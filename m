@@ -1,167 +1,337 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F08389DE3;
-	Wed, 24 Jun 2026 07:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0821C360EC0
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Jun 2026 07:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782285355; cv=none; b=ODRaK1nhQpPPsMhw6YlAFcx7AIgeL0aDjuk+jZPPVwzGv8D7+tUbV+wJw3XrRLYfER/pQgz/6T9DpshcexaWWzUO+W01KxDd7Hx+1f2d0yM2kcXhKYgY2zQ0HdTvQ7iR/VS3VZwPyRqg/HSYyZnuI/YpziQAjoJ5Pync8eXtqpM=
+	t=1782286788; cv=none; b=ggmFzsjhOUUIPIwB7FQGg8YkIvFtv/gklDR+0d+WMVXhUGNavcN8sPH0ZnRBcv4EKLY9FdNJmyye66D9GbWb/3z1KxxKTGBuWRgZucJCfPywWhM/InP1h4Hd1iA4KLesFgqOAgdFvMpyBd1dYtckzbQb8X2V44aFxrYL5GK0bzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782285355; c=relaxed/simple;
-	bh=PfYTomWWcI7PSFeOzKdEGdH/2MiubdyKhna/WEa7cY8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=IIOcHapx3zkwHw8ohU60ea/q15+Esaej86mQ1NfMFq3XRASxetpAySD+VWXwPVrWNvHPcZw9A73xuU8r42MBlR2AghmGB7iauio7Q4d9/uMaTJikQExJM7e497qolZkihq9xh/u82C2RmHG18Ffxz5IlKeQBUNKQYnOsd2IbF+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=J9g94jE7; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1782286788; c=relaxed/simple;
+	bh=K9hXOjJNrOUVW4ZYqXx7EpTqNs3yz4MSR382ybbfthk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OdFgTGd/Gthj3/kcENT987aIeTswNNKLnXUaCOqaZMprd/nSV1X1bEWWFuHEZH53WXO6c8YjoCfI7FK/5aSL+mq1tiFHzNVroXukoF//cFaUERBp0hPc8PjBobuSMLZpJc2vgK5WulpUHX1h33L7VXaHy+TUd0DFx7hkH9shJWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nBpcratL; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="J9g94jE7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1782285325; x=1782890125; i=markus.elfring@web.de;
-	bh=8dOWp3pV+ZefuPVZ5j2qaSzkQVlLtzcYfZVuW/HNwQ4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=J9g94jE7rMX0K2jQ3lJWegOVx841SU9oOhKPqhBVvkHGX4PGZAe+gz1Cuwgr2bPu
-	 MLwbLGefYPjjeWARd416rbdJ2mnJlABM/7CG18I3RpRFKmn2i/YzgoNR2dGRvuUwf
-	 mgXq4CTDV183qn/PnUh/rdQrtPo0N7/V4QcOfMofeyZJXLwbZpBxPQHuSThDHUxYX
-	 Rs59Zd3mZYhtB6jR2lT/Q800hhsXXC1Cp+EnHTrVqz/GJex0QDpY427xyIyf1H4ey
-	 HFCHEjKYXdIjq+DpcBOpX3/arpfhYB/Jwv0IFKtgOYOmdyDb/h/fJt2iYIHOzTVgs
-	 3zLlasrhmDICwIwJ0A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from client.hidden.invalid by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MdO5C-1xBLbB1KDI-00b2z7; Wed, 24
- Jun 2026 09:15:25 +0200
-Message-ID: <53c33d57-6619-41ba-8963-604337ae35db@web.de>
-Date: Wed, 24 Jun 2026 09:15:22 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBpcratL"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8423610ec93so839481b3a.2
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Jun 2026 00:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782286786; x=1782891586; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NG4dKTDv8JZYL7kS7cRIE6tHZ+j36hHvO+etffou0zY=;
+        b=nBpcratL8BpqYna82iQSngCsqcqqV+jZrrfkZSZGv3hA99jDGOpf2NtGoufUL1PQAS
+         uEr4mmfNsG5geOKoRETbUeU/m/kF8sMeeeZCuoWWEJoR8JeyEgHjcgh4w0x5sJo2SOYy
+         ofEjzYei5W1loN+zuhmIOyOp7V/jV2lNuPYRStswjrLUdMe9se7gWXpUvyj63dLOjury
+         1CrNj6PGvkkfRols1T+3ZxRv6L3gYiupkm84Hhq49rfeBlvhQ4G/3ayteatXxQZNwVW+
+         qtwEdI2RHXiSRH9rD7zwghcxfdE8gHIKSjmshGiPiKNyiD49BA/RTxpo91tCeDCVzhXF
+         jtXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782286786; x=1782891586;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NG4dKTDv8JZYL7kS7cRIE6tHZ+j36hHvO+etffou0zY=;
+        b=p2ODZKdPoTnTRjmHMhbvzM1l+e5u6Q132vub/NO5aP0/yaYYwLSg8xdV2zTzYrHHzz
+         LanWP9CnY9TDhnM1Q7Z3a4ebUh7/fHb7VyS5Au97UpZpOrPLbBrFDx8Bn8rwg9c+DQst
+         M6ZPwbheIWzq9P6kRK79mbHzEJOXGxbUBi1YWaaJUdqJsbm/e8p2Ywy8Xtwqt6k1AKHB
+         bcXoF2T3ZeEYKvcK3r9XIYbm7nRntNS/C0l6NCqUIQYi33gCNRVQnhgwRzo2KJk6Pl8i
+         0jDPbzDOxV4W2dVnZIH6Gcla7d4HP2zVr7OrBkENsPWugn96n68zjAmMZDuAKYoyLfHe
+         tTQQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/BzbEeFl9wZMt5wMgoJeVQC58M/W9kDFlVgaB2LN0om1QsP/ZKiuaWEZ7Wv8khULuMnOleEDPc8ZD89js8Hls=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3nAIPuxg/rzVQZrYp1pFFApI3Q3NsrtFdg5dDR6BHo9wXzFRz
+	ysxQ+AI2WI6XGTWnidDg8GN24Etjq8JQIVkZg4ZieFSB2ImH1CkYK0rNN4V8B8P+
+X-Gm-Gg: AfdE7cmcHgSPIo0ecti2Lu/t3nMNcAW/XHRHETM49gMbCMNj5uF9JzCaOH3vsWDbI4B
+	7YTcGUrA/q7IGIOrxDCKZH5jOVtQzsWTNwhc+7U2P0Fz4gl5Yg7sv5c4zI7iA4c2PaPuZTKO8JV
+	PlUqUphG/y8mt6wmxXJSZxqJo9v5TdWqyh8o+q9/8v2gwTyWd2bhm79VsLZnL3SYEMzM1v0mCLZ
+	hM5RCrhvTj43C4B83IWnWDEe90qn52g0Pms0UGp4LCxT3us5FBHViuRzlp8hJsfyX8aFcbp1lPQ
+	NFEEIrCDe51QnU1SawBFqmU8aCcKMDxySKd9LLGZl0AXfn2u2IJjgFUW3xImRuudMhG0ubE4tl4
+	DQyCkQDXEc5djdYgsx4OZVEXCLUDXTW2MEb1qH0d+PV60fS0d73ciT9cunu1nKvauV4vN9UvIef
+	j0/X/m3WHtc/NjoA0XdcmiafEr4E//W2oXLGWgi1YkNXuG1w==
+X-Received: by 2002:a05:6a00:1ac6:b0:82f:6e9:d1c3 with SMTP id d2e1a72fcca58-845a2c82cc3mr3048248b3a.29.1782286786086;
+        Wed, 24 Jun 2026 00:39:46 -0700 (PDT)
+Received: from Athena ([58.146.97.171])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-845a3fecc06sm1370420b3a.21.2026.06.24.00.39.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2026 00:39:45 -0700 (PDT)
+From: Harshal Chavan <harshal24.chavan@gmail.com>
+To: io-uring@vger.kernel.org
+Cc: axboe@kernel.dk,
+	krisman@suse.de,
+	gregkh@linuxfoundation.org,
+	gustavoars@kernel.org,
+	harshal24.chavan@gmail.com,
+	kees@kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5] io_uring/register: add IORING_REGISTER_CLONE_FILES opcode
+Date: Wed, 24 Jun 2026 13:09:21 +0530
+Message-ID: <20260624073921.11037-1-harshal24.chavan@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>,
- linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Brigham Campbell <me@brighamcampbell.com>,
- Jori Koolstra <jkoolstra@xs4all.nl>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
-References: <20260623145147.12145-1-woradorn.laon@gmail.com>
-Subject: Re: [PATCH v3] tracing: Use seq_buf for string concatenation
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20260623145147.12145-1-woradorn.laon@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TFiC94XlxxqZbGdb/y0wk5frxVrXTtU05fENh0OowrVa8K9pe8u
- QtadBkms3J9BH2F2OZbXKcwFP9m0nBHFFsYe/dmzHELGntnSv7fr8HrFX4MQbHw3UabxIvn
- j9Zeuwqyh3PuA6/IO4h6Oy9P3fiixSjPlU1hHTnQjWdW8UiLmKByr+hwzUEX0cVSXwfNbOM
- gdP8oT8JBx9r0CwKd1dDg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bGMsl0RDInQ=;s6ChLshfZgchcskk+rGquto+txl
- 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
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> +++ b/kernel/trace/trace_events.c
-=E2=80=A6
-> @@ -4501,13 +4502,20 @@ extern struct trace_event_call *__start_ftrace_e=
-vents[];
-=E2=80=A6
->  static __init int setup_trace_event(char *str)
->  {
-> -	if (bootup_event_buf[0] !=3D '\0')
-> -		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
-> +	if (seq_buf_used(&bootup_event_seq) > 0)
-> +		seq_buf_puts(&bootup_event_seq, ",");
-=E2=80=A6
+Currently, if an application wants to duplicate registered file
+descriptors from one io_uring instance to another, it must manually
+unregister and re-register them, incurring unnecessary overhead.
 
-I suggest to use the function =E2=80=9Cseq_buf_putc=E2=80=9D instead at th=
-is source code place.
-https://elixir.bootlin.com/linux/v7.1.1/source/lib/seq_buf.c#L203-L221
+Add IORING_REGISTER_CLONE_FILES to allow direct cloning of the file
+table from a source ring to a destination ring. This implementation
+strictly mirrors the io_clone_buffers UAPI, supporting partial offsets
+and the IORING_REGISTER_DST_REPLACE flag.
 
-Is there a need for corresponding error detection?
+To ensure lock synchronization safety, destination nodes are strictly
+allocated as new, private io_rsrc_nodes rather than sharing references
+across rings.
 
-Regards,
-Markus
+Signed-off-by: Harshal Chavan <harshal24.chavan@gmail.com>
+
+---
+v5:
+  - Added missing spacing in comment (Gabriel).
+  - Removed ctx->user and mm_account checks (Gabriel).
+  - Used !! for boolean conversion (Gabriel).
+  - Moved mutex_unlock unconditionally above the out label (Gabriel).
+  - liburing implementation and tests: https://github.com/axboe/liburing/pull/1606
+v4:
+  - Updated Signed-off-by to use real name and moved above the scissors line (Greg KH).
+v3:
+  - Rewrote the cloning loop to allocate private destination nodes via io_rsrc_node_alloc to fix non-atomic ref lock synchronization (Jens).
+  - Maintained partial offset/copy support to mirror io_clone_buffers UAPI (Jens).
+  - Gated the replacement free check on ctx->file_table.data.nr (Gabriel).
+  - Prevented self-cloning by checking ctx == src_ctx (Gabriel).
+  - Removed submitter_task check to allow cross-thread pooling setups (Gabriel).
+v2:
+  - Dropped unrelated whitespace formatting changes from v1
+---
+ include/uapi/linux/io_uring.h |  12 +++
+ io_uring/register.c           |   6 ++
+ io_uring/rsrc.c               | 145 ++++++++++++++++++++++++++++++++++
+ io_uring/rsrc.h               |   1 +
+ 4 files changed, 164 insertions(+)
+
+diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+index 909fb7aea638..67fcc40f8dfc 100644
+--- a/include/uapi/linux/io_uring.h
++++ b/include/uapi/linux/io_uring.h
+@@ -723,6 +723,9 @@ enum io_uring_register_op {
+ 	/* register bpf filtering programs */
+ 	IORING_REGISTER_BPF_FILTER		= 37,
+ 
++	/* clone file descriptors from another ring */
++	IORING_REGISTER_CLONE_FILES		= 38,
++
+ 	/* this goes last */
+ 	IORING_REGISTER_LAST,
+ 
+@@ -854,6 +857,15 @@ struct io_uring_clone_buffers {
+ 	__u32	pad[3];
+ };
+ 
++struct io_uring_clone_files {
++	__u32 src_fd;
++	__u32 flags;
++	__u32 src_off;
++	__u32 dst_off;
++	__u32 nr;
++	__u32 pad[3];
++};
++
+ struct io_uring_buf {
+ 	__u64	addr;
+ 	__u32	len;
+diff --git a/io_uring/register.c b/io_uring/register.c
+index dce5e2f9cf77..bbc8c506ea2d 100644
+--- a/io_uring/register.c
++++ b/io_uring/register.c
+@@ -924,6 +924,12 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
+ 			break;
+ 		ret = io_register_clone_buffers(ctx, arg);
+ 		break;
++	case IORING_REGISTER_CLONE_FILES:
++		ret = -EINVAL;
++		if (!arg || nr_args != 1)
++			break;
++		ret = io_register_clone_files(ctx, arg);
++		break;
+ 	case IORING_REGISTER_ZCRX_IFQ:
+ 		ret = -EINVAL;
+ 		if (!arg || nr_args != 1)
+diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
+index 650303626be6..5ddd715e2a63 100644
+--- a/io_uring/rsrc.c
++++ b/io_uring/rsrc.c
+@@ -1303,6 +1303,151 @@ int io_register_clone_buffers(struct io_ring_ctx *ctx, void __user *arg)
+ 	return ret;
+ }
+ 
++static int io_clone_file_node(struct io_ring_ctx *ctx,
++			      struct io_rsrc_node *src_node,
++			      int dst_index,
++			      struct io_file_table *new_table)
++{
++	struct io_rsrc_node *dst_node;
++	struct file *file;
++
++	dst_node = io_rsrc_node_alloc(ctx, IORING_RSRC_FILE);
++	if (!dst_node)
++		return -ENOMEM;
++
++	file = io_slot_file(src_node);
++	get_file(file);
++	io_fixed_file_set(dst_node, file);
++
++	new_table->data.nodes[dst_index] = dst_node;
++	io_file_bitmap_set(new_table, dst_index);
++
++	return 0;
++}
++
++static int io_clone_files(struct io_ring_ctx *ctx, struct io_ring_ctx *src_ctx,
++			  struct io_uring_clone_files *arg)
++{
++	struct io_file_table new_file_table;
++	unsigned int dst_nr = ctx->file_table.data.nr;
++	unsigned int src_nr = src_ctx->file_table.data.nr;
++	unsigned int new_nr, i;
++
++	lockdep_assert_held(&ctx->uring_lock);
++	lockdep_assert_held(&src_ctx->uring_lock);
++
++	if (dst_nr && !(arg->flags & IORING_REGISTER_DST_REPLACE))
++		return -EBUSY;
++
++	if (!src_nr)
++		return -ENXIO;
++
++	if (!arg->nr)
++		arg->nr = src_nr;
++	else if (arg->nr > src_nr)
++		return -EINVAL;
++
++	if (check_add_overflow(arg->src_off, arg->nr, &i) || i > src_nr)
++		return -EINVAL;
++	if (check_add_overflow(arg->dst_off, arg->nr, &i))
++		return -EINVAL;
++
++	new_nr = max(dst_nr, arg->dst_off + arg->nr);
++	if (new_nr > IORING_MAX_FIXED_FILES)
++		return -EINVAL;
++
++	memset(&new_file_table, 0, sizeof(new_file_table));
++	if (!io_alloc_file_tables(ctx, &new_file_table, new_nr))
++		return -ENOMEM;
++
++	/* Copy original nodes from before the cloned range */
++	for (i = 0; i < min(arg->dst_off, dst_nr); i++) {
++		struct io_rsrc_node *src_node = io_rsrc_node_lookup(&ctx->file_table.data, i);
++
++		if (!src_node)
++			continue;
++		if (io_clone_file_node(ctx, src_node, i, &new_file_table))
++			goto out;
++	}
++
++	/* Copy the actual cloned range from the source ring */
++	for (i = 0; i < arg->nr; i++) {
++		struct io_rsrc_node *src_node = io_rsrc_node_lookup(&src_ctx->file_table.data,
++				arg->src_off + i);
++
++		if (!src_node)
++			continue;
++		if (io_clone_file_node(ctx, src_node, arg->dst_off + i, &new_file_table))
++			goto out;
++	}
++
++	/* Copy original nodes from after the cloned range */
++	for (i = arg->dst_off + arg->nr; i < dst_nr; i++) {
++		struct io_rsrc_node *src_node = io_rsrc_node_lookup(&ctx->file_table.data, i);
++
++		if (!src_node)
++			continue;
++		if (io_clone_file_node(ctx, src_node, i, &new_file_table))
++			goto out;
++	}
++
++	/* free the old file table if there is any data present */
++	if (dst_nr)
++		io_free_file_tables(ctx, &ctx->file_table);
++
++	WARN_ON_ONCE(ctx->file_table.data.nr);
++	ctx->file_table = new_file_table;
++	io_file_table_set_alloc_range(ctx, 0, ctx->file_table.data.nr);
++	return 0;
++
++out:
++	/* Error Path: Safely destroy whatever we partially built */
++	io_free_file_tables(ctx, &new_file_table);
++	return -ENOMEM;
++}
++
++int io_register_clone_files(struct io_ring_ctx *ctx, void __user *arg)
++{
++	struct io_uring_clone_files clone_arg;
++	struct io_ring_ctx *src_ctx;
++	bool registered_src;
++	struct file *file;
++	int ret;
++
++	if (copy_from_user(&clone_arg, arg, sizeof(clone_arg)))
++		return -EFAULT;
++	if (clone_arg.flags &
++	    ~(IORING_REGISTER_SRC_REGISTERED | IORING_REGISTER_DST_REPLACE))
++		return -EINVAL;
++
++	if (memchr_inv(clone_arg.pad, 0, sizeof(clone_arg.pad)))
++		return -EINVAL;
++
++	registered_src = !!(clone_arg.flags & IORING_REGISTER_SRC_REGISTERED); 
++	file = io_uring_ctx_get_file(clone_arg.src_fd, registered_src);
++	if (IS_ERR(file))
++		return PTR_ERR(file);
++
++	src_ctx = file->private_data;
++	/* Same ring clone is not allowed */
++	if (src_ctx == ctx) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	mutex_unlock(&ctx->uring_lock);
++	lock_two_rings(ctx, src_ctx);
++
++	ret = io_clone_files(ctx, src_ctx, &clone_arg);
++
++	mutex_unlock(&src_ctx->uring_lock);
++
++out:
++	if (!registered_src)
++		fput(file);
++	return ret;
++}
++
+ void io_vec_free(struct iou_vec *iv)
+ {
+ 	if (!iv->iovec)
+diff --git a/io_uring/rsrc.h b/io_uring/rsrc.h
+index 44e3386f7c1c..32f5c47c46af 100644
+--- a/io_uring/rsrc.h
++++ b/io_uring/rsrc.h
+@@ -75,6 +75,7 @@ int io_prep_reg_iovec(struct io_kiocb *req, struct iou_vec *iv,
+ 			const struct iovec __user *uvec, size_t uvec_segs);
+ 
+ int io_register_clone_buffers(struct io_ring_ctx *ctx, void __user *arg);
++int io_register_clone_files(struct io_ring_ctx *ctx, void __user *arg);
+ int io_sqe_buffers_unregister(struct io_ring_ctx *ctx);
+ int io_sqe_buffers_register(struct io_ring_ctx *ctx, void __user *arg,
+ 			    unsigned int nr_args, u64 __user *tags);
+-- 
+2.54.0
+
