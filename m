@@ -1,207 +1,275 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864953DB328
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Jun 2026 15:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D128A3DD53B
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Jun 2026 17:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782316580; cv=none; b=stsUrAxBFFAYfp3PNQlfsoaQ7VOY1pR3rbChxwhfuZE2vVpByPrp82HxTRcecrV3gFZ1Vf71/Aoz4mZtr5s/1+Z453y62ZKSFkzipe8XKbsjF6ar/rTZ/LIXtgs5TbNlOmn6Iu7OsToEHS8m212a4kHTyWDJ1qg4OYc7wN6EkEI=
+	t=1782323705; cv=none; b=RVpJa9DE1jp0U3VO/VK4e7Yb2CNnIXSBJqwdZ8NFKnNlLFqz6Q/DKA3326PqnqRPnonfrHN07v/LBUWgRWbUBN2tlZv8t2psZV0FnakUa6Eqd2rGdu9JxHFmxwBXjDXwc7xK1P4ot9mgfgJM2vmLL1uhusNhLKQiU9oKYlqmd2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782316580; c=relaxed/simple;
-	bh=OIfIzrv8cXjwoKNsROTB/WmCpERrX7Jeow982/fvBB0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GpE3IFS0AWwsO244UHfljuemmHNG7OZtto8DzaLl1NnqLUV/e/0PLiU+ORfjTHcYbi2zsmuiqSAPRhbr0VoF7G1Kpcuo9InphPI6dSn83ZQAxluRBu1GKr4MMmJHh3G2BdyrVaSXrJSCBwFf4qtYlsomCrRcnvyiGsASqqhQews=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lz9bvbjO; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=P9rGj5Ss; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1782323705; c=relaxed/simple;
+	bh=wwnho7hEdXTC6ab0TaoU8pKnUrHIJ2RB2ggTwseerv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l1XiKLuqlQwOeO/sTaM6llK3ty2YCZyhqK7enkyom05DCVPIYbIqdEFxnOfKiejDNfpATd2KCcQjpVVbxc0rET5P6Sn8AE1uD5Tg5/roGWEBKvILhCAzp0EemzzvxU7JKeAoDb25hvZkFXug1pC4vghAuiFvlY2j8rB7XJfi7CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xu4wCQtl; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lz9bvbjO";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="P9rGj5Ss"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65OFnUFV3573229
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Jun 2026 15:56:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9bR2ocqQMdp4hN0L3M5pIvBrJtLBQ9RYBOAWa7t2h1g=; b=lz9bvbjOkMHK0fQH
-	Xei8RRt14kG6/Iv720DXi/HJzzyo37lfYpLVZZxEtcy6WQH91J/jdMXqWEC6fzgo
-	JFIFU2IaCvSIHzIUdphe+qIO0273F56Ram0LvWOzV5XsUpRnglT6KQkWB318PydR
-	tWwKuoPJQ237N3ZyTXLZTV8w9WHkaAK9UwkxppH6boguf6GcYDFCHL8f4ifZZMYx
-	dQfb1Jn53l6J9GlMUyQarr7WCHkdvJ379xPFv6JHdYesQF26YQYzs83fDozL1k6q
-	q/qXUifddppRT2zEUGZP5j87/Me+lkVN2na35gUdMKllpA8IQjYjPYUHYC2Mibzp
-	7JgIIQ==
-Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com [209.85.222.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f0j7dr0uq-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Jun 2026 15:56:16 +0000 (GMT)
-Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-9674fead9e3so186274241.0
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Jun 2026 08:56:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xu4wCQtl"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-37cb36ca63bso898256a91.0
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Jun 2026 10:55:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782316576; x=1782921376; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9bR2ocqQMdp4hN0L3M5pIvBrJtLBQ9RYBOAWa7t2h1g=;
-        b=P9rGj5SsZH4CL831fL8NWsTJwelZ/g3SDDx6bfdbtSAsvxnNxKqJREkQM9PRGaqvrp
-         4da7oKsZPyLnpHmf3kOnDCUoFOO9F8n8aThqb7Rudt7hHu4Sqih5GdivZgVZpGXEmahm
-         VSUw6k7yiWwk0+RqUczugjCk7lKTODB0slKHNPPF0O6rdCKQYhR2ScIEbaC4Lj2A/o/8
-         BqvyPRZ4EfDzYYD3MsD55HfuLDno/yE6wAE5VOAQXH8a3ZWVSOh/8m4g2kPjKMyVq938
-         sY6K1fFh8Te+rahQPQWS5kYxoO4SqDCMTbbGdDDsMY9B1osQPBKK+JiXPzyfbl7zUexl
-         PNTQ==
+        d=linaro.org; s=google; t=1782323703; x=1782928503; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4NlwdAQFxJRK87l+yQ/+R9Mq1tuhwUOP4+/t1hmPNl0=;
+        b=Xu4wCQtl5QsY42R07fX/KaLSN4VMfBSEw2+6dTpScpfb1Som20gCfvEabNyD/gB6m/
+         4n9tn0amevgflvxV43WYqHig6fIcXu2CXwH7ubvMCd2lLIFEqSsP+bPuzLSsHSArol3Z
+         Iq7WTWqFu/PYgqg05oYkKycmS2K2vftO/VJ+YOB9fw/2cKWWVHCvOzHxqA7IaF2slyPH
+         FuA0NLLuT4rPphmXMPDgeQ3v1IOsGj0/oi6Rxlk4z2Ye4k4Q86nJuanwV+JFNl8KrEHu
+         mTbtpEHINF7swKCqsg4zE4wHAtqheAYk35QQ1/LgLnNpgpaC4JN0R2lT4/HbmHZz9dUe
+         QeEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782316576; x=1782921376;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9bR2ocqQMdp4hN0L3M5pIvBrJtLBQ9RYBOAWa7t2h1g=;
-        b=EE4TbUOyJJrOTkfonhdNkR8Q6ESrW8UWd0vocFsV3Uo2ha2S5V3c+N7DA527qF24K+
-         fy1hZaC2vrhCj7lBtwFq3vihFyrDe9L9BoJsvrdKD1ftMPj5K0L6Xps1sj76xvdyQV2Y
-         lWa0mPRLha86qo/7uexoG6zwA2f2/Z3Nojs0668s9va8PDRMJLeqBTl8rwcSyGysnQBf
-         sM3ByRzaYjAhSsg3a97tw8OxCxc6Qh3Uu5VdAGMgLJHHt2w7AXoGFjQ5bFEoth1XRh7/
-         52Zqp0jGgFQIuC3G6CukmGptcao4mWhMjOXmc9d6u+EAa2JMqg1rAO4cI1O0yP1cZBEU
-         m51g==
-X-Forwarded-Encrypted: i=1; AHgh+RpuZkT59eJF6GdVVw53wNmAKfohecDtYYSxjHj+gR9hF3tkcOBw6OmkwxW3PhDBkmuuxljapU0a0E/J0t07KEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyiub9akeZvgcFMhXdBRUpeteSWwwyo2K95IOtHve2wxmIWvApz
-	WnKbcRBi4m6KN9prNWrhiDm1ZIuQySweOpW87bXR3C6Zkgl7vjCNvRJOmkQ1sftYdl26rdSrsEF
-	/LfZzjqaEvTfVnyfltRC3dQPMPBud5NpRGIbFp9F9wKYbYXgpcylw/yw8NXftYKwWhQfEmbE=
-X-Gm-Gg: AfdE7clIsRT1+vJg0muLLYV/WKeynBHSgWGoe3rM047o7kHv3QWAnWynfUeMY3xaXdi
-	APknwlEAdDkfCmLqihK5gAATF3XRd+VQ4JOqGfrpzH8d8dTJ3vYh7gpd8gX5bx7BVmE6Qcky4P7
-	vCiz/pua/VcKY1EB06etICPOfXFkGxqK6yx7aE0jXJW0CKRQn4W5efPtL+PJNIVbhxob6hMZXM+
-	7S6FSHbAijLdD0INBxbu+pZTOaXzyPCadywxSpe3lvfwBE6EkpeCuFzMns3t9nv/7fPYTHdiEwd
-	ntwiO19SYV0Pwz2Du0eLmSJFhXGhGCIrq9JewLUTpl/QaUIO6Q6ju7pItO40fpOM87KXRRYLbNw
-	6+uY8Mtq92RlSVH3g0Cxyyt4CmUHAp8J2E1P97ZkQJzf94w6wg98QYbqaa9omPOMspQWjd7M=
-X-Received: by 2002:a05:6102:292b:b0:631:af51:7d8e with SMTP id ada2fe7eead31-731162122femr2076168137.17.1782316575687;
-        Wed, 24 Jun 2026 08:56:15 -0700 (PDT)
-X-Received: by 2002:a05:6102:292b:b0:631:af51:7d8e with SMTP id ada2fe7eead31-731162122femr2076134137.17.1782316575223;
-        Wed, 24 Jun 2026 08:56:15 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:fce5:aedd:3ea4:36f? ([2a05:6e02:1041:c10:fce5:aedd:3ea4:36f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46c1e840f80sm8495036f8f.6.2026.06.24.08.56.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2026 08:56:14 -0700 (PDT)
-Message-ID: <ae0ec05e-607b-4022-a006-2eb1a283144d@oss.qualcomm.com>
-Date: Wed, 24 Jun 2026 17:56:13 +0200
+        d=1e100.net; s=20251104; t=1782323703; x=1782928503;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4NlwdAQFxJRK87l+yQ/+R9Mq1tuhwUOP4+/t1hmPNl0=;
+        b=AmlpCf994RcAcmX+g0eFe0Ut0sXGtjkNeCe+UKONZh31jW5FcvikosnXiF/tf2KgXh
+         lDUrrTh8bgd/1d+0HQQ4U8XbCI56qc/LwlBFHsyDT24vHm+MKr+Udxx2YsFaW2d4ngQN
+         oOJk/2oaTIdwLfaM0NNpRJgPPjCz8aotzaCDGx8oF+NkL1ntqxeiQztDqWnp9doFxFzJ
+         kA2uIgaQBuqmHPIqKYu5rSa5hvxT1FP9SmFStKLNoktXdYpuzYa4mSmwis5WTLMvVDyO
+         IqG4Qyurz9WE8Xs4TpqAE74yRcfsDagvF3aV5ikIe+DFvAa3QiYgvXv4yitYzTAtiqXh
+         qH1Q==
+X-Forwarded-Encrypted: i=1; AHgh+RpPcJa+1FyMtT7VVmouEkildkNQnVIRtVk5hdu0a9ldrvzB7/9MD3Oi2BrXvIEyLEnGRE9I++emyhfC5FAYjyo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0X6TgGKgzXooebw1T9mMUP8cxOptoOv72F1Oj3SOawxec0U2I
+	sNzMwkpv6yL/pZIGNBizr4i5IMV0tW9Cn9FCuTSzBmPydJ8yQQuPKEIDsadgmIVCx1o=
+X-Gm-Gg: AfdE7cnU42ogcgv9fqFmNzKMoAnXFHSg7xTEaj3SLDpkEjhfkvdKCkOUHfSiC2aANta
+	a43GyNSyu3Gp7tPU8OhvBSDg17NJokCOqZtOGG1pbNjX0IM/tuEqoF8H040BVg1BHZ9z6CHBBut
+	ky6P3ynfWF5Smsrme2MMS/z2bBMYXKN2n06zyaJ+hhNylxCMRzXN2GdaIUgr5g+6Rt7EaK46bqv
+	C9eWXIF7gy1yXHbNgYP2idNBAJ1h4NvJc9QxQNXLFhxeFwSshUCzyJGcH+C5ijKmiaKRWfFS9uh
+	8uEhp3xJm1e5GPcqoeYFLv/8BFF0er3tRLDOowDBbBqJOXiC530C7LKjxe2Wy6wKwhTkRwbJi47
+	y6yAmJQo4AR3c1zZmNcJwiRjdolOI0ieB5+/oGSCo9r/DA88r+EkQM0B2VdSbwfE/C5TPXGw/0g
+	jrmnYCkkt5LOwhIFrQ
+X-Received: by 2002:a17:90b:2543:b0:36a:c4b:76cf with SMTP id 98e67ed59e1d1-37de43b6c88mr5058783a91.23.1782323703018;
+        Wed, 24 Jun 2026 10:55:03 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:c087:d655:ef04:fbeb])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37df36c34basm273518a91.0.2026.06.24.10.55.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2026 10:55:02 -0700 (PDT)
+Date: Wed, 24 Jun 2026 11:55:00 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Francesco Valla <francesco@valla.it>
+Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: virtio: support dynamic number of vrings
+Message-ID: <ajwZ9EPnrYu2M6G-@p14s>
+References: <20260621-vring_flex-v1-1-c6c582fbe94b@valla.it>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] dt-bindings: remoteproc: qcom,pas: add thermal
- mitigation properties
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20260609-qmi-tmd-v3-0-291a2ff4c634@oss.qualcomm.com>
- <20260609-qmi-tmd-v3-1-291a2ff4c634@oss.qualcomm.com>
- <20260610-ocelot-of-stimulating-excellence-bcb0fe@quoll>
- <03d863ee-2caa-41f2-94b5-7332fc930b42@oss.qualcomm.com>
- <d81bc78e-2c1d-45fd-90c9-f7ec462183a0@kernel.org>
- <7f1e46fb-15e3-4638-9930-8abc1dd5a778@oss.qualcomm.com>
- <fcf93e0f-a2f0-4070-86ec-8a34e9344b76@kernel.org>
- <ec65893d-873a-4a62-b0e2-5008b2130545@oss.qualcomm.com>
- <3cbcaf8c-357e-42d2-91c1-9d1a32c55ed0@oss.qualcomm.com>
- <ae43a691-4879-4bfa-8c7c-1be16945480c@oss.qualcomm.com>
- <9a31bb29-75d7-42fa-b8a8-4155cf85cadf@oss.qualcomm.com>
- <c32e263c-ba4e-4899-a935-e129de0f1269@kernel.org>
- <61765401-3397-497d-a0ca-e9bf9d76cc6a@oss.qualcomm.com>
- <5b0f1f39-ddaa-4a2e-ab29-34aacc9ff672@kernel.org>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-In-Reply-To: <5b0f1f39-ddaa-4a2e-ab29-34aacc9ff672@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 4K2ENpemSDdozIWL4bjNxMD68mwmNSbv
-X-Authority-Analysis: v=2.4 cv=NvHhtcdJ c=1 sm=1 tr=0 ts=6a3bfe20 cx=c_pps
- a=ULNsgckmlI/WJG3HAyAuOQ==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22 a=Zihj0RZBmKQ52BXb7y4A:9
- a=QEXdDO2ut3YA:10 a=1WsBpfsz9X-RYQiigVTh:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI0MDEzNCBTYWx0ZWRfXxllH+1OpiY1R
- eeSs1zYHC6Gu6n+7EERw0kgfhqx7c0SB88HfHh3BgV3wHLCkuWz1phghkOh8BRsCPnFXYXurfwO
- SBYpZdzJXIm1gxZG9TdCGgJFsEgKMTo=
-X-Proofpoint-ORIG-GUID: 4K2ENpemSDdozIWL4bjNxMD68mwmNSbv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI0MDEzNCBTYWx0ZWRfXzUkHuav0zjWo
- VFhtAw8Km4VHp4nLrzIImQG/xu0GTu1GcYezEJ73i8tQHfEfDgZp0QCGcOg/2nwKi4mHAhieNL7
- AspEH8fmSeLOEFKacWzNd1AWRyBYBXkMtu4isWri4Lmyxt/Ca+J5cGeVA0CkTswjhWen8LerUd3
- kHXBHsLw1rsYsg2VRr3Vy0WPQ8sGuaZNWDaQiDMKDmYXqxL9Qk34/TPiDqV1m0FsVZ7ewgXU8gA
- X4Zcr5mm7UOBlo976GXNM2YE9WsPrwIK+9wilaUWVvCso+i1AcW3geDmkCSWGw3BvOePO0lcV/b
- DdEDyliEA3l/2q5k47BbIl/akGRAOz46BFEiXiNJ6eiC689JQ1eKbjhl8my7EexZj3B6cNCaj4c
- Kf/gbApjjebp56uuhinybViL9sWDBg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-24_03,2026-06-24_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 phishscore=0 spamscore=0 malwarescore=0
- bulkscore=0 lowpriorityscore=0 classifier=typeunknown authscore=0 authtc=
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.22.0-2606150000 definitions=main-2606240134
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260621-vring_flex-v1-1-c6c582fbe94b@valla.it>
 
-On 6/24/26 12:42, Krzysztof Kozlowski wrote:
+Hi Francesco,
 
-[ ... ]
+On Sun, Jun 21, 2026 at 11:57:31PM +0200, Francesco Valla wrote:
+> The number of vrings for each vdev has been fixed to 2 since the
+> introduction of multi-vdev support [1]; this is completely fine for the
+> rpmsg usecase, but can conflict with other virtio devices (CAN for
+> example requires 3 virtqueues, entropy only 1, network a variable number
+> and so on).
 
-> Therefore I still do not see the need of tmd-names. You know the name of
-> cooling device, because you have strict one-to-one mapping.
+I suppose the remoteproc subsystem is involved because these other virtio
+devices are behind a remote processor?  If so, how does virtio drivers for the
+devices get called?
 
+Otherwise I'm good with the code.
 
-There is one remote proc with one or multiple cooling devices attached.
+Thanks,
+Mathieu
 
-We describe those in the remoteproc node with the tmd-names.
-
-Anyway, we should be able to list the tmd names in the driver itself if 
-we ensure a consistency with the index by defining them in a shared 
-header eg. include/dt-bindings/firmware/qcom,cdsp.h
-
-#define HAMOA_TMD_CDSP_SW 0
-#define HAMOA_TMD_CDSP_HW 1
-#define HAMOA_TMD_CP0UV_RESTRICTION_COLD 2
-
-In the driver:
-
-struct tmd_name {
-	const char *name;
-	int id;
-	bool disabled;
-};
-
-static struct tmd_name tmd_names[] = {
-	{ .name = "cdsp_sw", HAMOA_TMD_CDSP_SW },
-	{ .name = "cdsp_hw", HAMOA_TMD_CDSP_HW, .disabled = true },
-	{ .name = "cpuv_restriction_cold", HAMOA_TMD_CP0UV_RESTRICTION_COLD, 
-.disabled = true },
-};
-
-...
-	for (int i = 0; i < ARRAY_SIZE(tmd_names); i++) {
-
-		if (tmd_names[i].disabled)
-			continue;
-		devm_cooling_of_device_register(rprocdev,
-			tmd_names[i].name, tmd_names[i].id, ...);
-	}
-
-
-In the device tree:
-
-	cooling-maps = <&rproc HAMOA_TMD_CDSP_SW min max>;
-
-I think that is somehow what Konrad and Dmitry were suggesting
-
-Does it sound better ?
+> 
+> Remove the static vring allocation, transforming it to a flex array that
+> is allocated at vdev probe time; for the existent usecases (i.e.: mainly
+> rpmsg) this leads to no functional change, except the additional memory
+> used for the counter associated to the new array.
+> 
+> The maximum number of virtqueues is limited to 256 due to the uint8_t
+> value used inside the resource table to indicate the number of vring to
+> allocate; for this reason, no additional plausibility check is performed
+> on the number of vrings indicated by the resource table.
+> 
+> As a side effect, this also fixes the single virtqueue usecase, which
+> was apparently supported also before but for which the remove action
+> caused an error (because the remove action was trying to unmap also the
+> second vring, which was in fact not mapped).
+> 
+> [1] https://lore.kernel.org/all/1330589497-4139-5-git-send-email-ohad@wizery.com/
+> 
+> Signed-off-by: Francesco Valla <francesco@valla.it>
+> ---
+>  drivers/remoteproc/remoteproc_core.c   |  7 -------
+>  drivers/remoteproc/remoteproc_virtio.c | 21 +++++++++++++--------
+>  include/linux/remoteproc.h             | 10 ++++------
+>  3 files changed, 17 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index f003be006b1b..88504d6eed93 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -473,7 +473,6 @@ static int rproc_handle_vdev(struct rproc *rproc, void *ptr,
+>  {
+>  	struct fw_rsc_vdev *rsc = ptr;
+>  	struct device *dev = &rproc->dev;
+> -	struct rproc_vdev *rvdev;
+>  	size_t rsc_size;
+>  	struct rproc_vdev_data rvdev_data;
+>  	struct platform_device *pdev;
+> @@ -494,12 +493,6 @@ static int rproc_handle_vdev(struct rproc *rproc, void *ptr,
+>  	dev_dbg(dev, "vdev rsc: id %d, dfeatures 0x%x, cfg len %d, %d vrings\n",
+>  		rsc->id, rsc->dfeatures, rsc->config_len, rsc->num_of_vrings);
+>  
+> -	/* we currently support only two vrings per rvdev */
+> -	if (rsc->num_of_vrings > ARRAY_SIZE(rvdev->vring)) {
+> -		dev_err(dev, "too many vrings: %d\n", rsc->num_of_vrings);
+> -		return -EINVAL;
+> -	}
+> -
+>  	rvdev_data.id = rsc->id;
+>  	rvdev_data.index = rproc->nb_vdev++;
+>  	rvdev_data.rsc_offset = offset;
+> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+> index d5e9ff045a28..96f13f828b8e 100644
+> --- a/drivers/remoteproc/remoteproc_virtio.c
+> +++ b/drivers/remoteproc/remoteproc_virtio.c
+> @@ -115,8 +115,7 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
+>  	void *addr;
+>  	int num, size;
+>  
+> -	/* we're temporarily limited to two virtqueues per rvdev */
+> -	if (id >= ARRAY_SIZE(rvdev->vring))
+> +	if (id >= rvdev->num_vrings)
+>  		return ERR_PTR(-EINVAL);
+>  
+>  	if (!name)
+> @@ -503,17 +502,20 @@ static int rproc_virtio_probe(struct platform_device *pdev)
+>  	if (!rvdev_data)
+>  		return -EINVAL;
+>  
+> -	rvdev = devm_kzalloc(dev, sizeof(*rvdev), GFP_KERNEL);
+> +	rsc = rvdev_data->rsc;
+> +
+> +	rvdev = kzalloc_flex(*rvdev, vring, rsc->num_of_vrings);
+>  	if (!rvdev)
+>  		return -ENOMEM;
+>  
+>  	rvdev->id = rvdev_data->id;
+>  	rvdev->rproc = rproc;
+>  	rvdev->index = rvdev_data->index;
+> +	rvdev->num_vrings = rsc->num_of_vrings;
+>  
+>  	ret = copy_dma_range_map(dev, rproc->dev.parent);
+>  	if (ret)
+> -		return ret;
+> +		goto free_rvdev;
+>  
+>  	/* Make device dma capable by inheriting from parent's capabilities */
+>  	set_dma_ops(dev, get_dma_ops(rproc->dev.parent));
+> @@ -527,13 +529,11 @@ static int rproc_virtio_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, rvdev);
+>  	rvdev->pdev = pdev;
+>  
+> -	rsc = rvdev_data->rsc;
+> -
+>  	/* parse the vrings */
+>  	for (i = 0; i < rsc->num_of_vrings; i++) {
+>  		ret = rproc_parse_vring(rvdev, rsc, i);
+>  		if (ret)
+> -			return ret;
+> +			goto free_rvdev;
+>  	}
+>  
+>  	/* remember the resource offset*/
+> @@ -569,6 +569,9 @@ static int rproc_virtio_probe(struct platform_device *pdev)
+>  	for (i--; i >= 0; i--)
+>  		rproc_free_vring(&rvdev->vring[i]);
+>  
+> +free_rvdev:
+> +	kfree(rvdev);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -579,7 +582,7 @@ static void rproc_virtio_remove(struct platform_device *pdev)
+>  	struct rproc_vring *rvring;
+>  	int id;
+>  
+> -	for (id = 0; id < ARRAY_SIZE(rvdev->vring); id++) {
+> +	for (id = 0; id < rvdev->num_vrings; id++) {
+>  		rvring = &rvdev->vring[id];
+>  		rproc_free_vring(rvring);
+>  	}
+> @@ -588,6 +591,8 @@ static void rproc_virtio_remove(struct platform_device *pdev)
+>  	rproc_remove_rvdev(rvdev);
+>  
+>  	put_device(&rproc->dev);
+> +
+> +	kfree(rvdev);
+>  }
+>  
+>  /* Platform driver */
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 7c1546d48008..222e1a56cebc 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -339,10 +339,6 @@ struct rproc_subdev {
+>  	void (*unprepare)(struct rproc_subdev *subdev);
+>  };
+>  
+> -/* we currently support only two vrings per rvdev */
+> -
+> -#define RVDEV_NUM_VRINGS 2
+> -
+>  /**
+>   * struct rproc_vring - remoteproc vring state
+>   * @va:	virtual address
+> @@ -370,9 +366,10 @@ struct rproc_vring {
+>   * @id: virtio device id (as in virtio_ids.h)
+>   * @node: list node
+>   * @rproc: the rproc handle
+> - * @vring: the vrings for this vdev
+>   * @rsc_offset: offset of the vdev's resource entry
+>   * @index: vdev position versus other vdev declared in resource table
+> + * @num_vrings: the number of vrings for this vdev
+> + * @vring: the vrings for this vdev
+>   */
+>  struct rproc_vdev {
+>  
+> @@ -382,9 +379,10 @@ struct rproc_vdev {
+>  	unsigned int id;
+>  	struct list_head node;
+>  	struct rproc *rproc;
+> -	struct rproc_vring vring[RVDEV_NUM_VRINGS];
+>  	u32 rsc_offset;
+>  	u32 index;
+> +	unsigned int num_vrings;
+> +	struct rproc_vring vring[] __counted_by(num_vrings);
+>  };
+>  
+>  struct rproc *rproc_get_by_phandle(phandle phandle);
+> 
+> ---
+> base-commit: ef0c9f75a19532d7675384708fc8621e10850104
+> change-id: 20260618-vring_flex-b4d23d1974ba
+> 
+> Best regards,
+> --  
+> Francesco Valla <francesco@valla.it>
+> 
