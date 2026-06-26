@@ -1,51 +1,51 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB333EB0ED;
-	Fri, 26 Jun 2026 10:07:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791343EA967;
+	Fri, 26 Jun 2026 10:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782468451; cv=none; b=uHfmWIrzy5zKF8sYUK3sFNuUPgYsNZmeBWT7RA2AeLHjzu6fTFGU5lLCGE0mWN+bpFEgRPKkaZrB5QjnmlqYjAerXlmEH0397tqrNalxrM5Va+WHY/5gMgTLxVzzEoJaQZ38x1voGBjHzVXr8H8//G6Kisjxp1s+va5CiDPF3Ok=
+	t=1782469013; cv=none; b=ZvU+6zy/qtTI+6Y8XM8qjDcaXv8bVPUvD5GZRTYHm6IJ9MMTnSC9qHdMvsWLWrdBsiLdK/54/Fg3m4trQdoiz0EcjJB4LOGYRqEuZDl7+a0+GTXAm/s18Yz0Gg7+aT+j7vzoHKO1TwGIfvcvWGYs2JVeFyaHhWITEHMFt8zx4Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782468451; c=relaxed/simple;
-	bh=mWD9mCGrzZWHZ7x0PPyvacdrsovHQpw623DcM+HA8P0=;
+	s=arc-20240116; t=1782469013; c=relaxed/simple;
+	bh=zNOQKVs7mFtzvW7ZL9QiUwGBwaYNwddOXYQ6SUFj9VE=;
 	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=d0AuBul7nl1kpEw6QPLcjQQXUvS/t5++FtAZ8dgT637n7PfpqoBqCbHHF/uX03K1Tzzbxd2AK6tTPMNvGF/QNtJjySgi8mRiBUc67Z7L2YR+NhJv/HyeAJWDaSURlFMYMFNn8CbcTNWuvaZrklVlGSUWBirSk5yeLluuxliqx9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=d8M/HeC8; arc=none smtp.client-ip=68.232.154.123
+	 Content-Type:MIME-Version; b=o7wRA51kY09p0F+Vh2nlbd56gbf8XVM2I0BA0nYJnWCYeYWPx0chMGZrRFbUp7iFmA7LpN0qXnXgbNXWdNnTeJyCGsXPfuf0DTcr9A5YCfK+HsdaeOGeS/+rBnwZjKEVWzb33ya/e5J24eZ45ABGgcON9GZy1aYFFUFq0qZpQPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=oGVUk05U; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="d8M/HeC8"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="oGVUk05U"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1782468450; x=1814004450;
+  t=1782469012; x=1814005012;
   h=message-id:subject:from:to:cc:date:in-reply-to:
    references:content-transfer-encoding:mime-version;
-  bh=mWD9mCGrzZWHZ7x0PPyvacdrsovHQpw623DcM+HA8P0=;
-  b=d8M/HeC8C9HRycqeqtFVHAwBo/Q2lQu5y/Riou5fjyy+3VMa3lMk0Jjc
-   LizIVutdNInHShpq7wWlugQ8y8EuUKnEdrwC/wGP8kCeEN4b54wudV9Rf
-   BGZOMU8k1D8cwcminkBKrebCSyw9GYs5EU9+Ju5Tvy43F4ouFr1+Hajb/
-   v5DMmce9FNJHldVFQN0Z61sus0wMyqkWLC7vvEdzr7GYyHM+RryBY0MqW
-   qSlEpg2E4nctALkCBJ/v5LqV7BWL4S/fqvAAhjl2voBuA2biLF0nthf4v
-   BB7DHitNpIoHyxwuDt6Ct+9VQHAT8ldpuuUro+rxoxTAO8UCvnY5x6/hp
-   w==;
-X-CSE-ConnectionGUID: KlKLWQ5ZT9mmykJiUVRU5w==
-X-CSE-MsgGUID: SxoojhgbT/G54j0UDE7HWw==
+  bh=zNOQKVs7mFtzvW7ZL9QiUwGBwaYNwddOXYQ6SUFj9VE=;
+  b=oGVUk05U8tIeR6MK2vZaJY1QW6nEPQUYMklI8bC/4qRW7Dd07Z577PTG
+   S5TN36DTeZ1JLBwWl/zA1ayZGMK4OOrjmE1aSmHsP0isZW2or8GQzInNP
+   aISU/peC1pCTCTrnalD7E5uI17vJwpmrnYVfO+YH6jJzmL5Rm665XMyWN
+   LtTL11VTh36pkY6ZqUBAXYYSrJGk2sp9Wb9Bp5501sflx4x75CAAAQqM2
+   NyksdOsgOUVyREl8pduwGfY9v1JMFNzSFxgpCbO1K59e2ucgtn0RWaowZ
+   ZUo5pq3zRa7mlRy+WmBr93yneeoerc+oF+Ba8bbHZFDagNueQFMVknIvd
+   g==;
+X-CSE-ConnectionGUID: 8bIlMgSjTJ2lCwvRkPA3WQ==
+X-CSE-MsgGUID: 8LxoRXNIQeaKlQiHcqlfEw==
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="60080065"
+   d="scan'208";a="60080306"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Jun 2026 03:07:29 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Jun 2026 03:16:51 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Fri, 26 Jun 2026 03:07:28 -0700
+ 15.1.2507.58; Fri, 26 Jun 2026 03:16:51 -0700
 Received: from DEN-DL-M77643.microsemi.net (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.58 via Frontend Transport; Fri, 26 Jun 2026 03:07:25 -0700
-Message-ID: <fc2d818282656906dc264f286c4a10c24f77f1d7.camel@microchip.com>
-Subject: Re: [PATCH net-next 1/9] net: microchip: vcap: fix rule move for
- rules of coprime size
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.58 via Frontend Transport; Fri, 26 Jun 2026 03:16:48 -0700
+Message-ID: <ae037bec765ab2f660097edd61f02ec4d969098f.camel@microchip.com>
+Subject: Re: [PATCH net-next 6/9] net: sparx5: vcap: add lpm vcap
+ implementation
 From: Jens Emil Schulz Ostergaard <jensemil.schulzostergaard@microchip.com>
 To: Jakub Kicinski <kuba@kernel.org>
 CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
@@ -54,10 +54,10 @@ CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
 	<Steen.Hegelund@microchip.com>, <kees@kernel.org>, <gustavoars@kernel.org>,
 	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-hardening@vger.kernel.org>
-Date: Fri, 26 Jun 2026 12:07:25 +0200
-In-Reply-To: <20260615233845.1042219-1-kuba@kernel.org>
-References: <20260612-sparx5_l3_routing-v1-1-fc3c10160f49@microchip.com>
-	 <20260615233845.1042219-1-kuba@kernel.org>
+Date: Fri, 26 Jun 2026 12:16:48 +0200
+In-Reply-To: <20260615233849.1042290-1-kuba@kernel.org>
+References: <20260612-sparx5_l3_routing-v1-6-fc3c10160f49@microchip.com>
+	 <20260615233849.1042290-1-kuba@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4-0ubuntu2.1 
@@ -75,155 +75,81 @@ e content is safe
 > This is an AI-generated review of your patch. The human sending this
 > email has considered the AI review valid, or at least plausible.
 > ---
-> Subject: net: microchip: vcap: fix rule move for rules of coprime size
+> net: sparx5: vcap: add lpm vcap implementation
 >=20
-> This patch addresses a discrepancy in how software and hardware move rule
-> addresses on insert and delete for the LPM VCAP. It introduces a uniform
-> offset computation aligned to the least common multiple of all rule sizes
-> in a block. This ensures that hardware and software representations remai=
-n
-> synchronized and all rules land on correctly aligned addresses.
+> Add the implementation for the LPM VCAP for lan969x and sparx5. The LPM
+> VCAP has a static keyset configuration, and a single lookup dedicated to
+> LPM, so this is straight forward, and many functions can use existing
+> functionality.
 >=20
-> > diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api.c b/drivers/n=
-et/ethernet/microchip/vcap/vcap_api.c
-> > index 0fdb5e363badc..6946fd7384581 100644
-> > --- a/drivers/net/ethernet/microchip/vcap/vcap_api.c
-> > +++ b/drivers/net/ethernet/microchip/vcap/vcap_api.c
->=20
-> [ ... ]
->=20
-> > @@ -2275,8 +2336,7 @@ int vcap_add_rule(struct vcap_rule *rule)
-> >                      __func__, __LINE__, ret);
-> >               goto out;
+> > diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c b=
+/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c
+> > index 95b93e46a41dc..e25e759c24f60 100644
+> > --- a/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c
+> > +++ b/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c
+> > @@ -1083,6 +1146,46 @@ static void sparx5_vcap_es2_cache_write(struct s=
+parx5 *sparx5,
 > >       }
-> > -     if (move.count > 0)
-> > -             vcap_move_rules(ri, &move);
-> > +     vcap_move_rules(ri, &move);
-> >=20
-> >       /* Set the counter to zero */
-> >       ret =3D vcap_write_counter(ri, &ctr);
->=20
-> [Severity: High]
-> This is a pre-existing issue, but does vcap_add_rule() leak the newly
-> duplicated rule if operations like vcap_write_counter() or
-> vcap_write_rule() fail later on?
->=20
-> If a failure occurs, the code takes the goto out path:
->=20
-> vcap_add_rule() {
->     ...
->     ret =3D vcap_write_rule(ri);
->     if (ret) {
->         pr_err("%s:%d: rule write error: %d\n", __func__, __LINE__, ret);
->         goto out;
->     }
-> out:
->     mutex_unlock(&ri->admin->lock);
->     return ret;
-> }
->=20
-> This seems to exit without reverting the earlier list insertions and
-> hardware moves.
->=20
-> Could this leave the software and hardware states permanently inconsisten=
-t
-> and leak the newly duplicated rule?
->=20
-
-I think this is latent, and not actually reachable by current callers.
-
-1. vcap_write_counter always returns 0
-2. vcap_encode_rule can not error if vcap_val_rule is called before vcap_ad=
-d_rule
-3. vcap_write_rule can not error if vcap_val_rule is called before vcap_add=
-_rule
-
-So I propose this is fixed in seperate series.
-
-> [ ... ]
->=20
-> > @@ -2488,59 +2548,52 @@ int vcap_mod_rule(struct vcap_rule *rule)
 > >  }
-> >  EXPORT_SYMBOL_GPL(vcap_mod_rule);
+> >=20
+> > +static void sparx5_vcap_lpm_cache_write(struct sparx5 *sparx5,
+> > +                                     struct vcap_admin *admin,
+> > +                                     enum vcap_selection sel,
+> > +                                     u32 start,
+> > +                                     u32 count)
+> > +{
+> > +     u32 *keystr, *mskstr, *actstr;
+> > +     int idx;
+> > +
+> > +     keystr =3D &admin->cache.keystream[start];
+> > +     mskstr =3D &admin->cache.maskstream[start];
+> > +     actstr =3D &admin->cache.actionstream[start];
+> > +
+> > +     switch (sel) {
+> > +     case VCAP_SEL_ENTRY:
+> > +             for (idx =3D 0; idx < count; ++idx) {
+> > +                     /* Avoid 'match-off' by setting value & mask */
+> > +                     spx5_wr(keystr[idx] & mskstr[idx], sparx5,
+> > +                             VCAP_SUPER_VCAP_ENTRY_DAT(idx));
 >=20
 > [Severity: High]
-> This isn't a bug introduced by this patch, but does vcap_mod_rule() disca=
-rd
-> the active software rule pointer and overwrite hardware with stale addres=
-ses?
+> Are concurrent writes to the shared VCAP_SUPER_VCAP_ENTRY_DAT registers
+> safe here without a global hardware lock across the different VCAP types?
 >=20
-> Looking at vcap_mod_rule(), the function validates the rule using
-> vcap_get_locked_rule() but ignores the returned pointer:
+> It looks like IS0 and IS2 rules are updated via vcap_add_rule() under the
+> rtnl_lock(). However, the LPM rules are updated under the
+> sparx5->router->lock inside a workqueue.
 >=20
-> vcap_mod_rule(struct vcap_rule *rule) {
->     struct vcap_rule_internal *ri =3D to_intrule(rule);
->     ...
->     if (!vcap_get_locked_rule(ri->vctrl, ri->data.id))
->         return -ENOENT;
->     ...
->     err =3D vcap_encode_rule(ri);
->     if (err)
->         goto out;
->=20
->     err =3D vcap_write_rule(ri);
-> }
->=20
-> Because the function continues to use the caller provided copy ri, it
-> doesn't see updates to the real rule in the admin->rules list.
->=20
-> If the real rule's hardware address was previously shifted due to inserti=
-ons
-> or deletions, could writing to the stale address in ri->addr corrupt othe=
-r
-> rules in the hardware VCAP?
+> Since both execution paths share the Super VCAP hardware block, could
+> concurrent updates from TC (IS0/IS2) and routing (LPM) race on these shar=
+ed
+> cache registers, and also on VCAP_SUPER_CTRL in sparx5_vcap_super_update(=
+),
+> garbling the hardware command and corrupting the cache memory?
 >=20
 
-This is also true but latent again. To trigger this we would need concurren=
-cy
-against the same vcap instance. Before this series vcap_mod_rule was only
-called under rtnl. This series introduces a call outside rtnl, but the new =
-LPM VCAP
-is not usable by tc only the routing module, which serializes everything un=
-der
-one mutex.
+Very nice catch, I missed this. This is even reachable before this series
+because the debugfs dump also uses these registers, and runs outside of
+rtnl.
 
-So I think this should be fixed in a seperate series.
+I will send a fix to net which replaces the per instance locks with a singl=
+e
+vcap_control global mutex.
 
+> > +                     spx5_wr(~mskstr[idx], sparx5,
+> > +                             VCAP_SUPER_VCAP_MASK_DAT(idx));
+> > +             }
+> > +             break;
+>=20
 > [ ... ]
 >=20
-> One other pre-existing issue noticed while reviewing this subsystem:
->=20
-> [Severity: High]
-> This is a pre-existing issue, but is it safe to iterate over the admin->r=
-ules
-> list across different VCAP instances without acquiring admin->lock for
-> each instance?
->=20
-> In vcap_rule_exists():
->=20
-> static bool vcap_rule_exists(struct vcap_control *vctrl, u32 id) {
->     ...
->     list_for_each_entry(admin, &vctrl->list, list)
->         list_for_each_entry(ri, &admin->rules, list)
->             if (ri->data.id =3D=3D id)
->                 return true;
->     return false;
-> }
->=20
-> If another thread is concurrently inserting or deleting a rule on another
-> VCAP instance while holding that instance's lock, could this unprotected
-> concurrent access encounter a data race and dereference a poisoned pointe=
-r?
-
-Yes this becomes reachable with this series, due to calls outside rtnl.
-It is a symptom of a wider issue with the per instance locking in the VCAP
-api. Sashiko found another existing bug with the shared SUPER vcap register=
-s
-also caused by this, and that one is reachable in mainline, so I will send =
-a
-fix to net for the vcap locking which will also fix this problem, then send
-v2 once that is settled.
-
-> --
-> pw-bot: cr
+> > @@ -1379,6 +1523,7 @@ static void sparx5_vcap_update(struct net_device =
+*ndev,
+> >       struct sparx5 *sparx5 =3D port->sparx5;
+> >=20
+> >       switch (admin->vtype) {
+> > +     case VCAP_TYPE_LPM:
+> >       case VCAP_TYPE_IS0:
+> >       case VCAP_TYPE_IS2:
+> >               sparx5_vcap_super_update(sparx5, cmd, sel, addr);
 
