@@ -1,133 +1,229 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F722F8EBC
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Jun 2026 08:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB333EB0ED;
+	Fri, 26 Jun 2026 10:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782463428; cv=none; b=ik1XzW8s40vl4tGceOurLeJVr+1LGQS/qW4Vec/5TxFFpB1kHn1KRLRwBkqqlNu4wEIT5nQar450KXnPViVCT2fe4iF/a+TA+5J1JgnMlqtMDy8buXxkOfs9no/DAe5codEuiUsP6UHEEOf0pSOjtsqDFoFSQn8MYvrmkhDXyuo=
+	t=1782468451; cv=none; b=uHfmWIrzy5zKF8sYUK3sFNuUPgYsNZmeBWT7RA2AeLHjzu6fTFGU5lLCGE0mWN+bpFEgRPKkaZrB5QjnmlqYjAerXlmEH0397tqrNalxrM5Va+WHY/5gMgTLxVzzEoJaQZ38x1voGBjHzVXr8H8//G6Kisjxp1s+va5CiDPF3Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782463428; c=relaxed/simple;
-	bh=gi6cjj4yVrM928zwD15uDmvPXd6Clwc+js6B3393dJE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XnXx7mu/0IJCpsrQYhUZfqxxbfsmkYs8JJvcS9WOmMqLV6+5bFN5OL0lugHU50KJgzoUTCjzX7pK09NnvxVqpaL74uLwhkyNVHuayVQSg/cHhjZ5/M6yhSAyj9NaMn3hcK8tzhBKFswckaPTGAYcuDJrnQNx87erMHFt1tb8PqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H1nW048o; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782468451; c=relaxed/simple;
+	bh=mWD9mCGrzZWHZ7x0PPyvacdrsovHQpw623DcM+HA8P0=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=d0AuBul7nl1kpEw6QPLcjQQXUvS/t5++FtAZ8dgT637n7PfpqoBqCbHHF/uX03K1Tzzbxd2AK6tTPMNvGF/QNtJjySgi8mRiBUc67Z7L2YR+NhJv/HyeAJWDaSURlFMYMFNn8CbcTNWuvaZrklVlGSUWBirSk5yeLluuxliqx9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=d8M/HeC8; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1nW048o"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-490bc6a7958so13243675e9.1
-        for <linux-hardening@vger.kernel.org>; Fri, 26 Jun 2026 01:43:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782463425; x=1783068225; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RzRs5rqLLtXVGsPkhyCwyE08g4chaY0AjMl0jB56qQo=;
-        b=H1nW048oTChxfiAu/iy1Xc0skWP75+a5K0NuycSqJ7BsXHX1kkbi1YPw0TnHUlN8OM
-         1bwRnG7+rl395MsMc+okYKV+JxqayqrKIgptFS+WeFQvDRAz7E90GPLmL6FePxyeSj8L
-         4y/F6CiUmwZx1ckkwTi+OBSwmzp+tnE9QXS/26cV5yWs3L8lIPy7BBdF32kRk65eOLAr
-         I4ZW3uO8D19qP2NEmdNeLL0gIsf4HqydDbR003WIM+kLwMwtuGtccr5XhOLBdajWgnNL
-         CZiG934ivNicAbe5OSTQ2VDiISH00exjK/I+Z9jQnfI2FdylfbZV12hnAuQKwxXR7Qr3
-         AjKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782463425; x=1783068225;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RzRs5rqLLtXVGsPkhyCwyE08g4chaY0AjMl0jB56qQo=;
-        b=OFtSj0061ysCgLaDJ1c5E+Bk7rZFmlA8h6GUxIDdyfcjn2WrMzqueY+sDJLqiELODf
-         mlpBykPM9EcoKMOk4r3dlTWrmm8GShlsJhkGzJ99Wy4qV38hyA+YoqDnpj9rd0ipQ2c9
-         rHTPj5VowYMVak0zkcAaDA/Trkl1vIROOk3U3PTF29RypDZPbdCNzY4JYQvZHI0/DTyl
-         yNJKBYvgsZYnQHLb6QxQ5Ya3mlazruh1vzqhWeF+Z1n9LiOVF0dA7HZjkyKpp4ZPeWLR
-         tr7DgyDM6hPw4U8iTQzBAM5rreKDuncpXSgujxa/bMUy4aAziE4JT/FRrLuvgQp4TUbq
-         U2jw==
-X-Forwarded-Encrypted: i=1; AFNElJ+1QntU39Gv8cpJ2jLzpTHZW5O/TXNDiRHyDO6VkA86OYzF+FLK3RwphKQZtrpzdHKB7CzI7CrWC8JAz/kdvww=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3I/pUiRJeqQzDZCjLZQfGzjdKsYTYfUG9s0ovmfUznRM9x782
-	vNOk4+NrFN/V8rSL+w8VsJaVlNEgsw51c90rPeKV3pLYZrjzgJUu0Pe7
-X-Gm-Gg: AfdE7cmd2OPsGA9FB7gxU1qlw0J0tlrHCpFk9x1LQIsleS7RmwA4lve8C5PtMJs2a85
-	cv+bCK392LQn9dJkgyHsNL4/ArWL7YhGQ6TyJwnut/G2py4WtrtgGA0aUfvXx6hpXo4oIQ7oKDJ
-	3e9DVFqzLnmyS/ILnYYstZ2LxeVI2PD4aqmrNg5eC6zENck0ZGBTyVfVxMQ8ByIc1N4CTDOTMKN
-	g9ctdgwFSaYMdMPXigIEoLLQWTbHkBrhxlbZJc+4T8EiheyzE1ZHmUxbKtUd5dWNYmzjGmQBim9
-	OBoi/DyTYMw5Ue/lj20J5zqtxb/Pn2BLcc/5FQHhUD/Z/329V2BWdyiisKeXv7MWBje+MwyDyIu
-	TNCVJ3iS1AZaZE4DIXr9tl3Dx470I+ux2eOte3dnwDJuDYHw4TOjALBsmt99jMhM8h3oTgqRr9G
-	wuRatjbmhadeu3k1E+ggbvE+SEhwX0IbrZTdUD7rfecLWK+bD412I5bks79YCL2/o6OGiGew==
-X-Received: by 2002:a05:600c:540f:b0:492:6f5c:fd8c with SMTP id 5b1f17b1804b1-4926f5d0214mr1724275e9.15.1782463424661;
-        Fri, 26 Jun 2026 01:43:44 -0700 (PDT)
-Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4926c278ab2sm23257135e9.1.2026.06.26.01.43.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2026 01:43:44 -0700 (PDT)
-From: David Laight <david.laight.linux@gmail.com>
-To: Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org
-Cc: Arnd Bergmann <arnd@kernel.org>,
-	Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai@fnnas.com>,
-	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH v2 next] drivers/md/md: Use bounded strings ops when setting disk->disk_name
-Date: Fri, 26 Jun 2026 09:43:34 +0100
-Message-Id: <20260626084334.3012-1-david.laight.linux@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="d8M/HeC8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1782468450; x=1814004450;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=mWD9mCGrzZWHZ7x0PPyvacdrsovHQpw623DcM+HA8P0=;
+  b=d8M/HeC8C9HRycqeqtFVHAwBo/Q2lQu5y/Riou5fjyy+3VMa3lMk0Jjc
+   LizIVutdNInHShpq7wWlugQ8y8EuUKnEdrwC/wGP8kCeEN4b54wudV9Rf
+   BGZOMU8k1D8cwcminkBKrebCSyw9GYs5EU9+Ju5Tvy43F4ouFr1+Hajb/
+   v5DMmce9FNJHldVFQN0Z61sus0wMyqkWLC7vvEdzr7GYyHM+RryBY0MqW
+   qSlEpg2E4nctALkCBJ/v5LqV7BWL4S/fqvAAhjl2voBuA2biLF0nthf4v
+   BB7DHitNpIoHyxwuDt6Ct+9VQHAT8ldpuuUro+rxoxTAO8UCvnY5x6/hp
+   w==;
+X-CSE-ConnectionGUID: KlKLWQ5ZT9mmykJiUVRU5w==
+X-CSE-MsgGUID: SxoojhgbT/G54j0UDE7HWw==
+X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
+   d="scan'208";a="60080065"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Jun 2026 03:07:29 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.58; Fri, 26 Jun 2026 03:07:28 -0700
+Received: from DEN-DL-M77643.microsemi.net (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.58 via Frontend Transport; Fri, 26 Jun 2026 03:07:25 -0700
+Message-ID: <fc2d818282656906dc264f286c4a10c24f77f1d7.camel@microchip.com>
+Subject: Re: [PATCH net-next 1/9] net: microchip: vcap: fix rule move for
+ rules of coprime size
+From: Jens Emil Schulz Ostergaard <jensemil.schulzostergaard@microchip.com>
+To: Jakub Kicinski <kuba@kernel.org>
+CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<pabeni@redhat.com>, <daniel.machon@microchip.com>,
+	<Steen.Hegelund@microchip.com>, <kees@kernel.org>, <gustavoars@kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-hardening@vger.kernel.org>
+Date: Fri, 26 Jun 2026 12:07:25 +0200
+In-Reply-To: <20260615233845.1042219-1-kuba@kernel.org>
+References: <20260612-sparx5_l3_routing-v1-1-fc3c10160f49@microchip.com>
+	 <20260615233845.1042219-1-kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2.1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Replace strcpy() with strscpy() and sprintf() with snprintf() for safety.
+On Mon, 2026-06-15 at 16:38 -0700, Jakub Kicinski wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
+e content is safe
+>=20
+> This is an AI-generated review of your patch. The human sending this
+> email has considered the AI review valid, or at least plausible.
+> ---
+> Subject: net: microchip: vcap: fix rule move for rules of coprime size
+>=20
+> This patch addresses a discrepancy in how software and hardware move rule
+> addresses on insert and delete for the LPM VCAP. It introduces a uniform
+> offset computation aligned to the least common multiple of all rule sizes
+> in a block. This ensures that hardware and software representations remai=
+n
+> synchronized and all rules land on correctly aligned addresses.
+>=20
+> > diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api.c b/drivers/n=
+et/ethernet/microchip/vcap/vcap_api.c
+> > index 0fdb5e363badc..6946fd7384581 100644
+> > --- a/drivers/net/ethernet/microchip/vcap/vcap_api.c
+> > +++ b/drivers/net/ethernet/microchip/vcap/vcap_api.c
+>=20
+> [ ... ]
+>=20
+> > @@ -2275,8 +2336,7 @@ int vcap_add_rule(struct vcap_rule *rule)
+> >                      __func__, __LINE__, ret);
+> >               goto out;
+> >       }
+> > -     if (move.count > 0)
+> > -             vcap_move_rules(ri, &move);
+> > +     vcap_move_rules(ri, &move);
+> >=20
+> >       /* Set the counter to zero */
+> >       ret =3D vcap_write_counter(ri, &ctr);
+>=20
+> [Severity: High]
+> This is a pre-existing issue, but does vcap_add_rule() leak the newly
+> duplicated rule if operations like vcap_write_counter() or
+> vcap_write_rule() fail later on?
+>=20
+> If a failure occurs, the code takes the goto out path:
+>=20
+> vcap_add_rule() {
+>     ...
+>     ret =3D vcap_write_rule(ri);
+>     if (ret) {
+>         pr_err("%s:%d: rule write error: %d\n", __func__, __LINE__, ret);
+>         goto out;
+>     }
+> out:
+>     mutex_unlock(&ri->admin->lock);
+>     return ret;
+> }
+>=20
+> This seems to exit without reverting the earlier list insertions and
+> hardware moves.
+>=20
+> Could this leave the software and hardware states permanently inconsisten=
+t
+> and leak the newly duplicated rule?
+>=20
 
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
----
+I think this is latent, and not actually reachable by current callers.
 
-v2: Make sizeof look like a function call for consistency.
+1. vcap_write_counter always returns 0
+2. vcap_encode_rule can not error if vcap_val_rule is called before vcap_ad=
+d_rule
+3. vcap_write_rule can not error if vcap_val_rule is called before vcap_add=
+_rule
 
-This is one of a group of patches that remove potentially unbounded
-strcpy() calls.
+So I propose this is fixed in seperate series.
 
-They are mostly replaced by strscpy() or, when strlen() has just been
-called, with memcpy() (usually including the '\0').
+> [ ... ]
+>=20
+> > @@ -2488,59 +2548,52 @@ int vcap_mod_rule(struct vcap_rule *rule)
+> >  }
+> >  EXPORT_SYMBOL_GPL(vcap_mod_rule);
+>=20
+> [Severity: High]
+> This isn't a bug introduced by this patch, but does vcap_mod_rule() disca=
+rd
+> the active software rule pointer and overwrite hardware with stale addres=
+ses?
+>=20
+> Looking at vcap_mod_rule(), the function validates the rule using
+> vcap_get_locked_rule() but ignores the returned pointer:
+>=20
+> vcap_mod_rule(struct vcap_rule *rule) {
+>     struct vcap_rule_internal *ri =3D to_intrule(rule);
+>     ...
+>     if (!vcap_get_locked_rule(ri->vctrl, ri->data.id))
+>         return -ENOENT;
+>     ...
+>     err =3D vcap_encode_rule(ri);
+>     if (err)
+>         goto out;
+>=20
+>     err =3D vcap_write_rule(ri);
+> }
+>=20
+> Because the function continues to use the caller provided copy ri, it
+> doesn't see updates to the real rule in the admin->rules list.
+>=20
+> If the real rule's hardware address was previously shifted due to inserti=
+ons
+> or deletions, could writing to the stale address in ri->addr corrupt othe=
+r
+> rules in the hardware VCAP?
+>=20
 
-Calls with copy string literals into arrays are left unchanged.
-They are safe and easily detected as such.
+This is also true but latent again. To trigger this we would need concurren=
+cy
+against the same vcap instance. Before this series vcap_mod_rule was only
+called under rtnl. This series introduces a call outside rtnl, but the new =
+LPM VCAP
+is not usable by tc only the routing module, which serializes everything un=
+der
+one mutex.
 
-The changes were made by getting the compiler to detect the calls and
-then fixing the code by hand.
+So I think this should be fixed in a seperate series.
 
-Note that all the changes are only compile tested.
+> [ ... ]
+>=20
+> One other pre-existing issue noticed while reviewing this subsystem:
+>=20
+> [Severity: High]
+> This is a pre-existing issue, but is it safe to iterate over the admin->r=
+ules
+> list across different VCAP instances without acquiring admin->lock for
+> each instance?
+>=20
+> In vcap_rule_exists():
+>=20
+> static bool vcap_rule_exists(struct vcap_control *vctrl, u32 id) {
+>     ...
+>     list_for_each_entry(admin, &vctrl->list, list)
+>         list_for_each_entry(ri, &admin->rules, list)
+>             if (ri->data.id =3D=3D id)
+>                 return true;
+>     return false;
+> }
+>=20
+> If another thread is concurrently inserting or deleting a rule on another
+> VCAP instance while holding that instance's lock, could this unprotected
+> concurrent access encounter a data race and dereference a poisoned pointe=
+r?
 
-Some Makefiles were changed to allow files to contain strcpy().
-As well as 'difficult to fix' files, this included 'show' functions
-as they really need to use sysfs_emit() or seq_printf().
+Yes this becomes reachable with this series, due to calls outside rtnl.
+It is a symptom of a wider issue with the per instance locking in the VCAP
+api. Sashiko found another existing bug with the shared SUPER vcap register=
+s
+also caused by this, and that one is reachable in mainline, so I will send =
+a
+fix to net for the vcap locking which will also fix this problem, then send
+v2 once that is settled.
 
-All the patches are being sent individually to avoid very long cc lists.
-Apologies for the terse commit messages and likely unexpected tags.
-(There are about 100 patches in total.)
-
- drivers/md/md.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 8b568eee8743..4b659d10fa4d 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -6346,11 +6346,11 @@ struct mddev *md_alloc(dev_t dev, char *name)
- 	disk->first_minor = unit << shift;
- 	disk->minors = 1 << shift;
- 	if (name)
--		strcpy(disk->disk_name, name);
-+		strscpy(disk->disk_name, name);
- 	else if (partitioned)
--		sprintf(disk->disk_name, "md_d%d", unit);
-+		snprintf(disk->disk_name, sizeof(disk->disk_name), "md_d%d", unit);
- 	else
--		sprintf(disk->disk_name, "md%d", unit);
-+		snprintf(disk->disk_name, sizeof (disk->disk_name), "md%d", unit);
- 	disk->fops = &md_fops;
- 	disk->private_data = mddev;
- 
--- 
-2.39.5
+> --
+> pw-bot: cr
 
