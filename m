@@ -1,155 +1,187 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from flow-a1-smtp.messagingengine.com (flow-a1-smtp.messagingengine.com [103.168.172.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791343EA967;
-	Fri, 26 Jun 2026 10:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3FD197A7D;
+	Fri, 26 Jun 2026 15:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782469013; cv=none; b=ZvU+6zy/qtTI+6Y8XM8qjDcaXv8bVPUvD5GZRTYHm6IJ9MMTnSC9qHdMvsWLWrdBsiLdK/54/Fg3m4trQdoiz0EcjJB4LOGYRqEuZDl7+a0+GTXAm/s18Yz0Gg7+aT+j7vzoHKO1TwGIfvcvWGYs2JVeFyaHhWITEHMFt8zx4Ro=
+	t=1782489437; cv=none; b=N5rdYQOJ3jpbENMHyeEzLBYZIRnZlJgbe3wBNyZGKts+I5cBYtty7rQzGG7Fh4drcv7l/kiRVAgqiL2OeyKkcW42bklBPULVvPEGzhQHkSjO0lEXFxLGQW2bTrOC+g2+dkmO3ste1lGFL5T2XWyTleuKIrOWvUeTX6rZTYGOfEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782469013; c=relaxed/simple;
-	bh=zNOQKVs7mFtzvW7ZL9QiUwGBwaYNwddOXYQ6SUFj9VE=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=o7wRA51kY09p0F+Vh2nlbd56gbf8XVM2I0BA0nYJnWCYeYWPx0chMGZrRFbUp7iFmA7LpN0qXnXgbNXWdNnTeJyCGsXPfuf0DTcr9A5YCfK+HsdaeOGeS/+rBnwZjKEVWzb33ya/e5J24eZ45ABGgcON9GZy1aYFFUFq0qZpQPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=oGVUk05U; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1782489437; c=relaxed/simple;
+	bh=yPAlb8Ui5Zj40cwMQLJtp4HZS8TEkFZLEgfWTysqu8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=HtpbleuUWy5wOTD5Sd7u9uK/DBoJ2lZfZvcZU+45sxfgibKM4whQnTaYCsz3hnBDqJHrb9pdR2s3yjbCyhbx3vjLqMR5M+HpCjD/GNPdEUrBBO3NEOYLtuWcVHbnOBDAqYcZn3WZsy/7fFgSdqbIJ2+tgFj2i+RXT/f5JC8m3oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=Tbv5DrPF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XQVmppr/; arc=none smtp.client-ip=103.168.172.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="oGVUk05U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1782469012; x=1814005012;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=zNOQKVs7mFtzvW7ZL9QiUwGBwaYNwddOXYQ6SUFj9VE=;
-  b=oGVUk05U8tIeR6MK2vZaJY1QW6nEPQUYMklI8bC/4qRW7Dd07Z577PTG
-   S5TN36DTeZ1JLBwWl/zA1ayZGMK4OOrjmE1aSmHsP0isZW2or8GQzInNP
-   aISU/peC1pCTCTrnalD7E5uI17vJwpmrnYVfO+YH6jJzmL5Rm665XMyWN
-   LtTL11VTh36pkY6ZqUBAXYYSrJGk2sp9Wb9Bp5501sflx4x75CAAAQqM2
-   NyksdOsgOUVyREl8pduwGfY9v1JMFNzSFxgpCbO1K59e2ucgtn0RWaowZ
-   ZUo5pq3zRa7mlRy+WmBr93yneeoerc+oF+Ba8bbHZFDagNueQFMVknIvd
-   g==;
-X-CSE-ConnectionGUID: 8bIlMgSjTJ2lCwvRkPA3WQ==
-X-CSE-MsgGUID: 8LxoRXNIQeaKlQiHcqlfEw==
-X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="60080306"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Jun 2026 03:16:51 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Fri, 26 Jun 2026 03:16:51 -0700
-Received: from DEN-DL-M77643.microsemi.net (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.58 via Frontend Transport; Fri, 26 Jun 2026 03:16:48 -0700
-Message-ID: <ae037bec765ab2f660097edd61f02ec4d969098f.camel@microchip.com>
-Subject: Re: [PATCH net-next 6/9] net: sparx5: vcap: add lpm vcap
- implementation
-From: Jens Emil Schulz Ostergaard <jensemil.schulzostergaard@microchip.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
-	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<pabeni@redhat.com>, <daniel.machon@microchip.com>,
-	<Steen.Hegelund@microchip.com>, <kees@kernel.org>, <gustavoars@kernel.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-hardening@vger.kernel.org>
-Date: Fri, 26 Jun 2026 12:16:48 +0200
-In-Reply-To: <20260615233849.1042290-1-kuba@kernel.org>
-References: <20260612-sparx5_l3_routing-v1-6-fc3c10160f49@microchip.com>
-	 <20260615233849.1042290-1-kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2.1 
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="Tbv5DrPF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XQVmppr/"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailflow.phl.internal (Postfix) with ESMTP id 133F61380C23;
+	Fri, 26 Jun 2026 11:57:14 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Fri, 26 Jun 2026 11:57:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm1;
+	 t=1782489434; x=1782493034; bh=opuKrtUE/2bKi1cyeB0bUYvy6wt0jZot
+	m+Li6EvISX8=; b=Tbv5DrPFTK5L6KyGw6Uf458OCMKIlGKz+0/sHQVtzIo/PNkc
+	SfGhYg6YbMY+aBq2zk6K21x54JyCIy96VmyvwgDyvSAtfFIjRHgdADQv9htCcrkp
+	YWadim9X9XIBysmil9yJ9dGwRXXFGPxvcAeYziufBCejreQOwP/DCVQATbvYFdgS
+	5Mgznf0WvIk2iDmihTp5mMue529jD424Aza01OXudi2U+JWwgNxBwhhBnxeKGF7m
+	11sDZ9G1oeFRm8u671/gMv/RIHBBa3zHZ5daCs3DdVRB0wba/xH6lW0Y/HCXocfW
+	hIFodonuGWh/LnOKcNmlcV7G8Z4YHRJQ1Wtp9g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782489434; x=
+	1782493034; bh=opuKrtUE/2bKi1cyeB0bUYvy6wt0jZotm+Li6EvISX8=; b=X
+	QVmppr/XtLwZfoAgZr82tr/o7CuthCYmtgQeS8a21ySsVGeuTPsHuOtVHz+mZYrJ
+	N58T1PGosxwKN9/PNtXlhUrik2jBcrFUw33Nqbaq4UqEfcBffwsfCoqm/lFPqEij
+	ieWaNpHqVeSTCB6drP62kj65FZ3d/9FhIMlsAzmvCazjo4afs5CHPpRKaINTRieZ
+	facvoHULcLqfHmugwcr2i6uTQuhT3244aYlGL3EW4f1LMv6m60ypkEM9GL65NCEz
+	upigMC+hJrpaEQ7/2TQvC6k9+rjIxdAQ5hFxvsnvgsqWPvmEg45FUqLwLCrYfxRL
+	ZgGD5m2gNylUweD0Mnsjg==
+X-ME-Sender: <xms:WaE-anvKb_1SG2rjUTis1Ru4TawpPGRA3hqfPPSdTq3-Pgeys_Ijwg>
+    <xme:WaE-ajbXFzsD8bD1QSWrHSiAU9ONNYv9m5HryiQ4gu4nbxR_WoHQCCfqjLZxlueUt
+    ktFtcabFVjxC8zAuOEbfvD1yvuwRbx5tDd7k4-OQYLsmQNg7S8XPg>
+X-ME-Received: <xmr:WaE-apycUdwvOv-esk4OrZNpypJ9mtvuaJHJsNkCZNoet0Rv9bOrcZRFQMs>
+X-ME-Proxy-Cause: dmFkZTGv5wm1aBrGFc5VxFaDJ73BYzDkCyCs7qD2tlEKVNj/3/sm48JJlq/OBszWXCyYZU
+    BwUzsVkrCo9NaYQlMCnzs7mntTbfubZBW8KgdKcASVpKPCOh0sBv7mzzTnLhzJdj+8GjE6
+    WS3Pd96HTL8B8Sndl1WCfVkQJ6c4sweHCRKq8vGIg6CWy3Mt78pdM/X83BUvZPARg67zMT
+    gHRK6nDA3cPBo3rrFuHp7c717MNTkDPWQG4FuuoGrxcuaK+BEhDCORyTuKeLFI6CoNrLC7
+    DEBF2l54X9qYHQddmj1cY35wcvU97YnOR7vs0j2utiCY1XSib0CcHBWDzDzK8YpwbPLiQg
+    4tV4FUldIJNif0CbhaDT+iz56V2VZ/CGv60hq4CVwdlUP+35rnIY6Kn5gHwGUWFDydfVsd
+    qw28ZQ6THpJ07rYAdIkCT+nWrgfX3HxMTsn+5q6ZSEJQSsGQZ4/Xp/LMd9OqSTFloC11Uy
+    mIGN4xj+K+1Rhsz3eaIj4WozOfzAGIOPy6a8ewY4n0DmcCtB/b3SB78PmpIbmez0JUNlgI
+    xd5OlBpoXXsfFdxqCAZKd4aK3+q8G7OIMhKs7+C9rWa+Q0krzmKgwpc1UVXgGEs3A3OK6E
+    IWbRrUIs8upbMX9TaosKhfpFNl45txD5ZZp0b6Y4x0Dq3LJh+l3G0JyzPEHg
+X-ME-Proxy: <xmx:WaE-arjaEcgP4HyDfthKqFh80bkIE6R94shnqjqXE_etPUq8ukh8Vg>
+    <xmx:WaE-allM_1bL8cp9FcurCpVWMS_CSEeCUYxqYScCjSMoyFpvrmMkOQ>
+    <xmx:WaE-ahjmBoheAmthLH_tsxhXABTIE-3KQgtueuBiTkcBgo3eH3UGRA>
+    <xmx:WaE-ap1cflN9oLWH9j5qSIJkiGesuJieU4Ww-DilpZdWc7xLjxFySQ>
+    <xmx:WaE-aiTkzdcWmr2rqNUjP2dNDUMtQbaONxhAM9esHjHGwCyhkBX8UGEH>
+Feedback-ID: ib53e4b78:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 26 Jun 2026 11:57:13 -0400 (EDT)
+Date: Fri, 26 Jun 2026 10:57:10 -0500
+From: Ian Bridges <icb@fastmail.org>
+To: Paul Moore <paul@paul-moore.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Subject: [PATCH v2] selinux: replace strlcat() with seq_buf in
+ selinux_ima_collect_state()
+Message-ID: <aj6hVjECikvYtnED@dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 2026-06-15 at 16:38 -0700, Jakub Kicinski wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
-e content is safe
->=20
-> This is an AI-generated review of your patch. The human sending this
-> email has considered the AI review valid, or at least plausible.
-> ---
-> net: sparx5: vcap: add lpm vcap implementation
->=20
-> Add the implementation for the LPM VCAP for lan969x and sparx5. The LPM
-> VCAP has a static keyset configuration, and a single lookup dedicated to
-> LPM, so this is straight forward, and many functions can use existing
-> functionality.
->=20
-> > diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c b=
-/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c
-> > index 95b93e46a41dc..e25e759c24f60 100644
-> > --- a/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c
-> > +++ b/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c
-> > @@ -1083,6 +1146,46 @@ static void sparx5_vcap_es2_cache_write(struct s=
-parx5 *sparx5,
-> >       }
-> >  }
-> >=20
-> > +static void sparx5_vcap_lpm_cache_write(struct sparx5 *sparx5,
-> > +                                     struct vcap_admin *admin,
-> > +                                     enum vcap_selection sel,
-> > +                                     u32 start,
-> > +                                     u32 count)
-> > +{
-> > +     u32 *keystr, *mskstr, *actstr;
-> > +     int idx;
-> > +
-> > +     keystr =3D &admin->cache.keystream[start];
-> > +     mskstr =3D &admin->cache.maskstream[start];
-> > +     actstr =3D &admin->cache.actionstream[start];
-> > +
-> > +     switch (sel) {
-> > +     case VCAP_SEL_ENTRY:
-> > +             for (idx =3D 0; idx < count; ++idx) {
-> > +                     /* Avoid 'match-off' by setting value & mask */
-> > +                     spx5_wr(keystr[idx] & mskstr[idx], sparx5,
-> > +                             VCAP_SUPER_VCAP_ENTRY_DAT(idx));
->=20
-> [Severity: High]
-> Are concurrent writes to the shared VCAP_SUPER_VCAP_ENTRY_DAT registers
-> safe here without a global hardware lock across the different VCAP types?
->=20
-> It looks like IS0 and IS2 rules are updated via vcap_add_rule() under the
-> rtnl_lock(). However, the LPM rules are updated under the
-> sparx5->router->lock inside a workqueue.
->=20
-> Since both execution paths share the Super VCAP hardware block, could
-> concurrent updates from TC (IS0/IS2) and routing (LPM) race on these shar=
-ed
-> cache registers, and also on VCAP_SUPER_CTRL in sparx5_vcap_super_update(=
-),
-> garbling the hardware command and corrupting the cache memory?
->=20
+In preparation for removing the deprecated strlcat() API[1], replace the
+strscpy()/strlcat() chain in selinux_ima_collect_state() with a struct
+seq_buf, which tracks the write position and remaining space internally.
 
-Very nice catch, I missed this. This is even reachable before this series
-because the debugfs dump also uses these registers, and runs outside of
-rtnl.
+Each field is written with seq_buf_printf() using a "=%d;" format, which
+removes the open-coded "=1;"/"=0;" constants. The seven per-append
+WARN_ON(rc >= buf_len) truncation checks are replaced by a single
+seq_buf_has_overflowed() check after the string is built.
 
-I will send a fix to net which replaces the per instance locks with a singl=
-e
-vcap_control global mutex.
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Signed-off-by: Ian Bridges <icb@fastmail.org>
+---
+Changed in v2: replace the v1 seq_buf_puts() pairs with seq_buf_printf()
+using a "=%d;" format, which drops the open-coded "=1;"/"=0;" constants.
 
-> > +                     spx5_wr(~mskstr[idx], sparx5,
-> > +                             VCAP_SUPER_VCAP_MASK_DAT(idx));
-> > +             }
-> > +             break;
->=20
-> [ ... ]
->=20
-> > @@ -1379,6 +1523,7 @@ static void sparx5_vcap_update(struct net_device =
-*ndev,
-> >       struct sparx5 *sparx5 =3D port->sparx5;
-> >=20
-> >       switch (admin->vtype) {
-> > +     case VCAP_TYPE_LPM:
-> >       case VCAP_TYPE_IS0:
-> >       case VCAP_TYPE_IS2:
-> >               sparx5_vcap_super_update(sparx5, cmd, sel, addr);
+v1: https://lore.kernel.org/all/ajlN94VO7BYNUTAy@dev/
+
+I didn't change the precomputation of the string size. An alternative,
+which is used by other seq_buf callers (e.g. kernel/rcu/refscale.c,
+mm/memcontrol.c), is to drop the precomputation and allocate an oversized
+fixed buffer, relying on the seq_buf overflow check as a backstop. I'm
+happy to rework the patch to adopt that alternative.
+
+ security/selinux/ima.c | 40 +++++++++++++---------------------------
+ 1 file changed, 13 insertions(+), 27 deletions(-)
+
+diff --git a/security/selinux/ima.c b/security/selinux/ima.c
+index aa34da9b0aeb..cb0efa2fc1ad 100644
+--- a/security/selinux/ima.c
++++ b/security/selinux/ima.c
+@@ -9,6 +9,7 @@
+  */
+ #include <linux/vmalloc.h>
+ #include <linux/ima.h>
++#include <linux/seq_buf.h>
+ #include "security.h"
+ #include "ima.h"
+ 
+@@ -20,46 +21,31 @@
+  */
+ static char *selinux_ima_collect_state(void)
+ {
+-	const char *on = "=1;", *off = "=0;";
++	struct seq_buf s;
+ 	char *buf;
+-	int buf_len, len, i, rc;
++	int buf_len, suffix_len, i;
+ 
+ 	buf_len = strlen("initialized=0;enforcing=0;checkreqprot=0;") + 1;
++	suffix_len = strlen("=0;");
+ 
+-	len = strlen(on);
+ 	for (i = 0; i < __POLICYDB_CAP_MAX; i++)
+-		buf_len += strlen(selinux_policycap_names[i]) + len;
++		buf_len += strlen(selinux_policycap_names[i]) + suffix_len;
+ 
+ 	buf = kzalloc(buf_len, GFP_KERNEL);
+ 	if (!buf)
+ 		return NULL;
+ 
+-	rc = strscpy(buf, "initialized", buf_len);
+-	WARN_ON(rc < 0);
++	seq_buf_init(&s, buf, buf_len);
+ 
+-	rc = strlcat(buf, selinux_initialized() ? on : off, buf_len);
+-	WARN_ON(rc >= buf_len);
++	seq_buf_printf(&s, "initialized=%d;enforcing=%d;checkreqprot=%d;",
++		       selinux_initialized(), enforcing_enabled(),
++		       checkreqprot_get());
+ 
+-	rc = strlcat(buf, "enforcing", buf_len);
+-	WARN_ON(rc >= buf_len);
+-
+-	rc = strlcat(buf, enforcing_enabled() ? on : off, buf_len);
+-	WARN_ON(rc >= buf_len);
+-
+-	rc = strlcat(buf, "checkreqprot", buf_len);
+-	WARN_ON(rc >= buf_len);
+-
+-	rc = strlcat(buf, checkreqprot_get() ? on : off, buf_len);
+-	WARN_ON(rc >= buf_len);
+-
+-	for (i = 0; i < __POLICYDB_CAP_MAX; i++) {
+-		rc = strlcat(buf, selinux_policycap_names[i], buf_len);
+-		WARN_ON(rc >= buf_len);
++	for (i = 0; i < __POLICYDB_CAP_MAX; i++)
++		seq_buf_printf(&s, "%s=%d;", selinux_policycap_names[i],
++			       selinux_state.policycap[i]);
+ 
+-		rc = strlcat(buf, selinux_state.policycap[i] ? on : off,
+-			buf_len);
+-		WARN_ON(rc >= buf_len);
+-	}
++	WARN_ON(seq_buf_has_overflowed(&s));
+ 
+ 	return buf;
+ }
+-- 
+2.47.3
 
