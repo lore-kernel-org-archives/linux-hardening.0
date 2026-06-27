@@ -1,139 +1,185 @@
-Received: from flow-b8-smtp.messagingengine.com (flow-b8-smtp.messagingengine.com [202.12.124.143])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F16878F26;
-	Sat, 27 Jun 2026 05:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.143
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F9B229B12
+	for <linux-hardening@vger.kernel.org>; Sat, 27 Jun 2026 21:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782537104; cv=none; b=Pr05YahcNS/AGrcrMfezcwRdPsbAFv3YqM5Eb52762kO/R/6uBujjz/M/OnVsIYocBQzBXBEhRtBMtrTsS7BJ5Fne5caPnOmQW6YjdMhG9RFcnRwHj15Weva7fTbe3T1wUIa7fPhH+4N0qSgWTtoI1aWkDWDwAfMiSl9Ye3V/Ns=
+	t=1782595009; cv=none; b=dvgVAEg27sFXpdfMAiQJbWe64XzB8plMyYrZPfAJwrHCrb9mvomLn8VcicAO/viHCiEOTmU7t+t+FBHBikVcBZVUMOnLZQAxPgU+AQJSywf6EOYazb8k6LNo42xv+0V94CfKxNMkjpU0F4c59lL9rq9bP3nVEgUaSwG/DJRclWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782537104; c=relaxed/simple;
-	bh=/VsB74zwCXVnz/0VFCi/dUI3gIBJbC3fxzQsz0T8RbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=iaKtbEyZQMXuuHASTb4leBJuTqAQFd1k9vuttRpIU4NJrUNzMzowCHCtjQUWNIS65e8jslr50Z6pDrf+XXi1D3YuWqAgea/t3WuR+R+6NgNyk/WQNLK+kWrcFtHBLrqvMqx7dGDCkeZO2qtTvg9jFgdz0QMY9eVnuO+dHKU7m/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=nm9ZQbNf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ieqWb76Z; arc=none smtp.client-ip=202.12.124.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
+	s=arc-20240116; t=1782595009; c=relaxed/simple;
+	bh=3rGpUDw+ddrLG9sPceYY9ObkHQDjG5NTyD2hYg6jTzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sQ7vrXx38EqIcojR6BpAQXANk5QisbqtBct2gRXDs4HdGXCR8k06RFsUc3IdPLRDuf52EaRdwzvKyCG2MEILutGZWuZVQxOqHuftVkaOULpxZ17pgS799wxTNFKOko/riSgcVOg0ApHVCHW24cc/qo/IujBw50j9VQA7SG2jFTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OhMpEmYO; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="nm9ZQbNf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ieqWb76Z"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailflow.stl.internal (Postfix) with ESMTP id 41786130024B;
-	Sat, 27 Jun 2026 01:11:41 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Sat, 27 Jun 2026 01:11:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm1;
-	 t=1782537101; x=1782540701; bh=Yawowe8zx5C7uDvQPKakOCXbHdKhV7R9
-	9P2QeR1rAS8=; b=nm9ZQbNfHNYkv8cdFpySG0htUn3UCNbtS/+tFfURRLH2epJa
-	D8HjhJi2+zQzPPtGTp5nNEMYwskgo9t6QjWspNz9bFEzOJGKndw339qVspvaWXHi
-	l+mH96g+w0VFnrk/jiNulSOqY8tx4OEWBYfqMtQGhBVmMCM+WAgGHiBkRXrbqHfa
-	D1VbAIclGnixLA1v/6S8c4eHEghMxem4SB1dInEVzLcU4BG96MlSKe+fsWXCIFLW
-	bXxVnChg2II4VqLsb98Z5UTXoI5JozlrJGSJlNxNCX4r4iJB4Y109TnZifld51Y/
-	i8fPA+iz7SdXqGV3VYfjGfy91ugfo4Z1KQ2XNg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782537101; x=
-	1782540701; bh=Yawowe8zx5C7uDvQPKakOCXbHdKhV7R99P2QeR1rAS8=; b=i
-	eqWb76Z0YIJk5JqS+Sorj115qkFVnzZkwiEvqjjRMl1AX4+V9Agb9tJliqXVwZ0f
-	ZndsFhvkJ/aqpekwv1SCDyAJqY6QSrrEd1otJfAj0ZYFlCtlC7J4KWG3zLjkXLfU
-	OR3NLClJf/CMfGiBF3IFixmvGtFyKvduUKj9l0x2DTYgSa5loJ6FLePDj/FW4Wbz
-	HwQlx+4NNUY8Lmn3E7v0NPGwrD9Jk00EvLNyH1nAwivKPz0kaTChziS9Nx8Q2ecB
-	jReYP2YwRmFQi2g6+BKsCO4RkyD4YLtLctqej17FHQ4B3JxsnP4kOdS970/FbmDd
-	r91NJ5iPyEWm9JOzX/3Uw==
-X-ME-Sender: <xms:jFs_avHKXgTEIwS8b64GJMLPODF4IKHCf2Tfa3kUtVKbfr048gTTuA>
-    <xme:jFs_alRI2R4TeT1aAvFwTCBGvCud5CcgFqapaCTXObB3tnVpZCWB_wTqPzKTIWB1b
-    -cmdB2NuHbluaSgUBAfmskODSfFRAfjDe_Sj-hpfqigyZzX0nTfuQo>
-X-ME-Received: <xmr:jFs_asuLKDV0IZnHJonUf5NFOsX-Hg0U1Fm_lCcKo61O58dgDRmLO5buFm4>
-X-ME-Proxy-Cause: dmFkZTEEJGas0eal+haqiznubm05y0BHQqqdCWlV5MG4ed30bCnDNmZnYMoGVqATwByXQ6
-    62jw/wpBiAVlhnZdzI8HoTE5bi+hevsp/u9zJ0oU5IglqMHIf8+isdmzspda8CkFRN0L5E
-    RWIIOx+csNFY6hhAFCY1ilJo9VRvWdX7ksW7rcUSTy7enVhf+UqqVtDjkP2AE9NzXuuzPd
-    NYyVzry+AlVHzQyFi7Ion7i/0ez3GQXUe/mfKlbIbvqd6ovxb2QKrh2kSKjpOZ5Vob7ica
-    nVYyrny7nVBo34xbtlnSZUINwmAGdm2SAzfUClMB/O1IBG1k79l2D6swXv+NJBB0SXLNfl
-    1T9Qk/zyIz1rqLoqTyW6afxPNLRwtoXbNv3iFWpvECmWfvCDCtNHnaf8gf9CwHkqCwdTCN
-    ur73CruIY+oA53abIUd4yyljMMzKll6R5R0HvDze0/Ze0MqeIGD3PkJwIaO9dx9mKX9lye
-    c+9BNbWrg4cnT7ZOWcY+bNkhebh5pYjqXSJwL0rcAXK6zBYKttGZJ2Vxjr2zhFtFzKG9Xn
-    2nTm7KTnK4aNBG1WG8IBO/Soinow03DlWUdV+otnK0VxDX/YG82WNeQcsu6Qo6opqSEbmg
-    NpYb0YlP2WVzeffweojx+5ZSd4yHzK3k/Bh1jZNQ5iB9hXhsCGtn07uFQWmw
-X-ME-Proxy: <xmx:jFs_atIocfDxU9qUuiMeMg4i-t6hEubvXDSxixRZjvyBhPcbQTci8Q>
-    <xmx:jFs_ahloNhEcXa_qMI-rbvbCasKi2DUl134z1ZanqEnHqcDS-pNNQw>
-    <xmx:jFs_amI4qr5wtbNR4HoHzqxybSbrjgsIj0A0-do9-dTC-obtGNmatw>
-    <xmx:jFs_au7c73mBp-BAkkO-b7mTWramchj1_rSx8DXrHuxKdDKqV-cqaw>
-    <xmx:jFs_apgmrl4lWEpPjQyoN_N9Ci6b9OXilQnDCWvaJicBN9xuSqSGqtIi>
-Feedback-ID: ib53e4b78:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 27 Jun 2026 01:11:40 -0400 (EDT)
-Date: Sat, 27 Jun 2026 00:11:37 -0500
-From: Ian Bridges <icb@fastmail.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] SUNRPC: Replace strlcat() with snprintf() in
- rpc_sockaddr2uaddr()
-Message-ID: <aj9bie25tpHnz7_G@dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhMpEmYO"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-493a440bc10so2322445e9.1
+        for <linux-hardening@vger.kernel.org>; Sat, 27 Jun 2026 14:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782595006; x=1783199806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s95FZx2QU/TjB5YrTYRCYxYo5MNS6NGrQ65w/N+79gc=;
+        b=OhMpEmYO+A/1GPGrZ+Qmas4EUBsssEKbaynAB+sN/nVUzlVlzAhH3wMPUZOgPgrw74
+         +FwC5zG6rTOaKpovy0oLxDaAlDm9/taG5HPoeRBjHXjSNmCGkbTv6UVB4AD3EGQ3kdzD
+         vtJBCcYnLqb7kt94opUwU8UAusyX9jyKUg9JeMGSDe3S77JmV+fZDOoYbAYddZ68rbsg
+         uWvkekzl/yC/pIIWzPPpiWhscudAIITxDR7ho6Jm6GjkN10M2cWyOi+RzrC6klrW2JYm
+         OgA1fR8Goifx1dvvFKiicgcEqpNamfbPz6eB5jNHUYvi1WtRxiQYIqBDZ/nDxo3aM70P
+         7DCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782595006; x=1783199806;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=s95FZx2QU/TjB5YrTYRCYxYo5MNS6NGrQ65w/N+79gc=;
+        b=jtGZ+aGaFWgWkw4ebQbMhckbZpHsvVZKBaxeSvkMx+VlpjOVOLCJRZQWtQMA8AYgQH
+         AGynNtvEtQ8RmECftYwoV1B7sA48XoPo+LBNuYSkzAmLi6B6XiFS+5C3KqzcvddJShif
+         YYOoiBBkvmUH3t4nrVG2bIdJpxf1f9Zy3j1J3JUP94CBkCSCUhnwlsj20i3p3p6GNEDg
+         v3D89tBIIk5kM56zoH5hY0nXGEv0Co36YBkJGN0gxwVGiO68H+EteiFLr46xFNB5N/gB
+         jIMo6htcw3knPuyqWDOewQtdNtaxpZpWyg2gZ9+0bmpPCgp20gNrPOfhIHUVDp9f1Pyb
+         WZNg==
+X-Forwarded-Encrypted: i=1; AFNElJ/4jYFfvmc2VO1ibG5kbOw4naxlI6XZIn6OUin34jdUipsNmogsXxSlr+n5O72r3p/QC/0vn6uWlmuQ2Ob1IO8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqqMNfidTdUiZTPBRtZygJu3DqWbey4S8/1mj9XSz1J51uBoK+
+	ePLKJC3hXkoV8S4wTFXHijF2pMwbHSqmqltRj5pWgzqXsLd2np35PKdv
+X-Gm-Gg: AfdE7clSNDvDHOj6GCK5XV795yvynAnRpNCfCQRD5QQYZCAhw1fkMbwweQ/xTmdWUEj
+	+ehWcskcfRM79zqHhfJdp2yQ0I7vYvfnLst4hbbai/CypljdMRI7Kgz9bVlVTNsMXikvYijSAAc
+	2KsXMqgZlxYpSSqZpHoVWG2qLcWXl75Gx+8M/C2tJnwHcbHy+oTj2jf9fJksdBTVV0eMry/1S9Y
+	CcU6D6Nrxwouaq06sUmN/ge+DCplkd/7hJJebCo15IEIfo4J5QWLjP4l/1vaaPDlahVZj7N97rk
+	l/FcGKUx2TPiNmXfpytE9BX+w+dVqsUrWDhq8+slTjY3yEBNJMMGfuXj3Md1EIM3v4Ml6+5gXtb
+	VMbSrHH/PjkL2HxW11pswWZclxynDAUIOnPz6XDrgLLzv/P+2bT5jmVQHuR1j7loAsNFv/IRbYX
+	ZbzBWbCaVyknyx/w88dP92njjrfjUtStlEHV7Jk1lHlU7Kdw==
+X-Received: by 2002:a05:600c:6215:b0:492:463c:48b7 with SMTP id 5b1f17b1804b1-492668985c2mr157854005e9.22.1782595005526;
+        Sat, 27 Jun 2026 14:16:45 -0700 (PDT)
+Received: from pumpkin (host-92-21-50-228.as13285.net. [92.21.50.228])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49269071d05sm193434745e9.11.2026.06.27.14.16.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2026 14:16:45 -0700 (PDT)
+Date: Sat, 27 Jun 2026 22:16:43 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Ian Bridges <icb@fastmail.org>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal
+ <fw@strlen.de>, Phil Sutter <phil@nwl.cc>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] netfilter: x_tables: replace strlcat() with snprintf()
+Message-ID: <20260627221643.1e837496@pumpkin>
+In-Reply-To: <aj78X4Cjqcpbb8Co@dev>
+References: <aj78X4Cjqcpbb8Co@dev>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-In preparation for removing the deprecated strlcat() API[1], replace the
-snprintf()/strlcat() pair in rpc_sockaddr2uaddr() with a single snprintf()
-that appends the port suffix directly to the address buffer.
+On Fri, 26 Jun 2026 17:25:35 -0500
+Ian Bridges <icb@fastmail.org> wrote:
 
-rpc_ntop4() and rpc_ntop6_noscopeid() leave a NUL-terminated presentation
-address in addrbuf; the port is then formatted as ".p1.p2" and appended.
-Writing that suffix at addrbuf + strlen(addrbuf) with snprintf() yields the
-same universal address string as the separate portbuf/strlcat() step it
-replaces, so the intermediate portbuf is no longer needed.
+> In preparation for removing the deprecated strlcat() API[1], replace the
+> strscpy()/strlcat() pairs in xt_proto_init() and xt_proto_fini() with
+> snprintf(), which builds each /proc file name in a single call.
+> 
+> Each name is "<prefix><suffix>", where <prefix> is the address-family
+> string xt_prefix[af] and <suffix> is one of the FORMAT_TABLES,
+> FORMAT_MATCHES or FORMAT_TARGETS literals. snprintf() with a "%s%s"
+> format produces the same NUL-terminated, length-bounded string as the
+> strscpy()/strlcat() chain it replaces, so the proc entry names are
+> unchanged.
+> 
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> Signed-off-by: Ian Bridges <icb@fastmail.org>
+> ---
+>  net/netfilter/x_tables.c | 24 ++++++++----------------
+>  1 file changed, 8 insertions(+), 16 deletions(-)
+> 
+> diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
+> index 4e6708c23922..56f4546be336 100644
+> --- a/net/netfilter/x_tables.c
+> +++ b/net/netfilter/x_tables.c
+> @@ -2033,8 +2033,7 @@ int xt_proto_init(struct net *net, u_int8_t af)
+>  	root_uid = make_kuid(net->user_ns, 0);
+>  	root_gid = make_kgid(net->user_ns, 0);
+>  
+> -	strscpy(buf, xt_prefix[af], sizeof(buf));
+> -	strlcat(buf, FORMAT_TABLES, sizeof(buf));
+> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TABLES);
 
-snprintf() returns the length it would have written excluding the NUL, so
-comparing it against the remaining buffer space preserves the existing
-truncation check that returns NULL.
+If you are going to use snprintf either paste the strings together:
+	snprintf(buf, sizeof(buf), "%s" FORMAT_TABLES, xt_prefix[af]);
+or prepend the "%s" onto the #define of FORMAT_TABLES itself:
+	snprintf(buf, sizeof(buf), FORMAT_TABLES, xt_prefix[af]);
 
-Link: https://github.com/KSPP/linux/issues/370 [1]
-Signed-off-by: Ian Bridges <icb@fastmail.org>
----
- net/sunrpc/addr.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+FORMAT_TABLES should also be FORMAT_NAMES.
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index 97ff11973c49..c164ea214e6a 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -264,9 +264,9 @@ EXPORT_SYMBOL_GPL(rpc_pton);
-  */
- char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
- {
--	char portbuf[RPCBIND_MAXUADDRPLEN];
- 	char addrbuf[RPCBIND_MAXUADDRLEN];
- 	unsigned short port;
-+	size_t len, avail;
- 
- 	switch (sap->sa_family) {
- 	case AF_INET:
-@@ -283,11 +283,10 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
- 		return NULL;
- 	}
- 
--	if (snprintf(portbuf, sizeof(portbuf),
--		     ".%u.%u", port >> 8, port & 0xff) >= (int)sizeof(portbuf))
--		return NULL;
--
--	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >= sizeof(addrbuf))
-+	len = strlen(addrbuf);
-+	avail = sizeof(addrbuf) - len;
-+	if (snprintf(addrbuf + len, avail, ".%u.%u",
-+		     port >> 8, port & 0xff) >= avail)
- 		return NULL;
- 
- 	return kstrdup(addrbuf, gfp_flags);
--- 
-2.47.3
+-- David
+
+>  	proc = proc_create_net_data(buf, 0440, net->proc_net, &xt_table_seq_ops,
+>  			sizeof(struct seq_net_private),
+>  			(void *)(unsigned long)af);
+> @@ -2043,8 +2042,7 @@ int xt_proto_init(struct net *net, u_int8_t af)
+>  	if (uid_valid(root_uid) && gid_valid(root_gid))
+>  		proc_set_user(proc, root_uid, root_gid);
+>  
+> -	strscpy(buf, xt_prefix[af], sizeof(buf));
+> -	strlcat(buf, FORMAT_MATCHES, sizeof(buf));
+> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_MATCHES);
+>  	proc = proc_create_seq_private(buf, 0440, net->proc_net,
+>  			&xt_match_seq_ops, sizeof(struct nf_mttg_trav),
+>  			(void *)(unsigned long)af);
+> @@ -2053,8 +2051,7 @@ int xt_proto_init(struct net *net, u_int8_t af)
+>  	if (uid_valid(root_uid) && gid_valid(root_gid))
+>  		proc_set_user(proc, root_uid, root_gid);
+>  
+> -	strscpy(buf, xt_prefix[af], sizeof(buf));
+> -	strlcat(buf, FORMAT_TARGETS, sizeof(buf));
+> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TARGETS);
+>  	proc = proc_create_seq_private(buf, 0440, net->proc_net,
+>  			 &xt_target_seq_ops, sizeof(struct nf_mttg_trav),
+>  			 (void *)(unsigned long)af);
+> @@ -2068,13 +2065,11 @@ int xt_proto_init(struct net *net, u_int8_t af)
+>  
+>  #ifdef CONFIG_PROC_FS
+>  out_remove_matches:
+> -	strscpy(buf, xt_prefix[af], sizeof(buf));
+> -	strlcat(buf, FORMAT_MATCHES, sizeof(buf));
+> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_MATCHES);
+>  	remove_proc_entry(buf, net->proc_net);
+>  
+>  out_remove_tables:
+> -	strscpy(buf, xt_prefix[af], sizeof(buf));
+> -	strlcat(buf, FORMAT_TABLES, sizeof(buf));
+> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TABLES);
+>  	remove_proc_entry(buf, net->proc_net);
+>  out:
+>  	return -1;
+> @@ -2087,16 +2082,13 @@ void xt_proto_fini(struct net *net, u_int8_t af)
+>  #ifdef CONFIG_PROC_FS
+>  	char buf[XT_FUNCTION_MAXNAMELEN];
+>  
+> -	strscpy(buf, xt_prefix[af], sizeof(buf));
+> -	strlcat(buf, FORMAT_TABLES, sizeof(buf));
+> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TABLES);
+>  	remove_proc_entry(buf, net->proc_net);
+>  
+> -	strscpy(buf, xt_prefix[af], sizeof(buf));
+> -	strlcat(buf, FORMAT_TARGETS, sizeof(buf));
+> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TARGETS);
+>  	remove_proc_entry(buf, net->proc_net);
+>  
+> -	strscpy(buf, xt_prefix[af], sizeof(buf));
+> -	strlcat(buf, FORMAT_MATCHES, sizeof(buf));
+> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_MATCHES);
+>  	remove_proc_entry(buf, net->proc_net);
+>  #endif /*CONFIG_PROC_FS*/
+>  }
 
