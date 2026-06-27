@@ -1,77 +1,75 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F9B229B12
-	for <linux-hardening@vger.kernel.org>; Sat, 27 Jun 2026 21:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E58313E29
+	for <linux-hardening@vger.kernel.org>; Sat, 27 Jun 2026 21:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782595009; cv=none; b=dvgVAEg27sFXpdfMAiQJbWe64XzB8plMyYrZPfAJwrHCrb9mvomLn8VcicAO/viHCiEOTmU7t+t+FBHBikVcBZVUMOnLZQAxPgU+AQJSywf6EOYazb8k6LNo42xv+0V94CfKxNMkjpU0F4c59lL9rq9bP3nVEgUaSwG/DJRclWI=
+	t=1782596960; cv=none; b=ZK06dgZWS8MjB9ZRJUm+O888k2E/kG3bfPvW2kj2evJAS2F5nj39gqVUOsKde2Kd7EBI6PZiB4eFkx2NQKOX4ON4ijqg2Rf5Y6IpuxQDK3w3ry/s2WK+9L0ebfqn8QgyoJWR43dc44/3QXXNBZPalZ9lFRt7mGBtVoc9p4Cdq2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782595009; c=relaxed/simple;
-	bh=3rGpUDw+ddrLG9sPceYY9ObkHQDjG5NTyD2hYg6jTzI=;
+	s=arc-20240116; t=1782596960; c=relaxed/simple;
+	bh=68nQ8F/wKOdx7sIEHXlhuv/UHvO++uJWbFGpLpQpvGE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sQ7vrXx38EqIcojR6BpAQXANk5QisbqtBct2gRXDs4HdGXCR8k06RFsUc3IdPLRDuf52EaRdwzvKyCG2MEILutGZWuZVQxOqHuftVkaOULpxZ17pgS799wxTNFKOko/riSgcVOg0ApHVCHW24cc/qo/IujBw50j9VQA7SG2jFTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OhMpEmYO; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version:Content-Type; b=i0mQQAZrxZS7qzIME/S9dIMd2hpHN9T3HHCGKfdAYy549utx2NS0bE85yr1Bbwyo6DGoIbGO1KAu1HqJAcyN6QxDw/GOpsgtOnpZNLUVTNKcVpIZCyv8+2Aymah0MT8GzSmUawQUGEQGEXYe+EB8nFM40SCv5h6rhWQa+/57QLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQ3TxRoa; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhMpEmYO"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-493a440bc10so2322445e9.1
-        for <linux-hardening@vger.kernel.org>; Sat, 27 Jun 2026 14:16:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQ3TxRoa"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-493a7bd27c2so192795e9.3
+        for <linux-hardening@vger.kernel.org>; Sat, 27 Jun 2026 14:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782595006; x=1783199806; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782596957; x=1783201757; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s95FZx2QU/TjB5YrTYRCYxYo5MNS6NGrQ65w/N+79gc=;
-        b=OhMpEmYO+A/1GPGrZ+Qmas4EUBsssEKbaynAB+sN/nVUzlVlzAhH3wMPUZOgPgrw74
-         +FwC5zG6rTOaKpovy0oLxDaAlDm9/taG5HPoeRBjHXjSNmCGkbTv6UVB4AD3EGQ3kdzD
-         vtJBCcYnLqb7kt94opUwU8UAusyX9jyKUg9JeMGSDe3S77JmV+fZDOoYbAYddZ68rbsg
-         uWvkekzl/yC/pIIWzPPpiWhscudAIITxDR7ho6Jm6GjkN10M2cWyOi+RzrC6klrW2JYm
-         OgA1fR8Goifx1dvvFKiicgcEqpNamfbPz6eB5jNHUYvi1WtRxiQYIqBDZ/nDxo3aM70P
-         7DCg==
+        bh=kEN9TfqaZUsPLob8cVU9eEwSlgjveH90ByGGACtMAE0=;
+        b=SQ3TxRoaIAOvACJJkkP6oL4CRDz5t/sQmakEkFNvhfEI933jz+SvyIxgGl/fNZEJ+9
+         fQdFFpwAUYm39WXmFC0brqjOS8b9+eCByIUvKfMRgFO97ito2VtGy2l6eFNGFnFmat7t
+         MY0JdputbPNMshx+2ZzAhZtEHKGjiJDg4u/7VljEfTU/5B6dtK8M5iBOdFcDycRN7b3l
+         YGPYIgLrBOoxdgMuZJPjQcwaJcMaWozn2ZGs6qSYxl/+G/xDchWWohLO+zO30O1ydLQ0
+         y9b0+Fw4sVdoxojErGpzpOxvwNCUzrBV02+Rvr4WOBoU+6+J2XeZ9B1KlogbOPpxdSPy
+         7qXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782595006; x=1783199806;
+        d=1e100.net; s=20251104; t=1782596957; x=1783201757;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=s95FZx2QU/TjB5YrTYRCYxYo5MNS6NGrQ65w/N+79gc=;
-        b=jtGZ+aGaFWgWkw4ebQbMhckbZpHsvVZKBaxeSvkMx+VlpjOVOLCJRZQWtQMA8AYgQH
-         AGynNtvEtQ8RmECftYwoV1B7sA48XoPo+LBNuYSkzAmLi6B6XiFS+5C3KqzcvddJShif
-         YYOoiBBkvmUH3t4nrVG2bIdJpxf1f9Zy3j1J3JUP94CBkCSCUhnwlsj20i3p3p6GNEDg
-         v3D89tBIIk5kM56zoH5hY0nXGEv0Co36YBkJGN0gxwVGiO68H+EteiFLr46xFNB5N/gB
-         jIMo6htcw3knPuyqWDOewQtdNtaxpZpWyg2gZ9+0bmpPCgp20gNrPOfhIHUVDp9f1Pyb
-         WZNg==
-X-Forwarded-Encrypted: i=1; AFNElJ/4jYFfvmc2VO1ibG5kbOw4naxlI6XZIn6OUin34jdUipsNmogsXxSlr+n5O72r3p/QC/0vn6uWlmuQ2Ob1IO8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqqMNfidTdUiZTPBRtZygJu3DqWbey4S8/1mj9XSz1J51uBoK+
-	ePLKJC3hXkoV8S4wTFXHijF2pMwbHSqmqltRj5pWgzqXsLd2np35PKdv
-X-Gm-Gg: AfdE7clSNDvDHOj6GCK5XV795yvynAnRpNCfCQRD5QQYZCAhw1fkMbwweQ/xTmdWUEj
-	+ehWcskcfRM79zqHhfJdp2yQ0I7vYvfnLst4hbbai/CypljdMRI7Kgz9bVlVTNsMXikvYijSAAc
-	2KsXMqgZlxYpSSqZpHoVWG2qLcWXl75Gx+8M/C2tJnwHcbHy+oTj2jf9fJksdBTVV0eMry/1S9Y
-	CcU6D6Nrxwouaq06sUmN/ge+DCplkd/7hJJebCo15IEIfo4J5QWLjP4l/1vaaPDlahVZj7N97rk
-	l/FcGKUx2TPiNmXfpytE9BX+w+dVqsUrWDhq8+slTjY3yEBNJMMGfuXj3Md1EIM3v4Ml6+5gXtb
-	VMbSrHH/PjkL2HxW11pswWZclxynDAUIOnPz6XDrgLLzv/P+2bT5jmVQHuR1j7loAsNFv/IRbYX
-	ZbzBWbCaVyknyx/w88dP92njjrfjUtStlEHV7Jk1lHlU7Kdw==
-X-Received: by 2002:a05:600c:6215:b0:492:463c:48b7 with SMTP id 5b1f17b1804b1-492668985c2mr157854005e9.22.1782595005526;
-        Sat, 27 Jun 2026 14:16:45 -0700 (PDT)
+        bh=kEN9TfqaZUsPLob8cVU9eEwSlgjveH90ByGGACtMAE0=;
+        b=Chx+s4ZTkvG7q7udzIeyarYTL3AsHyYbDzwcWVUzG9TzS/QPDAoX0N03aCEoyIOAue
+         QVoeE+pBRGMygWh6R2I5NGlHN4v8UlnRepCSwy6F4dxwbkf3ITMTgXQ7u+nbi1toly7C
+         9ugpwzh7a1BLDlvYGmy8zZrY7/rjhE4nD0HSvQb4XljYmusrQMiHW53KclNnen+ptyTk
+         KVwMT4ym2qYjCncx2Djm1kWIXeTY9SgG2KdqfE+FLu67fqa5h9jy0GjvC+hp6poCBBdx
+         61akt9u3WsrId5SaxqOgotynShwJJwmsgt7+PQWr9zIeMvBcFvlvamIJwECotjlIUMti
+         0vHA==
+X-Forwarded-Encrypted: i=1; AHgh+RrguLt1dA5P6er7qSxRNTHOccuES5mcoRX83MKfCrNWop/pYOSE9rSnSQ1ec/YYCz7osgixeDpCjwRrptbb5SI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhfE1b5ipQsEX/EWvIuhCtgMANfqsSqx9X8Q9LrL1HwnR1L0yW
+	77T10BjyR/qMIhFc/VanwNc5Ye6TIK05PTzqLYi688/Xw8a3uaZIJEVD
+X-Gm-Gg: AfdE7cmVHJHG3R9q9WnuDuNigfQd5qc4c1KOdgBsVhAIibfrDLl5Ddr/GCFxFt/P4sl
+	EcIOSKeTWozZOaaHyKJ2t0vISF0D/+YsG/BX7MkhyBwtdeFUVXhdq+zrfOvj+3aFX5sX4lCmD/d
+	6cUXfhl/z6zpODNmbrFPUTNhuDZbLjcCNXCTGfYabMRPaJ3KndkQj0/3nBtSG43Q5b6LP0Dnr4u
+	4VeXZ45cZ9r2NNeiDQ1oZYopH/ct5xiO7n2bSXFy5b1amqQ18RKnvJG+ZfXgUEalVKh6tt1kLTJ
+	fHq0kc9r/2ZeOlcrLoci653gahJRsiYWXhenUDVxDH1Qo1CYZ3wiUmOBWd8yXP4kof3g3vFfvnq
+	US4kRz/EfNvJ/+vcYfEYhW15ibvRy1niXz3dtZh2BmNP56M1/KCU0gV7ACMg8MsFIxurhtcg4+W
+	jkZdQl3XUYZtO2VqdiBKs93xaFb5E8EbjFi2nkBDGjZHXpOQ==
+X-Received: by 2002:a05:6000:2484:b0:46f:5d62:d914 with SMTP id ffacd0b85a97d-46f5d62db15mr10310672f8f.12.1782596956934;
+        Sat, 27 Jun 2026 14:49:16 -0700 (PDT)
 Received: from pumpkin (host-92-21-50-228.as13285.net. [92.21.50.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49269071d05sm193434745e9.11.2026.06.27.14.16.44
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-472de944719sm158151f8f.2.2026.06.27.14.49.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2026 14:16:45 -0700 (PDT)
-Date: Sat, 27 Jun 2026 22:16:43 +0100
+        Sat, 27 Jun 2026 14:49:16 -0700 (PDT)
+Date: Sat, 27 Jun 2026 22:49:14 +0100
 From: David Laight <david.laight.linux@gmail.com>
 To: Ian Bridges <icb@fastmail.org>
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>, Florian Westphal
- <fw@strlen.de>, Phil Sutter <phil@nwl.cc>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] netfilter: x_tables: replace strlcat() with snprintf()
-Message-ID: <20260627221643.1e837496@pumpkin>
-In-Reply-To: <aj78X4Cjqcpbb8Co@dev>
-References: <aj78X4Cjqcpbb8Co@dev>
+Cc: Paul Moore <paul@paul-moore.com>, Stephen Smalley
+ <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>,
+ selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] selinux: replace strlcat() with seq_buf in
+ selinux_ima_collect_state()
+Message-ID: <20260627224914.68b506b0@pumpkin>
+In-Reply-To: <aj6hVjECikvYtnED@dev>
+References: <aj6hVjECikvYtnED@dev>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -82,104 +80,116 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 26 Jun 2026 17:25:35 -0500
+On Fri, 26 Jun 2026 10:57:10 -0500
 Ian Bridges <icb@fastmail.org> wrote:
 
 > In preparation for removing the deprecated strlcat() API[1], replace the
-> strscpy()/strlcat() pairs in xt_proto_init() and xt_proto_fini() with
-> snprintf(), which builds each /proc file name in a single call.
+> strscpy()/strlcat() chain in selinux_ima_collect_state() with a struct
+> seq_buf, which tracks the write position and remaining space internally.
 > 
-> Each name is "<prefix><suffix>", where <prefix> is the address-family
-> string xt_prefix[af] and <suffix> is one of the FORMAT_TABLES,
-> FORMAT_MATCHES or FORMAT_TARGETS literals. snprintf() with a "%s%s"
-> format produces the same NUL-terminated, length-bounded string as the
-> strscpy()/strlcat() chain it replaces, so the proc entry names are
-> unchanged.
+> Each field is written with seq_buf_printf() using a "=%d;" format, which
+> removes the open-coded "=1;"/"=0;" constants. The seven per-append
+> WARN_ON(rc >= buf_len) truncation checks are replaced by a single
+> seq_buf_has_overflowed() check after the string is built.
 > 
 > Link: https://github.com/KSPP/linux/issues/370 [1]
 > Signed-off-by: Ian Bridges <icb@fastmail.org>
 > ---
->  net/netfilter/x_tables.c | 24 ++++++++----------------
->  1 file changed, 8 insertions(+), 16 deletions(-)
+> Changed in v2: replace the v1 seq_buf_puts() pairs with seq_buf_printf()
+> using a "=%d;" format, which drops the open-coded "=1;"/"=0;" constants.
+
+Did you verify that all the values are 0/1 otherwise a !! prefix might
+be needed.
+
 > 
-> diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
-> index 4e6708c23922..56f4546be336 100644
-> --- a/net/netfilter/x_tables.c
-> +++ b/net/netfilter/x_tables.c
-> @@ -2033,8 +2033,7 @@ int xt_proto_init(struct net *net, u_int8_t af)
->  	root_uid = make_kuid(net->user_ns, 0);
->  	root_gid = make_kgid(net->user_ns, 0);
->  
-> -	strscpy(buf, xt_prefix[af], sizeof(buf));
-> -	strlcat(buf, FORMAT_TABLES, sizeof(buf));
-> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TABLES);
+> v1: https://lore.kernel.org/all/ajlN94VO7BYNUTAy@dev/
+> 
+> I didn't change the precomputation of the string size. An alternative,
+> which is used by other seq_buf callers (e.g. kernel/rcu/refscale.c,
+> mm/memcontrol.c), is to drop the precomputation and allocate an oversized
+> fixed buffer, relying on the seq_buf overflow check as a backstop. I'm
+> happy to rework the patch to adopt that alternative.
 
-If you are going to use snprintf either paste the strings together:
-	snprintf(buf, sizeof(buf), "%s" FORMAT_TABLES, xt_prefix[af]);
-or prepend the "%s" onto the #define of FORMAT_TABLES itself:
-	snprintf(buf, sizeof(buf), FORMAT_TABLES, xt_prefix[af]);
+That would be reasonable, the output is always exactly the same length and
+the buffer is freed just after being allocated.
+A comment that there are 3 + 15 strings and all are under 32 bytes so 1k
+is plenty would suffice.
 
-FORMAT_TABLES should also be FORMAT_NAMES.
+	David
 
--- David
-
->  	proc = proc_create_net_data(buf, 0440, net->proc_net, &xt_table_seq_ops,
->  			sizeof(struct seq_net_private),
->  			(void *)(unsigned long)af);
-> @@ -2043,8 +2042,7 @@ int xt_proto_init(struct net *net, u_int8_t af)
->  	if (uid_valid(root_uid) && gid_valid(root_gid))
->  		proc_set_user(proc, root_uid, root_gid);
+> 
+>  security/selinux/ima.c | 40 +++++++++++++---------------------------
+>  1 file changed, 13 insertions(+), 27 deletions(-)
+> 
+> diff --git a/security/selinux/ima.c b/security/selinux/ima.c
+> index aa34da9b0aeb..cb0efa2fc1ad 100644
+> --- a/security/selinux/ima.c
+> +++ b/security/selinux/ima.c
+> @@ -9,6 +9,7 @@
+>   */
+>  #include <linux/vmalloc.h>
+>  #include <linux/ima.h>
+> +#include <linux/seq_buf.h>
+>  #include "security.h"
+>  #include "ima.h"
 >  
-> -	strscpy(buf, xt_prefix[af], sizeof(buf));
-> -	strlcat(buf, FORMAT_MATCHES, sizeof(buf));
-> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_MATCHES);
->  	proc = proc_create_seq_private(buf, 0440, net->proc_net,
->  			&xt_match_seq_ops, sizeof(struct nf_mttg_trav),
->  			(void *)(unsigned long)af);
-> @@ -2053,8 +2051,7 @@ int xt_proto_init(struct net *net, u_int8_t af)
->  	if (uid_valid(root_uid) && gid_valid(root_gid))
->  		proc_set_user(proc, root_uid, root_gid);
+> @@ -20,46 +21,31 @@
+>   */
+>  static char *selinux_ima_collect_state(void)
+>  {
+> -	const char *on = "=1;", *off = "=0;";
+> +	struct seq_buf s;
+>  	char *buf;
+> -	int buf_len, len, i, rc;
+> +	int buf_len, suffix_len, i;
 >  
-> -	strscpy(buf, xt_prefix[af], sizeof(buf));
-> -	strlcat(buf, FORMAT_TARGETS, sizeof(buf));
-> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TARGETS);
->  	proc = proc_create_seq_private(buf, 0440, net->proc_net,
->  			 &xt_target_seq_ops, sizeof(struct nf_mttg_trav),
->  			 (void *)(unsigned long)af);
-> @@ -2068,13 +2065,11 @@ int xt_proto_init(struct net *net, u_int8_t af)
+>  	buf_len = strlen("initialized=0;enforcing=0;checkreqprot=0;") + 1;
+> +	suffix_len = strlen("=0;");
 >  
->  #ifdef CONFIG_PROC_FS
->  out_remove_matches:
-> -	strscpy(buf, xt_prefix[af], sizeof(buf));
-> -	strlcat(buf, FORMAT_MATCHES, sizeof(buf));
-> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_MATCHES);
->  	remove_proc_entry(buf, net->proc_net);
+> -	len = strlen(on);
+>  	for (i = 0; i < __POLICYDB_CAP_MAX; i++)
+> -		buf_len += strlen(selinux_policycap_names[i]) + len;
+> +		buf_len += strlen(selinux_policycap_names[i]) + suffix_len;
 >  
->  out_remove_tables:
-> -	strscpy(buf, xt_prefix[af], sizeof(buf));
-> -	strlcat(buf, FORMAT_TABLES, sizeof(buf));
-> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TABLES);
->  	remove_proc_entry(buf, net->proc_net);
->  out:
->  	return -1;
-> @@ -2087,16 +2082,13 @@ void xt_proto_fini(struct net *net, u_int8_t af)
->  #ifdef CONFIG_PROC_FS
->  	char buf[XT_FUNCTION_MAXNAMELEN];
+>  	buf = kzalloc(buf_len, GFP_KERNEL);
+>  	if (!buf)
+>  		return NULL;
 >  
-> -	strscpy(buf, xt_prefix[af], sizeof(buf));
-> -	strlcat(buf, FORMAT_TABLES, sizeof(buf));
-> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TABLES);
->  	remove_proc_entry(buf, net->proc_net);
+> -	rc = strscpy(buf, "initialized", buf_len);
+> -	WARN_ON(rc < 0);
+> +	seq_buf_init(&s, buf, buf_len);
 >  
-> -	strscpy(buf, xt_prefix[af], sizeof(buf));
-> -	strlcat(buf, FORMAT_TARGETS, sizeof(buf));
-> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_TARGETS);
->  	remove_proc_entry(buf, net->proc_net);
+> -	rc = strlcat(buf, selinux_initialized() ? on : off, buf_len);
+> -	WARN_ON(rc >= buf_len);
+> +	seq_buf_printf(&s, "initialized=%d;enforcing=%d;checkreqprot=%d;",
+> +		       selinux_initialized(), enforcing_enabled(),
+> +		       checkreqprot_get());
 >  
-> -	strscpy(buf, xt_prefix[af], sizeof(buf));
-> -	strlcat(buf, FORMAT_MATCHES, sizeof(buf));
-> +	snprintf(buf, sizeof(buf), "%s%s", xt_prefix[af], FORMAT_MATCHES);
->  	remove_proc_entry(buf, net->proc_net);
->  #endif /*CONFIG_PROC_FS*/
+> -	rc = strlcat(buf, "enforcing", buf_len);
+> -	WARN_ON(rc >= buf_len);
+> -
+> -	rc = strlcat(buf, enforcing_enabled() ? on : off, buf_len);
+> -	WARN_ON(rc >= buf_len);
+> -
+> -	rc = strlcat(buf, "checkreqprot", buf_len);
+> -	WARN_ON(rc >= buf_len);
+> -
+> -	rc = strlcat(buf, checkreqprot_get() ? on : off, buf_len);
+> -	WARN_ON(rc >= buf_len);
+> -
+> -	for (i = 0; i < __POLICYDB_CAP_MAX; i++) {
+> -		rc = strlcat(buf, selinux_policycap_names[i], buf_len);
+> -		WARN_ON(rc >= buf_len);
+> +	for (i = 0; i < __POLICYDB_CAP_MAX; i++)
+> +		seq_buf_printf(&s, "%s=%d;", selinux_policycap_names[i],
+> +			       selinux_state.policycap[i]);
+>  
+> -		rc = strlcat(buf, selinux_state.policycap[i] ? on : off,
+> -			buf_len);
+> -		WARN_ON(rc >= buf_len);
+> -	}
+> +	WARN_ON(seq_buf_has_overflowed(&s));
+>  
+>  	return buf;
 >  }
 
