@@ -1,57 +1,77 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5958329D281;
-	Mon, 29 Jun 2026 04:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941E33769EF
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Jun 2026 09:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782708208; cv=none; b=as/TRhvNnMq5W1GiqkfedmXzss9pM550MPgLOAmww7SB4Ut13wNHnkU3eAEzfNCfQpfTxabDukTAZIHisZj9mVyH2ZBQd3YHK9e3y1AkjAR7Bvuh36kyLqSBAX5j+aky+ldRmoJPRT/1clgw2I+6Laj+6bwhxWyLrgNYQ2HLKgA=
+	t=1782725151; cv=none; b=HI8BGYtdvf2U0uEZgqU/Vw7mE/BR5ZXUHnFNywequWh0Z9y3wjZEnUbKJzd/iUmeyb2RI/sos27btxYzwBeaZYnfXY0UM/cOB5/1Tk248wYkPDj2Bb7quhw+Yj0/ktmq/K/EuTaV04koqf2uCA1e8hwPSTDIrLeGlZ8pYm/ZSnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782708208; c=relaxed/simple;
-	bh=unCVjL321DXaQRdotHd/KHT07H1NPIYGYZ67pykHzkk=;
+	s=arc-20240116; t=1782725151; c=relaxed/simple;
+	bh=bwnmgqddSsR2yWJdg4y/ToBDVUT0ZwX4H8eihcGW/7Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=izg7455+0OlNlrg8vgCiApmaF0BgLLpmSFLtvMF1yhQCYayRVlqQ3HLC7g5y5dSRHQl2nhUzAA5J+9uJ7xLddQNLX2SHe++nByQyABTU8yNnUB2CsG96B7fzPD/a6a1EhGAWZz6ou01/xll81g9hmiNVBWKOf4YzkpXW64/V0Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nNDA8CB9; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1Q9q7B8hjREwvCMwvZmOC+h61Ci6O+S/WesByIA8lJgJtgjtAb+YPmOu1OHEjsJ3sL2khdYwPM7tRsvgmUb2ZPLI1kpGfeNkgrj/Eeny2c4dfUEcThvILUfqKzf0LX4O/yvzB2Wv/gqWY9QHR+U7l1qHOxuaMmb+dPUSIrhH2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=CavymvKe; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nNDA8CB9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ejAiWdMEnIVX/zERdGSuovRm+wQyGi2KlnG+GaTgKh4=; b=nNDA8CB9pf/u0o69aoat+9xEjK
-	UsBg6eeiuDg1NqebWfVELKGI14y9YEGNg0EYgKlkndkXi0HWw80EKssucIj3VYsNe6IAPGi/faXV4
-	JDhhS+7O1tZPXM7tsWaZnhu4885fEiZlmdIeyAJvSaUStolJcXo9ZYl33KS39HPeh0anYdPz530jF
-	PVCD/lD0L69DXCt1syA5FvaUWuHKR2BfA/GT/v8h3CIJgoM0rpMtQ12Eix3Yyoe93X184Go9Z9HfE
-	h2SsOCXFUnWxIF+tjC6pX8VGV3lD3GAiYHZnXotYm1IeHd7YF3QTc1vaRYo4gXXHODPZFOUBrJEqR
-	QfX5J9Uw==;
-Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1we3pz-00000002bfS-0vuJ;
-	Mon, 29 Jun 2026 04:43:15 +0000
-Date: Mon, 29 Jun 2026 05:43:15 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Xiang Mei <xmei5@asu.edu>, Pedro Falcato <pfalcato@suse.de>,
-	Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	linux-hardening@vger.kernel.org,
-	Uladzislau Rezki <urezki@gmail.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Jennifer Miller <jmill@asu.edu>,
-	Tiffany Bao <tbao@asu.edu>, Ruoyu Wang <fishw@asu.edu>,
-	Adam Doupe <doupe@asu.edu>, Kyle Zeng <zengyhkyle@asu.edu>,
-	Yan Shoshitaishvili <yans@asu.edu>
-Subject: Re: [PATCH] mm/vmalloc: widen guard region to defeat ENTER-based
- stack pivot
-Message-ID: <akH34ycu5-q2Yc_D@casper.infradead.org>
-References: <20260626173444.2252041-1-xmei5@asu.edu>
- <aj7UNceukU9zYeGH@pedro-suse.lan>
- <CAPpSM+RVFDOYJFT2iwgNYdjbwqF-MmrbYizpLYksd1SLb5bT9g@mail.gmail.com>
- <499a4e15-34a4-421b-946a-c855199fdbf9@zytor.com>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="CavymvKe"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49319ebb3a9so11260435e9.3
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Jun 2026 02:25:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1782725148; x=1783329948; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sCJ+3VriZa2HDxVFuhLXbhDbJmzauFoiNJi8rwd7lTU=;
+        b=CavymvKe3FOe6BG/PaMybIL6ptrZOn7WEWqyqVeeuSmM98Oq5wbELprt2nNTO+1Av9
+         GxWTIjildYjMhUFBYpch5NELjumKZRw2M07x2CD4rZDHgUnJjK0+hXstKH1RQsUYAlSQ
+         uW75OrqX6u49quAcAhXUsDMja2NX+GLbWitnDb+xUIRAHWldcWZODQFATXH/B1gqTCx0
+         b59xwBFPXSpVXTR2b+MTl8XJyWjinE7FkwCX/ehPX0lgcMbZ9gbfZeGShw1M1MG62T38
+         3/KS2i0hX5zK5KMCav+llED7+3LjaLKQ5f2DYtgTzSH11xnPjyoSJqbFmmlIPWFiGklk
+         ZTew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782725148; x=1783329948;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sCJ+3VriZa2HDxVFuhLXbhDbJmzauFoiNJi8rwd7lTU=;
+        b=KJsvL1D/SwPfMc/HjrTuQ1xXoEWtl3qTRUau+ssVg+ft21bSQhFKvP40eYkXc2HPph
+         mN74bbJ5FmT3L3YHLHKpU2yWNmDdcF+WCdNLvcsJFUolqNQXoKiBkgievFMLWvINw4hk
+         yJr2kAiMiGhbjL1AmdibUV26hA7hg/chVLoiPvcPc+amzYHYQ0Ak3VMANF9kEBS7AsBH
+         qe4H5Tp/OJdlIkuLhOR8knwQng0bKwAj1dARClh1Yct4Wa+VKP84Bm4aTIJrTf3I2kUn
+         hSjwTnopiuNrT4FtrT4WfQgUzbu64HJIo8xDamvZX0/MRIXM5myWk21kfZWh69PUmnbt
+         vhBw==
+X-Forwarded-Encrypted: i=1; AFNElJ+gxjhKmf951VEj8q4j6V26wUjrnjw1LcqgEQ5X9MmeKpiaUmKX8uFYJrZripxisRKWCjzWTq3G0gozXM0PRT0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLLC/IkoGaoPo5V0oQ/KIL6dvhUZtnJE00Q9GNDP+ANqVIB2zj
+	MaIxux5AucWpi1fe/UXp1aWjYuvAHp/YGDdFHamvrCg8tBB4IbFwM36iBo0fFSDyGK8MPLlIc+9
+	mQTjP6hg=
+X-Gm-Gg: AfdE7cl7FuZa0B1TMDT6/URu7Ue+0niwUjjl+azk6Jw8yh/k1vOlZhUOhxTBqHDwzcL
+	vmbZfAWbrGUg/hcrcnS8eZYOTIjIQibnTDEvJPPJJstFaqNDCt2XexQErmdfJqJPLP/PwBux0nN
+	F6yMxhOCiYaoMg0kppTzAFAfsk6v/kAy2xjqOQ1MRpv7AveywaL8p1Q90gCZMjMIGuCnsRJ7FUF
+	Zy4aR9N/3HQpk1bIB1Y3y7gfjGHzbj4f9+JcaonC30QCNsekcvsxpWo13GncHxrCOmSiP22aRd0
+	Ip1bsRDUITuBs0fb9+jpkiEe0rL6ijMOcMnMScSgnz9jFRpwA6OVTlLQLlYQXkbzP/v7IAX+F3f
+	Q+7Mgf2+USP2Zb+1G/O8o5PJV1mVbP5YnG8X7J5HSf+zGEqUZdIyh/p6LjLNrZ8AdnskdYGleOy
+	mBPWkkXMf7FlIuSJRIh04XJoxLOxMVvhaHu6f/XdsKAH7wiem5nab3o54N9gVuBtKSYAhCvzAHV
+	6IZotSswlDN5iMAGy96wKV4K8GzorJp52SoRHzS2KOekcfuXQV+N38vVQ4HrDTTs1tB3IG9lQ==
+X-Received: by 2002:a05:600c:1392:b0:492:488c:f630 with SMTP id 5b1f17b1804b1-492668b6847mr266804345e9.34.1782725147829;
+        Mon, 29 Jun 2026 02:25:47 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493adf3d98fsm69281375e9.8.2026.06.29.02.25.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2026 02:25:47 -0700 (PDT)
+Date: Mon, 29 Jun 2026 10:25:45 +0100
+From: Daniel Thompson <daniel@riscstar.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Daniel Thompson <danielt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jason Wessel <jason.wessel@windriver.com>
+Subject: Re: [PATCH v2 next] drivers/misc/kgdbts: Replace strlen() strcpy()
+ pair with strscpy()
+Message-ID: <akI6GewIobXk7RBs@aspen.lan>
+References: <20260626083821.2981-1-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,27 +80,100 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <499a4e15-34a4-421b-946a-c855199fdbf9@zytor.com>
+In-Reply-To: <20260626083821.2981-1-david.laight.linux@gmail.com>
 
-On Sun, Jun 28, 2026 at 07:09:37PM -0700, H. Peter Anvin wrote:
-> On 2026-06-26 13:05, Xiang Mei wrote:
-> > 
-> > Thanks for your questions and attention.
-> > 
-> > 1) `enter` can do big enough stack pivoting (where we can't find many
-> > `add/sub/adc/sbb rsp, ` doing so)
-> 
-> Say what?
-> 
-> Using add/sub/lea on %rsp is probably more common than enter, because enter is
-> considered kind of slow.
-> 
-> gcc, I believe, will generate "leave" but not "enter" as a result.
-> 
-> 
-> > 2) `enter` is not rare since we can take part in the instruction.
-> 
-> This sentence doesn't parse.
+On Fri, Jun 26, 2026 at 09:38:21AM +0100, David Laight wrote:
+> Use the result of strscpy() for the options overflow check,
+> if too long delete the config string.
 
-They mean that we can jump into the middle of an instruction, and it is
-not rare to see a 'c8' byte in the instruction stream.
+This still seems like very little information for future adventurers to
+go on.
+
+IIUC you are setting config[0] = 0 because that puts the string back as
+it was before the strscpy() altered it by writing in a truncated value?
+And that is based on the assumption that config is still zero-filled when
+kgdbts_option_setup() runs?
+
+If that's why this code was added then explain that rather than
+explaining what it does.
+
+Also, if that really is the rationale then would strlen()/memcpy() be
+cleaner? That way you would never write a bad value into config in the
+first place.
+
+
+Daniel.
+
+
+
+> Use two argument strscpy(config, kmessage) to ensure no overflow.
+>
+> Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> ---
+>
+> v2: Note that an overlong config string gets deleted.
+>
+> This is one of a group of patches that remove potentially unbounded
+> strcpy() calls.
+>
+> They are mostly replaced by strscpy() or, when strlen() has just been
+> called, with memcpy() (usually including the '\0').
+>
+> Calls with copy string literals into arrays are left unchanged.
+> They are safe and easily detected as such.
+>
+> The changes were made by getting the compiler to detect the calls and
+> then fixing the code by hand.
+>
+> Note that all the changes are only compile tested.
+>
+> Some Makefiles were changed to allow files to contain strcpy().
+> As well as 'difficult to fix' files, this included 'show' functions
+> as they really need to use sysfs_emit() or seq_printf().
+>
+> All the patches are being sent individually to avoid very long cc lists.
+> Apologies for the terse commit messages and likely unexpected tags.
+> (There are about 100 patches in total.)
+>
+>  drivers/misc/kgdbts.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+> index 9d3218330f0a..2c8f10b8ac74 100644
+> --- a/drivers/misc/kgdbts.c
+> +++ b/drivers/misc/kgdbts.c
+> @@ -1069,11 +1069,10 @@ static void kgdbts_run_tests(void)
+>
+>  static int __init kgdbts_option_setup(char *opt)
+>  {
+> -	if (strlen(opt) >= MAX_CONFIG_LEN) {
+> +	if (strscpy(config, opt) < 0) {
+> +		config[0] = 0;
+>  		printk(KERN_ERR "kgdbts: config string too long\n");
+> -		return 1;
+>  	}
+> -	strcpy(config, opt);
+>  	return 1;
+>  }
+>
+> @@ -1144,7 +1143,7 @@ static int param_set_kgdbts_var(const char *kmessage,
+>
+>  	/* Only copy in the string if the init function has not run yet */
+>  	if (configured < 0) {
+> -		strcpy(config, kmessage);
+> +		strscpy(config, kmessage);
+>  		return 0;
+>  	}
+>
+> @@ -1153,7 +1152,7 @@ static int param_set_kgdbts_var(const char *kmessage,
+>  		return -EBUSY;
+>  	}
+>
+> -	strcpy(config, kmessage);
+> +	strscpy(config, kmessage);
+>  	/* Chop out \n char as a result of echo */
+>  	if (len && config[len - 1] == '\n')
+>  		config[len - 1] = '\0';
+> --
+> 2.39.5
+>
