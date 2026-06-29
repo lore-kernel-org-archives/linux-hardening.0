@@ -1,346 +1,329 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99454423178
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Jun 2026 14:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8EF450901
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Jun 2026 16:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782744247; cv=none; b=U0Zxpkv0BnZwc9emf+Y72TxTmV7AbpmQh74J8g2Eqjnk0mUxI3Xwp+zQENwACwMndxRLXXfeqiFsOAu0lAjyEqyK7mn7pk9EC+ihK2gM0BzXTXFMZnMConIXR+mUMUh3wx1KL3v+Y+yHLERWeePRYjufoiCvMkFM+NyikjjiHg4=
+	t=1782751423; cv=none; b=HBF+rS0N36SbHH5GqFd7jh68P+1zenksouFl22MCWyYvTHiH34Le6dbvbjYl4cdl8SVjxEJ2PXjVA+9okU6pQue2rdmElElbSHmQLCVtmf5IlT7Ous9TiKzzQhudFq5cCuNtyx5QdbzDUdecC2Q92lM4ZSJLPjg8i3OpWBD8xcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782744247; c=relaxed/simple;
-	bh=gWJAwz2ZHhwS2HGJrGQY29G7D+E3lCi8DwYOZoH/WHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P1OJoVHuuIHVN0PTp5dUwA8BvRce9G9s9bG9CqhXZKMDvNYUlYLeIjOVcG4IWZMQLNfwhEqVSsAxkYR4HX5zT46EMqRVO72ZmU1v8mKJIeC4sTKCTMan0MSNSxVTZ5hpdIRBeJPq9QxglKPbAuHi4U/I7RHZ85GfSwdRcMP1SuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fB0QzmNn; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ZeHuzVA9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1782751423; c=relaxed/simple;
+	bh=TrFQtQEp+bE6O/CFdbgivT5heIeRCPa1pLQCKyjbYlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eZ1IZgoR60dOq12eh2+IyLxIkc8qgzpZ07UcLNH9kGk/1PFAoZPXXQbwl5wvqFva/+miLgOSH32lXmEcHTYDaVEVOic2cs1V+aR66mgyuWcl5ESE+ZdvoW3+FvWqRQKRnScI7xI2lToP+S2F2IDvZbQf5Vb21njm10URXmqtb40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CNiYo+As; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fB0QzmNn";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ZeHuzVA9"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65TAT3UA2604346
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Jun 2026 14:44:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qchk2MkefAKVIklzCH9TFm/NuG0dZDLePCYOMg4obTg=; b=fB0QzmNnEJikPNtf
-	RzogspgFMsWKAp6FIR4wXZH2Dhl2CLHuIN2FYw238GACv+8g/DL7wZWMQiWVxyLs
-	7eFpqkhMxFYccdit7rdoIGw4wc+zjyigQxlX+ekT4cen0lJ+3ct53UBWy9FfZN68
-	mY6WZUXOE144g6n1Rn8gYq4VGfeo9fJVg7bRF4yXffqhR9TJT962QjhoZjx9/ToG
-	cw8l92DU2qs8vhQlrz5S+gLbSNEXJ6c+BnK2svxDSxlltVxNxqtws/yReyOU72Cc
-	b51Vww+kwiktc+Ro2uUV7ZqXd8q00b1ZcGyE/+8L0Wn2ByCu6SA6/eV/OG6dzX6a
-	cr7Kbg==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f3nq89b97-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Jun 2026 14:44:01 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-845c65bef88so3188111b3a.0
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Jun 2026 07:44:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CNiYo+As"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-37fc02e660bso1446431a91.0
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Jun 2026 09:43:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782744241; x=1783349041; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qchk2MkefAKVIklzCH9TFm/NuG0dZDLePCYOMg4obTg=;
-        b=ZeHuzVA90tXi4gZhwiynKEgiEa8RwUBfokCGm3ZZG/YdJlm4BE8Nz2qsz2Li1Bhr1s
-         Y1nZ66MHCuHF20rF41eJdJjHqpvllNRrUAWOkbBdmcMTyNpLcs8IVw7epuGzalAGienv
-         tSsNFgTCLK2A9I5B5kO5o868n7vIytkENx/puJMw9cHLqI+NKSeIzvcaOQJUVbbZMJG/
-         KAv08ovCNEAgG49DyDZeDRKpdwwBPG6OXrMOmIy9yWmDfDDTcELBeueVFYo2aRukq+Tc
-         /zZv5UcaNtD4x5/BETwgt5D0jQ+qHktVWY1uj/bSa118KlIQDA6zKdIyQzGGBD2Isj/P
-         n7jQ==
+        d=linaro.org; s=google; t=1782751418; x=1783356218; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qtZBVd8yePFKbqBw2Sj49p+P306FRw4PXhxNd+NXf2U=;
+        b=CNiYo+AshtfKiAcDtR65MDqdfm+PmKCyJH6NNU0KaUB4gqdC1+HFYK+fAaSQeiYG0v
+         qPM+n1IJxuqvxbElujxEcQSDIRPXynWeDBoonykYBblZFxoy12OZd+V7k7NiHGKNzKfz
+         4T5xjjLJKqJipvAsbnQnOxcRzcHNb7812H4z+WM3yA+da2g+t1qbFKapzoN0U6Kth1ok
+         C8kcYURIzXyx/pl2ONEuYQzQPQ3BN+RJz5VXZLgBARBR81aXbXJbDoJjlz/fSoNjC8+5
+         UQXykXCoz9nyxF0gfjYoHfcY0IXKGY6vf/S7uBCzH9RUM8Ksc0ZpgbyZvr4qQWXpUYw2
+         nlbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782744241; x=1783349041;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qchk2MkefAKVIklzCH9TFm/NuG0dZDLePCYOMg4obTg=;
-        b=i0TPAkCQUaKE+XvFk26NsvchjoFHD4q2++uMLBW2JQJ78QkMWSiBp+7wOIP0R/D/K4
-         VdXJY9N1ZQI0c7vxlOLiG8Jv8pZL30pKbH4zeEzkmCTHoN1usCiR4qYOUuuZ9U7aRtsf
-         /QCOlMdj5tDI95d9CFrvrxPWVKR6kQqO7bUK9+IrGWtiCoFOa59MvIEDLOBwR/E55FPA
-         TLmf2o9cUm7iuPtvLPX2L++JNtYH2QthU1IeGdEGkiauzYKwn1VAPNN/VF6h9efsdkc7
-         xEj4ZBj4QJOLNHp+aY9UTlU2WldO7ptzUEOeaFuzfKrfNB3OTMMQ8PPtUdHPIpvBcq2X
-         gwIQ==
-X-Forwarded-Encrypted: i=1; AHgh+RouIUajJPU8TLppZ6pIet/BweUE0Ir9Ar7/o+YEQ6HIQOet4z6NrBTMtxMGxg9YgFiCYn7tcn2QhO54+DW9QTI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE9njLr1tgm4eNKw5pJkLeD5usWQ0NkDIoPnjYVTZrzK78FbTE
-	awZicgBXwOqo8CiJRxu7UZckej4+jy7LxmokInL7rrHVGprlxVAF1NypRy3WW6R9WL4Helm5jiD
-	7IElG7yDiY7yJfGv+zdJ0N2L1cZ/IThTQypqZdsmx84SsJPBZAhTZxkV2LotarmJ7c6vVWMM=
-X-Gm-Gg: AfdE7cm66sA3cArR6PIuJXPwjKlILvb2K/0+Ac8Ot/B6T20gBsmX7PsZl2LZjDi6ocO
-	AvUmDruWRll8d270H1ZDCZpJ3XGDHJ3KrFHN5n5liCkrXCxe2xnCryYgcuGHrgq03htJ7zPngA7
-	8VWa8Dq4GcMtLA/dupyB0VKzCf2Jc91NoJ14FOXj3axezuUYeZIgGgJ7/ifHIChs1ZB0ojTjXUy
-	iwc/uwsBwgwSajeF1su663G126TIP/FQdp9rL/3XeYdNtI7eEXHdBrzY8BYyUKdT7PyyozXTiDb
-	hxtpwkaOz2JwjUx2YvISVWbI0KP0LnLQH4nPI4tUIxy/WHqP+it//lGBXV+0SyJbMbr3sIaQyx5
-	XsSnj2yUgfFllxGZrgMRTqh0ulADjAiiHGxmNY0C/jg==
-X-Received: by 2002:a05:6a00:6983:b0:847:70f4:613f with SMTP id d2e1a72fcca58-84770f465damr2921931b3a.12.1782744240751;
-        Mon, 29 Jun 2026 07:44:00 -0700 (PDT)
-X-Received: by 2002:a05:6a00:6983:b0:847:70f4:613f with SMTP id d2e1a72fcca58-84770f465damr2921907b3a.12.1782744240207;
-        Mon, 29 Jun 2026 07:44:00 -0700 (PDT)
-Received: from [192.168.1.13] ([106.222.231.34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84774c8d180sm3031081b3a.54.2026.06.29.07.43.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2026 07:43:59 -0700 (PDT)
-Message-ID: <12443cb5-f010-456c-b210-03cc7d9547a2@oss.qualcomm.com>
-Date: Mon, 29 Jun 2026 20:13:50 +0530
+        d=1e100.net; s=20251104; t=1782751418; x=1783356218;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qtZBVd8yePFKbqBw2Sj49p+P306FRw4PXhxNd+NXf2U=;
+        b=OIhpdIwRD6U/PSKW3sSazUvFwjvemHDdrQDNweRupleYsYZL80hnV0kSUCJAEEGHSt
+         g6HSMs7Q8OPd3uFpAt3vavN0ZXmHXU0qulk24sYKR7N81Q9CJjLpaTf7GGxHhv7GRKwS
+         wYUPGRhuIxqLRo4iGSvfCPGDAjEPOJU1n9VMEoeRWY1M9fDCXy+rMKvhAMTzkWLDxM3s
+         TixvroCvFluv/XlghTT+DCLbveeuL8zp1ZZSeqNut6AHE114gqzNK8OuD7f4nvVH8Td9
+         IHDw3n7LSdAbY+I0GgRJRon7+4GGOi20ii6pMTu2Nj3bjT1D/2NgW5hvEr821zce8buV
+         hhCQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqA9xVt/MsQhpUCg+egiED9qzUiL5o5UjK5G+JkT9AotBDQmzxjPjHPBX3NI0UHab743MsLdg7ar96eHv64Gu4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFuhJ7UrpmGG+d6OFwa3AKVzKWu3J2Dbn9iOPQ3hOXWAlrmUsl
+	eLyHDKzQ4CXjld0Ni9CtxfR7FG6nK/HZLjutDzYseexA6XmafyKlvYk6OHgaypNokXM=
+X-Gm-Gg: AfdE7cnQMroV5HpbxniVHphSKUIf2XtOj58plm8cE4jBJUX9q3D7WZIt4FUvR/SBkne
+	G4x93PwNepFRvHOWF5YoeOHynyN9NQ2QkE3d3zbxbhEYx3dZSfYrik1sNYUk4usmFTZ89wn9z4J
+	JnB+Im09e1X0vFtwHk/DAgnyiguXt1INNrCW7PrtcJRpnwFNvaDNhmyf0Yc4gZ5GisSxj40bsgR
+	E837PKUoJ/uxHgNhgHeG+LaBLU6NJBELTduOUd+zHkd5NBnK3tpcP1xAdG5lXEdGF2vlYbllO10
+	GlUiyyElnovosUjJV6h/yvf45v5c8VdssIZRiboxC2ge/vs9BuKaLGXh+Nnwn6B0b6Gi/TaxqAL
+	ZaAmoEayDTselBjaNF+3bo0aUTUAzihKvrI1SfVRsNcknjXSpNRCsdMksP+sGYLwYjwoAnCPUxG
+	0JWdtD6/TeyqCWM18P
+X-Received: by 2002:a17:902:ce8c:b0:2c9:c46b:129b with SMTP id d9443c01a7336-2ca2d5288fdmr1527855ad.5.1782751418355;
+        Mon, 29 Jun 2026 09:43:38 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:aa83:261a:68a7:9974])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c9b8e62a18sm47420495ad.22.2026.06.29.09.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2026 09:43:37 -0700 (PDT)
+Date: Mon, 29 Jun 2026 10:43:35 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Francesco Valla <francesco@valla.it>
+Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: virtio: support dynamic number of vrings
+Message-ID: <akKgtwY5iGo0xsPD@p14s>
+References: <20260621-vring_flex-v1-1-c6c582fbe94b@valla.it>
+ <ajwZ9EPnrYu2M6G-@p14s>
+ <aj2PQGRj4N_xWnyp@bywater>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/8] arm64: dts: qcom: kodiak: Enable CDSP & Modem
- cooling
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
-        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
-References: <20260609-qmi-tmd-v3-0-291a2ff4c634@oss.qualcomm.com>
- <20260609-qmi-tmd-v3-4-291a2ff4c634@oss.qualcomm.com>
- <pf6rymdtbfcqqzt6vnn6gc3uuod4vlfpw42dxxag33aom7lltu@6ymibirvwfnc>
- <4006d16f-a159-4f1b-ba80-f19bef8f4c5c@oss.qualcomm.com>
- <ezggulsc6wvd3gbgnm6tepvtcnvwkeyvva4szrrwbcksxgcesg@qo5l5pjtz77n>
-Content-Language: en-US
-From: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-In-Reply-To: <ezggulsc6wvd3gbgnm6tepvtcnvwkeyvva4szrrwbcksxgcesg@qo5l5pjtz77n>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: _eyBC-AkEUwRgHly8o1D2dFriHcrUhq1
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI5MDEyMiBTYWx0ZWRfX6iu/lgkrpyQR
- aigMqrEulPAxQZZb/Kba1CCIqOWppUmIeW1Xr9+hRm3fCWANhc9qL3Qquk3mOoRT10hr9m7ddJV
- cJx0mVz0V3Z7Teh3Z6G/Ysbvy2nvDPM=
-X-Proofpoint-ORIG-GUID: _eyBC-AkEUwRgHly8o1D2dFriHcrUhq1
-X-Authority-Analysis: v=2.4 cv=PqSjqQM3 c=1 sm=1 tr=0 ts=6a4284b1 cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=JaHktJlP2QtFIg7UHuVw+g==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=H1hhAa048skaI1irU30A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI5MDEyMiBTYWx0ZWRfXxnt7spXrBP3N
- 9LDxs+TWSF96O8arLI4vvg5yQTBtVxE8Pi2Dpib50IXFfL+ONABUceHe9qVVC/vUeNitH74JkPh
- YlKwAILr3Cz+QBUjwarpqAlZPbifPl0bu6TCYlovqkvKbyrP6zetQez31Z6U/UkZDvVgLD+Mrek
- fb8o42Uchl2E5uS7DLE8vBD8bUuy+aN7L8WgCFCJ5E717EiLX+4BGbLDzZZVNjLo5EbN8Ri7k4i
- JO7ZR8Z9fE6E4UiqIz8+Mtnq0p9hvx28l/ywsIpmak6YnFDBzdPNYvXwH7g3KEN4FWS1GvS/sUF
- BakLkMW0cOy9JQ+hLqvaKSNrZkQkRGwMxoVcyxVUoKzSgBC8DIRaptYjt8V67Dmp4VMEHtNmQ3X
- oL5Ovb8CVhfcfqptJ9PJ9ghFIbeaiz7or5D7oRDkOXZfK4vqCq842bnsN/juihPhrpiui1l8jXh
- IhCAoEv6StB1ONJJvcA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-29_03,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 priorityscore=1501 adultscore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 suspectscore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2606290122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aj2PQGRj4N_xWnyp@bywater>
 
-
-
-On 6/15/2026 8:55 PM, Dmitry Baryshkov wrote:
-> On Mon, Jun 15, 2026 at 11:02:22AM +0530, Gaurav Kohli wrote:
->>
->>
->> On 6/9/2026 4:27 PM, Dmitry Baryshkov wrote:
->>> On Tue, Jun 09, 2026 at 03:52:59PM +0530, Gaurav Kohli wrote:
->>>> Unlike the CPU, the CDSP/Modem does not throttle its speed automatically
->>>> when it reaches high temperatures in kodiak.
->>>>
->>>> Set up CDSP cooling by throttling the cdsp when it reaches 100°C and
->>>> for modem when it reaches to 95°C.
->>>>
->>>> Remove inherited mdmss cooling-map nodes for Non Modem kodiak variant.
->>>
->>> Why? If it is a GNSS-only MPSS, does it not provide any thermal
->>> mitigation mechanisms? Does ADSP provide those? WPSS?
->>>
->>
->> Hi Dmitry,
->>
->> Thank you for the review.
->>
->> Since the remoteproc_mpss node doesn't exist on these boards, the
->> cooling-maps that reference it cause DT compilation errors. That's why
->> we need to remove the inherited cooling-maps from the SoC DTSI.
->>   /delete-node/ &remoteproc_mpss;
+On Thu, Jun 25, 2026 at 10:54:05PM +0200, Francesco Valla wrote:
+> Hi Mathieu,
 > 
-> Ok. Explain that in the commit message. And maybe we need to fix those
-> boards to provide mpss instead.
+> On Wed, Jun 24, 2026 at 11:55:00AM -0600, Mathieu Poirier wrote:
+> > Hi Francesco,
+> > 
+> > On Sun, Jun 21, 2026 at 11:57:31PM +0200, Francesco Valla wrote:
+> > > The number of vrings for each vdev has been fixed to 2 since the
+> > > introduction of multi-vdev support [1]; this is completely fine for the
+> > > rpmsg usecase, but can conflict with other virtio devices (CAN for
+> > > example requires 3 virtqueues, entropy only 1, network a variable number
+> > > and so on).
+> > 
+> > I suppose the remoteproc subsystem is involved because these other virtio
+> > devices are behind a remote processor?  If so, how does virtio drivers for the
+> > devices get called?
+> > 
+> 
+> Yes, the idea is to have virtio devices provided by a remote processor.
+> I am investingating the possibility after several years of custom
+> solutions (especially for CAN buses, now covered by the recent virtio
+> CAN device), as well as a brief discussion on the possibility of using
+> virtio-gpu for screen sharing in mixed-criticality systems instead of
+> rpmsg-based solutions (like the one presented recently by TI [1]).
+> 
+> AFAIU, the resource table format used by the remoteproc framework was
+> designed to support any kind of virtio device, and in fact the
+> rproc-virtio driver is not restricting the device type to a subset of
+> allowed device IDs wehn calling register_virtio_device() [2].
+> 
+> In practice, only two virtio drivers are usable over the proc framework
+> today, them being rpmsg and virtio console, since they are the only two
+> that allocate their transfer buffers from the memory provided by the
+> rproc framework (using dma_alloc_coherent()) and then properly translate
+> the addresses used inside the scatter-gather lists used for vring
+> transfers [3] [4].
+> 
+> I am still unsure on how to tackle the other drivers - I have a PoC for
+> a modified virtio-rng driver, but other solutions are emerging, like the
+> hypervisorless virtio effort [5] and virtio-msg [6].
+>
+
+My goal in asking for more details was to see if you had done your research on
+this topic - and you have.  
+ 
+> During this investigation, I stumbled on the limitation posed by the
+> fixed number of vrings and decided to send a patch for it.
 > 
 
-Ack, in new version will explain in commit message.
->>
->> Regarding thermal mitigation for other subsystems:
->> ->CDSP and Modem are the primary heat sources based on our internal
->>    thermal testing and evaluation.
->> ->ADSP and WPSS have lower power consumption and don't typically reach
->>    thermal thresholds that require active mitigation
->> ->For this, I'm checking with our internal team to confirm if ADSP/WPSS
->>    provide any TMD mechanism across all targets.
-> 
-> They do. I've posted the dump of qrtr-lookup somewhere.
-> 
->>
->>>>
->>>> Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
->>>> ---
->>>>    arch/arm64/boot/dts/qcom/kodiak.dtsi               | 127 ++++++++++++++++++++-
->>>>    .../boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts     |  17 +++
->>>
->>> So, you removed those for Radxa Q6A, but not forRB3 Gen2. Why?
->>>
->>
->> Ack, this is a miss. will fix this.
->>
->>>>    .../dts/qcom/qcs6490-thundercomm-minipc-g1iot.dts  |  17 +++
->>>>    .../boot/dts/qcom/qcs6490-thundercomm-rubikpi3.dts |  17 +++
->>>>    .../boot/dts/qcom/sc7280-herobrine-lte-sku.dtsi    |  18 +++
->>>>    .../boot/dts/qcom/sc7280-herobrine-wifi-sku.dtsi   |  16 +++
->>>>    6 files changed, 208 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/kodiak.dtsi b/arch/arm64/boot/dts/qcom/kodiak.dtsi
->>>> index fa540d8c2615..d345add2d8c8 100644
->>>> --- a/arch/arm64/boot/dts/qcom/kodiak.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/kodiak.dtsi
->>>> @@ -3427,6 +3427,9 @@ remoteproc_mpss: remoteproc@4080000 {
->>>>    			qcom,smem-states = <&modem_smp2p_out 0>;
->>>>    			qcom,smem-state-names = "stop";
->>>> +			#cooling-cells = <3>;
->>>> +			tmd-names = "pa", "modem";
->>>> +
->>>>    			status = "disabled";
->>>>    			glink-edge {
->>>> @@ -4787,6 +4790,9 @@ remoteproc_cdsp: remoteproc@a300000 {
->>>>    			qcom,smem-states = <&cdsp_smp2p_out 0>;
->>>>    			qcom,smem-state-names = "stop";
->>>> +			#cooling-cells = <2>;
->>>> +			tmd-names = "cdsp_sw";
->>>
->>> I'm going to review only this DT, the comments apply to the rest of
->>> them.
->>>
->>> So, we have two cases, CDSP and MPSS. Why does CDSP have only 2 cells?
->>> Just because tmd-names has only one name? What if we add another
->>> mitigation (which can be added in the firmware), do we suddenly have to
->>> change number of cells and all the cooling devices to reflect it?
->>>
->>
->> As Cdsp has only one relevant tmd to mitigate, so we have used cooling cells
->> as 2. But i will change this to 3 as this is backward compatible.
->>
->>> Finally. If I understand correctly, these mitigtion mechanisms are
->>> provided by the firmware. Firmware differs between the boards. Vendors
->>> (in theory) can change them. Why do we list these names here, in the SoC
->>> DT?
->>>
->>
->> Below are the main reason for this, replied in other thread also.
->> Please guide, if i can use qcom_pas_data to define names.
->>
->> Following Daniel's series [1], the thermal framework supports
->> mapping multiple cooling devices per remoteproc/device via indexed
->> cooling-cells.
->>
->> 1) The thermal framework's cooling-maps reference
->> cooling devices by index (for #cooling-cells = <3>). Without tmd-names,
->> there's no way to know which index corresponds to which TMD, as firmware
->> may return tmd-names in any order.
-> 
-> You can #define the indices to the well known names, turning those into
-> bindings.
-> 
->>
->> below are the changes post new thermal mapping changes:
->> DT: tmd-names = "cdsp_sw", "xyz";
->> Firmware: ["cdsp_sw", "xyz1", "xyz2",]
->> Driver registers: Only "cdsp_sw" (index 0) and "xyz" (index 1)
-> 
-> What if the DT has "cdsp_sw", but the firmware doesn't report it? That's
-> an error, as it seems.
-> 
+Please resend this patch as part of the patchset that provides support for (one)
+of the devices you are interested in and we'll take it from there.
 
-No error, driver won't register cdsp_sw as cooling device for such cases 
-and binding won't happen.
-
->>
->> This allows cooling-maps like below:
->> cooling-device = <&remoteproc 0 ...>  // "cdsp_sw"
->> cooling-device = <&remoteproc 1 ...>  // "xyz"
->>
->> 2) Not all firmware-provided TMDs should be
->> exposed as cooling devices. The tmd-names property acts as a filter,
->> allowing board-specific DT to select only the relevant TMDs for that
->> platform.
+> > Otherwise I'm good with the code.
+> > 
+> > Thanks,
+> > Mathieu
+> > 
 > 
-> But then the properties should be defined in the board DT rather than
-> the platform DT.
+> Thank you!
 > 
->>
->> [1]
->> https://lore.kernel.org/all/20260526140802.1059293-12-daniel.lezcano@oss.qualcomm.com/
->>
->> Shall i use pas data to define tmd-names instead of dt ?
+> Reagrds,
+> Francesco
 > 
-> Let's settle in the thread with Daniel.
+> [1] https://cfp.embedded-recipes.org/media/er2026/submissions/PCYPJP/resources/rpmsg-kms-dispay-em_QToijxj.pdf
+> [2] https://elixir.bootlin.com/linux/v7.1.1/source/drivers/remoteproc/remoteproc_virtio.c#L446
+> [3] https://elixir.bootlin.com/linux/v7.1.1/source/drivers/rpmsg/virtio_rpmsg_bus.c#L864
+> [4] https://elixir.bootlin.com/linux/v7.1.1/source/drivers/char/virtio_console.c#L426
+> [5] https://openamp.readthedocs.io/en/latest/hypervisorless_virtio_zcu102/README_hypervisorless_virtio.html
+> [6] https://lore.kernel.org/all/cover.1781514628.git.bertrand.marquis@arm.com/
 > 
-
-Ack, as suggested will drop tmd-names and use dt binding for the index 
-and name matching.
->>
->>>> +
->>>>    			status = "disabled";
->>>>    			glink-edge {
->>>> +			cooling-maps {
->>>> +				map0 {
->>>> +					trip = <&mdmss0_alert1>;
->>>> +					cooling-device = <&remoteproc_mpss 0 0 2>;
->>>
->>> What does this mean? I assume that the first cell is one of the
->>> mechanisms. What is the difference between them? Do we really need to
->>> list them one by one here?
->>>
->>
->> Let me check, if i can document different tmd's somewhere:
->>
->> -> modem tmd used for Modem Processor mitigation.
->> -> pa is used for Power Amplifier mitigation.
-> 
-> What does that mean?
-> 
-
-this will prevent overheating of RF power amplifier by doing uplink
-throttling.
->>
->> And we need to list them for binding purpose mainly.
->>
->>> What do other cells mean? Why are they 0 and 2 rather than
->>> THERMAL_NO_LIMIT? How does one come with those values? This should all
->>> be documented and explained somewhere.
->>>
->>
->> Will change to THERMAL_NO_LIMIT. Let me check, if i can use
->> qli doc for documentation.
->>
->>>> +				};
->>>> +
->>>> +				map1 {
->>>> +					trip = <&mdmss0_alert1>;
->>>> +					cooling-device = <&remoteproc_mpss 1 0 2>;
->>>> +				};
->>>> +			};
->>>>    		};
->>>
->>
-> 
-
+> > > 
+> > > Remove the static vring allocation, transforming it to a flex array that
+> > > is allocated at vdev probe time; for the existent usecases (i.e.: mainly
+> > > rpmsg) this leads to no functional change, except the additional memory
+> > > used for the counter associated to the new array.
+> > > 
+> > > The maximum number of virtqueues is limited to 256 due to the uint8_t
+> > > value used inside the resource table to indicate the number of vring to
+> > > allocate; for this reason, no additional plausibility check is performed
+> > > on the number of vrings indicated by the resource table.
+> > > 
+> > > As a side effect, this also fixes the single virtqueue usecase, which
+> > > was apparently supported also before but for which the remove action
+> > > caused an error (because the remove action was trying to unmap also the
+> > > second vring, which was in fact not mapped).
+> > > 
+> > > [1] https://lore.kernel.org/all/1330589497-4139-5-git-send-email-ohad@wizery.com/
+> > > 
+> > > Signed-off-by: Francesco Valla <francesco@valla.it>
+> > > ---
+> > >  drivers/remoteproc/remoteproc_core.c   |  7 -------
+> > >  drivers/remoteproc/remoteproc_virtio.c | 21 +++++++++++++--------
+> > >  include/linux/remoteproc.h             | 10 ++++------
+> > >  3 files changed, 17 insertions(+), 21 deletions(-)
+> > > 
+> > > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> > > index f003be006b1b..88504d6eed93 100644
+> > > --- a/drivers/remoteproc/remoteproc_core.c
+> > > +++ b/drivers/remoteproc/remoteproc_core.c
+> > > @@ -473,7 +473,6 @@ static int rproc_handle_vdev(struct rproc *rproc, void *ptr,
+> > >  {
+> > >  	struct fw_rsc_vdev *rsc = ptr;
+> > >  	struct device *dev = &rproc->dev;
+> > > -	struct rproc_vdev *rvdev;
+> > >  	size_t rsc_size;
+> > >  	struct rproc_vdev_data rvdev_data;
+> > >  	struct platform_device *pdev;
+> > > @@ -494,12 +493,6 @@ static int rproc_handle_vdev(struct rproc *rproc, void *ptr,
+> > >  	dev_dbg(dev, "vdev rsc: id %d, dfeatures 0x%x, cfg len %d, %d vrings\n",
+> > >  		rsc->id, rsc->dfeatures, rsc->config_len, rsc->num_of_vrings);
+> > >  
+> > > -	/* we currently support only two vrings per rvdev */
+> > > -	if (rsc->num_of_vrings > ARRAY_SIZE(rvdev->vring)) {
+> > > -		dev_err(dev, "too many vrings: %d\n", rsc->num_of_vrings);
+> > > -		return -EINVAL;
+> > > -	}
+> > > -
+> > >  	rvdev_data.id = rsc->id;
+> > >  	rvdev_data.index = rproc->nb_vdev++;
+> > >  	rvdev_data.rsc_offset = offset;
+> > > diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+> > > index d5e9ff045a28..96f13f828b8e 100644
+> > > --- a/drivers/remoteproc/remoteproc_virtio.c
+> > > +++ b/drivers/remoteproc/remoteproc_virtio.c
+> > > @@ -115,8 +115,7 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
+> > >  	void *addr;
+> > >  	int num, size;
+> > >  
+> > > -	/* we're temporarily limited to two virtqueues per rvdev */
+> > > -	if (id >= ARRAY_SIZE(rvdev->vring))
+> > > +	if (id >= rvdev->num_vrings)
+> > >  		return ERR_PTR(-EINVAL);
+> > >  
+> > >  	if (!name)
+> > > @@ -503,17 +502,20 @@ static int rproc_virtio_probe(struct platform_device *pdev)
+> > >  	if (!rvdev_data)
+> > >  		return -EINVAL;
+> > >  
+> > > -	rvdev = devm_kzalloc(dev, sizeof(*rvdev), GFP_KERNEL);
+> > > +	rsc = rvdev_data->rsc;
+> > > +
+> > > +	rvdev = kzalloc_flex(*rvdev, vring, rsc->num_of_vrings);
+> > >  	if (!rvdev)
+> > >  		return -ENOMEM;
+> > >  
+> > >  	rvdev->id = rvdev_data->id;
+> > >  	rvdev->rproc = rproc;
+> > >  	rvdev->index = rvdev_data->index;
+> > > +	rvdev->num_vrings = rsc->num_of_vrings;
+> > >  
+> > >  	ret = copy_dma_range_map(dev, rproc->dev.parent);
+> > >  	if (ret)
+> > > -		return ret;
+> > > +		goto free_rvdev;
+> > >  
+> > >  	/* Make device dma capable by inheriting from parent's capabilities */
+> > >  	set_dma_ops(dev, get_dma_ops(rproc->dev.parent));
+> > > @@ -527,13 +529,11 @@ static int rproc_virtio_probe(struct platform_device *pdev)
+> > >  	platform_set_drvdata(pdev, rvdev);
+> > >  	rvdev->pdev = pdev;
+> > >  
+> > > -	rsc = rvdev_data->rsc;
+> > > -
+> > >  	/* parse the vrings */
+> > >  	for (i = 0; i < rsc->num_of_vrings; i++) {
+> > >  		ret = rproc_parse_vring(rvdev, rsc, i);
+> > >  		if (ret)
+> > > -			return ret;
+> > > +			goto free_rvdev;
+> > >  	}
+> > >  
+> > >  	/* remember the resource offset*/
+> > > @@ -569,6 +569,9 @@ static int rproc_virtio_probe(struct platform_device *pdev)
+> > >  	for (i--; i >= 0; i--)
+> > >  		rproc_free_vring(&rvdev->vring[i]);
+> > >  
+> > > +free_rvdev:
+> > > +	kfree(rvdev);
+> > > +
+> > >  	return ret;
+> > >  }
+> > >  
+> > > @@ -579,7 +582,7 @@ static void rproc_virtio_remove(struct platform_device *pdev)
+> > >  	struct rproc_vring *rvring;
+> > >  	int id;
+> > >  
+> > > -	for (id = 0; id < ARRAY_SIZE(rvdev->vring); id++) {
+> > > +	for (id = 0; id < rvdev->num_vrings; id++) {
+> > >  		rvring = &rvdev->vring[id];
+> > >  		rproc_free_vring(rvring);
+> > >  	}
+> > > @@ -588,6 +591,8 @@ static void rproc_virtio_remove(struct platform_device *pdev)
+> > >  	rproc_remove_rvdev(rvdev);
+> > >  
+> > >  	put_device(&rproc->dev);
+> > > +
+> > > +	kfree(rvdev);
+> > >  }
+> > >  
+> > >  /* Platform driver */
+> > > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> > > index 7c1546d48008..222e1a56cebc 100644
+> > > --- a/include/linux/remoteproc.h
+> > > +++ b/include/linux/remoteproc.h
+> > > @@ -339,10 +339,6 @@ struct rproc_subdev {
+> > >  	void (*unprepare)(struct rproc_subdev *subdev);
+> > >  };
+> > >  
+> > > -/* we currently support only two vrings per rvdev */
+> > > -
+> > > -#define RVDEV_NUM_VRINGS 2
+> > > -
+> > >  /**
+> > >   * struct rproc_vring - remoteproc vring state
+> > >   * @va:	virtual address
+> > > @@ -370,9 +366,10 @@ struct rproc_vring {
+> > >   * @id: virtio device id (as in virtio_ids.h)
+> > >   * @node: list node
+> > >   * @rproc: the rproc handle
+> > > - * @vring: the vrings for this vdev
+> > >   * @rsc_offset: offset of the vdev's resource entry
+> > >   * @index: vdev position versus other vdev declared in resource table
+> > > + * @num_vrings: the number of vrings for this vdev
+> > > + * @vring: the vrings for this vdev
+> > >   */
+> > >  struct rproc_vdev {
+> > >  
+> > > @@ -382,9 +379,10 @@ struct rproc_vdev {
+> > >  	unsigned int id;
+> > >  	struct list_head node;
+> > >  	struct rproc *rproc;
+> > > -	struct rproc_vring vring[RVDEV_NUM_VRINGS];
+> > >  	u32 rsc_offset;
+> > >  	u32 index;
+> > > +	unsigned int num_vrings;
+> > > +	struct rproc_vring vring[] __counted_by(num_vrings);
+> > >  };
+> > >  
+> > >  struct rproc *rproc_get_by_phandle(phandle phandle);
+> > > 
+> > > ---
+> > > base-commit: ef0c9f75a19532d7675384708fc8621e10850104
+> > > change-id: 20260618-vring_flex-b4d23d1974ba
+> > > 
+> > > Best regards,
+> > > --  
+> > > Francesco Valla <francesco@valla.it>
+> > > 
