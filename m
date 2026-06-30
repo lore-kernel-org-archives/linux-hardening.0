@@ -1,193 +1,189 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7620E313E34
-	for <linux-hardening@vger.kernel.org>; Tue, 30 Jun 2026 09:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782811002; cv=none; b=Y83zCFvL5PTZlKGAaGFM+SaeODa/GiV5H5vY3tWz9Rr2PHxJUT2aPtx7k0kZ4rIDnLV39XPiqaG09wYfpa49eMqnFTDnJugbSJBfeqRzamlPuwi/TZSZNCygA/lvRQEfbnXxXKdb0SNAZLpLDBmWoXZXNPjSRhADLNXNo9keeIk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782811002; c=relaxed/simple;
-	bh=pOGqr+6YjRRrGfqyTm37l0BuFHy9XPuCtkGh7B9Kr+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mGE0tGyjnuhSiUpFUusfPUC0xxwq1m3fbDgl1bEvAi5bvfK4e2MZKo38LAB6WRnIcy0Tzx6fyCh6eTU91UClPxhqu09CN4tx96gBWE4bUIdPGPdH6Uvldm5rorZpHHWLItwv6OoQ8+q7zZcDKer/yC7EcOwx72TP5fvR0bHpkcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=OhlBURWG; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from mx0b-0002e601.pphosted.com (mx0b-0002e601.pphosted.com [148.163.154.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2BD145FE0;
+	Tue, 30 Jun 2026 12:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.154.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782822640; cv=fail; b=dLERWzXl0HCtSXKZDQ4T/cXAX+EP/3OeV2C/H1Gwwlrnlz6/yWM4qFvGuPf332LOcx/bsTdKS+dB5p55QoNr0Bz90qEsXOjyrYid4V6KmpwWIB0vwGFKRAxkALy0DJ3pOnzntphKIQD5TqS0zBUawil9QBjqKNhXF4KEEzI+Th8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782822640; c=relaxed/simple;
+	bh=5fdbmexkp+tEE1voq98ZUdXpRnfHJBukYFAstSJRW1E=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tpLjQIWi4Kj8so/O78KWZEx2fOUIJMp5qWls9PhzEmCriyyoNqSmk31yqPc6yjTyLHU3Bufs4o5mmv2kth84i0gg8BiU78vgzgXe3C9dJdz2aBbR0pQ/FeFj4ozX3APayxWvnQwcCzsGLL7ibfv0Ik/mJMOr34Ir8fZLEIZktG8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b=bs2iV1f6; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sQJ8jcAQ; arc=fail smtp.client-ip=148.163.154.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="OhlBURWG"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68EE12C1C;
-	Tue, 30 Jun 2026 02:16:36 -0700 (PDT)
-Received: from [10.57.81.132] (unknown [10.57.81.132])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F30143FAFB;
-	Tue, 30 Jun 2026 02:16:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782811000; bh=pOGqr+6YjRRrGfqyTm37l0BuFHy9XPuCtkGh7B9Kr+0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OhlBURWGxQqcbV6J2ZjbPLWqe0+OO9mHDyY8RjjqBPKuIiYpX91UGBHlnRLA2voBR
-	 ZGfe8UhEF+CVHnpiOUhkK+Si+HmROlqhNQzZWseJfpnlDEHoIShP9UCusiuqoiShd4
-	 QVu9mycDBfqeZmeTAPiDcXgKfSZGryWFP031nXt4=
-Message-ID: <e4f98e9d-9f02-46d3-90ff-22ec711ba85b@arm.com>
-Date: Tue, 30 Jun 2026 11:16:27 +0200
+	dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b="bs2iV1f6";
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sQJ8jcAQ"
+Received: from pps.filterd (m0374955.ppops.net [127.0.0.1])
+	by mx0b-0002e601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65UBAoit676857;
+	Tue, 30 Jun 2026 07:30:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	proofpoint-05-2026; bh=d6d9GoL2Cwba4zKt6lgX+OEUKmVmYsV6rK0N9Cwpp
+	5A=; b=bs2iV1f6acC9A2B+V4NebiB/lbq2FfSNj/n0KVHd8YsN+lgUFImFz0L9n
+	6+b2dBX114YOkJ+S3wUhNjkvxu7IhMLVM7u7WADqTyRwXkwB4Ox2qVUhH0H7nVvN
+	TA+WhGoapeMVyFk6RTYZOHG5umAgGP4VvLVe+0EPM9dNAaIc759KL4q7i8TAswpr
+	8YIVxmpdNe0EOnQakxfMQGc58IKOGEY/VXVQagdfV3ekktQUhATEAkxAaiJ/VNyM
+	9kQUvY1spQOqTXF8NV0uw3QuV9iQJT0NjfJ1gd+rQxDTk5icPwTJYXa0jz/1PQjc
+	gYzyB0nO5qvsA/RPbe4JZ0iF1AyjQ==
+Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazon11012057.outbound.protection.outlook.com [52.101.43.57])
+	by mx0b-0002e601.pphosted.com (PPS) with ESMTPS id 4f4cpvrb25-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 30 Jun 2026 07:30:31 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PaCRMckbfQJyHv3UXsKtfq4A9PvLu8jCAZXdPHvwrHnE8xjCROsfcW+CjEBtGQ/6MIH/yFh8QBIlcIZse0vB5l9vV5NTWU4L7EN/jhxZulKKuXYZ13yfVcSc3FdOae61pW9TlKCuQpw7kMAAXUaaj7Bvr2SyMo0wIGLnQqDq91EQew/KHjCNaYhA4AOgTMRmiBUK4BnijKpUlcf5MsRtbC8InDN/hYBwtHE6SN7zQ1r9cVvOh/Tk09kNyG0mnQbOyjblBS108hsjiMYEdTFwlwtV7yNyZ8m424LSfdxjmv5KOGrRCz520tFrV/S3XQgsptWp+xH7WbtagwQ+OskO7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d6d9GoL2Cwba4zKt6lgX+OEUKmVmYsV6rK0N9Cwpp5A=;
+ b=iXuZQzDb4PYZBLjjIQFHU65tNbrxV+OZdi5ixcgJxEMa/Yth/Y8JIYb4yZYinmq+u+mltf78kSHEDrsm1BWNX/GNc2TNRtRWfTq6Y3ht/rvcJ0c3EpU7ylIufqVJ+Vtg6Viq8sAHabBGJppL2uEpQS/pfdDv/LHxric5i+cQgjjy+oQS2R2wGa+2k8VHToB9nL7p/Idj4CCxp73hSHLsIRWPzjenKwggqgPyS8V/vz09+tkvJiy4B7CQGKCPsGDHBGlu0Go3PlHnOxVf+YBZKZaN4vAr5JeJqOS081V5cPkxdNKAYENdEo75FgqDFzOC+/wJH0AoNVod7MmaoZ0xvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 198.47.23.195) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d6d9GoL2Cwba4zKt6lgX+OEUKmVmYsV6rK0N9Cwpp5A=;
+ b=sQJ8jcAQKVFhu5TOAhPoUQmhedoGIbPL5Hs6Eb93n/Nv23xJZPTjTysltl9YttfTEg2WFPtcC2n5vLch35xBu4Wsbt6Q3E4P/v2ozqZNk1EupzcU8mIrf8NOre0jN9po75KOFQzrrN0n/rBjKkGEr1HlSNTQYh+7fmcJ8M4SVfE=
+Received: from SA0PR11CA0182.namprd11.prod.outlook.com (2603:10b6:806:1bc::7)
+ by PH0PR10MB4631.namprd10.prod.outlook.com (2603:10b6:510:41::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.16; Tue, 30 Jun
+ 2026 12:30:29 +0000
+Received: from SN1PEPF000397B5.namprd05.prod.outlook.com
+ (2603:10b6:806:1bc:cafe::81) by SA0PR11CA0182.outlook.office365.com
+ (2603:10b6:806:1bc::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.8 via Frontend Transport; Tue, 30
+ Jun 2026 12:30:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.195)
+ smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
+ action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.23.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.23.195; helo=lewvzet201.ext.ti.com; pr=C
+Received: from lewvzet201.ext.ti.com (198.47.23.195) by
+ SN1PEPF000397B5.mail.protection.outlook.com (10.167.248.59) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Tue, 30 Jun 2026 12:30:29 +0000
+Received: from DLEE200.ent.ti.com (157.170.170.75) by lewvzet201.ext.ti.com
+ (10.4.14.104) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Tue, 30 Jun
+ 2026 07:30:29 -0500
+Received: from DLEE209.ent.ti.com (157.170.170.98) by DLEE200.ent.ti.com
+ (157.170.170.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Tue, 30 Jun
+ 2026 07:30:29 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE209.ent.ti.com
+ (157.170.170.98) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37 via Frontend
+ Transport; Tue, 30 Jun 2026 07:30:29 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232] (may be forged))
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 65UCUTQJ3055883;
+	Tue, 30 Jun 2026 07:30:29 -0500
+Date: Tue, 30 Jun 2026 07:30:29 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Rosen Penev <rosenp@gmail.com>
+CC: <dmaengine@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vignesh R <vigneshr@ti.com>, Vinod Koul <vkoul@kernel.org>,
+        Frank Li
+	<Frank.Li@kernel.org>, Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar
+	<ssantosh@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCHv2] firmware: ti_sci: simplify resource allocation
+Message-ID: <20260630123029.ozveska7eoenci3s@unturned>
+References: <20260504031209.618949-1-rosenp@gmail.com>
+ <20260506110910.su2s6ncsi2xfdiwm@pureblood>
+ <CAKxU2N8PUdxo54oHtcroqe+Q88k0obxPg_9OCRsNsoOwvcS25Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v8 05/24] arm64: Implement asm/kpkeys.h using POE
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- linux-hardening@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Kees Cook <kees@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Maxwell Bland <mbland@motorola.com>,
- "Mike Rapoport (IBM)" <rppt@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
- Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-mm@kvack.org, x86@kernel.org, Lorenzo Stoakes <ljs@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>
-References: <20260526-kpkeys-v8-0-eaaacdacc67c@arm.com>
- <20260526-kpkeys-v8-5-eaaacdacc67c@arm.com>
- <f8507ad6-761c-4073-85ae-bddb2a07d660@kernel.org>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <f8507ad6-761c-4073-85ae-bddb2a07d660@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKxU2N8PUdxo54oHtcroqe+Q88k0obxPg_9OCRsNsoOwvcS25Q@mail.gmail.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B5:EE_|PH0PR10MB4631:EE_
+X-MS-Office365-Filtering-Correlation-Id: f6287067-4c4f-4aa2-e635-08ded6a35f20
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700016|82310400026|7416014|23010399003|1800799024|376014|18002099003|22082099003|4143699003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	ER+IewTJFiqXNnBougqfSr8Saj9TN38WjrH1PwY5OmFlSeVXuzqUvLVkgi/0sCL7Mqp+Lknel+PLEO8NvkkWdRJs+88tINXiEZBpji1Wrw9+J2p8V0GuhZbU4dBXsV5eoduYMebs0X7NiQ6pzqDfu/HIEzQiUYBcBtRIERjyzmkC5TussZ7r2+JcHhtOKSVmltMkb9UW7IZCWCzX26v5b6ZsuCJoZmb1lQ1eAGpwxWSUqVEGhk+SLpuclpxxhciIuHfdR2jKoslZJNUph9IyOnVoiWJBWWYW75L9raiLE4v5mca2wFVnyg8Q7y6anFtvy+KIjLvACjx/X5RsN2XahxXw9JXERP/lUdxNH/EZ2YizEHnOa7qbrRqT9ZEqc+ksktvCbly8jauCv2166FtQp55494f1E2b0cbBCNketTzdCY6eRWQwpDlRq6QunS7vZs0aRU6NRfZkFebHdvBNKtqxxgskoGWGSdwthN/+7Hl3xywyaLvJ/ryvNJI4XfoSQ9Sjg6pjqrNbIoDJgZ/kBlRXInpl/AAHriVkFo4uTBWwTJ/mefQPy93DZKpPVwvT3yZcLH9dom8J+wZ9mYNYputva9BIa06nQMg9NxC06LFs4CC7jlaNPtOoE/stVRYscs7gI/MXt1Z/Z7yOb0Sbzfg==
+X-Forefront-Antispam-Report:
+	CIP:198.47.23.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet201.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(7416014)(23010399003)(1800799024)(376014)(18002099003)(22082099003)(4143699003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	iDiusGzsgOekt0q6eRBejNHUnA/1pHjSghzfzvS7TzfWKCdkUtpLutcB5X15ioyskbmuyiL80uTCRqW+d45uFpk9VkNzqj6Vv2qHSRkqphnkpaLIpCqscwQo029bYwXxCyNNGET12qCp7XAoA9YafiKyTYw5jhVsoL3Fq8bUFxva59WYSFDKAHgUpLzGNmjKisudGdUfkBdDoD4sdGc7i2d49tLU/1JBpCCMJuXGkBodjE9gsL+3fh8uurXlasgxat0gRvFGhV1PhIgJ5QKd0VfHB+mO1FAS+S4eg958VTg4hiKIYcepx4QdnUyoJWOQjut+lFIYTGYhd7n4uzwY+Iq2jfCG+ZgNdh7oV4S4jujXJe6LepD8TnXW1egQ7sTfdXbm8XZlolOrf4JYIvqK7/5FlPq4iT8KTGMVfJ2NNDhsGcS5MU2njtAZlX0Z3Ktx
+X-Exchange-RoutingPolicyChecked:
+	eHpkXLVlWYJwiUKQm4XC8M3DEjanElFi0rvuKf7f+tSd8h2SAPRlT1HlKdLTQJmWMLuOc3v6/haKQoDsgyqmfdcJ1UNUaV9NX4odYSD9bumpalw/lLwUlPfrQryb/tuZAY5SotxK61rlCH2BukrDHHhYlGVUcr2PvjTQcYIJSnjmjnDAqo+xJNzK3zh99nymevtY6bsEGea1p2vWBvyZb/tkaao8Uz8dIsuKr7vYhT3SCNONPA7H/F5crddmtAU0S+D1ynXB9ZRkPleMzk43WSNXg41njSj3L5vAloliA+Gke/zM6Od9gD3XMrcrEjk6n+e2MFVgVQvWm8Oxke1PLQ==
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2026 12:30:29.6439
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6287067-4c4f-4aa2-e635-08ded6a35f20
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.195];Helo=[lewvzet201.ext.ti.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4631
+X-Authority-Analysis: v=2.4 cv=c6abhx9l c=1 sm=1 tr=0 ts=6a43b6e7 cx=c_pps
+ a=Y/Y9x3HtMOqQL+YbCjVQEg==:117 a=f+v6EHfkeJbVwR46tk4DMg==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10
+ a=s63m1ICgrNkA:10 a=V5UXEbMT0ywA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Z8NIEmU8O1QQgoT56wFK:22 a=fPAWb5peG099m5CrUpKH:22 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=sozttTNsAAAA:8 a=P6EMeZrB4Hkf_tHIvukA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDExNiBTYWx0ZWRfX3oW38DbELDzQ
+ rnAnbYhsUvXvjVDZpYV0JirWFl18ijm/0efMGfNdVy4gpSJdakac9zv6UdpyHuGgZoHhZh8++d0
+ OSBVg1b9HLI9AUtvdd+xYpsYjPtCwVg=
+X-Proofpoint-GUID: AUJbHr8712Ya2Z3BhOcOGjXC0wxnXKBb
+X-Proofpoint-ORIG-GUID: AUJbHr8712Ya2Z3BhOcOGjXC0wxnXKBb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDExNiBTYWx0ZWRfXyV+HUHAns43D
+ pKjy10ptW/V/KEdoOPgLY6Iu2uE99j+Qbez2dsCa3j2EqKeqJUrZOx4I1zzEfDY8QL61kq2RWEC
+ bK0EE2NXN3GMnYzvmRSK9eMTNUvzLd2Q4qoyajg+QzdLVhlvjrXa+Cd0HuUAGTjxQ9jdBjakszd
+ wapLQhxHq39xxXQSCBF5JS7id/qgbhIy77+U96I1r95kCUAKhr6xPRDN/GdhcvGRJsABBxUyzag
+ /Y1dqOLbul8pxzS/YnPMimMJl+PGsyoGTSkQ87XIru2QFBjwNjsoq4K1dKBNy2c7gJQXz2wBoie
+ 1HQW2ZZu7Uvphotti3db8uwgV+z3NT0y8/y/q0TVlwL9apMKEZH+Hv4jWK4U0E+LZd6qWmo4HDk
+ y1VZrabLTZJGs71zh1d0ABW1Dv0Zl87CnVabZpSCfwaaqHPeFe4yJOhBfA8k8gKeueE3fC2tEsf
+ 3kuJJlCeSmDrfSKEqnA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-30_03,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 bulkscore=0 clxscore=1011 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606300116
 
-On 22/06/2026 15:35, David Hildenbrand (Arm) wrote:
-> On 5/26/26 13:15, Kevin Brodsky wrote:
->> Implement the kpkeys interface if CONFIG_ARM64_POE is enabled.
->> The permissions for KPKEYS_PKEY_DEFAULT (pkey 0) are set to RWX as
->> this pkey is also used for code mappings.
->>
->> To allow <asm/kpkeys.h> to be included from assembly, also add
->> appropriate #ifdef's to <asm/por.h>.
->>
->> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
->> ---
->>  arch/arm64/include/asm/kpkeys.h | 59 +++++++++++++++++++++++++++++++++++++++++
->>  arch/arm64/include/asm/por.h    |  4 +++
->>  2 files changed, 63 insertions(+)
->>
->> diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
->> new file mode 100644
->> index 000000000000..4dbfeb3dfcfe
->> --- /dev/null
->> +++ b/arch/arm64/include/asm/kpkeys.h
->> @@ -0,0 +1,59 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +#ifndef __ASM_KPKEYS_H
->> +#define __ASM_KPKEYS_H
->> +
->> +#include <asm/barrier.h>
->> +#include <asm/cpufeature.h>
->> +#include <asm/por.h>
->> +
->> +#include <asm-generic/kpkeys.h>
->> +
->> +/*
->> + * Equivalent to por_set_kpkeys_context(0, KPKEYS_CTX_DEFAULT), but can also be
->> + * used in assembly.
->> + */
->> +#define POR_EL1_INIT	POR_ELx_PERM_PREP(KPKEYS_PKEY_DEFAULT, POE_RWX)
-> Okay, this matches
->
-> #define POR_EL0_INIT		POR_ELx_PERM_PREP(0, POE_RWX)
->
-> Is there a good reason we need KPKEYS_PKEY_DEFAULT at all (and not similarly
-> just hardcode it to 0)?
+On 18:42-20260629, Rosen Penev wrote:
+> On Wed, May 6, 2026 at 4:09 AM Nishanth Menon <nm@ti.com> wrote:
+> >
+> > For some reason, replying drops the CC list. manually added them in.
+> Found the issue:
+> 
+> https://lore.kernel.org/lkml/20260630014129.1548147-1-rosenp@gmail.com/T/#u
 
-I did wonder about that. As per the discussion on patch 1 I don't see
-that value ever changing, so I'm fine with hardcoding 0 if that feels
-more consistent/intuitive.
 
-> Just wondering, because apparently we didn't care about adding an indicator for
-> user space pkey 0.
+Please repost with additionally CC LAKML and the TISCI maintainers for
+the patch, this would go through my tree.
 
-It's never too late to add a constant for userspace as well, but of
-course since it's been ABI for so long the value isn't going to change.
-
->> +
->> +#ifndef __ASSEMBLY__
->> +
->> +static inline bool arch_supports_kpkeys(void)
->> +{
->> +	return system_supports_poe();
->> +}
->> +
->> +#ifdef CONFIG_ARM64_POE
->> +
->> +static inline u64 por_set_kpkeys_context(u64 por, int ctx)
->> +{
->> +	por = por_elx_set_pkey_perms(por, KPKEYS_PKEY_DEFAULT, POE_RWX);
->> +
->> +	return por;
-> Why not
->
-> return por_elx_set_pkey_perms(por, KPKEYS_PKEY_DEFAULT, POE_RWX);
->
-> ?
-
-Because of patch 17, I wanted to minimise the diff. Happy to change it
-if that feels less surprising.
-
-> In light of API discussions, it would be nicer if arch_kpkeys_set_context()
-> would just return the old context. But that would mean that restoring the
-> context would require another read_sysreg_s(SYS_POR_EL1);
-
-Correct, that's what I wanted to avoid.
-
-> So instead of returning magic register values, that should be wrapped in some
-> arch state struct as mentioned as reply to a previous patch.
-
-Agreed.
-
->> +}
->> +
->> +static __always_inline void __kpkeys_set_pkey_reg_nosync(u64 pkey_reg)
->> +{
->> +	write_sysreg_s(pkey_reg, SYS_POR_EL1);
->> +}
->> +
->> +static __always_inline u64 arch_kpkeys_set_context(int ctx)
->> +{
->> +	u64 prev_por = read_sysreg_s(SYS_POR_EL1);
->> +	u64 new_por = por_set_kpkeys_context(prev_por, ctx);
-> Both can be const.
-
-Sure.
-
-> But maybe you just use a single "por" variable.
-
-Not sure how? prev_por is returned and new_por is based on its value.
-
->> +
->> +	__kpkeys_set_pkey_reg_nosync(new_por);
->> +	isb();
->> +
->> +	return prev_por;
->> +}
->> +
->> +static __always_inline void arch_kpkeys_restore_pkey_reg(u64 pkey_reg)
->> +{
->> +	__kpkeys_set_pkey_reg_nosync(pkey_reg);
->> +	isb();
-> Why is that isb() for both callers outside of the function? Do you expect
-> another user that doesn't need the isb?
-
-Outside of __kpkeys_set_pkey_reg_nosync() that is? That function is also
-used by patch 22, which doesn't want the ISB because we already have an
-ISB somewhere else. The naming follows that of __set_pte_nosync().
-
-- Kevin
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+https://ti.com/opensource
