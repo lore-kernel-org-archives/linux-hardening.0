@@ -1,132 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA74A78F2F;
-	Tue, 30 Jun 2026 07:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782804503; cv=none; b=ewIil6PnNe1ljcIsmxB4yEOnms9HB4mtA+fQUMgSaThW+J8OSPWyFV5hWMd5SM2vlksrKnwSEHJNLubF7Dz3mR4//Hxb9QAMTrJ8igny9DgJekttjtTtoLuK69EtjcUekZeundfxDJw0GcWq7rYt3y4nefFSutASflrinJIuY+E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782804503; c=relaxed/simple;
-	bh=QXsMlIJFgIaZkb+e81eZ8/ZujmTrQ3d/KPlPA13+lgQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ocHNq7SFZXGYw2Zgy7TGsKWVNhXkeIRqPBsFgX2j0AKGTFvI0jSbOIkGHHkjkYk1RDE152ZjSjjcKF/STslbTNwtVlPTpMnKM3Drf27ah63feZwoujwy+9VYP0YHfUevEH/R+m3j7hMKT0R7FoJCKXvkN0mo1CrmIGwVv6CgPR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+VYfc7a; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4F02C3245
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Jun 2026 08:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.179
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782806957; cv=pass; b=ZMY3nD6sVVzlfnE7JjP3BnpREuVPqRJQ2aMreHsBumqdyT1dKK/VOyix0z5RAXLUwpQnOUbeb+fLo+RGlqYQyE8ecGp8tENu+aVtCPmicpZXAcrdm09wkLIJnAxvpFPLRW9FOYqxDiUah8rqHXGWymMNgiWblik7C/dscuN8ZQo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782806957; c=relaxed/simple;
+	bh=BZiqEOF622Wn1mEZzKvDK3USmkyKBgRUpLQz4VE2a3Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j96mh+S74D/4ZAlF2kkeRkZz8UmAObhKLji3szHrZzol9/s4xJWylMO25d9KP7XZy/6Wa6CXv2YJc8AWHIp1woflR6vXI5uAvw7r6yBiFPP+Vp3/JGFuMI63iRfqHSOMi5kNnIMv7M36ciKbUnvF+2rJKzLIRj0Cg93N9uO/c8Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=YsIXCevK; arc=pass smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+VYfc7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CFBC1F000E9;
-	Tue, 30 Jun 2026 07:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782804502;
-	bh=ZZ79yflPqq3Spvk4qgRCr72BY3mK+jqs5+5msARrrV0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=A+VYfc7aJqYtdH4yr1Q/cuz5a+NkQAkJdcDcHNxjOxU3OplH8tFqQixGpeqnkrSuu
-	 YKIZy77HB/G3zQ/ACvIMn72aU0t+vkttIrqDbW/oODAMFZEskar10yFPbcYN2xd93C
-	 VFcgi/whXgD355X/7Fo3Glx82sMdoe7zE+S/oIbdBtbQz7dXz10Ap5enAkXDit3hXU
-	 xhshfd0TM0mim+VjdEJbhqSnB6WH5DgCoKnGClcFpOWBYyue9nv+w8KTeua1soUAAO
-	 KzxoZ1C7wXRL+muliCrfPQti9l91jlK6NzKOef6eQoGTp80Zn5Lzsep4k/vQwpj7ys
-	 jBCfYzgxpEFqA==
-Message-ID: <17d381fb-1f91-461c-8315-1508ad0c1efe@kernel.org>
-Date: Tue, 30 Jun 2026 16:28:19 +0900
+	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="YsIXCevK"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-84780c95e2eso1234528b3a.3
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Jun 2026 01:09:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782806955; cv=none;
+        d=google.com; s=arc-20260327;
+        b=cGRP4GIMBxTCLS2VIGUIjKfyuGTnn1OlQnBtFAvWEDWBkF7cAfzU3+4Kpu1CdKVfuw
+         39CRBbeh2qGkfp9Qvyg6DiUHsj+FVJYINuKUjCcREf7ICAMfREHBGz9S+kszQPih0ro7
+         SSTv96aur783Vu9PvWOGTtGznnPRpaVt6tW/slIvtaGQBLlOhVYY+2nNjLaVhEF5ny5+
+         FHWCStVdfbWwE34m5aDTn2NfnZ85Xbb1MFm99LOp7/rH5sHyVummlPp6DHnNOb2XQKbY
+         oQmvwkL9hmOqBKyAsv9K0k/5KnwKWX3DkgF1Pei6ZSlZy2I6TQr4R5Eq2TWgwrHb3GsY
+         2AXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=QMfxs/lV3gs7hZOuAvr99QHZT5L0EyUo7IHm9UkfFF4=;
+        fh=rlmncKrX/96pyK9MgxsCirSamjS0/fiFDsr3wy8S4To=;
+        b=AcCPc/1RMq0mmIeGhOP5gNtEwDoREFOv7JMaez1eP0ikFRQYOW6bI6xTKgysNZJDW4
+         NVi9ErS4/KOgeXDgJOZ9QeJqe7lNR61+RXsDoEu5d1TzMvZm0KKf8PyGDVt0FVv+pF2Z
+         WDzMgWXL8mb4X+wXlBY69XBwMjyQAguYEIeMlNnMT+yWOodDPYf6Zxz9ZIu4QwFCiuG8
+         uFFkozhin6twChGTNjGOcE7qHKQgO+smOglI7XckmhVlSuIL6cxl+QPu0AdJv+KboIAq
+         yirF+p2C1wSra3A9kl48YE1arsKh3ujfdK64S8i7ZvaI9PwQ1Pfom3btS3W7MUxxqUzx
+         rCrQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=asu.edu; s=google; t=1782806955; x=1783411755; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QMfxs/lV3gs7hZOuAvr99QHZT5L0EyUo7IHm9UkfFF4=;
+        b=YsIXCevKuRk/r+O5gIVXuJFavn1kh6N8etEn9xvTfRxec39ke1RHMfAqjYGtRgOe73
+         hrWHU0DZ4wmQj9qrwVdQ0DRjB204qTNOecS0yJgM3An11G4fQr+cwQv0uulNgHeuAi5P
+         mUL9uOjOQR72i3EtKmSnXBaxvTn3ROASUrz3ElKf70xMkXqAx+bQbW3akE28eDhRCMee
+         mfiUz0Rul2ttI6LQlG+xmMoZ1eiR6WEKMoovAfNB3vTUQemDTMlWwkZsh3vRtg0/I34q
+         gQEjUC2iu5nFL1fThqz2XLV7LDvJRlvvoQSa+mMecRebsXwtJS52DdoZ1D6IvMz66wrw
+         h6og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782806955; x=1783411755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QMfxs/lV3gs7hZOuAvr99QHZT5L0EyUo7IHm9UkfFF4=;
+        b=pgm/1VFFYx9sUWgfbUWtmKLzdtNvgZhzOsx9YrgK1J0mKtiph0PNs4T42KEkOlzrQC
+         QyX3cfHeHkRFCMwqFx2nMIFb1wvXw7gVfv3avw7CaZ3d0Vn0rP7FsH3gUh5ZxnzLd3Vi
+         Wb8Z5Ypv9QMb8LokJFe8uoOrcTlflrUSQo9P8IIH5mZ32QgdJIf0LNhwAe+GpFF5kRoq
+         hW49edi5ArLw0K9m8HFLYKEm8HHWiLVaDAex1W+7xAVMTxKefwBdCmerrqwnQSSDmETk
+         HDeZBQoDPz1jrVNy35rzLPwsrzOh17KhiYaepFHFHxIR5lSuFZKA/lRB5BmD8TZgxdwp
+         wTJA==
+X-Forwarded-Encrypted: i=1; AHgh+RrYm7u2Z/bdDWdNQ2LNTwh7LGRcz1MMyhayDci8dZHW4WHB3oWs7siDJQ8DEheG1K2YQo/d4BdPKOauiV75OV4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztBI25Y6kydogrK4uLDC9raMzPCVv1oytDeMqRc9a/u+sHmckm
+	jWvi6K5amDmmmqCTTISzxtjSWxxiOi550ajxahAg5LMmiSxregpQHL9UIYLFnb2PVkl9OumJk4O
+	NAcwD+XhCpmEtV6dg+ZNJ48GhBWoBSQG0s/6prZD+
+X-Gm-Gg: AfdE7clqUy6SZL4B35Yus8CMlHbit8EzB7lXwGRpKlsu0Im9+vZ0ay+vc58cdawaWqF
+	nOlNTVDRF2QkeKUFHMZNLBws3yseI3nA9+Bg8P5o38Lv8NMJhScRWS25CsEUZOkmL+4ZoCFjEcB
+	Mi1w2BNbmqNCUN2LCZCmtauskh5p2khSN8f5HMyVfsjyURsFkJuInMiOHGSpx6s2QeFMfJpx1XM
+	D5Cn2aFOPQz21KjC7aMJvxQ2f61vW2UwXEvQf7LO+2NVwwd86vjdHNSOi9uc6H1NzF+EAqftR2o
+	CSdnfoH6dLOtYvATW5ACffUS9dE0/g==
+X-Received: by 2002:a05:6a00:bd0b:b0:845:e8b5:8c49 with SMTP id
+ d2e1a72fcca58-8479ee9a9a9mr2040137b3a.10.1782806955524; Tue, 30 Jun 2026
+ 01:09:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: st: use kzalloc_array
-To: Rosen Penev <rosenp@gmail.com>, linux-scsi@vger.kernel.org
-Cc: =?UTF-8?Q?Kai_M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- open "list:KERNEL" HARDENING "(not" covered by other
- "areas):Keyword:b__counted_by(_le|_be|_ptr)?b"
- <linux-hardening@vger.kernel.org>
-References: <20260630012101.1461335-1-rosenp@gmail.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20260630012101.1461335-1-rosenp@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260626173444.2252041-1-xmei5@asu.edu> <yu6l7zo4dmqcnho7thkf7sk42lt6xkz6uxxwxmg73x23vihlnp@pe7vdut4o2jc>
+ <CAPpSM+Qwmv_wsNFnEjtk3GbLdZB_JtH5vW0v-Cj-CyiE8M_UEw@mail.gmail.com> <20260630071257.GQ1181229@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260630071257.GQ1181229@noisy.programming.kicks-ass.net>
+From: Xiang Mei <xmei5@asu.edu>
+Date: Tue, 30 Jun 2026 01:09:04 -0700
+X-Gm-Features: AVVi8CdBvYa65GaG_aiHMGG_wGQ7SXzFa_rmBeFZe4-w9ahKm8Oy_NU9CMHCKu0
+Message-ID: <CAPpSM+Q3nZTULXxRM8_6QzfF0BBDLEWOcLF16cciuFzS1aodCQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/vmalloc: widen guard region to defeat ENTER-based
+ stack pivot
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	linux-hardening@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Jennifer Miller <jmill@asu.edu>, Tiffany Bao <tbao@asu.edu>, 
+	Ruoyu Wang <fishw@asu.edu>, Adam Doupe <doupe@asu.edu>, Kyle Zeng <zengyhkyle@asu.edu>, 
+	Yan Shoshitaishvili <yans@asu.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/30/26 10:21, Rosen Penev wrote:
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+On Tue, Jun 30, 2026 at 12:13=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+>
+> On Fri, Jun 26, 2026 at 10:48:46AM -0700, Xiang Mei wrote:
+>
+> > >   - The displacement is attacker-chosen (via the immediates) up to 0x=
+100ff,
+> > >     so the pivot can clear any guard narrower than that in one step.
+> > >   - ENTER is reachable as a gadget, so a pivot of this size is availa=
+ble
+> > >     without depending on register state at the hijack site.
+> > >   - The pivot happens after the control transfer, so it is not constr=
+ained
+> > >     by forward-edge CFI (kCFI / FineIBT).
+>
+> > Please ignore this line; it is not related since we assume we already
+> > have a CFH primitive. Sorry for the confusion.
+>
+> So I am still confused by all this. CFI does remove a ton of CFH
+> primitives. Until we have Shadow Stacks sorted, ROP will obviously be
+> the main alternative, but I'm really struggling to justify adding 16
+> guard pages rather than going after any actual control flow hijacking
+> primitives.
 
-No commit message ? Please explain your reasonning, because I find this patch
-incorrect. See below.
+Sorry for my wrong information. This is not related to CFI. I'll remove it.
 
-> ---
->  drivers/scsi/st.c | 12 +++---------
->  drivers/scsi/st.h |  3 ++-
->  2 files changed, 5 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
-> index f1c3c4946637..31ae189b18e7 100644
-> --- a/drivers/scsi/st.c
-> +++ b/drivers/scsi/st.c
-> @@ -149,7 +149,7 @@ static struct st_dev_parm {
->     mode counts */
->  static const char *st_formats[] = {
->  	"",  "r", "k", "s", "l", "t", "o", "u",
-> -	"m", "v", "p", "x", "a", "y", "q", "z"}; 
-> +	"m", "v", "p", "x", "a", "y", "q", "z"};
->  
->  /* The default definitions have been moved to st_options.h */
->  
-> @@ -3973,21 +3973,15 @@ static struct st_buffer *new_tape_buffer(int max_sg)
->  {
->  	struct st_buffer *tb;
->  
-> -	tb = kzalloc_obj(struct st_buffer);
-> +	tb = kzalloc_flex(*tb, reserved_pages, max_sg);
->  	if (!tb) {
->  		printk(KERN_NOTICE "st: Can't allocate new tape buffer.\n");
->  		return NULL;
->  	}
-> -	tb->frp_segs = 0;
->  	tb->use_sg = max_sg;
-> +	tb->frp_segs = 0;
->  	tb->buffer_size = 0;
->  
-> -	tb->reserved_pages = kzalloc_objs(struct page *, max_sg);
+We assume we have a CFHP (control flow hijacking primitive), and ENTER
+gadgets escalate the CFHP to ROP execution.
 
-reserve_pages is in the middle of struct st_buffer so you cannot use a flex array.
+>
+> I mean, if you have a reliable CFH, we should be fixing that. But
+> somehow I'm thinking that if you do have one, ENTER isn't going to be
+> the worst of it.
+>
+> Or am I missing something here?
 
-> -	if (!tb->reserved_pages) {
-> -		kfree(tb);
-> -		return NULL;
-> -	}
-> -
->  	return tb;
->  }
->  
-> diff --git a/drivers/scsi/st.h b/drivers/scsi/st.h
-> index 0d7c4b8c2c8a..759f4c43d563 100644
-> --- a/drivers/scsi/st.h
-> +++ b/drivers/scsi/st.h
-> @@ -45,7 +45,6 @@ struct st_buffer {
->  	int syscall_result;
->  	struct st_request *last_SRpnt;
->  	struct st_cmdstatus cmdstat;
-> -	struct page **reserved_pages;
->  	int reserved_page_order;
->  	struct page **mapped_pages;
->  	struct rq_map_data map_data;
-> @@ -53,6 +52,8 @@ struct st_buffer {
->  	unsigned short use_sg;	/* zero or max number of s/g segments for this adapter */
->  	unsigned short sg_segs;		/* number of segments in s/g list */
->  	unsigned short frp_segs;	/* number of buffer segments */
-> +
-> +	struct page *reserved_pages[] __counted_by(use_sg);
->  };
->  
->  /* The tape mode definition */
+You are totally correct. ENTER only works when we have CFH. It works
+as a stable one-gadget primitive escalation (from CFH to Arbitrary
+Code Execution), and we propose this patch as a hardening feature.
+Sorry for the misunderstanding because of my mistake.
 
-
--- 
-Damien Le Moal
-Western Digital Research
+Xiang
