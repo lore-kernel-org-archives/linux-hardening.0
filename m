@@ -1,76 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC6E2FD69E;
-	Mon, 29 Jun 2026 23:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8279F33BBA7
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Jun 2026 01:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782776883; cv=none; b=tsPTknnYWb4I5uBwmeZULS3EvJc1y75YNpEyOAienic96XVYfpvk8xUopL1PDkO9w/Ald8EscVacQtjbJwIQ6TOW1Iae8LIrW2+g++2il8l160gnjH84ZsJy/n0DQGlzNw4cZEEZSc24h6GMbOwGlKs1IccyQaJspHxYRtuQJx8=
+	t=1782782473; cv=none; b=nBpMw95XW3wpg09c6bTuIEvTUtT13gZBQV2yAFzzaayJ5y1CyWTWio0sXfo1vrw6K13aWzwVPjaFEncYrbqYNDCWD3LOkaoPyq56n5jU9i1yBS2wis0vn0WyEoyamRbQdw5M3l0fATYRm4+e1YnIcdm8K41QnFJ/5J+3LVYIHgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782776883; c=relaxed/simple;
-	bh=rtm+54lMPyXh2AvhXa6MvRR6q7qgl+tQLL8pQeLwvCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WlKIJuRxJbMYUxD7SK3jRwZ3d6KIdry3obbO5NSTauiTfHzxus6oLjVV5s7J+Xt/fXsFdN+pmJ6N5RF1a90VFsntmMJPIEg+xPGZs/jW7I4+Oi8Am7+WbFmugab6lfdqY6DmoltGBxDipLouMBT4S6/ti8T6AVfnnLh6aXP5zLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPA4aT4S; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782782473; c=relaxed/simple;
+	bh=NcHqpszERXjT6L6QRCE5wtLwJT4Wa3f3AWZ6iw/lRs8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VJsK/7kmbIhqOkfU3GW/F+HhoWE4sAR4eaAUGx6trc/0pZEri6uLTZQozBlP8vW8UgCHG3XQH94GjntlTNNthjEqXkMbnZKSXQm4Q+DYcc0l+gkPJPVvOOIkOMknphp2+ktnYXO38rZ1eBJLCFqb7lDDlURnEL1Scmc8XoPvRIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=knBvwv6t; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPA4aT4S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F5F1F000E9;
-	Mon, 29 Jun 2026 23:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782776882;
-	bh=MeMyWXM5ySTIsgDDp+6WL4WsbLV2tdptGm1+i71qusE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=WPA4aT4S0YVFxNBN/YVzEiMCX+kopezf6TvzANtw+AvVzaPq+4NZ4OjKtOc5WUp7n
-	 MUGf+gJeKsxLFK8I1G5J6uNMhRFGoDCjW0ZmXuxSSWXHOlxdsUbqugCAZvZk8bRDA6
-	 SY755P1et8m8lexU6Esb7n7pFwz8yCCRQbd/PocWF0rFj8SUcnMz+I5y3+PU/bn81D
-	 IUi9Wlo1akzQw+bs2ROrWl3doDqAWcQ5GCVnu9pFev2402y9ie+9j5qjRKB5ABfILn
-	 Y5zZelV21xGjUl6zn0oHdsC5RrhMdA8yFqhxEWdXXjaUTA7RppHuFNvAjtg26oMjh0
-	 MKeHu0Gr1jgBg==
-Date: Tue, 30 Jun 2026 00:47:56 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Rodrigo Alencar via B4 Relay
- <devnull+rodrigo.alencar.analog.com@kernel.org>
-Cc: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
- linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Michael
- Hennerich <Michael.Hennerich@analog.com>, David Lechner
- <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook
- <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v5 12/12] iio: dac: ad5686: add gain control support
-Message-ID: <20260630004756.5194faed@jic23-huawei>
-In-Reply-To: <20260628-ad5686-new-features-v5-12-577caadbf7c0@analog.com>
-References: <20260628-ad5686-new-features-v5-0-577caadbf7c0@analog.com>
-	<20260628-ad5686-new-features-v5-12-577caadbf7c0@analog.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knBvwv6t"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c9b373d5af0so626392a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Jun 2026 18:21:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782782463; x=1783387263; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WLMD0egzUCNwTlRP4H9rot2jquTKrKUwDtaYpTqbx2Q=;
+        b=knBvwv6t6gpDSIkRVagkBaMb4sL127quTTaNfXA9w/KDSYq1Sy3vSDVn9ah8lD+d7G
+         hwuk+DEaokclsExt3veXJEBNxfxxXhXzg7QqN8qr4S3esXWHRjwO8QKDtwl6/7ML6Lbu
+         9YGupVnnTU0dUnM7ZxSszPDCvNh3yDV60AYDZcQlOv1xHJzFcj33CoKvH7fMNMLYCbkF
+         9GV4co6il5n+8ZZ+8tFprnOUCxFRH6O5MTTXZdECLVewiTec2MtPdlETiWB05dtyOaZf
+         bpW3YHAw3T871Qw9EyPaHovXwP9ZCZZ7gIofcUktvobpbRPPV40myf/HiVj5S7vAOHu4
+         QRlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782782463; x=1783387263;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WLMD0egzUCNwTlRP4H9rot2jquTKrKUwDtaYpTqbx2Q=;
+        b=ITj+/ZzK6TwU06KhxGr1LnndFv0CUSlMnQc5DaEz0aoSp5dnLGbUcXe2w79ynJ2QqH
+         ZTF4T2wqrVqsuw0XHMHWdrrmQnXjA6pZS6plfqXErztAvSOJcOnNCAqh+n2GHg6JF3Nv
+         mkl7Nh18AzWHOzObtNagOxVZROxfp+esHV+N8W+iY/xVmrEsc/euE+Gf92cg+KbWjaxZ
+         DFJhU09EBO2LOkqjxhHGzn3QXpoj57ATLQbyQa2grc00E67ehFo7EILl5CvwVb3A1IIh
+         iMKjq1qA0YHwOQ1JSSKqW7UkW89S5ExK0rVw50UBEu3SuTn6DvxGERxhfwZJznPWT3E5
+         H34g==
+X-Forwarded-Encrypted: i=1; AHgh+Rqwa4gNjMBFjD6vLH00Hy3UV3lV8CtV0IPl2VsqqiEMpUIZNT1cdW2b0VeybqLpq8CBxS8wZqS+ngUr7qJJV4s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEwC3u+00EnDRgH1oLSaiqEiCewM2oiBV9ccjaQ1xUE+nBSpXJ
+	Ym5TQXdbd7BnbfajV4cJK3Fu0egTecrApjvBdZ+giCsVvE/Z/WiBMLVL
+X-Gm-Gg: AfdE7cljWEipBM2L1SI1yHF1FgwIUlZvv2hVHomHhjg/hBAchgO2alvyAPAXgMFb40N
+	LGe2FI/zGplIpWLYoEXa1r/A60rA6yFigy2UxvcblQSjsAuqjNIC2SZWGB29xMBT5+sXI7WNHb8
+	S9RPv5J+haP8fIcMnWXs2FsuYW26H6eOUk8G+qaZWFft5p5OkUmYLlruHjJrBLep5YbPN9Myx9g
+	6U29ou7ulADoxWu2peYAl+j/iklHHXUV3qcMbznB5KqEyyhcSwacdbSxRswDg/FclqnliR0IM4W
+	A9al2v7bUAmR12gbABNns4HljxK4PushaddbZR/1SpONUlj7CEdjV9kkS4xfpGmIkDk3UbwvIPx
+	/Yksz5WjKvm7GUJXjRpmBazUCx/WFZN/cM4xunpHRLWRdn4gC/jmOrXwtwqBVK6uWUvLKiszNzq
+	E8Grq3JJG3o2j8V7Dsgz7Q2K2opFlI7Oj37itQS9uK+9y11qkaPNTEHIn26Fua1HXEPkQw9gIO8
+	06+UJ/vSQ==
+X-Received: by 2002:a05:6a00:ad89:b0:847:9aa8:d3bb with SMTP id d2e1a72fcca58-8479eed1d30mr1294340b3a.12.1782782463469;
+        Mon, 29 Jun 2026 18:21:03 -0700 (PDT)
+Received: from ryzen.lan ([2601:644:8000:7a86::e34])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8479ff8c7b5sm689184b3a.11.2026.06.29.18.21.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2026 18:21:02 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-scsi@vger.kernel.org
+Cc: =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
+Subject: [PATCH] scsi: st: use kzalloc_array
+Date: Mon, 29 Jun 2026 18:21:01 -0700
+Message-ID: <20260630012101.1461335-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sun, 28 Jun 2026 15:08:19 +0100
-Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/scsi/st.c | 12 +++---------
+ drivers/scsi/st.h |  3 ++-
+ 2 files changed, 5 insertions(+), 10 deletions(-)
 
-> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> 
-> Most of the supported devices rely on a GAIN pin to control a 2x
-> multiplier applied to the output voltage. Other devices, e.g. the
-> single-channel ones, provides a gain control through a bit field in
-> the control register. Some designs might have the GAIN pin hardwired
-> to VDD/VLOGIC or GND, which would have no "gain-gpios" device property,
-> being able to set "adi,range-double" if it is hardwired to VDD. The
-> vref_mv field is moved down in the struct ad5686_state, so that the
-> overall size increase is reduced.
-> 
-> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
-I took another look at patches 8-12 and they look good to me
-(other than the thing Sashiko raised).
+diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
+index f1c3c4946637..31ae189b18e7 100644
+--- a/drivers/scsi/st.c
++++ b/drivers/scsi/st.c
+@@ -149,7 +149,7 @@ static struct st_dev_parm {
+    mode counts */
+ static const char *st_formats[] = {
+ 	"",  "r", "k", "s", "l", "t", "o", "u",
+-	"m", "v", "p", "x", "a", "y", "q", "z"}; 
++	"m", "v", "p", "x", "a", "y", "q", "z"};
+ 
+ /* The default definitions have been moved to st_options.h */
+ 
+@@ -3973,21 +3973,15 @@ static struct st_buffer *new_tape_buffer(int max_sg)
+ {
+ 	struct st_buffer *tb;
+ 
+-	tb = kzalloc_obj(struct st_buffer);
++	tb = kzalloc_flex(*tb, reserved_pages, max_sg);
+ 	if (!tb) {
+ 		printk(KERN_NOTICE "st: Can't allocate new tape buffer.\n");
+ 		return NULL;
+ 	}
+-	tb->frp_segs = 0;
+ 	tb->use_sg = max_sg;
++	tb->frp_segs = 0;
+ 	tb->buffer_size = 0;
+ 
+-	tb->reserved_pages = kzalloc_objs(struct page *, max_sg);
+-	if (!tb->reserved_pages) {
+-		kfree(tb);
+-		return NULL;
+-	}
+-
+ 	return tb;
+ }
+ 
+diff --git a/drivers/scsi/st.h b/drivers/scsi/st.h
+index 0d7c4b8c2c8a..759f4c43d563 100644
+--- a/drivers/scsi/st.h
++++ b/drivers/scsi/st.h
+@@ -45,7 +45,6 @@ struct st_buffer {
+ 	int syscall_result;
+ 	struct st_request *last_SRpnt;
+ 	struct st_cmdstatus cmdstat;
+-	struct page **reserved_pages;
+ 	int reserved_page_order;
+ 	struct page **mapped_pages;
+ 	struct rq_map_data map_data;
+@@ -53,6 +52,8 @@ struct st_buffer {
+ 	unsigned short use_sg;	/* zero or max number of s/g segments for this adapter */
+ 	unsigned short sg_segs;		/* number of segments in s/g list */
+ 	unsigned short frp_segs;	/* number of buffer segments */
++
++	struct page *reserved_pages[] __counted_by(use_sg);
+ };
+ 
+ /* The tape mode definition */
+-- 
+2.54.0
 
-Thanks,
-
-Jonathan
