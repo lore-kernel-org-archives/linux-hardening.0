@@ -1,33 +1,33 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6505A313E34
-	for <linux-hardening@vger.kernel.org>; Tue, 30 Jun 2026 09:15:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7620E313E34
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Jun 2026 09:16:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782810952; cv=none; b=mMND+6CFSywu6XLqrVCQjXhDZx8S5g2Ckv/MxXlrwXm798GJH6/vAALZGWlefBs+6R1NaK+pBftST9jgo60m7l2HcgwlhMvsS71PuvhxCrQPqMVLPP5yCgusryYuwu6zs0zJkIkG3Gst7WK83Qmdwq9lo3fzqqUq+UAkRciGuCE=
+	t=1782811002; cv=none; b=Y83zCFvL5PTZlKGAaGFM+SaeODa/GiV5H5vY3tWz9Rr2PHxJUT2aPtx7k0kZ4rIDnLV39XPiqaG09wYfpa49eMqnFTDnJugbSJBfeqRzamlPuwi/TZSZNCygA/lvRQEfbnXxXKdb0SNAZLpLDBmWoXZXNPjSRhADLNXNo9keeIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782810952; c=relaxed/simple;
-	bh=sVn7JJGwZOLyL4bxlpoMBgAzZBKKk9c/Cy1C3BZSWug=;
+	s=arc-20240116; t=1782811002; c=relaxed/simple;
+	bh=pOGqr+6YjRRrGfqyTm37l0BuFHy9XPuCtkGh7B9Kr+0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZTiKbHXQub9ORN3gecjk6SsDyjYi5hzHukjnFtdQRe3sIooMuESVa5NFPOy39JDlelaXW5JktJadBbEgt6G/bjE3lJJjcnU52/PpXxkAZIbRC75sO9SW26D1oRsx1AY2XwlYGabVkKmuFsePyS14a7mAGaOW3JKF+Gd8xtSR3pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Hnex8kTI; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:Content-Type; b=mGE0tGyjnuhSiUpFUusfPUC0xxwq1m3fbDgl1bEvAi5bvfK4e2MZKo38LAB6WRnIcy0Tzx6fyCh6eTU91UClPxhqu09CN4tx96gBWE4bUIdPGPdH6Uvldm5rorZpHHWLItwv6OoQ8+q7zZcDKer/yC7EcOwx72TP5fvR0bHpkcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=OhlBURWG; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Hnex8kTI"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="OhlBURWG"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 579662C1C;
-	Tue, 30 Jun 2026 02:15:46 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68EE12C1C;
+	Tue, 30 Jun 2026 02:16:36 -0700 (PDT)
 Received: from [10.57.81.132] (unknown [10.57.81.132])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDA043FAFB;
-	Tue, 30 Jun 2026 02:15:41 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F30143FAFB;
+	Tue, 30 Jun 2026 02:16:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782810950; bh=sVn7JJGwZOLyL4bxlpoMBgAzZBKKk9c/Cy1C3BZSWug=;
+	t=1782811000; bh=pOGqr+6YjRRrGfqyTm37l0BuFHy9XPuCtkGh7B9Kr+0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Hnex8kTIqJvDaCwWDLDms17GUHLABmXpVlHniMOGFY9lEm0cRriX6yLe9fcG0DQqa
-	 qEkiKClZ7FQfIJKCVlnr4qWxNJT3I0hCP27j0vIhDQd78gJFmS9Mr/RG6zkIZ1LeLV
-	 d0Td8sQg68FW8THEVVnk5GPM4swe7eEP7w7hlH1k=
-Message-ID: <0554305f-d2a1-4727-bada-0fba203a8af6@arm.com>
-Date: Tue, 30 Jun 2026 11:15:38 +0200
+	b=OhlBURWGxQqcbV6J2ZjbPLWqe0+OO9mHDyY8RjjqBPKuIiYpX91UGBHlnRLA2voBR
+	 ZGfe8UhEF+CVHnpiOUhkK+Si+HmROlqhNQzZWseJfpnlDEHoIShP9UCusiuqoiShd4
+	 QVu9mycDBfqeZmeTAPiDcXgKfSZGryWFP031nXt4=
+Message-ID: <e4f98e9d-9f02-46d3-90ff-22ec711ba85b@arm.com>
+Date: Tue, 30 Jun 2026 11:16:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v8 04/24] arm64: Introduce por_elx_set_pkey_perms()
- helper
+Subject: Re: [PATCH RFC v8 05/24] arm64: Implement asm/kpkeys.h using POE
 To: "David Hildenbrand (Arm)" <david@kernel.org>,
  linux-hardening@vger.kernel.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -58,107 +57,137 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-mm@kvack.org, x86@kernel.org, Lorenzo Stoakes <ljs@kernel.org>,
  Thomas Gleixner <tglx@kernel.org>
 References: <20260526-kpkeys-v8-0-eaaacdacc67c@arm.com>
- <20260526-kpkeys-v8-4-eaaacdacc67c@arm.com>
- <e334c595-92ab-4eb9-a096-35602d57ae6d@kernel.org>
+ <20260526-kpkeys-v8-5-eaaacdacc67c@arm.com>
+ <f8507ad6-761c-4073-85ae-bddb2a07d660@kernel.org>
 From: Kevin Brodsky <kevin.brodsky@arm.com>
 Content-Language: en-GB
-In-Reply-To: <e334c595-92ab-4eb9-a096-35602d57ae6d@kernel.org>
+In-Reply-To: <f8507ad6-761c-4073-85ae-bddb2a07d660@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/06/2026 15:16, David Hildenbrand (Arm) wrote:
+On 22/06/2026 15:35, David Hildenbrand (Arm) wrote:
 > On 5/26/26 13:15, Kevin Brodsky wrote:
->> Introduce a helper that sets the permissions of a given pkey
->> (POIndex) in the POR_ELx format, and make use of it in
->> arch_set_user_pkey_access().
+>> Implement the kpkeys interface if CONFIG_ARM64_POE is enabled.
+>> The permissions for KPKEYS_PKEY_DEFAULT (pkey 0) are set to RWX as
+>> this pkey is also used for code mappings.
+>>
+>> To allow <asm/kpkeys.h> to be included from assembly, also add
+>> appropriate #ifdef's to <asm/por.h>.
 >>
 >> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 >> ---
->>  arch/arm64/include/asm/por.h |  7 +++++++
->>  arch/arm64/mm/mmu.c          | 26 ++++++++++----------------
->>  2 files changed, 17 insertions(+), 16 deletions(-)
+>>  arch/arm64/include/asm/kpkeys.h | 59 +++++++++++++++++++++++++++++++++++++++++
+>>  arch/arm64/include/asm/por.h    |  4 +++
+>>  2 files changed, 63 insertions(+)
 >>
->> diff --git a/arch/arm64/include/asm/por.h b/arch/arm64/include/asm/por.h
->> index d913d5b529e4..bffb4d2b1246 100644
->> --- a/arch/arm64/include/asm/por.h
->> +++ b/arch/arm64/include/asm/por.h
->> @@ -31,4 +31,11 @@ static inline bool por_elx_allows_exec(u64 por, u8 pkey)
->>  	return perm & POE_X;
->>  }
->>  
->> +static inline u64 por_elx_set_pkey_perms(u64 por, u8 pkey, u64 perms)
->> +{
->> +	u64 shift = POR_ELx_PERM_SHIFT(pkey);
+>> diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
+>> new file mode 100644
+>> index 000000000000..4dbfeb3dfcfe
+>> --- /dev/null
+>> +++ b/arch/arm64/include/asm/kpkeys.h
+>> @@ -0,0 +1,59 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +#ifndef __ASM_KPKEYS_H
+>> +#define __ASM_KPKEYS_H
 >> +
->> +	return (por & ~(POE_MASK << shift)) | (perms << shift);
+>> +#include <asm/barrier.h>
+>> +#include <asm/cpufeature.h>
+>> +#include <asm/por.h>
+>> +
+>> +#include <asm-generic/kpkeys.h>
+>> +
+>> +/*
+>> + * Equivalent to por_set_kpkeys_context(0, KPKEYS_CTX_DEFAULT), but can also be
+>> + * used in assembly.
+>> + */
+>> +#define POR_EL1_INIT	POR_ELx_PERM_PREP(KPKEYS_PKEY_DEFAULT, POE_RWX)
+> Okay, this matches
+>
+> #define POR_EL0_INIT		POR_ELx_PERM_PREP(0, POE_RWX)
+>
+> Is there a good reason we need KPKEYS_PKEY_DEFAULT at all (and not similarly
+> just hardcode it to 0)?
+
+I did wonder about that. As per the discussion on patch 1 I don't see
+that value ever changing, so I'm fine with hardcoding 0 if that feels
+more consistent/intuitive.
+
+> Just wondering, because apparently we didn't care about adding an indicator for
+> user space pkey 0.
+
+It's never too late to add a constant for userspace as well, but of
+course since it's been ABI for so long the value isn't going to change.
+
+>> +
+>> +#ifndef __ASSEMBLY__
+>> +
+>> +static inline bool arch_supports_kpkeys(void)
+>> +{
+>> +	return system_supports_poe();
 >> +}
 >> +
->>  #endif /* _ASM_ARM64_POR_H */
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index dd85e093ffdb..493310cf0486 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -2339,8 +2339,8 @@ void __cpu_replace_ttbr1(pgd_t *pgdp, bool cnp)
->>  #ifdef CONFIG_ARCH_HAS_PKEYS
->>  int arch_set_user_pkey_access(int pkey, unsigned long init_val)
->>  {
->> -	u64 new_por;
->> -	u64 old_por;
->> +	u64 new_perms;
-> You should spell out the renaming of the variable.
+>> +#ifdef CONFIG_ARM64_POE
+>> +
+>> +static inline u64 por_set_kpkeys_context(u64 por, int ctx)
+>> +{
+>> +	por = por_elx_set_pkey_perms(por, KPKEYS_PKEY_DEFAULT, POE_RWX);
+>> +
+>> +	return por;
+> Why not
+>
+> return por_elx_set_pkey_perms(por, KPKEYS_PKEY_DEFAULT, POE_RWX);
+>
+> ?
 
-Sure, will do.
+Because of patch 17, I wanted to minimise the diff. Happy to change it
+if that feels less surprising.
 
-> Given that perms is 4bit per key, should we use a u8 for it instead?
+> In light of API discussions, it would be nicer if arch_kpkeys_set_context()
+> would just return the old context. But that would mean that restoring the
+> context would require another read_sysreg_s(SYS_POR_EL1);
 
-We could, in fact I'm just noticing that this all very inconsistent
-right now: the POE_* constants are defined as UL, but por_elx_allows_*
-and other functions use u8. I'll clean that up in a separate patch and
-use u8 here.
+Correct, that's what I wanted to avoid.
 
->> +	u64 por;
->>  
->>  	if (!system_supports_poe())
->>  		return -ENOSPC;
->> @@ -2354,25 +2354,19 @@ int arch_set_user_pkey_access(int pkey, unsigned long init_val)
->>  		return -EINVAL;
->>  
->>  	/* Set the bits we need in POR:  */
->> -	new_por = POE_RWX;
->> +	new_perms = POE_RWX;
->>  	if (init_val & PKEY_DISABLE_WRITE)
->> -		new_por &= ~POE_W;
->> +		new_perms &= ~POE_W;
->>  	if (init_val & PKEY_DISABLE_ACCESS)
->> -		new_por &= ~POE_RW;
->> +		new_perms &= ~POE_RW;
->>  	if (init_val & PKEY_DISABLE_READ)
->> -		new_por &= ~POE_R;
->> +		new_perms &= ~POE_R;
->>  	if (init_val & PKEY_DISABLE_EXECUTE)
->> -		new_por &= ~POE_X;
->> +		new_perms &= ~POE_X;
->>  
->> -	/* Shift the bits in to the correct place in POR for pkey: */
->> -	new_por = POR_ELx_PERM_PREP(pkey, new_por);
->> -
->> -	/* Get old POR and mask off any old bits in place: */
->> -	old_por = read_sysreg_s(SYS_POR_EL0);
->> -	old_por &= ~(POE_MASK << POR_ELx_PERM_SHIFT(pkey));
->> -
->> -	/* Write old part along with new part: */
->> -	write_sysreg_s(old_por | new_por, SYS_POR_EL0);
->> +	por = read_sysreg_s(SYS_POR_EL0);
->> +	por = por_elx_set_pkey_perms(por, pkey, new_perms);
->> +	write_sysreg_s(por, SYS_POR_EL0);
-> Was wondering whether to move reading+writing of the register into the same
-> helper, but you cannot reuse this exactly the same way for SYS_POR_EL1 as it seems.
+> So instead of returning magic register values, that should be wrapped in some
+> arch state struct as mentioned as reply to a previous patch.
 
-It wouldn't be useful because the new user of the helper,
-por_set_kpkeys_context(), doesn't itself read or write the register.
+Agreed.
 
-> Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+>> +}
+>> +
+>> +static __always_inline void __kpkeys_set_pkey_reg_nosync(u64 pkey_reg)
+>> +{
+>> +	write_sysreg_s(pkey_reg, SYS_POR_EL1);
+>> +}
+>> +
+>> +static __always_inline u64 arch_kpkeys_set_context(int ctx)
+>> +{
+>> +	u64 prev_por = read_sysreg_s(SYS_POR_EL1);
+>> +	u64 new_por = por_set_kpkeys_context(prev_por, ctx);
+> Both can be const.
 
-Thanks!
+Sure.
+
+> But maybe you just use a single "por" variable.
+
+Not sure how? prev_por is returned and new_por is based on its value.
+
+>> +
+>> +	__kpkeys_set_pkey_reg_nosync(new_por);
+>> +	isb();
+>> +
+>> +	return prev_por;
+>> +}
+>> +
+>> +static __always_inline void arch_kpkeys_restore_pkey_reg(u64 pkey_reg)
+>> +{
+>> +	__kpkeys_set_pkey_reg_nosync(pkey_reg);
+>> +	isb();
+> Why is that isb() for both callers outside of the function? Do you expect
+> another user that doesn't need the isb?
+
+Outside of __kpkeys_set_pkey_reg_nosync() that is? That function is also
+used by patch 22, which doesn't want the ISB because we already have an
+ISB somewhere else. The naming follows that of __set_pte_nosync().
 
 - Kevin
