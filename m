@@ -1,70 +1,87 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1798242D65;
-	Thu,  2 Jul 2026 00:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64362853FD;
+	Thu,  2 Jul 2026 02:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782951934; cv=none; b=taEFiDAcZNIu/N2vy7zJW+HuyAHYfNWy6EdxsINYZ6EJky2ppLDX747OSStY4DcCvMwJQBISa3+aLB9a3u5oOD2Z64EVHD3+PS1AhtKznM8eA9d8OQIfL4EFNolRhA47iPYoTWmbwfPAHAbKczBnP4lmIrgDGF1YwqHU2WTst+A=
+	t=1782958612; cv=none; b=ZImHDuWMoHlSdJvQm4TbOpZ7ywHfuZ7TKQ4mx2vbjeiPL3iQZczaFtn1OjWNeEG2U4mBDrWXPhjLmoQcMqF5de+0dZxlBO42en+Cu08xoHDaW+35iY7FMM0w2R9fuP+nX6RIinCPK6tvdmh0YgigOSbzYDJJLEZDMEU7JdY8cxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782951934; c=relaxed/simple;
-	bh=b23V63BD9BdyYV2a2cLuU4Mh+dF+RSGxaY+1gI7BIEU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=H4ckXlBQLoz6IzNFZ53QumyL1kBmp3emmsDrhH/f+lo4ngY2NUPA1kcJpRAmagaV72fyWngRWDUw731GvRpjn0jcCyR3gk6FrHqFEe9FOwh3u7/Qi3CU9QIgWTQ4Qol1yTE+itBhUM2tWoQmU8ZSytIoMNF3+mBiekxmGFjwl+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=h3bv4x2W; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1782958612; c=relaxed/simple;
+	bh=UXCBA2Bre4/bWySg1KvkyjGhklbsFGFnfXY9gyzqmJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QIK3oSP7V4kEkpMxVGVzbRdrAD4FDlEWLITeKL7l2CJ2dQyIpI7hhVpIS7UbR0rjntfKKKwkcfodaEdCGFz9YbHjr/wgQhIA+vnYUNQBnwScWYFl2zoK9ymRG8UQEpeb7Wn3Fk7i8efmK583xaJo48PrgswjYmT9VkCLQ/rQl4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DJ20JY7s; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="h3bv4x2W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1782951925;
-	bh=b23V63BD9BdyYV2a2cLuU4Mh+dF+RSGxaY+1gI7BIEU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=h3bv4x2WU3f1qVa7wLIOYvub7fxttSM9mZv8n11Vg4VoIPKJIsENJXvbd+HN3ds0M
-	 cNISPiqb448GaEdzSxe5INSLK1lnf5MpWUaVphXrhLC2jQh4ncUfEdnPHBL+RuQeKs
-	 +wGvEbXl5aZ3PeTvwmt+3z8oz3eXWAJGGk7SrnnlNbDg0ev2NzTvfzw8XK4vHiEkmd
-	 F9sQLOXnw7VPGED1Zvqi82Gpr6J/HfVYUbWIYf5w2n7mkSR3ny0AeN1/6cPPWmQQ4x
-	 scUrVFdffYKE8fBRFXe9Uc0GRxKAUcwpnpMzfcoT47eg29b5eVu97Edxvh2UA36dot
-	 GGbRjlpj+sJ+g==
-Received: from [192.168.68.117] (unknown [180.150.112.11])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 0162A65871;
-	Thu,  2 Jul 2026 08:25:23 +0800 (AWST)
-Message-ID: <33cf45f92e4aa2ca985501807c3e4f74e1a10032.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v6] soc: aspeed: lpc-snoop: Fix usercopy overflow in
- snoop_file_read
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Karthikeyan KS <karthiproffesional@gmail.com>
-Cc: joel@jms.id.au, andrew@aj.id.au, Kees Cook <kees@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date: Thu, 02 Jul 2026 09:55:23 +0930
-In-Reply-To: <20260701171506.338614-1-karthiproffesional@gmail.com>
-References: 
-	<033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
-	 <20260701171506.338614-1-karthiproffesional@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-0+deb13u1 
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DJ20JY7s"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6210A40E01B4;
+	Thu,  2 Jul 2026 02:16:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 8qrYl36SsMot; Thu,  2 Jul 2026 02:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1782958598; bh=U0ibtjdKS8/Jb1mPEb064Gd1FFp8S8EP9vMedmZd3dQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DJ20JY7sQSmCBewgz8N5PqPWR9+U09bSWpydcI5HXfTet4cQvMhbJKW5VSw4i6xjB
+	 9VI5tpedP/BwFLtOUVOcMweQNuXMfdFSjdAXn6eJ0PCrU2XqjVQ1ClhyXYm91QqezB
+	 BWBxBhgCntE+LllJ9eI3gXQNdcBzT6kCX6jCDe0fRwyS5jwA6QLvgvSgHExdm4+ANc
+	 EqWYH3ZDqfk8AYG+qNGddTsqrJQ0IkyPE2hjqMZGDrLtDUy4ECrSrwyMSTKOhgVwRs
+	 LUUbQJDDRVx2dfqaba062lxJoKv4Wn9IKM1NBgcRXlg3o8lxWwjVusTeLEqJ7W+MC7
+	 iOawLnpudAR3YuqT4/jIRUZd32Ucbul4mqqSMLsK+CIBFis+8dR4iAYJYEFAdpqZFs
+	 dW+7xWlp8DBymok8tGte46Hsf+NiVujhE/VMj5uIxA9eT5ZR/jPDkWCHr3WwX4nUB8
+	 EE85y77vQx77LWcizkjJ8JHZS4WTVUA2S1ZPpPT3bFJl5Tlb2Piynk6bZHdKlr0Y64
+	 V6HDpIzSaZ6ayfPpNgI1huWSmN27DSyOsq7UEML5mkgEoJbaqpLmaQw+2qfCOadcso
+	 Z0NrLTAP9BZi6REpw492LID8XOdObMxtgdyE2igruVR/oWldCk/EoUnX8RtvJdmlUw
+	 VZSVQ4w4nHV9TF6a8e30Smfw=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::1a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BAB9540E016E;
+	Thu,  2 Jul 2026 02:16:22 +0000 (UTC)
+Date: Wed, 1 Jul 2026 19:16:19 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Li Zhe <lizhe.67@bytedance.com>
+Cc: akpm@linux-foundation.org, apopple@nvidia.com, arnd@arndb.de,
+	dave.hansen@linux.intel.com, david@kernel.org, kees@kernel.org,
+	mingo@redhat.com, rppt@kernel.org, tglx@kernel.org,
+	linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v5 6/8] string: introduce memcpy_nt() helpers
+Message-ID: <20260702021619.GEakXJ89-0rZcYGIq8@fat_crate.local>
+References: <20260701090553.62691-1-lizhe.67@bytedance.com>
+ <20260701090553.62691-7-lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260701090553.62691-7-lizhe.67@bytedance.com>
 
-Hi,
+On Wed, Jul 01, 2026 at 05:05:51PM +0800, Li Zhe wrote:
+> +static __always_inline void memcpy_nt_drain(void)
+> +{
+> +	asm volatile("sfence" : : : "memory");
 
-On Wed, 2026-07-01 at 17:15 +0000, Karthikeyan KS wrote:
-> Hi Andrew,
->=20
-> Just following up, it's been about two weeks since I shared the
-> hardware validation results. I believe I've addressed the questions
-> raised in the thread, but please let me know if there's anything
-> else you'd like me to do.
+Doing a simple grep around the tree will give you the hint to use wmb() and
+not reinvent the wheel here. Not to mention that this is bypassing KCSAN
+instrumentation.
 
-Nothing further required on your part. I intend to apply it, however am
-working through some other priorities.
+And then you don't need to go define this drain thing but simply use wmb()
+because, oh, look, other architectures already define a write memory barrier
+too.
 
-Thanks,
+-- 
+Regards/Gruss,
+    Boris.
 
-Andrew
+https://people.kernel.org/tglx/notes-about-netiquette
