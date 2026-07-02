@@ -1,76 +1,86 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0F430FF05
-	for <linux-hardening@vger.kernel.org>; Thu,  2 Jul 2026 15:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DB333ADB0
+	for <linux-hardening@vger.kernel.org>; Thu,  2 Jul 2026 17:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783007704; cv=none; b=A/FWyDh5k/mTUyRIBT1DbtNO+zlWBKGaMV6zxR9yfan4LkVsSu/QaiI97JgdKfiSeu6VLboKP2s6fdtjhMqRLFgc1T23IjOjzb3MwYrU/tRNOZCdYwIGWm9xHASBRkx/XpBao3haQPYmXf5Qtz3S/am7jq5/v7d24uwCg2OlYq0=
+	t=1783012055; cv=none; b=OUp27umOvuKbvG3vMeFZBAOm4yDCuvw3AQA95++nKFV9Tnc7kCAJfRa8mncfijjs4S9i9CEPG93QkRm8GpNUxfGY0TCS6APoBYY9sNn1gRz+ZVVHcNN5NGYkbn6MQAb2tZRz6/WmM+KafAtF4kz4/zdF3dNWO0EnknUpe4NR1u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783007704; c=relaxed/simple;
-	bh=EBaGVlFtaU5cgkN4vkEjpdW+YdCqJZ1tqKuOPRWWN+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AHgNv/2hlqxy2Fs/Z/xEHDjLHu+Ptcv9cz+ongVdjncsat1fFfmYYbGpTQndgMEbRxOCCVGV8oNrB+Wr++Bl3UXCDvcCqFl+R9dEFYsqf69fb/DdkBMvCL0T8Dok5ACtMQmWkISnMA4ZAa+M20P8WCzIdEuf4TQbGT1+ZVWA1Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j5VDd5QI; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783012055; c=relaxed/simple;
+	bh=F2zdOrejIvQnkAO0xZf/Vpd4zQ7u6NKC3lw97B5xC/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wy81yIy7ee+CKPCtQ5EShOgghLxc8TnxfIHwl3hF2ZJWI0IbWYextGaNVqYyK9SJRNtZmC/Y9l7DaGEFY+XX+T68savdUBko2mQR9s28C1+SZ6J36Rz0oKIlYU7NytVLfBU/Fz3Ixw1Bcc/lSqXONN04dwwHN4o82TbCypOLqUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tfQweZZd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wdsClWE2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tfQweZZd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wdsClWE2; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5VDd5QI"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-490b1bbcf3aso11198725e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Jul 2026 08:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783007701; x=1783612501; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yQp7blzNTKwxZMSxGZDcTyFP/mvOADqzAmk2csJY+sU=;
-        b=j5VDd5QIxnejQIbC5UTyNAg3KServZL+NY/mHjq/BxpqeXCZVG+Wbo76MRKzNxg2Ik
-         jzzu7jH2QqCdc0/OcZmTyEat8lhcxSgY+EOkIWska0UkJHm+SuYbjgyDo+chS1gpuXI0
-         eGVQh2bWX1VrPnQYpFaxsf1XmqvIeu+VcYZoeeI/gqc7uM1xpQXp8Z2z0oH7uGAVSVAK
-         XaEQypt6BqeE6NypyFZHTIzVWDuZDMhqQk6MBTC8dRLdDOOrOSabsE6NjXAs4iZmbMJ3
-         AalZyeDyJVv48yf5lTTWRXbn2XHXeg44ap/OPH4i5OC+kkzTWLW6/8jlvL+nA5KI3jUs
-         plZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783007701; x=1783612501;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yQp7blzNTKwxZMSxGZDcTyFP/mvOADqzAmk2csJY+sU=;
-        b=rWXlUz22JNjAx9G84Y09uFcEj8MlYUGfEJt+aGXHKRzGFiMcWoeSXy96wdOWsa7SN1
-         6a1AlBB1CQYZedyVpSg0ziz+4Yd6LqVlTNl3EC9YG06kANlxeul5M/uOMjsOng6Sl0yx
-         bTLH0K9+OXq6zXvwT+3r83LU7RWD3JaQH+xGX//r/HsDZ34kc7duSxfNb5VWEsEaeAPc
-         uwHw/AwNtjnFndr1psIhnMh/mptZSEeO3uI+vlsuUWDL8n1E+2d1ZEIkljpkgKx1unB5
-         V7GKZYccNB7MvqC3G2Rbkh0KYqw0wSQurK/X7GG7owwBRPq0qs+2b76P/t5NkQN1Jerx
-         /MKw==
-X-Forwarded-Encrypted: i=1; AFNElJ8d3woGuRQKr49eSznOUOqOOmg0//owuqXO/ZQLP9CegjuE0wqZNpXzU81R/19mXbotfM8wgs4aBaodWZWL84E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym8rbLiNcpGKwjbeYKKYRZCfqLeKef4OoVo8BM5jpJCh1tmGNS
-	T/TmYIxBD0m9LfKd0plu4XQOfhV7/izFBHi/ZRalA6SUaK++GTRqF/gc
-X-Gm-Gg: AfdE7cn3k+yxiXa4xPai8RQpEwy17uAfLQZ8dTQd/m4oZR/2HAmNjqna6xwueZ2n+3g
-	LWekrbGtH0BQWbQeyMsfcpAPcUp5/Fd52HZqukRSm+DWMT1PD+8iqNh5+uwgK61okN8EqcnC+dH
-	esJ8DoMKS7QG87WYMEt8IOzGhpZUvHKdl4zhwc4S/Vn+ewCXQxg+xMeJMQQZFQYh0kpVJQLEK2y
-	KmK4XYDFAVp/Wk4kovV/TDdtBrVdC7yX572kgGQNkPseWhhFXnc3+ZE+LzBkewz0kLEZlKelzb7
-	Yyqz6yuUjkeoiGMm6xH8e0ibSOrnqOA3pbwtH+l6UyyRMQa0ffPAEoRq0lXFM7uR8lTLzEoun49
-	heYUNpK5ncIvOMcRrZDfM/OwejeI4AjokUFXAXazCybdyStXQnUhwzvClGnBsLPlpyW12IQX/tL
-	rywTtBUIS+6k/Rz33zctCzgflbwUK0Sx3XeSluwbpFuj2RURIXMO857srUQJnvLFNX8880wFQyH
-	bTHbF2ft7YapARWLZsOOWX7AamPVw==
-X-Received: by 2002:a05:600d:c:b0:493:adcb:d368 with SMTP id 5b1f17b1804b1-493c2b45ce5mr74061155e9.9.1783007700998;
-        Thu, 02 Jul 2026 08:55:00 -0700 (PDT)
-Received: from workstation.speedport.ip (p200300d5070afe1af6868251d71bd2b0.dip0.t-ipconnect.de. [2003:d5:70a:fe1a:f686:8251:d71b:d2b0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-477db3dbb79sm9758055f8f.2.2026.07.02.08.55.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2026 08:55:00 -0700 (PDT)
-From: Mert Seftali <mertsftl@gmail.com>
-X-Google-Original-From: Mert Seftali <mertseftali@web.de>
-To: Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-leds@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tfQweZZd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wdsClWE2";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tfQweZZd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wdsClWE2"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1196075821;
+	Thu,  2 Jul 2026 17:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1783012052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Z9lWzy1veEaYSpwqXLfJuDZby+eduADIj2yeYtPyqjw=;
+	b=tfQweZZdP0EqhQ2GIrZm+6KLdMA7MYCjXGNdtDCQ7HeYaJ3K18igyhG7wBBT7HRGPCFsBB
+	szMcoIAYw/EgSo0Pliq0JFIjJQ/37kxttfY4yYf3dd2SAUcB+ezq8efqwpYRjQ5Q6W2PIL
+	jzRutHl0t6Z50jFAhdTFZCpCUtgolFc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1783012052;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Z9lWzy1veEaYSpwqXLfJuDZby+eduADIj2yeYtPyqjw=;
+	b=wdsClWE20LPl+yBq4H/xFkJSUO/mKBDEtjW2R8ImRRhcmZ/kabecGtKISduxrgaPaKIB+s
+	B1bd+U3aeNTO8wBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1783012052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Z9lWzy1veEaYSpwqXLfJuDZby+eduADIj2yeYtPyqjw=;
+	b=tfQweZZdP0EqhQ2GIrZm+6KLdMA7MYCjXGNdtDCQ7HeYaJ3K18igyhG7wBBT7HRGPCFsBB
+	szMcoIAYw/EgSo0Pliq0JFIjJQ/37kxttfY4yYf3dd2SAUcB+ezq8efqwpYRjQ5Q6W2PIL
+	jzRutHl0t6Z50jFAhdTFZCpCUtgolFc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1783012052;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Z9lWzy1veEaYSpwqXLfJuDZby+eduADIj2yeYtPyqjw=;
+	b=wdsClWE20LPl+yBq4H/xFkJSUO/mKBDEtjW2R8ImRRhcmZ/kabecGtKISduxrgaPaKIB+s
+	B1bd+U3aeNTO8wBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 31AF2779AA;
+	Thu,  2 Jul 2026 17:07:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id J8GPCNOaRmrYTgAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 02 Jul 2026 17:07:31 +0000
+From: Pedro Falcato <pfalcato@suse.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Mert Seftali <mertsftl@gmail.com>
-Subject: [PATCH v2] leds: pwm: Annotate leds[] with __counted_by()
-Date: Thu,  2 Jul 2026 17:54:52 +0200
-Message-ID: <20260702155452.67594-1-mertseftali@web.de>
-X-Mailer: git-send-email 2.55.0
+	linux-hardening@vger.kernel.org,
+	Pedro Falcato <pfalcato@suse.de>,
+	Kees Cook <kees@kernel.org>
+Subject: [PATCH net-next v3] net: skb: isolate skb data area allocations into a separate bucket
+Date: Thu,  2 Jul 2026 18:07:28 +0100
+Message-ID: <20260702170728.168755-1-pfalcato@suse.de>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -78,78 +88,96 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,google.com,vger.kernel.org,suse.de];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Level: 
+X-Spam-Score: -2.80
 
-From: Mert Seftali <mertsftl@gmail.com>
+SKB data area allocations (as done from alloc_skb()) use kmalloc().
+These allocations can be variably sized and their contents can be more
+or less controlled from userspace, which makes them useful for attackers
+that want to overwrite a use-after-free'd object from the same kmalloc slab
+(which often just requires the sizes to roughly match into the same kmalloc
+bucket). [0] is an easy example of an exploit that uses netlink skb
+allocation to target another similarly-sized accidentally freed object.
 
-Add the __counted_by() attribute to the flexible array member leds[] in
-struct led_pwm_priv so the compiler and runtime (e.g. FORTIFY_SOURCE,
-UBSAN_BOUNDS) can bounds-check accesses against num_leds.
+While other mitigations like CONFIG_RANDOM_KMALLOC_CACHES exist, these are
+probabilistic. Use the existing kmem buckets API to further isolate these
+allocations in a guaranteed fashion, when CONFIG_SLAB_BUCKETS=y.
 
-While here, pass the led_pwm_data element into led_pwm_add() instead of
-the whole led_pwm_priv, so the helper no longer needs to index the array
-itself. num_leds is incremented in the caller as each LED is added and
-doubles as the index.
-
-No functional change intended.
-
-Suggested-by: Lee Jones <lee@kernel.org>
-Signed-off-by: Mert Seftali <mertsftl@gmail.com>
+Link: https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2023-4207_lts_cos_mitigation_2/docs/exploit.md [0]
+Reviewed-by: Kees Cook <kees@kernel.org>
+Acked-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Pedro Falcato <pfalcato@suse.de>
 ---
-Changes in v2 (per Lee Jones review):
-- Pass the led_pwm_data element into led_pwm_add() so it drops the priv
-  and index arguments; increment num_leds in the caller, where it also
-  serves as the array index.
+v3:
+ - rebase on net-next and resend
 
-Build-tested only (also with FORTIFY_SOURCE and UBSAN_BOUNDS enabled).
+ net/core/skbuff.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
- drivers/leds/leds-pwm.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 6c1f2f50ff85..dabdf0423582 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -36,7 +36,7 @@ struct led_pwm_data {
- 
- struct led_pwm_priv {
- 	int num_leds;
--	struct led_pwm_data leds[];
-+	struct led_pwm_data leds[] __counted_by(num_leds);
- };
- 
- static int led_pwm_set(struct led_classdev *led_cdev,
-@@ -81,10 +81,9 @@ static int led_pwm_default_brightness_get(struct fwnode_handle *fwnode,
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 18dabb4e9cfa..9dc5a8548681 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -586,6 +586,8 @@ struct sk_buff *napi_build_skb(void *data, unsigned int frag_size)
  }
+ EXPORT_SYMBOL(napi_build_skb);
  
- __attribute__((nonnull))
--static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
-+static int led_pwm_add(struct device *dev, struct led_pwm_data *led_data,
- 		       struct led_pwm *led, struct fwnode_handle *fwnode)
++static kmem_buckets *skb_data_buckets __ro_after_init;
++
+ static void *kmalloc_pfmemalloc(size_t obj_size, gfp_t flags, int node)
  {
--	struct led_pwm_data *led_data = &priv->leds[priv->num_leds];
- 	struct led_init_data init_data = { .fwnode = fwnode };
- 	int ret;
- 
-@@ -167,7 +166,6 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
- 		}
- 	}
- 
--	priv->num_leds++;
- 	return 0;
+ 	if (!gfp_pfmemalloc_allowed(flags))
+@@ -593,7 +595,8 @@ static void *kmalloc_pfmemalloc(size_t obj_size, gfp_t flags, int node)
+ 	if (!obj_size)
+ 		return kmem_cache_alloc_node(net_hotdata.skb_small_head_cache,
+ 					     flags, node);
+-	return kmalloc_node_track_caller(obj_size, flags, node);
++	return kmem_buckets_alloc_node_track_caller(skb_data_buckets, obj_size,
++						    flags, node);
  }
  
-@@ -193,9 +191,10 @@ static int led_pwm_create_fwnode(struct device *dev, struct led_pwm_priv *priv)
+ /*
+@@ -634,7 +637,7 @@ static void *kmalloc_reserve(unsigned int *size, gfp_t flags, int node,
+ 	 * Try a regular allocation, when that fails and we're not entitled
+ 	 * to the reserves, fail.
+ 	 */
+-	obj = kmalloc_node_track_caller(obj_size,
++	obj = kmem_buckets_alloc_node_track_caller(skb_data_buckets, obj_size,
+ 					flags | __GFP_NOMEMALLOC | __GFP_NOWARN,
+ 					node);
+ 	if (likely(obj))
+@@ -5215,6 +5218,7 @@ void __init skb_init(void)
+ 						0,
+ 						SKB_SMALL_HEAD_HEADROOM,
+ 						NULL);
++	skb_data_buckets = kmem_buckets_create("skb_data", SLAB_PANIC, 0, INT_MAX, NULL);
+ 	skb_extensions_init();
+ }
  
- 		led.default_state = led_init_default_state_get(fwnode);
- 
--		ret = led_pwm_add(dev, priv, &led, fwnode);
-+		ret = led_pwm_add(dev, &priv->leds[priv->num_leds], &led, fwnode);
- 		if (ret)
- 			return ret;
-+		priv->num_leds++;
- 	}
- 
- 	return 0;
 -- 
-2.55.0
+2.54.0
 
