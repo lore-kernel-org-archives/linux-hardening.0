@@ -1,91 +1,117 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1E6349AF6
-	for <linux-hardening@vger.kernel.org>; Thu,  2 Jul 2026 17:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6D13624C5;
+	Thu,  2 Jul 2026 17:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783013760; cv=none; b=doYAbm+373OIKiTJBvi5g8LgF9NwX7xhLSmFT0/8C6rOKEMrI51/PYtNoCU0rfAmzwEDCLKBgXEIVrgR5Dsb8SB2pJRpj0mIks/So/N3PZZZsNPh+3DuToHbalSBOo40LqwKjjsh/4k3OMnSKEWXshLVHQVhSuZqd/IXOMDm5Hk=
+	t=1783014288; cv=none; b=JwCFeqfwIBt9LrNniTEKxkrZFl5/xt7lVwXkQtpHt6PU4zUXGApjDCJWn6tkk5ZODF4yuhojkdbF5m/d/wFMs7SC3L2C9oKsSKOqglAg2ZKgH8Oa11gTBV1eEqijsLunBNH2gqeBmJa3UWLg/G3oPMDtliKj3GEUMxxTfqqGM/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783013760; c=relaxed/simple;
-	bh=I1eeHpCHy2amylD5gAFQ/G5VWDnH0phiGEsKBXqG2BM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ki8pFK0up6P39CHXaJeKBYtdFFYeTfqsrF6z7Q5yybkZYyFd8BAE4ZfUMy4u+O9TPGW4LSaJQwBzwuSSAjSDZSPjiJrXRCTPDA3YygIlfaPnhj0d2angnRGsfAVgn1/uarY1xJXhqZYCEzDCUdwiOQzhAHK8vt9Hl4LjZaOsvUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UKFugqjV; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783014288; c=relaxed/simple;
+	bh=qN1BEqviBdra3blN4I5mvv2dJxn54XoSZdBXfNPMcPg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Akb7e9Xar5V/Mg4yG5O7OyslrsQPvejfrgn6GrLYfYEDmxaLF72Scq1IH9kE/GtbPblHdaxlo7lrMItkWvTdMyFfIgMOpkXB7epxRsAFPWKHpcaGZtd5D+pXWW+1frlduyvfF76T7M+8X+7bF7PEsT0wyi4ZU1H13ZQZru/4RcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=is1Nw4CV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKFugqjV"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-37defb2f231so1424197a91.2
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Jul 2026 10:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783013759; x=1783618559; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I1eeHpCHy2amylD5gAFQ/G5VWDnH0phiGEsKBXqG2BM=;
-        b=UKFugqjV9r9iou6jyGWSsAIsdVsDSHxJqhgI8nnEp7LvnpLH48EHGKmoWGbufd3Og3
-         SnENMdSdeZAYjwT1XcB+sHWoQJPWfP7s4Z7IcCCAIP4zAgARnej1gsuaYGTSLv2xzz2j
-         5Ou/PBUDq3i1rdcKr6Dx0bRAouACcmxpz54BIZYiwPP/6pNGqMj+EoYKV+vTT9/5Dvas
-         rUvqIkWu4/ZVx/JYar+BRD3uSkThci6FcmoM2JGYiElhZRLepO5lKGTknI7e7WsjRUci
-         lGkIZBa6W6qx7kGLJdRldkA4KWhm1XobQkiD38cBDRC/MBv8sTZ8hkqoeaM5o0nFKkpm
-         Ya5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783013759; x=1783618559;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=I1eeHpCHy2amylD5gAFQ/G5VWDnH0phiGEsKBXqG2BM=;
-        b=DJFFoq6ZsQmJlpJGfuYYhlKn8Az3FbQblbP4+fd/p+4+8qyLlfappShZ49goelkJ22
-         /f+7fBQ1kGLQ3AgVWEO3RYTOjU9GRSD1mETnXkPlJiObtpB15nQj8YI6OQlha7OF2dgS
-         8wIehiQ+fucXC3LalsCQF1hNqqtvsTK5AcUpzmXOgt+n1W4wN+m0enwB2Cf+J8GF/oQG
-         cUaxlBcBgUhDeZ2VzISoYQOUECKympjgxbDiNr00dUcKUgrJ56SEcTfvj8zVbZR4UJXA
-         qmxTiSHV2LwKMbwlo91kBSHJe/WIXwzJMTY0Qk8mt50njLpNFOAmgO9uShKBnRjmnKeL
-         pzTA==
-X-Forwarded-Encrypted: i=1; AHgh+RpBv3/zsGNtcW3kKxLZv7qyxiaS7vcdrfLahT2gmC+Jl/wpfnZFpqCAJDnR29Z6WWzphzpyS06EyI9IEqSw9eQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynDnPxxT+97tOlCxrrCRu5k+U3gaQGt7o2XAqn6yuLai92EE9g
-	XKsVdVKGc4DqRPFcRPLR/orCAst21a5srs4aUAZHLdKYK+piEomylAm1
-X-Gm-Gg: AfdE7ckvebUm7lVuTJHrBq1Anu0qHA6JGDbCKNreF+2Ll7LLx4vl0GFB5FSJ/uJ/QW0
-	dwsEbR2YRaGrabIyz28MwaPqTcbDpQxzbgkQuYX75EK4uc3RwGWPjaCML74MbRACy4M4Ip6WFSz
-	If7FqcEByQ/VOf52mpEc6OqWXvupXMm6R4MKncrTCu5gbfpFu5vYNA5WLjBe9CpbibrDaG9ijOc
-	Nu+nEOJXgxR8CwXRfvOhWWgYYGpjEWKA4khcvsIhHExp50x2uBLh6rY/I5OQdLnUptyUTZCBbTo
-	OPPk9lheW2AruGsvNTbvPkfZQl2FbmkD9T78JCO7bV5aprqBT/kzi9TyhF5Z7BzABisa6T0Kioa
-	T0xtuZaQttNB0UyC4qqrFIDLCvaoEDbNPTHt595d8+vClanSc/93nMw7G4IkrkuMpNqHdMa1HsW
-	Y0SvIwH1cVQMfDltuhjUkfCmrC/pelZ+7m70dAijHVLpoKVV8srHcA2UA=
-X-Received: by 2002:a17:90b:41:b0:372:b4a1:21d8 with SMTP id 98e67ed59e1d1-380aa0f43d6mr7412581a91.13.1783013758621;
-        Thu, 02 Jul 2026 10:35:58 -0700 (PDT)
-Received: from LAPTOP-97G9G880.domain.name ([106.222.201.11])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30f0b813cd9sm10870313eec.8.2026.07.02.10.35.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2026 10:35:58 -0700 (PDT)
-From: Karthikeyan KS <karthiproffesional@gmail.com>
-To: andrew@codeconstruct.com.au
-Cc: joel@jms.id.au,
-	andrew@aj.id.au,
-	Kees Cook <kees@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v6] soc: aspeed: lpc-snoop: Fix usercopy overflow in snoop_file_read
-Date: Thu,  2 Jul 2026 17:35:50 +0000
-Message-ID: <20260702173550.10779-1-karthiproffesional@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
-References: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="is1Nw4CV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 788841F000E9;
+	Thu,  2 Jul 2026 17:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783014287;
+	bh=hABVF4sGpyE3jVKHYv5QCrfL7jA6qp4NE9op0JVv1lU=;
+	h=From:Date:Subject:To:Cc;
+	b=is1Nw4CV7xigjs/lVsqTt/gdZ/Nu/U0Ca+ImhFPR7CD/WXDWKkCTWLxyfUek7kvv/
+	 GoyNdWcNqhUV1fFnWL+TyfTGdtGIMd7FZcYNDSdbMYbYooj1TjNXG3o1oQketvuYQU
+	 nfYO5OWrscjLLH8ulBMlJtaLjQBenpvq8fEJKvOnxIzxSsFpFvlt0M2z+oICSC5YYV
+	 en4+/xB8yp1epLiM2yojpyWaJpJOrdhJZCH9eD4BE5oGyYqb1nJwTFTEH+xGwOicaE
+	 pbXYzQ2TEQC6fMiHBMGzIRBObiSf9jok1mGHt5N2Ni3hmIUfXFjob3vEVp3hYSNqhh
+	 u2AnLpkhsrHYQ==
+From: Mark Brown <broonie@kernel.org>
+Date: Thu, 02 Jul 2026 18:37:08 +0100
+Subject: [PATCH v3] hardening: Default randstruct off with rust for better
+ allmodconfig support
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260702-rust-reverse-randstruct-dep-v3-1-e4e09c50014e@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAMOhRmoC/5WNSw6CMBQAr0K6tqYf2hRX3sO4gPYBVQPktRAN4
+ e62uHKny0kmMysJgB4CORUrQVh88OOQQB4KYvt66IB6l5gIJjTTTFGcQ6TJBAxAsR5ciDjbSB1
+ MVNWKldZozoUhqTAhtP651y/XD4e5uYGNOZmN3oc44mvfLzx7v50WTjktlYUKwDjm+PkOOMDjO
+ GJH8moRf8REilXSScOEbHRbfcW2bXsDEHid6SYBAAA=
+X-Change-ID: 20260605-rust-reverse-randstruct-dep-5a504c861128
+To: Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+ "Serge E. Hallyn" <serge@hallyn.com>, Miguel Ojeda <ojeda@kernel.org>, 
+ Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-security-module@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1900; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=qN1BEqviBdra3blN4I5mvv2dJxn54XoSZdBXfNPMcPg=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqRqOKsW4w1g8+CfBlAPqGGVzKCw6/cheOZPJc8
+ ojA0RHNoG+JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCakajigAKCRAk1otyXVSH
+ 0EwYB/4hreA5GB5rTEBNmtVZYGByevSJyKCca4iFFdT/Vg8kFPrHPR4fPlPCcoAQiZlb4ye4Kgd
+ oTrdPlejNRejott+60/gxw6Vr5vMaZvlCwSn8DU8/bblryTU1fD+bQeW+ISML/uq/gwizsOyhIq
+ 3wuf3z3wvLAEz6UXD1wkMO1GYQIe08m+Fe0kAU53/T7B83xPlkm+NA0Gzou/jI9M+D+3nKZFMXD
+ uwgaattplCljwYXvpRo8533JRtKE8P0jcjM03RCbmrB7f/s2FpS5yzwS8O7HvrhLzeDpX6Rpqde
+ TrniePFkj2THMUHWSqeScskAEK9shickrDZXgD0LetnVMbAD
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Hi Andrew,
+Currently randstruct does not support rust so we have Kconfig dependencies
+which prevent rust being enabled when randstruct is. Unfortunately this
+prevents rust being enabled in allmodconfig, our standard coverage build.
+randstruct gets turned on by default, then the dependency on !RANDSTRUCT
+causes rust to get disabled.
 
-Thanks for your consistent support and guidance.
-I learned a lot from you.
-Much Appreciated.
+Work around this by disabling randstruct by default if we have a usable
+rust toolchain and rust support for the architecture, circular
+dependencies prevent us directly depending on !RUST. This means we might
+end up with a configuration that disables both rust and randstruct but
+hopefully it's more likely go give the expected result.
 
-Thanks,
-Karthikeyan
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v3:
+- Rebase onto v7.2-rc1.
+- Link to v2: https://patch.msgid.link/20260605-rust-reverse-randstruct-dep-v2-1-93d38023b6f9@kernel.org
+
+Changes in v2:
+- Add a HAVE_RUST in there too.
+- Link to v1: https://patch.msgid.link/20260605-rust-reverse-randstruct-dep-v1-1-45ce9ee8d0d1@kernel.org
+---
+ security/Kconfig.hardening | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index 6923036e1a2f..81c81ad983ad 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -278,7 +278,7 @@ config CC_HAS_RANDSTRUCT
+ 
+ choice
+ 	prompt "Randomize layout of sensitive kernel structures"
+-	default RANDSTRUCT_FULL if COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
++	default RANDSTRUCT_FULL if !(RUST_IS_AVAILABLE && HAVE_RUST) && COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
+ 	default RANDSTRUCT_NONE
+ 	help
+ 	  If you enable this, the layouts of structures that are entirely
+
+---
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+change-id: 20260605-rust-reverse-randstruct-dep-5a504c861128
+
+Best regards,
+--  
+Mark Brown <broonie@kernel.org>
+
