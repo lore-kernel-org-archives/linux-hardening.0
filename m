@@ -1,85 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4744F35F182;
-	Wed,  1 Jul 2026 23:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1798242D65;
+	Thu,  2 Jul 2026 00:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782948491; cv=none; b=VNGOmBkCplKeBqgRw2mJdEV7ivjaBq7uUnQXsvPPPebRJKQsewPmgkGFwtLtwYwH9+v8Q+2Pt2uULmsjR8FBHLGxX0ZpERC4VxMliielASWuoC1g17lAP+LBjH7DACezC2v5vfZ5/1/PF8bMpBGoF7/RPlQM53g/lPkCsvAroqE=
+	t=1782951934; cv=none; b=taEFiDAcZNIu/N2vy7zJW+HuyAHYfNWy6EdxsINYZ6EJky2ppLDX747OSStY4DcCvMwJQBISa3+aLB9a3u5oOD2Z64EVHD3+PS1AhtKznM8eA9d8OQIfL4EFNolRhA47iPYoTWmbwfPAHAbKczBnP4lmIrgDGF1YwqHU2WTst+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782948491; c=relaxed/simple;
-	bh=R1sXhs858dNRbgUkglUsMplDfYjOiBmWV+LuElFvITE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=BifLi2vjAEaooLAshFs1GtdZsVDMV6xx3wAsYH7P+MQI5coNAi/MKIqgMw8wIgM7n/BybAFtR2+RhkCVfTcmf2Ml2CLll80MSwMtBneimAVbm5p773m4MGYzZjftwZCu1qBpn5mUx74Jt52qS8ag2OpqLmplO06z2lLgHAERa24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=L2QalADw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782951934; c=relaxed/simple;
+	bh=b23V63BD9BdyYV2a2cLuU4Mh+dF+RSGxaY+1gI7BIEU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=H4ckXlBQLoz6IzNFZ53QumyL1kBmp3emmsDrhH/f+lo4ngY2NUPA1kcJpRAmagaV72fyWngRWDUw731GvRpjn0jcCyR3gk6FrHqFEe9FOwh3u7/Qi3CU9QIgWTQ4Qol1yTE+itBhUM2tWoQmU8ZSytIoMNF3+mBiekxmGFjwl+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=h3bv4x2W; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="L2QalADw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A35E1F000E9;
-	Wed,  1 Jul 2026 23:28:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="h3bv4x2W"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1782948489;
-	bh=1tDwCIfEqBRQ1kY6a/LyMZ0uL6F57NGOJfCL1V2mTmI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=L2QalADwm9bFMHLjZn1wLrJ5YlM8eN4fmlBcjUJyuZrTsH2NRaSVqdjeoPHTL8fce
-	 KGwKk9BiP7Vo4GMPShjJ9aX6hdVbGKuYN5Tpov0be/hiewKZNUBEgzE7NZNrj7rnQl
-	 ikMNO19Y8iSz+JpicuChYq4cEmcSHxF3q6JzeWVo=
-Date: Wed, 1 Jul 2026 16:28:08 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Li Zhe" <lizhe.67@bytedance.com>
-Cc: <apopple@nvidia.com>, <arnd@arndb.de>, <bp@alien8.de>,
- <dave.hansen@linux.intel.com>, <david@kernel.org>, <kees@kernel.org>,
- <mingo@redhat.com>, <rppt@kernel.org>, <tglx@kernel.org>,
- <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>,
- Balbir Singh <balbirs@nvidia.com>
-Subject: Re: [PATCH v5 0/8] mm: optimize zone-device memmap initialization
-Message-Id: <20260701162808.f6701ef751f874b9ff1c1c85@linux-foundation.org>
-In-Reply-To: <20260701090553.62691-1-lizhe.67@bytedance.com>
-References: <20260701090553.62691-1-lizhe.67@bytedance.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	d=codeconstruct.com.au; s=2022a; t=1782951925;
+	bh=b23V63BD9BdyYV2a2cLuU4Mh+dF+RSGxaY+1gI7BIEU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=h3bv4x2WU3f1qVa7wLIOYvub7fxttSM9mZv8n11Vg4VoIPKJIsENJXvbd+HN3ds0M
+	 cNISPiqb448GaEdzSxe5INSLK1lnf5MpWUaVphXrhLC2jQh4ncUfEdnPHBL+RuQeKs
+	 +wGvEbXl5aZ3PeTvwmt+3z8oz3eXWAJGGk7SrnnlNbDg0ev2NzTvfzw8XK4vHiEkmd
+	 F9sQLOXnw7VPGED1Zvqi82Gpr6J/HfVYUbWIYf5w2n7mkSR3ny0AeN1/6cPPWmQQ4x
+	 scUrVFdffYKE8fBRFXe9Uc0GRxKAUcwpnpMzfcoT47eg29b5eVu97Edxvh2UA36dot
+	 GGbRjlpj+sJ+g==
+Received: from [192.168.68.117] (unknown [180.150.112.11])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 0162A65871;
+	Thu,  2 Jul 2026 08:25:23 +0800 (AWST)
+Message-ID: <33cf45f92e4aa2ca985501807c3e4f74e1a10032.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v6] soc: aspeed: lpc-snoop: Fix usercopy overflow in
+ snoop_file_read
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Karthikeyan KS <karthiproffesional@gmail.com>
+Cc: joel@jms.id.au, andrew@aj.id.au, Kees Cook <kees@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date: Thu, 02 Jul 2026 09:55:23 +0930
+In-Reply-To: <20260701171506.338614-1-karthiproffesional@gmail.com>
+References: 
+	<033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
+	 <20260701171506.338614-1-karthiproffesional@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-0+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
 
-On Wed,  1 Jul 2026 17:05:45 +0800 "Li Zhe" <lizhe.67@bytedance.com> wrote:
+Hi,
 
-> memmap_init_zone_device() can take a noticeable amount of time when large
-> pmem namespaces are bound or rebound, because it initializes nearly
-> identical struct page descriptors one PFN at a time. This series reduces
-> that ZONE_DEVICE memmap initialization overhead by reusing prepared
-> struct page templates and, on x86, using memcpy_nt() for the template
-> copy path.
-> 
-> The main target is large fsdax/devdax pmem configurations, where the
-> cost of initializing the memmap shows up directly in nd_pmem/dax_pmem
-> bind and rebind latency.
-> 
-> Patches 1-3 are preparatory cleanups and helper extraction. Patches 4-5
-> add the template-copy fast path for head pages and compound tails.
-> Patches 6-8 introduce memcpy_nt()/memcpy_nt_drain(), extend the x86
-> fixed-size memcpy_flushcache() inline cases used by that helper, and
-> switch the template-copy path over to memcpy_nt().
-> 
-> The fast path remains disabled when the page_ref_set tracepoint is
-> active, and sanitized builds stay on the slow path so their instrumented
-> stores are preserved. Architectures without a specialized memcpy_nt()
-> backend continue to fall back to memcpy().
-> 
-> Tested in a VM with a 100 GB fsdax namespace device configured with
-> map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
-> server.
+On Wed, 2026-07-01 at 17:15 +0000, Karthikeyan KS wrote:
+> Hi Andrew,
+>=20
+> Just following up, it's been about two weeks since I shared the
+> hardware validation results. I believe I've addressed the questions
+> raised in the thread, but please let me know if there's anything
+> else you'd like me to do.
 
-Thanks for persisting with this.
+Nothing further required on your part. I intend to apply it, however am
+working through some other priorities.
 
-Review is still thin :( I see that Mike, Boris and Alistair have
-commented on previous versions.  As did Balbir, who wasn't cc'ed on
-this (fixed).
+Thanks,
 
-I'll add it to mm.git for testing exposure (because I'm still a sucker
-for speedups), but more review is needed, please.
-
+Andrew
