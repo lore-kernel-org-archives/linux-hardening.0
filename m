@@ -1,138 +1,91 @@
-Received: from flow-b7-smtp.messagingengine.com (flow-b7-smtp.messagingengine.com [202.12.124.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003E631691A;
-	Thu,  2 Jul 2026 17:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1E6349AF6
+	for <linux-hardening@vger.kernel.org>; Thu,  2 Jul 2026 17:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783013230; cv=none; b=kt38Bc4DB66QZ6nlHAphvCYtc6OswX5ja5sZ25O2+v1w+2DaNTK+FC8zxEPusI0iTkmEiuX2phEQ1mAmu2szUqoHFAA9L+ft9o6gu+bOk0DbanjEGqbMGUFruDIvHZxo4mUmZRFotF8CYosM+UwtfV+6pdfBF/6MMIeSnoorfXs=
+	t=1783013760; cv=none; b=doYAbm+373OIKiTJBvi5g8LgF9NwX7xhLSmFT0/8C6rOKEMrI51/PYtNoCU0rfAmzwEDCLKBgXEIVrgR5Dsb8SB2pJRpj0mIks/So/N3PZZZsNPh+3DuToHbalSBOo40LqwKjjsh/4k3OMnSKEWXshLVHQVhSuZqd/IXOMDm5Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783013230; c=relaxed/simple;
-	bh=8zb3pRfWFqDgJI7e7/4uFJ2yBNri71TEyEZQAg+0D3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fkatDmdZEYIH+UGQo/FvvNxuT9LwLeqLGMcUsxzoXolpmHVlor/ZBYD0/giXgAa40D2wd3K2x7Q/tP38as1qaQdhiIk4B+hw0fFsKqiUTJ86RfVlGiQ/gj+ebysfbxkQWOE0bXbUe0ehd5QL/45xK8dcvkt4aIBUQ/vG7ND0Rrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=iw7wH5Fm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=P54UQM2Z; arc=none smtp.client-ip=202.12.124.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
+	s=arc-20240116; t=1783013760; c=relaxed/simple;
+	bh=I1eeHpCHy2amylD5gAFQ/G5VWDnH0phiGEsKBXqG2BM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ki8pFK0up6P39CHXaJeKBYtdFFYeTfqsrF6z7Q5yybkZYyFd8BAE4ZfUMy4u+O9TPGW4LSaJQwBzwuSSAjSDZSPjiJrXRCTPDA3YygIlfaPnhj0d2angnRGsfAVgn1/uarY1xJXhqZYCEzDCUdwiOQzhAHK8vt9Hl4LjZaOsvUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UKFugqjV; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="iw7wH5Fm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P54UQM2Z"
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailflow.stl.internal (Postfix) with ESMTP id 887721300107;
-	Thu,  2 Jul 2026 13:26:41 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Thu, 02 Jul 2026 13:26:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
-	 t=1783013201; x=1783016801; bh=A1mAq9QgeDFQGoc1g0bU/qewhTBVLQPT
-	Wx4Ov6Yt/nQ=; b=iw7wH5Fm1WmPuWFN8hL3+Il+pjRNAk02KOsV5yEc8Y3yv1gS
-	aRtc1lPnS8GfZ7PHm5qDQgZZFoJ7WUYHMuOTbF7pu6v8Ij7vtHdZKm+GLbHDBJh5
-	hLSAdFIAIn479UM3KjIYStjl4yYIFIUMydbB9xMsf+RY6M1XQWIn+Vg1GHV0NDsZ
-	hsCVrhLZsYDhfIEYYDmorsTxdoMpRrmfSm5nYh6Kit+bbMwDGNAbc2okjLN41C0r
-	ZKczCSG3LrfFE5A71sQ+tKiN0GusNPtwpSgQ2kbUOG4ogIDSpFdBnZonbVzpFR1L
-	bMPhKO7MlbxHK93dfRxGPtrwS5WILozyVn3u2Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1783013201; x=
-	1783016801; bh=A1mAq9QgeDFQGoc1g0bU/qewhTBVLQPTWx4Ov6Yt/nQ=; b=P
-	54UQM2ZnN/6imxnbJrNe1+9M72MTaMIzk3ZrtQNwBc6PAaZK0/Q7daspjfR57kZx
-	1jN53rl5t85F+jMuggjmPt2Nu8f4nL3zT4eM/uxNiDh5Tt+C2Ab7JGs82rLDwCLZ
-	SNcstwQrXSw7bpJZRZ7IjynFHWcs3H/FvIPpnmr9ihEkK6uGzGUp0CGDKBK+zxhx
-	iK6FGfQ/8kSr8AqBXoSJmD4GigT4+euhBsDrQuj6d8uwuop2AOLU0r50brDirCXL
-	UHIar7lFFVEBAXN89FHzzlcHYKYGV1XAwE1m37KhLH2SojmZCKZkpMFT4te+3twv
-	gmIn6c81GoZdDW3TC+8xg==
-X-ME-Sender: <xms:UZ9GatdPz5u0aM_VAYwBbAEEe6poFKzKUDcKlOspgACgUID-9y6OuA>
-    <xme:UZ9GakKCMKnFJxMV8w0s6KEDoN6lZEIE93WSpkB0AP7k8XwaIQJZ-TQufeTXJUaL5
-    8eAk3WFwna6Ji8dr8eInVWlOD8PdmE28GN3i_WAPe_RXuJTfrUrzFE>
-X-ME-Received: <xmr:UZ9GaiEKwEX32_dMGGhH8yMRM5hDJ3_i3RD-8xkc_VS6DRpHrTmnWoxwzeI>
-X-ME-Proxy-Cause: dmFkZTGeEpR+AsdLrpWZ77U4u+gogj5Rn2qvzLNI4DWk5vaM4M191xqWXgmVv8E4h7oBcQ
-    39deDZ7h2yJzGUf6cDCm7cDzMR95VhjRxVjnL4OIz6d2SHcWAYZcWOAZtVU/e+/OTK8HVz
-    OQvKOVQARvAHO0zLXGJ+7VJ/Bh5HNnhWNtr9+X98qb+BnnWMkNrnyyek2SoyBKwQJhsQ9U
-    D140zIQEcNQBZCtIFMfjkKe0rzDx8OcBmad8r7emM7x62zMV60W5AuIJxpSMe0mjnxOnpQ
-    dalSnPW6KjpISgAS0jMTQrz2zTslPToO9cyDIkGk7KEyEQcA/lrbnJdHY4jc4SZA71UMjD
-    1hev/O1XBjg7IQlfs6V/4JZi7ZPavmMj2Wt7P/YNOL/QDNeZ8qKqfWKsXURQk4Hp1fo1+A
-    FVTTKbJkPOG9ZEIm36H8p40HHsiP0Dvf5sXgcNYvanR8R3a+39O0pPT2lh35Ww7cnLvko/
-    nOvKYfPUDcD6wM63QTPGHwAkBJCRvq38lfSnWKf+ZbUC8qRavhtcnSDsMio7NjASiOh3aX
-    swegRWZON4WjBk07KGyuCwCwP0ResfvK2qWdu+HgdnQgTgVFMekYf8OLpV9Rhjzu7b9tnM
-    clugM+UtXCFSslSZHXiDFp7x/apB2IHwElJv/g03FMcOw7D8cKbj784VSybQ
-X-ME-Proxy: <xmx:UZ9GanA3uyciShD84Ziq53-huaMsVMfVP7Jhjm72E7zdNG85XBY-8Q>
-    <xmx:UZ9Gal-ViKLR0-3KSckbyFHw8nB_Yvfhz6vu8GHS9UzFAzfl5dQ4og>
-    <xmx:UZ9GajBj3ONGd98PJre0zOQ_Fy6uVVJcyiwYb2MwOvnbrCmjwReBdg>
-    <xmx:UZ9GaqQqqXx2w50--tomR5r6MicyKe3i3ElTvhnmg-iuUEgycPe6Ag>
-    <xmx:UZ9GamM0iBjYu8pa-BVbPhBGJBAtCiXNeWVBGXI_xgKdWWjy4M05paBQ>
-Feedback-ID: ib53e4b78:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 2 Jul 2026 13:26:40 -0400 (EDT)
-Date: Thu, 2 Jul 2026 12:26:38 -0500
-From: Ian Bridges <icb@fastmail.org>
-To: Matthias Schwarzott <zzam@gentoo.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKFugqjV"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-37defb2f231so1424197a91.2
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Jul 2026 10:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783013759; x=1783618559; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I1eeHpCHy2amylD5gAFQ/G5VWDnH0phiGEsKBXqG2BM=;
+        b=UKFugqjV9r9iou6jyGWSsAIsdVsDSHxJqhgI8nnEp7LvnpLH48EHGKmoWGbufd3Og3
+         SnENMdSdeZAYjwT1XcB+sHWoQJPWfP7s4Z7IcCCAIP4zAgARnej1gsuaYGTSLv2xzz2j
+         5Ou/PBUDq3i1rdcKr6Dx0bRAouACcmxpz54BIZYiwPP/6pNGqMj+EoYKV+vTT9/5Dvas
+         rUvqIkWu4/ZVx/JYar+BRD3uSkThci6FcmoM2JGYiElhZRLepO5lKGTknI7e7WsjRUci
+         lGkIZBa6W6qx7kGLJdRldkA4KWhm1XobQkiD38cBDRC/MBv8sTZ8hkqoeaM5o0nFKkpm
+         Ya5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783013759; x=1783618559;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=I1eeHpCHy2amylD5gAFQ/G5VWDnH0phiGEsKBXqG2BM=;
+        b=DJFFoq6ZsQmJlpJGfuYYhlKn8Az3FbQblbP4+fd/p+4+8qyLlfappShZ49goelkJ22
+         /f+7fBQ1kGLQ3AgVWEO3RYTOjU9GRSD1mETnXkPlJiObtpB15nQj8YI6OQlha7OF2dgS
+         8wIehiQ+fucXC3LalsCQF1hNqqtvsTK5AcUpzmXOgt+n1W4wN+m0enwB2Cf+J8GF/oQG
+         cUaxlBcBgUhDeZ2VzISoYQOUECKympjgxbDiNr00dUcKUgrJ56SEcTfvj8zVbZR4UJXA
+         qmxTiSHV2LwKMbwlo91kBSHJe/WIXwzJMTY0Qk8mt50njLpNFOAmgO9uShKBnRjmnKeL
+         pzTA==
+X-Forwarded-Encrypted: i=1; AHgh+RpBv3/zsGNtcW3kKxLZv7qyxiaS7vcdrfLahT2gmC+Jl/wpfnZFpqCAJDnR29Z6WWzphzpyS06EyI9IEqSw9eQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynDnPxxT+97tOlCxrrCRu5k+U3gaQGt7o2XAqn6yuLai92EE9g
+	XKsVdVKGc4DqRPFcRPLR/orCAst21a5srs4aUAZHLdKYK+piEomylAm1
+X-Gm-Gg: AfdE7ckvebUm7lVuTJHrBq1Anu0qHA6JGDbCKNreF+2Ll7LLx4vl0GFB5FSJ/uJ/QW0
+	dwsEbR2YRaGrabIyz28MwaPqTcbDpQxzbgkQuYX75EK4uc3RwGWPjaCML74MbRACy4M4Ip6WFSz
+	If7FqcEByQ/VOf52mpEc6OqWXvupXMm6R4MKncrTCu5gbfpFu5vYNA5WLjBe9CpbibrDaG9ijOc
+	Nu+nEOJXgxR8CwXRfvOhWWgYYGpjEWKA4khcvsIhHExp50x2uBLh6rY/I5OQdLnUptyUTZCBbTo
+	OPPk9lheW2AruGsvNTbvPkfZQl2FbmkD9T78JCO7bV5aprqBT/kzi9TyhF5Z7BzABisa6T0Kioa
+	T0xtuZaQttNB0UyC4qqrFIDLCvaoEDbNPTHt595d8+vClanSc/93nMw7G4IkrkuMpNqHdMa1HsW
+	Y0SvIwH1cVQMfDltuhjUkfCmrC/pelZ+7m70dAijHVLpoKVV8srHcA2UA=
+X-Received: by 2002:a17:90b:41:b0:372:b4a1:21d8 with SMTP id 98e67ed59e1d1-380aa0f43d6mr7412581a91.13.1783013758621;
+        Thu, 02 Jul 2026 10:35:58 -0700 (PDT)
+Received: from LAPTOP-97G9G880.domain.name ([106.222.201.11])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30f0b813cd9sm10870313eec.8.2026.07.02.10.35.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2026 10:35:58 -0700 (PDT)
+From: Karthikeyan KS <karthiproffesional@gmail.com>
+To: andrew@codeconstruct.com.au
+Cc: joel@jms.id.au,
+	andrew@aj.id.au,
+	Kees Cook <kees@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] media: si2165: Replace strlcat() with snprintf()
-Message-ID: <akafTmRDnPK4L3A1@dev>
+Subject: Re: [PATCH v6] soc: aspeed: lpc-snoop: Fix usercopy overflow in snoop_file_read
+Date: Thu,  2 Jul 2026 17:35:50 +0000
+Message-ID: <20260702173550.10779-1-karthiproffesional@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
+References: <033f2657ae6a94ad13d22f717a2900afb75d892d.camel@codeconstruct.com.au>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-In preparation for removing the strlcat() API[1], replace its uses in
-si2165_probe(). The chip name and the supported delivery systems are
-already known when the frontend name is built, so the whole name can be
-produced by a single snprintf(), seeded from the same si2165_ops
-template default that the strlcat() calls appended to.
+Hi Andrew,
 
-Link: https://github.com/KSPP/linux/issues/370 [1]
-Signed-off-by: Ian Bridges <icb@fastmail.org>
----
-I don't have si2165 hardware, so I tested the patch with:
- - x86_64 build at W=1 with no warnings. Applies cleanly on the media
-   tree next branch.
- - Module load/unload in an x86_64 QEMU guest.
- - A userspace comparison of the old and new name construction for both
-   chip types; outputs are identical.
+Thanks for your consistent support and guidance.
+I learned a lot from you.
+Much Appreciated.
 
- drivers/media/dvb-frontends/si2165.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/media/dvb-frontends/si2165.c b/drivers/media/dvb-frontends/si2165.c
-index f1241b63aa5c..ebb4083b99a8 100644
---- a/drivers/media/dvb-frontends/si2165.c
-+++ b/drivers/media/dvb-frontends/si2165.c
-@@ -1243,20 +1243,16 @@ static int si2165_probe(struct i2c_client *client)
- 		chip_name, rev_char, state->chip_type,
- 		state->chip_revcode);
- 
--	strlcat(state->fe.ops.info.name, chip_name,
--		sizeof(state->fe.ops.info.name));
-+	snprintf(state->fe.ops.info.name, sizeof(state->fe.ops.info.name),
-+		 "%s%s%s%s", si2165_ops.info.name, chip_name,
-+		 state->has_dvbt ? " DVB-T" : "",
-+		 state->has_dvbc ? " DVB-C" : "");
- 
- 	n = 0;
--	if (state->has_dvbt) {
-+	if (state->has_dvbt)
- 		state->fe.ops.delsys[n++] = SYS_DVBT;
--		strlcat(state->fe.ops.info.name, " DVB-T",
--			sizeof(state->fe.ops.info.name));
--	}
--	if (state->has_dvbc) {
-+	if (state->has_dvbc)
- 		state->fe.ops.delsys[n++] = SYS_DVBC_ANNEX_A;
--		strlcat(state->fe.ops.info.name, " DVB-C",
--			sizeof(state->fe.ops.info.name));
--	}
- 
- 	/* return fe pointer */
- 	*pdata->fe = &state->fe;
--- 
-2.47.3
-
+Thanks,
+Karthikeyan
