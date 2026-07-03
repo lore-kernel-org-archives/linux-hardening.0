@@ -1,185 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D971D6BB;
-	Fri,  3 Jul 2026 01:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24347241C8C
+	for <linux-hardening@vger.kernel.org>; Fri,  3 Jul 2026 02:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783042419; cv=none; b=b8ZZVXOwe5oAMj86qNb/5B/c55yISBxQehgl0xxgHu+PEysOCdALC/MGz5ePDdSg0U5UDfeBCGVaYMhsP+IKaMGhJeVpf5KGjSznQ6Q3P+lbZjF/CuqafeDhriDsuczu+Z1AlPQERDJD7g4LgMTlVcc64DPi23dVDUEvvhHOCuo=
+	t=1783044669; cv=none; b=EDUjB+5GM/T9UYfSsYY9awzg7XZBdK1DJD7iymiikE8SrckeozZHae0kCTJaDRgKAsyNHydkBJeM05PTS2F6W4Iy1dNeWbbHo/5yhlaLg08z+cbiVtrGnfhVgDEJ4+sfgVHQZ2TLTNHa4KTdDSwHmBMhPZxvbXho6OFhLB3NzoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783042419; c=relaxed/simple;
-	bh=t7p6dISSVB8lnZVanH8fynJR/7IRvjvGfqNSvKTAhI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hdNSxe/SNhJOuFEPgcJChqSz/ae1pg7Xze9eOFSHFaPtrY2igCoC+NGBknC8ER2Ci2+XXyz2wLsYx26yHZsHM+hjJtbLzca7BbBnMuNA9RBiZwnflJ6iHytDrqAWqjvwC+rlLmCEl3hBi11fw2neI70L1JAFREr3SRZTa/Kw7gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVZDDHpC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783044669; c=relaxed/simple;
+	bh=o2jlelQPxV+nzbfoQUAgtVkuNyE+WmmoaGnh8aaogKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Re2LKiGiI+mcZoIlykYcMR0rik7uULZrp+MXTIYYOzgqdqoqOB61h7Yk9p28WLXoB975zViP5CuiWlzU0PbLNBL+6vd+6t1SgCIx48W4G2OQqK5M7PoC/d+AwH72Bafyq0srLlZJORXHmKpUXAUiK+/keVzBca+9YibXLCrf+78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U5gjNzG1; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVZDDHpC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 572951F000E9;
-	Fri,  3 Jul 2026 01:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783042417;
-	bh=z1UJKnDhUjSBpg0SZM4+JMff/Bf70BA3nzIrzGyoKKw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=HVZDDHpCKI4pCgTI9pT+GuZNj74Hyg0B8SAIbW/bmS/iaMjHVooyN4tn5vU9ECGKC
-	 C0hQIYuDAV8FiIOOeg/I2hVvEGeasHdti4sYkNohMiPeuBBKWBeuymKeYUSv4qLRTL
-	 HymV57vyiTYmZMbewyRJ2eDlAxsEt88JCID+SklxRz9e08RzdsZmM6lUSGzoXdC+mR
-	 TL48O54mUgZO9C0oguqFJ80OQ+iZRD19TpvgdTNCmJ3t87Af4LdAAyNLMAGjfUgsLK
-	 ZDvfbhFY1Xz+zwb/d6OxRT0Ud07Ph6akvxmk1DCK6K/GN9KB3VA+ncEIa1m3wx8eDn
-	 zKSSbsEVfp3JQ==
-Date: Fri, 3 Jul 2026 02:33:30 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Rodrigo Alencar via B4 Relay
- <devnull+rodrigo.alencar.analog.com@kernel.org>
-Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
- Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
- Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
- Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v6 07/16] iio: core: add hierarchical channel
- relationships
-Message-ID: <20260703023330.45916b4e@jic23-huawei>
-In-Reply-To: <20260618-ad9910-iio-driver-v6-7-79125ffbe430@analog.com>
-References: <20260618-ad9910-iio-driver-v6-0-79125ffbe430@analog.com>
-	<20260618-ad9910-iio-driver-v6-7-79125ffbe430@analog.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U5gjNzG1"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-8478fe07f0fso79656b3a.0
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Jul 2026 19:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783044657; x=1783649457; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9te5WRnB3/pnQ+/Q0S83oqHxAqp55SmkhfuxRe3M02I=;
+        b=U5gjNzG1ZobA3lMW8WgFhjZgJ06XZN/Ydgm45lGGKjgCDP+N1OAdB21HTwzpJTUhHY
+         jW8gHsg2W4Oms84EU0M3IhQ+GC+/wx4y/dy1DQ8O+g+VYhY07wWkw8LGo4N6hfejwt0d
+         g1dleaiS9k+mseoilhV3E51/xr4xftz6HC88NmL8ZxopAuF2B8J4001N4Y5vgJRT7jAR
+         z9+2/7vuilBKbuUSknwO6xpVyg0EdZG9UyPVG4GEocgV/qYPVFIoIAa2tR9ilzbUTj1N
+         iSIbKV0YbwzMRFzIdWiP9seqT9EoI9ztzhmCM7ScVGj8ET0zJAKtpBKB6Mo2NEeShfEM
+         sm2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783044657; x=1783649457;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9te5WRnB3/pnQ+/Q0S83oqHxAqp55SmkhfuxRe3M02I=;
+        b=Zd9c0rk1TVi9B3uvsf5OJaPQIP6bEeeDlkupR1+v5wFlbmuz6XpN9LLd/pNq1b2tHo
+         e+AXbT0YXPhbISNNT2RODv/6Lt5EF/VwwECpQrTHjSemklO1swES/hG3zEJgETQ85rjQ
+         0QQS6+CYsGJkAdSNIhiq59+JPwyZoyogC2Pj+L/MNqHn48byJLTnMV/aoxHIJ10kcpUg
+         Qi0IvWT8hLcSE+GJZv8YQpWIbq+KatOfI9LvuoxgiWI6AXlrX97vt5dFDAaY223duKRQ
+         tcJHMwmcttmPaDzmw8iv41RZZtYhiSpMUTsUGC9LSQvLOaRY+fR8mV+HHSMvlLSJA3fP
+         ziWA==
+X-Forwarded-Encrypted: i=1; AHgh+Rq7l6uv5TvBP4cIngR04wOSXdXQAM3SEBhP3H8ZXrxrUheNT8ZsqPEuwjaa9D9HZdTq70/3F3KS0F9MvMF3PXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIC11z16ipyMfR4ofU7kIqSOHH4DWBsRF94PDzhvll9nqeYr+2
+	VxmsmIPBghcSY+h4qWCJyE4Nx21Qm5VfsMIUdn5o2ylN/vYWBO1b5OIg
+X-Gm-Gg: AfdE7cli/XvW4eQEW0tSOL4nBEfGLPh7JaeR6SaqM73j+cL97DI/UZNFeNXZ6F+7mQ5
+	hqicWnQ480HryJpfTZWMQ1/oYGwGrTNsVU2zWCIGcMRTLkwjKm6jhK8ibUAXjX5vqdShRtnxXFv
+	2ASdJ6nnYZASag17W/zcU2KviYjCwUtEDspGTLeIh3rmsPt5VgHCTK9UK9BPuy6ZKpYfer4LoWx
+	ol2a0Q1MTzblF8dNv9kNt2ui9K3AGawzwL9sWBswXTiX6KIpfGwsD0mXoIjqT2EdE54Y2lySlGy
+	/YKeGcFLh7tCiGPBD428KMkv2VD4NK1jnhTskVcof4TlJc5fzCEsWJT0hlN6pd2EC42Gtrw8EYd
+	DZG2UuY5yOVTbmkgldSqW7kyrvXQvfYCd6Z72DOKzicwnRkMs3dRFQRKX7oD0KndQ0VEzaTq220
+	YwkpsLwzPMmoQHx3bIBLXhLg==
+X-Received: by 2002:a05:6a00:b481:b0:847:8496:1aa2 with SMTP id d2e1a72fcca58-847c0731433mr8687798b3a.27.1783044657351;
+        Thu, 02 Jul 2026 19:10:57 -0700 (PDT)
+Received: from localhost ([2001:19f0:8000:3e6e:5400:6ff:fe38:3d01])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847cb9b0220sm2124478b3a.50.2026.07.02.19.10.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2026 19:10:57 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Yixun Lan <dlan@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Alex Elder <elder@riscstar.com>,
+	Ze Huang <huang.ze@linux.dev>
+Cc: linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH v2 0/2] riscv: spacemit: Add K3 PCIe/USB comb phy support
+Date: Fri,  3 Jul 2026 10:10:21 +0800
+Message-ID: <20260703021024.495433-1-inochiama@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 18 Jun 2026 14:27:23 +0100
-Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+The PCIe/USB comb phy on K3 is a big phy that contains multiple
+standalone phys for each PCIe and USB controllers. This phy is
+required to configure a syscon device for mux configuration and
+calibration.
 
-> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> 
-> Add parent-child relationship between iio channels by creating a parent
-> pointer field in iio_chan_spec struct and exposing a sysfs attribute that
-> returns the parent channel label.
-> 
-> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
-Generally I like this.  A couple of trivial suggestions inline.
+Changed from v1:
+patch 1:
+1. Add extra description for "#phy-cells" and "spacemit,apmu"
+patch 2:
+1. Fix multiple spelling errors and copy-paste errors.
+2. Make some magic number as meaningful macros.
+3. Remove USB3 set_speed() callback as it is not needed.
+4. Fix the wrong land data config and mask.
 
-Jonathan
+Inochi Amaoto (2):
+  dt-bindings: phy: Add Spacemit K3 USB3/PCIe comb phy support
+  phy: spacemit: Add USB3/PCIe comb PHY driver for Spacemit K3
 
-> ---
->  drivers/iio/industrialio-core.c | 44 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/iio/iio.h         |  5 +++++
->  2 files changed, 49 insertions(+)
-> 
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 9373006235c8..3d12269f26f4 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -854,6 +854,21 @@ static ssize_t iio_read_channel_label(struct device *dev,
->  					 to_iio_dev_attr(attr)->c, buf);
->  }
->  
-> +static ssize_t iio_read_channel_parent(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       char *buf)
-> +{
-> +	const struct iio_chan_spec *parent = to_iio_dev_attr(attr)->c->parent;
-> +	int len;
-> +
-> +	len = __iio_chan_prefix_emit(parent, IIO_SEPARATE, buf, PAGE_SIZE - 1);
-> +	if (len < 0)
-> +		return len;
-> +
-> +	buf[len - 1] = '\n'; /* replace underscore termination with newline */
+ .../bindings/phy/spacemit,k3-combo-phy.yaml   |  68 +++
+ drivers/phy/spacemit/Kconfig                  |  16 +
+ drivers/phy/spacemit/Makefile                 |   2 +
+ drivers/phy/spacemit/phy-k3-combo.c           | 252 +++++++++++
+ drivers/phy/spacemit/phy-k3-common.c          | 391 ++++++++++++++++++
+ drivers/phy/spacemit/phy-k3-common.h          |  27 ++
+ 6 files changed, 756 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/spacemit,k3-combo-phy.yaml
+ create mode 100644 drivers/phy/spacemit/phy-k3-combo.c
+ create mode 100644 drivers/phy/spacemit/phy-k3-common.c
+ create mode 100644 drivers/phy/spacemit/phy-k3-common.h
 
-That's irritating.  Can we instead make __iio_chan_prefix_emit() not include the _ ?
-That might mean a wrapper to just do the last bit of logic in there.
-
-
-> +	return len;
-> +}
-> +
->  static ssize_t iio_read_channel_info(struct device *dev,
->  				     struct device_attribute *attr,
->  				     char *buf)
-> @@ -1263,6 +1278,30 @@ static int iio_device_add_channel_label(struct iio_dev *indio_dev,
->  	return 1;
->  }
->  
-> +static int iio_device_add_channel_parent(struct iio_dev *indio_dev,
-> +					 struct iio_chan_spec const *chan)
-> +{
-> +	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> +	int ret;
-> +
-> +	if (!chan->parent)
-> +		return 0;
-> +
-> +	ret = __iio_add_chan_devattr("parent",
-> +				     chan,
-> +				     &iio_read_channel_parent,
-> +				     NULL,
-> +				     0,
-> +				     IIO_SEPARATE,
-> +				     &indio_dev->dev,
-> +				     NULL,
-> +				     &iio_dev_opaque->channel_attr_list);
-
-Probably younger me style, but can we group a few of those into logical
-sets to reduce the number of lines?
-
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 1;
-
-Hmm. Can we make it explicit this is about an attr in the function name.
-I think that would make the positive return more something we might expect
-than something that sounds like it is adding something non countable.
-
-> +}
-> +
->  static int iio_device_add_info_mask_type(struct iio_dev *indio_dev,
->  					 struct iio_chan_spec const *chan,
->  					 enum iio_shared_by shared_by,
-> @@ -1401,6 +1440,11 @@ static int iio_device_add_channel_sysfs(struct iio_dev *indio_dev,
->  		return ret;
->  	attrcount += ret;
->  
-> +	ret = iio_device_add_channel_parent(indio_dev, chan);
-> +	if (ret < 0)
-> +		return ret;
-> +	attrcount += ret;
-> +
->  	if (chan->ext_info) {
->  		unsigned int i = 0;
->  
-> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> index 1c7d12af22da..9470ab8eb726 100644
-> --- a/include/linux/iio/iio.h
-> +++ b/include/linux/iio/iio.h
-> @@ -264,6 +264,10 @@ struct iio_scan_type {
->   * @ext_info:		Array of extended info attributes for this channel.
->   *			The array is NULL terminated, the last element should
->   *			have its name field set to NULL.
-> + * @parent:		Optional pointer to the parent channel spec for
-> + *			hierarchical channel relationships. When set, a read-only
-> + *			"parent" sysfs attribute is created containing the
-> + *			parent channel's sysfs name prefix (e.g. "in_voltage0").
->   * @extend_name:	Allows labeling of channel attributes with an
->   *			informative name. Note this has no effect codes etc,
->   *			unlike modifiers.
-> @@ -309,6 +313,7 @@ struct iio_chan_spec {
->  	const struct iio_event_spec *event_spec;
->  	unsigned int		num_event_specs;
->  	const struct iio_chan_spec_ext_info *ext_info;
-> +	const struct iio_chan_spec *parent;
->  	const char		*extend_name;
->  	const char		*datasheet_name;
->  	unsigned int		modified:1;
-> 
+--
+2.55.0
 
