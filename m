@@ -1,129 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279A13D25C2;
-	Fri,  3 Jul 2026 14:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1DD3D45EA
+	for <linux-hardening@vger.kernel.org>; Fri,  3 Jul 2026 14:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783087603; cv=none; b=Vak+hhtbMO8XGrOlYJyyQfsoJ2o0VXYLfkVgE3I3L6AKSQxzkcf8jVyw6CgGBne6PWIkMc4l2p57KMcPTYafEYbddcAu433o+wviJf1GXUbbsIBnfcxcVZK9XCjnx7qIvFd56GxpQRO2Y6K7H371HGpqj/Z0R9Nggd1PJCLiykU=
+	t=1783087706; cv=none; b=hT0LoOY+ty4waCJ7qmTZNLFLpqhA+2FuEDCGYShe4OLwm09atBek+ZRhmli2bLkC8jWGQxvhzTJdqNgXJ/07Bs9otPHJl/SzyKPI1NBvvgEnlrc9TVSrMME7MBEBbjtezjU0oUe0gguAVPvXpzncP+IrumaJheGW9KYsfd5LE1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783087603; c=relaxed/simple;
-	bh=1nBynMYrjOxt2oYrh38p8rFOIE9BYNqjdzW1X4NA8q0=;
+	s=arc-20240116; t=1783087706; c=relaxed/simple;
+	bh=sxt78hW/PsWxFDCcSOLlFJjgkvoHFNRhW6v7oBKogR4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qiulGgVGxNLZRWnoSAQiP9vcZppKabNOUZhihN149+SsXx5gENQTzOOIllYibmSfPq9iWFNjV7wRfXLgsnyKJqEiBCF7oWbxSb8ASVoTkwlSiPaSt+s9dKHiAfQxkFFZybA+n8ScrSTissrbtqZkZfL1O5mMU58806eDBTloBH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lp3q0TXL; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=FNHcS1XbDDu4kYNzYZ+AUucdMPsWoAA35hjXjdD3wmdLG26KZkFJ6BO7JFfeVf+YbouYfWgpV35d2FdPSwpMjDWKBF/fUUE1/9DONM5Hb6DE11Egejnqa6TelkUxirBDyyuOLkiI4VL/Mf2ZGTBxefJ8fQOOtUDFfBK7zJBMUnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=q+4u8vnx; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lp3q0TXL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DBB11F000E9;
-	Fri,  3 Jul 2026 14:06:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783087601;
-	bh=1pl8AC7qRBIEwlkot9AQuVgRYA3lF+ufbzrcbLLYwh0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=lp3q0TXLLJy3nqhzUHsU4dOWZjR3u2CraFKtZKVK7JOnHWpZNEOORVkR5AtEaoVFM
-	 MkTqvcZg5727VjDHeVl1YFCJ+3Eh6f9QwEG1vKfxvygkdN9iwE8a44mkwbGhqGqqe6
-	 geLge/IeNx9EBV3kvleMaIzjDDmfQ6Ts9RLrWzv8e+buz2IIbyzHrwNCd/rzxxjNM7
-	 5YKkrzcyxrkzhjc8p6ZKxGvDO0RWIT87fhA5220Qm2pDZtz7A6L8Kmset3rjQQ6Kvb
-	 psVhW82tgtKWptTPfTnTgtI0EQMyWDRmm8oTr6fFHLebyTc6qDhBrJ8OHNqqdbaNmc
-	 oWXodFLtCI9+w==
-Date: Fri, 3 Jul 2026 17:06:33 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Li Zhe <lizhe.67@bytedance.com>
-Cc: akpm@linux-foundation.org, apopple@nvidia.com, arnd@arndb.de,
-	bp@alien8.de, dave.hansen@linux.intel.com, david@kernel.org,
-	kees@kernel.org, mingo@redhat.com, tglx@kernel.org,
-	linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 4/8] mm: add a template-based fast path for
- zone-device page init
-Message-ID: <akfB6Qe-jKDEMUxz@kernel.org>
-References: <20260701090553.62691-1-lizhe.67@bytedance.com>
- <20260701090553.62691-5-lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q+4u8vnx"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-47362928f65so609057f8f.2
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Jul 2026 07:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783087703; x=1783692503; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ff/YHnBqJa7Fo45VaTkgV0Ahz6JMeo4m1RJIBiXmpRg=;
+        b=q+4u8vnxsIhU8W4cb6MxioztC1t5YtdadvtxxnTYqwq7gZZtqFy8rhqN5gOD3iJQ19
+         DzQT3yv2NU1/R7armS+fI8RXXgtIeiogzz0yaJ9DeQusmRfZze5waXXEGpORwtVLf7si
+         BkBTajDyPz2q9xZlblsl/lnTtNKlEFjR5n8HR+jLO7C5CxdoHQD2RD7+TfYGGWZ5J3KA
+         mssgN8UreyxZUJCA3dyBPV/lXX3ASslA7BQxz+LEhbqrWdN/KtdseM1Nn1ckuOTJ4sBJ
+         SQ0MilkYJkqjzEqI1VT160eto5kDgb/dkEU+WWZgCQuil6OXpVgK675+k7DDB+xDpdng
+         cuwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783087703; x=1783692503;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ff/YHnBqJa7Fo45VaTkgV0Ahz6JMeo4m1RJIBiXmpRg=;
+        b=OWVRm0gGlulZKdlhV1YaQqqC5uHs0BK1trVRWV0WPJHgWVheFqSYAugIVXCE2ahtzy
+         S7hfixwZ0XxXZ/eJKw/barvhZ5p6eNbUndr8Rp2MEwEW5vkI7NIH0yBd78n2YXrh+JLU
+         Eg696B+qD+iH9LZN47w952Wk2bhnsszA1fAVt8Ehyv5Mlt6JCs4bXJVKGHvptNPrPpw6
+         MqSuFExNYzG4k/rXmkJaZkw1BZ266lZ82yUrE/FUt1FBrLgK2sUrx++1Bi73K1ssuO4N
+         x2Lt03KVLvx1+MUwKh48losVCBzZMKE9gMzyki5KP7uXw0JJ4JmuE4OIvZVYDdq7zJar
+         anvw==
+X-Forwarded-Encrypted: i=1; AHgh+Rr2FOfOGw0g3dzHvXSCFcTxNc8NFH/spu2E0COiIWDZawZId2qnb7NHGXrQochlHxwYwMZ2d4mNeSDx0NEwtjU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ1fUPmQmj9ccmq+lq79jMPzxwoJDlxcGW/7GLJRB4YFVYbcZB
+	uoUf8wHpm4zZ+EMF4N+p9fDHyGsJGqQo4NlcOhThJ3jPunLdzkvq9Rs4
+X-Gm-Gg: AfdE7clA9Cux5GKaMvARbZo/qYQGGjiIAPMtF/VUntjKmeZGUCFuk627dEAKwKO+nOu
+	Jx/FrZ6xtOoGa3UI3AvjxujJtd9Up+BfLiyMs6BjhS4KzyfKJjX5WpwqAXXqFyBTEKyU6LU6yEu
+	Kl1LeF/lecTpp2QTmBj0aSMZ8TM/KOru7jq6sKgSQ1Lx5TYDGfT/X1K4ChDXykVnGVvm05kDZjC
+	j0ywk55Fo9fsL0Mx/gZgWUm+I7zrul5rG8HNBqMbkNqsP8bG4ckSmBGDIsWjh3gAKqoTX+s+xsc
+	ZyJm92GskhFV3nm5GP9LZiOxVTLkqeWieefguUkAsVxSeSJM3pVRMk81a5UIz0Rr92LSr5xiOf8
+	U55oqaaBMp7Ob92513u17q4etZ/NUGpfQmPbnFn2MV4DqHK6Hsqj/Jm8qE/yzcMB1OqO9j8Yh8I
+	QbZWfk
+X-Received: by 2002:adf:e012:0:10b0:474:18d9:8371 with SMTP id ffacd0b85a97d-4775bd0ed70mr11785200f8f.28.1783087702435;
+        Fri, 03 Jul 2026 07:08:22 -0700 (PDT)
+Received: from nsa ([148.63.225.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-477de3dd46asm19665003f8f.36.2026.07.03.07.08.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2026 07:08:22 -0700 (PDT)
+Date: Fri, 3 Jul 2026 15:09:26 +0100
+From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>, 
+	rodrigo.alencar@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v6 12/16] iio: frequency: ad9910: add RAM mode support
+Message-ID: <ake_YWfvVC9RQ3wu@nsa>
+References: <20260618-ad9910-iio-driver-v6-0-79125ffbe430@analog.com>
+ <20260618-ad9910-iio-driver-v6-12-79125ffbe430@analog.com>
+ <20260703040544.08a8ea5e@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260701090553.62691-5-lizhe.67@bytedance.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260703040544.08a8ea5e@jic23-huawei>
 
-On Wed, Jul 01, 2026 at 05:05:49PM +0800, Li Zhe wrote:
-> memmap_init_zone_device() repeats nearly identical head-page
-> initialization for each PFN. Prepare one reusable ZONE_DEVICE head-page
-> template through the existing slow path, refresh the PFN-dependent
-> fields in that template before each copy, and memcpy it into each
-> destination page.
+On Fri, Jul 03, 2026 at 04:05:44AM +0100, Jonathan Cameron wrote:
+> On Thu, 18 Jun 2026 14:27:28 +0100
+> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 > 
-> This reduces the average rebind time from 244.28 ms to 217.19 ms, or
-> about 11%.
+> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > 
+> > Add RAM control channel, which includes:
+> > - RAM data loading via firmware upload interface;
+> > - Per-profile configuration and DDS core parameter destination as firmware
+> >   metadata;
+> > - Profile switching relying on profile channels;
+> > - Sampling frequency control of the active profile;
+> > - ram-enable-aware read/write paths that redirect single tone
+> >   frequency/phase/amplitude access through reg_profile cache when RAM is
+> >   active;
+> > 
+> > When RAM is enabled, the DDS profile parameters (frequency, phase,
+> > amplitude) for the single tone mode are sourced from a shadow register
+> > cache (reg_profile[]) since the profile registers are repurposed for RAM
+> > control.
+> > 
+> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > 
-> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> ---
->  mm/mm_init.c | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 74 insertions(+), 2 deletions(-)
+> > diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
+> > index 3fe97aa887c3..c4e179dda715 100644
+> > --- a/drivers/iio/frequency/ad9910.c
+> > +++ b/drivers/iio/frequency/ad9910.c
 > 
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index 4c7fad440c2a..cc8417951467 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -1066,6 +1066,50 @@ static void __ref zone_device_page_init_slow(struct page *page,
->  		set_page_count(page, 0);
->  }
->  
-> +static inline bool zone_device_page_init_optimization_enabled(void)
-> +{
-> +	/*
-> +	 * The template fast path copies a preinitialized struct page image.
-> +	 * Skip it when the page_ref_set tracepoint is enabled.
-> +	 */
-> +	return !page_ref_tracepoint_active(page_ref_set);
-> +}
-> +
-> +static inline void zone_device_template_page_init(struct page *template,
-> +						  struct page *src)
-> +{
-> +	memcpy(template, src, sizeof(*template));
-> +}
-> +
-> +/*
-> + * 'template' is a reusable page prototype rather than a strictly immutable
-> + * object. Most ZONE_DEVICE fields stay constant across the pages covered by
-> + * the current template, but section bits and page->virtual may still depend
-> + * on the PFN. Refresh those PFN-dependent fields in the template before
-> + * copying it into @page.
-> + */
-> +static inline void zone_device_page_update_template(struct page *template,
-> +		unsigned long pfn)
-> +{
-> +	set_page_section_from_pfn(template, pfn);
-> +#ifdef WANT_PAGE_VIRTUAL
-> +	if (!is_highmem_idx(ZONE_DEVICE))
-> +		set_page_address(template, __va(pfn << PAGE_SHIFT));
-> +#endif
-> +}
-> +
-> +static void zone_device_page_init_from_template(struct page *page,
-> +		unsigned long pfn, struct page *template)
-> +{
-> +	/*
-> +	 * 'template' carries the invariant portion of a ZONE_DEVICE struct
-> +	 * page. Update the PFN-dependent fields in place before copying it
-> +	 * to the destination page.
-> +	 */
-> +	zone_device_page_update_template(template, pfn);
-> +	memcpy(page, template, sizeof(*page));
-> +}
-> +
+> > +static enum fw_upload_err ad9910_ram_fwu_write(struct fw_upload *fw_upload,
+> > +					       const u8 *data, u32 offset,
+> > +					       u32 size, u32 *written)
+> > +{
+> > +	const struct ad9910_ram_fw *fw_data = (const struct ad9910_ram_fw *)data;
+> > +	struct ad9910_state *st = fw_upload->dd_handle;
+> > +	int ret, ret2, idx, wcount;
+> > +	u64 tmp64, backup;
+> > +
+> > +	if (offset != 0)
+> > +		return FW_UPLOAD_ERR_INVALID_SIZE;
+> > +
+> > +	guard(mutex)(&st->lock);
+> > +
+> > +	if (st->ram_fwu_cancel)
+> > +		return FW_UPLOAD_ERR_CANCELED;
+> > +
+> > +	if (AD9910_RAM_ENABLED(st))
+> > +		return FW_UPLOAD_ERR_HW_ERROR;
+> > +
+> > +	for (idx = 0; idx < AD9910_NUM_PROFILES; idx++)
+> > +		st->reg_profile[idx] = get_unaligned_be64(&fw_data->profiles[idx]) |
+> > +				       AD9910_PROFILE_RAM_OPEN_MSK;
+> > +
+> > +	ret = ad9910_reg32_update(st, AD9910_REG_CFR1,
+> > +				  AD9910_CFR1_RAM_PLAYBACK_DEST_MSK |
+> > +				  AD9910_CFR1_INT_PROFILE_CTL_MSK,
+> > +				  get_unaligned_be32(&fw_data->cfr1), true);
+> > +	if (ret)
+> > +		return FW_UPLOAD_ERR_RW_ERROR;
+> > +
+> > +	wcount = get_unaligned_be16(&fw_data->wcount);
+> > +	if (!wcount) {
+> > +		*written = size;
+> > +		return FW_UPLOAD_ERR_NONE; /* nothing else to write */
+> > +	}
+> > +
+> > +	ret = ad9910_profile_set(st, st->profile);
+> > +	if (ret)
+> > +		return FW_UPLOAD_ERR_HW_ERROR;
+> > +
+> > +	/* backup profile register and update it with required address range */
+> > +	backup = st->reg[AD9910_REG_PROFILE(st->profile)].val64;
+> > +	tmp64 = AD9910_PROFILE_RAM_STEP_RATE_MSK |
+> > +		FIELD_PREP(AD9910_PROFILE_RAM_START_ADDR_MSK, 0) |
+> > +		FIELD_PREP(AD9910_PROFILE_RAM_END_ADDR_MSK, wcount - 1);
+> > +	ret = ad9910_reg64_write(st, AD9910_REG_PROFILE(st->profile), tmp64, true);
+> > +	if (ret)
+> > +		return FW_UPLOAD_ERR_RW_ERROR;
+> > +
+> > +	memcpy(&st->tx_buf[1], fw_data->words, wcount * AD9910_RAM_WORD_SIZE);
+> > +
+> > +	/* write ram data and restore profile register */
+> > +	ret = ad9910_spi_write(st, AD9910_REG_RAM,
+> > +			       wcount * AD9910_RAM_WORD_SIZE, false);
+> > +	ret2 = ad9910_reg64_write(st, AD9910_REG_PROFILE(st->profile), backup, true);
+> > +	if (ret || ret2)
+> > +		return FW_UPLOAD_ERR_RW_ERROR;
+> > +
+> > +	*written = size;
+> 
+> I'd like a blank line here. Mostly to make that 'good' return more obvious.
+> 
+> > +	return FW_UPLOAD_ERR_NONE;
+> > +}
+> 
+> >  
+> > +static inline void ad9910_debugfs_init(struct ad9910_state *st,
+> > +				       struct iio_dev *indio_dev)
+> > +{
+> > +	struct dentry *d = iio_get_debugfs_dentry(indio_dev);
+> > +	char buf[64];
+> > +
+> > +	/*
+> > +	 * symlinks are created here so iio userspace tools can refer to them
+> > +	 * as debug attributes.
+> 
+> Maybe worth a reference to appropriate ABI doc here (even if it is introduced
+> in a later patch)
 
-The whole bunch of template functions look like it could be useful for
-initialization of the non-zone-device struct pages as well.
+I'm not so sure about these links. I mean, I definitely agree we should
+make it easy for userspace tools like libiio to be able to handle
+these kind of attributes but using debugfs is questionable to me. Pretty
+much because this is not a debug thing. It is a real setting for the
+driver so ideally we would be able to control it (using the existent
+tools) without enforcing one to mount debugfs (I know that most of the
+times it's always mounted but still feels wrong to tie "real
+functionality" to debugfs). 
 
-As I mentioned previously, it's interesting to see if this approach speeds
-up normal memory map initialization as well. If if does could have a single
-set of the template functions.
+Having said the above, some suggestions:
 
--- 
-Sincerely yours,
-Mike.
+1. Make the iio_dev the parent so that the attr name is just "ram" and
+it will be a subdir /sys/bus/iio/iio:deviceN/ram/.
+2. Propose a new helper for the firmware_loader code so we can get
+struct device from struct fw_upload then we can easily create a sysfs
+symlink.
+3. Name the attr as dev_name(iio_dev):attr so that it becomes
+iio:deviceN:attr_name.
+
+Now that I think about it, 2. does not make much sense when compared to
+1. And If I'm not missing anything both 1. and 3. can be sanely parsable
+from userspace (being 3. maybe a bit more reliable). And yes, both require
+user space tools (in this case libiio) to support a new type of
+attribute (firmware) but that is another problem.
+
+- Nuno Sá
+> 
+> > +	 */
+> > +	snprintf(buf, sizeof(buf), "/sys/class/firmware/%s/loading", st->ram_fwu_name);
+> > +	debugfs_create_symlink("ram_loading", d, buf);
+> > +
+> > +	snprintf(buf, sizeof(buf), "/sys/class/firmware/%s/data", st->ram_fwu_name);
+> > +	debugfs_create_symlink("ram_data", d, buf);
+> > +}
+> > +
+> >  static int ad9910_probe(struct spi_device *spi)
+> >  {
+> >  	static const char * const supplies[] = {
+> > @@ -1561,7 +1876,25 @@ static int ad9910_probe(struct spi_device *spi)
+> ...
+> 
+> > +	ad9910_debugfs_init(st, indio_dev);
+> 
+> Blank line preferred before a simple return like this one.
+> 
+> > +	return 0;
+> >  }
+> >  
+> >  static const struct spi_device_id ad9910_id[] = {
+> > 
+> 
