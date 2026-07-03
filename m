@@ -1,187 +1,107 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB838306757
-	for <linux-hardening@vger.kernel.org>; Fri,  3 Jul 2026 19:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783105608; cv=pass; b=XEIN19elFdl+pxpOom9LUEFnK2OYxUJ1QHxepeaNr3nMA2vt/aJz9/VWEQmmBDN+bkr6vUmb6sAXBAWcXFbIFkKImA7ZNc/zd4bLMXmVy/u1jZ1OCocKZVTtjMsPEEfPwt+MSMIcFg1BKv0LmLBm0cKVGNzlbXcxZYCjjdHCCss=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783105608; c=relaxed/simple;
-	bh=k3RPGAp9TTWRVSnJ9yi69FuEbvcNRj9QK7W0Z0AxRT4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YgvXBwjaWWAlyOB81A/OCATIPtXX3Yn7C342FPxEboHt7ZOCc65uDmIdRFCoDymauoJqr4/IfD2tTmeOpJ0Oz/rmzlj65O/eRyLxRBwCLmOdKOPreMVQJSeeGVE1L9q9o/OhiUzMRfrl/vFHs0FUZQ0qE8czn1Ps4zDGals8TnQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C1+29AoG; arc=pass smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F086E266EE9;
+	Fri,  3 Jul 2026 19:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783108612; cv=none; b=X+TWhjfrQXja42E43TdEwyXgBLtWlwoaLd0CtoeX8A6JP/1zjWj8XdG/mF4Hfc8xi/5r4Fcdn2PJeAZxcgU0oVc5QK4BNSG12677XKkxN3fQVm4TRzanFHNiRYPDvFRRu4MJWNG3hUbGc1WtSbeV/HiDXlu+i8EqK8xKqJ3UY2E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783108612; c=relaxed/simple;
+	bh=SM0OW7dWu+p2+grJqjD29tf+g1990+0LujxNw7uV7KI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IavaDUMnaG1LhYIGLqem33kY4mbzhjRJZbEevLwpkuzJ0YT02HewpYh7Uat+A8GYtoHF0IuDqAoJ195i5cqMzXbfygpX17C6bw8hWJnSGFuODhwukbllb7LvRMXayEdW/gyjsZITP2pTGfTxOP5+FuvbFIMBcbjin61YlHHE1wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fbhDnA/g; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1+29AoG"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6983f20a8bfso1530665a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Jul 2026 12:06:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783105605; cv=none;
-        d=google.com; s=arc-20260327;
-        b=gQS1DS3HAXNfq4NDLGhzt9E9dm4dUrfjA7UmXV4Jlw9l9ztOveNcHIzJI+BawuSTE4
-         AjGdxz18Vs6LNlImIalBVuSJJpx1oQxt0e0LeYMeU5NyU+Ad0/av0zYybAnxDSXqTMBX
-         DAtpINo9SaIz0FGwr56eiydoAXCkvRT9Yrzvj1ckx2u+CM+ulu+76T+WRlsEdP14AQxI
-         24++9s87OvY8Q8np9OTeQIJVpX9Fc5BJkzQHqnxU+/hysuWDcBOwVG5/Qdbd2Vb2RzQ+
-         QzwP/RLnzU1yjMsWj1f0u1emQD3z1KQC6MahdDL6PWHB0qtzLsB3hFoNbKevc1m5DZ3a
-         iYLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ptCq+Q5Te24m3SA3JXj8jjJzYrmXyLCdMsPnUku3kEQ=;
-        fh=QPWrKCgBpbUsM5zXf+pHiWwJq79Hi69RSy+1ynOKwXw=;
-        b=qd11pYhqq8YW0O8qZsG+wxdALkfl3yufWDoZkDD5YozoIU5fkE6dhXmWp8YsqwS8QQ
-         zNj31g9Bw+1QC2a16wso/wKnBeiVLgXFB2JPiRVDcgvs2GtJFaSJr0IATTKYA6B68d6F
-         Un9fPlJdpnaXs/tfVn2VD9Xeyge5EW2NPJPaxLfcKd7lZM8bf7l5L5byMsjr8XRt0nIU
-         mh2yVwxgKxe4X7Rgmin+Q2OWfh6EyoLCMKaORUQoCP/JMKC1pIcAJVw7vz1VzvF0dsUU
-         1YUiFKsTNKUfD8EZeWzij4hizpaJ/ZPZEfLP551nTezoLxr5oBpVdCey1ZiKmXcIeZns
-         DyIA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783105605; x=1783710405; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ptCq+Q5Te24m3SA3JXj8jjJzYrmXyLCdMsPnUku3kEQ=;
-        b=C1+29AoGbNWZUZsXzo5zbHIWpQ83y5fHbsz+wfq6fkRCwbvtAUqLyKty40QNx9ioVB
-         YeT2mxWQ/lMuoFP+AzL2EjDpcJnbwrJXjR6cMBXhx2mAjjfOysZYlZrXYNRd4lPODGsu
-         YVmmmycmqcqWNGRI2JKW05Qfw7oQoDytRi9GMrUw8mXYwcNmXwT9Dbo/sJRg2xLO8Z3Q
-         1FbrMqMJgQ8t2AmO2xnUuu2A77RGphpIrV3/a2Ij5e7dIG0GMuRAu7dzcHAas/4SGPTf
-         Dq5ofa4oaq2XjL4fHgD1EwM2jFQ17TDhCwvut+Vj0TGKzdfZWbTPCw7ZsPGjQVEbfwMu
-         QfQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783105605; x=1783710405;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ptCq+Q5Te24m3SA3JXj8jjJzYrmXyLCdMsPnUku3kEQ=;
-        b=k1no9zvPpe6gCpIk9VM5SaQQjz97W36+Bni/R3b8rGNaXbKTYKw5Bxs69g/COdkZgD
-         ghkfqEBwzvd4Q7Uqw8dsUa5DkzwqNyjwSSG6PlYs2JxOJCjwECbARDpUpPR/5FyWhGfm
-         F8JJqjBy96oQSLV2BzKYMqUBts8Ycn9rYLgTFCTkZwDkCYZjjMGqUMrpdidi+EN2cCn0
-         PyA9YsW/NAc6BUSMM0bpRoOk5lixNeSs47iPVRIDArBlo6cdaXWVs+zBctVObFnzq9o6
-         SqeFMjYJPEGEZ89cksJX6WW+/whNwneAYMER5jz1L/Xlx1rikGrrd76Gfg++S97wT5qN
-         EpGg==
-X-Forwarded-Encrypted: i=1; AHgh+Rp9KdcWr02c4+ukQsSTWrjwEQ4Xoq768HTzykPaRpePGa2t9a9KA5JVG25cXLRBiRvDBG2KR+uCDTNdkL5fBD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcyqEKB8tfVCGh+asq6rn/YMhI8te9v4lgzoNGcdE+vnFY8f6G
-	B4isF+1FmfvOjp5r40h26xgWouI4ggo7VAUKsXM+L+2Tmjffl0B8QUNsZbzjg+KeegWupb4aDGb
-	UboKGXV9dLvqWOTKY7Wr+gcyX6ZPBSjzpBA==
-X-Gm-Gg: AfdE7ckK5iN9odbm6L0D+RS50HlgYS89XKoENw6wBxEkESEWihXe+i/w2VH1iR0DChK
-	2xFCGd7abZZBSgaJiiFeB4pFUVn1Y05r8imSjOuBzLCGFXuX/ix25dk+Uz4rrDpSSxVLMkBpT8Q
-	WAGL3zHeqn3UW2N1JjvZslIK8kaooaJWEXNC9vlAEfzeIxx18wgMwQrTmAAeb9T6tC0jdQ5nNUj
-	RGBV9lBGP68h3gTIrDvbGkwM+Nz6ggXYtVwyY15jTR/NavUDnW/fM5eyRnKJkOoTCCxnhORiL7T
-	SpBCIQBVnvw1WJXILcsoaI7GXHuw6GOoCV/EIex6TmQL0leA/g/l7VFSylwM02hjh/3e8M3TwZy
-	10Dtjj/vBMExkhhZF7p2nydNgcFA=
-X-Received: by 2002:a05:6402:274a:b0:699:2448:be63 with SMTP id
- 4fb4d7f45d1cf-69a1a273625mr189718a12.16.1783105605235; Fri, 03 Jul 2026
- 12:06:45 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fbhDnA/g"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E8A7640E01DB;
+	Fri,  3 Jul 2026 19:56:47 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 591k-6jQHESx; Fri,  3 Jul 2026 19:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1783108598; bh=Ec4ooeB81VdLBBWoolmCjIrqAa/mMFqe7GUMG3eUFx0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fbhDnA/gtOESnV9bPd2jExK58X/KJ+kXFtj7TALiu2D/pTjDmFF+sq2Q5S4GTDoZs
+	 Rfn5fhAbaqjrt66z5m65Gp/yldPN4Ssmi5cPYyGdlTe7ZNjpcZ3Dqz/kW7Nv8iqp3b
+	 QkedMrE1/YPFjPknxed4vUpV0fnVmvTJzrJP4xMkdqJ6SJh4znVRjFxk5eg7GcQxJi
+	 cVXNsLkRf/3Z7BxcWNoQzn6i9aR8qN/ZGM7COx03LYky89jAHnso74jYMsfasa5dxU
+	 ykabhvjrBh3QhJuoQb+/YvMbUeieDfz142B32N5wS7fFKGWBbYMj0D9HCGeoDCqUox
+	 f4GDW8ngLep9gNMJO4JlDs7OfiBRnPIzjAScLuSOwZzLBwtwddJv9MRPUreHp6/aeA
+	 kCGiRqVO7WuBnhYBqfdL4Wjxwp2m9JnFoqK+Ido2qLgLsQAzOwd3tyXTWCusWmy2RC
+	 2Ks7tRaZj99L2v+VbpEXaKCbyZQMflIkx+YZ8cB1mJ2mXZ6HnKGSvAE56tLI6yRZi8
+	 jLl9CP+mLFDS4mTQyW//oyD1Q9w4HDNZXnRCA6FNS1XukmTlJufSbpNlAL2KemskFr
+	 OITG3TLxt6kcMu9wf16o/ao7qLJAcQ37ePi9aOi+X7Y4bVRkuGoYdm1DN4hN/VGOtk
+	 tCVkVB1slPHiLCfzotXwxa1k=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5108940E01CE;
+	Fri,  3 Jul 2026 19:56:22 +0000 (UTC)
+Date: Fri, 3 Jul 2026 12:56:19 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Li Zhe <lizhe.67@bytedance.com>
+Cc: akpm@linux-foundation.org, apopple@nvidia.com, arnd@arndb.de,
+	dave.hansen@linux.intel.com, david@kernel.org, kees@kernel.org,
+	linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mingo@redhat.com,
+	rppt@kernel.org, tglx@kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 7/8] x86/string: extend memcpy_flushcache() fixed-size
+ fastpaths
+Message-ID: <20260703195619.GGakgT44P7lpcoMVlY@fat_crate.local>
+References: <20260702022342.GFakXLrl7ryd-g7gTu@fat_crate.local>
+ <20260702073750.73840-1-lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260630012101.1461335-1-rosenp@gmail.com> <17d381fb-1f91-461c-8315-1508ad0c1efe@kernel.org>
-In-Reply-To: <17d381fb-1f91-461c-8315-1508ad0c1efe@kernel.org>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Fri, 3 Jul 2026 12:06:34 -0700
-X-Gm-Features: AVVi8CdaQFcBWDWlMOsDL-RbGTiwVSxCIdUvl5QYiWhT7_pjzoXOmEeBUlTudQ8
-Message-ID: <CAKxU2N8Be1XxVznSrV1KGWOyivNEFJjojd2KRXLguLYZEB=gYw@mail.gmail.com>
-Subject: Re: [PATCH] scsi: st: use kzalloc_array
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-scsi@vger.kernel.org, =?UTF-8?Q?Kai_M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260702073750.73840-1-lizhe.67@bytedance.com>
 
-On Tue, Jun 30, 2026 at 12:28=E2=80=AFAM Damien Le Moal <dlemoal@kernel.org=
-> wrote:
->
-> On 6/30/26 10:21, Rosen Penev wrote:
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
->
-> No commit message ? Please explain your reasonning, because I find this p=
-atch
-> incorrect. See below.
->
-> > ---
-> >  drivers/scsi/st.c | 12 +++---------
-> >  drivers/scsi/st.h |  3 ++-
-> >  2 files changed, 5 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
-> > index f1c3c4946637..31ae189b18e7 100644
-> > --- a/drivers/scsi/st.c
-> > +++ b/drivers/scsi/st.c
-> > @@ -149,7 +149,7 @@ static struct st_dev_parm {
-> >     mode counts */
-> >  static const char *st_formats[] =3D {
-> >       "",  "r", "k", "s", "l", "t", "o", "u",
-> > -     "m", "v", "p", "x", "a", "y", "q", "z"};
-> > +     "m", "v", "p", "x", "a", "y", "q", "z"};
-> >
-> >  /* The default definitions have been moved to st_options.h */
-> >
-> > @@ -3973,21 +3973,15 @@ static struct st_buffer *new_tape_buffer(int ma=
-x_sg)
-> >  {
-> >       struct st_buffer *tb;
-> >
-> > -     tb =3D kzalloc_obj(struct st_buffer);
-> > +     tb =3D kzalloc_flex(*tb, reserved_pages, max_sg);
-> >       if (!tb) {
-> >               printk(KERN_NOTICE "st: Can't allocate new tape buffer.\n=
-");
-> >               return NULL;
-> >       }
-> > -     tb->frp_segs =3D 0;
-> >       tb->use_sg =3D max_sg;
-> > +     tb->frp_segs =3D 0;
-> >       tb->buffer_size =3D 0;
-> >
-> > -     tb->reserved_pages =3D kzalloc_objs(struct page *, max_sg);
->
-> reserve_pages is in the middle of struct st_buffer so you cannot use a fl=
-ex array.
-This patch moves it, no?
->
-> > -     if (!tb->reserved_pages) {
-> > -             kfree(tb);
-> > -             return NULL;
-> > -     }
-> > -
-> >       return tb;
-> >  }
-> >
-> > diff --git a/drivers/scsi/st.h b/drivers/scsi/st.h
-> > index 0d7c4b8c2c8a..759f4c43d563 100644
-> > --- a/drivers/scsi/st.h
-> > +++ b/drivers/scsi/st.h
-> > @@ -45,7 +45,6 @@ struct st_buffer {
-> >       int syscall_result;
-> >       struct st_request *last_SRpnt;
-> >       struct st_cmdstatus cmdstat;
-> > -     struct page **reserved_pages;
-> >       int reserved_page_order;
-> >       struct page **mapped_pages;
-> >       struct rq_map_data map_data;
-> > @@ -53,6 +52,8 @@ struct st_buffer {
-> >       unsigned short use_sg;  /* zero or max number of s/g segments for=
- this adapter */
-> >       unsigned short sg_segs;         /* number of segments in s/g list=
- */
-> >       unsigned short frp_segs;        /* number of buffer segments */
-> > +
-> > +     struct page *reserved_pages[] __counted_by(use_sg);
-> >  };
-> >
-> >  /* The tape mode definition */
->
->
-> --
-> Damien Le Moal
-> Western Digital Research
+On Thu, Jul 02, 2026 at 03:37:50PM +0800, Li Zhe wrote:
+> The relevant target sizes here are the x86_64 sizeof(struct page)
+> values which patch 8 can hit: 64, 80, and 96 bytes.
+> 
+> On x86_64, CONFIG_HAVE_ALIGNED_STRUCT_PAGE keeps struct page 16-byte
+> aligned. That gives 64 bytes in the common case, 80 bytes when
+> WANT_PAGE_VIRTUAL or CONFIG_KMSAN adds extra fields, and 96 bytes when
+> both are present. I stopped there deliberately because this series does
+> not have a current caller which needs larger constant sizes.
+> 
+> The 32-byte and 48-byte cases were added only as intermediate fixed-size
+> combinations used to build those larger struct page-sized copies while
+> keeping them on the inline movnti path.
+
+This needs to be in a comment over that code so that it is clear why that
+distinction has been made.
+
+> Yes. The separate helper is there exactly because the added
+> 32/48/64/80/96-byte cases carry an extra 8-byte destination-alignment
+> check, while I left the existing 4/8/16-byte inline cases unchanged.
+> 
+> The intent was to keep the larger fixed-size cases on the inline
+> movnti path only when they already match the alignment assumptions
+> used by __memcpy_flushcache(); otherwise they fall back to that
+> out-of-line helper, which already handles the misaligned head/tail
+> fragments before entering its movnti loops.
+
+Why can't the larger MOVNTI sizes deal with misaligned cases too and thus make
+the code even simpler and more straight-forward this way?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
