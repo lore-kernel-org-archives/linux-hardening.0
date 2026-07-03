@@ -1,106 +1,84 @@
-Received: from hall.aurel32.net (hall.aurel32.net [195.154.119.183])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D851DDC35;
-	Fri,  3 Jul 2026 17:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.154.119.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6204731064B;
+	Fri,  3 Jul 2026 18:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783098785; cv=none; b=WfGHkgthviNZcPyncH/v4/IHSF+90ExEnrEycnkroe5tFeF1d5QT46hkCIZ5bX8H9+DBr4dGEsIfJee7zZbS1Fc/atWtrfCrJQ/ZpECeiCOkmAJaKQNNzzABq7cch6zoUgaVVxM3jgzHvrs+ZZjehnbooF/4uXUTXwWIbd4ct0Q=
+	t=1783102165; cv=none; b=Vz6vZxVNeI+8o6/NDcT8Iw+DuAxTvLnXleHwG0ToZjZLcO+FvAWJwwaxgCg4N6+9UcyrB9kj4uiV4OM8i/2R3zAX6Pq2xVzHW2lsh8lmT2y46XwGJmQZrK4srzx7nnv32K4u61y8ursIr7o5Ek/V3aYarMn012da22lY5l6GUHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783098785; c=relaxed/simple;
-	bh=8bv3J3cvbclVP0PN4eTqNx2AlyxAYso72f3TApq8yh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wz6xpFFqLZ47I07Jt/QC/I4tcMXRjpndPMew3X24YaZgkXKR/EOUMem8k6w07JSL2HSpKGA2anX9x+7QdyYnCGOsDpOGeX7ZPrK8cieTvnReMaLule6/ZuR+ak7geHsyz02BlTKvZfkbn14+H3t2Y05rC6O9/u2R6qo0SmcduOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net; spf=pass smtp.mailfrom=aurel32.net; dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b=mWPKHCqj; arc=none smtp.client-ip=195.154.119.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aurel32.net
+	s=arc-20240116; t=1783102165; c=relaxed/simple;
+	bh=yNA/4HKAUUc0vxBuSIvnW8HtCeJPKyqgojGJ2iyx/fE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M7W7jEkT4OP6RvRRC4pyaXB+0Q7KYBvYiVIxg50toQ10/raVHD1BZJ0JSLH6eRN7YEjEkXaBrRIecG4nXVDgiD3Ht7OYjpnJVDszRBX8Ikkinn8hB6DoE1A86UVQVTHNrxelpEtS7FRekH6kB+uHrSaZ5cPk0vnV/CBWbf0t8OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I19Du1Fw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="mWPKHCqj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
-	; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
-	Subject:Content-ID:Content-Description:X-Debbugs-Cc;
-	bh=P0tPEngGB69/ViXzlastUZSeIBDc5NlmASuyBxp/sKg=; b=mWPKHCqjQiLOPiIKGP797yKAT2
-	k4NTJkDZm2SFKYc6mKLQnly6dnsorUJIepBxEIEw1Z1Q2ApwYgf7rFOnpawAnrQYrA8MRPSFEny9m
-	NmEcTuqLlHmD3ySt4/vsjZ56WnWHKMIPCiNN2FNVFm9IDQCnuwud+pzFC0VdyTY8GOJph67Hk/FCy
-	krjVKQIT/yMWsNeg1rcTqA6jSq67RyUc7SXIutYqYMa/z0XGlX3QN0OiYongVzKi8ZKZkiULT8mu/
-	LYgu9WxEuhWAhKlsh9T3B5Oy+jmoqTE8A6FQwmeC/q13SvB+BQ1kptMeWuWVbHBEQT/9eghYyhEPT
-	4KJcE/tQ==;
-Received: from authenticated user
-	by hall.aurel32.net with esmtpsa  (TLS1.3)  tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <aurelien@aurel32.net>)
-	id 1wfhRb-000000008UP-05Pd;
-	Fri, 03 Jul 2026 19:12:51 +0200
-Date: Fri, 3 Jul 2026 19:12:49 +0200
-From: Aurelien Jarno <aurelien@aurel32.net>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Alex Elder <elder@riscstar.com>, Ze Huang <huang.ze@linux.dev>,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v2 2/2] phy: spacemit: Add USB3/PCIe comb PHY driver for
- Spacemit K3
-Message-ID: <akftkeI9Wbr0xL-5@aurel32.net>
-Mail-Followup-To: Inochi Amaoto <inochiama@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Alex Elder <elder@riscstar.com>, Ze Huang <huang.ze@linux.dev>,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-References: <20260703021024.495433-1-inochiama@gmail.com>
- <20260703021024.495433-3-inochiama@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I19Du1Fw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDAB61F000E9;
+	Fri,  3 Jul 2026 18:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783102164;
+	bh=Gt1g2jGABpVjMdY1s+MJCjyBjm5LGxSMGoVhyMP1AGQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=I19Du1FwDB2Llf3gWLIuHPsDVsFO4mUY4KeLxA/YCmtIxQOPyBIcStJLtFMWdea6L
+	 Npb2EwMrm5ysOfoamdIxIQl9W4izy8AuhCsIYu+t+Vq5ktTkE7ASJ//xroMibsn7zG
+	 mNe7ADxP5Y3IdCER5QaDICms0DIey2wJbz/7MXp9e8evZGZzDkZt4meqRpspl3x7wY
+	 aGzO4BY/xGPvjwCU9AZtHd8skoptWt4vuj65wN44akjalVEaKkiEyZ6azORcR5dwff
+	 kB/LzJeHS+qap8ULdKfVyhg2Xlkl48yYUX6nsuEzXhDg60aphYXDohdGxbYyEDgD80
+	 yn6v7SQDBI1/g==
+Date: Fri, 3 Jul 2026 19:09:20 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v6 13/16] iio: frequency: ad9910: add output shift
+ keying support
+Message-ID: <20260703190920.27adb87c@jic23-huawei>
+In-Reply-To: <20260618-ad9910-iio-driver-v6-13-79125ffbe430@analog.com>
+References: <20260618-ad9910-iio-driver-v6-0-79125ffbe430@analog.com>
+	<20260618-ad9910-iio-driver-v6-13-79125ffbe430@analog.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260703021024.495433-3-inochiama@gmail.com>
-User-Agent: Mutt/2.2.13 (2024-03-09)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2026-07-03 10:10, Inochi Amaoto wrote:
-> The comb PHY on K3 requires to configure a syscon device for the
-> right mux configuration. And it requires calibration before any
-> usage.
+On Thu, 18 Jun 2026 14:27:29 +0100
+Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > 
-> Add USB3/PCIe comb PHY driver for Spacemit K3.
+> Add OSK channel with amplitude envelope control capabilities:
+> - OSK enable/disable via IIO_CHAN_INFO_ENABLE;
+> - Amplitude ramp rate control via IIO_CHAN_INFO_SAMP_FREQ;
+> - Amplitude scale factor readback via IIO_CHAN_INFO_RAW (ASF register);
+> - Automatic OSK step size configurable through the raw_roc extended
+>   attribute, which allows for selectable step sizes in raw units:
+> 	- 0: no step, means manual mode (NOT pin controlled)
+> 	- 1: I_FS / 2^14 step, automatic mode (pin controlled)
+> 	- 2: 2 I_FS / 2^14 step, automatic mode (pin controlled)
+> 	- 4: 4 I_FS /2^14 step, automatic mode (pin controlled)
+
+Trivial but good to tidy up formatting. Space after /
+
+> 	- 8: 8 I_FS /2^14 step, automatic mode (pin controlled)
+> 	- 16383: I_FS step (max), manual mode (pin controlled)
 > 
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> ---
->  drivers/phy/spacemit/Kconfig         |  16 ++
->  drivers/phy/spacemit/Makefile        |   2 +
->  drivers/phy/spacemit/phy-k3-combo.c  | 252 +++++++++++++++++
->  drivers/phy/spacemit/phy-k3-common.c | 391 +++++++++++++++++++++++++++
->  drivers/phy/spacemit/phy-k3-common.h |  27 ++
->  5 files changed, 688 insertions(+)
->  create mode 100644 drivers/phy/spacemit/phy-k3-combo.c
->  create mode 100644 drivers/phy/spacemit/phy-k3-common.c
->  create mode 100644 drivers/phy/spacemit/phy-k3-common.h
+> The ASF register is initialized with a default amplitude ramp rate during
+> device setup to ensure valid readback.
+> 
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Tested-by: Aurelien Jarno <aurelien@aurel32.net>
-
--- 
-Aurelien Jarno                          GPG: 4096R/1DDD8C9B
-aurelien@aurel32.net                     http://aurel32.net
