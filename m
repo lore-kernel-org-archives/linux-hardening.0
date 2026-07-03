@@ -1,842 +1,122 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF92256C61
-	for <linux-hardening@vger.kernel.org>; Fri,  3 Jul 2026 02:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F820241C8C;
+	Fri,  3 Jul 2026 02:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783044670; cv=none; b=p+z0J1v8oxygy9PD3n0Znu+4DKJKTZt4JPLLO1YEF5ytb2dzr3kn19GzkULrC2WUy84fyQ8IzGdXhaef4RExKfUjEMnsX6f3VUc0lBUPdG2941KRdAhpAueb1AMJ8CJGLzgxZO5mSryD/k/xp3j6OVScpo4DjCfBqX5keXfseiA=
+	t=1783044806; cv=none; b=NmrVyznvTkizmMw0IaJ6g7lTv1f3cF/Uk7poTNwgA4VvnAAckJCrX9gXk2Pm8hKkeHuTQ4pBmCWd8R+E7rGQhmqTs3wS3S5SRnZDzcDga09+8ZX4wQOYW+OoydW7lS3Bq49cr2tYTao7GyZOSwtQlsXlU371hQTFlqxiI6iKrME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783044670; c=relaxed/simple;
-	bh=VpFqr6ZfkELfKtSDofS2M0um5xQVRGrzwslxbeHewao=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kW+G+xW17nJvZapbQO9592ArtbyQYe4WN0KcWm/2/mqKHj3IC/lT1ybl45lygv+6fsxTQ0Bk5MhUm97Ep1J8IFN9K4Cdj/aEZCVlMg2Fg8KxOZbfwe/J4sVtrQHaHPw9MvLuShhsHlBIB/tTKqoqojLweM0BqzjbvblSUO6aamU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jASa9GVI; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783044806; c=relaxed/simple;
+	bh=D+uSMRZNCAJohaZANJi+fcozrpSGbQCo3IAxm7Bs4jY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qi5NncxWc0ZaUGuU72tZMmq6jWX4vcRh4Dt4ELg+WdnGcqtqR0D2/19YtlV3ubvx53aK1xMdKFIdkkUpXbfnoX+057dvBfxtDyT0zRJ10rBIyJj2CWA79KZKjYrWS8rvqGEqKncypZKCWhN5+iDC0aXv3KI+1nSAtGnp2ugf4dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbGpht5m; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jASa9GVI"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2c9878bbe88so8048765ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Jul 2026 19:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783044662; x=1783649462; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oZGXVG+lHt0HZzVnsnA3zj+o14WiOx8zz6BUjKDXoZ0=;
-        b=jASa9GVI+jCQCJZm1l7QxuBUV2iS6+pw4xSEMypB3youUmh3672s8LnBIZEyRe2ebn
-         lEZLYWk+DKxHWw+IW1UJ0FTOwKdXxgq+cRxSif/1nTsgcfwp3JfH/vLNghizZydJSx/n
-         kWNBYxhpwxgRmxH4M2iSNSAggC+b9jngmth0oS7iZTRQzWnU7+o8YyVFlZewAUU2p+lL
-         jSvAFPGW0CsEIBlOiG/sB7c3IqMFN5Iav7whj1Ss7lkZqkRo+zqDM7eczA+W2cfpIKAY
-         8UoxmkRUJwxCiQsHS+q6/4bHtaIZVicJ3XInDPgnG3pRfDPSxns5VdYyzkTjK9VesN0M
-         zKRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783044662; x=1783649462;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oZGXVG+lHt0HZzVnsnA3zj+o14WiOx8zz6BUjKDXoZ0=;
-        b=Qs2eUTPteWTTvPVzq1exaxG0YgEiSvVYzkKmX0RwhDb8IxbPKcujhm1PGN6sqrKG1L
-         UAjIPhTnz3IbsELePPt7KZjU3ISmzB9VovDUWwmOwC6JAJrMR9NSnfDpmrtoEhEqkjGn
-         BHFVWOyIB27AvaZpnH9WgdomZUSzUPrrYpQwNvHeYzd4dwk6PVggs8PIytYYBMRn6FZu
-         8RBHdv99PQDgQQihcOdnq0XfcxfI/o0dK7B1BA1CBnSzUhV8VNPWudlGTfsDiyFu5/aO
-         x4E2AJc6yUK5wTe3wOuBxZM+hJ5dAQPmx8TgDdh+nxrZ3xwFjjOvoPoeE5zHcQsyPbW7
-         UUFQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqnvbkPDWqzabznd4ApXqsnSMAalOSDzIE67ZUIVm2cMaqrhzb1GNbUuVdofADwifnCuGJZf+ZMRHR4mCDfY3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMbeCTxiQNsq0Cx4+/iZP/iu6Sm6CVI0PglzmO40uK1Ax2XZIg
-	S6oEkRE5rhkqO9Y0ZlvXPMigey0+/DiY9rd1RgxcQrBW1m9NJHy62JaO9XAT1wy6
-X-Gm-Gg: AfdE7clZmpZIyzwzaXAF8W6BPm4+4kjIipZ4fXH0mm5SF5ItF8rj4Oepgjmsdr958eP
-	dsGNg+j8g2tF8N1djVC3UhpYy9tqBOC2XE9jG7KIOhkBKLwJ38Jgj0pHgUMgPYYnvoxnyqnDPuA
-	waW5ZcMUc2feF43Me4rtfb5nGJAMk1PVYljX1HZGOjVaDxDWIxqTG6l77RWXpeV0jXKpy8L1FjM
-	PUzhzjNav38zyNiuUL8RYA+yzfflI5W+k9MsgB0vB2GvW7BhKCV+NjSBjbh3fUil6MK8y133eqd
-	j92OSbisKw5jiaRMt1m0wm0LxYWR9fiL+vZvA99b2sUazxiz+PjYXYZiEcQ8ju7g4VK6a8VwJPN
-	2Gny+9l9dQmBGWO3I8Gh8s0ohusTrCO/u/c0IPhOpFcLrnIVKiQSLlBtCBw1Pf9WKOVUyAbeF50
-	2YUXWqVfGIZyo=
-X-Received: by 2002:a17:903:2450:b0:2c9:b911:bdc2 with SMTP id d9443c01a7336-2cacacd3fbfmr21471585ad.6.1783044662378;
-        Thu, 02 Jul 2026 19:11:02 -0700 (PDT)
-Received: from localhost ([2001:19f0:8000:3e6e:5400:6ff:fe38:3d01])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad7765810sm1476895ad.53.2026.07.02.19.11.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2026 19:11:02 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yixun Lan <dlan@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Alex Elder <elder@riscstar.com>,
-	Ze Huang <huang.ze@linux.dev>
-Cc: linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v2 2/2] phy: spacemit: Add USB3/PCIe comb PHY driver for Spacemit K3
-Date: Fri,  3 Jul 2026 10:10:23 +0800
-Message-ID: <20260703021024.495433-3-inochiama@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260703021024.495433-1-inochiama@gmail.com>
-References: <20260703021024.495433-1-inochiama@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbGpht5m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C631F000E9;
+	Fri,  3 Jul 2026 02:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783044804;
+	bh=B8J5N5ATqqb/sQ5E0nqBZmkphsVSEKcvcog9noD71Hs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=YbGpht5mgbRgVduEX9F6SdQ+Wg/iHhHcajnkN6qzJ7bozq9se5YMpiyK1ZBIAJDEn
+	 PeeTpfzS47iuDNb8bOh8Cu4+AaxjEXqPGVMwOcQclk4jloF0TBZoGFwh+mu9P/fMvW
+	 K3j4kBy86nfjzNfpuyIOKvWrICR6BJqFSPM+8+Suf+9N1czW+xoKM6gNkEPWA0l1Zh
+	 ywL6jetBF+xP0X/V3S8Lfm+dRKiaY2uwlzzBBKBR7SUwN97+EiMZFOdPgCOZuniSS+
+	 9oMZUSlgTODNt47l24r0xSfG2VOvOJvq9uoOjniaqK37hZBR3UjY7GfJQINQ16vOeD
+	 snKrc8WyDXUMQ==
+Date: Fri, 3 Jul 2026 03:13:16 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rodrigo Alencar via B4 Relay
+ <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
+ Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v6 09/16] iio: frequency: ad9910: initial driver
+ implementation
+Message-ID: <20260703031316.0b4edbcd@jic23-huawei>
+In-Reply-To: <20260618-ad9910-iio-driver-v6-9-79125ffbe430@analog.com>
+References: <20260618-ad9910-iio-driver-v6-0-79125ffbe430@analog.com>
+	<20260618-ad9910-iio-driver-v6-9-79125ffbe430@analog.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The comb PHY on K3 requires to configure a syscon device for the
-right mux configuration. And it requires calibration before any
-usage.
+On Thu, 18 Jun 2026 14:27:25 +0100
+Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 
-Add USB3/PCIe comb PHY driver for Spacemit K3.
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> 
+> Add the core AD9910 DDS driver infrastructure with single tone mode
+> support. This includes SPI register access, profile management via GPIO
+> pins, PLL/DAC configuration from firmware properties, and single tone
+> frequency/phase/amplitude control through IIO attributes.
+> 
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
----
- drivers/phy/spacemit/Kconfig         |  16 ++
- drivers/phy/spacemit/Makefile        |   2 +
- drivers/phy/spacemit/phy-k3-combo.c  | 252 +++++++++++++++++
- drivers/phy/spacemit/phy-k3-common.c | 391 +++++++++++++++++++++++++++
- drivers/phy/spacemit/phy-k3-common.h |  27 ++
- 5 files changed, 688 insertions(+)
- create mode 100644 drivers/phy/spacemit/phy-k3-combo.c
- create mode 100644 drivers/phy/spacemit/phy-k3-common.c
- create mode 100644 drivers/phy/spacemit/phy-k3-common.h
+Hi Rodrigo, just a couple of things that are really really trivial.
 
-diff --git a/drivers/phy/spacemit/Kconfig b/drivers/phy/spacemit/Kconfig
-index 50b0005acf66..5fdf18fce499 100644
---- a/drivers/phy/spacemit/Kconfig
-+++ b/drivers/phy/spacemit/Kconfig
-@@ -23,3 +23,19 @@ config PHY_SPACEMIT_K1_USB2
- 	help
- 	  Enable this to support K1 USB 2.0 PHY driver. This driver takes care of
- 	  enabling and clock setup and will be used by K1 udc/ehci/otg/xhci driver.
-+
-+config PHY_SPACEMIT_K3_COMMON_OPS
-+	tristate
-+	select MFD_SYSCON
-+	select GENERIC_PHY
-+
-+config PHY_SPACEMIT_K3_COMBO_PHY
-+	tristate "SpacemiT K3 USB3/PCIe PHY support"
-+	depends on (ARCH_SPACEMIT || COMPILE_TEST) && OF
-+	depends on COMMON_CLK
-+	select PHY_SPACEMIT_K3_COMMON_OPS
-+	help
-+	  Enable this to support K3 USB3/PCIe combo PHY driver. This
-+	  driver takes care of enabling and clock setup and will be used
-+	  by K3 dwc3 driver.
-+	  If unsure, say N.
-diff --git a/drivers/phy/spacemit/Makefile b/drivers/phy/spacemit/Makefile
-index a821a21d6142..f679c1851b4f 100644
---- a/drivers/phy/spacemit/Makefile
-+++ b/drivers/phy/spacemit/Makefile
-@@ -1,3 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_PHY_SPACEMIT_K1_PCIE)		+= phy-k1-pcie.o
- obj-$(CONFIG_PHY_SPACEMIT_K1_USB2)		+= phy-k1-usb2.o
-+obj-$(CONFIG_PHY_SPACEMIT_K3_COMBO_PHY)		+= phy-k3-combo.o
-+obj-$(CONFIG_PHY_SPACEMIT_K3_COMMON_OPS)	+= phy-k3-common.o
-diff --git a/drivers/phy/spacemit/phy-k3-combo.c b/drivers/phy/spacemit/phy-k3-combo.c
-new file mode 100644
-index 000000000000..0bc08bb6247a
---- /dev/null
-+++ b/drivers/phy/spacemit/phy-k3-combo.c
-@@ -0,0 +1,252 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * phy-k3-combo.c - SpacemiT K3 PCIe/USB3 Combo PHY Driver
-+ *
-+ * Copyright (c) 2025 SpacemiT Technology Co. Ltd
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/iopoll.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/phy/phy.h>
-+
-+#include <dt-bindings/phy/phy.h>
-+
-+#include "phy-k3-common.h"
-+
-+/*
-+ * The PCIE/USB Subsystem on SpacemiT K3 have 3 single lane PIPE3 PHYs
-+ * (PHY2/3/4) shared by PCIE PortC/D and USB3 PortB/C/D.
-+ *
-+ * PMUA_PCIE_SUBSYS_MGMT[4:0]
-+ *
-+ *   bit4 = 0 : PCIe A X8 mode, all 8 lanes dedicated to PCIe Port A
-+ *          1 : PHY lanes shared between PCIe or USB according to [3:0]
-+ *
-+ * All PHY matrix combinations according to [4:0]:
-+ *
-+ *   0x0X : PCIe-A X8
-+ *   0x10 : PCIe-C x2 (PHY2+PHY3) + PCIe-D x1 (PHY4)
-+ *   0x11 : PCIe-C x2 (PHY2+PHY3) + USB-D (PHY4)
-+ *   0x12 : PCIe-C x1 (PHY2)      + USB-C (PHY3)
-+ *   0x13 : PCIe-C x1 (PHY2)      + USB-C (PHY3) + USB-D (PHY4)
-+ *   0x14 : PCIe-C x1 (PHY3)      + USB-B (PHY2)
-+ *   0x15 : PCIe-C x1 (PHY3)      + USB-B (PHY2) + USB-D (PHY4)
-+ *   0x16 : USB-B (PHY2) + USB-C (PHY3) + PCIe D x1 (PHY4)
-+ *   0x17 : USB-B (PHY2) + USB-C (PHY3) + USB-D (PHY4)
-+ *
-+ * So any USB Port B/C/D operation requires PCIe A X8 mode to be disabled.
-+ */
-+#define PMUA_PCIE_SUBSYS_MGMT		0x1d8
-+#define PU_MATRIX_CONF_MASK		GENMASK(4, 0)
-+
-+#define COMBPHY_MAX_SUBPHYS		6
-+
-+struct k3_combo_phy {
-+	struct device *dev;
-+	struct k3_lane_group groups[COMBPHY_MAX_SUBPHYS];
-+	void __iomem *base;
-+	struct regmap *apb_spare;
-+};
-+
-+static const struct k3_phy_lane_group_data k3_combphy_lane_group0 = {
-+	.lanes		= 2,
-+	.config		= 0xff,
-+	.mask		= 0x00,
-+	.offsets	= {
-+		0x0, 0x400
-+	},
-+};
-+
-+static const struct k3_phy_lane_group_data k3_combphy_lane_group1 = {
-+	.lanes		= 2,
-+	.config		= 0xff,
-+	.mask		= 0x00,
-+	.offsets	= {
-+		0x100000, 0x100400
-+	},
-+};
-+
-+static const struct k3_phy_lane_group_data k3_combphy_lane_group2 = {
-+	.lanes		= 1,
-+	.config		= 0x14,
-+	.mask		= 0x14,
-+	.offsets	= {
-+		0x200000
-+	},
-+};
-+
-+static const struct k3_phy_lane_group_data k3_combphy_lane_group3 = {
-+	.lanes		= 1,
-+	.config		= 0x12,
-+	.mask		= 0x12,
-+	.offsets	= {
-+		0x300000
-+	},
-+};
-+
-+static const struct k3_phy_lane_group_data k3_combphy_lane_group4 = {
-+	.lanes		= 1,
-+	.config		= 0x11,
-+	.mask		= 0x11,
-+	.offsets	= {
-+		0x400000
-+	},
-+};
-+
-+static const struct k3_phy_lane_group_data k3_combphy_lane_group5 = {
-+	.lanes		= 1,
-+	.config		= 0xff,
-+	.mask		= 0x00,
-+	.offsets	= {
-+		0x500000
-+	},
-+};
-+
-+static const struct k3_phy_lane_group_data *k3_combphy_lane_datas[] = {
-+	&k3_combphy_lane_group0,
-+	&k3_combphy_lane_group1,
-+	&k3_combphy_lane_group2,
-+	&k3_combphy_lane_group3,
-+	&k3_combphy_lane_group4,
-+	&k3_combphy_lane_group5,
-+};
-+
-+static int k3_combo_phy_init_lanes(struct k3_combo_phy *phy, unsigned int config)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(k3_combphy_lane_datas); i++) {
-+		const struct k3_phy_lane_group_data *data = k3_combphy_lane_datas[i];
-+		struct k3_lane_group *lg = &phy->groups[i];
-+		const struct phy_ops *ops;
-+		bool is_usb;
-+
-+		is_usb = (data->mask & config) == data->config;
-+		if (is_usb)
-+			ops = &k3_usb3_phy_ops;
-+		else
-+			ops = &k3_pcie_phy_ops;
-+
-+		dev_dbg(phy->dev, "phy %d is %s\n", i, is_usb ? "usb" : "pcie");
-+
-+		lg->phy = devm_phy_create(phy->dev, NULL, ops);
-+		if (IS_ERR(lg->phy))
-+			return PTR_ERR(lg->phy);
-+
-+		lg->is_pcie = !is_usb;
-+		lg->data = data;
-+		lg->base = phy->base;
-+		phy_set_drvdata(lg->phy, lg);
-+	}
-+
-+	return 0;
-+}
-+
-+static int k3_combo_phy_update_config(struct regmap *apmu, unsigned int config)
-+{
-+	if (config & ~PU_MATRIX_CONF_MASK)
-+		return -EINVAL;
-+
-+	return regmap_update_bits(apmu, PMUA_PCIE_SUBSYS_MGMT, PU_MATRIX_CONF_MASK, config);
-+}
-+
-+static struct phy *k3_combo_phy_xlate(struct device *dev, const struct of_phandle_args *args)
-+{
-+	struct k3_combo_phy *phy = dev_get_drvdata(dev);
-+	struct k3_lane_group *lg;
-+
-+	if (args->args_count != 2) {
-+		dev_err(dev, "Invalid number of arguments\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (args->args[0] >= ARRAY_SIZE(k3_combphy_lane_datas)) {
-+		dev_err(dev, "Invalid PHY id\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	lg = &phy->groups[args->args[0]];
-+
-+	if ((lg->is_pcie && args->args[1] != PHY_TYPE_PCIE) ||
-+	    (!lg->is_pcie && args->args[1] != PHY_TYPE_USB3)) {
-+		dev_err(dev, "Invalid PHY mode\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return lg->phy;
-+}
-+
-+static int k3_combo_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	struct phy_provider *provider;
-+	struct k3_combo_phy *phy;
-+	struct regmap *apmu;
-+	u32 config = 0;
-+	int ret;
-+
-+	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-+	if (!phy)
-+		return -ENOMEM;
-+
-+	phy->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(phy->base))
-+		return PTR_ERR(phy->base);
-+
-+	phy->apb_spare = syscon_regmap_lookup_by_phandle(node, "spacemit,apb-spare");
-+	if (IS_ERR(phy->apb_spare))
-+		return dev_err_probe(dev, PTR_ERR(phy->apb_spare),
-+				     "Failed to find APB SPARE syscon");
-+
-+	apmu = syscon_regmap_lookup_by_phandle_args(node, "spacemit,apmu", 1, &config);
-+	if (IS_ERR(apmu))
-+		return dev_err_probe(dev, PTR_ERR(apmu),
-+				     "Failed to find APMU syscon");
-+
-+	ret = k3_combo_phy_update_config(apmu, config);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to set lane configuration");
-+
-+	phy->dev = dev;
-+	platform_set_drvdata(pdev, phy);
-+
-+	ret = k3_phy_calibrate(phy->apb_spare);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to calibrate phy");
-+
-+	ret = k3_combo_phy_init_lanes(phy, config);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to init lanes");
-+
-+	provider = devm_of_phy_provider_register(dev, k3_combo_phy_xlate);
-+	if (IS_ERR(provider))
-+		return dev_err_probe(dev, PTR_ERR(provider),
-+				     "Failed to register provider\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id k3_combo_phy_of_match[] = {
-+	{ .compatible = "spacemit,k3-combo-phy" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, k3_combo_phy_of_match);
-+
-+static struct platform_driver k3_combo_phy_driver = {
-+	.probe = k3_combo_phy_probe,
-+	.driver = {
-+		.name = "spacemit,k3-combo-phy",
-+		.of_match_table = k3_combo_phy_of_match,
-+	},
-+};
-+module_platform_driver(k3_combo_phy_driver);
-+
-+MODULE_DESCRIPTION("SpacemiT K3 USB3/PCIe combo PHY driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/phy/spacemit/phy-k3-common.c b/drivers/phy/spacemit/phy-k3-common.c
-new file mode 100644
-index 000000000000..0b289e63db99
---- /dev/null
-+++ b/drivers/phy/spacemit/phy-k3-common.c
-@@ -0,0 +1,391 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/bitfield.h>
-+#include <linux/cleanup.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/usb.h>
-+
-+#include <dt-bindings/phy/phy.h>
-+
-+#include "phy-k3-common.h"
-+
-+/* PHY Registers */
-+#define PHY_VERSION			0x0
-+
-+#define PHY_RESET_CFG			0x04
-+
-+#define PHY_RESET_RXBUF_RST		BIT(0)
-+#define PHY_RESET_SOFT_RST_PCS		BIT(1)
-+#define PHY_RESET_SOFT_RST_AHB		BIT(2)
-+#define PHY_RESET_EN_SD_AFTER_LOCK	BIT(6)
-+
-+#define PHY_CLK_CFG			0x08
-+
-+#define PHY_CLK_PLL_READY		BIT(0)
-+#define PHY_CLK_TXCLK_INV		BIT(2)
-+#define PHY_CLK_RXCLK_EN		BIT(3)
-+#define PHY_CLK_TXCLK_EN		BIT(4)
-+#define PHY_CLK_PCLK_EN			BIT(5)
-+#define PHY_CLK_PIPE_PCLK_EN		BIT(6)
-+#define PHY_CLK_REFCLK_FREQ		GENMASK(10, 7)
-+#define PHY_CLK_REFCLK_24M		2
-+#define PHY_CLK_SW_INIT_DONE		BIT(11)
-+#define PHY_CLK_PU_SSC_OUT		BIT(23)
-+
-+#define PHY_MODE_CFG			0x0C
-+
-+#define PHY_MODE_PCIE_INT_EN		BIT(0)
-+#define PHY_MODE_LFPS_TPERIOD		GENMASK(9, 8)
-+#define PHY_MODE_LFPS_TPERIOD_USB	3
-+
-+#define PHY_PU_SEL			0x40
-+
-+#define PHY_PU_CFG_STATUS		BIT(9)
-+#define PHY_PU_OVRD_STATUS		BIT(10)
-+
-+#define PHY_PU_CK_REG			0x54
-+
-+#define PHY_PU_REFCLK_100		BIT(25)
-+
-+#define PHY_PLL_REG1			0x58
-+
-+#define PHY_PLL_FREF_SEL		GENMASK(15, 13)
-+#define PHY_PLL_FREF_24M		0x1
-+#define PHY_PLL_SSC_DEP_SEL		GENMASK(27, 24)
-+#define PHY_PLL_SSC_5000PPM		0xa
-+#define PHY_PLL_SSC_MODE		GENMASK(29, 28)
-+#define PHY_PLL_SSC_MODE_CENTER_SPREAD	0
-+#define PHY_PLL_SSC_MODE_UP_SPREAD	1
-+#define PHY_PLL_SSC_MODE_DOWN_SPREAD	2
-+#define PHY_PLL_SSC_MODE_DOWN_SPREAD1	3
-+
-+#define PHY_PLL_REG2			0x5c
-+
-+#define PHY_PLL_SEL_REF100		BIT(21)
-+
-+/* PHY RX Register Definitions */
-+#define PHY_RX_REG_A			0x60
-+
-+#define PHY_RX_REG0_MASK		GENMASK(7, 0)
-+#define PHY_RX_REG1_MASK		GENMASK(15, 8)
-+#define PHY_RX_REG2_MASK		GENMASK(23, 16)
-+#define PHY_RX_REG3_MASK		GENMASK(31, 24)
-+
-+#define PHY_RX_REG0_RLOAD		BIT(4)
-+#define PHY_RX_REG1_RTERM		GENMASK(11, 8)
-+#define PHY_RX_REG1_RC_CALI		GENMASK(15, 12)
-+#define PHY_RX_REG2_CSEL		GENMASK(19, 16)
-+#define PHY_RX_REG2_FORCE_CSEL		BIT(20)
-+#define PHY_RX_REG2_PSEL		GENMASK(23, 21)
-+#define PHY_RX_REG3_I_LOAD		GENMASK(26, 24)
-+#define PHY_RX_REG3_SEL_CBOOST_CODE	BIT(27)
-+#define PHY_RX_REG3_ADJ_BIAS		GENMASK(29, 28)
-+#define PHY_RX_REG3_RDEG1		GENMASK(31, 30)
-+
-+#define PHY_RX_REG_B			0x64
-+
-+#define PHY_RX_REG4_MASK		GENMASK(7, 0)
-+#define PHY_RX_REG5_MASK		GENMASK(15, 8)
-+#define PHY_RX_REG6_MASK		GENMASK(23, 16)
-+
-+#define PHY_RX_REGB_MASK		GENMASK(23, 0)
-+
-+#define PHY_RX_REG4_RDEG2		GENMASK(2, 1)
-+#define PHY_RX_REG4_ENVOS		BIT(4)
-+#define PHY_RX_REG4_RTERM_SEL		BIT(5)
-+#define PHY_RX_REG4_MANUAL_CFG		BIT(7)
-+#define PHY_RX_REG5_RCELL_VCM		GENMASK(11, 8)
-+#define PHY_RX_REG5_RCELL_BIAS		GENMASK(15, 12)
-+#define PHY_RX_REG6_H1_REG		GENMASK(19, 16)
-+#define PHY_RX_REG6_ADAPT_GAIN		GENMASK(21, 20)
-+#define PHY_RX_REG6_BYPASS_ADPT		BIT(22)
-+
-+#define PHY_ADPT_CFG0			0x140
-+#define PHY_ADPT_AFE_RST_OVRD_EN	BIT(1)
-+#define PHY_ADPT_AFE_RST_OVRD_VAL	BIT(4)
-+
-+#define PHY_RXEQ_TIME			0xb4
-+#define PHY_RXEQ_TIME_OVRD_POST_C_SOC	BIT(21)
-+#define PHY_RXEQ_TIME_CFG_AMP_SOC	GENMASK(23, 22)
-+#define PHY_RXEQ_TIME_AMP_SOC_650M	0
-+#define PHY_RXEQ_TIME_AMP_SOC_800M	1
-+#define PHY_RXEQ_TIME_AMP_SOC_870M	2
-+#define PHY_RXEQ_TIME_AMP_SOC_900M	3
-+#define PHY_RXEQ_TIME_OVRD_AMP_SOC	BIT(24)
-+
-+#define PCIE_PU_ADDR_CLK_CFG		0x0008
-+#define PHY_CLK_PLL_READY		BIT(0)
-+#define PCIE_INITAL_TIMER		GENMASK(6, 3)
-+#define CFG_INTERNAL_TIMER_ADJ		GENMASK(10, 7)
-+#define CFG_SW_PHY_INIT_DONE		BIT(11)
-+
-+/* Lane RX/TX configuration (per‑lane, at lane_base) */
-+#define PCIE_RX_REG1			0x050
-+#define PCIE_RX_REFCLK_MODE		GENMASK(1, 0)
-+#define PCIE_RX_REFCLK_MODE_DRIVER	1
-+#define PCIE_RX_SEL_TRI_CODE		BIT(2)
-+#define PCIE_RX_LEGACY			GENMASK(15, 8)
-+#define PCIE_RX_LEGACY_DEFAULT		0x65
-+
-+#define PCIE_TX_REG1			0x064
-+
-+#define PCIE_PLL_TIMEOUT		500000
-+#define PCIE_POLL_DELAY			500
-+
-+static int k3_usb3phy_init_single(struct k3_lane_group *lg, void __iomem *base)
-+{
-+	struct phy *phy = lg->phy;
-+	u32 val, tmp;
-+	int ret;
-+
-+	/* Do not wait CDR lock before sampling data */
-+	val = readl(base + PHY_RESET_CFG);
-+	val = u32_replace_bits(val, 0, PHY_RESET_EN_SD_AFTER_LOCK);
-+	writel(val, base + PHY_RESET_CFG);
-+
-+	/* Power down 100MHz refclk buffer */
-+	val = readl(base + PHY_PU_CK_REG);
-+	val = u32_replace_bits(val, 0, PHY_PU_REFCLK_100);
-+	writel(val, base + PHY_PU_CK_REG);
-+
-+	/* Program PLL REG1 configure the SSC */
-+	val = FIELD_PREP(PHY_PLL_SSC_MODE, PHY_PLL_SSC_MODE_DOWN_SPREAD1) |
-+	      FIELD_PREP(PHY_PLL_SSC_DEP_SEL, PHY_PLL_SSC_5000PPM) |
-+	      FIELD_PREP(PHY_PLL_FREF_SEL, PHY_PLL_FREF_24M);
-+	writel(val, base + PHY_PLL_REG1);
-+
-+	/* Un-select 100MHz PLL reference */
-+	val = readl(base + PHY_PLL_REG2);
-+	val = u32_replace_bits(val, 0, PHY_PLL_SEL_REF100);
-+	writel(val, base + PHY_PLL_REG2);
-+
-+	/* USB LFPS period configuration */
-+	val = readl(base + PHY_MODE_CFG);
-+	val = u32_replace_bits(val, PHY_MODE_LFPS_TPERIOD_USB, PHY_MODE_LFPS_TPERIOD);
-+	writel(val, base + PHY_MODE_CFG);
-+
-+	/* Force AFE adaptation reset */
-+	val = readl(base + PHY_ADPT_CFG0);
-+	val |= PHY_ADPT_AFE_RST_OVRD_EN | PHY_ADPT_AFE_RST_OVRD_VAL;
-+	writel(val, base + PHY_ADPT_CFG0);
-+
-+	/* Override driver amplitude value to 900m */
-+	val = readl(base + PHY_RXEQ_TIME);
-+	val |= PHY_RXEQ_TIME_OVRD_AMP_SOC;
-+	val = u32_replace_bits(val, PHY_RXEQ_TIME_AMP_SOC_900M, PHY_RXEQ_TIME_CFG_AMP_SOC);
-+	writel(val, base + PHY_RXEQ_TIME);
-+
-+	/* Configure RX parameters */
-+	val = PHY_RX_REG0_RLOAD |
-+		FIELD_PREP(PHY_RX_REG1_RTERM, 0x8) |
-+		FIELD_PREP(PHY_RX_REG1_RC_CALI, 0x7) |
-+		FIELD_PREP(PHY_RX_REG2_CSEL, 0x8) |
-+		PHY_RX_REG2_FORCE_CSEL |
-+		FIELD_PREP(PHY_RX_REG2_PSEL, 0x4) |
-+		FIELD_PREP(PHY_RX_REG3_I_LOAD, 0x7) |
-+		PHY_RX_REG3_SEL_CBOOST_CODE |
-+		FIELD_PREP(PHY_RX_REG3_ADJ_BIAS, 0x1) |
-+		FIELD_PREP(PHY_RX_REG3_RDEG1, 0x3);
-+	writel(val, base + PHY_RX_REG_A);
-+
-+	val = readl(base + PHY_RX_REG_B);
-+	tmp = FIELD_PREP(PHY_RX_REG4_RDEG2, 0x2) |
-+		PHY_RX_REG4_ENVOS | PHY_RX_REG4_RTERM_SEL | PHY_RX_REG4_MANUAL_CFG |
-+		FIELD_PREP(PHY_RX_REG5_RCELL_VCM, 0x8) |
-+		FIELD_PREP(PHY_RX_REG5_RCELL_BIAS, 0x8) |
-+		FIELD_PREP(PHY_RX_REG6_H1_REG, 0x8) |
-+		FIELD_PREP(PHY_RX_REG6_ADAPT_GAIN, 0x2);
-+	val = u32_replace_bits(val, tmp, PHY_RX_REGB_MASK);
-+	writel(val, base + PHY_RX_REG_B);
-+
-+	/*
-+	 * Inform PHY that all PLL-related configuration is done.
-+	 * PLL will not start locking until PHY_CLK_SW_INIT_DONE is set.
-+	 */
-+	val = PHY_CLK_SW_INIT_DONE | PHY_CLK_PU_SSC_OUT |
-+	      FIELD_PREP(PHY_CLK_REFCLK_FREQ, PHY_CLK_REFCLK_24M) |
-+	      PHY_CLK_RXCLK_EN | PHY_CLK_TXCLK_EN |
-+	      PHY_CLK_PCLK_EN | PHY_CLK_PIPE_PCLK_EN;
-+	writel(val, base + PHY_CLK_CFG);
-+
-+	ret = readl_poll_timeout(base + PHY_CLK_CFG, val,
-+				 (val & PHY_CLK_PLL_READY),
-+				 PCIE_POLL_DELAY, PCIE_PLL_TIMEOUT);
-+	if (ret) {
-+		dev_err(&phy->dev, "PHY PLL polling timeout\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int k3_usb3phy_init(struct phy *phy)
-+{
-+	struct k3_lane_group *lg = phy_get_drvdata(phy);
-+	int ret, i;
-+
-+	for (i = 0; i < lg->data->lanes; i++) {
-+		ret = k3_usb3phy_init_single(lg, lg->base + lg->data->offsets[i]);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+const struct phy_ops k3_usb3_phy_ops = {
-+	.init = k3_usb3phy_init,
-+	.owner = THIS_MODULE,
-+};
-+EXPORT_SYMBOL_GPL(k3_usb3_phy_ops);
-+
-+static int k3_pcie_phy_init(struct phy *phy)
-+{
-+	struct k3_lane_group *lg = phy_get_drvdata(phy);
-+	void __iomem *phy_base = lg->base + lg->data->offsets[0];
-+	u32 val;
-+	int ret;
-+	int i;
-+
-+	val = readl(phy_base + PHY_PLL_REG1);
-+	val = u32_replace_bits(val, 0x2, GENMASK(15, 12));
-+	writel(val, phy_base + PHY_PLL_REG1);
-+
-+	val = readl(phy_base + PHY_PLL_REG2);
-+	val = u32_replace_bits(val, 0, BIT(21));
-+	writel(val, phy_base + PHY_PLL_REG2);
-+
-+	for (i = 0; i < lg->data->lanes; i++) {
-+		void __iomem *lane_base = lg->base + lg->data->offsets[i];
-+
-+		val = readl(lane_base + PCIE_RX_REG1);
-+		val = u32_replace_bits(val, 0, 0x3);
-+		writel(val, lane_base + PCIE_RX_REG1);
-+	}
-+
-+	val = readl(phy_base + PHY_PLL_REG2);
-+	val |= BIT(20);
-+	writel(val, phy_base + PHY_PLL_REG2);
-+
-+	/* The write is needed as clock requires renegotiation */
-+	val = FIELD_PREP(PCIE_RX_REFCLK_MODE, PCIE_RX_REFCLK_MODE_DRIVER) |
-+	      PCIE_RX_SEL_TRI_CODE |
-+	      FIELD_PREP(PCIE_RX_LEGACY, PCIE_RX_LEGACY_DEFAULT);
-+	writel(val, phy_base + PCIE_RX_REG1);
-+
-+	/* pll_reg1 of lane0, disable SSC: pll[27:24] = 0 */
-+	val = readl(phy_base + PHY_PLL_REG1);
-+	val = u32_replace_bits(val, 0, GENMASK(27, 24));
-+	writel(val, phy_base + PHY_PLL_REG1);
-+
-+	for (i = 0; i < lg->data->lanes; i++) {
-+		void __iomem *lane_base = lg->base + lg->data->offsets[i];
-+
-+		/* set cfg_tx_send_dummy_data to be 1'b1 for disable dash data */
-+		val = readl(lane_base + PHY_PU_SEL);
-+		val = u32_replace_bits(val, 1, BIT(13));
-+		writel(val, lane_base + PHY_PU_SEL);
-+
-+		/* disable en_sample_data_after_cdr_locked */
-+		val = readl(lane_base + PHY_RESET_CFG);
-+		val = u32_replace_bits(val, 0, BIT(6));
-+		writel(val, lane_base + PHY_RESET_CFG);
-+
-+		/* Dynamic Lock */
-+		val = readl(lane_base + PHY_MODE_CFG);
-+		val = u32_replace_bits(val, 1, BIT(2));
-+		writel(val, lane_base + PHY_MODE_CFG);
-+
-+		val = FIELD_PREP(PHY_RX_REG0_MASK, 0x10) |
-+			FIELD_PREP(PHY_RX_REG1_MASK, 0x78) |
-+			FIELD_PREP(PHY_RX_REG2_MASK, 0x98) |
-+			FIELD_PREP(PHY_RX_REG3_MASK, 0xdf);
-+		writel(val, lane_base + PHY_RX_REG_A);
-+
-+		val = readl(lane_base + PHY_RX_REG_B);
-+		val &= ~PHY_RX_REGB_MASK;
-+		val |= FIELD_PREP(PHY_RX_REG4_MASK, 0xb4) |
-+			FIELD_PREP(PHY_RX_REG5_MASK, 0x88) |
-+			FIELD_PREP(PHY_RX_REG6_MASK, 0x28);
-+		writel(val, lane_base + PHY_RX_REG_B);
-+
-+		/* Set init done */
-+		val = readl(lane_base + PCIE_PU_ADDR_CLK_CFG);
-+		val = u32_replace_bits(val, 1, CFG_SW_PHY_INIT_DONE);
-+		writel(val, lane_base + PCIE_PU_ADDR_CLK_CFG);
-+	}
-+
-+	ret = readl_poll_timeout(phy_base + PCIE_PU_ADDR_CLK_CFG, val,
-+				 (val & PHY_CLK_PLL_READY), PCIE_POLL_DELAY,
-+				 PCIE_PLL_TIMEOUT);
-+	if (ret) {
-+		dev_err(&lg->phy->dev, "PHY PLL lock timeout\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+const struct phy_ops k3_pcie_phy_ops = {
-+	.init		= k3_pcie_phy_init,
-+	.owner		= THIS_MODULE,
-+};
-+EXPORT_SYMBOL_GPL(k3_pcie_phy_ops);
-+
-+/* PHY rcal init requires APB_SPARE regmap access */
-+
-+#define APB_SPARE_PU_CAL		0x178
-+#define PU_CAL				BIT(17)
-+
-+#define APB_SPARE_RCAL_HSIO		0x17c
-+#define APB_SPARE_PU_CAL_DONE		BIT(8)
-+#define RCAL_OVRD_PTRIM			GENMASK(23, 20)
-+#define RCAL_OVRD_NTRIM			GENMASK(27, 24)
-+#define RCAL_OVRD_PTRIM_EN		BIT(28)
-+#define RCAL_OVRD_NTRIM_EN		BIT(29)
-+#define RCAL_OVRD_STABLE_VAL		BIT(30)
-+#define RCAL_OVRD_STABLE_EN		BIT(31)
-+
-+#define RCAL_OVRD_TRIM_EN		(RCAL_OVRD_NTRIM_EN | RCAL_OVRD_PTRIM_EN)
-+#define RCAL_OVRD_TRIM_MASK		(RCAL_OVRD_NTRIM | RCAL_OVRD_PTRIM)
-+
-+#define PU_CAL_TIMEOUT 2000000
-+
-+static DEFINE_MUTEX(calibrate_lock);
-+
-+int k3_phy_calibrate(struct regmap *apb_spare)
-+{
-+	unsigned int val = 0;
-+	int ret;
-+
-+	guard(mutex)(&calibrate_lock);
-+
-+	regmap_read(apb_spare, APB_SPARE_RCAL_HSIO, &val);
-+	if (val & APB_SPARE_PU_CAL_DONE)
-+		return 0;
-+
-+	regmap_update_bits(apb_spare, APB_SPARE_PU_CAL, PU_CAL,
-+			   PU_CAL);
-+
-+	ret = regmap_read_poll_timeout(apb_spare, APB_SPARE_RCAL_HSIO,
-+				       val, (val & APB_SPARE_PU_CAL_DONE), PCIE_POLL_DELAY,
-+				       PU_CAL_TIMEOUT);
-+
-+	if (ret)
-+		regmap_update_bits(apb_spare, APB_SPARE_RCAL_HSIO,
-+				   RCAL_OVRD_TRIM_EN | RCAL_OVRD_STABLE_VAL |
-+				   RCAL_OVRD_TRIM_MASK | RCAL_OVRD_STABLE_EN,
-+				   RCAL_OVRD_TRIM_EN | RCAL_OVRD_STABLE_VAL |
-+				   FIELD_PREP(RCAL_OVRD_NTRIM, 0x6) |
-+				   FIELD_PREP(RCAL_OVRD_PTRIM, 0xa) |
-+				   RCAL_OVRD_STABLE_EN);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(k3_phy_calibrate);
-+
-+MODULE_DESCRIPTION("SpacemiT K3 PHY common ops");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/phy/spacemit/phy-k3-common.h b/drivers/phy/spacemit/phy-k3-common.h
-new file mode 100644
-index 000000000000..49009c3c313a
---- /dev/null
-+++ b/drivers/phy/spacemit/phy-k3-common.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef _PHY_K3_COMMON_H
-+#define _PHY_K3_COMMON_H
-+
-+#include <linux/phy/phy.h>
-+
-+struct k3_phy_lane_group_data {
-+	u32 lanes;
-+	u8 config;
-+	u8 mask;
-+	u32 offsets[] __counted_by(lanes);
-+};
-+
-+struct k3_lane_group {
-+	const struct k3_phy_lane_group_data *data;
-+	void __iomem *base;
-+	struct phy *phy;
-+	bool is_pcie;
-+};
-+
-+extern const struct phy_ops k3_pcie_phy_ops;
-+extern const struct phy_ops k3_usb3_phy_ops;
-+
-+int k3_phy_calibrate(struct regmap *apb_spare);
-+
-+#endif
--- 
-2.55.0
+> diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
+> new file mode 100644
+> index 000000000000..95b01295e4a0
+> --- /dev/null
+> +++ b/drivers/iio/frequency/ad9910.c
+
+> +static int ad9910_parse_fw(struct ad9910_state *st)
+> +{
+> +	static const char * const refclk_out_drv0[] = {
+> +		"disabled", "low", "medium", "high",
+> +	};
+> +	struct device *dev = &st->spi->dev;
+> +	const char *prop;
+> +	u32 tmp;
+> +	int ret;
+> +
+> +	st->data.pll_enabled = device_property_read_bool(dev, "adi,pll-enable");
+> +	if (st->data.pll_enabled) {
+> +		tmp = AD9910_ICP_MIN_uA;
+
+Perhaps move to an else rather than doing it as set then override? 
+
+
+> +		prop = "adi,charge-pump-current-microamp";
+> +		if (device_property_present(dev, prop)) {
+> +			ret = device_property_read_u32(dev, prop, &tmp);
+> +			if (ret)
+> +				return dev_err_probe(dev, ret, "property read: %s\n", prop);
+> +
+> +			if (tmp < AD9910_ICP_MIN_uA || tmp > AD9910_ICP_MAX_uA)
+> +				return dev_err_probe(dev, -ERANGE,
+> +						     "invalid charge pump current %u\n", tmp);
+> +		}
+> +		st->data.pll_charge_pump_current = tmp;
+> +
+> +		prop = "adi,refclk-out-drive-strength";
+> +		if (device_property_present(dev, prop)) {
+> +			ret = device_property_match_property_string(dev, prop,
+> +								    refclk_out_drv0,
+> +								    ARRAY_SIZE(refclk_out_drv0));
+> +			if (ret < 0)
+> +				return dev_err_probe(dev, ret, "property read: %s\n", prop);
+> +
+> +			st->data.refclk_out_drv = ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
 
