@@ -1,184 +1,165 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26CB3C8C46
-	for <linux-hardening@vger.kernel.org>; Fri,  3 Jul 2026 10:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18713C4171;
+	Fri,  3 Jul 2026 12:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783074683; cv=none; b=r6KpM532uMsLhGKsZSmRq/CF/iFUDuz5aTJERoMWo441BdVoAyoDGmZGvb7qpafmCPXf+iOoS/Ox72kt0l17CWIQsqU38HtbTF1QARDuM/1WkGIPz9FbWyO3+lSc+nt6xSR04ivxpWtODuvGA+Xq57v3sPAJnmPuQDkme0CP0F0=
+	t=1783080771; cv=none; b=HwFKwsnnXu6M/hIcQ0Gq0XKjgPuS6qHsiWoF8YIt1gEMJppIG21GAoXi1CF8Of2NL/QUjQ1U+GbMvXRIlcrFNAG0idxqq2NMYNqOfpcBi+STKs8ZzvGppsRiPWiUQjuJML3M/VdjCpeSwm47ThnN5dzkxuXmnBppB59nxXIQBdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783074683; c=relaxed/simple;
-	bh=qiyzgDhFBvLQBInbQdAPGyL8srSytSEX42oOuQxiCH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ws+AjlsHQ81c+vHe1bCqpQPS+zhokQNB0vGrOp3A68eDJk/NlPx1YKlOh8c8J9WskLjmTss4dxvXTU6lhLBqzkpTs6jks0VcCgv+8l5vZCF7Z1blUzMJA7I2wjmMrwtC8xY8zSbLTGLuuANnQz9Xni3Bk79+SwUyjKsWwLRRSnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XF25VBTj; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=HkKlrQqr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1783080771; c=relaxed/simple;
+	bh=svuMCr40km+pZ9uy6Wrvq5DI4pzkEmdcVGA4/pmIkcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JKw5zpPCZ2s0Ugfb96AwAFKTq5njJ+xqTjSYolBx2CGsRM08L0hHsGeie8mAWbjxuglebWv9ajS5CFsKx0z1kVi6Xi5iW0cDXAOvSUiS5Ls7IS0i040vL8L57JFGWMQOHZkQ4DBsUTnRnOh9fple+y/YXFhdgCxEYrfldLRvIoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=RujNGzWy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LbR5w1H9; arc=none smtp.client-ip=103.168.172.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XF25VBTj";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="HkKlrQqr"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6635rfSf3136145
-	for <linux-hardening@vger.kernel.org>; Fri, 3 Jul 2026 10:31:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8sg/ld/I8qbw7uUnUsVl9AhVTb+2HSc9O79hpsKVLY8=; b=XF25VBTjXdW4rzLs
-	Cv50XV/XSKIHVl2NDbWOZikEIzSts9CaNge1SdaskXgT77lLHZQRySRLceuSZw6w
-	sjAzZuLbAQD7FDUUL/epyOXp7Ncz3eN8p3Olhq6f/Q/Dkm4dOdQZvpi7ALh3/drh
-	hVifuvuDLxvcV2e3bfWznaqF1cFQ1GpktvjIn6Nspw5yZEpzzIPZ/lghhkTIjFrP
-	rOxRC8MV55xl/RoDnQUUBN4BDqwTTU7jrwS88RV045BJEncNAdLoRDG9FG9A1gSE
-	z8DXzKw5GEJ06tndCi1ST5hffPxVPH/zm3qfOUmd8rtPKoI6u4EgzzH7Fk633T2V
-	wS+fdA==
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f64b59umj-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 03 Jul 2026 10:31:21 +0000 (GMT)
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-c8924f4d0a4so682251a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Jul 2026 03:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783074681; x=1783679481; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8sg/ld/I8qbw7uUnUsVl9AhVTb+2HSc9O79hpsKVLY8=;
-        b=HkKlrQqrBMdzBN6+NVhyBsbfGgnL6ph7UyOPJSl7ZXDHjrWVR7qq41L+SAHP7hQ478
-         lvjIkJsbACA6u/oCwrBp0gYJJ8kuCRskgbMgRUgMuufnDhgDVxgILMLoh3Z19YApN8+Y
-         6qTtCZImnkvGqXs7+ZR9MxMYIoP7XolbnYr7c9E8utarakkHyGJvgKSFMg5jCkCDfHTG
-         pGzLZLsJb3JemIrDJ+c8/qQdZ7GKvFN+pi70bQ+dY0CDUsN2VToZ6qbdG5JjQG0hOFlF
-         jbS3fgLnI/rZFp1+9Xnw3XkFubV0IVJcE+Do/lQY79NoXkCaiazklJLGrrbFKf+1ZeWt
-         tkdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783074681; x=1783679481;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=8sg/ld/I8qbw7uUnUsVl9AhVTb+2HSc9O79hpsKVLY8=;
-        b=E/BVE6KNkSOdXX/JiWm9pMvIbODMVy6+ASI77XRx6SWmY4HHPiiJ0jxLtPwMDij/Se
-         qQ8MFobiQhlTXiJbzebbr9Nt+Y4R0gfjIOEBxbgNQ1jBvdCBmWgLylF3o+1qcT9i4Iht
-         JhcaoU/tQyGDpn54IFkYe8vTY+AAQwSEvjhSKy1B//QDPer3Ft7TWjwM3JVGqphCamdO
-         IpHUwzTxJri8TgaOwl6CIu05lVWV2TvkN+t58FGSHmXbE/MrlNgxZyGGbXNeOEDLVbiW
-         ewij95u1fFGqUtEK08odUal4XS6C+MTu28AIKHpOkTnpmwYSveHHp6tbix6d9whGFtMK
-         QucA==
-X-Forwarded-Encrypted: i=1; AHgh+RrQ0viRKh5c1MtBu5Dv26zUlpAeCgB10LGpxcgOpUCfEj6t1sLRhA5QSKnRDibHEYdFmBF07bmlwh5QkNDcIf0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzliFsW2XXQGlTxw3z+C2KtAeaavqeFp+p56Vg90tdANUGeGt2N
-	6GJ23iXc4PoMD67gH8CtuZjSaQpoLt63SnkPeGnT2r/CMm+sclw7w71v7DVvEO7Xt5cl4SqwYm4
-	R6ddto1LidjHfacJoiZrnj8q459MuBdOyBP77b9A5noGoQuZb3uuKf3Y/BT9Xc/7x0dBI5vg=
-X-Gm-Gg: AfdE7clP6qaXZ/0K6Lwyp8mGLcH3r0PBqze6AsxVr3NDO062jniFwEEfiJgkTc0Q9bG
-	l2xd2PGP6Pw3P0MTBojbYHxa4D2CQxKPuHdjBg4KzOC9DtBC97E+EkGvDgphWltIily/l6Srvvr
-	s28oP5niD8UwjTkWwNMXqEQ8J0JF+46pmT6X8CuMJJw4dpQ6LDjmfkQKNUxq/5SbW52EGtplOf2
-	MSlgSPHSi9bDNocJ/N/uIDCnSIdu7KT3mMcR9fXlXlS2OYtZjYyarfT0nsOaRuZDAvgh4MDFTpF
-	TBd8jeqQ6UN1GOE5MSewD1MaazjvwIwPTzH5FbQToGesuUXx2Dm/HhHYwCmsOs5HLPMx6WcsqUm
-	yn5VXOUgpVdKHUF3wz/6sFdJOFqkR1/DI+xU25CpCvA==
-X-Received: by 2002:a17:902:da89:b0:2c9:e6d7:fbb4 with SMTP id d9443c01a7336-2ca7e85a856mr102663205ad.31.1783074680700;
-        Fri, 03 Jul 2026 03:31:20 -0700 (PDT)
-X-Received: by 2002:a17:902:da89:b0:2c9:e6d7:fbb4 with SMTP id d9443c01a7336-2ca7e85a856mr102662705ad.31.1783074680012;
-        Fri, 03 Jul 2026 03:31:20 -0700 (PDT)
-Received: from [10.217.199.117] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad71328d8sm7377295ad.29.2026.07.03.03.31.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2026 03:31:19 -0700 (PDT)
-Message-ID: <faa65875-0aee-4a12-a751-084459edd4a7@oss.qualcomm.com>
-Date: Fri, 3 Jul 2026 16:01:13 +0530
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="RujNGzWy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LbR5w1H9"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailflow.phl.internal (Postfix) with ESMTP id A921B1380284;
+	Fri,  3 Jul 2026 08:12:48 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Fri, 03 Jul 2026 08:12:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
+	 t=1783080768; x=1783084368; bh=m4XJPc232WXgHvfWbkxdWEyKS6DaeVGg
+	FYWDDMuo6k8=; b=RujNGzWyVEXpSE0n+Jr4mRWFddDz+dvHDNydDzanbLya2m3H
+	mqXI5+OTGrF4ShApJAfeED1M5tGtksscmnDMIEFkVUwzvaa4oXv1ZeFvvRYnmqSn
+	Q+H8IcV1GsTEQVxI8JkWoecTTDbV5LZk2m4S0cvOZLDtIhoqk1Hn22WNbjvx9QAW
+	DhuqEnsiPEzLIfB8RPnd3pq1QEVGVwofQ9jSghjQ5lgNOUp6AJ36Ethu8zyIGCDv
+	I09ESHDLeHw/hpor/N2PSKY62JuZf57uIrZQUL5cC6y7+Nh6JRyOQOZ/tOe0Lc1A
+	uqjtJJ2DXDRlkdrL0mRZK/UUk/arsP9WVu5utA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1783080768; x=
+	1783084368; bh=m4XJPc232WXgHvfWbkxdWEyKS6DaeVGgFYWDDMuo6k8=; b=L
+	bR5w1H9m8OLeANhy9ft+aOFCycMBm/TLTuQJImrXyc77gzRjj3WpZQZYtorUHiR5
+	tYhMIX33Wej5D/zK+Dflv8JNew2h86dt47+u8qxKGPPhX+0Gl8+xCG3GAk5CP7tN
+	Mxb3Sq2iXHzd4r1MlcJGKuXvDeAaTq6EO4wHjum1qpOFJDoFE9bc99LL7mAUu0co
+	kmtBvhiz++vrU47vyBR7vzZG0rzfqS01LtFaYpqUqZigplqFOKWmk66VW8pem8zP
+	0oo1ZP2sNUXLAUY/tPw31RpzzCAPgkhTYoJD9BXf5/ye05pZs+QYzJyUpL3iSoqm
+	PK3XzKCjOBKGYziuQXoFw==
+X-ME-Sender: <xms:QKdHamIhHfb9yrkBj5RAVBCi9CdD0hl-cWSsGjAVcYL6ntWl6mibqQ>
+    <xme:QKdHaoOiCgtSbGkJ90x5XWWVD4h9zVzSOt3HudidDs5MOUbOqQG7zMCzeSjUXOnnH
+    w-MB-UDNPFOw-5tqsviyRxg-6c72s19867m0VdueCuEzST0DNXNWA>
+X-ME-Received: <xmr:QKdHamk_JyApDLQpHtzcip37k--OJsc3pXGSOBZOpUZEeBSmxJTnNesgi70>
+X-ME-Proxy-Cause: dmFkZTEAwyBZPl0V2RBfwhsNfZDOaVSL/bZNHBc1GnWElBBEjOg7d9WhUZaS1YAT/Kq5I0
+    r/NWyOA4/OIyQxgX09eMu00qaVbBQptcgEhWPxRpH2/WnLWCjyF3lkjoFRoO7e3FU7cULa
+    ADNQweOt4aRX0xWLfj4+aLYguU47OyrCDlKKpF4RoOiPQjaBVmXisM90kAJAuAtJ5erMkz
+    4Q8rhsCLs8V5JDcSawJWo1cwsuZec4qS9PUAvJw15Tt/tDL9tEYLC8L10yNQ7PWghBVQa1
+    GUxJsIXpq6w4NUUrMUavux11wXMKBYtI6WQ2fK5RA6YAEYOZIUi+6xOJNozdHX+rl+QeQe
+    TJFBcWDadlGyoHzMobdMZeYvpnHvKdNlz1UfpbHIQ0phwcqB7M/3ED6POq+b6Sg8CNuJSv
+    qxPpHXh5G3wNP/ez0WZassEsVmjOoW/65NGQUQy8agq8XKyN2HlMuoiRoDmPznhP0PQAIW
+    cepYcy1KnCh4f2nB7wYxj/jDKghnzJhtv4TTEAkeACg1vVLRbAV+4lTpd+cFn2m1fTgPyO
+    YsIsV5xfroCmyFMkwBMFrFcu+ZNGvJe+lBYly43RxJs5FUxw+mIEG8uKqKWLmhd28UjBov
+    GeRTjWgBNmi8QN+x1k84GX5lZQwHu0TIn5htwGZxbQQseROK9X8c4z5JYlaA
+X-ME-Proxy: <xmx:QKdHas5Q4wTQYwVxDx0y1izlhekHdWc_ImV9Ez2MxF4ncj0toyC0hg>
+    <xmx:QKdHaq051wSuDud02Wx8FdgOkifz9naiXnLb4nl6LSKCl_meB3tQXA>
+    <xmx:QKdHanEa2hMewyaiMH2Dn-lyJMnuPazrTThB-0Pf0ETQQ3lTEPQAxA>
+    <xmx:QKdHaphWCe49d4ZEgiM0IUS1cowHCBWPdWioR8-z3V0u0h06Lav6pA>
+    <xmx:QKdHaowSHACkgHDpw4LoYI7Ld3ZDuALVmJA5o68lzQS-JKU6ZR1iWooP>
+Feedback-ID: ib53e4b78:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 3 Jul 2026 08:12:48 -0400 (EDT)
+Date: Fri, 3 Jul 2026 07:12:46 -0500
+From: Ian Bridges <icb@fastmail.org>
+To: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <david@davidgow.net>, Rae Moar <raemoar63@gmail.com>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] kunit: string-stream: Replace strlcat() with strscpy() and
+ seq_buf
+Message-ID: <akenPvVk1xr_-480@dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/10] dt-bindings: firmware: qcom: tmd: add TMD device
- type constants
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
-        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
-References: <20260703-qmi-tmd-v4-0-3882189c1f83@oss.qualcomm.com>
- <20260703-qmi-tmd-v4-1-3882189c1f83@oss.qualcomm.com>
- <20260703-bizarre-abiding-spoonbill-dcc142@quoll>
-Content-Language: en-US
-From: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-In-Reply-To: <20260703-bizarre-abiding-spoonbill-dcc142@quoll>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAzMDEwMSBTYWx0ZWRfXzzBzqKrq4+I1
- iheFin9akoBhHAqGa1KKkmeDzkaw1atgPIWkVW4bV+7pvTJi0Iw1KFccyCQCBiwu+8wmt9uZZ7b
- iNPqVG2cqt8fLbPXh3dQafRskJrlnN8=
-X-Authority-Analysis: v=2.4 cv=FOQrAeos c=1 sm=1 tr=0 ts=6a478f79 cx=c_pps
- a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
- a=EUspDBNiAAAA:8 a=Ac_jkr_iY3tVM05H0rEA:9 a=QEXdDO2ut3YA:10
- a=_Vgx9l1VpLgwpw_dHYaR:22
-X-Proofpoint-ORIG-GUID: IQplWIac4tQYprdhCIZfuRp3-HibSZKY
-X-Proofpoint-GUID: IQplWIac4tQYprdhCIZfuRp3-HibSZKY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAzMDEwMSBTYWx0ZWRfX2hqcGE/1C/cH
- gLgIDf3p7GHUSz93xhGr+Lce+qSN2hPN/bGHKnhe5HChcBjEOstUBBBnV/9LuNKqsplTl1D5k0U
- CQAxNb0X4kLGJfwts8gxRPmIFRnMnwhMtmeb4W55BQRt5kk+J2GhFwpNgZjrRJRbiNzSNibjpiI
- XvTf4BvO50ZVKKGHojJR9OfCGTWFmmxRo8jXi1rP1BkLy3BtrIi2tG0BnLkVFpiGKY6JTLlfDfG
- wltHOCtV2xBgANWZGzI0dtscG5ZpvTeDaLVATBjUHPIlOCpfyjhX82zp+p76lMRfXfuhF9ouc8Z
- 5qgnuYztkJrQF1HBjl+OIsAFE54GzoNqvBri+U82BS5arKDrsxQhG+GJqBo5fIak2FEGnxKn+6B
- 4XL4kcs6YEfInWo4+4QE6GxnSSaQQ3Ab94t0lBwJ6rlrgaHBhj3Yb2Bw7jrHYpEIp5gn1I4xNBb
- 1fZcM1wnqEx7NcuginA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-07-03_02,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 adultscore=0 clxscore=1015 malwarescore=0 phishscore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607030101
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+In preparation for removing the strlcat() API[1], replace its uses in
+string-stream.
 
+string_stream_vadd() appends at most a single newline into space that
+was explicitly reserved when the fragment was sized, so a bounded copy
+at the end of the string is enough. The return value of strscpy()
+keeps the length accounting unchanged. string_stream_get_string()
+concatenates a variable number of fragments into a buffer sized to
+hold them all, which is what seq_buf is for.
 
-On 7/3/2026 1:22 PM, Krzysztof Kozlowski wrote:
-> On Fri, Jul 03, 2026 at 10:33:04AM +0530, Gaurav Kohli wrote:
->> Add Device Tree binding constants for Qualcomm Thermal Mitigation
->> Device (TMD) types used by remoteproc-backed thermal cooling devices.
->>
->> Qualcomm remote processors expose thermal mitigation endpoints
->> through QMI. These endpoints can be registered with the thermal
->> framework via the `#cooling-cells` property on the remoteproc node.
->>
->> The QMI TMD protocol identifies devices using string names (for example,
->> "pa", "modem", and "cdsp_sw"), while the DT cooling-device binding with
->> `#cooling-cells = <3>` requires numeric device id in the form:
->>
->>    <&phandle device_id min_state max_state>
->>
->> Define common TMD device index constants shared across currently
->> supported platforms. If a future target requires a different mapping,
->> additional target-specific constants can be introduced while preserving
->> existing DT ABI.
->>
->> Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
->> ---
->>   MAINTAINERS                                 |  1 +
->>   include/dt-bindings/firmware/qcom,qmi-tmd.h | 20 ++++++++++++++++++++
-> 
-> Why is it put into firmware? What part of firmware are you describing?
-> To me it looks like thermal thing and even you wrote: Thermal Mitigation Device
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Signed-off-by: Ian Bridges <icb@fastmail.org>
+---
+Truncation semantics differ between the two APIs. On overflow,
+strlcat() keeps whatever prefix of the fragment fits, while
+seq_buf_puts() drops any fragment that does not fit whole. Neither
+path is reachable here. string_stream_get_string() sizes the buffer
+to hold all fragments exactly. The newline lands in a byte that
+string_stream_vadd() reserved when it sized the fragment.
 
-Ack, it looks better under thermal. Will move to
-include/dt-bindings/thermal/qcom,qmi-tmd.h in the next version.
-> 
-> Best regards,
-> Krzysztof
-> 
+The patch was tested as follows:
+ - The string-stream KUnit suite passes all 12 tests before and after
+   the change. The full lib/kunit KUnit config (95 tests) also shows
+   identical results before and after.
+ - An x86_64 build of lib/kunit/string-stream.o at W=1 produces no
+   warnings.
+ - A userspace comparison of the old and new construction ran
+   with different fragment lengths for the newline append and with
+   randomized fragment lists for the concatenation loop. All outputs
+   were identical.
+
+ lib/kunit/string-stream.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
+index 0d8f1b30559b..51ba40ebf19f 100644
+--- a/lib/kunit/string-stream.c
++++ b/lib/kunit/string-stream.c
+@@ -9,6 +9,7 @@
+ #include <kunit/static_stub.h>
+ #include <kunit/test.h>
+ #include <linux/list.h>
++#include <linux/seq_buf.h>
+ #include <linux/slab.h>
+ 
+ #include "string-stream.h"
+@@ -74,7 +75,8 @@ int string_stream_vadd(struct string_stream *stream,
+ 
+ 		/* Append newline if necessary. */
+ 		if (frag_container->fragment[result_len - 1] != '\n')
+-			result_len = strlcat(frag_container->fragment, "\n", buf_len);
++			result_len += strscpy(frag_container->fragment + result_len,
++					      "\n", buf_len - result_len);
+ 	} else {
+ 		result_len = vsnprintf(frag_container->fragment, buf_len, fmt, args);
+ 	}
+@@ -118,15 +120,18 @@ char *string_stream_get_string(struct string_stream *stream)
+ {
+ 	struct string_stream_fragment *frag_container;
+ 	size_t buf_len = stream->length + 1; /* +1 for null byte. */
++	struct seq_buf sb;
+ 	char *buf;
+ 
+ 	buf = kzalloc(buf_len, stream->gfp);
+ 	if (!buf)
+ 		return NULL;
+ 
++	seq_buf_init(&sb, buf, buf_len);
++
+ 	spin_lock(&stream->lock);
+ 	list_for_each_entry(frag_container, &stream->fragments, node)
+-		strlcat(buf, frag_container->fragment, buf_len);
++		seq_buf_puts(&sb, frag_container->fragment);
+ 	spin_unlock(&stream->lock);
+ 
+ 	return buf;
+-- 
+2.47.3
 
