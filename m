@@ -1,60 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB0033A711;
-	Fri,  3 Jul 2026 07:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31080370ADD
+	for <linux-hardening@vger.kernel.org>; Fri,  3 Jul 2026 07:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783065130; cv=none; b=AceXNJbgfAUz8YXBdJroAQ8jN2gqLFqmnWsu7n/xNRc8ih5Y9NeExo7z01L63ax3PxQtsv/Nu+lqSAdCJOBXRwmv6Ly2HVKvcmm/SoCerRlavdIK3rGQxpSFquB6coT0GkvJTlGPhn3Uu3PDI/PvX1f0hNxZVxCi5Q/7a7WOIR0=
+	t=1783065203; cv=none; b=EUrk0svAoaZEAcEdyMvbn7DyQfHwC60K+kJ4uzROXhCP5aHuDKNHrsBKN5UJtfScJnEl+vc4HVSUP/IW1Vc8cohx8caupsCetcLef1POr9g2s0MaAwLcLKGgtdkaOHOC39oBEpSNgRmMoWH8P3OtYyH4iWPtJotgEUeQ31m9t64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783065130; c=relaxed/simple;
-	bh=zsdr1p5Efq9G7CRePnguZeg1sexbuAYBixN2H81XEMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PI6rVBRco3Dl6LWSaks7tuYuv7x9/v3XPuqIO6GsS9IlgOD+PYypWLhAoAbJNQOcDli9q50z+uYHF/mW/BsS8GSo0DFr6nAOHJitHR7M+gbZJxG6EbmOCUERAdohfkyUd4FpXLYUVKmnh9ZsESjofv2uutqp6jqOs+dMIyAjfro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6BbjYxi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783065203; c=relaxed/simple;
+	bh=4GDXcUWg0RJJB35LWW58Z24XSFPlDFhzDi0gE68NIGw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=izAtm87VdgZwDwNNmaUfF47G4UpJ8BKcLgEV8wOGKqg2BAXrCSyY0F0vdMy1WWBuc+3coy0u+7A3xIgT4NtJSuEWdVSGIWTPFqWAwPVRJXfDcZeHMpep746/YEoP70sPRNWAa+dk+M4sKVn38IDBjd8TweQX6m1toQl/ZhM5Et0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WOOADg8B; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=DowyvV+u; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6BbjYxi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCCCE1F00A3A;
-	Fri,  3 Jul 2026 07:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783065128;
-	bh=URGNTO5qpdlPm6rkSuLXxib/AseUmenBimvYq/Y6ghs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=c6BbjYxij7r7DkARrIgpI3n12qcXT5aQ8+iufs/vsluvtI1Yp9p1bZ6GzFZWKkAGi
-	 B0RomWTDMOHtl4CjWKoX38jXmRULncnEt1xJgeE50GakECapj7snuP8Kzxn/rZ5Bkb
-	 Em68PcQuesdywv2+VSGC/naEwxTjk3Hl2pfkKq7cinbEaej6VNBMy0tfCn+N3kxEdd
-	 L8EnznShNoy6kp+TqQiMYbmxScAICn4WmW4G8SNTyrIzX245WPON+f4iUZESuWqoyi
-	 JSoolbRt+rMGhFOODfmDYnV59mv5p6vE/udXvq0+1Xa48QTfo6MP9WBXn8LB1BzqI8
-	 AK482n/ekGUAg==
-Date: Fri, 3 Jul 2026 09:52:04 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>, Amit Kucheria <amit.kucheria@oss.qualcomm.com>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, 
-	Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
-Subject: Re: [PATCH v4 01/10] dt-bindings: firmware: qcom: tmd: add TMD
- device type constants
-Message-ID: <20260703-bizarre-abiding-spoonbill-dcc142@quoll>
-References: <20260703-qmi-tmd-v4-0-3882189c1f83@oss.qualcomm.com>
- <20260703-qmi-tmd-v4-1-3882189c1f83@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WOOADg8B";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="DowyvV+u"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6635rjDa3123373
+	for <linux-hardening@vger.kernel.org>; Fri, 3 Jul 2026 07:53:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	my5LxqpeZJrLYDspU5PJadi/aHSgKZJwjD5QvHa1qxA=; b=WOOADg8B0zZOnxbe
+	/L1k1s5BKYj8MsloinIr+OYMOpUNny3YPAg4pcqsGtJOLByl7w5qntAdsEImCmqv
+	ftrsCMwrw9JCLEwOZcDvkWAr1ifbAReYE3vJJ1UDric3+S6UcXl41DOAmMFZ6EKa
+	6tj3mOuhvphKimTBpx6BSnt3XseGprUK6h7E9R8KfV7TXKpe/xRbDzWClg46gIFP
+	CAAMbITW2YRqqrCdAzUwFJU7gw3rIln5iCn8CobHLXYv8Yo4rvdawmrjr2Lm6aY4
+	dtEDKzMCTlF7wvKUTmF11mtt8oTTYrZ+26NuLFA27ve5P2JfEDzwISkgHUCCzYgB
+	/bY1JQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f5qnpcad2-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Fri, 03 Jul 2026 07:53:21 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-92e6cb57d25so9064885a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Jul 2026 00:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1783065200; x=1783670000; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=my5LxqpeZJrLYDspU5PJadi/aHSgKZJwjD5QvHa1qxA=;
+        b=DowyvV+ufcJaK8iKAN6GxzmOUobiePUdySL00jQ99EJzEMjJmNS20qELILKdEt4k5c
+         ltVOtP4NtfeI0YI+NfWirhDdgV2UB1Q9qEGB0pSiqkQbuoJo9+WphEerb31onTVh5czx
+         zo0HolRQ3sl4b7tD/V8XLl2T79R7JYOOmJGhzvxlh3wp/PoIEwytUUFWaHV63fL9LKEm
+         TsGARkcJLYiWH3oHdNbSNS1a9k+DIj1+kNFi6FyR5Z6cuBnjnmCobFcnZaF2sWdFMGKR
+         sO9RtM0UGvISfznfAUo7MSl+Qn6/mj1oTgeuntB+9PkTG9zqbEuIpBPWnnHK7b7KZncs
+         tDGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783065200; x=1783670000;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=my5LxqpeZJrLYDspU5PJadi/aHSgKZJwjD5QvHa1qxA=;
+        b=TEERYnBE+s1/kYjko7gjXYbbHFPkKKWS4TAeZgCWuHbVy5VIu51YvlJayVBsewBGQP
+         CggxEerzqLLOzQV/sI0E0+oWW5S2yYb4lSRGQhjvvJ910w8A/W0d4WmlDyclKc+aq/2+
+         gOU1YHFD5peNelL8LDvjFj8Q+aqXFTFBSmZ47o6VA0c8mgUO6fVuI7jthtv4BiYmDtwU
+         re24xfVk0GeZPY/mgcnTRDVFEU9OE7lBgWNVOFLEXWbdphmZ0yP6umwotKOppA8LqbJ9
+         nxY1Pt73WMKsyp41m5puCdSAZk0K5frTMwglBU3cOZchndu31GG3G7pmK0lB6LfSClk/
+         FPWQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9mFcvV1EJBBoj9zyG7o31OigDLTwMyeJlDBGfKvxifkmtEf4606ia9px471dI5vmTCY+DLMyS51pP1P8U4NEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDI+y2d9RBjR0Z3y3STe0/JdoXvmiiG0ZSBUbbP+GwuOeRK6dz
+	oZ0eO9Yt37+TZUYVY/jkGtiVQiave6BeILeLClgCfLJQoI/lh/22gYPes0A0VB5aa3455a+1YD1
+	2DEmzdnqOUmkrqV5bIt9gqeLu5li8v/GsD5426sz6kKS9RFucnPd+aHNTH9yZDw3S45hbF4s=
+X-Gm-Gg: AfdE7clgLV1o+mImLI/9nvl8+CiS60f9eqzBwxgavoDbEitrLPTmf21XU6fGE6H9Iaf
+	G2VrOc/E0oOQfECfbbTzWLk75RZyFZu8feqmFIPu7Q4mRD4I4KrFGwVK80PDZaALY7uBCViGoyN
+	IuDAGr/RyXnnZy6uTPElkPO8Y5h5E54pEszSXwFoqRW1uDWHJKo6Zblgp38DStPUeMj6fVHaAyW
+	yykk71dG6TPSszyQHNdNjUhiTKSGDxB+RAukMuS3ZpXFSz2gt1V7bEFlOq6dn0LHj8VvVm5uZNC
+	aus9Vpvxv8ZYUvdDnlf/rgcXq8Q7R6VGiQ6BsIq3Y3FUEKukHbVB7g9H3OYy4m6DJU+3VKwChJN
+	vX8ylYdqX5s7Fh5UYzRxOvPNPhvMQmmWYQ3Q=
+X-Received: by 2002:a05:620a:19a9:b0:92a:d10e:bde3 with SMTP id af79cd13be357-92e782a7a3dmr728599585a.3.1783065200392;
+        Fri, 03 Jul 2026 00:53:20 -0700 (PDT)
+X-Received: by 2002:a05:620a:19a9:b0:92a:d10e:bde3 with SMTP id af79cd13be357-92e782a7a3dmr728596785a.3.1783065199915;
+        Fri, 03 Jul 2026 00:53:19 -0700 (PDT)
+Received: from [192.168.120.193] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c12b60575c4sm244853566b.9.2026.07.03.00.53.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2026 00:53:19 -0700 (PDT)
+Message-ID: <977711ef-c1fb-4735-b82a-4ca2f4797f51@oss.qualcomm.com>
+Date: Fri, 3 Jul 2026 09:53:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/10] dt-bindings: firmware: qcom: tmd: add TMD device
+ type constants
+To: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
+        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
+References: <20260703-qmi-tmd-v4-0-3882189c1f83@oss.qualcomm.com>
+ <20260703-qmi-tmd-v4-1-3882189c1f83@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 In-Reply-To: <20260703-qmi-tmd-v4-1-3882189c1f83@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAzMDA3NCBTYWx0ZWRfX68omPizj9kAx
+ prh62K/JVhI1XAI2soGvNnw6RoW3HbrcrMnI8OiD6EQvckHwCEewGFO/ricJ0l7jFLTo9GuRANz
+ zUSqXD5E6MvKX0VPCPjCiThK2fweiOI=
+X-Authority-Analysis: v=2.4 cv=FoI1OWrq c=1 sm=1 tr=0 ts=6a476a71 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
+ a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=7t_v5s2nVLkGmMFP55oA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAzMDA3NCBTYWx0ZWRfX2OOt0hLRE7fr
+ PTZpXtCZK44l060AxyRaayd4TjcU1uJ6ssptjHoybJTV9nvO4SV8o/Kuv1dbO8rwN8T9h2m/W4M
+ 42E8pHlmlZsGLC3xRdzQd26wVKsvjtzhv/1f95mNsXSNISszIkKaUu/nOCLyxuW1WN0wZh7roA4
+ JSUNF6e+6MIA0JXSmlfmReNHG8obfSGqS4Hur3al66AdI5HN8uH2g7dFWKLfzYt0P5tsZtNLVHA
+ uw4brw1vJpPqZUDjN7RQSr2Gv4q/Hy1c2lQVzmHII8+FqlLV0AVkHimcfwUJEqwbn+NLSBrjmet
+ fsspGCo7UaJ4UU2Jqm9j0Z48ranouNPl5EoKRyfCjaj2I6APrEzKJSKSNdrJVtZu10Vr3mpuj8A
+ /UZMCrK7YrlllffKqKFvs+Zf1ZCWIc9d3od/iwd8A3aQ2Pxky+7MP7Y8gaKv91zPuOEs9ehAyPT
+ mrd0HjQYPEsBJJD1bVg==
+X-Proofpoint-ORIG-GUID: q207vfMY0T9OsG0B324mp5o_FpY6l5nQ
+X-Proofpoint-GUID: q207vfMY0T9OsG0B324mp5o_FpY6l5nQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-07-03_02,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 clxscore=1015 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 spamscore=0 suspectscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607030074
 
-On Fri, Jul 03, 2026 at 10:33:04AM +0530, Gaurav Kohli wrote:
+On 7/3/26 7:03 AM, Gaurav Kohli wrote:
 > Add Device Tree binding constants for Qualcomm Thermal Mitigation
 > Device (TMD) types used by remoteproc-backed thermal cooling devices.
 > 
@@ -77,10 +167,47 @@ On Fri, Jul 03, 2026 at 10:33:04AM +0530, Gaurav Kohli wrote:
 > ---
 >  MAINTAINERS                                 |  1 +
 >  include/dt-bindings/firmware/qcom,qmi-tmd.h | 20 ++++++++++++++++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 57656ec0e9d5..ffd85fd1dd80 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3410,6 +3410,7 @@ F:	drivers/firmware/qcom/
+>  F:	drivers/soc/qcom/
+>  F:	drivers/watchdog/gunyah_wdt.c
+>  F:	include/dt-bindings/arm/qcom,ids.h
+> +F:	include/dt-bindings/firmware/qcom,qmi-tmd.h
+>  F:	include/dt-bindings/firmware/qcom,scm.h
+>  F:	include/dt-bindings/soc/qcom*
+>  F:	include/linux/firmware/qcom
+> diff --git a/include/dt-bindings/firmware/qcom,qmi-tmd.h b/include/dt-bindings/firmware/qcom,qmi-tmd.h
+> new file mode 100644
+> index 000000000000..73efecef0f3c
+> --- /dev/null
+> +++ b/include/dt-bindings/firmware/qcom,qmi-tmd.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> +/*
+> + * Qualcomm QMI TMD (Thermal Mitigation Device) cooling device indices
+> + *
+> + * These indices are used in device tree cooling-maps to reference
+> + * specific TMD devices provided by remote processors via QMI.
+> + *
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +#ifndef _DT_BINDINGS_FIRMWARE_QCOM_QMI_TMD_H
+> +#define _DT_BINDINGS_FIRMWARE_QCOM_QMI_TMD_H
+> +
+> +/* CDSP thermal mitigation device id */
+> +#define QCOM_CDSP_TMD_CDSP_SW	0
+> +
+> +/* Modem thermal mitigation device id */
+> +#define QCOM_MODEM_TMD_PA	0
+> +#define QCOM_MODEM_TMD_MODEM	1
 
-Why is it put into firmware? What part of firmware are you describing?
-To me it looks like thermal thing and even you wrote: Thermal Mitigation Device
+What about the dozens other ones that Dmitry's laptop reports?
 
-Best regards,
-Krzysztof
+https://lore.kernel.org/linux-arm-msm/4gs664zboaqgpok33x7bgorfmhh3f2fahjkt4jjl6fbzpwixnm@hxzz2xeogd4k/
 
+Konrad
