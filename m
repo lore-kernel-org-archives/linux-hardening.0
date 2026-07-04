@@ -1,116 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fgw23-4.mail.saunalahti.fi (fgw23-4.mail.saunalahti.fi [62.142.5.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65A3342538;
-	Sat,  4 Jul 2026 09:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C99347FC8
+	for <linux-hardening@vger.kernel.org>; Sat,  4 Jul 2026 10:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783156223; cv=none; b=s7RcxeuOv9+Gr7Tk+c/O+BYCqiK7AhiLgf+u5yic2N+kiR6BDpB13jFkt/TZMJFZ6IePRmiTGx+W6OwvkdDmTeKI9cENhtphOcN8hLe7ttdJVsLaqG+6yYN5kGVHaUhKKVNDE3m3C3pEi0Nz+NnJINiMfLeLErf9fy+hgC1pe+E=
+	t=1783162578; cv=none; b=hHYVAuHeLChCVN+cKSl8vGvRcVJ9BQ+jymUQzQ2aEFtkhYMhoaQe8AIbjDQaVNtZFXCrmyaPIQcNPc7QZOpMucRO0nk7CSjaIhEJrAkvSuYZP4EFhhY3Gzmv5ZNaYwANO8ujoWx4iS7b4AMSOW9l48nhWOYicjr4IlHp7YCjBEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783156223; c=relaxed/simple;
-	bh=WHQp6O5UqBznnh17N+e9Ls0ks6AdwQ8G63PjlS+dlOo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JWE21EKMPMiMApFLLEO1fUXE/xWijvgAlMnrWw9i4Cu4TygLJ/TtuFN9GaGSwU9Z4j6fQ177K1A8pHBxVOnZGhAq0OeZIr7QzW1oh7nBkgdJvoXGKkSIx2w4yrPPW+J6cTYObJPeFgqeK9mQx2srC6XUSkmxgy1sz6VtWnsZeJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpKZ4WvB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783162578; c=relaxed/simple;
+	bh=lj1D6n0ntrOE6DtRg8V0l8lmR0uUIhq5alUYbQxjFns=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=DXzJDkbvCz/rmBaMYI582gejHZes0P8m2i1c13iqWheJ15UnsIHJm1ZjwbPVPn5XUuH6Y37IhkEqwMPXHVKG7C4cLS6gTZrljBw0IXxfLUGGyEdXfJL8zW1pzxmrR0hs0UbdJ1OWDl4hteM/26ETQgJaXa3NJ1q9PW+kiL35wz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kolumbus.fi; spf=pass smtp.mailfrom=kolumbus.fi; dkim=pass (2048-bit key) header.d=kolumbus.fi header.i=@kolumbus.fi header.b=grArjoOX; arc=none smtp.client-ip=62.142.5.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kolumbus.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kolumbus.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpKZ4WvB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8563F1F000E9;
-	Sat,  4 Jul 2026 09:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783156222;
-	bh=53EQLw8XTEKafDGHQxdckYh+PN5Z8cHEu1Ax3kBjkYQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=mpKZ4WvB1LGdTw/vgASBVUBuaZlEfZeN8b1CQ7ChT63YY4UYXNWKcpSMS9vf/g560
-	 G1v3sXJYYcunL1fwyBgAKYbKwgnLjSgxwOUUbpklJR7dcnhkYjW8981fYk0HLz4gYC
-	 3jbApuPrxjc0EZRJt3+gfakE7mVV2KK13kI1IflqOwlz7WggXSDdQgwelGykLer7v0
-	 mvl7pn7UbBhOFT61LgMujJzotLp6bVAmJDNNTLSikTXunU8Z3EHu7nFtlJ4yBuoOgu
-	 CrMbCze98EfT0Yujmu4S+XRb42FQkUOxT3Ror6libgvFbNa/bJTJ5x+i7kZcBWRdpA
-	 YZH09UM8bRpkg==
-Message-ID: <dbd95f4c-cef3-4f7f-8619-375fe37c8852@kernel.org>
-Date: Sat, 4 Jul 2026 11:10:18 +0200
+	dkim=pass (2048-bit key) header.d=kolumbus.fi header.i=@kolumbus.fi header.b="grArjoOX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=kolumbus.fi; s=elisa1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:feedback-id:from:to:cc:reply-to:subject:date:
+	 in-reply-to:references:list-archive:list-subscribe:list-unsubscribe:
+	 content-type:content-transfer-encoding:message-id;
+	bh=lj1D6n0ntrOE6DtRg8V0l8lmR0uUIhq5alUYbQxjFns=;
+	b=grArjoOXgyTcxVKM6ghIrm79456jRCtDUUpaJCBa5gbjF8bShCvUT7LVNLGM/jPPIlnUId3dIRRFT
+	 hmIsAvVVHi2S4+Lgi/fpo7ARrLQCFff69/PeNDKmI1d81rYQwOMC+NOFyAIkXMXonjRwK6CFd/YEUp
+	 l8Mu/SIxqMtz/i88oVbX0d6Ty08lI9jiTNRyY56X0OS/OF3rgJ1PA940T60exUlQp1bHXiotpC2G/N
+	 nWXYQO8DeZzv4Qndgn6xvXHof+8G+1CoUg2qJ0CwucPYKdlY+FNQts+ZH1hX2U9vlrneGsHiT7eIN4
+	 wEuW1pf7MhtKYA73dczUZIaFTDNBB1w==
+Feedback-ID: 5c3835a5:3ccff4:smtpa:elisa
+Received: from smtpclient.apple (91-158-174-119.elisa-laajakaista.fi [91.158.174.119])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTPSA
+	id d0c312a2-7796-11f1-952d-005056bd6ce9;
+	Sat, 04 Jul 2026 13:55:06 +0300 (EEST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] drivers/bus/fsl-mc: Use strscpy() to copy strings
- into arrays
-To: david.laight.linux@gmail.com, Kees Cook <kees@kernel.org>,
- Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20260608095500.2567-1-david.laight.linux@gmail.com>
-Content-Language: fr-FR
-From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-In-Reply-To: <20260608095500.2567-1-david.laight.linux@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
+Subject: Re: [PATCHv2] scsi: st: use kzalloc_array()
+From: =?utf-8?B?IkthaSBNw6RraXNhcmEgKEtvbHVtYnVzKSI=?= <kai.makisara@kolumbus.fi>
+In-Reply-To: <20260703215345.253901-1-rosenp@gmail.com>
+Date: Sat, 4 Jul 2026 13:54:55 +0300
+Cc: linux-hardening@vger.kernel.org,
+ linux-scsi@vger.kernel.org,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:KERNEL HARDENING (not covered by other
+ areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org (ope>)
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <129AD05F-52C8-4A24-9813-51A7BA4E7043@kolumbus.fi>
+References: <20260703215345.253901-1-rosenp@gmail.com>
+To: Rosen Penev <rosenp@gmail.com>
+X-Mailer: Apple Mail (2.3864.600.51.1.1)
 
-
-
-Le 08/06/2026 à 11:54, david.laight.linux@gmail.com a écrit :
-> From: David Laight <david.laight.linux@gmail.com>
-> 
-> Replacing strcpy() with strscpy() ensures than overflow of the target
-> buffer cannot happen.
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> ---
-> This is one of a group of patches that remove potentially unbounded
-> strcpy() calls.
-> 
-> They are mostly replaced by strscpy() or, when strlen() has just been
-> called, with memcpy() (usually including the '\0').
-> 
-> Calls with copy string literals into arrays are left unchanged.
-> They are safe and easily detected as such.
-> 
-> The changes were made by getting the compiler to detect the calls and
-> then fixing the code by hand.
-> 
-> Note that all the changes are only compile tested.
-> 
-> Some Makefiles were changed to allow files to contain strcpy().
-> As well as 'difficult to fix' files, this included 'show' functions
-> as they really need to use sysfs_emit() or seq_printf().
-> 
-> All the patches are being sent individually to avoid very long cc lists.
-> Apologies for the terse commit messages and likely unexpected tags.
-> (There are about 100 patches in total.)
-> 
->   drivers/bus/fsl-mc/fsl-mc-bus.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-
-Do you expect this patch to go via individual trees or will you apply 
-them all together in a given tree ?
-
-Ioana, as usual I can take it via soc/fsl/ with your Ack.
-
-Christophe
-
-> 
-> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> index 221146e4860b..372175fe169c 100644
-> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> @@ -903,7 +903,7 @@ struct fsl_mc_device *fsl_mc_get_endpoint(struct fsl_mc_device *mc_dev,
->   	int state, err;
->   
->   	mc_bus_dev = to_fsl_mc_device(mc_dev->dev.parent);
-> -	strcpy(endpoint1.type, mc_dev->obj_desc.type);
-> +	strscpy(endpoint1.type, mc_dev->obj_desc.type);
->   	endpoint1.id = mc_dev->obj_desc.id;
->   	endpoint1.if_id = if_id;
->   
-> @@ -920,7 +920,7 @@ struct fsl_mc_device *fsl_mc_get_endpoint(struct fsl_mc_device *mc_dev,
->   		return ERR_PTR(err);
->   	}
->   
-> -	strcpy(endpoint_desc.type, endpoint2.type);
-> +	strscpy(endpoint_desc.type, endpoint2.type);
->   	endpoint_desc.id = endpoint2.id;
->   	endpoint = fsl_mc_device_lookup(&endpoint_desc, mc_bus_dev);
->   	if (endpoint)
+On 4. Jul 2026, at 0.53, Rosen Penev <rosenp@gmail.com> wrote:
+>=20
+> Merge allocations to simpily memory management with kzalloc_array(). =
+No
+> need to kfree separately.
+>=20
+I fail to see what is the real problem this patch fixes? I am not in =
+favor of rewiritng working code
+just because it can be done.
 
