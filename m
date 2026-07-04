@@ -1,158 +1,159 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B5F341AD6
-	for <linux-hardening@vger.kernel.org>; Fri,  3 Jul 2026 22:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42E3372B27;
+	Sat,  4 Jul 2026 03:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783116194; cv=none; b=u1MX0GvrQoltRCBkKlbYa4sQ/RS7+X6nN15mWnjqbNo+S3bnHRYooDaFO9keUvQCS8zLeN7qGAFlWA/0uWF+lDHc9VMicgRojeKVwXAgjkHbG20razFoBakQhSzAObgMvhjn2eN/i6v0peVEapILQu94b569BzgVPX6sNLs2TC8=
+	t=1783136955; cv=none; b=o2XhQQ6zQgVj5JdviMjacw6SFXdblMGh1uNERpjgAwWZzQ/87TPnaGok04PT+VoM3ulpU8vLMYp1GGg66dsEHZaXCJmVPYRvvDRgIHnsfatCOUa4dC3yqAD2AJZaEqMrCBKtuiSpb+JfIH2G2pYpz2W91uPexUFVpheBm+Zm7YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783116194; c=relaxed/simple;
-	bh=5VkVa/bfQQlD4FNDyJGe3VFIzh2ZdEhPVb+nD/ImeDs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iaKZMdUbmlcW150DUC+beZJgAoI7SkQNtHJMmdzsdw0n9Cc0Rh2dN7KWOhbbXLM+dN6sdK9hFIlfzgXs5Hwigx3deFiKw3tNzS1IKCAvLBJut4pSrvXjtEcIPIQTI8bJ8sSlz4U5QlSTYyciKWHJHn4oJlBPGugAFRxakJNJCRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RmTVknSK; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783136955; c=relaxed/simple;
+	bh=TFjQbWyzAMxvKwNbnP4LPBome1ljwijs1AcHQbPY+JY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=uWu5WrH/IV14RYicx/1/3paQF4uQUEKIAaK/Fzaby1AQOKZiHv4oombYnjlgn66G8rEp/ZXDDPNEQKofSoLh93Jo9RJg12+va70wjRmegRtLJ5TxorjSY1xpDbMAYNVSwhkwb51V1tVE7D/IVHSVpuh82LKJyyjnTOEWzyfl3zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=cFYJ/gs0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NFguQlYX; arc=none smtp.client-ip=202.12.124.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RmTVknSK"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2c82538b6b0so7308555ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Jul 2026 15:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783116191; x=1783720991; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7TiflaSmlDHD5QUweyOWTNN1cwlytjiZ+cyZbaPXtE4=;
-        b=RmTVknSKKitbY5ap6hXuc3iM81A1D/wuqulP6whzjopM5dArDZxo1NGH+m7JJaXo0u
-         z73Dv8OXTZaOwGAR/l3UPH7BBFBqJU0amQYUdF4QyzGwSXgDFmuJkjgbRV4wRhNrRVR/
-         M660Ni3Ur4S3YXXk7DXerp212jz6HNl8p5WiAsGun6KQOQwYj824GovLrpzx5dYl5A2z
-         byNbh8PHk6k7KaOHMcwItnXAG8LvML+UGr45TQPMnjwXEgqstXVKL5v8BXsgB/cl3q7n
-         tZSMBgSkjUtTL3qhksio7c2MtrcyhQDMGvSUoiN4E5BZH2fuCs20TDZQFsllixjfTj7P
-         CJwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783116191; x=1783720991;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7TiflaSmlDHD5QUweyOWTNN1cwlytjiZ+cyZbaPXtE4=;
-        b=eGICW8uqn/S/9v9eygWvl3Srzohw4kR8Fj7+oTPF1nmf6LVxzwYpyNWJaSaXp6QnJA
-         /5+pYP5sCLoDgMJ20O/JkOVnYb6ESpYD7F8n6BgTB6nhGwk/O1K3lF35ER7vM/b01118
-         ozpyjSDCMrsWyxRLCZ4bcY/4SBJrSs+NgzXS3OWhrW7fclvl6LTdmHfqaDjcm/buPEyk
-         D/0UUme1y3KXugoDaqpDGAE9bctD9P9ghHttgLyUxTY9N0qfJPqnSJF37uJjc1tFIkk9
-         IT6iEKheA0lAANSszfOS3+kMlw8QO6B5H7+pGsun0tcckbpu4ceXvPBSnM8Jt92Kecax
-         a5PA==
-X-Forwarded-Encrypted: i=1; AHgh+RrO+hxEzYZ4amGbltz39Cd6+hV3+fHkyWA6/6iSa8druPLG1DkKYdPG2kW1fOnfi9l7c1D8poHSuOEDkCA8gOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCZrh+c+x1+/G+HkuZAVLRKOpLn2G7jS0E4WT7PwRSUb0eNNGv
-	ufQqxyNhWd7KMsYF9xsvMkptq6xIBA6BUmrQzgevLHAx7OscnznRxGRLxMgr3w==
-X-Gm-Gg: AfdE7cngOyasceartMBaHxiS3kDbN+CPCDakjzGG0ztjHVrGAAQHcRcNbLNsR8ApFae
-	1isfQBKas5tNhb45DBp8vmoa1trpT9fuQVXdDf7HoOxyEy5in5xzbD7U25/K/Z9DoIdb8/HFNDH
-	jM2i4LP+Oy7iCL+YEzYPKgUQaSJSByBLh0ilWNLnfoAj/hcQPtAjQZVp55UwH4oo1BfwDRL/HsK
-	qQcsrEtayWsekjZCNHizmiu34fyRj9c14siYfRYNw84OGNrPtkAgamlrXzUNreHIigncVguaT+8
-	Cr0m8s7mugSQ3oK+XlN63+KRfudJJD2TvoTFdiPeHL8vsiPyvTjlTZHUhudN3m+aR2b5N2008RQ
-	xA8XoPJXhgXMBUgoRMWKv/KRQ4ESAlFTU0AOniN6Xyo4MQPgfIFXFOjWQJXdcrg3rlY68Xhljo0
-	v2YOJ1m6ugaTtba1+brxcJm4E/0yUdcP2Zcu6/Kq+VjVY2GBZYi/kqpW84R5qDyzKyqsfOD8OCz
-	RLF4oA+BA==
-X-Received: by 2002:a17:903:3bcb:b0:2c8:1f56:9fc5 with SMTP id d9443c01a7336-2cbb9ec70a6mr8823645ad.35.1783116190489;
-        Fri, 03 Jul 2026 15:03:10 -0700 (PDT)
-Received: from ryzen.lan ([2601:644:8000:7a86::e34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad77657cbsm14598455ad.47.2026.07.03.15.03.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2026 15:03:09 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-usb@vger.kernel.org
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:MEDIATEK USB3 DRD IP DRIVER),
-	linux-mediatek@lists.infradead.org (moderated list:MEDIATEK USB3 DRD IP DRIVER),
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCHv2] usb: mtu3: allocate phys with ssusb
-Date: Fri,  3 Jul 2026 15:03:08 -0700
-Message-ID: <20260703220308.294247-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="cFYJ/gs0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NFguQlYX"
+Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
+	by mailflow.stl.internal (Postfix) with ESMTP id B7CD31300346;
+	Fri,  3 Jul 2026 23:49:11 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-10.internal (MEProxy); Fri, 03 Jul 2026 23:49:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
+	 t=1783136951; x=1783140551; bh=jnB0rrYn5mUvHmZaVe+grQm+cXzwfP+A
+	6jxeO42NYT4=; b=cFYJ/gs08qFzAnN03zhzf8lHC9u6XVaD7hOGSEhoWn4SyZRf
+	yImUouOYPWtTpKfUiZ0vzFYSzvt2NW6+3hC162pdAydia/R8JZfGe01AsAYU2nd5
+	qAAfPRBWak8FbRniTTTXTX3N+nsWCWsoOqLg8ywyaOCRkggaEJxnkzlPBd381sTb
+	ibauz/UFD4VFBVHwklSEKXOMg0FJ9BjtAU4EGtxUa+UuOMYdbrzmrM8EvhJJLe7X
+	zt3mPs/8Oscz/0GWvJ+zLU3OQUwxylxDiGhLWjYy56M0KbqsqIy/xu/TfjeMO80x
+	wvK1sxKyVo7WujuAdzWKsb6oURoL10LYPfmuYA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1783136951; x=
+	1783140551; bh=jnB0rrYn5mUvHmZaVe+grQm+cXzwfP+A6jxeO42NYT4=; b=N
+	FguQlYXZcwJalNytBcM/7oKA554ATa9pJNRu+VloSFtW9rf3ZmNmHXULrDh575wG
+	nZ2NtiTxMWlEh5uJUL2SKpIn6MEwI4iX7OFrzM4ETZpfBk5SFq/Vk4ujrqlGY3Py
+	4hKKdvIEDJVtEqVEikwij2VoSEErs+K8+mHsWkWtUcaAdfuDtRp9Nl59za0AtQ7Q
+	76Xi4yNf9kzw8cUoQgk6L8zh9zinPfljAWL/jtouczL+iy50yPA8ol7UH6CnVu8m
+	Gg2uqPOmoq2+9Hep7kWJRIt4e73Q+6qvzT7++p4WvMdk2A1BwTU5hpPEpIxGLB3u
+	l+yeBPPY9v0eavk1owIIQ==
+X-ME-Sender: <xms:toJIalMSfUibPoJzysy-7_w3tkaGwKgYvicchOotFFiE8aVS2EVerg>
+    <xme:toJIaoYV3St34wcBatPVZm2m-ZeI4Dk8mvkGlHCZPEqqB97oa_lEU_4duEse2oT7v
+    CZ-H3wvKUY-NA3Ogh1p1NKKYA9Y3U3rkQZRks7RMRy36fC614HhliQ>
+X-ME-Received: <xmr:toJIak-KByOFbIzU5qgJJ8ryymovCjErn3DJa73rwKHpyGx_OyW4N76lErg>
+X-ME-Proxy-Cause: dmFkZTE1RLNBESqud5IguXj7/320U/Hq5bUFrR0Cl8gmtcPFAstBi1qVUiCwERepb4Y5H/
+    +AueLB/rBNEbeIXMrek2vZdfXG13T2L9ww075AZAxwR248H/VVyySljgycYsKcxCq5gobT
+    HYZhFQta2WT9ZHmGMb90K8gV2hwvSp5yTQfA3bxaJE3arrYvxz0yacC/q9bmt9t3ge47aQ
+    WJco6X38hD5UgAdeGOKvHclcHvC1+r3sX1nileT9M8gIy1q7lCw6z1zVDWf6DlDyy21KKU
+    lXHTWmXrecqFDhiKREu5ptUV3OBPs0oCd4e6thX/W/mRKfl/QiOuI8JsMAde7dHDTrcytG
+    tRqJ/WTutim5EaJr+sWtoix6Zj5/Qd2buJ66+X+8teMwBUMDVdJSw3WAZoLi1X8TWQ8zU9
+    aEByZmsurYV/8hPOK6mKZmwBIpb6ysgosE0nN0WNb/dgUL03rwsifAue/wdudQdTBKcIY/
+    iPeImB6wJ7tgF7Sb7nKiRzIbL/KG4J22MH6aoS9MLGV9id7I/Cn6pQ5i5D+Wt5NMzQEcAD
+    1HxN/5EIHBS7/7Nnt1i+Fc+rMFbiRRpE92dvFom5A6O/SKSzTdz3IXlG+ziM/3JsMp9Iy4
+    l4anNeonj9M3Cm7erGpUY6914Wy3ssmHI46oWJMNw1kWRgZ5n2K5T/Pv5xPw
+X-ME-Proxy: <xmx:toJIapTEGCtHPmA18Syzsqw39iK2P-JAxEkfb5YLST-a1KicaPUQUQ>
+    <xmx:toJIaufjPp7jDOT0cnfSrUBSGhDJOXhYxA-Z_y_Bd4kYTNspQtH4xg>
+    <xmx:toJIarSU8XzUCaeTxCH1xYaStWWwKKX5YGerTxkywgG8IpyQzqvieA>
+    <xmx:toJIaqLgg8hawmezWth0uZDdCtcnRiHNJwU14ZeZzib_DQLV4t9gqw>
+    <xmx:t4JIajmkERby9x6hzupmMKWURlRgQIrdXH3CMnTidKGZa9Kgfr89-Apv>
+Feedback-ID: ib53e4b78:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 3 Jul 2026 23:49:10 -0400 (EDT)
+Date: Fri, 3 Jul 2026 22:49:08 -0500
+From: Ian Bridges <icb@fastmail.org>
+To: Jiri Pirko <jiri@resnulli.us>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next] devlink: Replace strlcat() with seq_buf
+Message-ID: <akiCtALVjd9TF8Xl@dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Use a flexible array member to combine allocations. Slightly more
-efficient to have a single allocation like this.
+In preparation for removing the strlcat() API[1], replace its uses in
+__devlink_compat_running_version().
 
-Add __counted_by for extra runtime analysis.
+The function accumulates a variable number of version strings into a
+fixed buffer, which is what seq_buf is for. The seq_buf is anchored at
+the end of any existing string in the buffer and each version string
+is appended with a single seq_buf_printf(). The output is unchanged,
+including under truncation.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Signed-off-by: Ian Bridges <icb@fastmail.org>
 ---
- v2: add max() call to prevent negative values.
- drivers/usb/mtu3/mtu3.h      |  2 +-
- drivers/usb/mtu3/mtu3_plat.c | 19 +++++++------------
- 2 files changed, 8 insertions(+), 13 deletions(-)
+The patch was tested as follows, on top of net-next:
+ - x86_64 allmodconfig and allyesconfig builds of net/devlink/dev.o at
+   W=1 produce no warnings.
+ - A userspace comparison of the old and new construction ran with
+   randomized version lists and buffer contents across all buffer
+   fill levels. The outputs are byte-identical in every case,
+   including on overflow.
+ - The changed path was exercised in a QEMU guest through the ethtool
+   GDRVINFO ioctl against a netdevsim device, before and after the
+   change, with identical fw_version output.
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index ba5a63669e5f..d71849388602 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -252,7 +252,6 @@ struct ssusb_mtk {
- 	struct mtu3 *u3d;
- 	void __iomem *mac_base;
- 	void __iomem *ippc_base;
--	struct phy **phys;
- 	int num_phys;
- 	int wakeup_irq;
- 	/* common power & clock */
-@@ -272,6 +271,7 @@ struct ssusb_mtk {
- 	struct regmap *uwk;
- 	u32 uwk_reg_base;
- 	u32 uwk_vers;
-+	struct phy *phys[] __counted_by(num_phys);
- };
+ net/devlink/dev.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/net/devlink/dev.c b/net/devlink/dev.c
+index 57b2b8f03543..0d4301267171 100644
+--- a/net/devlink/dev.c
++++ b/net/devlink/dev.c
+@@ -5,6 +5,7 @@
+  */
  
- /**
-diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index cc8a864dbd63..afb01b76e1d7 100644
---- a/drivers/usb/mtu3/mtu3_plat.c
-+++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -240,17 +240,6 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- 	if (ret)
- 		return ret;
+ #include <linux/device.h>
++#include <linux/seq_buf.h>
+ #include <net/genetlink.h>
+ #include <net/sock.h>
+ #include "devl_internal.h"
+@@ -1188,8 +1189,10 @@ static void __devlink_compat_running_version(struct devlink *devlink,
+ 					     char *buf, size_t len)
+ {
+ 	struct devlink_info_req req = {};
++	size_t used = strnlen(buf, len);
+ 	const struct nlattr *nlattr;
+ 	struct sk_buff *msg;
++	struct seq_buf sb;
+ 	int rem, err;
  
--	ssusb->num_phys = of_count_phandle_with_args(node,
--			"phys", "#phy-cells");
--	if (ssusb->num_phys > 0) {
--		ssusb->phys = devm_kcalloc(dev, ssusb->num_phys,
--					sizeof(*ssusb->phys), GFP_KERNEL);
--		if (!ssusb->phys)
--			return -ENOMEM;
--	} else {
--		ssusb->num_phys = 0;
--	}
--
- 	for (i = 0; i < ssusb->num_phys; i++) {
- 		ssusb->phys[i] = devm_of_phy_get_by_index(dev, node, i);
- 		if (IS_ERR(ssusb->phys[i])) {
-@@ -330,12 +319,18 @@ static int mtu3_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct ssusb_mtk *ssusb;
- 	int ret = -ENOMEM;
-+	int num_phys;
+ 	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
+@@ -1201,6 +1204,8 @@ static void __devlink_compat_running_version(struct devlink *devlink,
+ 	if (err)
+ 		goto free_msg;
  
-+	num_phys = of_count_phandle_with_args(dev->of_node,
-+			"phys", "#phy-cells");
-+	num_phys = max(0, num_phys);
- 	/* all elements are set to ZERO as default value */
--	ssusb = devm_kzalloc(dev, sizeof(*ssusb), GFP_KERNEL);
-+	ssusb = devm_kzalloc(dev, struct_size(ssusb, phys, num_phys), GFP_KERNEL);
- 	if (!ssusb)
- 		return -ENOMEM;
- 
-+	ssusb->num_phys = num_phys;
++	seq_buf_init(&sb, buf + used, len - used);
 +
- 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
- 	if (ret) {
- 		dev_err(dev, "No suitable DMA config available\n");
+ 	nla_for_each_attr_type(nlattr, DEVLINK_ATTR_INFO_VERSION_RUNNING,
+ 			       (void *)msg->data, msg->len, rem) {
+ 		const struct nlattr *kv;
+@@ -1208,8 +1213,8 @@ static void __devlink_compat_running_version(struct devlink *devlink,
+ 
+ 		nla_for_each_nested_type(kv, DEVLINK_ATTR_INFO_VERSION_VALUE,
+ 					 nlattr, rem_kv) {
+-			strlcat(buf, nla_data(kv), len);
+-			strlcat(buf, " ", len);
++			seq_buf_printf(&sb, "%s ",
++				       (const char *)nla_data(kv));
+ 		}
+ 	}
+ free_msg:
 -- 
-2.55.0
+2.47.3
 
