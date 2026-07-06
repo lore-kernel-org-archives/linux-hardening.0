@@ -1,112 +1,51 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916E72ECE93
-	for <linux-hardening@vger.kernel.org>; Mon,  6 Jul 2026 17:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1989727A107;
+	Mon,  6 Jul 2026 17:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783360038; cv=none; b=l9JDjCOT0vB8sXwtxIQAiK/ip4VnpP5tcsvdJjuu0+clrUDR4wJ0VDppc4qtnvLHJOsghcB7lHYp9lj/37IDgDEKHqkAWcJv1W3Biemm7GwCw+cvdo3HY/wVJfh1sUGxHk1PRQ3ur3caGLyNmGiK3HC2idG0+c9A+heYtFhWrhM=
+	t=1783360699; cv=none; b=krS2M0SGlNUmhImO+LLd2BnA2VmgxRLV+a2vPf7jTkk7pCCyXoChh+62t5j4HbV7HHKfAnbmoRLGPlLJJvqtWNggzdZHTHnNJk5j4JFgBSdTEUSA59Z9CBeEsXbAS5aqQ4c08oK8k9wu8KS2GoAlIbfAk3JnIkVGFssBNABfLKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783360038; c=relaxed/simple;
-	bh=5bOmYD47KumyTOb+Y1qYhZXDQ6MEozeWdEp60mgsnpE=;
+	s=arc-20240116; t=1783360699; c=relaxed/simple;
+	bh=h980sEF6MU4UaII9Q4INlvAIxaxOl7RRKHFGjT/8d/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hUmJlDzKx73ZGvtZs9rMpZqUWXfPpSIwcKb5GF78S5A9Nuc+976+OzZd9Hg7mhIf9P+wLuRAxqvmrAaxpGanHabq1ggeGB08aiN/TaZk2+hA3ZT76f+InlmvZ9FecL5Vp6dTg1ETsv9rfc3X/z1CfHdKnUR97rbRMLQrXWn+vLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PhfPQC3/; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=NyMjbkY0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=W22BNX206mRsgB0w0rJOVe8211Z2Ta8KRtUCoIK2iZMlTXZD0MYu49HykUQqBVkikS7aHZv+QZ1Q/sVxK+KI+2bXf7ow6JKYiulgvqCJwfPoGFbZTdlu4SM/9UWglQvLcsCOb2yLT0VDUkVBx40lpLE4utKd+yH7X2/XwS9Oqt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/EoXkqE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PhfPQC3/";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="NyMjbkY0"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666FF5NE981539
-	for <linux-hardening@vger.kernel.org>; Mon, 6 Jul 2026 17:47:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=apmFEM59O0B61gJ5WxH6Ae7z
-	ChxrAAcQn15+cvRZUhw=; b=PhfPQC3/q9NiNTgCQvS1BiHAdQ8HBNaOXp5VPl1Z
-	J82gW6T2BnNDO2cMfYvSJci955vGMEiY4Tt3NbL4hgjlIc5kPcQioYOl/tz0Hsh+
-	pvqvsxTv0pOCaEDc+vwhEGcHvt0U8lJ1LG7dMM0V2PvUy8woIG+EpNrMDCZZydcd
-	WuuHNvvUNI1KvaWm7zQj6ztz2DIbXPjaF1PZHMOa3dintSRMwMoUJFJHUEsrFNJx
-	y3ARG47UrJ2rghFb+DOydUsWspQzZlwSbfFnhx34+qIY0deFjjiE6Wu9bx7i0lqM
-	jCz17NaUvpezMIKQA20EoHD0cweURIhUDNoyXqgmReBvGA==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f89kgtb5a-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 06 Jul 2026 17:47:16 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-92aea0d801dso319862685a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Jul 2026 10:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783360036; x=1783964836; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=apmFEM59O0B61gJ5WxH6Ae7zChxrAAcQn15+cvRZUhw=;
-        b=NyMjbkY0FapE+sQkOAkx6As1D7z4KerhqY7GM9Qy63Ytpoip9EIKz9yF+rHCPIeP9T
-         HUCXqw21tf7qmz5okYfV+11z69umw70WAXDpBTR7/j9QV8OBW6WPfAhWLxNpmoQcIHu6
-         pnrhHgg+l4SSt3AhaXchuJGVC4zh6EUBBNB+mlGsc+TeWFzfl6IN7MNcuZ2IRoP8jwAZ
-         oy6ujKJxLl2XnV2ZkGMDy4jsYkZLSuLEc+CjSBaTek1RHrfa2hqrzYuBcSq4qz66asre
-         C5AsBCPmuU6T4sCUmlppq3ErFxbNhkMm0r8XGyoC2t7E6baMzYk5qSzrQTW8AdIf2AFw
-         9Few==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783360036; x=1783964836;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=apmFEM59O0B61gJ5WxH6Ae7zChxrAAcQn15+cvRZUhw=;
-        b=gTNruKpfj3kcpR1xYaCXy5W6QHuocCRhysbytUgZyDqxcpXlVLfvXH1aNlw3o21rkN
-         kxpWAsO4GXsW/dn4fO/tEISq4OiyfX3Lhz386GQ/aT56+QCAf1eM9CFpMTNlinocGDBv
-         u6tD3ca1Y5rdyS8VdA/B7BWEcv677md2Zm/S1bRZJ4xIOaZsKf2bOYUO+VfJ7lzwqK+3
-         E3h9YRukEiVoOPIBTiIt/1s7uYJ5FAO4i1aV+wlXLEd4BpXo8M6myZcdYtZq37iGgPPK
-         Lcp7yNn94ELXUz2GZh5E9E8gmLRvY+UnpGUwC+/1mIHi5u/MYROyA6J+vumncsO8espU
-         K8uw==
-X-Forwarded-Encrypted: i=1; AHgh+RocIChyNKilPqZvm1yaCx/nU4ZS7CHaxCwBY9RYy3aSlYuzzXp4emvEwprI/TSmCuocRZB8QrRSBOcT1Ijpcg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5EgAezyeX1b5B4znSaROCw3l+pdAoNDrpoOeSKBQNVgTxRGyO
-	N8StwWvXlHKTlsQ3nO4tbGSG2tsiCuOsTQ2T+ZvfBX1Twih1HQCkJ2JAXitWCFSMFhI3n14w1jD
-	qgH/y+IFKiTUbqCLOl3REzRCa1+L0ocPqnbrdH3V4qlCXS9ZMZxobzvwlM618qzOboEJcCBE=
-X-Gm-Gg: AfdE7cmi1QEIrr+eCCNCUIQkmShwYJgHZrdvII56uRKbISnRrDP7gGkU8Q0EcO/HZNu
-	LVLTYOj9WjmYPQaXfws743v1bc37lagjT9ztFfH2ox0RsRTUT530I6Yp3PuI0Smihg1oXDtNT/V
-	wEts/kLR0E6oZ24gNSman+rvmjS7z2BJCsP/J5qakxbvy7fOlpPQ6Gwl17XF9eWKhJAHENqzit9
-	86ZgaXKAw7bxcv4lBTUuvCXJ4zktRJuMc8yBUXjZPe+FXdD1w1gHQNtMduJOIo2Rp5ftMEAClQ5
-	JMzuOmOjo7ceJxYf8h41D/woQTUxIqDRZO38F2gCulMqkoO8Lz6qigYPUA3HGEoM+7tVfExRaJM
-	BF0XSPDcgI5NWii8577ayo1xQRcyd7EphYhScCK4e2+w2dmzwi8MNNNs3xApvDwp9/cvYn9lC2o
-	3F8/fm0NkVgjhgs/MpoaO+Zbpx
-X-Received: by 2002:a05:620a:4412:b0:915:b852:4361 with SMTP id af79cd13be357-92ebb4d57d6mr203281785a.20.1783360035714;
-        Mon, 06 Jul 2026 10:47:15 -0700 (PDT)
-X-Received: by 2002:a05:620a:4412:b0:915:b852:4361 with SMTP id af79cd13be357-92ebb4d57d6mr203274985a.20.1783360035123;
-        Mon, 06 Jul 2026 10:47:15 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-39b4ae5c8ecsm19731901fa.35.2026.07.06.10.47.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 10:47:13 -0700 (PDT)
-Date: Mon, 6 Jul 2026 20:47:10 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-Cc: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
-Subject: Re: [PATCH v4 01/10] dt-bindings: firmware: qcom: tmd: add TMD
- device type constants
-Message-ID: <dv4n4ntnfvhouv23asgshgs7wcolkmqs7lbuni52maexo4s44x@4bqhf33x4fr6>
-References: <20260703-qmi-tmd-v4-0-3882189c1f83@oss.qualcomm.com>
- <20260703-qmi-tmd-v4-1-3882189c1f83@oss.qualcomm.com>
- <977711ef-c1fb-4735-b82a-4ca2f4797f51@oss.qualcomm.com>
- <8ad14017-bce7-485e-9677-9cbf8ecb2742@oss.qualcomm.com>
- <yvggh2zs6qkuyuzvwydkecswnjoyba2d7t27br6xpk6d2csp53@i25g6okdktz5>
- <10a346d8-fbb1-4142-a650-507c3917b8f6@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/EoXkqE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83771F000E9;
+	Mon,  6 Jul 2026 17:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783360697;
+	bh=Xfa02w+2R7v85UsHbfc8c8fBDDDTcGtnNT9og3+/x+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=l/EoXkqEqLzf/RmDFKoleUlyWGN8jKQKxq88TU+k7AINCMlouqbeFvDNtMG1ujBD0
+	 daO+DPr9pYbKdvKxoQu38X0ZYp1smDFej9Nm24s6FwslOX+7mIbZnPFTFajOX3N+Lx
+	 uHvR+9g0G8rKkVBPNnzYKihpTCv8aP4sg0oR4ct0Xw7Oy7bpgmGTdHo24nyLjp+uTQ
+	 SxzKfmEUvtM8MGXPQbAL4s27RmkpJ9I3v9p3/nrB1Ubo+h+TUiFVG27qZJcqGAvCI1
+	 aKXOvLUS0HrAjs7XNVArgFq+aXnLaJEkr0mQZzY11Yfvlti/0vf1GKWx7Rh2OgdSmU
+	 ui4UATs+PWTKA==
+Date: Mon, 6 Jul 2026 10:58:16 -0700
+From: Oliver Upton <oupton@kernel.org>
+To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v8 6/7] KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
+Message-ID: <akvsuBcqCCzlrBLk@kernel.org>
+References: <20260706-hybrid-v8-0-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
+ <20260706-hybrid-v8-6-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -115,128 +54,117 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <10a346d8-fbb1-4142-a650-507c3917b8f6@oss.qualcomm.com>
-X-Proofpoint-GUID: lBV_u7A2X7ThijdzOejinTMjnUAVK3MK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDE3OSBTYWx0ZWRfX618VUbj0KrLJ
- fsg6xAm9rFG307KmAndJqrVAK432B5fL6ddu+1QhFC8RRJnLuNQZlaEhvhW81dvE2lqmCmQG9fM
- v98yvvxdkWHnQh4Dd/LGg43RYJMoyaqP6fAUrOb7kBT70VGAdTsBS+hhQqp81/BLgaDqlqbXpQK
- pZwkmaDtDCfPhQWVLaRdLR6wUgGEPDPsgMd9SWk4Gz7qAzQzBs+mZNY0aQA/NC5SLrwtpwYkPe9
- JEFNdnLrciB9qf+Z1lmdV1C1B2Ulg2PgaESgZuOnuPGkj2QbS5/9tpAL72ciDngRV613HZJxeAW
- 12vguOGX7i18gfBZ7LokCFAlYLkosgN/aHFyKMzxtjd1Vuv1vahsL6O5Lrxi6xd9NOpQ3xHvV/Z
- CBIH2yKqDssOsrE50DNgcTCVkuI4M3IPUkCq6Ow+Vrg/4dKIVHNY9xikgjxSYBbEQPwlUHOidZm
- 1zg4oIYHJ1CQPfl0mhA==
-X-Proofpoint-ORIG-GUID: lBV_u7A2X7ThijdzOejinTMjnUAVK3MK
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDE3OSBTYWx0ZWRfX8wjIVT7FYCkx
- gA00xdNng7eikDI8mCkNnN9M5QBJoUnSHe79K+pSCQB35/53wVo81nBCCWYHhsupMmgZ8ivnilY
- U9Hu+Yt/Ozzgc2VxCnNEMmDE3HL0OS8=
-X-Authority-Analysis: v=2.4 cv=c6Sbhx9l c=1 sm=1 tr=0 ts=6a4bea24 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22 a=EUspDBNiAAAA:8
- a=2pRoOLr91VfmbNnP4VsA:9 a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-06_02,2026-07-06_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 clxscore=1015
- adultscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607060179
+In-Reply-To: <20260706-hybrid-v8-6-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
 
-On Mon, Jul 06, 2026 at 07:03:18PM +0200, Daniel Lezcano wrote:
-> On 7/3/26 17:42, Dmitry Baryshkov wrote:
-> > On Fri, Jul 03, 2026 at 07:43:39PM +0530, Gaurav Kohli wrote:
-> > > 
-> > > 
-> > > On 7/3/2026 1:23 PM, Konrad Dybcio wrote:
-> > > > On 7/3/26 7:03 AM, Gaurav Kohli wrote:
-> > > > > Add Device Tree binding constants for Qualcomm Thermal Mitigation
-> > > > > Device (TMD) types used by remoteproc-backed thermal cooling devices.
-> > > > > 
-> > > > > Qualcomm remote processors expose thermal mitigation endpoints
-> > > > > through QMI. These endpoints can be registered with the thermal
-> > > > > framework via the `#cooling-cells` property on the remoteproc node.
-> > > > > 
-> > > > > The QMI TMD protocol identifies devices using string names (for example,
-> > > > > "pa", "modem", and "cdsp_sw"), while the DT cooling-device binding with
-> > > > > `#cooling-cells = <3>` requires numeric device id in the form:
-> > > > > 
-> > > > >     <&phandle device_id min_state max_state>
-> > > > > 
-> > > > > Define common TMD device index constants shared across currently
-> > > > > supported platforms. If a future target requires a different mapping,
-> > > > > additional target-specific constants can be introduced while preserving
-> > > > > existing DT ABI.
-> > > > > 
-> > > > > Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-> > > > > ---
-> > > > >    MAINTAINERS                                 |  1 +
-> > > > >    include/dt-bindings/firmware/qcom,qmi-tmd.h | 20 ++++++++++++++++++++
-> > > > >    2 files changed, 21 insertions(+)
-> > > > > 
-> > > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > > index 57656ec0e9d5..ffd85fd1dd80 100644
-> > > > > --- a/MAINTAINERS
-> > > > > +++ b/MAINTAINERS
-> > > > > @@ -3410,6 +3410,7 @@ F:	drivers/firmware/qcom/
-> > > > >    F:	drivers/soc/qcom/
-> > > > >    F:	drivers/watchdog/gunyah_wdt.c
-> > > > >    F:	include/dt-bindings/arm/qcom,ids.h
-> > > > > +F:	include/dt-bindings/firmware/qcom,qmi-tmd.h
-> > > > >    F:	include/dt-bindings/firmware/qcom,scm.h
-> > > > >    F:	include/dt-bindings/soc/qcom*
-> > > > >    F:	include/linux/firmware/qcom
-> > > > > diff --git a/include/dt-bindings/firmware/qcom,qmi-tmd.h b/include/dt-bindings/firmware/qcom,qmi-tmd.h
-> > > > > new file mode 100644
-> > > > > index 000000000000..73efecef0f3c
-> > > > > --- /dev/null
-> > > > > +++ b/include/dt-bindings/firmware/qcom,qmi-tmd.h
-> > > > > @@ -0,0 +1,20 @@
-> > > > > +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> > > > > +/*
-> > > > > + * Qualcomm QMI TMD (Thermal Mitigation Device) cooling device indices
-> > > > > + *
-> > > > > + * These indices are used in device tree cooling-maps to reference
-> > > > > + * specific TMD devices provided by remote processors via QMI.
-> > > > > + *
-> > > > > + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-> > > > > + */
-> > > > > +#ifndef _DT_BINDINGS_FIRMWARE_QCOM_QMI_TMD_H
-> > > > > +#define _DT_BINDINGS_FIRMWARE_QCOM_QMI_TMD_H
-> > > > > +
-> > > > > +/* CDSP thermal mitigation device id */
-> > > > > +#define QCOM_CDSP_TMD_CDSP_SW	0
-> > > > > +
-> > > > > +/* Modem thermal mitigation device id */
-> > > > > +#define QCOM_MODEM_TMD_PA	0
-> > > > > +#define QCOM_MODEM_TMD_MODEM	1
-> > > > 
-> > > > What about the dozens other ones that Dmitry's laptop reports?Ri
-> > > > 
-> > > 
-> > > Thanks for the review, Konrad.
-> > > 
-> > > We are only defining constants for the TMD devices that are actually used
-> > > for thermal mitigation on the platforms supported by this series.
-> > 
-> > Why are you using only those TMD devices?
-> > 
-> > > More constants can be added as needed.
-> > 
-> > Kodiak is one of the supported platforms.
-> 
-> What would be the benefit of having more than thirteen cooling devices
-> declared in the thermal framework and having only a couple of them mapped in
-> a thermal zone ?
-> 
-> I agree there are more TMDs but if they are unused for the moment, why do we
-> need to add them ? Can we do that incrementally ?
+On Mon, Jul 06, 2026 at 07:03:29PM +0900, Akihiko Odaki wrote:
+> +1.6 ATTRIBUTE: KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
+> +------------------------------------------------------
+> +
+> +:Parameters: no additional parameter in kvm_device_attr.addr
+> +
+> +:Returns:
+> +
+> +	 =======  ==================================================
+> +	 -EBUSY   PMUv3 already initialized, a VCPU has already run,
+> +		  an event filter has already been set or
+> +		  a hardware PMU has already been specified
+> +	 -ENXIO   Attempted to get before setting
+> +	 -ENODEV  Attempted to set while PMUv3 not supported
+> +	 =======  ==================================================
+> +
+> +If set, KVM emulates PMUv3 without programmable event counters. Only fixed
+> +counters are exposed to the guest: the cycle counter today, and the instruction
+> +counter if support for FEAT_PMUv3_ICNTR is added.
 
-That's what I am trying to understand: why the implementation uses only
-the selected two devices, if the modem on Kodiak supports others. How
-can we find out, which TMDs to use on other devices.
+Drop the mention of cycle counter and FEAT_PMUv3_ICNTR, I want to avoid
+the argument later down the line when ICNTR support is added to this
+mode.
 
--- 
-With best wishes
-Dmitry
+The expectation is that the VMM discovers the feature set using the ID
+registers just like every other CPU feature. KVM documentation doesn't
+need to describe the architecture.
+
+> +With programmable counters disabled, the VCPU can run on any physical CPU.
+> +This is particularly useful on heterogeneous systems where different hardware
+> +PMUs cover different physical CPUs. All VCPUs in a VM share this attribute.
+
+  When this attribute is enabled, the vCPU can run on any physical CPU
+  that has a PMU, regardless of the underlying implementation. This
+  attribute is VM-scoped.
+
+The documentation is focused on unambiguously representing the UAPI, not
+providing application recommendations.
+
+>  2. GROUP: KVM_ARM_VCPU_TIMER_CTRL
+>  =================================
+>  
+> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+> index 1c13bfa2d38a..39a1a1e412e6 100644
+> --- a/arch/arm64/include/uapi/asm/kvm.h
+> +++ b/arch/arm64/include/uapi/asm/kvm.h
+> @@ -437,6 +437,7 @@ enum {
+>  #define   KVM_ARM_VCPU_PMU_V3_FILTER		2
+>  #define   KVM_ARM_VCPU_PMU_V3_SET_PMU		3
+>  #define   KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS	4
+> +#define   KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY	5
+>  #define KVM_ARM_VCPU_TIMER_CTRL		1
+>  #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
+>  #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
+> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+> index 40cad183376c..ad9ff4d0d89c 100644
+> --- a/arch/arm64/kvm/pmu-emul.c
+> +++ b/arch/arm64/kvm/pmu-emul.c
+> @@ -1149,11 +1149,13 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
+>  		arm_pmu = entry->arm_pmu;
+>  		if (arm_pmu->pmu.type == pmu_id) {
+>  			if (kvm_vm_has_ran_once(kvm) ||
+> +			    kvm_pmu_fixed_counters_only(kvm) ||
+>  			    (kvm->arch.pmu_filter && kvm->arch.arm_pmu != arm_pmu)) {
+>  				ret = -EBUSY;
+>  				break;
+>  			}
+>  
+> +			set_bit(KVM_ARCH_FLAG_PMU_V3_EXPLICIT, &kvm->arch.flags);
+
+Why is this flag necessary? kvm->arch.arm_pmu is NULL if no PMU
+implementation was selected by userspace.
+
+>  			kvm_arm_set_pmu(kvm, arm_pmu);
+>  			cpumask_copy(kvm->arch.supported_cpus, &arm_pmu->supported_cpus);
+>  			ret = 0;
+> @@ -1164,6 +1166,22 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
+>  	return ret;
+>  }
+>  
+> +static int kvm_arm_pmu_v3_set_pmu_fixed_counters_only(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +
+> +	lockdep_assert_held(&kvm->arch.config_lock);
+> +
+> +	if (kvm_vm_has_ran_once(kvm) || kvm->arch.pmu_filter ||
+> +	    test_bit(KVM_ARCH_FLAG_PMU_V3_EXPLICIT, &kvm->arch.flags))
+> +		return -EBUSY;
+> +
+> +	set_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &kvm->arch.flags);
+> +	kvm_arm_set_nr_counters(kvm, 0);
+> +
+> +	return 0;
+> +}
+> +
+>  static int kvm_arm_pmu_v3_set_nr_counters(struct kvm_vcpu *vcpu, unsigned int n)
+>  {
+>  	struct kvm *kvm = vcpu->kvm;
+> @@ -1238,7 +1256,7 @@ int kvm_arm_pmu_v3_set_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
+>  		     filter.action != KVM_PMU_EVENT_DENY))
+>  			return -EINVAL;
+>  
+> -		if (kvm_vm_has_ran_once(kvm))
+> +		if (kvm_vm_has_ran_once(kvm) || kvm_pmu_fixed_counters_only(kvm))
+
+There's no reason for doing this, just let userspace create an event
+filter. Even with the current PMU implementation it's possible that the
+fixed cycle counter gets filtered.
+
+Thanks,
+Oliver
