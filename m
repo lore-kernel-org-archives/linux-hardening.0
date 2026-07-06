@@ -1,158 +1,215 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E392B3C1F45
-	for <linux-hardening@vger.kernel.org>; Mon,  6 Jul 2026 18:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B89B672;
+	Mon,  6 Jul 2026 18:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783362015; cv=none; b=VbDhTp/RXQzmDJXUfZLb+09EAhc20EO9Jx8BwMKfh5O+Gyk8KubH5sQuGSVMe9QXLttPJTj8ORBcSikDo2IcvWFFHd93KNkJm06D32t6sdvVDxQMcSh4c6fw1kufaPXbTHN4/EUcMhO+Xf2hsxFxIFj1GEpP4lmTYRgawHl9bvY=
+	t=1783362240; cv=none; b=RKx1y986YWs5pspqRuN7uY1Anqlni/y5pkzo6pfr0DPRqm/8g7wc6j/tYEiFVmgDll9cPqPDsPIT/UKHsviO3/wTDOzdawqYNWHy7S2DE3v92l43L2NvD18QkV5n4y6r2gFAqEBmvTAOQsL0OzNw7vwoHFV+yzLz1EW5M+kH2cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783362015; c=relaxed/simple;
-	bh=+mBC3wHds5hkqQoAbrs/ckZqUqlq5DGBoM+aQ6GSbN0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hwuXF8ujJsVP9OC6vmRgZcJFeh8aZrFZpRQkJWPrg/Ak2G7MZD+CMJj+2GIaFgn2CvN0+xFjvW0q1MnUGn04p9zyz4cXknV1ErQpYgrPE4YTr/+/PU4ywji/6skH2cDXnc9EXp1CPhbKSnHf0Wr30tVBrilusmGneMloxc8lbxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z9+QfX1d; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783362240; c=relaxed/simple;
+	bh=OAZW2mOhO7NaL6oxqnNTVcDyra+tNWR2x3SKVGe+Lf4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lFFRdwmHy0cHLDp9Td2lUlqPGVogP3G9TnXh+p00AWjnanFzkel56sBdQglNoRWgGrn1/F8wJwBUNwnU0rH4eFfoUvaeo7Ojcyp+QMxwed/nk0ampgpDsIi8EwQjOPUg50iYbxFEYv7l3sTMT/ts/4sR0zadPZjicBsBddiy6vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kumziUdy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9+QfX1d"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-47122683cf3so2173187f8f.0
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Jul 2026 11:20:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783362012; x=1783966812; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=/oh7qDp/45FgXXQqrTzgauJ39HP74+OOVGmB/m/72Sk=;
-        b=Z9+QfX1dlYDzB47Apqo7xukv3o1dKc+n2QUUH54Q4/HyRrhZflF3i4gqRtCI/fRIka
-         2eTSNgrgBIqltmd4p7a2DRmQYTYZLe8v4NHBjC818dXbsg69ro8WifoQDV2V73BvQMyy
-         0f4Bxg1mHXXpuo6rqFVI92EbEdevPZuhkPPfsoUFIlbca5MWfxoKlIwA3+SewcUAyLHA
-         nlibZ8TFCvWi8mK8YiOTByDG3i0ijTvqK+rhbO0+b3qWEfz3l9MyUoDd+5h9vwdh4+IZ
-         4XLpBsZ7CE1S5/wauVHk9U+8b2qKXs3jbI1c13GBDBqW+jEjb/pP8q1lvsQvV1XORUzL
-         zLPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783362012; x=1783966812;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/oh7qDp/45FgXXQqrTzgauJ39HP74+OOVGmB/m/72Sk=;
-        b=lJza/F/Vz2+tZcXUUEesWIX1jZZP4gYLKr8hnXXPM/XygvnI9cb9+Sbou7IoeEorxE
-         1EbnQDSHHlYUg7qzB7s1gbdQebYviFn2CwEyFM29pDOdyQp6MKYc0k/7gAhGEjd/3M9p
-         iIZeBSwBgTHzgUUHXmQAUot5YN02yHlN2RLkZIqvrQcv7x4Hes3OHg1LzlOei3p1jmgU
-         spbZMAOrRsoLMiZVjpeff+xLeg0WTfhaFOcpYdqZciBNPtvuaWf3QCv3BHqiwM5KQ0nJ
-         pom+DyT+Upwtg7s/vcbYaMgIMWIGsDbNgiPYMR9pEKEtzFHlE3vsvhxCVYH9E5LILBxu
-         bdPw==
-X-Forwarded-Encrypted: i=1; AHgh+RpHu6wQIRpqeWoMJesJtgwWw5fBiDVl3TJ9zt88jbA4xczcBDrC+zGF6imKoO2PZKRMRWSdjF7jaimjuPoVHNc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy83z33yelXiztupO3FEqOswwKo6y+be3nlNuSFFJzEH0BiFz6r
-	a+jep9TVsik6EMtL87w3F5sx6OCZcMTRnK2GkPljPG5Zg0c8J4U4hCGj
-X-Gm-Gg: AfdE7clPOEogLY4HUkh0LWdlkYH39K0bZpk4o+SCT5Ib5jTE/TMQ2R+/78eu12eXKLm
-	YOI0KjsmfZfks3FDCxew19qFKzGtD23asDQ9/u9Da2w5f1wfhsfkPfyx8wZAsmd1+yw56R/jwpN
-	rvHdIUY9gZUwgf2afu09muet8i/5xoKzItfq/9dLBXNWMBAOxL11LpJq7decsaWJHqmi2tPgrUz
-	by0xyRe+XUsLHtlEEzMw7TUMiJD16W6d0eFbYonr8tLPCcmDRNT5ueZTEURF1IK4RESCRGaUcDF
-	IOQ0ZgK/EofLp/4hxT+FDRQA9/pdYhjM8M5uy5J7NqPkz3PZVofJlrKd20XxIip8SglqXf8pi5U
-	h/7Rlu3GQ9pqnPX3a7Mwr6RuM0ck9ErUpsEzSWvQDTNr5QMmFYR8JgyMGprNrtfs7zPps1sY/j4
-	QW+fkfNh46359vy6QHAPhh7R7uObRyU8+xlbJocQ==
-X-Received: by 2002:a05:6000:461e:b0:454:a41f:d082 with SMTP id ffacd0b85a97d-47de66677fdmr1640454f8f.3.1783362012186;
-        Mon, 06 Jul 2026 11:20:12 -0700 (PDT)
-Received: from [192.168.2.14] (85-70-151-113.rcd.o2.cz. [85.70.151.113])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47aa0f213e8sm23719930f8f.34.2026.07.06.11.20.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2026 11:20:11 -0700 (PDT)
-Message-ID: <276a4c4e-bbe4-4f6f-9f9a-c1e195e06c86@gmail.com>
-Date: Mon, 6 Jul 2026 20:20:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kumziUdy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD941F000E9;
+	Mon,  6 Jul 2026 18:23:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783362238;
+	bh=SsdGNSB4zy5M0ej3qNdxVPNJ5ocdqwgLpYFnxrwRiOA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kumziUdyrjugrxYZugzIjlWcmC9HIodhRMZrmVkXke0JQHc6DSSO6eYyMfq5CiKE9
+	 BBmRIfa50qID9aoZHs3mU54ICO17zjuZm2QSn0ZNhv4rX8myFYPfFwehkg2/YxyEUC
+	 y4cwrMjn5amJToz/JhoF1gAGvh0rSORDSCafQZ9sOrZp1XWo3//gU/Z6518bMMgfLc
+	 7l2YRvqGYxltd3+1No6PKk5KCn2uJuCQlWLTXTZfA9RdbAh6BN0zxHIPcPJ40mpgCH
+	 PwetxkjP2bXyTXfxGXDQZDob0kfbFiGrQCFG10MA64mdwp706YJKni8AECL7P7ZaQq
+	 f0FBu47IYqtTw==
+Date: Mon, 6 Jul 2026 11:23:57 -0700
+From: Oliver Upton <oupton@kernel.org>
+To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v8 5/7] KVM: arm64: PMU: Implement fixed-counters-only
+ emulation
+Message-ID: <akvyvclUQ2b2YHiU@kernel.org>
+References: <20260706-hybrid-v8-0-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
+ <20260706-hybrid-v8-5-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: af_alg - Allow additional ciphers for cryptsetup
-To: Eric Biggers <ebiggers@kernel.org>,
- Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20260705184419.40762-1-ebiggers@kernel.org>
-Content-Language: en-US
-From: Milan Broz <gmazyland@gmail.com>
-Autocrypt: addr=gmazyland@gmail.com; keydata=
- xsFNBE94p38BEADZRET8y1gVxlfDk44/XwBbFjC7eM6EanyCuivUPMmPwYDo9qRey0JdOGhW
- hAZeutGGxsKliozmeTL25Z6wWICu2oeY+ZfbgJQYHFeQ01NVwoYy57hhytZw/6IMLFRcIaWS
- Hd7oNdneQg6mVJcGdA/BOX68uo3RKSHj6Q8GoQ54F/NpCotzVcP1ORpVJ5ptyG0x6OZm5Esn
- 61pKE979wcHsz7EzcDYl+3MS63gZm+O3D1u80bUMmBUlxyEiC5jo5ksTFheA8m/5CAPQtxzY
- vgezYlLLS3nkxaq2ERK5DhvMv0NktXSutfWQsOI5WLjG7UWStwAnO2W+CVZLcnZV0K6OKDaF
- bCj4ovg5HV0FyQZknN2O5QbxesNlNWkMOJAnnX6c/zowO7jq8GCpa3oJl3xxmwFbCZtH4z3f
- EVw0wAFc2JlnufR4dhaax9fhNoUJ4OSVTi9zqstxhEyywkazakEvAYwOlC5+1FKoc9UIvApA
- GvgcTJGTOp7MuHptHGwWvGZEaJqcsqoy7rsYPxtDQ7bJuJJblzGIUxWAl8qsUsF8M4ISxBkf
- fcUYiR0wh1luUhXFo2rRTKT+Ic/nJDE66Ee4Ecn9+BPlNODhlEG1vk62rhiYSnyzy5MAUhUl
- stDxuEjYK+NGd2aYH0VANZalqlUZFTEdOdA6NYROxkYZVsVtXQARAQABzSBNaWxhbiBCcm96
- IDxnbWF6eWxhbmRAZ21haWwuY29tPsLBlQQTAQgAPwIbAwYLCQgHAwIGFQgCCQoLBBYCAwEC
- HgECF4AWIQQqKRgkP95GZI0GhvnZsFd72T6Y/AUCYaUUZgUJJPhv5wAKCRDZsFd72T6Y/D5N
- D/438pkYd5NyycQ2Gu8YAjF57Od2GfeiftCDBOMXzh1XxIx7gLosLHvzCZ0SaRYPVF/Nr/X9
- sreJVrMkwd1ILNdCQB1rLBhhKzwYFztmOYvdCG9LRrBVJPgtaYqO/0493CzXwQ7FfkEc4OVB
- uhBs4YwFu+kmhh0NngcP4jaaaIziHw/rQ9vLiAi28p1WeVTzOjtBt8QisTidS2VkZ+/iAgqB
- 9zz2UPkE1UXBAPU4iEsGCVXGWRz99IULsTNjP4K3p8ZpdZ6ovy7X6EN3lYhbpmXYLzZ3RXst
- PEojSvqpkSQsjUksR5VBE0GnaY4B8ZlM3Ng2o7vcxbToQOsOkbVGn+59rpBKgiRadRFuT+2D
- x80VrwWBccaph+VOfll9/4FVv+SBQ1wSPOUHl11TWVpdMFKtQgA5/HHldVqrcEssWJb9/tew
- 9pqxTDn6RHV/pfzKCspiiLVkI66BF802cpyboLBBSvcDuLHbOBHrpC+IXCZ7mgkCrgMlZMql
- wFWBjAu8Zlc5tQJPgE9eeQAQrfZRcLgux88PtxhVihA1OsMNoqYapgMzMTubLUMYCCsjrHZe
- nzw5uTcjig0RHz9ilMJlvVbhwVVLmmmf4p/R37QYaqm1RycLpvkUZUzSz2NCyTcZp9nM6ooR
- GhpDQWmUdH1Jz9T6E9//KIhI6xt4//P15ZfiIs7BTQRPeKd/ARAA3oR1fJ/D3GvnoInVqydD
- U9LGnMQaVSwQe+fjBy5/ILwo3pUZSVHdaKeVoa84gLO9g6JLToTo+ooMSBtsCkGHb//oiGTU
- 7KdLTLiFh6kmL6my11eiK53o1BI1CVwWMJ8jxbMBPet6exUubBzceBFbmqq3lVz4RZ2D1zKV
- njxB0/KjdbI53anIv7Ko1k+MwaKMTzO/O6vBmI71oGQkKO6WpcyzVjLIip9PEpDUYJRCrhKg
- hBeMPwe+AntP9Om4N/3AWF6icarGImnFvTYswR2Q+C6AoiAbqI4WmXOuzJLKiImwZrSYnSfQ
- 7qtdDGXWYr/N1+C+bgI8O6NuAg2cjFHE96xwJVhyaMzyROUZgm4qngaBvBvCQIhKzit61oBe
- I/drZ/d5JolzlKdZZrcmofmiCQRa+57OM3Fbl8ykFazN1ASyCex2UrftX5oHmhaeeRlGVaTV
- iEbAvU4PP4RnNKwaWQivsFhqQrfFFhvFV9CRSvsR6qu5eiFI6c8CjB49gBcKKAJ9a8gkyWs8
- sg4PYY7L15XdRn8kOf/tg98UCM1vSBV2moEJA0f98/Z48LQXNb7dgvVRtH6owARspsV6nJyD
- vktsLTyMW5BW9q4NC1rgQC8GQXjrQ+iyQLNwy5ESe2MzGKkHogxKg4Pvi1wZh9Snr+RyB0Rq
- rIrzbXhyi47+7wcAEQEAAcLBfAQYAQgAJgIbDBYhBCopGCQ/3kZkjQaG+dmwV3vZPpj8BQJh
- pRSXBQkk+HAYAAoJENmwV3vZPpj8BPMP/iZV+XROOhs/MsKd7ngQeFgETkmt8YVhb2Rg3Vgp
- AQe9cn6aw9jk3CnB0ecNBdoyyt33t3vGNau6iCwlRfaTdXg9qtIyctuCQSewY2YMk5AS8Mmb
- XoGvjH1Z/irrVsoSz+N7HFPKIlAy8D/aRwS1CHm9saPQiGoeR/zThciVYncRG/U9J6sV8XH9
- OEPnQQR4w/V1bYI9Sk+suGcSFN7pMRMsSslOma429A3bEbZ7Ikt9WTJnUY9XfL5ZqQnjLeRl
- 8243OTfuHSth26upjZIQ2esccZMYpQg0/MOlHvuFuFu6MFL/gZDNzH8jAcBrNd/6ABKsecYT
- nBInKH2TONc0kC65oAhrSSBNLudTuPHce/YBCsUCAEMwgJTybdpMQh9NkS68WxQtXxU6neoQ
- U7kEJGGFsc7/yXiQXuVvJUkK/Xs04X6j0l1f/6KLoNQ9ep/2In596B0BcvvaKv7gdDt1Trgg
- vlB+GpT+iFRLvhCBe5kAERREfRfmWJq1bHod/ulrp/VLGAaZlOBTgsCzufWF5SOLbZkmV2b5
- xy2F/AU3oQUZncCvFMTWpBC+gO/o3kZCyyGCaQdQe4jS/FUJqR1suVwNMzcOJOP/LMQwujE/
- Ch7XLM35VICo9qqhih4OvLHUAWzC5dNSipL+rSGHvWBdfXDhbezJIl6sp7/1rJfS8qPs
-In-Reply-To: <20260705184419.40762-1-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260706-hybrid-v8-5-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
 
-On 7/5/26 8:44 PM, Eric Biggers wrote:
-> Add "xts(camellia)", "xts(serpent)", and "xts(twofish)" to the allowlist
-> for af_alg_restrict=1.  These niche AES alternatives have continued to
-> see rare but persistent use via cryptsetup, which has historically
-> relied on the AF_ALG support for these ciphers in XTS mode for
-> performing the keyslot encryption.  (cryptsetup v2.8.7 and later fall
-> back to a temporary dm-crypt mapping, but that requires root.)
+On Mon, Jul 06, 2026 at 07:03:28PM +0900, Akihiko Odaki wrote:
+> Add internal state for PMUv3 emulation without programmable event
+> counters. When fixed-counters-only mode is active, KVM reports no
+> programmable counters and hides PMCEID, avoiding event-counter state
+> whose behavior can depend on the selected hardware PMU.
 > 
-> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+> The cycle counter still uses a host perf event. Unlike the normal PMU
+> path, fixed-counters-only mode may create that event from the hardware
+> PMU attached to the VCPU's current pCPU. If the VCPU later loads on a
+> pCPU that is not covered by the existing event's PMU, request a PMU
+> reload so the cycle counter can be recreated against the new pCPU's PMU.
+> Keep this affinity check limited to fixed-counters-only VMs; the normal
+> programmable-counter mode continues to use the VM-wide PMU and does not
+> need per-load reload decisions.
+> 
+> Add a separate internal flag for explicit userspace PMU selection. The
+> UAPI wiring added later will use it to keep explicit PMU selection and
+> fixed-counters-only mode mutually exclusive while still allowing
+> fixed-counters-only mode to replace the default PMU selected during
+> KVM_ARM_VCPU_INIT.
+> 
+> The UAPI wiring that sets the fixed-counters-only flag and records
+> explicit PMU selection is added later in the series.
+> 
+> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 > ---
->   crypto/algif_skcipher.c | 3 +++
->   1 file changed, 3 insertions(+)
+>  arch/arm64/include/asm/kvm_host.h |  4 ++++
+>  arch/arm64/kvm/arm.c              |  1 +
+>  arch/arm64/kvm/pmu-emul.c         | 43 +++++++++++++++++++++++++++++++++++++--
+>  include/kvm/arm_pmu.h             |  2 ++
+>  4 files changed, 48 insertions(+), 2 deletions(-)
 > 
-> diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
-> index 2b8069667974..49ae779b3b6b 100644
-> --- a/crypto/algif_skcipher.c
-> +++ b/crypto/algif_skcipher.c
-> @@ -45,6 +45,9 @@ static const struct af_alg_allowlist_entry skcipher_allowlist[] = {
->   	{ "ecb(des)", true }, /* iwd */
->   	{ "hctr2(aes)", false }, /* cryptsetup */
->   	{ "xts(aes)", false }, /* cryptsetup benchmark */
-> +	{ "xts(camellia)", false }, /* cryptsetup */
-> +	{ "xts(serpent)", false }, /* cryptsetup */
-> +	{ "xts(twofish)", false }, /* cryptsetup */
->   	{},
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 0c39d9db7d57..aa07b05b8231 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -353,6 +353,10 @@ struct kvm_arch {
+>  #define KVM_ARCH_FLAG_WRITABLE_IMP_ID_REGS		10
+>  	/* Unhandled SEAs are taken to userspace */
+>  #define KVM_ARCH_FLAG_EXIT_SEA				11
+> +	/* PMUv3 is emulated with an explicitly specified hardware PMU */
+> +#define KVM_ARCH_FLAG_PMU_V3_EXPLICIT			12
+> +	/* PMUv3 is emulated without progammable event counters */
+> +#define KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY	13
+>  	unsigned long flags;
+>  
+>  	/* VM-wide vCPU feature set */
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 68767bb08285..1cc7754d5ace 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -687,6 +687,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>  	if (has_vhe())
+>  		kvm_vcpu_load_vhe(vcpu);
+>  	kvm_arch_vcpu_load_fp(vcpu);
+> +	kvm_vcpu_load_pmu(vcpu);
+>  	kvm_vcpu_pmu_restore_guest(vcpu);
+>  	if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
+>  		kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
+> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+> index e70628653e4b..40cad183376c 100644
+> --- a/arch/arm64/kvm/pmu-emul.c
+> +++ b/arch/arm64/kvm/pmu-emul.c
+> @@ -96,6 +96,11 @@ u64 kvm_pmu_evtyper_mask(struct kvm *kvm)
+>  	return mask;
+>  }
+>  
+> +static bool kvm_pmu_fixed_counters_only(struct kvm *kvm)
+> +{
+> +	return test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &kvm->arch.flags);
+> +}
+> +
+>  /**
+>   * kvm_pmc_is_64bit - determine if counter is 64bit
+>   * @pmc: counter context
+> @@ -343,7 +348,11 @@ u64 kvm_pmu_implemented_counter_mask(struct kvm_vcpu *vcpu)
+>  
+>  static void kvm_pmc_enable_perf_event(struct kvm_pmc *pmc)
+>  {
+> -	if (!pmc->perf_event) {
+> +	struct kvm_vcpu *vcpu = kvm_pmc_to_vcpu(pmc);
+> +
+> +	if (!pmc->perf_event ||
+> +	    (kvm_pmu_fixed_counters_only(vcpu->kvm) &&
+> +	     !cpumask_test_cpu(vcpu->cpu, &to_arm_pmu(pmc->perf_event->pmu)->supported_cpus))) {
+>  		kvm_pmu_create_perf_event(pmc);
+>  		return;
+>  	}
+> @@ -720,6 +729,12 @@ static void kvm_pmu_create_perf_event(struct kvm_pmc *pmc)
+>  	int eventsel;
+>  	u64 evtreg;
+>  
+> +	if (kvm_pmu_fixed_counters_only(vcpu->kvm)) {
+> +		arm_pmu = kvm_pmu_probe_armpmu(vcpu->cpu);
+> +		if (WARN_ON_ONCE(!arm_pmu))
+> +			return;
+> +	}
+> +
+>  	evtreg = kvm_pmc_read_evtreg(pmc);
+>  
+>  	kvm_pmu_stop_counter(pmc);
+> @@ -748,7 +763,7 @@ static void kvm_pmu_create_perf_event(struct kvm_pmc *pmc)
+>  	 * Don't create an event if we're running on hardware that requires
+>  	 * PMUv3 event translation and we couldn't find a valid mapping.
+>  	 */
+> -	eventsel = kvm_map_pmu_event(vcpu->kvm->arch.arm_pmu, eventsel);
+> +	eventsel = kvm_map_pmu_event(arm_pmu, eventsel);
+>  	if (eventsel < 0)
+>  		return;
+>  
+> @@ -878,6 +893,9 @@ u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, bool pmceid1)
+>  	u64 val, mask = 0;
+>  	int base, i, nr_events;
+>  
+> +	if (kvm_pmu_fixed_counters_only(vcpu->kvm))
+> +		return 0;
+> +
 
-Well, if we are going this way, I would also add Aria and SM4 (currently usable only in cryptsetup main branch).
+Even if we advertise bits in PMCEID, does it matter? There's no PMC that
+the guest could use to count it.
 
-Milan
+I understand it isn't aesthetic but I really want to minimize the
+special-casing that has to be done for this feature.
 
-p.s.
-There is another user of AF_ALG hash, hardlink in util-linux, see
-https://github.com/util-linux/util-linux/blob/master/lib/fileeq.c
+> +void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu)
+> +{
+> +	/*
+> +	 * ARMV8_PMU_INSTR_IDX will need the same check once
+> +	 * FEAT_PMUv3_ICNTR is supported.
+> +	 */
+> +	struct kvm_pmc *pmc = kvm_vcpu_idx_to_pmc(vcpu, ARMV8_PMU_CYCLE_IDX);
+> +	struct arm_pmu *cpu_pmu;
+> +
+> +	if (!kvm_pmu_fixed_counters_only(vcpu->kvm) ||
+> +	    !kvm_pmu_counter_is_enabled(pmc) || !pmc->perf_event)
+> +		return;
+> +
+> +	cpu_pmu = to_arm_pmu(pmc->perf_event->pmu);
+> +	if (!cpumask_test_cpu(vcpu->cpu, &cpu_pmu->supported_cpus))
+> +		kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
 
+Just detect the changing PMU implementation here, KVM_REQ_RELOAD_PMU
+will need to detect the PMCs that require an update anyway. Stash the
+last cpu in kvm_arch_vcpu_load() and pass it to this:
+
+void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu, int last_cpu)
+{
+	if (!kvm_pmu_fixed_counters_only(vcpu->kvm) || vcpu->cpu == last_cpu)
+		return;
+
+	if (kvm_pmu_probe_armpmu(vcpu->cpu) != kvm_pmu_probe_armpmu(last_cpu))
+		kvm_make_request(KVM_REQ_RELOAD_PMU);
+}
+
+Thanks,
+Oliver
