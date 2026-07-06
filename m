@@ -1,105 +1,242 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543FD3B7779;
-	Mon,  6 Jul 2026 17:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916E72ECE93
+	for <linux-hardening@vger.kernel.org>; Mon,  6 Jul 2026 17:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783358376; cv=none; b=GDOU7pJTlDKUA3fC7wSy5SE60km3lr6J8KHSluEgHj/cO8q98SbJl2rZ7FrKvljUNsE9427TEHD6iz2ZeH7kaScrpjBwtvWZVkv9nIbN1TtDyOTmyMExTdTSBsZLfpBIVFmg450oPOQtB7hdh39Mocs+YqLoatAczpU2kwzKa2c=
+	t=1783360038; cv=none; b=l9JDjCOT0vB8sXwtxIQAiK/ip4VnpP5tcsvdJjuu0+clrUDR4wJ0VDppc4qtnvLHJOsghcB7lHYp9lj/37IDgDEKHqkAWcJv1W3Biemm7GwCw+cvdo3HY/wVJfh1sUGxHk1PRQ3ur3caGLyNmGiK3HC2idG0+c9A+heYtFhWrhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783358376; c=relaxed/simple;
-	bh=L0L0FF9JzdvaxhZgwZNkOjyWh3L8/Q+Sd6PJuQ5Xyec=;
+	s=arc-20240116; t=1783360038; c=relaxed/simple;
+	bh=5bOmYD47KumyTOb+Y1qYhZXDQ6MEozeWdEp60mgsnpE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RQh4/f6QUdu6t28q3Xf/Bnge7uLVF6Z5oC3Tw4W+iVxmqpKsV3lS4i8vhu64NkhBlXJzxv6euj8rHdkRNgb6N2bfgNWKAqE5ETujbMaQPwL0i7fAxilo1rtCITLztIcmnvzk+zQx0yp28rS9PgcCpGOiIe5kolJOpv7sRjBMobs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bpaFdjdu; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=hUmJlDzKx73ZGvtZs9rMpZqUWXfPpSIwcKb5GF78S5A9Nuc+976+OzZd9Hg7mhIf9P+wLuRAxqvmrAaxpGanHabq1ggeGB08aiN/TaZk2+hA3ZT76f+InlmvZ9FecL5Vp6dTg1ETsv9rfc3X/z1CfHdKnUR97rbRMLQrXWn+vLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PhfPQC3/; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=NyMjbkY0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bpaFdjdu"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 218C640E00C0;
-	Mon,  6 Jul 2026 17:19:31 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id XZjjGk29IVBx; Mon,  6 Jul 2026 17:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1783358361; bh=DM6ZBlt0zfO3Oxu5g1xHzady00ujWkiGTPHBW0POuGI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bpaFdjdu7MeLFpwxJSUxbUN2zFVzHvpjeEX3yENf0gapDgpb38KuOEddMkkTXgf70
-	 cAj1hYFfp60+FBEfB5QeUs5VzgHkUzDJsrRW8joss+DYyzGCkn+b4FMhTOj2Y0Mr1T
-	 r89df/BS4pK6QPE0w+EpspS1EbTTvetdE7yZIsU//NDMqTNPjeUFrmXvy/E6LDXKVc
-	 1/9GgGFZ8wx5g2OjcepRtDSMLK7tucXC+moW5Z8+PpRGMO0r4gO04rmtUi6ZhTC9/P
-	 cQ9HrtVv7dGJt1aKdQRVkLPcu3e++nk5LZELNGuse4WvsCtIjtzGPt9btDmBUEeUA/
-	 A0wTRpBQYIRKviTCwHHkK53tjSPK0cR6ZdSk29JBmET8hQhUtOe1Cfzf2s8Gsq6XrH
-	 mJXQpN44UKQAF1SfZxdiQrV1IFLXBzgqM6AiM1s2X0iFBM1JRw9Eqj5qr3cgIoWo1J
-	 kJJMK9UNBs7jGIiqEY5KGNINByS0yHLhZ7d7bTMy0MJbWDcCyzKrQOfVnTta9A+kCv
-	 316Zx1nxDKYFZhcDEqCR2xq2UVwSr8ae8A2lecRPap07vDNDKU1cE2LBaEqMDBAwrg
-	 axWuu6/TE2eI7hoDEKQuOlIByonIR+JnhhcvGra6UrfiODroSgRg6g0IVQISQ2qptm
-	 xyobEQ+SWKLbhNsbJqxa0V4o=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 826F640E00DC;
-	Mon,  6 Jul 2026 17:19:05 +0000 (UTC)
-Date: Mon, 6 Jul 2026 10:19:02 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Li Zhe <lizhe.67@bytedance.com>
-Cc: akpm@linux-foundation.org, apopple@nvidia.com, arnd@arndb.de,
-	dave.hansen@linux.intel.com, david@kernel.org, kees@kernel.org,
-	linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mingo@redhat.com,
-	rppt@kernel.org, tglx@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v5 7/8] x86/string: extend memcpy_flushcache() fixed-size
- fastpaths
-Message-ID: <20260706171902.GCakvjhl5U89iJdaNP@fat_crate.local>
-References: <20260703195619.GGakgT44P7lpcoMVlY@fat_crate.local>
- <20260706074346.23928-1-lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PhfPQC3/";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="NyMjbkY0"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666FF5NE981539
+	for <linux-hardening@vger.kernel.org>; Mon, 6 Jul 2026 17:47:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=apmFEM59O0B61gJ5WxH6Ae7z
+	ChxrAAcQn15+cvRZUhw=; b=PhfPQC3/q9NiNTgCQvS1BiHAdQ8HBNaOXp5VPl1Z
+	J82gW6T2BnNDO2cMfYvSJci955vGMEiY4Tt3NbL4hgjlIc5kPcQioYOl/tz0Hsh+
+	pvqvsxTv0pOCaEDc+vwhEGcHvt0U8lJ1LG7dMM0V2PvUy8woIG+EpNrMDCZZydcd
+	WuuHNvvUNI1KvaWm7zQj6ztz2DIbXPjaF1PZHMOa3dintSRMwMoUJFJHUEsrFNJx
+	y3ARG47UrJ2rghFb+DOydUsWspQzZlwSbfFnhx34+qIY0deFjjiE6Wu9bx7i0lqM
+	jCz17NaUvpezMIKQA20EoHD0cweURIhUDNoyXqgmReBvGA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f89kgtb5a-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Mon, 06 Jul 2026 17:47:16 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-92aea0d801dso319862685a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 06 Jul 2026 10:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1783360036; x=1783964836; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=apmFEM59O0B61gJ5WxH6Ae7zChxrAAcQn15+cvRZUhw=;
+        b=NyMjbkY0FapE+sQkOAkx6As1D7z4KerhqY7GM9Qy63Ytpoip9EIKz9yF+rHCPIeP9T
+         HUCXqw21tf7qmz5okYfV+11z69umw70WAXDpBTR7/j9QV8OBW6WPfAhWLxNpmoQcIHu6
+         pnrhHgg+l4SSt3AhaXchuJGVC4zh6EUBBNB+mlGsc+TeWFzfl6IN7MNcuZ2IRoP8jwAZ
+         oy6ujKJxLl2XnV2ZkGMDy4jsYkZLSuLEc+CjSBaTek1RHrfa2hqrzYuBcSq4qz66asre
+         C5AsBCPmuU6T4sCUmlppq3ErFxbNhkMm0r8XGyoC2t7E6baMzYk5qSzrQTW8AdIf2AFw
+         9Few==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783360036; x=1783964836;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=apmFEM59O0B61gJ5WxH6Ae7zChxrAAcQn15+cvRZUhw=;
+        b=gTNruKpfj3kcpR1xYaCXy5W6QHuocCRhysbytUgZyDqxcpXlVLfvXH1aNlw3o21rkN
+         kxpWAsO4GXsW/dn4fO/tEISq4OiyfX3Lhz386GQ/aT56+QCAf1eM9CFpMTNlinocGDBv
+         u6tD3ca1Y5rdyS8VdA/B7BWEcv677md2Zm/S1bRZJ4xIOaZsKf2bOYUO+VfJ7lzwqK+3
+         E3h9YRukEiVoOPIBTiIt/1s7uYJ5FAO4i1aV+wlXLEd4BpXo8M6myZcdYtZq37iGgPPK
+         Lcp7yNn94ELXUz2GZh5E9E8gmLRvY+UnpGUwC+/1mIHi5u/MYROyA6J+vumncsO8espU
+         K8uw==
+X-Forwarded-Encrypted: i=1; AHgh+RocIChyNKilPqZvm1yaCx/nU4ZS7CHaxCwBY9RYy3aSlYuzzXp4emvEwprI/TSmCuocRZB8QrRSBOcT1Ijpcg0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5EgAezyeX1b5B4znSaROCw3l+pdAoNDrpoOeSKBQNVgTxRGyO
+	N8StwWvXlHKTlsQ3nO4tbGSG2tsiCuOsTQ2T+ZvfBX1Twih1HQCkJ2JAXitWCFSMFhI3n14w1jD
+	qgH/y+IFKiTUbqCLOl3REzRCa1+L0ocPqnbrdH3V4qlCXS9ZMZxobzvwlM618qzOboEJcCBE=
+X-Gm-Gg: AfdE7cmi1QEIrr+eCCNCUIQkmShwYJgHZrdvII56uRKbISnRrDP7gGkU8Q0EcO/HZNu
+	LVLTYOj9WjmYPQaXfws743v1bc37lagjT9ztFfH2ox0RsRTUT530I6Yp3PuI0Smihg1oXDtNT/V
+	wEts/kLR0E6oZ24gNSman+rvmjS7z2BJCsP/J5qakxbvy7fOlpPQ6Gwl17XF9eWKhJAHENqzit9
+	86ZgaXKAw7bxcv4lBTUuvCXJ4zktRJuMc8yBUXjZPe+FXdD1w1gHQNtMduJOIo2Rp5ftMEAClQ5
+	JMzuOmOjo7ceJxYf8h41D/woQTUxIqDRZO38F2gCulMqkoO8Lz6qigYPUA3HGEoM+7tVfExRaJM
+	BF0XSPDcgI5NWii8577ayo1xQRcyd7EphYhScCK4e2+w2dmzwi8MNNNs3xApvDwp9/cvYn9lC2o
+	3F8/fm0NkVgjhgs/MpoaO+Zbpx
+X-Received: by 2002:a05:620a:4412:b0:915:b852:4361 with SMTP id af79cd13be357-92ebb4d57d6mr203281785a.20.1783360035714;
+        Mon, 06 Jul 2026 10:47:15 -0700 (PDT)
+X-Received: by 2002:a05:620a:4412:b0:915:b852:4361 with SMTP id af79cd13be357-92ebb4d57d6mr203274985a.20.1783360035123;
+        Mon, 06 Jul 2026 10:47:15 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-39b4ae5c8ecsm19731901fa.35.2026.07.06.10.47.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2026 10:47:13 -0700 (PDT)
+Date: Mon, 6 Jul 2026 20:47:10 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+Cc: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
+Subject: Re: [PATCH v4 01/10] dt-bindings: firmware: qcom: tmd: add TMD
+ device type constants
+Message-ID: <dv4n4ntnfvhouv23asgshgs7wcolkmqs7lbuni52maexo4s44x@4bqhf33x4fr6>
+References: <20260703-qmi-tmd-v4-0-3882189c1f83@oss.qualcomm.com>
+ <20260703-qmi-tmd-v4-1-3882189c1f83@oss.qualcomm.com>
+ <977711ef-c1fb-4735-b82a-4ca2f4797f51@oss.qualcomm.com>
+ <8ad14017-bce7-485e-9677-9cbf8ecb2742@oss.qualcomm.com>
+ <yvggh2zs6qkuyuzvwydkecswnjoyba2d7t27br6xpk6d2csp53@i25g6okdktz5>
+ <10a346d8-fbb1-4142-a650-507c3917b8f6@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260706074346.23928-1-lizhe.67@bytedance.com>
+In-Reply-To: <10a346d8-fbb1-4142-a650-507c3917b8f6@oss.qualcomm.com>
+X-Proofpoint-GUID: lBV_u7A2X7ThijdzOejinTMjnUAVK3MK
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDE3OSBTYWx0ZWRfX618VUbj0KrLJ
+ fsg6xAm9rFG307KmAndJqrVAK432B5fL6ddu+1QhFC8RRJnLuNQZlaEhvhW81dvE2lqmCmQG9fM
+ v98yvvxdkWHnQh4Dd/LGg43RYJMoyaqP6fAUrOb7kBT70VGAdTsBS+hhQqp81/BLgaDqlqbXpQK
+ pZwkmaDtDCfPhQWVLaRdLR6wUgGEPDPsgMd9SWk4Gz7qAzQzBs+mZNY0aQA/NC5SLrwtpwYkPe9
+ JEFNdnLrciB9qf+Z1lmdV1C1B2Ulg2PgaESgZuOnuPGkj2QbS5/9tpAL72ciDngRV613HZJxeAW
+ 12vguOGX7i18gfBZ7LokCFAlYLkosgN/aHFyKMzxtjd1Vuv1vahsL6O5Lrxi6xd9NOpQ3xHvV/Z
+ CBIH2yKqDssOsrE50DNgcTCVkuI4M3IPUkCq6Ow+Vrg/4dKIVHNY9xikgjxSYBbEQPwlUHOidZm
+ 1zg4oIYHJ1CQPfl0mhA==
+X-Proofpoint-ORIG-GUID: lBV_u7A2X7ThijdzOejinTMjnUAVK3MK
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDE3OSBTYWx0ZWRfX8wjIVT7FYCkx
+ gA00xdNng7eikDI8mCkNnN9M5QBJoUnSHe79K+pSCQB35/53wVo81nBCCWYHhsupMmgZ8ivnilY
+ U9Hu+Yt/Ozzgc2VxCnNEMmDE3HL0OS8=
+X-Authority-Analysis: v=2.4 cv=c6Sbhx9l c=1 sm=1 tr=0 ts=6a4bea24 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22 a=EUspDBNiAAAA:8
+ a=2pRoOLr91VfmbNnP4VsA:9 a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-06_02,2026-07-06_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ adultscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607060179
 
-On Mon, Jul 06, 2026 at 03:43:46PM +0800, Li Zhe wrote:
-> The extra IS_ALIGNED() check is meant as a conservative performance
-> choice, not because MOVNTI itself would be invalid on a misaligned
-> destination.
-
-Dude, you can't just wait for me to pull every unobvious decision in the code
-out of you - you need to write it down in your commit messages! I'm not a mind
-reader, you know.
-
-> As the Intel optimization reference manual notes, higher-throughput
-> data movement usually comes with alignment considerations, and can
-> be more efficient when the destination is naturally aligned.
-
-This can't get any more vague.
-
-> So for these larger fixed-size cases, I kept the inline path limited
-> to the aligned case. For misaligned destinations, falling back to
-> __memcpy_flushcache() is expected to be the better choice, since it
-> already handles the unaligned head first and only then enters its
-> MOVNTI loops.
+On Mon, Jul 06, 2026 at 07:03:18PM +0200, Daniel Lezcano wrote:
+> On 7/3/26 17:42, Dmitry Baryshkov wrote:
+> > On Fri, Jul 03, 2026 at 07:43:39PM +0530, Gaurav Kohli wrote:
+> > > 
+> > > 
+> > > On 7/3/2026 1:23 PM, Konrad Dybcio wrote:
+> > > > On 7/3/26 7:03 AM, Gaurav Kohli wrote:
+> > > > > Add Device Tree binding constants for Qualcomm Thermal Mitigation
+> > > > > Device (TMD) types used by remoteproc-backed thermal cooling devices.
+> > > > > 
+> > > > > Qualcomm remote processors expose thermal mitigation endpoints
+> > > > > through QMI. These endpoints can be registered with the thermal
+> > > > > framework via the `#cooling-cells` property on the remoteproc node.
+> > > > > 
+> > > > > The QMI TMD protocol identifies devices using string names (for example,
+> > > > > "pa", "modem", and "cdsp_sw"), while the DT cooling-device binding with
+> > > > > `#cooling-cells = <3>` requires numeric device id in the form:
+> > > > > 
+> > > > >     <&phandle device_id min_state max_state>
+> > > > > 
+> > > > > Define common TMD device index constants shared across currently
+> > > > > supported platforms. If a future target requires a different mapping,
+> > > > > additional target-specific constants can be introduced while preserving
+> > > > > existing DT ABI.
+> > > > > 
+> > > > > Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
+> > > > > ---
+> > > > >    MAINTAINERS                                 |  1 +
+> > > > >    include/dt-bindings/firmware/qcom,qmi-tmd.h | 20 ++++++++++++++++++++
+> > > > >    2 files changed, 21 insertions(+)
+> > > > > 
+> > > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > > > index 57656ec0e9d5..ffd85fd1dd80 100644
+> > > > > --- a/MAINTAINERS
+> > > > > +++ b/MAINTAINERS
+> > > > > @@ -3410,6 +3410,7 @@ F:	drivers/firmware/qcom/
+> > > > >    F:	drivers/soc/qcom/
+> > > > >    F:	drivers/watchdog/gunyah_wdt.c
+> > > > >    F:	include/dt-bindings/arm/qcom,ids.h
+> > > > > +F:	include/dt-bindings/firmware/qcom,qmi-tmd.h
+> > > > >    F:	include/dt-bindings/firmware/qcom,scm.h
+> > > > >    F:	include/dt-bindings/soc/qcom*
+> > > > >    F:	include/linux/firmware/qcom
+> > > > > diff --git a/include/dt-bindings/firmware/qcom,qmi-tmd.h b/include/dt-bindings/firmware/qcom,qmi-tmd.h
+> > > > > new file mode 100644
+> > > > > index 000000000000..73efecef0f3c
+> > > > > --- /dev/null
+> > > > > +++ b/include/dt-bindings/firmware/qcom,qmi-tmd.h
+> > > > > @@ -0,0 +1,20 @@
+> > > > > +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> > > > > +/*
+> > > > > + * Qualcomm QMI TMD (Thermal Mitigation Device) cooling device indices
+> > > > > + *
+> > > > > + * These indices are used in device tree cooling-maps to reference
+> > > > > + * specific TMD devices provided by remote processors via QMI.
+> > > > > + *
+> > > > > + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> > > > > + */
+> > > > > +#ifndef _DT_BINDINGS_FIRMWARE_QCOM_QMI_TMD_H
+> > > > > +#define _DT_BINDINGS_FIRMWARE_QCOM_QMI_TMD_H
+> > > > > +
+> > > > > +/* CDSP thermal mitigation device id */
+> > > > > +#define QCOM_CDSP_TMD_CDSP_SW	0
+> > > > > +
+> > > > > +/* Modem thermal mitigation device id */
+> > > > > +#define QCOM_MODEM_TMD_PA	0
+> > > > > +#define QCOM_MODEM_TMD_MODEM	1
+> > > > 
+> > > > What about the dozens other ones that Dmitry's laptop reports?Ri
+> > > > 
+> > > 
+> > > Thanks for the review, Konrad.
+> > > 
+> > > We are only defining constants for the TMD devices that are actually used
+> > > for thermal mitigation on the platforms supported by this series.
+> > 
+> > Why are you using only those TMD devices?
+> > 
+> > > More constants can be added as needed.
+> > 
+> > Kodiak is one of the supported platforms.
 > 
-> I will make that rationale explicit in the code comment and commit
-> message in v6.
+> What would be the benefit of having more than thirteen cooling devices
+> declared in the thermal framework and having only a couple of them mapped in
+> a thermal zone ?
+> 
+> I agree there are more TMDs but if they are unused for the moment, why do we
+> need to add them ? Can we do that incrementally ?
 
-No, you need to show whether the alignment brigns anything and then add it or
-remove it. We don't do things based on hearsay in the kernel - only on hard
-performance numbers.
-
-Thx.
+That's what I am trying to understand: why the implementation uses only
+the selected two devices, if the modem on Kodiak supports others. How
+can we find out, which TMDs to use on other devices.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+With best wishes
+Dmitry
