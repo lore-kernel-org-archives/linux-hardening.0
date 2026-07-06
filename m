@@ -1,103 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A273DC4AB;
-	Mon,  6 Jul 2026 20:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D64F3D34AB
+	for <linux-hardening@vger.kernel.org>; Mon,  6 Jul 2026 23:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783369488; cv=none; b=kxygQyLI9cErRqhnglpgB6uapEZS1XIcNL6ZZY5lHee/Ak5cdffDxoa2JrkHSwN6vAr8cKoaABeZ5k9QZhsgOsKJp2ExG86xpJy0tEm/sDbr5G7lu/07+Cs0MRqvTOmZtzLkXrxw2CR4v8DIfCiNp7P8cjxSC0OYxYVBoIvuIP8=
+	t=1783380635; cv=none; b=SQa3N/xlQggHp8itxYII0wTJmEexNweKaAADE07k+BxZAX870NdifIJTzbbKRn2A0O/ojA4JFc0oS7WPc//0LuhErQe7jyiSOrYP+fFaNztJBDMwhOudFtVvk+ZwCzGnL384yLgYpqqVeyWwTKPG6GwfOd3nkvam2EqH2UMeAfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783369488; c=relaxed/simple;
-	bh=C0IdBgwluOdkvoJhUK4YmzgWofAi2f6pxu1H/RBLTkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q7ihALipcCJcMyBK1BhMIk8rY8Fz1Ej2m5pgB10R/91KEdqTKmxNAKAjeG7/duSaTt+ampN+kduLWihtRtiUhmm5IJ3S0KQmtZDWIYGHOZpmYEIxZaAd0A+Dmp82xNx2VsnsU/rvAxtT6+Rr1pQKCTCsF31G4VB89szzf7OBK1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jX9VjPwb; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783380635; c=relaxed/simple;
+	bh=SLW8WrLBlFCgWLBf7dnpDb/jTAtbAWktNj6RWs4dTvg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s2az6ouF93XiQAwEJX5/PomH5h/22HNfLPU7qNxhC7nEyZOP2iiT+xvOHmyr4+K1L/NqBmRWhjs5lWmQYFxJVC4L1IBlkPUGcsJbB4K5ImtG/+9sev7aow016oejhg6I6zPX5ccXxk7YN0p2dh5CSOUathQl1fcj2YdXoS18YL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T989Z/6E; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jX9VjPwb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B987B1F000E9;
-	Mon,  6 Jul 2026 20:24:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783369486;
-	bh=5V2MYmXw0IMspTQHOBJTvMJEn+62Lokecxupqj4r6JI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jX9VjPwbhsRJ02+sVOKhGpdCFa//B1cNzRDkCiXnL4+ts1hPSsXp/P4712PS3LgXz
-	 oh/ww9IMlCBakAJxyl+LCvw1piLRNo/8sdHnNM55HSeEV4lZggt+iLXr2TyHIeqDFE
-	 g1LRULajgRJWVF2Mu71TRMvNnB24rfyK1fu83RRqEOSuLgWxjgcBsEonGklU0Vpbpn
-	 DNCqn2OK+OqHVtetw0c45Vjq9vvxQmOwtGopbAyYksdn+16VFEuEndVmKnlxlJdZUi
-	 PVkwriu4/obPw0BTFZEUqXGqyp8xeSA7/4xkra//qYmSpB1caUdpZA8CDvDCwHfIk8
-	 gWnDm1Z3fRBDQ==
-Date: Mon, 6 Jul 2026 13:24:45 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Milan Broz <gmazyland@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: af_alg - Allow additional ciphers for cryptsetup
-Message-ID: <20260706202445.GA283366@quark>
-References: <20260705184419.40762-1-ebiggers@kernel.org>
- <276a4c4e-bbe4-4f6f-9f9a-c1e195e06c86@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T989Z/6E"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-8efef6533aaso27427426d6.0
+        for <linux-hardening@vger.kernel.org>; Mon, 06 Jul 2026 16:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783380633; x=1783985433; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=OBr+hnnFmHItjtpfNGkl7u5UUjWMDOi9fk/G15N4o2Y=;
+        b=T989Z/6Ej/mppJX/sweFwrtgfsA5QzAUvGu+CIlzmRm3ycajwMsXC00I26pgbe4Ntf
+         /9PJfzuLjspjbeiendXaIkgGv0RFBARgrmK8d94gKqMddVSzsU2WZeDQKT0BOGPXfdRi
+         x4BG8TREtvv/7NUUtHqpD6BP3HLEsJX2FMhvntrdw77Bznx1XZvGeGGoQAgE8DSXNMiR
+         LRdeWcbOOkYluHXqRTNDP5H+00FI+TVx0NIgQE+/efcfk+rid0aHL3WXvTirpdRZuUTA
+         /qheak8owHgTAI6WSO7FOKyfvosKUgRGxJXam9CxrGFlnuUbrddJCbNV/mTF3sTdywzD
+         +d/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783380633; x=1783985433;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=OBr+hnnFmHItjtpfNGkl7u5UUjWMDOi9fk/G15N4o2Y=;
+        b=pCP0fUyKEqbi8BNE+ka3fW/ubFXkHtRM1SsJM7l1YWjll/qJziU7hXY4lkKnSI64oO
+         /5zrYy9m+qj2cNq7DNUJug21P/DrzXcQXmOgCfKaGl43zpjs25zWK9RVuXe4uaAU6zEb
+         hH5oYZAw9RLiVjtAOIURGauw4QO2J07mLnpbYOjsCq/uzII7wD4vbbq6EDvt1OJ+qdYp
+         B4MBA8L4pyDD8/E/4ebXQtee06+lvvrsZuYx3ms2sb9OEHIFUXy7GAZnyZPROoCu3BW4
+         1sVK+ydrNQWAkhCDOEDxeZKbR7Jk8P2MEf/8Hgh9sDG2Kwk8nEgnj+K1bEWKjHBVfIjr
+         FDmQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrBRpE9QcOkOYqolwnjKhSEn3RYRG8ywlxPwOzf2kbJ3S3eVhd+Sv1UTTZOQqXJ1ebktOC75ZWLBScs5bpOWLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd9Y+6MkCxRricJwNiO2i4CGzyevbRN8SiDV9sGd4IftaFqLqK
+	OsiY8CroC58jtEEhovZQPZ6Xx1c541LyIyzusyNusu9jLFJIG41TS2gS
+X-Gm-Gg: AfdE7cnF3UM+Q8HnBmJvjStrDDKl/E5pxQezTonrSWgObOIW2LQR+XCTMcfJhDnkmTE
+	p69CySfF8wIQkKLKiqONzkrvYL38Y5LuHolq2m82GLxxHvguwSr3NXhl4D5UU4RbOktAukVQz2y
+	IYiIREy3wXpfC40OCP0lw1BHCAqkncGTrGdWSmIcYify0acnQH9fQMAki1wN9B4sHsMZF8ctpgJ
+	WPynaK0+mvUPRwk+pAzSR9T9tAVuLozLsMUGhXAG4LUIHGBTHis+HES5/xIwj0KN8ACoxyDJsp2
+	qJyH8cpZrHlhQmhE1yV9vZrBfKWloiYwoppFTdsZGAmUrWNjTVw9G1bnURYTK440oO3iT0FaiCr
+	zSI4XpeuMcqb3i0/fFyJBB0AEfAmd5qAwUqb4nm3eigf5u0P1TPfK5jkqrRwf91nbp32kbSaS8q
+	0L/yBle07Xy6AEgH4h+F+VidJ2EduGNPY40SYDs/PgRfnXjp1BBQZV6/iTvZdEVgrasyC8cQIZ4
+	Mtdo0mtVs7aFd76Rxgz
+X-Received: by 2002:a05:6214:202b:b0:8f2:8fe9:752e with SMTP id 6a1803df08f44-8fcb4fe943dmr37631566d6.53.1783380632620;
+        Mon, 06 Jul 2026 16:30:32 -0700 (PDT)
+Received: from ryzen.lan ([2601:644:8000:7a86::e34])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f46e371bdfsm146137956d6.1.2026.07.06.16.30.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2026 16:30:31 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-scsi@vger.kernel.org
+Cc: =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
+Subject: [PATCHv3] scsi: st: use kzalloc_array()
+Date: Mon,  6 Jul 2026 16:30:29 -0700
+Message-ID: <20260706233029.814601-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <276a4c4e-bbe4-4f6f-9f9a-c1e195e06c86@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 06, 2026 at 08:20:10PM +0200, Milan Broz wrote:
-> On 7/5/26 8:44 PM, Eric Biggers wrote:
-> > Add "xts(camellia)", "xts(serpent)", and "xts(twofish)" to the allowlist
-> > for af_alg_restrict=1.  These niche AES alternatives have continued to
-> > see rare but persistent use via cryptsetup, which has historically
-> > relied on the AF_ALG support for these ciphers in XTS mode for
-> > performing the keyslot encryption.  (cryptsetup v2.8.7 and later fall
-> > back to a temporary dm-crypt mapping, but that requires root.)
-> > 
-> > Signed-off-by: Eric Biggers <ebiggers@kernel.org>
-> > ---
-> >   crypto/algif_skcipher.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
-> > index 2b8069667974..49ae779b3b6b 100644
-> > --- a/crypto/algif_skcipher.c
-> > +++ b/crypto/algif_skcipher.c
-> > @@ -45,6 +45,9 @@ static const struct af_alg_allowlist_entry skcipher_allowlist[] = {
-> >   	{ "ecb(des)", true }, /* iwd */
-> >   	{ "hctr2(aes)", false }, /* cryptsetup */
-> >   	{ "xts(aes)", false }, /* cryptsetup benchmark */
-> > +	{ "xts(camellia)", false }, /* cryptsetup */
-> > +	{ "xts(serpent)", false }, /* cryptsetup */
-> > +	{ "xts(twofish)", false }, /* cryptsetup */
-> >   	{},
-> 
-> Well, if we are going this way, I would also add Aria and SM4
-> (currently usable only in cryptsetup main branch).
+Merge allocations to simplify memory management with kzalloc_array(). No
+need to kfree separately.
 
-I'm adding these three because they seem to have a history of occasional
-use, as can be seen by web search results including their mentions in
-various forums, documentation, etc.  So I worry about breaking users of
-them who upgrade their kernel and still have cryptsetup < 2.8.7.
+Add __counted_by for extra runtime analysis. Move counting variable
+assignment after allocation as kzalloc_flex() does this with newer
+compilers.
 
-It doesn't seem like the same as true of aria-xts or sm4-xts.  And as
-you said they are usable only on the cryptsetup main branch -- which I
-understand now consistently uses the fallback to a temporary dm-crypt
-mapping (at least when run as root).  So perhaps we don't actually need
-to allow "xts(aria)" and "xts(sm4)" as well?
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ v3: typo fix
+ v2: remove the kfree and add a description.
+ drivers/scsi/st.c | 13 +++----------
+ drivers/scsi/st.h |  3 ++-
+ 2 files changed, 5 insertions(+), 11 deletions(-)
 
-The point isn't to add things that could theoretically be used, but
-rather add the minimum set that's needed to keep actual existing users
-working.
+diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
+index f1c3c4946637..55238f23f743 100644
+--- a/drivers/scsi/st.c
++++ b/drivers/scsi/st.c
+@@ -149,7 +149,7 @@ static struct st_dev_parm {
+    mode counts */
+ static const char *st_formats[] = {
+ 	"",  "r", "k", "s", "l", "t", "o", "u",
+-	"m", "v", "p", "x", "a", "y", "q", "z"}; 
++	"m", "v", "p", "x", "a", "y", "q", "z"};
+ 
+ /* The default definitions have been moved to st_options.h */
+ 
+@@ -3973,21 +3973,15 @@ static struct st_buffer *new_tape_buffer(int max_sg)
+ {
+ 	struct st_buffer *tb;
+ 
+-	tb = kzalloc_obj(struct st_buffer);
++	tb = kzalloc_flex(*tb, reserved_pages, max_sg);
+ 	if (!tb) {
+ 		printk(KERN_NOTICE "st: Can't allocate new tape buffer.\n");
+ 		return NULL;
+ 	}
+-	tb->frp_segs = 0;
+ 	tb->use_sg = max_sg;
++	tb->frp_segs = 0;
+ 	tb->buffer_size = 0;
+ 
+-	tb->reserved_pages = kzalloc_objs(struct page *, max_sg);
+-	if (!tb->reserved_pages) {
+-		kfree(tb);
+-		return NULL;
+-	}
+-
+ 	return tb;
+ }
+ 
+@@ -4533,7 +4527,6 @@ static void scsi_tape_release(struct kref *kref)
+ 
+ 	if (tpnt->buffer) {
+ 		normalize_buffer(tpnt->buffer);
+-		kfree(tpnt->buffer->reserved_pages);
+ 		kfree(tpnt->buffer);
+ 	}
+ 
+diff --git a/drivers/scsi/st.h b/drivers/scsi/st.h
+index 0d7c4b8c2c8a..759f4c43d563 100644
+--- a/drivers/scsi/st.h
++++ b/drivers/scsi/st.h
+@@ -45,7 +45,6 @@ struct st_buffer {
+ 	int syscall_result;
+ 	struct st_request *last_SRpnt;
+ 	struct st_cmdstatus cmdstat;
+-	struct page **reserved_pages;
+ 	int reserved_page_order;
+ 	struct page **mapped_pages;
+ 	struct rq_map_data map_data;
+@@ -53,6 +52,8 @@ struct st_buffer {
+ 	unsigned short use_sg;	/* zero or max number of s/g segments for this adapter */
+ 	unsigned short sg_segs;		/* number of segments in s/g list */
+ 	unsigned short frp_segs;	/* number of buffer segments */
++
++	struct page *reserved_pages[] __counted_by(use_sg);
+ };
+ 
+ /* The tape mode definition */
+-- 
+2.55.0
 
-> There is another user of AF_ALG hash, hardlink in util-linux, see
-> https://github.com/util-linux/util-linux/blob/master/lib/fileeq.c
-
-The AF_ALG use in 'hardlink' is unnecessary and has just been causing
-problems
-(https://sporks.space/2026/05/19/chasing-down-why-installing-the-kernel-segfaulted/).
-Fortunately, it's not a hard dependency, as it already has a working
-runtime fallback.  This was discussed on the util-linux issue tracker as
-well, and I understand the AF_ALG use is planned to be removed.
-
-- Eric
