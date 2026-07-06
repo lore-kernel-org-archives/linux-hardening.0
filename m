@@ -1,106 +1,117 @@
-Received: from va-1-115.ptr.blmpb.com (va-1-115.ptr.blmpb.com [209.127.230.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F2632E696
-	for <linux-hardening@vger.kernel.org>; Mon,  6 Jul 2026 07:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCBA423168;
+	Mon,  6 Jul 2026 09:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783323989; cv=none; b=P83hCg5YeW5dL0OU34eIXW+ET5fGhc7NzoCEOx+PN0x7xSA7bWYJbiixylb5PJoM5TDsnZ0MVLAcc5pRLNRn6v9RTspdzX8H+dkEsykN8uK38b3vqk3WXpnR84sf0a29LICPZ/JKQsX6jke0lGNxWSxN1SeHPCnDboJUO6JGkDI=
+	t=1783329089; cv=none; b=V7gZ1XXDIOMYdaAuyRFlAUHmE1AEK5v+hNkpCiyaygboLVWh58T/8FqgdD+1Aq0zEhCWrAwavEFiRyKOwoM/w9qAZAsl+WyB9oxhpxcW6KAFMXJvwwYI1zD3uM5rzlJdOmlYMTWsPakF+9dpq/T4OTLzeyL2W1lhTQApDHW+Xhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783323989; c=relaxed/simple;
-	bh=LcZ9wxLx+07e/rrFE1ojXbKD7zyLixDGTZisA7HBq1o=;
-	h=Subject:Mime-Version:References:Content-Type:To:Cc:Message-Id:
-	 In-Reply-To:From:Date; b=F45Bkb3u603UGRVhxZvKta7cynK41jLqrgyReggQj3VtFjHfNu/BFosipFc3wzyeFTaSfT1BZUzA6rlj13uI7z8c3oZ62Z5MsDg02KUrvrNbYwLzSuJFBbNo3LY5tE+zXl103q/F6LUzlC3r2qlPXEqqucCWeAwVs1cuVU6fYjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hC0TCeZK; arc=none smtp.client-ip=209.127.230.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1783329089; c=relaxed/simple;
+	bh=Yjvw/HVVmh70MVDhZySNDvXNJK4oCHdYgeZDhZvn3Ew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J1oweo1l7Zd/m4YyRh+Idj9IkoONHsFgXtiWLU8aY72JfngeP5mX14o2sHEgggLbpzOV3TReMAG97gerWoLiV0ct3PHGspcFvuAbaQVBwlznBUxg0Z64P8wLLicHh9vXnYknQUcBRq6Gdwf8ta9pS1oNLMKxLixdhynZRDpshtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eG2rVnJC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hC0TCeZK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1783323850; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=DWB+NjMk1HZepzF30XQzFwBn/hDq5+vh5fwlGqKis+4=;
- b=hC0TCeZKMo+CD7ZABwhuUqjie2wrXJGayLjJvPFDdCCde5wEgJryYiimTdjKh4zFzpoq3w
- 8GyQqiFxCYGUvez9FAzi4CBTknfmnbHs71Pn0Ze6V3PuuI1nfn1Lc25NmvF7sLCQ3YOGnT
- bf28URxLxQWmnjy1i8srnyNIesd+aRn7RvR7vUyhjXv0r+S9E5zgMBijT9RtGj2DMz23/p
- qO2EkACqzH5xTuLb3Lu2Nfb/gA9PyqzY2DBpJX4Fa/29RI5ei8JSvn7xXqlhzD/IoBTjI8
- BWlYUaWya2RMtYbkceIit4EIJ0Ku3fMwmnlCAOR1CY4DPL8mCNO9EvktD45z9w==
-Subject: Re: [PATCH v5 7/8] x86/string: extend memcpy_flushcache() fixed-size fastpaths
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eG2rVnJC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A9FD1F000E9;
+	Mon,  6 Jul 2026 09:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783329079;
+	bh=QkFcj8l+oLXhC7aF9NZNqPGpSl0c31kzpzMlDAFV+QE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=eG2rVnJCBidyUV6k5BBeWCCNM0F85/+WLTF1a2gL5CGxYgFLCFHCnWCFYkXxi2Gui
+	 gDSVgdzO8E6gbyBl1IAWNCCK2l/zOAT2aR1gsO7xQLSKCUDwFXdHcgwy1HRFT3xOCz
+	 eKZWz8qRLy6vOYo+YpPeOUkDqS9LlSYVzoaDIRTp+J36Z5Jg5J9M4glSVPaw1eG56j
+	 qViuc9HDHORqEf1JGyxn/2GpdcuorVLkLmARIVmJuOeYgO4vFWj0zNgi5cfqbVrP6x
+	 kvmaz3sd5ZdMQXmYDf0Her2yi6jY2CEtWmO+2AsD3bZmiL0pZUvfkuIR88Yax+Adve
+	 IU3CGjON99saw==
+Message-ID: <a1ffd1b0-f790-4c5c-af5e-541b15df3a4c@kernel.org>
+Date: Mon, 6 Jul 2026 11:11:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260703195619.GGakgT44P7lpcoMVlY@fat_crate.local>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/8] mm: fix stale ZONE_DEVICE refcount comment
+To: Li Zhe <lizhe.67@bytedance.com>, akpm@linux-foundation.org,
+ apopple@nvidia.com, arnd@arndb.de, bp@alien8.de,
+ dave.hansen@linux.intel.com, kees@kernel.org, mingo@redhat.com,
+ rppt@kernel.org, tglx@kernel.org
+Cc: linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+References: <20260701090553.62691-1-lizhe.67@bytedance.com>
+ <20260701090553.62691-2-lizhe.67@bytedance.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260701090553.62691-2-lizhe.67@bytedance.com>
 Content-Type: text/plain; charset=UTF-8
-To: <bp@alien8.de>
-Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<dave.hansen@linux.intel.com>, <david@kernel.org>, <kees@kernel.org>, 
-	<linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, 
-	<lizhe.67@bytedance.com>, <mingo@redhat.com>, <rppt@kernel.org>, 
-	<tglx@kernel.org>, <x86@kernel.org>
-Message-Id: <20260706074346.23928-1-lizhe.67@bytedance.com>
-In-Reply-To: <20260703195619.GGakgT44P7lpcoMVlY@fat_crate.local>
-X-Lms-Return-Path: <lba+26a4b5cc8+354306+vger.kernel.org+lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-From: "Li Zhe" <lizhe.67@bytedance.com>
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-Date: Mon,  6 Jul 2026 15:43:46 +0800
 Content-Transfer-Encoding: 7bit
 
-On Fri, 3 Jul 2026 12:56:19 -0700, bp@alien8.de wrote:
-
-> On Thu, Jul 02, 2026 at 03:37:50PM +0800, Li Zhe wrote:
-> > The relevant target sizes here are the x86_64 sizeof(struct page)
-> > values which patch 8 can hit: 64, 80, and 96 bytes.
-> >
-> > On x86_64, CONFIG_HAVE_ALIGNED_STRUCT_PAGE keeps struct page 16-byte
-> > aligned. That gives 64 bytes in the common case, 80 bytes when
-> > WANT_PAGE_VIRTUAL or CONFIG_KMSAN adds extra fields, and 96 bytes when
-> > both are present. I stopped there deliberately because this series does
-> > not have a current caller which needs larger constant sizes.
-> >
-> > The 32-byte and 48-byte cases were added only as intermediate fixed-size
-> > combinations used to build those larger struct page-sized copies while
-> > keeping them on the inline movnti path.
+On 7/1/26 11:05, Li Zhe wrote:
+> The comment in __init_zone_device_page() still uses the old
+> MEMORY_TYPE_* names and implies that FS_DAX pages regain a
+> refcount of 1 in the free path. That no longer matches the code.
 > 
-> This needs to be in a comment over that code so that it is clear why that
-> distinction has been made.
-
-Thanks. I will add a code comment for that in v6.
-
-> > Yes. The separate helper is there exactly because the added
-> > 32/48/64/80/96-byte cases carry an extra 8-byte destination-alignment
-> > check, while I left the existing 4/8/16-byte inline cases unchanged.
-> >
-> > The intent was to keep the larger fixed-size cases on the inline
-> > movnti path only when they already match the alignment assumptions
-> > used by __memcpy_flushcache(); otherwise they fall back to that
-> > out-of-line helper, which already handles the misaligned head/tail
-> > fragments before entering its movnti loops.
+> Update the comment to describe the current policy correctly:
+> MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free path,
+> while the remaining ZONE_DEVICE types start from 0 here and raise the
+> count again when the allocator or driver hands the page out.
 > 
-> Why can't the larger MOVNTI sizes deal with misaligned cases too and thus make
-> the code even simpler and more straight-forward this way?
+> No functional change intended.
+> 
+> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> ---
 
-The extra IS_ALIGNED() check is meant as a conservative performance
-choice, not because MOVNTI itself would be invalid on a misaligned
-destination.
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
-As the Intel optimization reference manual notes, higher-throughput
-data movement usually comes with alignment considerations, and can
-be more efficient when the destination is naturally aligned.
+-- 
+Cheers,
 
-So for these larger fixed-size cases, I kept the inline path limited
-to the aligned case. For misaligned destinations, falling back to
-__memcpy_flushcache() is expected to be the better choice, since it
-already handles the unaligned head first and only then enters its
-MOVNTI loops.
-
-I will make that rationale explicit in the code comment and commit
-message in v6.
-
-Thanks,
-Zhe
+David
