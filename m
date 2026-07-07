@@ -1,232 +1,151 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-115.ptr.blmpb.com (va-1-115.ptr.blmpb.com [209.127.230.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AFA3BB665;
-	Tue,  7 Jul 2026 11:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D513F8231
+	for <linux-hardening@vger.kernel.org>; Tue,  7 Jul 2026 11:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783423762; cv=none; b=fO9oOcnvaDh9bGG+41O6b/9QdPvUnn1rTM0gElw9/NMQQq0nJIAQivtdmtRnoOq+aicH0afF04BQQ7JCm7Y5GRcSZl33Azm8C1tu4kywXr9dS0etEAUy63nvyvCSiv3Rq8hiBDe2aTalWFN7U7lt8BRydYK7KDOxdRJb4FEb4Cw=
+	t=1783424085; cv=none; b=DnNN3IxW+yxLOuz4WkzTsMRtU4UhpgJJSBMM17RWveHEXSgiveDVc9bM8va3rqjR+HXsQVJ5ts09cUfSG+WwGMW85n2+gT/Q01QLiMcc4hgUz266i2vQJeRC6GL2EBZpCaq+ZEReUdHvr7Mry+a6S3T0l3kEj4exexhfUNGpu0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783423762; c=relaxed/simple;
-	bh=onBhDyqzL4dpAY4chrVkKmkoS4sjWp6Os00FF9DRTZs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yhe/XZut+s1D1KC6FdLFoOh5rzbBLZf9w4JA7bFTWk4iigMfInudlibo4VXzpJMtbFaFJE/b7nKYf2B7OQFbMrC66Sj/n9+tIP31bVAE7oDaODCTCBKG21gfcKlMjtL4wAh4Sgtl8fJXueweKGwISl6ObNP9UmENFYNLgwadRqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=pUJ/OyF7 reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1783424085; c=relaxed/simple;
+	bh=bwMlJUahduxpYuI7dxnCe73XeR1A9mK1WvouKmZcB2g=;
+	h=In-Reply-To:Content-Type:To:Subject:Mime-Version:Date:Message-Id:
+	 References:Cc:From; b=rlfGDsCWINS7HQt6rg1b57OofThbl2iAZdjD8ae9XF+Esvf5ec+eKqvLZyVlFTqE/Vxum1Ks4ukkUXYIMZA2VqP0v6zCYTQ5QcBllxBGwBJDQ5T+IHyNTAcx5YUBEAEVriiIlnKotrGdRfbLLvqmNnGAKD09ASIJnJlhKea4GpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=S0HZYj6i; arc=none smtp.client-ip=209.127.230.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="pUJ/OyF7"
-Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 667BNfJs005495
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 7 Jul 2026 20:23:42 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=FbPusrcXPnpYFyMiIMTwRTROLwgbaX8b1Agwe0KIe8E=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1783423422; v=1;
-        b=pUJ/OyF7ICHeyUEuLdKMr4YCFsLqDapVuMRnLQ1VG7qoZLxt4aFcFeO4o7kJliWn
-         H3b7btpDubqYTMc9GZCHY5WXZStHC0PvxFiMDD07iruin19bvrgV4oOrmbqrFwGL
-         2e6SFbIbSZA2dMHu2Ue3tvi0icj3flekDGu400ANaIoILfDXU2YSG92LLbGEfKwY
-         qeakxzWWZshEsXfQfd+3pw9cJNbdEwZEsTMAMFX1PtjbqZUypMMGWCmgWfK2C6AI
-         gS95j9Ph4YatoHewtYhkaTotazxRpdOEUFGz1u8zd/R7Fg7xuNZKLxD6q/fhCtwI
-         dK+JUrYcPvBaufMKvSU3Lw==
-Message-ID: <cb5d5f13-a1a9-47dd-a717-5533a8b32b20@rsg.ci.i.u-tokyo.ac.jp>
-Date: Tue, 7 Jul 2026 20:23:41 +0900
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="S0HZYj6i"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1783424072; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=jQE3oIJ4htoW+wFqKdDDzBtKjMtLRHL9VUuCAay6Gu0=;
+ b=S0HZYj6iA/8doMYhRv7PwCxyEjwG6yYdBTwX0CGw0zVs0c+gaQ3KMv3Nr30+Q8pkPvZkDP
+ 1elSkLWqTSqBgWJXGUnYbgDpBpgw6g0KhF4oQSKG5jyeOB8ZPUTNtGlrlNrrAUnFbfhqZh
+ li8F2SESyx+3UqSjOq5nN9f/IaSmeDP67Twqg2Epvjj/vby8Qx11wNnCPNyNZumV4GQ3Dm
+ QvyWKIoqfZb8KI1wGir5jyRIMKp5/jR7WxpFJZvnopRLNxd+48Neq3BC9R/UfcidI4xQ17
+ mJ1fTN5Hlmq/IS5Ee9ZEkAa4RQNDI43MS89PNob21AY4hsCqojimrG/UOsP9sA==
+In-Reply-To: <20260706171902.GCakvjhl5U89iJdaNP@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+To: <bp@alien8.de>
+Subject: Re: [PATCH v5 7/8] x86/string: extend memcpy_flushcache() fixed-size fastpaths
+Content-Transfer-Encoding: 7bit
+X-Lms-Return-Path: <lba+26a4ce446+543edf+vger.kernel.org+lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 5/7] KVM: arm64: PMU: Implement fixed-counters-only
- emulation
-To: Oliver Upton <oupton@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu
- <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-References: <20260706-hybrid-v8-0-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
- <20260706-hybrid-v8-5-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
- <akvyvclUQ2b2YHiU@kernel.org>
-Content-Language: en-US
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <akvyvclUQ2b2YHiU@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Date: Tue,  7 Jul 2026 19:34:09 +0800
+Message-Id: <20260707113409.71996-1-lizhe.67@bytedance.com>
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+References: <20260706171902.GCakvjhl5U89iJdaNP@fat_crate.local>
+Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<dave.hansen@linux.intel.com>, <david@kernel.org>, <kees@kernel.org>, 
+	<linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, 
+	<lizhe.67@bytedance.com>, <mingo@redhat.com>, <rppt@kernel.org>, 
+	<tglx@kernel.org>, <x86@kernel.org>
+From: "Li Zhe" <lizhe.67@bytedance.com>
 
-On 2026/07/07 3:23, Oliver Upton wrote:
-> On Mon, Jul 06, 2026 at 07:03:28PM +0900, Akihiko Odaki wrote:
->> Add internal state for PMUv3 emulation without programmable event
->> counters. When fixed-counters-only mode is active, KVM reports no
->> programmable counters and hides PMCEID, avoiding event-counter state
->> whose behavior can depend on the selected hardware PMU.
->>
->> The cycle counter still uses a host perf event. Unlike the normal PMU
->> path, fixed-counters-only mode may create that event from the hardware
->> PMU attached to the VCPU's current pCPU. If the VCPU later loads on a
->> pCPU that is not covered by the existing event's PMU, request a PMU
->> reload so the cycle counter can be recreated against the new pCPU's PMU.
->> Keep this affinity check limited to fixed-counters-only VMs; the normal
->> programmable-counter mode continues to use the VM-wide PMU and does not
->> need per-load reload decisions.
->>
->> Add a separate internal flag for explicit userspace PMU selection. The
->> UAPI wiring added later will use it to keep explicit PMU selection and
->> fixed-counters-only mode mutually exclusive while still allowing
->> fixed-counters-only mode to replace the default PMU selected during
->> KVM_ARM_VCPU_INIT.
->>
->> The UAPI wiring that sets the fixed-counters-only flag and records
->> explicit PMU selection is added later in the series.
->>
->> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
->> ---
->>   arch/arm64/include/asm/kvm_host.h |  4 ++++
->>   arch/arm64/kvm/arm.c              |  1 +
->>   arch/arm64/kvm/pmu-emul.c         | 43 +++++++++++++++++++++++++++++++++++++--
->>   include/kvm/arm_pmu.h             |  2 ++
->>   4 files changed, 48 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->> index 0c39d9db7d57..aa07b05b8231 100644
->> --- a/arch/arm64/include/asm/kvm_host.h
->> +++ b/arch/arm64/include/asm/kvm_host.h
->> @@ -353,6 +353,10 @@ struct kvm_arch {
->>   #define KVM_ARCH_FLAG_WRITABLE_IMP_ID_REGS		10
->>   	/* Unhandled SEAs are taken to userspace */
->>   #define KVM_ARCH_FLAG_EXIT_SEA				11
->> +	/* PMUv3 is emulated with an explicitly specified hardware PMU */
->> +#define KVM_ARCH_FLAG_PMU_V3_EXPLICIT			12
->> +	/* PMUv3 is emulated without progammable event counters */
->> +#define KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY	13
->>   	unsigned long flags;
->>   
->>   	/* VM-wide vCPU feature set */
->> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
->> index 68767bb08285..1cc7754d5ace 100644
->> --- a/arch/arm64/kvm/arm.c
->> +++ b/arch/arm64/kvm/arm.c
->> @@ -687,6 +687,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->>   	if (has_vhe())
->>   		kvm_vcpu_load_vhe(vcpu);
->>   	kvm_arch_vcpu_load_fp(vcpu);
->> +	kvm_vcpu_load_pmu(vcpu);
->>   	kvm_vcpu_pmu_restore_guest(vcpu);
->>   	if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
->>   		kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
->> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
->> index e70628653e4b..40cad183376c 100644
->> --- a/arch/arm64/kvm/pmu-emul.c
->> +++ b/arch/arm64/kvm/pmu-emul.c
->> @@ -96,6 +96,11 @@ u64 kvm_pmu_evtyper_mask(struct kvm *kvm)
->>   	return mask;
->>   }
->>   
->> +static bool kvm_pmu_fixed_counters_only(struct kvm *kvm)
->> +{
->> +	return test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &kvm->arch.flags);
->> +}
->> +
->>   /**
->>    * kvm_pmc_is_64bit - determine if counter is 64bit
->>    * @pmc: counter context
->> @@ -343,7 +348,11 @@ u64 kvm_pmu_implemented_counter_mask(struct kvm_vcpu *vcpu)
->>   
->>   static void kvm_pmc_enable_perf_event(struct kvm_pmc *pmc)
->>   {
->> -	if (!pmc->perf_event) {
->> +	struct kvm_vcpu *vcpu = kvm_pmc_to_vcpu(pmc);
->> +
->> +	if (!pmc->perf_event ||
->> +	    (kvm_pmu_fixed_counters_only(vcpu->kvm) &&
->> +	     !cpumask_test_cpu(vcpu->cpu, &to_arm_pmu(pmc->perf_event->pmu)->supported_cpus))) {
->>   		kvm_pmu_create_perf_event(pmc);
->>   		return;
->>   	}
->> @@ -720,6 +729,12 @@ static void kvm_pmu_create_perf_event(struct kvm_pmc *pmc)
->>   	int eventsel;
->>   	u64 evtreg;
->>   
->> +	if (kvm_pmu_fixed_counters_only(vcpu->kvm)) {
->> +		arm_pmu = kvm_pmu_probe_armpmu(vcpu->cpu);
->> +		if (WARN_ON_ONCE(!arm_pmu))
->> +			return;
->> +	}
->> +
->>   	evtreg = kvm_pmc_read_evtreg(pmc);
->>   
->>   	kvm_pmu_stop_counter(pmc);
->> @@ -748,7 +763,7 @@ static void kvm_pmu_create_perf_event(struct kvm_pmc *pmc)
->>   	 * Don't create an event if we're running on hardware that requires
->>   	 * PMUv3 event translation and we couldn't find a valid mapping.
->>   	 */
->> -	eventsel = kvm_map_pmu_event(vcpu->kvm->arch.arm_pmu, eventsel);
->> +	eventsel = kvm_map_pmu_event(arm_pmu, eventsel);
->>   	if (eventsel < 0)
->>   		return;
->>   
->> @@ -878,6 +893,9 @@ u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, bool pmceid1)
->>   	u64 val, mask = 0;
->>   	int base, i, nr_events;
->>   
->> +	if (kvm_pmu_fixed_counters_only(vcpu->kvm))
->> +		return 0;
->> +
-> 
-> Even if we advertise bits in PMCEID, does it matter? There's no PMC that
-> the guest could use to count it.
-> 
-> I understand it isn't aesthetic but I really want to minimize the
-> special-casing that has to be done for this feature.
+On Mon, 6 Jul 2026 10:19:02 -0700, bp@alien8.de wrote:
 
-This strictly ensures that sysregs are stable after migrating across 
-physical CPUs, which may have different PMCEID values.
+> On Mon, Jul 06, 2026 at 03:43:46PM +0800, Li Zhe wrote:
+> > The extra IS_ALIGNED() check is meant as a conservative performance
+> > choice, not because MOVNTI itself would be invalid on a misaligned
+> > destination.
+> 
+> Dude, you can't just wait for me to pull every unobvious decision in the code
+> out of you - you need to write it down in your commit messages! I'm not a mind
+> reader, you know.
+> 
+> > As the Intel optimization reference manual notes, higher-throughput
+> > data movement usually comes with alignment considerations, and can
+> > be more efficient when the destination is naturally aligned.
+> 
+> This can't get any more vague.
+> 
+> > So for these larger fixed-size cases, I kept the inline path limited
+> > to the aligned case. For misaligned destinations, falling back to
+> > __memcpy_flushcache() is expected to be the better choice, since it
+> > already handles the unaligned head first and only then enters its
+> > MOVNTI loops.
+> >
+> > I will make that rationale explicit in the code comment and commit
+> > message in v6.
+> 
+> No, you need to show whether the alignment brigns anything and then add it or
+> remove it. We don't do things based on hearsay in the kernel - only on hard
+> performance numbers.
 
-> 
->> +void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu)
->> +{
->> +	/*
->> +	 * ARMV8_PMU_INSTR_IDX will need the same check once
->> +	 * FEAT_PMUv3_ICNTR is supported.
->> +	 */
->> +	struct kvm_pmc *pmc = kvm_vcpu_idx_to_pmc(vcpu, ARMV8_PMU_CYCLE_IDX);
->> +	struct arm_pmu *cpu_pmu;
->> +
->> +	if (!kvm_pmu_fixed_counters_only(vcpu->kvm) ||
->> +	    !kvm_pmu_counter_is_enabled(pmc) || !pmc->perf_event)
->> +		return;
->> +
->> +	cpu_pmu = to_arm_pmu(pmc->perf_event->pmu);
->> +	if (!cpumask_test_cpu(vcpu->cpu, &cpu_pmu->supported_cpus))
->> +		kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
-> 
-> Just detect the changing PMU implementation here, KVM_REQ_RELOAD_PMU
-> will need to detect the PMCs that require an update anyway. Stash the
-> last cpu in kvm_arch_vcpu_load() and pass it to this:
-> 
-> void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu, int last_cpu)
-> {
-> 	if (!kvm_pmu_fixed_counters_only(vcpu->kvm) || vcpu->cpu == last_cpu)
-> 		return;
-> 
-> 	if (kvm_pmu_probe_armpmu(vcpu->cpu) != kvm_pmu_probe_armpmu(last_cpu))
-> 		kvm_make_request(KVM_REQ_RELOAD_PMU);
-> }
+Thanks. I measured the exact tradeoff on the physical x86_64 host with
+an out-of-tree microbenchmark.
 
-It is a nice way to simplify the code and to avoid hardcoding 
-ARMV8_PMU_INSTR_IDX. I'll use the code for the next version.
+The question for this patch is whether misaligned 32/48/64/80/96-byte
+copies should still stay in the fixed-size switch, or whether an extra
+alignment check should redirect them to the generic
+__memcpy_flushcache() path.
 
-Regards,
-Akihiko Odaki
+To isolate that choice, I benchmarked two memcpy_flushcache()-style
+helpers which shared the same generic body. The only difference was
+whether those fixed-size cases always stayed in the fixed-size MOVNTI
+switch, or whether misaligned destinations were redirected to the
+generic path:
+
+variant A:
+    switch (len) {
+    case 32 ... 96:
+        do fixed-size MOVNTI stores;
+        return;
+    default:
+        generic __memcpy_flushcache()-style body;
+    }
+
+variant B:
+    switch (len) {
+    case 32 ... 96:
+        if (!IS_ALIGNED(dst, 8))
+            goto generic_path;
+        do fixed-size MOVNTI stores;
+        return;
+    default:
+    generic_path:
+        generic __memcpy_flushcache()-style body;
+    }
+
+On the same CPU, with the same source buffer, destination layout,
+stride, and iteration count, I measured the median time per memcpy.
+The wmb() was used only to separate rounds and was not included in the
+timed interval.
+
+For offset 0, the two variants were essentially the same. For
+misaligned destinations (offsets 1..7 averaged), keeping those sizes in
+the fixed-size switch took about:
+
+    32-byte memcpy: 0.410 us
+    48-byte memcpy: 0.411 us
+    64-byte memcpy: 0.426 us
+    80-byte memcpy: 0.426 us
+    96-byte memcpy: 0.428 us
+
+Redirecting the same misaligned cases to the generic
+__memcpy_flushcache() path took about:
+
+    32-byte memcpy: 0.962 us
+    48-byte memcpy: 0.956 us
+    64-byte memcpy: 0.923 us
+    80-byte memcpy: 0.998 us
+    96-byte memcpy: 1.001 us
+
+So based on these measurements, the extra alignment check is not buying
+us anything here. It consistently makes the misaligned 32/48/64/80/96
+cases slower by redirecting them to the generic path.
+
+I will drop the separate alignment check and fold 32/48/64/80/96 into
+the main fixed-size switch in the next version.
+
+Thanks,
+Zhe
