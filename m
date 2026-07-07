@@ -1,243 +1,226 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23C63ECBEB;
-	Tue,  7 Jul 2026 12:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F24313E29;
+	Tue,  7 Jul 2026 14:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783428815; cv=none; b=TeTL0flOQ9Bq7ol1AI3U5Ta7m/mnBrRSu1uvIGhcYYK2rL7J6vGRDiDInAlhs3gg1Q377ybX6xisWxasHwo0BYPzH1uz8+0OknubSbhGsDrqRvU3jK17OAyyjxm4GmQY8vgeH1cSXN21EUg0J3wXIkLrLmfEEGh1tqsaaDTZ7EQ=
+	t=1783433067; cv=none; b=hJbhNJ4oK48qSNQLEYznvebtVKd+ILBhDLojCt3LELS8iQLgoRSLJPC6MrgdW+zjqwmJ4Ca/0lReWYNCjmib6dUj0SNAyQApKZjadpPY88Xeo/++NaLK8hPpjK3NBtrSDoYQVWxJD+Ac11OSslb1YfbVlju+CTk653Ez+rEQ6fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783428815; c=relaxed/simple;
-	bh=Xb+YqBjRz0qD+o6CKIOqq56fPsxW6/yG2jq8gj08s6w=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=sIiYPtktC28V2vXOiSFSCh7sdGQDcFwifdlCrMNxJ4Pv1+Kib1bC0vJ1GocWEnll6zoWqhfRHPx949C9HuutD51UWtDk0F9iqChTodQpj5fyeM5UPQqOHBfhJLlFh0D5YPz44bPliqItTlFgs6B2Ln7UYCMBykWx+C0N46kkznM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=R81RxZKK reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1783433067; c=relaxed/simple;
+	bh=VVduthgyM0ls5bM2bLDjpqwtpzsb3QYUHtpF9OYaiZs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NVCf4ro+K43zJYltnE4ziPnGPIs1Nf6yDjjrnpZUkw47o113uXgmAdOQkNwrgHp/pILBvAHjweFNr5dUdjan3lSYLeSVsmmGZPysgjYI1r/sWQskrFmOH2OUQ9V4S7OTZLeVwZ3ACbrc7NU0KzZO7xoU0PW76cf1yWGU9XJPRGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7bzhUah; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="R81RxZKK"
-Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 667Cqolx003077
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 7 Jul 2026 21:52:50 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=Q8mzB5h+eiRPcyM+Q6UnMUdYQq5QX0PPqK6QKz/gjn8=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1783428770; v=1;
-        b=R81RxZKKr830m5okZVbuAUx4R8H9TjeZgWqeLdmsDWICaaofU7CAqfRjVh3fvZD3
-         mrliymgWKokZgwSB89BSujTeGSgjgItUFlZ9M/0gs0AnaVlRp91/oo2sR+MHyrRE
-         u/iC4N79tmrHs+w/SIt3Sqt8TuyTZQpZf0Mkvwea9OXeOiS6J2KTyJE2gN2hjwRU
-         G5EVKOY9d3cqJ2LUpgO0t9O8tlPEaetmyhzQxG/P8NrievxGEtr5Nqjr1/75WN2J
-         kc4fCJhY3PMJKabOSTXG+qkwTxV6xFS6PmaWS1iBzxNRPqn7Wj8u5ZNaOoX/+aDE
-         xixulSsKGWtekmOPgcjeWg==
-Message-ID: <5e66748a-bfda-41a9-8614-88cbf2fe1f09@rsg.ci.i.u-tokyo.ac.jp>
-Date: Tue, 7 Jul 2026 21:52:49 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7bzhUah"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7892EC2BCB8;
+	Tue,  7 Jul 2026 14:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1783433067;
+	bh=VVduthgyM0ls5bM2bLDjpqwtpzsb3QYUHtpF9OYaiZs=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=A7bzhUahOPz0laqExxJJloa/dCKpVhwOlo4UqpanIQ8nOw/7uS+dppxMSrvmbAc1x
+	 Y86dfg27VUuFJExZmRlIv5Yoj5H+14x4KyGN1noAr+GExXMwzQlo7wYCiNgXrKmnhI
+	 7S+k6MD/sHVypGN4VBnQ05McKUl2MwP7Ij6sHJChHbV6r2nMaZA78V3q/5LhGji3vF
+	 jG8jql23V7GWpdQdr41fri+no2PBBSi9Q328JdCQrr9esfV6gqLWK9UR3cXc/ZWTLh
+	 79F/Lxn/Obd7tb73GKum8CEpzRXO6WCKJcAMSoNohhJZnScZiNzrhCvqBQHaCRlmPh
+	 Ij54c4oOInw8g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53226C43458;
+	Tue,  7 Jul 2026 14:04:27 +0000 (UTC)
+From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Subject: [PATCH v7 00/17] AD9910 Direct Digital Synthesizer
+Date: Tue, 07 Jul 2026 15:04:21 +0100
+Message-Id: <20260707-ad9910-iio-driver-v7-0-a4ec30f63700@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 5/7] KVM: arm64: PMU: Implement fixed-counters-only
- emulation
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-To: Oliver Upton <oupton@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu
- <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-References: <20260706-hybrid-v8-0-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
- <20260706-hybrid-v8-5-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
- <akvyvclUQ2b2YHiU@kernel.org>
- <cb5d5f13-a1a9-47dd-a717-5533a8b32b20@rsg.ci.i.u-tokyo.ac.jp>
-Content-Language: en-US
-In-Reply-To: <cb5d5f13-a1a9-47dd-a717-5533a8b32b20@rsg.ci.i.u-tokyo.ac.jp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGYHTWoC/23Q3WrEIBAF4FdZvK7FGX8Se9X3WHqhcdwV2lhMk
+ S1L3r1mKaQlXh7Bbw7nzhYqiRb2crqzQjUtKc8tDE8nNl3dfCGeQssMBRqBMHIXrAXBU8o8lFS
+ pcOtlQFATaois/fssFNPtYZ7fWr6m5SuX78eJCtvrr4aio1XggkuPRjmnRgfi1c3uPV+ep/zBN
+ q7iTshuoYqNoMFGKz1NEeBAyJ1QMPQI2Qi03soB0CGOB0LthBbdFqoRAY2PAQWRDAdC/yH6LfS
+ 2BWhrp3GUoNyBMDth+luYRgwWUMfoScn/c67r+gNv4RiRAgIAAA==
+X-Change-ID: 20260218-ad9910-iio-driver-9b3d214c251f
+To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Rodrigo Alencar <rodrigo.alencar@analog.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783433065; l=7884;
+ i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
+ bh=VVduthgyM0ls5bM2bLDjpqwtpzsb3QYUHtpF9OYaiZs=;
+ b=8EistSINOpKLMgs2rNuyOXAOeECwKPLhFJOvW3sHtajgED8gDlIvXCRvIt3m3uuXouDGC62Rg
+ xZ/iaM8nFnkCoUqeAEquRqyh6UHE+ysKqZFsL/XLkVd+EKEF/uAfveW
+X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
+ pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
+X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
+ with auth_id=561
+X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Reply-To: rodrigo.alencar@analog.com
 
-On 2026/07/07 20:23, Akihiko Odaki wrote:
-> On 2026/07/07 3:23, Oliver Upton wrote:
->> On Mon, Jul 06, 2026 at 07:03:28PM +0900, Akihiko Odaki wrote:
->>> Add internal state for PMUv3 emulation without programmable event
->>> counters. When fixed-counters-only mode is active, KVM reports no
->>> programmable counters and hides PMCEID, avoiding event-counter state
->>> whose behavior can depend on the selected hardware PMU.
->>>
->>> The cycle counter still uses a host perf event. Unlike the normal PMU
->>> path, fixed-counters-only mode may create that event from the hardware
->>> PMU attached to the VCPU's current pCPU. If the VCPU later loads on a
->>> pCPU that is not covered by the existing event's PMU, request a PMU
->>> reload so the cycle counter can be recreated against the new pCPU's PMU.
->>> Keep this affinity check limited to fixed-counters-only VMs; the normal
->>> programmable-counter mode continues to use the VM-wide PMU and does not
->>> need per-load reload decisions.
->>>
->>> Add a separate internal flag for explicit userspace PMU selection. The
->>> UAPI wiring added later will use it to keep explicit PMU selection and
->>> fixed-counters-only mode mutually exclusive while still allowing
->>> fixed-counters-only mode to replace the default PMU selected during
->>> KVM_ARM_VCPU_INIT.
->>>
->>> The UAPI wiring that sets the fixed-counters-only flag and records
->>> explicit PMU selection is added later in the series.
->>>
->>> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
->>> ---
->>>   arch/arm64/include/asm/kvm_host.h |  4 ++++
->>>   arch/arm64/kvm/arm.c              |  1 +
->>>   arch/arm64/kvm/pmu-emul.c         | 43 ++++++++++++++++++++++++++++ 
->>> +++++++++--
->>>   include/kvm/arm_pmu.h             |  2 ++
->>>   4 files changed, 48 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/ 
->>> asm/kvm_host.h
->>> index 0c39d9db7d57..aa07b05b8231 100644
->>> --- a/arch/arm64/include/asm/kvm_host.h
->>> +++ b/arch/arm64/include/asm/kvm_host.h
->>> @@ -353,6 +353,10 @@ struct kvm_arch {
->>>   #define KVM_ARCH_FLAG_WRITABLE_IMP_ID_REGS        10
->>>       /* Unhandled SEAs are taken to userspace */
->>>   #define KVM_ARCH_FLAG_EXIT_SEA                11
->>> +    /* PMUv3 is emulated with an explicitly specified hardware PMU */
->>> +#define KVM_ARCH_FLAG_PMU_V3_EXPLICIT            12
->>> +    /* PMUv3 is emulated without progammable event counters */
->>> +#define KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY    13
->>>       unsigned long flags;
->>>       /* VM-wide vCPU feature set */
->>> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
->>> index 68767bb08285..1cc7754d5ace 100644
->>> --- a/arch/arm64/kvm/arm.c
->>> +++ b/arch/arm64/kvm/arm.c
->>> @@ -687,6 +687,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, 
->>> int cpu)
->>>       if (has_vhe())
->>>           kvm_vcpu_load_vhe(vcpu);
->>>       kvm_arch_vcpu_load_fp(vcpu);
->>> +    kvm_vcpu_load_pmu(vcpu);
->>>       kvm_vcpu_pmu_restore_guest(vcpu);
->>>       if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
->>>           kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
->>> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
->>> index e70628653e4b..40cad183376c 100644
->>> --- a/arch/arm64/kvm/pmu-emul.c
->>> +++ b/arch/arm64/kvm/pmu-emul.c
->>> @@ -96,6 +96,11 @@ u64 kvm_pmu_evtyper_mask(struct kvm *kvm)
->>>       return mask;
->>>   }
->>> +static bool kvm_pmu_fixed_counters_only(struct kvm *kvm)
->>> +{
->>> +    return test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &kvm- 
->>> >arch.flags);
->>> +}
->>> +
->>>   /**
->>>    * kvm_pmc_is_64bit - determine if counter is 64bit
->>>    * @pmc: counter context
->>> @@ -343,7 +348,11 @@ u64 kvm_pmu_implemented_counter_mask(struct 
->>> kvm_vcpu *vcpu)
->>>   static void kvm_pmc_enable_perf_event(struct kvm_pmc *pmc)
->>>   {
->>> -    if (!pmc->perf_event) {
->>> +    struct kvm_vcpu *vcpu = kvm_pmc_to_vcpu(pmc);
->>> +
->>> +    if (!pmc->perf_event ||
->>> +        (kvm_pmu_fixed_counters_only(vcpu->kvm) &&
->>> +         !cpumask_test_cpu(vcpu->cpu, &to_arm_pmu(pmc->perf_event- 
->>> >pmu)->supported_cpus))) {
->>>           kvm_pmu_create_perf_event(pmc);
->>>           return;
->>>       }
->>> @@ -720,6 +729,12 @@ static void kvm_pmu_create_perf_event(struct 
->>> kvm_pmc *pmc)
->>>       int eventsel;
->>>       u64 evtreg;
->>> +    if (kvm_pmu_fixed_counters_only(vcpu->kvm)) {
->>> +        arm_pmu = kvm_pmu_probe_armpmu(vcpu->cpu);
->>> +        if (WARN_ON_ONCE(!arm_pmu))
->>> +            return;
->>> +    }
->>> +
->>>       evtreg = kvm_pmc_read_evtreg(pmc);
->>>       kvm_pmu_stop_counter(pmc);
->>> @@ -748,7 +763,7 @@ static void kvm_pmu_create_perf_event(struct 
->>> kvm_pmc *pmc)
->>>        * Don't create an event if we're running on hardware that 
->>> requires
->>>        * PMUv3 event translation and we couldn't find a valid mapping.
->>>        */
->>> -    eventsel = kvm_map_pmu_event(vcpu->kvm->arch.arm_pmu, eventsel);
->>> +    eventsel = kvm_map_pmu_event(arm_pmu, eventsel);
->>>       if (eventsel < 0)
->>>           return;
->>> @@ -878,6 +893,9 @@ u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, 
->>> bool pmceid1)
->>>       u64 val, mask = 0;
->>>       int base, i, nr_events;
->>> +    if (kvm_pmu_fixed_counters_only(vcpu->kvm))
->>> +        return 0;
->>> +
->>
->> Even if we advertise bits in PMCEID, does it matter? There's no PMC that
->> the guest could use to count it.
->>
->> I understand it isn't aesthetic but I really want to minimize the
->> special-casing that has to be done for this feature.
-> 
-> This strictly ensures that sysregs are stable after migrating across 
-> physical CPUs, which may have different PMCEID values.
-> 
->>
->>> +void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu)
->>> +{
->>> +    /*
->>> +     * ARMV8_PMU_INSTR_IDX will need the same check once
->>> +     * FEAT_PMUv3_ICNTR is supported.
->>> +     */
->>> +    struct kvm_pmc *pmc = kvm_vcpu_idx_to_pmc(vcpu, 
->>> ARMV8_PMU_CYCLE_IDX);
->>> +    struct arm_pmu *cpu_pmu;
->>> +
->>> +    if (!kvm_pmu_fixed_counters_only(vcpu->kvm) ||
->>> +        !kvm_pmu_counter_is_enabled(pmc) || !pmc->perf_event)
->>> +        return;
->>> +
->>> +    cpu_pmu = to_arm_pmu(pmc->perf_event->pmu);
->>> +    if (!cpumask_test_cpu(vcpu->cpu, &cpu_pmu->supported_cpus))
->>> +        kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
->>
->> Just detect the changing PMU implementation here, KVM_REQ_RELOAD_PMU
->> will need to detect the PMCs that require an update anyway. Stash the
->> last cpu in kvm_arch_vcpu_load() and pass it to this:
->>
->> void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu, int last_cpu)
->> {
->>     if (!kvm_pmu_fixed_counters_only(vcpu->kvm) || vcpu->cpu == last_cpu)
->>         return;
->>
->>     if (kvm_pmu_probe_armpmu(vcpu->cpu) != 
->> kvm_pmu_probe_armpmu(last_cpu))
->>         kvm_make_request(KVM_REQ_RELOAD_PMU);
->> }
-> 
-> It is a nice way to simplify the code and to avoid hardcoding 
-> ARMV8_PMU_INSTR_IDX. I'll use the code for the next version.
+This patch series adds support for the Analog Devices AD9910 DDS.
 
-I tried this but unfortunately it doesn't seem to work. 
-kvm_arch_vcpu_put() sets vcpu->cpu to -1 so we cannot simply read it to 
-get the last cpu in kvm_arch_vcpu_load().
+This is a follow-up of the V3/V4/V5 discussion. For V1, we reached into
+this channel composition agreement where physical channels may have
+sub-channels. That adds the flexibility necessary for this design.
+During V2, some feedback indicated that the ABI is too device-specific,
+so DRG/RAM destination and operating modes are configured through
+alternate paths and profile channels are created. In V3/V4/V5, there was
+further discussion on the ABI and on mode priority debug.
 
-Regards,
-Akihiko Odaki
+The AD9910 DDS core can be driven through several independent mechanisms:
+single tone profiles, a digital ramp generator, an internal RAM playback
+engine, a parallel data port, and output shift keying. Each of these
+represents a distinct signal path into the DDS accumulator, so the driver
+models them as separate IIO output channels (IIO_ALTCURRENT, IIO_PHASE
+and IIO_FREQUENCY). This per-channel separation allows userspace to
+configure each mode independently through its own set of sysfs attributes,
+and to enable/disable modes individually via IIO_CHAN_INFO_ENABLE, relying
+on the hardware's own mode selection architecture.
+
+The AD9910 register map is not suited for the regmap framework: register
+widths vary across the map (16, 32, and 64 bits). The driver instead
+implements direct SPI access helpers with a software register cache, using
+type-specific read/write/update functions (ad9910_reg{16,32,64}_{read,
+write,update}) that handle endianness conversion and cache coherency.
+
+Registers are cached for several reasons. The control/function registers
+(CFR1, CFR2) are frequently queried to determine the current operating
+mode (e.g., checking RAM_ENABLE before every profile register access),
+and caching avoids repeated SPI read transactions for what are
+essentially state checks. The cache also enables efficient
+read-modify-write updates on multi-byte registers: the update functions
+merge new field values with the cached register content without issuing
+a SPI read, and skip the write entirely when the value is unchanged.
+Finally, the profile registers serve dual purposes depending on whether
+RAM mode is active -- they hold single tone parameters (FTW, POW, ASF)
+in normal operation but are repurposed for RAM playback configuration
+(start/end address, step rate, operating mode) when RAM is enabled. A
+shadow register array (reg_profile[]) preserves the inactive mode's
+settings across transitions, so no state is lost when switching between
+single tone and RAM operation.
+
+RAM data is loaded through firmware upload infrastructure. Userspace
+writes the waveform data as a raw binary buffer (up to 4096 bytes for
+the full 1024x32-bit RAM), and the driver reverses the byte array and
+transfers it to the device in a single SPI transaction. Per-profile
+start/end addresses and playback parameters (operating mode, step rate,
+no-dwell control) are also configured through firmware update, using
+metadata in the header.
+
+Streaming data to the DDS core through the parallel data port at the
+PD_CLK rate is not covered by this series. That functionality would
+be added in a separate patch series, building on top of the IIO backend
+infrastructure to provide a proper buffered data path.
+
+Kind regards,
+
+Rodrigo Alencar
+
+Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+---
+Changes in v7:
+- Use seq_buf instead of scnprintf() in __iio_chan_prefix_emit().
+- Add tests for __iio_chan_prefix_emit().
+- #clock-cells as required in the dt-binding.
+- Add drctl as pwm in the dt-binding.
+- Check refclk freq range when pll is disabled.
+- Address other minor feedback (e.g. sashiko's ones) 
+- Link to v6: https://lore.kernel.org/r/20260618-ad9910-iio-driver-v6-0-79125ffbe430@analog.com
+
+Changes in v6:
+- Introduce IIO_FREQUENCY channel type.
+- Replace altvoltage channels for altcurrent.
+- DRG and Parallel Port destination handled with different channel types.
+- Parent attribute shows channel prefix rather than label.
+- Link to v5: https://lore.kernel.org/r/20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com
+
+Changes in v5:
+- Drop RFC tag to the patch series.
+- Address sashiko's comments.
+- Add parent-child relationship between iio channels.
+- List vs Table changes in documentation.
+- Add crc and version check to RAM mode firmware update.
+- Link to v4: https://lore.kernel.org/r/20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com
+
+Changes in v4:
+- Digital Ramp step exposed as a rate of change.
+- Dwell modes of Digital Ramp are controlled with dwell_en attribute. 
+- Disable of active profile behaves as a software powerdown.
+- Expose debugfs attributes to show mode priority.
+- Add 64-bit debugfs reg access support into iio core.
+- Link to v3: https://lore.kernel.org/r/20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com
+
+Changes in v3:
+- RAM custom configs (address range, destination, modes) loaded during firmware write.
+- DRG destination defined when attrs are written.
+- DRG modes broken down into enable attrs for ramp up/down channels.
+- Add separate profile channels, switching done through enable attr
+- Link to v2: https://lore.kernel.org/r/20260318-ad9910-iio-driver-v2-0-e79f93becf11@analog.com
+
+Changes in v2:
+- Device-tree bindings changes.
+- RAM loading to use firmware update interface.
+- Rearrange of channels into a hierarchy.
+- Link to v1: https://lore.kernel.org/r/20260220-ad9910-iio-driver-v1-0-3b264aa48a10@analog.com
+
+---
+Rodrigo Alencar (17):
+      iio: ABI: add attributes for altcurrent channels
+      iio: ABI: scale and offset for frequency/phase channels
+      iio: ABI: add parent entry for iio channels
+      iio: add IIO_FREQUENCY channel type
+      iio: core: support 64-bit register through debugfs
+      iio: core: create local __iio_chan_prefix_emit() for reuse
+      iio: test: add kunit tests for channel prefix naming generation
+      iio: core: add hierarchical channel relationships
+      dt-bindings: iio: frequency: add ad9910
+      iio: frequency: ad9910: initial driver implementation
+      iio: frequency: ad9910: add basic parallel port support
+      iio: frequency: ad9910: add digital ramp generator support
+      iio: frequency: ad9910: add RAM mode support
+      iio: frequency: ad9910: add output shift keying support
+      iio: frequency: ad9910: show channel priority in debugfs
+      iio: ABI: add docs for ad9910 sysfs and debugfs entries
+      docs: iio: add documentation for ad9910 driver
+
+ Documentation/ABI/testing/debugfs-iio-ad9910       |   60 +
+ Documentation/ABI/testing/sysfs-bus-iio            |   46 +
+ .../ABI/testing/sysfs-bus-iio-frequency-ad9910     |   31 +
+ .../bindings/iio/frequency/adi,ad9910.yaml         |  209 ++
+ Documentation/iio/ad9910.rst                       |  792 +++++++
+ Documentation/iio/index.rst                        |    1 +
+ MAINTAINERS                                        |   19 +
+ drivers/iio/frequency/Kconfig                      |   21 +
+ drivers/iio/frequency/Makefile                     |    1 +
+ drivers/iio/frequency/ad9910.c                     | 2356 ++++++++++++++++++++
+ drivers/iio/industrialio-core.c                    |  247 +-
+ drivers/iio/test/Kconfig                           |   14 +
+ drivers/iio/test/iio-test-channel-prefix.c         |  246 ++
+ include/linux/iio/iio-opaque.h                     |    2 +-
+ include/linux/iio/iio.h                            |   12 +
+ include/uapi/linux/iio/types.h                     |    1 +
+ tools/iio/iio_event_monitor.c                      |    2 +
+ 17 files changed, 3949 insertions(+), 111 deletions(-)
+---
+base-commit: 093239070573637ad2b4cb56abc9c4c7ee109294
+change-id: 20260218-ad9910-iio-driver-9b3d214c251f
+
+Best regards,
+-- 
+Rodrigo Alencar <rodrigo.alencar@analog.com>
+
+
