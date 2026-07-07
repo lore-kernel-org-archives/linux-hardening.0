@@ -1,63 +1,63 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012005.outbound.protection.outlook.com [40.107.200.5])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012013.outbound.protection.outlook.com [52.101.43.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D097733F8D9;
-	Tue,  7 Jul 2026 02:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100D53793BA;
+	Tue,  7 Jul 2026 03:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783391314; cv=fail; b=BiB8n6ICAx4YcTtiljNjX5JxWUKaxZTnf4BB/VJwy+LqrKhpLBBNUN1GzEICUoYdxS+ecAUfu+Iby+wrdlo6yUkNRT6hibrrhsTRmzQi3x7+mTaGvFrfnomhja85eVMZ3EMt6Mw4C7Sccm3Rm24BajKiy4QASXD4ybqtpdEuYZ0=
+	t=1783393442; cv=fail; b=Lu0YqaTgB7oug1vk8aIeaFQ3XBk0OGEVpHedqBnWukTzqdKmm77T13yqJH87SFfS4moPBmTyATBNx+3U39Dk2EdwVlN5AVZr9P1TGf0V91ddQlHqWiLfxuHakQsVNrK5djLhb0D9E5bqYUK0jwcqBZiZe7ORFRf6F2MCMOGsO1w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783391314; c=relaxed/simple;
-	bh=jBp2icyZVXiKMXYSSFqWJBbfyDc9DF15HfcFslchyqA=;
+	s=arc-20240116; t=1783393442; c=relaxed/simple;
+	bh=MpDuzucRmnPh9b+6bD85aCc/1xo0Uf28oaTsJNTz5dk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=c1AZajEVogm/eRyDgZdb6AfPMqHNRjxoGXxLvQ6GUeBR0q/kYDQZ0Z65X9j9zIYqg1/XVas/oBJ8vSVOvEsUlFzefRB+cEx3FUD/o4ypvfsH81e1VDs+XkLQ4cPe/lgeXSgXpTu3lvMgyS0Lb1NthFFCM3guVj/XwHL+piFVBd0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=smn1IEtq; arc=fail smtp.client-ip=40.107.200.5
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gFouWF1uSye4pAnmpzc70u8pX82pSOFYc+KIW3VExwvAqOoVeBEmdo9+CNIwe8soTYtKCRXqxPPxyE3EHHpDYt61hG7c2gCuWe7nb37y8vTtRb3/Gszfm0oaxr4GZuedOaSogyd9NGEGs7RwOSnPiK7c1u1pfengIs8xue9eit8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dyH3vsUH; arc=fail smtp.client-ip=52.101.43.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="smn1IEtq"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dyH3vsUH"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hs7wWaHDIxIOuuC9UWCVpyQP/kOffLqx9CRiI55hvJ+fJOE8yx4bMxeCb3Y5bA3zzNLwMnwKJZIlWZHsx26wBQxj3FPbZ9KUT/5K8jdSh3uex4SD4utr5yvmS5twWtKmeU9AwOWzRqSP3M10KFbS5QgyhO2Z01AUcJ/3FS6VPV901bS8R8H5nnqZUhENnSZwoOer1quEdRc9BZL15s8UGB4sbOt0fqU+qq+XVfq63B5ugoTswfLjcdoQL+22bsughJrehZ2Pr0y2W7rRefZBjO3x52uLAoGtcbg0mrqYXujkiIeBSZeoLRDNxNAKR+zDHV+TB5LquPG6QkL8QX9EZA==
+ b=K9hqZc7RW/7sVmXFtDa4PVrqWzzhJjeAo3JDKrUYEr7IlKKRgeMWDIsnSef1YvyJ6UTYyfjrgB0YLNC8SnAFYM6VsDT58dH4IRmBSAC+9d2FNGRo75PzjYlin2jWkBc9J6pFMP3fAYS0B1xJmQ77RdfTW0tLwdKLjj4Ft0aBcsPgM5qt/XNbUiuZ3LK0IvRb7qrdB8OzGbMIyuKmiSEhbC8bZ7rXpe3KafY6KWG/+OLLqhL9XgvhnzGpOZ06DohCtjN3MfXeAaixwvEG3V5JYnMf7JdkvXPeJu0/9scT4e2dGB1gf9em1QcY8JTwvNFTVFwmoTwSaP5K4/lixsfJMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+0hx2vAEkxb+N40MUPog4OfdtJ3OqGYgqMA8QY7jAjM=;
- b=Ow+sD2nrCgh9MO+fq046QtQlwJiD1RQTg8lVMLkxlfxz1kisTDm+s0lc9fRkr5+8hqLar4IafNLyrg5TVCm8hNtvRs1OAls8JzTDPXKdODrn4QK0Jt71wz9NXzeMdEUhTcROtKpgdF5mg0Bs1q52H6+3rY5t0tFwwWrZNySeqBlTp4of5Jkbios6ApaptRhenR1ib3BXoYqx+MWTnhm59RJycm6kOr6uS3hBA8lEdQgilKi6K6r5zhC/3pIa5ksEsT/EDhDxZZN4YmFvP8uqoUQ0ZyC55l0B1VeXjWpUoBzWKA8HdWkW/svQQnD1vCOLrbM/P63TwmqNtmoJXZRSOQ==
+ bh=eKReyStzCu60GUZcWwZ29FnEijq1osKolLGH9MuB0rs=;
+ b=Jom20b1E/HBeTU45pSrHATUNxJRFfMeoR60D+Qmq+EUOJvxqplh1l7rzSSPYMkhwh9b6dW5bEVn7lNPuTiPIy2Y784cqmqnBd5GGI8qCXAmQtWxBJYhpCxv/CE9IvDK+WakkkFT8Aljq4AbSqF4eDMKSnOU/s22SbHjEJCWaM8sgggPJK2lPanUlW/2uEH15IZ+SZJlVi+If/Yncr//ptteiZL95t8wQQW1UQuWyst8yDeTAkWFdNTN1bz15B7OPvZ1wCywy64hrniJtKJcrz58k4Hrx1o3GYg2zsEWcmEqx5rAGpCPTZp7SInyg0+St1hzRkdwCapjlbsYKPckWCQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+0hx2vAEkxb+N40MUPog4OfdtJ3OqGYgqMA8QY7jAjM=;
- b=smn1IEtq1WS6V09lUVWlks+FyaKBiGsFjkoYFKIrpjl2oS/CDNomS4tOyjqXglTxxZvIgEGd0hAWKVRF4FnlnOtzGAQuancaGQdeH4NjTPJ7jRaar2KW4tJBv5TH7U/1J7DSxZzEgMaRq9qWuDtEIcNk6EfCzwDOinQP6TqQIJ99MjKeooq0yM55C/TroLom0uf3Szfv3R8LDdqU+zsqcLBIdiuO8TRV9ZukbI0ckNZzkc4hoca+lUpBrDAyB4La9dQPsEbLW6NZIfhUAq/jh2EKQ4bHxcrXOAuSpPgfI+vYPu0RCWOXcfXc+C9wacAhJKGtacr723wAIWKR8KnRGw==
+ bh=eKReyStzCu60GUZcWwZ29FnEijq1osKolLGH9MuB0rs=;
+ b=dyH3vsUHtMoEr6pxSrhrFj9yaoPxJLjsRx82SataptDX93hAEtyGosF5vEoy3dmIBHD3Hw3x2yXqBB4e5riisYpgH7a6ahrQMBcwlPJYLgPZa1BO8HEP8uiIEQ5qKthMIk3NWcw6G9MIG/ctcVsNK88hV62HfaMhj+GXwxyqYPGieTzFeD5/LhCWhDRREKFS0pZ5Ckoqfc4QqJv22Xm2cX1UYo673CdZPFVUtww4jLmKdGYghqaRxPKtBbBk386fyKxtqH0cI0qVYuh1SD04qGZqfz5FoobuMFMEkUFbHC9lnXvh/LTtE8MU7v/XsCY8IB6d5q5oyOGS4aUYz2OiEw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- PH7PR12MB6562.namprd12.prod.outlook.com (2603:10b6:510:212::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Tue, 7 Jul
- 2026 02:28:26 +0000
+ CYYPR12MB9015.namprd12.prod.outlook.com (2603:10b6:930:c8::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.8; Tue, 7 Jul 2026 03:03:03 +0000
 Received: from DS0PR12MB7726.namprd12.prod.outlook.com
  ([fe80::5807:8e24:69b0:f6c0]) by DS0PR12MB7726.namprd12.prod.outlook.com
  ([fe80::5807:8e24:69b0:f6c0%4]) with mapi id 15.21.0181.008; Tue, 7 Jul 2026
- 02:28:26 +0000
-Date: Tue, 7 Jul 2026 12:28:20 +1000
+ 03:03:03 +0000
+Date: Tue, 7 Jul 2026 13:02:52 +1000
 From: Alistair Popple <apopple@nvidia.com>
 To: Li Zhe <lizhe.67@bytedance.com>
 Cc: akpm@linux-foundation.org, arnd@arndb.de, bp@alien8.de, 
 	dave.hansen@linux.intel.com, david@kernel.org, kees@kernel.org, mingo@redhat.com, 
 	rppt@kernel.org, tglx@kernel.org, linux-arch@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 1/8] mm: fix stale ZONE_DEVICE refcount comment
-Message-ID: <akxkB7_lG-cPdzNA@nvdebian.thelocal>
+Subject: Re: [PATCH v5 4/8] mm: add a template-based fast path for
+ zone-device page init
+Message-ID: <akxpS3WOP7oUBNKF@nvdebian.thelocal>
 References: <20260701090553.62691-1-lizhe.67@bytedance.com>
- <20260701090553.62691-2-lizhe.67@bytedance.com>
+ <20260701090553.62691-5-lizhe.67@bytedance.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260701090553.62691-2-lizhe.67@bytedance.com>
-X-ClientProxiedBy: SY6PR01CA0162.ausprd01.prod.outlook.com
- (2603:10c6:10:1ba::20) To DS0PR12MB7726.namprd12.prod.outlook.com
+In-Reply-To: <20260701090553.62691-5-lizhe.67@bytedance.com>
+X-ClientProxiedBy: SY5P300CA0018.AUSP300.PROD.OUTLOOK.COM
+ (2603:10c6:10:1ff::6) To DS0PR12MB7726.namprd12.prod.outlook.com
  (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -66,102 +66,224 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|PH7PR12MB6562:EE_
-X-MS-Office365-Filtering-Correlation-Id: de79c827-797d-4be3-c814-08dedbcf6d05
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|CYYPR12MB9015:EE_
+X-MS-Office365-Filtering-Correlation-Id: 690283d6-4620-4bbb-64f2-08dedbd44286
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|23010399003|376014|366016|4143699003|18002099003|56012099006|11063799006|22082099003;
+	BCL:0;ARA:13230040|1800799024|23010399003|7416014|376014|366016|56012099006|4143699003|3023799007|22082099003|11063799006|18002099003|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	7IxiJdWemmeZWwMFwTPFhkKdsK9SVThdycHy2FIuAtbkZ9p5Tlt6/xIv6UTUIw/El1QOzyWNa1egoDJpm5LtYipOtmi95riEqLwFPV7TTMx7EImLEGeHRTCsv8Qhixult344irBcD1LVSjsiI0PdvCJq94qz7C41oEpVC1KDj6W3eNlvtImNmh8uz5pXcMusOdAf1EK70iMpS0e/JEzS8SssQqHkbMy47bHF8KFSwp2KgJtqr85Dcre8eO+0632+gymlvxk7KZTjHkdRPMWUejNTbvL351tbRflrFbzItrN1X556g4XU8IkN07DKj33qmWBkWFzzbDw8tSeCS/ec8/t+p54eQlmi6alSSoqzlWPyDob6PDSRW/kjtJaGCffC9Ke9ChdAwnvqFbfx7pp0Suo58FfK71wxl1vriu3z48w70x8rXPOIzQ2RdgPGBnmVc1bJwoTSwv0HJJN7qkGB43IFfoXZGeX82olTXLk9BnPEMDcxd56naZ17HWToNnEF+MfyRgX5XKFkV0aJqmytwmL43iTL8qbMn7ueTS0CevDopFvnGMYiU5mFHbIELo3e8+b83MX1QS0+YKLH6VM6IsDCWche5cpOSqLXC32S3No5mFJVpBjc6RvCVGnEXizn8SoXsW4i7NKzz5LGPxZ0bO594mCSsBVNTWbIZ3pl8l8=
+	lsIn/MetmaGZ/SKIlKggkkrcL0LpzuSGbzYVA5Qz6A+dvvlxIjfpx2hjifcez+uYQcclebjPQ7VyIdh271PzPQ/R2QBzPBGdnDE5A3YStMeVxTHmRERXefYVqMrU+bPPLxV3uzrY3/D6YrxjAgO7PW5yD1TIXvH1hramph6nzr9K7xlFspVMzoyZyfFZzoyWWIvZN70ruhv8RVp+nsGXEsphugHzro7ShpWAQJ8BSIhs1DThLEsiutZbbhNqd+1Tg2fuVGhv7c8pngYkRSDof/GfkgHeygy7bck2v+UB9BNbcN9nFQpD0nbcWkiU2vPGKRhnaFje8kkuZ1RF8joluKhvloAkV+6jOnpYUXtM3IQIN9YpmcPNzdn/pw5JxvZGq2Q6YZEhBhMf972syVXtALoCWb91BCEPjJhcWsd2gIMTSSNfp8iFU9GItr+v6QsqfAvR+Ap/msMmgpKetM0GwHnY2BtJIuFNCiXzcM3Iascd4pnJwHZDPcFnI6f9X25/0/MH4e3Bd/SOTbApywagQNGpA8vbh68q3R2msz8rJu92hmFo3zRoopg1ooMK05jvCXG7V17uvJLIO5FOcv9vtG37wbKR6tAeM1W5J0s7Ypee8889np24DpXA1rlhKwY3vAAMKoSZvHD7JaevvxEsQeJsy9JFKHrBrDDA1gHheKk=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(23010399003)(376014)(366016)(4143699003)(18002099003)(56012099006)(11063799006)(22082099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(7416014)(376014)(366016)(56012099006)(4143699003)(3023799007)(22082099003)(11063799006)(18002099003)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XL70I+Pb4wsPT87ywHYOA1zFowSo3MlrxEhMPTUDY7IIKClT3Kq0sQh5Fg5e?=
- =?us-ascii?Q?Hk0Zl/oAK8wXWJ4Eaz5G8L9siIjdVzXL3JGC3DTjkXTu6HgsZJR40KSNLwDQ?=
- =?us-ascii?Q?xPTk2fuiEjkRPGLBDMDV/Xz6vR2khBTFNyicssyesJdAm86bZEoEg6ynxnv2?=
- =?us-ascii?Q?QLXJvTK9R9RC0Q8+FQ0q4kIe6F4GjAXY1UDJrgjQ4qCq/CFxPt7lMdHs8Xky?=
- =?us-ascii?Q?P9W1n25tBbDUGB6G41GDNYqUSHdvGFlB+BwJBhwB8wk+iyCQ13gBssTVtyOV?=
- =?us-ascii?Q?XWyUBuyYaVgV+qPnOSGLktL82uwiE2CCpAyNxklxz9OG9du/GnOPcmtxQA4p?=
- =?us-ascii?Q?Jg8KFOFZH2uCJ4MQgHkK0oaxPtOwq8/SGETNPgHloz5UTDTzEkqxDkYcM78v?=
- =?us-ascii?Q?T2dWpL5E3wZVL/Kl4EfvQHaDHtfEaE9CRSmzEX0BWhGc6//XfKJxuA57LsZ5?=
- =?us-ascii?Q?Gf60bDb/1JYiWZ/vrKBP3XtsHViZnneY+7RpDptFXCWjpg1tihZSMMiydNAA?=
- =?us-ascii?Q?0oCBCIkJuEsQrZRq5+TckLpPxLohWHrSQvtqD0d9cV4r2FewgLITYy4YleP6?=
- =?us-ascii?Q?IeJOoyxUZB/FJaMYtMTlbCegzcVom9oAk7/kfU9SB1A8UiTTTsdEEKF8GKJh?=
- =?us-ascii?Q?KTb+F2fHnTlImh2QILFcFOEslyRJ+5pRnCLjy55TiYtLhbITCZ85qY5yWLyY?=
- =?us-ascii?Q?vgCpioCNFowXJ0XXCJ8A1v9/dQ/UEqQWrpJiUqewxnPvG/4F7hxfZBeXvQ+n?=
- =?us-ascii?Q?2OiZqE9fzPD6ade3OwKl5QUVSYAAy4tMoaZYq7qi8bxw2tbIWybNCU80ALnc?=
- =?us-ascii?Q?ozJW5Ei+Cne2vYVY1KtPkusL7jzlvLX9iRATf68WgjHbowqHAhJu8B97Q7Qo?=
- =?us-ascii?Q?FCjm0Juy9YCQoUWDH3+6F2nzsKZ1lFrKYMBEu+JkDfIC8VtYPo1MtgIwOP/c?=
- =?us-ascii?Q?EoC3cQDQs9SnhUeOYp2+Y8NYAyCPNl/hbrZskumup6wYTunfqBLxCeRldinW?=
- =?us-ascii?Q?+sQXu1H/5A0YDp7kRMXBMaWGtpj6ncQS4H3oM3wzexpvGyb+cBfX9gr8go4H?=
- =?us-ascii?Q?mL4po8zLIfOFV0NAEl7Nc/xTFb8JzfvY9CxkydxuvmpeThfyyZOTqWJlGfis?=
- =?us-ascii?Q?dYLjnV2BYAo3697+3OWbvHC8twerxTI05cZFAgeKfbRImT0RuXTgzWKDBpoe?=
- =?us-ascii?Q?ZVuvJ+61ZHXIiUbM+3Q5UHf+vLvvOH3MM/Bw+2Ns4zSUZUnYyZJZtQvNAAJc?=
- =?us-ascii?Q?31G+YIC5iL4FOM1McYwK6vmHOo7wm6xtKtUigBTAdXLkt6c4l5XXcx08WzfS?=
- =?us-ascii?Q?2A7YO306NjhTcdcKnaY8CtbyUbXdHvKB4tEQtx3ITGW4MNEn+dGVNYihU/Sm?=
- =?us-ascii?Q?CJqmngFT4ce08Z5jJ1kp5sf4zkIXE0tvus9tEjwNBj/j6kDmyvHl5bin7eEn?=
- =?us-ascii?Q?RjbpD2OI4KYYrwUE5QsLXP2ujOVHOf3wKPyBGSK28mxn6Ld+7S9Fg4MydPPk?=
- =?us-ascii?Q?UVF5zVmFxboDVnXIFaeVYpLGGxO6zchS+TMz6fB+LeRM1T3729MX5OizMtaB?=
- =?us-ascii?Q?nrrXzlH8o3WuHpOLRwSlshi6icLCGbaFFSdHJdrD59fU1IES8ciBM2jzHwXa?=
- =?us-ascii?Q?7BSu39q3434s3M+dSywvhoo/BMoTOObepf+DyaqtexT0KSX4pklM9oG5c7fg?=
- =?us-ascii?Q?l9lOH3UHCUMboMyv6ESPasOed0enGJ1hnw0NuRniS5p9oMdhB9lKrn6LnTPa?=
- =?us-ascii?Q?4CNSZ/z9AA=3D=3D?=
+	=?us-ascii?Q?QP6VkFD+zMJXEL59T2OntIxXv34U07I0Mqh47+RQteTDi5S/vZvPZ47tyX7u?=
+ =?us-ascii?Q?zsJsJg+DKKxB8euv+OvQimP+TQM3FQ7VLrlidpyTp+VNJzSFF8C+DqSEfOYy?=
+ =?us-ascii?Q?zc66K5bx+gVtjy2TI7mSBbYQSth4+V/IqONIc5s+bVi/AooEvGrdf5rggCfB?=
+ =?us-ascii?Q?zJiIvKLdkUrVmsg1bpwFskjqkWEsKIccIbsQVDkn96hjDYK7QewJsy4nXMCk?=
+ =?us-ascii?Q?9KVniVNgMSANUz/qrdt1/q3CMA0FSrfa2QPt3NIsirT8NloaDowqyXve5HPl?=
+ =?us-ascii?Q?VJZm5Kcsaq+6KS8w4vjgCZE4nyy2b4UQVJ+V7hyvM3N9Zb9872mk/KtuVxsi?=
+ =?us-ascii?Q?cEYsP9luHPSx28Qybxu8HfaGpjaxVIZu42B25nJ1ToBAt6wSCjaso9F/3XN2?=
+ =?us-ascii?Q?l0/0Xc39rv2+lk+qyzPU+jnkxzhORJIZjKbhmx0/HTa3zs5395c4hoWTnqui?=
+ =?us-ascii?Q?tO5Fjah5l/rDDH9tWbIQlPtI+AQLsUHBnxRe0iv1ObaT+jwy6bI0Ea7CwEFm?=
+ =?us-ascii?Q?97T4SZaSBFCjr+23hj8PyRnaQGg/3k2jgUYsKK/eV7tEofAvFHJwAoep3LF6?=
+ =?us-ascii?Q?Cv8vhobkp23dEUe0L9NQjU8enn4diLykwYAB83xGFiFjCoRB8++bc+6jVvAd?=
+ =?us-ascii?Q?2k3C9lQrY8Cnr5gwmogL2/5SRg0704J472u7aMQIeciCbhDZ5HWBZBKSoxd0?=
+ =?us-ascii?Q?svqf7QTTPQ9awI9YmHnAEd+j0OC8lR1i4W/pJoj7URe8zZE2KVZt5zo1FPk0?=
+ =?us-ascii?Q?DISy2Jf6CQPjUQ/jgYPfCiUpwULbkEPuv/6Dsb++6hbSMxJLgUaY4UDoXnEg?=
+ =?us-ascii?Q?QcRWotCQqalRrqrrNbAD5415b1iCArdQBT1SuABvIX+O8JFkQgZKS4mpSz+T?=
+ =?us-ascii?Q?c6OtKmzxuBbIOCijADBRJ0+1uaDsDANwSmp53DLntOvbEZd7xEMAxkrIiLEm?=
+ =?us-ascii?Q?zdLaavnp1LL4IZli8vIhfuTOhJ08CoJ9/IChjc5MsSe+eGrrtAvAKnUdl8u8?=
+ =?us-ascii?Q?h9aYFaN/x55ncGkaOgq0XbM+GBZOoa3+DUO4b2UFDQJf/Fu/9y2TJatMzbQx?=
+ =?us-ascii?Q?6Km0jNQTnts2WDcpMQ+Pfo7Jy2aDQ4gAB8pUUGr5cnCbqC3+szOOBkkDqUHt?=
+ =?us-ascii?Q?yjkNTb4DdKUGIrTFWO5O3VyWOWddBcTuUzN0mIBKSSLgz0o7+/m00RVyKfqT?=
+ =?us-ascii?Q?GEtdAEVDuMK6IzSuNUMdSTR3iptpLIfV9u+FmK1lBrzDcs3BdrYOWTvYQDNm?=
+ =?us-ascii?Q?EYBhgTgUfSneBQcnYvUYUKbFn8wR0P919/kqol3zhAVuGUvhxyiMtGK3gtX+?=
+ =?us-ascii?Q?3lU2wHq7BZSR8V5T50slxTKqhmp3zAYiP4qHxHgR9hQaWCqmEWF/cbA46cYb?=
+ =?us-ascii?Q?WlBuDdEGzHH1ytCmkZBxJqb/H67EBxMwHRyDpOifhmyULirtXRTKPjiyeWqp?=
+ =?us-ascii?Q?kzHgRcHcdfTWjE8hPiinYvu8oOdx1bhO7isSnzH5HXcNtjLjV7O9zdrSdw5q?=
+ =?us-ascii?Q?swTFUvluExbmcvVKPM9aMU2fNcuc7+nj/2pF3nG95Q6oiGImx79y1iNIcDrV?=
+ =?us-ascii?Q?1SIXJSxhpVbzMtqNbbJjybVnHJ93zeiLp+SC27WhWytwgIqwjIyrgUOh+wwj?=
+ =?us-ascii?Q?e19LBkKJ9XipjSZDECSKLlMbOu2XQNWKb5FDJAymSwNKS6LYjg9xDdLbWGfa?=
+ =?us-ascii?Q?HWD+dBse3O0TkzUdSr4b8pTXA7/D4wd0dvGQvJaY6whNLAEnFPTEjtgXU/pT?=
+ =?us-ascii?Q?k2QzEdUz2Q=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de79c827-797d-4be3-c814-08dedbcf6d05
+X-MS-Exchange-CrossTenant-Network-Message-Id: 690283d6-4620-4bbb-64f2-08dedbd44286
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2026 02:28:26.8468
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2026 03:03:03.0375
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MntOzAphthj45sC8qzsnR/TDIKpWq0/NoVhsOzeRDAKDahrSlgLY2UgYPplv4sLHLDwOhesJIX+Y0uietIcC3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6562
+X-MS-Exchange-CrossTenant-UserPrincipalName: ASNhkDSyU8YBg43XP7HjYM3fVMgwa45C8T6rc6LhmqxLU/BW1XDMy1R065JQlKB3rH3CSWD2d+UBfuJb4Jz0NA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB9015
 
 On 2026-07-01 at 19:05 +1000, Li Zhe <lizhe.67@bytedance.com> wrote...
-> The comment in __init_zone_device_page() still uses the old
-> MEMORY_TYPE_* names and implies that FS_DAX pages regain a
-> refcount of 1 in the free path. That no longer matches the code.
+> memmap_init_zone_device() repeats nearly identical head-page
+> initialization for each PFN. Prepare one reusable ZONE_DEVICE head-page
+> template through the existing slow path, refresh the PFN-dependent
+> fields in that template before each copy, and memcpy it into each
+> destination page.
 > 
-> Update the comment to describe the current policy correctly:
-> MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free path,
-> while the remaining ZONE_DEVICE types start from 0 here and raise the
-> count again when the allocator or driver hands the page out.
+> The optimized path assigns _refcount through the copied template, so
+> keep it disabled when the page_ref_set tracepoint is enabled.
 > 
-> No functional change intended.
+> This patch accelerates head-page initialization. The pfns_per_compound
+> == 1 case gets the full benefit here, compound tails are handled in the
+> next patch.
+> 
+> Tested in a VM with a 100 GB fsdax namespace device configured with
+> map=dev on Intel Ice Lake server. This test exercises the nd_pmem rebind
+> path (pfns_per_compound == 1).
+> 
+> Test procedure:
+> Rebind the nd_pmem driver 30 times and collect the memmap initialization
+> time from the pr_debug() output of memmap_init_zone_device().
+> 
+> Base(v7.2-rc1):
+>   First binding: 1456 ms
+>   Average of subsequent rebinds: 244.28 ms
+> 
+> With this patch and its prerequisites applied:
+>   First binding: 1440 ms
+>   Average of subsequent rebinds: 217.19 ms
+> 
+> This reduces the average rebind time from 244.28 ms to 217.19 ms, or
+> about 11%.
 > 
 > Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-
-Accidentally just sent my response on v4, but this looks correct to me:
-
-Reviewed-by: Alistair Popple <apopple@nvidia.com>
-
 > ---
->  mm/mm_init.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
+>  mm/mm_init.c | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 74 insertions(+), 2 deletions(-)
 > 
 > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index 0f64909e8d20..95808ab5cfdb 100644
+> index 4c7fad440c2a..cc8417951467 100644
 > --- a/mm/mm_init.c
 > +++ b/mm/mm_init.c
-> @@ -1030,13 +1030,9 @@ static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
->  	page->zone_device_data = NULL;
+> @@ -1066,6 +1066,50 @@ static void __ref zone_device_page_init_slow(struct page *page,
+>  		set_page_count(page, 0);
+>  }
 >  
->  	/*
-> -	 * ZONE_DEVICE pages other than MEMORY_TYPE_GENERIC are released
-> -	 * directly to the driver page allocator which will set the page count
-> -	 * to 1 when allocating the page.
-> -	 *
-> -	 * MEMORY_TYPE_GENERIC and MEMORY_TYPE_FS_DAX pages automatically have
-> -	 * their refcount reset to one whenever they are freed (ie. after
-> -	 * their refcount drops to 0).
-> +	 * MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free
-> +	 * path. The remaining ZONE_DEVICE types start from 0 here and raise
-> +	 * the count again when the allocator or driver hands the page out.
->  	 */
->  	switch (pgmap->type) {
->  	case MEMORY_DEVICE_FS_DAX:
+> +static inline bool zone_device_page_init_optimization_enabled(void)
+> +{
+> +	/*
+> +	 * The template fast path copies a preinitialized struct page image.
+> +	 * Skip it when the page_ref_set tracepoint is enabled.
+> +	 */
+> +	return !page_ref_tracepoint_active(page_ref_set);
+> +}
+> +
+> +static inline void zone_device_template_page_init(struct page *template,
+> +						  struct page *src)
+> +{
+> +	memcpy(template, src, sizeof(*template));
+
+I'd drop this function and just open-code the memcpy as I think that ends up
+being clearer and removes a naming confusion - I kept mixing up the purpose of
+`zone_device_template_page_init` and `zone_device_page_init_from_template`
+
+> +}
+> +
+> +/*
+> + * 'template' is a reusable page prototype rather than a strictly immutable
+> + * object. Most ZONE_DEVICE fields stay constant across the pages covered by
+> + * the current template, but section bits and page->virtual may still depend
+> + * on the PFN. Refresh those PFN-dependent fields in the template before
+> + * copying it into @page.
+> + */
+> +static inline void zone_device_page_update_template(struct page *template,
+> +		unsigned long pfn)
+> +{
+> +	set_page_section_from_pfn(template, pfn);
+> +#ifdef WANT_PAGE_VIRTUAL
+> +	if (!is_highmem_idx(ZONE_DEVICE))
+> +		set_page_address(template, __va(pfn << PAGE_SHIFT));
+> +#endif
+> +}
+> +
+> +static void zone_device_page_init_from_template(struct page *page,
+> +		unsigned long pfn, struct page *template)
+> +{
+> +	/*
+> +	 * 'template' carries the invariant portion of a ZONE_DEVICE struct
+> +	 * page. Update the PFN-dependent fields in place before copying it
+> +	 * to the destination page.
+> +	 */
+> +	zone_device_page_update_template(template, pfn);
+> +	memcpy(page, template, sizeof(*page));
+> +}
+> +
+>  /*
+>   * With compound page geometry and when struct pages are stored in ram most
+>   * tail pages are reused. Consequently, the amount of unique struct pages to
+> @@ -1121,6 +1165,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+>  				   unsigned long nr_pages,
+>  				   struct dev_pagemap *pgmap)
+>  {
+> +	bool use_template = zone_device_page_init_optimization_enabled();
+>  	unsigned long pfn, end_pfn = start_pfn + nr_pages;
+>  	struct pglist_data *pgdat = zone->zone_pgdat;
+>  	struct vmem_altmap *altmap = pgmap_altmap(pgmap);
+> @@ -1128,6 +1173,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+>  	unsigned long zone_idx = zone_idx(zone);
+>  	unsigned long start = jiffies;
+>  	int nid = pgdat->node_id;
+> +	struct page template;
+>  
+>  	if (WARN_ON_ONCE(!pgmap || zone_idx != ZONE_DEVICE))
+>  		return;
+> @@ -1142,10 +1188,36 @@ void __ref memmap_init_zone_device(struct zone *zone,
+>  		nr_pages = end_pfn - start_pfn;
+>  	}
+>  
+> -	for (pfn = start_pfn; pfn < end_pfn; pfn += pfns_per_compound) {
+> -		struct page *page = pfn_to_page(pfn);
+> +
+> +	if (!nr_pages)
+> +		return;
+> +
+> +	pfn = start_pfn;
+> +	/*
+> +	 * Seed the reusable head-page template from the first real struct
+> +	 * page, because the existing page-init and pageblock helpers expect
+> +	 * a real memmap entry rather than a stack object.
+> +	 */
+> +	if (use_template) {
+> +		struct page *page = pfn_to_page(start_pfn);
+>  
+>  		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
+> +		zone_device_template_page_init(&template, page);
+> +		if (pfns_per_compound != 1)
+> +			memmap_init_compound(page, pfn, zone_idx, nid, pgmap,
+> +				compound_nr_pages(start_pfn, altmap, pgmap));
+> +		pfn += pfns_per_compound;
+
+I think it would be clearer and less error prone to not unroll the loop here.
+Instead just initialise the template page and leave the for loop starting at
+pfn = start_pfn and let it handle the rest of the steps. I can't imagine the
+extra call to zone_deivce_page_init_from_template() would cause a noticable
+perf impact.
+
+It also avoids the obvious danger of someone updating the loop but missing the
+unrolled version above.
+
+ - Alistair
+
+> +	}
+> +
+> +	for (; pfn < end_pfn; pfn += pfns_per_compound) {
+> +		struct page *page = pfn_to_page(pfn);
+> +
+> +		if (use_template)
+> +			zone_device_page_init_from_template(page, pfn,
+> +							    &template);
+> +		else
+> +			zone_device_page_init_slow(page, pfn, zone_idx,
+> +						   nid, pgmap);
+>  
+>  		if (IS_ALIGNED(pfn, PAGES_PER_SECTION))
+>  			cond_resched();
 > -- 
 > 2.20.1
