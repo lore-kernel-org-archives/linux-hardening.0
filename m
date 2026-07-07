@@ -1,39 +1,39 @@
 Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1E72FF641;
-	Tue,  7 Jul 2026 11:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23C63ECBEB;
+	Tue,  7 Jul 2026 12:53:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783424236; cv=none; b=AKEsNLRoqiB2JhV9JeNRQFptiF2uHmmdnIhqSAmKQaaDjXe0ni0miS/3jM1fxweIza5eTg9wojoUXLfMokPPQlTL7grGAyxE46ibnxbUjjwhuf3K7HpV8ImW9sW9k0GHkJ7Xwy70cjQFt6XBgdqcAuMIQ9RhT07inIGvrzFmXnk=
+	t=1783428815; cv=none; b=TeTL0flOQ9Bq7ol1AI3U5Ta7m/mnBrRSu1uvIGhcYYK2rL7J6vGRDiDInAlhs3gg1Q377ybX6xisWxasHwo0BYPzH1uz8+0OknubSbhGsDrqRvU3jK17OAyyjxm4GmQY8vgeH1cSXN21EUg0J3wXIkLrLmfEEGh1tqsaaDTZ7EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783424236; c=relaxed/simple;
-	bh=zisHKAD74OWux5/tK8lytmVqjM6h3AIY4NHgLxcwVtg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EVu8bXBdkrgIZUBO8UJa6UXz1SPwrT+5yDbwVDCmy1JRYScOG1SUdwTaHXHdYz/BfXMLzfenibtr+m7o9cT5maCreW2TMiJ427AqiTLM5twhonLgAeKTACkVvBObQCcG913Xa5oed6NfHnCBt4Mx4y34L/FYix97WLTYPIaX9wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=TJ9+WCJu reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
+	s=arc-20240116; t=1783428815; c=relaxed/simple;
+	bh=Xb+YqBjRz0qD+o6CKIOqq56fPsxW6/yG2jq8gj08s6w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sIiYPtktC28V2vXOiSFSCh7sdGQDcFwifdlCrMNxJ4Pv1+Kib1bC0vJ1GocWEnll6zoWqhfRHPx949C9HuutD51UWtDk0F9iqChTodQpj5fyeM5UPQqOHBfhJLlFh0D5YPz44bPliqItTlFgs6B2Ln7UYCMBykWx+C0N46kkznM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=R81RxZKK reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="TJ9+WCJu"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="R81RxZKK"
 Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
 	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 667BaXR6009375
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 667Cqolx003077
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 7 Jul 2026 20:36:33 +0900 (JST)
+	Tue, 7 Jul 2026 21:52:50 +0900 (JST)
 	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=PC9H9+hfBUgJc1h9fKgLECYX3wbgWyiwPKt7KOMjAiE=;
+DKIM-Signature: a=rsa-sha256; bh=Q8mzB5h+eiRPcyM+Q6UnMUdYQq5QX0PPqK6QKz/gjn8=;
         c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
         h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1783424194; v=1;
-        b=TJ9+WCJuvN2HY9GfRKpGwzZshGSjYSg+ZCQPyx+qgt+W3BRyH5dvAMZNxppn7WPz
-         KWg4fLBC8zWUuwbNrQrvtEciEtr3hzWw2BgyPziP7Tz9IAtBBJ96qe1kaSSZyN1a
-         CtNdBeuNKcYX6EG9UT8iaiSkatol3VYDd+FkjSQqNMVCD0ajPTR8LH/cQd2teirB
-         WhZc42jMhxC7y3nYH4eeUVst6bLixn5KanS+l+9ciFjtWUfnH5ZfdaGif2Sg3Z0o
-         iUTu6Pc2W3lxcodV0dFvbkAQDmL18va8K84f1tATGhEOsG/TV0InJ0JkrkuR1WFR
-         driv6wIpea3cPdDdCv26EA==
-Message-ID: <db672f83-a6c4-4d94-a959-930a624a7915@rsg.ci.i.u-tokyo.ac.jp>
-Date: Tue, 7 Jul 2026 20:36:32 +0900
+        s=rs20250326; t=1783428770; v=1;
+        b=R81RxZKKr830m5okZVbuAUx4R8H9TjeZgWqeLdmsDWICaaofU7CAqfRjVh3fvZD3
+         mrliymgWKokZgwSB89BSujTeGSgjgItUFlZ9M/0gs0AnaVlRp91/oo2sR+MHyrRE
+         u/iC4N79tmrHs+w/SIt3Sqt8TuyTZQpZf0Mkvwea9OXeOiS6J2KTyJE2gN2hjwRU
+         G5EVKOY9d3cqJ2LUpgO0t9O8tlPEaetmyhzQxG/P8NrievxGEtr5Nqjr1/75WN2J
+         kc4fCJhY3PMJKabOSTXG+qkwTxV6xFS6PmaWS1iBzxNRPqn7Wj8u5ZNaOoX/+aDE
+         xixulSsKGWtekmOPgcjeWg==
+Message-ID: <5e66748a-bfda-41a9-8614-88cbf2fe1f09@rsg.ci.i.u-tokyo.ac.jp>
+Date: Tue, 7 Jul 2026 21:52:49 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,7 +41,9 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 6/7] KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
+Subject: Re: [PATCH v8 5/7] KVM: arm64: PMU: Implement fixed-counters-only
+ emulation
+From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 To: Oliver Upton <oupton@kernel.org>
 Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
@@ -57,140 +59,185 @@ Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
         devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kselftest@vger.kernel.org
 References: <20260706-hybrid-v8-0-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
- <20260706-hybrid-v8-6-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
- <akvsuBcqCCzlrBLk@kernel.org>
+ <20260706-hybrid-v8-5-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
+ <akvyvclUQ2b2YHiU@kernel.org>
+ <cb5d5f13-a1a9-47dd-a717-5533a8b32b20@rsg.ci.i.u-tokyo.ac.jp>
 Content-Language: en-US
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <akvsuBcqCCzlrBLk@kernel.org>
+In-Reply-To: <cb5d5f13-a1a9-47dd-a717-5533a8b32b20@rsg.ci.i.u-tokyo.ac.jp>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2026/07/07 2:58, Oliver Upton wrote:
-> On Mon, Jul 06, 2026 at 07:03:29PM +0900, Akihiko Odaki wrote:
->> +1.6 ATTRIBUTE: KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
->> +------------------------------------------------------
->> +
->> +:Parameters: no additional parameter in kvm_device_attr.addr
->> +
->> +:Returns:
->> +
->> +	 =======  ==================================================
->> +	 -EBUSY   PMUv3 already initialized, a VCPU has already run,
->> +		  an event filter has already been set or
->> +		  a hardware PMU has already been specified
->> +	 -ENXIO   Attempted to get before setting
->> +	 -ENODEV  Attempted to set while PMUv3 not supported
->> +	 =======  ==================================================
->> +
->> +If set, KVM emulates PMUv3 without programmable event counters. Only fixed
->> +counters are exposed to the guest: the cycle counter today, and the instruction
->> +counter if support for FEAT_PMUv3_ICNTR is added.
+On 2026/07/07 20:23, Akihiko Odaki wrote:
+> On 2026/07/07 3:23, Oliver Upton wrote:
+>> On Mon, Jul 06, 2026 at 07:03:28PM +0900, Akihiko Odaki wrote:
+>>> Add internal state for PMUv3 emulation without programmable event
+>>> counters. When fixed-counters-only mode is active, KVM reports no
+>>> programmable counters and hides PMCEID, avoiding event-counter state
+>>> whose behavior can depend on the selected hardware PMU.
+>>>
+>>> The cycle counter still uses a host perf event. Unlike the normal PMU
+>>> path, fixed-counters-only mode may create that event from the hardware
+>>> PMU attached to the VCPU's current pCPU. If the VCPU later loads on a
+>>> pCPU that is not covered by the existing event's PMU, request a PMU
+>>> reload so the cycle counter can be recreated against the new pCPU's PMU.
+>>> Keep this affinity check limited to fixed-counters-only VMs; the normal
+>>> programmable-counter mode continues to use the VM-wide PMU and does not
+>>> need per-load reload decisions.
+>>>
+>>> Add a separate internal flag for explicit userspace PMU selection. The
+>>> UAPI wiring added later will use it to keep explicit PMU selection and
+>>> fixed-counters-only mode mutually exclusive while still allowing
+>>> fixed-counters-only mode to replace the default PMU selected during
+>>> KVM_ARM_VCPU_INIT.
+>>>
+>>> The UAPI wiring that sets the fixed-counters-only flag and records
+>>> explicit PMU selection is added later in the series.
+>>>
+>>> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+>>> ---
+>>>   arch/arm64/include/asm/kvm_host.h |  4 ++++
+>>>   arch/arm64/kvm/arm.c              |  1 +
+>>>   arch/arm64/kvm/pmu-emul.c         | 43 ++++++++++++++++++++++++++++ 
+>>> +++++++++--
+>>>   include/kvm/arm_pmu.h             |  2 ++
+>>>   4 files changed, 48 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/ 
+>>> asm/kvm_host.h
+>>> index 0c39d9db7d57..aa07b05b8231 100644
+>>> --- a/arch/arm64/include/asm/kvm_host.h
+>>> +++ b/arch/arm64/include/asm/kvm_host.h
+>>> @@ -353,6 +353,10 @@ struct kvm_arch {
+>>>   #define KVM_ARCH_FLAG_WRITABLE_IMP_ID_REGS        10
+>>>       /* Unhandled SEAs are taken to userspace */
+>>>   #define KVM_ARCH_FLAG_EXIT_SEA                11
+>>> +    /* PMUv3 is emulated with an explicitly specified hardware PMU */
+>>> +#define KVM_ARCH_FLAG_PMU_V3_EXPLICIT            12
+>>> +    /* PMUv3 is emulated without progammable event counters */
+>>> +#define KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY    13
+>>>       unsigned long flags;
+>>>       /* VM-wide vCPU feature set */
+>>> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+>>> index 68767bb08285..1cc7754d5ace 100644
+>>> --- a/arch/arm64/kvm/arm.c
+>>> +++ b/arch/arm64/kvm/arm.c
+>>> @@ -687,6 +687,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, 
+>>> int cpu)
+>>>       if (has_vhe())
+>>>           kvm_vcpu_load_vhe(vcpu);
+>>>       kvm_arch_vcpu_load_fp(vcpu);
+>>> +    kvm_vcpu_load_pmu(vcpu);
+>>>       kvm_vcpu_pmu_restore_guest(vcpu);
+>>>       if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
+>>>           kvm_make_request(KVM_REQ_RECORD_STEAL, vcpu);
+>>> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+>>> index e70628653e4b..40cad183376c 100644
+>>> --- a/arch/arm64/kvm/pmu-emul.c
+>>> +++ b/arch/arm64/kvm/pmu-emul.c
+>>> @@ -96,6 +96,11 @@ u64 kvm_pmu_evtyper_mask(struct kvm *kvm)
+>>>       return mask;
+>>>   }
+>>> +static bool kvm_pmu_fixed_counters_only(struct kvm *kvm)
+>>> +{
+>>> +    return test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &kvm- 
+>>> >arch.flags);
+>>> +}
+>>> +
+>>>   /**
+>>>    * kvm_pmc_is_64bit - determine if counter is 64bit
+>>>    * @pmc: counter context
+>>> @@ -343,7 +348,11 @@ u64 kvm_pmu_implemented_counter_mask(struct 
+>>> kvm_vcpu *vcpu)
+>>>   static void kvm_pmc_enable_perf_event(struct kvm_pmc *pmc)
+>>>   {
+>>> -    if (!pmc->perf_event) {
+>>> +    struct kvm_vcpu *vcpu = kvm_pmc_to_vcpu(pmc);
+>>> +
+>>> +    if (!pmc->perf_event ||
+>>> +        (kvm_pmu_fixed_counters_only(vcpu->kvm) &&
+>>> +         !cpumask_test_cpu(vcpu->cpu, &to_arm_pmu(pmc->perf_event- 
+>>> >pmu)->supported_cpus))) {
+>>>           kvm_pmu_create_perf_event(pmc);
+>>>           return;
+>>>       }
+>>> @@ -720,6 +729,12 @@ static void kvm_pmu_create_perf_event(struct 
+>>> kvm_pmc *pmc)
+>>>       int eventsel;
+>>>       u64 evtreg;
+>>> +    if (kvm_pmu_fixed_counters_only(vcpu->kvm)) {
+>>> +        arm_pmu = kvm_pmu_probe_armpmu(vcpu->cpu);
+>>> +        if (WARN_ON_ONCE(!arm_pmu))
+>>> +            return;
+>>> +    }
+>>> +
+>>>       evtreg = kvm_pmc_read_evtreg(pmc);
+>>>       kvm_pmu_stop_counter(pmc);
+>>> @@ -748,7 +763,7 @@ static void kvm_pmu_create_perf_event(struct 
+>>> kvm_pmc *pmc)
+>>>        * Don't create an event if we're running on hardware that 
+>>> requires
+>>>        * PMUv3 event translation and we couldn't find a valid mapping.
+>>>        */
+>>> -    eventsel = kvm_map_pmu_event(vcpu->kvm->arch.arm_pmu, eventsel);
+>>> +    eventsel = kvm_map_pmu_event(arm_pmu, eventsel);
+>>>       if (eventsel < 0)
+>>>           return;
+>>> @@ -878,6 +893,9 @@ u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, 
+>>> bool pmceid1)
+>>>       u64 val, mask = 0;
+>>>       int base, i, nr_events;
+>>> +    if (kvm_pmu_fixed_counters_only(vcpu->kvm))
+>>> +        return 0;
+>>> +
+>>
+>> Even if we advertise bits in PMCEID, does it matter? There's no PMC that
+>> the guest could use to count it.
+>>
+>> I understand it isn't aesthetic but I really want to minimize the
+>> special-casing that has to be done for this feature.
 > 
-> Drop the mention of cycle counter and FEAT_PMUv3_ICNTR, I want to avoid
-> the argument later down the line when ICNTR support is added to this
-> mode.
+> This strictly ensures that sysregs are stable after migrating across 
+> physical CPUs, which may have different PMCEID values.
 > 
-> The expectation is that the VMM discovers the feature set using the ID
-> registers just like every other CPU feature. KVM documentation doesn't
-> need to describe the architecture.
-I'll drop it with the next version.
+>>
+>>> +void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu)
+>>> +{
+>>> +    /*
+>>> +     * ARMV8_PMU_INSTR_IDX will need the same check once
+>>> +     * FEAT_PMUv3_ICNTR is supported.
+>>> +     */
+>>> +    struct kvm_pmc *pmc = kvm_vcpu_idx_to_pmc(vcpu, 
+>>> ARMV8_PMU_CYCLE_IDX);
+>>> +    struct arm_pmu *cpu_pmu;
+>>> +
+>>> +    if (!kvm_pmu_fixed_counters_only(vcpu->kvm) ||
+>>> +        !kvm_pmu_counter_is_enabled(pmc) || !pmc->perf_event)
+>>> +        return;
+>>> +
+>>> +    cpu_pmu = to_arm_pmu(pmc->perf_event->pmu);
+>>> +    if (!cpumask_test_cpu(vcpu->cpu, &cpu_pmu->supported_cpus))
+>>> +        kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
+>>
+>> Just detect the changing PMU implementation here, KVM_REQ_RELOAD_PMU
+>> will need to detect the PMCs that require an update anyway. Stash the
+>> last cpu in kvm_arch_vcpu_load() and pass it to this:
+>>
+>> void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu, int last_cpu)
+>> {
+>>     if (!kvm_pmu_fixed_counters_only(vcpu->kvm) || vcpu->cpu == last_cpu)
+>>         return;
+>>
+>>     if (kvm_pmu_probe_armpmu(vcpu->cpu) != 
+>> kvm_pmu_probe_armpmu(last_cpu))
+>>         kvm_make_request(KVM_REQ_RELOAD_PMU);
+>> }
+> 
+> It is a nice way to simplify the code and to avoid hardcoding 
+> ARMV8_PMU_INSTR_IDX. I'll use the code for the next version.
 
-> 
->> +With programmable counters disabled, the VCPU can run on any physical CPU.
->> +This is particularly useful on heterogeneous systems where different hardware
->> +PMUs cover different physical CPUs. All VCPUs in a VM share this attribute.
-> 
->    When this attribute is enabled, the vCPU can run on any physical CPU
->    that has a PMU, regardless of the underlying implementation. This
->    attribute is VM-scoped.
-> 
-> The documentation is focused on unambiguously representing the UAPI, not
-> providing application recommendations.
-
-I agree. I'll use your wording for the next version.
-
-> 
->>   2. GROUP: KVM_ARM_VCPU_TIMER_CTRL
->>   =================================
->>   
->> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
->> index 1c13bfa2d38a..39a1a1e412e6 100644
->> --- a/arch/arm64/include/uapi/asm/kvm.h
->> +++ b/arch/arm64/include/uapi/asm/kvm.h
->> @@ -437,6 +437,7 @@ enum {
->>   #define   KVM_ARM_VCPU_PMU_V3_FILTER		2
->>   #define   KVM_ARM_VCPU_PMU_V3_SET_PMU		3
->>   #define   KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS	4
->> +#define   KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY	5
->>   #define KVM_ARM_VCPU_TIMER_CTRL		1
->>   #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
->>   #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
->> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
->> index 40cad183376c..ad9ff4d0d89c 100644
->> --- a/arch/arm64/kvm/pmu-emul.c
->> +++ b/arch/arm64/kvm/pmu-emul.c
->> @@ -1149,11 +1149,13 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
->>   		arm_pmu = entry->arm_pmu;
->>   		if (arm_pmu->pmu.type == pmu_id) {
->>   			if (kvm_vm_has_ran_once(kvm) ||
->> +			    kvm_pmu_fixed_counters_only(kvm) ||
->>   			    (kvm->arch.pmu_filter && kvm->arch.arm_pmu != arm_pmu)) {
->>   				ret = -EBUSY;
->>   				break;
->>   			}
->>   
->> +			set_bit(KVM_ARCH_FLAG_PMU_V3_EXPLICIT, &kvm->arch.flags);
-> 
-> Why is this flag necessary? kvm->arch.arm_pmu is NULL if no PMU
-> implementation was selected by userspace.
-
-The explicit flag is there because kvm->arch.arm_pmu is also populated
-by KVM_ARM_VCPU_INIT through kvm_arm_set_default_pmu(). I wanted to keep
-allowing userspace to enable FIXED_COUNTERS_ONLY after that default PMU
-selection, as long as PMUv3 has not been initialized and the VM has not
-run, while still rejecting it after an explicit SET_PMU.
-
-> 
->>   			kvm_arm_set_pmu(kvm, arm_pmu);
->>   			cpumask_copy(kvm->arch.supported_cpus, &arm_pmu->supported_cpus);
->>   			ret = 0;
->> @@ -1164,6 +1166,22 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
->>   	return ret;
->>   }
->>   
->> +static int kvm_arm_pmu_v3_set_pmu_fixed_counters_only(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm *kvm = vcpu->kvm;
->> +
->> +	lockdep_assert_held(&kvm->arch.config_lock);
->> +
->> +	if (kvm_vm_has_ran_once(kvm) || kvm->arch.pmu_filter ||
->> +	    test_bit(KVM_ARCH_FLAG_PMU_V3_EXPLICIT, &kvm->arch.flags))
->> +		return -EBUSY;
->> +
->> +	set_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &kvm->arch.flags);
->> +	kvm_arm_set_nr_counters(kvm, 0);
->> +
->> +	return 0;
->> +}
->> +
->>   static int kvm_arm_pmu_v3_set_nr_counters(struct kvm_vcpu *vcpu, unsigned int n)
->>   {
->>   	struct kvm *kvm = vcpu->kvm;
->> @@ -1238,7 +1256,7 @@ int kvm_arm_pmu_v3_set_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
->>   		     filter.action != KVM_PMU_EVENT_DENY))
->>   			return -EINVAL;
->>   
->> -		if (kvm_vm_has_ran_once(kvm))
->> +		if (kvm_vm_has_ran_once(kvm) || kvm_pmu_fixed_counters_only(kvm))
-> 
-> There's no reason for doing this, just let userspace create an event
-> filter. Even with the current PMU implementation it's possible that the
-> fixed cycle counter gets filtered.
-
-This check was added as the consequence of the discussion in the 
-following thread:
-https://lore.kernel.org/all/327f74e4-78b8-4629-a418-d1d3ba78859f@rsg.ci.i.u-tokyo.ac.jp/
+I tried this but unfortunately it doesn't seem to work. 
+kvm_arch_vcpu_put() sets vcpu->cpu to -1 so we cannot simply read it to 
+get the last cpu in kvm_arch_vcpu_load().
 
 Regards,
 Akihiko Odaki
