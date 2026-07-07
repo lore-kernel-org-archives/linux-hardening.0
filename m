@@ -1,81 +1,106 @@
-Received: from va-1-112.ptr.blmpb.com (va-1-112.ptr.blmpb.com [209.127.230.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322243A7F51
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Jul 2026 06:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3AF320CD9;
+	Tue,  7 Jul 2026 07:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783406327; cv=none; b=TTqxq/dydqXw+ENav9zVPOh/UeR3+DNZC3Gwb5Zrr/ke+iwzfFvOiHdzlA1dPkcARPuK1zPk0tdSfzMRa79u/zuFaK+AuEyolm3FfWGHNPUXaP8HmM7DLMXnKwCP6UwtiWpl5MT9CxlRiqEixWGFJbbsIYLkOefzovQvl/QWa3A=
+	t=1783411134; cv=none; b=tzPSnNSv1NpU7IfxcZgO5hQpukX42qlfVG4So1WrlofzzMmmuCG6WNrRJhjnRlPrDxI59LJ0eBcq4Tl5/OAxa0F3Pn8Ryw55hV5oILSZiSABVyWXKsI/WHwo2quHKcwQVMuEKKxQwnk6T0LnqNXDm2ihn9McRelSC0BbECTmpIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783406327; c=relaxed/simple;
-	bh=nV2AGITJZTU1NzNzryu2M0rvwVAs69WU7Il0XZUHCqU=;
-	h=Subject:Date:Message-Id:To:Cc:From:Mime-Version:In-Reply-To:
-	 References:Content-Type; b=e3OqgX6dyr1oyYez3VqW4srf34zZJ2vn0xblCTAKOY05tdvvRk797V2JX8+QQNbXmU4HD//0yZsDHeCn6ClcNi2ekPJNuZP5AXbutNBi0mO/7woASsZyRrKz/Ii4kB7Gx/3WthH7sps1R+6QcPZrqlyb67O/04zyIziZHXQFmBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=T9c9o/hg; arc=none smtp.client-ip=209.127.230.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1783411134; c=relaxed/simple;
+	bh=GAtw8czhd2aMhjWO4X9p/ubNApLmoZ7OyAVteOFs1kA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YFJMNoL3j1cwI+UrJcAWRcL15Znlg+eSAgshWhigmY8J8V7KxNsCxxojwbVa3cm2gJ/sv1M2b2VzBIjAjBgfYvCnvSG/Z8kjpRegnmMvbEXtFycGrZpwVgbnGTQZo9UVD1yQ1iVYf9P21OhgFkChbcaUSwrMsw+Y0lCf9xk/X+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F9dO4cZw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="T9c9o/hg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1783406321; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=t1BFGaGU2xupQRN461NQlBdIPrGwg67ma5LofMnJBF8=;
- b=T9c9o/hgrsIen/ufvk8cRltvXc98r0f7EqRqol0h2xOlpYPaEds9LiOavYAnXnMqZK1QU/
- tJFTdwl9AqBP1WE4OfIcKhnLtFGofcXfP6cdLzrZa9UWblf4j+5XR9NDS71K863YqXjtmz
- xmFuMZJGfliqsMk18REwMAJICS4nCNTxK7f92WV5FRLJ1qBczS3RAUcmVt07IoUIIGfQl4
- 48L5Bdg31dUmUISHQQ8enci+/1njK//6szFSdbL/RUP5w9Kwk7KoOBLidOuQ/lQtpWa08w
- 3fD5BpDEMR8LcT0qm5q25TaViyAC5t1NFXHzMqiEzMGXMUwpqGu6Lm25artsnw==
-Subject: Re: [PATCH v5 5/8] mm: extend the template fast path to zone-device compound tails
-Date: Tue,  7 Jul 2026 14:38:14 +0800
-Message-Id: <20260707063814.40421-1-lizhe.67@bytedance.com>
-To: <apopple@nvidia.com>
-Cc: <akpm@linux-foundation.org>, <arnd@arndb.de>, <bp@alien8.de>, 
-	<dave.hansen@linux.intel.com>, <david@kernel.org>, <kees@kernel.org>, 
-	<linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, 
-	<lizhe.67@bytedance.com>, <mingo@redhat.com>, <rppt@kernel.org>, 
-	<tglx@kernel.org>, <x86@kernel.org>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-X-Lms-Return-Path: <lba+26a4c9eef+4b62c2+vger.kernel.org+lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F9dO4cZw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B1E41F000E9;
+	Tue,  7 Jul 2026 07:58:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783411133;
+	bh=tpIOncymRCGSppNzLVX19mro9eWiUYLlNmVFoYEKqAI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=F9dO4cZwh1Vri6X2ijnhDlSIeGJOGovGYffqHyySj7nzYEr2MILNdMg3efat6xdz3
+	 5Ej2/E5dObGvSw3d/Q9kdz2yamr7Sbv1eGDcdL8t051hapZVIlF7hV3lHBJgYNjsvU
+	 i3vQfU/QdAaktekq4NtBAUy1WNHsXsEDzsLZWMAXA5pCsW8CQzVRDBe0meaHOC0w/l
+	 WgaxpM+DiBSUkS7ZKgTLHAiPmzDZVZ2qGD4lLNBmXFXz4s0OlYElT3DVdt8cEHq1be
+	 MUDdt1KW/xM50igh6KWtmse79REct2ygy6jJ15qjiFTUf6i3Y151sUTUxjqPrnthLo
+	 uytkDo8ScI+qg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1wh0hf-00000002I1m-0pfp;
+	Tue, 07 Jul 2026 07:58:51 +0000
+Date: Tue, 07 Jul 2026 08:58:50 +0100
+Message-ID: <86bjcjp6x1.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oupton@kernel.org>
+Cc: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	devel@daynix.com,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v8 0/7] KVM: arm64: PMU: Use multiple host PMUs
+In-Reply-To: <akvzxDwZbj_sZ4pI@kernel.org>
+References: <20260706-hybrid-v8-0-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
+	<akvzxDwZbj_sZ4pI@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-In-Reply-To: <akxtWBdz5XjoAAzF@nvdebian.thelocal>
-X-Mailer: git-send-email 2.45.2
-References: <akxtWBdz5XjoAAzF@nvdebian.thelocal>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: oupton@kernel.org, odaki@rsg.ci.i.u-tokyo.ac.jp, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, kees@kernel.org, gustavoars@kernel.org, pbonzini@redhat.com, corbet@lwn.net, shuah@kernel.org, skhan@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, 7 Jul 2026 13:09:01 +1000, apopple@nvidia.com wrote:
-
-> > -	for (pfn = head_pfn + 1; pfn < end_pfn; pfn++) {
-> > +
-> > +	pfn = head_pfn + 1;
-> > +	/*
-> > +	 * All tails of the same compound page share the state established by
-> > +	 * prep_compound_tail(). Reuse one tail template for the whole range and
-> > +	 * refresh only the PFN-dependent fields in that template before each copy.
-> > +	 */
-> > +	if (use_template) {
-> >  		struct page *page = pfn_to_page(pfn);
-> >
-> > -		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
-> > -		prep_compound_tail(page, head, order);
-> > -		set_page_count(page, 0);
-> > +		zone_device_tail_page_init(page, pfn, zone_idx, nid,
-> > +					   pgmap, head, order);
-> > +		zone_device_template_page_init(&template, page);
-> > +		pfn++;
+On Mon, 06 Jul 2026 19:28:20 +0100,
+Oliver Upton <oupton@kernel.org> wrote:
 > 
-> Similar comment as the previous patch - I think it's clearer to just init the
-> template page here as a separate step and not unroll the loop.
+> On Mon, Jul 06, 2026 at 07:03:23PM +0900, Akihiko Odaki wrote:
+> > Akihiko Odaki (7):
+> >       KVM: arm64: Disallow vPMU when pPMUs do not cover all CPUs
+> >       KVM: arm64: PMU: Protect the list of PMUs with RCU
+> >       KVM: arm64: PMU: Pass the pPMU to kvm_map_pmu_event()
+> >       KVM: arm64: PMU: Pass the target CPU to kvm_pmu_probe_armpmu()
+> >       KVM: arm64: PMU: Implement fixed-counters-only emulation
+> >       KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
+> >       KVM: arm64: selftests: Test PMU_V3_FIXED_COUNTERS_ONLY
+> 
+> Thanks for respinning the series, I left some comments. I'd really like
+> to get this feature picked up, hope you have cycles to work on it soon.
+> 
+> FWIW, we're considering adding a new vCPU feature flag to deprecate all
+> the ugliness of the old PMUv3 UAPI. I'm tempted to say that the
+> FIXED_COUNTERS_ONLY feature is conditioned on the new feature flag...
 
-Thanks. I will rework memmap_init_compound() the same way in v6.
+It'd be good to have a strawman proposal on the list if we are going
+to change add a new API, specially if this is likely to gate new code.
 
 Thanks,
-Zhe
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
