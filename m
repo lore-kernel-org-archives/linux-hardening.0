@@ -1,78 +1,74 @@
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013016.outbound.protection.outlook.com [52.101.83.16])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011033.outbound.protection.outlook.com [52.101.70.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519C04D98F2;
-	Wed,  8 Jul 2026 18:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE5F3EDAC7;
+	Wed,  8 Jul 2026 20:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.33
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783535764; cv=fail; b=BSKZ107XgoNGOK7tsg7WNSnmE+KP+hLCuC7J+5o5t81TD1xQ5GneaG1XaWspwtPjwLFPwOc3ETDxkTs3xRNhWJwSFzOLOVgUEl9Zd2dIgXpCCdW9CYbrgeBDv8Iad1u8lfwqEWeJlUbsbh+h4gIh/l/cmTbSKiT3E3F6FDOIMxg=
+	t=1783544142; cv=fail; b=SkRi7dKr4Ywa4O3x788HAe5wFwNJfgVX+5JzyihbGPvWtVBM04hGraxkXaYVoO6DEQXk8wvbCcKyN57XUqarSfX4ArwyOf+MtanTFa25OgYu8N8osbWRXAsg1RFaqj1Hbzt0V+stJVlezIyUp0S0yDhOur4H2PEesXb/00hAVzg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783535764; c=relaxed/simple;
-	bh=CC5lrM4DrCHPb1wQSb8h7AcW8T0yg3jm3yJvrePLd48=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=dE9zrIbtmrRtoCG+yBbd2P068MX9I21bjVTTFJdfsXTdWDWVq6bdFrDz3xkreot+P0M2KFD7Zo8T/qeqoteaULc9FPYkNvZL8DP9vm+ipY4685dPjwXcJx2sElRmkeRr1jrCYv6JvqSrHnUoznQDDUBnGyQiWGknjpQCpfwPA4I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=wIEA8BwK; arc=fail smtp.client-ip=52.101.83.16
+	s=arc-20240116; t=1783544142; c=relaxed/simple;
+	bh=JW3a+Mj8tQUJ6gZ2p+DPHMQXxvSDlQp/anKowc+dvmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Vts0zMq+U8/H6Ij4Zy+xZAcex8tk21+WIZq7jihxtMOMQ7AQSvTbhadzl4NXOU2R/vtnnWcPJtcoJCAV5L71KfTN/W1QPP3BECZ7sy+h20Mr154nMXBXkKPumhcOgpMTgXqmWmblV6Dd8qagI7gQvieTbhIrSleS9GtFEFQFQ5I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=dLu2Iegp; arc=fail smtp.client-ip=52.101.70.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="wIEA8BwK"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="dLu2Iegp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HuFeeI2nd8ytcnoUwG0SWG4MS4w1/9WG6Nv7AehTKBJo20zCfqU3KOy9z0fFTeg7ohIOhDLu1I3CfVDPEop4jLaa+kG6BfiasAduoYwNBZIeohGC5fp5eAhS0OUgmUuxMd1qo3rzaO0vbIy4fEuzbnmb3ERMbv8UnuQ7Ni3oPggBbjALUGmVYP4bTUuUL6BFz5004W+rJcYebCHttDlcDfON53leqWjuYb0nIrCmmSXltk+g7xfkf+zbVvr0ryB4K3EtNxseFm64k+jL0SG3euLOlqbMHJYSzxFGTQ2FXLK3tj9NNimKJ2jFTnPZyhuYFiz7jkKCsye4YKRWe1VUvQ==
+ b=mmmLZEPxrKwlSVe8L/FivvgqmdoPtDZPF+yxs/yuQlEQcJD3/DDM6m3cMpqBE0I9A2GLqdyaFYSkNmz1jm9zou+QWu9AazOj+YMjCt6l4Irbzg+wdXbTig0UwFW306wjuhA85bCJ8DnZ8ac49LOPuMCKrBJ4vTCbdAFWo/EO+AQpvknrDOmgvHcAEKQoXFAU22n80KTt/4llaU+n6+/W137ugRx7sYVwxzAIWBt80pciPcBId+3heo24+ngUjvjJtdn2nI1Qz1G3wbYyNXxvJBgwg0FhpmFfFKqM3dVqMW4SJCOzKr2e4O4bAWjZ6cxMpTk+Vmb0VvJAd/JbHiRYvw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LTil+8xNqLIewzwvDORcBzICK5g7RqTNYQehSrRj61g=;
- b=p20DLOR2V+8PQoxaE+IYJCK8r7G+hikhuxZMmKMxV5zV5p+TIjaxa9nAvRG2bWiVjOxrR3TX5oMSmFp5KcdcgDjUeGp94AvVD0rGp9GE3PxKgSlcrBWjuVFOf9CxtS/lruIXrzfSkvu+YuJgiCk+vcxrq+pmjJFbsWeHQvqqxJN+XAl60DSR+wP1Q1z8EcRA5dYEH0pOX09Krm03ZMrg/YEpc8sy4Plx2pHBQgR0QaEWw7rCrysugBF4BHf6OGXPx3obK+jnQESvOtrWNU6MMn/fHyeE8gAVTamEXLo6yfuEcRKs5ZQqVtveahOqfaKi3mgQKIYRVrTyjUgRypLoMQ==
+ bh=s0NuBzPvH/JllaoI9BAAtfgehAn/KRuLi39Cj+cP0GY=;
+ b=IPVj/Vdv8Ihxmt1i0O9M8hg6UvZ9a+FuVlDIO4/squxY17NEuYgO4zIlwdMqgdHi3ZuyJPztW4hjzthNYGTe61CPC7GnS9dADZd9NDG26EbEgK/61hwYkF9EbCNC20f8W16Ch1+DKb0eH/CSXSJJPd4DkBIFHxqm7U39Wx6BtPfa5xNLXqHkAaT/8kGj4zsqKORnkEixnqi+yLfPQkDPx7I93oLIzuPZiSLJhPUqefGSpPlJddBb4N8vOh5ABSW1ddJJYqSXNZX2RyK4bhi3K8TynSokXy5cMlleAcG3bjeM+j8NBekhPQkl96ZFMi9IA4ji09FkNrfzuK3lTDquxw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LTil+8xNqLIewzwvDORcBzICK5g7RqTNYQehSrRj61g=;
- b=wIEA8BwKZj5Rp8e+HOlM6/kT3CsYQEUhVgufJI4zwZ5/jSoAY33Io7xoPo4fIweJjxKD559nHfm+Qi+1XW9H5vTqp9YhFyjSpo2Y28jL4yXVzXhwXh7MU3Xjc71wQdfyCL7AU71yW2GcouhrOvhuXiL0dDtvFH/5dNRxGYc3hi9X9MOIPvklOO9mKgXxPAMjvpx5RcgSMo5rCXGWwjeETug6SjN2U/u8ulDkmmiqyuWTGKzlMprGx5TFEvY23TeZtrw1FMJMQWnYXxezi05cBieWqu+1JTi3YivAQfmKPca5yM0ddbRiBpKpGgRYvxPcD5Nh+PHKKQh8B9ZfuKHylw==
+ bh=s0NuBzPvH/JllaoI9BAAtfgehAn/KRuLi39Cj+cP0GY=;
+ b=dLu2Iegpwqdc5UFEioUOzIcoCW77mncDHXPoJ+5TmVIHUr6+wOE7jwxQqqoBUrkjgs0bWQ0pxMwKTwvyLfwRSgcEfuZNTSvuh/LsmRK1VnfYt0+56UJIyfN4Au88lo5GYMjBKCeD2HQs+ZxY56AqfjGUpmBMTbJhB71eEN7z0qKVnvgwslyQvcqtHMe/sXJB7slpquFv0gQhszU/k6f2iMIDy1Ek3+6337QrEA/wou/UVQDI3fkugTRiQBDkM2qEkMAu2IHA6piTyKI5tJQrv9yncq2Cf7NKA2w71dnKgTFNhrR5X41N4xHV5mTlKKtOF1xfe9BWaeEgJ3iLIuaaCA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by VI1PR04MB9810.eurprd04.prod.outlook.com (2603:10a6:800:1df::11) with
+ by PAXPR04MB8815.eurprd04.prod.outlook.com (2603:10a6:102:20e::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Wed, 8 Jul
- 2026 18:35:58 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.14; Wed, 8 Jul
+ 2026 20:55:32 +0000
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Wed, 8 Jul 2026
- 18:35:58 +0000
-From: Frank.Li@oss.nxp.com
-Date: Wed, 08 Jul 2026 14:35:10 -0400
-Subject: [PATCH v4 10/10] dmaengine: dw-edma: Remove struct dw_edma_chunk
-Content-Type: text/plain; charset="utf-8"
+ 20:55:32 +0000
+Date: Wed, 8 Jul 2026 15:55:21 -0500
+From: Frank Li <Frank.li@oss.nxp.com>
+To: Koichiro Den <den@valinux.co.jp>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Niklas Cassel <cassel@kernel.org>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	imx@lists.linux.dev, "Verma, Devendra" <devverma@amd.com>,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v3 00/10] dmaengine: dw-edma: flatten desc structions and
+ simple code
+Message-ID: <ak65OTg6t7mPnizf@SMW015318>
+References: <20260702-edma_ll-v3-0-877aa463740c@nxp.com>
+ <gfylpnuieclkt52xzbcghzaza7oirunstgzfmru7aqpnapdlit@dpgmjrs6ww7u>
+ <2z2ba5kwgtyjzipkhxqf2jxjscerbx35ep7jndedv5zk6l6xwk@esy2ayjyhcoo>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260708-edma_ll-v4-10-cc128f0afb61@nxp.com>
-References: <20260708-edma_ll-v4-0-cc128f0afb61@nxp.com>
-In-Reply-To: <20260708-edma_ll-v4-0-cc128f0afb61@nxp.com>
-To: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
- Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>, 
- Niklas Cassel <cassel@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-nvme@lists.infradead.org, Koichiro Den <den@valinux.co.jp>, 
- imx@lists.linux.dev, "Verma, Devendra" <devverma@amd.com>, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783535707; l=10259;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=YRqAocW0qP2hltMHxZ3RUTaSv5Ync8DH/nO7wV195V4=;
- b=dw7uhC+qRQGBZh1Z0Wb2JdhAjKV6NtctdlsNubttL4u+IVHDIwfEAr3Sacv7a72fYWF3pMBuH
- M2qZ7SMp1PxAwafE7BBkrhSQW/KFdIDSyQxusccmS/eUow/Swdg/s+s
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SN7PR04CA0034.namprd04.prod.outlook.com
- (2603:10b6:806:120::9) To GV2PR04MB11799.eurprd04.prod.outlook.com
+In-Reply-To: <2z2ba5kwgtyjzipkhxqf2jxjscerbx35ep7jndedv5zk6l6xwk@esy2ayjyhcoo>
+X-ClientProxiedBy: PH8PR21CA0020.namprd21.prod.outlook.com
+ (2603:10b6:510:2ce::27) To GV2PR04MB11799.eurprd04.prod.outlook.com
  (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -81,420 +77,324 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|VI1PR04MB9810:EE_
-X-MS-Office365-Filtering-Correlation-Id: 30f2fede-68c3-461c-449c-08dedd1fc085
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PAXPR04MB8815:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff959fc6-e83a-424a-47cc-08dedd334024
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|19092799006|376014|1800799024|23010399003|56012099006|22082099003|11063799006|18002099003|921020;
+	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|19092799006|4143699003|56012099006|11063799006|22082099003|18002099003|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	p1Ym3INiL5NNNVc1hKJfYaNkfTh4XTF3zxvqwm+bC8ctxjXNxonfFA4tjcAEYN99N7WRzWciAB5bWZoy5MHMket6hkHBGhzT1sv/+Z9TsCmRmtoptRk7UVeibutnig20sVBRK6ZHgimOC1P+Wnedp0QpzllJdSyKqjTGXnY/vIAYY71M20VSIxUP8ksJExd+aCspcpoPp5lpDcBnzoOzvp+M8kHidDX1TWQQctUaHEPUWDewS1inQUKWyYQh1f/sRrRfGpGefhlnO/WeLS4AswDPtTb0NTafTYuy2kP34UN5CURMJyMPbixshOI0j6bSx6EDiuIK0IGWQmKyWBTlumgLsb5JwQbUPNLvktoWItQcqj7kyVetq4oPLgM0CqqP8TdXdEgFL52MBx3D971Tz3IEHS/RnCVQ4Eu4gwEKJam/zrqrutTEx4vu76TncbBzI+74aS1YD/9suu0WHCiwBmtTxDrTYGD38Pm+ggY5erySNSI3NtAFKfxvZIqdJ1PhPANTx0A+sWZmAuX4cy/uRGxvN1Y+DAMeokBVME82rmSSfsAclSXcvXbloow/SP8h1w25Y8J7ZBtrGX/nSn6OwTnEERqufnLipeID8JeEeH/92hmbNfPVp2TDxHFypxmYu/LxIDBfJ2hM0XUH7ApuaT7x1sadnDsvreiMBTbNJ+xTizTm5YeY39+oQ2nnZMVYXc6wzoGo4GnFvTYmFHICDQ==
+	VvVLlTpvNHkbfrcLfYnT8XCwHZT0av3NQ/N/aJStAO7ccYsXmvYvdD8piHolEtaK30zc1kJzqm9/HfIILODaKnoiyyRrmSqdQ5/FAAq+7O+EZ3ZVpsVKpXV8s4u4R0ykCRl5B9Pl0YyAPRkMmzujzo1hYJkHFmdt2L6OjvvNRejA2HoTC5xBFepz7TaTALKNSGQMVLnUOwGH87Q5f/wSz1pEr7Z4PINpaTIIxiUXb1fFgtl3SG7yIk5wKJ4AkDK1D4wxp6m+XYT2asevELjmn5NuvM/SSv670B/HokFjq9Lobyhse+45zIB9i3qvLFEcx8d3UBKq703wkquBVrFwVhUAbhLZULGVWQ3mqAWH8sWxlfQi1LRhYm6KLKT9Pq3GdvxStpMGvpAxNwa6yH/xdSP17UwWbKawb9yayXLSaPcbAgvlganJqerUhvMUBEp6ofhZXdJOmTJog/dZT0SXAKhiubzG7ZPf9j59+jUvE6ZkrvKGmUIgNaYMGrd5yOns1PoW4Jb4cqE8M80I1NOQrQPyv1k6sNzQCoVddm1YD/yRG/t0800NGvmhXOhAy5b0BSKSvZPx1L0mxqIn62+KY5hQ8lpgaWX8T2GE36hVKm9DaGTK6AOJE7kgsOx7ygHeYMRw2pOSl9bBR1l0Uh2z5d4vUjLfM3AdNNYBrci9u8A=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(19092799006)(376014)(1800799024)(23010399003)(56012099006)(22082099003)(11063799006)(18002099003)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(19092799006)(4143699003)(56012099006)(11063799006)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TVBBUmlHK0QwS0tNMmJZaHUvSCtwNkdvbE1rOU92eFFIZWdyYWVJQld6R1lp?=
- =?utf-8?B?Nk1ac3I5STc2YVRqSFdhaUFJM2YyNnI0THN2YSsrOWpwRWxReWVsTDFJRlBz?=
- =?utf-8?B?RXQ2WHRQUnZ0YmtoM3ZNYmRvaGw3M3JhSy94NXpTZ0h2RWJoVFdlZWVoRmtR?=
- =?utf-8?B?OTFWT2FNUXJuQnRTNGFqY202NWt1MU04c0ZNUmR1Z0tCNXhpMnI0TS9zR0I5?=
- =?utf-8?B?MEtnbEt6NkZvL3k4Y3dDN1dNVmxtblhvRUR2ZGFyTjdpeEhjemFaSGIzRGVy?=
- =?utf-8?B?SngrWlVFMVltMXJuTmhvWnJaSm14enV5bnMxZGdaUlMrTStrSUhDR29JTXJF?=
- =?utf-8?B?dWNUdVdZWWNOMlYzaWlOZWJwbkx5cDlIUnNZaG43OVUva0J6RUhvb2hBK1dn?=
- =?utf-8?B?bFJoditzQnFYZWVHZEpFcFhOVWVRdm9hYTRyQjlha04zY1A5bitmaS9BVktz?=
- =?utf-8?B?elRtLzMvalNsYXRpL2p3RGxUOHJoZEcyYlROVS9yVm9lYjVQOGhUT2FPUk5r?=
- =?utf-8?B?RjFrdytsQno3Qm1RaW1ESTNTUWYzVHQzSFhjb0tXSjJYYUw2YVk2NEF4d0xH?=
- =?utf-8?B?Z2lERkZhZnFnWU5VSmc3RzRtcGI5SHlyOFlJblJJLytwbnB3bzNRNDFrUlFI?=
- =?utf-8?B?bXl3ZE5MU3NwR1BIdHRHc1B1Syt3TzBSK2lHNUJVSlRLL3JHWi9KTGZQSHdq?=
- =?utf-8?B?Y25kRk1FMXpQdDdJWkJFQUM2RzYrdDFnMnZuNjcwS014dFhHUXE5cjE0emVx?=
- =?utf-8?B?b0gxeVhScEpUTGZRNGdLdDJKbXJxY3N2THpEc1cxUVhGRHVsL0REQVJrQVZi?=
- =?utf-8?B?aWVsekF3L3ZhK1Z2TXl1Z3p4NHJqV1dTdGx2c0h2UGpZLytJZEpwbWE1OS84?=
- =?utf-8?B?ZkNqRlZLMmV3YUdPOFEzbGJQNjNCdXdSZnhablBBZHZCTmVCNWp4ejEyYThM?=
- =?utf-8?B?bGpnWTR2TjAzWUhkVnJBRHFTdGI1UE85dzlLb0hrWmQ3a1ROQ1BYdHk5Nm5a?=
- =?utf-8?B?cEhFeG96elcrTlhuWjRGRTNja1JPZDN3UE1UeDE4VFVFaGIxb3gwcERzNExC?=
- =?utf-8?B?T0F4WmpsUjNDR0tjWnBHTnpNclB5MHdiRmhCaDM1SmJFRCtrSGtCR3h1K1dK?=
- =?utf-8?B?WkthR2Y0L21GWllUZjR1MzlGUUhCQWF2TTl1VzlqQmhJS0FoRk5TZmNBbkFk?=
- =?utf-8?B?Q2s3L3hEZkdFZzV5RjlsMlc3Vmhac25vWVVMbGx0TDZzSmNRUjVRNHErbHlR?=
- =?utf-8?B?UmhJaDY0TUVUOUR3RFVwcDZvRFRZZ050bmUxZ1o4NGpYbmNVamQxeWdBTnlu?=
- =?utf-8?B?Nkg1dDl1bHdkbUs2UlBLbGIxaWxDSkkzY3VUdEVTaUZuajdYamowcTlsWFJv?=
- =?utf-8?B?TDFPNjNFRlhVckt5WXN1QzRrQUtFTUQzL280NGI2VHNZcDR0b3ZIZllLZHhJ?=
- =?utf-8?B?K2tsMkFiTWdEbC8xUjhnaW8wM3ZZWDR0SWlQZkJyK21haGRTeFlrNFZLQXU0?=
- =?utf-8?B?cHVYRVZnZ1g4MW5KSGlsK1VWNkN4Mlh6UEh4UVZJTCtVbXJFc2lqZ1RDWDcw?=
- =?utf-8?B?YjJiRDB1ZlB1ZW1GakduN3lEdUVmbEVSSlEyb2Voc3JWdnI2MGpHRXJPTThT?=
- =?utf-8?B?cm1peTBJc0twRk5ibE9TQWc1V0lhOGFiU2M4WW9pQW5SeDlRSUZOMXpNYUhT?=
- =?utf-8?B?d1JOcVR0ZHlCRzNaanNiQjhoUzg1U2ZiaVBlMlZyWllPOStHL1B2eGhqWlQr?=
- =?utf-8?B?TE5xbE9Pay8zMmxWaTNPcmM0bmNKS0xrNlRjSWtFWGxPSU1lRmdaMnNRZFpX?=
- =?utf-8?B?bEhtQmtuRFNteGx3ZFpISnNYblViZldQL0loVm1tMVVBWkFoM1ZaZTRwOWY5?=
- =?utf-8?B?UGVEOWdUUXN0V3V2cnFYd1pxcFZMNkNJN3hvSk1GYUt2cDR1THhVMzNWalln?=
- =?utf-8?B?WTVrcEMvQWJsZUJWQTVUOXkxTEdEMmV4TFNxbG8xWFc2aXRGZkVHamhyeWFZ?=
- =?utf-8?B?YjlEK0JKMlNJL0JQSUpYenhLVGdHSk41cCt5cFduQUtiU2dLZEM2U2l4ODR6?=
- =?utf-8?B?SnM0MG1MSnBhT2JKMGtGY3FLTTk2QkN6YzVYd3VVZnNKazBmckVUUkNFcmkr?=
- =?utf-8?B?Njh3Ymt1STZjQ0xoUkVDVlJoSnZnb3pDdFByd3k2TytnVER3ODUxajJSVXMw?=
- =?utf-8?B?RGd4cDMrVGFOVkVXK1d2RjNMckhKVExMRGc5WUpYZWhSdDFNUWs5WVRBWk1V?=
- =?utf-8?B?LzBxY1JaYmJ1N2lSN1U2N0M0YzVrbG9nNUcwQ214V3pVNkFsdk5UZjJuL25l?=
- =?utf-8?B?bEJQdUZsOHc1Yi9sM2wwa3JaMEsrT3hDTk5aUmhVbWxHS3BVaGEwTDE3NkF1?=
- =?utf-8?Q?8YwzyzrUFJve5KLWSrl2tTmx4GkxLfxthdXmf?=
+	=?utf-8?B?YXZ0YVRWTnFoSWl1UklBV1lpbXI3d1pVOGlFODk0R0RnOTdzRGl3QndrSDBC?=
+ =?utf-8?B?eWQzRXkvWFVEbzdhYWgxYVpPR1o1bHpLNy9XT0ZOdnBQTTZML2hSZitNb2Q5?=
+ =?utf-8?B?OU9sMnNLOGlXdVlhdVo2QjlxWE90NEFtcy9ZSkJseFM3N0lobit0Vm1jblh2?=
+ =?utf-8?B?YzVmcmxncjNERytJYUJRMm1TdXltVUpzcWNlem9uL2MrclArMVA1d1RVOXhY?=
+ =?utf-8?B?WURrd1VzY3JMT0ZiazhscDBXQVEvZ1dySFhFOW9BU0tOWTN4OTR5NjlmaHdo?=
+ =?utf-8?B?cng2ZFBCRzZzRjdseUtFNHlaQmpQRVNpM2Y0aTZBVzNKVlJ2dUEwZ1ZwSHY1?=
+ =?utf-8?B?eVozYkU3MVNIZHBPK25pN2YxV1lDbXkwS2hTRS9OOC85eFZ3RHNIenhZYmRI?=
+ =?utf-8?B?dUN0RXNoSWV1eERRNDM3UTJHalIrNGtuTS9kS0lZZ1lBNExMMTEvMTN1cHNK?=
+ =?utf-8?B?dDRaZkIvbjdFbFk3ak5QdzJDak5ocHZKUXRsazNrcFg4MklPNFBwT0hLN3Ex?=
+ =?utf-8?B?TmQzV3BZL1h1aVhOb0FtZ2JiRWMwRlhxWXA3OE9DbDN6cVRMSzVJeTZqWUJJ?=
+ =?utf-8?B?MGdvSnpNOUhzQ3NhZDVYUmN4UzluMU5mLzlMVUUrQ2pvWDhiMGQweFBUQ0t3?=
+ =?utf-8?B?UVd1VWs3MkRVS2FadFpRYkkvZ3FteDNOaE93K2hTVmFVeDNwS241R2xWZ3pZ?=
+ =?utf-8?B?K2w2MEtWZER6d0RmN2Y3V2I3ZUtYL212aFd4YjlMYkZUTzZEZm11YjQzVTZu?=
+ =?utf-8?B?aTlZK3pBVFF4WjdYZjZMTWNReFM5aHFCWlpwUVgzU0F0aVVlSFFqeDdEOWdy?=
+ =?utf-8?B?RTJEbkVWcHhiT1AvZ0F0WjR0U3RNK2VuWVd5clA0WVRqUFJZLzZQeDZuSElu?=
+ =?utf-8?B?ZlJNenRERmIzYzNGRE5sWGJuYzhVS0VLMUt6RVRhUnByVWNjdkkrUTByOE1k?=
+ =?utf-8?B?UVBwS0V3eWcvRVhZWTdhVE8wMWUra1RIS3FGU3NweE9Tci9MRWdhMU1aWXYw?=
+ =?utf-8?B?T3g2aGxqRzFHMlVnME9iTGNOT1NieHBXTTlkemdTUm0vZFdSUE5DUFNKV3Y3?=
+ =?utf-8?B?UU1GT2FFcjZ1OEdQSkRKMU5naS9VNGFRS05ZYWNtSGVSNUk0OHloSXQxemRG?=
+ =?utf-8?B?d201Y1MraU1LWEpWRGxHQ1hCODVoZVJNR0hmWDRGejliTGN0TWEzalVqUlFn?=
+ =?utf-8?B?dTdyOFA3UlNUSGljNWhNN04rN293MjRNRFlCdGJLMFZLL3dqbzZHZWJpYzRY?=
+ =?utf-8?B?cVJveVdUZUl2c1V0b3g1dEVNNk9nM1ZnY0ovZDduK09JeUZrY0Z6bk9ZMXJu?=
+ =?utf-8?B?MGYrV2NYS3RPQ1Jzdy9ESTV1V25xMFhWbVhlQmpRSDBPY2E1eG03bnVUd0FO?=
+ =?utf-8?B?MjFBYnZONzNlQmV1MStHV21ZaHJaczRrQUxVYy81MTdQMk1MVnUxcUpPekwz?=
+ =?utf-8?B?VWh6NmxnOGJ0REx5UWJMckd0RkcxL25kYTk5YUY3RW5veGJuTTNkVmkvOVpx?=
+ =?utf-8?B?WWFMSHhYOGtsaUNxNHNFd2xKQi8yNUdCeERUMk0wM0Zwa0Iwdi82SkRFQ0kw?=
+ =?utf-8?B?VUVjT1NMem5VdERXUnVURVYrY0dPeFYrT05xWjJaak50eEtwWEpnVFViL0ZF?=
+ =?utf-8?B?dmwrcS9kTzhGWENaa0Q1R1ZxWWJIcE1HWG9WY3dCODZQeGdOUXp3bjZHL0pp?=
+ =?utf-8?B?QldKdVEzK2xlOTBHY2lrck9CRnFQMWJYTTN0SHlJZDI0eW5hYlFMQTh1WElS?=
+ =?utf-8?B?elpWZWU5a1dJOXJ6eFNUcTJHYjQrakJpQTJwTE11ZW5tVjV3c3J0RnU0SEdh?=
+ =?utf-8?B?OHc0WjhLcVpjUDVRb1ZIZ3V3THN2WE8zUVB3a013akUzbHFjU01wenZNWFZG?=
+ =?utf-8?B?cGpLcncxamhWTVhwU1E3a0N3aXcrVkF6Qjh2emFqSmFjSzBJQVFJRGpJbDcy?=
+ =?utf-8?B?cmx1b3Fxb2wxdHZiY3gxYjVIdU5LVGYzL1cwSDAyN2xQNG0wMXZueWovYi9x?=
+ =?utf-8?B?M3BsYlFCK2xUVG5kRU96a0JRcHhjRW1GRElUa2FCaS80Ny9HNkFTY21rVlhH?=
+ =?utf-8?B?M2pLVHJxcUYzeEd3eU5FalZRRVFaRk9YUnBTWnZsZ0d4c2dNUGR0ZEdUbnBN?=
+ =?utf-8?B?c0lOa2lWTkVkeGN2c0FJVnA4YzArTUFpVFkxV2RkQUVHaWY1ZUFOYTNBM2V1?=
+ =?utf-8?B?SXYyd3VyU0dYZTRtZFVaa2ZENEoxeHg5VXdKMFprU3BpT0o2dXV2MVczOVRG?=
+ =?utf-8?B?dFcvSU5aOVcvNS9qb2tneUI5MjZGTXFGSnVNMjJ4TGtQVzJPZWMzRnVZM3pY?=
+ =?utf-8?B?VmlmcXhHUFhzanRZOHZGb1o1OTREVExFbmpESXNFMVBsQWF5cFBNcFlvOTN0?=
+ =?utf-8?Q?Nm/aLCPnvXa79+92sFVmx5MiS1rSdjCmIX5Qi?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30f2fede-68c3-461c-449c-08dedd1fc085
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff959fc6-e83a-424a-47cc-08dedd334024
 X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 18:35:57.9939
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 20:55:32.4900
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iuJzeKkRryzixwFDDcl1s1Su+q1XpkC9IZheOyOvTyfGVaxcNplWA7oJU6ldkbQAYFN6NCgIragC3QxaHwBBQtwAEJChXeRszmY2Pa3Z5xenA0pbWb6QMNDmubGmMW5d
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9810
+X-MS-Exchange-CrossTenant-UserPrincipalName: tXnFXL2zXAHxsozS1j/JgbbZbylceXUt4pJbwyFU6AyRVC+ds3mrD/6tK5KIEkWlKXLYXkQkx0nsBiiU1bxNoAWHqZ10aLvdvsAHLvvttAPw6sAze4amWmOjcAA5y3SP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8815
 
-From: Frank Li <Frank.Li@nxp.com>
+On Wed, Jul 08, 2026 at 11:59:21PM +0900, Koichiro Den wrote:
+> On Mon, Jul 06, 2026 at 10:20:38PM +0900, Koichiro Den wrote:
+> > On Thu, Jul 02, 2026 at 05:21:20PM -0400, Frank.Li@oss.nxp.com wrote:
+> > > Koichiro Den:
+> > > 	My hardware temperately is unavaible recently. Can you help test
+> > > it.
+> >
+> > Sure, I can test it on my side. I'll report back once I have the results.
+>
+> Here are the results. For the series:
+>
+> Tested-by: Koichiro Den <den@valinux.co.jp>
 
-The current descriptor layout is:
+Thank you for testing it. I just post v4, but still have issues reported
+by sashiko.
 
-  struct dw_edma_desc *desc
-   └─ chunk list
-        └─ burst[]
-
-Creating a DMA descriptor requires at least two kzalloc() calls because
-each chunk is allocated as a linked-list node. Since the number of bursts
-is already known when the descriptor is created, this linked-list layer is
-unnecessary.
-
-Move the burst array directly into struct dw_edma_desc and remove the
-struct dw_edma_chunk layer entirely.
-
-Use start_burst and done_burst to track the current bursts, which current
-are in the DMA link list.
-
-Tested-by: Koichiro Den <den@valinux.co.jp>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-change in v4
-- fix loop condition check in dw_edma_core_start(), found by sashiko AI.
-- collect Koichiro tag
-
-change in v2
-- remove debug code
-- move "residue = desc->alloc_sz;"  in if(desc) check
-- keep inline to avoid build warning
----
- drivers/dma/dw-edma/dw-edma-core.c | 143 ++++++++++++-------------------------
- drivers/dma/dw-edma/dw-edma-core.h |  24 ++++---
- 2 files changed, 61 insertions(+), 106 deletions(-)
-
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 01bee22fe3b3e..474debb53c470 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -40,82 +40,54 @@ u64 dw_edma_get_pci_address(struct dw_edma_chan *chan, phys_addr_t cpu_addr)
- 	return cpu_addr;
- }
- 
--static struct dw_edma_chunk *dw_edma_alloc_chunk(struct dw_edma_desc *desc, u32 nburst)
--{
--	struct dw_edma_chan *chan = desc->chan;
--	struct dw_edma_chunk *chunk;
--
--	chunk = kzalloc_flex(*chunk, burst, nburst, GFP_NOWAIT);
--	if (unlikely(!chunk))
--		return NULL;
--
--	chunk->chan = chan;
--	/* Toggling change bit (CB) in each chunk, this is a mechanism to
--	 * inform the eDMA HW block that this is a new linked list ready
--	 * to be consumed.
--	 *  - Odd chunks originate CB equal to 0
--	 *  - Even chunks originate CB equal to 1
--	 */
--	chunk->cb = !(desc->chunks_alloc % 2);
--
--	chunk->nburst = nburst;
--
--	list_add_tail(&chunk->list, &desc->chunk_list);
--	desc->chunks_alloc++;
--
--	return chunk;
--}
--
--static struct dw_edma_desc *dw_edma_alloc_desc(struct dw_edma_chan *chan)
-+static struct dw_edma_desc *
-+dw_edma_alloc_desc(struct dw_edma_chan *chan, u32 nburst)
- {
- 	struct dw_edma_desc *desc;
- 
--	desc = kzalloc_obj(*desc, GFP_NOWAIT);
-+	desc = kzalloc_flex(*desc, burst, nburst, GFP_NOWAIT);
- 	if (unlikely(!desc))
- 		return NULL;
- 
- 	desc->chan = chan;
--
--	INIT_LIST_HEAD(&desc->chunk_list);
-+	desc->nburst = nburst;
-+	desc->cb = true;
- 
- 	return desc;
- }
- 
--static void dw_edma_free_desc(struct dw_edma_desc *desc)
--{
--	struct dw_edma_chunk *child, *_next;
--
--	/* Remove all the list elements */
--	list_for_each_entry_safe(child, _next, &desc->chunk_list, list) {
--		list_del(&child->list);
--		kfree(child);
--		desc->chunks_alloc--;
--	}
--
--	kfree(desc);
--}
--
- static void vchan_free_desc(struct virt_dma_desc *vdesc)
- {
--	dw_edma_free_desc(vd2dw_edma_desc(vdesc));
-+	kfree(vd2dw_edma_desc(vdesc));
- }
- 
--static void dw_edma_core_start(struct dw_edma_chunk *chunk, bool first)
-+static void dw_edma_core_start(struct dw_edma_desc *desc, bool first)
- {
--	struct dw_edma_chan *chan = chunk->chan;
-+	struct dw_edma_chan *chan = desc->chan;
- 	u32 i = 0;
- 
- 	if (chan->non_ll) {
--		if (chunk->nburst == 1)
--			chan->dw->core->non_ll_start(chunk->chan, &chunk->burst[0]);
-+		chan->dw->core->non_ll_start(chan, &desc->burst[desc->start_burst]);
-+		desc->done_burst = desc->start_burst;
-+		desc->start_burst += 1;
- 		return;
- 	}
- 
--	for (i = 0; i < chunk->nburst; i++)
--		dw_edma_core_ll_data(chan, &chunk->burst[i], i, chunk->cb,
--				     i == chunk->nburst - 1);
-+	for (i = 0; i + desc->start_burst < desc->nburst; i++) {
-+		u32 idx = i + desc->start_burst;
- 
--	dw_edma_core_ll_link(chan, i, chunk->cb, chan->ll_region.paddr);
-+		if (i == chan->ll_max - 1)
-+			break;
-+
-+		dw_edma_core_ll_data(chan, &desc->burst[idx],
-+				     i, desc->cb,
-+				     idx == desc->nburst - 1 || i == chan->ll_max - 2);
-+	}
-+
-+	desc->done_burst = desc->start_burst;
-+	desc->start_burst += i;
-+
-+	dw_edma_core_ll_link(chan, i, desc->cb, chan->ll_region.paddr);
- 
- 	if (first)
- 		dw_edma_core_ch_enable(chan);
-@@ -125,7 +97,6 @@ static void dw_edma_core_start(struct dw_edma_chunk *chunk, bool first)
- 
- static int dw_edma_start_transfer(struct dw_edma_chan *chan)
- {
--	struct dw_edma_chunk *child;
- 	struct dw_edma_desc *desc;
- 	struct virt_dma_desc *vd;
- 
-@@ -137,16 +108,9 @@ static int dw_edma_start_transfer(struct dw_edma_chan *chan)
- 	if (!desc)
- 		return 0;
- 
--	child = list_first_entry_or_null(&desc->chunk_list,
--					 struct dw_edma_chunk, list);
--	if (!child)
--		return 0;
-+	dw_edma_core_start(desc, !desc->start_burst);
- 
--	dw_edma_core_start(child, !desc->xfer_sz);
--	desc->xfer_sz += child->xfer_sz;
--	list_del(&child->list);
--	kfree(child);
--	desc->chunks_alloc--;
-+	desc->cb = !desc->cb;
- 
- 	return 1;
- }
-@@ -337,8 +301,10 @@ dw_edma_device_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
- 	vd = vchan_find_desc(&chan->vc, cookie);
- 	if (vd) {
- 		desc = vd2dw_edma_desc(vd);
--		if (desc)
--			residue = desc->alloc_sz - desc->xfer_sz;
-+
-+		residue = desc->alloc_sz;
-+		if (desc && desc->done_burst)
-+			residue -= desc->burst[desc->done_burst].xfer_sz;
- 	}
- 	spin_unlock_irqrestore(&chan->vc.lock, flags);
- 
-@@ -355,12 +321,10 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 	struct dw_edma_chan *chan = dchan2dw_edma_chan(xfer->dchan);
- 	enum dma_transfer_direction dir = xfer->direction;
- 	struct scatterlist *sg = NULL;
--	struct dw_edma_chunk *chunk = NULL;
- 	struct dw_edma_burst *burst;
- 	struct dw_edma_desc *desc;
- 	u64 src_addr, dst_addr;
- 	size_t fsz = 0;
--	u32 bursts_max;
- 	u32 cnt = 0;
- 	u32 i;
- 
-@@ -418,17 +382,6 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 		return NULL;
- 	}
- 
--	/*
--	 * For non-LL mode, only a single burst can be handled
--	 * in a single chunk unlike LL mode where multiple bursts
--	 * can be configured in a single chunk.
--	 */
--	bursts_max = chan->non_ll ? 1 : chan->ll_max;
--
--	desc = dw_edma_alloc_desc(chan);
--	if (unlikely(!desc))
--		goto err_alloc;
--
- 	if (xfer->type == EDMA_XFER_INTERLEAVED) {
- 		src_addr = xfer->xfer.il->src_start;
- 		dst_addr = xfer->xfer.il->dst_start;
-@@ -452,19 +405,15 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 		fsz = xfer->xfer.il->frame_size;
- 	}
- 
-+	desc = dw_edma_alloc_desc(chan, cnt);
-+	if (unlikely(!desc))
-+		return NULL;
-+
- 	for (i = 0; i < cnt; i++) {
- 		if (xfer->type == EDMA_XFER_SCATTER_GATHER && !sg)
- 			break;
- 
--		if (!(i % chan->ll_max)) {
--			u32 n = min(cnt - i, chan->ll_max);
--
--			chunk = dw_edma_alloc_chunk(desc, n);
--			if (unlikely(!chunk))
--				goto err_alloc;
--		}
--
--		burst = chunk->burst + (i % chan->ll_max);
-+		burst = desc->burst + i;
- 
- 		if (xfer->type == EDMA_XFER_CYCLIC)
- 			burst->sz = xfer->xfer.cyclic.len;
-@@ -473,8 +422,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 		else if (xfer->type == EDMA_XFER_INTERLEAVED)
- 			burst->sz = xfer->xfer.il->sgl[i % fsz].size;
- 
--		chunk->xfer_sz += burst->sz;
- 		desc->alloc_sz += burst->sz;
-+		burst->xfer_sz = desc->alloc_sz;
- 
- 		if (dir == DMA_DEV_TO_MEM) {
- 			burst->sar = src_addr;
-@@ -529,12 +478,6 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer,
- 	}
- 
- 	return vchan_tx_prep(&chan->vc, &desc->vd, xfer->flags);
--
--err_alloc:
--	if (desc)
--		dw_edma_free_desc(desc);
--
--	return NULL;
- }
- 
- static struct dma_async_tx_descriptor *
-@@ -605,8 +548,14 @@ static void dw_hdma_set_callback_result(struct virt_dma_desc *vd,
- 		return;
- 
- 	desc = vd2dw_edma_desc(vd);
--	if (desc)
--		residue = desc->alloc_sz - desc->xfer_sz;
-+	if (desc) {
-+		residue = desc->alloc_sz;
-+
-+		if (result == DMA_TRANS_NOERROR)
-+			residue -= desc->burst[desc->start_burst - 1].xfer_sz;
-+		else if (desc->done_burst)
-+			residue -= desc->burst[desc->done_burst - 1].xfer_sz;
-+	}
- 
- 	res = &vd->tx_result;
- 	res->result = result;
-@@ -625,7 +574,7 @@ static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
- 		switch (chan->request) {
- 		case EDMA_REQ_NONE:
- 			desc = vd2dw_edma_desc(vd);
--			if (!desc->chunks_alloc) {
-+			if (desc->start_burst >= desc->nburst) {
- 				dw_hdma_set_callback_result(vd,
- 							    DMA_TRANS_NOERROR);
- 				list_del(&vd->node);
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 4950c57fca34f..7f2ec871f5bd5 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -46,15 +46,8 @@ struct dw_edma_burst {
- 	u64				sar;
- 	u64				dar;
- 	u32				sz;
--};
--
--struct dw_edma_chunk {
--	struct list_head		list;
--	struct dw_edma_chan		*chan;
--	u8				cb;
-+	/* precalulate summary of previous burst total size */
- 	u32				xfer_sz;
--	u32                             nburst;
--	struct dw_edma_burst            burst[] __counted_by(nburst);
- };
- 
- struct dw_edma_desc {
-@@ -66,6 +59,12 @@ struct dw_edma_desc {
- 
- 	u32				alloc_sz;
- 	u32				xfer_sz;
-+
-+	u32				done_burst;
-+	u32				start_burst;
-+	u8				cb;
-+	u32				nburst;
-+	struct dw_edma_burst            burst[] __counted_by(nburst);
- };
- 
- struct dw_edma_chan {
-@@ -128,7 +127,6 @@ struct dw_edma_core_ops {
- 	void (*ll_link)(struct dw_edma_chan *chan, u32 idx, bool cb, u64 addr);
- 	void (*ch_doorbell)(struct dw_edma_chan *chan);
- 	void (*ch_enable)(struct dw_edma_chan *chan);
--
- 	void (*ch_config)(struct dw_edma_chan *chan);
- 	void (*debugfs_on)(struct dw_edma *dw);
- 	void (*ack_emulated_irq)(struct dw_edma *dw);
-@@ -170,6 +168,14 @@ struct dw_edma_chan *dchan2dw_edma_chan(struct dma_chan *dchan)
- 	return vc2dw_edma_chan(to_virt_chan(dchan));
- }
- 
-+static inline u64 dw_edma_core_get_ll_paddr(struct dw_edma_chan *chan)
-+{
-+	if (chan->dir == EDMA_DIR_WRITE)
-+		return chan->dw->chip->ll_region_wr[chan->id].paddr;
-+
-+	return chan->dw->chip->ll_region_rd[chan->id].paddr;
-+}
-+
- static inline
- void dw_edma_core_off(struct dw_edma *dw)
- {
-
--- 
-2.43.0
-
+Frank
+>
+> * I don't see a significant difference between Before and After, but I don't
+>   think that is an issue at all. Most of the differences look like normal
+>   run-to-run variation.
+> * Each full fio test set was run three times in alternating order (B-A-B-A-B-A),
+>   with runtime=30s and ramp_time=5s.
+>
+> eDMA:
+>   - Testbed:
+>     * Endpoint: RK3588 (Rock 5B)
+>       controller IP version: v5.60a
+>       ll_max: 170
+>
+>   - Summary by group (BW delta %)
+>     all          n=26 mean=  -2.3 median=  +0.2 min= -28.0 max= +11.7
+>     read         n=14 mean=  -3.2 median=  +0.2 min= -17.3 max=  +3.1
+>     write        n=11 mean=  -1.5 median=  -0.2 min= -28.0 max= +11.7
+>     qd32         n=16 mean=  +0.5 median=  +0.3 min=  -3.8 max=  +3.1
+>     q1           n= 9 mean=  -7.6 median=  -6.7 min= -28.0 max= +11.7
+>     small 4K     n= 6 mean=  -4.0 median=  +1.1 min= -28.0 max=  +3.1
+>     large >=128K n=20 mean=  -1.8 median=  +0.1 min= -17.3 max= +11.7
+>
+>   - Before mean -> After mean (MiB/s)
+>
+>     Case                         Before             After              Delta
+>     ---------------------------  -----------------  -----------------  ------
+>     Rnd read     4KB q1  1j         33.4 (sd 10.1)     32.0 (sd 10.9)    -4.0%
+>     Rnd read     4KB q32 1j        196.0 (sd 28.6)    202.0 (sd 29.5)    +3.1%
+>     Rnd read     4KB q32 4j        196.7 (sd 29.2)    202.0 (sd 25.1)    +2.7%
+>     Rnd read   128KB q1  1j        497.7 (sd 12.2)   420.7 (sd 181.3)   -15.5%
+>     Rnd read   128KB q32 1j        2248.0 (sd 6.6)   2277.3 (sd 34.2)    +1.3%
+>     Rnd read   128KB q32 4j        2381.3 (sd 2.5)   2386.3 (sd 17.9)    +0.2%
+>     Rnd read   512KB q1  1j        627.3 (sd 15.2)    585.3 (sd 78.2)    -6.7%
+>     Rnd read   512KB q32 1j        2376.0 (sd 5.2)   2381.3 (sd 21.4)    +0.2%
+>     Rnd read   512KB q32 4j        2379.7 (sd 6.7)   2386.7 (sd 17.6)    +0.3%
+>     Rnd write    4KB q1  1j          28.1 (sd 4.1)     20.2 (sd 10.1)   -28.0%
+>     Rnd write    4KB q32 1j         120.3 (sd 6.1)     122.0 (sd 6.2)    +1.4%
+>     Rnd write    4KB q32 4j         124.7 (sd 3.8)     125.7 (sd 4.6)    +0.8%
+>     Rnd write  128KB q1  1j        318.7 (sd 44.7)     327.0 (sd 4.4)    +2.6%
+>     Rnd write  128KB q32 1j       1080.0 (sd 20.2)   1077.3 (sd 37.6)    -0.2%
+>     Rnd write  128KB q32 4j       1069.7 (sd 20.3)   1056.0 (sd 46.2)    -1.3%
+>     Seq read   128KB q1  1j       486.3 (sd 138.3)    402.3 (sd 38.0)   -17.3%
+>     Seq read   128KB q32 1j        2245.3 (sd 3.5)   2258.7 (sd 26.3)    +0.6%
+>     Seq read   512KB q1  1j        662.0 (sd 29.2)    594.3 (sd 13.7)   -10.2%
+>     Seq read   512KB q32 1j        2375.7 (sd 7.4)   2382.0 (sd 22.9)    +0.3%
+>     Seq read     1MB q32 1j        2380.7 (sd 4.7)   2385.3 (sd 19.3)    +0.2%
+>     Seq write  128KB q1  1j        342.0 (sd 58.9)   382.0 (sd 101.1)   +11.7%
+>     Seq write  128KB q32 1j       1080.3 (sd 48.8)   1070.7 (sd 37.0)    -0.9%
+>     Seq write  512KB q1  1j        509.7 (sd 35.4)    502.7 (sd 39.2)    -1.4%
+>     Seq write  512KB q32 1j       1043.3 (sd 56.7)   1074.0 (sd 47.8)    +2.9%
+>     Seq write    1MB q32 1j        989.3 (sd 23.0)    952.0 (sd 57.4)    -3.8%
+>     Rnd rdwr  4K..1MB q8  4j       841.3 (sd 15.1)    841.7 (sd 12.9)    +0.0%
+>
+> HDMA:
+>   - Testbed:
+>     * Endpoint: SpacemiT K3
+>       controller IP version: v6.30a
+>       ll_max: 170
+>
+>   - Summary by group (BW delta %)
+>
+>     all          n=26 mean=  +1.1 median=  -0.6 min=  -4.4 max=  +9.5
+>     read         n=14 mean=  +2.1 median=  +0.7 min=  -2.5 max=  +9.5
+>     write        n=11 mean=  -0.1 median=  -0.8 min=  -4.4 max=  +4.7
+>     qd32         n=16 mean=  +0.6 median=  -0.8 min=  -2.5 max=  +9.5
+>     q1           n= 9 mean=  +2.0 median=  +4.4 min=  -4.4 max=  +7.9
+>     small 4K     n= 6 mean=  +4.8 median=  +4.5 min=  +0.2 max=  +9.5
+>     large >=128K n=20 mean=  -0.0 median=  -0.9 min=  -4.4 max=  +7.9
+>
+>   - Before mean -> After mean (MiB/s)
+>
+>     Case                         Before             After              Delta
+>     ---------------------------  -----------------  -----------------  ------
+>     Rnd read     4KB q1  1j          66.3 (sd 5.8)      69.4 (sd 7.0)    +4.6%
+>     Rnd read     4KB q32 1j        300.3 (sd 45.5)    329.0 (sd 21.7)    +9.5%
+>     Rnd read     4KB q32 4j        312.0 (sd 51.1)     341.7 (sd 3.1)    +9.5%
+>     Rnd read   128KB q1  1j        705.7 (sd 34.8)    736.7 (sd 51.6)    +4.4%
+>     Rnd read   128KB q32 1j       1507.7 (sd 25.6)    1486.3 (sd 5.9)    -1.4%
+>     Rnd read   128KB q32 4j        1549.7 (sd 7.0)   1534.3 (sd 16.9)    -1.0%
+>     Rnd read   512KB q1  1j         848.7 (sd 9.5)    858.0 (sd 15.5)    +1.1%
+>     Rnd read   512KB q32 1j       1530.0 (sd 27.0)   1536.0 (sd 14.8)    +0.4%
+>     Rnd read   512KB q32 4j       1519.0 (sd 66.7)   1544.3 (sd 15.0)    +1.7%
+>     Rnd write    4KB q1  1j          64.0 (sd 6.2)      66.9 (sd 2.2)    +4.5%
+>     Rnd write    4KB q32 1j         199.3 (sd 7.1)     199.7 (sd 2.9)    +0.2%
+>     Rnd write    4KB q32 4j         199.7 (sd 7.6)     200.3 (sd 3.2)    +0.3%
+>     Rnd write  128KB q1  1j        558.3 (sd 18.3)     533.7 (sd 5.0)    -4.4%
+>     Rnd write  128KB q32 1j       1248.0 (sd 21.3)    1237.3 (sd 7.5)    -0.9%
+>     Rnd write  128KB q32 4j       1248.7 (sd 23.0)    1238.0 (sd 6.1)    -0.9%
+>     Seq read   128KB q1  1j        640.7 (sd 60.1)     691.3 (sd 9.0)    +7.9%
+>     Seq read   128KB q32 1j       1507.7 (sd 24.2)    1488.3 (sd 5.1)    -1.3%
+>     Seq read   512KB q1  1j        866.7 (sd 45.8)    847.0 (sd 32.2)    -2.3%
+>     Seq read   512KB q32 1j       1532.3 (sd 31.7)   1516.7 (sd 40.3)    -1.0%
+>     Seq read     1MB q32 1j        1550.7 (sd 7.2)   1512.0 (sd 32.9)    -2.5%
+>     Seq write  128KB q1  1j        514.0 (sd 34.7)    538.0 (sd 15.1)    +4.7%
+>     Seq write  128KB q32 1j       1248.0 (sd 22.1)    1237.0 (sd 7.8)    -0.9%
+>     Seq write  512KB q1  1j        755.7 (sd 30.0)     739.3 (sd 2.1)    -2.2%
+>     Seq write  512KB q32 1j       1248.7 (sd 22.6)    1238.3 (sd 6.7)    -0.8%
+>     Seq write    1MB q32 1j       1248.0 (sd 22.5)    1238.3 (sd 7.6)    -0.8%
+>     Rnd rdwr  4K..1MB q8  4j        869.0 (sd 8.9)     865.3 (sd 1.5)    -0.4%
+>
+> Best regards,
+> Koichiro
+>
+> >
+> > Best regards,
+> > Koichiro
+> >
+> > >
+> > > Rebase and compile test only now.
+> > >
+> > > Verma, Devendra:
+> > > 	Can you help check if block non-ll mode?
+> > >
+> > > Frank
+> > >
+> > > Basic change
+> > >
+> > > struct dw_edma_desc *desc
+> > >        └─ chunk list
+> > >             └─ burst list
+> > >
+> > > To
+> > >
+> > > struct dw_edma_desc *desc
+> > >             └─ burst[n]
+> > >
+> > > And reduce at least 2 times kzalloc() for each dma descriptor create.
+> > >
+> > > I only test eDMA part, not hardware test hdma part.
+> > >
+> > > The finial goal is dymatic add DMA request when DMA running. So needn't
+> > > wait for irq for fetch next round DMA request.
+> > >
+> > > This work is neccesary to for dymatic DMA request appending.
+> > >
+> > > The post this part first to review and test firstly during working dymatic
+> > > DMA part.
+> > >
+> > > performance is little bit better. Use NVME as EP function
+> > >
+> > > Before
+> > >
+> > >   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6660, BW=26.0MiB/s (27.3MB/s)
+> > >   Rnd read,    4KB, QD=32, 1 job :  IOPS=28.6k, BW=112MiB/s (117MB/s)
+> > >   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
+> > >   Rnd read,  128KB,  QD=1, 1 job :  IOPS=914, BW=114MiB/s (120MB/s)
+> > >   Rnd read,  128KB, QD=32, 1 job :  IOPS=1204, BW=151MiB/s (158MB/s)
+> > >   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1255, BW=157MiB/s (165MB/s)
+> > >   Rnd read,  512KB,  QD=1, 1 job :  IOPS=248, BW=124MiB/s (131MB/s)
+> > >   Rnd read,  512KB, QD=32, 1 job :  IOPS=353, BW=177MiB/s (185MB/s)
+> > >   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=388, BW=194MiB/s (204MB/s)
+> > >   Rnd write,   4KB,  QD=1, 1 job :  IOPS=6241, BW=24.4MiB/s (25.6MB/s)
+> > >   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.7k, BW=96.5MiB/s (101MB/s)
+> > >   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=26.9k, BW=105MiB/s (110MB/s)
+> > >   Rnd write, 128KB,  QD=1, 1 job :  IOPS=780, BW=97.5MiB/s (102MB/s)
+> > >   Rnd write, 128KB, QD=32, 1 job :  IOPS=987, BW=123MiB/s (129MB/s)
+> > >   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1021, BW=128MiB/s (134MB/s)
+> > >   Seq read,  128KB,  QD=1, 1 job :  IOPS=1190, BW=149MiB/s (156MB/s)
+> > >   Seq read,  128KB, QD=32, 1 job :  IOPS=1400, BW=175MiB/s (184MB/s)
+> > >   Seq read,  512KB,  QD=1, 1 job :  IOPS=243, BW=122MiB/s (128MB/s)
+> > >   Seq read,  512KB, QD=32, 1 job :  IOPS=355, BW=178MiB/s (186MB/s)
+> > >   Seq read,    1MB, QD=32, 1 job :  IOPS=191, BW=192MiB/s (201MB/s)
+> > >   Seq write, 128KB,  QD=1, 1 job :  IOPS=784, BW=98.1MiB/s (103MB/s)
+> > >   Seq write, 128KB, QD=32, 1 job :  IOPS=1030, BW=129MiB/s (135MB/s)
+> > >   Seq write, 512KB,  QD=1, 1 job :  IOPS=216, BW=108MiB/s (114MB/s)
+> > >   Seq write, 512KB, QD=32, 1 job :  IOPS=295, BW=148MiB/s (155MB/s)
+> > >   Seq write,   1MB, QD=32, 1 job :  IOPS=164, BW=165MiB/s (173MB/s)
+> > >   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=250, BW=126MiB/s (132MB/s)
+> > >   IOPS=261, BW=132MiB/s (138MB/s
+> > >
+> > > After
+> > >   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6780, BW=26.5MiB/s (27.8MB/s)
+> > >   Rnd read,    4KB, QD=32, 1 job :  IOPS=28.6k, BW=112MiB/s (117MB/s)
+> > >   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
+> > >   Rnd read,  128KB,  QD=1, 1 job :  IOPS=1188, BW=149MiB/s (156MB/s)
+> > >   Rnd read,  128KB, QD=32, 1 job :  IOPS=1440, BW=180MiB/s (189MB/s)
+> > >   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1282, BW=160MiB/s (168MB/s)
+> > >   Rnd read,  512KB,  QD=1, 1 job :  IOPS=254, BW=127MiB/s (134MB/s)
+> > >   Rnd read,  512KB, QD=32, 1 job :  IOPS=354, BW=177MiB/s (186MB/s)
+> > >   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=388, BW=194MiB/s (204MB/s)
+> > >   Rnd write,   4KB,  QD=1, 1 job :  IOPS=6282, BW=24.5MiB/s (25.7MB/s)
+> > >   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.9k, BW=97.5MiB/s (102MB/s)
+> > >   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=27.4k, BW=107MiB/s (112MB/s)
+> > >   Rnd write, 128KB,  QD=1, 1 job :  IOPS=1098, BW=137MiB/s (144MB/s)
+> > >   Rnd write, 128KB, QD=32, 1 job :  IOPS=1195, BW=149MiB/s (157MB/s)
+> > >   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1120, BW=140MiB/s (147MB/s)
+> > >   Seq read,  128KB,  QD=1, 1 job :  IOPS=936, BW=117MiB/s (123MB/s)
+> > >   Seq read,  128KB, QD=32, 1 job :  IOPS=1218, BW=152MiB/s (160MB/s)
+> > >   Seq read,  512KB,  QD=1, 1 job :  IOPS=301, BW=151MiB/s (158MB/s)
+> > >   Seq read,  512KB, QD=32, 1 job :  IOPS=360, BW=180MiB/s (189MB/s)
+> > >   Seq read,    1MB, QD=32, 1 job :  IOPS=193, BW=194MiB/s (203MB/s)
+> > >   Seq write, 128KB,  QD=1, 1 job :  IOPS=796, BW=99.5MiB/s (104MB/s)
+> > >   Seq write, 128KB, QD=32, 1 job :  IOPS=1019, BW=127MiB/s (134MB/s)
+> > >   Seq write, 512KB,  QD=1, 1 job :  IOPS=213, BW=107MiB/s (112MB/s)
+> > >   Seq write, 512KB, QD=32, 1 job :  IOPS=273, BW=137MiB/s (143MB/s)
+> > >   Seq write,   1MB, QD=32, 1 job :  IOPS=168, BW=168MiB/s (177MB/s)
+> > >   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=255, BW=128MiB/s (134MB/s)
+> > >    IOPS=266, BW=135MiB/s (141MB/s)
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > Changes in v3:
+> > > - remove patch dmaengine: dw-edma: Remove ll_max = -1 in dw_edma_channel_setup()
+> > > - rebase to vnod's dmaengine topic/config_prep_api
+> > > - Add non-ll-start() callback to handle non-ll mode transfer
+> > > - Link to v2: https://lore.kernel.org/r/20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com
+> > >
+> > > Changes in v2:
+> > > - use 'eDMA' and 'HDMA' at commit message
+> > > - remove debug code.
+> > > - keep 'inline' to avoid build warning
+> > > - Link to v1: https://lore.kernel.org/r/20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com
+> > >
+> > > ---
+> > > Frank Li (10):
+> > >       dmaengine: dw-edma: Move control field update of DMA link to the last step
+> > >       dmaengine: dw-edma: Add xfer_sz field to struct dw_edma_chunk
+> > >       dmaengine: dw-edma: Move ll_region from struct dw_edma_chunk to struct dw_edma_chan
+> > >       dmaengine: dw-edma: Pass down dw_edma_chan to reduce one level of indirection
+> > >       dmaengine: dw-edma: Add helper dw_(edma|hdma)_v0_core_ch_enable()
+> > >       dmaengine: dw-edma: Add callbacks to fill link list entries
+> > >       dmaengine: dw-edma: Add non_ll_start() callback
+> > >       dmaengine: dw-edma: Use common dw_edma_core_start() for both eDMA and HDMA
+> > >       dmaengine: dw-edma: Use burst array instead of linked list
+> > >       dmaengine: dw-edma: Remove struct dw_edma_chunk
+> > >
+> > >  drivers/dma/dw-edma/dw-edma-core.c    | 216 ++++++++----------------------
+> > >  drivers/dma/dw-edma/dw-edma-core.h    |  65 ++++++---
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 240 +++++++++++++++++-----------------
+> > >  drivers/dma/dw-edma/dw-hdma-v0-core.c | 169 ++++++++++++------------
+> > >  4 files changed, 302 insertions(+), 388 deletions(-)
+> > > ---
+> > > base-commit: c9e9927c6d8346cdf6555a8f97da093980172e4b
+> > > change-id: 20251211-edma_ll-0904ba089f01
+> > >
+> > > Best regards,
+> > > --
+> > > Frank Li <Frank.Li@nxp.com>
+> > >
+> >
