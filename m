@@ -1,125 +1,185 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5131E3E7BBD
-	for <linux-hardening@vger.kernel.org>; Wed,  8 Jul 2026 09:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BF23EB7FD;
+	Wed,  8 Jul 2026 09:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783501452; cv=none; b=WXdYZZYYRJitu4yjpdqRcVnQeGRT4+BikuNsJmvc0/HuM989Lk4FNWS/L+YQqJNIoHMlmtaXfAy8EQlW/nz4whhL80tMBCwA1bkMi+8QdzjrXdjxEDknZpYlLXgUkxzXONC/rvKRqknSOu6ZLaJozuA6BCQsmEaFKnF+M3GHy2Q=
+	t=1783503854; cv=none; b=PpwJ6PLtGdPujJRc3c+2fk4wk2vyY+s5ADywBEEdpQJemK77oEqueHAW6qAGXNyZ0xWVFbI7GHDHFTq3DciURVgHdlCocHsIOvu3+/rl1HU0EVo6JT0ilYwYrJm2P+IxCMmo4ubrjcYHYytIkwhiV3m+24tFAzNcLOuryc04oUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783501452; c=relaxed/simple;
-	bh=0ttgfS7PI7S6E/+kOsmnxTsnPvxIfwYSyy8onWHW/s4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XsJ1Gccng8H+iQW1jPrMiYdLa9jsgSXyKz3IWDalp1cMQWZJ6i9S9kk/0pZiTwaIRLW/nQr7d8428A3L/UoDeRb2wraYynqvzFgpGjyzioQH0xId4jyeOpQh3vqKUcR9/2jbAm65iQIIZ9kphvHqmk3heId/Ot/tVisN4iP1gPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=L3j5Dv3k; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1783503854; c=relaxed/simple;
+	bh=iAp/2iIyG11ZG11l4saqEYvca5yGcgnsjr+HcDo3CNI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c/LtMsvPazK76nmGy3d/QSkc/LYLtFLeZrSVYO2VYpdrlu9gx4fvNeYMZNZfpiiQVcmNajWhEWvFqiop6IRiLBBUyFwWxssfr5ypqsMpWbRRnaw8QgSZ3JLQwrxzECmoGFWQD4BeZ9WajVC4N8jEHUdUBgHXV+i1C9KB+f46vfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=i5/M71p/ reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="L3j5Dv3k"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-493c486f012so1608925e9.3
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Jul 2026 02:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1783501449; x=1784106249; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=0ttgfS7PI7S6E/+kOsmnxTsnPvxIfwYSyy8onWHW/s4=;
-        b=L3j5Dv3k9fRjX7AwgCgN6nByvWbpdyA/BXNAZaL72KePHNuh8HxoOnmsqA/lY/oin5
-         1W0mKu3Te2JPj4CJ6BCJLOD93gGyns6I6H6+SZ5tFWayr2ybXqbzwgaTDQ3foLMtU/Gz
-         qyzZQ00uH5sz99F1YNPmBHydCHi1Wix/qzhUXFywKEjFhTtbpNuUpy6jK/Uth9GGdlc9
-         CBwyJAIu2oC1S6UcXK3/s/uUxLzHn5s8uNtPz6T9sP0YhPKRwahpHdmheYVk1o30vn85
-         4mJtupsBX/sBjIzPi0Y2/E3+lFDhGMvuiwHboqVL/8WZS8RbuuOcX3BT+Ah+Q+WbQYEW
-         KVgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783501449; x=1784106249;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=0ttgfS7PI7S6E/+kOsmnxTsnPvxIfwYSyy8onWHW/s4=;
-        b=cnrTZv3y98qaEt6qQ64p7SciLy/ce1aQ8rLh6OHJe81mSK5cRb6YliAMu+67Jhl8IR
-         /gKZ8N+ys/Js/0JaAYVHcjnJtnavM1m+v4JgUM5hiBLZECr5mGZJSIGNdgS8Z4taF+xH
-         4SmPJ3hfH/fXUGzu4ioByqseg1XNYSCwARAfhymc2ChnLzWb4LrgcSLufuS8PibBtMVO
-         tMXaE0BMCrEQ64faaJedFQGuOzVGHYhoYqIVTg4roIkDAiN1XRZkHup7zT3/px/S8TbH
-         vSfnGDPkgE1Qpcvq1jcVu7XqSfL1lbFrGgiihD9VaqlECVU1fqMJ64skqY8wPQYGC/8L
-         xxog==
-X-Forwarded-Encrypted: i=1; AHgh+RrgiT/rMkTLkbcBDoBm8/FsmH2ToPFY1Upbiadtl+8t+RafP0pr3AviLTlpVywqj3CFrAxuSBhYrxaL+cUTjD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5vPsTjfWIWfxTnO21LEPJswVqDYMesiMnsFuVBf71RelLiPeA
-	CfMJkv/Z3DXvX8zDK9VehFu22T0euLGmMzEpqypS+JCnAtFm179kDyyz9LxPZYutPXQ=
-X-Gm-Gg: AfdE7clnjiXBDxxn1CR5u27CLARU/laeA4SqXlMrt9Z3l9FvwLJ9YZQhPc9Yj4Vs9Lt
-	5T8x/nS+GkdSEbx0H1cwjUSOP0ohj2+PQzqmg8GvyEpX2N+8RlAMCGJcl/8yhYz3OrifEuAS3YX
-	bRnfnq4Z9GP/Rs7k/jvzC+PKFWi26qb5igyVkSC+zndC89FcknnB1/mBAYDdS2lmDEYTpO4LQJu
-	GNL9nkmMyuErj/EBWYR8GSD7By99uqDDmNWI39B4PAQe5RLTjiA6RaoU5wE7dm9GhBmpFpsP+5y
-	uaG0i88XdMNVDVAEIgxahv71wORiNL35t+17lWZYMfYXiYKHo5aXGC/FIFYugfLlpA40ORDmzuK
-	HajQqeYI8QT7h2rJtPgup1AnTd/BEqHj3NdOUQSmsY6CZwH6SPxVFw4BIbgc5TZGKIKJwownUkr
-	4ZUeOBGNXwR3PSe4tDEOvYlGhsXbZpursxEDtENVKM2bDzSiXUQ/mYtNxd9jJxLhbhh3bZhXt+D
-	vgd
-X-Received: by 2002:a05:600c:8119:b0:490:9d1b:f086 with SMTP id 5b1f17b1804b1-493e686ad70mr14985975e9.14.1783501448658;
-        Wed, 08 Jul 2026 02:04:08 -0700 (PDT)
-Received: from localhost (p200300f65f47db04930dc5bd4534e1e5.dip0.t-ipconnect.de. [2003:f6:5f47:db04:930d:c5bd:4534:e1e5])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-493e0f3318dsm111773165e9.3.2026.07.08.02.04.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2026 02:04:07 -0700 (PDT)
-Date: Wed, 8 Jul 2026 11:04:06 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: rodrigo.alencar@analog.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v7 10/17] iio: frequency: ad9910: initial driver
- implementation
-Message-ID: <ak4SSFQZVVh6DuGy@monoceros>
-References: <20260707-ad9910-iio-driver-v7-0-a4ec30f63700@analog.com>
- <20260707-ad9910-iio-driver-v7-10-a4ec30f63700@analog.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="i5/M71p/"
+Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
+	(authenticated bits=0)
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 6689hWTh023275
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 8 Jul 2026 18:43:33 +0900 (JST)
+	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
+DKIM-Signature: a=rsa-sha256; bh=5rGUgl8D8cEFi7JteuJI6fPSAC+UPbsjLAqZsYFvBLY=;
+        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
+        h=From:Message-ID:To:Subject:Date;
+        s=rs20250326; t=1783503813; v=1;
+        b=i5/M71p/b8sSTK+HDV4OHUq/SgIc9wIyvsE8xdPImpdn4DlyASk6OCwfGZiB4AV7
+         QixiwPfKNM++x5DdafRW/wl24DGg0NFa9IXroeXxpS7Ln4z8cH+dgAgzI2mNJDsa
+         UV9SYpU2sL7Fj/lLqQ2OhnQvVNrtgUbruVG3CpWZtD6XWrqmqcyKKmBQhedrymw/
+         b7yXnKmuqBcMfeGZn753Chok+ZaLEfh/NCxlJHLRF1R24b5NQelMjxXXrRqf2tfc
+         j0RVP2JGVBe8gnVi4sSl4zm+FMOJgW7vQqeWrmMc7510oHCGR+oU4a8OvPvWYPt/
+         /diQ9dYSZcwlUnWPP3IqKg==
+Message-ID: <a2d7ed42-b82e-4c0c-8985-32c12d7c49b0@rsg.ci.i.u-tokyo.ac.jp>
+Date: Wed, 8 Jul 2026 18:43:32 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zsfy6shrbu2mdzpn"
-Content-Disposition: inline
-In-Reply-To: <20260707-ad9910-iio-driver-v7-10-a4ec30f63700@analog.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 5/7] KVM: arm64: PMU: Implement fixed-counters-only
+ emulation
+To: Oliver Upton <oupton@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu
+ <yuzenghui@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <20260706-hybrid-v8-0-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
+ <20260706-hybrid-v8-5-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
+ <akvyvclUQ2b2YHiU@kernel.org>
+ <cb5d5f13-a1a9-47dd-a717-5533a8b32b20@rsg.ci.i.u-tokyo.ac.jp>
+ <5e66748a-bfda-41a9-8614-88cbf2fe1f09@rsg.ci.i.u-tokyo.ac.jp>
+ <ak0_PSnxyAWm9_Fu@kernel.org>
+Content-Language: en-US
+From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+In-Reply-To: <ak0_PSnxyAWm9_Fu@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 2026/07/08 3:02, Oliver Upton wrote:
+> On Tue, Jul 07, 2026 at 09:52:49PM +0900, Akihiko Odaki wrote:
+>> On 2026/07/07 20:23, Akihiko Odaki wrote:
+>>> On 2026/07/07 3:23, Oliver Upton wrote:
+>>>> Just detect the changing PMU implementation here, KVM_REQ_RELOAD_PMU
+>>>> will need to detect the PMCs that require an update anyway. Stash the
+>>>> last cpu in kvm_arch_vcpu_load() and pass it to this:
+>>>>
+>>>> void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu, int last_cpu)
+>>>> {
+>>>>      if (!kvm_pmu_fixed_counters_only(vcpu->kvm) || vcpu->cpu == last_cpu)
+>>>>          return;
+>>>>
+>>>>      if (kvm_pmu_probe_armpmu(vcpu->cpu) !=
+>>>> kvm_pmu_probe_armpmu(last_cpu))
+>>>>          kvm_make_request(KVM_REQ_RELOAD_PMU);
+>>>> }
+>>>
+>>> It is a nice way to simplify the code and to avoid hardcoding
+>>> ARMV8_PMU_INSTR_IDX. I'll use the code for the next version.
+>>
+>> I tried this but unfortunately it doesn't seem to work. kvm_arch_vcpu_put()
+>> sets vcpu->cpu to -1 so we cannot simply read it to get the last cpu in
+>> kvm_arch_vcpu_load().
+> 
+> Urgh, there's no reason for doing that any more. Let's fix it, I want a
+> straightforward way to detect pCPU migrations. There may be other
+> reasons for using it in the future.
+> 
+> Untested, but could you give this a whirl?
 
---zsfy6shrbu2mdzpn
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v7 10/17] iio: frequency: ad9910: initial driver
- implementation
-MIME-Version: 1.0
+It looks good to me. I'll test it and include it in the next version.
 
-Hello,
+Regards,
+Akihiko Odaki
 
-On Tue, Jul 07, 2026 at 03:04:31PM +0100, Rodrigo Alencar via B4 Relay wrote:
-> +#include <linux/mod_devicetable.h>
+> 
+>  From bb5af058030aada66f5c9eafa54db604979acf55 Mon Sep 17 00:00:00 2001
+> From: Oliver Upton <oupton@kernel.org>
+> Date: Tue, 7 Jul 2026 09:50:00 -0700
+> Subject: [PATCH] KVM: arm64: Don't clear vcpu->cpu in kvm_arch_vcpu_put()
+> 
+> commit e9b152cb957c ("arm/arm64: kvm: Set vcpu->cpu to -1 on vcpu_put")
+> reset vcpu->cpu in order for the VGIC to determine if there was any vCPU
+> running at the time of access. The VGIC has gone through an entire
+> rewrite since then, and with commit 7d450e282171 ("KVM: arm/arm64:
+> vgic-new: Add userland access to VGIC dist registers") the user
+> accessors just grab all vCPU mutexes instead.
+> 
+> Drop this remaining vestige such that kvm_arch_vcpu_load() can properly
+> detect a CPU migration. While at it, rework kvm_reset_vcpu() to do a
+> much more pedantic check that the provided vCPU is actually what's
+> running on the present CPU.
+> 
+> Signed-off-by: Oliver Upton <oupton@kernel.org>
+> ---
+>   arch/arm64/kvm/arm.c   |  1 -
+>   arch/arm64/kvm/reset.c | 15 ++++++++++-----
+>   2 files changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 50adfff75be8..735acc42b50b 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -749,7 +749,6 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+>   	kvm_arm_vmid_clear_active();
+>   
+>   	vcpu_clear_on_unsupported_cpu(vcpu);
+> -	vcpu->cpu = -1;
+>   }
+>   
+>   static void __kvm_arm_vcpu_power_off(struct kvm_vcpu *vcpu)
+> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+> index b963fd975aac..6aba085c0673 100644
+> --- a/arch/arm64/kvm/reset.c
+> +++ b/arch/arm64/kvm/reset.c
+> @@ -190,7 +190,8 @@ static void kvm_vcpu_reset_sve(struct kvm_vcpu *vcpu)
+>   void kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+>   {
+>   	struct vcpu_reset_state reset_state;
+> -	bool loaded;
+> +	struct kvm_vcpu *running;
+> +	bool loaded = false;
+>   	u32 pstate;
+>   
+>   	spin_lock(&vcpu->arch.mp_state_lock);
+> @@ -198,10 +199,15 @@ void kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+>   	vcpu->arch.reset_state.reset = false;
+>   	spin_unlock(&vcpu->arch.mp_state_lock);
+>   
+> -	preempt_disable();
+> -	loaded = (vcpu->cpu != -1);
+> -	if (loaded)
+> +	guard(preempt)();
+> +
+> +	if ((running = kvm_get_running_vcpu())) {
+> +		if (KVM_BUG_ON(running != vcpu, vcpu->kvm))
+> +			return;
+> +
+> +		loaded = true;
+>   		kvm_arch_vcpu_put(vcpu);
+> +	}
+>   
+>   	if (!kvm_arm_vcpu_sve_finalized(vcpu)) {
+>   		if (vcpu_has_feature(vcpu, KVM_ARM_VCPU_SVE))
+> @@ -269,7 +275,6 @@ void kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+>   
+>   	if (loaded)
+>   		kvm_arch_vcpu_load(vcpu, smp_processor_id());
+> -	preempt_enable();
+>   }
+>   
+>   u32 kvm_get_pa_bits(struct kvm *kvm)
 
-Please don't add new users for this header file. Only use those
-<linux/device-id/*.h> that you actually need (if any).
-
-Thanks
-Uwe
-
---zsfy6shrbu2mdzpn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpOEoIACgkQj4D7WH0S
-/k6KCwf/Vgjpa4Op4HxG6UMD29jr9xEIWuo5E45vasyVBmM8XpQPLy8lof6Ftx5z
-hKUALu3RTBas4V+7sxlgbyGcbnq3sn+fG8nq0zuMmYjJ/Yt3M40ysryX0FyOJhBD
-nReg2c3lQ7EsVtCcBMpvuPCBq8hb/gzAJ5gW46cP068KzoGgP5Tp31EtZ8W3+Uyv
-/7p6nWKibQVKI+yB08a0JQK/A9KbjYfbLR/kJdIn62ypQBOxx5i/w9EQ4a+1qHzI
-HorFt9nltPe4VidIEEsFE7pylt1wW2O8crfi83ZvbFtBPUAtG2EOBpVQ2PRPZhFU
-mXtkyx5tKMD50sJB81tvJVJzv/vpGw==
-=WxHJ
------END PGP SIGNATURE-----
-
---zsfy6shrbu2mdzpn--
