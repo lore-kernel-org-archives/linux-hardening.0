@@ -1,156 +1,164 @@
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013003.outbound.protection.outlook.com [52.101.83.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3708E449985;
-	Thu,  9 Jul 2026 19:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783625107; cv=fail; b=FuSrl4cJwC0rW8w+WbZeiEsDY8/eeqhnvYQlsmVmaYpWvWx63M8OCNLGJ62Lqn5vKT2HNRAt4SvuG/+itYM8zqUiNK4wdWBgJXHwWP4r0RY6nZEKQkjc7sKjL1LskBXJSKL/aZk7WBog1oVe2wr/xfM7nLsC4zhaxK9RbP/48qE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783625107; c=relaxed/simple;
-	bh=zIE7HSk8xgMMBk9Oad8P4UlMyuIo5syFCxQWSC8/SOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mwE2jQwa20ZJWEolsxg+/5snghRpWYLqdJ+b3+uscJa7jRjp/4NSSwQtaQhwfK9uv12XTO3R7cZguN7gVrc7Oxpigy/0QkX+esgRKOG8Xe60cCX2squQRAAnLpQix5HAx4MVllc+ziFHzZwxkWv3PACT9Z+l1Ql7pfGNGjHjM00=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=nuCulSz8; arc=fail smtp.client-ip=52.101.83.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB6A3AC0E4
+	for <linux-hardening@vger.kernel.org>; Thu,  9 Jul 2026 21:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783631500; cv=none; b=QgKWVciVxj3FAbaJ8ZLgN1UeqxkPaCqPI5RmxkMlomgpT/fumGQJEsAkTe0uFBIHUf5MHH/ZEOy1exn6ouUCF23Z9VUFUX9Ex+THc2XRn8lUc0x02spsSxwzh5Y4IvMSH4ZMCYHjeVhZPkWKbZ2PzMaf6iexAfAJuxxEXa6Ae5Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783631500; c=relaxed/simple;
+	bh=7wR85BSlK6g7rPPLZUmhmMR7qWMPn8HJ/Ov54TKx1o4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j90yCm4nHNo75CGQNmj7hbVCwKQhZHuvmUUV4eu+PgNpKZWYIqT9hGqUneUMCbWXEc0cqrldbUtScJ6qaVJ6Nnd3pKDrn2XfMPgP9MW86i14wwOiAlyUcPaHYSPipIElOGI/02i28aPPUwrLT3n+QnzRdnFZ9nDyf8E6y9plo9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=JbY5bMRB; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="nuCulSz8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WCgW9iIQ6Hvekxzlm8hgKFkPTV1/FpJJ3s5CeWd/oVVU4ZTEI77e8vT4vw0nIoykoBaJNbA2shVMmScQzPaNzH6/owFPU4B+dXFUkYrXtVxwi8nCQ0KkZ1xBrPI5md+B78n39XJ6v1nmLYKVP92maE70iPlxIB3IIVRL1HeyC4FflV+0puPn642SScMmiQBRRNcWnuH/u1Si3HTYgaABdFLn/pTCe2TIOH0eb30RGmtwSbOKjyUnEQp2cayXX+Rpqm/1w7XMEDlGWBAY8IVwOKFH8y+LBMGrjTgL87grcKaMJAF19U4iTo1ixrWgs6AClm+79YmYOzSbp0T+v9NL1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zIE7HSk8xgMMBk9Oad8P4UlMyuIo5syFCxQWSC8/SOg=;
- b=ep6sVLK5g7wkwCgIi0HSegnsn4oAtFCBu733I9J1S9FnnoJYnnpZJLe450n0w5Mm3gtBtwIFk9JZlC0weYkyak9FaPJNuo7twFgQEt6SnxtIc5oSqmjEJKQhbIq2nkYa/eDuB2oKSP/uPCxv0ofoVC4zg6acsvOTCHN7ipxhS3iqzULDq1pXZ6ktL4xJwni3lArN49Gjp1evoU0kpDO1qpGXwqzxZZfAJ6F9TmwRJVsseTUGxoxZEArMKm7uEh3clDv8Fm7JTkebSiQt2mymG268ZADBsx3oUcwearblhAjpNZLgFP3J01T2XCufacUomSgKvGF8H47A+VRFNfjaBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zIE7HSk8xgMMBk9Oad8P4UlMyuIo5syFCxQWSC8/SOg=;
- b=nuCulSz80QtKG3flfQLsvmHswBYArlxzOSF7QFlYzFdHvkNEkl71QjzO2qoTqd9VIfi0gb00+PsFhpZK9iMdtKw6EbA0BekyGClMx2ukD7v93N/fsu8XU9WXAs+k7eRl5EQGpI3lOvrqgSSobYRaofg1TMg/VsQ4E2WuXzIpgUf4Xzx+amqaE5GM8yZ+KI42+riN46Y5dSOBCIdxGKn9BGRwYFdB7G0bsbHrezWM9bgwdd8SC/O4lhY079Sjvp8IxUa+ErCkKS7l/fZCs+1Wp8LpqTPj2n2p+znz+a753f7dWaFDa19c+B8IkAqTBwYmMpgOw09A0j8/6qFGeC30Yg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by GV1PR04MB10631.eurprd04.prod.outlook.com (2603:10a6:150:202::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Thu, 9 Jul
- 2026 19:25:00 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Thu, 9 Jul 2026
- 19:25:00 +0000
-Date: Thu, 9 Jul 2026 15:24:50 -0400
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Shubham Patil <shubhamsanjay.patil@amd.com>
-Cc: git@amd.com, michal.simek@amd.com, alexandre.belloni@bootlin.com,
-	Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, pgaj@cadence.com,
-	wsa+renesas@sang-engineering.com, tommaso.merciai.xr@bp.renesas.com,
-	arnd@arndb.de, quic_msavaliy@quicinc.com, Shyam-sundar.S-k@amd.com,
-	sakari.ailus@linux.intel.com, billy_tsai@aspeedtech.com,
-	kees@kernel.org, gustavoars@kernel.org,
-	jarkko.nikula@linux.intel.com, jorge.marques@analog.com,
-	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-hardening@vger.kernel.org, radhey.shyam.pandey@amd.com,
-	srinivas.goud@amd.com, shubhrajyoti.datta@amd.com,
-	Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-Subject: Re: [PATCH v10 2/2] i3c: master: Add driver for AMD AXI I3C master
- controller
-Message-ID: <ak_1gpc6EpgQeOOl@lizhi-Precision-Tower-5810>
-References: <20260709064233.1451482-1-shubhamsanjay.patil@amd.com>
- <20260709064233.1451482-3-shubhamsanjay.patil@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260709064233.1451482-3-shubhamsanjay.patil@amd.com>
-X-ClientProxiedBy: SA9PR03CA0014.namprd03.prod.outlook.com
- (2603:10b6:806:20::19) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="JbY5bMRB"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2cc73e322dbso2232035ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 09 Jul 2026 14:11:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=asu.edu; s=google; t=1783631498; x=1784236298; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XuEkKfOMhfrm+8X9CsfK3WSrB0bxoAf1wJ4HbTJkHGI=;
+        b=JbY5bMRBgpKcVY1ZhIt/nTPR2Z3ACmt45JPnkcEu8cAGIXImAYoR4TXywhiuGXXQys
+         RKYPjwUFapyErCnTIlLYDj9bFBK7SoOowuH6fIG9iM46aO1ax6NYOH0jlf6TcFg5/T+Z
+         piYaHnJ14mSXWhkHaVfSSZoUpi8q4SgWucaaoFPoweF8Nzi/sF3lPq1j+J8sqzaFbVOs
+         bOVugGC8DZFf9mrh5wZCqXWc9Uqwr0k/DPinzr+vanCCW0fdRM6q4ljJYBb/BB+C9WRa
+         Q3KFQy9+zRGMkC+2oo9wfg1HvwNgciVTifVi+HP3stiZDUwS6AC4oZiXLBKEro+X1mYX
+         FBpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783631498; x=1784236298;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XuEkKfOMhfrm+8X9CsfK3WSrB0bxoAf1wJ4HbTJkHGI=;
+        b=Akzth+XgRxCYUZxQTlafF4tYUQv64XLeiJnbDE+7xKOxPol6osfUNj7jUpzVFHYzHC
+         JMtnADbSUKSTIz+HaD6JvvwAc8GutlesgCIDWmw9Qd+PaC5iJz6gEM0ZlZE6R4p4Hrwg
+         q08W+dFLAEoGoKhhc77VuNqQ6PyZgzj6UognzU/Ukwb/39CwtImXdw9I46e0SboC7qPH
+         N96BrvahWLO0gteaB64gAAkTwo+T5FO9oam/nmcJVdSur+XNwesgcmF32P1x+35GYr+p
+         ohlLg6737p8dOMYGL4s4By48yAjgEyy0Mdoa7/KZOWh+8P8rf74ATgt0VC4gaiEYECAO
+         XHPg==
+X-Forwarded-Encrypted: i=1; AHgh+Ro7Bh0KCvUJHn5BOT2TGlzlCsFHzsOD1oZSne1b0Wr3dbiMNkBb4xaomDNh/Y3OpprBQrAj77+HFK8kU2zZ8OA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyITvxpbbabTOzNtZ3mw95TAwyYRvLNbD2fRKpQ8X6mf6RDnkqW
+	bSyObp+84TB0DIm9CKUbuMts9tTf5gUMUMHiSHF1VdtoaYElV6A2tlBOXcR29oWTYpZNbzPdktK
+	REHOLaA==
+X-Gm-Gg: AfdE7ckvHSaSm6tmJWbQbTzEHiMb/p58ZGxH8nzomPwVSjUSuLktuZH5m6QE5Rt/or5
+	Y2PIRnivLGAyXJZw3Gxs3KzbbBGB6Bv1ZT02CMpYBFws13ZQ60bicfkxoEeGNWgbLel5tArQNig
+	yIcPRv+HqKJZ5aTFcdNFVRdaBm56Gbsl2zNP73QbIYIlSTxyanLOJlOw2r2M38ikOTouGgPzaKv
+	vrBjin6KybiT97btZGQM2shP+gq5AVDzoEmaiMztHgT7mCJwMY8ywpaAEGCo4aMivPGwtCzVXMc
+	JuTP7v++LRZrgQJMbIBmdz7lRMA3RVT2MQBNXti4PYjzcEyS2bGn7A5UgCpNZPeszFFdCc7yCkP
+	NmAFY8zQdc0JBpRq92veFfb5+KHkk3jJfNwEHhRu8l5/Cpclpoqye6WpNPZ3fvtcnIGsTbzS3
+X-Received: by 2002:a17:903:4b0d:b0:2cc:ffa6:462a with SMTP id d9443c01a7336-2ccffa65d47mr55654255ad.10.1783631497770;
+        Thu, 09 Jul 2026 14:11:37 -0700 (PDT)
+Received: from p1.. ([2607:fb91:150f:dd4:6d78:821f:ff11:b509])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d5bd2fsm49742475ad.78.2026.07.09.14.11.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2026 14:11:36 -0700 (PDT)
+From: Xiang Mei <xmei5@asu.edu>
+To: Joanne Koong <joannelkoong@gmail.com>,
+	Bernd Schubert <bernd@bsbernd.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>
+Cc: fuse-devel@lists.linux.dev,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Luis Henriques <luis@igalia.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	bestswngs@gmail.com,
+	Xiang Mei <xmei5@asu.edu>
+Subject: [PATCH v3 1/2] fuse: copy request headers via a stack buffer for io-uring
+Date: Thu,  9 Jul 2026 14:11:29 -0700
+Message-ID: <20260709211130.543773-1-xmei5@asu.edu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|GV1PR04MB10631:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e15c3af-3b08-4d0b-eb55-08deddefc48e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|7416014|1800799024|366016|19092799006|22082099003|18002099003|56012099006|11063799006|4143699003;
-X-Microsoft-Antispam-Message-Info:
-	OleXcigNERDBp3zqfnQPA+gSUhy1u9bvsEhBUsqW6LNS+r4GEM5m/e7fkGUDnthRcaKMta/NGSDiB9LyDXXvGka5rlyZcPPQR1sEncBa6Etz1w69uBFgQUCT9dRF22ZedvmfGcTC2v1wx4owPO6sU2ex7U7ke9qXTP2yCNMsQqStaQHr1hTCgjb4oUL3wNFtXXFPWt+fqYQoVQjgIWmF6RQyPARLMQ7tuTZBpC+NhuvhVJp3H6Ck0cqnO5pKumgJiUxehrFIECqiWag7F5oUmD51wxGcFB/45GwVaS1bPoZ9ur4wrhY9grxMmEO16Fd1ZCmOpe3kccNfogXTanFa9ZNPkHGU6Xw5jPATQfAIY1WisrSht2aVknE7NNKseEJc4qqlf8jDl57oXPVPhnsiTrPMbDZkSg2IdeBXUZcVT7oSvJBxOJ/+bDHH0UxmRg4n0Dgr+L4JT2qmcQE0c+Px9G+1kMBF2W/20aSTOWnr06ZYMUbHSHitrAceSawE6WOBT9xtnQTvN45iRA3lkJVTrH2dVD6z1GUITvijUogNcONk9pxGfzdZ/rZ0bOpCmZHdVjaIjkHpQmeRJLr9P+QovYpqIaRHkWAmitLFEEPjWLUh0hFeWa/qaj0o13z5yNDdYYXG35Q6KC9qvn2LiyaAnr6XDFJfT3YLL4pOolleZUY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(1800799024)(366016)(19092799006)(22082099003)(18002099003)(56012099006)(11063799006)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yi1/cuHs30e+k9bBzl8zv/ZLTsrM9yMzCPgA83AMk7F1VAazlMCaSd488FaZ?=
- =?us-ascii?Q?jSSSec06TBY80S9dE5FlvxWqJ9qATLYnpkLbmSykZlWs9mk6QMmbroGZESf5?=
- =?us-ascii?Q?P7tW50uMJCBme1E0/Uyx5klsajsnfSftds0Z3Ps2fYfHghLoaDflWpwrUd24?=
- =?us-ascii?Q?vBx+4Q33ozi63ICQkR/QTFOZpK9j+y5dfRGDHb/FgPhetPadz8xkAPm0T8XB?=
- =?us-ascii?Q?QRNlJjNFM5sY52ZpmsUeQP84AFP+zuk4oSH9Km6hRqqWrRy111O0SmMJ7U4a?=
- =?us-ascii?Q?eYUvqf94mXpzPvMKd4bHqkBZMeyo2vE6kO8a1j7BcTvLO3iL+c51wxQoyZlh?=
- =?us-ascii?Q?i7CH2z4pQ0ButUGCIYXY6jjnLO+sdEf+4cVnIqEpee1UiPCoIhSxOreGulVX?=
- =?us-ascii?Q?Qax/esIagLEYZHf0FIahkwlOYq9W0l0ygrcl4aquYIl4f15Ua2UoUmlKoxzv?=
- =?us-ascii?Q?yQPceOQ4yICw0LqbtD3kgwHt4ZwDQ8w4OCvnvjX1wTJ71uCZShkIzTsOiImg?=
- =?us-ascii?Q?A85SLJO0VzlikHRjmo71qE7IeENF0ZZxZ5Vd7ayye7EWZaM5Wza1DTm1gDD4?=
- =?us-ascii?Q?J+sMyNE981jxzYshde/kJsd6nqiq+TtzlWZxfMVWTynD48ycUOavD/ahj9Mk?=
- =?us-ascii?Q?Y4bNHI5xnGxKg/THyr8eQRe1RP/MHpiS8wXgm/R6Azl/HKmK+ZKRdgLcGV/i?=
- =?us-ascii?Q?a/8kXweOE6w9jvtlj94vQNHjfA4daz2FHvtc1XsBJeG9UrpC1fWu6vcdKB5l?=
- =?us-ascii?Q?cEE8lbReJtDIFS9BFmptAm23Zkmydnin67ex+Q4GnhD+Z8db6f1hMSDSu6MX?=
- =?us-ascii?Q?0g3IJ1O0mxEhN0TGX1lhcz46VRvytDfP8PD/zUJDBWpuOQogafwReH2QFWCK?=
- =?us-ascii?Q?FTJRbPnJxEH9cjpr5GYx/QOUO41kNZ7PU/TGVFc6sVjzwTTfT0c+tYgpYuv9?=
- =?us-ascii?Q?xjlvQ+Vvr9/CCz3jYmI42sdEXFbd37RCfPnr+Z6M0vkAhOKNYNyTm1cwlUYx?=
- =?us-ascii?Q?DpZtBq0hhXZ6O+/Kj8jM7VQRT9hY08ohttqseFKs2jj+IsVxu/afSfT4OCC7?=
- =?us-ascii?Q?EqtapyA+lLNyoeoiuXVhK4ClVB//IkzmIcT0DT4KWlfdOYNoWPAYXrTp7qRm?=
- =?us-ascii?Q?aDelmqkz/jm/DAfpA19SGTXGuMiQvTrNNTSVngvSUyUfFrjRWwkLPBeZnjVO?=
- =?us-ascii?Q?YAw+PjorSi1WKFLTePyazDRoTEzf2ZVYWXbuzRc1Ur7AOUvnHBdsI8cIaqcd?=
- =?us-ascii?Q?Ze+1DZub/tS+T0hLNPwsaAx8qZHXaBKiOQaCrItx0DihZbG7VrqGcayH2H04?=
- =?us-ascii?Q?ZBvIqXiJa3S/UT6xS/OFNG9YSaoBFLxeBaWMpt7xbCTjrxdu3d/0hWusVq83?=
- =?us-ascii?Q?wIIniGWyJlP9CYbADcSWPAD7mb8qn7Reg91yAY4+Ft4kKZA7gBWwSi5QaWOh?=
- =?us-ascii?Q?IeLqBW3XMJMw4qj1cEWZBziW+wowsFDAsfSbwr1b2nPFXB8pfcnvmb5ffVKo?=
- =?us-ascii?Q?pzIOGvhgNj1bEqQw8pIMGTePMkXikQf7CkJTYc2Bx33lTCqXmK7F2rYqARKg?=
- =?us-ascii?Q?ajKbkNbvGF4w4CAfOSB+qkAvKalBr+G+aFVwDkfEFxgWuiGrldpKg+14SB9B?=
- =?us-ascii?Q?MRomSXy4O16GSSXlwN4aLZnIkuAlDeR/nSut+xOBlBKZY/3If4kE72F5LvhC?=
- =?us-ascii?Q?3hBPXw5xzNb/N6ayUGRuCxCVPfW2K5OHEQVJilTrck37hLZIPaXwaCWj5AoK?=
- =?us-ascii?Q?Gm+6JxU/8jrd3YBuI7Rbu6HTB02N8NY2lPHxHajHHRKCRTzkR5N9?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e15c3af-3b08-4d0b-eb55-08deddefc48e
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 19:25:00.0290
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mO8RMOhHIUULoDiyU0PiUxc8tpGbKxMoHuBBUUKNgs7pioDtxd8+XM6BVciPql6mLWPBpe2fROIz+YY+aW2i/53sGeDcNqPoui54JX5mfkob+WejgxK3G4Y7hr2WNetY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10631
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 09, 2026 at 12:12:33PM +0530, Shubham Patil wrote:
-> From: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
->
-> Add an I3C master driver and maintainers fragment for the AMD I3C bus
-> controller.
->
-> The driver currently supports the I3C bus operating in SDR mode,
-> with features including Dynamic Address Assignment, private data
-> transfers, and CCC transfers in both broadcast and direct modes. It
-> also supports operation in I2C mode.
->
-> The controller's data FIFOs are accessed big-endian; the driver performs
-> this conversion locally using ioread32be()/iowrite32be() with the
-> helpers, so it does not depend on any core FIFO-endianness helpers.
->
-> Signed-off-by: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-> Co-developed-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-> Co-developed-by: Shubham Patil <shubhamsanjay.patil@amd.com>
-> Signed-off-by: Shubham Patil <shubhamsanjay.patil@amd.com>
-> ---
+The fuse-io-uring transport copies req->in.h out to the ring in
+fuse_uring_copy_to_ring() and req->out.h back in fuse_uring_commit().
+Both headers live inside the fuse_request slab object, whose cache
+(fuse_req_cachep) is created without a usercopy whitelist, so copying
+them directly to/from userspace trips CONFIG_HARDENED_USERCOPY and
+panics:
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+  usercopy: Kernel memory exposure attempt detected from SLUB object
+  'fuse_request' (offset 56, size 40)!
+  kernel BUG at mm/usercopy.c:102!
+  RIP: 0010:usercopy_abort+0x6c/0x80
+  Call Trace:
+   __check_heap_object
+   __check_object_size
+   copy_header_to_ring          fs/fuse/dev_uring.c:618
+   fuse_uring_prepare_send
+   fuse_uring_send_in_task
+   ...
+   __do_sys_io_uring_enter
+   entry_SYSCALL_64_after_hwframe
+
+Bounce both headers through an on-stack copy so the usercopy touches
+stack memory, not the slab object.
+
+Fixes: c090c8abae4b ("fuse: Add io-uring sqe commit and fetch support")
+Cc: stable@vger.kernel.org
+Reported-by: Weiming Shi <bestswngs@gmail.com>
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Xiang Mei <xmei5@asu.edu>
+Reviewed-by: Bernd Schubert <bernd@bsbernd.com>
+Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
+---
+v3: no context change; add Bernd's Reviewed-by
+
+ fs/fuse/dev_uring.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/fs/fuse/dev_uring.c b/fs/fuse/dev_uring.c
+index 77c8cec43d9c..0814681eb04b 100644
+--- a/fs/fuse/dev_uring.c
++++ b/fs/fuse/dev_uring.c
+@@ -744,6 +744,7 @@ static int fuse_uring_copy_to_ring(struct fuse_ring_ent *ent,
+ {
+ 	struct fuse_ring_queue *queue = ent->queue;
+ 	struct fuse_ring *ring = queue->ring;
++	struct fuse_in_header in_header;
+ 	int err;
+ 
+ 	err = -EIO;
+@@ -765,8 +766,9 @@ static int fuse_uring_copy_to_ring(struct fuse_ring_ent *ent,
+ 	}
+ 
+ 	/* copy fuse_in_header */
+-	return copy_header_to_ring(ent, FUSE_URING_HEADER_IN_OUT, &req->in.h,
+-				   sizeof(req->in.h));
++	in_header = req->in.h;
++	return copy_header_to_ring(ent, FUSE_URING_HEADER_IN_OUT, &in_header,
++				   sizeof(in_header));
+ }
+ 
+ static int fuse_uring_prepare_send(struct fuse_ring_ent *ent,
+@@ -871,11 +873,13 @@ static void fuse_uring_commit(struct fuse_ring_ent *ent, struct fuse_req *req,
+ 			      unsigned int issue_flags)
+ {
+ 	struct fuse_ring *ring = ent->queue->ring;
++	struct fuse_out_header out_header;
+ 	ssize_t err = -EFAULT;
+ 
+-	if (copy_header_from_ring(ent, FUSE_URING_HEADER_IN_OUT, &req->out.h,
+-				  sizeof(req->out.h)))
++	if (copy_header_from_ring(ent, FUSE_URING_HEADER_IN_OUT, &out_header,
++				  sizeof(out_header)))
+ 		goto out;
++	req->out.h = out_header;
+ 
+ 	err = fuse_uring_out_header_has_err(&req->out.h, req);
+ 	if (err) {
+-- 
+2.43.0
 
