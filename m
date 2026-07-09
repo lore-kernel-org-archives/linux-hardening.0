@@ -1,106 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7049276049;
-	Thu,  9 Jul 2026 04:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626CA390CB3
+	for <linux-hardening@vger.kernel.org>; Thu,  9 Jul 2026 05:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783571636; cv=none; b=aqn7ljjUparEYbi/WPn6JqPXS8VDZl9iQTpIQDQthWNOilCQBgjQMkNce5FUEo9iijz5IETNJK3dPKBUXzRQb+8feC3gPYwMP8aojaPilsm5Vqsbv3ATJkNMJ0stNkz3uDIc21DTrcBRRQXPs4bqryLq327+RIcSHIz3SNZguAQ=
+	t=1783574678; cv=none; b=gT69S+kW3ehoSs6hzeQHGFPA9Txl7+ootGtNDVqdtHrzcXLLh1slanh+ktZdjnxZLKlxLe9C5JsWGMYg3zMKCb7eHXuIz0CIQ1zs3GuCWBA9cIGtXdQ93HlYgXkBvuZbAudMxglm1w+JCaVzYgxVrtr2Ze4kq2gFMeLSLvg4zxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783571636; c=relaxed/simple;
-	bh=eNqPIs12EdriTq4almq2Yg+Aa3TgvUL56esI9T5WPAE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aWuNO+dzWPsgwNeRl4ntXQ71WPpkMyAnoloKAmD1zXDIoUuN/JAPpMRcqE9skZcTFlmqMh9DQTrkxjZg7aebCQF+ZFkvMCm6CqQh/P7JwtYeX9GvldiYKla0mGnN68B6yiedNtCPdXQ1fRM0xsjQxsOoT5sLq5tRz9UpLirCJ1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8zVwvpt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783574678; c=relaxed/simple;
+	bh=eCEmFNBKDCUgi/XpzjhkSQjXE6ML/LWB346kaTFfFn0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tXgIy7/TgESLcoMRUnZlYF9FJ1j1yjMR1ajZktAn2E2HhRg/NxGXN8nr5X8nc0py15sQxU6lNAZ97v+fbmhukhZJS6Ror9KmUQklCx8gKjuOW5uq5M3cqeACZMpTr4rCKqYmc62zn7w0yQ/CWebUac9YdJAVhbLgPrQlC+qPX2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a35GQmGs; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Xmko6yvi; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8zVwvpt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F521F00A3D;
-	Thu,  9 Jul 2026 04:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783571635;
-	bh=Js3NGQVx1KADZnJZvetknE5nLYp1IGOPnigBp3atZ94=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=f8zVwvptMpk9i+/Dpd7J4bpmuwVNaIB7EwG573FjQCYLYi/johTd67PCKp8/ElV3S
-	 ze03u6735P/PvuBKLQv83KIjvJhfMx3BqjIa25LkytYEZ/QC3O64Z6aeHTveLdb/gc
-	 vkRfhsBVUpOHwVANZ6jacEaPemss2ryZEMFBlODLPnDlAzDUp6nUAzF6O8ghErbBib
-	 EJ9RzoZD1bCItXBZpYGOswfa6BGAc+J0sykYfJurHD3esf/u/p4Y1I4us7cou6MEdB
-	 9lCf8VbuTYIm2m+tD2R6hcxmYZpegeJNHFEMACjSCYSwQcjYpXB/IoKoFuCxNSqCpW
-	 fsf0sJ5fquFsQ==
-From: Eric Biggers <ebiggers@kernel.org>
-To: stable@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Harry Yoo (Oracle)" <harry@kernel.org>,
-	"Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
-	Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH 6.18 4/4] slab: recognize @GFP parameter as optional in kernel-doc
-Date: Thu,  9 Jul 2026 00:33:01 -0400
-Message-ID: <20260709043301.142931-5-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260709043301.142931-1-ebiggers@kernel.org>
-References: <20260709043301.142931-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a35GQmGs";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Xmko6yvi"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 668N9B3K038913
+	for <linux-hardening@vger.kernel.org>; Thu, 9 Jul 2026 05:24:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VD1AdfG2BjNXiv/VHQwI0Lnl5qw+Uds4QKa09TDo4ds=; b=a35GQmGs9wr7rn+0
+	ZhoGjA7yyYan+76zASJR+jiS752KDbhgRM8t7qeoBOi20HePqfqTSRypLPDCpRAd
+	cDO7i2YEaOafS22jzgsocg2l5OCEh7Q6VqxI4r+DhrQ1IOMSrh7qzpzrMsTVLMaa
+	jtqtK5e/b5in5sCvRTAHuwrQq/kBtbUZWA5/oaGtm+99M6SPaSWOI3TDxBSljlUm
+	S9QvOav5tq6V59VvbeilyXBY6UbYSOQr0R8IAQ1L7Ga1E7lpz0abA1Efq3GW+8D7
+	wHdIjX/wgLt3XeH1j1TDCiUDCD4QhXNa+GJfecbvFsWjC5kNA/0q1SG+LQ8rJ4Cf
+	MZwquA==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f9ug6j14h-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Thu, 09 Jul 2026 05:24:35 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-847ad67cc51so1812532b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Jul 2026 22:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1783574674; x=1784179474; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=VD1AdfG2BjNXiv/VHQwI0Lnl5qw+Uds4QKa09TDo4ds=;
+        b=Xmko6yviZxwnc0Y5jFf8MudMF/CzgrsLOlhn6AlGCDY+oxfRMFunB1tixTiaM7In96
+         C0v6xkXhLg86djeXv5XqcaZNjcyWZUE+f4bHYPSDwR9+hFrufDlC11sS91eFV4DMK2xJ
+         MM3GYdBN92glMtUYIe6E67S33Ue9zHxARTilQzIzN7lrB1PUHqGsCRoLROcY+i5UCPKT
+         kDq692v2Tsu1Dxiq34HupMBSVAeLYWAQvMe8KwsGbskIqORb0iGyPikaT7Ln7KXdggnT
+         DzQ4vvPOg5Km/elKl5AyY+VqM0rhYfYaPcImkDZtYhfHxTzi5uzG/mVf86re6UphnLG6
+         ZSLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783574674; x=1784179474;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=VD1AdfG2BjNXiv/VHQwI0Lnl5qw+Uds4QKa09TDo4ds=;
+        b=rYDEfhL9j6TXleaVoNbU2ajBLglMCXNdMe9A37qdzaAyDt6e9xudnFJYHXuU7AhaBT
+         /ff+cCrR1h42pV8ZiJ03XJtwg5ycUByuzFRFmgIH4towD8hZdrcuAb4YImRPmj9kgbgE
+         soekwFbqtYthNaxrKmPPmO3dyqrYDHTF+ICQckSG2rHneH6Nxog2AQB5+dU83viLiuNI
+         JSQvNfbGcGsUId4Hs0FaLlrS+cYuggB28kFpYpsF7cfgi+y1Byyk+/a9uWx0gfLRlm02
+         08Bj9cXtvFeFd/ka9XrUL+EILvU9seYQMZv6T5fdyzo88ylZwGp3xh0RplgGS7QtHw6E
+         v/Gg==
+X-Forwarded-Encrypted: i=1; AHgh+RofXpu2CQn7NV0hfkEcBktynxAnge0Gxa0FV6/VDIkKRK5x1WAuZNooueQLQSo4QD0btl+WXllPQoJeQWEEXas=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTkD+jnt4/NFCxWdGQL3W6+cGdTIwreOjz8M/JsYAgJ1ZZAEGm
+	cNQ+ci0Wr/v3UvBt/S4Y9NQfBF1+zid8xvXrFyOZdSNNrqaPbefeY428kHXs0vdiPeySfRI4SM7
+	5BXSzZQZhhqakNzmLXpB/vinwNG8xDAme/dhAbp7CvWFinH04bNChlasO6ZOKBfV6vYCImZI=
+X-Gm-Gg: AfdE7ckirokgDx8tOp1Kv5GfdJmqXMVRl1e8aZTouo9bwHir5ghJmnQFqFyELy+EOjQ
+	rUM8AkHCRWcqAGDeOqVSm9Pp2rsvkIcUruAMwHRGP6namvoMMomXtVHQ96Mx3/IhHp8iHqx7M6b
+	pAwiaqcrfqdPifMuvNvLEORWYSjsYvXpfINTWkD4PB+473X6wIzkuuIUAjDrTPrreMfg19Otccs
+	Mn1PIrAR16ibkSZ5/T5fPQ9fijjNtbhrqx5mTFCZhrOiUFtxf2ioORGar+DQGKOs7p5TU5hhGht
+	msi6DPGj0N0/kXMHhHzp0UpoLtpWIU0FbQ86/3I5o8XFHmmFO7ZfqsBnYmk1Uhc936zO3VmfElL
+	zbdaZuecwEP1XzK4imoRgfZjsgQmS8Wdx2lstUL+gZA==
+X-Received: by 2002:a05:6a00:c88:b0:846:de21:3da4 with SMTP id d2e1a72fcca58-84842ebc27cmr4969641b3a.3.1783574674348;
+        Wed, 08 Jul 2026 22:24:34 -0700 (PDT)
+X-Received: by 2002:a05:6a00:c88:b0:846:de21:3da4 with SMTP id d2e1a72fcca58-84842ebc27cmr4969596b3a.3.1783574673765;
+        Wed, 08 Jul 2026 22:24:33 -0700 (PDT)
+Received: from [10.217.199.117] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8483d117a1dsm2382038b3a.37.2026.07.08.22.24.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2026 22:24:33 -0700 (PDT)
+Message-ID: <6f179f96-fdd1-4fa9-b26c-df7372eb6d20@oss.qualcomm.com>
+Date: Thu, 9 Jul 2026 10:54:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/10] dt-bindings: firmware: qcom: tmd: add TMD device
+ type constants
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
+References: <20260703-qmi-tmd-v4-0-3882189c1f83@oss.qualcomm.com>
+ <20260703-qmi-tmd-v4-1-3882189c1f83@oss.qualcomm.com>
+ <977711ef-c1fb-4735-b82a-4ca2f4797f51@oss.qualcomm.com>
+ <8ad14017-bce7-485e-9677-9cbf8ecb2742@oss.qualcomm.com>
+ <yvggh2zs6qkuyuzvwydkecswnjoyba2d7t27br6xpk6d2csp53@i25g6okdktz5>
+ <10a346d8-fbb1-4142-a650-507c3917b8f6@oss.qualcomm.com>
+ <dv4n4ntnfvhouv23asgshgs7wcolkmqs7lbuni52maexo4s44x@4bqhf33x4fr6>
+ <1aca8d60-8e39-4532-9095-a5260bba76ac@oss.qualcomm.com>
+ <e7eho7ezujbrdzgumshapf2r7hu2jaujib7lvotrqvcj5er5ut@xpd6l2kgipqu>
+ <9dc4b29e-e9fb-421a-b789-eb16a68ff915@oss.qualcomm.com>
+ <2tu35aavp7sc2npni33ky5bve57idzy3bzp2pk7eh5lryq3r4v@gmm3dhayu4cf>
+Content-Language: en-US
+From: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
+In-Reply-To: <2tu35aavp7sc2npni33ky5bve57idzy3bzp2pk7eh5lryq3r4v@gmm3dhayu4cf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA0OCBTYWx0ZWRfXzkIXug2X+eod
+ +d1eiSv6Yne2qOBjag4D745a0rrT5ocvkC36nZhhEE4YxaY57PJzDOatcyKNbSs7q7dgUlaxkhq
+ fbXV6WmhThGXRlRG6qubiyYsVFS24XI=
+X-Proofpoint-GUID: NXyhhLrDwVM7jr5wRuzLsiq7nykDZoIO
+X-Authority-Analysis: v=2.4 cv=cL3QdFeN c=1 sm=1 tr=0 ts=6a4f3093 cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
+ a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=tNnYrs7vTIEjkU0joGkA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-ORIG-GUID: NXyhhLrDwVM7jr5wRuzLsiq7nykDZoIO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA0OCBTYWx0ZWRfX1PeemWssAMGx
+ /TlBSBbRlPY9zT3me5u6Y4rhvGJ7w18q9KL5Qrb/tv/0sb8P2sIo/uOHIQEKXPjaKOXgPGHOWmV
+ aLmxklKfnl4bz1V2jztkyJ49rkhU9Yoi25Au+nJ3jckIThwU6flREzaCQxi54/Z8KTwmI4C7OCu
+ B3cCTPpRW/ttl8Gqh9okFDs0r+L/cJkOAiw29LYW2LyyD/UPLCuWCxLQh4gq5TADm2+a0Dv6p6d
+ Rr7jlFpVX1CXXmkgLYMho1RRjwx4RCZXET+b447V2FlWcr+etfEF7VQwffGdqZYUSItFbQA9kKs
+ KiGRSuLnD+mniHdTIr8B0beVtcfeJE+dsvcqXpL15a8eKLZR9AbZSvNs+/qzmXQB2lwGlSXMetH
+ 4lHeWgsIGAnWWSEmtFKDN71oxRSP2YMAhGTfKf1sbmIEJ7On5HQM8n086olPjr1BeEi+xV88a3Y
+ IWH2AeBB2YQakfFfkKw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-08_05,2026-07-08_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0 spamscore=0
+ phishscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607090048
 
-From: Randy Dunlap <rdunlap@infradead.org>
 
-commit 7b5f5865fb11e60edd03c5e063e2d228b7062317 upstream.
 
-Since the @GFP parameter in kmalloc_obj() etc. is now optional, change
-the kernel-doc to indicate that it is optional. This avoids kernel-doc
-warnings:
+On 7/8/2026 7:55 PM, Dmitry Baryshkov wrote:
+> On Tue, Jul 07, 2026 at 03:55:13PM +0530, Gaurav Kohli wrote:
+>>
+>>
+>> On 7/7/2026 1:04 AM, Dmitry Baryshkov wrote:
+>>> On Mon, Jul 06, 2026 at 08:11:35PM +0200, Daniel Lezcano wrote:
+>>>> On 7/6/26 19:47, Dmitry Baryshkov wrote:
+>>>>> On Mon, Jul 06, 2026 at 07:03:18PM +0200, Daniel Lezcano wrote:
+>>>>>> On 7/3/26 17:42, Dmitry Baryshkov wrote:
+>>>>>>> On Fri, Jul 03, 2026 at 07:43:39PM +0530, Gaurav Kohli wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 7/3/2026 1:23 PM, Konrad Dybcio wrote:
+>>>>>>>>> On 7/3/26 7:03 AM, Gaurav Kohli wrote:
+>>>>>>>>>> Add Device Tree binding constants for Qualcomm Thermal Mitigation
+>>>>>>>>>> Device (TMD) types used by remoteproc-backed thermal cooling devices.
+>>>>>>>>>>
+>>>>>>>>>> Qualcomm remote processors expose thermal mitigation endpoints
+>>>>>>>>>> through QMI. These endpoints can be registered with the thermal
+>>>>>>>>>> framework via the `#cooling-cells` property on the remoteproc node.
+>>>>>>>>>>
+>>>>>>>>>> The QMI TMD protocol identifies devices using string names (for example,
+>>>>>>>>>> "pa", "modem", and "cdsp_sw"), while the DT cooling-device binding with
+>>>>>>>>>> `#cooling-cells = <3>` requires numeric device id in the form:
+>>>>>>>>>>
+>>>>>>>>>>        <&phandle device_id min_state max_state>
+>>>>>>>>>>
+>>>>>>>>>> Define common TMD device index constants shared across currently
+>>>>>>>>>> supported platforms. If a future target requires a different mapping,
+>>>>>>>>>> additional target-specific constants can be introduced while preserving
+>>>>>>>>>> existing DT ABI.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
+>>>>
+>>>> [ ... ]
+>>>>
+>>>>>>> Why are you using only those TMD devices?
+>>>>>>>
+>>>>>>>> More constants can be added as needed.
+>>>>>>>
+>>>>>>> Kodiak is one of the supported platforms.
+>>>>>>
+>>>>>> What would be the benefit of having more than thirteen cooling devices
+>>>>>> declared in the thermal framework and having only a couple of them mapped in
+>>>>>> a thermal zone ?
+>>>>>>
+>>>>>> I agree there are more TMDs but if they are unused for the moment, why do we
+>>>>>> need to add them ? Can we do that incrementally ?
+>>>>>
+>>>>> That's what I am trying to understand: why the implementation uses only
+>>>>> the selected two devices, if the modem on Kodiak supports others. How
+>>>>> can we find out, which TMDs to use on other devices.
+>>>>
+>>>> My understanding is that is an initial thermal setup. Gaurav will add them
+>>>> step by step while setting up all the thermal zones instead of sending a big
+>>>> patchset. And TBH, that will be much easier to review.
+>>>
+>>> In such a case it should be noted in the commit message and/or cover
+>>> letter.
+>>
+>> Thanks for the review/guidance. Not all TMD endpoints are relevant for
+>> kernel thermal zone binding — some like BCL and cold temperature are handled
+>> from userspace when needed. The constants here cover only
+> 
+> What if there is no userspace? Or the userspace is different from what
+> you expect? I doubt we have TMD-speaking userspace yet.
 
-WARNING: include/linux/slab.h:1101 Excess function parameter 'GFP' description in 'kmalloc_obj'
-WARNING: include/linux/slab.h:1113 Excess function parameter 'GFP' description in 'kmalloc_objs'
-WARNING: include/linux/slab.h:1128 Excess function parameter 'GFP' description in 'kmalloc_flex'
+Thanks for mail, The TMD userspace implementation is available upstream 
+at https://github.com/qualcomm/qmi-framework.
 
-Fixes: e19e1b480ac7 ("add default_gfp() helper macro and use it in the new *alloc_obj() helpers")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Acked-by: Harry Yoo (Oracle) <harry@kernel.org>
-Link: https://patch.msgid.link/20260617163125.2716279-1-rdunlap@infradead.org
-Signed-off-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
----
- include/linux/slab.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+>> what is needed for modem and CDSP thermal zones on the currently posted
+>> targets.
+> 
+> Again, SLPI, ADSP?
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 976c781a7842..22daf3f34a76 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -1006,7 +1006,7 @@ void *kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node);
- /**
-  * kmalloc_obj - Allocate a single instance of the given type
-  * @VAR_OR_TYPE: Variable or type to allocate.
-- * @GFP: GFP flags for the allocation.
-+ * @...: optional GFP flags for the allocation (GFP_KERNEL when not specified).
-  *
-  * Returns: newly allocated pointer to a @VAR_OR_TYPE on success, or NULL
-  * on failure.
-@@ -1018,7 +1018,7 @@ void *kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node);
-  * kmalloc_objs - Allocate an array of the given type
-  * @VAR_OR_TYPE: Variable or type to allocate an array of.
-  * @COUNT: How many elements in the array.
-- * @GFP: GFP flags for the allocation.
-+ * @...: optional GFP flags for the allocation (GFP_KERNEL when not specified).
-  *
-  * Returns: newly allocated pointer to array of @VAR_OR_TYPE on success,
-  * or NULL on failure.
-@@ -1031,7 +1031,7 @@ void *kmalloc_nolock_noprof(size_t size, gfp_t gfp_flags, int node);
-  * @VAR_OR_TYPE: Variable or type to allocate (with its flex array).
-  * @FAM: The name of the flexible array member of the structure.
-  * @COUNT: How many flexible array member elements are desired.
-- * @GFP: GFP flags for the allocation.
-+ * @...: optional GFP flags for the allocation (GFP_KERNEL when not specified).
-  *
-  * Returns: newly allocated pointer to @VAR_OR_TYPE on success, NULL on
-  * failure. If @FAM has been annotated with __counted_by(), the allocation
--- 
-2.55.0
+Sorry, I should have said "generic subsystems" rather than listing 
+specific ones. SLPI and ADSP do not require active thermal mitigation on 
+these platforms.
+
+> 
+>>
+>> Will add a note in the cover letter clarifying for current tmd's.
+>> Please let me if this is fine.
+>>
+>>>
+>>>
+>>
+> 
 
