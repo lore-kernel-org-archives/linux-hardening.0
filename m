@@ -1,247 +1,245 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011049.outbound.protection.outlook.com [52.101.52.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626CA390CB3
-	for <linux-hardening@vger.kernel.org>; Thu,  9 Jul 2026 05:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783574678; cv=none; b=gT69S+kW3ehoSs6hzeQHGFPA9Txl7+ootGtNDVqdtHrzcXLLh1slanh+ktZdjnxZLKlxLe9C5JsWGMYg3zMKCb7eHXuIz0CIQ1zs3GuCWBA9cIGtXdQ93HlYgXkBvuZbAudMxglm1w+JCaVzYgxVrtr2Ze4kq2gFMeLSLvg4zxg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783574678; c=relaxed/simple;
-	bh=eCEmFNBKDCUgi/XpzjhkSQjXE6ML/LWB346kaTFfFn0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tXgIy7/TgESLcoMRUnZlYF9FJ1j1yjMR1ajZktAn2E2HhRg/NxGXN8nr5X8nc0py15sQxU6lNAZ97v+fbmhukhZJS6Ror9KmUQklCx8gKjuOW5uq5M3cqeACZMpTr4rCKqYmc62zn7w0yQ/CWebUac9YdJAVhbLgPrQlC+qPX2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a35GQmGs; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Xmko6yvi; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190573DB652;
+	Thu,  9 Jul 2026 06:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783579405; cv=fail; b=TNekbO1Tc18MsMjva+RHsvUL+2Eo76S2MIqBnZDCWEB2EAYegQUTNEIC8LhgvwUWl1MmauJgfq5FIc+ckWqMmY5x2xaGIvdL6LRXnJRS0Quiy1N/EdFatfOZtOMnzNvLjXtbht0YyVMhPnsQ6O78q03G+BHNEF6cFPHf/XFq/88=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783579405; c=relaxed/simple;
+	bh=KTrJXnyZzmck6ARj2yYWjcf9T/uQMjqAOqQhU8o04hU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h12Z3kgx0pmo1dgCnkKMzrKUFjYfX1qd5FLSrUzIv5V6RpB3vDwPwRIo0fR+kSzoCLnNz/tthtVImSZFf9DvMpexmIm6s6w0XvLOviRhER3Tg8Vdtvd65o7fUrv1pGFFJoJtfh4imUfdrJSJEP/M4N33yJAhj4i96/SGUb+i+xg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Zt21dIaE; arc=fail smtp.client-ip=52.101.52.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a35GQmGs";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Xmko6yvi"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 668N9B3K038913
-	for <linux-hardening@vger.kernel.org>; Thu, 9 Jul 2026 05:24:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VD1AdfG2BjNXiv/VHQwI0Lnl5qw+Uds4QKa09TDo4ds=; b=a35GQmGs9wr7rn+0
-	ZhoGjA7yyYan+76zASJR+jiS752KDbhgRM8t7qeoBOi20HePqfqTSRypLPDCpRAd
-	cDO7i2YEaOafS22jzgsocg2l5OCEh7Q6VqxI4r+DhrQ1IOMSrh7qzpzrMsTVLMaa
-	jtqtK5e/b5in5sCvRTAHuwrQq/kBtbUZWA5/oaGtm+99M6SPaSWOI3TDxBSljlUm
-	S9QvOav5tq6V59VvbeilyXBY6UbYSOQr0R8IAQ1L7Ga1E7lpz0abA1Efq3GW+8D7
-	wHdIjX/wgLt3XeH1j1TDCiUDCD4QhXNa+GJfecbvFsWjC5kNA/0q1SG+LQ8rJ4Cf
-	MZwquA==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f9ug6j14h-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Thu, 09 Jul 2026 05:24:35 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-847ad67cc51so1812532b3a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Jul 2026 22:24:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783574674; x=1784179474; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VD1AdfG2BjNXiv/VHQwI0Lnl5qw+Uds4QKa09TDo4ds=;
-        b=Xmko6yviZxwnc0Y5jFf8MudMF/CzgrsLOlhn6AlGCDY+oxfRMFunB1tixTiaM7In96
-         C0v6xkXhLg86djeXv5XqcaZNjcyWZUE+f4bHYPSDwR9+hFrufDlC11sS91eFV4DMK2xJ
-         MM3GYdBN92glMtUYIe6E67S33Ue9zHxARTilQzIzN7lrB1PUHqGsCRoLROcY+i5UCPKT
-         kDq692v2Tsu1Dxiq34HupMBSVAeLYWAQvMe8KwsGbskIqORb0iGyPikaT7Ln7KXdggnT
-         DzQ4vvPOg5Km/elKl5AyY+VqM0rhYfYaPcImkDZtYhfHxTzi5uzG/mVf86re6UphnLG6
-         ZSLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783574674; x=1784179474;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VD1AdfG2BjNXiv/VHQwI0Lnl5qw+Uds4QKa09TDo4ds=;
-        b=rYDEfhL9j6TXleaVoNbU2ajBLglMCXNdMe9A37qdzaAyDt6e9xudnFJYHXuU7AhaBT
-         /ff+cCrR1h42pV8ZiJ03XJtwg5ycUByuzFRFmgIH4towD8hZdrcuAb4YImRPmj9kgbgE
-         soekwFbqtYthNaxrKmPPmO3dyqrYDHTF+ICQckSG2rHneH6Nxog2AQB5+dU83viLiuNI
-         JSQvNfbGcGsUId4Hs0FaLlrS+cYuggB28kFpYpsF7cfgi+y1Byyk+/a9uWx0gfLRlm02
-         08Bj9cXtvFeFd/ka9XrUL+EILvU9seYQMZv6T5fdyzo88ylZwGp3xh0RplgGS7QtHw6E
-         v/Gg==
-X-Forwarded-Encrypted: i=1; AHgh+RofXpu2CQn7NV0hfkEcBktynxAnge0Gxa0FV6/VDIkKRK5x1WAuZNooueQLQSo4QD0btl+WXllPQoJeQWEEXas=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTkD+jnt4/NFCxWdGQL3W6+cGdTIwreOjz8M/JsYAgJ1ZZAEGm
-	cNQ+ci0Wr/v3UvBt/S4Y9NQfBF1+zid8xvXrFyOZdSNNrqaPbefeY428kHXs0vdiPeySfRI4SM7
-	5BXSzZQZhhqakNzmLXpB/vinwNG8xDAme/dhAbp7CvWFinH04bNChlasO6ZOKBfV6vYCImZI=
-X-Gm-Gg: AfdE7ckirokgDx8tOp1Kv5GfdJmqXMVRl1e8aZTouo9bwHir5ghJmnQFqFyELy+EOjQ
-	rUM8AkHCRWcqAGDeOqVSm9Pp2rsvkIcUruAMwHRGP6namvoMMomXtVHQ96Mx3/IhHp8iHqx7M6b
-	pAwiaqcrfqdPifMuvNvLEORWYSjsYvXpfINTWkD4PB+473X6wIzkuuIUAjDrTPrreMfg19Otccs
-	Mn1PIrAR16ibkSZ5/T5fPQ9fijjNtbhrqx5mTFCZhrOiUFtxf2ioORGar+DQGKOs7p5TU5hhGht
-	msi6DPGj0N0/kXMHhHzp0UpoLtpWIU0FbQ86/3I5o8XFHmmFO7ZfqsBnYmk1Uhc936zO3VmfElL
-	zbdaZuecwEP1XzK4imoRgfZjsgQmS8Wdx2lstUL+gZA==
-X-Received: by 2002:a05:6a00:c88:b0:846:de21:3da4 with SMTP id d2e1a72fcca58-84842ebc27cmr4969641b3a.3.1783574674348;
-        Wed, 08 Jul 2026 22:24:34 -0700 (PDT)
-X-Received: by 2002:a05:6a00:c88:b0:846:de21:3da4 with SMTP id d2e1a72fcca58-84842ebc27cmr4969596b3a.3.1783574673765;
-        Wed, 08 Jul 2026 22:24:33 -0700 (PDT)
-Received: from [10.217.199.117] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8483d117a1dsm2382038b3a.37.2026.07.08.22.24.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2026 22:24:33 -0700 (PDT)
-Message-ID: <6f179f96-fdd1-4fa9-b26c-df7372eb6d20@oss.qualcomm.com>
-Date: Thu, 9 Jul 2026 10:54:26 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Zt21dIaE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OYVkWBDYF8sPhhvQXmcSre7prcBESHUCfNRxlsbaYqD9USXstfGniKHHnnLo+CUsOV/3coLIwS2bbgu8z7CzGXWOW/p4MfWlHjI+9N4CCVvLp3rnQ7IDDeMDdxQ20u39AZwLNQKnGxbL8r2h8Nre+l96d2TZ2HoszKq3raWxgKZlo8ep+KE1NAeVdnvZDNcspGIDGxXdZO6iOtvRWe0W5XRCobmVZKKv7/Zf53oy6Lr9d4UVTkb9mzu+SX59IZlS3tEzlcGwy+3l4qWvoOvMI2Ejegbr7YzltemGlZn4WThDpQ2yZs6z3k7ADMgCfGdCOz4RMz7mnAkGdHs/FxfUxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lPlleH54N+IDGEQZumGZpdTWNI3mINEqyIodk8Qvr3s=;
+ b=MGnRDg1Hb5b9tPIOg2iNAed3HJm1BArRJ09x0J4xvOBWO/hxLNd+uDyJfdcrG3jntfRglXPq4FN2ksGQx44MBr3VTSEnM5QKpbV5oNYiOdAovSs9noLOP00hNCY2NwQbHlMaLZwg1wKBv57ZDA97nL0QdwaKOBVSCkqc6uzJVZqTxAjqrhIvztGQgg1GaBXoEXJEx8e14rEuKu2QVOJO1ltCsH+8WkQgI6IHIFLPtWrGoZ/h+M9Hj94aP9tZhCpbprJE1IRSJ0OkuAFCZJl3+vvjLaSuwA75DTGz14HG7fe+YntgiOjGlz7CAbh+lNZ9HMMkC0zXN6ymI//yEZqtDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lPlleH54N+IDGEQZumGZpdTWNI3mINEqyIodk8Qvr3s=;
+ b=Zt21dIaEvFZwmDTHU0X3J5bbDXIkkdmhgeOkstTFNFEzAqmPrW/eI8VCcd0tYGBTNoreczBgofvuZwoE7D7AUQAKzhB+p+QaGt/2EaVdwR16C3ifsLRwh7nzxMrELgAzGmDAIHVPjY1/OuySe+kSh1zLRO3oyI9BEs96wsyoB/A=
+Received: from MN2PR16CA0038.namprd16.prod.outlook.com (2603:10b6:208:234::7)
+ by CYXPR12MB9443.namprd12.prod.outlook.com (2603:10b6:930:db::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Thu, 9 Jul
+ 2026 06:43:14 +0000
+Received: from BL6PEPF0002256E.namprd02.prod.outlook.com
+ (2603:10b6:208:234:cafe::5e) by MN2PR16CA0038.outlook.office365.com
+ (2603:10b6:208:234::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.11 via Frontend Transport; Thu, 9
+ Jul 2026 06:43:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ BL6PEPF0002256E.mail.protection.outlook.com (10.167.249.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Thu, 9 Jul 2026 06:43:13 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 9 Jul
+ 2026 01:43:12 -0500
+Received: from xhdshubpati40x.xilinx.com (10.180.168.240) by
+ satlexmb08.amd.com (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.41
+ via Frontend Transport; Thu, 9 Jul 2026 01:43:06 -0500
+From: Shubham Patil <shubhamsanjay.patil@amd.com>
+To: <git@amd.com>, <michal.simek@amd.com>, <alexandre.belloni@bootlin.com>,
+	<Frank.Li@nxp.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <pgaj@cadence.com>,
+	<wsa+renesas@sang-engineering.com>, <tommaso.merciai.xr@bp.renesas.com>,
+	<arnd@arndb.de>, <quic_msavaliy@quicinc.com>, <Shyam-sundar.S-k@amd.com>,
+	<sakari.ailus@linux.intel.com>, <billy_tsai@aspeedtech.com>,
+	<kees@kernel.org>, <gustavoars@kernel.org>, <jarkko.nikula@linux.intel.com>,
+	<jorge.marques@analog.com>, <linux-i3c@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+CC: <radhey.shyam.pandey@amd.com>, <srinivas.goud@amd.com>,
+	<shubhrajyoti.datta@amd.com>, <shubhamsanjay.patil@amd.com>
+Subject: [PATCH v10 0/2] Add AMD I3C master controller driver and bindings
+Date: Thu, 9 Jul 2026 12:12:31 +0530
+Message-ID: <20260709064233.1451482-1-shubhamsanjay.patil@amd.com>
+X-Mailer: git-send-email 2.49.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/10] dt-bindings: firmware: qcom: tmd: add TMD device
- type constants
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Manaf Meethalavalappu Pallikunhi <manaf.pallikunhi@oss.qualcomm.com>
-References: <20260703-qmi-tmd-v4-0-3882189c1f83@oss.qualcomm.com>
- <20260703-qmi-tmd-v4-1-3882189c1f83@oss.qualcomm.com>
- <977711ef-c1fb-4735-b82a-4ca2f4797f51@oss.qualcomm.com>
- <8ad14017-bce7-485e-9677-9cbf8ecb2742@oss.qualcomm.com>
- <yvggh2zs6qkuyuzvwydkecswnjoyba2d7t27br6xpk6d2csp53@i25g6okdktz5>
- <10a346d8-fbb1-4142-a650-507c3917b8f6@oss.qualcomm.com>
- <dv4n4ntnfvhouv23asgshgs7wcolkmqs7lbuni52maexo4s44x@4bqhf33x4fr6>
- <1aca8d60-8e39-4532-9095-a5260bba76ac@oss.qualcomm.com>
- <e7eho7ezujbrdzgumshapf2r7hu2jaujib7lvotrqvcj5er5ut@xpd6l2kgipqu>
- <9dc4b29e-e9fb-421a-b789-eb16a68ff915@oss.qualcomm.com>
- <2tu35aavp7sc2npni33ky5bve57idzy3bzp2pk7eh5lryq3r4v@gmm3dhayu4cf>
-Content-Language: en-US
-From: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-In-Reply-To: <2tu35aavp7sc2npni33ky5bve57idzy3bzp2pk7eh5lryq3r4v@gmm3dhayu4cf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA0OCBTYWx0ZWRfXzkIXug2X+eod
- +d1eiSv6Yne2qOBjag4D745a0rrT5ocvkC36nZhhEE4YxaY57PJzDOatcyKNbSs7q7dgUlaxkhq
- fbXV6WmhThGXRlRG6qubiyYsVFS24XI=
-X-Proofpoint-GUID: NXyhhLrDwVM7jr5wRuzLsiq7nykDZoIO
-X-Authority-Analysis: v=2.4 cv=cL3QdFeN c=1 sm=1 tr=0 ts=6a4f3093 cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
- a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=tNnYrs7vTIEjkU0joGkA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-ORIG-GUID: NXyhhLrDwVM7jr5wRuzLsiq7nykDZoIO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA0OCBTYWx0ZWRfX1PeemWssAMGx
- /TlBSBbRlPY9zT3me5u6Y4rhvGJ7w18q9KL5Qrb/tv/0sb8P2sIo/uOHIQEKXPjaKOXgPGHOWmV
- aLmxklKfnl4bz1V2jztkyJ49rkhU9Yoi25Au+nJ3jckIThwU6flREzaCQxi54/Z8KTwmI4C7OCu
- B3cCTPpRW/ttl8Gqh9okFDs0r+L/cJkOAiw29LYW2LyyD/UPLCuWCxLQh4gq5TADm2+a0Dv6p6d
- Rr7jlFpVX1CXXmkgLYMho1RRjwx4RCZXET+b447V2FlWcr+etfEF7VQwffGdqZYUSItFbQA9kKs
- KiGRSuLnD+mniHdTIr8B0beVtcfeJE+dsvcqXpL15a8eKLZR9AbZSvNs+/qzmXQB2lwGlSXMetH
- 4lHeWgsIGAnWWSEmtFKDN71oxRSP2YMAhGTfKf1sbmIEJ7On5HQM8n086olPjr1BeEi+xV88a3Y
- IWH2AeBB2YQakfFfkKw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-08_05,2026-07-08_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0 spamscore=0
- phishscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607090048
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0002256E:EE_|CYXPR12MB9443:EE_
+X-MS-Office365-Filtering-Correlation-Id: 198f682f-7581-4378-506d-08dedd8559ac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|23010399003|82310400026|36860700016|1800799024|921020|18002099003|3023799007|56012099006|11063799006|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	5xC5cKqPuqaQWJpoYK/3rvaEts0VWni7ZTTbQvl+HxMDmkxlZdF9IjgcoXKYUsTIlworSqfVSA/gQ4W93sCK097Py1ZvGofKCBAY2ASQDqp7w3NqIaK08vd/+JrlQSxX+QmN+inWqgzRL6uKG7UX3EBhmoauGe+ilD4usKMR9q85ev68McR/y/K9JzHKBGaBkxN90vB7R2eXRe7o8VFcpW02YH5zR++teaDtlO8M0IDP7DTKby1KbBtzGA5zXdUZRmmkE2emfWgVZrtWHiqKscxjTY048Nki1EBO8jvf/UHIbzqwrsq2AnBB6+wAGtWyupvO/MQR/EcCD9JdMN1K74pMihhpt4h/HEtyrkGRYvYYkXjG5FINwabZdzZGPLSywlyBgQhwvVpEVUo4Khfk55zbhz0dCikL95BP4W1fhfUAALDcIJUdsHzuvmmvySn9rV5AKhKqf0XQqKXw/PPIvklSaRlqZgVVuq0wqdaSX/7NaPShDz29nfycmeoe6vGPWTca/U2IWgGmFQMOdY6wlUcJRT0qxRg+s3J3pbja16QQFpnwBCVy22PtpASlqZUjzJTwIwSYa2GhaKoRyqggZWR0egrK9lAS5jegcbHpgSxWYfuJqC7pdpVDFsuQNWk/Wlmx4tOvlrt2ftvuagUKt5oAVPpznXnWy9YX/5VBp3bcyPDVQp81P+liw5u1EYMY/7nq3Ov9z8EJbESAg2GH7ufxYsfvfuDKxj4XmuScy/z7NFSY7M3QtYvAnTRLYO6g
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(82310400026)(36860700016)(1800799024)(921020)(18002099003)(3023799007)(56012099006)(11063799006)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	hRVhYJHT/oja90ipzB8zvOuNv/AS3GdVvI6F9dynMk3018e+guFROZbyyl5DYVAk0C59FMMRlv52tzYErhmpf6+McLiljGBNMIDqyNsWgh7ln0Wr/e4Eu2uV9sjHF13gc476OcgUqElwKZu4BCTr7SHJ27P24S1NG0W3yxKT7REjGANFgXMVkBBcAUQNMawBTjDMGvhImvVLZNgvRn7rNnUHL5EsLdH4xQ7+fB509DfigS4PIrxd9YN/1ej1ZXdNUP01PJK5L+aFGXmRuPQo7q09Ld9XqDschjBy9Yre6jkL7iYEKFzIH4a5qwHbUhIhlcwLfmxcKYG4hqGEXuCyS4r2UUIzJ/DWhoAO5qbi7q5pDKw2XB9FLEQAEFESmroCcmea7h4FMnmvHEI6Wu+2dpzFb1dqpqKONe/9O2zuq+4VKLEaHsil78/lNnnCTyjv
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 06:43:13.7597
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 198f682f-7581-4378-506d-08dedd8559ac
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0002256E.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9443
 
+This patch series introduces support for the AMD I3C master controller,
+including the device tree binding and driver implementation.
+---
+Changes for V10:
+clk config: reject timing values exceeding the 18-bit registers (-EINVAL)
+instead of silently masking.
+Direct CCC read: clamp length to min(rx_actual, payload.len).
+Private transfers: report err/actual_len only for issued commands.
+Handle response code 5 (early T-bit read termination) as a short read;
+added xi3c_cmd.rx_actual and XI3C_RESP_BYTES_MASK.
+Report actual_len as min(rx_actual, len) for private reads.
+Allow zero-length transfers with a NULL buffer.
+DAA: move PID scratch buffer off-stack to kcalloc().
+DAA: drop i3c_master_add_i3c_dev_locked() return check.
+DAA: replace __free(kfree) with explicit kfree() at a single out: label.
+DAA: on max devices / no free address, warn and break so already
+enumerated devices are kept.
+Document timing constants (MIPI I3C v1.1.1, AMD PG439); fix OD/tCAS
+constants to ns and XI3C_MAX_DEVS to 128.
+Replace udelay() with fsleep() in FIFO reset.
+Use kzalloc_flex() and kmalloc_objs().
+Replace min_t() with min() in RX-FIFO drain.
+Trim verbose comments and drop two MODULE_AUTHOR lines.
+Use symbolic interrupt macros (GIC_SPI / IRQ_TYPE_LEVEL_HIGH) in the
+binding example and include arm-gic.h.
+Added Shubham Patil as Co-developed-by / Signed-off-by on the binding.
+Trimmed verbose comments and dropped redundant MODULE_AUTHOR lines.
 
+Changes for V9:
+Drop big-endian MMIO infra patches; do BE FIFO access locally with
+ioread32be()/iowrite32be() (self-contained, no internals.h).
+Replace async completion/queue with a synchronous path under the mutex.
+Rework response handling: add enum i3c_error_code, return -ENODEV/-EIO,
+set err M2/M0, and propagate err to CCC and private transfers.
+Switch .priv_xfers to .i3c_xfers; reject non-SDR modes (-EOPNOTSUPP).
+Rework DAA: incremental addressing, bounded count (-ENOSPC),
+end-of-enumeration via -ENODEV, zeroed PID buffers.
+Sleep with usleep_range() in FIFO loops instead of busy-spinning.
+Use FIELD_PREP() with named masks; convert accessor macros to inlines.
+Split the timeout macro into XI3C_RESP_TIMEOUT_US and XI3C_XFER_TIMEOUT_MS;
+add XI3C_POLL_INTERVAL_US.
+xi3c_clk_cfg(): use NSEC_PER_SEC and named constants, guard underflow,
+handle I3C_BUS_MODE_MIXED_SLOW.
+Drop ENTHDR (SDR-only); dispatch CCCs via the I3C_CCC_DIRECT bit.
+Use const TX buffers and parity8() for the DAA parity bit.
+Update MODULE_DESCRIPTION, copyright, and Kconfig to AMD_AXI_I3C_MASTER;
+fix the MAINTAINERS entry.
 
-On 7/8/2026 7:55 PM, Dmitry Baryshkov wrote:
-> On Tue, Jul 07, 2026 at 03:55:13PM +0530, Gaurav Kohli wrote:
->>
->>
->> On 7/7/2026 1:04 AM, Dmitry Baryshkov wrote:
->>> On Mon, Jul 06, 2026 at 08:11:35PM +0200, Daniel Lezcano wrote:
->>>> On 7/6/26 19:47, Dmitry Baryshkov wrote:
->>>>> On Mon, Jul 06, 2026 at 07:03:18PM +0200, Daniel Lezcano wrote:
->>>>>> On 7/3/26 17:42, Dmitry Baryshkov wrote:
->>>>>>> On Fri, Jul 03, 2026 at 07:43:39PM +0530, Gaurav Kohli wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 7/3/2026 1:23 PM, Konrad Dybcio wrote:
->>>>>>>>> On 7/3/26 7:03 AM, Gaurav Kohli wrote:
->>>>>>>>>> Add Device Tree binding constants for Qualcomm Thermal Mitigation
->>>>>>>>>> Device (TMD) types used by remoteproc-backed thermal cooling devices.
->>>>>>>>>>
->>>>>>>>>> Qualcomm remote processors expose thermal mitigation endpoints
->>>>>>>>>> through QMI. These endpoints can be registered with the thermal
->>>>>>>>>> framework via the `#cooling-cells` property on the remoteproc node.
->>>>>>>>>>
->>>>>>>>>> The QMI TMD protocol identifies devices using string names (for example,
->>>>>>>>>> "pa", "modem", and "cdsp_sw"), while the DT cooling-device binding with
->>>>>>>>>> `#cooling-cells = <3>` requires numeric device id in the form:
->>>>>>>>>>
->>>>>>>>>>        <&phandle device_id min_state max_state>
->>>>>>>>>>
->>>>>>>>>> Define common TMD device index constants shared across currently
->>>>>>>>>> supported platforms. If a future target requires a different mapping,
->>>>>>>>>> additional target-specific constants can be introduced while preserving
->>>>>>>>>> existing DT ABI.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
->>>>
->>>> [ ... ]
->>>>
->>>>>>> Why are you using only those TMD devices?
->>>>>>>
->>>>>>>> More constants can be added as needed.
->>>>>>>
->>>>>>> Kodiak is one of the supported platforms.
->>>>>>
->>>>>> What would be the benefit of having more than thirteen cooling devices
->>>>>> declared in the thermal framework and having only a couple of them mapped in
->>>>>> a thermal zone ?
->>>>>>
->>>>>> I agree there are more TMDs but if they are unused for the moment, why do we
->>>>>> need to add them ? Can we do that incrementally ?
->>>>>
->>>>> That's what I am trying to understand: why the implementation uses only
->>>>> the selected two devices, if the modem on Kodiak supports others. How
->>>>> can we find out, which TMDs to use on other devices.
->>>>
->>>> My understanding is that is an initial thermal setup. Gaurav will add them
->>>> step by step while setting up all the thermal zones instead of sending a big
->>>> patchset. And TBH, that will be much easier to review.
->>>
->>> In such a case it should be noted in the commit message and/or cover
->>> letter.
->>
->> Thanks for the review/guidance. Not all TMD endpoints are relevant for
->> kernel thermal zone binding — some like BCL and cold temperature are handled
->> from userspace when needed. The constants here cover only
-> 
-> What if there is no userspace? Or the userspace is different from what
-> you expect? I doubt we have TMD-speaking userspace yet.
+Changes for V8:
+Included dependent patch "i3c: fix big-endian FIFO transfers"
+to this series as [3/5].
+Resolved conflicts with "i3c: fix big-endian FIFO transfers".
+Updated description.
+Used time_left instead of timeout.
+Used __free(kfree) for xfer to simplify err path in multiple places.
 
-Thanks for mail, The TMD userspace implementation is available upstream 
-at https://github.com/qualcomm/qmi-framework.
+Changes for V7:
+Added i3c controller version details to commit description.
+Added Reviewed-by tag to binding patch [1/4].
+Added big-endian MMIO accessors [2/4].
+Added endianness support for i3c_readl_fifo() and i3c_writel_fifo() [3/4].
+Updated timeout macro name.
+Updated xi3c_master_wr_to_tx_fifo() and xi3c_master_rd_from_rx_fifo()
+to use i3c_writel_fifo() and i3c_readl_fifo().
 
-> 
->> what is needed for modem and CDSP thermal zones on the currently posted
->> targets.
-> 
-> Again, SLPI, ADSP?
+Changes for V6:
+Corrected the $id in the YAML file to match the filename and fix
+the dtschema warning.
+Removed typecast for xi3c_getrevisionnumber(), xi3c_wrfifolevel(),
+and xi3c_rdfifolevel().
+Replaced dynamic allocation with a static variable for pid_bcr_dcr.
+Fixed sparse warning in do_daa by typecasting the address parity value
+to u8.
+Fixed sparse warning in xi3c_master_bus_init by typecasting the pid value
+to u64 in info.pid calculation.
 
-Sorry, I should have said "generic subsystems" rather than listing 
-specific ones. SLPI and ADSP do not require active thermal mitigation on 
-these platforms.
+Changes for V5:
+Renamed the xlnx,axi-i3c.yaml file into xlnx,axi-i3c-1.0.yaml.
+Used GENMASK_ULL for PID mask as it's 64bit mask.
 
-> 
->>
->> Will add a note in the cover letter clarifying for current tmd's.
->> Please let me if this is fine.
->>
->>>
->>>
->>
-> 
+Changes for V4:
+Added h/w documentation details.
+Updated timeout macros.
+Removed type casting for xi3c_is_resp_available() macro.
+Used ioread32() and iowrite32() instead of readl() and writel()
+to keep consistency.
+Read XI3C_RESET_OFFSET reg before udelay().
+Removed xi3c_master_free_xfer() and directly used kfree().
+Skipped checking return value of i3c_master_add_i3c_dev_locked().
+Used devm_mutex_init() instead of mutex_init().
+
+Changes for V3:
+Updated commit description.
+Corrected the order of properties and removed resets property.
+Added compatible to required list.
+Added interrupts to example.
+Resolved merge conflicts.
+
+Changes for V2:
+Updated commit subject and description.
+Moved allOf to after required.
+Removed xlnx,num-targets property.
+Added mixed mode support with clock configuration.
+Converted smaller functions into inline functions.
+Used FIELD_GET() in xi3c_get_response().
+Updated xi3c_master_rd_from_rx_fifo() to use cmd->rx_buf.
+Used parity8() for address parity calculation.
+Added guards for locks.
+Dropped num_targets and updated xi3c_master_do_daa().
+Used __free(kfree) in xi3c_master_send_bdcast_ccc_cmd().
+Dropped PM runtime support.
+Updated xi3c_master_read() and xi3c_master_write() with
+xi3c_is_resp_available() check.
+Created separate functions: xi3c_master_init() and xi3c_master_reinit().
+Used xi3c_master_init() in bus initialization and xi3c_master_reinit()
+in error paths.
+Added DAA structure to xi3c_master structure.
+---
+Manikanta Guntupalli (2):
+  dt-bindings: i3c: Add AMD I3C master controller support
+  i3c: master: Add driver for AMD AXI I3C master controller
+
+ .../bindings/i3c/xlnx,axi-i3c-1.0.yaml        |   58 +
+ MAINTAINERS                                   |    8 +
+ drivers/i3c/master/Kconfig                    |   15 +
+ drivers/i3c/master/Makefile                   |    1 +
+ drivers/i3c/master/amd-i3c-master.c           | 1124 +++++++++++++++++
+ 5 files changed, 1206 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml
+ create mode 100644 drivers/i3c/master/amd-i3c-master.c
+
+-- 
+2.49.1
 
