@@ -1,40 +1,38 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66EC40F8D6;
-	Fri, 10 Jul 2026 11:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556E34192EA;
+	Fri, 10 Jul 2026 11:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783682188; cv=none; b=usNOErwA8oBJZlIcFV5Yyl2wuDBfP2UazKOWzzP+NUCVqsfMRwaX//ck2PUe5pm6BU98JC0AAY9UTuvcTQxaAsR6MuXS8EP8uiEzxfMlP/3hRO/QqvenqUl8cyOAPf0DbV8WorHP5BOcvQcOwsOK9yCv0ZkgJp/oBxp0CEj2rOI=
+	t=1783682460; cv=none; b=fXWY+zv2oVXTxaSOZbPNE71teoAUS8cbJ+sDPw1t6qj7ZlKpqTJMwVWpb/72cdLUakeYOXVczLcs7J17RF9GSS6SHgtSdo5ofoNWCcZ10Lf3nMqniPC7TRlw6w5RkBULYMjC2GUCmQ531CWgIHvCS2yBwHA3u+pmfQEj7ZlXQfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783682188; c=relaxed/simple;
-	bh=3aaGkxuWYeIHEXxQ7jK2xLPaTuF44GG9raRCIo26jOg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CHOMNJhgRIsNazzVCXaG4MW22BOqSEulGg4+SPnNj0Wg+tl75qflqIgy9P/jY0ip2HOZpWrn9I2u8p5CpJrpgHxRbhWpXDFT+W7c/cxBKzkix8XKxPdT3+XEuDYmCpHTy3lTVeNfAElcmpSbMXXvJqjtCEhzou0z2udVzf8vs68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=WFCDYw6U reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1783682460; c=relaxed/simple;
+	bh=ntHGY55JFXOVuGQaVUZ34CsGt/7YAIh1ZUBbVWP3CsQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KEvYqcd8KK2NUmpg4Tqsguwg9QXiQotV0B7GrRUT/XToqhO4v/R8fsuoZt2JKD559KnH6btbbWdntKgTUAqyJXTfNlOHRKJVBqtTge7YpgQ/RWmDkau6VP/P/5yh4s1njHbNUjdk6Hlejgpgc71zN2pAsCpa2J8XBWnDKJbAvxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWaIVFJm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="WFCDYw6U"
-Received: from h183.csg.ci.i.u-tokyo.ac.jp (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 66ABEvsE024946
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 10 Jul 2026 20:15:09 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=KGB+NKL0JfhCiL8lQAxj2/85FwyywY4aNanasRFKkk8=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-Id:To:Subject:Date;
-        s=rs20250326; t=1783682109; v=1;
-        b=WFCDYw6UwvD01zELlgqWWQoilYBDJd876u90Q9LWxE0DzNG/4H/ncS1wa4ByRtD7
-         42qpGj0Oi6BB3NOcHNO+Biwcksblt/HN1jBHyv1gVI9wtVMA34nNKKo5oN+C1Wgx
-         IXhAgM1jqUFHq+EBt8IKQE7R3xKru10jMPx8zyW2HT167rD5pNfU87hFhcyT4xph
-         dQOqSiS/96vwp7N58zdhknJgZyK/uQD0N9edcBI8s+ow0cGy4GAjVElIkgvzDaWW
-         Dz8kexKiVA5XoT81MtnakTmS+lPVG8b7kvXm4YQ6/A+9qyLbnyGRp/iOr/tvWlIg
-         LATdvOWMJZkc7xlkeUGuQQ==
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Subject: [PATCH v8 00/11] KVM: arm64: PMU: Use multiple host PMUs
-Date: Fri, 10 Jul 2026 20:14:54 +0900
-Message-Id: <20260710-hybrid-v8-0-621409f3a592@rsg.ci.i.u-tokyo.ac.jp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWaIVFJm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 78D82C2BD04;
+	Fri, 10 Jul 2026 11:20:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1783682458;
+	bh=ntHGY55JFXOVuGQaVUZ34CsGt/7YAIh1ZUBbVWP3CsQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=YWaIVFJmtghM4jlNTfd7qG3GUI4aef7xoRbh0+7Y7uRrW2fXefoZNxXYqmiqSg0cF
+	 xGu2zgJNv82tpY9FzevENb13x238gp54D1rYA30KBtxSOay7M9k8W7+KcWIvkEK0kE
+	 DLWo1u/qhgvSuGzWOLUqAra53MAmMHzqOoWVoK4IlJf007OT+eZU65df08/9SJUgxU
+	 RPJZPD+GhKL9PeBaB6Qq3yarnGTnjLmdj4VvLZ0XQXT3QBcVFlZKHuFJRhKoL+4kR0
+	 0e3YEgftlGbUaMC8gqBKgYMJ5ZjTzxd9EvCNLclGhQ0qAmDdaw2VJ/GwGhMFa1sdc9
+	 wz4M5kw04Z2QQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6689AC43458;
+	Fri, 10 Jul 2026 11:20:58 +0000 (UTC)
+From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Date: Fri, 10 Jul 2026 12:20:48 +0100
+Subject: [PATCH v7 4/7] iio: dac: ad5686: implement new sync() op for the
+ spi bus
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,164 +41,314 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/33Ry27CMBAF0F9BWdeRHxM/WPEfVRe2ZwxuBaFJi
- IgQ/14TRGBTltfyHF+NL1VPXaa+Wq8uVUdj7nN7KMF+rKq484ctsYwlV5LLhksJbDeFLiPjApu
- UwBCirMrlY0cpn2fo8+ueO/o9FW+4H1bB98Riu9/nYb0SRNKgj4EajICUwArjAK1zqE3gCI3h3
- EF1s3a5H9pumjuOYsbmOkq4R51RMMEAhUcvOBnebNBPh3yuy4OzMcrnnOV6mZOMM6618BSVTzZ
- uun5bx1zn+sSG9mdqax/r7+PdUA9Dl1U0i6GKAZpsIim5tfytAU9DCbMYUIyAWoaIYDXAW6N5G
- iDEYjQ3g4MKgC6Bo7eGfjXUYuhikHFoNE8mifDWMK+GXQxTDBmSch7LH4b0r3G9Xv8AO8RVVIE
- CAAA=
-X-Change-ID: 20250224-hybrid-01d5ff47edd2
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-X-Mailer: b4 0.16-dev-925f5
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6022;
- i=odaki@rsg.ci.i.u-tokyo.ac.jp; h=from:subject:message-id;
- bh=3aaGkxuWYeIHEXxQ7jK2xLPaTuF44GG9raRCIo26jOg=;
- b=kA0DAAoWKJ19aUZYEjEByyZiAGpQ1DOjADdd99DcVYORyjtI+t88DTfQUdvgMtOperExO9rXD
- Yh1BAAWCgAdFiEEZHK7CyhbffJxYF+EKJ19aUZYEjEFAmpQ1DMACgkQKJ19aUZYEjEN2gEA+2De
- 2VjJrhKOkt/4XcDubhTXeZN+3XmBBa+PbVtQr24A/iFHmD5h9H3xKCIWyNP1J6+prxFIAzFdp8E
- oR9TdNfMA
-X-Developer-Key: i=odaki@rsg.ci.i.u-tokyo.ac.jp; a=openpgp;
- fpr=AEDC03C9AF734F2EC26A7BFFA4BAEAA73536753C
+Message-Id: <20260710-ad5686-new-features-v7-4-1bcc8c280e4d@analog.com>
+References: <20260710-ad5686-new-features-v7-0-1bcc8c280e4d@analog.com>
+In-Reply-To: <20260710-ad5686-new-features-v7-0-1bcc8c280e4d@analog.com>
+To: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Rodrigo Alencar <rodrigo.alencar@analog.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783682457; l=9034;
+ i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
+ bh=97qIi6+LeMKQRfC0Ku/wZdiBRB5IRSJ+Abel0ki2gI4=;
+ b=BHVoXDgE1BLb2xRaUD0aOOj4zUuENpIUOiCkTOvwS3bsDeBYObNOXMMXvQoUhJJuB8enSNHEp
+ vbxcR1fW981AWjmaUWLAtUMleyRExm6JyTA4gFxBJIuhCQ6+Zw3v05T
+X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
+ pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
+X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
+ with auth_id=561
+X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Reply-To: rodrigo.alencar@analog.com
 
-On a heterogeneous arm64 system, KVM's PMU emulation is based on the
-features of a single host PMU instance. When a vCPU is migrated to a
-pCPU with an incompatible PMU, counters such as PMCCNTR_EL0 stop
-incrementing.
+From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Although this behavior is permitted by the architecture, Windows does
-not handle it gracefully and may crash with a division-by-zero error.
+Use of local SPI bus data to manage a collection of SPI transfers and
+flush them to the SPI platform driver with the sync() operation. This
+allows for faster handling of multiple channel DAC writes, avoiding kernel
+overhead per spi_sync() call, which will be helpful when enabling
+triggered buffer support.
 
-The current workaround requires VMMs to pin vCPUs to a set of pCPUs
-that share a compatible PMU. This is difficult to implement correctly in
-QEMU/libvirt, where pinning occurs after vCPU initialization, and it
-also restricts the guest to a subset of available pCPUs.
-
-This patch introduces the KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
-attribute. If set, PMUv3 will be emulated without programmable event
-counters. KVM will be able to run VCPUs on any physical CPUs with a
-compatible hardware PMU.
-
-This allows Windows guests to run reliably on heterogeneous systems
-without crashing, even without vCPU pinning, and enables VMMs to
-schedule vCPUs across all available pCPUs, making full use of the host
-hardware.
-
-A QEMU patch that demonstrates the usage of the new attribute is
-available at:
-https://lore.kernel.org/qemu-devel/20260706-kvm-v4-1-089cac8c25c3@rsg.ci.i.u-tokyo.ac.jp/
-("[PATCH RFC v4] target/arm/kvm: Choose PMU backend")
-
-Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
-Changes in v8:
-- Added patch
-  "KVM: arm64: Disallow vPMU when pPMUs do not cover all CPUs".
-- Split patch "KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY".
-- Documented the FEAT_PMUv3_ICNTR support plan.
-- Ensured KVM_ARM_VCPU_PMU_V3_FILTER and
-  KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY are mutually exclusive.
-- Ensured KVM_ARM_VCPU_PMU_V3_SET_PMU and
-  KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY are mutually exclusive.
-- Dropped the code to support KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS for
-  KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY.
-- Added a function to de-duplicate
-  "test_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, ...)".
-- Link to v7: https://lore.kernel.org/r/20260418-hybrid-v7-0-2bf39ad009bf@rsg.ci.i.u-tokyo.ac.jp
+ drivers/iio/dac/ad5686-spi.c | 129 ++++++++++++++++++++++++++++++++-----------
+ drivers/iio/dac/ad5686.c     |   4 +-
+ drivers/iio/dac/ad5686.h     |   8 ++-
+ drivers/iio/dac/ad5696-i2c.c |   2 +-
+ 4 files changed, 108 insertions(+), 35 deletions(-)
 
-Changes in v7:
-- Fixed the vCPU run hang in test_fixed_counters_only().
-- Link to v6: https://lore.kernel.org/r/20260413-hybrid-v6-0-e79d760f7f1b@rsg.ci.i.u-tokyo.ac.jp
+diff --git a/drivers/iio/dac/ad5686-spi.c b/drivers/iio/dac/ad5686-spi.c
+index d3b64b4361d5..ae74a17ba48e 100644
+--- a/drivers/iio/dac/ad5686-spi.c
++++ b/drivers/iio/dac/ad5686-spi.c
+@@ -13,59 +13,95 @@
+ #include <linux/errno.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
++#include <linux/overflow.h>
+ #include <linux/spi/spi.h>
+ 
+ #include <asm/byteorder.h>
+ 
+ #include "ad5686.h"
+ 
++/**
++ * struct ad5686_spi_data - SPI bus specific data
++ * @msg: SPI message used for transfers
++ * @size: number of transfers currently in the message
++ * @capacity: maximum number of transfers that can be added to the message
++ * @xfers: array of SPI transfers, allocated with the provided capacity
++ */
++struct ad5686_spi_data {
++	struct spi_message msg;
++	unsigned int size;
++	unsigned int capacity;
++	struct spi_transfer xfers[] __counted_by(capacity);
++};
++
+ static int ad5686_spi_write(struct ad5686_state *st,
+ 			    u8 cmd, u8 addr, u16 val)
+ {
+-	struct spi_device *spi = to_spi_device(st->dev);
+-	u8 tx_len, *buf;
++	struct ad5686_spi_data *bus_data = st->bus_data;
++	struct spi_transfer *xfer;
+ 
++	if (bus_data->size >= bus_data->capacity)
++		return -E2BIG;
++
++	if (bus_data->size)
++		bus_data->xfers[bus_data->size - 1].cs_change = 1;
++	else
++		spi_message_init(&bus_data->msg);
++
++	xfer = &bus_data->xfers[bus_data->size];
+ 	switch (st->chip_info->regmap_type) {
+ 	case AD5310_REGMAP:
+-		st->data[0].d16 = cpu_to_be16(FIELD_PREP(AD5310_CMD_MSK, cmd) |
+-					      FIELD_PREP(AD5310_DATA_MSK, val));
+-		buf = &st->data[0].d8[0];
+-		tx_len = 2;
++		st->data[bus_data->size].d16 =
++			cpu_to_be16(FIELD_PREP(AD5310_CMD_MSK, cmd) |
++				    FIELD_PREP(AD5310_DATA_MSK, val));
++		*xfer = (struct spi_transfer) {
++			.tx_buf = &st->data[bus_data->size].d16,
++			.len = sizeof(st->data[bus_data->size].d16),
++		};
+ 		break;
+ 	case AD5683_REGMAP:
+-		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+-					      FIELD_PREP(AD5683_DATA_MSK, val));
+-		buf = &st->data[0].d8[1];
+-		tx_len = 3;
++		st->data[bus_data->size].d32 =
++			cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
++				    FIELD_PREP(AD5683_DATA_MSK, val));
++		*xfer = (struct spi_transfer) {
++			.tx_buf = &st->data[bus_data->size].d8[1],
++			.len = sizeof(st->data[bus_data->size].d8) - 1,
++		};
+ 		break;
+ 	case AD5686_REGMAP:
+-		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+-					      FIELD_PREP(AD5686_ADDR_MSK, addr) |
+-					      FIELD_PREP(AD5686_DATA_MSK, val));
+-		buf = &st->data[0].d8[1];
+-		tx_len = 3;
++		st->data[bus_data->size].d32 =
++			cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
++				    FIELD_PREP(AD5686_ADDR_MSK, addr) |
++				    FIELD_PREP(AD5686_DATA_MSK, val));
++		*xfer = (struct spi_transfer) {
++			.tx_buf = &st->data[bus_data->size].d8[1],
++			.len = sizeof(st->data[bus_data->size].d8) - 1,
++		};
+ 		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+ 
+-	return spi_write(spi, buf, tx_len);
++	spi_message_add_tail(xfer, &bus_data->msg);
++	bus_data->size++;
++
++	return 0;
++}
++
++static int ad5686_spi_sync(struct ad5686_state *st)
++{
++	struct spi_device *spi = to_spi_device(st->dev);
++	struct ad5686_spi_data *bus_data = st->bus_data;
++
++	bus_data->size = 0; /* always reset, even on sync failure */
++	return spi_sync(spi, &bus_data->msg);
+ }
+ 
+ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+ {
+-	struct spi_transfer t[] = {
+-		{
+-			.tx_buf = &st->data[0].d8[1],
+-			.len = 3,
+-			.cs_change = 1,
+-		}, {
+-			.tx_buf = &st->data[1].d8[1],
+-			.rx_buf = &st->data[2].d8[1],
+-			.len = 3,
+-		},
+-	};
+ 	struct spi_device *spi = to_spi_device(st->dev);
++	struct ad5686_spi_data *bus_data = st->bus_data;
++	struct spi_transfer *xfer = &bus_data->xfers[0];
+ 	u8 cmd = 0;
+ 	int ret;
+ 
+@@ -86,8 +122,21 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+ 				      FIELD_PREP(AD5686_ADDR_MSK, addr));
+ 	st->data[1].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, AD5686_CMD_NOOP));
+ 
+-	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
+-	if (ret < 0)
++	xfer[0] = (struct spi_transfer) {
++		.tx_buf = &st->data[0].d8[1],
++		.len = sizeof(st->data[0].d8) - 1,
++		.cs_change = 1,
++	};
++	xfer[1] = (struct spi_transfer) {
++		.tx_buf = &st->data[1].d8[1],
++		.rx_buf = &st->data[2].d8[1],
++		.len = sizeof(st->data[1].d8) - 1,
++	};
++
++	spi_message_init_with_transfers(&bus_data->msg, xfer, 2);
++
++	ret = spi_sync(spi, &bus_data->msg);
++	if (ret)
+ 		return ret;
+ 
+ 	return be32_to_cpu(st->data[2].d32);
+@@ -96,12 +145,30 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+ static const struct ad5686_bus_ops ad5686_spi_ops = {
+ 	.write = ad5686_spi_write,
+ 	.read = ad5686_spi_read,
++	.sync = ad5686_spi_sync,
+ };
+ 
+ static int ad5686_spi_probe(struct spi_device *spi)
+ {
+-	return ad5686_probe(&spi->dev, spi_get_device_match_data(spi),
+-			    spi->modalias, &ad5686_spi_ops);
++	const struct ad5686_chip_info *info;
++	struct ad5686_spi_data *bus_data;
++	struct device *dev = &spi->dev;
++	unsigned int capacity;
++
++	info = spi_get_device_match_data(spi);
++	if (!info)
++		return -ENODEV;
++
++	/* read operation requires at least 2 transfers */
++	capacity = max(info->num_channels, 2);
++	bus_data = devm_kzalloc(dev, struct_size(bus_data, xfers, capacity),
++				GFP_KERNEL);
++	if (!bus_data)
++		return -ENOMEM;
++
++	bus_data->capacity = capacity;
++
++	return ad5686_probe(dev, info, spi->modalias, &ad5686_spi_ops, bus_data);
+ }
+ 
+ static const struct spi_device_id ad5686_spi_id[] = {
+diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
+index 120dd095dd2e..316f9ccf54d9 100644
+--- a/drivers/iio/dac/ad5686.c
++++ b/drivers/iio/dac/ad5686.c
+@@ -472,7 +472,8 @@ EXPORT_SYMBOL_NS_GPL(ad5679r_chip_info, "IIO_AD5686");
+ 
+ int ad5686_probe(struct device *dev,
+ 		 const struct ad5686_chip_info *chip_info,
+-		 const char *name, const struct ad5686_bus_ops *ops)
++		 const char *name, const struct ad5686_bus_ops *ops,
++		 void *bus_data)
+ {
+ 	struct reset_control *rstc;
+ 	struct ad5686_state *st;
+@@ -487,6 +488,7 @@ int ad5686_probe(struct device *dev,
+ 
+ 	st->dev = dev;
+ 	st->ops = ops;
++	st->bus_data = bus_data;
+ 	st->chip_info = chip_info;
+ 
+ 	rstc = devm_reset_control_get_optional_exclusive(dev, NULL);
+diff --git a/drivers/iio/dac/ad5686.h b/drivers/iio/dac/ad5686.h
+index ae9aeda2d201..2c3d7d5b1d6b 100644
+--- a/drivers/iio/dac/ad5686.h
++++ b/drivers/iio/dac/ad5686.h
+@@ -25,6 +25,7 @@
+ 
+ #define AD5686_ADDR_DAC(chan)			(0x1 << (chan))
+ #define AD5686_ADDR_ALL_DAC			0xF
++#define AD5686_MAX_CHANNELS			16
+ 
+ #define AD5686_CMD_NOOP				0x0
+ #define AD5686_CMD_WRITE_INPUT_N		0x1
+@@ -132,6 +133,7 @@ extern const struct ad5686_chip_info ad5679r_chip_info;
+  * @use_internal_vref:	set to true if the internal reference voltage is used
+  * @lock:		lock to protect access to state fields, which includes
+  *			the data buffer during regmap ops
++ * @bus_data:		bus specific data
+  * @data:		transfer buffers
+  */
+ struct ad5686_state {
+@@ -144,6 +146,7 @@ struct ad5686_state {
+ 	unsigned int			pwr_down_mode;
+ 	bool				use_internal_vref;
+ 	struct mutex			lock;
++	void				*bus_data;
+ 
+ 	/*
+ 	 * DMA (thus cache coherency maintenance) may require the
+@@ -154,13 +157,14 @@ struct ad5686_state {
+ 		__be32 d32;
+ 		__be16 d16;
+ 		u8 d8[4];
+-	} data[3] __aligned(IIO_DMA_MINALIGN);
++	} data[AD5686_MAX_CHANNELS] __aligned(IIO_DMA_MINALIGN);
+ };
+ 
+ 
+ int ad5686_probe(struct device *dev,
+ 		 const struct ad5686_chip_info *chip_info,
+-		 const char *name, const struct ad5686_bus_ops *ops);
++		 const char *name, const struct ad5686_bus_ops *ops,
++		 void *bus_data);
+ 
+ static inline int ad5686_write(struct ad5686_state *st, u8 cmd, u8 addr, u16 val)
+ {
+diff --git a/drivers/iio/dac/ad5696-i2c.c b/drivers/iio/dac/ad5696-i2c.c
+index 73dcd2e6f51b..b122d8d938e4 100644
+--- a/drivers/iio/dac/ad5696-i2c.c
++++ b/drivers/iio/dac/ad5696-i2c.c
+@@ -71,7 +71,7 @@ static const struct ad5686_bus_ops ad5686_i2c_ops = {
+ static int ad5686_i2c_probe(struct i2c_client *i2c)
+ {
+ 	return ad5686_probe(&i2c->dev, i2c_get_match_data(i2c),
+-			    i2c->name, &ad5686_i2c_ops);
++			    i2c->name, &ad5686_i2c_ops, NULL);
+ }
+ 
+ static const struct i2c_device_id ad5686_i2c_id[] = {
 
-Changes in v6:
-- Removed WARN_ON_ONCE() in kvm_pmu_create_perf_event(). It can be
-  triggered in kvm_arch_vcpu_load() before it checks supported_cpus.
-- Removed an extra lockdep assertion in kvm_arm_pmu_v3_get_attr().
-- Fixed error messages in test_fixed_counters_only().
-- Fixed the vCPU run in test_fixed_counters_only().
-- Link to v5: https://lore.kernel.org/r/20260411-hybrid-v5-0-b043b4d9f49e@rsg.ci.i.u-tokyo.ac.jp
+-- 
+2.43.0
 
-Changes in v5:
-- Rebased.
-- Fixed the order to clear KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY in
-  kvm_arm_pmu_v3_set_pmu().
-- Fixed the setting of KVM_ARM_VCPU_PMU_V3_IRQ in
-  test_fixed_counters_only().
-- Changed to WARN_ON_ONCE() when kvm_pmu_probe_armpmu() returns NULL in
-  kvm_pmu_create_perf_event(), which is no longer supposed to happen.
-- Link to v4: https://lore.kernel.org/r/20260317-hybrid-v4-0-bd62bcd48644@rsg.ci.i.u-tokyo.ac.jp
-
-Changes in v4:
-- Extracted kvm_pmu_enabled_counter_mask() into a separate patch.
-- Added patch "KVM: arm64: PMU: Protect the list of PMUs with RCU".
-- Merged KVM_REQ_CREATE_PMU into KVM_REQ_RELOAD_PMU.
-- Added a check to avoid unnecessary KVM_REQ_RELOAD_PMU requests.
-- Dropped the change to avoid setting kvm_arm_set_default_pmu() when
-  KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY is not set.
-- Link to v3: https://lore.kernel.org/r/20260225-hybrid-v3-0-46e8fe220880@rsg.ci.i.u-tokyo.ac.jp
-
-Changes in v3:
-- Renamed the attribute to KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY.
-- Changed to request the creation of perf counters when loading vCPU.
-- Link to v2: https://lore.kernel.org/r/20250806-hybrid-v2-0-0661aec3af8c@rsg.ci.i.u-tokyo.ac.jp
-
-Changes in v2:
-- Added the KVM_ARM_VCPU_PMU_V3_COMPOSITION attribute to opt in the
-  feature.
-- Added code to handle overflow.
-- Link to v1: https://lore.kernel.org/r/20250319-hybrid-v1-1-4d1ada10e705@daynix.com
-
----
-Akihiko Odaki (10):
-      KVM: arm64: Serialize userspace MDCR_EL2 access
-      tools headers: Sync bitfield.h with the kernel
-      KVM: arm64: selftests: Cover PMU state in MDCR_EL2
-      arm64: errata: Require Apple IMPDEF PMUv3 traps on all CPUs
-      KVM: arm64: PMU: Protect the list of PMUs with RCU
-      KVM: arm64: PMU: Pass the pPMU to kvm_map_pmu_event()
-      KVM: arm64: PMU: Pass the target CPU to kvm_pmu_probe_armpmu()
-      KVM: arm64: PMU: Implement fixed-counters-only emulation
-      KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
-      KVM: arm64: selftests: Test PMU_V3_FIXED_COUNTERS_ONLY
-
-Oliver Upton (1):
-      KVM: arm64: Don't clear vcpu->cpu in kvm_arch_vcpu_put()
-
- Documentation/virt/kvm/devices/vcpu.rst            |  30 ++-
- arch/arm64/include/asm/kvm_host.h                  |   4 +
- arch/arm64/include/uapi/asm/kvm.h                  |   1 +
- arch/arm64/kernel/cpu_errata.c                     |   2 +-
- arch/arm64/kvm/arm.c                               |   3 +-
- arch/arm64/kvm/pmu-emul.c                          | 185 ++++++++++++-----
- arch/arm64/kvm/reset.c                             |  16 +-
- arch/arm64/kvm/sys_regs.c                          |  39 +++-
- include/kvm/arm_pmu.h                              |   2 +
- tools/include/linux/bitfield.h                     | 175 +++++++++++++---
- tools/include/linux/bitops.h                       |  19 ++
- tools/include/linux/compiler_types.h               |  13 ++
- tools/include/linux/typecheck.h                    |  34 +++
- .../selftests/kvm/arm64/vpmu_counter_access.c      | 229 ++++++++++++++++++---
- 14 files changed, 635 insertions(+), 117 deletions(-)
----
-base-commit: 1ee27dacbe5dc4def481794d899d67b0d4570094
-change-id: 20250224-hybrid-01d5ff47edd2
-
-Best regards,
---  
-Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 
