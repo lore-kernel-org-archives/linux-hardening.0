@@ -1,150 +1,252 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3415937AA8A;
-	Fri, 10 Jul 2026 18:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FA21624C5
+	for <linux-hardening@vger.kernel.org>; Fri, 10 Jul 2026 19:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783709902; cv=none; b=Aq5VE2aNvj39AzpyNo9qRlrqsp6vi+x4IkpnzQ0z31n0TNus2NBRf12q7G9Pm3IQRNbSwZbhaQFwy+8jnTSjpA+TtOEIy+HWvmsBN5TIhoiu8ATHHuhEKUEH9FNeBp/6xafITC0bnhIoyq6wl/bxQv/cDg81wnAU+AroLv2CTRc=
+	t=1783711191; cv=none; b=blHyHOa44Q1DDvG+D2eDROANHDLpV4GkssKlB8Jl4NC1q1jj2LB4FK6hDDJeQbWcjJnxOFmoUCrrPRDFz4sElhqZYBMCBANgmUEISgO6hJYZZBjoFr3BMgkYhK1ayLs5Fylh4OXcJqBwHBJ1ZsuqXLWChnPnggOD8rQhPh+V5L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783709902; c=relaxed/simple;
-	bh=DrPaq6heWDDdouFqQIykoOFCC9AQr7k0ptjRkxAthqQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hB9swNf7Nn1TAZyyL2pjbVWw29/06RkeGt70bnlHgTEuOVNawPTA/qxlYqfY+Donih16e1zhmlmJCtKRKyeu7Gu1FrVsILElHkrT4yc2GNM9f2oc9lTZCosqIDhfOIJw2XdMNpQu1+TSpcKFOIy29jrjZy6OE9mb01SEir5PAmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GkZNOBfY; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1783711191; c=relaxed/simple;
+	bh=MDuyKwOnI4c8UkUFug0giLAGO1E70cqFGeZjVC9YgZY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jgFBsrFD9mHHnZ6bU4aqGE2JEmSN15AbTpvhZaMGVTFLm5ixyVu9AQv7yKOZZ+TF1RIggh0wT0g+uB3ybEHABaOc/g7a9QFzPN5k4GsbaVkfE5QSbXGm08O9YqQYQIWeyUeR1G2hWm7guVnRwOTtXY1EM8MWn5/UKxVIod36AyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=bwAZe7UQ; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GkZNOBfY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783709901; x=1815245901;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DrPaq6heWDDdouFqQIykoOFCC9AQr7k0ptjRkxAthqQ=;
-  b=GkZNOBfYuOHdvPd/WHXm/skwi6FXiZPVs8/05Ofim8U2hAQQiIqnU+LL
-   ojp+NrexmnOYSBNJqjiH25jqV6eCF0/OsOfoz7UAquYHgMG9Jzljplkk7
-   YcgdLhcyRCS5zQ+EGY50vQsIsklBIhRjXUr6x2mKMYe11VvBlW8+f+/C1
-   rCnOiOmBANTHPSSWz9VHfJB5eCMHCZafNZZxQcPILhzPS0h4PVgQpCKRt
-   CDvekY8a4qPOfhb3Ln7E5aFhGZa1ktYriBmDYAliFId/WIdRFIAp1BjGG
-   DWYtMrH70zeOz0PP80F/oERkx5A5V9zDEEqdTSifoK1B5NwcYyc6AizzJ
-   g==;
-X-CSE-ConnectionGUID: uCn9SV6XT2yVuxJ6ZbweTQ==
-X-CSE-MsgGUID: vsIpeAJURxGC7EVNjMLELg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84266993"
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84266993"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 11:58:20 -0700
-X-CSE-ConnectionGUID: VeQ15drLQUOMPQogtYS6tQ==
-X-CSE-MsgGUID: YLvfyccNTkO1wszNS4m6OA==
-X-ExtLoop1: 1
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.111.199]) ([10.125.111.199])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 11:58:19 -0700
-Message-ID: <bfa239d3-2582-4669-8614-0a299491a744@intel.com>
-Date: Fri, 10 Jul 2026 11:58:18 -0700
+	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="bwAZe7UQ"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-ca957432c7fso972071a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Jul 2026 12:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=asu.edu; s=google; t=1783711188; x=1784315988; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=07skD6UBUnzDgRpfjlevYHiGMN3WuSNHUvliv5fl0GM=;
+        b=bwAZe7UQcrCpuzYmhRBeNRmfKKTRR9XrwufRREp5aNuocPtpoNUKxKQS9GCqNe7PD1
+         1D+vEclOFcZ+86WhR4M2tsKpLDrW8ptSzpVPZIr+fPWIMw6lL2uKpRdxxs7/Q5mLJyS/
+         dfXRwj07tjXUl5aDot7rTaJKlYJZpossn1Q1QZqj05mrbmIzWz0TDRPmgMmNzG3WfNFF
+         nFh1j1aNmQR8Gi19PYRatpIYrJ1FgDbqCvBpyM27vaTV5b345Xd1kq1l6/l94Y4oHWI9
+         qKaSiEXJJotkCN/BXj5D0eXxcWY9xjSHvNiBaDndwZ2UR+781Sx/4WfLcG4TdiM96AJ9
+         T81Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783711188; x=1784315988;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=07skD6UBUnzDgRpfjlevYHiGMN3WuSNHUvliv5fl0GM=;
+        b=jAYQjbUkazP+Ibxw3zx+o2VHdENw4TwKXfZuSLC8stxpNxSkV+2YI8RPBIfCvxatqI
+         l7s95JQU9/q82nr1i8gBWpRzkwhYjsXaQzSXh6VMbvugNhxW2RdZnbOtZMHz6b8iUbPB
+         yQuloapxfUtqHbya15HI0kIpE1MpE8zvD5naNnrLNtcjRKQpVzz07B6i4xOHmSuo1ad/
+         m/VsWW/MtGQShKATUGIHg4GzD3EMxKrHwagqw5pDJTe2dt7AmZn/DwovZfcDKZhGAmIm
+         UTLDRZARHS8jxNv+PB7F3KcHiMnpAHvX/lXfsyS4KTmTKTgzLcHFm6mkox7uhTl5r1mG
+         jf4g==
+X-Forwarded-Encrypted: i=1; AHgh+Rq2q5aV8trgZPdX5KzxxajWKoQ7jYfWcgNMogwAmqd4bCaTX4JuIWdm7SF4AS611pEVs6Auq5o5cwJ9cEOLF10=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKS4zEY2x6joX77H/rzZ3G19zdvByh7WkjgNigdDIT14gxuywR
+	VROBCL8KAirkQl4GDa5R03B1HEocQlEm2Ej7gNMVnTI1CsXe57l8XijjpX+2zIx07w==
+X-Gm-Gg: AfdE7cksTDiC4zhYeG0z9tZ4KLuZFVvNJGKU37ZEQZEl0XwLtmNhEtaux+9UbN1XFzc
+	TxgoaB6QdPN8P1KL59LVLTN1vkhD7/HUMvXFReWR9zG7mfGerLOowJMqLvuoagLJPPsfsOc6OT9
+	MQqiFFI9+L1BPkVIgFQ9rAa9tnJUZmBRF+155rwN7hNSi1xK+YZdBNV09X3oUednLmQnu1BT9VX
+	MfTdGhtKo1ZiPyPaH6aXsql0ew2UqwQwKdk5NH0+itvRPr3+e0g6uSXIMyyhwBy8BBi0N51IbyL
+	1uaTkHgaETWRl89dM8NyVPtkDtSWKtL4q2kKPOBtXJ6bwtga6WziF2n40KslaOlJ+X1maf9jqBI
+	m/gxek2dSmx2Pb05ZLiBNda0AfoDle5u0hlkfFpZ6kkebRig92rRg4j6tVKumZVsPOQlUxJu6vd
+	beTC33vopqGtW2x5GfvhB9J1lG6QQDZ81b8LIw1s3EzgwPbVtxENTix6ACo2NbcD5PfPGgCA==
+X-Received: by 2002:a05:6a20:d49a:b0:3bf:6c08:fba2 with SMTP id adf61e73a8af0-3c110ba295dmr342869637.54.1783711188004;
+        Fri, 10 Jul 2026 12:19:48 -0700 (PDT)
+Received: from rip.tailfedc6c.ts.net (149-169-99-5.nat.asu.edu. [149.169.99.5])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3118ee6091dsm41912582eec.14.2026.07.10.12.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2026 12:19:47 -0700 (PDT)
+From: Jennifer Miller <jmill@asu.edu>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	memxor@gmail.com,
+	kees@kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: jmill@asu.edu,
+	xmei5@asu.edu,
+	samitolvanen@google.com,
+	peterz@infradead.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH bpf-next v1 0/1] Enable BPF JIT hardening by default when x86_64 CFI is enabled
+Date: Fri, 10 Jul 2026 12:19:31 -0700
+Message-Id: <20260710191932.120911-1-jmill@asu.edu>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm/vmalloc: widen guard region to defeat ENTER-based
- stack pivot
-To: Xiang Mei <xmei5@asu.edu>, Peter Zijlstra <peterz@infradead.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner
- <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, linux-hardening@vger.kernel.org,
- Uladzislau Rezki <urezki@gmail.com>,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Jennifer Miller <jmill@asu.edu>,
- Tiffany Bao <tbao@asu.edu>, Ruoyu Wang <fishw@asu.edu>,
- Adam Doupe <doupe@asu.edu>, Kyle Zeng <zengyhkyle@asu.edu>,
- Yan Shoshitaishvili <yans@asu.edu>
-References: <20260629214712.1198680-1-xmei5@asu.edu>
- <d9775951-fe04-4d1f-b205-bd4626590f5e@intel.com>
- <20260701072747.GN48970@noisy.programming.kicks-ass.net>
- <20260701074834.GI49529@noisy.programming.kicks-ass.net>
- <8730D74D-6395-4FF4-B9F9-06AFABBF8CDE@zytor.com>
- <20260701083108.GD751831@noisy.programming.kicks-ass.net>
- <CAPpSM+SzqLSPt2q0KhkzB-WvphXGmby99QBJL7v_nq4kJGAYFA@mail.gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <CAPpSM+SzqLSPt2q0KhkzB-WvphXGmby99QBJL7v_nq4kJGAYFA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/1/26 14:04, Xiang Mei wrote:
-> Peter's explanation is correct: this technique makes CFH->ACE easier.
-> 
-> I think both ways can mitigate it, but I would like to hear your
-> (maintainers') idea of which one we should proceed:
-> 
-> 1. supervisor-ENTER-#UD + Peter's objtool check. Cleanest for ENTER,
-> but it needs a new bit from Intel/AMD, so future CPUs only.
-> 2. Kill the landing zone with a 0x11-page guard area.
+Hi all,
 
-Or:
+As part of some academic research we, Xiang (CC'd) and I, found three
+(closely-related) methods for bypassing different configurations of
+x86-64 CFI schemes (kCFI and FineIBT). The methods have some limitations
+which I will provide further details on in the rest of this mail.
+We previously reported this to security@k.o and were encouraged to have
+a public discussion about hardening against this, rather than dealing
+with it in private.
 
-3. Do nothing. Normal kernel IBT is good enough.
+In short, the cBPF JIT code can contain controlled 32-bit immediates
+which can be used to partially or fully craft CFI hashes and endbr64
+instructions to bypass control flow integrity mitigations. To mitigate
+these bypasses we'd recommend enabling JIT Constant Blinding for
+unprivileged users by default (bpf_jit_harden=1) when CFI is enabled.
+I have included a potential patch that does this, I am not sure though
+if this change could somehow be more local to CFI related code, or if
+it'd be better to modify the function that controls whether JIT blinding
+is enabled (bpf_jit_blinding_enabled) rather than touching the sysctl's
+default value.
 
-The hardest part of #1 IMNHO is convincing people that we need "a new
-bit" *PLUS* the two CET technologies (indirect branch tracking and
-shadow stacks). If I were a hardware guy, I'd be complaining that those
-silly kernel developers aren't even doing supervisor shadow stacks, so
-maybe they should use what they have before we starting building new things.
+For some additional context, in the past few years misaligned
+instructions in the cBPF JIT region have become a somewhat common target
+for Control Flow Hijacking exploits because they provide constrained
+shellcode execution, a number of submissions to Google's KernelCTF
+program have used this approach[1-3]. There is randomization applied to
+start of the JIT code so it is probabilistic whether control flow is
+hijacked to the expected code, on a system where panic on oops is not
+enabled it is possible to retry until the attack succeeds.
 
-Also, I kinda gave you a route forward. I think someone can both make
-the vmalloc gaps more flexible, less hacky, simpler and cleaner. Then,
-once that has been done, it's dirt simple for any individual vmalloc
-user to have a custom-sized gap. Or, to have a universal, larger,
-tunable vmalloc gap.
+We have a PoC exploit for each method, where we took an existing exploit
+and demonstrated that we can get code execution from control flow
+hijacking on a kernel with CFI enabled, we can share more details about
+those about if desired.
 
-Get that series put together and I'm open to an 0x11-page gap that x86
-pokes in to place in some way.
+There are three methods, each under different configurations:
+1. Full Hash Forgery
+    - Bypasses kCFI, kernel versions >= 6.2
+2. Endbr64 Forgery + Pivot
+    - Bypasses FineIBT
+3. Opcode Collision Forgery
+    - Bypasses kCFI, for kernel versions < 6.2
+
+
+1. Full Hash Forgery
+
+This method applies when CONFIG_CFI=y and CONFIG_FINEIBT=n or when
+CONFIG_FINEIBT=y but kCFI is being used, either as a fallback (AMD) or
+forced via `cfi=kcfi` on the kernel cmdline. However, if
+CONFIG_FINEIBT=y then a leak of a kCFI hash or the random value that is
+xored with the hashes to randomize them (via an arbitrary read or
+otherwise) is necessary for this to work.
+
+CFI hashes are four bytes long and it is only possible to forge at most
+four consecutive bytes in JIT code using 32-bit immediates. When
+CONFIG_FINEIBT=y, the hash is stored at [dest-0xf] (offset depends on
+function alignment config but -0xf is where it is at by default) where
+'dest' is the target of indirect control flow. If the target hash is
+0x21524111 when kCFI is in use, then the negation of the hash is must
+be forged in the immediate (-0x21524111 == 0xdeadbeef).
+
+insn0 = {.code = BPF_LD + BPF_K, .k = 0xdeadbeef}; // hash
+insn1 = {.code = BPF_LD + BPF_K, .k = 0xcafeb0ba}; // filler
+insn2 = {.code = BPF_LD + BPF_K, .k = 0xcafeb0ba}; // filler
+insn3 = {.code = BPF_LD + BPF_K, .k = 0xc3d42948}; // code
+
+Produces:
+mov eax, 0xdeadbeef
+mov eax, 0xcafeb0ba
+mov eax, 0xcafeb0ba
+mov eax, 0xc3d42948
+
+At the kCFI protected callsite:
+[dest-0xf] == 0xdeadbeef (hash check succeeds)
+[dest] == 0xc3d42948 == `sub rsp, rdx; ret;` (pivots the stack)
+
+
+2. Endbr64 Forgery + Pivot
+
+This method applies when CONFIG_FINEIBT=y and FineIBT is used at
+run-time. An endbr64 instruction can be crafted in  a 32-bit JIT
+immediate and the aligned instructions that follow will be executed
+afterwards. This method is *highly* constrained in which callsites can
+be used, we have only found one viable callsite so far. If FineIBT
+paranoid is enabled, which is true by default for existing Intel CPUs
+but not for future CPUs with support for FRED, then a leak of a kCFI
+hash is required.
+
+Since the kernel uses rbp as a general purpose register when frame
+pointers are omitted it is possible to find call-sites where rbp points
+to a heap chunk. BPF JIT code ends in a `leave; ret` sequence, so if rbp
+points to the heap then after executing this sequence the heap pointer
+will become our new stack when returning from the JIT code, achieving a
+stack pivot to the heap. Not only does it need to point to a heap chunk
+but [rbp+0x8] must be controlled for the stack pivot to be useful (there
+needs to be at least one ROP gadget there to a longer ROP chain
+elsewhere in memory). As previously mentioned, we have only found one
+case of a call-site where this is possible. Enumerating all call-sites
+where this is possible is non-trivial, so we are still unsure of how many
+there actually are.
+
+
+3. Opcode Collision Forgery
+
+This method only really applies when CONFIG_CFI_CLANG=y on kernels with
+support for kCFI before FineIBT was merged (pre 6.2). More recent
+kernels default to placing padding after the CFI hash rather than before
+it. Without FineIBT, CFI hashes are not randomized on boot so a leak is
+not necessary.
+
+Prior to 6.2 the padding for CFI stubs was hardcoded to be before the
+hash, making it more difficult to forge a full hash in an unaligned JIT
+instruction while maintaining control flow hijacking. Using the full
+four bytes of a 32-bit immediate to forge a hash would result in aligned
+instructions after the hash being executed and would likely result in a
+fault when the JIT code tries to return. To maintain code execution
+avoid using all four-bytes of the immediate and instead reserve a few
+bytes following the hash to craft a jump instruction to the next 4 byte
+immediate and continue with the limited shellcode execution in unaligned
+instructions. Not crafting all four bytes of the hash in the 32-bit
+immediate means that an "opcode-collision" is necessary to craft the
+full hash, which looks something like this:
+
+insn0 = {.code = BPF_LD + BPF_K, .k = 0x7fdb0000}; // hash part 1
+insn1 = {.code = BPF_LD + BPF_K, .k = 0x9002eb1a}; // hash part 2 + insn
+
+Produces:
+mov eax, 0x7fdb0000
+mov eax, 0x9002eb1a
+
+Combined:
+b8 00 00 [db 7f b8 1a] eb 02 90
+
+At the kCFI protected callsite:
+[dest-0x4] == 0x1ab87fdb (hash check succeeds)
+[dest] == 0x02eb == `jmp .+4` (continue control flow hijacking)
+
+Since 0xb8 is the opcode byte for the `mov eax` instruction, it is
+possible to forge a kCFI hash such as 0x1ab87fdb using two instructions
+in the JIT region and still retain limited shellcode execution through
+code stored in 32-bit immediates.
+
+There are a number of instructions that take 32-bit immediates that can
+be generated in cBPF JIT (e.g., or, xor, and, sub, add, etc...), with
+various opcode bytes which can collide with a CFI hash. Xiang enumerated
+these instructions and did an analysis to see how many hashes could be
+bypassed with this method on a 6.1 LTS kernel (pre-FineIBT so no CFI
+hash rerandomization yet, compiled with the KernelCTF config plus the
+configs necessary for kCFI), and found that approx 14% of the hashes
+were able to be crafted via an opcode collision in the JIT code.
+
+
+~Jennifer
+
+[1] https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2023-3609_cos_mitigation/docs/exploit.md#spray-ebpf-programs
+[2] https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2024-36972_lts_cos/docs/exploit.md#spray-ebpf-programs
+[3] https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2025-21756_cos/docs/exploit.md#spray-ebpf-programs
+
+
+Jennifer Miller (1):
+  bpf: Enable JIT hardening by default when x86_64 CFI is enabled
+
+ kernel/bpf/core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+--
+2.34.1
+
