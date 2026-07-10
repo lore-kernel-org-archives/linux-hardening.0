@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4208932B131;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420F83314BF;
 	Fri, 10 Jul 2026 05:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783662491; cv=none; b=c3kCZozmCpxiDfdoDZJw5KUdhIlhHvDT8MPwSHZI9chx7xvAfPl5r2sU/dxNzwUWRBg23op/5B3naFXQm5MQyl14w4Jey45arJTEd+Z1HsAMC5cLRltVkU78ZshYnwczGcTAesdf9lAGiLdUOlBJH44l14N8Emje57Nm9F6cNuI=
+	t=1783662491; cv=none; b=M/vi1FCR05TY3KzDrGsEzbP6gMl7nn8GvDuhUNDMKo/FV3Rw5GBYSxkXBisvMKYKpb9GntKCZFhdQEIH9VYdACKe9ZyqCPiiJPnh7WAj7cxKrp+BAdvST/Vm/3M4UXcrIZ62xVjj7s1JW/uwZ0kYXTvuf6MB8skezrLQeWEjn5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783662491; c=relaxed/simple;
-	bh=1JoqAKvb1v+9+8D6Z6hKQDixrMHBsj2+KAE8y7K+VgE=;
+	bh=NcdLhXrPcWFclpxrmSESajR2JcjuoXQBKnYxQjejsnA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zc1m9wZlgvTO4kG+HlOgvuCZSY+P2W55HlH1wsXL04TjCw8+C62zcoeZjG3Ki/AmeGu+k1PhJPTMnixXhXI8rfQPYiGmvA4tMLRAeeKx1onFafoUBVx+3u9MK1LE0Su2CxYPjX96jS26Sag0UH4yvx6/ZaDuLFZFaJQ37tDt4N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctlJNwmv; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=bg64b6CVd9oxLfDw7/tfjzic7OIwWoMc5KimNYhtJpw8nMzJufboZysw0fdUrrtKz9AsVTjqd/69qVfoumBP1/VcyIPJKzwh3hBoC1CZ8jjdLCUgtSr09Kw5mCSmyJt+YujTXti54MLPq7pTEeL73r8A6LhSLGgbTCTgi5qnZF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLoaF4LQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctlJNwmv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D60C6C2BCB9;
-	Fri, 10 Jul 2026 05:48:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLoaF4LQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0541BC2BCFB;
+	Fri, 10 Jul 2026 05:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1783662490;
-	bh=1JoqAKvb1v+9+8D6Z6hKQDixrMHBsj2+KAE8y7K+VgE=;
+	s=k20201202; t=1783662491;
+	bh=NcdLhXrPcWFclpxrmSESajR2JcjuoXQBKnYxQjejsnA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ctlJNwmvNvv9r1QtlqTORG+j8U6kZyaFlau0TFmLeoQJmCSY9eRqjKAFzmNjkpHob
-	 9vCD1jsqSQZ+G4rDlAo83r+PnaxqeGbq+DLzhGp3Uvid+ZVSW0m/V9vI+La05/ruSK
-	 +6/B5z24c9eUUHvcwEKq94Xb8TfSev34QV0isDT6KMbutSAYqeSBrKkGhfgiZRqzaD
-	 Ord4+0t3axSGLBRT4Kf0uKUdnq+K5ZmXdBcQQOTwha29p6r8QCX+YJAXQTymIeRjfd
-	 UV5QeAPAShy9VvB+EngojToon1AkYdr+S/pD8w3K/10+ZrOAaI+t1Un+EsbKNsj1AZ
-	 b+gJVqVJi1VnA==
+	b=fLoaF4LQeWpnwE4OhMmtZ9yUCvJu+MG4TpB5ziYnVWIRSmfWcoGnzEWPG/iT8OPe1
+	 HgV0X4CdVkNPwxsWitV/4NzimfefC00PFcZadaiKsFrJydeP3rAaknasAE824dklNC
+	 7jBgUMN8WI5eTaOKQTJQKADTeRVwnr1fGG/JSylz3AKVBQRVRewZG3MhnKg4a556jF
+	 05XE6XSeASsmzdv1Sdjy+npcJToNejoUAso8yXfYewkBWiX/FT/QYzHi79mUobfN7m
+	 VdPbTmaTi3fhmcuLa0SrJ4mL0DRHJkqzdw54MfE3ZAB1o2ZU4aMNJSM5zTbxwS1pht
+	 qFVPJAA/R8Y8g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96D9C44501;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03FBC44506;
 	Fri, 10 Jul 2026 05:48:10 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Fri, 10 Jul 2026 05:48:06 +0000
-Subject: [PATCH v10 1/3] dt-bindings: dma: Add Amlogic A9 SoC DMA
+Date: Fri, 10 Jul 2026 05:48:08 +0000
+Subject: [PATCH v10 3/3] MAINTAINERS: Add an entry for Amlogic DMA driver
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,8 +39,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260710-amlogic-dma-v10-1-ff4deae837e7@amlogic.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260710-amlogic-dma-v10-3-ff4deae837e7@amlogic.com>
 References: <20260710-amlogic-dma-v10-0-ff4deae837e7@amlogic.com>
 In-Reply-To: <20260710-amlogic-dma-v10-0-ff4deae837e7@amlogic.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -50,14 +50,13 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
  Frank Li <Frank.Li@kernel.org>
 Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+ linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783662489; l=2916;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783662489; l=791;
  i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
- bh=o/Qp8oCw+N9EVwbF9aeiSMMFq+aTHa2sv+r3V4aaRw0=;
- b=zrZZRmVKEy/MjDnqfT2EA7rFq4NoqlZ0g6xhIyuzqgnPNRn2bW6SXur71D52QG5sLmxOxghd5
- AYLwX8FeD04ABsufQ1u1ZgCTdE7Vip18LP2UC5G0E0tNLzO9GR+Stki
+ bh=9xq7fFe8x3ZtUEb/et7K+dc4J+CzRRN9hABeSR7Mhcs=;
+ b=sfIqATjqLFmWCEHr6Wu5cpoP9tttYIHVG+mLvgrmQ1xFyTtYG76XrR7sSl/GBkDXl+FUmxqt/
+ jp2BtODFwsACJupNTUus6OhCarg3IwLeqUwIxmScbD9SFS2Xq2m2h0K
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
@@ -67,104 +66,32 @@ Reply-To: xianwei.zhao@amlogic.com
 
 From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Add documentation describing the Amlogic A9 SoC DMA. And add
-the properties specific values defines into a new include file.
+Add Amlogic DMA controller entry to MAINTAINERS to clarify
+the maintainers.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- .../devicetree/bindings/dma/amlogic,a9-dma.yaml    | 68 ++++++++++++++++++++++
- include/dt-bindings/dma/amlogic,a9-dma.h           |  8 +++
- 2 files changed, 76 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml b/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
-new file mode 100644
-index 000000000000..6cedd5fdfefd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/amlogic,a9-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3e7b2d9e9c24..b4ef8d3f52cb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1307,6 +1307,13 @@ F:	Documentation/devicetree/bindings/perf/amlogic,g12-ddr-pmu.yaml
+ F:	drivers/perf/amlogic/
+ F:	include/soc/amlogic/
+ 
++AMLOGIC DMA DRIVER
++M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
++L:	linux-amlogic@lists.infradead.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
++F:	drivers/dma/amlogic-dma.c
 +
-+title: Amlogic general DMA controller
-+
-+description:
-+  This is a general-purpose peripheral DMA controller. It currently supports
-+  major peripherals including I2C, I3C, PIO, and CAN-BUS. Transmit and receive
-+  for the same peripheral use two separate channels, controlled by different
-+  register sets. I2C and I3C transfer data in 1-byte units, while PIO and
-+  CAN-BUS transfer data in 4-byte units. From the controller’s perspective,
-+  there is no significant difference.
-+
-+maintainers:
-+  - Xianwei Zhao <xianwei.zhao@amlogic.com>
-+
-+properties:
-+  compatible:
-+    const: amlogic,a9-dma
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: sys
-+
-+  '#dma-cells':
-+    const: 2
-+    description:
-+      The first cell is the DMA channel type(DMA_TX or DMA_RX).
-+      The second cell is the DMA channel index.
-+
-+  dma-channels:
-+    maximum: 64
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - '#dma-cells'
-+  - dma-channels
-+
-+allOf:
-+  - $ref: dma-controller.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    dma-controller@fe400000 {
-+        compatible = "amlogic,a9-dma";
-+        reg = <0xfe400000 0x4000>;
-+        interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-+        clocks = <&clkc 45>;
-+        #dma-cells = <2>;
-+        dma-channels = <28>;
-+    };
-diff --git a/include/dt-bindings/dma/amlogic,a9-dma.h b/include/dt-bindings/dma/amlogic,a9-dma.h
-new file mode 100644
-index 000000000000..c59c2fd4b956
---- /dev/null
-+++ b/include/dt-bindings/dma/amlogic,a9-dma.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+
-+#ifndef __DT_BINDINGS_DMA_AMLOGIC_DMA_H__
-+#define __DT_BINDINGS_DMA_AMLOGIC_DMA_H__
-+
-+#define DMA_TX			0
-+#define DMA_RX			1
-+#endif /* __DT_BINDINGS_DMA_AMLOGIC_DMA_H__ */
+ AMLOGIC ISP DRIVER
+ M:	Keke Li <keke.li@amlogic.com>
+ L:	linux-media@vger.kernel.org
 
 -- 
 2.52.0
