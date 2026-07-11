@@ -1,67 +1,68 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4603D2C21E6
-	for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 15:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4260927B353
+	for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 15:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783782457; cv=none; b=mZGE5Q4ZI1CN0g75j+AVP4TlbWmZVzT6sjBMJqFc7EwsuLF/dhwkj03uWYYu9b51ueoUUIi4rtydR5G+sMGNJNecbIvtB9H7OJW12Ew9MWwaPEmk+M6UZ442HiUz7jEjxm+pDfzsI6ToHSHL6Ia4aQk6NUhtDwy7MDuqPd9kALo=
+	t=1783782598; cv=none; b=B7JOsQphn13LDw36Kl/aBvHnAllIM3Dv9NOj+Z4A9Kg1+7PEbr20CTvvcIzMIH36oCiXRT+RdcBvBuYu6nm+nzkEuQvKUVxSg80m8MOaHnrUOAc464LYu/q3VMqYN5sNn2wc6SCXgPbmlPmaSSHUj0k0VhHxg5v9FhZ1gMbb3Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783782457; c=relaxed/simple;
-	bh=gCnIYXS7l6OLB7PpxEY05mTYnJlHvIVhDb+6beqSHZw=;
+	s=arc-20240116; t=1783782598; c=relaxed/simple;
+	bh=u656KmwHS2NuwcwmZgMH2DXucDEuVNMw+znBt3qpx2Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YoEneW3qjRvQVbdlOQs7arfJtQzBvnj4z7qmmEfpmynY3qcA/BdKVpRmM5lt8ejPv/NG1h5oHYQSLyTtCQbjWPIDu0XvG33acAfgHV40tNL9nlBKhbOdW34z+SytaaDSsB50eruHTA3gjGjuXhyc2t+xvaKrut+EEZehbit1C7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=l0vRvDAa; arc=none smtp.client-ip=209.85.167.178
+	 In-Reply-To:Content-Type; b=kPQBRpLIqciD4QPJQs9Ldps6EQvj97iXj1YpH9gWPtvZM4mrsNiulKj+4GSj88eo821HxPQd1kLqoocWQYO65b3tAE8X/vqgJWlFGPLS2xFS43HRw0+88y1qkiikSnZZiHyprAhBTgDteWm76mJyyyDYcKPDAs0ckext5jUIBRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=BesgDaNj; arc=none smtp.client-ip=209.85.210.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="l0vRvDAa"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-495b98b4f6aso672262b6e.2
-        for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 08:07:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="BesgDaNj"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7e9ecb1e13cso1598903a34.3
+        for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 08:09:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1783782453; x=1784387253; darn=vger.kernel.org;
+        d=baylibre.com; s=google; t=1783782595; x=1784387395; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=G95LYy3SIhKCZuULQ6kHhqOCotb5tWbIJKUEos0d2CQ=;
-        b=l0vRvDAaetNx2URX6tpMka5Xu0AxeFHne4N5w7LP6smNdR76ppU2ENvpGo+zI15CVu
-         mf/8jeDgoJru0ODVcpVLlHAqDsDx+qTMzgnNe5xfxIgQWdg8ycUHXISkdA6hSP0ldK/6
-         1LNtnO4V+aXotroRd9CmAe/0z3ufWaZtwMs5ln4xD4oTHiDQZUGKHspDxSkNPRVPvyYd
-         SnWyK5oB8oXM1FKsOMBmw4s+j0ojsz4vIkKzubbSsWxySZk73j4o/lZkqZMcXPYTGgam
-         7zX8kpSL+FMLMp6zsRqTXvk699ea2B7KG+oLwGHOvpwLvk8dva3n8pnYb6XWR7qX6HZx
-         3DEw==
+        bh=nr0soaAtqthPp2U17XEZK/Vr4kfG1VMxAbHUIXSh0Dc=;
+        b=BesgDaNjNQYR+jKIUeO95DXLO7HZIlzux01aKseMB+0HxqCGKgU+74uGM9z1QDPA6A
+         C9C/D6ZKcjQslnOp3+ONoVHoNVIScnRNiUKZMHRhbiGclV+woARoyTuAJ6U4rYo/PMYz
+         54Dk4ql8ihuxIg69M69LwFW0Sl4AviGoTXgCXnwA5vdFEEVpHUSsJozLT+BAdRD/nSAN
+         rh1Of8Yul+Bc6Uvq1Ee3qMlpbOLfTVSn7rz85xC0k1oU5O87r8XocBptL69BQQJMqBFk
+         6eBTQV5vqSQkuEW8fP3cWY2pLp+WeWhH5VXzmbsH3kP/GArcv6RI2rJlY7TpBrOQgx8z
+         ngPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783782453; x=1784387253;
+        d=1e100.net; s=20251104; t=1783782595; x=1784387395;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=G95LYy3SIhKCZuULQ6kHhqOCotb5tWbIJKUEos0d2CQ=;
-        b=WCCzChZDXOxA9JYyZQll0x0rXOjb3kcfzvWSrlYVPGOFYyN5eXiFI00ZG1NI2a7ZQJ
-         2y2VE4L9rgO4O2STx4OfO7CEaKTCttUpxqBJzyQLj8e3ZDdquNfqDkNd4M7NAdYTE48g
-         fpwGBZA6F68mRkb9SVvWrvUE5gTFDmENcfIAr1EDw7vsm5UkwiGAAQYadiw4Nl3qaFTO
-         01Q5nu9o7CKwzr/mU1aBHTG1srMy0C6A1T8bxPoCPociYf0exfDb5AbdshaBZT+8E9gJ
-         nsAto4Zg/bEZTkNEpuQy/IJ5wpvdprdg/hgFqkesl5X7YtbZ0qZbmgWKJNtyVdN39+FU
-         O8GA==
-X-Forwarded-Encrypted: i=1; AFNElJ/INjGz0jUPpcv8eyM0Fd2zdUNkTMC2TNo3jATuBvgg0XABxW5bVcEAddzpMoheRqYJG/0J8b5KwJcXV1ZOes8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSmmofI7vVuModpsuXht03dOwm6phmVKBH8xtfivpa2EaoHYqz
-	hJds1FhqmaLWUQ+vc3nEVYWynUiITDDcsc2N6fjVoPO8yODs9FttJPvWuz1DPvy1T8c=
-X-Gm-Gg: AfdE7ckDTxKL80kNR1P6Aazv+IeVIRL0AaQTbOkZXGkVgMw/CY2U368Pfz/LQSHff9k
-	WuqA8cK7PAWgBlb8A2QQ1wGayqgpJqmpRZCxshK3zJ+oS3H6yHQg09vtuEu2Oq+8VuXru4xz97L
-	Unnp0FJdUVOSEGaR3R9yA0GPyeq+W3zHC/PPypqgkLP2VIMq7xuFtGP24/cSr8Ahpp6hBUYGDp8
-	RGz5VMQ/RQbgCxnaeHEyX8hxmcXPZ/SDF3inuvER7rhlkGSseAFqygbPt908O/do50fcd6zVele
-	RRk4vfVosdrSqphle8J8TfN1kvn5YtpPShQAJOPe+4a0fKKrhFOnVfqPkJujBrGWedU9ZBvWkEr
-	QKFR7AP4zNqwmqqWuntEUJ8dACXEm5UAo+YEpCysI5g2JkK+qitcs9xg84Xxo9rfbJ7Y9bRTILo
-	c4KZP3a5NR0eh3NFRveyfB39apUoGZhXuxHGAE836OK8JlPTlfKJbhFg6KeVFLEEA=
-X-Received: by 2002:a05:6808:bce:b0:497:e39e:a002 with SMTP id 5614622812f47-4a42aed5ce8mr2156666b6e.30.1783782453233;
-        Sat, 11 Jul 2026 08:07:33 -0700 (PDT)
+        bh=nr0soaAtqthPp2U17XEZK/Vr4kfG1VMxAbHUIXSh0Dc=;
+        b=qyTXOif0gPBelvK7kVoe8l6C7HFrR3hCQD/sC9kkgIIWix2NsIwQp9sg1RsOFzuMfH
+         AqmhSaXBGKX7vDPr46k3LaQ/3MrnUyvSmMVBf4uQyolGHRvqBbTK4gGBfZNk13jjZIo9
+         xmcQYenOUGznUzufoNVkZJioUUdXx8M5Jum5NqaNqVhOwZg2GLvDR9BonAaLF+F7M59M
+         QV33mqTLL6/JeoCnckRLVdMBJfVvwgqv3upNu24e/5CKpfTCkK1OXbvMbMEebb67uo11
+         RR8xzpiq4EkqubvYShtqemGDTgs5g6hYn8vnys1bD4LDFbXs794YnWE4iims3VckNlO4
+         vFFg==
+X-Forwarded-Encrypted: i=1; AFNElJ+pO5oJzGmcaEpSL6VFWU6xqfpeE1NsE4w1lVSYfoBVt15K2/E224ArCaEpO/MDOxAmcLmogbC+wVrHnd4tbVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGhw0Wrfo3cGsEONaUDVKu9TZ7sJRYG4iaIB5gl6JstojmBF29
+	2Ai6vWCGw2y9qvaUlhn4WmrPk8i3eAcxXX11WR7I6DkhnJjQt9P7nqpmBs98yCrIXSw=
+X-Gm-Gg: AfdE7cnIS7M6FHaL4/rXuN6fJ7XIE05We1zvS5nU877I0fPXuH3iWHqDhM23pW2xjsy
+	8QNg5LHjrQDDuaEAwt8zQZzGRxakpOuj+E6QX29HL8jE75M/n3BvbuJ65y19YsT4k3u5F/PfDuk
+	i1DDCBfRDjj5h1rdBBKTu5n6gQKMuoPGkthS5hkfHuZ/iiAvEtgETCYyCHERPMBTORnWkst5B1g
+	Sx0g0XB7V4r8/+iO9CnEzLdeb1FfpYOMpwXekexapDPZsX/GXQsVh9MPmt51YtpSJYzwUJoWW1q
+	stRc98eM8XoFtT98sndf5MHeH3Dx/tXps994AP9PORSNcvPDl+xAP+CMvEsCYOfYvvE3y3G6vWK
+	ky1kwvVFjRcDdpiebi+5AW9YY1VCDYM7mNIIAAl2r0+bZnNHbes/0sJ1el3O8VJXHMGoGwzDLRO
+	I0z13jqZMd4AdN2PPZUMnc04q1QrT1Mc2pBK7a8kT0r7ETE/jb6/rNLNCtLfritekpP+LWR2Z1S
+	g==
+X-Received: by 2002:a05:6830:2309:b0:7e9:e5c0:e0a with SMTP id 46e09a7af769-7ec095c68cdmr2096634a34.5.1783782595189;
+        Sat, 11 Jul 2026 08:09:55 -0700 (PDT)
 Received: from ?IPV6:2600:8803:e7e4:500:a950:74e5:81f2:8c89? ([2600:8803:e7e4:500:a950:74e5:81f2:8c89])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4a1b02e5abbsm8265036b6e.15.2026.07.11.08.07.30
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ebcae1dddbsm8558095a34.1.2026.07.11.08.09.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jul 2026 08:07:31 -0700 (PDT)
-Message-ID: <931fe63d-d200-4b79-9e17-fa48c8de7f29@baylibre.com>
-Date: Sat, 11 Jul 2026 10:07:29 -0500
+        Sat, 11 Jul 2026 08:09:53 -0700 (PDT)
+Message-ID: <0b513d21-31e5-497a-9332-7efc3fd3e010@baylibre.com>
+Date: Sat, 11 Jul 2026 10:09:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,8 +70,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/7] iio: dac: ad5686: implement new sync() op for the
- spi bus
+Subject: Re: [PATCH v7 5/7] iio: dac: ad5686: read_raw/write_raw: use
+ guard(mutex)()
 To: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
  linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
@@ -78,193 +79,90 @@ Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
  Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Maxwell Doose <m32285159@gmail.com>, Joshua Crofts <joshua.crofts1@gmail.com>
 References: <20260710-ad5686-new-features-v7-0-1bcc8c280e4d@analog.com>
- <20260710-ad5686-new-features-v7-4-1bcc8c280e4d@analog.com>
+ <20260710-ad5686-new-features-v7-5-1bcc8c280e4d@analog.com>
 Content-Language: en-US
 From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20260710-ad5686-new-features-v7-4-1bcc8c280e4d@analog.com>
+In-Reply-To: <20260710-ad5686-new-features-v7-5-1bcc8c280e4d@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 7/10/26 6:20 AM, Rodrigo Alencar via B4 Relay wrote:
 > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > 
-> Use of local SPI bus data to manage a collection of SPI transfers and
-> flush them to the SPI platform driver with the sync() operation. This
-> allows for faster handling of multiple channel DAC writes, avoiding kernel
-> overhead per spi_sync() call, which will be helpful when enabling
-> triggered buffer support.
+> Use guarded mutex lock to facilitate code review when adding new
+> attributes. This will allow for early returns, avoiding error-prone
+> locking and unlocking in error paths. This also adds missing include
+> linux/cleanup.h. Gain-control support will allow the scale attribute
+> to be configurable.
 > 
+> Reviewed-by: Maxwell Doose <m32285159@gmail.com>
+> Reviewed-by: Joshua Crofts <joshua.crofts1@gmail.com>
 > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > ---
->  drivers/iio/dac/ad5686-spi.c | 129 ++++++++++++++++++++++++++++++++-----------
->  drivers/iio/dac/ad5686.c     |   4 +-
->  drivers/iio/dac/ad5686.h     |   8 ++-
->  drivers/iio/dac/ad5696-i2c.c |   2 +-
->  4 files changed, 108 insertions(+), 35 deletions(-)
+>  drivers/iio/dac/ad5686.c | 19 ++++++++-----------
+>  1 file changed, 8 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/iio/dac/ad5686-spi.c b/drivers/iio/dac/ad5686-spi.c
-> index d3b64b4361d5..ae74a17ba48e 100644
-> --- a/drivers/iio/dac/ad5686-spi.c
-> +++ b/drivers/iio/dac/ad5686-spi.c
-> @@ -13,59 +13,95 @@
+> diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
+> index 316f9ccf54d9..df32f46db81e 100644
+> --- a/drivers/iio/dac/ad5686.c
+> +++ b/drivers/iio/dac/ad5686.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/array_size.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/bitops.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/delay.h>
+>  #include <linux/dev_printk.h>
 >  #include <linux/errno.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
-> +#include <linux/overflow.h>
->  #include <linux/spi/spi.h>
->  
->  #include <asm/byteorder.h>
->  
->  #include "ad5686.h"
->  
-> +/**
-> + * struct ad5686_spi_data - SPI bus specific data
-> + * @msg: SPI message used for transfers
-> + * @size: number of transfers currently in the message
-> + * @capacity: maximum number of transfers that can be added to the message
-> + * @xfers: array of SPI transfers, allocated with the provided capacity
-> + */
-> +struct ad5686_spi_data {
-> +	struct spi_message msg;
-> +	unsigned int size;
-> +	unsigned int capacity;
-> +	struct spi_transfer xfers[] __counted_by(capacity);
-> +};
-> +
->  static int ad5686_spi_write(struct ad5686_state *st,
->  			    u8 cmd, u8 addr, u16 val)
->  {
-> -	struct spi_device *spi = to_spi_device(st->dev);
-> -	u8 tx_len, *buf;
-> +	struct ad5686_spi_data *bus_data = st->bus_data;
-> +	struct spi_transfer *xfer;
->  
-
-This could use some comments similar to the explanation in the
-commit message that this function is just queuing writes to
-be sent over the bus when sync() is called.
-
-> +	if (bus_data->size >= bus_data->capacity)
-> +		return -E2BIG;
-> +
-> +	if (bus_data->size)
-> +		bus_data->xfers[bus_data->size - 1].cs_change = 1;
-> +	else
-> +		spi_message_init(&bus_data->msg);
-> +
-> +	xfer = &bus_data->xfers[bus_data->size];
-
-Why not a local variable for st->data[bus_data->size] too so we don't
-have to write it so many times?
-
->  	switch (st->chip_info->regmap_type) {
->  	case AD5310_REGMAP:
-> -		st->data[0].d16 = cpu_to_be16(FIELD_PREP(AD5310_CMD_MSK, cmd) |
-> -					      FIELD_PREP(AD5310_DATA_MSK, val));
-> -		buf = &st->data[0].d8[0];
-> -		tx_len = 2;
-> +		st->data[bus_data->size].d16 =
-> +			cpu_to_be16(FIELD_PREP(AD5310_CMD_MSK, cmd) |
-> +				    FIELD_PREP(AD5310_DATA_MSK, val));
-> +		*xfer = (struct spi_transfer) {
-> +			.tx_buf = &st->data[bus_data->size].d16,
-> +			.len = sizeof(st->data[bus_data->size].d16),
-> +		};
->  		break;
->  	case AD5683_REGMAP:
-> -		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
-> -					      FIELD_PREP(AD5683_DATA_MSK, val));
-> -		buf = &st->data[0].d8[1];
-> -		tx_len = 3;
-> +		st->data[bus_data->size].d32 =
-> +			cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
-> +				    FIELD_PREP(AD5683_DATA_MSK, val));
-> +		*xfer = (struct spi_transfer) {
-> +			.tx_buf = &st->data[bus_data->size].d8[1],
-> +			.len = sizeof(st->data[bus_data->size].d8) - 1,
-> +		};
->  		break;
->  	case AD5686_REGMAP:
-> -		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
-> -					      FIELD_PREP(AD5686_ADDR_MSK, addr) |
-> -					      FIELD_PREP(AD5686_DATA_MSK, val));
-> -		buf = &st->data[0].d8[1];
-> -		tx_len = 3;
-> +		st->data[bus_data->size].d32 =
-> +			cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
-> +				    FIELD_PREP(AD5686_ADDR_MSK, addr) |
-> +				    FIELD_PREP(AD5686_DATA_MSK, val));
-> +		*xfer = (struct spi_transfer) {
-> +			.tx_buf = &st->data[bus_data->size].d8[1],
-> +			.len = sizeof(st->data[bus_data->size].d8) - 1,
-> +		};
->  		break;
->  	default:
->  		return -EINVAL;
->  	}
->  
-> -	return spi_write(spi, buf, tx_len);
-> +	spi_message_add_tail(xfer, &bus_data->msg);
-> +	bus_data->size++;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad5686_spi_sync(struct ad5686_state *st)
-> +{
-> +	struct spi_device *spi = to_spi_device(st->dev);
-> +	struct ad5686_spi_data *bus_data = st->bus_data;
-> +
-> +	bus_data->size = 0; /* always reset, even on sync failure */
-> +	return spi_sync(spi, &bus_data->msg);
->  }
->  
->  static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
->  {
-> -	struct spi_transfer t[] = {
-> -		{
-> -			.tx_buf = &st->data[0].d8[1],
-> -			.len = 3,
-> -			.cs_change = 1,
-> -		}, {
-> -			.tx_buf = &st->data[1].d8[1],
-> -			.rx_buf = &st->data[2].d8[1],
-> -			.len = 3,
-> -		},
-> -	};
->  	struct spi_device *spi = to_spi_device(st->dev);
-> +	struct ad5686_spi_data *bus_data = st->bus_data;
-> +	struct spi_transfer *xfer = &bus_data->xfers[0];
-
-It would be nice if the commit message also explained why the
-read() function needs to be changed to use bus_data.
-
->  	u8 cmd = 0;
+> @@ -177,11 +178,11 @@ static int ad5686_read_raw(struct iio_dev *indio_dev,
+>  	struct ad5686_state *st = iio_priv(indio_dev);
 >  	int ret;
 >  
-> @@ -86,8 +122,21 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
->  				      FIELD_PREP(AD5686_ADDR_MSK, addr));
->  	st->data[1].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, AD5686_CMD_NOOP));
->  
-> -	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
-> -	if (ret < 0)
-> +	xfer[0] = (struct spi_transfer) {
-> +		.tx_buf = &st->data[0].d8[1],
-> +		.len = sizeof(st->data[0].d8) - 1,
-> +		.cs_change = 1,
-> +	};
-> +	xfer[1] = (struct spi_transfer) {
-> +		.tx_buf = &st->data[1].d8[1],
-> +		.rx_buf = &st->data[2].d8[1],
-> +		.len = sizeof(st->data[1].d8) - 1,
-> +	};
+> +	guard(mutex)(&st->lock);
+
+The commit message should explain why the location we are taking the lock
+has moved. Although, I don't see a reason to move it.
+
 > +
-> +	spi_message_init_with_transfers(&bus_data->msg, xfer, 2);
+>  	switch (m) {
+>  	case IIO_CHAN_INFO_RAW:
+> -		mutex_lock(&st->lock);
+>  		ret = ad5686_read(st, chan->address);
+> -		mutex_unlock(&st->lock);
+>  		if (ret < 0)
+>  			return ret;
+>  		*val = (ret >> chan->scan_type.shift) &
+> @@ -202,23 +203,19 @@ static int ad5686_write_raw(struct iio_dev *indio_dev,
+>  			    long mask)
+>  {
+>  	struct ad5686_state *st = iio_priv(indio_dev);
+> -	int ret;
 > +
-> +	ret = spi_sync(spi, &bus_data->msg);
-> +	if (ret)
->  		return ret;
+> +	guard(mutex)(&st->lock);
 >  
->  	return be32_to_cpu(st->data[2].d32);
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_RAW:
+>  		if (val >= (1 << chan->scan_type.realbits) || val < 0)
+>  			return -EINVAL;
+>  
+> -		mutex_lock(&st->lock);
+> -		ret = ad5686_write(st, AD5686_CMD_WRITE_INPUT_N_UPDATE_N,
+> -				   chan->address, val << chan->scan_type.shift);
+> -		mutex_unlock(&st->lock);
+> -		break;
+> +		return ad5686_write(st, AD5686_CMD_WRITE_INPUT_N_UPDATE_N,
+> +				    chan->address, val << chan->scan_type.shift);
+>  	default:
+> -		ret = -EINVAL;
+> +		return -EINVAL;
+>  	}
+> -
+> -	return ret;
+>  }
+>  
+>  static const struct iio_info ad5686_info = {
+> 
+
