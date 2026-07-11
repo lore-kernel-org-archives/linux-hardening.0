@@ -1,39 +1,67 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8F9279DAF;
-	Sat, 11 Jul 2026 06:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4603D2C21E6
+	for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 15:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783750784; cv=none; b=P12vqNy8FLvYZIk2g6RiXlyHWDjrqvWwXRVhmpehHhhGyizGrcc0yeK+eQakFvLFJmkytFJKthT+z7d4TGYYTyNwdlCrNbnEekjHDTzFRLUUawvFrCNtBm299nZk5JhfeuCBaWVOjgii0PZnMnJW21LoGCK4oI1NQ9Bj7DPwxzw=
+	t=1783782457; cv=none; b=mZGE5Q4ZI1CN0g75j+AVP4TlbWmZVzT6sjBMJqFc7EwsuLF/dhwkj03uWYYu9b51ueoUUIi4rtydR5G+sMGNJNecbIvtB9H7OJW12Ew9MWwaPEmk+M6UZ442HiUz7jEjxm+pDfzsI6ToHSHL6Ia4aQk6NUhtDwy7MDuqPd9kALo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783750784; c=relaxed/simple;
-	bh=bVka9Y/pxBnfhMrcVcpVcQlHeE4oraJ+VZOP20yHSxk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=e1OFTp2AGJgU+Q34vibtVZz1XhGh4Lz4qT1xN28GHE80zzBJtxJtdJ8lhMzSpDmXKUrcWEKV0KDVpt/iRBn30W6/IWzvrIatRB1zLPNd59MGcNd9y7HVmojKIUd4+G3/ekl4KdhThWwP6wtvpyKVFHCwpU5Qps1r0FlQaOMMBvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=TIktfliC reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1783782457; c=relaxed/simple;
+	bh=gCnIYXS7l6OLB7PpxEY05mTYnJlHvIVhDb+6beqSHZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YoEneW3qjRvQVbdlOQs7arfJtQzBvnj4z7qmmEfpmynY3qcA/BdKVpRmM5lt8ejPv/NG1h5oHYQSLyTtCQbjWPIDu0XvG33acAfgHV40tNL9nlBKhbOdW34z+SytaaDSsB50eruHTA3gjGjuXhyc2t+xvaKrut+EEZehbit1C7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=l0vRvDAa; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="TIktfliC"
-Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 66B6IoIf015927
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Sat, 11 Jul 2026 15:18:50 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=jhPYci9Dt8OvtEtcy4b+McdMFRjiobjic+3G8cI6QZI=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1783750731; v=1;
-        b=TIktfliCWLwpd/+swlM0LiA65CD4UnKwP+vi5ebo48IQszOhpbBoisXZWlKlE/dX
-         uAHImhHe1u8Zjp9F1SsNkKIkUb/AXZ9u8Z7NdTlKN2jqD5SOEswuQpbbITyDpknr
-         bQMy8wc6V8eb3bRh5OuNVsh/Fytdus3Lti0kugfIaALxVXZL20RQVbBjguL04sMs
-         aXEazALRVK84+npwac+koioVcBKj9dDnwEKFkIHUTtN1H8w/Ua72wDLMM7mvGBzF
-         WYg5KFzUg1+rIbfhz4gWL1L0e/OW6ioPVpTinpDdvu87eF5MyhfkfpurgzIcIBhd
-         q2uPRk28yyDaK3zl+/06dA==
-Message-ID: <0e5e64ea-2f3c-4ce6-88ac-08b66f13027c@rsg.ci.i.u-tokyo.ac.jp>
-Date: Sat, 11 Jul 2026 15:18:50 +0900
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="l0vRvDAa"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-495b98b4f6aso672262b6e.2
+        for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 08:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1783782453; x=1784387253; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=G95LYy3SIhKCZuULQ6kHhqOCotb5tWbIJKUEos0d2CQ=;
+        b=l0vRvDAaetNx2URX6tpMka5Xu0AxeFHne4N5w7LP6smNdR76ppU2ENvpGo+zI15CVu
+         mf/8jeDgoJru0ODVcpVLlHAqDsDx+qTMzgnNe5xfxIgQWdg8ycUHXISkdA6hSP0ldK/6
+         1LNtnO4V+aXotroRd9CmAe/0z3ufWaZtwMs5ln4xD4oTHiDQZUGKHspDxSkNPRVPvyYd
+         SnWyK5oB8oXM1FKsOMBmw4s+j0ojsz4vIkKzubbSsWxySZk73j4o/lZkqZMcXPYTGgam
+         7zX8kpSL+FMLMp6zsRqTXvk699ea2B7KG+oLwGHOvpwLvk8dva3n8pnYb6XWR7qX6HZx
+         3DEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783782453; x=1784387253;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=G95LYy3SIhKCZuULQ6kHhqOCotb5tWbIJKUEos0d2CQ=;
+        b=WCCzChZDXOxA9JYyZQll0x0rXOjb3kcfzvWSrlYVPGOFYyN5eXiFI00ZG1NI2a7ZQJ
+         2y2VE4L9rgO4O2STx4OfO7CEaKTCttUpxqBJzyQLj8e3ZDdquNfqDkNd4M7NAdYTE48g
+         fpwGBZA6F68mRkb9SVvWrvUE5gTFDmENcfIAr1EDw7vsm5UkwiGAAQYadiw4Nl3qaFTO
+         01Q5nu9o7CKwzr/mU1aBHTG1srMy0C6A1T8bxPoCPociYf0exfDb5AbdshaBZT+8E9gJ
+         nsAto4Zg/bEZTkNEpuQy/IJ5wpvdprdg/hgFqkesl5X7YtbZ0qZbmgWKJNtyVdN39+FU
+         O8GA==
+X-Forwarded-Encrypted: i=1; AFNElJ/INjGz0jUPpcv8eyM0Fd2zdUNkTMC2TNo3jATuBvgg0XABxW5bVcEAddzpMoheRqYJG/0J8b5KwJcXV1ZOes8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSmmofI7vVuModpsuXht03dOwm6phmVKBH8xtfivpa2EaoHYqz
+	hJds1FhqmaLWUQ+vc3nEVYWynUiITDDcsc2N6fjVoPO8yODs9FttJPvWuz1DPvy1T8c=
+X-Gm-Gg: AfdE7ckDTxKL80kNR1P6Aazv+IeVIRL0AaQTbOkZXGkVgMw/CY2U368Pfz/LQSHff9k
+	WuqA8cK7PAWgBlb8A2QQ1wGayqgpJqmpRZCxshK3zJ+oS3H6yHQg09vtuEu2Oq+8VuXru4xz97L
+	Unnp0FJdUVOSEGaR3R9yA0GPyeq+W3zHC/PPypqgkLP2VIMq7xuFtGP24/cSr8Ahpp6hBUYGDp8
+	RGz5VMQ/RQbgCxnaeHEyX8hxmcXPZ/SDF3inuvER7rhlkGSseAFqygbPt908O/do50fcd6zVele
+	RRk4vfVosdrSqphle8J8TfN1kvn5YtpPShQAJOPe+4a0fKKrhFOnVfqPkJujBrGWedU9ZBvWkEr
+	QKFR7AP4zNqwmqqWuntEUJ8dACXEm5UAo+YEpCysI5g2JkK+qitcs9xg84Xxo9rfbJ7Y9bRTILo
+	c4KZP3a5NR0eh3NFRveyfB39apUoGZhXuxHGAE836OK8JlPTlfKJbhFg6KeVFLEEA=
+X-Received: by 2002:a05:6808:bce:b0:497:e39e:a002 with SMTP id 5614622812f47-4a42aed5ce8mr2156666b6e.30.1783782453233;
+        Sat, 11 Jul 2026 08:07:33 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:500:a950:74e5:81f2:8c89? ([2600:8803:e7e4:500:a950:74e5:81f2:8c89])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4a1b02e5abbsm8265036b6e.15.2026.07.11.08.07.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Jul 2026 08:07:31 -0700 (PDT)
+Message-ID: <931fe63d-d200-4b79-9e17-fa48c8de7f29@baylibre.com>
+Date: Sat, 11 Jul 2026 10:07:29 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,141 +69,202 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/7] KVM: arm64: Disallow vPMU when pPMUs do not cover
- all CPUs
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-To: Oliver Upton <oupton@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu
- <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-References: <20260706-hybrid-v8-0-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
- <20260706-hybrid-v8-1-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
- <akvgIWqBjAp_VA_A@kernel.org>
- <e03f17b2-a765-4912-adf6-3da26e7eeecd@rsg.ci.i.u-tokyo.ac.jp>
- <ak1DVUs0bgkpZh0N@kernel.org>
- <7bf6c440-5f14-4326-9800-9821adc4e2e4@rsg.ci.i.u-tokyo.ac.jp>
+Subject: Re: [PATCH v7 4/7] iio: dac: ad5686: implement new sync() op for the
+ spi bus
+To: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
+ linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <20260710-ad5686-new-features-v7-0-1bcc8c280e4d@analog.com>
+ <20260710-ad5686-new-features-v7-4-1bcc8c280e4d@analog.com>
 Content-Language: en-US
-In-Reply-To: <7bf6c440-5f14-4326-9800-9821adc4e2e4@rsg.ci.i.u-tokyo.ac.jp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20260710-ad5686-new-features-v7-4-1bcc8c280e4d@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2026/07/08 17:32, Akihiko Odaki wrote:
-> On 2026/07/08 3:20, Oliver Upton wrote:
->> On Tue, Jul 07, 2026 at 08:08:03PM +0900, Akihiko Odaki wrote:
->>> On 2026/07/07 2:04, Oliver Upton wrote:
->>>> Hi,
->>>>
->>>> On Mon, Jul 06, 2026 at 07:03:24PM +0900, Akihiko Odaki wrote:
->>>>> Commit ec3eb9ed6081 ("KVM: arm64: PMU: Disallow vPMU on non-uniform
->>>>> PMUVer") made KVM reject vPMU unless the system-wide PMUVer is usable.
->>>>> That covers systems where PMUv3 is absent or non-uniform, as well as
->>>>> systems where IMPDEF PMUv3 sysreg traps are unavailable.
->>>>>
->>>>> However, KVM can still accept vPMU when all CPUs uniformly trap PMUv3
->>>>> sysregs, but the pPMUs registered with KVM only cover a subset of
->>>>> possible CPUs.
->>>>>
->>>>> Reject vPMU unless the registered pPMUs cover every possible CPU.
->>>>> This avoids carrying support for partial pPMU coverage into the
->>>>> fixed-counters-only UAPI introduced later in the series.
->>>>
->>>> Doesn't CPU hotplug screw this up? I could online a CPU that doesn't
->>>> have a PMU after creating the VM.>
->>>> I'd rather just change ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS to become a
->>>> system feature. That way any CPU which breaks the system-wide 
->>>> assumption
->>>> cannot be onlined.
->>>
->>> ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS only says that IMPDEF PMUv3 
->>> sysregs are
->>> trapped. It does not say that KVM has a driver-backed PMU usable for 
->>> PMUv3
->>> emulation. This patch checks that extra requirement.
->>>
->>> I re-checked CPU hotplug. Onlining a CPU without a PMU later does not 
->>> make
->>> an accepted VM unsafe, since the check is against cpu_possible_mask.
->>
->> Sorry, I missed that this was against the possible mask.
->>
->>> The problem is the reverse case on ACPI: this check can disable vPMU 
->>> when a
->>> possible CPU is offline. DT populates supported_cpus at boot, while ACPI
->>> initially populates it only from online CPUs and grows it as matching 
->>> CPUs
->>> come online.
->>>
->>> That makes this patch too conservative. In practice, I do not expect 
->>> systems
->>> to mix CPUs with and without a usable PMU. A better approach is 
->>> probably to
->>> treat such a host as out of spec and add TAINT_CPU_OUT_OF_SPEC. We 
->>> already
->>> do that for architectural PMUv3 by detecting mismatches in
->>> ID_AA64DFR0_EL1.PMUVer; we can do the same for
->>> ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS with non-standard PMUs.
->>
->> The presence of the workaround is, by definition, out of spec. I just
->> never bothered tainting the kernel because these machines are already
->> TAINT_CPU_OUT_OF_SPEC by way of the broken VGIC.
->>
->> Ok, so how about you keep the check that you're doing here and promote
->> IMPDEF_TRAPS to a system-wide feature? That would satisfy the two
->> preconditions we have for PMU emulation, which is system register traps
->> and a backing arm_pmu that understands PMUv3 events.
+On 7/10/26 6:20 AM, Rodrigo Alencar via B4 Relay wrote:
+> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > 
-> This check turned out to be faulty: it can disable PMU emulation on ACPI
-> systems when a possible CPU is offline, because ACPI grows
-> arm_pmu::supported_cpus as matching CPUs come online.
+> Use of local SPI bus data to manage a collection of SPI transfers and
+> flush them to the SPI platform driver with the sync() operation. This
+> allows for faster handling of multiple channel DAC writes, avoiding kernel
+> overhead per spi_sync() call, which will be helpful when enabling
+> triggered buffer support.
 > 
-> My current plan is:
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> ---
+>  drivers/iio/dac/ad5686-spi.c | 129 ++++++++++++++++++++++++++++++++-----------
+>  drivers/iio/dac/ad5686.c     |   4 +-
+>  drivers/iio/dac/ad5686.h     |   8 ++-
+>  drivers/iio/dac/ad5696-i2c.c |   2 +-
+>  4 files changed, 108 insertions(+), 35 deletions(-)
 > 
-> - drop the possible-mask coverage check, to avoid breaking ACPI;
-> - promote ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS to
->    ARM64_CPUCAP_EARLY_LOCAL_CPU_FEATURE, so the system will have the
->    feature only if all online CPUs implement it;
-> - explicitly taint hosts with ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS,
->    matching what KVM already does for non-architectural VGICs. The
->    comment will make it clear that this is out of spec because KVM cannot
->    make the usual architectural assumptions about PMUv3 sysreg traps and
->    uniform driver-backed PMU availability.
+> diff --git a/drivers/iio/dac/ad5686-spi.c b/drivers/iio/dac/ad5686-spi.c
+> index d3b64b4361d5..ae74a17ba48e 100644
+> --- a/drivers/iio/dac/ad5686-spi.c
+> +++ b/drivers/iio/dac/ad5686-spi.c
+> @@ -13,59 +13,95 @@
+>  #include <linux/errno.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> +#include <linux/overflow.h>
+>  #include <linux/spi/spi.h>
+>  
+>  #include <asm/byteorder.h>
+>  
+>  #include "ad5686.h"
+>  
+> +/**
+> + * struct ad5686_spi_data - SPI bus specific data
+> + * @msg: SPI message used for transfers
+> + * @size: number of transfers currently in the message
+> + * @capacity: maximum number of transfers that can be added to the message
+> + * @xfers: array of SPI transfers, allocated with the provided capacity
+> + */
+> +struct ad5686_spi_data {
+> +	struct spi_message msg;
+> +	unsigned int size;
+> +	unsigned int capacity;
+> +	struct spi_transfer xfers[] __counted_by(capacity);
+> +};
+> +
+>  static int ad5686_spi_write(struct ad5686_state *st,
+>  			    u8 cmd, u8 addr, u16 val)
+>  {
+> -	struct spi_device *spi = to_spi_device(st->dev);
+> -	u8 tx_len, *buf;
+> +	struct ad5686_spi_data *bus_data = st->bus_data;
+> +	struct spi_transfer *xfer;
+>  
 
-I sent a new revision implementing these changes, but due to a rebase
-mistake it was also sent as v8.
+This could use some comments similar to the explanation in the
+commit message that this function is just queuing writes to
+be sent over the bus when sync() is called.
 
-However, it still does not cover every case of non-uniform driver-backed
-PMU availability. With ACPI, if a CPU is brought online whose MIDR was
-not represented by any CPU online during PMU probing, the PMU code
-cannot associate it with an existing arm_pmu or register a new one.
-This can happen even when PMUVer is uniform across CPUs.
+> +	if (bus_data->size >= bus_data->capacity)
+> +		return -E2BIG;
+> +
+> +	if (bus_data->size)
+> +		bus_data->xfers[bus_data->size - 1].cs_change = 1;
+> +	else
+> +		spi_message_init(&bus_data->msg);
+> +
+> +	xfer = &bus_data->xfers[bus_data->size];
 
-I therefore plan to take a simpler approach: when KVM cannot find a
-registered pPMU for the vCPU's current CPU, emit a one-time warning and
-set TAINT_CPU_OUT_OF_SPEC, matching the treatment of mismatched CPU
-features.
+Why not a local variable for st->data[bus_data->size] too so we don't
+have to write it so many times?
 
-Regards,
-Akihiko Odaki
+>  	switch (st->chip_info->regmap_type) {
+>  	case AD5310_REGMAP:
+> -		st->data[0].d16 = cpu_to_be16(FIELD_PREP(AD5310_CMD_MSK, cmd) |
+> -					      FIELD_PREP(AD5310_DATA_MSK, val));
+> -		buf = &st->data[0].d8[0];
+> -		tx_len = 2;
+> +		st->data[bus_data->size].d16 =
+> +			cpu_to_be16(FIELD_PREP(AD5310_CMD_MSK, cmd) |
+> +				    FIELD_PREP(AD5310_DATA_MSK, val));
+> +		*xfer = (struct spi_transfer) {
+> +			.tx_buf = &st->data[bus_data->size].d16,
+> +			.len = sizeof(st->data[bus_data->size].d16),
+> +		};
+>  		break;
+>  	case AD5683_REGMAP:
+> -		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+> -					      FIELD_PREP(AD5683_DATA_MSK, val));
+> -		buf = &st->data[0].d8[1];
+> -		tx_len = 3;
+> +		st->data[bus_data->size].d32 =
+> +			cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+> +				    FIELD_PREP(AD5683_DATA_MSK, val));
+> +		*xfer = (struct spi_transfer) {
+> +			.tx_buf = &st->data[bus_data->size].d8[1],
+> +			.len = sizeof(st->data[bus_data->size].d8) - 1,
+> +		};
+>  		break;
+>  	case AD5686_REGMAP:
+> -		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+> -					      FIELD_PREP(AD5686_ADDR_MSK, addr) |
+> -					      FIELD_PREP(AD5686_DATA_MSK, val));
+> -		buf = &st->data[0].d8[1];
+> -		tx_len = 3;
+> +		st->data[bus_data->size].d32 =
+> +			cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+> +				    FIELD_PREP(AD5686_ADDR_MSK, addr) |
+> +				    FIELD_PREP(AD5686_DATA_MSK, val));
+> +		*xfer = (struct spi_transfer) {
+> +			.tx_buf = &st->data[bus_data->size].d8[1],
+> +			.len = sizeof(st->data[bus_data->size].d8) - 1,
+> +		};
+>  		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+>  
+> -	return spi_write(spi, buf, tx_len);
+> +	spi_message_add_tail(xfer, &bus_data->msg);
+> +	bus_data->size++;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad5686_spi_sync(struct ad5686_state *st)
+> +{
+> +	struct spi_device *spi = to_spi_device(st->dev);
+> +	struct ad5686_spi_data *bus_data = st->bus_data;
+> +
+> +	bus_data->size = 0; /* always reset, even on sync failure */
+> +	return spi_sync(spi, &bus_data->msg);
+>  }
+>  
+>  static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+>  {
+> -	struct spi_transfer t[] = {
+> -		{
+> -			.tx_buf = &st->data[0].d8[1],
+> -			.len = 3,
+> -			.cs_change = 1,
+> -		}, {
+> -			.tx_buf = &st->data[1].d8[1],
+> -			.rx_buf = &st->data[2].d8[1],
+> -			.len = 3,
+> -		},
+> -	};
+>  	struct spi_device *spi = to_spi_device(st->dev);
+> +	struct ad5686_spi_data *bus_data = st->bus_data;
+> +	struct spi_transfer *xfer = &bus_data->xfers[0];
 
-> 
-> That lets the code keep assuming uniform PMU availability without adding 
-> an ACPI-hostile possible-CPU check, and makes that assumption explicit 
-> for humans like me and tools such as Sashiko [1].
-> 
-> [1] https://sashiko.dev/#/patchset/20260706-hybrid-v8-0- 
-> de459617b59d@rsg.ci.i.u-tokyo.ac.jp?part=6
-> 
-> Regards,
-> Akihiko Odaki
-> 
+It would be nice if the commit message also explained why the
+read() function needs to be changed to use bus_data.
 
+>  	u8 cmd = 0;
+>  	int ret;
+>  
+> @@ -86,8 +122,21 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
+>  				      FIELD_PREP(AD5686_ADDR_MSK, addr));
+>  	st->data[1].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, AD5686_CMD_NOOP));
+>  
+> -	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
+> -	if (ret < 0)
+> +	xfer[0] = (struct spi_transfer) {
+> +		.tx_buf = &st->data[0].d8[1],
+> +		.len = sizeof(st->data[0].d8) - 1,
+> +		.cs_change = 1,
+> +	};
+> +	xfer[1] = (struct spi_transfer) {
+> +		.tx_buf = &st->data[1].d8[1],
+> +		.rx_buf = &st->data[2].d8[1],
+> +		.len = sizeof(st->data[1].d8) - 1,
+> +	};
+> +
+> +	spi_message_init_with_transfers(&bus_data->msg, xfer, 2);
+> +
+> +	ret = spi_sync(spi, &bus_data->msg);
+> +	if (ret)
+>  		return ret;
+>  
+>  	return be32_to_cpu(st->data[2].d32);
