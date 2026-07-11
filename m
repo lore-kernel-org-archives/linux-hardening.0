@@ -1,66 +1,39 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B353C2782
-	for <linux-hardening@vger.kernel.org>; Fri, 10 Jul 2026 21:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8F9279DAF;
+	Sat, 11 Jul 2026 06:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783719667; cv=none; b=mFkThvQcPUh2xw6bBz8wSYeF1QMlsTgZsZuryihE6IdSgjDfF67PkK8EaBa3jYqQ80QGHbiVfksXvuMXCWETKuNNMjaCmRlSbAsx8/1sHaqDT6eJN754RU6tgvgkbaViFjojOyrES9U2nXOlKxk34A2d68MzM6+msNFc36gNYXs=
+	t=1783750784; cv=none; b=P12vqNy8FLvYZIk2g6RiXlyHWDjrqvWwXRVhmpehHhhGyizGrcc0yeK+eQakFvLFJmkytFJKthT+z7d4TGYYTyNwdlCrNbnEekjHDTzFRLUUawvFrCNtBm299nZk5JhfeuCBaWVOjgii0PZnMnJW21LoGCK4oI1NQ9Bj7DPwxzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783719667; c=relaxed/simple;
-	bh=sRLsKhX3nbX3ip0h+lFJX6a9doiDlrP1aVmvc5UQZsA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bdio8yjTdr1HcfAtKT9l8ItHk3Grk+ddLJd/pJn693NjPK+xmEcbGYaMDHqBONSaENFToalnR8hN5MxskPMugRemxFsPaPBxSQuqzhC52x3cvE6MXTcVu7ONWKaCzLLwrVOxZUlBtNDwL7GIxeu9SRTxM8YRLf4SsHNiHh0exCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F7RIYxd7; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1783750784; c=relaxed/simple;
+	bh=bVka9Y/pxBnfhMrcVcpVcQlHeE4oraJ+VZOP20yHSxk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=e1OFTp2AGJgU+Q34vibtVZz1XhGh4Lz4qT1xN28GHE80zzBJtxJtdJ8lhMzSpDmXKUrcWEKV0KDVpt/iRBn30W6/IWzvrIatRB1zLPNd59MGcNd9y7HVmojKIUd4+G3/ekl4KdhThWwP6wtvpyKVFHCwpU5Qps1r0FlQaOMMBvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=TIktfliC reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F7RIYxd7"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-471eeac43bfso1368114f8f.3
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Jul 2026 14:41:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1783719663; x=1784324463; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=98z+F18zm2o1eM5nkxQ5VKYEoQh7CpUJdp3ti2B74Ec=;
-        b=F7RIYxd708YM3jQHsLdNtcVcoZ7aOviKcVmkiiGo0mw7fvIMpGl0CsQgrlft/cOoKG
-         kSxqFPAhQEDSKD9vtdUO3nC8TR95bDPsIkFAJZPEzeKXeLh6zN56ERp8njtiz0nSwJLV
-         rFDjyB0UhTpMquTModkqZZTPRT8CKZ6o/8cq0vORdwFq3+SxTucffQf5BWaSl1Q+ChcT
-         3c74Gxh4yEFqLyla7jImI1NifWzRXT0u8zNHNGUMFntD/kF4BbVw2BZ5FIuqrMae5j9Y
-         OOn8SwEYz1BCFmSSeTPf2aMLro5JZ0hBakzJ2mCcNneCI2K82MuGjRldftO5ZY+sZ84q
-         SMuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783719663; x=1784324463;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=98z+F18zm2o1eM5nkxQ5VKYEoQh7CpUJdp3ti2B74Ec=;
-        b=LaGH+jes5Y0VghEEmw+DgvHO7coLiArmYxJrgIyAV1LRdU0DjiERRnUd8iLN7/Y/OT
-         /aTIMGabilTpczK31ljE4QWakEJLJ3eAzDnujSWFvw1VBh1L5oEZqdnKuHip+jCPDAHx
-         vdyHQ36W9inyU3uVKv6VoLJ2O5Rey2F4+51t5D3Hbg5Sf0xpBx6M6tGIcnx9Ga/HiS1B
-         wqIPEEv3pYtDNNTuezQIQjdI5w23e6Atpr+kzK93OfUrF5U+FB07EeoW1jHHtdg5TM71
-         WZVgCSBAOavK5XHcYv8FJwYfhc69Fg4Upw2/0aupsKbfyxeQ26PfppggFG1WyiwiBoft
-         m9aQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rrow/R/bgtsXo2e0CmqOSFCHznkgzSAs2XBmVgM37eSI+jY5+ASM4GQ8WFKkEH8kRsAJvR2Ckos6DJuITLUdwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQWqS4D1SvCLv4chSMKxGuPJLKMIOdE9CchbriTafG5KkWBmtI
-	lZFs3adnlTc0UKJ/rUsRh52cu+GYd7bdxJXW28H59WswQ0mmzuPgG0R3QL1D7zAnKk8=
-X-Gm-Gg: AfdE7cmjOi2DYUIgII3jrP2CRKv6F8EBhYjNctIDF96pu5tio2pnTOo9CXc2yJvH+Tr
-	on4A0ZRGMeaOLnusCC7F03kui6VVKbFNLGDiewRnQ8c8kKoWFnhSvOrY8DVrTppCG1RSAnJMVeA
-	azbOuBgdLz6MeTdZerCE1z8MElhwTG2qKsONgp8dTJfs9azUz0kcEp1Dr2E7eAJHRmOLunXSfeC
-	SD2h9PNME9t23mvV/qgJDbJaAC8QcspFWEHvm7xHNVTGvujV69qEYJP/WBBp+EDIXJGPkRbTzx9
-	T5/Zmpi/w7krXhIAoZzrsESoa+b49U9D7xfq4RAQNzK97QNeFuItzRQVBDHhR1U2UD+btn4bL+W
-	fPlm1CwngDP8q/9qK8GWxu5l/vtmbOqcnBZhm2eXDxCigTYvglhl409HFikhXrWuQ07xstLWiWn
-	LYTSdKdJDGUF2x2/99v4GhRaGN
-X-Received: by 2002:a05:6000:4284:b0:477:b22:488d with SMTP id ffacd0b85a97d-47f2dca803amr471641f8f.10.1783719662677;
-        Fri, 10 Jul 2026 14:41:02 -0700 (PDT)
-Received: from [192.168.0.101] ([109.76.243.23])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47aa039bcdasm65817946f8f.21.2026.07.10.14.41.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2026 14:41:02 -0700 (PDT)
-Message-ID: <54d76244-8ba2-472f-8577-b5d445d6ede0@linaro.org>
-Date: Fri, 10 Jul 2026 22:41:00 +0100
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="TIktfliC"
+Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
+	(authenticated bits=0)
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 66B6IoIf015927
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Sat, 11 Jul 2026 15:18:50 +0900 (JST)
+	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
+DKIM-Signature: a=rsa-sha256; bh=jhPYci9Dt8OvtEtcy4b+McdMFRjiobjic+3G8cI6QZI=;
+        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
+        h=From:Message-ID:To:Subject:Date;
+        s=rs20250326; t=1783750731; v=1;
+        b=TIktfliCWLwpd/+swlM0LiA65CD4UnKwP+vi5ebo48IQszOhpbBoisXZWlKlE/dX
+         uAHImhHe1u8Zjp9F1SsNkKIkUb/AXZ9u8Z7NdTlKN2jqD5SOEswuQpbbITyDpknr
+         bQMy8wc6V8eb3bRh5OuNVsh/Fytdus3Lti0kugfIaALxVXZL20RQVbBjguL04sMs
+         aXEazALRVK84+npwac+koioVcBKj9dDnwEKFkIHUTtN1H8w/Ua72wDLMM7mvGBzF
+         WYg5KFzUg1+rIbfhz4gWL1L0e/OW6ioPVpTinpDdvu87eF5MyhfkfpurgzIcIBhd
+         q2uPRk28yyDaK3zl+/06dA==
+Message-ID: <0e5e64ea-2f3c-4ce6-88ac-08b66f13027c@rsg.ci.i.u-tokyo.ac.jp>
+Date: Sat, 11 Jul 2026 15:18:50 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,41 +41,141 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] media: uapi: Add CAMSS ISP configuration
- definition
-To: Loic Poulain <loic.poulain@oss.qualcomm.com>,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20260710-camss-isp-ope-v4-0-51207a0319d8@oss.qualcomm.com>
- <20260710-camss-isp-ope-v4-5-51207a0319d8@oss.qualcomm.com>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v8 1/7] KVM: arm64: Disallow vPMU when pPMUs do not cover
+ all CPUs
+From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+To: Oliver Upton <oupton@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu
+ <yuzenghui@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <20260706-hybrid-v8-0-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
+ <20260706-hybrid-v8-1-de459617b59d@rsg.ci.i.u-tokyo.ac.jp>
+ <akvgIWqBjAp_VA_A@kernel.org>
+ <e03f17b2-a765-4912-adf6-3da26e7eeecd@rsg.ci.i.u-tokyo.ac.jp>
+ <ak1DVUs0bgkpZh0N@kernel.org>
+ <7bf6c440-5f14-4326-9800-9821adc4e2e4@rsg.ci.i.u-tokyo.ac.jp>
 Content-Language: en-US
-In-Reply-To: <20260710-camss-isp-ope-v4-5-51207a0319d8@oss.qualcomm.com>
+In-Reply-To: <7bf6c440-5f14-4326-9800-9821adc4e2e4@rsg.ci.i.u-tokyo.ac.jp>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/07/2026 10:04, Loic Poulain wrote:
-> Add the uapi header camss-config.h defining the ISP parameter
-> structures used by the CAMSS Offline Processing Engine (OPE) driver.
-> This includes structures for white balance, chroma enhancement and
-> color correction configuration.
+On 2026/07/08 17:32, Akihiko Odaki wrote:
+> On 2026/07/08 3:20, Oliver Upton wrote:
+>> On Tue, Jul 07, 2026 at 08:08:03PM +0900, Akihiko Odaki wrote:
+>>> On 2026/07/07 2:04, Oliver Upton wrote:
+>>>> Hi,
+>>>>
+>>>> On Mon, Jul 06, 2026 at 07:03:24PM +0900, Akihiko Odaki wrote:
+>>>>> Commit ec3eb9ed6081 ("KVM: arm64: PMU: Disallow vPMU on non-uniform
+>>>>> PMUVer") made KVM reject vPMU unless the system-wide PMUVer is usable.
+>>>>> That covers systems where PMUv3 is absent or non-uniform, as well as
+>>>>> systems where IMPDEF PMUv3 sysreg traps are unavailable.
+>>>>>
+>>>>> However, KVM can still accept vPMU when all CPUs uniformly trap PMUv3
+>>>>> sysregs, but the pPMUs registered with KVM only cover a subset of
+>>>>> possible CPUs.
+>>>>>
+>>>>> Reject vPMU unless the registered pPMUs cover every possible CPU.
+>>>>> This avoids carrying support for partial pPMU coverage into the
+>>>>> fixed-counters-only UAPI introduced later in the series.
+>>>>
+>>>> Doesn't CPU hotplug screw this up? I could online a CPU that doesn't
+>>>> have a PMU after creating the VM.>
+>>>> I'd rather just change ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS to become a
+>>>> system feature. That way any CPU which breaks the system-wide 
+>>>> assumption
+>>>> cannot be onlined.
+>>>
+>>> ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS only says that IMPDEF PMUv3 
+>>> sysregs are
+>>> trapped. It does not say that KVM has a driver-backed PMU usable for 
+>>> PMUv3
+>>> emulation. This patch checks that extra requirement.
+>>>
+>>> I re-checked CPU hotplug. Onlining a CPU without a PMU later does not 
+>>> make
+>>> an accepted VM unsafe, since the check is against cpu_possible_mask.
+>>
+>> Sorry, I missed that this was against the possible mask.
+>>
+>>> The problem is the reverse case on ACPI: this check can disable vPMU 
+>>> when a
+>>> possible CPU is offline. DT populates supported_cpus at boot, while ACPI
+>>> initially populates it only from online CPUs and grows it as matching 
+>>> CPUs
+>>> come online.
+>>>
+>>> That makes this patch too conservative. In practice, I do not expect 
+>>> systems
+>>> to mix CPUs with and without a usable PMU. A better approach is 
+>>> probably to
+>>> treat such a host as out of spec and add TAINT_CPU_OUT_OF_SPEC. We 
+>>> already
+>>> do that for architectural PMUv3 by detecting mismatches in
+>>> ID_AA64DFR0_EL1.PMUVer; we can do the same for
+>>> ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS with non-standard PMUs.
+>>
+>> The presence of the workaround is, by definition, out of spec. I just
+>> never bothered tainting the kernel because these machines are already
+>> TAINT_CPU_OUT_OF_SPEC by way of the broken VGIC.
+>>
+>> Ok, so how about you keep the check that you're doing here and promote
+>> IMPDEF_TRAPS to a system-wide feature? That would satisfy the two
+>> preconditions we have for PMU emulation, which is system register traps
+>> and a backing arm_pmu that understands PMUv3 events.
 > 
-> Signed-off-by: Loic Poulain<loic.poulain@oss.qualcomm.com>
-> ---
->   include/uapi/linux/camss-config.h | 161 ++++++++++++++++++++++++++++++++++++++
->   1 file changed, 161 insertions(+)
+> This check turned out to be faulty: it can disable PMU emulation on ACPI
+> systems when a possible CPU is offline, because ACPI grows
+> arm_pmu::supported_cpus as matching CPUs come online.
 > 
-> diff --git a/include/uapi/linux/camss-config.h b/include/uapi/linux/camss-config.h
+> My current plan is:
+> 
+> - drop the possible-mask coverage check, to avoid breaking ACPI;
+> - promote ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS to
+>    ARM64_CPUCAP_EARLY_LOCAL_CPU_FEATURE, so the system will have the
+>    feature only if all online CPUs implement it;
+> - explicitly taint hosts with ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS,
+>    matching what KVM already does for non-architectural VGICs. The
+>    comment will make it clear that this is out of spec because KVM cannot
+>    make the usual architectural assumptions about PMUv3 sysreg traps and
+>    uniform driver-backed PMU availability.
 
-Why haven't you based this on the HFI stuff I supplied though ? Its the 
-same hardware right ?
+I sent a new revision implementing these changes, but due to a rebase
+mistake it was also sent as v8.
 
----
-bod
+However, it still does not cover every case of non-uniform driver-backed
+PMU availability. With ACPI, if a CPU is brought online whose MIDR was
+not represented by any CPU online during PMU probing, the PMU code
+cannot associate it with an existing arm_pmu or register a new one.
+This can happen even when PMUVer is uniform across CPUs.
+
+I therefore plan to take a simpler approach: when KVM cannot find a
+registered pPMU for the vCPU's current CPU, emit a one-time warning and
+set TAINT_CPU_OUT_OF_SPEC, matching the treatment of mismatched CPU
+features.
+
+Regards,
+Akihiko Odaki
+
+> 
+> That lets the code keep assuming uniform PMU availability without adding 
+> an ACPI-hostile possible-CPU check, and makes that assumption explicit 
+> for humans like me and tools such as Sashiko [1].
+> 
+> [1] https://sashiko.dev/#/patchset/20260706-hybrid-v8-0- 
+> de459617b59d@rsg.ci.i.u-tokyo.ac.jp?part=6
+> 
+> Regards,
+> Akihiko Odaki
+> 
+
