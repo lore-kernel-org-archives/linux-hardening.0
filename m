@@ -1,67 +1,67 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA616287247
-	for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 15:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0782DB78C
+	for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 15:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783783374; cv=none; b=MVy4nZ7aCRjAuo7OV+TpH6S9MhEV6JnvMEsn7NgCG8khGTGqlqHOKyg78wwlXhMUQ+aD6ODRfkmhef+7jSS0W8Ms3zUMyOJUU4x7Ewb2CnGCcza8XcA3JH3cKbnmmCvzD6Ovi4GUyHoOSNyJT6VduihNy9yRvmw6rNw9R3xBSxk=
+	t=1783783443; cv=none; b=ZdXc1inFJHhn7JNxM631ny84oBPUFf3ozAm7iI3O+GMuAXaTPV4jdstjAsgDWb5gtlFQRLlEKveh58O7xYTZyFdEzFJ74KOPw/mx7NWZaiA+CTD4OmArNcmqj9sfpZLTJfrKRN/jVgG4F2ycjzpkXe2r3tIKW49qXo0MmNtuMDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783783374; c=relaxed/simple;
-	bh=cyISK+85Dz541Qqs0If42ibLezlTMoZfbi29ufY26+Y=;
+	s=arc-20240116; t=1783783443; c=relaxed/simple;
+	bh=ytnfegl7Qybj0AzCwxpuF7iUfDDtBrbX3UJyTbFECFM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pN2HDKeZMXH44Qaird0Lxo6UPYaWlLEZGuWtC/aXdVK/pygp7zpf9tnJQkaro9Lu/yBFG/aZKcytEHb6zgmixM4ou7lkz8cy/lI7CP16rm7uAXd+P17Ij2bhzl6zw3M1GMiRVhXpywpcPfEpVODeoPXh1hUlD9/56qglrB5U3E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=MhoM3U/I; arc=none smtp.client-ip=209.85.210.41
+	 In-Reply-To:Content-Type; b=SI8gSo7TbDWdRY5OH9wP3sc+Dod7g1vWykEr4QD9Fj/D9cE5dyxaj/mcD39GudgdHN/xJDOenU57GCNhbhwWnrifRzOgKswypdxcpyl+B7KBiLBPbuaAjrWFabQTTBt8+xo2eqSTq58G0i3p7x4QRcEPIZR4XIlVL8AYkzL2Hh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=bXPltKwO; arc=none smtp.client-ip=209.85.167.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="MhoM3U/I"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7e6b554044fso1726133a34.0
-        for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 08:22:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="bXPltKwO"
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-4a427e628a9so468014b6e.0
+        for <linux-hardening@vger.kernel.org>; Sat, 11 Jul 2026 08:24:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1783783371; x=1784388171; darn=vger.kernel.org;
+        d=baylibre.com; s=google; t=1783783441; x=1784388241; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=RQgvAx06dSlqRMJAhcTe3Z4aoWlaS6qUI00wrJ9Xoq8=;
-        b=MhoM3U/IzuZwbWRXMHaESKT/BfhxNnv5SVSMwk5BPx0Vh4jrvbfqx0uJJQLLlH2AwH
-         f8nfBAeLOqmOTdk01giiOWSCY8X/XpEcW+6gipKvQA0kpZs7wFffgAzE3wvpL8HDfFyL
-         0TzPL5z+/xzNlPtpAwu3OnjYWrD82vzLaiq+g+2EAF7nSVZXT1gYMr/MEWWo5igQTLsa
-         iV7jsSUp7W5iJEFn2RGByUjy4IejvEUUVdgwaAJuZg50ulu0tNtKtLtreYk1fHR10gbb
-         r4UxH7gShfp3GHN/U6gQWa4X7WId0LLVMdnyYmO8FMHfDHYg5rTOptPmXDMfNBvZ0Tbw
-         bkRA==
+        bh=oPASv6Zq6YY/gY0oEbRpb3fd8WBXtfv+ncRCm+l0SYU=;
+        b=bXPltKwORkBFdn5e6sB6/D/3ve/kjpKIGr7B6DqihDL294D8oi5Rq4hAt2VuPgT3kv
+         off6Vk3hjbh3ZuyhEyqAAU/sPeLEG5YcuDp9lfVPaAqXQV7/eouonYa7ua7dYnhWPpCo
+         7dCW+QMx25QNmYG6wylrMd5gAErWbyHXHxCgN14j4Tn2gWiTj5feWyAYFB6T1kQT3kox
+         CQHM+8CZpRb7sKeF0jC8rZttYWGnT62fSAqrmezvH5gCD0Dyjmyw20qFjAMXq9tW4KGB
+         JC77c2tOuuJXV0yfdhMgJHjb1zWr+/0rklbKC9QEVyY8ZJ+njxhNU3X3BMQhkIGK7V6X
+         +xDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783783371; x=1784388171;
+        d=1e100.net; s=20251104; t=1783783441; x=1784388241;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=RQgvAx06dSlqRMJAhcTe3Z4aoWlaS6qUI00wrJ9Xoq8=;
-        b=VATomuhUbxEhWLyxSJtAGO+Mt7FOnaLC9NOy2liQgtPeJTFgLz5vq6zlOVnZEy6X3H
-         k5bvj2UfgUmF1eROWQ+mBwRt69hwei4fWKC2G2k/F6mXhq4jTVx9gj8zQVoxpIGUzIEC
-         Dcagye2qasecdRlFyMMyQO/LsAB/BoM+O6Kmc/M6Cv6Vh8inkv1K2ZbrptSb0j3v6hk0
-         z2GSqRv0VDBAq4FlWfftaBt3Od2jCYOst/0gxQndcb4/h+W+JSu6GftMBFRXDzYxv5j5
-         xNlcInTF7p084f0azWrFsejWFceW8USSOFGLzAQlwx5NDsC22zG7XZ8uQMjvFQO2lwWU
-         oqvA==
-X-Forwarded-Encrypted: i=1; AFNElJ9v//7d0qN/3X6GSjPs4KeNYhWHYxSQH2eIs6/ZKpq17XGGyJ7bIbktJ08cFrJXge0jxR12EA0cJWUpegcP6PE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxbu5hH4VaHxBBtFMqF1HKMi7rOwwPKzxpQmXr8xeGzVQgS/F6x
-	XXerYrimGzQM220JCjXChDWBVpZQtY2khgX/jrk1aFd8RDou3Bm5J/rfqEiEz9R/EQk=
-X-Gm-Gg: AfdE7cledBcAoNggsfQDEL8HhLnDLmsUa/4d4g16OFo4QXOZSPmVYaxru4yMhuZ436T
-	j7h9A1p8sYarW6bM8QVba+4evFmfOXCpWjD39+PTNaE+EPXw3gceilF3PF1XvUsijsaFnJV5Aa6
-	zQupfkvOTnUosvRs01wtcFlmN6xNohEqh2h0hj/HrdsZaH3hy4uCXZv2Ej6W3xZGIUhD8B9deaj
-	IyTtZNsJbiPFJU4RUWuZnpyZGbr4dvkLE+u8GIex8DVmYEbE8JYe7/E/80wVGrEnW5wxQ1Uruji
-	ol8IhQTHp9eJfX5Tvnz/CpYsKLrfu27StrbAYrPjoIR0c1LpzJUSpJCJBFZ+WLP2VuIiSUpjE9M
-	9KHS4/UCqg+zh1hnqoowgqz3yb7HGqk668aCA9NNZzmCDbd3t/Mqq0NdL2m5akjj4Pn2EnGUBV6
-	wVfhSLMaZBEu7IPX7QKjo7VB24rWgWSVaC/JvXM49MLKGQrTQmVlOxYNsYpnbIP6M=
-X-Received: by 2002:a05:6820:4de5:b0:6a3:7b7e:ee6c with SMTP id 006d021491bc7-6a39a6d19b7mr1803639eaf.40.1783783370923;
-        Sat, 11 Jul 2026 08:22:50 -0700 (PDT)
+        bh=oPASv6Zq6YY/gY0oEbRpb3fd8WBXtfv+ncRCm+l0SYU=;
+        b=oGA/mCPP/9wiI6aEhEBYnmyP19tdM2mlUSCpIZO9qTPDN0KNzEHdFMMnQ+yez7FbM9
+         viZaX+83Tz5teDHVtZYKQoGezAPNsLmtBWT3n0KhxZWjQOzL/aqXVgtz9Hpe98ugcHcZ
+         WIMmsAR4ArpIFhmCWGMQeiZyPgJ+Tk3tQO7qNHiBA7DFf44TzctgZ+/LLZY27l/JUXfd
+         B/MoCN7cb2a0RuAdEDgdsXturW7Rr5lZy3CY6/N/FphCeo+qRj1Xati35tM1Pa5MAh4x
+         ZkWHVHItVFkMXDR+bIyiNpZiPl2LLNIxE8xXF08pW7kIlfLbrB8+48SJ/a0E2AO99Vfj
+         kWLQ==
+X-Forwarded-Encrypted: i=1; AFNElJ862G/NouaPGPIQzUXES7B3wsaIPTbETKXOdF1Xw9gRdmfM0yAYoJAFTFC7oc21XCJ+rw3ktTiEwYYsNeHRLEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeOrV2BlZpADXNXlXq3QKWSRJPWth0cLYXIwQz7JsHZ6F+zMeD
+	pqKzQ6jgoVgmu+hntnpsykdMNnVGs2Dw6xIcb/qTKFfaMuyBAz1UriTaJ/acHaOwX8k=
+X-Gm-Gg: AfdE7ckLBFmlAkWT8HjEhSPJyoChorR33M6t93bW2GbJ0BaiReb/JdLsTtjzf+D9IvX
+	l6USDy65Ug8uvedkaA2p/q0v67qR0JuIGl6DYi0YkxQjnTc/4reQ2Mdzn88iwOMnvfCEQ6WS7aQ
+	Y0t2kfCgwn6Df8u8bJCjhnwwfIzi2v9D+/u/xBUjtTeVd96undJJMEJmORVtJY94cBCjmSad21Z
+	bhBJbtT8CmsdDnGzlc6bojPulpdWHQe3lgN2QG9wMNJ9QpeQKyOj6anzyidy1EKGf9CjG6IUiCN
+	Ke5BavMsEjqUIZJsxHJAReLuNGKPlpMOUDhKrlUGTv8846huFFZaKOGaj7TaPnc1b5//IqMDksd
+	FmrjJvyYlnNKRqIU5EeGGJ4oooYmXP3dAbxokCfJ0Il1O3Q32Ol8bLklOx10GICLjuComl7R61i
+	2b4Nq0ltpE2IGDrYofmk18cAieOfuzJiseNKXxi5yCEVqq4tPkb+szQ+K+pAp/CwM=
+X-Received: by 2002:a05:6808:6903:b0:493:b6b8:c8b0 with SMTP id 5614622812f47-4a42ad7549dmr1908121b6e.14.1783783439274;
+        Sat, 11 Jul 2026 08:23:59 -0700 (PDT)
 Received: from ?IPV6:2600:8803:e7e4:500:a950:74e5:81f2:8c89? ([2600:8803:e7e4:500:a950:74e5:81f2:8c89])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ebcae20782sm9133072a34.4.2026.07.11.08.22.49
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4a1b01eefbbsm7974781b6e.13.2026.07.11.08.23.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jul 2026 08:22:49 -0700 (PDT)
-Message-ID: <a5c58557-8289-4cd8-85bd-3349e410392d@baylibre.com>
-Date: Sat, 11 Jul 2026 10:22:48 -0500
+        Sat, 11 Jul 2026 08:23:57 -0700 (PDT)
+Message-ID: <adf66856-1cdc-4722-bc3e-549122a912bc@baylibre.com>
+Date: Sat, 11 Jul 2026 10:23:56 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 7/7] iio: dac: ad5686: add gain control support
+Subject: Re: [PATCH v7 0/7] New features for the AD5686 IIO driver
 To: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
  linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
@@ -77,72 +77,37 @@ Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
  Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ sashiko-bot@kernel.org, Maxwell Doose <m32285159@gmail.com>,
+ Joshua Crofts <joshua.crofts1@gmail.com>
 References: <20260710-ad5686-new-features-v7-0-1bcc8c280e4d@analog.com>
- <20260710-ad5686-new-features-v7-7-1bcc8c280e4d@analog.com>
 Content-Language: en-US
 From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20260710-ad5686-new-features-v7-7-1bcc8c280e4d@analog.com>
+In-Reply-To: <20260710-ad5686-new-features-v7-0-1bcc8c280e4d@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 7/10/26 6:20 AM, Rodrigo Alencar via B4 Relay wrote:
-> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> This is the second series of three on updating the AD5686 driver.
 > 
-> Most of the supported devices rely on a GAIN pin to control a 2x
-> multiplier applied to the output voltage. Other devices, e.g. the
-> single-channel ones, provides a gain control through a bit field in
-> the control register. Some designs might have the GAIN pin hardwired
-> to VDD/VLOGIC or GND, which would have no "gain-gpios" device property,
-> being able to set "adi,range-double" if it is hardwired to VDD. The
-> vref_mv field is moved down in the struct ad5686_state, so that the
-> overall size increase is reduced.
+> Initially, a big patch series was sent:
+> https://lore.kernel.org/r/20260422-ad5313r-iio-support-v1-0-ed7dca001d1b@analog.com
 > 
+> Then, the first patch series added fixes and cleanups:
+> https://lore.kernel.org/linux-iio/20260524-ad5686-fixes-v7-0-b6bf395d08bd@analog.com/
+> 
+> This one is introducing new features:
+> - Consume optional reset and correct power supplies;
+> - LDAC GPIO handling (active-low, held low when unused);
+> - SPI bus sync() implementation for batching multiple transfers;
+> - Triggered buffer support, leveraging LDAC and sync() to flush
+>   all channel writes atomically;
+> - Gain control support through the scale property.
+> 
+> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> ---
 
-...
+I made a few comments, but nothing critical, so...
 
-> @@ -217,6 +229,82 @@ static int ad5686_write_raw(struct iio_dev *indio_dev,
->  
->  		return ad5686_write(st, AD5686_CMD_WRITE_INPUT_N_UPDATE_N,
->  				    chan->address, val << chan->scan_type.shift);
-> +	case IIO_CHAN_INFO_SCALE:
-> +		if (val == st->scale_avail[0] && val2 == st->scale_avail[1])
-> +			double_scale = false;
-> +		else if (val == st->scale_avail[2] && val2 == st->scale_avail[3])
-> +			double_scale = true;
-> +		else
-> +			return -EINVAL;
-> +
-> +		if (st->double_scale == double_scale)
-> +			return 0; /* no change */
-> +
-> +		if (st->chip_info->regmap_type == AD5686_REGMAP && !st->gain_gpio)
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
-This condition is used a couple of times. It could be nice to just add a
-st->pin_strapped_gain field to make it self-documenting and use that instead.
-
-> +			return -EINVAL; /* GAIN pin is board-strapped */
-> +
-> +		st->double_scale = double_scale;
-> +		switch (st->chip_info->regmap_type) {
-> +		case AD5310_REGMAP:
-> +			ret = ad5310_control_sync(st);
-> +			break;
-> +		case AD5683_REGMAP:
-> +			ret = ad5683_control_sync(st);
-> +			break;
-> +		case AD5686_REGMAP:
-> +			ret = gpiod_set_value_cansleep(st->gain_gpio,
-> +						       st->double_scale ? 1 : 0);
-> +			break;
-> +		default:
-> +			ret = -EINVAL;
-> +		}
-> +		if (ret)
-> +			st->double_scale = !double_scale; /* revert on failure */
-> +		return ret;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
