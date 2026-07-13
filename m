@@ -1,259 +1,186 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012003.outbound.protection.outlook.com [40.107.200.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BCD3382F1;
-	Mon, 13 Jul 2026 16:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783960707; cv=fail; b=SEN+TMTuWmgFiOHldsYNpv9VXdfoIpsKXs8GcQxgJ/KKi8jFDg88M5Huk0DnalePpeDokxpFKfJdBRgx9Pa4EfLzB5znpKn7s4Btu9z/3IQ89qXNfc00oy4Yxb5aoKA3+kPSm8jiEUmC6/BNKGwu/BCjCOq7FpUz3+QLakllm7o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783960707; c=relaxed/simple;
-	bh=6pA1x4hy1S5BrvbPcwsR+HBw0/UjS/cu+7r2SyMOzUA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FAtIHD3FcOadyvb9vBWqmo0PT9b9cNoKbtIRjh9829swGPD3QcCbaZCt+cgWa/me7cdY0iri7lgf16oFCYn8PsSvk+OhKIt0Q5pD4VU6nr2LX2aewrLU3VdFwCAKOf6P3ww+XJyHHf1gneU7a4cAJ3VCgcZFCs55Aoy53ygDYeQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LuGZfSNU; arc=fail smtp.client-ip=40.107.200.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED2143CECA
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 16:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783961078; cv=none; b=P3WbNg7jt4loaBok7cyZY/qNWFw7C+dCeFTK6KJfczC6sR4L3NYm+/elkkxIxxugy03FQcsIkHpB1pLBYIwuKl3H0SUrqIPCPZd9O6RTZI2u8VnrgEr6/iG89tuZwQ+jAVL1SQQeNEtOaRzg3CNnnqK/KdUeyHjSQ20a4VysNdM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783961078; c=relaxed/simple;
+	bh=nNTqNq7xMs/jXDzPl/ePNEIhBvhz9TuNxBRMnOKKpbs=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZmMDYe7xNc7r4sPPdCcNrEcNcUdn6FzpCn6oj+n47gHEm6n/Jy7L6O6MmLrEEmEWgd82Kuetvg232kFdJKfugD9AkVmhYaqTyymt49qyHSaXIZo/bGnSgJGdUeByTM9sw8k+yXApuq6vMdjmiGPzCSQWSRQhQVlYib5H44rFIoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dlwg+Fqw; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LuGZfSNU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L1vAhvMXrgynBDXhdK/ais5Fuv2poCf9VRLlj1vTR7cCnzEBVptR5KWLCjICtQDzloDI/A7FmAk487xYzbrL9YuoCU1gpURzoQa541VHQUGIuOV0EBSSwNRJb9eRLe5HqedaI5aYn+gEgKQmIAGKTe8SclOjmdUh6P4MU4KH65f3GIBBAiz6WYh+qzbF7YvgXv0/a6nr1EAYy+92Q7r4WWRwwhasklzOeCPjToIY1iHhqWslVBq9oL/P+uay40pMg1e73JprDLg7IPdM6EHmv+cs5PgyaqHJTIn7RQ8vvvgL1nlgu5ZQG0g/uCrdd1kXf2Op3OPFbsfRhVyMIpAyJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1Q/en/7ckSEXraxMygO/NvLcwDhwUznwW94J4pPpTUg=;
- b=wfxoQUKxAkjByu0ozScrsGLM/+gHDIuTmIaJIGGL3Nn/NfqVwarU0Mtkykp6imIFPmUT73iulE+D/w/dxl5HW+qkgx8KA4CjSifEprAsA1CWzXxyOn2kleZxdgCBtR5mGrYpjNObe6kHmrCqyVKILeIXkdsW/zlMENOdVNahe/0qrqrKW5BICJMIZblnpGY3XmsejTiM2srkgQDbQA5U5bMTvWEhWKJHS1uSLFArVSMtJUEU9XkgRrdOdhtRy7PM3nA2DIIO+CczgRrN7DY3nN5bezg7xkuZi1rCkTzvwSWdszXG1aKDG2wyQO/yBsiFD+zpkbZ5KdEu0nNVn/ZaeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Q/en/7ckSEXraxMygO/NvLcwDhwUznwW94J4pPpTUg=;
- b=LuGZfSNUJy5XLgbmujn9u4bUQjiM6AG5cZI9jniQJahtYkQvPFvV8XiiirokaNu4appEjHstbFSYRvy1cxipcoLx3EdtZ/xGLUUN4Mtm968luXe6kqX3LjCIb/kneqGl5DQEYt5cz6Qy2Qn+KO5kLFmvxENUHyqIMcc1nIPkFLg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CY1PR12MB9697.namprd12.prod.outlook.com (2603:10b6:930:107::6)
- by IA1PR12MB6532.namprd12.prod.outlook.com (2603:10b6:208:3a3::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Mon, 13 Jul
- 2026 16:38:17 +0000
-Received: from CY1PR12MB9697.namprd12.prod.outlook.com
- ([fe80::3a41:55a0:8203:596d]) by CY1PR12MB9697.namprd12.prod.outlook.com
- ([fe80::3a41:55a0:8203:596d%5]) with mapi id 15.21.0202.014; Mon, 13 Jul 2026
- 16:38:17 +0000
-Message-ID: <02ccf4e3-8193-4ba7-931a-e5bf2dde3f12@amd.com>
-Date: Mon, 13 Jul 2026 22:08:03 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 1/2] dt-bindings: i3c: Add AMD I3C master controller
- support
-To: Shubham Patil <shubhamsanjay.patil@amd.com>, git@amd.com,
- michal.simek@amd.com, alexandre.belloni@bootlin.com, Frank.Li@nxp.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, pgaj@cadence.com,
- wsa+renesas@sang-engineering.com, tommaso.merciai.xr@bp.renesas.com,
- arnd@arndb.de, quic_msavaliy@quicinc.com, Shyam-sundar.S-k@amd.com,
- sakari.ailus@linux.intel.com, billy_tsai@aspeedtech.com, kees@kernel.org,
- gustavoars@kernel.org, jarkko.nikula@linux.intel.com,
- jorge.marques@analog.com, linux-i3c@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org
-Cc: radhey.shyam.pandey@amd.com, srinivas.goud@amd.com,
- shubhrajyoti.datta@amd.com,
- Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-References: <20260709064233.1451482-1-shubhamsanjay.patil@amd.com>
- <20260709064233.1451482-2-shubhamsanjay.patil@amd.com>
-Content-Language: en-US
-From: "Pandey, Radhey Shyam" <radheys@amd.com>
-In-Reply-To: <20260709064233.1451482-2-shubhamsanjay.patil@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0125.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:96::11) To CY1PR12MB9697.namprd12.prod.outlook.com
- (2603:10b6:930:107::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dlwg+Fqw"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-493f45e20cdso20664625e9.2
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 09:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783961075; x=1784565875; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=RjYd7MVan8krnGSSqxV4jQoaD7g5/4a0TcjKtRhjtfw=;
+        b=dlwg+FqwRh8SusCqwS5NGG9ZMqUONQ4E8LG72Ld/UwR73FTMPLsHYAD8GlQ327ZSwx
+         Gc2so+x1H/m62G4Mleryiaw2Kwo44o87e9PCTMkdDgd7BNL1d99q08OJAVr57gQUmtEp
+         R0xU72+kGS++sXve1n6fblxlEyOzdbAibCkFL05xIBk/JFETPEa4YXe7wfYjsGvDwgG/
+         zSTuJSVQralsKAUjxF4JXOx200H/0e1NNnbTdAfv2A6HJMie37IWpwQHOxpYL/nrNZwl
+         2XVHpBx3TIDmqODu3eu0tcKBm3BjgOFfQhIg3bssIa/b8UiqKga1tJ9HZqt7KQD5oKGf
+         MsCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783961075; x=1784565875;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=RjYd7MVan8krnGSSqxV4jQoaD7g5/4a0TcjKtRhjtfw=;
+        b=Uv6zBYN7bstSZT8Gd6r5TfCzonABty7J8vKUCudPAknHocSXMuxaJYRJZvf0iUcG8M
+         cnuoWGqXG4CzDjgh2eJE4qUN4HRQ53WrZJF7vHdU/JqjtZuU84x3u15SxYtrQIpw1/in
+         2+A17m+H7NEDp0jGPt4YobLK+yMYY5k5i0mfMO4jP61gVfhXXX6CFp8/vKj+5r1CZK0R
+         zKUvUKWqZWFqgpv9yE45jYv+5Ji/IAzRsOkvbOevrzq6CG4N33/Os3MvbEEvwuJIUruM
+         y4UDQ2TpWx/TvO64oG2qPfJN+T37WmX1Vh6C6kPhM9FmkqrhHtpNkvImhq2Y2fQpD+cQ
+         QTfg==
+X-Forwarded-Encrypted: i=1; AHgh+RqxT0UJvWh/JRC5TDS9L8NjRVqI5JcqYmJiJ+zx0bvKZGeL+FqWv89fUKbVs6Zs52AB1BxczX5b4SD8cMVQOFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRofdONBeQmfYtMPmpVHFmZC2JwM3GFlzV+izuXdGg0W2trESM
+	DDR4Z/mGozBu9z5J1XxytVm4178816Hee/xVxksH9wbkDS9ioOjHYeZxgpnUnel+
+X-Gm-Gg: AfdE7cmzNoa1+bwcH9jnqj+qa6Ck6eTUAm82SmV9wPTFrSRrMl//8ChjS52g2BVLrLr
+	R7nxyGggV/D9Mzztxte9FOyRVH8h0HW+PG95k1I5veCS/cISuyET6Bz8HET5ISLxHf5rB1BOwgx
+	7xCCzOxyzrQ1x7msdAEkqFQjUrOXPpqcaQs6k9ttjYs9njwfC+CICV5mJkdlfb1pSHTjbgX9Zs/
+	nWGVOfvD+BT2TlUsEBJtSxTgBrokzfzNV2wk18YZxtCEy8BS/ebZUb+BYBIToQNna1k5hyf8uAh
+	xoph+EvKXQ1MJDLk7SZ4fa67ElRIUMdFjwaW4rrVCqUxtua3hLFjF7jlaqI5HCTL+BR+hrkMTWI
+	0vJ8QQLWg+59Ie5GASu4i75fCZqgYbO8vy2QL53n01ZNnMZ+LwnJX2tKYOO+QbSVZpC8Awve2pn
+	HQkfl+/FlfRxVebYaS0hdrgxAg7bTpoFbYi7CXV+t5G/6QvKSnvkypc5quYQA+achwCla05QfEF
+	IKv8MJiIpUwuY9l
+X-Received: by 2002:a05:600c:b99:b0:493:aaa2:f034 with SMTP id 5b1f17b1804b1-493f882ae23mr104948055e9.26.1783961075315;
+        Mon, 13 Jul 2026 09:44:35 -0700 (PDT)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49508727f7dsm8128065e9.4.2026.07.13.09.44.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2026 09:44:34 -0700 (PDT)
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Date: Mon, 13 Jul 2026 17:44:28 +0100
+To: David Lechner <dlechner@baylibre.com>, 
+	Michael Auchter <michael.auchter@ni.com>, linux@analog.com, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v7 4/7] iio: dac: ad5686: implement new sync() op for the
+ spi bus
+Message-ID: <satyxehagxb4zdqfmni7b57ipwyk6bmu5opkfquz2ie7ohne2s@jbobjkgdp2pk>
+References: <20260710-ad5686-new-features-v7-0-1bcc8c280e4d@analog.com>
+ <20260710-ad5686-new-features-v7-4-1bcc8c280e4d@analog.com>
+ <931fe63d-d200-4b79-9e17-fa48c8de7f29@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY1PR12MB9697:EE_|IA1PR12MB6532:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3201d55b-5b6b-45d1-4784-08dee0fd2424
-X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|7416014|376014|11063799006|56012099006|4143699003|3023799007|9063799003|22082099003|18002099003|921020;
-X-Microsoft-Antispam-Message-Info:
-	HZ7Btc9nUGa9GKHJ4yYgntoiWddF6EtX+4MA8PZP7KXmAyhEo/XYfOTD9LYm+22EV1YB935DOe805n7sAhvG+wKnDFh+xVjl2b+B8eUEdBohmaWIPgPF4OJxbx9jCPdteC6WH2W8ED7rIVKbhotVY7KFH0o2UWQW2ZGC+YGHQl8/PLT7wm4wEVWHqNmyWwW5yh1QCHOvlLlMq1HGkxznl5xrNIjwOX0DTn7L3fVy9RjKWf5atqLXXzytLVHE36taoeyppFKxvRMw1A6FXBQENOXqE2ksnU05XAF6B39cyJ8NOa1tLfloPQGd8OWQNG3f1HQ9LGy1GpfGmOooJDzUYxOl9CTqn/FU6hn9Ye7T6ofZumg2lSKTRpxBQCbWVIz4dPr4L9npCJy/bJlqLNSoepE0nLEXy82Mnf/OQUpIPAGl8Z7E2pBEmxjUt8gRfYN85bkLqYir3NYxEKDlZPeVfv56hhZv1Pq15eobQiOH18rN/iTrSw3bMATzSPTLSh2d1cUTHM51nqN5HYl7HBcdnGbjs4j2gfqxfqcbaFhegBxy6Pzqf6FvpgXnLvN14bLNunjOnBdumTN28U3BfXbKQwIpFJCPrjT5OcyNkMqIKN1SSnoNvn7mWa+iuBkegjs9ofWYmDa++uL1G4RUsjEJcn2LHKhhq3GyrmCqludDre8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY1PR12MB9697.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(7416014)(376014)(11063799006)(56012099006)(4143699003)(3023799007)(9063799003)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dkpKS2VodEprWGJRT2krVjhFOTZwdE1wb0dJOTZBVTcxOW9CZ2RvOTFjZXJi?=
- =?utf-8?B?UVNvNUxsTm1FVmErdklES2V6VEVCSWFKdTdQYUY5V1ZsbXBHMFFHWkVTdVVB?=
- =?utf-8?B?ZnZ3eEViTlY0SzVpS2RjbWtVUjlLdmhRKzZ3Q3B5cjFGa0JDSEZGU3ZjOFp1?=
- =?utf-8?B?bW84eG5aQ1F4R3dISVdVM3ZLL2UvcU4yem9GMW1sbjdjTTZzTEc4c2d0amR2?=
- =?utf-8?B?R0VkVGNXSWNSM2lDa2pjek9WbFk2WUR6TkZIZDMzTU4wOSt0VERTQTEwelJQ?=
- =?utf-8?B?Qkx5RmhWK0ZFTmJjM2QxOWFkNkNHMnFGWXJ5bEVaWFg2NjlBNVJKNHJiRVo3?=
- =?utf-8?B?QmJJZXBmL0FJeUptOFFleWZ6ZmFsWDNzRnhFc09wZGEybVBwWTYrWlFnd2lx?=
- =?utf-8?B?aFJkK1hjZ3ZnZHRYNTN1L3VONnRBSkU0YnE5bnlOZzJ3QlFiRldxV3pIUzVw?=
- =?utf-8?B?TGZibzZDUXcrckxWV2pmNitLWkR3R25QanBiQTI4YVlUN3phRnVpL2hXbE8r?=
- =?utf-8?B?aXBteFZpMHpOTHd4ZGNjS0NZWVZLblFmeWJaTHVVYUYyZUx2QmhYdjBXdWZi?=
- =?utf-8?B?Y21BSm16NjFUYXVUajNaN3ZLR2hzM1A5a3NibW9xaFozR24yY240NDlvTHEy?=
- =?utf-8?B?bk56OTRxaXY2eXVCbTVKbWlkL05adUJ6M3lxbE8yb05CZ2FFZVkzMUhneCt4?=
- =?utf-8?B?Y0Jkc01BZnhTWjlRVmJTaDYweTB6dlEwTW9WUTEzZ0hvY05WQnVUaTNvYW8w?=
- =?utf-8?B?QXZWTkNBR0J6cWFxVmJOTFplM1pkbkNBNWZsRWFUSXFHek5YaDluZ25MZlVY?=
- =?utf-8?B?WVVtZldWUC92bXpsU2MyZnlkRjJzbGNKL2VrZ3dHWGdlYXRlUGRHRjB5UnpK?=
- =?utf-8?B?NUhYOWIrSUpRU1VYVCtnNXdVT0VEMUtPL0p1dnNCZ3YrV3QyTnFZUTZFRlFh?=
- =?utf-8?B?dHovdE5CK2V4bFVzZXhBemRmaGptRkMyZ3YzNmJCVkU4RVVFdEhYYzFVWjZO?=
- =?utf-8?B?VHUzd0Rsai93amUwSkl4RTNJUjl5Nzl6TkRvWlYydzhRUVpjUnI2ZGlkb3Jq?=
- =?utf-8?B?TlAzRTlpZ2lpcVI2ZHFmVEZEVGtIcWZTaDU5cWxDV3J5L2lrZEFxWUF2QWxu?=
- =?utf-8?B?akNFTHowTVJLeFNEK3FrTjhqUWRER01hc09lMSsvKzlLdTNOUm5yOG1EV0Zr?=
- =?utf-8?B?Z04rMUtVR1VFdzl6V3JidWVOcGoyb296RGFiN1lvMmZUT2tzRWJsUisvVlFt?=
- =?utf-8?B?VVBzSUdKbDdxWlBQRTJrdEs2Y1owamp3RVQvYzJhVkllbldXRlVsU1FRTmwy?=
- =?utf-8?B?RnZCeE1DekZCQksxN3RMTk9lemlmd3ZUd1BCZ3czQkpvbUNjYldZdVoxNDM4?=
- =?utf-8?B?NDRtYXlRRlBkdm8wUVpDdFhJdkprNHI2aDNBUEdqcUxnYUpTWjZLVU5QU2tK?=
- =?utf-8?B?dTVLUVd6NS8zcWkvSmVlWDExL3JLZ0pSQm1wSHB1cUhyM3BUZHhCTXFSb0l2?=
- =?utf-8?B?OUdCRVBBMXVOOUpYejVuUXRMMjdYTWRIT3haL1MrRzAzTEVnT0ZmQ3F4aXJu?=
- =?utf-8?B?N3cwdWNka25rUDhZZHlFZ1NvTlQ0UVlDS2ZuM2JWN1BBNTduVmhHOSttQ09Y?=
- =?utf-8?B?bU9KVXM2ak1OaGpNSlBnbUVGdEJQdzBJMU5NTW02dkdwejB4Y2tscFU5enRX?=
- =?utf-8?B?NXhjdkhEaEZscW1HYTFubXNzSExJNTg3WWErb0RtOVo5YXhybmtaVExpOFh3?=
- =?utf-8?B?K0F3WHFKN2I2TXY2VXZxS3BKNCtuTU5jRVcxNGZJNHpQSGt1UTlOczUrSm5n?=
- =?utf-8?B?cCtBOEU1R2dhK3dTNnB5eGtWb0VOWSt6eFhNaXFrN0QyS3ROY1BZc2F5WGtt?=
- =?utf-8?B?R0lYN0hDd3FxM2xNNldObDRiOE1LY1VjbXNaeHhYS0g0M0s5MmswODZNMXpz?=
- =?utf-8?B?TEZkM0E5ZFdmQVphTFZOQVlDZ3VWY2t4TnhocE1xdEExc211YjNnKzhDa05k?=
- =?utf-8?B?MlBBUHp1bGswUUM2Y1JRaWo0NGgwUVZMV2ZDZkJrUXVocncyakJaV2JQSEpM?=
- =?utf-8?B?YThNZlRtVEpVOEM4UUc1R0Q0anJPc2NWZm5GZWgwdGl2dWZ3UTV4VGRTR29u?=
- =?utf-8?B?NXNHZlo0T3pNekdWVTQ5am9QSnEyQ28xZVBHb2cxVFRpYi9tcUc4LzJEMloy?=
- =?utf-8?B?VHMvelN0ZTh0TkJiZnk2c2NBbituL0Fxa09xU1VOZjVsRGppSUxhRk4vekJw?=
- =?utf-8?B?bEV1Q3h0SHdPVFlzL2JoN3Mzai9SYzFzbUUwTUtJY1B4cmorcXVFaGJrcXBk?=
- =?utf-8?B?c2N4clpkMXAwRzZmZk5ZcFpEL0hMOWl4OUpDckRPTHJRRkE4ejV0UT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3201d55b-5b6b-45d1-4784-08dee0fd2424
-X-MS-Exchange-CrossTenant-AuthSource: CY1PR12MB9697.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2026 16:38:17.2247
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cnOq/4vGdOlFSspQXgidxq8DNcMXTZn5xAnEJK+6bIjeGMefRqeYlWEywRrymV4G
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6532
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <931fe63d-d200-4b79-9e17-fa48c8de7f29@baylibre.com>
 
-> From: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-> 
-> Add device tree binding documentation for the AMD I3C master controller
-> version 1.0.
-> 
-> Signed-off-by: Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-> Co-developed-by: Shubham Patil <shubhamsanjay.patil@amd.com>
-> Signed-off-by: Shubham Patil <shubhamsanjay.patil@amd.com>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-v10 changes looks fine to me.
+On 11/07/26 10:07, David Lechner wrote:
+> On 7/10/26 6:20 AM, Rodrigo Alencar via B4 Relay wrote:
+> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > 
+> > Use of local SPI bus data to manage a collection of SPI transfers and
+> > flush them to the SPI platform driver with the sync() operation. This
+> > allows for faster handling of multiple channel DAC writes, avoiding kernel
+> > overhead per spi_sync() call, which will be helpful when enabling
+> > triggered buffer support.
 
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Thanks!
+...
 
-> Changes for V10:
-> Use symbolic interrupt macros and include arm-gic.h.
-> Added Shubham Patil as Co-developed-by / Signed-off-by on the binding.
+> >  static int ad5686_spi_write(struct ad5686_state *st,
+> >  			    u8 cmd, u8 addr, u16 val)
+> >  {
+> > -	struct spi_device *spi = to_spi_device(st->dev);
+> > -	u8 tx_len, *buf;
+> > +	struct ad5686_spi_data *bus_data = st->bus_data;
+> > +	struct spi_transfer *xfer;
+> >  
 > 
-> Changes for V9:
-> Updated the MAINTAINER section.
+> This could use some comments similar to the explanation in the
+> commit message that this function is just queuing writes to
+> be sent over the bus when sync() is called.
 > 
-> Changes for V8:
-> None.
+> > +	if (bus_data->size >= bus_data->capacity)
+> > +		return -E2BIG;
+> > +
+> > +	if (bus_data->size)
+> > +		bus_data->xfers[bus_data->size - 1].cs_change = 1;
+> > +	else
+> > +		spi_message_init(&bus_data->msg);
+> > +
+> > +	xfer = &bus_data->xfers[bus_data->size];
 > 
-> Changes for V7:
-> Added i3c controller version details to commit description.
-> 
-> Changes for V6:
-> Corrected the file name for $id in yaml to fix the dtschema warning.
-> 
-> Changes for V5:
-> Renamed the xlnx,axi-i3c.yaml file into xlnx,axi-i3c-1.0.yaml.
-> 
-> Changes for V4:
-> Added h/w documentation details.
-> 
-> Changes for V3:
-> Updated commit description.
-> Corrected the order of properties and removed resets property.
-> Added compatible to required list.
-> Added interrupts to example.
-> 
-> Changes for V2:
-> Updated commit subject and description.
-> Moved allOf to after required.
-> Removed xlnx,num-targets property.
-> ---
->   .../bindings/i3c/xlnx,axi-i3c-1.0.yaml        | 58 +++++++++++++++++++
->   1 file changed, 58 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml b/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml
-> new file mode 100644
-> index 000000000000..2caa245a8656
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i3c/xlnx,axi-i3c-1.0.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/i3c/xlnx,axi-i3c-1.0.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AMD I3C master
-> +
-> +maintainers:
-> +  - Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-> +  - Shubham Patil <shubhamsanjay.patil@amd.com>
-> +
-> +description:
-> +  The AXI-I3C IP is an I3C Controller with an AXI4-Lite interface, compatible
-> +  with the MIPI I3C Specification v1.1.1. The design includes bidirectional I/O
-> +  buffers that implement open collector drivers for the SDA and SCL signals.
-> +  External pull-up resistors are required to properly hold the bus at a Logic-1
-> +  level when the drivers are released.
-> +
-> +  For more details, please see https://docs.amd.com/r/en-US/pg439-axi-i3c
-> +
-> +properties:
-> +  compatible:
-> +    const: xlnx,axi-i3c-1.0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +
-> +allOf:
-> +  - $ref: i3c.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    i3c@80000000 {
-> +        compatible = "xlnx,axi-i3c-1.0";
-> +        reg = <0x80000000 0x10000>;
-> +        clocks = <&zynqmp_clk 71>;
-> +        interrupt-parent = <&imux>;
-> +        interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +        #address-cells = <3>;
-> +        #size-cells = <0>;
-> +    };
-> +...
+> Why not a local variable for st->data[bus_data->size] too so we don't
+> have to write it so many times?
 
+The union is anonymous.. is it fine to use:
+
+	typeof(st->data[0]) *buf;
+	...
+	buf = &st->data[bus_data->size];
+
+> 
+> >  	switch (st->chip_info->regmap_type) {
+> >  	case AD5310_REGMAP:
+> > -		st->data[0].d16 = cpu_to_be16(FIELD_PREP(AD5310_CMD_MSK, cmd) |
+> > -					      FIELD_PREP(AD5310_DATA_MSK, val));
+> > -		buf = &st->data[0].d8[0];
+> > -		tx_len = 2;
+> > +		st->data[bus_data->size].d16 =
+> > +			cpu_to_be16(FIELD_PREP(AD5310_CMD_MSK, cmd) |
+> > +				    FIELD_PREP(AD5310_DATA_MSK, val));
+> > +		*xfer = (struct spi_transfer) {
+> > +			.tx_buf = &st->data[bus_data->size].d16,
+> > +			.len = sizeof(st->data[bus_data->size].d16),
+> > +		};
+> >  		break;
+> >  	case AD5683_REGMAP:
+> > -		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+> > -					      FIELD_PREP(AD5683_DATA_MSK, val));
+> > -		buf = &st->data[0].d8[1];
+> > -		tx_len = 3;
+> > +		st->data[bus_data->size].d32 =
+> > +			cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+> > +				    FIELD_PREP(AD5683_DATA_MSK, val));
+> > +		*xfer = (struct spi_transfer) {
+> > +			.tx_buf = &st->data[bus_data->size].d8[1],
+> > +			.len = sizeof(st->data[bus_data->size].d8) - 1,
+> > +		};
+> >  		break;
+> >  	case AD5686_REGMAP:
+> > -		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+> > -					      FIELD_PREP(AD5686_ADDR_MSK, addr) |
+> > -					      FIELD_PREP(AD5686_DATA_MSK, val));
+> > -		buf = &st->data[0].d8[1];
+> > -		tx_len = 3;
+> > +		st->data[bus_data->size].d32 =
+> > +			cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
+> > +				    FIELD_PREP(AD5686_ADDR_MSK, addr) |
+> > +				    FIELD_PREP(AD5686_DATA_MSK, val));
+> > +		*xfer = (struct spi_transfer) {
+> > +			.tx_buf = &st->data[bus_data->size].d8[1],
+> > +			.len = sizeof(st->data[bus_data->size].d8) - 1,
+> > +		};
+> >  		break;
+> >  	default:
+> >  		return -EINVAL;
+> >  	}
+
+...
+
+-- 
+Kind regards,
+
+Rodrigo Alencar
