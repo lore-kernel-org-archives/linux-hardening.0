@@ -1,200 +1,159 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020137.outbound.protection.outlook.com [52.101.195.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390BA3E7BB6
-	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 13:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783949314; cv=none; b=bF5+obimLJ+4eDjGVKN+d+dwYDveIV0rEnsL/f05/JPpWig1Mzq9hB+rVN2sWdaCXUuIEdj9pr66Ixl/mwKr46tmIgaG2IB/k08BPV2Cqqa+oM7NaFTrtByqQnTteCRcjw6VyPTyZL4K08B/roeqszHWaelPDFOr3Yjz4hssTpM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783949314; c=relaxed/simple;
-	bh=ioNx/vZiww8QXaRnyf9DxKh6eU5D8RXGfIcVFBFbMwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=arqrNcT5OjuQt3vzXUGud2lvHX6b3fmGIV9bQgRgfTPgW7q8y15AfogPcnEoC7oviyQ8rucp+P3gV1nn/bkV98RBd27UfSgLNk5QAEd6kZnufTF4RVh1uCK+7Nf0CWPVfH8f5Tg5D/T0R/n+lFktSzisOLvRexsU8csXyP2dCJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IbpaFlKp; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1479F435EE9;
+	Mon, 13 Jul 2026 13:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.137
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783950901; cv=fail; b=DEg4/4KGHZN8D/1Gvj/xD3tJVWsKBgTqRyTl0qmDSMlcxKI0IKiCIwdoDk338tnCJgO5f6Q2K8GBjiubAZzLf+UP18gLzWg5CLyd2SIMF1Tctcz9TVBLWq82Ut/kGZIyWOahXqIRqOsEcM29jmoG2JNREUwYzRb9w0+LRMJja4E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783950901; c=relaxed/simple;
+	bh=+i8sJw4S43s0m7nny4Q65u1RHcbXWuK59+/+g0o+lkU=;
+	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:References:
+	 In-Reply-To:MIME-Version; b=bkeKnPQRszoOlkw3OtZpDNN0nYOWs/D0z1ul2ZMhKLf93qvPohS9fEaF0dhnSqx29rWstUCaFY4upsGS5ymArqg7GbAmh9Kt69NeJ05y6WoHRlt2ozHASybgay+bAJcDzzf5hTTM9mMRb/pN7LKwQSX/wd87J36iSeuFBxuH90M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=kPuwcDsU; arc=fail smtp.client-ip=52.101.195.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IbpaFlKp"
-Message-ID: <03158ab2-94e0-4a48-94d1-df2eedbc5545@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783949300;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hCZwaMJokj8MvB23i+KgfL9s2fF07ZtloHz25nGxCcw=;
-	b=IbpaFlKpeA4JFZRTs7k4EM9meHM8rqNlkc7853eC6eHUK3DbIhaVDMxQ+fem+c4f+dtDuE
-	y6OhZo3KMkn3mClYnfAZ9QXDmpNSTEDhd/MA7LJ4NycFEh2iQTAefbclmy+AYROQyxRBxf
-	ornndC/2/V47wWEUo6ZTo1CKDrkwRGA=
-Date: Mon, 13 Jul 2026 21:28:10 +0800
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="kPuwcDsU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yjTckaSNq9rV/MVPJCQDNlqP+2fWIdHiLjdSdipjhZ0SPZ40vwqDn97JPr0gN17Xwi2si8EKieqRWPIhmoDT7WbFvqx533iVfCqw78sPYbDF00CAPngfFuI7HU4jNfG8L9jskCZZLLTf/UpVW3/LHD97ohrpPEj9tGOzLaZ06M7ZZfv/9Euev2GbogVJ7IELTqBQjVA4aB4z+ev/foMLQudqSCXaqFcDkHLfdsBNUd/qBQ6tINcHX1IsLS5LC2eUddoRRb8arO9tS9dtqiK/SUJEhuoXz6VsuiDq+uNb09GxakC90zUwBuIYw9UBZxwnXhIQ3iJrh14GCcXAp1HHCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W1GDEtV4QAUXkWqdMRGaZ/c1d5OUfiSiaBHhbuvrXko=;
+ b=Rsnfk78Iq9hb0P4TFtg3YfsGLUi80Z/4Lzv3q6tButJAVtCMQq5DM+lIFtGVnRB+iZjDxRhNtQqCG8V6i7MQICEBRl5yhUXBSgVwsDsza9e6cwXgq/PfDsDhE/9FQJtM9DLF+7cq29EYwZDvuN2lqT45in+B0YqqHgLvMAvtN1z7xZE8OG/Xrvv/gmpffsYrXFBprqAUm6lZV2ZYamKMT5wLKakEdeDMd9fTLmrOpcBN4Lu6EXWuvfOnsMHtmP6nFupJ2wMMZiBbVJMY9HKPR5wo8Kg5qMwruykMlnV1GOs+wTfHiCGCbJAoAwyA/iHtv7UyuKF6R4/2jI6/AhznGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W1GDEtV4QAUXkWqdMRGaZ/c1d5OUfiSiaBHhbuvrXko=;
+ b=kPuwcDsUGtqxI4rwqNxjmpqikr1TFS1IAcWr8itBNOaVQHpowXcaIgfFZ/jWGx0eoDhXe50B6d7Z5qSHkHTpoy7TcgSCmbeyayydtx/Eyaai14m9yKyV15Lxlv4vwjBVX4lFNvfoiOTI4k2MtbWMExzSlYiaUE5o9TXACbsL7VE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from CW1P265MB8877.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:27c::13)
+ by LO7P265MB7462.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:41a::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.19; Mon, 13 Jul
+ 2026 13:54:56 +0000
+Received: from CW1P265MB8877.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::6c9e:93c8:10db:e995]) by CW1P265MB8877.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::6c9e:93c8:10db:e995%3]) with mapi id 15.21.0202.014; Mon, 13 Jul 2026
+ 13:54:55 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 13 Jul 2026 14:54:54 +0100
+Message-Id: <DJXHTB615I2J.POTXT6L2LM5K@garyguo.net>
+From: "Gary Guo" <gary@garyguo.net>
+To: "Mark Brown" <broonie@kernel.org>, "Kees Cook" <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, "Paul Moore"
+ <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "Serge E.
+ Hallyn" <serge@hallyn.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng"
+ <boqun@kernel.org>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>
+Cc: <linux-hardening@vger.kernel.org>,
+ <linux-security-module@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v3] hardening: Default randstruct off with rust for
+ better allmodconfig support
+X-Mailer: aerc 0.21.0
+References: <20260702-rust-reverse-randstruct-dep-v3-1-e4e09c50014e@kernel.org> <7cdb2407-924c-44a1-8c68-917efadd4e92@sirena.org.uk>
+In-Reply-To: <7cdb2407-924c-44a1-8c68-917efadd4e92@sirena.org.uk>
+X-ClientProxiedBy: LO4P123CA0531.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c5::15) To CW1P265MB8877.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:400:27c::13)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 4/8] mm: add a template-based fast path for zone-device
- page init
-To: Li Zhe <lizhe.67@bytedance.com>
-Cc: linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- akpm@linux-foundation.org, apopple@nvidia.com, arnd@arndb.de,
- balbirs@nvidia.com, bp@alien8.de, dave.hansen@linux.intel.com,
- david@kernel.org, kees@kernel.org, mingo@redhat.com, rppt@kernel.org,
- tglx@kernel.org
-References: <20260709112520.24857-1-lizhe.67@bytedance.com>
- <20260709112520.24857-5-lizhe.67@bytedance.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20260709112520.24857-5-lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CW1P265MB8877:EE_|LO7P265MB7462:EE_
+X-MS-Office365-Filtering-Correlation-Id: b8a9676a-b894-4599-e9ec-08dee0e651c8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|10070799003|23010399003|921020|22082099003|18002099003|4143699003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	yAC5yylWk9j0/c3rCE8hdaO5Rs8vytxsBx9Ljzf/v4EBSxuOShQuvD/isXFv/h6xhAKh2YwlbJ60ry4awRT9YjaSn4sxo1C81h5uuMxSVLe0YSokNe9XQ9l1IRDq3sUDjhugy2Nfv2G0CuzEgYCfTxNvZHGvdLEWPu4w+rGvn+pyCWzVUdHosIbP92NmjVd09VP43otskyWsAAVXVkbNnswAzLdQCactDPB10+bMcvdYdgdD0zE6b5O0g3nKSXhwK7cWL0FreSuDhQ72181kdi/1PwCimbf9YovsB0srKPHDGuySpbeNeEnAKgPUgpuy34vpDwFsFe2F7lz4iIMqbAF1MiHFV61LrnGlRHcScb+StbaOyGooFhDWsRI7s0DcMnyqLwZPkd7bWSSMm1KmOeeHaQFrdE1/M4E7lqJl3ga1qDRsl5dC5oSlXWwn/GJtzAJUKG3Nu6p9uEgT+yRKZ9wh3MFYw1sTX1R/V3AeAPotxDp5TZkaaYtSXg9/p8iZI+aJp5RnUNsUysFGatG++5X4E5Ck3TJqEh+tVamxRGaVPTb9vo2DU5+vMhMtaPy4dS4TRIJ0feS24Y8btlJRXFPj607lR3+Mc0o+Elkh102rNZziKnQdS/Uvj5KFj/x2VlTKbQCuMYblVMro8K3V1ZvJXci7V9+XOB1DbBUrbpueQCMg0MHEgcmGsOO1iSnpLl/oF0yeEGErGtGr4wuqCw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CW1P265MB8877.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(10070799003)(23010399003)(921020)(22082099003)(18002099003)(4143699003)(56012099006);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NjJZNHVhS2hJVzRseGVBNG9CVElmaHZ5ZytsVHZDNkdxajVxUWF0YnVWYm1q?=
+ =?utf-8?B?ZGFyN1kybGhURTE0SkpIb21wTWpVWkU5a0pjOUprZzE5SVVwTmQ4TlJaN2wz?=
+ =?utf-8?B?OUNuczdkam9zeWVvQ0k2UTR5Ni8wR0ZKU1RmQ0J5WDh4Q2gxdmFibjhNME14?=
+ =?utf-8?B?eElJb0o1djJWdWs0N2k1cWdRcThVcFc0OU9MMDhLNnp0cEpmU0NENC9jMjM4?=
+ =?utf-8?B?M3E5SGtSV0sxN2pZL3I5cCs1NjI3U3VRNk9iNno0Q3lBVUYyc0twN2VDeWh2?=
+ =?utf-8?B?OTNkYzZzbk94VHE4L2Jiekg0Z2xHR0h4NHk4eUpSM05tWk1vR3VuQnczNzFa?=
+ =?utf-8?B?ckF0c08vRk13NzhtZzJadVB3Q1hSVW9sM0hHdFpKd2V6UWl3NWloL2oxVXZs?=
+ =?utf-8?B?Qzc0Qzl6SG1qSTQzb2JlMTFDMEVkQTBpTWFRd1RtM1M5NHE4NUNxd0F2dmJC?=
+ =?utf-8?B?TnZMZ2NQaEpBUkJTNTFpWDVHTXA2SHZPRVYvQURienJ3bFR1NVNVT3hCYTdC?=
+ =?utf-8?B?SlMwcXZ6Wis2VXdJWFJ4b3NLaW9BUDMyS2tYd3dNZFJQV3U1dFo4ZXRscGFX?=
+ =?utf-8?B?MzBaanByR09acUppSzJJTjZ3QkhaYzRaTkJ1RXE5SU1QN1QxZUhDTmt3UGQz?=
+ =?utf-8?B?RnhuYzM4N0VrVGUrZVRSbEhWaHFsUk5HaTY4a1Rva3pwcmpMOTNiYkZWZnlv?=
+ =?utf-8?B?djRHc2x0c3V1UDQwUi8rSE1MVlcvNHlqY3JlM3UvT2tkV0M2by9KWCtEcWdx?=
+ =?utf-8?B?NVZZSUxMTGFaa0kzaUtzeWNteENnV29EZVhsdUhXYVVzNzNRMDBzc3dGcGpo?=
+ =?utf-8?B?ZjVURUtLT1J6dmJjaFlHRVp0OGovWkl2ZkptTmk4NnFKSUUrcGp1SXh2OU9I?=
+ =?utf-8?B?Rm43aU93bXQzRUt2ZERtMEYrcUFxaGM2L1RON2tNL21rYXBtSW5oTHFlSzFi?=
+ =?utf-8?B?ajBlajdKQXN5Qmp4K3BndkVxejZEcVlyS1dQa0NFajRqNkN4Rzd2dDY2VU5w?=
+ =?utf-8?B?LzhmbW9ZdXo5aGlwR3dzNjVZTkhHdk5BU1NyNUdZd1dWYjFqMzJtMjZyYU1K?=
+ =?utf-8?B?NW1aSFI3Q0RuOGhtYm9xeHhiaWlhYkZES3psZnM5aytPK1FKQkxRNWxzVjhl?=
+ =?utf-8?B?K0dyMnhLTDRPZWZWdjg5bkxKSWVqT21KUDJ5MVJaSHNkbHArZHJaL1M1SUt3?=
+ =?utf-8?B?M2hpSXZab2RocmFjL2VBc3plQXJUalNEWGFVSkhtdzlialhnK3NiMWVoODBl?=
+ =?utf-8?B?b0Z1ZDRpZ3hNYkoxUW5KaElLbnIyOVBoTTlFVUthbVFUTCszMlRvdXQzZ0VQ?=
+ =?utf-8?B?RkpTOTBtSnVTbmkwZmkzdmozM2NXSUZyUWhyd0VRNHpjRkVubURKVW5uNlN1?=
+ =?utf-8?B?UXArTlJvZWxPUmVhTG9zdmt1ZktaUW0vY1dsMlJiZW1MVkd3c1JaWHcxNGtS?=
+ =?utf-8?B?dUNmanVXS3pGOTRSaldlcEZILytLRWNRYzMrS0JIdGhNU2tXd09pZnpNaXNC?=
+ =?utf-8?B?M2VGL011THY0YmNZTVBhRGVVS3ZlWUd5aVBiWnhRTW5QT2g3QXkzcmI0OUtu?=
+ =?utf-8?B?MDZOdUtQZEpQTE5lVlpPbHhrK01KMmovaXpCWnZsbWpnWFlnSjhDbjVKOU1U?=
+ =?utf-8?B?Q3hqYWxCU3B1QlZGK1NQSUhOdE1VNFZadG1SYzA5MlhkRkxhQVllMzB5SGEr?=
+ =?utf-8?B?M3pUS0pkdU1CUXlndUdJNUMwOSt1dHpRZFpVRmhqN3J4WEtwTEhzaDBnRzZZ?=
+ =?utf-8?B?b1NFV04xYVZ0Y0RDZTRoaW96KzQ3U3dQcTBsM3Y4SmdNVm81SDRjWFdhYnAx?=
+ =?utf-8?B?YUJaOXY2VFk4MlloZXNQak8xa3MxR1phblFrN21pZ29RK3BuWEFsRG5JdHc4?=
+ =?utf-8?B?SExnMVJJdFJoRDhDYnBaeTQ3L1FpKzN6bUg4aXQyNkNnQk1NZjBBSHgyb2dY?=
+ =?utf-8?B?VWs2Z3JqVmNrZ3hSTmpqck8yd0o5QmVxZVlIMXBQSFhMaHZqdnAzZm83bVZ1?=
+ =?utf-8?B?R2FDZG1Nd3lqQTV5a3lZYnNVMERGNFB1VXk2MTF2MWFnR2p0MGp2bmVPUm9v?=
+ =?utf-8?B?YXNOeVI3TkZHWTIwVExIcE5TcnYrcUR6UUxFOW4yNDdlQ0R0anZFd3JKWGhL?=
+ =?utf-8?B?U3JxR21XRTErdHh3MHdHbjZ1UGdKOGpvc3JoaEF6dENvQ1ZIR0xDc3VBenBK?=
+ =?utf-8?B?czVYa1FMaXBBVitINDR4cytDY2dRMmo4Y3lBYUxqODZDdU1vZEFmdXVjUHVZ?=
+ =?utf-8?B?R0VzTzJEdXFkTUFRTUYyNnFmQlEzZGx5S3VOcm40RWJES1Ardzd1d0tQUUh6?=
+ =?utf-8?B?QW5RUk14emZtMlZEWG9heHNmRzhIY1VzVys2TEJnREY5cmkrakt4dz09?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8a9676a-b894-4599-e9ec-08dee0e651c8
+X-MS-Exchange-CrossTenant-AuthSource: CW1P265MB8877.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2026 13:54:55.3317
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GlSF+RmzshGm2uPHRM3EqwRGX6Yvkoq/QSBCXApQaMqeyMKx61/bEF7GoHJB776kC9ws0jDeHn67eA2fMUNSNg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO7P265MB7462
 
+On Mon Jul 13, 2026 at 1:45 PM BST, Mark Brown wrote:
+> On Thu, Jul 02, 2026 at 06:37:08PM +0100, Mark Brown wrote:
+>> Currently randstruct does not support rust so we have Kconfig dependenci=
+es
+>> which prevent rust being enabled when randstruct is. Unfortunately this
+>> prevents rust being enabled in allmodconfig, our standard coverage build=
+.
+>> randstruct gets turned on by default, then the dependency on !RANDSTRUCT
+>> causes rust to get disabled.
+>
+> Any news on this?  I'm flying blind doing -next merges of rust code with
+> build coverage gone, and I suspect a bunch of other people think they
+> have build coverage in their tests but it's silently vanished (I know at
+> least one person ran into that already).
 
+I thought Miguel wants to add support to properly support RANDSTRUCT with C=
+lang?
 
-On 2026/7/9 19:25, Li Zhe wrote:
-> memmap_init_zone_device() repeats nearly identical head-page
-> initialization for each PFN. Prepare one reusable ZONE_DEVICE head-page
-> template through the existing slow path, refresh the PFN-dependent
-> fields in that template before each copy, and memcpy it into each
-> destination page.
->
-> The optimized path assigns _refcount through the copied template, so
-> keep it disabled when the page_ref_set tracepoint is enabled.
->
-> This patch accelerates head-page initialization. The pfns_per_compound
-> == 1 case gets the full benefit here, compound tails are handled in the
-> next patch.
->
-> Tested in a VM with a 100 GB fsdax namespace device configured with
-> map=dev on Intel Ice Lake server. This test exercises the nd_pmem rebind
-> path (pfns_per_compound == 1).
->
-> Test procedure:
-> Rebind the nd_pmem driver 30 times and collect the memmap initialization
-> time from the pr_debug() output of memmap_init_zone_device().
->
-> Base(v7.2-rc1):
->    First binding: 1456 ms
->    Average of subsequent rebinds: 244.28 ms
->
-> With this patch and its prerequisites applied:
->    First binding: 1440 ms
->    Average of subsequent rebinds: 217.19 ms
->
-> This reduces the average rebind time from 244.28 ms to 217.19 ms, or
-> about 11%.
-
-An 11% reduction is definitely a solid achievement. While the
-absolute gain is in the range of a few dozen milliseconds, I’d
-love to better understand the compounding impact. In which
-specific latency-sensitive scenarios or workloads does saving
-these few dozen milliseconds translate into a major breakthrough
-for the user experience?
-
-Muchun,
-Thanks.
-
->
-> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> ---
->   mm/mm_init.c | 59 +++++++++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 58 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index 5fccfbacf855..170021e182e0 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -1065,6 +1065,44 @@ static void __ref zone_device_page_init_slow(struct page *page,
->   		set_page_count(page, 0);
->   }
->   
-> +static inline bool zone_device_page_init_optimization_enabled(void)
-> +{
-> +	/*
-> +	 * The template fast path copies a preinitialized struct page image.
-> +	 * Skip it when the page_ref_set tracepoint is enabled.
-> +	 */
-> +	return !page_ref_tracepoint_active(page_ref_set);
-> +}
-> +
-> +/*
-> + * 'template' is a reusable page prototype rather than a strictly immutable
-> + * object. Most ZONE_DEVICE fields stay constant across the pages covered by
-> + * the current template, but section bits and page->virtual may still depend
-> + * on the PFN. Refresh those PFN-dependent fields in the template before
-> + * copying it into @page.
-> + */
-> +static inline void zone_device_page_update_template(struct page *template,
-> +		unsigned long pfn)
-> +{
-> +	set_page_section_from_pfn(template, pfn);
-> +#ifdef WANT_PAGE_VIRTUAL
-> +	if (!is_highmem_idx(ZONE_DEVICE))
-> +		set_page_address(template, __va(pfn << PAGE_SHIFT));
-> +#endif
-> +}
-> +
-> +static void zone_device_page_init_from_template(struct page *page,
-> +		unsigned long pfn, struct page *template)
-> +{
-> +	/*
-> +	 * 'template' carries the invariant portion of a ZONE_DEVICE struct
-> +	 * page. Update the PFN-dependent fields in place before copying it
-> +	 * to the destination page.
-> +	 */
-> +	zone_device_page_update_template(template, pfn);
-> +	memcpy(page, template, sizeof(*page));
-> +}
-> +
->   /*
->    * With compound page geometry and when struct pages are stored in ram most
->    * tail pages are reused. Consequently, the amount of unique struct pages to
-> @@ -1120,6 +1158,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
->   				   unsigned long nr_pages,
->   				   struct dev_pagemap *pgmap)
->   {
-> +	bool use_template = zone_device_page_init_optimization_enabled();
->   	unsigned long pfn, end_pfn = start_pfn + nr_pages;
->   	struct pglist_data *pgdat = zone->zone_pgdat;
->   	struct vmem_altmap *altmap = pgmap_altmap(pgmap);
-> @@ -1127,6 +1166,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
->   	unsigned long zone_idx = zone_idx(zone);
->   	unsigned long start = jiffies;
->   	int nid = pgdat->node_id;
-> +	struct page template;
->   
->   	if (WARN_ON_ONCE(!pgmap || zone_idx != ZONE_DEVICE))
->   		return;
-> @@ -1144,7 +1184,24 @@ void __ref memmap_init_zone_device(struct zone *zone,
->   	for (pfn = start_pfn; pfn < end_pfn; pfn += pfns_per_compound) {
->   		struct page *page = pfn_to_page(pfn);
->   
-> -		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
-> +		if (!use_template) {
-> +			zone_device_page_init_slow(page, pfn, zone_idx,
-> +						   nid, pgmap);
-> +		} else if (pfn == start_pfn) {
-> +			/*
-> +			 * Seed the reusable head-page template from the
-> +			 * first real struct page, because the existing
-> +			 * page-init and pageblock helpers expect a real
-> +			 * memmap entry rather than a stack object.
-> +			 */
-> +			zone_device_page_init_slow(page, pfn, zone_idx,
-> +						   nid, pgmap);
-> +			/* init template page */
-> +			memcpy(&template, page, sizeof(*page));
-> +		} else {
-> +			zone_device_page_init_from_template(page, pfn,
-> +							    &template);
-> +		}
->
->   		if (IS_ALIGNED(pfn, PAGES_PER_SECTION))
->   			cond_resched();
-> --
-> 2.20.1
-
+Best,
+Gary
