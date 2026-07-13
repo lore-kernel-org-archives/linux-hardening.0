@@ -1,101 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC8343DA53;
-	Mon, 13 Jul 2026 14:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2C13E00B5
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 16:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783951371; cv=none; b=ja41GLR7PZzVLQY/pz1aMGHJSIDNZRD7cCMY4zW2hb87wrKh18CZi3vozMejSKPY1DEu1jr7NQ1MZ17QjVYF8IQVf9v+1HcKBXArisaeGyj6XmDJgid4HLHuuYjpEYCVoHouTpX4ILO3boc4giHIsPMVCWrotqDopBEHlg1B0mc=
+	t=1783959504; cv=none; b=smaz7QvDO97E1OsEJtgWgLfU7alLru32uYbHqifauURrauiDOYssvod3YUnjP8rP9foywbLH/YGdlNRO/iRaOAltvePmob0GPHCGHRnn55Nl0JDnnbJTZ3Yutr66U2j/MhCJRg2eD5Q9vvsuxP4lMkVSivKvuboyFLX6W3TOadw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783951371; c=relaxed/simple;
-	bh=XjolIzzY2Tc1xblemFkryo5qNEr23sD2CggZqCpEuZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMj1HE3AiZP6iKFLNZeYtT90vK2N+o7gatEAqtqxsjigOxzoWTn2RTCRDBOrHJuA8D8hDzHfaPfNaNEW28o7ZAOxp1G6ibAp4b7VJQyvb38By1pdc9l1gZJb/PV3ghMpkgcnmUld0+g4mHcMSEoszOP6I39zE/FOY0y5DRlba78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJCjIbUj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783959504; c=relaxed/simple;
+	bh=j/xGGVpfBmZ38fXC8JgNuKE6Pd+vPTqjmTMDjnqgZk4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mkSLuKD0fA3Ux+dlmSQ/VP1dzDXkQoF3N6PPciOV2Ytw122PrBLpCe3abk8okbUVulZqgMNASP71jy/hUwg14PYlUCZAD9DiXSB2HLsm8PW8ur9bh4FZ85gQcYsjiJt0JTcN4g5FH1/2nZk2BUODMyDYUNnXWjCSKy62jJtPNB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KOopP5Le; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJCjIbUj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD491F00A3D;
-	Mon, 13 Jul 2026 14:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783951370;
-	bh=XjolIzzY2Tc1xblemFkryo5qNEr23sD2CggZqCpEuZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UJCjIbUjk7esa+IkF3hYs9ANTXztF0AUJrCn++Wwd7wKVV1uCxIE1Mi979xhL5hr6
-	 uVOXOI3zXY7VweMm/t0NaX6JGnpyb4objY5O/JqRSn2AWwhU5xbqc8epCIGL6gmnJR
-	 sGr2LhWtxZUlGQ3aQBlGbp8BUQ0avkC5VLPfvuriLNBQv9hmH5h2uEVvHWl/+kT44F
-	 X6mTGGp4WxYimnyf+gpem6CDu3df266cGLEqOFqyXjzWiGyqiNEZ0NI2TFJj13Xg/j
-	 9zEYO7Ei23Nzc2El0x0EssCR9uAB9zpkpxrqLxxil7kmKtsN9LSaQnwNnnUdVdGTf6
-	 0Ny1Jn0DgE2Pg==
-Date: Mon, 13 Jul 2026 15:02:44 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Gary Guo <gary@garyguo.net>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3] hardening: Default randstruct off with rust for
- better allmodconfig support
-Message-ID: <1a9148a3-da1b-4386-97d3-62c55c3e5d96@sirena.org.uk>
-References: <20260702-rust-reverse-randstruct-dep-v3-1-e4e09c50014e@kernel.org>
- <7cdb2407-924c-44a1-8c68-917efadd4e92@sirena.org.uk>
- <DJXHTB615I2J.POTXT6L2LM5K@garyguo.net>
- <CANiq72kNYRBW88VwYyDX8_2b1L7dLv_gDwgE5SruMELR7KPmig@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KOopP5Le"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-493c2c0b9a8so769045e9.1
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 09:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783959501; x=1784564301; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=TbGjb/jMJnZzb2UpXKwZzIOhvZ257eTjhYHwFcycWxE=;
+        b=KOopP5Lek6WwBkVP78wZIawLKodi3zHxJ8ipLT+pzfncbVPORan7bKbC/pxSFKaEAf
+         R2hH9ufjSC48FbdymIqun3oH7vkyg+0S7P46qLJ0DuiHPbVypbotReu+4J8SVSe3Kx9g
+         qRBqU1rshS7IpsGxaACI1ffgoJiofV1zj9/az25SHRVcaJqZx5cwcarVqdhYbh3wmrtC
+         9RuYWevfr1+BiWjHGzMZO7E3YXlBBJrgLimCNSea9wDT4qfV45AAFsH7Llinz0LxJazx
+         GuPQ8BnAFAQhoFJ6Qfoy2QUe7iItfn5Y1QJ5ZlGoIVJyzhpwDv52N4vfe3RdHrxPTF2c
+         gWGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783959501; x=1784564301;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TbGjb/jMJnZzb2UpXKwZzIOhvZ257eTjhYHwFcycWxE=;
+        b=kcWXGJtXllIaoUTOf3pkit3gPR53FADrcM8CODIbszT1p/SDoBrOBUzpqvK0DE2Uvg
+         PG+ACqK4KThcAZhC6E7/+WfzloBNT3UwL/Z/gS3Ibv/yFTA0BmYnhbwHbXZKIKw3Tdak
+         BAXfWgFt4VEQrMiaZawEGTBf00X+8hUANpxRgYV6O6MVwMHBNa2NO6642lJsGgJd8kx2
+         mPTUtzUWTrl3TYLA3NXk92P7B7BUaUlLCVrqJtyl0Yf7fB0xhL8M+Vz628+v7MR2OoIs
+         idkBrnYKokgtdTz1suHE16XAG/s2FXkabp4AiRzXNP+NvfzPA83859TcoQHWcteq5ulm
+         5KUg==
+X-Forwarded-Encrypted: i=1; AHgh+RobDgZKCYOVlo7dhrdbiuHEZwPsd29FQ6EhA/inDEhy/BF+1pCHiQyejknjvkXMHHjXHxKPvsABrGDSm/2JA9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0HXGTDCmQctqTvYUrQfjSn8sl06eBoqiIiLs2LGCS294BspvL
+	6MYw+Q5BbW18Znd8KobPp1mOGJcBxhaHIozjiARb0iH+15ECN7WrADFj
+X-Gm-Gg: AfdE7clF/AWe/CFes9LEN0eSx9V4OU1VupkbBs8Hv9NKA5QRxJMbcDxGwNA72Q+1cAz
+	OMewhV9JOVjyoIUmJZ74R5xmc2Ueltt8ZecJL/Ia+y1vWGZ9yf+g5ohucpwGkzfk0RqXU1EDOpO
+	AU6H+Lp099nmyOU2X1iORmtgk0DpV8HW2dgKLcA26H6SPZKUX3thaDPwaJvBJy5raZKWhML7EPo
+	OXtXZ7TIyRMcZ703UR6bxPWzn22jxqe1gLQ8h10qR1zjJmFJaCeGIE1ttRnRtogiSazR1PmlkFg
+	UabkpUOEpvYwSlHylStIb3f9EJiEnb/BnJwtqbWSyIqzqw83dffWtpQ+a3KDXmAhW6fVh8AaAZ1
+	z73E/O+nCkqWJEpR+GIFxfcmbp+TNPqO/mMNgsoWc3KYnRdCAk5LS5oMldg+S6YQeclsm2/8Ui9
+	iS4JETFor4mbjqQlELdvnmSfw0mwDBrW+1NqlL7zy+25z6VdAPeehSxjf3BW0qgJsMwnn3cIlil
+	MhVKJV5f/s1ChZ+zKUcE8yOBVo=
+X-Received: by 2002:a05:600c:1392:b0:493:f753:24e8 with SMTP id 5b1f17b1804b1-493fed59338mr80519895e9.6.1783959500626;
+        Mon, 13 Jul 2026 09:18:20 -0700 (PDT)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4950a32a2casm7873375e9.12.2026.07.13.09.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2026 09:18:19 -0700 (PDT)
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Date: Mon, 13 Jul 2026 17:18:14 +0100
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v7 4/7] iio: dac: ad5686: implement new sync() op for the
+ spi bus
+Message-ID: <2shq75gvzzm27rodbgmtxkbgt5n2a7dafjc2mmkttwnshmhyqr@pdytastitwfm>
+References: <20260710-ad5686-new-features-v7-0-1bcc8c280e4d@analog.com>
+ <20260710-ad5686-new-features-v7-4-1bcc8c280e4d@analog.com>
+ <alM8M78O9-cRSxR-@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TEuJpuswX2OaX08Z"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANiq72kNYRBW88VwYyDX8_2b1L7dLv_gDwgE5SruMELR7KPmig@mail.gmail.com>
-X-Cookie: Courage is grace under pressure.
+In-Reply-To: <alM8M78O9-cRSxR-@ashevche-desk.local>
 
+On 12/07/26 10:03, Andy Shevchenko wrote:
+> On Fri, Jul 10, 2026 at 12:20:48PM +0100, Rodrigo Alencar via B4 Relay wrote:
+> 
+> > Use of local SPI bus data to manage a collection of SPI transfers and
+> > flush them to the SPI platform driver with the sync() operation. This
+> > allows for faster handling of multiple channel DAC writes, avoiding kernel
+> > overhead per spi_sync() call, which will be helpful when enabling
+> > triggered buffer support.
+> 
+> ...
+> 
+> >  int ad5686_probe(struct device *dev,
+> >  		 const struct ad5686_chip_info *chip_info,
+> > -		 const char *name, const struct ad5686_bus_ops *ops)
+> > +		 const char *name, const struct ad5686_bus_ops *ops,
+> > +		 void *bus_data)
+> 
+> Can't you utilise the dev->platform_data for this? I believe it's exactly
+> the case where it suits.
 
---TEuJpuswX2OaX08Z
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I could use dev_set_drvdata(), I understand that platform_data is to be injected
+by the board/platform configuration.
 
-On Mon, Jul 13, 2026 at 03:58:11PM +0200, Miguel Ojeda wrote:
-> On Mon, Jul 13, 2026 at 3:55=E2=80=AFPM Gary Guo <gary@garyguo.net> wrote:
+SPI/I2C cores do write it, from the board-info structs at device creation:
+    - drivers/spi/spi.c:835
+	proxy->dev.platform_data = (void *) chip->platform_data; (from spi_board_info::platform_data)
+    - drivers/i2c/i2c-core-base.c:973
+	client->dev.platform_data = info->platform_data; (from i2c_board_info::platform_data)
 
-> > I thought Miguel wants to add support to properly support RANDSTRUCT wi=
-th Clang?
+After device creation, the core itself doesn't touch it.
 
-It would be great to have randstruct support for clang and Rust but we
-do not currently have that support.
+-- 
+Kind regards,
 
-> I am happy either way, i.e. whatever the hardening folks prefer, but
-> regardless of what we do, I think recovering the linux-next coverage
-> is a high priority at the moment.
-
-Yeah, when randstruct support is added we can remove all the constraints
-around it and clang/Rust - this patch is about the making the current
-situation work more usefully, it's not intended to be a final state.
-
---TEuJpuswX2OaX08Z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmpU8AMACgkQJNaLcl1U
-h9AEnAf8C08rWR2J+LlDhnvdUsW8FfmIZxPHJOOw7aq8rbp79koBHEF7MWL/Rqx0
-dFQr2Hq57OiL4sxSAAs7/xmBWMIOyxg5mRGvTWxrLHThsH8nYy5qALuVzYirwUEi
-YxoByDhn6CNn3gMUyKn0TJz6lcx/6P/KYwlnTQvMab4rlRv/0LkHIJSwzVbh/goS
-DOoxgEQGHUgEw+ukYjhbiYzaYN0RrpCKf5TCJbCpIdNJh+oZeiFwSVqR463XR9Be
-T/m83k1xVt19J+NzKQj35nwLvtBAPHX6cZQMA8s6F7Zl/SRGitPjMMyBiYtLh+8i
-WLZSOowFjWkFfnEPlMM5oeEPzR4fiA==
-=XjjB
------END PGP SIGNATURE-----
-
---TEuJpuswX2OaX08Z--
+Rodrigo Alencar
