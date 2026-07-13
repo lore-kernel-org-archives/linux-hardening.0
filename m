@@ -1,245 +1,166 @@
-Received: from va-1-112.ptr.blmpb.com (va-1-112.ptr.blmpb.com [209.127.230.112])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E982D1F40
-	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 03:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6059034D389
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 04:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783912769; cv=none; b=Bltj1R331XbX08371XFdsZe0h0sUrvyn1Gix9XveusvSWg6wiZqdZGAqTuUw9PmJGT5d0SKFZul/2GH296Dcixieok5KisKtmnwGYJ/Yh0DnvUcD1p0ZSu4cIBD0pdjludepPp/xA5qE3henRr54nAK/Gn+JpEXa7WKzFf6ce8c=
+	t=1783918451; cv=none; b=MRkx2ngielMoK+eM7XSfbgJWGZFV2kKKVKYIv750y6PX3C0zS69DRJS4ScSZ6ezT/PWHXtcrYSXiDA5eOO7tymYiRreO95LkWC3F3d2A0ZlZwbUQQR55p06xJF7m+r/flc/py8+UEE8rOwUlfEkBZfwDbHpmrx+QNvv78bBV5nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783912769; c=relaxed/simple;
-	bh=RokLB2cW0F1IYAitfVH1k7lc7iEl7Cn/ifvjuSaC2VM=;
-	h=References:In-Reply-To:To:Cc:Subject:Content-Type:Message-Id:From:
-	 Date:Mime-Version; b=s+iSKwqw8pPmI6mkpKuBgFgR/bXFYsBa0U9ofcZf4KyZn+5L+rrktcISioKUFNgTMlu+npBrRgByRvTF+fuys5PjYUVKst3yGKVVBIwduyiwQvB5GjdKD/h09CAhXx3y1PL6tJGAZdCxLs/sMvzJ2Fr20Q3l6RW3C0QeZE7Udn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=TS9MWgij; arc=none smtp.client-ip=209.127.230.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1783918451; c=relaxed/simple;
+	bh=aWyuivC0uBr2raUrYrGhB6xX3JmGBmcCaiXVvYEGVQ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YJf56hqkthRigcfzpbM1zu6b3FZ9DVZmBAn3MZ6irW0a9jbW+OFFP0EaX0/Pagc+Mvm9L1/B3U7Z32H8JKgbwscjhxbxfoC+9HwGxxfW70uEKH7MmZTUHzJFAzCCpFHXcWtZqE7XjM/QvMx9ISIADZXBIBZ9m1FBDsXbcnvu664=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TVFZFK3V; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="TS9MWgij"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1783912753; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=j7FS//a2Zq+aYPLaWvaHRIpjDEzF5l5dQPYgw4A861Y=;
- b=TS9MWgijFOd6mXjI2Rd6x3HrIzPpCImoK48v1PvG9QVp9/6Jjt5VzPecIXOjzoWbZHH3CA
- zB/MWTU2msmQtKSUZ+iwpEyRt13tOSlgMS4t4ykB8N7iQqPGEsaF1utzIB+A0dI8CEL0n5
- g3DdHZTXD1TZkeO9w8zTj223xPczT3fNqxBDxDYbRbQw/aIXFO1uUD3jKCNOMshK4Ep1+P
- wQyJXmlL0ycMyGP0E+cUFcJ7CYDowY4ioBcwYuKCfaalYYNsz76kfLSji93IRQpNPdYSbK
- fwBWuYCSZMdyzRlWCuXTURinEySj9W3+SnIgxmJDrjDBZTD4mRWdUuTeYUSUkA==
-References: <20260709112520.24857-1-lizhe.67@bytedance.com> <alRCNbTlRFyD8f-1@parvat>
-In-Reply-To: <alRCNbTlRFyD8f-1@parvat>
-Content-Transfer-Encoding: 7bit
-To: "Balbir Singh" <balbirs@nvidia.com>
-Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
-	<kees@kernel.org>, <mingo@redhat.com>, <rppt@kernel.org>, 
-	<tglx@kernel.org>, <linux-arch@vger.kernel.org>, 
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-mm@kvack.org>, <x86@kernel.org>
-Subject: Re: [PATCH v6 0/8] mm: optimize zone-device memmap initialization
-Content-Type: text/plain; charset=UTF-8
-Message-Id: <68087ca2-1a88-46b5-b9b0-60f3358d83b2@bytedance.com>
-User-Agent: Mozilla Thunderbird
-From: "ByteDance" <lizhe.67@bytedance.com>
-Date: Mon, 13 Jul 2026 11:18:50 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVFZFK3V"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2caf228a910so19087525ad.2
+        for <linux-hardening@vger.kernel.org>; Sun, 12 Jul 2026 21:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783918449; x=1784523249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sFT84HfE6g23Y0JSEsGGMWs+C5GZdiRx3RFEfHBMGN4=;
+        b=TVFZFK3VZffAe1yuSIkedDFa3KTAXLhI/6j7UIyHz1n/fUko7w9Aitw2+qYxV+i6yz
+         fDGaKoD9D0pg6l/b752JMBlS/15cbk0fngiH3B1ectkCsfRC8ZCc3erik8yifqdbGEEn
+         uXFW42hgVapJqCdY8A8wMKS89eSnQEWTpYHJ5wsmQ8qMInOR85b2FiPmAtNhbvcenERE
+         YA7IsDaSNQLt55ggtafDHYACH/H7Jy8Nt5TtPbhjmRy6ivcwnRJP8jCKYnqgXUjCimiL
+         znr4eeTtpx403DOfQV6RrduRxmMOtucMoJw8e09xPY4ljHe6vEYQJ+5lRB53oSynyzfy
+         efhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783918449; x=1784523249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=sFT84HfE6g23Y0JSEsGGMWs+C5GZdiRx3RFEfHBMGN4=;
+        b=KbKyBetVnqhundK51/wmoTOJnvAUjstESKAuis22RJbvZyv7ZQsi5bEDyNz0lvotkU
+         qiBzcNaEeILVzJ2lbCb4ZTjj9t5GaK+W+OexQngFSdYrELKxD86Z7rmAXx1u1ZHRyrB4
+         4vLoFP62Vg5Lviuv3KO8SXnyMHBIfA162Cn9gNiwy/7yTEbSRLpXk9swA1Nm1bTrzrIa
+         6p8IQPgOCKc3+MoxhVlrIOmdgdzJWX9hUpaOr3bDiSvZXxSntii+U8orcmvrAhhFADY+
+         B+ZVIPJIvt0dsSA3gZK5lG9RloMiYLtFu03+47PfQla0OVqzOhn9qlBofgzuGFgT7ql9
+         x93w==
+X-Forwarded-Encrypted: i=1; AHgh+RqERH2fN4tQNVIYmC2E/DzVgJiLmHH5zmkgxIspfgfPWV4S9esQ/oNjmSR1AmaGzIMrwx+F26f8Xn4I7XQaOm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYKP4raB1Saw+Y8iOUf7DZkLkhZbt7H/59PUt2hvod4yUD2i8x
+	hQV++mB9jhD7fmxvekrFSUjXF0Q27dDuFiJwWXilFk45GDvpmJHUEzhd
+X-Gm-Gg: AfdE7clhHbmLkWHJgBDqmQbsOBpZWBV8EefsOlaky18wCfWVDWiST7W5LqlmQ6n4TmA
+	EzcniXeNjqhshgblgmlI8lZqzzKXXX+cGEhqYAF5joWYSNMTebty2NS3GD5VYM1PdWGnWquw7Ic
+	HplRzNIu6sb1JsHORCdX8rnaBNoq+Vbeor5lytZTP1Kp3dlbVMmV1/hN2hLvdk3BsEczo4hyTIO
+	POP9V5KHwSFWvSu6vlMyVXJaslqIajFvn0gL8KijYqJ8qxt19Rq2kF6dfgUAIkkQRSZp6T0X31N
+	7fn8ju/CnhVaZ5TaK3qq7G8Tk0sxKxQUdQTCw/eY53mzgjyF/ds3pa+Y9TKgqlWM8reB8zmWi2E
+	QbrcuRglmC0Jmim5uHhzojGZvOpv2XqyYhtj8uGbwYbL5X3eVvVMhl9Ho1j06MEEZFrl5469lRd
+	GNgz/wF3/LTx6L3zCQgOgQQ/f7Q/k=
+X-Received: by 2002:a17:903:b07:b0:2c9:ff29:3f91 with SMTP id d9443c01a7336-2ce9e7a5613mr78426635ad.6.1783918449548;
+        Sun, 12 Jul 2026 21:54:09 -0700 (PDT)
+Received: from mo-Inspiron-5559.. ([2001:fb1:db:5c33:ea21:9586:4d37:987d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d3bbaesm92010215ad.57.2026.07.12.21.54.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jul 2026 21:54:08 -0700 (PDT)
+From: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	shuah@kernel.org,
+	skhan@linuxfoundation.org,
+	me@brighamcampbell.com,
+	jkoolstra@xs4all.nl,
+	woradorn.laon@gmail.com
+Subject: [PATCH v4] tracing: Use seq_buf for string concatenation
+Date: Mon, 13 Jul 2026 11:52:49 +0700
+Message-ID: <20260713045249.69942-1-woradorn.laon@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Lms-Return-Path: <lba+26a54592f+fd7512+vger.kernel.org+lizhe.67@bytedance.com>
-X-Original-From: ByteDance <lizhe.67@bytedance.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On 7/13/26 9:44 AM, Balbir Singh wrote:
-> On Thu, Jul 09, 2026 at 07:25:12PM +0800, Li Zhe wrote:
->> memmap_init_zone_device() can take a noticeable amount of time when large
->> pmem namespaces are bound or rebound, because it initializes nearly
->> identical struct page descriptors one PFN at a time. This series reduces
->> that ZONE_DEVICE memmap initialization overhead by reusing prepared
->> struct page templates and, on x86, using memcpy_nt() for the template
->> copy path.
->>
-> Is the slowness specific to an architecture? Do you have any test
-> results from any other arch?
+In preparation for removing the strlcat API[1],
+replace the string concatenation logic with a struct seq_buf,
+which tracks the current position and the remaining space internally.
 
+Use seq_buf_str() to NUL-terminate before passing to early_enable_events().
 
-The slowness I am targeting is not specific to x86.
+Link: https://github.com/KSPP/linux/issues/370 [1]
 
-The generic part is that memmap_init_zone_device() initializes nearly
-identical struct page state one PFN at a time. Patches 4-5 address that
-part by reusing prepared head/tail templates. Patches 6-8 then add an
-x86-specific optimization for the copy step via memcpy_nt().
+Signed-off-by: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
+---
+v1 -> v2: 
+	- Fixed WARN_ON when booting with empty trace_event.
+v2 -> v3: 
+	- Addressed Sashiko's concern about the compound literal backing buffer.
+	- Replaced the compund literal with an explicit declared buffer and pointed
+	seq_buf.buffer to it. This guarantees the backing storage is placed in 
+	`.init.data` and reclaimed after boot.
+v3 -> v4:
+	- Removed typecast a const char* to non const.
 
-I only have x86_64 measurements at the moment, so I do not want to
-claim results for another architecture without data. On the x86_64
-setup, patches 4-5 already reduced the average rebind time by about
-11.0% for the fsdax case and 10.6% for the devdax case before the
-memcpy_nt() changes were added.
+v1: https://lore.kernel.org/all/20260620175441.223342-1-woradorn.laon@gmail.com
+v2: https://lore.kernel.org/all/20260622094623.18469-1-woradorn.laon@gmail.com
+v3: https://lore.kernel.org/all/20260623145147.12145-1-woradorn.laon@gmail.com
+Sashiko: https://sashiko.dev/#/patchset/20260622094623.18469-1-woradorn.laon%40gmail.com
 
-Thanks,
-Zhe
+ kernel/trace/trace_events.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
->> The main target is large fsdax/devdax pmem configurations, where the
->> cost of initializing the memmap shows up directly in nd_pmem/dax_pmem
->> bind and rebind latency.
->>
->> Patches 1-3 are preparatory cleanups and helper extraction. Patches 4-5
->> add the template-copy fast path for head pages and compound tails.
->> Patches 6-8 introduce memcpy_nt()/memcpy_nt_drain(), extend the x86
->> fixed-size memcpy_flushcache() inline cases used by that helper, and
->> switch the template-copy path over to memcpy_nt().
->>
->> The fast path remains disabled when the page_ref_set tracepoint is
->> active, and sanitized builds stay on the slow path so their instrumented
->> stores are preserved. Architectures without a specialized memcpy_nt()
->> backend continue to fall back to memcpy().
->>
->> Tested in a VM with a 100 GB fsdax namespace device configured with
->> map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
->> server.
->>
->> Test procedure:
->> Rebind the nd_pmem and dax_pmem driver 30 times and collect the memmap
->> initialization time from the pr_debug() output of
->> memmap_init_zone_device().
->>
->> Base(v7.2-rc1):
->>    First binding for nd_pmem driver: 1456 ms
->>    Average of subsequent rebinds: 244.28 ms
->>
->>    First binding for dax_pmem driver: 1462 ms
->>    Average of subsequent rebinds: 273.31 ms
->>
->> With this series applied:
->>    First binding for nd_pmem driver: 1272 ms
->>    Average of subsequent rebinds: 96.79 ms
->>
->>    First binding for dax_pmem driver: 1354 ms
->>    Average of subsequent rebinds: 119.04 ms
->>
->> This reduces the average rebind time by about 60.4% for nd_pmem and
->> 56.4% for dax_pmem.
->>
->> As an additional data point, I also ran a smaller set of measurements on
->> the same physical x86_64 host with a 100 GB PMEM region created via the
->> memmap= kernel command line, configured as fsdax and devdax namespaces
->> with map=dev and 2 MiB alignment.
->>
->> For brevity, the individual patches keep only the VM results rather than
->> including a second set of physical-host measurements throughout the
->> series. The physical-host numbers below are included only as
->> supplemental evidence that the same optimization also provides a similar
->> benefit on a non-virtualized system.
->>
->> Test procedure:
->> Reconfigure the namespace mode, rebind the nd_pmem or dax_pmem driver
->> once, and collect the memmap initialization time from the pr_debug()
->> output of memmap_init_zone_device().
->>
->> Base (v7.2-rc1):
->>    nd_pmem / fsdax: 179 ms
->>    dax_pmem / devdax: 264 ms
->>
->> With this series applied:
->>    nd_pmem / fsdax: 82 ms
->>    dax_pmem / devdax: 113 ms
->>
->> This reduces the measured rebind time by about 54.2% for nd_pmem and
->> 57.2% for dax_pmem on that setup, which is broadly consistent with the
->> VM results above.
->>
->> As another supplemental data point, I also measured the test_hmm.ko
->> module on the same physical x86_64 host, using the test_hmm.ko setup
->> from the previous discussion that times ten 64 GB
->> memremap_pages()/memunmap_pages() iterations during module insertion[1].
->> By default, module insertion initializes two DEVICE_PRIVATE dmirror
->> devices, so two avg memremap values are reported; each value is the
->> average for one 64 GB chunk.
->>
->> This is not the primary target workload of the series, but it exercises
->> the same large ZONE_DEVICE memmap initialization path and shows the same
->> direction of improvement.
->>
->> Base (v7.2-rc1):
->>    avg memremap reported during module insertion: 116689362 ns, 116539263 ns
->>
->> With this series applied:
->>    avg memremap reported during module insertion: 54607108 ns, 54458236 ns
->>
->> This corresponds to about a 53.2% reduction based on the mean of the
->> reported values, which is again consistent with the pmem bind/rebind
->> results above.
->>
-> That is a good result, thanks for sharing
->
->> [1] https://lore.kernel.org/all/aiEoByaQdRR3xtM5@nvdebian.thelocal/
->>
->> Li Zhe (8):
->>    mm: fix stale ZONE_DEVICE refcount comment
->>    mm: factor zone-device page init helpers out of
->>      __init_zone_device_page
->>    mm: add a set_page_section_from_pfn() helper
->>    mm: add a template-based fast path for zone-device page init
->>    mm: extend the template fast path to zone-device compound tails
->>    string: introduce memcpy_nt() helpers
->>    x86/string: extend memcpy_flushcache() fixed-size fastpaths
->>    mm: use memcpy_nt() in zone-device template copies
->>
->>   arch/x86/include/asm/string_64.h |  78 ++++++++++++-
->>   include/linux/mm.h               |  15 ++-
->>   include/linux/string.h           |  23 ++++
->>   mm/mm_init.c                     | 186 ++++++++++++++++++++++++++-----
->>   4 files changed, 273 insertions(+), 29 deletions(-)
->>
->> ---
->> v5: https://lore.kernel.org/all/20260701090553.62691-1-lizhe.67@bytedance.com/
->> v4: https://lore.kernel.org/all/20260603080152.64728-1-lizhe.67@bytedance.com/
->> v3: https://lore.kernel.org/all/20260527033636.28231-1-lizhe.67@bytedance.com/
->> v2: https://lore.kernel.org/all/20260521040124.10608-1-lizhe.67@bytedance.com/
->> v1: https://lore.kernel.org/all/20260515082045.63029-1-lizhe.67@bytedance.com/
->>
->> Changelogs:
->>
->> v5->v6:
->> - Rework patch 6 so the x86 memcpy_nt_drain() helper uses wmb()
->>    instead of an open-coded sfence, while architectures that do not
->>    override memcpy_nt() keep the generic no-op drain fallback.
->>    Suggested by Borislav Petkov.
->> - Rework patch 6 to use the usual self-macro override pattern for
->>    memcpy_nt() and memcpy_nt_drain() instead of a dedicated
->>    __HAVE_ARCH_MEMCPY_NT feature macro. Suggested by David
->>    Hildenbrand.
->> - Drop the default: case from pagemap_resets_refcount() and drop the
->>    WARN_ONCE() after the switch so newly added enum memory_type values
->>    remain visible to compiler switch checking. Suggested by David
->>    Hildenbrand.
->> - Drop the unnecessary empty set_page_section() stub from patch 3, keep
->>    set_page_section_from_pfn() as the only !SECTION_IN_PAGE_FLAGS no-op
->>    helper and fix its indentation. Suggested by David Hildenbrand.
->> - Rework patch 4 so the reusable head-page template is seeded from the
->>    first loop iteration, keeping the main loop intact while ensuring the
->>    first page is initialized only once; also drop the extra template
->>    memcpy helper, as suggested by Alistair Popple.
->> - Rework patch 5 similarly for compound tails: seed the reusable tail
->>    template from the first tail-page iteration so the first tail page is
->>    initialized only once, while keeping the main tail loop intact, as
->>    suggested by Alistair Popple.
->> - Rework patch 7 to rename the internal fixed-size MOVNTI helpers to
->>    movnti_*(), keep memcpy_flushcache() as the externally visible
->>    wrapper, fold the new 32/48/64/80/96-byte copies into the main
->>    fixed-size switch, clarify in the code and changelog that the
->>    ZONE_DEVICE template-copy path relies on the 64/80/96-byte struct
->>    page copies while 32/48-byte copies stay inline as well, and drop the
->>    separate alignment check based on the physical-host microbenchmark
->>    results. Suggested by Borislav Petkov.
->> - Run v6 VM spot checks for the fsdax/devdax map=dev paths. The
->>    results stayed in the same ballpark as v5, so keep the previously
->>    posted v5 full-run numbers in this version instead of replacing them
->>    with another partial data set.
->>
->> For changelogs of earlier revisions, please refer to the v5 cover letter.
->>
->> -- 
->> 2.20.1
-> Balbir
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..4f5a0e73a89b 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -22,6 +22,7 @@
+ #include <linux/sort.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <linux/seq_buf.h>
+ 
+ #include <trace/events/sched.h>
+ #include <trace/syscall.h>
+@@ -4501,13 +4502,20 @@ extern struct trace_event_call *__start_ftrace_events[];
+ extern struct trace_event_call *__stop_ftrace_events[];
+ 
+ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
++static struct seq_buf bootup_event_seq __initdata = {
++	.buffer = bootup_event_buf,
++	.size = sizeof(bootup_event_buf),
++};
+ 
+ static __init int setup_trace_event(char *str)
+ {
+-	if (bootup_event_buf[0] != '\0')
+-		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
++	if (seq_buf_used(&bootup_event_seq) > 0)
++		seq_buf_puts(&bootup_event_seq, ",");
++
++	seq_buf_puts(&bootup_event_seq, str);
+ 
+-	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
++	if (seq_buf_has_overflowed(&bootup_event_seq))
++		return -ENOMEM;
+ 
+ 	trace_set_ring_buffer_expanded(NULL);
+ 	disable_tracing_selftest("running event tracing");
+@@ -4766,6 +4774,7 @@ static __init int event_trace_enable(void)
+ 	 */
+ 	__trace_early_add_events(tr);
+ 
++	seq_buf_str(&bootup_event_seq);
+ 	early_enable_events(tr, bootup_event_buf, false);
+ 
+ 	trace_printk_start_comm();
+@@ -4794,6 +4803,7 @@ static __init int event_trace_enable_again(void)
+ 	if (!tr)
+ 		return -ENODEV;
+ 
++	seq_buf_str(&bootup_event_seq);
+ 	early_enable_events(tr, bootup_event_buf, true);
+ 
+ 	return 0;
+-- 
+2.43.0
+
