@@ -1,166 +1,138 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6E534B1B0
-	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 04:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E63B38F230;
+	Mon, 13 Jul 2026 07:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783918679; cv=none; b=JIyzjpDBXm8w1eTUkhU5sbRZJolArtfV1Ps/SM7zYs/d74vYtPmQZFYNKvvkApaBUw1GZstNpC4fl+mdJSAqsbNxHVfsJyto25DRur9sPrYFfAbggwch8Z/Mce+ZnjM2Y6EjZWPiygoSndvcDI4Sk8Fak9bZ3cBvSCke4wkuw8o=
+	t=1783928020; cv=none; b=sPOn0giYQFScnBz9V6Z0xE1OWe9vv7yZmxnEM0xTsxhzUxpKGQkXeQrFSz9k4QL61WMoE56GpG9ZGrn6A/hay4wgRbSafkmabl87YCZF0wcki6Y3IqU2+irbY0Wg+OVrFZqUt5M0PgJ378K+gnCsEOyCDBfSb83AHsWGK30Rcxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783918679; c=relaxed/simple;
-	bh=LflzoFEAZCGohBe6+8suK5icx8InddD6Nep0mFpxNEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RkAdDUNcFJAp+rAGCUVKurQT7Fca1VInrSl+X2LlJAwyI8MxF06EUPplD0S6rl5cv2WqXSCAvr2W3ok6Q2j0vAHjwCjvBVhgG4liEveBQmQK7tFu+vvIVLkmip5ixir1YYuWRJakpirkMOx4jAnjUqnTN1rT55kkwfWzP/4uqEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GtlCqUGP; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783928020; c=relaxed/simple;
+	bh=vxR1n8x++y1etfYJI5z3sl9ofTRJlNXz1r/eUXMPNK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nQLjQ8udJFDIOSp+rPfhjTq/LbNdhwwQO1FzvWCyD3D/HlE7SkEhmehBoWYtW9vn43t8JJON8pCqYV1M70yexLftp3rXbu0t/AZv/Aikje83XWtCx3CchNiZk8pebC/GMPfJ4djMCJDyKlEl9ArvQHWsVnFFlJdoYg5SoMAwx+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTljm3XC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtlCqUGP"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-c9aea40d799so1173175a12.0
-        for <linux-hardening@vger.kernel.org>; Sun, 12 Jul 2026 21:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783918677; x=1784523477; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=I2Wy8lwvqhiTKT55Dm2cNnX9AvjqZigx9HgdgElZQis=;
-        b=GtlCqUGPSo1dD7lcdBJPovpyrDvaFv/SbTgD+LXsaMLMeibe/KTPMpm4lWVw7pnRTm
-         +yS7LczwVYtLoy7tMmzK0ROUg6/T9Ft+9JL9bpjWNcVJ1Oy1PdwRWqcDxStLaZ3BGAQT
-         zNKV/Z4TpcsK+jCgUAh90EWBUnbMt2d2YJbAcYnU+RgnSJZQ1Z1V+wep1MdXY3RgK/jl
-         PGFtC1s2iogUozlGxGmiIZaSZCapAoAGM6+100Eff6Mj3xIdfTPiJaS7LmyqzRRz8y/Q
-         fOJPt5AXvEF/Tm8FV2fLBnRsoxdE4oCFNljQ0rHZ4Q0iOucXJe6w0izOjNxT8p5wIAhX
-         oU1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783918677; x=1784523477;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=I2Wy8lwvqhiTKT55Dm2cNnX9AvjqZigx9HgdgElZQis=;
-        b=k2qMW+gCpRmzm7DuA6PH3AKvP2R4vcgcjm7T21Y+551JHsdJwk1UTNBbBTzTnN07RH
-         c4tM+Jy460tZSembvNIjxEUUwxUbtIzpLuBgyGsUTYJRJZoX7bGpTvhtjCDvlKbxL+j4
-         HAm3f/Y3yr+ekVpfrI0xami5ezDBRXpNF0i4n6fMDoJF96454mJl0hFDPHFu+sD49jFF
-         3aQ8PtuGmQAB1rcRZJFWVT0HcEjRppfG8i2LgVr2gQ8CqMr87/JoTvpCSzdPAxk+NrPj
-         qPUUZygruegZtdnHeaYiLk96Jn59eD28Dpq+Os1kTJeeC7wiSV2284h8WLVww8LMfiop
-         2IIQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rp09ar12tHzSYGchtuQeqpT23bAd02dplQ0WxzNKXWXF0YX0zCfqL+NhY4uUAANOdzOYvZ7zbNILutxvPqHwx4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvK6dulqSlycXAyj8CGGAssihpAZ48ohlD8pICvtOy1BPxwsb2
-	G5jWkGEDZ32KVcIeEHt6/P+LFTJfRu8UR2Ootsa/nSlOIIBWQ5DGYLqnZotA3tCH
-X-Gm-Gg: AfdE7cmtXui4rA5zSTOMaFt2pyCaQC4dMr8XCRO5AW71SqmkvLf1sFnZ/ZidsfSk5ut
-	PbK7rO/5Ws5G9en8HF3dmzSdY03AFcpLRLUFfbKjT+lIWoJ5z9ohXgVG+7cfuCIeX7VYb8Kgbff
-	bgLdQdc36gP9J3UVvegR96HtURS4GKXFQQKtJ0oR0oF/bQ8mChejwlvGT3cfAMHlHqlPZm3B1OI
-	Sl011aB1aQzceeZY0APdK0xf2v6HSRJy59Ws+gu3ZANWVOa/Mxjw8KcObRWDt8Vo771D/JW8dvs
-	DJ5RlKeXToXWoP29x8NtZ1YxYeOoIjF1Xwddkcw8/E4cGTMoa0HNGhZmRTgRPK8ExKKCMaALUyG
-	7s43lJn+ciS9J9nJbJLuUJ35j8tC22o14BM5bLmdm2IDcK2g0Cg9bDxRynFEPA6cS0mSvZ+wk2X
-	gAUFT1bShHk3pLtk5/wgrjYiVcEq8MXQeu7ozdQq3g+2bwhO8/sbvUznZa4sk/W42J8m7DVGXHF
-	2ns9aSfGs2kPeM=
-X-Received: by 2002:a05:6a21:4d8f:b0:3c0:9c1a:894f with SMTP id adf61e73a8af0-3c110b33403mr8347974637.71.1783918677163;
-        Sun, 12 Jul 2026 21:57:57 -0700 (PDT)
-Received: from ?IPV6:2001:fb1:db:5c33:7066:708a:3018:7aec? ([2001:fb1:db:5c33:7066:708a:3018:7aec])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cabc7b2aa4bsm2033582a12.10.2026.07.12.21.57.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2026 21:57:53 -0700 (PDT)
-Message-ID: <79f36674-5a35-4aaf-b5b1-bc6189c222ad@gmail.com>
-Date: Mon, 13 Jul 2026 11:57:46 +0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTljm3XC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 956141F000E9;
+	Mon, 13 Jul 2026 07:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783928018;
+	bh=YK6JJLrtYdjUeALj48c7CkynRd/F55S7Z4V7ax9rj+E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=FTljm3XC7PYrixU2x5qXuvq0zgoVZ/vdaSFjUkS3qnIRtIgW3LqKRDBMWCqA4vyz2
+	 wver2ibuCFeaz8yAIFmelV46IC4YVJX21usDAIWS47K6A/oomcVhgEdhetuwS8mCLY
+	 RHwT6v5JsDqBAa1JF0DqJIGj7u+4unUeNxU2Cfm+Yqoo7frtgFFO7XZ4uMbG8VgmPH
+	 mrcbEPSyNNdygnw9yncJ2EaQIvDOAI2teBZBeicbjHACBaAkjb34ZNROiD2A0AqLwg
+	 pP8bSd0W5LCm3XL2nOlWhwBY8Pg+P2Va2R7FlPuc5NomIhulJRV41Wq1cONcXcm1dk
+	 XgyFFaYKQS0HQ==
+Date: Mon, 13 Jul 2026 00:33:37 -0700
+From: Oliver Upton <oupton@kernel.org>
+To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v8 01/11] KVM: arm64: Serialize userspace MDCR_EL2 access
+Message-ID: <alSU0ZoIQ3sMLo0p@kernel.org>
+References: <20260710-hybrid-v8-0-621409f3a592@rsg.ci.i.u-tokyo.ac.jp>
+ <20260710-hybrid-v8-1-621409f3a592@rsg.ci.i.u-tokyo.ac.jp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] tracing: Use seq_buf for string concatenation
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- shuah@kernel.org, skhan@linuxfoundation.org, me@brighamcampbell.com,
- jkoolstra@xs4all.nl
-References: <20260622094623.18469-1-woradorn.laon@gmail.com>
- <20260629143947.2216574e@robin>
-Content-Language: en-US
-From: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>
-In-Reply-To: <20260629143947.2216574e@robin>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260710-hybrid-v8-1-621409f3a592@rsg.ci.i.u-tokyo.ac.jp>
 
-On 30/6/2569 BE 01:39, Steven Rostedt wrote:
-> On Mon, 22 Jun 2026 16:46:23 +0700
-> Woradorn Laodhanadhaworn <woradorn.laon@gmail.com> wrote:
-> 
->>  
->>  #include <trace/events/sched.h>
->>  #include <trace/syscall.h>
->> @@ -4500,14 +4501,20 @@ static void __add_event_to_tracers(struct trace_event_call *call)
->>  extern struct trace_event_call *__start_ftrace_events[];
->>  extern struct trace_event_call *__stop_ftrace_events[];
->>  
->> -static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
-> 
-> Keep the above string and just assign it.
-> 
->> +static struct seq_buf bootup_event_buf __initdata = {
->> +	.buffer = (char[COMMAND_LINE_SIZE]) {},
->> +	.size = COMMAND_LINE_SIZE,
->> +};
-> 
-> static struct seq_buf bootup_event_seq __initdata = {
-> 	.buffer = bootup_event_buf;
-> 	.size = sizeof(bootup_event_buf);
-> };
-> 
->>  
->>  static __init int setup_trace_event(char *str)
->>  {
->> -	if (bootup_event_buf[0] != '\0')
->> -		strlcat(bootup_event_buf, ",", COMMAND_LINE_SIZE);
->> +	if (seq_buf_used(&bootup_event_buf) > 0)
->> +		seq_buf_puts(&bootup_event_buf, ",");
->> +
->> +	seq_buf_puts(&bootup_event_buf, str);
->>  
->> -	strlcat(bootup_event_buf, str, COMMAND_LINE_SIZE);
->> +	if (seq_buf_has_overflowed(&bootup_event_buf))
->> +		return -ENOMEM;
->>  
->>  	trace_set_ring_buffer_expanded(NULL);
->>  	disable_tracing_selftest("running event tracing");
->> @@ -4766,7 +4773,7 @@ static __init int event_trace_enable(void)
->>  	 */
->>  	__trace_early_add_events(tr);
->>  
->> -	early_enable_events(tr, bootup_event_buf, false);
->> +	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_buf), false);
-> 
-> The above then would be:
-> 
-> 	seq_buf_str(&bootup_event_seq);
-> 	early_enable_events(tr, bootup_event_buf, false);
-> 
-> Don't typecast a const char* to non const.
-> 
->>  
->>  	trace_printk_start_comm();
->>  
->> @@ -4794,7 +4801,7 @@ static __init int event_trace_enable_again(void)
->>  	if (!tr)
->>  		return -ENODEV;
->>  
->> -	early_enable_events(tr, bootup_event_buf, true);
->> +	early_enable_events(tr, (char *)seq_buf_str(&bootup_event_buf), true);
-> 
-> Same here.
-> 
-> -- Steve
-> 
->>  
->>  	return 0;
->>  }
-> 
+Hi,
 
-Thank you, Steven, for your review. I've sent v4:
-https://lore.kernel.org/all/20260713045249.69942-1-woradorn.laon@gmail.com
+On Fri, Jul 10, 2026 at 08:14:55PM +0900, Akihiko Odaki wrote:
+> kvm_arm_set_nr_counters() updates MDCR_EL2.HPMN for every vCPU while
+> holding kvm->arch.config_lock. However, KVM_SET_ONE_REG currently writes
+> MDCR_EL2 through the generic sysreg path without taking the same lock.
+> Concurrent PMU configuration and register restore can therefore race and
+> lose updates to unrelated MDCR_EL2 bits.
+
+Ugh, we should just stop updating MDCR_EL2.HPMN altogether. Since this
+overwrites the previous value (rather than clamping it) we could discard
+a legal value set by userspace.
+
+From the UAPI POV all we need to do is ensure the reset value is sane.
+The documentation says that system registers are reset to their warm
+reset values when KVM_ARM_VCPU_INIT is called. Which in this would mean
+HPMN is reset to the number of implemented counters at the time of the
+ioctl.
+
+If userspace changes the number of counters afterwards, that's their
+problem.
+
+> Add explicit userspace accessors for MDCR_EL2. Serialize them with
+> config_lock so whole-register userspace writes cannot race with HPMN
+> rewrites, reject HPMN values above the configured PMU counter count, and
+> request a PMU reload when HPME changes to match guest trap behavior.
+> 
+> Fixes: c8823e51b534 ("KVM: arm64: Fix MDCR_EL2.HPMN reset value")
+> Closes: https://sashiko.dev/#/patchset/20260706-hybrid-v8-0-de459617b59d%40rsg.ci.i.u-tokyo.ac.jp?part=6
+> Assisted-by: Codex:gpt-5.5
+> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+> ---
+>  arch/arm64/kvm/sys_regs.c | 39 ++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 38 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index d217530359ba..2b2ea33159e9 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -2949,6 +2949,42 @@ static bool access_mdcr(struct kvm_vcpu *vcpu,
+>  	return true;
+>  }
+>  
+> +static int get_mdcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
+> +		    u64 *val)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +
+> +	guard(mutex)(&kvm->arch.config_lock);
+
+Hrm... I would strongly prefer that we *not* take the config_lock for
+this register since there's no way for userspace to avoid lock
+contention. ID registers are special and documented as VM-scoped, so an
+aware VMM could potentially set these once (avoiding the lock).
+
+> +	*val = __vcpu_sys_reg(vcpu, MDCR_EL2);
+> +
+> +	return 0;
+> +}
+> +
+> +static int set_mdcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
+> +		    u64 val)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +	u64 old, hpmn = FIELD_GET(MDCR_EL2_HPMN, val);
+> +
+> +	guard(mutex)(&kvm->arch.config_lock);
+> +
+> +	if (hpmn > vcpu->kvm->arch.nr_pmu_counters)
+> +		return -EINVAL;
+
+KVM allows userspace to write whatever it wants right now, we can't
+start rejecting values that were previously valid. The architecture also
+allows anything to be written to the field, just that unimplemented
+values have UNKNOWN behavior.
 
 Thanks,
-Woradorn
+Oliver
