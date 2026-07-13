@@ -1,193 +1,167 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011045.outbound.protection.outlook.com [52.101.70.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027B93793CB
-	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 09:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783936389; cv=none; b=awBPeI/9k8YYcfkiivr7uZnAvMNeiGy55QVU/EJX34qkUJ2hoGa57BdzPMRqjlYBw956kPL+/iClO+/IMAokxs0PClbdvc/4q98p7N/hti9Fy/AIP5OZ+lXhgvLI0Otl7uvSxHM0cYdnD6JjjZAVaaHSdkPfIfLN85yPPgJCrG0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783936389; c=relaxed/simple;
-	bh=ij2M2kwiOeKDbVQfgMoEAJNmqYl0Dpypsxx7+TfCsrQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HDDFiqCr8jFMqodujTDAhJSeKuEGXn8Z5luPHj2ero+SVDzIUqAsU8YUWg9jiOJSRqCYT/FM5/rvgUvVruhCpu6MLu1gR7x8NTzqw6bBAGt8fR5Ir+aGm/W7cfAQxhyaV2yQC6Kbq+BpnVQXcbGYqA4PVrzjY9c8PO+t7pW94sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A0JFgexU; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A19A30499A;
+	Mon, 13 Jul 2026 11:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783940932; cv=fail; b=uitEj9lcoB44aGJFEPDlnJU9uy9OPz7vCQ2tywfLfxcox0nOmER70w7XGNnvDEjc7qiNU06zK8YAgmTr+4A3XUXPNPn2ptT61BMTBcV25aTjxY14vfLcDNJyl/7U/0momrRKSPSZ3AyDckaGf1BOYHtWuGNoV/4VlQ9ERzj4PI4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783940932; c=relaxed/simple;
+	bh=JABYGmajaFyWMp94Lx/womRaeC4Zh72W6CQec587Ku4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=K6Lcu4cEMfUGssM5NPsIViIpOqQvBHIGa3YGx/BJMo+KkrMKz3cz7jh3j2cai/5KKaGd6j9j7CgWqw3RVQaxT+gSryQ6oZE9udbvwfSZZL3KiKLFrBobAUInQ5PrUfh8xXDR5YrfD2JIA+OuKTWYDbqBcaA92uz2/c6GHwvwzlc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=I2CqXhR3 reason="signature verification failed"; arc=fail smtp.client-ip=52.101.70.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0JFgexU"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-699fbcd23ccso4088505a12.1
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 02:53:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783936385; x=1784541185; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=XkoqjiJgvj0fIc6sWXvWxf3IczQwvql9N4c4357BiFs=;
-        b=A0JFgexUNYl7pPyM4pRup8Pl7+UFV6eQiII/8P0CfTFVryFg1uQaM7YAnk0kVfem8F
-         MnIrHXSo+PovyVwN273k+6K63OQOKPusMb08D0atM593GnFLFrX0Ow1zRci3B50ys/+k
-         wb8raIcmrpwdy+enh1nLJ/yAVpDklLevUAbMiUOhb4EBeSF8zTGc2LLtDMaCsowa0aCK
-         8ig955ObQ0Rtbm01PvE8ZBoBG9d4rsUnbB78r2Wv7o8BHlNSwsAxRQgDlsuU3acfMXqA
-         RbN52ZE6r1BimAIH934w61WK5ehL60mnmhJBb/rrhzMAfzw3Rf3Y9b+lQxVJ2WINAr1p
-         Hh5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783936385; x=1784541185;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=XkoqjiJgvj0fIc6sWXvWxf3IczQwvql9N4c4357BiFs=;
-        b=ZkYiN1szrpd/OvG3UwsUwQTMcgCZAqDOuuiQKPJs3QMefnopV9D80Agp14+MJg2UG0
-         /IKk5iZZF2DidMbD7+yakzddajTuUUKULY3uXf+wEidIk5934LXs0DtpsX9qfSgE1IKn
-         o7j1J9Z5+G/AxxsK0og7gW+di/f5Us+2xFniw6pZUpqyHtDOB48oUHGViRR+yDHnN/mB
-         wovJ8rc32Wzg0nkNfuoL3mVsNpkYkqZBHUvIogVMAmf7a1JtpFzfYu57A9w4sTRiPvCE
-         pA2w75gL6P0FZd+9S9V7LvTkznI1JDax0JFSNZcjcCBoR0vv332hn5Fh3MLEfPhez9Jb
-         LxaQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrKWtXx6BG4tyu9TuwJ5+U88XLF2Wje4XvkB0Ruk1gZrlcWTeYf3q6E73VeRoLHypE+TfTjZRsw9CIqayVfDuk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTo33RvydTzSaDszcdWSJxkmcP0KZZJDpmW0d0xgkeDnZwqLBb
-	dSjMp7cpiSTgDZxqujVafu72C7NwVCrXeYRR4hLYYiDMazYR16PnI22l0IxN077c
-X-Gm-Gg: AfdE7cl/szondGbhnGPMr96d2ekVp+TX5e2nI5HcUg2zrxOCrHUDVKHiNC95wHfvaW6
-	8Gni3nccOSbvVPu5elcm2UBRE/d9+kkXxzrqbCgdzg1Da92pqd66ViNi8AFensCwUKMQmPxSAos
-	1eR/yIEixrCxe2M6CMmQRMfdGdSRyqPEgBi3gL/p+lbnuOO3cyZWfmRDbcT8qZreSWEpbhTQeBL
-	gshirevJn19PyIGCqY8X9gIMglUO1Ly2ySuVqT+dhSCrk34hnfYsRpxJey5oQUutmbgBbndOOUk
-	7TjkS4lJV1bOfK/xwAt6AdKHrrKNM4RPcdjVaSqBWNDvBp60lR4silwzK/bT5jSLjPXtVBzW29O
-	EFbW5QjTRi4MkAKoNwpN7mWPDwKrciYbCVjel9vjoZFO51KuN8v+SZswLjs2+pkc+Jn9jhDe6el
-	8eSiwfYRr5KOahjQ+rYLVt4grMhDqNVjNYINM84i3lL33IS9xqUapLRLuul4ltR9g55I1dxDnFJ
-	K6iTYodtoSy+V8JIXc8OaU0SBI=
-X-Received: by 2002:a05:6402:1e8c:b0:698:7485:3f12 with SMTP id 4fb4d7f45d1cf-69c5f0eafb7mr3910232a12.24.1783936385138;
-        Mon, 13 Jul 2026 02:53:05 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.131.netskope-rdns.com. [24.206.116.131])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-69ac41d7ceesm7759429a12.23.2026.07.13.02.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2026 02:53:04 -0700 (PDT)
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-X-Google-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-Date: Mon, 13 Jul 2026 10:52:56 +0100
-To: Jonathan Cameron <jic23@kernel.org>, 
-	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v7 07/17] iio: test: add kunit tests for channel prefix
- naming generation
-Message-ID: <egyms7ulkxsgu4pvfkoruelec3sf6ca4bndcuqkvxljrdluqwu@edlqne7oy3xs>
-References: <20260707-ad9910-iio-driver-v7-0-a4ec30f63700@analog.com>
- <20260707-ad9910-iio-driver-v7-7-a4ec30f63700@analog.com>
- <20260712020928.2c8d1667@jic23-huawei>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="I2CqXhR3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JZxntUCkhcZO0HtPovXvsE27WjHl26dwH65L0bq1X46Im6v/d7P3nJXklMdKkBBNXVMDsS1ShdxG3wQtjiBLeVDV3QGuDYTAI+3d5ERTqQKge8xvnuRjtEbCkcLhbTe8qGv4QABbPpvIO0hyS0lDll63Z19gUmQfpatNoOgphCLxO1l7e4ZCsVmVYpluCHlsTVHqgfNNkKz3agmxsywGFf5W4ZWD/XikQwdtFVWcNErtxVDQpJXa0plUq/42Th/9Ifpb9hPG1Y+cEcmIC4fm3l3dBG1dY7XjCfbcn5RZkF26+pLmJZnr1MEbp1vedjXfZubOdhT968e0vZGgMLaeNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZqZd/0gAEqbKFycYSg/76QIkKOWux91Y+SIQ0FPqU6k=;
+ b=UfyxW5wlwo4N5GK3TY3nbHgkxkE+EyfAPWFyIsjTmIIiLmIlgQOMmULfWhDHxtnBLQMa7HDGmQbFdSTnxH0NWiTlOI2d5rkgfyNiEEPBvizXC5slghBFFxYbAm0VZHBSeG/CVqo+n5FjV8nV8Rpw3S6f/djNi+JXr++Z5See/zf7dE827luc6ar31oLsJtfHpCnFMcQnA8rhdK8OCNDw9NskQb0YozLm9PhSwuLCJkLYeypmiMaOpvLYcKKimtW4UNyEbYWyR9QZvQN851nteYtVKNjXhWj1PJdCj1cKtBXhRlro5zEWkKujtP2mjfz9iF0oOvbA/Pc3KL7H6macMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZqZd/0gAEqbKFycYSg/76QIkKOWux91Y+SIQ0FPqU6k=;
+ b=I2CqXhR3UlccKK+Ev3qH4NCZNw4A0rDZ8CmWUA2rlsILWEl2ymvnzdc5k0YqKzdKW+Qqkbw7VussgBkov6Y6ldyOPpTDF0ov0KZdr3y4b3bRjRWJ3lpVOfxYGCrmbXHBgHNjL7atlLsa7A4EG8HRW1x1OMmaNnJ7gmOk8VCDalIO7bafKyWvBerltqV6+k+M2m18n5GLeDOJxV2E9VY1N0G37kdL76qP9vZ74SgJY3BXUBB+976z5LAAlOwZFSsjQmez0HJLDfdD+BRMq94nskSZrPRb76cT9cbR+Tt9OaWHZS+2uNl0BY0UUT/qeQguIV8/lYwOkbGDuV/o+Jnv2w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from GVXPR04MB12290.eurprd04.prod.outlook.com
+ (2603:10a6:150:319::13) by PAXPR04MB9005.eurprd04.prod.outlook.com
+ (2603:10a6:102:210::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Mon, 13 Jul
+ 2026 11:08:47 +0000
+Received: from GVXPR04MB12290.eurprd04.prod.outlook.com
+ ([fe80::1739:3404:2175:33dd]) by GVXPR04MB12290.eurprd04.prod.outlook.com
+ ([fe80::1739:3404:2175:33dd%6]) with mapi id 15.21.0181.014; Mon, 13 Jul 2026
+ 11:08:46 +0000
+Date: Mon, 13 Jul 2026 14:08:42 +0300
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: david.laight.linux@gmail.com, Kees Cook <kees@kernel.org>, 
+	Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH next] drivers/bus/fsl-mc: Use strscpy() to copy strings
+ into arrays
+Message-ID: <xwsinrysbg6vqtvj7mbgn7ywtgojkwpozbhkalpyrq6qnmzrhe@losn7mdkeynd>
+References: <20260608095500.2567-1-david.laight.linux@gmail.com>
+ <dbd95f4c-cef3-4f7f-8619-375fe37c8852@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dbd95f4c-cef3-4f7f-8619-375fe37c8852@kernel.org>
+X-ClientProxiedBy: AS4P189CA0044.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5dd::13) To GVXPR04MB12290.eurprd04.prod.outlook.com
+ (2603:10a6:150:319::13)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260712020928.2c8d1667@jic23-huawei>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GVXPR04MB12290:EE_|PAXPR04MB9005:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a9b5560-ccd1-48f9-78b2-08dee0cf1bf7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|1800799024|376014|19092799006|366016|18002099003|22082099003|56012099006|4143699003|11063799006|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	gs59xyxh4+kDxPKfvkE5MdHQYQGNtDQliYNHOv4I4Pc/M6emxfZ5pSRbKOpm8Hv1vCUuSSU3aUrWhPX8HEwLqmpW5DIyIfnk9qlQPo4AFF+GH0QVxDHV5Sq2DTg+KzPBRsw4USMgYtJ7rQU3P97XRqIMIefaRC5Y1BKDRSjWwK/zxayLzBv79YgExWSMLlLOUFNnP8gnjQjMbZhNlo5XUzsOA+AG3BaScSIG84T48kKVs+TBLq3L8rNvqEO3woXJpqVp/1wM9mnPS5DJ+BeC6sKORKPhahgPv6wYAp525LTR94H0HY+xnZKRvBBg5XDT9gArSndfcAcnTvVWKFA2hiBStDsc1yBx1jjwB6m/qvggdKU+2HuWqlbIHTPi57TUMi1vk7i9TCDt/LJao9pU/Fp8RsD2z9YVhEMC5vFsQGHjeXTkv2m2PLYKEiYTOpPPlRSn7vxgdbTJ0NzYlP8OFyfCX5cQ3XYPj4Wj9IMyUsk9o/88MX6YLbuxE3caEq75BFi31gEZiQbtqiMfRK0CaQS/y/Uy+uTipYocWEL3ErbIyPrT/d1ebvHAjBUP5z2dStDW/qzsb8cCWSTIoIjM1bwiH7mmQpEWgO/FQKt11BPZl2qjgFXrwCb1wfXX1R607klbhZFl5X1v0jMhCGvv3E2rK28+Pht+y7DaubPLWu4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVXPR04MB12290.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(19092799006)(366016)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?QYV9U/yMbdBOn5PAFoTdijUy2qXhrr65Ck+ibBqk0woQTzbWmkOxPsvnSz?=
+ =?iso-8859-1?Q?fXnBZd/PX8fILI6F+3MOfx2dstbw3QoIThB7rf8tetMXE7m2oCIKo0xSJT?=
+ =?iso-8859-1?Q?fy9b5CaBO+IDry7uazt6Msu4XDIMc83Ht/yBVsdx8PYC1uWy4Qx9+oM3tX?=
+ =?iso-8859-1?Q?17oMe3Y4rqpZfmW2W8fdh8rZQV7SRQb0obVpVG9NrkZn51JXhPxBP7Ph/T?=
+ =?iso-8859-1?Q?8okzzkkVMQOHrF9jaNZHk0PDr0UaCS9tplxskUfdBrOQ3c13m/cGkF4ohq?=
+ =?iso-8859-1?Q?WnNdTor0DiYT/lzIwsOAsY/6DIYMa5/dqzS9mcgA317oA3Jc2vhT23BDJx?=
+ =?iso-8859-1?Q?sVsf0UNz6vM/b2USxcfvQ/zes04IA/T9Sedy7qYqgxeV+uJ+yk43ijmQ5l?=
+ =?iso-8859-1?Q?eahHoJP6Eiy3lHjUuCZFkqpsmrMEBxyxW5sqnoEtgBshr2TnbmIyvxu4Bw?=
+ =?iso-8859-1?Q?fy9bhnbBR7XoEDOvt1CqAB12ureWfVUeAN0C4Yck4WqugCVxeW5pi8sYUo?=
+ =?iso-8859-1?Q?pE4J7XGr9YF+f9t0OxG94nnmcMb/zZ3Jb7QSOJZTWcx5jh5E1kIemKVo47?=
+ =?iso-8859-1?Q?NKcmwN+JGRdbUcuFTkiTiaN51dvZd/O8J13mTKo4lqcYvWkkQ1Z1FZq6IZ?=
+ =?iso-8859-1?Q?qB5btpKGQIsTFSbRGC53hzdsiL7CSoxf/hEETVncMFYitUHI4MlGEmelcu?=
+ =?iso-8859-1?Q?PcVD+STh9GDAhSjfHKPGYjPyv5cKSyt4Aptby7VUbwBwsWlnuDMBAoIiJF?=
+ =?iso-8859-1?Q?Q37Qbp1UD7H8FBXw2kXLbMKDEsATwwpV3DZtp2U/4HqtQUpcADsNxiqci/?=
+ =?iso-8859-1?Q?QH6SctJCN3xGDac4nB3qpwSGRBPX3oUflHhAsu43a9L42B0rDpA3NhFMdU?=
+ =?iso-8859-1?Q?RdFh44ERuJ5VQcaMvDolPane2SAqrpC4e4yuarRQpje2g3UNTrc0LiAfao?=
+ =?iso-8859-1?Q?UrKN+HS7m3iQa9n42FSxLNco/GA9wuzVQ5jmuUsvsTsIShsg9zqSarNoIY?=
+ =?iso-8859-1?Q?15GQ7wNkNmfVhR5siEoCUbabUun+tunye+SRDK0hVvbp4b7skZvyijkLsd?=
+ =?iso-8859-1?Q?9rxgo2kIo2LSIofeNkWGe3LJfFIHfRbdvTXGbUPDY5jUCN/PB1vAoMXrPx?=
+ =?iso-8859-1?Q?eOzNegMMwFKzCnxNHaFX2n3oiwtb7ZjqLrSXZhWkUBbb8fZfKGVzNqK1K9?=
+ =?iso-8859-1?Q?Y0iOUh8xmHwSi4WxuO6qF0trfgrf0hNRIYeRZZ1xXr+SD75lYXk3BAc6A9?=
+ =?iso-8859-1?Q?acJOU4MUENKpqCXuNldnAJGo3vDaSJO7v1FXCaZVsFzESp8D6NAUHnq23l?=
+ =?iso-8859-1?Q?z9hf+Bu94AGaPAlwAsKen7hH8SNY4lZVdcSfmtIK3x7xxKq8wConvTsMsO?=
+ =?iso-8859-1?Q?lGtMgAk5F8VITfRUtVBKCIA+UQI2ntqERgfXt6qYvEuI8CDpmPGjhqgXcL?=
+ =?iso-8859-1?Q?s8F2pSk/cib4XezDdQxus+N3GgjfB3XIYwMN1FpucpNWr4IhpHTQPPVZWx?=
+ =?iso-8859-1?Q?wWYzha4WWLUWcr82taTr4wJReLlEalZ3qicTLy4FZIeOy1zuQDaeSQI90Z?=
+ =?iso-8859-1?Q?HAlqFXt8xDecszo7maudwtC+auI7unp0ryBNO5+oBpcA/XxmvmxCgfcXTg?=
+ =?iso-8859-1?Q?HaGwtLrBJyK8EKqyjMVkLmsBjFReEti+XP+JAqtqWMkVZohRS1E/Gj3o57?=
+ =?iso-8859-1?Q?4aO+QkVpMycq7FQj6vaG867xBe/HmdNL/oYiwXPkFC4wZ4qmCklMwQtKOW?=
+ =?iso-8859-1?Q?OLXSy0R5vPloAugg8w51s5FrFTOMzSZYpMVcnV1O0cC7TfzS9Lbf7KWPN4?=
+ =?iso-8859-1?Q?jpScAEwzMw=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a9b5560-ccd1-48f9-78b2-08dee0cf1bf7
+X-MS-Exchange-CrossTenant-AuthSource: GVXPR04MB12290.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2026 11:08:46.6869
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BXf/z5JOUbPLqpPro7u2KUYf+UTffOEpzBOZ+oCbQ3k7L0gSO0sf3A9z4829eQjOsQQOmSVzbta2m6rPu5ECqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9005
 
-On 12/07/26 02:09, Jonathan Cameron wrote:
-> On Tue, 07 Jul 2026 15:04:28 +0100
-> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+On Sat, Jul 04, 2026 at 11:10:18AM +0200, Christophe Leroy (CS GROUP) wrote:
 > 
-> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > 
-> > Add a KUnit test suite covering __iio_chan_prefix_emit(), the helper
-> > that builds IIO sysfs attribute name prefixes from an iio_chan_spec.
-> > The suite groups cases by the enum iio_shared_by mode it exercises:
-> > 
-> >   - IIO_SHARED_BY_ALL: produces an empty prefix.
-> >   - IIO_SHARED_BY_DIR: emits direction only ("in" / "out").
-> >   - IIO_SHARED_BY_TYPE: emits "<dir>_<type>" and the differential
-> >     "<dir>_<type>-<type>" variant.
-> >   - IIO_SEPARATE: covers the full matrix of indexed, differential,
-> >     modified, output and extend_name combinations, plus the two
-> >     documented error paths (differential without indexed, differential
-> >     with modifier).
-> > 
-> > A final case exercises the seq_buf overflow path by passing an
-> > undersized buffer and expects -EOVERFLOW.
-> > 
-> > Because __iio_chan_prefix_emit() is static, the test translation unit
-> > is pulled into industrialio-core.c.
 > 
-> Isn't there some magic route cases like this that makes it non static
-> only when self tests are enabled? 
-> Claude tells me to look at include/kunit/visibility.h
-
-There is, Although I think that using
-
-	#if IS_ENABLED(CONFIG_IIO_CHANNEL_PREFIX_KUNIT_TEST)
-		#include "test/iio-test-channel-prefix.c"
-	#endif
-
-was more straight forward, less invasive and easier to change than..
-
-	/* In "drivers/iio/industrialio-core.c" */
-
-	#include <kunit/visibility.h>
-	...
-	VISIBLE_IF_KUNIT ssize_t __iio_chan_prefix_emit(...)
-	{
-	...
-	}
-	EXPORT_SYMBOL_IF_KUNIT(__iio_chan_prefix_emit);
-
-	/* In "iio_core.h" */
-
-	#if IS_ENABLED(CONFIG_KUNIT)
-		ssize_t __iio_chan_prefix_emit(...);
-	#endif
-
-	/* In "drivers/iio/test/iio-test-channel-prefix.c" */
-
-	#include <kunit/visibility.h>
-	#include <iio_core.h>
-	...
-	MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
-	...
-	// Use __iio_chan_prefix_emit() in tests
-
-> 
-> Very nice.  A couple of really small additions requested inline.
-> I might well have missed where you exercised the corners requested though!
-> + I'll need an Ack from Lars for that maintainers entry. I'll guess that
-> Lars won't give one as not very active at the moment in this area.
-> 
-> Jonathan
-> 
+> Le 08/06/2026 à 11:54, david.laight.linux@gmail.com a écrit :
+> > From: David Laight <david.laight.linux@gmail.com>
 > > 
-> > Also, an entry is created under MAINTAINERS dedicated to tests for IIO
-> > core helpers.
+> > Replacing strcpy() with strscpy() ensures than overflow of the target
+> > buffer cannot happen.
 > > 
-> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
 > > ---
-> >  MAINTAINERS                                |   8 +
-> >  drivers/iio/industrialio-core.c            |   4 +
-> >  drivers/iio/test/Kconfig                   |  14 ++
-> >  drivers/iio/test/iio-test-channel-prefix.c | 246 +++++++++++++++++++++++++++++
-> >  4 files changed, 272 insertions(+)
+> > This is one of a group of patches that remove potentially unbounded
+> > strcpy() calls.
 > > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 2b1ec46c5919..57ffc0dcfdb6 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12634,6 +12634,14 @@ F:	include/dt-bindings/iio/
-> >  F:	include/linux/iio/
-> >  F:	tools/iio/
-> >  
-> > +IIO CORE KUNIT TESTS
-> > +M:	Lars-Peter Clausen <lars@metafoo.de>
+> > They are mostly replaced by strscpy() or, when strlen() has just been
+> > called, with memcpy() (usually including the '\0').
+> > 
+> > Calls with copy string literals into arrays are left unchanged.
+> > They are safe and easily detected as such.
+> > 
+> > The changes were made by getting the compiler to detect the calls and
+> > then fixing the code by hand.
+> > 
+> > Note that all the changes are only compile tested.
+> > 
+> > Some Makefiles were changed to allow files to contain strcpy().
+> > As well as 'difficult to fix' files, this included 'show' functions
+> > as they really need to use sysfs_emit() or seq_printf().
+> > 
+> > All the patches are being sent individually to avoid very long cc lists.
+> > Apologies for the terse commit messages and likely unexpected tags.
+> > (There are about 100 patches in total.)
+> > 
+> >   drivers/bus/fsl-mc/fsl-mc-bus.c | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> I'd need an Ack from Lars for this entry.   If we don't get one are you
-> fine looking after this without Lars listed?  
+> Do you expect this patch to go via individual trees or will you apply them
+> all together in a given tree ?
+> 
+> Ioana, as usual I can take it via soc/fsl/ with your Ack.
 
-That is fine, will drop his name.
+Yes, you can take the patch through soc/fsl.
 
--- 
-Kind regards,
-
-Rodrigo Alencar
+Reviewed-by: Ioana Ciornei <ioana.ciornei@nxp.com>
