@@ -1,195 +1,189 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DB1344DB9
-	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 17:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783963488; cv=pass; b=TzQNAmKlUnhdIM2rgD456ZHs7DIDQ9LjJNC/jfy0cyl1jE+vQGyEVX1cCN4Df+gbW9zGSdNAZh9EDdi3nrT2NsezewSAWhoTse4gughVXGUwtsI0DgvAJVLDKHM38tdYlgt5ZGTO106iX6HpW55P7TJepVost3Iw+i6We7BvpgA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783963488; c=relaxed/simple;
-	bh=U9+pV9BQK0J2LKLjG50wc3GsJtadYzCJrEoYSxQcAco=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jpu/hcUXMB0IFF0ZuCO2g9i0eAeCnFLWJvRJjsRjWL2r6N2L3sbxP1uMXxi16I5YkaaCbHCuIEqu9uTQWDi+m+VD1WZrPNC+FmWvkMAo/cEgS8KKSQXa/nshbPnmUaaUuxhLQ7qBHYoglVh6aegBcvASdBDwZlJXItQw2VyyQLc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rsq8eoTH; arc=pass smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2639B1E5714
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 20:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783976193; cv=none; b=tgB5O1gfuIfwG6QoXYmsyOmy+kG2KCLg+xaTGxAlskcXeS8wfZiJQ7LmrCh2sOgiEABdzxZIycM9Hx+8mu5jzGWxJxfy3SQyn0eVjXjhoitOrkKC5k2CotrxT1b/lbWR9ViVp/im5RC23Jgq8tCnQUJO/40ALyjIksO5ai5sVXU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783976193; c=relaxed/simple;
+	bh=bMq0yg6e87SIljIP3KX8iDIAp9Uo8hI0a45j+UnWgKE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ijMuiR6V71zKPweuieyiiqbi3WYvzH675DmpSwfYmyHtxM9z6qrbT9XdTkDgu4YQWcJZgeJBsmsB0rA2obDifwMcRja1Ez1ZguRLQTHhIcl6VUTq7a8P8Rumk77rQzkaupGkH7gQzHRemhXS3wvdpRV6Zdlwh9GCTchO853wg7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0sec.ai; spf=pass smtp.mailfrom=0sec.ai; dkim=temperror (0-bit key) header.d=0sec.ai header.i=@0sec.ai header.b=DxbMLCHq; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0sec.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0sec.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rsq8eoTH"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-47362928f65so3298750f8f.2
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 10:24:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783963485; cv=none;
-        d=google.com; s=arc-20260327;
-        b=QCURYsQEhXsSs3pIjs7g7Tu0ib7KYhTvs/FuWTkNFM2yNPnt3Owd5frOosXfiQ6pkU
-         3u985zh2zjTpNYm/kbYzZG0nDEBA3ADylsJIqZyt8AbMUcI0nBCmTybgBe9XOfwP+kOE
-         LHJEb9/lks56WKunW9fSS6KIOzoAXhwAxrZMB68YzCLgWn6Yw309PNE/8momzxFax+xY
-         dnNYS/zG9DQN7t7CwPN4qwzSIC2KriJtfT9hV7Qq+OeHomM/iKa5P5O7XyGsz73W0M6K
-         u41R7e6dehtgKG7msrer3kMEwAl3Edu/iNxD8I59IXgZ2aTVpWHX7uTjBdFylnj1N50j
-         7G7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=LsYopPB6o48hPqvaNGGMWtc62srs6hllgE/2L+4vLdY=;
-        fh=voKfKxjJorVfBBN9JgZ13w3F0kHaBsYzbp1m4DetYOI=;
-        b=LOlrC4VWDl2CPKh+gf+3hhnbt256lE10wRBOiDsss8JY3rbJDgzQAQd5/z1xsuIED7
-         vBGBBHCQfXsDbjB4L4vsk2YaFkOOhWLA+5wJoX5U1xBJTIqQGIxow/ZSKk2kgD3oldQF
-         CKBExUd1RBQXdizkzt1oz61IDdlihB6/8gPSx3n0fFp8rvXiieIY9JyxSGJ8cfXy6o/E
-         uL7aVN5CNZNPhrf3UXjm5i2gKWnGqlwmiWjfU9ulvmqI71iJbXDOEtT+jD44U2YSk3fS
-         QNwi1ULKW2Dan8wAkVqXYIIoePtiA7NIqOCZT5PB9HjMh/SVKr96JGHsmKC0CQGLCj8k
-         nwYQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=temperror (0-bit key) header.d=0sec.ai header.i=@0sec.ai header.b="DxbMLCHq"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-493c733f15aso33531375e9.0
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 13:56:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783963485; x=1784568285; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=LsYopPB6o48hPqvaNGGMWtc62srs6hllgE/2L+4vLdY=;
-        b=Rsq8eoTHciODvWEh3GASDbfKdzr9NHCN3IS6ff+prHwq4Bb7iRMa3KynEp7luIasRW
-         Qcq2NWG7UEcPr2xkU0CYHMb1j9tpRGk6U0jYGmRmoL7QD2FrEQIc+8284YO4nGYlcH+L
-         MrvjoP7xRMSfALZFX/LhO4UVYImJRhM8sjfgJlyOHTrC1hx77IYkZauHCqvXehXfSp0L
-         y4ujZZ4vyBlvRCfesAkx4JTeuUMeAz0x1d1P9kl/ig7JygZ0v/UOkv+RLn+Qs97uWq5p
-         ZbGLywHPorhZ1r+u9gE6jQ0SFfT5U1aL1kOOlZK4up0LsyLEn5IPOEbzg3/sc4d+Hf0G
-         RUHg==
+        d=0sec.ai; s=google; t=1783976188; x=1784580988; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=u+xKnuTI1B6k0A1NfDaxq70Pipp+wChxPKxkTyBDJp8=;
+        b=DxbMLCHqb+UkQ5PJMNbIN8R10vLv51Ss+F75Pzd5w97IxwcL+GQhyeOUOVAtIstqfC
+         WECI5GyGcsU8/Eecap1WaqlH3jZwoU+h9yOHtlaFzbteVw5+Iej5lUHDuvJOQrZP9dHV
+         ybz+CIDCC9fwGi7lHp3leVrL5uqBKD55m20HN5sTR0P/YJFw+ciJlBl3p0ZAKyaCYzDC
+         OuAX/mVO2jjA1FCPDrXnpq70dwu3eGQCEkX1aDQ9Fb0MmWJj9Bv6Ei7ve4UPottIU12o
+         N79JL/LefTopyJQ67EELmKygLeHMYV4RTxuUIVudoIHbcj/CODGX38DBiQxxUH6bWUM9
+         s7eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783963485; x=1784568285;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=LsYopPB6o48hPqvaNGGMWtc62srs6hllgE/2L+4vLdY=;
-        b=mYRm0NsDPiqDbkylt5/+SFJfRjF1Sb3xWm/aO7rCTfgSgIUJHiLJMBW8r+xEv4/zpe
-         6dtf9D/MnkNXUB30Pbl+p+u7T0ESrL8N717gaM2DXVhbA6RBNj5akE7OUOTkEKzetwHl
-         0PqT659TKRjCi4Bge5UB90ms0M3d3qx06hQtloi9//FRmuUpIYC8NhFtlXDL9A4wVNr+
-         t2kXmpxZLfgk4lhQjCzxnoF/guM/ll4SebxFHJfu8JTtcPTgy5kfzdudbvWnr8wuW+38
-         DFQYhP3T2BE2YNM/ImsmG4LvAK28RYO+HS6BbNnJOIbBkTqeo/tR4MJWp4w0VHkKSQ+T
-         eEaA==
-X-Forwarded-Encrypted: i=1; AHgh+Rqhpzv0VrLXOpQ5R/9lWxxebkC4ipBwWJXmkJLkrTDOQbzuL5DS4qV45JhfccNoCdWEZyXRMqjIsACVOp1jwFA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyqy/jWjhK+K4P/ofOSLrmCSJLh+r1D2iPo1x9ZsdsKOfViWLqW
-	/xPR8Vif0GIoZAbqhKj8X5w6yW+3f0q7Kp/l/d5OyXlW3ICcVCaZ5aR/fYFCi0SlSCabDutc1/x
-	vBIEDvoebBd4HmniKPsa7rGyR9I/E3AI=
-X-Gm-Gg: AfdE7cm5G+NTzrNcNQmnPyhswJTqCQ/Ajy7yTL3nwhLFN9YUzGwXLGgT3hPTpF0JpYs
-	UmG8ioK36KiOqlDWXcA0IBA3G8b441p6A9H6YQYBl4TZ7qUQBBcKV14iw+sm7Zx6FhN9+Ve9jFb
-	2sQHWWuBwGP2fZmUkJmXGzK5zRBqjZeLXgUAKjCnpbhEq7CIeq7WaQpQGVWVaXn0Cx/0zgeCfug
-	XhJ5AQdr7FquMZMPjiaykujT9CehhFrVytAbCGG/5KBEv3KD8j9oKZtN3CnnJ3l+FtCc7xhGlny
-	7E17ndWhQJ0iLceD5vNu4J8N/khUmrIEG7S+Wclg2zV21Xv/XLGzASaY340DF5ONhvDBLg==
-X-Received: by 2002:a5d:5f89:0:b0:472:326c:a4a1 with SMTP id
- ffacd0b85a97d-47f2dc9b856mr11273284f8f.22.1783963485101; Mon, 13 Jul 2026
- 10:24:45 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783976188; x=1784580988;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=u+xKnuTI1B6k0A1NfDaxq70Pipp+wChxPKxkTyBDJp8=;
+        b=RQw1+i+41ZQ4qI+yr3/dguF+pZw1Lrc7XqLANNOgaXMz/V81v+hTEiZwQnVpgMa1gu
+         ydTeWRdsaTaQ/B23FJkJMspdM39II4C50/q7BFJbzpFIZhqiUF63bilmJaPzBQMFQ3xS
+         cnmEGi2ZU7dfqGtXqNEOFChf0BdUyXSAzlFATFFqYh3IA5xnCZA+2d8H2/2yQXrDJVue
+         /xY4mPLJHwTihE4NAM7lrBAZXMc5y+ZMZQ9ub+JioPPQ1EjwRtcCVKBFCqKtwWUP/Xqm
+         lZoYuvBcJlJhJa0Dwy2jr/x9QoozyI1o9VHD1K3Hw8ikt7ww6QB2RceL0jViAkI5qfpj
+         hELw==
+X-Forwarded-Encrypted: i=1; AHgh+RpICCdLUkf3UmrAITg9IHbdOLd0gdrl8/fUfLqiArH8BZw63/DyNUIqB5jrc83b1JNGl/i9nA7+LKwwNw9jjPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVHB78pGmOngEfPlXCnkjVed5cHG83FtDD340BcSDYB+W36vew
+	PbgmbO5NJ7jg7mY5MSevzvxk5HEB63gqZlSPbGsdc4i5RHwcvDckF6wf69jlfzUzAuhs
+X-Gm-Gg: AfdE7cl2JR5x4cMhMgVIscgJjQ27pIdOEKDTgeSdJLtWHdMvpzh+VQApYhoYhhZ3M3j
+	2sN90LfvXY9nHxISEPq52xbPfFPj/dx00s/y+KEpbMQSQPorh5XUQGwnLrLm58vi+9YF2Q0zDgM
+	uvCNCBeNUso7jvMjpBlzcNj/2uz276sdmWvjY4F/gh4P7Dl+kkOw0sYJUxljiNRCEalJzMcEXWA
+	qU/kI26xN9M+tKRaoakurUH73iQFb14vYgMW2i590qDwjYARWYE0+OBrs1U10s9CN+iVSuXuVTN
+	DTi3bW3zDy0IMy5PHYFxxw5Xy95dzc7H1o02rB9O4W9i39p8y0gvexhAvGNtUwQZIOXTfNOi5hd
+	Ow0P/23MNzBTiwpgPSAB6xx8q6Qxho+Lq1JOra2oMjOn3PXtEtEgbxTC2BbNDpOG+XGwxdNWvAo
+	yXBXdQKyw9a7r9kOr7WFXDFMukcRDpKodg0CUS/0V1q/G6jtUJYTUY/hsIS7Ao0hF4tXu4lD7GP
+	uQSiE4cQF7xVkczDi9852dosrm2orAQx/w=
+X-Received: by 2002:a05:600c:4e41:b0:492:4a50:41fe with SMTP id 5b1f17b1804b1-493f881f9d6mr106303585e9.22.1783976187973;
+        Mon, 13 Jul 2026 13:56:27 -0700 (PDT)
+Received: from PeakBook-Mini.tail8e484.ts.net ([178.197.218.188])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4950871d1bdsm21661155e9.1.2026.07.13.13.56.26
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 13 Jul 2026 13:56:27 -0700 (PDT)
+From: Doruk Tan Ozturk <doruk@0sec.ai>
+To: Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>
+Cc: ocfs2-devel@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	Doruk Tan Ozturk <doruk@0sec.ai>,
+	stable@vger.kernel.org
+Subject: [PATCH] ocfs2: validate directory-index entry counts when reading metadata
+Date: Mon, 13 Jul 2026 22:56:25 +0200
+Message-ID: <20260713205625.92391-1-doruk@0sec.ai>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260709211130.543773-1-xmei5@asu.edu> <20260709211130.543773-2-xmei5@asu.edu>
-In-Reply-To: <20260709211130.543773-2-xmei5@asu.edu>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Mon, 13 Jul 2026 10:24:33 -0700
-X-Gm-Features: AUfX_myhSaDPwHMJYmu_3zqBXlJBVmiSvx7jGX39NT-6i7iZPVT7Znv4C7dKQp4
-Message-ID: <CAJnrk1Zek9hHOehCjfmR42+Gc=K6vixmyn5977ZHv3J5fUUS_A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] fuse: bound io-uring payload copies to the
- registered buffer size
-To: Xiang Mei <xmei5@asu.edu>
-Cc: Bernd Schubert <bernd@bsbernd.com>, Miklos Szeredi <miklos@szeredi.hu>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, fuse-devel@lists.linux.dev, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Luis Henriques <luis@igalia.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, bestswngs@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 9, 2026 at 2:11=E2=80=AFPM Xiang Mei <xmei5@asu.edu> wrote:
->
-> The fuse-io-uring transport imports each ring entry's payload buffer at
-> ring->max_payload_sz and bounds both copy directions against that value,
-> ignoring the buffer length the server actually registered.  Both the
-> server-supplied reply payload_sz (fuse_uring_copy_from_ring) and an
-> oversized request payload such as a large FUSE_SETXATTR value
-> (fuse_uring_args_to_ring) can then overrun the imported iterator and hit
-> fuse_copy_fill()'s BUG_ON(!err):
->
->   kernel BUG at fs/fuse/dev.c:1053!
->   Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
->   RIP: 0010:fuse_copy_fill (fs/fuse/dev.c:1022)
->   Call Trace:
->    fuse_copy_args (fs/fuse/dev.c:1329 fs/fuse/dev.c:1351)
->    fuse_uring_copy_from_ring (fs/fuse/dev_uring.c:686)
->    fuse_uring_cmd (fs/fuse/dev_uring.c:1226)
->    io_uring_cmd (io_uring/uring_cmd.c:271)
->    __io_issue_sqe (io_uring/io_uring.c:1395)
->    io_issue_sqe (io_uring/io_uring.c:1418)
->    io_submit_sqes (io_uring/io_uring.c:1649 io_uring/io_uring.c:1934 io_u=
-ring/io_uring.c:2057)
->    __do_sys_io_uring_enter (io_uring/io_uring.c:2646)
->    do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_6=
-4.c:94)
->    entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
->
-> The request path overruns the same way, via fuse_copy_args() ->
-> fuse_uring_args_to_ring().
->
-> Store the registered payload length (payload->iov_len) in the ring entry
-> and use it for the import and both bounds checks, so the buffer the
-> server provided is honoured and an oversized reply/request is rejected
-> (-EINVAL for a reply, and -E2BIG/-EIO for a request, matching
-> fuse_dev_do_read()) instead of panicking.
->
-> Fixes: c090c8abae4b ("fuse: Add io-uring sqe commit and fetch support")
-> Cc: stable@vger.kernel.org
-> Reported-by: Weiming Shi <bestswngs@gmail.com>
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Xiang Mei <xmei5@asu.edu>
-> ---
-> v3: propose the patch fixing another issue found by Bernd by Joanne sugge=
-sted way
->
->  fs/fuse/dev_uring.c   | 9 ++++++++-
->  fs/fuse/dev_uring_i.h | 1 +
->  2 files changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/fuse/dev_uring.c b/fs/fuse/dev_uring.c
-> index 0814681eb04b..248e5a3e340e 100644
-> --- a/fs/fuse/dev_uring.c
-> +++ b/fs/fuse/dev_uring.c
-> @@ -650,7 +650,7 @@ static int setup_fuse_copy_state(struct fuse_copy_sta=
-te *cs,
->  {
->         int err;
->
-> -       err =3D import_ubuf(dir, ent->payload, ring->max_payload_sz, iter=
-);
-> +       err =3D import_ubuf(dir, ent->payload, ent->payload_sz, iter);
->         if (err) {
->                 pr_info_ratelimited("fuse: Import of user buffer failed\n=
-");
->                 return err;
-> @@ -679,6 +679,9 @@ static int fuse_uring_copy_from_ring(struct fuse_ring=
- *ring,
->         if (err)
->                 return err;
->
-> +       if (ring_in_out.payload_sz > ent->payload_sz)
-> +               return -EINVAL;
-> +
->         err =3D setup_fuse_copy_state(&cs, ring, req, ent, ITER_SOURCE, &=
-iter);
->         if (err)
->                 return err;
-> @@ -725,6 +728,9 @@ static int fuse_uring_args_to_ring(struct fuse_ring *=
-ring, struct fuse_req *req,
->                 num_args--;
->         }
->
-> +       if (fuse_len_args(num_args, (struct fuse_arg *)in_args) > ent->pa=
-yload_sz)
-> +               return args->opcode =3D=3D FUSE_SETXATTR ? -E2BIG : -EIO;
+ocfs2_validate_dx_leaf() and ocfs2_validate_dx_root() check the ECC and
+signature of an indexed-directory block before it reaches higher-level
+callers, but neither validator bounds the ocfs2_dx_entry_list counts
+against the capacity of the block that holds them.
 
-Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
+ocfs2_dx_dir_search() then walks
 
-Not saying you have to do this, but if you wanted to, I think it'd be
-nice to have a separate cleanup patch that deduplicates this setxattr
-special casing logic between the /dev/fuse path and here.
+	for (i = 0; i < le16_to_cpu(entry_list->de_num_used); i++)
+		dx_entry = &entry_list->de_entries[i];
 
-Thanks,
-Joanne
+over de_num_used entries with no bounds check.  entry_list is either
+dx_leaf->dl_list (from ocfs2_read_dx_leaf) or, for an inline root,
+dx_root->dr_entries.  A crafted on-disk image can set de_num_used (and
+de_count, which is the __counted_by_le() bound of de_entries) to 0xffff
+and make the walk read far past the end of the 4KB metadata block, giving
+a slab out-of-bounds read reachable from any path lookup, stat() or open()
+on an indexed directory once the image is mounted.
+
+Commit 775c17386a6f ("ocfs2: validate dx_root extent list fields during
+block read") already bounds dr_list for the non-inline dx_root, but left
+the inline dr_entries path and the dx_leaf dl_list unchecked.  Add the
+same read-time validation for both entry lists: de_count must equal the
+capacity of the block (ocfs2_dx_entries_per_leaf()/per_root()) and
+de_num_used must not exceed de_count, rejecting corrupted metadata with
+-EFSCORRUPTED before ocfs2_dx_dir_search() can walk an out-of-range entry
+array.
+
+de_count is always written as exactly the block capacity when a leaf or
+inline root is formatted, so the equality check does not reject any
+valid image.
+
+Fixes: 9b7895efac90 ("ocfs2: Add a name indexed b-tree to directory inodes")
+Fixes: 4ed8a6bb083b ("ocfs2: Store dir index records inline")
+Cc: stable@vger.kernel.org
+Found by 0sec automated security-research tooling (https://0sec.ai).
+Assisted-by: 0sec:claude-opus-4-8
+Signed-off-by: Doruk Tan Ozturk <doruk@0sec.ai>
+---
+ fs/ocfs2/dir.c | 45 +++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 41 insertions(+), 4 deletions(-)
+
+diff --git a/fs/ocfs2/dir.c b/fs/ocfs2/dir.c
+index baf3eca7b4e4..fcc3721cbe34 100644
+--- a/fs/ocfs2/dir.c
++++ b/fs/ocfs2/dir.c
+@@ -624,6 +624,28 @@ static int ocfs2_validate_dx_root(struct super_block *sb,
+ 					  le16_to_cpu(el->l_count));
+ 			goto bail;
+ 		}
++	} else {
++		struct ocfs2_dx_entry_list *dl_list = &dx_root->dr_entries;
++
++		if (le16_to_cpu(dl_list->de_count) !=
++		    ocfs2_dx_entries_per_root(sb)) {
++			ret = ocfs2_error(sb,
++					  "Dir Index Root # %llu has invalid de_count %u (expected %u)\n",
++					  (unsigned long long)le64_to_cpu(dx_root->dr_blkno),
++					  le16_to_cpu(dl_list->de_count),
++					  ocfs2_dx_entries_per_root(sb));
++			goto bail;
++		}
++
++		if (le16_to_cpu(dl_list->de_num_used) >
++		    le16_to_cpu(dl_list->de_count)) {
++			ret = ocfs2_error(sb,
++					  "Dir Index Root # %llu has invalid de_num_used %u (de_count %u)\n",
++					  (unsigned long long)le64_to_cpu(dx_root->dr_blkno),
++					  le16_to_cpu(dl_list->de_num_used),
++					  le16_to_cpu(dl_list->de_count));
++			goto bail;
++		}
+ 	}
+ 
+ bail:
+@@ -663,10 +685,25 @@ static int ocfs2_validate_dx_leaf(struct super_block *sb,
+ 		return ret;
+ 	}
+ 
+-	if (!OCFS2_IS_VALID_DX_LEAF(dx_leaf)) {
+-		ret = ocfs2_error(sb, "Dir Index Leaf has bad signature %.*s\n",
+-				  7, dx_leaf->dl_signature);
+-	}
++	if (!OCFS2_IS_VALID_DX_LEAF(dx_leaf))
++		return ocfs2_error(sb, "Dir Index Leaf has bad signature %.*s\n",
++				   7, dx_leaf->dl_signature);
++
++	if (le16_to_cpu(dx_leaf->dl_list.de_count) !=
++	    ocfs2_dx_entries_per_leaf(sb))
++		return ocfs2_error(sb,
++				   "Dir Index Leaf # %llu has invalid de_count %u (expected %u)\n",
++				   (unsigned long long)le64_to_cpu(dx_leaf->dl_blkno),
++				   le16_to_cpu(dx_leaf->dl_list.de_count),
++				   ocfs2_dx_entries_per_leaf(sb));
++
++	if (le16_to_cpu(dx_leaf->dl_list.de_num_used) >
++	    le16_to_cpu(dx_leaf->dl_list.de_count))
++		return ocfs2_error(sb,
++				   "Dir Index Leaf # %llu has invalid de_num_used %u (de_count %u)\n",
++				   (unsigned long long)le64_to_cpu(dx_leaf->dl_blkno),
++				   le16_to_cpu(dx_leaf->dl_list.de_num_used),
++				   le16_to_cpu(dx_leaf->dl_list.de_count));
+ 
+ 	return ret;
+ }
+-- 
+2.43.0
+
