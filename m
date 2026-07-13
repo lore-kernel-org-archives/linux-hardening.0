@@ -1,146 +1,193 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0FA3932CE;
-	Mon, 13 Jul 2026 08:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027B93793CB
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 09:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783930814; cv=none; b=ewkIO9/RyBCi2wtcNmZ1xkpOGWQPqCMGQevx3d2VHD6tW37YDxOGwHP4K5+bmue6eLusC4N3gdGbjc+DjyqW7XFqCvQ3Y915VmryNE9+bvu90/CugTzQwDAP7T2X9S+c34XMWyPYVoUkogzkuhVAHL6hh1TjZ/x/tT/InGByZGQ=
+	t=1783936389; cv=none; b=awBPeI/9k8YYcfkiivr7uZnAvMNeiGy55QVU/EJX34qkUJ2hoGa57BdzPMRqjlYBw956kPL+/iClO+/IMAokxs0PClbdvc/4q98p7N/hti9Fy/AIP5OZ+lXhgvLI0Otl7uvSxHM0cYdnD6JjjZAVaaHSdkPfIfLN85yPPgJCrG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783930814; c=relaxed/simple;
-	bh=BBqMnGi4wGTH9S1GDOdPt9fL8SQXpYQGHyQzDjuWEKY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=omRm+cYKmAdmenIs3PDN2Xe3Y6IKLI/abrYBYnVvL3eW16uIXY4aPE1laedMFGv4UVfLHehwM4hH8xMMXw1E8Rq75OchXOFCY7SruXaAu1CBVUm0Q/IMNuznTo1IhZH7YDwRulucrXBFSvou7XxTP4mpcd9x0mKnQYMb5K1v6lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=eBtNqezf; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1783936389; c=relaxed/simple;
+	bh=ij2M2kwiOeKDbVQfgMoEAJNmqYl0Dpypsxx7+TfCsrQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HDDFiqCr8jFMqodujTDAhJSeKuEGXn8Z5luPHj2ero+SVDzIUqAsU8YUWg9jiOJSRqCYT/FM5/rvgUvVruhCpu6MLu1gR7x8NTzqw6bBAGt8fR5Ir+aGm/W7cfAQxhyaV2yQC6Kbq+BpnVQXcbGYqA4PVrzjY9c8PO+t7pW94sE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A0JFgexU; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="eBtNqezf"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1783930802; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=DiUBhTKFzNhpXGXkh49SffbTXZU5ygdNhcD76oDQdCM=;
-	b=eBtNqezfRPXH2H4qB/GBzY52xKDBbtq4Odc0zUr7w370fz6i/a85t5twUf2MBePqQD25Bk4A4dXSVPJ8n9fOOuxifPyAUoWBcHj1zOVzsOjSur6fSIp3ZI8ul0QBDW6FCXqzXqO3s1Fe3mNy+SEOlg4jULoNoC3pQ2XT5kYUhUs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=libaokun@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X6wbGFP_1783930801;
-Received: from 30.221.131.131(mailfrom:libaokun@linux.alibaba.com fp:SMTPD_---0X6wbGFP_1783930801 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 13 Jul 2026 16:20:01 +0800
-Message-ID: <26a9a225-617c-4492-af1d-152d71414f4d@linux.alibaba.com>
-Date: Mon, 13 Jul 2026 16:20:00 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0JFgexU"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-699fbcd23ccso4088505a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 02:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783936385; x=1784541185; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=XkoqjiJgvj0fIc6sWXvWxf3IczQwvql9N4c4357BiFs=;
+        b=A0JFgexUNYl7pPyM4pRup8Pl7+UFV6eQiII/8P0CfTFVryFg1uQaM7YAnk0kVfem8F
+         MnIrHXSo+PovyVwN273k+6K63OQOKPusMb08D0atM593GnFLFrX0Ow1zRci3B50ys/+k
+         wb8raIcmrpwdy+enh1nLJ/yAVpDklLevUAbMiUOhb4EBeSF8zTGc2LLtDMaCsowa0aCK
+         8ig955ObQ0Rtbm01PvE8ZBoBG9d4rsUnbB78r2Wv7o8BHlNSwsAxRQgDlsuU3acfMXqA
+         RbN52ZE6r1BimAIH934w61WK5ehL60mnmhJBb/rrhzMAfzw3Rf3Y9b+lQxVJ2WINAr1p
+         Hh5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783936385; x=1784541185;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XkoqjiJgvj0fIc6sWXvWxf3IczQwvql9N4c4357BiFs=;
+        b=ZkYiN1szrpd/OvG3UwsUwQTMcgCZAqDOuuiQKPJs3QMefnopV9D80Agp14+MJg2UG0
+         /IKk5iZZF2DidMbD7+yakzddajTuUUKULY3uXf+wEidIk5934LXs0DtpsX9qfSgE1IKn
+         o7j1J9Z5+G/AxxsK0og7gW+di/f5Us+2xFniw6pZUpqyHtDOB48oUHGViRR+yDHnN/mB
+         wovJ8rc32Wzg0nkNfuoL3mVsNpkYkqZBHUvIogVMAmf7a1JtpFzfYu57A9w4sTRiPvCE
+         pA2w75gL6P0FZd+9S9V7LvTkznI1JDax0JFSNZcjcCBoR0vv332hn5Fh3MLEfPhez9Jb
+         LxaQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrKWtXx6BG4tyu9TuwJ5+U88XLF2Wje4XvkB0Ruk1gZrlcWTeYf3q6E73VeRoLHypE+TfTjZRsw9CIqayVfDuk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTo33RvydTzSaDszcdWSJxkmcP0KZZJDpmW0d0xgkeDnZwqLBb
+	dSjMp7cpiSTgDZxqujVafu72C7NwVCrXeYRR4hLYYiDMazYR16PnI22l0IxN077c
+X-Gm-Gg: AfdE7cl/szondGbhnGPMr96d2ekVp+TX5e2nI5HcUg2zrxOCrHUDVKHiNC95wHfvaW6
+	8Gni3nccOSbvVPu5elcm2UBRE/d9+kkXxzrqbCgdzg1Da92pqd66ViNi8AFensCwUKMQmPxSAos
+	1eR/yIEixrCxe2M6CMmQRMfdGdSRyqPEgBi3gL/p+lbnuOO3cyZWfmRDbcT8qZreSWEpbhTQeBL
+	gshirevJn19PyIGCqY8X9gIMglUO1Ly2ySuVqT+dhSCrk34hnfYsRpxJey5oQUutmbgBbndOOUk
+	7TjkS4lJV1bOfK/xwAt6AdKHrrKNM4RPcdjVaSqBWNDvBp60lR4silwzK/bT5jSLjPXtVBzW29O
+	EFbW5QjTRi4MkAKoNwpN7mWPDwKrciYbCVjel9vjoZFO51KuN8v+SZswLjs2+pkc+Jn9jhDe6el
+	8eSiwfYRr5KOahjQ+rYLVt4grMhDqNVjNYINM84i3lL33IS9xqUapLRLuul4ltR9g55I1dxDnFJ
+	K6iTYodtoSy+V8JIXc8OaU0SBI=
+X-Received: by 2002:a05:6402:1e8c:b0:698:7485:3f12 with SMTP id 4fb4d7f45d1cf-69c5f0eafb7mr3910232a12.24.1783936385138;
+        Mon, 13 Jul 2026 02:53:05 -0700 (PDT)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.131.netskope-rdns.com. [24.206.116.131])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-69ac41d7ceesm7759429a12.23.2026.07.13.02.53.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2026 02:53:04 -0700 (PDT)
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Date: Mon, 13 Jul 2026 10:52:56 +0100
+To: Jonathan Cameron <jic23@kernel.org>, 
+	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v7 07/17] iio: test: add kunit tests for channel prefix
+ naming generation
+Message-ID: <egyms7ulkxsgu4pvfkoruelec3sf6ca4bndcuqkvxljrdluqwu@edlqne7oy3xs>
+References: <20260707-ad9910-iio-driver-v7-0-a4ec30f63700@analog.com>
+ <20260707-ad9910-iio-driver-v7-7-a4ec30f63700@analog.com>
+ <20260712020928.2c8d1667@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] fuse: copy request headers via a stack buffer for
- io-uring
-To: Xiang Mei <xmei5@asu.edu>
-Cc: fuse-devel@lists.linux.dev, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Luis Henriques <luis@igalia.com>, Pavel Begunkov <asml.silence@gmail.com>,
- bestswngs@gmail.com, "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- Joanne Koong <joannelkoong@gmail.com>, Kees Cook <kees@kernel.org>,
- Bernd Schubert <bernd@bsbernd.com>, Miklos Szeredi <miklos@szeredi.hu>
-References: <20260709211130.543773-1-xmei5@asu.edu>
-From: Baokun Li <libaokun@linux.alibaba.com>
-In-Reply-To: <20260709211130.543773-1-xmei5@asu.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260712020928.2c8d1667@jic23-huawei>
 
-Hi Xiang,
+On 12/07/26 02:09, Jonathan Cameron wrote:
+> On Tue, 07 Jul 2026 15:04:28 +0100
+> Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+> 
+> > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > 
+> > Add a KUnit test suite covering __iio_chan_prefix_emit(), the helper
+> > that builds IIO sysfs attribute name prefixes from an iio_chan_spec.
+> > The suite groups cases by the enum iio_shared_by mode it exercises:
+> > 
+> >   - IIO_SHARED_BY_ALL: produces an empty prefix.
+> >   - IIO_SHARED_BY_DIR: emits direction only ("in" / "out").
+> >   - IIO_SHARED_BY_TYPE: emits "<dir>_<type>" and the differential
+> >     "<dir>_<type>-<type>" variant.
+> >   - IIO_SEPARATE: covers the full matrix of indexed, differential,
+> >     modified, output and extend_name combinations, plus the two
+> >     documented error paths (differential without indexed, differential
+> >     with modifier).
+> > 
+> > A final case exercises the seq_buf overflow path by passing an
+> > undersized buffer and expects -EOVERFLOW.
+> > 
+> > Because __iio_chan_prefix_emit() is static, the test translation unit
+> > is pulled into industrialio-core.c.
+> 
+> Isn't there some magic route cases like this that makes it non static
+> only when self tests are enabled? 
+> Claude tells me to look at include/kunit/visibility.h
 
-On 2026/7/10 05:11, Xiang Mei wrote:
-> The fuse-io-uring transport copies req->in.h out to the ring in
-> fuse_uring_copy_to_ring() and req->out.h back in fuse_uring_commit().
-> Both headers live inside the fuse_request slab object, whose cache
-> (fuse_req_cachep) is created without a usercopy whitelist,
+There is, Although I think that using
 
+	#if IS_ENABLED(CONFIG_IIO_CHANNEL_PREFIX_KUNIT_TEST)
+		#include "test/iio-test-channel-prefix.c"
+	#endif
 
-Then why not allocate "fuse_request" with kmem_cache_create_usercopy()
-to add a usercopy whitelist instead?
+was more straight forward, less invasive and easier to change than..
 
-That would avoid the extra stack usage for the bounce headers and
-the 56 bytes of copying they incur.
+	/* In "drivers/iio/industrialio-core.c" */
 
+	#include <kunit/visibility.h>
+	...
+	VISIBLE_IF_KUNIT ssize_t __iio_chan_prefix_emit(...)
+	{
+	...
+	}
+	EXPORT_SYMBOL_IF_KUNIT(__iio_chan_prefix_emit);
 
-Thanks,
-Baokun
+	/* In "iio_core.h" */
 
->  so copying
-> them directly to/from userspace trips CONFIG_HARDENED_USERCOPY and
-> panics:
->
->   usercopy: Kernel memory exposure attempt detected from SLUB object
->   'fuse_request' (offset 56, size 40)!
->   kernel BUG at mm/usercopy.c:102!
->   RIP: 0010:usercopy_abort+0x6c/0x80
->   Call Trace:
->    __check_heap_object
->    __check_object_size
->    copy_header_to_ring          fs/fuse/dev_uring.c:618
->    fuse_uring_prepare_send
->    fuse_uring_send_in_task
->    ...
->    __do_sys_io_uring_enter
->    entry_SYSCALL_64_after_hwframe
->
-> Bounce both headers through an on-stack copy so the usercopy touches
-> stack memory, not the slab object.
->
-> Fixes: c090c8abae4b ("fuse: Add io-uring sqe commit and fetch support")
-> Cc: stable@vger.kernel.org
-> Reported-by: Weiming Shi <bestswngs@gmail.com>
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Xiang Mei <xmei5@asu.edu>
-> Reviewed-by: Bernd Schubert <bernd@bsbernd.com>
-> Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
-> ---
-> v3: no context change; add Bernd's Reviewed-by
->
->  fs/fuse/dev_uring.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/fuse/dev_uring.c b/fs/fuse/dev_uring.c
-> index 77c8cec43d9c..0814681eb04b 100644
-> --- a/fs/fuse/dev_uring.c
-> +++ b/fs/fuse/dev_uring.c
-> @@ -744,6 +744,7 @@ static int fuse_uring_copy_to_ring(struct fuse_ring_ent *ent,
->  {
->  	struct fuse_ring_queue *queue = ent->queue;
->  	struct fuse_ring *ring = queue->ring;
-> +	struct fuse_in_header in_header;
->  	int err;
->  
->  	err = -EIO;
-> @@ -765,8 +766,9 @@ static int fuse_uring_copy_to_ring(struct fuse_ring_ent *ent,
->  	}
->  
->  	/* copy fuse_in_header */
-> -	return copy_header_to_ring(ent, FUSE_URING_HEADER_IN_OUT, &req->in.h,
-> -				   sizeof(req->in.h));
-> +	in_header = req->in.h;
-> +	return copy_header_to_ring(ent, FUSE_URING_HEADER_IN_OUT, &in_header,
-> +				   sizeof(in_header));
->  }
->  
->  static int fuse_uring_prepare_send(struct fuse_ring_ent *ent,
-> @@ -871,11 +873,13 @@ static void fuse_uring_commit(struct fuse_ring_ent *ent, struct fuse_req *req,
->  			      unsigned int issue_flags)
->  {
->  	struct fuse_ring *ring = ent->queue->ring;
-> +	struct fuse_out_header out_header;
->  	ssize_t err = -EFAULT;
->  
-> -	if (copy_header_from_ring(ent, FUSE_URING_HEADER_IN_OUT, &req->out.h,
-> -				  sizeof(req->out.h)))
-> +	if (copy_header_from_ring(ent, FUSE_URING_HEADER_IN_OUT, &out_header,
-> +				  sizeof(out_header)))
->  		goto out;
-> +	req->out.h = out_header;
->  
->  	err = fuse_uring_out_header_has_err(&req->out.h, req);
->  	if (err) {
+	#if IS_ENABLED(CONFIG_KUNIT)
+		ssize_t __iio_chan_prefix_emit(...);
+	#endif
 
+	/* In "drivers/iio/test/iio-test-channel-prefix.c" */
 
+	#include <kunit/visibility.h>
+	#include <iio_core.h>
+	...
+	MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
+	...
+	// Use __iio_chan_prefix_emit() in tests
+
+> 
+> Very nice.  A couple of really small additions requested inline.
+> I might well have missed where you exercised the corners requested though!
+> + I'll need an Ack from Lars for that maintainers entry. I'll guess that
+> Lars won't give one as not very active at the moment in this area.
+> 
+> Jonathan
+> 
+> > 
+> > Also, an entry is created under MAINTAINERS dedicated to tests for IIO
+> > core helpers.
+> > 
+> > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> > ---
+> >  MAINTAINERS                                |   8 +
+> >  drivers/iio/industrialio-core.c            |   4 +
+> >  drivers/iio/test/Kconfig                   |  14 ++
+> >  drivers/iio/test/iio-test-channel-prefix.c | 246 +++++++++++++++++++++++++++++
+> >  4 files changed, 272 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 2b1ec46c5919..57ffc0dcfdb6 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12634,6 +12634,14 @@ F:	include/dt-bindings/iio/
+> >  F:	include/linux/iio/
+> >  F:	tools/iio/
+> >  
+> > +IIO CORE KUNIT TESTS
+> > +M:	Lars-Peter Clausen <lars@metafoo.de>
+> 
+> I'd need an Ack from Lars for this entry.   If we don't get one are you
+> fine looking after this without Lars listed?  
+
+That is fine, will drop his name.
+
+-- 
+Kind regards,
+
+Rodrigo Alencar
