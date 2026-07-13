@@ -1,114 +1,118 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167E63438BD;
-	Mon, 13 Jul 2026 21:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BB333B966
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 22:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783979481; cv=none; b=KhVx3MgIOg/5g8jJHJKE7aMQNQ/c9DXw0Gh5HqnKwP4C/NEbGv42J+6JgB+1NGUt9QXi7wSGcAtbwy/5KYQ+SAhz5B4UFAZWbUqsgfZ1yfvXeQb8FRfMwTsAAJdHsOnUOm3N3WsLI3tO+eVJaydEmOqDBCB8ZUQOmutuKRxb05Y=
+	t=1783980932; cv=none; b=Cb0FwA9ZMXbPutmD/Y+M8TNn9wtpqgTZaPje7IS8qTSZRjyeVQ0l6IRdIKxi49zT5TvbtBw29jkeu2/ulXX4mgcpS+s8ZNh9N3QjUiQ5C5JNbWA0FSMAi//8eQZ74mTPIo654AsaidIPZetS2cHCYJfPC0FA3QoL1iJc8B+R78I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783979481; c=relaxed/simple;
-	bh=cknK5Ss3uLo2RtS0e7PCBty02RMBUc1/0IuYTI2AZPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jEm/EnfjZr+8MqTvpVfyR7TEMmY6Vhv1PIhfJ0AIOPGWoAi7aTgh142GfopBC8p+I/ZTAKEDRBB3CFrofPyUCBEAAIB/mhrcAd/bdIL+fqu9d0gBQFfUwsviOtqlBdQIqfrGiYQmhiNylHENp1eMnzIwp/5VhIvw8yQc10Jt0Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=q+pvPfzK reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1783980932; c=relaxed/simple;
+	bh=EDMAekzapluN8qvqLwwRmxBiWYLSDHH4j1CTBMpYI8c=;
+	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
+	 References:In-Reply-To; b=T4P9Nhp507pzG8SvmSYSmYtnkD8bf52bM+HnZR/QzTw3DLytiVNNoNv473pob1nya2cZdTzOyOLPaJ2kEJIm/Jo1pUlSRxiFVx5MBkd+PjEKP+VupnoN2RCVrUqfAJ8BwnZFsmTOADFuAnmBwObNouYu4Tzl6/Y+3KBv9jZJ5dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=JZkhv30v; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="q+pvPfzK"
-Received: from [192.168.10.145] (p865013-ipoe.ipoe.ocn.ne.jp [153.242.222.12])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 66DLoXiN028776
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 14 Jul 2026 06:50:33 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=YQuvSU+rvn/LSkKpcRyfWMx1R3fVRsbIfemsxe/bHdc=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1783979433; v=1;
-        b=q+pvPfzKFHSCkTHNmb/RFGkEuDeEHQA9xBGPxWZit+9tf2IF+rWDbWtk7ztw/ptF
-         +qts/pQlOV9MYwwhT3TkFKpq2vAKva18A6kqasaKTynJQB/QJtST5nTTqqB2fcl/
-         /5t1BcqsT9i0r95mZuDPBghdn3PFh1cJ/jsWRa8768dzLqpPDCsV96BWN5Il9p+3
-         +1zD5gjHAmkatHOVvDZdrYIR7JFnj9FpWL2OipiA+Z5seE6lR8R0A9GOZ0hu49Zu
-         NrB/4ds5LcG2XzYsOY/IDjrwpDZi4as/XfAcGpqGMwZ2QQg1i+Opw04aroZk8XgY
-         sSmITQApacG55s+3lNKtSg==
-Message-ID: <bb1224e8-ff4b-4e5d-babb-b6a2970219ab@rsg.ci.i.u-tokyo.ac.jp>
-Date: Tue, 14 Jul 2026 06:50:33 +0900
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="JZkhv30v"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51c1d487f2cso3593471cf.1
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 15:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1783980930; x=1784585730; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-type:mime-version:message-id:date:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6knqno33u0gKFnShVvAy1vOVQidX1D6I4tvt9i4jmuw=;
+        b=JZkhv30vhx+vGk+seNoIcsgrBx5LtWeViBMuOjT2j5C9vxlYY4imKsV2zSxNeZEq7c
+         wN4L+CzCOX8RHrf/s7zsbFG48UPBv0XXej9CHF0hKl4/dExkdtF54ADrSTNvDhjwVJ7e
+         FD+nP3btnYSyBbdK5tUmriuesadgiHx9nr5u5WE82b8Y9PllEAKH5SrtHln7LoeN4x4d
+         i6ZnJc10oSpTYBVZhbVrJr9TAdu5qNKA4jEtissEuB+c9AsgAhQWTMh7n01XZKoh9nxH
+         vcwpfqE+gAlADDOfSxQceSHQ8m8bkMTTKAfqbpfeUWSqgl9407GVUzmkcDcmzt/JU71s
+         xTPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783980930; x=1784585730;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-type:mime-version:message-id:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=6knqno33u0gKFnShVvAy1vOVQidX1D6I4tvt9i4jmuw=;
+        b=Hij08NpPzU+RwuBMEMjGiRLwZl7H5VgKYe3L95S0KaP67Xk2kwKdWJ2KDNuGJLaV/0
+         9mdMkFBjT4ysXcqVQJv6mOlskKxregW14ulkRn8ksz5PIdcagkH2laRu0SdXUmfUHbs5
+         R7HQTe6/UME6jaSDI4b4+2Nt+Ju8ixaf81jjZoU9aGMljx7o1OgHSwUnJRHBfWhhuFac
+         BSyn/jsKDiJz7/FzevuGE0qMZHDVB4me+n8cfciVu6PIAQYIav4LaVH9sYPAtJvLApzA
+         qLPwPGxwPiuvA9G1VYEZ1/4MKqdnC1BiSTqUDa+M77pl1dMEOaJg3Z+VSC+/gvWCvOY8
+         iR2w==
+X-Gm-Message-State: AOJu0YzVcfF/9UEwpwMDqwMOr7PdOYAwsdznrrqqK4t3CBYpxWwZDR4q
+	HC7mA04mLc+mXK7oKi2CR59aFT6dSMgzSE3g2NC8PxTJ7xAUMqDqKg0zwSvs2RGR3g==
+X-Gm-Gg: AfdE7cntjKtCh+Gvu2feilf//aMDbGygG5GYLhFwuek5sjwMwnGZVWhoUA9Q3ewzIll
+	t5ppY4WEuxozdFn6xI4cQTZ0QtpP3Dl6xI6K/gpypnWGVQM5rg7jffTnpY4aLha3uV0uAz8m3on
+	E03sKOzykkdEgTIlhxWvNSv4nNcMEKLueEtxvNtf6aPx2iSxinyiHgwwVjy7ghfxhuFe62SCCdW
+	HNUY/OQwJSMosU3XJfmCZkuf+QdglYF5Yidy68TpYc3wOAp9vrD7ULwh0avMmE+Q8BShdMg4gOE
+	YV6aa4dZpQZNRV6XyYYWgdoNuGHoozKXWM16oE4m72qw++1oq8kOlWs3e3qKfYyYVAWcuYQT+Lp
+	m6AzEiIzhU+VkGtPEZ4HGXANyKhpLRSQ8eYUfZLIz8abV7ItHjV7sO5laDtym1+/R1F502X+o+F
+	1vC+GH9jSACUahgR77CdYtBSr3UgQx9zu1Wh+p5VfrY5pCk2ZrdpBrMRjg7g==
+X-Received: by 2002:a05:622a:2d5:b0:51a:8b64:69e0 with SMTP id d75a77b69052e-51cbf0dff29mr107693501cf.11.1783980930061;
+        Mon, 13 Jul 2026 15:15:30 -0700 (PDT)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ffd50df5e2sm144312526d6.4.2026.07.13.15.15.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2026 15:15:29 -0700 (PDT)
+Date: Mon, 13 Jul 2026 18:15:28 -0400
+Message-ID: <df755e0282dab3b932d19aceab71b7d7@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 09/11] KVM: arm64: PMU: Implement fixed-counters-only
- emulation
-To: Oliver Upton <oupton@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu
- <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-References: <20260710-hybrid-v8-0-621409f3a592@rsg.ci.i.u-tokyo.ac.jp>
- <20260710-hybrid-v8-9-621409f3a592@rsg.ci.i.u-tokyo.ac.jp>
- <alSWtwHVfYh0zdPy@kernel.org>
-Content-Language: en-US
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <alSWtwHVfYh0zdPy@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=UTF-8 
+Content-Transfer-Encoding: 8bit 
+X-Mailer: pstg-pwork:20260713_1552/pstg-lib:20260713_1057/pstg-pwork:20260713_1552
+From: Paul Moore <paul@paul-moore.com>
+To: Ian Bridges <icb@fastmail.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] selinux: replace strlcat() with seq_buf in  selinux_ima_collect_state()
+References: <aj6hVjECikvYtnED@dev>
+In-Reply-To: <aj6hVjECikvYtnED@dev>
 
-On 2026/07/13 16:41, Oliver Upton wrote:
-> On Fri, Jul 10, 2026 at 08:15:03PM +0900, Akihiko Odaki wrote:
->> @@ -813,6 +842,15 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
->>   	if (!pmuv3_implemented(kvm_arm_pmu_get_pmuver_limit()))
->>   		return;
->>   
->> +	/*
->> +	 * IMPDEF PMUv3 traps are non-architectural, and KVM cannot assume a
->> +	 * uniform PMUv3-compatible arm_pmu is available on all CPUs.
->> +	 */
->> +	if (cpus_have_final_cap(ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS)) {
->> +		kvm_info("Non-architectural PMU, tainting kernel\n");
->> +		add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
->> +	}
->> +
+On Jun 26, 2026 Ian Bridges <icb@fastmail.org> wrote:
 > 
-> This is an unrelated change, and really the taint should be added with the
-> .cpu_enable() for this capability. That's the point where we flip the
-> magic bit.
-
-I'm abandoning this change because it does not effectively cover all 
-corner cases we don't want to support:
-https://lore.kernel.org/all/0e5e64ea-2f3c-4ce6-88ac-08b66f13027c@rsg.ci.i.u-tokyo.ac.jp/
-
+> In preparation for removing the deprecated strlcat() API[1], replace the
+> strscpy()/strlcat() chain in selinux_ima_collect_state() with a struct
+> seq_buf, which tracks the write position and remaining space internally.
 > 
->> +void kvm_vcpu_load_pmu(struct kvm_vcpu *vcpu, int last_cpu)
->> +{
->> +	if (!kvm_pmu_fixed_counters_only(vcpu->kvm) || vcpu->cpu == last_cpu || last_cpu == -1)
-> 										^~~~~~~~~~~~~~
+> Each field is written with seq_buf_printf() using a "=%d;" format, which
+> removes the open-coded "=1;"/"=0;" constants. The seven per-append
+> WARN_ON(rc >= buf_len) truncation checks are replaced by a single
+> seq_buf_has_overflowed() check after the string is built.
 > 
-> Does this do anything other than avoid a spurious reload on the first KVM_RUN?
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> Signed-off-by: Ian Bridges <icb@fastmail.org>
+> Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> ---
+> Changed in v2: replace the v1 seq_buf_puts() pairs with seq_buf_printf()
+> using a "=%d;" format, which drops the open-coded "=1;"/"=0;" constants.
+> 
+> v1: https://lore.kernel.org/all/ajlN94VO7BYNUTAy@dev/
+> 
+> I didn't change the precomputation of the string size. An alternative,
+> which is used by other seq_buf callers (e.g. kernel/rcu/refscale.c,
+> mm/memcontrol.c), is to drop the precomputation and allocate an oversized
+> fixed buffer, relying on the seq_buf overflow check as a backstop. I'm
+> happy to rework the patch to adopt that alternative.
 
-Yes. Without this check, the value will be passed to cpu_max_bits_warn() 
-in the following call chain, resulting in a warning ifdef 
-CONFIG_DEBUG_PER_CPU_MAPS:
+Another option would be to split out the length calculation and only do
+it once at boot, e.g. call a selinux_ima_calculate_len() function from
+selinux_init(), and then reuse that length in
+selinux_ima_collect_state().
 
-1. kvm_vcpu_load_pmu()
-2. kvm_pmu_probe_armpmu()
-3. cpumask_test_cpu()
-4. cpumask_check()
-5. cpu_max_bits_warn()
+What you're doing here is no worse than what we currently have so I'm
+going to go ahead and merge it into selinux/dev, but if you could split
+out the length calculation I think that would be worthwhile.  Thanks!
 
-Regards,
-Akihiko Odaki
+>  security/selinux/ima.c | 40 +++++++++++++---------------------------
+>  1 file changed, 13 insertions(+), 27 deletions(-)
+
+--
+paul-moore.com
