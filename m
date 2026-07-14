@@ -1,134 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031D344C64E;
-	Tue, 14 Jul 2026 19:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0DE41DDF9;
+	Tue, 14 Jul 2026 19:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784057765; cv=none; b=IXhxQADVQmU4RUKqMCcl1e4eIokzIDfAlRpzk6ekzhTZLY9cNEbx078mM9qiiNyHULXn5QwawGKBH3xmuENFZ5Q0y2u6+tVM66b4EDAcAwxg07n+r5tR3prVntTaz3DM9xbzaOolW18urcgzEr6GzDfXHNRoHIuwI8Cuyp9Qlek=
+	t=1784057803; cv=none; b=HxkhPSGqVdqW5EqGTqum8RjWhpCCdf2Hm7V/07FAxWYRAQhpjSwQQx4pkqk9CH/5AYPndWZresYyykB13sKVutHrlPQKQYQ/ro7QiYmvacdu90C7H5Bpryv3UzQ27yPteSSnLXibbvoy3xhqSiSRe8ASxI7h/Ol+Nq5XQdmrPGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784057765; c=relaxed/simple;
-	bh=V+dxP2MKZFyQvonniRH08CNvUHJHMDcdU9VEg0Osq7c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ubbIQulT4BWoEM5ayRiz+W/9gRQZtRv9VBOkKd53RQl5Q/wRfAEvqK4KTm0e7dsH1sK3mKhDHgDgbEIXGn78YXW1vUSu5mL5rMFgwg1S25C59Uz61mUmBhSvRjRIscQ5Uzx6T3p9Qq5sAaYWRhExWJ2g3tDZBDOpploXUPlXKY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sd4S+UXm; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1784057803; c=relaxed/simple;
+	bh=/m3Qkuf6/ar3+WA6/bC0iH3GQf1MX3/OjuI6168hCgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=laBbzI98eB3aDXhaj2jWHbrVy5z7Y9op05H2/r9/dyvH97muTMjzHltJg0TBWWdzYt+FcbBLwWeRsjtWvy5XmCMjvWoVkVMd/oMG7i8uawP3bLWTCEBayxr8P8BlnOie66+MsRvVqZvGbAk83sC3w7sPwEuPo6Boa/yU2RPph08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=k4wrp//1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=m+J+64c/; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sd4S+UXm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784057763; x=1815593763;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=V+dxP2MKZFyQvonniRH08CNvUHJHMDcdU9VEg0Osq7c=;
-  b=Sd4S+UXmho9poHIt2DIsYhjcVpE22LtDCCk21BjMF6Ch0ZmVmueMF3Hy
-   +/wA5g2uyUeOdhgyQ+RCxlEKy70wPwnQ8oITg9NihzA3okdrB3w9PMmDJ
-   ypW+pWBEo40rua5IyNeLfLzrmoLuBIEX0BKPSTPR6YAQG+PwesBRA5gfx
-   VNa92/JUO14yUk3nCxR4R6ISb3DbP++hCPBOVFFpjnT5Xtu0PaZKxNRTl
-   y5vPUAMU+97xYpPb6RjGRJPPgYOs31Lk2nQqRQeoPxIUcl0Bg4tqRJQDe
-   TLNNDgaDyerBokrxsnLg/M4o4FE16LDHQZcnQnshS1igzL8neeKAyPeHO
-   Q==;
-X-CSE-ConnectionGUID: +MLuJnsgRD6+aoyU6dv4Rw==
-X-CSE-MsgGUID: +JnKP8knSSWh9yolDgsiJA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="95043225"
-X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
-   d="scan'208";a="95043225"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 12:36:02 -0700
-X-CSE-ConnectionGUID: R1W0fAQuSEeFyP9xAdNPTg==
-X-CSE-MsgGUID: tRewb2NPTaepYM4u8roZPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
-   d="scan'208";a="251984195"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa010.fm.intel.com with ESMTP; 14 Jul 2026 12:36:01 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 0CE8995; Tue, 14 Jul 2026 21:36:00 +0200 (CEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v2 1/1] string: Add missing Return sections
-Date: Tue, 14 Jul 2026 21:34:56 +0200
-Message-ID: <20260714193557.868356-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="k4wrp//1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m+J+64c/"
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfout.stl.internal (Postfix) with ESMTP id C9AD91D00025;
+	Tue, 14 Jul 2026 15:36:40 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Tue, 14 Jul 2026 15:36:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
+	 t=1784057800; x=1784144200; bh=bBepFvY1LKlSxlgL4l06nBRvhcWtf9at
+	VR4FTFTQN/s=; b=k4wrp//1Hq1CGzDI2Re45jcIxItk/kyClRcbmdhZyqL/tPPV
+	O2UiQ0WkV+K0+017+4bZAQ2I4evnybgV/0WBtcQk56m4jE7xXztaKQUItXS3sMJA
+	4ltmx1oOslBByUMRfLB4aR/LufKOgMm4I4gu5o6JwAhz8HzuMvqDMxMPD4vS2i/s
+	XyXEVEB0nWmcZLm1Q8WluFoFsig7gXXKiU5HXUk35opAyQAlKXqd/6IMQ1H1z1+V
+	Yvw9CRVnltlbKDyAcCz+6/PCgyC/zP8Qr6gZLXcE5hJupAChY6MjXBMUj6AUF3WO
+	5iw89TvCQh/i7TR+SsbEksbm2zfcmIFb8ZeaNw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1784057800; x=
+	1784144200; bh=bBepFvY1LKlSxlgL4l06nBRvhcWtf9atVR4FTFTQN/s=; b=m
+	+J+64c/T6SSEGgfmzf7WOg9pVRnMrBavbfPWxArJed635s/F/xdQ2+MpFO3FEQiu
+	nVffHMgIpt9Lvf3TEfR9+zAqOX+q7PYQu84e0Jxun+QHmjBpfggQ/RrdwiLTbqvu
+	WlS5RpUIb9o7JiPtOGBlQU1tpR6NgiApDMFBTIHR1yKAw2CSFb0qccPoKar0Uk1q
+	+lDa/Vl9sAvdqWNtBxznmYqJ1lsmfqjeTbbQNfM9oOdLOTHhCOObJrGrLfep8oTh
+	5F1WkDCI3I+r7SgV518cP5907v63pCNrYmhdPRHc4EY9piLA6yDwhgS+unHo/LE8
+	bIEnR+JO8hKUSN0rP+/2w==
+X-ME-Sender: <xms:yI9Wak5UvcDZJH-yVQwD8BIi6WbcsVlQJ2UpVFs8bPvom220DBdanQ>
+    <xme:yI9Wau1SP4qepowCipP6RggHuwtW2HqOuBHWh5wbJHmH2It7uYfXrCY_jrGMsm8gV
+    JrAHEwcF4FDd5KhrAkfQHpHTAHQ6tohK4N8IjWUB-4App2xFL56VLY>
+X-ME-Received: <xmr:yI9WavCELBBmWiCRSzp6FREQpkqr2NG2283GOrBVeedv2glgtvMmpM0BC6k>
+X-ME-Proxy-Cause: dmFkZTFI0lKS02VttvzmWLTXz6Ea7hhNAxH/RTsvO02/LouO39/kpuqH7Bk5BkFAxAhIvM
+    9M+aAfcrUc03JSDKF8zi8FaT1wEgW6y3XnXHs1X6MAIkj7D1Yytui0iN7f1uYtCTVHBw0F
+    hH35fpYkURb+1CWWCRcNrCgu42z3NkozeFUD8gx7JWdYDAn5QPinOiUgevXCNQyH3xD/WH
+    Ne1QeFYw11DjcUYrIOKRMM9kahikcCCqKlqWbgwCErgkKUKrQgkXdaXmC6zkj+mCq+Qk38
+    W/W4tit31xd6hpv+J3gEjBmKZUnyhBx1Z9WNYBLRML9+9ailxbSZPuU0jW/xQwTHSnXIYY
+    P4UkJSS7+G6SDh7KcEMyZN9TEBUHtnZeZECLjNDD0ReyDNtBFufMBzV/jGzF9eLSs6hbTk
+    5Aeg/zI+qWfLxrsV6sZxks9GHKgld8l80TXtvj6wE3eMERaPERyNefL2eLNGlw4Me10Xsl
+    gn/J8egnMhn4qrH0eA5AK0J0HBzYIl9rTZSH0mr2jSLXATI0/WOk5ruAvbhw3M7Qu5Snen
+    hl+A/uur/NryV6KewHGF8lHhN0z7jqsrgVLNqzDCSjdWRcFZ0FRMRI4AsKLtdlkQ+4ne1G
+    58uaRzx4M92mObjfzXyGpjVYEyBHvvJiVHT/PINaXzo2Ser4B9ofFU27kDrA
+X-ME-Proxy: <xmx:yI9WapN7FYdVciZoq8h8Vy9LtUIc643jrP3yw3WLSdacI2HUQXEYUw>
+    <xmx:yI9WakYKc393qoaVJez5R2AeCqDs1j_c96lm_Q0Z4Me-trScKbrLPA>
+    <xmx:yI9Waouzq6-y4KiAP6h0XrCcAzJXp5NemPxEQAdOKzXb3gZF_5m9sA>
+    <xmx:yI9WamMjBITZF4u9VPCwKDKe2CCUIFcICOAYrj_XzMhIFwgfkkgX7w>
+    <xmx:yI9WarpJJzSF6n4OZgyF--6psUzDzcqLdqfzDt4d5zSekXiwEaDz7jnX>
+Feedback-ID: ib53e4b78:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 14 Jul 2026 15:36:39 -0400 (EDT)
+Date: Tue, 14 Jul 2026 14:36:37 -0500
+From: Ian Bridges <icb@fastmail.org>
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] ALSA: hda/generic: Replace strlcat() with strscpy()
+Message-ID: <alaPxW5S5PT_-kZi@dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The kernel-doc unfortunately can't catch some corner cases. Hence
-the commit 645b9ad2dc6b ("string: Add missing kernel-doc return descriptions")
-missed that. On top there is no consistency in use of Return/Returns.
-Address both problems here. Choose Returns over Return as it will be
-less invasive change.
+In preparation for removing the strlcat() API[1], replace its two
+uses in the generic parser.
 
-Fixes: 645b9ad2dc6b ("string: Add missing kernel-doc return descriptions")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Both call sites append one suffix to a string that the function has
+already bounded to the buffer size. A strscpy() anchored at the
+current end of the string writes the same bytes, including when the
+suffix is truncated.
+
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Signed-off-by: Ian Bridges <icb@fastmail.org>
 ---
-v2: fixed reference to a parameter in __sysfs_match_string()
- include/linux/string.h | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+The patch was tested as follows.
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 5702daca4326..75bfc194ad20 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -25,7 +25,7 @@ extern void *memdup_user_nul(const void __user *, size_t);
-  * @n: number of array members to copy
-  * @size: size of one array member
-  *
-- * Return: an ERR_PTR() on failure. Result is physically
-+ * Returns: an ERR_PTR() on failure. Result is physically
-  * contiguous, to be freed by kfree().
-  */
- static inline __realloc_size(2, 3)
-@@ -45,7 +45,7 @@ void *memdup_array_user(const void __user *src, size_t n, size_t size)
-  * @n: number of array members to copy
-  * @size: size of one array member
-  *
-- * Return: an ERR_PTR() on failure. Result may be not
-+ * Returns: an ERR_PTR() on failure. Result may be not
-  * physically contiguous. Use kvfree() to free.
-  */
- static inline __realloc_size(2, 3)
-@@ -103,7 +103,8 @@ ssize_t sized_strscpy(char *, const char *, size_t);
-  * doesn't unnecessarily force the tail of the destination buffer to be
-  * zero padded. If padding is desired please use strscpy_pad().
-  *
-- * Returns the number of characters copied in @dst (not including the
-+ * Returns:
-+ * The number of characters copied in @dst (not including the
-  * trailing %NUL) or -E2BIG if @size is 0 or the copy from @src was
-  * truncated.
-  */
-@@ -286,7 +287,7 @@ char *strreplace(char *str, char old, char new);
-  * @s: The memory area
-  * @n: The size of the area
-  *
-- * Return: True if the area of memory is all 0's.
-+ * Returns: True if the area of memory is all 0's.
-  */
- static inline bool mem_is_zero(const void *s, size_t n)
- __sysfs_match_string{
-@@ -328,7 +329,11 @@ int __sysfs_match_string(const char * const *array, size_t n, const char *s);
-  * @_a: array of strings
-  * @_s: string to match with
-  *
-- * Helper for __sysfs_match_string(). Calculates the size of @a automatically.
-+ * Helper for __sysfs_match_string(). Calculates the size of @_a automatically.
-+ *
-+ * Returns:
-+ * The index of the matching string in the array or negative error code
-+ * otherwise.
-  */
- #define sysfs_match_string(_a, _s) __sysfs_match_string(_a, ARRAY_SIZE(_a), _s)
+- W=1 build of sound/hda/, zero warnings.
+- A userspace differential harness compiled the old and the new
+  functions side by side. The buffers were byte identical over their
+  full length, including the bytes after the terminator.
+- A QEMU runtime compare. A guest with an emulated HDA codec was
+  booted on the base and on the patched kernel, and the captured
+  /proc/asound state was byte identical. That covers the PCM stream
+  names from fill_pcm_stream_name() live.
+
+ sound/hda/codecs/generic.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/sound/hda/codecs/generic.c b/sound/hda/codecs/generic.c
+index 660a9f2c0ded..5f373cbf4a53 100644
+--- a/sound/hda/codecs/generic.c
++++ b/sound/hda/codecs/generic.c
+@@ -2712,10 +2712,12 @@ static void get_jack_mode_name(struct hda_codec *codec, hda_nid_t pin,
+ 			       char *name, size_t name_len)
+ {
+ 	struct hda_gen_spec *spec = codec->spec;
++	size_t used;
+ 	int idx = 0;
  
+ 	snd_hda_get_pin_label(codec, pin, &spec->autocfg, name, name_len, &idx);
+-	strlcat(name, " Jack Mode", name_len);
++	used = strnlen(name, name_len);
++	strscpy(name + used, " Jack Mode", name_len - used);
+ 
+ 	for (; find_kctl_name(codec, name, idx); idx++)
+ 		;
+@@ -5682,6 +5684,7 @@ static const struct hda_pcm_stream dyn_adc_pcm_analog_capture = {
+ static void fill_pcm_stream_name(char *str, size_t len, const char *sfx,
+ 				 const char *chip_name)
+ {
++	size_t used;
+ 	char *p;
+ 
+ 	if (*str)
+@@ -5695,7 +5698,8 @@ static void fill_pcm_stream_name(char *str, size_t len, const char *sfx,
+ 			break;
+ 		}
+ 	}
+-	strlcat(str, sfx, len);
++	used = strnlen(str, len);
++	strscpy(str + used, sfx, len - used);
+ }
+ 
+ /* copy PCM stream info from @default_str, and override non-NULL entries
 -- 
-2.50.1
+2.47.3
 
