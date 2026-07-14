@@ -1,648 +1,246 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E40A38B7A6;
-	Tue, 14 Jul 2026 11:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9059A37E2F3
+	for <linux-hardening@vger.kernel.org>; Tue, 14 Jul 2026 11:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784026974; cv=none; b=ifKWJxv7IP58Xuqry9WoqU53b1PzwnuoeBIWECUCu7Kd+Gie4VDD48+WWItop+cs2S2mhXBVEIfeyI/296aRMKjhdb5DC5kls7z6kXQbxHX6wm86/ruLKpgcVKgoZm75EErb+dwVCrN2mJtbq+PiQfpqsW18p+KVuodgccGrC+Y=
+	t=1784028212; cv=none; b=AswLlv7MrIxOfxQHt17zjJ8OlI8C/SclN9GetlGpQrE8twg5xb5XQHbS9TSHmhCNgelqLTiSwSH1fgZoa8wCstff0JgQo1G622HlsXpmj5mAnCS1LtP8+9EzN4PjvQrtmhqAPAuQqb1U/GpsqnLFa4QkBefXazgARv0elDdgcJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784026974; c=relaxed/simple;
-	bh=EBQdqatAeYwThD1Kg75N1fl4xdSgZxFed5ax1mVnjSI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SkVH20+3fgPPV59SCE7rllbKBD4CyxTuMyfRF/xa9uC6x2uhrGe5gNGQ/RgRaGjy3DCnoROc0c+l8GGu4TsC4gg68bD5PLC4swT4E57t+IQoMSe8rZQfZzMbT4T2T5Hxbs77sLqYPmn6WyXJGyyXVI0Zypkh151pg1y5F/cZLOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSARlrEl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1784028212; c=relaxed/simple;
+	bh=gi7MhfdQLbCvDBoMf2FV1lTS6pvW2brH0HiT9uusij4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=BgcrYCdncFGFX2sKpebDrXHG7tKDkkJQOKOzixCJIOpZI2quyOxJ+xqr0njHizJlv/dmF3bwz2fq7zrV8oHkoed8ykKFGhH9zLidWNIMCpjuzRWQ8ssh6l9ZK2Lv4B1zq6FK+slabzuz4uKEChmZJeYwW/OeGINh5KIySHCA8ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BTzB0iPZ; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSARlrEl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5C471C32781;
-	Tue, 14 Jul 2026 11:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1784026973;
-	bh=EBQdqatAeYwThD1Kg75N1fl4xdSgZxFed5ax1mVnjSI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=fSARlrEl8qXjasg3p+VmEZ9e9Ba6AqeyyXD9es0zI7Gt6hsnyqccXx2TAmwwhLWHl
-	 Dw/h8lMC7ANOKgsgjh8gWyMw/HxipuH5WUEOSk1LvngpbaEDxmI5CAR1wU6qVkEMMC
-	 7Nbo8lFt6ye1KkYYA33YIv80p7vT3bqzCw1ntlMK+PqHSNhBX4a0MB2rg9fGSiH90+
-	 HMw38SzuM9fDqAmqmeTtCiWzc+MfW9pLO4h3u17g22Dr0jCQI9LqrCjZ2UmGHFp1C8
-	 N3VydwFBx82/QsMf2V+oegMQsl8KC4HRUxAV64R0TMvPe4GbRnkhx6ZC1NSpApi9dz
-	 jYhKTT8cb74ag==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E83C44507;
-	Tue, 14 Jul 2026 11:02:53 +0000 (UTC)
-From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Tue, 14 Jul 2026 12:02:52 +0100
-Subject: [PATCH v8 12/17] iio: frequency: ad9910: add digital ramp
- generator support
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BTzB0iPZ"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784028208;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ic+aWwaSz46V+LedNdfmAheNIC6sClM8F1svsoDeJLQ=;
+	b=BTzB0iPZJxSwIjoJI+hAEyWR8xxBjAJMON/tbmuUmybdBNBD14IL/+qBx7/G0FNdwotYAv
+	Wo94bFny/4PokGhwWVU60T4ZI3e2OECohbrdVrdrGGBB3EzFNWGgmcFBNCJpfNkFR8G+0o
+	x+PZZkCIokQdJYLmn0RvwX9FB35yNMI=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260714-ad9910-iio-driver-v8-12-36939c3c07d2@analog.com>
-References: <20260714-ad9910-iio-driver-v8-0-36939c3c07d2@analog.com>
-In-Reply-To: <20260714-ad9910-iio-driver-v8-0-36939c3c07d2@analog.com>
-To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Rodrigo Alencar <rodrigo.alencar@analog.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784026971; l=18823;
- i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=0DkNlFjtphp2n9PU/luo6bJ9oh2P2mCD1ZGZxRc7MoI=;
- b=cGQmYN9QPcVNZ1lSdQKgVgC+QjX10iR8swLYE12RtAKgkKKHWvFaVh753c3n+5JllDG3HO6A6
- 6ap3XCA5VKpACXFxNY7FLB88XMQ/x5wTqTCJvpc65u/fY+X+jBMVy9Q
-X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
- pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
-X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
- with auth_id=561
-X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-Reply-To: rodrigo.alencar@analog.com
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
+Subject: Re: [PATCH v6 8/8] mm: use memcpy_nt() in zone-device template copies
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <04f5b50a-a526-4644-b9f0-c54a0d6db702@linux.dev>
+Date: Tue, 14 Jul 2026 19:22:39 +0800
+Cc: linux-arch@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org,
+ x86@kernel.org,
+ akpm@linux-foundation.org,
+ apopple@nvidia.com,
+ arnd@arndb.de,
+ balbirs@nvidia.com,
+ bp@alien8.de,
+ dave.hansen@linux.intel.com,
+ david@kernel.org,
+ kees@kernel.org,
+ mingo@redhat.com,
+ rppt@kernel.org,
+ tglx@kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <67BC9BE5-A201-4DED-B847-8C74BF30B16D@linux.dev>
+References: <20260709112520.24857-1-lizhe.67@bytedance.com>
+ <20260709112520.24857-9-lizhe.67@bytedance.com>
+ <04f5b50a-a526-4644-b9f0-c54a0d6db702@linux.dev>
+To: Li Zhe <lizhe.67@bytedance.com>
+X-Migadu-Flow: FLOW_OUT
 
-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Add Digital Ramp Generator channels with destination selection (frequency,
-phase, or amplitude) based on attribute writes, dwell mode control,
-configurable upper/lower limits, step size controlled with rate of change
-config, and step rate controlled as sampling frequency.
 
-Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
----
- drivers/iio/frequency/ad9910.c | 401 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 399 insertions(+), 2 deletions(-)
+> On Jul 14, 2026, at 17:45, Muchun Song <muchun.song@linux.dev> wrote:
+>=20
+>=20
+>=20
+> On 2026/7/9 19:25, Li Zhe wrote:
+>> The template fast path currently uses memcpy() for the actual struct
+>> page copy. Switch zone_device_page_init_from_template() to =
+memcpy_nt()
+>> and add memcpy_nt_drain() before memmap_init_compound(), before
+>> prep_compound_head() updates overlapping tail metadata, and before
+>> returning from memmap_init_zone_device().
+>>=20
+>> ZONE_DEVICE memmap initialization is largely write-once: each struct
+>> page is populated once, and most destination cachelines are not =
+expected
+>> to be reused immediately afterwards. On x86, a regular cached =
+memcpy()
+>> can therefore incur write-allocate traffic by pulling destination
+>> cachelines into the cache before writeback, and can populate the =
+cache
+>> with data that has little near-term reuse. Using memcpy_nt() lets =
+this
+>> path request non-temporal stores for that copy pattern, which can =
+reduce
+>> cache pollution and avoid part of the associated write-allocate
+>> overhead, while architectures without a specialized backend still =
+fall
+>> back to memcpy().
+>>=20
+>> When memcpy_nt() maps to non-temporal stores, order those stores =
+before
+>> memmap_init_compound(), before prep_compound_head() updates =
+overlapping
+>> compound metadata, and before returning from =
+memmap_init_zone_device().
+>>=20
+>> Keep sanitized builds on the slow path so KASAN/KMSAN retain their
+>> instrumented stores.
+>>=20
+>> Tested in a VM with a 100 GB fsdax namespace device configured with
+>> map=3Ddev and a 100 GB devdax namespace (align=3D2097152) on Intel =
+Ice Lake
+>> server.
+>>=20
+>> Test procedure:
+>> Rebind the nd_pmem and dax_pmem driver 30 times and collect the =
+memmap
+>> initialization time from the pr_debug() output of
+>> memmap_init_zone_device().
+>>=20
+>> Base(v7.2-rc1):
+>>   First binding for nd_pmem driver: 1456 ms
+>>   Average of subsequent rebinds: 244.28 ms
+>>=20
+>>   First binding for dax_pmem driver: 1462 ms
+>>   Average of subsequent rebinds: 273.31 ms
+>>=20
+>> With this series:
+>>   First binding for nd_pmem driver: 1272 ms
+>>   Average of subsequent rebinds: 96.79 ms
+>>=20
+>>   First binding for dax_pmem driver: 1354 ms
+>>   Average of subsequent rebinds: 119.04 ms
+>>=20
+>> This reduces the average rebind time by about 60.4% for nd_pmem and
+>> 56.4% for dax_pmem.
+>>=20
+>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>> ---
+>>  mm/mm_init.c | 39 +++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 37 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/mm/mm_init.c b/mm/mm_init.c
+>> index fb855bb0437a..addb4969587e 100644
+>> --- a/mm/mm_init.c
+>> +++ b/mm/mm_init.c
+>> @@ -1067,11 +1067,21 @@ static void __ref =
+zone_device_page_init_slow(struct page *page,
+>>=20
+>>  static inline bool zone_device_page_init_optimization_enabled(void)
+>>  {
+>> + /*
+>> + * Keep sanitized builds on the slow path so their stores stay
+>> + * instrumented.
+>> + */
+>> + if (IS_ENABLED(CONFIG_KASAN) || IS_ENABLED(CONFIG_KMSAN))
+>> + return false;
+>=20
+> It is not a major concern if struct page initialization lacks KASAN or
+> KMSAN instrumentation. To keep things simple, let's just entirely =
+remove
+> zone_device_page_init_optimization_enabled() to simplify the code.
 
-diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
-index aaeff2e7640e..6c794e1b4b1c 100644
---- a/drivers/iio/frequency/ad9910.c
-+++ b/drivers/iio/frequency/ad9910.c
-@@ -140,6 +140,18 @@
- #define AD9910_MC_SYNC_OUTPUT_DELAY_MSK		GENMASK(15, 11)
- #define AD9910_MC_SYNC_INPUT_DELAY_MSK		GENMASK(7, 3)
- 
-+/* Digital Ramp Limit Register */
-+#define AD9910_DRG_LIMIT_UPPER_MSK		GENMASK_ULL(63, 32)
-+#define AD9910_DRG_LIMIT_LOWER_MSK		GENMASK_ULL(31, 0)
-+
-+/* Digital Ramp Step Register */
-+#define AD9910_DRG_STEP_DEC_MSK			GENMASK_ULL(63, 32)
-+#define AD9910_DRG_STEP_INC_MSK			GENMASK_ULL(31, 0)
-+
-+/* Digital Ramp Rate Register */
-+#define AD9910_DRG_RATE_DEC_MSK			GENMASK(31, 16)
-+#define AD9910_DRG_RATE_INC_MSK			GENMASK(15, 0)
-+
- /* Profile Register Format (Single Tone Mode) */
- #define AD9910_PROFILE_ST_ASF_MSK		GENMASK_ULL(61, 48)
- #define AD9910_PROFILE_ST_POW_MSK		GENMASK_ULL(47, 32)
-@@ -147,6 +159,7 @@
- 
- /* Device constants */
- #define AD9910_PI_NANORAD		3141592653UL
-+#define AD9910_PI_PICORAD		3141592653590ULL
- 
- #define AD9910_MAX_SYSCLK_HZ		(1000 * HZ_PER_MHZ)
- #define AD9910_MAX_PHASE_MICRORAD	(AD9910_PI_NANORAD / 500)
-@@ -155,6 +168,7 @@
- #define AD9910_ASF_PP_LSB_MAX		FIELD_MAX(AD9910_ASF_SCALE_FACTOR_PP_LSB_MSK)
- #define AD9910_POW_MAX			FIELD_MAX(AD9910_PROFILE_ST_POW_MSK)
- #define AD9910_POW_PP_LSB_MAX		FIELD_MAX(AD9910_POW_PP_LSB_MSK)
-+#define AD9910_STEP_RATE_MAX		FIELD_MAX(AD9910_DRG_RATE_DEC_MSK)
- #define AD9910_NUM_PROFILES		8
- 
- /* PLL constants */
-@@ -184,6 +198,7 @@
- 
- /* altcurrent ABI is in mA */
- #define AD9910_NANO_MILLIAMP_PER_MICROAMP	1000000UL
-+#define AD9910_PICO_MILLIAMP_PER_MICROAMP	1000000000UL
- 
- #define AD9910_REFDIV2_MIN_FREQ_HZ	(25 * HZ_PER_MHZ)
- #define AD9910_REFDIV2_MAX_FREQ_HZ	(1900 * HZ_PER_MHZ)
-@@ -211,6 +226,9 @@
-  * @AD9910_CHANNEL_PROFILE_7: Profile 7 output channel
-  * @AD9910_CHANNEL_PARALLEL: Parallel Data output channel
-  * @AD9910_CHANNEL_PARALLEL_POLAR: Parallel Polar Data output channel
-+ * @AD9910_CHANNEL_DRG: Digital Ramp Generator output channel
-+ * @AD9910_CHANNEL_DRG_RAMP_UP: DRG ramp up channel
-+ * @AD9910_CHANNEL_DRG_RAMP_DOWN: DRG ramp down channel
-  */
- enum ad9910_channel {
- 	AD9910_CHANNEL_PHY = 100,
-@@ -224,6 +242,9 @@ enum ad9910_channel {
- 	AD9910_CHANNEL_PROFILE_7 = 117,
- 	AD9910_CHANNEL_PARALLEL = 120,
- 	AD9910_CHANNEL_PARALLEL_POLAR = 121,
-+	AD9910_CHANNEL_DRG = 130,
-+	AD9910_CHANNEL_DRG_RAMP_UP = 131,
-+	AD9910_CHANNEL_DRG_RAMP_DOWN = 132,
- };
- 
- enum {
-@@ -241,10 +262,21 @@ enum {
- 	AD9910_CHAN_IDX_PARALLEL_FREQ,
- 	AD9910_CHAN_IDX_PARALLEL_POLAR_AMP,
- 	AD9910_CHAN_IDX_PARALLEL_POLAR_PHASE,
-+	AD9910_CHAN_IDX_DRG_FREQ,
-+	AD9910_CHAN_IDX_DRG_PHASE,
-+	AD9910_CHAN_IDX_DRG_AMP,
-+	AD9910_CHAN_IDX_DRG_FREQ_RAMP_UP,
-+	AD9910_CHAN_IDX_DRG_FREQ_RAMP_DOWN,
-+	AD9910_CHAN_IDX_DRG_PHASE_RAMP_UP,
-+	AD9910_CHAN_IDX_DRG_PHASE_RAMP_DOWN,
-+	AD9910_CHAN_IDX_DRG_AMP_RAMP_UP,
-+	AD9910_CHAN_IDX_DRG_AMP_RAMP_DOWN,
- };
- 
- enum {
- 	AD9910_POWERDOWN,
-+	AD9910_DWELL_EN,
-+	AD9910_ROC,
- };
- 
- struct ad9910_data {
-@@ -547,6 +579,14 @@ static ssize_t ad9910_ext_info_read(struct iio_dev *indio_dev,
- 	case AD9910_POWERDOWN:
- 		val = ad9910_sw_powerdown_get(st);
- 		break;
-+	case AD9910_DWELL_EN:
-+		if (chan->channel == AD9910_CHANNEL_DRG_RAMP_UP)
-+			val = FIELD_GET(AD9910_CFR2_DRG_NO_DWELL_HIGH_MSK,
-+					st->reg[AD9910_REG_CFR2].val32) ? 0 : 1;
-+		else
-+			val = FIELD_GET(AD9910_CFR2_DRG_NO_DWELL_LOW_MSK,
-+					st->reg[AD9910_REG_CFR2].val32) ? 0 : 1;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -575,6 +615,113 @@ static ssize_t ad9910_ext_info_write(struct iio_dev *indio_dev,
- 		if (ret)
- 			return ret;
- 		break;
-+	case AD9910_DWELL_EN:
-+		if (chan->channel == AD9910_CHANNEL_DRG_RAMP_UP) {
-+			val32 = val32 ? 0 : AD9910_CFR2_DRG_NO_DWELL_HIGH_MSK;
-+			ret = ad9910_reg32_update(st, AD9910_REG_CFR2,
-+						  AD9910_CFR2_DRG_NO_DWELL_HIGH_MSK,
-+						  val32, true);
-+			if (ret)
-+				return ret;
-+		} else {
-+			val32 = val32 ? 0 : AD9910_CFR2_DRG_NO_DWELL_LOW_MSK;
-+			ret = ad9910_reg32_update(st, AD9910_REG_CFR2,
-+						  AD9910_CFR2_DRG_NO_DWELL_LOW_MSK,
-+						  val32, true);
-+			if (ret)
-+				return ret;
-+		}
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return len;
-+}
-+
-+static ssize_t ad9910_drg_roc_read(struct iio_dev *indio_dev, uintptr_t private,
-+				   const struct iio_chan_spec *chan,
-+				   char *buf)
-+{
-+	struct ad9910_state *st = iio_priv(indio_dev);
-+	u64 roc64;
-+	u32 rate;
-+
-+	guard(mutex)(&st->lock);
-+
-+	switch (chan->channel) {
-+	case AD9910_CHANNEL_DRG_RAMP_UP:
-+		roc64 = FIELD_GET(AD9910_DRG_STEP_INC_MSK,
-+				  st->reg[AD9910_REG_DRG_STEP].val64);
-+		rate = FIELD_GET(AD9910_DRG_RATE_INC_MSK,
-+				 st->reg[AD9910_REG_DRG_RATE].val32);
-+		break;
-+	case AD9910_CHANNEL_DRG_RAMP_DOWN:
-+		roc64 = FIELD_GET(AD9910_DRG_STEP_DEC_MSK,
-+				  st->reg[AD9910_REG_DRG_STEP].val64);
-+		rate = FIELD_GET(AD9910_DRG_RATE_DEC_MSK,
-+				 st->reg[AD9910_REG_DRG_RATE].val32);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (!rate)
-+		return -ERANGE;
-+
-+	roc64 *= st->data.sysclk_freq_hz;
-+	return sysfs_emit(buf, "%llu\n", div_u64(roc64, 4 * rate));
-+}
-+
-+static ssize_t ad9910_drg_roc_write(struct iio_dev *indio_dev,
-+				    uintptr_t private,
-+				    const struct iio_chan_spec *chan,
-+				    const char *buf, size_t len)
-+{
-+	struct ad9910_state *st = iio_priv(indio_dev);
-+	u64 tmp64;
-+	u32 rate;
-+	int ret;
-+
-+	ret = kstrtou64(buf, 10, &tmp64);
-+	if (ret)
-+		return ret;
-+
-+	guard(mutex)(&st->lock);
-+
-+	switch (chan->channel) {
-+	case AD9910_CHANNEL_DRG_RAMP_UP:
-+		rate = FIELD_GET(AD9910_DRG_RATE_INC_MSK,
-+				 st->reg[AD9910_REG_DRG_RATE].val32);
-+		if (!rate)
-+			return -ERANGE;
-+
-+		tmp64 = ad9910_rational_scale(tmp64, 4 * rate, st->data.sysclk_freq_hz);
-+		tmp64 = min_t(u64, tmp64, U32_MAX);
-+
-+		ret = ad9910_reg64_update(st, AD9910_REG_DRG_STEP,
-+					  AD9910_DRG_STEP_INC_MSK,
-+					  FIELD_PREP(AD9910_DRG_STEP_INC_MSK, tmp64),
-+					  true);
-+		if (ret)
-+			return ret;
-+		break;
-+	case AD9910_CHANNEL_DRG_RAMP_DOWN:
-+		rate = FIELD_GET(AD9910_DRG_RATE_DEC_MSK,
-+				 st->reg[AD9910_REG_DRG_RATE].val32);
-+		if (!rate)
-+			return -ERANGE;
-+
-+		tmp64 = ad9910_rational_scale(tmp64, 4 * rate, st->data.sysclk_freq_hz);
-+		tmp64 = min_t(u64, tmp64, U32_MAX);
-+
-+		ret = ad9910_reg64_update(st, AD9910_REG_DRG_STEP,
-+					  AD9910_DRG_STEP_DEC_MSK,
-+					  FIELD_PREP(AD9910_DRG_STEP_DEC_MSK, tmp64),
-+					  true);
-+		if (ret)
-+			return ret;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -593,6 +740,24 @@ static const struct iio_chan_spec_ext_info ad9910_phy_ext_info[] = {
- 	{ }
- };
- 
-+static const struct iio_chan_spec_ext_info ad9910_drg_ramp_ext_info[] = {
-+	{
-+		.name = "dwell_en",
-+		.read = ad9910_ext_info_read,
-+		.write = ad9910_ext_info_write,
-+		.private = AD9910_DWELL_EN,
-+		.shared = IIO_SEPARATE,
-+	},
-+	{
-+		.name = "raw_roc",
-+		.read = ad9910_drg_roc_read,
-+		.write = ad9910_drg_roc_write,
-+		.private = AD9910_ROC,
-+		.shared = IIO_SEPARATE,
-+	},
-+	{ }
-+};
-+
- #define AD9910_PROFILE_CHAN(idx) {				\
- 	.type = IIO_ALTCURRENT,					\
- 	.indexed = 1,						\
-@@ -672,6 +837,102 @@ static const struct iio_chan_spec ad9910_channels[] = {
- 				      BIT(IIO_CHAN_INFO_SCALE),
- 		.parent = &ad9910_channels[AD9910_CHAN_IDX_PHY],
- 	},
-+	[AD9910_CHAN_IDX_DRG_FREQ] = {
-+		.type = IIO_FREQUENCY,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_DRG,
-+		.address = AD9910_CHAN_IDX_DRG_FREQ,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE) |
-+				      BIT(IIO_CHAN_INFO_SCALE),
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_PHY],
-+	},
-+	[AD9910_CHAN_IDX_DRG_PHASE] = {
-+		.type = IIO_PHASE,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_DRG,
-+		.address = AD9910_CHAN_IDX_DRG_PHASE,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE) |
-+				      BIT(IIO_CHAN_INFO_SCALE),
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_PHY],
-+	},
-+	[AD9910_CHAN_IDX_DRG_AMP] = {
-+		.type = IIO_ALTCURRENT,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_DRG,
-+		.address = AD9910_CHAN_IDX_DRG_AMP,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE) |
-+				      BIT(IIO_CHAN_INFO_SCALE),
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_PHY],
-+	},
-+	[AD9910_CHAN_IDX_DRG_FREQ_RAMP_UP] = {
-+		.type = IIO_FREQUENCY,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_DRG_RAMP_UP,
-+		.address = AD9910_CHAN_IDX_DRG_FREQ_RAMP_UP,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.ext_info = ad9910_drg_ramp_ext_info,
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_DRG_FREQ],
-+	},
-+	[AD9910_CHAN_IDX_DRG_FREQ_RAMP_DOWN] = {
-+		.type = IIO_FREQUENCY,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_DRG_RAMP_DOWN,
-+		.address = AD9910_CHAN_IDX_DRG_FREQ_RAMP_DOWN,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.ext_info = ad9910_drg_ramp_ext_info,
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_DRG_FREQ],
-+	},
-+	[AD9910_CHAN_IDX_DRG_PHASE_RAMP_UP] = {
-+		.type = IIO_PHASE,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_DRG_RAMP_UP,
-+		.address = AD9910_CHAN_IDX_DRG_PHASE_RAMP_UP,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.ext_info = ad9910_drg_ramp_ext_info,
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_DRG_PHASE],
-+	},
-+	[AD9910_CHAN_IDX_DRG_PHASE_RAMP_DOWN] = {
-+		.type = IIO_PHASE,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_DRG_RAMP_DOWN,
-+		.address = AD9910_CHAN_IDX_DRG_PHASE_RAMP_DOWN,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.ext_info = ad9910_drg_ramp_ext_info,
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_DRG_PHASE],
-+	},
-+	[AD9910_CHAN_IDX_DRG_AMP_RAMP_UP] = {
-+		.type = IIO_ALTCURRENT,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_DRG_RAMP_UP,
-+		.address = AD9910_CHAN_IDX_DRG_AMP_RAMP_UP,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.ext_info = ad9910_drg_ramp_ext_info,
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_DRG_AMP],
-+	},
-+	[AD9910_CHAN_IDX_DRG_AMP_RAMP_DOWN] = {
-+		.type = IIO_ALTCURRENT,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_DRG_RAMP_DOWN,
-+		.address = AD9910_CHAN_IDX_DRG_AMP_RAMP_DOWN,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.ext_info = ad9910_drg_ramp_ext_info,
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_DRG_AMP],
-+	},
- };
- 
- static int ad9910_read_raw(struct iio_dev *indio_dev,
-@@ -695,6 +956,15 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 				*val = (tmp32 == st->profile);
- 			}
- 			break;
-+		case AD9910_CHANNEL_DRG:
-+			tmp32 = FIELD_GET(AD9910_CFR2_DRG_DEST_MSK,
-+					  st->reg[AD9910_REG_CFR2].val32);
-+			if (tmp32 == (chan->address - AD9910_CHAN_IDX_DRG_FREQ))
-+				*val = FIELD_GET(AD9910_CFR2_DRG_ENABLE_MSK,
-+						 st->reg[AD9910_REG_CFR2].val32);
-+			else
-+				*val = 0;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -734,6 +1004,16 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 			*val = FIELD_GET(AD9910_PROFILE_ST_ASF_MSK,
- 					 st->reg[AD9910_REG_PROFILE(tmp32)].val64);
- 			return IIO_VAL_INT;
-+		case AD9910_CHANNEL_DRG_RAMP_UP:
-+			tmp64 = FIELD_GET(AD9910_DRG_LIMIT_UPPER_MSK,
-+					  st->reg[AD9910_REG_DRG_LIMIT].val64);
-+			iio_val_s64_decompose(tmp64, val, val2);
-+			return IIO_VAL_INT_64;
-+		case AD9910_CHANNEL_DRG_RAMP_DOWN:
-+			tmp64 = FIELD_GET(AD9910_DRG_LIMIT_LOWER_MSK,
-+					  st->reg[AD9910_REG_DRG_LIMIT].val64);
-+			iio_val_s64_decompose(tmp64, val, val2);
-+			return IIO_VAL_INT_64;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -742,9 +1022,23 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 		case AD9910_CHANNEL_PHY:
- 			*val = st->data.sysclk_freq_hz;
- 			return IIO_VAL_INT;
-+		case AD9910_CHANNEL_DRG_RAMP_UP:
-+			tmp32 = FIELD_GET(AD9910_DRG_RATE_INC_MSK,
-+					  st->reg[AD9910_REG_DRG_RATE].val32);
-+			break;
-+		case AD9910_CHANNEL_DRG_RAMP_DOWN:
-+			tmp32 = FIELD_GET(AD9910_DRG_RATE_DEC_MSK,
-+					  st->reg[AD9910_REG_DRG_RATE].val32);
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-+		if (!tmp32)
-+			return -ERANGE;
-+		tmp32 *= 4;
-+		*val = st->data.sysclk_freq_hz / tmp32;
-+		*val2 = div_u64((u64)(st->data.sysclk_freq_hz % tmp32) * MICRO, tmp32);
-+		return IIO_VAL_INT_PLUS_MICRO;
- 	case IIO_CHAN_INFO_SCALE:
- 		switch (chan->address) {
- 		case AD9910_CHAN_IDX_PHY:
-@@ -774,6 +1068,21 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 			*val = 0;
- 			*val2 = AD9910_PI_NANORAD >> 7;
- 			return IIO_VAL_INT_PLUS_NANO;
-+		case AD9910_CHAN_IDX_DRG_FREQ:
-+			tmp64 = ad9910_rational_scale(st->data.sysclk_freq_hz,
-+						      PICO, BIT_ULL(32));
-+			iio_val_s64_decompose(tmp64, val, val2);
-+			return IIO_VAL_DECIMAL64_PICO;
-+		case AD9910_CHAN_IDX_DRG_PHASE:
-+			tmp64 = DIV_U64_ROUND_CLOSEST(AD9910_PI_PICORAD, BIT(31));
-+			iio_val_s64_decompose(tmp64, val, val2);
-+			return IIO_VAL_DECIMAL64_PICO;
-+		case AD9910_CHAN_IDX_DRG_AMP:
-+			tmp64 = (u64)st->data.output_current_uA *
-+				AD9910_PICO_MILLIAMP_PER_MICROAMP;
-+			tmp64 = DIV_U64_ROUND_CLOSEST(tmp64 >> 1, BIT(31));
-+			iio_val_s64_decompose(tmp64, val, val2);
-+			return IIO_VAL_DECIMAL64_PICO;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -831,6 +1140,22 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 				return ret;
- 
- 			return ad9910_profile_set(st, tmp32);
-+		case AD9910_CHANNEL_DRG:
-+			tmp32 = chan->address - AD9910_CHAN_IDX_DRG_FREQ;
-+			if (val) {
-+				tmp32 = AD9910_CFR2_DRG_ENABLE_MSK |
-+					FIELD_PREP(AD9910_CFR2_DRG_DEST_MSK, tmp32);
-+			} else {
-+				if (tmp32 != FIELD_GET(AD9910_CFR2_DRG_DEST_MSK,
-+						       st->reg[AD9910_REG_CFR2].val32))
-+					return 0; /* nothing to do */
-+				tmp32 = 0;
-+			}
-+
-+			return ad9910_reg32_update(st, AD9910_REG_CFR2,
-+						   AD9910_CFR2_DRG_DEST_MSK |
-+						   AD9910_CFR2_DRG_ENABLE_MSK,
-+						   tmp32, true);
- 		default:
- 			return -EINVAL;
- 		}
-@@ -884,11 +1209,61 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
- 						   AD9910_PROFILE_ST_ASF_MSK,
- 						   tmp64, true);
-+		case AD9910_CHANNEL_DRG_RAMP_UP: {
-+			s64 val64 = iio_val_s64_compose(val, val2);
-+
-+			if (val64 < 0)
-+				return -EINVAL;
-+
-+			tmp64 = min_t(u64, val64, U32_MAX);
-+			tmp64 = FIELD_PREP(AD9910_DRG_LIMIT_UPPER_MSK, tmp64);
-+			return ad9910_reg64_update(st, AD9910_REG_DRG_LIMIT,
-+						   AD9910_DRG_LIMIT_UPPER_MSK,
-+						   tmp64, true);
-+		}
-+		case AD9910_CHANNEL_DRG_RAMP_DOWN: {
-+			s64 val64 = iio_val_s64_compose(val, val2);
-+
-+			if (val64 < 0)
-+				return -EINVAL;
-+
-+			tmp64 = min_t(u64, val64, U32_MAX);
-+			tmp64 = FIELD_PREP(AD9910_DRG_LIMIT_LOWER_MSK, tmp64);
-+			return ad9910_reg64_update(st, AD9910_REG_DRG_LIMIT,
-+						   AD9910_DRG_LIMIT_LOWER_MSK,
-+						   tmp64, true);
-+		}
- 		default:
- 			return -EINVAL;
- 		}
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		return ad9910_set_sysclk_freq(st, val, true);
-+		if (chan->channel == AD9910_CHANNEL_PHY)
-+			return ad9910_set_sysclk_freq(st, val, true);
-+
-+		if (val < 0 || val2 < 0 || val > st->data.sysclk_freq_hz / 4)
-+			return -EINVAL;
-+
-+		tmp64 = ((u64)val * MICRO + val2) * 4;
-+		if (!tmp64)
-+			return -EINVAL;
-+
-+		tmp64 = DIV64_U64_ROUND_CLOSEST((u64)st->data.sysclk_freq_hz * MICRO, tmp64);
-+		tmp32 = clamp(tmp64, 1U, AD9910_STEP_RATE_MAX);
-+
-+		switch (chan->channel) {
-+		case AD9910_CHANNEL_DRG_RAMP_UP:
-+			tmp32 = FIELD_PREP(AD9910_DRG_RATE_INC_MSK, tmp32);
-+			return ad9910_reg32_update(st, AD9910_REG_DRG_RATE,
-+						   AD9910_DRG_RATE_INC_MSK,
-+						   tmp32, true);
-+		case AD9910_CHANNEL_DRG_RAMP_DOWN:
-+			tmp32 = FIELD_PREP(AD9910_DRG_RATE_DEC_MSK, tmp32);
-+			return ad9910_reg32_update(st, AD9910_REG_DRG_RATE,
-+						   AD9910_DRG_RATE_DEC_MSK,
-+						   tmp32, true);
-+		default:
-+			return -EINVAL;
-+		}
- 	case IIO_CHAN_INFO_SCALE:
- 		switch (chan->address) {
- 		case AD9910_CHAN_IDX_PHY:
-@@ -963,11 +1338,16 @@ static int ad9910_write_raw_get_fmt(struct iio_dev *indio_dev,
- 		switch (chan->channel) {
- 		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
- 			return IIO_VAL_INT;
-+		case AD9910_CHANNEL_DRG_RAMP_UP:
-+		case AD9910_CHANNEL_DRG_RAMP_DOWN:
-+			return IIO_VAL_INT_64;
- 		default:
- 			return -EINVAL;
- 		}
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		return IIO_VAL_INT;
-+		if (chan->channel == AD9910_CHANNEL_PHY)
-+			return IIO_VAL_INT;
-+		return IIO_VAL_INT_PLUS_MICRO;
- 	case IIO_CHAN_INFO_SCALE:
- 		return IIO_VAL_INT_PLUS_NANO;
- 	case IIO_CHAN_INFO_OFFSET:
-@@ -1038,6 +1418,15 @@ static const char * const ad9910_channel_str[] = {
- 	[AD9910_CHAN_IDX_PARALLEL_FREQ] = "parallel_frequency",
- 	[AD9910_CHAN_IDX_PARALLEL_POLAR_AMP] = "parallel_polar_amplitude",
- 	[AD9910_CHAN_IDX_PARALLEL_POLAR_PHASE] = "parallel_polar_phase",
-+	[AD9910_CHAN_IDX_DRG_FREQ] = "drg_frequency",
-+	[AD9910_CHAN_IDX_DRG_PHASE] = "drg_phase",
-+	[AD9910_CHAN_IDX_DRG_AMP] = "drg_amplitude",
-+	[AD9910_CHAN_IDX_DRG_FREQ_RAMP_UP] = "drg_rising_frequency",
-+	[AD9910_CHAN_IDX_DRG_FREQ_RAMP_DOWN] = "drg_falling_frequency",
-+	[AD9910_CHAN_IDX_DRG_PHASE_RAMP_UP] = "drg_rising_phase",
-+	[AD9910_CHAN_IDX_DRG_PHASE_RAMP_DOWN] = "drg_falling_phase",
-+	[AD9910_CHAN_IDX_DRG_AMP_RAMP_UP] = "drg_rising_amplitude",
-+	[AD9910_CHAN_IDX_DRG_AMP_RAMP_DOWN] = "drg_falling_amplitude",
- };
- 
- static int ad9910_read_label(struct iio_dev *indio_dev,
-@@ -1173,6 +1562,14 @@ static int ad9910_setup(struct device *dev, struct ad9910_state *st,
- 	if (ret)
- 		return ret;
- 
-+	/* configure step rate with default values */
-+	ret = ad9910_reg32_write(st, AD9910_REG_DRG_RATE,
-+				 FIELD_PREP(AD9910_DRG_RATE_DEC_MSK, 1) |
-+				 FIELD_PREP(AD9910_DRG_RATE_INC_MSK, 1),
-+				 false);
-+	if (ret)
-+		return ret;
-+
- 	return ad9910_io_update(st);
- }
- 
+BTW, If you really want to properly support KASAN, you should integrate
+the check directly into memcpy_flushcache() via kasan_check_write(), =
+rather
+than treating it as a special case here.
 
--- 
-2.43.0
-
+>=20
+> Thanks.
+>=20
+>> +
+>>   /*
+>>   * The template fast path copies a preinitialized struct page image.
+>>   * Skip it when the page_ref_set tracepoint is enabled.
+>>   */
+>> - return !page_ref_tracepoint_active(page_ref_set);
+>> + if (page_ref_tracepoint_active(page_ref_set))
+>> + return false;
+>> +
+>> + return true;
+>>  }
+>>=20
+>>  static inline void zone_device_tail_page_init(struct page *page,
+>> @@ -1110,7 +1120,7 @@ static void =
+zone_device_page_init_from_template(struct page *page,
+>>   * to the destination page.
+>>   */
+>>   zone_device_page_update_template(template, pfn);
+>> - memcpy(page, template, sizeof(*page));
+>> + memcpy_nt(page, template, sizeof(*page));
+>>  }
+>>=20
+>>  /*
+>> @@ -1179,6 +1189,15 @@ static void __ref memmap_init_compound(struct =
+page *head,
+>>      &template);
+>>   }
+>>   }
+>> +
+>> + /*
+>> + * When the template path is enabled, order the preceding tail-page =
+copies
+>> + * before prep_compound_head() updates the overlapping compound =
+metadata
+>> + * in the first tail-page descriptors. If memcpy_nt() fell back to
+>> + * regular cached stores, memcpy_nt_drain() may be a no-op.
+>> + */
+>> + if (use_template)
+>> + memcpy_nt_drain();
+>>   prep_compound_head(head, order);
+>>  }
+>>=20
+>> @@ -1238,10 +1257,26 @@ void __ref memmap_init_zone_device(struct =
+zone *zone,
+>>   if (pfns_per_compound =3D=3D 1)
+>>   continue;
+>>=20
+>> + /*
+>> + * When the template path is enabled, order the preceding head-page =
+copy
+>> + * before memmap_init_compound(), which immediately updates =
+compound-head
+>> + * metadata. If memcpy_nt() fell back to regular cached stores,
+>> + * memcpy_nt_drain() may be a no-op.
+>> + */
+>> + if (use_template)
+>> + memcpy_nt_drain();
+>> +
+>>   memmap_init_compound(page, pfn, zone_idx, nid, pgmap,
+>>       compound_nr_pages(pfn, altmap, pgmap),
+>>       use_template);
+>>   }
+>> + /*
+>> + * Ensure any prior template copies are ordered before returning.
+>> + * On architectures where memcpy_nt() used regular cached stores,
+>> + * memcpy_nt_drain() may be a no-op.
+>> + */
+>> + if (use_template)
+>> + memcpy_nt_drain();
+>>=20
+>>   pageblock_migratetype_init_range(start_pfn, nr_pages, =
+MIGRATE_MOVABLE);
+>>=20
+>> --
+>> 2.20.1
+>>=20
+>=20
 
