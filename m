@@ -1,118 +1,86 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BB333B966
-	for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 22:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D5E37AA92
+	for <linux-hardening@vger.kernel.org>; Tue, 14 Jul 2026 02:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783980932; cv=none; b=Cb0FwA9ZMXbPutmD/Y+M8TNn9wtpqgTZaPje7IS8qTSZRjyeVQ0l6IRdIKxi49zT5TvbtBw29jkeu2/ulXX4mgcpS+s8ZNh9N3QjUiQ5C5JNbWA0FSMAi//8eQZ74mTPIo654AsaidIPZetS2cHCYJfPC0FA3QoL1iJc8B+R78I=
+	t=1783995973; cv=none; b=SdBMVGakl/aZs9KjwNwOm+Ww6Jy0arxY9oABJ5hxrPgaD6CPi/YJTU7v9C0P5UfN/267H+xF1uTiPCYn20nh0FYH2KuKadrzaZHm0rLTbJTW44WyTRyH5HSotP/Wf4HsEsCOB8Js9Or6bYoTxEHcpMw335hXQbjNrX3ohfINVHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783980932; c=relaxed/simple;
-	bh=EDMAekzapluN8qvqLwwRmxBiWYLSDHH4j1CTBMpYI8c=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=T4P9Nhp507pzG8SvmSYSmYtnkD8bf52bM+HnZR/QzTw3DLytiVNNoNv473pob1nya2cZdTzOyOLPaJ2kEJIm/Jo1pUlSRxiFVx5MBkd+PjEKP+VupnoN2RCVrUqfAJ8BwnZFsmTOADFuAnmBwObNouYu4Tzl6/Y+3KBv9jZJ5dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=JZkhv30v; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1783995973; c=relaxed/simple;
+	bh=lKUiJt3APooMI3IqhPxHAhOogKti/18rIw475RmB9uk=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=AcrMqeBfRwbUJmfoHva/sjyVslS5MtJuaTyHTRGuewAHbhIkN6Lr51AcRR0iRaaEuiGNlryB4ieRj8nqW+0lsAak5d4TQqOJUZh+UmILZP+hxAIttkqMecc1kRRtBePJWY7MRwBGJFsD69nCGZ3E5OMr+Qow7OKDDV3ZsNcvHkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LXxZo6ik; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="JZkhv30v"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51c1d487f2cso3593471cf.1
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jul 2026 15:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1783980930; x=1784585730; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :content-type:mime-version:message-id:date:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=6knqno33u0gKFnShVvAy1vOVQidX1D6I4tvt9i4jmuw=;
-        b=JZkhv30vhx+vGk+seNoIcsgrBx5LtWeViBMuOjT2j5C9vxlYY4imKsV2zSxNeZEq7c
-         wN4L+CzCOX8RHrf/s7zsbFG48UPBv0XXej9CHF0hKl4/dExkdtF54ADrSTNvDhjwVJ7e
-         FD+nP3btnYSyBbdK5tUmriuesadgiHx9nr5u5WE82b8Y9PllEAKH5SrtHln7LoeN4x4d
-         i6ZnJc10oSpTYBVZhbVrJr9TAdu5qNKA4jEtissEuB+c9AsgAhQWTMh7n01XZKoh9nxH
-         vcwpfqE+gAlADDOfSxQceSHQ8m8bkMTTKAfqbpfeUWSqgl9407GVUzmkcDcmzt/JU71s
-         xTPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783980930; x=1784585730;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :content-type:mime-version:message-id:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6knqno33u0gKFnShVvAy1vOVQidX1D6I4tvt9i4jmuw=;
-        b=Hij08NpPzU+RwuBMEMjGiRLwZl7H5VgKYe3L95S0KaP67Xk2kwKdWJ2KDNuGJLaV/0
-         9mdMkFBjT4ysXcqVQJv6mOlskKxregW14ulkRn8ksz5PIdcagkH2laRu0SdXUmfUHbs5
-         R7HQTe6/UME6jaSDI4b4+2Nt+Ju8ixaf81jjZoU9aGMljx7o1OgHSwUnJRHBfWhhuFac
-         BSyn/jsKDiJz7/FzevuGE0qMZHDVB4me+n8cfciVu6PIAQYIav4LaVH9sYPAtJvLApzA
-         qLPwPGxwPiuvA9G1VYEZ1/4MKqdnC1BiSTqUDa+M77pl1dMEOaJg3Z+VSC+/gvWCvOY8
-         iR2w==
-X-Gm-Message-State: AOJu0YzVcfF/9UEwpwMDqwMOr7PdOYAwsdznrrqqK4t3CBYpxWwZDR4q
-	HC7mA04mLc+mXK7oKi2CR59aFT6dSMgzSE3g2NC8PxTJ7xAUMqDqKg0zwSvs2RGR3g==
-X-Gm-Gg: AfdE7cntjKtCh+Gvu2feilf//aMDbGygG5GYLhFwuek5sjwMwnGZVWhoUA9Q3ewzIll
-	t5ppY4WEuxozdFn6xI4cQTZ0QtpP3Dl6xI6K/gpypnWGVQM5rg7jffTnpY4aLha3uV0uAz8m3on
-	E03sKOzykkdEgTIlhxWvNSv4nNcMEKLueEtxvNtf6aPx2iSxinyiHgwwVjy7ghfxhuFe62SCCdW
-	HNUY/OQwJSMosU3XJfmCZkuf+QdglYF5Yidy68TpYc3wOAp9vrD7ULwh0avMmE+Q8BShdMg4gOE
-	YV6aa4dZpQZNRV6XyYYWgdoNuGHoozKXWM16oE4m72qw++1oq8kOlWs3e3qKfYyYVAWcuYQT+Lp
-	m6AzEiIzhU+VkGtPEZ4HGXANyKhpLRSQ8eYUfZLIz8abV7ItHjV7sO5laDtym1+/R1F502X+o+F
-	1vC+GH9jSACUahgR77CdYtBSr3UgQx9zu1Wh+p5VfrY5pCk2ZrdpBrMRjg7g==
-X-Received: by 2002:a05:622a:2d5:b0:51a:8b64:69e0 with SMTP id d75a77b69052e-51cbf0dff29mr107693501cf.11.1783980930061;
-        Mon, 13 Jul 2026 15:15:30 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ffd50df5e2sm144312526d6.4.2026.07.13.15.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2026 15:15:29 -0700 (PDT)
-Date: Mon, 13 Jul 2026 18:15:28 -0400
-Message-ID: <df755e0282dab3b932d19aceab71b7d7@paul-moore.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LXxZo6ik"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1783995966;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W9fRwwQkeGf6F9r/P3GuaK/upsaVrmeQr74oaf89FWQ=;
+	b=LXxZo6ikKL5FZ163ux6l8K6IjX7k8IwSsHb7dHSp7a3/yd7Fr0eE9O9gdF+lz2OSQsBBD9
+	v01jqlH6V8pgCQRalgifB+MISHI0vVZBJLolZotqMWhWmPoQRhSc9FHiRG1gB2BjhQuNyQ
+	iiiVTG1vfrCW5//A3brF4RaLXSL5N1U=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20260713_1552/pstg-lib:20260713_1057/pstg-pwork:20260713_1552
-From: Paul Moore <paul@paul-moore.com>
-To: Ian Bridges <icb@fastmail.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] selinux: replace strlcat() with seq_buf in  selinux_ima_collect_state()
-References: <aj6hVjECikvYtnED@dev>
-In-Reply-To: <aj6hVjECikvYtnED@dev>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
+Subject: Re: [PATCH v6 1/8] mm: fix stale ZONE_DEVICE refcount comment
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20260709112520.24857-2-lizhe.67@bytedance.com>
+Date: Tue, 14 Jul 2026 10:25:26 +0800
+Cc: akpm@linux-foundation.org,
+ apopple@nvidia.com,
+ arnd@arndb.de,
+ balbirs@nvidia.com,
+ bp@alien8.de,
+ dave.hansen@linux.intel.com,
+ david@kernel.org,
+ kees@kernel.org,
+ mingo@redhat.com,
+ rppt@kernel.org,
+ tglx@kernel.org,
+ linux-arch@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org,
+ x86@kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <287F70E5-78F2-4C52-99A4-E72CA16C7635@linux.dev>
+References: <20260709112520.24857-1-lizhe.67@bytedance.com>
+ <20260709112520.24857-2-lizhe.67@bytedance.com>
+To: Li Zhe <lizhe.67@bytedance.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Jun 26, 2026 Ian Bridges <icb@fastmail.org> wrote:
-> 
-> In preparation for removing the deprecated strlcat() API[1], replace the
-> strscpy()/strlcat() chain in selinux_ima_collect_state() with a struct
-> seq_buf, which tracks the write position and remaining space internally.
-> 
-> Each field is written with seq_buf_printf() using a "=%d;" format, which
-> removes the open-coded "=1;"/"=0;" constants. The seven per-append
-> WARN_ON(rc >= buf_len) truncation checks are replaced by a single
-> seq_buf_has_overflowed() check after the string is built.
-> 
-> Link: https://github.com/KSPP/linux/issues/370 [1]
-> Signed-off-by: Ian Bridges <icb@fastmail.org>
-> Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> ---
-> Changed in v2: replace the v1 seq_buf_puts() pairs with seq_buf_printf()
-> using a "=%d;" format, which drops the open-coded "=1;"/"=0;" constants.
-> 
-> v1: https://lore.kernel.org/all/ajlN94VO7BYNUTAy@dev/
-> 
-> I didn't change the precomputation of the string size. An alternative,
-> which is used by other seq_buf callers (e.g. kernel/rcu/refscale.c,
-> mm/memcontrol.c), is to drop the precomputation and allocate an oversized
-> fixed buffer, relying on the seq_buf overflow check as a backstop. I'm
-> happy to rework the patch to adopt that alternative.
 
-Another option would be to split out the length calculation and only do
-it once at boot, e.g. call a selinux_ima_calculate_len() function from
-selinux_init(), and then reuse that length in
-selinux_ima_collect_state().
 
-What you're doing here is no worse than what we currently have so I'm
-going to go ahead and merge it into selinux/dev, but if you could split
-out the length calculation I think that would be worthwhile.  Thanks!
+> On Jul 9, 2026, at 19:25, Li Zhe <lizhe.67@bytedance.com> wrote:
+> 
+> The comment in __init_zone_device_page() still uses the old
+> MEMORY_TYPE_* names and implies that FS_DAX pages regain a
+> refcount of 1 in the free path. That no longer matches the code.
+> 
+> Update the comment to describe the current policy correctly:
+> MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free path,
+> while the remaining ZONE_DEVICE types start from 0 here and raise the
+> count again when the allocator or driver hands the page out.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+> Reviewed-by: Alistair Popple <apopple@nvidia.com>
 
->  security/selinux/ima.c | 40 +++++++++++++---------------------------
->  1 file changed, 13 insertions(+), 27 deletions(-)
+Reviewed-by: Muchun Song <muchun.song@linux.dev>
 
---
-paul-moore.com
+
