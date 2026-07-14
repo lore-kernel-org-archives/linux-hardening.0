@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B93737D128;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360EF3876D7;
 	Tue, 14 Jul 2026 11:02:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784026974; cv=none; b=DapqULYiKAP2GOoqb7XmntXsA4mwp69XIlMRFP1JkNQvxM1RKA/ezjyyP9qSnRnzkLDv6wKjikQ2WVdE/vWsRQo+emZoveyFXL5+B+ccktihVegPuc6UKorsRvM2yOWu5mEqzywiCkoG80q+Jr/F6mcOZmh9gLeQy8K0NtzaGvc=
+	t=1784026974; cv=none; b=HX8aJeaBhxdAQHgQA1oKl8fVPDylJd8UkEqUkDCvOqUAhxMgTvnJ/V2ycN4RlClpz/okMcT4SMN0tYCxZF3tBUwwdnBhxNwt44npUQ3w+Vfl6tDPSkDpzWdpUx+XO/BJNMl5bQ1j0lNt0wfmL7PCeVhVqVvG31jpu3GnM8Lb1xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784026974; c=relaxed/simple;
-	bh=NoLwX+07FoBt47zWLtitA0dnXwzqvaD8Io/4xTsV/7I=;
+	bh=kqbLfRqrQe70WtV9A1wHM2UX90jMCw35sdfgI1Op+Ww=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bzDK7glKBVfSX9LU7QJCQof399q//ronQu4qqlWuCknNCeSarJZWHIvcxf3py5S9hZGjT59mPMGFhJKRg7l9bryM5tG0vrvlsM6xl8EOCV5p73/PiX/EBqZ4FvF5vqvJKtulyLEjNiATa6o+MVRsKsBlw35VSRiihHWagHJQtw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azoHWWKS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=IOFZk+L+ZoSBg+VTz26aZeNaGV8kE0HOqEhNrtxRAc7yz4HYec3Q2u8wViUodVXDgez0rSSsRpMK5xcs+wdFmtCvbmgkN/h4pafGY4Ld5I0ITob+z64ybz2ygj6sC5fSkNaYOT7diwbQITVORGAdDNFDxWaG4ok/TEm9WacCTfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AO9QRmsj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azoHWWKS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7D344C2BCF7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AO9QRmsj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0CB06C4AF11;
 	Tue, 14 Jul 2026 11:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1784026973;
-	bh=NoLwX+07FoBt47zWLtitA0dnXwzqvaD8Io/4xTsV/7I=;
+	bh=kqbLfRqrQe70WtV9A1wHM2UX90jMCw35sdfgI1Op+Ww=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=azoHWWKSkuzNNnPIinoRQneaxOny4jVmYYjT7qPCKVBxdZkokqoChTJLtb712eU1V
-	 4VyR8NQOxAyunmcdYP41g6+T8lFvH1iSsH0Idz6VH4dE1RgWF5aMTjJO9NEtfD41Mz
-	 i+j2eJpH67OwPh+erjR0p8kV9PigViSgAuNBGxebHy9JWxoq49S/4YKJrMpK2McfTg
-	 c53K5KEylPUfxSO3O34qITmTI7u9ITb3p8AVh1ppcFYMNDIfLpDje9UJApyEUjxE+Q
-	 iZ+8A2lE9e5uRXhWTZXkWnjBavgtEYFtNSgEtdlEzHVs8/hOiH0bjYZP7fTFdqTbXA
-	 6GT6Z3wxEZG4w==
+	b=AO9QRmsjVCwM3esv6sjPyGPOi5SGfh9GHr4dorkpYuDH+6Mb4Yc64QK6ZgZ92c2Nn
+	 +uzOe5k+jY2dQuX4S9HXhQyQoKuXcWqpTc3VHvPIpyVfY60vhrVEP1I8t6zyno5q+i
+	 B0+x7dKw27CqcAUxLgMQpOlG8GRRYBDFodp13XcHpO16EEKQ6VhVnOql5+V68ielTW
+	 vEFZ86NtN+UpEPPk+llQnTWIcDqUSPJ1WiLyi5YVVMKWPqcbqH1ivMKvihyVGnFl1t
+	 ChB3rwaCltvYW+xRxkGbbe2LHoPNs3L3k4o6cj0/qSjTFVggycDax0CRU9EbanTvq5
+	 A6C7p2tGK/INA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6917AC43458;
-	Tue, 14 Jul 2026 11:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7C2C44507;
+	Tue, 14 Jul 2026 11:02:52 +0000 (UTC)
 From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Tue, 14 Jul 2026 12:02:54 +0100
-Subject: [PATCH v8 14/17] iio: frequency: ad9910: add output shift keying
- support
+Date: Tue, 14 Jul 2026 12:02:47 +0100
+Subject: [PATCH v8 07/17] iio: test: add kunit tests for channel prefix
+ naming generation
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260714-ad9910-iio-driver-v8-14-36939c3c07d2@analog.com>
+Message-Id: <20260714-ad9910-iio-driver-v8-7-36939c3c07d2@analog.com>
 References: <20260714-ad9910-iio-driver-v8-0-36939c3c07d2@analog.com>
 In-Reply-To: <20260714-ad9910-iio-driver-v8-0-36939c3c07d2@analog.com>
 To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
@@ -57,11 +57,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
  Rodrigo Alencar <rodrigo.alencar@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784026971; l=10549;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784026971; l=11782;
  i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=0cahCIiRPjcytxmPzv/LMTE5IfqfI+3pk8xx7/661Ww=;
- b=U+NjAACBhdKTftp/S8/+rqClPpv/zl2N+3rGSgTDWuBsbUm+Y+xGnzdgZkoZJwoA0HHnyI98k
- ZSV98GsoImNBuzlsjyMgOkdUmLnnT3dPg3BdAoytblznmizYJywviDL
+ bh=cLsar4g6ywEsFfBe5Wt3Znzrh2jrG/2Jj2nW3Bwx/Rs=;
+ b=pPGs4QuH28V1qiWC1C9rvBJyWe9S1IEDDX1ybZjrov+7GGsfEReEOZhoY6vNgo6MRYp7NHeN3
+ SiqHXjl2YIsA+JoAbcLL11z6xYXCVed11d3I7YLj9yZcWr/DBfngE0Q
 X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
  pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
 X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
@@ -71,333 +71,399 @@ Reply-To: rodrigo.alencar@analog.com
 
 From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Add OSK channel with amplitude envelope control capabilities:
-- OSK enable/disable via IIO_CHAN_INFO_ENABLE;
-- Amplitude ramp rate control via IIO_CHAN_INFO_SAMP_FREQ;
-- Amplitude scale factor readback via IIO_CHAN_INFO_RAW (ASF register);
-- Automatic OSK step size configurable through the raw_roc extended
-  attribute, which allows for selectable step sizes in raw units:
-	- 0: no step, means manual mode (NOT pin controlled)
-	- 1: I_FS / 2^14 step, automatic mode (pin controlled)
-	- 2: 2 I_FS / 2^14 step, automatic mode (pin controlled)
-	- 4: 4 I_FS / 2^14 step, automatic mode (pin controlled)
-	- 8: 8 I_FS / 2^14 step, automatic mode (pin controlled)
-	- 16383: I_FS step (max), manual mode (pin controlled)
+Add a KUnit test suite covering __iio_chan_prefix_emit(), the helper
+that builds IIO sysfs attribute name prefixes from an iio_chan_spec.
+The suite groups cases by the enum iio_shared_by mode it exercises:
 
-The ASF register is initialized with a default amplitude ramp rate during
-device setup to ensure valid readback.
+  - IIO_SHARED_BY_ALL: produces an empty prefix.
+  - IIO_SHARED_BY_DIR: emits direction only ("in" / "out").
+  - IIO_SHARED_BY_TYPE: emits "<dir>_<type>" and the differential
+    "<dir>_<type>-<type>" variant.
+  - IIO_SEPARATE: covers the full matrix of indexed, differential,
+    modified, output and extend_name combinations, plus the two
+    documented error paths (differential without indexed, differential
+    with modifier).
+
+A final case exercises the seq_buf overflow path by passing an
+undersized buffer and expects -EOVERFLOW.
+
+Because __iio_chan_prefix_emit() is static, the test translation unit
+is pulled into industrialio-core.c.
+
+Also, an entry is created under MAINTAINERS dedicated to tests for IIO
+core helpers.
 
 Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
- drivers/iio/frequency/ad9910.c | 191 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 191 insertions(+)
+ MAINTAINERS                                |   7 +
+ drivers/iio/industrialio-core.c            |   4 +
+ drivers/iio/test/Kconfig                   |  14 ++
+ drivers/iio/test/iio-test-channel-prefix.c | 299 +++++++++++++++++++++++++++++
+ 4 files changed, 324 insertions(+)
 
-diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
-index fef0e3b360a7..407a7d19f71f 100644
---- a/drivers/iio/frequency/ad9910.c
-+++ b/drivers/iio/frequency/ad9910.c
-@@ -252,6 +252,7 @@
-  * @AD9910_CHANNEL_DRG_RAMP_UP: DRG ramp up channel
-  * @AD9910_CHANNEL_DRG_RAMP_DOWN: DRG ramp down channel
-  * @AD9910_CHANNEL_RAM: RAM control output channel
-+ * @AD9910_CHANNEL_OSK: Output Shift Keying output channel
-  */
- enum ad9910_channel {
- 	AD9910_CHANNEL_PHY = 100,
-@@ -269,6 +270,7 @@ enum ad9910_channel {
- 	AD9910_CHANNEL_DRG_RAMP_UP = 131,
- 	AD9910_CHANNEL_DRG_RAMP_DOWN = 132,
- 	AD9910_CHANNEL_RAM = 140,
-+	AD9910_CHANNEL_OSK = 150,
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2b1ec46c5919..ffeee7c1ffa8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12634,6 +12634,13 @@ F:	include/dt-bindings/iio/
+ F:	include/linux/iio/
+ F:	tools/iio/
  
- /**
-@@ -319,12 +321,14 @@ enum {
- 	AD9910_CHAN_IDX_DRG_AMP_RAMP_UP,
- 	AD9910_CHAN_IDX_DRG_AMP_RAMP_DOWN,
- 	AD9910_CHAN_IDX_RAM,
-+	AD9910_CHAN_IDX_OSK,
- };
- 
- enum {
- 	AD9910_POWERDOWN,
- 	AD9910_DWELL_EN,
- 	AD9910_ROC,
-+	AD9910_ROC_AVAIL,
- };
- 
- struct ad9910_data {
-@@ -804,6 +808,125 @@ static ssize_t ad9910_drg_roc_write(struct iio_dev *indio_dev,
- 	return len;
- }
- 
-+static const u32 ad9910_osk_raw_step[] = {
-+	0,		/* no step: manual mode (NOT pin controlled) */
-+	1,		/* step size 1: automatic mode (pin controlled) */
-+	2,		/* step size 2: automatic mode (pin controlled) */
-+	4,		/* step size 4: automatic mode (pin controlled) */
-+	8,		/* step size 8: automatic mode (pin controlled) */
-+	GENMASK(13, 0),	/* max step: manual mode (pin controlled) */
-+};
++IIO CORE KUNIT TESTS
++M:	Rodrigo Alencar <rodrigo.alencar@analog.com>
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	drivers/iio/test/iio-test-channel-prefix.c
++F:	drivers/iio/test/iio-test-format.c
 +
-+static ssize_t ad9910_osk_attrs_read(struct iio_dev *indio_dev,
-+				     uintptr_t private,
-+				     const struct iio_chan_spec *chan,
-+				     char *buf)
+ IIO UNIT CONVERTER
+ M:	Peter Rosin <peda@lysator.liu.se>
+ L:	linux-iio@vger.kernel.org
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index b365922d8481..3909255212f5 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -2230,6 +2230,10 @@ EXPORT_SYMBOL_GPL(iio_device_get_current_mode);
+ subsys_initcall(iio_init);
+ module_exit(iio_exit);
+ 
++#if IS_ENABLED(CONFIG_IIO_CHANNEL_PREFIX_KUNIT_TEST)
++#include "test/iio-test-channel-prefix.c"
++#endif
++
+ MODULE_AUTHOR("Jonathan Cameron <jic23@kernel.org>");
+ MODULE_DESCRIPTION("Industrial I/O core");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/iio/test/Kconfig b/drivers/iio/test/Kconfig
+index 4fc17dd0dcd7..7d2c29cc583b 100644
+--- a/drivers/iio/test/Kconfig
++++ b/drivers/iio/test/Kconfig
+@@ -4,6 +4,20 @@
+ #
+ 
+ # Keep in alphabetical order
++config IIO_CHANNEL_PREFIX_KUNIT_TEST
++	tristate "Test IIO channel prefix" if !KUNIT_ALL_TESTS
++	depends on KUNIT && IIO
++	default KUNIT_ALL_TESTS
++	help
++	  Build unit tests for __iio_chan_prefix_emit(), the helper that
++	  builds IIO sysfs attribute name prefixes from an iio_chan_spec.
++	  The tests are compiled into the IIO core module.
++
++	  For more information on KUnit and unit tests in general, please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
++
+ config IIO_GTS_KUNIT_TEST
+ 	tristate "Test IIO gain-time-scale helpers" if !KUNIT_ALL_TESTS
+ 	depends on KUNIT
+diff --git a/drivers/iio/test/iio-test-channel-prefix.c b/drivers/iio/test/iio-test-channel-prefix.c
+new file mode 100644
+index 000000000000..4326d9bc466d
+--- /dev/null
++++ b/drivers/iio/test/iio-test-channel-prefix.c
+@@ -0,0 +1,299 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Unit tests for IIO channel prefix generation.
++ */
++
++#include <kunit/test.h>
++
++#include <linux/iio/iio.h>
++#include <linux/limits.h>
++#include <linux/string.h>
++
++#define PREFIX_BUF_SIZE		(NAME_MAX + 1)
++
++#define EXPECT_PREFIX(_test, _buf, _ret, _expected) do {			\
++		struct kunit *__test = (_test);					\
++		const char *__expected = (_expected);				\
++										\
++		KUNIT_EXPECT_EQ(__test, (_ret), (ssize_t)strlen(__expected));	\
++		KUNIT_EXPECT_STREQ(__test, (_buf), __expected);			\
++	} while (0)
++
++static char *iio_test_prefix_alloc(struct kunit *test)
 +{
-+	struct ad9910_state *st = iio_priv(indio_dev);
-+	bool auto_en, pinctrl_en;
-+	u32 rate, step;
-+	u64 roc64;
++	char *buf = kunit_kzalloc(test, PREFIX_BUF_SIZE, GFP_KERNEL);
 +
-+	guard(mutex)(&st->lock);
-+
-+	rate = FIELD_GET(AD9910_ASF_RAMP_RATE_MSK, st->reg[AD9910_REG_ASF].val32);
-+	if (!rate)
-+		return -ERANGE;
-+
-+	switch (private) {
-+	case AD9910_ROC:
-+		auto_en = FIELD_GET(AD9910_CFR1_SELECT_AUTO_OSK_MSK,
-+				    st->reg[AD9910_REG_CFR1].val32);
-+		pinctrl_en = FIELD_GET(AD9910_CFR1_OSK_MANUAL_EXT_CTL_MSK,
-+				       st->reg[AD9910_REG_CFR1].val32);
-+		if (auto_en) {
-+			step = FIELD_GET(AD9910_ASF_STEP_SIZE_MSK,
-+					 st->reg[AD9910_REG_ASF].val32);
-+			step = ad9910_osk_raw_step[step + 1];
-+		} else if (pinctrl_en) {
-+			step = ad9910_osk_raw_step[ARRAY_SIZE(ad9910_osk_raw_step) - 1];
-+		} else {
-+			step = ad9910_osk_raw_step[0];
-+		}
-+
-+		roc64 = div_u64((u64)step * st->data.sysclk_freq_hz, 4 * rate);
-+		return sysfs_emit(buf, "%llu\n", roc64);
-+	case AD9910_ROC_AVAIL: {
-+		ssize_t len = 0;
-+
-+		for (unsigned int i = 0; i < ARRAY_SIZE(ad9910_osk_raw_step); i++) {
-+			roc64 = div_u64((u64)ad9910_osk_raw_step[i] * st->data.sysclk_freq_hz,
-+					4 * rate);
-+			len += sysfs_emit_at(buf, len, "%llu ", roc64);
-+		}
-+
-+		buf[len - 1] = '\n'; /* replace last space with a newline */
-+		return len;
-+	}
-+	default:
-+		return -EINVAL;
-+	}
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf);
++	return buf;
 +}
 +
-+static ssize_t ad9910_osk_attrs_write(struct iio_dev *indio_dev,
-+				      uintptr_t private,
-+				      const struct iio_chan_spec *chan,
-+				      const char *buf, size_t len)
++static void iio_test_prefix_shared_by_all(struct kunit *test)
 +{
-+	struct ad9910_state *st = iio_priv(indio_dev);
-+	u32 idx, reg_val, rate;
-+	u64 step;
-+	int ret;
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++	};
++	const struct iio_chan_spec chan_noisy = {
++		.type = IIO_ACCEL,
++		.output = 1,
++		.indexed = 1,
++		.modified = 1,
++		.channel = 7,
++		.channel2 = IIO_MOD_Z,
++		.extend_name = "supply",
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
 +
-+	ret = kstrtou64(buf, 10, &step);
-+	if (ret)
-+		return ret;
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SHARED_BY_ALL,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "");
 +
-+	guard(mutex)(&st->lock);
-+
-+	rate = FIELD_GET(AD9910_ASF_RAMP_RATE_MSK, st->reg[AD9910_REG_ASF].val32);
-+	if (!rate)
-+		return -ERANGE;
-+
-+	switch (private) {
-+	case AD9910_ROC:
-+		step = ad9910_rational_scale(step, 4 * rate,
-+					     st->data.sysclk_freq_hz);
-+		step = min(step, AD9910_ASF_MAX);
-+		idx = find_closest(step, ad9910_osk_raw_step,
-+				   ARRAY_SIZE(ad9910_osk_raw_step));
-+		if (idx == ARRAY_SIZE(ad9910_osk_raw_step) - 1) {
-+			/* manual mode: pin-controlled */
-+			reg_val = AD9910_CFR1_OSK_MANUAL_EXT_CTL_MSK;
-+		} else if (idx == 0) {
-+			/* manual mode, NOT pin-controlled */
-+			reg_val = 0;
-+		} else {
-+			/* auto mode: pin-controlled */
-+			reg_val = FIELD_PREP(AD9910_ASF_STEP_SIZE_MSK, idx - 1);
-+			ret = ad9910_reg32_update(st, AD9910_REG_ASF,
-+						  AD9910_ASF_STEP_SIZE_MSK,
-+						  reg_val, false);
-+			if (ret)
-+				return ret;
-+
-+			reg_val = AD9910_CFR1_SELECT_AUTO_OSK_MSK;
-+		}
-+
-+		ret = ad9910_reg32_update(st, AD9910_REG_CFR1,
-+					  AD9910_CFR1_SELECT_AUTO_OSK_MSK |
-+					  AD9910_CFR1_OSK_MANUAL_EXT_CTL_MSK,
-+					  reg_val, true);
-+		if (ret)
-+			return ret;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return len;
++	ret = __iio_chan_prefix_emit(NULL, &chan_noisy, IIO_SHARED_BY_ALL,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "");
 +}
 +
- static const struct iio_chan_spec_ext_info ad9910_phy_ext_info[] = {
- 	{
- 		.name = "powerdown",
-@@ -833,6 +956,23 @@ static const struct iio_chan_spec_ext_info ad9910_drg_ramp_ext_info[] = {
- 	{ }
- };
- 
-+static const struct iio_chan_spec_ext_info ad9910_osk_ext_info[] = {
-+	{
-+		.name = "raw_roc",
-+		.read = ad9910_osk_attrs_read,
-+		.write = ad9910_osk_attrs_write,
-+		.private = AD9910_ROC,
-+		.shared = IIO_SEPARATE,
-+	},
-+	{
-+		.name = "raw_roc_available",
-+		.read = ad9910_osk_attrs_read,
-+		.private = AD9910_ROC_AVAIL,
-+		.shared = IIO_SEPARATE,
-+	},
++static void iio_test_prefix_shared_by_dir(struct kunit *test)
++{
++	const struct iio_chan_spec chan_in = {
++		.type = IIO_VOLTAGE,
++		.output = 0,
++	};
++	const struct iio_chan_spec chan_out = {
++		.type = IIO_VOLTAGE,
++		.output = 1,
++	};
++	const struct iio_chan_spec chan_in_noisy = {
++		.type = IIO_ACCEL,
++		.indexed = 1,
++		.modified = 1,
++		.channel = 5,
++		.channel2 = IIO_MOD_Y,
++		.extend_name = "supply",
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_in, IIO_SHARED_BY_DIR,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in");
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_out, IIO_SHARED_BY_DIR,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "out");
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_in_noisy, IIO_SHARED_BY_DIR,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in");
++}
++
++static void iio_test_prefix_shared_by_type(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++	};
++	const struct iio_chan_spec chan_diff = {
++		.type = IIO_VOLTAGE,
++		.differential = 1,
++	};
++	const struct iio_chan_spec chan_noisy = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.modified = 1,
++		.channel = 4,
++		.channel2 = IIO_MOD_X,
++		.extend_name = "supply",
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SHARED_BY_TYPE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage");
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_diff, IIO_SHARED_BY_TYPE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage-voltage");
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_noisy, IIO_SHARED_BY_TYPE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage");
++}
++
++static void iio_test_prefix_separate_simple(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_TEMP,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_temp");
++}
++
++static void iio_test_prefix_separate_indexed(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.channel = 3,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage3");
++}
++
++static void iio_test_prefix_separate_indexed_diff(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.differential = 1,
++		.channel = 0,
++		.channel2 = 1,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage0-voltage1");
++}
++
++static void iio_test_prefix_separate_modified(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_ACCEL,
++		.modified = 1,
++		.channel2 = IIO_MOD_X,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_accel_x");
++}
++
++static void iio_test_prefix_separate_indexed_modified(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_ACCEL,
++		.indexed = 1,
++		.modified = 1,
++		.channel = 2,
++		.channel2 = IIO_MOD_Y,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_accel2_y");
++}
++
++static void iio_test_prefix_separate_extend_name(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.channel = 2,
++		.extend_name = "supply",
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage2_supply");
++}
++
++static void iio_test_prefix_output_separate(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.output = 1,
++		.indexed = 1,
++		.channel = 0,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "out_voltage0");
++}
++
++static void iio_test_prefix_diff_unindexed_fails(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.differential = 1,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
++}
++
++static void iio_test_prefix_diff_modified_fails(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.differential = 1,
++		.modified = 1,
++		.channel = 0,
++		.channel2 = 1,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
++}
++
++static void iio_test_prefix_overflow(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++	};
++	char small[4];
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SHARED_BY_TYPE,
++				     small, sizeof(small));
++	KUNIT_EXPECT_EQ(test, ret, -EOVERFLOW);
++}
++
++static struct kunit_case iio_chan_prefix_test_cases[] = {
++	KUNIT_CASE(iio_test_prefix_shared_by_all),
++	KUNIT_CASE(iio_test_prefix_shared_by_dir),
++	KUNIT_CASE(iio_test_prefix_shared_by_type),
++	KUNIT_CASE(iio_test_prefix_separate_simple),
++	KUNIT_CASE(iio_test_prefix_separate_indexed),
++	KUNIT_CASE(iio_test_prefix_separate_indexed_diff),
++	KUNIT_CASE(iio_test_prefix_separate_modified),
++	KUNIT_CASE(iio_test_prefix_separate_indexed_modified),
++	KUNIT_CASE(iio_test_prefix_separate_extend_name),
++	KUNIT_CASE(iio_test_prefix_output_separate),
++	KUNIT_CASE(iio_test_prefix_diff_unindexed_fails),
++	KUNIT_CASE(iio_test_prefix_diff_modified_fails),
++	KUNIT_CASE(iio_test_prefix_overflow),
 +	{ }
 +};
 +
- #define AD9910_PROFILE_CHAN(idx) {				\
- 	.type = IIO_ALTCURRENT,					\
- 	.indexed = 1,						\
-@@ -1020,6 +1160,18 @@ static const struct iio_chan_spec ad9910_channels[] = {
- 				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
- 		.parent = &ad9910_channels[AD9910_CHAN_IDX_PHY],
- 	},
-+	[AD9910_CHAN_IDX_OSK] = {
-+		.type = IIO_ALTCURRENT,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_OSK,
-+		.address = AD9910_CHAN_IDX_OSK,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE) |
-+				      BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.ext_info = ad9910_osk_ext_info,
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_PHY],
-+	},
- };
- 
- static int ad9910_read_raw(struct iio_dev *indio_dev,
-@@ -1056,6 +1208,10 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 			*val = FIELD_GET(AD9910_CFR1_RAM_ENABLE_MSK,
- 					 st->reg[AD9910_REG_CFR1].val32);
- 			break;
-+		case AD9910_CHANNEL_OSK:
-+			*val = FIELD_GET(AD9910_CFR1_OSK_ENABLE_MSK,
-+					 st->reg[AD9910_REG_CFR1].val32);
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1111,6 +1267,10 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 					  st->reg[AD9910_REG_DRG_LIMIT].val64);
- 			iio_val_s64_decompose(tmp64, val, val2);
- 			return IIO_VAL_INT_64;
-+		case AD9910_CHANNEL_OSK:
-+			*val = FIELD_GET(AD9910_ASF_SCALE_FACTOR_MSK,
-+					 st->reg[AD9910_REG_ASF].val32);
-+			return IIO_VAL_INT;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1131,6 +1291,10 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 			tmp32 = FIELD_GET(AD9910_PROFILE_RAM_STEP_RATE_MSK,
- 					  ad9910_ram_profile_val(st));
- 			break;
-+		case AD9910_CHANNEL_OSK:
-+			tmp32 = FIELD_GET(AD9910_ASF_RAMP_RATE_MSK,
-+					  st->reg[AD9910_REG_ASF].val32);
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1292,6 +1456,11 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 			return ad9910_reg32_update(st, AD9910_REG_CFR1,
- 						   AD9910_CFR1_RAM_ENABLE_MSK,
- 						   tmp32, true);
-+		case AD9910_CHANNEL_OSK:
-+			tmp32 = FIELD_PREP(AD9910_CFR1_OSK_ENABLE_MSK, !!val);
-+			return ad9910_reg32_update(st, AD9910_REG_CFR1,
-+						   AD9910_CFR1_OSK_ENABLE_MSK,
-+						   tmp32, true);
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1392,6 +1561,15 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 						   AD9910_DRG_LIMIT_LOWER_MSK,
- 						   tmp64, true);
- 		}
-+		case AD9910_CHANNEL_OSK:
-+			if (val < 0)
-+				return -EINVAL;
++static struct kunit_suite iio_channel_prefix_test_suite = {
++	.name = "iio-channel-prefix",
++	.test_cases = iio_chan_prefix_test_cases,
++};
 +
-+			tmp32 = min_t(u32, val, AD9910_ASF_MAX);
-+			tmp32 = FIELD_PREP(AD9910_ASF_SCALE_FACTOR_MSK, tmp32);
-+			return ad9910_reg32_update(st, AD9910_REG_ASF,
-+						   AD9910_ASF_SCALE_FACTOR_MSK,
-+						   tmp32, true);
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1431,6 +1609,11 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 			return ad9910_reg64_update(st, AD9910_REG_PROFILE(st->profile),
- 						   AD9910_PROFILE_RAM_STEP_RATE_MSK,
- 						   tmp64, true);
-+		case AD9910_CHANNEL_OSK:
-+			return ad9910_reg32_update(st, AD9910_REG_ASF,
-+						   AD9910_ASF_RAMP_RATE_MSK,
-+						   FIELD_PREP(AD9910_ASF_RAMP_RATE_MSK, tmp32),
-+						   true);
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1507,6 +1690,7 @@ static int ad9910_write_raw_get_fmt(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_RAW:
- 		switch (chan->channel) {
- 		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
-+		case AD9910_CHANNEL_OSK:
- 			return IIO_VAL_INT;
- 		case AD9910_CHANNEL_DRG_RAMP_UP:
- 		case AD9910_CHANNEL_DRG_RAMP_DOWN:
-@@ -1598,6 +1782,7 @@ static const char * const ad9910_channel_str[] = {
- 	[AD9910_CHAN_IDX_DRG_AMP_RAMP_UP] = "drg_rising_amplitude",
- 	[AD9910_CHAN_IDX_DRG_AMP_RAMP_DOWN] = "drg_falling_amplitude",
- 	[AD9910_CHAN_IDX_RAM] = "ram",
-+	[AD9910_CHAN_IDX_OSK] = "osk",
- };
- 
- static int ad9910_read_label(struct iio_dev *indio_dev,
-@@ -1860,6 +2045,12 @@ static int ad9910_setup(struct device *dev, struct ad9910_state *st,
- 		return ret;
- 
- 	/* configure step rate with default values */
-+	ret = ad9910_reg32_write(st, AD9910_REG_ASF,
-+				 FIELD_PREP(AD9910_ASF_RAMP_RATE_MSK, 1),
-+				 false);
-+	if (ret)
-+		return ret;
-+
- 	ret = ad9910_reg32_write(st, AD9910_REG_DRG_RATE,
- 				 FIELD_PREP(AD9910_DRG_RATE_DEC_MSK, 1) |
- 				 FIELD_PREP(AD9910_DRG_RATE_INC_MSK, 1),
++kunit_test_suite(iio_channel_prefix_test_suite);
 
 -- 
 2.43.0
