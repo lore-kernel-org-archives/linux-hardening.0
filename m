@@ -1,163 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0034A1390
-	for <linux-hardening@vger.kernel.org>; Tue, 14 Jul 2026 15:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031D344C64E;
+	Tue, 14 Jul 2026 19:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784042376; cv=none; b=KQT4hwRTNCgaurqK6oAfnWo09OjGMWrjA0fH8z4eiicw84+ZAIGT3voilx6h3YIL3fMBqduik2uCacxE2s0RJZFJ94v8l/E+e/oLoNsSbABWFDLgiHDA9BH+2403XC12sktHO5LisXW7vBmGAPjP2GawImw8U78kCDqoZEOkus4=
+	t=1784057765; cv=none; b=IXhxQADVQmU4RUKqMCcl1e4eIokzIDfAlRpzk6ekzhTZLY9cNEbx078mM9qiiNyHULXn5QwawGKBH3xmuENFZ5Q0y2u6+tVM66b4EDAcAwxg07n+r5tR3prVntTaz3DM9xbzaOolW18urcgzEr6GzDfXHNRoHIuwI8Cuyp9Qlek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784042376; c=relaxed/simple;
-	bh=Xp9s8tZJA7nkiD5RUoHmjJ+DfJJCbZoJMCwWPFY+PwE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=kLCGxA5AgaA6r8XcJE8IIyFSMlYvoPTQdC/TNQ6jqZfRwQB3Tpgv9pWiMcE/qv96unWcRVRWy5Z8C7TEiLkv6WDrnh2VbhoIDh3ZLWJY+qwIbsoMFn+S/Qhp0eHt/NfAi0jWpK6WYdg4Fsfzd3VdFqCcDYRNgcg64YI6/XhrnDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PYUniIUo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784057765; c=relaxed/simple;
+	bh=V+dxP2MKZFyQvonniRH08CNvUHJHMDcdU9VEg0Osq7c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ubbIQulT4BWoEM5ayRiz+W/9gRQZtRv9VBOkKd53RQl5Q/wRfAEvqK4KTm0e7dsH1sK3mKhDHgDgbEIXGn78YXW1vUSu5mL5rMFgwg1S25C59Uz61mUmBhSvRjRIscQ5Uzx6T3p9Qq5sAaYWRhExWJ2g3tDZBDOpploXUPlXKY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sd4S+UXm; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PYUniIUo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784042374;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=blE1l/fSbP/6balVpCO8VC1IyJ+7b4JfQ59eHK8tgiI=;
-	b=PYUniIUo0cyBSmjSuKjxzUOWXI7RsLsv0L5ImOfDA00JpTnmsVD1aJazR8yylVp0CYdL8s
-	nkPg7OkfGjhIjrU22SUWksJWxZnhopMoBpe2RyWrzSzN76tHsSDmab6lGEgg7vsLdSP1Rn
-	TYw8b1A2BVNraqQCJU7tMvvSuLveXhM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-J1pnN-jMN0m2bFzmnWpDTw-1; Tue,
- 14 Jul 2026 11:18:23 -0400
-X-MC-Unique: J1pnN-jMN0m2bFzmnWpDTw-1
-X-Mimecast-MFC-AGG-ID: J1pnN-jMN0m2bFzmnWpDTw_1784042301
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 99E451802669;
-	Tue, 14 Jul 2026 15:18:21 +0000 (UTC)
-Received: from jtaubepe-thinkpadx1carbongen12.ibmlowe.csb (unknown [10.17.17.152])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9078D195604B;
-	Tue, 14 Jul 2026 15:18:19 +0000 (UTC)
-From: Jesse Taube <jtaubepe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	John Meneghini <jmeneghi@redhat.com>,
-	Chris Leech <cleech@redhat.com>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Jesse Taube <jtaubepe@redhat.com>
-Subject: [RFC PATCH] overflow: Add DECLARE_SIZED_FLEX() helper family
-Date: Tue, 14 Jul 2026 11:18:18 -0400
-Message-ID: <20260714151818.538869-1-jtaubepe@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sd4S+UXm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784057763; x=1815593763;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=V+dxP2MKZFyQvonniRH08CNvUHJHMDcdU9VEg0Osq7c=;
+  b=Sd4S+UXmho9poHIt2DIsYhjcVpE22LtDCCk21BjMF6Ch0ZmVmueMF3Hy
+   +/wA5g2uyUeOdhgyQ+RCxlEKy70wPwnQ8oITg9NihzA3okdrB3w9PMmDJ
+   ypW+pWBEo40rua5IyNeLfLzrmoLuBIEX0BKPSTPR6YAQG+PwesBRA5gfx
+   VNa92/JUO14yUk3nCxR4R6ISb3DbP++hCPBOVFFpjnT5Xtu0PaZKxNRTl
+   y5vPUAMU+97xYpPb6RjGRJPPgYOs31Lk2nQqRQeoPxIUcl0Bg4tqRJQDe
+   TLNNDgaDyerBokrxsnLg/M4o4FE16LDHQZcnQnshS1igzL8neeKAyPeHO
+   Q==;
+X-CSE-ConnectionGUID: +MLuJnsgRD6+aoyU6dv4Rw==
+X-CSE-MsgGUID: +JnKP8knSSWh9yolDgsiJA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="95043225"
+X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
+   d="scan'208";a="95043225"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 12:36:02 -0700
+X-CSE-ConnectionGUID: R1W0fAQuSEeFyP9xAdNPTg==
+X-CSE-MsgGUID: tRewb2NPTaepYM4u8roZPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
+   d="scan'208";a="251984195"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa010.fm.intel.com with ESMTP; 14 Jul 2026 12:36:01 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 0CE8995; Tue, 14 Jul 2026 21:36:00 +0200 (CEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>
+Subject: [PATCH v2 1/1] string: Add missing Return sections
+Date: Tue, 14 Jul 2026 21:34:56 +0200
+Message-ID: <20260714193557.868356-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: kzxNpuKVCZxEqCylWyu0Bp7w-mTSl97TOQZEsft097w_1784042301
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Add new DECLARE_SIZED_FLEX() helper to set the default size of a
-flexible-array member. The code is identical to the declaration in
-__DEFINE_FLEX() which has also been changed to use DECLARE_SIZED_FLEX().
+The kernel-doc unfortunately can't catch some corner cases. Hence
+the commit 645b9ad2dc6b ("string: Add missing kernel-doc return descriptions")
+missed that. On top there is no consistency in use of Return/Returns.
+Address both problems here. Choose Returns over Return as it will be
+less invasive change.
 
-Add DECLARE_COUNTED_FLEX_ARRAY() helper which is a variant of
-DECLARE_FLEX_ARRAY() with a counted-by attribute.
-
-Also add default sized variants of
-DECLARE_FLEX_ARRAY(), DECLARE_SIZED_FLEX(), and
-DECLARE_COUNTED_FLEX_ARRAY(), DECLARE_COUNTED_SIZED_FLEX().
-
-Signed-off-by: Jesse Taube <jtaubepe@redhat.com>
+Fixes: 645b9ad2dc6b ("string: Add missing kernel-doc return descriptions")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/overflow.h | 58 +++++++++++++++++++++++++++++++++++++---
- 1 file changed, 54 insertions(+), 4 deletions(-)
+v2: fixed reference to a parameter in __sysfs_match_string()
+ include/linux/string.h | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index a8cb6319b4fb..a3384cae49e5 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -464,6 +464,59 @@ static __always_inline size_t __must_check size_sub(size_t minuend, size_t subtr
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 5702daca4326..75bfc194ad20 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -25,7 +25,7 @@ extern void *memdup_user_nul(const void __user *, size_t);
+  * @n: number of array members to copy
+  * @size: size of one array member
+  *
+- * Return: an ERR_PTR() on failure. Result is physically
++ * Returns: an ERR_PTR() on failure. Result is physically
+  * contiguous, to be freed by kfree().
   */
- #define struct_offset(p, member) (offsetof(typeof(*(p)), member))
+ static inline __realloc_size(2, 3)
+@@ -45,7 +45,7 @@ void *memdup_array_user(const void __user *src, size_t n, size_t size)
+  * @n: number of array members to copy
+  * @size: size of one array member
+  *
+- * Return: an ERR_PTR() on failure. Result may be not
++ * Returns: an ERR_PTR() on failure. Result may be not
+  * physically contiguous. Use kvfree() to free.
+  */
+ static inline __realloc_size(2, 3)
+@@ -103,7 +103,8 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+  * doesn't unnecessarily force the tail of the destination buffer to be
+  * zero padded. If padding is desired please use strscpy_pad().
+  *
+- * Returns the number of characters copied in @dst (not including the
++ * Returns:
++ * The number of characters copied in @dst (not including the
+  * trailing %NUL) or -E2BIG if @size is 0 or the copy from @src was
+  * truncated.
+  */
+@@ -286,7 +287,7 @@ char *strreplace(char *str, char old, char new);
+  * @s: The memory area
+  * @n: The size of the area
+  *
+- * Return: True if the area of memory is all 0's.
++ * Returns: True if the area of memory is all 0's.
+  */
+ static inline bool mem_is_zero(const void *s, size_t n)
+ __sysfs_match_string{
+@@ -328,7 +329,11 @@ int __sysfs_match_string(const char * const *array, size_t n, const char *s);
+  * @_a: array of strings
+  * @_s: string to match with
+  *
+- * Helper for __sysfs_match_string(). Calculates the size of @a automatically.
++ * Helper for __sysfs_match_string(). Calculates the size of @_a automatically.
++ *
++ * Returns:
++ * The index of the matching string in the array or negative error code
++ * otherwise.
+  */
+ #define sysfs_match_string(_a, _s) __sysfs_match_string(_a, ARRAY_SIZE(_a), _s)
  
-+/**
-+ * __DECLARE_SIZED_FLEX() - helper macro for DECLARE_SIZED_FLEX() family.
-+ * Allows for easily declaring a structure with a trailing flexible array member
-+ * to have a specific size.
-+ *
-+ * @obj: object to be given a specific size
-+ * @name: Name of the array member.
-+ * @count: Number of elements in the array; must be compile-time const.
-+ */
-+#define __DECLARE_SIZED_FLEX(obj, name, count)	\
-+	_Static_assert(__builtin_constant_p(count),		\
-+		       "default sized flex array members require compile-time const count");	\
-+	union {							\
-+		u8 bytes[struct_size_t(obj, name, count)];	\
-+		obj;						\
-+	}
-+
-+/**
-+ * DECLARE_COUNTED_FLEX_ARRAY() - Declare a counted flexible array
-+ *
-+ * @type: Type name.
-+ * @name: Name of the array member.
-+ * @counter: Name of the __counted_by member.
-+ */
-+#define DECLARE_COUNTED_FLEX_ARRAY(type, name, counter)\
-+	struct { \
-+		size_t counter; \
-+		type name[] __counted_by(counter); \
-+	}
-+
-+/**
-+ * DECLARE_SIZED_FLEX() - Declare a structure with a trailing flexible array
-+ * member with a default size.
-+ *
-+ * @type: Type name.
-+ * @name: Name of the array member.
-+ * @count: Number of elements in the array; must be compile-time const.
-+ */
-+#define DECLARE_SIZED_FLEX(type, name, count)	\
-+	__DECLARE_SIZED_FLEX(type name[], name, count)
-+
-+/**
-+ * DECLARE_COUNTED_SIZED_FLEX() - Declare a structure with a trailing flexible
-+ * array member counted by count, with a default size.
-+ *
-+ * @type: Type name.
-+ * @name: Name of the array member.
-+ * @counter: Name of the __counted_by member.
-+ * @count: Number of elements in the array; must be compile-time const.
-+ */
-+#define DECLARE_COUNTED_SIZED_FLEX(type, name, counter, count)	\
-+	__DECLARE_SIZED_FLEX(DECLARE_COUNTED_FLEX_ARRAY(type, name, counter), name, count)
-+
- /**
-  * __DEFINE_FLEX() - helper macro for DEFINE_FLEX() family.
-  * Enables caller macro to pass arbitrary trailing expressions
-@@ -477,10 +530,7 @@ static __always_inline size_t __must_check size_sub(size_t minuend, size_t subtr
- #define __DEFINE_FLEX(type, name, member, count, trailer...)			\
- 	_Static_assert(__builtin_constant_p(count),				\
- 		       "onstack flex array members require compile-time const count"); \
--	union {									\
--		u8 bytes[struct_size_t(type, member, count)];			\
--		type obj;							\
--	} name##_u trailer;							\
-+	__DECLARE_SIZED_FLEX(type obj, member, count) name##_u trailer;		\
- 	type *name = (type *)&name##_u
- 
- /**
 -- 
-2.54.0
+2.50.1
 
