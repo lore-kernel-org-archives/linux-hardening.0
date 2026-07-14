@@ -1,148 +1,169 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0DE41DDF9;
-	Tue, 14 Jul 2026 19:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFA742BE95
+	for <linux-hardening@vger.kernel.org>; Tue, 14 Jul 2026 23:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784057803; cv=none; b=HxkhPSGqVdqW5EqGTqum8RjWhpCCdf2Hm7V/07FAxWYRAQhpjSwQQx4pkqk9CH/5AYPndWZresYyykB13sKVutHrlPQKQYQ/ro7QiYmvacdu90C7H5Bpryv3UzQ27yPteSSnLXibbvoy3xhqSiSRe8ASxI7h/Ol+Nq5XQdmrPGM=
+	t=1784073253; cv=none; b=AHdv4UsGJ7cz/eis9L2ZPFqMZWeeB/Fbdn0mudmXd5cfCqpySxhiqEjrTr1QIBTyRAzfh0tsxZvllruyXweYCtFtvPcdnKsQaiU/sLJuq85AVWZfYKSSt4CduvchzlEcJaNZNOqxKOnBQKI0PJFuql/A19v4CVAQtam+EQMBHnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784057803; c=relaxed/simple;
-	bh=/m3Qkuf6/ar3+WA6/bC0iH3GQf1MX3/OjuI6168hCgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=laBbzI98eB3aDXhaj2jWHbrVy5z7Y9op05H2/r9/dyvH97muTMjzHltJg0TBWWdzYt+FcbBLwWeRsjtWvy5XmCMjvWoVkVMd/oMG7i8uawP3bLWTCEBayxr8P8BlnOie66+MsRvVqZvGbAk83sC3w7sPwEuPo6Boa/yU2RPph08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=k4wrp//1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=m+J+64c/; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
+	s=arc-20240116; t=1784073253; c=relaxed/simple;
+	bh=AuZlmqiR8+NPISpjMyL03Y3+6R9Uu6pS6O/DvI2I34E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N1oluci1WEwVbGbs8LmGx/9l0Ycyv2nLN61AH1RWJNjPdV/15KNeMk9AnP5wZrxB7dwDW+xnXWbvutJ2qZiGL/EyqiYtsBe8lWhzmKZkEbWCAUU6wnw7AhsPElmLeppQWkwqkVUoqpOt3KEraMTFCXPuPjamwQ12ejcNc20snzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=tlhg3TXO; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="k4wrp//1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m+J+64c/"
-Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
-	by mailfout.stl.internal (Postfix) with ESMTP id C9AD91D00025;
-	Tue, 14 Jul 2026 15:36:40 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Tue, 14 Jul 2026 15:36:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
-	 t=1784057800; x=1784144200; bh=bBepFvY1LKlSxlgL4l06nBRvhcWtf9at
-	VR4FTFTQN/s=; b=k4wrp//1Hq1CGzDI2Re45jcIxItk/kyClRcbmdhZyqL/tPPV
-	O2UiQ0WkV+K0+017+4bZAQ2I4evnybgV/0WBtcQk56m4jE7xXztaKQUItXS3sMJA
-	4ltmx1oOslBByUMRfLB4aR/LufKOgMm4I4gu5o6JwAhz8HzuMvqDMxMPD4vS2i/s
-	XyXEVEB0nWmcZLm1Q8WluFoFsig7gXXKiU5HXUk35opAyQAlKXqd/6IMQ1H1z1+V
-	Yvw9CRVnltlbKDyAcCz+6/PCgyC/zP8Qr6gZLXcE5hJupAChY6MjXBMUj6AUF3WO
-	5iw89TvCQh/i7TR+SsbEksbm2zfcmIFb8ZeaNw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1784057800; x=
-	1784144200; bh=bBepFvY1LKlSxlgL4l06nBRvhcWtf9atVR4FTFTQN/s=; b=m
-	+J+64c/T6SSEGgfmzf7WOg9pVRnMrBavbfPWxArJed635s/F/xdQ2+MpFO3FEQiu
-	nVffHMgIpt9Lvf3TEfR9+zAqOX+q7PYQu84e0Jxun+QHmjBpfggQ/RrdwiLTbqvu
-	WlS5RpUIb9o7JiPtOGBlQU1tpR6NgiApDMFBTIHR1yKAw2CSFb0qccPoKar0Uk1q
-	+lDa/Vl9sAvdqWNtBxznmYqJ1lsmfqjeTbbQNfM9oOdLOTHhCOObJrGrLfep8oTh
-	5F1WkDCI3I+r7SgV518cP5907v63pCNrYmhdPRHc4EY9piLA6yDwhgS+unHo/LE8
-	bIEnR+JO8hKUSN0rP+/2w==
-X-ME-Sender: <xms:yI9Wak5UvcDZJH-yVQwD8BIi6WbcsVlQJ2UpVFs8bPvom220DBdanQ>
-    <xme:yI9Wau1SP4qepowCipP6RggHuwtW2HqOuBHWh5wbJHmH2It7uYfXrCY_jrGMsm8gV
-    JrAHEwcF4FDd5KhrAkfQHpHTAHQ6tohK4N8IjWUB-4App2xFL56VLY>
-X-ME-Received: <xmr:yI9WavCELBBmWiCRSzp6FREQpkqr2NG2283GOrBVeedv2glgtvMmpM0BC6k>
-X-ME-Proxy-Cause: dmFkZTFI0lKS02VttvzmWLTXz6Ea7hhNAxH/RTsvO02/LouO39/kpuqH7Bk5BkFAxAhIvM
-    9M+aAfcrUc03JSDKF8zi8FaT1wEgW6y3XnXHs1X6MAIkj7D1Yytui0iN7f1uYtCTVHBw0F
-    hH35fpYkURb+1CWWCRcNrCgu42z3NkozeFUD8gx7JWdYDAn5QPinOiUgevXCNQyH3xD/WH
-    Ne1QeFYw11DjcUYrIOKRMM9kahikcCCqKlqWbgwCErgkKUKrQgkXdaXmC6zkj+mCq+Qk38
-    W/W4tit31xd6hpv+J3gEjBmKZUnyhBx1Z9WNYBLRML9+9ailxbSZPuU0jW/xQwTHSnXIYY
-    P4UkJSS7+G6SDh7KcEMyZN9TEBUHtnZeZECLjNDD0ReyDNtBFufMBzV/jGzF9eLSs6hbTk
-    5Aeg/zI+qWfLxrsV6sZxks9GHKgld8l80TXtvj6wE3eMERaPERyNefL2eLNGlw4Me10Xsl
-    gn/J8egnMhn4qrH0eA5AK0J0HBzYIl9rTZSH0mr2jSLXATI0/WOk5ruAvbhw3M7Qu5Snen
-    hl+A/uur/NryV6KewHGF8lHhN0z7jqsrgVLNqzDCSjdWRcFZ0FRMRI4AsKLtdlkQ+4ne1G
-    58uaRzx4M92mObjfzXyGpjVYEyBHvvJiVHT/PINaXzo2Ser4B9ofFU27kDrA
-X-ME-Proxy: <xmx:yI9WapN7FYdVciZoq8h8Vy9LtUIc643jrP3yw3WLSdacI2HUQXEYUw>
-    <xmx:yI9WakYKc393qoaVJez5R2AeCqDs1j_c96lm_Q0Z4Me-trScKbrLPA>
-    <xmx:yI9Waouzq6-y4KiAP6h0XrCcAzJXp5NemPxEQAdOKzXb3gZF_5m9sA>
-    <xmx:yI9WamMjBITZF4u9VPCwKDKe2CCUIFcICOAYrj_XzMhIFwgfkkgX7w>
-    <xmx:yI9WarpJJzSF6n4OZgyF--6psUzDzcqLdqfzDt4d5zSekXiwEaDz7jnX>
-Feedback-ID: ib53e4b78:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 14 Jul 2026 15:36:39 -0400 (EDT)
-Date: Tue, 14 Jul 2026 14:36:37 -0500
-From: Ian Bridges <icb@fastmail.org>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] ALSA: hda/generic: Replace strlcat() with strscpy()
-Message-ID: <alaPxW5S5PT_-kZi@dev>
+	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="tlhg3TXO"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2cc891373e0so58455885ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Jul 2026 16:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=asu.edu; s=google; t=1784073251; x=1784678051; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6qOgI3AhwNY3MyS5Yl8AT4tj9fOaqiCdXwpSFV0QdFk=;
+        b=tlhg3TXONtvK7oGvTT+6+gc5hQQA3faL1//xtfH2o7C142VXPCp/XEePr4U0yGJT5Y
+         Xv71C0Dk7pYeaQL9G7DkOmm6jco/LvENbXhU4gMmLYhGRuhvoxCJvfu4NT6s3UyUcBY0
+         +H02ruSUFLPZs3DdrhWHY0ryvWgsCYnOmvV8otkmuCSRoco4CU+uS3nn8w5PgQMQw+l8
+         tWUAe7rAreBvPSnnWE+/TCbA0Fdvz1c7ycuj7IicFlOaGxj3nVLRaATNTMVrXSODCcNk
+         +tqEKNtMA6ibxfuNi6KwyBqdY392p+np/gnYPRn7cKCjf5Tn0jHdAgbZ2zzD1WrlUl8x
+         8Gfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784073251; x=1784678051;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6qOgI3AhwNY3MyS5Yl8AT4tj9fOaqiCdXwpSFV0QdFk=;
+        b=g43PFHlQyeXlpXCwTtqbIlXvCIeDa7ga81AusQfPeineFrPj69ItjiOcDzLJTvjT2h
+         3LIKFo5nCKY7F/6TqcqEuhKZ6Om0IkTNep2QC5nG3bT9WgaYpZ65OnqJVKn1NDxbU0oQ
+         f32/MoHYHXtMLLuDANUK51nh6BRBOEthgA3/+KMAO0lcE3DtVbrr9Q6xQO2DC5eyKzv0
+         4lD4OS1tWOwF9RFuu7Lc/3m5/3ijrreLiE3ZE0MH3VNkiRqRhQne3+9XNqsTk+OZnlV8
+         yNSAIA6OfWSM6+kXJe4tOGVog+NU87IwYrFe+VC+KJ/9GlLCHyORhKxBOMfIO93oNtRh
+         wHMA==
+X-Forwarded-Encrypted: i=1; AHgh+RpvMfHLYW617zmOiYsKRHfby7lXFE40jdEEMmfhuWaYGuhK9iu+uSR/xIoKz7Bs8Xt4Ory2WA5tZngMhShwYh8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMYQz6C9Cru9RTggnEl8+fPwUNr+xo1EOIF449zfj++yzCVznR
+	M3UnxOj6f7hRIZpWoQpbi3ohfBRPK54QF7pJS904NXu4ayVD6rdqHmNuxLY9nQySXA==
+X-Gm-Gg: AfdE7ckrDyHqKu54Ba0EzrdB4CwRBqhuwORzl3Msizvx+/JXLY1JG+aUjoccw2Y+XvH
+	uuZ8BU1415zl0SOTcxjkAWAQ35mJn+VL1PWUbZJ/zFuAM2PqDWL+jhr4yJCrAljLDH3ByLzngH4
+	DA8mK0Ji6E3TQl+A6CPFau1E8vcwvyq9CPHpBzjKGlOth2SDR6Uivt3Hc0DV9lLHsQzqHyYlgIp
+	ZN7HKHfyJzU3WhC/0g6Jrv59EtV5u1/CCAmq8j1sPk8pObhJPu8Hz6OX/0+oV4WV0V2miizktEh
+	7VW70C/NKbZtrnBY7YFBSM+eUWdwh3fOMBGN9hUxLQZp795udYfVmlockqKPOF1sXkqdPhHi4Q2
+	QV52Bnld5J4+QjL1HnGx38yWu/8joWEsjqtBlA6p60WYudhoFSUGWPaxJruMv1gVJGf83lDpzHQ
+	==
+X-Received: by 2002:a17:903:186:b0:2cb:ea0b:9164 with SMTP id d9443c01a7336-2cf03c7f0f7mr5116715ad.6.1784073251584;
+        Tue, 14 Jul 2026 16:54:11 -0700 (PDT)
+Received: from p1.. ([2607:fb91:1513:463e:34c6:f6a3:8e91:2983])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d3d451sm123236075ad.65.2026.07.14.16.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2026 16:54:11 -0700 (PDT)
+From: Xiang Mei <xmei5@asu.edu>
+To: Joanne Koong <joannelkoong@gmail.com>,
+	Bernd Schubert <bernd@bsbernd.com>,
+	Baokun Li <libaokun@linux.alibaba.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>
+Cc: fuse-devel@lists.linux.dev,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Luis Henriques <luis@igalia.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	bestswngs@gmail.com,
+	Xiang Mei <xmei5@asu.edu>
+Subject: [PATCH v4 1/3] fuse: whitelist the request headers for usercopy
+Date: Tue, 14 Jul 2026 16:54:06 -0700
+Message-ID: <20260714235408.1666063-1-xmei5@asu.edu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-In preparation for removing the strlcat() API[1], replace its two
-uses in the generic parser.
+The fuse-io-uring transport copies req->in.h out to the ring in
+fuse_uring_copy_to_ring() and req->out.h back in fuse_uring_commit().
+Both headers live inside the fuse_request slab object, whose cache
+(fuse_req_cachep) is created without a usercopy whitelist, so copying
+them directly to/from userspace trips CONFIG_HARDENED_USERCOPY and
+panics:
 
-Both call sites append one suffix to a string that the function has
-already bounded to the buffer size. A strscpy() anchored at the
-current end of the string writes the same bytes, including when the
-suffix is truncated.
+  usercopy: Kernel memory exposure attempt detected from SLUB object
+  'fuse_request' (offset 56, size 40)!
+  kernel BUG at mm/usercopy.c:102!
+  Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+  RIP: 0010:usercopy_abort (mm/usercopy.c:90)
+  Call Trace:
+   __check_heap_object (mm/slub.c:8268)
+   __check_object_size (mm/usercopy.c:197 mm/usercopy.c:258 mm/usercopy.c:223)
+   copy_header_to_ring (fs/fuse/dev_uring.c:618)
+   fuse_uring_prepare_send (fs/fuse/dev_uring.c:776 fs/fuse/dev_uring.c:785)
+   fuse_uring_send_in_task (fs/fuse/dev_uring.c:1306)
+   tctx_task_work_run (io_uring/tw.c:96)
+   task_work_run (kernel/task_work.c:233)
+   io_run_task_work (io_uring/tw.h:84)
+   io_cqring_wait (io_uring/wait.c:278)
+   __do_sys_io_uring_enter (io_uring/io_uring.c:2685)
+   entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
 
-Link: https://github.com/KSPP/linux/issues/370 [1]
-Signed-off-by: Ian Bridges <icb@fastmail.org>
+in.h and out.h are adjacent in struct fuse_req, so a single usercopy
+region starting at in.h covers both and nothing else.  Create the cache
+with that region whitelisted.
+
+Fixes: c090c8abae4b ("fuse: Add io-uring sqe commit and fetch support")
+Cc: stable@vger.kernel.org
+Reported-by: Weiming Shi <bestswngs@gmail.com>
+Suggested-by: Baokun Li <libaokun@linux.alibaba.com>
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Xiang Mei <xmei5@asu.edu>
 ---
-The patch was tested as follows.
+v3: no context change; add Bernd's Reviewed-by
+v4: drop previous tags; use kmem_cache_args to reserve usercopy area
 
-- W=1 build of sound/hda/, zero warnings.
-- A userspace differential harness compiled the old and the new
-  functions side by side. The buffers were byte identical over their
-  full length, including the bytes after the terminator.
-- A QEMU runtime compare. A guest with an emulated HDA codec was
-  booted on the base and on the patched kernel, and the captured
-  /proc/asound state was byte identical. That covers the PCM stream
-  names from fill_pcm_stream_name() live.
+ fs/fuse/dev.c        | 9 +++++++--
+ fs/fuse/fuse_dev_i.h | 5 +++++
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
- sound/hda/codecs/generic.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/sound/hda/codecs/generic.c b/sound/hda/codecs/generic.c
-index 660a9f2c0ded..5f373cbf4a53 100644
---- a/sound/hda/codecs/generic.c
-+++ b/sound/hda/codecs/generic.c
-@@ -2712,10 +2712,12 @@ static void get_jack_mode_name(struct hda_codec *codec, hda_nid_t pin,
- 			       char *name, size_t name_len)
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 5763a7cd3b37..b8e43e374b35 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -2404,10 +2404,15 @@ static struct miscdevice fuse_miscdevice = {
+ 
+ int __init fuse_dev_init(void)
  {
- 	struct hda_gen_spec *spec = codec->spec;
-+	size_t used;
- 	int idx = 0;
++	struct kmem_cache_args args = {
++		.useroffset = offsetof(struct fuse_req, in.h),
++		.usersize = sizeof_field(struct fuse_req, in.h) +
++			    sizeof_field(struct fuse_req, out.h),
++	};
+ 	int err = -ENOMEM;
++
+ 	fuse_req_cachep = kmem_cache_create("fuse_request",
+-					    sizeof(struct fuse_req),
+-					    0, 0, NULL);
++					    sizeof(struct fuse_req), &args, 0);
+ 	if (!fuse_req_cachep)
+ 		goto out;
  
- 	snd_hda_get_pin_label(codec, pin, &spec->autocfg, name, name_len, &idx);
--	strlcat(name, " Jack Mode", name_len);
-+	used = strnlen(name, name_len);
-+	strscpy(name + used, " Jack Mode", name_len - used);
+diff --git a/fs/fuse/fuse_dev_i.h b/fs/fuse/fuse_dev_i.h
+index 668c8391d61c..b511aaab6bfc 100644
+--- a/fs/fuse/fuse_dev_i.h
++++ b/fs/fuse/fuse_dev_i.h
+@@ -81,6 +81,11 @@ struct fuse_req {
+ 	/** @flags: Request flags, updated with test/set/clear_bit() */
+ 	unsigned long flags;
  
- 	for (; find_kctl_name(codec, name, idx); idx++)
- 		;
-@@ -5682,6 +5684,7 @@ static const struct hda_pcm_stream dyn_adc_pcm_analog_capture = {
- static void fill_pcm_stream_name(char *str, size_t len, const char *sfx,
- 				 const char *chip_name)
- {
-+	size_t used;
- 	char *p;
- 
- 	if (*str)
-@@ -5695,7 +5698,8 @@ static void fill_pcm_stream_name(char *str, size_t len, const char *sfx,
- 			break;
- 		}
- 	}
--	strlcat(str, sfx, len);
-+	used = strnlen(str, len);
-+	strscpy(str + used, sfx, len - used);
- }
- 
- /* copy PCM stream info from @default_str, and override non-NULL entries
++	/*
++	 * @in and @out are the usercopy region of this cache (see
++	 * fuse_dev_init()); keep them adjacent.
++	 */
++
+ 	/** @in: The request input header */
+ 	struct {
+ 		/** @in.h: The request input header */
 -- 
-2.47.3
+2.43.0
 
