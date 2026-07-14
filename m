@@ -1,225 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011017.outbound.protection.outlook.com [40.107.208.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B9C2FBE1F;
-	Tue, 14 Jul 2026 12:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784030605; cv=none; b=nLkASmMTfFSkzJbjWIMgC/tlUoWRQM46S/8Lzv7C5ceylv8glW+u+ZIoXEf3eeFfUfcbsnygcdzN9Uoig5XHQKAb1vLr5aisU+6pGADcqWG9mcvePKK8zt8a7JCn6KWglbT6qcYaV2Lz5T6CwXoe8tMx5aKSMROXJT5EJ5bLq/c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784030605; c=relaxed/simple;
-	bh=KwGy7fWqUYGkkpXerfZG2X3j2Yri4hnvfOm2RZGNPBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YAc/7UuLsIOtD1P4+QMO/0AqxKKgN/nxQJN+DXTMgqnMMvjZuHQcS41bfBTgpbJdIGxBN2P8K61TNzP057WtMkRSerimidrGzu9xLekKfuWeJWjgXRFCV4RaFd7E0+rFHGBFHAOacfdBRr0uVuKQHnTFjc8/6xm+Bhv3/bFy/tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nww+aQs7; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC292D47FF;
+	Tue, 14 Jul 2026 12:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784030966; cv=fail; b=UBmpdWVBa6BecJ9mTtriCv0GSmodnCK81HG/qiDvbsF4vPmhv2d+isaE+eDFj3MlUgoLvFmlRXK0JCTJV/xtMQ8FOzyeFBBcxp/s1Yl6iuNyFZCEtdqNnbOOJy1OVWL6UJgL+KfqmWlg2V7kWosZQ60p0cHHtG/SfvUuWPUDT+A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784030966; c=relaxed/simple;
+	bh=NzOnEjtYI8FBawQK1dEsjiKTscYAMFEsgdA62wxgn0o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WB7+Azv5FYV7zw1FMDwTyL7ATVpRkrL7/ROk5tABILRySrDytj66j+Moe5pOL1CBOHVj2ehRaq5xN3cWYJTp47MY80fqIUt7nAGolDXToRaFpkiRMb7mW4O5U/uuFNfNwa5UiL6HMEfc6XoUIq1SZYKe316kr8me3I97lvMOXJ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QSix9szY; arc=fail smtp.client-ip=40.107.208.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nww+aQs7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E56C1F000E9;
-	Tue, 14 Jul 2026 12:03:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784030602;
-	bh=TEZI3chpr1Sn0iTGmVOuZ3v5A0uYcjaAtTMT7DqMsDw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Nww+aQs7Vih9dRithSo4WWYbNEAli8OML9UuRIuzHAIlrHy2sZxGs52QacS//52ZZ
-	 k65+mU+AWPHBHeaXNaisXpoExyEpK8XklK/DACDZJZnH4a9lQGtMVtorGUAtsrUCTT
-	 ocndPzKAXCnH+kSEWNysCgx7OBB2R87oAXAaBUQsDqlas8BrK5C1qCRHAxwwrg9Ad2
-	 jfr4cT1xiqY9U483cTuLAXCJS4r5NZPpU2WixoZpSd4mYlDTYXnJUSgNXl3gIsTAOp
-	 4SQsNEwa39YQ2FxH6s8eZpBgSh204Sa8s8mdmdZtx+K9bOjXUDtrgFGbatIc/LgALv
-	 xdB3tgqD+RuZQ==
-Date: Tue, 14 Jul 2026 17:33:18 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: xianwei.zhao@amlogic.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, linux-amlogic@lists.infradead.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v11 2/3] dmaengine: amlogic: Add general DMA driver for A9
-Message-ID: <alYlhm9vav59wKq9@vaman>
-References: <20260714-amlogic-dma-v11-0-de79c2394282@amlogic.com>
- <20260714-amlogic-dma-v11-2-de79c2394282@amlogic.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QSix9szY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=L5AQyYqMSC5+uBcVQH2krfRP7iej0ixZJIummJ/rTvcj2JdAiLoqTamiCJKCtErIbfqlGOwCUoayY63/Ht01ZZ8KbNze8niOIfjMcwBgMt36afHO+sdmgE0EPGEA08Z5GEquy4ZzHQifZH37ZsbWqrwuLJ69/Dv58TResD+rm514JoMhQ23fJK8rpEo/ENEknzW61S7hdBInakGdt0Hn//Nu3g/EAW68cmhzpQbVSSHoWQwibPaa63HVKaKH0aApcgl64N9qybadmFt7MEmiV5gsana5wrliwjOBuKgPMTIZ+dw+pWetYAf2pHXo2k3CU6O4JjE7qkJGB+UheFoR0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tB1E8AflNK9lYSQiXymfQGGwDjrSU4Xu8+uOqchFgOE=;
+ b=BRyM9usouIp2GjMczGKY12toFZitZDS7V/vxbRRc9QfHJGVM21HS0as9mrwats3wxLcWvWL+tff4EyNpvSNvhs01yMyG3jqwEyJsTPapGj8sJwIdTFzBl+JyWsaqloOQJizDDz5wrCCnvhJkjKX4A2onSPEj4YOz7Q8WTFdiRw8xTf5lWO3KA4Zud5lrEVArJJ3965WF45kwwIeaEH9CGIeotVz1MmC1ln1Cg3mB0RU4vgE/98dwF9XB3+F1dv/lG5LfublxZGS/VT4L+KfVvf3qtLsrmAJRaAaMepBuGX7Snh71Z0RFR+LvtLpPk7xuDNKizmDXQdhbWC1AidRZpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tB1E8AflNK9lYSQiXymfQGGwDjrSU4Xu8+uOqchFgOE=;
+ b=QSix9szYZwEOqpv9KmKA+p3fx/eOIhaPP5YfXMqA0+12bJaPaXSmGOK805ZFqsPN/b3RAxOuR5iMOxxTZxpet0YD/oxgWK6nJG/vg/N7ihHtMcML4m+DFx7ZlDlYeGuNXnNtysLJAeAhEF79sDK4MRThayITU+eVsgYdgqfrQDkkIK0K/bSRKR7DZfJuxF3yJsPLzXI/fRlDT6J/vxKvbW17SazYjCOAW50vB8IaCmvTiEtHC64BhjbpmxEQKzaxaGNn9N7wqRyNlV6egqe3AVuBP5b2HQJT52d8kzK6SOMMSo/LQ/g4bGBu8mZWCZCuNQitYiU7/Z+cJ36hiEyKlw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB5001.namprd12.prod.outlook.com (2603:10b6:610:61::18)
+ by BL1PR12MB5706.namprd12.prod.outlook.com (2603:10b6:208:385::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.9; Tue, 14 Jul
+ 2026 12:09:17 +0000
+Received: from CH2PR12MB5001.namprd12.prod.outlook.com
+ ([fe80::89e3:6df0:de90:8dfe]) by CH2PR12MB5001.namprd12.prod.outlook.com
+ ([fe80::89e3:6df0:de90:8dfe%3]) with mapi id 15.21.0223.008; Tue, 14 Jul 2026
+ 12:09:17 +0000
+Message-ID: <5d9e8ff3-49fb-4ece-921f-a59214973894@nvidia.com>
+Date: Tue, 14 Jul 2026 22:09:08 +1000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/8] mm: add a set_page_section_from_pfn() helper
+To: Li Zhe <lizhe.67@bytedance.com>, akpm@linux-foundation.org,
+ apopple@nvidia.com, arnd@arndb.de, bp@alien8.de,
+ dave.hansen@linux.intel.com, david@kernel.org, kees@kernel.org,
+ mingo@redhat.com, rppt@kernel.org, tglx@kernel.org
+Cc: linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+References: <20260709112520.24857-1-lizhe.67@bytedance.com>
+ <20260709112520.24857-4-lizhe.67@bytedance.com>
+Content-Language: en-US
+From: Balbir Singh <balbirs@nvidia.com>
+In-Reply-To: <20260709112520.24857-4-lizhe.67@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MEWPR01CA0034.ausprd01.prod.outlook.com
+ (2603:10c6:220:1e5::13) To CH2PR12MB5001.namprd12.prod.outlook.com
+ (2603:10b6:610:61::18)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260714-amlogic-dma-v11-2-de79c2394282@amlogic.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB5001:EE_|BL1PR12MB5706:EE_
+X-MS-Office365-Filtering-Correlation-Id: 47a85bfb-60fc-43d3-dbeb-08dee1a0ba0a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|7416014|18002099003|22082099003|11063799006|56012099006|4143699003|6133799003|921020;
+X-Microsoft-Antispam-Message-Info:
+	7LMjloBgAk7EriW6tQDf8f/G2Pqc69wFXvG/7+CvrX+2VlcNehKsgmMIJk7KjAOxdwQJ/fC1MVhnmDVeOfXCcZH4WuCof3UOg1FDD/P0Sah1uLYYcP6BpX1ovdaM1j+/ErZ1kb2QhCrWHPYH5dCrKoQC/u6lgNFWJURZrAZ7o6OUPS6lmGzeUy4z85T5z2Le42gOuHavgCKhFkOTq2FrttCp3CeRBLh+gWEmUsezqWAuQK2/7li0W2v/pVZP2AqpwDQZN6wLX5C5Us/s83OqGxAXmDDzgn8vdvVBcF1RA7xAByFrZdNTWzMESAWuNaLmETalFWdBK7brJ2xpr32hh6akofQzI5g9Pz3aZgYSy4Ju7ZqLdf7ApqQMIVmxcbyn6FO0Tcbb6EfpZ6gWHcbQvDyil9V2aPm/2erNWK/cOMKjuoCH/B4t2JwXO7UcraUE4m1lDgtUqitA7ty+BwRTMyZK+QiJjKzHEnjWmCZHjVwoQTTNavKTuSpLlUX0altjiKgGRrqVM9sVAJgJZWVikexQ7FlwQdFh7ryZOqpmmGBS9zGD2dTPACpRGNL6KiMiPbBBKnrfs0V0RbzQJo43Nrp8gBIGqIJ89dTAP6iGF4C5VazIVeoGVPlHkHuCadQ8u+DLPQvUukKRcdyoA2IVqasit9qPZXheqVlZFZja1NMlxJsjXSgeIyCNIJwDIx/fLpvQO67Qs8jvhKPkG42Oog==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB5001.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(7416014)(18002099003)(22082099003)(11063799006)(56012099006)(4143699003)(6133799003)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aGFPRVQwYW5VTXFZTktaSmVsY3l5ZEhCOERQeDBqUGE4L1RMb3NYeWhiS1Bz?=
+ =?utf-8?B?cFNoTTJ1NjgvRk9HWHN0ZUtVbGh1M2tTbERRVlhjRjZMTFNEL0x5K044YjBH?=
+ =?utf-8?B?OGc1aXdCeVU4dUV4cFVDenRwektqSEtSeXozYzhTUkdFUGErS0dhV0YyU3Zz?=
+ =?utf-8?B?OFdGdm5yOXFLWmtibU5JYUVzMEF0VG1VN0Rhd3lEd1dVVGZndWdLZlBadDBW?=
+ =?utf-8?B?RzluaVFwb0ZZZDBvQmNPeS9jeUZSVXhxYk5mZW9RN0dvb0VsVmJ3cUVZQkhZ?=
+ =?utf-8?B?aFR4LzhKck10cm5zM0szdUk3V1ZUbzIyaVBORkVkanNGWkIrcXpMZnUwWGVG?=
+ =?utf-8?B?MFFITnNUUjVpVkQ2cHdvUkZlSGpIdFRUSjV1L2tyTmtsRGphNUxORkZZVDJ0?=
+ =?utf-8?B?L1p1L1p1V0U3SG5tN1ZtRlBFc1hwNno5QlVQYUxOczI2MkNxVFVuaVdlRU9z?=
+ =?utf-8?B?WUJoMTFZL1ErUjFSN1dXVTdMWFhSWmhvQ3o4ZFZjVnZSZ3prb0wySDhrTVNy?=
+ =?utf-8?B?enJ0dGRmM093dlRKdGlPU0JPdXpEQXpvWUpnOFNZbHhCQ1Ntdzc2MGNBMjFk?=
+ =?utf-8?B?bFpnVmhsS1djV25BSVFPd0FZUHhrTEFEUjBFNkxaM3hHUE5OWktqQzBtQXZy?=
+ =?utf-8?B?VEtzemY5Y0phWGlTcVVaMFc1NFZTb0MvWTYweHdDSURMTlRtVkd3TE1mOFhu?=
+ =?utf-8?B?U3doVVZjby95MGxkeDExQ3dOeWk2WGdkWVpoQUthNVcwUU5rWGkyWm5GWlly?=
+ =?utf-8?B?WEV3bzliditndFlFa1l3YlhvaWpmRGE3NEZHRll4WnZ2TFgyQXlwTjQ1WnpK?=
+ =?utf-8?B?emhrMm8yU1pneFBpZWZRaU9GbGFOTXYwOFRheWQzRitCSEtiSmFmL21UMGxi?=
+ =?utf-8?B?dXc5cTJKTy8vVFRCcmgxUVBUQlpNTThtWTVEdE9zNXRpNGoyUTVsRXdmV0s5?=
+ =?utf-8?B?Z3F2YnpWNFFWSEFCR0RjanpPaDdxWWwxWlpvYzJBTG5mTkhhTmY0THNFaklT?=
+ =?utf-8?B?S0dWTENqU0NvdFF1VmZTZmQyeEJlRjVxbUdlZUk2MVRxbDJhb2pWeXZmRndr?=
+ =?utf-8?B?YUFiakJIUHBwRDlqNnRobUsrMHljNkxJZzdDOUdCYWFjM2pxUnNlU2MrWVhK?=
+ =?utf-8?B?V1FHZnJnUnZqS1FlbHRwSlFLVXVKeEVlWDhlSGlYVXMxczJ4Wnk2TXM3WG5B?=
+ =?utf-8?B?K2R5UzRsMWRTNHh1bE5seml3c3FLNk1jcGJLNTVlYjZ4YWtlSUFWMXhuS2Rm?=
+ =?utf-8?B?NXFRN1lsOGZJZlNEQXRDWmk2c2laMEJHOUo4aVJDcWpuRmdyVTBKZEhYc2ht?=
+ =?utf-8?B?UzE4ZHhzcUltc29RTm03TjQ4RXE1dStpeGVYVks4enN6bnRaM1FnWTUyVEFE?=
+ =?utf-8?B?bHE5d2JobzljbUNSWG8zeU4xSFBmQWdUaHpCbGx4ZzI5dG14TXJnQmplR0RM?=
+ =?utf-8?B?Y0ZBOHFNdE85UWxGeVorZy9sbXFxOFZBdjJ2Mmw2ZDNHSi9QQTl6a2FnTURG?=
+ =?utf-8?B?NVlobjRVUU5acjlnalBaQUdEWEJNTmdQY0w4RTQzaFZ6NFNnM1dpMEdGRDlK?=
+ =?utf-8?B?MitHb1VaM0N5cjZrelBsTU54QW8wb3phQUVaOGVoWHl6VStrSUl4ak80ZDFx?=
+ =?utf-8?B?YWwrbnAzQWJuK1VmMEFVUkdnRWJGU0tCUXQrQytsOGk2YlhLTDV2QmkrdkYw?=
+ =?utf-8?B?UTVRNkV5elZTR2x3NEZodXpIUjFEZW1HNXBkb3EvdFFoL1pZRWpYT3ZKZ0JI?=
+ =?utf-8?B?L1dkVE5DQjNYUjY3R0tHdWR1YmQwamJCcmU5K3VlYkNKNWs5WmJuSFA5ZmxK?=
+ =?utf-8?B?V09nUzFVbjNVajcvY0V3Mk5pS1d5bUUzcktWNCtFdWRkU210cW1obHNtV3VM?=
+ =?utf-8?B?Y3Bhem1UeWpKUE5NSks1SlZrWlZiQUdPYTdlZzczSVg5aU01Q2dHQjNNUVpJ?=
+ =?utf-8?B?Yno0eTcxNUFUdWlac203VExXRFZZaUYweHQ3eW9ZcDd2QVhHZjkrUmdSdnNw?=
+ =?utf-8?B?NS9iTW8vVU9EOXp0cUFDZFN3WWVIaWdmbjdWZGdscXhEemRMcU91VzFNSVdo?=
+ =?utf-8?B?aGZlM2t1eHA2RmRmZEREUjBIa2UyaDg4ZUtYYXNUVjg4eGtJYkFqRzNsT3BZ?=
+ =?utf-8?B?OG1DQ2FOVjF3aGRZWS95T1JjWG1LWlMxQzBKUGZ2UFd0Z084UXpkYnVFVzVv?=
+ =?utf-8?B?aEMwWnhoTkdLeXRqbnFTR3NZbmxzL05CQXEzTVgxQzRJeUE5dVpFMDdaTW4x?=
+ =?utf-8?B?NGd3cXF0Z0lTVDVBZVNxWEQySVBOcHVoL25sMnNaVUl4WUlRd1R6d09zc1Rx?=
+ =?utf-8?B?ZEVHWGJsT1hySUhTOGU0eVFyRzNScUNkMXlyUzVFQlk0cTZCbGtsUT09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47a85bfb-60fc-43d3-dbeb-08dee1a0ba0a
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB5001.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 12:09:16.9869
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qv1bGZWjOjRJwqguu5BMULhrLTi1p5h6vhEaksExy5pVuL0qXKF3Dc4SOZgKashL3iSDmt4rl4RSWLdpuDeb0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5706
 
-On 14-07-26, 08:08, Xianwei Zhao via B4 Relay wrote:
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On 7/9/26 9:25 PM, Li Zhe wrote:
+> Callers that want to update section bits from a PFN currently need to
+> open-code:
 > 
-> Amlogic A9 SoCs include a general-purpose DMA controller that can be used
-> by multiple peripherals, such as I2C PIO and I3C. Each peripheral group
-> is associated with a dedicated DMA channel in hardware.
+> 	set_page_section(page, pfn_to_section_nr(pfn));
 > 
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> and guard that sequence with #ifdef SECTION_IN_PAGE_FLAGS.
+> 
+> Add set_page_section_from_pfn() to wrap that update in one place. When
+> section bits are stored in page flags, the helper derives the section
+> number from the PFN and updates the page flags. Otherwise keep it as a
+> no-op so callers can use one helper without open-coding
+> SECTION_IN_PAGE_FLAGS.
+> 
+> Convert set_page_links() to use the new helper so later ZONE_DEVICE
+> fast-path patches can also update section bits without open-coding
+> SECTION_IN_PAGE_FLAGS at each callsite.
+> 
+> This keeps the PFN-to-section translation local to the configurations
+> that actually store section bits in struct page flags, and avoids
+> exposing that detail to generic callers.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > ---
->  drivers/dma/Kconfig       |  10 +
->  drivers/dma/Makefile      |   1 +
->  drivers/dma/amlogic-dma.c | 726 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 737 insertions(+)
+>  include/linux/mm.h | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index ae6a682c9f76..01f96a8257e5 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -85,6 +85,16 @@ config AMCC_PPC440SPE_ADMA
->  	help
->  	  Enable support for the AMCC PPC440SPe RAID engines.
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 485df9c2dbdd..43343bfce493 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2541,11 +2541,22 @@ static inline void set_page_section(struct page *page, unsigned long section)
+>  	page->flags.f |= (section & SECTIONS_MASK) << SECTIONS_PGSHIFT;
+>  }
 >  
-> +config AMLOGIC_DMA
-> +	tristate "Amlogic general DMA support"
-> +	depends on ARCH_MESON || COMPILE_TEST
-> +	select DMA_ENGINE
-> +	select DMA_VIRTUAL_CHANNELS
-> +	select REGMAP_MMIO
-> +	help
-> +	  Enable support for the Amlogic general DMA engines. THis DMA
-> +	  controller is used some Amlogic SoCs, such as A9.
-> +
->  config APPLE_ADMAC
->  	tristate "Apple ADMAC support"
->  	depends on ARCH_APPLE || COMPILE_TEST
-> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> index 14aa086629d5..f62d12b08e15 100644
-> --- a/drivers/dma/Makefile
-> +++ b/drivers/dma/Makefile
-> @@ -16,6 +16,7 @@ obj-$(CONFIG_DMATEST) += dmatest.o
->  obj-$(CONFIG_ALTERA_MSGDMA) += altera-msgdma.o
->  obj-$(CONFIG_AMBA_PL08X) += amba-pl08x.o
->  obj-$(CONFIG_AMCC_PPC440SPE_ADMA) += ppc4xx/
-> +obj-$(CONFIG_AMLOGIC_DMA) += amlogic-dma.o
->  obj-$(CONFIG_APPLE_ADMAC) += apple-admac.o
->  obj-$(CONFIG_ARM_DMA350) += arm-dma350.o
->  obj-$(CONFIG_AT_HDMAC) += at_hdmac.o
-> diff --git a/drivers/dma/amlogic-dma.c b/drivers/dma/amlogic-dma.c
-> new file mode 100644
-> index 000000000000..9de650a79aba
-> --- /dev/null
-> +++ b/drivers/dma/amlogic-dma.c
-> @@ -0,0 +1,726 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-> +/*
-> + * Copyright (C) 2025 Amlogic, Inc. All rights reserved
-
-2026 please
-
-> +/* DMA controller reg */
-> +#define RCH_INT_MASK		0x1000
-> +#define WCH_INT_MASK		0x1004
-> +#define CLEAR_W_BATCH		0x1014
-> +#define CLEAR_RCH		0x1024
-> +#define CLEAR_WCH		0x1028
-> +#define RCH_ACTIVE		0x1038
-> +#define WCH_ACTIVE		0x103c
-> +#define RCH_DONE		0x104c
-> +#define WCH_DONE		0x1050
-> +#define RCH_ERR			0x1060
-> +#define RCH_LEN_ERR		0x1064
-> +#define WCH_ERR			0x1068
-> +#define DMA_BATCH_END		0x1078
-> +#define WCH_EOC_DONE		0x1088
-> +#define WDMA_RESP_ERR		0x1098
-> +#define UPT_PKT_SYNC		0x10a8
-> +#define RCHN_CFG		0x10ac
-> +#define WCHN_CFG		0x10b0
-> +#define MEM_PD_CFG		0x10b4
-> +#define MEM_BUS_CFG		0x10b8
-> +#define DMA_GMV_CFG		0x10bc
-> +#define DMA_GMR_CFG		0x10c0
-> +
-> +#define MAX_CHAN_ID		32
-> +#define SG_MAX_LEN		(GENMASK(26, 0) & ~0x3)
-
-So you define a mask for 0-26 and then clear everything expect last two
-bits, why not define last two bits..? Something does not look right here
-
-> +static int aml_dma_probe(struct platform_device *pdev)
+> +static inline void set_page_section_from_pfn(struct page *page,
+> +		unsigned long pfn)
 > +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct dma_device *dma_dev;
-> +	struct aml_dma_dev *aml_dma;
-> +	int ret, i, len;
-> +	u32 chan_nr;
+> +	set_page_section(page, pfn_to_section_nr(pfn));
+> +}
 > +
-> +	const struct regmap_config aml_regmap_config = {
-> +		.reg_bits = 32,
-> +		.val_bits = 32,
-> +		.reg_stride = 4,
-> +		.max_register = 0x3000,
-> +	};
+>  static inline unsigned long memdesc_section(memdesc_flags_t mdf)
+>  {
+>  	return (mdf.f >> SECTIONS_PGSHIFT) & SECTIONS_MASK;
+>  }
+>  #else /* !SECTION_IN_PAGE_FLAGS */
+> +static inline void set_page_section_from_pfn(struct page *page,
+> +		unsigned long pfn)
+> +{
+> +}
 > +
-> +	ret = of_property_read_u32(np, "dma-channels", &chan_nr);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "failed to read dma-channels\n");
-> +	if (chan_nr > (MAX_CHAN_ID * 2))
-> +		return dev_err_probe(&pdev->dev, -EINVAL, "dma-channels unusual\n");
-> +
-> +	len = sizeof(struct aml_dma_dev) + sizeof(struct aml_dma_chan) * chan_nr;
-> +	aml_dma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
-> +	if (!aml_dma)
-> +		return -ENOMEM;
-> +
-> +	aml_dma->chan_nr = chan_nr;
-> +
-> +	aml_dma->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(aml_dma->base))
-> +		return PTR_ERR(aml_dma->base);
-> +
-> +	aml_dma->regmap = devm_regmap_init_mmio(&pdev->dev, aml_dma->base,
-> +						&aml_regmap_config);
-> +	if (IS_ERR_OR_NULL(aml_dma->regmap))
-> +		return PTR_ERR(aml_dma->regmap);
-> +
-> +	aml_dma->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-> +	if (IS_ERR(aml_dma->clk))
-> +		return PTR_ERR(aml_dma->clk);
-> +
-> +	aml_dma->irq = platform_get_irq(pdev, 0);
-> +
-> +	aml_dma->pdev = pdev;
-> +	aml_dma->dma_device.dev = &pdev->dev;
-> +
-> +	dma_dev = &aml_dma->dma_device;
-> +	INIT_LIST_HEAD(&dma_dev->channels);
-> +
-> +	/* Initialize channel parameters */
-> +	for (i = 0; i < chan_nr; i++) {
-> +		struct aml_dma_chan *aml_chan = &aml_dma->aml_chans[i];
-> +
-> +		aml_chan->aml_dma = aml_dma;
-> +		aml_chan->vchan.desc_free = aml_dma_free_desc;
-> +		vchan_init(&aml_chan->vchan, &aml_dma->dma_device);
-> +	}
-> +	aml_dma->chan_used = 0;
-> +
-> +	dma_set_max_seg_size(dma_dev->dev, SG_MAX_LEN);
-> +	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
-> +	dma_dev->device_alloc_chan_resources = aml_dma_alloc_chan_resources;
-> +	dma_dev->device_free_chan_resources = aml_dma_free_chan_resources;
-> +	dma_dev->device_tx_status = aml_dma_tx_status;
-> +	dma_dev->device_prep_slave_sg = aml_dma_prep_slave_sg;
-> +	dma_dev->device_pause = aml_dma_chan_pause;
-> +	dma_dev->device_resume = aml_dma_chan_resume;
-> +	dma_dev->device_terminate_all = aml_dma_terminate_all;
-> +	dma_dev->device_issue_pending = aml_dma_issue_pending;
-> +	/* PIO 4 bytes and I2C 1 byte */
-> +	dma_dev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
-> +	dma_dev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-> +	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-> +
-> +	regmap_write(aml_dma->regmap, RCH_INT_MASK, 0xffffffff);
-> +	regmap_write(aml_dma->regmap, WCH_INT_MASK, 0xffffffff);
+>  static inline unsigned long memdesc_section(memdesc_flags_t mdf)
+>  {
+>  	return 0;
+> @@ -2768,9 +2779,7 @@ static inline void set_page_links(struct page *page, enum zone_type zone,
+>  {
+>  	set_page_zone(page, zone);
+>  	set_page_node(page, node);
+> -#ifdef SECTION_IN_PAGE_FLAGS
+> -	set_page_section(page, pfn_to_section_nr(pfn));
+> -#endif
+> +	set_page_section_from_pfn(page, pfn);
+>  }
+>  
+>  /**
 
-I think we have macros for 32bit masks, please use that here and other
-places
- 
 
--- 
-~Vinod
+Reviewed-by: Balbir Singh <balbirs@nvidia.com>
