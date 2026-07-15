@@ -1,223 +1,151 @@
-Received: from va-1-114.ptr.blmpb.com (va-1-114.ptr.blmpb.com [209.127.230.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978742931F2
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 06:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AC7313283;
+	Wed, 15 Jul 2026 06:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784097051; cv=none; b=IdsYKk8RPouXmk0C3yQLvoRXXTOAn12OaY5paCcA1veLjubculCQYzu3Y27yxf7JQ0VN9QQUR2KnVeJm+UnUCAFiNstvGKm1yfh4ndD0ObaUO0sKZDU3iY3iqn7MAaVTcoOBQpR5ju5I2dH9NpTCPuIDlGnOrVemvfBpcSGMeCQ=
+	t=1784097146; cv=none; b=hmMuCUkR420EtdjvR0wCGThlG+haGCQVaF+QBHS8IKoXqjc7nJAAa2dt7FJ9oxFaFvqRyAqJScjqyZiE1sUFeOvlbfGFa2fnAgvGTNmenPHUt4wwiD+jH9ruL9nD5VkLnQHRQkTsEyVoYotmA2uA3B4FWvrd9XZkOnpziJAIS0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784097051; c=relaxed/simple;
-	bh=scYE86tsEPFxauDv1n7o3T4yPdUKkLTEh8J7NafH39A=;
-	h=To:Subject:Mime-Version:Content-Type:Cc:From:Date:Message-Id:
-	 In-Reply-To:References; b=UDy4kOWF77G2zhpT0cViwFLzo8kmNei6DkdjehZjCc6fggXZO0qczxDX/QA8QNSpcL8RIs16GsZbyvr2lnycsOKjQcQ2/l2pAbl4iiPxr0nqjTQmcrzjaG8H3lDs+rhJhdPqvoykhmNvK5RtudZUW8cg8iLxHFRj0wYLkSaW4AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JEk6VnCl; arc=none smtp.client-ip=209.127.230.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1784097146; c=relaxed/simple;
+	bh=RgFSZ4GcQNxSGk/4lQiMQnPxmHi1gAvKmjEWlI5TUMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lynxQIEOGTtCroC/NLEeIJfX9UkGQ57sfPKj+4wUlMgyjCbPNkaXFwQMFpRlyp1Jrcki+U8pPKJoBnLAH9nQIY6oJj1Lz5TVZJ2jxMzrSFXyd6XIsUCCxRgax+gq4b2TuF+0CbyTlm/zwlzqOiXXNKeEAe2++hnkzky4Gaf+jWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q2TbwCJN; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JEk6VnCl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1784097037; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=lCB9dhy5QZLhYQKmcCdqDKGU5CSnd+c1XZ3RMoIJ+zg=;
- b=JEk6VnCljaCqr2AlzqWMSLv3qWCCgmkKzCwOxUFnWaCtg/s34R22lHy3OW1irDF/4PBDGi
- 6KeLNhZQDUcnBM+XdcgWPx5QnSQg/AL/pqNV/iBiYpVgHqQhz9w5haatStv7IN3jb3w6Bo
- 9S9ckujDWFvk0NXaQR9kKuCgWnY9xUdLjrFOS1OqxzeWbtmgYFI9WltxrKS0jxYNE73uur
- bYQUmTeYRbLLtcOi0KN6xrl63ZqzEzSTa0X+nXbyVz+b4s3KyXeXpALQX7Y3cyhj1+QawT
- Gh3ME05l7+IjyrrJn8kAaNMuYto+8ysRSfsRR0/YMz/8ps7GC3BL+n5pJy9psQ==
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-User-Agent: Mozilla Thunderbird
-To: "Muchun Song" <muchun.song@linux.dev>
-Subject: Re: [PATCH v6 8/8] mm: use memcpy_nt() in zone-device template copies
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q2TbwCJN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784097145; x=1815633145;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RgFSZ4GcQNxSGk/4lQiMQnPxmHi1gAvKmjEWlI5TUMQ=;
+  b=Q2TbwCJNmrZaYb5Qd80ZDc5UTaurU4mwkq6Hr4uRF5QPJjMH3HPmqKD6
+   PkA6QyAg+tfpSNxNU/YH8Y7qRUKG8+I8vSRlzHnLpbAXuSxbicotmPbFF
+   GhdDu0MtcTlWMH9wB4aevZf7F0AGV42vKz36ZxbibDz1mVnnAWHq0FRWV
+   If7ua3SEV21gdOqIKOqBdA53Q8GZ0HaejxsJqSFaiQXjJon3ne554HiDp
+   adiX5LK5SzXSXgNsd2/LS34f2pmVL9mksMsaqtmMjorF2RJDiUatAZqDA
+   gZDPtaTHePRD+YmxK1AycJ0aW4jcZqqkhgqNhW5adMNHLLr9CBa3vTQxy
+   w==;
+X-CSE-ConnectionGUID: +LQO0EBGTcyfoHYW7ufkIw==
+X-CSE-MsgGUID: 09u5F7t1QVynrWvNSIzYhQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="84842206"
+X-IronPort-AV: E=Sophos;i="6.25,165,1779174000"; 
+   d="scan'208";a="84842206"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 23:32:22 -0700
+X-CSE-ConnectionGUID: 0DPTEpseSdSJFiU6iNrQpg==
+X-CSE-MsgGUID: fImbR2beQzyJHFlgMfVyjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,165,1779174000"; 
+   d="scan'208";a="254332119"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.44])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 23:32:18 -0700
+Date: Wed, 15 Jul 2026 09:32:15 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Cc: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v7 07/17] iio: test: add kunit tests for channel prefix
+ naming generation
+Message-ID: <alcpb-7GVSfk6jFB@ashevche-desk.local>
+References: <20260707-ad9910-iio-driver-v7-0-a4ec30f63700@analog.com>
+ <20260707-ad9910-iio-driver-v7-7-a4ec30f63700@analog.com>
+ <20260712020928.2c8d1667@jic23-huawei>
+ <egyms7ulkxsgu4pvfkoruelec3sf6ca4bndcuqkvxljrdluqwu@edlqne7oy3xs>
+ <20260714180812.000070c4@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Cc: <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>, 
-	<akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
-	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
-	<rppt@kernel.org>, <tglx@kernel.org>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Date: Wed, 15 Jul 2026 14:30:13 +0800
-Message-Id: <fcfe93e4-e7fc-4d77-bce5-d027c597e556@bytedance.com>
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <67BC9BE5-A201-4DED-B847-8C74BF30B16D@linux.dev>
-References: <20260709112520.24857-1-lizhe.67@bytedance.com> <20260709112520.24857-9-lizhe.67@bytedance.com> <04f5b50a-a526-4644-b9f0-c54a0d6db702@linux.dev> <67BC9BE5-A201-4DED-B847-8C74BF30B16D@linux.dev>
-X-Lms-Return-Path: <lba+26a57290b+8170e6+vger.kernel.org+lizhe.67@bytedance.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260714180812.000070c4@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 7/14/26 7:22 PM, Muchun Song wrote:
->
->> On Jul 14, 2026, at 17:45, Muchun Song <muchun.song@linux.dev> wrote:
->>
->>
->>
->> On 2026/7/9 19:25, Li Zhe wrote:
->>> The template fast path currently uses memcpy() for the actual struct
->>> page copy. Switch zone_device_page_init_from_template() to memcpy_nt()
->>> and add memcpy_nt_drain() before memmap_init_compound(), before
->>> prep_compound_head() updates overlapping tail metadata, and before
->>> returning from memmap_init_zone_device().
->>>
->>> ZONE_DEVICE memmap initialization is largely write-once: each struct
->>> page is populated once, and most destination cachelines are not expected
->>> to be reused immediately afterwards. On x86, a regular cached memcpy()
->>> can therefore incur write-allocate traffic by pulling destination
->>> cachelines into the cache before writeback, and can populate the cache
->>> with data that has little near-term reuse. Using memcpy_nt() lets this
->>> path request non-temporal stores for that copy pattern, which can reduce
->>> cache pollution and avoid part of the associated write-allocate
->>> overhead, while architectures without a specialized backend still fall
->>> back to memcpy().
->>>
->>> When memcpy_nt() maps to non-temporal stores, order those stores before
->>> memmap_init_compound(), before prep_compound_head() updates overlapping
->>> compound metadata, and before returning from memmap_init_zone_device().
->>>
->>> Keep sanitized builds on the slow path so KASAN/KMSAN retain their
->>> instrumented stores.
->>>
->>> Tested in a VM with a 100 GB fsdax namespace device configured with
->>> map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
->>> server.
->>>
->>> Test procedure:
->>> Rebind the nd_pmem and dax_pmem driver 30 times and collect the memmap
->>> initialization time from the pr_debug() output of
->>> memmap_init_zone_device().
->>>
->>> Base(v7.2-rc1):
->>>    First binding for nd_pmem driver: 1456 ms
->>>    Average of subsequent rebinds: 244.28 ms
->>>
->>>    First binding for dax_pmem driver: 1462 ms
->>>    Average of subsequent rebinds: 273.31 ms
->>>
->>> With this series:
->>>    First binding for nd_pmem driver: 1272 ms
->>>    Average of subsequent rebinds: 96.79 ms
->>>
->>>    First binding for dax_pmem driver: 1354 ms
->>>    Average of subsequent rebinds: 119.04 ms
->>>
->>> This reduces the average rebind time by about 60.4% for nd_pmem and
->>> 56.4% for dax_pmem.
->>>
->>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
->>> ---
->>>   mm/mm_init.c | 39 +++++++++++++++++++++++++++++++++++++--
->>>   1 file changed, 37 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/mm/mm_init.c b/mm/mm_init.c
->>> index fb855bb0437a..addb4969587e 100644
->>> --- a/mm/mm_init.c
->>> +++ b/mm/mm_init.c
->>> @@ -1067,11 +1067,21 @@ static void __ref zone_device_page_init_slow(struct page *page,
->>>
->>>   static inline bool zone_device_page_init_optimization_enabled(void)
->>>   {
->>> + /*
->>> + * Keep sanitized builds on the slow path so their stores stay
->>> + * instrumented.
->>> + */
->>> + if (IS_ENABLED(CONFIG_KASAN) || IS_ENABLED(CONFIG_KMSAN))
->>> + return false;
->> It is not a major concern if struct page initialization lacks KASAN or
->> KMSAN instrumentation. To keep things simple, let's just entirely remove
->> zone_device_page_init_optimization_enabled() to simplify the code.
-> BTW, If you really want to properly support KASAN, you should integrate
-> the check directly into memcpy_flushcache() via kasan_check_write(), rather
-> than treating it as a special case here.
-I agree that proper KASAN-aware support, if ever needed for
-memcpy_flushcache(), would belong in the low-level helper itself rather
-than in this caller.
+On Tue, Jul 14, 2026 at 06:08:12PM -0700, Jonathan Cameron wrote:
+> On Mon, 13 Jul 2026 10:52:56 +0100
+> Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
+> > On 12/07/26 02:09, Jonathan Cameron wrote:
+> > > On Tue, 07 Jul 2026 15:04:28 +0100
+> > > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 
-That said, for this series I would still prefer to keep the local check
-in zone_device_page_init_optimization_enabled(). The goal here is not to
-add full KASAN support to memcpy_flushcache(), but simply to keep
-sanitized builds on the existing instrumented slow path.
+...
 
-When KASAN/KMSAN is enabled, performance is usually not the priority for
-that configuration, while preserving the instrumented store path is.
-Keeping the check local here avoids broadening the scope of this series
-into a generic memcpy_flushcache() change.
+> > > > Because __iio_chan_prefix_emit() is static, the test translation unit
+> > > > is pulled into industrialio-core.c.  
 
-Thanks,
-Zhe
+KUnit also has static/non-static automation via a macro (defined in the
+kunit/visibility.h) and I see that's used in the below example.
 
->
->> Thanks.
->>
->>> +
->>>    /*
->>>    * The template fast path copies a preinitialized struct page image.
->>>    * Skip it when the page_ref_set tracepoint is enabled.
->>>    */
->>> - return !page_ref_tracepoint_active(page_ref_set);
->>> + if (page_ref_tracepoint_active(page_ref_set))
->>> + return false;
->>> +
->>> + return true;
->>>   }
->>>
->>>   static inline void zone_device_tail_page_init(struct page *page,
->>> @@ -1110,7 +1120,7 @@ static void zone_device_page_init_from_template(struct page *page,
->>>    * to the destination page.
->>>    */
->>>    zone_device_page_update_template(template, pfn);
->>> - memcpy(page, template, sizeof(*page));
->>> + memcpy_nt(page, template, sizeof(*page));
->>>   }
->>>
->>>   /*
->>> @@ -1179,6 +1189,15 @@ static void __ref memmap_init_compound(struct page *head,
->>>       &template);
->>>    }
->>>    }
->>> +
->>> + /*
->>> + * When the template path is enabled, order the preceding tail-page copies
->>> + * before prep_compound_head() updates the overlapping compound metadata
->>> + * in the first tail-page descriptors. If memcpy_nt() fell back to
->>> + * regular cached stores, memcpy_nt_drain() may be a no-op.
->>> + */
->>> + if (use_template)
->>> + memcpy_nt_drain();
->>>    prep_compound_head(head, order);
->>>   }
->>>
->>> @@ -1238,10 +1257,26 @@ void __ref memmap_init_zone_device(struct zone *zone,
->>>    if (pfns_per_compound == 1)
->>>    continue;
->>>
->>> + /*
->>> + * When the template path is enabled, order the preceding head-page copy
->>> + * before memmap_init_compound(), which immediately updates compound-head
->>> + * metadata. If memcpy_nt() fell back to regular cached stores,
->>> + * memcpy_nt_drain() may be a no-op.
->>> + */
->>> + if (use_template)
->>> + memcpy_nt_drain();
->>> +
->>>    memmap_init_compound(page, pfn, zone_idx, nid, pgmap,
->>>        compound_nr_pages(pfn, altmap, pgmap),
->>>        use_template);
->>>    }
->>> + /*
->>> + * Ensure any prior template copies are ordered before returning.
->>> + * On architectures where memcpy_nt() used regular cached stores,
->>> + * memcpy_nt_drain() may be a no-op.
->>> + */
->>> + if (use_template)
->>> + memcpy_nt_drain();
->>>
->>>    pageblock_migratetype_init_range(start_pfn, nr_pages, MIGRATE_MOVABLE);
->>>
->>> --
->>> 2.20.1
->>>
+> > > Isn't there some magic route cases like this that makes it non static
+> > > only when self tests are enabled? 
+> > > Claude tells me to look at include/kunit/visibility.h  
+> > 
+> > There is, Although I think that using
+> > 
+> > 	#if IS_ENABLED(CONFIG_IIO_CHANNEL_PREFIX_KUNIT_TEST)
+> > 		#include "test/iio-test-channel-prefix.c"
+> > 	#endif
+> > 
+> > was more straight forward, less invasive and easier to change than..
+
+Maybe, but thanks to this thread, I fixed other modules that use their own
+approach to use the standard KUnit infra for this (as below).
+
+> > 	/* In "drivers/iio/industrialio-core.c" */
+> > 
+> > 	#include <kunit/visibility.h>
+> > 	...
+> > 	VISIBLE_IF_KUNIT ssize_t __iio_chan_prefix_emit(...)
+> > 	{
+> > 	...
+> > 	}
+> > 	EXPORT_SYMBOL_IF_KUNIT(__iio_chan_prefix_emit);
+> > 
+> > 	/* In "iio_core.h" */
+> > 
+> > 	#if IS_ENABLED(CONFIG_KUNIT)
+> > 		ssize_t __iio_chan_prefix_emit(...);
+> > 	#endif
+> > 
+> > 	/* In "drivers/iio/test/iio-test-channel-prefix.c" */
+> > 
+> > 	#include <kunit/visibility.h>
+> > 	#include <iio_core.h>
+> > 	...
+> > 	MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
+> > 	...
+> > 	// Use __iio_chan_prefix_emit() in tests
+> 
+> I'd rather this wasn't built into the core module.  So prefer you jump
+> though those hoops.
+
+Hmm... The above (while being verbose) is the standard way of how we export
+symbols for KUnit tests. Do you have a better alternative that everyone can
+use? (Not only IIO subsystem.)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
