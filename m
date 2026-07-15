@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5425E3B4E87
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 19:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5CD3C10B3
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 19:56:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784142388; cv=none; b=uZo9ba7KlXUDAGpJW9W4yoOJ2KVc2ehJ3v3gFWtUXbLk3rTVqRnt9jOWLjAcc4ofNA0tDtUsKIUvlmyxx751WhH0yqn4jkLjm0gX5JG7QnTUQz93OkIbjUNv1m4f3n7JhZA61bIUUBHVxgfGf6WnEQPGD7xe9WJ+j+29Ki8Mqys=
+	t=1784145421; cv=none; b=YmTa2PPQQqqb9taunMFEwR4aXOPRPwlSANsM0i0X1MHcTxHvfxHzBtavEYQFrqE7/9mNXX1ljEAeXxkQIZOWnZa7CB7VHp9ZD089tCNQx1xRPkukO0OaY0d2T5d4O7BbmsM3KKm6nwWMzb0+ZDZtrww+wEe4K6fC5TmNh1QRXeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784142388; c=relaxed/simple;
-	bh=V7Q/qo28+1ZAcG7qa/SIkUDw8Vy35bmgcDcKj48LfD8=;
+	s=arc-20240116; t=1784145421; c=relaxed/simple;
+	bh=ngbT7sHDPSIbE6k9rjyNreW1XKhJWgxX6sLw4fQb+o8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbUCFbae4Aa+ZUjH3RbeojWUfhpchFyMTthCHTJ0bX2kgcGNpBAIPijeUSB+Pa957vR/JZdkIoyxD39AEaAQIsOLi5bcx8Ur5+o5e18eiftcO9objkmiKcvqMjbpHDnRnkkCg4Ohftr2GWoVcdgCsx+1pWX2Z38PLr0lfZxaEq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ng7E1BrU; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=ChYgWqyKlYylwCDxWkZtdVzyig5ysslFeNMjt0d48HabQ3Py4OWnzDWSwQP2feu7JeGLJRb5XHgS+dR0l88+eBiQcu+fvqUMw12i5tTeSw83yUNkSCpCaaZzphW2Pj0FEXgybBC+ruQfgQb4fdPc6SzHHc+0TqAn40eh3PA+3LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3FuFsh9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ng7E1BrU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7DF51F000E9;
-	Wed, 15 Jul 2026 19:06:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3FuFsh9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 441891F000E9;
+	Wed, 15 Jul 2026 19:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784142377;
-	bh=nRhZfEbZrENSE0M2suAF1WmBkJXrxr5AZlRPVcFxltU=;
+	s=k20260515; t=1784145415;
+	bh=bzdPIEXxBOFZ9WryL+zUc5wJmcxmqPO3R/82iXUVhB8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ng7E1BrUddltDsjOXHZiJWOg5bqLzCq7Tbi2E32y2LjC2/TwWYUrs7rQKjqZqMFdW
-	 F7AkQ9LlTtlWGpH9OvRKhiKZ7O38nANURZ5VrWp89Hhcf1PSoXX8FPKRVKfsFadxWf
-	 wdpXFrX1O1n5vgGds15ejo/rStaKuZfHIL1QU01t2AF9Vx8zsHxuB3yJURFe3v5TE5
-	 QmomVsmgNBhHqnFMANqxPUTNEDJJkGnNEOaG8a8kbgZrxVaso/G1K5t70mHVHicqkb
-	 HfkgFY/6G2M2ns6QxEYr6NJRYwxrITbppeToKPDgvtjsGvvkrLjDMuswz7vHhnSFIO
-	 TGpUU4QYlsmMg==
-Date: Wed, 15 Jul 2026 12:06:17 -0700
+	b=e3FuFsh9I1YZJ/hWOdjYSLwKwW+17hRMq7NZLwQ2ZVuZneY6ztOhqKk23QMWE7OFN
+	 Lhq5+xMI3CHQe0LBA9jCGyv5QswZUWSXEh9O/itu8RdmXFpA979aVj7oS/qdoUnZyQ
+	 p1AVe08HPGsA3KLyad8og18PPeN27l4rB6t8iBT9QBlG7NOF9CnUxhNtkL5Exjbkf6
+	 +sQtT2wBZNp938MS/WGO4yS/3MnpU5AxYenCNwyHgdGY1cYWKO8mR7H7EvJ1Yf9oUf
+	 VtZU9dsGr+yJ29gP969LDCWeXUcLi/xoqxdgCUo65/tEGru3sCB/uldhkOdBuFCEK2
+	 xwgzkvP/7YUOA==
+Date: Wed, 15 Jul 2026 12:56:54 -0700
 From: Kees Cook <kees@kernel.org>
 To: Andrea Pinski <andrew.pinski@oss.qualcomm.com>
 Cc: Jeffrey Law <jefflaw@qti.qualcomm.com>,
@@ -53,11 +53,12 @@ Cc: Jeffrey Law <jefflaw@qti.qualcomm.com>,
 	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
 	"Constable, Scott D" <scott.d.constable@intel.com>,
 	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v13 1/7] kcfi: Introduce KCFI typeinfo mangling API
-Message-ID: <202607151151.AB5F1BD0@keescook>
+Subject: Re: [PATCH v13 5/7] aarch64: Add AArch64 Kernel Control Flow
+ Integrity implementation
+Message-ID: <202607151256.417B05A99A@keescook>
 References: <20260618204530.work.910-kees@kernel.org>
- <20260618204539.824446-1-kees@kernel.org>
- <CALvbMcCiQ1b0KDrJHS-irGMWNEk5oWaWs31KQor2ZHPSVewQ=A@mail.gmail.com>
+ <20260618204539.824446-5-kees@kernel.org>
+ <CALvbMcDnK6iWkXbO7VbdBgeuym9yO6xNG8VE_RNQ8Nser0=TmA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,129 +68,89 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALvbMcCiQ1b0KDrJHS-irGMWNEk5oWaWs31KQor2ZHPSVewQ=A@mail.gmail.com>
+In-Reply-To: <CALvbMcDnK6iWkXbO7VbdBgeuym9yO6xNG8VE_RNQ8Nser0=TmA@mail.gmail.com>
 
-On Sat, Jun 27, 2026 at 03:00:42PM -0700, Andrea Pinski wrote:
+On Sat, Jun 27, 2026 at 04:00:04PM -0700, Andrea Pinski wrote:
 > On Thu, Jun 18, 2026 at 1:45 PM Kees Cook <kees@kernel.org> wrote:
-> > [...]
-> > diff --git a/gcc/doc/extend.texi b/gcc/doc/extend.texi
-> > index 9f821f048533..2e7b7e4aed89 100644
-> > --- a/gcc/doc/extend.texi
-> > +++ b/gcc/doc/extend.texi
-> > @@ -17967,6 +17967,101 @@ which will cause a @code{NULL} pointer to be used for the unsafe case.
 > >
-> >  @enddefbuiltin
+> > Implement AArch64-specific KCFI backend.
 > >
-> > +@defbuiltin{{unsigned int} __builtin_linux_abi_kcfi_hash (@var{type})}
-> > +
-> > +The built-in function @code{__builtin_linux_abi_kcfi_hash} returns a hash value
-> > +for the given type @var{type} (which is a type, not an expression).
-> > +The hash is computed using the FNV-1a algorithm on the type's mangled
-> > +name representation, which follows a subset of the Itanium C++ ABI
-> > +conventions adapted for C types.  (See @code{__builtin_linux_abi_kcfi_name}
-> > +for the string representation.)
+> > - Trap debugging through ESR (Exception Syndrome Register) encoding
+> >   in BRK instruction immediate values.
+> >
+> > - Scratch register allocation using w16/w17 (x16/x17) following
+> >   AArch64 procedure call standard for intra-procedure-call registers,
+> >   which already makes x16/x17 available through existing clobbers.
+> >
+> >   Note that BTI uses x16/x17 AT the call site, and KCFI uses w16/w17
+> >   BEFORE the call (for the type hash comparison). These don't conflict
+> >   because:
+> >   - KCFI clobbers w16/w17 with hash values.
+> >   - Then the actual call happens via blr %target_reg (whatever
+> >     register the target is in).
+> >   - If SLS hardening is enabled, aarch64_indirect_call_asm will
+> >     create a thunk that moves target into x16 and does br x16.
+> >   - By the time the SLS thunk uses x16, KCFI is already done with it.
+> >
+> > - Complementary with BTI (which uses a separate pass system to inject
+> >   landing instructions where needed).
+> >
+> > - Does not interfere with SME, which uses attributes not function
+> >   prototypes for distinguishing functions.
+> >
+> > Assembly Code Pattern for AArch64:
+> >   ldur w16, [target, #-4]       ; Load actual type ID from preamble
+> >   mov  w17, #type_id_low        ; Load expected type (lower 16 bits)
+> >   movk w17, #type_id_high, lsl #16  ; Load upper 16 bits if needed
+> >   cmp  w16, w17                 ; Compare type IDs directly
+> >   b.eq .Lpass                   ; Branch if types match
+> >   .Ltrap: brk #esr_value        ; Enhanced trap with register info
+> >   .Lpass: blr/br target         ; Execute validated indirect transfer
+> >
+> > ESR (Exception Syndrome Register) Integration:
+> > - BRK instruction immediate encoding format:
+> >   0x8000 | ((TypeIndex & 31) << 5) | (AddrIndex & 31)
+> >   - TypeIndex indicates which W register contains expected type (W17 = 17)
+> >   - AddrIndex indicates which X register contains target address (0-30)
+> >   - Example: brk #33313 (0x8221) = expected type in W17, target address in X1
+> >
+> > Build and run tested with Linux kernel ARCH=arm64.
+> >
+> > gcc/ChangeLog:
+> >
+> >         config/aarch64/aarch64-protos.h: Declare aarch64_indirect_branch_asm,
+> >         and KCFI helpers.
+> >         config/aarch64/aarch64.cc (aarch64_expand_call): Wrap CALLs in
+> >         KCFI, with clobbers.
+> >         (aarch64_indirect_branch_asm): New function, extract common
+> >         logic for branch asm, like existing call asm helper.
+> >         (aarch64_output_kcfi_insn): Emit KCFI assembly.
+> >         config/aarch64/aarch64.md: Add KCFI RTL patterns and replace
+> >         open-coded branch emission with aarch64_indirect_branch_asm.
+> >         doc/invoke.texi: Document aarch64 nuances.
+> >
+> > gcc/testsuite/ChangeLog:
+> >
+> >         * gcc.dg/kcfi/kcfi-adjacency.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-basics.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-call-sharing.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-complex-addressing.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-direct-call-shapes.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-move-preservation.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-no-sanitize-inline.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-no-sanitize.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-offset-validation.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-patchable-entry-only.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-patchable-large.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-patchable-medium.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-patchable-prefix-only.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-tail-calls.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-trap-section.c: Add aarch64 patterns.
+> >         * gcc.dg/kcfi/kcfi-trap-encoding.c: New test.
 > 
-> I think we should add a link to the Itanium C++ ABI from the documentation.
+> Ok once all other prerequisites have been approved.
 
-Do you mean a literal URL?
-
-> The documentation is missing that these builtins are only available
-> from the C and Objective-C and not there for C++.
-> Unless you are going to add a cp/cp-parser.cc implementation too.
-
-Good point; I don't intend to add this to cp/cp-parser.cc unless there
-is some extremely good reason, and if this is Linux-kernel specific, it
-really should just be C.
-
-> > [...]
-> > +
-> > +    printf("\n================================================================\n");
-> > +    printf("Passed: %d Failed: %d (%d total tests)\n", pass, fail, pass + fail);
-> > +    return fail;
-> > +}
-> 
-> It would be a good idea to add a random generated testing here. See
-> testsuite/objc.dg/gnu-encoding and testsuite/gcc.dg/compat for
-> examples.
-
-Okay, thanks for the pointer; I'll see what I can come up with. I
-generally dislike random testing since they may appear to be "flaky"
-when they trip, but I'll give it a shot.
-
-> > [...]
-> > --- /dev/null
-> > +++ b/gcc/kcfi-typeinfo.h
-> > @@ -0,0 +1,32 @@
-> > +/* KCFI-compatible type mangling, based on Itanium C++ ABI.
-> > +   Copyright (C) 2025 Free Software Foundation, Inc.
-> 
-> It is 2026 now.
-
-Oops, yes.
-
-> 
-> > +
-> > +This file is part of GCC.
-> > +
-> > +GCC is free software; you can redistribute it and/or modify it under
-> > +the terms of the GNU General Public License as published by the Free
-> > +Software Foundation; either version 3, or (at your option) any later
-> > +version.
-> > +
-> > +GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-> > +WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> > +FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-> > +for more details.
-> > +
-> > +You should have received a copy of the GNU General Public License
-> > +along with GCC; see the file COPYING3.  If not see
-> > +<http://www.gnu.org/licenses/>.  */
-> > +
-> > +#ifndef GCC_KCFI_TYPEINFO_H
-> > +#define GCC_KCFI_TYPEINFO_H
-> > +
-> > +#include "tree.h"
-> > +#include <string>
-> 
-> Don't include string here. It will break on some host.
-
-Ah! Okay. Do you know which combo trips this? I'd love to be able to
-validate I've fixed this correctly.
-
-> > [...]
-> > +#include "config.h"
-> Add `#define INCLUDE_STRING` here.
-
-> > [...]
-> > +/* Forward declaration for recursive type mangling.  */
-> > +
-> > +static void mangle_type (tree type, std::string *out_str, uint32_t *hash_state);
-> 
-> Forward declarations should be close to the top of the file.
-
-Gotcha.
-
-> > [...]
-> > +  /* Unknown builtin type: this should never happen in a well-formed C.  */
-> > +  debug_tree (type);
-> > +  internal_error ("mangle: Unknown builtin type - please report this as a bug");
-> Maybe fatal_error or sorry. I know we had some disagreement about this
-> but I can't remember the out come.
-> I am not sure we want internal_error exactly to be user friendly.
-
-We've gone back and forth a few times in other places. My take on this
-is that I do want it to be friendly because in at least the place I
-tripped over this, it was very confusing for me: first I saw this for
-vector types and later for builtins. So, at the very least, I'd like to
-keep this as-is because of how hard I found it to be to debug when
-something got missed. :P
-
-> Note I also have not doubled check but do you have some testcases
-> testing VLAs inside a struct here?
-> What about _BitInt testcases?
-
-I can add both; Linux uses neither so I hadn't considered/tripped over
-those.
+Great; thank you for all the review!
 
 -- 
 Kees Cook
