@@ -1,181 +1,139 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4567C379EE2;
-	Wed, 15 Jul 2026 01:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79394225403;
+	Wed, 15 Jul 2026 02:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784078567; cv=none; b=lxTj/ijgLxk4p8C9JkiZFiDo95JfBFE3+b5ljKUaeDa5Dynq2IHMkTxsFgnu9mUU6BlXvpOS+BnYWiMU8g0iKzY1DWQ/Q2cdON64NJEt7nKpxOburONqIScpLhl8vqHP6LEfA+Cui3jPGi+wm5vyi9NfUhduMfDSKALWClI6V3o=
+	t=1784081858; cv=none; b=gw1qjcdxlW+w5FTddcwzSMZN+SARYNV9JI9UW8QbWiwiqhWaeeuChxm0TbYDAsdgW5i4j8k+DL9uC4L1GvS8nwD5XEtgYbSqdOLNkzDW1wBPqxpxtNl1B6u4hr4LsCJaj/2r84Y6pFtLUyillYx3jRsUSaQTb8d1B0WpXGwfXWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784078567; c=relaxed/simple;
-	bh=UkjDLG4XGjeBZA6yNdI13VlXhjqfFVoKD3WwStCIwwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=i6W5ELVngfelxIbNcECemSeun6XgMUyaj4lOy5riNhAhcf+Rq9cKCzUfYvjhR2qExvlZxxdhpOKDnSCc/p6VcraSNgWL3MIdBybI5bmSlsIBD5LEUs+HAVKJ3GxHFCEejVyouYSIohJhP1DAqbeQhEIDk9gJx3P/BLxIl8+ujf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=pUTkNY3a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OOGxqJGo; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
+	s=arc-20240116; t=1784081858; c=relaxed/simple;
+	bh=cOOejFe4k0KTdIQaW8F+K9w1mFZBWCguRU7Z+ka+fE0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nafjgx2C+gwtOD1D8jrliawm93P/k3vatk5Co87vF2Vpz6rE5crCqvd+BPkMpqDWgHFTJO4E9QP7fhkGe0hixxM2xUedFojhVCitDvu3FPcgGEBLflbu0sA7Nfl6qMV3rzTMDXXTGDoGKz7KuYEgUkCllpjad536Jlp/fVyzg7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Mj9RPp1s; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="pUTkNY3a";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OOGxqJGo"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 786C27A01AB;
-	Tue, 14 Jul 2026 21:22:44 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Tue, 14 Jul 2026 21:22:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
-	 t=1784078564; x=1784164964; bh=qCwUqP5E/Tizzg6FQrFskv3X65mohBjV
-	Tw6dw1aOwZY=; b=pUTkNY3ajKGQyJpihivMDZhqUfHQCbLmeZcITCFKcbiL3jZ9
-	leAyaCr7HY39TJB481kA+fxMmotOb/WNmOwbXiyCWCJ7Bb06PvGPbx7sl1LGWRB1
-	ezyCp287yuGRGq1O25Fa6WDP1yL98O5Rm3eV45efpTO+K5KZApz7ESR0/e9bpuYo
-	F7Il2RELlXAuLBBJVEdbymLwDLtAJBrJ/Krfyd8URXKbjNEkk2rBreMnYX8mGZVY
-	oJsBezshaLZiYKfAdsAVP9F6PzSSEsrowhw3vivsoCx5IuoX3r64sScBUIEenvOA
-	v5pvep22dX9F91zxIRVewiMWZnLhqZJYUHSNug==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1784078564; x=
-	1784164964; bh=qCwUqP5E/Tizzg6FQrFskv3X65mohBjVTw6dw1aOwZY=; b=O
-	OGxqJGoU5+GfOHXn7wg6pJF/gapxFLFAbqWA5z99E+RTqrPa3hRjSOgsH8x/7wVt
-	39nLDf4a8b6NorMgTcrLA8rw6eU2q0nkzC8NWZ837qnm9Jl6MRVvrW0p1vWAZuGN
-	5orXGPumG9qM3jWmQbyurXgF0Vrp61EiMrLaa3FsrKkiJwdAahhcjqTkIYHrduuX
-	IffZN3kPJhM9U71Hzlg7jYI7JZDCtcgOhSBwRazjKg2Pal9w5HE9zMC5FKXZUDsF
-	TNcqea4Y1UojPz0ypTqX6N6l42RhDB8tjlJEEb8ppaikWW7qn08sv77nU7liqzVN
-	Mj3KmmeiPK8xuiIC3zMsw==
-X-ME-Sender: <xms:5OBWarhBVuzqT5pxhw1gAErmAhhe1QaN24t0n58pWFAydvtxBKG9MA>
-    <xme:5OBWajeZ-5M6DFKHYyh_FBOAuWez50vOEuKiWWKy9iiwA4Op8Am62p7i73RSOxkE8
-    cuA-hH1uhmEtIOK6D5o9GGgYqhv_aVAnIqE4vEyGyv6hsoJCYHeTw8>
-X-ME-Received: <xmr:5OBWaum5ZobflZIh8p3QKiBFUKpYHPFALEqNNmfFtY2pomQGJgPhNY3UvDY>
-X-ME-Proxy-Cause: dmFkZTFI/LtI7W6f1lF3OsQjfGRe8wa4mOKzgAHolKjPZkt7o4Av2dlAxiIpLI9nmoQecn
-    0yLqQjeyLynHQ3vJHBmucmp4kn4WBfm+YfvkJLpc+c1ToRFq615QBAfbwCjH7Rnkfk2Hdr
-    RkyMxDiEt75HUg+mZMEcvVmm8ktvzBtNjqdP6UhTer0AogpEmahMLXV7qbjGtmOKesBAtp
-    ww6BrrM2wQ+I2tGn+ClIV3dfLLqQPKPF4LdrvS25XekfNCiZNo1P9pDzHZkPbjBZrgAxUq
-    iRJ6trIA/m2yM570qkIFDRoMHaXprbIZBI+L1pEpiylYRqxClwyrS8ws2lUzr7uEW+Wtez
-    gl38TXKad3hE+5TkirLFG5jkfMO6BwBH8KcrMiyOYO9MKjCAbChueBP3ocyjCzHqYAvNel
-    vtTT3/r9wGZ2ZU+gYQ1a264RKTTOsplGhER/Ytb3zj4UOINycGaPoYUCN1th8A0p261jo7
-    TfXGotlcw3VGkIqIN+F9k6sa2O9HPxYlVnGb7LdPUpHyVx6rdHUFmm5jpszbLGrccMC+Fg
-    92c42hynXLo2ayZP6Wch23iM7Qg1uonl2GTFp4Z6n7ULwDbG+6SX23okO3S5c8XpXjydsD
-    +f/cPNXbj9HVQBtHWxvRVJLcLvB2NoKwD3oaqAJzmwrcEMM4Oa/BY9sjEUug
-X-ME-Proxy: <xmx:5OBWastkvRBgD8-anL1oL6EqxPM6XhM8P6v8n_hXPE2lOcPohMLXmA>
-    <xmx:5OBWak_faOF8-kUY3k_eVrRouhR80FXlcjzEYAsX-O8hQI-0MMly1A>
-    <xmx:5OBWauM4vRbOtsClrCVeV0AmIQrmfjJxNWush-us48QMADTj4-U63g>
-    <xmx:5OBWaqHnBjBF4jm56dRUn85_xEgps4gh2IhDttoPkpfsBP8tPAhuvQ>
-    <xmx:5OBWamyDNjhmYdQNMjFNWVOUj2zTQUtskMLGZbXAMHbKJgbjhqAeUQY_>
-Feedback-ID: ib53e4b78:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 14 Jul 2026 21:22:43 -0400 (EDT)
-Date: Tue, 14 Jul 2026 20:22:41 -0500
-From: Ian Bridges <icb@fastmail.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] Input: wacom_w8001 - replace strlcat() with a strscpy()
- helper
-Message-ID: <albg4Rv7QxvLJD05@dev>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Mj9RPp1s"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1784081853; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=bVuX5Q4TeV1R+TtqVkuED8PpetVVHItpE0gtsE1t7Jo=;
+	b=Mj9RPp1shDWHedHPHqWNJs/LbXKrMk4n7zlu1A+tSRJ5Y5BsBpm/jJj8aRyYSQPLj1sOmnYmXtNu9/WAGcU6fVaY/P5UV8BGQSniR3JhbU+LMQnNeyui0GRCN05gCaSzMgIigJfyDbyW/Ht97pq1dkUFRJoJHztx70dU1Pm2fWI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=libaokun@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X77N9Ch_1784081851;
+Received: from 30.221.131.206(mailfrom:libaokun@linux.alibaba.com fp:SMTPD_---0X77N9Ch_1784081851 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 15 Jul 2026 10:17:32 +0800
+Message-ID: <4c760c0f-0408-4b95-ab67-e4f027e34224@linux.alibaba.com>
+Date: Wed, 15 Jul 2026 10:17:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] fuse: whitelist the request headers for usercopy
+To: Xiang Mei <xmei5@asu.edu>
+Cc: fuse-devel@lists.linux.dev, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Luis Henriques <luis@igalia.com>, Pavel Begunkov <asml.silence@gmail.com>,
+ bestswngs@gmail.com, Joanne Koong <joannelkoong@gmail.com>,
+ Bernd Schubert <bernd@bsbernd.com>, Miklos Szeredi <miklos@szeredi.hu>,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>
+References: <20260714235408.1666063-1-xmei5@asu.edu>
+From: Baokun Li <libaokun@linux.alibaba.com>
+In-Reply-To: <20260714235408.1666063-1-xmei5@asu.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In preparation for removing the strlcat() API[1], replace its five
-uses with a small append helper built on strnlen() and strscpy().
+On 2026/7/15 07:54, Xiang Mei wrote:
+> The fuse-io-uring transport copies req->in.h out to the ring in
+> fuse_uring_copy_to_ring() and req->out.h back in fuse_uring_commit().
+> Both headers live inside the fuse_request slab object, whose cache
+> (fuse_req_cachep) is created without a usercopy whitelist, so copying
+> them directly to/from userspace trips CONFIG_HARDENED_USERCOPY and
+> panics:
+>
+>   usercopy: Kernel memory exposure attempt detected from SLUB object
+>   'fuse_request' (offset 56, size 40)!
+>   kernel BUG at mm/usercopy.c:102!
+>   Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+>   RIP: 0010:usercopy_abort (mm/usercopy.c:90)
+>   Call Trace:
+>    __check_heap_object (mm/slub.c:8268)
+>    __check_object_size (mm/usercopy.c:197 mm/usercopy.c:258 mm/usercopy.c:223)
+>    copy_header_to_ring (fs/fuse/dev_uring.c:618)
+>    fuse_uring_prepare_send (fs/fuse/dev_uring.c:776 fs/fuse/dev_uring.c:785)
+>    fuse_uring_send_in_task (fs/fuse/dev_uring.c:1306)
+>    tctx_task_work_run (io_uring/tw.c:96)
+>    task_work_run (kernel/task_work.c:233)
+>    io_run_task_work (io_uring/tw.h:84)
+>    io_cqring_wait (io_uring/wait.c:278)
+>    __do_sys_io_uring_enter (io_uring/io_uring.c:2685)
+>    entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+>
+> in.h and out.h are adjacent in struct fuse_req, so a single usercopy
+> region starting at in.h covers both and nothing else.  Create the cache
+> with that region whitelisted.
+>
+> Fixes: c090c8abae4b ("fuse: Add io-uring sqe commit and fetch support")
+> Cc: stable@vger.kernel.org
+> Reported-by: Weiming Shi <bestswngs@gmail.com>
+> Suggested-by: Baokun Li <libaokun@linux.alibaba.com>
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Xiang Mei <xmei5@asu.edu>
 
-The five calls append device name fragments to a basename buffer
-that grows in place across the setup functions. The helper takes
-the same arguments as strlcat() and writes the same bytes, including
-when a fragment is truncated.
+Looks good, feel free to add:
 
-Link: https://github.com/KSPP/linux/issues/370 [1]
-Signed-off-by: Ian Bridges <icb@fastmail.org>
----
-The produced device names are unchanged.
+Reviewed-by: Baokun Li <libaokun@linux.alibaba.com>
 
-A seq_buf conversion was considered instead of the helper and set
-aside for two reasons. seq_buf_puts() drops a whole fragment when it
-does not fit, while strlcat() writes the partial fragment, so the
-produced bytes would change at the truncation boundary. The setup
-functions would also change signature to take a struct seq_buf
-pointer. A v2 can adopt seq_buf if that tradeoff is preferred.
+> ---
+> v3: no context change; add Bernd's Reviewed-by
+> v4: drop previous tags; use kmem_cache_args to reserve usercopy area
+>
+>  fs/fuse/dev.c        | 9 +++++++--
+>  fs/fuse/fuse_dev_i.h | 5 +++++
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index 5763a7cd3b37..b8e43e374b35 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -2404,10 +2404,15 @@ static struct miscdevice fuse_miscdevice = {
+>  
+>  int __init fuse_dev_init(void)
+>  {
+> +	struct kmem_cache_args args = {
+> +		.useroffset = offsetof(struct fuse_req, in.h),
+> +		.usersize = sizeof_field(struct fuse_req, in.h) +
+> +			    sizeof_field(struct fuse_req, out.h),
+> +	};
+>  	int err = -ENOMEM;
+> +
+>  	fuse_req_cachep = kmem_cache_create("fuse_request",
+> -					    sizeof(struct fuse_req),
+> -					    0, 0, NULL);
+> +					    sizeof(struct fuse_req), &args, 0);
+>  	if (!fuse_req_cachep)
+>  		goto out;
+>  
+> diff --git a/fs/fuse/fuse_dev_i.h b/fs/fuse/fuse_dev_i.h
+> index 668c8391d61c..b511aaab6bfc 100644
+> --- a/fs/fuse/fuse_dev_i.h
+> +++ b/fs/fuse/fuse_dev_i.h
+> @@ -81,6 +81,11 @@ struct fuse_req {
+>  	/** @flags: Request flags, updated with test/set/clear_bit() */
+>  	unsigned long flags;
+>  
+> +	/*
+> +	 * @in and @out are the usercopy region of this cache (see
+> +	 * fuse_dev_init()); keep them adjacent.
+> +	 */
+> +
+>  	/** @in: The request input header */
+>  	struct {
+>  		/** @in.h: The request input header */
 
-The patch was tested as follows.
-
-- W=1 build of drivers/input/touchscreen/, zero warnings.
-- A userspace differential harness compiled the old and the new
-  functions side by side. The name buffers were byte identical over
-  their full length, and the return values and id assignments matched
-  in every case.
-
- drivers/input/touchscreen/wacom_w8001.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/input/touchscreen/wacom_w8001.c b/drivers/input/touchscreen/wacom_w8001.c
-index 45930d731873..d8d1cdc3f09e 100644
---- a/drivers/input/touchscreen/wacom_w8001.c
-+++ b/drivers/input/touchscreen/wacom_w8001.c
-@@ -417,6 +417,13 @@ static int w8001_detect(struct w8001 *w8001)
- 	return 0;
- }
- 
-+static void w8001_append_suffix(char *dest, const char *suffix, size_t dest_sz)
-+{
-+	size_t used = strnlen(dest, dest_sz);
-+
-+	strscpy(dest + used, suffix, dest_sz - used);
-+}
-+
- static int w8001_setup_pen(struct w8001 *w8001, char *basename,
- 			   size_t basename_sz)
- {
-@@ -453,7 +460,7 @@ static int w8001_setup_pen(struct w8001 *w8001, char *basename,
- 	}
- 
- 	w8001->id = 0x90;
--	strlcat(basename, " Penabled", basename_sz);
-+	w8001_append_suffix(basename, " Penabled", basename_sz);
- 
- 	return 0;
- }
-@@ -503,14 +510,14 @@ static int w8001_setup_touch(struct w8001 *w8001, char *basename,
- 	case 2:
- 		w8001->pktlen = W8001_PKTLEN_TOUCH93;
- 		w8001->id = 0x93;
--		strlcat(basename, " 1FG", basename_sz);
-+		w8001_append_suffix(basename, " 1FG", basename_sz);
- 		break;
- 
- 	case 1:
- 	case 3:
- 	case 4:
- 		w8001->pktlen = W8001_PKTLEN_TOUCH9A;
--		strlcat(basename, " 1FG", basename_sz);
-+		w8001_append_suffix(basename, " 1FG", basename_sz);
- 		w8001->id = 0x9a;
- 		break;
- 
-@@ -534,7 +541,7 @@ static int w8001_setup_touch(struct w8001 *w8001, char *basename,
- 		input_abs_set_res(dev, ABS_MT_POSITION_X, touch.panel_res);
- 		input_abs_set_res(dev, ABS_MT_POSITION_Y, touch.panel_res);
- 
--		strlcat(basename, " 2FG", basename_sz);
-+		w8001_append_suffix(basename, " 2FG", basename_sz);
- 		if (w8001->max_pen_x && w8001->max_pen_y)
- 			w8001->id = 0xE3;
- 		else
-@@ -542,7 +549,7 @@ static int w8001_setup_touch(struct w8001 *w8001, char *basename,
- 		break;
- 	}
- 
--	strlcat(basename, " Touchscreen", basename_sz);
-+	w8001_append_suffix(basename, " Touchscreen", basename_sz);
- 
- 	return 0;
- }
--- 
-2.47.3
 
