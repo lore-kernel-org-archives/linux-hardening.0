@@ -1,288 +1,168 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D08D3C8708
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 09:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9933B7B6E
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 11:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784108775; cv=none; b=LZbM37dmBg1AF7zBXRyAQMlx7eVXgLCajcvzGpHg3DuQMMzaXh8fYK7oRjzye1Oi8C8PAvnypUnpWaHsPZlwkzIPJBOha5J086xKHrBDGNSNPFKGLUZnINHRiWkPzU1meffQv3z5syrx/tMZtIX9M2PHeYqv+xXqGdggehvY6Ic=
+	t=1784113675; cv=none; b=Btixsd/EXyJn4gNUs3D63W3wB4TtOx4/1p9j2GX+FdpFvU1o2OJ9UdNNs2f70DJdjE3/v9PIxUNc/axPN9ONHCrOO/h8RTh0E1v1WxVEFBwFJh5FwNG8hEuwvqXgLh1MsCz0hwlvI4F48T//83TQth9u2pJbx6wvm9ZSuu++ZCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784108775; c=relaxed/simple;
-	bh=ycLp4YOzr77AFKYsYBIxizdPf3qgiuB7hcLJ+9mIHDk=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=JI26ZvQIIiBj1D9V1RIHPULkN+UhFZfRdmymNirqG0MREic9vSh4OXOz8CO4NtxTVXZMDasv2pfgh+qXwFOT5MltUI3V8NrXshMyIdx+JTlxhZ+5CrLb3noFmv3qEnoIj2XKvD72KaHhsqXgEs8gaNqphvfB2YLPxVw5b6LASag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ao7ahOc+; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1784113675; c=relaxed/simple;
+	bh=Hc514JNshgqWceOMm9U2mfrHvFSvhhnQoBZQ351+jAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hkoIKcuWiwaeFbFMfQtBM0SQpldbErtXKGCt0BILqEtfk1uKUJjmqB944KRchuEBWezXVr6eUD7vvaNT6E+4Izo4NghDnDzL1U38D3C+Wob7BktFjyh/1nmq18DKNfWiD+7VZc3V/oKRrjITNnTIdGHbXQcAbK1sp3T4TK80tK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ai83GQU1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mAvO173l; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ai83GQU1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mAvO173l; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ao7ahOc+"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784108766;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ai83GQU1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mAvO173l";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ai83GQU1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mAvO173l"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 07A567837A;
+	Wed, 15 Jul 2026 11:07:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784113672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FMTXrB+Zi9TMK+EM1dR+BBVtkmv5obNVP547abyNOYE=;
-	b=Ao7ahOc+WpMezS4WolYDDwVKyD9mEjHAbDZ9lc1Z3gs/slhubkfm/tNkSoxySpIypV3i0N
-	zyjvMaKbdqV29NJDCZHcB9gJ1b6qwmHnNCtLz+lCeZOxmnFtw2NYlbAVfOtoKLDaTgJei3
-	pPvoTTqr6mgWPckPVIaCAN1V7gSXqhU=
+	bh=nioUefq1xbXjtodWxvKxZTWQPlbxpqryGWIKwDtgw9w=;
+	b=ai83GQU1QSLW4HMqQLHqkTNNKJcdnVJeYTkcJczwLEkaWbE4HH08Sgzz4Zi3FfHHLXKF0w
+	BUqWf9xtp+Poz7MSTvJxVILX1rJ1fg0J0/12EhNSXj8Ts27FocAgBdZZtHRJP2E0SYcjVW
+	dRLsXyhi36zD9Vi640oinf7YuU/RvAU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784113672;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nioUefq1xbXjtodWxvKxZTWQPlbxpqryGWIKwDtgw9w=;
+	b=mAvO173lFLygJBfvjytDRj9llSE+d8jC3KzkTwirCPAfOhdFiZxPmaq14VxHUPIQnWNtTe
+	BMuK6oUQqZjAcqAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784113672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nioUefq1xbXjtodWxvKxZTWQPlbxpqryGWIKwDtgw9w=;
+	b=ai83GQU1QSLW4HMqQLHqkTNNKJcdnVJeYTkcJczwLEkaWbE4HH08Sgzz4Zi3FfHHLXKF0w
+	BUqWf9xtp+Poz7MSTvJxVILX1rJ1fg0J0/12EhNSXj8Ts27FocAgBdZZtHRJP2E0SYcjVW
+	dRLsXyhi36zD9Vi640oinf7YuU/RvAU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784113672;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nioUefq1xbXjtodWxvKxZTWQPlbxpqryGWIKwDtgw9w=;
+	b=mAvO173lFLygJBfvjytDRj9llSE+d8jC3KzkTwirCPAfOhdFiZxPmaq14VxHUPIQnWNtTe
+	BMuK6oUQqZjAcqAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0E927779AE;
+	Wed, 15 Jul 2026 11:07:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id iqBNAAdqV2ooAwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 15 Jul 2026 11:07:51 +0000
+Date: Wed, 15 Jul 2026 12:07:49 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Harry Yoo <harry@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Jason Xing <kerneljasonxing@gmail.com>, Kuniyuki Iwashima <kuniyu@google.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	linux-mm@kvack.org, Vlastimil Babka <vbabka@kernel.org>
+Subject: Re: [PATCH net-next v3] net: skb: isolate skb data area allocations
+ into a separate bucket
+Message-ID: <aldpAY6nXwgayHL0@pedro-suse.lan>
+References: <20260702170728.168755-1-pfalcato@suse.de>
+ <04debe19-bbe8-4b5f-9668-753d1f97832d@redhat.com>
+ <ak4w2k4Woj55E0On@pedro-suse>
+ <529e3997-d26f-4d8e-ad90-3329fe90e555@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
-Subject: Re: [PATCH v6 8/8] mm: use memcpy_nt() in zone-device template copies
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <fcfe93e4-e7fc-4d77-bce5-d027c597e556@bytedance.com>
-Date: Wed, 15 Jul 2026 17:45:15 +0800
-Cc: linux-arch@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-mm@kvack.org,
- x86@kernel.org,
- akpm@linux-foundation.org,
- apopple@nvidia.com,
- arnd@arndb.de,
- balbirs@nvidia.com,
- bp@alien8.de,
- dave.hansen@linux.intel.com,
- david@kernel.org,
- kees@kernel.org,
- mingo@redhat.com,
- rppt@kernel.org,
- tglx@kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <10E87709-2116-46E3-96E2-6BC4E6F69952@linux.dev>
-References: <20260709112520.24857-1-lizhe.67@bytedance.com>
- <20260709112520.24857-9-lizhe.67@bytedance.com>
- <04f5b50a-a526-4644-b9f0-c54a0d6db702@linux.dev>
- <67BC9BE5-A201-4DED-B847-8C74BF30B16D@linux.dev>
- <fcfe93e4-e7fc-4d77-bce5-d027c597e556@bytedance.com>
-To: Li Zhe <lizhe.67@bytedance.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <529e3997-d26f-4d8e-ad90-3329fe90e555@kernel.org>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,davemloft.net,google.com,kernel.org,gmail.com,vger.kernel.org,kvack.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,pedro-suse.lan:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
+On Wed, Jul 08, 2026 at 10:27:54PM +0900, Harry Yoo wrote:
+> 
+> 
+> On 7/8/26 8:16 PM, Pedro Falcato wrote:
+> > On Wed, Jul 08, 2026 at 10:30:50AM +0200, Paolo Abeni wrote:
+> >> On 7/2/26 7:07 PM, Pedro Falcato wrote:> @@ -586,6 +586,8 @@ struct
+> >> sk_buff *napi_build_skb(void *data, unsigned int frag_size)
+> >>>  }
+> >>>  EXPORT_SYMBOL(napi_build_skb);
+> >>>  
+> >>> +static kmem_buckets *skb_data_buckets __ro_after_init;
+> >>> +
+> >>>  static void *kmalloc_pfmemalloc(size_t obj_size, gfp_t flags, int node)
+> >>>  {
+> >>>  	if (!gfp_pfmemalloc_allowed(flags))
+> >>> @@ -593,7 +595,8 @@ static void *kmalloc_pfmemalloc(size_t obj_size, gfp_t flags, int node)
+> >>>  	if (!obj_size)
+> >>>  		return kmem_cache_alloc_node(net_hotdata.skb_small_head_cache,
+> >>>  					     flags, node);
+> >>> -	return kmalloc_node_track_caller(obj_size, flags, node);
+> >>> +	return kmem_buckets_alloc_node_track_caller(skb_data_buckets, obj_size,
+> >>> +						    flags, node);
+> >>
+> >> Sashiko noted that some drivers may require GFP_DMA buckets, and the
+> >> above may break them:
+> >>
+> >> https://sashiko.dev/#/patchset/20260702170728.168755-1-pfalcato%40suse.de
+> > 
+> > Oh, this is really awkward. Adding linux-mm and slab maintainers for input here.
+> > 
+> > Considering the current slab bucketing does not seem to duplicate DMA or
+> > CGROUP caches, could it make sense to duplicate those as well?
+> 
+> Could we specify what kmalloc types the user needs when creating
+> kmem_buckets and duplicate caches for the requested kmalloc types only?
 
+Perhaps. But do the users themselves know? alloc_skb() allows users to specify
+random __GFP flags. We're bound to see some random caller do
+alloc_skb(__GFP_ACCOUNT) ;)
 
-> On Jul 15, 2026, at 14:30, Li Zhe <lizhe.67@bytedance.com> wrote:
->=20
-> On 7/14/26 7:22 PM, Muchun Song wrote:
->>=20
->>> On Jul 14, 2026, at 17:45, Muchun Song <muchun.song@linux.dev> =
-wrote:
->>>=20
->>>=20
->>>=20
->>> On 2026/7/9 19:25, Li Zhe wrote:
->>>> The template fast path currently uses memcpy() for the actual =
-struct
->>>> page copy. Switch zone_device_page_init_from_template() to =
-memcpy_nt()
->>>> and add memcpy_nt_drain() before memmap_init_compound(), before
->>>> prep_compound_head() updates overlapping tail metadata, and before
->>>> returning from memmap_init_zone_device().
->>>>=20
->>>> ZONE_DEVICE memmap initialization is largely write-once: each =
-struct
->>>> page is populated once, and most destination cachelines are not =
-expected
->>>> to be reused immediately afterwards. On x86, a regular cached =
-memcpy()
->>>> can therefore incur write-allocate traffic by pulling destination
->>>> cachelines into the cache before writeback, and can populate the =
-cache
->>>> with data that has little near-term reuse. Using memcpy_nt() lets =
-this
->>>> path request non-temporal stores for that copy pattern, which can =
-reduce
->>>> cache pollution and avoid part of the associated write-allocate
->>>> overhead, while architectures without a specialized backend still =
-fall
->>>> back to memcpy().
->>>>=20
->>>> When memcpy_nt() maps to non-temporal stores, order those stores =
-before
->>>> memmap_init_compound(), before prep_compound_head() updates =
-overlapping
->>>> compound metadata, and before returning from =
-memmap_init_zone_device().
->>>>=20
->>>> Keep sanitized builds on the slow path so KASAN/KMSAN retain their
->>>> instrumented stores.
->>>>=20
->>>> Tested in a VM with a 100 GB fsdax namespace device configured with
->>>> map=3Ddev and a 100 GB devdax namespace (align=3D2097152) on Intel =
-Ice Lake
->>>> server.
->>>>=20
->>>> Test procedure:
->>>> Rebind the nd_pmem and dax_pmem driver 30 times and collect the =
-memmap
->>>> initialization time from the pr_debug() output of
->>>> memmap_init_zone_device().
->>>>=20
->>>> Base(v7.2-rc1):
->>>>   First binding for nd_pmem driver: 1456 ms
->>>>   Average of subsequent rebinds: 244.28 ms
->>>>=20
->>>>   First binding for dax_pmem driver: 1462 ms
->>>>   Average of subsequent rebinds: 273.31 ms
->>>>=20
->>>> With this series:
->>>>   First binding for nd_pmem driver: 1272 ms
->>>>   Average of subsequent rebinds: 96.79 ms
->>>>=20
->>>>   First binding for dax_pmem driver: 1354 ms
->>>>   Average of subsequent rebinds: 119.04 ms
->>>>=20
->>>> This reduces the average rebind time by about 60.4% for nd_pmem and
->>>> 56.4% for dax_pmem.
->>>>=20
->>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
->>>> ---
->>>>  mm/mm_init.c | 39 +++++++++++++++++++++++++++++++++++++--
->>>>  1 file changed, 37 insertions(+), 2 deletions(-)
->>>>=20
->>>> diff --git a/mm/mm_init.c b/mm/mm_init.c
->>>> index fb855bb0437a..addb4969587e 100644
->>>> --- a/mm/mm_init.c
->>>> +++ b/mm/mm_init.c
->>>> @@ -1067,11 +1067,21 @@ static void __ref =
-zone_device_page_init_slow(struct page *page,
->>>>=20
->>>>  static inline bool =
-zone_device_page_init_optimization_enabled(void)
->>>>  {
->>>> + /*
->>>> + * Keep sanitized builds on the slow path so their stores stay
->>>> + * instrumented.
->>>> + */
->>>> + if (IS_ENABLED(CONFIG_KASAN) || IS_ENABLED(CONFIG_KMSAN))
->>>> + return false;
->>> It is not a major concern if struct page initialization lacks KASAN =
-or
->>> KMSAN instrumentation. To keep things simple, let's just entirely =
-remove
->>> zone_device_page_init_optimization_enabled() to simplify the code.
->> BTW, If you really want to properly support KASAN, you should =
-integrate
->> the check directly into memcpy_flushcache() via kasan_check_write(), =
-rather
->> than treating it as a special case here.
-> I agree that proper KASAN-aware support, if ever needed for
-> memcpy_flushcache(), would belong in the low-level helper itself =
-rather
-> than in this caller.
->=20
-> That said, for this series I would still prefer to keep the local =
-check
-> in zone_device_page_init_optimization_enabled(). The goal here is not =
-to
-> add full KASAN support to memcpy_flushcache(), but simply to keep
-> sanitized builds on the existing instrumented slow path.
->=20
-> When KASAN/KMSAN is enabled, performance is usually not the priority =
-for
-> that configuration, while preserving the instrumented store path is.
-> Keeping the check local here avoids broadening the scope of this =
-series
-> into a generic memcpy_flushcache() change.
+In all honesty, I'm not quite sure what the best way forward here is. The most
+transparent way is to bucket those other kmalloc types as well, but that might
+very trivially result in a lot more caches (and possibly memory usage) for no
+great reason. So perhaps specifying caches might do.
 
-However, there is an even simpler approach: just don't do any special =
-handling
-for KASAN. In fact, many callers of memcpy_flushcache don't handle it at =
-all.
-
-So I'm curious, why are you keen on handling KASAN as a special case =
-here?
-
-Thanks.
-
->=20
-> Thanks,
-> Zhe
->=20
->>=20
->>> Thanks.
->>>=20
->>>> +
->>>>   /*
->>>>   * The template fast path copies a preinitialized struct page =
-image.
->>>>   * Skip it when the page_ref_set tracepoint is enabled.
->>>>   */
->>>> - return !page_ref_tracepoint_active(page_ref_set);
->>>> + if (page_ref_tracepoint_active(page_ref_set))
->>>> + return false;
->>>> +
->>>> + return true;
->>>>  }
->>>>=20
->>>>  static inline void zone_device_tail_page_init(struct page *page,
->>>> @@ -1110,7 +1120,7 @@ static void =
-zone_device_page_init_from_template(struct page *page,
->>>>   * to the destination page.
->>>>   */
->>>>   zone_device_page_update_template(template, pfn);
->>>> - memcpy(page, template, sizeof(*page));
->>>> + memcpy_nt(page, template, sizeof(*page));
->>>>  }
->>>>=20
->>>>  /*
->>>> @@ -1179,6 +1189,15 @@ static void __ref =
-memmap_init_compound(struct page *head,
->>>>      &template);
->>>>   }
->>>>   }
->>>> +
->>>> + /*
->>>> + * When the template path is enabled, order the preceding =
-tail-page copies
->>>> + * before prep_compound_head() updates the overlapping compound =
-metadata
->>>> + * in the first tail-page descriptors. If memcpy_nt() fell back to
->>>> + * regular cached stores, memcpy_nt_drain() may be a no-op.
->>>> + */
->>>> + if (use_template)
->>>> + memcpy_nt_drain();
->>>>   prep_compound_head(head, order);
->>>>  }
->>>>=20
->>>> @@ -1238,10 +1257,26 @@ void __ref memmap_init_zone_device(struct =
-zone *zone,
->>>>   if (pfns_per_compound =3D=3D 1)
->>>>   continue;
->>>>=20
->>>> + /*
->>>> + * When the template path is enabled, order the preceding =
-head-page copy
->>>> + * before memmap_init_compound(), which immediately updates =
-compound-head
->>>> + * metadata. If memcpy_nt() fell back to regular cached stores,
->>>> + * memcpy_nt_drain() may be a no-op.
->>>> + */
->>>> + if (use_template)
->>>> + memcpy_nt_drain();
->>>> +
->>>>   memmap_init_compound(page, pfn, zone_idx, nid, pgmap,
->>>>       compound_nr_pages(pfn, altmap, pgmap),
->>>>       use_template);
->>>>   }
->>>> + /*
->>>> + * Ensure any prior template copies are ordered before returning.
->>>> + * On architectures where memcpy_nt() used regular cached stores,
->>>> + * memcpy_nt_drain() may be a no-op.
->>>> + */
->>>> + if (use_template)
->>>> + memcpy_nt_drain();
->>>>=20
->>>>   pageblock_migratetype_init_range(start_pfn, nr_pages, =
-MIGRATE_MOVABLE);
->>>>=20
->>>> --
->>>> 2.20.1
-
-
+-- 
+Pedro
