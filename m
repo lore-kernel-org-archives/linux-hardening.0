@@ -1,104 +1,506 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B442147D92B
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 12:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4575318EE2
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 13:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.168.131
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784120048; cv=pass; b=oId3byyvZ9fEz/yPVEp+SUBgeFJF7/sarBj6ItqGCOP+1wK3j+0wRLwFfW7SN01/D4dbSJIktN/QxPIIyFFye3mGW8hE4XIvOFewFvOZkgtlGKd60f850aw4sMtOIJmmO67RnSfuv+Rty42ls6xvdUihkSms/BPPPhVACj3tyoE=
+	t=1784123533; cv=pass; b=SNscmuZ7rRNKWDeAN/0dDHwyBOhWHXYrr8QeREBTaP9754hUVVmSCkqd0Mw7HLWYHfToDY/LBw5HAn0Nguyn9SDPLlXTt94f8CoNjTYMnwDuCMzQQZguVQiLd32/bWpoNFJ5wqZsy4QCiafhQ6Sb5cOhsg8JHjVxlqfHTBvbOXA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784120048; c=relaxed/simple;
-	bh=em1N3E/WTG6TYKt1hKLZLg4BVzT79CC6h9GgUGkGOTQ=;
+	s=arc-20240116; t=1784123533; c=relaxed/simple;
+	bh=YYg5eiB94mB3VISmVnhcr2eYct6Z9MxOLR3m1ctoO2E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZDsg11/ZQkL2Zgu8YmMcuErwEwY8Mo5URsBpvk7VQV6EoxlskDTEqVFilvEHhZb5lAz0ENKpHKPpfTmnUo+lpjIhefU1DV/9lJJArx1OYUz8q4QvYPLoyFnG3Eikcqi2vHnyWNr4Is07MmBSH+TAX5BNC7SkAPNTscr/ZLzmpls=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qrSF4oP4; arc=pass smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ijKsluLGTzvJX1YZZEretGGYB3GJETHsFldBgvnybJWHuXtcEvDiQ/Ru2Bo/ygrMBeQd2guSPZXlXtmXCe+E4Maq/GoGs7Q5uMisVeBLlYeYrDRIBeIflnP91GBUoFkLwCLUC2RVEzLnKIjoaqJuiQws4siXf7gLLM3EfjRacp8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UobDZ0hY; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=VwMpd0pb; arc=pass smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qrSF4oP4"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-38e1a9d9105so1511496a91.1
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 05:54:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1784120047; cv=none;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UobDZ0hY";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="VwMpd0pb"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66FBcTpf3450115
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 13:52:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HRDnaHbZxLgU003Z7di3xnBpvLkFBoiwrEvgYu4LvWQ=; b=UobDZ0hYC0oTT8v1
+	MqjYt1jw6xsTciUAAAuOOHl1CBaIZYNhWApPcIG3ClKjp5CBU71mxUfBXsppzugk
+	TI/wcFQUej4R9PlqN4gJJkHvSrdsL9ZcXkuTDUb6OdrJR70CeW3+Av4SlkzglWj8
+	cU/V7HKPLIUtO9qqhL9Lm7F52wczok4g1Wmwo99xXwRq7yK6TdyJOl9I8DO8GEg/
+	WNb1EtT/cpg4JTVMWle2IgkUrnXgALf+hQvAt5SGDwK8IvEXbynPD9ehgp8zA5Q8
+	LxnISjaS2kthG75MG/dMIQVdmKui+IyAUOTeKCFU6Ff5sqW0jJgAs186cxwc7gMT
+	D7O6GQ==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fe7ka91ga-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 13:52:10 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-8ea75996387so137257166d6.1
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 06:52:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784123530; cv=none;
         d=google.com; s=arc-20260327;
-        b=L59AxZs4ycUNp00OVFiP8n+FCwarDlNvyUcAd0Yb2OF3tC9PBZ5Snim4RKOPWF6tv9
-         COLR8DQb46PxSB4/CegFn3YAlmvFsxg1g0Z+h3s6aBDaGBfGHR2zvt1PUR9rfwW9KkrD
-         fKH0yzT9kPC12GI1jZQWB1yTpI+RQc4pB5NMCBb+/yoyInQZ7V+/QPKeB0CCyihEupb6
-         yiu+u8EHACNmuT6Gugin/yhD8bWMW9mqnSkd4kqAiynD39cyVjWZIgdODGH2Sajt8awr
-         2eQ98rv3gjetWpoWfVgWBQGJye9Fao1/9JtTaKnKny7p0MyOaRvZLVcFT+rIg+N3X6Tg
-         7nxg==
+        b=P1L8svKCBFrYSC4iWj4i0vHdx+nXrlh5fU+sVUEcoSl1YbJHFRXZesT+cMjcR5c+xZ
+         MEApeO4gMfyXBBcTLbd6MxGTCRu2m/mjh1T16AkxyqI8vFTopzsf0TtvRgVE85w4ZeG1
+         i0F6xFEQWGULktUuKZJPJdReuYmkc5tw0tgZvDn/Z9WePNrr2kIFB8uv8iugcpJzK0zD
+         W3en0mI4Ya2fNRqtiV6F7j+TZUFYRyRwxiSTALsJgMDizewSs43amDov45IzIRaqsLJS
+         sC3+6/FFJ6r30RRBIk7PkzXtlg6Zt8H8gn+v5U9Ak3xQwmoZOujobFx/eLf8fWlSP4iO
+         8Ypw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=em1N3E/WTG6TYKt1hKLZLg4BVzT79CC6h9GgUGkGOTQ=;
-        fh=D4AuURJYyRePAqaAojGeShAlqoMjvcCa+Q0efcDrDhc=;
-        b=Bb5Zr0e3ECFoYCCauiN6GOGe2wV7EprWqjTSnx434UOkHfNlB7LjkHWmIXBj38Jyi7
-         I9FkGZuCSkNefIRZYPf0ZK5O1VHVJnj4cUT062vGEzr65Vgi0kE1OFKVCD0fgqh4PqW3
-         NHP9Jhk7oa0wH23beGMZjyuI/IiQIEXrQku/l+8iMC1sW2+DERTZSBxaKt2lGIze4dYe
-         l2laCwLRrQmoxPp9Uh+VJIxFjnz+Me9N9DjXVqBRkkWofybVKSDj2Tu8nDi9gYXW1F+m
-         qQui92ka3iW6I+ttTdDFYCtW1Ayckl87FbvcxVmDk8DCylOtUHowThVQd+PcCx63Vtoe
-         pW/g==;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=HRDnaHbZxLgU003Z7di3xnBpvLkFBoiwrEvgYu4LvWQ=;
+        fh=ze+o1fzEL2mSBXgsTUAsZXno39vyse8K7y8bjXnHlz8=;
+        b=ftygv6uyb6DCL9JyVDJ1TwQeLETY5F/0eK2IBgjs/iadsZY6J2AT+6ODRE3JMWJqoO
+         hXjK5+om53Wo1PSSueUPIubbw0w8Rdar/2COXll0pC3f0UDgDcYyWWQdIWplNIJ5iGZj
+         jZMMwcnOWCVlzVypjI9ONHAh0n3StCyfnIRa4Zttp9Ly2r3JBTLNsm28e42drOpvUctS
+         CxUF60nC8UtaCtUAyjszp2AcC6Lqfol6YeB8pRNumBtOjvpNc59zI0/CzXYIqG1jUhZ7
+         j/mPT5WrfMu1ZkKJwoKfE5kZvFZCMk/uvG382XNgaU6MnkY1U6TP0IAf5wyAX3DmXD89
+         YROA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784120047; x=1784724847; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=em1N3E/WTG6TYKt1hKLZLg4BVzT79CC6h9GgUGkGOTQ=;
-        b=qrSF4oP4bcrvEBynZseumGXxggZV3Btn/fY3AvyQcVu2G5gmxDCdc7sQRddO+nw7VS
-         P+iSQlQSPUJBFEFyt2n2Ddoqmv3Be8p6asRfFOg9X5rHcuHwgwP9oCtEBt2C25eVrztb
-         t4Ob4l3NxgUopgeMk6MYwvRpGsNL1DSUwEuZ03RFWsVmpxMH5gLqMj2ZztOw5O+SAKi3
-         Nz+WZsSBPCLfgPKhlxjWmio2skwky5cHDTswCZ2Z/2J97A+G5lCqYTO87RqHLfCfJRhQ
-         7sgcfLmNAOjKDpbIDyGLa4IxfPjFmYuqBwjyfoQoIcBuCqjjEEDhvx9aEOE5/830UY6N
-         XP/Q==
+        d=oss.qualcomm.com; s=google; t=1784123530; x=1784728330; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=HRDnaHbZxLgU003Z7di3xnBpvLkFBoiwrEvgYu4LvWQ=;
+        b=VwMpd0pbigmF+4b0DLg/NFJvRRCUSfQFIYYQCa+IpM4eK3AU6MHgaPy/daLMPe6/3k
+         Y+IQ0saF1Pfs/gBB2ZnogkUSBma3E6coXPlov5D6kViU+JcnkMxzpvGKcP53N9LjVBYn
+         i9BQ2d8pPM4XisZDrGPDFUVGIFTVABHp1wTRBld9SwU2jAqgRT4c4KSIZzpQ6Fe2iSxf
+         aqdndlMWEI5WopHGr3Tk7c2ePI3255jlB+1RbaHjvvddw0PDA3YaumfvVdgTnsFgJ98b
+         9LkVK+7JgsMfOfur6e+x5fB7Ws8Ug/XWToDYdZFVfFw7ZKRDcUZuzbWieM0AmA/NFTSw
+         uF2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784120047; x=1784724847;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=em1N3E/WTG6TYKt1hKLZLg4BVzT79CC6h9GgUGkGOTQ=;
-        b=pDJNxH3Ac20KNFhEgScDR03CPVddkNFPtG1zZPd4zywA1WrCywZh3H7ou6UunRaAz9
-         /7sp1m9PIcAYhOZM7Si1jMeukayGlUZZVV5N62Sz/raIaHf56Mpj0rfPVKPKbO0JADII
-         LqsaINvwbXbQhQZPAWj/4KyG+4i5k7d80eh/Iss7kta0m/bJ835if+Xe+HSn2M/zZXFo
-         RTyJ93ml8e/pq68TXgUAocI/lQfbBrUHh9+USHkNAqY6jpGLTjGtEq8lh+p8Dtj6eMLm
-         +2fop8ssdwwgq+r1mDqq3o0mN5O+S8Sg4SgB0eqYA283Wpzdpf3Z8V1f+ygGUhZnzn0O
-         vFgA==
-X-Forwarded-Encrypted: i=1; AHgh+RoscXZaoXNastOZFcnSSD+aixrbTIC223JjR1BlGhiBiJjBdvAZGEvxOVzmrlC0YPlkARCKAoguxteb5L4zKeA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIFpa2iILe0cL+rtv04gsbC7CRjdM9/25Jez+ukJ6mY+YBch9H
-	h+1jtfr80MUF7rktiaBBTIB8fmcoxaVUsD6GKyOeHwCQNbH+rqKPc7EqHFRyAn2yxHa1uSIWFz/
-	cY82XXKHlPggp2DtrqOwi1XEedpOwQJg=
-X-Gm-Gg: AfdE7ckaLJGS67dp1dETK+ohCIO44hemIKGmSpT4mQv4/Cb0G7yRRVOvwfzfw8ZE+Tc
-	+xt1UgIIHdULMgDDAvIGQZXym1g2uWblHmWNCNTA2rvxBHodWifPGXgWmxO4amMvnOv4xMEgaPv
-	LvEcpZ8pM5j+m4rLZFZbvIl0+zMVSqDzxN1peNwRUIdtZx+rQvOupvlNM4Krl2XQUu4zSMK0v6I
-	vQFdIJGdMcgCDNpJB9IK7fhIpai989YEMHw7i9aebinZUkXFQJ8ObVgYn1GRZTjSxrAzBWDcfxg
-	t2m8yI4pMR1rh6m9LotiaT6n13eZ1Q==
-X-Received: by 2002:a17:90b:1652:b0:381:6466:7160 with SMTP id
- 98e67ed59e1d1-38e2a0c33c5mr2314053a91.26.1784120046938; Wed, 15 Jul 2026
- 05:54:06 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1784123530; x=1784728330;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=HRDnaHbZxLgU003Z7di3xnBpvLkFBoiwrEvgYu4LvWQ=;
+        b=gXDl6PWdy+A+O6La+hLc1rloRJ8Pj31zSd0i5Eu0+sfMoPCL2IPnpFHR1Fekufb9lz
+         R1rY8Se6296WXjI84OBoAOmIlAD+PM2Gk0MNhJ9493Y4/X8DxfC/zsY3uKXqSF1EM6i5
+         n2Uku0ks4FxnhB8pHkm5NqlCnpHDUDxFqVzITsinhzDxENkRL/w5LEL5hws0fzy7iTO8
+         yyVtbr3z2z1YKEFcCTGL0Xc9AutgiC0p4cpEC6Y/boPZFN1ByWPdumHGY2lefVNH+YZY
+         SU3aVa4Y47dNbJSABS/u/T78Y5HTqwhJoKnf7FytD2IuC4trpTXzU5eHbIsf4Q7pef8Y
+         RTtA==
+X-Forwarded-Encrypted: i=1; AHgh+Rrgzro5VSKz3ED5Op67i9W5FXpiCFje0bwKlSU8qUDLuiZpz19vyzPjJr1cqXO/m6cOM/XVho7Ux2qRSyHhYEo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO9eENyExGoSFpWRvzaE5hVl3yp/1SBUbbZ1BIAcTFQwef9s4j
+	P4ch/HBstyYrF2ZDwC07fzuLkO/J+F15a7Q8CgVajVAf+0RVGPrJSgIJQzZTOiFLbB9OdpwvFXI
+	GUnJtHiuyMv7phDtn9sSZWdaCuMsGB5mcx2jKAHt28rxaDaoABUOQCLFyzP8NxOmpni6MQGW5QC
+	idCOiO2YmtWnBqNdDqEOJBABbDtL+A1ZfULXTYGnAiHvCZUQ==
+X-Gm-Gg: AfdE7cnCXNfBjIbwroUnMhUlhbEcMRwttM+dqey3DxFARNJQlA2UYlsoIKXDQOgRpI0
+	vCEuwG2j5/j+K4LDONmXfPOegZA3r2RunIaGZLBQ3z1vVl2HqJ6rrUJkRwpy1xssDD58rXktvuc
+	pa6x3OdOGl7kaodiid20X+AKlPddsqPig0gEaLSN45LvbsEn8q23V3F+vzq2PMGQuHcY5l2MdLv
+	Rorvz3UAsYCMEh1fiFxvVUquL49I0wxxagoFEZFRMau6kxCXuqArut+0rWz6KBzepuFDbu189s2
+	WQLPzVMjT64=
+X-Received: by 2002:a05:6214:5712:b0:8db:dd:4d85 with SMTP id 6a1803df08f44-90758d34f11mr30929466d6.26.1784123529579;
+        Wed, 15 Jul 2026 06:52:09 -0700 (PDT)
+X-Received: by 2002:a05:6214:5712:b0:8db:dd:4d85 with SMTP id
+ 6a1803df08f44-90758d34f11mr30928866d6.26.1784123528967; Wed, 15 Jul 2026
+ 06:52:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260624073921.11037-1-harshal24.chavan@gmail.com>
- <20260624124019.4521-1-harshal24.chavan@gmail.com> <87fr2auzq3.fsf@mailhost.krisman.be>
- <CADCAkb6wuR7vT3chfFtBL0qma+gx-2mJM7v+JJLS00W3oyb5dg@mail.gmail.com>
-In-Reply-To: <CADCAkb6wuR7vT3chfFtBL0qma+gx-2mJM7v+JJLS00W3oyb5dg@mail.gmail.com>
-From: Harshal Chavan <harshal24.chavan@gmail.com>
-Date: Wed, 15 Jul 2026 18:23:55 +0530
-X-Gm-Features: AUfX_mx4Pt1vuEloSH-b7zneRHe1DCEtLnRCsohGnflYfyu-JmuWdQPLSoehD6c
-Message-ID: <CADCAkb63_kAa0b09GAQApBqi9-oUR03beQajkSMKL6Q4bkpWWg@mail.gmail.com>
-Subject: Re: [PATCH v6] io_uring/register: add IORING_REGISTER_CLONE_FILES opcode
-To: Gabriel Krisman Bertazi <krisman@suse.de>
-Cc: axboe@kernel.dk, gregkh@linuxfoundation.org, gustavoars@kernel.org, 
-	io-uring@vger.kernel.org, kees@kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20260710-camss-isp-ope-v4-0-51207a0319d8@oss.qualcomm.com>
+ <20260710-camss-isp-ope-v4-6-51207a0319d8@oss.qualcomm.com> <da70ed94-fd76-4105-8071-1ed8d8e41d84@linaro.org>
+In-Reply-To: <da70ed94-fd76-4105-8071-1ed8d8e41d84@linaro.org>
+From: Loic Poulain <loic.poulain@oss.qualcomm.com>
+Date: Wed, 15 Jul 2026 15:51:57 +0200
+X-Gm-Features: AUfX_mw9FYNoF0_hfoG8VGZ5UTEorPD_jR7frbEunNBfVR6iyQH02jj9VbYksmQ
+Message-ID: <CAFEp6-2nTWjU0VrMQ8D8nDzH9P-vbA1gFPimv8aX+qREWHPNow@mail.gmail.com>
+Subject: Re: [PATCH v4 6/7] media: qcom: camss: Add CAMSS Offline Processing
+ Engine driver
+To: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
+Cc: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
+        Hans de Goede <johannes.goede@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Authority-Analysis: v=2.4 cv=TMF1jVla c=1 sm=1 tr=0 ts=6a57908a cx=c_pps
+ a=wEM5vcRIz55oU/E2lInRtA==:117 a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
+ a=YMgV9FUhrdKAYTUUvYB2:22 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
+ a=5oiKfTUM-gNaU-HVeUYA:9 a=QEXdDO2ut3YA:10 a=OIgjcC2v60KrkQgK7BGD:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: MCDFExKy2GUWHuNwy05YQ1eFKjyaTUzo
+X-Proofpoint-ORIG-GUID: MCDFExKy2GUWHuNwy05YQ1eFKjyaTUzo
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDEzNyBTYWx0ZWRfX+R9IJ6X2XNNr
+ C41wMhPjSs7DRS2SkiHRtgndhrtlfCOX36JNRKgggcyqE7yK3O3l4uzQBxWctzk1Xff4rdJCr2U
+ h8Kfw1ovk5Ew3UazslqcIPfgeweWtCw=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDEzNyBTYWx0ZWRfX0EAEzHICqNFM
+ wZNK0s83QbwotEJaYVCQr8utwJOwYIvUwkf9hd/eGWy/FhkgRITc3t0sNMKWc4bfFRLzSOwrrlb
+ ifmjIFtw20ymUAHQL6tvvH/hsrmmo2Idp2lnYfzlMbnKC4nv5NT3a132EFKBXdzDdbahRkE93U8
+ GCPMo2Ex8YdnyhNDbLjBzYyIVwyxbZZJLpwqikJ0wglx4Imspawlf944PjjyDVbQ32bpJwZgm96
+ S3lCEtym0lGOwsC0NQGGogn7HoBJp8lJ/zB12tkrN5ew9zTCpkFGfjnypUSvMGLGa0vpWy4vYc5
+ sjfIaET2K2f0xUrktcIqOdkcIVkinVpt/T5vZrzScIvn06GAa1/3uRpgV5XG87i8KDmQOLgsO+o
+ d5a3XP/NlR+WVstaV/1Lm16PE42AX+QHEonTnbrTyPD3mLHFTvk3n2w16+36lzFpmU0djDv2Ebv
+ XH7Wx3fyaSvjwmMk/Jg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-15_02,2026-07-15_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 adultscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607150137
 
-Hello Jens,
-Just a gentle ping on this patch. Gabriel has reviewed the recent
-changes, and asked me to wait for your review, so we can batch it with
-your review of the overall approach.
-Thanks,
-Harshal
+On Mon, Jul 13, 2026 at 3:05=E2=80=AFPM Bryan O'Donoghue
+<bryan.odonoghue@linaro.org> wrote:
+>
+> On 10/07/2026 10:04, Loic Poulain wrote:
+> > Add an image processing driver for the Qualcomm Offline Processing Engi=
+ne
+> > (OPE). OPE is a memory-to-memory ISP block that converts raw Bayer
+> > frames to YUV, performing white balance, demosaic, chroma enhancement,
+> > color correction and downscaling.
+> >
+> > The hardware architecture consists of Fetch Engines and Write Engines,
+> > connected through intermediate pipeline modules for pix processing.
+> >
+> > The driver exposes three video nodes per pipeline instance:
+> >    - ope_input: Bayer RAW input (V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+> >    - ope_disp_output: YUV output     (V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLAN=
+E)
+> >    - ope_params: ISP parameters (V4L2_BUF_TYPE_META_OUTPUT)
+> >
+> > Hardware features:
+> >    - Stripe-based processing (up to 336 pixels wide per stripe)
+> >    - White balance (CLC_WB)
+> >    - Demosaic / Bayer-to-RGB (CLC_DEMO)
+> >    - RGB-to-YUV conversion (CLC_CHROMA_ENHAN)
+> >    - Color correction matrix (CLC_CC)
+> >    - MN downscaler for chroma and luma planes
+> >
+> > Default configuration values are based on public standards such as BT.6=
+01.
+> >
+> > Processing Model:
+> > OPE processes frames in stripes of up to 336 pixels. Therefore, frames =
+must
+> > be split into stripes for processing. Each stripe is configured after t=
+he
+> > previous one has been acquired (double buffered registers). To minimize
+> > inter-stripe latency, stripe configurations are generated ahead of time=
+.
+> >
+> > Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
+> > Co-developed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+> > Signed-off-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+> > ---
+> >   drivers/media/platform/qcom/camss/Kconfig     |   18 +
+> >   drivers/media/platform/qcom/camss/Makefile    |    4 +
+> >   drivers/media/platform/qcom/camss/camss-ope.c | 3245 ++++++++++++++++=
++++++++++
+>
+> I think this should be in a sub-directory.
+
+You mean a OPE specific directory or a kind of offline engine generic one l=
+ike:
+drivers/media/platform/qcom/camss/offline/ope.c ?
+
+>
+> >   3 files changed, 3267 insertions(+)
+> >
+> > diff --git a/drivers/media/platform/qcom/camss/Kconfig b/drivers/media/=
+platform/qcom/camss/Kconfig
+> > index 4eda48cb1adf049a7fb6cb59b9da3c0870fe57f4..895fc57a679655fcb6f308b=
+e1565dc6b77bbbd67 100644
+> > --- a/drivers/media/platform/qcom/camss/Kconfig
+> > +++ b/drivers/media/platform/qcom/camss/Kconfig
+> > @@ -7,3 +7,21 @@ config VIDEO_QCOM_CAMSS
+> >       select VIDEO_V4L2_SUBDEV_API
+> >       select VIDEOBUF2_DMA_SG
+> >       select V4L2_FWNODE
+> > +
+> > +config VIDEO_QCOM_CAMSS_OPE
+> > +     tristate "Qualcomm Offline Processing Engine (OPE) driver"
+> > +     depends on VIDEO_QCOM_CAMSS
+> > +     depends on V4L_PLATFORM_DRIVERS
+> > +     depends on VIDEO_DEV
+> > +     depends on (ARCH_QCOM && IOMMU_DMA) || COMPILE_TEST
+> > +     select V4L2_ISP
+> > +     select VIDEOBUF2_DMA_CONTIG
+> > +     select VIDEOBUF2_VMALLOC
+> > +     help
+> > +       Enable support for the Qualcomm Offline Processing Engine (OPE)=
+.
+> > +       OPE is a memory-to-memory ISP block that converts raw Bayer fra=
+mes
+> > +       to YUV, performing white balance, demosaic, chroma enhancement =
+and
+> > +       downscaling. Found on QCM2290 and related SoCs.
+> > +
+> > +       To compile this driver as a module, choose M here: the module
+> > +       will be called qcom-camss-ope.
+> > diff --git a/drivers/media/platform/qcom/camss/Makefile b/drivers/media=
+/platform/qcom/camss/Makefile
+> > index 5678621efb6780b67a043ec8a2e914cce02d9b98..422eebc0a86301de3f39c74=
+3fbc06c437b17ac9a 100644
+> > --- a/drivers/media/platform/qcom/camss/Makefile
+> > +++ b/drivers/media/platform/qcom/camss/Makefile
+> > @@ -31,3 +31,7 @@ qcom-camss-objs +=3D \
+> >               camss-params.o \
+> >
+> >   obj-$(CONFIG_VIDEO_QCOM_CAMSS) +=3D qcom-camss.o
+> > +
+> > +qcom-camss-ope-objs :=3D camss-ope.o
+> > +
+> > +obj-$(CONFIG_VIDEO_QCOM_CAMSS_OPE) +=3D qcom-camss-ope.o
+> > diff --git a/drivers/media/platform/qcom/camss/camss-ope.c b/drivers/me=
+dia/platform/qcom/camss/camss-ope.c
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..2c0d68cf1a637c998ebe4d3=
+afb1fa6dbdb68f029
+> > --- /dev/null
+> > +++ b/drivers/media/platform/qcom/camss/camss-ope.c
+> > @@ -0,0 +1,3245 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * camss-ope.c
+> > + *
+> > + * Qualcomm MSM Camera Subsystem - Offline Processing Engine
+> > + *
+> > + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> > + */
+> > +
+> > +/*
+> > + * This driver provides driver implementation for the Qualcomm Offline
+> > + * Processing Engine (OPE). OPE is a memory-to-memory hardware block
+> > + * designed for image processing on a source frame. Typically, the inp=
+ut
+> > + * frame originates from the SoC CSI capture path, though not limited =
+to.
+> > + *
+> > + * The hardware architecture consists of Fetch Engines and Write Engin=
+es,
+> > + * connected through intermediate pipeline modules:
+> > + *   [FETCH ENGINES] =3D> [Pipeline Modules] =3D> [WRITE ENGINES]
+> > + *
+> > + * Current Configuration:
+> > + *     Fetch Engine: One fetch engine is used for Bayer frame input.
+> > + *     Write Engines: Two display write engines for Y and UV planes ou=
+tput.
+> > + *
+> > + * Only a subset of the pipeline modules are enabled:
+> > + *   CLC_WB: White balance for channel gain configuration
+> > + *   CLC_DEMO: Demosaic for Bayer to RGB conversion
+> > + *   CLC_CC: Color Correct, coefficient based RGB correction
+> > + *   CLC_CHROMA_ENHAN: for RGB to YUV conversion
+> > + *   CLC_DOWNSCALE*: Downscaling for UV (YUV444 -> YUV422/YUV420) and =
+YUV planes
+> > + *
+> > + * Default configuration values are based on public standards such as =
+BT.601.
+> > + *
+> > + * Processing Model:
+> > + * OPE processes frames in stripes of up to 336 pixels. Therefore, fra=
+mes must
+> > + * be split into stripes for processing. Each stripe is configured aft=
+er the
+> > + * previous one has been acquired (double buffered registers). To mini=
+mize
+> > + * inter-stripe latency, the stripe configurations are generated ahead=
+ of time.
+> > + */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/cleanup.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/completion.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/interconnect.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pm_clock.h>
+> > +#include <linux/pm_domain.h>
+> > +#include <linux/pm_opp.h>
+> > +#include <linux/pm_runtime.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/units.h>
+> > +
+> > +#include <media/v4l2-device.h>
+> > +#include <media/media-device.h>
+> > +#include <media/v4l2-ctrls.h>
+> > +#include <media/v4l2-event.h>
+> > +#include <media/v4l2-fh.h>
+> > +#include <media/v4l2-ioctl.h>
+> > +#include <media/v4l2-rect.h>
+> > +
+> > +#include "camss-pipeline.h"
+> > +
+> > +#include <media/videobuf2-dma-contig.h>
+> > +#include <media/videobuf2-vmalloc.h>
+> > +
+> > +#include <uapi/linux/camss-config.h>
+> > +
+> > +#include "camss-params.h"
+> > +
+> > +#define OPE_NAME     "qcom-camss-ope"
+> > +
+> > +/* Format descriptor */
+> > +struct ope_fmt {
+> > +     u32             fourcc;
+> > +     unsigned int    depth;
+> > +     unsigned int    align;
+> > +     unsigned int    num_planes;
+> > +     u32             mbus_code;
+> > +     unsigned int    c_hsub;
+> > +     unsigned int    c_vsub;
+> > +};
+> > +
+> > +/* Per-queue format state */
+> > +struct ope_fmt_state {
+> > +     const struct ope_fmt    *fmt;
+> > +     unsigned int            width;
+> > +     unsigned int            height;
+> > +     struct v4l2_rect        crop;
+> > +     unsigned int            bytesperline;
+> > +     unsigned int            sizeimage;
+> > +     enum v4l2_colorspace    colorspace;
+> > +     enum v4l2_xfer_func     xfer_func;
+> > +     enum v4l2_ycbcr_encoding        ycbcr_enc;
+> > +     enum v4l2_quantization  quantization;
+> > +     unsigned int            sequence;
+> > +     struct v4l2_fract       timeperframe;
+> > +};
+> > +
+> > +/* -------- Register layout -------- */
+> > +
+> > +#define OPE_TOP_HW_VERSION                                   0x000
+> > +#define              OPE_TOP_HW_VERSION_STEP         GENMASK(15, 0)
+> > +#define              OPE_TOP_HW_VERSION_REV          GENMASK(27, 16)
+> > +#define              OPE_TOP_HW_VERSION_GEN          GENMASK(31, 28)
+> > +#define OPE_TOP_RESET_CMD                                    0x004
+> > +#define              OPE_TOP_RESET_CMD_HW            BIT(0)
+> > +#define              OPE_TOP_RESET_CMD_SW            BIT(1)
+> > +#define OPE_TOP_IRQ_STATUS                                   0x014
+> > +#define OPE_TOP_IRQ_MASK                                     0x018
+> > +#define              OPE_TOP_IRQ_STATUS_RST_DONE     BIT(0)
+> > +#define              OPE_TOP_IRQ_STATUS_WE           BIT(1)
+> > +#define              OPE_TOP_IRQ_STATUS_FE           BIT(2)
+> > +#define              OPE_TOP_IRQ_STATUS_VIOL         BIT(3)
+> > +#define              OPE_TOP_IRQ_STATUS_IDLE         BIT(4)
+> > +#define OPE_TOP_IRQ_CLEAR                                    0x01c
+> > +#define OPE_TOP_IRQ_CMD                                              0=
+x024
+> > +#define              OPE_TOP_IRQ_CMD_CLEAR           BIT(0)
+> > +#define OPE_TOP_VIOLATION_STATUS                             0x028
+> > +
+> > +/* Fetch engine */
+> > +#define OPE_BUS_RD_INPUT_IF_IRQ_MASK                         0x00c
+> > +#define OPE_BUS_RD_INPUT_IF_IRQ_CLEAR                                0=
+x010
+> > +#define OPE_BUS_RD_INPUT_IF_IRQ_CMD                          0x014
+> > +#define              OPE_BUS_RD_INPUT_IF_IRQ_CMD_CLEAR       BIT(0)
+> > +#define OPE_BUS_RD_INPUT_IF_IRQ_STATUS                               0=
+x018
+> > +#define OPE_BUS_RD_INPUT_IF_CMD                                      0=
+x01c
+> > +#define              OPE_BUS_RD_INPUT_IF_CMD_GO_CMD          BIT(0)
+> > +#define OPE_BUS_RD_CLIENT_0_CORE_CFG                         0x050
+> > +#define              OPE_BUS_RD_CLIENT_0_CORE_CFG_EN BIT(0)
+> > +#define OPE_BUS_RD_CLIENT_0_CCIF_META_DATA                   0x054
+> > +#define              OPE_BUS_RD_CLIENT_0_CCIF_MD_PIX_PATTERN GENMASK(7=
+, 2)
+> > +#define OPE_BUS_RD_CLIENT_0_ADDR_IMAGE                               0=
+x058
+> > +#define OPE_BUS_RD_CLIENT_0_RD_BUFFER_SIZE                   0x05c
+> > +#define OPE_BUS_RD_CLIENT_0_RD_STRIDE                                0=
+x060
+> > +#define OPE_BUS_RD_CLIENT_0_UNPACK_CFG_0                     0x064
+> > +
+> > +/* Write engines */
+> > +#define OPE_BUS_WR_INPUT_IF_IRQ_MASK_0                               0=
+x018
+> > +#define OPE_BUS_WR_INPUT_IF_IRQ_MASK_1                               0=
+x01c
+> > +#define OPE_BUS_WR_INPUT_IF_IRQ_CLEAR_0                              0=
+x020
+> > +#define OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0                     0x028
+> > +#define              OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_RUP_DONE       B=
+IT(0)
+> > +#define              OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_BUF_DONE       B=
+IT(8)
+> > +#define              OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_CONS_VIOL      B=
+IT(28)
+> > +#define              OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_VIOL           B=
+IT(30)
+> > +#define              OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_IMG_SZ_VIOL    B=
+IT(31)
+> > +#define OPE_BUS_WR_INPUT_IF_IRQ_CMD                          0x030
+> > +#define              OPE_BUS_WR_INPUT_IF_IRQ_CMD_CLEAR       BIT(0)
+> > +#define OPE_BUS_WR_VIOLATION_STATUS                          0x064
+> > +#define OPE_BUS_WR_IMAGE_SIZE_VIOLATION_STATUS                       0=
+x070
+> > +#define OPE_BUS_WR_CLIENT_CFG(c)                             (0x200 + =
+(c) * 0x100)
+> > +#define              OPE_BUS_WR_CLIENT_CFG_EN                BIT(0)
+> > +#define              OPE_BUS_WR_CLIENT_CFG_AUTORECOVER       BIT(4)
+> > +#define OPE_BUS_WR_CLIENT_ADDR_IMAGE(c)                              (=
+0x204 + (c) * 0x100)
+> > +#define OPE_BUS_WR_CLIENT_IMAGE_CFG_0(c)                     (0x20c + =
+(c) * 0x100)
+> > +#define OPE_BUS_WR_CLIENT_IMAGE_CFG_1(c)                     (0x210 + =
+(c) * 0x100)
+> > +#define OPE_BUS_WR_CLIENT_IMAGE_CFG_2(c)                     (0x214 + =
+(c) * 0x100)
+> > +#define OPE_BUS_WR_CLIENT_PACKER_CFG(c)                              (=
+0x218 + (c) * 0x100)
+> > +#define OPE_BUS_WR_CLIENT_MAX        4
+> > +
+> > +/* Pipeline modules */
+> > +#define OPE_PP_CLC_WB_GAIN_MODULE_CFG                                (=
+0x200 + 0x60)
+>
+> Can you just map the individual blocks so that we can interrogate
+> HW_VERSION HW_STATUS and friends ? Those regs usually come first. I can
+> see useful debugfs and/or dev_dbg() usages of those data.
+
+Sure, will do.
+
+> > +#define              OPE_PP_CLC_WB_GAIN_MODULE_CFG_EN        BIT(0)
+> > +#define OPE_PP_CLC_WB_GAIN_WB_CFG(ch)                                (=
+0x200 + 0x68 + 4 * (ch))
+> > +#define              OPE_PP_CLC_WB_GAIN_WB_CFG_GAIN          GENMASK(1=
+4, 0)
+> > +#define OPE_PP_CLC_WB_GAIN_WB_SUB_CFG(ch)                    (0x200 + =
+0x74 + 4 * (ch))
+> > +#define              OPE_PP_CLC_WB_GAIN_WB_SUB_CFG_VAL       GENMASK(3=
+1, 20)
+> > +#define OPE_PP_CLC_WB_GAIN_WB_ADD_CFG(ch)                    (0x200 + =
+0x80 + 4 * (ch))
+> > +#define              OPE_PP_CLC_WB_GAIN_WB_ADD_CFG_VAL       GENMASK(3=
+1, 20)
+> > +
+> > +#define OPE_PP_CLC_CC_BASE                                   0x400
+>
+> Is this actually the correct register base for CCM ?
+
+Nope, you're right.
+
+>
+> I think you should check again.
+>
+> Same comment for each of these blocks HW_VERSION should be the first
+> register.
+
+Ack I will define generic macro for them.
+
+Regards,
+Loic
