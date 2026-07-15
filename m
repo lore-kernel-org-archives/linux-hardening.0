@@ -1,190 +1,259 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D812F39B5
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 07:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F3C42376D;
+	Wed, 15 Jul 2026 09:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784102101; cv=none; b=FccnZFaKqlbTG5LkYWdxMGKbAo7Gs6CWsLTkqq3FBbW0TZsBJhwf88X5dv3zSzmOimSoP4H1EOQfzZ/BiETQxr2BEu6KcNkG/UTl67MRjwlfI0nUToHXcHLIxUP23UTfG6a39ZNo6bv3fvO/jmGo5cvLD7BznIAdxG/1qsWZrLc=
+	t=1784107209; cv=none; b=btbBLw7Ntk8uB1rUhH53p8zqZZSQOvxo5tgcq95Xkpu8FH/0eAdg/C5O+klfRH6wwCCmwws8W0LvVz9K/UGSe5xNEw9XS6eh5teaawdiFwba08KKEVPIzZimVhRKIcfIIW+orATkwyKH0IVVm3SucnMMthCo2t00vtImHBOqrhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784102101; c=relaxed/simple;
-	bh=W+3PNG/rQkb1rXBSDdcPIdifSQue918SU9KPZ6VfCYs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jXMILsIXxIBEpY2ssyCUs19YarV1T5bbcUE4UVR5oNNQfNPNXgM71uUyqYvPWFoJY0LfOruFF6WqR8xi6teV28ghxX4/qAFE4i5/r6rmo8z/lXc9E24a+ASdzyGpgLrDLEw8VQm4adWVPTsA7p9+6gK2QRbAy2Awknx06dn1ps0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LQ9BuE72; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZI4M2tq5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IkBb31TO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6I+9Y9xC; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1784107209; c=relaxed/simple;
+	bh=7bqX575miDuDXxtkUM5rIRiOrm7H9ZQm+Q8G5UwWC5E=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=f5sBWNMYOJhcOVkASaxCEdl4cDtwDw9cW6iFMh3Cgr9qSd/4im0ZdHSDeNSq40hLZ07b/KdyqYFaNWTMqRvRU1ymNZSZ5K1t0nFbSxcFWGdUEM1QnB6JT5YbyqKdrOj7gvlP2UcTR/uinmgKl2qeA2hzCH5nUivJO7HPe5Uhqm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SKTE+a+J; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LQ9BuE72";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZI4M2tq5";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IkBb31TO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6I+9Y9xC"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3868E76073;
-	Wed, 15 Jul 2026 07:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1784102098; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SKTE+a+J"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784107205;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wXJx+ndhr0wzT6Dna5r9N6rTI3YFqffJa78zyokU+SI=;
-	b=LQ9BuE72eYdNrei+jtepPFbc6rSzzdD0zxs3gaT73H0q/I4pBEmL8EsRTI6K1sAlUclbKD
-	vFGvJ4HFgt1iIz4FSa3evxy6vq87llSbrs2Y8AyVEiBSAG0S+kEUrP/wLexirrRc2NIKFE
-	ChBZY6Z4uri0TwzdWQF02K82zHuySAA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1784102098;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wXJx+ndhr0wzT6Dna5r9N6rTI3YFqffJa78zyokU+SI=;
-	b=ZI4M2tq5g5Shy2u0qHYZWqgW6CJ1pHJtm6BRWhNTDtktE3kzAzdaz0GEBF4g6F5LAPyvEn
-	cLaLS26sVtdWiiBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1784102097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wXJx+ndhr0wzT6Dna5r9N6rTI3YFqffJa78zyokU+SI=;
-	b=IkBb31TOe/ojsYlgb3lvrl4/GkmFjZrr8QKSpCWPhkCTv8nOaI+pK+8iiXzxCJ10VPGgCV
-	7NDKj2PgQXSALNvq8y166jGqZV6tG1G0/UvnDht0peIp2KrMMC/qxZcL9GIZpF130HOeAK
-	xzhV2CMz7CL9MmEsoZECVN7T4wJRclA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1784102097;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wXJx+ndhr0wzT6Dna5r9N6rTI3YFqffJa78zyokU+SI=;
-	b=6I+9Y9xCygmxjIQceEwvWwdQeFhN/llBO4PUjHfmHFWVZyiX/IchOK7srvuoB+wwrqTpXi
-	xuG0I2qQqyWH61AQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EFD51779AD;
-	Wed, 15 Jul 2026 07:54:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ur4QONA8V2pAPAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 15 Jul 2026 07:54:56 +0000
-Date: Wed, 15 Jul 2026 09:54:56 +0200
-Message-ID: <87o6g8y9f3.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Ian Bridges <icb@fastmail.org>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda/generic: Replace strlcat() with strscpy()
-In-Reply-To: <alaPxW5S5PT_-kZi@dev>
-References: <alaPxW5S5PT_-kZi@dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	bh=bO9YvcI54ue/gwDNdgB1p3Ix0P3xCAMWlTg6ILi3wPw=;
+	b=SKTE+a+Jqj1MwRmJW7eGwo0/jz6WimdogmPp1HPKMXNzQl/nGGV6NKOLoVkLUBQJajM1gD
+	41oVl93srSOA3OKg6v6h0WJTIMxAQTIaZYM+m3tR9qN8L5LKnE+4Or3zdDA0nkQ0ASEcJm
+	a39ToRz0q7nGV7XgjMxLSoh3WZaQIcg=
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,fastmail.org:email]
-X-Spam-Level: 
-
-On Tue, 14 Jul 2026 21:36:37 +0200,
-Ian Bridges wrote:
-> 
-> In preparation for removing the strlcat() API[1], replace its two
-> uses in the generic parser.
-> 
-> Both call sites append one suffix to a string that the function has
-> already bounded to the buffer size. A strscpy() anchored at the
-> current end of the string writes the same bytes, including when the
-> suffix is truncated.
-> 
-> Link: https://github.com/KSPP/linux/issues/370 [1]
-> Signed-off-by: Ian Bridges <icb@fastmail.org>
-> ---
-> The patch was tested as follows.
-> 
-> - W=1 build of sound/hda/, zero warnings.
-> - A userspace differential harness compiled the old and the new
->   functions side by side. The buffers were byte identical over their
->   full length, including the bytes after the terminator.
-> - A QEMU runtime compare. A guest with an emulated HDA codec was
->   booted on the base and on the patched kernel, and the captured
->   /proc/asound state was byte identical. That covers the PCM stream
->   names from fill_pcm_stream_name() live.
-> 
->  sound/hda/codecs/generic.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/hda/codecs/generic.c b/sound/hda/codecs/generic.c
-> index 660a9f2c0ded..5f373cbf4a53 100644
-> --- a/sound/hda/codecs/generic.c
-> +++ b/sound/hda/codecs/generic.c
-> @@ -2712,10 +2712,12 @@ static void get_jack_mode_name(struct hda_codec *codec, hda_nid_t pin,
->  			       char *name, size_t name_len)
->  {
->  	struct hda_gen_spec *spec = codec->spec;
-> +	size_t used;
->  	int idx = 0;
->  
->  	snd_hda_get_pin_label(codec, pin, &spec->autocfg, name, name_len, &idx);
-> -	strlcat(name, " Jack Mode", name_len);
-> +	used = strnlen(name, name_len);
-> +	strscpy(name + used, " Jack Mode", name_len - used);
->  
->  	for (; find_kctl_name(codec, name, idx); idx++)
->  		;
-> @@ -5682,6 +5684,7 @@ static const struct hda_pcm_stream dyn_adc_pcm_analog_capture = {
->  static void fill_pcm_stream_name(char *str, size_t len, const char *sfx,
->  				 const char *chip_name)
->  {
-> +	size_t used;
->  	char *p;
->  
->  	if (*str)
-> @@ -5695,7 +5698,8 @@ static void fill_pcm_stream_name(char *str, size_t len, const char *sfx,
->  			break;
->  		}
->  	}
-> -	strlcat(str, sfx, len);
-> +	used = strnlen(str, len);
-> +	strscpy(str + used, sfx, len - used);
->  }
->  
->  /* copy PCM stream info from @default_str, and override non-NULL entries
-
-Hmm...  IMHO, those changes are *too ugly*.
-
-Is the reason to drop strlcat() is only about the performance, no?
-If it were some security hardening, I'd find OK, but if not, this kind
-of change is doubtful: the code path is no hot path, hence the effect
-is nothing, and yet readability becomes significantly worse.
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
+Subject: Re: [PATCH v6 4/8] mm: add a template-based fast path for zone-device
+ page init
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <b4308d88-3486-4e4d-ae81-6c7ae66956a1@bytedance.com>
+Date: Wed, 15 Jul 2026 17:19:21 +0800
+Cc: linux-arch@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org,
+ x86@kernel.org,
+ akpm@linux-foundation.org,
+ apopple@nvidia.com,
+ arnd@arndb.de,
+ balbirs@nvidia.com,
+ bp@alien8.de,
+ dave.hansen@linux.intel.com,
+ david@kernel.org,
+ kees@kernel.org,
+ mingo@redhat.com,
+ rppt@kernel.org,
+ tglx@kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <E103722E-D074-4B5F-9271-93894152DD84@linux.dev>
+References: <20260709112520.24857-1-lizhe.67@bytedance.com>
+ <20260709112520.24857-5-lizhe.67@bytedance.com>
+ <08d40cad-8f61-4aba-9556-5a84067c6494@linux.dev>
+ <b4308d88-3486-4e4d-ae81-6c7ae66956a1@bytedance.com>
+To: Li Zhe <lizhe.67@bytedance.com>
+X-Migadu-Flow: FLOW_OUT
 
 
-thanks,
 
-Takashi
+> On Jul 15, 2026, at 14:11, Li Zhe <lizhe.67@bytedance.com> wrote:
+> 
+> On 7/14/26 4:38 PM, Muchun Song wrote:
+>> 
+>> 
+>> On 2026/7/9 19:25, Li Zhe wrote:
+>>> memmap_init_zone_device() repeats nearly identical head-page
+>>> initialization for each PFN. Prepare one reusable ZONE_DEVICE head-page
+>>> template through the existing slow path, refresh the PFN-dependent
+>>> fields in that template before each copy, and memcpy it into each
+>>> destination page.
+>>> 
+>>> The optimized path assigns _refcount through the copied template, so
+>>> keep it disabled when the page_ref_set tracepoint is enabled.
+>>> 
+>>> This patch accelerates head-page initialization. The pfns_per_compound
+>>> == 1 case gets the full benefit here, compound tails are handled in the
+>>> next patch.
+>>> 
+>>> Tested in a VM with a 100 GB fsdax namespace device configured with
+>>> map=dev on Intel Ice Lake server. This test exercises the nd_pmem rebind
+>>> path (pfns_per_compound == 1).
+>>> 
+>>> Test procedure:
+>>> Rebind the nd_pmem driver 30 times and collect the memmap initialization
+>>> time from the pr_debug() output of memmap_init_zone_device().
+>>> 
+>>> Base(v7.2-rc1):
+>>>    First binding: 1456 ms
+>>>    Average of subsequent rebinds: 244.28 ms
+>>> 
+>>> With this patch and its prerequisites applied:
+>>>    First binding: 1440 ms
+>>>    Average of subsequent rebinds: 217.19 ms
+>>> 
+>>> This reduces the average rebind time from 244.28 ms to 217.19 ms, or
+>>> about 11%.
+>>> 
+>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>>> ---
+>>>   mm/mm_init.c | 59 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+>>>   1 file changed, 58 insertions(+), 1 deletion(-)
+>>> 
+>>> diff --git a/mm/mm_init.c b/mm/mm_init.c
+>>> index 5fccfbacf855..170021e182e0 100644
+>>> --- a/mm/mm_init.c
+>>> +++ b/mm/mm_init.c
+>>> @@ -1065,6 +1065,44 @@ static void __ref 
+>>> zone_device_page_init_slow(struct page *page,
+>>>           set_page_count(page, 0);
+>>>   }
+>>>   +static inline bool zone_device_page_init_optimization_enabled(void)
+>>> +{
+>>> +    /*
+>>> +     * The template fast path copies a preinitialized struct page 
+>>> image.
+>>> +     * Skip it when the page_ref_set tracepoint is enabled.
+>>> +     */
+>>> +    return !page_ref_tracepoint_active(page_ref_set);
+>> 
+>> I'm not sure why we need to make this. I think we can go ahead and
+>> perform this optimization unconditionally.
+>> 
+>> If we look at why the tracepoint was added in the first place, it's
+>> clear that its primary purpose is for debugging, particularly regarding
+>> why CMA memory pages cannot be allocated (see commit 95813b8faa0). But
+>> at this stage, the struct page hasn't even been initialized yet; we
+>> are currently in the middle of initialization. From the perspective of
+>> the page being initialized, the user doesn't need to care at all about
+>> how the reference count is changing. Therefore, I don't think we need to
+>> include these checks. It would only increase the complexity of the code.
+>> 
+>> I suggest deleting this section of code to keep things simple.
+>> 
+>> Thanks.
+> 
+> I would prefer to keep this check.
+> 
+> When page_ref_set debugging is enabled, preserving the existing per-page
+> set_page_count() behavior is still useful, including during
+> initialization, because it keeps the debug trace complete and unchanged.
+
+When you say 'useful,' what aspects are you referring to?
+
+> 
+> In the normal case, page_ref_set is off by default, so this only affects
+> an explicit debugging configuration and leaves the production fast path
+> unchanged. The extra logic here is also fairly small and stays local to
+> this optimization path.
+
+I know there's no real overhead here. The point I'm actually trying to make
+is that since deleting the code has no impact, why not go with the simpler
+approach?
+
+Thanks.
+
+> 
+> Thanks,
+> Zhe
+> 
+>>> +}
+>>> +
+>>> +/*
+>>> + * 'template' is a reusable page prototype rather than a strictly 
+>>> immutable
+>>> + * object. Most ZONE_DEVICE fields stay constant across the pages 
+>>> covered by
+>>> + * the current template, but section bits and page->virtual may 
+>>> still depend
+>>> + * on the PFN. Refresh those PFN-dependent fields in the template 
+>>> before
+>>> + * copying it into @page.
+>>> + */
+>>> +static inline void zone_device_page_update_template(struct page 
+>>> *template,
+>>> +        unsigned long pfn)
+>>> +{
+>>> +    set_page_section_from_pfn(template, pfn);
+>>> +#ifdef WANT_PAGE_VIRTUAL
+>>> +    if (!is_highmem_idx(ZONE_DEVICE))
+>>> +        set_page_address(template, __va(pfn << PAGE_SHIFT));
+>>> +#endif
+>>> +}
+>>> +
+>>> +static void zone_device_page_init_from_template(struct page *page,
+>>> +        unsigned long pfn, struct page *template)
+>>> +{
+>>> +    /*
+>>> +     * 'template' carries the invariant portion of a ZONE_DEVICE struct
+>>> +     * page. Update the PFN-dependent fields in place before copying it
+>>> +     * to the destination page.
+>>> +     */
+>>> +    zone_device_page_update_template(template, pfn);
+>>> +    memcpy(page, template, sizeof(*page));
+>>> +}
+>>> +
+>>>   /*
+>>>    * With compound page geometry and when struct pages are stored in 
+>>> ram most
+>>>    * tail pages are reused. Consequently, the amount of unique struct 
+>>> pages to
+>>> @@ -1120,6 +1158,7 @@ void __ref memmap_init_zone_device(struct zone 
+>>> *zone,
+>>>                      unsigned long nr_pages,
+>>>                      struct dev_pagemap *pgmap)
+>>>   {
+>>> +    bool use_template = zone_device_page_init_optimization_enabled();
+>>>       unsigned long pfn, end_pfn = start_pfn + nr_pages;
+>>>       struct pglist_data *pgdat = zone->zone_pgdat;
+>>>       struct vmem_altmap *altmap = pgmap_altmap(pgmap);
+>>> @@ -1127,6 +1166,7 @@ void __ref memmap_init_zone_device(struct zone 
+>>> *zone,
+>>>       unsigned long zone_idx = zone_idx(zone);
+>>>       unsigned long start = jiffies;
+>>>       int nid = pgdat->node_id;
+>>> +    struct page template;
+>>> 
+>>>       if (WARN_ON_ONCE(!pgmap || zone_idx != ZONE_DEVICE))
+>>>           return;
+>>> @@ -1144,7 +1184,24 @@ void __ref memmap_init_zone_device(struct zone 
+>>> *zone,
+>>>       for (pfn = start_pfn; pfn < end_pfn; pfn += pfns_per_compound) {
+>>>           struct page *page = pfn_to_page(pfn);
+>>> 
+>>> -        zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
+>>> +        if (!use_template) {
+>>> +            zone_device_page_init_slow(page, pfn, zone_idx,
+>>> +                           nid, pgmap);
+>>> +        } else if (pfn == start_pfn) {
+>>> +            /*
+>>> +             * Seed the reusable head-page template from the
+>>> +             * first real struct page, because the existing
+>>> +             * page-init and pageblock helpers expect a real
+>>> +             * memmap entry rather than a stack object.
+>>> +             */
+>>> +            zone_device_page_init_slow(page, pfn, zone_idx,
+>>> +                           nid, pgmap);
+>>> +            /* init template page */
+>>> +            memcpy(&template, page, sizeof(*page));
+>>> +        } else {
+>>> +            zone_device_page_init_from_template(page, pfn,
+>>> +                                &template);
+>>> +        }
+>>> 
+>>>           if (IS_ALIGNED(pfn, PAGES_PER_SECTION))
+>>>               cond_resched();
+>>> -- 
+>>> 2.20.1
+
+
