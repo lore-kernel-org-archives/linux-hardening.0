@@ -1,260 +1,181 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE191B808
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 01:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4567C379EE2;
+	Wed, 15 Jul 2026 01:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784077704; cv=none; b=Nts/vyaHG5j/JSbeGRlGf3ndbCPVfp2H0HeBs+sdG3F+FhhHg4BDJ0i1LXgH3QRp7IuyG6ZZALpQasvz1cw9+kH2Tao7Xdm5jPh/efb8fQhi/YiGjrv+GGU+WLVdBOJPWy2IMdDSD3o/3TOWaFG7xj077JUCF71vFJY2HWSaoKY=
+	t=1784078567; cv=none; b=lxTj/ijgLxk4p8C9JkiZFiDo95JfBFE3+b5ljKUaeDa5Dynq2IHMkTxsFgnu9mUU6BlXvpOS+BnYWiMU8g0iKzY1DWQ/Q2cdON64NJEt7nKpxOburONqIScpLhl8vqHP6LEfA+Cui3jPGi+wm5vyi9NfUhduMfDSKALWClI6V3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784077704; c=relaxed/simple;
-	bh=tN35dLZPzwzi+5Sd9xksFVjFrsn7f2K4Ef6bj0jV96g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tGoYzP2Io9vFs5NUL7R9nA8l1lccZvxnzTEKMDKluOKsuG4PGbT6e8KnX7XHoe7ruTIJNQ0PaadgplloKIzR1SnnlhrM8BxBkHy1hNBvhGo9rOc8JCbMdeGC0iG/8m2zUH8hUblxPKc2lIi2G0axHA+Rh6Ijf35J9rsDFVnvmAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bTIv3TVG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jCrhHjPd; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1784078567; c=relaxed/simple;
+	bh=UkjDLG4XGjeBZA6yNdI13VlXhjqfFVoKD3WwStCIwwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=i6W5ELVngfelxIbNcECemSeun6XgMUyaj4lOy5riNhAhcf+Rq9cKCzUfYvjhR2qExvlZxxdhpOKDnSCc/p6VcraSNgWL3MIdBybI5bmSlsIBD5LEUs+HAVKJ3GxHFCEejVyouYSIohJhP1DAqbeQhEIDk9gJx3P/BLxIl8+ujf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=pUTkNY3a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OOGxqJGo; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bTIv3TVG";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="jCrhHjPd"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66F0IW8g2172241
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 01:08:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	aXTMMshAVtUeQo0IZUDx3gK+TpvQrcV476loM7bSKzc=; b=bTIv3TVGY9TPZ32r
-	WeYkeoiwDe+S4dCEL46RoqTcV9RQrbX3KUXFsbpgCmcgjE4iqFbEEopQlayy3D+W
-	HGoovpmQnRJAO1OOOORAJFG1ZRT1XJ/zVmYBY1HT7Vlj03rQzoll0REwAOma2JZV
-	lvmg4mzOa60ASK1WPwKkUSIpnG4LAdCLwegm77fih29cktCXfBwq0ihd5Pb/YpS/
-	oejQr3Mo09H8pvoCETvplmeoVqw0WGxkwAgPayWNYZqEPLRwwmtjFBb2IHbrHjs0
-	8KtLsWNLQZSySO/jlKYjYFcP7Y0OqMvwDgwh0qsJr3PcEWYQaA0QW2TQ39H1hsTZ
-	E6Y/Cw==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fdnnqteq4-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 01:08:17 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-c889d1eedcdso7880375a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Jul 2026 18:08:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1784077696; x=1784682496; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:organization
-         :references:in-reply-to:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=aXTMMshAVtUeQo0IZUDx3gK+TpvQrcV476loM7bSKzc=;
-        b=jCrhHjPdiSt1PJFwxwdvi980LWTS+oRBSsRAjfeCqYO869sOiTkZIUOSRxwP2req5p
-         9AJQNIUhVNiBwQWCqcprC4YnkoHy3Fl4miar3p+PSQpJLdy2k8nAO9vCD5gKpUe8sW1+
-         YQCA1gDAno5EbuWz3aKKdHg+KVb2IS30Z4juAEuQskNRojriISwKxSRrX3tHlQZtNPjy
-         issubbGRGLyuUX10MtZIXhZuSYBRBAeuk1LzImCat1S5J29YfPpTW8OT8cQ/1lCel6JV
-         3xI36SVW3PKEMIbrlWDNqJjLGrhu8JoYVpQf1eek3Inof1lDedrKLvYvGWyi1GSlo6Qq
-         YgRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784077696; x=1784682496;
-        h=content-transfer-encoding:content-type:mime-version:organization
-         :references:in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aXTMMshAVtUeQo0IZUDx3gK+TpvQrcV476loM7bSKzc=;
-        b=KZDLIYawg9XjkR+V3pMeoRJUV5TMi7NAe+l8OkKfavAM5mJ/VoSlxioo9wNl3AgnHC
-         8q1YbrItI+4GiNvt08UVsBNjEwfUr/Q1DkfhMEuDvqDEOlDmeZEUW5bTAmAnMNovfIZP
-         BPbur1/ALDqx3hzbluw3BURUBQceyZql2n8fHlDBUtglIj0qvqQbBI8I2KwaRf2Tc2v6
-         1Cddxv4OObCjrKUcyeUZOyT47vL0CcSQz2G8JvjtjiVbmhJjS89YqVxxFsLo0ORxp986
-         iXdxdzJ+ZIbegFbeoxatCvIKNiMIiEcBa8c8CfCKecl8vC50f331zzNN/FfpQjIMcx0o
-         h6Ig==
-X-Forwarded-Encrypted: i=1; AHgh+RprucyDaPsa+quzHrZEhk2XxBGH2ha2kPac66h0G3FNCgtuSUFNWS09n8MM1d4ABdx+y7tjM8nP5lOzf4E5lK8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUEe4usGdd4jcTrVITwujdm9e9w9vFhxSJB9BRMondn5+HE1VA
-	JQcBJ07I0ucyanHIUOSAfaXEeFNQjyOac4JHyKEkFE4ARIehCdDu5CZJTy5hcsc1o+Dhd32qL5K
-	ff3XAdYEM9iw1AlLw+BvaOfeKh0Hn+pIkeX8pFyhtaLfXgKFEMtRDmQOIRaLQgNpE5bv9vD4=
-X-Gm-Gg: AfdE7ckuK5Bny5euc4USUxtkPpoM51uB5cu+SYlGbIENvVHOw/vBxN9h8/hs0jVW5RI
-	NE/GRg2RAy7H6/7Cx1j2D8kdz3bAcjJ09v+DYVXdWEofBIIMpvq0x8x7AsyfKQ6z0kcWrC7A8Tb
-	I5VBrw1HUaV4jxXMTD/PW2BUXrSF7f4qxiosYjxZyBDNkDABE+eCqcUTJhCk0Zoa2FrQEq4LPqq
-	e7IUCmEt7i6CCxIct9BhG2VJB+gpHTd9ll+SIluqDZbHgZTwcOhtk+2DLpFbSLkCh5LvX1zjdye
-	0X8408ZysNd3TKe0sguTx/89Mz0d3TXvmJ3dt4NmSVpVTunFL7oTSEppyD9G0FJQR8Ekg/v1rOr
-	qu04OcPfzJCSSG6avsSBpwAePksif8RqyNNrs
-X-Received: by 2002:a05:6a21:694:b0:3c0:9c1a:8937 with SMTP id adf61e73a8af0-3c34d8b2322mr7739474637.63.1784077696501;
-        Tue, 14 Jul 2026 18:08:16 -0700 (PDT)
-X-Received: by 2002:a05:6a21:694:b0:3c0:9c1a:8937 with SMTP id adf61e73a8af0-3c34d8b2322mr7739430637.63.1784077696047;
-        Tue, 14 Jul 2026 18:08:16 -0700 (PDT)
-Received: from localhost ([50.35.46.84])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13b924258a2sm78642078c88.1.2026.07.14.18.08.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 18:08:15 -0700 (PDT)
-Date: Tue, 14 Jul 2026 18:08:12 -0700
-From: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-        Rodrigo Alencar via B4 Relay
- <devnull+rodrigo.alencar.analog.com@kernel.org>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Lars-Peter
- Clausen <lars@metafoo.de>,
-        Michael Hennerich
- <Michael.Hennerich@analog.com>,
-        David Lechner <dlechner@baylibre.com>,
-        Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Philipp
- Zabel <p.zabel@pengutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shuah
- Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A.
- R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v7 07/17] iio: test: add kunit tests for channel prefix
- naming generation
-Message-ID: <20260714180812.000070c4@oss.qualcomm.com>
-In-Reply-To: <egyms7ulkxsgu4pvfkoruelec3sf6ca4bndcuqkvxljrdluqwu@edlqne7oy3xs>
-References: <20260707-ad9910-iio-driver-v7-0-a4ec30f63700@analog.com>
-	<20260707-ad9910-iio-driver-v7-7-a4ec30f63700@analog.com>
-	<20260712020928.2c8d1667@jic23-huawei>
-	<egyms7ulkxsgu4pvfkoruelec3sf6ca4bndcuqkvxljrdluqwu@edlqne7oy3xs>
-Organization: Qualcomm
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.51; x86_64-w64-mingw32)
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="pUTkNY3a";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OOGxqJGo"
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 786C27A01AB;
+	Tue, 14 Jul 2026 21:22:44 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Tue, 14 Jul 2026 21:22:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
+	 t=1784078564; x=1784164964; bh=qCwUqP5E/Tizzg6FQrFskv3X65mohBjV
+	Tw6dw1aOwZY=; b=pUTkNY3ajKGQyJpihivMDZhqUfHQCbLmeZcITCFKcbiL3jZ9
+	leAyaCr7HY39TJB481kA+fxMmotOb/WNmOwbXiyCWCJ7Bb06PvGPbx7sl1LGWRB1
+	ezyCp287yuGRGq1O25Fa6WDP1yL98O5Rm3eV45efpTO+K5KZApz7ESR0/e9bpuYo
+	F7Il2RELlXAuLBBJVEdbymLwDLtAJBrJ/Krfyd8URXKbjNEkk2rBreMnYX8mGZVY
+	oJsBezshaLZiYKfAdsAVP9F6PzSSEsrowhw3vivsoCx5IuoX3r64sScBUIEenvOA
+	v5pvep22dX9F91zxIRVewiMWZnLhqZJYUHSNug==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1784078564; x=
+	1784164964; bh=qCwUqP5E/Tizzg6FQrFskv3X65mohBjVTw6dw1aOwZY=; b=O
+	OGxqJGoU5+GfOHXn7wg6pJF/gapxFLFAbqWA5z99E+RTqrPa3hRjSOgsH8x/7wVt
+	39nLDf4a8b6NorMgTcrLA8rw6eU2q0nkzC8NWZ837qnm9Jl6MRVvrW0p1vWAZuGN
+	5orXGPumG9qM3jWmQbyurXgF0Vrp61EiMrLaa3FsrKkiJwdAahhcjqTkIYHrduuX
+	IffZN3kPJhM9U71Hzlg7jYI7JZDCtcgOhSBwRazjKg2Pal9w5HE9zMC5FKXZUDsF
+	TNcqea4Y1UojPz0ypTqX6N6l42RhDB8tjlJEEb8ppaikWW7qn08sv77nU7liqzVN
+	Mj3KmmeiPK8xuiIC3zMsw==
+X-ME-Sender: <xms:5OBWarhBVuzqT5pxhw1gAErmAhhe1QaN24t0n58pWFAydvtxBKG9MA>
+    <xme:5OBWajeZ-5M6DFKHYyh_FBOAuWez50vOEuKiWWKy9iiwA4Op8Am62p7i73RSOxkE8
+    cuA-hH1uhmEtIOK6D5o9GGgYqhv_aVAnIqE4vEyGyv6hsoJCYHeTw8>
+X-ME-Received: <xmr:5OBWaum5ZobflZIh8p3QKiBFUKpYHPFALEqNNmfFtY2pomQGJgPhNY3UvDY>
+X-ME-Proxy-Cause: dmFkZTFI/LtI7W6f1lF3OsQjfGRe8wa4mOKzgAHolKjPZkt7o4Av2dlAxiIpLI9nmoQecn
+    0yLqQjeyLynHQ3vJHBmucmp4kn4WBfm+YfvkJLpc+c1ToRFq615QBAfbwCjH7Rnkfk2Hdr
+    RkyMxDiEt75HUg+mZMEcvVmm8ktvzBtNjqdP6UhTer0AogpEmahMLXV7qbjGtmOKesBAtp
+    ww6BrrM2wQ+I2tGn+ClIV3dfLLqQPKPF4LdrvS25XekfNCiZNo1P9pDzHZkPbjBZrgAxUq
+    iRJ6trIA/m2yM570qkIFDRoMHaXprbIZBI+L1pEpiylYRqxClwyrS8ws2lUzr7uEW+Wtez
+    gl38TXKad3hE+5TkirLFG5jkfMO6BwBH8KcrMiyOYO9MKjCAbChueBP3ocyjCzHqYAvNel
+    vtTT3/r9wGZ2ZU+gYQ1a264RKTTOsplGhER/Ytb3zj4UOINycGaPoYUCN1th8A0p261jo7
+    TfXGotlcw3VGkIqIN+F9k6sa2O9HPxYlVnGb7LdPUpHyVx6rdHUFmm5jpszbLGrccMC+Fg
+    92c42hynXLo2ayZP6Wch23iM7Qg1uonl2GTFp4Z6n7ULwDbG+6SX23okO3S5c8XpXjydsD
+    +f/cPNXbj9HVQBtHWxvRVJLcLvB2NoKwD3oaqAJzmwrcEMM4Oa/BY9sjEUug
+X-ME-Proxy: <xmx:5OBWastkvRBgD8-anL1oL6EqxPM6XhM8P6v8n_hXPE2lOcPohMLXmA>
+    <xmx:5OBWak_faOF8-kUY3k_eVrRouhR80FXlcjzEYAsX-O8hQI-0MMly1A>
+    <xmx:5OBWauM4vRbOtsClrCVeV0AmIQrmfjJxNWush-us48QMADTj4-U63g>
+    <xmx:5OBWaqHnBjBF4jm56dRUn85_xEgps4gh2IhDttoPkpfsBP8tPAhuvQ>
+    <xmx:5OBWamyDNjhmYdQNMjFNWVOUj2zTQUtskMLGZbXAMHbKJgbjhqAeUQY_>
+Feedback-ID: ib53e4b78:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 14 Jul 2026 21:22:43 -0400 (EDT)
+Date: Tue, 14 Jul 2026 20:22:41 -0500
+From: Ian Bridges <icb@fastmail.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] Input: wacom_w8001 - replace strlcat() with a strscpy()
+ helper
+Message-ID: <albg4Rv7QxvLJD05@dev>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDAwOCBTYWx0ZWRfXxyo1xskCD272
- fpgp6BcJTV4k6GxxwVI/vgQyeEiC+gyCIC5yg1mlKj/DSe7ARcMtwaRuKURW3PLzg+lLUHv1Nu/
- 1/yK4jniU51hQsmhg6wK6x27qoeU2k5k6LbtyPQF1sw5RxQMnNCvVnsAIEsdkE5g3+aZ/DJWQZC
- riPizZduBUDuDETtjv0CnDrug5f+zN70SepHmYNuFTPKo0p6aWm0d8FzoYQhMpHqqToxmfiKrLQ
- kpOAotKmVMLFKVT7L/dw+zj78Zu79jGNCgoEhIF1WmkJwREeE89Cua1LV3qTU8WKfUjt/iymQ0+
- BL/ez1w8cLHHMkqgWmu9WOfoN1s8KUWEn18ENdJE+hHomCbOUuBUpTHR3ReOfy2WtBxzMFJCj7y
- X/xWR3SWwJUc9+uUE7bm6S9yaWo9tWh1PPyJ/a98/JEyppNIZv6kEz7A/P5LZydq+GL7EDgTGCm
- c9ImNaWcZDZE49dEB4w==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDAwOCBTYWx0ZWRfX5dUuJgD4BjGy
- aiUdRxTgpQLwUGcLz8pA90SlSjeeZs9LCigKO9N8qD/8tItp0cgsnhBy7xMGzzGDdFLKwac3PdF
- vnOPA+vm5dZEVEwyctOmLRDUA6ntMXs=
-X-Authority-Analysis: v=2.4 cv=U+Oiy+ru c=1 sm=1 tr=0 ts=6a56dd81 cx=c_pps
- a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=qC1CW/w66vtJz1P9yTJxNA==:17
- a=kj9zAlcOel0A:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22
- a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=7zneujqQnARXn4JFaX0A:9
- a=CjuIK1q_8ugA:10 a=3WC7DwWrALyhR5TkjVHa:22
-X-Proofpoint-GUID: e2cZ4mbbgYorxBANOxWFCzKpLR3BlTi1
-X-Proofpoint-ORIG-GUID: e2cZ4mbbgYorxBANOxWFCzKpLR3BlTi1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-15_01,2026-07-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
- clxscore=1015 priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607150008
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 13 Jul 2026 10:52:56 +0100
-Rodrigo Alencar <455.rodrigo.alencar@gmail.com> wrote:
+In preparation for removing the strlcat() API[1], replace its five
+uses with a small append helper built on strnlen() and strscpy().
 
-> On 12/07/26 02:09, Jonathan Cameron wrote:
-> > On Tue, 07 Jul 2026 15:04:28 +0100
-> > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
-> >   
-> > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > > 
-> > > Add a KUnit test suite covering __iio_chan_prefix_emit(), the helper
-> > > that builds IIO sysfs attribute name prefixes from an iio_chan_spec.
-> > > The suite groups cases by the enum iio_shared_by mode it exercises:
-> > > 
-> > >   - IIO_SHARED_BY_ALL: produces an empty prefix.
-> > >   - IIO_SHARED_BY_DIR: emits direction only ("in" / "out").
-> > >   - IIO_SHARED_BY_TYPE: emits "<dir>_<type>" and the differential
-> > >     "<dir>_<type>-<type>" variant.
-> > >   - IIO_SEPARATE: covers the full matrix of indexed, differential,
-> > >     modified, output and extend_name combinations, plus the two
-> > >     documented error paths (differential without indexed, differential
-> > >     with modifier).
-> > > 
-> > > A final case exercises the seq_buf overflow path by passing an
-> > > undersized buffer and expects -EOVERFLOW.
-> > > 
-> > > Because __iio_chan_prefix_emit() is static, the test translation unit
-> > > is pulled into industrialio-core.c.  
-> > 
-> > Isn't there some magic route cases like this that makes it non static
-> > only when self tests are enabled? 
-> > Claude tells me to look at include/kunit/visibility.h  
-> 
-> There is, Although I think that using
-> 
-> 	#if IS_ENABLED(CONFIG_IIO_CHANNEL_PREFIX_KUNIT_TEST)
-> 		#include "test/iio-test-channel-prefix.c"
-> 	#endif
-> 
-> was more straight forward, less invasive and easier to change than..
-> 
-> 	/* In "drivers/iio/industrialio-core.c" */
-> 
-> 	#include <kunit/visibility.h>
-> 	...
-> 	VISIBLE_IF_KUNIT ssize_t __iio_chan_prefix_emit(...)
-> 	{
-> 	...
-> 	}
-> 	EXPORT_SYMBOL_IF_KUNIT(__iio_chan_prefix_emit);
-> 
-> 	/* In "iio_core.h" */
-> 
-> 	#if IS_ENABLED(CONFIG_KUNIT)
-> 		ssize_t __iio_chan_prefix_emit(...);
-> 	#endif
-> 
-> 	/* In "drivers/iio/test/iio-test-channel-prefix.c" */
-> 
-> 	#include <kunit/visibility.h>
-> 	#include <iio_core.h>
-> 	...
-> 	MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
-> 	...
-> 	// Use __iio_chan_prefix_emit() in tests
+The five calls append device name fragments to a basename buffer
+that grows in place across the setup functions. The helper takes
+the same arguments as strlcat() and writes the same bytes, including
+when a fragment is truncated.
 
-I'd rather this wasn't built into the core module.  So prefer you jump
-though those hoops.
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Signed-off-by: Ian Bridges <icb@fastmail.org>
+---
+The produced device names are unchanged.
 
-Jonathan
+A seq_buf conversion was considered instead of the helper and set
+aside for two reasons. seq_buf_puts() drops a whole fragment when it
+does not fit, while strlcat() writes the partial fragment, so the
+produced bytes would change at the truncation boundary. The setup
+functions would also change signature to take a struct seq_buf
+pointer. A v2 can adopt seq_buf if that tradeoff is preferred.
 
-> 
-> > 
-> > Very nice.  A couple of really small additions requested inline.
-> > I might well have missed where you exercised the corners requested though!
-> > + I'll need an Ack from Lars for that maintainers entry. I'll guess that
-> > Lars won't give one as not very active at the moment in this area.
-> > 
-> > Jonathan
-> >   
-> > > 
-> > > Also, an entry is created under MAINTAINERS dedicated to tests for IIO
-> > > core helpers.
-> > > 
-> > > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
-> > > ---
-> > >  MAINTAINERS                                |   8 +
-> > >  drivers/iio/industrialio-core.c            |   4 +
-> > >  drivers/iio/test/Kconfig                   |  14 ++
-> > >  drivers/iio/test/iio-test-channel-prefix.c | 246 +++++++++++++++++++++++++++++
-> > >  4 files changed, 272 insertions(+)
-> > > 
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 2b1ec46c5919..57ffc0dcfdb6 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -12634,6 +12634,14 @@ F:	include/dt-bindings/iio/
-> > >  F:	include/linux/iio/
-> > >  F:	tools/iio/
-> > >  
-> > > +IIO CORE KUNIT TESTS
-> > > +M:	Lars-Peter Clausen <lars@metafoo.de>  
-> > 
-> > I'd need an Ack from Lars for this entry.   If we don't get one are you
-> > fine looking after this without Lars listed?    
-> 
-> That is fine, will drop his name.
-> 
+The patch was tested as follows.
+
+- W=1 build of drivers/input/touchscreen/, zero warnings.
+- A userspace differential harness compiled the old and the new
+  functions side by side. The name buffers were byte identical over
+  their full length, and the return values and id assignments matched
+  in every case.
+
+ drivers/input/touchscreen/wacom_w8001.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/input/touchscreen/wacom_w8001.c b/drivers/input/touchscreen/wacom_w8001.c
+index 45930d731873..d8d1cdc3f09e 100644
+--- a/drivers/input/touchscreen/wacom_w8001.c
++++ b/drivers/input/touchscreen/wacom_w8001.c
+@@ -417,6 +417,13 @@ static int w8001_detect(struct w8001 *w8001)
+ 	return 0;
+ }
+ 
++static void w8001_append_suffix(char *dest, const char *suffix, size_t dest_sz)
++{
++	size_t used = strnlen(dest, dest_sz);
++
++	strscpy(dest + used, suffix, dest_sz - used);
++}
++
+ static int w8001_setup_pen(struct w8001 *w8001, char *basename,
+ 			   size_t basename_sz)
+ {
+@@ -453,7 +460,7 @@ static int w8001_setup_pen(struct w8001 *w8001, char *basename,
+ 	}
+ 
+ 	w8001->id = 0x90;
+-	strlcat(basename, " Penabled", basename_sz);
++	w8001_append_suffix(basename, " Penabled", basename_sz);
+ 
+ 	return 0;
+ }
+@@ -503,14 +510,14 @@ static int w8001_setup_touch(struct w8001 *w8001, char *basename,
+ 	case 2:
+ 		w8001->pktlen = W8001_PKTLEN_TOUCH93;
+ 		w8001->id = 0x93;
+-		strlcat(basename, " 1FG", basename_sz);
++		w8001_append_suffix(basename, " 1FG", basename_sz);
+ 		break;
+ 
+ 	case 1:
+ 	case 3:
+ 	case 4:
+ 		w8001->pktlen = W8001_PKTLEN_TOUCH9A;
+-		strlcat(basename, " 1FG", basename_sz);
++		w8001_append_suffix(basename, " 1FG", basename_sz);
+ 		w8001->id = 0x9a;
+ 		break;
+ 
+@@ -534,7 +541,7 @@ static int w8001_setup_touch(struct w8001 *w8001, char *basename,
+ 		input_abs_set_res(dev, ABS_MT_POSITION_X, touch.panel_res);
+ 		input_abs_set_res(dev, ABS_MT_POSITION_Y, touch.panel_res);
+ 
+-		strlcat(basename, " 2FG", basename_sz);
++		w8001_append_suffix(basename, " 2FG", basename_sz);
+ 		if (w8001->max_pen_x && w8001->max_pen_y)
+ 			w8001->id = 0xE3;
+ 		else
+@@ -542,7 +549,7 @@ static int w8001_setup_touch(struct w8001 *w8001, char *basename,
+ 		break;
+ 	}
+ 
+-	strlcat(basename, " Touchscreen", basename_sz);
++	w8001_append_suffix(basename, " Touchscreen", basename_sz);
+ 
+ 	return 0;
+ }
+-- 
+2.47.3
 
