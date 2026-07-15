@@ -1,387 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26D148C8DC;
-	Wed, 15 Jul 2026 17:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784137956; cv=none; b=BtPRc5t2/n3msN10Zkv4yVdn+RC/tZIrAnNPbBpIOQjr6IGT03f5MqWXQdP+tK2EG9GsYX/Hui5dXLFqcF7qPMsQYwep+XdN77GEAX/ADrZRwJw/OAi+XfkU3OsNjtMtEkJo93hoG3oQ8JZAPc5LLn3R/XNyu1SGSbaV8Y+Oaqc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784137956; c=relaxed/simple;
-	bh=+1G8QPlUFuILDnO393TH65EL6dK2Ay6tH2J4v/o3ZwI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=LxP+MiIEY4NXNHh/ZjrR1YXQZ88ew9/FcwEN4TeZQ5lrHTL3vQBZdW97mJR08jyF+X/7gwKfrJFbafZyEI51J148YKqwVRkVotLN4TF5DKwUF5w6yh+oyHw0oh5eNUqZHrHF1hill5u7yErdvf3r5Ta78rq1cP2xZWjvRi7BfI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XWsYGyR4; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACD3338910
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 18:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784139205; cv=pass; b=Kg+ItvnBw2eRUuH5G/dWXVHEHh69IOrcp5rEyPpW//XmIT/69dl7N3pQzrFIphpro2DAAYKa0eHsBkvFyjg2QB73q4Z0tpuMDTSzosElMS4vh5WLrTuPOCNcOwLEhUaMORr5zUBVXBZgmIAiKYv+C5L9l+vyrhBCS1cF/jq2dk0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784139205; c=relaxed/simple;
+	bh=TlTrHrgV9T9HsF1/ikFD5MM6TsMNEWuH7t9v3bzGGpA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=koRpqMBpo/OpbWDmtiLQujmxr+C3qJEdxvbBTDDQiq8Fn3kTGOcOidOKNdtsGEqHkCwSEaxpzMfAw/XD91UthN0woGHiUnXNvfk/HeF7AhPEZ7/ySKeg0yH4X0T8PIJ0PXHakeNAZVZ2kvtruuTZqqNdXKlHDnvnFateeIR2ysY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eCY8mLFC; arc=pass smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XWsYGyR4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F7FE1F000E9;
-	Wed, 15 Jul 2026 17:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784137954;
-	bh=c4f1ZmkmR1O0A/LfhQpAbZrixZvj3u3dIvoVYNBSYh4=;
-	h=From:To:Cc:Subject:Date;
-	b=XWsYGyR489TIbiO60xP95miqy5Mz+ODVYQx6qB4rJ3C6GdOax3bmvzr/FKRhG+Iag
-	 /CjsEaXrA6thWIGEy3tCpCsQr5sagu31+W1Pw3lyI5hfIiRpgRyh+N5n6f4iElRjb1
-	 sU3wQ8iIll5AvaZ+LXHEXJ9uoJndNuk6iiy9hB9eQySpU3GeHy9J657OTD33BMkBRP
-	 2xGkmXhd0jieoe1zOnt9LQxa7cDEg3FNsWG2LFDdaNLM1VaObItGo9Af1O+10y+Y/Z
-	 H8WyoMVWWDC4r06kP0cUVZfmGEqu0Q+NdwPjUuGPi0cWwHdq0U8rM3yniPNHhKAUbm
-	 +15G9QFnnmjKQ==
-From: Kees Cook <kees@kernel.org>
-To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Cc: Kees Cook <kees@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Zhen Lei <thunder.leizhen@huawei.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Micha=C5=82=20Pecio?= <michal.pecio@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	Russell King <linux@armlinux.org.uk>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3] ARM: traps: Implement KCFI trap handler for ARM32
-Date: Wed, 15 Jul 2026 10:52:27 -0700
-Message-Id: <20260715175223.make.153-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCY8mLFC"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-493c7902f47so47848005e9.1
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 11:13:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784139197; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ffeWGm1XaHPfuIiNMi7kNts64Xqcg5Guc4Q3mVDx/RyhxPP9qP3LBaSdO9QnmtdNga
+         aCfWAFHB/y5GR3vggKWrMCBFpqnRHGv31YyAW+jw4qulW7kozN4fnFOvYBaoxizHtBkP
+         p/6U6S+5vMLlgQKYIzOxSnwwdkh6usR0xl2ktrGvhBK0w7sueyk+ZMgCywUq4I9VVC+m
+         9wCr/eKff4bnV0SQj3hZKG7Z5m+ojCu1w2HcVRHQ9cC4QaFe0iaZSHM2IGDoyKAOgeLc
+         nYFXaB6LcTBvioabQnnwdrAOiTwJs26qBORCn3rPv3zlHuHEBZ7zWv6ELXltZ8li/7W7
+         1xjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=2Y5Uh47jmS2lL6sNnuOrdeSccdkAkRk2F1888yDlqwc=;
+        fh=uXtDNwrLHpMSWw93w13F+eGLhaopt5hYeHPX98eUN6A=;
+        b=AfwKx+q/ViHBSBc6oMbYVJCn94iNzx7mk53PzTZd9be3MOiBhignX2BnTLgUVZJMdU
+         0yPTuHW9lXmiLwU0OA0AkOyhkCLU6oLRVE+QLaQ9FD4xXwVEqY6poR2olT1Mu+ylLoBB
+         wJmoN3fSMimE3oG2t6BWQb3OnFky3E5MdxqESz7dTbtXpRN/Eh5ZrZ+zRimrCmZGKMZO
+         SIQWrPuZvf7pIMxEVt8m4Mpoc2F3TwiTQC99+0LhjHfWafYU0DSaAhqEGxtWimNkSNSH
+         NUeXisTQbuRnYTdxM8+us1JBbWh0DtOs8d3C2PZawDfCbIh0VlWuRvEP8pYKOcVzsD/D
+         6dgg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784139197; x=1784743997; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=2Y5Uh47jmS2lL6sNnuOrdeSccdkAkRk2F1888yDlqwc=;
+        b=eCY8mLFCyDK/RwIdj/rDFfVXDRCCUA4l7IN8DO3XrxtA2gjES13qUiYav+TcU5r9eb
+         pFAo0JWD4Y5jUIInfOxzkIqdvIgUrYzIKtZCT4/i+13PqjvFvvKgqwgPal3hWl/BhqyG
+         PG3ff8nIkg/T4JuHPtmn5a6YKXlH/mulsXmuP2s/cQA1cG6Dqxj8NJMsRzLcx2GJ0tP1
+         ynQACydIRqxXRP2NjpENcO73Us9NPqlexFqn5hrn1jjfHcREYYED3RGkQaohgTCI9cOY
+         arIz2NOv9zL5nDgln2tyCBg/+XnwUFevvewlFNB/gxAvSZrxbsmMP/E0mhHjZ0z8rWFQ
+         kbwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784139197; x=1784743997;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=2Y5Uh47jmS2lL6sNnuOrdeSccdkAkRk2F1888yDlqwc=;
+        b=pYPvpqW1m9KEiQSAPjBbqdANclaALkY9/0uTpiOVV/xkozKcJmFGllKpkqGsoI6cOj
+         8GiP7bTQtT56xqQtVQ/TFMEwYknMlZ0v3TGYkNx+XBe0gBw/pQTrUWZlq8BoSBFQU2ip
+         eG3fckY3AaKhG41nCrDqHvaTJQpYtmtBjo7p4XVJLMNk2PV6yvN4kzGGFsxvuR/APHhy
+         aeQLsI3Lzs2St10DQ0fBijY9JOnoVsa0YEzDSfhs6Gmnirq7UkiC5u1SxwKBppGWZ+Pg
+         P2ZiNkqZwD2zgDB0Jw4j+2s1YND7PMv05+CUgLMIGk2PQF2sKM9lT78Ke7eoKtsnEzh+
+         MDPw==
+X-Forwarded-Encrypted: i=1; AHgh+Rpw7loxz4CLA3iiTbE1T5r8TfLWqpb88KqnXECG4DOlKfA6gjDrArXRyiDU403PXbuGI/kHm9wnhzMtE6TBex0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXEyIGXT/bmEufWgAj4YkrVguiOfqHZkCz6m8YFHLBmQOtTXV2
+	z9WlDyjU2709f/1rDa+Xhor6Uk0VlDXNrxDtY6IIxI9nrnAIZljapEthPo7UJZqqCrRc9pA12w/
+	ZN5YrzTMBzx9/ovSNwtIgeRHenUlZXgwQSXVy
+X-Gm-Gg: AfdE7cmFNy+wFNHFvUwsLqgjp58hrRmQY2ize6aqnEeqfpS1BgSSpnp2Uqw/o3TtfZq
+	+VH2G3JioCo1MUKn3PBcXvwSVnhhhTOSRcwjgZEqmkmiVjCkCm6ZFeouzL1qa6pTpoMIIy3I6EV
+	AWTbDFrD9DAZc5mypNn3lycD6Jp88eBGy6t/3aFOB6ZTiDgWkV8Ah+PJQPwDlqun/JZl3GfLAIb
+	fk5LdF035h5PREfKtVY/tJpdaoCbjYuBRkIDAwVfp8pkWJAJuxTOvMTdlwYuRlEU0hSrJzhokPQ
+	vkJa5zNtFqKU5QJJ6utD5gysSr06lhxiPcAafYBpWoyQzQj/wAd8
+X-Received: by 2002:a05:600c:42c8:b0:490:d354:bcf4 with SMTP id
+ 5b1f17b1804b1-4953c28b5edmr28410535e9.27.1784139197027; Wed, 15 Jul 2026
+ 11:13:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12094; i=kees@kernel.org; h=from:subject:message-id; bh=+1G8QPlUFuILDnO393TH65EL6dK2Ay6tH2J4v/o3ZwI=; b=owGbwMvMwCVmps19z/KJym7G02pJDFnhJ26xlGVcs5hru5Bxs2Gp6tlFfHIPHD5f+yZY5//nx nau5cXrOkpZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACZyqZWRYW3cxOy4/dLX2gXz snjcDy35XzfNlV3s/q6jt/UYss3T/BgZNq2/GMZ3u7GnunvRRrVFUTNNJggb7b+56FmamCXj6x+ rGQE=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20260714235408.1666063-1-xmei5@asu.edu>
+In-Reply-To: <20260714235408.1666063-1-xmei5@asu.edu>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Wed, 15 Jul 2026 11:13:03 -0700
+X-Gm-Features: AUfX_mw-teJ0Q6ljAmZl4MTwHTDoeMlbTti5lf97n8LexyPhS1kxB0kDNkM69po
+Message-ID: <CAJnrk1b4VAsyEMx7obFTBgP8M3dBcD1+QnKVQK-r881MBySDOg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] fuse: whitelist the request headers for usercopy
+To: Xiang Mei <xmei5@asu.edu>
+Cc: Bernd Schubert <bernd@bsbernd.com>, Baokun Li <libaokun@linux.alibaba.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, fuse-devel@lists.linux.dev, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, Luis Henriques <luis@igalia.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, bestswngs@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ARM32 GCC KCFI[1] violations currently show as generic "Oops - undefined
-instruction" errors, making debugging CFI failures difficult. Add a proper
-KCFI trap handler similar to the aarch64 implementation to provide clear
-CFI error messages, including the call target and the expected type.
+On Tue, Jul 14, 2026 at 4:54=E2=80=AFPM Xiang Mei <xmei5@asu.edu> wrote:
+>
+> The fuse-io-uring transport copies req->in.h out to the ring in
+> fuse_uring_copy_to_ring() and req->out.h back in fuse_uring_commit().
+> Both headers live inside the fuse_request slab object, whose cache
+> (fuse_req_cachep) is created without a usercopy whitelist, so copying
+> them directly to/from userspace trips CONFIG_HARDENED_USERCOPY and
+> panics:
+>
+>   usercopy: Kernel memory exposure attempt detected from SLUB object
+>   'fuse_request' (offset 56, size 40)!
+>   kernel BUG at mm/usercopy.c:102!
+>   Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+>   RIP: 0010:usercopy_abort (mm/usercopy.c:90)
+>   Call Trace:
+>    __check_heap_object (mm/slub.c:8268)
+>    __check_object_size (mm/usercopy.c:197 mm/usercopy.c:258 mm/usercopy.c=
+:223)
+>    copy_header_to_ring (fs/fuse/dev_uring.c:618)
+>    fuse_uring_prepare_send (fs/fuse/dev_uring.c:776 fs/fuse/dev_uring.c:7=
+85)
+>    fuse_uring_send_in_task (fs/fuse/dev_uring.c:1306)
+>    tctx_task_work_run (io_uring/tw.c:96)
+>    task_work_run (kernel/task_work.c:233)
+>    io_run_task_work (io_uring/tw.h:84)
+>    io_cqring_wait (io_uring/wait.c:278)
+>    __do_sys_io_uring_enter (io_uring/io_uring.c:2685)
+>    entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+>
+> in.h and out.h are adjacent in struct fuse_req, so a single usercopy
+> region starting at in.h covers both and nothing else.  Create the cache
+> with that region whitelisted.
+>
+> Fixes: c090c8abae4b ("fuse: Add io-uring sqe commit and fetch support")
+> Cc: stable@vger.kernel.org
+> Reported-by: Weiming Shi <bestswngs@gmail.com>
+> Suggested-by: Baokun Li <libaokun@linux.alibaba.com>
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Xiang Mei <xmei5@asu.edu>
+> ---
+> v3: no context change; add Bernd's Reviewed-by
+> v4: drop previous tags; use kmem_cache_args to reserve usercopy area
+>
+>  fs/fuse/dev.c        | 9 +++++++--
+>  fs/fuse/fuse_dev_i.h | 5 +++++
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index 5763a7cd3b37..b8e43e374b35 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -2404,10 +2404,15 @@ static struct miscdevice fuse_miscdevice =3D {
+>
+>  int __init fuse_dev_init(void)
+>  {
+> +       struct kmem_cache_args args =3D {
+> +               .useroffset =3D offsetof(struct fuse_req, in.h),
+> +               .usersize =3D sizeof_field(struct fuse_req, in.h) +
+> +                           sizeof_field(struct fuse_req, out.h),
+> +       };
+>         int err =3D -ENOMEM;
+> +
+>         fuse_req_cachep =3D kmem_cache_create("fuse_request",
+> -                                           sizeof(struct fuse_req),
+> -                                           0, 0, NULL);
+> +                                           sizeof(struct fuse_req), &arg=
+s, 0);
+>         if (!fuse_req_cachep)
+>                 goto out;
+>
+> diff --git a/fs/fuse/fuse_dev_i.h b/fs/fuse/fuse_dev_i.h
+> index 668c8391d61c..b511aaab6bfc 100644
+> --- a/fs/fuse/fuse_dev_i.h
+> +++ b/fs/fuse/fuse_dev_i.h
+> @@ -81,6 +81,11 @@ struct fuse_req {
+>         /** @flags: Request flags, updated with test/set/clear_bit() */
+>         unsigned long flags;
+>
+> +       /*
+> +        * @in and @out are the usercopy region of this cache (see
+> +        * fuse_dev_init()); keep them adjacent.
+> +        */
+> +
+>         /** @in: The request input header */
+>         struct {
+>                 /** @in.h: The request input header */
+> --
+> 2.43.0
+>
 
-Clang and GCC trap CFI failures differently on ARM32. Clang lowers
-its checks to a BKPT, handled via the breakpoint/prefetch-abort path
-in hw_breakpoint.c, which cannot recover the target or expected type
-and so must report via report_cfi_failure_noaddr(). GCC instead lowers
-KCFI checks to a UDF (undefined instruction) whose immediate encodes
-the registers involved, so the handler can decode it and call the full
-report_cfi_failure() with the target and expected type.
+I think this is more a matter of preference as they're both
+functionally correct but imo the previous approach seemed cleaner,
+given that only the io-uring path needs this. The extra hop goes
+through a tmp stack variable whose memory is already in the L1 cache
+and the memcpys are small (~40 bytes), so I think the cost is
+essentially negligible. Not sure if Bernd or Miklos or Amir have a
+preference here.
 
-The GCC ARM32 KCFI implementation uses UDF instructions with a specific
-encoding pattern:
-- UDF instruction format: cccc 0111 1111 imm12 1111 imm4
-- 16-bit immediate reconstructed from bits 19-8 and 3-0
-- KCFI encoding: 0x8000 | (type_reg_num << 5) | (target_reg_num & 31)
-- Bit 15: KCFI trap identifier (0x8000)
-- Bits 9-5: Type ID register field (0x1F when unavailable)
-- Bits 4-0: Target address register number
-
-When the type register field is 0x1F (the type was spilled rather than
-kept in a register), the handler walks back up to 6 preceding
-instructions to recover the 32-bit type ID from the four EOR-immediate
-instructions the compiler emits, similar to x86 CFI trap reconstruction.
-
-The handler is dispatched directly from do_undefinstr() rather than
-through register_undef_hook(). A registered hook is only installed once
-initcalls run, so any KCFI violation that fires earlier in boot would be
-reported as a generic "undefined instruction"; calling the decoder from
-the exception handler itself catches failures from the very first
-instruction. Dispatching directly also lets the handler ignore
-non-kernel-mode UDFs, preventing a user process from spoofing the KCFI
-encoding.
-
-Both the UDF handler and the Clang breakpoint handler in hw_breakpoint.c
-act on the report_cfi_failure*() result identically (oops on a fatal
-violation, or skip the trapping instruction under CFI permissive mode)
-so factor that shared tail into arm_cfi_handle_failure(), declared in
-asm/traps.h.
-
-Link: https://inbox.sourceware.org/gcc-patches/20260618204539.824446-6-kees@kernel.org/ [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v3:
-  - rebased on https://lore.kernel.org/lkml/20260701-arm32-cfi-bug-v3-1-e3c37e2b80a4@kernel.org/
-  - drop initcall registration: potentially too late
-  - share logic with hw_breakpoint.c
- v2: https://lore.kernel.org/lkml/20250904034656.3670313-9-kees@kernel.org/#r
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Cc: Linus Walleij <linusw@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Michał Pecio" <michal.pecio@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: <linux-arm-kernel@lists.infradead.org>
----
- arch/arm/include/asm/traps.h    |   3 +
- arch/arm/kernel/hw_breakpoint.c |  40 +++------
- arch/arm/kernel/traps.c         | 144 ++++++++++++++++++++++++++++++++
- 3 files changed, 158 insertions(+), 29 deletions(-)
-
-diff --git a/arch/arm/include/asm/traps.h b/arch/arm/include/asm/traps.h
-index 2621b9fb9b19..5f10af964774 100644
---- a/arch/arm/include/asm/traps.h
-+++ b/arch/arm/include/asm/traps.h
-@@ -2,6 +2,7 @@
- #ifndef _ASMARM_TRAP_H
- #define _ASMARM_TRAP_H
- 
-+#include <linux/bug.h>
- #include <linux/linkage.h>
- #include <linux/list.h>
- 
-@@ -20,6 +21,8 @@ struct undef_hook {
- void register_undef_hook(struct undef_hook *hook);
- void unregister_undef_hook(struct undef_hook *hook);
- 
-+bool arm_cfi_handle_failure(struct pt_regs *regs, enum bug_trap_type type);
-+
- static inline int __in_irqentry_text(unsigned long ptr)
- {
- 	extern char __irqentry_text_start[];
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index 38feb30dfb5f..04755b4373f2 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -904,33 +904,6 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
- 	watchpoint_single_step_handler(addr);
- }
- 
--#ifdef CONFIG_CFI
--static void hw_breakpoint_cfi_handler(struct pt_regs *regs)
--{
--	/*
--	 * TODO: implementing target and type to pass to CFI using the more
--	 * elaborate report_cfi_failure() requires compiler work. To be able
--	 * to properly extract target information the compiler needs to
--	 * emit a stable instructions sequence for the CFI checks so we can
--	 * decode the instructions preceding the trap and figure out which
--	 * registers were used.
--	 */
--
--	switch (report_cfi_failure_noaddr(regs, instruction_pointer(regs))) {
--	case BUG_TRAP_TYPE_BUG:
--		die("Oops - CFI", regs, 0);
--		break;
--	case BUG_TRAP_TYPE_WARN:
--		/* Skip the breaking instruction */
--		instruction_pointer(regs) += 4;
--		break;
--	default:
--		die("Unknown CFI error", regs, 0);
--		break;
--	}
--}
--#endif
--
- /*
-  * Called from either the Data Abort Handler [watchpoint] or the
-  * Prefetch Abort Handler [breakpoint] with interrupts disabled.
-@@ -962,10 +935,19 @@ static int hw_breakpoint_pending(unsigned long addr, unsigned int fsr,
- 		break;
- #ifdef CONFIG_CFI
- 	case ARM_ENTRY_CFI_BREAKPOINT:
-+		/*
-+		 * Clang lowers its CFI checks to a plain breakpoint that does not
-+		 * encode the call target or expected type, so (unlike the GCC UDF
-+		 * handler in traps.c) this can only report via
-+		 * report_cfi_failure_noaddr(). Recovering the target would require
-+		 * the compiler to emit a stable instruction sequence around the
-+		 * check to decode the registers used.
-+		 */
- 		if (user_mode(regs))
- 			ret = 1; /* Don't handle userspace BKPT */
--		else
--			hw_breakpoint_cfi_handler(regs);
-+		else if (!arm_cfi_handle_failure(regs,
-+				report_cfi_failure_noaddr(regs, instruction_pointer(regs))))
-+			die("Unknown CFI error", regs, 0);
- 		break;
- #endif
- 	default:
-diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index afbd2ebe5c39..adaa6170963b 100644
---- a/arch/arm/kernel/traps.c
-+++ b/arch/arm/kernel/traps.c
-@@ -27,6 +27,7 @@
- #include <linux/sched/task_stack.h>
- #include <linux/irq.h>
- #include <linux/vmalloc.h>
-+#include <linux/cfi.h>
- 
- #include <linux/atomic.h>
- #include <asm/cacheflush.h>
-@@ -40,6 +41,7 @@
- #include <asm/stacktrace.h>
- #include <asm/system_misc.h>
- #include <asm/opcodes.h>
-+#include <linux/bitfield.h>
- 
- 
- static const char *handler[]= {
-@@ -442,6 +444,141 @@ int call_undef_hook(struct pt_regs *regs, unsigned int instr)
- 	return fn ? fn(regs, instr) : 1;
- }
- 
-+#ifdef CONFIG_CFI
-+/**
-+ * arm_cfi_handle_failure() - Act on a report_cfi_failure() result
-+ * @regs: registers at the trapping instruction
-+ * @type: the bug_trap_type returned by report_cfi_failure*()
-+ *
-+ * Shared by the GCC UDF handler in this file and the Clang breakpoint handler
-+ * in hw_breakpoint.c: oops on a fatal violation, or under CFI permissive mode
-+ * skip the (4-byte, ARM state) trapping instruction and continue.
-+ *
-+ * Return: true if @type was a recognized CFI failure and has been handled;
-+ * false otherwise, so the caller can escalate.
-+ */
-+bool arm_cfi_handle_failure(struct pt_regs *regs, enum bug_trap_type type)
-+{
-+	switch (type) {
-+	case BUG_TRAP_TYPE_BUG:
-+		die("Oops - CFI", regs, 0);
-+		break;
-+	case BUG_TRAP_TYPE_WARN:
-+		/* Permissive mode: skip the trapping instruction and continue. */
-+		instruction_pointer(regs) += 4;
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+/*
-+ * ARM32 KCFI trap handler.
-+ * UDF instruction format: cccc 0111 1111 imm12 1111 imm4
-+ * Immediate is reconstructed from bits 19-8 (12 bits) and bits 3-0 (4 bits)
-+ * KCFI immediate encoding: 0x8000 | (0x1F << 5) | (target_reg_num & 31)
-+ * - Bit 15: KCFI trap identifier (0x8000)
-+ * - Bits 9-5: Type ID register field (0x1F when invalid due to stack spilling)
-+ * - Bits 4-0: Target address register number
-+ */
-+#define CFI_UDF_KCFI_BIT    BIT(15)	  /* KCFI identifier bit (0x8000) */
-+#define CFI_UDF_IMM_TARGET  GENMASK(4, 0) /* Target register (bits 4:0) */
-+#define CFI_UDF_IMM_TYPE    GENMASK(9, 5) /* Type register (bits 9:5) */
-+
-+/* UDF base pattern with KCFI bit: cond=0xe, 0x7f, xxxx, 1xxx, 0xf, xxxx */
-+#define CFI_UDF_IMM_BASE    0xe7f008f0
-+#define CFI_UDF_IMM_MASK    0xfff008f0	/* Mask for UDF + KCFI bit matching */
-+
-+/**
-+ * cfi_udf_handler() - Decode and report a GCC KCFI UDF trap
-+ * @regs: registers at the trapping instruction
-+ * @instr: the trapping instruction word
-+ *
-+ * Called for every kernel-mode undefined instruction. If @instr is a GCC
-+ * KCFI UDF, decode its target and expected type and hand them to
-+ * report_cfi_failure(), which oopses (fatal) or, under CFI permissive mode,
-+ * warns and skips the instruction.
-+ *
-+ * Return: 0 if this was a KCFI failure and has been handled (the caller
-+ * should return to the interrupted context); 1 otherwise when the UDF was not
-+ * a KCFI trap (user mode, non-KCFI encoding, malformed operands, or an
-+ * unrecognized report), so the caller should keep looking for a handler.
-+ */
-+static int cfi_udf_handler(struct pt_regs *regs, unsigned int instr)
-+{
-+	unsigned long target;
-+	u32 target_reg, type_reg, type, imm16;
-+
-+	/*
-+	 * KCFI checks are only emitted in kernel code, so ignore user-mode UDFs
-+	 * (this also stops a user process spoofing the KCFI encoding), and only
-+	 * handle UDFs carrying the KCFI pattern.
-+	 */
-+	if (processor_mode(regs) != SVC_MODE)
-+		return 1;
-+	if ((instr & CFI_UDF_IMM_MASK) != CFI_UDF_IMM_BASE)
-+		return 1;
-+
-+	/* Reconstruct 16-bit immediate from bits 19-8 and 3-0 */
-+	imm16 = ((instr >> 4) & 0xfff0) | (instr & 0x0f);
-+
-+	target_reg = FIELD_GET(CFI_UDF_IMM_TARGET, imm16);
-+	type_reg = FIELD_GET(CFI_UDF_IMM_TYPE, imm16);
-+
-+	if (target_reg >= 16) {
-+		pr_err("CFI UDF handler: invalid target register %u\n", target_reg);
-+		return 1;
-+	}
-+
-+	target = regs->uregs[target_reg];
-+
-+	/* Type register field is set to all 1s (0x1F) when spilled; extract from EOR sequence */
-+	if (type_reg == 0x1F) {
-+		u32 *pc = (u32 *)regs->ARM_pc;
-+		int eor_count = 0;
-+		int i;
-+
-+		type = 0;
-+		/* Walk back up to 6 instructions to find EOR sequence for type ID */
-+		for (i = 1; i <= 6 && eor_count < 4; i++) {
-+			u32 instr_prev = __mem_to_opcode_arm(pc[-i]);
-+
-+			/* Check for EOR/EORS immediate: cccc 0010 0x1n Rn Rd immediate */
-+			if ((instr_prev & 0x0fe00000) == 0x02200000) {
-+				/* Extract EOR immediate value and XOR to reconstruct type */
-+				u32 rotate = (instr_prev >> 8) & 0xf;
-+				u32 imm8 = instr_prev & 0xff;
-+				u32 imm32 = (imm8 >> (rotate * 2)) | (imm8 << (32 - rotate * 2));
-+				type ^= imm32;
-+				eor_count++;
-+			}
-+		}
-+		if (eor_count != 4)
-+			pr_err("CFI UDF handler: found %d EOR instructions, expected 4\n", eor_count);
-+	} else {
-+		if (type_reg >= 16) {
-+			pr_err("CFI UDF handler: invalid type register %u\n", type_reg);
-+			return 1;
-+		}
-+
-+		type = regs->uregs[type_reg];
-+	}
-+
-+	if (!arm_cfi_handle_failure(regs,
-+			report_cfi_failure(regs, regs->ARM_pc, &target, type)))
-+		return 1;
-+
-+	return 0;
-+}
-+#else
-+static inline int cfi_udf_handler(struct pt_regs *regs, unsigned int instr)
-+{
-+	return 1;
-+}
-+#endif /* CONFIG_CFI */
-+
- asmlinkage void do_undefinstr(struct pt_regs *regs)
- {
- 	unsigned int instr;
-@@ -478,6 +615,13 @@ asmlinkage void do_undefinstr(struct pt_regs *regs)
- 		instr = __mem_to_opcode_arm(instr);
- 	}
- 
-+	/*
-+	 * Decode KCFI failures directly (not via register_undef_hook) so they
-+	 * are diagnosed even when they fire before initcalls have run.
-+	 */
-+	if (cfi_udf_handler(regs, instr) == 0)
-+		return;
-+
- 	if (call_undef_hook(regs, instr) == 0)
- 		return;
- 
--- 
-2.34.1
-
+Thanks,
+Joanne
