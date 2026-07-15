@@ -1,186 +1,195 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE6B42FCCD
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 18:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784140244; cv=pass; b=ZbLfMxLlcb6GnjkhcQBuy3aMIY3hYqPEUEBmwJD5/D7Wvq0I1j+3NIslf18RqMF+KWbUMGUpHSdOEEEyStZnzWhkZY1dEzwqnxKz9jPCyd28ZDsV/6x58+uCOihtaoiUqMPY9cso7xS9hlV/GfGJU6IhzyYOPbbayGG8NyAqgZk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784140244; c=relaxed/simple;
-	bh=LqZQ7GhvjznYU5Bodyh7xffu+f6vi+N9hg5ldo+B/i4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qAK18RrBRGuQtURJIZU70YkC0WfC0Agra2OYEii5bsU5uOz/IRExu4Y0xnWXe7oXl6AMU7f8qX47KvWtsBbPpS3GQ9HIemvejp/9lb9gGRWjW46GI/AGip/8mjPfLCY/PxALPHYQOv8F/WhgNNZ56GQRqttChpO8rNM2W8ouCeM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9lDK2rb; arc=pass smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5425E3B4E87
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 19:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784142388; cv=none; b=uZo9ba7KlXUDAGpJW9W4yoOJ2KVc2ehJ3v3gFWtUXbLk3rTVqRnt9jOWLjAcc4ofNA0tDtUsKIUvlmyxx751WhH0yqn4jkLjm0gX5JG7QnTUQz93OkIbjUNv1m4f3n7JhZA61bIUUBHVxgfGf6WnEQPGD7xe9WJ+j+29Ki8Mqys=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784142388; c=relaxed/simple;
+	bh=V7Q/qo28+1ZAcG7qa/SIkUDw8Vy35bmgcDcKj48LfD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rbUCFbae4Aa+ZUjH3RbeojWUfhpchFyMTthCHTJ0bX2kgcGNpBAIPijeUSB+Pa957vR/JZdkIoyxD39AEaAQIsOLi5bcx8Ur5+o5e18eiftcO9objkmiKcvqMjbpHDnRnkkCg4Ohftr2GWoVcdgCsx+1pWX2Z38PLr0lfZxaEq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ng7E1BrU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9lDK2rb"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-493bf73ec2aso39409875e9.2
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 11:30:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1784140233; cv=none;
-        d=google.com; s=arc-20260327;
-        b=HU5JcWbT3po5jqJxCW3d/S1n/67R6fFAgx8Pgtu8obH8rJwRmB0ku4/PDyW3s0Dx+n
-         s37fuP0XOWH+eOouJO9RHP92t+3seSahyv8MrBb+sl9ZkNu+sbYnYRtRbodYKnMfZsTm
-         YhodJemL40tzKZxAX2v5EjjN4QhD7P0yqD2Z7HcoJwQ0Ltqi8/Gq+DQMe5cVgx08gJ59
-         1xX6+f/W6vkBzP748SDGLcpHfko1/cgTP0Lj04MMbaUEP9Elm8lMm+rxRKT/l4PQG5XD
-         ryh7JUt0L1uFdva0vKM0pvEemiWqZrUyPwyB3V0BOmF+CNt6dLO6b3MCrQ/qJ74DdnQq
-         d/6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=eflNygwkucfn8rSal3UDLFQ6W9vndZUg982/8SGMCAg=;
-        fh=6JMAxIDOMWEdosWsyoHml1rjuB3efieoM7tWjej375I=;
-        b=S47aPIx86qT00KWmmr7VMbbc20FSPowC/nsnXPHQJ+44u0C18Fw7DDE3IJ5EPP0TRT
-         eCCO078MPLzXwaPs+HVbu2XdnKQtPsZ9jVByze/WH52rpQ8QvA3bxbZFxUyPcZbXJlTJ
-         vzNyKl9eU3AekS8eSfzrJRAyGN/wo8IL1UrB09I8oUmUQqMKTxvFH0YYm3oBcOnzCc1z
-         2BPl5wtgDpQsGIoVseWz9Vqr5iBLyI2JYZidICwzvt8mjHbK2o4FMh7Zd/kt3oSXOWmw
-         yb05VOCXP15CJEz6stMf7aaLznorznIrS6LaK5T+vS26Y6/12JZCk6biPfY/9aXYyeaA
-         ogHQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784140233; x=1784745033; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=eflNygwkucfn8rSal3UDLFQ6W9vndZUg982/8SGMCAg=;
-        b=h9lDK2rbq5wUM8wtk2YsXnGw4qzoqeJ3EsIDY/pVR7XozbzSKQyUtRi8aySNUnu9Ro
-         1OTbhU7VqSIrhVpk2LsX2AjHbAm2oyKG6Y9uP0Kgdk50TH87//v/9TWXv06HVWImIC7f
-         i9vgyIZG3k/3SfNByQZnYvoVRYc6X4+ADNaCYLzCjGy09eGj4eJkZsUt7OLg3QiejQZK
-         TRIYH5Dbo05hTZXJa16QIzCBUKIlRQbVRhdNbH4lY4DdFQvXoVSU1y/9DbFZ0ls/8sxw
-         g1SbhX4cdfzcMiEBI9t3yfdaNszZNo/toDaHkRMirviaiD7srqweQ1i+37JM0gYjwI0F
-         8Pcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784140233; x=1784745033;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=eflNygwkucfn8rSal3UDLFQ6W9vndZUg982/8SGMCAg=;
-        b=VbWZ2t3mRoIsX8/6pXzRvsp4rsV5f2V+T7yGhIWP1ystt+iNTBfd06UkXKI83SuYf/
-         HBx6dmSyZF+GUSTMYJJvlihCa5z0ew3tP3OyC+jqJisys1C3Sj9b4yKunwCud0VYkP/k
-         PPuwWXH3GwjM5rniHjdoDvKrEiqto5SjqvqZDA93kFFX1G5bQcs0dkoIqf3CAjXeDLmP
-         qe1E7ar0F2SmN65MnZkVYDOiBKuCVQdWKrsABRPvQhoQCuHp7d1L4rDlR0u13iSNlB6V
-         brEluG1gQWA5PYThI6RCIFjIh8/xAVF7qHgZScdgacFSecfp92jE0b7qh3fJZ0nnZff5
-         kNpw==
-X-Forwarded-Encrypted: i=1; AHgh+RoIbWXT183FCshzeT/9AZ4AnKg5yXnD8hopSYiTGcUM15M+n1bzQZYfFHS3xKTlO+PSN2z7xqCyR/tJ61/CrQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5LgpN0HVVHD7xaA8K9pWH3G2LOQ9yB7pVdx+0ONM+aQM97WRQ
-	Jf5J/UUiMIpH5nKC0AsgvcA5NCLqBTIwwZBIcpdGZEirCbKvtzYmtvClSDRjres6Q5ALS7ZvPft
-	jgPRoEsfC27qcpS9uUmPdi5P2fTcUJuo=
-X-Gm-Gg: AfdE7cnXZuzZ0Wf4Ov53ey7unGQsOfyyziSov63VH3Q2v0QX/YmxICOQEUEaOJOIDIY
-	miAeTy3LzExpvJ/pqtllW/lAs/cCxwkbx3pRS/TammV94+jIdCRToXcId/744Q0NJa9S7vOwjwT
-	7OQ7ksyq4AHicY+iHANubhwIOYTmeveSFshcJ20a45V/i/OyHVVQ/y0co/2DwI8dZ1c9835B3kM
-	12QzSOWThfzl0Fzmkyg6AHPv85x4lrqHKWEDEfjRjyyuJOxKlF4VnjdVVjzX/2qwm+F4p0BqXOM
-	erWHUXS9k0LJqX++pVI4FsNX7nwG7R2c1zpIk8eFUHPai5aRDV3/
-X-Received: by 2002:a05:600c:58d6:b0:493:f262:b8 with SMTP id
- 5b1f17b1804b1-4953c147474mr38215745e9.1.1784140233078; Wed, 15 Jul 2026
- 11:30:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ng7E1BrU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7DF51F000E9;
+	Wed, 15 Jul 2026 19:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784142377;
+	bh=nRhZfEbZrENSE0M2suAF1WmBkJXrxr5AZlRPVcFxltU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ng7E1BrUddltDsjOXHZiJWOg5bqLzCq7Tbi2E32y2LjC2/TwWYUrs7rQKjqZqMFdW
+	 F7AkQ9LlTtlWGpH9OvRKhiKZ7O38nANURZ5VrWp89Hhcf1PSoXX8FPKRVKfsFadxWf
+	 wdpXFrX1O1n5vgGds15ejo/rStaKuZfHIL1QU01t2AF9Vx8zsHxuB3yJURFe3v5TE5
+	 QmomVsmgNBhHqnFMANqxPUTNEDJJkGnNEOaG8a8kbgZrxVaso/G1K5t70mHVHicqkb
+	 HfkgFY/6G2M2ns6QxEYr6NJRYwxrITbppeToKPDgvtjsGvvkrLjDMuswz7vHhnSFIO
+	 TGpUU4QYlsmMg==
+Date: Wed, 15 Jul 2026 12:06:17 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andrea Pinski <andrew.pinski@oss.qualcomm.com>
+Cc: Jeffrey Law <jefflaw@qti.qualcomm.com>,
+	Joseph Myers <josmyers@redhat.com>,
+	Richard Biener <rguenther@suse.de>,
+	Jeff Law <jeffreyalaw@gmail.com>, Andrew Pinski <pinskia@gmail.com>,
+	Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+	"Constable, Scott D" <scott.d.constable@intel.com>,
+	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v13 1/7] kcfi: Introduce KCFI typeinfo mangling API
+Message-ID: <202607151151.AB5F1BD0@keescook>
+References: <20260618204530.work.910-kees@kernel.org>
+ <20260618204539.824446-1-kees@kernel.org>
+ <CALvbMcCiQ1b0KDrJHS-irGMWNEk5oWaWs31KQor2ZHPSVewQ=A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260714235408.1666063-1-xmei5@asu.edu> <20260714235408.1666063-3-xmei5@asu.edu>
-In-Reply-To: <20260714235408.1666063-3-xmei5@asu.edu>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Wed, 15 Jul 2026 11:30:20 -0700
-X-Gm-Features: AUfX_myhxLCfqR4n7aGibfgh8m6ozVVwNoTPdhZMyVsgCsfFwX4PP36R6t_ZV1Q
-Message-ID: <CAJnrk1YRmyaPeeBgd2HQSfmwDYm08cev__Y8LgyPyTqaTZE1vw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] fuse: deduplicate the oversized-request error selection
-To: Xiang Mei <xmei5@asu.edu>
-Cc: Bernd Schubert <bernd@bsbernd.com>, Baokun Li <libaokun@linux.alibaba.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, fuse-devel@lists.linux.dev, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Luis Henriques <luis@igalia.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, bestswngs@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALvbMcCiQ1b0KDrJHS-irGMWNEk5oWaWs31KQor2ZHPSVewQ=A@mail.gmail.com>
 
-On Tue, Jul 14, 2026 at 4:54=E2=80=AFPM Xiang Mei <xmei5@asu.edu> wrote:
->
-> fuse_dev_do_read() and fuse_uring_args_to_ring() both pick the error for
-> a request that does not fit the server's buffer, and both special-case
-> FUSE_SETXATTR.  Move that choice into a helper so the two transports
-> cannot drift apart.
->
-> No functional change.
->
-> Signed-off-by: Xiang Mei <xmei5@asu.edu>
-> ---
-> v4: introduce fuse_req_too_large_error as a helper
->
->  fs/fuse/dev.c        | 5 +----
->  fs/fuse/dev_uring.c  | 2 +-
->  fs/fuse/fuse_dev_i.h | 7 +++++++
->  3 files changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> index b8e43e374b35..56c38aca7389 100644
-> --- a/fs/fuse/dev.c
-> +++ b/fs/fuse/dev.c
-> @@ -1584,10 +1584,7 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *f=
-ud, struct file *file,
->
->         /* If request is too large, reply with an error and restart the r=
-ead */
->         if (nbytes < reqsize) {
-> -               req->out.h.error =3D -EIO;
-> -               /* SETXATTR is special, since it may contain too large da=
-ta */
-> -               if (args->opcode =3D=3D FUSE_SETXATTR)
-> -                       req->out.h.error =3D -E2BIG;
-> +               req->out.h.error =3D fuse_req_too_large_error(args);
->                 fuse_request_end(req);
->                 goto restart;
->         }
-> diff --git a/fs/fuse/dev_uring.c b/fs/fuse/dev_uring.c
-> index 4529505b2bca..cebd8f871627 100644
-> --- a/fs/fuse/dev_uring.c
-> +++ b/fs/fuse/dev_uring.c
-> @@ -729,7 +729,7 @@ static int fuse_uring_args_to_ring(struct fuse_ring *=
-ring, struct fuse_req *req,
->         }
->
->         if (fuse_len_args(num_args, (struct fuse_arg *)in_args) > ent->pa=
-yload_sz)
-> -               return args->opcode =3D=3D FUSE_SETXATTR ? -E2BIG : -EIO;
-> +               return fuse_req_too_large_error(args);
->
->         /* copy the payload */
->         err =3D fuse_copy_args(&cs, num_args, args->in_pages,
-> diff --git a/fs/fuse/fuse_dev_i.h b/fs/fuse/fuse_dev_i.h
-> index b511aaab6bfc..4958158c0f02 100644
-> --- a/fs/fuse/fuse_dev_i.h
-> +++ b/fs/fuse/fuse_dev_i.h
-> @@ -13,6 +13,8 @@
->  #include <linux/workqueue.h>
->  #include <linux/fs.h>
->
-> +#include "args.h"
-> +
->  /* Ordinary requests have even IDs, while interrupts IDs are odd */
->  #define FUSE_INT_REQ_BIT (1ULL << 0)
->  #define FUSE_REQ_ID_STEP (1ULL << 1)
-> @@ -367,6 +369,11 @@ static inline struct fuse_dev *__fuse_get_dev(struct=
- file *file)
->         return fud;
->  }
->
-> +static inline int fuse_req_too_large_error(struct fuse_args *args)
-> +{
-> +       return args->opcode =3D=3D FUSE_SETXATTR ? -E2BIG : -EIO;
-> +}
+On Sat, Jun 27, 2026 at 03:00:42PM -0700, Andrea Pinski wrote:
+> On Thu, Jun 18, 2026 at 1:45 PM Kees Cook <kees@kernel.org> wrote:
+> > [...]
+> > diff --git a/gcc/doc/extend.texi b/gcc/doc/extend.texi
+> > index 9f821f048533..2e7b7e4aed89 100644
+> > --- a/gcc/doc/extend.texi
+> > +++ b/gcc/doc/extend.texi
+> > @@ -17967,6 +17967,101 @@ which will cause a @code{NULL} pointer to be used for the unsafe case.
+> >
+> >  @enddefbuiltin
+> >
+> > +@defbuiltin{{unsigned int} __builtin_linux_abi_kcfi_hash (@var{type})}
+> > +
+> > +The built-in function @code{__builtin_linux_abi_kcfi_hash} returns a hash value
+> > +for the given type @var{type} (which is a type, not an expression).
+> > +The hash is computed using the FNV-1a algorithm on the type's mangled
+> > +name representation, which follows a subset of the Itanium C++ ABI
+> > +conventions adapted for C types.  (See @code{__builtin_linux_abi_kcfi_name}
+> > +for the string representation.)
+> 
+> I think we should add a link to the Itanium C++ ABI from the documentation.
 
-Could you add a comment to the top of this function? Maybe something
-like "A request whose payload size exceeds the transport buffer size
-is rejected with -EIO. The exception is FUSE_SETXATTR whose value may
-legitimately be oversized and is rejected with -E2BIG, matching the
-vfs setxattr path".
+Do you mean a literal URL?
 
-Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
+> The documentation is missing that these builtins are only available
+> from the C and Objective-C and not there for C++.
+> Unless you are going to add a cp/cp-parser.cc implementation too.
 
-Thanks,
-Joanne
+Good point; I don't intend to add this to cp/cp-parser.cc unless there
+is some extremely good reason, and if this is Linux-kernel specific, it
+really should just be C.
+
+> > [...]
+> > +
+> > +    printf("\n================================================================\n");
+> > +    printf("Passed: %d Failed: %d (%d total tests)\n", pass, fail, pass + fail);
+> > +    return fail;
+> > +}
+> 
+> It would be a good idea to add a random generated testing here. See
+> testsuite/objc.dg/gnu-encoding and testsuite/gcc.dg/compat for
+> examples.
+
+Okay, thanks for the pointer; I'll see what I can come up with. I
+generally dislike random testing since they may appear to be "flaky"
+when they trip, but I'll give it a shot.
+
+> > [...]
+> > --- /dev/null
+> > +++ b/gcc/kcfi-typeinfo.h
+> > @@ -0,0 +1,32 @@
+> > +/* KCFI-compatible type mangling, based on Itanium C++ ABI.
+> > +   Copyright (C) 2025 Free Software Foundation, Inc.
+> 
+> It is 2026 now.
+
+Oops, yes.
+
+> 
+> > +
+> > +This file is part of GCC.
+> > +
+> > +GCC is free software; you can redistribute it and/or modify it under
+> > +the terms of the GNU General Public License as published by the Free
+> > +Software Foundation; either version 3, or (at your option) any later
+> > +version.
+> > +
+> > +GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+> > +WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> > +FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+> > +for more details.
+> > +
+> > +You should have received a copy of the GNU General Public License
+> > +along with GCC; see the file COPYING3.  If not see
+> > +<http://www.gnu.org/licenses/>.  */
+> > +
+> > +#ifndef GCC_KCFI_TYPEINFO_H
+> > +#define GCC_KCFI_TYPEINFO_H
+> > +
+> > +#include "tree.h"
+> > +#include <string>
+> 
+> Don't include string here. It will break on some host.
+
+Ah! Okay. Do you know which combo trips this? I'd love to be able to
+validate I've fixed this correctly.
+
+> > [...]
+> > +#include "config.h"
+> Add `#define INCLUDE_STRING` here.
+
+> > [...]
+> > +/* Forward declaration for recursive type mangling.  */
+> > +
+> > +static void mangle_type (tree type, std::string *out_str, uint32_t *hash_state);
+> 
+> Forward declarations should be close to the top of the file.
+
+Gotcha.
+
+> > [...]
+> > +  /* Unknown builtin type: this should never happen in a well-formed C.  */
+> > +  debug_tree (type);
+> > +  internal_error ("mangle: Unknown builtin type - please report this as a bug");
+> Maybe fatal_error or sorry. I know we had some disagreement about this
+> but I can't remember the out come.
+> I am not sure we want internal_error exactly to be user friendly.
+
+We've gone back and forth a few times in other places. My take on this
+is that I do want it to be friendly because in at least the place I
+tripped over this, it was very confusing for me: first I saw this for
+vector types and later for builtins. So, at the very least, I'd like to
+keep this as-is because of how hard I found it to be to debug when
+something got missed. :P
+
+> Note I also have not doubled check but do you have some testcases
+> testing VLAs inside a struct here?
+> What about _BitInt testcases?
+
+I can add both; Linux uses neither so I hadn't considered/tripped over
+those.
+
+-- 
+Kees Cook
