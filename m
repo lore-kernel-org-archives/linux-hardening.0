@@ -1,203 +1,269 @@
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABC53BF665;
-	Wed, 15 Jul 2026 21:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8113BD653
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 22:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784152781; cv=none; b=QkItpBrKgWVJQoYZ3HlkIxD0bk2TF1p8cGq0cKaXiPkb1EodF+yJsibNxSVMNwHjaQomqJ/1iATRfAENmCuAFBH7jc3xEjhWZ9sb+uiNXTqQq/5v86mlasVbLlYyboTweObon19GvhaGom8It/r07of+/LOVguvwo1Dq6SaxW6E=
+	t=1784154851; cv=none; b=Ct97qq2iGdDjjiVBPRSg4N20EjKpR4b1N2QrI+3nFfghWcvMKeF2mw6YH5HptJBo+wS+S/fNsU7UHBu2NjewKnLFhlDN5jP5uDtNuAMt51eD/QO01eM8Yrrg+IdWFAQRctCvfityCyxKXXTBBbT0qVGvEoRmI3HUjWeN0ZB9i3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784152781; c=relaxed/simple;
-	bh=NOAVxZS4uIotck51ZDhimlS8HiMBWZ6w9ReawGbCGck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m1/n37ZM6CymFxuD0uyqKTqfv6LrjEsBE3iIkpGLOMiRma0aMMxgTRBliEYC+BJQyRHvZkudcOHMZBuXh9ph6XLQ5zpl5iOIZC5//POIlLf8n5QtV/sI6Ddr04T8+bFRkGr60DltdL4Ez8kqlllfGqiYue1JzGNKg6FryMD3TYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=YB1B5bQ4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MbympuEk; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
+	s=arc-20240116; t=1784154851; c=relaxed/simple;
+	bh=A5TJo5DNwQJUUQ+1OZBTxnzBCRLf/emq3cdku/Npz7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FKU2yMTlGUSEIeJdpwuhfcWUXotBYQno2bFtQ2mbMVb0lVz9ZiNh3tX0Nvup1bn1P3nZWGeh7C2f2RD5cHPFooNtnn5JSDSHhw888uU6hn8jsu3iKxDk7PXZlR9QpOPxtotoy1i5WUIXfRdvU8v+VDNwLrnbzKFL/f0noV6VJHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7TBRDmQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="YB1B5bQ4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MbympuEk"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id E9A677A0138;
-	Wed, 15 Jul 2026 17:59:37 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Wed, 15 Jul 2026 17:59:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1784152777;
-	 x=1784239177; bh=81OaXMIS9gCQivFXADEv2cqZHgmuSBYxM29OqB8pUwY=; b=
-	YB1B5bQ4JCUaUyoZ28DBlynMW6UUAoqwLYUVbxjrC3Uwv1wlDj1/cIEJE/sZdRXB
-	WGUH0EVLfaxhFAc/gMjzCu6mHs5I8W4FZqsp3hyAS9RHzGIsUhL6U34fwL0Whx0q
-	B7aU4jD1lyO4TBj8FLI8FfcZbZm8lFJ+0mVbQHkNZTlII7pMD2H13PIM+wrTu9Sd
-	XDSg7Yl4hFjfEgNl+xrenO1QAcam2p6URz+M0ELLdsZwAr5WYdZwBDTyfPJQAER9
-	cNw4NO5pcTm/grNU766BQZVtKIDfsR9Byyi1iZ0A1sxwvnrnnaPBSKEOawf/v7qo
-	MjEOD6vROdO5XaLIx+UcqA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1784152777; x=
-	1784239177; bh=81OaXMIS9gCQivFXADEv2cqZHgmuSBYxM29OqB8pUwY=; b=M
-	bympuEk4180Qq877pUzhx9p4fSCIGE3jKES2FH7KEdj3bWlfPbnBsMbKFc33a53G
-	h4dWU1qvxTGDn0dvowvj1q5ow+3JiK8woJOJzmThJDMzBZ/zit915AEXummkxa/6
-	dbxav3cxoDS/M6IbzxeNC3ftzbrAvpl/ksgN3YDoCfi2YsRJuFbwv8C5ezgb/hqd
-	c4zljyeK3dj9QmzAf5UCSBGbAafMK7RnG77o3O6oS7IjBWPYCgOo3tpykabkhGpY
-	+TSbw4dvA+ahCd5gWwZHT+to7YZU4osfUwq6luUJHmWRPivvd3JkbuvaqHELFRvP
-	dLBhCIWWBW7eayEABpgkQ==
-X-ME-Sender: <xms:yAJYalkULA0odJ6GGAAjtvc5WKg_IaiXg8eiQuZoTnlPQGQn7MfATQ>
-    <xme:yAJYamDnmFb-lV21J6NdwBy7YxkbGQbqe920Mvr9T8GHpPQRIG68t_gkhWKK2pLFa
-    Yh7j2_FF16Jryw3DoZqITdlmIEHN6zsCsVpzu2cKUYR4bLOly3E>
-X-ME-Received: <xmr:yAJYavBL5erxKaD4JLZ5fX7v2dqDnCjGw62r-3PgSD0jZ9W19tXSfquOtXo4Z9tEL2YVOqYOrE-_qALsTHOwuUu6D8I6_tebAELkDjXzrtRBjZHNGTNunbiC1HN24U4YXVq7HjJhCy5CWAbU22xQNyokVw>
-X-ME-Proxy-Cause: dmFkZTGYY6vDhiTw0UdRhHgNi8ewbXmGCiW4L2TAGNbnsNX7aieIk12vCFH/GPoMIYuSLZ
-    /ARb38Pk8+E2fBftYaM5x2UHCZPX9jnOzPm4Q14IsmRZ7PgioprRgtsOXCLPqXd1VgXGYZ
-    P+7ndqHHklS9jm0cBH5J3q1n6eguc+PUGzp+mHFsDWZ9vlvnhJddncVajq5nrwz+TRmwPs
-    qx8pXgOSbDCdhWzYigjNDE6SC6OpPqKJscxqoSbtKKmaNw3gxJxgHaDGLGLgclbxsUdK5t
-    1TtZF9dknMRRf7ebRaW5vJu5hqAXlBnJWjw1epou/3mWLXhhL/NEFp8Nv073STz5gqWYrc
-    n2GmX3t4LC6Z4JJp6Ke/c8c5h8RV9s4w1WQ83cMRnXxGe7+vjVn5wBHAvfDlAQ1w7PF4od
-    i22uWv0Oo+lAK7mRZ+WxgVtOI3yVCT+xSMgN5i7l1ClBlk5+GkTDwfPNcR2Yc3TQeSZrh5
-    F3pkDzM7J/lspBnd2+ZlmJ9SZSjQS1HnXNM9JRVHVmtogpAZ/w3HXcPDi/0rNrkYsj4Wza
-    G+iARuTih2ExRqQB1hCbeDT14L0GR6HsXbSUZFswfo3xGI0Rj4uAwSfzbyZMmkxMzp1rL7
-    Jxecr1FVqkEvry4CSKdExOLJlvTiwKkX/3ERl9iIenC3ZzrF7YIIkJ4IYSwQ
-X-ME-Proxy: <xmx:yAJYalE0OcVjts_f7r6Pd_SgQumOmFWRMExIqJebCPVQOfPw5TLbUg>
-    <xmx:yAJYau6fg7nEmsQDFxqWie6nNZr1S6pVLOzSkO3kBvbCjthLCY9mWQ>
-    <xmx:yAJYakRsA1Orzpy2ejnjJsGSVer6XhU97Nep6IK_lgZCvLW3HComdg>
-    <xmx:yAJYah7CJXVBq8nijEqq6tHXyeNcA8LBuX0lVdDR7OVGuJRIrBQMNw>
-    <xmx:yQJYarmyNoE1cxNZ-ER-9_iU2Rdrw8UcX40HNngLochCn0kEQXECLNak>
-Feedback-ID: i5c2e48a5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 15 Jul 2026 17:59:33 -0400 (EDT)
-Message-ID: <c48c4541-c62a-45cc-aa3d-1c78a48d0676@bsbernd.com>
-Date: Wed, 15 Jul 2026 23:59:30 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7TBRDmQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0B451F000E9;
+	Wed, 15 Jul 2026 22:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784154849;
+	bh=4L3VkpWzLwo4AefEcnLv88AWAfcpGpCE7v4J8YEdpgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=a7TBRDmQZ9mi9OyJ+7AfaMpDVXqUBpp9YGHT3s4/Tp/7U4qD09DzEkeYsG+ZArqWF
+	 G+NNXwwmZsuZdoqI35rU9OWEkrS85FviDALTydxvgetmWyfankXqr3GuZqjKAEp5MN
+	 1MP3YnNTnYhtyd6RLT9qpnvDg8JbzcfHHz/i+eA670maR9hQ21bjXsqP6qIkiBC/39
+	 gPjb4qX5CvMX9ZrPzXkCVHWmztVwq+EWQUSIqxbfiN5SksHD0r7zjYPyi2y3bbsWNI
+	 +6CqwabUNBEl7lakXo54UVrQn9coVOBt1DRq9cOJeCie2p5QAq4Pln+lDhf7p/wxyD
+	 SMVf5AriBDfQg==
+Date: Wed, 15 Jul 2026 15:34:09 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andrea Pinski <andrew.pinski@oss.qualcomm.com>
+Cc: Jeffrey Law <jefflaw@qti.qualcomm.com>,
+	Joseph Myers <josmyers@redhat.com>,
+	Richard Biener <rguenther@suse.de>,
+	Jeff Law <jeffreyalaw@gmail.com>, Andrew Pinski <pinskia@gmail.com>,
+	Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+	"Constable, Scott D" <scott.d.constable@intel.com>,
+	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v13 2/7] kcfi: Add core Kernel Control Flow Integrity
+ infrastructure
+Message-ID: <202607151337.31D0828D0@keescook>
+References: <20260618204530.work.910-kees@kernel.org>
+ <20260618204539.824446-2-kees@kernel.org>
+ <CALvbMcDwYgJNo=qeZY1m+zAutURc7rfRCaW960DDjbRAOKUZ+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] fuse: whitelist the request headers for usercopy
-To: Joanne Koong <joannelkoong@gmail.com>, Xiang Mei <xmei5@asu.edu>
-Cc: Baokun Li <libaokun@linux.alibaba.com>, Miklos Szeredi
- <miklos@szeredi.hu>, Kees Cook <kees@kernel.org>,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>, fuse-devel@lists.linux.dev,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Luis Henriques <luis@igalia.com>,
- Pavel Begunkov <asml.silence@gmail.com>, bestswngs@gmail.com
-References: <20260714235408.1666063-1-xmei5@asu.edu>
- <CAJnrk1b4VAsyEMx7obFTBgP8M3dBcD1+QnKVQK-r881MBySDOg@mail.gmail.com>
-From: Bernd Schubert <bernd@bsbernd.com>
-Content-Language: fr, en-US, de-DE, ru-RU
-In-Reply-To: <CAJnrk1b4VAsyEMx7obFTBgP8M3dBcD1+QnKVQK-r881MBySDOg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALvbMcDwYgJNo=qeZY1m+zAutURc7rfRCaW960DDjbRAOKUZ+w@mail.gmail.com>
 
-
-
-On 7/15/26 20:13, Joanne Koong wrote:
-> On Tue, Jul 14, 2026 at 4:54 PM Xiang Mei <xmei5@asu.edu> wrote:
->>
->> The fuse-io-uring transport copies req->in.h out to the ring in
->> fuse_uring_copy_to_ring() and req->out.h back in fuse_uring_commit().
->> Both headers live inside the fuse_request slab object, whose cache
->> (fuse_req_cachep) is created without a usercopy whitelist, so copying
->> them directly to/from userspace trips CONFIG_HARDENED_USERCOPY and
->> panics:
->>
->>   usercopy: Kernel memory exposure attempt detected from SLUB object
->>   'fuse_request' (offset 56, size 40)!
->>   kernel BUG at mm/usercopy.c:102!
->>   Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
->>   RIP: 0010:usercopy_abort (mm/usercopy.c:90)
->>   Call Trace:
->>    __check_heap_object (mm/slub.c:8268)
->>    __check_object_size (mm/usercopy.c:197 mm/usercopy.c:258 mm/usercopy.c:223)
->>    copy_header_to_ring (fs/fuse/dev_uring.c:618)
->>    fuse_uring_prepare_send (fs/fuse/dev_uring.c:776 fs/fuse/dev_uring.c:785)
->>    fuse_uring_send_in_task (fs/fuse/dev_uring.c:1306)
->>    tctx_task_work_run (io_uring/tw.c:96)
->>    task_work_run (kernel/task_work.c:233)
->>    io_run_task_work (io_uring/tw.h:84)
->>    io_cqring_wait (io_uring/wait.c:278)
->>    __do_sys_io_uring_enter (io_uring/io_uring.c:2685)
->>    entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
->>
->> in.h and out.h are adjacent in struct fuse_req, so a single usercopy
->> region starting at in.h covers both and nothing else.  Create the cache
->> with that region whitelisted.
->>
->> Fixes: c090c8abae4b ("fuse: Add io-uring sqe commit and fetch support")
->> Cc: stable@vger.kernel.org
->> Reported-by: Weiming Shi <bestswngs@gmail.com>
->> Suggested-by: Baokun Li <libaokun@linux.alibaba.com>
->> Assisted-by: Claude:claude-opus-4-8
->> Signed-off-by: Xiang Mei <xmei5@asu.edu>
->> ---
->> v3: no context change; add Bernd's Reviewed-by
->> v4: drop previous tags; use kmem_cache_args to reserve usercopy area
->>
->>  fs/fuse/dev.c        | 9 +++++++--
->>  fs/fuse/fuse_dev_i.h | 5 +++++
->>  2 files changed, 12 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
->> index 5763a7cd3b37..b8e43e374b35 100644
->> --- a/fs/fuse/dev.c
->> +++ b/fs/fuse/dev.c
->> @@ -2404,10 +2404,15 @@ static struct miscdevice fuse_miscdevice = {
->>
->>  int __init fuse_dev_init(void)
->>  {
->> +       struct kmem_cache_args args = {
->> +               .useroffset = offsetof(struct fuse_req, in.h),
->> +               .usersize = sizeof_field(struct fuse_req, in.h) +
->> +                           sizeof_field(struct fuse_req, out.h),
->> +       };
->>         int err = -ENOMEM;
->> +
->>         fuse_req_cachep = kmem_cache_create("fuse_request",
->> -                                           sizeof(struct fuse_req),
->> -                                           0, 0, NULL);
->> +                                           sizeof(struct fuse_req), &args, 0);
->>         if (!fuse_req_cachep)
->>                 goto out;
->>
->> diff --git a/fs/fuse/fuse_dev_i.h b/fs/fuse/fuse_dev_i.h
->> index 668c8391d61c..b511aaab6bfc 100644
->> --- a/fs/fuse/fuse_dev_i.h
->> +++ b/fs/fuse/fuse_dev_i.h
->> @@ -81,6 +81,11 @@ struct fuse_req {
->>         /** @flags: Request flags, updated with test/set/clear_bit() */
->>         unsigned long flags;
->>
->> +       /*
->> +        * @in and @out are the usercopy region of this cache (see
->> +        * fuse_dev_init()); keep them adjacent.
->> +        */
->> +
->>         /** @in: The request input header */
->>         struct {
->>                 /** @in.h: The request input header */
->> --
->> 2.43.0
->>
+On Sat, Jun 27, 2026 at 03:57:36PM -0700, Andrea Pinski wrote:
+> On Thu, Jun 18, 2026 at 1:45 PM Kees Cook <kees@kernel.org> wrote:
+> > [...]
+> > diff --git a/gcc/kcfi.h b/gcc/kcfi.h
+> > new file mode 100644
+> > index 000000000000..ea7e7881040f
+> > --- /dev/null
+> > +++ b/gcc/kcfi.h
+> > [...]
+> > +#include "config.h"
+> > +#include "system.h"
+> > +#include "coretypes.h"
+> > +#include "rtl.h"
 > 
-> I think this is more a matter of preference as they're both
-> functionally correct but imo the previous approach seemed cleaner,
-> given that only the io-uring path needs this. The extra hop goes
-> through a tmp stack variable whose memory is already in the L1 cache
-> and the memcpys are small (~40 bytes), so I think the cost is
-> essentially negligible. Not sure if Bernd or Miklos or Amir have a
-> preference here.
+> This is wrong. Don't include config.h nor system.h in a header file.
 
-Sorry for late replies, currently on vacation and reviews only when
-everyone else is asleep.
+Okay, removing.
 
-I don't have a strong opinion, I wondered the same if the stack copy was
-avoidable, but then came to the same conclusion as Joanne - negligible
-overhead.
+> 
+> > +
+> > +/* Common helper for RTL patterns to emit .kcfi_traps section entry.
+> > +   Call after emitting trap label and instruction with the trap symbol
+> > +   reference.  */
+> > +extern void kcfi_emit_traps_section (FILE *file, rtx trap_label_sym,
+> > +                                     int labelno);
+> > +
+> > +/* Extract KCFI type ID from current GIMPLE statement.  */
+> > +extern rtx internal_kcfi_get_type_id_for_expanding_gimple_call (void);
+> > +
+> > +/* Convenience wrapper to check for SANITIZE_KCFI.  */
+> > +static inline rtx
+> Remove static.
 
+Okay. This is a Linux-ism in my finger, I think. :)
 
-Thanks,
-Bernd
+> > [...]
+> > --- /dev/null
+> > +++ b/gcc/kcfi.cc
+> > @@ -0,0 +1,696 @@
+> > +/* Kernel Control Flow Integrity (KCFI) support for GCC.
+> > +   Copyright (C) 2025 Free Software Foundation, Inc.
+> 
+> 2026.
+
+Yup, I went and hunted down all of these.
+
+> > [...]
+> > +#include "config.h"
+> `#define INCLUDE_STRING` is needed based on review of the previous patch.
+
+Got it.
+
+> > [...]
+> > +/* KCFI label counter, incremented by KCFI insn emission.  */
+> > +static int kcfi_labelno = 0;
+> 
+> I am not 100% sure if this needs a GTY marker or not. I suspect no
+> because we should not have emitted assembly code yet.
+
+If this moves with kcfi_next_labelno into final, I think it's okay
+without GTY?
+
+> > +
+> > +/* Get next KCFI label number.  Returns the current KCFI label number
+> > +   and increments the internal counter for the next call.  The label is
+> > +   used to provide a unique number for each indirect callsite of the
+> > +   current module of the compilation.  */
+> > +
+> > +int
+> > +kcfi_next_labelno (void)
+> > +{
+> > +  return kcfi_labelno++;
+> > +}
+> 
+> Seems like this should be instead in `final.{cc,h}` rather than `kfci.{cc,h}`.
+
+I think you want this because it's exclusively used during output phase?
+I'll get it moved.
+
+> > +/* Function attribute to store KCFI type ID.  */
+> > +static tree kcfi_type_id_attr = NULL_TREE;
+> 
+> This 100% needs a GTY marker. to make sure the identifier does not get freed.
+
+Got it.
+
+> > +
+> > +/* Get KCFI type ID for a function type.  Set it if missing.  FN_TYPE
+> > +   is the function type tree node.  Returns the cached or newly computed
+> > +   32-bit KCFI type identifier, storing it as a type attribute.  */
+> > +
+> > +static uint32_t
+> > +kcfi_get_type_id (tree fn_type)
+> > +{
+> > +  uint32_t type_id;
+> > +
+> > +  /* Cache the attribute identifier for build_tree_list usage.  */
+> > +  if (!kcfi_type_id_attr)
+> > +    kcfi_type_id_attr = get_identifier ("kcfi_type_id");
+> > +
+> > +  tree attr = lookup_attribute ("kcfi_type_id", TYPE_ATTRIBUTES (fn_type));
+> > +  if (attr)
+> > +    {
+> > +      tree value = TREE_VALUE (attr);
+> > +      gcc_assert (value && TREE_CODE (value) == INTEGER_CST);
+> gcc_assert (tree_fits_uhwi_p (value));
+> type_id = tree_to_uhwi (value);
+
+Updated.
+
+> > +      type_id = (uint32_t) TREE_INT_CST_LOW (value);
+> > +    }
+> > +  else
+> > +    {
+> > +      type_id = compute_kcfi_type_id (fn_type);
+> > +
+> > +      tree type_id_tree = build_int_cst (unsigned_type_node, type_id);
+> > +      tree attr = build_tree_list (kcfi_type_id_attr, type_id_tree);
+> > +
+> > +      TYPE_ATTRIBUTES (fn_type) = chainon (TYPE_ATTRIBUTES (fn_type), attr);
+> > +    }
+> 
+> Instead of an attribute there must be a better way of doing this.
+> Maybe a hashset instead.
+
+Perhaps? I will go examine this vs LTO, etc.
+
+> > [...]
+> > +rtx
+> > +internal_kcfi_get_type_id_for_expanding_gimple_call (void)
+> > +{
+> > +  gcc_assert (currently_expanding_gimple_stmt);
+> 
+> gcall *call_stmt = dyn_cast<gcall *> (currently_expanding_gimple_stmt);
+> gcc_assert (call_stmt);
+
+Updated.
+
+> > [...]
+> > +  /* Emit .type directive.  */
+> > +  ASM_OUTPUT_TYPE_DIRECTIVE (asm_file, cfi_symbol_name.c_str (), "function");
+> > +  ASM_OUTPUT_LABEL (asm_file, cfi_symbol_name.c_str ());
+> > +
+> > +  /* Emit any needed alignment padding NOPs using target's NOP template.  */
+> > +  for (int i = 0; i < kcfi_alignment_padding_nops; i++)
+> > +    output_asm_insn (kcfi_nop, NULL);
+> I think you need to calculate kcfi_nop each time you call this
+> function. Instead of caching it. For GC reasons.
+
+Uh, do I have to? This seems wasteful: the nop is generated frequently.
+Should kcfi_nop gain GTY instead? I will take a closer look at this.
+
+> > [...]
+> > +static unsigned int
+> > +ipa_kcfi_execute (void)
+> > +{
+> > +  struct cgraph_node *node;
+> > +
+> > +  /* Prepare global KCFI alignment NOPs calculation once for all functions.  */
+> > +  kcfi_prepare_alignment_nops ();
+> > +
+> > +  /* Process all functions - both local and external.  */
+> > +  FOR_EACH_FUNCTION (node)
+> > +    {
+> > +      tree fndecl = node->decl;
+> > +
+> > +      /* Skip all non-NORMAL builtins (MD, FRONTEND) entirely.
+> > +        For NORMAL builtins, skip those that lack an implicit
+> > +        implementation (closest way to distinguishing DEF_LIB_BUILTIN
+> > +        from others).  E.g. we need to have typeids for memset().  */
+> > +      if (fndecl_built_in_p (fndecl))
+> > +       {
+> > +         if (DECL_BUILT_IN_CLASS (fndecl) != BUILT_IN_NORMAL)
+> > +           continue;
+> > +         if (!builtin_decl_implicit_p (DECL_FUNCTION_CODE (fndecl)))
+> > +           continue;
+> > +       }
+> > +
+> > +      /* Cache the type_id in the function type.  */
+> > +      kcfi_get_type_id (TREE_TYPE (fndecl));
+> 
+> Why are you needing to cache here?
+
+This was originally added for the __kcfi_typeid emission for functions
+known to the TU since at the time I couldn't figure out how to deal with
+lacking FN_TYPE (to see the function argument types), but that logic
+changed in v3, and I never noticed I didn't have to cache it any more.
+It looks like I can drop this.
+
+So... we could just not cache this at all, I guess? It seems wrong to
+keep resolving the same typeid over and over though. I will look at
+hashset, though, as you suggested.
+
+-Kees
+
+-- 
+Kees Cook
