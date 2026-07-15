@@ -1,273 +1,214 @@
 Received: from va-1-113.ptr.blmpb.com (va-1-113.ptr.blmpb.com [209.127.230.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6B33093CF
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 06:12:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998E71A9F87
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Jul 2026 06:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784095929; cv=none; b=O9rW4lYFrGmlEEdI1W8yTie7a1WkhY+K/qRHk23GnV6F1P0kUiV9mNFAH7hyXdkCV1gPGjvcduBrj7SRqJcecm2M5XI35Ea1QJMDRD2Uhpkx3l5FeeKwUpUdBfZnkUhMD6y2JBgfAgeelSh41bj0FXBO3UJdWTO9dgiBX7LVEbo=
+	t=1784096361; cv=none; b=ULrZUa3jbRXaksKRv98eDnxS8TgQmYwexRkseLLhpR7LmgNiW2HxJGKb4htBwCzbjONpXJGQQdRIH2fC8SljGz0k5iEyH0Oph796rhdnNvkrS/fbWQUQvpMVV0cp8CeIajOO+smPpFyAlQZVV1RrTZCgCtMyaWpa8wwmwpGA2wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784095929; c=relaxed/simple;
-	bh=j+gJA7tqEZMJUaymDan0oLSAsVsiMfSlVhTnTUzhvlQ=;
-	h=In-Reply-To:Cc:From:References:Date:Content-Type:Message-Id:
-	 Mime-Version:To:Subject; b=fgLWBMvNYuoe2OMjW7t25zhQnGVCnJDObt1ReqdFGdp1zFo6HBTGyUm0OZx5bGq3pcLNIV14MqBo0CKBbo5eWtnEkmKzvz9qf4jTDqOLbChahUgq2u9Ffem62TBfk2ps0neT4gfRMTrIll02ZFiKlR6zinhs4CxKhWFM1FJmgNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=VEWL4DDm; arc=none smtp.client-ip=209.127.230.113
+	s=arc-20240116; t=1784096361; c=relaxed/simple;
+	bh=/uoPEMWHBxJqjD+lvYlYW7fv8YA0LyJzXoEQxvPEpvM=;
+	h=Message-Id:References:From:Subject:Mime-Version:Content-Type:Cc:
+	 Date:In-Reply-To:To; b=Tqyp/SjokqHl5dVavUPpAaRB0uv7BU3G0weYFLwjGDYlaCE8a1HnTEhvV1Nw/+5YRVJkapKSMspNfFo/1JOrznb2yDnraJCoMzQlwaOCf1uPlGpDI7jd/XvoHpX/T26sdBegR9v8GJw7U6cfkegAGwpVunCsnm6BNSXo1EjbIX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZAuN3Q+5; arc=none smtp.client-ip=209.127.230.113
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="VEWL4DDm"
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZAuN3Q+5"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1784095921; h=from:subject:
+ s=2212171451; d=bytedance.com; t=1784096353; h=from:subject:
  mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
  mime-version:in-reply-to:message-id;
- bh=j+gJA7tqEZMJUaymDan0oLSAsVsiMfSlVhTnTUzhvlQ=;
- b=VEWL4DDmijl4nREiBLesS0ldcoPgMTTL3xuuWjy/JciLmcXyS6D1ntCziIQmexeaGG5xW0
- 0wyny3R9WFeByMT7J3jEJ+9atlHR2AupZiAEEz6QMBwSx5+tOffsb3d7E4KeM29IyWa6Hn
- gThnjj1mGbExhlyqRh47j1p0PQ+AKziFhlm9VG8P+n2puZs1INzlyyx5GYkxbdKU+grLg0
- HP0/jXGBR4Bu53lCVAqEpVAnrmCv4c8EimXweJrtQp1mMGa100NBnpT7LHDbOWRVNX5qH7
- TXAH8HLgSPo+YIEt1Jd4j56v7GqTrlKtWIzId/aIk9iM9ora0cqFF7UGCyK+vg==
-In-Reply-To: <08d40cad-8f61-4aba-9556-5a84067c6494@linux.dev>
-Cc: <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>, 
-	<akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
-	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
-	<rppt@kernel.org>, <tglx@kernel.org>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Content-Transfer-Encoding: quoted-printable
-References: <20260709112520.24857-1-lizhe.67@bytedance.com> <20260709112520.24857-5-lizhe.67@bytedance.com> <08d40cad-8f61-4aba-9556-5a84067c6494@linux.dev>
+ bh=/uoPEMWHBxJqjD+lvYlYW7fv8YA0LyJzXoEQxvPEpvM=;
+ b=ZAuN3Q+5oshtTOCeRZItTV/Y4DRqsV3g7mGWJSnW6IM2FDaij/whhqjh5cb5/f8OpMNJD+
+ JSCR2WNGlQNyBXIkaxc3R5NTHb40bzsWnEU7zvigRmgQbNsM9slqLWBgGKJ9Yl43PRS3UL
+ QMP5ytZxjK2uMxJJfy6yHkTfdNgvQ+TJH4cX25/TPp6uWl575rwyFQBgS6k58cPaEGZoiW
+ w8j5qrGdHxFE9Y6mPjWE+DVSfX4PRJvtKDp/PHbQQ6Ge3ZxSAZ23p2771tymjojntVfxMD
+ 2CvPtARoPwIPfxFZzgG3Ks+Ojgb0evSXMRQQLtWVzxA/5TWO9YX/Yo7ZeEGe1w==
+Message-Id: <abd1f6da-a6f4-40ed-923f-94201bba4690@bytedance.com>
+References: <20260709112520.24857-1-lizhe.67@bytedance.com> <20260709112520.24857-7-lizhe.67@bytedance.com> <7bfb13a0-8f4a-4f4b-9df4-da842169f8f1@linux.dev>
 User-Agent: Mozilla Thunderbird
-Date: Wed, 15 Jul 2026 14:11:36 +0800
-Content-Type: text/plain; charset=UTF-8
 X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-Message-Id: <b4308d88-3486-4e4d-ae81-6c7ae66956a1@bytedance.com>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Subject: Re: [PATCH v6 6/8] string: introduce memcpy_nt() helpers
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Lms-Return-Path: <lba+26a5724ae+cca19f+vger.kernel.org+lizhe.67@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+X-Lms-Return-Path: <lba+26a57265f+811200+vger.kernel.org+lizhe.67@bytedance.com>
+Cc: <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>, 
+	<akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
+	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
+	<rppt@kernel.org>, <tglx@kernel.org>
+Date: Wed, 15 Jul 2026 14:18:50 +0800
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <7bfb13a0-8f4a-4f4b-9df4-da842169f8f1@linux.dev>
 To: "Muchun Song" <muchun.song@linux.dev>
-Subject: Re: [PATCH v6 4/8] mm: add a template-based fast path for zone-device page init
 
-On 7/14/26 4:38 PM, Muchun Song wrote:
+On 7/14/26 5:24 PM, Muchun Song wrote:
 >
 >
 > On 2026/7/9 19:25, Li Zhe wrote:
->> memmap_init_zone_device() repeats nearly identical head-page
->> initialization for each PFN. Prepare one reusable ZONE_DEVICE head-page
->> template through the existing slow path, refresh the PFN-dependent
->> fields in that template before each copy, and memcpy it into each
->> destination page.
+>> Introduce memcpy_nt() and memcpy_nt_drain() for write-once copy sites
+>> that want a named non-temporal copy primitive plus an explicit drain
+>> step.
 >>
->> The optimized path assigns _refcount through the copied template, so
->> keep it disabled when the page_ref_set tracepoint is enabled.
+>> On x86_64, override both helpers in arch/x86/include/asm/string_64.h
+>> using the usual self-macro pattern, next to the existing
+>> memcpy_flushcache() backend that memcpy_nt() wraps. The x86_64
+>> implementation maps memcpy_nt() to memcpy_flushcache() and uses wmb()
+>> for memcpy_nt_drain(), because that backend issues MOVNTI stores and
+>> callers need an ordering point before later normal stores that depend
+>> on those writes becoming visible.
 >>
->> This patch accelerates head-page initialization. The pfns_per_compound
->> =3D=3D 1 case gets the full benefit here, compound tails are handled in =
-the
->> next patch.
+>> include/linux/string.h provides the generic fallback under
+>> memcpy_nt() as plain memcpy() and leaves memcpy_nt_drain() empty, so
+>> architectures that do not override memcpy_nt() do not pay an
+>> unconditional barrier. Architectures that later grow a specialized
+>> memcpy_nt() backend can override memcpy_nt_drain() with whatever
+>> drain primitive their memory-ordering rules require.
 >>
->> Tested in a VM with a 100 GB fsdax namespace device configured with
->> map=3Ddev on Intel Ice Lake server. This test exercises the nd_pmem rebi=
-nd
->> path (pfns_per_compound =3D=3D 1).
->>
->> Test procedure:
->> Rebind the nd_pmem driver 30 times and collect the memmap initialization
->> time from the pr_debug() output of memmap_init_zone_device().
->>
->> Base(v7.2-rc1):
->> =C2=A0=C2=A0 First binding: 1456 ms
->> =C2=A0=C2=A0 Average of subsequent rebinds: 244.28 ms
->>
->> With this patch and its prerequisites applied:
->> =C2=A0=C2=A0 First binding: 1440 ms
->> =C2=A0=C2=A0 Average of subsequent rebinds: 217.19 ms
->>
->> This reduces the average rebind time from 244.28 ms to 217.19 ms, or
->> about 11%.
+>> The immediate user is the ZONE_DEVICE template-copy path. It populates
+>> struct page descriptors in a write-once pattern, so a regular cached
+>> memcpy() can incur avoidable write-allocate traffic and cache
+>> pollution for data with little near-term reuse.
 >>
 >> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
 >> ---
->> =C2=A0 mm/mm_init.c | 59 +++++++++++++++++++++++++++++++++++++++++++++++=
-++++-
->> =C2=A0 1 file changed, 58 insertions(+), 1 deletion(-)
+>> =C2=A0 arch/x86/include/asm/string_64.h | 22 ++++++++++++++++++++++
+>> =C2=A0 include/linux/string.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 23 +++++++++++++++++++++++
+>> =C2=A0 2 files changed, 45 insertions(+)
 >>
->> diff --git a/mm/mm_init.c b/mm/mm_init.c
->> index 5fccfbacf855..170021e182e0 100644
->> --- a/mm/mm_init.c
->> +++ b/mm/mm_init.c
->> @@ -1065,6 +1065,44 @@ static void __ref=20
->> zone_device_page_init_slow(struct page *page,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_page_count(pa=
-ge, 0);
+>> diff --git a/arch/x86/include/asm/string_64.h=20
+>> b/arch/x86/include/asm/string_64.h
+>> index 4635616863f5..6cb9e0ac7fa0 100644
+>> --- a/arch/x86/include/asm/string_64.h
+>> +++ b/arch/x86/include/asm/string_64.h
+>> @@ -4,6 +4,7 @@
+>>
+>> =C2=A0 #ifdef __KERNEL__
+>> =C2=A0 #include <linux/jump_label.h>
+>> +#include <asm/barrier.h>
+>>
+>> =C2=A0 /* Written 2002 by Andi Kleen */
+>>
+>> @@ -100,6 +101,27 @@ static __always_inline void=20
+>> memcpy_flushcache(void *dst, const void *src, size_t
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __memcpy_flushcache(dst, src, cnt);
 >> =C2=A0 }
->> =C2=A0 +static inline bool zone_device_page_init_optimization_enabled(vo=
-id)
+>> +
+>> +#define memcpy_nt memcpy_nt
+>> +/*
+>> + * Reuse the existing x86 flushcache backend as the nt copy primitive.
+>> + * Callers pair it with memcpy_nt_drain() when later stores must be
+>> + * ordered after the copy.
+>> + */
+>> +static __always_inline void memcpy_nt(void *dst, const void *src,=20
+>> size_t cnt)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 memcpy_flushcache(dst, src, cnt);
+>
+> Why not use memcpy_flushcache() directly in device dax path? I don't
+> understand the necessity of introducing memcpy_nt here.
+>
+
+The reason for introducing memcpy_nt() is to give generic MM code a
+named non-temporal copy primitive, instead of hardwiring the x86
+memcpy_flushcache() backend into a generic caller.
+
+On x86, memcpy_nt() maps to memcpy_flushcache() today. On other
+architectures, memcpy_flushcache() may have different semantics, and we
+also do not know whether its implementation would provide the same
+optimization opportunity as on x86. Using memcpy_nt() lets the generic
+caller express the intent while leaving the backend choice to each
+architecture.
+
+>> +}
+>> +
+>> +#define memcpy_nt_drain memcpy_nt_drain
+>> +static __always_inline void memcpy_nt_drain(void)
 >> +{
 >> +=C2=A0=C2=A0=C2=A0 /*
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * The template fast path copies a preinitializ=
-ed struct page=20
->> image.
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * Skip it when the page_ref_set tracepoint is =
-enabled.
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Order the prior MOVNTI stores issued by memc=
+py_flushcache()
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 * before later normal stores.
 >> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0=C2=A0 return !page_ref_tracepoint_active(page_ref_set);
 >
-> I'm not sure why we need to make this. I think we can go ahead and
-> perform this optimization unconditionally.
+> I also have a question here: why are we using wmb to guarantee visibility
+> at this stage?
 >
-> If we look at why the tracepoint was added in the first place, it's
-> clear that its primary purpose is for debugging, particularly regarding
-> why CMA memory pages cannot be allocated (see commit 95813b8faa0). But
-> at this stage, the struct page hasn't even been initialized yet; we
-> are currently in the middle of initialization. From the perspective of
-> the page being initialized, the user doesn't need to care at all about
-> how the reference count is changing. Therefore, I don't think we need to
-> include these checks. It would only increase the complexity of the code.
->
-> I suggest deleting this section of code to keep things simple.
+> Since we are still in the very early phases of memory initialization=20
+> (specifically,
+> struct page initialization), since we are still in an intermediate=20
+> initialization
+> state, this shouldn't be visible to other CPUs anyway.
 >
 > Thanks.
 
-I would prefer to keep this check.
+The drain is not about exposing the intermediate initialization state to
+other CPUs.
 
-When page_ref_set debugging is enabled, preserving the existing per-page
-set_page_count() behavior is still useful, including during
-initialization, because it keeps the debug trace complete and unchanged.
+It is there to order the earlier non-temporal stores before the later
+normal stores on the same control path, for example before
+memmap_init_compound() / prep_compound_head() update overlapping
+compound metadata.
 
-In the normal case, page_ref_set is off by default, so this only affects
-an explicit debugging configuration and leaves the production fast path
-unchanged. The extra logic here is also fairly small and stays local to
-this optimization path.
+On x86, memcpy_nt() maps to MOVNTI-based memcpy_flushcache(), so
+memcpy_nt_drain() uses wmb(), which maps to the required sfence there.
 
 Thanks,
 Zhe
 
+>
+>> +=C2=A0=C2=A0=C2=A0 wmb();
 >> +}
->> +
+>> =C2=A0 #endif
+>>
+>> =C2=A0 #endif /* __KERNEL__ */
+>> diff --git a/include/linux/string.h b/include/linux/string.h
+>> index 5702daca4326..a109b2f86ca6 100644
+>> --- a/include/linux/string.h
+>> +++ b/include/linux/string.h
+>> @@ -278,6 +278,29 @@ static inline void memcpy_flushcache(void *dst,=20
+>> const void *src, size_t cnt)
+>> =C2=A0 }
+>> =C2=A0 #endif
+>>
+>> +#ifndef memcpy_nt
 >> +/*
->> + * 'template' is a reusable page prototype rather than a strictly=20
->> immutable
->> + * object. Most ZONE_DEVICE fields stay constant across the pages=20
->> covered by
->> + * the current template, but section bits and page->virtual may=20
->> still depend
->> + * on the PFN. Refresh those PFN-dependent fields in the template=20
->> before
->> + * copying it into @page.
+>> + * memcpy_nt() requests a non-temporal copy when the architecture has a
+>> + * suitable backend. Architectures that do not override it fall back to
+>> + * memcpy().
 >> + */
->> +static inline void zone_device_page_update_template(struct page=20
->> *template,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long pfn)
+>> +static inline void memcpy_nt(void *dst, const void *src, size_t cnt)
 >> +{
->> +=C2=A0=C2=A0=C2=A0 set_page_section_from_pfn(template, pfn);
->> +#ifdef WANT_PAGE_VIRTUAL
->> +=C2=A0=C2=A0=C2=A0 if (!is_highmem_idx(ZONE_DEVICE))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_page_address(template, _=
-_va(pfn << PAGE_SHIFT));
+>> +=C2=A0=C2=A0=C2=A0 memcpy(dst, src, cnt);
+>> +}
 >> +#endif
->> +}
 >> +
->> +static void zone_device_page_init_from_template(struct page *page,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long pfn, struct pa=
-ge *template)
+>> +#ifndef memcpy_nt_drain
+>> +/*
+>> + * Callers use memcpy_nt_drain() before later normal stores that=20
+>> need to
+>> + * be ordered after memcpy_nt(). Architectures without a specialized
+>> + * backend can leave it empty.
+>> + */
+>> +static inline void memcpy_nt_drain(void)
 >> +{
->> +=C2=A0=C2=A0=C2=A0 /*
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * 'template' carries the invariant portion of =
-a ZONE_DEVICE struct
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * page. Update the PFN-dependent fields in pla=
-ce before copying it
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * to the destination page.
->> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0=C2=A0 zone_device_page_update_template(template, pfn);
->> +=C2=A0=C2=A0=C2=A0 memcpy(page, template, sizeof(*page));
 >> +}
+>> +#endif
 >> +
->> =C2=A0 /*
->> =C2=A0=C2=A0 * With compound page geometry and when struct pages are sto=
-red in=20
->> ram most
->> =C2=A0=C2=A0 * tail pages are reused. Consequently, the amount of unique=
- struct=20
->> pages to
->> @@ -1120,6 +1158,7 @@ void __ref memmap_init_zone_device(struct zone=20
->> *zone,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long nr_pages,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct dev_pagemap *pgmap)
->> =C2=A0 {
->> +=C2=A0=C2=A0=C2=A0 bool use_template =3D zone_device_page_init_optimiza=
-tion_enabled();
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long pfn, end_pfn =3D start_pfn =
-+ nr_pages;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pglist_data *pgdat =3D zone->zone_=
-pgdat;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vmem_altmap *altmap =3D pgmap_altm=
-ap(pgmap);
->> @@ -1127,6 +1166,7 @@ void __ref memmap_init_zone_device(struct zone=20
->> *zone,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long zone_idx =3D zone_idx(zone)=
-;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long start =3D jiffies;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int nid =3D pgdat->node_id;
->> +=C2=A0=C2=A0=C2=A0 struct page template;
+>> =C2=A0 void *memchr_inv(const void *s, int c, size_t n);
+>> =C2=A0 char *strreplace(char *str, char old, char new);
 >>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (WARN_ON_ONCE(!pgmap || zone_idx !=3D =
-ZONE_DEVICE))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->> @@ -1144,7 +1184,24 @@ void __ref memmap_init_zone_device(struct zone=20
->> *zone,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (pfn =3D start_pfn; pfn < end_pfn; pf=
-n +=3D pfns_per_compound) {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct page *page=
- =3D pfn_to_page(pfn);
->>
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 zone_device_page_init_slow(p=
-age, pfn, zone_idx, nid, pgmap);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!use_template) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 zone=
-_device_page_init_slow(page, pfn, zone_idx,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 nid, pgmap);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else if (pfn =3D=3D start_=
-pfn) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 * Seed the reusable head-page template from the
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 * first real struct page, because the existing
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 * page-init and pageblock helpers expect a real
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 * memmap entry rather than a stack object.
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 zone=
-_device_page_init_slow(page, pfn, zone_idx,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 nid, pgmap);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* i=
-nit template page */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memc=
-py(&template, page, sizeof(*page));
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 zone=
-_device_page_init_from_template(page, pfn,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &template);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ALIGNED(pf=
-n, PAGES_PER_SECTION))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 cond_resched();
 >> --=20
 >> 2.20.1
 >>
