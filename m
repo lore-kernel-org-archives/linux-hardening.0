@@ -1,104 +1,100 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1969038C40E;
-	Thu, 16 Jul 2026 09:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0DE3F44DB
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Jul 2026 09:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784193442; cv=none; b=CJYMoOAK0Ad0r1kbVvpAqqz9555hwREhV9LwuwL1mk5ZsNQPOXlOZsnp3WXGhBXWYoN7ZDMC3A9hXqzO1gkpz+RTSeGLD4Azv7YCXwSPc4b6cykm+B/a0L6ETQQ7JoXRP6emT31SKkU3ThOZ8hqQDfuOcriPSsde3VCGYHc6a6I=
+	t=1784194364; cv=none; b=FBiv11HgSyfueeh8nWpWTLHNrECNYmuwO8qbUC6X5qqrTM877L9eJimpJsiSgYOGZW1OXc5zpxEO3st2s+RsC3sHBUpxIF+112ScFI3h7bmnk8QdDn4VJpzr+JeG8nRiA8CDnHYkpxLTVcvNb3RILZI8DZ6ZTb+9+3/5HzjHtBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784193442; c=relaxed/simple;
-	bh=0r8ODIZPMMonUvBM8SnKt8GPLAt04IeGSwSwMWqTBrM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lryRYeSs1CkdVL8D0yBG8onSq84d6hviEHxpArjq074UIEtotyH8AtlmYInN0y/fEwgfxrdoUhMDTq9G82KmA/Zy9fNFS55a6BQBMS3ykpSm7h6BfUt4/gY46eXz3ARwsmFnjqUXAvrFqWYjFru/PBaQRPLqnvW6NXhoI71vrdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LJLM1W5A; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1784194364; c=relaxed/simple;
+	bh=cPmpmx+T5sAWycdpqF364kuymZ/P1B9n9CUUBg6crMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uhsO1rMfX84EtrcWP8B5M0B9aVZ2U8QOvaUo26werag+5U6dKQnlehwSK7WfJmcb9w7ajO1s+zdldXnEIgEfho7jzOPcC/lp2a3b6i6P6aPooQbGYsNmYbVfr5JvbV3av/eQDLzdpLRB+5+yUNHFOrkAfvaTndrcBh8WMd8h04E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/y3csxw; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LJLM1W5A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=jw
-	oo4Lze8ESagV/L0PikUZKIuUo9FLrqDtWPfeVpMG4=; b=LJLM1W5AZE05uzkMEj
-	EvgqpuxI5E1N9yLf+s2Q0u00nHZBnCcA2LCL+9wxri7vrErwXZQtxxF84wozILtB
-	kNKbx7umkgme989QKIFmOZYYWIVZD+RO98Te707WQqQonJ0wacaow92AFV0av8Wg
-	3n4paz6XhUS4DRm5jHSAi7dV0=
-Received: from thinkpadx13gen2i.. (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wAnMWuHoVhqusb4Jg--.29116S2;
-	Thu, 16 Jul 2026 17:16:55 +0800 (CST)
-From: Zongmin Zhou <min_halo@163.com>
-To: andy@kernel.org,
-	kees@kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zongmin Zhou <zhouzongmin@kylinos.cn>,
-	Feng Jiang <jiangfeng@kylinos.cn>
-Subject: [RESEND PATCH] lib/string_kunit: add strnlen() tests for strings without NUL terminator
-Date: Thu, 16 Jul 2026 17:16:36 +0800
-Message-Id: <20260716091636.51556-1-min_halo@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260526085913.429049-1-min_halo@163.com>
-References: <20260526085913.429049-1-min_halo@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/y3csxw"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-493c7902f47so50935405e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Jul 2026 02:32:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784194359; x=1784799159; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=zMCp06Fn7LM1KbKjNDRyvgq+gIPkw0ShH7Q56EFQy0E=;
+        b=K/y3csxwNu4Fd3RqfPYeUBRGDZFXvvuEx2hKSB8qibeBokcxFISgRcIb5LB075dCW6
+         YIwSBVFxgLRokj4VbeS1y6s08JefvE2btKkwvT2dlWtdOqi4wwruVFd6GsTbVHZWrw6c
+         d7VR0cnHBejI2XuPiDBvWM3qr8z3AEEmj0lxNviGaMj9/BSy6eOGhSf7VPbQFaBvX9Yi
+         9UHEp8CtF+/a2cfectVTJ8qVZ9OjGB9HbtjNNoJRIPJJmAASPPmQNy6GcQPQdClAnSjj
+         +jBNL7eTSAQaOMCdozRdaYwssyXZs00a7yAZQ7TJ2HyRRrjQjwU05z39HRQlrWblFv3q
+         dr+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784194359; x=1784799159;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=zMCp06Fn7LM1KbKjNDRyvgq+gIPkw0ShH7Q56EFQy0E=;
+        b=WEtoCV/O99Eb+AN9S9loATBhO3T+I3U3RLCW8rL6BjAVJXSNeDhZkBiL1HpXMlqzKc
+         adNrdTsx0nQDLUzl489BnjqlxsVyC9usrkNUpD6LlCifyQeE/L7QVCp6ux/lci2boS/d
+         4B3djQI+8TEy8k8hBL9vvLTlnTaNyCm/vBwpAEdPlrDVRoX1Mdb8MLN2yF1uAYI6WSea
+         yowZdYoxEocikitww4eR5I00QW8AzjApSyHWneoo9V+1CTUwff+SrgmhTWzGuXAsN7FS
+         9qEYeLhQIgaLwK9y3U9nrNn59VVQqTevub3RarcSVGRmBCFVx2xNsvYOb+MK2vUeYYj0
+         an7w==
+X-Forwarded-Encrypted: i=1; AHgh+RoyCZsnCJoOfgVxuFmI2L+zfJlLhW26uxn+iflM9m8BHZGg0I0EJAjgWzq0LRxBWECOpDbpKABtMtQHXptsFdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3gK9Inb62IPGXRkNy0mn2odgVWxLQQKWaoO56Eh0zLExdREC3
+	w5lPNv7EzGWWW1oMxYqb5VTQPdLSYLkcDGqNf+othE2PT9Hnu+zgpm7i
+X-Gm-Gg: AfdE7ckwh1TZ0Xi7ZWLFOw/cmNGBMidIwvD3mfT1I3pAlJcT00JcGl9vtqFaDnGVWrJ
+	UkZDovIP5D6sQV/5YjhSqWA98y1rorToQQwmhh4AeJw2vklVpf7G4jlQnWJ0LXbN/+Mdc9CbRcE
+	m6me6YjP4Qj/W724FTkwRTGoGCHBHc2vkvoHmbORC9ti9tO8OOqS0Bx6rZMdvgOZYQyqzrGo89q
+	UwD9ScgDNqDViy0388l94i+keOHTQqYEFpcKp+Xe5kpmz/YBQHB+onzwbNDKs1t7pwMfxfDcliY
+	HvRRhZECuMxpbIW95hIM8wxtgQ2L6mT/yH4TiSgnnbkXe36Kh76tjg6One3VQuJJ4xjH/Vd5HFo
+	qKgY2KLqnMLPLG9D1vfjEwq7s02v7q6E4RxIisBhnS/3xypbob+CxZaOI0i9hAxt8j5Ha0h1ae0
+	bc+eg96eZH9iV77ToM8acwM5imqvPqTR4xWQqw7NGZ/TJG6TS89g==
+X-Received: by 2002:a05:600c:1e0f:b0:493:b03c:5650 with SMTP id 5b1f17b1804b1-4953c280b8amr61833475e9.19.1784194358954;
+        Thu, 16 Jul 2026 02:32:38 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49541e83d05sm40799655e9.6.2026.07.16.02.32.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2026 02:32:38 -0700 (PDT)
+Date: Thu, 16 Jul 2026 10:32:36 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Ian Bridges <icb@fastmail.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Input: wacom_w8001 - replace strlcat() with a strscpy()
+ helper
+Message-ID: <20260716103236.28c1b5bb@pumpkin>
+In-Reply-To: <albg4Rv7QxvLJD05@dev>
+References: <albg4Rv7QxvLJD05@dev>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAnMWuHoVhqusb4Jg--.29116S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Zw43Ary7Wr4kXF4UXF4UXFb_yoW8Xw43pF
-	92vay8Kr15Xr1xtws3Wr43XrykWw4Skr4fCrZrGw4fXrZYqFnxZrsIgr40yanxJry8ua1F
-	vr98XFy5GasxGF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j089NUUUUU=
-X-CM-SenderInfo: pplqsxxdorqiywtou0bp/xtbC0gc65WpYoYe9RgAA3l
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Zongmin Zhou <zhouzongmin@kylinos.cn>
+On Tue, 14 Jul 2026 20:22:41 -0500
+Ian Bridges <icb@fastmail.org> wrote:
 
-The existing strnlen() tests only cover strings with a NUL terminator.
-Add test cases for strings without a NUL terminator to verify that
-strnlen() correctly returns the maximum length when no NUL is found
-within the given bound.
+> In preparation for removing the strlcat() API[1], replace its five
+> uses with a small append helper built on strnlen() and strscpy().
+> 
+> The five calls append device name fragments to a basename buffer
+> that grows in place across the setup functions. The helper takes
+> the same arguments as strlcat() and writes the same bytes, including
+> when a fragment is truncated.
 
-Co-developed-by: Feng Jiang <jiangfeng@kylinos.cn>
-Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
-Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
----
- lib/tests/string_kunit.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+You can do much better than that...
 
-diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 0819ace5b027..b0d5626a79c8 100644
---- a/lib/tests/string_kunit.c
-+++ b/lib/tests/string_kunit.c
-@@ -155,6 +155,16 @@ static void string_test_strnlen(struct kunit *test)
- 
- 	for (size_t offset = 0; offset < STRING_TEST_MAX_OFFSET; offset++) {
- 		for (size_t len = 0; len <= STRING_TEST_MAX_LEN; len++) {
-+			/* Test strings without NUL terminator */
-+			s = buf + buf_size - offset - len;
-+			if (len > 0)
-+				KUNIT_EXPECT_EQ(test, strnlen(s, len - 1), len - 1);
-+			if (len > 1)
-+				KUNIT_EXPECT_EQ(test, strnlen(s, len - 2), len - 2);
-+
-+			KUNIT_EXPECT_EQ(test, strnlen(s, len), len);
-+
-+			/* Test strings with NUL terminator */
- 			s = buf + buf_size - 1 - offset - len;
- 			s[len] = '\0';
- 
-@@ -169,6 +179,7 @@ static void string_test_strnlen(struct kunit *test)
- 			KUNIT_EXPECT_EQ(test, strnlen(s, len + 2), len);
- 			KUNIT_EXPECT_EQ(test, strnlen(s, len + 10), len);
- 
-+			/* Restore buffer */
- 			s[len] = 'A';
- 		}
- 	}
--- 
-2.34.1
+Change w8001_setup_touch/pen() to return the 'const char *' name,
+then put everything together in the final snprintf().
 
-
-No virus found
-		Checked by Hillstone Network AntiVirus
+	David
 
