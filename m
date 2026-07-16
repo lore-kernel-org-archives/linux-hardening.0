@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DD141DEE2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D1741E6CB;
 	Thu, 16 Jul 2026 12:14:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784204076; cv=none; b=ZL4vjgxg9kdr7ZmaqgwIEZQkrCoJUJ8t5KWgTnqtd3hvbtZQiHLo/Ij2gkqdphuSd/lYIs+sUQrgLJbcU6mD4Fj9igVUtBW3GKEej5/vt6s8QbhLpgABkdtdAOUVDRdzAoZ6y+EPdw8O7ofi9W4Lv0PrNUHEExSwV/ekXycP87k=
+	t=1784204076; cv=none; b=qTysP1g3w2ry7wO4bf2RWGjP0B/cgGhUVgS0r/KI8LGhLFAOqqtjue2H7C4pF1QnJ0ca6F4WnLLjJD9G36ooe3ZGcZJMBYvGU1UHQYxRoJR8qVVbvFMy3Q7hQKoN/l/DkubqByjBACHfPe5SMBwgBfDlSwURS1UObZfirVoDrdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784204076; c=relaxed/simple;
-	bh=9Gm0I8M5tfPuRSA1nO6OxxUxNPM87vuB8sQFznGAYpo=;
+	bh=O7Zf7muyltV+fxEMustl2nDV2Z0DoJbnq+Mz2OI8upE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LW47FahRD9yS2aBf76oSHpcZrAjGj22YJj35fqbRumS4KjuAbAf44QqcgEf+Q7FU3vsGaBaFq8lYLMzLK2OlTUfQ67q3fWl4vrLNfwgpLMNDKDITZMRJUBuR1zvLwTIPdTl1ucTJgIN5kjaoiXhTwe6d0QS4YVo7NGPyKKL2YNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8t27mz0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=iRMpvwfA8pUNLCi+ujV0F84J9C3mmYY0/2Sfgy/5YKSJXMQ4cDVEIrqrDSFff0IEF2Xlzy/LtZCMx9OTaoahBNy3QWBLToaJY2x+STaq1yVI+ILpsLup0bdH98pJCvzljYLnUPA/rmmGw/SwnAdHj2cSnzSXsSQ0iplO2QeuHGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfYmuXkZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8t27mz0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 332BEC2BCC9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfYmuXkZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 20E42C2BCC7;
 	Thu, 16 Jul 2026 12:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1784204075;
-	bh=9Gm0I8M5tfPuRSA1nO6OxxUxNPM87vuB8sQFznGAYpo=;
+	bh=O7Zf7muyltV+fxEMustl2nDV2Z0DoJbnq+Mz2OI8upE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=G8t27mz0rlWTQ7ubutpG25mZe4kyYYoi4Rdg+CshNKIO6gvGIHA85+mt2zW0l9W64
-	 9EbQ+LHpQBfzoAscO5cwgThKN5yzqGRO/GSgXgIxODczMgBY60QuDgmBnXkfgut5cN
-	 zY9noehWXmMegpdysI+a86o+twDIvtQRZ5ZrIeOyAPsFnl9znQlWLEPVQMxexJzpTv
-	 xzMSHv0b6X8NKV8Nkbc7q/FUVhCMWrmk+ImppmHr89z1PMRvOy1CUMjlvnUJdIEbpj
-	 IfoEcAWeQs2pWzVEqSPJLft3UvPXPGG5oIBZ7C5d52uGrVPwUAPupKqAMgxNVvAHoE
-	 kpN7nO0FqMKvw==
+	b=AfYmuXkZvWFv4rkP7WisttAGL3ZIaTHICitwS/nSZInIcW0uXbuU8bEZ501Df10Kw
+	 OaJJV81us7q1I62ONOQP2lrYTJCFcJLIS0VZFLIpLPvBhSVBqbJbg+9TiSkQcZCehv
+	 RnUmaqpXpwKTCIrZ8DO2ot58/o1n4lAKK4gzG1lLBwkEtIJXKMv77El6pPe9aqafVW
+	 MtFx8K842VsVCJt5SmIpwyWJqYpYAIUMa8oteCSxH2quWn8oyfyD75qlHV7+Cg+Jun
+	 e2PTcVO121J7vz0aENS/m9A4EvE5D7zcKt4X6k5J5wbWP/Xmxu8ry4PZ7xEzcrpBYI
+	 EEDKob9a46a4Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14157C4450A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016E5C44514;
 	Thu, 16 Jul 2026 12:14:35 +0000 (UTC)
 From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Thu, 16 Jul 2026 13:14:18 +0100
-Subject: [PATCH v8 2/8] iio: dac: ad5686: missing NULL check on match data
+Date: Thu, 16 Jul 2026 13:14:17 +0100
+Subject: [PATCH v8 1/8] iio: dac: ad5696: properly check i2c_transfer()
+ return value
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260716-ad5686-new-features-v8-2-ebb0051af5e5@analog.com>
+Message-Id: <20260716-ad5686-new-features-v8-1-ebb0051af5e5@analog.com>
 References: <20260716-ad5686-new-features-v8-0-ebb0051af5e5@analog.com>
 In-Reply-To: <20260716-ad5686-new-features-v8-0-ebb0051af5e5@analog.com>
 To: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
@@ -54,11 +55,11 @@ Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
  Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
  Rodrigo Alencar <rodrigo.alencar@analog.com>, sashiko-bot@kernel.org
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784204073; l=947;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784204073; l=1345;
  i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=B6fpsbUowwq2wwnC44rBjvb0k/SqZw7YPYPD6UUOXs0=;
- b=5ahXKuzPoIFDO9l54rv9iIqAN0epUdRXTrmvtahiMVJ/CWOWJGdeK6lTWQJLFrIjGrx8lBITM
- ZYZkTXl+tXQDNfaQOHm6YjFaJMXZhr+aFpjrBvyoGxGH1919grMWu+x
+ bh=zz4hraoKydFSu7wueaAjuCXnID835nhFEfDyJb8Sb44=;
+ b=mf+Fpuq1Pv6bh1V4wapfF+uIPBfBRB/SMEqk/ViOdzmyvHgNeyNmCD2fiaWwoAlfrx6USFd7g
+ HoJFYbL1gpTATpXifl8lMehrE76sKNBUqtK69XouehkFwatfS/HrgJH
 X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
  pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
 X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
@@ -68,32 +69,44 @@ Reply-To: rodrigo.alencar@analog.com
 
 From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Verify that chip_info pointer is not NULL. If a user binds the driver
-using driver_override via sysfs with a device name not present in the
-id_table or of_match_table, match data will be NULL.
+Verify that the expected number of i2c messages were transferred when
+ad5686_i2c_read() is called. This issue exists since the support for I2C
+devices was first introduced.
 
-Fixes: 0eb1728461a1 ("iio: dac: ad5686: drop enum id")
+Fixes: 4177381b4401 ("iio:dac:ad5686: Add AD5671R/75R/94/94R/95R/96/96R support")
 Reported-by: sashiko-bot@kernel.org
-Closes: https://lore.kernel.org/all/20260710113149.53EC51F000E9@smtp.kernel.org/
+Closes: https://lore.kernel.org/all/20260705114746.1485F1F000E9@smtp.kernel.org/
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
- drivers/iio/dac/ad5686.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iio/dac/ad5696-i2c.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
-index 713fe71ad1e7..d34250647aa4 100644
---- a/drivers/iio/dac/ad5686.c
-+++ b/drivers/iio/dac/ad5686.c
-@@ -479,6 +479,9 @@ int ad5686_probe(struct device *dev,
- 	struct iio_dev *indio_dev;
- 	int ret, i;
+diff --git a/drivers/iio/dac/ad5696-i2c.c b/drivers/iio/dac/ad5696-i2c.c
+index 279309329b64..551b200bfe14 100644
+--- a/drivers/iio/dac/ad5696-i2c.c
++++ b/drivers/iio/dac/ad5696-i2c.c
+@@ -7,6 +7,7 @@
+  * Copyright 2018 Analog Devices Inc.
+  */
  
-+	if (!chip_info)
-+		return -ENODEV;
-+
- 	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
- 	if (indio_dev == NULL)
- 		return  -ENOMEM;
++#include <linux/array_size.h>
+ #include <linux/errno.h>
+ #include <linux/i2c.h>
+ #include <linux/mod_devicetable.h>
+@@ -39,9 +40,11 @@ static int ad5686_i2c_read(struct ad5686_state *st, u8 addr)
+ 				      AD5686_ADDR(addr) |
+ 				      0x00);
+ 
+-	ret = i2c_transfer(i2c->adapter, msg, 2);
++	ret = i2c_transfer(i2c->adapter, msg, ARRAY_SIZE(msg));
+ 	if (ret < 0)
+ 		return ret;
++	if (ret != ARRAY_SIZE(msg))
++		return -EIO;
+ 
+ 	return be16_to_cpu(st->data[0].d16);
+ }
 
 -- 
 2.43.0
