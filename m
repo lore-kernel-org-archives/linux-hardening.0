@@ -1,100 +1,246 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from va-1-112.ptr.blmpb.com (va-1-112.ptr.blmpb.com [209.127.230.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0DE3F44DB
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Jul 2026 09:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CD640A955
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Jul 2026 11:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784194364; cv=none; b=FBiv11HgSyfueeh8nWpWTLHNrECNYmuwO8qbUC6X5qqrTM877L9eJimpJsiSgYOGZW1OXc5zpxEO3st2s+RsC3sHBUpxIF+112ScFI3h7bmnk8QdDn4VJpzr+JeG8nRiA8CDnHYkpxLTVcvNb3RILZI8DZ6ZTb+9+3/5HzjHtBk=
+	t=1784202877; cv=none; b=TrG54BqpXVfbpUJUw/I+mFTaXhA2A7a56H33Jd07IGOJhmNVr9i0IXoKyHm4KI40bl1+BTzGQD9/Bd4EZdaLghtHnDItofJIExNkKe6Ha2LH+WMUu4ATovK6V+JF2b9kve3uhFGE1SJ5PbaAf0cWLZsMIhDYLYsjG+4nq/DJrt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784194364; c=relaxed/simple;
-	bh=cPmpmx+T5sAWycdpqF364kuymZ/P1B9n9CUUBg6crMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uhsO1rMfX84EtrcWP8B5M0B9aVZ2U8QOvaUo26werag+5U6dKQnlehwSK7WfJmcb9w7ajO1s+zdldXnEIgEfho7jzOPcC/lp2a3b6i6P6aPooQbGYsNmYbVfr5JvbV3av/eQDLzdpLRB+5+yUNHFOrkAfvaTndrcBh8WMd8h04E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/y3csxw; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784202877; c=relaxed/simple;
+	bh=lO107y5Q5Kp0EODI6wCrcSBNpLSLIXIBgVySKLMvYyc=;
+	h=In-Reply-To:From:Date:Message-Id:Content-Type:References:To:Cc:
+	 Subject:Mime-Version; b=jjntouRTotQolF4sGm8u50lQwAgdgMc27Y0yPtMrXFg1wBJ0a4eVnAJjnRqsEzy5rc2jtAYPgHmKulCooXM/6kYlXgrwxQhS3ziB/9137DLfmVVkhqM9urzUcRSotERVGS6p5F+N6fJ8xkG6C3sQFBzsv8g0pbXCBAmqXFYducc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=MJTWhNQe; arc=none smtp.client-ip=209.127.230.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/y3csxw"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-493c7902f47so50935405e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jul 2026 02:32:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784194359; x=1784799159; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=zMCp06Fn7LM1KbKjNDRyvgq+gIPkw0ShH7Q56EFQy0E=;
-        b=K/y3csxwNu4Fd3RqfPYeUBRGDZFXvvuEx2hKSB8qibeBokcxFISgRcIb5LB075dCW6
-         YIwSBVFxgLRokj4VbeS1y6s08JefvE2btKkwvT2dlWtdOqi4wwruVFd6GsTbVHZWrw6c
-         d7VR0cnHBejI2XuPiDBvWM3qr8z3AEEmj0lxNviGaMj9/BSy6eOGhSf7VPbQFaBvX9Yi
-         9UHEp8CtF+/a2cfectVTJ8qVZ9OjGB9HbtjNNoJRIPJJmAASPPmQNy6GcQPQdClAnSjj
-         +jBNL7eTSAQaOMCdozRdaYwssyXZs00a7yAZQ7TJ2HyRRrjQjwU05z39HRQlrWblFv3q
-         dr+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784194359; x=1784799159;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=zMCp06Fn7LM1KbKjNDRyvgq+gIPkw0ShH7Q56EFQy0E=;
-        b=WEtoCV/O99Eb+AN9S9loATBhO3T+I3U3RLCW8rL6BjAVJXSNeDhZkBiL1HpXMlqzKc
-         adNrdTsx0nQDLUzl489BnjqlxsVyC9usrkNUpD6LlCifyQeE/L7QVCp6ux/lci2boS/d
-         4B3djQI+8TEy8k8hBL9vvLTlnTaNyCm/vBwpAEdPlrDVRoX1Mdb8MLN2yF1uAYI6WSea
-         yowZdYoxEocikitww4eR5I00QW8AzjApSyHWneoo9V+1CTUwff+SrgmhTWzGuXAsN7FS
-         9qEYeLhQIgaLwK9y3U9nrNn59VVQqTevub3RarcSVGRmBCFVx2xNsvYOb+MK2vUeYYj0
-         an7w==
-X-Forwarded-Encrypted: i=1; AHgh+RoyCZsnCJoOfgVxuFmI2L+zfJlLhW26uxn+iflM9m8BHZGg0I0EJAjgWzq0LRxBWECOpDbpKABtMtQHXptsFdM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3gK9Inb62IPGXRkNy0mn2odgVWxLQQKWaoO56Eh0zLExdREC3
-	w5lPNv7EzGWWW1oMxYqb5VTQPdLSYLkcDGqNf+othE2PT9Hnu+zgpm7i
-X-Gm-Gg: AfdE7ckwh1TZ0Xi7ZWLFOw/cmNGBMidIwvD3mfT1I3pAlJcT00JcGl9vtqFaDnGVWrJ
-	UkZDovIP5D6sQV/5YjhSqWA98y1rorToQQwmhh4AeJw2vklVpf7G4jlQnWJ0LXbN/+Mdc9CbRcE
-	m6me6YjP4Qj/W724FTkwRTGoGCHBHc2vkvoHmbORC9ti9tO8OOqS0Bx6rZMdvgOZYQyqzrGo89q
-	UwD9ScgDNqDViy0388l94i+keOHTQqYEFpcKp+Xe5kpmz/YBQHB+onzwbNDKs1t7pwMfxfDcliY
-	HvRRhZECuMxpbIW95hIM8wxtgQ2L6mT/yH4TiSgnnbkXe36Kh76tjg6One3VQuJJ4xjH/Vd5HFo
-	qKgY2KLqnMLPLG9D1vfjEwq7s02v7q6E4RxIisBhnS/3xypbob+CxZaOI0i9hAxt8j5Ha0h1ae0
-	bc+eg96eZH9iV77ToM8acwM5imqvPqTR4xWQqw7NGZ/TJG6TS89g==
-X-Received: by 2002:a05:600c:1e0f:b0:493:b03c:5650 with SMTP id 5b1f17b1804b1-4953c280b8amr61833475e9.19.1784194358954;
-        Thu, 16 Jul 2026 02:32:38 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49541e83d05sm40799655e9.6.2026.07.16.02.32.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2026 02:32:38 -0700 (PDT)
-Date: Thu, 16 Jul 2026 10:32:36 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Ian Bridges <icb@fastmail.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Input: wacom_w8001 - replace strlcat() with a strscpy()
- helper
-Message-ID: <20260716103236.28c1b5bb@pumpkin>
-In-Reply-To: <albg4Rv7QxvLJD05@dev>
-References: <albg4Rv7QxvLJD05@dev>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="MJTWhNQe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1784202868; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=Zb47wRi4sOHO/8LTR4EG3esNvOTJsaH8noXff1aeIwg=;
+ b=MJTWhNQew6v0eZvRbbfNeS+Vp8cKNtK1qj+MRg5zVU2UWui8OZ2/RLCTrziOi9i3k90KNG
+ NP/yOlVKqVw+39ymBCgo2aLs9AhG+OAf7goiBaImNUm2ne4HQqk5MVuDPnpM3SJP1RkK5m
+ Ys2DQNtsHrjrxCcSjraHu1SeEABHatb08cml5TFKmLwwWMrKMNycFh3oTe5x7MzQ22jkSG
+ 4oXA6w43Lorz0Xg/AI2qqj/8PSrMsF1DL/BVc/Mn+j3dh7XqbCSkGI6t9ceQEObXHXgpmq
+ jNYnHlTtlTxPG4gM+TQl5Ju9wKjY7wNtjCLRVg8MWbOKIodqH45riJ8H11AfvA==
+In-Reply-To: <80A0AAC8-DC3C-4FB7-8CE3-EF2EC96EB47F@linux.dev>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Date: Thu, 16 Jul 2026 19:54:05 +0800
+Message-Id: <fb1795f0-7dd0-4518-9760-2f14cc3107f8@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+References: <20260709112520.24857-1-lizhe.67@bytedance.com> <20260709112520.24857-7-lizhe.67@bytedance.com> <7bfb13a0-8f4a-4f4b-9df4-da842169f8f1@linux.dev> <abd1f6da-a6f4-40ed-923f-94201bba4690@bytedance.com> <80A0AAC8-DC3C-4FB7-8CE3-EF2EC96EB47F@linux.dev>
+Content-Transfer-Encoding: 7bit
+To: "Muchun Song" <muchun.song@linux.dev>
+Cc: <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>, 
+	<akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
+	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
+	<rppt@kernel.org>, <tglx@kernel.org>
+Subject: Re: [PATCH v6 6/8] string: introduce memcpy_nt() helpers
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+X-Lms-Return-Path: <lba+26a58c672+fb92ac+vger.kernel.org+lizhe.67@bytedance.com>
 
-On Tue, 14 Jul 2026 20:22:41 -0500
-Ian Bridges <icb@fastmail.org> wrote:
+On 7/15/26 5:33 PM, Muchun Song wrote:
+>
+>> On Jul 15, 2026, at 14:18, Li Zhe <lizhe.67@bytedance.com> wrote:
+>>
+>> On 7/14/26 5:24 PM, Muchun Song wrote:
+>>>
+>>> On 2026/7/9 19:25, Li Zhe wrote:
+>>>> Introduce memcpy_nt() and memcpy_nt_drain() for write-once copy sites
+>>>> that want a named non-temporal copy primitive plus an explicit drain
+>>>> step.
+>>>>
+>>>> On x86_64, override both helpers in arch/x86/include/asm/string_64.h
+>>>> using the usual self-macro pattern, next to the existing
+>>>> memcpy_flushcache() backend that memcpy_nt() wraps. The x86_64
+>>>> implementation maps memcpy_nt() to memcpy_flushcache() and uses wmb()
+>>>> for memcpy_nt_drain(), because that backend issues MOVNTI stores and
+>>>> callers need an ordering point before later normal stores that depend
+>>>> on those writes becoming visible.
+>>>>
+>>>> include/linux/string.h provides the generic fallback under
+>>>> memcpy_nt() as plain memcpy() and leaves memcpy_nt_drain() empty, so
+>>>> architectures that do not override memcpy_nt() do not pay an
+>>>> unconditional barrier. Architectures that later grow a specialized
+>>>> memcpy_nt() backend can override memcpy_nt_drain() with whatever
+>>>> drain primitive their memory-ordering rules require.
+>>>>
+>>>> The immediate user is the ZONE_DEVICE template-copy path. It populates
+>>>> struct page descriptors in a write-once pattern, so a regular cached
+>>>> memcpy() can incur avoidable write-allocate traffic and cache
+>>>> pollution for data with little near-term reuse.
+>>>>
+>>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>>>> ---
+>>>>    arch/x86/include/asm/string_64.h | 22 ++++++++++++++++++++++
+>>>>    include/linux/string.h           | 23 +++++++++++++++++++++++
+>>>>    2 files changed, 45 insertions(+)
+>>>>
+>>>> diff --git a/arch/x86/include/asm/string_64.h
+>>>> b/arch/x86/include/asm/string_64.h
+>>>> index 4635616863f5..6cb9e0ac7fa0 100644
+>>>> --- a/arch/x86/include/asm/string_64.h
+>>>> +++ b/arch/x86/include/asm/string_64.h
+>>>> @@ -4,6 +4,7 @@
+>>>>
+>>>>    #ifdef __KERNEL__
+>>>>    #include <linux/jump_label.h>
+>>>> +#include <asm/barrier.h>
+>>>>
+>>>>    /* Written 2002 by Andi Kleen */
+>>>>
+>>>> @@ -100,6 +101,27 @@ static __always_inline void
+>>>> memcpy_flushcache(void *dst, const void *src, size_t
+>>>>        }
+>>>>        __memcpy_flushcache(dst, src, cnt);
+>>>>    }
+>>>> +
+>>>> +#define memcpy_nt memcpy_nt
+>>>> +/*
+>>>> + * Reuse the existing x86 flushcache backend as the nt copy primitive.
+>>>> + * Callers pair it with memcpy_nt_drain() when later stores must be
+>>>> + * ordered after the copy.
+>>>> + */
+>>>> +static __always_inline void memcpy_nt(void *dst, const void *src,
+>>>> size_t cnt)
+>>>> +{
+>>>> +    memcpy_flushcache(dst, src, cnt);
+>>> Why not use memcpy_flushcache() directly in device dax path? I don't
+>>> understand the necessity of introducing memcpy_nt here.
+>>>
+>> The reason for introducing memcpy_nt() is to give generic MM code a
+>> named non-temporal copy primitive, instead of hardwiring the x86
+>> memcpy_flushcache() backend into a generic caller.
+>>
+>> On x86, memcpy_nt() maps to memcpy_flushcache() today. On other
+>> architectures, memcpy_flushcache() may have different semantics, and we
+>> also do not know whether its implementation would provide the same
+>> optimization opportunity as on x86. Using memcpy_nt() lets the generic
+>> caller express the intent while leaving the backend choice to each
+>> architecture.
+> Got it. But the 'nt' suffix is overly abbreviated and not direct enough.
+> Therefore, I suggest avoiding uncommon abbreviations and instead keeping
+> things as explicit as the 'flushcache' suffix in memcpy_flushcache.
 
-> In preparation for removing the strlcat() API[1], replace its five
-> uses with a small append helper built on strnlen() and strscpy().
-> 
-> The five calls append device name fragments to a basename buffer
-> that grows in place across the setup functions. The helper takes
-> the same arguments as strlcat() and writes the same bytes, including
-> when a fragment is truncated.
 
-You can do much better than that...
+Thanks, that makes sense. The abbreviated "nt" name came from Boris'
+earlier suggestion to keep the naming focused on non-temporal stores and
+to abbreviate that as "nt":
 
-Change w8001_setup_touch/pen() to return the 'const char *' name,
-then put everything together in the final snprintf().
+https://lore.kernel.org/all/20260607190804.GAaiXBlGO2eRcfs1oB@fat_crate.local/
 
-	David
+But I agree that, for a generic string helper, spelling this out is
+clearer. I will rename the helper to memcpy_nontemporal() in the next
+version.
 
+>>>> +}
+>>>> +
+>>>> +#define memcpy_nt_drain memcpy_nt_drain
+>>>> +static __always_inline void memcpy_nt_drain(void)
+>>>> +{
+>>>> +    /*
+>>>> +     * Order the prior MOVNTI stores issued by memcpy_flushcache()
+>>>> +     * before later normal stores.
+>>>> +     */
+>>> I also have a question here: why are we using wmb to guarantee visibility
+>>> at this stage?
+>>>
+>>> Since we are still in the very early phases of memory initialization
+>>> (specifically,
+>>> struct page initialization), since we are still in an intermediate
+>>> initialization
+>>> state, this shouldn't be visible to other CPUs anyway.
+>>>
+>>> Thanks.
+>> The drain is not about exposing the intermediate initialization state to
+>> other CPUs.
+>>
+>> It is there to order the earlier non-temporal stores before the later
+>> normal stores on the same control path, for example before
+>> memmap_init_compound() / prep_compound_head() update overlapping
+>> compound metadata.
+> For a single core, out-of-order execution is invisible to developers.
+> Therefore, I'm curious about your reasons for preserving the order? What
+> would be the consequences of not maintaining it?
+>
+> Thanks.
+You are right. My previous explanation overstated the need for this
+ordering point.
+
+For the intended ZONE_DEVICE callers added later in the series,
+memcpy_nontemporal() is used while the struct page metadata is still
+being initialized and before that memmap is published for normal use.
+The later ordinary stores to the compound metadata are also part of the
+same initialization sequence. So those callers do not need a generic
+drain helper just to order the non-temporal copy against later local
+initialization stores.
+
+I will drop memcpy_nt_drain() from the generic interface and remove the
+drain calls from the ZONE_DEVICE user.
+
+Thanks,
+Zhe
+
+
+>
+>> On x86, memcpy_nt() maps to MOVNTI-based memcpy_flushcache(), so
+>> memcpy_nt_drain() uses wmb(), which maps to the required sfence there.
+>>
+>> Thanks,
+>> Zhe
+>>
+>>>> +    wmb();
+>>>> +}
+>>>>    #endif
+>>>>
+>>>>    #endif /* __KERNEL__ */
+>>>> diff --git a/include/linux/string.h b/include/linux/string.h
+>>>> index 5702daca4326..a109b2f86ca6 100644
+>>>> --- a/include/linux/string.h
+>>>> +++ b/include/linux/string.h
+>>>> @@ -278,6 +278,29 @@ static inline void memcpy_flushcache(void *dst,
+>>>> const void *src, size_t cnt)
+>>>>    }
+>>>>    #endif
+>>>>
+>>>> +#ifndef memcpy_nt
+>>>> +/*
+>>>> + * memcpy_nt() requests a non-temporal copy when the architecture has a
+>>>> + * suitable backend. Architectures that do not override it fall back to
+>>>> + * memcpy().
+>>>> + */
+>>>> +static inline void memcpy_nt(void *dst, const void *src, size_t cnt)
+>>>> +{
+>>>> +    memcpy(dst, src, cnt);
+>>>> +}
+>>>> +#endif
+>>>> +
+>>>> +#ifndef memcpy_nt_drain
+>>>> +/*
+>>>> + * Callers use memcpy_nt_drain() before later normal stores that
+>>>> need to
+>>>> + * be ordered after memcpy_nt(). Architectures without a specialized
+>>>> + * backend can leave it empty.
+>>>> + */
+>>>> +static inline void memcpy_nt_drain(void)
+>>>> +{
+>>>> +}
+>>>> +#endif
+>>>> +
+>>>>    void *memchr_inv(const void *s, int c, size_t n);
+>>>>    char *strreplace(char *str, char old, char new);
+>>>>
+>>>> -- 
+>>>> 2.20.1
