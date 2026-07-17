@@ -1,83 +1,71 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA8B3C1085
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Jul 2026 09:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28723A0B2E;
+	Fri, 17 Jul 2026 10:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784280692; cv=none; b=hfTVzTjqRj+EN9qI6agqKatiRHPbvmo+3vGsW1U9fyu4E59+bh7NCODUHR2Ga7E6zGro/GFCKyyirsWT0xwRtC4dcmO2x+9DQ842Lu+6sS2nBx+AsVg3rBuyzUTaSAzG4gIHge+O2NWFTUzcgZaaSzEu22Dky7RuJkt9fScQbRs=
+	t=1784284141; cv=none; b=UwV7xP+9SJRJg5TOXr76o9kThuVWAweliB6VpFZ6qVDkv9KfCexvAin/Z6ZHMYzOhB3QAL4sHDujpykj3njjseXT2vjpUysiXmDkkHBI5rN5+NwkXyg+jR/zi34a43l25Z32AIYeHtC2D+TZdBVXMb6fhU6fo2/JdJwz445ek04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784280692; c=relaxed/simple;
-	bh=DznFh8UZjIxtgi2+bc5sL16x3pqRgUE1ixJxMc0YOjI=;
+	s=arc-20240116; t=1784284141; c=relaxed/simple;
+	bh=Cd/VtuFBCKSyAi98W3gkxJkPrKArDgXzdstC5RR4eq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eLbUwHqLVAO/v0qylioAPQDnFmmeabtt88A8rdBfeISGytJgaBnkEe/vuD88vGF/FfA4JUhZ9fI+PPE72xonAIHzP2bbCU9z0ZWiJ+mKfMXD2HfBjhvo73VGQL5mvhc7uUTOeZ35orNv+OzjTk7ku8eCamg2jDD2qcpmnurmsHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OpWD+6uN; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tfMhydSXMvfbPypVTDygKszsvYp55WCAE6LRx09TJ8pB4iqdIGxP942xdNU7HJa6URNXZwS37KtWfDcIcd18WGPq8b7QTWCQoId1/cFtNVN5+7DHuB2tHhu9Y8S/Rxr92N4BgtnPkkvN1pznndO+7KS8HpZMoIr/TfvQ67UWHcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jknpeIEk; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpWD+6uN"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c169ae1cb26so222899666b.1
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Jul 2026 02:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784280689; x=1784885489; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Hlfo1dR9NIn3Lqj3BjXyQaSgs7H1G2kacEIIBWr8j0A=;
-        b=OpWD+6uNbfxyfyVgg4SLWj2pKlKDDnt+63QcuNQB3EqwfGxCe1z7r21CCOG3E5+HOo
-         qRjPZMRWSScffMFVkCvLfQk81QlntS4VBSezvU7SuVE1oFeZv237MqPA0qaF3DPv2tCw
-         MOfEX4xsYDqLRWImnILtoiUJGou48Zr6J7AF/agopVXGJct9/UKGSWEnBxczhp0euduL
-         WnnjIkoZpO4oG4VOuEA9jRrpETsLt656ed4qU24pVh4TE/VC3NcZa8ot5RV48aHpqOYL
-         995FrVIzB/Z/Hiww+Xh2BHjiAHmlFe3ZWas+8Xf+Ug/PyXcL1eBXO/UCABfPnhogL7Mr
-         Txsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784280689; x=1784885489;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Hlfo1dR9NIn3Lqj3BjXyQaSgs7H1G2kacEIIBWr8j0A=;
-        b=A14hP01gDdYwHX/GFmoeOMko5pAlfJ4yEVillj6sWXP04yJxuViN6IqS4pcP9LCBOg
-         i6WQsa85AFuA0cOSzVzBo3r1kBCF27Fz9fFZnvAnV/CURsEMLrZvJJax3OClE867M3II
-         AKFSNDCbcwXQf4Cwu7IK1wJ4wNPCxnmfZ/0jfxYFP8dFznk/4UfZ2NJO7noR2sO6830G
-         axBvZotjpKNnkm8J+7GznUVxF2WFNgG8JCMemP2109chFJxVkL+HE1aazx92gopZywXz
-         pLtIhhyUlEDw0b0vw4TENwOMe/yGatdspgFm4WdweUAe8O1QHHmXyYOtcm2X5PtlmvlV
-         dGtg==
-X-Forwarded-Encrypted: i=1; AHgh+RrkcstpDicrm6az35qQiO2eML2SUDWNiboFKiZOhtxXtwLVMomgA7klWzhtTnbA2nMwD4tbRhTnR1NM2ZogMUA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc0V4oWzXG4nj8DkTMQBK2yNQLSSc5Wc1SoVCWk+qX90cRnz/r
-	THGkTJUtjnJeXqz1sWk8Oc2GamrOca+lnT2xVEk05XerokNIhiiqKFy7
-X-Gm-Gg: AfdE7cn8WEAZ9ITKVgiKJL7CpRUuUTgMRVHV48hOQJhkgwe74vW2okif3Lxh83B3rip
-	ze7AqkXhx0zLQmsw8AiBgkcke+znyvL8wlq22Hmb95qHRoXSn3TmphHu4UAQnB7vhx/VF/YhP/0
-	Tqk+abkLFRiNzLGHhYMOVkG9cJdtcuOEOxKtMi7njG5e6fb7t27eWfB+MjFmi1+8ZeSF8Lx/00v
-	mYksFp/fDB0IoonCHz7MK3cIUFMBTij/eE6Wu24LK7zTq+0STA1UY5WAHz9kfSsrapknG10e5eD
-	eC9WzVaCUZCrg8AjLoMVLIS83kE5pTFcDK9Y7CR6lcrN6uwWqRo+X41hR0dmbCJlmVAmhCDk0X4
-	axL3duWHJ0DoYhQk8fb1B0JQrlt4zljI04+bdMMTvDcRUkDZmnEenLQP5vyAHpAsmwkuVXOFTFk
-	N+yEXPFoRShEezTeAYbCliyKIV1dhZIaa21QWUoKDol9n39LokLzBj0Wb0LZTVof56exDo1RDAd
-	w5FXdfIeQ==
-X-Received: by 2002:a17:907:e902:b0:c16:b01c:ac0f with SMTP id a640c23a62f3a-c16b4002ca0mr82893966b.5.1784280688498;
-        Fri, 17 Jul 2026 02:31:28 -0700 (PDT)
-Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c170591172esm48042166b.15.2026.07.17.02.31.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2026 02:31:27 -0700 (PDT)
-Date: Fri, 17 Jul 2026 10:31:26 +0100
-From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, sashiko-bot@kernel.org
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jknpeIEk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784284140; x=1815820140;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Cd/VtuFBCKSyAi98W3gkxJkPrKArDgXzdstC5RR4eq4=;
+  b=jknpeIEkxL4LdnYGnvJegPHxQEKWxC0ZAEk08CFYNLRRaqbH/x2YP2bs
+   i26y4NZn6n9d8VXCle/khWdSqq7WPHj0k1qom/Pp+X1uW6vb5RFOAM9LC
+   ypaEB7nlTANvkijsr+xbaAd0VyxndqeXBo7JnzgHls7ZuA4gPmiIXNYQt
+   UIRGzLaDBiS6EJGKT8cYgJZ7EqEjIbqtkqVTKCFi9AjA1Ln/JWe3Q/iED
+   1+WY8pokiaiTO13r+Gzod6kDisWe/Kp4W0KgEy0BReI8H9ifBJOS6Q7wU
+   35pl13B2kYYI3faUgdhuFDTlXffWjd4+1D25WtqNJvFIbZhtOmKHGPdSr
+   g==;
+X-CSE-ConnectionGUID: H+4QslTGTMOILzC62DhkbA==
+X-CSE-MsgGUID: c2RIYpYkQquA2eRtpZixaA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="88854118"
+X-IronPort-AV: E=Sophos;i="6.25,169,1779174000"; 
+   d="scan'208";a="88854118"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 03:28:59 -0700
+X-CSE-ConnectionGUID: ARFOpTYCTAyMwKD86DZEdg==
+X-CSE-MsgGUID: y2rwKgaDSwyOJBhdQDRtEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,169,1779174000"; 
+   d="scan'208";a="261036964"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.143])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 03:28:55 -0700
+Date: Fri, 17 Jul 2026 13:28:52 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	sashiko-bot@kernel.org
 Subject: Re: [PATCH v8 2/8] iio: dac: ad5686: missing NULL check on match data
-Message-ID: <gy2dn5emz7sreavy6kioz27f3sx2ip6zhkgzs2uz4qzecpkrbe@zgsortof6aqn>
+Message-ID: <aloD5HdbntKu--xC@ashevche-desk.local>
 References: <20260716-ad5686-new-features-v8-0-ebb0051af5e5@analog.com>
  <20260716-ad5686-new-features-v8-2-ebb0051af5e5@analog.com>
  <alkmAcDvSXr_COc_@ashevche-desk.local>
  <ondynh4kmchzugk2l24klamrcaje3qxnhgiks7gnc46wwwvo35@hysk2zaimb2e>
  <alnknz55FbyyqqlL@ashevche-desk.local>
+ <gy2dn5emz7sreavy6kioz27f3sx2ip6zhkgzs2uz4qzecpkrbe@zgsortof6aqn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -86,41 +74,47 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alnknz55FbyyqqlL@ashevche-desk.local>
+In-Reply-To: <gy2dn5emz7sreavy6kioz27f3sx2ip6zhkgzs2uz4qzecpkrbe@zgsortof6aqn>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 17/07/26 11:15, Andy Shevchenko wrote:
-> On Fri, Jul 17, 2026 at 07:51:35AM +0100, Rodrigo Alencar wrote:
-> > On 16/07/26 21:42, Andy Shevchenko wrote:
-> > > On Thu, Jul 16, 2026 at 01:14:18PM +0100, Rodrigo Alencar via B4 Relay wrote:
-> 
-> ...
-> 
-> > > >  	struct iio_dev *indio_dev;
-> > > >  	int ret, i;
+On Fri, Jul 17, 2026 at 10:31:26AM +0100, Rodrigo Alencar wrote:
+> On 17/07/26 11:15, Andy Shevchenko wrote:
+> > On Fri, Jul 17, 2026 at 07:51:35AM +0100, Rodrigo Alencar wrote:
+> > > On 16/07/26 21:42, Andy Shevchenko wrote:
+> > > > On Thu, Jul 16, 2026 at 01:14:18PM +0100, Rodrigo Alencar via B4 Relay wrote:
+
+...
+
+> > > > >  	struct iio_dev *indio_dev;
+> > > > >  	int ret, i;
+> > > > 
+> > > > Move an assignment here as well.
+> > > > 
+> > > > 	chip_info = ...
 > > > 
-> > > Move an assignment here as well.
-> > > 
-> > > 	chip_info = ...
+> > > assignment? this is an input param validation
 > > 
-> > assignment? this is an input param validation
+> > Can we make sure we always get a correct one to begin with?
+> > With that an assignment and check can be coupled together.
+> > Also consider use -ENODATA as it's most likely comes from
+> > driver_data.
 > 
-> Can we make sure we always get a correct one to begin with?
-> With that an assignment and check can be coupled together.
-> Also consider use -ENODATA as it's most likely comes from
-> driver_data.
+> I suppose you are suggesting to move the check to the bus code with:
+> 
+> 	info = i2c_get_match_data(i2c);
+> 	if (!info)
+> 		return -ENODATA;
+> 
+> rather than here in the core/common code.
 
-I suppose you are suggesting to move the check to the bus code with:
+Yes! This avoids layering violation and makes the API contract cleaner.
 
-	info = i2c_get_match_data(i2c);
-	if (!info)
-		return -ENODATA;
-
-rather than here in the core/common code.
- 
-> > > > +	if (!chip_info)
-> > > > +		return -ENODEV;
+> > > > > +	if (!chip_info)
+> > > > > +		return -ENODEV;
 
 -- 
-Kind regards,
+With Best Regards,
+Andy Shevchenko
 
-Rodrigo Alencar
+
