@@ -1,69 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B493E1234;
-	Fri, 17 Jul 2026 08:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA8B3C1085
+	for <linux-hardening@vger.kernel.org>; Fri, 17 Jul 2026 09:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784276134; cv=none; b=V+Rqs6jR77d+V04mycEWaYUAX0SzVPlsmfHXND9eRTaAn2ZF7Bz7zumHf2LIZ52d3DlQ7IjlO10AcTpmbx7vaUaLbzcXvVySO/H7wPxZcM5JzVWP8yvT4FtqOQV1WWKo0J0rrZiDFVrjhhVZPUNAKuepctntjvizRVhP4GC9AWc=
+	t=1784280692; cv=none; b=hfTVzTjqRj+EN9qI6agqKatiRHPbvmo+3vGsW1U9fyu4E59+bh7NCODUHR2Ga7E6zGro/GFCKyyirsWT0xwRtC4dcmO2x+9DQ842Lu+6sS2nBx+AsVg3rBuyzUTaSAzG4gIHge+O2NWFTUzcgZaaSzEu22Dky7RuJkt9fScQbRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784276134; c=relaxed/simple;
-	bh=Icfqbb3rEIiFxXFRxS8O+X8oNH9+xaaTCNfk2QK60rY=;
+	s=arc-20240116; t=1784280692; c=relaxed/simple;
+	bh=DznFh8UZjIxtgi2+bc5sL16x3pqRgUE1ixJxMc0YOjI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMIuSxONsRqdAtREx32Er9Mh5zoz/F2niw7jPkiFE90m3LVxunvmPpEf+msZy9RyMyLQd+DaZjresBHwCLVUaICufLQL5F1un0LvrKkI7HAIEx69CjCmcc4fsXJCo94bO2jnZYqrXN9qVjgNaDaBjWhQrEkbRHhTdiwrVqjBh9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qol3CTLt; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=eLbUwHqLVAO/v0qylioAPQDnFmmeabtt88A8rdBfeISGytJgaBnkEe/vuD88vGF/FfA4JUhZ9fI+PPE72xonAIHzP2bbCU9z0ZWiJ+mKfMXD2HfBjhvo73VGQL5mvhc7uUTOeZ35orNv+OzjTk7ku8eCamg2jDD2qcpmnurmsHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OpWD+6uN; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qol3CTLt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784276133; x=1815812133;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Icfqbb3rEIiFxXFRxS8O+X8oNH9+xaaTCNfk2QK60rY=;
-  b=Qol3CTLt6XsDyXFHOftWwY+35LJBcust+SRnT1pY4LhSZHs6zKnJaoiR
-   dV4w2M89B6aE4GODFN7ootA79tX4ij2tTfq+4tv3jOZqV6IyUtF7yGkl7
-   9qNJ1+ukyt/wN8HUNxSomh0LbptYTIF1n4sXbKg7F4O5YV3GJDJ97vD6h
-   GvdG0NtK9WHe+MziXyCTC/6EpeTwGQY+eXi/XMhUGsW917srlhsBed1qk
-   aDGkoYlFe+ZMgj7Y18bw3Yr9k86SoyjciUq+cX4SsnoaHQ4FCJM3+CgE4
-   S1dTrcOJOQrKhjwn/MlvEIjtM4G5aq8TABMrxTRKlsxg4MtrWu/UnoCfl
-   w==;
-X-CSE-ConnectionGUID: 5jCHv8KwTh+IYuf4rWBp7g==
-X-CSE-MsgGUID: REUT/e4nRImColF+/yaxnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="95300707"
-X-IronPort-AV: E=Sophos;i="6.25,169,1779174000"; 
-   d="scan'208";a="95300707"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 01:15:33 -0700
-X-CSE-ConnectionGUID: FEMOgqSsQICEJ6vQ/MYLvg==
-X-CSE-MsgGUID: reeqV29lRv29dNC9HSRyLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,169,1779174000"; 
-   d="scan'208";a="250377846"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.143])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 01:15:29 -0700
-Date: Fri, 17 Jul 2026 11:15:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	sashiko-bot@kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpWD+6uN"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c169ae1cb26so222899666b.1
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Jul 2026 02:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784280689; x=1784885489; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Hlfo1dR9NIn3Lqj3BjXyQaSgs7H1G2kacEIIBWr8j0A=;
+        b=OpWD+6uNbfxyfyVgg4SLWj2pKlKDDnt+63QcuNQB3EqwfGxCe1z7r21CCOG3E5+HOo
+         qRjPZMRWSScffMFVkCvLfQk81QlntS4VBSezvU7SuVE1oFeZv237MqPA0qaF3DPv2tCw
+         MOfEX4xsYDqLRWImnILtoiUJGou48Zr6J7AF/agopVXGJct9/UKGSWEnBxczhp0euduL
+         WnnjIkoZpO4oG4VOuEA9jRrpETsLt656ed4qU24pVh4TE/VC3NcZa8ot5RV48aHpqOYL
+         995FrVIzB/Z/Hiww+Xh2BHjiAHmlFe3ZWas+8Xf+Ug/PyXcL1eBXO/UCABfPnhogL7Mr
+         Txsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784280689; x=1784885489;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Hlfo1dR9NIn3Lqj3BjXyQaSgs7H1G2kacEIIBWr8j0A=;
+        b=A14hP01gDdYwHX/GFmoeOMko5pAlfJ4yEVillj6sWXP04yJxuViN6IqS4pcP9LCBOg
+         i6WQsa85AFuA0cOSzVzBo3r1kBCF27Fz9fFZnvAnV/CURsEMLrZvJJax3OClE867M3II
+         AKFSNDCbcwXQf4Cwu7IK1wJ4wNPCxnmfZ/0jfxYFP8dFznk/4UfZ2NJO7noR2sO6830G
+         axBvZotjpKNnkm8J+7GznUVxF2WFNgG8JCMemP2109chFJxVkL+HE1aazx92gopZywXz
+         pLtIhhyUlEDw0b0vw4TENwOMe/yGatdspgFm4WdweUAe8O1QHHmXyYOtcm2X5PtlmvlV
+         dGtg==
+X-Forwarded-Encrypted: i=1; AHgh+RrkcstpDicrm6az35qQiO2eML2SUDWNiboFKiZOhtxXtwLVMomgA7klWzhtTnbA2nMwD4tbRhTnR1NM2ZogMUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc0V4oWzXG4nj8DkTMQBK2yNQLSSc5Wc1SoVCWk+qX90cRnz/r
+	THGkTJUtjnJeXqz1sWk8Oc2GamrOca+lnT2xVEk05XerokNIhiiqKFy7
+X-Gm-Gg: AfdE7cn8WEAZ9ITKVgiKJL7CpRUuUTgMRVHV48hOQJhkgwe74vW2okif3Lxh83B3rip
+	ze7AqkXhx0zLQmsw8AiBgkcke+znyvL8wlq22Hmb95qHRoXSn3TmphHu4UAQnB7vhx/VF/YhP/0
+	Tqk+abkLFRiNzLGHhYMOVkG9cJdtcuOEOxKtMi7njG5e6fb7t27eWfB+MjFmi1+8ZeSF8Lx/00v
+	mYksFp/fDB0IoonCHz7MK3cIUFMBTij/eE6Wu24LK7zTq+0STA1UY5WAHz9kfSsrapknG10e5eD
+	eC9WzVaCUZCrg8AjLoMVLIS83kE5pTFcDK9Y7CR6lcrN6uwWqRo+X41hR0dmbCJlmVAmhCDk0X4
+	axL3duWHJ0DoYhQk8fb1B0JQrlt4zljI04+bdMMTvDcRUkDZmnEenLQP5vyAHpAsmwkuVXOFTFk
+	N+yEXPFoRShEezTeAYbCliyKIV1dhZIaa21QWUoKDol9n39LokLzBj0Wb0LZTVof56exDo1RDAd
+	w5FXdfIeQ==
+X-Received: by 2002:a17:907:e902:b0:c16:b01c:ac0f with SMTP id a640c23a62f3a-c16b4002ca0mr82893966b.5.1784280688498;
+        Fri, 17 Jul 2026 02:31:28 -0700 (PDT)
+Received: from RDEALENC-L01.ad.analog.com (24.206.116.103.netskope-rdns.com. [24.206.116.103])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c170591172esm48042166b.15.2026.07.17.02.31.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2026 02:31:27 -0700 (PDT)
+Date: Fri, 17 Jul 2026 10:31:26 +0100
+From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Michael Auchter <michael.auchter@ni.com>, linux@analog.com, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, sashiko-bot@kernel.org
 Subject: Re: [PATCH v8 2/8] iio: dac: ad5686: missing NULL check on match data
-Message-ID: <alnknz55FbyyqqlL@ashevche-desk.local>
+Message-ID: <gy2dn5emz7sreavy6kioz27f3sx2ip6zhkgzs2uz4qzecpkrbe@zgsortof6aqn>
 References: <20260716-ad5686-new-features-v8-0-ebb0051af5e5@analog.com>
  <20260716-ad5686-new-features-v8-2-ebb0051af5e5@analog.com>
  <alkmAcDvSXr_COc_@ashevche-desk.local>
  <ondynh4kmchzugk2l24klamrcaje3qxnhgiks7gnc46wwwvo35@hysk2zaimb2e>
+ <alnknz55FbyyqqlL@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -72,35 +86,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ondynh4kmchzugk2l24klamrcaje3qxnhgiks7gnc46wwwvo35@hysk2zaimb2e>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <alnknz55FbyyqqlL@ashevche-desk.local>
 
-On Fri, Jul 17, 2026 at 07:51:35AM +0100, Rodrigo Alencar wrote:
-> On 16/07/26 21:42, Andy Shevchenko wrote:
-> > On Thu, Jul 16, 2026 at 01:14:18PM +0100, Rodrigo Alencar via B4 Relay wrote:
-
-...
-
-> > >  	struct iio_dev *indio_dev;
-> > >  	int ret, i;
-> > 
-> > Move an assignment here as well.
-> > 
-> > 	chip_info = ...
+On 17/07/26 11:15, Andy Shevchenko wrote:
+> On Fri, Jul 17, 2026 at 07:51:35AM +0100, Rodrigo Alencar wrote:
+> > On 16/07/26 21:42, Andy Shevchenko wrote:
+> > > On Thu, Jul 16, 2026 at 01:14:18PM +0100, Rodrigo Alencar via B4 Relay wrote:
 > 
-> assignment? this is an input param validation
+> ...
+> 
+> > > >  	struct iio_dev *indio_dev;
+> > > >  	int ret, i;
+> > > 
+> > > Move an assignment here as well.
+> > > 
+> > > 	chip_info = ...
+> > 
+> > assignment? this is an input param validation
+> 
+> Can we make sure we always get a correct one to begin with?
+> With that an assignment and check can be coupled together.
+> Also consider use -ENODATA as it's most likely comes from
+> driver_data.
 
-Can we make sure we always get a correct one to begin with?
-With that an assignment and check can be coupled together.
-Also consider use -ENODATA as it's most likely comes from
-driver_data.
+I suppose you are suggesting to move the check to the bus code with:
 
-> > > +	if (!chip_info)
-> > > +		return -ENODEV;
+	info = i2c_get_match_data(i2c);
+	if (!info)
+		return -ENODATA;
+
+rather than here in the core/common code.
+ 
+> > > > +	if (!chip_info)
+> > > > +		return -ENODEV;
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Kind regards,
 
-
+Rodrigo Alencar
