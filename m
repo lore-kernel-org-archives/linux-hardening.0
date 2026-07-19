@@ -1,110 +1,116 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693DF4A32
-	for <linux-hardening@vger.kernel.org>; Sat, 18 Jul 2026 23:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41A5CA6B
+	for <linux-hardening@vger.kernel.org>; Sun, 19 Jul 2026 00:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784419165; cv=none; b=Ds6cNi9wkh2VxAUmqLPjnrZvycYYGXEGqTmUPmkqTVB2A7BIf4mLyggjeQ4AR9GebCnedKPV/BukSDXmsWxWmqjGiwWg+GZ/PWp+cZq2Lg38sw9NsjZBVOBLB1zjrzZmHd4kiSkvSLDBxc6tcPri+nv/DSbxt5TyC9wqVyElYdI=
+	t=1784419768; cv=none; b=rZMlcsRzQqDT6VJSk7cEZcZwBa/GYzukSsolqQuQlmTRTcKBvqjCiuZftR0eb34kvsw3VS/GuF7o/MqAc464aCnlHTCUtOJEFU2GnjwdR+A09BrPb5x6Mr4FrEniVthgiYQsoApm6bERj+BhHsi2HXyfuoiVYAo5kr7ELuT01Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784419165; c=relaxed/simple;
-	bh=U6eCNFgQl24h5cm20ZPbYYjjWr7jTuXfAWCnv3wIP7w=;
+	s=arc-20240116; t=1784419768; c=relaxed/simple;
+	bh=Fp1M2fJsMXzbVJa1xj290WI9PSfRcyhTd/zB16zI1wg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GzXjELGaDRQ0O9+b9fGthZcq14GNZhsfnGbdX5YcGWnarr+QLKk8SVr2tbk/lOYYoyOY3IzIf1BU0rCcALKya1RoBDSQrQuXtIDTLU25T1HXFBNU/Y7CYgsQezoDmF+LF+DavnVV+aG8ALT9vqmnGs1NfZsRuiU6cnAs5MBuKBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aDJoJOkb; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=DLvLDYMd; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=GySU7t6zgswE3IzWfeesqZTwo/4/cv4UvCAwzF7ytlEFnoTdeX4/oT36eFTmyvgE/ZOJNQXINNYiKVIlHZfN9HF3hiabxVb5QMfuw0mMtltVjhjTjNwfqreJiGiQF3fr6U2jyFvNmWzA3lRPrasTy29wS7RqNlyqCx+lxKt1pjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=T5Q3Eaeu; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=h6aV5FFy; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aDJoJOkb";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="DLvLDYMd"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="T5Q3Eaeu";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="h6aV5FFy"
 Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66IN2DFr2048690
-	for <linux-hardening@vger.kernel.org>; Sat, 18 Jul 2026 23:59:23 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66IN2Xtq2049329
+	for <linux-hardening@vger.kernel.org>; Sun, 19 Jul 2026 00:09:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BlX0v5gGgT4IHLQD84AwHM3lT+72OwlqLgYbraMzkeQ=; b=aDJoJOkbPbd1hBaH
-	wQFlvqiGWlGGvatrTTvap5oXvI2ICv80kI6pEj8Ytk+3/OzeRo5CtHhy4gaskW9C
-	JOyMkMEH+WAbblgNBXYXGlWrwKZKPWI2gD/z94WKfzfJJ0/IQbzhAFCSS4OfhkFm
-	dg/VA+iOrfQP5Jn/wqtiHlJ+aE9Vk0nN75dyKBrHyVCigMucZuCWPWYBeov1SxYY
-	0EExm46cpaYTHMHQSTmCuEwiTt9JZh0hbK82dD3r7cgWMmU8YbMrkgoshIMhVtmG
-	+jKj5hVHuSS6KRSEp9HL5UxWuwLtqU447Rommy6GWXCfvjwarTABJCRoCg+j3nZ5
-	xG4IoQ==
+	/Ip7BNs+p7U2rvcrd2MAfZwgo2ckBeageifb/ZWfaLE=; b=T5Q3EaeuizOSIlUT
+	nGEb/nxINB+pP40e/s9kvBijWokWKYHTUHUnwgxsA3Zp34NxMPMZS8oln2otGUt3
+	+9+3MY5WmTXeDPT+vfxE8d41PDpU9DpJjdnJ8VChdPt8ACyYuDqG3XeJ+4sGUCoH
+	c44NnP94lbWp53adUWQLdYAMyphx6A0ZnpLRwrJ7HYzfSiU5dPqnVWSBCVApbycK
+	H/y5Q5j6Dr/rBC1GiAfypO+rT/bM/qL0YfOn7K4fDJ4jQvncithkUqU5h5Z+444O
+	yVBzzc8Kjw7B1tZiyIQBZqBqVBXN1Af6Mc2qeAR1p2j1fax6D9iMxzez5KQSQRXB
+	UIK6dg==
 Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fg2bnht69-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fg2bnhtpj-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Sat, 18 Jul 2026 23:59:23 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-848568a6f62so15322262b3a.0
-        for <linux-hardening@vger.kernel.org>; Sat, 18 Jul 2026 16:59:23 -0700 (PDT)
+	for <linux-hardening@vger.kernel.org>; Sun, 19 Jul 2026 00:09:24 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-8485d853b08so7889383b3a.1
+        for <linux-hardening@vger.kernel.org>; Sat, 18 Jul 2026 17:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1784419163; x=1785023963; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1784419764; x=1785024564; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:mime-version:references
          :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=BlX0v5gGgT4IHLQD84AwHM3lT+72OwlqLgYbraMzkeQ=;
-        b=DLvLDYMd4MaT6ZYrZNPktzaKIjIyNDZqBFCLZtzcex+5ZqrEozkRjdcqFZ/Xud1Y60
-         Qqx7zWA7asKd7mT3yOXhB8tbx5bdHZ3Rf8bdj0JgI9s3IVvbwgr/hiHYLx8akdx4Jh5D
-         A8vO+IfA1kR+i7I5LtomFBpkQiOK2vcm7aUsyibMQQiiQXpOpZh7qtYt4gs84M3knh0+
-         sIEBxdg5bpDVRlruTS/tvpzzSbZF/JqZK6mypW4sFOqlprxHfjLJftUeqa+7FSJJH3GK
-         ufH96fEKxbHpLoaAUIpH0QWZXqUF6xowE33Fc6QqQ7kXDpWZwOmCsRPIh0645WpdWvs0
-         C2jg==
+        bh=/Ip7BNs+p7U2rvcrd2MAfZwgo2ckBeageifb/ZWfaLE=;
+        b=h6aV5FFy0IJqf88sbDeP5gVCyWbAHPzT+N7k0UUQ5vEC/ixuzVzTeEC5Ryk4c9IMv9
+         xl20HGRCP+K8VqnW+p7lO+SD+Nv+mlzdj2DorBMauXWp1ejgrddZ+xfG2I6grKTDHl+b
+         bN6Gau/SPX1rDdh1TaOJw/tfzemgPaAaZ7Q41aDOGncGqnnYMFCf0ngguwqAA0+18Rto
+         09IBkfG4pggWYozpgw1IkGR70J7/x1YPsBE+4MMG7A2Rkbe0poW1lZJSOz7g+relmH27
+         24lwqdk0G631xtb6CpEfLnb04dY0CUsQIu2VQiShqmBdWRVr+MkSNazNCarqfMGefaTq
+         0hww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784419163; x=1785023963;
+        d=1e100.net; s=20251104; t=1784419764; x=1785024564;
         h=content-transfer-encoding:content-type:mime-version:references
          :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=BlX0v5gGgT4IHLQD84AwHM3lT+72OwlqLgYbraMzkeQ=;
-        b=ZcodG0LJ24q04GobFXAfAhMelIIQbA/7KvD/UZoOC4ZPF6Iw3njiNrlFOlyMc7713v
-         fjTji9IBvwv7EOcKBQMaFVThtJ1ifBo8S1QQiUW5mcqYSJ5mwLWiPjj4TfO53xFFPDQh
-         eassOcjg3rIAzUkCRlySeYMYrLKIQToLF+RQlKLlgc+q6Nqr21ETuaLQ23FlZgdxmE8p
-         paAvmrSc7xiYcmKi06C0W6iYbGmubJU1ckuNZoW2WTHfOE4x75zJpyijy+nXu392yFbK
-         aolLuGHeDVW3FwZWqraY5fBpCiRN63Q0IUnmrxUM9DLm2cOG0oyjS9r0cs0324xhJKNo
-         Ztrg==
-X-Forwarded-Encrypted: i=1; AHgh+RqosxHFGd/nZ/2okkHKxlamPE86iMD+0jhWLY+c8FC6GuLgKSGv5HGxR0JNXC6LIHxZTalXB14OlbfYKxWDui8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEUAPs9tQhGGRRSvOLWVhpQJwCKkXD0ReZVYvkAKLNYGR/ZR2v
-	ioucylmcj3UkrD88Dam0p8kdtapHDO8ZBSzeOMWiHgyj24ucnaeFYJSS3l7BrVxcpEaQvZjlemq
-	qfoJiSGJ24JGxgAEI0tw+NGEoce0QGVidZu0lE4fsQuzHZ154yB4jLCbv685JrLD/iF7NSGT1r5
-	J9mno=
-X-Gm-Gg: AfdE7cn1n05+q8RrwX1FPcxDpvd/7KFWAf1aP0ej3adA5DRZSV+1wowGzGJhdnVRRfo
-	2Cfc3rEU2u50s40gLHOH4ux2625YAnButqTwwgvqCDmKfhjI0HFJH3mt1FeVMaMmvd1HNeilK0a
-	4Vdt54wHjKHlW0PG7CbWnq2X0Dt5aHsTkR8phwUkuickLGfyVxm2ftd9dh2KaV3Psj8NyH4Q6zD
-	7fEhIJBV81Cj/CRorxmaQUr6yfb0k4LTOVqUuh3oA3XgiQlScJMcspKNm+BN0z1fVVnKWgk13A1
-	J4diGokpddWeqzvW7tfigQ0G8wjK4r+SOfM4cH1oi4RoeiD9zJg6Gf3muTUQ/mWraoQxfiXAb8Z
-	RsYYPBr0VEeFtahRe
-X-Received: by 2002:a05:6a00:2d84:b0:84a:640f:1ae6 with SMTP id d2e1a72fcca58-84c295268bemr8231582b3a.67.1784419162738;
-        Sat, 18 Jul 2026 16:59:22 -0700 (PDT)
-X-Received: by 2002:a05:6a00:2d84:b0:84a:640f:1ae6 with SMTP id d2e1a72fcca58-84c295268bemr8231557b3a.67.1784419162224;
-        Sat, 18 Jul 2026 16:59:22 -0700 (PDT)
+        bh=/Ip7BNs+p7U2rvcrd2MAfZwgo2ckBeageifb/ZWfaLE=;
+        b=Gff/BqT61hlr3w17IW0GCnrUfZvNSC7ENBxJILMPiKari9CodFxOADSv11/T7NjSMZ
+         ezzGn2VOuFwM1cSTK1aMsP/8pGAagIqgWUgqLM6TTKGQBuoOxZAY4rfU60Y9dPet7a7N
+         CLJ113Dw8Zlrd0gcZeSzqgvukgafrmpz+8rhNS6iHdVI+GZctSOgEuN3n/pYNhGQzueb
+         9UvgM5aOHrjYgSpj6qRUlbPSLrAtBbXkYDsi8pBSF1RRQVwQ2KLswqk+ce1CYJmZ2Poi
+         pGszNuHNb2Db//dp0OM8u3KCp70+1MF32s1Ig/bRY6ElL5M39hP3pSa+fyWLznImghWT
+         W6Qw==
+X-Forwarded-Encrypted: i=1; AHgh+RppZFzJ2JKPbL475qSDhRiEGM0aLwuShPo5pdgCgY48if83d5J2/nwPKmTP4ioe+JVaCVc+PAJnnquOHetHTfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2aDEYTrJ7CxZXw5MTZUhpAwdBq0eppoEf+q5shrZHrzbyz7Di
+	YpNZlU6V39ycvWO1mASG+11JE9ZeYTZJZzPPflRKh26oqjkfy6n0e7taK9F4BIvXDWahtXgcH4Z
+	/krevduowsPZfCj339nzZ5pqp8Dy2Mf14Z/mJ5oIXVDlwoBsi9BLhDfqG8Or9jfBhNW0OaBQ=
+X-Gm-Gg: AfdE7clN753SX5xhKV41MbSS1PVaJV6xCcqJntAxfdfncca2yMTt74Nzry/uxcUMFql
+	6Fe8n8/dqKdPFs5zA9d36Cs2XDDVktr+vJJxqFj/BNyRKbJ90u/jiQsS1Ll10Nl1o+pODAlT1ng
+	GJpXReivz3I8dP28TvZ3No9fZFqWqFNv3Pr78SIdLEDKhDs3GeJGuMpYvW87avAjIKFcQEjIx4+
+	SDFJzR1We8I2ajH5V39yogm0jXfsfQYHaRU7/GPzeoEPRByR5o9E+gPkFJQNMyC1W6k+TC8+4DQ
+	HTGsLztZmiI37GwyRrd80F703kgMQKai/J68dLnj/kcQt84setT8t4bFPuAicbBJHN1NOT05m9+
+	K7quPxob5/9jKCWT3
+X-Received: by 2002:a05:6a00:400f:b0:848:6ba2:4139 with SMTP id d2e1a72fcca58-84c29487c9amr8216366b3a.36.1784419763993;
+        Sat, 18 Jul 2026 17:09:23 -0700 (PDT)
+X-Received: by 2002:a05:6a00:400f:b0:848:6ba2:4139 with SMTP id d2e1a72fcca58-84c29487c9amr8216349b3a.36.1784419763537;
+        Sat, 18 Jul 2026 17:09:23 -0700 (PDT)
 Received: from jic23-huawei ([50.35.46.84])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84c2af9f00bsm3396222b3a.56.2026.07.18.16.59.20
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84c2adc3466sm3491452b3a.15.2026.07.18.17.09.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2026 16:59:21 -0700 (PDT)
-Date: Sun, 19 Jul 2026 00:59:18 +0100
+        Sat, 18 Jul 2026 17:09:22 -0700 (PDT)
+Date: Sun, 19 Jul 2026 01:09:16 +0100
 From: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-To: Rodrigo Alencar via B4 Relay
- <devnull+rodrigo.alencar.analog.com@kernel.org>
-Cc: rodrigo.alencar@analog.com, Michael Auchter <michael.auchter@ni.com>,
-        linux@analog.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Michael
- Hennerich <Michael.Hennerich@analog.com>,
-        David Lechner
- <dlechner@baylibre.com>,
-        Andy Shevchenko <andy@kernel.org>, Rob Herring
- <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook
- <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>, sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 3/8] iio: dac: ad5686: refactor command/data macros
-Message-ID: <20260719005918.1e58ebf4@jic23-huawei>
-In-Reply-To: <20260716-ad5686-new-features-v8-3-ebb0051af5e5@analog.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>,
+        Michael Auchter
+ <michael.auchter@ni.com>, linux@analog.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Michael Hennerich
+ <Michael.Hennerich@analog.com>,
+        David Lechner <dlechner@baylibre.com>,
+        Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp
+ Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 2/8] iio: dac: ad5686: missing NULL check on match
+ data
+Message-ID: <20260719010916.54de1870@jic23-huawei>
+In-Reply-To: <20260719005533.41520a27@jic23-huawei>
 References: <20260716-ad5686-new-features-v8-0-ebb0051af5e5@analog.com>
-	<20260716-ad5686-new-features-v8-3-ebb0051af5e5@analog.com>
+	<20260716-ad5686-new-features-v8-2-ebb0051af5e5@analog.com>
+	<alkmAcDvSXr_COc_@ashevche-desk.local>
+	<ondynh4kmchzugk2l24klamrcaje3qxnhgiks7gnc46wwwvo35@hysk2zaimb2e>
+	<alnknz55FbyyqqlL@ashevche-desk.local>
+	<gy2dn5emz7sreavy6kioz27f3sx2ip6zhkgzs2uz4qzecpkrbe@zgsortof6aqn>
+	<aloD5HdbntKu--xC@ashevche-desk.local>
+	<20260719005533.41520a27@jic23-huawei>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -114,25 +120,25 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE4MDI1MSBTYWx0ZWRfXzuqVXyQ+YuFf
- PvGsgMg1D+fVokFTC7S873ZNk0r74VOges3NsblQk2ERwqTbMjNPYKNXKLPtJ430YW5efEXNxik
- C1boQgVSVQGnJcqPrQt3I6XJXqFwEpYAkdhMzn+Pdut6t4XGZmfljZ8kR3pshL6wnSjv7fDwTjm
- bdY2IPjE/jtndnbAKMogPS0/9bFhR+ZBR6IF7DXF7z3jCwTeQGUNjpln3Tx2Wvnb89FjYF6+tx2
- qZYhHWNsL+t+PMX20YbsuIpIGJXqtMqii6iza99JcG8YGWPjUZY7rO2foXNPu6Ysl9IDEKelGUh
- 9CTGzW2yA+PYwvDvclcEXIaVpyfyVMKEIWBUHRkBHjqSRVEVeSwvRQwrwKbgIHsA20AwjFoI2dI
- S1eWavj7RL7ZMcIarI/d68co79kN7CFf75EoY0DQVP/yasbzBA3T4iDbJDWlrp7yArDV8KvqKfo
- 6qbQLzgrHnm+/oVzIng==
-X-Proofpoint-ORIG-GUID: 9omE6wZ2fotrVPLd_GAzEyGBueVNzyv0
-X-Proofpoint-GUID: 9omE6wZ2fotrVPLd_GAzEyGBueVNzyv0
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE4MDI1MSBTYWx0ZWRfX96zqde81eZJs
- mXe+xvY3okYAv10UvsqL1298OFHGlH48d/J44rGKHye0l810ItwSPFL+tefayqyZNSdLnnAUyOb
- GU6M3YUhY1epXHRnT7K/gtB4ztjJ9j4=
-X-Authority-Analysis: v=2.4 cv=deOwG3Xe c=1 sm=1 tr=0 ts=6a5c135b cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE4MDI1MyBTYWx0ZWRfX0VUL2l+gKWEh
+ tWf3QdIP1ivx4YTQ8amE/nzKXfZFuJEjXCTr7n1herB2OYptTfaLS95tG3QWGWNFFHMc5IrliZM
+ qwQLFwp2fit/w+MbmUHgAHzXXbndY69G9ZmRi42ggLW3/Y7rdGH3Cg7xdNsw9JZlJ3wAKXczvXA
+ nOCVqj/rZAFnQOcGz4R3ziN5oQgPKb/W3BFwzHUj4Lremk3u29j8WT0hwh+XZWn8f8g+JWLQ/Iw
+ lsSR6lZ3fCjEcxVUViXb/nvWlVJ/UipQQEimltRitdXdY/zhygRhebFrfUrv0Ww/RaMZTj4v5UV
+ 4q2hx2xu1ihL8TAKOSH4dz/BCTAyzz3PZ5KgJpAKB1qEmLhawXljai/G6l7bQKZZhjpGwM3xKcL
+ 9x8NAEbiVCZ0MPAFQQw31vlkUrUYgmByDMwvUyNlkxX8ctds6ERdPaIC1slk6FwfxMwsDltnf4a
+ bMpeA+5IY9BcEArFy0Q==
+X-Proofpoint-ORIG-GUID: NVSJRrT4BUWtiRNVpBXDvStWer84294-
+X-Proofpoint-GUID: NVSJRrT4BUWtiRNVpBXDvStWer84294-
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE4MDI1MyBTYWx0ZWRfXyUPivLsJdI/R
+ /C+j4zzrg4OrRRRfntFKSZX0hKqgyQDeEZ040E2jwgNhCVvXw0crG0OJ0u/Jz9Uac999Uais6QE
+ FNkZXBgLYTztuN5LyBV5Wju+Gyh1Ffk=
+X-Authority-Analysis: v=2.4 cv=deOwG3Xe c=1 sm=1 tr=0 ts=6a5c15b4 cx=c_pps
  a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=qC1CW/w66vtJz1P9yTJxNA==:17
  a=kj9zAlcOel0A:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
  a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
- a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=IpJZQVW2AAAA:8 a=ORtW8YiJEmzS7SvgJCwA:9
- a=CjuIK1q_8ugA:10 a=2VI0MkxyNR6bbpdq8BZq:22 a=IawgGOuG5U0WyFbmm1f5:22
+ a=EUspDBNiAAAA:8 a=QyXUC8HyAAAA:8 a=HvgeF_Dkktg8HcRXRxcA:9 a=CjuIK1q_8ugA:10
+ a=2VI0MkxyNR6bbpdq8BZq:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-18_07,2026-07-17_01,2025-10-01_01
@@ -140,209 +146,95 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  priorityscore=1501 spamscore=0 malwarescore=0 clxscore=1015 phishscore=0
  suspectscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607180251
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607180253
 
-On Thu, 16 Jul 2026 13:14:19 +0100
-Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
+On Sun, 19 Jul 2026 00:55:44 +0100
+Jonathan Cameron <jonathan.cameron@oss.qualcomm.com> wrote:
 
-> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> On Fri, 17 Jul 2026 13:28:52 +0300
+> Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
 > 
-> Replace usage of bit shifting macros for FIELD_PREP(), which would not
-> ignore bit masking when preparing SPI/I2C commands. This change is a code
-> hardening measure to be paired with the upcoming triggered buffer support.
-> For the AD5310 regmap case, 16-bit data coming from the buffer may overlap
-> with command bits if the data field is unmasked.
+> > On Fri, Jul 17, 2026 at 10:31:26AM +0100, Rodrigo Alencar wrote:  
+> > > On 17/07/26 11:15, Andy Shevchenko wrote:    
+> > > > On Fri, Jul 17, 2026 at 07:51:35AM +0100, Rodrigo Alencar wrote:    
+> > > > > On 16/07/26 21:42, Andy Shevchenko wrote:    
+> > > > > > On Thu, Jul 16, 2026 at 01:14:18PM +0100, Rodrigo Alencar via B4 Relay wrote:    
+> > 
+> > ...
+> >   
+> > > > > > >  	struct iio_dev *indio_dev;
+> > > > > > >  	int ret, i;    
+> > > > > > 
+> > > > > > Move an assignment here as well.
+> > > > > > 
+> > > > > > 	chip_info = ...    
+> > > > > 
+> > > > > assignment? this is an input param validation    
+> > > > 
+> > > > Can we make sure we always get a correct one to begin with?
+> > > > With that an assignment and check can be coupled together.
+> > > > Also consider use -ENODATA as it's most likely comes from
+> > > > driver_data.    
+> > > 
+> > > I suppose you are suggesting to move the check to the bus code with:
+> > > 
+> > > 	info = i2c_get_match_data(i2c);
+> > > 	if (!info)
+> > > 		return -ENODATA;
+> > > 
+> > > rather than here in the core/common code.    
+> > 
+> > Yes! This avoids layering violation and makes the API contract cleaner.  
 > 
-> *_REF_BIT_MSK and *_PD_MSK bit position macros are renamed (with a DATA
-> prefix) so to indicate that they are relative to the DATA field.
-> 
-> Reported-by: sashiko-bot@kernel.org
-> Closes: https://lore.kernel.org/all/20260628143026.EC6CA1F000E9@smtp.kernel.org/
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
-> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
-Some fuzz when applying this due at least partly to crossing with various
-header cleanup related series. Please check I didn't mess it up!
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/dac/ad5686-spi.c | 21 +++++++++++----------
->  drivers/iio/dac/ad5686.c     | 10 +++++-----
->  drivers/iio/dac/ad5686.h     | 22 ++++++++++++----------
->  drivers/iio/dac/ad5696-i2c.c | 11 ++++++-----
->  4 files changed, 34 insertions(+), 30 deletions(-)
+> I applied the following rather than going for a v9 for just this:
+> Shout if I messed it up.
 > 
 > diff --git a/drivers/iio/dac/ad5686-spi.c b/drivers/iio/dac/ad5686-spi.c
-> index 6b6ef1d7071f..d3b64b4361d5 100644
+> index 8abfaf8f0c46..591596a68004 100644
 > --- a/drivers/iio/dac/ad5686-spi.c
 > +++ b/drivers/iio/dac/ad5686-spi.c
-> @@ -9,6 +9,7 @@
->   */
+> @@ -98,8 +98,13 @@ static const struct ad5686_bus_ops ad5686_spi_ops = {
 >  
->  #include <linux/array_size.h>
-> +#include <linux/bitfield.h>
->  #include <linux/errno.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
-> @@ -26,21 +27,21 @@ static int ad5686_spi_write(struct ad5686_state *st,
->  
->  	switch (st->chip_info->regmap_type) {
->  	case AD5310_REGMAP:
-> -		st->data[0].d16 = cpu_to_be16(AD5310_CMD(cmd) |
-> -					      val);
-> +		st->data[0].d16 = cpu_to_be16(FIELD_PREP(AD5310_CMD_MSK, cmd) |
-> +					      FIELD_PREP(AD5310_DATA_MSK, val));
->  		buf = &st->data[0].d8[0];
->  		tx_len = 2;
->  		break;
->  	case AD5683_REGMAP:
-> -		st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) |
-> -					      AD5683_DATA(val));
-> +		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
-> +					      FIELD_PREP(AD5683_DATA_MSK, val));
->  		buf = &st->data[0].d8[1];
->  		tx_len = 3;
->  		break;
->  	case AD5686_REGMAP:
-> -		st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) |
-> -					      AD5686_ADDR(addr) |
-> -					      val);
-> +		st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
-> +					      FIELD_PREP(AD5686_ADDR_MSK, addr) |
-> +					      FIELD_PREP(AD5686_DATA_MSK, val));
->  		buf = &st->data[0].d8[1];
->  		tx_len = 3;
->  		break;
-> @@ -81,9 +82,9 @@ static int ad5686_spi_read(struct ad5686_state *st, u8 addr)
->  		return -EINVAL;
->  	}
->  
-> -	st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) |
-> -				      AD5686_ADDR(addr));
-> -	st->data[1].d32 = cpu_to_be32(AD5686_CMD(AD5686_CMD_NOOP));
-> +	st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
-> +				      FIELD_PREP(AD5686_ADDR_MSK, addr));
-> +	st->data[1].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, AD5686_CMD_NOOP));
->  
->  	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
->  	if (ret < 0)
-> diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
-> index d34250647aa4..c285aeed44d1 100644
-> --- a/drivers/iio/dac/ad5686.c
-> +++ b/drivers/iio/dac/ad5686.c
-> @@ -35,8 +35,8 @@ static int ad5310_control_sync(struct ad5686_state *st)
->  	unsigned int pd_val = st->pwr_down_mask & st->pwr_down_mode;
->  
->  	return ad5686_write(st, AD5686_CMD_CONTROL_REG, 0,
-> -			    FIELD_PREP(AD5310_PD_MSK, pd_val & AD5686_PD_MSK) |
-> -			    FIELD_PREP(AD5310_REF_BIT_MSK, st->use_internal_vref ? 0 : 1));
-> +			    FIELD_PREP(AD5310_DATA_PD_MSK, pd_val & AD5686_PD_MSK) |
-> +			    FIELD_PREP(AD5310_DATA_REF_MSK, st->use_internal_vref ? 0 : 1));
->  }
->  
->  static int ad5683_control_sync(struct ad5686_state *st)
-> @@ -44,8 +44,8 @@ static int ad5683_control_sync(struct ad5686_state *st)
->  	unsigned int pd_val = st->pwr_down_mask & st->pwr_down_mode;
->  
->  	return ad5686_write(st, AD5686_CMD_CONTROL_REG, 0,
-> -			    FIELD_PREP(AD5683_PD_MSK, pd_val & AD5686_PD_MSK) |
-> -			    FIELD_PREP(AD5683_REF_BIT_MSK, st->use_internal_vref ? 0 : 1));
-> +			    FIELD_PREP(AD5683_DATA_PD_MSK, pd_val & AD5686_PD_MSK) |
-> +			    FIELD_PREP(AD5683_DATA_REF_MSK, st->use_internal_vref ? 0 : 1));
->  }
->  
->  static inline unsigned int ad5686_pd_mask_shift(const struct iio_chan_spec *chan)
-> @@ -565,7 +565,7 @@ int ad5686_probe(struct device *dev,
->  		break;
->  	case AD5686_REGMAP:
->  		ret = ad5686_write(st, AD5686_CMD_INTERNAL_REFER_SETUP, 0,
-> -				   st->use_internal_vref ? 0 : AD5686_REF_BIT_MSK);
-> +				   st->use_internal_vref ? 0 : AD5686_DATA_REF_MSK);
->  		if (ret)
->  			return ret;
->  		break;
-> diff --git a/drivers/iio/dac/ad5686.h b/drivers/iio/dac/ad5686.h
-> index c424720f8f72..32cb3931413c 100644
-> --- a/drivers/iio/dac/ad5686.h
-> +++ b/drivers/iio/dac/ad5686.h
-> @@ -14,12 +14,14 @@
->  
->  #include <linux/iio/iio.h>
->  
-> -#define AD5310_CMD(x)				((x) << 12)
-> +#define AD5310_CMD_MSK				GENMASK(15, 12)
-> +#define AD5310_DATA_MSK				GENMASK(11, 0)
->  
-> -#define AD5683_DATA(x)				((x) << 4)
-> +#define AD5683_DATA_MSK				GENMASK(19, 4)
->  
-> -#define AD5686_ADDR(x)				((x) << 16)
-> -#define AD5686_CMD(x)				((x) << 20)
-> +#define AD5686_CMD_MSK				GENMASK(23, 20)
-> +#define AD5686_ADDR_MSK				GENMASK(19, 16)
-> +#define AD5686_DATA_MSK				GENMASK(15, 0)
->  
->  #define AD5686_ADDR_DAC(chan)			(0x1 << (chan))
->  #define AD5686_ADDR_ALL_DAC			0xF
-> @@ -38,15 +40,15 @@
->  #define AD5686_CMD_CONTROL_REG			0x4
->  #define AD5686_CMD_READBACK_ENABLE_V2		0x5
->  
-> -#define AD5310_REF_BIT_MSK			BIT(8)
-> -#define AD5310_PD_MSK				GENMASK(10, 9)
-> +#define AD5310_DATA_REF_MSK			BIT(8)
-> +#define AD5310_DATA_PD_MSK			GENMASK(10, 9)
->  
-> -#define AD5683_REF_BIT_MSK			BIT(12)
-> -#define AD5683_PD_MSK				GENMASK(14, 13)
-> +#define AD5683_DATA_REF_MSK			BIT(12) /* DB16 */
-> +#define AD5683_DATA_PD_MSK			GENMASK(14, 13) /* DB18:DB17 */
+>  static int ad5686_spi_probe(struct spi_device *spi)
+>  {
+> -       return ad5686_probe(&spi->dev, spi_get_device_match_data(spi),
+> -                           spi->modalias, &ad5686_spi_ops);
+> +       const struct ad5686_chip_info *chip_info;
+Renamed these to info to match the later patch that has this code anyway.
+
 > +
-> +#define AD5686_DATA_REF_MSK			BIT(0)
+> +       chip_info = spi_get_device_match_data(spi);
+> +       if (!chip_info)
+> +               return -ENODEV;
+> +
+> +       return ad5686_probe(&spi->dev, chip_info, spi->modalias, &ad5686_spi_ops);
+>  }
 >  
-> -#define AD5686_REF_BIT_MSK			BIT(0)
->  #define AD5686_PD_MSK				GENMASK(1, 0)
-> -
->  #define AD5686_PD_MODE_1K_TO_GND		0x1
->  #define AD5686_PD_MODE_100K_TO_GND		0x2
->  #define AD5686_PD_MODE_THREE_STATE		0x3
+>  static const struct spi_device_id ad5686_spi_id[] = {
 > diff --git a/drivers/iio/dac/ad5696-i2c.c b/drivers/iio/dac/ad5696-i2c.c
-> index 551b200bfe14..2c95d394a1c0 100644
+> index d49946adbde3..a6c85d0c33c9 100644
 > --- a/drivers/iio/dac/ad5696-i2c.c
 > +++ b/drivers/iio/dac/ad5696-i2c.c
-> @@ -8,6 +8,7 @@
->   */
+> @@ -68,8 +68,13 @@ static const struct ad5686_bus_ops ad5686_i2c_ops = {
 >  
->  #include <linux/array_size.h>
-> +#include <linux/bitfield.h>
->  #include <linux/errno.h>
->  #include <linux/i2c.h>
->  #include <linux/mod_devicetable.h>
-> @@ -36,9 +37,8 @@ static int ad5686_i2c_read(struct ad5686_state *st, u8 addr)
->  	};
->  	int ret;
->  
-> -	st->data[0].d32 = cpu_to_be32(AD5686_CMD(AD5686_CMD_NOOP) |
-> -				      AD5686_ADDR(addr) |
-> -				      0x00);
-> +	st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, AD5686_CMD_NOOP) |
-> +				      FIELD_PREP(AD5686_ADDR_MSK, addr));
->  
->  	ret = i2c_transfer(i2c->adapter, msg, ARRAY_SIZE(msg));
->  	if (ret < 0)
-> @@ -55,8 +55,9 @@ static int ad5686_i2c_write(struct ad5686_state *st,
->  	struct i2c_client *i2c = to_i2c_client(st->dev);
->  	int ret;
->  
-> -	st->data[0].d32 = cpu_to_be32(AD5686_CMD(cmd) | AD5686_ADDR(addr)
-> -				      | val);
-> +	st->data[0].d32 = cpu_to_be32(FIELD_PREP(AD5686_CMD_MSK, cmd) |
-> +				      FIELD_PREP(AD5686_ADDR_MSK, addr) |
-> +				      FIELD_PREP(AD5686_DATA_MSK, val));
->  
->  	ret = i2c_master_send(i2c, &st->data[0].d8[1], 3);
->  	if (ret < 0)
+>  static int ad5686_i2c_probe(struct i2c_client *i2c)
+>  {
+> -       return ad5686_probe(&i2c->dev, i2c_get_match_data(i2c),
+> -                           i2c->name, &ad5686_i2c_ops);
+> +       const struct ad5686_chip_info *chip_info;
+> +
+> +       chip_info = i2c_get_match_data(i2c);
+> +       if (!chip_info)
+> +               return -ENODEV;
+> +
+> +       return ad5686_probe(&i2c->dev, chip_info, i2c->name, &ad5686_i2c_ops);
+>  }
+> 
+> 
+> >   
+> > > > > > > +	if (!chip_info)
+> > > > > > > +		return -ENODEV;    
+> >   
+> 
 > 
 
