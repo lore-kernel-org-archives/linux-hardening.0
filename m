@@ -1,161 +1,111 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EC738B142;
-	Mon, 20 Jul 2026 03:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FF73A8759;
+	Mon, 20 Jul 2026 05:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784518202; cv=none; b=JgehZ795qPEn4DWkA644gr0QcDHT99OC5zawgrNv3bUyKwaz2ziYS7sPgrYpG39BpYm/kLxzKuiXM9Lfv8vIb7AAJH4MEDJ37hpzKZ2G6uid6qRRPiToGIMn5IUgl0+NATRJc+ppNwqMRcYV6RJhu1A4zA7KFuzq6wZxjACUF6s=
+	t=1784525970; cv=none; b=eXz5m5KUMaTlh89SwM2YI7CiaBjVFJudN2XrOOOF5znGRr2uAFHsPvmXIlorxoiDhyaVNYH+yVk8bonqkDW90zRZqpuQc/nQDIN9WBfzOApWW3bBTQvKomgqIG5OfUKfcQ7N0ZYxatfQEU65yFebn/R4cativr2i5r6Baj81mvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784518202; c=relaxed/simple;
-	bh=WBwR1x/AgySTRGoCs7cqNEMzr0STGf9y+8WbKYg/8TY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WQUVcCdW7jnLemKN0CEodH87LiAvWlsSGa1Fh6/jVlFd5jNwvucltbY0vs5/j8MPI+9O5FKmG268f6nlBZkmG2Bu6Yv7lwjUxvwZKvODJs3BCMMkC0A/10JND2p9B/eSobZedXMAHEb2kks1uuCNH2RPcStaAz771UnqjVrVLP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aJYZqnKI; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1784525970; c=relaxed/simple;
+	bh=8DcNWD473O5mxKX4hIYKD0DwQc9QDM6rn/VJdtyi9jg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hcCej4HRPPKlbAO4MaxgccKroqXBN7irphOWmd2a9Zrc0mXoXkcgtdqs2FIC5UMhi+YJ4BvqM4LjXFKogagzeytKHQASOpziOrFYIh8s1CTrtEnp2PSIBEuENIBhT1aQ2DR4Mbu8iZEcKEo6h5jtU0j0qjVuqdesLNTzmTAA7jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=fail (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=KR9J/1Ls reason="key not found in DNS"; arc=none smtp.client-ip=49.212.243.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aJYZqnKI"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1784518196; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=iVIJn8TH8YnLTF6YzCMiEtQHIk6NR7odP5UPUmkVhZA=;
-	b=aJYZqnKIdVTBy9jgs2/z7AkJtZHURJnC6tQYFpPPqPmugFoXUbt38JH410O8LQeJ+SRg9BNgC2CdaiJLhX2nHRJTqbq1vJaMlVhHWbtCQPkWcnfaWMenAS6PAcbCLCz87tQ5BnCl+ouste4nqPSDf8317w/pQm5SJokM5iy22ik=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0X7NMv8L_1784518195;
-Received: from 30.166.0.112(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0X7NMv8L_1784518195 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 20 Jul 2026 11:29:56 +0800
-Message-ID: <30393fd0-6e0a-41c0-a1df-41bfee16dc07@linux.alibaba.com>
-Date: Mon, 20 Jul 2026 11:29:54 +0800
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="KR9J/1Ls"
+Received: from h183.csg.ci.i.u-tokyo.ac.jp (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
+	(authenticated bits=0)
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 66K5c7ol075973
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 20 Jul 2026 14:38:25 +0900 (JST)
+	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
+DKIM-Signature: a=rsa-sha256; bh=0hksgsoHb+5DPEqDI69vVoWioOdWpzFWo2XEINBkKEY=;
+        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
+        h=From:Message-Id:To:Subject:Date;
+        s=rs20250326; t=1784525906; v=1;
+        b=KR9J/1LsfcCUHiMKtSXTbiglekYsTdFxmUTKfBN55AS3aEINv6Zv7uLbXeoND/tQ
+         l6KYch1zNeOAzBqeI6GLTxYhk2ipCxNMldf9dSHxe2QBEa3KDNLTq8ggkCM6LGC8
+         jvllIlTKUkZ4GajUWKNaX9xxYcEC3e6cWc/8JYo6vLDHbfVba32+o/MGxLwA5Ic0
+         x8KCZu4IWmDazK5jEb7xM055vqqzghw2I+ey/rMrk/7IMpIKNcvT8lUSLaxboOAC
+         DcmrbrJphLS3jNQNMS3Ev9h7VJsSS39Ldps22jVT18l/zL9/8p5gbzyqv4F9AdsB
+         vojYUpqc+eLoLvjkgmZszg==
+From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Date: Mon, 20 Jul 2026 14:37:57 +0900
+Subject: [PATCH v9 03/16] KVM: arm64: PMU: Freeze counter count after first
+ run
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ocfs2: validate directory-index entry counts when reading
- metadata
-To: Doruk Tan Ozturk <doruk@0sec.ai>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
- Kees Cook <kees@kernel.org>, ocfs2-devel@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20260713205625.92391-1-doruk@0sec.ai>
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
-In-Reply-To: <20260713205625.92391-1-doruk@0sec.ai>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260720-hybrid-v9-3-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
+References: <20260720-hybrid-v9-0-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
+In-Reply-To: <20260720-hybrid-v9-0-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Eiden <seiden@linux.ibm.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+X-Mailer: b4 0.16-dev-925f5
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1114;
+ i=odaki@rsg.ci.i.u-tokyo.ac.jp; h=from:subject:message-id;
+ bh=8DcNWD473O5mxKX4hIYKD0DwQc9QDM6rn/VJdtyi9jg=;
+ b=owGbwMvMwCWmMbc20y1CyJDxtFoSQ1bsFpdWCZXNC13nb33sknhDYZrRs2Sm3+/el3NfSjvy3
+ zRLJWZyRykLgxgXg6yYIktK0W5ujejaT4UJ8S0wc1iZQIYwcHEKwETaWRgZ5u/ee9gnmnfj3v6J
+ b7mDJJRMom8/c/N4wBYteE73ZW3zcoY/POq3P779e25nZtBbjySrZw5aOhuLKjJOumSvPmAU+eA
+ bGwA=
+X-Developer-Key: i=odaki@rsg.ci.i.u-tokyo.ac.jp; a=openpgp;
+ fpr=AEDC03C9AF734F2EC26A7BFFA4BAEAA73536753C
 
+PMU configuration is VM-scoped, but SET_NR_COUNTERS can be issued
+through any vCPU. Checking only whether that vCPU's PMU has been
+initialized allows userspace to change the counter count through an idle
+sibling after another vCPU has run.
 
+Reject the attribute once any vCPU has run. This keeps the VM-wide
+implemented counter mask and the PMCR_EL0.N value stable after guest
+execution begins.
 
-On 7/14/26 4:56 AM, Doruk Tan Ozturk wrote:
-> ocfs2_validate_dx_leaf() and ocfs2_validate_dx_root() check the ECC and
-> signature of an indexed-directory block before it reaches higher-level
-> callers, but neither validator bounds the ocfs2_dx_entry_list counts
-> against the capacity of the block that holds them.
-> 
-> ocfs2_dx_dir_search() then walks
-> 
-> 	for (i = 0; i < le16_to_cpu(entry_list->de_num_used); i++)
-> 		dx_entry = &entry_list->de_entries[i];
-> 
-> over de_num_used entries with no bounds check.  entry_list is either
-> dx_leaf->dl_list (from ocfs2_read_dx_leaf) or, for an inline root,
-> dx_root->dr_entries.  A crafted on-disk image can set de_num_used (and
-> de_count, which is the __counted_by_le() bound of de_entries) to 0xffff
-> and make the walk read far past the end of the 4KB metadata block, giving
-> a slab out-of-bounds read reachable from any path lookup, stat() or open()
-> on an indexed directory once the image is mounted.
-> 
-> Commit 775c17386a6f ("ocfs2: validate dx_root extent list fields during
-> block read") already bounds dr_list for the non-inline dx_root, but left
-> the inline dr_entries path and the dx_leaf dl_list unchecked.  Add the
-> same read-time validation for both entry lists: de_count must equal the
-> capacity of the block (ocfs2_dx_entries_per_leaf()/per_root()) and
-> de_num_used must not exceed de_count, rejecting corrupted metadata with
-> -EFSCORRUPTED before ocfs2_dx_dir_search() can walk an out-of-range entry
-> array.
-> 
-> de_count is always written as exactly the block capacity when a leaf or
-> inline root is formatted, so the equality check does not reject any
-> valid image.
-> 
-> Fixes: 9b7895efac90 ("ocfs2: Add a name indexed b-tree to directory inodes")
-> Fixes: 4ed8a6bb083b ("ocfs2: Store dir index records inline")
-> Cc: stable@vger.kernel.org
-> Found by 0sec automated security-research tooling (https://0sec.ai).
-> Assisted-by: 0sec:claude-opus-4-8
-> Signed-off-by: Doruk Tan Ozturk <doruk@0sec.ai>
+Fixes: b7628c797376 ("KVM: arm64: Allow userspace to limit the number of PMU counters for EL2 VMs")
+Assisted-by: Codex:gpt-5.6-sol
+Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+---
+ arch/arm64/kvm/pmu-emul.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Looks fine.
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+index b5df6843dbcd..b4b877f31097 100644
+--- a/arch/arm64/kvm/pmu-emul.c
++++ b/arch/arm64/kvm/pmu-emul.c
+@@ -1087,6 +1087,9 @@ static int kvm_arm_pmu_v3_set_nr_counters(struct kvm_vcpu *vcpu, unsigned int n)
+ {
+ 	struct kvm *kvm = vcpu->kvm;
+ 
++	if (kvm_vm_has_ran_once(kvm))
++		return -EBUSY;
++
+ 	if (!kvm->arch.arm_pmu)
+ 		return -EINVAL;
+ 
 
-> ---
->  fs/ocfs2/dir.c | 45 +++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 41 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/ocfs2/dir.c b/fs/ocfs2/dir.c
-> index baf3eca7b4e4..fcc3721cbe34 100644
-> --- a/fs/ocfs2/dir.c
-> +++ b/fs/ocfs2/dir.c
-> @@ -624,6 +624,28 @@ static int ocfs2_validate_dx_root(struct super_block *sb,
->  					  le16_to_cpu(el->l_count));
->  			goto bail;
->  		}
-> +	} else {
-> +		struct ocfs2_dx_entry_list *dl_list = &dx_root->dr_entries;
-> +
-> +		if (le16_to_cpu(dl_list->de_count) !=
-> +		    ocfs2_dx_entries_per_root(sb)) {
-> +			ret = ocfs2_error(sb,
-> +					  "Dir Index Root # %llu has invalid de_count %u (expected %u)\n",
-> +					  (unsigned long long)le64_to_cpu(dx_root->dr_blkno),
-> +					  le16_to_cpu(dl_list->de_count),
-> +					  ocfs2_dx_entries_per_root(sb));
-> +			goto bail;
-> +		}
-> +
-> +		if (le16_to_cpu(dl_list->de_num_used) >
-> +		    le16_to_cpu(dl_list->de_count)) {
-> +			ret = ocfs2_error(sb,
-> +					  "Dir Index Root # %llu has invalid de_num_used %u (de_count %u)\n",
-> +					  (unsigned long long)le64_to_cpu(dx_root->dr_blkno),
-> +					  le16_to_cpu(dl_list->de_num_used),
-> +					  le16_to_cpu(dl_list->de_count));
-> +			goto bail;
-> +		}
->  	}
->  
->  bail:
-> @@ -663,10 +685,25 @@ static int ocfs2_validate_dx_leaf(struct super_block *sb,
->  		return ret;
->  	}
->  
-> -	if (!OCFS2_IS_VALID_DX_LEAF(dx_leaf)) {
-> -		ret = ocfs2_error(sb, "Dir Index Leaf has bad signature %.*s\n",
-> -				  7, dx_leaf->dl_signature);
-> -	}
-> +	if (!OCFS2_IS_VALID_DX_LEAF(dx_leaf))
-> +		return ocfs2_error(sb, "Dir Index Leaf has bad signature %.*s\n",
-> +				   7, dx_leaf->dl_signature);
-> +
-> +	if (le16_to_cpu(dx_leaf->dl_list.de_count) !=
-> +	    ocfs2_dx_entries_per_leaf(sb))
-> +		return ocfs2_error(sb,
-> +				   "Dir Index Leaf # %llu has invalid de_count %u (expected %u)\n",
-> +				   (unsigned long long)le64_to_cpu(dx_leaf->dl_blkno),
-> +				   le16_to_cpu(dx_leaf->dl_list.de_count),
-> +				   ocfs2_dx_entries_per_leaf(sb));
-> +
-> +	if (le16_to_cpu(dx_leaf->dl_list.de_num_used) >
-> +	    le16_to_cpu(dx_leaf->dl_list.de_count))
-> +		return ocfs2_error(sb,
-> +				   "Dir Index Leaf # %llu has invalid de_num_used %u (de_count %u)\n",
-> +				   (unsigned long long)le64_to_cpu(dx_leaf->dl_blkno),
-> +				   le16_to_cpu(dx_leaf->dl_list.de_num_used),
-> +				   le16_to_cpu(dx_leaf->dl_list.de_count));
->  
->  	return ret;
->  }
+-- 
+2.55.0
 
