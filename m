@@ -1,122 +1,187 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D987B3033DE;
-	Mon, 20 Jul 2026 09:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1884A3D669C;
+	Mon, 20 Jul 2026 09:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784540155; cv=none; b=GE4snEZ2ZbNAUUfSWNq7FpXayLsTJJhHqZkEO7XPDwITWk8pSzm4GIaf6qCENn9Wz5jgQJS9DBiyzRf0bJGtz98IqujUOJCdMJLVdliQ18Af8gYDd2eaXW3NJ6T1odsTeAw3kf9mOl8EKx+ViZEIqHRinesVTOvvaLXNVlxqUoo=
+	t=1784541170; cv=none; b=PsFDQSDG0hxkVRuaqtje2c8AdHPQ2qNo8t0ikRvFf3vR6H/RxCctk4KlqhVDJiQfyKBDYG9Iw5DDcpUiOV/rIVA5wxtWPdaPTZUFV7sS3ni2Nx7BS+DbHuf5Mgp7ST5tMcMhveY6IjGfNUzEVK1XYJUl/OQGKOJ/rCi4zYnLobE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784540155; c=relaxed/simple;
-	bh=DyxOMZzA2k4hB3vl1HuYpFbwQe/dyjkOLBtutR0DyLc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PT6iJRwjmNEAIJUatCbkntFc4DDLJNeDZOcU0UxEbcLF+jYufmTooiygXxb2Xlk6+HQCkYBIzvFxydhEID/PtHXKrc9LLdNIEiJtJLOq9a8Zwv+hhcmJB5t+WP6NlL05hxBb3TN2P1WvnN7j0T1oXD1zCRRQhWYh9+RgV/ITWfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UdGfrhZi; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1784541170; c=relaxed/simple;
+	bh=j+GFna9NRb2HuBvQJD0oUM/Zix3uuE8dlGpVy5zxZdU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BulZYyjBR0XbBN/Va8viR3J+Wa/q8e+X664jIfmQPS2R/N0xu8pxL+BwAOpy9RgQw1dalnnTrS3yyqHSmTDnLklwqK2Vami2b/AMaX89piKkdh/2QbIorxCHj5muHDA/NOys9ytIh/hLyRxIY3gw3R5stcfjZuoc/B/6hToKKhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ScmwHF42; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UdGfrhZi"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66K963jI2110471;
-	Mon, 20 Jul 2026 09:35:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=M3uRqlUrDEZ
-	EZU28+D+F6qyLvARXLHd/wFZNCIfUcV4=; b=UdGfrhZiJTytyuacXTf15qwdSyP
-	GXxc7s8VyLapXdTYqF5kCmYwHsyl1tQZkMffvU5QeidB0itRJ+Jt9YJWLw5jSLbp
-	NHStbdPwLlnztb3IuAGAKGDwt00VFQ34NbND9jDdYIZbZ1l2Lj1zlh6qm0N2uTA3
-	rHtXHKYORaewTc+CKSxt8PbaMNLU2YOX6xIrsp2O5t3r807Q0iZERoaSlcG3yaL9
-	qznKFkTJ+/jmAYueGpjIgvE2flGW+CjjeBgLgttX20MSpY70GSOS5gf+Ut7MfOt7
-	46Z9exL5yKe5FQYLuIW7Ylp4iNZdmorQOr9HRG2UXCWQGK4SIMzlqbfv1ZQ==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fhgre84fk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jul 2026 09:35:50 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTP id 66K9Zk5e005809;
-	Mon, 20 Jul 2026 09:35:46 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 4fgj53by72-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jul 2026 09:35:46 +0000 (GMT)
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 66K9Zkcf005798;
-	Mon, 20 Jul 2026 09:35:46 GMT
-Received: from hu-devc-hyd-u24-a.qualcomm.com (hu-jaihindy-hyd.qualcomm.com [10.213.102.234])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 66K9ZkDY005796
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jul 2026 09:35:46 +0000 (GMT)
-Received: by hu-devc-hyd-u24-a.qualcomm.com (Postfix, from userid 448081)
-	id A4CE222161; Mon, 20 Jul 2026 15:05:45 +0530 (+0530)
-From: Jaihind Yadav <jaihindy@qti.qualcomm.com>
-To: nathan@kernel.org, nsc@kernel.org, kees@kernel.org,
-        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
-Cc: gustavoars@kernel.org, linux-kernel@vger.kernel.org,
-        Jaihind Yadav <jaihindy@qti.qualcomm.com>
-Subject: [PATCH 1/1] scripts: kstack_erase: use relative stackleak plugin path
-Date: Mon, 20 Jul 2026 15:05:45 +0530
-Message-ID: <20260720093545.3836066-2-jaihindy@qti.qualcomm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260720093545.3836066-1-jaihindy@qti.qualcomm.com>
-References: <20260720093545.3836066-1-jaihindy@qti.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ScmwHF42"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1784541146; x=1785145946; i=markus.elfring@web.de;
+	bh=j+GFna9NRb2HuBvQJD0oUM/Zix3uuE8dlGpVy5zxZdU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ScmwHF42c5aisGOGN3N9qaLT8tKNm0mcDRjSbhVtq+X4TyQc+RLXI1CXRG2yKdQB
+	 IW7Pwhac2w7ZsycgjzniiWkIGphYkwSIklY9sG51/JiJjtMYFCNCT4W6Uxburjp9o
+	 z1i4Mx6R6x/ZGP1uE3d0wfMmp71pY81H/Fsm2VOSNllpXDNGO7Z8bUwCPffvg8/Wk
+	 MCUrMU2VHEcKLDd0E7wOm8xosZFDXMXAU0GfQc2og+PksjiPaqjSLxIc8QuFRYOPU
+	 xNXdgswsMT24WiU0AEtkj7qbNbziVGH5pT1e+MKMqe0pMEWPBFs5EV1VSQDrQNIlg
+	 Pj9FsXDo9r+MshLwGA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1McZjd-1xHDs72MHd-00n4f6; Mon, 20
+ Jul 2026 11:52:26 +0200
+Message-ID: <e624499c-7fff-4c77-8f4d-0fb8c0d0814c@web.de>
+Date: Mon, 20 Jul 2026 11:52:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIwMDEwNiBTYWx0ZWRfXzNk0jarJmVLg
- AQvy1gUsV4f05+ECtwl8q3mvA8RS0rgzG1Gvxh5tTZDksIOUDj489KA/nVv4p/Ci1nTGKZqWyYC
- FI2as9YSHr0ou88Wpz30kC50xwE0u3w=
-X-Proofpoint-GUID: VocrOH1rOyGiUOFrP2hKwguEH06OrQoF
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIwMDEwNiBTYWx0ZWRfX0TXkVrCjbdOv
- 2dToUbdcKUa1dn0AsBo/c0YfognT6o5Aa2g4hO2HC/yqAjws3YdzwG39t0QrrJYk+OGbTx/9F83
- iTo5eU4k4PatCVK4m9Mb1pG1URUWazIWVe4fgXSX7LF5+hZsgMU23YuG9yKjLBdrgynZIOqmLe2
- A+wYEPIHJyiBKR0GVgS6Yk0cjoUwHlI05eohQgYBHrPM6wByQGSUbu1whe3Y6O18Y/pg7AHy6Dn
- olYGw2J/limCJ35ThpsFQxq/yPqEdeWoV1s3YyKbo/fmEWFZ1KDu2ZBZMXEjngYC3PYQcrZhqVp
- JqEsOlQFst72cjq/EO9haZtexTwi0RGWv6oRvcJB270CUNwh7O6gAbo+MKRHU3oG2TRaAbFTFbG
- zEeNuqlXnnAUjfCKAT/Up0wJyFEMHsSx7179tbZMNYWsjWuyyuLdwT0NNv+EjXDXhKcGnLObD4w
- 1UAy+G960cJTloXF/CQ==
-X-Proofpoint-ORIG-GUID: VocrOH1rOyGiUOFrP2hKwguEH06OrQoF
-X-Authority-Analysis: v=2.4 cv=foLsol4f c=1 sm=1 tr=0 ts=6a5debf6 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=gowsoOTTUOVcmtlkKump:22 a=EUspDBNiAAAA:8 a=Y0pXpkGaDFTcPSGoZn0A:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-20_01,2026-07-17_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 suspectscore=0 priorityscore=1501 spamscore=0 clxscore=1011
- lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607200106
+User-Agent: Mozilla Thunderbird
+Subject: Re: fbdev: arkfb: Move a variable assignment behind a condition check
+ in ics5342_init()
+To: Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Kees Cook <kees@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <36d0eba7-e78d-4a06-95bc-c97d9b91f8f0@web.de>
+ <40d5e392-3f99-44c9-b30a-3481f60143ba@gmx.de>
+ <550584cc-863d-48c3-813b-3a0cb45d9084@web.de>
+ <5a13f19d-4ba0-40d4-b061-0d17156b1686@gmx.de>
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <5a13f19d-4ba0-40d4-b061-0d17156b1686@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:CMHwCFXVNXhc75th/O8NH0ABCwkICIAYrj8Oh1kjoXjgdxrS6aQ
+ vL38EbVABf3H8LPIFc64u/rGNLVnpaTpOcB2i07Wpuv6wyHtMQo3B9U7JiYRXQRclabjYGp
+ x+17MAt8atlNS4LW3NGzzEo4T2GOZi215WbNSnsze+msZ3fW6G3zN7vkNhPrnz8nfGasep6
+ UOCjPJAf1SvPqGHmVqgjQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:JQOQTvrWW5o=;zL8YovSRSPMCYZbSe/CkuYIIZzn
+ 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
 
-GCC records full compiler command lines in DWARF producer strings by\ndefault. With CONFIG_KSTACK_ERASE, the stackleak plugin is currently\npassed using an absolute -fplugin path, which can leak host-specific\nbuild paths into debug artifacts.\n\nResolve the stackleak plugin directory relative to the current build\ndirectory and use that in the -fplugin option, falling back to the\nexisting absolute objtree path when needed.\n\nThis keeps plugin loading behavior unchanged while avoiding absolute\nworkspace paths in recorded compiler flags.
+>>>> The address of a data structure member was determined before
+>>>> a corresponding null pointer check in the implementation of
+>>>> the function =E2=80=9Cics5342_init=E2=80=9D.
+>>>>
+>>>> Thus avoid the risk for undefined behaviour by moving the assignment
+>>>> for the variable =E2=80=9Cinfo=E2=80=9D behind a condition check.
+>>>>
+>>>> This issue was detected by using the Coccinelle software.
+>>>
+>>> There is no "risk" here.
+>>> It just adds an offset to a potential NULL value (which isn't then use=
+d afterwards).
+>> Does your understanding of programming language details differ from the=
+ view of
+>> SEI CERT C Coding Standard (from the Carnegie Mellon University)?
+>> https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-sta=
+ndard/rules/expressions-exp/exp34-c/
+> My statement still stands.
+> Try to find the difference between the code and the examples on that web=
+site yourself.
+> Tip: The relevant part is the "&" and in doubt look at the generated ass=
+embly code.
+Do any more code reviewers take another look at results from undefined beh=
+aviour sanitizers?
 
-Signed-off-by: Jaihind Yadav <jaihindy@qti.qualcomm.com>
----
- scripts/Makefile.kstack_erase | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+* https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#introduction
 
-diff --git a/scripts/Makefile.kstack_erase b/scripts/Makefile.kstack_erase
-index ee7e4ef7b8926..006d10f3b77a0 100644
---- a/scripts/Makefile.kstack_erase
-+++ b/scripts/Makefile.kstack_erase
-@@ -1,7 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- ifdef CONFIG_GCC_PLUGIN_STACKLEAK
--kstack-erase-cflags-y += -fplugin=$(objtree)/scripts/gcc-plugins/stackleak_plugin.so
-+stackleak-plugin-dir := $(or \
-+	$(shell realpath -m --relative-to=$(CURDIR) $(objtree)/scripts/gcc-plugins 2>/dev/null), \
-+	$(objtree)/scripts/gcc-plugins)
-+kstack-erase-cflags-y += -fplugin=$(stackleak-plugin-dir)/stackleak_plugin.so
- kstack-erase-cflags-y += -fplugin-arg-stackleak_plugin-track-min-size=$(CONFIG_KSTACK_ERASE_TRACK_MIN_SIZE)
- kstack-erase-cflags-y += -fplugin-arg-stackleak_plugin-arch=$(SRCARCH)
- kstack-erase-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK_VERBOSE) += -fplugin-arg-stackleak_plugin-verbose
--- 
-2.43.0
+* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/dev-tools/ubsan.rst?h=3Dv7.2-rc3#n6
 
+
+See also:
+https://stackoverflow.com/questions/79662603/why-do-compilers-not-warn-abo=
+ut-this-null-dereferencing-even-when-they-detect-i#answer-79663272
+
+Regards,
+Markus
