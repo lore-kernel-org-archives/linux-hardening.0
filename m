@@ -1,94 +1,95 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166EE3A4F3D
-	for <linux-hardening@vger.kernel.org>; Mon, 20 Jul 2026 19:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74677449B1D
+	for <linux-hardening@vger.kernel.org>; Mon, 20 Jul 2026 19:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784575121; cv=pass; b=U0CE67p11pQby7bSGZXIIgA2v8efUDBs7Pvs5L7jRRhbsSltfhaf3kDVw/QocbUN9z0naXOKlqZDIevC7zuB0TUZ9RmuxW2G8NsGv4R26D4HrBhL4CWicwZfF4Kw99LeTrGmuQ0gj7c6rhaCIw055NOlznSvacAW9CKheep1Vmo=
+	t=1784576653; cv=pass; b=kQ+MbU+P+U6+HtrNaWs6W1QJay5UmkNLGQHvzxVTQzfap577Pyhqyib5YYbE5ZUhBBZZHsX6DTYWcamwiNFgrTd/vUcd8026VEa9aJgJ88V2Q2oW3jadYHdXxDdw7xnedtKILRiNMx8xJ6VYmzI4GnJ/GavXY8rQmQdFVVPnQcE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784575121; c=relaxed/simple;
-	bh=CzOzvw9sY6kxmGwhIsCJLwfImNmbkBT0gx9KZ9/KDKk=;
+	s=arc-20240116; t=1784576653; c=relaxed/simple;
+	bh=ytciUFjlNF6Z1Zi01hjgS/0ArtVMWYYff4GEHsDLYX8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YbtJRdMi1s+1y2WwmFKcoFOJNWVXHzvYqJufakCnvE5eLX2RLbsPC6eRloaAZ2sJ1wi8silZplv6JjtS3gQLlmTHA9uTHZ+OtSM/PjYPPt9aE71MPr8XShCPGP60TFtpYtAAr1zfIq/alo6u5xj36q/239hazoljH75cwuOJCK4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZvsJU3Fs; arc=pass smtp.client-ip=209.85.214.172
+	 To:Cc:Content-Type; b=OLpSR0wcDk59yd3+W8o90RPSaIbn06QLrFXQNPjk+rX3G8zDift/feytkojjRbWo3m3W32LzCVp7uWMkZgs1yzwp0FKsXwYTUc0Q943sb1iUn4ZuaoGJp9hwzeeOXpi6FvlkYuWoteFqmiOc/+AuQYIBPIO4aJRP9rGkkd08aq4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e2nfbOGL; arc=pass smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZvsJU3Fs"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2ccdf36f63dso417045ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Jul 2026 12:18:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1784575119; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e2nfbOGL"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-493be0fbcc5so177855e9.0
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Jul 2026 12:44:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784576649; cv=none;
         d=google.com; s=arc-20260327;
-        b=TMMWOon6bLXTJXLvxSz2TxvcK8QEV8zkp6tzrRBtwxGnwBSWEI0cuX0X/aZ2lanusK
-         U29R1jxTnccTofMh7RIMKjar70uouZ7TCESQk5ZRQeAGKoy/SIh3Ky2fx02hsusYYj+X
-         vrw7LGSvPWUbttOKj7xc7qMVnIvjE8Q2ND7D0ASwNVPjBRaoJ6d/Cha63JK6PzYig2bf
-         zlDrbAs8ZnZ0eKNn9vs/FoB8TJpzt/FpbIW6Ylp8mUkWwHmW544xth2qZpBuz6a8XO4z
-         Xa4CANiJe6Pl6x3ZEyjQtsn+aAgvVaxq9ikdAYnjpuMGY8DdCThSAzPQbqCuNhKQM6ED
-         075g==
+        b=KdWmwRSFjX22oYCdYAulqAzdtZRE4bWyN4z8pIPOwyl+4fVkTezsoT6Zo0tZPG/yCX
+         xV7QMCUAvDLdlmpCpIugrsjqKEJpS7L79L2kbVx5dcBLZkIzKvXGtX4sjbAt67QfM+zx
+         xoUyJtsnx9niAA1mLqO3Rzm9KiQBg6EJsg0UYUV1uq0paWdL4/83LBQNfy/LLR3X81Xp
+         /JN6zdqwH2Y1opfMRDwhYk4Si7H4OVdSGNHdutxCYcttVMxrb/tTEpt5xXn4SuPdv4xj
+         9vbskiKE6A3KiB+hANLYDaZcZzCi4oKjzeShh8/Olh9LBQ3x12HI3RV4E7bykjhDDO3y
+         Licw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=xZApkQlP3tUF+0sIVFilGXDzjCPNwegylhqk3EBxphQ=;
-        fh=44qGXZrM/BmzP2A4f0CodJxv+ydiHkIjpqTtZzU4Pd8=;
-        b=skDDF0XKflEBrA18TdIcDm/q57HiB5Jy2srfG3drHO9O15QkSLmt2dMVChPir36jco
-         Ll/b+Wk51fZVq/CED/I4+Eu9U4QthkOapNah5BseeVqXPxXljDWENTu8tbJAs/NTYTlO
-         n9eLzNxgc9nayK4/grSa2ky9UvfM9eTqjJ5LN2pVZMm2bdssv67ri1IcD6C1T3YzYU1M
-         +Tneq9/owJuVaGh+pJkIuP/FtjB8REKJcpwFXv1IKmQgR5HSpw5r18eEaamz0a07wtZT
-         oIoCBri0dpGhPu5aqqABIrO3AUPZqqD5lAkeq8Im3no2oyiuc91XOWXhYxjq3jn8jIkQ
-         ljxg==;
+        bh=LfC49QPlyZaqOrOjM8PszDB9lp1q3fneMjUdK0YaQRk=;
+        fh=47/GZRXatU2ISKC0EXfs6V4rkY32oV3LyW4YpWoCyLM=;
+        b=Hh4/Dh961TX/gqdK9blzgsWGOEcVWm9SvKGEMPRcLZNJBIhl5Blqk1t06cHRWNCbXa
+         QuExht8iXcXsACuY8Jg/U090LKH6Lr26Tu8th6qS616nq79v9omPvyLlAekZP2u41Qu+
+         2eOOGjkcS8LcqzIleluCSc2jvKLDbm7PFKl/IpUhlLur+WOigrRovogcwip0y4Nqb3Ev
+         qDaTLYfIhtxj94kY7ltpO+LrpmwQX9gv7POC3PjXbMiQLNmupHinQLB1OPkSrIVP34ic
+         SlChN5Yqxt5FSa6+N11ElmI/wtfK6fm5EwQqiyYmyYX0xreSwjZlTzF49VRw1v3wMVaj
+         yL9g==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784575119; x=1785179919; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1784576649; x=1785181449; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=xZApkQlP3tUF+0sIVFilGXDzjCPNwegylhqk3EBxphQ=;
-        b=ZvsJU3FsAPRSa4YHucj5v6EVOfLO5qk8JIQqF6wzKspt3y7T6VluPADGOzTklxY3Cs
-         3G3EEI+2pbjzDvIXH7llyDZXNzLnshzqIZijJh4ShctRoAo11eM8WbbfcJ9WNh4IBKvb
-         YU7zPyZHZKR/ckEIsG+YNjvgDW94UHoz2gdDG+yKbdqm/piFRX8kuyHdeBR3LXhqMWgD
-         7bgzfqZaovA6fvsvkddJEiCtDaewht/dNHPAENm+6Wzd5QVf7DbsUdrNdh9dg4/Ruvw6
-         y+yGnNm3NGps1vkfQZp3iKzwhIIL1coXmi94baPalTDp/Y/sbGXKRtpHIMhe62aYMDvs
-         2q3A==
+        bh=LfC49QPlyZaqOrOjM8PszDB9lp1q3fneMjUdK0YaQRk=;
+        b=e2nfbOGL+mDaBFEEf9H7l013FyU45GNQG0/EKAvbewJQD4TkNdBNPHY8vmAUWzZ+xK
+         ghLA253SP5XiMitJQcxbrScyGPj3V6uiXGAeri9XUqGvompOuN4hQFGqD0LNyMKIuBwM
+         S28Do4BeKf5wc4uHvgGDzdewOo7oIJRXn/BSNlKlzfq3OF4XJ6SsVSXi2YqBcIv4RMI3
+         wu903KgqP7gSNcVO/hiRUwg0ZcOb9Afst5Vj3Ee5nckUhfWwbwOMoFJZQsD7Nwme291m
+         I5eSGBTCUIhSqEORouQTQQqByiq7k3K4iATbq73VNz/tD7IXk9nbotHo3YfeaeesXyE2
+         I9DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784575119; x=1785179919;
+        d=1e100.net; s=20251104; t=1784576649; x=1785181449;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=xZApkQlP3tUF+0sIVFilGXDzjCPNwegylhqk3EBxphQ=;
-        b=FElZTkfHpLZtAVB4CVivOlU63tbAWa8hugSNRRVuJ75BG/OtjHW/pXCB3ywdxQI7Zf
-         5qjReQrSXs9hsnGJmro8qgSi6fziKgd7/n68XfO6UueF/ckuxHnporO4k/k2HWml/nUb
-         lSkWhcjqCMCbSeFpYLzE/k7gUOaUSVqON8qCcs9KAItvl1nxSmZdRhTbK5ieHL3GKUno
-         NK6ywdN2A6vz3Ywn2RUoqsUmuNbxqKFD+jf0F/pNFCFARMdxuJPr3M5cU7EDyDhGbgiI
-         trcCmrVlrYwa5Fgty14I1A4muE0nWOACR1lOh2ZnbxcMXNxkiArTxDqkv3xVNMrYWNDD
-         nNyw==
-X-Forwarded-Encrypted: i=1; AHgh+Rpbie0Dl5+sjAL2hoNUydyeklxVNfEJzvki92PehSM4D1sXYO5plV02LN+kr/KHdnIy0Kb84zBaOuqTPvQULzc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbhDwRBTEINSz3lRaIPZw6Ri/14X8PPjynmceOaMQzpii2qMOF
-	li1qMNMMZRVzv0kD7rjJIwSWYvgIzmDS3aiIncksz91LWCLpMSxp0ieWL59KoBts6oKcRPeetcb
-	d+WQxGiauspkvvwOVFP9JtjRdAf2aJZn0nz8bPqpg
-X-Gm-Gg: AR+sD13993R8KLgGal6bXXRH579KjsyF1KTwdXWXxKBSD4Qjbbjgj18QGz9Q6IJNO5k
-	wr5++Xd/sLtLB2TMPV4HLWVcrsCp3Sc6xOviO6HNNfxTuJgm+vrAWAGTa/xCNQ/U+QkRa6Nee3K
-	+6kkaJKaQzAQi95jxks6p0Wu39YPW7QtZcED5WLqHbuuQQ8poXu8gjia3L2cP1z0ZL4wpZiCJCo
-	vD9+YOnULxmhyyZNiqhBkGeUWvYa16gGMjlnOuuHZeerRnBMA/1WlBgOWnPFXGCh1Lrb5q4SDZw
-	olPkpLUnWIgUkQ1CCQD8VosOolM=
-X-Received: by 2002:a17:902:ec92:b0:2ce:f9e2:4646 with SMTP id
- d9443c01a7336-2cf7b71d50emr2078035ad.27.1784575118135; Mon, 20 Jul 2026
- 12:18:38 -0700 (PDT)
+        bh=LfC49QPlyZaqOrOjM8PszDB9lp1q3fneMjUdK0YaQRk=;
+        b=hXX44+kQMBYOgWYjqCtp9WX2XCpJRnrpLIuUszt4XCjsdYCpzn+2bwlHy8Z9agVLXL
+         2hkKTIb4yqb+ebufED1mxsKVf42iGg+KjME4VrrrA+8F/tr7Lg55D5LUEhNEAS440DR1
+         kd1SZZ8r6xXiMWnXcmUoBCFFsk9b35B/X1b9Yj79wdXe62It4cdlS6JfByjf9AAMuaYY
+         0jRZLp0/f01shoWjTr5m/oznfEbekXrTRHznFb/xfvgIBY/mghNHbpfDPgla1fHh0s4W
+         flFmPYhpNy0FiYtV+3MMQZ1Z/8LDLcUb8Et3/ZfiJuw/k60keMs80IUnfupuKHpK2xYP
+         g5+w==
+X-Forwarded-Encrypted: i=1; AHgh+RrjvUQzUfORpBLWP0yh9HFR1DBFaJ2sKB4n+QDNNtHi2OaNvhG/bQDA5c78G0NQa7g8XAlZAmU18BvDdjBlgm0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeEu/NBkoZrAcLyMb8gKiAugbYaETJz76nrvi3OEkpMH80+jAE
+	XiiTmxxajcjglVfKLB3GHiJU38Dp9K9rJSHAi2DQT/Ty3maRhizSqhbXD/nD8LLGyDfv7/QwDD/
+	xM7fsjOMh4OdVF/yHUnpQgWCqQaFGLu0KBKMtx0Sw
+X-Gm-Gg: AfdE7cmF4dbQwYkNb0gcvpPLruwAcglhFdjOf/rbrGQCQ3JegTH/vncOHVR+t3sk+ut
+	N4G1dCqh37fwDdRq1j6/WyL7UqlQtAaqu3g8hMZKYLC2KBV7e8qt9UuxGEbE0dOjUFyHs2u8oWI
+	AM1pvSOBW6Ss3SHvNB4NZruyweSrxU06ildMG+DfaEWpISWhmPAV6DrZfb0jdLmhkiHkfMJqd0H
+	VgKdgKtw97UurS9oPvLtOGgIKuKA/PvPxID9w03ok4M1aifIS9ER3ePy7vSHXUIxnofFwWF1ueK
+	B+LzaOl6eI8RxHD0OGkKtWb6CHc=
+X-Received: by 2002:a05:600c:3412:b0:495:5515:3c00 with SMTP id
+ 5b1f17b1804b1-495643961d2mr413355e9.9.1784576647864; Mon, 20 Jul 2026
+ 12:44:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260719175857.4071636-1-ap420073@gmail.com>
-In-Reply-To: <20260719175857.4071636-1-ap420073@gmail.com>
+References: <20260719175857.4071636-1-ap420073@gmail.com> <20260719175857.4071636-3-ap420073@gmail.com>
+In-Reply-To: <20260719175857.4071636-3-ap420073@gmail.com>
 From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 20 Jul 2026 12:18:25 -0700
-X-Gm-Features: AUfX_mytWgNwpYQoEAQtZaZUmAoldCJ_ZYmUTMTxrjD32WIPJUFR9GJy7g5tI1U
-Message-ID: <CAHS8izMocev_0TtAsUr9BqCm6sH2DBh-bPK4DfZYNEAb_d2G6w@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next 00/13] net: knod: in-kernel network offload device
+Date: Mon, 20 Jul 2026 12:43:52 -0700
+X-Gm-Features: AUfX_mzh-HpiMTdTmR9Mwblg1Yg1F2-k1cGWYRzG5BMePvMor3JMM2rdb0_Pak0
+Message-ID: <CAHS8izMU4gQCH2v0dcOFkjP6Sxj7RUvC8=Baet=+pFXG24qh7A@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next 02/13] net: devmem: extend memory provider
+ for knod
 To: Taehee Yoo <ap420073@gmail.com>
 Cc: Alex Deucher <alexander.deucher@amd.com>, Alexei Starovoitov <ast@kernel.org>, 
 	amd-gfx@lists.freedesktop.org, Andrew Lunn <andrew+netdev@lunn.ch>, 
@@ -117,140 +118,288 @@ Cc: Alex Deucher <alexander.deucher@amd.com>, Alexei Starovoitov <ast@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jul 19, 2026 at 11:01=E2=80=AFAM Taehee Yoo <ap420073@gmail.com> wr=
+On Sun, Jul 19, 2026 at 11:03=E2=80=AFAM Taehee Yoo <ap420073@gmail.com> wr=
 ote:
 >
-> knod (in-kernel network offload device) drives a GPU directly from the
-> Linux kernel - with no userspace GPU runtime such as CUDA or ROCm, and
-> no userspace component in the data path - to accelerate packet
-> processing.
+> Extend the devmem memory-provider path so a knod accelerator can back a
+> NIC page_pool with accelerator-exported memory (dma-buf), letting the
+> NIC DMA received packets directly into accelerator memory.
 >
-> The kernel itself allocates the GPU's queues, JIT-compiles the
-> per-packet program to GPU machine code, and dispatches it; the NIC DMAs
-> received packets straight into GPU memory and the GPU returns a verdict.
-> The GPU is programmed like any other in-kernel offload, not through a
-> userspace framework, so existing XDP programs and IPsec SAs can be
-> offloaded to it transparently.
+> Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+
+Changes look fine in general but I do not understand in the design how
+the page_pool not bound to rx queue would be used. Maybe elaborate on
+the design in the commit message or cover letter in the next
+iteration.
+
+> (cherry picked from commit d511a8cb3e229f8f5cf060985880d45bd384db87)
+
+I guess remove unintended cherry-pick tag.
+
+> ---
+>  include/net/devmem.h                    |  58 +++++++++++++
+>  include/net/netmem.h                    |   9 +++
+>  include/net/page_pool/memory_provider.h |   4 +
+>  include/net/page_pool/types.h           |  23 +++++-
+>  net/core/devmem.c                       | 103 +++++++++++++++++++-----
+>  net/core/devmem.h                       |   7 +-
+>  net/core/page_pool.c                    |  22 ++++-
+>  7 files changed, 198 insertions(+), 28 deletions(-)
+>  create mode 100644 include/net/devmem.h
 >
-> The design and motivation were presented at Linux Plumbers Conference
-> 2025:
+> diff --git a/include/net/devmem.h b/include/net/devmem.h
+> new file mode 100644
+> index 000000000000..f1c3895d7833
+> --- /dev/null
+> +++ b/include/net/devmem.h
+
+Try to keep only include/net/netmem.h and net/core/devmem.h rather
+than add an include/net/devmem.h
+
+> @@ -0,0 +1,58 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Device memory TCP support
+> + *
+> + * Authors:    Mina Almasry <almasrymina@google.com>
+> + *             Willem de Bruijn <willemb@google.com>
+> + *             Kaiyuan Zhang <kaiyuanz@google.com>
+> + *
+> + */
+> +#ifndef _NET_DEVMEM_H
+> +#define _NET_DEVMEM_H
+> +
+> +#include <linux/dma-direction.h>
+> +#include <linux/err.h>
+> +#include <linux/types.h>
+> +
+> +struct device;
+> +struct dma_buf;
+> +struct dma_buf_attach_ops;
+> +struct net_device;
+> +struct net_devmem_dmabuf_binding;
+> +struct netlink_ext_ack;
+> +
+> +#if defined(CONFIG_NET_DEVMEM)
+> +struct net_devmem_dmabuf_binding *
+> +__net_devmem_binding_create(struct net_device *dev, struct device *dma_d=
+ev,
+> +                           struct dma_buf *dmabuf,
+> +                           enum dma_data_direction direction,
+> +                           const struct dma_buf_attach_ops *importer_ops=
+,
+> +                           struct netlink_ext_ack *extack);
+> +int net_devmem_bind_dmabuf_to_queue_direct(struct net_device *dev, u32 r=
+xq_idx,
+> +                                          struct net_devmem_dmabuf_bindi=
+ng *binding);
+> +void net_devmem_unbind_dmabuf_direct(struct net_devmem_dmabuf_binding *b=
+inding);
+> +#else
+> +static inline struct net_devmem_dmabuf_binding *
+> +__net_devmem_binding_create(struct net_device *dev, struct device *dma_d=
+ev,
+> +                           struct dma_buf *dmabuf,
+> +                           enum dma_data_direction direction,
+> +                           const struct dma_buf_attach_ops *importer_ops=
+,
+> +                           struct netlink_ext_ack *extack)
+> +{
+> +       return ERR_PTR(-EOPNOTSUPP);
+> +}
+> +
+> +static inline int
+> +net_devmem_bind_dmabuf_to_queue_direct(struct net_device *dev, u32 rxq_i=
+dx,
+> +                                      struct net_devmem_dmabuf_binding *=
+binding)
+> +{
+> +       return -EOPNOTSUPP;
+> +}
+> +
+> +static inline void
+> +net_devmem_unbind_dmabuf_direct(struct net_devmem_dmabuf_binding *bindin=
+g)
+> +{
+> +}
+> +#endif
+> +
+> +#endif /* _NET_DEVMEM_H */
+> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> index bccacd21b6c3..3ddfbd37500f 100644
+> --- a/include/net/netmem.h
+> +++ b/include/net/netmem.h
+> @@ -127,6 +127,15 @@ static inline void net_iov_init(struct net_iov *niov=
+,
+>         niov->type =3D type;
+>  }
 >
->   https://lpc.events/event/19/contributions/2267/
+> +/* Global page index within the dma-buf, accounting for multi-chunk
+> + * scatter-gather layouts where each chunk owner's niovs start at 0.
+> + */
+> +static inline unsigned int net_iov_binding_idx(const struct net_iov *nio=
+v)
+> +{
+> +       return (net_iov_owner(niov)->base_virtual >> PAGE_SHIFT) +
+> +              net_iov_idx(niov);
+> +}
+> +
+>  /* netmem */
 >
-> Motivation
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>  /**
+> diff --git a/include/net/page_pool/memory_provider.h b/include/net/page_p=
+ool/memory_provider.h
+> index 255ce4cfd975..4b58a9702fb7 100644
+> --- a/include/net/page_pool/memory_provider.h
+> +++ b/include/net/page_pool/memory_provider.h
+> @@ -23,6 +23,10 @@ bool net_mp_niov_set_dma_addr(struct net_iov *niov, dm=
+a_addr_t addr);
+>  void net_mp_niov_set_page_pool(struct page_pool *pool, struct net_iov *n=
+iov);
+>  void net_mp_niov_clear_page_pool(struct net_iov *niov);
 >
-> Line-rate packet processing that does non-trivial per-packet work - an
-> XDP program doing L4 load balancing, or IPsec crypto - is bound by the
-> host CPU: each core handles one packet at a time, so scaling means
-> spending more cores. A GPU is the opposite shape - thousands of lanes
-> running the same small program over many packets at once (SIMT) - which
-> happens to match the per-packet-program model of XDP.
+> +void page_pool_provider_set_netmem(struct page_pool *pool, netmem_ref ne=
+tmem,
+> +                                  dma_addr_t addr);
+> +void page_pool_clear_pp_info(netmem_ref netmem);
+> +
+>  int netif_mp_open_rxq(struct net_device *dev, unsigned int rxq_idx,
+>                       const struct pp_memory_provider_params *p,
+>                       struct netlink_ext_ack *extack);
+> diff --git a/include/net/page_pool/types.h b/include/net/page_pool/types.=
+h
+> index 03da138722f5..3e866f249768 100644
+> --- a/include/net/page_pool/types.h
+> +++ b/include/net/page_pool/types.h
+> @@ -31,8 +31,16 @@
+>   */
+>  #define PP_FLAG_ALLOW_UNREADABLE_NETMEM BIT(3)
 >
-> knod moves that per-packet compute off the host CPU and onto a GPU. The
-> NIC DMAs received packets directly into GPU memory, the GPU runs the
-> program across a batch of packets in parallel, and only the result
-> comes back: a verdict for every packet, plus the packet itself for the
-> ones destined to the host. The CPU no longer pays the per-packet
-> program cost, and throughput scales with GPU occupancy rather than core
-> count.
+> +/* Driver-managed pool with a directly-supplied memory provider, not bou=
+nd to a
+> + * netdev rx queue. Setting this flag requires page_pool_params.mp_ops a=
+nd
+> + * .mp_priv to both be set.
+> + */
+> +#define PP_FLAG_CUSTOM_MEMORY_PROVIDER BIT(4)
+> +
+>  #define PP_FLAG_ALL            (PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV |=
+ \
+> -                                PP_FLAG_SYSTEM_POOL | PP_FLAG_ALLOW_UNRE=
+ADABLE_NETMEM)
+> +                                PP_FLAG_SYSTEM_POOL | \
+> +                                PP_FLAG_ALLOW_UNREADABLE_NETMEM | \
+> +                                PP_FLAG_CUSTOM_MEMORY_PROVIDER)
 >
-> Crucially this happens entirely inside the kernel. GPU packet processing
-> today generally launches work from a userspace GPU runtime (CUDA and
-> friends) and keeps that runtime in the data path; knod instead builds
-> the GPU queues, compiles the program, and dispatches it from the kernel,
-> so it plugs into existing offload paths (XDP, xfrm) with nothing to
-> install or keep running in userspace.
+>  /* Index limit to stay within PP_DMA_INDEX_BITS for DMA indices */
+>  #define PP_DMA_INDEX_LIMIT XA_LIMIT(1, BIT(PP_DMA_INDEX_BITS) - 1)
+> @@ -54,11 +62,11 @@
+>   * would have to take a slower code path.
+>   */
+>  #if PAGE_SIZE >=3D SZ_64K
+> -#define PP_ALLOC_CACHE_REFILL  4
+> +#define PP_ALLOC_CACHE_REFILL  256
+>  #elif PAGE_SIZE >=3D SZ_16K
+> -#define PP_ALLOC_CACHE_REFILL  16
+> +#define PP_ALLOC_CACHE_REFILL  1024
+>  #else
+> -#define PP_ALLOC_CACHE_REFILL  64
+> +#define PP_ALLOC_CACHE_REFILL  4096
+>  #endif
 >
 
-TBH I found this motivation weak, especially since IIUC you're asking
-for almost ~50K lines of code to be merged to the kernel. My thinking
-is that (a) it's true that Native XDP takes up CPU cores, but
-HW-offload XDP already exists and takes up no CPU. (b) with AI, GPUs
-are very expensive and the work they're doing is critical, so you're
-unlikely to buy a GPU and use it for knod-offloaded XDP; you'd
-probably buy a cheaper smart-NIC? And in the cases where you do have a
-GPU, it's likely your system's money-maker, and you probably want to
-offload work from the GPU, not to your GPU.
+I'm guessing this is just a workaround/optimization. You need a proper
+change for this, maybe make it configurable arguments when creating a
+pp or something.
 
-But as far as I can tell there should be much more interesting
-applications for what you're doing rather than offloading XDP. Like
-wouldn't you with this feature be able to implement ML collectively
-like all-to-all/all-reduce/all-gather as purely XDP programs offloaded
-to the GPU? If you have that implemented and can positively compare
-performance to RoCE or RDMA that would be a much more interesting use
-case IMO.
+>  #define PP_ALLOC_CACHE_SIZE    (PP_ALLOC_CACHE_REFILL * 2)
+> @@ -67,6 +75,8 @@ struct pp_alloc_cache {
+>         netmem_ref cache[PP_ALLOC_CACHE_SIZE];
+>  };
+>
+> +struct memory_provider_ops;
+> +
+>  /**
+>   * struct page_pool_params - page pool parameters
+>   * @fast:      params accessed frequently on hotpath
+> @@ -83,6 +93,9 @@ struct pp_alloc_cache {
+>   * @queue_idx: queue idx this page_pool is being created for.
+>   * @flags:     PP_FLAG_DMA_MAP, PP_FLAG_DMA_SYNC_DEV, PP_FLAG_SYSTEM_POO=
+L,
+>   *             PP_FLAG_ALLOW_UNREADABLE_NETMEM.
+> + * @mp_ops:    driver-supplied memory provider for a pool not bound to a
+> + *             netdev rx queue (NULL to use rxq->mp_params instead)
+> + * @mp_priv:   context passed to @mp_ops
+>   */
+>  struct page_pool_params {
+>         struct_group_tagged(page_pool_params_fast, fast,
+> @@ -99,6 +112,8 @@ struct page_pool_params {
+>                 struct net_device *netdev;
+>                 unsigned int queue_idx;
+>                 unsigned int    flags;
+> +               const struct memory_provider_ops *mp_ops;
+> +               void *mp_priv;
+>  /* private: used by test code only */
+>                 void (*init_callback)(netmem_ref netmem, void *arg);
+>                 void *init_arg;
+> diff --git a/net/core/devmem.c b/net/core/devmem.c
+> index 957d6b96216b..9e21cffc9643 100644
+> --- a/net/core/devmem.c
+> +++ b/net/core/devmem.c
+> @@ -121,12 +121,9 @@ void net_devmem_free_dmabuf(struct net_iov *niov)
+>         gen_pool_free(binding->chunk_pool, dma_addr, PAGE_SIZE);
+>  }
+>
+> -void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *binding)
+> +static void
+> +net_devmem_binding_unpublish(struct net_devmem_dmabuf_binding *binding)
+>  {
+> -       struct netdev_rx_queue *rxq;
+> -       unsigned long xa_idx;
+> -       unsigned int rxq_idx;
+> -
+>         xa_erase(&net_devmem_dmabuf_bindings, binding->id);
+>
+>         /* Ensure no tx net_devmem_lookup_dmabuf() are in flight after th=
+e
+> @@ -136,6 +133,15 @@ void net_devmem_unbind_dmabuf(struct net_devmem_dmab=
+uf_binding *binding)
+>
+>         if (binding->list.next)
+>                 list_del(&binding->list);
+> +}
+> +
+> +void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *binding)
+> +{
+> +       struct netdev_rx_queue *rxq;
+> +       unsigned long xa_idx;
+> +       unsigned int rxq_idx;
+> +
+> +       net_devmem_binding_unpublish(binding);
+>
+>         xa_for_each(&binding->bound_rxqs, xa_idx, rxq) {
+>                 const struct pp_memory_provider_params mp_params =3D {
+> @@ -151,6 +157,47 @@ void net_devmem_unbind_dmabuf(struct net_devmem_dmab=
+uf_binding *binding)
+>         percpu_ref_kill(&binding->ref);
+>  }
+>
+> +/* Bind/unbind variants for in-kernel offload importers that drive the r=
+x
+> + * queue lifecycle themselves. The mp_params are poked directly, without=
+ the
+> + * tcp-data-split/XDP guards or the queue reconfigure that the netlink c=
+ontrol
+> + * plane applies through netif_mp_open_rxq()/netif_mp_close_rxq().
+> + */
+> +int net_devmem_bind_dmabuf_to_queue_direct(struct net_device *dev, u32 r=
+xq_idx,
+> +                                          struct net_devmem_dmabuf_bindi=
+ng *binding)
+> +{
 
-> Model
-> =3D=3D=3D=3D=3D
->
-> knod binds two endpoints through a third object:
->
->   - a NIC-side netdev, registered by the NIC driver;
->   - an accelerator (the GPU), registered by a provider built into the
->     GPU driver;
->   - an offload device, created on attach, that connects them and owns
->     the per-queue data-path state.
->
-> The accelerator ops are feature-agnostic, so different per-packet
-> programs plug in behind one interface. This series ships two features
-> to show the framework is not tied to a single use case (the accel-type
-> uAPI also reserves "dpu" for future non-GPU backends):
->
->   - BPF:   an XDP program attached in offload mode is JIT-compiled from
->            eBPF to an AMD GCN shader and executed on the GPU.
->   - IPsec: RX ESP full-packet decrypt on the GPU (proof of concept,
->            see below).
->
-> Data path
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> For a NIC RX queue bound to an accelerator, a received packet flows as
-> follows:
->
->   1. Attach reconfigures the NIC's page_pool so its pages come from GPU
->      memory, exported as a dma-buf and plugged in through the devmem
->      memory provider. The NIC therefore DMAs the packet straight into
->      GPU memory - there is no host-side copy on RX.
->
->   2. Instead of building an skb and entering the stack, the NIC's NAPI
->      pushes a small descriptor (memory ref + offset + length) onto a
->      per-queue lock-free SPSC ring shared with the GPU.
->
->   3. A persistent GPU worker drains descriptors and runs the active
->      feature's shader over a batch of packets in parallel - one
->      workgroup per packet - then writes a per-packet verdict back onto
->      the ring: PASS, DROP or TX.
->
->   4. Back on the NIC NAPI, each verdict is applied:
->        - DROP: the GPU page is recycled to the pool;
->        - TX:   the packet is sent back out the NIC directly from GPU
->                memory (XDP_TX), with no host round-trip;
->        - PASS: the packet is copied out of GPU memory into a host
->                delivery page by the GPU's DMA engine (async SDMA),
->                wrapped as an skb, and handed to the normal stack.
->
-> So only PASS packets ever touch host memory, and even then the copy is
-> done by the GPU, not the CPU.
->
-> The control plane is a generic netlink family ("knod") for
-> attach/detach, accelerator/NIC inventory, and per-accelerator feature
-> selection, with notifications on bind/unbind.
->
-> Code layout
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> knod separates into a subsystem-neutral core and a GPU-specific
-> provider; nothing in the core knows about GPUs. Roughly:
->
->   - core + control plane + NIC drivers   net/, kernel/bpf/       (~4.4k)
->   - GPU provider (queues, JIT, shaders)  drivers/gpu/drm/amd/    (~39k)
->
-
-Since the changes are so large, I would break this work into many
-series, the first which only supports a very minimal set of work
-(which I would guess would be XDP_DROP and XDP_TX), and then follow up
-with another series which adds XDP_PASS support, and then IPSec, etc.
+The LLM says in this function you need to check if the queue is
+already bound to a devmem tcp memory provider.
 
 --=20
 Thanks,
