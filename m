@@ -1,72 +1,76 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15CF3911B2
-	for <linux-hardening@vger.kernel.org>; Mon, 20 Jul 2026 19:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17DA391E50
+	for <linux-hardening@vger.kernel.org>; Mon, 20 Jul 2026 19:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784574711; cv=none; b=FkmlT0l0u0Qgt2NxRPnkF+VZ2Ai0siybscLPQn0Hw2hkOWw5/K6igtllgLe/xjQyJdqA+0n7W9l8j01RbgIjBs3U3k2AR08EXISeyDfNdUqbT3mFmF8UU5jNxx5BL2TmNBDpis7R+Eh+ICaEgxP0mojLP6R4xtrzg5Ira9D3Mpg=
+	t=1784574773; cv=none; b=X1p+m4JPAbLY/+dAP2NkO+Fn8wsqHtJgazdWvgyxuY0mIMKLcRpesclcmHimn5Y9Imo2d88H8VIgMNSxkcdwBimiKPl5rRIbGmQmpMfHpYLvVk4XuYCijousIbSylZLIhib4AOx8drruH8ZKmvNDNO7Fif97M7O9N0dzcKnVA9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784574711; c=relaxed/simple;
-	bh=2ctxrtH/5XbGbnpJpD4rlCSJMnv+vGkfBow+a2WpIlk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JMS+qB/zodlb0AUlhH76MPPQ5Ajf1YFjW7G7Kw8M92+2edQz18EBVMzyhZkS8++STypUiGFuzoU6VAoaOuQtvIG/scTbixKJhVIkuTepreKCH0r+aXHw7t9XSLuoAmxK2xp2il/VXWCG2AuAXxcrPMRSqYb/77Y/wrHtbMSuP9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com; spf=none smtp.mailfrom=yjn-systems.com; dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b=ALEjxa3X; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1784574773; c=relaxed/simple;
+	bh=gekiQCZESIIJdVg8sXF/vRmWXF30r7W7qnWzKeGpzi0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=deuVGb8DQpxEzttmJaSPGIxog4j5k15InIwrq3iIrWYUE3jLWZ760tDPmCy6DoQTWnP6OxjT0AmviVWqqQoaVC29wEeKJ/BFG7byYl71uYrDbiCmrVFMbdYe7Vbb6o0pqx2WKytW45rJeioWoVx2vLBZFWajay5u4PVgyY3xDUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com; spf=none smtp.mailfrom=yjn-systems.com; dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b=Iw0IrppS; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yjn-systems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b="ALEjxa3X"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4954aff6088so21395145e9.3
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Jul 2026 12:11:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b="Iw0IrppS"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-47de0093c42so5759313f8f.3
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Jul 2026 12:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=yjn-systems.com; s=google; t=1784574708; x=1785179508; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=CifOdF1U/jKgeu9YY0ikwBnZ67YXrW44iKCHCRnXdO8=;
-        b=ALEjxa3Xm8u5HOjc1PaWwcXwZGXEJzJrotWkRUplLYkQ6HsxEJz+BOm+1ZKWpuFVOP
-         dhdbCt2rK5qLVcPHtom1BEjOmdYzHtrwj2kEQu4W0HnMFEqwJ41HGd1hHcin2lCfikJQ
-         61Zxsj/cxxb3wms+YLLLf7r3AkYG8Unsh0bHHYwqFUf9YMuzANON5i4hzQALKBvm7r5S
-         zgzh57JG65wFZLm7BCvNQlxIXMZXfZ2N+966tmSfGu05taTeCzRddr5eFb5YAD9F/aky
-         noPLG/B0oYeZQ280i6DFi1b90FO9ZVn7R4HVxUhzdRmCoyw8Vq07abb3rPVvbJuTBdtn
-         yofw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784574708; x=1785179508;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=yjn-systems.com; s=google; t=1784574765; x=1785179565; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=CifOdF1U/jKgeu9YY0ikwBnZ67YXrW44iKCHCRnXdO8=;
-        b=AVY1jieGvhRCcMBwuJVZ9A1SO8tIJCqfAGOkuoIzmZPaMIfSPPq6u3ccKaY9n6b3qr
-         N9tMPNRmgd/Lg96H1l7ixX33/atRpiPG+/Hkfgox7bT4q32lnwu/lFcrpkib0qYvrQWn
-         7OZNH8UhbvM5JJXMN8/DK4VjThAl9JxmDjRANUYUp+bMgxuMRoZhZgvmSWNC7xW/6Xen
-         AXA//4LE3nuioDWSV0xsYRNkLZYMvVFL56Qpf/AtH6hC2qaP5+lBQAWPYjX3GAwBEPaB
-         BtQV6I9lsG8zFHUC96LvE+S08L5tsJeh2O0NtDSng234ObDryueXnOUfuka8aDs8zSPz
-         Jl1g==
-X-Gm-Message-State: AOJu0YwjgJ1hAXv2W/dnBHSx7hFa634gzAjEkkL2xB6DQqXsSDjPAJyC
-	tKlWeFQuDZe7GHjbosO+zOHaD9vrMg7MwIgsBvLH+98m8vDgInk/NFPlqoKPB/325EaHh9pm/iD
-	cN5ZqE4uS
-X-Gm-Gg: AfdE7cnK68hWLxCWv9lYKYHdotvyzGAVCY1wJvtvnlTbmvwrLIaLLj2KwvtlYdbqwdj
-	4fsCHZ46o7bEpQvdmvSxmDDzmlhlT/0hT3Im42H7Fq9PcHyTkLcCE8osQ2BSxINTF6bao0ZiX5L
-	cDtg99Xs6lAJ27M9Bq/d5X6vSszlkL7tzI+HP0Z2Zd8Y3Waue3Lcua0Yk1y1DN/POxwKOi5q2rZ
-	4j1v8nsqPGn3SWDQndLWaRItWQt3pNIa8bPx+Wyc15v1Sz0En9jCmh9vrHh6Sv2cXtvUbMs7PWB
-	AXuPDpcInL2GJKrtfjDp9zNDTTZcPuF7AbaNcoUP4qgzJgCAXEm+d3IX6f8garrlvpxRVXO8Y42
-	Ic8QwNSIooeURkVdWf3Tr7Q++tjK/0Qf7airh2hhF8RbAu0hvsm9Lo2SQkInOGIk8f09mZry95o
-	qJm+E5shFCZaeREbGkZouG7ki3xPxmPGUtkjlJqN2z1HtL7e/gUiLLrqqUarYgH8EKOzVkMGJVL
-	m2JC0eNbVBv4ZILuPI=
-X-Received: by 2002:a05:600c:4687:b0:495:5845:fb2 with SMTP id 5b1f17b1804b1-495584510afmr96398085e9.38.1784574707825;
-        Mon, 20 Jul 2026 12:11:47 -0700 (PDT)
+        bh=BYix+MVqcHojTJQiHy2+juJSxN4HngDPVlffP3SS58o=;
+        b=Iw0IrppSArlpcyi6CJjMamWGC+O2jOXapgwFEJnD8TUM6lJ6B4gyoQPDSN84n9wTTw
+         2U1newGuKOQwkTk/c4cvNLcg5r7xpfmfnRL986BobywYHztgKaC0UPxvNiOdbi9Pdnp7
+         R70tg7jYwxQZEV3GnM7VtRVarH2S8dadVEgKeUkI3P9ZjHmWfYt67aYowAWPv+6j39/H
+         hUqr5p4t/hKpAS7Fp9zgMfm7nH/yZ35+xSD194WoyawicbRNBl7BwcBBM6VLRhEdBBca
+         BSgkqziuqDqT9KfdxFzB7t+rYjowjYd7H71uNuwbDH1fI1qnVCViIpl9fg96xCvhZkxf
+         RwqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784574765; x=1785179565;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=BYix+MVqcHojTJQiHy2+juJSxN4HngDPVlffP3SS58o=;
+        b=RsmLXwAmUsbiZa6YgAcmYGL+Mg3otQElHIjlLkVw0BNu+Cup8WC2/qlNMlCveuTv1Y
+         27Erz/d+JPf5cz9mIWTWLrUQS2FCrYIkYOu1hajx88UpL2FRaOElfILvWrwPysip39on
+         yKgekJAVxQ2h/i8RjSduRJVK02UBqsahDlZ+1r1s4dhuxPrQ67axO1hcro2BiykEfbrd
+         mMs4ti+3tnD2hixeWuM0vUmOqPmmmzQBwkUTyIQJwthOf1QE7buHNAUY8iGEYB9FA3Qq
+         ia8c76uqy+FlDsVQphp/MttWYMi8Jjsn5vjy7WXQPeR8G9BTO1KCKnbX1SwYBXyJYebY
+         mm7w==
+X-Gm-Message-State: AOJu0Yz0Yi6VC/rUuOZOUqVzgd2QE8Aj+1h1mtlDuG4xO7WBuQ9WRUkd
+	LNHAeXuIQJxUlI1m0tqRDAAZlHrKuZ0/jKZxwGU+7tMGL6V3c61vsn23qOWWDVhpIcz+4bRcYX0
+	fWWlIpHjs
+X-Gm-Gg: AR+sD13nsPzzNjW1u3AN12VbmH9BAKhj81npdrXlG3cxCfI6Sg9jLrx/QZhjktsSY+p
+	oFQllekHtRtRbmy7XVynwEiTQKm1z7uasbdq2Z6afGSMw7yRZKG5jSA3cWpbqWA9v71ge/q6UeM
+	Uiv4irzP/cy/RxsOV6JRiKHOQec1xyeMt8vUJ9Fdg6wizGoGkiR93VeJlRWM9lAZDjPEl8EHYMY
+	QxMryhnzkTqJ0cHQ9CPjhsA/qarGqsE12xn4XWJKPQjwwIOBNRDCwU4l/FDkdLuFedlcfx+JMkr
+	32v+/vPtfLXRDQDNBjLqIu6nslGHFGCQdTkfo3bFbhst0+qC8fXwLW6vCdAYJAQZTLV6JMYXgtX
+	zNYWHeJCEGDi4Ku2u6QpfeCMpM3r6RYsbCqyycjHz0ArOx0dwreqsYdBEVzftBzx5oQxSxqQY8h
+	K2JQz5tVwZ+RhPe5gYns5ABY791syY/+jx0aUH4AhW+XkgGC66A7ZlDndotFde5vb3A6CeNNwuC
+	naTEjR2iwepTHQWr64=
+X-Received: by 2002:a05:6000:1ace:b0:47f:6f98:498e with SMTP id ffacd0b85a97d-47f6f984b9dmr10760036f8f.24.1784574764503;
+        Mon, 20 Jul 2026 12:12:44 -0700 (PDT)
 Received: from yjn-Zenbook-UX3404VA-UX3404VA.. (p200300dcbf448c00c9c364f8ed993120.dip0.t-ipconnect.de. [2003:dc:bf44:8c00:c9c3:64f8:ed99:3120])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4956547323bsm8673315e9.4.2026.07.20.12.11.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f63eddd1csm32209266f8f.29.2026.07.20.12.12.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 12:11:47 -0700 (PDT)
+        Mon, 20 Jul 2026 12:12:44 -0700 (PDT)
 From: York Jasper Niebuhr <yjn@yjn-systems.com>
 To: linux-hardening@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	kees@kernel.org,
 	franzen@sec.in.tum.de,
 	ardb@kernel.org
-Subject: [RFC v3 0/5] Bootpatch-SLR: Randomizing Linux Kernel Structure Layouts at Boot
-Date: Mon, 20 Jul 2026 21:11:46 +0200
-Message-ID: <20260720191146.21473-1-yjn@yjn-systems.com>
+Subject: [RFC v3 1/5] Pinpoint plugin
+Date: Mon, 20 Jul 2026 21:12:43 +0200
+Message-ID: <20260720191243.21571-1-yjn@yjn-systems.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260720191146.21473-1-yjn@yjn-systems.com>
+References: <20260720191146.21473-1-yjn@yjn-systems.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -75,171 +79,27 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
-this is the third RFC version of Bootpatch-SLR. The previous RFCs were
-sent to linux-hardening; this version is also sent to LKML for broader
-review. Compared to RFC v2, it uses a new GAS feature instead of a
-dedicated assembler inside the compiler plugin. Additionally, it
-introduces the Sanemaker validation framework. This version rebases
-BPSLR onto Linux 7.2-rc3 and resolves the boot failures that prevented
-earlier rebases.
-
-RFC v2:
-    https://lists.openwall.net/linux-hardening/2026/06/20/5
-
-Changes since RFC v2:
-  - Implemented GAS fieldlabel feature to label immediate instruction
-    operand bytes.
-  - Removed pinpoint instruction pin assembler. Metadata now links
-    directly against fieldlabels emitted by GAS.
-  - Implemented Sanemaker validation tool and integrated it into the
-    kernel.
-  - Rebased Bootpatch-SLR onto Linux 7.2-rc3.
-  - Excluded some RCU fields of task_struct from randomization to
-    prevent boot crashes on new version.
-
-Bootpatch-SLR enables per-instance structure layout randomization for
-distribution kernels. While GCC's RandStruct pass randomizes layouts at
-compile-time, every machine running the same kernel image receives the
-same layout. Bootpatch-SLR applies comparable randomization during boot.
-
-A full architectural overview and additional resources are available at:
-
-    https://spslr.yjn-systems.com
-
-At this stage, tooling is only available for x86_64. It is based on
-Linux 7.2-rc3. Bootpatch-SLR currently randomizes most of the
-task_struct. A few fields are exempt from randomization because of
-current implementation details (see v2 cover letter).
-
-Bootpatch-SLR requires a custom toolchain based on GCC 16.1.0 and GAS
-2.46.1. GCC is extended to provide access to COMPONENT_REFs that are
-usually folded inside the parser. The custom GAS provides the new
-fieldlabel feature used to annotate encoded instruction patch sites.
-
-An example for the fieldlabel feature is:
-
-    movq $fieldlabel(8, .Lspslr_ipin_42, .Lspslr_ipin_width_42), %0
-
-This causes the custom GAS to put the .Lspslr_ipin_42 label directly
-onto the bytes encoding the immediate value 8. It additionally defines
-the .Lspslr_ipin_width_42 label to be the size of the immediate field.
-The metadata emitted by the Pinpoint plugin directly references these
-symbols to specify exact patch-site locations.
-
-The toolchain patches are available at:
-
-    https://github.com/YJN-Systems/Selfpatch-SLR/tree/rfc-v3/toolchain
-
-This RFC patch series is organized as follows:
-
- * Patch 1 adds the Pinpoint GCC plugin.
-
- * Patch 2 adds the Selfpatch runtime.
-
- * Patch 3 adds linker scripts and build integration.
-
- * Patch 4 applies BPSLR to the task_struct and integrates Sanemaker.
-
- * Patch 5 adds a simple tasklist sample module for sanity checking.
-
-The current baseline configuration for testing is defconfig plus
-CONFIG_SPSLR. Additionally, CONFIG_SAMPLES, CONFIG_SAMPLES_SPSLR, and
-CONFIG_SAMPLES_SPSLR_TASKLIST can be enabled to build a simple
-sanity-check module. Lastly, CONFIG_SANEMAKER can be set to make the
-build compatible with the Sanemaker validation tool.
-
-The Sanemaker sources are available at:
-
-    https://github.com/YJN-Systems/Sanemaker/tree/rfc-v3
-
-Further reading material on it is available at:
-
-    https://spslr.yjn-systems.com/sanemaker.html
-
-Sanemaker is a QEMU TCG plugin that traces every memory access that the
-kernel performs. It normalizes accessed addresses to target type fields.
-Between one run with BPSLR inactive and one run with the feature
-enabled, it verifies that all instructions access the same fields in
-both runs. Should an instruction be missed by pinpoint and thus be
-insufficiently adjusted to a randomized layout, Sanemaker recognizes
-that the instruction accesses the wrong field in the BPSLR-enabled run.
-Integrated into CI pipelines, Sanemaker is meant to act as a deployment
-barrier. It provides strong evidence that all instructions exercised
-during testing behave correctly under BPSLR.
-
-The RCU issue with the latest kernel version was reliably identified
-using Sanemaker too. You can find a short blog post detailing the
-investigation and results here:
-
-    https://spslr.yjn-systems.com/blog/sanemk_kboot.html
-
-The most immediate next points on my TODO list are:
-
-  - Randomize the list heads. I intend to expand Selfpatch to refresh
-    static data that depends on randomized field offsets.
-
-  - Apply randomization to more target types. Optimally, v4 will
-    randomize all types marked for randomization under RandStruct.
-
-I immensely appreciate any feedback on any component or concept of this
-system.
-
-Thanks,
-Jasper
-
-York Jasper Niebuhr (5):
-  Pinpoint plugin
-  Selfpatch runtime
-  SPSLR build integration
-  SPSLR and Sanemaker source integration
-  Tasklist sample module
-
- arch/x86/boot/startup/Makefile                |   4 +
- arch/x86/entry/vdso/common/Makefile.include   |   2 +-
- arch/x86/kernel/vmlinux.lds.S                 |  23 +
- include/linux/compiler_types.h                |   8 +
- include/linux/sched.h                         |  58 +-
- include/linux/spslr.h                         |  82 +++
- include/sanemaker/traps.h                     | 135 ++++
- init/Kconfig                                  |  13 +
- init/main.c                                   |  35 +
- kernel/Makefile                               |   2 +
- kernel/fork.c                                 |  10 +-
- kernel/module/main.c                          | 167 +++++
- kernel/spslr/Makefile                         |   7 +
- kernel/spslr/pinpoint.h                       |  76 +++
- kernel/spslr/sanemaker_traps.c                | 117 ++++
- kernel/spslr/spslr.c                          | 555 +++++++++++++++
- kernel/spslr/spslr_env.c                      |  74 ++
- kernel/spslr/spslr_env.h                      |  45 ++
- kernel/spslr/spslr_randomizer.c               | 646 ++++++++++++++++++
- kernel/spslr/spslr_randomizer.h               |  29 +
- samples/Kconfig                               |   3 +
- samples/Makefile                              |   1 +
- samples/spslr/Kconfig                         |  17 +
- samples/spslr/Makefile                        |   1 +
- samples/spslr/tasklist/Makefile               |   1 +
- samples/spslr/tasklist/tasklist.c             |  67 ++
+Signed-off-by: York Jasper Niebuhr <yjn@yjn-systems.com>
+---
  scripts/Makefile.gcc-plugins                  |   9 +
  scripts/gcc-plugins/Makefile                  |  18 +
  scripts/gcc-plugins/asm_offset_pass.c         |  79 +++
- scripts/gcc-plugins/dpin_registry.c           | 199 ++++++
+ scripts/gcc-plugins/dpin_registry.c           | 199 +++++++
  scripts/gcc-plugins/dpin_registry.h           |  22 +
- scripts/gcc-plugins/ipin_registry.c           | 367 ++++++++++
+ scripts/gcc-plugins/ipin_registry.c           | 367 +++++++++++++
  scripts/gcc-plugins/ipin_registry.h           |  57 ++
- scripts/gcc-plugins/layout_hash.c             |  61 ++
+ scripts/gcc-plugins/layout_hash.c             |  61 +++
  scripts/gcc-plugins/layout_hash.h             |   8 +
  scripts/gcc-plugins/on_finish_decl.c          |   8 +
  scripts/gcc-plugins/on_finish_type.c          |  12 +
- scripts/gcc-plugins/on_finish_unit.c          | 336 +++++++++
- .../gcc-plugins/on_preserve_component_ref.c   |  99 +++
+ scripts/gcc-plugins/on_finish_unit.c          | 336 ++++++++++++
+ .../gcc-plugins/on_preserve_component_ref.c   |  99 ++++
  scripts/gcc-plugins/on_register_attributes.c  |  52 ++
  scripts/gcc-plugins/on_start_unit.c           |  11 +
- scripts/gcc-plugins/passes.h                  |  31 +
- scripts/gcc-plugins/pinpoint.c                | 103 +++
- scripts/gcc-plugins/pinpoint.h                |  75 ++
- .../gcc-plugins/rtl_ipin_survival_scan_pass.c |  37 +
+ scripts/gcc-plugins/passes.h                  |  31 ++
+ scripts/gcc-plugins/pinpoint.c                | 103 ++++
+ scripts/gcc-plugins/pinpoint.h                |  75 +++
+ .../gcc-plugins/rtl_ipin_survival_scan_pass.c |  37 ++
  scripts/gcc-plugins/safe-attribs.h            |   9 +
  scripts/gcc-plugins/safe-diagnostic.h         |  10 +
  scripts/gcc-plugins/safe-gcc-plugin.h         |   6 +
@@ -252,28 +112,13 @@ York Jasper Niebuhr (5):
  scripts/gcc-plugins/safe-plugin-version.h     |   8 +
  scripts/gcc-plugins/safe-rtl.h                |  17 +
  scripts/gcc-plugins/safe-tree.h               |  10 +
- scripts/gcc-plugins/separate_offset_pass.c    | 327 +++++++++
- scripts/gcc-plugins/serialize.c               | 303 ++++++++
+ scripts/gcc-plugins/separate_offset_pass.c    | 327 ++++++++++++
+ scripts/gcc-plugins/serialize.c               | 303 +++++++++++
  scripts/gcc-plugins/serialize.h               | 115 ++++
- .../gcc-plugins/target_hash_builtin_pass.c    | 167 +++++
- scripts/gcc-plugins/target_registry.c         | 492 +++++++++++++
- scripts/gcc-plugins/target_registry.h         |  59 ++
- scripts/module.lds.S                          |  25 +
- 64 files changed, 5336 insertions(+), 29 deletions(-)
- create mode 100644 include/linux/spslr.h
- create mode 100644 include/sanemaker/traps.h
- create mode 100644 kernel/spslr/Makefile
- create mode 100644 kernel/spslr/pinpoint.h
- create mode 100644 kernel/spslr/sanemaker_traps.c
- create mode 100644 kernel/spslr/spslr.c
- create mode 100644 kernel/spslr/spslr_env.c
- create mode 100644 kernel/spslr/spslr_env.h
- create mode 100644 kernel/spslr/spslr_randomizer.c
- create mode 100644 kernel/spslr/spslr_randomizer.h
- create mode 100644 samples/spslr/Kconfig
- create mode 100644 samples/spslr/Makefile
- create mode 100644 samples/spslr/tasklist/Makefile
- create mode 100644 samples/spslr/tasklist/tasklist.c
+ .../gcc-plugins/target_hash_builtin_pass.c    | 167 ++++++
+ scripts/gcc-plugins/target_registry.c         | 492 ++++++++++++++++++
+ scripts/gcc-plugins/target_registry.h         |  59 +++
+ 37 files changed, 3162 insertions(+)
  create mode 100644 scripts/gcc-plugins/asm_offset_pass.c
  create mode 100644 scripts/gcc-plugins/dpin_registry.c
  create mode 100644 scripts/gcc-plugins/dpin_registry.h
@@ -310,6 +155,3400 @@ York Jasper Niebuhr (5):
  create mode 100644 scripts/gcc-plugins/target_registry.c
  create mode 100644 scripts/gcc-plugins/target_registry.h
 
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index b0e1423b09c2..2ae9d571d812 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -8,6 +8,15 @@ ifdef CONFIG_GCC_PLUGIN_LATENT_ENTROPY
+ endif
+ export DISABLE_LATENT_ENTROPY_PLUGIN
+ 
++PINPOINT_PLUGIN_CFLAGS := \
++	-fplugin=$(objtree)/scripts/gcc-plugins/pinpoint_plugin.so \
++	-D__SPSLR__
++
++gcc-plugin-$(CONFIG_SPSLR) += pinpoint_plugin.so
++gcc-plugin-cflags-$(CONFIG_SPSLR) += -D__SPSLR__
++
++export PINPOINT_PLUGIN_CFLAGS
++
+ # All the plugin CFLAGS are collected here in case a build target needs to
+ # filter them out of the KBUILD_CFLAGS.
+ GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y)) -DGCC_PLUGINS
+diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+index 05b14aba41ef..1ecc9e923b85 100644
+--- a/scripts/gcc-plugins/Makefile
++++ b/scripts/gcc-plugins/Makefile
+@@ -22,6 +22,24 @@ targets += randomize_layout_seed.h
+ #
+ # foo-objs := foo.o foo2.o
+ 
++pinpoint_plugin-objs := \
++	pinpoint.o \
++	asm_offset_pass.o \
++	dpin_registry.o \
++	ipin_registry.o \
++	layout_hash.o \
++	on_finish_decl.o \
++	on_finish_type.o \
++	on_finish_unit.o \
++	on_preserve_component_ref.o \
++	on_register_attributes.o \
++	on_start_unit.o \
++	rtl_ipin_survival_scan_pass.o \
++	separate_offset_pass.o \
++	serialize.o \
++	target_registry.o \
++	target_hash_builtin_pass.o
++
+ always-y += $(GCC_PLUGIN)
+ 
+ GCC_PLUGINS_DIR = $(shell $(CC) -print-file-name=plugin)
+diff --git a/scripts/gcc-plugins/asm_offset_pass.c b/scripts/gcc-plugins/asm_offset_pass.c
+new file mode 100644
+index 000000000000..5a1be25f1f2c
+--- /dev/null
++++ b/scripts/gcc-plugins/asm_offset_pass.c
+@@ -0,0 +1,79 @@
++#include <unordered_map>
++
++#include <pinpoint.h>
++#include <passes.h>
++#include <ipin_registry.h>
++
++/*
++ * gsi_replace() changes the statement, but SSA names that were defined by the
++ * separator call still point at the old def statement. Retarget those SSA defs
++ * so later GCC passes see the asm marker as the producer of the offset value.
++ */
++
++static void pin_update_ssa_def(function *fn, gimple *old_def, gimple *new_def)
++{
++	if (!fn || !old_def)
++		return;
++
++	// Stage 0 separator call was definition statement of temporary variable
++
++	unsigned i;
++	tree name;
++	FOR_EACH_SSA_NAME(i, name, fn)
++	{
++		if (!name)
++			continue;
++
++		if (SSA_NAME_DEF_STMT(name) != old_def)
++			continue;
++
++		SSA_NAME_DEF_STMT(name) = new_def;
++	}
++}
++
++static void pin_assemble_maybe(function *fn, gimple_stmt_iterator *gsi)
++{
++	if (!gsi)
++		return;
++
++	gimple *stmt = gsi_stmt(*gsi);
++	if (!stmt)
++		return;
++
++	ipin::handle pin = ipin::identify_gimple_separator(stmt);
++	if (pin == ipin::invalid)
++		return;
++
++	gimple *replacement = ipin::make_gimple_pin(gimple_call_lhs(stmt), pin);
++	if (!replacement)
++		pinpoint_fatal("failed to construct ipin");
++
++	gsi_replace(gsi, replacement, true);
++	pin_update_ssa_def(fn, stmt, replacement);
++}
++
++static const pass_data asm_offset_pass_data = {
++	GIMPLE_PASS, "asm_offset",   OPTGROUP_NONE, TV_NONE, 0, 0, 0,
++	0,	     TODO_update_ssa
++};
++
++asm_offset_pass::asm_offset_pass(gcc::context *ctxt)
++	: gimple_opt_pass(asm_offset_pass_data, ctxt)
++{
++}
++
++unsigned int asm_offset_pass::execute(function *fn)
++{
++	if (!fn)
++		return 0;
++
++	basic_block bb;
++	FOR_EACH_BB_FN(bb, fn)
++	{
++		for (gimple_stmt_iterator gsi = gsi_start_bb(bb);
++		     !gsi_end_p(gsi); gsi_next(&gsi))
++			pin_assemble_maybe(fn, &gsi);
++	}
++
++	return 0;
++}
+diff --git a/scripts/gcc-plugins/dpin_registry.c b/scripts/gcc-plugins/dpin_registry.c
+new file mode 100644
+index 000000000000..415f7befe296
+--- /dev/null
++++ b/scripts/gcc-plugins/dpin_registry.c
+@@ -0,0 +1,199 @@
++#include <string>
++#include <unordered_set>
++
++#include <pinpoint.h>
++#include <dpin_registry.h>
++#include <target_registry.h>
++
++static std::list<dpin> pins;
++static std::unordered_set<std::string> seen_dpin_symbols;
++
++PINPOINT_GC_PRESERVE_CALLBACK()
++{
++	for (const dpin &pin : pins)
++		for (const dpin::component &c : pin.components)
++			PINPOINT_GC_MARK_TREE(c.target);
++}
++
++void dpin::reset()
++{
++	pins.clear();
++	seen_dpin_symbols.clear();
++}
++
++const std::list<dpin> &dpin::inspect()
++{
++	return pins;
++}
++
++static std::list<dpin::component> compile_datapin_components(tree type);
++static std::list<dpin::component> compile_datapin_record_components(tree type);
++static std::list<dpin::component> compile_datapin_array_components(tree type);
++
++/*
++ * Build the list of randomized objects contained in a static object.
++ *
++ * A dpin may describe the object itself, nested target structs, arrays of
++ * targets, or targets embedded inside non-target containers. The level field
++ * records nesting depth so the runtime can patch inner objects before
++ * their containing objects.
++ */
++
++static std::list<dpin::component> compile_datapin_components(tree type)
++{
++	std::list<dpin::component> components;
++
++	tree relevant = target::main_variant(type);
++	if (target::is_target(relevant)) {
++		components.push_back(dpin::component{
++			.offset = 0,
++			.level = 0,
++			.target = relevant,
++		});
++	}
++
++	std::list<dpin::component> sub_components;
++	if (TREE_CODE(type) == RECORD_TYPE)
++		sub_components = compile_datapin_record_components(type);
++	else if (TREE_CODE(type) == ARRAY_TYPE)
++		sub_components = compile_datapin_array_components(type);
++
++	for (const dpin::component &sc : sub_components) {
++		components.push_back(dpin::component{
++			.offset = sc.offset,
++			.level = sc.level + 1,
++			.target = sc.target,
++		});
++	}
++
++	// Note -> should probably make sure that randomized structs are never used in unions!
++	return components;
++}
++
++static std::list<dpin::component> compile_datapin_record_components(tree type)
++{
++	std::list<dpin::component> components;
++
++	if (TREE_CODE(type) != RECORD_TYPE || !COMPLETE_TYPE_P(type))
++		return components;
++
++	for (tree field = TYPE_FIELDS(type); field; field = TREE_CHAIN(field)) {
++		if (TREE_CODE(field) != FIELD_DECL)
++			continue;
++
++		if (!target::field_has_size(field))
++			continue; // flexible array member / dynamic-size trailing array
++
++		if (target::field_is_bitfield(field))
++			continue;
++
++		std::size_t field_offset = target::field_offset(field);
++		tree field_type = TREE_TYPE(field);
++
++		std::list<dpin::component> field_components =
++			compile_datapin_components(field_type);
++
++		for (const dpin::component &fc : field_components) {
++			components.push_back(dpin::component{
++				.offset = field_offset + fc.offset,
++				.level = fc.level,
++				.target = fc.target,
++			});
++		}
++	}
++
++	return components;
++}
++
++static std::list<dpin::component> compile_datapin_array_components(tree type)
++{
++	std::list<dpin::component> components;
++
++	if (TREE_CODE(type) != ARRAY_TYPE)
++		return components;
++
++	tree elem_type = TREE_TYPE(type);
++	if (!elem_type)
++		return components;
++
++	std::list<dpin::component> elem_components =
++		compile_datapin_components(elem_type);
++	if (elem_components.empty())
++		return components;
++
++	tree domain = TYPE_DOMAIN(type);
++	if (!domain)
++		pinpoint_fatal("dpin: failed to get array domain");
++
++	tree min_t = TYPE_MIN_VALUE(domain);
++	tree max_t = TYPE_MAX_VALUE(domain);
++	if (!min_t || !max_t || TREE_CODE(min_t) != INTEGER_CST ||
++	    TREE_CODE(max_t) != INTEGER_CST)
++		pinpoint_fatal("dpin: failed to get constant array bounds");
++
++	HOST_WIDE_INT min_i = tree_to_shwi(min_t);
++	HOST_WIDE_INT max_i = tree_to_shwi(max_t);
++
++	tree elem_size_t = TYPE_SIZE_UNIT(elem_type);
++	if (!elem_size_t || TREE_CODE(elem_size_t) != INTEGER_CST)
++		pinpoint_fatal("dpin: failed to get constant element size");
++
++	std::size_t elem_size = tree_to_uhwi(elem_size_t);
++
++	for (HOST_WIDE_INT i = min_i; i <= max_i; ++i) {
++		std::size_t element_offset =
++			static_cast<std::size_t>(i - min_i) * elem_size;
++
++		for (const dpin::component &ec : elem_components) {
++			components.push_back(dpin::component{
++				.offset = element_offset + ec.offset,
++				.level = ec.level,
++				.target = ec.target,
++			});
++		}
++	}
++
++	return components;
++}
++
++static bool compile_datapin(tree type, dpin &pin)
++{
++	pin.components = compile_datapin_components(type);
++	return !pin.components.empty();
++}
++
++void dpin::consider_static_var(tree var)
++{
++	if (!var || TREE_CODE(var) != VAR_DECL)
++		return;
++
++	if (!TREE_STATIC(var) || DECL_EXTERNAL(var))
++		return;
++
++	tree type = TREE_TYPE(var);
++	if (!type)
++		return;
++
++	tree symbol_tree = DECL_ASSEMBLER_NAME(var);
++	const char *symbol = symbol_tree ? IDENTIFIER_POINTER(symbol_tree) :
++					   nullptr;
++	if (!symbol)
++		pinpoint_fatal("dpin: failed to get static variable symbol");
++
++	std::string sym{ symbol };
++
++	/*
++	 * Multiple VAR_DECLs can name the same emitted object, for example through
++	 * export or alias machinery. Emit at most one dpin per assembler symbol.
++	 */
++	if (!seen_dpin_symbols.insert(sym).second)
++		return;
++
++	dpin pin;
++	if (!compile_datapin(type, pin))
++		return;
++
++	DECL_PRESERVE_P(var) = 1;
++	pin.symbol = sym;
++	pins.emplace_back(std::move(pin));
++}
+diff --git a/scripts/gcc-plugins/dpin_registry.h b/scripts/gcc-plugins/dpin_registry.h
+new file mode 100644
+index 000000000000..500535ce0bf2
+--- /dev/null
++++ b/scripts/gcc-plugins/dpin_registry.h
+@@ -0,0 +1,22 @@
++#pragma once
++
++#include <cstddef>
++#include <list>
++#include <string>
++
++#include <safe-tree.h>
++
++struct dpin {
++	struct component {
++		std::size_t offset = 0;
++		std::size_t level = 0;
++		tree target = NULL_TREE;
++	};
++
++	std::string symbol;
++	std::list<component> components;
++
++	static void consider_static_var(tree var);
++	static void reset();
++	static const std::list<dpin> &inspect();
++};
+diff --git a/scripts/gcc-plugins/ipin_registry.c b/scripts/gcc-plugins/ipin_registry.c
+new file mode 100644
+index 000000000000..41e2d525a08f
+--- /dev/null
++++ b/scripts/gcc-plugins/ipin_registry.c
+@@ -0,0 +1,367 @@
++#include <cstring>
++#include <algorithm>
++
++#include <pinpoint.h>
++#include <ipin_registry.h>
++#include <target_registry.h>
++
++#define PINPOINT_SEPARATOR "__spslr_offsetof"
++#define PINPOINT_IPIN_MARKER "spslr_ipin_marker"
++#define PINPOINT_IPIN_SYMBOL_PREFIX "spslr_ipin_" /* suffixed with "<uid>" */
++#define PINPOINT_IPIN_WIDTH_SYMBOL_PREFIX \
++	"spslr_ipin_width_" /* suffixed with "<uid>" */
++
++static ipin::handle next_ipin_handle = 0;
++static std::map<ipin::handle, ipin> ipins;
++
++static tree separator_decl = NULL_TREE;
++
++PINPOINT_GC_PRESERVE_CALLBACK()
++{
++	PINPOINT_GC_MARK_TREE(separator_decl);
++
++	for (const auto &[h, pin] : ipins)
++		PINPOINT_GC_MARK_TREE(pin.field);
++}
++
++/*
++ * Separators are compiler-internal marker calls, not runtime calls.
++ *
++ * They carry a unique ID with which metadata is associated. The call is
++ * declared pure/no-vops so GCC treats it as having no memory side effects; a
++ * later pinpoint pass must remove every separator before code generation.
++ */
++
++static tree make_separator_decl()
++{
++	if (separator_decl)
++		return separator_decl;
++
++	tree args = tree_cons(NULL_TREE, sizetype, NULL_TREE);
++	tree type = build_function_type(sizetype, args);
++
++	tree tmp_decl = build_fn_decl(PINPOINT_SEPARATOR, type);
++	if (!tmp_decl)
++		return NULL_TREE;
++
++	DECL_EXTERNAL(tmp_decl) = 1;
++	TREE_PUBLIC(tmp_decl) = 1;
++	DECL_ARTIFICIAL(tmp_decl) = 1;
++
++	/* Prevent VOP problems later when removing calls (VOPs mark memory
++       side-effects, which these calls have none of anyways) */
++	DECL_PURE_P(tmp_decl) = 1;
++	DECL_IS_NOVOPS(tmp_decl) = 1;
++
++	return (separator_decl = tmp_decl);
++}
++
++static ipin *get_pin(ipin::handle pin)
++{
++	auto it = ipins.find(pin);
++	return it == ipins.end() ? nullptr : &it->second;
++}
++
++ipin::handle ipin::make(tree field)
++{
++	handle h = next_ipin_handle++;
++
++	ipin pin;
++	pin.status = state::pending;
++	pin.field = field;
++
++	ipins.emplace(h, std::move(pin));
++	return h;
++}
++
++tree ipin::make_ast_separator(ipin::handle pin)
++{
++	ipin *p = get_pin(pin);
++	if (!p)
++		pinpoint_fatal("ipin: inknown pin in make_ast_separator");
++
++	tree decl = make_separator_decl();
++	if (!decl)
++		return NULL_TREE;
++
++	tree arg0 = size_int(pin);
++	if (!arg0)
++		return NULL_TREE;
++
++	p->status = state::separator;
++	return build_call_expr(decl, 1, arg0);
++}
++
++gimple *ipin::make_gimple_separator(tree lhs, ipin::handle pin)
++{
++	if (!lhs)
++		return nullptr;
++
++	ipin *p = get_pin(pin);
++	if (!p)
++		pinpoint_fatal("ipin: unknown pin in make_gimple_separator");
++
++	tree decl = make_separator_decl();
++	if (!decl)
++		return nullptr;
++
++	tree arg0 = size_int(pin);
++	if (!arg0)
++		return nullptr;
++
++	gimple *call = gimple_build_call(decl, 1, arg0);
++	if (!call)
++		return nullptr;
++
++	gimple_call_set_lhs(call, lhs);
++	p->status = state::separator;
++	return call;
++}
++
++static bool decl_is_separator(tree fndecl)
++{
++	if (!fndecl)
++		return false;
++
++	tree name_tree = DECL_NAME(fndecl);
++	if (!name_tree)
++		return false;
++
++	const char *name = IDENTIFIER_POINTER(name_tree);
++	if (!name)
++		return false;
++
++	return strcmp(name, PINPOINT_SEPARATOR) == 0;
++}
++
++ipin::handle ipin::identify_gimple_separator(gimple *stmt)
++{
++	if (!stmt || !is_gimple_call(stmt))
++		return invalid;
++
++	tree fndecl = gimple_call_fndecl(stmt);
++	if (!decl_is_separator(fndecl))
++		return invalid;
++
++	tree arg0 = gimple_call_arg(stmt, 0);
++	if (!arg0 || TREE_CODE(arg0) != INTEGER_CST)
++		pinpoint_fatal("ipin: separator has invalid ipin handle");
++
++	return static_cast<handle>(tree_to_uhwi(arg0));
++}
++
++static bool lhs_type_is_64bit(tree lhs)
++{
++	if (!lhs)
++		return false;
++
++	tree type = TREE_TYPE(lhs);
++	if (!type)
++		return false;
++
++	tree size = TYPE_SIZE(type);
++	if (!size || TREE_CODE(size) != INTEGER_CST)
++		return false;
++
++	return tree_to_uhwi(size) == 64;
++}
++
++static tree make_asm_operand(const char *constraint_text, tree operand_tree)
++{
++	tree constraint_str =
++		build_string(strlen(constraint_text) + 1, constraint_text);
++	tree inner_list = build_tree_list(NULL_TREE, constraint_str);
++	tree outer_list = build_tree_list(inner_list, operand_tree);
++	return outer_list;
++}
++
++/*
++ * The symbol does not denote executable code as a callable function; it denotes
++ * the four-byte immediate field inside the instruction stream.
++ */
++static std::string make_final_x86_64_asm(const std::string &field_symbol,
++					 const std::string &width_symbol,
++					 std::size_t imm)
++{
++	char buf[512];
++
++	std::snprintf(buf, sizeof(buf),
++		      "# %s\n"
++		      " movq $fieldlabel(%zu, %s, %s), %%0",
++		      PINPOINT_IPIN_MARKER, imm, field_symbol.c_str(),
++		      width_symbol.c_str());
++
++	return std::string(buf);
++}
++
++gimple *ipin::make_gimple_pin(tree lhs, ipin::handle pin)
++{
++	if (!lhs)
++		return nullptr;
++
++	ipin *p = get_pin(pin);
++	if (!p)
++		pinpoint_fatal("ipin: unknown pin in make_gimple_pin");
++
++	if (!lhs_type_is_64bit(lhs))
++		pinpoint_fatal("ipin: expected 64-bit destination type");
++
++	/*
++	 * Do not emit the final label here. GCC may duplicate this asm later.
++	 * The original pin id is carried only as an input operand.
++	 */
++	std::string asm_str = "# " PINPOINT_IPIN_MARKER;
++
++	tree arg0 = build_int_cst(size_type_node, pin);
++
++	vec<tree, va_gc> *outputs = NULL;
++	vec<tree, va_gc> *inputs = NULL;
++
++	vec_safe_push(outputs, make_asm_operand("=r", lhs));
++	vec_safe_push(inputs, make_asm_operand("i", arg0));
++
++	gasm *new_gasm = gimple_build_asm_vec(ggc_strdup(asm_str.c_str()),
++					      inputs, outputs, NULL, NULL);
++	if (!new_gasm)
++		return nullptr;
++
++	/*
++	 * Non-volatile is intentional: unused field-offset computations should die
++	 * normally. Only offsets that survive optimization become instruction pins.
++	 */
++	gimple_asm_set_volatile(new_gasm, false);
++
++	p->status = state::pin;
++	return new_gasm;
++}
++
++static bool extract_asm_operands(rtx x, rtx &asm_out)
++{
++	if (!x)
++		return false;
++
++	if (GET_CODE(x) == ASM_OPERANDS) {
++		asm_out = x;
++		return true;
++	}
++
++	if (GET_CODE(x) == SET)
++		return extract_asm_operands(SET_SRC(x), asm_out);
++
++	if (GET_CODE(x) == PARALLEL) {
++		for (int i = 0; i < XVECLEN(x, 0); ++i) {
++			if (extract_asm_operands(XVECEXP(x, 0, i), asm_out))
++				return true;
++		}
++	}
++
++	return false;
++}
++
++ipin::handle ipin::identify_rtl_pin(rtx x)
++{
++	rtx asm_rtx = nullptr;
++	if (!extract_asm_operands(x, asm_rtx))
++		return invalid;
++
++	if (!asm_rtx || GET_CODE(asm_rtx) != ASM_OPERANDS)
++		return invalid;
++
++	const char *templ = ASM_OPERANDS_TEMPLATE(asm_rtx);
++	if (!templ || !std::strstr(templ, PINPOINT_IPIN_MARKER))
++		return invalid;
++
++	if (ASM_OPERANDS_INPUT_LENGTH(asm_rtx) != 1)
++		pinpoint_fatal(
++			"ipin: RTL pin asm has invalid number of inputs");
++
++	rtx in0 = ASM_OPERANDS_INPUT(asm_rtx, 0);
++	if (!CONST_INT_P(in0))
++		pinpoint_fatal("ipin: RTL ipin id is not CONST_INT");
++
++	return static_cast<handle>(INTVAL(in0));
++}
++
++void ipin::mark_live(ipin::handle pin, rtx at)
++{
++	ipin::handle found = identify_rtl_pin(at);
++
++	if (found != pin) {
++		pinpoint_fatal(
++			"ipin: mark_live called with mismatching RTL pin");
++	}
++
++	rtx asm_rtx = nullptr;
++
++	if (!extract_asm_operands(at, asm_rtx) || !asm_rtx ||
++	    GET_CODE(asm_rtx) != ASM_OPERANDS) {
++		pinpoint_fatal(
++			"ipin: mark_live could not recover ASM_OPERANDS");
++	}
++
++	ipin *p = get_pin(pin);
++	if (!p) {
++		pinpoint_fatal("ipin: tried to mark unknown pin live");
++	}
++
++	ipin::handle live_handle = pin;
++	ipin *live_pin = p;
++
++	if (p->status == state::live) {
++		live_handle = next_ipin_handle++;
++
++		ipin clone = *p;
++		clone.status = state::pin;
++		clone.symbol.clear();
++		clone.width_symbol.clear();
++
++		auto inserted = ipins.emplace(live_handle, std::move(clone));
++		live_pin = &inserted.first->second;
++	}
++
++	live_pin->status = state::live;
++
++	const std::string handle_suffix = std::to_string(live_handle);
++
++	live_pin->symbol =
++		".L" + std::string(PINPOINT_IPIN_SYMBOL_PREFIX) + handle_suffix;
++
++	live_pin->width_symbol =
++		".L" + std::string(PINPOINT_IPIN_WIDTH_SYMBOL_PREFIX) +
++		handle_suffix;
++
++	std::size_t offset = target::field_offset(live_pin->field);
++
++	std::string final_asm = make_final_x86_64_asm(
++		live_pin->symbol, live_pin->width_symbol, offset);
++
++	XSTR(asm_rtx, 0) = ggc_strdup(final_asm.c_str());
++}
++
++std::size_t ipin::live_count()
++{
++	std::size_t n = 0;
++
++	for (const auto &[h, pin] : ipins) {
++		if (pin.status == state::live)
++			++n;
++	}
++
++	return n;
++}
++
++const std::map<ipin::handle, ipin> &ipin::inspect()
++{
++	return ipins;
++}
++
++const ipin *ipin::inspect(ipin::handle pin)
++{
++	return get_pin(pin);
++}
++
++void ipin::reset()
++{
++	ipins.clear();
++	next_ipin_handle = 0;
++}
+diff --git a/scripts/gcc-plugins/ipin_registry.h b/scripts/gcc-plugins/ipin_registry.h
+new file mode 100644
+index 000000000000..0fff090ed6e7
+--- /dev/null
++++ b/scripts/gcc-plugins/ipin_registry.h
+@@ -0,0 +1,57 @@
++#pragma once
++#include <cstddef>
++#include <string>
++#include <limits>
++#include <map>
++
++#include <safe-tree.h>
++#include <safe-gimple.h>
++#include <safe-rtl.h>
++
++struct ipin {
++	enum class state { pending, separator, pin, live };
++
++	state status = state::pending;
++
++	/* Field that the ipin refers to */
++	tree field = NULL_TREE;
++
++	/*
++	 * The field-address and field-width symbols are available once the pin is
++	 * marked live and its final inline assembly has been constructed.
++	 */
++	std::string symbol;
++	std::string width_symbol;
++
++	using handle = std::size_t;
++	static constexpr handle invalid = std::numeric_limits<handle>::max();
++
++	/* Register new ipin to track through compilation */
++	static handle make(tree field);
++
++	/* Construct an AST separator tree refering to an ipin */
++	static tree make_ast_separator(handle pin);
++
++	/* Construct a GIMPLE separator statement refering to an ipin */
++	static gimple *make_gimple_separator(tree lhs, handle pin);
++
++	/* Check if a GIMPLE statement is a separator refering to an ipin */
++	static handle identify_gimple_separator(gimple *stmt);
++
++	/* Construct a GIMPLE ipin - currently as ASM statement */
++	static gimple *make_gimple_pin(tree lhs, handle pin);
++
++	/* Check if an RTL instruction is an ipin */
++	static handle identify_rtl_pin(rtx x);
++
++	/* Mark an ipin as being present in the final asm */
++	static void mark_live(handle pin, rtx at);
++	static std::size_t live_count();
++
++	/* Inspect the state of one or more ipins */
++	static const std::map<handle, ipin> &inspect();
++	static const ipin *inspect(handle pin);
++
++	/* Reset ipin registry */
++	static void reset();
++};
+diff --git a/scripts/gcc-plugins/layout_hash.c b/scripts/gcc-plugins/layout_hash.c
+new file mode 100644
+index 000000000000..6200bd037f54
+--- /dev/null
++++ b/scripts/gcc-plugins/layout_hash.c
+@@ -0,0 +1,61 @@
++#include <cstdint>
++#include <cstring>
++#include <string>
++
++#include <layout_hash.h>
++#include <target_registry.h>
++
++#include <safe-md5.h>
++
++namespace
++{
++
++void append_u64(std::string &buf, std::uint64_t v)
++{
++	for (unsigned i = 0; i < 8; i++)
++		buf.push_back(static_cast<char>((v >> (i * 8)) & 0xff));
++}
++
++void append_size(std::string &buf, std::size_t v)
++{
++	append_u64(buf, static_cast<std::uint64_t>(v));
++}
++
++void append_string(std::string &buf, const std::string &s)
++{
++	append_size(buf, s.size());
++	buf.append(s);
++}
++
++}
++
++std::array<std::byte, 16> compute_layout_hash(tree target_type)
++{
++	std::string buf;
++
++	append_string(buf, "spslr-layout-hash-v2");
++
++	for (const std::string &ctx : target::context_chain(target_type))
++		append_string(buf, ctx);
++
++	append_string(buf, target::name(target_type));
++	append_size(buf, target::size(target_type));
++
++	for (const target::compressed_field &field :
++	     target::compressed_fields(target_type)) {
++		append_string(buf, field.name);
++		append_size(buf, field.size);
++		append_size(buf, field.offset);
++		append_size(buf, field.alignment);
++		append_size(buf, field.fixed ? 1 : 0);
++	}
++
++	unsigned char digest[16];
++	md5_buffer(buf.data(), buf.size(), digest);
++
++	std::array<std::byte, 16> out;
++	for (std::size_t i = 0; i < out.size(); i++)
++		out[i] = static_cast<std::byte>(digest[i]);
++
++	return out;
++}
+diff --git a/scripts/gcc-plugins/layout_hash.h b/scripts/gcc-plugins/layout_hash.h
+new file mode 100644
+index 000000000000..b4b660bd0b96
+--- /dev/null
++++ b/scripts/gcc-plugins/layout_hash.h
+@@ -0,0 +1,8 @@
++#pragma once
++
++#include <array>
++#include <cstddef>
++
++#include <safe-tree.h>
++
++std::array<std::byte, 16> compute_layout_hash(tree target_type);
+diff --git a/scripts/gcc-plugins/on_finish_decl.c b/scripts/gcc-plugins/on_finish_decl.c
+new file mode 100644
+index 000000000000..6781d2516e75
+--- /dev/null
++++ b/scripts/gcc-plugins/on_finish_decl.c
+@@ -0,0 +1,8 @@
++#include <passes.h>
++#include <dpin_registry.h>
++
++void on_finish_decl(void *plugin_data, void *user_data)
++{
++	tree decl = (tree)plugin_data;
++	dpin::consider_static_var(decl);
++}
+diff --git a/scripts/gcc-plugins/on_finish_type.c b/scripts/gcc-plugins/on_finish_type.c
+new file mode 100644
+index 000000000000..023470f8cc8c
+--- /dev/null
++++ b/scripts/gcc-plugins/on_finish_type.c
+@@ -0,0 +1,12 @@
++#include <passes.h>
++#include <target_registry.h>
++
++void on_finish_type(void *plugin_data, void *user_data)
++{
++	tree t = target::main_variant((tree)plugin_data);
++
++	if (!target::is_target(t))
++		return;
++
++	target::validate(t);
++}
+diff --git a/scripts/gcc-plugins/on_finish_unit.c b/scripts/gcc-plugins/on_finish_unit.c
+new file mode 100644
+index 000000000000..5229dbb53c52
+--- /dev/null
++++ b/scripts/gcc-plugins/on_finish_unit.c
+@@ -0,0 +1,336 @@
++#include <string>
++#include <filesystem>
++#include <vector>
++#include <algorithm>
++#include <unordered_map>
++
++#include <pinpoint.h>
++#include <passes.h>
++#include <ipin_registry.h>
++#include <dpin_registry.h>
++#include <serialize.h>
++#include <target_registry.h>
++#include <safe-input.h>
++#include <safe-output.h>
++
++/*
++ * Finish-unit emits the per-compilation-unit metadata into the object asm.
++ *
++ * Only information that survived all earlier filtering should be dumped here:
++ * target layouts, data pins for static objects, and live instruction pins
++ * whose immediates exist in the final object.
++ */
++
++namespace
++{
++
++static std::string src_filename()
++{
++	namespace fs = std::filesystem;
++
++	if (!main_input_filename)
++		return {};
++
++	return fs::weakly_canonical(main_input_filename).generic_string();
++}
++
++using selfpatch::hash16_t;
++
++struct emitted_target {
++	tree target;
++	hash16_t hash;
++	std::size_t unit_target_idx;
++};
++
++struct emitted_dpin {
++	std::string addr_expr;
++	std::size_t unit_target_idx;
++};
++
++static hash16_t to_hash16(const std::array<std::byte, 16> &in)
++{
++	hash16_t out{};
++
++	for (std::size_t i = 0; i < out.size(); ++i)
++		out[i] = static_cast<std::uint8_t>(in[i]);
++
++	return out;
++}
++
++static std::string add_offset_expr(const std::string &symbol, std::size_t off)
++{
++	if (off == 0)
++		return symbol;
++
++	return symbol + " + " + std::to_string(off);
++}
++
++static std::vector<emitted_target> collect_all_targets()
++{
++	std::vector<emitted_target> out;
++	out.reserve(target::target_count());
++
++	target::iterate_targets([&](tree t) {
++		out.push_back({
++			.target = t,
++			.hash = to_hash16(target::layout_hash(t)),
++			.unit_target_idx = out.size(),
++		});
++	});
++
++	return out;
++}
++
++static std::unordered_map<tree, std::size_t>
++make_unit_target_idx_map(const std::vector<emitted_target> &targets)
++{
++	std::unordered_map<tree, std::size_t> out;
++
++	for (const emitted_target &target : targets)
++		out[target.target] = target.unit_target_idx;
++
++	return out;
++}
++
++static std::vector<emitted_dpin>
++collect_dpins(const std::unordered_map<tree, std::size_t> &target_idx)
++{
++	std::vector<emitted_dpin> out;
++
++	for (const dpin &pin : dpin::inspect()) {
++		if (pin.symbol.empty())
++			pinpoint_fatal(
++				"finish-unit: data pin has empty symbol");
++
++		std::vector<dpin::component> components(pin.components.begin(),
++							pin.components.end());
++
++		/*
++		 * Data pins with deeper nesting level must be patched first.
++		 */
++		std::sort(components.begin(), components.end(),
++			  [](const dpin::component &a,
++			     const dpin::component &b) {
++				  return a.level > b.level;
++			  });
++
++		for (const dpin::component &c : components) {
++			const auto target_it = target_idx.find(c.target);
++
++			if (target_it == target_idx.end())
++				pinpoint_fatal(
++					"finish-unit: dpin target not in unit target map");
++
++			out.push_back({
++				.addr_expr =
++					add_offset_expr(pin.symbol, c.offset),
++				.unit_target_idx = target_it->second,
++			});
++		}
++	}
++
++	return out;
++}
++
++static void emit_target_metadata(FILE *out,
++				 const std::vector<emitted_target> &targets)
++{
++	for (const emitted_target &ut : targets) {
++		const std::string target_sym =
++			selfpatch::target_symbol(ut.hash);
++		const std::string hash_sym =
++			selfpatch::target_hash_symbol(ut.hash);
++		const std::string layout_sym =
++			selfpatch::target_layout_symbol(ut.hash);
++		const std::string fields_sym =
++			selfpatch::make_local_label("target_fields");
++
++		const std::string target_name = selfpatch::emit_strtab_entry(
++			out, target::qualified_name(ut.target));
++
++		selfpatch::emit_targets_section(out, ut.hash);
++		selfpatch::emit_hidden_global_label(out, target_sym);
++
++		/* This can only be done here, because the hash is the first
++		 * component of the target metadata. */
++		selfpatch::emit_hidden_global_label(out, hash_sym);
++
++		selfpatch::target_desc target_desc{
++			.hash = ut.hash,
++			.name_label = target_name,
++			.layout_symbol = layout_sym,
++		};
++
++		selfpatch::emit_target(out, target_desc);
++		selfpatch::emit_pop_section(out);
++
++		selfpatch::emit_target_layouts_section(out, ut.hash);
++		selfpatch::emit_hidden_global_label(out, layout_sym);
++
++		const std::vector<target::compressed_field> &fields =
++			target::compressed_fields(ut.target);
++
++		selfpatch::target_layout_desc layout_desc{
++			.size = target::size(ut.target),
++			.field_cnt = fields.size(),
++			.fields_symbol = fields_sym,
++		};
++
++		selfpatch::emit_target_layout(out, layout_desc);
++
++		selfpatch::emit_label(out, fields_sym);
++
++		for (const target::compressed_field &field : fields) {
++			const std::string field_name =
++				selfpatch::emit_strtab_entry(out, field.name);
++
++			std::size_t field_flags = field.fixed ? 1 : 0;
++
++			selfpatch::target_field_desc field_desc{
++				.name_label = field_name,
++				.size = field.size,
++				.offset = field.offset,
++				.alignment = field.alignment,
++				.flags = field_flags,
++			};
++
++			selfpatch::emit_target_field(out, field_desc);
++		}
++
++		selfpatch::emit_pop_section(out);
++	}
++}
++
++static void emit_unit_target_refs(FILE *out,
++				  const std::vector<emitted_target> &targets,
++				  const std::string &target_refs_sym)
++{
++	selfpatch::emit_cu_target_refs_section(out);
++	selfpatch::emit_label(out, target_refs_sym);
++
++	for (const emitted_target &target : targets) {
++		selfpatch::target_ref_desc ref{
++			.target_symbol = selfpatch::target_symbol(target.hash),
++		};
++
++		selfpatch::emit_target_ref(out, ref);
++	}
++
++	selfpatch::emit_pop_section(out);
++}
++
++static void emit_ipins(FILE *out,
++		       const std::unordered_map<tree, std::size_t> &target_idx,
++		       const std::string &ipins_sym)
++{
++	std::map<ipin::handle, std::string> expr_syms;
++
++	selfpatch::emit_ipins_section(out);
++	selfpatch::emit_label(out, ipins_sym);
++
++	for (const auto &[h, pin] : ipin::inspect()) {
++		if (pin.status != ipin::state::live)
++			continue;
++
++		if (pin.symbol.empty() || pin.width_symbol.empty())
++			pinpoint_fatal(
++				"finish-unit: live ipin is missing field symbols");
++
++		std::string expr_sym = selfpatch::make_local_label("ipin_expr");
++		expr_syms.emplace(h, expr_sym);
++
++		selfpatch::ipin_desc desc{
++			.addr_expr = pin.symbol,
++			.size_expr = pin.width_symbol,
++			.expr_symbol = expr_sym,
++		};
++
++		selfpatch::emit_ipin(out, desc);
++	}
++
++	for (const auto &[h, pin] : ipin::inspect()) {
++		if (pin.status != ipin::state::live)
++			continue;
++
++		tree pin_target = target::from_field(pin.field);
++		const auto target_it = target_idx.find(pin_target);
++
++		if (target_it == target_idx.end())
++			pinpoint_fatal(
++				"finish-unit: ipin target not in unit target map");
++
++		auto expr_sym_it = expr_syms.find(h);
++		if (expr_sym_it == expr_syms.end())
++			pinpoint_fatal("finish-unit: lost ipin expr symbol");
++
++		selfpatch::emit_label(out, expr_sym_it->second);
++
++		selfpatch::ipin_expr_desc expr{
++			.unit_target_idx = target_it->second,
++			.field = target::field_index(pin.field),
++		};
++
++		selfpatch::emit_ipin_expr(out, expr);
++	}
++
++	selfpatch::emit_pop_section(out);
++}
++
++static void emit_dpins(FILE *out, const std::vector<emitted_dpin> &dpins,
++		       const std::string &dpins_sym)
++{
++	selfpatch::emit_dpins_section(out);
++	selfpatch::emit_label(out, dpins_sym);
++
++	for (const emitted_dpin &pin : dpins) {
++		selfpatch::dpin_desc desc{
++			.addr_expr = pin.addr_expr,
++			.unit_target_idx = pin.unit_target_idx,
++		};
++
++		selfpatch::emit_dpin(out, desc);
++	}
++
++	selfpatch::emit_pop_section(out);
++}
++
++} // namespace
++
++void on_finish_unit(void *plugin_data, void *user_data)
++{
++	FILE *out = asm_out_file;
++
++	const std::vector<emitted_target> targets = collect_all_targets();
++	const auto target_idx = make_unit_target_idx_map(targets);
++	const std::vector<emitted_dpin> dpins = collect_dpins(target_idx);
++
++	const std::string source_label =
++		selfpatch::emit_strtab_entry(out, src_filename());
++
++	const std::string target_refs_sym =
++		selfpatch::make_local_label("target_refs");
++	const std::string ipins_sym = selfpatch::make_local_label("ipins");
++	const std::string dpins_sym = selfpatch::make_local_label("dpins");
++
++	selfpatch::emit_comment(out, "SPSLR runtime metadata");
++
++	emit_target_metadata(out, targets);
++	emit_unit_target_refs(out, targets, target_refs_sym);
++	emit_ipins(out, target_idx, ipins_sym);
++	emit_dpins(out, dpins, dpins_sym);
++
++	selfpatch::emit_units_section(out);
++
++	selfpatch::unit_desc unit{
++		.source_label = source_label,
++		.target_ref_cnt = targets.size(),
++		.target_refs_symbol = target_refs_sym,
++		.ipin_cnt = ipin::live_count(),
++		.ipins_symbol = ipins_sym,
++		.dpin_cnt = dpins.size(),
++		.dpins_symbol = dpins_sym,
++	};
++
++	selfpatch::emit_unit(out, unit);
++	selfpatch::emit_pop_section(out);
++}
+diff --git a/scripts/gcc-plugins/on_preserve_component_ref.c b/scripts/gcc-plugins/on_preserve_component_ref.c
+new file mode 100644
+index 000000000000..133269438914
+--- /dev/null
++++ b/scripts/gcc-plugins/on_preserve_component_ref.c
+@@ -0,0 +1,99 @@
++#include <pinpoint.h>
++#include <passes.h>
++#include <ipin_registry.h>
++#include <target_registry.h>
++#include <safe-tree.h>
++
++static tree materialize_c_rvalue(location_t loc, tree expr)
++{
++	gcc_assert(!lvalue_p(expr));
++
++	tree type = TREE_TYPE(expr);
++
++	tree tmp = build_decl(loc, VAR_DECL, create_tmp_var_name("spslr_rval"),
++			      type);
++
++	DECL_CONTEXT(tmp) = current_function_decl;
++	DECL_ARTIFICIAL(tmp) = 1;
++	DECL_IGNORED_P(tmp) = 1;
++	TREE_USED(tmp) = 1;
++	TREE_ADDRESSABLE(tmp) = 1;
++	DECL_CHAIN(tmp) = NULL_TREE;
++
++	// layout_decl(tmp, 0); - not available to plugins
++
++	tree init = build2_loc(loc, INIT_EXPR, type, tmp, expr);
++
++	tree body = build2(COMPOUND_EXPR, type, init, tmp);
++
++	SET_EXPR_LOCATION(body, loc);
++
++	tree bind = build3(BIND_EXPR, type, tmp, body, NULL_TREE);
++
++	SET_EXPR_LOCATION(bind, loc);
++	TREE_SIDE_EFFECTS(bind) = 1;
++
++	return bind;
++}
++
++/*
++ * Preserve an early COMPONENT_REF before GCC folds it into a plain constant
++ * offset.
++ *
++ * The custom GCC hook calls this while the frontend still knows that an
++ * expression is "base.field". We rewrite it into pointer arithmetic whose
++ * offset comes from a synthetic separator call:
++ *
++ *     base.field  ->  *(typeof(field) *)((char *)&base + separator(uid))
++ *
++ * Later passes replace the separator with an instruction pin.
++ */
++
++static tree ast_separate_offset(tree ref, ipin::handle pin)
++{
++	tree separator = ipin::make_ast_separator(pin);
++	if (!separator)
++		pinpoint_fatal(
++			"ast_separate_offset failed to generate AST separator");
++
++	tree base = TREE_OPERAND(ref, 0);
++
++	// ADDR_EXPR can never be a valid base, but such trees can happen during parsing before checks
++	if (TREE_CODE(base) == ADDR_EXPR)
++		pinpoint_fatal(
++			"ast_separate_offset encountered ADDR_EXPR as COMPONENT_REF base");
++
++	// Turn rvalue objects into adressable lvalues
++	if (!lvalue_p(base))
++		base = materialize_c_rvalue(EXPR_LOCATION(base), base);
++
++	tree base_ptr = build_fold_addr_expr(base);
++
++	tree field_type = TREE_TYPE(
++		ref); // Type of COMPONENT_REF is type of the accessed field
++	tree field_ptr_type = build_pointer_type(field_type);
++	tree field_ptr =
++		build2(POINTER_PLUS_EXPR, field_ptr_type, base_ptr, separator);
++
++	tree field_ref = build1(INDIRECT_REF, field_type, field_ptr);
++	return field_ref;
++}
++
++void on_preserve_component_ref(void *plugin_data, void *user_data)
++{
++	tree *ref = (tree *)plugin_data;
++	if (!ref)
++		return;
++
++	tree field;
++	if (!target::component_ref(*ref, &field))
++		return;
++
++	if (target::field_is_fixed(field))
++		return;
++
++	ipin::handle pin = ipin::make(field);
++	tree separated = ast_separate_offset(*ref, pin);
++	if (separated)
++		*ref = separated;
++}
+diff --git a/scripts/gcc-plugins/on_register_attributes.c b/scripts/gcc-plugins/on_register_attributes.c
+new file mode 100644
+index 000000000000..221693a1c465
+--- /dev/null
++++ b/scripts/gcc-plugins/on_register_attributes.c
+@@ -0,0 +1,52 @@
++#include <pinpoint.h>
++#include <passes.h>
++
++static tree check_spslr_attribute(tree *node, tree name, tree args, int flags,
++				  bool *no_add_attrs)
++{
++	if (!node || !*node || TREE_CODE(*node) != RECORD_TYPE) {
++		*no_add_attrs = true;
++		pinpoint_debug(SPSLR_ATTRIBUTE
++			       " attribute only applies to record types");
++	}
++
++	return NULL_TREE;
++}
++
++static tree check_spslr_field_fixed_attribute(tree *node, tree name, tree args,
++					      int flags, bool *no_add_attrs)
++{
++	if (!node || !*node || TREE_CODE(*node) != FIELD_DECL) {
++		*no_add_attrs = true;
++		pinpoint_debug(SPSLR_FIELD_FIXED_ATTRIBUTE
++			       " attribute only applies to struct fields");
++	}
++	return NULL_TREE;
++}
++
++/*
++ * __attribute__((spslr)) marks a record type as a randomization target.
++ */
++
++static struct attribute_spec spslr_attribute = {
++	SPSLR_ATTRIBUTE,       0,   0, false, false, false, false,
++	check_spslr_attribute, NULL
++};
++
++/*
++ * __attribute__((spslr_field_fixed)) marks a field as layout-sensitive.
++ * Fixed fields remain part of the target, but are treated as dangerous so
++ * instruction/data pins are not generated for offsets that would become
++ * ambiguous after randomization.
++ */
++
++static struct attribute_spec spslr_fixed_field_attribute = {
++	SPSLR_FIELD_FIXED_ATTRIBUTE,	   0,	0, false, false, false, false,
++	check_spslr_field_fixed_attribute, NULL
++};
++
++void on_register_attributes(void *plugin_data, void *user_data)
++{
++	register_attribute(&spslr_attribute);
++	register_attribute(&spslr_fixed_field_attribute);
++}
+diff --git a/scripts/gcc-plugins/on_start_unit.c b/scripts/gcc-plugins/on_start_unit.c
+new file mode 100644
+index 000000000000..dc8917209de7
+--- /dev/null
++++ b/scripts/gcc-plugins/on_start_unit.c
+@@ -0,0 +1,11 @@
++#include <passes.h>
++#include <ipin_registry.h>
++#include <dpin_registry.h>
++#include <target_registry.h>
++
++void on_start_unit(void *plugin_data, void *user_data)
++{
++	target::reset();
++	dpin::reset();
++	ipin::reset();
++}
+diff --git a/scripts/gcc-plugins/passes.h b/scripts/gcc-plugins/passes.h
+new file mode 100644
+index 000000000000..f22949330e80
+--- /dev/null
++++ b/scripts/gcc-plugins/passes.h
+@@ -0,0 +1,31 @@
++#pragma once
++
++#include <safe-gimple.h>
++#include <safe-rtl.h>
++
++void on_register_attributes(void *plugin_data, void *user_data);
++void on_finish_type(void *plugin_data, void *user_data);
++void on_preserve_component_ref(void *plugin_data, void *user_data);
++void on_finish_decl(void *plugin_data, void *user_data);
++void on_start_unit(void *plugin_data, void *user_data);
++void on_finish_unit(void *plugin_data, void *user_data);
++
++struct separate_offset_pass : gimple_opt_pass {
++	separate_offset_pass(gcc::context *ctxt);
++	unsigned int execute(function *fn) override;
++};
++
++struct asm_offset_pass : gimple_opt_pass {
++	asm_offset_pass(gcc::context *ctxt);
++	unsigned int execute(function *fn) override;
++};
++
++struct rtl_ipin_survival_scan_pass : rtl_opt_pass {
++	rtl_ipin_survival_scan_pass(gcc::context *ctxt);
++	unsigned int execute(function *fn) override;
++};
++
++struct target_hash_builtin_pass : gimple_opt_pass {
++	target_hash_builtin_pass(gcc::context *ctxt);
++	unsigned int execute(function *fn) override;
++};
+diff --git a/scripts/gcc-plugins/pinpoint.c b/scripts/gcc-plugins/pinpoint.c
+new file mode 100644
+index 000000000000..619487fdb53f
+--- /dev/null
++++ b/scripts/gcc-plugins/pinpoint.c
+@@ -0,0 +1,103 @@
++#include <filesystem>
++#include <string>
++
++#include <pinpoint.h>
++#include <passes.h>
++#include <safe-gcc-plugin.h>
++#include <safe-plugin-version.h>
++
++int plugin_is_GPL_compatible;
++
++bool pinpoint_verbose_enabled;
++
++void pinpoint_gc_preserve(void *, void *)
++{
++	for (pinpoint_gc_preserve_fn *p = PINPOINT_GC_SECTION_START;
++	     p != PINPOINT_GC_SECTION_END; ++p) {
++		if (*p)
++			(*p)();
++	}
++}
++
++int plugin_init(struct plugin_name_args *plugin_info,
++		struct plugin_gcc_version *version)
++{
++	if (!plugin_default_version_check(version, &gcc_version)) {
++		plugin_print_early_error(
++			"incompatible GCC/plugin versions: plugin built for GCC %s, loaded by GCC %s",
++			gcc_version.basever, version->basever);
++		return 1;
++	}
++
++	pinpoint_verbose_enabled = false;
++
++	for (int i = 0; i < plugin_info->argc; ++i) {
++		if (!strcmp(plugin_info->argv[i].key, "verbose"))
++			pinpoint_verbose_enabled = true;
++	}
++
++	/*
++	 * Pinpoint runs as a staged GCC plugin because no single GCC IR level has
++	 * all information SPSLR needs.
++	 *
++	 * Stage 0 runs while COMPONENT_REF trees are built or still available and records
++	 * which structure field offsets are randomization-sensitive.
++	 *
++	 * Stage 1 replaces synthetic separator calls with asm instructions whose immediate
++	 * operands are labeled for runtime patching.
++	 *
++	 * The final callback emits the collected metadata for patchcompile.
++	 */
++
++	register_callback(plugin_info->base_name, PLUGIN_START_UNIT,
++			  on_start_unit, NULL);
++	register_callback(plugin_info->base_name, PLUGIN_ATTRIBUTES,
++			  on_register_attributes, NULL);
++	register_callback(plugin_info->base_name, PLUGIN_FINISH_TYPE,
++			  on_finish_type, NULL);
++	register_callback(plugin_info->base_name, PLUGIN_BUILD_COMPONENT_REF,
++			  on_preserve_component_ref, NULL);
++	register_callback(plugin_info->base_name, PLUGIN_FINISH_DECL,
++			  on_finish_decl, NULL);
++	register_callback(plugin_info->base_name, PLUGIN_GGC_MARKING,
++			  pinpoint_gc_preserve, NULL);
++
++	struct register_pass_info target_hash_builtin_pass_info;
++	target_hash_builtin_pass_info.pass =
++		new target_hash_builtin_pass(nullptr);
++	target_hash_builtin_pass_info.ref_pass_instance_number = 1;
++	target_hash_builtin_pass_info.reference_pass_name = "cfg";
++	target_hash_builtin_pass_info.pos_op = PASS_POS_INSERT_AFTER;
++	register_callback(plugin_info->base_name, PLUGIN_PASS_MANAGER_SETUP,
++			  nullptr, &target_hash_builtin_pass_info);
++
++	struct register_pass_info separate_offset_pass_info;
++	separate_offset_pass_info.pass = new separate_offset_pass(nullptr);
++	separate_offset_pass_info.ref_pass_instance_number = 1;
++	separate_offset_pass_info.reference_pass_name = "spslr_target_hash";
++	separate_offset_pass_info.pos_op = PASS_POS_INSERT_AFTER;
++	register_callback(plugin_info->base_name, PLUGIN_PASS_MANAGER_SETUP,
++			  nullptr, &separate_offset_pass_info);
++
++	struct register_pass_info asm_offset_pass_info;
++	asm_offset_pass_info.pass = new asm_offset_pass(nullptr);
++	asm_offset_pass_info.ref_pass_instance_number = 1;
++	asm_offset_pass_info.reference_pass_name = "separate_offset";
++	asm_offset_pass_info.pos_op = PASS_POS_INSERT_AFTER;
++	register_callback(plugin_info->base_name, PLUGIN_PASS_MANAGER_SETUP,
++			  nullptr, &asm_offset_pass_info);
++
++	struct register_pass_info rtl_ipin_survival_scan_pass_info;
++	rtl_ipin_survival_scan_pass_info.pass =
++		new rtl_ipin_survival_scan_pass(nullptr);
++	rtl_ipin_survival_scan_pass_info.ref_pass_instance_number = 1;
++	rtl_ipin_survival_scan_pass_info.reference_pass_name = "final";
++	rtl_ipin_survival_scan_pass_info.pos_op = PASS_POS_INSERT_BEFORE;
++	register_callback(plugin_info->base_name, PLUGIN_PASS_MANAGER_SETUP,
++			  nullptr, &rtl_ipin_survival_scan_pass_info);
++
++	register_callback(plugin_info->base_name, PLUGIN_FINISH_UNIT,
++			  on_finish_unit, NULL);
++
++	return 0;
++}
+diff --git a/scripts/gcc-plugins/pinpoint.h b/scripts/gcc-plugins/pinpoint.h
+new file mode 100644
+index 000000000000..7f88cda32f48
+--- /dev/null
++++ b/scripts/gcc-plugins/pinpoint.h
+@@ -0,0 +1,75 @@
++#pragma once
++#include <cstdio>
++#include <safe-diagnostic.h>
++#include <safe-ggc.h>
++
++#define SPSLR_ATTRIBUTE "spslr"
++#define SPSLR_FIELD_FIXED_ATTRIBUTE "spslr_field_fixed"
++#define SPSLR_TARGET_HASH_BUILTIN "__spslr_target_hash"
++
++extern bool pinpoint_verbose_enabled;
++
++#define plugin_print_early_error(fmt, ...)                                 \
++	do {                                                               \
++		std::fprintf(stderr, "[spslr::pinpoint] error: " fmt "\n", \
++			     ##__VA_ARGS__);                               \
++	} while (0)
++
++#define pinpoint_debug_loc(loc, fmt, ...)                       \
++	do {                                                    \
++		if (pinpoint_verbose_enabled)                   \
++			inform((loc), "[spslr::pinpoint] " fmt, \
++			       ##__VA_ARGS__);                  \
++	} while (0)
++
++#define pinpoint_debug(fmt, ...) \
++	pinpoint_debug_loc(UNKNOWN_LOCATION, fmt, ##__VA_ARGS__)
++
++#define pinpoint_fatal_loc(loc, fmt, ...) \
++	fatal_error((loc), "[spslr::pinpoint] " fmt, ##__VA_ARGS__)
++
++#define pinpoint_fatal(fmt, ...) \
++	pinpoint_fatal_loc(UNKNOWN_LOCATION, fmt, ##__VA_ARGS__)
++
++using pinpoint_gc_preserve_fn = void (*)();
++
++#define PINPOINT_GC_CONCAT2(a, b) a##b
++#define PINPOINT_GC_CONCAT(a, b) PINPOINT_GC_CONCAT2(a, b)
++
++#define PINPOINT_GC_USED __attribute__((used))
++
++#define PINPOINT_GC_SECTION "pinpoint_gc_mark"
++#define PINPOINT_GC_SECTION_START __start_pinpoint_gc_mark
++#define PINPOINT_GC_SECTION_END __stop_pinpoint_gc_mark
++
++#define PINPOINT_GC_SECTION_ATTRIB __attribute__((section(PINPOINT_GC_SECTION)))
++
++#define PINPOINT_GC_PRESERVE_CALLBACK() \
++	PINPOINT_GC_PRESERVE_CALLBACK_IMPL(__COUNTER__)
++
++#define PINPOINT_GC_PRESERVE_CALLBACK_IMPL(id)                          \
++	static void PINPOINT_GC_CONCAT(pinpoint_gc_preserve_cb_, id)(); \
++	static pinpoint_gc_preserve_fn PINPOINT_GC_CONCAT(              \
++		pinpoint_gc_preserve_reg_, id)                          \
++	PINPOINT_GC_USED PINPOINT_GC_SECTION_ATTRIB =                   \
++		PINPOINT_GC_CONCAT(pinpoint_gc_preserve_cb_, id);       \
++	static void PINPOINT_GC_CONCAT(pinpoint_gc_preserve_cb_, id)()
++
++#define PINPOINT_GC_MARK_TREE(t)      \
++	do {                          \
++		if ((t) != NULL_TREE) \
++			ggc_mark(t);  \
++	} while (0)
++
++#define PINPOINT_GC_MARK(p)          \
++	do {                         \
++		if (p)               \
++			ggc_mark(p); \
++	} while (0)
++
++extern "C" {
++extern pinpoint_gc_preserve_fn PINPOINT_GC_SECTION_START[];
++extern pinpoint_gc_preserve_fn PINPOINT_GC_SECTION_END[];
++}
++
++void pinpoint_gc_preserve(void *, void *);
+diff --git a/scripts/gcc-plugins/rtl_ipin_survival_scan_pass.c b/scripts/gcc-plugins/rtl_ipin_survival_scan_pass.c
+new file mode 100644
+index 000000000000..a30f709f6fb6
+--- /dev/null
++++ b/scripts/gcc-plugins/rtl_ipin_survival_scan_pass.c
+@@ -0,0 +1,37 @@
++#include <pinpoint.h>
++#include <passes.h>
++#include <ipin_registry.h>
++#include <safe-rtl.h>
++
++static const pass_data rtl_ipin_survival_scan_pass_data = {
++	RTL_PASS,
++	"spslr_rtl_ipin_survival_scan",
++	OPTGROUP_NONE,
++	TV_NONE,
++	PROP_rtl,
++	0,
++	0,
++	0,
++	0,
++};
++
++rtl_ipin_survival_scan_pass::rtl_ipin_survival_scan_pass(gcc::context *ctxt)
++	: rtl_opt_pass(rtl_ipin_survival_scan_pass_data, ctxt)
++{
++}
++
++unsigned int rtl_ipin_survival_scan_pass::execute(function *fn)
++{
++	(void)fn;
++
++	for (rtx_insn *insn = get_insns(); insn; insn = NEXT_INSN(insn)) {
++		if (!NONDEBUG_INSN_P(insn))
++			continue;
++
++		ipin::handle pin = ipin::identify_rtl_pin(PATTERN(insn));
++		if (pin != ipin::invalid)
++			ipin::mark_live(pin, PATTERN(insn));
++	}
++
++	return 0;
++}
+diff --git a/scripts/gcc-plugins/safe-attribs.h b/scripts/gcc-plugins/safe-attribs.h
+new file mode 100644
+index 000000000000..2d62fe75c72b
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-attribs.h
+@@ -0,0 +1,9 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_ATTRIBS_H
++#define SAFEGCC_ATTRIBS_H
++
++#include <stringpool.h>
++#include <attribs.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-diagnostic.h b/scripts/gcc-plugins/safe-diagnostic.h
+new file mode 100644
+index 000000000000..c58b739d88ed
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-diagnostic.h
+@@ -0,0 +1,10 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_DIAGNOSTIC_H
++#define SAFEGCC_DIAGNOSTIC_H
++
++#include <c-family/c-common.h>
++#include <diagnostic.h>
++#include <diagnostic-core.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-gcc-plugin.h b/scripts/gcc-plugins/safe-gcc-plugin.h
+new file mode 100644
+index 000000000000..fcd111636a1c
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-gcc-plugin.h
+@@ -0,0 +1,6 @@
++#ifndef SAFEGCC_GCC_PLUGIN_H
++#define SAFEGCC_GCC_PLUGIN_H
++
++#include <gcc-plugin.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-ggc.h b/scripts/gcc-plugins/safe-ggc.h
+new file mode 100644
+index 000000000000..5df62ad492e8
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-ggc.h
+@@ -0,0 +1,8 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_GGC_H
++#define SAFEGCC_GGC_H
++
++#include <ggc.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-gimple.h b/scripts/gcc-plugins/safe-gimple.h
+new file mode 100644
+index 000000000000..2eb0bae2f0a4
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-gimple.h
+@@ -0,0 +1,14 @@
++#include <safe-gcc-plugin.h>
++#include <safe-tree.h>
++
++#ifndef SAFEGCC_GIMPLE_H
++#define SAFEGCC_GIMPLE_H
++
++#include <gimple.h>
++#include <gimplify.h>
++#include <gimple-iterator.h>
++#include <gimple-pretty-print.h>
++#include <gimplify-me.h>
++#include <ssa.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-input.h b/scripts/gcc-plugins/safe-input.h
+new file mode 100644
+index 000000000000..fe24435830fe
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-input.h
+@@ -0,0 +1,9 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_INPUT_H
++#define SAFEGCC_INPUT_H
++
++#include <input.h>
++#include <libiberty.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-langhooks.h b/scripts/gcc-plugins/safe-langhooks.h
+new file mode 100644
+index 000000000000..3fbea6ccb579
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-langhooks.h
+@@ -0,0 +1,8 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_LANGHOOKS_H
++#define SAFEGCC_LANGHOOKS_H
++
++#include <langhooks.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-md5.h b/scripts/gcc-plugins/safe-md5.h
+new file mode 100644
+index 000000000000..8341cb193467
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-md5.h
+@@ -0,0 +1,8 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_MD5_H
++#define SAFEGCC_MD5_H
++
++#include <md5.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-output.h b/scripts/gcc-plugins/safe-output.h
+new file mode 100644
+index 000000000000..5da7fec494be
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-output.h
+@@ -0,0 +1,8 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_OUTPUT_H
++#define SAFEGCC_OUTPUT_H
++
++#include <output.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-plugin-version.h b/scripts/gcc-plugins/safe-plugin-version.h
+new file mode 100644
+index 000000000000..e43a1689da8c
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-plugin-version.h
+@@ -0,0 +1,8 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_PLUGIN_VERSION_H
++#define SAFEGCC_PLUGIN_VERSION_H
++
++#include <plugin-version.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-rtl.h b/scripts/gcc-plugins/safe-rtl.h
+new file mode 100644
+index 000000000000..f89decdb1d18
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-rtl.h
+@@ -0,0 +1,17 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_RTL_H
++#define SAFEGCC_RTL_H
++
++#include <rtl.h>
++#include <rtl-iter.h>
++#include <memmodel.h>
++#include <emit-rtl.h>
++#include <function.h>
++#include <expr.h>
++#include <hard-reg-set.h>
++
++#undef toupper
++#undef tolower
++
++#endif
+diff --git a/scripts/gcc-plugins/safe-tree.h b/scripts/gcc-plugins/safe-tree.h
+new file mode 100644
+index 000000000000..d968f8b9675a
+--- /dev/null
++++ b/scripts/gcc-plugins/safe-tree.h
+@@ -0,0 +1,10 @@
++#include <safe-gcc-plugin.h>
++
++#ifndef SAFEGCC_TREE_H
++#define SAFEGCC_TREE_H
++
++#include <tree.h>
++#include <tree-pass.h>
++#include <c-tree.h>
++
++#endif
+diff --git a/scripts/gcc-plugins/separate_offset_pass.c b/scripts/gcc-plugins/separate_offset_pass.c
+new file mode 100644
+index 000000000000..9598f1148896
+--- /dev/null
++++ b/scripts/gcc-plugins/separate_offset_pass.c
+@@ -0,0 +1,327 @@
++#include <functional>
++#include <list>
++
++#include <pinpoint.h>
++#include <passes.h>
++#include <ipin_registry.h>
++#include <target_registry.h>
++
++/*
++ * AccessChain flattens nested COMPONENT_REF / ARRAY_REF expressions from
++ * outer base to inner access.
++ *
++ * This lets the pass rebuild the expression one step at a time while replacing
++ * only SPSLR-relevant field offsets with separator calls. Non-target offsets
++ * stay as ordinary constant pointer arithmetic.
++ */
++
++struct AccessChain {
++	struct Step {
++		enum Kind { STEP_COMPONENT, STEP_ARRAY } kind = STEP_COMPONENT;
++
++		tree t = NULL_TREE;
++
++		/* COMPONENT_REF data */
++		bool relevant = false;
++		tree field = NULL_TREE;
++		ipin::handle pin = ipin::invalid;
++	};
++
++	bool relevant = false;
++	std::list<Step> steps;
++	tree base = NULL_TREE;
++};
++
++static tree walk_tree_contains_component_ref(tree *tp, int *walk_subtrees,
++					     void *data)
++{
++	int *found_flag = (int *)data;
++
++	if (!tp || !*tp)
++		return NULL_TREE;
++
++	if (TREE_CODE(*tp) == COMPONENT_REF)
++		*found_flag = 1;
++
++	return NULL_TREE;
++}
++
++static bool tree_contains_component_ref(tree ref)
++{
++	int found_flag = 0;
++	walk_tree(&ref, walk_tree_contains_component_ref, &found_flag, NULL);
++	return found_flag != 0;
++}
++
++static bool access_chain(tree ref, AccessChain &chain)
++{
++	if (!ref)
++		return false;
++
++	switch (TREE_CODE(ref)) {
++	case COMPONENT_REF: {
++		AccessChain::Step step;
++		step.kind = AccessChain::Step::STEP_COMPONENT;
++		step.t = ref;
++		tree field;
++		step.relevant = target::component_ref(ref, &field) &&
++				!target::field_is_fixed(field);
++		if (step.relevant) {
++			step.field = field;
++			step.pin = ipin::make(field);
++			chain.relevant = true;
++		}
++		chain.steps.push_front(step);
++		return access_chain(TREE_OPERAND(ref, 0), chain);
++	}
++
++	case ARRAY_REF:
++	case ARRAY_RANGE_REF: {
++		AccessChain::Step step;
++		step.kind = AccessChain::Step::STEP_ARRAY;
++		step.t = ref;
++		chain.steps.push_front(step);
++		return access_chain(TREE_OPERAND(ref, 0), chain);
++	}
++
++	default:
++		/*
++		 * Access chain construction needs to reach all COMPONENT_REFs. Further
++		 * implementation may be required to cover all possible AST scenarios.
++		 */
++		if (tree_contains_component_ref(ref))
++			return false;
++
++		chain.base = ref;
++		return true;
++	}
++}
++
++/*
++ * Rewrite a relevant field-access chain into explicit pointer arithmetic.
++ *
++ * The resulting MEM_REF has offset zero; all interesting byte offsets have
++ * either become separator calls or fixed constants. This makes the later asm
++ * marker pass independent of GCC's original COMPONENT_REF tree shape.
++ */
++
++static tree separate_offset_chain_maybe(tree ref, gimple_stmt_iterator *gsi)
++{
++	AccessChain chain;
++	if (!access_chain(ref, chain)) {
++		pinpoint_fatal(
++			"separate_offset_chain_maybe encountered invalid access chain: top=%s base=%s",
++			get_tree_code_name(TREE_CODE(ref)),
++			TREE_OPERAND(ref, 0) ? get_tree_code_name(TREE_CODE(
++						       TREE_OPERAND(ref, 0))) :
++					       "<null>");
++	}
++
++	if (!chain.relevant)
++		return NULL_TREE;
++
++	tree cur_expr = chain.base;
++
++	// NOTE -> Could fold into single call here (needs to track what offsets contribute, +irrelevant combined)
++
++	for (const AccessChain::Step &step : chain.steps) {
++		if (step.kind == AccessChain::Step::STEP_COMPONENT) {
++			if (TREE_CODE(cur_expr) == ADDR_EXPR)
++				pinpoint_fatal(
++					"separate_offset_chain_maybe encountered ADDR_EXPR as base of COMPONENT_REF");
++
++			tree cur_ptr = build_fold_addr_expr(cur_expr);
++
++			tree field_ptr_type =
++				build_pointer_type(TREE_TYPE(step.t));
++			tree field_ptr;
++
++			if (step.relevant) {
++				tree return_tmp =
++					create_tmp_var(size_type_node, NULL);
++				gimple *call_stmt = ipin::make_gimple_separator(
++					return_tmp, step.pin);
++				if (!call_stmt)
++					pinpoint_fatal(
++						"separate_offset_chain_maybe failed to make gimple separator");
++
++				gsi_insert_before(gsi, call_stmt,
++						  GSI_SAME_STMT);
++				field_ptr = build2(POINTER_PLUS_EXPR,
++						   field_ptr_type, cur_ptr,
++						   return_tmp);
++			} else {
++				tree field_decl = TREE_OPERAND(step.t, 1);
++
++				std::size_t field_offset =
++					target::field_offset(field_decl);
++				bool field_bitfield =
++					target::field_is_bitfield(field_decl);
++				if (field_bitfield)
++					pinpoint_fatal(
++						"separate_offset_chain_maybe encountered bitfield access in relevant COMPONENT_REF chain");
++
++				field_ptr = build2(POINTER_PLUS_EXPR,
++						   field_ptr_type, cur_ptr,
++						   build_int_cst(sizetype,
++								 field_offset));
++			}
++
++			tree ptr_tmp = create_tmp_var(field_ptr_type, NULL);
++
++			tree ptr_val = force_gimple_operand_gsi(
++				gsi, field_ptr,
++				true, // require simple result
++				ptr_tmp, // target temp
++				true, // insert before current stmt
++				GSI_SAME_STMT);
++
++			tree offset0 = fold_convert(TREE_TYPE(ptr_val),
++						    build_int_cst(sizetype, 0));
++
++			cur_expr = build2(MEM_REF, TREE_TYPE(step.t), ptr_val,
++					  offset0);
++
++			continue;
++		}
++
++		if (step.kind == AccessChain::Step::STEP_ARRAY) {
++			tree idx = TREE_OPERAND(step.t, 1);
++			tree low = TREE_OPERAND(step.t, 2);
++			tree elts = TREE_OPERAND(step.t, 3);
++
++			cur_expr = build4(TREE_CODE(step.t), TREE_TYPE(step.t),
++					  cur_expr, idx, low, elts);
++			continue;
++		}
++	}
++
++	return cur_expr;
++}
++
++static void dispatch_separation_maybe(const std::list<tree *> &path,
++				      gimple_stmt_iterator *gsi,
++				      unsigned &cancel_levels)
++{
++	if (path.empty() || !gsi)
++		return;
++
++	tree ref = *path.back();
++	if (!ref || TREE_CODE(ref) != COMPONENT_REF)
++		return;
++
++	cancel_levels = 1;
++
++	tree instrumented_ref = separate_offset_chain_maybe(ref, gsi);
++	if (!instrumented_ref)
++		return;
++
++	gimple_set_modified(gsi_stmt(*gsi), true);
++	*path.back() = instrumented_ref;
++
++	// At this point, instrumented_ref is a MEM_REF node (off=0). A wrapping ADDR_EXPR cancels it out.
++
++	if (path.size() < 2)
++		return;
++
++	tree *parent = *(++path.rbegin());
++
++	if (TREE_CODE(*parent) == ADDR_EXPR) {
++		// Note -> the base of the MEM_REF is expected to have the same type as the ADDR_EXPR
++		*parent = TREE_OPERAND(instrumented_ref, 0);
++		cancel_levels++;
++	}
++}
++
++static const pass_data separate_offset_pass_data = {
++	GIMPLE_PASS, "separate_offset", OPTGROUP_NONE, TV_NONE, 0, 0, 0,
++	0,	     TODO_update_ssa
++};
++
++separate_offset_pass::separate_offset_pass(gcc::context *ctxt)
++	: gimple_opt_pass(separate_offset_pass_data, ctxt)
++{
++}
++
++struct TreeWalkData {
++	std::list<tree *> path;
++	gimple_stmt_iterator *gsi;
++	unsigned cancel_levels;
++	std::function<void(const std::list<tree *> &, gimple_stmt_iterator *,
++			   unsigned &)>
++		callback;
++};
++
++static tree walk_tree_level(tree *tp, int *walk_subtrees, void *data)
++{
++	TreeWalkData *twd = (TreeWalkData *)data;
++	if (!twd)
++		return NULL_TREE;
++
++	if (!twd->path.empty() && twd->path.back() == tp)
++		return NULL_TREE; // root of this level
++
++	if (walk_subtrees)
++		*walk_subtrees = 0;
++
++	twd->cancel_levels = 0;
++	twd->path.push_back(tp);
++
++	twd->callback(twd->path, twd->gsi, twd->cancel_levels);
++
++	if (twd->cancel_levels == 0)
++		walk_tree(tp, walk_tree_level, data, NULL);
++
++	twd->path.pop_back();
++
++	if (twd->cancel_levels > 0)
++		twd->cancel_levels--;
++
++	// Cancel current level if there are still cancel_levels due
++	return twd->cancel_levels == 0 ? NULL_TREE : *tp;
++}
++
++static bool
++walk_gimple_stmt(gimple_stmt_iterator *gsi,
++		 std::function<void(const std::list<tree *> &,
++				    gimple_stmt_iterator *, unsigned &)>
++			 callback)
++{
++	if (!gsi || gsi_end_p(*gsi) || !callback)
++		return false;
++
++	gimple *stmt = gsi_stmt(*gsi);
++
++	for (std::size_t i = 0; i < gimple_num_ops(stmt); i++) {
++		tree *op = gimple_op_ptr(stmt, i);
++		if (!op || !*op)
++			continue;
++
++		TreeWalkData twd;
++		twd.gsi = gsi;
++		twd.callback = callback;
++
++		walk_tree_level(op, NULL, &twd);
++	}
++
++	return true;
++}
++
++unsigned int separate_offset_pass::execute(function *fn)
++{
++	if (!fn)
++		return 0;
++
++	basic_block bb;
++	FOR_EACH_BB_FN(bb, fn)
++	{
++		for (gimple_stmt_iterator gsi = gsi_start_bb(bb);
++		     !gsi_end_p(gsi); gsi_next(&gsi)) {
++			if (!walk_gimple_stmt(&gsi, dispatch_separation_maybe))
++				pinpoint_fatal(
++					"separate_offset pass failed to walk gimple statement");
++		}
++	}
++
++	return 0;
++}
+diff --git a/scripts/gcc-plugins/serialize.c b/scripts/gcc-plugins/serialize.c
+new file mode 100644
+index 000000000000..d30e49464aea
+--- /dev/null
++++ b/scripts/gcc-plugins/serialize.c
+@@ -0,0 +1,303 @@
++#include "serialize.h"
++
++#include <cctype>
++
++namespace selfpatch
++{
++
++namespace
++{
++
++constexpr std::string_view section_entry = "spslr_entry";
++constexpr std::string_view section_units = "spslr_units";
++constexpr std::string_view section_targets = "spslr_targets";
++constexpr std::string_view section_target_layouts = "spslr_target_layouts";
++constexpr std::string_view section_ipins = "spslr_ipins";
++constexpr std::string_view section_dpins = "spslr_dpins";
++constexpr std::string_view section_strtab = "spslr_strtab";
++constexpr std::string_view section_cu_target_refs = "spslr_cu_target_refs";
++
++std::size_t next_local_label_id = 0;
++
++std::string quote_asm_string(std::string_view s)
++{
++	std::string out;
++	out.reserve(s.size() + 8);
++	out.push_back('"');
++
++	for (unsigned char c : s) {
++		switch (c) {
++		case '\\':
++			out += "\\\\";
++			break;
++		case '"':
++			out += "\\\"";
++			break;
++		case '\n':
++			out += "\\n";
++			break;
++		case '\r':
++			out += "\\r";
++			break;
++		case '\t':
++			out += "\\t";
++			break;
++		case '\0':
++			out += "\\000";
++			break;
++		default:
++			if (std::isprint(c)) {
++				out.push_back(static_cast<char>(c));
++			} else {
++				char buf[5];
++				std::snprintf(buf, sizeof(buf), "\\%03o", c);
++				out += buf;
++			}
++			break;
++		}
++	}
++
++	out.push_back('"');
++	return out;
++}
++
++} // namespace
++
++void emit_comment(FILE *out, std::string_view text)
++{
++	std::fprintf(out, "\n/* %.*s */\n", static_cast<int>(text.size()),
++		     text.data());
++}
++
++void emit_push_section(FILE *out, std::string_view name)
++{
++	/* Future implementation should differentiate between module and host
++	 * section permissions. Module relocations may cause DT_TEXTREL issues
++	 * if the metadata sections are read-only.  */
++	std::fprintf(out, ".pushsection %.*s,\"aw\",@progbits\n",
++		     static_cast<int>(name.size()), name.data());
++}
++
++void emit_push_comdat_section(FILE *out, std::string_view name,
++			      std::string_view group_symbol)
++{
++	/* Future implementation should differentiate between module and host
++	 * section permissions. Module relocations may cause DT_TEXTREL issues
++	 * if the metadata sections are read-only.  */
++	std::fprintf(out, ".pushsection %.*s,\"awG\",@progbits,%.*s,comdat\n",
++		     static_cast<int>(name.size()), name.data(),
++		     static_cast<int>(group_symbol.size()),
++		     group_symbol.data());
++}
++
++void emit_pop_section(FILE *out)
++{
++	std::fprintf(out, ".popsection\n");
++}
++
++void emit_units_section(FILE *out)
++{
++	emit_push_section(out, section_units);
++}
++
++void emit_targets_section(FILE *out, const hash16_t &hash)
++{
++	emit_push_comdat_section(out, section_targets,
++				 comdat_target_symbol(hash));
++}
++
++void emit_target_layouts_section(FILE *out, const hash16_t &hash)
++{
++	emit_push_comdat_section(out, section_target_layouts,
++				 comdat_target_symbol(hash));
++}
++
++void emit_ipins_section(FILE *out)
++{
++	emit_push_section(out, section_ipins);
++}
++
++void emit_dpins_section(FILE *out)
++{
++	emit_push_section(out, section_dpins);
++}
++
++void emit_strtab_section(FILE *out)
++{
++	emit_push_section(out, section_strtab);
++}
++
++void emit_cu_target_refs_section(FILE *out)
++{
++	emit_push_section(out, section_cu_target_refs);
++}
++
++void emit_label(FILE *out, std::string_view label)
++{
++	std::fprintf(out, "%.*s:\n", static_cast<int>(label.size()),
++		     label.data());
++}
++
++void emit_hidden_global_label(FILE *out, std::string_view label)
++{
++	std::fprintf(out, ".globl %.*s\n", static_cast<int>(label.size()),
++		     label.data());
++	std::fprintf(out, ".hidden %.*s\n", static_cast<int>(label.size()),
++		     label.data());
++	emit_label(out, label);
++}
++
++std::string make_local_label(std::string_view stem)
++{
++	std::string out = ".Lspslr_";
++	out.append(stem);
++	out.push_back('_');
++	out.append(std::to_string(next_local_label_id++));
++	return out;
++}
++
++std::string emit_strtab_entry(FILE *out, std::string_view value)
++{
++	const std::string label = make_local_label("str");
++
++	emit_strtab_section(out);
++	emit_label(out, label);
++	emit_c_string(out, value);
++	emit_pop_section(out);
++
++	return label;
++}
++
++void emit_unit(FILE *out, const unit_desc &unit)
++{
++	emit_quad_symbol(out, unit.source_label);
++	emit_quad(out, unit.target_ref_cnt);
++	emit_quad_symbol(out, unit.target_refs_symbol);
++	emit_quad(out, unit.ipin_cnt);
++	emit_quad_symbol(out, unit.ipins_symbol);
++	emit_quad(out, unit.dpin_cnt);
++	emit_quad_symbol(out, unit.dpins_symbol);
++}
++
++void emit_target(FILE *out, const target_desc &target)
++{
++	emit_bytes(out, target.hash.data(), target.hash.size());
++	emit_quad_symbol(out, target.name_label);
++	emit_quad_symbol(out, target.layout_symbol);
++}
++
++void emit_target_layout(FILE *out, const target_layout_desc &layout)
++{
++	emit_quad(out, layout.size);
++	emit_quad(out, layout.field_cnt);
++	emit_quad_symbol(out, layout.fields_symbol);
++}
++
++void emit_target_field(FILE *out, const target_field_desc &field)
++{
++	emit_quad_symbol(out, field.name_label);
++	emit_quad(out, field.size);
++	emit_quad(out, field.offset);
++	emit_quad(out, field.alignment);
++	emit_quad(out, field.flags);
++}
++
++void emit_target_ref(FILE *out, const target_ref_desc &target)
++{
++	emit_quad_symbol(out, target.target_symbol);
++}
++
++void emit_ipin(FILE *out, const ipin_desc &ipin)
++{
++	emit_quad_expr(out, ipin.addr_expr);
++	emit_quad_expr(out, ipin.size_expr);
++	emit_quad_symbol(out, ipin.expr_symbol);
++}
++
++void emit_dpin(FILE *out, const dpin_desc &dpin)
++{
++	emit_quad_expr(out, dpin.addr_expr);
++	emit_quad(out, dpin.unit_target_idx);
++}
++
++void emit_ipin_expr(FILE *out, const ipin_expr_desc &expr)
++{
++	emit_quad(out, expr.unit_target_idx);
++	emit_quad(out, expr.field);
++}
++
++void emit_quad(FILE *out, std::size_t value)
++{
++	std::fprintf(out, ".quad %zu\n", value);
++}
++
++void emit_quad_symbol(FILE *out, std::string_view symbol)
++{
++	emit_quad_expr(out, symbol);
++}
++
++void emit_quad_expr(FILE *out, std::string_view expr)
++{
++	std::fprintf(out, ".quad %.*s\n", static_cast<int>(expr.size()),
++		     expr.data());
++}
++
++void emit_bytes(FILE *out, const void *data, std::size_t size)
++{
++	const auto *bytes = static_cast<const std::uint8_t *>(data);
++
++	for (std::size_t i = 0; i < size; ++i) {
++		if (i % 16 == 0)
++			std::fprintf(out, ".byte ");
++		else
++			std::fprintf(out, ",");
++
++		std::fprintf(out, "0x%02x", bytes[i]);
++
++		if (i % 16 == 15 || i + 1 == size)
++			std::fprintf(out, "\n");
++	}
++}
++
++void emit_c_string(FILE *out, std::string_view value)
++{
++	const std::string quoted = quote_asm_string(value);
++	std::fprintf(out, ".asciz %s\n", quoted.c_str());
++}
++
++std::string hash_hex(const hash16_t &hash)
++{
++	static constexpr char digits[] = "0123456789abcdef";
++
++	std::string out;
++	out.resize(hash.size() * 2);
++
++	for (std::size_t i = 0; i < hash.size(); ++i) {
++		out[i * 2] = digits[(hash[i] >> 4) & 0x0f];
++		out[i * 2 + 1] = digits[hash[i] & 0x0f];
++	}
++
++	return out;
++}
++
++std::string comdat_target_symbol(const hash16_t &hash)
++{
++	return "__comdat_spslr_target_" + hash_hex(hash);
++}
++
++std::string target_symbol(const hash16_t &hash)
++{
++	return "__spslr_target_" + hash_hex(hash);
++}
++
++std::string target_hash_symbol(const hash16_t &hash)
++{
++	return "__spslr_target_hash_" + hash_hex(hash);
++}
++
++std::string target_layout_symbol(const hash16_t &hash)
++{
++	return "__spslr_target_layout_" + hash_hex(hash);
++}
++
++} // namespace selfpatch
+diff --git a/scripts/gcc-plugins/serialize.h b/scripts/gcc-plugins/serialize.h
+new file mode 100644
+index 000000000000..7c358dd17645
+--- /dev/null
++++ b/scripts/gcc-plugins/serialize.h
+@@ -0,0 +1,115 @@
++#pragma once
++
++#include <array>
++#include <cstddef>
++#include <cstdint>
++#include <cstdio>
++#include <string>
++#include <string_view>
++
++namespace selfpatch
++{
++
++using hash16_t = std::array<std::uint8_t, 16>;
++
++/*
++ * Entry point is:
++ *   __start_spslr_units
++ *   __stop_spslr_units
++ *   __start_spslr_targets
++ *   __stop_spslr_targets
++ */
++
++struct unit_desc {
++	std::string source_label;
++	std::size_t target_ref_cnt = 0;
++	std::string target_refs_symbol;
++	std::size_t ipin_cnt = 0;
++	std::string ipins_symbol;
++	std::size_t dpin_cnt = 0;
++	std::string dpins_symbol;
++};
++
++struct target_desc {
++	hash16_t hash{};
++	std::string name_label;
++	std::string layout_symbol;
++};
++
++struct target_layout_desc {
++	std::size_t size = 0;
++	std::size_t field_cnt = 0;
++	std::string fields_symbol;
++};
++
++struct target_field_desc {
++	std::string name_label;
++	std::size_t size = 0;
++	std::size_t offset = 0;
++	std::size_t alignment = 0;
++	std::uint64_t flags = 0;
++};
++
++struct target_ref_desc {
++	std::string target_symbol;
++};
++
++struct ipin_desc {
++	std::string addr_expr;
++	std::string size_expr;
++	std::string expr_symbol;
++};
++
++struct dpin_desc {
++	std::string addr_expr;
++	std::size_t unit_target_idx = 0;
++};
++
++struct ipin_expr_desc {
++	std::size_t unit_target_idx = 0;
++	std::size_t field = 0;
++};
++
++void emit_comment(FILE *out, std::string_view text);
++
++void emit_push_section(FILE *out, std::string_view name);
++void emit_push_comdat_section(FILE *out, std::string_view name,
++			      std::string_view group_symbol);
++void emit_pop_section(FILE *out);
++
++void emit_units_section(FILE *out);
++void emit_targets_section(FILE *out, const hash16_t &hash);
++void emit_target_layouts_section(FILE *out, const hash16_t &hash);
++void emit_ipins_section(FILE *out);
++void emit_dpins_section(FILE *out);
++void emit_strtab_section(FILE *out);
++void emit_cu_target_refs_section(FILE *out);
++
++void emit_label(FILE *out, std::string_view label);
++void emit_hidden_global_label(FILE *out, std::string_view label);
++
++std::string make_local_label(std::string_view stem);
++std::string emit_strtab_entry(FILE *out, std::string_view value);
++
++void emit_unit(FILE *out, const unit_desc &unit);
++void emit_target(FILE *out, const target_desc &target);
++void emit_target_layout(FILE *out, const target_layout_desc &layout);
++void emit_target_field(FILE *out, const target_field_desc &field);
++void emit_target_ref(FILE *out, const target_ref_desc &target);
++void emit_ipin(FILE *out, const ipin_desc &ipin);
++void emit_dpin(FILE *out, const dpin_desc &dpin);
++void emit_ipin_expr(FILE *out, const ipin_expr_desc &expr);
++
++void emit_quad(FILE *out, std::size_t value);
++void emit_quad_symbol(FILE *out, std::string_view symbol);
++void emit_quad_expr(FILE *out, std::string_view expr);
++void emit_bytes(FILE *out, const void *data, std::size_t size);
++void emit_c_string(FILE *out, std::string_view value);
++
++std::string hash_hex(const hash16_t &hash);
++std::string comdat_target_symbol(const hash16_t &hash);
++std::string target_symbol(const hash16_t &hash);
++std::string target_hash_symbol(const hash16_t &hash);
++std::string target_layout_symbol(const hash16_t &hash);
++
++} // namespace selfpatch
+diff --git a/scripts/gcc-plugins/target_hash_builtin_pass.c b/scripts/gcc-plugins/target_hash_builtin_pass.c
+new file mode 100644
+index 000000000000..d35b8df9abbc
+--- /dev/null
++++ b/scripts/gcc-plugins/target_hash_builtin_pass.c
+@@ -0,0 +1,167 @@
++#include <cstring>
++#include <map>
++#include <string>
++
++#include <pinpoint.h>
++#include <passes.h>
++#include <serialize.h>
++#include <target_registry.h>
++
++#include <safe-gimple.h>
++#include <safe-tree.h>
++
++namespace
++{
++
++static std::map<std::string, tree> hash_symbol_decls;
++
++static selfpatch::hash16_t to_hash16(const target::layout_hash_t &in)
++{
++	selfpatch::hash16_t out{};
++
++	for (std::size_t i = 0; i < out.size(); ++i)
++		out[i] = static_cast<std::uint8_t>(in[i]);
++
++	return out;
++}
++
++static bool called_decl_name_is(tree fndecl, const char *wanted)
++{
++	if (!fndecl || !DECL_NAME(fndecl))
++		return false;
++
++	const char *name = IDENTIFIER_POINTER(DECL_NAME(fndecl));
++	return name && std::strcmp(name, wanted) == 0;
++}
++
++static tree call_argument_pointee_type(gimple *stmt)
++{
++	if (!stmt || !is_gimple_call(stmt) || gimple_call_num_args(stmt) != 1)
++		return NULL_TREE;
++
++	tree arg = gimple_call_arg(stmt, 0);
++	if (!arg)
++		return NULL_TREE;
++
++	/* Case: &__spslr_target_hash_type_anchor_N */
++	if (TREE_CODE(arg) == ADDR_EXPR) {
++		tree obj = TREE_OPERAND(arg, 0);
++		if (obj) {
++			tree obj_type = TREE_TYPE(obj);
++			if (obj_type)
++				return target::main_variant(obj_type);
++		}
++	}
++
++	/* Fallback: argument still has pointer type T *. */
++	tree arg_type = TREE_TYPE(arg);
++	if (arg_type && POINTER_TYPE_P(arg_type))
++		return target::main_variant(TREE_TYPE(arg_type));
++
++	return NULL_TREE;
++}
++
++static tree make_hash_symbol_decl(const std::string &symbol)
++{
++	auto it = hash_symbol_decls.find(symbol);
++	if (it != hash_symbol_decls.end())
++		return it->second;
++
++	tree byte_type =
++		build_qualified_type(unsigned_char_type_node, TYPE_QUAL_CONST);
++	tree array_type = build_array_type_nelts(byte_type, 16);
++
++	tree decl = build_decl(UNKNOWN_LOCATION, VAR_DECL,
++			       get_identifier(symbol.c_str()), array_type);
++
++	DECL_EXTERNAL(decl) = 1;
++	TREE_PUBLIC(decl) = 1;
++	TREE_READONLY(decl) = 1;
++	DECL_ARTIFICIAL(decl) = 1;
++	DECL_IGNORED_P(decl) = 1;
++
++	hash_symbol_decls.emplace(symbol, decl);
++	return decl;
++}
++
++static tree make_hash_pointer_expr(tree target_type, tree result_type)
++{
++	const selfpatch::hash16_t hash =
++		to_hash16(target::layout_hash(target_type));
++
++	const std::string symbol = selfpatch::target_hash_symbol(hash);
++
++	tree decl = make_hash_symbol_decl(symbol);
++	tree addr = build_fold_addr_expr(decl);
++
++	return fold_convert(result_type, addr);
++}
++
++static tree make_null_pointer_expr(tree result_type)
++{
++	return fold_convert(result_type, null_pointer_node);
++}
++
++} // namespace
++
++PINPOINT_GC_PRESERVE_CALLBACK()
++{
++	for (const auto &[symbol, decl] : hash_symbol_decls)
++		PINPOINT_GC_MARK_TREE(decl);
++}
++
++static const pass_data target_hash_builtin_pass_data = {
++	GIMPLE_PASS, "spslr_target_hash", OPTGROUP_NONE, TV_NONE, 0, 0, 0,
++	0,	     TODO_update_ssa
++};
++
++target_hash_builtin_pass::target_hash_builtin_pass(gcc::context *ctxt)
++	: gimple_opt_pass(target_hash_builtin_pass_data, ctxt)
++{
++}
++
++unsigned int target_hash_builtin_pass::execute(function *fn)
++{
++	if (!fn)
++		return 0;
++
++	basic_block bb;
++	FOR_EACH_BB_FN(bb, fn)
++	{
++		for (gimple_stmt_iterator gsi = gsi_start_bb(bb);
++		     !gsi_end_p(gsi);) {
++			gimple *stmt = gsi_stmt(gsi);
++
++			if (!is_gimple_call(stmt) ||
++			    !called_decl_name_is(gimple_call_fndecl(stmt),
++						 SPSLR_TARGET_HASH_BUILTIN)) {
++				gsi_next(&gsi);
++				continue;
++			}
++
++			tree lhs = gimple_call_lhs(stmt);
++			if (!lhs) {
++				gsi_remove(&gsi, true);
++				continue;
++			}
++
++			tree result_type = TREE_TYPE(lhs);
++			tree target_type = call_argument_pointee_type(stmt);
++
++			tree rhs = NULL_TREE;
++
++			if (target_type &&
++			    target::is_validated_target(target_type))
++				rhs = make_hash_pointer_expr(target_type,
++							     result_type);
++			else
++				rhs = make_null_pointer_expr(result_type);
++
++			gimple *replacement = gimple_build_assign(lhs, rhs);
++			gsi_replace(&gsi, replacement, true);
++			gsi_next(&gsi);
++		}
++	}
++
++	return 0;
++}
+diff --git a/scripts/gcc-plugins/target_registry.c b/scripts/gcc-plugins/target_registry.c
+new file mode 100644
+index 000000000000..a692520467bd
+--- /dev/null
++++ b/scripts/gcc-plugins/target_registry.c
+@@ -0,0 +1,492 @@
++#include <algorithm>
++#include <map>
++#include <set>
++#include <vector>
++
++#include <pinpoint.h>
++#include <target_registry.h>
++#include <layout_hash.h>
++
++#include <safe-attribs.h>
++#include <safe-langhooks.h>
++
++struct validated_target {
++	std::vector<target::compressed_field> fields{};
++	std::map<tree, std::size_t> field_indices{};
++	target::layout_hash_t hash{};
++};
++
++static std::map<tree, validated_target> validated_targets;
++
++PINPOINT_GC_PRESERVE_CALLBACK()
++{
++	for (const auto &[t, info] : validated_targets)
++		PINPOINT_GC_MARK_TREE(t);
++}
++
++using field_callback = std::function<void(tree field_decl)>;
++
++static void iterate_fields(tree type, const field_callback &cb)
++{
++	type = target::main_variant(type);
++
++	if (!type || !COMPLETE_TYPE_P(type))
++		pinpoint_fatal("target::iterate_fields: incomplete target");
++
++	for (tree f = TYPE_FIELDS(type); f; f = DECL_CHAIN(f)) {
++		if (TREE_CODE(f) == FIELD_DECL)
++			cb(f);
++	}
++}
++
++static void build_compressed_fields(tree type, validated_target &vt)
++{
++	vt.fields.clear();
++
++	std::size_t compressed_idx = 0;
++
++	iterate_fields(type, [&](tree field) {
++		std::string name = target::field_name(field);
++		std::size_t off = target::field_offset(field);
++		std::size_t sz = target::field_size(field);
++		std::size_t end = off + sz;
++		bool fixed = target::field_is_fixed(field);
++
++		if (vt.fields.empty()) {
++			vt.fields.push_back({
++				.name = name,
++				.offset = off,
++				.size = sz,
++				.alignment = target::field_alignment(field),
++				.fixed = fixed,
++			});
++			vt.field_indices[field] = compressed_idx;
++			return;
++		}
++
++		target::compressed_field &prev = vt.fields.back();
++		std::size_t prev_end = prev.offset + prev.size;
++
++		if (off < prev.offset)
++			pinpoint_fatal(
++				"target::build_compressed_fields: invalid field order in target \"%s\"",
++				target::qualified_name(type).c_str());
++
++		if (off >= prev_end) {
++			vt.fields.push_back({
++				.name = name,
++				.offset = off,
++				.size = sz,
++				.alignment = target::field_alignment(field),
++				.fixed = fixed,
++			});
++			vt.field_indices[field] = ++compressed_idx;
++			return;
++		}
++
++		if (!prev.fixed || !fixed) {
++			pinpoint_fatal(
++				"target::build_compressed_fields: overlapping non-fixed field in target \"%s\": \"%s\"",
++				target::qualified_name(type).c_str(),
++				target::field_name(field).c_str());
++		}
++
++		/*
++		 * Fixed overlapping fields are represented as one immovable byte
++		 * range in the runtime metadata. Alignment is irrelevant because
++		 * the randomizer will never move this synthetic field.
++		 */
++		if (end > prev_end)
++			prev.size = end - prev.offset;
++
++		prev.alignment = 1;
++		prev.fixed = true;
++		prev.name = prev.name + "+" + name;
++
++		vt.field_indices[field] = compressed_idx;
++	});
++}
++
++static void remember_target(tree type)
++{
++	type = target::main_variant(type);
++	if (!type)
++		return;
++
++	if (validated_targets.find(type) != validated_targets.end())
++		return;
++
++	auto new_vt = validated_targets.emplace(type, validated_target{});
++	if (!new_vt.second)
++		pinpoint_fatal(
++			"remember_target failed to log new validated target");
++
++	validated_target &vt = new_vt.first->second;
++
++	/* Must build compressed fields before hash, because hash queries them */
++	build_compressed_fields(type, vt);
++	vt.hash = compute_layout_hash(type);
++}
++
++bool target::is_validated_target(tree type)
++{
++	type = main_variant(type);
++	return type && validated_targets.find(type) != validated_targets.end();
++}
++
++const target::layout_hash_t &target::layout_hash(tree type)
++{
++	type = main_variant(type);
++
++	auto it = validated_targets.find(type);
++	if (it == validated_targets.end())
++		pinpoint_fatal(
++			"target::layout_hash: type is not a validated SPSLR target");
++
++	return it->second.hash;
++}
++
++tree target::main_variant(tree type)
++{
++	if (!type || TREE_CODE(type) != RECORD_TYPE)
++		return NULL_TREE;
++
++	return TYPE_MAIN_VARIANT(type);
++}
++
++tree target::from_field(tree field_decl)
++{
++	if (!field_decl || TREE_CODE(field_decl) != FIELD_DECL)
++		return NULL_TREE;
++
++	return main_variant(DECL_CONTEXT(field_decl));
++}
++
++bool target::is_target(tree type)
++{
++	type = main_variant(type);
++
++	if (!type || TREE_CODE(type) != RECORD_TYPE)
++		return false;
++
++	return lookup_attribute(SPSLR_ATTRIBUTE, TYPE_ATTRIBUTES(type));
++}
++
++std::string target::field_name(tree field_decl)
++{
++	if (!field_decl || TREE_CODE(field_decl) != FIELD_DECL)
++		return "<error>";
++
++	tree name = DECL_NAME(field_decl);
++	if (!name)
++		return "<anonymous>";
++
++	return IDENTIFIER_POINTER(name);
++}
++
++std::string target::name(tree type)
++{
++	type = main_variant(type);
++	if (!type)
++		return "<error>";
++
++	tree name_tree = TYPE_NAME(type);
++	if (!name_tree)
++		return "<anonymous>";
++
++	if (TREE_CODE(name_tree) == TYPE_DECL && DECL_NAME(name_tree))
++		return IDENTIFIER_POINTER(DECL_NAME(name_tree));
++
++	if (TREE_CODE(name_tree) == IDENTIFIER_NODE)
++		return IDENTIFIER_POINTER(name_tree);
++
++	return "<anonymous>";
++}
++
++static std::string decl_context_name(tree decl)
++{
++	if (!decl)
++		return "<anonymous>";
++
++	tree name = DECL_NAME(decl);
++	if (!name)
++		return "<anonymous>";
++
++	return IDENTIFIER_POINTER(name);
++}
++
++std::vector<std::string> target::context_chain(tree type)
++{
++	std::vector<std::string> out;
++
++	type = main_variant(type);
++	if (!type)
++		return out;
++
++	tree type_name = TYPE_NAME(type);
++	tree ctx = NULL_TREE;
++
++	if (type_name && TREE_CODE(type_name) == TYPE_DECL)
++		ctx = DECL_CONTEXT(type_name);
++
++	if (!ctx)
++		ctx = TYPE_CONTEXT(type);
++
++	for (; ctx;) {
++		if (TREE_CODE(ctx) == TRANSLATION_UNIT_DECL)
++			break;
++
++		if (TREE_CODE(ctx) == RECORD_TYPE) {
++			out.push_back(name(ctx));
++			ctx = TYPE_CONTEXT(ctx);
++			continue;
++		}
++
++		if (DECL_P(ctx)) {
++			out.push_back(decl_context_name(ctx));
++			ctx = DECL_CONTEXT(ctx);
++			continue;
++		}
++
++		if (TYPE_P(ctx)) {
++			out.push_back(name(ctx));
++			ctx = TYPE_CONTEXT(ctx);
++			continue;
++		}
++
++		break;
++	}
++
++	std::reverse(out.begin(), out.end());
++	return out;
++}
++
++std::string target::qualified_name(tree type)
++{
++	std::string out;
++
++	for (const std::string &ctx : context_chain(type)) {
++		if (!out.empty())
++			out += "::";
++		out += ctx;
++	}
++
++	if (!out.empty())
++		out += "::";
++
++	out += name(type);
++	return out;
++}
++
++std::size_t target::size(tree type)
++{
++	type = main_variant(type);
++
++	tree size_tree = type ? TYPE_SIZE(type) : NULL_TREE;
++	if (!size_tree || TREE_CODE(size_tree) != INTEGER_CST)
++		pinpoint_fatal("target::size: non-constant target size");
++
++	HOST_WIDE_INT bits = tree_to_uhwi(size_tree);
++	if (bits < 0 || bits % BITS_PER_UNIT)
++		pinpoint_fatal("target::size: target size is not byte-aligned");
++
++	return static_cast<std::size_t>(bits / BITS_PER_UNIT);
++}
++
++std::size_t target::field_offset(tree field_decl)
++{
++	if (!field_decl || TREE_CODE(field_decl) != FIELD_DECL)
++		pinpoint_fatal(
++			"target::field_offset can only be applied to FIELD_DECL trees");
++
++	tree field_byte_offset_tree = DECL_FIELD_OFFSET(field_decl);
++	tree field_bit_offset_tree = DECL_FIELD_BIT_OFFSET(field_decl);
++
++	if (!field_byte_offset_tree ||
++	    TREE_CODE(field_byte_offset_tree) != INTEGER_CST)
++		pinpoint_fatal(
++			"target::field_offset was unable to fetch byte offset");
++
++	if (!field_bit_offset_tree ||
++	    TREE_CODE(field_bit_offset_tree) != INTEGER_CST)
++		pinpoint_fatal(
++			"target::field_offset was unable to fetch bit offset");
++
++	HOST_WIDE_INT byte_offset = tree_to_uhwi(field_byte_offset_tree);
++	HOST_WIDE_INT bit_offset = tree_to_uhwi(field_bit_offset_tree);
++	HOST_WIDE_INT bit_offset_bytes = bit_offset / BITS_PER_UNIT;
++
++	return byte_offset + bit_offset_bytes;
++}
++
++bool target::field_has_size(tree field_decl)
++{
++	if (!field_decl || TREE_CODE(field_decl) != FIELD_DECL)
++		return false;
++
++	tree bit_offset = DECL_FIELD_BIT_OFFSET(field_decl);
++	tree bit_size = DECL_SIZE(field_decl);
++
++	return bit_offset && TREE_CODE(bit_offset) == INTEGER_CST && bit_size &&
++	       TREE_CODE(bit_size) == INTEGER_CST;
++}
++
++std::size_t target::field_size(tree field_decl)
++{
++	if (!field_decl || TREE_CODE(field_decl) != FIELD_DECL)
++		pinpoint_fatal(
++			"target::field_size can only be applied to FIELD_DECL trees");
++
++	tree field_bit_offset_tree = DECL_FIELD_BIT_OFFSET(field_decl);
++	tree field_bit_size_tree = DECL_SIZE(field_decl);
++
++	if (!field_bit_offset_tree ||
++	    TREE_CODE(field_bit_offset_tree) != INTEGER_CST)
++		pinpoint_fatal(
++			"target::field_size was unable to fetch bit offset");
++
++	if (!field_bit_size_tree ||
++	    TREE_CODE(field_bit_size_tree) != INTEGER_CST)
++		pinpoint_fatal(
++			"target::field_size was unable to fetch bit size");
++
++	HOST_WIDE_INT bit_offset =
++		tree_to_uhwi(field_bit_offset_tree) % BITS_PER_UNIT;
++	HOST_WIDE_INT bit_size = tree_to_uhwi(field_bit_size_tree) + bit_offset;
++
++	HOST_WIDE_INT bit_overhang = bit_size % BITS_PER_UNIT;
++	if (bit_overhang != 0)
++		bit_size += (8 - bit_overhang);
++
++	return static_cast<std::size_t>(bit_size / BITS_PER_UNIT);
++}
++
++std::size_t target::field_alignment(tree field_decl)
++{
++	if (!field_decl || TREE_CODE(field_decl) != FIELD_DECL)
++		pinpoint_fatal(
++			"target::field_alignment can only be applied to FIELD_DECL trees");
++
++	HOST_WIDE_INT alignment_bits = DECL_ALIGN(field_decl);
++	if (alignment_bits <= 0 && TREE_TYPE(field_decl))
++		alignment_bits = TYPE_ALIGN(TREE_TYPE(field_decl));
++	if (alignment_bits <= 0)
++		alignment_bits = BITS_PER_UNIT;
++
++	std::size_t alignment = static_cast<std::size_t>(
++		(alignment_bits + BITS_PER_UNIT - 1) / BITS_PER_UNIT);
++	if (alignment == 0)
++		alignment = 1;
++
++	return alignment;
++}
++
++bool target::field_is_bitfield(tree field_decl)
++{
++	if (!field_decl || TREE_CODE(field_decl) != FIELD_DECL)
++		pinpoint_fatal(
++			"target::field_is_bitfield can only be applied to FIELD_DECL trees");
++
++	tree field_bit_offset_tree = DECL_FIELD_BIT_OFFSET(field_decl);
++	tree field_bit_size_tree = DECL_SIZE(field_decl);
++
++	if (!field_bit_offset_tree ||
++	    TREE_CODE(field_bit_offset_tree) != INTEGER_CST)
++		pinpoint_fatal(
++			"target::field_is_bitfield was unable to fetch bit offset");
++
++	if (!field_bit_size_tree ||
++	    TREE_CODE(field_bit_size_tree) != INTEGER_CST)
++		pinpoint_fatal(
++			"target::field_is_bitfield was unable to fetch bit size");
++
++	HOST_WIDE_INT bit_offset =
++		tree_to_uhwi(field_bit_offset_tree) % BITS_PER_UNIT;
++	HOST_WIDE_INT bit_size = tree_to_uhwi(field_bit_size_tree);
++
++	bool decl_bitfield = DECL_BIT_FIELD_TYPE(field_decl) != NULL_TREE;
++	bool extra_bitfield = bit_size % 8 != 0 || bit_offset != 0;
++
++	return decl_bitfield || extra_bitfield;
++}
++
++bool target::field_is_fixed(tree field_decl)
++{
++	return field_is_bitfield(field_decl) ||
++	       lookup_attribute(SPSLR_FIELD_FIXED_ATTRIBUTE,
++				DECL_ATTRIBUTES(field_decl));
++}
++
++const std::vector<target::compressed_field> &
++target::compressed_fields(tree type)
++{
++	type = main_variant(type);
++
++	auto it = validated_targets.find(type);
++	if (it == validated_targets.end())
++		pinpoint_fatal(
++			"target::compressed_fields: type is not a validated SPSLR target");
++
++	return it->second.fields;
++}
++
++void target::iterate_targets(const target_callback &cb)
++{
++	for (const auto &[t, info] : validated_targets)
++		cb(t);
++}
++
++std::size_t target::target_count()
++{
++	return validated_targets.size();
++}
++
++void target::validate(tree type)
++{
++	type = main_variant(type);
++	remember_target(type);
++}
++
++bool target::component_ref(tree ref, tree *field_decl)
++{
++	if (!ref || TREE_CODE(ref) != COMPONENT_REF)
++		return false;
++
++	tree field = TREE_OPERAND(ref, 1);
++	if (!field || TREE_CODE(field) != FIELD_DECL)
++		return false;
++
++	tree type = from_field(field);
++	if (!is_target(type))
++		return false;
++
++	if (field_decl)
++		*field_decl = field;
++
++	return true;
++}
++
++std::size_t target::field_index(tree field_decl)
++{
++	tree type = from_field(field_decl);
++	if (!type)
++		pinpoint_fatal(
++			"target::field_index: field does not belong to a target");
++
++	auto vt = validated_targets.find(type);
++	if (vt == validated_targets.end())
++		pinpoint_fatal(
++			"target::field_index: field does not belong to a validated target");
++
++	auto it = vt->second.field_indices.find(field_decl);
++	if (it == vt->second.field_indices.end())
++		pinpoint_fatal(
++			"target::field_index: field does not belong to a validated target");
++
++	return it->second;
++}
++
++void target::reset()
++{
++	validated_targets.clear();
++}
+diff --git a/scripts/gcc-plugins/target_registry.h b/scripts/gcc-plugins/target_registry.h
+new file mode 100644
+index 000000000000..5531cefffb38
+--- /dev/null
++++ b/scripts/gcc-plugins/target_registry.h
+@@ -0,0 +1,59 @@
++#pragma once
++
++#include <cstddef>
++#include <functional>
++#include <string>
++#include <vector>
++#include <array>
++
++#include <safe-tree.h>
++
++struct target {
++	struct compressed_field {
++		std::string name{};
++		std::size_t offset{};
++		std::size_t size{};
++		std::size_t alignment{};
++		bool fixed{};
++	};
++
++	static tree main_variant(tree type);
++	static tree from_field(tree field_decl);
++
++	static bool is_target(tree type);
++
++	static std::string name(tree type);
++	static std::vector<std::string> context_chain(tree type);
++	static std::string qualified_name(tree type);
++
++	static std::size_t size(tree type);
++
++	static std::string field_name(tree field_decl);
++	static std::size_t field_offset(tree field_decl);
++	static bool field_has_size(tree field_decl);
++	static std::size_t field_size(tree field_decl);
++	static std::size_t field_alignment(tree field_decl);
++	static bool field_is_bitfield(tree field_decl);
++	static bool field_is_fixed(tree field_decl);
++
++	static bool component_ref(tree ref, tree *field_decl);
++
++	static const std::vector<compressed_field> &
++	compressed_fields(tree type);
++
++	using target_callback = std::function<void(tree target_type)>;
++	static void iterate_targets(const target_callback &cb);
++	static std::size_t target_count();
++
++	static void validate(tree type);
++
++	/* THe field index is into compressed_fields */
++	static std::size_t field_index(tree field_decl);
++
++	using layout_hash_t = std::array<std::byte, 16>;
++
++	static bool is_validated_target(tree type);
++	static const layout_hash_t &layout_hash(tree type);
++
++	static void reset();
++};
 -- 
 2.43.0
 
