@@ -1,94 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B5E435ED0
-	for <linux-hardening@vger.kernel.org>; Tue, 21 Jul 2026 07:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CD0414DDD
+	for <linux-hardening@vger.kernel.org>; Tue, 21 Jul 2026 11:29:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784620492; cv=none; b=LsRffX+CJ8/c83JBn71eNdlVYTy9LKJ+EyN9oeUTBPtpCWxZ86SGf+m/PVHes3lBhxDpLD0oNjSEB1rX4+RZuYnl0lJhuF+J6yZLo3t4mPcDxs268nP6pvH6I+3YxUKQSY+sbR3I6xXRwToMe4K11fnwZQMjzSkZKACWCltHxGc=
+	t=1784633399; cv=none; b=QDTDrB7LUCihjflNRldn42rPOE097yDi33NrwyCb1objUhQXYSdrIffwfbnu6pTWIIQrsAL88VgVPdRAft14O/vptpVLnWyX9AvkwUUUqiipYdkpMlPiZ9tz8c4tDKSr890RihUKXKmqrYwmdraNb+byUrgLyILa88x/qbR24q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784620492; c=relaxed/simple;
-	bh=dCFp8azqbtjMnvLCWbCJTpVJiM5s5tHj5DD4OdLTAbw=;
+	s=arc-20240116; t=1784633399; c=relaxed/simple;
+	bh=qDplgMgSB8GKiMH7AQ1XIe1zw8ZX4lnI0b0rHbUWBQA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M3Zo51Vln5LA09WW0APmYOsJcuGvtrUR/DFt8Q7LrrqEg3FJV5Ch10xOiwD+zEVXvx3vdBmSpRsYs54KPyM/uAygUOWaU0PFHu9KC9PpM7bdvhkmlnYzgXqKzmC5F/TdarmcBn5bCivB5rbuoE/fNTK2lEVVvuzreU7M8slFVTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MzDvOdby; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=fL6sqmRcVIDcj1YYWZeTTolPBH9yw67F//ya7wLvnfKmFDVEXQdOPMDEM8RafWDK/I8HyBJqNHPeoSPvkvXLNsWrXAdz4lHDLlQQW/NlX/6TcGq/c1buxkiMDxN3m+lhrzvCOZDsgegpscHPlnfsyoCS8bNoYQOmk/9VWtYSz40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lR4YZ/OX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MzDvOdby"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1AC71F0155F
-	for <linux-hardening@vger.kernel.org>; Tue, 21 Jul 2026 07:54:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lR4YZ/OX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 340221F00A3D
+	for <linux-hardening@vger.kernel.org>; Tue, 21 Jul 2026 11:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784620491;
-	bh=dCFp8azqbtjMnvLCWbCJTpVJiM5s5tHj5DD4OdLTAbw=;
+	s=k20260515; t=1784633398;
+	bh=qDplgMgSB8GKiMH7AQ1XIe1zw8ZX4lnI0b0rHbUWBQA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=MzDvOdbyzTCAvdoapu1Tim55VE4TPHvrsM716xnZiCJqz1gRE/ytbZAHFZTSScv/c
-	 0PBqGmUU+Q0+8wWYJ3ggt7bIxBahPf1Z92LImAqaPHxaLg4RsBlKuZXf15WdZZcmn/
-	 bMgi09VrHwwqMcskbiqckVfAwDTHtCQTsHH7xWqYeOeF5Bq0Yj5Qeps+gCszEWiV78
-	 nbU6UUNqoHA193nqFxdJYEXUKNrhTPcQMU4HPb6m4FKBvZoA4SMIQTL80XfbSZykwH
-	 zaABhGQjS98KMnWwRgi+VnslfcrZzi5etB+TaAKRcuw/bYx/yhvEQRjj2EMApQRBjK
-	 yWwC1qyhCcL1g==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-39c7ed5410bso58149581fa.0
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Jul 2026 00:54:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RriTbkLK7N39traiqoeOX8eB2KK2HXYHFro0MHEpYGsEwonVzumnZDKMXIkqEN6eiLY5nebO0l9BsZRrXQhjgQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwamKLGxBoPGs3DDL0BzubzlY5D6n9yUedSu0Jjl9LsfxaJvIZr
-	W2+TzoZzjla9wFE2Zw5/7zJeEeizJWJrbxdR/HvrtuBGWdLa0tKdukL0pP+mruV7rht4Fw/fsjl
-	lI1bEqsU+NpYHZC9tlIUEy3QP1pPJJEE=
-X-Received: by 2002:ac2:5b4a:0:b0:5b0:177f:beab with SMTP id
- 2adb3069b0e04-5b28f9b8ab1mr2888376e87.44.1784620489665; Tue, 21 Jul 2026
- 00:54:49 -0700 (PDT)
+	b=lR4YZ/OXGBlZez/KWPQj8+p5ZUM6HPdysUb55fWx+Y6UV+vB0k3fWtN8g1+VfMVqR
+	 vrnPEpARseBNPvDLqQ68cGATQA0L3MUlJeZa5NdVmrn8CeeUOb0eTaYJpScfdd9E+E
+	 kjfq52A/mAL2PcaSMCZUoHEA8CTlGi/iL/hkJKr/0IMOypjkDTA6nmGIsIUGB7+3uh
+	 ViJ8eSJwtPoYZMs7XU2nduzV+SDWDm0ri1dhQgbM4sPkV/M7xblydQdDweJi24FjT0
+	 tVseN7wn8BWqVazSo/Cq1JhPVvGfqKXuGW+4S5Ku4IkPeednb2hmCsoO3wPvK35WWR
+	 MhZ80pVFU/QIA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5b00d083818so3905031e87.1
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Jul 2026 04:29:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqrNY7mPEnbIBxiQgIsC0+G6jtDhlQaofNllj7HOkAo/ih3kuU79avQlzjAy7auR1dnv/VOg9cm9YpMfeWCPWE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqIYf7ScUW772Jbr+JOATGwVtoVQpbfAGNMWA+bS38wiN5zSL/
+	po83tGKzMsJErAmema5E3Diom/34FdzV5pZFIdGa0ymB97Qt7bqDauN7fLNOCLp188G11VvuwdV
+	wPjZhHXR8WsGm1tQ8lVEYFw5xKAPnOSM=
+X-Received: by 2002:ac2:51c9:0:b0:5b0:1433:13bd with SMTP id
+ 2adb3069b0e04-5b28a16682fmr4547358e87.9.1784633396583; Tue, 21 Jul 2026
+ 04:29:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260715175223.make.153-kees@kernel.org>
-In-Reply-To: <20260715175223.make.153-kees@kernel.org>
-From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 21 Jul 2026 09:54:37 +0200
-X-Gmail-Original-Message-ID: <CAD++jLk549ZcSjpRN0G27i1C-n-k-dOpmgvfZBgmHQ5s0F6dJg@mail.gmail.com>
-X-Gm-Features: AUfX_mzMwCV8Z7xeaNpPDzFxYqTYvhmmKEur1wOLmu4Wv6aUpsrNZUfEjvv8O44
-Message-ID: <CAD++jLk549ZcSjpRN0G27i1C-n-k-dOpmgvfZBgmHQ5s0F6dJg@mail.gmail.com>
-Subject: Re: [PATCH v3] ARM: traps: Implement KCFI trap handler for ARM32
-To: Kees Cook <kees@kernel.org>
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Nathan Chancellor <nathan@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Zhen Lei <thunder.leizhen@huawei.com>, 
-	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-arm-kernel@lists.infradead.org, 
-	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20260616034410.70675-1-kaihengf@nvidia.com> <DK39G70DVR3S.UUEE4333DB9W@nvidia.com>
+In-Reply-To: <DK39G70DVR3S.UUEE4333DB9W@nvidia.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Tue, 21 Jul 2026 13:29:36 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ggU82224fh1JRaNA6V6J9t=CiADCn0rmVqbPEezaY2hw@mail.gmail.com>
+X-Gm-Features: AUfX_myMqh3lKgqdOz6-2SclBm6oZVrgJxTPLlDhRovHhsc1tkgFV35wFO5GYns
+Message-ID: <CAJZ5v0ggU82224fh1JRaNA6V6J9t=CiADCn0rmVqbPEezaY2hw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] ACPI: APEI: GHES: Add NVIDIA Vera CPER decoder and tests
+To: Kai-Heng Feng <kaihengf@nvidia.com>
+Cc: shuah@kernel.org, kees@kernel.org, julianbraha@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	csoto@nvidia.com, mochs@nvidia.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 15, 2026 at 7:52=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+On Mon, Jul 20, 2026 at 10:37=E2=80=AFAM Kai-Heng Feng <kaihengf@nvidia.com=
+> wrote:
+>
+> On Tue Jun 16, 2026 at 11:44 AM CST, Kai-Heng Feng wrote:
+>
+> A gentle ping...
 
-> ARM32 GCC KCFI[1] violations currently show as generic "Oops - undefined
-> instruction" errors, making debugging CFI failures difficult. Add a prope=
-r
-> KCFI trap handler similar to the aarch64 implementation to provide clear
-> CFI error messages, including the call target and the expected type.
+You need a tag from at least one of the APEI reviewers listed in
+MAINTAINERS for this.
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
-
-> Clang and GCC trap CFI failures differently on ARM32. Clang lowers
-> its checks to a BKPT, handled via the breakpoint/prefetch-abort path
-> in hw_breakpoint.c, which cannot recover the target or expected type
-> and so must report via report_cfi_failure_noaddr(). GCC instead lowers
-> KCFI checks to a UDF (undefined instruction) whose immediate encodes
-> the registers involved, so the handler can decode it and call the full
-> report_cfi_failure() with the target and expected type.
-
-Aha, that explains a few things.
-
-The UDF is a better approach for ARM I think (Russell will know best).
-
-As noted from earlier conversation the breakpoint usecase overloading
-on ARM is a mess, and we would certainly like to avoid it if possible,
-albeit I have a patch in Russell's patch tracker to paper it over.
-
-Do you think that long term we could switch Clang to do what
-GCC does?
-
-Yours,
-Linus Walleij
+I'd suggest resending the series with CCs to those people.
