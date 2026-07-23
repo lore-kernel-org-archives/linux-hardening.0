@@ -1,33 +1,40 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DABC32C8B;
-	Thu, 23 Jul 2026 05:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5323BCD04;
+	Thu, 23 Jul 2026 06:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784786248; cv=none; b=blGeKIrkMZcyV3Kk/0cUX8SkCeuCaEAdZcYvgeMaXq5hRXTTPDD4wJtzQ4h/+Pk6yX+ba+PXa9A/gzKSwr1GwWdvG8Zatn2LaAUmP/fuXEZYUYAMxzwPcV3pxdBDp4kRfP72Rywy77VkK5taYr/+tx7AXp56qD+Rqzdv9zXkIdM=
+	t=1784789092; cv=none; b=P/mVmydBLIoLj4ttuCHuUN/w7TwRXe8Mi+Yo4OZ7JOuW7TJhGBf+dySnwecFuUNGHMZb0BKvmfeTVOOvycO/Bhebl/og0I6sOatjoiyvd7u4k2VJp+4S/g0x95HrcH+pKoJexKAdG1EcfssZemoByiGQkYV54F4sHcVX2VYhlEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784786248; c=relaxed/simple;
-	bh=FdNXOOmzFJ56NMNtXW551REGWdO/3itmiVOQUjhNeJA=;
+	s=arc-20240116; t=1784789092; c=relaxed/simple;
+	bh=dN+lG9a/eWWNVbUWn3qyRWEddvwqXYRCJp9w+fT+QyM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ddlI6SsR/nU8ZIrjyyycS6p4F7V8UhBKj8kK09aNl5eFUwdhbjl+e1mpX7Yn4HiISD/12kdKzrCWva42kyxP4ZVx0FYZypc0EC30tMAC/rg/SqyJD4IKN8PdweQPRYDrwFES9FMS0ozuOmYF2w6/jfPIvSulouioTqdHhLAwScE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=LOWpAtDo; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="LOWpAtDo"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09D3F16F2;
-	Wed, 22 Jul 2026 22:57:20 -0700 (PDT)
-Received: from [10.164.19.44] (unknown [10.164.19.44])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 879BB3F66F;
-	Wed, 22 Jul 2026 22:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784786244; bh=FdNXOOmzFJ56NMNtXW551REGWdO/3itmiVOQUjhNeJA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LOWpAtDoTm28o2tE/1stUtYVbc0rRPQchkrnlB7RW/S9U6SE5nUU0Fwcrw4OOJ2K+
-	 UHaD7IDWwYQSmFPfnOcf1eWhmM/bJE29QgK2J4WEgNqxJW8XEzaQNhlFk6wJOsnBd8
-	 O1ttBL/Yxwa/JKbvG6S2DgbbCRHIYjFfwWgXN3Ko=
-Message-ID: <e510fc4a-b3a1-4b7a-b10a-3306e75e8b66@arm.com>
-Date: Thu, 23 Jul 2026 11:27:18 +0530
+	 In-Reply-To:Content-Type; b=s4TX10iykrShhtYSe5QZI82uxODGE5mH03X0a73mekSmHJpDIsWeCOpZR+2fjXjaO0LlJIMJrtK0qIalG1YGkoipItnkUHu81VxNayAmL8IcD+xaLpRo82LXMCHpUHpQqSOT+MQehFSyZOfwdHUqKzMBcYVFggqq59Obvot1Yg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: faaebaf2866111f1aa26b74ffac11d73-20260723
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:e242e081-c494-4aa3-a82d-733feacf8b5a,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:e7bac3a,CLOUDID:c4a2b4a85359be396a6d2c449ef42505,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|865|898,TC:nil,Content:0
+	|15|50,EDM:-3,IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:
+	0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: faaebaf2866111f1aa26b74ffac11d73-20260723
+X-User: jiangfeng@kylinos.cn
+Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <jiangfeng@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 839911132; Thu, 23 Jul 2026 14:44:40 +0800
+Message-ID: <3355f1cc-4059-475e-9e52-4bca9b10ed98@kylinos.cn>
+Date: Thu, 23 Jul 2026 14:44:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,95 +42,76 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/usercopy: harden bounds checking for vmalloc
- allocations
-To: Kees Cook <kees@kernel.org>
-Cc: akpm@linux-foundation.org, gustavoars@kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, ryan.roberts@arm.com,
- anshuman.khandual@arm.com, david@kernel.org, urezki@gmail.com
-References: <20260722142936.3287702-1-dev.jain@arm.com>
- <202607222102.E6A5679@keescook>
+Subject: Re: [PATCH 2/2] kunit: string: add strnlen SIZE_MAX test coverage
+To: Gao Rui <gao.rui@zte.com.cn>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ linux-hardening@vger.kernel.org
+References: <20260722064037.1111467-1-gao.rui@zte.com.cn>
+ <20260722064037.1111467-3-gao.rui@zte.com.cn>
 Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <202607222102.E6A5679@keescook>
+From: Feng Jiang <jiangfeng@kylinos.cn>
+In-Reply-To: <20260722064037.1111467-3-gao.rui@zte.com.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 2026/7/22 14:40, Gao Rui wrote:
+> Extend string_test_strnlen to validate strnlen behavior with
+> SIZE_MAX input:
+> 
+> - Add explicit test case for strnlen(s, SIZE_MAX).
+> - Ensure fallback to generic path returns correct length when
+>   string has no NUL terminator.
+> - Complements existing tests for non-terminated strings and
+>   boundary conditions.
+> 
+> This improves KUnit coverage for extreme inputs and verifies
+> the correctness of the new fallback logic in strnlen.S.
+> 
+> Signed-off-by: Gao Rui <gao.rui@zte.com.cn>
+> ---
+>  lib/tests/string_kunit.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
+> index 0819ace5b027..8e2e8980aa75 100644
+> --- a/lib/tests/string_kunit.c
+> +++ b/lib/tests/string_kunit.c
+> @@ -155,6 +155,16 @@ static void string_test_strnlen(struct kunit *test)
+>  
+>  	for (size_t offset = 0; offset < STRING_TEST_MAX_OFFSET; offset++) {
+>  		for (size_t len = 0; len <= STRING_TEST_MAX_LEN; len++) {
+> +			/* Test strings without NUL terminator */
+> +			s = buf + buf_size - offset - len;
+> +			if (len > 0)
+> +				KUNIT_EXPECT_EQ(test, strnlen(s, len - 1), len - 1);
+> +			if (len > 1)
+> +				KUNIT_EXPECT_EQ(test, strnlen(s, len - 2), len - 2);
+> +
+> +			KUNIT_EXPECT_EQ(test, strnlen(s, len), len);
+> +
+> +			/* Test strings with NUL terminator */
+>  			s = buf + buf_size - 1 - offset - len;
+>  			s[len] = '\0';
+>  
+> @@ -169,6 +179,9 @@ static void string_test_strnlen(struct kunit *test)
+>  			KUNIT_EXPECT_EQ(test, strnlen(s, len + 2), len);
+>  			KUNIT_EXPECT_EQ(test, strnlen(s, len + 10), len);
+>  
+> +			/* Test Count overflow fallback */
+> +			KUNIT_EXPECT_EQ(test, strnlen(s, SSIZE_MAX), len);
+> +
+>  			s[len] = 'A';
+>  		}
+>  	}
 
+A similar patch has already been submitted:
 
-On 23/07/26 9:33 am, Kees Cook wrote:
-> On Wed, Jul 22, 2026 at 02:29:35PM +0000, Dev Jain wrote:
->> The vmalloc allocator stores the actual allocation size inside the
->> vm_struct structure. We can use this bound in usercopy instead of the
->> page-aligned va_end to catch usercopy beyond the actual allocation size.
->>
->> For vmap, the requested_size field is always page-aligned since it maps a
->> certain number of pages. Same for vm_map_ram (alongwith, not even having
->> a vm_struct). So the check is only relevant for vmalloc mappings.
->>
->> Because there are early vm areas registered even before vmalloc_init,
->> requested_size may be zero. So also check whether the requested_size
->> is set.
->>
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> 
-> Looks good to me! Can you update the LKDTM tests to check for this more
-> tightened range check with a new vmalloc-based test?
+https://lore.kernel.org/all/20260526085913.429049-1-min_halo@163.com/
 
-Thanks. I have written the test, I'll send a v2 with it once the mm people
-take a look at this.
-
-
-> 
-> If other mm folks can double-check this, I'll happily take this via the
-> hardening tree.
-> 
-> Thanks!
-> 
-> -Kees
-> 
->> ---
->> Applies on mm-new (3d18f3499c48).
->>
->>  mm/usercopy.c | 18 ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
->>
->> diff --git a/mm/usercopy.c b/mm/usercopy.c
->> index 5de7a518b1b1c..772681aff8477 100644
->> --- a/mm/usercopy.c
->> +++ b/mm/usercopy.c
->> @@ -176,10 +176,28 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
->>  
->>  	if (is_vmalloc_addr(ptr) && !pagefault_disabled()) {
->>  		struct vmap_area *area = find_vmap_area(addr);
->> +		struct vm_struct *vm;
->>  
->>  		if (!area)
->>  			usercopy_abort("vmalloc", "no area", to_user, 0, n);
->>  
->> +		vm = area->vm;
->> +		/*
->> +		 * Mappings with a vm_struct track the originally requested
->> +		 * size. Check against that rather than the page-rounded
->> +		 * vmap_area->va_end so copies cannot reach vmalloc tail
->> +		 * padding. vmap mappings are always page aligned.
->> +		 */
->> +		if (vm && (vm->flags & VM_ALLOC) && vm->requested_size) {
->> +			unsigned long size = vm->requested_size;
->> +
->> +			offset = addr - area->va_start;
->> +			if (offset > size || n > size - offset)
->> +				usercopy_abort("vmalloc", NULL, to_user,
->> +					       offset, n);
->> +			return;
->> +		}
->> +
->>  		if (n > area->va_end - addr) {
->>  			offset = addr - area->va_start;
->>  			usercopy_abort("vmalloc", NULL, to_user, offset, n);
->> -- 
->> 2.43.0
->>
-> 
+-- 
+With Best Regards,
+Feng Jiang
 
