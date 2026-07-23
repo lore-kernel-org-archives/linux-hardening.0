@@ -1,117 +1,73 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5323BCD04;
-	Thu, 23 Jul 2026 06:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7E335C685;
+	Thu, 23 Jul 2026 07:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784789092; cv=none; b=P/mVmydBLIoLj4ttuCHuUN/w7TwRXe8Mi+Yo4OZ7JOuW7TJhGBf+dySnwecFuUNGHMZb0BKvmfeTVOOvycO/Bhebl/og0I6sOatjoiyvd7u4k2VJp+4S/g0x95HrcH+pKoJexKAdG1EcfssZemoByiGQkYV54F4sHcVX2VYhlEg=
+	t=1784791348; cv=none; b=JHaTadDVEKMarUVgsxRQxj13Bz/ilkmOAZjlk+CaYQYbvDclr13P00gJOzcfpVb3csp0V318hGuvZ3y9vz47/r9u0+eGWHkgLT+kJ+WTQECwO04pdIc48A6IcSMsr2i2QOBNedbKdlhVyaOF6GsCNFuTg4KWO53xzXJo7bQHHpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784789092; c=relaxed/simple;
-	bh=dN+lG9a/eWWNVbUWn3qyRWEddvwqXYRCJp9w+fT+QyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s4TX10iykrShhtYSe5QZI82uxODGE5mH03X0a73mekSmHJpDIsWeCOpZR+2fjXjaO0LlJIMJrtK0qIalG1YGkoipItnkUHu81VxNayAmL8IcD+xaLpRo82LXMCHpUHpQqSOT+MQehFSyZOfwdHUqKzMBcYVFggqq59Obvot1Yg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: faaebaf2866111f1aa26b74ffac11d73-20260723
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:e242e081-c494-4aa3-a82d-733feacf8b5a,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:e7bac3a,CLOUDID:c4a2b4a85359be396a6d2c449ef42505,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|865|898,TC:nil,Content:0
-	|15|50,EDM:-3,IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:
-	0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: faaebaf2866111f1aa26b74ffac11d73-20260723
-X-User: jiangfeng@kylinos.cn
-Received: from [10.42.12.56] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <jiangfeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 839911132; Thu, 23 Jul 2026 14:44:40 +0800
-Message-ID: <3355f1cc-4059-475e-9e52-4bca9b10ed98@kylinos.cn>
-Date: Thu, 23 Jul 2026 14:44:37 +0800
+	s=arc-20240116; t=1784791348; c=relaxed/simple;
+	bh=mA3U7pWvFVNGxEPqn4zWz9kbraUWwUOw/sRiQbOhzuo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9h9PE2xkk/4jpkrvbFqWtHJ06nP9rl/09jYPK1Mjv4MhimjZaRyJtf+bCGDLi/kixWmKjxrDha9hRLjecPKFphos18MjqSafcHSz50FoNXspdS0j3b7QbPETg14zAWWtnxAy5Uk47eN7lbR3G+9PbaSkJ7E25+mVxFdGcqyASU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXpQgxVZ; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXpQgxVZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A8001F000E9;
+	Thu, 23 Jul 2026 07:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784791347;
+	bh=sqEqx/dsEBv1eP8UyW1cZ7pHK0Q+V0EqkrcAbtlOXUQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=WXpQgxVZ5AtlZV2o2NpWt4AFrXuCoyHa4hA3yGPbXDN1Rb0df98k38s8Rx8DWF6mq
+	 ZbEvS6IjppLXdfUUnK4eepeD/UK2ThTeXbk6jtyZmts1z4oYnkkiTlOI/IjnIwM9jI
+	 cVEQEcEObkLf2HwKYbSOoBGRw9R8vmi7HwIlSEkJgFLnRacsehThCdZNpc/0iUpxhI
+	 wzBpAoPO7oF+hKgpW61+R7pHR2fG+m5QW+UQVpvfpUGoekHiQ/NBKemdPmIhNFTVfq
+	 lD3V63ptoploAmtAawSFPEG5E2xcznwYA9wYBxpckiCth144vZ6SvtZOoTxuD9+Zb0
+	 Gi8Ij4FjUJUbg==
+Date: Thu, 23 Jul 2026 09:22:23 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>, Amit Kucheria <amit.kucheria@oss.qualcomm.com>, 
+	Konrad Dybcio <konradybcio@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, manaf.pallikunhi@oss.qualcomm.com
+Subject: Re: [PATCH v5 1/9] dt-bindings: remoteproc: qcom,pas: add
+ #cooling-cells property
+Message-ID: <20260723-encouraging-flexible-skylark-c92ab6@quoll>
+References: <20260721-b4-qmi-tmd-v5-0-99620e07f505@oss.qualcomm.com>
+ <20260721-b4-qmi-tmd-v5-1-99620e07f505@oss.qualcomm.com>
+ <20260722-active-kangaroo-of-order-ebb28f@quoll>
+ <f3864ed8-34bb-42e2-a821-ac2d1a653076@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] kunit: string: add strnlen SIZE_MAX test coverage
-To: Gao Rui <gao.rui@zte.com.cn>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- linux-hardening@vger.kernel.org
-References: <20260722064037.1111467-1-gao.rui@zte.com.cn>
- <20260722064037.1111467-3-gao.rui@zte.com.cn>
-Content-Language: en-US
-From: Feng Jiang <jiangfeng@kylinos.cn>
-In-Reply-To: <20260722064037.1111467-3-gao.rui@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f3864ed8-34bb-42e2-a821-ac2d1a653076@oss.qualcomm.com>
 
-On 2026/7/22 14:40, Gao Rui wrote:
-> Extend string_test_strnlen to validate strnlen behavior with
-> SIZE_MAX input:
+On Wed, Jul 22, 2026 at 07:08:07PM +0530, Gaurav Kohli wrote:
+> > Filename must match compatible. There are no qcom,qmi-tmd or qcom,.*tmd
+> > or qcom,.*qmi compatibles.
+> > 
+> > Which device is providing this ABI? PAS?
 > 
-> - Add explicit test case for strnlen(s, SIZE_MAX).
-> - Ensure fallback to generic path returns correct length when
->   string has no NUL terminator.
-> - Complements existing tests for non-terminated strings and
->   boundary conditions.
-> 
-> This improves KUnit coverage for extreme inputs and verifies
-> the correctness of the new fallback logic in strnlen.S.
-> 
-> Signed-off-by: Gao Rui <gao.rui@zte.com.cn>
-> ---
->  lib/tests/string_kunit.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-> index 0819ace5b027..8e2e8980aa75 100644
-> --- a/lib/tests/string_kunit.c
-> +++ b/lib/tests/string_kunit.c
-> @@ -155,6 +155,16 @@ static void string_test_strnlen(struct kunit *test)
->  
->  	for (size_t offset = 0; offset < STRING_TEST_MAX_OFFSET; offset++) {
->  		for (size_t len = 0; len <= STRING_TEST_MAX_LEN; len++) {
-> +			/* Test strings without NUL terminator */
-> +			s = buf + buf_size - offset - len;
-> +			if (len > 0)
-> +				KUNIT_EXPECT_EQ(test, strnlen(s, len - 1), len - 1);
-> +			if (len > 1)
-> +				KUNIT_EXPECT_EQ(test, strnlen(s, len - 2), len - 2);
-> +
-> +			KUNIT_EXPECT_EQ(test, strnlen(s, len), len);
-> +
-> +			/* Test strings with NUL terminator */
->  			s = buf + buf_size - 1 - offset - len;
->  			s[len] = '\0';
->  
-> @@ -169,6 +179,9 @@ static void string_test_strnlen(struct kunit *test)
->  			KUNIT_EXPECT_EQ(test, strnlen(s, len + 2), len);
->  			KUNIT_EXPECT_EQ(test, strnlen(s, len + 10), len);
->  
-> +			/* Test Count overflow fallback */
-> +			KUNIT_EXPECT_EQ(test, strnlen(s, SSIZE_MAX), len);
-> +
->  			s[len] = 'A';
->  		}
->  	}
+> thanks for review.
+> Yes, this belongs under PAS. Should i rename the file to pas?
 
-A similar patch has already been submitted:
+qcom,pas.yaml would work for me.
 
-https://lore.kernel.org/all/20260526085913.429049-1-min_halo@163.com/
-
--- 
-With Best Regards,
-Feng Jiang
+Best regards,
+Krzysztof
 
