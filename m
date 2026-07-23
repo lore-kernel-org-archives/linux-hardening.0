@@ -1,80 +1,861 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEC047127D;
-	Thu, 23 Jul 2026 14:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784818569; cv=none; b=r7W18sH7irp9xKGzxgJcgPdxp8C+dmzF0r+TImwfBbRvlrFZoGVAg+8FIa60Z7/DdfGlb3BmfpZyxxEqMJNVpemABQbn427JeJI6n4bUVVwD2HOUji67CFJ4wHQZe6umEqYozZEHkGvloXHUODVRLtgi85hX+RdoyexgdLeQCj8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784818569; c=relaxed/simple;
-	bh=/LHb9PbjJ/W28XoMgVzt3faPlUPkc8xEtyV0gyh8X2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4bCVW9NnMH+8Ls2X1K+Wj/RFHd7X8aYbSvgDCA13MFxib8WEKcFb9oPGNGYP5UKtaOWxca4E4zNb6UgS3+y/7pjpKVhd/ZkqO/sL2SCyUSuWT61ZVvKdM2YVTlLV1U0WtSO3y+HbJqRdtBzPs/AuJozdnF5WBKJbhc03xPyBjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=ofqJ8Jdc; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EEF416869
+	for <linux-hardening@vger.kernel.org>; Thu, 23 Jul 2026 19:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784834819; cv=pass; b=gMFOi6ST6tkg2u7JYvoMDqLifXvuiQh+1ebQUWMUg1ZvDh6X8mrO3Xu5a3Oox9xZrYic33amE/ZXW2B0FV0cNWdXdIaEjaC7/o4n66481NznbAx9Owl285cUD9nQiiPZrQy33ymFpkgdl0dKQlAlO6TRWwESUXgC3WYRb+FL2DI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784834819; c=relaxed/simple;
+	bh=3qDUJCleO9/mQDxvVj55P94PNa8vDe1TK7upIEPAyAU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fJLbd6clCfde4F6PGH20BJdD2vErw3GuQt1UYE2xcr14Lx7Tr4+QZsXYQzFDerOq4zyjt8snUbuStJdkKySEZczXS6/DrfKg+T5crZVA6Fkbz2JPeplHzoNawQgK4DxJxrG2y+UP4lB0lf2giJraj1wDk/kAJmJKlkJyp9plzRs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UXaSW3HC; arc=pass smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="ofqJ8Jdc"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 23EB51FCC4;
-	Thu, 23 Jul 2026 16:55:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1784818559;
-	bh=v0CAf/eb/QKfGldUDL9kacxXaRwcPuGwyKPcibiP6BE=; h=From:To:Subject;
-	b=ofqJ8Jdca7VuP4g2uN9Jp7eHl0z+aZT8YWlBFJsGg5K6AHBPGjRhU8O2gjtb4TWwD
-	 +Hl3SVglaSzWOWylA+Ztyalq+SkrpQfjkchNgV6brpgxCeIatm5yaLwb1E4TVAqtbA
-	 H37EWqu4vvPGPGtw0KGwBQRFaSOHDkVYrcdW9GHHN1NSFc/2xkN5YQ51NekJY0AvTV
-	 RQdU9mtOPecAPagnU19Tx/u2IkY6Dvjj3dkPFY5Xp7RJFNxg7DVMReCOLZS/Ov/cdv
-	 tOON8NG9ajEXYHqH47GuCbOm4UmTkcCZBoWOjowFOeml/SRCOPGPpxtinbz94Fk9Tq
-	 dYM8sVflhnvBw==
-Date: Thu, 23 Jul 2026 16:55:55 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org,
-	Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other  areas):Keyword:\\b__counted_by(_le|_be|_ptr)?\\b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH wireless-next] wifi: mwifiex: Use flexible array for RX
- reorder table
-Message-ID: <20260723145555.GA238048@francesco-nb>
-References: <20260518211826.11245-1-rosenp@gmail.com>
- <1e77da9180ee82bf1b0d122f0ddf137949d4278e.camel@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXaSW3HC"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-698aa7ba320so1899113a12.1
+        for <linux-hardening@vger.kernel.org>; Thu, 23 Jul 2026 12:26:56 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784834815; cv=none;
+        d=google.com; s=arc-20260327;
+        b=F7hMcHAQ9NyirrSga3CaCJl/aiTlGjhJs93fKVkJlT4Oaal1zaY/2oy/pT8b+4evTi
+         gqXqUzA9sCgxCONz7yWYFrGetYIEpyqL8DxbQFwBvlHaXGn40bAT+bjCPKeM24MUSwzK
+         7YATXsvgNzuDenm0qmwRyPcxzCkl9yvFzL3ImP515WXwjFUKlQtdFjHuPRheZNwWOxCx
+         ovOzAmiknn8XiuLRpaYsdRLpZRztrVlEWuN/5fCo2tmegaVYCMWTsapb49AMxO4oi/J7
+         tg/b9PGy31nsCrUHZIcEfSqmSclB68zoZ/eVJHMJk2lBsb6EQ0c8/1F/QGiw7dBIpL2T
+         MS+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=c48oFHcUl73M+7xCb5JNWHbcfZqyaHeFDgmQTnaFHyM=;
+        fh=+NKSjFCJH+Kit/KXeIKLrKLYre3JHw6CuspASxNGq18=;
+        b=gQyoQ8uUZMC9itZ1ta9nC9lqBE45UA060Jin+OehUuHKI2QEDH0fKFC33geF+zETak
+         Q9zz3vNNRhJV8icX5LrnJLek4N/uelyEnbj1fXb4KFA9XvwXspFGxJRmAkV9ckXKL02J
+         UnZMh8JTnmM1uZYFu9sHInyvKeqnA62zX/trZk8Kgdwo5zrEPn/cFVQCCubQaQgkQejv
+         U/UkJUzMbQT4JlFSOJtjSSHwtHXUudxwOCyk/IWxwAMeSmV6/wL8q6+xZdl0nL9DylrD
+         hvnuHKwI+n36gR/IdbXkIRxMgetzIu+OoFy+NAq21I/JZRg6+sfgeC7jjmArEqdOM+Sx
+         QVGA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784834815; x=1785439615; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=c48oFHcUl73M+7xCb5JNWHbcfZqyaHeFDgmQTnaFHyM=;
+        b=UXaSW3HCerlbhByKSge9NZJmMicliu+mZs6lO/cyFlMtXX/oKRyuNtc878gOp5TW/Y
+         SS1h5kWwX2lBrIfwegBn2UUFDEtEjmUZaCqK/GeQAexgTP4YBwU+TwsTQJ99UwqQ8pKC
+         wndW3x+c8RFNeNgyeuxP7tUzcZvO+rxaH3Qj51u/2FncGAN/ZyYbh2uB5B8T1aE9z0pi
+         14lHp03bTmQkPTEQ11vyLJcxUIf+fujPwQx5R5xgOLgXqilLx5nhXkppoUxZHgRE/89Q
+         kVsk9JGrNa1lfMqDssK6BPceUtBWsP9INwRKgwj0gJTEmu89+5T5AkQ51o0SxZsQn4S7
+         8+og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784834815; x=1785439615;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=c48oFHcUl73M+7xCb5JNWHbcfZqyaHeFDgmQTnaFHyM=;
+        b=ofX5EN2SNYeN7oqVkbKKUhNaH5t9Oofw3GBwqa59CM01r2+4WoxlLKFiTSsyASPBDI
+         w0qSt96vIBlYMlM8G8HmUe6TK5/IkpCEAZEBO3Wly+4AQ1HTE1IBsgvPhd+e+YCnWLWz
+         wiSzI8qO+LxUH+qXhTyiw7IAcxrhwiYXS8ux2Ah42SQUcVZBLRNtAyBtocFk8HsMFupC
+         8x9B0QAnPPILQI9AODQrW3Ad8zVdjvYS7icNHfsrfW71fEFqc1MTVuyE7F0FDEim5bOD
+         6LD/zEq5rfr/Z6lX6VyqmCnpxFyKEw2E/oXp0cYdWrBCKivHUX5q/r31yFHDQzCl90pn
+         2Txw==
+X-Forwarded-Encrypted: i=1; AHgh+RoOE2bPVaXPHG6CKMflsoxYZQ9oY67xMFCDezdBk5lXKhHfM9t367Nilhpy40ducDA4FjIOMgx7wxs2H3FlvSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc59x0q3iP0Y5GtSrLNAGl58xFcUGU+WSOFfINzIGlH8pg7sBh
+	7cd064sQD0v+9zcx3eZWa4X1cEjHwRuzmq6K7yXkOMuY6/VaxmQm/IBD+OldbJWQ66khB5BbkXU
+	VzDP+cVs3F0l0To4C7TRoorVlg4Jj5FI=
+X-Gm-Gg: AR+sD12BdmuV8sk6MsqNDEpBpdm0iB1vVHsLVoO7CoL5rAgj0B6QyBESJOjAsWWVIK3
+	eMdT4AzQZhCpaEL2OiF9k1g54zu5AL994qlowDnqfVrxua0nSlYzfAkJssRloB4uEEEsM1UKb1v
+	68AV3y0rpt9pMIl9JvMoeWo1Ofyx3st6uRWn3bVUeaNRkHThzI1xWqbHQroFPrMbGba/DyeYztG
+	niABNijRDYD5APz4uCmGTwE5Fn7KP+JuQ/DVzx81FCUAnPjorcvz8BvvqyFeUjiRMBSdjqP+yrr
+	ZHeEMmVeBs+PWJu4QDacFjoUMmQTsj8/6bpXFgza7yb9hSwXzyANuRw5c/tapyZ/869H6MPluBL
+	oAHQ02ooA0+/NAOc83CU4SQ1OC0P0qMd2PIKbZMCpwthCWSrWZnqCrekvo5S/wOX6Okt7pb/nn6
+	Ep3MowsbU=
+X-Received: by 2002:a05:6402:2381:b0:69f:a71:8d69 with SMTP id
+ 4fb4d7f45d1cf-69f7484278bmr1704021a12.10.1784834814248; Thu, 23 Jul 2026
+ 12:26:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e77da9180ee82bf1b0d122f0ddf137949d4278e.camel@sipsolutions.net>
+References: <20260629033156.2363850-1-rosenp@gmail.com> <20260723075304.GA4577@wp.pl>
+In-Reply-To: <20260723075304.GA4577@wp.pl>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Thu, 23 Jul 2026 12:26:41 -0700
+X-Gm-Features: AUfX_mzpmUaJhE3D_n-zE7eGSgQLoC7It6rfepFnJRnT3lAzERi3FXxY9y0n_Wk
+Message-ID: <CAKxU2N_LbndYqrGDQ__sAjj87mj-J8Hs-RWeD90eRcGK1dDAcw@mail.gmail.com>
+Subject: Re: [PATCH wireless-next] wifi: rt2x00: Use flexible array for
+ hw_mode_spec channels
+To: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: linux-wireless@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Johannes,
-
-On Tue, May 19, 2026 at 08:47:00AM +0200, Johannes Berg wrote:
-> On Mon, 2026-05-18 at 14:18 -0700, Rosen Penev wrote:
-> > Embed the RX reorder pointer array in struct mwifiex_rx_reorder_tbl
-> > instead of allocating it separately.
-> 
-> Others might disagree, but personally, I think you should stop doing
-> this. Sure, it *might* (I've been bitten too much by __counted_by) be a
-> border-line improvement, but it's not _really_ all that useful,
-> especially on these older drivers.
-> 
-> Did you even test it at all?
-> 
-...
-> If you _really_ want to help, please help review changes rather than
-> producing more noise. Maybe even take over maintenance of some specific
-> driver that you can test.
-
-I also do not see any specific reason to take this, as of now I have not
-enough brain cycles available to properly review this, and if this is
-not even tested we should just reject it.
-
-Francesco
-
+On Thu, Jul 23, 2026 at 12:53=E2=80=AFAM Stanislaw Gruszka <stf_xl@wp.pl> w=
+rote:
+>
+> Hi,
+>
+> On Sun, Jun 28, 2026 at 08:31:56PM -0700, Rosen Penev wrote:
+> > struct hw_mode_spec stores channel information that is allocated by the
+> > individual rt2x00 drivers during hardware probing.  The channel info
+> > array has the same lifetime as the hardware mode specification, but it
+> > is currently allocated separately and then freed through a separate
+> > pointer.
+> >
+> > Make struct rt2x00_dev hold a pointer to the hardware mode
+> > specification, store the channel info as a flexible array member, and
+> > allocate both pieces together with kzalloc_flex().
+> >
+> > Assisted-by: Codex:GPT-5.5
+> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > ---
+> >  .../net/wireless/ralink/rt2x00/rt2400pci.c    | 24 +++---
+> >  .../net/wireless/ralink/rt2x00/rt2500pci.c    | 55 ++++++++------
+> >  .../net/wireless/ralink/rt2x00/rt2500usb.c    | 55 ++++++++------
+> >  .../net/wireless/ralink/rt2x00/rt2800lib.c    | 74 ++++++++++---------
+> >  drivers/net/wireless/ralink/rt2x00/rt2x00.h   |  4 +-
+> >  .../net/wireless/ralink/rt2x00/rt2x00config.c | 12 +--
+> >  .../net/wireless/ralink/rt2x00/rt2x00dev.c    |  4 +-
+> >  drivers/net/wireless/ralink/rt2x00/rt61pci.c  | 42 ++++++-----
+> >  drivers/net/wireless/ralink/rt2x00/rt73usb.c  | 50 +++++++------
+> >  9 files changed, 177 insertions(+), 143 deletions(-)
+>
+> This result in extra code. I do not see benefit of avoiding
+> kzalloc calls at cost of adding more lines of code.
+On runtime there's extra UBSAN analysis. Reducing allocations is always goo=
+d.
+>
+> Regards
+> Stanislaw
+>
+> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2400pci.c b/drivers/n=
+et/wireless/ralink/rt2x00/rt2400pci.c
+> > index cac191304bf5..3fb74dcbee63 100644
+> > --- a/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
+> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
+> > @@ -1559,7 +1559,7 @@ static const struct rf_channel rf_vals_b[] =3D {
+> >
+> >  static int rt2400pci_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
+> >  {
+> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
+> > +     struct hw_mode_spec *spec;
+> >       struct channel_info *info;
+> >       u8 *tx_power;
+> >       unsigned int i;
+> > @@ -1580,27 +1580,25 @@ static int rt2400pci_probe_hw_mode(struct rt2x0=
+0_dev *rt2x00dev)
+> >       /*
+> >        * Initialize hw_mode information.
+> >        */
+> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
+> > -     spec->supported_rates =3D SUPPORT_RATE_CCK;
+> > +     spec =3D kzalloc_flex(*spec, channels_info, ARRAY_SIZE(rf_vals_b)=
+);
+> > +     if (!spec)
+> > +             return -ENOMEM;
+> >
+> >       spec->num_channels =3D ARRAY_SIZE(rf_vals_b);
+> >       spec->channels =3D rf_vals_b;
+> >
+> > -     /*
+> > -      * Create channel information array
+> > -      */
+> > -     info =3D kzalloc_objs(*info, spec->num_channels);
+> > -     if (!info)
+> > -             return -ENOMEM;
+> > -
+> > -     spec->channels_info =3D info;
+> > +     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
+> > +     spec->supported_rates =3D SUPPORT_RATE_CCK;
+> >
+> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_START);
+> >       for (i =3D 0; i < 14; i++) {
+> > -             info[i].max_power =3D TXPOWER_FROM_DEV(MAX_TXPOWER);
+> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> > +             info =3D &spec->channels_info[i];
+> > +             info->max_power =3D TXPOWER_FROM_DEV(MAX_TXPOWER);
+> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> >       }
+> >
+> > +     rt2x00dev->spec =3D spec;
+> > +
+> >       return 0;
+> >  }
+> >
+> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2500pci.c b/drivers/n=
+et/wireless/ralink/rt2x00/rt2500pci.c
+> > index fc35b60e422c..4c85f401c091 100644
+> > --- a/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
+> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
+> > @@ -1854,7 +1854,10 @@ static const struct rf_channel rf_vals_5222[] =
+=3D {
+> >
+> >  static int rt2500pci_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
+> >  {
+> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
+> > +     const struct rf_channel *channels;
+> > +     unsigned int num_channels =3D 0;
+> > +     unsigned int supported_bands;
+> > +     struct hw_mode_spec *spec;
+> >       struct channel_info *info;
+> >       u8 *tx_power;
+> >       unsigned int i;
+> > @@ -1880,52 +1883,58 @@ static int rt2500pci_probe_hw_mode(struct rt2x0=
+0_dev *rt2x00dev)
+> >       /*
+> >        * Initialize hw_mode information.
+> >        */
+> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
+> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> > +     supported_bands =3D SUPPORT_BAND_2GHZ;
+> >
+> >       if (rt2x00_rf(rt2x00dev, RF2522)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2522);
+> > -             spec->channels =3D rf_vals_bg_2522;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2522);
+> > +             channels =3D rf_vals_bg_2522;
+> >       } else if (rt2x00_rf(rt2x00dev, RF2523)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2523);
+> > -             spec->channels =3D rf_vals_bg_2523;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2523);
+> > +             channels =3D rf_vals_bg_2523;
+> >       } else if (rt2x00_rf(rt2x00dev, RF2524)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2524);
+> > -             spec->channels =3D rf_vals_bg_2524;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2524);
+> > +             channels =3D rf_vals_bg_2524;
+> >       } else if (rt2x00_rf(rt2x00dev, RF2525)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2525);
+> > -             spec->channels =3D rf_vals_bg_2525;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2525);
+> > +             channels =3D rf_vals_bg_2525;
+> >       } else if (rt2x00_rf(rt2x00dev, RF2525E)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2525e);
+> > -             spec->channels =3D rf_vals_bg_2525e;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2525e);
+> > +             channels =3D rf_vals_bg_2525e;
+> >       } else if (rt2x00_rf(rt2x00dev, RF5222)) {
+> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_5222);
+> > -             spec->channels =3D rf_vals_5222;
+> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_5222);
+> > +             channels =3D rf_vals_5222;
+> >       }
+> >
+> >       /*
+> >        * Create channel information array
+> >        */
+> > -     info =3D kzalloc_objs(*info, spec->num_channels);
+> > -     if (!info)
+> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
+> > +     if (!spec)
+> >               return -ENOMEM;
+> >
+> > -     spec->channels_info =3D info;
+> > +     spec->num_channels =3D num_channels;
+> > +     spec->channels =3D channels;
+> > +     spec->supported_bands =3D supported_bands;
+> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> >
+> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_START);
+> >       for (i =3D 0; i < 14; i++) {
+> > -             info[i].max_power =3D MAX_TXPOWER;
+> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> > +             info =3D &spec->channels_info[i];
+> > +             info->max_power =3D MAX_TXPOWER;
+> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> >       }
+> >
+> >       if (spec->num_channels > 14) {
+> >               for (i =3D 14; i < spec->num_channels; i++) {
+> > -                     info[i].max_power =3D MAX_TXPOWER;
+> > -                     info[i].default_power1 =3D DEFAULT_TXPOWER;
+> > +                     info =3D &spec->channels_info[i];
+> > +                     info->max_power =3D MAX_TXPOWER;
+> > +                     info->default_power1 =3D DEFAULT_TXPOWER;
+> >               }
+> >       }
+> >
+> > +     rt2x00dev->spec =3D spec;
+> > +
+> >       return 0;
+> >  }
+> >
+> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2500usb.c b/drivers/n=
+et/wireless/ralink/rt2x00/rt2500usb.c
+> > index 58728df6666c..cbc1c1399cc6 100644
+> > --- a/drivers/net/wireless/ralink/rt2x00/rt2500usb.c
+> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2500usb.c
+> > @@ -1661,7 +1661,10 @@ static const struct rf_channel rf_vals_5222[] =
+=3D {
+> >
+> >  static int rt2500usb_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
+> >  {
+> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
+> > +     const struct rf_channel *channels;
+> > +     unsigned int num_channels =3D 0;
+> > +     unsigned int supported_bands;
+> > +     struct hw_mode_spec *spec;
+> >       struct channel_info *info;
+> >       u8 *tx_power;
+> >       unsigned int i;
+> > @@ -1693,52 +1696,58 @@ static int rt2500usb_probe_hw_mode(struct rt2x0=
+0_dev *rt2x00dev)
+> >       /*
+> >        * Initialize hw_mode information.
+> >        */
+> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
+> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> > +     supported_bands =3D SUPPORT_BAND_2GHZ;
+> >
+> >       if (rt2x00_rf(rt2x00dev, RF2522)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2522);
+> > -             spec->channels =3D rf_vals_bg_2522;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2522);
+> > +             channels =3D rf_vals_bg_2522;
+> >       } else if (rt2x00_rf(rt2x00dev, RF2523)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2523);
+> > -             spec->channels =3D rf_vals_bg_2523;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2523);
+> > +             channels =3D rf_vals_bg_2523;
+> >       } else if (rt2x00_rf(rt2x00dev, RF2524)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2524);
+> > -             spec->channels =3D rf_vals_bg_2524;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2524);
+> > +             channels =3D rf_vals_bg_2524;
+> >       } else if (rt2x00_rf(rt2x00dev, RF2525)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2525);
+> > -             spec->channels =3D rf_vals_bg_2525;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2525);
+> > +             channels =3D rf_vals_bg_2525;
+> >       } else if (rt2x00_rf(rt2x00dev, RF2525E)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2525e);
+> > -             spec->channels =3D rf_vals_bg_2525e;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2525e);
+> > +             channels =3D rf_vals_bg_2525e;
+> >       } else if (rt2x00_rf(rt2x00dev, RF5222)) {
+> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_5222);
+> > -             spec->channels =3D rf_vals_5222;
+> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_5222);
+> > +             channels =3D rf_vals_5222;
+> >       }
+> >
+> >       /*
+> >        * Create channel information array
+> >        */
+> > -     info =3D kzalloc_objs(*info, spec->num_channels);
+> > -     if (!info)
+> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
+> > +     if (!spec)
+> >               return -ENOMEM;
+> >
+> > -     spec->channels_info =3D info;
+> > +     spec->num_channels =3D num_channels;
+> > +     spec->channels =3D channels;
+> > +     spec->supported_bands =3D supported_bands;
+> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> >
+> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_START);
+> >       for (i =3D 0; i < 14; i++) {
+> > -             info[i].max_power =3D MAX_TXPOWER;
+> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> > +             info =3D &spec->channels_info[i];
+> > +             info->max_power =3D MAX_TXPOWER;
+> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> >       }
+> >
+> >       if (spec->num_channels > 14) {
+> >               for (i =3D 14; i < spec->num_channels; i++) {
+> > -                     info[i].max_power =3D MAX_TXPOWER;
+> > -                     info[i].default_power1 =3D DEFAULT_TXPOWER;
+> > +                     info =3D &spec->channels_info[i];
+> > +                     info->max_power =3D MAX_TXPOWER;
+> > +                     info->default_power1 =3D DEFAULT_TXPOWER;
+> >               }
+> >       }
+> >
+> > +     rt2x00dev->spec =3D spec;
+> > +
+> >       return 0;
+> >  }
+> >
+> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c b/drivers/n=
+et/wireless/ralink/rt2x00/rt2800lib.c
+> > index 97290899674e..7b7f6dcc9247 100644
+> > --- a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
+> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
+> > @@ -11778,7 +11778,9 @@ static const struct rf_channel rf_vals_7620[] =
+=3D {
+> >
+> >  static int rt2800_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
+> >  {
+> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
+> > +     const struct rf_channel *channels;
+> > +     unsigned int num_channels =3D 0;
+> > +     struct hw_mode_spec *spec;
+> >       struct channel_info *info;
+> >       s8 *default_power1;
+> >       s8 *default_power2;
+> > @@ -11840,19 +11842,17 @@ static int rt2800_probe_hw_mode(struct rt2x00=
+_dev *rt2x00dev)
+> >       /*
+> >        * Initialize hw_mode information.
+> >        */
+> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> > -
+> >       switch (rt2x00dev->chip.rf) {
+> >       case RF2720:
+> >       case RF2820:
+> > -             spec->num_channels =3D 14;
+> > -             spec->channels =3D rf_vals;
+> > +             num_channels =3D 14;
+> > +             channels =3D rf_vals;
+> >               break;
+> >
+> >       case RF2750:
+> >       case RF2850:
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals);
+> > -             spec->channels =3D rf_vals;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals);
+> > +             channels =3D rf_vals;
+> >               break;
+> >
+> >       case RF2020:
+> > @@ -11870,44 +11870,52 @@ static int rt2800_probe_hw_mode(struct rt2x00=
+_dev *rt2x00dev)
+> >       case RF5372:
+> >       case RF5390:
+> >       case RF5392:
+> > -             spec->num_channels =3D 14;
+> > +             num_channels =3D 14;
+> >               if (rt2800_clk_is_20mhz(rt2x00dev))
+> > -                     spec->channels =3D rf_vals_3x_xtal20;
+> > +                     channels =3D rf_vals_3x_xtal20;
+> >               else
+> > -                     spec->channels =3D rf_vals_3x;
+> > +                     channels =3D rf_vals_3x;
+> >               break;
+> >
+> >       case RF7620:
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_7620);
+> > -             spec->channels =3D rf_vals_7620;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_7620);
+> > +             channels =3D rf_vals_7620;
+> >               break;
+> >
+> >       case RF3052:
+> >       case RF3053:
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_3x);
+> > -             spec->channels =3D rf_vals_3x;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_3x);
+> > +             channels =3D rf_vals_3x;
+> >               break;
+> >
+> >       case RF3853:
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_3853);
+> > -             spec->channels =3D rf_vals_3853;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_3853);
+> > +             channels =3D rf_vals_3853;
+> >               break;
+> >
+> >       case RF5592:
+> >               reg =3D rt2800_register_read(rt2x00dev, MAC_DEBUG_INDEX);
+> >               if (rt2x00_get_field32(reg, MAC_DEBUG_INDEX_XTAL)) {
+> > -                     spec->num_channels =3D ARRAY_SIZE(rf_vals_5592_xt=
+al40);
+> > -                     spec->channels =3D rf_vals_5592_xtal40;
+> > +                     num_channels =3D ARRAY_SIZE(rf_vals_5592_xtal40);
+> > +                     channels =3D rf_vals_5592_xtal40;
+> >               } else {
+> > -                     spec->num_channels =3D ARRAY_SIZE(rf_vals_5592_xt=
+al20);
+> > -                     spec->channels =3D rf_vals_5592_xtal20;
+> > +                     num_channels =3D ARRAY_SIZE(rf_vals_5592_xtal20);
+> > +                     channels =3D rf_vals_5592_xtal20;
+> >               }
+> >               break;
+> >       }
+> >
+> > -     if (WARN_ON_ONCE(!spec->channels))
+> > +     if (WARN_ON_ONCE(!channels))
+> >               return -ENODEV;
+> >
+> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
+> > +     if (!spec)
+> > +             return -ENOMEM;
+> > +
+> > +     spec->num_channels =3D num_channels;
+> > +     spec->channels =3D channels;
+> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> > +
+> >       spec->supported_bands =3D SUPPORT_BAND_2GHZ;
+> >       if (spec->num_channels > 14)
+> >               spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > @@ -11959,19 +11967,13 @@ static int rt2800_probe_hw_mode(struct rt2x00=
+_dev *rt2x00dev)
+> >       /*
+> >        * Create channel information and survey arrays
+> >        */
+> > -     info =3D kzalloc_objs(*info, spec->num_channels);
+> > -     if (!info)
+> > -             return -ENOMEM;
+> > -
+> >       rt2x00dev->chan_survey =3D
+> >               kzalloc_objs(struct rt2x00_chan_survey, spec->num_channel=
+s);
+> >       if (!rt2x00dev->chan_survey) {
+> > -             kfree(info);
+> > +             kfree(spec);
+> >               return -ENOMEM;
+> >       }
+> >
+> > -     spec->channels_info =3D info;
+> > -
+> >       default_power1 =3D rt2800_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_B=
+G1);
+> >       default_power2 =3D rt2800_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_B=
+G2);
+> >
+> > @@ -11982,10 +11984,11 @@ static int rt2800_probe_hw_mode(struct rt2x00=
+_dev *rt2x00dev)
+> >               default_power3 =3D NULL;
+> >
+> >       for (i =3D 0; i < 14; i++) {
+> > -             info[i].default_power1 =3D default_power1[i];
+> > -             info[i].default_power2 =3D default_power2[i];
+> > +             info =3D &spec->channels_info[i];
+> > +             info->default_power1 =3D default_power1[i];
+> > +             info->default_power2 =3D default_power2[i];
+> >               if (default_power3)
+> > -                     info[i].default_power3 =3D default_power3[i];
+> > +                     info->default_power3 =3D default_power3[i];
+> >       }
+> >
+> >       if (spec->num_channels > 14) {
+> > @@ -12002,10 +12005,11 @@ static int rt2800_probe_hw_mode(struct rt2x00=
+_dev *rt2x00dev)
+> >                       default_power3 =3D NULL;
+> >
+> >               for (i =3D 14; i < spec->num_channels; i++) {
+> > -                     info[i].default_power1 =3D default_power1[i - 14]=
+;
+> > -                     info[i].default_power2 =3D default_power2[i - 14]=
+;
+> > +                     info =3D &spec->channels_info[i];
+> > +                     info->default_power1 =3D default_power1[i - 14];
+> > +                     info->default_power2 =3D default_power2[i - 14];
+> >                       if (default_power3)
+> > -                             info[i].default_power3 =3D default_power3=
+[i - 14];
+> > +                             info->default_power3 =3D default_power3[i=
+ - 14];
+> >               }
+> >       }
+> >
+> > @@ -12033,6 +12037,8 @@ static int rt2800_probe_hw_mode(struct rt2x00_d=
+ev *rt2x00dev)
+> >               break;
+> >       }
+> >
+> > +     rt2x00dev->spec =3D spec;
+> > +
+> >       return 0;
+> >  }
+> >
+> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00.h b/drivers/net/=
+wireless/ralink/rt2x00/rt2x00.h
+> > index 7d313e86d3f2..babc04210a65 100644
+> > --- a/drivers/net/wireless/ralink/rt2x00/rt2x00.h
+> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00.h
+> > @@ -404,9 +404,9 @@ struct hw_mode_spec {
+> >
+> >       unsigned int num_channels;
+> >       const struct rf_channel *channels;
+> > -     const struct channel_info *channels_info;
+> >
+> >       struct ieee80211_sta_ht_cap ht;
+> > +     struct channel_info channels_info[] __counted_by(num_channels);
+> >  };
+> >
+> >  /*
+> > @@ -802,7 +802,7 @@ struct rt2x00_dev {
+> >       /*
+> >        * hw capability specifications.
+> >        */
+> > -     struct hw_mode_spec spec;
+> > +     struct hw_mode_spec *spec;
+> >
+> >       /*
+> >        * This is the default TX/RX antenna setup as indicated
+> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00config.c b/driver=
+s/net/wireless/ralink/rt2x00/rt2x00config.c
+> > index f895f560a185..b97cb67c4361 100644
+> > --- a/drivers/net/wireless/ralink/rt2x00/rt2x00config.c
+> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00config.c
+> > @@ -165,7 +165,7 @@ void rt2x00lib_config_antenna(struct rt2x00_dev *rt=
+2x00dev,
+> >  static u16 rt2x00ht_center_channel(struct rt2x00_dev *rt2x00dev,
+> >                                  struct ieee80211_conf *conf)
+> >  {
+> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
+> > +     struct hw_mode_spec *spec =3D rt2x00dev->spec;
+> >       int center_channel;
+> >       u16 i;
+> >
+> > @@ -194,6 +194,7 @@ void rt2x00lib_config(struct rt2x00_dev *rt2x00dev,
+> >                     struct ieee80211_conf *conf,
+> >                     unsigned int ieee80211_flags)
+> >  {
+> > +     struct hw_mode_spec *spec =3D rt2x00dev->spec;
+> >       struct rt2x00lib_conf libconf;
+> >       u16 hw_value;
+> >       u16 autowake_timeout;
+> > @@ -218,13 +219,8 @@ void rt2x00lib_config(struct rt2x00_dev *rt2x00dev=
+,
+> >                       hw_value =3D conf->chandef.chan->hw_value;
+> >               }
+> >
+> > -             memcpy(&libconf.rf,
+> > -                    &rt2x00dev->spec.channels[hw_value],
+> > -                    sizeof(libconf.rf));
+> > -
+> > -             memcpy(&libconf.channel,
+> > -                    &rt2x00dev->spec.channels_info[hw_value],
+> > -                    sizeof(libconf.channel));
+> > +             memcpy(&libconf.rf, &spec->channels[hw_value], sizeof(lib=
+conf.rf));
+> > +             memcpy(&libconf.channel, &spec->channels_info[hw_value], =
+sizeof(libconf.channel));
+> >
+> >               /* Used for VCO periodic calibration */
+> >               rt2x00dev->rf_channel =3D libconf.rf.channel;
+> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c b/drivers/n=
+et/wireless/ralink/rt2x00/rt2x00dev.c
+> > index edc1f8eac747..3ffbc8aabbae 100644
+> > --- a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
+> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
+> > @@ -1097,7 +1097,7 @@ static void rt2x00lib_remove_hw(struct rt2x00_dev=
+ *rt2x00dev)
+> >               rt2x00dev->hw->wiphy->bands[NL80211_BAND_5GHZ] =3D NULL;
+> >       }
+> >
+> > -     kfree(rt2x00dev->spec.channels_info);
+> > +     kfree(rt2x00dev->spec);
+> >       kfree(rt2x00dev->chan_survey);
+> >  }
+> >
+> > @@ -1116,7 +1116,7 @@ static const struct ieee80211_tpt_blink rt2x00_tp=
+t_blink[] =3D {
+> >
+> >  static int rt2x00lib_probe_hw(struct rt2x00_dev *rt2x00dev)
+> >  {
+> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
+> > +     struct hw_mode_spec *spec =3D rt2x00dev->spec;
+> >       int status;
+> >
+> >       if (test_bit(DEVICE_STATE_REGISTERED_HW, &rt2x00dev->flags))
+> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt61pci.c b/drivers/net=
+/wireless/ralink/rt2x00/rt61pci.c
+> > index 79e1fd0a1fbd..479825f8bba9 100644
+> > --- a/drivers/net/wireless/ralink/rt2x00/rt61pci.c
+> > +++ b/drivers/net/wireless/ralink/rt2x00/rt61pci.c
+> > @@ -2654,7 +2654,10 @@ static const struct rf_channel rf_vals_seq[] =3D=
+ {
+> >
+> >  static int rt61pci_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
+> >  {
+> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
+> > +     const struct rf_channel *channels;
+> > +     unsigned int num_channels =3D 0;
+> > +     unsigned int supported_bands;
+> > +     struct hw_mode_spec *spec;
+> >       struct channel_info *info;
+> >       u8 *tx_power;
+> >       unsigned int i;
+> > @@ -2693,46 +2696,51 @@ static int rt61pci_probe_hw_mode(struct rt2x00_=
+dev *rt2x00dev)
+> >       /*
+> >        * Initialize hw_mode information.
+> >        */
+> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
+> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> > +     supported_bands =3D SUPPORT_BAND_2GHZ;
+> >
+> >       if (!rt2x00_has_cap_rf_sequence(rt2x00dev)) {
+> > -             spec->num_channels =3D 14;
+> > -             spec->channels =3D rf_vals_noseq;
+> > +             num_channels =3D 14;
+> > +             channels =3D rf_vals_noseq;
+> >       } else {
+> > -             spec->num_channels =3D 14;
+> > -             spec->channels =3D rf_vals_seq;
+> > +             num_channels =3D 14;
+> > +             channels =3D rf_vals_seq;
+> >       }
+> >
+> >       if (rt2x00_rf(rt2x00dev, RF5225) || rt2x00_rf(rt2x00dev, RF5325))=
+ {
+> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_seq);
+> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_seq);
+> >       }
+> >
+> >       /*
+> >        * Create channel information array
+> >        */
+> > -     info =3D kzalloc_objs(*info, spec->num_channels);
+> > -     if (!info)
+> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
+> > +     if (!spec)
+> >               return -ENOMEM;
+> >
+> > -     spec->channels_info =3D info;
+> > +     spec->num_channels =3D num_channels;
+> > +     spec->channels =3D channels;
+> > +     spec->supported_bands =3D supported_bands;
+> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> >
+> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_G_START=
+);
+> >       for (i =3D 0; i < 14; i++) {
+> > -             info[i].max_power =3D MAX_TXPOWER;
+> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> > +             info =3D &spec->channels_info[i];
+> > +             info->max_power =3D MAX_TXPOWER;
+> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> >       }
+> >
+> >       if (spec->num_channels > 14) {
+> >               tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER=
+_A_START);
+> >               for (i =3D 14; i < spec->num_channels; i++) {
+> > -                     info[i].max_power =3D MAX_TXPOWER;
+> > -                     info[i].default_power1 =3D
+> > -                                     TXPOWER_FROM_DEV(tx_power[i - 14]=
+);
+> > +                     info =3D &spec->channels_info[i];
+> > +                     info->max_power =3D MAX_TXPOWER;
+> > +                     info->default_power1 =3D TXPOWER_FROM_DEV(tx_powe=
+r[i - 14]);
+> >               }
+> >       }
+> >
+> > +     rt2x00dev->spec =3D spec;
+> > +
+> >       return 0;
+> >  }
+> >
+> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt73usb.c b/drivers/net=
+/wireless/ralink/rt2x00/rt73usb.c
+> > index d6b7174d087a..17338378329b 100644
+> > --- a/drivers/net/wireless/ralink/rt2x00/rt73usb.c
+> > +++ b/drivers/net/wireless/ralink/rt2x00/rt73usb.c
+> > @@ -2088,7 +2088,10 @@ static const struct rf_channel rf_vals_5225_2527=
+[] =3D {
+> >
+> >  static int rt73usb_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
+> >  {
+> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
+> > +     const struct rf_channel *channels;
+> > +     unsigned int num_channels =3D 0;
+> > +     unsigned int supported_bands;
+> > +     struct hw_mode_spec *spec;
+> >       struct channel_info *info;
+> >       u8 *tx_power;
+> >       unsigned int i;
+> > @@ -2114,49 +2117,54 @@ static int rt73usb_probe_hw_mode(struct rt2x00_=
+dev *rt2x00dev)
+> >       /*
+> >        * Initialize hw_mode information.
+> >        */
+> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
+> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> > +     supported_bands =3D SUPPORT_BAND_2GHZ;
+> >
+> >       if (rt2x00_rf(rt2x00dev, RF2528)) {
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2528);
+> > -             spec->channels =3D rf_vals_bg_2528;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2528);
+> > +             channels =3D rf_vals_bg_2528;
+> >       } else if (rt2x00_rf(rt2x00dev, RF5226)) {
+> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_5226);
+> > -             spec->channels =3D rf_vals_5226;
+> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_5226);
+> > +             channels =3D rf_vals_5226;
+> >       } else if (rt2x00_rf(rt2x00dev, RF2527)) {
+> > -             spec->num_channels =3D 14;
+> > -             spec->channels =3D rf_vals_5225_2527;
+> > +             num_channels =3D 14;
+> > +             channels =3D rf_vals_5225_2527;
+> >       } else if (rt2x00_rf(rt2x00dev, RF5225)) {
+> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_5225_2527);
+> > -             spec->channels =3D rf_vals_5225_2527;
+> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
+> > +             num_channels =3D ARRAY_SIZE(rf_vals_5225_2527);
+> > +             channels =3D rf_vals_5225_2527;
+> >       }
+> >
+> >       /*
+> >        * Create channel information array
+> >        */
+> > -     info =3D kzalloc_objs(*info, spec->num_channels);
+> > -     if (!info)
+> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
+> > +     if (!spec)
+> >               return -ENOMEM;
+> >
+> > -     spec->channels_info =3D info;
+> > +     spec->num_channels =3D num_channels;
+> > +     spec->channels =3D channels;
+> > +     spec->supported_bands =3D supported_bands;
+> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
+> >
+> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_G_START=
+);
+> >       for (i =3D 0; i < 14; i++) {
+> > -             info[i].max_power =3D MAX_TXPOWER;
+> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> > +             info =3D &spec->channels_info[i];
+> > +             info->max_power =3D MAX_TXPOWER;
+> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
+> >       }
+> >
+> >       if (spec->num_channels > 14) {
+> >               tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER=
+_A_START);
+> >               for (i =3D 14; i < spec->num_channels; i++) {
+> > -                     info[i].max_power =3D MAX_TXPOWER;
+> > -                     info[i].default_power1 =3D
+> > -                                     TXPOWER_FROM_DEV(tx_power[i - 14]=
+);
+> > +                     info =3D &spec->channels_info[i];
+> > +                     info->max_power =3D MAX_TXPOWER;
+> > +                     info->default_power1 =3D TXPOWER_FROM_DEV(tx_powe=
+r[i - 14]);
+> >               }
+> >       }
+> >
+> > +     rt2x00dev->spec =3D spec;
+> > +
+> >       return 0;
+> >  }
+> >
+> > --
+> > 2.54.0
+> >
