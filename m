@@ -1,47 +1,47 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011040.outbound.protection.outlook.com [40.93.194.40])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011026.outbound.protection.outlook.com [52.101.52.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA693424D73;
-	Fri, 24 Jul 2026 12:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E7741DDE0;
+	Fri, 24 Jul 2026 12:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.26
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784895687; cv=fail; b=JHDufuRiD6CTe5pm4ksFPXcK7p/7DVNd+1AM/uOGAZ6La2KWm3+tUPdqmZzTiT5RMlA9RvgvI0LOW+AuHYMRSlTvzaBzrxlCA/1PPqB3Ug4mzKymLiuysz2pAcl7zhhn9JbEGNADK249rzaPCFUhV2cxXlaEPcBwPL0XZrqVN4o=
+	t=1784895700; cv=fail; b=eeIVQ0QUYqiKcgrzkO6rBqG3SyRR08QmgsTSPGUrsXbDPJe6WaKa9opLIFeUbZJZVc02oT7NjgDBGlcwgdpYqhla+kikwOset0A4SZIUyR20w05mf75KHQ4AJF1AQCASqyHkdJY5KOn3WjxW3r2OvhFiJgInxUJ0sGZ8+YumkQ8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784895687; c=relaxed/simple;
-	bh=BbiabetB/ychqbg14YoDie95/MIaRUORLSDaPypa7uE=;
+	s=arc-20240116; t=1784895700; c=relaxed/simple;
+	bh=1dE0WyaoxV/thZhmub+CkdPWDQkQVk6WOQwZO1xLOao=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gFlDeexS4DurcdTiQQ3XamjyirtLrSwa3uhL9Pklqe2noJSz2nb3N6Jtv4AVWsbvlV4oQA1cAwxtTZo0+eYPE3R35jAw3L7wAXRqL60eKHvN6WwDUQ6fK+ytGixGj0CEOVphTwhpdQ9ICENNXymVQXDBdXelj1fxr2H0tVKzqik=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Aq4tjA4l; arc=fail smtp.client-ip=40.93.194.40
+	 Content-Type:MIME-Version; b=cxUiqq+Bgkj1UPwUP7L4qhokOf7Hh4UpgWfr3kXmH99t1/1lvRYyiXlACVJgzf3PQV443VsOkwOAcLvYttO6LAxE8Cdf37po/bPi2RGNKC6AyAK8PohzbnVK33oBLcB3TYHDCFxWq86a8934gpCi89dyzxwn3GykiEZth/55vFk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e7HBQ2Ov; arc=fail smtp.client-ip=52.101.52.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Aq4tjA4l"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e7HBQ2Ov"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SdFZK32m/Q0aVYGVMQYzXNeYb/LVOcNV+L6pJEb/2g/UMeUYv+G4nLhw+xcZO9Y0ajccksQ2yBgkRDAXamlboe5T7LXFr1mhnpbdW92EIEf3PxQDdInl77B3Sn3Hx4jxAxrMU4DUuKwVbK8dUgNdKF7j2ZUNeORFPmzHltJfrifVsjON4TfQliKFpDk5Td0pzq+So9HVC9wANOZrrYVF67J2dGjLbQpMdTKIqe06HCL6d5bHYLYxif7pUYmmo7XEx3fNhlovhlUVAHyAZCtLLpKJiK2Zk65TYbfXbVKjbERcA1MPzwlHQyZDbsgWLWti99T/5pBsnI9OUJbYJCqaCA==
+ b=ouBO5Z1lDT/yWQ0CavokSaWADaJ+i7b5oxkRnVj0Fgyz0U1SF/tDKV5KV8q10OJEi+Nns11fuMFOHZkgp0UQB/YF3lyzJUCKtuApahSkCOLuHPWS2Rssh2x3yn5ZAu+C2c1TH02jt7R6ihFsScpuQsphafIOUo8hNaRxlJFPHEpM5Ti0xQyWYzH+diLvkb1NKhjEk+PRcJDPha/FTv2UXGsPUoZLf/TUlW0rrbQEKRwnTSvZc6WUpldBN/kLQHZOPu+gEaIN8dWdNWtHXllE6AyQhBe7TjmjSzxiXMM/OJJr9mnUw8rogd4eOqGvlatwEnYmyjEryrpxFocN2XBXoQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GlmgzACLb1WQPGjnfDt8yY7eilPJOYKy+NC+QsvwCVc=;
- b=OqqM3qyH0m+qZyI+3F6jWOduE4kflhFlrP4RRvyHaUB2JqkoRfjXOMjU/WgrQysL8hiH0lBlBWicS4y27KNKqDW6vDR5Afnjyt9156rJPRECJg4ChZytPZt04Zx83vn6qTRHJtFBlRVOmD6jKMMIaJ2kkFh6K0SoqXSH/B6mLtWTTYRGWUVTJ6cr1VNn2SdyX29cSc8eRFbSxSHQE5Xk81HM5636WsByh0zmZgSkRWrq67WmCkU31BeZXeuMSLWGV6zeiYVrAsIO6tK4iK8ntFIahSl7lLHwFTwLH4pChKMC2vcDkMBBtDbiqTuWiRBcETOejCwZ1SZ7lJTQ/nF3ww==
+ bh=t9FuS6qNMJYzp3roTJTAGfubJsOLWiXZczcDQsUgi0Y=;
+ b=KE5EOEW7dgOCvsK5Hh+hhTXjXZIZRN9m4HoyRuIrUTZS5r4puPVKAvd0eLvEF3XA3CvEVRgM9ZDd6g1IHoO4Bg4Sr7a32n8hU/3Xmb6fGcjDBFpRUi4JXnqxHrZrPcAHN4IR0hhK99Ezl89qAoxzj6k/8S17Hu4QlEm3TOARZ9dpGPYawZhqSFUXe6H4KBQXyQWcZGNrHEI8Q9uRHpvILUYaICT+laQ6Hy0/RPWLHa4oIUqxTfYnp9e6+e2b46Uhpmdc+k8WNAyuKazn92BUUi+rRLTEvY0WfzUgI/TfYHoXpLabzQ4hPxM44F5CPj05g9bc7N0PExo50WxsQTQ+Vw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GlmgzACLb1WQPGjnfDt8yY7eilPJOYKy+NC+QsvwCVc=;
- b=Aq4tjA4lsCiPdiDbwwKSh/0NRN8VnGH6o7Uuhw+l9wr/P9GtStHgmWjpXTEVDLHdZB/wOHIM8seWRHRwKrxFlp9/1vm7v+Opwh60pD83R6ezDYT9BXfzjcHM3uF90puhU0Z/bL5XPkDjvgujLZ9D5Y4dZaIn+pYaxbYgWu9jMTeMIZZe3znN1doelgw8dBDgWjkgX9JY0FZ0tMhqKwkEb1560RJtISmQp8jU2l+UWuZ6JzGj5oN7z8ZVGB6La5dSVlB2AbdD1bVjesxkVdtmvzapuDn65ayOl2sgZyoRh75vGNRW3OGZXhm3T/rauGvjdTImQ7/xQZOw15WJmFr8cg==
+ bh=t9FuS6qNMJYzp3roTJTAGfubJsOLWiXZczcDQsUgi0Y=;
+ b=e7HBQ2Ovk1A4I6lJ0y5MLtpYIAlNryOTKiHF3j1+Pq/CVBrfO0mWvbxD3BLpg69xdO87P7KQUOPOTNXLbGCex++ISfnXALbtBkL1ecfyfRE7/UWl/pLiu5ggWtFBUv3X4QSMejy6H26ISRA85p5UC5KyS5/BJzGSU/tJmyr838VWQq0EVTcxQoWkh8UTfsbDLrpG6EUAxeLcN/oSHQFXDETYbs4iKmuvRiq5djTzrEIQaPgG07cHXZGNMBRGenhCvxRKcq9ae5aXGtYSQBHe/ksewC3S5XuknL5s2mjtG+a8qUF3msR5P5xBNvGwg//PmnMFLyhQBZnTT7WOlgyKTg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from SJ0PR12MB6733.namprd12.prod.outlook.com (2603:10b6:a03:477::9)
  by IA1PR12MB9032.namprd12.prod.outlook.com (2603:10b6:208:3f3::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.12; Fri, 24 Jul
- 2026 12:21:17 +0000
+ 2026 12:21:23 +0000
 Received: from SJ0PR12MB6733.namprd12.prod.outlook.com
  ([fe80::f00d:2f6b:6f9b:8f97]) by SJ0PR12MB6733.namprd12.prod.outlook.com
  ([fe80::f00d:2f6b:6f9b:8f97%6]) with mapi id 15.21.0223.017; Fri, 24 Jul 2026
- 12:21:16 +0000
+ 12:21:23 +0000
 From: Kai-Heng Feng <kaihengf@nvidia.com>
 To: rafael@kernel.org,
 	shuah@kernel.org,
@@ -59,17 +59,16 @@ Cc: julianbraha@gmail.com,
 	csoto@nvidia.com,
 	mochs@nvidia.com,
 	Kai-Heng Feng <kaihengf@nvidia.com>
-Subject: [PATCH v2 RESEND 2/4] ACPI: APEI: GHES: Add NVIDIA Vera decoder
-Date: Fri, 24 Jul 2026 20:20:52 +0800
-Message-ID: <20260724122054.36162-3-kaihengf@nvidia.com>
+Subject: [PATCH v2 RESEND 3/4] ACPI: APEI: GHES: Add Grace and Vera KUnit coverage
+Date: Fri, 24 Jul 2026 20:20:53 +0800
+Message-ID: <20260724122054.36162-4-kaihengf@nvidia.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260724122054.36162-1-kaihengf@nvidia.com>
 References: <20260724122054.36162-1-kaihengf@nvidia.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI3PR03CA0003.apcprd03.prod.outlook.com
- (2603:1096:4:297::13) To SJ0PR12MB6733.namprd12.prod.outlook.com
- (2603:10b6:a03:477::9)
+X-ClientProxiedBy: SI2P153CA0031.APCP153.PROD.OUTLOOK.COM (2603:1096:4:190::7)
+ To SJ0PR12MB6733.namprd12.prod.outlook.com (2603:10b6:a03:477::9)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -78,591 +77,1071 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SJ0PR12MB6733:EE_|IA1PR12MB9032:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e8603c0-6a12-49db-6aac-08dee97e0e7b
+X-MS-Office365-Filtering-Correlation-Id: 62ba856b-f11a-425e-c1f9-08dee97e126a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|10067099003|11063799006|56012099006|22082099003|18002099003;
+	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|10067099003|11063799006|56012099006|6133799003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	4tzZFCv2xWFLzse6qFFTXRSbSHzlkIhoKm0XRdpCD654lOFwhG083Ciu4Ya3ULzCxVxM7vM2k5pmHGODOUQby3tkOgk+RE+JJxadYa5iEwE6OVvls7omxRkNFCmGgkRroQR9rMTAMlmM69Q0pbx0/tRGAm3BNxjXVvQ2nUu3O8BmPsvbiGfELc5ItxGc61lfP9PU4NJ6yoor1AOVcAMimjMMnLDcSBSektVvg8Mrw62n6HaXtZrcdQGTriEtJ7iKFRd3/6o0BBTGr5cESwX+1nduvcpQkQ0d7EPg3h3z8QjfFvYa1cgNRm2Mb3wY0kH5g/7ZHpymlWvHT6B4OW0BPJ+dgAMwFFxXAko/fGLKx24BNO68fgv8e+1ssBOWExF+Erch20wJiSDMurn98P2rmHbW29RAk/WI4nJH5o7p1eaEg/NbGd+j+dIp4DM8reuV92kYbfMzvOtBwVjQj9EEW906oX8arTQfCBCFILvY1kR5MZ/iH1fKYHuqMC0cTUzGhXT69nqyuVZc9t8OtiCVpF2LW3mL+hy9cDkPGJ0CjYj4FQSFKlKR+QUVK7JDHEWaT5sKiLqpAGUVP5cXo41j5SVX8PHQ9cR3LuK0fWQTlGg+e+32ppX0HK2qX2cFUNIr45fOnOZJPvQb0km96Z5b7I4NJPgpwnfD63Jlu6kacL4=
+	h2D6Q0ojn7mT8Gy82O+5W4VLzhF0Nb7pH5ahBFi5V81cSuu0CgzdXdWF5R4kEYj6z9bzyM3uBAMdK6m1mJCX9QM+a+YkV0X+M6MWdcWAxqOcyQdoMrX2vL9Lg9j595+fxutc+toj8nPSpfVG9g/AuwAF4BpzgoX+zprho/Azl+9l8mJYJRIRi8evyqKYbudnctLQJFmDqJWZObJRU/CpfkjKityxcq5id28kEWj52s/oLx0mto7ywNahzMBh2h59ISgQtYiKuPkbcoSI5CWnHrmxGJHl77VrgbG7XLslMmJySoDHDuFgY+nIVw7Fcv+uQhWatgUt7VE87UoAmtJZx6PyrwHROy7writbgczJnNDuvRMekAuFICfwZJIoNP9M31vcbRVuL+ior7KepgEb8ZWtvs7jxTcOulTlbyHQ63fWfbYqsnXIz9uN3OvO8odmIrTm0ohlOXBY4lA07PB9fmxoFJKWPUlqvioKfjIXmTypswYCp2Sa4eSLMO9BjUo1PMLMtV8rlqFOSPOPxADg6zRpq+lWjXfzZ/FgMemTzTSsNNFJW7jTaylDung/2oGxXPNLcc/4mcN3K4X+0YyT0s59Svqx1090/korCW245SBHI1QLiiBf7Zqn4AP4NdbNdPHBiKn9xkxBEkhbQ89fXX3NTXAijZKJV6mO9pEZAWU=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB6733.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(10067099003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB6733.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(10067099003)(11063799006)(56012099006)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eGakGwpcqbSZNWAcAZ27il7Uc6dm4ComniMY47feGeJlYcjrxhaBL9/W/u4n?=
- =?us-ascii?Q?FG8wkDzEEqTtgSPt1aZnjUp6yE3Vu1UgD1CRmb5vsGeJbIPnlbmOs98jwc4k?=
- =?us-ascii?Q?misW7vFyZUtIegi2HgXKsoERSuC7YzRs3hAmjp7IRglXCkZ6nO7Cy7DyYxCd?=
- =?us-ascii?Q?wn0vrX/9+/0FKgxwSCVGMJ4Hn9QqJ6y27DQcte78ubP0QaoEclqtSo8vIa5D?=
- =?us-ascii?Q?ooDbVua8XojFPnz6AapSEvzHmWCAO6M92dAxLxXsq6aC69a+XxbDETSiULFt?=
- =?us-ascii?Q?uNYVfyKAtJFp636b1aRl3o3u6X+reEcxW50tN7+TJU3sy2ca8qnuYt8w7vib?=
- =?us-ascii?Q?vOEI6j4fliGfUBrcmlUeZOSaAxLy02tWSB4A79Hzb4MxdkovGWmAU4aFOS8t?=
- =?us-ascii?Q?PwVSuQKhWGVjuF7WvO6KXRQD3cvRaCgMNZqH6o+bD/NcbeEQLPkKNV3xsFcm?=
- =?us-ascii?Q?EYvpdhKe1qWt0AA+F/DXce5ZCpwsor42GCYziHniPEJ5d3h3BVrnJ4fnDBY+?=
- =?us-ascii?Q?CpIQa0O87AzMTgbR7OnPpJUfc4zd9JoNhfUW3kgWqZ8oub+Srwqfnq2ZP/3b?=
- =?us-ascii?Q?jEQOrxpW4EBx1j1/nZwiOMTBmjcUGgO8z7IIkwE78aVAcwRcR7Wu3iCNo5YI?=
- =?us-ascii?Q?H3bGButqmz2E2hvMlKB0wa4tCBNcex3KgMtqqz6eHhFOBgAmxvaRnEGvGW9R?=
- =?us-ascii?Q?pKivy0hSp06cbeh1jt2AZn8IyZJJA2W8l1UalFnDBiFj4MutbPEMo3szs/hN?=
- =?us-ascii?Q?FIWsc8/nfWTYXCvAUVimrOwiIQUdTAqrtp2U3MobNC0vx02HKswKucxXu6cU?=
- =?us-ascii?Q?fJz1WSFUp2f0gGyf1/++C88R74cway24OG51rbKrOmYV/c/M1ySF8o+Oj62F?=
- =?us-ascii?Q?dNkYrFUsVJSAL0vYWfe/G5sV3f1xzR8DSq0QWZcxlnw12ttHSfchmn2xCaod?=
- =?us-ascii?Q?oI/lVuu+c9GzFqmZ4rhg89Nyu9FJ0OJ7WXWPpySwK69ubXdWTaNgNGkfgD0M?=
- =?us-ascii?Q?6KWZMRQuEtKYjFNPCvbu4WxoQEZQ2UfQcP1ztdnzpLtamZvoVDqlsxcLyzah?=
- =?us-ascii?Q?EAlsgtwHPW5PY52nQuCnn6uvX1hljHgQEwz10y98zpb4RqWsSa/Tm9uYGgp3?=
- =?us-ascii?Q?1KdMeOEvupiQj/gefz2XpTqnqUqXlk9cC6JgZoFvNzEE4rcEEdVajHyJICJ3?=
- =?us-ascii?Q?hsgt9gmYu48hVviN2CrLCgSyyXIYbbydvYRoSed/qtGuYQ3/b+x5Eum1BhV9?=
- =?us-ascii?Q?LoBsrBXb6/xCinnO+UwcM2IKeQYNfrDhnPpse0nHdaFArq1FPeCGnoZGzrvh?=
- =?us-ascii?Q?Du+0EOAyRSEmxefEtwX/UuE7gRuq6No1SF5CsSHHp7kLMYAH6wGMJ5aRzj9/?=
- =?us-ascii?Q?Y1ztEvT2zNB44pPsirDY+zRKR0y0iGOPJJHKzXM3aqaX0FpwfejL7KvUCgIt?=
- =?us-ascii?Q?TdPsDMibqMVucJrEX/8+OmAtq4GhqCB/DwyG4XiPPd8KjBV/a0LmrQxlfw6A?=
- =?us-ascii?Q?7UGObDBitKLZzf+7VDiewNlr4Lv+OFEBrpQ9+7QqzCIEc1TX9adwnzYgEral?=
- =?us-ascii?Q?HI1arVx/o6uSCxCvD2LkmtMPte270yO/m/3lTtiR3vuUEP/Zyq3ExRiVZL2F?=
- =?us-ascii?Q?g2+zasu2gNNBNgA/U+92bNgYi4K+wgJpM4rnaHHaCiOQsqMLSTDgKPuF6LWd?=
- =?us-ascii?Q?eJtLtwyUXKNaL6fqbYRtvTwS2f3CIBvC45pks6GqymK+JRdIb90b8Fr1ZF7W?=
- =?us-ascii?Q?6GOYeiW60Q=3D=3D?=
+	=?us-ascii?Q?M/y1giMX6EFIQtQ6nbSpfgEmMr/W291jZGFdUdFyL4uUl6hCbiYGEpVEiGZJ?=
+ =?us-ascii?Q?6ddriXcfXGtFVbtgfS+DW6QIo359ZNc1Xtvh4f4g4Z5ETya7457TinZsLaVP?=
+ =?us-ascii?Q?coPfpUpGJQfJOEn59B0Frm7fg3oMVW/fHrx75iDRQ6leg9mQ3Bq7KhTxXFfB?=
+ =?us-ascii?Q?y0FkDEV+xcyitGkn6veDQpe+ttSppCq+X7Wnm5XGaK8FADyFSF5gEZxmUFZZ?=
+ =?us-ascii?Q?zATyZARogt3KFPvvgQQ5fkQUBv8nkx2Sj6O4YoEiiYQrf6LdA9QOTjehFVh4?=
+ =?us-ascii?Q?PP367m4THsHSb1CPvYA8oZCSxMtVhkUxAT/xeioG7yHmIWbjLaPOzjbm7lO6?=
+ =?us-ascii?Q?pYCAQyVFvpZwoDmmuSElGJvWY7cmc5SWlKZg7M+2Kitili9BP+V4yQdSZ9B9?=
+ =?us-ascii?Q?fIjYN2rShKIFf57geE7h23qXyH+iMMECIs7uLbE+PR8WOwq1mLZ8u9k9xlIo?=
+ =?us-ascii?Q?6zfg3yPFVbR4xoxpnkxSPid7dJS/lo1Oe6N8wAG4b0SLt1zIj3cQeJZpJnnQ?=
+ =?us-ascii?Q?2iMJVCWf3PJ7f7CTSJ0Bc6Jf3sJr72p3vwGuN7k0mpsUj6Pubw9Zva4LeJLA?=
+ =?us-ascii?Q?GCSgKRQk8WjN8W7chdF2s8b5iSy+vos+08DesnjltbMlJ9K7dwy2NZWkAP/2?=
+ =?us-ascii?Q?SLdyTHdcR4hfyWlA4e2UfvdExf+s+eTrLX2XTkU4ZEc8TWwC4Yco2O2OlDf8?=
+ =?us-ascii?Q?oEsfJu/iyUOEZz3vCzBdCqGtLUc3oRMfnsPY9ytgdYvrWtWmAnSGazXLfZTl?=
+ =?us-ascii?Q?3nldiX72vVzfarUZUYw7V/Gb6SJ2S3WhCktANSFF8Wu4FZm7EkO0oF2eg+9Y?=
+ =?us-ascii?Q?V+RFKFI0Ptt5QFdsgHfZoqufqPFtzI+mqof5VgUbcsGBcIqKir4dizTyukWH?=
+ =?us-ascii?Q?Z4iMgqrLvL0OWNh6z5oXPZgDYdBw8or+Eqnojst3wWpcBMlD3XuSq8yTFDpu?=
+ =?us-ascii?Q?u++g2MyhVzlDyGFlBFrULmZDtRXUYiK7ypwEGjKUMjhlPPAhbsHrBzkb3q4a?=
+ =?us-ascii?Q?m9wVLg/ioqb4rghnD0Jmh8cYVs30uBsiLiTWXBl1yUKSE3ph4QWYzQob9c3e?=
+ =?us-ascii?Q?VAkM15QHHZPqh668H1w+jlCPcdx7IPn+8skd9YYCf38vXDdS0lWUDdEqeKV0?=
+ =?us-ascii?Q?SBgOgKeG3jn3lgqjxu//kC3cGVFRnCf57oR0j918a0UpaE4JfEklSziXFhkb?=
+ =?us-ascii?Q?eD8uE/G7xTL/4Ql6n2YidEyfRpHMmRlJ7Rk995boDWDPhtI1W3E5UOXwhq/D?=
+ =?us-ascii?Q?JeIyQTj3rbegJutjBijsB11RzTtQ9IAzdlfRLPv9xLv6KGe084nD1lkaPPVP?=
+ =?us-ascii?Q?k/e5bc0QUFzAe3dXsSaL1UVXDzeEeq0LaNS3kak56YQyUCwUGHyTd2lhwSSc?=
+ =?us-ascii?Q?HbnZ0ChB9AxCIhbETojPfax/YfX6I+y2CChs//wZgN/WkEFKrnbulOvYFyOQ?=
+ =?us-ascii?Q?npR52mWBq+BG/oDg7lICEgGRDdMdiTACwt1fXcHqKYPzbSX46aacgn7/lWtI?=
+ =?us-ascii?Q?/lMMG3N/vmo/g31bMXYJw18fzRqiJQVNqoPyr4eHIm9U0Jg+G82/5r57nt7K?=
+ =?us-ascii?Q?/OY6RXvMVyyL7MTiHOAW0a9dVKx/6HcaP7gyrjE6FU4wIFxpV5DFrSbWXrBi?=
+ =?us-ascii?Q?rcD0Rc5LwY+zI5EHL8v92KY8omzaXIR7A5svqrjmc2wrCyt2piDRq6WxBAEX?=
+ =?us-ascii?Q?EWFFh9+QFIXF0oDhMmfwmz2N2y0i0cdU5YLwduPkMjXKblsX69CHnzC2gA15?=
+ =?us-ascii?Q?0VIT0gL+KA=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e8603c0-6a12-49db-6aac-08dee97e0e7b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62ba856b-f11a-425e-c1f9-08dee97e126a
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB6733.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2026 12:21:16.1629
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2026 12:21:22.8886
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 73PnO19LE7TY1oVxb7g0+NNswGCN7MbtUSDLlR9MGQdRteh/IxHvrf5grzrQxws579pnctW9ErQNPPdTy/oYkw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: k3z7F/5rAhtZDG6ePfhEFWQDIYGVkbGpNbtCYSjc6WEhKG3gj/WCSSkIKf38nF61MfS5VuQevBhbgj3i+0a2mg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9032
 
-Vera is NVIDIA's next-generation server SoC. Its CPER section uses a
-different GUID and a different binary layout from Grace, so it needs
-its own decoder. Without this, firmware-reported hardware errors on
-Vera platforms are received but not decoded.
+Verify the Grace and Vera decoders against real binary records
+captured from firmware before deploying to production hardware.
+Tests cover both the happy path and the rejection of malformed
+inputs across all constraint categories.
 
 Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
 ---
- drivers/acpi/apei/ghes-nvidia.c | 368 ++++++++++++++++++++++++++++++--
- drivers/acpi/apei/ghes-nvidia.h |  29 ++-
- 2 files changed, 382 insertions(+), 15 deletions(-)
+v2:
+ - Add !KUNIT_ALL_TESTS for tristate.
 
-diff --git a/drivers/acpi/apei/ghes-nvidia.c b/drivers/acpi/apei/ghes-nvidia.c
-index af445152def0..c74c155dd2ba 100644
---- a/drivers/acpi/apei/ghes-nvidia.c
-+++ b/drivers/acpi/apei/ghes-nvidia.c
-@@ -7,18 +7,27 @@
+ drivers/acpi/apei/Kconfig                     |  17 +-
+ drivers/acpi/apei/Makefile                    |   1 +
+ drivers/acpi/apei/ghes-nvidia-test-fixtures.h | 233 ++++++
+ drivers/acpi/apei/ghes-nvidia-test.c          | 704 ++++++++++++++++++
+ 4 files changed, 953 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/acpi/apei/ghes-nvidia-test-fixtures.h
+ create mode 100644 drivers/acpi/apei/ghes-nvidia-test.c
+
+diff --git a/drivers/acpi/apei/Kconfig b/drivers/acpi/apei/Kconfig
+index 428458c623f0..22d88425f36c 100644
+--- a/drivers/acpi/apei/Kconfig
++++ b/drivers/acpi/apei/Kconfig
+@@ -80,14 +80,27 @@ config ACPI_APEI_GHES_NVIDIA
+ 	help
+ 	  Support for decoding NVIDIA-specific CPER sections delivered via
+ 	  the APEI GHES vendor record notifier chain. Registers a handler
+-	  for the NVIDIA section GUID and logs error signatures, severity,
+-	  socket, and diagnostic register address-value pairs.
++	  for the NVIDIA Grace and Vera section GUIDs and logs the decoded
++	  NVIDIA error records.
  
- #include <linux/acpi.h>
- #include <linux/module.h>
-+#include <linux/overflow.h>
- #include <linux/platform_device.h>
+ 	  Enable on NVIDIA server platforms (e.g. DGX, HGX) that expose
+ 	  ACPI device NVDA2012 in their firmware tables.
+ 
+ 	  If unsure, say N.
+ 
++config ACPI_APEI_GHES_NVIDIA_KUNIT_TEST
++	tristate "NVIDIA GHES vendor record handler KUnit tests" if !KUNIT_ALL_TESTS
++	depends on KUNIT && ACPI_APEI_GHES_NVIDIA
++	default KUNIT_ALL_TESTS
++	help
++	  KUnit tests for NVIDIA GHES vendor CPER parser helpers.
++	  They cover Grace helper decoding, Vera payload parsing, and
++	  section routing.
++	  They are enabled only for KUnit test builds.
++	  They are not intended for production firmware paths.
++
++	  If unsure, say N.
++
+ config ACPI_APEI_ERST_DEBUG
+ 	tristate "APEI Error Record Serialization Table (ERST) Debug Support"
+ 	depends on ACPI_APEI
+diff --git a/drivers/acpi/apei/Makefile b/drivers/acpi/apei/Makefile
+index 66588d6be56f..210a57242044 100644
+--- a/drivers/acpi/apei/Makefile
++++ b/drivers/acpi/apei/Makefile
+@@ -11,5 +11,6 @@ einj-y				:= einj-core.o
+ einj-$(CONFIG_ACPI_APEI_EINJ_CXL) += einj-cxl.o
+ obj-$(CONFIG_ACPI_APEI_ERST_DEBUG) += erst-dbg.o
+ obj-$(CONFIG_ACPI_APEI_GHES_NVIDIA) += ghes-nvidia.o
++obj-$(CONFIG_ACPI_APEI_GHES_NVIDIA_KUNIT_TEST) += ghes-nvidia-test.o
+ 
+ apei-y := apei-base.o hest.o erst.o bert.o
+diff --git a/drivers/acpi/apei/ghes-nvidia-test-fixtures.h b/drivers/acpi/apei/ghes-nvidia-test-fixtures.h
+new file mode 100644
+index 000000000000..705c879c785e
+--- /dev/null
++++ b/drivers/acpi/apei/ghes-nvidia-test-fixtures.h
+@@ -0,0 +1,233 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef GHES_NVIDIA_TEST_FIXTURES_H
++#define GHES_NVIDIA_TEST_FIXTURES_H
++
++#include <linux/types.h>
++
++/*
++ * Source: cper-tools/test_data/vera_msft.json
++ * cper-tools commit: bf18f75406422e73e11b8b1ff80e3c9d9cfb032a
++ * Boundary: CPER.Oem.Nvidia.Unknown.Data.
++ * Each payload equals the Vera GUID section body located in DiagnosticData.
++ */
++
++/* Redfish Id 10, signature L1 RESET, real sample. */
++/* Vera section index 0, offset 200, length 80. */
++/* sha256 fc11639e506eb8d79e7ff16a0556463ac4b1304bface935c0cd13efc0b3e317f. */
++static const u8 vera_l1_reset_id10[] = {
++	0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x27, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x4c, 0x31, 0x20, 0x52, 0x45, 0x53, 0x45, 0x54,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00,
++	0x07, 0x41, 0x01, 0x00, 0xc0, 0x01, 0xfe, 0x06, 0x00, 0x00, 0x00, 0x00,
++	0x81, 0xc1, 0x18, 0x78, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00,
++	0x15, 0xfe, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++};
++
++/* Redfish Id 40, signature CRASHDUMP-ID, real sample. */
++/* Vera section index 0, offset 200, length 304. */
++/* sha256 3ba93201740e6bd868b48ec40c3d52b235c1ebc59528fc81974079c21bf2a6a2. */
++static const u8 vera_crashdump_id_id40[] = {
++	0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x43, 0x52, 0x41, 0x53, 0x48, 0x44, 0x55, 0x4d,
++	0x50, 0x2d, 0x49, 0x44, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00,
++	0x07, 0x41, 0x01, 0x00, 0xc0, 0x01, 0xfe, 0x06, 0x00, 0x00, 0x00, 0x00,
++	0x81, 0xc1, 0x18, 0x78, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x01, 0x00, 0x00, 0x00, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x83, 0x72, 0x65, 0x6c, 0x5f, 0x37, 0x33, 0x2e, 0x37,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x84, 0x64, 0x69, 0x72, 0x74,
++	0x79, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x85,
++	0x44, 0x24, 0x4e, 0x9e, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x10, 0x00,
++	0x14, 0xfe, 0x00, 0x00, 0x07, 0x41, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x04, 0x07, 0x03, 0x03, 0x14, 0xfe, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x20, 0x00, 0x15, 0xfe, 0x00, 0x00,
++	0x9d, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x0a, 0x04, 0x00,
++	0x14, 0xfe, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x14, 0x0a, 0x04, 0x00, 0x14, 0xfe, 0x00, 0x00, 0x1e, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x18, 0x0a, 0x04, 0x00, 0x14, 0xfe, 0x00, 0x00,
++	0x40, 0x60, 0x30, 0x06, 0x00, 0x00, 0x00, 0x00, 0x1c, 0x0a, 0x04, 0x00,
++	0x14, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x20, 0x0a, 0x04, 0x00, 0x14, 0xfe, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x24, 0x0a, 0x04, 0x00, 0x14, 0xfe, 0x00, 0x00,
++	0xfc, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x0a, 0x04, 0x00,
++	0x14, 0xfe, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x2c, 0x0a, 0x04, 0x00, 0x14, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00,
++};
++
++/* Redfish Id 41, signature CRASHDUMP-S1, real sample. */
++/* Vera section index 0, offset 200, length 2008. */
++/* sha256 54db30564d3324240f088a1533c113407f1d81bcd652ef0d27d958c490aee5ce. */
++static const u8 vera_crashdump_s1_id41[] = {
++	0x01, 0x01, 0x00, 0x00, 0x00, 0x10, 0x00, 0x09, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x43, 0x52, 0x41, 0x53, 0x48, 0x44, 0x55, 0x4d,
++	0x50, 0x2d, 0x53, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00,
++	0x07, 0x41, 0x01, 0x00, 0xc0, 0x01, 0xfe, 0x06, 0x00, 0x00, 0x00, 0x00,
++	0x81, 0xc1, 0x18, 0x78, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x88, 0x07, 0x00, 0x00, 0x53, 0x56, 0x7f, 0xa1,
++	0xd1, 0xd7, 0x7f, 0xe5, 0xaa, 0x34, 0xde, 0x7d, 0xe9, 0x3e, 0xc4, 0xd4,
++	0x92, 0xe8, 0x10, 0xa1, 0x4c, 0xfc, 0xf9, 0x2e, 0x02, 0x87, 0xc5, 0x6e,
++	0x44, 0xfb, 0xb5, 0x59, 0xac, 0xfa, 0xa8, 0x15, 0x75, 0x46, 0x2d, 0x67,
++	0x84, 0xe0, 0x78, 0x14, 0xe4, 0x18, 0x8e, 0x30, 0x46, 0xff, 0xbe, 0x5e,
++	0x15, 0x3e, 0x61, 0xf4, 0xcc, 0x3d, 0x2e, 0xdf, 0x1b, 0xf9, 0x1f, 0x1c,
++	0xa3, 0xf8, 0x35, 0x34, 0xe1, 0x4c, 0xb7, 0xd0, 0xcc, 0xda, 0xf1, 0xbc,
++	0x02, 0x8d, 0xc2, 0x6b, 0x5d, 0x56, 0xd4, 0x48, 0x89, 0x7f, 0xb2, 0x64,
++	0xda, 0xa0, 0xf4, 0xed, 0xef, 0xf7, 0x5f, 0x29, 0x38, 0x51, 0x59, 0x35,
++	0x1f, 0x52, 0x63, 0xa8, 0x45, 0x02, 0x7a, 0x24, 0xf6, 0x26, 0x83, 0x29,
++	0x65, 0x01, 0x77, 0x0e, 0xb2, 0x5e, 0xac, 0xf2, 0xd4, 0xc0, 0x09, 0x94,
++	0x5c, 0x4d, 0x55, 0xaf, 0xcf, 0xb7, 0x8c, 0xad, 0x47, 0xcf, 0x02, 0x2c,
++	0x8c, 0x0f, 0x28, 0xf1, 0x4c, 0x15, 0x66, 0xb0, 0xb4, 0x7d, 0xd1, 0xf6,
++	0x90, 0xc8, 0x5e, 0x64, 0x16, 0x9f, 0x5f, 0x3f, 0x50, 0xc9, 0x62, 0x91,
++	0x87, 0xd8, 0xd7, 0xe9, 0x9f, 0x7b, 0xcd, 0xc9, 0xfe, 0xa1, 0xd3, 0xf2,
++	0xc2, 0x95, 0xc7, 0x37, 0x34, 0x6c, 0xc4, 0xc0, 0x53, 0x56, 0x01, 0x2c,
++	0x96, 0x63, 0xdb, 0x2c, 0xea, 0x09, 0xa0, 0xaa, 0xe5, 0xe2, 0x48, 0x18,
++	0x3c, 0x68, 0xf9, 0xa0, 0x7f, 0x98, 0x5a, 0xe3, 0xe8, 0x8e, 0x83, 0x71,
++	0x51, 0x79, 0xc3, 0x14, 0xf1, 0xf4, 0xac, 0xd5, 0xd9, 0x8c, 0xab, 0x33,
++	0x4e, 0x9f, 0xc2, 0xb7, 0xed, 0x6f, 0x78, 0x81, 0x77, 0x34, 0xb8, 0xea,
++	0xb0, 0x71, 0xa1, 0x4d, 0x08, 0x40, 0xad, 0x4c, 0x95, 0x6a, 0x21, 0x96,
++	0x07, 0x12, 0x62, 0xed, 0x42, 0xa9, 0xe4, 0xa8, 0x88, 0xc7, 0x81, 0xff,
++	0x88, 0x07, 0x00, 0x00, 0x55, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x83, 0xbc, 0x15, 0xd9, 0x0b, 0x6b, 0x3b, 0x3b, 0xff, 0x77, 0xb2, 0x7c,
++	0x0c, 0xdd, 0xfb, 0x00, 0x7e, 0x0a, 0x88, 0x47, 0x8a, 0xf2, 0xf8, 0xc5,
++	0x07, 0x51, 0x0e, 0xd7, 0xcb, 0x78, 0xea, 0x89, 0x37, 0x2a, 0x44, 0x0d,
++	0x74, 0x4f, 0x9e, 0x6d, 0x2c, 0xf9, 0x53, 0xed, 0x38, 0x34, 0xca, 0x38,
++	0x7d, 0x96, 0xfe, 0x9a, 0x9b, 0x23, 0x3b, 0x17, 0x17, 0x69, 0xe6, 0x6c,
++	0x0e, 0xe6, 0x71, 0xf5, 0x59, 0xf6, 0xc4, 0x82, 0xd6, 0x83, 0xb1, 0x76,
++	0x41, 0x22, 0x53, 0x72, 0x9f, 0x85, 0x0d, 0xdc, 0x67, 0x22, 0x35, 0xd3,
++	0xe3, 0xaf, 0x10, 0x50, 0xc8, 0xe1, 0xb0, 0xea, 0xc9, 0x1a, 0x3e, 0x02,
++	0x36, 0xea, 0x94, 0xb1, 0x27, 0xfc, 0xc9, 0x61, 0xcb, 0x6f, 0xb0, 0x50,
++	0xe1, 0x85, 0x1c, 0x2d, 0x5f, 0xb5, 0x63, 0x38, 0x69, 0x02, 0xb3, 0x7d,
++	0xb3, 0xb5, 0xe0, 0xfe, 0x5a, 0xf1, 0x0d, 0x83, 0xd9, 0x51, 0xcc, 0xa2,
++	0xb5, 0x41, 0x3b, 0xd1, 0xf5, 0x58, 0xe8, 0x54, 0x49, 0x78, 0xc1, 0x8b,
++	0x70, 0xf1, 0x94, 0x45, 0x18, 0x4b, 0x19, 0x58, 0xe6, 0x0a, 0x08, 0x27,
++	0xe7, 0x95, 0xd6, 0x82, 0xb7, 0x8c, 0xae, 0xae, 0x58, 0x33, 0xc2, 0x02,
++	0xf8, 0xfb, 0x8a, 0x73, 0xe4, 0x0b, 0x75, 0x9b, 0x00, 0x76, 0x14, 0x31,
++	0x5e, 0xf5, 0xf0, 0x8b, 0xb7, 0x6b, 0xaf, 0xdd, 0x8b, 0x52, 0xc9, 0x79,
++	0xe7, 0xd3, 0x17, 0x90, 0xa4, 0xb0, 0xa0, 0x97, 0xcf, 0xba, 0x37, 0x1d,
++	0xe0, 0xbf, 0x31, 0xff, 0xe9, 0x3a, 0x50, 0x5b, 0xf8, 0x94, 0xd0, 0x33,
++	0xf9, 0x2d, 0x2e, 0x54, 0xfa, 0x11, 0x63, 0x06, 0xf2, 0x32, 0xb9, 0x7b,
++	0xd9, 0xc6, 0x12, 0x60, 0xa6, 0x16, 0xac, 0xc8, 0x02, 0xf7, 0xd6, 0xd5,
++	0xb6, 0x2e, 0xf0, 0xb3, 0x05, 0x39, 0x47, 0xd4, 0xa9, 0xed, 0x1a, 0xca,
++	0x4c, 0x4f, 0x83, 0x2d, 0xcc, 0x5c, 0xa7, 0x02, 0x01, 0x84, 0xc9, 0x07,
++	0xa5, 0x6a, 0xf7, 0xbe, 0x3d, 0xc2, 0x09, 0xe8, 0xc8, 0xf8, 0x4b, 0x71,
++	0xa8, 0x79, 0x6c, 0x68, 0xda, 0x35, 0xe1, 0xd2, 0x9d, 0xa6, 0xb3, 0x70,
++	0xf6, 0xcb, 0x66, 0x41, 0xde, 0x86, 0x11, 0x2a, 0xd0, 0xa1, 0x84, 0x99,
++	0x5b, 0xdf, 0x74, 0x26, 0x18, 0xba, 0x6f, 0x3e, 0x46, 0xef, 0xe7, 0xd2,
++	0xfd, 0xe5, 0xa8, 0xba, 0xff, 0xe4, 0xe0, 0x50, 0x9f, 0x23, 0xe5, 0x03,
++	0x81, 0xc2, 0xab, 0x74, 0xd8, 0xc4, 0xe9, 0xd5, 0xf6, 0x7f, 0x86, 0x6b,
++	0x06, 0xfc, 0x62, 0x0f, 0xeb, 0xa3, 0xc4, 0xa0, 0xad, 0x70, 0xad, 0x9b,
++	0xdf, 0xd1, 0x75, 0x28, 0xdc, 0xf2, 0x24, 0x87, 0x6e, 0x85, 0x67, 0xfb,
++	0xbb, 0x38, 0x86, 0xd8, 0x77, 0x15, 0x35, 0x41, 0x53, 0x69, 0x71, 0xd9,
++	0x33, 0x00, 0x2c, 0x56, 0x45, 0xfd, 0xfc, 0xea, 0xf9, 0x8f, 0xd7, 0x04,
++	0x6a, 0x8d, 0xf5, 0x4b, 0xd1, 0x5a, 0x66, 0x7e, 0xe0, 0xeb, 0x06, 0x80,
++	0xc2, 0x14, 0x00, 0x49, 0x1c, 0x62, 0x54, 0xdb, 0x4b, 0x80, 0xc1, 0xa1,
++	0xe3, 0x36, 0xc0, 0x58, 0x0f, 0x6c, 0x65, 0xfc, 0xc8, 0x4d, 0x85, 0xa5,
++	0x5e, 0xb2, 0xbd, 0x5e, 0x2d, 0x47, 0x14, 0x77, 0x32, 0x7e, 0x39, 0x0b,
++	0xba, 0xcd, 0x30, 0x4b, 0x8e, 0x3b, 0x6d, 0x66, 0x59, 0x73, 0x16, 0x0b,
++	0x23, 0x99, 0xb5, 0x09, 0xb7, 0x8f, 0xb2, 0x96, 0x1f, 0x74, 0x08, 0x36,
++	0x1f, 0xcd, 0x46, 0x90, 0x1b, 0xe9, 0xfe, 0xe1, 0xcb, 0x7e, 0x06, 0x98,
++	0x74, 0x47, 0x2f, 0x57, 0x0b, 0x72, 0xea, 0x0d, 0x25, 0xed, 0x92, 0x70,
++	0x0d, 0x00, 0x5f, 0x48, 0xe3, 0xff, 0x3f, 0x39, 0xfc, 0xa9, 0x66, 0xa9,
++	0x95, 0x33, 0xcd, 0x8b, 0x22, 0x11, 0xd9, 0xff, 0x7e, 0x5c, 0x9d, 0x80,
++	0xc5, 0xed, 0x99, 0x78, 0x5c, 0x33, 0xdd, 0x0e, 0xca, 0x6a, 0xe2, 0xb6,
++	0x3a, 0x66, 0xbd, 0x1d, 0x60, 0x96, 0x28, 0x20, 0xbd, 0x8c, 0xf4, 0x6c,
++	0xcb, 0xc3, 0x9b, 0x19, 0x78, 0xd7, 0x57, 0xa3, 0xc3, 0x12, 0x95, 0x11,
++	0x3d, 0xab, 0x44, 0x0d, 0x78, 0xbb, 0x2e, 0x0b, 0x4e, 0x0c, 0x94, 0x75,
++	0xe7, 0x8f, 0x5c, 0xad, 0xe4, 0x2f, 0x9c, 0x26, 0x00, 0x01, 0x71, 0xe1,
++	0x36, 0xcf, 0xb1, 0x00, 0x8f, 0xf7, 0x86, 0x79, 0x2e, 0x79, 0x9e, 0xd5,
++	0x8b, 0x53, 0x0d, 0x28, 0x6c, 0xb9, 0xa2, 0xdf, 0x04, 0xe3, 0x78, 0x6d,
++	0xcb, 0xb7, 0xf9, 0xea, 0x20, 0x4a, 0x5d, 0x92, 0x64, 0x88, 0x7d, 0xc4,
++	0x5a, 0x21, 0x86, 0x12, 0x46, 0x49, 0x6d, 0xbc, 0x03, 0xd5, 0xeb, 0xf6,
++	0xe3, 0x38, 0x4a, 0xaa, 0xce, 0x45, 0x91, 0x6a, 0xc0, 0x59, 0x1b, 0x6c,
++	0x98, 0xb2, 0xe0, 0x29, 0x91, 0x01, 0xb5, 0x44, 0x48, 0xa6, 0xd3, 0x78,
++	0x5a, 0xe1, 0xe4, 0x8c, 0xd9, 0x33, 0xa0, 0xd5, 0xe1, 0x83, 0xd6, 0x5a,
++	0xe3, 0x5f, 0xe6, 0xf8, 0xfd, 0x21, 0x12, 0xff, 0x9e, 0x71, 0x70, 0x7f,
++	0x17, 0xe2, 0x41, 0xf2, 0xb1, 0x4a, 0x84, 0x6b, 0x88, 0xb6, 0xb9, 0xed,
++	0xdb, 0x0b, 0x84, 0x6f, 0x07, 0x94, 0xc7, 0x8e, 0xcc, 0xc2, 0xb2, 0x49,
++	0x3d, 0xf8, 0x70, 0x1a, 0x9b, 0x4d, 0x13, 0x0c, 0xe7, 0xeb, 0x75, 0x5d,
++	0xfb, 0x10, 0x16, 0xf9, 0xf1, 0xac, 0x4b, 0xe3, 0x65, 0x5f, 0xaa, 0xbb,
++	0x31, 0xac, 0x4d, 0x74, 0x11, 0x62, 0x64, 0xd1, 0x90, 0x6e, 0x45, 0xaf,
++	0x2d, 0xb2, 0xa5, 0xfa, 0x57, 0x67, 0xaa, 0x4c, 0x3f, 0x81, 0x72, 0x93,
++	0x8a, 0xfb, 0xeb, 0x19, 0x9d, 0x9a, 0x10, 0x8d, 0xce, 0xb8, 0xe9, 0x3f,
++	0x97, 0x3e, 0xb2, 0x2d, 0x3e, 0xaf, 0x19, 0x39, 0xb0, 0xea, 0x33, 0x09,
++	0x25, 0xbc, 0x6f, 0x88, 0x25, 0x75, 0x11, 0x2b, 0xd9, 0x42, 0x8d, 0x48,
++	0x8e, 0xe7, 0x51, 0x4e, 0xd4, 0xee, 0xd4, 0xf1, 0xe1, 0x94, 0xfb, 0xbd,
++	0x01, 0x87, 0xa5, 0xd6, 0x94, 0x36, 0x6f, 0x37, 0xcd, 0x70, 0x49, 0xfd,
++	0x6a, 0x94, 0xb0, 0xc8, 0xe5, 0xb9, 0xdb, 0x83, 0x72, 0xa0, 0xd8, 0x5e,
++	0x00, 0x3e, 0x3d, 0x56, 0xc9, 0xae, 0xf6, 0xe7, 0xb1, 0xba, 0xdd, 0x6d,
++	0x59, 0x2a, 0x6a, 0x50, 0x66, 0xfd, 0xf1, 0x1f, 0x18, 0xe4, 0xf9, 0x59,
++	0x16, 0xf1, 0x25, 0x42, 0x7c, 0xab, 0xc5, 0xea, 0x64, 0x31, 0xf7, 0xcf,
++	0xdd, 0x56, 0xc4, 0xbd, 0xb5, 0xe6, 0xb4, 0xda, 0x41, 0xb7, 0xfa, 0x05,
++	0x06, 0x57, 0x51, 0xd8, 0xc4, 0xf7, 0x3c, 0xc8, 0x54, 0x55, 0x5c, 0x2c,
++	0xd2, 0x17, 0xec, 0x27, 0xd3, 0xbf, 0xf3, 0xc8, 0xba, 0xbf, 0x75, 0xcf,
++	0x1f, 0x78, 0x42, 0x1a, 0x4f, 0xb0, 0xcb, 0xd7, 0x84, 0xc6, 0xbd, 0x40,
++	0x07, 0xbf, 0x47, 0xe9, 0x17, 0x2f, 0xad, 0xec, 0x64, 0x8b, 0xca, 0x7c,
++	0x49, 0x4c, 0xda, 0xf9, 0x5f, 0x28, 0x1d, 0x2d, 0xc3, 0x8d, 0x15, 0xa6,
++	0x0f, 0x95, 0x76, 0x99, 0xb5, 0x76, 0x68, 0x97, 0x91, 0x93, 0xca, 0x9d,
++	0x61, 0x50, 0xa7, 0xa7, 0xf7, 0xce, 0xd5, 0x14, 0xe5, 0xb2, 0x50, 0x50,
++	0x21, 0x73, 0x00, 0x21, 0x4f, 0x12, 0x79, 0x7f, 0x68, 0x27, 0x52, 0xf2,
++	0x2c, 0x9d, 0x2d, 0x4f, 0x66, 0x3e, 0xf1, 0xb5, 0x68, 0x77, 0xc9, 0xd5,
++	0x16, 0x01, 0xb2, 0x6d, 0x46, 0x7c, 0xce, 0x8d, 0x67, 0x77, 0x27, 0xdd,
++	0x4b, 0x16, 0xd7, 0x7b, 0x16, 0xfd, 0x6b, 0x18, 0x36, 0xeb, 0xa5, 0xd6,
++	0xd1, 0x21, 0xdb, 0x27, 0x01, 0x9a, 0x22, 0xa1, 0xbf, 0x45, 0xda, 0xf7,
++	0xe4, 0x07, 0x26, 0x0c, 0x84, 0xe1, 0x81, 0x1c, 0xf9, 0x38, 0x4a, 0x26,
++	0xb3, 0xe3, 0x90, 0x13, 0x5e, 0xb7, 0xd5, 0xaf, 0xcb, 0x7d, 0xc1, 0xf7,
++	0x23, 0x2d, 0x96, 0xc8, 0xe7, 0x3e, 0x21, 0x2c, 0xee, 0xa8, 0xd7, 0x83,
++	0xf1, 0xd7, 0xf0, 0xce, 0xca, 0x80, 0xb5, 0xbd, 0x89, 0x10, 0x71, 0x38,
++	0x8c, 0xa2, 0xa1, 0x07, 0x93, 0xa9, 0xd9, 0x4d, 0xa5, 0x9b, 0x66, 0x68,
++	0x06, 0x65, 0x8d, 0x26, 0xff, 0xcb, 0xf2, 0xf5, 0x09, 0x7c, 0xf1, 0x7f,
++	0x55, 0x3f, 0x61, 0x78, 0xb8, 0x27, 0x77, 0xb8, 0x30, 0x91, 0x10, 0x3f,
++	0x57, 0xec, 0xfd, 0x82, 0xd2, 0xd3, 0x8a, 0x27, 0xa5, 0x26, 0x87, 0x01,
++	0x8a, 0x20, 0x9a, 0x5d, 0xe9, 0x88, 0xa7, 0x70, 0xb0, 0x06, 0x04, 0xe8,
++	0xa0, 0x15, 0x2c, 0x0b, 0xe5, 0xea, 0x79, 0x57, 0xad, 0x8c, 0xe2, 0x98,
++	0xcd, 0xbf, 0x74, 0x1c, 0xb6, 0x06, 0xc6, 0x17, 0x12, 0x2b, 0xa4, 0xa6,
++	0xfe, 0xe7, 0x94, 0xf9, 0xb6, 0x95, 0xf0, 0xfc, 0xe5, 0x57, 0xfe, 0xf9,
++	0x1d, 0xd4, 0x29, 0xc0, 0x06, 0xf9, 0x5f, 0x14, 0x73, 0x14, 0x1d, 0x42,
++	0x1f, 0x70, 0xa0, 0xd5, 0x3d, 0x0d, 0xbe, 0xfb, 0xb3, 0xe0, 0xae, 0x35,
++	0x34, 0x40, 0xa9, 0xca, 0x5d, 0x6f, 0x4f, 0x3a, 0x3b, 0x9e, 0xe2, 0xed,
++	0x85, 0xa9, 0x53, 0xb9, 0xb2, 0x43, 0x5e, 0x95, 0x7a, 0x30, 0x63, 0x2a,
++	0x84, 0x40, 0x1b, 0x86, 0x2d, 0x74, 0xf6, 0xf3, 0x3b, 0x40, 0x5b, 0x16,
++	0x51, 0xa1, 0xaa, 0x70, 0xed, 0xb3, 0x96, 0x66, 0x9b, 0x6b, 0x57, 0x4d,
++	0x0d, 0x8b, 0x2a, 0x9b, 0x27, 0xb6, 0x04, 0xa5, 0x19, 0xb2, 0x17, 0xad,
++	0x6f, 0x6f, 0xef, 0x8c, 0xae, 0x87, 0x58, 0xc9, 0xbd, 0x51, 0xf9, 0x6b,
++	0x7d, 0x5c, 0xd1, 0x42, 0x10, 0xa1, 0x5c, 0x66, 0x13, 0xaa, 0xe0, 0xfc,
++	0x91, 0x95, 0x63, 0x0a, 0x0b, 0x3d, 0x5c, 0xd1, 0x64, 0xda, 0xaf, 0x7b,
++	0x1b, 0x0a, 0x09, 0x9f, 0xf8, 0xd9, 0x43, 0x7b, 0x7d, 0xe1, 0x34, 0x68,
++	0x6a, 0xb2, 0x3a, 0x16, 0x99, 0x2f, 0x29, 0x5f, 0xa3, 0xe6, 0x03, 0x74,
++	0x42, 0x49, 0x6a, 0x33, 0x15, 0x93, 0x5e, 0xa5, 0xab, 0x13, 0x77, 0x3a,
++	0x1a, 0x78, 0x6d, 0xe5, 0x06, 0x1f, 0xa4, 0x6f, 0xdc, 0xa8, 0xc8, 0x93,
++	0x9f, 0x4d, 0x99, 0xba, 0xb1, 0x6d, 0x8d, 0x1d, 0xc0, 0x6b, 0xff, 0x16,
++	0x7d, 0xb3, 0xfc, 0xe0, 0xd7, 0xd4, 0xb2, 0x69, 0x32, 0x38, 0x64, 0xef,
++	0x04, 0xba, 0x7b, 0xa5, 0x5e, 0xc6, 0x1f, 0x1d, 0xd0, 0xf8, 0x6b, 0xd8,
++	0x35, 0xb9, 0x9e, 0x2f, 0x62, 0x36, 0xf5, 0x88, 0x41, 0x90, 0x1f, 0xc7,
++	0xc3, 0x96, 0x1b, 0x4f, 0xc4, 0x87, 0x0c, 0xea, 0xdb, 0x8f, 0xea, 0x6a,
++	0xe9, 0xdc, 0x30, 0xc4, 0x6c, 0x23, 0x9b, 0xac, 0x8b, 0xf6, 0xa6, 0xbf,
++	0xc0, 0xd6, 0x00, 0xf6, 0x92, 0x3f, 0xd3, 0x83, 0xfe, 0x74, 0x7c, 0x19,
++	0x74, 0xfb, 0xe7, 0x72, 0x81, 0x17, 0x32, 0x32, 0xb8, 0x4b, 0x5d, 0x70,
++	0x67, 0x14, 0xe1, 0xee,
++};
++
++#endif
+diff --git a/drivers/acpi/apei/ghes-nvidia-test.c b/drivers/acpi/apei/ghes-nvidia-test.c
+new file mode 100644
+index 000000000000..5c84da82f898
+--- /dev/null
++++ b/drivers/acpi/apei/ghes-nvidia-test.c
+@@ -0,0 +1,704 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <kunit/test.h>
++#include <linux/errno.h>
 +#include <linux/slab.h>
- #include <linux/types.h>
 +#include <linux/unaligned.h>
- #include <linux/uuid.h>
-+#include <kunit/visibility.h>
- #include <acpi/ghes.h>
- 
--#include <kunit/visibility.h>
- #include "ghes-nvidia.h"
- 
-+#define NVIDIA_GHES_VERA_VERSION	1
++#include <linux/uuid.h>
 +
- static const guid_t nvidia_grace_sec_guid =
- 	GUID_INIT(0x6d5244f2, 0x2712, 0x11ec,
- 		  0xbe, 0xa7, 0xcb, 0x3f, 0xdb, 0x95, 0xc7, 0x86);
- 
-+static const guid_t nvidia_vera_sec_guid =
-+	GUID_INIT(0x9068e568, 0x6ca0, 0x11f0,
-+		  0xae, 0xaf, 0x15, 0x93, 0x43, 0x59, 0x1e, 0xac);
++#include "ghes-nvidia.h"
++#include "ghes-nvidia-test-fixtures.h"
 +
- struct cper_sec_nvidia {
- 	char	signature[16];
- 	__le16	error_type;
-@@ -31,11 +40,51 @@ struct cper_sec_nvidia {
- 	struct nvidia_ghes_grace_reg regs[] __counted_by(number_regs);
- };
- 
-+struct cper_sec_nvidia_vera_event {
-+	u8	version;
-+	u8	event_context_count;
-+	u8	source_device_type;
-+	u8	reserved;
-+	__le16	event_type;
-+	__le16	event_sub_type;
-+	__le64	event_link_id;
-+	char	source_module_signature[16];
-+} __packed;
++static const u8 grace_valid_two_regs[] = {
++	'N', 'V', 'D', 'A', '-', 'G', 'R', 'A',
++	'C', 'E', 0, 0, 0, 0, 0, 0,
++	0x34, 0x12, 0x78, 0x56, 0x02, 0x03, 0x02, 0x00,
++	0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01,
++	0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x11, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x22, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++};
 +
-+struct cper_sec_nvidia_vera_cpu_info {
-+	__le16	info_version;
-+	u8	info_size;
-+	u8	socket_number;
-+	__le32	architecture;
-+	u8	chip_serial_number[16];
-+	__le64	instance_base;
-+} __packed;
++static const u8 grace_valid_zero_regs[] = {
++	'N', 'V', 'D', 'A', '-', 'G', 'R', 'A',
++	'C', 'E', 0, 0, 0, 0, 0, 0,
++	0x01, 0x00, 0x02, 0x00, 0x00, 0x01, 0x00, 0x00,
++	0xef, 0xbe, 0xad, 0xde, 0x00, 0x00, 0x00, 0x00,
++};
 +
-+struct cper_sec_nvidia_vera_context {
-+	__le32	context_size;
-+	__le16	context_version;
-+	__le16	reserved;
-+	__le16	data_format_type;
-+	__le16	data_format_version;
-+	__le32	data_size;
-+} __packed;
++static const u8 grace_valid_full_signature[] = {
++	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
++	'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
++	0x01, 0x00, 0x02, 0x00, 0x00, 0x01, 0x00, 0x00,
++	0xef, 0xbe, 0xad, 0xde, 0x00, 0x00, 0x00, 0x00,
++};
 +
- struct nvidia_ghes_private {
- 	struct notifier_block	nb;
- 	struct device		*dev;
- };
- 
-+VISIBLE_IF_KUNIT
-+enum nvidia_ghes_format nvidia_ghes_format_from_guid(const guid_t *guid)
++static void nvidia_ghes_grace_decodes_registers(struct kunit *test)
 +{
-+	if (guid_equal(guid, &nvidia_grace_sec_guid))
-+		return NVIDIA_GHES_FORMAT_GRACE;
-+	if (guid_equal(guid, &nvidia_vera_sec_guid))
-+		return NVIDIA_GHES_FORMAT_VERA;
-+	return NVIDIA_GHES_FORMAT_UNKNOWN;
-+}
-+EXPORT_SYMBOL_IF_KUNIT(nvidia_ghes_format_from_guid);
++	struct nvidia_ghes_decoded decoded = {};
++	u64 addr, val;
 +
- VISIBLE_IF_KUNIT
- int nvidia_ghes_decode_grace(struct device *dev, const void *buf,
- 			     size_t len,
-@@ -81,7 +130,7 @@ EXPORT_SYMBOL_IF_KUNIT(nvidia_ghes_decode_grace);
- 
- VISIBLE_IF_KUNIT
- int nvidia_ghes_grace_reg_pair(const struct nvidia_ghes_decoded *decoded,
--				      unsigned int index, u64 *addr, u64 *val)
-+			       unsigned int index, u64 *addr, u64 *val)
- {
- 	const struct nvidia_ghes_grace_reg *regs;
- 
-@@ -98,6 +147,220 @@ int nvidia_ghes_grace_reg_pair(const struct nvidia_ghes_decoded *decoded,
- }
- EXPORT_SYMBOL_IF_KUNIT(nvidia_ghes_grace_reg_pair);
- 
-+static int nvidia_ghes_vera_validate_context_data(u16 data_format_type,
-+						  u32 data_size)
-+{
-+	switch (data_format_type) {
-+	case 0:
-+		return 0;
-+	case 1:
-+		return data_size % 16 ? -EINVAL : 0;
-+	case 2:
-+	case 3:
-+		return data_size % 8 ? -EINVAL : 0;
-+	case 4:
-+		return data_size % 4 ? -EINVAL : 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_decode_grace(NULL, grace_valid_two_regs,
++						 sizeof(grace_valid_two_regs),
++						 &decoded));
++	KUNIT_EXPECT_EQ(test, NVIDIA_GHES_FORMAT_GRACE, decoded.format);
++	KUNIT_EXPECT_STREQ(test, "NVDA-GRACE", decoded.signature);
++	KUNIT_EXPECT_EQ(test, 0x1234, decoded.error_type);
++	KUNIT_EXPECT_EQ(test, 0x5678, decoded.error_instance);
++	KUNIT_EXPECT_EQ(test, 2, decoded.severity);
++	KUNIT_EXPECT_EQ(test, 3, decoded.socket);
++	KUNIT_EXPECT_EQ(test, 2, decoded.number_regs);
++	KUNIT_EXPECT_EQ(test, 0x0102030405060708ULL, decoded.instance_base);
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_grace_reg_pair(&decoded, 0, &addr, &val));
++	KUNIT_EXPECT_EQ(test, 0x1000ULL, addr);
++	KUNIT_EXPECT_EQ(test, 0x1111ULL, val);
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_grace_reg_pair(&decoded, 1, &addr, &val));
++	KUNIT_EXPECT_EQ(test, 0x2000ULL, addr);
++	KUNIT_EXPECT_EQ(test, 0x2222ULL, val);
 +}
 +
-+VISIBLE_IF_KUNIT
-+int nvidia_ghes_decode_vera(struct device *dev, const void *buf,
-+			    size_t len,
-+			    struct nvidia_ghes_decoded *decoded)
++static void nvidia_ghes_grace_accepts_zero_registers(struct kunit *test)
 +{
-+	const struct cper_sec_nvidia_vera_event *event = buf;
-+	const struct cper_sec_nvidia_vera_cpu_info *cpu_info;
-+	const struct cper_sec_nvidia_vera_context *context;
-+	const u8 *bytes = buf;
-+	size_t data_end_advance;
-+	size_t advance;
-+	size_t offset;
-+	int ret;
++	struct nvidia_ghes_decoded decoded = {};
 +
-+	if (!buf || !decoded)
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_decode_grace(NULL, grace_valid_zero_regs,
++						 sizeof(grace_valid_zero_regs),
++						 &decoded));
++	KUNIT_EXPECT_EQ(test, NVIDIA_GHES_FORMAT_GRACE, decoded.format);
++	KUNIT_EXPECT_EQ(test, 0, decoded.number_regs);
++	KUNIT_EXPECT_PTR_EQ(test, NULL, decoded.grace_regs);
++}
++
++static void nvidia_ghes_grace_copies_non_nul_signature(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_decode_grace(NULL, grace_valid_full_signature,
++						 sizeof(grace_valid_full_signature),
++						 &decoded));
++	KUNIT_EXPECT_STREQ(test, "ABCDEFGHIJKLMNOP", decoded.signature);
++	KUNIT_EXPECT_EQ(test, '\0', decoded.signature[16]);
++}
++
++static void nvidia_ghes_grace_rejects_truncated_header(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++
++	KUNIT_EXPECT_EQ(test, -ENODATA,
++			nvidia_ghes_decode_grace(NULL, grace_valid_two_regs,
++						 sizeof(grace_valid_zero_regs) - 1,
++						 &decoded));
++}
++
++static void nvidia_ghes_grace_rejects_truncated_registers(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++
++	KUNIT_EXPECT_EQ(test, -ENODATA,
++			nvidia_ghes_decode_grace(NULL, grace_valid_two_regs,
++						 sizeof(grace_valid_two_regs) - 1,
++						 &decoded));
++}
++
++static const u8 vera_chip_serial[] = {
++	0xc0, 0x01, 0xfe, 0x06, 0x00, 0x00, 0x00, 0x00,
++	0x81, 0xc1, 0x18, 0x78, 0x01, 0x00, 0x00, 0x00,
++};
++
++#define VERA_EVENT_HDR_SIZE	32
++#define VERA_CPU_INFO_SIZE	32
++#define VERA_CONTEXT_HDR_SIZE	16
++#define VERA_FIRST_CONTEXT_OFFSET	(VERA_EVENT_HDR_SIZE + VERA_CPU_INFO_SIZE)
++
++static u8 *nvidia_ghes_kunit_memdup(struct kunit *test, const u8 *src, size_t len)
++{
++	u8 *buf;
++
++	buf = kunit_kmalloc(test, len, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, buf);
++	memcpy(buf, src, len);
++
++	return buf;
++}
++
++static u8 *vera_make_synthetic(struct kunit *test, u8 version, u8 info_size,
++			       u16 format, const u8 *data, u32 data_size,
++			       size_t *len)
++{
++	u8 *buf;
++	size_t context_offset;
++
++	KUNIT_ASSERT_TRUE(test, info_size >= VERA_CPU_INFO_SIZE);
++
++	context_offset = VERA_EVENT_HDR_SIZE + info_size;
++	*len = context_offset + VERA_CONTEXT_HDR_SIZE + data_size;
++	buf = kunit_kzalloc(test, *len, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, buf);
++
++	buf[0] = version;
++	buf[1] = 1;
++	buf[2] = 0;
++	put_unaligned_le16(0x22, &buf[4]);
++	memcpy(&buf[16], "SYNTH", 5);
++	put_unaligned_le16(0, &buf[32]);
++	buf[34] = info_size;
++	buf[35] = 0;
++	put_unaligned_le32(0x14107, &buf[36]);
++	memcpy(&buf[40], vera_chip_serial, sizeof(vera_chip_serial));
++	put_unaligned_le64(0, &buf[56]);
++	put_unaligned_le32(VERA_CONTEXT_HDR_SIZE, &buf[context_offset]);
++	put_unaligned_le16(0, &buf[context_offset + 4]);
++	put_unaligned_le16(format, &buf[context_offset + 8]);
++	put_unaligned_le16(0, &buf[context_offset + 10]);
++	put_unaligned_le32(data_size, &buf[context_offset + 12]);
++	memcpy(&buf[context_offset + VERA_CONTEXT_HDR_SIZE], data, data_size);
++
++	return buf;
++}
++
++static u8 *vera_make_synthetic_default(struct kunit *test, u16 format,
++				       const u8 *data, u32 data_size, size_t *len)
++{
++	return vera_make_synthetic(test, 1, VERA_CPU_INFO_SIZE, format, data,
++				   data_size, len);
++}
++
++static int nvidia_ghes_vera_context_u64_pair(const struct nvidia_ghes_vera_context *ctx,
++					     unsigned int index, u64 *addr, u64 *val)
++{
++	int count;
++
++	if (!ctx || !addr || !val || ctx->data_format_type != 1)
 +		return -EINVAL;
-+	if (len < sizeof(*event)) {
-+		if (dev)
-+			dev_err_ratelimited(dev, "Vera event header truncated (%zu < %zu)\n",
-+					    len, sizeof(*event));
-+		return -ENODATA;
-+	}
-+	if (event->version != NVIDIA_GHES_VERA_VERSION)
-+		return -EOPNOTSUPP;
-+	if (event->source_device_type != 0)
-+		return -EOPNOTSUPP;
 +
-+	offset = sizeof(*event);
-+	if (len - offset < sizeof(*cpu_info)) {
-+		if (dev)
-+			dev_err_ratelimited(dev, "Vera CPU info truncated (%zu < %zu)\n",
-+					    len - offset, sizeof(*cpu_info));
-+		return -ENODATA;
-+	}
++	count = nvidia_ghes_vera_context_entry_count(ctx);
++	if (count < 0)
++		return count;
++	if (index >= count)
++		return -ERANGE;
 +
-+	cpu_info = (const void *)(bytes + offset);
-+	if (cpu_info->info_size < sizeof(*cpu_info)) {
-+		if (dev)
-+			dev_err_ratelimited(dev, "Vera CPU info size %u smaller than header %zu\n",
-+					    cpu_info->info_size, sizeof(*cpu_info));
-+		return -EINVAL;
-+	}
-+	if (len - offset < cpu_info->info_size) {
-+		if (dev)
-+			dev_err_ratelimited(dev, "Vera CPU info extends past section (%u > %zu)\n",
-+					    cpu_info->info_size, len - offset);
-+		return -ENODATA;
-+	}
-+
-+	offset += cpu_info->info_size;
-+	if (event->event_context_count > NVIDIA_GHES_MAX_CONTEXTS) {
-+		if (dev)
-+			dev_err_ratelimited(dev, "Vera context count %u exceeds maximum %u\n",
-+					    event->event_context_count,
-+					    NVIDIA_GHES_MAX_CONTEXTS);
-+		return -E2BIG;
-+	}
-+
-+	memset(decoded, 0, sizeof(*decoded));
-+	decoded->format = NVIDIA_GHES_FORMAT_VERA;
-+	memcpy(decoded->signature, event->source_module_signature,
-+	       sizeof(event->source_module_signature));
-+	decoded->signature[sizeof(event->source_module_signature)] = '\0';
-+	decoded->event_context_count = event->event_context_count;
-+	decoded->source_device_type = event->source_device_type;
-+	decoded->event_type = get_unaligned_le16(&event->event_type);
-+	decoded->event_sub_type = get_unaligned_le16(&event->event_sub_type);
-+	decoded->event_link_id = get_unaligned_le64(&event->event_link_id);
-+	decoded->socket = cpu_info->socket_number;
-+	decoded->architecture = get_unaligned_le32(&cpu_info->architecture);
-+	memcpy(decoded->chip_serial_number, cpu_info->chip_serial_number,
-+	       sizeof(cpu_info->chip_serial_number));
-+	decoded->instance_base = get_unaligned_le64(&cpu_info->instance_base);
-+
-+	for (int i = 0; i < event->event_context_count; i++) {
-+		struct nvidia_ghes_vera_context *decoded_context = &decoded->contexts[i];
-+		u32 context_size;
-+		u32 data_size;
-+		u16 data_format_type;
-+
-+		if (len - offset < sizeof(*context)) {
-+			if (dev)
-+				dev_err_ratelimited(dev, "Vera context[%d] header truncated (%zu < %zu)\n",
-+						    i, len - offset, sizeof(*context));
-+			return -ENODATA;
-+		}
-+
-+		context = (const void *)(bytes + offset);
-+		context_size = get_unaligned_le32(&context->context_size);
-+		data_format_type = get_unaligned_le16(&context->data_format_type);
-+		data_size = get_unaligned_le32(&context->data_size);
-+
-+		if (context_size < sizeof(*context)) {
-+			if (dev)
-+				dev_err_ratelimited(dev,
-+						    "Vera context[%d] size %u smaller than header %zu\n",
-+						    i, context_size, sizeof(*context));
-+			return -EINVAL;
-+		}
-+		if (data_format_type > 4) {
-+			if (dev)
-+				dev_dbg(dev,
-+					"Vera context[%d] unsupported data format %u\n",
-+					i, data_format_type);
-+			return -EOPNOTSUPP;
-+		}
-+		if (check_add_overflow((size_t)data_size, sizeof(*context),
-+				       &data_end_advance)) {
-+			if (dev)
-+				dev_err_ratelimited(dev,
-+						    "Vera context[%d] data_size %u overflows section accounting\n",
-+						    i, data_size);
-+			return -EOVERFLOW;
-+		}
-+
-+		if (data_end_advance > len - offset) {
-+			if (dev)
-+				dev_err_ratelimited(dev,
-+						    "Vera context[%d] data extends past section (%zu > %zu)\n",
-+						    i, data_end_advance, len - offset);
-+			return -ENODATA;
-+		}
-+
-+		/*
-+		 * Some Vera payloads use only the header size here and
-+		 * place the format-specific payload immediately after it.
-+		 */
-+		if (context_size == sizeof(*context))
-+			advance = data_end_advance;
-+		else if (data_size <= context_size - sizeof(*context))
-+			advance = context_size;
-+		else {
-+			if (dev)
-+				dev_err_ratelimited(dev,
-+						    "Vera context[%d] data_size %u exceeds context_size %u\n",
-+						    i, data_size, context_size);
-+			return -EINVAL;
-+		}
-+
-+		if (advance > len - offset) {
-+			if (dev)
-+				dev_err_ratelimited(dev,
-+						    "Vera context[%d] advance %zu extends past section (%zu)\n",
-+						    i, advance, len - offset);
-+			return -ENODATA;
-+		}
-+
-+		ret = nvidia_ghes_vera_validate_context_data(data_format_type, data_size);
-+		if (ret) {
-+			if (dev)
-+				dev_err_ratelimited(dev,
-+						    "Vera context[%d] format %u rejected data_size %u (ret=%d)\n",
-+						    i, data_format_type, data_size, ret);
-+			return ret;
-+		}
-+
-+		decoded_context->context_size = context_size;
-+		decoded_context->context_version =
-+			get_unaligned_le16(&context->context_version);
-+		decoded_context->data_format_type = data_format_type;
-+		decoded_context->data_format_version =
-+			get_unaligned_le16(&context->data_format_version);
-+		decoded_context->data_size = data_size;
-+		decoded_context->data = bytes + offset + sizeof(*context);
-+		offset += advance;
-+	}
++	*addr = get_unaligned_le64(ctx->data + index * 16);
++	*val = get_unaligned_le64(ctx->data + index * 16 + 8);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_IF_KUNIT(nvidia_ghes_decode_vera);
 +
-+VISIBLE_IF_KUNIT
-+int nvidia_ghes_vera_context_entry_count(const struct nvidia_ghes_vera_context *ctx)
++static int nvidia_ghes_vera_context_u32_pair(const struct nvidia_ghes_vera_context *ctx,
++					     unsigned int index, u32 *addr, u32 *val)
 +{
-+	if (!ctx)
++	int count;
++
++	if (!ctx || !addr || !val || ctx->data_format_type != 2)
 +		return -EINVAL;
-+	if (ctx->data_size > INT_MAX)
-+		return -EOVERFLOW;
 +
-+	switch (ctx->data_format_type) {
-+	case 0:
-+		return 0;
-+	case 1:
-+		return ctx->data_size / 16;
-+	case 2:
-+		return ctx->data_size / 8;
-+	case 3:
-+		return ctx->data_size / 8;
-+	case 4:
-+		return ctx->data_size / 4;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+EXPORT_SYMBOL_IF_KUNIT(nvidia_ghes_vera_context_entry_count);
++	count = nvidia_ghes_vera_context_entry_count(ctx);
++	if (count < 0)
++		return count;
++	if (index >= count)
++		return -ERANGE;
 +
- static void nvidia_ghes_print_grace(struct device *dev,
- 				    const struct nvidia_ghes_decoded *decoded,
- 				    bool fatal)
-@@ -111,7 +374,8 @@ static void nvidia_ghes_print_grace(struct device *dev,
- 	dev_printk(level, dev, "severity: %u\n", decoded->severity);
- 	dev_printk(level, dev, "socket: %u\n", decoded->socket);
- 	dev_printk(level, dev, "number_regs: %u\n", decoded->number_regs);
--	dev_printk(level, dev, "instance_base: 0x%016llx\n", decoded->instance_base);
-+	dev_printk(level, dev, "instance_base: 0x%016llx\n",
-+		   decoded->instance_base);
- 
- 	for (int i = 0; i < decoded->number_regs; i++) {
- 		if (nvidia_ghes_grace_reg_pair(decoded, i, &addr, &val))
-@@ -121,12 +385,52 @@ static void nvidia_ghes_print_grace(struct device *dev,
- 	}
- }
- 
-+static void nvidia_ghes_print_vera(struct device *dev,
-+				   const struct nvidia_ghes_decoded *decoded,
-+				   bool fatal, unsigned long ghes_severity)
-+{
-+	const char *level = fatal ? KERN_ERR : KERN_INFO;
++	*addr = get_unaligned_le32(ctx->data + index * 8);
++	*val = get_unaligned_le32(ctx->data + index * 8 + 4);
 +
-+	dev_printk(level, dev, "signature: %s\n", decoded->signature);
-+	dev_printk(level, dev, "event_type: %u\n", decoded->event_type);
-+	dev_printk(level, dev, "event_sub_type: %u\n", decoded->event_sub_type);
-+	dev_printk(level, dev, "ghes_severity: %lu\n", ghes_severity);
-+	dev_printk(level, dev, "event_link_id: 0x%016llx\n",
-+		   decoded->event_link_id);
-+	dev_printk(level, dev, "socket: %u\n", decoded->socket);
-+	dev_printk(level, dev, "architecture: 0x%x\n", decoded->architecture);
-+	dev_printk(level, dev, "chip_serial_number: %*phN\n",
-+		   (int)sizeof(decoded->chip_serial_number),
-+		   decoded->chip_serial_number);
-+	dev_printk(level, dev, "instance_base: 0x%016llx\n", decoded->instance_base);
-+	dev_printk(level, dev, "event_context_count: %u\n", decoded->event_context_count);
-+
-+	for (int i = 0; i < decoded->event_context_count; i++) {
-+		const struct nvidia_ghes_vera_context *ctx = &decoded->contexts[i];
-+		int entries = nvidia_ghes_vera_context_entry_count(ctx);
-+
-+		dev_printk(level, dev,
-+			   "context[%d]: version=%u format=%u format_version=%u context_size=%u data_size=%u\n",
-+			   i, ctx->context_version, ctx->data_format_type,
-+			   ctx->data_format_version, ctx->context_size, ctx->data_size);
-+		if (ctx->data_format_type == 0 && ctx->data_size > 0) {
-+			int prefix_len = ctx->data_size > 16 ? 16 : ctx->data_size;
-+
-+			dev_printk(level, dev, "context[%d]_opaque_prefix: %*phN\n",
-+				   i, prefix_len, ctx->data);
-+		} else if (entries >= 0) {
-+			dev_printk(level, dev, "context[%d]_entries: %d\n", i, entries);
-+		}
-+	}
++	return 0;
 +}
 +
- static int nvidia_ghes_notify(struct notifier_block *nb,
- 			      unsigned long event, void *data)
- {
- 	struct acpi_hest_generic_data *gdata = data;
--	struct nvidia_ghes_decoded decoded;
-+	struct nvidia_ghes_decoded *decoded;
- 	struct nvidia_ghes_private *priv;
-+	enum nvidia_ghes_format format;
- 	const void *payload;
- 	guid_t sec_guid;
- 	u32 len;
-@@ -134,26 +438,64 @@ static int nvidia_ghes_notify(struct notifier_block *nb,
- 	bool fatal;
- 
- 	import_guid(&sec_guid, gdata->section_type);
--	if (!guid_equal(&sec_guid, &nvidia_grace_sec_guid))
-+	format = nvidia_ghes_format_from_guid(&sec_guid);
-+	if (format == NVIDIA_GHES_FORMAT_UNKNOWN)
- 		return NOTIFY_DONE;
- 
- 	priv = container_of(nb, struct nvidia_ghes_private, nb);
- 	len = acpi_hest_get_error_length(gdata);
++static int nvidia_ghes_vera_context_u64_value(const struct nvidia_ghes_vera_context *ctx,
++					      unsigned int index, u64 *val)
++{
++	int count;
 +
- 	payload = acpi_hest_get_payload(gdata);
- 	fatal = event >= GHES_SEV_RECOVERABLE;
-+	decoded = kzalloc_obj(*decoded);
-+	if (!decoded) {
-+		dev_err_ratelimited(priv->dev,
-+				    "Failed to allocate NVIDIA CPER decode buffer\n");
-+		return NOTIFY_OK;
-+	}
++	if (!ctx || !val || ctx->data_format_type != 3)
++		return -EINVAL;
 +
-+	switch (format) {
-+	case NVIDIA_GHES_FORMAT_GRACE:
-+		ret = nvidia_ghes_decode_grace(priv->dev, payload, len, decoded);
-+		break;
-+	case NVIDIA_GHES_FORMAT_VERA:
-+		ret = nvidia_ghes_decode_vera(priv->dev, payload, len, decoded);
-+		break;
-+	default:
-+		ret = -EOPNOTSUPP;
-+		break;
-+	}
- 
--	ret = nvidia_ghes_decode_grace(priv->dev, payload, len, &decoded);
- 	if (ret) {
--		dev_err(priv->dev,
--			"Malformed NVIDIA CPER section, error_data_length: %u, ret: %d\n",
--			len, ret);
--		return NOTIFY_OK;
-+		if (ret == -EOPNOTSUPP && format == NVIDIA_GHES_FORMAT_VERA)
-+			dev_info(priv->dev,
-+				 "Unsupported NVIDIA Vera CPER section, error_data_length: %u, ret: %d\n",
-+				 len, ret);
-+		else if (format == NVIDIA_GHES_FORMAT_GRACE)
-+			dev_err(priv->dev,
-+				"Malformed NVIDIA Grace CPER section, error_data_length: %u, ret: %d\n",
-+				len, ret);
-+		else
-+			dev_err(priv->dev,
-+				"Malformed NVIDIA Vera CPER section, error_data_length: %u, ret: %d\n",
-+				len, ret);
-+		goto out;
- 	}
- 
--	dev_printk(fatal ? KERN_ERR : KERN_INFO, priv->dev,
--		   "NVIDIA CPER section, error_data_length: %u\n", len);
--	nvidia_ghes_print_grace(priv->dev, &decoded, fatal);
-+	if (format == NVIDIA_GHES_FORMAT_GRACE)
-+		dev_printk(fatal ? KERN_ERR : KERN_INFO, priv->dev,
-+			   "NVIDIA Grace CPER section, error_data_length: %u\n", len);
-+	else
-+		dev_printk(fatal ? KERN_ERR : KERN_INFO, priv->dev,
-+			   "NVIDIA Vera CPER section, error_data_length: %u\n", len);
++	count = nvidia_ghes_vera_context_entry_count(ctx);
++	if (count < 0)
++		return count;
++	if (index >= count)
++		return -ERANGE;
 +
-+	if (format == NVIDIA_GHES_FORMAT_VERA)
-+		nvidia_ghes_print_vera(priv->dev, decoded, fatal, event);
-+	else
-+		nvidia_ghes_print_grace(priv->dev, decoded, fatal);
- 
-+out:
-+	kfree(decoded);
- 	return NOTIFY_OK;
- }
- 
-diff --git a/drivers/acpi/apei/ghes-nvidia.h b/drivers/acpi/apei/ghes-nvidia.h
-index f0592fa41abf..7fff088e1dc1 100644
---- a/drivers/acpi/apei/ghes-nvidia.h
-+++ b/drivers/acpi/apei/ghes-nvidia.h
-@@ -3,36 +3,61 @@
- #define GHES_NVIDIA_H
- 
- #include <linux/types.h>
-+#include <linux/uuid.h>
- #include <kunit/visibility.h>
- 
--struct device;
--
- enum nvidia_ghes_format {
- 	NVIDIA_GHES_FORMAT_UNKNOWN,
- 	NVIDIA_GHES_FORMAT_GRACE,
-+	NVIDIA_GHES_FORMAT_VERA,
- };
- 
-+#define NVIDIA_GHES_MAX_CONTEXTS 16
++	*val = get_unaligned_le64(ctx->data + index * 8);
 +
- struct nvidia_ghes_grace_reg {
- 	__le64 addr;
- 	__le64 val;
- };
- 
-+struct nvidia_ghes_vera_context {
-+	u32 context_size;
-+	u16 context_version;
-+	u16 data_format_type;
-+	u16 data_format_version;
-+	u32 data_size;
-+	const u8 *data;
++	return 0;
++}
++
++static int nvidia_ghes_vera_context_u32_value(const struct nvidia_ghes_vera_context *ctx,
++					      unsigned int index, u32 *val)
++{
++	int count;
++
++	if (!ctx || !val || ctx->data_format_type != 4)
++		return -EINVAL;
++
++	count = nvidia_ghes_vera_context_entry_count(ctx);
++	if (count < 0)
++		return count;
++	if (index >= count)
++		return -ERANGE;
++
++	*val = get_unaligned_le32(ctx->data + index * 4);
++
++	return 0;
++}
++
++static void nvidia_ghes_vera_decodes_l1_reset(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_decode_vera(NULL, vera_l1_reset_id10,
++						sizeof(vera_l1_reset_id10),
++						&decoded));
++	KUNIT_EXPECT_EQ(test, NVIDIA_GHES_FORMAT_VERA, decoded.format);
++	KUNIT_EXPECT_STREQ(test, "L1 RESET", decoded.signature);
++	KUNIT_EXPECT_EQ(test, 1, decoded.event_context_count);
++	KUNIT_EXPECT_EQ(test, 1, decoded.event_type);
++	KUNIT_EXPECT_EQ(test, 39, decoded.event_sub_type);
++	KUNIT_EXPECT_EQ(test, 0, decoded.source_device_type);
++	KUNIT_EXPECT_EQ(test, 0, decoded.socket);
++	KUNIT_EXPECT_EQ(test, 0x14107U, decoded.architecture);
++	KUNIT_EXPECT_MEMEQ(test, decoded.chip_serial_number, vera_chip_serial,
++			   sizeof(vera_chip_serial));
++	KUNIT_EXPECT_EQ(test, 0xfe1500200000ULL, decoded.instance_base);
++	KUNIT_EXPECT_EQ(test, 16U, decoded.contexts[0].context_size);
++	KUNIT_EXPECT_EQ(test, 1, decoded.contexts[0].data_format_type);
++	KUNIT_EXPECT_EQ(test, 0U, decoded.contexts[0].data_size);
++}
++
++static void nvidia_ghes_vera_decodes_crashdump_id(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u64 addr, val;
++
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_decode_vera(NULL, vera_crashdump_id_id40,
++						sizeof(vera_crashdump_id_id40),
++						&decoded));
++	KUNIT_EXPECT_STREQ(test, "CRASHDUMP-ID", decoded.signature);
++	KUNIT_EXPECT_MEMEQ(test, decoded.chip_serial_number, vera_chip_serial,
++			   sizeof(vera_chip_serial));
++	KUNIT_EXPECT_EQ(test, 240U, decoded.contexts[0].context_size);
++	KUNIT_EXPECT_EQ(test, 1, decoded.contexts[0].data_format_type);
++	KUNIT_EXPECT_EQ(test, 224U, decoded.contexts[0].data_size);
++	KUNIT_EXPECT_EQ(test, 14, nvidia_ghes_vera_context_entry_count(&decoded.contexts[0]));
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_vera_context_u64_pair(&decoded.contexts[0], 0,
++							  &addr, &val));
++	KUNIT_EXPECT_EQ(test, 0x8300000000000000ULL, addr);
++	KUNIT_EXPECT_EQ(test, 0x372e33375f6c6572ULL, val);
++}
++
++static void nvidia_ghes_vera_decodes_crashdump_s1_opaque_context(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u64 val;
++
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_decode_vera(NULL, vera_crashdump_s1_id41,
++						sizeof(vera_crashdump_s1_id41),
++						&decoded));
++	KUNIT_EXPECT_STREQ(test, "CRASHDUMP-S1", decoded.signature);
++	KUNIT_EXPECT_EQ(test, 4096, decoded.event_type);
++	KUNIT_EXPECT_EQ(test, 2304, decoded.event_sub_type);
++	KUNIT_EXPECT_MEMEQ(test, decoded.chip_serial_number, vera_chip_serial,
++			   sizeof(vera_chip_serial));
++	KUNIT_EXPECT_EQ(test, 16U, decoded.contexts[0].context_size);
++	KUNIT_EXPECT_EQ(test, 0, decoded.contexts[0].data_format_type);
++	KUNIT_EXPECT_EQ(test, 1928U, decoded.contexts[0].data_size);
++	KUNIT_EXPECT_NOT_NULL(test, decoded.contexts[0].data);
++	KUNIT_EXPECT_EQ(test, 0x53, decoded.contexts[0].data[0]);
++	KUNIT_EXPECT_EQ(test, 0x56, decoded.contexts[0].data[1]);
++	KUNIT_EXPECT_EQ(test, 0x7f, decoded.contexts[0].data[2]);
++	KUNIT_EXPECT_EQ(test, -EINVAL,
++			nvidia_ghes_vera_context_u64_value(&decoded.contexts[0], 0, &val));
++}
++
++static void nvidia_ghes_vera_decodes_format2_u32_pairs(struct kunit *test)
++{
++	static const u8 data[] = {
++		0x78, 0x56, 0x34, 0x12, 0xf0, 0xde, 0xbc, 0x9a,
++	};
++	struct nvidia_ghes_decoded decoded = {};
++	size_t len;
++	u8 *buf;
++	u32 addr, val;
++
++	buf = vera_make_synthetic_default(test, 2, data, sizeof(data), &len);
++	KUNIT_EXPECT_EQ(test, 0, nvidia_ghes_decode_vera(NULL, buf, len, &decoded));
++	KUNIT_EXPECT_EQ(test, 1, nvidia_ghes_vera_context_entry_count(&decoded.contexts[0]));
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_vera_context_u32_pair(&decoded.contexts[0], 0,
++							  &addr, &val));
++	KUNIT_EXPECT_EQ(test, 0x12345678U, addr);
++	KUNIT_EXPECT_EQ(test, 0x9abcdef0U, val);
++}
++
++static void nvidia_ghes_vera_decodes_format3_u64_values(struct kunit *test)
++{
++	static const u8 data[] = {
++		0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01,
++	};
++	struct nvidia_ghes_decoded decoded = {};
++	size_t len;
++	u8 *buf;
++	u64 val;
++
++	buf = vera_make_synthetic_default(test, 3, data, sizeof(data), &len);
++	KUNIT_EXPECT_EQ(test, 0, nvidia_ghes_decode_vera(NULL, buf, len, &decoded));
++	KUNIT_EXPECT_EQ(test, 1, nvidia_ghes_vera_context_entry_count(&decoded.contexts[0]));
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_vera_context_u64_value(&decoded.contexts[0], 0, &val));
++	KUNIT_EXPECT_EQ(test, 0x0102030405060708ULL, val);
++}
++
++static void nvidia_ghes_vera_decodes_format4_u32_values(struct kunit *test)
++{
++	static const u8 data[] = {
++		0x78, 0x56, 0x34, 0x12,
++	};
++	struct nvidia_ghes_decoded decoded = {};
++	size_t len;
++	u8 *buf;
++	u32 val;
++
++	buf = vera_make_synthetic_default(test, 4, data, sizeof(data), &len);
++	KUNIT_EXPECT_EQ(test, 0, nvidia_ghes_decode_vera(NULL, buf, len, &decoded));
++	KUNIT_EXPECT_EQ(test, 1, nvidia_ghes_vera_context_entry_count(&decoded.contexts[0]));
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_vera_context_u32_value(&decoded.contexts[0], 0, &val));
++	KUNIT_EXPECT_EQ(test, 0x12345678U, val);
++}
++
++static void nvidia_ghes_vera_rejects_truncated_event_header(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++
++	KUNIT_EXPECT_EQ(test, -ENODATA,
++			nvidia_ghes_decode_vera(NULL, vera_l1_reset_id10,
++						VERA_EVENT_HDR_SIZE - 1,
++						&decoded));
++}
++
++static void nvidia_ghes_vera_rejects_truncated_cpu_info(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++
++	KUNIT_EXPECT_EQ(test, -ENODATA,
++			nvidia_ghes_decode_vera(NULL, vera_l1_reset_id10,
++						VERA_FIRST_CONTEXT_OFFSET - 1,
++						&decoded));
++}
++
++static void nvidia_ghes_vera_rejects_truncated_context_header(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++
++	KUNIT_EXPECT_EQ(test, -ENODATA,
++			nvidia_ghes_decode_vera(NULL, vera_l1_reset_id10,
++						VERA_FIRST_CONTEXT_OFFSET +
++						VERA_CONTEXT_HDR_SIZE - 1,
++						&decoded));
++}
++
++static void nvidia_ghes_vera_rejects_too_many_contexts(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u8 *buf;
++
++	buf = nvidia_ghes_kunit_memdup(test, vera_l1_reset_id10, sizeof(vera_l1_reset_id10));
++	buf[1] = NVIDIA_GHES_MAX_CONTEXTS + 1;
++
++	KUNIT_EXPECT_EQ(test, -E2BIG,
++			nvidia_ghes_decode_vera(NULL, buf, sizeof(vera_l1_reset_id10), &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_bad_info_size(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u8 *buf;
++
++	buf = nvidia_ghes_kunit_memdup(test, vera_l1_reset_id10, sizeof(vera_l1_reset_id10));
++	buf[34] = 31;
++
++	KUNIT_EXPECT_EQ(test, -EINVAL,
++			nvidia_ghes_decode_vera(NULL, buf, sizeof(vera_l1_reset_id10), &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_unsupported_version(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u8 *buf;
++
++	buf = nvidia_ghes_kunit_memdup(test, vera_l1_reset_id10, sizeof(vera_l1_reset_id10));
++	buf[0] = 2;
++
++	KUNIT_EXPECT_EQ(test, -EOPNOTSUPP,
++			nvidia_ghes_decode_vera(NULL, buf, sizeof(vera_l1_reset_id10), &decoded));
++}
++
++static void nvidia_ghes_vera_accepts_extended_cpu_info(struct kunit *test)
++{
++	static const u8 data[] = {
++		0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01,
++	};
++	struct nvidia_ghes_decoded decoded = {};
++	size_t len;
++	u8 *buf;
++	u64 val;
++
++	buf = vera_make_synthetic(test, 1, VERA_CPU_INFO_SIZE + 4, 3,
++				  data, sizeof(data), &len);
++	KUNIT_EXPECT_EQ(test, 0, nvidia_ghes_decode_vera(NULL, buf, len, &decoded));
++	KUNIT_EXPECT_EQ(test, VERA_CONTEXT_HDR_SIZE, decoded.contexts[0].context_size);
++	KUNIT_EXPECT_EQ(test, 3, decoded.contexts[0].data_format_type);
++	KUNIT_EXPECT_EQ(test, 8U, decoded.contexts[0].data_size);
++	KUNIT_EXPECT_EQ(test, 1, nvidia_ghes_vera_context_entry_count(&decoded.contexts[0]));
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_vera_context_u64_value(&decoded.contexts[0], 0, &val));
++	KUNIT_EXPECT_EQ(test, 0x0102030405060708ULL, val);
++}
++
++static void nvidia_ghes_vera_rejects_short_context_size(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u8 *buf;
++
++	buf = nvidia_ghes_kunit_memdup(test, vera_l1_reset_id10, sizeof(vera_l1_reset_id10));
++	put_unaligned_le32(15, &buf[VERA_FIRST_CONTEXT_OFFSET]);
++
++	KUNIT_EXPECT_EQ(test, -EINVAL,
++			nvidia_ghes_decode_vera(NULL, buf, sizeof(vera_l1_reset_id10), &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_ambiguous_context_size(struct kunit *test)
++{
++	static const u8 data[] = {
++		0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01,
++	};
++	struct nvidia_ghes_decoded decoded = {};
++	size_t len;
++	u8 *buf;
++
++	buf = vera_make_synthetic_default(test, 3, data, sizeof(data), &len);
++	put_unaligned_le32(20, &buf[VERA_FIRST_CONTEXT_OFFSET]);
++
++	KUNIT_EXPECT_EQ(test, -EINVAL, nvidia_ghes_decode_vera(NULL, buf, len, &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_data_beyond_section(struct kunit *test)
++{
++	static const u8 data[] = {
++		0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01,
++	};
++	struct nvidia_ghes_decoded decoded = {};
++	size_t len;
++	u8 *buf;
++
++	buf = vera_make_synthetic_default(test, 3, data, sizeof(data), &len);
++	put_unaligned_le32(16, &buf[VERA_FIRST_CONTEXT_OFFSET + 12]);
++
++	KUNIT_EXPECT_EQ(test, -ENODATA, nvidia_ghes_decode_vera(NULL, buf, len, &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_mis_sized_format1(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u8 *buf;
++
++	buf = nvidia_ghes_kunit_memdup(test, vera_crashdump_id_id40,
++				       sizeof(vera_crashdump_id_id40));
++	put_unaligned_le32(15, &buf[VERA_FIRST_CONTEXT_OFFSET + 12]);
++
++	KUNIT_EXPECT_EQ(test, -EINVAL,
++			nvidia_ghes_decode_vera(NULL, buf, sizeof(vera_crashdump_id_id40), &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_mis_sized_format2(struct kunit *test)
++{
++	static const u8 data[] = {
++		0x78, 0x56, 0x34, 0x12, 0xf0, 0xde, 0xbc,
++	};
++	struct nvidia_ghes_decoded decoded = {};
++	size_t len;
++	u8 *buf;
++
++	buf = vera_make_synthetic_default(test, 2, data, sizeof(data), &len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, nvidia_ghes_decode_vera(NULL, buf, len, &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_mis_sized_format3(struct kunit *test)
++{
++	static const u8 data[] = {
++		0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02,
++	};
++	struct nvidia_ghes_decoded decoded = {};
++	size_t len;
++	u8 *buf;
++
++	buf = vera_make_synthetic_default(test, 3, data, sizeof(data), &len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, nvidia_ghes_decode_vera(NULL, buf, len, &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_mis_sized_format4(struct kunit *test)
++{
++	static const u8 data[] = {
++		0x78, 0x56, 0x34,
++	};
++	struct nvidia_ghes_decoded decoded = {};
++	size_t len;
++	u8 *buf;
++
++	buf = vera_make_synthetic_default(test, 4, data, sizeof(data), &len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, nvidia_ghes_decode_vera(NULL, buf, len, &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_unsupported_source_device(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u8 *buf;
++
++	buf = nvidia_ghes_kunit_memdup(test, vera_l1_reset_id10, sizeof(vera_l1_reset_id10));
++	buf[2] = 1;
++
++	KUNIT_EXPECT_EQ(test, -EOPNOTSUPP,
++			nvidia_ghes_decode_vera(NULL, buf, sizeof(vera_l1_reset_id10), &decoded));
++}
++
++static void nvidia_ghes_vera_rejects_unsupported_data_format(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u8 *buf;
++
++	buf = nvidia_ghes_kunit_memdup(test, vera_l1_reset_id10, sizeof(vera_l1_reset_id10));
++	put_unaligned_le16(5, &buf[VERA_FIRST_CONTEXT_OFFSET + 8]);
++
++	KUNIT_EXPECT_EQ(test, -EOPNOTSUPP,
++			nvidia_ghes_decode_vera(NULL, buf, sizeof(vera_l1_reset_id10), &decoded));
++}
++
++static void nvidia_ghes_vera_copies_non_nul_signature(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {};
++	u8 *buf;
++
++	buf = nvidia_ghes_kunit_memdup(test, vera_l1_reset_id10, sizeof(vera_l1_reset_id10));
++	memcpy(&buf[16], "ABCDEFGHIJKLMNOP", 16);
++
++	KUNIT_EXPECT_EQ(test, 0,
++			nvidia_ghes_decode_vera(NULL, buf, sizeof(vera_l1_reset_id10), &decoded));
++	KUNIT_EXPECT_STREQ(test, "ABCDEFGHIJKLMNOP", decoded.signature);
++	KUNIT_EXPECT_EQ(test, '\0', decoded.signature[16]);
++}
++
++static void nvidia_ghes_guid_routes_grace(struct kunit *test)
++{
++	const guid_t guid = GUID_INIT(0x6d5244f2, 0x2712, 0x11ec,
++				      0xbe, 0xa7, 0xcb, 0x3f, 0xdb, 0x95, 0xc7, 0x86);
++
++	KUNIT_EXPECT_EQ(test, NVIDIA_GHES_FORMAT_GRACE,
++			nvidia_ghes_format_from_guid(&guid));
++}
++
++static void nvidia_ghes_guid_routes_vera(struct kunit *test)
++{
++	const guid_t guid = GUID_INIT(0x9068e568, 0x6ca0, 0x11f0,
++				      0xae, 0xaf, 0x15, 0x93, 0x43, 0x59, 0x1e, 0xac);
++
++	KUNIT_EXPECT_EQ(test, NVIDIA_GHES_FORMAT_VERA,
++			nvidia_ghes_format_from_guid(&guid));
++}
++
++static void nvidia_ghes_guid_rejects_unknown(struct kunit *test)
++{
++	const guid_t guid = GUID_INIT(0x00000000, 0x0000, 0x0000,
++				      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
++
++	KUNIT_EXPECT_EQ(test, NVIDIA_GHES_FORMAT_UNKNOWN,
++			nvidia_ghes_format_from_guid(&guid));
++}
++
++static void nvidia_ghes_grace_reg_pair_rejects_null_decoded(struct kunit *test)
++{
++	u64 addr, val;
++
++	KUNIT_EXPECT_EQ(test, -EINVAL,
++			nvidia_ghes_grace_reg_pair(NULL, 0, &addr, &val));
++}
++
++static void nvidia_ghes_grace_reg_pair_rejects_wrong_format(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {
++		.format = NVIDIA_GHES_FORMAT_VERA,
++	};
++	u64 addr, val;
++
++	KUNIT_EXPECT_EQ(test, -EINVAL,
++			nvidia_ghes_grace_reg_pair(&decoded, 0, &addr, &val));
++}
++
++static void nvidia_ghes_grace_reg_pair_rejects_out_of_range(struct kunit *test)
++{
++	struct nvidia_ghes_decoded decoded = {
++		.format = NVIDIA_GHES_FORMAT_GRACE,
++		.number_regs = 0,
++	};
++	u64 addr, val;
++
++	KUNIT_EXPECT_EQ(test, -ERANGE,
++			nvidia_ghes_grace_reg_pair(&decoded, 0, &addr, &val));
++}
++
++static struct kunit_case nvidia_ghes_test_cases[] = {
++	KUNIT_CASE(nvidia_ghes_grace_decodes_registers),
++	KUNIT_CASE(nvidia_ghes_grace_accepts_zero_registers),
++	KUNIT_CASE(nvidia_ghes_grace_copies_non_nul_signature),
++	KUNIT_CASE(nvidia_ghes_grace_rejects_truncated_header),
++	KUNIT_CASE(nvidia_ghes_grace_rejects_truncated_registers),
++	KUNIT_CASE(nvidia_ghes_grace_reg_pair_rejects_null_decoded),
++	KUNIT_CASE(nvidia_ghes_grace_reg_pair_rejects_wrong_format),
++	KUNIT_CASE(nvidia_ghes_grace_reg_pair_rejects_out_of_range),
++	KUNIT_CASE(nvidia_ghes_vera_decodes_l1_reset),
++	KUNIT_CASE(nvidia_ghes_vera_decodes_crashdump_id),
++	KUNIT_CASE(nvidia_ghes_vera_decodes_crashdump_s1_opaque_context),
++	KUNIT_CASE(nvidia_ghes_vera_decodes_format2_u32_pairs),
++	KUNIT_CASE(nvidia_ghes_vera_decodes_format3_u64_values),
++	KUNIT_CASE(nvidia_ghes_vera_decodes_format4_u32_values),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_truncated_event_header),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_truncated_cpu_info),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_truncated_context_header),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_too_many_contexts),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_bad_info_size),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_unsupported_version),
++	KUNIT_CASE(nvidia_ghes_vera_accepts_extended_cpu_info),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_short_context_size),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_ambiguous_context_size),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_data_beyond_section),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_mis_sized_format1),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_mis_sized_format2),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_mis_sized_format3),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_mis_sized_format4),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_unsupported_source_device),
++	KUNIT_CASE(nvidia_ghes_vera_rejects_unsupported_data_format),
++	KUNIT_CASE(nvidia_ghes_vera_copies_non_nul_signature),
++	KUNIT_CASE(nvidia_ghes_guid_routes_grace),
++	KUNIT_CASE(nvidia_ghes_guid_routes_vera),
++	KUNIT_CASE(nvidia_ghes_guid_rejects_unknown),
++	{}
 +};
 +
- struct nvidia_ghes_decoded {
- 	enum nvidia_ghes_format format;
- 	char signature[17];
- 	u16 error_type;
- 	u16 error_instance;
-+	u16 event_type;
-+	u16 event_sub_type;
- 	u8 severity;
- 	u8 socket;
- 	u8 number_regs;
-+	u8 source_device_type;
-+	u8 event_context_count;
-+	u32 architecture;
-+	u64 event_link_id;
- 	u64 instance_base;
-+	u8 chip_serial_number[16];
- 	const struct nvidia_ghes_grace_reg *grace_regs;
-+	struct nvidia_ghes_vera_context contexts[NVIDIA_GHES_MAX_CONTEXTS];
- };
- 
-+VISIBLE_IF_KUNIT enum nvidia_ghes_format nvidia_ghes_format_from_guid(const guid_t *guid);
- VISIBLE_IF_KUNIT int nvidia_ghes_decode_grace(struct device *dev, const void *buf,
- 					      size_t len,
- 					      struct nvidia_ghes_decoded *decoded);
- VISIBLE_IF_KUNIT int nvidia_ghes_grace_reg_pair(const struct nvidia_ghes_decoded *decoded,
- 						unsigned int index, u64 *addr, u64 *val);
-+VISIBLE_IF_KUNIT int nvidia_ghes_decode_vera(struct device *dev, const void *buf,
-+					     size_t len,
-+					     struct nvidia_ghes_decoded *decoded);
-+VISIBLE_IF_KUNIT
-+int nvidia_ghes_vera_context_entry_count(const struct nvidia_ghes_vera_context *ctx);
- 
- #endif
++static struct kunit_suite nvidia_ghes_test_suite = {
++	.name = "ghes-nvidia",
++	.test_cases = nvidia_ghes_test_cases,
++};
++
++kunit_test_suite(nvidia_ghes_test_suite);
++
++MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
++MODULE_DESCRIPTION("KUnit tests for NVIDIA GHES CPER parser helpers");
++MODULE_LICENSE("GPL");
 -- 
 2.50.1 (Apple Git-155)
 
