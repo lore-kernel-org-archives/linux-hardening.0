@@ -1,581 +1,304 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011026.outbound.protection.outlook.com [52.101.52.26])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1F542BC5F;
-	Fri, 24 Jul 2026 12:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784895702; cv=fail; b=tsACFhWEFDoe1JaYWBV2E9Lo/sjaU5TJx3vl2t0M9m82yvi9MZ2BKJBLfUkKL+328Emu6BOnqnsviS0sLLQyHLmC5jYQCAeEZ2sCAwQ4ErjYT8w2qRGvWrU0yWy+CjsgQ4Gm/eCvWoHbwpAKZOk+1Bc+ZFPd5FBK7DiheKjiYjA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784895702; c=relaxed/simple;
-	bh=MBPdsRpd7quP/ogkU5skJ7OU3KxxhWLM0T/bwTbkXE4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NLHhsj1mlbIDiIE+NwpxaLfVZ4PzCoqJEOsDMUoEd5RwkfbEp53jVL2QmI4W0be1vB8O629vt8UmSRYKErv1JealbG4RNmfmpRvtxrmbgLWPJcDtvfShSKdWulSySQkle5DJ1qctRspn9HtZav36sNWMpYoN6sHJY5md2l1Imks=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CHoKkFeY; arc=fail smtp.client-ip=52.101.52.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA71D41684F
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Jul 2026 12:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784896941; cv=none; b=eWSk2aIxI8FCDAiPxWRxzuPCbSipjtP7BIehlW1GKeKqCZ/WEiKrh2p/CItOeckl6pTtqJb2NOWrsGdnxdoKz4Mc4UaEXJzFKVzGp7kCkL8MPFendtwkcF6AQ6wozNIvMNxHhhrSx3uSiDSW1trB9+4Wj3QgPBVa0xKxgNNVAow=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784896941; c=relaxed/simple;
+	bh=P6LNU8zKsK52EexDG9sr03EG75GRsVNOKcLPifAvHfg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jxI3pJvb80wvPtDto5yPsGK9bWN9ZMyj6GADZxO7g1zJYmQouw/9zQQhe7JGhLcylwHXBt1amQeU01cTEc4VMRouyMPQ6F7tQb9FHdiXay71Nl9aAeSrKUsaixH0MY3mkq1jCZMHgoxncQkuf9lJazGLalfUSt/Z4DIKA8BQ/a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=M6wO3a7Z; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=QZOamfDs; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CHoKkFeY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b3w4xa51/CaHs9gde2JI52JPNTyXWgXj54NvhMTDynIokp9edzhg6pflTSUjmcuFg97U3W6O855a4qfKdzuWTrY2G0qdGnlmHrExTLfOrcXlxDa6FmtQBQo+lJAlJBDcgXouXxVzg9ud4w5D8C625Urau1yfJVcl9ALN8o2aZHfl01QmgG0SeFhkkg6wu8YxQTeSA+mTiWXSpUdjvRHUkYN28EXf2SAQcwRhTcGqwLpCMBg28IZVtO/b+xvoDKgFNRxaepNSu/KmneplAN5jlsJ9Pf70P8sPIq3R6OtZV8IXZHyYeVLU/Jz/zeaXNG4s0HjHBLCERzIoygkYuFOUZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OIZpqKBtRJM0qmD5mh81mIrj71QURR3aNlbY0c+c2Eo=;
- b=sOC65OUg9vB8hNlJbkDMflFaTNZDc83QvFNcBtMExgD0rRp5k50vfe7eIKckYOcqo9V6OgVMYKmQDO1Wehxtf+KWJzLtGB5qdVfKPEkL2IqZwpMLp7HJ9mXyyEheSCueRzDAYfTYmvX478hFhHPqW8r34LE/AN7Q4jkhhzy0CqvcokOmHwtgWFbBsEGWNzP/nRGmZzbJzdbuhJqQE0VnjM4wfRrO/sz7n4IP37J+EA1ELVaCvNb3LxwT2mI/vyznO1wn5rbDkcfWkGfhupd8onK6eufxCobRHlGMhLeJnOsqiFzfA+AcghdNpCzNPm52zQrT7Z0TXCdLKHtdaWL97g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OIZpqKBtRJM0qmD5mh81mIrj71QURR3aNlbY0c+c2Eo=;
- b=CHoKkFeY/n45wgazop4nzEECftnlsmW5VoBDhEn9FubwLL6j/p6PA5BGKQwsWyiWTvHrRxSDXgZwht9L/6lEZgJmuEXxC7TjDtME635WRvtbIQy6fGQUT6tlt7fzVqv7CfxswAcvd6xHktYExLmZPOBWA7EswdIehpTSekZGTeH/RoUBgO6u+tfkQW/mSs1zUF22eooT4Y/bpGahMpE+DV92nhq1ncvnvOUAbnZLhu3kslWB1FrQvN7jbE0ZWWcIioxUVVNxSn6bqPv5SuWX2ywSTRvy4qn9XIGPFuyMbkKFJdzZVZIqtdZ66sR9tQe4Kkmf8U2MJogvF+96R1LyGg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SJ0PR12MB6733.namprd12.prod.outlook.com (2603:10b6:a03:477::9)
- by IA1PR12MB9032.namprd12.prod.outlook.com (2603:10b6:208:3f3::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.12; Fri, 24 Jul
- 2026 12:21:29 +0000
-Received: from SJ0PR12MB6733.namprd12.prod.outlook.com
- ([fe80::f00d:2f6b:6f9b:8f97]) by SJ0PR12MB6733.namprd12.prod.outlook.com
- ([fe80::f00d:2f6b:6f9b:8f97%6]) with mapi id 15.21.0223.017; Fri, 24 Jul 2026
- 12:21:29 +0000
-From: Kai-Heng Feng <kaihengf@nvidia.com>
-To: rafael@kernel.org,
-	shuah@kernel.org,
-	kees@kernel.org
-Cc: julianbraha@gmail.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	guohanjun@huawei.com,
-	mchehab@kernel.org,
-	xueshuai@linux.alibaba.com,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	csoto@nvidia.com,
-	mochs@nvidia.com,
-	Kai-Heng Feng <kaihengf@nvidia.com>
-Subject: [PATCH v2 RESEND 4/4] selftests: firmware: Add NVIDIA GHES EINJ selftest
-Date: Fri, 24 Jul 2026 20:20:54 +0800
-Message-ID: <20260724122054.36162-5-kaihengf@nvidia.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260724122054.36162-1-kaihengf@nvidia.com>
-References: <20260724122054.36162-1-kaihengf@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TPYP295CA0043.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:7d0:7::11) To SJ0PR12MB6733.namprd12.prod.outlook.com
- (2603:10b6:a03:477::9)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="M6wO3a7Z";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="QZOamfDs"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66OCgHPu3057340
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Jul 2026 12:42:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=BasHnkJh1AZ7ZcpL5l3uRm
+	qruJWcA/bEo+NpmjJe46s=; b=M6wO3a7ZuvIwMd1Z2VmXDAvZ8D4E6GGLeCksJK
+	ic0LoICZaklUv/Fu+ra3/e5prLmo3P7k3+A85V7piLq+oDpS4JMID7/WaqNew/SO
+	9BQfwv3YVBDB/8krz9SgAXu1DoJMqA70kONekACTfm+tYw/5gXDqtdklmXf0ymMv
+	VfMI/mivaWlnvINrSPyOCjkw9wIp3ahd3jTXT9er352xDJmmJN7Ln74zijXhEy4B
+	QUyoDLd92GALFaH2+dyPAkXHG9JmaRrl7BPA7oHwUYtXQlFRgnTT9btgkq2b2jFC
+	eImBDjw6YPvxD0yjKHOuu6ESGPQjEFqST41LppS733qrtu+Q==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fm5yagj52-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Jul 2026 12:42:17 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-51bfe3fa93bso6768461cf.2
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jul 2026 05:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1784896937; x=1785501737; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=BasHnkJh1AZ7ZcpL5l3uRmqruJWcA/bEo+NpmjJe46s=;
+        b=QZOamfDslNagJfKKQ6zf3ICFaPlrnkheSSuWqBFgR6N3ziHW4Gy/SOH6ISsDU1VLZx
+         ZPfgpxFAkrMCgt/9b4JKT9i29AnILZ10EE7bV7WsgrpNjFzf8IwhLtibS8t//69u/fEy
+         pTKV0ns30/1q605hKEvbC4VudHslhwo4KeIRmf9wc7DIOxOmLfktPeCyr75kiFepQJfe
+         zTbPn3GzOYH+jBQqhNDUxcYDlPFt6sHWcKF9d1Nc0vBSTdrBPzDNUxo5+vYJBHsTEYQd
+         cwIvbLpFhxfX5s53aCprJUSsKe6fYBhG/SBEHJ13OvlAIM5qo8JxgixwI1RPhzW75Saa
+         y9tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784896937; x=1785501737;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=BasHnkJh1AZ7ZcpL5l3uRmqruJWcA/bEo+NpmjJe46s=;
+        b=Lg5ZORsV0jYuoTAoIrmaU1WlEnOdsW9B8GEa9Cl5kWxd0iZln++mloLPSkWs+UnX4l
+         0sRPQE0CXKEtCMxw5XmMuKyvfan0+Qxb0SOSSsVCta2JUqbqEELXDtLViW3m+M424Av5
+         Wq0bSl0Av+TDurB1nvKG6dc5UniNdMwlVhuwvBg2NO7IW3urG91SxOaWlXj/0o7N3Bsl
+         AEYqQw84AgLKbckD9VFUhRzuTUhjCjR9q6MHr1LRBKtnob2616Gorw5qgHS9HJqbh8YO
+         uoZt4LBhxwEDP0ABDQQ9pL8dPPQgaV4k4oQxjFHbqACGH2ByafKXYTPtTovUmzQn7XWf
+         yG+Q==
+X-Forwarded-Encrypted: i=1; AHgh+Rok7zP8bVJPWxjDcwH7162/E5xm5Wvq96e8wczt7TFgHfeyNKunh3E8SSikHmOBdxGk6u7MolXFSm1PPA0Yy3o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPNwmbF9EHQl2WeIB1gjR9oqPxfoxI7vkHA5Z50lroBeravdW7
+	MCE9Q1iuaAfvxtLJsWRPHITi1j+YuLAtBzkuTv8XHZHoULp8huSr3bOq2hAiGiLgYQuwtHbShzY
+	ELhFepzLmZNAVF/ATOnsXNNFXGV7z7CCcsM9GorDN4YDt8bxj9elym4RWlfsZotHYueHUwTQ=
+X-Gm-Gg: AR+sD10ks2FD7L2GgCntjKc3EoZ6ST8GdN4NSRoF4BXbW1J2/an5JgjxgsDrC1oZCPK
+	UJE8exHMOo8Zd2d427JePow95hriGi9YznZk1L0YDuKxXXLHTc2li6xCGmO1YzjhWnSafaWeKwL
+	zE78O5kgqndOnoez3YHDRbZjFrM/2ccbfznCSgGJ0F0rOk0YtL9y3XHCXsEVGf8QO1XGMpApNaq
+	00US21Ikf0WDW8kKMNPEDivIQSICUUogPNVsJK2eK9652KAjP1xlJV81F2fElGrKs9OyAYBk0kl
+	zHjkQKJ3yWxAhW5o6j44jZ3Nt5mScRM2t0pgYeBOQXmj0Emz0TZUzlGAzgJQlbuRYsbL3if4nnP
+	t92oR3fWRM3DYJGhlaBKZNLQ3A18lIDZYwFO+DOhaFjhzwVGMwMpu9pU+DbKCVzhzGX6il5x2vx
+	IxCPVIJ2ie6TqmnVtCn1/8Ul1POQ4+gKK7pc73cLIeYMCYWZ0Qzg==
+X-Received: by 2002:a05:622a:1802:b0:528:325c:2905 with SMTP id d75a77b69052e-5283df7974dmr69250501cf.63.1784896936915;
+        Fri, 24 Jul 2026 05:42:16 -0700 (PDT)
+X-Received: by 2002:a05:622a:1802:b0:528:325c:2905 with SMTP id d75a77b69052e-5283df7974dmr69250021cf.63.1784896936299;
+        Fri, 24 Jul 2026 05:42:16 -0700 (PDT)
+Received: from QCOM-eG0v1AUPpu.na.qualcomm.com ([2a01:e0a:830:450:48e:a2cc:6c4:c92a])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1c32ebc828sm352591166b.43.2026.07.24.05.42.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2026 05:42:15 -0700 (PDT)
+From: Loic Poulain <loic.poulain@oss.qualcomm.com>
+Subject: [PATCH v5 0/5] media: qcom: camss: CAMSS Offline Processing Engine
+ support
+Date: Fri, 24 Jul 2026 14:42:08 +0200
+Message-Id: <20260724-camss-isp-ope-v5-0-e70ad4fa39ce@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR12MB6733:EE_|IA1PR12MB9032:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6aa5687b-931e-4c06-ccd5-08dee97e15f4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|3023799007|10067099003|11063799006|56012099006|6133799003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	4deR+dnkCYDSLc9UU2bmRG7t8extqIRsrpnN8jfSve9fCAhBaewgvMEyOVJl2TaGxoQ3RAEBLNoCq0UkjyeDdkaMGz7WC36s89t9bi5OMTF7t++PGzswP6UoWZfGsRP7xZV2OZob91Zz24t3YWvQaXxYyXcHaezQfPoPK2pJl5W/xAw9thCKp+JxWh2ygBg/Hgw8rc/6K7htYk7waU8fq1I+rCBl9stYwPNhojS5p1hsFpMv4tdlS3RcxMApj+r9SHYQqQos8uvtEIKvBv0Mwh/YlHfumlta/vNi/Oqq6V4zhtWFW8410TQK+SHjz88ETHBAIfEatL7RhqHYMD4oZKY16b7ZAJdIaW/u2xeEzOhuM5mX2ztrJh2nj787PEK9aSDZXlY4yDABHFPPpnUQIumRAIFtMzsNA2ZmN5qHry+prTad0x4qiD3YxTATR3crJG3Vu/Ff62MrHEz5+sTRoC3rym8u4zTTahaosGJ6vrop7dxxDdg55UxrYdjBA2LzqBsQBzdE900CfnS/e++a5iqYAFG5iKhP39oOMvHcWOD6x+CdYNTqJJ2o4OMHnVF4Nh0LJHq4B7exX6959w40e5zxRc52SkRKvpdMg9/vrDkcig7Mxu+d5zKOrn3ff4WfaLwmBCe2wEfuxHggv23jqXfppNglIFhwfPFRtNPSJjU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB6733.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(3023799007)(10067099003)(11063799006)(56012099006)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7ONfWTRpSwrJLwflt6pIUyaClZSNLsssnrR1P9tSKQ31uQfmp0mnxGhDU8ig?=
- =?us-ascii?Q?hKw+0O6sRIwCtcIT+5kG3ejP1R13WkP6dDDEq11HyLvqFhzRZX3kUYB8YWeZ?=
- =?us-ascii?Q?GKs7r2fbYpNdjnPI9+/cjR1CIlmIG0lSNefSuN183l96plEzmcbOK9OCyzGK?=
- =?us-ascii?Q?PFpUlAk1IbLP7CMdGNHWUUA+Q19ygx10lisML/g2tf+K7qq9PHGzqM4CguS0?=
- =?us-ascii?Q?sPzuGXAOoC9t0HiR1gUw7Ov1JGLIiDn6MLfdQeJaCPEtHuf45nQDlGW6tZfc?=
- =?us-ascii?Q?h+MoPxQo/G8dr5eovXsHBDNvbzi2Fvj5bRppktAqR4WzZpuowWzp/ChXaAGj?=
- =?us-ascii?Q?6o3VH89xe7ZYb41iW3hpEgiZ1iQSULIKRL5CZHegywySgF4OvHSxYZXr5HB2?=
- =?us-ascii?Q?av5VA4hr6S/SiTGVTFoUxsaBbjtZM7ZHChv0iO09Wgda/KIZXEq6ADXZanbw?=
- =?us-ascii?Q?QgslhD5OySOzKi0d9ThNFE+zkGWIOsVtvD2+In3cdS3U2mROwVUX7eZRpPNH?=
- =?us-ascii?Q?fPTyFQgcdog6IH2f/OME4oRuTbnfxfZxe8rauZ7fAFBWD0nbNPnDrRHCLJWx?=
- =?us-ascii?Q?n031gU1PddBNeh/VNsepv+btleJm7eUSg3EooeOOir9CuoZ6vaFBsakxORxr?=
- =?us-ascii?Q?6XzBukra+zEld7wxlI7LAeIvLa4Ei52ZuAUTpZXWM44I1Ss8U64ICINCCEI3?=
- =?us-ascii?Q?YBn4A1GlV7XXp4ZD88ZobnPJmoG5xH6RT92VZzgg/aZZEzowQJjd31B1PU/E?=
- =?us-ascii?Q?mmkL93LABSO4sEZSd0eN4XGBFD+F3NLiwJBqyib+fplaUeoBbln0zNYFklY9?=
- =?us-ascii?Q?/HnYWdWE9e6WG/fyLRzwnBwc0UxuyAKLQ3u3Ly/8G7J/v1Nb2EnDo353QBZu?=
- =?us-ascii?Q?PjIN6bIxoyJ+YYVcW2oYGBy+edBxjhiRJSA/fH1ecuZwaui6F1DLP+kL3jCZ?=
- =?us-ascii?Q?BpKlljYgrWqrnVd3raOqIiASddgUc12yEikG2OCCRgaiEWD57FhGRfUtsfj9?=
- =?us-ascii?Q?qBMOtQ1Jm3o4h64NqOAvn4KwKYrQDTbiuCGqETtIxclC3uDONbYN/S1I/+LI?=
- =?us-ascii?Q?Z2bgnhQvfd6jBgGWeurxUbNutZTZoMyg53Qmpba91rv5JzyjgYMZsuGEz2oR?=
- =?us-ascii?Q?2amrxDoNfBnmNy9x+l8pvRmMMse71olFDEZ5+SXTaJNZD0cWbe67i+TOrDvH?=
- =?us-ascii?Q?6pjasvXtiBUNHqpOSyArjLV7J8o+NBMW05JvonP8JwVRxk4IB7aMB0mgNNn3?=
- =?us-ascii?Q?5gX2uTMjl3sGLsRuYq9ywTOjovAQqnVGwnnhXbtYenjcJSbYS5uqgjMBNihu?=
- =?us-ascii?Q?gF1uN7nrAGKV65zHubzegUioweaRo5JvkICNP2tvzjzgj70SxdwdyZHWofmF?=
- =?us-ascii?Q?RnC1WtXewbeP88PQbwwJNTp7aryRmCf5EoP873RwdF1HQCdU22XodKjf5jPJ?=
- =?us-ascii?Q?qUQi4IU0gLSNt07WimCk74y2oeyqzWv9fS4CXiENKnTZ59A2PHt60RxTYScv?=
- =?us-ascii?Q?t4/VFJ5xETZdp4Jivt/Yin7z2larHzF/bv3v7ek0rg+ApDCRcC1WvVASZ21i?=
- =?us-ascii?Q?nT3ezZb/xrCyo+HDqSyx44+5Pp0PKfniv2EuOd8Fk7fmnSa5tWpw7ZChPBlJ?=
- =?us-ascii?Q?f/Ih6btNWQ1h6/vTXjb274opl/Pd2juJzfZZASsmDy7H7wdDy0M9eHdBJXNw?=
- =?us-ascii?Q?z+f9OUAJWdpA5Q0p0h09PoXZ9G5/reMfLryQ9aXZE3aUTrfHOVsLVpz8SzqY?=
- =?us-ascii?Q?FGNv7GGxEQ=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6aa5687b-931e-4c06-ccd5-08dee97e15f4
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB6733.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2026 12:21:28.2076
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: djXM2OkWEnUl3tqZ4rO/W8u+/CvJBpt5CUUIxS7ahg7DUahbxMIkDfYif3y2xikBt0VZ310bGGWIaEpNdOcO5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9032
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKBdY2oC/23OQW7CMBAF0Ksgr5nIHntw6Kr3qFg4jtNYSuLUA
+ xEVyt3rwAIJuhnpL+b9fxMccgwsPnY3kcMSOaapBNrvhO/d9B0gtiULlHiQBi14NzJD5BnSHMA
+ 0ZKnrgsfQivIz59DF6937OpXc5TTCuc/BPRWNWiHVaCpU6qAIFAwp+mpOl8HF6TMxVz8XN/g0j
+ lU5m9tHPqf8e5+56E1/WCTrl0WLBglNoyQRWlPa3r1t2GKeiFXyFTEFIYXSOqnVsa3/QdZ1/QO
+ TDRLHPgEAAA==
+X-Change-ID: 20260427-camss-isp-ope-4b575ffec2ed
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        Loic Poulain <loic.poulain@oss.qualcomm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
+        Hans de Goede <johannes.goede@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI0MDExNSBTYWx0ZWRfX11Cx+SozCXHb
+ pKdXq6LuzwTx1JsyyctrG1tN98YW4JWDibfmaYfkufSTpPQrRTJy7NLPQrgq+n9CzjTGIWH/Mxg
+ TLB0SReWQygVIzO+4O3QO96R3bBOC4M=
+X-Authority-Analysis: v=2.4 cv=Rtz16imK c=1 sm=1 tr=0 ts=6a635da9 cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22 a=NEAV23lmAAAA:8
+ a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=rgSWqCNzigiIzMNiINIA:9
+ a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: JsCu9-C6gLeXcHos0gJQieSqutbOqdJ0
+X-Proofpoint-ORIG-GUID: JsCu9-C6gLeXcHos0gJQieSqutbOqdJ0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI0MDExNSBTYWx0ZWRfX8VMyKLS6wQ2g
+ 7SjAN3MnrfN7XIr8cb/XiHr+/XHuHC64BWNo6aRp8cnlQLeWyahBvm8BTaodSXlFCBlI1ryDYUr
+ Et7C8ccuNTIFVAd0/F8fasiQDBZr6Xg4KxfSHocNS2gq9fc9PPH7kb6u1G9IsZAqvWO77nY3q+0
+ iRDoZZsKBxk8O+Gf1RYn7c4HlSQK4HbUP9zJ9Z3BSlmCCQ7/k2vapR7xSfknacsxSrYSDJ1KG12
+ U6t901Ohp/NCtZ3dFmtOYN5g7TLAaaazZn4/09dXOo5WyiOh+ytZIhWocdPD+nu8tdddFVe7TMv
+ O3jAVKxHptoLIAG91HRktP3FoZgMoXuY3PNbkk7kgnBfp5O7LZTFXYwh07brXeWusJOzl226MaZ
+ mT6KhAB0bgLtSzWSyOzpFEG37SJMNpoTfxfpvYCSxntgWlxy7IC5b0+HDVZHNbxt9JEMx0CtzJ6
+ NMBTaK2n23QFKyFP05Q==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-24_02,2026-07-24_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0 clxscore=1015
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607240115
 
-Exercise the full driver path on real Grace and Vera hardware using
-ACPI EINJ to inject CPER sections and validate the kernel log output.
-KUnit covers the parser in isolation; this test covers the path from
-firmware notification through GUID dispatch to decoded output.
+This series introduces support for the Qualcomm CAMSS Offline Processing
+Engine (OPE), as found on Agatti-based platforms. Boards such as Arduino
+UNO-Q use this SoC family and will benefit from hardware-assisted image
+processing enabled by this work.
 
-Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
+This represents the first step toward enabling image processing beyond
+raw capture on Qualcomm platforms by using hardware blocks for
+operations such as debayering, color correction, and scaling.
+
+The OPE sits outside the live capture pipeline. It operates on frames
+fetched from system memory and writes processed results back to memory.
+Because of this design, the OPE is not tied to any specific capture
+interface: frames may come from CAMSS RDI or PIX paths, or from any
+other producer capable of providing memory-backed buffers.
+
+The hardware can sustain up to 580 megapixels per second, which is
+sufficient to process a 9MPix (4K) stream at 60 fps or to handle
+four parallel 2MPix (HD) streams at 60 fps.
+
+The driver is designed to support multiple processing contexts. At
+present, however, only a single context is instantiated, which is
+created on the first media-pipeline open. This keeps the implementation
+simple while ensuring the design is ready for forthcoming multi-context
+support at the V4L2/media framework level.
+
+The OPE is a standalone device, independent from the CAMSS device. It
+manages its own clocks and power domains (CAMSS GDSC and CX), and does
+not require any change to the core CAMSS driver.
+
+Graph:
+ope_input ----+
+              +--> ope_proc --> ope_disp --> ope_disp_output
+ope_params ---+
+
+Compliance: v4l2-compliance has been executed without any error on
+the media and video devices.
+
+Testing: A camss-isp-m2m tool is available at
+https://github.com/loicpoulain/camss-isp-m2m-test
+The tool can be used to exercise and stress-test the OPE engine,
+as well as to observe performance and latency behavior under
+various operating conditions (resolution, format, buf count, etc).
+
+./camss-isp-m2m -s 3840x2160 -n 5
+
+  Name                            Device            Dir       Type
+  --------------------------------------------------------------
+  ope_input                       /dev/video10      output    video
+  ope_params                      /dev/video11      output    meta
+  ope_disp_output                 /dev/video12      capture   video
+  ope_proc                        /dev/v4l-subdev13  -        subdev
+  ope_disp                        /dev/v4l-subdev14  -        subdev
+
+Test: 3840x2160 RGGB -> 3840x2160 NV12  [5 frames]
+  Input   /dev/video10  3840x2160 RGGB  bpl=3840  size=8294400
+  Output  /dev/video12  3840x2160 NV12  bpl=5760  size=12441600
+
+Buffers:
+  /dev/video10    buf[0]  offset=0x00000000  length=8294400   VA=0xffffbcb87000
+  /dev/video11    buf[0]  offset=0x00000000  length=12441600  VA=0xffffbbfa9000
+
+Streaming  5 frames...
+  seq=0      buf: in=0 out=0   14.833 ms  (67.4 fps)
+  seq=1      buf: in=0 out=0   14.874 ms  (67.2 fps)
+  seq=2      buf: in=0 out=0   14.902 ms  (67.1 fps)
+  seq=3      buf: in=0 out=0   14.960 ms  (66.8 fps)
+  seq=4      buf: in=0 out=0   14.896 ms  (67.1 fps)
+
 ---
-v2:
- - No change.
+Changes in v5:
+- Make params definition ope specific (Bryan)
+- Add pipeline/params helpers to ope driver/subdir.
+- driver: fix COLOR_CORRECT base (0xa00, was 0x400) (Bryan).
+- driver: fix DEMO INTERP_COEFF lambda masks (G [7:0], RB [23:16]).
+- driver: map pipeline blocks individually, dump per-block HW_VERSION (Bryan).
+- driver: disp subdev is pass-through, mirror sink format to source
+  and make source read-only.
+- dt-bindings/dts: map the CDM register block and rename node to isp@5c42000 (Bryan).
+- Link to v4: https://lore.kernel.org/r/20260710-camss-isp-ope-v4-0-51207a0319d8@oss.qualcomm.com
 
- tools/testing/selftests/firmware/Makefile     |   4 +-
- tools/testing/selftests/firmware/config       |   5 +
- tools/testing/selftests/firmware/einj_lib.sh  | 189 ++++++++++++++++++
- .../selftests/firmware/ghes_nvidia_einj.sh    | 144 +++++++++++++
- .../firmware/ghes_nvidia_einj_profiles.sh     |  46 +++++
- 5 files changed, 386 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/firmware/einj_lib.sh
- create mode 100755 tools/testing/selftests/firmware/ghes_nvidia_einj.sh
- create mode 100755 tools/testing/selftests/firmware/ghes_nvidia_einj_profiles.sh
+Changes in v4:
+- Made OPE a standalone device again, sibling of CAMSS rather than
+  a child node, following maintainer feedback (Bryan)
+- Aligned params with ones suggested by Bryan (when possible) (Bryan)
+- Correct usage of subdevice states for configuration (Hans)
+- Removed the bufq and scheduling helpers (now in ope driver) (Bryan)
+- Moved generic pipeline and params helpers to camms 'core'
+- Fixed Green hue with some downscaling factors (reported by Hans)
+- Fixed ope_enum_fmt_vid_cap (Hans)
+- don't hardcode DT assigned-clock-rates for AXI (Konrad)
+- Link to v3: https://lore.kernel.org/all/20260508-camss-isp-ope-v3-0-bb1055274603@oss.qualcomm.com
 
-diff --git a/tools/testing/selftests/firmware/Makefile b/tools/testing/selftests/firmware/Makefile
-index 7992969deaa2..b753dd123860 100644
---- a/tools/testing/selftests/firmware/Makefile
-+++ b/tools/testing/selftests/firmware/Makefile
-@@ -3,8 +3,8 @@
- CFLAGS = -Wall \
-          -O2
- 
--TEST_PROGS := fw_run_tests.sh
--TEST_FILES := fw_fallback.sh fw_filesystem.sh fw_upload.sh fw_lib.sh
-+TEST_PROGS := fw_run_tests.sh ghes_nvidia_einj.sh
-+TEST_FILES := fw_fallback.sh fw_filesystem.sh fw_upload.sh fw_lib.sh einj_lib.sh ghes_nvidia_einj_profiles.sh
- TEST_GEN_FILES := fw_namespace
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/firmware/config b/tools/testing/selftests/firmware/config
-index 6e402519b117..1b68e638d0b7 100644
---- a/tools/testing/selftests/firmware/config
-+++ b/tools/testing/selftests/firmware/config
-@@ -4,3 +4,8 @@ CONFIG_FW_LOADER_USER_HELPER=y
- CONFIG_IKCONFIG=y
- CONFIG_IKCONFIG_PROC=y
- CONFIG_FW_UPLOAD=y
-+CONFIG_DEBUG_FS=y
-+CONFIG_ACPI_APEI=y
-+CONFIG_ACPI_APEI_GHES=y
-+CONFIG_ACPI_APEI_EINJ=y
-+CONFIG_ACPI_APEI_GHES_NVIDIA=y
-diff --git a/tools/testing/selftests/firmware/einj_lib.sh b/tools/testing/selftests/firmware/einj_lib.sh
-new file mode 100644
-index 000000000000..ca569a9fe5b0
---- /dev/null
-+++ b/tools/testing/selftests/firmware/einj_lib.sh
-@@ -0,0 +1,189 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+
-+EINJ_TABLE=/sys/firmware/acpi/tables/EINJ
-+EINJ_DEBUGFS=/sys/kernel/debug/apei/einj
-+NVIDIA_PLATFORM_GLOB=/sys/bus/platform/devices/NVDA2012:*
-+NVIDIA_DRIVER_DIR=/sys/bus/platform/drivers/nvidia-ghes
-+
-+einj_skip()
-+{
-+	echo "$0: $1" >&2
-+	exit $ksft_skip
-+}
-+
-+einj_require_root()
-+{
-+	[ "$(id -u)" -eq 0 ] || einj_skip "must be run as root"
-+}
-+
-+einj_require_debugfs()
-+{
-+	[ -d /sys/kernel/debug ] || einj_skip "debugfs is not mounted at /sys/kernel/debug"
-+}
-+
-+einj_require_einj()
-+{
-+	[ -e "$EINJ_TABLE" ] || einj_skip "ACPI EINJ table is missing"
-+	if [ ! -d "$EINJ_DEBUGFS" ]; then
-+		modprobe einj 2>/dev/null || true
-+	fi
-+	[ -d "$EINJ_DEBUGFS" ] || einj_skip "EINJ debugfs directory is missing"
-+}
-+
-+einj_require_vendor_einj()
-+{
-+	[ -e "$EINJ_DEBUGFS/vendor" ] || einj_skip "NVIDIA vendor EINJ metadata is missing"
-+	[ -e "$EINJ_DEBUGFS/vendor_flags" ] || einj_skip "NVIDIA vendor EINJ flags are missing"
-+}
-+
-+einj_require_available_error_type()
-+{
-+	local available
-+
-+	available=$(einj_read_trimmed_value available_error_type)
-+	[ -n "$available" ] || einj_skip "available_error_type is missing"
-+}
-+
-+einj_read_trimmed_value()
-+{
-+	local file=$1
-+
-+	einj_read_value "$file" | tr -d '\n'
-+}
-+
-+einj_require_writable_value()
-+{
-+	local file=$1
-+
-+	[ -w "$EINJ_DEBUGFS/$file" ] || einj_skip "$file is not writable"
-+}
-+
-+einj_require_writable_profile()
-+{
-+	local file
-+
-+	for file in error_type flags vendor_flags param1 param2 param3 param4 notrigger; do
-+		einj_require_writable_value "$file"
-+	done
-+}
-+
-+einj_find_bound_nvidia_device()
-+{
-+	local dev
-+
-+	for dev in $NVIDIA_PLATFORM_GLOB; do
-+		[ -e "$dev" ] || continue
-+		if [ "$(readlink -f "$dev/driver" 2>/dev/null)" = "$NVIDIA_DRIVER_DIR" ]; then
-+			echo "$dev"
-+			return 0
-+		fi
-+	done
-+
-+	return 1
-+}
-+
-+einj_require_bound_nvidia_device()
-+{
-+	local dev
-+
-+	dev=$(einj_find_bound_nvidia_device) || einj_skip "no bound NVIDIA GHES device"
-+	echo "$dev"
-+}
-+
-+einj_read_value()
-+{
-+	local file=$1
-+
-+	cat "$EINJ_DEBUGFS/$file"
-+}
-+
-+einj_write_value()
-+{
-+	local file=$1
-+	local value=$2
-+
-+	printf '%s\n' "$value" > "$EINJ_DEBUGFS/$file"
-+}
-+
-+einj_restore_value()
-+{
-+	local file=$1
-+	local value=$2
-+
-+	# Some EINJ controls read back as an empty string when unset, but the
-+	# debugfs write handler has no matching "clear" operation.
-+	[ -n "$value" ] || return 0
-+	einj_write_value "$file" "$value"
-+}
-+
-+einj_save_state()
-+{
-+	EINJ_SAVED_ERROR_TYPE=$(einj_read_value error_type)
-+	EINJ_SAVED_FLAGS=$(einj_read_value flags)
-+	EINJ_SAVED_PARAM1=$(einj_read_value param1)
-+	EINJ_SAVED_PARAM2=$(einj_read_value param2)
-+	EINJ_SAVED_PARAM3=$(einj_read_value param3)
-+	EINJ_SAVED_PARAM4=$(einj_read_value param4)
-+	EINJ_SAVED_VENDOR_FLAGS=$(einj_read_value vendor_flags)
-+	EINJ_SAVED_NOTRIGGER=$(einj_read_value notrigger)
-+}
-+
-+einj_restore_state()
-+{
-+	[ -n "${EINJ_SAVED_ERROR_TYPE+x}" ] || return 0
-+
-+	einj_restore_value error_type "$EINJ_SAVED_ERROR_TYPE"
-+	einj_restore_value flags "$EINJ_SAVED_FLAGS"
-+	einj_restore_value param1 "$EINJ_SAVED_PARAM1"
-+	einj_restore_value param2 "$EINJ_SAVED_PARAM2"
-+	einj_restore_value param3 "$EINJ_SAVED_PARAM3"
-+	einj_restore_value param4 "$EINJ_SAVED_PARAM4"
-+	einj_restore_value vendor_flags "$EINJ_SAVED_VENDOR_FLAGS"
-+	einj_restore_value notrigger "$EINJ_SAVED_NOTRIGGER"
-+}
-+
-+einj_emit_kmsg_marker()
-+{
-+	local tag=$1
-+	local marker
-+
-+	marker="ghes-nvidia-einj:${tag}:$$:${RANDOM}"
-+	printf '%s\n' "$marker" > /dev/kmsg
-+	printf '%s\n' "$marker"
-+}
-+
-+einj_capture_dmesg_after_marker()
-+{
-+	local marker=$1
-+
-+	dmesg | awk -v marker="$marker" '
-+		found { print }
-+		index($0, marker) { found = 1 }
-+	'
-+}
-+
-+einj_wait_for_dmesg_after_marker_contains()
-+{
-+	local marker=$1
-+	local needle=$2
-+	local timeout=${3:-10}
-+	local i
-+	local slice
-+
-+	for i in $(seq 1 "$timeout"); do
-+		slice=$(einj_capture_dmesg_after_marker "$marker")
-+		if printf '%s\n' "$slice" | grep -Fq "$needle"; then
-+			printf '%s\n' "$slice"
-+			return 0
-+		fi
-+		sleep 1
-+	done
-+
-+	return 1
-+}
-diff --git a/tools/testing/selftests/firmware/ghes_nvidia_einj.sh b/tools/testing/selftests/firmware/ghes_nvidia_einj.sh
-new file mode 100755
-index 000000000000..6fc4d3189235
---- /dev/null
-+++ b/tools/testing/selftests/firmware/ghes_nvidia_einj.sh
-@@ -0,0 +1,144 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+TEST_DIR=$(dirname "$0")
-+source "$TEST_DIR/einj_lib.sh"
-+source "$TEST_DIR/ghes_nvidia_einj_profiles.sh"
-+
-+einj_assert_nvidia_cper_output()
-+{
-+	local profile=$1
-+	local output=$2
-+
-+	if printf '%s\n' "$output" | grep -Fq 'Malformed NVIDIA'; then
-+		echo "$0: $profile produced malformed NVIDIA CPER output" >&2
-+		printf '%s\n' "$output" >&2
-+		return 1
-+	fi
-+
-+	if printf '%s\n' "$output" | grep -Fq 'NVIDIA Grace CPER section'; then
-+		if ! printf '%s\n' "$output" | grep -Fq 'signature:'; then
-+			echo "$0: $profile Grace output missing signature line" >&2
-+			printf '%s\n' "$output" >&2
-+			return 1
-+		fi
-+		if ! printf '%s\n' "$output" | grep -Fq 'error_type:'; then
-+			echo "$0: $profile Grace output missing error_type line" >&2
-+			printf '%s\n' "$output" >&2
-+			return 1
-+		fi
-+		if ! printf '%s\n' "$output" | grep -Fq 'number_regs:'; then
-+			echo "$0: $profile Grace output missing number_regs line" >&2
-+			printf '%s\n' "$output" >&2
-+			return 1
-+		fi
-+		if ! printf '%s\n' "$output" | grep -Fq 'instance_base:'; then
-+			echo "$0: $profile Grace output missing instance_base line" >&2
-+			printf '%s\n' "$output" >&2
-+			return 1
-+		fi
-+		return 0
-+	fi
-+
-+	if printf '%s\n' "$output" | grep -Fq 'NVIDIA Vera CPER section'; then
-+		if ! printf '%s\n' "$output" | grep -Fq 'signature:'; then
-+			echo "$0: $profile Vera output missing signature line" >&2
-+			printf '%s\n' "$output" >&2
-+			return 1
-+		fi
-+		if ! printf '%s\n' "$output" | grep -Fq 'event_type:'; then
-+			echo "$0: $profile Vera output missing event_type line" >&2
-+			printf '%s\n' "$output" >&2
-+			return 1
-+		fi
-+		if ! printf '%s\n' "$output" | grep -Fq 'event_sub_type:'; then
-+			echo "$0: $profile Vera output missing event_sub_type line" >&2
-+			printf '%s\n' "$output" >&2
-+			return 1
-+		fi
-+		if ! printf '%s\n' "$output" | grep -Fq 'event_context_count:'; then
-+			echo "$0: $profile Vera output missing event_context_count line" >&2
-+			printf '%s\n' "$output" >&2
-+			return 1
-+		fi
-+		return 0
-+	fi
-+
-+	echo "$0: $profile did not emit a recognized NVIDIA CPER section" >&2
-+	printf '%s\n' "$output" >&2
-+	return 1
-+}
-+
-+einj_run_profile()
-+{
-+	local profile=$1
-+	local marker
-+	local output
-+
-+	if ! einj_select_profile "$profile"; then
-+		echo "$0: unknown safe NVIDIA EINJ profile: $profile" >&2
-+		return 1
-+	fi
-+
-+	einj_require_writable_profile
-+
-+	printf '%s: running safe sample %s\n' "$0" "$profile"
-+	marker=$(einj_emit_kmsg_marker "$profile")
-+
-+	einj_write_value error_type "$EINJ_PROFILE_ERROR_TYPE"
-+	einj_write_value flags 0
-+	einj_write_value vendor_flags "$EINJ_PROFILE_VENDOR_FLAGS"
-+	einj_write_value param1 "$EINJ_PROFILE_PARAM1"
-+	einj_write_value param2 "$EINJ_PROFILE_PARAM2"
-+	einj_write_value param3 "$EINJ_PROFILE_PARAM3"
-+	einj_write_value param4 "$EINJ_PROFILE_PARAM4"
-+	einj_write_value notrigger 0
-+	einj_write_value error_inject 1
-+
-+	output=$(einj_wait_for_dmesg_after_marker_contains "$marker" "$EINJ_PROFILE_BANNER" 10) || {
-+		printf '%s: %s not supported on this platform\n' "$0" "$profile"
-+		return "$ksft_skip"
-+	}
-+
-+	einj_assert_nvidia_cper_output "$profile" "$output"
-+}
-+
-+einj_cleanup()
-+{
-+	local status=$1
-+
-+	if ! einj_restore_state; then
-+		echo "$0: failed to restore EINJ state" >&2
-+		[ "$status" -eq 0 ] && status=1
-+	fi
-+
-+	exit "$status"
-+}
-+
-+main()
-+{
-+	local profile
-+	local passed=0
-+
-+	einj_require_root
-+	einj_require_debugfs
-+	einj_require_einj
-+	einj_require_vendor_einj
-+	einj_require_available_error_type
-+	einj_save_state
-+	trap 'einj_cleanup "$?"' EXIT
-+
-+	einj_require_bound_nvidia_device
-+
-+	for profile in $(einj_list_profiles); do
-+		einj_run_profile "$profile" && passed=$((passed + 1)) || {
-+			[ "$?" -eq "$ksft_skip" ] || exit 1
-+		}
-+	done
-+
-+	[ "$passed" -gt 0 ] || einj_skip "no NVIDIA EINJ profiles produced output"
-+}
-+
-+main "$@"
-diff --git a/tools/testing/selftests/firmware/ghes_nvidia_einj_profiles.sh b/tools/testing/selftests/firmware/ghes_nvidia_einj_profiles.sh
-new file mode 100755
-index 000000000000..b25461d2238c
---- /dev/null
-+++ b/tools/testing/selftests/firmware/ghes_nvidia_einj_profiles.sh
-@@ -0,0 +1,46 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+# Run both architecture profiles on every platform; firmware silently ignores
-+# selectors it does not support, so a timeout just means "not this platform".
-+EINJ_PROFILE_NAMES="cmet_dump_status_grace cmet_dump_status_vera"
-+
-+einj_list_profiles()
-+{
-+	printf '%s\n' $EINJ_PROFILE_NAMES
-+}
-+
-+einj_select_profile()
-+{
-+	local profile=$1
-+
-+	case "$profile" in
-+	cmet_dump_status_grace)
-+		# Grace CMET dump/status: informational sample, selector 3.
-+		EINJ_PROFILE_ERROR_TYPE=0x80000010
-+		EINJ_PROFILE_VENDOR_FLAGS=1
-+		EINJ_PROFILE_PARAM1=3
-+		EINJ_PROFILE_PARAM2=0
-+		EINJ_PROFILE_PARAM3=0
-+		EINJ_PROFILE_PARAM4=0
-+		EINJ_PROFILE_BANNER='NVIDIA Grace CPER section'
-+		;;
-+	cmet_dump_status_vera)
-+		# Vera CMET-NULL dump/status: informational sample, selector 0.
-+		EINJ_PROFILE_ERROR_TYPE=0x80000010
-+		EINJ_PROFILE_VENDOR_FLAGS=1
-+		EINJ_PROFILE_PARAM1=0
-+		EINJ_PROFILE_PARAM2=0
-+		EINJ_PROFILE_PARAM3=0
-+		EINJ_PROFILE_PARAM4=0
-+		EINJ_PROFILE_BANNER='NVIDIA Vera CPER section'
-+		;;
-+	*)
-+		return 1
-+		;;
-+	esac
-+
-+	return 0
-+}
+Changes in v3:
+- Simplified camss_init_pm_clks()- no clk_get, no rate setting;
+- Added Assigned clock rate in devicetree for CAMSS AXI clock
+- Add Kernel Doc for camss-isp-bufq exported functions
+- Added description explaining the 2-cell for CAMSS bus
+- Reworked OPE media topology with intermediate ope_disp subdev
+- Support for crop and compose in ope_proc sink/source
+- Fixed Write Engine violation with some scaling config
+- Fixed input/output custom-stride issue (Hans)
+- Split uapi header (camss-config.h) into its own dedicated commit
+- Patch reordering to respect dependency in regards to ABI/dt-bindings introduction
+- Link to v2: https://lore.kernel.org/r/20260427-camss-isp-ope-v2-0-f430e7485009@oss.qualcomm.com
+
+Changes in v2:
+- Not an RFC anymore
+- Move from v4l2-m2m to multi-devices design
+- Support for parameters
+- Helpers for pipeline, job scheduling, buf-queues
+- OPE as a child node of CAMSS
+
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+To: Loic Poulain <loic.poulain@oss.qualcomm.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Kees Cook <kees@kernel.org>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+
+---
+Loic Poulain (5):
+      media: qcom: camss: Add V4L2 meta format for CAMSS ISP parameters
+      dt-bindings: media: qcom: Add CAMSS Offline Processing Engine (OPE)
+      media: uapi: Add CAMSS OPE ISP configuration definition
+      media: qcom: camss: Add CAMSS Offline Processing Engine driver
+      arm64: dts: qcom: agatti: Add OPE node
+
+ .../bindings/media/qcom,qcm2290-camss-ope.yaml     |  151 +
+ arch/arm64/boot/dts/qcom/agatti.dtsi               |   79 +
+ drivers/media/platform/qcom/camss/Kconfig          |    2 +
+ drivers/media/platform/qcom/camss/Makefile         |    2 +
+ drivers/media/platform/qcom/camss/ope/Kconfig      |   16 +
+ drivers/media/platform/qcom/camss/ope/Makefile     |    9 +
+ drivers/media/platform/qcom/camss/ope/core.c       | 3353 ++++++++++++++++++++
+ drivers/media/platform/qcom/camss/ope/params.c     |   75 +
+ drivers/media/platform/qcom/camss/ope/params.h     |   62 +
+ drivers/media/platform/qcom/camss/ope/pipeline.c   |  399 +++
+ drivers/media/platform/qcom/camss/ope/pipeline.h   |  237 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
+ include/uapi/linux/camss-ope-config.h              |  160 +
+ include/uapi/linux/videodev2.h                     |    3 +
+ 14 files changed, 4549 insertions(+)
+---
+base-commit: 6b0fbf4352615cc5e542347120f1724ce31837f8
+change-id: 20260427-camss-isp-ope-4b575ffec2ed
+
+Best regards,
 -- 
-2.50.1 (Apple Git-155)
+Loic Poulain <loic.poulain@oss.qualcomm.com>
 
