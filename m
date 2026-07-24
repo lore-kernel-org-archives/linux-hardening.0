@@ -1,861 +1,253 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EEF416869
-	for <linux-hardening@vger.kernel.org>; Thu, 23 Jul 2026 19:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2BB283FCE
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Jul 2026 01:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.180.131
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784834819; cv=pass; b=gMFOi6ST6tkg2u7JYvoMDqLifXvuiQh+1ebQUWMUg1ZvDh6X8mrO3Xu5a3Oox9xZrYic33amE/ZXW2B0FV0cNWdXdIaEjaC7/o4n66481NznbAx9Owl285cUD9nQiiPZrQy33ymFpkgdl0dKQlAlO6TRWwESUXgC3WYRb+FL2DI=
+	t=1784856512; cv=pass; b=nqm5hQJ60+RKbqSD+EDJgu/HgfCYYUW9QfWNYw2So+pL+0OXjjqcDbzl83FgB94u7QDsTOl9fhVmqMRxOtzPldXgz7XP8BxgsDRnWw93xJdohZwvBIRGqAczuaqWN9luCgQktqlaTYJZprAKci/N2P4FCLup3M9QXHK+I1/p0Dc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784834819; c=relaxed/simple;
-	bh=3qDUJCleO9/mQDxvVj55P94PNa8vDe1TK7upIEPAyAU=;
+	s=arc-20240116; t=1784856512; c=relaxed/simple;
+	bh=7HDrOa1K9kHByX1pamll9b2/vr++AG+iAEaNhi4wyDs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fJLbd6clCfde4F6PGH20BJdD2vErw3GuQt1UYE2xcr14Lx7Tr4+QZsXYQzFDerOq4zyjt8snUbuStJdkKySEZczXS6/DrfKg+T5crZVA6Fkbz2JPeplHzoNawQgK4DxJxrG2y+UP4lB0lf2giJraj1wDk/kAJmJKlkJyp9plzRs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UXaSW3HC; arc=pass smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=BUPC4x7JZ/lwL+l46ILCY9WxO/frEaMqUYmsEOdxb8Rhnz68idHIiWHZDYaU3kjOoNzM0ua5TXN7gD6MjbJElBGUpzQbA8SPi+iBHSXaXZzL0g1gI0xPljOb+ATCgbVLyLIda6R5owrACkDFFC2IEk8EIsSxJ5bd+snOcXLekWA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fTcJwwzG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=CgbXGQWC; arc=pass smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXaSW3HC"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-698aa7ba320so1899113a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Jul 2026 12:26:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1784834815; cv=none;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fTcJwwzG";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="CgbXGQWC"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66NLekMl1202677
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Jul 2026 01:28:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	CLuIsIOJe1D2yKZ/8FWYomM57/XuNoALWUl9rATE8vg=; b=fTcJwwzG4r1UoNkN
+	5xqNzTUtdfMtpwr++Gjy0AKiv9SaXiAY8tTKZA92QDg6ZDWhxLXnvzZ+4r/q57im
+	rc/DGIbXsWOJrM3NdJSQxofdt0CEZ2eIB/na1OVpKmCgSGl5vnVqHTOxJjzpyQbw
+	6nuisORXb+S9ubnztVdfJ5Zk2ym5lB3IoVGcFxaaZW4vvcnoGG4qCguPlU3lWLcK
+	uSxFHh3f3kj2S1+/jXhJ/uCQNYB0a65V/lerUoqo1punGJD7grkjjd9/peO0T6j/
+	fWKCNkWkrCjEsA+hXhV5S71W5CibA+yojUvLM9b4OMeVvShryng9xlTbz/nPXAhc
+	rZqs4A==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fkqamsfxk-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Jul 2026 01:28:29 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-84885a4fcabso1518437b3a.3
+        for <linux-hardening@vger.kernel.org>; Thu, 23 Jul 2026 18:28:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784856509; cv=none;
         d=google.com; s=arc-20260327;
-        b=F7hMcHAQ9NyirrSga3CaCJl/aiTlGjhJs93fKVkJlT4Oaal1zaY/2oy/pT8b+4evTi
-         gqXqUzA9sCgxCONz7yWYFrGetYIEpyqL8DxbQFwBvlHaXGn40bAT+bjCPKeM24MUSwzK
-         7YATXsvgNzuDenm0qmwRyPcxzCkl9yvFzL3ImP515WXwjFUKlQtdFjHuPRheZNwWOxCx
-         ovOzAmiknn8XiuLRpaYsdRLpZRztrVlEWuN/5fCo2tmegaVYCMWTsapb49AMxO4oi/J7
-         tg/b9PGy31nsCrUHZIcEfSqmSclB68zoZ/eVJHMJk2lBsb6EQ0c8/1F/QGiw7dBIpL2T
-         MS+Q==
+        b=nFTdAWbC+620dxwJolyI2JK7Fhdf+MtZWbV88Idhbu4clyKiyijtBjpxp1Emcr/4H/
+         qV0lVuTsvccUghFOwDdQ8cYUe5MjbeGmQf5IaAzFxFGe4MkdCb1g2xTg37VqYgHWUzMv
+         1ZMV3YayQs6fMq01M42m6kSVYMdMOCemfBLErw6iRNYilzqYrpg5cN/o/nmPnCQDq2x+
+         OIhPmA7+xp2goFkx7lMQ/cV4H8sWQuFnWJMz2Q+RDlG3dikQmSAYYh5Ly+/HXuIsgjq8
+         Y2qjMBrimDVJ1w4FNM7QncLuSD8fnmqlLWXeafp6WC1r1gP3NeSCP2AcQyU/sp/9OBLr
+         iydA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=c48oFHcUl73M+7xCb5JNWHbcfZqyaHeFDgmQTnaFHyM=;
-        fh=+NKSjFCJH+Kit/KXeIKLrKLYre3JHw6CuspASxNGq18=;
-        b=gQyoQ8uUZMC9itZ1ta9nC9lqBE45UA060Jin+OehUuHKI2QEDH0fKFC33geF+zETak
-         Q9zz3vNNRhJV8icX5LrnJLek4N/uelyEnbj1fXb4KFA9XvwXspFGxJRmAkV9ckXKL02J
-         UnZMh8JTnmM1uZYFu9sHInyvKeqnA62zX/trZk8Kgdwo5zrEPn/cFVQCCubQaQgkQejv
-         U/UkJUzMbQT4JlFSOJtjSSHwtHXUudxwOCyk/IWxwAMeSmV6/wL8q6+xZdl0nL9DylrD
-         hvnuHKwI+n36gR/IdbXkIRxMgetzIu+OoFy+NAq21I/JZRg6+sfgeC7jjmArEqdOM+Sx
-         QVGA==;
+        bh=CLuIsIOJe1D2yKZ/8FWYomM57/XuNoALWUl9rATE8vg=;
+        fh=yyaOurmD5BHL+oXr88MXvTqJ8dGM+qZIzcaULqFAv4s=;
+        b=KfaIZNqLxd9MlYj9OfqzHw37uy7v4UksPokmHOFePvaLixuMrr1YRi33upjBZPQvD9
+         eVdcRVmTEN3Vr+uItEV01HAB+/I73fJTGvb8mBvx6kFVZcNy6aUHmnIDjU8jOPXcrukc
+         8rYmviGR2jC0h/9panuUHJeD0P5+0tMKXr4t4yc42zYzAO1p6jv0Za1ImsD112nZutWM
+         uhvKKv0hVNfkG4bNCjoRaQ9ZrfWsI/ccrddQQTU23KgbJIwfkq3QyN4asaFgYqbXc+yG
+         5bKffQZoO7jOY9/3qZASAq1tt0vjfSM1TSbGHwDuruAuY2NDQFk872y2YrITwQqXBDEx
+         PnvQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784834815; x=1785439615; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1784856509; x=1785461309; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=c48oFHcUl73M+7xCb5JNWHbcfZqyaHeFDgmQTnaFHyM=;
-        b=UXaSW3HCerlbhByKSge9NZJmMicliu+mZs6lO/cyFlMtXX/oKRyuNtc878gOp5TW/Y
-         SS1h5kWwX2lBrIfwegBn2UUFDEtEjmUZaCqK/GeQAexgTP4YBwU+TwsTQJ99UwqQ8pKC
-         wndW3x+c8RFNeNgyeuxP7tUzcZvO+rxaH3Qj51u/2FncGAN/ZyYbh2uB5B8T1aE9z0pi
-         14lHp03bTmQkPTEQ11vyLJcxUIf+fujPwQx5R5xgOLgXqilLx5nhXkppoUxZHgRE/89Q
-         kVsk9JGrNa1lfMqDssK6BPceUtBWsP9INwRKgwj0gJTEmu89+5T5AkQ51o0SxZsQn4S7
-         8+og==
+        bh=CLuIsIOJe1D2yKZ/8FWYomM57/XuNoALWUl9rATE8vg=;
+        b=CgbXGQWCfl7jtkrS27l0RFBOV4FZZznvStlV7wm8mWH+HJZKB5rIz0MjwHAeqaKxlN
+         WO9V7f4Pngez3+rfMuO5mLKf4aMMuBFEt8+lu7zHIK4QxeAocpqCJTPABPLiBmjPgkrR
+         +YAvO2t5f/VTlOpCuuPa6mRKrdOzBxkocs+H76+0nq6viVAVQmAsUF5HA/c6rcF2C5BW
+         Nb6rLcqF/Lkg7SJE6ExSa47qpxUzKihu8w65kpABc88QaW50LWWw9Ysh34O30TGGzgVo
+         fOG9aIlFAXeD2abdCIEJV6jS5kf3sW4Wk+WkPdcyyplibVa/aAf3fhE5HBBVzidkO265
+         52zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784834815; x=1785439615;
+        d=1e100.net; s=20251104; t=1784856509; x=1785461309;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=c48oFHcUl73M+7xCb5JNWHbcfZqyaHeFDgmQTnaFHyM=;
-        b=ofX5EN2SNYeN7oqVkbKKUhNaH5t9Oofw3GBwqa59CM01r2+4WoxlLKFiTSsyASPBDI
-         w0qSt96vIBlYMlM8G8HmUe6TK5/IkpCEAZEBO3Wly+4AQ1HTE1IBsgvPhd+e+YCnWLWz
-         wiSzI8qO+LxUH+qXhTyiw7IAcxrhwiYXS8ux2Ah42SQUcVZBLRNtAyBtocFk8HsMFupC
-         8x9B0QAnPPILQI9AODQrW3Ad8zVdjvYS7icNHfsrfW71fEFqc1MTVuyE7F0FDEim5bOD
-         6LD/zEq5rfr/Z6lX6VyqmCnpxFyKEw2E/oXp0cYdWrBCKivHUX5q/r31yFHDQzCl90pn
-         2Txw==
-X-Forwarded-Encrypted: i=1; AHgh+RoOE2bPVaXPHG6CKMflsoxYZQ9oY67xMFCDezdBk5lXKhHfM9t367Nilhpy40ducDA4FjIOMgx7wxs2H3FlvSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyc59x0q3iP0Y5GtSrLNAGl58xFcUGU+WSOFfINzIGlH8pg7sBh
-	7cd064sQD0v+9zcx3eZWa4X1cEjHwRuzmq6K7yXkOMuY6/VaxmQm/IBD+OldbJWQ66khB5BbkXU
-	VzDP+cVs3F0l0To4C7TRoorVlg4Jj5FI=
-X-Gm-Gg: AR+sD12BdmuV8sk6MsqNDEpBpdm0iB1vVHsLVoO7CoL5rAgj0B6QyBESJOjAsWWVIK3
-	eMdT4AzQZhCpaEL2OiF9k1g54zu5AL994qlowDnqfVrxua0nSlYzfAkJssRloB4uEEEsM1UKb1v
-	68AV3y0rpt9pMIl9JvMoeWo1Ofyx3st6uRWn3bVUeaNRkHThzI1xWqbHQroFPrMbGba/DyeYztG
-	niABNijRDYD5APz4uCmGTwE5Fn7KP+JuQ/DVzx81FCUAnPjorcvz8BvvqyFeUjiRMBSdjqP+yrr
-	ZHeEMmVeBs+PWJu4QDacFjoUMmQTsj8/6bpXFgza7yb9hSwXzyANuRw5c/tapyZ/869H6MPluBL
-	oAHQ02ooA0+/NAOc83CU4SQ1OC0P0qMd2PIKbZMCpwthCWSrWZnqCrekvo5S/wOX6Okt7pb/nn6
-	Ep3MowsbU=
-X-Received: by 2002:a05:6402:2381:b0:69f:a71:8d69 with SMTP id
- 4fb4d7f45d1cf-69f7484278bmr1704021a12.10.1784834814248; Thu, 23 Jul 2026
- 12:26:54 -0700 (PDT)
+        bh=CLuIsIOJe1D2yKZ/8FWYomM57/XuNoALWUl9rATE8vg=;
+        b=WBuXAyjI4CjfqnQhxgOZ/rJlDia3QoRoG8cXK6UpxLrsguoWhW7hfSYD/xPOgJOY79
+         EiebjnXgPk5N45IzqVlg8NQYP+UT9eTPRUGudPgvzEB8ZYvj48eDg38U4I50RnfIj//A
+         TDhiMGiDvtMHBO6CO9TD5YbM15B7QGlgseTzcD8e5DwAX7eCbFRiES9vM1bBqCR8hEp/
+         +XnT2SCgZID4j7PhcTqWRV4iVuRpriCnoiQYF3ICIjb03UbU9qmUPhKnhakeoXHUNNJ6
+         nCNKByWkSm0/ehJXms2OFSqrMkufht33KG6oovZtPC0j/W6iCEFhLM2gvyQtZ05sSHa4
+         xnGA==
+X-Forwarded-Encrypted: i=1; AHgh+RpdfYwPRvImZHpHTX+3PMpia71EPfTY04CR3y8fnTCWQFxT4cvVJ6gk/Nca8ensNhKvH3yKZ9Uhs688Ck/tzYM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU6BqcvVXyU6aA6bqsWa4gmPBxfiU88ARRgSsB2A4bPhbA+C/f
+	0i9p+qXv74MrjrKX9ndhQUPTvvgzxy60EB6a4jvwmKrs47FZL+Ho9HI+9Ty+qMHAn6man7WpQpi
+	+Uzq+WdiW2wZqiCyGdPhorbRbJt5dpX4klU8awMCH70TPOPHajTKqTi6BIj/GH2831NTG+mzcIV
+	xIsIRkJXc8F8+BRm43HlQH2XB9vW+YHVG5KthBcGBFRJC+zQ==
+X-Gm-Gg: AR+sD10HCqlmj5taib/c6Dpc/QtSoL2TV2LieNeTk+OsXKr+ne6JP7Sx+1v3wCLnrf/
+	RU99rIe7kXLAk177xn6h4VCu6GyhPeNhYMIPucrZPlblQnTaree1ela4dROPeQB81MZEZijIi6L
+	hclND5Sla8gAEBixTRERZCpqgowNC9EgOPN+IAYzDVHtx2gaZAjGBggCE=
+X-Received: by 2002:a05:6a21:2d46:b0:3c3:c130:3532 with SMTP id adf61e73a8af0-3c44b1ead5fmr6240032637.41.1784856508804;
+        Thu, 23 Jul 2026 18:28:28 -0700 (PDT)
+X-Received: by 2002:a05:6a21:2d46:b0:3c3:c130:3532 with SMTP id
+ adf61e73a8af0-3c44b1ead5fmr6239982637.41.1784856508257; Thu, 23 Jul 2026
+ 18:28:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260629033156.2363850-1-rosenp@gmail.com> <20260723075304.GA4577@wp.pl>
-In-Reply-To: <20260723075304.GA4577@wp.pl>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Thu, 23 Jul 2026 12:26:41 -0700
-X-Gm-Features: AUfX_mzpmUaJhE3D_n-zE7eGSgQLoC7It6rfepFnJRnT3lAzERi3FXxY9y0n_Wk
-Message-ID: <CAKxU2N_LbndYqrGDQ__sAjj87mj-J8Hs-RWeD90eRcGK1dDAcw@mail.gmail.com>
-Subject: Re: [PATCH wireless-next] wifi: rt2x00: Use flexible array for
- hw_mode_spec channels
-To: Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: linux-wireless@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
+References: <20260618204530.work.910-kees@kernel.org> <20260618204539.824446-2-kees@kernel.org>
+ <CALvbMcDwYgJNo=qeZY1m+zAutURc7rfRCaW960DDjbRAOKUZ+w@mail.gmail.com>
+ <202607151337.31D0828D0@keescook> <202607151619.201AF99A@keescook>
+In-Reply-To: <202607151619.201AF99A@keescook>
+From: Andrea Pinski <andrew.pinski@oss.qualcomm.com>
+Date: Thu, 23 Jul 2026 18:28:16 -0700
+X-Gm-Features: AUfX_mwlUXJawulUsTOzU37c7STnbWn83ytJ2d5sfpnlMXjIRK3ehicOfJmxsl8
+Message-ID: <CALvbMcB_pdM83JQg_F91yq2FfGWjkLynrckm6wgLdJfCDfArjQ@mail.gmail.com>
+Subject: Re: [PATCH v13 2/7] kcfi: Add core Kernel Control Flow Integrity infrastructure
+To: Kees Cook <kees@kernel.org>
+Cc: Jeffrey Law <jefflaw@qti.qualcomm.com>, Joseph Myers <josmyers@redhat.com>,
+        Richard Biener <rguenther@suse.de>, Jeff Law <jeffreyalaw@gmail.com>,
+        Andrew Pinski <pinskia@gmail.com>, Jakub Jelinek <jakub@redhat.com>,
+        Martin Uecker <uecker@tugraz.at>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
+        Richard Earnshaw <richard.earnshaw@arm.com>,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        Marcus Shawcroft <marcus.shawcroft@arm.com>,
+        Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+        Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Waterman <andrew@sifive.com>,
+        Jim Wilson <jim.wilson.gcc@gmail.com>,
+        Dan Li <ashimida.1990@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ramon de C Valle <rcvalle@google.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Bill Wendling <morbo@google.com>,
+        "Osterlund, Sebastian" <sebastian.osterlund@intel.com>,
+        "Constable, Scott D" <scott.d.constable@intel.com>,
+        gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI0MDAxMSBTYWx0ZWRfX3FpHwpNpLwkM
+ 4VTMOQe5G4CdAo3swE2ioMARsAD6SJNpb9/d6M+f24ywBtQFmfFmEtY97f+cwFgvb8hiCEzUd0h
+ btwj10vKfCXoNeZWHCbPuZyI5FHLVQkA5z4WzW6RimVNcj1liIOD/VEINpSfp8lP66i6aitnu1M
+ inWmJlU4FSBvhl/PNkdyWEDcdsD4Adc+ZvOQghR4ejv/wfLfzOXcNAzbjs3dlMR1mHw43ZTBWJ0
+ zk8e9JPpqNF5/0zmyiemscJEogjPji0vFt6YhAcoT6h4v93681N3hC1dd8+/yJ8/hxv2s3jiuo+
+ LTv8AcVOpFvSkWHjQoSa9Wr0v2S/z0p/uubpXPywMS1hNklK16Bl9XkC6qqyvPrBhJS34hsBiM8
+ BfD5a6GOt8nyntpNnYnOiNrCGooMxzTfvRLvM0I6NnLbl0sVkhUhvyce8k78IRFMh/Ev9CL/bNR
+ W8dJFgJVdnE7Dvmzg7Q==
+X-Proofpoint-GUID: 7OY7ok2pSa9tr9obPb-6mo9qM72YnzMt
+X-Authority-Analysis: v=2.4 cv=DfAnbPtW c=1 sm=1 tr=0 ts=6a62bfbd cx=c_pps
+ a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
+ a=3WHJM1ZQz_JShphwDgj5:22 a=VwQbUJbxAAAA:8 a=_dWQ7dL1IJye_9a_ncEA:9
+ a=QEXdDO2ut3YA:10 a=zc0IvFSfCIW2DFIPzwfm:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI0MDAxMSBTYWx0ZWRfXzOjgXMob0cFt
+ T25SSqJRaZkMiEc5mdME7mQaWx7yI9d7pZuN7Kz4P3BR/f/qDRw/+Hpn82JlfrLq9Ojcq+pnzY1
+ HNAFiHJM9ivo0rb4SfEXJQ4LiCCq3LM=
+X-Proofpoint-ORIG-GUID: 7OY7ok2pSa9tr9obPb-6mo9qM72YnzMt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-23_07,2026-07-22_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 clxscore=1015 suspectscore=0 spamscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607240011
 
-On Thu, Jul 23, 2026 at 12:53=E2=80=AFAM Stanislaw Gruszka <stf_xl@wp.pl> w=
+On Wed, Jul 15, 2026 at 4:32=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Wed, Jul 15, 2026 at 03:34:09PM -0700, Kees Cook wrote:
+> > On Sat, Jun 27, 2026 at 03:57:36PM -0700, Andrea Pinski wrote:
+> > > On Thu, Jun 18, 2026 at 1:45=E2=80=AFPM Kees Cook <kees@kernel.org> w=
 rote:
+> > > > [...]
+> > > > +/* KCFI label counter, incremented by KCFI insn emission.  */
+> > > > +static int kcfi_labelno =3D 0;
+> > >
+> > > I am not 100% sure if this needs a GTY marker or not. I suspect no
+> > > because we should not have emitted assembly code yet.
+> >
+> > If this moves with kcfi_next_labelno into final, I think it's okay
+> > without GTY?
 >
-> Hi,
+> This is an int, so GC shouldn't be an issue.
+
+GTY is used for PCH also and not just GC. This is why I question the
+need for the GTY marker. A GTY marker on an int is to make sure that
+it is restored from the PCH.
+Maybe you can add a couple of PCH testcases to make sure it is working
+correctly.
+
+
 >
-> On Sun, Jun 28, 2026 at 08:31:56PM -0700, Rosen Penev wrote:
-> > struct hw_mode_spec stores channel information that is allocated by the
-> > individual rt2x00 drivers during hardware probing.  The channel info
-> > array has the same lifetime as the hardware mode specification, but it
-> > is currently allocated separately and then freed through a separate
-> > pointer.
+> > > > +      type_id =3D (uint32_t) TREE_INT_CST_LOW (value);
+> > > > +    }
+> > > > +  else
+> > > > +    {
+> > > > +      type_id =3D compute_kcfi_type_id (fn_type);
+> > > > +
+> > > > +      tree type_id_tree =3D build_int_cst (unsigned_type_node, typ=
+e_id);
+> > > > +      tree attr =3D build_tree_list (kcfi_type_id_attr, type_id_tr=
+ee);
+> > > > +
+> > > > +      TYPE_ATTRIBUTES (fn_type) =3D chainon (TYPE_ATTRIBUTES (fn_t=
+ype), attr);
+> > > > +    }
+> > >
+> > > Instead of an attribute there must be a better way of doing this.
+> > > Maybe a hashset instead.
 > >
-> > Make struct rt2x00_dev hold a pointer to the hardware mode
-> > specification, store the channel info as a flexible array member, and
-> > allocate both pieces together with kzalloc_flex().
-> >
-> > Assisted-by: Codex:GPT-5.5
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > ---
-> >  .../net/wireless/ralink/rt2x00/rt2400pci.c    | 24 +++---
-> >  .../net/wireless/ralink/rt2x00/rt2500pci.c    | 55 ++++++++------
-> >  .../net/wireless/ralink/rt2x00/rt2500usb.c    | 55 ++++++++------
-> >  .../net/wireless/ralink/rt2x00/rt2800lib.c    | 74 ++++++++++---------
-> >  drivers/net/wireless/ralink/rt2x00/rt2x00.h   |  4 +-
-> >  .../net/wireless/ralink/rt2x00/rt2x00config.c | 12 +--
-> >  .../net/wireless/ralink/rt2x00/rt2x00dev.c    |  4 +-
-> >  drivers/net/wireless/ralink/rt2x00/rt61pci.c  | 42 ++++++-----
-> >  drivers/net/wireless/ralink/rt2x00/rt73usb.c  | 50 +++++++------
-> >  9 files changed, 177 insertions(+), 143 deletions(-)
+> > Perhaps? I will go examine this vs LTO, etc.
 >
-> This result in extra code. I do not see benefit of avoiding
-> kzalloc calls at cost of adding more lines of code.
-On runtime there's extra UBSAN analysis. Reducing allocations is always goo=
-d.
+> Tracking this with lifetime tied to the fndecl is going to be more pain
+> from what I can find. The attribute is stable and doesn't cause problems
+> for LTO: I've tested with 2 TUs, and this all appears to happen
+> post-merge? Anyway, if there is something I've missed here, I'm happy to
+> find a new solution, but I can't induce any problems so far.
+
+So maybe we add a field for FUNCTION_TYPE for this instead of an
+attribute. But that requires extra code for streaming the LTO and
+such. But it will reduce the overall overhead in general.
+
 >
-> Regards
-> Stanislaw
+> > > > [...]
+> > > > +  /* Emit .type directive.  */
+> > > > +  ASM_OUTPUT_TYPE_DIRECTIVE (asm_file, cfi_symbol_name.c_str (), "=
+function");
+> > > > +  ASM_OUTPUT_LABEL (asm_file, cfi_symbol_name.c_str ());
+> > > > +
+> > > > +  /* Emit any needed alignment padding NOPs using target's NOP tem=
+plate.  */
+> > > > +  for (int i =3D 0; i < kcfi_alignment_padding_nops; i++)
+> > > > +    output_asm_insn (kcfi_nop, NULL);
+> > > I think you need to calculate kcfi_nop each time you call this
+> > > function. Instead of caching it. For GC reasons.
+> >
+> > Uh, do I have to? This seems wasteful: the nop is generated frequently.
+> > Should kcfi_nop gain GTY instead? I will take a closer look at this.
 >
-> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2400pci.c b/drivers/n=
-et/wireless/ralink/rt2x00/rt2400pci.c
-> > index cac191304bf5..3fb74dcbee63 100644
-> > --- a/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
-> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
-> > @@ -1559,7 +1559,7 @@ static const struct rf_channel rf_vals_b[] =3D {
-> >
-> >  static int rt2400pci_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
-> >  {
-> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
-> > +     struct hw_mode_spec *spec;
-> >       struct channel_info *info;
-> >       u8 *tx_power;
-> >       unsigned int i;
-> > @@ -1580,27 +1580,25 @@ static int rt2400pci_probe_hw_mode(struct rt2x0=
-0_dev *rt2x00dev)
-> >       /*
-> >        * Initialize hw_mode information.
-> >        */
-> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
-> > -     spec->supported_rates =3D SUPPORT_RATE_CCK;
-> > +     spec =3D kzalloc_flex(*spec, channels_info, ARRAY_SIZE(rf_vals_b)=
-);
-> > +     if (!spec)
-> > +             return -ENOMEM;
-> >
-> >       spec->num_channels =3D ARRAY_SIZE(rf_vals_b);
-> >       spec->channels =3D rf_vals_b;
-> >
-> > -     /*
-> > -      * Create channel information array
-> > -      */
-> > -     info =3D kzalloc_objs(*info, spec->num_channels);
-> > -     if (!info)
-> > -             return -ENOMEM;
-> > -
-> > -     spec->channels_info =3D info;
-> > +     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
-> > +     spec->supported_rates =3D SUPPORT_RATE_CCK;
-> >
-> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_START);
-> >       for (i =3D 0; i < 14; i++) {
-> > -             info[i].max_power =3D TXPOWER_FROM_DEV(MAX_TXPOWER);
-> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> > +             info =3D &spec->channels_info[i];
-> > +             info->max_power =3D TXPOWER_FROM_DEV(MAX_TXPOWER);
-> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> >       }
-> >
-> > +     rt2x00dev->spec =3D spec;
-> > +
-> >       return 0;
-> >  }
-> >
-> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2500pci.c b/drivers/n=
-et/wireless/ralink/rt2x00/rt2500pci.c
-> > index fc35b60e422c..4c85f401c091 100644
-> > --- a/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
-> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
-> > @@ -1854,7 +1854,10 @@ static const struct rf_channel rf_vals_5222[] =
-=3D {
-> >
-> >  static int rt2500pci_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
-> >  {
-> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
-> > +     const struct rf_channel *channels;
-> > +     unsigned int num_channels =3D 0;
-> > +     unsigned int supported_bands;
-> > +     struct hw_mode_spec *spec;
-> >       struct channel_info *info;
-> >       u8 *tx_power;
-> >       unsigned int i;
-> > @@ -1880,52 +1883,58 @@ static int rt2500pci_probe_hw_mode(struct rt2x0=
-0_dev *rt2x00dev)
-> >       /*
-> >        * Initialize hw_mode information.
-> >        */
-> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
-> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> > +     supported_bands =3D SUPPORT_BAND_2GHZ;
-> >
-> >       if (rt2x00_rf(rt2x00dev, RF2522)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2522);
-> > -             spec->channels =3D rf_vals_bg_2522;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2522);
-> > +             channels =3D rf_vals_bg_2522;
-> >       } else if (rt2x00_rf(rt2x00dev, RF2523)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2523);
-> > -             spec->channels =3D rf_vals_bg_2523;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2523);
-> > +             channels =3D rf_vals_bg_2523;
-> >       } else if (rt2x00_rf(rt2x00dev, RF2524)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2524);
-> > -             spec->channels =3D rf_vals_bg_2524;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2524);
-> > +             channels =3D rf_vals_bg_2524;
-> >       } else if (rt2x00_rf(rt2x00dev, RF2525)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2525);
-> > -             spec->channels =3D rf_vals_bg_2525;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2525);
-> > +             channels =3D rf_vals_bg_2525;
-> >       } else if (rt2x00_rf(rt2x00dev, RF2525E)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2525e);
-> > -             spec->channels =3D rf_vals_bg_2525e;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2525e);
-> > +             channels =3D rf_vals_bg_2525e;
-> >       } else if (rt2x00_rf(rt2x00dev, RF5222)) {
-> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_5222);
-> > -             spec->channels =3D rf_vals_5222;
-> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_5222);
-> > +             channels =3D rf_vals_5222;
-> >       }
-> >
-> >       /*
-> >        * Create channel information array
-> >        */
-> > -     info =3D kzalloc_objs(*info, spec->num_channels);
-> > -     if (!info)
-> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
-> > +     if (!spec)
-> >               return -ENOMEM;
-> >
-> > -     spec->channels_info =3D info;
-> > +     spec->num_channels =3D num_channels;
-> > +     spec->channels =3D channels;
-> > +     spec->supported_bands =3D supported_bands;
-> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> >
-> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_START);
-> >       for (i =3D 0; i < 14; i++) {
-> > -             info[i].max_power =3D MAX_TXPOWER;
-> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> > +             info =3D &spec->channels_info[i];
-> > +             info->max_power =3D MAX_TXPOWER;
-> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> >       }
-> >
-> >       if (spec->num_channels > 14) {
-> >               for (i =3D 14; i < spec->num_channels; i++) {
-> > -                     info[i].max_power =3D MAX_TXPOWER;
-> > -                     info[i].default_power1 =3D DEFAULT_TXPOWER;
-> > +                     info =3D &spec->channels_info[i];
-> > +                     info->max_power =3D MAX_TXPOWER;
-> > +                     info->default_power1 =3D DEFAULT_TXPOWER;
-> >               }
-> >       }
-> >
-> > +     rt2x00dev->spec =3D spec;
-> > +
-> >       return 0;
-> >  }
-> >
-> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2500usb.c b/drivers/n=
-et/wireless/ralink/rt2x00/rt2500usb.c
-> > index 58728df6666c..cbc1c1399cc6 100644
-> > --- a/drivers/net/wireless/ralink/rt2x00/rt2500usb.c
-> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2500usb.c
-> > @@ -1661,7 +1661,10 @@ static const struct rf_channel rf_vals_5222[] =
-=3D {
-> >
-> >  static int rt2500usb_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
-> >  {
-> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
-> > +     const struct rf_channel *channels;
-> > +     unsigned int num_channels =3D 0;
-> > +     unsigned int supported_bands;
-> > +     struct hw_mode_spec *spec;
-> >       struct channel_info *info;
-> >       u8 *tx_power;
-> >       unsigned int i;
-> > @@ -1693,52 +1696,58 @@ static int rt2500usb_probe_hw_mode(struct rt2x0=
-0_dev *rt2x00dev)
-> >       /*
-> >        * Initialize hw_mode information.
-> >        */
-> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
-> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> > +     supported_bands =3D SUPPORT_BAND_2GHZ;
-> >
-> >       if (rt2x00_rf(rt2x00dev, RF2522)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2522);
-> > -             spec->channels =3D rf_vals_bg_2522;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2522);
-> > +             channels =3D rf_vals_bg_2522;
-> >       } else if (rt2x00_rf(rt2x00dev, RF2523)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2523);
-> > -             spec->channels =3D rf_vals_bg_2523;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2523);
-> > +             channels =3D rf_vals_bg_2523;
-> >       } else if (rt2x00_rf(rt2x00dev, RF2524)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2524);
-> > -             spec->channels =3D rf_vals_bg_2524;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2524);
-> > +             channels =3D rf_vals_bg_2524;
-> >       } else if (rt2x00_rf(rt2x00dev, RF2525)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2525);
-> > -             spec->channels =3D rf_vals_bg_2525;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2525);
-> > +             channels =3D rf_vals_bg_2525;
-> >       } else if (rt2x00_rf(rt2x00dev, RF2525E)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2525e);
-> > -             spec->channels =3D rf_vals_bg_2525e;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2525e);
-> > +             channels =3D rf_vals_bg_2525e;
-> >       } else if (rt2x00_rf(rt2x00dev, RF5222)) {
-> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_5222);
-> > -             spec->channels =3D rf_vals_5222;
-> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_5222);
-> > +             channels =3D rf_vals_5222;
-> >       }
-> >
-> >       /*
-> >        * Create channel information array
-> >        */
-> > -     info =3D kzalloc_objs(*info, spec->num_channels);
-> > -     if (!info)
-> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
-> > +     if (!spec)
-> >               return -ENOMEM;
-> >
-> > -     spec->channels_info =3D info;
-> > +     spec->num_channels =3D num_channels;
-> > +     spec->channels =3D channels;
-> > +     spec->supported_bands =3D supported_bands;
-> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> >
-> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_START);
-> >       for (i =3D 0; i < 14; i++) {
-> > -             info[i].max_power =3D MAX_TXPOWER;
-> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> > +             info =3D &spec->channels_info[i];
-> > +             info->max_power =3D MAX_TXPOWER;
-> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> >       }
-> >
-> >       if (spec->num_channels > 14) {
-> >               for (i =3D 14; i < spec->num_channels; i++) {
-> > -                     info[i].max_power =3D MAX_TXPOWER;
-> > -                     info[i].default_power1 =3D DEFAULT_TXPOWER;
-> > +                     info =3D &spec->channels_info[i];
-> > +                     info->max_power =3D MAX_TXPOWER;
-> > +                     info->default_power1 =3D DEFAULT_TXPOWER;
-> >               }
-> >       }
-> >
-> > +     rt2x00dev->spec =3D spec;
-> > +
-> >       return 0;
-> >  }
-> >
-> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c b/drivers/n=
-et/wireless/ralink/rt2x00/rt2800lib.c
-> > index 97290899674e..7b7f6dcc9247 100644
-> > --- a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
-> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
-> > @@ -11778,7 +11778,9 @@ static const struct rf_channel rf_vals_7620[] =
-=3D {
-> >
-> >  static int rt2800_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
-> >  {
-> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
-> > +     const struct rf_channel *channels;
-> > +     unsigned int num_channels =3D 0;
-> > +     struct hw_mode_spec *spec;
-> >       struct channel_info *info;
-> >       s8 *default_power1;
-> >       s8 *default_power2;
-> > @@ -11840,19 +11842,17 @@ static int rt2800_probe_hw_mode(struct rt2x00=
-_dev *rt2x00dev)
-> >       /*
-> >        * Initialize hw_mode information.
-> >        */
-> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> > -
-> >       switch (rt2x00dev->chip.rf) {
-> >       case RF2720:
-> >       case RF2820:
-> > -             spec->num_channels =3D 14;
-> > -             spec->channels =3D rf_vals;
-> > +             num_channels =3D 14;
-> > +             channels =3D rf_vals;
-> >               break;
-> >
-> >       case RF2750:
-> >       case RF2850:
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals);
-> > -             spec->channels =3D rf_vals;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals);
-> > +             channels =3D rf_vals;
-> >               break;
-> >
-> >       case RF2020:
-> > @@ -11870,44 +11870,52 @@ static int rt2800_probe_hw_mode(struct rt2x00=
-_dev *rt2x00dev)
-> >       case RF5372:
-> >       case RF5390:
-> >       case RF5392:
-> > -             spec->num_channels =3D 14;
-> > +             num_channels =3D 14;
-> >               if (rt2800_clk_is_20mhz(rt2x00dev))
-> > -                     spec->channels =3D rf_vals_3x_xtal20;
-> > +                     channels =3D rf_vals_3x_xtal20;
-> >               else
-> > -                     spec->channels =3D rf_vals_3x;
-> > +                     channels =3D rf_vals_3x;
-> >               break;
-> >
-> >       case RF7620:
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_7620);
-> > -             spec->channels =3D rf_vals_7620;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_7620);
-> > +             channels =3D rf_vals_7620;
-> >               break;
-> >
-> >       case RF3052:
-> >       case RF3053:
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_3x);
-> > -             spec->channels =3D rf_vals_3x;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_3x);
-> > +             channels =3D rf_vals_3x;
-> >               break;
-> >
-> >       case RF3853:
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_3853);
-> > -             spec->channels =3D rf_vals_3853;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_3853);
-> > +             channels =3D rf_vals_3853;
-> >               break;
-> >
-> >       case RF5592:
-> >               reg =3D rt2800_register_read(rt2x00dev, MAC_DEBUG_INDEX);
-> >               if (rt2x00_get_field32(reg, MAC_DEBUG_INDEX_XTAL)) {
-> > -                     spec->num_channels =3D ARRAY_SIZE(rf_vals_5592_xt=
-al40);
-> > -                     spec->channels =3D rf_vals_5592_xtal40;
-> > +                     num_channels =3D ARRAY_SIZE(rf_vals_5592_xtal40);
-> > +                     channels =3D rf_vals_5592_xtal40;
-> >               } else {
-> > -                     spec->num_channels =3D ARRAY_SIZE(rf_vals_5592_xt=
-al20);
-> > -                     spec->channels =3D rf_vals_5592_xtal20;
-> > +                     num_channels =3D ARRAY_SIZE(rf_vals_5592_xtal20);
-> > +                     channels =3D rf_vals_5592_xtal20;
-> >               }
-> >               break;
-> >       }
-> >
-> > -     if (WARN_ON_ONCE(!spec->channels))
-> > +     if (WARN_ON_ONCE(!channels))
-> >               return -ENODEV;
-> >
-> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
-> > +     if (!spec)
-> > +             return -ENOMEM;
-> > +
-> > +     spec->num_channels =3D num_channels;
-> > +     spec->channels =3D channels;
-> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> > +
-> >       spec->supported_bands =3D SUPPORT_BAND_2GHZ;
-> >       if (spec->num_channels > 14)
-> >               spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > @@ -11959,19 +11967,13 @@ static int rt2800_probe_hw_mode(struct rt2x00=
-_dev *rt2x00dev)
-> >       /*
-> >        * Create channel information and survey arrays
-> >        */
-> > -     info =3D kzalloc_objs(*info, spec->num_channels);
-> > -     if (!info)
-> > -             return -ENOMEM;
-> > -
-> >       rt2x00dev->chan_survey =3D
-> >               kzalloc_objs(struct rt2x00_chan_survey, spec->num_channel=
-s);
-> >       if (!rt2x00dev->chan_survey) {
-> > -             kfree(info);
-> > +             kfree(spec);
-> >               return -ENOMEM;
-> >       }
-> >
-> > -     spec->channels_info =3D info;
-> > -
-> >       default_power1 =3D rt2800_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_B=
-G1);
-> >       default_power2 =3D rt2800_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_B=
-G2);
-> >
-> > @@ -11982,10 +11984,11 @@ static int rt2800_probe_hw_mode(struct rt2x00=
-_dev *rt2x00dev)
-> >               default_power3 =3D NULL;
-> >
-> >       for (i =3D 0; i < 14; i++) {
-> > -             info[i].default_power1 =3D default_power1[i];
-> > -             info[i].default_power2 =3D default_power2[i];
-> > +             info =3D &spec->channels_info[i];
-> > +             info->default_power1 =3D default_power1[i];
-> > +             info->default_power2 =3D default_power2[i];
-> >               if (default_power3)
-> > -                     info[i].default_power3 =3D default_power3[i];
-> > +                     info->default_power3 =3D default_power3[i];
-> >       }
-> >
-> >       if (spec->num_channels > 14) {
-> > @@ -12002,10 +12005,11 @@ static int rt2800_probe_hw_mode(struct rt2x00=
-_dev *rt2x00dev)
-> >                       default_power3 =3D NULL;
-> >
-> >               for (i =3D 14; i < spec->num_channels; i++) {
-> > -                     info[i].default_power1 =3D default_power1[i - 14]=
-;
-> > -                     info[i].default_power2 =3D default_power2[i - 14]=
-;
-> > +                     info =3D &spec->channels_info[i];
-> > +                     info->default_power1 =3D default_power1[i - 14];
-> > +                     info->default_power2 =3D default_power2[i - 14];
-> >                       if (default_power3)
-> > -                             info[i].default_power3 =3D default_power3=
-[i - 14];
-> > +                             info->default_power3 =3D default_power3[i=
- - 14];
-> >               }
-> >       }
-> >
-> > @@ -12033,6 +12037,8 @@ static int rt2800_probe_hw_mode(struct rt2x00_d=
-ev *rt2x00dev)
-> >               break;
-> >       }
-> >
-> > +     rt2x00dev->spec =3D spec;
-> > +
-> >       return 0;
-> >  }
-> >
-> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00.h b/drivers/net/=
-wireless/ralink/rt2x00/rt2x00.h
-> > index 7d313e86d3f2..babc04210a65 100644
-> > --- a/drivers/net/wireless/ralink/rt2x00/rt2x00.h
-> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00.h
-> > @@ -404,9 +404,9 @@ struct hw_mode_spec {
-> >
-> >       unsigned int num_channels;
-> >       const struct rf_channel *channels;
-> > -     const struct channel_info *channels_info;
-> >
-> >       struct ieee80211_sta_ht_cap ht;
-> > +     struct channel_info channels_info[] __counted_by(num_channels);
-> >  };
-> >
-> >  /*
-> > @@ -802,7 +802,7 @@ struct rt2x00_dev {
-> >       /*
-> >        * hw capability specifications.
-> >        */
-> > -     struct hw_mode_spec spec;
-> > +     struct hw_mode_spec *spec;
-> >
-> >       /*
-> >        * This is the default TX/RX antenna setup as indicated
-> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00config.c b/driver=
-s/net/wireless/ralink/rt2x00/rt2x00config.c
-> > index f895f560a185..b97cb67c4361 100644
-> > --- a/drivers/net/wireless/ralink/rt2x00/rt2x00config.c
-> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00config.c
-> > @@ -165,7 +165,7 @@ void rt2x00lib_config_antenna(struct rt2x00_dev *rt=
-2x00dev,
-> >  static u16 rt2x00ht_center_channel(struct rt2x00_dev *rt2x00dev,
-> >                                  struct ieee80211_conf *conf)
-> >  {
-> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
-> > +     struct hw_mode_spec *spec =3D rt2x00dev->spec;
-> >       int center_channel;
-> >       u16 i;
-> >
-> > @@ -194,6 +194,7 @@ void rt2x00lib_config(struct rt2x00_dev *rt2x00dev,
-> >                     struct ieee80211_conf *conf,
-> >                     unsigned int ieee80211_flags)
-> >  {
-> > +     struct hw_mode_spec *spec =3D rt2x00dev->spec;
-> >       struct rt2x00lib_conf libconf;
-> >       u16 hw_value;
-> >       u16 autowake_timeout;
-> > @@ -218,13 +219,8 @@ void rt2x00lib_config(struct rt2x00_dev *rt2x00dev=
-,
-> >                       hw_value =3D conf->chandef.chan->hw_value;
-> >               }
-> >
-> > -             memcpy(&libconf.rf,
-> > -                    &rt2x00dev->spec.channels[hw_value],
-> > -                    sizeof(libconf.rf));
-> > -
-> > -             memcpy(&libconf.channel,
-> > -                    &rt2x00dev->spec.channels_info[hw_value],
-> > -                    sizeof(libconf.channel));
-> > +             memcpy(&libconf.rf, &spec->channels[hw_value], sizeof(lib=
-conf.rf));
-> > +             memcpy(&libconf.channel, &spec->channels_info[hw_value], =
-sizeof(libconf.channel));
-> >
-> >               /* Used for VCO periodic calibration */
-> >               rt2x00dev->rf_channel =3D libconf.rf.channel;
-> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c b/drivers/n=
-et/wireless/ralink/rt2x00/rt2x00dev.c
-> > index edc1f8eac747..3ffbc8aabbae 100644
-> > --- a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-> > +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-> > @@ -1097,7 +1097,7 @@ static void rt2x00lib_remove_hw(struct rt2x00_dev=
- *rt2x00dev)
-> >               rt2x00dev->hw->wiphy->bands[NL80211_BAND_5GHZ] =3D NULL;
-> >       }
-> >
-> > -     kfree(rt2x00dev->spec.channels_info);
-> > +     kfree(rt2x00dev->spec);
-> >       kfree(rt2x00dev->chan_survey);
-> >  }
-> >
-> > @@ -1116,7 +1116,7 @@ static const struct ieee80211_tpt_blink rt2x00_tp=
-t_blink[] =3D {
-> >
-> >  static int rt2x00lib_probe_hw(struct rt2x00_dev *rt2x00dev)
-> >  {
-> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
-> > +     struct hw_mode_spec *spec =3D rt2x00dev->spec;
-> >       int status;
-> >
-> >       if (test_bit(DEVICE_STATE_REGISTERED_HW, &rt2x00dev->flags))
-> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt61pci.c b/drivers/net=
-/wireless/ralink/rt2x00/rt61pci.c
-> > index 79e1fd0a1fbd..479825f8bba9 100644
-> > --- a/drivers/net/wireless/ralink/rt2x00/rt61pci.c
-> > +++ b/drivers/net/wireless/ralink/rt2x00/rt61pci.c
-> > @@ -2654,7 +2654,10 @@ static const struct rf_channel rf_vals_seq[] =3D=
- {
-> >
-> >  static int rt61pci_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
-> >  {
-> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
-> > +     const struct rf_channel *channels;
-> > +     unsigned int num_channels =3D 0;
-> > +     unsigned int supported_bands;
-> > +     struct hw_mode_spec *spec;
-> >       struct channel_info *info;
-> >       u8 *tx_power;
-> >       unsigned int i;
-> > @@ -2693,46 +2696,51 @@ static int rt61pci_probe_hw_mode(struct rt2x00_=
-dev *rt2x00dev)
-> >       /*
-> >        * Initialize hw_mode information.
-> >        */
-> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
-> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> > +     supported_bands =3D SUPPORT_BAND_2GHZ;
-> >
-> >       if (!rt2x00_has_cap_rf_sequence(rt2x00dev)) {
-> > -             spec->num_channels =3D 14;
-> > -             spec->channels =3D rf_vals_noseq;
-> > +             num_channels =3D 14;
-> > +             channels =3D rf_vals_noseq;
-> >       } else {
-> > -             spec->num_channels =3D 14;
-> > -             spec->channels =3D rf_vals_seq;
-> > +             num_channels =3D 14;
-> > +             channels =3D rf_vals_seq;
-> >       }
-> >
-> >       if (rt2x00_rf(rt2x00dev, RF5225) || rt2x00_rf(rt2x00dev, RF5325))=
- {
-> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_seq);
-> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_seq);
-> >       }
-> >
-> >       /*
-> >        * Create channel information array
-> >        */
-> > -     info =3D kzalloc_objs(*info, spec->num_channels);
-> > -     if (!info)
-> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
-> > +     if (!spec)
-> >               return -ENOMEM;
-> >
-> > -     spec->channels_info =3D info;
-> > +     spec->num_channels =3D num_channels;
-> > +     spec->channels =3D channels;
-> > +     spec->supported_bands =3D supported_bands;
-> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> >
-> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_G_START=
-);
-> >       for (i =3D 0; i < 14; i++) {
-> > -             info[i].max_power =3D MAX_TXPOWER;
-> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> > +             info =3D &spec->channels_info[i];
-> > +             info->max_power =3D MAX_TXPOWER;
-> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> >       }
-> >
-> >       if (spec->num_channels > 14) {
-> >               tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER=
-_A_START);
-> >               for (i =3D 14; i < spec->num_channels; i++) {
-> > -                     info[i].max_power =3D MAX_TXPOWER;
-> > -                     info[i].default_power1 =3D
-> > -                                     TXPOWER_FROM_DEV(tx_power[i - 14]=
-);
-> > +                     info =3D &spec->channels_info[i];
-> > +                     info->max_power =3D MAX_TXPOWER;
-> > +                     info->default_power1 =3D TXPOWER_FROM_DEV(tx_powe=
-r[i - 14]);
-> >               }
-> >       }
-> >
-> > +     rt2x00dev->spec =3D spec;
-> > +
-> >       return 0;
-> >  }
-> >
-> > diff --git a/drivers/net/wireless/ralink/rt2x00/rt73usb.c b/drivers/net=
-/wireless/ralink/rt2x00/rt73usb.c
-> > index d6b7174d087a..17338378329b 100644
-> > --- a/drivers/net/wireless/ralink/rt2x00/rt73usb.c
-> > +++ b/drivers/net/wireless/ralink/rt2x00/rt73usb.c
-> > @@ -2088,7 +2088,10 @@ static const struct rf_channel rf_vals_5225_2527=
-[] =3D {
-> >
-> >  static int rt73usb_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
-> >  {
-> > -     struct hw_mode_spec *spec =3D &rt2x00dev->spec;
-> > +     const struct rf_channel *channels;
-> > +     unsigned int num_channels =3D 0;
-> > +     unsigned int supported_bands;
-> > +     struct hw_mode_spec *spec;
-> >       struct channel_info *info;
-> >       u8 *tx_power;
-> >       unsigned int i;
-> > @@ -2114,49 +2117,54 @@ static int rt73usb_probe_hw_mode(struct rt2x00_=
-dev *rt2x00dev)
-> >       /*
-> >        * Initialize hw_mode information.
-> >        */
-> > -     spec->supported_bands =3D SUPPORT_BAND_2GHZ;
-> > -     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> > +     supported_bands =3D SUPPORT_BAND_2GHZ;
-> >
-> >       if (rt2x00_rf(rt2x00dev, RF2528)) {
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_bg_2528);
-> > -             spec->channels =3D rf_vals_bg_2528;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_bg_2528);
-> > +             channels =3D rf_vals_bg_2528;
-> >       } else if (rt2x00_rf(rt2x00dev, RF5226)) {
-> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_5226);
-> > -             spec->channels =3D rf_vals_5226;
-> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_5226);
-> > +             channels =3D rf_vals_5226;
-> >       } else if (rt2x00_rf(rt2x00dev, RF2527)) {
-> > -             spec->num_channels =3D 14;
-> > -             spec->channels =3D rf_vals_5225_2527;
-> > +             num_channels =3D 14;
-> > +             channels =3D rf_vals_5225_2527;
-> >       } else if (rt2x00_rf(rt2x00dev, RF5225)) {
-> > -             spec->supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > -             spec->num_channels =3D ARRAY_SIZE(rf_vals_5225_2527);
-> > -             spec->channels =3D rf_vals_5225_2527;
-> > +             supported_bands |=3D SUPPORT_BAND_5GHZ;
-> > +             num_channels =3D ARRAY_SIZE(rf_vals_5225_2527);
-> > +             channels =3D rf_vals_5225_2527;
-> >       }
-> >
-> >       /*
-> >        * Create channel information array
-> >        */
-> > -     info =3D kzalloc_objs(*info, spec->num_channels);
-> > -     if (!info)
-> > +     spec =3D kzalloc_flex(*spec, channels_info, num_channels);
-> > +     if (!spec)
-> >               return -ENOMEM;
-> >
-> > -     spec->channels_info =3D info;
-> > +     spec->num_channels =3D num_channels;
-> > +     spec->channels =3D channels;
-> > +     spec->supported_bands =3D supported_bands;
-> > +     spec->supported_rates =3D SUPPORT_RATE_CCK | SUPPORT_RATE_OFDM;
-> >
-> >       tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER_G_START=
-);
-> >       for (i =3D 0; i < 14; i++) {
-> > -             info[i].max_power =3D MAX_TXPOWER;
-> > -             info[i].default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> > +             info =3D &spec->channels_info[i];
-> > +             info->max_power =3D MAX_TXPOWER;
-> > +             info->default_power1 =3D TXPOWER_FROM_DEV(tx_power[i]);
-> >       }
-> >
-> >       if (spec->num_channels > 14) {
-> >               tx_power =3D rt2x00_eeprom_addr(rt2x00dev, EEPROM_TXPOWER=
-_A_START);
-> >               for (i =3D 14; i < spec->num_channels; i++) {
-> > -                     info[i].max_power =3D MAX_TXPOWER;
-> > -                     info[i].default_power1 =3D
-> > -                                     TXPOWER_FROM_DEV(tx_power[i - 14]=
-);
-> > +                     info =3D &spec->channels_info[i];
-> > +                     info->max_power =3D MAX_TXPOWER;
-> > +                     info->default_power1 =3D TXPOWER_FROM_DEV(tx_powe=
-r[i - 14]);
-> >               }
-> >       }
-> >
-> > +     rt2x00dev->spec =3D spec;
-> > +
-> >       return 0;
-> >  }
-> >
-> > --
-> > 2.54.0
-> >
+> So, while I could go full GTY, I opted for xstrdup instead. I've
+> rearranged things here now, and indeed, LTO created some issues.
+> Upstream Linux doesn't have GCC LTO support (there are trees but no one
+> has been pushing for it), so I hadn't tested this area at all. I've
+> added some limited LTO testing now.
+
+I am less worried about LTO and more worried about PCH when it comes
+GTY markers really.
+
+
+>
+> -Kees
+>
+> --
+> Kees Cook
