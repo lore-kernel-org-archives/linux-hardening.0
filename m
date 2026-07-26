@@ -1,33 +1,32 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49FE337BE7B;
-	Sun, 26 Jul 2026 08:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64AF137923;
+	Sun, 26 Jul 2026 09:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785056332; cv=none; b=IeV3qktu+zMeHxbmuZubHCEkRI6oYoR5BO5Jj2hpqnCCmkEJFcW/OzDpRpGrzN7gGVqbU3RqmQD2ad8SXH9ZjjRKNTJkvnrw/3PQUGWhg8mQe6iP4uqHhCUADMIwlDAswZDG72MARXNbsJFNbjMkiVeY/OZ9hyoh62bh85x6q/s=
+	t=1785056547; cv=none; b=sbn7aOfa+RouqCydtY6eJWzUiNnaXgBdmvUkDjKw7wdgKcwXhhJGNSUyteVFsml2p3iAXjLANuGsDI9kQ31m4NfpZhMN+Y+g30HzZLwb75ca/CHp325gbtiuKOjGoY8iI2W6tSchVeVQyoefs0Sg3ngZ6vOxgo18Pvw9zAjWX2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785056332; c=relaxed/simple;
-	bh=HsTk2zi9LsNnreXaT5/Xhg6wgsUc7xZ+m0lgwTS04jI=;
+	s=arc-20240116; t=1785056547; c=relaxed/simple;
+	bh=H6zc3e+fPKI/5/3sivloek4OyJnOZmoBHY7FinDrAXw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sz80TP6RfL2rDZqT5uQPjn/JjbqleoeEWbFNPs9jg9KsLlFrbfc3v4/g0A4x5gI+LInwfTQRM+6JDeDwyBTnIE8Yk4NtHdrOPVJsqizmfM1FN64pRUVataepnCsr7im/h7OEV01wpR3IU56KyG/XKM21YWISMGsFnvqf7m2OfR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=luZCEai/; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 In-Reply-To:Content-Type; b=o7ZFdzncontEsf/805zxL2IirZzbNiU5Z0rWhxsVATjlSP15tBcejXSsDOxXViHd1kH88ejA6J7/M7auGYRdrQr3ABEYTPMy39iQhWoAynOGYDdrRWhSeViN3pLhyJ5Pzr8XEELQge45r9WDfI968qkNHt+d/e0R1F6WH/00g9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=SbvrWYBK; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="luZCEai/"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FF4F2F;
-	Sun, 26 Jul 2026 01:53:21 -0700 (PDT)
-Received: from [10.164.11.0] (unknown [10.164.11.0])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 120E13F86F;
-	Sun, 26 Jul 2026 01:53:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1785056005; bh=HsTk2zi9LsNnreXaT5/Xhg6wgsUc7xZ+m0lgwTS04jI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=luZCEai/ghbSmVGHX/P+9p6g7yYiIjeo7lSLfGz5eW/tFCmfFNcvaFXmOPw685ClY
-	 b7U94Rpqam/lyWk5QMMocOJsHcmLOXhxthD8sOfUwLDLQwGjE1JxooGWI1uoa8MQeR
-	 n1kgMVCneffHRTUED32NkBqzfaVKhRU9MlKbthes=
-Message-ID: <f3db438e-6cf7-4ccf-bd4f-379c549d1e9d@arm.com>
-Date: Sun, 26 Jul 2026 14:23:20 +0530
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="SbvrWYBK"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1785056533; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=qgDKlgSBwdwNpaUSZa7cKe/JphLs7EoLAwMXrn/+4N8=;
+	b=SbvrWYBKN0ygSgnfoLXK0pFNebd8ZQOQAgxxtXFmXyRv1g1famt5npJl6rb/4daIDUlZuwxplLSjSetj9DI5Vj2tFZrDvOwV6XWreHK6O2/rbGoPuSDFvp0HO5GVrPQnXL3LQZWHj4YNjBfmSjsIG7q+GKu2W7PDg16JZ07lVTU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0X7n9drU_1785056531;
+Received: from 30.28.192.31(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X7n9drU_1785056531 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 26 Jul 2026 17:02:12 +0800
+Message-ID: <36b3c907-f6f4-4047-b743-04bf1c246e2c@linux.alibaba.com>
+Date: Sun, 26 Jul 2026 17:02:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,116 +34,73 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/usercopy: harden bounds checking for vmalloc
- allocations
-To: kees@kernel.org, akpm@linux-foundation.org
-Cc: gustavoars@kernel.org, linux-hardening@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, ryan.roberts@arm.com,
- anshuman.khandual@arm.com, david@kernel.org, urezki@gmail.com
-References: <20260722142936.3287702-1-dev.jain@arm.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20260722142936.3287702-1-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2 RESEND 4/4] selftests: firmware: Add NVIDIA GHES EINJ
+ selftest
+To: Kai-Heng Feng <kaihengf@nvidia.com>, rafael@kernel.org, shuah@kernel.org,
+ kees@kernel.org, "Luck, Tony" <tony.luck@intel.com>
+Cc: julianbraha@gmail.com, tony.luck@intel.com, bp@alien8.de,
+ guohanjun@huawei.com, mchehab@kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-hardening@vger.kernel.org, csoto@nvidia.com, mochs@nvidia.com
+References: <20260724122054.36162-1-kaihengf@nvidia.com>
+ <20260724122054.36162-5-kaihengf@nvidia.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260724122054.36162-5-kaihengf@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 22/07/26 7:59 pm, Dev Jain wrote:
-> The vmalloc allocator stores the actual allocation size inside the
-> vm_struct structure. We can use this bound in usercopy instead of the
-> page-aligned va_end to catch usercopy beyond the actual allocation size.
+On 7/24/26 8:20 PM, Kai-Heng Feng wrote:
+> Exercise the full driver path on real Grace and Vera hardware using
+> ACPI EINJ to inject CPER sections and validate the kernel log output.
+> KUnit covers the parser in isolation; this test covers the path from
+> firmware notification through GUID dispatch to decoded output.
 > 
-> For vmap, the requested_size field is always page-aligned since it maps a
-> certain number of pages. Same for vm_map_ram (alongwith, not even having
-> a vm_struct). So the check is only relevant for vmalloc mappings.
-> 
-> Because there are early vm areas registered even before vmalloc_init,
-> requested_size may be zero. So also check whether the requested_size
-> is set.
-> 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
 > ---
-
-Sashiko:
-
-1. "Does this locklessly access area->vm after find_vmap_area() has dropped
-the busy tree lock?
-
-If an out-of-bounds pointer falls into an adjacent vmap_area, and that
-adjacent area is concurrently freed by another thread, its vm_struct
-is freed. Additionally, when the vmap_area is moved to the free tree,
-area->vm (which shares a union with subtree_max_size) is overwritten
-with an integer size.
-
-Would dereferencing vm->flags later in this function cause a use-after-free
-or a wild pointer dereference?"
-
-
-I don't get it. So usercopy is checking OOB for an object but shouldn't
-assume the existence of that object while using it?
-
-It is a bug in the caller if someone does vfree() while usercopy is operating
-on the vmalloc object. I don't think usercopy should handle it. For example
-we don't handle it for slabs currently.
-
-
-2. "Can addr still have hardware KASAN tags (like ARM64 MTE) attached in the
-top byte here?
-
-Because check_heap_object() casts ptr to addr without calling
-kasan_reset_tag(), a tagged address will be numerically different from
-untagged kernel addresses. When calculating offset against the untagged
-area->va_start, this could underflow or produce a massive unsigned value.
-
-Could this cause the offset > size check to evaluate to true, triggering a
-spurious usercopy_abort() for valid usercopies on HW-tagged vmalloc memory?"
-
-
-This looks genuine. check_heap_object() should be doing a kasan_reset_tag().
-We probably didn't catch this because no one is running CONFIG_HARDENED_USERCOPY
-with KASAN enabled, since the latter kind-of already stops the OOB bugs.
-
-Even if they did, mostly we care about slab OOB's I think, and the __check_heap_object
-in mm/slub.c does a kasan_reset_tag() already.
-
-
-> Applies on mm-new (3d18f3499c48).
+> v2:
+>   - No change.
 > 
->  mm/usercopy.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>   tools/testing/selftests/firmware/Makefile     |   4 +-
+>   tools/testing/selftests/firmware/config       |   5 +
+>   tools/testing/selftests/firmware/einj_lib.sh  | 189 ++++++++++++++++++
+>   .../selftests/firmware/ghes_nvidia_einj.sh    | 144 +++++++++++++
+>   .../firmware/ghes_nvidia_einj_profiles.sh     |  46 +++++
+>   5 files changed, 386 insertions(+), 2 deletions(-)
+>   create mode 100644 tools/testing/selftests/firmware/einj_lib.sh
+>   create mode 100755 tools/testing/selftests/firmware/ghes_nvidia_einj.sh
+>   create mode 100755 tools/testing/selftests/firmware/ghes_nvidia_einj_profiles.sh
 > 
-> diff --git a/mm/usercopy.c b/mm/usercopy.c
-> index 5de7a518b1b1c..772681aff8477 100644
-> --- a/mm/usercopy.c
-> +++ b/mm/usercopy.c
-> @@ -176,10 +176,28 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
->  
->  	if (is_vmalloc_addr(ptr) && !pagefault_disabled()) {
->  		struct vmap_area *area = find_vmap_area(addr);
-> +		struct vm_struct *vm;
->  
->  		if (!area)
->  			usercopy_abort("vmalloc", "no area", to_user, 0, n);
->  
-> +		vm = area->vm;
-> +		/*
-> +		 * Mappings with a vm_struct track the originally requested
-> +		 * size. Check against that rather than the page-rounded
-> +		 * vmap_area->va_end so copies cannot reach vmalloc tail
-> +		 * padding. vmap mappings are always page aligned.
-> +		 */
-> +		if (vm && (vm->flags & VM_ALLOC) && vm->requested_size) {
-> +			unsigned long size = vm->requested_size;
-> +
-> +			offset = addr - area->va_start;
-> +			if (offset > size || n > size - offset)
-> +				usercopy_abort("vmalloc", NULL, to_user,
-> +					       offset, n);
-> +			return;
-> +		}
-> +
->  		if (n > area->va_end - addr) {
->  			offset = addr - area->va_start;
->  			usercopy_abort("vmalloc", NULL, to_user, offset, n);
+> diff --git a/tools/testing/selftests/firmware/Makefile b/tools/testing/selftests/firmware/Makefile
+> index 7992969deaa2..b753dd123860 100644
+> --- a/tools/testing/selftests/firmware/Makefile
+> +++ b/tools/testing/selftests/firmware/Makefile
+> @@ -3,8 +3,8 @@
+>   CFLAGS = -Wall \
+>            -O2
+>   
+> -TEST_PROGS := fw_run_tests.sh
+> -TEST_FILES := fw_fallback.sh fw_filesystem.sh fw_upload.sh fw_lib.sh
+> +TEST_PROGS := fw_run_tests.sh ghes_nvidia_einj.sh
+> +TEST_FILES := fw_fallback.sh fw_filesystem.sh fw_upload.sh fw_lib.sh einj_lib.sh ghes_nvidia_einj_profiles.sh
+>   TEST_GEN_FILES := fw_namespace
 
+I am not sure this belongs in the generic firmware selftests.
+
+This test requires root, debugfs, ACPI EINJ, NVIDIA-specific vendor EINJ
+metadata, a bound NVDA2012 device, and it writes EINJ controls before
+triggering error_inject.  Even if the selected profiles are intended to be
+informational, this looks more like a platform RAS validation tool than a
+generic kselftest that should run as part of the firmware selftest suite.
+
+Would ras-tools be a better place for this?  Tony Luck maintains that tree
+for RAS-related test and injection tooling, and this script seems to fit
+there better than tools/testing/selftests/firmware/.
+
+Please see:
+
+     https://git.kernel.org/pub/scm/linux/kernel/git/aegl/ras-tools.git
+
+Thanks,
+Shuai
