@@ -1,68 +1,68 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA82B3EDAD2
-	for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 09:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DC53EEAD3
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 09:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785145053; cv=none; b=jPFvkXfqsTkBTcUSttcL2aGTBbIEXPEZEZMjQlg2aKB/WUWWPIki6NX1C/rh1mTpL9hPSEgP8zFEtp1wxKqz/8b7gMrIWS0ybiGrw/0lWpV7PqWA5Wzd/ZwWLsU94/VFtd7LuuTujoWH6JTcR+V4mJk5bE9I0JyVsPIqU97NM80=
+	t=1785145272; cv=none; b=YSah10PE+m1L71c4I51Q2j7H1MWlnA0+7crGtb0zOfi3fq9vMXcoH51gjosIfH+UL3X2AzfTO5CMhY1uLLTa01aXFp2xzKbT/wZA9HwXA3AvkbsfvrHDbfUn9TyR+anpFT4K4ruXG+j8FtBN0Mk/7C5NgOoBYfJzHY6yskAeuBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785145053; c=relaxed/simple;
-	bh=Yt4WhkQ0bfNF3i+Bo8I3umUKuq7qDV0/dN0snQn+DvY=;
+	s=arc-20240116; t=1785145272; c=relaxed/simple;
+	bh=6dgUYUuzfhsDSIYKKAB+5XI3CWqUbj017l5cX3HrvDY=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZuZv6Kh7GvfQSw52WZVh24/MlATSKW/dtCsB8vyMs47zyThSd56V28Ax2CPOU63IPw0wi6gQayBT6apkH2qJIhtaR4KWAu/BoOf6tlBTP+x4SGfAIG1hk7QYiURaCtR5jaiEJt3l2Ge9qWv6eHAJaV0jAqKiFu7C16R3XkDq6z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFIKNIr9; arc=none smtp.client-ip=209.85.218.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=i/alrMT1bhO0N45KAuYM8I7aMvpO86QBBdg7cHK0ubUO1BS7saETSwcWJeW2I6Sr3ezmY1jRWlmiUh+MaSZK0VGqU3TwXx5j5+N5Z+DwThFFckViJthRzx18YuPEdtbEbevE/yhU/SLPxEuo115cSrY8ZfKlTMjbZvMn4n7gx5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rf2j480R; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFIKNIr9"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-c15cb6f5c12so401247766b.0
-        for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 02:37:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rf2j480R"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2cf41bab353so33657855ad.0
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 02:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785145050; x=1785749850; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785145270; x=1785750070; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:date:from:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=uCfmC301HH+gxHVN5YqFyM0xtUcGcZEvjNT2gWZ/T7c=;
-        b=NFIKNIr9gNX6hiLcxyJ1PnERyaIpcHyF4w1xYzgsAxoU+6NWOl2gkrvNE6SHH4e2hs
-         cfCdye4jttAfg3z1Ak0YLi15xJf2F37g9j3/TKh5BZJx/K6O2kfnbGXTrPajnqbXfsw3
-         gjY6AnR0qMSLN/YK5tFClUa9scK2AkUEh9hQzfveshvt3rohnqcB6KMr7oThXwE9X2ZU
-         Aa3tP93nbjYoiako+NEUWCiLuXaNcCrj5RZkeilAoadat+tbPApcpKOqW/Qu0jA7+VlA
-         qA7hYv7FGzZ7CG9x29KGEU1KU/P8qlfp0zDtKBDLTh+dyp1qkF8rFC2lKWltjAjLvU4C
-         vyaA==
+        bh=DxypF0mqvE1RlhZs44JfIUVBgafKcdOhHfFx2Mq1iJY=;
+        b=Rf2j480Rze2GkGrKykZ6rmQk7DordpPXHwZvWA89zZpdbBo1e/Kiqee+YIT52xvaIk
+         g98Fimf51txajcGPPqvoP79ChhOppRsmRmUKhYrtkoWvejB9HyXuU8bmWFEmjSdNuuA7
+         yT/vfGh8DM0QPtS+3bbhek3oDLmqifScB0l9sIMxR/3jzLd2nowP2FyTJ3xVHtGkS3oI
+         s2Ti7eB1midP1ep7RJb8q/+C9C885KTABBC8V8OfNf0BkBQ8EuIT0C5LpFIrVu58QLl0
+         LqHbQZshEI6YCiUrOyeJ0lhm0AhjoOJqvkcHF/TsuhjjhHw8UjnVFJMZmvX9mnN+F1ZJ
+         qh3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785145050; x=1785749850;
+        d=1e100.net; s=20251104; t=1785145270; x=1785750070;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=uCfmC301HH+gxHVN5YqFyM0xtUcGcZEvjNT2gWZ/T7c=;
-        b=TaTRdHQH3TRIzc3rVF1ymmiJLaZhEBrzqhjDBzuIMicGWwRi4+fVl5cTkV5Pob0nV7
-         WpnVOi2LaT+HAe6w1vHZwOgYcG7Aisbaz0F5nbpJ/lpZz1Obk1fyn9PpPiaFrXDWJcGw
-         XSR9gDar6Pl7yQ8gkcGtaz6vtitDozFrmJGCjMqWXl11/dUMdJ7ed4MkVOsRrqfXEkcB
-         PvG3dKd4ABho2yG8NafruSXV4Qv+NPi7EsDn+NcFyr+BtpIhVII14cAIt1iux+QgyrBA
-         EEg/eXYWKyubvJ0VCqHsDhWlTBQeSVNFeRX7mJhWzMN3SLV1NdQg3NfXsV/NLDTx6Sk/
-         QjUA==
-X-Forwarded-Encrypted: i=1; AHgh+RoJwqKck6vuedXbZ749pJ/YBUikaFrV9RHtNT80GSWM8WU/7o5SBTYpoCtszgdUX/AhnG9970F5DK7AdAo/Pbw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlISUqfn0oD7g8JNFyCipn7Yi+xDAar4r9hbaLwNgLocL+pPia
-	iAuDOuYmWVF0+B0iyrONObpIKxlB95DNSX5P+MfN6qmFpxQi2ed1Bi5/VwNWBqs/
-X-Gm-Gg: AR+sD12HjhwXkHKtT+0B9TrLY2kevelTh+W9EAZ29i2+HnTulgbmjmYArSFYLm9Y51x
-	w81nRHg7GmMnZe4WIB8PpuMeNJ86hIxTMbyGJLx3D01G/SRJzDyBHkpBZlk09wMOjLyxotZ9kcV
-	bhX2v6GpvdU2AdgS18e8nLQ19lvUouWSxcnr5NTbJ28u3JWTrICYpTgurp0WhfIC82rHYxQE8ry
-	C1qQrpatRe+h9d1ElaBIT7CHx5b6ldaS3BCDjMnYPkfURhehkLQd5+73tSRrTQ5gchMbWgWSD6o
-	5AyNUdBxz4vvuaa/uaXzlAulEVCX310SFmbEcIa/mKiSfiCRxut/7lFT2L+zPi7PhqLaGmJBEQ4
-	FnmrkyyHFPxPn3EYFs4mhPHQwboikMDDsaylR79VFDbgt1ugQG2jIBTDCK1O501jCLb40Tl2zYp
-	QfTcF65a62Dxrj4kcjgVGCU5yD9LcEvUE001GZbqlCA3n7hi9yxAKcvR7XnqJCtc/Tft5hWeAjF
-	19y7Q==
-X-Received: by 2002:a17:907:3cc3:b0:c16:2dc0:e1ef with SMTP id a640c23a62f3a-c1f1ebe59c1mr303138166b.14.1785145049847;
-        Mon, 27 Jul 2026 02:37:29 -0700 (PDT)
+        bh=DxypF0mqvE1RlhZs44JfIUVBgafKcdOhHfFx2Mq1iJY=;
+        b=gNiDC33brGPfISw4CmwYNPSae1GGc0uEQTa5gwUr4iNgwo+i640QINI65V/r7FAtfW
+         LeXnpUTkCcojOkd1T3GFugqg82cIsxq8f3q6iTKOuLzJzxoKU0TZGfiMkDN9oi6b7BsU
+         grL9VeT9drOMuqs74Z54es+Q6GfGSXqJohNaE0vFzaYle9tjmzfQ4o16m53fl3VHcV4D
+         C6Ai7aMaMt3jNCbk9/zr2Cjd7gsRExoGAgRR6IIlDHNmx8pwb1b8or0kHJaHmJmtjGHG
+         vE5zUgdJpT7kbCcTn593xTASTSIOTlVTK7orBz9SOOtoe4Kq0p+U4omG6MkdUdH1JEaa
+         CKhA==
+X-Forwarded-Encrypted: i=1; AHgh+Rp/BEsR0uVFp2j8M8+I3yClXkzA5roB6jgcw8jQWCgiVcKfM00wWP7dumNlvfG9M19+gygoI1QM0MGFLNc/g6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNFvaeYMSYkq9Lm+iUntb5unLdAuH//gUUy9fETHPL+CSCXmwt
+	hWbF3l1wGO876jQsois3z1YSp8++mW8jQ3Q+s3VlLK2Q9E8GRJYLX3T0
+X-Gm-Gg: AR+sD13LJY6ZSKxKVk06vanJnofXp+XLLaeSBsGMz3QSFeELrsFcAyJR+rqk+EI77wV
+	NQdJ+zK1Zu+K0rQX7YB1XoAqpXDZvXK809MFaX07SxfVtVt5KU7KNcapjdXiMETl1X1TSwluW2L
+	uMGsTDa122bah1Pitujk8iQCnmcc/AZeGbR71MiVcPzQ23rWrjYHiGcse4zWbrUxMB///f5MNoA
+	fSjSgpzefcaMI9G8wTgBOPx4IY/kMwS8r0q8tOGXar1p2avH6E4yFhGI6OU6d+MLKOQurJzZLE/
+	2mJEfANJ0KcZaioKhwUNUFPSF87+Pmi6nMSGm6LQmz5eUNHSla1s6spEMJwCycUzvDCryExKu0+
+	NvQl+AwD/jg3MRVNYz/p7aS+xCei6Ji0OaqmmigGFiPikWWN2M8dcpV1uL+uvboAqfJq7+uitwk
+	9TbJj2/9tuZHC04KGLdlpeN8L7VYIW9FpBY0KJo7UIxFj9CId4hWnImjp9S6Dk2dh6t0vww4gYv
+	Y4XgVk4Chfh5tuG
+X-Received: by 2002:a17:903:244a:b0:2cf:9f0b:b560 with SMTP id d9443c01a7336-2cfde866990mr74953715ad.29.1785145270129;
+        Mon, 27 Jul 2026 02:41:10 -0700 (PDT)
 Received: from RDEALENC-L01.ad.analog.com (24.206.116.131.netskope-rdns.com. [24.206.116.131])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1c32ac8c4bsm622684366b.18.2026.07.27.02.37.27
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cfde7ee3b1sm31369645ad.62.2026.07.27.02.40.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2026 02:37:29 -0700 (PDT)
+        Mon, 27 Jul 2026 02:41:09 -0700 (PDT)
 From: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 X-Google-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
-Date: Mon, 27 Jul 2026 10:37:26 +0100
+Date: Mon, 27 Jul 2026 10:40:55 +0100
 To: Jonathan Cameron <jic23@kernel.org>, 
 	Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
 Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
@@ -73,12 +73,12 @@ Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
 	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
 	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v9 10/17] iio: frequency: ad9910: initial driver
- implementation
-Message-ID: <k5gfkzynht4d2hqaqhoqbrszah352dblvbopgaxwgwx26maeue@nv3hjwplqqv4>
+Subject: Re: [PATCH v9 08/17] iio: core: add hierarchical channel
+ relationships
+Message-ID: <6tdoluaxt24zpkb4rrfe56lcb7ohphkbvi2klqplw7zibxy6xs@yi6m7bydrqaq>
 References: <20260722-ad9910-iio-driver-v9-0-459d1df5ac56@analog.com>
- <20260722-ad9910-iio-driver-v9-10-459d1df5ac56@analog.com>
- <20260725233354.369b3fa2@jic23-huawei>
+ <20260722-ad9910-iio-driver-v9-8-459d1df5ac56@analog.com>
+ <20260725232432.7a0d4292@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -87,93 +87,65 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260725233354.369b3fa2@jic23-huawei>
+In-Reply-To: <20260725232432.7a0d4292@jic23-huawei>
 
-On 25/07/26 23:33, Jonathan Cameron wrote:
-> On Wed, 22 Jul 2026 16:50:19 +0100
+On 25/07/26 23:24, Jonathan Cameron wrote:
+> On Wed, 22 Jul 2026 16:50:17 +0100
 > Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 > 
 > > From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 > > 
-> > Add the core AD9910 DDS driver infrastructure with single tone mode
-> > support. This includes SPI register access, profile management via GPIO
-> > pins, PLL/DAC configuration from firmware properties, and single tone
-> > frequency/phase/amplitude control through IIO attributes.
+> > Add parent-child relationship between iio channels by creating a parent
+> > pointer field in iio_chan_spec struct and exposing a sysfs attribute that
+> > returns the parent channel prefix.
 > > 
 > > Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> Hi Rodrigo.
 > 
-> ...
+> One small thing below
 > 
-> > diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
-> > new file mode 100644
-> > index 000000000000..b41b011af281
-> > --- /dev/null
-> > +++ b/drivers/iio/frequency/ad9910.c
+> Jonathan
 > 
-> ...
-> 
-> > +static int ad9910_parse_fw(struct ad9910_state *st)
+> > ---
+> >  drivers/iio/industrialio-core.c | 40 ++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/iio/iio.h         |  5 +++++
+> >  2 files changed, 45 insertions(+)
+> > 
+> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> > index aa9d6474edd9..f7e3048354b9 100644
+> > --- a/drivers/iio/industrialio-core.c
+> > +++ b/drivers/iio/industrialio-core.c
+> > @@ -856,6 +856,22 @@ static ssize_t iio_read_channel_label(struct device *dev,
+> >  					 to_iio_dev_attr(attr)->c, buf);
+> >  }
+> >  
+> > +static ssize_t iio_read_channel_parent(struct device *dev,
+> > +				       struct device_attribute *attr,
+> > +				       char *buf)
 > > +{
-> > +	static const char * const refclk_out_drv0[] = {
-> > +		"disabled", "low", "medium", "high",
-> > +	};
-> > +	struct device *dev = &st->spi->dev;
-> > +	const char *prop;
-> > +	u32 tmp;
-> > +	int ret;
+> > +	const struct iio_chan_spec *chan = to_iio_dev_attr(attr)->c->parent;
+> > +	ssize_t len;
 > > +
-> > +	st->data.pll_enabled = device_property_read_bool(dev, "adi,pll-enable");
-> > +	if (st->data.pll_enabled) {
-> > +		prop = "adi,charge-pump-current-microamp";
-> > +		if (device_property_present(dev, prop)) {
-> > +			ret = device_property_read_u32(dev, prop, &tmp);
-> > +			if (ret)
-> > +				return dev_err_probe(dev, ret, "property read: %s\n", prop);
+> > +	len = __iio_chan_prefix_emit(dev, chan, IIO_SEPARATE, buf, PAGE_SIZE);
+> > +	if (len < 0)
+> > +		return len;
 > > +
-> > +			if (tmp < AD9910_ICP_MIN_uA || tmp > AD9910_ICP_MAX_uA)
-> > +				return dev_err_probe(dev, -ERANGE,
-> > +						     "invalid charge pump current %u\n", tmp);
-> > +		} else {
-> > +			tmp = AD9910_ICP_MIN_uA;
-> > +		}
-> > +		st->data.pll_charge_pump_current = tmp;
-> > +
-> > +		prop = "adi,refclk-out-drive-strength";
+> > +	buf[len++] = '\n';
 > 
-> Sashiko did have a question about this.  I didn't care enough about the particular
-> combination restrictions on the clock being output, but please have a quick check.
-> https://sashiko.dev/#/patchset/20260722-ad9910-iio-driver-v9-0-459d1df5ac56%40analog.com
-> 
-> If it is possible but nonsensical, add a comment here.
+> Use sysfs_emit_at() for this rather than a direct write. I'd rather not have
+> to think about what happens if __iio_chan_prefix_emit() returns exactly
+> PAGE_SIZE().
 
-The datasheet states:
+We can have __iio_chan_prefix_emit() called with PAGE_SIZE - 1?
 
-	When the PLL is enabled, a buffered clock signal is available at 
-	the REFCLK_OUT pin. This clock signal is the same frequency 
-	as the REF_CLK input. This is especially useful when a crystal 
-	is connected because it gives the user a replica of the crystal 
-	clock for driving other external devices
+Filenames should be capped at 255.. so that NAME_MAX << PAGE_SIZE 
 
-REFCLK_OUT is basically the input to the PLL added some gain. So that is only
-applicable when PLL is enabled. By default, st->data.refclk_out_drv is zero
-so it is disabled when PLL is not being used.
-
-This DT-property (adi,refclk-out-drive-strength) is also dependent on the
-adi,pll-enable property in the bindings.
-
-> > +		if (device_property_present(dev, prop)) {
-> > +			ret = device_property_match_property_string(dev, prop,
-> > +								    refclk_out_drv0,
-> > +								    ARRAY_SIZE(refclk_out_drv0));
-> > +			if (ret < 0)
-> > +				return dev_err_probe(dev, ret, "property read: %s\n", prop);
+As you suggest, we need a local buffer. Not sure we need to do an extra copy...
+ 
 > > +
-> > +			st->data.refclk_out_drv = ret;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
+> > +	return len;
 > > +}
+> > +
 
 -- 
 Kind regards,
