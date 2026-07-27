@@ -1,88 +1,88 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865B93815DF
-	for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 14:23:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42645382F08
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 14:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785162210; cv=none; b=fZfU2ljvDbAsY37ezR87MlZimLzKLpRqpHTvVxn3c2npKplrHoZpygSrD7xt0+wU/9w9hBjpnAFAAb7yFilYllN8qvAZ2gwA+vRKwxGNKNLCpjsV1KRc1RORzeDxH9VhR8A6YYl9eDYRY1mc9yPDpNSqJXnKiM+LGQEBCSb98N4=
+	t=1785162217; cv=none; b=dl23mubKkKQ2RignJCihzEEGg0OpQ7edhek+j0JGCACogmO05VirvC60wKvcuV4l/jrubP5aFNJye/WlrI0Y+wyUFRjvhcWZyIbrbptB9bvxOce+vYb37DzR/tsPKq6SD+xivN5ji5GFWwJ7ksvfBtq1v2xP9tIdlcIcsTrxD6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785162210; c=relaxed/simple;
-	bh=b2APw6QMKkRhQDm4skrvz2fmpdUst56rE5+WErZDaLo=;
+	s=arc-20240116; t=1785162217; c=relaxed/simple;
+	bh=lY2yoHcldcA+3NaI8lXXUOj0RQzCzCCOyPwbI6I3/FA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=A9jAfZ5RCEWDTnmKI5x0f22uYY78nWRhZ9aKr/R7pjVimRP/hImE4ux38Z9E3ZSaAp+DWqRlCGNKp9l5u/twB2ChpApIg0GRzjneqyx/mTCbZ3IUYAYXq0cKqwkOUF2Ul2DYX9/8CbWvDtin8Hz0sg+da0JcZFR5WSiZx5oRM9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pj/mf+fL; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=PPjIdS0u; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=IihWgmU6RMw2Yfk/pMmzroR9ht0LPGB/JwyH9vS73JiTQX6zrudn6ajlFY+CM8PmvG2HSidzkW/oAbhZPTjmfmJeDZIMTTzY8ZaxvTh4Mx2OFo7dTUKw9NIF9rokhF6PoAEBoyWqKFDAZcoDUN/sZPh+wNyTaf6Q8H0yaabD44w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KRKk0Ali; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=K5LD5oJV; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pj/mf+fL";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="PPjIdS0u"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KRKk0Ali";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="K5LD5oJV"
 Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66RDlSVV4065465
-	for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 14:23:27 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66RDlSBi4065457
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 14:23:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WOSx4enz7zetc1w/+P4mM5Jxf3PccCyPcjq9sbRYwh8=; b=pj/mf+fLOFcpaLyd
-	b9SuBKUY1Z41D0OY6Gsa0e5X37K9p+g7YN8uaZzeca/mbxvoANI78Dvmi7kCYDgE
-	VyvfhLNMYJCkyzBDXxrFCB4aZpD0PGglg9XNDloBbKtKCanrLLLEo3GaXIjFyBmS
-	s4vstwkT/RiQ5Fwl9Sf8EA/GiqyysWRzyx8IUy8w30of/hh/7zAiO/EG+ZSkweFX
-	8WlqslgKoHuKplKX9q7KbHUMpeZtaAXI+too32a6XrpD/PB5IeMrF+oH0PQDLxMx
-	LVG/E3lP9Q0ccf3wth5iZrn8eeas2xtWqvkunUR8VSQNWIhmYNbml/bTGunkTBpV
-	qm5qjg==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fngysuv1m-1
+	LqMjPqmNKTABTQyu4/oXXNeGMN13hbmHy5tUZLQLrYc=; b=KRKk0Ali4VxzfNdy
+	mSi9EKlqwIze2xfh71SEbCde5KOZvAdpu82P6btTVjzuEYhLcz7j6fVSZYlFQEw0
+	T6D3p9BhkY3HrJo2aChnjXMOt/Q9pMUCdigMWc/P3tO65zXpV5s6EX/n18T/eDAU
+	lMenKyJWZIv7CDuWKs9BcaSPRCWue47QybrYE34b/siNX9SHhLpf3yE3bMUokhvm
+	8Azzko5St2gXl7mEIbU6aqcz4XcCq4ZNvol6C8rxnKYTDg11AiwvoHirk7h7K7z7
+	XvnhzLWTSl1wPW22HzfADoyDSsfl1YDVcqNRUVXcgmcqtH+4viL2q0yXQdCQn7zq
+	ydHi1w==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fngysuv26-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 14:23:27 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2cca3673560so3415525ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 07:23:27 -0700 (PDT)
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 14:23:34 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38e667368f0so4539771a91.2
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Jul 2026 07:23:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1785162207; x=1785767007; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1785162213; x=1785767013; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=WOSx4enz7zetc1w/+P4mM5Jxf3PccCyPcjq9sbRYwh8=;
-        b=PPjIdS0uD6ZJktCJJcQ9gM56L3X7SSSoWehO+J0ye0/nqjKpwOWy2brSyRpxMHftxx
-         e/d/gPFWUYLKYw/zvQATERGBo/3lYuICcnbPAyGY4ZTrFvbXa1oSWbnlukWJBiYw/qPK
-         5SeZ29aptdxe1cmt9CAVoqKpw4Fy/ecQ2ZpSV6qFWKzwUVQf1k8fUbUdzG4MY7sI9wu5
-         MfvMabw3+2SdW87SasUuT8T36kGUziQXaBCuuxbHKezCbV+yy+ft+wwL4th0wVMWOLHW
-         whCP377Y/qTh//jmS+KxUYVGvaBPt7RD8Cqy52hVdXMUhzY493m3gSQvfgeUeFtBe8gq
-         0SMw==
+        bh=LqMjPqmNKTABTQyu4/oXXNeGMN13hbmHy5tUZLQLrYc=;
+        b=K5LD5oJVQiec6nHlyaUCCrU9+yyqCtLVQbPHHFpKj+dn1eFxRsVrqFDDlWLXlsvQrg
+         bqxiY/lWCoaXYP42So4sb3NuprcRb0mzJioLWxZL9kiszhgec3fiNc9T3bl006AZWsMF
+         GnHtkEGzsTEsvBCj8uELpm4pFidulboBqCYmyWEW8iQ96JasyTi+t3DN7C56/eZ8EBpZ
+         nHURhS5UgR77JMYC8YL7bf3JKf7TgYCc8Fe0GHuat3huvk3tos0v2VzpdGoz+PM6zRHi
+         vIdXZgy6xnYkf9tBS3hT+cGA2jV3umTKyvlx70Mswoey14ppneQrgvyleIeusDrkZmrC
+         bMxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785162207; x=1785767007;
+        d=1e100.net; s=20251104; t=1785162213; x=1785767013;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=WOSx4enz7zetc1w/+P4mM5Jxf3PccCyPcjq9sbRYwh8=;
-        b=YOdi03efJxH+LEq2RihYFohBjPOw+NBgkbqxBrYBb/lycfZHMVlBKEaLQ9zdUJSjXU
-         LI4DPGjegzYH1M0tV5Cda+YkCa94Z7ZF969/pAx9AO3rn052IbyT46rLsgs7k74KTxJ1
-         jJWcsAW5WKOYlI/+wsN/srXiiSnlxjJcEnkjIx5X9QQktuQtkTGJrm41tysXyofHmV2H
-         FNO/ri949+mkxNIWCwtiDZDx2oB6fx06vdRQWTf9phm88zrpUv1b4hW0WiPnMlfTCQaC
-         ECPjVy0myCuu7bJN0bDYnZcgtloHU3q9IyzF1H6CEKqV0iBZ10jTvVrVw0rw1A7gpS4C
-         TuWw==
-X-Forwarded-Encrypted: i=1; AHgh+RonFlTAaTYysehiu+o2/yL8woXrKu2PU4Lp3P1Be5UCNWAtesrFJbOvcfv4v0wbk5YNJpPDfgZrkQR5y0B/Bp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUw9icTAEFCj0jsTOIKpsS08PY0vJghB5arTC2JPa46GJ6a2Ui
-	zz7UjygiQ4WMNvpzxZakDEZWt+zgQHnsKy/fMSEY1RAZt5TJgREcO2fDWtM0AMlrMiFGcGQbTHG
-	xwyBBRnaAesLHCwYPeBnqof0Vw7elsKbwlI+5i7PcJP/La8gJraUZTIoAkUFNXGLtJBPdjbg=
-X-Gm-Gg: AR+sD130FB2WTr8d3e64EC7u9xrOBvzyyZ6KypMUXiGVbUuKqwW6/0eXCKIJakuQvjv
-	8ymin1qc8luxSh1gUQkHTnLB49vZmzr0wjxGkVQi/HdB1HW6Ecc/UpBeG5BvRhNKr4lBqLukvPM
-	+F8jTF31s4rkTlxYPk94aNhtDjfrLj8Km/I0E9lWoBuvjsdRwhZHkkobgrTV1cR5dEo5uUCoIQj
-	TwK6aTsy3sbcZCpbRExYrKnbu2PenXx2of1pAoBWGRFo/9UleLYzv6Tx+KMmdCtFGJhWM/+2okX
-	4nEWcB0kW/QQSwm7kIqZ0UdPuMyBk45Zb3DLYvUO0lV3YgXOMUgt4sw8pBv8e/tPB7V8iLAIQ/y
-	nOSekOqNECTvZCUlQaXoUWAC1BIsc7Q==
-X-Received: by 2002:a17:903:948:b0:2ca:619f:9733 with SMTP id d9443c01a7336-2cfde79fc06mr80176845ad.17.1785162206521;
-        Mon, 27 Jul 2026 07:23:26 -0700 (PDT)
-X-Received: by 2002:a17:903:948:b0:2ca:619f:9733 with SMTP id d9443c01a7336-2cfde79fc06mr80176425ad.17.1785162206107;
-        Mon, 27 Jul 2026 07:23:26 -0700 (PDT)
+        bh=LqMjPqmNKTABTQyu4/oXXNeGMN13hbmHy5tUZLQLrYc=;
+        b=tA83Lg1oUe+D0/kgXEhwfA8N/a5Wgip1RTKlSYczp+68pcMJ7Qc0XSey5IysfEMDvq
+         4d4PFYaAroIAJnZ1z5R5X/IsDiyYh9ftgg5xMJeKOIQNXW3ysT0rN5iuEYhkxN1Ak+Q+
+         bouAsRHgTfLCqz6Z2mB6bvBx+6GpuLqmvrcs+kgGk5d5Tk0wdeIya0j+IxXjz2A7X8t+
+         D5ZooiIFAsBjpps/kA0lV5yxIo7i/7Eu3UASpgWADaCG0XFQ/sG/YtTs+2aAKTJ40xaF
+         weZ7C/c5vTAHkdJ4dDL9DlWGs/sYSdKAWyhG3vml4jYg1JeOEc5n9Z19NkUjXznXi519
+         IjTw==
+X-Forwarded-Encrypted: i=1; AHgh+RqAO4V6J6stCxvrsHJH2o68OGQF4e6Thv5QhzrvK6byZSLhmpxgkuW+w/VV3mYStA+gSIsT6Fb6N1KNVN/eoIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+xDQuo8xSP0N3pJmycNoTPRhcnlDWizgk3L7C7aMJ5bssHCtg
+	2rzcyDPMcgnnKw4Us7o5FqWrbjIObipQxhSAATMKci2SZoGPQiCBKP6N80QePadNkS7sodSkY4q
+	WDW0zvjSsHzXz7ifCuOwkUPFPtHZOuMuccvjcBykttZhjUpPCFBox0l2JyjSvdF94DM0b9yk=
+X-Gm-Gg: AR+sD13PDafcmEYggqyXXtjGWemrytsbaqKhtTr2/bqf/ZzcR554/QGsB5pSoaRNmbH
+	TDI7azFDbeAjL/5NKDT6jqSbMhqDLf7CHaKdzwp8vQUu0iu9UZzl5XyQpILNENtzdT+Kh4YmGWs
+	sXUga+XoA+EKByR/38W8g69MxOqXJrFyH6PXfX/fdIUx12gTVEQTkdG0t74lgKOgzdHKMPB2ayl
+	GW2NfZA9uTVaVrXTT/yBKFydD5fhvTD7BGpgt/19hu32Yd07V5A6tuiCR1X+22q2mQg1JTML5ry
+	kt+87H0ufTTs+VsG4yYvo6fUMBULF/MVvlTeNGAd/QmrApY9ZWt3STEKqm/KGT/DI3xgtZEso27
+	dbECNX7BPn9RGATAKCKtYXQvZIakbbQ==
+X-Received: by 2002:a17:902:d48b:b0:2ca:d151:383a with SMTP id d9443c01a7336-2cfde7adcaemr86494195ad.20.1785162213490;
+        Mon, 27 Jul 2026 07:23:33 -0700 (PDT)
+X-Received: by 2002:a17:902:d48b:b0:2ca:d151:383a with SMTP id d9443c01a7336-2cfde7adcaemr86493745ad.20.1785162212992;
+        Mon, 27 Jul 2026 07:23:32 -0700 (PDT)
 Received: from hu-gkohli-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cfde81d7f5sm36608755ad.83.2026.07.27.07.23.19
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cfde81d7f5sm36608755ad.83.2026.07.27.07.23.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2026 07:23:25 -0700 (PDT)
+        Mon, 27 Jul 2026 07:23:32 -0700 (PDT)
 From: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-Date: Mon, 27 Jul 2026 19:52:20 +0530
-Subject: [PATCH v6 3/9] remoteproc: qcom: pas: add support for TMD thermal
- cooling devices
+Date: Mon, 27 Jul 2026 19:52:21 +0530
+Subject: [PATCH v6 4/9] remoteproc: qcom_q6v5_pas: enable QMI TMD cooling
+ support
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -91,7 +91,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260727-b4-qmi-tmd-v6-3-973cd3a226af@oss.qualcomm.com>
+Message-Id: <20260727-b4-qmi-tmd-v6-4-973cd3a226af@oss.qualcomm.com>
 References: <20260727-b4-qmi-tmd-v6-0-973cd3a226af@oss.qualcomm.com>
 In-Reply-To: <20260727-b4-qmi-tmd-v6-0-973cd3a226af@oss.qualcomm.com>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -115,32 +115,32 @@ Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
         manaf.pallikunhi@oss.qualcomm.com
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785162177; l=5129;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785162177; l=3908;
  i=gaurav.kohli@oss.qualcomm.com; s=20260302; h=from:subject:message-id;
- bh=b2APw6QMKkRhQDm4skrvz2fmpdUst56rE5+WErZDaLo=;
- b=0pwnrB6QIaiUmPu8luDEOMkcVQ2xIJ3uOwBAIw+D5+F3nWzeuCbhfM/xSe9x28CkVtONk9sfR
- KGMVUBUFlb1DG9qIxQx+kAAlh4xGjoF4NmsE8uqcCOEIQYxsQwpD+ym
+ bh=lY2yoHcldcA+3NaI8lXXUOj0RQzCzCCOyPwbI6I3/FA=;
+ b=NeDCgOWKfvQfPbiBGlv8v4h+J0TA3CDp3WSY2FOn/Sipv4ba2znp8p0drrEA8UF7va2mTdFIb
+ bjSzdydwb0jD6kju7rc+MVH+ZpDlJQDGgz6w4sxZHk1HEWIZpzwaPdW
 X-Developer-Key: i=gaurav.kohli@oss.qualcomm.com; a=ed25519;
  pk=IdNsqe8rWsF6dbpGHfwPEH9zM0nbOdRH72HxUT9qPak=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI3MDEzNiBTYWx0ZWRfXyphQjoaABGCx
- YdqrdYFBcgfv7RFmaJ7JRBT88Heu5Laty+6fUex6KWon6S4n5MQDhKSG4GqH13uSWf/PPb71Iy2
- mLQJVAUIV6lWNEruiec++kdyaT+gHdOvBKoaKRElw6IeVgBMKHKaJL3JWAs1b9DN3ALCyqflM12
- PybsNbyxzZ6Ukb5xJI1dRkZeUxdcAc9KTis3Jam4qJzTx6L9KG5wmLNSOiuw3P7ig46BnYbe719
- gFQthVs0+UQzgvZCzSHDF35Zhx25gLT49PxINADriZ3QE1aDnuID+9GRhMRSl/ujFmQ0CIlpiQw
- bykfaJjCicaY9SBwguLcRSMRgiTBdDxjDHa7ZioeWBIgs4pEMEG6N5Aplntjr9fFzRESSedGHNf
- kqb4///QtpA44KNO6ojJJxMhMpRCXnJySU54uZrYMWYfBm5+gagQ77UkyH/cul2zSCKtN36l28E
- DxBSigbZzChkywkcP1w==
-X-Proofpoint-GUID: hCmuWs5WMuEBLZ1UkG1rqenut7ugE8d1
-X-Authority-Analysis: v=2.4 cv=DNG/JSNb c=1 sm=1 tr=0 ts=6a6769df cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI3MDEzNiBTYWx0ZWRfX4IMYr5B77bqs
+ wO317cQDGcMKnISi42Y/mGWxP3Z+NRnoJplskutI7sPu6RPEaZedglZTfsTniJSX0IC7MI2Usfe
+ /f3QAdoNNrnxeYvNDYoxe/x1Mribh0J0NA+WgQfrYEcMShq6amcURZW8Was4OqYcvU7mh1k5fyY
+ hslzphZni4oTUu+Vb79GZla5h84YN4wUCPu04JUSRJwj1jXymmX3gUpN1yvbkTDe+dkjIcsjSDG
+ jFLpXlzx/XZ7TDO/wT78yunaXoW4uI1s0ubpOmv9826Ez0YPQ7kabKl0lCSHR/gSXJvb/Jx+g/2
+ WPmc9CTIUNLoHKa+LhnWS+04dkhYjRlkvGSI5tTt09DrRo4GLqydTxb0i56Gy6gmupX99qdtr4S
+ B8+OXNZyoCu6zJe4v6UjPNTZADHdmTYIMqQuXhVKE+CXOzu+4c8hrdTEvYM4OdFtZ6vPjokZKpT
+ eD4qSTH16grWTf0NRHw==
+X-Proofpoint-GUID: JaAoP7DYHdP-0eHqO7uOMP2y93FoiITI
+X-Authority-Analysis: v=2.4 cv=DNG/JSNb c=1 sm=1 tr=0 ts=6a6769e6 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
  a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
- a=EUspDBNiAAAA:8 a=JsyU97BMdJ6RvXteW0AA:9 a=+jEqtf1s3R9VXZ0wqowq2kgwd+I=:19
- a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI3MDEzNiBTYWx0ZWRfX0au1ICp+r/Oc
- p6ce9vJOqCLwbTEhHQjd0jkpFVG7S71hTYLTfEftejwluW8j2WBWACd1w+pbH3je7p/49ivdPpc
- l2BAx5QDL2yMGMPmP/8veomQMhZ1dro=
-X-Proofpoint-ORIG-GUID: hCmuWs5WMuEBLZ1UkG1rqenut7ugE8d1
+ a=EUspDBNiAAAA:8 a=j6jQExit_mXiN_RbaP8A:9 a=QEXdDO2ut3YA:10
+ a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI3MDEzNiBTYWx0ZWRfX+k1P+mRlcGnx
+ pCP3Adw2zHReH3xlO4TSPKGE6HoE5vu/SlgQi7+3FmRTluVY5gSagG/e0LxNM1WZFpII5ckbGeC
+ 8Iazcp+O0LEmTSxmOxhQQAyVQOxBgXg=
+X-Proofpoint-ORIG-GUID: JaAoP7DYHdP-0eHqO7uOMP2y93FoiITI
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-27_04,2026-07-24_02,2025-10-01_01
@@ -150,191 +150,115 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607270136
 
-Register Thermal Mitigation Devices (TMDs) for PAS-managed remote
-processors to enable thermal throttling through QMI.
+Enable Thermal Mitigation Device (TMD) support for PAS-managed CDSP and
+modem remote processors on platforms that expose the QMI TMD service.
 
-This allows the thermal framework to request mitigation when remote
-subsystems such as modem and CDSP contribute to thermal pressure.
+This adds per-platform TMD configuration in qcom_q6v5_pas for:
+- Hamoa (X1E80100) CDSP
+- Kodiak CDSP and modem
+- Lemans (SA8775P) CDSP
+- Talos CDSP
+- Monaco CDSP
 
+For each remoteproc, the configured TMD QMI instance ID is used to bind to
+the TMD service running on that subsystem (e.g. CDSP: 0x43, modem: 0x0).
+The driver then uses the corresponding TMD endpoint names ("cdsp_sw",
+"pa", "modem") for cooling-device registration.
+
+QMI TMD identifies mitigation endpoints by name, while DT thermal bindings
+reference cooling devices by id. This change provides the mapping
+between DT cooling indices and QMI TMD names, allowing remoteproc nodes
+with #cooling-cells to act as cooling devices in the thermal framework.
+
+With this in place, thermal policies can request mitigation from CDSP and
+modem subsystems via QMI under thermal pressure.
+
+Reviewed-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
 Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
 ---
- drivers/remoteproc/Kconfig         |  1 +
- drivers/remoteproc/qcom_q6v5_pas.c | 90 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 90 insertions(+), 1 deletion(-)
+ drivers/remoteproc/qcom_q6v5_pas.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index 65befdbfa5f7..152d7a53aa09 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -229,6 +229,7 @@ config QCOM_Q6V5_PAS
- 	select QCOM_PIL_INFO
- 	select QCOM_MDT_LOADER
- 	select QCOM_Q6V5_COMMON
-+	select QCOM_QMI_TMD if NET
- 	select QCOM_RPROC_COMMON
- 	select QCOM_SCM
- 	select QCOM_PAS
 diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index 25599d728208..07336a2d75f7 100644
+index 07336a2d75f7..ab23c371601f 100644
 --- a/drivers/remoteproc/qcom_q6v5_pas.c
 +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2016 Linaro Ltd
-  * Copyright (C) 2014 Sony Mobile Communications AB
-  * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-  */
- 
- #include <linux/clk.h>
-@@ -26,8 +27,10 @@
- #include <linux/regulator/consumer.h>
- #include <linux/remoteproc.h>
- #include <linux/soc/qcom/mdt_loader.h>
-+#include <linux/soc/qcom/qmi_tmd.h>
- #include <linux/soc/qcom/smem.h>
- #include <linux/soc/qcom/smem_state.h>
-+#include <dt-bindings/thermal/qcom,pas.h>
- 
- #include "qcom_common.h"
- #include "qcom_pil_info.h"
-@@ -38,6 +41,16 @@
- 
- #define MAX_ASSIGN_COUNT 3
- 
-+/**
-+ * struct tmd_name - TMD device name to cooling-device index mapping
-+ * @name: TMD device name
-+ * @id: Cooling-device index used as #cooling-cells cell 0 in DT
-+ */
-+struct tmd_name {
-+	const char *name;
-+	int id;
-+};
-+
- struct qcom_pas_data {
- 	int crash_reason_smem;
- 	const char *firmware_name;
-@@ -58,6 +71,10 @@ struct qcom_pas_data {
- 	int ssctl_id;
- 	unsigned int smem_host_id;
- 
-+	unsigned int tmd_instance_id;
-+	const struct tmd_name *tmd_name;
-+	int num_tmd;
-+
- 	int region_assign_idx;
- 	int region_assign_count;
- 	bool region_assign_shared;
-@@ -122,6 +139,8 @@ struct qcom_pas {
- 
- 	struct qcom_pas_context *pas_ctx;
- 	struct qcom_pas_context *dtb_pas_ctx;
-+
-+	struct qmi_tmd_client *tmd_inst;
- };
- 
- static void qcom_pas_segment_dump(struct rproc *rproc,
-@@ -798,6 +817,64 @@ static void qcom_pas_unassign_memory_region(struct qcom_pas *pas)
- 	}
+@@ -1061,6 +1061,15 @@ static void qcom_pas_remove(struct platform_device *pdev)
+ 	device_init_wakeup(pas->dev, false);
  }
  
-+static int qcom_pas_setup_tmd(struct qcom_pas *pas, const struct qcom_pas_data *desc)
-+{
-+	struct qmi_tmd_client *tmd_inst;
-+	const struct tmd_name *tmd;
-+	const char **tmd_names;
-+	int i, ret;
++static const struct tmd_name cdsp_tmd_name[] = {
++	{ .name = "cdsp_sw", .id = QCOM_TMD_CDSP_SW },
++};
 +
-+	if (!device_property_present(pas->dev, "#cooling-cells"))
-+		return 0;
++static const struct tmd_name modem_tmd_name[] = {
++	{ .name = "pa", .id = QCOM_TMD_PA },
++	{ .name = "modem", .id = QCOM_TMD_MODEM },
++};
 +
-+	if (!desc->tmd_name || desc->num_tmd == 0)
-+		return 0;
-+
-+	tmd_names = devm_kcalloc(pas->dev, desc->num_tmd,
-+				 sizeof(*tmd_names), GFP_KERNEL);
-+	if (!tmd_names)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < desc->num_tmd; i++) {
-+		tmd = &desc->tmd_name[i];
-+
-+		if (tmd->id >= desc->num_tmd) {
-+			dev_err(pas->dev, "Invalid TMD id %d for '%s'\n",
-+				tmd->id, tmd->name);
-+			return -EINVAL;
-+		}
-+
-+		if (tmd_names[tmd->id]) {
-+			dev_err(pas->dev, "Duplicate TMD id %d for '%s'\n",
-+				tmd->id, tmd->name);
-+			return -EINVAL;
-+		}
-+
-+		tmd_names[tmd->id] = tmd->name;
-+	}
-+
-+	for (i = 0; i < desc->num_tmd; i++) {
-+		if (!tmd_names[i]) {
-+			dev_err(pas->dev, "Missing TMD mapping for id %d\n", i);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	tmd_inst = qmi_tmd_init(pas->dev, desc->tmd_instance_id, tmd_names,
-+				desc->num_tmd);
-+	if (IS_ERR(tmd_inst)) {
-+		ret = PTR_ERR(tmd_inst);
-+		if (ret == -ENODEV)
-+			return 0;
-+
-+		return ret;
-+	}
-+
-+	pas->tmd_inst = tmd_inst;
-+
-+	return 0;
-+}
-+
- static int qcom_pas_probe(struct platform_device *pdev)
- {
- 	const struct qcom_pas_data *desc;
-@@ -925,16 +1002,24 @@ static int qcom_pas_probe(struct platform_device *pdev)
- 	if (desc->early_boot)
- 		pas->rproc->state = RPROC_DETACHED;
+ static const struct qcom_pas_data adsp_resource_init = {
+ 	.crash_reason_smem = 423,
+ 	.firmware_name = "adsp.mdt",
+@@ -1218,6 +1227,9 @@ static const struct qcom_pas_data sa8775p_cdsp0_resource = {
+ 	.ssr_name = "cdsp",
+ 	.sysmon_name = "cdsp",
+ 	.ssctl_id = 0x17,
++	.tmd_instance_id = 0x43,
++	.tmd_name = cdsp_tmd_name,
++	.num_tmd = ARRAY_SIZE(cdsp_tmd_name),
+ };
  
--	ret = rproc_add(rproc);
-+	ret = qcom_pas_setup_tmd(pas, desc);
- 	if (ret)
- 		goto remove_ssr_sysmon;
+ static const struct qcom_pas_data sa8775p_cdsp1_resource = {
+@@ -1236,6 +1248,9 @@ static const struct qcom_pas_data sa8775p_cdsp1_resource = {
+ 	.ssr_name = "cdsp1",
+ 	.sysmon_name = "cdsp1",
+ 	.ssctl_id = 0x20,
++	.tmd_instance_id = 0x44,
++	.tmd_name = cdsp_tmd_name,
++	.num_tmd = ARRAY_SIZE(cdsp_tmd_name),
+ };
  
-+	ret = rproc_add(rproc);
-+	if (ret)
-+		goto remove_setup_tmd;
-+
- 	node = of_get_compatible_child(pdev->dev.of_node, "qcom,bam-dmux");
- 	pas->bam_dmux = of_platform_device_create(node, NULL, &pdev->dev);
- 	of_node_put(node);
+ static const struct qcom_pas_data sdm845_cdsp_resource_init = {
+@@ -1263,6 +1278,9 @@ static const struct qcom_pas_data sm6350_cdsp_resource = {
+ 	.ssr_name = "cdsp",
+ 	.sysmon_name = "cdsp",
+ 	.ssctl_id = 0x17,
++	.tmd_instance_id = 0x43,
++	.tmd_name = cdsp_tmd_name,
++	.num_tmd = ARRAY_SIZE(cdsp_tmd_name),
+ };
  
- 	return 0;
+ static const struct qcom_pas_data sm8150_cdsp_resource = {
+@@ -1278,6 +1296,9 @@ static const struct qcom_pas_data sm8150_cdsp_resource = {
+ 	.ssr_name = "cdsp",
+ 	.sysmon_name = "cdsp",
+ 	.ssctl_id = 0x17,
++	.tmd_instance_id = 0x43,
++	.tmd_name = cdsp_tmd_name,
++	.num_tmd = ARRAY_SIZE(cdsp_tmd_name),
+ };
  
-+remove_setup_tmd:
-+	if (pas->tmd_inst)
-+		qmi_tmd_exit(pas->tmd_inst);
-+
- remove_ssr_sysmon:
- 	qcom_remove_ssr_subdev(rproc, &pas->ssr_subdev);
- 	qcom_remove_sysmon_subdev(pas->sysmon);
-@@ -960,6 +1045,9 @@ static void qcom_pas_remove(struct platform_device *pdev)
- 	if (pas->bam_dmux)
- 		of_platform_device_destroy(&pas->bam_dmux->dev, NULL);
+ static const struct qcom_pas_data sm8250_cdsp_resource = {
+@@ -1362,6 +1383,9 @@ static const struct qcom_pas_data x1e80100_cdsp_resource = {
+ 	.ssr_name = "cdsp",
+ 	.sysmon_name = "cdsp",
+ 	.ssctl_id = 0x17,
++	.tmd_instance_id = 0x43,
++	.tmd_name = cdsp_tmd_name,
++	.num_tmd = ARRAY_SIZE(cdsp_tmd_name),
+ };
  
-+	if (pas->tmd_inst)
-+		qmi_tmd_exit(pas->tmd_inst);
-+
- 	rproc_del(pas->rproc);
+ static const struct qcom_pas_data sm8350_cdsp_resource = {
+@@ -1430,6 +1454,9 @@ static const struct qcom_pas_data mpss_resource_init = {
+ 	.ssr_name = "mpss",
+ 	.sysmon_name = "modem",
+ 	.ssctl_id = 0x12,
++	.tmd_instance_id = 0x0,
++	.tmd_name = modem_tmd_name,
++	.num_tmd = ARRAY_SIZE(modem_tmd_name),
+ };
  
- 	qcom_q6v5_deinit(&pas->q6v5);
+ static const struct qcom_pas_data sc8180x_mpss_resource = {
 
 -- 
 2.34.1
