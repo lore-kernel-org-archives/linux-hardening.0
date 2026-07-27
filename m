@@ -1,91 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7457211466;
-	Mon, 27 Jul 2026 03:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 143831EBFE0;
+	Mon, 27 Jul 2026 07:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785122554; cv=none; b=uGSO63cl4jQuZ5DQ9RKWTgsL8LB28RegDXRdbaSthJYcKcfR6u0cLBm7Q+VBfN5Cl2+3y97q0voac2tfwhCYxR5UNSFDK5KkdG9KN6JZs5+j9Mx111bvvGJgwxAg5wI4qC40HG5jDLn4l5AK23RSpMXFlhqAVU4cWHEbxbOe5cU=
+	t=1785135845; cv=none; b=hLRLKXYn544NeYamDu24XkI7GO5m74yw7Y/qyWbwjiIXnyiaGoMDWn1efJLHkh6AEBiR+cBQHUkjeNojyove4qtgOfstXb67qbyZEgynFznBdbYf4F+0MEW1fmXkCIN5ql6HiWXBCPkl6q0jyPOC2rTfwokrN62iF5ajcHr8u4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785122554; c=relaxed/simple;
-	bh=8KP4PiBBrRw09s2s62tuo65phqxK1mrxdRNer1iI8zk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hlrITfjYRNX6PtibV0WYqQrOmi/nWVoO2uFZud9uEBLzr4EGCSNPz6BUqeYUIqZP33JtZ3jxxrgBNL5RLks+c9jupywrrTxK6ApuqgIJraXaZB5CLbasSzJQSSzXL7viPMhX/oThpmzp0aM+kvnL42Br5SUHBacYuXRxUq5hmi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1M5A/vL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785135845; c=relaxed/simple;
+	bh=4ltq6LtZBqJVd3I7pMRg9u6HVMA61yXfYDc8FQY5yWE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=anId2Svs4QLsqjHDSTKBPENZQCOwzs2Y0vB9beXdHNM1ibvmGBBiZ9Frju1T1LAkv3zTc9Va/GeDhcLVwOhAKrB67bzvKrQ6gt/1ugOtMlZmFoC9lOuM6eG5+4c7vXVdD6FaGVLeKQd8I67HX02JhT3LA/4It5LjGMp9W3jyts4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ifZFJuEU; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1M5A/vL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0971F000E9;
-	Mon, 27 Jul 2026 03:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785122553;
-	bh=qV4h87/d1gnm+h3+HNsQ5x+Ju2OIOg1VuEoL6D5+CGc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=j1M5A/vLCTdwIa8x8fIK0MsKBsYcUh+ivYwptg4o/7DeNHH/mDLg3zRjX1o3CPfhS
-	 +oXfSspCrBolzfwpNYx0A0vZP0J76doKsNI+t3IcCLCgrsw8ECsNAa9VwILDhBvuLF
-	 WMQeedvpjdp7ETpu7sFsr7a1hZTq/Y3W5QGJROzqtehNKbQpAqceWxCJPvFbXqr6XZ
-	 DQoCYF6ptL4BbD1qHnkzyQGfcE15LgYeLvHufnmC2/6Oy7nsOL/dbAXZrm19jiCGO6
-	 CsJ/+wC2etp8X3w1DVLrto0xRkKffSDOT78Qa8ZZ3YNyrC7L5fmarCk3747V58zVUU
-	 8R8pdNX3eag3g==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Taniya Das <taniya.das@oss.qualcomm.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Qiang Yu <qiang.yu@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v10 0/7] clk: qcom: Add common clkref support and migrate Glymur and Mahua
-Date: Sun, 26 Jul 2026 22:22:28 -0500
-Message-ID: <178512251610.15997.11111449058382808559.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260721-tcsr_qre_0721-v10-0-d2fa68c63b78@oss.qualcomm.com>
-References: <20260721-tcsr_qre_0721-v10-0-d2fa68c63b78@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ifZFJuEU"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77D09143D;
+	Mon, 27 Jul 2026 00:03:51 -0700 (PDT)
+Received: from [10.164.19.51] (unknown [10.164.19.51])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE69E3F86F;
+	Mon, 27 Jul 2026 00:03:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1785135835; bh=4ltq6LtZBqJVd3I7pMRg9u6HVMA61yXfYDc8FQY5yWE=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=ifZFJuEU4VWNW/epbN4+hCZvMbZ69RlJEhdU1cImyCsU9NV6vfU3ttTkEghOFlwvz
+	 WyVNZrWwQeebbS+fCJ88/AMYbNtcuQ6hVWTBqoLzSdhX2nZitlsOgyv8nBgVJ2Gag2
+	 YrcwzppSiJI40iegLyh8rlslss0lNNIm/r6CUOBA=
+Message-ID: <0a312983-3d63-4d60-8ff4-d53dcfff7819@arm.com>
+Date: Mon, 27 Jul 2026 12:33:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Dev Jain <dev.jain@arm.com>
+Subject: Re: [PATCH] mm/usercopy: harden bounds checking for vmalloc
+ allocations
+To: Matthew Wilcox <willy@infradead.org>
+Cc: kees@kernel.org, akpm@linux-foundation.org, gustavoars@kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, ryan.roberts@arm.com,
+ anshuman.khandual@arm.com, david@kernel.org, urezki@gmail.com
+References: <20260722142936.3287702-1-dev.jain@arm.com>
+ <f3db438e-6cf7-4ccf-bd4f-379c549d1e9d@arm.com>
+ <amXldUo3LfIGs-zs@casper.infradead.org>
+Content-Language: en-US
+In-Reply-To: <amXldUo3LfIGs-zs@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On Tue, 21 Jul 2026 22:58:55 -0700, Qiang Yu wrote:
-> This series adds a common clkref_en implementation and converts glymur
-> and mahua to use it, along with the related binding and DTS updates.
+
+On 26/07/26 4:16 pm, Matthew Wilcox wrote:
+> On Sun, Jul 26, 2026 at 02:23:20PM +0530, Dev Jain wrote:
+>> On 22/07/26 7:59 pm, Dev Jain wrote:
+>>> The vmalloc allocator stores the actual allocation size inside the
+>>> vm_struct structure. We can use this bound in usercopy instead of the
+>>> page-aligned va_end to catch usercopy beyond the actual allocation size.
+>>>
+>>> For vmap, the requested_size field is always page-aligned since it maps a
+>>> certain number of pages. Same for vm_map_ram (alongwith, not even having
+>>> a vm_struct). So the check is only relevant for vmalloc mappings.
+>>>
+>>> Because there are early vm areas registered even before vmalloc_init,
+>>> requested_size may be zero. So also check whether the requested_size
+>>> is set.
+>>>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> ---
+>>
+>> Sashiko:
+>>
+>> 1. "Does this locklessly access area->vm after find_vmap_area() has dropped
+>> the busy tree lock?
+>>
+>> If an out-of-bounds pointer falls into an adjacent vmap_area, and that
+>> adjacent area is concurrently freed by another thread, its vm_struct
+>> is freed. Additionally, when the vmap_area is moved to the free tree,
+>> area->vm (which shares a union with subtree_max_size) is overwritten
+>> with an integer size.
+>>
+>> Would dereferencing vm->flags later in this function cause a use-after-free
+>> or a wild pointer dereference?"
+>>
+>>
+>> I don't get it. So usercopy is checking OOB for an object but shouldn't
+>> assume the existence of that object while using it?
+>>
+>> It is a bug in the caller if someone does vfree() while usercopy is operating
+>> on the vmalloc object. I don't think usercopy should handle it. For example
+>> we don't handle it for slabs currently.
 > 
-> The PCIe clkref clocks on Glymur and Mahua gate the QREF block which
-> provides reference clocks to the PCIe PHYs. QREF requires LDO supplies
-> and a reference voltage from the refgen block to operate. The refgen
-> block itself requires vdda-refgen_0p9 and vdda-refgen_1p2 LDOs to
-> function.
+> I think the question Sashiko is getting to is how we handle:
 > 
-> [...]
+> 	char *p = vmalloc();
+> 	copy_to_user(p - 4);
 
-Applied, thanks!
+Thanks Willy, I completely misread Sashiko's point.
 
-[1/7] dt-bindings: clock: qcom: Move glymur TCSR to own binding
-      commit: f9cbc4bddb636dd9d446bfba31f58fbceaf09424
-[2/7] dt-bindings: clock: qcom,glymur-tcsr: Add mahua support
-      commit: 0998cf30b0e0d02dbcdfc1f989b745137b21f682
-[3/7] clk: qcom: Add generic clkref_en support
-      commit: 22c70e5732005356a4bc2601e7dcf878aab101e0
-[4/7] clk: qcom: tcsrcc-glymur: Add regulator supplies and migrate to clk_ref helper
-      commit: 0753091abc4b480abf76cb40c10fffe2764bfcf7
-[5/7] clk: qcom: tcsrcc-glymur: Add Mahua QREF regulator support
-      commit: 0f87ded5f8398182fbac232f0f287d45baa10d6a
+I think this is an existing problem? We are using area->va_end currently,
+so we can access freed memory.
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+But with my patch if the area is freed then area->vm can actually be
+subtree_max_size. So now we use this unsigned long value as a bogus
+pointer to retrieve ->flags and ->requested_size, and may accidentally
+pass the check.
+
+Trivially I can move my diff below the existing check to prevent this.
+
+So now a copy_to/from_user() passing a pointer not lying in the vmalloc
+page can be caught by the existing check. Then, my patch will always
+retrieve the struct vmap_area of the vmalloc allocation we are checking.
+So at least my patch won't regress anything from security PoV.
+
+
+> 
+> My quibble with this patch is that you've made this more precise at the
+> cost of making it more expensive.  Is the extra precision worth the
+> cost?  You're not running into anybody else's allocation (ie these pages
+> are allocated to you exclusively), so I would tend to think not.  It's
+> like calling kmalloc(93) and then accessing bytes 93-95.  It's out of
+> bounds, but they're not anybody else's memory.
+
+I hope Kees can jump in this as I am not a security expert :)
+
+
+So the motivation of this patch is: From the perspective of security,
+I am looking at ways to use arm64 MTE only when it really matters,
+so we can get maximum security with as little MTE overhead.
+
+Currently if we enable KASAN_HW_TAGS (i.e arm64 MTE), the kernel tags
+vmalloc, slab and page allocator.
+
+There is a measurable overhead for vmalloc and slab tagging. If you really
+think about it, the semantics of the vmalloc allocator already give us
+a lot of security.
+
+There are broadly two ways an attacker exploits kernel (C, really) bugs:
+
+1) OOB corrupting a member of the same object (type), and then using
+that corrupted member to do nasty stuff
+
+2) type confusion through
+
+  a) UAF: Using the dangling pointer to access a freed object which has
+	  now been reallocated to a different type
+
+  b) OOB: Corrupting an adjacent object of a different type
+
+I believe 1) cannot be stopped. A way of exploiting 1) is usercopy, but
+vmalloc does not have an analogue of kmem_cache_create_usercopy().
+
+2 (b) doesn't happen since a vmalloc page contains a single vmalloc object
+(although I searched and there is weird code allocating a vmalloc page
+and storing two different structs on it, let us assume this is rare enough)
+
+2 (a) is stopped because vmalloc has a concept of lazy TLB flush: virtual
+regions are freed into the lazy list.
+
+The lazy list is flushed after certain parameters are met, so this gives a
+vmalloc virtual region a natural "quarantine period" wherein a UAF cannot be
+converted into type confusion. The dangling pointer can access memory it
+already had which is not a security problem.
+
+I just noticed that usercopy wasn't checking the actual allocation size in
+vmalloc, so to further harden it without using MTE, I wrote this patch.
+
+(Note that KASAN_HW_TAGS creates a "poisoned redzone" beyond the tail of
+the allocation, so the concept itself is not new)
+
+
+One way I can think of exploiting an OOB into the same page, is vrealloc()
+extending into the attacker bytes. Following is a snippet of vrealloc code:
+
+
+	/*
+	 * We already have the bytes available in the allocation; use them.
+	 */
+	if (size <= alloced_size) {
+		/*
+		 * No need to zero memory here, as unused memory will have
+		 * already been zeroed at initial allocation time or during
+		 * realloc shrink time.
+		 */
+		vm->requested_size = size;
+		kasan_vrealloc(p, old_size, size);
+		return (void *)p;
+	}
+
+
+
+> 
+
