@@ -1,52 +1,52 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA454ADDAE
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 16:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE44F397352
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 17:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785343221; cv=none; b=tYkbjgDF5C/IBrXekt0vNrx5eP4YRxAxVEdXz9ESQHrMTlEKv0C+rsrevTZORqKw/DQzAO+XIe9eyCJFuLYYw9Av9eda7HiKhb1c8UbR+AxjZFxgWBVg2U5/frPmmHS/yTsWTywtLtN6tRyvGmijlLQhrEzxdJea5oSYnX+of28=
+	t=1785347224; cv=none; b=OZMPOwTgtKNQ0OPypR7vDVmyWFvPOk+6diMWHtBw1aHYN5yH3e6p7cZ7EnJFDkZNLM8cC/Hy5+ZkICiupe3sYt/7id0rsrZdfLjFR/wiKN2g6hs/24n5Ji/0Dxn8RdaqYWctayyUoHCEK83WH8soukEX3af9ibHtmKsXmJeFPRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785343221; c=relaxed/simple;
-	bh=P1CBFuFn5URk4XkWKPaomxNCNRYuE86ueT9NGJQmOPY=;
+	s=arc-20240116; t=1785347224; c=relaxed/simple;
+	bh=ap92kwRr/a7fNVjoXbmvUUcASL44iSYrV9EftYQE43U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g3Gk/rGzX9wGfmSOeD3MgFYJMWIEiVM4XGWBEIWIP2nT3mCp4VesYtMnRHuKcJfrabDz2C642nHhCqkcyDQ+YtS7N2ktNeSiZ0QEOROUkMc5xMafEo9cavsxZ85BY1iWwMOT6XmA4QFPjb4Xc7tq0tfgr1iv7kOvfV2AoNgoCRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cN2g3cmD; arc=none smtp.client-ip=91.218.175.171
+	 To:Cc:Content-Type; b=ubhi+TbW7Ri46fpykx1Lgj4WVr+VjWadR9xoKpW2at3C9qhLLa10NWqR5JpwjIMyswOJ+aQslm7vRAqc4yIIGCQJMQk0rq31vhj2MyOqXwISUMT6G+TlFn4cbWop1asCHjRWBuW35Mu5CAn8JLoRek8e2pkZomUzmRI7uGyofHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RDmO3pD9; arc=none smtp.client-ip=95.215.58.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cN2g3cmD"
-X-Forwarded-Encrypted: i=1; AHgh+Ro7vG1h1GwVfj+SB5kYJMzHvBwykS8pHc8+rdxzTkZAFKplzlN1A88aMtj89IvvK7+JEDA7G1wnRcdgE1hm2b0=@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RDmO3pD9"
+X-Forwarded-Encrypted: i=1; AHgh+RpaTfWc1cqlfSw/BaCDEXDM2kx8ke9Gfz6lMjNVo5QlVIQQ33KKdYZywm8DYHekcty7+aXrj3mTGIRRGZjp6gg=@vger.kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785343213;
+	t=1785347214;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hTKtf9y0sAvMzfV5x7XnlOJ9LjJuEUBlqCkfsXA/OVA=;
-	b=cN2g3cmDyeGa76ix8+fYkUWK0CjfBsYItAg9eTsLwL/Hb9+kLexFuC3pRMBuVnijtN8LiP
-	qwuS4orlAQtca2Eyu2pa7oUzK55uWIH7wWo+Uuc7dFubIAXEJj2AGJuRmBLu2RyiDO5Ni1
-	e5r1IXgS4teYT53gXEDccGgUeLFT3D8=
-X-Gm-Message-State: AOJu0YxewV1LlpJaAg0RTejIZJxYfzSkINZt+rBKuVrABHB3LAPGadub
-	wv5dA3CbYpp4X+PaFAoWwO//23VdOdSnmJ2Vhk/TCMouX8DIjDVWznKRUnx3SAnsUiO07GqCGUu
-	qNNvBsJMNqf3EEcJoP+rx+UYRduzpssWVF1oEwFJp
-X-Received: by 2002:a05:622a:c4:b0:517:5ac7:332e with SMTP id
- d75a77b69052e-52b34fbe0femr1827251cf.6.1785343198660; Wed, 29 Jul 2026
- 09:39:58 -0700 (PDT)
+	bh=VeiwwUTVEJhKZbSrlTRImNB7jVC969Sz3ID5XycdSNM=;
+	b=RDmO3pD9Rvr1l9RS+ZgeYHwph4o2PZS95vSkAZPgQvb6AoPr/kHZLKKMpNMzp/keesS8e9
+	lLnfnjDd6OnU9pFLyB7F3ImBrC1Pa28O4RwcbvPf9o5ILOkSzOpWJmYgIF3BYAauaUlenq
+	1Gln6ZB8D/af1zvzFAGDCSW31pZiuIo=
+X-Gm-Message-State: AOJu0YxpC38+QNdpRQ9cQVpk695cvAJJ3H9mv0UEZ9YqALNO3RFAClOv
+	/jjUhjw6Tw6tpZmAw5zEL/YFJbOc+VCTwOfxQy3O+ykU9KQ2/+SZbuisQ/It3RBWJbNWrtMz01R
+	9CVkizL2orA2hU2ys1NLkKly+Y5RlXtjjSuMx2S56
+X-Received: by 2002:a05:6512:340b:b0:5ae:b726:5f1f with SMTP id
+ 2adb3069b0e04-5b2d9b5e246mr38229e87.8.1785347192415; Wed, 29 Jul 2026
+ 10:46:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260720-hybrid-v9-0-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp> <20260720-hybrid-v9-11-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <20260720-hybrid-v9-11-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
+References: <20260720-hybrid-v9-0-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp> <20260720-hybrid-v9-12-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
+In-Reply-To: <20260720-hybrid-v9-12-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Fuad Tabba <fuad.tabba@linux.dev>
-Date: Wed, 29 Jul 2026 17:39:00 +0100
-X-Gmail-Original-Message-ID: <CA+EHjTyY3PnJLHBVWCx1Mjy09a+AztByawZxcSSVtBUfzObC_A@mail.gmail.com>
-X-Gm-Features: AUfX_myAfVdxJqe8mBkarWtUgPMModQPrWR0zonAtg_LmKu_beXtJUxWvL2MWRA
-Message-ID: <CA+EHjTyY3PnJLHBVWCx1Mjy09a+AztByawZxcSSVtBUfzObC_A@mail.gmail.com>
-Subject: Re: [PATCH v9 11/16] KVM: arm64: PMU: Protect the list of PMUs with RCU
+Date: Wed, 29 Jul 2026 18:45:52 +0100
+X-Gmail-Original-Message-ID: <CA+EHjTzqXV7wmzevDdiezK+dbXYB-+SHOTu==_EiBrGpcekMSw@mail.gmail.com>
+X-Gm-Features: AUfX_mxRkX-Zqid_e-BAuwcS03ps7VJdHqOkA3Ldb7q_0YRC6ZP02uwIv7QUnxo
+Message-ID: <CA+EHjTzqXV7wmzevDdiezK+dbXYB-+SHOTu==_EiBrGpcekMSw@mail.gmail.com>
+Subject: Re: [PATCH v9 12/16] KVM: arm64: PMU: Pass the pPMU to kvm_map_pmu_event()
 To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, Joey Gouly <joey.gouly@arm.com>, 
 	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
@@ -65,10 +65,11 @@ X-Migadu-Flow: FLOW_OUT
 On Mon, 20 Jul 2026 at 06:39, Akihiko Odaki
 <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
 >
-> Convert the list of PMUs to a RCU-protected list that has primitives to
-> avoid read-side contention.
+> Replace the VM argument with the pPMU used for event creation. The
+> current caller still passes the VM's default pPMU, but this removes the
+> implicit lookup from kvm_map_pmu_event() so later changes can map events
+> against the pPMU selected for an individual vCPU.
 >
-> Assisted-by: Codex:gpt-5.5
 > Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 
 Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
@@ -76,91 +77,34 @@ Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
 Cheers,
 /fuad
 
-
 > ---
->  arch/arm64/kvm/pmu-emul.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
+>  arch/arm64/kvm/pmu-emul.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 >
 > diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-> index 9ac5f307ea31..c5c505b6fc61 100644
+> index c5c505b6fc61..27db8877f96e 100644
 > --- a/arch/arm64/kvm/pmu-emul.c
 > +++ b/arch/arm64/kvm/pmu-emul.c
-> @@ -7,9 +7,9 @@
->  #include <linux/cpu.h>
->  #include <linux/kvm.h>
->  #include <linux/kvm_host.h>
-> -#include <linux/list.h>
->  #include <linux/perf_event.h>
->  #include <linux/perf/arm_pmu.h>
-> +#include <linux/rculist.h>
->  #include <linux/uaccess.h>
->  #include <asm/kvm_emulate.h>
->  #include <kvm/arm_pmu.h>
-> @@ -20,6 +20,10 @@
->  #define MDCR_EL2_PMU_RECREATE_MASK     (MDCR_EL2_HPMN | MDCR_EL2_HPMD | \
->                                          MDCR_EL2_HLP)
+> @@ -670,10 +670,8 @@ static bool kvm_pmc_counts_at_el2(struct kvm_pmc *pmc)
+>         return kvm_pmc_read_evtreg(pmc) & ARMV8_PMU_INCLUDE_EL2;
+>  }
 >
-> +/*
-> + * arm_pmus is append-only. kvm_supports_guest_pmuv3() feeds persistent
-> + * VM state, so a true result must remain valid after the check.
-> + */
->  static LIST_HEAD(arm_pmus);
->  static DEFINE_MUTEX(arm_pmus_lock);
->
-> @@ -29,7 +33,6 @@ static bool kvm_pmu_counter_is_enabled(struct kvm_pmc *pmc);
->
->  bool kvm_supports_guest_pmuv3(void)
+> -static int kvm_map_pmu_event(struct kvm *kvm, unsigned int eventsel)
+> +static int kvm_map_pmu_event(struct arm_pmu *pmu, unsigned int eventsel)
 >  {
-> -       guard(mutex)(&arm_pmus_lock);
->         return !list_empty(&arm_pmus);
->  }
->
-> @@ -807,7 +810,7 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
->                 return;
->
->         entry->arm_pmu = pmu;
-> -       list_add_tail(&entry->entry, &arm_pmus);
-> +       list_add_tail_rcu(&entry->entry, &arm_pmus);
->  }
->
->  static struct arm_pmu *kvm_pmu_probe_armpmu(void)
-> @@ -816,7 +819,7 @@ static struct arm_pmu *kvm_pmu_probe_armpmu(void)
->         struct arm_pmu *pmu;
->         int cpu;
->
-> -       guard(mutex)(&arm_pmus_lock);
-> +       guard(rcu)();
->
+> -       struct arm_pmu *pmu = kvm->arch.arm_pmu;
+> -
 >         /*
->          * It is safe to use a stale cpu to iterate the list of PMUs so long as
-> @@ -836,7 +839,7 @@ static struct arm_pmu *kvm_pmu_probe_armpmu(void)
->          * carried here.
+>          * The CPU PMU likely isn't PMUv3; let the driver provide a mapping
+>          * for the guest's PMUv3 event ID.
+> @@ -725,7 +723,7 @@ static void kvm_pmu_create_perf_event(struct kvm_pmc *pmc)
+>          * Don't create an event if we're running on hardware that requires
+>          * PMUv3 event translation and we couldn't find a valid mapping.
 >          */
->         cpu = raw_smp_processor_id();
-> -       list_for_each_entry(entry, &arm_pmus, entry) {
-> +       list_for_each_entry_rcu(entry, &arm_pmus, entry) {
->                 pmu = entry->arm_pmu;
->
->                 if (cpumask_test_cpu(cpu, &pmu->supported_cpus))
-> @@ -1088,9 +1091,9 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
->         int ret = -ENXIO;
->
->         lockdep_assert_held(&kvm->arch.config_lock);
-> -       mutex_lock(&arm_pmus_lock);
-> +       guard(rcu)();
->
-> -       list_for_each_entry(entry, &arm_pmus, entry) {
-> +       list_for_each_entry_rcu(entry, &arm_pmus, entry) {
->                 arm_pmu = entry->arm_pmu;
->                 if (arm_pmu->pmu.type == pmu_id) {
->                         if (kvm_vm_has_ran_once(kvm) ||
-> @@ -1106,7 +1109,6 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
->                 }
->         }
->
-> -       mutex_unlock(&arm_pmus_lock);
->         return ret;
->  }
+> -       eventsel = kvm_map_pmu_event(vcpu->kvm, eventsel);
+> +       eventsel = kvm_map_pmu_event(vcpu->kvm->arch.arm_pmu, eventsel);
+>         if (eventsel < 0)
+>                 return;
 >
 >
 > --
