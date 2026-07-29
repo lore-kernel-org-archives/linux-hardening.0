@@ -1,52 +1,95 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C6231714A
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 15:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785338252; cv=none; b=CAAWo6z85A2MYZkO+mvAh0GkYM6hchf3bFcKXdQ2AY1eybTVGn8cty1UDdIlBYZiV7A9YM91I4TUDk6bpSs3cDkeMM/nUvbwFXmya/q0tnehz4JMxic79L20kBJKXOR8Fgcq7ND8u3GK6FvqqW1Nyu9QOnj6ZeDIa9c9NYw+umY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785338252; c=relaxed/simple;
-	bh=+h9sttoR68rx+GrC/rxmaOenAHYFlJ1Bom+m58CnNCs=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFCC4C9003
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 15:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785338426; cv=pass; b=XqqeBqiN/5qrQjt28Dz8Ab725E1uVEDVFhO8wvVqZpCmEE9PwfPeyZucp4MBMOkCoxaqiivvHbNhdpVarbrdaqxC8Yv7CV957KOiI+LO3zIZkpJFkTCXCul/tnfOe9PdL4VI42S5mU39muyy4GW81jcY6r7UJvKTBg31KTMhroQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785338426; c=relaxed/simple;
+	bh=3BAdkEbGZqLfwXxKr2RxchaDtVa9lkmIZOkFm2/fWWA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c9dJTDgguI5cGvHD8XcPr+/MUz26uRPtYVEv7dIszwChwoJarURepv3qavuNVZW0EUHPRtnaAZGa/G7e7JMHj2TDM854MwhDimU+SEmuoKgF9T0HkzriXLaPcfTfJfBJM4VOBtq2/EMRaX8jBz1Ke8uHIJlRq9vdxu1nqOWLYaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CysC5sKL; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 To:Cc:Content-Type; b=Pu1qtATW5YevRX5K0KB6WZi4E4gIvhNeZia9Y6oowNkIWZ1ISQGvyd+htmgDtUl4uKX7HDdzKjWwHDCrlTFg9M1omTu14cit6v+Hw2r5NEPDzxHaBSIjdaFj2K422cqA/rgGnU8aESZngKk96KN06mFlr28mLs7sv89kLFrrlTE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L3vsvpkg; arc=pass smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CysC5sKL"
-X-Forwarded-Encrypted: i=1; AHgh+RoMpkA7MLT1lwPgtgzdPtSWWFqjdkJNTXopeFMFoWMue+7MoER0/Q9EmDPKPfmLhO2gSSDdvrnOH/xDW4vCcSQ=@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785338246;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ti+NqKDTLfm/nZ8f6EX1KwjNP1iMFipkmncvpp1Cax0=;
-	b=CysC5sKLgkaYSDzdjbTUfAivIn3eu6l/jBVtLSbntAPX+duhPB3vKhUg+FTsop0OF09gQ0
-	wrQtNxm6uF0CtzQ7elx8BBEiuVqERyTwOateLZ62CppcTGkWnIlKjuWAR2spgTLMB+gUE0
-	s8Z8IB8bvhXxkuRhw2a3ysMwXJ8dVZA=
-X-Gm-Message-State: AOJu0YwALLsUEg0s1JxLezadddCMCNvRb4zkZm/+uZSGzvAhff7gvikb
-	+UABcMjGvbJuGM1AERmARnv9wozpAFlJQ5A9QVsimPli2dXP8Iw7oDuVfiiAQPo1xcIjr4WcIgd
-	eb6L+rduWmrwXgNMJgArs1fpyKboGIIVGAk3FyPCl
-X-Received: by 2002:ac8:7dc4:0:b0:528:3186:5799 with SMTP id
- d75a77b69052e-52b35089d24mr441161cf.10.1785338243657; Wed, 29 Jul 2026
- 08:17:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L3vsvpkg"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-51c15a5b265so355201cf.0
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 08:20:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785338424; cv=none;
+        d=google.com; s=arc-20260327;
+        b=LYPvkM3mSISxmXJ66QVaMduZA7o091vx35YT7MV23vl+vm6tibGWNIYcF6dv7oRyfC
+         L7FY7lvDpTDqLaTiRCr9kLEfo/h+cubeaskeTzywmvElrdVrkcbkQPpc49UJ049yV2lK
+         P20vYM3BZbKESvMBZDt50wZUweMaEERq5zH8t9Y8eUJFjD0lVAp97wzGwkJk7oY5FY0e
+         lk2dS3hGt8Uuk3/qXY6XtGL9/AY4AWBraIoFfMOkQbXSsXm4YlfZWgEVDAQKXK3z9ttq
+         KD30fSD/8WFG+TRv63me4t1ihPcf+PdGXgAwUpa0+OtEzLTDgXdZB/9ocsCSVpnIjmtD
+         TrxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=JYgZt/35SRTSOby0/Cc9E+OqarqONJhII6K0Q/18dbI=;
+        fh=LtpYi7H9NH/Blv1kAlfLyQVLK6tJarNVCrvXxVA4unA=;
+        b=i8w5c2eYvTRkEMXcTZ/NNNoeW1sgA4a7nvs+SlIo2JU+snWzHGHj7PWqM8Yxtml1fm
+         OqgvqzpSOCvO3xDLVs1S55qodWns5hbCBlSJE+K1DgfL9FE1XYHr3R6NT3e91Wbo+xSJ
+         KOSAUr+fh49EY1IqS3SI4CgaxW52xZ19tmsWHZPI61OOFMMFjMrputTxzYnV6UiWRS9f
+         TLFNI2Ll4GPvWlI/Aymd0ACEEIZOqaNaO4KQAmxWtBmX3wphl1LHPMpQgNPXKG6FL5uf
+         1kq0l3filx7E9GFJnpl6IdLoJnmALNBM9bDxbsQw6cUijmtaQPlRMC3Jq23F7hdp65jp
+         Tzmw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785338424; x=1785943224; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JYgZt/35SRTSOby0/Cc9E+OqarqONJhII6K0Q/18dbI=;
+        b=L3vsvpkgRExvopHd3Qt3RNawb9DUgkDL/KKX2PkCuKGS8Yxs0qXVbCSwmHxm4wsfsE
+         KAMAnlGqO182hQf5ZxMesMwuWlTiWd9kC+tmvCXMlixvmyqUDNv2G4TBgKyOLzu97ZFT
+         SQcHFK2Bm+B0ChJk76n+G5GCodKjnI8z5KBcI8BQIrhcjPoRiHVIfcT0UfkLkTRLqul5
+         nAeF6GBmAVao8/Y5y/2A3GDLkMDQ+9HeMSx4LYO/cbIq8yurfx1ZDSpg+PovsvJwt1G7
+         QHXyj4JxqinzQKMprfJ+9ufVlMOin5/YqbnYwOEIlbkdBf1TYAgmh0X/SwGWY42t2jsA
+         RdiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785338424; x=1785943224;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=JYgZt/35SRTSOby0/Cc9E+OqarqONJhII6K0Q/18dbI=;
+        b=kgigZsgg+/UMRnQP2db9zTVsbzjYBscw2UnCycgRF+hFyn00TonFYAeSAAAHXvzr2Z
+         7OG7aA8inoiEBwjJ8yV4ouId56+XUZbdUL1rF4Sy7SUgbZjEd/bkBlOrGOD4FDtAEwPB
+         nz0hZH+Ic0c44KPmWbEkFnhVqU8pkoAaxJAAIIhYZfCmC3qsTg6M0uqeZLKyezpFynNc
+         D12qoAI4R4NLWQUs19KjZ0y8inwK3rAZG08FzKQfFFpH4BIXYnXoo9RT1PjAjK+k+jxX
+         ICocp/C8qdAC8OOq728bQaxuP/xDWAyPD+w1uHqhbh3WRsdoCwIua1xTeNSjwKBHxINP
+         IuuQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrBYFeslnRdfQnbiiCLB5p0D1GOHVeOj939LraiOb0nezgl0yEib+caBZHxCE7z5Kxo5DOgzBDch6nNpaMinoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV8OZ4ShPKtimnNKvHqnERE4dkDFVp/HwCK1MKRKsF+qSzJaP4
+	GEyRoKlnhcYNMI/snJx93ycx8IR2w5KRjeqWGgHSh+RcZ9XTdqms0DD/eMzjCCnvSa1VJA8kgmN
+	5NJM5hOBaBw1/qBaQsXA2IKPDYtFNPr/HasqNV8hf
+X-Gm-Gg: AR+sD10oZWBGyWiLqwfhB9n4BgL9O71qRvIe1kxo9br8hfB6ANz3K+NXAfQxI+RtPpo
+	w63CNq9a3k2Z4yKK7EAp1SOYgle6x7Xa51h4Ud4AofiXs+zVmhlJ9wxcujfs5V5TFIXLL5xuY7P
+	1vhZIz7TTk2HABde8BdVZWs60ivzwQjYnvqH9/+TzfjR3LoyaAZXRspPw0vZzaxT4ARI8lrGpM2
+	yLwgpfQ54PKAj4tCMbDSFA1zawZhLBHhJcggSMozzyW0MGDXTatu3bf7ZwmzYOQc4thCIqDZJ2p
+	+WQp4u/fYzhKH3JvISwHkdjgb2k0oH7uwOh0N2KelWDvveYZaQTEriILBZyjxY5vc2RgFx3UI8Z
+	yVKKCQjnMgw==
+X-Received: by 2002:a05:622a:9014:b0:517:6010:7c71 with SMTP id
+ d75a77b69052e-52b34e95118mr803001cf.4.1785338408902; Wed, 29 Jul 2026
+ 08:20:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260720-hybrid-v9-0-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp> <20260720-hybrid-v9-2-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <20260720-hybrid-v9-2-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Fuad Tabba <fuad.tabba@linux.dev>
-Date: Wed, 29 Jul 2026 16:16:46 +0100
-X-Gmail-Original-Message-ID: <CA+EHjTwCFXkQ=VHjQt3zt0TORh5YwPVCPBqFqTJF7YULxM-11g@mail.gmail.com>
-X-Gm-Features: AUfX_mxk11pzy6CU19PtboDUtDrd-zS8qSEKUP6-qNGENZgdWGBbQJn1zZ_m4NQ
-Message-ID: <CA+EHjTwCFXkQ=VHjQt3zt0TORh5YwPVCPBqFqTJF7YULxM-11g@mail.gmail.com>
-Subject: Re: [PATCH v9 02/16] KVM: arm64: PMU: Stop updating MDCR_EL2.HPMN
+References: <20260720-hybrid-v9-0-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp> <20260720-hybrid-v9-3-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
+In-Reply-To: <20260720-hybrid-v9-3-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
+From: Fuad Tabba <tabba@google.com>
+Date: Wed, 29 Jul 2026 16:19:31 +0100
+X-Gm-Features: AUfX_mwnVrQrZWbAViwhlMWDHtZtcw4flUU1g4ENMs-4TGfR7On64kQESsXcw8M
+Message-ID: <CA+EHjTyYk0Dcc-8RbvQZHFBZ7HM7cekfg3O5MR4jo57qX5SohA@mail.gmail.com>
+Subject: Re: [PATCH v9 03/16] KVM: arm64: PMU: Freeze counter count after
+ first run
 To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, Joey Gouly <joey.gouly@arm.com>, 
 	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
@@ -60,24 +103,21 @@ Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, Joey Gouly 
 	devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Migadu-Flow: FLOW_OUT
 
 On Mon, 20 Jul 2026 at 06:39, Akihiko Odaki
 <odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
 >
-> KVM allows userspace to write any value to MDCR_EL2.HPMN. However,
-> kvm_arm_set_nr_counters() rewrites HPMN for every vCPU whenever
-> userspace changes the PMU or its counter count. This can discard a
-> value previously restored with KVM_SET_ONE_REG.
+> PMU configuration is VM-scoped, but SET_NR_COUNTERS can be issued
+> through any vCPU. Checking only whether that vCPU's PMU has been
+> initialized allows userspace to change the counter count through an idle
+> sibling after another vCPU has run.
 >
-> The architecture only defines HPMN's value on warm reset. Stop
-> rewriting it after vCPU initialization and update nr_pmu_counters
-> directly instead. reset_mdcr() continues to initialize HPMN from the
-> counter count current at KVM_ARM_VCPU_INIT.
+> Reject the attribute once any vCPU has run. This keeps the VM-wide
+> implemented counter mask and the PMCR_EL0.N value stable after guest
+> execution begins.
 >
-> Fixes: c8823e51b534 ("KVM: arm64: Fix MDCR_EL2.HPMN reset value")
-> Closes: https://sashiko.dev/#/patchset/20260706-hybrid-v8-0-de459617b59d%40rsg.ci.i.u-tokyo.ac.jp?part=6
-> Assisted-by: Codex:gpt-5.5
+> Fixes: b7628c797376 ("KVM: arm64: Allow userspace to limit the number of PMU counters for EL2 VMs")
+> Assisted-by: Codex:gpt-5.6-sol
 > Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 
 Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
@@ -86,53 +126,22 @@ Cheers,
 /fuad
 
 > ---
->  arch/arm64/kvm/pmu-emul.c | 22 ++--------------------
->  1 file changed, 2 insertions(+), 20 deletions(-)
+>  arch/arm64/kvm/pmu-emul.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >
 > diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-> index 98305bbfc095..b5df6843dbcd 100644
+> index b5df6843dbcd..b4b877f31097 100644
 > --- a/arch/arm64/kvm/pmu-emul.c
 > +++ b/arch/arm64/kvm/pmu-emul.c
-> @@ -1022,30 +1022,12 @@ u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
->         return bitmap_weight(arm_pmu->cntr_mask, ARMV8_PMU_MAX_GENERAL_COUNTERS);
->  }
->
-> -static void kvm_arm_set_nr_counters(struct kvm *kvm, unsigned int nr)
-> -{
-> -       kvm->arch.nr_pmu_counters = nr;
-> -
-> -       /* Reset MDCR_EL2.HPMN behind the vcpus' back... */
-> -       if (test_bit(KVM_ARM_VCPU_HAS_EL2, kvm->arch.vcpu_features)) {
-> -               struct kvm_vcpu *vcpu;
-> -               unsigned long i;
-> -
-> -               kvm_for_each_vcpu(i, vcpu, kvm) {
-> -                       u64 val = __vcpu_sys_reg(vcpu, MDCR_EL2);
-> -                       val &= ~MDCR_EL2_HPMN;
-> -                       val |= FIELD_PREP(MDCR_EL2_HPMN, kvm->arch.nr_pmu_counters);
-> -                       __vcpu_assign_sys_reg(vcpu, MDCR_EL2, val);
-> -               }
-> -       }
-> -}
-> -
->  static void kvm_arm_set_pmu(struct kvm *kvm, struct arm_pmu *arm_pmu)
+> @@ -1087,6 +1087,9 @@ static int kvm_arm_pmu_v3_set_nr_counters(struct kvm_vcpu *vcpu, unsigned int n)
 >  {
->         lockdep_assert_held(&kvm->arch.config_lock);
+>         struct kvm *kvm = vcpu->kvm;
 >
->         kvm->arch.arm_pmu = arm_pmu;
-> -       kvm_arm_set_nr_counters(kvm, kvm_arm_pmu_get_max_counters(kvm));
-> +       kvm->arch.nr_pmu_counters = kvm_arm_pmu_get_max_counters(kvm);
->  }
->
->  /**
-> @@ -1111,7 +1093,7 @@ static int kvm_arm_pmu_v3_set_nr_counters(struct kvm_vcpu *vcpu, unsigned int n)
->         if (n > kvm_arm_pmu_get_max_counters(kvm))
+> +       if (kvm_vm_has_ran_once(kvm))
+> +               return -EBUSY;
+> +
+>         if (!kvm->arch.arm_pmu)
 >                 return -EINVAL;
->
-> -       kvm_arm_set_nr_counters(kvm, n);
-> +       kvm->arch.nr_pmu_counters = n;
->         return 0;
->  }
 >
 >
 > --
