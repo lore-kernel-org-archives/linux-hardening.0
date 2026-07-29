@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8098D43CE6F;
-	Wed, 29 Jul 2026 08:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025A643E07C;
+	Wed, 29 Jul 2026 08:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785313629; cv=none; b=KmlZDhPGo/bN3TGu6/eFptyn4bbsA7eMveuWbYoB5Ov8BZyQfo917z67Plgf5MV5WTMa5gD2pwAoLJ382aZ7KxpvWdkP1TOakMLKeOlERR5nu7UJQFqmXPeL53QCUSk/qo1UcFY9q1D2BQ75TBgZrcJNlOFVig8kizZlDos6usc=
+	t=1785313632; cv=none; b=FdcDd02mW2wzeY4gDw7MPOg68YSt2gB01Sb+yeH03WiM7jX/UoCHSC8gCONbb4anHx3LSnbZeyHVAQgrLlWDh4yPosqTKuAEjbxphGfiyd2qD76BkIzOF04I5txvod5YU2e1I6eFJgc/rcAmJi54ZtC3g/yop7wR6T+OY0W6OGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785313629; c=relaxed/simple;
-	bh=Y/f1ahrtaR0xglfvxEySyh1FC++gJgsKQBGwanvx/Ag=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VZiAv2b9zenw+AUuN/StKnCcxwRUQoIbVxQOlDH208wATQDJYuj0H6aWdooLhZEl9y3/j4fVy51dFjrFZnnRuWHl1hQCkNv4ZrPb6dlD0ixvX5gIp2isslXbIeY4xsLv68sWk2lXHi4UzVo5FawouNrnwgk+LkRD991sbc/mb58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kiia6Zyw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1785313632; c=relaxed/simple;
+	bh=D/MndTQ7yke3YnDa9QJIZtjxOMQpl0vWHGDHmPAD70s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=e6c9w7+vEgikZXWMNlr60oUMd7cRTABj119+QzPJV8LS+gTuh9ueE0P1wnKNeqOhSzD7oWzzfD2bwv00+CFCg5cUBLACSzkzMAKRRGaFOWGuvsg+/EYHCjY3cHamz/sKxFdYRcL80GE5vVjBYU4gnoKfI9q5QAXXwWknsNyp7e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0PGjQSF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kiia6Zyw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A21C3C2BCFB;
-	Wed, 29 Jul 2026 08:27:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0PGjQSF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 47CD6C4AF1D;
+	Wed, 29 Jul 2026 08:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1785313628;
-	bh=Y/f1ahrtaR0xglfvxEySyh1FC++gJgsKQBGwanvx/Ag=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=Kiia6ZywkJQExtt5e7i1NyHxG37K+H2ZTUQYC3RLZCnkVbWKVMcILhw617xhWaexm
-	 fOsb3ADI0dVcth5ltygC3g3dmv98HK8vxf8cGiKb93CpuOuiB6zsk7UmZkuKGXx3Xf
-	 LwnmiAZzo5MgSpcd7DyszpDZyimF2rpdYr0dvrYm2V5TuISMdVUy98+zWfiO9B2WPP
-	 LXr6W5rUo8x1UIHONly2BbpvuB2O09SLs49i3vYB/vF6jDWbOz0z90iFCyW4IaApYW
-	 NwqVZF+xgvIxL0qWiu7kvu6X4i95bY/F7jVR83r9827YSD30XOAOB93YVYbPKOMM9z
-	 ol8M643GsuVng==
+	s=k20201202; t=1785313629;
+	bh=D/MndTQ7yke3YnDa9QJIZtjxOMQpl0vWHGDHmPAD70s=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=M0PGjQSFOQeoOus92fTQZ5/mPAzsC9FN6M/uJ6PSBok6QfCQIaJTj682bAQI9fZ4D
+	 t5jwAcWY6KHgsLVgdiN6uB8nMJ6zy24HCkfdISDqUREC5+VjiOW4B+QW8VqG5BplTc
+	 IzOYR+FQQ7niktF95BEvPNo7/ucJpf7opfnOO8FIlZmWYgB8LgjpctHFHHK23xtjrY
+	 uIZsxhoYPMhEowia1FFKsSmaXs0/hKHj1INEMfVIE0a2m941zRb5AvBlN4glGrI5+g
+	 upbu4twcZZ07855pvdMAlcZyMZNYVINGhkCwsI3M1Y0C5rlDQV0lKJ34xOnrRtp6pc
+	 KPspAfuQlrPKA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DF3C53200;
-	Wed, 29 Jul 2026 08:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D9CC54F51;
+	Wed, 29 Jul 2026 08:27:09 +0000 (UTC)
 From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Subject: [PATCH v10 00/17] AD9910 Direct Digital Synthesizer
-Date: Wed, 29 Jul 2026 09:25:27 +0100
-Message-Id: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
+Date: Wed, 29 Jul 2026 09:25:37 +0100
+Subject: [PATCH v10 10/17] iio: frequency: ad9910: initial driver
+ implementation
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,13 +41,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPi4aWoC/23Qy2rDMBAF0F8JWldFM6OHp6v+R+lC1iMRtHGwi
- 2kJ+ffKoeAUaTkDOnN1r2JJc0mLeDlcxZzWspTpXAdQTwcRTv58TLLEuhCo0CqEQfrIDEqWMsk
- 4lzXNkkeKCDqggSzqu8uccvm+o2/vdT6V5Wuaf+43Vti2fxqqjraCVJJGtNp7PXhQr/7sP6bjc
- 5g+xcatuBPUDbRiJZLjzDSmkAEagnZCg+sRVAnkkckBesShIfROGNVNoSsR0Y45okqJYkOYB6K
- fwmxdgGEOw0CgfUPYnbD9LmwlHAOanMekqa3T7YRT3RSuEl6nQCpbcqolhgcCdI8Yto9YJg4Ul
- IvYEPxAIPYIroQ2HCFm44Ox/4jb7fYLfokYd8wCAAA=
-X-Change-ID: 20260218-ad9910-iio-driver-9b3d214c251f
+Message-Id: <20260729-ad9910-iio-driver-v10-10-aa1f6167729e@analog.com>
+References: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
+In-Reply-To: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
 To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
  linux-hardening@vger.kernel.org
@@ -58,14 +55,13 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
  Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
  Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Rodrigo Alencar <rodrigo.alencar@analog.com>, 
- Conor Dooley <conor.dooley@microchip.com>, Johan Hovold <johan@kernel.org>
+ Rodrigo Alencar <rodrigo.alencar@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785313626; l=8833;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785313627; l=37069;
  i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=Y/f1ahrtaR0xglfvxEySyh1FC++gJgsKQBGwanvx/Ag=;
- b=JuQqfqYOFZEnRQwg1CwEqorXKA7A9sjM4+x/+EJbgCz3z7WmcMu071lUC3vukv/nMCy2lL7x/
- 4z6epKy4/ZGCkpAdNFV9vYUPttfhlkNWESa+cwYFcXQ8Kzp8pUmWoDB
+ bh=UTt7zHUUXNGwaESTDauw7Vx92Gi+rfUw0bZ54KcIiXo=;
+ b=ZV5Lls9g7RyBpHmyVTKFYmKPUAjmDx43Z7jkHOUnogAwHG70YkmiLKenfzmBg7uCGNBhCXjrz
+ rSd58Yuxu9tAR9oSQHl1QChTrT7SQNLHMbRGBb7tNZ+1/HFdk2NCro+
 X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
  pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
 X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
@@ -73,177 +69,1224 @@ X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
 X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 Reply-To: rodrigo.alencar@analog.com
 
-This patch series adds support for the Analog Devices AD9910 DDS.
+From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-This is a follow-up of the V3/V4/V5 discussion. For V1, we reached into
-this channel composition agreement where physical channels may have
-sub-channels. That adds the flexibility necessary for this design.
-During V2, some feedback indicated that the ABI is too device-specific,
-so DRG/RAM destination and operating modes are configured through
-alternate paths and profile channels are created. In V3/V4/V5, there was
-further discussion on the ABI and on mode priority debug.
-
-The AD9910 DDS core can be driven through several independent mechanisms:
-single tone profiles, a digital ramp generator, an internal RAM playback
-engine, a parallel data port, and output shift keying. Each of these
-represents a distinct signal path into the DDS accumulator, so the driver
-models them as separate IIO output channels (IIO_ALTCURRENT, IIO_PHASE
-and IIO_FREQUENCY). This per-channel separation allows userspace to
-configure each mode independently through its own set of sysfs attributes,
-and to enable/disable modes individually via IIO_CHAN_INFO_ENABLE, relying
-on the hardware's own mode selection architecture.
-
-The AD9910 register map is not suited for the regmap framework: register
-widths vary across the map (16, 32, and 64 bits). The driver instead
-implements direct SPI access helpers with a software register cache, using
-type-specific read/write/update functions (ad9910_reg{16,32,64}_{read,
-write,update}) that handle endianness conversion and cache coherency.
-
-Registers are cached for several reasons. The control/function registers
-(CFR1, CFR2) are frequently queried to determine the current operating
-mode (e.g., checking RAM_ENABLE before every profile register access),
-and caching avoids repeated SPI read transactions for what are
-essentially state checks. The cache also enables efficient
-read-modify-write updates on multi-byte registers: the update functions
-merge new field values with the cached register content without issuing
-a SPI read, and skip the write entirely when the value is unchanged.
-Finally, the profile registers serve dual purposes depending on whether
-RAM mode is active -- they hold single tone parameters (FTW, POW, ASF)
-in normal operation but are repurposed for RAM playback configuration
-(start/end address, step rate, operating mode) when RAM is enabled. A
-shadow register array (reg_profile[]) preserves the inactive mode's
-settings across transitions, so no state is lost when switching between
-single tone and RAM operation.
-
-RAM data is loaded through firmware upload infrastructure. Userspace
-writes the waveform data as a raw binary buffer (up to 4096 bytes for
-the full 1024x32-bit RAM), and the driver reverses the byte array and
-transfers it to the device in a single SPI transaction. Per-profile
-start/end addresses and playback parameters (operating mode, step rate,
-no-dwell control) are also configured through firmware update, using
-metadata in the header.
-
-Streaming data to the DDS core through the parallel data port at the
-PD_CLK rate is not covered by this series. That functionality would
-be added in a separate patch series, building on top of the IIO backend
-infrastructure to provide a proper buffered data path.
-
-Kind regards,
-
-Rodrigo Alencar
+Add the core AD9910 DDS driver infrastructure with single tone mode
+support. This includes SPI register access, profile management via GPIO
+pins, PLL/DAC configuration from firmware properties, and single tone
+frequency/phase/amplitude control through IIO attributes.
 
 Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
-Changes in v10:
-- Drop cleanup() op for RAM fw update.
-- Drop priority mode check for parallel-port.
-- Fix typos and misc changes.
-- Link to v9: https://lore.kernel.org/r/20260722-ad9910-iio-driver-v9-0-459d1df5ac56@analog.com
+ MAINTAINERS                    |    1 +
+ drivers/iio/frequency/Kconfig  |   18 +
+ drivers/iio/frequency/Makefile |    1 +
+ drivers/iio/frequency/ad9910.c | 1142 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 1162 insertions(+)
 
-Changes in v9:
-- Separate in/out raw attribute descriptions in sysfs ABI
-- Use KUnit visibility.h to expose function-to-be-tested.
-- Implement cleanup() op for RAM fw update.
-- Link to v8: https://lore.kernel.org/r/20260714-ad9910-iio-driver-v8-0-36939c3c07d2@analog.com
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 103f95307af1..816ccfaa88ca 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1684,6 +1684,7 @@ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ W:	https://ez.analog.com/linux-software-drivers
+ F:	Documentation/devicetree/bindings/iio/frequency/adi,ad9910.yaml
++F:	drivers/iio/frequency/ad9910.c
+ 
+ ANALOG DEVICES INC MAX22007 DRIVER
+ M:	Janani Sunil <janani.sunil@analog.com>
+diff --git a/drivers/iio/frequency/Kconfig b/drivers/iio/frequency/Kconfig
+index 90c6304c4bcd..6033f9155b4f 100644
+--- a/drivers/iio/frequency/Kconfig
++++ b/drivers/iio/frequency/Kconfig
+@@ -23,6 +23,24 @@ config AD9523
+ 
+ endmenu
+ 
++menu "Direct Digital Synthesis"
++
++config AD9910
++	tristate "Analog Devices AD9910 Direct Digital Synthesizer"
++	depends on SPI
++	depends on GPIOLIB
++	help
++	  Say yes here to build support for Analog Devices AD9910
++	  1 GSPS, 14-Bit DDS with integrated DAC.
++
++	  Supports single tone mode with 8 configurable profiles
++	  and digital ramp generation.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called ad9910.
++
++endmenu
++
+ #
+ # Phase-Locked Loop (PLL) frequency synthesizers
+ #
+diff --git a/drivers/iio/frequency/Makefile b/drivers/iio/frequency/Makefile
+index 53b4d01414d8..e3b1d36ed620 100644
+--- a/drivers/iio/frequency/Makefile
++++ b/drivers/iio/frequency/Makefile
+@@ -5,6 +5,7 @@
+ 
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_AD9523) += ad9523.o
++obj-$(CONFIG_AD9910) += ad9910.o
+ obj-$(CONFIG_ADF41513) += adf41513.o
+ obj-$(CONFIG_ADF4350) += adf4350.o
+ obj-$(CONFIG_ADF4371) += adf4371.o
+diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
+new file mode 100644
+index 000000000000..b41b011af281
+--- /dev/null
++++ b/drivers/iio/frequency/ad9910.c
+@@ -0,0 +1,1142 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * AD9910 SPI DDS (Direct Digital Synthesizer) driver
++ *
++ * Copyright 2026 Analog Devices Inc.
++ */
++
++#include <linux/array_size.h>
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/device-id/of.h>
++#include <linux/device-id/spi.h>
++#include <linux/device/devres.h>
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/log2.h>
++#include <linux/math64.h>
++#include <linux/module.h>
++#include <linux/property.h>
++#include <linux/regulator/consumer.h>
++#include <linux/reset.h>
++#include <linux/spi/spi.h>
++#include <linux/sysfs.h>
++#include <linux/types.h>
++#include <linux/units.h>
++#include <linux/unaligned.h>
++
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++
++/* Register addresses */
++#define AD9910_REG_CFR1			0x00
++#define AD9910_REG_CFR2			0x01
++#define AD9910_REG_CFR3			0x02
++#define AD9910_REG_AUX_DAC		0x03
++#define AD9910_REG_IO_UPDATE_RATE	0x04
++#define AD9910_REG_FTW			0x07
++#define AD9910_REG_POW			0x08
++#define AD9910_REG_ASF			0x09
++#define AD9910_REG_MULTICHIP_SYNC	0x0A
++#define AD9910_REG_DRG_LIMIT		0x0B
++#define AD9910_REG_DRG_STEP		0x0C
++#define AD9910_REG_DRG_RATE		0x0D
++#define AD9910_REG_PROFILE0		0x0E
++#define AD9910_REG_PROFILE1		0x0F
++#define AD9910_REG_PROFILE2		0x10
++#define AD9910_REG_PROFILE3		0x11
++#define AD9910_REG_PROFILE4		0x12
++#define AD9910_REG_PROFILE5		0x13
++#define AD9910_REG_PROFILE6		0x14
++#define AD9910_REG_PROFILE7		0x15
++#define AD9910_REG_RAM			0x16
++
++#define AD9910_REG_NUM_CACHED		0x16
++#define AD9910_REG_PROFILE(x)		(AD9910_REG_PROFILE0 + (x))
++
++/* CFR1 bit definitions */
++#define AD9910_CFR1_RAM_ENABLE_MSK		BIT(31)
++#define AD9910_CFR1_RAM_PLAYBACK_DEST_MSK	GENMASK(30, 29)
++#define AD9910_CFR1_OSK_MANUAL_EXT_CTL_MSK	BIT(23)
++#define AD9910_CFR1_INV_SINC_EN_MSK		BIT(22)
++#define AD9910_CFR1_INT_PROFILE_CTL_MSK		GENMASK(20, 17)
++#define AD9910_CFR1_SELECT_SINE_MSK		BIT(16)
++#define AD9910_CFR1_LOAD_LRR_IO_UPDATE_MSK	BIT(15)
++#define AD9910_CFR1_AUTOCLR_DIG_RAMP_ACCUM_MSK	BIT(14)
++#define AD9910_CFR1_AUTOCLR_PHASE_ACCUM_MSK	BIT(13)
++#define AD9910_CFR1_CLEAR_DIG_RAMP_ACCUM_MSK	BIT(12)
++#define AD9910_CFR1_CLEAR_PHASE_ACCUM_MSK	BIT(11)
++#define AD9910_CFR1_LOAD_ARR_IO_UPDATE_MSK	BIT(10)
++#define AD9910_CFR1_OSK_ENABLE_MSK		BIT(9)
++#define AD9910_CFR1_SELECT_AUTO_OSK_MSK		BIT(8)
++#define AD9910_CFR1_DIGITAL_POWER_DOWN_MSK	BIT(7)
++#define AD9910_CFR1_DAC_POWER_DOWN_MSK		BIT(6)
++#define AD9910_CFR1_REFCLK_INPUT_POWER_DOWN_MSK	BIT(5)
++#define AD9910_CFR1_AUX_DAC_POWER_DOWN_MSK	BIT(4)
++#define AD9910_CFR1_EXT_POWER_DOWN_CTL_MSK	BIT(3)
++#define AD9910_CFR1_SDIO_INPUT_ONLY_MSK		BIT(1)
++#define AD9910_CFR1_LSB_FIRST_MSK		BIT(0)
++
++/* DIGITAL and REFCLK_INPUT powerdown bits are effective without I/O update */
++#define AD9910_CFR1_SW0_POWER_DOWN_MSK	(AD9910_CFR1_DIGITAL_POWER_DOWN_MSK | \
++					 AD9910_CFR1_REFCLK_INPUT_POWER_DOWN_MSK)
++/* DAC and AUX_DAC powerdown require I/O update */
++#define AD9910_CFR1_SW1_POWER_DOWN_MSK	(AD9910_CFR1_DAC_POWER_DOWN_MSK | \
++					 AD9910_CFR1_AUX_DAC_POWER_DOWN_MSK)
++
++#define AD9910_CFR1_SW_POWER_DOWN_MSK	(AD9910_CFR1_SW0_POWER_DOWN_MSK | \
++					 AD9910_CFR1_SW1_POWER_DOWN_MSK)
++
++/* CFR2 bit definitions */
++#define AD9910_CFR2_AMP_SCALE_SINGLE_TONE_MSK	BIT(24)
++#define AD9910_CFR2_INTERNAL_IO_UPDATE_MSK	BIT(23)
++#define AD9910_CFR2_SYNC_CLK_EN_MSK		BIT(22)
++#define AD9910_CFR2_DRG_DEST_MSK		GENMASK(21, 20)
++#define AD9910_CFR2_DRG_ENABLE_MSK		BIT(19)
++#define AD9910_CFR2_DRG_NO_DWELL_HIGH_MSK	BIT(18)
++#define AD9910_CFR2_DRG_NO_DWELL_LOW_MSK	BIT(17)
++#define AD9910_CFR2_DRG_NO_DWELL_MSK		GENMASK(18, 17)
++#define AD9910_CFR2_READ_EFFECTIVE_FTW_MSK	BIT(16)
++#define AD9910_CFR2_IO_UPDATE_RATE_CTL_MSK	GENMASK(15, 14)
++#define AD9910_CFR2_PDCLK_ENABLE_MSK		BIT(11)
++#define AD9910_CFR2_PDCLK_INVERT_MSK		BIT(10)
++#define AD9910_CFR2_TXENABLE_INVERT_MSK		BIT(9)
++#define AD9910_CFR2_MATCHED_LATENCY_EN_MSK	BIT(7)
++#define AD9910_CFR2_DATA_ASM_HOLD_LAST_MSK	BIT(6)
++#define AD9910_CFR2_SYNC_TIMING_VAL_DISABLE_MSK	BIT(5)
++#define AD9910_CFR2_PARALLEL_DATA_PORT_EN_MSK	BIT(4)
++#define AD9910_CFR2_FM_GAIN_MSK			GENMASK(3, 0)
++
++/* CFR3 bit definitions */
++#define AD9910_CFR3_OPEN_MSK			(BIT(27) | GENMASK(18, 16))
++#define AD9910_CFR3_DRV0_MSK			GENMASK(29, 28)
++#define AD9910_CFR3_VCO_SEL_MSK			GENMASK(26, 24)
++#define AD9910_CFR3_ICP_MSK			GENMASK(21, 19)
++#define AD9910_CFR3_REFCLK_DIV_BYPASS_MSK	BIT(15)
++#define AD9910_CFR3_REFCLK_DIV_RESETB_MSK	BIT(14)
++#define AD9910_CFR3_PFD_RESET_MSK		BIT(10)
++#define AD9910_CFR3_PLL_EN_MSK			BIT(8)
++#define AD9910_CFR3_N_MSK			GENMASK(7, 1)
++
++/* Auxiliary DAC Control Register Bits */
++#define AD9910_AUX_DAC_FSC_MSK			GENMASK(7, 0)
++
++/* ASF Register Bits */
++#define AD9910_ASF_RAMP_RATE_MSK		GENMASK(31, 16)
++#define AD9910_ASF_SCALE_FACTOR_MSK		GENMASK(15, 2)
++#define AD9910_ASF_STEP_SIZE_MSK		GENMASK(1, 0)
++
++/* Multichip Sync Register Bits */
++#define AD9910_MC_SYNC_VALIDATION_DELAY_MSK	GENMASK(31, 28)
++#define AD9910_MC_SYNC_RECEIVER_ENABLE_MSK	BIT(27)
++#define AD9910_MC_SYNC_GENERATOR_ENABLE_MSK	BIT(26)
++#define AD9910_MC_SYNC_GENERATOR_POLARITY_MSK	BIT(25)
++#define AD9910_MC_SYNC_STATE_PRESET_MSK		GENMASK(23, 18)
++#define AD9910_MC_SYNC_OUTPUT_DELAY_MSK		GENMASK(15, 11)
++#define AD9910_MC_SYNC_INPUT_DELAY_MSK		GENMASK(7, 3)
++
++/* Profile Register Format (Single Tone Mode) */
++#define AD9910_PROFILE_ST_ASF_MSK		GENMASK_ULL(61, 48)
++#define AD9910_PROFILE_ST_POW_MSK		GENMASK_ULL(47, 32)
++#define AD9910_PROFILE_ST_FTW_MSK		GENMASK_ULL(31, 0)
++
++/* Device constants */
++#define AD9910_PI_NANORAD		3141592653UL
++
++#define AD9910_MAX_SYSCLK_HZ		(1000 * HZ_PER_MHZ)
++#define AD9910_MAX_PHASE_MICRORAD	(AD9910_PI_NANORAD / 500)
++
++#define AD9910_ASF_MAX			FIELD_MAX(AD9910_PROFILE_ST_ASF_MSK)
++#define AD9910_POW_MAX			FIELD_MAX(AD9910_PROFILE_ST_POW_MSK)
++#define AD9910_NUM_PROFILES		8
++
++/* PLL constants */
++#define AD9910_PLL_MIN_N		12
++#define AD9910_PLL_MAX_N		127
++
++#define AD9910_PLL_IN_MIN_FREQ_HZ	(3307 * HZ_PER_KHZ)
++#define AD9910_PLL_IN_MAX_FREQ_HZ	(60 * HZ_PER_MHZ)
++
++#define AD9910_PLL_OUT_MIN_FREQ_HZ	(420 * HZ_PER_MHZ)
++#define AD9910_PLL_OUT_MAX_FREQ_HZ	AD9910_MAX_SYSCLK_HZ
++
++#define AD9910_VCO0_RANGE_AUTO_MAX_HZ	(457 * HZ_PER_MHZ)
++#define AD9910_VCO1_RANGE_AUTO_MAX_HZ	(530 * HZ_PER_MHZ)
++#define AD9910_VCO2_RANGE_AUTO_MAX_HZ	(632 * HZ_PER_MHZ)
++#define AD9910_VCO3_RANGE_AUTO_MAX_HZ	(775 * HZ_PER_MHZ)
++#define AD9910_VCO4_RANGE_AUTO_MAX_HZ	(897 * HZ_PER_MHZ)
++#define AD9910_VCO_RANGE_NUM		6
++
++#define AD9910_ICP_MIN_uA		212
++#define AD9910_ICP_MAX_uA		387
++#define AD9910_ICP_STEP_uA		25
++
++#define AD9910_DAC_IOUT_MAX_uA		31590
++#define AD9910_DAC_IOUT_DEFAULT_uA	20070
++#define AD9910_DAC_IOUT_MIN_uA		8640
++
++/* altcurrent ABI is in mA */
++#define AD9910_NANO_MILLIAMP_PER_MICROAMP	1000000UL
++
++#define AD9910_REFDIV2_MIN_FREQ_HZ	(25 * HZ_PER_MHZ)
++#define AD9910_REFDIV2_MAX_FREQ_HZ	(1900 * HZ_PER_MHZ)
++
++#define AD9910_WAKEUP_DELAY_us		1000	/* 1ms: datasheet Table 1 */
++#define AD9910_RESET_DELAY_us		1	/* 5 sysclk cycles: < 1us */
++
++#define AD9910_SPI_DATA_IDX		1
++#define AD9910_SPI_DATA_LEN_MAX		sizeof(__be64)
++#define AD9910_SPI_MESSAGE_LEN_MAX	(AD9910_SPI_DATA_IDX + AD9910_SPI_DATA_LEN_MAX)
++#define AD9910_SPI_READ_MSK		BIT(7)
++#define AD9910_SPI_ADDR_MSK		GENMASK(4, 0)
++
++/**
++ * enum ad9910_channel - AD9910 channel identifiers in priority order
++ *
++ * @AD9910_CHANNEL_PHY: Physical output channel
++ * @AD9910_CHANNEL_PROFILE_0: Profile 0 output channel
++ * @AD9910_CHANNEL_PROFILE_1: Profile 1 output channel
++ * @AD9910_CHANNEL_PROFILE_2: Profile 2 output channel
++ * @AD9910_CHANNEL_PROFILE_3: Profile 3 output channel
++ * @AD9910_CHANNEL_PROFILE_4: Profile 4 output channel
++ * @AD9910_CHANNEL_PROFILE_5: Profile 5 output channel
++ * @AD9910_CHANNEL_PROFILE_6: Profile 6 output channel
++ * @AD9910_CHANNEL_PROFILE_7: Profile 7 output channel
++ */
++enum ad9910_channel {
++	AD9910_CHANNEL_PHY = 100,
++	AD9910_CHANNEL_PROFILE_0 = 110,
++	AD9910_CHANNEL_PROFILE_1 = 111,
++	AD9910_CHANNEL_PROFILE_2 = 112,
++	AD9910_CHANNEL_PROFILE_3 = 113,
++	AD9910_CHANNEL_PROFILE_4 = 114,
++	AD9910_CHANNEL_PROFILE_5 = 115,
++	AD9910_CHANNEL_PROFILE_6 = 116,
++	AD9910_CHANNEL_PROFILE_7 = 117,
++};
++
++enum {
++	AD9910_CHAN_IDX_PHY,
++	AD9910_CHAN_IDX_PROFILE_0,
++	AD9910_CHAN_IDX_PROFILE_1,
++	AD9910_CHAN_IDX_PROFILE_2,
++	AD9910_CHAN_IDX_PROFILE_3,
++	AD9910_CHAN_IDX_PROFILE_4,
++	AD9910_CHAN_IDX_PROFILE_5,
++	AD9910_CHAN_IDX_PROFILE_6,
++	AD9910_CHAN_IDX_PROFILE_7,
++};
++
++enum {
++	AD9910_POWERDOWN,
++};
++
++struct ad9910_data {
++	u32 sysclk_freq_hz;
++	u32 output_current_uA;
++
++	u16 pll_charge_pump_current;
++	u8 refclk_out_drv;
++	bool pll_enabled;
++};
++
++union ad9910_reg {
++	u64 val64;
++	u32 val32;
++	u16 val16;
++};
++
++struct ad9910_state {
++	struct spi_device *spi;
++	struct clk *refclk;
++
++	struct gpio_desc *gpio_pwdown;
++	struct gpio_desc *gpio_update;
++	struct gpio_descs *gpio_profile;
++
++	/* cached registers */
++	union ad9910_reg reg[AD9910_REG_NUM_CACHED];
++
++	/* Lock for accessing device registers and state variables */
++	struct mutex lock;
++
++	struct ad9910_data data;
++	u8 profile;
++
++	/*
++	 * RAM loading requires a reasonable amount of bytes, at the same time
++	 * DMA capable SPI drivers requires the transfer buffers to live in
++	 * their own cache lines.
++	 */
++	u8 tx_buf[AD9910_SPI_MESSAGE_LEN_MAX] __aligned(IIO_DMA_MINALIGN);
++};
++
++/**
++ * ad9910_rational_scale() - Perform scaling of input given a reference.
++ * @input: The input value to be scaled.
++ * @scale: The numerator of the scaling factor.
++ * @reference: The denominator of the scaling factor.
++ *
++ * Closest rounding with mul_u64_add_u64_div_u64
++ *
++ * Return: The scaled value.
++ */
++static inline u64 ad9910_rational_scale(u64 input, u64 scale, u64 reference)
++{
++	return mul_u64_add_u64_div_u64(input, scale, reference >> 1, reference);
++}
++
++static int ad9910_io_update(struct ad9910_state *st)
++{
++	if (st->gpio_update) {
++		gpiod_set_value_cansleep(st->gpio_update, 1);
++		fsleep(1);
++		gpiod_set_value_cansleep(st->gpio_update, 0);
++	}
++
++	return 0;
++}
++
++static inline int ad9910_spi_read(struct ad9910_state *st, u8 reg, void *data,
++				  size_t len)
++{
++	u8 inst = AD9910_SPI_READ_MSK | FIELD_PREP(AD9910_SPI_ADDR_MSK, reg);
++
++	return spi_write_then_read(st->spi, &inst, sizeof(inst), data, len);
++}
++
++static inline int ad9910_spi_write(struct ad9910_state *st, u8 reg, size_t len,
++				   bool update)
++{
++	int ret;
++
++	st->tx_buf[0] = FIELD_PREP(AD9910_SPI_ADDR_MSK, reg);
++	ret = spi_write(st->spi, st->tx_buf, AD9910_SPI_DATA_IDX + len);
++	if (ret)
++		return ret;
++
++	if (update)
++		return ad9910_io_update(st);
++
++	return 0;
++}
++
++#define AD9910_REG_READ_FN(nb)						\
++static int ad9910_reg##nb##_read(struct ad9910_state *st, u8 reg,	\
++				 u##nb * data)				\
++{									\
++	__be##nb be_data;						\
++	int ret;							\
++									\
++	ret = ad9910_spi_read(st, reg, &be_data, sizeof(be_data));	\
++	if (ret)							\
++		return ret;						\
++									\
++	*data = be##nb##_to_cpu(be_data);				\
++	return ret;							\
++}
++
++AD9910_REG_READ_FN(16)
++AD9910_REG_READ_FN(32)
++AD9910_REG_READ_FN(64)
++
++#define AD9910_REG_WRITE_FN(nb)						\
++static int ad9910_reg##nb##_write(struct ad9910_state *st, u8 reg,	\
++				  u##nb data, bool update)		\
++{									\
++	int ret;							\
++									\
++	put_unaligned_be##nb(data, &st->tx_buf[AD9910_SPI_DATA_IDX]);	\
++	ret = ad9910_spi_write(st, reg, sizeof(data), update);		\
++	if (ret)							\
++		return ret;						\
++									\
++	st->reg[reg].val##nb = data;					\
++	return ret;							\
++}
++
++AD9910_REG_WRITE_FN(16)
++AD9910_REG_WRITE_FN(32)
++AD9910_REG_WRITE_FN(64)
++
++#define AD9910_REG_UPDATE_FN(nb)					\
++static int ad9910_reg##nb##_update(struct ad9910_state *st,		\
++				   u8 reg, u##nb mask,			\
++				   u##nb data, bool update)		\
++{									\
++	u##nb reg_val = (st->reg[reg].val##nb & ~mask) | (data & mask);	\
++									\
++	if (reg_val == st->reg[reg].val##nb && !update)			\
++		return 0;						\
++									\
++	return ad9910_reg##nb##_write(st, reg, reg_val, update);	\
++}
++
++AD9910_REG_UPDATE_FN(16)
++AD9910_REG_UPDATE_FN(32)
++AD9910_REG_UPDATE_FN(64)
++
++static int ad9910_set_dac_current(struct ad9910_state *st, u32 val_uA,
++				  bool update)
++{
++	u32 code;
++
++	/* FSC = (86.4 / Rset) * (1 + CODE/96) where Rset = 10k ohms */
++	val_uA = clamp(val_uA, AD9910_DAC_IOUT_MIN_uA, AD9910_DAC_IOUT_MAX_uA);
++	code = DIV_ROUND_CLOSEST(val_uA - AD9910_DAC_IOUT_MIN_uA, 90);
++	st->data.output_current_uA = AD9910_DAC_IOUT_MIN_uA + code * 90;
++
++	return ad9910_reg32_write(st, AD9910_REG_AUX_DAC, code, update);
++}
++
++static int ad9910_set_sysclk_freq(struct ad9910_state *st, u32 freq_hz,
++				  bool update)
++{
++	struct device *dev = &st->spi->dev;
++	unsigned long refclk_freq_hz;
++	u32 sysclk_freq_hz;
++	u32 tmp32, vco_sel;
++	int ret;
++
++	if (!freq_hz || freq_hz > AD9910_MAX_SYSCLK_HZ)
++		return -EINVAL;
++
++	refclk_freq_hz = clk_get_rate(st->refclk);
++	if (st->data.pll_enabled) {
++		if (refclk_freq_hz < AD9910_PLL_IN_MIN_FREQ_HZ ||
++		    refclk_freq_hz > AD9910_PLL_IN_MAX_FREQ_HZ) {
++			dev_err(dev,
++				"REF_CLK freq %lu Hz is out of PLL input range\n",
++				refclk_freq_hz);
++			return -ERANGE;
++		}
++
++		tmp32 = DIV_ROUND_CLOSEST(freq_hz, refclk_freq_hz);
++		tmp32 = clamp(tmp32, DIV_ROUND_UP(AD9910_PLL_OUT_MIN_FREQ_HZ, refclk_freq_hz),
++			      AD9910_PLL_OUT_MAX_FREQ_HZ / refclk_freq_hz);
++		tmp32 = clamp(tmp32, AD9910_PLL_MIN_N, AD9910_PLL_MAX_N);
++		sysclk_freq_hz = refclk_freq_hz * tmp32;
++
++		if (sysclk_freq_hz <= AD9910_VCO0_RANGE_AUTO_MAX_HZ)
++			vco_sel = 0;
++		else if (sysclk_freq_hz <= AD9910_VCO1_RANGE_AUTO_MAX_HZ)
++			vco_sel = 1;
++		else if (sysclk_freq_hz <= AD9910_VCO2_RANGE_AUTO_MAX_HZ)
++			vco_sel = 2;
++		else if (sysclk_freq_hz <= AD9910_VCO3_RANGE_AUTO_MAX_HZ)
++			vco_sel = 3;
++		else if (sysclk_freq_hz <= AD9910_VCO4_RANGE_AUTO_MAX_HZ)
++			vco_sel = 4;
++		else
++			vco_sel = 5;
++
++		ret = ad9910_reg32_update(st, AD9910_REG_CFR3,
++					  AD9910_CFR3_N_MSK | AD9910_CFR3_VCO_SEL_MSK,
++					  FIELD_PREP(AD9910_CFR3_N_MSK, tmp32) |
++					  FIELD_PREP(AD9910_CFR3_VCO_SEL_MSK, vco_sel),
++					  update);
++		if (ret)
++			return ret;
++	} else {
++		if (refclk_freq_hz < AD9910_REFDIV2_MIN_FREQ_HZ ||
++		    refclk_freq_hz > AD9910_REFDIV2_MAX_FREQ_HZ) {
++			dev_err(dev,
++				"REF_CLK freq %lu Hz is out of divider range\n",
++				refclk_freq_hz);
++			return -ERANGE;
++		}
++
++		tmp32 = DIV_ROUND_CLOSEST(refclk_freq_hz, freq_hz);
++		tmp32 = clamp(tmp32, 1U, 2U);
++		sysclk_freq_hz = refclk_freq_hz / tmp32;
++		tmp32 = AD9910_CFR3_VCO_SEL_MSK |
++			FIELD_PREP(AD9910_CFR3_REFCLK_DIV_BYPASS_MSK, tmp32 % 2);
++		ret = ad9910_reg32_update(st, AD9910_REG_CFR3,
++					  AD9910_CFR3_VCO_SEL_MSK |
++					  AD9910_CFR3_REFCLK_DIV_BYPASS_MSK,
++					  tmp32, update);
++		if (ret)
++			return ret;
++	}
++
++	st->data.sysclk_freq_hz = sysclk_freq_hz;
++
++	return 0;
++}
++
++static int ad9910_profile_set(struct ad9910_state *st, u8 profile)
++{
++	DECLARE_BITMAP(values, BITS_PER_TYPE(profile));
++
++	st->profile = profile;
++	values[0] = profile;
++	gpiod_multi_set_value_cansleep(st->gpio_profile, values);
++
++	return 0;
++}
++
++static inline bool ad9910_sw_powerdown_get(struct ad9910_state *st)
++{
++	return FIELD_GET(AD9910_CFR1_SW_POWER_DOWN_MSK,
++			 st->reg[AD9910_REG_CFR1].val32) ? true : false;
++}
++
++static int ad9910_sw_powerdown_set(struct ad9910_state *st, bool enable)
++{
++	int ret;
++
++	if (ad9910_sw_powerdown_get(st) == enable)
++		return 0;
++
++	/*
++	 * When powering down, the DAC and AUX_DAC (SW1) must be powered down
++	 * first, as they require an I/O update to take effect. The opposite is
++	 * true when powering up, the DAC and AUX_DAC must be powered up last,
++	 * i.e., after the DIGITAL and REFCLK_INPUT (SW0) power up.
++	 */
++	if (enable) {
++		ret = ad9910_reg32_update(st, AD9910_REG_CFR1,
++					  AD9910_CFR1_SW1_POWER_DOWN_MSK,
++					  AD9910_CFR1_SW1_POWER_DOWN_MSK,
++					  true);
++		if (ret)
++			return ret;
++
++		return ad9910_reg32_update(st, AD9910_REG_CFR1,
++					   AD9910_CFR1_SW0_POWER_DOWN_MSK,
++					   AD9910_CFR1_SW0_POWER_DOWN_MSK,
++					   false);
++	}
++
++	ret = ad9910_reg32_update(st, AD9910_REG_CFR1,
++				  AD9910_CFR1_SW0_POWER_DOWN_MSK, 0, false);
++	if (ret)
++		return ret;
++
++	return ad9910_reg32_update(st, AD9910_REG_CFR1,
++				   AD9910_CFR1_SW1_POWER_DOWN_MSK, 0, true);
++}
++
++static ssize_t ad9910_ext_info_read(struct iio_dev *indio_dev,
++				    uintptr_t private,
++				    const struct iio_chan_spec *chan,
++				    char *buf)
++{
++	struct ad9910_state *st = iio_priv(indio_dev);
++	int val;
++
++	guard(mutex)(&st->lock);
++
++	switch (private) {
++	case AD9910_POWERDOWN:
++		val = ad9910_sw_powerdown_get(st);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return iio_format_value(buf, IIO_VAL_INT, 1, &val);
++}
++
++static ssize_t ad9910_ext_info_write(struct iio_dev *indio_dev,
++				     uintptr_t private,
++				     const struct iio_chan_spec *chan,
++				     const char *buf, size_t len)
++{
++	struct ad9910_state *st = iio_priv(indio_dev);
++	u32 val32;
++	int ret;
++
++	ret = kstrtou32(buf, 10, &val32);
++	if (ret)
++		return ret;
++
++	guard(mutex)(&st->lock);
++
++	switch (private) {
++	case AD9910_POWERDOWN:
++		ret = ad9910_sw_powerdown_set(st, val32 ? true : false);
++		if (ret)
++			return ret;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return len;
++}
++
++static const struct iio_chan_spec_ext_info ad9910_phy_ext_info[] = {
++	{
++		.name = "powerdown",
++		.read = ad9910_ext_info_read,
++		.write = ad9910_ext_info_write,
++		.private = AD9910_POWERDOWN,
++		.shared = IIO_SEPARATE,
++	},
++	{ }
++};
++
++#define AD9910_PROFILE_CHAN(idx) {				\
++	.type = IIO_ALTCURRENT,					\
++	.indexed = 1,						\
++	.output = 1,						\
++	.channel = AD9910_CHANNEL_PROFILE_ ## idx,		\
++	.address = AD9910_CHAN_IDX_PROFILE_ ## idx,		\
++	.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE) |	\
++			      BIT(IIO_CHAN_INFO_FREQUENCY) |	\
++			      BIT(IIO_CHAN_INFO_PHASE) |	\
++			      BIT(IIO_CHAN_INFO_RAW),		\
++	.parent = &ad9910_channels[AD9910_CHAN_IDX_PHY],	\
++}
++
++static const struct iio_chan_spec ad9910_channels[] = {
++	[AD9910_CHAN_IDX_PHY] = {
++		.type = IIO_ALTCURRENT,
++		.indexed = 1,
++		.output = 1,
++		.channel = AD9910_CHANNEL_PHY,
++		.address = AD9910_CHAN_IDX_PHY,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_SAMP_FREQ),
++		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
++		.ext_info = ad9910_phy_ext_info,
++	},
++	[AD9910_CHAN_IDX_PROFILE_0] = AD9910_PROFILE_CHAN(0),
++	[AD9910_CHAN_IDX_PROFILE_1] = AD9910_PROFILE_CHAN(1),
++	[AD9910_CHAN_IDX_PROFILE_2] = AD9910_PROFILE_CHAN(2),
++	[AD9910_CHAN_IDX_PROFILE_3] = AD9910_PROFILE_CHAN(3),
++	[AD9910_CHAN_IDX_PROFILE_4] = AD9910_PROFILE_CHAN(4),
++	[AD9910_CHAN_IDX_PROFILE_5] = AD9910_PROFILE_CHAN(5),
++	[AD9910_CHAN_IDX_PROFILE_6] = AD9910_PROFILE_CHAN(6),
++	[AD9910_CHAN_IDX_PROFILE_7] = AD9910_PROFILE_CHAN(7),
++};
++
++static int ad9910_read_raw(struct iio_dev *indio_dev,
++			   struct iio_chan_spec const *chan,
++			   int *val, int *val2, long info)
++{
++	struct ad9910_state *st = iio_priv(indio_dev);
++	u64 tmp64;
++	u32 tmp32;
++
++	guard(mutex)(&st->lock);
++
++	switch (info) {
++	case IIO_CHAN_INFO_ENABLE:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			if (ad9910_sw_powerdown_get(st)) {
++				*val = 0;
++			} else {
++				tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++				*val = (tmp32 == st->profile);
++			}
++			break;
++		default:
++			return -EINVAL;
++		}
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_FREQUENCY:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = FIELD_GET(AD9910_PROFILE_ST_FTW_MSK,
++					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
++			break;
++		default:
++			return -EINVAL;
++		}
++		tmp64 *= st->data.sysclk_freq_hz;
++		*val = tmp64 >> 32;
++		*val2 = ((tmp64 & GENMASK_ULL(31, 0)) * MICRO) >> 32;
++		return IIO_VAL_INT_PLUS_MICRO;
++	case IIO_CHAN_INFO_PHASE:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = FIELD_GET(AD9910_PROFILE_ST_POW_MSK,
++					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
++			break;
++		default:
++			return -EINVAL;
++		}
++		tmp32 = (tmp64 * AD9910_MAX_PHASE_MICRORAD) >> 16;
++		*val = tmp32 / MICRO;
++		*val2 = tmp32 % MICRO;
++		return IIO_VAL_INT_PLUS_MICRO;
++	case IIO_CHAN_INFO_RAW:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			*val = FIELD_GET(AD9910_PROFILE_ST_ASF_MSK,
++					 st->reg[AD9910_REG_PROFILE(tmp32)].val64);
++			return IIO_VAL_INT;
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PHY:
++			*val = st->data.sysclk_freq_hz;
++			return IIO_VAL_INT;
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SCALE:
++		switch (chan->address) {
++		case AD9910_CHAN_IDX_PHY:
++			tmp64 = (u64)st->data.output_current_uA *
++				AD9910_NANO_MILLIAMP_PER_MICROAMP;
++			*val = 0;
++			*val2 = tmp64 >> 14;
++			return IIO_VAL_INT_PLUS_NANO;
++		default:
++			return -EINVAL;
++		}
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ad9910_write_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan,
++			    int val, int val2, long info)
++{
++	struct ad9910_state *st = iio_priv(indio_dev);
++	u64 tmp64;
++	u32 tmp32;
++	int ret;
++
++	guard(mutex)(&st->lock);
++
++	switch (info) {
++	case IIO_CHAN_INFO_ENABLE:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			if (!val) {
++				if (tmp32 != st->profile)
++					return 0; /* nothing to do */
++
++				return ad9910_sw_powerdown_set(st, true);
++			}
++
++			ret = ad9910_sw_powerdown_set(st, false);
++			if (ret)
++				return ret;
++
++			return ad9910_profile_set(st, tmp32);
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_FREQUENCY:
++		if (val < 0 || val2 < 0 || val >= st->data.sysclk_freq_hz / 2)
++			return -EINVAL;
++
++		tmp64 = ad9910_rational_scale((u64)val * MICRO + val2, BIT_ULL(32),
++					      (u64)MICRO * st->data.sysclk_freq_hz);
++		tmp64 = min_t(u64, tmp64, U32_MAX);
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_FTW_MSK, tmp64);
++			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
++						   AD9910_PROFILE_ST_FTW_MSK,
++						   tmp64, true);
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_PHASE:
++		if (val < 0 || val2 < 0)
++			return -EINVAL;
++
++		tmp64 = (u64)val * MICRO + val2;
++		if (tmp64 >= AD9910_MAX_PHASE_MICRORAD)
++			return -EINVAL;
++
++		tmp64 = DIV_U64_ROUND_CLOSEST(tmp64 << 16, AD9910_MAX_PHASE_MICRORAD);
++		tmp64 = min(tmp64, AD9910_POW_MAX);
++
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_POW_MSK, tmp64);
++			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
++						   AD9910_PROFILE_ST_POW_MSK,
++						   tmp64, true);
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_RAW:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			if (val < 0)
++				return -EINVAL;
++
++			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
++			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_ASF_MSK,
++					   min_t(u64, val, AD9910_ASF_MAX));
++			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
++						   AD9910_PROFILE_ST_ASF_MSK,
++						   tmp64, true);
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		return ad9910_set_sysclk_freq(st, val, true);
++	case IIO_CHAN_INFO_SCALE:
++		switch (chan->address) {
++		case AD9910_CHAN_IDX_PHY:
++			if (val != 0 || val2 < 0)
++				return -EINVAL;
++
++			tmp32 = DIV_U64_ROUND_CLOSEST((u64)val2 << 14,
++						      AD9910_NANO_MILLIAMP_PER_MICROAMP);
++			return ad9910_set_dac_current(st, tmp32, true);
++		default:
++			return -EINVAL;
++		}
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ad9910_write_raw_get_fmt(struct iio_dev *indio_dev,
++				    struct iio_chan_spec const *chan,
++				    long mask)
++{
++	switch (mask) {
++	case IIO_CHAN_INFO_ENABLE:
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_FREQUENCY:
++	case IIO_CHAN_INFO_PHASE:
++		return IIO_VAL_INT_PLUS_MICRO;
++	case IIO_CHAN_INFO_RAW:
++		switch (chan->channel) {
++		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
++			return IIO_VAL_INT;
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SAMP_FREQ:
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_SCALE:
++		return IIO_VAL_INT_PLUS_NANO;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ad9910_debugfs_reg_access(struct iio_dev *indio_dev,
++				     unsigned int reg, u64 writeval,
++				     u64 *readval)
++{
++	struct ad9910_state *st = iio_priv(indio_dev);
++	union ad9910_reg tmp;
++	int ret;
++
++	if (reg >= AD9910_REG_RAM)
++		return -EINVAL;
++
++	guard(mutex)(&st->lock);
++
++	switch (reg) {
++	case AD9910_REG_DRG_LIMIT:
++	case AD9910_REG_DRG_STEP:
++	case AD9910_REG_PROFILE0 ... AD9910_REG_PROFILE7:
++		if (!readval)
++			return ad9910_reg64_write(st, reg, writeval, true);
++
++		ret = ad9910_reg64_read(st, reg, &tmp.val64);
++		if (ret)
++			return ret;
++		*readval = tmp.val64;
++		return 0;
++	case AD9910_REG_POW:
++		if (!readval)
++			return ad9910_reg16_write(st, reg, writeval, true);
++
++		ret = ad9910_reg16_read(st, reg, &tmp.val16);
++		if (ret)
++			return ret;
++		*readval = tmp.val16;
++		return 0;
++	default:
++		if (!readval)
++			return ad9910_reg32_write(st, reg, writeval, true);
++
++		ret = ad9910_reg32_read(st, reg, &tmp.val32);
++		if (ret)
++			return ret;
++		*readval = tmp.val32;
++		return 0;
++	}
++}
++
++static const char * const ad9910_channel_str[] = {
++	[AD9910_CHAN_IDX_PHY] = "phy",
++	[AD9910_CHAN_IDX_PROFILE_0] = "profile0",
++	[AD9910_CHAN_IDX_PROFILE_1] = "profile1",
++	[AD9910_CHAN_IDX_PROFILE_2] = "profile2",
++	[AD9910_CHAN_IDX_PROFILE_3] = "profile3",
++	[AD9910_CHAN_IDX_PROFILE_4] = "profile4",
++	[AD9910_CHAN_IDX_PROFILE_5] = "profile5",
++	[AD9910_CHAN_IDX_PROFILE_6] = "profile6",
++	[AD9910_CHAN_IDX_PROFILE_7] = "profile7",
++};
++
++static int ad9910_read_label(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     char *label)
++{
++	return sysfs_emit(label, "%s\n", ad9910_channel_str[chan->address]);
++}
++
++static const struct iio_info ad9910_info = {
++	.read_raw = ad9910_read_raw,
++	.write_raw = ad9910_write_raw,
++	.write_raw_get_fmt = ad9910_write_raw_get_fmt,
++	.read_label = ad9910_read_label,
++	.debugfs_reg64_access = &ad9910_debugfs_reg_access,
++};
++
++static int ad9910_cfg_sysclk(struct ad9910_state *st, bool update)
++{
++	u32 cfr3 = AD9910_CFR3_OPEN_MSK;
++	u32 tmp32;
++
++	cfr3 |= FIELD_PREP(AD9910_CFR3_DRV0_MSK, st->data.refclk_out_drv);
++
++	if (st->data.pll_enabled) {
++		tmp32 = st->data.pll_charge_pump_current - AD9910_ICP_MIN_uA;
++		tmp32 = DIV_ROUND_CLOSEST(tmp32, AD9910_ICP_STEP_uA);
++		cfr3 |= FIELD_PREP(AD9910_CFR3_ICP_MSK, tmp32) |
++			AD9910_CFR3_PLL_EN_MSK;
++	} else {
++		cfr3 |= AD9910_CFR3_ICP_MSK |
++			AD9910_CFR3_REFCLK_DIV_RESETB_MSK |
++			AD9910_CFR3_PFD_RESET_MSK;
++	}
++	st->reg[AD9910_REG_CFR3].val32 = cfr3;
++
++	return ad9910_set_sysclk_freq(st, AD9910_MAX_SYSCLK_HZ, update);
++}
++
++static int ad9910_parse_fw(struct ad9910_state *st)
++{
++	static const char * const refclk_out_drv0[] = {
++		"disabled", "low", "medium", "high",
++	};
++	struct device *dev = &st->spi->dev;
++	const char *prop;
++	u32 tmp;
++	int ret;
++
++	st->data.pll_enabled = device_property_read_bool(dev, "adi,pll-enable");
++	if (st->data.pll_enabled) {
++		prop = "adi,charge-pump-current-microamp";
++		if (device_property_present(dev, prop)) {
++			ret = device_property_read_u32(dev, prop, &tmp);
++			if (ret)
++				return dev_err_probe(dev, ret, "property read: %s\n", prop);
++
++			if (tmp < AD9910_ICP_MIN_uA || tmp > AD9910_ICP_MAX_uA)
++				return dev_err_probe(dev, -ERANGE,
++						     "invalid charge pump current %u\n", tmp);
++		} else {
++			tmp = AD9910_ICP_MIN_uA;
++		}
++		st->data.pll_charge_pump_current = tmp;
++
++		prop = "adi,refclk-out-drive-strength";
++		if (device_property_present(dev, prop)) {
++			ret = device_property_match_property_string(dev, prop,
++								    refclk_out_drv0,
++								    ARRAY_SIZE(refclk_out_drv0));
++			if (ret < 0)
++				return dev_err_probe(dev, ret, "property read: %s\n", prop);
++
++			st->data.refclk_out_drv = ret;
++		}
++	}
++
++	return 0;
++}
++
++static void ad9910_sw_powerdown_action(void *data)
++{
++	ad9910_sw_powerdown_set(data, true);
++}
++
++static void ad9910_hw_powerdown_action(void *data)
++{
++	struct ad9910_state *st = data;
++
++	gpiod_set_value_cansleep(st->gpio_pwdown, 1);
++}
++
++static int ad9910_setup(struct device *dev, struct ad9910_state *st,
++			struct reset_control *dev_rst)
++{
++	int ret;
++
++	ret = reset_control_assert(dev_rst);
++	if (ret)
++		return ret;
++
++	fsleep(AD9910_RESET_DELAY_us);
++
++	ret = reset_control_deassert(dev_rst);
++	if (ret)
++		return ret;
++
++	ret = ad9910_reg32_write(st, AD9910_REG_CFR1,
++				 (st->spi->mode & SPI_3WIRE ? 0 :
++				 AD9910_CFR1_SDIO_INPUT_ONLY_MSK), false);
++	if (ret)
++		return ret;
++
++	ret = devm_add_action_or_reset(dev, ad9910_sw_powerdown_action, st);
++	if (ret)
++		return ret;
++
++	ret = ad9910_reg32_write(st, AD9910_REG_CFR2,
++				 AD9910_CFR2_AMP_SCALE_SINGLE_TONE_MSK |
++				 AD9910_CFR2_SYNC_TIMING_VAL_DISABLE_MSK |
++				 AD9910_CFR2_DRG_NO_DWELL_MSK |
++				 AD9910_CFR2_DATA_ASM_HOLD_LAST_MSK |
++				 AD9910_CFR2_SYNC_CLK_EN_MSK |
++				 AD9910_CFR2_PDCLK_ENABLE_MSK, false);
++	if (ret)
++		return ret;
++
++	ret = ad9910_cfg_sysclk(st, false);
++	if (ret)
++		return ret;
++
++	ret = ad9910_set_dac_current(st, AD9910_DAC_IOUT_DEFAULT_uA, false);
++	if (ret)
++		return ret;
++
++	return ad9910_io_update(st);
++}
++
++static int ad9910_probe(struct spi_device *spi)
++{
++	static const char * const supplies[] = {
++		"dvdd-io33", "avdd33", "dvdd18", "avdd18",
++	};
++	struct device *dev = &spi->dev;
++	struct reset_control *dev_rst;
++	struct gpio_desc *io_rst_gpio;
++	struct iio_dev *indio_dev;
++	struct ad9910_state *st;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	st = iio_priv(indio_dev);
++	st->spi = spi;
++
++	indio_dev->name = "ad9910";
++	indio_dev->info = &ad9910_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = ad9910_channels;
++	indio_dev->num_channels = ARRAY_SIZE(ad9910_channels);
++
++	ret = devm_mutex_init(dev, &st->lock);
++	if (ret)
++		return ret;
++
++	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(supplies), supplies);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to get regulators\n");
++
++	st->refclk = devm_clk_get_enabled(dev, "ref_clk");
++	if (IS_ERR(st->refclk))
++		return dev_err_probe(dev, PTR_ERR(st->refclk),
++				     "Failed to get reference clock\n");
++
++	dev_rst = devm_reset_control_get_optional_exclusive(dev, NULL);
++	if (IS_ERR(dev_rst))
++		return dev_err_probe(dev, PTR_ERR(dev_rst),
++				     "failed to get device reset control\n");
++
++	/*
++	 * The IO RESET pin is not used in this driver, as we assume that all
++	 * SPI transfers are complete, but if it is wired up, we need to make
++	 * sure it is not floating. We can use either a reset controller or a
++	 * GPIO for this.
++	 */
++	io_rst_gpio = devm_gpiod_get_optional(dev, "io-reset", GPIOD_OUT_LOW);
++	if (IS_ERR(io_rst_gpio))
++		return dev_err_probe(dev, PTR_ERR(io_rst_gpio),
++				     "failed to get io reset gpio\n");
++
++	st->gpio_update = devm_gpiod_get_optional(dev, "update", GPIOD_OUT_LOW);
++	if (IS_ERR(st->gpio_update))
++		return dev_err_probe(dev, PTR_ERR(st->gpio_update),
++				     "failed to get update gpio\n");
++
++	st->gpio_profile = devm_gpiod_get_array_optional(dev, "profile",
++							 GPIOD_OUT_LOW);
++	if (IS_ERR(st->gpio_profile))
++		return dev_err_probe(dev, PTR_ERR(st->gpio_profile),
++				     "failed to get profile gpios\n");
++
++	if (st->gpio_profile && st->gpio_profile->ndescs != 3)
++		return dev_err_probe(dev, -EINVAL,
++				     "invalid number of profile gpios\n");
++
++	st->gpio_pwdown = devm_gpiod_get_optional(dev, "powerdown",
++						  GPIOD_OUT_LOW);
++	if (IS_ERR(st->gpio_pwdown))
++		return dev_err_probe(dev, PTR_ERR(st->gpio_pwdown),
++				     "failed to get powerdown gpio\n");
++
++	ret = devm_add_action_or_reset(dev, ad9910_hw_powerdown_action, st);
++	if (ret)
++		return dev_err_probe(dev, ret,
++				     "failed to add hw powerdown action\n");
++
++	fsleep(AD9910_WAKEUP_DELAY_us);
++
++	ret = ad9910_parse_fw(st);
++	if (ret)
++		return ret;
++
++	ret = ad9910_setup(dev, st, dev_rst);
++	if (ret)
++		return dev_err_probe(dev, ret, "device setup failed\n");
++
++	return devm_iio_device_register(dev, indio_dev);
++}
++
++static const struct spi_device_id ad9910_id[] = {
++	{ .name = "ad9910" },
++	{ }
++};
++MODULE_DEVICE_TABLE(spi, ad9910_id);
++
++static const struct of_device_id ad9910_of_match[] = {
++	{ .compatible = "adi,ad9910" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ad9910_of_match);
++
++static struct spi_driver ad9910_driver = {
++	.driver = {
++		.name = "ad9910",
++		.of_match_table = ad9910_of_match,
++	},
++	.probe = ad9910_probe,
++	.id_table = ad9910_id,
++};
++module_spi_driver(ad9910_driver);
++
++MODULE_AUTHOR("Rodrigo Alencar <rodrigo.alencar@analog.com>");
++MODULE_DESCRIPTION("Analog Devices AD9910 DDS driver");
++MODULE_LICENSE("GPL");
 
-Changes in v8:
-- Adjust channel prefix kunit test.
-- Include raw attribute ABI for frequency channels.
-- SW powerdown split into two steps.
-- Address some of sashiko's feedback and other minor changes.
-- Link to v7: https://lore.kernel.org/r/20260707-ad9910-iio-driver-v7-0-a4ec30f63700@analog.com
-
-Changes in v7:
-- Use seq_buf instead of scnprintf() in __iio_chan_prefix_emit().
-- Add tests for __iio_chan_prefix_emit().
-- #clock-cells as required in the dt-binding.
-- Add drctl as pwm in the dt-binding.
-- Check refclk freq range when pll is disabled.
-- Address other minor feedback (e.g. sashiko's ones) 
-- Link to v6: https://lore.kernel.org/r/20260618-ad9910-iio-driver-v6-0-79125ffbe430@analog.com
-
-Changes in v6:
-- Introduce IIO_FREQUENCY channel type.
-- Replace altvoltage channels for altcurrent.
-- DRG and Parallel Port destination handled with different channel types.
-- Parent attribute shows channel prefix rather than label.
-- Link to v5: https://lore.kernel.org/r/20260517-ad9910-iio-driver-v5-0-31599c88314a@analog.com
-
-Changes in v5:
-- Drop RFC tag to the patch series.
-- Address sashiko's comments.
-- Add parent-child relationship between iio channels.
-- List vs Table changes in documentation.
-- Add crc and version check to RAM mode firmware update.
-- Link to v4: https://lore.kernel.org/r/20260508-ad9910-iio-driver-v4-0-d26bfd20ee3d@analog.com
-
-Changes in v4:
-- Digital Ramp step exposed as a rate of change.
-- Dwell modes of Digital Ramp are controlled with dwell_en attribute. 
-- Disable of active profile behaves as a software powerdown.
-- Expose debugfs attributes to show mode priority.
-- Add 64-bit debugfs reg access support into iio core.
-- Link to v3: https://lore.kernel.org/r/20260417-ad9910-iio-driver-v3-0-29b93712a228@analog.com
-
-Changes in v3:
-- RAM custom configs (address range, destination, modes) loaded during firmware write.
-- DRG destination defined when attrs are written.
-- DRG modes broken down into enable attrs for ramp up/down channels.
-- Add separate profile channels, switching done through enable attr
-- Link to v2: https://lore.kernel.org/r/20260318-ad9910-iio-driver-v2-0-e79f93becf11@analog.com
-
-Changes in v2:
-- Device-tree bindings changes.
-- RAM loading to use firmware update interface.
-- Rearrange of channels into a hierarchy.
-- Link to v1: https://lore.kernel.org/r/20260220-ad9910-iio-driver-v1-0-3b264aa48a10@analog.com
-
----
-Rodrigo Alencar (17):
-      iio: ABI: add attributes for altcurrent channels
-      iio: ABI: raw, scale and offset for frequency/phase channels
-      iio: ABI: add parent entry for iio channels
-      iio: add IIO_FREQUENCY channel type
-      iio: core: support 64-bit register through debugfs
-      iio: core: create local __iio_chan_prefix_emit() for reuse
-      iio: test: add kunit tests for channel prefix naming generation
-      iio: core: add hierarchical channel relationships
-      dt-bindings: iio: frequency: add ad9910
-      iio: frequency: ad9910: initial driver implementation
-      iio: frequency: ad9910: add basic parallel port support
-      iio: frequency: ad9910: add digital ramp generator support
-      iio: frequency: ad9910: add RAM mode support
-      iio: frequency: ad9910: add output shift keying support
-      iio: frequency: ad9910: show channel priority in debugfs
-      iio: ABI: add docs for ad9910 sysfs and debugfs entries
-      docs: iio: add documentation for ad9910 driver
-
- Documentation/ABI/testing/debugfs-iio-ad9910       |   23 +
- Documentation/ABI/testing/sysfs-bus-iio            |   82 +
- .../ABI/testing/sysfs-bus-iio-frequency-ad9910     |   31 +
- .../bindings/iio/frequency/adi,ad9910.yaml         |  209 ++
- Documentation/iio/ad9910.rst                       |  792 +++++++
- Documentation/iio/index.rst                        |    1 +
- MAINTAINERS                                        |   18 +
- drivers/iio/frequency/Kconfig                      |   21 +
- drivers/iio/frequency/Makefile                     |    1 +
- drivers/iio/frequency/ad9910.c                     | 2347 ++++++++++++++++++++
- drivers/iio/iio_core.h                             |    7 +
- drivers/iio/industrialio-core.c                    |  249 ++-
- drivers/iio/test/Kconfig                           |   14 +
- drivers/iio/test/Makefile                          |    1 +
- drivers/iio/test/iio-test-channel-prefix.c         |  307 +++
- include/linux/iio/iio-opaque.h                     |    2 +-
- include/linux/iio/iio.h                            |   12 +
- include/uapi/linux/iio/types.h                     |    1 +
- tools/iio/iio_event_monitor.c                      |    2 +
- 19 files changed, 4009 insertions(+), 111 deletions(-)
----
-base-commit: e0484d62e8e1cff75b210938be835ea6221bda59
-change-id: 20260218-ad9910-iio-driver-9b3d214c251f
-
-Best regards,
 -- 
-Rodrigo Alencar <rodrigo.alencar@analog.com>
+2.43.0
 
 
