@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8013D43C7AE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815D043CED2;
 	Wed, 29 Jul 2026 08:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785313629; cv=none; b=K1jZIOcV3i60bbnclnFFhUgutIUea6ukHQaPqeulm4fkhBEIzEPbpdfDyKa7zSaJepd/VG6Fin1HeqSaCxhRn3Ln7whqZ509vJiHob5O2tfA6rHu5nOJd8wIfZ03JAQIf4zmc8emip6f5k3JJDwrX2kftEq+XgnuaxTXaX0kRp8=
+	t=1785313629; cv=none; b=NuyS7pzKGEhsM+gjUJJ31nym9a9Lik4dszFdevb/emGOAmwKFVexrfkfiTTB8CT9TE0+fpEll4ASwX/IpZI3cZY9ypEYXiPb9dKdWpX1URqxy7uuCrcsq5iF/UCr/TR6dxPZx8q/uvBtP8L9nZv14iJyW+48eaVWV0ZULc8U8S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785313629; c=relaxed/simple;
-	bh=y5y1Pex3r0tEmIZ3ma1DZMuFnuVLNzcCNOrpynmqk7Y=;
+	bh=8V9+BsSVbTHZfLGi06PqZVikcnksNRPWkUmpnuxzJzw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bylBaN2RDxxFDX3HIF7aGn+oBS1L5P1uOKf+slAOnmOZtUS7CNMEhTXLOBzL7OlhNfaLIns1JSkRoC8GHQ+yMyXHEcanlwaxCCEtAo9pe7yTTexdd7jq4MMC39J7bWVWSsFy68paCMlXmJYeu+XiTqWtCSp7oyWbAHrMbqOhD+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIaEBsoU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=SHtOoHUZp0lSg7T62JnU96cp2B8GOlh9ErlVMbGd8eclkf/LIjXUg1UQV6fuBgakkjN1Ekh2y+QlnlVK0mtWSYGGGoanj/lARqjEYYN1CwjZm1cUBJ0KqOPJQm6MHKi/9ryjUQyiHFCdgx99DpTMua7/UmlEi9q0WPcwaz9C5j0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vi5apmkG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIaEBsoU"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C770AC2BCF7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vi5apmkG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D4A52C4AF0E;
 	Wed, 29 Jul 2026 08:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1785313628;
-	bh=y5y1Pex3r0tEmIZ3ma1DZMuFnuVLNzcCNOrpynmqk7Y=;
+	bh=8V9+BsSVbTHZfLGi06PqZVikcnksNRPWkUmpnuxzJzw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oIaEBsoUVF0dj3ehhFcjjxFg7Qxz9qxobJ3A4Oh0LjbsuQ1AdrfxrFej9XOxj+GFV
-	 jiCTvmGyzpFWX1Wa+qJa1c7/IK7qXHhwZJUdAWaMSmA96z5H5mMfxvWzGaG971R08e
-	 dtbGYVLbaCzO0GfNExze33Y/izq3TnvCZ9rKNbdeXX3BjPPIv+zfbFsXpghfDBgVYO
-	 ucclwqsS8V3jYMM7eWXwJJAeY3buGmuuSqa9z3T5//ea1mQhyhTzmPlfIdgzDHRfxQ
-	 kZXndqxBfvY/h6jDoWN2r4smm6VG9XSZ1Y+h8Ikb0rwr0hMx3C3wRhbSL/3kt6HmKF
-	 GaXGEddOFpyWQ==
+	b=Vi5apmkGusBMGcCDyo3FAxMx09nhlCwm3w+gyzow1Vv+uxNrFjettnsWaCdefrCDK
+	 7KJZlByV57TaWAbJcvpPY3AqLkW45EOH5J87P2mTQhYEj58GuHQr17/o0jr5b8s538
+	 QeMUi/j0xL6Re3VjJGNn6+cWDRskYZmaOImOieL5hudvHEp//2zSyrJ1rVEx/x+Ved
+	 Y5ww9UQb52dNLwLmaQ286KQjnFi0e48NFbcVRsRQLDQGeOiciXpi2Gs+rYNBZceTCR
+	 rHo/Jc0wsA+xn7OfaMmmVnzB1sB/XtKR2aH1Gs/SGa8FePB/xFvBchhh+cff5DOnVC
+	 oRuHLQ7zHkxHQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80B7C54F5C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7572C54F51;
 	Wed, 29 Jul 2026 08:27:08 +0000 (UTC)
 From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Wed, 29 Jul 2026 09:25:29 +0100
-Subject: [PATCH v10 02/17] iio: ABI: raw, scale and offset for
- frequency/phase channels
+Date: Wed, 29 Jul 2026 09:25:30 +0100
+Subject: [PATCH v10 03/17] iio: ABI: add parent entry for iio channels
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260729-ad9910-iio-driver-v10-2-aa1f6167729e@analog.com>
+Message-Id: <20260729-ad9910-iio-driver-v10-3-aa1f6167729e@analog.com>
 References: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
 In-Reply-To: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
 To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
@@ -57,11 +56,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
  Rodrigo Alencar <rodrigo.alencar@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785313627; l=4117;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785313627; l=2407;
  i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=b0wjZEHLLiPjjpYzkara2Qcj+Q0dyqXjAs1Abo131jY=;
- b=IbPxfpd4pdPmGX1M/WffY5Auc4uTjhUku8+sEWdhkkxuljCS2nXikHgaxv62zhz8bmJlztiyz
- Tby5ajt6W5eCyDbWi2T9xNelypSClviEtbezuxOqorxDCHIdrLrRfk5
+ bh=KME4lbAmZLS+7H2VW8Y9DEQOx4E1scOeHoVVhQsAaYw=;
+ b=71mA8FcGgXe8BfcN6NKdo9L/aTzwwGtxBhBCstWFdW3wmxa2OEWcjlzrWZVj8qbfXAZ4th3i4
+ QY28DPaguV7CMd2EzacHipKJoyQSe5bsxnYfB+BTkEYOfnRo4GLbvBr
 X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
  pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
 X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
@@ -71,88 +70,53 @@ Reply-To: rodrigo.alencar@analog.com
 
 From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Consider scale and offset attributes for frequency and phase channels.
-Frequency channels are going to be introduced later alongside a DDS device
-driver which is going to leverage those new attributes.
+Add documentation for a read-only sysfs attribute that allows to expose
+parent-child relationships between IIO channels.
 
 Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
- Documentation/ABI/testing/sysfs-bus-iio | 41 +++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ Documentation/ABI/testing/sysfs-bus-iio | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 3e75ce1c97c6..24712b5bd110 100644
+index 24712b5bd110..851887e85cb2 100644
 --- a/Documentation/ABI/testing/sysfs-bus-iio
 +++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -441,6 +441,14 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_q_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_current_offset
-+What:		/sys/bus/iio/devices/iio:deviceX/in_phaseY_offset
-+What:		/sys/bus/iio/devices/iio:deviceX/in_phase_offset
-+What:		/sys/bus/iio/devices/iio:deviceX/out_phaseY_offset
-+What:		/sys/bus/iio/devices/iio:deviceX/out_phase_offset
-+What:		/sys/bus/iio/devices/iio:deviceX/in_frequencyY_offset
-+What:		/sys/bus/iio/devices/iio:deviceX/in_frequency_offset
-+What:		/sys/bus/iio/devices/iio:deviceX/out_frequencyY_offset
-+What:		/sys/bus/iio/devices/iio:deviceX/out_frequency_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_tempY_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_temp_offset
- What:		/sys/bus/iio/devices/iio:deviceX/in_pressureY_offset
-@@ -474,6 +482,14 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_voltage_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_voltage-voltage_scale
- What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_scale
- What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/in_phaseY_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/in_phase_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/out_phaseY_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/out_phase_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/in_frequencyY_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/in_frequency_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/out_frequencyY_scale
-+What:		/sys/bus/iio/devices/iio:deviceX/out_frequency_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_supply_scale
- What:		/sys/bus/iio/devices/iio:deviceX/in_current_scale
-@@ -2149,6 +2165,22 @@ Description:
+@@ -2165,6 +2165,34 @@ Description:
  		specific attributes. This is useful for userspace to be able to
  		better identify an individual channel.
  
-+What:		/sys/bus/iio/devices/iio:deviceX/in_frequencyY_raw
++What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_parent
++What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_parent
++What:		/sys/bus/iio/devices/iio:deviceX/in_altvoltageY_parent
++What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_parent
++What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_parent
++What:		/sys/bus/iio/devices/iio:deviceX/out_currentY_parent
++What:		/sys/bus/iio/devices/iio:deviceX/in_altcurrentY_parent
++What:		/sys/bus/iio/devices/iio:deviceX/out_altcurrentY_parent
 +KernelVersion:	7.3
 +Contact:	linux-iio@vger.kernel.org
 +Description:
-+		Raw (unscaled) frequency reading from channel Y.
-+		Units after application of scale and offset are Hz.
++		Read-only attribute containing the sysfs name prefix of the parent
++		channel for hierarchical channel relationships (e.g. "out_altvoltage0").
++		The prefix uniquely identifies the parent channel and can be used by
++		userspace to organize channels in tree-like structures that reflects
++		virtual or logical relationships between them.
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/out_frequencyY_raw
-+KernelVersion:	7.3
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Raw (unscaled, no bias etc.) output frequency for channel Y.
-+		The number must always be specified and unique if the output
-+		corresponds to a single channel. Units after application of
-+		scale and offset are Hz.
++		For example, an IIO device may expose a primary output channel as
++		"out_voltage0" together with a set of profile-based or mode-based
++		subchannels used to configure or compose the output signal. These
++		subchannels may carry common attributes such as frequency, phase, etc.
++		They do not represent physical outputs, but rather logical/virtual
++		channels grouping configurations that affect the primary output.
++		Each subchannel exposes a <dir>_<type>[Y]_parent attribute reading
++		"out_voltage0", allowing userspace to group controls under the output
++		channel they belong to rather than treating them as unrelated top-level
++		channels.
 +
- What:		/sys/bus/iio/devices/iio:deviceX/in_phaseY_raw
- KernelVersion:	4.18
+ What:		/sys/bus/iio/devices/iio:deviceX/in_frequencyY_raw
+ KernelVersion:	7.3
  Contact:	linux-iio@vger.kernel.org
-@@ -2156,6 +2188,15 @@ Description:
- 		Raw (unscaled) phase difference reading from channel Y.
- 		Units after application of scale and offset are radians.
- 
-+What:		/sys/bus/iio/devices/iio:deviceX/out_phaseY_raw
-+KernelVersion:	7.3
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Raw (unscaled, no bias etc.) output phase for channel Y.
-+		The number must always be specified and unique if the output
-+		corresponds to a single channel. Units after application of
-+		scale and offset are radians.
-+
- What:		/sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm1_input
- What:		/sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm1_input
- What:		/sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm2p5_input
 
 -- 
 2.43.0
