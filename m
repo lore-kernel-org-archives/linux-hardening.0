@@ -1,221 +1,178 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBFE4503F8
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 18:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83655451999
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 18:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785349883; cv=none; b=K1T9wOPJCDvo1r7fj2rNgLuygmbreqIId6aFVRurbgwB+X9B3B12VtuXf+gBgBhBpm1zUUhuO+q8GdDlzUOLuYgVI3XpDRCG2zC+2QEn/2asGa+Z33LTZp+dSIwBguiusNc2VILoTGhJJgd0iyQ7hbzcYbcMClIO4HaLXc9efs4=
+	t=1785350240; cv=none; b=ntH7OkWLqjb33qH7eaVBn4f320yUHGTJvTezZhF//XwL32AMYIEEwH12FSfIUgy0VVQWMZLQnGGDCDlrrT7gg9SIRM2Qh6/3FrAuq3XMS87gSUTqPZwN8JrxOC4u1njsDO2TI1yhbRcHqDSvRT77owF7ZOghSjr1jAy5lu7GdKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785349883; c=relaxed/simple;
-	bh=6Jmw8fadTclbG2T2Z68Rl3Wmmn5n2IP4R+z9w4+C6/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z8RSLO3LxfQvsSB7pFz+8c3FCclnsSRMEsN9QGeffwGrD+/nfE2SqIuwMT5sfXSAa4GaT+l7IiaDO9B7UWD6N5qUnkGgSXgZ2A+Ti/kkAKfNG9QdlioxEC5AXYu88Zx/NtNrBU7KIGrB7J4ZhPtcPc3bB6QLWDoTZyxk7PKqdoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OpOTluwo; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=SAbI5V10; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1785350240; c=relaxed/simple;
+	bh=4P98aSbKBGaFkCj+9Z8F4SQSSnqALgFeDj729JAeHgA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LMoWSfkjy1NFplCzDLW65il05KtmGExPxtQWoASSSGUZbWa9KC4sdBUw+ctvaL8gO06fwLGYaW+6tmNY8sTlNMlIQd6iCWOA83U09CbqQVm5v2rn6WtJ3Mh1+N5H8wrsHp44RauL3EWtv1GpyeBgDTykco43H8cVovGyUxLss78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PwEZ0xkA; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OpOTluwo";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="SAbI5V10"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TIR6go2663215
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 18:31:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6e9PyztcWTGin2D498CISl8xSLMp4ILlbC/KGKMteYg=; b=OpOTluwofiGYgtjD
-	lgoZRmTSWWinkWDadOgTD4hNi1AI3YjQb1xWwxVxzZDsEWAg4mkXHxZ9XgKN9ZLU
-	gjWu7jPHsUMpj/d+r+QT04q+KCeFGQkeF15rWU8b10UwVDLJUdaLAo2+9zM3+ew3
-	bqWcqK9Pe87PkosNZ6fv5mJVAgwm/VCDJA7a3XMR+ioA53Da6mDpeDdh1Jg+edZn
-	EQliwjFqUaPdsSSQUxcn6g2BNE8HdCsZTmIpRW5j6hsqn8bjGyE+OPFLUe6z/aOH
-	Jv92sgn9y+WvOzk9tx2Bz/I1ZzmtJ1WtBk/HRHKnn8Px10/SkE10W7O2jXpFCNwh
-	oD/MnA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fqkfm9agp-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 18:31:17 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-5174a236220so12478531cf.3
-        for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 11:31:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PwEZ0xkA"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-c9e0b89e228so870895a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 11:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1785349877; x=1785954677; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6e9PyztcWTGin2D498CISl8xSLMp4ILlbC/KGKMteYg=;
-        b=SAbI5V10WveV1v9cvqlR7gQUl5Q6mI1RIhmuOv8+FtHfJvV/M/9MLXTHH2hXQjVuWq
-         PZiXhDL93iKAxz8bNOuyboW80GapZoxqSgWLdnB5ys6DwKoiwqUC1JNS0lekG9Ur5F+k
-         VwHYpVXtmM4iliUkHygPxzjzI+39vNDcguN2/CRMwQab71uK6NsWfN4TKmijyJAAmp4D
-         n1e0KEtMpLF5p44JC6lGpcia9uAAdfuc8pbCkoSS45pAA/XGg5CJ0qWHXhhRd76P3Zum
-         qZayvIDOhzrdLQx9/YW4109IsEnzdgnbdNtMFJc7fkVEtF0N/7wc1eReDzC3UYGYVNe2
-         EBPA==
+        d=gmail.com; s=20251104; t=1785350239; x=1785955039; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=TKiRLVwj3NSxN3gEZDV7xpth8PKqEmNyRu0ElNGl93A=;
+        b=PwEZ0xkASSYe674ENRaXsVu9D5lUQjcKXrCTNqHJLiHWX4sqo9EZ2/VomqGePiODK6
+         5fFnbHWBU92MpTOkHoWgikiS+PlNqygQC/yScvv1uYyiWDSMNe5rQbImbvCZvWELQarF
+         ysEgXEwzSIWf3rOYnLphsGkBrRXrxI5nEZZMs3vxX/UnRoBjS+XmocsUF+YhzGxZRyUu
+         unwdwCLKwu2cfqR1GiDMWFuc8g93uB/G8EmVCvJfmpCgFyiI/02h+qico23lixDuPiM3
+         5zerkbmaXFvr+uzGbTZckwdkE4HJQ73WldgkojKc6gpcFpbu8dm6lOCj+r4ql1UcUpVs
+         3vJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785349877; x=1785954677;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1785350239; x=1785955039;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=6e9PyztcWTGin2D498CISl8xSLMp4ILlbC/KGKMteYg=;
-        b=khR58vw2eBJvh+A7GW4UFZ69VyRdwvD3iXhLleDYHBsNGYGBrUDc+773cTYWy7MD0F
-         bVsqLaXl7COPQRpaFOg7XUn09Y14wS/poj/l2Uw/P9cBZTdOQ4kkUidSATH3hhmvyDo3
-         DLzTd3pN1/7YaO7Lo4qrmQkx4ToQOd/LcPSSt1OaJ5NVQ+UV41aMJoLyyTxrp39x8lzK
-         99LAk0Ml85lVN6TTy6N/TwNt5H043wa1gH+Mp5k039QiPIaEPZZ2PJlh+9Y4h2f0G24U
-         mMmOScYSspPdLwXn4/4ldLQSUYdxxW0LX8KRMjLeQB6FKDatvK0Q0NLes6g2YYGcgyZ2
-         m4fQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrvtVjo+9ZvmeeEZokCYDo6PJRstOTkj2nSlugxtc4PBxF6UX/R4XHzR3VinZlawitd5E2fP8pUm1emDuIQxiU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq4i+g7kPtkjdmsOwtLDGwMDFg+lwih9OIwoLcD3DkihAdlV3i
-	skhRRJrdBtUmQ7lpGqCWFxirtmfFM6bb5lfEYxEr7JaEhX4CHjeG7AG4d9ojXvAOWmZbw9642ve
-	saOUyO8iRLrh37B5T6Fv/bnHAVlsOSmBzHzowja8ErxA09JPc9RCPSKMi+1oQbNCtveMxyj4=
-X-Gm-Gg: AR+sD10NcfHiet7PmF8uTjO98JRhDo+moooQn/R6qFVAqLjdEyCcSWtLGxirioaJR3C
-	MMH4QDnXNTHPn6isR/N1MzXh5kxbfAVDijBqoVLpQ9g+XHBA9rviePKKp8tlzNMl6OWuFrzfUl5
-	Z27hdqvujWR4J1IjVsSfwUNE7KtRFUj1s2MV2ghTIqsNiSdaMMfxK4vPLn2O/WEXlHmSVizj2Gk
-	AEJiyXLNIV6EvV+4FqJmui6QEO4HR66ZcbI0QqyaCgFxR+ti7p/YUmjYT+s7OcMrpNjo3T8GnWw
-	o/UTO3JFDvFOIMGbC/QvVY3IU5f5gaxjKcj+0V5rc61YYd3KUf3cnGR5iNAT1s8ClB7kulN/wD/
-	Np7w5ROqe5iQpT4VrhG9cmZsPvC+yIA3Y/1CPXCYwNrZ0d8RG8pGPdi5nzs2W9hwUsAEU6W/S
-X-Received: by 2002:ac8:7d4e:0:b0:51c:1cbd:5fdc with SMTP id d75a77b69052e-529d6faf8eemr75038051cf.10.1785349876803;
-        Wed, 29 Jul 2026 11:31:16 -0700 (PDT)
-X-Received: by 2002:ac8:7d4e:0:b0:51c:1cbd:5fdc with SMTP id d75a77b69052e-529d6faf8eemr75037651cf.10.1785349876366;
-        Wed, 29 Jul 2026 11:31:16 -0700 (PDT)
-Received: from [192.168.1.31] ([85.196.172.179])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fb6acb6c9sm11104361f8f.13.2026.07.29.11.31.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2026 11:31:15 -0700 (PDT)
-Message-ID: <50662ecf-22a6-43dc-baca-9cd58001b51e@oss.qualcomm.com>
-Date: Wed, 29 Jul 2026 21:31:13 +0300
+        bh=TKiRLVwj3NSxN3gEZDV7xpth8PKqEmNyRu0ElNGl93A=;
+        b=Ed05HCQUjUADj1spmPj1D9wXnVVhMmpmxgQLEVFXfFZXgwiO/O88fAEdQJSFHIlSM4
+         BCMiApVgHrAknCpENOvH60twPPEk2zuiFtxgbQ+r4rdRxTLWPwVXm6ugK4asHxI84p5x
+         nQ7Nld5z9umSAfhdHkaevTObBB4h+n0Hb8Oe2a/bJ/qIbsn3g8QmLiOr+T7xoRdzrzhp
+         mASJcBKw/B6VleRomxHOKS9UPIhdlDVbh9b1JorbO8PT/o9pE2HPar9kEd9N5A3kmyko
+         Lr006Nr2Lve2FsXnwSAW8b37JcyfKthQLHBhNQzmWnpQenFqKlDiy+xZU/VXZJpXcsSp
+         2TNw==
+X-Forwarded-Encrypted: i=1; AHgh+RoYYFDgk9Z13NHP98y6slvnuqX0YaBFSFbdYXEBYD9/RUe8gK5TkpCPITCsU3ZJGbqXwFMYoLIYwf5aFg8a5H4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQIA6OWNp/fqixUuPos+V0QSKZP/fw9fMvmlmj7mnwpMef6Y2w
+	XmVjeoGuVL4foRlr7i3jCv2timc4fju1hMlU0jY+2Hwh7j0Pdtp0VtyF
+X-Gm-Gg: AR+sD111uVEAqEnm1QcmNw1NDdDpwzPToYpT+Ky2haXlwmos5/l9kd2786ZmMfPrxwz
+	Hstl8rEK00lHKTWL00KEihuuQ9C6rZi07VpRXgQcZ5ZlTFD6WbSLQzrksIbX7P3Syc9fp82hFIR
+	lYpXI7ExQh7D+S/VS38W1PuM+MEHBIUw0xvM77MuPz+3hfipYkmpCwYlmecoMhLfcsuHE4O40nZ
+	Wjnz6L1+U0MMH8uG0HN47hbXUrhF8pZdeP4MCmGaRBoa8b2/hY6fT1Tc/CmV7qcUd9sA/96p+nQ
+	pNgYpojv1QBgz8sEcVXA0fT3oG+F/LWW38lTAF91wzi47H/1Gyu/orihy7Z581rHgYAEgG6LwVF
+	t6qzBRkJNJa/leiuwKpRR+jhLNdlXVfv/E1dZKbF1l6MYnsYif+p+bd+CEGXBpdRX6oAwWiyFiu
+	vuffu1Py45agAn9bYXpwX7Euzs5dwQ/h13easOSLVuwn63Js3FxkoCjQRknFCGsnasOTl+TTG+x
+	BVS1xRrdXgIh54fyIVzulOT2sz6rxVcqL+NPkoIF/W/nWKlZgLC6esik6yVNavNOmplj9ynCfXf
+	q33ryiHSmFC7zF+CoZoO58MpvNdszSE1BzeKhg==
+X-Received: by 2002:a05:6a21:7106:b0:3c3:7f8f:88c9 with SMTP id adf61e73a8af0-3c8ba616cf1mr8675488637.54.1785350238739;
+        Wed, 29 Jul 2026 11:37:18 -0700 (PDT)
+Received: from ryzen.lan ([2601:644:8000:7a86::e35])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbdba63d2fesm1312154a12.27.2026.07.29.11.37.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2026 11:37:17 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-wireless@vger.kernel.org
+Cc: Jeff Chen <jeff.chen_1@nxp.com>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
+Subject: [PATCHv2 wireless-next] wifi: nxpwifi: embed rx_reorder_ptr
+Date: Wed, 29 Jul 2026 11:37:15 -0700
+Message-ID: <20260729183715.691287-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] media: uapi: Add CAMSS OPE ISP configuration
- definition
-To: johannes.goede@oss.qualcomm.com,
-        Loic Poulain <loic.poulain@oss.qualcomm.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Rob Herring
- <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20260724-camss-isp-ope-v5-0-e70ad4fa39ce@oss.qualcomm.com>
- <20260724-camss-isp-ope-v5-3-e70ad4fa39ce@oss.qualcomm.com>
- <77f79a27-6a19-4879-b302-e7b42faaaced@oss.qualcomm.com>
-Content-Language: en-US
-From: "Gjorgji Rosikopulos (Consultant)"
- <gjorgji.rosikopulos@oss.qualcomm.com>
-In-Reply-To: <77f79a27-6a19-4879-b302-e7b42faaaced@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=D6p37PRj c=1 sm=1 tr=0 ts=6a6a46f5 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=Q/e3f29T3Hw2hnAEzBPF7w==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22
- a=YAyIRdgMAAAA:8 a=EUspDBNiAAAA:8 a=Yqt9_RdanuqypNOcg2YA:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22 a=o1rO4XtwZBNj6n05oSJ_:22
-X-Proofpoint-GUID: g6T9MbNIkVJYXP-LjylWG7e-bBAm7bko
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDE0MiBTYWx0ZWRfX7Dg8O/QPELCu
- 53jGQxnnNtxRvvKBC18PAO1aqbDP4eFDtbDWZWhm49LfEn9m3whkCDYTUPq4eUixt+F026RElq0
- KNyImcf1GcTcEHN/jUZiOGttVIA4tac=
-X-Proofpoint-ORIG-GUID: g6T9MbNIkVJYXP-LjylWG7e-bBAm7bko
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDE0MiBTYWx0ZWRfX++18WOuLIsgT
- hYKKIt4TDpPcgb+5GEAO/x530koCf8a/gaTBeiAtT8Nyij4zvweCfg93SFxrmXQ39bhP/CO1W6V
- SoSCFnvIPkW9YKPDqe0RK8E54LPBwqEF0jPAtpndVp0XSkq8kqqE/1jRSLx/ZefRBm7ahoiKYnP
- MIIZG4nqE3FiUsDU7hmsaaS3xyALLx3yYVQzuI/U/1bHGB8LSOeOIk1AhfVrhZQGTxIv9zmUq9D
- Zh3SXJsSZVaUPJR1V24WAYXYN2auJJBYD2k1/nxaUOLGX7wgL2BLadrTjPMVhr3NyI++oBK/kXx
- Msrkx0VXJol0mjasbcwHKfeA7L2QHT1jIIRPiEkH/T//XhRw6FeaS7Mo68gd9gxHVxUFZOvixrr
- dR7HUVxJ1dbPG/f9g6m/FhvgJ9ZMVtz4KtxLNHXXL309Lp3vrmDo44g9fTpRsvaVVkMt9YKYFVs
- u7HtkacXdJd63glXPDg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-29_07,2026-07-29_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
- malwarescore=0 priorityscore=1501 phishscore=0 clxscore=1011 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290142
+Content-Transfer-Encoding: 8bit
 
-Hi Loic, Hans,
+rx_reorder_ptr is a dynamically allocated array which is done near the
+main struct allocation. Combine the two to avoid freeing separately.
 
-On 7/29/2026 4:27 PM, johannes.goede@oss.qualcomm.com wrote:
-> Hi Loic, et.al,
-> 
-> On 24-Jul-26 14:42, Loic Poulain wrote:
->> Add the uapi header camss-ope-config.h defining the ISP parameter
->> structures used by the CAMSS Offline Processing Engine (OPE) driver.
->> This includes structures for white balance, chroma enhancement and
->> color correction configuration.
->>
->> Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
->> ---
->>  include/uapi/linux/camss-ope-config.h | 160 ++++++++++++++++++++++++++++++++++
->>  1 file changed, 160 insertions(+)
->>
->> diff --git a/include/uapi/linux/camss-ope-config.h b/include/uapi/linux/camss-ope-config.h
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..800e6ef1dba218ca33b565e1e51d6647f02f8753
->> --- /dev/null
->> +++ b/include/uapi/linux/camss-ope-config.h
->> @@ -0,0 +1,160 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
->> +/*
->> + * Qualcomm CAMSS Offline Processing Engine (OPE) ISP parameters UAPI
->> + *
->> + * Uses the generic V4L2 extensible ISP parameters buffer format defined in
->> + * <uapi/linux/media/v4l2-isp.h>.
->> + *
->> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
->> + */
->> +
->> +#ifndef _UAPI_LINUX_CAMSS_OPE_CONFIG_H
->> +#define _UAPI_LINUX_CAMSS_OPE_CONFIG_H
->> +
->> +#include <linux/types.h>
->> +#include <linux/media/v4l2-isp.h>
->> +
->> +/**
->> + * enum camss_ope_params_block_type - CAMSS ISP parameter block identifiers
->> + *
->> + * Each value identifies one ISP processing block.  The value is placed in
->> + * the @type field of &struct v4l2_isp_params_block_header.
->> + */
->> +enum camss_ope_params_block_type {
->> +	CAMSS_OPE_PARAMS_WB_GAIN = 1,
->> +	CAMSS_OPE_PARAMS_CHROMA_ENHAN = 2,
->> +	CAMSS_OPE_PARAMS_COLOR_CORRECT = 3,
->> +};
-> 
-> I don't think we want this enum to be OPE specific. The whole idea behind
-> the extensible ISP parameters is that there is a single set of parameter
-> definitions spanning multiple ISP generations.
-> 
-> There is going to be a mirroring patch for libcamera defining some C++
-> magic around this header:
-> 
-> https://patchwork.libcamera.org/patch/27430/
-> 
-> and this will be used in the camss libcamera IPA and we don't want to
-> have one version of the libcamera wrapper per ISP "generation".
-> 
-> So I think this should all be moved back to a generic camss-config.h
-> (or maybe camss-parameters.h ?) and then if for the planned Hamoa /
-> Monoca inline ISP work of we need say a new version of CAMSS_PARAMS_WB_GAIN
-> just add a CAMSS_OPE_PARAMS_WB_GAIN_V2 for that.
-> 
-> That is the whole idea behind the extensible params, otherwise libcamera
-> will effectively need to have 1 IPA per ISP generation / type which is
-> not what we want.
+Also fix the type to what it actually is. void is normally used to avoid
+casting but there's no need here.
 
-Can we change the name of the header to not be OPE specific. An proposal will be camss-config.h,
-i believe most of the parameters will be the same for other ISP versions.
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ v2: fix unused variable error
+ .../net/wireless/nxp/nxpwifi/11n_rxreorder.c  | 23 +++++--------------
+ drivers/net/wireless/nxp/nxpwifi/main.h       |  2 +-
+ 2 files changed, 7 insertions(+), 18 deletions(-)
 
-~Gjorgji
+diff --git a/drivers/net/wireless/nxp/nxpwifi/11n_rxreorder.c b/drivers/net/wireless/nxp/nxpwifi/11n_rxreorder.c
+index c5819f89b08c..65b628411543 100644
+--- a/drivers/net/wireless/nxp/nxpwifi/11n_rxreorder.c
++++ b/drivers/net/wireless/nxp/nxpwifi/11n_rxreorder.c
+@@ -171,7 +171,6 @@ nxpwifi_del_rx_reorder_entry(struct nxpwifi_private *priv,
+ 	list_del_rcu(&tbl->list);
+ 	spin_unlock_bh(&priv->rx_reorder_tbl_lock[tid]);
+ 
+-	kfree(tbl->rx_reorder_ptr);
+ 	kfree_rcu(tbl, rcu);
+ 
+ 	atomic_set(&priv->adapter->rx_ba_teardown_pending, 0);
+@@ -262,7 +261,6 @@ static void
+ nxpwifi_11n_create_rx_reorder_tbl(struct nxpwifi_private *priv, u8 *ta,
+ 				  int tid, int win_size, int seq_num)
+ {
+-	int i;
+ 	struct nxpwifi_rx_reorder_tbl *tbl, *new_node;
+ 	u16 last_seq = 0;
+ 	struct nxpwifi_sta_node *node;
+@@ -273,11 +271,16 @@ nxpwifi_11n_create_rx_reorder_tbl(struct nxpwifi_private *priv, u8 *ta,
+ 		nxpwifi_11n_dispatch_pkt_until_start_win(priv, tbl, seq_num);
+ 		return;
+ 	}
++
++	if (win_size <= 0)
++		return;
++
+ 	/* if !tbl then create one */
+-	new_node = kzalloc_obj(*new_node, GFP_KERNEL);
++	new_node = kzalloc_flex(*new_node, rx_reorder_ptr, win_size);
+ 	if (!new_node)
+ 		return;
+ 
++	new_node->win_size = win_size;
+ 	INIT_LIST_HEAD(&new_node->list);
+ 	new_node->tid = tid;
+ 	memcpy(new_node->ta, ta, ETH_ALEN);
+@@ -311,26 +314,12 @@ nxpwifi_11n_create_rx_reorder_tbl(struct nxpwifi_private *priv, u8 *ta,
+ 		new_node->flags |= RXREOR_INIT_WINDOW_SHIFT;
+ 	}
+ 
+-	new_node->win_size = win_size;
+-
+-	new_node->rx_reorder_ptr = kcalloc(win_size, sizeof(void *),
+-					   GFP_KERNEL);
+-	if (!new_node->rx_reorder_ptr) {
+-		kfree(new_node);
+-		nxpwifi_dbg(priv->adapter, ERROR,
+-			    "%s: failed to alloc reorder_ptr\n", __func__);
+-		return;
+-	}
+-
+ 	new_node->timer_context.ptr = new_node;
+ 	new_node->timer_context.priv = priv;
+ 	new_node->timer_context.timer_is_set = false;
+ 
+ 	timer_setup(&new_node->timer_context.timer, nxpwifi_flush_data, 0);
+ 
+-	for (i = 0; i < win_size; ++i)
+-		new_node->rx_reorder_ptr[i] = NULL;
+-
+ 	spin_lock_bh(&priv->rx_reorder_tbl_lock[tid]);
+ 	list_add_tail_rcu(&new_node->list, &priv->rx_reorder_tbl_ptr[tid]);
+ 	spin_unlock_bh(&priv->rx_reorder_tbl_lock[tid]);
+diff --git a/drivers/net/wireless/nxp/nxpwifi/main.h b/drivers/net/wireless/nxp/nxpwifi/main.h
+index 4abf80771be2..349dfa4d3f85 100644
+--- a/drivers/net/wireless/nxp/nxpwifi/main.h
++++ b/drivers/net/wireless/nxp/nxpwifi/main.h
+@@ -656,10 +656,10 @@ struct nxpwifi_rx_reorder_tbl {
+ 	int init_win;
+ 	int start_win;
+ 	int win_size;
+-	void **rx_reorder_ptr;
+ 	struct reorder_tmr_cnxt timer_context;
+ 	u8 amsdu;
+ 	u8 flags;
++	struct sk_buff *rx_reorder_ptr[] __counted_by(win_size);
+ };
+ 
+ struct nxpwifi_bss_prio_node {
+-- 
+2.55.0
+
