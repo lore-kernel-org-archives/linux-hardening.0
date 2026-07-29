@@ -1,209 +1,156 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2A71C3F31
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Jul 2026 00:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD8643B6D1;
+	Wed, 29 Jul 2026 08:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785286014; cv=none; b=tytOkhhfuryXwnMpL/5ljhgfFHgdPL2ZWrpLBJnJ7ppO2YU3YhPb2kdkTC6FRJdppW+JeNoCv0RhABwTht+Tw9TrH9/N9Q1o/GgzNfVvVNURAK5X/0UaEu23W1VhwriM/VQ5zcz7IHSSihu0IZJLQOY7aiU1QaAC+POl5tPhNIQ=
+	t=1785313629; cv=none; b=U9ErLElsCC7Tr1IPMZmHSvuUw7eYckpcOkFx1cfVPfE1KoZOv28YGg/Yszc4AF5yarP7+wRKD5WuIyvoIzAdnVh5EsRqBBUDi7pi+7Q5GluefQ/9pUOjrc5frRnnorApD8iyhvWczx/+qj2IZf2jUJI2cKADFYHlQyYbCbimSbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785286014; c=relaxed/simple;
-	bh=pg0YQExBKD1QBaMwIK+8w4kMFIM1KokG0edT6frwxlk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a3xNCgoQm61HCg7NKRMH22C/+SqOrMLM0az8BOxJoJmCV3/j1tXlx4ZZbF0m62TkauGkDjJZRiX8TEwySeLhZUP8QC/4TJVOuS0eoC+XTL+CI2uaCXGFFP0IL2Go2sSfmhARFKBtsJTTLDmxaXdLTnaQ9CAT2TpEl0u9Ze3zDA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=baA750o8; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785313629; c=relaxed/simple;
+	bh=c2p5L1q6zxv7wWh9EpdRkFyHFnzsFh472s+WmtKCZhw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KmIzoqbD7zjaWcpJhV4UtPUruUoIeG5j6b/A18b6IQIV/4/u44CJGI+7hW/USEH75S3TZtDMd/MhZsozShPwoPZDUdyGf5N8inBrrr0ruLa/N6b/AaR0EQrVqQ60gJY/EC2lQneGEER7a528GO/J9K6gXEU+xB4cbsyFoKWOksI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qaZrPsqc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="baA750o8"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2cf52d15d88so4544595ad.2
-        for <linux-hardening@vger.kernel.org>; Tue, 28 Jul 2026 17:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785286012; x=1785890812; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+/PYQKf0JDqIIDQm8H4gTdIyq8keoILKfJLaIqCIM/c=;
-        b=baA750o8TxoouBmAsc4HizWocRKLnAjxf2bdxQkuUWMcK6KF4GwTyTt8JdG/QQSTqE
-         P3DUzQgeVHetVgp1BbeXhX0ZRYxf+1JrZ96wErKZabY35Gj3sqfVUK8wIFhU4W3X2ibG
-         nS+eU+Al6Oq63tUnrjb9wSOOBvdRpulZ58kQQ0aDFZoWkd8UFxxHIoNIIJ6GApt+22dI
-         8p15JmCn2En4qsSoNZ7qE5BvdOfAI5Gs2Eg1fAmCR7T3bwY7JhaoD/iiopgKUnvsBZeM
-         ZQ7YHo4HuvEjWLbPybIQgLUI0O90B78M8BitpQ8TwmXKNcXQQVK77mQZrXWccPUTdljm
-         G9oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785286012; x=1785890812;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=+/PYQKf0JDqIIDQm8H4gTdIyq8keoILKfJLaIqCIM/c=;
-        b=fNDaI5Oy8FKUbkcrA6sJa+tqpshuh4Y3YWojkRk4A/8pc9za0TQKURESk71dfKt9hR
-         Ui+ErCS7A5WcB2yXzuR7hj9Vm6+rX7TRxJVbETqhlhduLhcRKJCGx4pzhEU+LDfYfISz
-         LyGXYkJ8THGlWWninlAC+G46agy0FWCYkzN/bfF5MrSeyR891ODtngnvJRef74ATORG2
-         u1xu98krRNRsyLPeXJ5oFLFsMbNW1bc2Uult/G29iv43/PStI6vXeAih+tBYAYiLTc/L
-         m2edUKmiiYDWrOgBDWpMOP2cSsU+31p1fyLi5cgrYWVCMt+RqvoNKHnVMNpOeHZFc8g+
-         8MnA==
-X-Forwarded-Encrypted: i=1; AHgh+Rrb2akg2cn1O24ux+COyagZaZHa7Pyiv3mvGYHIHQNaIcGXv5JrY5obXMiGWigHwHq3ior8ss4DXORZH0mkH60=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywrb40nyxlSJt0VVW7nYWO8TusZhwV3Khayimts7bvonLf+iYDN
-	7EYYXf8wq3/R1Mg5uArUkiK9c6gSPlvMQaAoMx9jTELOxIPCt86qUH0v
-X-Gm-Gg: AR+sD11wFrJ6jbGZpGrTAxiQg6NDmDfN5xRToLUN1ueoB+F3INDYBe0MTC5jDtyHs0y
-	A1fWxDFOR3mYnzsBNOVAeOkH7KJkjNbKFK+8oBF+TFvkdy6hdOo6JxiI5UiPy62DytFeBO/bY9n
-	kEPawYWvOLH6ivQbLWWz2WCmVyMJ9eKaPsFaPzGKCZRAr9tsvt3AlCSJ5gFgpLlaSa9YKvSoiVs
-	wxFj1MEKJGm+KsG+XFHFV3/VnHGWN2FoycXuCy4+SfxNopRxQbqr01bsHomNS2BTs4Uz0wzEDYl
-	3X54auZpm7FOvsVWkzLGn9Fs7ieVqDhiOfSVWZ2eZ+iBEqjZNBFV8qQ704KuYhZWMSS5MPFN17+
-	/MVZUFbpJCdrB7i/3OcSTUpxugImPX33ELp8V6DP2oNhePi1tUFij1rDqbWI741BAMXwOG5KB4O
-	Qh7qgMXN8AA0C4vqXeal2gettD85lGrxkPSu+Fme6nZ2YmiLhxnj46k1Cy+XYT1BosQnqJ+FBvQ
-	ofC1jyiymEhdxqZL+ZLFBajUmR+RBBVSUoFZbIGAzokdwWG1giozSta47SWz+aoCRf54lY3hUmR
-	SLphgvj95AvibujsP02W1V/iX5XT7NJ+18wA1Hg=
-X-Received: by 2002:a17:903:26c4:b0:2ca:d976:95ce with SMTP id d9443c01a7336-2d015d661dcmr49142535ad.39.1785286011753;
-        Tue, 28 Jul 2026 17:46:51 -0700 (PDT)
-Received: from ryzen.lan ([2601:644:8000:7a86::e35])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d024b114a5sm1588145ad.21.2026.07.28.17.46.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2026 17:46:50 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-edac@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCH] EDAC/mc: embed channels with csrow_info
-Date: Tue, 28 Jul 2026 17:46:48 -0700
-Message-ID: <20260729004648.601130-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qaZrPsqc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AF34FC2BCB3;
+	Wed, 29 Jul 2026 08:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1785313628;
+	bh=c2p5L1q6zxv7wWh9EpdRkFyHFnzsFh472s+WmtKCZhw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=qaZrPsqc46Va3HGE5DQv6PSJD2aEq7KN7B2MnLDrsaZzCCN3xaE5QKi7ZVo+RghaS
+	 2cECdSTMyXjs+h11nWxfdxk0UU+289s49mnRkwubvWmz0gvi3atWSU/Res25/55MkY
+	 3wJjOlZjaj4TTFjkmmY25m6LQBu/p+1MxAIJcyCymZKCF+/QwLh8KyppKqYTLMNdMK
+	 57oHWaPYlirS99z1rMg2Jdufy/y+EZGFlXz6bPAlXeu+lq13klzOkJXGNg0cnOXbp9
+	 xRyYc5HLX6HcFyJhvfAepyackC88eSZOvBof8WyrIa+u+ufmof0Fd8HMLoSqVQ2+Gy
+	 gXMTlXVkL5hag==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9935CC53219;
+	Wed, 29 Jul 2026 08:27:08 +0000 (UTC)
+From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
+Date: Wed, 29 Jul 2026 09:25:28 +0100
+Subject: [PATCH v10 01/17] iio: ABI: add attributes for altcurrent channels
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260729-ad9910-iio-driver-v10-1-aa1f6167729e@analog.com>
+References: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
+In-Reply-To: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
+To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Rodrigo Alencar <rodrigo.alencar@analog.com>, 
+ Johan Hovold <johan@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785313627; l=3588;
+ i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
+ bh=NMyQtwKnhP7ghLAaLd8Vv8Yqv0bWLLVXShCmZ6SK4qg=;
+ b=Qxwrjl8ACDFxXM51QGFN44XesPSFtyNyG8BXgOcrSLrWggCkgEZI9r5qo8bYuNawGAklFqpFa
+ ZcOPZhGRQCnDZVCj5U7VdbGuhYPBmSCrMm6INNaWiTTafCq/nTduags
+X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
+ pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
+X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
+ with auth_id=561
+X-Original-From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+Reply-To: rodrigo.alencar@analog.com
 
-Use a flexible array member to combine allocations to avoid separate
-freeing. Also emded the actual array to avoid separate allocations.
+From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Add __counted_by for extra runtime analysis with UBSAN.
+Add attributes applicable to altcurrent channels, e.g., frequency, phase,
+scale, raw, label and powerdown. Those are going to be used by a DDS
+device to be introduced shortly.
 
-Move tot_channels assignment to after allocations. kzalloc_flex() does
-this already for GCC >= 15.
-
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
- drivers/edac/edac_mc.c | 33 ++++++++++-----------------------
- include/linux/edac.h   |  2 +-
- 2 files changed, 11 insertions(+), 24 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-iio | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index fd70caa85574..0fff56ce21b4 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -179,7 +179,7 @@ static void mci_release(struct device *dev)
- {
- 	struct mem_ctl_info *mci = container_of(dev, struct mem_ctl_info, dev);
- 	struct csrow_info *csr;
--	int i, chn, row;
-+	int i, row;
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index 5cc2e82c4997..3e75ce1c97c6 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -478,6 +478,10 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_supply_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_current_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_current_q_scale
++What:		/sys/bus/iio/devices/iio:deviceX/in_altcurrentY_scale
++What:		/sys/bus/iio/devices/iio:deviceX/in_altcurrent_scale
++What:		/sys/bus/iio/devices/iio:deviceX/out_altcurrentY_scale
++What:		/sys/bus/iio/devices/iio:deviceX/out_altcurrent_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_peak_scale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_scale
+@@ -799,6 +803,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_powerdown
+ What:		/sys/bus/iio/devices/iio:deviceX/out_voltage_powerdown
+ What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_powerdown
+ What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltage_powerdown
++What:		/sys/bus/iio/devices/iio:deviceX/out_altcurrentY_powerdown
++What:		/sys/bus/iio/devices/iio:deviceX/out_altcurrent_powerdown
+ KernelVersion:	2.6.38
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+@@ -809,6 +815,7 @@ Description:
+ 		together.
  
- 	if (mci->dimms) {
- 		for (i = 0; i < mci->tot_dimms; i++)
-@@ -193,11 +193,6 @@ static void mci_release(struct device *dev)
- 			if (!csr)
- 				continue;
+ What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_frequency
++What:		/sys/bus/iio/devices/iio:deviceX/out_altcurrentY_frequency
+ KernelVersion:	3.4.0
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+@@ -835,8 +842,10 @@ Description:
+ 		all the other channels, since it involves changing the VCO
+ 		fundamental output frequency.
  
--			if (csr->channels) {
--				for (chn = 0; chn < mci->num_cschannel; chn++)
--					kfree(csr->channels[chn]);
--				kfree(csr->channels);
--			}
- 			kfree(csr);
- 		}
- 		kfree(mci->csrows);
-@@ -222,26 +217,18 @@ static int edac_mc_alloc_csrows(struct mem_ctl_info *mci)
- 	for (row = 0; row < tot_csrows; row++) {
- 		struct csrow_info *csr;
++What:		/sys/bus/iio/devices/iio:deviceX/in_altcurrentY_phase
+ What:		/sys/bus/iio/devices/iio:deviceX/in_altvoltageY_i_phase
+ What:		/sys/bus/iio/devices/iio:deviceX/in_altvoltageY_q_phase
++What:		/sys/bus/iio/devices/iio:deviceX/out_altcurrentY_phase
+ What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_phase
+ What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_i_phase
+ What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_q_phase
+@@ -850,6 +859,7 @@ Description:
+ 		channel.
  
--		csr = kzalloc_obj(**mci->csrows);
-+		csr = kzalloc_flex(*csr, channels, tot_channels);
- 		if (!csr)
- 			return -ENOMEM;
+ What:		/sys/bus/iio/devices/iio:deviceX/out_currentY_raw
++What:		/sys/bus/iio/devices/iio:deviceX/out_altcurrentY_raw
+ Date:		May 2012
+ KernelVersion:	3.5
+ Contact:	Johan Hovold <jhovold@gmail.com>
+@@ -1736,6 +1746,7 @@ Description:
  
-+		csr->nr_channels = tot_channels;
- 		mci->csrows[row] = csr;
- 		csr->csrow_idx = row;
- 		csr->mci = mci;
--		csr->nr_channels = tot_channels;
--		csr->channels = kzalloc_objs(*csr->channels, tot_channels);
--		if (!csr->channels)
--			return -ENOMEM;
+ What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_raw
+ What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_supply_raw
++What:		/sys/bus/iio/devices/iio:deviceX/in_altcurrentY_raw
+ KernelVersion:	3.17
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+@@ -2126,7 +2137,9 @@ Description:
  
- 		for (chn = 0; chn < tot_channels; chn++) {
--			struct rank_info *chan;
--
--			chan = kzalloc_obj(**csr->channels);
--			if (!chan)
--				return -ENOMEM;
-+			struct rank_info *chan = &csr->channels[chn];
+ 		Raw counter device counters direction for channel Y.
  
--			csr->channels[chn] = chan;
- 			chan->chan_idx = chn;
- 			chan->csrow = csr;
- 		}
-@@ -272,7 +259,7 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
- 		struct rank_info *chan;
- 		int n, len;
- 
--		chan = mci->csrows[row]->channels[chn];
-+		chan = &mci->csrows[row]->channels[chn];
- 
- 		dimm = kzalloc_obj(**mci->dimms);
- 		if (!dimm)
-@@ -613,13 +600,13 @@ int edac_mc_add_mc_with_groups(struct mem_ctl_info *mci,
- 			int j;
- 
- 			for (j = 0; j < csrow->nr_channels; j++)
--				nr_pages += csrow->channels[j]->dimm->nr_pages;
-+				nr_pages += csrow->channels[j].dimm->nr_pages;
- 			if (!nr_pages)
- 				continue;
- 			edac_mc_dump_csrow(csrow);
- 			for (j = 0; j < csrow->nr_channels; j++)
--				if (csrow->channels[j]->dimm->nr_pages)
--					edac_mc_dump_channel(csrow->channels[j]);
-+				if (csrow->channels[j].dimm->nr_pages)
-+					edac_mc_dump_channel(&csrow->channels[j]);
- 		}
- 
- 		mci_for_each_dimm(mci, dimm)
-@@ -758,7 +745,7 @@ int edac_mc_find_csrow_by_page(struct mem_ctl_info *mci, unsigned long page)
- 		struct csrow_info *csrow = csrows[i];
- 		n = 0;
- 		for (j = 0; j < csrow->nr_channels; j++) {
--			struct dimm_info *dimm = csrow->channels[j]->dimm;
-+			struct dimm_info *dimm = csrow->channels[j].dimm;
- 			n += dimm->nr_pages;
- 		}
- 		if (n == 0)
-@@ -904,7 +891,7 @@ static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
- 	if (type == HW_EVENT_ERR_CORRECTED) {
- 		mci->csrows[row]->ce_count += count;
- 		if (chan >= 0)
--			mci->csrows[row]->channels[chan]->ce_count += count;
-+			mci->csrows[row]->channels[chan].ce_count += count;
- 	} else {
- 		mci->csrows[row]->ue_count += count;
- 	}
-diff --git a/include/linux/edac.h b/include/linux/edac.h
-index 3902c3789510..3d8ee12c11be 100644
---- a/include/linux/edac.h
-+++ b/include/linux/edac.h
-@@ -448,7 +448,7 @@ struct csrow_info {
- 
- 	/* channel information for this csrow */
- 	u32 nr_channels;
--	struct rank_info **channels;
-+	struct rank_info channels[] __counted_by(nr_channels);
- };
- 
- /*
++What:		/sys/bus/iio/devices/iio:deviceX/in_altcurrentY_label
+ What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_label
++What:		/sys/bus/iio/devices/iio:deviceX/out_altcurrentY_label
+ What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_label
+ KernelVersion:	5.8
+ Contact:	linux-iio@vger.kernel.org
+
 -- 
-2.55.0
+2.43.0
+
 
