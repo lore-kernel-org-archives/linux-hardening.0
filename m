@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AF443DA31;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9412943E078;
 	Wed, 29 Jul 2026 08:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785313631; cv=none; b=ju7U+PikX1PUtWKjMdjEmObY25xYLCBOAz2ugKmb+w6XkIvjnOSsn4k1gPItFDxZ3vjgxKOcbTlemEdFSuMVDfvoEmBTlYA52JZ+z+h39gezQm3sdgVVgSi2VIFhZeV4U0q5EEPtbzjTQnXal664L/IHsT229bBLNbDimxWIkOc=
+	t=1785313631; cv=none; b=Jq471uA1J4QrTVfYE87AZlpMU1iUR8bfNaVuHhZ5N/Sl3aRHyfjHouj9QJxUjUGNVECzF83zqdJz8R5HYHo8Q/qy0dAarzSpEUjan7WDQvtu6bezOV96iQDDmTOX2t3T02IhNyLlTVnBZQZ6t1gwhton0JIJEiQN/gfAOwZiwoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785313631; c=relaxed/simple;
-	bh=WUzuTsse5Y8Ft2aJFKvgjzY4QdsWrSzMFd0WDCYRWAQ=;
+	bh=W0+Cjm/asGvRtGDRN3KkCSFrsxsXiywDO8oj7nyS8h0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ioyfaohE5lINQ8kn08n/HFARd9CWCFiiUQrO+BZIyetPMZSj5/nwe66p7p9B+18v+F3QVfRGfCNiUXpA3B2ljJAeFUqhAWddxSi41zvPPphq8W0OvcmDYkinx4hh4mEwMxsj+4ZtpfkYoM5BGXnRW/tl7o5Ii9bmOnVJ/FqlrvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UWxNdJ8F; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=MYGXAszAKj14B1SO+UR4sGTqNWIX5k/bCmRFRm/cGpmEvOaZ/Hoiis4Ynol6J+vwZZNuKLKGGJHSb/enVYELgiY1zgjwoJ1/WqkuKOELLarFu85xd9o229IWLqP5JRF28aM00jmrRJMJ/1S2p9N0OkPbEcb2DQDs029tMFCMWnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmeYCvmo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UWxNdJ8F"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7BB5EC2BD01;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmeYCvmo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1972EC32781;
 	Wed, 29 Jul 2026 08:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1785313629;
-	bh=WUzuTsse5Y8Ft2aJFKvgjzY4QdsWrSzMFd0WDCYRWAQ=;
+	bh=W0+Cjm/asGvRtGDRN3KkCSFrsxsXiywDO8oj7nyS8h0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=UWxNdJ8F5/YMAEUfhAFinY+z8PqwEhgpKSLKBSRZ8yC5OtrDnMhON5vWhz1fxxjN4
-	 8p6kk9pk3hgZfQH44JJmFPwc6dENr2vE8YteDrjF5/+7t4SryZQP+rsWxXXtXtKOuc
-	 3PKDpWm7Gk12bJW6mmRhPMQU/9HXeZ5yCttect55IWOSUbr14Fk+8R4KY1Vw+EEqEU
-	 xXEbNmKY/mRzcZi7nUJrp4o3rN4sHrvGIa7GBx9xNYqbgmOOGl6qfxizzH9ClMs+K5
-	 j31zRchpNm/1BS2jLIShSyLg3IuH3hbiikxLfPRngrHG0FFo0cDo0hOcWPrBgNlCpD
-	 OAL+Ggfo/B7xg==
+	b=GmeYCvmoa1s3M6uQFqv4xUdN4JMxqerSc7ebjW7OeaW4Bu6itrKfDr8Zxd9LhQBlD
+	 CWqNJCIh8WsRBRdEEZqefdOC/w8rb7dCReKvDAAgTkt+FPUMsgfhtIP2tCLFrlwB9N
+	 bHCJKtl9dF6hMvE9BxJsEer+pupHjyJZwSBF6vuSK2ftH6+MAhz4NkWFZImKfFjIeR
+	 CxWuQcNK+tsRwtSKZMrerhJedDRNn+uyvGQ4yqk9p1Y0hxk3JOZEM5VJrHW6FallYa
+	 YWedk1kR0sSF8B1UPZz9+MFsbHcMWjuVv1+2EF7u5XNhJSGzfjhQZ7/cgBcyFL/Zxq
+	 XgzkcZorX1uCg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663BCC53200;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047E2C54F5C;
 	Wed, 29 Jul 2026 08:27:09 +0000 (UTC)
 From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Wed, 29 Jul 2026 09:25:40 +0100
-Subject: [PATCH v10 13/17] iio: frequency: ad9910: add RAM mode support
+Date: Wed, 29 Jul 2026 09:25:34 +0100
+Subject: [PATCH v10 07/17] iio: test: add kunit tests for channel prefix
+ naming generation
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260729-ad9910-iio-driver-v10-13-aa1f6167729e@analog.com>
+Message-Id: <20260729-ad9910-iio-driver-v10-7-aa1f6167729e@analog.com>
 References: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
 In-Reply-To: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
 To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
@@ -56,11 +57,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
  Rodrigo Alencar <rodrigo.alencar@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785313627; l=19681;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785313627; l=14007;
  i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=nBE72nTTzqD+eS1Lcblx2HCK9JplUqPxF60PwZlHKHg=;
- b=URjR470esqwynKmu7LPk1MZzMzKStSiyaUF1f2/udzQIqdn9A8d1G1flK/m8pdHfwHG3C2nY+
- kILIphD07iSDmX0Kn6WhMIG+E1IJ+Ea0uv+NsStV9K7V2bxI5AXLXl8
+ bh=/BO9KKwfYEce739YkoLXpbt9r/zP9Z3389wSrDL1VZw=;
+ b=BIt5Jh8ZeMv8b542x1GfsH8Rds9MPmbmwKHb1yLjT+4JCvLAInVTNzzgTWxnJY47L1LMNBw1/
+ /07Ao/ighbPCGAQgPay1M0dw7fvLM89AwJBjPtsjbSTjVAnmhifxytb
 X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
  pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
 X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
@@ -70,578 +71,463 @@ Reply-To: rodrigo.alencar@analog.com
 
 From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Add RAM control channel, which includes:
-- RAM data loading via firmware upload interface;
-- Per-profile configuration and DDS core parameter destination as firmware
-  metadata;
-- Profile switching relying on profile channels;
-- Sampling frequency control of the active profile;
-- ram-enable-aware read/write paths that redirect single tone
-  frequency/phase/amplitude access through reg_profile cache when RAM is
-  active;
+Add a KUnit test suite covering __iio_chan_prefix_emit(), the helper
+that builds IIO sysfs attribute name prefixes from an iio_chan_spec.
+The suite groups cases by the enum iio_shared_by mode it exercises:
 
-When RAM is enabled, the DDS profile parameters (frequency, phase,
-amplitude) for the single tone mode are sourced from a shadow register
-cache (reg_profile[]) since the profile registers are repurposed for RAM
-control.
+  - IIO_SHARED_BY_ALL: produces an empty prefix.
+  - IIO_SHARED_BY_DIR: emits direction only ("in" / "out").
+  - IIO_SHARED_BY_TYPE: emits "<dir>_<type>" and the differential
+    "<dir>_<type>-<type>" variant.
+  - IIO_SEPARATE: covers the full matrix of indexed, differential,
+    modified, output and extend_name combinations, plus the two
+    documented error paths (differential without indexed, differential
+    with modifier).
+
+A final case exercises the seq_buf overflow path by passing an
+undersized buffer and expects -EOVERFLOW.
+
+Also, an entry is created under MAINTAINERS dedicated to tests for IIO
+core helpers.
 
 Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
- drivers/iio/frequency/Kconfig  |   3 +
- drivers/iio/frequency/ad9910.c | 330 ++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 326 insertions(+), 7 deletions(-)
+ MAINTAINERS                                |   7 +
+ drivers/iio/iio_core.h                     |   7 +
+ drivers/iio/industrialio-core.c            |  13 +-
+ drivers/iio/test/Kconfig                   |  14 ++
+ drivers/iio/test/Makefile                  |   1 +
+ drivers/iio/test/iio-test-channel-prefix.c | 307 +++++++++++++++++++++++++++++
+ 6 files changed, 345 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/frequency/Kconfig b/drivers/iio/frequency/Kconfig
-index 6033f9155b4f..994d199080eb 100644
---- a/drivers/iio/frequency/Kconfig
-+++ b/drivers/iio/frequency/Kconfig
-@@ -29,6 +29,9 @@ config AD9910
- 	tristate "Analog Devices AD9910 Direct Digital Synthesizer"
- 	depends on SPI
- 	depends on GPIOLIB
-+	select CRC32
-+	select FW_LOADER
-+	select FW_UPLOAD
- 	help
- 	  Say yes here to build support for Analog Devices AD9910
- 	  1 GSPS, 14-Bit DDS with integrated DAC.
-diff --git a/drivers/iio/frequency/ad9910.c b/drivers/iio/frequency/ad9910.c
-index 6c794e1b4b1c..d4f89fd44933 100644
---- a/drivers/iio/frequency/ad9910.c
-+++ b/drivers/iio/frequency/ad9910.c
-@@ -8,11 +8,14 @@
- #include <linux/array_size.h>
- #include <linux/bitfield.h>
- #include <linux/clk.h>
-+#include <linux/crc32.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/device-id/of.h>
- #include <linux/device-id/spi.h>
- #include <linux/device/devres.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ce020ded5fd3..101303d28a17 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12634,6 +12634,13 @@ F:	include/dt-bindings/iio/
+ F:	include/linux/iio/
+ F:	tools/iio/
+ 
++IIO CORE KUNIT TESTS
++M:	Rodrigo Alencar <rodrigo.alencar@analog.com>
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	drivers/iio/test/iio-test-channel-prefix.c
++F:	drivers/iio/test/iio-test-format.c
++
+ IIO UNIT CONVERTER
+ M:	Peter Rosin <peda@lysator.liu.se>
+ L:	linux-iio@vger.kernel.org
+diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
+index b7d5f4f0fada..59fa1bd9924b 100644
+--- a/drivers/iio/iio_core.h
++++ b/drivers/iio/iio_core.h
+@@ -109,4 +109,11 @@ void iio_device_wakeup_eventset(struct iio_dev *indio_dev);
+ struct iio_event_interface;
+ bool iio_event_enabled(const struct iio_event_interface *ev_int);
+ 
++#if IS_ENABLED(CONFIG_KUNIT)
++ssize_t __iio_chan_prefix_emit(struct device *dev,
++			       const struct iio_chan_spec *chan,
++			       enum iio_shared_by shared_by,
++			       char *buf, size_t len);
++#endif
++
+ #endif
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 23d3801887a9..aa9d6474edd9 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -9,12 +9,15 @@
+ 
+ #define pr_fmt(fmt) "iio-core: " fmt
+ 
++#include <kunit/visibility.h>
++
+ #include <linux/anon_inodes.h>
+ #include <linux/cdev.h>
+ #include <linux/cleanup.h>
+ #include <linux/debugfs.h>
+ #include <linux/device.h>
  #include <linux/err.h>
-+#include <linux/firmware.h>
- #include <linux/gpio/consumer.h>
- #include <linux/log2.h>
- #include <linux/math64.h>
-@@ -157,6 +160,15 @@
- #define AD9910_PROFILE_ST_POW_MSK		GENMASK_ULL(47, 32)
- #define AD9910_PROFILE_ST_FTW_MSK		GENMASK_ULL(31, 0)
- 
-+/* Profile Register Format (RAM Mode) */
-+#define AD9910_PROFILE_RAM_OPEN_MSK		GENMASK_ULL(61, 56)
-+#define AD9910_PROFILE_RAM_STEP_RATE_MSK	GENMASK_ULL(55, 40)
-+#define AD9910_PROFILE_RAM_END_ADDR_MSK		GENMASK_ULL(39, 30)
-+#define AD9910_PROFILE_RAM_START_ADDR_MSK	GENMASK_ULL(23, 14)
-+#define AD9910_PROFILE_RAM_NO_DWELL_HIGH_MSK	BIT_ULL(5)
-+#define AD9910_PROFILE_RAM_ZERO_CROSSING_MSK	BIT_ULL(3)
-+#define AD9910_PROFILE_RAM_MODE_CONTROL_MSK	GENMASK_ULL(2, 0)
-+
- /* Device constants */
- #define AD9910_PI_NANORAD		3141592653UL
- #define AD9910_PI_PICORAD		3141592653590ULL
-@@ -171,6 +183,16 @@
- #define AD9910_STEP_RATE_MAX		FIELD_MAX(AD9910_DRG_RATE_DEC_MSK)
- #define AD9910_NUM_PROFILES		8
- 
-+#define AD9910_RAM_FW_MAGIC		0x00AD9910
-+#define AD9910_RAM_FW_V1		0x0001
-+#define AD9910_RAM_SIZE_MAX_WORDS	1024
-+#define AD9910_RAM_WORD_SIZE		sizeof(u32)
-+#define AD9910_RAM_SIZE_MAX_BYTES	(AD9910_RAM_SIZE_MAX_WORDS * AD9910_RAM_WORD_SIZE)
-+#define AD9910_RAM_ADDR_MAX		(AD9910_RAM_SIZE_MAX_WORDS - 1)
-+
-+#define AD9910_RAM_ENABLED(st)		\
-+	FIELD_GET(AD9910_CFR1_RAM_ENABLE_MSK, (st)->reg[AD9910_REG_CFR1].val32)
-+
- /* PLL constants */
- #define AD9910_PLL_MIN_N		12
- #define AD9910_PLL_MAX_N		127
-@@ -207,7 +229,7 @@
- #define AD9910_RESET_DELAY_us		1	/* 5 sysclk cycles: < 1us */
- 
- #define AD9910_SPI_DATA_IDX		1
--#define AD9910_SPI_DATA_LEN_MAX		sizeof(__be64)
-+#define AD9910_SPI_DATA_LEN_MAX		AD9910_RAM_SIZE_MAX_BYTES
- #define AD9910_SPI_MESSAGE_LEN_MAX	(AD9910_SPI_DATA_IDX + AD9910_SPI_DATA_LEN_MAX)
- #define AD9910_SPI_READ_MSK		BIT(7)
- #define AD9910_SPI_ADDR_MSK		GENMASK(4, 0)
-@@ -229,6 +251,7 @@
-  * @AD9910_CHANNEL_DRG: Digital Ramp Generator output channel
-  * @AD9910_CHANNEL_DRG_RAMP_UP: DRG ramp up channel
-  * @AD9910_CHANNEL_DRG_RAMP_DOWN: DRG ramp down channel
-+ * @AD9910_CHANNEL_RAM: RAM control output channel
-  */
- enum ad9910_channel {
- 	AD9910_CHANNEL_PHY = 100,
-@@ -245,8 +268,32 @@ enum ad9910_channel {
- 	AD9910_CHANNEL_DRG = 130,
- 	AD9910_CHANNEL_DRG_RAMP_UP = 131,
- 	AD9910_CHANNEL_DRG_RAMP_DOWN = 132,
-+	AD9910_CHANNEL_RAM = 140,
++#include <linux/export.h>
+ #include <linux/fs.h>
+ #include <linux/idr.h>
+ #include <linux/kdev_t.h>
+@@ -201,10 +204,11 @@ static const char * const iio_chan_info_postfix[] = {
+ 	[IIO_CHAN_INFO_POWERFACTOR] = "powerfactor",
  };
  
-+/**
-+ * struct ad9910_ram_fw - AD9910 RAM firmware format
-+ * @magic:	Magic number for RAM firmware validation
-+ * @version:	Firmware version number
-+ * @wcount:	Number of RAM words to be written
-+ * @crc:	CRC32 checksum of the RAM data for integrity verification
-+ * @cfr1:	Value of CFR1 register to be configured (not all fields are
-+ *		used, but this is included here for convenience)
-+ * @profiles:	Array of RAM profile configurations
-+ * @words:	Array of RAM words to be written. Data pattern should be set in
-+ *		reverse order and wcount specifies the number of words in this
-+ *		array
-+ */
-+struct ad9910_ram_fw {
-+	__be32 magic;
-+	__be16 version;
-+	__be16 wcount;
-+	__be32 crc;
-+	__be32 cfr1;
-+	__be64 profiles[AD9910_NUM_PROFILES];
-+	__be32 words[] __counted_by_be(wcount);
-+} __packed;
-+
- enum {
- 	AD9910_CHAN_IDX_PHY,
- 	AD9910_CHAN_IDX_PROFILE_0,
-@@ -271,6 +318,7 @@ enum {
- 	AD9910_CHAN_IDX_DRG_PHASE_RAMP_DOWN,
- 	AD9910_CHAN_IDX_DRG_AMP_RAMP_UP,
- 	AD9910_CHAN_IDX_DRG_AMP_RAMP_DOWN,
-+	AD9910_CHAN_IDX_RAM,
- };
- 
- enum {
-@@ -297,6 +345,7 @@ union ad9910_reg {
- struct ad9910_state {
- 	struct spi_device *spi;
- 	struct clk *refclk;
-+	struct fw_upload *ram_fwu;
- 
- 	struct gpio_desc *gpio_pwdown;
- 	struct gpio_desc *gpio_update;
-@@ -305,12 +354,22 @@ struct ad9910_state {
- 	/* cached registers */
- 	union ad9910_reg reg[AD9910_REG_NUM_CACHED];
- 
-+	/*
-+	 * alternate profile registers used to store RAM profile settings when
-+	 * RAM mode is disabled and Single Tone profile settings when RAM mode
-+	 * is enabled.
-+	 */
-+	u64 reg_profile[AD9910_NUM_PROFILES];
-+
- 	/* Lock for accessing device registers and state variables */
- 	struct mutex lock;
- 
- 	struct ad9910_data data;
- 	u8 profile;
- 
-+	bool ram_fwu_cancel;
-+	char ram_fwu_name[20];
-+
- 	/*
- 	 * RAM loading requires a reasonable amount of bytes, at the same time
- 	 * DMA capable SPI drivers requires the transfer buffers to live in
-@@ -334,6 +393,22 @@ static inline u64 ad9910_rational_scale(u64 input, u64 scale, u64 reference)
- 	return mul_u64_add_u64_div_u64(input, scale, reference >> 1, reference);
- }
- 
-+static inline u64 ad9910_ram_profile_val(struct ad9910_state *st)
-+{
-+	if (AD9910_RAM_ENABLED(st))
-+		return st->reg[AD9910_REG_PROFILE(st->profile)].val64;
-+	else
-+		return st->reg_profile[st->profile];
-+}
-+
-+static inline u64 ad9910_st_profile_val(struct ad9910_state *st, u8 profile)
-+{
-+	if (AD9910_RAM_ENABLED(st))
-+		return st->reg_profile[profile];
-+	else
-+		return st->reg[AD9910_REG_PROFILE(profile)].val64;
-+}
-+
- static int ad9910_io_update(struct ad9910_state *st)
+-static ssize_t __iio_chan_prefix_emit(struct device *dev,
+-				      const struct iio_chan_spec *chan,
+-				      enum iio_shared_by shared_by,
+-				      char *buf, size_t len)
++VISIBLE_IF_KUNIT
++ssize_t __iio_chan_prefix_emit(struct device *dev,
++			       const struct iio_chan_spec *chan,
++			       enum iio_shared_by shared_by,
++			       char *buf, size_t len)
  {
- 	if (st->gpio_update) {
-@@ -933,6 +1008,18 @@ static const struct iio_chan_spec ad9910_channels[] = {
- 		.ext_info = ad9910_drg_ramp_ext_info,
- 		.parent = &ad9910_channels[AD9910_CHAN_IDX_DRG_AMP],
- 	},
-+	[AD9910_CHAN_IDX_RAM] = {
-+		.type = IIO_ALTCURRENT,
-+		.indexed = 1,
-+		.output = 1,
-+		.channel = AD9910_CHANNEL_RAM,
-+		.address = AD9910_CHAN_IDX_RAM,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE) |
-+				      BIT(IIO_CHAN_INFO_FREQUENCY) |
-+				      BIT(IIO_CHAN_INFO_PHASE) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.parent = &ad9910_channels[AD9910_CHAN_IDX_PHY],
-+	},
- };
+ 	const char *type = iio_chan_type_name_spec[chan->type];
+ 	const char *dir = iio_direction[chan->output];
+@@ -254,6 +258,7 @@ static ssize_t __iio_chan_prefix_emit(struct device *dev,
  
- static int ad9910_read_raw(struct iio_dev *indio_dev,
-@@ -965,6 +1052,10 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 			else
- 				*val = 0;
- 			break;
-+		case AD9910_CHANNEL_RAM:
-+			*val = FIELD_GET(AD9910_CFR1_RAM_ENABLE_MSK,
-+					 st->reg[AD9910_REG_CFR1].val32);
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -974,7 +1065,10 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
- 			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
- 			tmp64 = FIELD_GET(AD9910_PROFILE_ST_FTW_MSK,
--					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
-+					  ad9910_st_profile_val(st, tmp32));
-+			break;
-+		case AD9910_CHANNEL_RAM:
-+			tmp64 = st->reg[AD9910_REG_FTW].val32;
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -988,7 +1082,10 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
- 			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
- 			tmp64 = FIELD_GET(AD9910_PROFILE_ST_POW_MSK,
--					  st->reg[AD9910_REG_PROFILE(tmp32)].val64);
-+					  ad9910_st_profile_val(st, tmp32));
-+			break;
-+		case AD9910_CHANNEL_RAM:
-+			tmp64 = st->reg[AD9910_REG_POW].val16;
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -1002,7 +1099,7 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
- 			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
- 			*val = FIELD_GET(AD9910_PROFILE_ST_ASF_MSK,
--					 st->reg[AD9910_REG_PROFILE(tmp32)].val64);
-+					 ad9910_st_profile_val(st, tmp32));
- 			return IIO_VAL_INT;
- 		case AD9910_CHANNEL_DRG_RAMP_UP:
- 			tmp64 = FIELD_GET(AD9910_DRG_LIMIT_UPPER_MSK,
-@@ -1030,6 +1127,10 @@ static int ad9910_read_raw(struct iio_dev *indio_dev,
- 			tmp32 = FIELD_GET(AD9910_DRG_RATE_DEC_MSK,
- 					  st->reg[AD9910_REG_DRG_RATE].val32);
- 			break;
-+		case AD9910_CHANNEL_RAM:
-+			tmp32 = FIELD_GET(AD9910_PROFILE_RAM_STEP_RATE_MSK,
-+					  ad9910_ram_profile_val(st));
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1119,7 +1220,7 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 	struct ad9910_state *st = iio_priv(indio_dev);
- 	u64 tmp64;
- 	u32 tmp32;
--	int ret;
-+	int ret, i;
- 
- 	guard(mutex)(&st->lock);
- 
-@@ -1156,6 +1257,41 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 						   AD9910_CFR2_DRG_DEST_MSK |
- 						   AD9910_CFR2_DRG_ENABLE_MSK,
- 						   tmp32, true);
-+		case AD9910_CHANNEL_RAM:
-+			if (AD9910_RAM_ENABLED(st) == !!val)
-+				return 0;
-+
-+			/* swap profile configs */
-+			for (i = 0; i < AD9910_NUM_PROFILES; i++) {
-+				tmp64 = st->reg[AD9910_REG_PROFILE(i)].val64;
-+				ret = ad9910_reg64_write(st,
-+							 AD9910_REG_PROFILE(i),
-+							 st->reg_profile[i],
-+							 false);
-+				if (ret)
-+					break;
-+				st->reg_profile[i] = tmp64;
-+			}
-+
-+			if (ret) {
-+				/*
-+				 * After the write failure, profiles 0..i-1 were
-+				 * already swapped in SW, but Hw registers are
-+				 * still pending an IO update, so swap them back
-+				 * in SW to keep the state consistent.
-+				 */
-+				while (i--) {
-+					tmp64 = st->reg[AD9910_REG_PROFILE(i)].val64;
-+					st->reg[AD9910_REG_PROFILE(i)].val64 = st->reg_profile[i];
-+					st->reg_profile[i] = tmp64;
-+				}
-+				return ret;
-+			}
-+
-+			tmp32 = FIELD_PREP(AD9910_CFR1_RAM_ENABLE_MSK, !!val);
-+			return ad9910_reg32_update(st, AD9910_REG_CFR1,
-+						   AD9910_CFR1_RAM_ENABLE_MSK,
-+						   tmp32, true);
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1169,10 +1305,17 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 		switch (chan->channel) {
- 		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
- 			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
-+			if (AD9910_RAM_ENABLED(st)) {
-+				FIELD_MODIFY(AD9910_PROFILE_ST_FTW_MSK,
-+					     &st->reg_profile[tmp32], tmp64);
-+				return 0;
-+			}
- 			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_FTW_MSK, tmp64);
- 			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
- 						   AD9910_PROFILE_ST_FTW_MSK,
- 						   tmp64, true);
-+		case AD9910_CHANNEL_RAM:
-+			return ad9910_reg32_write(st, AD9910_REG_FTW, tmp64, true);
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1190,10 +1333,19 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 		switch (chan->channel) {
- 		case AD9910_CHANNEL_PROFILE_0 ... AD9910_CHANNEL_PROFILE_7:
- 			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
-+
-+			if (AD9910_RAM_ENABLED(st)) {
-+				FIELD_MODIFY(AD9910_PROFILE_ST_POW_MSK,
-+					     &st->reg_profile[tmp32], tmp64);
-+				return 0;
-+			}
-+
- 			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_POW_MSK, tmp64);
- 			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
- 						   AD9910_PROFILE_ST_POW_MSK,
- 						   tmp64, true);
-+		case AD9910_CHANNEL_RAM:
-+			return ad9910_reg16_write(st, AD9910_REG_POW, tmp64, true);
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1204,8 +1356,15 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 				return -EINVAL;
- 
- 			tmp32 = chan->channel - AD9910_CHANNEL_PROFILE_0;
--			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_ASF_MSK,
--					   min_t(u64, val, AD9910_ASF_MAX));
-+			tmp64 = min_t(u64, val, AD9910_ASF_MAX);
-+
-+			if (AD9910_RAM_ENABLED(st)) {
-+				FIELD_MODIFY(AD9910_PROFILE_ST_ASF_MSK,
-+					     &st->reg_profile[tmp32], tmp64);
-+				return 0;
-+			}
-+
-+			tmp64 = FIELD_PREP(AD9910_PROFILE_ST_ASF_MSK, tmp64);
- 			return ad9910_reg64_update(st, AD9910_REG_PROFILE(tmp32),
- 						   AD9910_PROFILE_ST_ASF_MSK,
- 						   tmp64, true);
-@@ -1261,6 +1420,17 @@ static int ad9910_write_raw(struct iio_dev *indio_dev,
- 			return ad9910_reg32_update(st, AD9910_REG_DRG_RATE,
- 						   AD9910_DRG_RATE_DEC_MSK,
- 						   tmp32, true);
-+		case AD9910_CHANNEL_RAM:
-+			if (!AD9910_RAM_ENABLED(st)) {
-+				FIELD_MODIFY(AD9910_PROFILE_RAM_STEP_RATE_MSK,
-+					     &st->reg_profile[st->profile], tmp32);
-+				return 0;
-+			}
-+
-+			tmp64 = FIELD_PREP(AD9910_PROFILE_RAM_STEP_RATE_MSK, tmp32);
-+			return ad9910_reg64_update(st, AD9910_REG_PROFILE(st->profile),
-+						   AD9910_PROFILE_RAM_STEP_RATE_MSK,
-+						   tmp64, true);
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1427,6 +1597,7 @@ static const char * const ad9910_channel_str[] = {
- 	[AD9910_CHAN_IDX_DRG_PHASE_RAMP_DOWN] = "drg_falling_phase",
- 	[AD9910_CHAN_IDX_DRG_AMP_RAMP_UP] = "drg_rising_amplitude",
- 	[AD9910_CHAN_IDX_DRG_AMP_RAMP_DOWN] = "drg_falling_amplitude",
-+	[AD9910_CHAN_IDX_RAM] = "ram",
- };
- 
- static int ad9910_read_label(struct iio_dev *indio_dev,
-@@ -1436,6 +1607,131 @@ static int ad9910_read_label(struct iio_dev *indio_dev,
- 	return sysfs_emit(label, "%s\n", ad9910_channel_str[chan->address]);
+ 	return seq_buf_has_overflowed(&s) ? -EOVERFLOW : s.len;
  }
++EXPORT_SYMBOL_IF_KUNIT(__iio_chan_prefix_emit);
  
-+static enum fw_upload_err ad9910_ram_fwu_prepare(struct fw_upload *fw_upload,
-+						 const u8 *data, u32 size)
+ /**
+  * iio_device_id() - query the unique ID for the device
+diff --git a/drivers/iio/test/Kconfig b/drivers/iio/test/Kconfig
+index 4fc17dd0dcd7..7d2c29cc583b 100644
+--- a/drivers/iio/test/Kconfig
++++ b/drivers/iio/test/Kconfig
+@@ -4,6 +4,20 @@
+ #
+ 
+ # Keep in alphabetical order
++config IIO_CHANNEL_PREFIX_KUNIT_TEST
++	tristate "Test IIO channel prefix" if !KUNIT_ALL_TESTS
++	depends on KUNIT && IIO
++	default KUNIT_ALL_TESTS
++	help
++	  Build unit tests for __iio_chan_prefix_emit(), the helper that
++	  builds IIO sysfs attribute name prefixes from an iio_chan_spec.
++	  The tests are compiled into the IIO core module.
++
++	  For more information on KUnit and unit tests in general, please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
++
+ config IIO_GTS_KUNIT_TEST
+ 	tristate "Test IIO gain-time-scale helpers" if !KUNIT_ALL_TESTS
+ 	depends on KUNIT
+diff --git a/drivers/iio/test/Makefile b/drivers/iio/test/Makefile
+index 0c846bc21acd..ba08afa7f3f2 100644
+--- a/drivers/iio/test/Makefile
++++ b/drivers/iio/test/Makefile
+@@ -4,6 +4,7 @@
+ #
+ 
+ # Keep in alphabetical order
++obj-$(CONFIG_IIO_CHANNEL_PREFIX_KUNIT_TEST) += iio-test-channel-prefix.o
+ obj-$(CONFIG_IIO_RESCALE_KUNIT_TEST) += iio-test-rescale.o
+ obj-$(CONFIG_IIO_FORMAT_KUNIT_TEST) += iio-test-format.o
+ obj-$(CONFIG_IIO_GTS_KUNIT_TEST) += iio-test-gts.o
+diff --git a/drivers/iio/test/iio-test-channel-prefix.c b/drivers/iio/test/iio-test-channel-prefix.c
+new file mode 100644
+index 000000000000..44c838fcd8d6
+--- /dev/null
++++ b/drivers/iio/test/iio-test-channel-prefix.c
+@@ -0,0 +1,307 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Unit tests for IIO channel prefix generation.
++ */
++
++#include <kunit/test.h>
++#include <kunit/visibility.h>
++
++#include <linux/iio/iio.h>
++#include <linux/limits.h>
++#include <linux/string.h>
++
++#include "../iio_core.h"
++
++#define PREFIX_BUF_SIZE		(NAME_MAX + 1)
++
++#define EXPECT_PREFIX(_test, _buf, _ret, _expected) do {			\
++		struct kunit *__test = (_test);					\
++		const char *__expected = (_expected);				\
++										\
++		KUNIT_EXPECT_EQ(__test, (_ret), (ssize_t)strlen(__expected));	\
++		KUNIT_EXPECT_STREQ(__test, (_buf), __expected);			\
++	} while (0)
++
++static char *iio_test_prefix_alloc(struct kunit *test)
 +{
-+	struct ad9910_state *st = fw_upload->dd_handle;
-+	const struct ad9910_ram_fw *fw_data = (const struct ad9910_ram_fw *)data;
-+	size_t wcount, bcount;
++	char *buf = kunit_kzalloc(test, PREFIX_BUF_SIZE, GFP_KERNEL);
 +
-+	scoped_guard(mutex, &st->lock) {
-+		/* cancel requests before prepare() are ignored */
-+		st->ram_fwu_cancel = false;
-+	}
-+
-+	if (size < sizeof(struct ad9910_ram_fw))
-+		return FW_UPLOAD_ERR_INVALID_SIZE;
-+
-+	if (get_unaligned_be32(&fw_data->magic) != AD9910_RAM_FW_MAGIC)
-+		return FW_UPLOAD_ERR_FW_INVALID;
-+
-+	if (get_unaligned_be16(&fw_data->version) != AD9910_RAM_FW_V1)
-+		return FW_UPLOAD_ERR_FW_INVALID;
-+
-+	wcount = get_unaligned_be16(&fw_data->wcount);
-+	bcount = size - sizeof(struct ad9910_ram_fw);
-+	if (wcount > AD9910_RAM_SIZE_MAX_WORDS ||
-+	    bcount != (wcount * AD9910_RAM_WORD_SIZE))
-+		return FW_UPLOAD_ERR_INVALID_SIZE;
-+
-+	bcount += sizeof(fw_data->cfr1) + sizeof(fw_data->profiles);
-+	if (crc32(0, &fw_data->cfr1, bcount) != get_unaligned_be32(&fw_data->crc))
-+		return FW_UPLOAD_ERR_FW_INVALID;
-+
-+	return FW_UPLOAD_ERR_NONE;
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf);
++	return buf;
 +}
 +
-+static enum fw_upload_err ad9910_ram_fwu_write(struct fw_upload *fw_upload,
-+					       const u8 *data, u32 offset,
-+					       u32 size, u32 *written)
++static void iio_test_prefix_shared_by_all(struct kunit *test)
 +{
-+	const struct ad9910_ram_fw *fw_data = (const struct ad9910_ram_fw *)data;
-+	struct ad9910_state *st = fw_upload->dd_handle;
-+	int ret, ret2, idx, wcount;
-+	u64 tmp64, backup;
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++	};
++	const struct iio_chan_spec chan_noisy = {
++		.type = IIO_ACCEL,
++		.output = 1,
++		.indexed = 1,
++		.modified = 1,
++		.channel = 7,
++		.channel2 = IIO_MOD_Z,
++		.extend_name = "supply",
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
 +
-+	if (offset != 0)
-+		return FW_UPLOAD_ERR_INVALID_SIZE;
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SHARED_BY_ALL,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "");
 +
-+	guard(mutex)(&st->lock);
-+
-+	if (st->ram_fwu_cancel)
-+		return FW_UPLOAD_ERR_CANCELED;
-+
-+	if (AD9910_RAM_ENABLED(st))
-+		return FW_UPLOAD_ERR_HW_ERROR;
-+
-+	for (idx = 0; idx < AD9910_NUM_PROFILES; idx++)
-+		st->reg_profile[idx] = get_unaligned_be64(&fw_data->profiles[idx]) |
-+				       AD9910_PROFILE_RAM_OPEN_MSK;
-+
-+	ret = ad9910_reg32_update(st, AD9910_REG_CFR1,
-+				  AD9910_CFR1_RAM_PLAYBACK_DEST_MSK |
-+				  AD9910_CFR1_INT_PROFILE_CTL_MSK,
-+				  get_unaligned_be32(&fw_data->cfr1), true);
-+	if (ret)
-+		return FW_UPLOAD_ERR_RW_ERROR;
-+
-+	wcount = get_unaligned_be16(&fw_data->wcount);
-+	if (!wcount) {
-+		*written = size;
-+		return FW_UPLOAD_ERR_NONE; /* nothing else to write */
-+	}
-+
-+	ret = ad9910_profile_set(st, st->profile);
-+	if (ret)
-+		return FW_UPLOAD_ERR_HW_ERROR;
-+
-+	/* backup profile register and update it with required address range */
-+	backup = st->reg[AD9910_REG_PROFILE(st->profile)].val64;
-+	tmp64 = AD9910_PROFILE_RAM_STEP_RATE_MSK |
-+		FIELD_PREP(AD9910_PROFILE_RAM_START_ADDR_MSK, 0) |
-+		FIELD_PREP(AD9910_PROFILE_RAM_END_ADDR_MSK, wcount - 1);
-+	ret = ad9910_reg64_write(st, AD9910_REG_PROFILE(st->profile), tmp64, true);
-+	if (ret)
-+		return FW_UPLOAD_ERR_RW_ERROR;
-+
-+	/* copy data words into spi buffer and transfer */
-+	memcpy(&st->tx_buf[1], fw_data->words, wcount * AD9910_RAM_WORD_SIZE);
-+	ret = ad9910_spi_write(st, AD9910_REG_RAM,
-+			       wcount * AD9910_RAM_WORD_SIZE, false);
-+
-+	/* restore active single tone profile regardless */
-+	st->reg[AD9910_REG_PROFILE(st->profile)].val64 = backup;
-+	ret2 = ad9910_reg64_write(st, AD9910_REG_PROFILE(st->profile), backup, true);
-+	if (ret || ret2)
-+		return FW_UPLOAD_ERR_RW_ERROR;
-+
-+	*written = size;
-+
-+	return FW_UPLOAD_ERR_NONE;
++	ret = __iio_chan_prefix_emit(NULL, &chan_noisy, IIO_SHARED_BY_ALL,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "");
 +}
 +
-+static enum fw_upload_err ad9910_ram_fwu_poll_complete(struct fw_upload *fw_upload)
++static void iio_test_prefix_shared_by_dir(struct kunit *test)
 +{
-+	return FW_UPLOAD_ERR_NONE;
++	const struct iio_chan_spec chan_in = {
++		.type = IIO_VOLTAGE,
++		.output = 0,
++	};
++	const struct iio_chan_spec chan_out = {
++		.type = IIO_VOLTAGE,
++		.output = 1,
++	};
++	const struct iio_chan_spec chan_in_noisy = {
++		.type = IIO_ACCEL,
++		.indexed = 1,
++		.modified = 1,
++		.channel = 5,
++		.channel2 = IIO_MOD_Y,
++		.extend_name = "supply",
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_in, IIO_SHARED_BY_DIR,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in");
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_out, IIO_SHARED_BY_DIR,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "out");
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_in_noisy, IIO_SHARED_BY_DIR,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in");
 +}
 +
-+static void ad9910_ram_fwu_cancel(struct fw_upload *fw_upload)
++static void iio_test_prefix_shared_by_type(struct kunit *test)
 +{
-+	struct ad9910_state *st = fw_upload->dd_handle;
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++	};
++	const struct iio_chan_spec chan_diff = {
++		.type = IIO_VOLTAGE,
++		.differential = 1,
++	};
++	const struct iio_chan_spec chan_noisy = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.modified = 1,
++		.channel = 4,
++		.channel2 = IIO_MOD_X,
++		.extend_name = "supply",
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
 +
-+	guard(mutex)(&st->lock);
-+	st->ram_fwu_cancel = true;
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SHARED_BY_TYPE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage");
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_diff, IIO_SHARED_BY_TYPE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage-voltage");
++
++	ret = __iio_chan_prefix_emit(NULL, &chan_noisy, IIO_SHARED_BY_TYPE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage");
 +}
 +
-+static void ad9910_ram_fwu_unregister(void *data)
++static void iio_test_prefix_separate_simple(struct kunit *test)
 +{
-+	firmware_upload_unregister(data);
++	const struct iio_chan_spec chan = {
++		.type = IIO_TEMP,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_temp");
 +}
 +
-+static const struct fw_upload_ops ad9910_ram_fwu_ops = {
-+	.prepare = ad9910_ram_fwu_prepare,
-+	.write = ad9910_ram_fwu_write,
-+	.poll_complete = ad9910_ram_fwu_poll_complete,
-+	.cancel = ad9910_ram_fwu_cancel,
++static void iio_test_prefix_separate_indexed(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.channel = 3,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage3");
++}
++
++static void iio_test_prefix_separate_indexed_diff(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.differential = 1,
++		.channel = 0,
++		.channel2 = 1,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage0-voltage1");
++}
++
++static void iio_test_prefix_separate_modified(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_ACCEL,
++		.modified = 1,
++		.channel2 = IIO_MOD_X,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_accel_x");
++}
++
++static void iio_test_prefix_separate_indexed_modified(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_ACCEL,
++		.indexed = 1,
++		.modified = 1,
++		.channel = 2,
++		.channel2 = IIO_MOD_Y,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_accel2_y");
++}
++
++static void iio_test_prefix_separate_extend_name(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.channel = 2,
++		.extend_name = "supply",
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "in_voltage2_supply");
++}
++
++static void iio_test_prefix_output_separate(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.output = 1,
++		.indexed = 1,
++		.channel = 0,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	EXPECT_PREFIX(test, buf, ret, "out_voltage0");
++}
++
++static void iio_test_prefix_diff_unindexed_fails(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.differential = 1,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
++}
++
++static void iio_test_prefix_diff_modified_fails(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++		.indexed = 1,
++		.differential = 1,
++		.modified = 1,
++		.channel = 0,
++		.channel2 = 1,
++	};
++	char *buf = iio_test_prefix_alloc(test);
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SEPARATE,
++				     buf, PREFIX_BUF_SIZE);
++	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
++}
++
++static void iio_test_prefix_overflow(struct kunit *test)
++{
++	const struct iio_chan_spec chan = {
++		.type = IIO_VOLTAGE,
++	};
++	char small[4];
++	ssize_t ret;
++
++	ret = __iio_chan_prefix_emit(NULL, &chan, IIO_SHARED_BY_TYPE,
++				     small, sizeof(small));
++	KUNIT_EXPECT_EQ(test, ret, -EOVERFLOW);
++}
++
++static struct kunit_case iio_chan_prefix_test_cases[] = {
++	KUNIT_CASE(iio_test_prefix_shared_by_all),
++	KUNIT_CASE(iio_test_prefix_shared_by_dir),
++	KUNIT_CASE(iio_test_prefix_shared_by_type),
++	KUNIT_CASE(iio_test_prefix_separate_simple),
++	KUNIT_CASE(iio_test_prefix_separate_indexed),
++	KUNIT_CASE(iio_test_prefix_separate_indexed_diff),
++	KUNIT_CASE(iio_test_prefix_separate_modified),
++	KUNIT_CASE(iio_test_prefix_separate_indexed_modified),
++	KUNIT_CASE(iio_test_prefix_separate_extend_name),
++	KUNIT_CASE(iio_test_prefix_output_separate),
++	KUNIT_CASE(iio_test_prefix_diff_unindexed_fails),
++	KUNIT_CASE(iio_test_prefix_diff_modified_fails),
++	KUNIT_CASE(iio_test_prefix_overflow),
++	{ }
 +};
 +
- static const struct iio_info ad9910_info = {
- 	.read_raw = ad9910_read_raw,
- 	.write_raw = ad9910_write_raw,
-@@ -1570,6 +1866,13 @@ static int ad9910_setup(struct device *dev, struct ad9910_state *st,
- 	if (ret)
- 		return ret;
- 
-+	for (unsigned int i = 0; i < AD9910_NUM_PROFILES; i++) {
-+		st->reg_profile[i] = AD9910_PROFILE_RAM_OPEN_MSK;
-+		st->reg_profile[i] |= FIELD_PREP(AD9910_PROFILE_RAM_STEP_RATE_MSK, 1);
-+		st->reg_profile[i] |= FIELD_PREP(AD9910_PROFILE_RAM_END_ADDR_MSK,
-+						 AD9910_RAM_ADDR_MAX);
-+	}
++static struct kunit_suite iio_channel_prefix_test_suite = {
++	.name = "iio-channel-prefix",
++	.test_cases = iio_chan_prefix_test_cases,
++};
 +
- 	return ad9910_io_update(st);
- }
- 
-@@ -1663,6 +1966,19 @@ static int ad9910_probe(struct spi_device *spi)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "device setup failed\n");
- 
-+	snprintf(st->ram_fwu_name, sizeof(st->ram_fwu_name), "%s:ram",
-+		 dev_name(&indio_dev->dev));
-+	st->ram_fwu = firmware_upload_register(THIS_MODULE, dev, st->ram_fwu_name,
-+					       &ad9910_ram_fwu_ops, st);
-+	if (IS_ERR(st->ram_fwu))
-+		return dev_err_probe(dev, PTR_ERR(st->ram_fwu),
-+				     "failed to register ram upload ops\n");
++kunit_test_suite(iio_channel_prefix_test_suite);
 +
-+	ret = devm_add_action_or_reset(dev, ad9910_ram_fwu_unregister, st->ram_fwu);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to add ram upload unregister action\n");
-+
- 	return devm_iio_device_register(dev, indio_dev);
- }
- 
++MODULE_AUTHOR("Rodrigo Alencar <rodrigo.alencar@analog.com>");
++MODULE_DESCRIPTION("Test IIO channel prefix generation");
++MODULE_LICENSE("GPL");
++MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
 
 -- 
 2.43.0
