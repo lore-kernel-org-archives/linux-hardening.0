@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E3743E074;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFBE3BB109;
 	Wed, 29 Jul 2026 08:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785313631; cv=none; b=H1xyCrf/QHrcgC/bmY+gz3MAOYlGCMZHmO4n52pu5d9fpfkBtMo5zEQTeNqFUVGE+yuwwVYd5tI3GWEh/UuLXuI8ClzzAQO7dOdcPQlzTrjyeLQAKKvVlxhNc7n1FO+Kdt6LHPVH7iPx0k07oQjDCcxs89bYWTeiOzKI+OGjUqU=
+	t=1785313632; cv=none; b=BS0oGqYSdFBOLgGIQKJAKjth3Xinh789m/Jbaw0wlhMjfU0Ihfw2gBj7nXQYRHA5HxNQD1iRcjIeDs74t/jsPZ4XJ9rp6p0czxitU46S0KEpZsfA9xqEmN7hHG9zRH2mjhgc4fac47KOcpDGEpWimOWGOCqdaILu10fmAl95tnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785313631; c=relaxed/simple;
-	bh=LkGR2S/oFgI/+IPKjfMY0lgtsj7hpBpubbqxfDZIpLs=;
+	s=arc-20240116; t=1785313632; c=relaxed/simple;
+	bh=zDzo9F6BjYMLU4Bklfq3YRGbBEWoNPSpXL18gbs0G2E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=q/ajHuA7g75dD/vLcPxQGKn52rdAvAN+jgNzVQryzwS9jmVdQOw+24ss1zmurl2QjMBsxZQFMi5+zZZ24ZSpepD22KMxEfxKtbX2fYFw9Zeqp77cPp10j79AMH0MObW3E6ZuIlFq/WNAetvY//sOb8DSR5/FSbfIHsPTrIkttlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6LUUrvH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=g2pHBjwaiQLjvC9Ktb/BhhUOLzBRb4S0snvItn9Zca0kRAHURwx68rjnFfOn05P6C+sj9Q0L0enXGguUfiwDUc9yOjB1SZyVoD5VWkrNW3jsVHRLphJr6Yu8SUSQuRuT1Rnv0erziMb6Cs448EFiIiEZDefRiCZQFm3TsITdkdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLGaG75e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6LUUrvH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D927DC4AF11;
-	Wed, 29 Jul 2026 08:27:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLGaG75e"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0957CC4AF48;
+	Wed, 29 Jul 2026 08:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1785313628;
-	bh=LkGR2S/oFgI/+IPKjfMY0lgtsj7hpBpubbqxfDZIpLs=;
+	s=k20201202; t=1785313629;
+	bh=zDzo9F6BjYMLU4Bklfq3YRGbBEWoNPSpXL18gbs0G2E=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Q6LUUrvH5Aqch3aOtDuO/HSr7mPC+tbsR3hcSdBZY10LLKy5mgbInaETp2DNVlyFz
-	 HTrHuW944d3uXQh6KasKLLW7CXgsXf2m48VdQkmigTQuo4jjv285VV3xdCEqQJl2b8
-	 eq0xjjpGk35xRAac2QvjZgHjw9mDL/KI+MWz22zVpUr487vFITf939Sf5QBaMKQjQX
-	 gPIyHJiwRsO+Y61F6SyPKN8npvdk+Vf3PCfNvwJtrG3jp4Q6R+3Q/gAMnbmnUV/hj8
-	 KhVOqKLv8EbGMcEQhfyFm4YHlbnl31XmaB4LiginpwFhJQ7YQATlhYGdTADk6jsZGT
-	 lQoF8FjKwFe9w==
+	b=OLGaG75eUFoR568hmVjiBGvp+6N9jEegJLlWSa76zD0i/FOGOGEN4mzl0qsLJo/dO
+	 3J0xJ68vibqFJ8UNzmZR/Ssk1nHZTD3YOgI1x+H8zDPNoANRZeK88pbC1a010QzmAJ
+	 vUP3vaVJw9RHPZq7DaQFY0+BvhuqBAmh1EyFAMchQI3Sz64jlgernX6V3QsLIonT93
+	 tNrJYD7pJUbcBGsrjE6PQGAoXeZInIAB2qfEM2cIhdDdHte0pBt+uaboLLD8g7baiD
+	 64kmYW8+SGZ6kkNe20LTQ/DTchZPmT+zcHqQZ9LP84HzFu9Q0gQetgdUvUYWCpRZih
+	 TuhkcAE1o1JFw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81BEC54FCD;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E735BC53219;
 	Wed, 29 Jul 2026 08:27:08 +0000 (UTC)
 From: Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org>
-Date: Wed, 29 Jul 2026 09:25:31 +0100
-Subject: [PATCH v10 04/17] iio: add IIO_FREQUENCY channel type
+Date: Wed, 29 Jul 2026 09:25:33 +0100
+Subject: [PATCH v10 06/17] iio: core: create local __iio_chan_prefix_emit()
+ for reuse
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260729-ad9910-iio-driver-v10-4-aa1f6167729e@analog.com>
+Message-Id: <20260729-ad9910-iio-driver-v10-6-aa1f6167729e@analog.com>
 References: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
 In-Reply-To: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
 To: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
@@ -56,11 +57,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
  Rodrigo Alencar <rodrigo.alencar@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785313627; l=1881;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785313627; l=7174;
  i=rodrigo.alencar@analog.com; s=default; h=from:subject:message-id;
- bh=1IPBIAnpoq77uH/f9ncnZ8sog7Fcx5CLyDe5QVK2WqI=;
- b=ZBghgeOnPDXlOOlWIj35IgB+4OhgaDNUcxDA3l/XIX9siJdp5FE5LDL9UGEmSgM7jFCs7B/R3
- Mq5xBoaXTQOBjih4RbgFQXbk3SSyzpDJC/xSjzOK1aIT/JlwXys+t9s
+ bh=oHv9yUvbBMOmb0C0IYClxjAbCiF7JNtiCFd2C4OtotY=;
+ b=A0vJkFNftPNOwbmZ8FKtGzgMckpUA0p1xgXPRi1AycPhrw4sIZ1zNO75OWDRprv7zktvf1Q9Q
+ hHv9hDbnn1oC+thpnAcmhdmqUv272IvZJ3MjmtIrrsGW30lil+kyFYz
 X-Developer-Key: i=rodrigo.alencar@analog.com; a=ed25519;
  pk=ULeHbgU/OYh/PG/4anHDfLgldFItQHAhOktYRVLMFRo=
 X-Endpoint-Received: by B4 Relay for rodrigo.alencar@analog.com/default
@@ -70,61 +71,240 @@ Reply-To: rodrigo.alencar@analog.com
 
 From: Rodrigo Alencar <rodrigo.alencar@analog.com>
 
-Add IIO_FREQUENCY channel type to support Direct Digital Synthesizer (DDS)
-devices that handles frequency values written directly to its buffered
-interface.
+Move logic to create a channel prefix for naming attribute files into a
+separate __iio_chan_prefix_emit() function for reuse. The dev pointer is
+passed to __iio_device_attr_init() so that dev_err() replaces WARN().
+The new helper is going to be used to expose channel relationships as
+sysfs attributes.
 
 Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
 ---
- drivers/iio/industrialio-core.c | 1 +
- include/uapi/linux/iio/types.h  | 1 +
- tools/iio/iio_event_monitor.c   | 2 ++
- 3 files changed, 4 insertions(+)
+ drivers/iio/industrialio-core.c | 172 +++++++++++++++++-----------------------
+ 1 file changed, 71 insertions(+), 101 deletions(-)
 
 diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index bdf3d4c06331..a45277bc5d99 100644
+index 98fc00343dc5..23d3801887a9 100644
 --- a/drivers/iio/industrialio-core.c
 +++ b/drivers/iio/industrialio-core.c
-@@ -99,6 +99,7 @@ static const char * const iio_chan_type_name_spec[] = {
- 	[IIO_ATTENTION] = "attention",
- 	[IIO_ALTCURRENT] = "altcurrent",
- 	[IIO_COVERAGE] = "coverage",
-+	[IIO_FREQUENCY] = "frequency",
- };
+@@ -25,6 +25,7 @@
+ #include <linux/poll.h>
+ #include <linux/property.h>
+ #include <linux/sched.h>
++#include <linux/seq_buf.h>
+ #include <linux/slab.h>
+ #include <linux/wait.h>
  
- static const char * const iio_modifier_names[] = {
-diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-index c9295c707041..1996839d1fce 100644
---- a/include/uapi/linux/iio/types.h
-+++ b/include/uapi/linux/iio/types.h
-@@ -54,6 +54,7 @@ enum iio_chan_type {
- 	IIO_ATTENTION,
- 	IIO_ALTCURRENT,
- 	IIO_COVERAGE,
-+	IIO_FREQUENCY,
+@@ -199,6 +200,61 @@ static const char * const iio_chan_info_postfix[] = {
+ 	[IIO_CHAN_INFO_CONVDELAY] = "convdelay",
+ 	[IIO_CHAN_INFO_POWERFACTOR] = "powerfactor",
  };
++
++static ssize_t __iio_chan_prefix_emit(struct device *dev,
++				      const struct iio_chan_spec *chan,
++				      enum iio_shared_by shared_by,
++				      char *buf, size_t len)
++{
++	const char *type = iio_chan_type_name_spec[chan->type];
++	const char *dir = iio_direction[chan->output];
++	struct seq_buf s;
++
++	seq_buf_init(&s, buf, len);
++
++	switch (shared_by) {
++	case IIO_SHARED_BY_ALL:
++		break;
++	case IIO_SHARED_BY_DIR:
++		seq_buf_printf(&s, "%s", dir);
++		break;
++	case IIO_SHARED_BY_TYPE:
++		seq_buf_printf(&s, "%s_%s", dir, type);
++		if (chan->differential)
++			seq_buf_printf(&s, "-%s", type);
++		break;
++	case IIO_SEPARATE:
++		/* Validate differential channel settings */
++		if (chan->differential) {
++			if (!chan->indexed) {
++				dev_err(dev, "Differential channels must be indexed\n");
++				return -EINVAL;
++			}
++			if (chan->modified) {
++				dev_err(dev, "Differential channels can not have modifier\n");
++				return -EINVAL;
++			}
++		}
++
++		seq_buf_printf(&s, "%s_%s", dir, type);
++
++		if (chan->indexed)
++			seq_buf_printf(&s, "%d", chan->channel);
++
++		if (chan->differential)
++			seq_buf_printf(&s, "-%s%d", type, chan->channel2);
++
++		if (chan->modified)
++			seq_buf_printf(&s, "_%s", iio_modifier_names[chan->channel2]);
++
++		if (chan->extend_name)
++			seq_buf_printf(&s, "_%s", chan->extend_name);
++		break;
++	}
++
++	return seq_buf_has_overflowed(&s) ? -EOVERFLOW : s.len;
++}
++
+ /**
+  * iio_device_id() - query the unique ID for the device
+  * @indio_dev:		Device structure whose ID is being queried
+@@ -1088,7 +1144,8 @@ static ssize_t iio_write_channel_info(struct device *dev,
+ }
  
- enum iio_modifier {
-diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-index bc3ef4c77c2b..7885f0f7562e 100644
---- a/tools/iio/iio_event_monitor.c
-+++ b/tools/iio/iio_event_monitor.c
-@@ -66,6 +66,7 @@ static const char * const iio_chan_type_name_spec[] = {
- 	[IIO_ATTENTION] = "attention",
- 	[IIO_ALTCURRENT] = "altcurrent",
- 	[IIO_COVERAGE] = "coverage",
-+	[IIO_FREQUENCY] = "frequency",
- };
+ static
+-int __iio_device_attr_init(struct device_attribute *dev_attr,
++int __iio_device_attr_init(struct device *dev,
++			   struct device_attribute *dev_attr,
+ 			   const char *postfix,
+ 			   struct iio_chan_spec const *chan,
+ 			   ssize_t (*readfunc)(struct device *dev,
+@@ -1100,106 +1157,22 @@ int __iio_device_attr_init(struct device_attribute *dev_attr,
+ 						size_t len),
+ 			   enum iio_shared_by shared_by)
+ {
+-	int ret = 0;
+-	char *name = NULL;
+-	char *full_postfix;
++	char prefix[NAME_MAX + 1];
++	ssize_t ret;
  
- static const char * const iio_ev_type_text[] = {
-@@ -196,6 +197,7 @@ static bool event_is_known(struct iio_event_data *event)
- 	case IIO_ATTENTION:
- 	case IIO_ALTCURRENT:
- 	case IIO_COVERAGE:
-+	case IIO_FREQUENCY:
- 		break;
- 	default:
- 		return false;
+ 	sysfs_attr_init(&dev_attr->attr);
+ 
+-	/* Build up postfix of <extend_name>_<modifier>_postfix */
+-	if (chan->modified && (shared_by == IIO_SEPARATE)) {
+-		if (chan->extend_name)
+-			full_postfix = kasprintf(GFP_KERNEL, "%s_%s_%s",
+-						 iio_modifier_names[chan->channel2],
+-						 chan->extend_name,
+-						 postfix);
+-		else
+-			full_postfix = kasprintf(GFP_KERNEL, "%s_%s",
+-						 iio_modifier_names[chan->channel2],
+-						 postfix);
+-	} else {
+-		if (chan->extend_name == NULL || shared_by != IIO_SEPARATE)
+-			full_postfix = kstrdup(postfix, GFP_KERNEL);
+-		else
+-			full_postfix = kasprintf(GFP_KERNEL,
+-						 "%s_%s",
+-						 chan->extend_name,
+-						 postfix);
+-	}
+-	if (full_postfix == NULL)
++	ret = __iio_chan_prefix_emit(dev, chan, shared_by, prefix, sizeof(prefix));
++	if (ret < 0)
++		return ret;
++
++	if (ret)
++		dev_attr->attr.name = kasprintf(GFP_KERNEL, "%s_%s", prefix, postfix);
++	else
++		dev_attr->attr.name = kstrdup(postfix, GFP_KERNEL);
++	if (!dev_attr->attr.name)
+ 		return -ENOMEM;
+ 
+-	if (chan->differential) { /* Differential can not have modifier */
+-		switch (shared_by) {
+-		case IIO_SHARED_BY_ALL:
+-			name = kasprintf(GFP_KERNEL, "%s", full_postfix);
+-			break;
+-		case IIO_SHARED_BY_DIR:
+-			name = kasprintf(GFP_KERNEL, "%s_%s",
+-						iio_direction[chan->output],
+-						full_postfix);
+-			break;
+-		case IIO_SHARED_BY_TYPE:
+-			name = kasprintf(GFP_KERNEL, "%s_%s-%s_%s",
+-					    iio_direction[chan->output],
+-					    iio_chan_type_name_spec[chan->type],
+-					    iio_chan_type_name_spec[chan->type],
+-					    full_postfix);
+-			break;
+-		case IIO_SEPARATE:
+-			if (!chan->indexed) {
+-				WARN(1, "Differential channels must be indexed\n");
+-				ret = -EINVAL;
+-				goto error_free_full_postfix;
+-			}
+-			name = kasprintf(GFP_KERNEL,
+-					    "%s_%s%d-%s%d_%s",
+-					    iio_direction[chan->output],
+-					    iio_chan_type_name_spec[chan->type],
+-					    chan->channel,
+-					    iio_chan_type_name_spec[chan->type],
+-					    chan->channel2,
+-					    full_postfix);
+-			break;
+-		}
+-	} else { /* Single ended */
+-		switch (shared_by) {
+-		case IIO_SHARED_BY_ALL:
+-			name = kasprintf(GFP_KERNEL, "%s", full_postfix);
+-			break;
+-		case IIO_SHARED_BY_DIR:
+-			name = kasprintf(GFP_KERNEL, "%s_%s",
+-						iio_direction[chan->output],
+-						full_postfix);
+-			break;
+-		case IIO_SHARED_BY_TYPE:
+-			name = kasprintf(GFP_KERNEL, "%s_%s_%s",
+-					    iio_direction[chan->output],
+-					    iio_chan_type_name_spec[chan->type],
+-					    full_postfix);
+-			break;
+-
+-		case IIO_SEPARATE:
+-			if (chan->indexed)
+-				name = kasprintf(GFP_KERNEL, "%s_%s%d_%s",
+-						    iio_direction[chan->output],
+-						    iio_chan_type_name_spec[chan->type],
+-						    chan->channel,
+-						    full_postfix);
+-			else
+-				name = kasprintf(GFP_KERNEL, "%s_%s_%s",
+-						    iio_direction[chan->output],
+-						    iio_chan_type_name_spec[chan->type],
+-						    full_postfix);
+-			break;
+-		}
+-	}
+-	if (name == NULL) {
+-		ret = -ENOMEM;
+-		goto error_free_full_postfix;
+-	}
+-	dev_attr->attr.name = name;
+-
+ 	if (readfunc) {
+ 		dev_attr->attr.mode |= 0444;
+ 		dev_attr->show = readfunc;
+@@ -1210,10 +1183,7 @@ int __iio_device_attr_init(struct device_attribute *dev_attr,
+ 		dev_attr->store = writefunc;
+ 	}
+ 
+-error_free_full_postfix:
+-	kfree(full_postfix);
+-
+-	return ret;
++	return 0;
+ }
+ 
+ static void __iio_device_attr_deinit(struct device_attribute *dev_attr)
+@@ -1242,7 +1212,7 @@ int __iio_add_chan_devattr(const char *postfix,
+ 	iio_attr = kzalloc_obj(*iio_attr);
+ 	if (iio_attr == NULL)
+ 		return -ENOMEM;
+-	ret = __iio_device_attr_init(&iio_attr->dev_attr,
++	ret = __iio_device_attr_init(dev, &iio_attr->dev_attr,
+ 				     postfix, chan,
+ 				     readfunc, writefunc, shared_by);
+ 	if (ret)
 
 -- 
 2.43.0
