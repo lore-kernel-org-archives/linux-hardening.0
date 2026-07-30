@@ -1,124 +1,191 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70BD3B6348
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Jul 2026 08:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90103EC83C
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Jul 2026 09:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785399305; cv=none; b=UzKAhVU63nhXBKkiHuXIw2M9kmk/i/oB9FRYTu8sb4bXZQ8lPUlBB1gaxBcO/DyFcb21F3NxYQI3S6a63JGKvJQ60OiGdsGluB7FxwnkH9dhyHgk9eWO47Jeej8wFzPG6YLevoQ17QTJEQfp+FCtylr0fYcKFyC/QWq8hxsCxZo=
+	t=1785402468; cv=none; b=CoQDoHm6RcSS5sblbExN49TMya3glrglgF8tk/OvZ6RwmuplnAVLUQWKsLaNVfuLtDgd5MtkoduT4LU5lbd3ZnTMdxRNHiGBDn22D3+e6Qj5cBELa0o+lFZyN/9dwSpctZAlqlsJuCUSDUY1k/cLgKTsg23dZYvWzj+rB4HBeQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785399305; c=relaxed/simple;
-	bh=zIgGXFhPhcmCwRhLNlAk+r8l30LriLi3g1dxUs263rc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X0A68mqRsITfABvC0xmuzik5jRUcspnYfUcMMHr7BA9nn/1YVwGUf4CDsBOnK/7TQCUI03tcXtmGsA7pOKWZOC0FDQhbJYBsJ0mGQXfYv0iIM+zoYA0IA6WLNm1D4fASSn87vXeLWdCF1XZdIj1UUgGAFWM/UPZRtGANp2PzzXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=q8f/YB4Q; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785402468; c=relaxed/simple;
+	bh=NcOKm/6FAgnlyW/Si0oZ9Z8lDLDhI5vXGTAfaxZi1ng=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KqT6zKf6S+f3JJlO37NvFTDByLHNg2MPr28Zy2dJmKN2lg9Of5Md3GaQwVD7aWd81ElWkCJJfWBFXZXQzzJ/V2FGswl+G3DAliXhBgN2V5L88NqcT/He36drvJ8m74rtQz9GgJ5T1aW+PT9o3YiFD/7phTSqKmq5saMYeuF9XW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GJ0baDcP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=T4fEIBPA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1V/+P+ey; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Bb+JD+J4; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8f/YB4Q"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-47f93b2fe4cso1240315f8f.0
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Jul 2026 01:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785399301; x=1786004101; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=gU8t2nLiO6KyR9mHd5oQe5CKsSlNQJu7tk5IuJVGRSw=;
-        b=q8f/YB4Q2BvmLLnS3Mo3pHYQEvh9tBDhwsK0NjUV7UF+2N/jm19XI8Z8ux+RHZcLAI
-         8Z9AtOgv0EevMC7q+gL37iW236gJkxN0FKcKV1177/e6GsYjI0cnigY7OhoWb3cjMWZO
-         b8rioRaWei4mf8lFVNN4PuzNC/aNFyx6wSlCtX6CiJj6FZnw8OxZZYLs9TzFMcMzBa6x
-         0YTjyKo7GQMtEjAqUpXVubnpsJpPIHq7L+L8CZdfWFNSmlOwLHP4VeDeXE1JSB6yYIBY
-         qlZNf2G2rvEyzr4r5vWqMRhTazEvUllBRLMUbKsBmQN//o+c09vmx6waEwmWXeKgYrf7
-         yMPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785399301; x=1786004101;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gU8t2nLiO6KyR9mHd5oQe5CKsSlNQJu7tk5IuJVGRSw=;
-        b=PVsPdwFCKf743GTFk3odkyIMZW8LMLCeJxfANPXGmqSEaapTiZOuRtOPqgmh0cnykT
-         +GI0/nBoCCYeM5tNHsDCZH/dlrzuzFWqD0G2fBULJnNcaAGLHIV8ykyOwn7vOKBvh6dM
-         xDeVsGUSJ9MgnXd608QfZz//fMZxOBxdoqryOlOvnDaUe5iOZ+cvJSoZyFlUH3wYtoNT
-         FWgzS/dlYVkCx//yF5/86RZ36VECZTJ52fx0VjcH69zsosjKIybZ6N4s+gE40CEiSZ8x
-         pNMZTk7Tx179rlCATN9k3uDFAFKQuCJ0TakehJ6QUVupjZogF81Krv+rDucwWPoIOI7M
-         8vog==
-X-Forwarded-Encrypted: i=1; AHgh+Rp9UtPPz8Lxxl7XxgYiR8VvBkW8KGaJXRfhMrBDbo6ulopEvcC3/ZY6ZjYq9EdosRsxWpVkzEPM9/GnWarCI1I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmV8CNEJYlxlrBnmkV9dPueZSye3Vp4PMKDI46XIVzlsO8rf+N
-	77und0k+Ypxmrkal+0XnOSolhRKA2a7w15zGQXtiy1InkCA8sv2FqO/A9xgY7R4drR0=
-X-Gm-Gg: AR+sD12V1TMKWYu9/WEL5OSUNzPU4OzA4d6AvBokHvTOxVdHKaG/LqH5Tc56gS3JZUe
-	eo6xx1a1F8tx/gtOmQsY9sDrHiFYOZzikZjbH+l6bHBOAyMNhzEaF0KVbTdPOW4/EljtSOT7LRF
-	d2eGpBhwK779h0NgLjzQH1JcyiFvSDlSFHppObPrqiwFwKzcALBVw5GbhiMqLQ3i6EJrUrY2J6t
-	JsyS2OP/0pjIsrON7Fjgig01CE+DL47ixcFAdZqTFf7YJZzW0OlYMSP7EifBI+BcN/9ZE2Ul3J/
-	XSUoqvpu5HLh5sq4gz+JUCyqt10fZpaK4xVBYsWiYYgOaM93eKhiLEZOliRBLjLKttKDZss6g9l
-	VaNiw1JkKxGhSgpbv6VTrM/49VJtRMn9emvLsSY//lSWel8qnaXrkz+2l4Eiq7rMcUAz3jKu5/p
-	iBt0CvvDxsnbx/l6DoeQhBJxv3gkZ1mJbIvobW0/8L9rcOPDsNO5zMMIWsslHPrEAssOpaSRD74
-	at0zeF2NZAVHx/As9GjUT6qYg==
-X-Received: by 2002:a05:600c:154b:b0:495:78ea:2687 with SMTP id 5b1f17b1804b1-49800eae778mr19575005e9.29.1785399300682;
-        Thu, 30 Jul 2026 01:15:00 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49800f0ebfasm37683065e9.2.2026.07.30.01.14.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2026 01:14:59 -0700 (PDT)
-Date: Thu, 30 Jul 2026 09:14:55 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Li Zhe <lizhe.67@bytedance.com>, akpm@linux-foundation.org,
- apopple@nvidia.com, arnd@arndb.de, balbirs@nvidia.com,
- dave.hansen@linux.intel.com, david@kernel.org, kees@kernel.org,
- mingo@redhat.com, muchun.song@linux.dev, rppt@kernel.org, tglx@kernel.org,
- linux-arch@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v8 7/9] x86/string: extend memcpy_flushcache()
- fixed-size fastpaths
-Message-ID: <20260730091455.1242d01a@pumpkin>
-In-Reply-To: <20260729234842.GFamqRWva8h7X59ccN@fat_crate.local>
-References: <20260727123429.5673-1-lizhe.67@bytedance.com>
-	<20260727123429.5673-8-lizhe.67@bytedance.com>
-	<20260729234842.GFamqRWva8h7X59ccN@fat_crate.local>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GJ0baDcP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="T4fEIBPA";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1V/+P+ey";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Bb+JD+J4"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A7DC67D52E;
+	Thu, 30 Jul 2026 09:07:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1785402460; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/2I7GqjsrjT29uowpQk6NFdDyIeivUiqsWiwXXEqgLs=;
+	b=GJ0baDcP6dsTI4xzkzv72WS9c64rNL1urCo1Ix2o6s4as6RBI5ikszLfXSUeLFwbUUj8HP
+	Dhz6ofOICMwWq+r3LQD8HChVsRfAPFb8z3GzuPDEsw8z3ygaG7RGtd2neUhSmz+rxfW0kA
+	CmcT1hie+wVL8keGSYJAe5r1jeEw0jk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1785402460;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/2I7GqjsrjT29uowpQk6NFdDyIeivUiqsWiwXXEqgLs=;
+	b=T4fEIBPATb2niJE5z30aBBYoPe+cAvCTlbNctnV4nLbYHx5WxxbTpJQWaEBbF0Pw5ih4ay
+	cMLv4C5YPWHaBVCQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1785402456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/2I7GqjsrjT29uowpQk6NFdDyIeivUiqsWiwXXEqgLs=;
+	b=1V/+P+eyi3YFM7vG3qDIVEbL16AjbeIlPMkboN0dlJ4daVmFQWNSwJjnZvF9bceik4Y9O+
+	/WFPtVV9kZ42bxH0IM8V2dXuG0jtpDMCZt4BDRqvzgfdiKnVRlNhs4XXF2AZV3fHnFkzEp
+	FUtHy5KGnA6rd5Ql6f7iHxZzAqbhtcU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1785402456;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/2I7GqjsrjT29uowpQk6NFdDyIeivUiqsWiwXXEqgLs=;
+	b=Bb+JD+J4UsHrZLJHPKiwOUAVcmD88eUpKPQJuMX7Uv4zmxBiNDAVOQpz43PEwLr0LTBAUf
+	h0bGUJqxphRx3NCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7422A779CC;
+	Thu, 30 Jul 2026 09:07:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id q+ciG1gUa2qgXwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 30 Jul 2026 09:07:36 +0000
+Date: Thu, 30 Jul 2026 11:07:36 +0200
+Message-ID: <87tspg3kx3.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Ian Bridges <icb@fastmail.org>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH v2] ALSA: hda/generic: Replace strlcat() with strscpy()
+In-Reply-To: <amolHJpiluNmBsDU@dev>
+References: <amolHJpiluNmBsDU@dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Spam-Score: -3.29
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.19)[-0.954];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
 
-On Wed, 29 Jul 2026 16:48:42 -0700
-Borislav Petkov <bp@alien8.de> wrote:
-
-...
-> at least the code is making a lot more sense now.
+On Wed, 29 Jul 2026 18:06:52 +0200,
+Ian Bridges wrote:
 > 
-> The fact that you had to axe off so much cruft off of it tells me that you
-> haven't really measured it right.
-
-Especially since if you do actually measure the clock counts (non-trivial)
-you'll find that loops are often completely free.
-The out-of-order execution unit will (effectively) execute the loop control
-instructions to generate a list of instructions that get executed at a
-later time.
-So provided the loop control doesn't use more clocks than the loop body
-(and there are spare ALU units - usually true) loops really make little
-difference.
-
-This also means that unrolling loops often doesn't make things faster.
-You do need to minimise the loop control instructions (and gcc doesn't
-like the best loop that uses negative offsets from the end), and
-intel cpu can't execute single clock loops (amd ones can).
-
-Inlining also increases the code size, the I-cache reads are actually
-likely to be significant.
-You need to time a single 'cold-cache' call not just loops for long
-enough that the result is also skewed by timer ticks (etc).
-
-	David 
-
+> In preparation for removing the strlcat() API[1], replace its uses in
+> fill_pcm_stream_name() and get_jack_mode_name(). Both appends become
+> bounded strscpy() calls at a known position.
 > 
-> So why do I really want your patch?
+> In fill_pcm_stream_name() the trim walk itself lands on the append
+> position. It stops at the trim point when the name has a decoration
+> to drop, and at the terminating NUL otherwise, so the suffix
+> overwrites from there and no length bookkeeping is needed.
 > 
-> Thx.
+> get_jack_mode_name() measures the label once with strnlen() because
+> snd_hda_get_pin_label() does not return a length.
 > 
+> The produced strings are unchanged.
+> 
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> Signed-off-by: Ian Bridges <icb@fastmail.org>
+> ---
+> v2: land on the append position instead of measuring before every
+> append. In fill_pcm_stream_name() the trim walk already finishes at
+> the append position, so the suffix goes down with one bounded
+> strscpy() and no length bookkeeping, matching the pattern of commit
+> 86dc52c5c96e ("ALSA: usb-audio: simplify mixer control name
+> handling"). get_jack_mode_name() keeps one strnlen() because
+> snd_hda_get_pin_label() returns no length. Other shapes were built
+> and measured for this respin, including the seq_buf form suggested
+> in the thread. That one moves the fill-only-when-empty guard of
+> fill_pcm_stream_name() into all three callers, because
+> seq_buf_init() clears the first byte, and every call site grew.
+> 
+> v1: https://lore.kernel.org/all/alaPxW5S5PT_-kZi@dev/
 
+Honestly speaking, I still don't like those changes, sorry.
+
+My argument is about neither code correctness nor efficiency.
+Instead, it's about that such a open code makes harder to understand
+the intention of the code.
+
+The meaning of strlcat() is clear: append a suffix string in a safe
+way.  Meanwhile, when you open-code it:
+
+	size_t used;
+	....
+ 	snd_hda_get_pin_label(codec, pin, &spec->autocfg, name, name_len, &idx);
+	used = strnlen(name, name_len);
+	strscpy(name + used, " Jack Mode", name_len - used);
+
+it's no longer obvious at a first glance, and you'd need to think of
+it much longer -- what does this and whether it's really safe.
+
+So, if we must inevitably drop strlcat() function, it's better to
+rearrange the caller side beforehand, e.g. replace strlcat() call to
+a local function like append_suffix(), in order to make the meaning
+of the code clearer.  Then we can replace the code in append_suffix().
+
+// append a suffix string safely; equivalent with strlcat()
+static void append_suffix(char *str, const char *suffix, size_t size)
+{
+	size_t used = strnlen(str, size);
+	strscpy(str + used, suffix, size - used);
+}
+
+....
+	snd_hda_get_pin_label(codec, pin, &spec->autocfg, name, name_len, &idx);
+	append_suffix(name, " Jack Mode", name_len);
+
+Since I've been already working on a cleanup of the relevant code, I'm
+going to change strlcat() to append_suffix() (but with strlcat()) as a
+preparation, too.  Once when we decide to drop strlcat() actually, we
+can change the code in that function.
+
+
+thanks,
+
+Takashi
