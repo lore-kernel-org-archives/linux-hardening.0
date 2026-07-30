@@ -1,106 +1,74 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-115.ptr.blmpb.com (va-1-115.ptr.blmpb.com [209.127.230.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087733B27F7
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Jul 2026 06:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E502838886B
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Jul 2026 07:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785394385; cv=none; b=OnLAT/9RYKGzgwEgReHAk9e1KwluvZcmtB1h0cmHmUCq9zE7qY/HcVXFQ7Guo2w9TZdf9Yk1ixkvHXLDPOk0kYE77NrNYWIWzS/aMhhBTtD+pIwSLJ037wjemfVcaXalnLj/ZmJ4TRSAtudfmluccm34kXhlqp1XFHjf3eBvpaA=
+	t=1785398034; cv=none; b=p0OMzIVtPialrq0eoPUR+wjn6znPyEs/sljzvx8FPRK25ylOL9UQde/e3Hhf1SCfcEyh+o73ginjC5ahRslcKp54sjjlEoiy002ytFiQUFw59aVl0XPfOHIeRma4+m7NuS950CcgkuPBrl72q1RkCsxEHIpxd4LKwbiP5Ut/KrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785394385; c=relaxed/simple;
-	bh=Pbj0P+gU8va8jJCrhk4MN1M1pVJoePTsLFgY9CKEP0E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=emgeR6N5XANUdSkGcaS46cfDw1CABzdhEnVqLOJ6EcNpRIkl7rc3BjxN9qiD1bnfSZM9wZjhoNaX/N/ifaiYTXvbaOu/Ki5BORkGvSH6lW2ZCIqvkLvxp0MsSWjNcjalq73QW/qGcs9PwQZVTFnM4UDsOh0BnneCdk1jiIJbrUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xcdxm9OQ; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1785398034; c=relaxed/simple;
+	bh=i8v0CBrzuIg3GbnT2uYqPiocpv9EQhDpNnWNDIDzVjY=;
+	h=Subject:Message-Id:References:In-Reply-To:To:Cc:Content-Type:From:
+	 Date:Mime-Version; b=c0wB7he0Y+p3lWzyDO9MPCINwpopaJ5pG33GOSC7h6U1loy426HElTQ4T4l99iYPC/RF98RNX1mG5YsUN/96UiWJCDrUlRohv6uUYwdJUSZQUoGCDhRsxJykoCzehYkiAmah5b/OTwHfUexguJu/x0iBjtSIVnRe6+PUMSUKnK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=RjSfmdGh; arc=none smtp.client-ip=209.127.230.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xcdxm9OQ"
-X-Forwarded-Encrypted: i=1; AHgh+RrIQDffdLzqBVhXvvlUdWhSwfRGFOY9nk68bQnlopFHM6KR606AhpY27cdPLgfm5Vr7ff+RIRFh7HSZ0Fbu2I0=@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785394379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pbj0P+gU8va8jJCrhk4MN1M1pVJoePTsLFgY9CKEP0E=;
-	b=Xcdxm9OQ8Eu+n1D7cDArgW3qzsmUFyciXadQnUjihQavB54Dz/AGYfwQ6iyWFsR47l0gV7
-	sUz0Xmut4ByvpyMmpQWfuF82EBdpzDWRyI6c7t0kWPMvA3NyPZTKQEkWDYnb0vK0+ScKt2
-	etE8IHS5lf8ur6/nQdU//RSb6Qpf67A=
-X-Gm-Message-State: AOJu0Yz9Wp7YvVo71pdEnU3Lnyld4ZYb7/lGehMEjrEymucfvWPuU1h7
-	vVpD/RDMLRtSbZLAdcTG5jgS4MD0il07vZzsL9QaqjSneKJgZEzf06eUR7IaZOcfHKfkNZEORQa
-	xPPK7AIZG0gC3bR85JPvLqgnWvA+D4LdCREeTVhN8
-X-Received: by 2002:a05:622a:1f18:b0:528:38d6:71b4 with SMTP id
- d75a77b69052e-52b39484e98mr9124391cf.11.1785394358893; Wed, 29 Jul 2026
- 23:52:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="RjSfmdGh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1785398026; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=i8v0CBrzuIg3GbnT2uYqPiocpv9EQhDpNnWNDIDzVjY=;
+ b=RjSfmdGhXl6kJy5B7OsKQcA1tZ8lodkG5GTBe7dQU1LcClfaf5UIH1jE3/lxx1eEydI028
+ XRMnFwfzxivY4g9SFdBPx+ZNlRdEhUc+PEB4KNIawXTe9wvFGGrR3jfojwGH61ARYebqZb
+ o6aTc26p2KlYVm9aMvbjiy15FOr2OpxGwwCu5TjkPzs6LnZVu+zp0ougjGfAwGPKf9QdN2
+ hZ/ZZ+UdSzXdB/T2pSj7akzgQ3WdywzJ4wYGM2ms82NgYSymcIx16sp75u24HwsbVksdAz
+ pIKXY4kEAW5Xr1Mou/oAHEQwub8RILSAZF5DVpEk4kNkYAN5JvpReCpUYQ8eNA==
+Subject: Re: [PATCH v7 0/9] mm: optimize zone-device memmap initialization
+Message-Id: <d68f7091-60ae-4887-88f0-42f4288b8e52@bytedance.com>
+References: <20260720120259.1545-1-lizhe.67@bytedance.com> <20260720120259.1545-2-lizhe.67@bytedance.com> <178525732062.1556190.314794914123127147.b4-review@b4>
+In-Reply-To: <178525732062.1556190.314794914123127147.b4-review@b4>
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+To: "Mike Rapoport" <rppt@kernel.org>
+Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
+	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
+	<tglx@kernel.org>, <muchun.song@linux.dev>, <linux-arch@vger.kernel.org>, 
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-mm@kvack.org>, <x86@kernel.org>
+Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Content-Type: text/plain; charset=UTF-8
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Date: Thu, 30 Jul 2026 15:53:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260720-hybrid-v9-0-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
- <20260720-hybrid-v9-14-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp>
- <CA+EHjTx0zNQ_yPCz38vGYpBssshE4b3KWaoUxjzuerGgzB=JSQ@mail.gmail.com> <e023d791-38c3-47b4-9b09-3420fe78d9ea@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <e023d791-38c3-47b4-9b09-3420fe78d9ea@rsg.ci.i.u-tokyo.ac.jp>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Fuad Tabba <fuad.tabba@linux.dev>
-Date: Thu, 30 Jul 2026 07:52:01 +0100
-X-Gmail-Original-Message-ID: <CA+EHjTxAH-eW4soxjbSJi8DwbH-yRXE-jJ9s02nEZ7kVXxxWMQ@mail.gmail.com>
-X-Gm-Features: AUfX_my8ZWlfDB9plrXG5PWElkl5pTmNLk-LtsIhDb0mp2MLaqYsxid4gcfDy1k
-Message-ID: <CA+EHjTxAH-eW4soxjbSJi8DwbH-yRXE-jJ9s02nEZ7kVXxxWMQ@mail.gmail.com>
-Subject: Re: [PATCH v9 14/16] KVM: arm64: PMU: Implement fixed-counters-only emulation
-To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, Joey Gouly <joey.gouly@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Steffen Eiden <seiden@linux.ibm.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Lms-Return-Path: <lba+26a6b0308+4629c6+vger.kernel.org+lizhe.67@bytedance.com>
 
-Hi Akihiko,
+On 7/29/26 12:48 AM, Mike Rapoport wrote:
+>> The numbers below measure the time spent in memmap_init_zone_device()
+>> during driver bind/rebind. They are not measurements of the full
+>> nd_pmem or dax_pmem bind/rebind operation.
+>>
+>> Tested in a VM with a 100 GB fsdax namespace device configured with
+>> map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
+>> server.
+> Since the first pathes touch the generic part of the memory map
+> initialization, it would be nice to make sure they don't regress other
+> architectures.
 
-On Thu, 30 Jul 2026 at 07:36, Akihiko Odaki
-<odaki@rsg.ci.i.u-tokyo.ac.jp> wrote:
-...
-> > Sashiko flagged that this can leave the perf event out of sync with
-> > the sysreg, which looks plausible: on a pCPU with no registered pPMU
-> > this returns without recreating the event, so a guest event-type
-> > change there updates the sysreg but not the event, and after migrating
-> > back to a pCPU the original pPMU covers, kvm_pmc_enable_perf_event()
-> > re-enables the stale event instead of recreating it.
-> >
-> > I know you treat the no-pPMU case as out of spec, but the dropped
-> > update lands once the vCPU is back on a normal pCPU. Is this intended?
->
-> "[PATCH v9 06/16] KVM: arm64: PMU: Recreate events after MDCR_EL2
-> changes" calls kvm_pmu_stop_counter() in kvm_vcpu_reload_pmu(), so it
-> does not matter whether this function calls kvm_pmu_stop_counter().
->
-> The other changes that require recreating the event are currently not
-> handled at all as Sashiko complains [1]. I'll fix that as done in
-> MDCR_EL2 setters in the next version.
->
-> That said, I do not intend to add any extra complexity to provide any
-> guarantee for a system with unsupported PMU variation except that the
-> user can notice and react to that (i.e., the taint is reported and no
-> oops happens due to NULL dereference). The patch message is somewhat
-> misleading in this aspect so I'm going to fix that in the next version.
 
-I see, yes, fixing the changelog would help.
+Thanks for pointing this out.
+
+I was able to get temporary access to an arm64 environment and have
+tested the generic template changes there as well. I will add the arm64
+test result to the v9 cover letter.
 
 Thanks,
-/fuad
-
->
-> [1]
-> https://sashiko.dev/#/patchset/20260720-hybrid-v9-0-2b713ca1b5dc@rsg.ci.i.u-tokyo.ac.jp?part=6
->
-> Regards,
-> Akihiko Odaki
+Zhe
