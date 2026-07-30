@@ -1,203 +1,99 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF4523ABBE;
-	Wed, 29 Jul 2026 23:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8E336EA8B;
+	Thu, 30 Jul 2026 02:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785368961; cv=none; b=aCWR9hiDBzPnuCldVRxCYrt8U6LkIABa7l7trlb2hYYENa9v9VbekV+MGIlwAzcQ2oE+dBVrolfW33FYqzfT2h7UEfDwbROkNiuvPJVNXo1ScLeY3viuEkoId2komI/XoMvr0gb3x9u87ppYf4mN2K2QPeDuObX8sy1tws0VSW0=
+	t=1785378946; cv=none; b=qD54eGf6JQLFUVNEJft2ee513DMYA28EruyWrUxdC26CWwzWEoaXQAiLRZ9loilfILjMzwVFulTkLHpKoS2OycqL7FIAl2O2V7w3pC7MrNYQOGvtMmBO9ay9KRe6l6mgYqV89tIKvxyxou//XtFT0FdkpmyIqrtv7wyJUEJ6QSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785368961; c=relaxed/simple;
-	bh=m4eai55ihkHg5mb2tP46fzBPiw578VfReG2MVgcZMkw=;
+	s=arc-20240116; t=1785378946; c=relaxed/simple;
+	bh=QA6hVIEAHNiGkoskLuMDFBYH91/GzfStig5+RxuGzpQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MoWoR3yzWlt7RWLCDJx3InjTHpE1kMjqJStRlBTxp2/4EZmFB5ivKlVFmxUoQtkjq/ciCF1fQRp2PkV/05G4Jl2GP2rALMsVq0X9ucn9rNhIEsXDGks8kieTIvJi33PFm6hSwwoYWJSSPw5f22XquHxibB1Y2dVpU/WIEWCirfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=IGOIE2H/; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=QRQkBrkGWAkdA9fbbFMb1Q8yftHmTX827ZbQsgWiFyUKs5PeNIfMwp8WfPYqifAn2rjRLWdL9jcUiUn4O9ItyiYlnlMhm0E9p2I7GgxOoyCi+nAeUCJo2eLKkNAWDw8gTYzyRep/2O/KRNmxAtGsYc9joJftHIhEWqQr7Lk/Vm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org; spf=pass smtp.mailfrom=fastmail.org; dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b=BoeB3Oga; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eIw4QHjE; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="IGOIE2H/"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 68FE640E014C;
-	Wed, 29 Jul 2026 23:49:16 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 52_uhmkqnzvn; Wed, 29 Jul 2026 23:49:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1785368944; bh=qXrfSofmj6bTld7YiDEE7BLXD3xXP7iHfJcsgH4Yw4E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IGOIE2H/sEeS+6u3224/vW0vSFH/k6NkgQ0qLWQ1lB9h/zmr9VghR9S+Hm8sa3WNB
-	 1QF3Au2c7RGwDpUMcBCbNhzQ3eqpciRIalHE8HdFdMKlajw/Mtx29W/kjO2iTOyEqE
-	 IyQN4iJqSXTuDLg/VVSKr+4S34N7WpXqYh9e04RRA6Ad4Z5u7KBcAvfmj0QQ+1zyqa
-	 Uk61i0OCSH9c90yQeBXUwaXgdoJERW2J+L6ynUeKXo7n2d8aaar3XVTJAMzFOnPHIX
-	 T+gVGj0ytatglOBnx5IiMTDQw9wdhdZj679IEb+/qAIWgh7i7C96c4SxuyrI5IAgWV
-	 vU2Sx5MXG8ba4ZZPcuyn1veDWuI2MzogEEjBQyapmZmW+3A7tw6ytRH4Sm4+0mY+EB
-	 xkG8UTQmyMTbhhkmM1Q5wnXVu+N0T2/hhQluyaiwK66BtOllD6y10GA85Z6k5QYTln
-	 VKRcW/4zyulaPymTmuQxLQ9eIUmpqPWENv44iE/PNEi7K0sxVBL1LwPGcf3Je8ui1l
-	 FkEn2F4Jq3PS+IwmBtWtFDCsTmAnnn4Q2bK2/c3ynrPbAADzPSlk3BWtdJcMikPHDb
-	 9IRvYleAs+lqUgmJDIwiSmhn22PMh3IVaINWq2UKs3u7SRlSHMUgFP7Vj9mGnZ4p0B
-	 LjlVQFijomNRDgfEaVhDaKZo=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::1b])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5C59940E00C4;
-	Wed, 29 Jul 2026 23:48:46 +0000 (UTC)
-Date: Wed, 29 Jul 2026 16:48:42 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Li Zhe <lizhe.67@bytedance.com>
-Cc: akpm@linux-foundation.org, apopple@nvidia.com, arnd@arndb.de,
-	balbirs@nvidia.com, dave.hansen@linux.intel.com, david@kernel.org,
-	kees@kernel.org, mingo@redhat.com, muchun.song@linux.dev,
-	rppt@kernel.org, tglx@kernel.org, linux-arch@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v8 7/9] x86/string: extend memcpy_flushcache() fixed-size
- fastpaths
-Message-ID: <20260729234842.GFamqRWva8h7X59ccN@fat_crate.local>
-References: <20260727123429.5673-1-lizhe.67@bytedance.com>
- <20260727123429.5673-8-lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="BoeB3Oga";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eIw4QHjE"
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 404C31D003A0;
+	Wed, 29 Jul 2026 22:35:41 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Wed, 29 Jul 2026 22:35:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1785378941; x=1785465341; bh=QA6hVIEAHN
+	iGkoskLuMDFBYH91/GzfStig5+RxuGzpQ=; b=BoeB3OgamhK4p/+XMhswxELE6D
+	fNwKZw+Ju6l1ZpLcUFxRUPm+XoUzNLYF1RQd6043iEVdF4anZQWUbT3aPS+RAKj4
+	J47cjGyogU2i8JsjcGmipds/28J4d6so0oNPM7rfqHQH0uxMobhgyrGExb/+1/MJ
+	YyMSJTzjRjFQI4N5wUp/G08eJB/q3gvSUd7/bU7TxPqEQDOHLa0+tTaxOqZpKH+t
+	Sz6iwZEWiJ0WbS3oXox3uzWZs1aEBQoVwuo2UgTENlZGUXj4dFYdUad72BsUAZMJ
+	iu6bAp/8CjtPnLXBsb/TFl/93sYSF39WA29cj8pBJwS9h47t6jTNx1E0Ar7A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1785378941; x=1785465341; bh=QA6hVIEAHNiGkoskLuMDFBYH91/GzfStig5
+	+RxuGzpQ=; b=eIw4QHjEKLYfx64x2KiaeyDzxS7j4sN/Js4+v7JoRmw8ERp+y4U
+	7SPIRjd/cri3QPBcTRkaeYvE9Wu8n6yiNQU01fWIYCtaPK/1JjGFvzRVkqapMquM
+	uaTK4bMx6iZZfofUYMFRgJ8uqJAq0SvGd9PFzJMhPhethD1mqhL0sqLYzmeittAa
+	KYRDPZR2Kcr9oItCepiJ21C2JmiAFHBSAnJCwADmuQjHquLwyiB8zMybRHcgsCEA
+	LFviGvdZhM/vVpW/li/9TjgIaBxE8oDN92RYEXPNEh1Pyy4QlUGyH+Fw66fKNAU4
+	+PhtvMfCXxXztUJQ0ReH1nzciL+rjaPM5xg==
+X-ME-Sender: <xms:fLhqanUjJMIEhJOMYL1dmmWRctBy5rVaT8E4o9VyJm1PTm30yO6Sug>
+    <xme:fLhqaqhVStby5b2rmx4AS8Q-8Mz8riH-3w7Ui-jz5XTsU6xezw1CdAFO98ZJx2W4T
+    meiDefYzfWILCWot3fNTPbjUXcvNF-oqJXEv8tdk_eluL7lusxpf3I>
+X-ME-Received: <xmr:fLhqaibfg7sKZIKyKlLRNw-QqnviSdleJ20WOb3Fy3RN7cboSQiWuq9M5_A>
+X-ME-Proxy-Cause: dmFkZTGX8nPZjomJll/+jmV5dmvE9dRvm7GU9Q2cJ9xo+eUbTuc6GG6qNQ+SB1XZfeXoQZ
+    O32aTzHIw2tKNTqeYNRNx1jUEPc7H9bznlRG1xEJZb7RULR3j+RSa+qQowZFdt7y3euXka
+    uv2uky23BIqTpYoDVqX2xTc27fbT7Xlst+7LR8iNKpAJWIrKNDVUdWhTbFRULphEvX199w
+    ebf+ac+hMeGx3kzMBBnf16i/xOF+FDnTQ4zLkmpUZ/yOs2bSM8+Fx+zYiQ1Q3fm570z+AN
+    2gdNT4/wWFA5eLzBW9HrT88hqvziOob32LcEK+IstnkmomQk5vxHAWFEUc2CUcVTtaFujC
+    qz+homSLfYa1iBMxkWzxzBOJWxrQnlsuypyYhipcO1UBMNmeNDC7aoxAcvh9bzWt5Kmnrb
+    9w9owfdKdvXWcL6OIjkQ5swr3y0RsBKAH/u8w7eUwKADR/0hypTpOu88Ioa2GvxD1z0ed4
+    FPRtBmaWNtX/k1jabNXvdXEE3Jsn1b0YlhUgiNBya1ND4qsRZu2a8xpibgkwYfzD+210Of
+    kcjJKFumIVYdwF932fkvMpwFDlGEcnb3RT1O7C8v9/rmRjNkDKuChBS1N0TLe+LZy18rXs
+    aCXwUpaL0p0buSQkt2gQvk3oXqSP+7Yf3LQ4QyzkT7BgcmYPTCE1ov1Blwfg
+X-ME-Proxy: <xmx:fLhqanorePvGxiqHK-QaStDBT23_3mqcJbiGnLAPWGgUi15nZVtkIA>
+    <xmx:fLhqavP69dRAd9Jjb5KwO83dwJ65nK0a6ak5FPEEsbFQh811vYTaOQ>
+    <xmx:fLhqaqqZ5UyEz4nz8su5W3NL1ndj9FJE00bDUQoB4Hem5l561bToQA>
+    <xmx:fLhqasf9PWKz-TQ-3JeNrKjfr2TyDN2tq3hEKea90-vCCYsjRiKVhg>
+    <xmx:fbhqahZGnLAkPSquH7CRJoSrdh3vwKaI6Wx_QmVFdim86SSfC672wUB4>
+Feedback-ID: ib53e4b78:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 29 Jul 2026 22:35:40 -0400 (EDT)
+Date: Wed, 29 Jul 2026 21:35:38 -0500
+From: Ian Bridges <icb@fastmail.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Robert Richter <rric@kernel.org>, Tony Luck <tony.luck@intel.com>,
+	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] EDAC/thunderx: Replace strlcat() with snprintf() and
+ seq_buf
+Message-ID: <amq4ej83V5e7BRqh@dev>
+References: <akYJUdY1hVABUQH6@dev>
+ <amppKvK6mIJRmoL8@dev>
+ <20260729230035.GDamqGE9bKD5ncU6ZV@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260727123429.5673-8-lizhe.67@bytedance.com>
+In-Reply-To: <20260729230035.GDamqGE9bKD5ncU6ZV@fat_crate.local>
 
-On Mon, Jul 27, 2026 at 08:34:27PM +0800, Li Zhe wrote:
-> The new x86 memcpy_nontemporal() helper in this series maps to
+On Wed, Jul 29, 2026 at 04:00:35PM -0700, Borislav Petkov wrote:
+> Are you in a hurry with this or is there anything that needs immediate
+> handling?
 
-s/in this series//
+No, there is no hurry on my end. I'm still new to this process, so if
+the ping was not appropriate here please let me know.
 
-That's implicit.
-
-> memcpy_flushcache(), and the ZONE_DEVICE fast path uses that primitive
-> for constant-sized struct page template copies.
-> 
-> The immediately relevant x86_64 sizeof(struct page) values here are 64,
-> 80, and 96 bytes. memcpy_flushcache() currently inlines only the 4, 8,
-> and 16-byte cases, so even those constant-sized struct page copies fall
-> through to __memcpy_flushcache().
-> 
-> Add 32, 48, 64, 80, and 96-byte MOVNTI sequences to the main fixed-size
-> switch so those constant-sized copies can stay on the inline path.
-> Factor the larger sequences into movnti_8()/16()/32()/64() helpers so
-> the switch can reuse them without duplicating the inline assembly.
-> While the ZONE_DEVICE template-copy path only needs 64/80/96-byte
-> copies, keep 32-byte and 48-byte copies inline as well rather than
-> sending those nearby fixed-size cases back to __memcpy_flushcache().
-
-Do not explain the code - explain *why* those sizes. I already asked a bunch
-of times.
-
-> 
-> These new fixed-size cases follow the existing memcpy_flushcache()
-> fixed-size MOVNTI cases. The existing 4/8/16-byte cases already use
-> MOVNTI without a separate destination alignment check.
-> 
-> The movnti_8()/16()/32()/64() helpers keep the "memory" clobber
-> intentionally. The destination memory operand describes the MOVNTI
-> destination, but it does not express the broader compiler-scheduling
-> constraint that this path wants: keep the fixed-size copy as a compact
-> sequence of streaming stores and avoid moving unrelated memory accesses
-> into the middle of that sequence.
-
-A lot of bla for its own sake.
-
-> A microbenchmark compared two memcpy_flushcache()-style helpers that
-> shared the same generic body and differed only in whether
-> 32/48/64/80/96-byte copies stayed in the fixed-size switch or were
-> redirected to __memcpy_flushcache() when the destination was not 8-byte
-> aligned. The timed interval covered the copy loop only; wmb() was used
-> only to separate rounds.
-
-So we're doing this only for a microbenchmark's sake?
-
-> In pseudo-code, the two variants were:
-> 
-> variant A:
-> 	switch (len) {
-> 		case 32:
-> 		case 48:
-> 		case 64:
-> 		case 80:
-> 		case 96:
-> 			do fixed-size MOVNTI stores;
-> 			return;
-> 		default:
-> 			generic __memcpy_flushcache()-style body;
-> 	}
-> 
-> variant B:
-> 	switch (len) {
-> 		case 32:
-> 		case 48:
-> 		case 64:
-> 		case 80:
-> 		case 96:
-> 			if (!IS_ALIGNED(dst, 8))
-> 				goto generic_path;
-> 			do fixed-size MOVNTI stores;
-> 			return;
-> 		default:
-> 	generic_path:
-> 			generic __memcpy_flushcache()-style body;
-> 	}
-> 
-> For offsets 1..7 averaged, keeping those sizes in the fixed-size
-> switch took about 0.410/0.411/0.426/0.426/0.428 us per
-> 32/48/64/80/96-byte copy, while redirecting the same cases to
-> __memcpy_flushcache() took about 0.962/0.956/0.923/0.998/1.001 us.
-> 
-> The correctness rationale for not adding a separate destination
-> alignment check is that these cases follow the existing 4/8/16-byte
-> memcpy_flushcache() MOVNTI cases, and I did not find Intel SDM text
-> requiring an 8-byte aligned destination for MOVNTI.
-> 
-> The microbenchmark is only the performance motivation for keeping
-> these small constant-size copies in the inline path.
-
-So in the end of the commit message, I still don't know why we need this code.
-
-I mean, it should be pretty trivial to explain: I'm adding those additional
-sizes because it brings this and that. Srsly.
-
-If you cannot justify that, why are you even doing it?
-
-So from going over this again, the reason why you're adding those other sizes
-are because struct page can be that big. Yes?
-
-How do you know? What's the proof?
-
-I'd expect a justification along the lines of: in a somewhat normal Linux
-installation, struct size can be of size <bla>. Adding MOVNTI helpers of size
-<bla> brings so and so performance uplift.
-
-How hard it is to write it this way?
-
-> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> ---
->  arch/x86/include/asm/string_64.h | 56 +++++++++++++++++++++++++++++++-
->  1 file changed, 55 insertions(+), 1 deletion(-)
-
-...
-
-at least the code is making a lot more sense now.
-
-The fact that you had to axe off so much cruft off of it tells me that you
-haven't really measured it right.
-
-So why do I really want your patch?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Ian
