@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5832135C183;
-	Sat,  1 Aug 2026 23:55:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDECEEC3;
+	Sun,  2 Aug 2026 00:10:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785628520; cv=none; b=l7mxxdscCS1AfOTTSZii2npTpgv2UVJWVS0mjIR6yfbHlbqYotcJaFKYxv++atpAvY66USMc3nhJY3ceoaEzPruXxgkhPIfqfncRYEt59EhPLGcWM/Yf5IO9yRJQz8U8TTcZQG5c03+n9p7ts7tqYYJmjV4GNr/fiVP+3d+f4Q4=
+	t=1785629416; cv=none; b=mM7HnzRNP3LH3FO6NJjgpvs3QDG/fa1xkvx22tlcvMVi/En/J9e06I12sVUILunz1TBUhK4D/QTaYXEYa/wBs5RKTK5f0kaqaqX+bU91Q1VNO425F4k1acayFgn8qPG3bDsbb1gWFewMQ93K8sz2TpkoXxR9nqObJuJZatSRPHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785628520; c=relaxed/simple;
-	bh=KRpiL7ukkRLXrrHlWj2Xid/sLeDHdyMHx5Kg32rk9qU=;
+	s=arc-20240116; t=1785629416; c=relaxed/simple;
+	bh=xgr4KDAO4BQ4x50JD82oGk50bEjH0+9uvlFjnD8cRz0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gVZHFNaopk4wm9vIaHkL1FtRhoiqT45CaiLzSasFkgPIoPUfeqn4zrD7zAeb36aSpU3Mwms8QEx9zZF9qA5ExJdYbrH7TONgAIs6MrfgELa6sWMlzX3HI5Yc3/vPXjYaUhjkQdnsXjQSW7M6RZ3c6omb8t1tire2hLcbMuLgLBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=njrsqnDL; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Li6njpqdIOq41Wsa3M3T9MHz2UlNlJwwIrzyCKohNeithgBWHNbR7BTnFz9Z46LkNcgpFRlG3/LU2uR76heZUEEQHwzpqueZPXPcJjpRjwhDbqN3svRl6sWFQ2lpkL0C0clFlPYvT626VJMYcrDyHlJAV+7rpQyvehG8n4HU5Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTtpb8Gi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="njrsqnDL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC28A1F00AC4;
-	Sat,  1 Aug 2026 23:55:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTtpb8Gi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9432D1F00AC4;
+	Sun,  2 Aug 2026 00:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785628518;
-	bh=C/YlJ8wucizeYmLyTqptfph4YeLQo2yHVoCMPddbvQw=;
+	s=k20260515; t=1785629414;
+	bh=PDAZryFvGbwIdulz1vmeoa6qroav231BWWjGAxSYlc0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=njrsqnDL0G1QjhnpK0R00RE9xJtYjTEdAiz7OdPbd0fjz0iXkFG17PlwZ8wOhancy
-	 ANpGJ2JcLPoG/fqn0FS5zN4K5rZSCu632h4hu+xixsGs95KvaPcOnWsEN/gZ52AICC
-	 DBCjLmwbB2J5VpwUG76auMIOX2/uJZQ25LVTQCn440+7Z8qoxJ8M5p40IaKY9BiNO1
-	 dawCYhGc3mAylsDmZe4al81ZrS03Fl3Ut/59nj6FZr5Ld9PvG+dHAjg+GBEUt4b7HY
-	 z2YzWlyH0spApcdNuA8V/+xQN/79ZtrflmcFQ4hOuPTfhLw4fqvaN3N37SO6dEEWtG
-	 11W3ItRjPrhIQ==
-Date: Sun, 2 Aug 2026 00:55:03 +0100
+	b=XTtpb8Gi/Aw5NrYrKdQjnqz1Uz0w1XwE/5cQtXdv0J5oc29iCtUMU/drcGx4MqZCv
+	 /2GQWgq5zOgmLedqtosxYiUqvv2t+FMlKaCFDA6nhPhdoehrtMnbjAlUFG24Xm04OC
+	 gxhDHvQEETKThj74BSS1Nl6c5eNu5F7Pu/LWVlO8eB3xgC27FwUqzrcwORHU7DCHZ/
+	 MVajCS85PWx17ll4MoQz+r9gdR1gGKA7NA3A9YqYzLrvyycPyOWVZIskR8YEaQLajB
+	 H+A4EqNv2uulqcuQQy7BzKhtGWAena/i9zBNKD40pszFRw+P4jNzsYbyyS8r1yBXBN
+	 GBAiOgim1myNQ==
+Date: Sun, 2 Aug 2026 01:09:59 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Rodrigo Alencar via B4 Relay
  <devnull+rodrigo.alencar.analog.com@kernel.org>
@@ -39,13 +39,12 @@ Cc: rodrigo.alencar@analog.com, linux-iio@vger.kernel.org,
  Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Philipp
  Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah
  Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v10 07/17] iio: test: add kunit tests for channel prefix
- naming generation
-Message-ID: <20260802005503.70ec9e25@jic23-huawei>
-In-Reply-To: <20260729-ad9910-iio-driver-v10-7-aa1f6167729e@analog.com>
+ R. Silva" <gustavoars@kernel.org>, Conor Dooley
+ <conor.dooley@microchip.com>, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v10 00/17] AD9910 Direct Digital Synthesizer
+Message-ID: <20260802010959.25f9f4df@jic23-huawei>
+In-Reply-To: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
 References: <20260729-ad9910-iio-driver-v10-0-aa1f6167729e@analog.com>
-	<20260729-ad9910-iio-driver-v10-7-aa1f6167729e@analog.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -56,57 +55,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 29 Jul 2026 09:25:34 +0100
+On Wed, 29 Jul 2026 09:25:27 +0100
 Rodrigo Alencar via B4 Relay <devnull+rodrigo.alencar.analog.com@kernel.org> wrote:
 
-> From: Rodrigo Alencar <rodrigo.alencar@analog.com>
+> This patch series adds support for the Analog Devices AD9910 DDS.
 > 
-> Add a KUnit test suite covering __iio_chan_prefix_emit(), the helper
-> that builds IIO sysfs attribute name prefixes from an iio_chan_spec.
-> The suite groups cases by the enum iio_shared_by mode it exercises:
-> 
->   - IIO_SHARED_BY_ALL: produces an empty prefix.
->   - IIO_SHARED_BY_DIR: emits direction only ("in" / "out").
->   - IIO_SHARED_BY_TYPE: emits "<dir>_<type>" and the differential
->     "<dir>_<type>-<type>" variant.
->   - IIO_SEPARATE: covers the full matrix of indexed, differential,
->     modified, output and extend_name combinations, plus the two
->     documented error paths (differential without indexed, differential
->     with modifier).
-> 
-> A final case exercises the seq_buf overflow path by passing an
-> undersized buffer and expects -EOVERFLOW.
-> 
-> Also, an entry is created under MAINTAINERS dedicated to tests for IIO
-> core helpers.
-> 
-> Signed-off-by: Rodrigo Alencar <rodrigo.alencar@analog.com>
->   * iio_device_id() - query the unique ID for the device
-> diff --git a/drivers/iio/test/Kconfig b/drivers/iio/test/Kconfig
-> index 4fc17dd0dcd7..7d2c29cc583b 100644
-> --- a/drivers/iio/test/Kconfig
-> +++ b/drivers/iio/test/Kconfig
-> @@ -4,6 +4,20 @@
+Series applied with that small Kconfig help tweak and a bit of fuzz
+around the new channel type due to the flow sensor I merged earlier today.
 
->  # Keep in alphabetical order
-> +config IIO_CHANNEL_PREFIX_KUNIT_TEST
-> +	tristate "Test IIO channel prefix" if !KUNIT_ALL_TESTS
-> +	depends on KUNIT && IIO
-> +	default KUNIT_ALL_TESTS
-> +	help
-> +	  Build unit tests for __iio_chan_prefix_emit(), the helper that
-> +	  builds IIO sysfs attribute name prefixes from an iio_chan_spec.
-> +	  The tests are compiled into the IIO core module.
+Thanks,
 
-Sashiko picked up on this being stale as now they are built as separate module.
-If nothing comes up I'll just delete this line whilst applying.
-
-> +
-> +	  For more information on KUnit and unit tests in general, please refer
-> +	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-> +
-> +	  If unsure, say N.
-> +
->  config IIO_GTS_KUNIT_TEST
->  	tristate "Test IIO gain-time-scale helpers" if !KUNIT_ALL_TESTS
->  	depends on KUNIT
+Jonathan
