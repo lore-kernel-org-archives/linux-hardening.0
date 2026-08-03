@@ -1,132 +1,121 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02596396572
-	for <linux-hardening@vger.kernel.org>; Mon,  3 Aug 2026 08:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89476426ECF;
+	Mon,  3 Aug 2026 18:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785746397; cv=none; b=OuogCmQjkJZ2xKTjstc7Xz5ZGmso20OnWQiDm4inV9HYrhIK0gSbXnqw/KKjfk0o+XGBvtoTQqhftB//P/0grOaDetKAVo3yjdllVKy2p8TWdhuwr5cZLdMSpK+2Try85Ym9blpxBE+gjV+pVMvIHkM1D5DmDeUJ9hIOVcv2BYI=
+	t=1785780742; cv=none; b=YXFmui1Zea7ycXkeymg3CgBFWH4NSWADfZ3Ll4GeGeSGS14Mux2p8+gPCEByCQi9U+Cuh+2RUn3DpCRgqaVIX4GRDtUfPr6JoRSNMl9PQCZE/q+ZlQLHs2en3+qmtxd7RMle1zScXk6H5SUnlqwafj83GavRda/F/+QHsDyB5t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785746397; c=relaxed/simple;
-	bh=i84saUSnhw4dvsL73qjIQ2iV2KAmszYV6bPiQqIQTao=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=tEulU0SfTRBfG0wFECi9vkPaqwi4LHxnAJdEAS2BpSgb7fCw6hg6ObaumdPkqKB+vVLA/eHkusPNDjojOgkymBd72P8ut6lh/Ie0KqiAKmw/Al2RC/pxPMsl9R7DGnSANnrDxuYMUh/MCaS5vTW1xK9OOSXQ7yo3QIgjSzLosrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wdsCv7xa; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1785780742; c=relaxed/simple;
+	bh=gy+E/r3YRd4ie0M1QS88d9acz/SOMCsPmBalBftlLXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=haK17QlWD+EW1ocxnD6UWd8AWwXwcMafyb2WC+QkF7Pik8csyWJ8rIn8l4u4rglYZYP8Tomy5d7clmq2asWnU1O8FCj/B6alIWU00qG22XzoUzq1e3Lnd2yj24g+sE5lsPfow+FZsScoWHy9J7g7Y0JH59cNYFbpa696PBOGwYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeHOPPo0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wdsCv7xa"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785746383;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wxNx4GDWUihrljy6qO1iXM0vV/PzaZT1gUMrOo4agVk=;
-	b=wdsCv7xanZYH2lLaZyI3Sc9uLB26pn1JOIYwZ9hS4f3Niq4qYKa3hmPkDDPHMv9+KoyP+Y
-	1uDDNrgwUZtRohVsWHI7XXn084qZG9U++C08ZGVFIM4PqRpGXoUfSixe5S5F3oTiX181l+
-	AOf2bd5jSvafihaz7v81tiQb2XvwfhY=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeHOPPo0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03FE1F000E9;
+	Mon,  3 Aug 2026 18:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785780741;
+	bh=caNw5de4BeQBAKorOGJf3ghVsp5LnmvH5cbGv3j3bnM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=NeHOPPo0TK3Ir5gyllRmAqkVovJVRwgPKNH1TDmtfEsRaPzzgaCSU3nqyr/SQa1MC
+	 pZJJV646OTmfpTj0HPnNbo73w1Zg0hW5/QTMlbusGfp0vYbfNvubk/UVz4lSC+tJLs
+	 lxNwDKeEtMYe+442XObTpxG/BipEJg7q2SHVfJNlEZ9+ej/riCSr9rLe9b72jZeGCQ
+	 q3fGkRCmaqrcmFJ8eQoFrcIxV3hVsxKsul3rAn7hFAbupmdeNGwMUR6XNu0uhZvEnq
+	 /wNsAs8lw1KXac8w4aJEVQ+LwcwVd7p+vPd3bgKhpYNlJCa1nAH02Bar2LgrsG3m7U
+	 SF/SivItMZJcA==
+Date: Mon, 3 Aug 2026 11:12:17 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Nicolas Schier <nsc@kernel.org>
+Cc: Jaihind Yadav <jaihindy@qti.qualcomm.com>,
+	"kees@kernel.org" <kees@kernel.org>,
+	"linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] scripts: kstack_erase: use relative stackleak plugin
+ path
+Message-ID: <20260803181217.GB1067866@ax162>
+References: <20260720093545.3836066-1-jaihindy@qti.qualcomm.com>
+ <20260720093545.3836066-2-jaihindy@qti.qualcomm.com>
+ <20260722-ubiquitous-stork-of-hail-3ba047@l-nschier-aarch64>
+ <BN0PR02MB8128563CD267288E68943157E2C12@BN0PR02MB8128.namprd02.prod.outlook.com>
+ <BN0PR02MB81287EC4BD8A7C0D7E6B5E31E2C12@BN0PR02MB8128.namprd02.prod.outlook.com>
+ <amPIsTxtNPhbDU-z@levanger>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
-Subject: Re: [PATCH v9 4/8] mm: add a template-based fast path for zone-device
- page init
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20260803070929.86075-5-lizhe.67@bytedance.com>
-Date: Mon, 3 Aug 2026 16:39:22 +0800
-Cc: akpm@linux-foundation.org,
- apopple@nvidia.com,
- arnd@arndb.de,
- balbirs@nvidia.com,
- bp@alien8.de,
- dave.hansen@linux.intel.com,
- david@kernel.org,
- kees@kernel.org,
- mingo@redhat.com,
- rppt@kernel.org,
- tglx@kernel.org,
- linux-arch@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-mm@kvack.org,
- x86@kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CB22DBB6-0B52-46C2-9A19-4A18A6F6DEC1@linux.dev>
-References: <20260803070929.86075-1-lizhe.67@bytedance.com>
- <20260803070929.86075-5-lizhe.67@bytedance.com>
-To: Li Zhe <lizhe.67@bytedance.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <amPIsTxtNPhbDU-z@levanger>
 
+On Fri, Jul 24, 2026 at 10:18:57PM +0200, Nicolas Schier wrote:
+> On Wed, Jul 22, 2026 at 07:00:43PM +0000, Jaihind Yadav wrote:
+> > 
+> > Hi Nicolas Schier,
+> > 
+> > Thanks for the suggestion. I tested the proposed change:
+> > 
+> > -kstack-erase-cflags-y += -fplugin=$(objtree)/scripts/gcc-plugins/stackleak_plugin.so
+> > +kstack-erase-cflags-y += -fplugin=scripts/gcc-plugins/stackleak_plugin.so
+> > 
+> > 
+> > Unfortunately, it does not work for the out-of-tree module builds in
+> > my environment.
+> 
+> Thanks for checking; and yes I forgot out-of-tree modules.  When
+> building them, Kbuild changes to their respective output directory so my
+> suggestion had to fail for oot kmods.
 
+Technically, this is only a problem for out of tree kernel modules,
+right? When building in-tree kernel modules, objtree is always '.', so
+we will never have the output directory path in the debug information
+(at least based on my brief testing).
 
-> On Aug 3, 2026, at 15:09, Li Zhe <lizhe.67@bytedance.com> wrote:
->=20
-> memmap_init_zone_device() repeats nearly identical head-page
-> initialization for each PFN. Prepare one reusable ZONE_DEVICE =
-head-page
-> template through the existing slow path, refresh the PFN-dependent
-> fields in that template before each copy, and memcpy it into each
-> destination page.
->=20
-> Use the template path unconditionally, as suggested by Muchun. The
-> page_ref_set tracepoint is primarily a debugging aid, while this code =
-is
-> still initializing struct pages before they are handed out. =46rom the
-> perspective of users of those pages, the initialization-time refcount
-> transitions are not part of the observable page lifetime.
->=20
-> This means page_ref_set will no longer observe every =
-initialization-time
-> refcount assignment for copied ZONE_DEVICE head pages. The impact is
-> controlled because the final initialized struct page state is =
-unchanged,
-> and keeping a separate non-template path only for this local =
-tracepoint
-> observability would add complexity to the common path.
->=20
-> This patch accelerates head-page initialization. The pfns_per_compound
-> =3D=3D 1 case gets the full benefit here, compound tails are handled =
-in the
-> next patch.
->=20
-> Tested in a VM with a 100 GB fsdax namespace device configured with
-> map=3Ddev on Intel Ice Lake server. This test exercises the nd_pmem =
-rebind
-> path (pfns_per_compound =3D=3D 1).
->=20
-> Test procedure:
-> Rebind the nd_pmem driver 30 times and collect the memmap =
-initialization
-> time from the pr_debug() output of memmap_init_zone_device().
->=20
-> Base(v7.2-rc1):
->  Average of rebinds for nd_pmem driver: 244.28 ms
->=20
-> With this patch and its prerequisites applied:
->  Average of rebinds for nd_pmem driver: 215.55 ms
->=20
-> This reduces the average memmap initialization time measured during =
-rebind
-> from 244.28 ms to 215.55 ms, or about 11%.
->=20
-> Suggested-by: Muchun Song <muchun.song@linux.dev>
+> > Given that the proposed relative path breaks out-of-tree module
+> > builds, could you please take a look at the patch I posted? If the
+> > approach looks reasonable, I would appreciate your review and
+> > consideration for merging it.
+> 
+> I am not sure, if we can take your path, as 'readlink --relative-to' is
+> only available in coreutils/Linux but coreutils are not a documented
+> requirement for Linux builds (cp. Documentation/process/changes.rst),
+> thus this would probably kill Linux builds on BSDs and Darwin/MacOS.
+> 
+> But let me think about that a few days;  and perhaps someone else comes
+> up with an idea.
 
-I personally feel you might have used the wrong trailer here, because it
-implies that the overall design is based on someone's suggestion. But =
-for me,
-I think what you actually meant is that in a previous version, I made a
-suggestion about simplifying the code, rather than dictating the overall
-direction of this entire patch series. So I feel I shouldn't be credited =
-here.
-This information is already enough just appearing in the change log.
+Yeah, I don't really like 'realpath --relative-to' either, it feels a
+bit like a hack since it will only avoid including a full path if the
+module output directory includes part of the build directory. For
+example:
 
-Muchun,
-Thanks.
+  O=/mnt/build/kernel
+  MO=/mnt/build/extmod
 
+$ realpath -m --relative-to /mnt/build/extmod /mnt/build/kernel
+../kernel
 
+vs.
+
+  O=/home/nathan/build/kernel
+  MO=/mnt/build/extmod
+
+$ realpath -m --relative-to /mnt/build/extmod /home/nathan/build/kernel
+../../../home/nathan/build/kernel
+
+Furthermore, this patch only fixes KSTACK_ERASE but we have other GCC
+plugins that presumably have the same problem.
+
+I do not have a good solution for this either but since it only affects
+external kernel modules, I am not particularly inclined to think too
+hard about it.
+
+-- 
+Cheers,
+Nathan
