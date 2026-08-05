@@ -1,115 +1,167 @@
-Received: from va-1-112.ptr.blmpb.com (va-1-112.ptr.blmpb.com [209.127.230.112])
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6418A3F86FE
-	for <linux-hardening@vger.kernel.org>; Wed,  5 Aug 2026 09:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A72D37A4B7
+	for <linux-hardening@vger.kernel.org>; Wed,  5 Aug 2026 10:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785923477; cv=none; b=jVQUnqYAB/yv2gtKwxZBUJ8I/r6nkYMGMFz0vfsJbK/XvB62LsKxgHhcsO+m7LfzAAe6otH9wolz/ZRygxDvUwRzGQdCzets6xaLrvMtlYhXonzkEMdPbm+W5vrTn9Na4W0kn5/Awj984FrsgZvYCuwzLAQqBuyDjRxVHeqDEyM=
+	t=1785926449; cv=none; b=Ov7rQUDCX5BccRM4qUIj1w7v4OLxNjHnZdTK70JFk+X4Q8AwJRBm9poTAlhsDb+sf0vwnLp2tdYswZokzJxgxmRe1YDX7aEhj33F6AgbpSSbckJdJpOoOQKXUMJBK2YxzXE5SmHX9sah8TdlnAeMxYCqQQhOzUJxac9IsNjgxnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785923477; c=relaxed/simple;
-	bh=/7rmQh5UIMjXl3eSec6+iVglbfzC2mjq8hJqDq0PiJA=;
-	h=References:Cc:Subject:Date:Message-Id:Content-Type:In-Reply-To:To:
-	 From:Mime-Version; b=n4cHc2C6xSubhh/koS3XS9kXyIIZCnIlZGB2joUdNnFVWFIVH/8k/Hs2/3GWGlZrYLd6yuwqv5/M6HkGVK4vkcMqOlpFRd7Lz3v845Pr4k4hLPxm5NsQxGbGorjXEYBY46I10JZohdkFiU6eXsIhPaOssWY4HI9GKmYaQrlOIIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=c4puW5Lk; arc=none smtp.client-ip=209.127.230.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1785926449; c=relaxed/simple;
+	bh=Rmbdm/R9T+nVHns9xmbwhhzc7T2IKGzFyN/cTZjjqhY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=VP4Q4fDgR2xJ5vn5SUYFoGSv2H3SDIQUxox3NFHw9YnSJox8mC5N/qRtejef532O9V0olEHXPevg8H0f+riktQcCO11MrtF7u+P9ovfjTO/I+GbsmvGBJkxKHF5Z25uKbshKtqkg1QtfRzl2GFDfoiqoM6LbEGoxhVTF5P1ND3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QtruUX8F; arc=none smtp.client-ip=209.85.208.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="c4puW5Lk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1785923471; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=kAxC4YTMr3xtaFtujHMyZqm2zshOuBu29sIloAfmWcI=;
- b=c4puW5LkUDqFT0VekX3TMpfAbW8PSbdWgqUPheVpEhu4JIuMaTwJvSaH0kBNw1ZR2KXAMq
- yG7rBt/MXw0G3wZYka1jsccKeT7Ok0mwQHEnheuIEZpL0F5YgG8cLYmxq+tqTk8sZd2gJ8
- ktTjcLeLFLCIwoJ+yV1lcrMR6pcc1PN2Lhthnjp+CvSmX9GXzneVVhPIldtjUhObGovB6k
- jrMDbiSmfStAENV/prdgKnCSNHq0idUDppFpT0ZiaGJ5CqDcvBmG+gsDSYneE+aeR9HDCJ
- 3jJv339QvbpyGd01ye1S+pwJA5VV02kA6vmNF22n9i2E6AJOhSD3OYTl51QenA==
-References: <20260803070929.86075-1-lizhe.67@bytedance.com> <20260803070929.86075-5-lizhe.67@bytedance.com> <CB22DBB6-0B52-46C2-9A19-4A18A6F6DEC1@linux.dev>
-Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
-	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
-	<rppt@kernel.org>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>, 
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-mm@kvack.org>, <x86@kernel.org>
-Subject: Re: [PATCH v9 4/8] mm: add a template-based fast path for zone-device page init
-User-Agent: Mozilla Thunderbird
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-Date: Wed, 5 Aug 2026 17:50:47 +0800
-Message-Id: <93090eff-7961-47f8-9373-787f6a0f8da4@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-In-Reply-To: <CB22DBB6-0B52-46C2-9A19-4A18A6F6DEC1@linux.dev>
-Content-Transfer-Encoding: 7bit
-To: "Muchun Song" <muchun.song@linux.dev>
-From: "Li Zhe" <lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QtruUX8F"
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-6a0de3383c0so971376a12.2
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Aug 2026 03:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785926446; x=1786531246; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sKn6cZqAriR/zZlCyouZ9X4PnMk81SsImmt/7OIBzd8=;
+        b=QtruUX8FDiEyJvgj01i/ZPe7Oo3Zrr8hQ5sp+XqnMqXAZd8085gD2ZY7aFw+Co4G/d
+         PmoKYkYbrg2jwUSGoaAB18xMBThBZQA1zY96iiqwtBDNuUyQZWuaw61iEavShA2Rmrd8
+         3X0ELc36HTjFAVl7sY5tL+MpBmWqz3sYeSgsfGomXDoKX/Ty5doPIR/pSUaKrc9GAtw0
+         2BIuVtw3BVnmwkBJFotfS5/l+ijGUnQUVRQrvIWULTs0sW8ftJjUCElt+oaPp/cdY4hS
+         h/6yoBpm9+O8QKoC3j0BN9Fa+URvxacGfLKwmvohNK/m4WCEB+VgtZteSH7N3yLD1vyE
+         w04w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785926446; x=1786531246;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=sKn6cZqAriR/zZlCyouZ9X4PnMk81SsImmt/7OIBzd8=;
+        b=b5WHllxyUPJZyWrHMTyghP5W1bpnZ8Rmze91nZH+eRzFAw/pBmX88dlU4WqVysi9t4
+         RvQDQ5I0gDbSdnq5LjTG/ZD6QCrmIdhmd2eEFAg4Fk7z/O2EVFEPhmusRNlAED4DAI0B
+         NBvO4hTBYZcI2AY9LDQ6m/Yeh39uYynumIXhwvsj3nnVnNbtZkjlSFr4VNkwl81QTJwM
+         3Pd8Zc10QqRMLfrxyMGdS5uh/TDjVzDKybb1viZJmuxjsvBtjvlWnbAk7S0/BmtA0Rt7
+         Rr0Wzc6hw+aDWbsTZvH0oTeWJQgNNnL6C/L8F/npwLvoXVixmNd6s210Nhr8T4De5T05
+         NnFA==
+X-Forwarded-Encrypted: i=1; AHgh+RpIHO3C3Ql+1bwonQEl8QFXBC/xzTgqxYUJWzzM7BQodOhjZpJJJVosdfAKvUkJNKspAXZerhMlAQBpNSPRoEg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9ZPuqf/5q3oqSL0ntq9OoP0oskkpRoNzraU4Vo9NJE6k7ZVDF
+	y9Y4rvZV/75jifHsxLHG96zdrg7MrBSVgYSC0W3SoeJs/xpBqH7csFYU1F4nP3nrwsKWo1vZqA=
+	=
+X-Received: from edoy16.prod.google.com ([2002:aa7:c250:0:b0:6a0:d084:32ec])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:52d5:b0:697:564c:9095
+ with SMTP id 4fb4d7f45d1cf-6a14f256695mr3050404a12.21.1785926445667; Wed, 05
+ Aug 2026 03:40:45 -0700 (PDT)
+Date: Wed,  5 Aug 2026 12:40:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Lms-Return-Path: <lba+26a73078c+0b6239+vger.kernel.org+lizhe.67@bytedance.com>
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3419; i=ardb@kernel.org;
+ h=from:subject; bh=aQqHgsHDXATSChltB95ehBTGy6vjImAwBYlhcut/HS4=;
+ b=owGbwMvMwCVmkMcZplerG8N4Wi2JIatYWJtd8KFR3xa3Gw4H5wYk210KejdP31k9cLmRRe2+X
+ WaPPqZ0lLIwiHExyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIlkrWb4Zyqzs+ZoQfJZlqwT
+ bKpeLC5sLw5yd9zhXuLPcF3jZED8N0aGu3LPI79XZhRMPlpWavJC9XOB4I/csrgyyUMTV9768uU fFwA=
+X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
+Message-ID: <20260805104042.1107678-2-ardb+git@google.com>
+Subject: [RFC PATCH] arm64: mm: Map fixmap PTE tables r/o in the linear map
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, 
+	Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, 
+	Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>, 
+	Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 8/3/26 4:39 PM, Muchun Song wrote:
->
->> On Aug 3, 2026, at 15:09, Li Zhe <lizhe.67@bytedance.com> wrote:
->>
->> memmap_init_zone_device() repeats nearly identical head-page
->> initialization for each PFN. Prepare one reusable ZONE_DEVICE head-page
->> template through the existing slow path, refresh the PFN-dependent
->> fields in that template before each copy, and memcpy it into each
->> destination page.
->>
->> Use the template path unconditionally, as suggested by Muchun. The
->> page_ref_set tracepoint is primarily a debugging aid, while this code is
->> still initializing struct pages before they are handed out. From the
->> perspective of users of those pages, the initialization-time refcount
->> transitions are not part of the observable page lifetime.
->>
->> This means page_ref_set will no longer observe every initialization-time
->> refcount assignment for copied ZONE_DEVICE head pages. The impact is
->> controlled because the final initialized struct page state is unchanged,
->> and keeping a separate non-template path only for this local tracepoint
->> observability would add complexity to the common path.
->>
->> This patch accelerates head-page initialization. The pfns_per_compound
->> == 1 case gets the full benefit here, compound tails are handled in the
->> next patch.
->>
->> Tested in a VM with a 100 GB fsdax namespace device configured with
->> map=dev on Intel Ice Lake server. This test exercises the nd_pmem rebind
->> path (pfns_per_compound == 1).
->>
->> Test procedure:
->> Rebind the nd_pmem driver 30 times and collect the memmap initialization
->> time from the pr_debug() output of memmap_init_zone_device().
->>
->> Base(v7.2-rc1):
->>   Average of rebinds for nd_pmem driver: 244.28 ms
->>
->> With this patch and its prerequisites applied:
->>   Average of rebinds for nd_pmem driver: 215.55 ms
->>
->> This reduces the average memmap initialization time measured during rebind
->> from 244.28 ms to 215.55 ms, or about 11%.
->>
->> Suggested-by: Muchun Song <muchun.song@linux.dev>
-> I personally feel you might have used the wrong trailer here, because it
-> implies that the overall design is based on someone's suggestion. But for me,
-> I think what you actually meant is that in a previous version, I made a
-> suggestion about simplifying the code, rather than dictating the overall
-> direction of this entire patch series. So I feel I shouldn't be credited here.
-> This information is already enough just appearing in the change log.
->
-> Muchun,
-> Thanks.
+From: Ard Biesheuvel <ardb@kernel.org>
 
+Without physical KASLR, the fixmap page tables will appear at an a
+priori known offset in the physical address space, and due to the lack
+of randomization, the linear map carries a writeable alias of the fixmap
+PTE pages, which appears at an offset in the kernel VA space that is
+also predictable.
 
-Thanks.
+Given that the placement of the fixmap area is never randomized either,
+a single store to this linear alias region is sufficient to map any
+physical page with any permissions at a known offset in the kernel VA
+space, including on top of the PTI trampoline.
 
-I will drop it and keep the simplification note only in the changelog.
+Avoid this, by remapping the fixmap PTE pages read-only in the linear
+map. This is possible because all updates to bm_pte[] occur via the
+mapping of the kernel image in the vmap area. A read-only mapping is
+still needed for things like ptdump that walk the page tables.
 
-Thanks,
-Zhe
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: Liz Prucka <lizprucka@google.com>
+Cc: Seth Jenkins <sethjenkins@google.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/arm64/include/asm/set_memory.h |  2 ++
+ arch/arm64/mm/fixmap.c              |  7 +++++++
+ arch/arm64/mm/pageattr.c            | 10 ++++++++++
+ 3 files changed, 19 insertions(+)
+
+diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm/set_memory.h
+index 90f61b17275e..a685fb534c3e 100644
+--- a/arch/arm64/include/asm/set_memory.h
++++ b/arch/arm64/include/asm/set_memory.h
+@@ -11,6 +11,8 @@ bool can_set_direct_map(void);
+ 
+ int set_memory_valid(unsigned long addr, int numpages, int enable);
+ 
++int set_direct_map_ro(unsigned long addr, int numpages);
++
+ int set_direct_map_invalid_noflush(struct page *page);
+ int set_direct_map_default_noflush(struct page *page);
+ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid);
+diff --git a/arch/arm64/mm/fixmap.c b/arch/arm64/mm/fixmap.c
+index f66a0016dd02..fcb571dffe82 100644
+--- a/arch/arm64/mm/fixmap.c
++++ b/arch/arm64/mm/fixmap.c
+@@ -14,6 +14,7 @@
+ #include <asm/fixmap.h>
+ #include <asm/kernel-pgtable.h>
+ #include <asm/pgalloc.h>
++#include <asm/set_memory.h>
+ #include <asm/tlbflush.h>
+ 
+ /* ensure that the fixmap region does not grow down into the PCI I/O region */
+@@ -173,3 +174,9 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ 
+ 	return dt_virt;
+ }
++
++static int __init fixmap_remap_ro(void)
++{
++	return set_direct_map_ro((unsigned long)lm_alias(&bm_pte), NR_BM_PTE_TABLES);
++}
++late_initcall(fixmap_remap_ro);
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index bbe98ac9ad8c..5072b14d4f9d 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -251,6 +251,16 @@ int set_memory_valid(unsigned long addr, int numpages, int enable)
+ 					__pgprot(PTE_PRESENT_VALID_KERNEL));
+ }
+ 
++int set_direct_map_ro(unsigned long addr, int numpages)
++{
++	if (!can_set_direct_map())
++		return 0;
++
++	return __change_memory_common(addr, PAGE_SIZE * numpages,
++				      __pgprot(PTE_RDONLY),
++				      __pgprot(PTE_WRITE));
++}
++
+ int set_direct_map_invalid_noflush(struct page *page)
+ {
+ 	pgprot_t clear_mask = __pgprot(PTE_PRESENT_VALID_KERNEL);
+-- 
+2.55.0.571.g244d577d93-goog
 
