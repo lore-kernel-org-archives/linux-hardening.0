@@ -1,196 +1,130 @@
-Received: from va-1-114.ptr.blmpb.com (va-1-114.ptr.blmpb.com [209.127.230.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A6E439F61
-	for <linux-hardening@vger.kernel.org>; Wed,  5 Aug 2026 11:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DCD44E67D;
+	Wed,  5 Aug 2026 12:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785927926; cv=none; b=OD/aptc3V3zoJ2y+pnZxboIn7QHKu5nlioCUWI8Cj3jF4YuhEXMqCpwpCQMa5lwO71UaMsx8D0Msz1maLm1Zz5K2DK1s+ZQ31AQwa/o0XWrKBNGbl6sAxgWgM6Z95/TsqVFO7COWsAOhG9QneyPqPjhfmO5syNTJ8zu8WeWpC18=
+	t=1785932011; cv=none; b=b+pCa1kEgwBBDMVRI74x6+1ssXTAZfdDGXbCc0k6x08Y6f8JfnsVsYB8GxixQ2qLhozA9m7/T9aR9i5XNjkUO53x0Or6msWn7M0GRAByoFO2lNdhoX5EBddfaE3K+7lYJAngIbCfG3Esgs1QCxOrqGnK4bq45N5WCMFgLKU1M7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785927926; c=relaxed/simple;
-	bh=YOkkqKX4+u8mPyIVjenBy8RUOP83bzF999F4R+vmBPU=;
-	h=Message-Id:References:Cc:In-Reply-To:Mime-Version:Content-Type:To:
-	 From:Subject:Date; b=VdZv+Fw3FnrIQ1N2a69Xats25rTuv55jth+54X0lUZ0/HVBG4ulcXHaJWbDjUgmBNgNs8fCYsTC7FjGRxdHOn4WcLEBY2fRQuLoQq0CnNcsqdZaeI7jWBvv356rt0v6qGtKa9uSIwZRa3EP1VuFb1Xeh4SjnkaFnnP/U0Vyn8C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bD+JxAel; arc=none smtp.client-ip=209.127.230.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1785932011; c=relaxed/simple;
+	bh=G+LDYaI75y6HB1fykYtTE0wwkh5v6ItDFFRyTrh21wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G1bABmrCdGf0Gct+D9O741+2Xeb9biUl+XMpEn9QH3nY1UL8AWLQUqkwed/1a5jtywme0sLNj2mvULuN6/s1JN7VWebvefI6OgcsK7fQOpnvKcqgJ/zwpiwnSs0coyu1gIou8CzVt6h9Z0H/yC+HoWZVSckFbJJBvIAFVnhh5pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBdRvyFh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bD+JxAel"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1785927918; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=o4866Y3ff9b3uwVCiml3jDWbGReoFxp6nuoKOcd5mp8=;
- b=bD+JxAelPaBAqKsaAkHvcjwYA4gQ/Io3NVhLtBV/VZ8382OogBThLvqDU6LWtbiEGj9ZyY
- Q/DXuQgD2TriUtpQ2bSghV7NOIdtqpxIVhpKFsQnUV8Jr83Q2CCnfP08Ywh+8WAVIcZbLT
- rJD1jBz8Re6xhcNw1Urw4HFzNyjoGlowHPKOs/yerEXr6tTt+If38LTiTBW2qNfljRRnwM
- dv1E3fqwRsslV43t3tXMVu0dVEwcA61bdgHSuYVkW/2W7YeaA+2zQs3Zkd0poZ/0AhBGy1
- vA5ZPEKIeM9eBCvwnHuO/UFnr6nPSiE9fG4CXBKilzTOyH/5x9GF98ij0ojsbA==
-Message-Id: <94d6172a-b7a5-4eac-96b3-15cc83d424b3@bytedance.com>
-References: <20260803070929.86075-1-lizhe.67@bytedance.com> <20260803070929.86075-9-lizhe.67@bytedance.com> <20260804203508.GEanJM_LGXmItYhFKZ@fat_crate.local>
-Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<balbirs@nvidia.com>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
-	<kees@kernel.org>, <mingo@redhat.com>, <muchun.song@linux.dev>, 
-	<rppt@kernel.org>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>, 
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-mm@kvack.org>, <x86@kernel.org>
-In-Reply-To: <20260804203508.GEanJM_LGXmItYhFKZ@fat_crate.local>
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBdRvyFh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F2D11F000E9;
+	Wed,  5 Aug 2026 12:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785932010;
+	bh=vUFXBNuXhafwGwK8UGdCE11bMme4oaaRhHR9wpn5xJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZBdRvyFh8alziS7hw7mYBO0guypWSroeTXhSFvQLGZB3l9rTcCFete4o2PH7XJXUY
+	 gvp/60COVl0ElpqYiIvyMH5HtkSzFcIiKHn0FFhf91v8jJyqkRIDyPxBLcuRVfi05s
+	 xkvk3O3/TgE1pH2DZucVATBzX+Up6s6+PMipQAo1hIkH2G1Xj3q4KRvifFlQHBpNwO
+	 x5tn1KddZ/FYKnn5fO/PgwFVNx8akHXaZoCwQ8Fy82iQcL/hE2wcAdhkVjl9SLeSjo
+	 lJwmKDq2O6zawqZIW6aDCI5Hn9qZ/uPi5XiSwtwJR5szU57Q29wxrHBrkIIQ2/gqWf
+	 7YaS/V0YcbbDg==
+Date: Wed, 5 Aug 2026 13:13:25 +0100
+From: Simon Horman <horms@kernel.org>
+To: Yehyeong Lee <yhlee@isslab.korea.ac.kr>
+Cc: alibuda@linux.alibaba.com, dust.li@linux.alibaba.com,
+	sidraya@linux.ibm.com, wenjia@linux.ibm.com, kuba@kernel.org,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	mjambigi@linux.ibm.com, tonylu@linux.alibaba.com,
+	guwen@linux.alibaba.com, guangguan.wang@linux.alibaba.com,
+	kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v5 3/3] net/smc: carry oversized SMC-Rv2 LLC messages
+ in the queue entry
+Message-ID: <20260805121325.GS51943@horms.kernel.org>
+References: <20260801094208.1937951-1-yhlee@isslab.korea.ac.kr>
+ <20260801094208.1937951-4-yhlee@isslab.korea.ac.kr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-User-Agent: Mozilla Thunderbird
-X-Lms-Return-Path: <lba+26a7318ec+6d8bd8+vger.kernel.org+lizhe.67@bytedance.com>
-Content-Transfer-Encoding: 7bit
-To: "Borislav Petkov" <bp@alien8.de>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Subject: Re: [PATCH v9 8/8] x86/string: extend memcpy_flushcache() fixed-size fastpaths
-Date: Wed, 5 Aug 2026 19:04:55 +0800
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260801094208.1937951-4-yhlee@isslab.korea.ac.kr>
 
-On 8/5/26 4:35 AM, Borislav Petkov wrote:
-> On Mon, Aug 03, 2026 at 03:09:29PM +0800, Li Zhe wrote:
->> Tested in a VM with a 100 GB fsdax namespace device configured with
->> map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
->> server.
->>
->> Test procedure:
->> Rebind the nd_pmem and dax_pmem drivers 30 times and collect the memmap
->> initialization time from the pr_debug() output of
->> memmap_init_zone_device().
->>
->> With memcpy_nontemporal() used by the ZONE_DEVICE template-copy path:
->>    Average of rebinds for nd_pmem driver: 150.83 ms
->>    Average of rebinds for dax_pmem driver: 153.55 ms
->>
->> With this x86 fixed-size fastpath patch applied:
->>    Average of rebinds for nd_pmem driver: 96.79 ms
->>    Average of rebinds for dax_pmem driver: 119.04 ms
->>
->> This further reduces the average memmap initialization time measured
->> during rebind by about 35.8% for nd_pmem and 22.5% for dax_pmem.
-> Testing methodology doesn't usually belong in the commit message but under the
-> "---" lines below but this is important enough to keep it here.
->
->> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
->> ---
->>   arch/x86/include/asm/string_64.h | 56 +++++++++++++++++++++++++++++++-
->>   1 file changed, 55 insertions(+), 1 deletion(-)
-> A quick and untested cleanup ontop with the potential for a bunch more
-> unification. But later.
->
-> Note that you're inconsistent about the "memory" clobber. The current code
-> doesn't have it, you're adding it to movnti_8(). I've added it now everywhere
-> to be on the safe side - it would be interesting to know whether you see any
-> perf difference with and without it in your use case.
->
-> Thx.
-
-
-Thanks, I will fold the cleaned-up version into v10.
-
-I also tested the memcpy_flushcache() fixed-size path with and without
-the "memory" clobber. In this build, the generated assembly for this
-path is the same in both cases.
-
-I also ran the ZONE_DEVICE rebind test with both variants. The difference
-was below 1% for both nd_pmem and dax_pmem, with no stable direction, so
-I do not see a measurable performance difference from the "memory"
-clobber in this use case.
-
-Given that, I will keep the clobber for consistency and safety.
-
-Thanks,
-Zhe
-
->
+On Sat, Aug 01, 2026 at 06:42:08PM +0900, Yehyeong Lee wrote:
+> An LLC message longer than the 44-byte union smc_llc_msg arrives either
+> whole in the receive buffer or split into the link group's shared v2
+> buffer, and both consumers of the tail rebuild that layout themselves.
+> Copy the tail into the queue entry instead, so its length and its lifetime
+> are those of the message that arrived, and declare the rkeys that do fit
+> inline as a member of the union rather than reaching them through a cast of
+> a shorter type.
+> 
+> The bound the previous patch placed on links without a shared v2 receive
+> buffer is no longer needed here: the extension is read from the qentry,
+> whose length is the length of the message that arrived.
+> 
+> A DELETE_RKEY_V2 is now bounded by what arrived rather than by the buffer
+> it landed in: a 44-byte message declaring 255 rkeys processed 255 of them
+> before, and processes the 9 that fit now.
+> 
+> Suggested-by: D. Wythe <alibuda@linux.alibaba.com>
+> Signed-off-by: Yehyeong Lee <yhlee@isslab.korea.ac.kr>
 > ---
-> diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
-> index bc6a9f34b346..3a1e1f17431b 100644
-> --- a/arch/x86/include/asm/string_64.h
-> +++ b/arch/x86/include/asm/string_64.h
-> @@ -83,6 +83,14 @@ int strcmp(const char *cs, const char *ct);
->   #define __HAVE_ARCH_MEMCPY_FLUSHCACHE 1
->   void __memcpy_flushcache(void *dst, const void *src, size_t cnt);
->   
-> +static __always_inline void movnti_4(void *dst, const void *src)
-> +{
-> +	asm volatile("movntil %1, %0"
-> +		     : "=m"(*(u32 *)dst)
-> +		     : "r"(*(u32 *)src)
-> +		     : "memory");
-> +}
-> +
->   static __always_inline void movnti_8(void *dst, const void *src)
->   {
->   	asm volatile("movntiq %1, %0"
-> @@ -112,47 +120,26 @@ static __always_inline void movnti_64(void *dst, const void *src)
->   static __always_inline void memcpy_flushcache(void *dst, const void *src,
->   					      size_t cnt)
->   {
-> -	if (__builtin_constant_p(cnt)) {
-> -		switch (cnt) {
-> -			case 4:
-> -				asm ("movntil %1, %0" : "=m"(*(u32 *)dst) : "r"(*(u32 *)src));
-> -				return;
-> -			case 8:
-> -				asm ("movntiq %1, %0" : "=m"(*(u64 *)dst) : "r"(*(u64 *)src));
-> -				return;
-> -			case 16:
-> -				asm ("movntiq %1, %0" : "=m"(*(u64 *)dst) : "r"(*(u64 *)src));
-> -				asm ("movntiq %1, %0" : "=m"(*(u64 *)(dst + 8)) : "r"(*(u64 *)(src + 8)));
-> -				return;
-> -			/*
-> -			 * The relevant fixed-size copies here are the
-> -			 * x86_64 struct page sizes: 64, 80, and 96 bytes.
-> -			 * Keep 32-byte and 48-byte copies inline as well
-> -			 * instead of sending those nearby fixed-size
-> -			 * cases back to __memcpy_flushcache().
-> -			 */
-> -			case 32:
-> -				movnti_32(dst, src);
-> -				return;
-> -			case 48:
-> -				movnti_32(dst, src);
-> -				movnti_16(dst + 32, src + 32);
-> -				return;
-> -			case 64:
-> -				movnti_64(dst, src);
-> -				return;
-> -			case 80:
-> -				movnti_64(dst, src);
-> -				movnti_16(dst + 64, src + 64);
-> -				return;
-> -			case 96:
-> -				movnti_64(dst, src);
-> -				movnti_32(dst + 64, src + 64);
-> -				return;
-> -		}
-> +	if (!__builtin_constant_p(cnt))
-> +		return __memcpy_flushcache(dst, src, cnt);
-> +
-> +	/*
-> +	 * The relevant fixed-size copies here are the x86_64 struct page sizes:
-> +	 * 64, 80, and 96 bytes. Keep 32-byte and 48-byte copies inline as well
-> +	 * instead of sending those nearby fixed-size cases back to
-> +	 * __memcpy_flushcache().
-> +	 */
-> +	switch (cnt) {
-> +	case 4:  movnti_4(dst, src); break;
-> +	case 8:	 movnti_8(dst, src); break;
-> +	case 16: movnti_16(dst, src); break;
-> +	case 32: movnti_32(dst, src); break;
-> +	case 48: movnti_32(dst, src); movnti_16(dst + 32, src + 32); break;
-> +	case 64: movnti_64(dst, src); break;
-> +	case 80: movnti_64(dst, src); movnti_16(dst + 64, src + 64); break;
-> +	case 96: movnti_64(dst, src); movnti_32(dst + 64, src + 64); break;
-> +	default: __memcpy_flushcache(dst, src, cnt); break;
->   	}
-> -
-> -	__memcpy_flushcache(dst, src, cnt);
->   }
->   
->   #define memcpy_nontemporal memcpy_nontemporal
+> Measured over rxe with KASAN: a DELETE_RKEY_V2 carrying 12 rkeys over a link
+> with a shared v2 receive buffer round-trips all 12 values, the last three
+> coming from the copied tail; 8, 9 and 10 rkeys and a 44-byte message declaring
+> 10 give 8, 9, 10 and 9 processed rkeys respectively.  kmemleak reports nothing
+> over the link-addition path, and does report the queue entry when the free
+> added by patch 1 is removed again.
+
+There is an AI generated review of this patch-set available at
+https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260801094208.1937951-1-yhlee%40isslab.korea.ac.kr
+
+Of that review, I think the following warrants particular consideration.
+
+TL;DR: to ensure complete backports, maybe add this tag to this patch,
+as it has been added to patch 2/3.
+
+  Fixes: 27ef6a9981fe ("net/smc: support SMC-R V2 for rdma devices with max_recv_sge equals to 1")
+
+The text of the AI-generated review:
+
+  Should this patch carry a Fixes: tag and Cc: stable as well?  Both
+  predecessors in the series do, and this is the patch that changes behaviour
+  in two places.
+
+  First, the early return this hunk replaces:
+
+	if (!smc_link_shared_v2_rxbuf(link))
+		return;
+  On a device with max_recv_sge == 1 that means the peer's rkeys in the
+  ADD_LINK v2 extension are never installed into lgr->rtokens for the new
+  link, even though those bytes do arrive on the link.  Only the
+  qentry->body_len bound added here reaches them.
+
+  Second, in smc_llc_rmt_delete_rkey() the shared-v2 path was bounded by the
+  capacity of the per-lgr buffer rather than by what the peer sent:
+
+	llcv2 = (struct smc_llc_msg_delete_rkey_v2 *)lgr->wr_rx_buf_v2;
+	buf_len = SMC_WR_BUF_V2_SIZE;
+	...
+	max = min_t(u32, max, (buf_len - rkey_off) / sizeof(llcv2->rkey[0]));
+
+  So a 44-byte DELETE_RKEY_V2 declaring num_rkeys = 255 walks rkey[9..254] out
+  of whatever an earlier oversized peer message left in lgr->wr_rx_buf_v2 and
+  passes each value to smc_rtoken_delete(), which can clear a valid rtoken of
+  an unrelated connection in the same link group.
+
+  The changelog describes both as consequences rather than as fixes:
+
+	The bound the previous patch placed on links without a shared v2
+	receive buffer is no longer needed here
+	A DELETE_RKEY_V2 is now bounded by what arrived rather than by the
+	buffer it landed in: a 44-byte message declaring 255 rkeys processed
+	255 of them before, and processes the 9 that fit now.
+
+  If a stable tree takes the first two patches of the series but not this one,
+  does it end up with the ADD_LINK v2 extension ignored on max_recv_sge == 1
+  devices and the stale-rkey deletion still present?
