@@ -1,167 +1,196 @@
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+Received: from va-1-114.ptr.blmpb.com (va-1-114.ptr.blmpb.com [209.127.230.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A72D37A4B7
-	for <linux-hardening@vger.kernel.org>; Wed,  5 Aug 2026 10:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A6E439F61
+	for <linux-hardening@vger.kernel.org>; Wed,  5 Aug 2026 11:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785926449; cv=none; b=Ov7rQUDCX5BccRM4qUIj1w7v4OLxNjHnZdTK70JFk+X4Q8AwJRBm9poTAlhsDb+sf0vwnLp2tdYswZokzJxgxmRe1YDX7aEhj33F6AgbpSSbckJdJpOoOQKXUMJBK2YxzXE5SmHX9sah8TdlnAeMxYCqQQhOzUJxac9IsNjgxnc=
+	t=1785927926; cv=none; b=OD/aptc3V3zoJ2y+pnZxboIn7QHKu5nlioCUWI8Cj3jF4YuhEXMqCpwpCQMa5lwO71UaMsx8D0Msz1maLm1Zz5K2DK1s+ZQ31AQwa/o0XWrKBNGbl6sAxgWgM6Z95/TsqVFO7COWsAOhG9QneyPqPjhfmO5syNTJ8zu8WeWpC18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785926449; c=relaxed/simple;
-	bh=Rmbdm/R9T+nVHns9xmbwhhzc7T2IKGzFyN/cTZjjqhY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=VP4Q4fDgR2xJ5vn5SUYFoGSv2H3SDIQUxox3NFHw9YnSJox8mC5N/qRtejef532O9V0olEHXPevg8H0f+riktQcCO11MrtF7u+P9ovfjTO/I+GbsmvGBJkxKHF5Z25uKbshKtqkg1QtfRzl2GFDfoiqoM6LbEGoxhVTF5P1ND3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QtruUX8F; arc=none smtp.client-ip=209.85.208.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1785927926; c=relaxed/simple;
+	bh=YOkkqKX4+u8mPyIVjenBy8RUOP83bzF999F4R+vmBPU=;
+	h=Message-Id:References:Cc:In-Reply-To:Mime-Version:Content-Type:To:
+	 From:Subject:Date; b=VdZv+Fw3FnrIQ1N2a69Xats25rTuv55jth+54X0lUZ0/HVBG4ulcXHaJWbDjUgmBNgNs8fCYsTC7FjGRxdHOn4WcLEBY2fRQuLoQq0CnNcsqdZaeI7jWBvv356rt0v6qGtKa9uSIwZRa3EP1VuFb1Xeh4SjnkaFnnP/U0Vyn8C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bD+JxAel; arc=none smtp.client-ip=209.127.230.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QtruUX8F"
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-6a0de3383c0so971376a12.2
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Aug 2026 03:40:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785926446; x=1786531246; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=sKn6cZqAriR/zZlCyouZ9X4PnMk81SsImmt/7OIBzd8=;
-        b=QtruUX8FDiEyJvgj01i/ZPe7Oo3Zrr8hQ5sp+XqnMqXAZd8085gD2ZY7aFw+Co4G/d
-         PmoKYkYbrg2jwUSGoaAB18xMBThBZQA1zY96iiqwtBDNuUyQZWuaw61iEavShA2Rmrd8
-         3X0ELc36HTjFAVl7sY5tL+MpBmWqz3sYeSgsfGomXDoKX/Ty5doPIR/pSUaKrc9GAtw0
-         2BIuVtw3BVnmwkBJFotfS5/l+ijGUnQUVRQrvIWULTs0sW8ftJjUCElt+oaPp/cdY4hS
-         h/6yoBpm9+O8QKoC3j0BN9Fa+URvxacGfLKwmvohNK/m4WCEB+VgtZteSH7N3yLD1vyE
-         w04w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785926446; x=1786531246;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=sKn6cZqAriR/zZlCyouZ9X4PnMk81SsImmt/7OIBzd8=;
-        b=b5WHllxyUPJZyWrHMTyghP5W1bpnZ8Rmze91nZH+eRzFAw/pBmX88dlU4WqVysi9t4
-         RvQDQ5I0gDbSdnq5LjTG/ZD6QCrmIdhmd2eEFAg4Fk7z/O2EVFEPhmusRNlAED4DAI0B
-         NBvO4hTBYZcI2AY9LDQ6m/Yeh39uYynumIXhwvsj3nnVnNbtZkjlSFr4VNkwl81QTJwM
-         3Pd8Zc10QqRMLfrxyMGdS5uh/TDjVzDKybb1viZJmuxjsvBtjvlWnbAk7S0/BmtA0Rt7
-         Rr0Wzc6hw+aDWbsTZvH0oTeWJQgNNnL6C/L8F/npwLvoXVixmNd6s210Nhr8T4De5T05
-         NnFA==
-X-Forwarded-Encrypted: i=1; AHgh+RpIHO3C3Ql+1bwonQEl8QFXBC/xzTgqxYUJWzzM7BQodOhjZpJJJVosdfAKvUkJNKspAXZerhMlAQBpNSPRoEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9ZPuqf/5q3oqSL0ntq9OoP0oskkpRoNzraU4Vo9NJE6k7ZVDF
-	y9Y4rvZV/75jifHsxLHG96zdrg7MrBSVgYSC0W3SoeJs/xpBqH7csFYU1F4nP3nrwsKWo1vZqA=
-	=
-X-Received: from edoy16.prod.google.com ([2002:aa7:c250:0:b0:6a0:d084:32ec])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:52d5:b0:697:564c:9095
- with SMTP id 4fb4d7f45d1cf-6a14f256695mr3050404a12.21.1785926445667; Wed, 05
- Aug 2026 03:40:45 -0700 (PDT)
-Date: Wed,  5 Aug 2026 12:40:43 +0200
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bD+JxAel"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1785927918; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=o4866Y3ff9b3uwVCiml3jDWbGReoFxp6nuoKOcd5mp8=;
+ b=bD+JxAelPaBAqKsaAkHvcjwYA4gQ/Io3NVhLtBV/VZ8382OogBThLvqDU6LWtbiEGj9ZyY
+ Q/DXuQgD2TriUtpQ2bSghV7NOIdtqpxIVhpKFsQnUV8Jr83Q2CCnfP08Ywh+8WAVIcZbLT
+ rJD1jBz8Re6xhcNw1Urw4HFzNyjoGlowHPKOs/yerEXr6tTt+If38LTiTBW2qNfljRRnwM
+ dv1E3fqwRsslV43t3tXMVu0dVEwcA61bdgHSuYVkW/2W7YeaA+2zQs3Zkd0poZ/0AhBGy1
+ vA5ZPEKIeM9eBCvwnHuO/UFnr6nPSiE9fG4CXBKilzTOyH/5x9GF98ij0ojsbA==
+Message-Id: <94d6172a-b7a5-4eac-96b3-15cc83d424b3@bytedance.com>
+References: <20260803070929.86075-1-lizhe.67@bytedance.com> <20260803070929.86075-9-lizhe.67@bytedance.com> <20260804203508.GEanJM_LGXmItYhFKZ@fat_crate.local>
+Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<balbirs@nvidia.com>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
+	<kees@kernel.org>, <mingo@redhat.com>, <muchun.song@linux.dev>, 
+	<rppt@kernel.org>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>, 
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-mm@kvack.org>, <x86@kernel.org>
+In-Reply-To: <20260804203508.GEanJM_LGXmItYhFKZ@fat_crate.local>
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3419; i=ardb@kernel.org;
- h=from:subject; bh=aQqHgsHDXATSChltB95ehBTGy6vjImAwBYlhcut/HS4=;
- b=owGbwMvMwCVmkMcZplerG8N4Wi2JIatYWJtd8KFR3xa3Gw4H5wYk210KejdP31k9cLmRRe2+X
- WaPPqZ0lLIwiHExyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIlkrWb4Zyqzs+ZoQfJZlqwT
- bKpeLC5sLw5yd9zhXuLPcF3jZED8N0aGu3LPI79XZhRMPlpWavJC9XOB4I/csrgyyUMTV9768uU fFwA=
-X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
-Message-ID: <20260805104042.1107678-2-ardb+git@google.com>
-Subject: [RFC PATCH] arm64: mm: Map fixmap PTE tables r/o in the linear map
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, 
-	Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, 
-	Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>, 
-	Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+X-Lms-Return-Path: <lba+26a7318ec+6d8bd8+vger.kernel.org+lizhe.67@bytedance.com>
+Content-Transfer-Encoding: 7bit
+To: "Borislav Petkov" <bp@alien8.de>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Subject: Re: [PATCH v9 8/8] x86/string: extend memcpy_flushcache() fixed-size fastpaths
+Date: Wed, 5 Aug 2026 19:04:55 +0800
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On 8/5/26 4:35 AM, Borislav Petkov wrote:
+> On Mon, Aug 03, 2026 at 03:09:29PM +0800, Li Zhe wrote:
+>> Tested in a VM with a 100 GB fsdax namespace device configured with
+>> map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
+>> server.
+>>
+>> Test procedure:
+>> Rebind the nd_pmem and dax_pmem drivers 30 times and collect the memmap
+>> initialization time from the pr_debug() output of
+>> memmap_init_zone_device().
+>>
+>> With memcpy_nontemporal() used by the ZONE_DEVICE template-copy path:
+>>    Average of rebinds for nd_pmem driver: 150.83 ms
+>>    Average of rebinds for dax_pmem driver: 153.55 ms
+>>
+>> With this x86 fixed-size fastpath patch applied:
+>>    Average of rebinds for nd_pmem driver: 96.79 ms
+>>    Average of rebinds for dax_pmem driver: 119.04 ms
+>>
+>> This further reduces the average memmap initialization time measured
+>> during rebind by about 35.8% for nd_pmem and 22.5% for dax_pmem.
+> Testing methodology doesn't usually belong in the commit message but under the
+> "---" lines below but this is important enough to keep it here.
+>
+>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>> ---
+>>   arch/x86/include/asm/string_64.h | 56 +++++++++++++++++++++++++++++++-
+>>   1 file changed, 55 insertions(+), 1 deletion(-)
+> A quick and untested cleanup ontop with the potential for a bunch more
+> unification. But later.
+>
+> Note that you're inconsistent about the "memory" clobber. The current code
+> doesn't have it, you're adding it to movnti_8(). I've added it now everywhere
+> to be on the safe side - it would be interesting to know whether you see any
+> perf difference with and without it in your use case.
+>
+> Thx.
 
-Without physical KASLR, the fixmap page tables will appear at an a
-priori known offset in the physical address space, and due to the lack
-of randomization, the linear map carries a writeable alias of the fixmap
-PTE pages, which appears at an offset in the kernel VA space that is
-also predictable.
 
-Given that the placement of the fixmap area is never randomized either,
-a single store to this linear alias region is sufficient to map any
-physical page with any permissions at a known offset in the kernel VA
-space, including on top of the PTI trampoline.
+Thanks, I will fold the cleaned-up version into v10.
 
-Avoid this, by remapping the fixmap PTE pages read-only in the linear
-map. This is possible because all updates to bm_pte[] occur via the
-mapping of the kernel image in the vmap area. A read-only mapping is
-still needed for things like ptdump that walk the page tables.
+I also tested the memcpy_flushcache() fixed-size path with and without
+the "memory" clobber. In this build, the generated assembly for this
+path is the same in both cases.
 
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: Liz Prucka <lizprucka@google.com>
-Cc: Seth Jenkins <sethjenkins@google.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/arm64/include/asm/set_memory.h |  2 ++
- arch/arm64/mm/fixmap.c              |  7 +++++++
- arch/arm64/mm/pageattr.c            | 10 ++++++++++
- 3 files changed, 19 insertions(+)
+I also ran the ZONE_DEVICE rebind test with both variants. The difference
+was below 1% for both nd_pmem and dax_pmem, with no stable direction, so
+I do not see a measurable performance difference from the "memory"
+clobber in this use case.
 
-diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm/set_memory.h
-index 90f61b17275e..a685fb534c3e 100644
---- a/arch/arm64/include/asm/set_memory.h
-+++ b/arch/arm64/include/asm/set_memory.h
-@@ -11,6 +11,8 @@ bool can_set_direct_map(void);
- 
- int set_memory_valid(unsigned long addr, int numpages, int enable);
- 
-+int set_direct_map_ro(unsigned long addr, int numpages);
-+
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
- int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid);
-diff --git a/arch/arm64/mm/fixmap.c b/arch/arm64/mm/fixmap.c
-index f66a0016dd02..fcb571dffe82 100644
---- a/arch/arm64/mm/fixmap.c
-+++ b/arch/arm64/mm/fixmap.c
-@@ -14,6 +14,7 @@
- #include <asm/fixmap.h>
- #include <asm/kernel-pgtable.h>
- #include <asm/pgalloc.h>
-+#include <asm/set_memory.h>
- #include <asm/tlbflush.h>
- 
- /* ensure that the fixmap region does not grow down into the PCI I/O region */
-@@ -173,3 +174,9 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
- 
- 	return dt_virt;
- }
-+
-+static int __init fixmap_remap_ro(void)
-+{
-+	return set_direct_map_ro((unsigned long)lm_alias(&bm_pte), NR_BM_PTE_TABLES);
-+}
-+late_initcall(fixmap_remap_ro);
-diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-index bbe98ac9ad8c..5072b14d4f9d 100644
---- a/arch/arm64/mm/pageattr.c
-+++ b/arch/arm64/mm/pageattr.c
-@@ -251,6 +251,16 @@ int set_memory_valid(unsigned long addr, int numpages, int enable)
- 					__pgprot(PTE_PRESENT_VALID_KERNEL));
- }
- 
-+int set_direct_map_ro(unsigned long addr, int numpages)
-+{
-+	if (!can_set_direct_map())
-+		return 0;
-+
-+	return __change_memory_common(addr, PAGE_SIZE * numpages,
-+				      __pgprot(PTE_RDONLY),
-+				      __pgprot(PTE_WRITE));
-+}
-+
- int set_direct_map_invalid_noflush(struct page *page)
- {
- 	pgprot_t clear_mask = __pgprot(PTE_PRESENT_VALID_KERNEL);
--- 
-2.55.0.571.g244d577d93-goog
+Given that, I will keep the clobber for consistency and safety.
 
+Thanks,
+Zhe
+
+>
+> ---
+> diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+> index bc6a9f34b346..3a1e1f17431b 100644
+> --- a/arch/x86/include/asm/string_64.h
+> +++ b/arch/x86/include/asm/string_64.h
+> @@ -83,6 +83,14 @@ int strcmp(const char *cs, const char *ct);
+>   #define __HAVE_ARCH_MEMCPY_FLUSHCACHE 1
+>   void __memcpy_flushcache(void *dst, const void *src, size_t cnt);
+>   
+> +static __always_inline void movnti_4(void *dst, const void *src)
+> +{
+> +	asm volatile("movntil %1, %0"
+> +		     : "=m"(*(u32 *)dst)
+> +		     : "r"(*(u32 *)src)
+> +		     : "memory");
+> +}
+> +
+>   static __always_inline void movnti_8(void *dst, const void *src)
+>   {
+>   	asm volatile("movntiq %1, %0"
+> @@ -112,47 +120,26 @@ static __always_inline void movnti_64(void *dst, const void *src)
+>   static __always_inline void memcpy_flushcache(void *dst, const void *src,
+>   					      size_t cnt)
+>   {
+> -	if (__builtin_constant_p(cnt)) {
+> -		switch (cnt) {
+> -			case 4:
+> -				asm ("movntil %1, %0" : "=m"(*(u32 *)dst) : "r"(*(u32 *)src));
+> -				return;
+> -			case 8:
+> -				asm ("movntiq %1, %0" : "=m"(*(u64 *)dst) : "r"(*(u64 *)src));
+> -				return;
+> -			case 16:
+> -				asm ("movntiq %1, %0" : "=m"(*(u64 *)dst) : "r"(*(u64 *)src));
+> -				asm ("movntiq %1, %0" : "=m"(*(u64 *)(dst + 8)) : "r"(*(u64 *)(src + 8)));
+> -				return;
+> -			/*
+> -			 * The relevant fixed-size copies here are the
+> -			 * x86_64 struct page sizes: 64, 80, and 96 bytes.
+> -			 * Keep 32-byte and 48-byte copies inline as well
+> -			 * instead of sending those nearby fixed-size
+> -			 * cases back to __memcpy_flushcache().
+> -			 */
+> -			case 32:
+> -				movnti_32(dst, src);
+> -				return;
+> -			case 48:
+> -				movnti_32(dst, src);
+> -				movnti_16(dst + 32, src + 32);
+> -				return;
+> -			case 64:
+> -				movnti_64(dst, src);
+> -				return;
+> -			case 80:
+> -				movnti_64(dst, src);
+> -				movnti_16(dst + 64, src + 64);
+> -				return;
+> -			case 96:
+> -				movnti_64(dst, src);
+> -				movnti_32(dst + 64, src + 64);
+> -				return;
+> -		}
+> +	if (!__builtin_constant_p(cnt))
+> +		return __memcpy_flushcache(dst, src, cnt);
+> +
+> +	/*
+> +	 * The relevant fixed-size copies here are the x86_64 struct page sizes:
+> +	 * 64, 80, and 96 bytes. Keep 32-byte and 48-byte copies inline as well
+> +	 * instead of sending those nearby fixed-size cases back to
+> +	 * __memcpy_flushcache().
+> +	 */
+> +	switch (cnt) {
+> +	case 4:  movnti_4(dst, src); break;
+> +	case 8:	 movnti_8(dst, src); break;
+> +	case 16: movnti_16(dst, src); break;
+> +	case 32: movnti_32(dst, src); break;
+> +	case 48: movnti_32(dst, src); movnti_16(dst + 32, src + 32); break;
+> +	case 64: movnti_64(dst, src); break;
+> +	case 80: movnti_64(dst, src); movnti_16(dst + 64, src + 64); break;
+> +	case 96: movnti_64(dst, src); movnti_32(dst + 64, src + 64); break;
+> +	default: __memcpy_flushcache(dst, src, cnt); break;
+>   	}
+> -
+> -	__memcpy_flushcache(dst, src, cnt);
+>   }
+>   
+>   #define memcpy_nontemporal memcpy_nontemporal
