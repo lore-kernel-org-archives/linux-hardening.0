@@ -1,73 +1,114 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF471A23A6;
-	Wed,  5 Aug 2026 13:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC1A48167E;
+	Wed,  5 Aug 2026 17:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785938301; cv=none; b=cYitjWkxuoUfJUcKXjdcOh89XV/EjxJ63xrmwXM3n5lwpsVyHeJHZ3jmVlgoEOVnq4TTpQv7aYVR0aU/QHVzWI32isFt/kxbdhEThloMpRUZquWAAC5QSJiLgBo2qqgpwtEQuK6rH6+o1NQVdI91LvgLgXeW4A3VwnrIilrHsW0=
+	t=1785949373; cv=none; b=ri6Ec4JobzigbkW9p4c1CaTfzj9D3J5kGDiaZ/+Oo+M6v0nbRgPcq3TYKSHjWYcnFvoEWml80OO3RvrMh3w86Ztr0p0EcWr8Prqgci5uy4bV1+R3SA1JlVqC1TLChul6DuhB24q/iaKX+4H6v/buUjCJieGksI5Orp0gCEBQGqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785938301; c=relaxed/simple;
-	bh=2f0N4NThyFsHOSu7yAvZvw8TfTzXH2mnDZfdUWwt1X0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2oYE0vwl8SUszxIUxYn7/BsoXFNAmNbNaqkaqfUUs2nqr5LamXAINiz7GHYd6YqG5CK9OayCYmtqYDkbrVLPFAxuLwMy2MS8mO4INzHUjBxdpDMV9FQDYb7m+xZdhrE8IFD5I+ixlylSq9CDRDsFj4wa63yClqXQQG3TjDy4ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=BRq05zj7; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1785949373; c=relaxed/simple;
+	bh=ZyN0SiqSs8DLHSC42IF4M3TnG8c6Jy/DH7clsf2OuSo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=erbvTGnUau9pDZk+gwjG8a+DB7g0lg+JMzXI9Mjmodb3reupwuPuTl5I0Gxu5LCopODJ3L2AG481dTkos/9qOD6VTZEFVDklbLSyEVh8Qb4VLc33mVX7mnbTK4S9p7wvro/0DqQEmi4WStcLNODrVzZQBhggvNZtoIUWc0lGEls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PidoY1uV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="BRq05zj7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=v684Hd3ge3JQAfZIPpMO9SA/yEYHCz655qZuiyy7FbQ=; b=BRq05zj7juD4nChMEME6XTDtcR
-	+6fbUxOskGN3s4vIj8rY9IKRJ9IG6s/ELpIjEoKsdS9wrsBnHjNd9sshMWVLpPXyXKDPUd/NsPQYH
-	VfzXQDETeSHrZJDbrnkocYT203w9A05+yjNyFBcPO9JU1xrzYF/0ZVInMNunU5aO9+N+xiXKPJ5F6
-	JBhqaI3cqRVqrpjDLUbUakOfrhtL0axdm0tZ6Evn6i3Rknkpieezs2DZdy3wVzxyvWZBS8mQkJOge
-	yLfZ4p2HVpldiTsz86mMrF36GoEY5CAHHJKXpQ3jZylmFxI/NuR9IMw6mPqR8sC4a58VT1WXXeWqE
-	HNcbv/YQ==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wrc8C-00Dxtz-1A;
-	Wed, 05 Aug 2026 13:58:04 +0000
-Date: Wed, 5 Aug 2026 06:57:58 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Yehyeong Lee <yhlee@isslab.korea.ac.kr>
-Cc: alibuda@linux.alibaba.com, dust.li@linux.alibaba.com, 
-	sidraya@linux.ibm.com, wenjia@linux.ibm.com, kuba@kernel.org, davem@davemloft.net, 
-	edumazet@google.com, pabeni@redhat.com, horms@kernel.org, mjambigi@linux.ibm.com, 
-	tonylu@linux.alibaba.com, guwen@linux.alibaba.com, guangguan.wang@linux.alibaba.com, 
-	kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH net v5 1/3] net/smc: fix use-after-free of the LLC qentry
- in smc_llc_srv_add_link()
-Message-ID: <anNA7V8wqhI6OEqf@gmail.com>
-References: <20260801094208.1937951-1-yhlee@isslab.korea.ac.kr>
- <20260801094208.1937951-2-yhlee@isslab.korea.ac.kr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PidoY1uV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16AD81F000E9;
+	Wed,  5 Aug 2026 17:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785949372;
+	bh=g1QSzSWGcu7ZvnW4RMOj2yIP9UMLovFDvTuaHVCj4Rs=;
+	h=From:Date:Subject:To:Cc;
+	b=PidoY1uVotmNcxB6CfWqaldOr68RGcNVE5p4LB69J6BzBqDM2cvz6stuvtIR/tYpl
+	 vpqYfbvAt3tSUpld8Lk8x6EsF8tmHBMiRByznCaTcSGewAvxwGwWtCT4HfmEe830n9
+	 TV/12uV12r7OhK9nU11lP/6AWHSrR88lNx0cAFaLXV3lc0NB/Nx2fXSCTxceA2FjVd
+	 hIowmpR2tnDwtP5WR3r5H74LncqUhlj3fe8/+19KKIBIS4MPmDlfhopPcJceUUmoLI
+	 2ACeSDBktLBj2MZH511oqNCQqGKAMj9CzAcZc683nZBpvwG5YSdGngBtP+fp6NlB7j
+	 5PEIRbWbX1I+g==
+From: Mark Brown <broonie@kernel.org>
+Date: Wed, 05 Aug 2026 18:02:43 +0100
+Subject: [PATCH RESEND v3] hardening: Default randstruct off with rust for
+ better allmodconfig support
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260801094208.1937951-2-yhlee@isslab.korea.ac.kr>
-X-Debian-User: leitao
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260805-rust-reverse-randstruct-dep-v3-1-7b8b2c761d6e@kernel.org>
+To: Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+ "Serge E. Hallyn" <serge@hallyn.com>, Miguel Ojeda <ojeda@kernel.org>, 
+ Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-security-module@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1936; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=ZyN0SiqSs8DLHSC42IF4M3TnG8c6Jy/DH7clsf2OuSo=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqc2y4WbcGZTuvWm0XxHfmx3U/wlLSJYoUqxRmV
+ AEMmi8cxSqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCanNsuAAKCRAk1otyXVSH
+ 0FkOB/wMYX1Sc3z+6+5HeiuPmYukBy8Btxf3NKjunUZSWVNk9tausZEeAkBuwAxMKL9PTdiUpgZ
+ oJjWZ1djUSoat9jL3r4Pu8KonsBGBS/3YQ4Q1W2AZ08TlHctZoyBLgNmVGrzrzQcsqUkqEtdYdI
+ cWqDjs9/v1maM3y9+wWga0E8tFqUHRod1iqNDzQ50j50+q7yF+51/qJLjboSKrIKEZyWybRFOIS
+ j+PF3ylW73uAfEpWA/ueT97NpOXULa+i4u3fGF/oDzFpn2ekMqjGR+s2ybfd4j8/hIMOGehvUCC
+ lmwYT9leKK2XYZRCQgcY19vIP9F2WdJh2+S5BhF2DHQjliO5
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Sat, Aug 01, 2026 at 06:42:06PM +0900, Yehyeong Lee wrote:
-> @@ -1512,6 +1513,7 @@ int smc_llc_srv_add_link(struct smc_link *link,
->  	rc = smc_llc_srv_conf_link(link, link_new, lgr_new_t);
->  	if (rc)
->  		goto out_err;
-> +	kfree(qentry);
->  	kfree(ini);
+Currently randstruct does not support rust so we have Kconfig dependencies
+which prevent rust being enabled when randstruct is. Unfortunately this
+prevents rust being enabled in allmodconfig, our standard coverage build.
+randstruct gets turned on by default, then the dependency on !RANDSTRUCT
+causes rust to get disabled.
 
-Instead of these two kfree, can you just 'goto out' ? out: seems to do
-the free nows, and rc is 0 above.
+Work around this by disabling randstruct by default if we have a usable
+rust toolchain and rust support for the architecture, circular
+dependencies prevent us directly depending on !RUST. This means we might
+end up with a configuration that disables both rust and randstruct but
+hopefully it's more likely go give the expected result.
 
-Also, is send_req_add_link_resp always false in smc_llc_srv_add_link() ?
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v3:
+- Rebase onto v7.2-rc1.
+- Link to v2: https://patch.msgid.link/20260605-rust-reverse-randstruct-dep-v2-1-93d38023b6f9@kernel.org
+
+Changes in v2:
+- Add a HAVE_RUST in there too.
+- Link to v1: https://patch.msgid.link/20260605-rust-reverse-randstruct-dep-v1-1-45ce9ee8d0d1@kernel.org
+---
+ security/Kconfig.hardening | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index 6923036e1a2f..81c81ad983ad 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -278,7 +278,7 @@ config CC_HAS_RANDSTRUCT
+ 
+ choice
+ 	prompt "Randomize layout of sensitive kernel structures"
+-	default RANDSTRUCT_FULL if COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
++	default RANDSTRUCT_FULL if !(RUST_IS_AVAILABLE && HAVE_RUST) && COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
+ 	default RANDSTRUCT_NONE
+ 	help
+ 	  If you enable this, the layouts of structures that are entirely
+
+---
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+change-id: 20260605-rust-reverse-randstruct-dep-5a504c861128
+
+Best regards,
+--
+Mark Brown <broonie@kernel.org>
+-- 
+Mark Brown <broonie@kernel.org>
 
