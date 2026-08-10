@@ -1,53 +1,53 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B417B3AD531;
-	Mon, 10 Aug 2026 11:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E97E3B9D8C;
+	Mon, 10 Aug 2026 11:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786361016; cv=none; b=KSpkGS2G8AMm1zZkzWnZjjMDOvZ8hawhdQqXmm2Lc8e5JNV/Vl17w+jD528Z7VDJNumnkmKIO8cd/dBsivIWdIT4u8cevh6JDNTEVLcF8vn7qnMiWSy26srTcjWkE4kWYs0muhNFBp+XX4ZoK1JLhLC6dkUGkEjdmol+itLlmBw=
+	t=1786361020; cv=none; b=PGILQct0yMHHBmd+Z3eqX9MbgYmzDmQXVezbcBDmPkUcMV2MFEU133UKOoaBLZ3n7BP3HZvYpByQdnDC/+OI7J7zi2xPc2rD9s/e6rVTyGVai1PspSsUzOAmZSdk+ho3lcDvivRu32DiRBiQGAQaGm3UPBZMkwFC6uJ8fYI3Iag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786361016; c=relaxed/simple;
-	bh=AjAr5gjAkQ1Yp4bxsaEgjcFfiPlkVc5weZHWpMGWB5s=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=kh5JSgFE8iTYq7yBRawhNPh0V7nq19mitGCxD49o4pa+VtGt6+298M5a2DA2LDhvyftOXFqdNrbuwVN5KEeCQYtD7dAckQ/P6NSYcWV80giSKP8k5jtefgMYPKisAlnd7n7KQRsGfPdvfBVLJNewSuLjAdaAUp1XRx6Iu/FXTbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=DPru+EMd; arc=none smtp.client-ip=68.232.153.233
+	s=arc-20240116; t=1786361020; c=relaxed/simple;
+	bh=6OLNsG61Ijbo7HVc/kLXVD99jK8d2XPbNA81yf+tY/c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=XMNqHvcYzbNvSXpfxk0C5E1nRkpFpmMQK/EvIAQik++9qNOlDnzoEpuPJUYtE1UDTZY930nCz3H3nzNrRRIGqn/uxmTfRBSZPxmovtd3d7kE+30buyPLUg7wPswfk6UGEfkzqccZTofc60N4yWVj9/FKIxm+BZPVDuSecLK6ZAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ey1u9z9g; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="DPru+EMd"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ey1u9z9g"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1786361015; x=1817897015;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=AjAr5gjAkQ1Yp4bxsaEgjcFfiPlkVc5weZHWpMGWB5s=;
-  b=DPru+EMdTfu+ij7GADMr8bbXaFoxC47iqAjDi8SGjUy3zFir+fKm7zsR
-   iTvqpf6OsdN4f8i6BGn3KSi/kSsWAhTBEuKUyWlo6hy2X3UEa/NgOBX1v
-   BxxFUFYYK+1Sr8MJfVYW31PJyYbb4nZzJGxnaPu2wvfuqMlwl3az0d9Io
-   n+Jx306kNau9Eh5JQETQvF9OBo6EtpfKWimvtrszyknTfzE3IquIJ6Gre
-   +zdNqaU6ASXzvsi7SghtRcWYAD3wOLYrhEHAFhACwWrGUOCsmClP4tLjS
-   fGRn0lPTCgXRfaY60j0VEqnS2eGlv9lzg1vRRgg8L9/7tdRE/QJHXX+H0
-   Q==;
-X-CSE-ConnectionGUID: ZtIVA3FtSgartEHIy3eibg==
-X-CSE-MsgGUID: tKBHExnvT4qjsvu4DAk5aw==
+  t=1786361017; x=1817897017;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=6OLNsG61Ijbo7HVc/kLXVD99jK8d2XPbNA81yf+tY/c=;
+  b=ey1u9z9goeaf8YZv4bzu7B+8pxV70GSCyibtyYUwkVDKfoL6IXBTE0T7
+   k2m6bG+jSNT8XTIDohbt+DWH4/3YJzSuFp/XvuTgaZFfn9rAizzq6Pfrk
+   mNzN0w8cjZrGz9BCV59XYnwIWwvPCY08cOTgcHuQ5lLPwkfX4IwIQk1zl
+   ccoIOKeFhKyCPNgM80eq6bpvqEGZnt02UDuN7oe/TChfrBf7VwdYvpQ7b
+   oCKacOKVPpQC8u2SfILlvD79/EATZNDlF00rAxYeZt3Zx60/W+eoGSpUs
+   I4Xj5I00Xc4NXTS+ocH58lqoEvPjm8w7L8KXi9BA4tLgNkLMKyxWIF1mL
+   A==;
+X-CSE-ConnectionGUID: +/Rqa5pURKWr7eZXFDxGww==
+X-CSE-MsgGUID: bVn2ZAcpRgSWImmyyab5wQ==
 X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="293272590"
+   d="scan'208";a="62209105"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 04:23:28 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 04:23:31 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
  chn-vm-ex4.mchp-main.com (10.10.87.33) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.45; Mon, 10 Aug 2026 04:23:26 -0700
+ 15.2.2562.45; Mon, 10 Aug 2026 04:23:30 -0700
 Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex04.mchp-main.com
  (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.58 via Frontend
- Transport; Mon, 10 Aug 2026 04:23:23 -0700
+ Transport; Mon, 10 Aug 2026 04:23:27 -0700
 From: =?utf-8?q?Jens_Emil_Schulz_=C3=98stergaard?=
 	<jensemil.schulzostergaard@microchip.com>
-Subject: [PATCH net-next v2 0/9] net: sparx5: add L3 unicast routing
- offload
-Date: Mon, 10 Aug 2026 13:20:45 +0200
-Message-ID: <20260810-sparx5_l3_routing-v2-0-59e68cc8c8ca@microchip.com>
+Date: Mon, 10 Aug 2026 13:20:46 +0200
+Subject: [PATCH net-next v2 1/9] net: microchip: vcap: fix rule move for
+ rules of coprime size
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,10 +56,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAA20eWoC/22NQQqDMBBFryKzbkoSNdSuvEcRkTjqQE1kkopFv
- HtD1l0+Hv/9EwIyYYBncQLjToG8S6BvBdhlcDMKGhODltpIraQI28BH3b/Lnv0nkptFY3RVP7A
- ay3GAtNsYJzpy8wUOo3B4ROiSWShEz998tqvsc9co/ae7KyHFZEurpDJyqpp2JcveLrTdrV+hu
- 67rByxTUh3AAAAA
+Message-ID: <20260810-sparx5_l3_routing-v2-1-59e68cc8c8ca@microchip.com>
+References: <20260810-sparx5_l3_routing-v2-0-59e68cc8c8ca@microchip.com>
+In-Reply-To: <20260810-sparx5_l3_routing-v2-0-59e68cc8c8ca@microchip.com>
 To: Horatiu Vultur <horatiu.vultur@microchip.com>,
 	<UNGLinuxDriver@microchip.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
  S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
@@ -73,118 +72,644 @@ CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<jensemil.schulzostergaard@microchip.com>
 X-Mailer: b4 0.15-dev
 
-Add L3 unicast route offloading for IPv4 and IPv6 on Sparx5 and
-LAN969x. This enables hardware-accelerated l3 routing between VLAN
-upper interfaces on a bridge, with ECMP support.
+Fix a discrepancy between how software and hardware moves rule
+addresses on insert and delete. Hardware moves a block of addresses by a
+uniform offset. The software representation stores the addresses of
+rules. These are updated individually by computing a space-optimal
+address relative to its neighbor.
 
-This series covers the core unicast data path: FIB offload, nexthop
-groups, ARP/NDP neighbour resolution, and router leg management.
+This worked when all rule sizes in a VCAP formed a divisibility
+chain (e.g. 1, 2, 6, 12), because any valid offset for the largest
+rule was also valid for all smaller rules. At the moment all clients of
+the VCAP library only uses rules for which this is true.
 
-Routes are programmed into the hardware LPM (Longest Prefix Match)
-VCAP, with nexthops resolved through the hardware ARP table for ECMP
-or inline VCAP actions for single nexthops.
+But the LPM VCAP, necessary for l3 routing, will introduce rule types of
+coprime size, so the algorithm must be fixed. This is in preparation for
+adding support for L3 routing to sparx5 and lan969x, which requires the
+LPM VCAP with rules of size 2 and 3. This patch fixes the issue by
+making sure the software representation is updated in the same way as
+the hardware.
 
-The LPM VCAP also requires type_id-aware rule decoding, since it has
-actionsets of identical length that differ only in their type_id
-field.
+The VCAP rule model has the following properties:
 
-Patch 1 fixes a latent bug in the VCAP rule-move algorithm that
-becomes reachable once the LPM VCAP is added, since LPM is the first
-VCAP to use rules of coprime size (2 and 3).
+- A rule has keyset size K and actionset size M; rule size N =
+  max(K, M).
+- Rules are naturally aligned to their size (start_addr % N == 0).
+- Rules are sorted by size with larger rules at higher addresses.
+- HW moves a contiguous block of addresses by a uniform offset.
 
-Patches 2-4 are the remaining preparatory commits for the shared VCAP
-API. They add the LPM VCAP keysets and actionsets to the autogenerated
-model for lan969x and sparx5, update the action-side rule decoder to
-differentiate actionsets by type_id, and expose two helpers
-(vcap_val_add_rule() and vcap_rule_mod_action_bit()) used by the LPM
-driver.
+Introducing rules of coprime size 2 and 3 exposes these four bugs:
 
-Patch 5 adds autogenerated register macros for the L3 routing blocks
-on sparx5 and lan969x.
+1) Move count on insert includes addresses beyond the moved block.
+   When padding exists between rules of different sizes, the count
+   overshoots, corrupting the rule above.
 
-Patch 6 adds the LPM VCAP implementation for sparx5 and lan969x.
+2) Move offset does not preserve alignment for the entire block.
+   Per-rule optimal offsets differ from the uniform HW offset,
+   causing HW/SW desync and misaligned rules.
 
-Patches 7-9 add L3 unicast routing to sparx5 and lan969x. The router
-code is split into three patches:
+3) On deletion, HW memory at the removed rule's addresses is not
+   initialized. The moved block may not fully cover them due to
+   padding, leaving stale data.
 
-Patch 7 (infrastructure + legs): Router leg lifecycle tied to VLAN
-uppers on a bridge, address event handling, base MAC tracking,
-blackhole leg for blackhole routes, and the hardware enable sequence.
+4) On deletion, padding between rules is not reclaimed.
 
-Patch 8 (FIB + nexthop + neighbour CRUD): This is a large patch.
-Splitting it further is difficult because the neighbour and nexthop CRUD
-is shared between the leg-teardown path and the neighbour-event path: leg
-teardown flushes the legs neighbours and refreshes their dependent
-nexthops, and the NETEVENT_NEIGH_UPDATE handler in patch 9 drives the
-same helpers.
+Example for issue 1, insert corrupts rule above:
 
-Patch 9 (neighbour events): Registers the netevent notifier for
-NETEVENT_NEIGH_UPDATE used in ARP/NDP resolution, wiring up the final
-piece.
+Starting state (X6 rule followed by X2):
 
-The Super VCAP shared-register race reported on v1 is fixed separately by
-commit d7a8d500d7e4 ("net: microchip: vcap: fix races on the shared Super
-VCAP block"), which is now in net-next.
+  Addr  Rule
+    35  X6
+    34  X6
+    33  X6
+    32  X6
+    31  X6
+    30  X6
+    29  X2
+    28  X2
+    27
 
+Insert X3 between X6 and X2. SW places rules optimally, X2 needs
+padding:
+
+  Addr  Rule (SW)
+    35  X6
+    34  X6
+    33  X6
+    32  X6
+    31  X6
+    30  X6
+    29  X3
+    28  X3
+    27  X3
+    26       (pad)
+    25  X2
+    24  X2
+
+Move count = X3.addr - X2.addr = 27 - 24 = 3. HW moves 3 addresses
+starting at 28: addrs {28, 29, 30}. But addr 30 is the base of X6,
+so the move corrupts it:
+
+  Addr  Rule (HW)
+    35  X6
+    34  X6
+    33  X6
+    32  X6
+    31  X6
+    30  ??   <- corrupted, was base of X6
+    ...
+    26  X6   <- stale copy of addr 30
+    25  X2
+    24  X2
+
+Example for issue 2, delete misaligns rule:
+
+Starting state:
+
+  Addr  Rule
+    38       <- LAST_VALID_ADDR
+    35  X6
+    34  X6
+    33  X6
+    32  X6
+    31  X6
+    30  X6
+    29  X3
+    28  X3
+    27  X3
+    26       (pad)
+    25  X2
+    24  X2
+
+Delete X6. Old code computes: offset = 39 - 30 - 6 = 3, gap = 0,
+each rule moves by 6 + 0 + 3 = 9:
+
+  X3: 27 + 9 = 36   (36 % 3 == 0, OK)
+  X2: 24 + 9 = 33   (33 % 2 == 1, MISALIGNED)
+
+Offset 9 is not a multiple of LCM(3, 2) = 6, breaking X2 alignment.
+
+Example for issues 1 + 2, insert desyncs HW/SW and misaligns:
+
+Starting state:
+
+  Addr  Rule
+    26  X3   <- LAST_VALID_ADDR
+    25  X3
+    24  X3
+    23  X2
+    22  X2
+
+Insert X6. SW calculates different per-rule offsets:
+
+  X3 needs offset  9 (to addr 15)
+  X2 needs offset 10 (to addr 12)
+
+Old code computes: count = 18 - 12 = 6 (should be 5), offset = 10.
+HW applies uniform offset 10 to 6 addresses:
+
+  Addr  Rule (SW)     Addr  Rule (HW)
+    17  X3              17
+    16  X3              16  X3
+    15  X3              15  X3
+    14                  14  X3  <- misaligned (14 % 3 != 0)
+    13  X2              13  X2
+    12  X2              12  X2
+
+HW and SW are out of sync, and X3 is misaligned in HW.
+
+The new move algorithm computes a single uniform offset for the
+entire block, aligned to the LCM of all rule sizes in that block.
+This guarantees that every rule lands on a naturally aligned address
+after the HW move, and that HW and SW stay in sync.
+
+On insert:
+
+1. Determine the move block: all rules below the insertion point.
+2. Compute the LCM of all rule sizes in the block
+   (vcap_find_move_block_lcm).
+3. Compute the move offset as the inserted rule's size rounded up
+   to the next LCM multiple (vcap_move_from_block). This is the
+   uniform offset applied to the entire block.
+4. Move count is exactly the number of addresses occupied by the
+   block (no overshoot into the rule above).
+5. Issue a single HW move, then update all SW rule addresses by
+   the same uniform offset (vcap_move_rules_sw).
+6. Place the new rule in the gap created by the move.
+
+On delete:
+
+1. Initialize HW memory at the deleted rule's addresses before
+   moving, since the moved block may not fully cover them due to
+   padding.
+2. Reclaim any padding between rules in the block.
+3. Compute the LCM-aligned uniform offset and move count as above.
+4. Issue a single HW move and update SW addresses uniformly.
+
+No VCAP api client uses rules of coprime size today, so the bug does not
+fire in any existing configuration. The LPM VCAP for sparx5 and lan969x,
+added later in this series, is the first instance with rules of coprime
+sizes (2 and 3), and therefore the first to reach this bug.
+
+Reviewed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
 Signed-off-by: Jens Emil Schulz Østergaard <jensemil.schulzostergaard@microchip.com>
 ---
-Changes in v2:
-- Reworked neighbour lifetime: anchor neighbours to the router leg
-  instead of the most-specific covering FIB entry (matching
-  mlxsw/prestera). Fixes a neighbour-entry leak (memory + VMID + host
-  VCAP rule + netdev reference) and lets the software LPM be removed
-  entirely.
-- Fixed a heap overflow in the fib6 nexthop prune path.
-- Fixed a leak on the router_init() error path.
-- Hardening: netns filtering and offload-ownership checks on the global
-  notifiers, and a NETDEV_UNREGISTER leg-teardown backstop.
-- Fixed do_div() misuse on a 32-bit value. Added the missing RCU
-  annotation on in_dev->ifa_list.
-- Zero-initialise the actionfield data in vcap_rule_mod_action_bit().
-- Updated the sparx5_router.c header comment to describe the
-  leg-anchored model.
-- Link to v1: https://lore.kernel.org/r/20260612-sparx5_l3_routing-v1-0-fc3c10160f49@microchip.com
+ drivers/net/ethernet/microchip/vcap/vcap_api.c     | 178 +++++++++++++--------
+ .../net/ethernet/microchip/vcap/vcap_api_kunit.c   |  81 ++++++----
+ 2 files changed, 164 insertions(+), 95 deletions(-)
 
----
-Jens Emil Schulz Østergaard (9):
-      net: microchip: vcap: fix rule move for rules of coprime size
-      net: microchip: vcap: add lpm vcap to autogen vcap api
-      net: microchip: vcap: make vcap actionset decoding type_id aware
-      net: microchip: vcap: expose helpers in vcap api and update debugfs
-      net: sparx5: add l3 routing registers
-      net: sparx5: vcap: add lpm vcap implementation
-      net: sparx5: add L3 router infrastructure and leg management
-      net: sparx5: add L3 FIB, nexthop and neighbour entry management
-      net: sparx5: add neighbour event handling for L3 routing
+diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api.c b/drivers/net/ethernet/microchip/vcap/vcap_api.c
+index 788c0728d763..75c2ca54fddd 100644
+--- a/drivers/net/ethernet/microchip/vcap/vcap_api.c
++++ b/drivers/net/ethernet/microchip/vcap/vcap_api.c
+@@ -4,7 +4,9 @@
+  * Copyright (c) 2022 Microchip Technology Inc. and its subsidiaries.
+  */
+ 
++#include <linux/lcm.h>
+ #include <linux/types.h>
++#include <linux/minmax.h>
+ 
+ #include "vcap_api_private.h"
+ 
+@@ -2106,12 +2108,63 @@ static u32 vcap_set_rule_id(struct vcap_rule_internal *ri)
+ 	return ri->data.id;
+ }
+ 
++static void vcap_move_from_block(u32 base_addr,
++				 struct vcap_rule_internal *block_first,
++				 struct vcap_rule_internal *block_last,
++				 int block_lcm, struct vcap_rule_move *move)
++{
++	int unaligned_offset;
++
++	if (!block_first || !block_last)
++		return;
++
++	move->addr = block_last->addr;
++	move->count = block_first->addr + block_first->size - block_last->addr;
++	/* Integer division rounds toward zero. We want to round toward +inf
++	 * for the positive case (insertion) to ensure enough room.
++	 */
++	unaligned_offset = (block_first->addr + block_first->size) - base_addr;
++	if (unaligned_offset > 0)
++		move->offset =
++			((unaligned_offset + (block_lcm - 1)) / block_lcm) *
++			block_lcm;
++	else
++		move->offset = (unaligned_offset / block_lcm) * block_lcm;
++}
++
++static void vcap_move_rules_sw(struct vcap_admin *admin,
++			       struct vcap_rule_internal *pos,
++			       struct vcap_rule_move const *move)
++{
++	if (move->count == 0 || move->offset == 0)
++		return;
++
++	list_for_each_entry_continue(pos, &admin->rules, list)
++		pos->addr -= move->offset;
++}
++
++static int vcap_find_move_block_lcm(struct vcap_admin *admin,
++				    struct vcap_rule_internal *pos)
++{
++	int block_lcm = 1;
++
++	list_for_each_entry_continue(pos, &admin->rules, list) {
++		block_lcm = lcm(block_lcm, pos->size);
++		if (pos->size <= 2)
++			break;
++	}
++
++	return block_lcm;
++}
++
+ static int vcap_insert_rule(struct vcap_rule_internal *ri,
+ 			    struct vcap_rule_move *move)
+ {
++	struct vcap_rule_internal *duprule, *iter, *block_first = NULL,
++						   *block_last;
+ 	int sw_count = ri->vctrl->vcaps[ri->admin->vtype].sw_count;
+-	struct vcap_rule_internal *duprule, *iter, *elem = NULL;
+ 	struct vcap_admin *admin = ri->admin;
++	int block_lcm;
+ 	u32 addr;
+ 
+ 	ri->sort_key = vcap_sort_key(sw_count, ri->size, ri->data.user,
+@@ -2124,12 +2177,12 @@ static int vcap_insert_rule(struct vcap_rule_internal *ri,
+ 	 */
+ 	list_for_each_entry(iter, &admin->rules, list) {
+ 		if (ri->sort_key < iter->sort_key) {
+-			elem = iter;
++			block_first = iter;
+ 			break;
+ 		}
+ 	}
+ 
+-	if (!elem) {
++	if (!block_first) {
+ 		ri->addr = vcap_next_rule_addr(admin->last_used_addr, ri);
+ 		admin->last_used_addr = ri->addr;
+ 
+@@ -2142,10 +2195,13 @@ static int vcap_insert_rule(struct vcap_rule_internal *ri,
+ 		return 0;
+ 	}
+ 
+-	/* Reuse the space of the current rule */
+-	addr = elem->addr + elem->size;
++	block_last = list_last_entry(&admin->rules, typeof(*ri), list);
++
++	/* Reuse the space and padding of the current rule */
++	addr = admin->last_valid_addr + 1;
++	if (!list_is_first(&block_first->list, &admin->rules))
++		addr = list_prev_entry(block_first, list)->addr;
+ 	ri->addr = vcap_next_rule_addr(addr, ri);
+-	addr = ri->addr;
+ 
+ 	/* Add a copy of the rule to the VCAP list */
+ 	duprule = vcap_dup_rule(ri, ri->state == VCAP_RS_DISABLED);
+@@ -2153,29 +2209,34 @@ static int vcap_insert_rule(struct vcap_rule_internal *ri,
+ 		return PTR_ERR(duprule);
+ 
+ 	/* Add before the current entry */
+-	list_add_tail(&duprule->list, &elem->list);
++	list_add_tail(&duprule->list, &block_first->list);
+ 
+-	/* Update the current rule */
+-	elem->addr = vcap_next_rule_addr(addr, elem);
+-	addr = elem->addr;
++	/* Collect block move info in struct move, to update VCAP HW later */
++	block_lcm = vcap_find_move_block_lcm(admin, duprule);
++	vcap_move_from_block(ri->addr, block_first, block_last, block_lcm,
++			     move);
+ 
+-	/* Update the address in the remaining rules in the list */
+-	list_for_each_entry_continue(elem, &admin->rules, list) {
+-		elem->addr = vcap_next_rule_addr(addr, elem);
+-		addr = elem->addr;
++	if ((int)block_last->addr - move->offset < admin->first_valid_addr) {
++		pr_err("%s:%d: No room for rule size: %u, %u\n", __func__,
++		       __LINE__, duprule->size, admin->first_valid_addr);
++		list_del(&duprule->list);
++		vcap_free_rule(&duprule->data);
++		return -ENOSPC;
+ 	}
+ 
+-	/* Update the move info */
+-	move->addr = admin->last_used_addr;
+-	move->count = ri->addr - addr;
+-	move->offset = admin->last_used_addr - addr;
+-	admin->last_used_addr = addr;
++	/* Apply move to SW */
++	vcap_move_rules_sw(admin, duprule, move);
++	admin->last_used_addr =
++		list_last_entry(&admin->rules, typeof(*ri), list)->addr;
+ 	return 0;
+ }
+ 
+ static void vcap_move_rules(struct vcap_rule_internal *ri,
+ 			    struct vcap_rule_move *move)
+ {
++	if (move->count == 0 || move->offset == 0)
++		return;
++
+ 	ri->vctrl->ops->move(ri->ndev, ri->admin, move->addr,
+ 			 move->offset, move->count);
+ }
+@@ -2285,8 +2346,7 @@ int vcap_add_rule(struct vcap_rule *rule)
+ 		       __func__, __LINE__, ret);
+ 		goto out;
+ 	}
+-	if (move.count > 0)
+-		vcap_move_rules(ri, &move);
++	vcap_move_rules(ri, &move);
+ 
+ 	/* Set the counter to zero */
+ 	ret = vcap_write_counter(ri, &ctr);
+@@ -2501,59 +2561,52 @@ int vcap_mod_rule(struct vcap_rule *rule)
+ }
+ EXPORT_SYMBOL_GPL(vcap_mod_rule);
+ 
+-/* Return the alignment offset for a new rule address */
+-static int vcap_valid_rule_move(struct vcap_rule_internal *el, int offset)
+-{
+-	return (el->addr + offset) % el->size;
+-}
+-
+-/* Update the rule address with an offset */
+-static void vcap_adjust_rule_addr(struct vcap_rule_internal *el, int offset)
+-{
+-	el->addr += offset;
+-}
+-
+ /* Rules needs to be moved to fill the gap of the deleted rule */
+ static int vcap_fill_rule_gap(struct vcap_rule_internal *ri)
+ {
++	struct vcap_rule_internal *block_first = NULL, *block_last = NULL;
+ 	struct vcap_admin *admin = ri->admin;
+-	struct vcap_rule_internal *elem;
+-	struct vcap_rule_move move;
+-	int gap = 0, offset = 0;
++	struct net_device *ndev = ri->ndev;
++	struct vcap_rule_move move = {};
++	int block_lcm, addr;
+ 
+-	/* If the first rule is deleted: Move other rules to the top */
+-	if (list_is_first(&ri->list, &admin->rules))
+-		offset = admin->last_valid_addr + 1 - ri->addr - ri->size;
++	if (!list_is_last(&ri->list, &admin->rules)) {
++		block_first = list_next_entry(ri, list);
++		block_last = list_last_entry(&admin->rules, typeof(*ri), list);
++	}
+ 
+-	/* Locate gaps between odd size rules and adjust the move */
+-	elem = ri;
+-	list_for_each_entry_continue(elem, &admin->rules, list)
+-		gap += vcap_valid_rule_move(elem, ri->size);
++	addr = admin->last_valid_addr + 1;
++	if (!list_is_first(&ri->list, &admin->rules))
++		addr = list_prev_entry(ri, list)->addr;
+ 
+-	/* Update the address in the remaining rules in the list */
+-	elem = ri;
+-	list_for_each_entry_continue(elem, &admin->rules, list)
+-		vcap_adjust_rule_addr(elem, ri->size + gap + offset);
++	block_lcm = vcap_find_move_block_lcm(admin, ri);
++	vcap_move_from_block(addr, block_first, block_last, block_lcm, &move);
+ 
+-	/* Update the move info */
+-	move.addr = admin->last_used_addr;
+-	move.count = ri->addr - admin->last_used_addr - gap;
+-	move.offset = -(ri->size + gap + offset);
++	/* Apply move to SW representation */
++	vcap_move_rules_sw(admin, ri, &move);
+ 
+-	/* Do the actual move operation */
++	/* Initialize space used by ri, as it may not be overwritten by move */
++	ri->vctrl->ops->init(ndev, admin, ri->addr, ri->size);
++
++	/* Apply move to HW. The VCAP move command automatically disables
++	 * (initializes) the source addresses, so no separate init is needed
++	 * for the vacated positions.
++	 */
+ 	vcap_move_rules(ri, &move);
+ 
+-	return gap + offset;
++	if (block_last)
++		return block_last->addr;
++
++	return addr;
+ }
+ 
+ /* Delete rule in a VCAP instance */
+ int vcap_del_rule(struct vcap_control *vctrl, struct net_device *ndev, u32 id)
+ {
+-	struct vcap_rule_internal *ri, *elem;
++	struct vcap_rule_internal *ri;
+ 	struct vcap_admin *admin;
+-	int gap = 0, err;
++	int err;
+ 
+-	/* This will later also handle rule moving */
+ 	if (!ndev)
+ 		return -ENODEV;
+ 	err = vcap_api_check(vctrl);
+@@ -2566,23 +2619,12 @@ int vcap_del_rule(struct vcap_control *vctrl, struct net_device *ndev, u32 id)
+ 
+ 	admin = ri->admin;
+ 
+-	if (ri->addr > admin->last_used_addr)
+-		gap = vcap_fill_rule_gap(ri);
++	admin->last_used_addr = vcap_fill_rule_gap(ri);
+ 
+ 	/* Delete the rule from the list of rules and the cache */
+ 	list_del(&ri->list);
+-	vctrl->ops->init(ndev, admin, admin->last_used_addr, ri->size + gap);
+ 	vcap_free_rule(&ri->data);
+ 
+-	/* Update the last used address, set to default when no rules */
+-	if (list_empty(&admin->rules)) {
+-		admin->last_used_addr = admin->last_valid_addr + 1;
+-	} else {
+-		elem = list_last_entry(&admin->rules, struct vcap_rule_internal,
+-				       list);
+-		admin->last_used_addr = elem->addr;
+-	}
+-
+ 	vcap_unlock(admin);
+ 	return err;
+ }
+diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api_kunit.c b/drivers/net/ethernet/microchip/vcap/vcap_api_kunit.c
+index 83de384d3e3b..675289001a00 100644
+--- a/drivers/net/ethernet/microchip/vcap/vcap_api_kunit.c
++++ b/drivers/net/ethernet/microchip/vcap/vcap_api_kunit.c
+@@ -1576,7 +1576,7 @@ static void vcap_api_rule_insert_in_order_test(struct kunit *test)
+ 		.lookups = 4,
+ 		.last_valid_addr = 3071,
+ 		.first_valid_addr = 0,
+-		.last_used_addr = 800,
++		.last_used_addr = 804,
+ 		.cache = {
+ 			.keystream = keydata,
+ 			.maskstream = mskdata,
+@@ -1584,15 +1584,28 @@ static void vcap_api_rule_insert_in_order_test(struct kunit *test)
+ 		},
+ 	};
+ 
++	struct vcap_rule_internal ri0 = {
++		.data = {
++			.id = 2001,
++		},
++		.addr = 804,
++		.size = 12,
++		.sort_key = vcap_sort_key(12, 12, 0, 0),
++		.admin = &admin,
++		.counter_id = 2002,
++		.vctrl = &test_vctrl,
++	};
++
+ 	vcap_test_api_init(&admin);
++	list_add_tail(&ri0.list, &admin.rules);
+ 
+ 	/* Create rules with different sizes and check that they are placed
+ 	 * at the correct address in the VCAP according to size
+ 	 */
+-	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 10, 500, 12, 780);
+-	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 20, 400, 6, 774);
+-	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 30, 300, 3, 771);
+-	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 40, 200, 2, 768);
++	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 10, 500, 12, 792);
++	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 20, 400, 6, 786);
++	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 30, 300, 3, 783);
++	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 40, 200, 2, 780);
+ 
+ 	vcap_del_rule(&test_vctrl, &test_netdev, 200);
+ 	vcap_del_rule(&test_vctrl, &test_netdev, 300);
+@@ -1614,7 +1627,7 @@ static void vcap_api_rule_insert_reverse_order_test(struct kunit *test)
+ 		.lookups = 4,
+ 		.last_valid_addr = 3071,
+ 		.first_valid_addr = 0,
+-		.last_used_addr = 800,
++		.last_used_addr = 804,
+ 		.cache = {
+ 			.keystream = keydata,
+ 			.maskstream = mskdata,
+@@ -1622,40 +1635,54 @@ static void vcap_api_rule_insert_reverse_order_test(struct kunit *test)
+ 		},
+ 	};
+ 	struct vcap_rule_internal *elem;
+-	u32 exp_addr[] = {780, 774, 771, 768, 767};
++	u32 exp_addr[] = {804, 792, 786, 783, 780};
+ 	int idx;
+ 
++	/* Existing X12 rule at last_used_addr */
++	struct vcap_rule_internal ri0 = {
++		.data = {
++			.id = 2001,
++		},
++		.addr = 804,
++		.size = 12,
++		.sort_key = vcap_sort_key(12, 12, 0, 0),
++		.admin = &admin,
++		.counter_id = 2002,
++		.vctrl = &test_vctrl,
++	};
++
+ 	vcap_test_api_init(&admin);
++	list_add_tail(&ri0.list, &admin.rules);
+ 
+ 	/* Create rules with different sizes and check that they are placed
+ 	 * at the correct address in the VCAP according to size
+ 	 */
+-	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 20, 200, 2, 798);
++	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 20, 200, 2, 802);
+ 	KUNIT_EXPECT_EQ(test, 0, test_move_offset);
+ 	KUNIT_EXPECT_EQ(test, 0, test_move_count);
+ 	KUNIT_EXPECT_EQ(test, 0, test_move_addr);
+ 
+-	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 30, 300, 3, 795);
+-	KUNIT_EXPECT_EQ(test, 6, test_move_offset);
+-	KUNIT_EXPECT_EQ(test, 3, test_move_count);
+-	KUNIT_EXPECT_EQ(test, 798, test_move_addr);
++	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 30, 300, 3, 801);
++	KUNIT_EXPECT_EQ(test, 4, test_move_offset);
++	KUNIT_EXPECT_EQ(test, 2, test_move_count);
++	KUNIT_EXPECT_EQ(test, 802, test_move_addr);
+ 
+-	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 40, 400, 6, 792);
++	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 40, 400, 6, 798);
+ 	KUNIT_EXPECT_EQ(test, 6, test_move_offset);
+ 	KUNIT_EXPECT_EQ(test, 6, test_move_count);
+-	KUNIT_EXPECT_EQ(test, 792, test_move_addr);
++	KUNIT_EXPECT_EQ(test, 798, test_move_addr);
+ 
+-	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 50, 500, 12, 780);
+-	KUNIT_EXPECT_EQ(test, 18, test_move_offset);
++	test_vcap_xn_rule_creator(test, 10000, VCAP_USER_QOS, 50, 500, 12, 792);
++	KUNIT_EXPECT_EQ(test, 12, test_move_offset);
+ 	KUNIT_EXPECT_EQ(test, 12, test_move_count);
+-	KUNIT_EXPECT_EQ(test, 786, test_move_addr);
++	KUNIT_EXPECT_EQ(test, 792, test_move_addr);
+ 
+ 	idx = 0;
+ 	list_for_each_entry(elem, &admin.rules, list) {
+ 		KUNIT_EXPECT_EQ(test, exp_addr[idx], elem->addr);
+ 		++idx;
+ 	}
+-	KUNIT_EXPECT_EQ(test, 768, admin.last_used_addr);
++	KUNIT_EXPECT_EQ(test, 780, admin.last_used_addr);
+ 
+ 	vcap_del_rule(&test_vctrl, &test_netdev, 500);
+ 	vcap_del_rule(&test_vctrl, &test_netdev, 400);
+@@ -1775,7 +1802,7 @@ static void vcap_api_rule_remove_in_middle_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, 768, test_move_addr);
+ 	KUNIT_EXPECT_EQ(test, -6, test_move_offset);
+ 	KUNIT_EXPECT_EQ(test, 6, test_move_count);
+-	KUNIT_EXPECT_EQ(test, 768, test_init_start);
++	KUNIT_EXPECT_EQ(test, 774, test_init_start);
+ 	KUNIT_EXPECT_EQ(test, 6, test_init_count);
+ 	KUNIT_EXPECT_EQ(test, 774, admin.last_used_addr);
+ 
+@@ -1785,8 +1812,8 @@ static void vcap_api_rule_remove_in_middle_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, 774, test_move_addr);
+ 	KUNIT_EXPECT_EQ(test, -4, test_move_offset);
+ 	KUNIT_EXPECT_EQ(test, 2, test_move_count);
+-	KUNIT_EXPECT_EQ(test, 774, test_init_start);
+-	KUNIT_EXPECT_EQ(test, 4, test_init_count);
++	KUNIT_EXPECT_EQ(test, 777, test_init_start);
++	KUNIT_EXPECT_EQ(test, 3, test_init_count);
+ 	KUNIT_EXPECT_EQ(test, 778, admin.last_used_addr);
+ 
+ 	test_init_rule_deletion();
+@@ -1795,8 +1822,8 @@ static void vcap_api_rule_remove_in_middle_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, 778, test_move_addr);
+ 	KUNIT_EXPECT_EQ(test, -20, test_move_offset);
+ 	KUNIT_EXPECT_EQ(test, 2, test_move_count);
+-	KUNIT_EXPECT_EQ(test, 778, test_init_start);
+-	KUNIT_EXPECT_EQ(test, 20, test_init_count);
++	KUNIT_EXPECT_EQ(test, 780, test_init_start);
++	KUNIT_EXPECT_EQ(test, 12, test_init_count);
+ 	KUNIT_EXPECT_EQ(test, 798, admin.last_used_addr);
+ 
+ 	test_init_rule_deletion();
+@@ -1856,11 +1883,11 @@ static void vcap_api_rule_remove_in_front_test(struct kunit *test)
+ 	ret = vcap_del_rule(&test_vctrl, &test_netdev, 400);
+ 	KUNIT_EXPECT_EQ(test, 0, ret);
+ 	KUNIT_EXPECT_EQ(test, 786, test_move_addr);
+-	KUNIT_EXPECT_EQ(test, -8, test_move_offset);
++	KUNIT_EXPECT_EQ(test, -6, test_move_offset);
+ 	KUNIT_EXPECT_EQ(test, 6, test_move_count);
+-	KUNIT_EXPECT_EQ(test, 786, test_init_start);
+-	KUNIT_EXPECT_EQ(test, 8, test_init_count);
+-	KUNIT_EXPECT_EQ(test, 794, admin.last_used_addr);
++	KUNIT_EXPECT_EQ(test, 792, test_init_start);
++	KUNIT_EXPECT_EQ(test, 6, test_init_count);
++	KUNIT_EXPECT_EQ(test, 792, admin.last_used_addr);
+ 
+ 	vcap_del_rule(&test_vctrl, &test_netdev, 200);
+ 	vcap_del_rule(&test_vctrl, &test_netdev, 300);
 
- drivers/net/ethernet/microchip/sparx5/Makefile     |    2 +-
- .../ethernet/microchip/sparx5/lan969x/lan969x.c    |    2 +
- .../microchip/sparx5/lan969x/lan969x_regs.c        |   20 +-
- .../microchip/sparx5/lan969x/lan969x_vcap_ag_api.c |  373 ++-
- .../microchip/sparx5/lan969x/lan969x_vcap_impl.c   |   12 +
- .../net/ethernet/microchip/sparx5/sparx5_main.c    |   13 +-
- .../net/ethernet/microchip/sparx5/sparx5_main.h    |   44 +
- .../ethernet/microchip/sparx5/sparx5_main_regs.h   |  691 ++++-
- .../net/ethernet/microchip/sparx5/sparx5_regs.c    |   20 +-
- .../net/ethernet/microchip/sparx5/sparx5_regs.h    |   20 +-
- .../net/ethernet/microchip/sparx5/sparx5_router.c  | 3021 ++++++++++++++++++++
- .../ethernet/microchip/sparx5/sparx5_vcap_ag_api.c |  373 ++-
- .../ethernet/microchip/sparx5/sparx5_vcap_ag_api.h |    6 +-
- .../ethernet/microchip/sparx5/sparx5_vcap_impl.c   |  159 +-
- .../ethernet/microchip/sparx5/sparx5_vcap_impl.h   |    5 +
- drivers/net/ethernet/microchip/vcap/vcap_ag_api.h  |   94 +-
- drivers/net/ethernet/microchip/vcap/vcap_api.c     |  219 +-
- drivers/net/ethernet/microchip/vcap/vcap_api.h     |    4 +-
- .../net/ethernet/microchip/vcap/vcap_api_client.h  |    6 +
- .../net/ethernet/microchip/vcap/vcap_api_debugfs.c |   13 +-
- .../net/ethernet/microchip/vcap/vcap_api_kunit.c   |   81 +-
- .../net/ethernet/microchip/vcap/vcap_model_kunit.c |    6 +-
- 22 files changed, 5047 insertions(+), 137 deletions(-)
----
-base-commit: 001b5d347d8ba39b2dccaefcc57967b18caec8fe
-change-id: 20260210-sparx5_l3_routing-962458e4d3da
-
-Best regards,
 -- 
-Jens Emil Schulz Østergaard <jensemil.schulzostergaard@microchip.com>
+2.52.0
 
