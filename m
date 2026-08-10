@@ -1,107 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out-2uec-a89.jellyfish.systems (out-2uec-a89.jellyfish.systems [63.250.43.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EB52EEE6E;
-	Mon, 10 Aug 2026 21:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992981A38F9
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Aug 2026 21:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.250.43.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786396607; cv=none; b=PVg7u+6clsBRu9iEA2S9dh8EBnsa8fk4e5+/MRu7SMUK5t3F4Jd8uVpmosNshwcP8qaO306HhcKkooxQM/VTiLI5S7idWaEUXvFhOmdOyal+91H5CavBdoQX/Wp3g0S9paGkEf6RyL43EwqtrxrxEMlF0OLqCslLrcYQkLKjzsQ=
+	t=1786398747; cv=none; b=dq+VDf843u3ZlvqAUouXgimYa3T7mFnpakc8mhjGjighZFVerjVs19jRPO/7THDfJ/+NIoqxnNnxtobCjIuCuqjty97wGXPwUJ/Ybx98XrL6fnbNPKSdFhxfjKzEChZ6RMsSEJuV8hyqWpxVzrl43vVEGAlrmxshq4N4hrGTLuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786396607; c=relaxed/simple;
-	bh=TBFlUH2DAWRdO5ZEbfVsPuzo0HQ+oE1ROviFaDWyp8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l7F8HFmMUfURE29lW5p9ghP7MpzF3h08FrdHGoQ9J66ZwKou3tlhxDqWnZLPlATjl1DAzNXZrDQa0xrPy/oq0qF1a4Cs5SOhwdW/u3ocUZUdqEcpXOy55gg0xYOSX4C9P94LN0iIPYfuB1Rv1vn97/SfDsCHbCCqWhvY4vqAIoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f97RwX0B; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f97RwX0B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96FA1F000E9;
-	Mon, 10 Aug 2026 21:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786396606;
-	bh=pcJn5EzShExLFseVfhgfYB2fGGsg+eUvJiSevSzZ3vo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=f97RwX0BOLEgNdLIB5HepcIfFsVOL1MolVy+VG3IhHfgnD33JykCHMkHx++PboA8L
-	 +f0/Mqw8NbZwT9/jHVrQxx9MYfFopMv08rnTlSqYmIjqyD+ZPuXGTj9yW3gwBP6LtW
-	 MYseaaHKS5yo5i5N6NatkodNZSv5M+1RnCh5nKq/yNy5f1WStSqU84UfphR6B1Jm/U
-	 AeDPIR9m8lCAqsfpdaoa+4CK8GHpf7AO/PZQ14zYjHG7rngsHF2E04PjP9YR2fce47
-	 bJJaHKTAXGdKwewczyqzFGeUwAWmdG5Edft1y0wpSpvM7ZOeaf5mRn7CvGi5fjuHf0
-	 jOI+XySNJmIYg==
-Date: Mon, 10 Aug 2026 23:16:41 +0200
-From: Robert Richter <rric@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ian Bridges <icb@fastmail.org>, Tony Luck <tony.luck@intel.com>,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] EDAC/thunderx: Replace strlcat() with snprintf() and
- seq_buf
-Message-ID: <ano_uQtMIjcoFcs9@rric.localdomain>
-References: <akYJUdY1hVABUQH6@dev>
- <amppKvK6mIJRmoL8@dev>
- <20260729230035.GDamqGE9bKD5ncU6ZV@fat_crate.local>
- <annRsN6UBDPsFLr2@rric.localdomain>
- <20260810134506.GAannV4uJN0I1UXh0q@fat_crate.local>
+	s=arc-20240116; t=1786398747; c=relaxed/simple;
+	bh=JnAva7BvWlD7HWlrJWTzhueaMfuP/b/E3WgX8cW+Lps=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qaA8twMuNDfdfScG8i4ql5YgTWvJ/09FQbyCiSIbg3cNZlIyrh01xAt7ZtAw4nXMJ7I7gN8xhBOteftNNJ3ZWof4fSF/XwVAXVgotpknU9rHrD1iwH7iC+73JwWvajz4uIvEjAu4wvnL8WiJvi70v3AzymifBIJoPISiuDM4jg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net; spf=pass smtp.mailfrom=catcrafts.net; arc=none smtp.client-ip=63.250.43.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=catcrafts.net
+Received: from mail.privateemail.com (unknown [87.215.145.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.privateemail.com (Postfix) with ESMTPSA id 4hJpPt4fKNz2x99;
+	Mon, 10 Aug 2026 21:52:18 +0000 (UTC)
+From: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	linux-iio@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luca Weiss <luca.weiss@fairphone.com>
+Subject: Re: [PATCH 3/3] iio: light: stk3310: support the Sensortek STK36C61
+Date: Mon, 10 Aug 2026 23:52:16 +0200
+Message-ID: <20260810215216.154484-1-jorijnvdgraaf@catcrafts.net>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <anoaYQNHKSNE8Pci@ashevche-desk.local>
+References: <20260810110423.41697-1-jorijnvdgraaf@catcrafts.net> <20260810110423.41697-4-jorijnvdgraaf@catcrafts.net> <anoaYQNHKSNE8Pci@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260810134506.GAannV4uJN0I1UXh0q@fat_crate.local>
+Content-Transfer-Encoding: 8bit
+X-Envelope-From: jorijnvdgraaf@catcrafts.net
 
-On 10.08.26 06:45:06, Borislav Petkov wrote:
-> On Mon, Aug 10, 2026 at 03:27:12PM +0200, Robert Richter wrote:
-> > However, the driver has several issues. I asked Marvell a while ago to
-> > take over maintainership, but never got a response. I don't have
-> > hardware to test changes. If you mean to mark the driver obsolete, I
-> > am good with it. On the other hand, the issues found may not actually
-> > trigger and only affect a single system. If we can live with it, we
-> > could leave it as is.
-> 
-> I am sorting out stuff which needs maintaining from obsolete gunk, which is not
-> used anymore and which doesn't need any maintenance effort or no one cares for
-> it anymore and there's no point to waste precious resources for.
-> 
-> So I'm going to do this but we can always revert it if someone shows interest.
-> 
-> ---
-> Author: Borislav Petkov (AMD) <bp@alien8.de>
-> Date:   Mon Aug 10 06:40:13 2026 -0700
-> 
->     EDAC/thunderx: Orphan it
->     
->     Robert doesn't have hardware to test patches anymore and no one else has
->     shown interest in maintaining this driver, so orphan it, for now at
->     least.
->     
->     Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+On Mon, Aug 10, 2026 at 09:37:21PM +0300, Andy Shevchenko wrote:
+> > -	if (chan->type != IIO_LIGHT && chan->type != IIO_PROXIMITY)
+> > +	if (chan->type != IIO_LIGHT && chan->type != IIO_PROXIMITY &&
+> > +	    chan->type != IIO_INTENSITY)
+> >  		return -EINVAL;
+>
+> Is this now a duplicating a bit with the below choices?
 
-Acked-by: Robert Richter <rric@kernel.org>
+A bit, in the int_time and scale arms. The check at the top is
+pre-existing (this patch only adds IIO_INTENSITY to it) and is the
+only type filter for the RAW case, which serves all three types
+through chan->address with no per-type branching of its own.
 
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d413dac5c8b3..671515d21bfc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9308,9 +9308,8 @@ S:	Maintained
->  F:	drivers/edac/octeon_edac*
->  
->  EDAC-CAVIUM THUNDERX
-> -M:	Robert Richter <rric@kernel.org>
->  L:	linux-edac@vger.kernel.org
-> -S:	Odd Fixes
-> +S:	Orphan
->  F:	drivers/edac/thunderx_edac*
->  
->  EDAC-CORE
-> 
-> ---
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> >  	case IIO_CHAN_INFO_INT_TIME:
+> >  		if (chan->type == IIO_LIGHT)
+> >  			ret = regmap_field_read(data->reg_als_it, &index);
+> > -		else
+> > +		else if (chan->type == IIO_PROXIMITY)
+> >  			ret = regmap_field_read(data->reg_ps_it, &index);
+> > +		else
+> > +			return -EINVAL;
+>
+> If you want to keep a single point of return, use
+>
+> 			ret = -EINVAL;
+>
+> here and below in _read_raw().
+
+Neither of the new else branches is reachable today: the colour
+channels declare RAW only, so no int_time or scale attribute exists
+for them, and in-kernel readers are gated by iio_channel_has_info().
+I would rather keep them than have a bare else read as proximity for
+a colour channel. v2 writes them with ret = -EINVAL as you suggest,
+falling into the existing if (ret < 0) return ret.
+
+Thanks,
+Jorijn
