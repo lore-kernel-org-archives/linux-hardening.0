@@ -1,100 +1,215 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out-2z4y-a156.jellyfish.systems (out-2z4y-a156.jellyfish.systems [198.54.127.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DB037A840;
-	Mon, 10 Aug 2026 08:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE4F17B505
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Aug 2026 11:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786348938; cv=none; b=SGgZD8I72r9TnTA1nYcZAtrV8YCmv4hBg/a8sdb78MhNV/BotUq3ANyP8eeAkKKCpxcBxDnaXlpVxLsCdX1SnMPauxOIbRwZqQ1w6YOVg3yPEBEfB1KQ3noMV5BFXDGLOS+lM2lIO7FOKnrUNj36iQt+Cp/anj0k4dEMROH6qoM=
+	t=1786359909; cv=none; b=gzV+GnlBsWYr9ELvGi4pCsIOlS9/Nw/h8qr1FgyAxhwi9kMmOqd6lWm6uVWyEt6sbKTWc+8NbJuXIlP1yUVs38UwCTeDkYWPq4hFtxjNfxUSeuYdFcaGVYeMozy9S/wuSwmFPMML1MxdlAQ2ephhDMqADn3N08SbMe15nRQS4Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786348938; c=relaxed/simple;
-	bh=/fNc5SGhyQrQXVKbO9qDIggCMXulGF5DofcIfTX2n0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mibxv7CBRKYY/xABQI/vtCMPcAsYewwOh3kFMI7LKQloiFuABjpuRquW74E2h8HPdmGUjXmUD7YrTGNXnuPH33rparrCuneOV3WuEF0cEYojZp44+SlCSi1ErmUBIBiSkPRo8IfhBNpHGW63bUdWyVTy8CpR7BshVWJqurf694I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qezp4qo+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qezp4qo+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/W+XsVUanySFDoNBpzYIBGgh3CLboIF3g/MwTHkub7A=; b=qezp4qo+EM4MmFDTanMWwbRJL9
-	qNIZtnbKaU+vByTJAmeA9wu0laxT4NVLwJWUsY/vKFZD+sZ4vCw1IHlYlCtUkOiTMzvKFtRVk/UHS
-	3jjuPa9lD1GlowZbI9Nhz6/aNdf0+kr+9lK3ygSamRdocnvarxhPPYtBNa8Mgd59yK9Ok56jNbyQ1
-	v4sJwgV9xwSNUGFNHeL/a9cH4sKlGarSQUui1Erb0iHlq/kLeXpnuh/0XJ2DunSAnm4JvdWQpCLW8
-	M4Qsy1CVkk5HYVNC6fOceNgDJOHmp0+TYbNhJUU6m1MfTeEaL+WA85mtHLX44TjdbigJpzgvVdIAD
-	bzsryJLw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtKxV-0000000Aa0a-2GFE;
-	Mon, 10 Aug 2026 08:02:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6F0023030A6; Mon, 10 Aug 2026 10:02:07 +0200 (CEST)
-Date: Mon, 10 Aug 2026 10:02:07 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Jennifer Miller <jmill@asu.edu>, ast@kernel.org, daniel@iogearbox.net,
-	andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com,
-	linux-hardening@vger.kernel.org, xmei5@asu.edu,
-	samitolvanen@google.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH bpf-next v1 1/1] bpf: Enable JIT hardening by default
- when x86_64 CFI is enabled
-Message-ID: <20260810080207.GD1642880@noisy.programming.kicks-ass.net>
-References: <20260710191932.120911-1-jmill@asu.edu>
- <20260710191932.120911-2-jmill@asu.edu>
- <202608091030.C69278022@keescook>
+	s=arc-20240116; t=1786359909; c=relaxed/simple;
+	bh=bwjCD43E9bjMXAxChdrLhk7PINHWYkrOck/9FWTc4F8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DlV2h8SHQR0APiGB/44ojAjVNxwTLzgt2Gp3eYS1N7Ajb95IJ6gYFI08/T7F5x8h6TgEcQlL7EakMS/luEPXL8DLJEPzfZVCWxk1VfiWKbWkJq/pDH67GYte6s2UjYKZb0cF3Oufv6SWmEaVDthNnElt58/pikSc9KcdZvzl0Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net; spf=pass smtp.mailfrom=catcrafts.net; arc=none smtp.client-ip=198.54.127.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=catcrafts.net
+Received: from mail.privateemail.com (unknown [87.215.145.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.privateemail.com (Postfix) with ESMTPSA id 4hJX2k6PYnz8sWQ;
+	Mon, 10 Aug 2026 11:04:46 +0000 (UTC)
+From: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+To: Jonathan Cameron <jic23@kernel.org>,
+	linux-iio@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luca Weiss <luca.weiss@fairphone.com>,
+	Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+Subject: [PATCH 3/3] iio: light: stk3310: support the Sensortek STK36C61
+Date: Mon, 10 Aug 2026 13:04:23 +0200
+Message-ID: <20260810110423.41697-4-jorijnvdgraaf@catcrafts.net>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260810110423.41697-1-jorijnvdgraaf@catcrafts.net>
+References: <20260810110423.41697-1-jorijnvdgraaf@catcrafts.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202608091030.C69278022@keescook>
+Content-Transfer-Encoding: 8bit
+X-Envelope-From: jorijnvdgraaf@catcrafts.net
 
-On Sun, Aug 09, 2026 at 10:30:35AM -0700, Kees Cook wrote:
-> On Fri, Jul 10, 2026 at 12:19:32PM -0700, Jennifer Miller wrote:
-> > Initializes bpf_jit_harden to 1 if x86_64 CFI is enabled. Prevents the
-> > misuse of BPF JIT code to craft CFI signatures or Endbr64 instructions
-> > by enabling constant blinding for JITted BPF code from unprivileged
-> > users.
-> > 
-> > Signed-off-by: Jennifer Miller <jmill@asu.edu>
-> > ---
-> >  kernel/bpf/core.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> > index 47fe047ad30b..ed22b90c6e4e 100644
-> > --- a/kernel/bpf/core.c
-> > +++ b/kernel/bpf/core.c
-> > @@ -548,7 +548,11 @@ void bpf_prog_kallsyms_del_all(struct bpf_prog *fp)
-> >  /* All BPF JIT sysctl knobs here. */
-> >  int bpf_jit_enable   __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_DEFAULT_ON);
-> >  int bpf_jit_kallsyms __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_DEFAULT_ON);
-> > -int bpf_jit_harden   __read_mostly;
-> > +/* Enable hardening by default when x86_64 CFI is enabled to prevent CFI
-> > + * hashes and endbr64 instructions from being crafted.
-> > + */
-> > +int bpf_jit_harden   __read_mostly = IS_ENABLED(CONFIG_X86_64) &&
-> > +					IS_ENABLED(CONFIG_CFI);
-> 
-> Why not just do this for all CONFIG_CFI?
+The Sensortek STK36C61 is a 3-in-1 ambient light / proximity / RGB
+colour sensor (chip ID 0x95) found in the Fairphone 6. Its register
+interface is compatible with the feature set this driver uses: the
+STATE/FLAG bit layout, the data and threshold registers and the gain
+and integration-time fields, verified on that device (the ALS and
+proximity readings scale with their gain and integration-time fields,
+thresholds written through the event interface read back from the
+chip, and the FLAG near/far bit crosses with them). Add its chip ID to
+the known-ID list and the device table entries.
 
-Additionally; does it make sense to add an arch hook to
-bpf_jit_blind_constant() / bpg_jit_blind_insn() such that architectures
-can blacklist certain values?
+Whenever the ALS engine runs, the chip also measures four colour
+channels, laid out directly after the ALS data as 16-bit big-endian
+values in R (0x15), G (0x17), B (0x19), C (0x1B) order; the R, G and B
+assignments were each confirmed by the matching channel dominating
+under red, green and blue illumination, and clear by its broadband
+response. The ALS data register tracks the green channel exactly.
+There is no public datasheet and therefore no counts-to-physical
+mapping for the colour channels, so they are exposed as raw-only
+intensity channels; the gain field the scale attribute controls does
+not govern clear either.
 
-Because as is, the whole thing *can* still generate an ENBBR by sheer
-accident.
+Assisted-by: Claude:claude-fable-5
+Signed-off-by: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+---
+ drivers/iio/light/stk3310.c | 44 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 41 insertions(+), 3 deletions(-)
 
-I'm thinking something simple like:
+diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
+index 249396b9bf80..288b544a8abb 100644
+--- a/drivers/iio/light/stk3310.c
++++ b/drivers/iio/light/stk3310.c
+@@ -40,6 +40,11 @@
+ #define STK3310_REG_PS_DATA_LSB			0x12
+ #define STK3310_REG_ALS_DATA_MSB		0x13
+ #define STK3310_REG_ALS_DATA_LSB		0x14
++#define STK36C61_REG_RED_DATA_MSB		0x15
++#define STK36C61_REG_GREEN_DATA_MSB		0x17
++#define STK36C61_REG_BLUE_DATA_MSB		0x19
++#define STK36C61_REG_CLEAR_DATA_MSB		0x1B
++#define STK36C61_REG_CLEAR_DATA_LSB		0x1C
+ #define STK3310_REG_ID				0x3E
+ #define STK3310_MAX_REG				0x80
+ 
+@@ -54,6 +59,7 @@
+ #define STK3311S34_CHIP_ID_VAL			0x1E
+ #define STK3311X_CHIP_ID_VAL			0x12
+ #define STK3335_CHIP_ID_VAL			0x51
++#define STK36C61_CHIP_ID_VAL			0x95
+ #define STK3310_PSINT_EN			0x01
+ #define STK3310_PS_MAX_VAL			0xFFFF
+ 
+@@ -102,6 +108,7 @@ static const u8 stk3310_chip_ids[] = {
+ 	STK3311X_CHIP_ID_VAL,
+ 	STK3311_CHIP_ID_VAL,
+ 	STK3335_CHIP_ID_VAL,
++	STK36C61_CHIP_ID_VAL,
+ };
+ 
+ /* Estimate maximum proximity values with regard to measurement scale. */
+@@ -202,11 +209,28 @@ static const struct iio_chan_spec_ext_info stk3310_ext_info[] = {
+ 	.ext_info = stk3310_ext_info,			\
+ }
+ 
++#define STK36C61_INTENSITY_CHANNEL(_mod, _reg) {	\
++	.type = IIO_INTENSITY,				\
++	.modified = 1,					\
++	.channel2 = IIO_MOD_LIGHT_##_mod,		\
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
++	.address = _reg,				\
++}
++
+ static const struct iio_chan_spec stk3310_channels[] = {
+ 	STK3310_LIGHT_CHANNEL,
+ 	STK3310_PROXIMITY_CHANNEL,
+ };
+ 
++static const struct iio_chan_spec stk36c61_channels[] = {
++	STK3310_LIGHT_CHANNEL,
++	STK3310_PROXIMITY_CHANNEL,
++	STK36C61_INTENSITY_CHANNEL(RED, STK36C61_REG_RED_DATA_MSB),
++	STK36C61_INTENSITY_CHANNEL(GREEN, STK36C61_REG_GREEN_DATA_MSB),
++	STK36C61_INTENSITY_CHANNEL(BLUE, STK36C61_REG_BLUE_DATA_MSB),
++	STK36C61_INTENSITY_CHANNEL(CLEAR, STK36C61_REG_CLEAR_DATA_MSB),
++};
++
+ /**
+  * struct stk3310_chip_info - chip-specific data
+  * @name: device name reported to the IIO core
+@@ -225,6 +249,12 @@ static const struct stk3310_chip_info stk3310_chip_info = {
+ 	.num_channels = ARRAY_SIZE(stk3310_channels),
+ };
+ 
++static const struct stk3310_chip_info stk36c61_chip_info = {
++	.name = "stk36c61",
++	.channels = stk36c61_channels,
++	.num_channels = ARRAY_SIZE(stk36c61_channels),
++};
++
+ static IIO_CONST_ATTR(in_illuminance_scale_available, STK3310_SCALE_AVAILABLE);
+ 
+ static IIO_CONST_ATTR(in_proximity_scale_available, STK3310_SCALE_AVAILABLE);
+@@ -400,7 +430,8 @@ static int stk3310_read_raw(struct iio_dev *indio_dev,
+ 	struct stk3310_data *data = iio_priv(indio_dev);
+ 	struct i2c_client *client = data->client;
+ 
+-	if (chan->type != IIO_LIGHT && chan->type != IIO_PROXIMITY)
++	if (chan->type != IIO_LIGHT && chan->type != IIO_PROXIMITY &&
++	    chan->type != IIO_INTENSITY)
+ 		return -EINVAL;
+ 
+ 	switch (mask) {
+@@ -419,8 +450,10 @@ static int stk3310_read_raw(struct iio_dev *indio_dev,
+ 	case IIO_CHAN_INFO_INT_TIME:
+ 		if (chan->type == IIO_LIGHT)
+ 			ret = regmap_field_read(data->reg_als_it, &index);
+-		else
++		else if (chan->type == IIO_PROXIMITY)
+ 			ret = regmap_field_read(data->reg_ps_it, &index);
++		else
++			return -EINVAL;
+ 		if (ret < 0)
+ 			return ret;
+ 
+@@ -430,8 +463,10 @@ static int stk3310_read_raw(struct iio_dev *indio_dev,
+ 	case IIO_CHAN_INFO_SCALE:
+ 		if (chan->type == IIO_LIGHT)
+ 			ret = regmap_field_read(data->reg_als_gain, &index);
+-		else
++		else if (chan->type == IIO_PROXIMITY)
+ 			ret = regmap_field_read(data->reg_ps_gain, &index);
++		else
++			return -EINVAL;
+ 		if (ret < 0)
+ 			return ret;
+ 
+@@ -567,6 +602,7 @@ static bool stk3310_is_volatile_reg(struct device *dev, unsigned int reg)
+ 	switch (reg) {
+ 	case STK3310_REG_ALS_DATA_MSB:
+ 	case STK3310_REG_ALS_DATA_LSB:
++	case STK36C61_REG_RED_DATA_MSB ... STK36C61_REG_CLEAR_DATA_LSB:
+ 	case STK3310_REG_PS_DATA_LSB:
+ 	case STK3310_REG_PS_DATA_MSB:
+ 	case STK3310_REG_FLAG:
+@@ -801,6 +837,7 @@ static const struct i2c_device_id stk3310_i2c_id[] = {
+ 	{ .name = "STK3310", .driver_data = (kernel_ulong_t)&stk3310_chip_info },
+ 	{ .name = "STK3311", .driver_data = (kernel_ulong_t)&stk3310_chip_info },
+ 	{ .name = "STK3335", .driver_data = (kernel_ulong_t)&stk3310_chip_info },
++	{ .name = "STK36C61", .driver_data = (kernel_ulong_t)&stk36c61_chip_info },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, stk3310_i2c_id);
+@@ -819,6 +856,7 @@ static const struct of_device_id stk3310_of_match[] = {
+ 	{ .compatible = "sensortek,stk3310", .data = &stk3310_chip_info },
+ 	{ .compatible = "sensortek,stk3311", .data = &stk3310_chip_info },
+ 	{ .compatible = "sensortek,stk3335", .data = &stk3310_chip_info },
++	{ .compatible = "sensortek,stk36c61", .data = &stk36c61_chip_info },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, stk3310_of_match);
+-- 
+2.55.0
 
-	while (imm_rnd ^ imm == gen_endbr() || imm_rnd == gen_endbr())
-		imm_rnd = get_random_u32();
-
-should do.
