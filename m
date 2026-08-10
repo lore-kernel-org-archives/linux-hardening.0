@@ -1,262 +1,103 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out-zbxj-a71.jellyfish.systems (out-zbxj-a71.jellyfish.systems [198.54.127.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AE53C140F;
-	Mon, 10 Aug 2026 11:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDC43BB13D
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Aug 2026 11:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786361043; cv=none; b=Nq/mrKHryqOY7FuZqLnT1614qWkAriHJV0QvVwuQydldxUxOKYW2cJ1E8c0Dx848ccDFsSkO+3vLFotep1mxwic9ok6/R6mlt+138wPtEjhU/3YLuPstteZCN39IByWOs4h1HQqzZzt43hMJwesdjHfIdsuhJwVL5YQ3WlR7/A0=
+	t=1786361129; cv=none; b=c3PDHszgpaQJ9OPvxZWasURZP3veSFm7YYZkrVEpeR9pFxPZ5UqwctcIE0ld255PeVt+624KsenZe0wkaTuTKXiOzzqTb9AbLX6NTg72nh1R51GLjlgmkbojriL/ryZvj3oitA4qfPeLQj0Mq/vSbTlHjzdGeWn5b/kSEAhYVQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786361043; c=relaxed/simple;
-	bh=rycCXlUKCDi8Gea4CfPFop5WlCBJGIojPTXqWUnWStw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=eNKEc5MRnlBiHE9oNoPN8u2zEUsi7iVxzGAInGa4Zh3i9WL0qNslHBPywgmVjKxPOEoy68QUwXxWCA+mMHYPmP6BMiDs+lZ4xMZ+xE5hgeQHXa8IFz35Bchq+ixdSR74LrsCJBIIhuI/uW2sagDVX6RLAjsJq4dwpIgq87Tqgnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=xMlRL72z; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="xMlRL72z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1786361044; x=1817897044;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=rycCXlUKCDi8Gea4CfPFop5WlCBJGIojPTXqWUnWStw=;
-  b=xMlRL72z2DQN1gifIVBc1LMiFVHkDYCZEm3MBTLv5Vtxy6rwOPtBnzqM
-   GIvCrceOCmsK0cwZM+V2uk/YPOXTHSCU1lrqfzEx45vIuhVgMghOBnqKO
-   nbLY3Yedr6JywDuUYISOjn94jUA+mAU7OxEF4/3PQvFN54zLj6C+9LRK+
-   cqmyWM6YNvN4b1267WYI7r2uqxFwW0YwIDfw5yPRwEtiu8jS1lqg9cICY
-   nXxl76mPuAvagjgQX8m4HS50nAkQyR4ml8fAzwrYpdMzPf3K6N+aDSRK+
-   aBP0emENNK1sF0C6FvBilhNGo7TWeUr10qTOCktipMvmDOumff9eXTamo
-   w==;
-X-CSE-ConnectionGUID: 7KhVYZE2RhyhPpw6FST1Gw==
-X-CSE-MsgGUID: s7qVtqSCQ7WjOq1LPt7efw==
-X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="61006992"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 04:24:03 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
- chn-vm-ex4.mchp-main.com (10.10.87.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.45; Mon, 10 Aug 2026 04:23:59 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.58 via Frontend
- Transport; Mon, 10 Aug 2026 04:23:56 -0700
-From: =?utf-8?q?Jens_Emil_Schulz_=C3=98stergaard?=
-	<jensemil.schulzostergaard@microchip.com>
-Date: Mon, 10 Aug 2026 13:20:54 +0200
-Subject: [PATCH net-next v2 9/9] net: sparx5: add neighbour event handling
- for L3 routing
+	s=arc-20240116; t=1786361129; c=relaxed/simple;
+	bh=3Y1xMEOAwH1QMRI4pDjeFz63XQW/IskcSv3+UqwmQZs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u/8U0YS2jzhPAutVMG5vT9CLxMEsGFCG4CKex9KNa/LwtQQhyLbuHjKCt/vr91gEZK65aiynfaRWWECBxGcsXcP+9cWPUPFtY5ya/cCKs+xhWD9ykCn9CqtGIGd2KBva6p+f/xPE9XQg3mF8K2sKlo+jXJd0Pj9NqARtwZXluFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net; spf=pass smtp.mailfrom=catcrafts.net; arc=none smtp.client-ip=198.54.127.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=catcrafts.net
+Received: from mail.privateemail.com (unknown [87.215.145.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.privateemail.com (Postfix) with ESMTPSA id 4hJX2Z4Y18z8sWQ;
+	Mon, 10 Aug 2026 11:04:38 +0000 (UTC)
+From: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+To: Jonathan Cameron <jic23@kernel.org>,
+	linux-iio@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luca Weiss <luca.weiss@fairphone.com>,
+	Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+Subject: [PATCH 1/3] dt-bindings: iio: light: stk33xx: document the Sensortek STK36C61
+Date: Mon, 10 Aug 2026 13:04:21 +0200
+Message-ID: <20260810110423.41697-2-jorijnvdgraaf@catcrafts.net>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260810110423.41697-1-jorijnvdgraaf@catcrafts.net>
+References: <20260810110423.41697-1-jorijnvdgraaf@catcrafts.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-ID: <20260810-sparx5_l3_routing-v2-9-59e68cc8c8ca@microchip.com>
-References: <20260810-sparx5_l3_routing-v2-0-59e68cc8c8ca@microchip.com>
-In-Reply-To: <20260810-sparx5_l3_routing-v2-0-59e68cc8c8ca@microchip.com>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>,
-	<UNGLinuxDriver@microchip.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Machon
-	<daniel.machon@microchip.com>, Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Robert Marko <robert.marko@sartura.hr>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-hardening@vger.kernel.org>,
-	=?utf-8?q?Jens_Emil_Schulz_=C3=98stergaard?=
-	<jensemil.schulzostergaard@microchip.com>
-X-Mailer: b4 0.15-dev
+X-Envelope-From: jorijnvdgraaf@catcrafts.net
 
-Register a netevent notifier to handle NETEVENT_NEIGH_UPDATE events,
-completing the L3 unicast forwarding data path:
+The STK36C61 is a 3-in-1 ambient light / proximity / RGB colour sensor
+found in the Fairphone 6. Its ambient light and proximity register
+interface is compatible with the stk3310's, while the dedicated
+compatible identifies the part, whose colour channels the fallback
+does not describe.
 
-- When ARP/NDP resolves a neighbour, update the hardware ARP table entry
-  with the resolved MAC address and notify all linked nexthops to
-  refresh their ECMP forwarding state.
+Add sensortek,stk36c61 with a sensortek,stk3310 fallback, mirroring
+the stk3013 entry, and widen the title and description to cover the
+part.
 
-- When a neighbour becomes unreachable, tear down the hardware ARP entry
-  and mark linked nexthops as unresolved so traffic traps to the CPU.
-
-Reviewed-by: Daniel Machon <daniel.machon@microchip.com>
-Reviewed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
-Signed-off-by: Jens Emil Schulz Østergaard <jensemil.schulzostergaard@microchip.com>
+Assisted-by: Claude:claude-fable-5
+Signed-off-by: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
 ---
-Changes in v2:
-- Add a netns (net_eq) guard to the netevent handler.
----
- .../net/ethernet/microchip/sparx5/sparx5_router.c  | 122 ++++++++++++++++++++-
- 1 file changed, 121 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/iio/light/stk33xx.yaml | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c b/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
-index 6d40d651180e..5f6add84b0d6 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
-@@ -1647,6 +1647,17 @@ static void sparx5_rr_nexthop_neigh_update(struct sparx5 *sparx5,
- 	sparx5_rr_arp_tbl_hw_addr_apply(sparx5, mac, vmid, grp_idx + nh_offset);
- }
+diff --git a/Documentation/devicetree/bindings/iio/light/stk33xx.yaml b/Documentation/devicetree/bindings/iio/light/stk33xx.yaml
+index e4341fdced98..0165a348918b 100644
+--- a/Documentation/devicetree/bindings/iio/light/stk33xx.yaml
++++ b/Documentation/devicetree/bindings/iio/light/stk33xx.yaml
+@@ -4,14 +4,14 @@
+ $id: http://devicetree.org/schemas/iio/light/stk33xx.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
  
-+static void
-+sparx5_rr_nexthops_update_notify(struct sparx5 *sparx5,
-+				 struct sparx5_rr_neigh_entry *neigh_entry,
-+				 bool entry_connected)
-+{
-+	struct sparx5_rr_nexthop *nh;
-+
-+	list_for_each_entry(nh, &neigh_entry->nexthop_list, neigh_list_node)
-+		sparx5_rr_nexthop_neigh_update(sparx5, nh, entry_connected);
-+}
-+
- static int sparx5_rr_neigh_entry_hw_apply(struct sparx5 *sparx5,
- 					  struct sparx5_rr_neigh_entry *entry)
- {
-@@ -2419,6 +2430,107 @@ static int sparx5_rr_fib_event(struct notifier_block *nb, unsigned long event,
- 	return NOTIFY_BAD;
- }
+-title: |
+-  Sensortek STK33xx I2C Ambient Light and Proximity sensor
++title: Sensortek STK33xx/STK36C61 I2C Ambient Light and Proximity sensor
  
-+static void sparx5_rr_neigh_event_work(struct work_struct *work)
-+{
-+	struct sparx5_rr_netevent_work *net_work =
-+		container_of(work, struct sparx5_rr_netevent_work, work);
-+	unsigned char hwaddr[ETH_ALEN] __aligned(2);
-+	struct sparx5 *sparx5 = net_work->sparx5;
-+	struct neighbour *n = net_work->neigh;
-+	struct sparx5_rr_neigh_key key = { };
-+	struct sparx5_rr_neigh_entry *entry;
-+	bool entry_connected;
-+	u8 nud_state, dead;
-+
-+	sparx5_rr_nb2neigh_key(n, &key);
-+
-+	/* Frames with link-local dip are trapped, so ignore the neighbour. */
-+	if (key.iaddr.version == SPARX5_IPV6 &&
-+	    ipv6_addr_type(&key.iaddr.ipv6) & IPV6_ADDR_LINKLOCAL)
-+		goto out;
-+
-+	/* If n changes after this read section, we will get another neigh
-+	 * event, which is processed after the current one.
-+	 */
-+	read_lock_bh(&n->lock);
-+	ether_addr_copy(hwaddr, n->ha);
-+	nud_state = n->nud_state;
-+	dead = n->dead;
-+	read_unlock_bh(&n->lock);
-+
-+	mutex_lock(&sparx5->router->lock);
-+
-+	entry_connected = nud_state & NUD_VALID && !dead;
-+	entry = sparx5_rr_neigh_entry_lookup(sparx5, &key);
-+	if (!entry_connected && !entry)
-+		goto out_mutex;
-+
-+	if (!entry) {
-+		entry = sparx5_rr_neigh_entry_create(sparx5, &key);
-+		if (IS_ERR(entry))
-+			goto out_mutex;
-+	}
-+
-+	if (entry->connected && entry_connected &&
-+	    ether_addr_equal(entry->hwaddr, hwaddr))
-+		goto out_mutex;
-+
-+	ether_addr_copy(entry->hwaddr, hwaddr);
-+	sparx5_rr_neigh_entry_update(sparx5, entry, entry_connected);
-+	sparx5_rr_nexthops_update_notify(sparx5, entry, entry_connected);
-+	if (!entry_connected)
-+		sparx5_rr_neigh_entry_put(sparx5, entry);
-+
-+out_mutex:
-+	mutex_unlock(&sparx5->router->lock);
-+out:
-+	neigh_release(n);
-+	kfree(net_work);
-+}
-+
-+/* Handle neighbour update events. Used to manage neigh_entries. Called in
-+ * atomic context, with rcu_read_lock().
-+ */
-+static int sparx5_rr_netevent_event(struct notifier_block *nb,
-+				    unsigned long event, void *ptr)
-+{
-+	struct sparx5_rr_netevent_work *net_work;
-+	struct sparx5_router *router;
-+	struct sparx5_port *port;
-+	struct neighbour *n;
-+
-+	router = container_of(nb, struct sparx5_router, netevent_nb);
-+
-+	switch (event) {
-+	case NETEVENT_NEIGH_UPDATE:
-+		n = ptr;
-+
-+		if (!net_eq(dev_net(n->dev), &init_net))
-+			return NOTIFY_DONE;
-+
-+		if (n->tbl->family != AF_INET && n->tbl->family != AF_INET6)
-+			return NOTIFY_DONE;
-+
-+		port = sparx5_port_dev_lower_find(n->dev);
-+		if (!port)
-+			return NOTIFY_DONE;
-+
-+		net_work = kzalloc_obj(*net_work, GFP_ATOMIC);
-+		if (!net_work)
-+			return NOTIFY_BAD;
-+
-+		INIT_WORK(&net_work->work, sparx5_rr_neigh_event_work);
-+		net_work->sparx5 = router->sparx5;
-+		net_work->neigh = neigh_clone(n);
-+		net_work->event = event;
-+		sparx5_rr_schedule_work(router->sparx5, &net_work->work);
-+
-+		return NOTIFY_DONE;
-+	}
-+
-+	return NOTIFY_DONE;
-+};
-+
- static void sparx5_rr_leg_base_mac_set(struct sparx5 *sparx5,
- 				       unsigned char mac[ETH_ALEN])
- {
-@@ -2813,10 +2925,15 @@ int sparx5_rr_router_init(struct sparx5 *sparx5)
- 		 ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_SEL, sparx5,
- 		 ANA_ACL_VCAP_S2_MISC_CTRL);
+ maintainers:
+   - Jonathan Cameron <jic23@kernel.org>
  
-+	r->netevent_nb.notifier_call = sparx5_rr_netevent_event;
-+	err = register_netevent_notifier(&r->netevent_nb);
-+	if (err)
-+		goto err_workqueue_destroy;
-+
- 	r->fib_nb.notifier_call = sparx5_rr_fib_event;
- 	err = register_fib_notifier(&init_net, &r->fib_nb, NULL, NULL);
- 	if (err)
--		goto err_workqueue_destroy;
-+		goto err_unreg_netevent_notifier;
+-description: |
+-  Ambient light and proximity sensor over an i2c interface.
++description:
++  Ambient light and proximity sensor over an i2c interface. The STK36C61
++  additionally provides RGBC colour channels.
  
- 	r->inetaddr_nb.notifier_call = sparx5_rr_inetaddr_event;
- 	err = register_inetaddr_notifier(&r->inetaddr_nb);
-@@ -2855,6 +2972,8 @@ int sparx5_rr_router_init(struct sparx5 *sparx5)
- 	unregister_inetaddr_notifier(&r->inetaddr_nb);
- err_unreg_fib_notifier:
- 	unregister_fib_notifier(&init_net, &r->fib_nb);
-+err_unreg_netevent_notifier:
-+	unregister_netevent_notifier(&r->netevent_nb);
- err_workqueue_destroy:
- 	destroy_workqueue(r->sparx5_router_owq);
- 	sparx5_rr_fib_flush(sparx5);
-@@ -2890,6 +3009,7 @@ void sparx5_rr_router_deinit(struct sparx5 *sparx5)
- 	unregister_inetaddr_validator_notifier(&router->inetaddr_valid_nb);
- 	unregister_inetaddr_notifier(&router->inetaddr_nb);
- 	unregister_fib_notifier(&init_net, &router->fib_nb);
-+	unregister_netevent_notifier(&router->netevent_nb);
- 	destroy_workqueue(router->sparx5_router_owq);
- 	sparx5_rr_fib_flush(sparx5);
- 	sparx5_rr_router_legs_flush(sparx5);
-
+ allOf:
+   - $ref: ../common.yaml#
+@@ -26,6 +26,7 @@ properties:
+       - items:
+           - enum:
+               - sensortek,stk3013
++              - sensortek,stk36c61
+           - const: sensortek,stk3310
+ 
+   reg:
 -- 
-2.52.0
+2.55.0
 
