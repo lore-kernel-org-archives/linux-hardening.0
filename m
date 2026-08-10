@@ -1,132 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3685F306B3B;
-	Mon, 10 Aug 2026 18:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C171442B1B
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Aug 2026 20:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786387049; cv=none; b=NYDAdW3udYUtlecDEfbRQAU+D/FAY84uz2URuMnGDUcwQoPScsu9e6R/tOZxc5Bm4Ot22+OC9NUPAA8fyiVLGYqBx+QW7LoytDZDJ/mhvlGAFBq3FYWoOT+v4zt/ur9MdPMa970PoUf3dN29LyDvWZhwyvCfs5bvKv9v50Oau28=
+	t=1786394493; cv=none; b=HT3cxenauXvVPfafkz9aR9EsfvSbdZCh1NC1InMoLHZ0hoBtmjkC86n4QBzRoH4UWAvaTr/JTyTf06hDfpC7kQav3n0XAmuE8r2LqNoGDzJl9FghgC2/kEXZhsLXVUwdBF59NpCyd9bWG0af0I+92MZH9ccbG8kVgLoiCwZVw8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786387049; c=relaxed/simple;
-	bh=fCJ3IU6wY98UeZ2VxZeJrOZZPe0TGlme/Eo9Mkvpung=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=irpbh1tgiKM2J1s84/feJ46gLFhav17wsSreULSZQY8lcbDcGJ7sLlYXXtWwyhxOOpv73Jr8ZNsihCZG0DxUze5eVXPbC2yz+6OQHjMtNS/LCR3jTGOCU6xbeR+biCOcc9+C2+W6smKRp5nAtrZ3IUK+QVTeXRHlvNTZO9HREkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h9XDqUNc; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1786394493; c=relaxed/simple;
+	bh=pFQD9MFc4A7vMMm3znX2ZQ/fMcPWFpch65waZMmi/CM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 Cc:Content-Type; b=fdxDAzisQyfwjr0KvOLPREU0a8ZGV81VWWKjSjo4UBLDeDb+OBueACpdUDqwNw3gUCg4ll2roweb2LVH2mGtBkjXjJ3W6Yo19Tc/o7d2nJc/z7tR5hiJ905Cbjij6ANR4o1YS4XohKM76f/a03oRkyDDme4jMER7XXCt4cXMdI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ix1jsaBp; arc=none smtp.client-ip=209.85.214.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h9XDqUNc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786387047; x=1817923047;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fCJ3IU6wY98UeZ2VxZeJrOZZPe0TGlme/Eo9Mkvpung=;
-  b=h9XDqUNc+G1dcbOgz620L/o+1A40O/9aPkETy6866AWxduu078SoGR1Q
-   cGI8wYO+MrWxUzGtgUHIcMDs2KluHtfiAGQcwBg1FvYo+kuqYOm2J76ru
-   3po0aAOFbQB8DTPVctvLVS/CFoS7bvoXnePU1oqomOFLnBUNeVkfumA2P
-   Baf5G8Fjhf1m/5JS+BJ9Cfp1Bcd2OdHJDZPphRiATY/IMfCEtMzeF7XiT
-   b5TQAZS/wukZllYffChv4+vqIJI44s6XbgNA5gvXXEdTIdmt6ki4xUnjT
-   8a+JYwwV9Luz9Ai1EuIZ4ocGt8stFLGlTTiY2q/TaUrdJ21IBI7Wq+MN2
-   w==;
-X-CSE-ConnectionGUID: CMC4Ta7ySWKyazPVhEd/eg==
-X-CSE-MsgGUID: 5sytLKOTQI2PjzF2vF7M9A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11871"; a="90724956"
-X-IronPort-AV: E=Sophos;i="6.25,216,1779174000"; 
-   d="scan'208";a="90724956"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 11:37:27 -0700
-X-CSE-ConnectionGUID: Dr8OJFLqSseG5yxhQREAOw==
-X-CSE-MsgGUID: rN7lVtyZQ/GXQ6g9EdOJ9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,216,1779174000"; 
-   d="scan'208";a="259267928"
-Received: from conormcd-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.244.99])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 11:37:23 -0700
-Date: Mon, 10 Aug 2026 21:37:21 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Luca Weiss <luca.weiss@fairphone.com>
-Subject: Re: [PATCH 3/3] iio: light: stk3310: support the Sensortek STK36C61
-Message-ID: <anoaYQNHKSNE8Pci@ashevche-desk.local>
-References: <20260810110423.41697-1-jorijnvdgraaf@catcrafts.net>
- <20260810110423.41697-4-jorijnvdgraaf@catcrafts.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ix1jsaBp"
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2cf1c86963bso2757715ad.0
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Aug 2026 13:41:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786394491; x=1786999291; darn=vger.kernel.org;
+        h=content-type:cc:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TEfuVEjGYGEogEAHeBDsRpCxcd7/D4XhwfU+1h+Q/ks=;
+        b=ix1jsaBpWEe//RJdvGX7Lyiirw4HtQN2Ym/FEDxpBrxcJAuiRcUddZSSwgnMOLMjDX
+         8NJsrlNX71uJ1+d5SORB/KPATmtqow+q1+qkLDITGgHlGCZ4nTi9EI8DaabgxE+Z6TOO
+         vw/d03PwXJ18oPJjD/NFZu8TGMR5kWhCzCubGcrOKiMaUTuJJKiPh17Cj41SwwgxMzs4
+         pFxIgLDI0raULDzYSYTdxepsQ5REf3icghHcEKXZ29g9/xM7mcU1MUmQecLOgwW47v8Q
+         diUTm2KvHwx6RCdHqJ10NnbkDhR0YB3JNjd50HSDmDlUJC1zkO54iI8EY7dZsyp1bYw+
+         8wag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786394491; x=1786999291;
+        h=content-type:cc:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=TEfuVEjGYGEogEAHeBDsRpCxcd7/D4XhwfU+1h+Q/ks=;
+        b=TbvUqazcyIgDZxSP/XTRK1aqQXCO8TlokL7Oy8Fz2msfd4SXTlYNNI9iuRBWbpYJKh
+         mK/EdtZvrKdj9Cf2zB3WRCfFgIjvFm9pkY+ChHR49K19c/PC2iorQCp4N1S8JMyctE73
+         gJ76ayGUaW8KQ2jPv3AfmJXg1QpGSvEjK3defmLaj7X+7xLpjz9lf0FRbGHPO4DHRZ2o
+         GqWZSRhAFQBMaiRUxgNBFXAd6uGoFde04qE53XA1bTP1coSs1oB6w6OXoyG4f5mXFmxm
+         mdZFy5JDQo6vrelJfh0I4HtPyuOgvfI/0kGTA/aAB7LPBHSfpVCBUF/4dhSnRO20K2CR
+         tyFA==
+X-Forwarded-Encrypted: i=1; AHgh+RoxEtJbNqm/QwIQUgOiffoGVHd5amn/cIE9MuKcPbEILc7N/9zXiVuCNs5vxTEcH4mFAymuXSwoMXDtkMXnrHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy943LFRCtD1j5v5nc9R+OBEkNH9Bd+wjm7eG8+uNFiMOzKSitf
+	YoymSmB+f3On82xQe3PG+9ydgP+67SO/9Lv3WcGV8IYM99fsy5BFnow/l/gG2aFrO4q2htvnYkY
+	+
+X-Received: from pjab15.prod.google.com ([2002:a17:90a:100f:b0:381:171e:961c])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d0e:b0:390:b3c5:e2c9
+ with SMTP id 98e67ed59e1d1-392d61cf225mr489608a91.17.1786394491093; Mon, 10
+ Aug 2026 13:41:31 -0700 (PDT)
+Date: Mon, 10 Aug 2026 20:41:12 +0000
+In-Reply-To: <20260810204118.1981755-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260810110423.41697-4-jorijnvdgraaf@catcrafts.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Mime-Version: 1.0
+References: <20260810204118.1981755-1-morbo@google.com>
+X-Mailer: git-send-email 2.55.0.679.g6767b8d81c-goog
+Message-ID: <20260810204118.1981755-2-morbo@google.com>
+Subject: [PATCH 1/2] vfs: Annotate struct fdtable's fd field with __counted_by_ptr
+From: Bill Wendling <morbo@google.com>
+Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Aug 10, 2026 at 01:04:23PM +0200, Jorijn van der Graaf wrote:
-> The Sensortek STK36C61 is a 3-in-1 ambient light / proximity / RGB
-> colour sensor (chip ID 0x95) found in the Fairphone 6. Its register
-> interface is compatible with the feature set this driver uses: the
-> STATE/FLAG bit layout, the data and threshold registers and the gain
-> and integration-time fields, verified on that device (the ALS and
-> proximity readings scale with their gain and integration-time fields,
-> thresholds written through the event interface read back from the
-> chip, and the FLAG near/far bit crosses with them). Add its chip ID to
-> the known-ID list and the device table entries.
-> 
-> Whenever the ALS engine runs, the chip also measures four colour
-> channels, laid out directly after the ALS data as 16-bit big-endian
-> values in R (0x15), G (0x17), B (0x19), C (0x1B) order; the R, G and B
-> assignments were each confirmed by the matching channel dominating
-> under red, green and blue illumination, and clear by its broadband
-> response. The ALS data register tracks the green channel exactly.
-> There is no public datasheet and therefore no counts-to-physical
-> mapping for the colour channels, so they are exposed as raw-only
-> intensity channels; the gain field the scale attribute controls does
-> not govern clear either.
+The 'struct fdtable' holds the file descriptor table information,
+including the current file descriptor array 'fd' and its size 'max_fds'.
+To harden the kernel against out-of-bounds accesses, we can annotate the
+'fd' pointer field with the '__counted_by_ptr' attribute, referencing
+'max_fds'.
 
-...
+The compiler uses the '__counted_by_ptr' attribute to track the
+size of the memory allocated for the pointer field, enabling
+runtime bounds checks under KASAN and fortified functions. There are
+three places where a 'struct fdtable' is initialized, and in all of
+them, 'max_fds' is set before the 'fd' pointer is accessed or assigned
+in all allocation and initialization places.
 
-> -	if (chan->type != IIO_LIGHT && chan->type != IIO_PROXIMITY)
-> +	if (chan->type != IIO_LIGHT && chan->type != IIO_PROXIMITY &&
-> +	    chan->type != IIO_INTENSITY)
->  		return -EINVAL;
+No accesses to 'fd' occur before 'max_fds' is set, preventing any
+potential runtime false-positives or panics due to uninitialized count
+fields.
 
-Is this now a duplicating a bit with the below choices?
+This patch was generated by CodeMender and checked by submitter.
 
-...
+Cc: codemender-patching+linux@google.com
+Signed-off-by: Bill Wendling <morbo@google.com>
+---
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Kees Cook <kees@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+---
+ include/linux/fdtable.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  	switch (mask) {
-
->  	case IIO_CHAN_INFO_INT_TIME:
->  		if (chan->type == IIO_LIGHT)
->  			ret = regmap_field_read(data->reg_als_it, &index);
-> -		else
-> +		else if (chan->type == IIO_PROXIMITY)
->  			ret = regmap_field_read(data->reg_ps_it, &index);
-> +		else
-> +			return -EINVAL;
-
-If you want to keep a single point of return, use
-
-			ret = -EINVAL;
-
-here and below in _read_raw().
-
->  		if (ret < 0)
->  			return ret;
-
+diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
+index c45306a9f007..3a5c88291125 100644
+--- a/include/linux/fdtable.h
++++ b/include/linux/fdtable.h
+@@ -25,7 +25,7 @@
+ 
+ struct fdtable {
+ 	unsigned int max_fds;
+-	struct file __rcu **fd;      /* current fd array */
++	struct file __rcu **fd __counted_by_ptr(max_fds);      /* current fd array */
+ 	unsigned long *close_on_exec;
+ 	unsigned long *open_fds;
+ 	unsigned long *full_fds_bits;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.55.0.679.g6767b8d81c-goog
 
