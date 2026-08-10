@@ -1,121 +1,122 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C77B39281D;
-	Mon, 10 Aug 2026 13:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7AF429822
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Aug 2026 16:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786369534; cv=none; b=FwjcAtvl4JybNTG/dp318XYN8gPxdDoPpg7IWrvbexoQY1ecEhL44L+O1HyTsyakhdNqZL4Y0BioLpAWZ/IKXzfbKltui17BUDjL6VeuKtnP9Tlg8boNpBSvjaVPNoSnFH8nDW+el1ZL9upurn4EgMR/Tq/3xRJaXJM8OeJ2yx0=
+	t=1786380964; cv=none; b=ZaCthyCcpwdz5eKP9RRenkpw6ZFie6l9TKDx6QHkfQNwWWX56LMrcfK+uOMIy4Rz3PMdJtjIZNQ4qZSDDSOQM8UVQ3J8vlYfmSsYhNINmUnungPozFEwvtHBmS+C1k4cQKurem3DogV+M9GFFXcZv3JEhHnea5myPmz1tkc+juo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786369534; c=relaxed/simple;
-	bh=ZVC9hqwNLYXhTu7K3JcH4RET0yoqZoR939Fl0i+siRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xzjp5S5QrMJJM9AKXIZYuRW0AMWQHSzfY8XFgmYXwzcR7a4PEP+aMSLR8tP8o44oNd7YDt0UGXJib81ffaKmXlVRe3esFMGY7Hmb0cCtcV9oeGMoQyf/vk2vxWKwE7+sus/iQJ2y0vjXXKzKv1K8oGtS83EFyN1elbJE48MALVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=M5TJQhDa; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1786380964; c=relaxed/simple;
+	bh=RWuj8qnf3rFbnhiUgB4rT985qfCrivQ22YvDzPsKCWo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cEOz3SN6Yng8RRydOgIjAP5mBfg55W2W76R6pp3LvnGob3YWv6BCjcSqYWmWCr3FHUIUkbuipAAKWCY2AxD7O+mtB0wbe5gQ8koGLS/9XtJZGYIm9jOxPU+NVC7zHcPdKxHHPhMRPUs/eDXZnWdDVaAUf1GEB74wZ/CbL8+u8gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fje3fzWU; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="M5TJQhDa"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B537C40E029F;
-	Mon, 10 Aug 2026 13:45:27 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 1ayom8aGKanv; Mon, 10 Aug 2026 13:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1786369515; bh=5gskXmXFQax6RkQ9XQrDZ6g7ObBgi9GrbHp5Ul4Fa4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M5TJQhDa4pYw7N+V4bwclBils9xRXhycFyRgy53FwVwXjpnc0Sa313xMPvjZ0Sq0n
-	 sNAbhBlb+kx6NeYM9k2vIWYzGBtp0bmIujN6d10p45kEh9SSm5RqQBW7/6OzmhYYvQ
-	 Qi1VHo+FqvcSARrk3UqeYdzzKGbW/pYJJDf//pbvNV82cyXE2GhfZTnDviKxRjE3Zy
-	 fTyVMgdB1JcFG4tM+XDEY1VevqKrXFa2IeRqU6Qoe2zimUpVrYii/nI3eZpZhpKMjl
-	 SxqJNgRA1cHSvdAfQNfONqUpfB6Sri+LPe2Ep0eYfSDCPCMyNnR978Y+Zz98CpgzSp
-	 aXW+EF2Oh1XrqOVAJ6uY72dOf/y0/+Mp/7mKXVZymwXWas7sAxFCT1hMqvNwcQd2WP
-	 Lk1Yu4z190FFOxDVeZslRkqt+6eraYt/L7oeXapzq6TEgkiPS/qyy7MswdS13lnHIq
-	 1RlgKzjlyrmfXgebR9vCuLE4cYe+QSeNOIUu11GSPU/3KXD7n/7GTxVWm7fo0ZnlvA
-	 ZqdWof7dKLWsbVMtaijY4AL1PUz5ltOZw0yZCjqjdm2O1pCTvOM0HKIi+hALPA5tS8
-	 VyYoooroPiYmpfdWmV2RzYLWNCmO3dlWqxoQir7OWy8UhOLbcAhkd6JM7dEtilO1oD
-	 HIjoM77Aeh2zz3LAylT31WLI=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::1b])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 42CD640E019C;
-	Mon, 10 Aug 2026 13:45:09 +0000 (UTC)
-Date: Mon, 10 Aug 2026 06:45:06 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Robert Richter <rric@kernel.org>
-Cc: Ian Bridges <icb@fastmail.org>, Tony Luck <tony.luck@intel.com>,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] EDAC/thunderx: Replace strlcat() with snprintf() and
- seq_buf
-Message-ID: <20260810134506.GAannV4uJN0I1UXh0q@fat_crate.local>
-References: <akYJUdY1hVABUQH6@dev>
- <amppKvK6mIJRmoL8@dev>
- <20260729230035.GDamqGE9bKD5ncU6ZV@fat_crate.local>
- <annRsN6UBDPsFLr2@rric.localdomain>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fje3fzWU"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-495635a85d2so18792105e9.0
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Aug 2026 09:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786380961; x=1786985761; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=13b3qYKMb3EC+1kg3FPioAIArReTTwfbQhljZ1qVL6Y=;
+        b=fje3fzWU5nJN4VsCug2NZN01UoT0kOzlYC6EhzRBAXaJvHsQusCAx795TtB5kJkova
+         x1gCkGk/0qw/7UPZNnKWk5kFvFjy+gYs5WOIyKryJZOIZeOIuoGnIQ1DwnIUEqx4MzON
+         YtZcoY6Knop5W5bJPyYIxfsnxSMO9zzPV2WHYbly6YEUctsGLfq5HD/OtFBKNUzrmX1z
+         e/CFIfF0JMRaH0mI7BR5GI7yWQFwhK/mD/Zgmtgqzt5RoXEGC7HUkDGplUKVdzXY8FGv
+         PlG71VSRI7tC9yYSEVnv18hqauF6sQEETxdAm7JuN6RRkOkDaUbIEKdguYpgqSLviKWY
+         mqsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786380961; x=1786985761;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=13b3qYKMb3EC+1kg3FPioAIArReTTwfbQhljZ1qVL6Y=;
+        b=YHbiUum+fm8O9Xyxmsf6YiCuLnU34tsyEcflrh/4OuX7kEuGm4M8ZoBx+NonkZLjfO
+         08xBnIeG8Oi68v17O2lIH/CzlXguo54OdPQ66KyuciPPhLb++KWy8uQcQc/7+Yodsnol
+         w/6HWfdtH4h9x+shIoq0iVLudQniAvEG8xpu2rHY8Sz6GeDTZphnk7E6krQwVd+Jm5ud
+         nW+mC/8gERintGOCosfBiYsaGTAUuGIXIygIvm5fCsBpe3E2oaHnyU4DOJbT2+7JpkRM
+         odOTCQcCsf8khAtAES+x5HWVDVBK1SX1vU/Tw3u3Sb0ZDm5XZSXphkr74i8AQSdKl1RZ
+         +wpg==
+X-Forwarded-Encrypted: i=1; AHgh+RoI0sTknHUxi3Den2RwLolB9+qOzewjd/CiB5JS6pGCq7OZEotColKh2pfQwf53KqtoBzYIAupgaOt3sD8Py5Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywu1HVp6j31hfCzJgswPvhPDPkUMotGjvzJlpJwc6rFQ9sRJo6d
+	H+ttcb0r+hZJURSsuCGDbBCPG0q6rmq6S1Gqfvld617nO4Fr6Ky8R62G
+X-Gm-Gg: AR+sD11ujCi/V6wr8GPS1/ItNgu1mTvcCH+HbdnxirLTanAv8xVYPrb2gTrIY4wot0g
+	BA1tBTRYFYVM8zzRUchS1OriZJIJFNTnAEWpC/z1d1NSz0Q3HPht2fYIbv+yAIKJU96iVsx8+Gw
+	1nK8Cu5JWJnlB56ICiE2u5bnjDk3nv0eG+x+Xpzs4dlYKG/Vol3GGrNTq9f8meYJI9CISuykzYZ
+	TdOTebLuTIYgsx83LmImwCyvhgcUstaKQ4gw+S4yIUrfn2HWJ6Fx7Xstyt1uaTGMX+hyYXMkbRh
+	fivheWvSRJkcEUJxODImDSx9KZVOFXbJUJ2A+DHXtXBjqp+spFm8pNKBSZ9xNJKAjBw3dMqgKQa
+	uG7WgtGM4pP4NB7a3ckBMxtbvfBPGpIH8dl8L01x96bBqcpmgGu1lHas30ngxjcNRzD5225drU7
+	J60buu8KNrhOneWbTI4hg0ufA5K3LuZudLalsW+YtOztPaOWDaaCObVpu1Eqa91pjwEaxGkuOLt
+	jpj5fA+cEvak7P+1jyjNC8gf8vxHuqgGZg=
+X-Received: by 2002:a05:600c:3ba6:b0:499:48be:3189 with SMTP id 5b1f17b1804b1-4994e6c065fmr548621365e9.0.1786380961346;
+        Mon, 10 Aug 2026 09:56:01 -0700 (PDT)
+Received: from [127.0.1.1] (83.31.73.193.ipv4.supernova.orange.pl. [83.31.73.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4995c69c8ffsm238472635e9.2.2026.08.10.09.55.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2026 09:56:00 -0700 (PDT)
+From: Adam Skladowski <a39.skl@gmail.com>
+Subject: [PATCH 0/7] arm64: dts: qcom: Add 3 new devices
+Date: Mon, 10 Aug 2026 18:55:33 +0200
+Message-Id: <20260810-next-patches-v1-0-79a779d76173@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <annRsN6UBDPsFLr2@rric.localdomain>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQ5AMBBA0avIrDWZWpS4ilhUOxiLkk6JRNxds
+ XyL/y8QikwCbXFBpIOF15ChywLcbMNEin02VFgZbDSqQGdSm01uJlHGeuM1Yl1bhJxskUY+v13
+ X/5Z9WMil9wH3/QAvQcMjcAAAAA==
+X-Change-ID: 20260810-next-patches-6ad6d10077a0
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Adam Skladowski <a39.skl@gmail.com>
+X-Mailer: b4 0.15.2
 
-On Mon, Aug 10, 2026 at 03:27:12PM +0200, Robert Richter wrote:
-> However, the driver has several issues. I asked Marvell a while ago to
-> take over maintainership, but never got a response. I don't have
-> hardware to test changes. If you mean to mark the driver obsolete, I
-> am good with it. On the other hand, the issues found may not actually
-> trigger and only affect a single system. If we can live with it, we
-> could leave it as is.
+Introduce support for 3 new devices:
+- Motorola Moto One based on MSM8953
+- LeEco Le2 based on MSM8976
+- Xiaomi Redmi 9T based on SM6115
 
-I am sorting out stuff which needs maintaining from obsolete gunk, which is not
-used anymore and which doesn't need any maintenance effort or no one cares for
-it anymore and there's no point to waste precious resources for.
+Device trees besides enabling most of supported hardware also wires power to
+subsystems like MDSS even if those are not enabled to lower maintenance burden
+on out of tree forks.
 
-So I'm going to do this but we can always revert it if someone shows interest.
-
+Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
 ---
-Author: Borislav Petkov (AMD) <bp@alien8.de>
-Date:   Mon Aug 10 06:40:13 2026 -0700
+Adam Skladowski (7):
+      dt-bindings: vendor-prefixes: Add LeEco
+      dt-bindings: arm: qcom: Document Motorola Moto One
+      arm64: dts: qcom: Add Motorola One
+      dt-bindings: arm: qcom: Document LeEco Le2
+      arm64: dts: qcom: Add LeEco Le2
+      dt-bindings: arm: qcom: Document Xiaomi Redmi 9T
+      arm64: dts: qcom: Add Xiaomi Redmi 9T
 
-    EDAC/thunderx: Orphan it
-    
-    Robert doesn't have hardware to test patches anymore and no one else has
-    shown interest in maintaining this driver, so orphan it, for now at
-    least.
-    
-    Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d413dac5c8b3..671515d21bfc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9308,9 +9308,8 @@ S:	Maintained
- F:	drivers/edac/octeon_edac*
- 
- EDAC-CAVIUM THUNDERX
--M:	Robert Richter <rric@kernel.org>
- L:	linux-edac@vger.kernel.org
--S:	Odd Fixes
-+S:	Orphan
- F:	drivers/edac/thunderx_edac*
- 
- EDAC-CORE
-
+ Documentation/devicetree/bindings/arm/qcom.yaml    |   3 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/qcom/Makefile                  |   3 +
+ arch/arm64/boot/dts/qcom/msm8953-motorola-deen.dts | 443 ++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8976-leeco-s2.dts      | 444 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm6115-xiaomi-lemon.dts   | 440 ++++++++++++++++++++
+ 6 files changed, 1335 insertions(+)
 ---
+base-commit: 6b8c8af514d739d0335f5579b585e02babe8a727
+change-id: 20260810-next-patches-6ad6d10077a0
 
-Thx.
+Best regards,
+--  
+Adam Skladowski <a39.skl@gmail.com>
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
