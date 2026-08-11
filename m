@@ -1,167 +1,124 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DFC448D1B
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 14:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786457575; cv=none; b=Hf4HQGJHhXOm1GhRlV6TF367W2mJFh+IgCV0ho3AIa+CceX9uAHk/kH+6fIP3EIHvb6LS88dEQSN6INuH4L4KLsiQrPFIudAa7gBUWY6nSBd2414fFzDz5VkqwAcqVRWPiNHTy4ak7csKtdjMBT9/A1ty8A6z5y3Ep+UyqGCUuE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786457575; c=relaxed/simple;
-	bh=LjIubD3Zg+wcYFo41RfpwdNGP6TjBzaPkrqdHz0k0BI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N6KPsZOTKgfTqpbW3W2Ia9EhlKDCaIad1RTztRn4THoxs/KmB/Vh5WnMVWSrstjkhQHFsL/mz3zt85Ltpr/nJJIaAGTJV8ed/0buUivaGOcs0HKBO55DNAD6XuvFJT1u7Pnz0KPdaNb/vnWx4nhvh2KCFuOvBkMw0gLle5MB55c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PYL6kqQ4; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27403932F9
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 15:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786462966; cv=pass; b=fzZJ2YQ6vwOpuxykB5aDeRbp9C0jLyWvrM/NEWFcY7AOg+Oe3Hvuaf8aSd+x8HQZkYFSjL17hM6SRYJrPvLjh+dUdNg6yM6B1sRB+gFVq9oT2Eb5WOlR1NCJirsYlJ3/LGz3qpM9kFNsO9E/uRVaH8LZft19T7z+LCqsRoYu3ew=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786462966; c=relaxed/simple;
+	bh=WK32yOxbLjB3jonpeVMeBQOLae3OsMqNjNC0RLtddE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sWzUrNTmh71ok4TBwYVs/j7C+NMJLXNSBRt6zjQUvhW7BjoN5qe/BwiIe3e/tCSONAyUnj9KgeHAd2ZIB0Y84iICrhvrO++6kDQ6snOJASRMMrCOE/+rBA9nGhQAY80PcVoZXAr4ryNEYzxaTNgstwuZLkgi/DaeixV25oTS51o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YNSZN/5N; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYL6kqQ4"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-49554ebb87dso29949275e9.3
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 07:12:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YNSZN/5N"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2cede6375caso119615ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 08:42:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786462964; cv=none;
+        d=google.com; s=arc-20260327;
+        b=e5trRKBt8rDQ187nzfhZcjd1z1g9DrqPT6z3V6zVcZQX3Pz3UQ9pVwVxGEwjPW7rja
+         G0a3d/UnmmULlnYYEKfcjlF1sUAu8NJkEZl7cI5N8HlYmKtUOfZJ3Q4GsCteKSVKkPUF
+         iDHhmXAtEtPPxg8gkC0llfwSvFD0MKddfhoz9UMhe4tXoc3AbvRGYcDOtiOQgnA17UzQ
+         ppoIO5O9+xuFxRGQHx2GeNsWNvD49h9Yyvq9G6Azz8FzwvUGr+rVqDAyL6GhGetN1xnP
+         RTxWfSDasZeK3nfGEfSiLJn/ywhhtEPRGGskCGGIpo/vtqMMA8xWzJAu2PI9fBrGR6G+
+         WZlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=67yVZg7Sclh/kMsuis6FMTvEKCWItPaYWqtUQHP9qvk=;
+        fh=S0YZ9vI1R7ubFLzh+N6mwIC+TdusYvyIN4Ow3a8h5BQ=;
+        b=r/fM47S+iJjRpjjWTRkImzkA0AlKN/6rMktKMm8PLbFATQsG5TD0r5K1Zaiwyf7EUg
+         yP2s6nTZQzgc72+O5IjL9gIbWLpWUawXM+h5z3BCD07GS+SBhJvJsEum3xfD7ET4FeH0
+         jDT50kiXOTRfiEFiAeQeLWu9pmd0FXV8kMAa80fO4k5ksbhfCcqmED4RhFFzmgWOdqlo
+         pFxzDOdQyf0Tl3jXB2CHjiJR9cCp2XC2c163Q6Km+Pia21jSXaVlnsriT40XNyrJw0mD
+         07xUcIwzcvWxa6Xb2kxBbP2jzbte1//r85KMQ4XT00ZXKurExhwuBH/NzlcqEdY/jtsr
+         KDKA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786457572; x=1787062372; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=o80QnEVKUcuUdd3OZFAdxnODo4B1zikCcE/tvO9NxHk=;
-        b=PYL6kqQ4cap3W/M0taPR1P8+0VSxhpAFQ082G8vEueVauFYcRZwN6eM49gXJJ8jQLA
-         CZxBeXlPvkzBbRSFWkm7NwhKwlhlNvowEfjLuC9/wYQwt0x3t3DZMBRpoPnRPPfa5DV9
-         KIkZs8C9qwZBluNiEUQ/Vvn60He2lhn7V1TIlAK/sM2+TKmevgb3lJJvbdcOlBfzMxfR
-         RD52Y6D7mriNNHzGzkxUQzfPF+oVzaqmDq/n4VnGMmwtfaktpVYMOYSPB4yFuim33aOg
-         B3on0epkL9FF1H24jBeuxt0c5omPBT71hS5Czqn9YgJtxPuMyM+/tjE506tlAJRbveW2
-         UnlQ==
+        d=google.com; s=20251104; t=1786462964; x=1787067764; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=67yVZg7Sclh/kMsuis6FMTvEKCWItPaYWqtUQHP9qvk=;
+        b=YNSZN/5NgJw/z7Zg9J+BLKVbyKRLOi/wmAfe4JhctaHZ1Yrtzl5zRZN3SKmhCZMw8D
+         smM7gz6x7gm75Bh37Jm54ZW3dBvkOOcXdZrjhjUkOoekA4WUt2fKd5vmhsd+N6iZ+jCU
+         rKJU+5ix9tDW93HGrdh/qrcb977Y2xeGKhi3MsEq+6qYMnJUcBTLNcc7M7SiZW50gjUR
+         mvrXz84TwDnpAoZeKZCKntAVyf3ToUGerdNw+xDf6GI9Kz78iKX72LXPoAHnKfLoBkLy
+         K2aFn7IGRWhhKOFOc1I4G8IOy4sfiGT4sqKiQq87jh5+ibu3DuW/JRk9dob39T3whGYh
+         6g2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786457572; x=1787062372;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=o80QnEVKUcuUdd3OZFAdxnODo4B1zikCcE/tvO9NxHk=;
-        b=qR0njuB/9HB80E0cpkAPLO2G65zApta7n9J/6Bw2emZqE/+F4nh3u0Savm6o8hFJlE
-         FwBkc180fDwwQTHOJACQX9MiJx6YHga1QvRfY9dYDj4Nuu0iDLnBZgepZ7M29jAAGOZC
-         YwNTptyqnLUL45QC9fTfMHxytfrALyGFUVhwtX/F1vj77TAVmoZIml28OXWHUE+ecHsS
-         VpNz0by6oMQpxNfXnvjGbz/FoUmGkdvpYPTOYg03Yy5sKqErVwsZr4YzBgXnb9Ce4OK+
-         pFDQlT1jxSDhwKYhidNuJ6EC1NOuAiIk5WyXsAynsmZjes8d1OKjRHTGDluubNLhSjGF
-         tYhA==
-X-Forwarded-Encrypted: i=1; AHgh+RorKGdnnqZ+9NVb9nfxHgNdwKQCownAHcJL5Wr/otHndE/qcDXSsdthY6coBgUJCCbcjZDPfYmUgpS7g1WOqNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzitSvxbvLPhG4SrfqQ9R7p5lUUtl6x5XJn05ED/rF5RZG9FpGC
-	sqmaeOz5C8+CLWzGE6F9kPBn4CbkwTvCcx3uE0L2Mvx1RgIIMjLS4d/2
-X-Gm-Gg: AR+sD12uA3ThHondOzfSYB9jS0g1TkI+TVK4nfR6YM6IpJoKpp9PWMR8PzAT+x6X3FD
-	Iwix/zxJKmiRdZ+J+oVy62plQh7w5R/ui+lDFU7TlknGK8EEwMyd6L2it4NGmCmzYhyi2Sf3Sm2
-	R4oPD8ydhW54uTUGbdg5rxQSYiOm8e6OLh4O68eBf0eck+sq7zhObZwL5yiTSETNMLK4pZh+Cb5
-	o1UXprSnx6OzMfqCTvBCCLAZtBTvokAojkq3E4bdD+t1EmENQav85XPE1HXBmylnaTi+RfHtJUr
-	5N9mlx8D8Dj0Pajw9z6/oLa7jjr9rqFinBWN9bLzZNV8njljUj0sDfhn0arP0Ew3Xt4jQ1RYELm
-	46NB647dNAI0v/rG9v497hfJS5qvAQm5MVHjOYNaYvCsNb+QP8XKViQf1GM+dBhdfJ22fgjqtAZ
-	MbB0hMfk13KmjRO1V3dAUi2VLC64EyZWO375d4aDPOs8JUX/mtgXfTpLQudpez+TBrR6gQJeTii
-	yrWZLmJ+9pfSHb4UsIJ5PQ9o1Xx6Wgnkp5mZCouRzgU3gID0xWssLC0ToknLRbsN4JB6UH+CO4E
-	uZo6jkWLJuA6VRc9aUpuKD3MdNOwxxc6XBZR/xGPwjEFOnIkttMkS6SBL2wEe+ijwQ02DpiVEQ=
-	=
-X-Received: by 2002:a05:600c:4709:b0:495:4d88:e630 with SMTP id 5b1f17b1804b1-4997844c55emr61209035e9.10.1786457571515;
-        Tue, 11 Aug 2026 07:12:51 -0700 (PDT)
-Received: from localhost.localdomain (dynamic-2a02-3100-a133-e401-bc8e-d36c-2d08-c5e0.310.pool.telefonica.de. [2a02:3100:a133:e401:bc8e:d36c:2d08:c5e0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4814a5be29fsm4464099f8f.12.2026.08.11.07.12.50
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 11 Aug 2026 07:12:51 -0700 (PDT)
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: Vlastimil Babka <vbabka@kernel.org>,
-	Harry Yoo <harry@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Karl Mehltretter <kmehltretter@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Hao Li <hao.li@linux.dev>,
-	Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH v2 3/3] slab: test zero-size allocations in slub_kunit
-Date: Tue, 11 Aug 2026 16:12:40 +0200
-Message-Id: <20260811141240.62519-4-kmehltretter@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260811141240.62519-1-kmehltretter@gmail.com>
-References: <20260811141240.62519-1-kmehltretter@gmail.com>
+        d=1e100.net; s=20251104; t=1786462964; x=1787067764;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=67yVZg7Sclh/kMsuis6FMTvEKCWItPaYWqtUQHP9qvk=;
+        b=Wvomo6//i9PCYEDuwSJtVUN11S1D3rii7oLnr1PFeULkHrDnFE494s9mBPvbp0JENK
+         k6NImht1bvvo3xamq+48VSMMPJNLim9k15U8MF48P5XTdeQgVlJ4AZCrH8bnf57eoiwe
+         bX8OYopLEuSLxuLBQBSXh2zg+lhva5Tnz6sNZAIfde+8IhQNFSs61wviifyt7Vb0YN3E
+         kcNqnDJSBvIgEu9myPwKJayEGo/zX+evwHKi6pzbhU5cF/cFKwXuIVJt61Pd2NM8JWVl
+         6KPPwAMo0NYVUn+P5LziRDYGRFGcajplFqrjFCdSs4cdcJFtTBSeKj/ctL9T7Xdti7fd
+         Aygw==
+X-Forwarded-Encrypted: i=1; AHgh+RrpIal+PMn54jlN1k+mRIkLhHxbVcGYtcnmAnefjIO6svAH6EYwCp9Fou2jlQqpBX/LQ8GYsfv38YVD7UVrl04=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7sazlR0z8XlcR0B3M6DVOIPASBoFBC4uluiyRCD6q9XrI86mU
+	WjAYo2WZVOWjvpzY5qNxJrkjSVeQ4pAuGEFf3hwEpSbzS5FQd2thUzL237mOrWJcVvr6o+LTQYm
+	E5esNu2OFELyX/kkz9+hXK0sSszrWEAvGqBmc7SDI
+X-Gm-Gg: AR+sD135Z+wheeN2DuvxMICkW9TTzw1boH/EijcQI9rgQRle5PCaNWUws/w0SwcH7hb
+	G1Umy+FG8KMccGptJ9xQZPn7BIOp1NhKN+PyIMnQU1UlLXQctXKbKNBb207UCkN1NNmrNRNFVor
+	vgwtC5cbCETYaNIqxSabsZ4JNIodvxIRCNkUWlOW3LbhbNseJ2H22xDs24SPRuUEfnyLglAoz8p
+	UbUtKo1AMKGPI68e1iI/JlJi8siKaOyUXbmYD4eNz8vYtb3FsxbkjQM5PfFnXM6yOkwG/YUDbrm
+	n2sW68J6UcHSOSnL7exe/V8VU3sV8SkhSHp/w3UnHnkSoF8NuCBedxF0nHYquEcPhvLfWAZDgrw
+	bLcQI8Ml6VN9i0nYyjSeG96+X3qfeTsw=
+X-Received: by 2002:a17:903:4b2b:b0:2bd:3bfd:74f1 with SMTP id
+ d9443c01a7336-2d3171a56dfmr5502005ad.2.1786462962320; Tue, 11 Aug 2026
+ 08:42:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260810204118.1981755-1-morbo@google.com> <20260810204118.1981755-3-morbo@google.com>
+ <202608101713.34DEA00E9D@keescook>
+In-Reply-To: <202608101713.34DEA00E9D@keescook>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 11 Aug 2026 17:42:05 +0200
+X-Gm-Features: AUfX_mxNDlgHpFyI6ONdIW4H6ADGwKcPUAc6snIFj_-8RLhUKE1_F9ggNW9ZDT0
+Message-ID: <CAG48ez1VBBkukXH17RRSnAU7rMu0St5x59rkTDVkcMebxuS4-g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] vfs: Add KUnit tests for fdtable
+To: Kees Cook <kees@kernel.org>
+Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add KUnit coverage for the zero-size allocation contract, including
-ZERO_SIZE_PTR alignment and exact ZERO_OR_NULL_PTR() matching.
+On Tue, Aug 11, 2026 at 2:16=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+> On Mon, Aug 10, 2026 at 08:41:13PM +0000, Bill Wendling wrote:
+> > +static void fdtable_test_alloc(struct kunit *test)
+> > +{
+> > +     struct fdtable *fdt;
+> > +     unsigned int slots =3D 64;
+> > +
+> > +     fdt =3D alloc_fdtable(slots);
+> > +     KUNIT_ASSERT_NOT_ERR_OR_NULL(test, fdt);
+> > +
+> > +     /* Check that max_fds is set correctly and is >=3D slots */
+> > +     KUNIT_EXPECT_GE(test, fdt->max_fds, slots);
+> > +
+> > +     /* Check that fd is allocated */
+> > +     KUNIT_EXPECT_NOT_ERR_OR_NULL(test, fdt->fd);
+>
+> Nice to add these tests! Can you add one for each of the conditionals
+> in alloc_fdtable (e.g. ENOMEM, EMFILE, and the power-of-two rounding-up
+> logic, etc)?
 
-Assisted-by: Claude:claude-fable-5
-Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
----
- lib/tests/slub_kunit.c | 43 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/lib/tests/slub_kunit.c b/lib/tests/slub_kunit.c
-index fa6d31dbca166..a02fc6b401e3e 100644
---- a/lib/tests/slub_kunit.c
-+++ b/lib/tests/slub_kunit.c
-@@ -380,6 +380,48 @@ static void test_kmalloc_kfree_nolock(struct kunit *test)
- }
- #endif
- 
-+static void test_zero_size_alloc(struct kunit *test)
-+{
-+	unsigned long zsp = (unsigned long)ZERO_SIZE_PTR;
-+	void *p, *r;
-+
-+	static_assert((unsigned long)ZERO_SIZE_PTR % ARCH_KMALLOC_MINALIGN == 0);
-+
-+	p = kmalloc(0, GFP_KERNEL);
-+	KUNIT_EXPECT_PTR_EQ(test, p, ZERO_SIZE_PTR);
-+	KUNIT_EXPECT_EQ(test, ksize(p), 0);
-+	kfree(p);
-+
-+	KUNIT_EXPECT_PTR_EQ(test, kzalloc(0, GFP_KERNEL), ZERO_SIZE_PTR);
-+	KUNIT_EXPECT_PTR_EQ(test, kmalloc_array(0, 8, GFP_KERNEL), ZERO_SIZE_PTR);
-+	KUNIT_EXPECT_PTR_EQ(test, kcalloc(4, 0, GFP_KERNEL), ZERO_SIZE_PTR);
-+
-+	p = kvmalloc(0, GFP_KERNEL);
-+	KUNIT_EXPECT_PTR_EQ(test, p, ZERO_SIZE_PTR);
-+	kvfree(p);
-+
-+	p = krealloc(NULL, 0, GFP_KERNEL);
-+	KUNIT_EXPECT_PTR_EQ(test, p, ZERO_SIZE_PTR);
-+	r = krealloc(p, 64, GFP_KERNEL);
-+	KUNIT_EXPECT_FALSE(test, ZERO_OR_NULL_PTR(r));
-+	p = krealloc(r, 0, GFP_KERNEL);
-+	KUNIT_EXPECT_PTR_EQ(test, p, ZERO_SIZE_PTR);
-+	kfree(p);
-+
-+	/* Only NULL and the zero-size sentinel match. */
-+	KUNIT_EXPECT_TRUE(test, ZERO_OR_NULL_PTR(NULL));
-+	KUNIT_EXPECT_TRUE(test, ZERO_OR_NULL_PTR(ZERO_SIZE_PTR));
-+	KUNIT_EXPECT_FALSE(test, ZERO_OR_NULL_PTR((void *)1));
-+	KUNIT_EXPECT_FALSE(test, ZERO_OR_NULL_PTR((void *)(zsp - 1)));
-+	KUNIT_EXPECT_FALSE(test, ZERO_OR_NULL_PTR((void *)(zsp + 1)));
-+	KUNIT_EXPECT_FALSE(test, ZERO_OR_NULL_PTR((void *)(zsp * 2)));
-+
-+	/* freeing the sentinel must stay a no-op */
-+	kfree(ZERO_SIZE_PTR);
-+	kfree_sensitive(ZERO_SIZE_PTR);
-+	kvfree(ZERO_SIZE_PTR);
-+}
-+
- static int test_init(struct kunit *test)
- {
- 	slab_errors = 0;
-@@ -404,6 +446,7 @@ static struct kunit_case test_cases[] = {
- 	KUNIT_CASE(test_kfree_rcu_wq_destroy),
- 	KUNIT_CASE(test_leak_destroy),
- 	KUNIT_CASE(test_krealloc_redzone_zeroing),
-+	KUNIT_CASE(test_zero_size_alloc),
- #ifdef CONFIG_PERF_EVENTS
- 	KUNIT_CASE_SLOW(test_kmalloc_kfree_nolock),
- #endif
--- 
-2.53.0
-
+Wouldn't tests for stuff like the rounding-up logic get into
+implementation details too much, and break if implementation choices
+change?
