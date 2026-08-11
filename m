@@ -1,94 +1,60 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFC231D372
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 05:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F278F3FD139;
+	Tue, 11 Aug 2026 07:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786424589; cv=none; b=OrmPu2GfvX+5rP28R5mFCXTi/lGVhOcZZsxd0ICTwPUvdr87Gd+mt9vU9fUc0ont7ES4Id6ImTdeZHpHlXKqfLpHEwS/T4Z0tesD0mt71iKJ+lkv650FNgsoT7IRo98qZGK43R0dPsHpMH+wEzEZOLhrraVrDBS92qSkK7fVsK0=
+	t=1786432415; cv=none; b=QChqdg8XYDhijYRMOjLMpcdelut1fMVwFCEEJK6HO/R/T5172S1bdbhBzu00yzbg2oaPI6uARKBvYZwHrS8ouRcIk2D1keyyKaWz/2kI7ldprloSfj7rg9PgpxXHJGdhwwyNDMslON6ATrBZ93aaaUvvTrZbfwj7pf8p4vjz0Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786424589; c=relaxed/simple;
-	bh=GfzBwg4ZHphT0HU4JIpIzgvGvublxLx3VU0uduAtHN8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BvPnneVzIY4E+bFeby0hwcQV6uKexeeIQ2ceaSdFDYJ4iMWsQs7BwA+NnFl4//1H9d98GaWN+TeYym4I+2Xx53FGrRzdJoTecLTkB95KC/+bbeAaimzai/OFqoyhZB7YyvadG9PS7mbgmK0jtJL/CTwKE3KfSYzh6RZ24nohdgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SINizHnq; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786432415; c=relaxed/simple;
+	bh=dKEAzoTxrnJRUnozAVrRr9+kPAXymWDr63g8YhYfYFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EqMkhws1NNR17PCqxZaRzLY73Mpl9EUB/3DJy96pDHPKVzZaHWp0N/oFaE4fpJNaqULlu24gNfSTaLsnx+0gQdIHaUPzWlfp+buev+TMT57J3Zf1D2S8km7Ky1tI8sYZa8soPZD6glvOChYWDdYjA8+A/2ExHwvlpf1O3FRdGpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GPzKR31z; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SINizHnq"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-c981c2c37cbso1921692a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Aug 2026 22:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786424575; x=1787029375; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=/70XqHwKtpkb8Nem1mvPAp3age5VnZSIpQXUrCBp0Sw=;
-        b=SINizHnqCGCjyEBUdA2HTT8VNbxB6jGkoPBjT1PkxzNvfoAEEWJ+EF440Pvjo9VdLC
-         dOVcum7R+XjGAFnFDjGKkPSh7YMIhpclrH0J4YOZoqM5USz/Qr5M6M57AJZbThdo7LHN
-         /IR0qIEUcuGSS9umTLdeex/Hhkj8Sx8yOjX295VvScNJxrF1KdRrWLLv6djCCFkM2psu
-         m4o+XxgcKsusz5dZkl+JSqjikHyrEk/YdDmcKHpUNdGX2FbnoAHk86yPHtVBE+VC9YHT
-         cmLW3kF02QFyaO2GqgCkdvJJkSB5sBan1LykDnxQr8sbKLgUgsGdeEc9NX5j7MX2OejW
-         No3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786424575; x=1787029375;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/70XqHwKtpkb8Nem1mvPAp3age5VnZSIpQXUrCBp0Sw=;
-        b=SVNrE2X0OhvI0mWutZxK2JrU8pB5UhN/ctLyysqWz8J0BNSKOTJ/+n7Oofh7E2jTIh
-         N1CbdQ0JJxVI8JY94BKDQwFNPleGvlaveWhtYNfAr/C5UrdvSjHLwLUAbhUVICgMTm3f
-         CQUAgisKHE4yamUrI9xgYosm0sk+e2HSOxtB4PYA09VvzVieHbmKc/XbvQF+/uixVoGz
-         wuDvE5zSRl8EQbyukLZfR7i1Ak/tqtoOsd0CKL+8tnE/cgf4gGI6zxtVY7nN6vq64gBj
-         5NBorrntqo1jFn3T/Tlw+WzOn7f1mJST0B865L3XLfhMskIR2si9l6nScpgS/4YqauFO
-         Yuhw==
-X-Forwarded-Encrypted: i=1; AHgh+RqIkHynrDHTHrwLuuDhP0fkREg54fIvYFe+P8qTDNqZZ6/exhJKDMRnKI9J41tm0s9ozUhilnJDfM1xcJLBEaI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJLIbprebboHmkTa1eNT1xrIA3HX5DfWJ1RTXM34FYbGWzTCok
-	KiopY1q+U2tiaTLUgrXgx2q0gDuv1IosdGepgFY8HP8N+r7xKpyH3Lkx
-X-Gm-Gg: AR+sD12Fmcu/88AEdMlHt88Xp3qVZsZgeXgGp2soJ+Rw1kql/C6jpeIie4Uby8AFCCx
-	iWTgsbwDmroDgon5fueEgvqbbHklhA4j/cpZ0ajJrhl5X2zU7vpB8tRUask7uZ+Y+I9264fw1FO
-	66SMDsf0OthcAc9fKuD6Zblr4OX+ie6lLtw0LrfHJVu6ivTyZGWcxh7lWJ12wXsRQhXjzyI+MI/
-	duxT8YHi9Eoow2otgqmAeGNwdBrHoxhWlICwKGJCkJgQMaeIIjItc13b2tdQKWXDdQnh7VYLzxm
-	vbJCfck1MrAmV1TpHHNGvAMhXUuCAmzMQLuEU4EcsJBcjNWLe/llBEcp0CXlR4ZJIDFf/xHdyRK
-	VV9h4y11GwBv9FTmmMxhaxABpvajtosOEUkpzjnLamfAzHads21ZMHCCU7Ukdkp2BiXfOg+HYtS
-	7GeyIFs6DEN+2JjHY8LldjZgMG3VmXVh4NyzkpitfxEix77UHShq9oAAFCOiMkGcV4sFh9CzGCK
-	yPbcerKCX0dkAghTXwvDKLKaLN5Ltjw/m5GJacu+GDM7Z8BYPPaWUALG8wR
-X-Received: by 2002:a05:6a20:2d13:b0:3c4:397a:69ba with SMTP id adf61e73a8af0-3cc2bac423emr1261864637.28.1786424574951;
-        Mon, 10 Aug 2026 22:02:54 -0700 (PDT)
-Received: from Mac.localdomain (198-27-228-154.fiber.dynamic.sonic.net. [198.27.228.154])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31c619cf07dsm660421eec.4.2026.08.10.22.02.53
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 10 Aug 2026 22:02:54 -0700 (PDT)
-From: Ahmad Byagowi <ahmadexp@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nam Tran <trannamatk@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Peter Rosin <peda@lysator.liu.se>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next v3 5/5] ptp: ocp: Add Time Card V9 I2C peripheral topology
-Date: Mon, 10 Aug 2026 22:02:44 -0700
-Message-ID: <1931d6019cdaa80c681c38b6ff4d0359ec42230d.1786423898.git.ahmadexp@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GPzKR31z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786432408; x=1817968408;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dKEAzoTxrnJRUnozAVrRr9+kPAXymWDr63g8YhYfYFo=;
+  b=GPzKR31zB1eBpFVBQmx8DS3YL41xCLvajL+yEuAmQsfaVlonrZw1RRGR
+   wBCVotMd4Z+U6JevNY1K1CFaeAY7+nhgFJP5lngdR6tpPq8t6H+/O4dJN
+   TpfEdAKzdH0XEwvogWcPT2zhm7fxyvNSach1dW7KRpog+XwmEdFx5B7HU
+   r44dr2xKf8+AvFi5MALLhUvYtmhkdI3w4eGjB2FL90YEA7ErD4ThGQpNb
+   Eo0L9AaBg4gG9/XKyUSDEfyv+Hy7bQ3nOvYDsEMjDAjuZgbSLGZaF6HdD
+   mj0YrDA0Edx4uMxoxmc9sdC+x7X+HoRLxhXO5k5z4sY65s7m4NxQMPXzW
+   g==;
+X-CSE-ConnectionGUID: gT5agpCGQcu1jWfppOWfoA==
+X-CSE-MsgGUID: g1IKpkyURQapHrbHksjJaA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11871"; a="90839126"
+X-IronPort-AV: E=Sophos;i="6.25,217,1779174000"; 
+   d="scan'208";a="90839126"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 00:13:24 -0700
+X-CSE-ConnectionGUID: n8t36Em1SSy0gt+VvXxZkw==
+X-CSE-MsgGUID: x1fqT4RqRUOFdhwHvdQzgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,217,1779174000"; 
+   d="scan'208";a="286675044"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa002.fm.intel.com with ESMTP; 11 Aug 2026 00:13:22 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 55A6599; Tue, 11 Aug 2026 09:13:21 +0200 (CEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Chen-Yu Tsai <wenst@chromium.org>
+Subject: [PATCH v1 1/1] string: Introduce __free(kfree_const)
+Date: Tue, 11 Aug 2026 09:13:17 +0200
+Message-ID: <20260811071319.1352016-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
-In-Reply-To: <cover.1786423898.git.ahmadexp@gmail.com>
-References: <cover.1786423898.git.ahmadexp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -97,139 +63,33 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Time Card V9 places a BME280 at 0x76, a BNO055 at 0x29, and an
-IS32FL3207 at 0x37 on PCA9546 channel 1.
+__free(kfree_const) may be used in the cases when one part of the code
+relies on the constant string literals, while the other uses a heap
+(via kasprintf(), for example).
 
-Describe GNSS1 and GNSS2 as RGB LEDs on outputs 0 through 5 and SMA1
-through SMA4 on outputs 6 through 17. The board uses a 4.7 kohm RISET
-resistor, sequential red, green, and blue output wiring, and an 8100 uA
-per-output limit.
-
-Select this profile only for the exact fixed-width EEPROM ID
-"TIMECARD-V9". Earlier revisions expose the same I2C devices with
-different LED routing, so probing cannot distinguish them safely. Leave
-erased, malformed, and unknown board IDs unconfigured.
-
-Signed-off-by: Ahmad Byagowi <ahmadexp@gmail.com>
+Requested-by: Chen-Yu Tsai <wenst@chromium.org>
+Link: https://lore.kernel.org/r/CAGXv+5HGZwAKpGpyV4=QHfg7yBQPx-syc1Gma2qad_tzW_RLog@mail.gmail.com
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/ptp/ptp_ocp.c | 73 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 72 insertions(+), 1 deletion(-)
+ include/linux/string.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-index f2c2979daaf1..a843198796ab 100644
---- a/drivers/ptp/ptp_ocp.c
-+++ b/drivers/ptp/ptp_ocp.c
-@@ -353,7 +353,7 @@ struct ptp_ocp_serial_port {
- 
- #define OCP_I2C_MUX_CHANNELS		4
- #define OCP_I2C_MAX_SENSOR_COUNT	5
--#define OCP_I2C_MAX_LED_COUNT		5
-+#define OCP_I2C_MAX_LED_COUNT		6
- #define OCP_I2C_MAX_LED_COMPONENT_COUNT	(3 * OCP_I2C_MAX_LED_COUNT)
- #define OCP_I2C_MUX_NAME_LEN		32
- #define OCP_I2C_MUX_COMPATIBLE		"nxp,pca9546"
-@@ -613,9 +613,61 @@ static const struct ptp_ocp_led ptp_ocp_r4006_leds[] = {
- 	},
- };
- 
-+static const struct ptp_ocp_i2c_device ptp_ocp_v9_sensors[] = {
-+	{ "pressure@76", "bosch,bme280", "bme280", 1, 0x76 },
-+	{ "imu@29", "bosch,bno055", "bno055", 1, 0x29 },
-+};
-+
-+static const struct ptp_ocp_led ptp_ocp_v9_leds[] = {
-+	{
-+		.node_name = "multi-led@0",
-+		.function = LED_FUNCTION_STATUS,
-+		.function_enumerator = 1,
-+		.has_function_enumerator = true,
-+		.channel = { 0, 1, 2 },
-+	},
-+	{
-+		.node_name = "multi-led@3",
-+		.function = LED_FUNCTION_STATUS,
-+		.function_enumerator = 2,
-+		.has_function_enumerator = true,
-+		.channel = { 3, 4, 5 },
-+	},
-+	{
-+		.node_name = "multi-led@6",
-+		.function = LED_FUNCTION_INDICATOR,
-+		.function_enumerator = 1,
-+		.has_function_enumerator = true,
-+		.channel = { 6, 7, 8 },
-+	},
-+	{
-+		.node_name = "multi-led@9",
-+		.function = LED_FUNCTION_INDICATOR,
-+		.function_enumerator = 2,
-+		.has_function_enumerator = true,
-+		.channel = { 9, 10, 11 },
-+	},
-+	{
-+		.node_name = "multi-led@c",
-+		.function = LED_FUNCTION_INDICATOR,
-+		.function_enumerator = 3,
-+		.has_function_enumerator = true,
-+		.channel = { 12, 13, 14 },
-+	},
-+	{
-+		.node_name = "multi-led@f",
-+		.function = LED_FUNCTION_INDICATOR,
-+		.function_enumerator = 4,
-+		.has_function_enumerator = true,
-+		.channel = { 15, 16, 17 },
-+	},
-+};
-+
- static_assert(ARRAY_SIZE(ptp_ocp_r4006_sensors) <=
- 	      OCP_I2C_MAX_SENSOR_COUNT);
- static_assert(ARRAY_SIZE(ptp_ocp_r4006_leds) <= OCP_I2C_MAX_LED_COUNT);
-+static_assert(ARRAY_SIZE(ptp_ocp_v9_sensors) <= OCP_I2C_MAX_SENSOR_COUNT);
-+static_assert(ARRAY_SIZE(ptp_ocp_v9_leds) <= OCP_I2C_MAX_LED_COUNT);
- 
- static const struct ptp_ocp_i2c_profile ptp_ocp_r4006_profile = {
- 	.name = "r4006",
-@@ -630,6 +682,19 @@ static const struct ptp_ocp_i2c_profile ptp_ocp_r4006_profile = {
- 	.led_max_microamp = 8150,
- };
- 
-+static const struct ptp_ocp_i2c_profile ptp_ocp_v9_profile = {
-+	.name = "v9",
-+	.sensors = ptp_ocp_v9_sensors,
-+	.sensor_count = ARRAY_SIZE(ptp_ocp_v9_sensors),
-+	.leds = ptp_ocp_v9_leds,
-+	.led_count = ARRAY_SIZE(ptp_ocp_v9_leds),
-+	.led_node_name = "led-controller@37",
-+	.led_mux_channel = 1,
-+	.led_address = 0x37,
-+	.led_riset_ohms = 4700,
-+	.led_max_microamp = 8100,
-+};
-+
- #define bp_assign_entry(bp, res, val) ({				\
- 	uintptr_t addr = (uintptr_t)(bp) + (res)->bp_offset;		\
- 	*(typeof(val) *)addr = val;					\
-@@ -2230,6 +2295,7 @@ static const struct ptp_ocp_i2c_profile *
- ptp_ocp_i2c_select_profile(struct ptp_ocp *bp)
- {
- 	static const char r4006_id[] = "R4006";
-+	static const char v9_id[] = "TIMECARD-V9";
- 	size_t board_id_len;
- 
- 	if (!ptp_ocp_has_eeprom_data(bp))
-@@ -2242,6 +2308,11 @@ ptp_ocp_i2c_select_profile(struct ptp_ocp *bp)
- 	    !memcmp(bp->board_id, r4006_id, sizeof(r4006_id) - 1))
- 		return &ptp_ocp_r4006_profile;
- 
-+	/* Older revisions share V9's I2C devices but not its LED wiring. */
-+	if (board_id_len == sizeof(v9_id) - 1 &&
-+	    !memcmp(bp->board_id, v9_id, sizeof(v9_id) - 1))
-+		return &ptp_ocp_v9_profile;
-+
- 	return NULL;
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 75bfc194ad20..6f3501b56c11 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -294,8 +294,11 @@ static inline bool mem_is_zero(const void *s, size_t n)
+ 	return !memchr_inv(s, 0, n);
  }
  
++/* mm/util.c */
+ extern void kfree_const(const void *x);
+ 
++DEFINE_FREE(kfree_const, void *, if (!IS_ERR_OR_NULL(_T)) kfree_const(_T))
++
+ extern char *kstrdup(const char *s, gfp_t gfp) __malloc;
+ extern const char *kstrdup_const(const char *s, gfp_t gfp);
+ extern char *kstrndup(const char *s, size_t len, gfp_t gfp);
 -- 
-2.50.1 (Apple Git-155)
+2.50.1
 
