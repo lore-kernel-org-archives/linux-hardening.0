@@ -1,204 +1,156 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7093429032
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 09:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DA342CAEF;
+	Tue, 11 Aug 2026 10:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786439997; cv=none; b=EPtsv8SgGbcYCJ9DlhIUlxSafGosSmIfomLrLMuYqKgUvp9OT7i6wsnR6DChx6pXS9L7644gZi/eSkQl1qUaqRKREAXat+Kqr8TrKzza+CriG31UyB5799DU69oywls85fQN//MVltl66Y+X0eYZVmNHojdWMXntb76pfNDKnRg=
+	t=1786444050; cv=none; b=iTQZlV+ZneOX8iAA0M5OOC6CTFaJG3XDYtCui/I0An2It101SUNWGt0HTQv9zKdG9ugGgqCCHVYjFwUS6NLsnBk+6SHUFNzGoDVIxJgg75rzKN3H0CmzTXnqHPD0oODp4TJhqt6mXL4atYm0Ptoqfs/YBeyLBoSoiXrtzDK/Oaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786439997; c=relaxed/simple;
-	bh=LyUpJFKfESBHuLkCIiDNQZkrg1ABi7qIcSdkqeBKKZg=;
+	s=arc-20240116; t=1786444050; c=relaxed/simple;
+	bh=f/FF/HmFixyeXAFRWPauGVCFVxMdFnLtXERcRTY6L6A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l9P92p0G2H6lZpj3rvkjLXZQ+/U1tlUqffZegwUMBVtyS88zEEmcADvc0BcIrEEpkUuVxOKOeR34IWf5lq4uGZzMNPoTutFKiC2ixIX8f+jp6iQl7VIGRTEbLCMXzEKunPflyeWs2gAken2EqZqa1g06Bum2k9qg5BSyV0+pkKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=W4YtsrcH; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jX/rYETL; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rFCswTyz9b8iYtVOdbqjYeXXW20cCU9t4twg9++3VJfajOHDyl7jltnsJmcxAtNqykVCkTHKygwHUYmuOoLCcFdOJBGhzHRTwQnZ5AugWEP9odTJW0fOgNvIBBZ5umdlHgU2wE1qao9q2xxOMHke4JHiIjkNn6HmuQjylaFh5jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V6hi1m4T; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="W4YtsrcH";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="jX/rYETL"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67B738Hr2252429
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 09:19:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=vQMbBYKosM4bhsnucZvfevVV
-	XwVTm2ddA2HEncy5r1Q=; b=W4YtsrcHS5KTk3OmKdZiG0dDZeKyHSCayC7uSbQa
-	4kbmuzC9iyeFHwOL8eyaQ3soKvYupucQuYXK9g7ydYuSxArS8/PGD3A6EjQqpb3i
-	cM5dx3IGYVls3S6Rnh0F0QiW+/sY121CFnUp2n2zLkClEEUf2BSGJtRXUplJEG14
-	suxCPa/huS+r9UyQF5ixOXViFu7lus3XVJKBqGnDSf5k/vpZ2bAGpTd75VsLu+38
-	6NCGHbtlL4PTax1a1wwlrB/Nnnmm+zqq+j8rpxlyBO+D1P3+N8IcnNF9foR8mtJn
-	/9t3gENY3yZpa5uH4znixtbqTuPyGWCgdn/WpWgjcnTakQ==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fyjk7bes8-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 09:19:53 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-51c1d30035dso20501821cf.2
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 02:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1786439993; x=1787044793; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=vQMbBYKosM4bhsnucZvfevVVXwVTm2ddA2HEncy5r1Q=;
-        b=jX/rYETLNg5KV2nInv0LuXHPe47v5L9JjbQixcNTheyvQmPZRzRy+KtUIFXJGjMb3/
-         EuFFGiI5qO7vti0si/pt9OdIDesn6WWU/1JHUEbrFRNyqlzb7gRiaegdx1B5OGCwjz7b
-         5DMJWmA1hl1WXxb6n/VupfyrEXYu7xAPwW8KwwTB5wRA9fLDEziDTwnQg8g0QH7pwWE9
-         QUL7WaFCVKavgWzic6nNFVBkbiyM0CF0BvQwjxc+uzbhWVNwmr/8Bb7w4wkj3AHFTrms
-         Yfux6UwPcCU8/M8/WSsCXD5MZquwmYxXsrtU35an1zxyP9omFdsmoHf3qKZNbFGHyBs1
-         q2xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786439993; x=1787044793;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=vQMbBYKosM4bhsnucZvfevVVXwVTm2ddA2HEncy5r1Q=;
-        b=Bi4pt03vNCNalTOpzTSbqbWJCMKDiHrQJRDyKapYUvSibIVCDRUmLhQzX1l+AZdwU9
-         Fzi/ZFhAgJ0e1bU3irf2SvJ+11httdyn25P/6SLPyI7dvAlRcQOAldByY1wgCyVjLZYv
-         c2AczRG4rUbrq67ycUedcTEinu/GagPryf2NEQ/I/i8HAM3HsHIouDIL3YFVf+MP4nvm
-         6W8vJP0tP0zcimGWEUlIsldCqjWr2SN7ntnHbpS5W/mw2HvxQN97ppkWL4Y0xRWLMiQV
-         l19vkFXGVbmO2oVXS41K2XyRnHgN58AKvcuLaKdES32qfgfhaCEIeEGu1kLHVNyrgTKA
-         dK2A==
-X-Forwarded-Encrypted: i=1; AHgh+RpObFr86QZbr1QfGo2Y6CFXVSAG3iBayDHNUsRVh8gvklRipKMOfCM0WEealpw2HnticP9fGLivKDiORqQxdgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYxFuzbetcJoIh2NjwMhlrI9cDeqF8D+1ZRJH5UZXUK0dJWJ7P
-	ZwjLL0Y1b6u9zOibZkf3ckNBvtn+szFfo1hQIi0kXgnpoDqXikeoKpQur+M86whBKUzyR0g0nuD
-	Y4UtnFOkVlpKG4O1aQvr05VXUk7vqt5lb3th4G9Vfd0WULQqL+fBnfllHfIhm4WnG9uL+y8w=
-X-Gm-Gg: AR+sD10YGxuV+EkNjZwmV9lTGpLYp5mJSqHpfjA1HtFOYaL8DBzb/gLHXm5apE3qE1m
-	GIfVsFakCW1HzyufB0HRu9N7hhipMxvidwRuj9C9AhSQUftG8rP6dOtSkOSjYj58e411GmTdGEc
-	Met26WUX7w1Ep0fHBIqUDuw9uB6cD/hTpkpFewjT9RDl6wFzNLVxi6ZAmAFBtVtVTHC6vSIxc1p
-	PsoeyTmJ+mxwGpT7gZ5hJuN9oM8Tu9ev/CziE0zvGzexlR3VaBpY/kG+4wnxS5/q4RHsbagb2gi
-	mzQT75RL+4X3/wwwk1NUy/hhXZOF248xGGZhu4z2Mp6q7m/yLpFlJqn7aTqHIAC1/0vO+jx4UpV
-	lHmJeCtQK5D29TSian9cQFc8IOucMlHUcL/EOqHrE2aF3Js4C8u97rDWoL5yNuk/FXbB7mlZ0VO
-	ffaUakg64weFkUZA==
-X-Received: by 2002:a05:622a:a18:b0:519:efea:cf41 with SMTP id d75a77b69052e-52d585dea65mr14209631cf.28.1786439992842;
-        Tue, 11 Aug 2026 02:19:52 -0700 (PDT)
-X-Received: by 2002:a05:622a:a18:b0:519:efea:cf41 with SMTP id d75a77b69052e-52d585dea65mr14209461cf.28.1786439992397;
-        Tue, 11 Aug 2026 02:19:52 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b44872d9d1sm162976e87.60.2026.08.11.02.19.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2026 02:19:51 -0700 (PDT)
-Date: Tue, 11 Aug 2026 12:19:49 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Adam Skladowski <a39.skl@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 7/7] arm64: dts: qcom: Add Xiaomi Redmi 9T
-Message-ID: <6tyswguhuemcwmvkcuwd5ssk2xj7s57cufogkzk2jgisnygqos@dwvsicvnylf4>
-References: <20260810-next-patches-v1-0-79a779d76173@gmail.com>
- <20260810-next-patches-v1-7-79a779d76173@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V6hi1m4T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786444046; x=1817980046;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=f/FF/HmFixyeXAFRWPauGVCFVxMdFnLtXERcRTY6L6A=;
+  b=V6hi1m4TiLVlSysK9PJMVyJB+fvsezODfYeudP1xkqxLWOK7Gfotm/5S
+   Io3l1YM1BxIBp3QGfyQODeEakKm9df9F49jqMzYfYOf9cg22kVf+wa3Z7
+   plyays0c7HT1gfQkg8ftzrvq5dz4tCzbx5FEJTXz6/j8KFcgKumKjGpH9
+   9BocBTPZvcPEzaROYJhk7ugssPXnNwMHGbC+nAjUj3a6r/PbZz+b8Te+2
+   w6Q04/Sg2n2RYnBl/KeH2qRPBOGLddFIUJp4Uvgf1+VknjlLHtCd8+LDW
+   yZJ5RAHq2LvhCRLDhn2EeRRbB7Lb4gALmrfaLFnx+trTYXZF7MoB7CsGG
+   A==;
+X-CSE-ConnectionGUID: OYIRUsGMR4OMTuIW1UBGzQ==
+X-CSE-MsgGUID: oSF4TgXITACeC35kaFXzLw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11871"; a="90653822"
+X-IronPort-AV: E=Sophos;i="6.25,217,1779174000"; 
+   d="scan'208";a="90653822"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 03:27:23 -0700
+X-CSE-ConnectionGUID: Ty2AYhTyQmi8KlMkwvQXrQ==
+X-CSE-MsgGUID: GJfZIQ/pQ3utjd8FaHD4jQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,217,1779174000"; 
+   d="scan'208";a="259991747"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.207])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 03:27:20 -0700
+Date: Tue, 11 Aug 2026 13:27:17 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Luca Weiss <luca.weiss@fairphone.com>
+Subject: Re: [PATCH 2/3] iio: light: stk3310: add per-chip match data
+Message-ID: <anr5BeHK-dboSBl3@ashevche-desk.local>
+References: <20260810110423.41697-1-jorijnvdgraaf@catcrafts.net>
+ <20260810110423.41697-3-jorijnvdgraaf@catcrafts.net>
+ <anoZwgq6ZO_VY064@ashevche-desk.local>
+ <20260810215157.154384-1-jorijnvdgraaf@catcrafts.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260810-next-patches-v1-7-79a779d76173@gmail.com>
-X-Authority-Analysis: v=2.4 cv=Yus/gYYX c=1 sm=1 tr=0 ts=6a7ae939 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22 a=pGLkceISAAAA:8
- a=8dPnOhcq9ZKN02hjC8wA:9 a=CjuIK1q_8ugA:10 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-ORIG-GUID: N8LKa2zGCnSHfrSQBxHk6myC8LMRbsU9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODExMDA3NiBTYWx0ZWRfX+MBTeU3gunSN
- VuFJud51V/00JRKTkvywu0QUKqsXkIQKxiyUzcCr3Da3XYnpiIM1jM+YDoRZp1k50RB3RIw/pqQ
- 1+YHX/gZVq+xYvq5RzAI78Dtb1w7D4LRx0ErhXSOBYqyRbV/jLhnkz6VI1eHsFv29gVgjoTR+sY
- biteRBhpd7vLBkjHEV/PcIPrrowrox7GvQDIGF4Vqp8ahL0aKHHxUabZWFKLIhlFpQ6BqENmE62
- IbHk0osvJm7JBUGpbl6lBU9oW7xZSya93BqxO4OY2W/anlkCV88mjSYdVDsXeUdVwk4nvI1eixf
- ejQaitNQl/JitJMa9IGg4y2UmUqIkylIl7OZyPHuzIl5XARH14uDLIzEaVBapAFwqPFIAvVpkJL
- 8oFrhAvnJWTgGvbEf4VFCTA/yG86LHn/64y+bDnPWb/VyenY1n2guOY2UlugMhjKHIgmCAUs3AP
- Og9oKmVUBy/R8l1rAsg==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODExMDA3NiBTYWx0ZWRfX7Uj1+mubwDWh
- 5b89qV0WdcA2KAP5wdjq2861VVQjZuN6LNvaD/FINcoZn96/JLX8dntrAYOBJukKIWZyHyp/j6g
- QBdgDFv5E6jo/J6OS12ulaKd7UY8qsw=
-X-Proofpoint-GUID: N8LKa2zGCnSHfrSQBxHk6myC8LMRbsU9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-10_06,2026-08-10_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 adultscore=0 impostorscore=0 bulkscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608110076
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260810215157.154384-1-jorijnvdgraaf@catcrafts.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Aug 10, 2026 at 06:55:40PM +0200, Adam Skladowski wrote:
-> Add a devicetree for the Xiaomi Redmi 9T smartphone, which is based
-> on the Bengal/SM6115 SoC.
+On Mon, Aug 10, 2026 at 11:51:57PM +0200, Jorijn van der Graaf wrote:
+> On Mon, Aug 10, 2026 at 09:34:42PM +0300, Andy Shevchenko wrote:
+> > > +	chip_info = i2c_get_match_data(client);
+> > > +	if (!chip_info) {
+> > > +		/*
+> > > +		 * Clients instantiated through the sysfs new_device
+> > > +		 * interface under the lowercase compatible-derived name
+> > > +		 * have no firmware node and do not match the uppercase
+> > > +		 * id table entries.
+> > > +		 */
+> > > +		chip_info = &stk3310_chip_info;
+> >
+> > This is an interesting comment and approach.
+> >
+> > > +	}
+> >
+> > - Where does this lowercase come from? Is it Linux forced conversion?
 > 
-> Supported functionality as of this initial submission:
+> No conversion - the client name is whatever is echoed into the sysfs
+> new_device file, and the lowercase spelling is the one that binds via
+> the OF table: for a client with no firmware node,
+> i2c_of_match_device() falls through to i2c_of_match_device_sysfs(),
+> which matches the client name against each compatible and its part
+> after the vendor prefix, so "stk3310" binds through
+> "sensortek,stk3310" - the same lowercase name a DT client gets from
+> of_alias_from_compatible(). The id table lookup stays case-sensitive,
+> which is why i2c_get_match_data() comes back NULL for such a client:
+> device_get_match_data() needs the firmware node it does not have, and
+> i2c_match_id() only knows the historic uppercase names.
 > 
-> * Display via SimpleFB/SimpleDRM
-> * GPU
-> * I2C peripherals (Backlight)
-> * Power Button, Volume Keys
-> * Regulators
-> * Remoteprocs (ADSP, CDSP, MPSS)
-> * UFS/SDCARD
-> * USB
+> > - What's wrong with simply failing the probe?
 > 
-> Device tree also contains supply maps to other subsystems like MDSS
-> but due to missing dependencies like panel those are disabled.
+> It would break a path that works before this patch: probe consumed no
+> match data, so "echo stk3310 0x48 > new_device" bound and probed fine
+> (we used exactly that during bring-up, before the DT node existed).
+> Failing it would be a userspace-visible regression in a patch that
+> claims no functional change.
 > 
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile                |   1 +
->  arch/arm64/boot/dts/qcom/sm6115-xiaomi-lemon.dts | 440 +++++++++++++++++++++++
->  2 files changed, 441 insertions(+)
+> > As far as I understand the problem is preexisted. Or was there any default
+> > taken? How do we know that the chosen default is a good one?
 > 
-> +
-> +/delete-node/ &pil_ipa_fw_mem;
-> +/delete-node/ &pil_ipa_gsi_mem;
-> +/delete-node/ &pil_gpu_mem;
-> +/delete-node/ &pil_adsp_mem;
+> The path preexists; only this patch makes probe care about match
+> data. Before it the driver had no per-chip data at all - every client
+> got the same two channels and the hardcoded "stk3310" name however it
+> matched. The fallback selects stk3310_chip_info, which is exactly
+> that, so a client that probed before this patch behaves identically
+> after it. What the default cannot give is the new part's extra
+> channels: an STK36C61 instantiated under the lowercase name gets the
+> reduced legacy profile, and the id table spelling "STK36C61" selects
+> the full one.
 
-Keep them sorted, please.
+The problem preexists. I just looked into the Git history of this rather broken
+table IDs and what I have to say and state is the following:
 
-> +
-> +	vph_pwr: vph-pwr-regulator {
+- the driver initially was written for ACPI and the author blindly (cargo cult?)
+  used the same IDs as for ACPI _HID, while they have different rules
 
-Nit: regulatur-vph-pwr. But current name is also fine if it's an only
-regulator.
+- there is no existing in kernel driver that supports enumeration based
+on I2C ID table
 
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vph_pwr";
-> +		regulator-min-microvolt = <3700000>;
-> +		regulator-max-microvolt = <3700000>;
-> +
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +};
-> +
-> +
-> +&usb_hsphy {
-> +	vdd-supply = <&pm6125_l4>;
-> +	vdda-pll-supply = <&pm6125_l12>;
-> +	vdda-phy-dpdm-supply = <&pm6125_l15>;
-> +	status = "okay";
-> +};
-> +
-> +/delete-node/ &usb_qmpphy;
+With that being said, I think we may just lower the case for the I²C ID
+table and fail enumeration when there is no chip_info provided.
+Yes, it will break very weird use case with capital letters via sysfs,
+but TBH it's a niche and people should know that most of the devices
+are enumerated as part number of OF compatible in that case.
 
-Just 'status = "disabled";'?
+Also note that the DT users should also not use sysfs, and instead call
+DT overlay.
 
-> +
-> +&xo_board {
-> +	clock-frequency = <19200000>;
-> +};
-> 
-> -- 
-> 2.55.0
-> 
+I can take all the blame on very unlikely event of a breakage of somebody's
+setup in the future. TL;DR: just add a first patch to lower case the IDs
+with Suggested-by my name and I will give a Rb tag with full conscience and
+responsibility.
 
 -- 
-With best wishes
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
