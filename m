@@ -1,85 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FAE3B058E;
-	Tue, 11 Aug 2026 10:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786445608; cv=none; b=vFNFHLit9DLAUThRPN+VkYmzpj1//l/h39K66CRlyoU0fMONTjnL7ofQuS0nLwv+8swYYQVeR+9a1F+evR6/Nai1hoxWt6KRbME5piqyUhxF7aD6ZTh2Uda6prmg/bOLYX0yMSbuMz498ukWfhHIjk1ztxNk9Qb30pNlo+2NGI0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786445608; c=relaxed/simple;
-	bh=uor4YsfmKk0Ew9XFzwt0MAWAPyxWQJ8gWx6gYrWkL7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Usac2XGgiVISxQBtrZ5Hh/T5L5Bv5U9mQkC7Cwb0KRMRc4iE3w3Dq/K8uoxNSycKdKn/Q5jNWJGKbQiTQBWWJ6s7TmTt3mL5AhN1E7G5xns2pkqsGiP+7KtrgccLJ93NjWNxmHVgK6Whdf6DqwkTWjqYCM84nH/MW8PSDc8yBic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cbEli28r; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CD143CECC
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 10:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786445951; cv=pass; b=RZCF1l1okq07b2KwOqrMz/KvjIIcNLZS7+9Ka6Ble02IpM+ljsTw+wVAhjp3YQ68AoImhPiL6vRHuzJCe8CPGR0q0nLEjlKJ7kQpyWXl3vjxmC5jILKoFwReyuDPGCilp2S3Iv+0Zm+fhKUFtqLQDIB1HDbo1OFQRbtsttJ9tTQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786445951; c=relaxed/simple;
+	bh=0LWVUx/oODSNSqmqchqpmkWOfT9szLWKegl3rd0Uox0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mzye1i++EIl73RH3IGaQUWNU4PM/Cw3CJV8lIQ1rgLfhaw59Kz9DXvGzfKKCemRph10U4gH89bhgJKrgG0/Ovk7hUii3cJkLBnL79VzG2Mt8rigCDS5m7qV6+jSpKUUr4e7MX6VoTfVra73AEgrIPXddg5VNFkTT6o1c+mUhQNI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZXqvFAYw; arc=pass smtp.client-ip=74.125.224.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cbEli28r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786445607; x=1817981607;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=uor4YsfmKk0Ew9XFzwt0MAWAPyxWQJ8gWx6gYrWkL7U=;
-  b=cbEli28ryc8iP1/z0AS5+paU5Z0b2yIbMpYU3XmFpVpDOUAMCGg5r/9a
-   xLzQqRfbwAGvQSgc/s/ORBTlQb6VEh2YnD2g+4T7cG9yQdVsXz1JXvQFD
-   yzUAtZCUsbsaF77iRrMcD01J78BmipOBk5Pd9Pw2LLJzfQFiCPoTekhVo
-   hP5t7HUy6liLEroH16X9qgJryLiM3RycHS6Ot2vC2UHWQ06OPKxo0cOkz
-   cSbsBhiBGmjYRMe+rtG70J2vCpZitA9fTfcNcq5n4LoXf+3BK5LTZ1Rjy
-   x7E4P+L7mCoPfWBoEOgOeHLpHKGA7DVVchRqTTdiFstNK+99goPTo23/2
-   w==;
-X-CSE-ConnectionGUID: BAx+XKz/QAC4Raxw9TeEkg==
-X-CSE-MsgGUID: 1DjLd/xWTGuY8QTgV3U5Eg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11871"; a="98120734"
-X-IronPort-AV: E=Sophos;i="6.25,217,1779174000"; 
-   d="scan'208";a="98120734"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 03:53:26 -0700
-X-CSE-ConnectionGUID: VULC+6WPS9mUPN+kgvpt+A==
-X-CSE-MsgGUID: bVvroFSmRMCJ8sMfvXavEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,217,1779174000"; 
-   d="scan'208";a="268467459"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.207])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 03:53:24 -0700
-Date: Tue, 11 Aug 2026 13:53:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v1 1/1] string: Introduce __free(kfree_const)
-Message-ID: <anr_ItiTKL3pjJH-@ashevche-desk.local>
-References: <20260811071319.1352016-1-andriy.shevchenko@linux.intel.com>
- <CAGXv+5EKtcEy29oy=8Qah=1=PXXMds3BvR08u7DQ656FB2u95Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZXqvFAYw"
+Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-66b13ee8801so1530875d50.1
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 03:59:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786445948; cv=none;
+        d=google.com; s=arc-20260327;
+        b=WI+1YU4iySP2h9SpuEsQxjeOcqUpX8KYZYEVN1a/oF8DvnwKsG/xyw6K0H/kszbtVT
+         lC7o4lCK8YEfVhgjWrDySIy9+aS/agG19wTSS+6qJHqwup5hL5+/5kJocNpBIJifj3wo
+         0V2gX5H+YcpSZbNt8pE8uHgglBdiwJsOJhRF+WGI/vsBRAxVJeeJQ4hXci1XMMbjmuhd
+         wBLldn+Kke9xnMNRIQsUWaCM/qACXetd8nC4l16vDSIJum1OpL7SBSy/WCzOdOAvmlEd
+         +rW48pcqC3xMrrKIH5n9KC9kSw0kjGoUhuuKeGCuBoIUURn3Oy5hnNu/hjDQKzWsnO7S
+         QrdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=0LWVUx/oODSNSqmqchqpmkWOfT9szLWKegl3rd0Uox0=;
+        fh=WHCNdLkfWRa6/Q38ts+aESrGpw3ko4XaytR1BPsWico=;
+        b=N66/RRCVByQwENJEnkcgnBmMw5460JPayLl2vbob6bqB2tPYHLBUdIRL7A8elH9wO5
+         OohdH8cyasxNPna3eyANFIwTSts9/PN/KLr90WGwb3QD4R/FNbz4LVcyoeQei8+23Si6
+         Rfp/ndvGrMAGLeEEJ0C65ayZWeN74ImWDDvajzCp95H9oE1r3nQ4WFZC3RScKAzukG29
+         CBtLSk5je3FZjd70Y8ABuv51d/VIaeQqfB/0toKHH1sELzn7bLV/OkI+he6vrxzpTBFK
+         LVIBTUXbXZk6fNVQGA7ANJY36Dl+tiHBw15u80VAwCEH3I3NqXtjwwuijVVTmyAT+35T
+         Tbqg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1786445948; x=1787050748; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=0LWVUx/oODSNSqmqchqpmkWOfT9szLWKegl3rd0Uox0=;
+        b=ZXqvFAYwSLpPgJdPWBoHibKMF7L71R8nZvamHbsKsP3hnjWp7v/fO2tr6Kxl5duawX
+         JDq4I5fY20U2Lx9Xczp7qYxRczXEzMaHV+XekF7AGiRpp1opKgNDw7AT6nHJEvfaysMw
+         1I6SLIITpvyiW5FA6SxZ9N1qonXlJBighA/4o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786445948; x=1787050748;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=0LWVUx/oODSNSqmqchqpmkWOfT9szLWKegl3rd0Uox0=;
+        b=AMiFkJXaGyzeMJduczbOzSLpLPdpdHStBFAoBbyuN5KzBa3f5TY39KKyoqJvUn/5O8
+         6qijJ6Pqqnryg/RZR6mDZpneXR+dEC86LJyTpulhc6OyX84CsJZS15XLYrkoj8wH0Xiz
+         oViEoOH1YHj5/Vf71XEitPZbiX5klXwtgz7WCWZnbKE4TYQzMxo/RSZAkl/lRhMilqd1
+         /26xtqTm7wTq94VAF4rZvG35fdx+I58M0Xw7zeYvWxIx6ycfZki4Rw7PvkmPUicfNS+t
+         m/2re9f6CFf+uoc2ccFqksoD3ODef3eQkO2R9Asm/iwbckABlQus8dBx7JAejFqc6so7
+         R53A==
+X-Gm-Message-State: AOJu0YwQ1bjdHhpl33ueXBn7zzT7VW2xgwOrR3tVBwRAXPztuYMXMDLA
+	Fivr2wE7uzNfodDobOEUfnVRgxS3XDxgY4C0SMs/j0GidhAWgDatOuLiLgeECOXZY8n10Y0m/0k
+	PG19qyZuwcAzMHSN0IZdGlIer1dNcaOiByoukS+eN
+X-Gm-Gg: AR+sD13nnrZtdjmDhm8tCD/g4Ojsrlxv2zSH5C1/6xFJqTAtYT8+gHT6v3kMqgsKPYr
+	W/t4vXHjuad33VkzDK2H5Prr2KaTsL/fotMQ2gjpl01CAED3oYTvRbVrMHMDvrz0CrrCxDiP0pM
+	SVurRl/FF9oEeCl2iqMhAqiPmQidCFdXiTdXJp1+ATN4tsijDa3nyvJslE6i3TJTTbj9rQIFkw7
+	YIaL5IycgFdDmITYLlnXlDQLAOZDeFUR58sIjrM7mXeXy6UY1Aez1Sdrv36YToisRwBITluzHfL
+	FCl+eZtXOCfu2YG+udmuo0CYrblON0nNwl1HFsLoBS1q9/49nCPiUl5fKw4tllLLXPbt2Vp3p08
+	=
+X-Received: by 2002:a53:df91:0:b0:669:9498:301e with SMTP id
+ 956f58d0204a3-66b22e4ef38mr950794d50.27.1786445947989; Tue, 11 Aug 2026
+ 03:59:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGXv+5EKtcEy29oy=8Qah=1=PXXMds3BvR08u7DQ656FB2u95Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20260811071319.1352016-1-andriy.shevchenko@linux.intel.com>
+ <CAGXv+5EKtcEy29oy=8Qah=1=PXXMds3BvR08u7DQ656FB2u95Q@mail.gmail.com> <anr_ItiTKL3pjJH-@ashevche-desk.local>
+In-Reply-To: <anr_ItiTKL3pjJH-@ashevche-desk.local>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Tue, 11 Aug 2026 18:58:57 +0800
+X-Gm-Features: AUfX_mzsUSrKmyzLy7BDEE0Nh3eOlU5S1gdGrKR-BToLFLM1Ul-1eCjnXShhIog
+Message-ID: <CAGXv+5FoNEPu6kUKg7C6vgMCbmyFRbRxin=tH7o-=RQHp0jE1g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] string: Introduce __free(kfree_const)
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 11, 2026 at 06:42:51PM +0800, Chen-Yu Tsai wrote:
-> On Tue, Aug 11, 2026 at 3:13 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Aug 11, 2026 at 6:53=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Aug 11, 2026 at 06:42:51PM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Aug 11, 2026 at 3:13=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+>
+> > Matches what we already have for kfree(), so
+> >
+> > Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+>
+> Thanks!
+>
+> I think you can incorporate this to (will be) your mini-series. But let's=
+ hear
+> from Kees and others if he is okay with the idea.
 
-> Matches what we already have for kfree(), so
-> 
-> Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
-
-Thanks!
-
-I think you can incorporate this to (will be) your mini-series. But let's hear
-from Kees and others if he is okay with the idea.
-
--- 
-With Best Regards,
-Andy Shevchenko
+If folks can merge it for the next cycle that would be even better.
+My series already has three cross-tree build dependencies...
 
 
+ChenYu
