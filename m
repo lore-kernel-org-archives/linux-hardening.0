@@ -1,65 +1,65 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90895445AD3
-	for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 14:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB4C448393
+	for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 14:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786457570; cv=none; b=K1S6ASiP13gOTtMheNfpv3JXYdTxqOTW5REgLgNQjyItOSsL3gQ36IxmPhWJqcpqLbsDhlLZcHhR9mF9yfxwBGXEQs0UGo8EaBO8gwr0woCmyWMnttHNlkYBTp30Wto2zB0g1InuzKYTtn+XBNa3Oy4P3NgP4diPpbyhiJe8YkE=
+	t=1786457572; cv=none; b=TaHN5adsRzxxfritAXPnree8qzg17HK789vv3lzLIquIDAfdht/K0otEYMdbIAjJOmqQ3xNBpzznwPtV+St0g/B9GMADJjYxqIaBB7X/s2r1tvt/pyWPQkWrh+CqKn+nHZFULgLqGdF5Ouf7gxx2V6DeWItJpaUfQ34q7sv2bt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786457570; c=relaxed/simple;
-	bh=xWPijaXXRIkBoc/QHjewJtmMl0ZST5M/cYh7D7YQf7Q=;
+	s=arc-20240116; t=1786457572; c=relaxed/simple;
+	bh=TaCmrurOP6eiSThHEAhj0hS/qDuy18I8xMkgu8ZEriI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B81qV89B4cOSBEtXzv00cnMvtfJmub86qiLSGCZKrshGKaLXWIC78jyF3KyFihYle+gVIHdDDX1LylCJZpdLB+RGMBO85EuOXmLSaIA6kU/SxkTTDYp5+01rIT99Pgfy+vhE39QDbi2df1peJTTt4JZ1bRyRB7xZ+lzyDTXmhKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUoJI9Wy; arc=none smtp.client-ip=209.85.221.43
+	 MIME-Version; b=K2iJ2S171dmxs5PzQFALC2ewXFQHC17Pwi5UuP0ZeNsY1Wyh69TsaIUs9Bti0SE0pnZeMjWq37TtIjCzswqTrkT4OUWrEwQTSnaZKWPpU65mNh4wY/BLxfBUDNcqQNZZ/X0Rmtl6k9aNrEBdciS7tQfbQv924qI4s+VQ28c0fHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VCoZkRgv; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUoJI9Wy"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-47f93b2fe4cso1755222f8f.0
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 07:12:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCoZkRgv"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4980dc26022so33094025e9.1
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Aug 2026 07:12:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786457567; x=1787062367; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1786457569; x=1787062369; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=bwwTg+OQL0Tw8flGAD/WL1rLA9ceEVBQqkqlLz//DPI=;
-        b=WUoJI9Wy+9wEoLJwRJtYDA1Z77UP1Vkv22JSs9gcDUxhZV2KRxdzyKD8oWYX8B7EQr
-         nDUC3uO4GYuGHvtK0feifQR2BE5BX/cMElOXycjKZr0VONCTFtkBoSf0pfc15kTkgLK8
-         OwJKZp+kSuVcCrOKmNSYkZhTUhtWNp9rS2FSRqkO/jpMH/rzyK8E7uQpjeh8l10SlCZs
-         F1Lbgh4l4pxBPb5y9seR2rwLr6Im+0+txzwXrLGzehXN3b37W1FkYlLdvupNqGDBvsiL
-         tyI9+cx5SZohZWEGlAFbFmiK8C4IUsB0m0NEghHSqCHcAwi5IAc8/CAmVMUwiYUoh0mj
-         wGqA==
+        bh=Ah0y0gDveI06pCiQf0Bv3vLT+VZq6BOea0NjGFqGqkY=;
+        b=VCoZkRgvC0JaViWUUr7N3sphR5tdb76kTdzSdtKLvZsR+U8T/uOHobnsNRNLsIKzP0
+         uQNSH9tq2mBsJNI7nAzTT6GzmX021iqfbjaW4mNGbW8Eap41P/FJAIozeAgreUjerNK6
+         Zma8+nWb6pntXWWENzBKNkFAVDP55lRv7yOcXrsOU6sK1wWP+3nXiRlhcjs8fzg0R3qs
+         i8TY3vq02NA3WclC1SkDIHFtmFYamcSG6V7y7gHqPSz+oezImVm11KDy0GXcpxdZxsI9
+         DW9T3885MW4N+1E6oXtE2HoOSstgLgvYMImN1L1pKT34ruICxz5dbi0GcKdy9WvXM2m9
+         qY/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786457567; x=1787062367;
+        d=1e100.net; s=20251104; t=1786457569; x=1787062369;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=bwwTg+OQL0Tw8flGAD/WL1rLA9ceEVBQqkqlLz//DPI=;
-        b=NfLYTIaUuygkJHrrc73fq+79U+3Sw8NsmDaWFaGecNpbF4GrhGIM8ZgoFEDKX1S/Os
-         3T90GzIL0hvNCDW1IxgLm0/ziLuubX6l0uc6JrqyjHdG22MSIFv9Ri6I4dpBGh21XCw9
-         CrNXpJSqc8RmmDtO6CFXkghR7DZeNhtf/A8cZ/S3tRr4A5lUz8lycjK5hFa/Lo/ObxMG
-         gRS4sWUAJlQOGnO4LEuUapqf2eJFjhi+0l7hbCuImhtWFl3SbWOE0B/NDYf3+aB7/ENd
-         sRbJxOBwsf25Q2ue0TStHli/0Cavs7yO5bxkR7Qc9UgCzWS4LXKhwHYmDr/5IL2vataR
-         Wd9g==
-X-Forwarded-Encrypted: i=1; AHgh+RqAW4/Lzf8X7XxrnssFHxNJ3YMEXCd2unPZpuP3LRLuNX+qmNsSSlZFTzP5F+n5Tdbmr9dvTTGMIsWObFy5qEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDrF+DTH8mIQelNdZePXw5UnGLFpQrizXH2frH2UhuAC7XtkES
-	PAeVvCWZ/Ux+MJ08VfbKgWkT/5mM/0RSB+ucVnfxfa9yVMuHDcD/bBiK
-X-Gm-Gg: AR+sD10/uH4vFZ94Pwmxxuoc+2DlViPLXIrAVB6z2QH6LAI2yqreOyoTphonWo1eWMS
-	BnpkOn6uofWYWxkpKTG78Yvvj5GnyYS4XGXFTbjLSCovmznust57adOhbRYNgYhIpK9ui1GSbP5
-	5vsrPwBHfvyLzRD3Z2VMi60qzfEOPMpbVLOZNJTUj4Ct/7JVtKwowIayjepyDcfKg16AC6Y434t
-	f00/eOwha8Ra5IwQs0FAQHM4J1lMGQdNJF1TEyAV69tOdchIXWxH8JgTcuYaBjZv41KWPxctSkP
-	ZMobkzA5/WRO6+If/v+aDnHGA/L5FesGXddK/fhszgNmEue5eM4ztnIbcfXTNf9pW2Y2KGyK9rz
-	EtvUWVZ4NVbGCG5mNxQq6ntKskS/WEp8/H5nWmIGBm0YI0TKS/luFDTZPRM7t9g+zftoo53BCfx
-	xmaodsJaXq/xFzutX0DYR7LpAu+cARnNfVLaVxge4Pet26vRIKTjZYeoMzCjWiQxqk1jXpL72za
-	k4YIxXZyXdqtp9lM+xzPPeAVC2k4b0YerOfhMPwPAl1XUCsUCGRUobVQXzLYPFKKytEVep1GxEV
-	rJGZukAo8YRsDsgGIlgUebFiSfKtntJ7AZ7V1O/tyWxplEZZtRyK1ATIzBgUXuH4pYzj
-X-Received: by 2002:a05:6000:240c:b0:47f:6dcb:3737 with SMTP id ffacd0b85a97d-4814aee3ef2mr5025916f8f.29.1786457566359;
-        Tue, 11 Aug 2026 07:12:46 -0700 (PDT)
+        bh=Ah0y0gDveI06pCiQf0Bv3vLT+VZq6BOea0NjGFqGqkY=;
+        b=DQCMib53OPBeJi2V3oUZgBsy36MNDwEVoqnXWlXHxxZAKnitFxgRJWbzsyhyul+kwP
+         6C0qSqtSUoXdq80NiDwHWkP/bt7Kmn9CfYf/5FdrPM+QfIpjRdPS2AyBC9GMfqxitY5f
+         /VyInHzw9cBicPSBE+eC/XqG/vvVWJpiCfAAPktnHHVUVI7Wab9Rbj6HBQbaVNc/4NlV
+         HYVQMpAp3w0+sGg1tfMjUYbrQfB0K9Bncq/PBoQKCnTlLhRZA5Bgdue6I0YDtEqnQ9V6
+         8MdbT1fPJVQob2IqHZm4Tecmn7OLy382h5NQkNtrV9+jTq1O0Z2DlGAa6hIrEzZANQxm
+         v3Pg==
+X-Forwarded-Encrypted: i=1; AHgh+RrEHv+UfW19sYyejmoxe72sQwiTPS/0AmBVC8A34ZuAAKCruNPnGeGdHOsu5MhTc6J3gDcUt/+QL9lHcpoampA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3UadSszMy+A/BU5J8BMOADMVF9fea9Jx4Q7tdTnkJ1CgdDtIq
+	RyYcfaSQA4vUpi7fIjC+04j9bbjEkJwTYjCf59mS8SFQD9TnGVbqxfOb
+X-Gm-Gg: AR+sD11YYelTwmo+H4q5s9TMw4ioKjaFvGbl1PLQLlIWEYCXGxt6z8cV/UfqGoUGw9O
+	X0NtgkzFLjJv6A+/9f1IBwkd+/RAkBjzMm6fBNXeD53ZTd8jbLALabfZizB0IlfDDc/GqZDbJ0A
+	4ehuewLku1sG/rC8QUpsijvBR1AVfkxkn7/Q4Ma9JbHDkjLGLer1efWT6tEgehfu7HzhEVAifS+
+	thbDHr1SI2y1Ka0/rI5DWw4qI8BcM7xsgC5yOO0GBAZdNYdxxyCymOIgQDL5N/iie9itPNMH10B
+	xNNE7BZVNhgyD63sVrnAJq8wT3h4fOkaI51LvZakgtUODmH+Jt/IVY+ohcg3qzXRRg+c0y0E+JK
+	h/V+vS9JLey2zzC48frYUa1g7sE7FEFkHIXV2G3CEOA3YO6kw9fXZyTSnSb/ZCamP7Z1HbLXnYL
+	EZ96vz3VAGzJHaCcuPT0bmvXHw1bUjgoyGM2TV42ADynhU3bfT3bO+GwSnHLozlXWRhOsuJ92mH
+	1fGY/tpr8rw2cj4JNYowb5PdPHenZqiPMu5S96cbw9uCTRUavr719rYp3GhuPxWdMNqrAZZxp/s
+	66v3A0rsLpGJ/lNANa0vrGSE0WyDOPu3fqd5915Ve2+pC1EoWu0bpsswb7U3Lpl/v+khTA==
+X-Received: by 2002:a05:600c:3103:b0:495:737a:7afe with SMTP id 5b1f17b1804b1-4997846c317mr57654805e9.15.1786457568853;
+        Tue, 11 Aug 2026 07:12:48 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-2a02-3100-a133-e401-bc8e-d36c-2d08-c5e0.310.pool.telefonica.de. [2a02:3100:a133:e401:bc8e:d36c:2d08:c5e0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4814a5be29fsm4464099f8f.12.2026.08.11.07.12.45
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4814a5be29fsm4464099f8f.12.2026.08.11.07.12.47
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 11 Aug 2026 07:12:45 -0700 (PDT)
+        Tue, 11 Aug 2026 07:12:48 -0700 (PDT)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Vlastimil Babka <vbabka@kernel.org>,
 	Harry Yoo <harry@kernel.org>,
@@ -77,9 +77,9 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH v2 1/3] slab: align ZERO_SIZE_PTR to ARCH_KMALLOC_MINALIGN
-Date: Tue, 11 Aug 2026 16:12:38 +0200
-Message-Id: <20260811141240.62519-2-kmehltretter@gmail.com>
+Subject: [PATCH v2 2/3] slab: check for ZERO_SIZE_PTR by exact match
+Date: Tue, 11 Aug 2026 16:12:39 +0200
+Message-Id: <20260811141240.62519-3-kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260811141240.62519-1-kmehltretter@gmail.com>
 References: <20260811141240.62519-1-kmehltretter@gmail.com>
@@ -91,63 +91,46 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The kmalloc entry points are annotated with __assume_kmalloc_alignment
-but return ZERO_SIZE_PTR, currently (void *)16, for zero-size requests.
-This violates the annotation when ARCH_KMALLOC_MINALIGN exceeds 16.
+ZERO_OR_NULL_PTR() returns true for every value less than or equal to
+ZERO_SIZE_PTR. With the sentinel raised to ARCH_KMALLOC_MINALIGN, up
+to 128 on some architectures, the helper matches additional values
+that are neither NULL nor the sentinel.
 
-Clang's UBSAN_ALIGNMENT detects the violation on armv5. GCC and Clang
-retain the ZERO_OR_NULL_PTR() range check but eliminate an exact
-ZERO_SIZE_PTR comparison after an annotated allocation.
+Compare explicitly against NULL and ZERO_SIZE_PTR. Store the argument
+in an unsigned long temporary to support both pointer and integer
+address arguments while evaluating it only once.
 
-Define ZERO_SIZE_PTR as the greater of 16 and ARCH_KMALLOC_MINALIGN,
-retaining the existing value where it is already aligned. Assert that
-ARCH_KMALLOC_MINALIGN remains below 0x100, the value of LIST_POISON1
-when POISON_POINTER_DELTA is zero, so the sentinel remains distinct
-from that poison pointer.
+This also changes check_bogus_address() in hardened usercopy: nonzero
+addresses below ZERO_SIZE_PTR no longer cause its null-address abort.
 
-Fixes: 94a58c360a45 ("slab.h: sprinkle __assume_aligned attributes")
+Apart from hardened usercopy, direct in-tree users apply the helper
+to allocation results or explicit sentinel values.
+
 Assisted-by: Claude:claude-fable-5
 Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 ---
- include/linux/slab.h | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ include/linux/slab.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 32c9f8ed7ae20..3e012cc4f001e 100644
+index 3e012cc4f001e..023e10ab77f8d 100644
 --- a/include/linux/slab.h
 +++ b/include/linux/slab.h
-@@ -259,13 +259,16 @@ enum _slab_flag_bits {
+@@ -270,8 +270,12 @@ enum _slab_flag_bits {
+ #define ZERO_SIZE_PTR ((void *)(ARCH_KMALLOC_MINALIGN > 16 ? \
+ 				ARCH_KMALLOC_MINALIGN : 16))
  
- /*
-  * ZERO_SIZE_PTR will be returned for zero sized kmalloc requests.
-+ * It satisfies the alignment promised by __assume_kmalloc_alignment
-+ * and keeps the historic value 16 where that is already aligned.
-  *
-  * Dereferencing ZERO_SIZE_PTR will lead to a distinct access fault.
-  *
-  * ZERO_SIZE_PTR can be passed to kfree though in the same way that NULL can.
-  * Both make kfree a no-op.
-  */
--#define ZERO_SIZE_PTR ((void *)16)
-+#define ZERO_SIZE_PTR ((void *)(ARCH_KMALLOC_MINALIGN > 16 ? \
-+				ARCH_KMALLOC_MINALIGN : 16))
+-#define ZERO_OR_NULL_PTR(x) ((unsigned long)(x) <= \
+-				(unsigned long)ZERO_SIZE_PTR)
++#define ZERO_OR_NULL_PTR(x)						\
++({									\
++	unsigned long __zon_ptr = (unsigned long)(x);			\
++	__zon_ptr == 0 ||						\
++	__zon_ptr == (unsigned long)ZERO_SIZE_PTR;			\
++})
  
- #define ZERO_OR_NULL_PTR(x) ((unsigned long)(x) <= \
- 				(unsigned long)ZERO_SIZE_PTR)
-@@ -622,6 +625,13 @@ static inline bool kmem_dump_obj(void *object) { return false; }
- #define KMALLOC_SHIFT_LOW ilog2(KMALLOC_MIN_SIZE)
- #endif
+ #include <linux/kasan.h>
  
-+/*
-+ * Keep ZERO_SIZE_PTR at most 128, i.e. below 0x100: LIST_POISON1 is
-+ * 0x100 when POISON_POINTER_DELTA is 0, and no architecture currently
-+ * has an ARCH_KMALLOC_MINALIGN above 128.
-+ */
-+static_assert(ARCH_KMALLOC_MINALIGN < 0x100);
-+
- /*
-  * Setting ARCH_SLAB_MINALIGN in arch headers allows a different alignment.
-  * Intended for arches that get misalignment faults even for 64 bit integer
 -- 
 2.53.0
 
