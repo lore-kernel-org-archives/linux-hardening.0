@@ -1,72 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BFA367291;
-	Wed, 12 Aug 2026 13:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ECA353A6C
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Aug 2026 14:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786541554; cv=none; b=WvZMV2uD2TIwmjEwMMATVCptkqOScmIql0GPjNZca+5f3pSkIF85eFv5lqAI9XklXCLhT2puvxTfIqau84qrb9q/6ofvHv9hzDI8mV07Y6E2xzwyyWwwMP2OqAnDGyKL7/V/1aNAxl1lBfR+5m7iL6DxPIS2wGxWrL062JvkBbM=
+	t=1786544242; cv=none; b=o4ojQFpAoI8MhDV42BJqX8uO4ltDj1wXxGPSa58Zmq3V8iwWF3Ka/QETRgfS9ZqBZzQr8AuK8cEAeMx59rmVpXSkV7jm9ArENKTecgl3biWx/fUBo6mPkDRoEHM9r5qU0gAJPRMInXO4lBMzsorg5Rz08Q0gkK4a8bQOu5/9tZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786541554; c=relaxed/simple;
-	bh=37eRYdjaxomv2eRGiOLZ22/lq5u86pHVdLmmzJiyeE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kIzrXRgZO8KNsjMmPt+m+nrearqWW0I4bnGMmfjEI2wcWXDXwwIoh2sBo/aRuk1uodKfbrHEqC/a1L+257YCLn5y//Sd0XsrPwRBuB86HeswDLysc56wgfRPwOkbJFwdTcEAEN4IWEB+vgvj+8J1wgwGJcubqNmmrIx6aAVLayY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpavJL8R; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786544242; c=relaxed/simple;
+	bh=lW7zxZqx7Njnrn6nen+3u4o3GCHZTEp4Ur108DTPK9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MxPyOTtbsoj7vFdAGzZsFzv5W6pb4J7njnEiLQB3tZgTi4Xh3WDGpm5NEapMa6PhHY9ak/wmREv8O0Y8So+r8q4jO+zgCy6zFXMn/GPPtn77DQLxZTEmpovAsaJP+4rugC5rf06CNP0GGwiBP6nnWnXINJIqSBoIiqv2O0Znwhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRI2Q9LF; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpavJL8R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F2E11F000E9;
-	Wed, 12 Aug 2026 13:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786541552;
-	bh=FHP2adXMKime99fuV2vPCh1LzH4rU7kufd/f7lfaEnw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=NpavJL8RPxuNJNu1SBs6w918KEO6ukKSW8Yr9b/sBXY1tKAiORrsy8wHkCioJ9mG0
-	 AI1YnPz1VkTha8o9/c+ywk6S0XYF+NQ3dEIGv1otvYPcWGlJsiJejKBtCNi/KsmSAn
-	 OxtVJdQftYcSEikfEmlG9IQ8XM4mWTuG/99dE//Kns7WWWxNdo+ESzfQ4+Kcl1KFje
-	 h0Tm5Y5kT0UDsu+m43ZrLjB8RcextlNlh2hC7VOsTV5DBfMpw/J++D/wl/sgU1YKUO
-	 eurYC0DBCLiHBfZBbjxs9LHMumQKPr2NlSaF6mEfbg/7hiVu+CHxB0bp6XL9PdFCAu
-	 4aVIYtH4ZL6zQ==
-Date: Wed, 12 Aug 2026 15:32:24 +0200
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-phy@lists.infradead.org, 
-	Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"moderated list:ARM/Mediatek USB3 PHY DRIVER" <linux-arm-kernel@lists.infradead.org>, 
-	"moderated list:ARM/Mediatek USB3 PHY DRIVER" <linux-mediatek@lists.infradead.org>, 
-	"open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] phy: mediatek: tphy: simplify main allocation
-Message-ID: <djjg6jwpuu6l5wcc7zbxfi7j4n5hircmhivxohdtgufzrp6rlb@l6eyfdyfrxix>
-References: <20260304041400.7236-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRI2Q9LF"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-38fdeaed181so1356248a91.1
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Aug 2026 07:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786544240; x=1787149040; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IFXEKRNC613kArjQkSDoySIwrg59q2YplhF5qCQ3nq4=;
+        b=KRI2Q9LF4g3P4OMFeOJUK/d89oCYcE5+83T1f8eTz9ptO3qQV6VH8+wPe/hg2/ND9M
+         knRx4CX/cBjsbaHHMaCpyUosGQduuOh2B655d2ZG9T28mFgzcgi+iUjfMnvHnBXVRvLE
+         +S5sH3VvkIQn/NgMOzxcIRdXz3/Y2kKtMwVSW3OgTAsRwk7Xd4EnJ9WoRINIAaJR6Zo8
+         0+TFRUnuy3JypNn580IfCNqn4B3mAxQ+bgwxPBlWU8Zcz9xzUFzHevAwxs9brraTCvdp
+         WsCjVdv2ke/6feIWkcMR7naRq9C/bFodamOuAwqSnS+FjSkka/YB/jhHkyWTpcuM8YCm
+         y2Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786544240; x=1787149040;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IFXEKRNC613kArjQkSDoySIwrg59q2YplhF5qCQ3nq4=;
+        b=ZNQHcU9qmgZs4LECs3+VgZrOopNacfkNZK0lgqEv+8HrBUYBM39wzsGVritzTuRX5G
+         Hwyr2NMFVijXJlDxqjDidDb1FTjJEGtVlU9PVtK1vvOWiMwT9q1LOGEhLNPLCL4RvAxi
+         LDgAT9nWLS49eYK4FxIMi2KMbvKQ6EiRDhROqnZSsV5JX/MnzHwPhEd3G4fGsZaOiKR5
+         rjul1WzUVh038ywJp3Zl6WKiUrG7/BdulYZ9V1VWMLYOZnJh6aqB7qHSY8J+jyDCHVIr
+         JQLpI9RnweiiG7NhV1qv4CKxUuLk+g4mO4w5RszT1BsTpGkdiDo8e8alFEp1vZld1XkU
+         D5cQ==
+X-Forwarded-Encrypted: i=1; AHgh+RprMqlR2n9+AqXuA7rSZv2TVt2f7puVcaMZ86DaFBKKCQd+nIY77b28C+IXvnjBV1oFZB4k7k7YqWmN+1MRtZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkgDTdLexUsmB+qpPGfJs7P/ulZIqpLgZIEbr2f2Xo3wVOif8S
+	NdNNh+3RaQgxp1q18FR6HALklccQsvwYX/Y7ylER6e/yqFmhrLTggwEG
+X-Gm-Gg: AR+sD1277l4/e4pLYikg2rpl8CvDOdJ7XEc+0h+h56jTyiDo/XNpiAT9b+HS9no/FUq
+	bOqxmDBZSkBsdLmbp3bknS7qFKhxWFFuFAI7ZlwB+kpUC3AXpH+s7NNibojdBXiosRHc1vJN6Lz
+	ACjHuEe0vrv3FO1BfJk2uZvtSrtPuJft6vXXvcPLASyYt70h3uHJqHjkPea/L/5CmDlBwfDQ3mp
+	mjDxI7Y9c+aJwIlwxe7NKkruThHvXXUn7a4ZWFA9E/+KEuH3AgBMw8avyhX//I0aClQya3CjIg2
+	YeF83mzw2+/+8E8YWWpqZWA52jIZFmifITnl7smj9GVjLSclCGwppirPagvVLGKb8UFY7QUqeM8
+	5RKSHc3CeJLj2WSQ3u8EgPZakDrP6E8bsPgkNHXmbS9lC1uWD5GRQlaRSjrRIUPBkvnY+HDTvfC
+	SN4ZcQtnCXYBfGcWhaAopWPzWY0J4znfTTkZoeJKb0xA2jeFs9Nv5K+nNN3OQoOKdj55i0F9udf
+	zyvXljDz10fBbyanoCHkdFc1LJTrC1lhOcf/sMvlE5oiROjuQ==
+X-Received: by 2002:a17:90a:e7c6:b0:38f:57f0:1f5d with SMTP id 98e67ed59e1d1-3930164ea38mr5615471a91.15.1786544239634;
+        Wed, 12 Aug 2026 07:17:19 -0700 (PDT)
+Received: from Mac.localdomain (198-27-228-154.fiber.dynamic.sonic.net. [198.27.228.154])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31cf361d57asm11963071eec.6.2026.08.12.07.17.16
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 12 Aug 2026 07:17:17 -0700 (PDT)
+From: Ahmad Byagowi <ahmadexp@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nam Tran <trannamatk@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Rosin <peda@lysator.liu.se>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next v4 0/5] ptp: ocp: Add R4006 and V9 I2C peripheral support
+Date: Wed, 12 Aug 2026 07:17:10 -0700
+Message-ID: <cover.1786543681.git.ahmadexp@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260304041400.7236-1-rosenp@gmail.com>
 
-On Tue, Mar 03, 2026 at 08:14:00PM -0800, Rosen Penev wrote:
-> Use a flexible array member to replace kzalloc + kcalloc with a single
-> kzalloc.
-> 
-> Shuffled some code around as __counted_by requires the counting variable
-> to be assigned first.
-> 
-> Removed NULL check from of_get_match_data as it's never NULL per the
-> device table.
-> 
+Add the generic LED and I2C-mux support needed to describe peripherals
+behind the FPGA I2C controller, then use it to instantiate the R4006 and
+Time Card V9 board topologies from software nodes.
 
-Please do not combine multiple fixes in a single patch. Also, the NULL check can
-be kept for the case of sanity as it wouldn't hurt.
+Patches 1 and 2 add the binding and LED-class driver for the Lumissil
+IS32FL3207. The driver supports individual and multicolor LEDs, enforces
+per-output current limits, and keeps the controller shut down until every
+channel has been configured.
 
-- Mani
+Patch 3 propagates software-node channel descriptions to adapters created
+by i2c-mux, including a software node attached behind a primary ACPI node.
 
+Patch 4 adds the R4006 profile for the temperature, humidity, pressure,
+GNSS LED, and four SMA LEDs. The BNO08x channel remains empty because no
+upstream driver binds that device. Profile selection is fail-closed and
+requires a supported PCI device plus a printable fixed-width EEPROM ID
+with valid padding and an R4006 prefix.
+
+Patch 5 adds the V9 BME280, BNO055, two GNSS LEDs, and four SMA LEDs. It
+uses the exact EEPROM ID "TIMECARD-V9" because earlier revisions expose
+the same detectable I2C devices with different LED routing.
+
+The prerequisite patches touch DT bindings, LED, and I2C code. Reviews or
+acks from those maintainers are requested so the complete dependency
+series can be carried through net-next.
+
+Hardware and build validation:
+  - Exercised the R4006 LED routing on hardware.
+  - Checked the V9 controller address, 4.7 kohm RISET, sequential RGB
+    routing, and second GNSS LED against the V9 schematic.
+  - Ran dt_binding_check for issi,is32fl3207.yaml.
+  - Built i2c-mux.o, leds-is32fl3207.o, and ptp_ocp.o with W=1 for x86-64
+    and arm64 using both defconfig and allmodconfig.
+  - Ran strict checkpatch with an 80-column limit on all five patches.
+  - Applied the generated mailbox to the stated base and compared the
+    resulting tree with the source branch.
+
+Changes since v3:
+  - Carry Krzysztof Kozlowski's Reviewed-by tag on the DT binding.
+  - Document that registers remain accessible with SDB low, preserving the
+    retained-scaling clear before hardware shutdown is released.
+  - Establish any ACPI primary before attaching the channel software node.
+  - Keep channel software nodes attached until child clients have been
+    removed, then release the held node reference after adapter deletion.
+  - Rebase onto current net-next.
+
+v3:
+https://lore.kernel.org/r/cover.1786423898.git.ahmadexp@gmail.com/
+
+Ahmad Byagowi (5):
+  dt-bindings: leds: Add IS32FL3207 controller
+  leds: is32fl3207: Add controller driver
+  i2c: mux: Propagate software nodes to channel adapters
+  ptp: ocp: Add R4006 I2C peripheral topology
+  ptp: ocp: Add Time Card V9 I2C peripheral topology
+
+ .../bindings/leds/issi,is32fl3207.yaml        | 251 +++++
+ MAINTAINERS                                   |   7 +
+ drivers/i2c/i2c-mux.c                         |  71 +-
+ drivers/leds/rgb/Kconfig                      |  11 +
+ drivers/leds/rgb/Makefile                     |   1 +
+ drivers/leds/rgb/leds-is32fl3207.c            | 691 ++++++++++++++
+ drivers/ptp/ptp_ocp.c                         | 881 +++++++++++++++++-
+ 7 files changed, 1865 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/issi,is32fl3207.yaml
+ create mode 100644 drivers/leds/rgb/leds-is32fl3207.c
+
+
+base-commit: ac155a26750a595703e7dadff84735456d75a479
 -- 
-மணிவண்ணன் சதாசிவம்
+2.50.1 (Apple Git-155)
