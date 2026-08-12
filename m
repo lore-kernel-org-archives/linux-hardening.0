@@ -1,164 +1,112 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2534430DECC
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Aug 2026 19:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0F03A8FE6;
+	Wed, 12 Aug 2026 20:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786563987; cv=none; b=jELnKlLMWeHiZshdq+BKXe9n/8Zg5Cym14KFdoo6H4yyWUG917umaHARJEA9kxvqh9NGX7xn5AwjPnMoXQqiVYYuWdJiNJV1K7UTmxpMiyopMK44cNgCjyNlNC8PVDt9E2qHb8LFO6ejIhH6vXDTnIAsL09wYCTUM66BrmBaRmU=
+	t=1786568120; cv=none; b=SyqR4+pD39f+ruMhE6SfYX8N4v/uUQVLvwRI+HWwOCRD6i4UxP/eNaHthUMJjbHCJ66qBZAakmM1S5CJK0QJDU84QQatqWyhu01Wa3Zg9heBVohroxax9xBIsxta6+0UrcUleG75Oesdf4hkVpkMDV6gaMfoncOyigL6VZxF6Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786563987; c=relaxed/simple;
-	bh=GtIsD9pilK0SNml3Q+EG+xXEnVtMBItrgeg4ymDh+9w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=omMjNy2yRQus7T+7bq81c0FBa2cViAfW+NVdmv4McRgBTjiF0RaGVYJuK42axXgKE6hT1onwomPApGJ/Ub9hnfkkcoGL3sdLckKtFTwNTkvMljBC4FpDGpIqZ1RcT1GJq922MpWvnbGut2BhUZ3sN17IvNcmzjZ3T61PEY7acFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KbZPemz+; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KbZPemz+"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4994d67d260so1545e9.1
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Aug 2026 12:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786563982; x=1787168782; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=lLauo+hnjrgG9ZJXjVO0Yx2ztAEOgVX1xLL/xvR8xq0=;
-        b=KbZPemz+V/1UAEocQhZbYKCizgX1A4K64KSGayuqgf4G7IV2rEQXo3VuCeQEaWaBZa
-         T8hNtiuJ6YeeB/YsoaBY3fMYt4RJqzpgkEF+LJIFf7XXhuxT6T5Su+grAodI6vNaZlrW
-         OynTN8D+KohlTsEP21hp94mriAl5+o+us1ALQNI/OKjwdopY0OJ6uvo2WiDdFu+HPWmL
-         rcG6GrT7HEz9qd3e23ObN5FR01zKx5f0NxDv3Q8/0iEJBrWSO8AYC5e5ksldF7yYa7BE
-         6OQyZnZtXBCmu+dOaYCwGezCforTJy8iw06YqtB6533huAbHHlw0u1wu8TLp7ySaTXM+
-         Y6UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786563982; x=1787168782;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=lLauo+hnjrgG9ZJXjVO0Yx2ztAEOgVX1xLL/xvR8xq0=;
-        b=f6kAvgVWt3qdM0o7nlbTW6Gu68ZoG8sKELLkW2NGZ/693XKBAENaaiJM3hz3Tp4mPn
-         0lRiWuyDfXlRrTw5xiAF5BruD1tRvQeIJe5QmYBxR/S0pN5s8IFCTfLd+sHJwrCIc5S3
-         gpZkG4j7pa+5VKvFztTBOFyhG7RD8StTm9VqZ9+eMxxvavAibhDQnU1zeCni18t6/ABk
-         pWpCO+UF5QRCLCQev32nTg9wXqlIgXbEXP0zxND9pRUzKqIXrhZV4QdBMFfWn54ZolI6
-         cQ4clnMnJUc+A/G8LjdeFqtu+BnL1JJZbB1rxv9vDFMvMy+Sxa91ZcajCl/YaBfRMAAT
-         9yig==
-X-Forwarded-Encrypted: i=1; AHgh+Rr5vXJc+C2W4s9nROh9LXU4sBDsby0orPcWoMN0ZR+tZPYnIwMOlbVReZ6m2blodq8Rk/C22+6bAobp1t5pZZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcifbLJSOyL/cmFE75P7/s9bQkKpD98JmZ9qT6r12lu3wzPQrG
-	//es/4r66NAEdigr5jcMkFql347O2TWholbX0woH3xlHCeA2FTWvLx02n9OJT+x3vecSBQNITFo
-	/yHkw4H52
-X-Gm-Gg: AR+sD102mISdBDvr0eWNJv9hXgsVSW51Z5XhNA/vxMMhOL0o0h8XNNA+leHaFwN5DTC
-	S2+pyDg41YzISUd/QySk0OWAYUMzkU5cqaOvi75l4Ecaj7vigC8vZYnFCBUw/dHnyED9y+21WxA
-	t5IwMQ/+WP3UTJhxUNPlNntKB1STC0whesoqCwD4UOD96KiwAIzq1uTaNvQEHMWpANVbvCMqeXt
-	DaPHA1d+zLoTt393BLifkhPnM5sl4UhPz0kCOZs28xA3WXxSRjvbHE5b2rf5vprGjdgVH7AcImm
-	/UKH5WV+wTm4atNy5C+TvCnFJYAAKO6En0zVarACmkVY/HeZ6dIWrlrHXynjFvtOA91i0muzHtg
-	Ru/guYZWFNhyQ+k8F6Wi18Tq4FI/4oayueXirTnW++VIZOLVovM51lVsTCm16RYLXqnXHEK3fK2
-	QHvcm2sgBd/ig2iav0Qrq+DWzrCBscDhXFJHwFapspuJ68/6xWGqatvofS6GSwSwzZsDZttwClq
-	BhtnJOtAOp54xnaoXw1NJVtKVxEcuSvKJ1PSk/2y10QGlSs
-X-Received: by 2002:a05:600c:42c5:b0:495:7a0b:3b4a with SMTP id 5b1f17b1804b1-49981f9c9d6mr97045e9.7.1786563981961;
-        Wed, 12 Aug 2026 12:46:21 -0700 (PDT)
-Received: from localhost ([2a00:79e0:288a:8:d358:790c:76c6:1a58])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49981b62894sm9412265e9.13.2026.08.12.12.46.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2026 12:46:21 -0700 (PDT)
-From: Jann Horn <jannh@google.com>
-Date: Wed, 12 Aug 2026 21:46:14 +0200
-Subject: [PATCH] bug: remove __must_check requirement for
- CHECK_DATA_CORRUPTION()
+	s=arc-20240116; t=1786568120; c=relaxed/simple;
+	bh=FrdqQ6kXNnNKfJVjZwswwcKEQOtgoDeMVrYYyQrDqpE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G2RQoc+vbOnhCIa3WaSsCZSuZsb58bPHCs8WyB4Mdb9lg9RZ8irj5fEiOrSvMsHE/l7T8asZOYiHHgGhrsKHt1P4OGA3NMcD9keZPtQL54OVgxXn+UNqlteDRzf3U0Dkutx6yKGZ8r2PdkMIgvmygDKuYNdvEwdiSEfNPKm8Vx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.helo=mail.mainlining.org; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.helo=mail.mainlining.org
+Message-ID: <b15b2687-0c2e-43b2-ac9e-78e04e77e065@mainlining.org>
+Date: Wed, 12 Aug 2026 23:54:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/33] Add support for Qualcomm Snapdragon SM7150 SoC and
+ Google Pixel 4a
+To: David Heidelberg <david@ixit.cz>, Jens Reidel <adrian@mainlining.org>,
+ Danila Tikhonov <danila@jiaxyga.com>, Miro Mraz <mraz.miro@seznam.cz>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org,
+ netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ neil.armstrong@linaro.org, linux-hardening@vger.kernel.org,
+ linux@mainlining.org, Connor Mitchell <c.dog29@hotmail.com>
+References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
+ <2ca2b774-fd7f-4612-b38d-f60e32ff6f9a@mainlining.org>
+ <283096ad-ae1b-42b8-8312-b192f735fc80@linaro.org>
+ <cce3fe36-322e-49ed-8928-3aef813faad7@ixit.cz>
+Content-Language: en-US
+From: Danila Tikhonov <danila@mainlining.org>
+In-Reply-To: <cce3fe36-322e-49ed-8928-3aef813faad7@ixit.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260812-data-corruption-mustcheck-v1-1-5f59bd3bc2b8@google.com>
-X-B4-Tracking: v=1; b=H4sIAIXNfGoC/yXM0QrCMAyF4VcZuTawFqnDVxEvujRzUdxG0oow9
- u7W7fKDc/4VjFXY4NqsoPwRk3mqcKcGaIzTg1FSNfjWh7ZzHlPMEWlWLUuuW3wXyzQyvZBc7IZ
- LSIH9Gep/UR7ku7dv98NW+idT/gdh237+ZdcnfQAAAA==
-X-Change-ID: 20260812-data-corruption-mustcheck-c1a8f76d6e24
-To: Kees Cook <kees@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jann Horn <jannh@google.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1786563977; l=2545;
- i=jannh@google.com; s=20240730; h=from:subject:message-id;
- bh=GtIsD9pilK0SNml3Q+EG+xXEnVtMBItrgeg4ymDh+9w=;
- b=Y3NRtAopcLAoSsP9DIwxXYLyoNePSF1VwGoE+HK3lnL79OhBo67uNhsu2FK0Y8N6pgmX+lVO8
- aKwU0DvvSM3CbeCbaKVPZ5NTbs85yL43sIcZaER0gxvRhfFDCbpg9Ux
-X-Developer-Key: i=jannh@google.com; a=ed25519;
- pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
 
-There are codepaths that currently use something like WARN() where
-CHECK_DATA_CORRUPTION() would be more appropriate, but it is not possible
-to gracefully bail out when corruption has been detected.
+Hi David,
 
-CHECK_DATA_CORRUPTION() is currently deliberately unusable in such cases.
-While it would be nice for users of CHECK_DATA_CORRUPTION() to bail out on
-corruption, that shouldn't be a hard requirement for
-CHECK_DATA_CORRUPTION().
+Thank you for your comment.
 
-So remove the __must_check requirement so that CHECK_DATA_CORRUPTION() can
-be used in codepaths where bailing out is infeasible.
+On 12/08/2026 14:40, David Heidelberg wrote:
+>
+>
+> On 23/04/2025 09:26, Neil Armstrong wrote:
+>> Hi,
+>>
+>> On 23/04/2025 00:07, Jens Reidel wrote:
+>>> Hi everyone,
+>>>
+>>> apologies for the mess this created. Danila's mail provider 
+>>> ratelimited him halfway through sending the series and the attempt 
+>>> to re-try sending the second half an hour later ended up with a new 
+>>> message ID (I think due to not using --in-reply-to).
+>>> He asked me to let you know that this will be resolved later and the 
+>>> whole series will be re-sent once the problems are resolved.
+>>
+>> The b4 web submission is a great alternative when the mail provider 
+>> is rate limited:
+>> https://b4.docs.kernel.org/en/latest/contributor/send.html#web-endpoint
+>>
+>
+> I see people interested in moving Pixel 4a forward, but it seems this 
+> was never upstreamed? I looked at sm7150 repository [1] where I see 
+> FROMLIST, but these patches never arrived to the list and this series 
+> is from 2025.
+>
+> Should we expect v2 (re)based on recent tree?
+>
 
-Signed-off-by: Jann Horn <jannh@google.com>
+I'd definitely like to get back to upstreaming SM7150 and the devices
+based on it, but I don't think there's much value in continuing with
+this particular series as-is. A lot has changed in the kernel over the
+past year, which would require substantial changes throughout the series
+and would effectively force the maintainers to review it from scratch
+anyway.
+
+I'd also like to split the series up to avoid targeting such a large
+number of maintainers in a single submission. Hopefully, I'll be able to
+find some time to work on this in the near future.
+
+
+> Thanks
+> David
+>
+> [1] 
+> https://github.com/sm7150-mainline/linux/commit/7ea41523c678e94a7c048936052b5b1b1b109cdd
+>
+>> Neil
+>>
+>>>
+>>> Best regards,
+>>> Jens
+>>
+>>
 ---
-I think this should probably go through Kees' hardening tree?
-
-This patch is inspired by me looking at file_ref_inc() and thinking
-that that really should be using CHECK_DATA_CORRUPTION().
----
- include/linux/bug.h | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
-
-diff --git a/include/linux/bug.h b/include/linux/bug.h
-index 17a4933c611b..e8d1febd8ae4 100644
---- a/include/linux/bug.h
-+++ b/include/linux/bug.h
-@@ -89,22 +89,21 @@ static inline void mem_dump_obj(void *object) {}
- 
- /*
-  * Since detected data corruption should stop operation on the affected
-- * structures. Return value must be checked and sanely acted on by caller.
-+ * structures. Return value should be checked and sanely acted on by caller if
-+ * possible.
-  */
--static inline __must_check bool check_data_corruption(bool v) { return v; }
--#define CHECK_DATA_CORRUPTION(condition, addr, fmt, ...)		 \
--	check_data_corruption(({					 \
--		bool corruption = unlikely(condition);			 \
--		if (corruption) {					 \
--			if (addr)					 \
--				mem_dump_obj(addr);			 \
--			if (IS_ENABLED(CONFIG_BUG_ON_DATA_CORRUPTION)) { \
--				pr_err(fmt, ##__VA_ARGS__);		 \
--				BUG();					 \
--			} else						 \
--				WARN(1, fmt, ##__VA_ARGS__);		 \
--		}							 \
--		corruption;						 \
--	}))
-+#define CHECK_DATA_CORRUPTION(condition, addr, fmt, ...) ({	 \
-+	bool corruption = unlikely(condition);			 \
-+	if (corruption) {					 \
-+		if (addr)					 \
-+			mem_dump_obj(addr);			 \
-+		if (IS_ENABLED(CONFIG_BUG_ON_DATA_CORRUPTION)) { \
-+			pr_err(fmt, ##__VA_ARGS__);		 \
-+			BUG();					 \
-+		} else						 \
-+			WARN(1, fmt, ##__VA_ARGS__);		 \
-+	}							 \
-+	corruption;						 \
-+})
- 
- #endif	/* _LINUX_BUG_H */
-
----
-base-commit: 3d6d817622b0a9721e3cc404df3469171582be13
-change-id: 20260812-data-corruption-mustcheck-c1a8f76d6e24
-
 Best regards,
---  
-Jann Horn <jannh@google.com>
+Danila
 
