@@ -1,77 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC56C2E8E09;
-	Wed, 12 Aug 2026 00:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7464309F1D;
+	Wed, 12 Aug 2026 00:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786493869; cv=none; b=XCAQO7Im2flH/mIepoe/E95fCT9ZKgbtPwn7szwp79JJyHbVfnvAf0aFgsS9a9hMfHkoaS0GOFZLOuAP//y9of4XnAHJTxs+ll7f/7p//pmGlJfjWdD6vP9J1z20HiBw/shnv4Ki6DrdgjcSqJ5cVy5kxfBB/k5rixvXHLe72r8=
+	t=1786494122; cv=none; b=ZtW5NIdwMsQedhIhMAjUqKRSVa+9eUNwc5y10Lsqe/NC7WtP0XcuVEVfRLv7aI92XeROBYjxn+g2oHXzwbAipshOfmeoLMumFa9X/fkZOw1jscV9iaR0+TzNtC9QTIHoYKKwaIsvEKjhWh4a7L3qyhw7wmdo0n6eqQXTOxdCDTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786493869; c=relaxed/simple;
-	bh=ha1cQzHmeAmgOC+MpY19CCwpCTIA2rRwWnQl2ETVZNY=;
+	s=arc-20240116; t=1786494122; c=relaxed/simple;
+	bh=86kRHvCfPEQrpiE0qCsIOVwwwyhqWxzSsJx3L+A+KCE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iGMY5rBJeiR3nAKVrUd1KGMnXhPh+4BU95mGM+plIzHmgdJOn5HTjWj/I+0vKXmwcQYv/5ktfhzuXHIG4L51qGy9kwHBAKKMBfzFI1rGPrl9duKpUNM0w9tNgTIJ8wWCew8UKbVpnyfS7l/3dn64mAutrRljPNfLFoOYpJOJHRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eM0nOym2; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=tNYW44QoJGrdGfPRg35cOrwMb7yAgicfI/j3PJ/F5/aCHMearU7iHU60Nrv+G5BPMZ9I+yfvkWtbBWWczlZWqJjpJQS5xAx4NT34Q67q1NanRxNw2QNnXoiu4hzAhpq5KL9mEwweCr+yF20bLIqB79/0mhaLs9XfJcrA7DgxUzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ysd8Fmn4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eM0nOym2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B11791F00A3A;
-	Wed, 12 Aug 2026 00:17:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ysd8Fmn4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3DD1F00A3A;
+	Wed, 12 Aug 2026 00:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786493868;
-	bh=glKqfK+8vzTCcTVl+aipxjInjbAI8DgcIFu3nly0kUY=;
+	s=k20260515; t=1786494121;
+	bh=VhwcullDweBA2y43cU3X0QJqXfzoX+SmzxNQiIKXUY4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=eM0nOym2AGLDqOZx4l707CB6YZfsavdmW4jozp1YGS6OTk9ElQ+5pMP3jZdH25VN9
-	 h4SilSashnxag0aWqDrMETcxkHsUhK83w6jubzXHtiBquUKc1XowcYtE8Czk4Q5wVS
-	 l3kGCRBF1DcRfad+neGD/cpPRDKdVAS/9nt7dW+ehAWVzu4kwOKQImVGZJCrQDK5Ku
-	 +nL3kbap8HBJQU4gyrOb2p7sYQTnIwpC0PbaaWdaVQX6yzD/K0wdSjGZYPgtUO/OF5
-	 hFKTAK5J1NYf9lBnglBI7NU1+yyeA8u3+9J0j2QRj/vLC3OnVFm+YYSD1GWnd5apMW
-	 Jg9jUpLStmBmA==
-Date: Tue, 11 Aug 2026 17:17:48 -0700
+	b=Ysd8Fmn4nDDPohKAcrSHO1iFdNzAewdFZ3jn0ktnzfwnv7L1Azf5kIXYE2Tp/QGz5
+	 +AgcdyPNfmyiJdymtRA0/tCwUZptVP8zj2Ou+kttITKGXhpic8sTZV/wXhx0//6cKu
+	 r9OaKDZBGf/g4RgpTBi05+QLRVaG68nPN6Rz0YjCfNeGy8NsqR4HNILkTOpaeu6C+M
+	 2ThCzkKyqdHOeji46dQFhlBhbqmZE1kB6/R4TkDYCjFOa6SiS+zeAZzBSr3STTgUes
+	 TeQ0gx2W2jXOW83HBs4EFBMV8UGJLKENDWKEetAIpMLPLSaXuJ9kHzKvWNpFRa1vD7
+	 e6XvRryqoFRZA==
+Date: Tue, 11 Aug 2026 17:22:01 -0700
 From: Kees Cook <kees@kernel.org>
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
+To: Jann Horn <jannh@google.com>
+Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 2/3] slab: check for ZERO_SIZE_PTR by exact match
-Message-ID: <202608111716.0FA9DB17@keescook>
-References: <20260811141240.62519-1-kmehltretter@gmail.com>
- <20260811141240.62519-3-kmehltretter@gmail.com>
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/2] vfs: Add KUnit tests for fdtable
+Message-ID: <202608111721.06C99CDB58@keescook>
+References: <20260810204118.1981755-1-morbo@google.com>
+ <20260810204118.1981755-3-morbo@google.com>
+ <202608101713.34DEA00E9D@keescook>
+ <CAG48ez1VBBkukXH17RRSnAU7rMu0St5x59rkTDVkcMebxuS4-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260811141240.62519-3-kmehltretter@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez1VBBkukXH17RRSnAU7rMu0St5x59rkTDVkcMebxuS4-g@mail.gmail.com>
 
-On Tue, Aug 11, 2026 at 04:12:39PM +0200, Karl Mehltretter wrote:
-> ZERO_OR_NULL_PTR() returns true for every value less than or equal to
-> ZERO_SIZE_PTR. With the sentinel raised to ARCH_KMALLOC_MINALIGN, up
-> to 128 on some architectures, the helper matches additional values
-> that are neither NULL nor the sentinel.
+On Tue, Aug 11, 2026 at 05:42:05PM +0200, Jann Horn wrote:
+> On Tue, Aug 11, 2026 at 2:16 AM Kees Cook <kees@kernel.org> wrote:
+> > On Mon, Aug 10, 2026 at 08:41:13PM +0000, Bill Wendling wrote:
+> > > +static void fdtable_test_alloc(struct kunit *test)
+> > > +{
+> > > +     struct fdtable *fdt;
+> > > +     unsigned int slots = 64;
+> > > +
+> > > +     fdt = alloc_fdtable(slots);
+> > > +     KUNIT_ASSERT_NOT_ERR_OR_NULL(test, fdt);
+> > > +
+> > > +     /* Check that max_fds is set correctly and is >= slots */
+> > > +     KUNIT_EXPECT_GE(test, fdt->max_fds, slots);
+> > > +
+> > > +     /* Check that fd is allocated */
+> > > +     KUNIT_EXPECT_NOT_ERR_OR_NULL(test, fdt->fd);
+> >
+> > Nice to add these tests! Can you add one for each of the conditionals
+> > in alloc_fdtable (e.g. ENOMEM, EMFILE, and the power-of-two rounding-up
+> > logic, etc)?
 > 
-> Compare explicitly against NULL and ZERO_SIZE_PTR. Store the argument
-> in an unsigned long temporary to support both pointer and integer
-> address arguments while evaluating it only once.
+> Wouldn't tests for stuff like the rounding-up logic get into
+> implementation details too much, and break if implementation choices
+> change?
 
-Can we move ZERO_SIZE_PTR to cover the ERR_PTR range too? See this issue:
-https://github.com/KSPP/linux/issues/93
-
-> This also changes check_bogus_address() in hardened usercopy: nonzero
-> addresses below ZERO_SIZE_PTR no longer cause its null-address abort.
-
-And then check_bogus_address would also catch ERR_PTR.
-
--Kees
+It seemed to me like we'd want to notice if that behavior changed?
 
 -- 
 Kees Cook
