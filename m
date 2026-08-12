@@ -1,149 +1,241 @@
-Received: from ixit.cz (ixit.cz [84.42.129.46])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012055.outbound.protection.outlook.com [40.107.200.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA25435504;
-	Wed, 12 Aug 2026 11:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.42.129.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786534828; cv=none; b=MYR0K2oDmXvpEz/hj+VYkImZvEe56JDzIf9v8HfP9pHnV0fg8+s1yOjPKfY/z2ToXQrfkeyChDAx/qy8D+lA5sTsAsOgOdYQuaohBTgHN3BCOAr5QK4oNmriWsR/62EI5OPL1sFAzYbxZaACNDu9euNE+hoW7C2C/ZXKe7Tgxdc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786534828; c=relaxed/simple;
-	bh=4h/0oLp2h7IE8pA6uZy4AQLNovG4Wqu1oVEvekedYSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DMtnPU65fDILrYTo06tAmD6FYYIn1zJsAuJnegXnWuziHVXUQid6568tUFVNXgYy95C9ba9qWj4DkiDh5w4Wk33jomaRjzVkLi+qPcPeyTIu1LhxIZAldGbwT9uJ4Yx15P8QrJRiJ3XepybbmGbdWH4i6WvoFrW3a+cArlYqY08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=GB7ysRj8; arc=none smtp.client-ip=84.42.129.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B3B43E06F;
+	Wed, 12 Aug 2026 12:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786537416; cv=fail; b=FszwHfiaq/f2enlgVS5FGQmITISylqYLoqxgG64ujcemMao+Gx0SDXy3ra033AQAF3LfsDamlW+YcVqBBZsKtUES8nI+bsoxOtaPnSJCbmlNCgJ5b7tyWE/qTqTChAPHaZVXPwvBTYk5lyHRyGv0JCtzS/REhXuyFT3o6Q6fJu4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786537416; c=relaxed/simple;
+	bh=nTQN8tuch2U9VVLCXdtsw+vsid1t9nC17kxDX53G9Yk=;
+	h=Content-Type:Date:Message-Id:To:Subject:Cc:From:References:
+	 In-Reply-To:MIME-Version; b=iPI+OwSNYk7mzNcaLmlEOgMpJau5Pek2NbSe/gjh9BrWwQbW/WMpEkb3ogH49lgUlKA+H97t8mjtUDsEVzf/dW8qpIvAWbNjrhkvDZBZlSc2SiB/sJOz/qP5tjCrdQLwAKhO2D4qpbSbWYarsF4Q+gjeKQSh7AgLJ12BtabKb5M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SzrInda/; arc=fail smtp.client-ip=40.107.200.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="GB7ysRj8"
-Received: from [172.16.124.192] (ip-78-44-13-22.bb.vodafone.cz [78.44.13.22])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id B6B8F53401E6;
-	Wed, 12 Aug 2026 13:40:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1786534824;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=KArXhTGikECnnXJBaKJQL5HiSiaclLz+gY4N4WdWjRA=;
-	b=GB7ysRj8pn9j8ajPfl9zs1ENqu8qTVII284Qf4FOevTFQfE6k//3GPYoLp5AlMyfiII8KF
-	bmiL05O4Yw4ptY+RPGmR1DHhpv3qai5XeDSN/rTPsAXphZx0FOsSqW7It7FR4+276wuubB
-	XtmhSyiGNND8ETSKmaPTKjjifL1M/ik=
-Message-ID: <cce3fe36-322e-49ed-8928-3aef813faad7@ixit.cz>
-Date: Wed, 12 Aug 2026 13:40:23 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SzrInda/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DPw6F0mDqUVUdUkjL4oEwHUCwaEr+J14WWnOiWpoVV7+KZQWlg7OC24NCAUkK9eygw1wQc9oGiDGKv7BLLqIjTlgdm7UmT1EA34XXVG7CIE6LkQFn0ZVonHgODFp2xLuxyPuIdf5iusmdph8wxKcQoPrdrKMHBjBF1uGiMOjwbtVTfI25JP5/cSkNqwAg2Cd7wUuD/7ayx+a9Arr/b7ca1DzLHdz9lZG8SSk82F/qhqXrNtMbuhJQP6mV6ZvXm0tNH+mxnBfeu6aqGKDIGo4yqqp1uaNtBftAwL3egpqSc2uOG47GqSCWlEj3M7ciIxItljx4I4lZ3hMqrwZsl9yWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ysHMXh+OphuU9nSb5q4wK3oNLoFW1/ieVbk1zEskU8k=;
+ b=nt0TPtvdG/NhS/gvjvXM9ugwPO2eW8mVC5RLG7CfjTo4APEqw2VBCYAH/Evk+Ozq/Uyn8YfJBosrZoXvbqNSEbr1N7X7RQUNbfXyAlbklZ5Iet/DFmZf+i6TiAzmrcwf7UHVcdkmZvJTyAlao7i3hfry+3DPhD2Og2AnBIzxmWwALNsXBaGDxryNzW8RuR7tntQWManhlcLw+Aw2Z1Y/U5S69xpQViPgWWuU5E5jLbIFBoqwI29KmQOWUB12cPahZGUkXN/NPuIXdNI4Ys+l/plCRaNq3vgPPCND/Oj2Xe3mW9TzS7oseFzAgRZTh73w52lE08s3Dz/DZDuVfPwRMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ysHMXh+OphuU9nSb5q4wK3oNLoFW1/ieVbk1zEskU8k=;
+ b=SzrInda/5H6fhL7v2TEF5zyVw4rO4bh5jori6ojKuQgX2aF8aTICAYXdhQ1rGMPg9kZlgyYrI+7VzC1bM+jhUpgGwYzfEp0e3aWjk/HmSgHZMaUMSNSOOUe7TQDxpwwJtrJf8gfng4HmbhoHn+kyUQBErmia2fnFvu5kDsnBtZqqtP7u7HpoLkL199ixxZrgpGz1XUrA60lvM1RwW8I2hl04r63ieIROgggwQ2YewXDS/XPJkaFk403F51AAuoG49oQsF4zWv+ocQy2u4kbom8W0AFxeJJXQB0cFSAMtiqZSPk/9XDSbNmnHNVf849YaF88Ull364R5F0xBDaxEG/A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ0PR12MB6733.namprd12.prod.outlook.com (2603:10b6:a03:477::9)
+ by CY8PR12MB7705.namprd12.prod.outlook.com (2603:10b6:930:84::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.14; Wed, 12 Aug
+ 2026 12:23:24 +0000
+Received: from SJ0PR12MB6733.namprd12.prod.outlook.com
+ ([fe80::f00d:2f6b:6f9b:8f97]) by SJ0PR12MB6733.namprd12.prod.outlook.com
+ ([fe80::f00d:2f6b:6f9b:8f97%3]) with mapi id 15.21.0315.014; Wed, 12 Aug 2026
+ 12:23:23 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 12 Aug 2026 20:23:17 +0800
+Message-Id: <DKMYNI96TQM8.3OMDZZZA5BGU3@nvidia.com>
+To: "Ashok Raj" <ashok.raj@oss.qualcomm.com>
+Subject: Re: [PATCH v3 1/3] ACPI: APEI: GHES: Refactor Grace decoder helpers
+Cc: <rafael@kernel.org>, <linux-acpi@vger.kernel.org>,
+ <tony.luck@intel.com>, <bp@alien8.de>, <guohanjun@huawei.com>,
+ <mchehab@kernel.org>, <xueshuai@linux.alibaba.com>, <lenb@kernel.org>,
+ <kees@kernel.org>, <gustavoars@kernel.org>,
+ <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From: "Kai-Heng Feng" <kaihengf@nvidia.com>
+X-Mailer: aerc 0.22.0
+References: <20260724122054.36162-1-kaihengf@nvidia.com>
+ <20260804122318.88193-1-kaihengf@nvidia.com>
+ <20260804122318.88193-2-kaihengf@nvidia.com>
+ <anUpAigVklVNG7ij@hu-ashoraj-lv.qualcomm.com>
+In-Reply-To: <anUpAigVklVNG7ij@hu-ashoraj-lv.qualcomm.com>
+X-ClientProxiedBy: TPYP295CA0041.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:7::19) To SJ0PR12MB6733.namprd12.prod.outlook.com
+ (2603:10b6:a03:477::9)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/33] Add support for Qualcomm Snapdragon SM7150 SoC and
- Google Pixel 4a
-To: Jens Reidel <adrian@mainlining.org>, Danila Tikhonov
- <danila@jiaxyga.com>, Miro Mraz <mraz.miro@seznam.cz>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org,
- netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- neil.armstrong@linaro.org, linux-hardening@vger.kernel.org,
- linux@mainlining.org, Connor Mitchell <c.dog29@hotmail.com>
-References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
- <2ca2b774-fd7f-4612-b38d-f60e32ff6f9a@mainlining.org>
- <283096ad-ae1b-42b8-8312-b192f735fc80@linaro.org>
-Content-Language: en-US
-From: David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- xsFNBF5v1x4BEADS3EddwsNsvVAI1XF8uQKbdYPY/GhjaSLziwVnbwv5BGwqB1tfXoHnccoA
- 9kTgKAbiXG/CiZFhD6l4WCIskQDKzyQN3JhCUIxh16Xyw0lECI7iqoW9LmMoN1dNKcUmCO9g
- lZxQaOl+1bY/7ttd7DapLh9rmBXJ2lKiMEaIpUwb/Nw0d7Enp4Jy2TpkhPywIpUn8CoJCv3/
- 61qbvI9y5utB/UhfMAUXsaAgwEJyGPAqHlC0YZjaTwOu+YQUE3AFzhCbksq95CwDz4U4gdls
- dmv9tkATfu2OmzERZQ6vJTehK0Pu4l5KmCAzYg42I9Dy4E6b17x6NncKbcByQFOXMtG0qVUk
- F1yeeOQUHwu+8t3ZDMBUhCkRL/juuoqLmyDWKMc0hKNNeZ9BNXgB8fXkRLWEUfgDXsFyEkKp
- NxUy5bDRlivf6XfExnikk5kj9l2gGlNQwqROti/46bfbmlmc/a2GM4k8ZyalHNEAdwtXYSpP
- 8JJmlbQ7hNTLkc3HQLRsIocN5th/ur7pPMz1Beyp0gbE9GcOceqmdZQB80vJ01XDyCAihf6l
- AMnzwpXZsjqIqH9r7T7tM6tVEVbPSwPt4eZYXSoJijEBC/43TBbmxDX+5+3txRaSCRQrG9dY
- k3mMGM3xJLCps2KnaqMcgUnvb1KdTgEFUZQaItw7HyRd6RppewARAQABzSBEYXZpZCBIZWlk
- ZWxiZXJnIDxkYXZpZEBpeGl0LmN6PsLBlAQTAQgAPgIbAwULCQgHAgYVCgkICwIEFgIDAQIe
- AQIXgBYhBNd6Cc/u3Cu9U6cEdGACP8TTSSByBQJl+KksBQkPDaAOAAoJEGACP8TTSSBy6IAQ
- AMqFqVi9LLxCEcUWBn82ssQGiVSDniKpFE/tp7lMXflwhjD5xoftoWOmMYkiWE86t5x5Fsp7
- afALx7SEDz599F1K1bLnaga+budu55JEAYGudD2WwpLJ0kPzRhqBwGFIx8k6F+goZJzxPDsf
- loAtXQE62UvEKa4KRRcZmF0GGoRsgA7vE7OnV8LMeocdD3eb2CuXLzauHAfdvqF50IfPH/sE
- jbzROiAZU+WgrwU946aOzrN8jVU+Cy8XAccGAZxsmPBfhTY5f2VN1IqvfaRdkKKlmWVJWGw+
- ycFpAEJKFRdfcc5PSjUJcALn5C+hxzL2hBpIZJdfdfStn+DWHXNgBeRDiZj1x6vvyaC43RAb
- VXvRzOQfG4EaMVMIOvBjBA/FtIpb1gtXA42ewhvPnd5RVCqD9YYUxsVpJ9d+XsAy7uib3BsV
- W2idAEsPtoqhVhq8bCUs/G4sC2DdyGZK8MRFDJqciJSUbqA+5z1ZCuE8UOPDpZKiW6H/OuOM
- zDcjh0lOzr4p+/1TSg1PbUh7fQ+nbMuiT044sC1lLtJK0+Zyn0GwhR82oNM4fldNsaHRW42w
- QGD35+eNo5Pvb3We5XRMlBdhFnj7Siggp4J8/PJ6MJvRyC+RIJPGtbdMB2/RxWunFLn87e5w
- UgwR9jPMHAstuTR1yR23c4SIYoQ2fzkrRzuazsFNBF5v1x4BEADnlrbta2WL87BlEOotZUh0
- zXANMrNV15WxexsirLetfqbs0AGCaTRNj+uWlTUDJRXOVIwzmF76Us3I2796+Od2ocNpLheZ
- 7EIkq8budtLVd1c06qJ+GMraz51zfgSIazVInNMPk9T6fz0lembji5yEcNPNNBA4sHiFmXfo
- IhepHFOBApjS0CiOPqowYxSTPe/DLcJ/LDwWpTi37doKPhBwlHev1BwVCbrLEIFjY0MLM0aT
- jiBBlyLJaTqvE48gblonu2SGaNmGtkC3VoQUQFcVYDXtlL9CVbNo7BAt5gwPcNqEqkUL60Jh
- FtvVSKyQh6gn7HHsyMtgltjZ3NKjv8S3yQd7zxvCn79tCKwoeNevsvoMq/bzlKxc9QiKaRPO
- aDj3FtW7R/3XoKJBY8Hckyug6uc2qYWRpnuXc0as6S0wfek6gauExUttBKrtSbPPHiuTeNHt
- NsT4+dyvaJtQKPBTbPHkXpTO8e1+YAg7kPj3aKFToE/dakIh8iqUHLNxywDAamRVn8Ha67WO
- AEAA3iklJ49QQk2ZyS1RJ2Ul28ePFDZ3QSr9LoJiOBZv9XkbhXS164iRB7rBZk6ZRVgCz3V6
- hhhjkipYvpJ/fpjXNsVL8jvel1mYNf0a46T4QQDQx4KQj0zXJbC2fFikAtu1AULktF4iEXEI
- rSjFoqhd4euZ+QARAQABwsF8BBgBCAAmAhsMFiEE13oJz+7cK71TpwR0YAI/xNNJIHIFAmX4
- qVAFCQ8NoDIACgkQYAI/xNNJIHKN4A/+Ine2Ii7JiuGITjJkcV6pgKlfwYdEs4eFD1pTRb/K
- 5dprUz3QSLP41u9OJQ23HnESMvn31UENk9ffebNoW7WxZ/8cTQY0JY/cgTTrlNXtyAlGbR3/
- 3Q/VBJptf04Er7I6TaKAmqWzdVeKTw33LljpkHp02vrbOdylb4JQG/SginLV9purGAFptYRO
- 8JNa2J4FAQtQTrfOUjulOWMxy7XRkqK3QqLcPW79/CFn7q1yxamPkpoXUJq9/fVjlhk7P+da
- NYQpe4WQQnktBY29SkFnvfIAwqIVU8ix5Oz8rghuCcAdR7lEJ7hCX9bR0EE05FOXdZy5FWL9
- GHvFa/Opkq3DPmFl/0nt4HJqq1Nwrr+WR6d0414oo1n2hPEllge/6iD3ZYwptTvOFKEw/v0A
- yqOoYSiKX9F7Ko7QO+VnYeVDsDDevKic2T/4GDpcSVd9ipiKxCQvUAzKUH7RUpqDTa+rYurm
- zRKcgRumz2Tc1ouHj6qINlzEe3a5ldctIn/dvR1l2Ko7GBTG+VGp9U5NOAEkGpxHG9yg6eeY
- fFYnMme51H/HKiyUlFiE3yd5LSmv8Dhbf+vsI4x6BOOOq4Iyop/Exavj1owGxW0hpdUGcCl1
- ovlwVPO/6l/XLAmSGwdnGqok5eGZQzSst0tj9RC9O0dXO1TZocOsf0tJ8dR2egX4kxM=
-In-Reply-To: <283096ad-ae1b-42b8-8312-b192f735fc80@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR12MB6733:EE_|CY8PR12MB7705:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9941402c-dae9-43d2-956f-08def86c80e8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|23010399003|18002099003|22082099003|4143699003|11063799006|56012099006|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	9kwtuQyOrEx0tjis3m3UvSE2JFwfWX28rhp3o10Zv5/5xDMO/AU6oclTwySjnW+hUKfcfqjA8GffbK8aZxPHQLM55XvFLGn6wlOEQJHtHdSrtfT0EsXM+p5V0/7sA/wjw/EK2jXu46JE4IIQWu5TRHjelWzNplsvCNje7IhAnmLsVlFB/sGbKM6gVh8QmFQrnj6RkL5CtSjVCmGdlPXW5h8leHJdn/vp5g/XoPyB2BxDTUtXHUxUZYb0qPMjROsSIeIACpdaw8g9Vb95HvZVSaeO7S0iBqxnn9RaaabzH+GJKg3GIaC8zFKVCvKGfM+qZ1JMUILHWvQAF5aclSuuc1iwaSeEAPEOfKkokzCXVEMwKbHE101O2wea63ipHrnliF+H2d/ANgGbOK5ZrNfFMPIuYlbRyTahnzEIgApQzmUiTHMMi88eI6Y7422rjGpo92AH/ZqLURThtDivC2okDCLTYvjCfcrRdYB3f9+41JE4VYNTrM9lJlXj02jBkY44MPcbiK6rF2upJ7HuM/Lc31KOdd0a7tckuutz9q+Q7hzWpYuBGjAlALvsEtR+M7iCdYnGbXHWC83p3j6Ir8lqRPjxTjywEud/IR55uzfKkHeaxQBa2PEfTVzKncuVmwY41JEtCv13KkT6jnhHPxtcQTKVg2sw8l0oZmYgLPT3AXs=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB6733.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(23010399003)(18002099003)(22082099003)(4143699003)(11063799006)(56012099006)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QklheU8xR1VWclFkdnlqbnVQYTV3NEdGM3JpQXFDN3BRNUk1QjBnNmZlVWps?=
+ =?utf-8?B?d3NHUXp0R0pyS2RHcE9zM2tDOUtDTTJZL1dRd3ZDQ2EwL2tJdkVWVHlhODJJ?=
+ =?utf-8?B?SWppUloybTc5bjhmeldiSllhYm9UQTJoU01TYnR4OFJhdzZyRUFWcWl4N09h?=
+ =?utf-8?B?NGkxakdpSmxwNExQNk9vcURQV21nRFI5Rmk4dW5TRnJtamFDTFpaKzB0ZjV0?=
+ =?utf-8?B?VjI1b2E3RUExMWxUcEc0Y1RqZDNMK2Qzb0NuN2lFQ0NGbUE5cHpINDRvVXlR?=
+ =?utf-8?B?K05OSkR1MVEyRWtGNlBZZXd6MVp6VVJ5c3NCVk5TQTU3akk1OE8rdUdrNGtE?=
+ =?utf-8?B?eHRDNmI4eUhPNUFNQy9oTnRBNTgzQk5rSWYyNjBnYkhENFdrOW5GdXp3eFkz?=
+ =?utf-8?B?U1BhMFdGVksyNTEzUmV3dEJNdWJKaEFyMWxKelpRTTg2d08ySnV0dkhTRTdY?=
+ =?utf-8?B?ZXVvUTJ2NWRYb1BpTzZsMXRBQ0Z2anRNSFlKWVBJMnJpa1pVdjhxL3dRc08z?=
+ =?utf-8?B?N29hK2k4TVdqYUxNNU1xSzl2M1p3bjBpbThoQlVWenRTbUJHU2g3cjZLTW8x?=
+ =?utf-8?B?Vmh3ZDRnQTR1ZEhxOHRTOWRJc3lFTEJaUzJQQkJXKzN5RUp3Z1p0MHpWY0U0?=
+ =?utf-8?B?RXAvOXY3bDYwR1FIcHFNRG5pL3pxN0V4YnZJTWFJVllrY2pGby9MN1dFZFVJ?=
+ =?utf-8?B?WWo4dW5QSHYzWVpMSFIzSVhmMXVVaUpTeFprZjVyUnlIYmZmQVNBSjJjUkFs?=
+ =?utf-8?B?dUp2dXRGMGNFWlUremQ4R0Nld1NMdVZKRjRQVDVYMlcrN24xY3AzcVpQK2Jh?=
+ =?utf-8?B?bGJIQUREamJubUNrODFEM0tXWEpRSnNJaUFTaG9PVjYzSk1scHBVSUphZDJL?=
+ =?utf-8?B?eW9BZDl0V0pueWt0d2JQRUJzcHdvZmpzYk9NWWExTTl0TkJTcG1ZQVBnVXho?=
+ =?utf-8?B?SEZMMExDOENCMitCekFZVFlsT0htNFNyb2VwL0U1SWFzRjIwd3BzRzFXTWp5?=
+ =?utf-8?B?bGhXSTNlNEUvWTdhb29IRTlpRUZHZVhZTjBEbTNwUkc4M0tBQkdjNVd0TXUy?=
+ =?utf-8?B?RE92cit6ZWtUVmFtVkdBVnhtbjdoUkNXMXJUc044SGZ6d25jY0lwL3hBbUdp?=
+ =?utf-8?B?Y3M5SXZreTA0NlV6T1ovRzdxSUszNkduLzNyQTI2NTJaSWE4Ymo4bTlCVk5N?=
+ =?utf-8?B?a1JLMlZNRzNTdUVDbHVyMFlNbjFQdGdYbUE4UGwvRFlYaEt2TnVyQUp3TFR4?=
+ =?utf-8?B?VkRJVTQxeVR0QlFaaE96ZHRiZThDMGZ5dXhYa1JxQThQU1A5dXhLbko0cVRM?=
+ =?utf-8?B?MEo4TXA5dDYxclp5elZwaU11WGRkUUh6QmhVTmFpUGxEZGp0UDRaVjFlZkhh?=
+ =?utf-8?B?cmVYOVQ2T2RSR0hteEF2NmZNYVk1MnR3alVkUzFRVVBUUU92bnFTRjJqQ29N?=
+ =?utf-8?B?V0xzOUxnQWtscGNYTjFsRkZKS0lSdjhnWERHQzJYcFZ4elBWdDNOZElyR1pD?=
+ =?utf-8?B?OVYzakJhWml2YXZYdU53Y0h5bHZsckNteTB4VHRSSzRNaUNNeEdsY2NaUWRt?=
+ =?utf-8?B?QXRHQlRPbUxHQnpqelpjYWhQclpSNVRId1hVUXV3MmVHWnQ3Ukd5NDhSYktD?=
+ =?utf-8?B?SHJyb25TTDhDUUtnaDd6cmlSRW91ZGxzSnlhREJUQkZUSlYyTURMNTZ2ODli?=
+ =?utf-8?B?RGQwODAwR0RNOEF3cU9nQ3RVbFkySFltOUJDYmV1T1I3emVyTWRRSjhmdFlV?=
+ =?utf-8?B?S3hjN21aMFNMUElUZCtnWFpQM2haUm5vUUZKemljNEFPRWxKMmJOQy8yYzhq?=
+ =?utf-8?B?RGlnbW40SXRyY0pnTWpQU3NQL2dEc0dlZUkyT1lvMmFEbFZOWFAyWE5QM243?=
+ =?utf-8?B?OHRWTUs2YzdIancwamNSem1qQlZKMDBsWk04c1BZNm9NNzc2R2VCTFJLSnNS?=
+ =?utf-8?B?QXdYR2ZQNnlBR21YeCtHdFZUM1ZhL3NBOVBlWWcwWEpJNzF0dXJJaDZSSDRI?=
+ =?utf-8?B?UHkzN2hrYld0RU9jWklGWXc3cEwrTzdJOVJoanJRWjNQVklGSk4yb21VZnJ2?=
+ =?utf-8?B?K2pUQTRURXNWUmpTVGgyWDR2cXo1OHJ0V0tSQWswdm8zK3hBelYzUTRqMUo1?=
+ =?utf-8?B?ekpsS1MzUFg0MjZQZngvbmUvWGNzVDZWZDlydU56V2ZDNDM4bXd3eTUvVDlu?=
+ =?utf-8?B?d2xRRW9hR2JMN1h3aTc1emgxeHhGb0JVUk9MamxFZXhGbmp4VnZHeWF6dWJp?=
+ =?utf-8?B?OHRyWjN0ZEJ5M0Rua2trYStJNkpyeE1BSlFqYUZSQ1E0aVRwdEhwOCtONkZl?=
+ =?utf-8?B?SCt5OTBFUnJjNjd6ZDNEcDJJVG1razNCUlEvc0l4VlRQckxCbHExQT09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9941402c-dae9-43d2-956f-08def86c80e8
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB6733.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2026 12:23:23.7671
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: I8p0TYnBlJ+jmGe9jA22FWkx1QpgxsvCVz8l2nxzGug6gGT1mGhlSsWZb6vNNvIuZYuuaz4kMhmKTV6VcFzxKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7705
 
-
-
-On 23/04/2025 09:26, Neil Armstrong wrote:
-> Hi,
-> 
-> On 23/04/2025 00:07, Jens Reidel wrote:
->> Hi everyone,
+On Fri Aug 7, 2026 at 8:38 AM CST, Ashok Raj wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On Tue, Aug 04, 2026 at 08:23:15PM +0800, Kai-Heng Feng wrote:
+>> Split the Grace CPER processing into a separate decode step and a
+>> print step so the parser can be exercised by KUnit without a live
+>> ACPI device. Introduce ghes-nvidia.h to hold shared types that the
+>> Vera decoder added in the next commit will also reference.
 >>
->> apologies for the mess this created. Danila's mail provider ratelimited him 
->> halfway through sending the series and the attempt to re-try sending the 
->> second half an hour later ended up with a new message ID (I think due to not 
->> using --in-reply-to).
->> He asked me to let you know that this will be resolved later and the whole 
->> series will be re-sent once the problems are resolved.
-> 
-> The b4 web submission is a great alternative when the mail provider is rate 
-> limited:
-> https://b4.docs.kernel.org/en/latest/contributor/send.html#web-endpoint
-> 
-
-I see people interested in moving Pixel 4a forward, but it seems this was never 
-upstreamed? I looked at sm7150 repository [1] where I see FROMLIST, but these 
-patches never arrived to the list and this series is from 2025.
-
-Should we expect v2 (re)based on recent tree?
-
-Thanks
-David
-
-[1] 
-https://github.com/sm7150-mainline/linux/commit/7ea41523c678e94a7c048936052b5b1b1b109cdd
-
-> Neil
-> 
+>> Parse the Grace wire payload with __packed structs and
+>> get_unaligned_le*() for multi-byte fields, matching the Vera
+>> decoder style. Reject nvidia_ghes_grace_reg_pair() calls with a
+>> non-zero register count and a NULL grace_regs pointer, and
+>> rate-limit Grace decoder diagnostics.
 >>
->> Best regards,
->> Jens
-> 
-> 
+>> Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
+>
+> Hi Kai,
+>
+>> ---
+>> v3:
+>>  - Use __packed + get_unaligned_le*() for Grace multi-byte fields,
+>>    including register pairs (Shuai Xue).
+>>  - Keep __counted_by / struct_size; reject NULL grace_regs when
+>>    number_regs !=3D 0; document the helper contract.
+>>  - Rate-limit Grace decoder and notify error messages.
+>> v2:
+>>  - No change.
+>> ---
+>>  MAINTAINERS                     |   2 +-
+>>  drivers/acpi/apei/ghes-nvidia.c | 160 ++++++++++++++++++++++----------
+>>  drivers/acpi/apei/ghes-nvidia.h |  50 ++++++++++
+>>  3 files changed, 160 insertions(+), 52 deletions(-)
+>>  create mode 100644 drivers/acpi/apei/ghes-nvidia.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 5114e6db7307..aa9c2ae58ac5 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -19348,7 +19348,7 @@ NVIDIA GHES VENDOR CPER RECORD HANDLER
+>>  M:   Kai-Heng Feng <kaihengf@nvidia.com>
+>>  L:   linux-acpi@vger.kernel.org
+>>  S:   Maintained
+>> -F:   drivers/acpi/apei/ghes-nvidia.c
+>> +F:   drivers/acpi/apei/ghes-nvidia*
+>>
+>>  NVIDIA VRS RTC DRIVER
+>>  M:   Shubhi Garg <shgarg@nvidia.com>
+>> diff --git a/drivers/acpi/apei/ghes-nvidia.c b/drivers/acpi/apei/ghes-nv=
+idia.c
+>> index 597275d81de8..e7cc912344fd 100644
+>> --- a/drivers/acpi/apei/ghes-nvidia.c
+>> +++ b/drivers/acpi/apei/ghes-nvidia.c
+>> @@ -9,13 +9,18 @@
+>>  #include <linux/module.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/types.h>
+>> +#include <linux/unaligned.h>
+>>  #include <linux/uuid.h>
+>>  #include <acpi/ghes.h>
+>
+> One naive question, do these CPER decoding for vendor specific pieces
+> belong in the kernel? Or you would manage them from user space?
+
+I think so, since pcie-hisi-controller is already doing that. And I
+think helpers like devm_ghes_register_vendor_record_notifier() is
+designed for this kind of work.
+
+Kai-Heng
+
+>
+>
+>>
+>> -static const guid_t nvidia_sec_guid =3D
+>> +#include <kunit/visibility.h>
+>> +#include "ghes-nvidia.h"
+>> +
+>> +static const guid_t nvidia_grace_sec_guid =3D
+>>       GUID_INIT(0x6d5244f2, 0x2712, 0x11ec,
+>>                 0xbe, 0xa7, 0xcb, 0x3f, 0xdb, 0x95, 0xc7, 0x86);
+>>
+>> +/* Grace CPER section wire layout (header without flexible register arr=
+ay). */
+>>  struct cper_sec_nvidia {
+>>       char    signature[16];
+>>       __le16  error_type;
+>> @@ -25,84 +30,137 @@ struct cper_sec_nvidia {
+>>       u8      number_regs;
+>>       u8      reserved;
+>>       __le64  instance_base;
+>> -     struct {
+>> -             __le64  addr;
+>> -             __le64  val;
+>> -     } regs[] __counted_by(number_regs);
+>> -};
+>> +     struct nvidia_ghes_grace_reg regs[] __counted_by(number_regs);
+>> +} __packed;
+>> +
+>
+> [snip]
+>
+> Cheers,
+> Ashok
+
+
