@@ -1,80 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0DA47CA87;
-	Thu, 13 Aug 2026 13:40:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31C64963CF;
+	Thu, 13 Aug 2026 16:42:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786628421; cv=none; b=ZhIEijNprNxTOfhxn2eHggGpnpfvKVnQmRHihG30r3AZaM1g4fzzecBqjTKdKGNLBTqrnMdZouBYl+kcUKcoFMD5GMTH4bVWuf4znjCYq0xfsoorhgo4lVUVDF4pb7leSm7sIEaZw5lWifk0Ufb47VwTnFnelIR9n7fCUDhwnks=
+	t=1786639387; cv=none; b=WcpRqN8PF3Rnzu9dr7n1/FkzGyrahaS/Gj23pymo7dukIjYP+0iTWzKqZEFkEbYUvdTWTdR+3dfW/YFVsAB4OWELFBJCbKU5SnMmfUWIvwSRYj+ZYN85n5rdISj7d6cN3MQdkgi+OJCIXM+FiP4DqsEdptvwtHAxyd5RYkOPRKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786628421; c=relaxed/simple;
-	bh=bOvvTxJwRAeeehEcmN1+v56tDgPAZJghrGSo7LRvNAI=;
+	s=arc-20240116; t=1786639387; c=relaxed/simple;
+	bh=18XYJsZ65BgnVlq3F1zRXJLD6La2O92czJ3L6N1Pe+4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=knIS8jKnHTCSU9ogViCLl50GOIG8/X6pvCaXosszm3Orh4TlUoW6V9/k/wNrW6Nv9RTnOjXabgdkiNQQEemUVKlS2radRNQrTRl8wdoqMf1CRaIiz3htI19WP44wV0fI6MIMvomAi6HKSXQpLI1iq7OISJGrP+IRKt/deJ5dcYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z7gJ4sPL; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=e45cEs0an5x6vmaBiwn99Cb3wDhk9+4kS7i5l3T2A/l3L/t9CX7bDGQ+ygQmbfIHyGW2UhiyWj33k4oaGas4CTruY4DKUYDlxF5RNLr4YSHYCTeQS9jst9bMEdZoTBZ9dA6XltiUa/bRFucbRz5yZfYbIzpDpXh/Ey/x3aTidH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V3/j8n7q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z7gJ4sPL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C57941F000E9;
-	Thu, 13 Aug 2026 13:40:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V3/j8n7q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 965E71F000E9;
+	Thu, 13 Aug 2026 16:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786628419;
-	bh=FQHX6qwH3K6Cws7imC/VISNvbPtmS5LtCAb0pnEIW4c=;
+	s=k20260515; t=1786639362;
+	bh=oF5DTKYd+ENE8uJqw+dkx2LAUHD3P6ue7t8VnUrsAXc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Z7gJ4sPL/QLGTRofjuqgeInA8apUG+qo4OurrP85GJpr84S9Pw17xHY0jtHVXcpMJ
-	 gEb9YOkZ87XkUuS01iGqtXyKLEk9ASVMiBnMDgnHHSqa7ODLMd2AvCjcmZ6UkM1Tco
-	 5nmhg61sL0cD4novs9PZrdiJ43TlB+WIWz4YD+j5B2vqnCBmJj9ZexvaYnnftfQo4+
-	 ARajYMF0RnJLoBdoQEA2y+Bot6NHtH/NApHbMhfguxf2iWzDGIdP1H72i640f3LYub
-	 txUuDBDfvo2sU74ieusuKZ3RKuoQgIRhlE/R9ApOtNZgU3zK1DY7yURwY6RRnYdo8i
-	 dv9cuvIjOZsdQ==
-Date: Thu, 13 Aug 2026 15:40:11 +0200
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-phy@lists.infradead.org, 
-	Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"moderated list:ARM/Mediatek USB3 PHY DRIVER" <linux-arm-kernel@lists.infradead.org>, 
-	"moderated list:ARM/Mediatek USB3 PHY DRIVER" <linux-mediatek@lists.infradead.org>, 
-	"open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] phy: mediatek: tphy: simplify main allocation
-Message-ID: <gauflzkiq4nsxciwzy4r3piodhnoriv5gh5mhsauk7bxgwclcp@3uiuv7i7qbh7>
-References: <20260304041400.7236-1-rosenp@gmail.com>
- <djjg6jwpuu6l5wcc7zbxfi7j4n5hircmhivxohdtgufzrp6rlb@l6eyfdyfrxix>
- <CAKxU2N_VYNgYKhS11Frzio4fbg_ZnDsvCfEypvxSiw3-JV0_QQ@mail.gmail.com>
+	b=V3/j8n7qqdIchKZjZ8UHxgY/RkOdJSCQxrcTPT3TrRj8GgpWWhpFpblO2M6PAVijO
+	 VmNu76ekWMTNjVHRzPr/wtMedGuM/ynS5Bc6QSDq/4v00+So6Q/1J8YAeRFwyjzETo
+	 SO3N9PDkyng+RBFJHFUXs4jSUD9w8EJRGWx2DzF5MyXi4gBO7aY4PT0XT1i7t1156L
+	 UcGbjSuLYjmFc9YeudfqB0/EYIPwvA4XGLMI6BVUqiOqufrcfvr7pLlbcF+ljcYa1Y
+	 6CvzOqQoZg5fZ8QosKOO5lBRPAAg7ucCBr/SFV4q7cfFEfTnbaThG6suO+ep1mRtOe
+	 FqjVHS64wmuLA==
+Date: Thu, 13 Aug 2026 09:42:42 -0700
+From: Kees Cook <kees@kernel.org>
+To: Jaihind Yadav <jaihindy@qti.qualcomm.com>
+Cc: nathan@kernel.org, nsc@kernel.org, linux-kbuild@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kstack_erase: suppress -grecord-gcc-switches for
+ external module builds
+Message-ID: <202608130942.4FFA5AAB9D@keescook>
+References: <20260803181217.GB1067866@ax162>
+ <20260813082949.1622045-1-jaihindy@qti.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKxU2N_VYNgYKhS11Frzio4fbg_ZnDsvCfEypvxSiw3-JV0_QQ@mail.gmail.com>
+In-Reply-To: <20260813082949.1622045-1-jaihindy@qti.qualcomm.com>
 
-On Wed, Aug 12, 2026 at 11:15:43AM -0700, Rosen Penev wrote:
-> On Wed, Aug 12, 2026 at 6:32 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
-> >
-> > On Tue, Mar 03, 2026 at 08:14:00PM -0800, Rosen Penev wrote:
-> > > Use a flexible array member to replace kzalloc + kcalloc with a single
-> > > kzalloc.
-> > >
-> > > Shuffled some code around as __counted_by requires the counting variable
-> > > to be assigned first.
-> > >
-> > > Removed NULL check from of_get_match_data as it's never NULL per the
-> > > device table.
-> > >
-> >
-> > Please do not combine multiple fixes in a single patch. Also, the NULL check can
-> > be kept for the case of sanity as it wouldn't hurt.
-> hmm? There are no fixes here. Just a FAM conversion.
+On Thu, Aug 13, 2026 at 01:59:49PM +0530, Jaihind Yadav wrote:
+> With CONFIG_GCC_PLUGIN_STACKLEAK=y, kstack erase adds:
+> 
+>   -fplugin=$(objtree)/scripts/gcc-plugins/stackleak_plugin.so
+> 
+> For KBUILD_EXTMOD builds, recording gcc switches can embed this host/build
+> specific plugin path into module DWARF producer strings, which trips QA
+> checks looking for absolute path leakage.
 
-Doesn't matter. A patch should do only one thing.
+Isn't this a problem for all Linux gcc plugins, though?
 
-- Mani
+-Kees
+
+> 
+> Disable gcc switch recording only for external modules by adding
+> -gno-record-gcc-switches to kstack-erase-cflags when KBUILD_EXTMOD is set.
+> 
+> This keeps stackleak plugin instrumentation enabled while avoiding leakage
+> of host-specific paths in external module debug metadata.
+> 
+> Suggested-by: Nathan Chancellor <nathan@kernel.org>
+> Link: https://lore.kernel.org/all/20260803181217.GB1067866@ax162/
+> Signed-off-by: Jaihind Yadav <jaihindy@qti.qualcomm.com>
+> ---
+>  scripts/Makefile.kstack_erase | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/scripts/Makefile.kstack_erase b/scripts/Makefile.kstack_erase
+> index ee7e4ef7b892..6f31a3915d24 100644
+> --- a/scripts/Makefile.kstack_erase
+> +++ b/scripts/Makefile.kstack_erase
+> @@ -5,6 +5,7 @@ kstack-erase-cflags-y += -fplugin=$(objtree)/scripts/gcc-plugins/stackleak_plugi
+>  kstack-erase-cflags-y += -fplugin-arg-stackleak_plugin-track-min-size=$(CONFIG_KSTACK_ERASE_TRACK_MIN_SIZE)
+>  kstack-erase-cflags-y += -fplugin-arg-stackleak_plugin-arch=$(SRCARCH)
+>  kstack-erase-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK_VERBOSE) += -fplugin-arg-stackleak_plugin-verbose
+> +kstack-erase-cflags-$(if $(KBUILD_EXTMOD),y) += -gno-record-gcc-switches
+>  DISABLE_KSTACK_ERASE := -fplugin-arg-stackleak_plugin-disable
+>  endif
+>  
+> -- 
+> 2.43.0
+> 
+> 
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Kees Cook
