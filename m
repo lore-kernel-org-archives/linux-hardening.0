@@ -1,128 +1,143 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from ixit.cz (ixit.cz [84.42.129.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E6143D4EE;
-	Thu, 13 Aug 2026 08:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57B432D0F5;
+	Thu, 13 Aug 2026 09:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.42.129.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786609824; cv=none; b=BjEdhuZ8IpNeD2Ep1qFYCJtKNQy6joTasUt4oRQi8hOiyMyREkyFSuHXduI4nQDQkLI4q7ApPAASs+Af1mRim2wQdTy/DlpzD7mYD2nu+HhxxluoBupXOK8mlAOfvuMmaWh50mVqJ0PGCbFfGlrBzREyvzqkNVg2Qvih2t4zhGQ=
+	t=1786612831; cv=none; b=pc9cq6Q0YmGs1plpSl7cb4qXT2mwP9BPVpA+O1vLLYIu/fRkkZppodZ5Wna29qPOKamntEdYkgzdmBuM1xwAyYss1ZGObQmF/ZAp67enW6XPKKY3M6pAS1Emil3A8E3qdKfZcMfjfhQhGAhS5jBFKS5dvWzDIU/k2k1YnO9ytXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786609824; c=relaxed/simple;
-	bh=LrspAeAx/yOVOn1WlpqcgTETe1zfP8oNMzYeylLkjRs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fZJPU/5vCzeakvAihoLRYaZO1h/0EH6lM+k1OdOd+JhpEDd8QLXuEKQRcOjWed5GeAtuEnscn1KUffystW2ntv8Ggt+UOvhdj5no/YMzUvnJkC1KWX+82We9V8NZ8rS432wtv4By74Yg38Lkjb7PnMc3mKILRepZqnkR3g29aho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com; spf=pass smtp.mailfrom=qti.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Zgx2T3i2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qti.qualcomm.com
+	s=arc-20240116; t=1786612831; c=relaxed/simple;
+	bh=XSbxuFNDxlXVpQ/cS578M2yFcGMkc7DG8pgNdZPizcw=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=r6MS6xcjUZisslsbzqA12opEBkddOi83zt8xbCOO2KUxk8K1Alxq1JFmsyNhRMdRcyA75EwzAqKvpz/KlsemzRLbfzwH5DeylfJdWt4h1YA/n8rMvHY9+HA5aCb+9rjrx28+gQPrEuxVEBcVNTTmU+qx3xxGv+Kn0vkYzDf9V54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=LZXlAaqM; arc=none smtp.client-ip=84.42.129.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Zgx2T3i2"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67D5g7T21072366;
-	Thu, 13 Aug 2026 08:30:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	V+OQevDySdUiNlsVYK3I5naRXIe8nUtnNrYUvXaCa/8=; b=Zgx2T3i2IFpPi8Xc
-	iIdrcQfRq5N2BD4OOZQ5rRDMmWWCrDT1apPrCLK+e8DkUIZ89WLo0CAwG6luqVWq
-	HnAntnatc+LES2vXDzeWNCqCwda2RVpYWVKBUIIMs71G8YVBBSZrFr74mDfqhcFg
-	3BTxHtuv4bYJgKPdbJuXEwEXyax3G0vUNTD4Xi5pcoLTP/SP1dZEJvasixWWQQXz
-	ZBWxikrSNolkBxkM1XG26LU+pD329zW9Pd3ZChkVp9RaaoBfHw+WwPW0bbuUOE98
-	gKwVmwaZmRAl3DEvmU9syn2L2biZdYH7zT1+/mHInRxMLsErrqNEVLsTPWAz0doc
-	iCP1Aw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g14syhca0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Aug 2026 08:30:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTPS id 67D8UCcb009415
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Aug 2026 08:30:12 GMT
-Received: from quicinc.com (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Thu, 13 Aug
- 2026 01:30:10 -0700
-From: Jaihind Yadav <jaihindy@qti.qualcomm.com>
-To: <nathan@kernel.org>, <nsc@kernel.org>
-CC: <linux-kbuild@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jaihind Yadav <jaihindy@qti.qualcomm.com>
-Subject: [PATCH v2] kstack_erase: suppress -grecord-gcc-switches for external module builds
-Date: Thu, 13 Aug 2026 13:59:49 +0530
-Message-ID: <20260813082949.1622045-1-jaihindy@qti.qualcomm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260803181217.GB1067866@ax162>
-References: <20260803181217.GB1067866@ax162>
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="LZXlAaqM"
+Received: from smtpclient.apple (85-70-170-181.rcd.o2.cz [85.70.170.181])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id BC3165340217;
+	Thu, 13 Aug 2026 11:20:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1786612821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XSbxuFNDxlXVpQ/cS578M2yFcGMkc7DG8pgNdZPizcw=;
+	b=LZXlAaqMDuz1Eu1qoATS2mQYnT7CsZwlU8A/IXlgD06ajK8b+e6H1n9LYw4UJuCZm5U/K1
+	45EC+UwLTUEFW7hK5NTe7T8cn5/fV82S+8GeZjkxTS2flC4JayGWz1E96Y3dcIj8ur1J4R
+	hWWn2JaZ0EhUTvH7hyEn/4YiTGlPbJw=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: David Heidelberg <david@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Authority-Analysis: v=2.4 cv=ZcQt8MVA c=1 sm=1 tr=0 ts=6a7d8095 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=O4BMjXmnfS_GZb3uHPoA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODEzMDA1OCBTYWx0ZWRfXzc/x3lmBd0k8
- FpOTS2CnfpVhCeqEi8A9HyvwpQrL79UDSoC3/fmy5MY4ynGyOrDO9AhsecbP5tPY/yAk6BJyqzc
- CN6DHkmXT3lfOz1ubZfebw966hCoYLbglT5eYGMIHjSj0f042xkKXy4+rNeSTzftQchEgHtf3/A
- RGnXkcCW103xmIRQqZViA+3xKI5nKJR3RfOtpyoPHEliG7yl2N0HsdqfPzm/gGIrfSeW7sbz6eN
- 8LDnzu3wVorde+9soWO2OVdkKqofGM1uLQ/qTP3VzcgzlxhRuGoeO2yatkU0DaR9baSKnWRQfGJ
- S2Oh3hG/uuy35efnwJL/ZBFwRrtYEmrq9Q0WS1tYmHEkqy4+d6nNR52oiCW/LiwM0XS9IdxFZtH
- Rn0OL1zBkjeJudJfgf65HHneWp5K0kzuhkNeb2fH29uCXX/CYB9m9YREQQyQoVT+F3R0cTcuQKu
- g3KLHyut3U1bfyBMbmA==
-X-Proofpoint-ORIG-GUID: l2Rc4SpdEorkfkAZJshjKaYmLy1Mh3kB
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODEzMDA1OCBTYWx0ZWRfX2eT0Ll2U9Yj+
- v3qFysTdBH5sl86vTiFCcqlmdIKNuA80RuzEWX4B6BKDv7v/leJXomzOupOELIvtjTod9+i6FqU
- uFLcloIbCcwXxk+gvIZo6WSoeCOhYgI=
-X-Proofpoint-GUID: l2Rc4SpdEorkfkAZJshjKaYmLy1Mh3kB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-13_02,2026-08-12_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 phishscore=0 malwarescore=0 suspectscore=0
- adultscore=0 bulkscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608130058
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 00/33] Add support for Qualcomm Snapdragon SM7150 SoC and Google Pixel 4a
+Date: Thu, 13 Aug 2026 11:20:11 +0200
+Message-Id: <7B026D92-3826-494D-B1A9-EF01D41B4461@ixit.cz>
+References: <b15b2687-0c2e-43b2-ac9e-78e04e77e065@mainlining.org>
+Cc: Jens Reidel <adrian@mainlining.org>,
+ Danila Tikhonov <danila@jiaxyga.com>, Miro Mraz <mraz.miro@seznam.cz>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org,
+ netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ neil.armstrong@linaro.org, linux-hardening@vger.kernel.org,
+ linux@mainlining.org, Connor Mitchell <c.dog29@hotmail.com>
+In-Reply-To: <b15b2687-0c2e-43b2-ac9e-78e04e77e065@mainlining.org>
+To: Danila Tikhonov <danila@mainlining.org>
+X-Mailer: iPhone Mail (23G71)
 
-With CONFIG_GCC_PLUGIN_STACKLEAK=y, kstack erase adds:
 
-  -fplugin=$(objtree)/scripts/gcc-plugins/stackleak_plugin.so
+> On 12. 8. 2026, at 22:54, Danila Tikhonov <danila@mainlining.org> wrote:
+>=20
+> =EF=BB=BFHi David,
+>=20
+> Thank you for your comment.
+>=20
+>> On 12/08/2026 14:40, David Heidelberg wrote:
+>>=20
+>>=20
+>>> On 23/04/2025 09:26, Neil Armstrong wrote:
+>>> Hi,
+>>>=20
+>>> On 23/04/2025 00:07, Jens Reidel wrote:
+>>>> Hi everyone,
+>>>>=20
+>>>> apologies for the mess this created. Danila's mail provider ratelimited=
+ him halfway through sending the series and the attempt to re-try sending th=
+e second half an hour later ended up with a new message ID (I think due to n=
+ot using --in-reply-to).
+>>>> He asked me to let you know that this will be resolved later and the wh=
+ole series will be re-sent once the problems are resolved.
+>>>=20
+>>> The b4 web submission is a great alternative when the mail provider is r=
+ate limited:
+>>> https://b4.docs.kernel.org/en/latest/contributor/send.html#web-endpoint
+>>>=20
+>>=20
+>> I see people interested in moving Pixel 4a forward, but it seems this was=
+ never upstreamed? I looked at sm7150 repository [1] where I see FROMLIST, b=
+ut these patches never arrived to the list and this series is from 2025.
+>>=20
+>> Should we expect v2 (re)based on recent tree?
+>>=20
+>=20
+> I'd definitely like to get back to upstreaming SM7150 and the devices
+> based on it, but I don't think there's much value in continuing with
+> this particular series as-is. A lot has changed in the kernel over the
+> past year, which would require substantial changes throughout the series
+> and would effectively force the maintainers to review it from scratch
+> anyway.
 
-For KBUILD_EXTMOD builds, recording gcc switches can embed this host/build
-specific plugin path into module DWARF producer strings, which trips QA
-checks looking for absolute path leakage.
+After longer period of time maintainers will have to do full review anyway. S=
+ure, the reviews needs to be addressed :)
 
-Disable gcc switch recording only for external modules by adding
--gno-record-gcc-switches to kstack-erase-cflags when KBUILD_EXTMOD is set.
+>=20
+> I'd also like to split the series up to avoid targeting such a large
+> number of maintainers in a single submission.
 
-This keeps stackleak plugin instrumentation enabled while avoiding leakage
-of host-specific paths in external module debug metadata.
+Yes, that=E2=80=99s exactly what=E2=80=99s needed (at least for the part pat=
+ches I saw).
 
-Suggested-by: Nathan Chancellor <nathan@kernel.org>
-Link: https://lore.kernel.org/all/20260803181217.GB1067866@ax162/
-Signed-off-by: Jaihind Yadav <jaihindy@qti.qualcomm.com>
----
- scripts/Makefile.kstack_erase | 1 +
- 1 file changed, 1 insertion(+)
+> Hopefully, I'll be able to
+> find some time to work on this in the near future.
 
-diff --git a/scripts/Makefile.kstack_erase b/scripts/Makefile.kstack_erase
-index ee7e4ef7b892..6f31a3915d24 100644
---- a/scripts/Makefile.kstack_erase
-+++ b/scripts/Makefile.kstack_erase
-@@ -5,6 +5,7 @@ kstack-erase-cflags-y += -fplugin=$(objtree)/scripts/gcc-plugins/stackleak_plugi
- kstack-erase-cflags-y += -fplugin-arg-stackleak_plugin-track-min-size=$(CONFIG_KSTACK_ERASE_TRACK_MIN_SIZE)
- kstack-erase-cflags-y += -fplugin-arg-stackleak_plugin-arch=$(SRCARCH)
- kstack-erase-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK_VERBOSE) += -fplugin-arg-stackleak_plugin-verbose
-+kstack-erase-cflags-$(if $(KBUILD_EXTMOD),y) += -gno-record-gcc-switches
- DISABLE_KSTACK_ERASE := -fplugin-arg-stackleak_plugin-disable
- endif
- 
--- 
-2.43.0
+Where the most recent patchset can be found? Just in case someone wanted to p=
+ush some bits in meantime.
 
+Thanks
+David
+
+>=20
+>=20
+>> Thanks
+>> David
+>>=20
+>> [1] https://github.com/sm7150-mainline/linux/commit/7ea41523c678e94a7c048=
+936052b5b1b1b109cdd
+>>=20
+>>> Neil
+>>>=20
+>>>>=20
+>>>> Best regards,
+>>>> Jens
+>>>=20
+>>>=20
+> ---
+> Best regards,
+> Danila
