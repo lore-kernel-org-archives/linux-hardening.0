@@ -1,112 +1,123 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0F03A8FE6;
-	Wed, 12 Aug 2026 20:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB790357D02
+	for <linux-hardening@vger.kernel.org>; Thu, 13 Aug 2026 06:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786568120; cv=none; b=SyqR4+pD39f+ruMhE6SfYX8N4v/uUQVLvwRI+HWwOCRD6i4UxP/eNaHthUMJjbHCJ66qBZAakmM1S5CJK0QJDU84QQatqWyhu01Wa3Zg9heBVohroxax9xBIsxta6+0UrcUleG75Oesdf4hkVpkMDV6gaMfoncOyigL6VZxF6Tk=
+	t=1786601764; cv=none; b=cfPUwmQkwrrf3+51imwmgPYIHdPd1+qk6HpjZCc/qVvO5BY5ggL/qag03vY8fZEbIsmP62oeeX68t3q33qm51T6t413ATEF9Rb7pgGecokeNyNy2JksUGKW9I+EtaU8fjmb3Rgn5n7Dy09QHzy2T3oetVZgh+NVhk08N3SMmSgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786568120; c=relaxed/simple;
-	bh=FrdqQ6kXNnNKfJVjZwswwcKEQOtgoDeMVrYYyQrDqpE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G2RQoc+vbOnhCIa3WaSsCZSuZsb58bPHCs8WyB4Mdb9lg9RZ8irj5fEiOrSvMsHE/l7T8asZOYiHHgGhrsKHt1P4OGA3NMcD9keZPtQL54OVgxXn+UNqlteDRzf3U0Dkutx6yKGZ8r2PdkMIgvmygDKuYNdvEwdiSEfNPKm8Vx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.helo=mail.mainlining.org; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.helo=mail.mainlining.org
-Message-ID: <b15b2687-0c2e-43b2-ac9e-78e04e77e065@mainlining.org>
-Date: Wed, 12 Aug 2026 23:54:41 +0300
+	s=arc-20240116; t=1786601764; c=relaxed/simple;
+	bh=sOnC6X6Gs/SA1VdEoaAslErXkIuBHbfJ2Vid+d8k1n0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cb1yN6fX8hacI7Pg18u0wZ2ALke2SIjB/4TBiGZeaimwKH243IQyjDVpt7F34BDzkKbljjfRECA5Rq8MPlIrV9C8BX62R9pXmXxXNqwt4mevCKIXIL9/YZIf+WFNu2U6TT9t5T0qHTv4cccnvz+SWUlABFgLUmzgua5KaJ0dfcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=isslab.korea.ac.kr; spf=none smtp.mailfrom=isslab.korea.ac.kr; dkim=pass (2048-bit key) header.d=isslab-korea-ac-kr.20251104.gappssmtp.com header.i=@isslab-korea-ac-kr.20251104.gappssmtp.com header.b=nkF9rRIL; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=isslab.korea.ac.kr
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=isslab.korea.ac.kr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=isslab-korea-ac-kr.20251104.gappssmtp.com header.i=@isslab-korea-ac-kr.20251104.gappssmtp.com header.b="nkF9rRIL"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-38e08baf860so407140a91.2
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Aug 2026 23:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isslab-korea-ac-kr.20251104.gappssmtp.com; s=20251104; t=1786601762; x=1787206562; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=G+XeDMuFDGYhAwuT7KIqlxZA1fecELK4uMec11zcI1A=;
+        b=nkF9rRILICfxAhXmOghJN1CFrfx5ollkaOc/RxNcfzD6E4fO2uuJnKH6+wjHtxKQsW
+         ZdoPWAW0rsX01rLe0afhMhVLRA1X5bdGmB/EVG1XEpDd/aweV7Tp1d45+nD9EW7FcNwA
+         739PO/TNdodg0l/we3y+H8WBi2PFai/8mN7vqAnCTW3DRbT+hjpFTQi7ebmmBlSMlknv
+         K59oGmATJT2UlWtFj5faz+t8bvhagpD1sV4WQ3Jl1nZyBWY+tkNZPU6XXwSmZ2ubVXzn
+         bTuJefcCPX+9pDsUDy9BxilMZOfuP2AKVMavnZWy9Y4q79gzxglzcFocdqAt6H2BXOE6
+         nTjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786601762; x=1787206562;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=G+XeDMuFDGYhAwuT7KIqlxZA1fecELK4uMec11zcI1A=;
+        b=BiCreyaFu0fADxPTB5eHb4Kt87cZ4M5bpfetlUZp66rPL8zaMUiB4hVt6WxFQPRF4M
+         R03oULJ6NjOhmnARfg373VtKi04Ppo7PorGD+WhO3ObVcvH0l0xsCLkOFKwTMCHdzYAh
+         Di5oEsd/MwfvR67jC+BwpQTPnRlcLUHvLr4JAlrzJ75xCOgNxSlDHvQi7KYsCFKSI/DG
+         h481adbkwFiNo6OFAklcJ5YJmhrv+6ymbpRKHcg+cW5+SlkaMrJmGx2o0YgZnUs3EWyW
+         OgnmTac0Q4fKcQt5V6yTMLka0UhropmwwUsgrdJwop2D3rvYmPfs4isXV9DiIsE6mLBi
+         9p6w==
+X-Forwarded-Encrypted: i=1; AHgh+Rpkyg2CgnPUXoLX+n/ZiMC/QwXZaqm/pQnip8wZGD9/9Ixh2lMtRpffogkxIJIoMUsSvYQAL1EITns8qDGoTpY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYp5T+EN6VINbzgCs3PtqBqysYg7+9ooKNqAWYOVrSt6VQqFZK
+	HN/QHojD3ulg69yglcAnT8uOlCdYr037vbmQbpk4aAPDA6lO96+kDH/1ETF4TORG4so=
+X-Gm-Gg: AR+sD12X5cDFqB/oKbp+C9ryxAhsirvY6TA3p16SHEQ7cQBCVVB3vMt0/UeEJFdKTJp
+	CXvJApguMcXAaZFksToXdyKcBCw2ntII4XPcDAIxKQ0SLP0IhTB90FPQSpWcIvt1WbXQcjUurGM
+	agU8HLKpVYZlkQyH6KI+5VKJp4e8FFQkFsjRhpG3v0as5ENCV8KQ36d1N3zngK/Kgeb/PcPzbVS
+	jVJarTGykPvAJ+NLk+suWyYjCNkaUiTW6lmjDxZKOBVZRi/e/ynmaLtqBYRIytCoQpzrLnhhgp+
+	1fXZM6NviUnxzP7Jt3tCQ4m8E+LHFHvcZ9GahblSAz/s9N3oXyZWjXCGZ4QrmXLEwVptLvW+Aum
+	mZKCuZaZJmRIemxgrmlJukc5u+4v2FYeblr8RHS4PF1ZULjYYvlp4uFXuiaHGsEWfrqti6zfZ0Y
+	t3GCsBS/zQVXIUWb/x3SCItZ67AljHufIlNTOQQ+6O2CM/HktZ2psXHmZtf2x5w5Gb7dOS
+X-Received: by 2002:a17:90b:1c87:b0:38e:67e1:15b with SMTP id 98e67ed59e1d1-3931e076282mr3739607a91.6.1786601762107;
+        Wed, 12 Aug 2026 23:16:02 -0700 (PDT)
+Received: from yhlee-960QFG.. ([125.131.91.97])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3931db4eaeesm533018a91.2.2026.08.12.23.15.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2026 23:16:01 -0700 (PDT)
+From: Yehyeong Lee <yhlee@isslab.korea.ac.kr>
+To: wenjia@linux.ibm.com,
+	alibuda@linux.alibaba.com,
+	dust.li@linux.alibaba.com,
+	sidraya@linux.ibm.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com
+Cc: Yehyeong Lee <yhlee@isslab.korea.ac.kr>,
+	leitao@debian.org,
+	horms@kernel.org,
+	mjambigi@linux.ibm.com,
+	tonylu@linux.alibaba.com,
+	guwen@linux.alibaba.com,
+	guangguan.wang@linux.alibaba.com,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v6 0/3] net/smc: fix out-of-bounds and use-after-free in SMC-Rv2 LLC processing
+Date: Thu, 13 Aug 2026 15:15:17 +0900
+Message-ID: <20260813061517.5380-1-yhlee@isslab.korea.ac.kr>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260811231902.47089-1-yhlee@isslab.korea.ac.kr>
+References: <20260811231902.47089-1-yhlee@isslab.korea.ac.kr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/33] Add support for Qualcomm Snapdragon SM7150 SoC and
- Google Pixel 4a
-To: David Heidelberg <david@ixit.cz>, Jens Reidel <adrian@mainlining.org>,
- Danila Tikhonov <danila@jiaxyga.com>, Miro Mraz <mraz.miro@seznam.cz>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org,
- netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- neil.armstrong@linaro.org, linux-hardening@vger.kernel.org,
- linux@mainlining.org, Connor Mitchell <c.dog29@hotmail.com>
-References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
- <2ca2b774-fd7f-4612-b38d-f60e32ff6f9a@mainlining.org>
- <283096ad-ae1b-42b8-8312-b192f735fc80@linaro.org>
- <cce3fe36-322e-49ed-8928-3aef813faad7@ixit.cz>
-Content-Language: en-US
-From: Danila Tikhonov <danila@mainlining.org>
-In-Reply-To: <cce3fe36-322e-49ed-8928-3aef813faad7@ixit.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi David,
+Answering the Sashiko comments on all three patches here.
 
-Thank you for your comment.
+1/3: yes, applying it alone leaves the out-of-bounds read reachable.  The
+commit message says so, and all three patches carry Cc: stable for that
+reason.  The three are a set.
 
-On 12/08/2026 14:40, David Heidelberg wrote:
->
->
-> On 23/04/2025 09:26, Neil Armstrong wrote:
->> Hi,
->>
->> On 23/04/2025 00:07, Jens Reidel wrote:
->>> Hi everyone,
->>>
->>> apologies for the mess this created. Danila's mail provider 
->>> ratelimited him halfway through sending the series and the attempt 
->>> to re-try sending the second half an hour later ended up with a new 
->>> message ID (I think due to not using --in-reply-to).
->>> He asked me to let you know that this will be resolved later and the 
->>> whole series will be re-sent once the problems are resolved.
->>
->> The b4 web submission is a great alternative when the mail provider 
->> is rate limited:
->> https://b4.docs.kernel.org/en/latest/contributor/send.html#web-endpoint
->>
->
-> I see people interested in moving Pixel 4a forward, but it seems this 
-> was never upstreamed? I looked at sm7150 repository [1] where I see 
-> FROMLIST, but these patches never arrived to the list and this series 
-> is from 2025.
->
-> Should we expect v2 (re)based on recent tree?
->
+2/3: patch 2 does restrict that path on its own, and it is not meant to
+stand alone.  It takes away no working behaviour either: before the series
+the same path did not save the peer's rkeys, because smc_llc_enqueue()
+copied only the 44-byte base message and the loop then read past the queue
+entry rather than the extension.  3/3 copies the tail into qentry->body, and
+both the add_link and the delete_rkey loop take the rkeys from there, so the
+complete series saves every rkey the peer sent.
 
-I'd definitely like to get back to upstreaming SM7150 and the devices
-based on it, but I don't think there's much value in continuing with
-this particular series as-is. A lot has changed in the kernel over the
-past year, which would require substantial changes throughout the series
-and would effectively force the maintainers to review it from scratch
-anyway.
+3/3: the tail is copied in smc_llc_enqueue(), next to the 44-byte copy that
+has always been there, so the extension is no longer read from the shared
+receive buffer later, from the worker.  Its length comes from wc->byte_len
+rather than from the length the peer declared, so a short message leaves an
+empty body instead of stale bytes.
 
-I'd also like to split the series up to avoid targeting such a large
-number of maintainers in a single submission. Hopefully, I'll be able to
-find some time to work on this in the near future.
+The other two points, the ownership of the shared receive buffer and the
+locking in smc_rtoken_delete(), are about code this series does not change.
 
-
-> Thanks
-> David
->
-> [1] 
-> https://github.com/sm7150-mainline/linux/commit/7ea41523c678e94a7c048936052b5b1b1b109cdd
->
->> Neil
->>
->>>
->>> Best regards,
->>> Jens
->>
->>
----
 Best regards,
-Danila
 
+Yehyeong Lee
