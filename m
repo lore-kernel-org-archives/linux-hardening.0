@@ -1,54 +1,59 @@
-Received: from latitanza.investici.org (latitanza.investici.org [185.218.207.228])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9331848D87C;
-	Fri, 14 Aug 2026 19:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.218.207.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE48D39150E;
+	Fri, 14 Aug 2026 19:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786734544; cv=none; b=h5IbhnEnt0IOSgkaDIAJh4M9iMVCpltNB9obdLu9T9shB1sQZAFGsJNFZ8pnu9/jheU2tf39C26FCGXA5PYe64FTeXRd9SVUYp189DiQE2lQ3/VUiRXiehYp14LxIzPRvGQxiMtVcJb1JP8Byd4E25SCc0+nQ8gdyIIedY+puWw=
+	t=1786737410; cv=none; b=iw7mLmp6aiKPAhIzwgH4Xe8XaL6nrEG2bJmQpS/ipJvA+UlDVmztisYg7Ggt+c+HwuqLws6qzyeovjX2lVyKxNCnTfiSiRwC9qTdlFSvFxxYJjz6vVfYriGFmhKJ102NHZ+yr9LvkHCdy1q23bEfZ3nIrnVEku8r+YNj32tbTR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786734544; c=relaxed/simple;
-	bh=Urd6fhjEJMW8hvl4We+DDMpWIXnt0w2MbMkWbmjhiVs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=tXQhzleCpBTWsY0EmMKgQQlt18pdfj+285NBjQcgM2orYL+NHCepovbO+HhuKo54dwgxVDhm1xtApjxb+ZlNkacIrD4jbOw3g3S69xL8LGuH9aZ1WF7YQXKAau0Koq2IHdgFeJGD+UsnfU3XG1SbKXS+gGzTOISPEjPF+3FkOKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net; spf=pass smtp.mailfrom=grrlz.net; dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b=kmXJBGFx; arc=none smtp.client-ip=185.218.207.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grrlz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grrlz.net
+	s=arc-20240116; t=1786737410; c=relaxed/simple;
+	bh=MzQ1VUBbgxNAW9gLOwm9NEaScQIEvJlQNgkYZxpVWn0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=n4b3SQhe3l70C1rvSSmha1sgSFLJeb8vislTSb2DWl1SoVIFeRbwNSOJ9lOhHi9ND7ZPXoQDBEm5NRxi2+TeKWxF4c1xQG4ptEOphprt3/mTwIApK9CMpwsxRexvDl+eoaeAXrBsJDJnE1QMl+D9piXT2sDLSZtRAigx9PFvD2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=AZcqb3i+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=grrlz.net header.i=@grrlz.net header.b="kmXJBGFx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1786734532;
-	bh=Urd6fhjEJMW8hvl4We+DDMpWIXnt0w2MbMkWbmjhiVs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:From;
-	b=kmXJBGFxDO9ZjanykO5DzKxjAyj8o5WTRlReDkgG30mRPYPGJbFeLlvrKvEo4HUsg
-	 /Y4imeOIu58hdxkcRAlhvXVTmelr+i9xSbKl9SLbe1Nn11nmEB2f0IwAz+RAblb916
-	 hnSmpEBsKYghvc/+JHWbEdVtnLm1DWG5W1TZ0r2Q=
-Received: from mx3.investici.org (unknown [127.0.0.1])
-	by latitanza.investici.org (Postfix) with ESMTP id 4hMBbS1SRPzGp94;
-	Fri, 14 Aug 2026 19:08:52 +0000 (UTC)
-Received: by mx3.investici.org (Postfix) id 4hMBbR6NZgzGp92;
-	Fri, 14 Aug 2026 19:08:51 +0000 (UTC)
-Date: Fri, 14 Aug 2026 20:08:53 +0100
-From: Bradley Morgan <include@grrlz.net>
-To: bigeasy@linutronix.de
-CC: akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com, kees@kernel.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux@rasmusvillemoes.dk, namhyung@kernel.org, pmladek@suse.com,
- rostedt@goodmis.org, senozhatsky@chromium.org, tycho@tycho.pizza
-Subject: Re: [PATCH 2/2] kallsyms: Don't leak pointers for unresolved symbols.
-In-Reply-To: <20260814144854.746840-3-bigeasy@linutronix.de>
-Message-ID: <6A4A7DD4-1B62-4618-A1FE-358A51014611@grrlz.net>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="AZcqb3i+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595981F000E9;
+	Fri, 14 Aug 2026 19:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1786737408;
+	bh=YuNGGAzC2eZf8ksSaCKBLE9s4m+Gv139JqVdt7tq24M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=AZcqb3i+uPmNqx9+2kwl/U6GBWQ8k0yclngi5d9StALiJ7ubbDTWTKsq+FsQOKKcR
+	 BcILgwl6JQvYjbG6CYuzoe6UVGAaRoGeYPeqg/Ne73mgATOJmSURcu3PiA+WnRxtxy
+	 UBaEf0ZT7zLRDwCl2alWMmw4/UyTJKbCXHTlRHHo=
+Date: Fri, 14 Aug 2026 12:56:47 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Kees Cook
+ <kees@kernel.org>, Petr Mladek <pmladek@suse.com>, Rasmus Villemoes
+ <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Tycho Andersen <tycho@tycho.pizza>
+Subject: Re: [PATCH 0/2] vsprintf: Don't leak pointers
+Message-Id: <20260814125647.3e10a3441ca204855b135a5e@linux-foundation.org>
+In-Reply-To: <20260814144854.746840-1-bigeasy@linutronix.de>
+References: <20260814144854.746840-1-bigeasy@linutronix.de>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-LGTM,
+On Fri, 14 Aug 2026 16:48:52 +0200 Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 
-Reviewed-by: Bradley Morgan <include@grrlz.net> # kernel/
-Thanks!
+> It is possible to leak pointers via %ps without KALLSYMS enabled.
+> With KALLSYMS pointers can be leaked if they can not be resolved.
+> 
+> The tiny series has two patches, one for each issue.
+> 
+
+Thanks.
+
+fwiw, Sashiko flagged a few possible issues:
+	https://sashiko.dev/#/patchset/20260814144854.746840-1-bigeasy@linutronix.de
