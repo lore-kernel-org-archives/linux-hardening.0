@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BBD3D6CA3;
-	Fri, 14 Aug 2026 10:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B0D3B637C;
+	Fri, 14 Aug 2026 10:34:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786703671; cv=none; b=uZNKBwXVQ988fmq3v80sW9Fg+caAAY67Zkq7zhqoUrfcgRu7hf17oyAwNaUM2N7wwD7EHw8rUcAUV7CvRGcfekQdGTSOB4He8ArbVCqUW4Omx4tSzLKip/NtB2r3raNJoU/flTl6/ED5ALK7QDEU1ol9Fw+yi6SLB452p8PIbhg=
+	t=1786703699; cv=none; b=Yfb2KrGlaUb1t9WGegOxU7cvMvzhH2nzWgvpfKtbm9JxWo/LKZe5zHhirLfO8vo1HKzUieVuIsnRlDyQN5RWowWqAyOfkasy7qcPz0H/l8va5XkyBSoaH5Jwt/fzAYbNOgxmFBNqKi8aGkEPBijPH/IL0HRvNmWQzxp1chJr50U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786703671; c=relaxed/simple;
-	bh=NgWLGupja1np27c5LhF6x/ZRkPSUawWG9LgyGraObkY=;
+	s=arc-20240116; t=1786703699; c=relaxed/simple;
+	bh=jSgH07T1T1GPvz2qg7Pd/HQPLo9H1ZT4I3dPszGWKXs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f49QjeUcbY0mC0MwTCRk/MExxdHERVIreZgi7nW7c1tC8pl6Jux9uP44XcTWi0DOZbrCtlNld8jHWeXUY6Qx5gdxO3sMfnSaidYjYr4XrlOiUNvwzmh2/3G8NNoH+ChDX4O1g9uI8YJH7TPF3EMLdpB5vYk0sDcRTe7yJWAOXSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A713bNVN; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=J+dsY+tyyWYQzODRn5xZ84UArYurMH3NoGTsLLe0GfrmWqCz0ZBain/zsCZlMif0XiC1QVxeR7+lpa4Y3CVYXijZNEPkLSOrPsE1Mxb9iaBqOWT47EH0q9UBs9PqVbzI0Q/MdqvDs/5wJACprSn93TLwBZpuUZY4xCj8s7kn+vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMkKl8fZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A713bNVN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7EAE1F000E9;
-	Fri, 14 Aug 2026 10:34:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMkKl8fZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C0F01F000E9;
+	Fri, 14 Aug 2026 10:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786703661;
-	bh=zLEpjjvjkMci6i0MeafGvpEGe46uOhbCMq2WLnNw7nY=;
+	s=k20260515; t=1786703687;
+	bh=4RIu9UZ9bVZVLDk/aNoSWVU7vQlBGpgluA294lEBvNs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=A713bNVNI2gHySO/Da51E2uRnVHCzPCxPNtPXF3mK7lipiL7ksDdy1Mo08/W42Djo
-	 xJ3RHUFRquqtm/TG0AL6wHaeVL0HjgZ18G7305jlzXJVLaW2uy8KStAC4eFzGCwXXK
-	 3L1yoRlstMeTfYDe6ano+RaQAmBTk1P8fT0IZCmm5n+w8XF8bIWZpaE7lh7HuS91xV
-	 8rbPbHSOPK3gX8zZAkOm3f4a5z7x8YmPvb4oqp4tw+RUvJMErHj+fZ5rfaBCz19Cil
-	 V/6j3eJI29JQDbL7ycYITLlxRz4+SPsGiF1fN2v178ETKyk5OsAOKfe31a53rDE7Ub
-	 zrUEAXYgxaWDw==
-Date: Fri, 14 Aug 2026 12:34:12 +0200
+	b=cMkKl8fZHQbHiyJDHDx4ntZfVQJyqXZK+F1XzupY/GgrJ6MJ+7aldgS0kpe2m5a97
+	 BYvYvE+yZY6NlBMItJHc4rfWyOESUjWcBOb9ouW9F9Upmsl+FuE6Icdp6QTK8kOqAj
+	 /unLnKbbAzTKR++n5TolvbAXuUMphKjU/zxpAei/XMzEA2VNLBtjxDS4356Rw0F7K/
+	 1KUix4Z8OiDC3jN+njAgEiBh4kYvWs8Vi1ztG6u5Ke0AmPwbfOneuoZkA/xLYgEthu
+	 BQpjuHE2WwjPSp5P3uzBaE5pWqZfz4GrHJsTS3GPihJqz732eW38Ocwr7X2S2J87WM
+	 Ev7wbmP612BIw==
+Date: Fri, 14 Aug 2026 12:34:39 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Adam Skladowski <a39.skl@gmail.com>
 Cc: Bjorn Andersson <andersson@kernel.org>, 
@@ -35,10 +35,10 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
 	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
 	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 4/7] dt-bindings: arm: qcom: Document LeEco Le2
-Message-ID: <20260814-lively-attentive-narwhal-1beb9a@quoll>
+Subject: Re: [PATCH 6/7] dt-bindings: arm: qcom: Document Xiaomi Redmi 9T
+Message-ID: <20260814-amazing-flying-tarsier-9e78ca@quoll>
 References: <20260810-next-patches-v1-0-79a779d76173@gmail.com>
- <20260810-next-patches-v1-4-79a779d76173@gmail.com>
+ <20260810-next-patches-v1-6-79a779d76173@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,10 +47,11 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260810-next-patches-v1-4-79a779d76173@gmail.com>
+In-Reply-To: <20260810-next-patches-v1-6-79a779d76173@gmail.com>
 
-On Mon, Aug 10, 2026 at 06:55:37PM +0200, Adam Skladowski wrote:
-> Add compatible for LeEco Le2 codename s2 based on Snapdragon 652 SoC.
+On Mon, Aug 10, 2026 at 06:55:39PM +0200, Adam Skladowski wrote:
+> Add compatible for Xiaomi Redmi 9T NFC codename lemon which is one
+> of variants of Xiaomi Citrus lineup based on Snapdragon 662 SoC.
 > 
 > Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
 > ---
