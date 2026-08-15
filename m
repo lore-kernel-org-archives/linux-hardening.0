@@ -1,74 +1,88 @@
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A924344D88;
-	Sat, 15 Aug 2026 01:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABED1EB5CE;
+	Sat, 15 Aug 2026 08:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786757178; cv=none; b=sMs9JIFR8G7RFhc5zxujEC4IsMfiCBbnvGbAMfTA4/rLNxxY5A2ylKZXL9QQvKWtfO0m2NCb4o/AJTFDHR3/Ns0AkH8UHCmsEfWLnphHzI6Gt1rr5uG4tu+rTjLDuAWXfqSU7IsvEMGnCEQresyEsWWAjA9umSZz4VsrIQQ/js4=
+	t=1786784291; cv=none; b=HWoHPpx5DxsG5ANuVggfSfmlyzZpQgHDqi+EzPd/TBbkrSqPuQ3mQpvE8noWWmmI3bTBp1Bsnk/69JKY5gAdGuDnVrHQraN5vSjl+gH50fO2q0AAjnKZNILCOVoG4mcGzKOIxlEmC04QomoE4qCnmM2D9nXDdbsiWexSzKW/lIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786757178; c=relaxed/simple;
-	bh=KhTNr/50lbXMx/ztsnuhARHGCEwZuYFRYqlpplZAUqk=;
+	s=arc-20240116; t=1786784291; c=relaxed/simple;
+	bh=83rVzdc43/8GHpNstu2sZht933k01ghuS0VejBxZSVg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Od9haVP/yXipLsY0ElU4N0WSn+yRiX3FeZucG1JCWjl3N0p4QkvxHYWo9skqBk0z9BGaQ8n1VOvUuAP0RST9TggZFP94HUSGTd+g26xt/HyK379bo47+aDCYrezMlFxjiA1EtlNRUPcz4OXg99dvdibc5yFIi7GlNIiGif3h0uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=gFGR6T/3; arc=none smtp.client-ip=180.181.231.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=MXTKa0k+Ge6M63QYtn92niiWYEOnWfyvbFPuGoh3TJEj+ggbH74br9YpoUjSQQ9HOQK/ETYGziaGJFL5rxa+9ZHs8Hs3GysPrxKIqjc9Pae7dRErZW0Muz8Whmr5qJ01iV/PtiJ7ZYm26Rq9OU1b9aN36Tif0M4Cd93UxOscupk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vl1OsyXd; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="gFGR6T/3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
-	from:content-type:reply-to; bh=k9u2F0jxMQRDWxjUAvaCbrfLZGFeFer9UNUh8841OWA=; 
-	b=gFGR6T/3VF0WvOFXCsRf36W8uN75NWjriGkrGpSinn+s0kerkkMJUkwLvsIH2mjSljD4U3F3jQK
-	RGMkYSNzS7wrUu1pHU04XO9QZyrKwCUhCdsNmZ75D/sPk+k+LleJiOLU1N9SmiOjxEpUhYsU2vwQZ
-	wAoIaAz/Ml71pKpR/He23rVMpg0Oue7SLCFK03H4wFdN8zM+j7ZZBergr2OghRtiBnCmRZfiJfJvL
-	Jor52PbFFn0x/ExXf901euLyMWs5zsqzR53HFeaFR2Fza/ipU6+gJueYD4VgRirU+1QyBDP/kTZoa
-	owUDrsqQmPUEww9eKX7Y87w/CF8XVzzwfmKw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.98.2 #2 (Debian))
-	id 1wv39w-000000054ti-12Nt;
-	Sat, 15 Aug 2026 09:26:05 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 15 Aug 2026 11:26:04 +1000
-Date: Sat, 15 Aug 2026 11:26:04 +1000
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <linux@jaseg.de>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	David Howells <dhowells@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Michael Bommarito <michael.bommarito@gmail.com>,
-	Jeffrey Altman <jaltman@auristor.com>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] crypto/krb5: use kfree_sensitive() for derived key
- buffers
-Message-ID: <an_ALPtrIGVPoGhh@gondor.apana.org.au>
-References: <20260803192621.329577-1-linux@jaseg.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vl1OsyXd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786784289; x=1818320289;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=83rVzdc43/8GHpNstu2sZht933k01ghuS0VejBxZSVg=;
+  b=Vl1OsyXdqh6dQ45u6L5QIvtooIfayjY2hZXMkBnO43b4PrdBBkT9MpJe
+   BwGBaaH7DmaQHy3OFdR6VUEqQ2j2L68LPDaI+BixzK2GnNqUDx0K3L04b
+   1azUZ6fXWaSaRDekeksAolytGyi1pid7uMrKLvhXEavz+0dbBCOL+m7Q1
+   UFPq3P9jWgO0RSB5MT94hVhaZIEGDLoZV0zqXxmcNXeVyCKE7MeRV5gL9
+   nNFrCPY6oseKpFjoNQiWSFcj8GmUkRvk0y8YOt7SCIU8NxZ5EtPNoaLBr
+   V8m5lYGO8V/JcRYgZKZvhLDMGXOf6YD2rerv9G1WvYZd+g9NITTVu2so3
+   g==;
+X-CSE-ConnectionGUID: hnftVAsOQPiiArceO2mEPQ==
+X-CSE-MsgGUID: HpugK26aRyao2s+WIorTiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11875"; a="74880130"
+X-IronPort-AV: E=Sophos;i="6.25,224,1779174000"; 
+   d="scan'208";a="74880130"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2026 01:58:08 -0700
+X-CSE-ConnectionGUID: Px/3JtpTQZ60BRBsGld8xg==
+X-CSE-MsgGUID: EilQOjN2Q8GYgk8GmAABfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,224,1779174000"; 
+   d="scan'208";a="262662014"
+Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.12])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2026 01:58:06 -0700
+Date: Sat, 15 Aug 2026 11:58:03 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tycho Andersen <tycho@tycho.pizza>
+Subject: Re: [PATCH 1/2] vsprintf: Don't leak pointers for %ps without
+ KALLSYMS enabled
+Message-ID: <aoAqG0kKxvBbed0M@ashevche-desk.local>
+References: <20260814144854.746840-1-bigeasy@linutronix.de>
+ <20260814144854.746840-2-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260803192621.329577-1-linux@jaseg.de>
+In-Reply-To: <20260814144854.746840-2-bigeasy@linutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Aug 03, 2026 at 09:26:21PM +0200, Jan Sebastian Götte wrote:
-> crypto_krb5_prepare_encryption() and crypto_krb5_prepare_checksum()
-> free the buffer holding the freshly derived keys with plain kfree(),
-> leaving the key material behind in the freed slab object.
+On Fri, Aug 14, 2026 at 04:48:53PM +0200, Sebastian Andrzej Siewior wrote:
+> The "%ps" format modifier prints the name of the symbol which is more
+> valuable in terms of debugging and does not leak the actual pointer.
 > 
-> Fixes: 3936f02bf2d3 ("crypto/krb5: Implement Kerberos crypto core")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jan Sebastian Götte <linux@jaseg.de>
-> ---
->  crypto/krb5/krb5_api.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Without KALLSYMS it will leak the pointer which is not intended. The
+> default policy for pointers is to print a hashed value and not to leak
+> the actual pointer.
+> 
+> Print "(unknown)" for any symbol resolution witout KALLSYMS enabled.
 
-Patch applied.  Thanks.
+Hmm... I would expect some test cases to be added/modified.
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+With Best Regards,
+Andy Shevchenko
+
+
