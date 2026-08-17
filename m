@@ -1,107 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com [209.85.210.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619213A9879;
-	Mon, 17 Aug 2026 18:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBA54B04AF
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Aug 2026 20:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786992712; cv=none; b=WOo/NwFXfZV3Sry+qhZ+k/FDIvuoI+YC8smXxYD+UpSeg7B125jkSI8w+LjnpgfrhcxapEvJCkycsB4y87r32lrPaOv+/GwdFpg4esJeFJRAPWPumMeS7enbmAi/9gNBn2TXwbMAkD4NZORPU5/EB9FRfk7NblZdZYdJViBfqcw=
+	t=1786998791; cv=none; b=fN6uy8RBRY50XR3SZ3pMFq7X8/9cq4cYUq3qCc87tl2Jqc0Q29DLNfoqEQ+XYlfNF348jOqqjSKtihsAiaO4yEiByr4EnPYwpi6XlMcm1svuioiIse0x3kQiTrRjiKNFve6HtNik0QhKxNhz/A74ukesH4V0WFu1wZnsky/EG98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786992712; c=relaxed/simple;
-	bh=261p/DeBpAyQF1el8SnPnh7ho2GfmZRpRR1Wtc323fM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ROKy1qsMQC9e0AiQ+27t9xUbYHdDczRr7jiD5Hw8OxbJCp04xtqD5bLSPppAl/mPwUJRYgAblIyBY1LOBLmo+aIYiWzxThzcMIGhe/sDeBGrbdWsYmM0LIByPNpZuq7yDrw88s3vZxJi/Q3XomiUNZ1QHtz8/hrWDIwEfA5n6Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=elKEjTdu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786998791; c=relaxed/simple;
+	bh=62mvJf3WvOZtRlyN48SZrZg1DyDipbX+PZ/49rl1Hjo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=cPEi7HxCw8KwJaGK0De2BX5L9lzmi/pPS7gYLbuRszhPj+SLDffb3DiwfI2H5KogPRJB4nrY1502LbKfJ3szc1KvV8i2kof3e8pldmr1ql3s2OApQyeBky9wZu35MJCg18nSxBL31G449/hXmQeli/cAiHmcXfkVycyrF0IeZdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=evc9YGzm; arc=none smtp.client-ip=209.85.210.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="elKEjTdu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 635CC1F000E9;
-	Mon, 17 Aug 2026 18:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786992710;
-	bh=GmaLjdPS/A0zeV66ab0EU7MLb8KKncXJ0C5BdXmW+XI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=elKEjTduH3qqyur+kF0U+eLHFaDIHAxA4s3XrWcu8KV8CRygieleBSrFmyLgkPWcT
-	 iqnbAubcyHqYymCoj8nE3z7w1iUFD65XZgc6lgF3/nLHF0A+TgWt558tp6fOcQGL8W
-	 72LIvWfLBGOyPuLjsg/tmNdFm0UwS+C6Jd63u480L23jeSIdoAFV84TbaYtv/7M8dY
-	 96poqGjT0BkIvHuAzqbQazs/bfs1SstSaotB+CifxvHiaN7t3R0VdxEgTT/pKg07DO
-	 vO6HtcAASAVjR+FT1VhAuVBVDp3ykvdq9KoypmZfXbTjLggpSBBC/nhn39jDfB21Rc
-	 FhK4Rit9IJFGw==
-Date: Mon, 17 Aug 2026 11:51:46 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Jaihind Yadav <jaihindy@qti.qualcomm.com>
-Cc: Nicolas Schier <nsc@kernel.org>, Kees Cook <kees@kernel.org>,
-	"linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] kstack_erase: suppress -grecord-gcc-switches for
- external module builds
-Message-ID: <20260817185146.GC1249844@ax162>
-References: <20260803181217.GB1067866@ax162>
- <20260813082949.1622045-1-jaihindy@qti.qualcomm.com>
- <202608130942.4FFA5AAB9D@keescook>
- <CY5PR02MB8991D4B48F9391D1849B2CFCE2DA2@CY5PR02MB8991.namprd02.prod.outlook.com>
- <an9dBpYEIb4GWhAC@levanger>
- <20260814224550.GA3553101@ax162>
- <CY5PR02MB8991C91E71C153EEF452972FE2D82@CY5PR02MB8991.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="evc9YGzm"
+Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-7ead32f5c6aso2601538a34.1
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Aug 2026 13:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786998789; x=1787603589; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=lAVl+NhQY8DNi7sjHIPAU1qvka7Rp9cjT1Z4/qhVby4=;
+        b=evc9YGzmiYUpe/ZFzeCe9WqVznc8D0U56PTj5HKKAuNSpf9gXZLBBWPiRH4YglDcjH
+         1z9zR9GEONZQZMx3AiDWjjBRRhWpgqiL1n5jFfjDuhsIvykwtnhUTCrna1XNHruCefVc
+         JQsIPAVhvOMTis/J2KzUKhko2YL83pGV0rQzBlQ78iZUsPajV2W+CgMrmCXgjRlx7wPR
+         aEkQ2QGwKC4isUiFuZEUz7x6ZqcazWnrlbOSqMvIsatIFXzbHhrnUMdaGMtKBxXJwFi6
+         A60g7yqGDznxoGIdc7hs3TSQ//q8g3GK+IpkFzVkWyKX+apP5gCC6ot/xrM994sntD39
+         KQPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786998789; x=1787603589;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lAVl+NhQY8DNi7sjHIPAU1qvka7Rp9cjT1Z4/qhVby4=;
+        b=b5pQueJZ3N/WocCZ69mg/H1TF+DF/IkIzE7FhfmN8oWoSgX22zxgtFkDj6GZ7b8Buh
+         H48wiGT/gUUH9UWQuYto/fREZQJBMWiG22zF9J4MLTXRai4AEwdw1O8LvqPqxibvBqu6
+         WJMsohkpcoM8uzZotR1OohbNUkbSoY5ghtnnjYJJCbR2DvXnQhzu0rtpTUE3NHSxGI4c
+         78ckYczr60wVqH1jY3IdTJOg/GblhP0bRp8yZ0PlxJBYt58ZFmHmil86VMXEyeeS6dQ3
+         D7atW2GCPYGfWCDlXfWDNJC/XRkCa0rS8I4f5Lbnqq+QcgKeZU8gdEemoX0LSatDoVxD
+         tGKw==
+X-Forwarded-Encrypted: i=1; AHgh+RqBWVUjRQd+ub0nDVa0noEjYdhMeieBjsmYbT8tOGo1wz5VCrWichH99xEmGC7v59SA7Os+A/gRj86EoZg31Ss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvdhY01KdjvBe+PnZUEnmqpwXyrykpwFWCplszdrORMsgfKtjB
+	QnzSZZkU26dgoU0spX66rV+dGj+Fzkun69fToTKsAvFVXwXxaDNfgMi5EZiS9TRv7t6PA76Is9k
+	bD/nqOcUhJVWlGeR6ahRM5JkRcw==
+X-Received: from ilbda7.prod.google.com ([2002:a05:6e02:3cc7:b0:508:27c6:a6d7])
+ (user=justinstitt job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6820:178b:b0:6ae:4475:bc48 with SMTP id 006d021491bc7-6b0d6245b8bmr24430765eaf.22.1786998788813;
+ Mon, 17 Aug 2026 13:33:08 -0700 (PDT)
+Date: Mon, 17 Aug 2026 13:33:08 -0700
+In-Reply-To: <27956255dde39f58d73a7b51cb53cbe3d7804f54.1786411026.git.mariianikitash@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY5PR02MB8991C91E71C153EEF452972FE2D82@CY5PR02MB8991.namprd02.prod.outlook.com>
+Mime-Version: 1.0
+References: <27956255dde39f58d73a7b51cb53cbe3d7804f54.1786411026.git.mariianikitash@google.com>
+Message-ID: <aoNuOD6CLopCgxtU@google.com>
+Subject: Re: [PATCH] NFS: nfsroot: replace strlcat() with snprintf()
+From: Justin Stitt <justinstitt@google.com>
+To: Mariia Nikitash <mariianikitash@google.com>
+Cc: trondmy@kernel.org, anna@kernel.org, keescook@google.com, 
+	linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nikitash.mariiaw@gmail.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Jaihind,
+Hi,
 
-On Sun, Aug 16, 2026 at 08:11:01AM +0000, Jaihind Yadav wrote:
->   Would it be acceptable to handle this generically for external modules in
->   top-level kbuild (`Makefile`) instead of tying it to kstack_erase? I was
->   thinking about adding:
+On Fri, Aug 14, 2026 at 12:28:45AM -0700, Mariia Nikitash wrote:
+> In preparation for removing the deprecated strlcat() API[1], replace its
+> uses in root_nfs_cat() with snprintf().
 > 
->     diff --git a/Makefile b/Makefile
->     @@ -1057,6 +1057,10 @@ include $(addprefix $(srctree)/, $(include-y))
->      # Do not add $(call cc-option,...) below this line. When you build the kernel
->      # from the clean source tree, the GCC plugins do not exist at this point.
+> Build the separator and source string in a single call using the
+> remaining space in the destination buffer. snprintf() returns the length
+> it would have written excluding the terminating NUL, so comparing the
+> return value against the remaining buffer space preserves the existing
+> truncation check.
 > 
->     +ifneq ($(KBUILD_EXTMOD),)
->     +KBUILD_CFLAGS += -gno-record-gcc-switches
->     +endif
->     +
->      # Add user supplied CPPFLAGS, AFLAGS, CFLAGS and RUSTFLAGS as the last assignments
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> Signed-off-by: Mariia Nikitash <mariianikitash@google.com>
+
+
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+
+> ---
+>  fs/nfs/nfsroot.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
->   This would avoid per-module changes and also avoid coupling a generic
->   compiler switch-recording behavior to `CONFIG_GCC_PLUGIN_STACKLEAK`.
+> diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
+> index 432612d22437..e951fe731679 100644
+> --- a/fs/nfs/nfsroot.c
+> +++ b/fs/nfs/nfsroot.c
+> @@ -173,12 +173,12 @@ static int __init root_nfs_cat(char *dest, const char *src,
+>  			       const size_t destlen)
+>  {
+>  	size_t len = strlen(dest);
+> +	size_t remaining = destlen - len;
+> +	const char *sep = "";
+>  
+>  	if (len && dest[len - 1] != ',')
+> -		if (strlcat(dest, ",", destlen) >= destlen)
+> -			return -1;
+> -
+> -	if (strlcat(dest, src, destlen) >= destlen)
+> +		sep = ",";
+> +	if (snprintf(dest + len, remaining, "%s%s", sep, src) >= remaining)
+>  		return -1;
+>  	return 0;
+>  }
+> -- 
+> 2.55.0.679.g6767b8d81c-goog
 > 
->   If this direction looks reasonable, I can send it as an RFC patch for review.
+>
 
-I do find this direction to get more at the heart of the problem but
-shouldn't this live in scripts/Makefile.gcc-plugins?
-
-diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
-index b0e1423b09c2..9b9899580571 100644
---- a/scripts/Makefile.gcc-plugins
-+++ b/scripts/Makefile.gcc-plugins
-@@ -8,6 +8,10 @@ ifdef CONFIG_GCC_PLUGIN_LATENT_ENTROPY
- endif
- export DISABLE_LATENT_ENTROPY_PLUGIN
- 
-+# Disable recording GCC options in debug info when building external modules to
-+# avoid leaking absolute host build paths
-+gcc-plugin-cflags-$(if $(KBUILD_EXTMOD),y) += -gno-record-gcc-switches
-+
- # All the plugin CFLAGS are collected here in case a build target needs to
- # filter them out of the KBUILD_CFLAGS.
- GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y)) -DGCC_PLUGINS
---
-
-Otherwise, this would apply to every external module build, not just
-ones that enable GCC plugins.
-
-I defer to Kees on whether this is actually acceptable though.
-
--- 
-Cheers,
-Nathan
+Thanks
+Justin
