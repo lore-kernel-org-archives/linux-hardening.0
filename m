@@ -1,102 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-115.ptr.blmpb.com (va-1-115.ptr.blmpb.com [209.127.230.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C7537649D;
-	Mon, 17 Aug 2026 06:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A653B47F5
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Aug 2026 07:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786948930; cv=none; b=RKnC1bhIbwBUP8B1lmguclykO351t32xy/rBVdlJV7zOtgPRMAbJWdvan0eMlpSzeU0/DF2IicbOFUmL70o7Aiz13lSK+777ty+OiPbt5b/lSUhgnhYu53Yzs8DV752uKTWk8ejQxFwDM8ee31XodQhL5IUw3s3JA5nrMIyKdWs=
+	t=1786950755; cv=none; b=MYSyBqB+7Fy7IZH/pRqzxg82ak/3Y1N95GZbuTnSPSGRiQLGwicB3/EA4WFkD+PTwOcEQgvP/nIM74tVoa/55OksStnzGHGDfW5cYrZ1V79Sk5GZDvBTvDHlmwjcjP6KrlHxewxJw6ktgSMA6bkftenWysB/pltg34NeUKG0cPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786948930; c=relaxed/simple;
-	bh=lfM9pOhBetJPYYK4qYrHW9wRll5A1BHJeYt3jkfBYwU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qExWKssTgkC926jGq3A3EMwzFX22XKJedIxsuJTlml4C78F3w+hYVmGPtZMEkHTndyttGcaWZO+oqGW0QHr4FDnLUFkb7u0Swma0r1y8OmQ6xw9aRAQhdKB4WdkVMB/qO62JYQ121vFffett1WCCwxebKAPL9RfFVYKo06U5JA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3jfklVL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786950755; c=relaxed/simple;
+	bh=+oXPAAva5kvvjai0iPcqJOZa+kqlPBgXMgSAYtrukhw=;
+	h=Message-Id:Mime-Version:From:Date:Cc:References:Content-Type:
+	 Subject:In-Reply-To:To; b=H+EWl14Us3rF9f99sK/bW951XNkpppL/6zKipx2uto4Vzv2SQcmrxEwjqcjCmsmBxq3f5AvdNMqQlpCxS1c6UrAAqSy7/wJR89+BJowdZVGeS9F4cOohWKGV2cDiLE+EBqIgHg7rDY2IY8GFW6nrVjkrdtUHFxATEP4CNQlIuHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=RTog4FrE; arc=none smtp.client-ip=209.127.230.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3jfklVL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0355C1F000E9;
-	Mon, 17 Aug 2026 06:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786948928;
-	bh=oywaUON15WdihKMJCP++sVdkvh89c+odYunDFRYVzhQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=H3jfklVLwyT6/xF3w7S1fNnK/K8UZDmaIyMRW0RQhLfMiz+frpcg0qz1AtkL/h2KH
-	 6qu2ZopqnqHycrgKodisx3WxfXSq6Yx4EWjaDm8hJCpbjhXXC6g1cDesl0N95DMWxi
-	 G+tinzQQpSOQM2ddT85MkJhmAzpyD1iUzP0n0dOEazg+Dyey6vcRIQumpQchOjiAQT
-	 gVq+gEVar9Pa/Q6jHmIB9bMwxGJdE3p1p5lUFVNiVNKtfBDomhbBlISV2OjJ+5Mmo8
-	 1GQ1QNbVm/UoKDqvshTwzoeOQn7x2j5Tcudgb0VSCyjH1DZ4tVImGfb55MwtLRk6lc
-	 U0T7a5bsLzrJw==
-Date: Mon, 17 Aug 2026 08:41:56 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Ahmad Byagowi <ahmadexp@gmail.com>
-Cc: netdev@vger.kernel.org, Lee Jones <lee@kernel.org>, 
-	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@lysator.liu.se>, 
-	Nam Tran <trannamatk@gmail.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Richard Cochran <richardcochran@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v5 1/7] dt-bindings: leds: Add IS32FL3207
- controller
-Message-ID: <20260817-invaluable-hog-of-current-b0d0bd@quoll>
-References: <cover.1786746757.git.ahmadexp@gmail.com>
- <d5df0bb5c312478279f0d2fd5ec6305e41add5ae.1786747084.git.ahmadexp@gmail.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="RTog4FrE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1786950741; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=zEmC/EhsOQJ52Eiw8IEgOG+hTiA5mRLWdEfIjaGYqew=;
+ b=RTog4FrEdFqXQN4hf79GJWgPqw+l52P3rPXcGGKIGLGuSurl2iiePNSZKSjgiV2JmrMOJN
+ vYyCw635BkqbabmR76hXeHDRnXwWRVXdkPH4Yp9lXSXlRnlhKYqAFLJLrM8+Lo515MxNOB
+ oSBetItuasYL2QqXxUuA87xabBsKOnH2tIEtSm8BszM8w88czHkniU7w9aRBIfHnQFZmML
+ 5zYhboPmWTS7iU3tsWiNfX/f2r8cVTzOAoTByI63fcCHdzZtdtUTcGRZybo3g6Q06uLz7M
+ bjwvi7vVDN20QqlmYxcJFOeeQD+6oGrk0I3eQGrW1Xt+Xg2FcAF/K5va956j3w==
+Message-Id: <050c317f-111e-4293-aee5-ac8e154ebc7e@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d5df0bb5c312478279f0d2fd5ec6305e41add5ae.1786747084.git.ahmadexp@gmail.com>
+Mime-Version: 1.0
+X-Lms-Return-Path: <lba+26a82b453+a0bc5e+vger.kernel.org+lizhe.67@bytedance.com>
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Date: Mon, 17 Aug 2026 15:11:56 +0800
+User-Agent: Mozilla Thunderbird
+Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
+	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
+	<muchun.song@linux.dev>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>, 
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-mm@kvack.org>, <x86@kernel.org>
+Content-Transfer-Encoding: 7bit
+References: <20260810122057.30447-1-lizhe.67@bytedance.com> <20260810122057.30447-3-lizhe.67@bytedance.com> <178688187038.2799959.7900723270155108493.b4-review@b4>
+Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v10 2/8] mm: factor zone-device page init helpers out of __init_zone_device_page
+In-Reply-To: <178688187038.2799959.7900723270155108493.b4-review@b4>
+To: "Mike Rapoport" <rppt@kernel.org>
 
-On Fri, Aug 14, 2026 at 04:10:49PM -0700, Ahmad Byagowi wrote:
-> The IS32FL3207 is an 18-channel constant-current LED controller with
-> per-output PWM and current scaling.
-> 
-> Describe I2C addressing, power and shutdown controls, RISET, and
-> individual or multicolor output groupings. Require board current limits
-> for each output and document their relationship to the RISET-derived full
-> scale.
-> 
-> Allow dash-suffixed multicolor group names when a group begins at channel
-> 16 or 17, which cannot be represented by the common schema unit-address
-> form.
-> 
-> Signed-off-by: Ahmad Byagowi <ahmadexp@gmail.com>
-> ---
->  .../bindings/leds/issi,is32fl3207.yaml        | 281 ++++++++++++++++++
+On 8/16/26 8:04 PM, Mike Rapoport wrote:
+> Hi,
+>
+>> memmap_init_zone_device() currently mixes refcount policy and core
+>> ZONE_DEVICE page setup in a single helper.
+>>
+>> Factor the refcount-reset predicate into pagemap_requires_refcount_reset(),
+>> move the common page initialization into __zone_device_page_init(), and
+>> wrap the existing slow path in zone_device_page_init_slow().
+>>
+>> This keeps the slow-path behaviour unchanged and gives later patches
+>> reusable helper boundaries.
+>>
+>> No functional change intended.
+>>
+>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>>
+>> diff --git a/mm/mm_init.c b/mm/mm_init.c
+>> index 95808ab5cfdb..a70acb7431a6 100644
+>> --- a/mm/mm_init.c
+>> +++ b/mm/mm_init.c
+>> @@ -1005,11 +1005,37 @@ static void __init memmap_init(void)
+>>   }
+>>   
+>>   #ifdef CONFIG_ZONE_DEVICE
+>> -static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
+>> +/*
+>> + * Return true when memmap_init_zone_device() must initialize the page
+>> + * refcount to 0. MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in
+>> + * the free path, while the remaining ZONE_DEVICE types start from 0 here
+>> + * and raise the count again when the allocator or driver hands the page
+>> + * out.
+>> + */
+>> +static inline bool pagemap_requires_refcount_reset(const struct dev_pagemap *pgmap)
+>> +{
+>> +	/*
+>> +	 * MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free
+>> +	 * path. The remaining ZONE_DEVICE types start from 0 here and raise
+>> +	 * the count again when the allocator or driver hands the page out.
+>> +	 */
+>> +	switch (pgmap->type) {
+>> +	case MEMORY_DEVICE_FS_DAX:
+>> +	case MEMORY_DEVICE_PRIVATE:
+>> +	case MEMORY_DEVICE_COHERENT:
+>> +	case MEMORY_DEVICE_PCI_P2PDMA:
+>> +		return true;
+>> +	case MEMORY_DEVICE_GENERIC:
+>> +		return false;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static void __ref __zone_device_page_init(struct page *page, unsigned long pfn,
+>>   					  unsigned long zone_idx, int nid,
+>>   					  struct dev_pagemap *pgmap)
+>>   {
+>> -
+>>   	__init_single_page(page, pfn, zone_idx, nid);
+>>   
+>>   	/*
+>> @@ -1028,23 +1054,15 @@ static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
+>>   	 */
+>>   	page_folio(page)->pgmap = pgmap;
+>>   	page->zone_device_data = NULL;
+>> +}
+>>   
+>> -	/*
+>> -	 * MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free
+>> -	 * path. The remaining ZONE_DEVICE types start from 0 here and raise
+>> -	 * the count again when the allocator or driver hands the page out.
+>> -	 */
+>> -	switch (pgmap->type) {
+>> -	case MEMORY_DEVICE_FS_DAX:
+>> -	case MEMORY_DEVICE_PRIVATE:
+>> -	case MEMORY_DEVICE_COHERENT:
+>> -	case MEMORY_DEVICE_PCI_P2PDMA:
+>> +static void __ref zone_device_page_init_slow(struct page *page,
+>> +		unsigned long pfn, unsigned long zone_idx, int nid,
+>> +		struct dev_pagemap *pgmap)
+>> +{
+>> +	__zone_device_page_init(page, pfn, zone_idx, nid, pgmap);
+>> +	if (pagemap_requires_refcount_reset(pgmap))
+>>   		set_page_count(page, 0);
+>> -		break;
+>> -
+>> -	case MEMORY_DEVICE_GENERIC:
+>> -		break;
+>> -	}
+>>   }
+>>   
+>>   /*
+>> @@ -1090,7 +1108,7 @@ static void __ref memmap_init_compound(struct page *head,
+>>   	for (pfn = head_pfn + 1; pfn < end_pfn; pfn++) {
+>>   		struct page *page = pfn_to_page(pfn);
+>>   
+>> -		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
+>> +		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
+>>   		prep_compound_tail(page, head, order);
+>>   		set_page_count(page, 0);
+>>   	}
+>> @@ -1126,7 +1144,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+>>   	for (pfn = start_pfn; pfn < end_pfn; pfn += pfns_per_compound) {
+>>   		struct page *page = pfn_to_page(pfn);
+>>   
+>> -		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
+>> +		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
+> It looks like all callers of __init_zone_device_page() are now calling
+> zone_device_page_init_slow() that with series evolution became a thin
+> wrapper for __zone_device_page_init().
+>
+> Maybe we can just rename __init_zone_device_page() to
+> __zone_device_page_init() and replace the open coded setting of the page
+> count with the call to pagemap_requires_refcount_reset() an be done
+> here?
 
-I do not see any explanation why you dropped review.
 
-We have enough of other patches to review, so if you ask us to do the
-same work twice, it's only fair if we just skip your patches.
+Yes, that would make patch 2 simpler.
 
-<form letter>
-This is a friendly reminder during the review process.
+The reason I kept the refcount policy outside __zone_device_page_init()
+is the compound-tail initialization added later in patch 5. Tail pages
+still need the same basic ZONE_DEVICE struct page initialization as head
+pages, including __init_single_page(), PageReserved, pgmap and
+zone_device_data setup. After that, the tail-page path calls
+prep_compound_tail() and sets the tail refcount to 0 unconditionally.
 
-It looks like you received a tag and forgot to add it.
+Folding pagemap_requires_refcount_reset() into __zone_device_page_init()
+would make that helper include the head-page refcount policy even for
+callers that will immediately apply the tail-page refcount rule
+afterwards.
 
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions of patchset, under or above your Signed-off-by tag, unless
-patch changed significantly (e.g. new properties added to the DT
-bindings). Tag is "received", when provided in a message replied to you
-on the mailing list. Tools like b4 can help here. However, there's no
-need to repost patches *only* to add the tags. The upstream maintainer
-will do that for tags received on the version they apply.
+That preserves the final state, but I was trying to keep the common
+ZONE_DEVICE page setup separate from the head-page refcount policy for
+this reason.
 
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+Would you still prefer the simpler renamed helper here, or should I keep
+the common ZONE_DEVICE page setup separate from the refcount policy and
+make the naming clearer in v11?
 
-If a tag was not added on purpose, please state in the patch changelog
-or cover letter why and what changed.
-</form letter>
-
-Best regards,
-Krzysztof
+Thanks,
+Zhe
 
