@@ -1,371 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013020.outbound.protection.outlook.com [52.101.72.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C50472535;
-	Mon, 17 Aug 2026 21:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787001243; cv=none; b=DknY3riMZwLve1BTnG1yVVEg31mo3Evr8+E6ITlLarEMq4q1rSZSNiOhnreZxH2N4jq/3nsdWDjASheRcJohTi5tUBCcT0jj7CcA0aJYvJMrX2cq/UEwf5Vdd+Yoa0J43/2GMieG9dxlc3aVePeFPWkNTsw3sIY1EHfFxhl3hp0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787001243; c=relaxed/simple;
-	bh=oXA5Kkescpkj/2Sjax6t3MPfOPNGMX8Ekxjk+5xJ3WA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qy42/fpViIbveSLqT2rc0zMNz87Kujt0s3UpyZuyCEWY3/0ap62XU3XrW7m85SRTC7Xbpm+A1oqrBfbtLBaPHomoWY6fr4BdH8dSy0cxJPe5CFeKy8gl05aOqQhh3XF/ovzlFw70CiydpRrlrMxAfngR30k7lAZexprowUvi61w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK8DYUjz; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A7A2D8796;
+	Mon, 17 Aug 2026 21:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787002433; cv=fail; b=okCg0IEbzlRvbBC+gK5y6wUa1CnfXhNbnPqhTwq2m8EF1SNkKmR66fc/maQBSa4QqfMKzIYJLR0cairdCIIM2aMzd1ZKPkzil79Ce7PdBVlGCP4Vl6efOEiYkmlQoJg3YbNp3CLbv6YDBu+ep7zqpuM4JzrWPE2+iv/YW0X6Prc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787002433; c=relaxed/simple;
+	bh=cd4AcbSb/zwpCNWGcOL20eSrZn24TGsR+Gn6cw7DvrU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gJBgrjFdmSAE+XyrC+31nAszTeJUkbeCxLy+DBILymljfiRK9y+vQkzBJM/j3lZ4pOeVbsP86FNPApjFK08x8Mf0Y0bQYP8hJqqoj4D+zq5cbSlooFf8Lsq6YQ0rW+dnNoa3g8YBjbmDJKBdR3vNoYtClGgdgDWDvU22Gwf3MD4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=n60S8IzT; arc=fail smtp.client-ip=52.101.72.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK8DYUjz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A931F000E9;
-	Mon, 17 Aug 2026 21:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787001242;
-	bh=jBcwTiXG8GYcLFIT6owml6CkINV+t6iQSd/lsiW8fZw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=FK8DYUjzFrnGyxxlECafHWHcXPc8N5o0Fy9m/5Pi36vzk4Rg0H7GzsmV3rj7gLcxP
-	 j4QKGJwju1JgLbZ6Gk2Nx1xey2CQyb2uVPNrgG0VopC/B02O8ogWGExM5L5GkDFpgV
-	 JrE2sDEAON+MpHLEA+DsjYoA3HXRTARPB94gKQsJkmZmtVubA+WyfA6XWdXVKe931M
-	 Stwx1gmUbcKu+Utike2YrGE98wW1PncR02Uhlzr1JVDd41pkL5Zn0aCK+/CO/Rok3K
-	 N1TmvHJc5OrdB5S2d8+igMCMbkRhopdOrzU1dq5cNtBz1HpjGCH7Q12+iNkBbta/uR
-	 WHs/LyRRH2k6A==
-From: Jakub Kicinski <kuba@kernel.org>
-To: jensemil.schulzostergaard@microchip.com
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	horatiu.vultur@microchip.com,
-	UNGLinuxDriver@microchip.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	daniel.machon@microchip.com,
-	Steen.Hegelund@microchip.com,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	robert.marko@sartura.hr,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v2 9/9] net: sparx5: add neighbour event handling for L3 routing
-Date: Mon, 17 Aug 2026 14:14:00 -0700
-Message-ID: <20260817211400.3633528-1-kuba@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260810-sparx5_l3_routing-v2-9-59e68cc8c8ca@microchip.com>
-References: <20260810-sparx5_l3_routing-v2-9-59e68cc8c8ca@microchip.com>
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="n60S8IzT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wVaPYFJ5MaF6bo8n910XAP2Bln0tcYcRGnJSd1qxMqhJC5Acq6UWryW8clz+Ud45/1pmsKdx/rQJL2rmMAHgPFZGSIE1/9znD8IvS+8JZXifsyhMIs+jNSTXlg5eFUkAVHA1G/aqqHPc+CxECuoQZPE97WpYvMgnO+MSJIDnd0Ovzj4P5Gf/hjVgV5xpfZEdRr4+jjbiyRsnETpC119Pkee4GchwdRq+5HosYzPpt6qyBbGTKhOxncN0PZYJBSUmH296Ht/msOsVFHX3AeYsByhzePUSyvK1kc2NNJ/XmCY7GygfDbGHQUZ/zcV+N3Thgon3430yNROH3eYRcoZ4Bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+rqzeZUn/a7gUDGTprWXHacaejLEZINdeqHR1SyZeZY=;
+ b=XGRhBX4SHarCL9qwTZPHz5sZYF9p/E1XGTTCSIVp3optvePVDi0qwP21ZAYGSXGVPRiqNW0fbX2BE6NCideanCrwd27n92B7ZqwtVsvzKuRTT+VvILkpfwPxLTI17d3rIKuyYjNkIL/ptCMcoup30IyYKCYi3ap8qCQMCPrpVZGxB42TkHKmKlMI+jPSgn2rIeprdzEwsXA1E2k6AsBC0y17oHEc1HlpI5iDLDPnD+BNkW1hTldONiBOBh4/l3HAvJkeAZsL1vBrsEdb9lqLLMaiQQNk8gYrHI8IzL/IWgDHGs32EvZekF+UJSaGmQYhmEJCMrWLlBrd4ZmpiKyeUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+rqzeZUn/a7gUDGTprWXHacaejLEZINdeqHR1SyZeZY=;
+ b=n60S8IzTfUiyvDXG0z/QMkQvF/FDbVBEvc4mk/X1KZTI0y76Vu1sKdzRE7TS7UQvgNl+ZOU4+NTXyGah04WKfezZM4Nd1Lv9Be/02ZFnnwhh69RX2rNjQZgCUA6cgHspqyBFBq+onwkhUotN0J6hRnoUa/r7pl0sH23o/alxLRz0zAZerndTHn0I8qZLbf8GopFvUFVz+zamtyiOEuXXgeIM7PbpffyA9wJsSvrO4WSFeCAWnPg21cISXYfgzwcJQrt5UEptTCeJFEY+0ow8TuW4XAQxr+24E2xI4YfuZGvdg+rVEwBSrlfe42Sh/dlZkQsK7pMSp7vLfS1FOzjFEw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
+ by PAXPR04MB8576.eurprd04.prod.outlook.com (2603:10a6:102:217::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.17; Mon, 17 Aug
+ 2026 21:33:49 +0000
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c%7]) with mapi id 15.21.0315.016; Mon, 17 Aug 2026
+ 21:33:49 +0000
+Date: Mon, 17 Aug 2026 16:33:39 -0500
+From: Frank Li <Frank.li@oss.nxp.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] dmaengine: pxa: fix double counting of the hw
+ descriptors
+Message-ID: <aoN-M5fFrOFT2lgp@SMW015318>
+References: <20260817-dmaengine-pxa-v2-1-f42ab0569a48@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260817-dmaengine-pxa-v2-1-f42ab0569a48@pengutronix.de>
+X-ClientProxiedBy: SA0PR11CA0040.namprd11.prod.outlook.com
+ (2603:10b6:806:d0::15) To GV2PR04MB11799.eurprd04.prod.outlook.com
+ (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PAXPR04MB8576:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3dbcc5b4-008f-4bbb-d542-08defca73974
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|376014|7416014|19092799006|1800799024|366016|18002099003|22082099003|56012099006|11063799006|10067099003|41080700001;
+X-Microsoft-Antispam-Message-Info:
+	ZycxkAVaJxmc3PkZ7nNjbHWbetYaQRi+uKelXjXuUQUIxAin7y+zb+l0DJrSDGrhJySIfKXRvDPrGDrV5qHFttknVUZYF4CPLi9tsF9bPdoGtrcQ9Vosq7FY6yaRdk/HbeMqUb2skcch4848rLpZtgy/de1OvBFdUVwm4llQWSQrNdgcYRj72R0eJ3wl9Cli7SKaRElpxWaCcnpJgkNZANojdGRKY9kajDcUlc7eE8R9/gbGFSiOOTmHyBeIUTDj6TGrdemAJDCkVFjgSl3ytSri7MBt+57qGRKDmJQGh4I2qFhcKHXmGthZ5XRQP2Rx4x2+boRWkG4p5WWyE+x+tNyCQRZMDc9TACz0HzXMJ5l4jaD5/jD12n4Iy904aWMSDN5XDkJvKBzh69RV+0ifj2Tj0VcIMdpodiIZT9ha2yWCUvtQZy7b1ZxyoJGnzJAqrUVt0EXVPvhz5ATR91hBtm1wOAD2EhpUa+VgHzbEHrfe132Dcux83JFkw2sJwe8o8PZvvS051ytnnfMGd4RdKAzZGO7ntmB96ycesoCZ0pWHvZoso+MRTVbR8kMIm824OUT7ThCWXWleP0YEktJJ/JHYAnEFxANeN3bB0Ku0uBslyHhYru+VknyNcOtTk3CL11ZzZVdZ99jmHBSqaeEaCS9i08smlNwuR+8ANZNdbra/2y1d/9sxY521VQTjnn/toGafnv0sPeU5O13z0dk/Ii9SVmRE07X2MZwLIAxEZ0U=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(19092799006)(1800799024)(366016)(18002099003)(22082099003)(56012099006)(11063799006)(10067099003)(41080700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?M6gnTRV0qzcpi2vGpb6HUVgNC48g3Boyp7Yd7jUbHYHEtLVDaT4YaHOvmehQ?=
+ =?us-ascii?Q?MrTy0KmjS5m21zHtj6Tf/IzpVmwJequA3Yw2+K4tCJnFX6Msr+58ui3F02bw?=
+ =?us-ascii?Q?d7GCHwabnzztztmJzWYhAmB9b1vmvDxHTDU+X44N15uZ+1YmIh3LaOMnPkVz?=
+ =?us-ascii?Q?H+q/CuSVNq7jd8Ll5/e87nDLjki1cVyN2frE1V+gskAOIKGIRp81Vgr7VJKX?=
+ =?us-ascii?Q?g0cHQVBdrrYHQFqOkuXaqbJx0WL8l7pcZx8ck9v7CCv7r/M0WT7QrQLHtiaA?=
+ =?us-ascii?Q?qqoW6zn+bnlQDkhtq7yuaBV6ANmmWklzC9cjMXH19ElIgOTdZGtB6PfXAE+t?=
+ =?us-ascii?Q?gHvwV/Jm6t+S6/fC3SlEQHw4bOj76LUBYoMDT1UPnrAzeinvKSSdqZk2VR79?=
+ =?us-ascii?Q?6Z1C2aq8ZfvpEMVyF+yatP2lghDM6SUaCpOmm8o6l/qPFiB0bebUUkAlWy91?=
+ =?us-ascii?Q?VM5Hbw9A6X62rprCrDcD5XmIyjhK3EUSOxkc+Yxiq/ooh+2FKbAWcP3unGuj?=
+ =?us-ascii?Q?1AMO5iiBY2yogkN/rJKDylmQjM5WHiFprO258FnCbiCTeFrOHm9F69gHFGpB?=
+ =?us-ascii?Q?ll6ywc62SCmQ608s9aeQeb+PzCOjgwvVlqj+fUmye9ECpXcXGvzmOPj+UNsM?=
+ =?us-ascii?Q?dVSMk1fCZt3LDvnfZuC21iuWYJ5XzlTTij0XxLLM5Q6Fh92ku3QJWfoJPrc/?=
+ =?us-ascii?Q?kZnSIFhBAQQUfn5XO+ujErHqa5SBWpAk6aZfDzRwjwB0CUscXS3PEo4RDXcZ?=
+ =?us-ascii?Q?WLZNbjcgkmueKIfXoN1G72rVnORQ4BYGvasTIvEmllQB2ZW2ljjNq9d0Qdwx?=
+ =?us-ascii?Q?h/N/iq5nNB1jrc1gcDLStNSR1+DbsTJzVTDrTW+ltPRpOy22TeYeHqvcEf2q?=
+ =?us-ascii?Q?Q2LsZQoM2hZlNX9ksEeUhRu9PgPtBlK6w6NWZNoWtGLFeqVmhGPWc9uYoQTJ?=
+ =?us-ascii?Q?q+kPiQ1bI5CnhUjYVLwlaVCOmnchvli/rkwDLZjEFgnhNw973a7wWGUi8l1A?=
+ =?us-ascii?Q?8T53HY3BhLb4ugc1OyHqEfZd019kVCytLkX/mLDo2cB0vDcXiRIRZAVlBagj?=
+ =?us-ascii?Q?RCFo1LCF7fwRoeyNGT+99TJnOzEB/fJeczb/PoW094x/MZNlnFSfedr0R7Up?=
+ =?us-ascii?Q?S2Y64wV4kpw40GgG3qTtAfNW4a6a/F2QsTFWne7HPLEkdJSoJOOSKeJ/woM+?=
+ =?us-ascii?Q?LGKA+hxzKZOIoePWb7V63JI4+8DJHNLxdOUPHP0X7AEOJZJa6rP9iq5ymS+a?=
+ =?us-ascii?Q?Pok/Xcu4N504gQYsq8USNtq4H9+I+lOEMK1kYDuhJGQhFxS5LaWDJ6FZ3nLH?=
+ =?us-ascii?Q?elGOuhDrZTzNJXgaSVRaDQx8ZHhJrL6aOsZP2bzSqcYoTMRp+ZpyeEeHGkxf?=
+ =?us-ascii?Q?Y0E9IxJIyEzm8QpSQe/OBtaVV0KzxjikG8qgZExNfPpiy1v90cY3MyEP/gDl?=
+ =?us-ascii?Q?GfNoY8z627+SZ+eC13g/wYs9NQCdnMGrfqLTzMnLOmzOoRfSEhL/Rqzjiify?=
+ =?us-ascii?Q?BXtKCnMeqQ3UNotqvJV+iDokLPkK5ADNx0XnLbDkeRIfpJx3oH70T/fvgH/a?=
+ =?us-ascii?Q?KzfyXnaH500wWEhSZZLXbjReoVItykxAioQpt0ZA81BQTVDCcg7Bm7VabGg3?=
+ =?us-ascii?Q?p4Dh/+dyGfGuQrCJvP6+v3Z9KpRz8/nDmidL0s34bfGnEOl6oNozWUg+SGJO?=
+ =?us-ascii?Q?DrPqWlZsmYxJtuB7SQiI0I8pcsuI7z0oKtLXs+GjNIP0es3r+N/iQpWIHpiY?=
+ =?us-ascii?Q?ry+FRLD0QQZDWgsMrBigpbtdMNdDUxSUDdP67T/530OcUKqIfd3U?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3dbcc5b4-008f-4bbb-d542-08defca73974
+X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2026 21:33:48.9516
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sJEAcru4qM6SIiQxeBzBEmiBJAN4JMQ0vHjQCI+HuKt4A7DtXOr/u79eDTAhn8p6KmCI0w1pLs3dj8vUBay73PZhaDL9L3WKg8gNaNQEnFi0u7a4MWSPBBv0Uc2feQLn
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8576
 
-This is an AI-generated review of your patch. The human sending this
-email has considered the AI review valid, or at least plausible.
----
-net: sparx5: add neighbour event handling for L3 routing
+On Mon, Aug 17, 2026 at 10:44:33PM +0200, Sascha Hauer wrote:
+> pxad_alloc_desc() was converted from
+>
+>         kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc), GFP_NOWAIT)
+>
+> to kzalloc_flex(), which sets the __counted_by() counter sw_desc->nb_desc
+> itself - but only where the compiler has __builtin_counted_by_ref(), so
+> from gcc 15.1 or clang 22.1 on. The loop below it still increments
+> nb_desc, which makes it come out doubled there and correct elsewhere.
+>
+> nb_desc is what pxad_free_desc() iterates over and what
+> set_updater_desc() indexes from, so set it explicitly and drop the
+> increment. The error path has to lower it to the number of descriptors
+> allocated so far, otherwise pxad_free_desc() would free entries that were
+> never allocated.
+>
+> Fixes: 69050f8d6d075 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
+> Assisted-by: Claude:claude-opus-5
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
 
-This adds a netevent notifier to sparx5 that queues NETEVENT_NEIGH_UPDATE
-events to the router ordered workqueue, where the resolved MAC is written
-into the driver neigh entry and pushed to the hardware ARP table and to
-all linked nexthops. Unreachable neighbours tear down the hardware ARP
-entry and mark the nexthops as unresolved.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-> diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c b/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
-> index 6d40d651180e6..5f6add84b0d6c 100644
-> --- a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
-> +++ b/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
-
-[ ... ]
-
-> @@ -2419,6 +2430,107 @@ static int sparx5_rr_fib_event(struct notifier_block *nb, unsigned long event,
->  	return NOTIFY_BAD;
->  }
->  
-> +static void sparx5_rr_neigh_event_work(struct work_struct *work)
-> +{
-> +	struct sparx5_rr_netevent_work *net_work =
-> +		container_of(work, struct sparx5_rr_netevent_work, work);
-> +	unsigned char hwaddr[ETH_ALEN] __aligned(2);
-> +	struct sparx5 *sparx5 = net_work->sparx5;
-> +	struct neighbour *n = net_work->neigh;
-> +	struct sparx5_rr_neigh_key key = { };
-> +	struct sparx5_rr_neigh_entry *entry;
-> +	bool entry_connected;
-> +	u8 nud_state, dead;
-> +
-> +	sparx5_rr_nb2neigh_key(n, &key);
-> +
-> +	/* Frames with link-local dip are trapped, so ignore the neighbour. */
-> +	if (key.iaddr.version == SPARX5_IPV6 &&
-> +	    ipv6_addr_type(&key.iaddr.ipv6) & IPV6_ADDR_LINKLOCAL)
-> +		goto out;
-
-[Severity: Medium]
-Does the comment's justification cover neighbours that are used as
-gateways rather than as destinations?
-
-The trap rule installed by sparx5_rr_lpm_link_local_create() matches on
-destination fe80::/64 only, and sparx5_rr_fib_info_should_ignore() only
-skips routes whose destination is link-local:
-
-	return fi->version == SPARX5_IPV6 &&
-	       ipv6_addr_type(&fi->fe6_info.rt_arr[0]->fib6_dst.addr) &
-		       (IPV6_ADDR_MULTICAST | IPV6_ADDR_LINKLOCAL);
-
-A route such as "ip -6 route add 2001:db8::/64 via fe80::1 dev vlanX" is
-therefore still offloaded, and sparx5_rr_nexthop_init() sets
-nh->neigh_tbl = &nd_tbl for every AF_INET6 gateway without a link-local
-filter, so sparx5_rr_nexthop_neigh_init() creates a neigh entry for
-fe80::1.
-
-Since this work handler is the only writer of entry->hwaddr, can such a
-nexthop ever obtain a MAC?  sparx5_rr_nexthop_egress_derive() would keep
-nh->trapped set and program the zero MAC, so routes via a link-local
-gateway (including RA-derived default routes) stay trapped to the CPU
-while being reported as offloaded.
-
-> +
-> +	/* If n changes after this read section, we will get another neigh
-> +	 * event, which is processed after the current one.
-> +	 */
-> +	read_lock_bh(&n->lock);
-> +	ether_addr_copy(hwaddr, n->ha);
-> +	nud_state = n->nud_state;
-> +	dead = n->dead;
-> +	read_unlock_bh(&n->lock);
-> +
-> +	mutex_lock(&sparx5->router->lock);
-> +
-> +	entry_connected = nud_state & NUD_VALID && !dead;
-> +	entry = sparx5_rr_neigh_entry_lookup(sparx5, &key);
-> +	if (!entry_connected && !entry)
-> +		goto out_mutex;
-> +
-> +	if (!entry) {
-> +		entry = sparx5_rr_neigh_entry_create(sparx5, &key);
-> +		if (IS_ERR(entry))
-> +			goto out_mutex;
-> +	}
-
-[Severity: Medium]
-With this notifier being the only source of entry->hwaddr, how does an
-already-resolved kernel neighbour get synchronized into a newly created
-driver entry?
-
-sparx5_rr_nexthop_neigh_init() only kicks ARP/NDP when the kernel
-neighbour did not already exist, and never samples n->ha / n->nud_state:
-
-	n = neigh_lookup(nh->neigh_tbl, &nh->gw_addr, dev);
-	if (!n) {
-		n = neigh_create(nh->neigh_tbl, &nh->gw_addr, dev);
-		if (IS_ERR(n))
-			return PTR_ERR(n);
-		/* Start arp process */
-		neigh_event_send(n, NULL);
-	}
-
-For a NUD_PERMANENT neighbour ("ip neigh add <gw> lladdr <mac> nud
-permanent dev vlanX") no further NETEVENT_NEIGH_UPDATE is generated -
-net/core/neighbour.c only emits netevents from __neigh_update(),
-neigh_timer_handler() and neigh_cleanup_and_release(), and permanent
-entries have no timer and are skipped by the GC work.  Does that leave
-entry->hwaddr zero forever, so sparx5_rr_nexthop_egress_derive() keeps
-nh->trapped set while the FIB entry is reported as offloaded?
-
-The same applies when the event arrives before a router leg exists:
-sparx5_rr_neigh_entry_create() returns ERR_PTR(-EINVAL) from
-
-	leg = sparx5_rr_leg_find_by_dev(sparx5, key->dev);
-	if (!leg)
-		return ERR_PTR(-EINVAL);
-
-and the event is dropped with no replay when the leg later appears.
-
-For comparison, mlxsw_sp_nexthop_neigh_init() reads nud_state/dead under
-n->lock and calls __mlxsw_sp_nexthop_neigh_update() at init time:
-
-	read_lock_bh(&n->lock);
-	nud_state = n->nud_state;
-	dead = n->dead;
-	read_unlock_bh(&n->lock);
-	__mlxsw_sp_nexthop_neigh_update(nh, !(nud_state & NUD_VALID && !dead));
-
-> +
-> +	if (entry->connected && entry_connected &&
-> +	    ether_addr_equal(entry->hwaddr, hwaddr))
-> +		goto out_mutex;
-
-[Severity: Medium]
-Can this early exit permanently block a retry after a failed hardware
-write?
-
-sparx5_rr_neigh_entry_update() marks the entry connected before the
-fallible hardware apply and only downgrades the offload marking:
-
-	entry->connected = adding;
-
-	if (adding) {
-		err = sparx5_rr_neigh_entry_hw_apply(sparx5, entry);
-		if (err)
-			offloaded = false;
-
-sparx5_rr_lpm_arp_entry_mod() can fail while the rule keeps the previous
-DMAC:
-
-	vrule = vcap_get_rule(vctrl, vrule_id);
-	if (IS_ERR(vrule))
-		return -EINVAL;
-
-and sparx5_rr_lpm_arp_entry_create() can fail on rule allocation or
-vcap_val_add_rule().
-
-Since the new MAC has already been stored in entry->hwaddr and
-entry->connected is true, every following NUD_VALID confirmation
-(REACHABLE/STALE/DELAY) hits the test above and skips both the LPM/ARP
-update and sparx5_rr_nexthops_update_notify().  For an IP that moves to a
-new MAC (VRRP failover, VM migration), would hardware keep rewriting DMAC
-to the old MAC with no trap and no further retry?
-
-Would keying the skip on hw_route.vrule_id_valid (or propagating the
-error from sparx5_rr_neigh_entry_update()) avoid that?
-
-> +
-> +	ether_addr_copy(entry->hwaddr, hwaddr);
-> +	sparx5_rr_neigh_entry_update(sparx5, entry, entry_connected);
-> +	sparx5_rr_nexthops_update_notify(sparx5, entry, entry_connected);
-> +	if (!entry_connected)
-> +		sparx5_rr_neigh_entry_put(sparx5, entry);
-
-[Severity: High]
-Should the MAC be committed into entry->hwaddr on the disconnect path as
-well?
-
-The kernel does not clear n->ha when a neighbour goes to NUD_FAILED or
-dead - neigh_invalidate() only flushes arp_queue, and neigh->ha is only
-overwritten when a new lladdr is supplied.  So for !entry_connected this
-stores the last, now invalid MAC while entry->connected becomes false, and
-nothing else ever zeroes entry->hwaddr.  sparx5_rr_neigh_entry_put() keeps
-the entry alive while a nexthop still references it.
-
-The only other consumer derives "resolved" purely from the MAC being
-non-zero and ignores entry->connected:
-
-	nh->trapped = !nh_neigh || is_zero_ether_addr(nh_neigh->hwaddr);
-
-	if (nh_neigh) {
-		memcpy(mac, nh_neigh->hwaddr, ETH_ALEN);
-
-On ordinary route churn, sparx5_rr_entry_nexthop_group_update() builds and
-programs the new group before releasing the old one:
-
-	/* Prepare new group in SW representation */
-	new_nh_grp = sparx5_rr_nexthop_group_create(sparx5, fib_entry);
-	...
-	err = sparx5_rr_fib_entry_hw_apply(sparx5, fib_entry);
-	...
-	sparx5_rr_nexthop_group_put(sparx5, old_nh_grp);
-
-so sparx5_rr_nexthop_neigh_init() re-attaches to the surviving entry and
-sparx5_rr_nexthop_egress_derive() then clears nh->trapped and installs the
-dead MAC.  Does that leave traffic forwarded to a host that no longer
-exists instead of trapped, with no path back to trapping since the kernel
-never sees the traffic?
-
-This also seems to differ from the commit message wording "mark linked
-nexthops as unresolved so traffic traps to the CPU".
-
-> +
-> +out_mutex:
-> +	mutex_unlock(&sparx5->router->lock);
-> +out:
-> +	neigh_release(n);
-> +	kfree(net_work);
-> +}
-> +
-> +/* Handle neighbour update events. Used to manage neigh_entries. Called in
-> + * atomic context, with rcu_read_lock().
-> + */
-> +static int sparx5_rr_netevent_event(struct notifier_block *nb,
-> +				    unsigned long event, void *ptr)
-> +{
-
-[ ... ]
-
-> +		net_work = kzalloc_obj(*net_work, GFP_ATOMIC);
-> +		if (!net_work)
-> +			return NOTIFY_BAD;
-
-[Severity: Low]
-Would NOTIFY_DONE be a better return value here?
-
-NETEVENT_NEIGH_UPDATE is delivered over the single system-wide atomic
-chain:
-
-net/core/netevent.c:call_netevent_notifiers() {
-	return atomic_notifier_call_chain(&netevent_notif_chain, val, v);
-}
-
-and NOTIFY_BAD carries NOTIFY_STOP_MASK, which ends the traversal:
-
-kernel/notifier.c:notifier_call_chain() {
-	...
-		if (ret & NOTIFY_STOP_MASK)
-			break;
-	...
-}
-
-So a driver-private GFP_ATOMIC failure suppresses the notification for
-every listener registered after sparx5.  The same idiom exists in
-mlxsw_sp_router_schedule_work(), so this is minor, but the failure looks
-purely local and recoverable here.
-
-> +
-> +		INIT_WORK(&net_work->work, sparx5_rr_neigh_event_work);
-> +		net_work->sparx5 = router->sparx5;
-> +		net_work->neigh = neigh_clone(n);
-> +		net_work->event = event;
-> +		sparx5_rr_schedule_work(router->sparx5, &net_work->work);
-> +
-> +		return NOTIFY_DONE;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +};
-> +
-
-[ ... ]
-
-> @@ -2855,6 +2972,8 @@ int sparx5_rr_router_init(struct sparx5 *sparx5)
->  	unregister_inetaddr_notifier(&r->inetaddr_nb);
->  err_unreg_fib_notifier:
->  	unregister_fib_notifier(&init_net, &r->fib_nb);
-> +err_unreg_netevent_notifier:
-> +	unregister_netevent_notifier(&r->netevent_nb);
->  err_workqueue_destroy:
->  	destroy_workqueue(r->sparx5_router_owq);
->  	sparx5_rr_fib_flush(sparx5);
-
-[Severity: Low]
-While looking at this unwind path, the neighbour hashtable is destroyed
-before the legs that own entries in it are flushed:
-
-err_neigh_ht_destroy:
-	rhashtable_destroy(&r->neigh_ht);
-err_blackhole_destroy:
-	sparx5_rr_router_legs_flush(sparx5);
-
-sparx5_rr_router_leg_destroy() walks leg->neigh_list and reaches
-rhashtable_remove_fast() via sparx5_rr_neigh_entry_destroy() ->
-sparx5_rr_neigh_entry_remove(), on a table whose bucket table has already
-been freed.  sparx5_rr_router_deinit() uses the opposite order (legs
-flush, WARN_ON(nelems), then rhashtable_destroy).
-
-The dangerous state does not appear reachable today: neigh entries only
-exist once a device leg exists, and legs are only created from the
-inetaddr/inet6addr handlers registered after register_fib_notifier(),
-which is the only registration here that realistically fails;
-sparx5_rr_netdevice_event() always returns NOTIFY_OK, and the
-inet6addr registrations only fail on duplicate registration.  This
-ordering also comes from the earlier patch in the series that added the
-FIB/nexthop/neighbour entry management, not from this patch, which only
-adds one more producer of neigh entries.  Would it still be worth
-matching the deinit order defensively?
+> pxad_alloc_desc() was converted from
+>
+>         kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc), GFP_NOWAIT)
+>
+> to kzalloc_flex(). hw_desc[] is annotated with __counted_by(nb_desc), so
+> __alloc_flex() now initializes sw_desc->nb_desc to nb_hw_desc itself.
+> The loop below it still increments nb_desc for every descriptor it
+> allocates though, so nb_desc ends up being twice the number of
+> descriptors that are actually there.
+>
+> Drop the now redundant increment. The error path has to set nb_desc to
+> the number of descriptors allocated so far, otherwise pxad_free_desc()
+> would free entries that were never allocated.
+> ---
+> Changes in v2:
+> - assign sw_desc->nb_desc manually as it is only automatically assigned
+>   for compilers supporting __builtin_counted_by_ref()
+> - Link to v1: https://lore.kernel.org/r/20260817-dmaengine-pxa-v1-1-850c215c1196@pengutronix.de
+> ---
+>  drivers/dma/pxa_dma.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
+> index fa2ee0b3e09f8..fc43124fefa89 100644
+> --- a/drivers/dma/pxa_dma.c
+> +++ b/drivers/dma/pxa_dma.c
+> @@ -744,6 +744,7 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
+>  	sw_desc = kzalloc_flex(*sw_desc, hw_desc, nb_hw_desc, GFP_NOWAIT);
+>  	if (!sw_desc)
+>  		return NULL;
+> +	sw_desc->nb_desc = nb_hw_desc;
+>  	sw_desc->desc_pool = chan->desc_pool;
+>
+>  	for (i = 0; i < nb_hw_desc; i++) {
+> @@ -752,10 +753,10 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
+>  			dev_err(&chan->vc.chan.dev->device,
+>  				"%s(): Couldn't allocate the %dth hw_desc from dma_pool %p\n",
+>  				__func__, i, sw_desc->desc_pool);
+> +			sw_desc->nb_desc = i;
+>  			goto err;
+>  		}
+>
+> -		sw_desc->nb_desc++;
+>  		sw_desc->hw_desc[i] = desc;
+>
+>  		if (i == 0)
+>
+> ---
+> base-commit: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f
+> change-id: 20260817-dmaengine-pxa-64152bb34313
+>
+> Best regards,
+> --
+> Sascha Hauer <s.hauer@pengutronix.de>
+>
