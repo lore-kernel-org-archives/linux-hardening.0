@@ -1,210 +1,288 @@
-Received: from va-1-112.ptr.blmpb.com (va-1-112.ptr.blmpb.com [209.127.230.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5C33B5E10
-	for <linux-hardening@vger.kernel.org>; Mon, 17 Aug 2026 07:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C313DD854;
+	Mon, 17 Aug 2026 10:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786950912; cv=none; b=eUL02rjFAzUURyC1+vTmFXZJm+4fxcTa3u5zBw29NlnDt//IqI0E8DAJf0nKSXJmUXud38tgqsTBVK+e9P9qHjywNyQWxxflqXOnF/y33PWiJCzFl3mEkNLROHwUqDNAWD+iq5eUKdDfsRrqkoTEZYYnDdjbM6Xvg6zIzEJlXiI=
+	t=1786961837; cv=none; b=QzZVJzT05Ux2mLDH8Lx+ONh0Ub+hbgo/8sn0G+WY65WpkxpzWSj1nVrXdNtydaZ4a0sy6b8La5s2ZeXKp+Fr7di+3+PhOyKejX34qRei49od5Chkt0QKNToIBYlmrKztg7hOmiUqJ58hP64Fc+evxc7yWfBibN3p0Qj5tXaNzlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786950912; c=relaxed/simple;
-	bh=H0kpBdlqtkCs4mnVIQOsbkWYLGpiS9UuExJ8HPentao=;
-	h=References:From:Date:Subject:In-Reply-To:To:Cc:Message-Id:
-	 Content-Type:Mime-Version; b=Tia+SA7Zrf77l9626MV+5uykYGxsi7aHeq55rzYTOEVZqNdprlTkR7ieFKmNnusw9iGJ0/cMzxegqnsyeVrwV9SDgKhFRpx/6S5ZHCrw4eTYW6mY7zqF4CC/GNPg1Ufl2kRmZjzAwYYbnVvQMGhDGeKhFu/LwfS1Az7//jascVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=X2YMVezb; arc=none smtp.client-ip=209.127.230.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1786961837; c=relaxed/simple;
+	bh=GbMCUZxxhLpXXdd2ahJl7MhJJZUncs/29ncV06E5+J4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=c+oKddEfVKdnHz75kxNVSth3e3l6FxvjSUa0GECIqx6Q1BpovFbw4CbTunAnJGqf6oN561JE7iiieXN4D5JZ+d9rfOwj2ohA33tqvFsaZhLxl7rfpF8W6M+6kgZlU+WjiHj7WN4DQIiMko1sYV8+kxrJa9oTmF/8AxJ5b51bbis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zq9Iac3c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="X2YMVezb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1786950902; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=N1LdzvO8YItiR+BdAiOLPMa7pHh1+EdgmMC0VPZv5PE=;
- b=X2YMVezbEfr6weHo6U4VNjvJJpHkvj0OHP8qA0iUPlLj3qGpr5pr0qyOg9yN67oyz78yxC
- rMCCxDJOT3XGg0yfzgbzhCFKskeqCmlJhQFJjwhx1cK01aXvppLGR0FPD9bXpeDw90b60L
- t7cPj+u/kClDERT/mcGI3u5Jvtc89ZdNveabXOcxmVhzyEHN7G3A0etuabAls0EuFtnatN
- x/8MjrJO9hrT0iMP1J3nmXuaVLzZ893h7vZSENxT06HtP3dxGy3kqhRiDEKxKy0F1WVeng
- jzAZa0/RPhIgO/OFmhZTxav7QBA/ONS6ZK7ZpqrgQUwssRMu99Cxx+elp9d4fQ==
-References: <20260810122057.30447-1-lizhe.67@bytedance.com> <20260810122057.30447-5-lizhe.67@bytedance.com> <178688187038.2799959.7142225711373927632.b4-review@b4>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Date: Mon, 17 Aug 2026 15:14:38 +0800
-Subject: Re: [PATCH v10 4/8] mm: add a template-based fast path for zone-device page init
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-In-Reply-To: <178688187038.2799959.7142225711373927632.b4-review@b4>
-To: "Mike Rapoport" <rppt@kernel.org>
-Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
-	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
-	<muchun.song@linux.dev>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>, 
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-mm@kvack.org>, <x86@kernel.org>
-Message-Id: <0c23c111-bf5b-43f5-a541-0345f10db25d@bytedance.com>
-X-Lms-Return-Path: <lba+26a82b4f4+869ac8+vger.kernel.org+lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zq9Iac3c"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6CB0EC2BCFB;
+	Mon, 17 Aug 2026 10:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1786961837;
+	bh=GbMCUZxxhLpXXdd2ahJl7MhJJZUncs/29ncV06E5+J4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Zq9Iac3cewXL/gtNSvvMVVlZJssW+udDvk+weYFNjArVmfJc4aKH1ojB0FVUaXN0T
+	 ec8vbKLSHfsGGFbUS5pMkIjuKdNnoN3XNYLTlpzwJHxVLY9gEVdm6DhD1WZ7/LsNNI
+	 MKP259m7vz0ubhwJcbSG2cEzlBXRL66iXhodL7rVnr7MmI9QNCn+650Bd1irU2n1NA
+	 g2RA9FwgZdHROvM63PXpGbsrnJybdQdmxBGupt5TiFv+Ih1s5VKmSc5T5ePwwawwKW
+	 swThhPix53vPCfqHWWYdMA6Mg5SLYzedHfSQXeTWyI3J2x9FfPDSqFcoJlEl6RK+8T
+	 2AcpaBxxQn9gg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C474C5DF66;
+	Mon, 17 Aug 2026 10:17:17 +0000 (UTC)
+From: Aiden Isik via B4 Relay <devnull+aidenisik.member.fsf.org@kernel.org>
+Date: Mon, 17 Aug 2026 11:17:06 +0100
+Subject: [PATCH 2/3] clk: samsung: clk-pll: Add support for pll_309
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-User-Agent: Mozilla Thunderbird
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260817-for-next-lucky7-clock-v1-2-032e4b229c76@member.fsf.org>
+References: <20260817-for-next-lucky7-clock-v1-0-032e4b229c76@member.fsf.org>
+In-Reply-To: <20260817-for-next-lucky7-clock-v1-0-032e4b229c76@member.fsf.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Brian Masney <bmasney@redhat.com>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Aiden Isik <aidenisik+git@member.fsf.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6673;
+ i=aidenisik@member.fsf.org; h=from:subject:message-id;
+ bh=ZEAmFkO+Kj2Xr9987kQ0DFVLYw0y1FU5mSesoCEg7Zk=;
+ b=owEBbQKS/ZANAwAIAUknAbLEetfrAcsmYgBqgt+nZuyPwpaL2xjUJWBSMW/Xre5a+jPvYxDNG
+ ujARNS1YnSJAjMEAAEIAB0WIQSDy8UkXGpc3JNbEaVJJwGyxHrX6wUCaoLfpwAKCRBJJwGyxHrX
+ 68u8D/9ENj8Tn/2On86yphQhsu7ZSYJNHQsJTBwx/KxxSkYJbzdw4ZJ5qXNXMxnvuypxj2VOahF
+ 3+3UN64EcsrKQC3XqbdHw2BkGbpnqk1jAfXwIRzILvae4Vgr2wkWs0+l16fwOljYKuJv7EyVTkK
+ sdUpg8oANj96NskRBxI9p7bgdwHHv0X5gYnof/WGM6rzUKQZ9vfdu2H4o/vMpSOINNrN2ZdXHAC
+ wM9s2s2dTdcGTY6tgJFvtEkh3SpxrMi3hBPcv+TvnVewfcN1mmIU+MIwnRb//y44CliALdwokdB
+ KSgGsiiKLvIgt0t8Ma6LYlcL5sEFvwb6FVgt3gUK3NBTtl9KYnBphZoh/+f4WSkC3cyAR/NMSWy
+ ReYuupZgC68vOgdXJvEKCPvmBiodwGW3K8Gl50haYc7uK68Sjc/VpXwcdEwpSokV4tNbgzBlqUb
+ Be/MRfNLKGvaN4eOnrNmYrx20DnnmyAdCWV3XvsKiS5Yy8r7SbC1l1OF4RDhpqzB1beRkeJp4yO
+ mWr1BUrPvHsYaxOwLpTwfhMoWabdK44dHN42MEbj6ePCI6juqgeZ6rHlD8UTLp2Mtwx0YIFLWEK
+ OP851dPjzwxvYTSr9SbuUDVy5kMi7mor0wGnvJltDVDwg1+3sE4Va447W6Z9e/WJXbaNTk/FqSm
+ IESkbQmlnD4iXuQ==
+X-Developer-Key: i=aidenisik@member.fsf.org; a=openpgp;
+ fpr=83CBC5245C6A5CDC935B11A5492701B2C47AD7EB
+X-Endpoint-Received: by B4 Relay for aidenisik@member.fsf.org/default with
+ auth_id=956
+X-Original-From: Aiden Isik <aidenisik@member.fsf.org>
+Reply-To: aidenisik@member.fsf.org
 
-On 8/16/26 8:04 PM, Mike Rapoport wrote:
-> Hi,
->
->> memmap_init_zone_device() repeats nearly identical head-page
->> initialization for each PFN. Prepare one reusable ZONE_DEVICE head-page
->> template through the existing slow path, refresh the PFN-dependent
->> fields in that template before each copy, and memcpy it into each
->> destination page.
->>
->> Use the template path unconditionally. The page_ref_set tracepoint is
->> primarily a debugging aid, while this code is still initializing struct
->> pages before they are handed out. From the perspective of users of those
->> pages, the initialization-time refcount transitions are not part of the
->> observable page lifetime.
->>
->> This means page_ref_set will no longer observe every initialization-time
->> refcount assignment for copied ZONE_DEVICE head pages. The impact is
->> controlled because the final initialized struct page state is unchanged,
->> and keeping a separate non-template path only for this local tracepoint
->> observability would add complexity to the common path.
->>
->> This patch accelerates head-page initialization. The pfns_per_compound
->> == 1 case gets the full benefit here, compound tails are handled in the
->> next patch.
->>
->> Tested in a VM with a 100 GB fsdax namespace device configured with
->> map=dev on Intel Ice Lake server. This test exercises the nd_pmem rebind
->> path (pfns_per_compound == 1).
->>
->> Test procedure:
->> Rebind the nd_pmem driver 30 times and collect the memmap initialization
->> time from the pr_debug() output of memmap_init_zone_device().
->>
->> Base(v7.2-rc1):
->>    Average of rebinds for nd_pmem driver: 244.28 ms
->>
->> With this patch and its prerequisites applied:
->>    Average of rebinds for nd_pmem driver: 215.55 ms
->>
->> This reduces the average memmap initialization time measured during rebind
->> from 244.28 ms to 215.55 ms, or about 11%.
->>
->> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
->>
->> diff --git a/mm/mm_init.c b/mm/mm_init.c
->> index a70acb7431a6..56a36a71ba89 100644
->> --- a/mm/mm_init.c
->> +++ b/mm/mm_init.c
->> @@ -1065,6 +1065,35 @@ static void __ref zone_device_page_init_slow(struct page *page,
->>   		set_page_count(page, 0);
->>   }
->>   
->> +/*
->> + * 'template' is a reusable page prototype rather than a strictly immutable
->> + * object. Most ZONE_DEVICE fields stay constant across the pages covered by
->> + * the current template, but section bits and page->virtual may still depend
->> + * on the PFN. Refresh those PFN-dependent fields in the template before
->> + * copying it into @page.
->> + */
->> +static inline void zone_device_page_update_template(struct page *template,
->> +		unsigned long pfn)
->> +{
->> +	set_page_section_from_pfn(template, pfn);
->> +#ifdef WANT_PAGE_VIRTUAL
->> +	if (!is_highmem_idx(ZONE_DEVICE))
->> +		set_page_address(template, __va(pfn << PAGE_SHIFT));
->> +#endif
->> +}
->> +
->> +static void zone_device_page_init_from_template(struct page *page,
->> +		unsigned long pfn, struct page *template)
->> +{
->> +	/*
->> +	 * 'template' carries the invariant portion of a ZONE_DEVICE struct
->> +	 * page. Update the PFN-dependent fields in place before copying it
->> +	 * to the destination page.
->> +	 */
->> +	zone_device_page_update_template(template, pfn);
-> Looks like it's the only user of zone_device_page_update_template().
-> I'd just fold it here and drop the comment.
+From: Aiden Isik <aidenisik@member.fsf.org>
+
+pll_309 (referred to in the downstream kernel sources as frd_309_rpll) is
+one of two PLLs used in the Exynos5515 SoC. It is an integer/fractional
+PLL with an FVCO of 600-2400MHz.
+
+It has the same locktime (500), and kdiv/mdiv/pdiv/sdiv masks and shifts
+as pll_531x, so it can be handled in exactly the same way.
+
+When defining a PLL, the "con" parameter should be set to the CON3
+register, like this:
+
+PLL(pll_309, CLK_FOUT_AUD_PLL, "fout_aud_pll", "oscclk",
+    PLL_LOCKTIME_PLL_AUD, PLL_CON3_PLL_AUD, NULL),
+
+Signed-off-by: Aiden Isik <aidenisik+git@member.fsf.org>
+---
+ drivers/clk/samsung/clk-pll.c | 57 +++++++++++++++++++++++--------------------
+ drivers/clk/samsung/clk-pll.h |  1 +
+ 2 files changed, 32 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+index e74552846ba3..8b1474aeaf0c 100644
+--- a/drivers/clk/samsung/clk-pll.c
++++ b/drivers/clk/samsung/clk-pll.c
+@@ -28,7 +28,7 @@ struct samsung_clk_pll {
+ 	unsigned short		lock_offs;
+ 	enum samsung_pll_type	type;
+ 	unsigned int		rate_count;
+-	struct samsung_pll_rate_table rate_table[] __counted_by(rate_count);
++	const struct samsung_pll_rate_table *rate_table;
+ };
+ 
+ #define to_clk_pll(_hw) container_of(_hw, struct samsung_clk_pll, hw)
+@@ -1593,32 +1593,35 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ {
+ 	struct samsung_clk_pll *pll;
+ 	struct clk_init_data init;
+-	unsigned int len = 0;
+-	int ret;
++	int ret, len;
+ 
+-	if (pll_clk->rate_table) {
+-		/* find count of rates in rate_table */
+-		while (pll_clk->rate_table[len].rate != 0)
+-			len++;
+-	}
+-
+-	pll = kzalloc_flex(*pll, rate_table, len);
++	pll = kzalloc_obj(*pll);
+ 	if (!pll) {
+ 		pr_err("%s: could not allocate pll clk %s\n",
+ 			__func__, pll_clk->name);
+ 		return;
+ 	}
+ 
+-	pll->rate_count = len;
+-	if (len)
+-		memcpy(pll->rate_table, pll_clk->rate_table,
+-		       len * sizeof(*pll->rate_table));
+-
+ 	init.name = pll_clk->name;
+ 	init.flags = pll_clk->flags;
+ 	init.parent_names = &pll_clk->parent_name;
+ 	init.num_parents = 1;
+ 
++	if (pll_clk->rate_table) {
++		/* find count of rates in rate_table */
++		for (len = 0; pll_clk->rate_table[len].rate != 0; )
++			len++;
++
++		pll->rate_count = len;
++		pll->rate_table = kmemdup_array(pll_clk->rate_table,
++						pll->rate_count,
++						sizeof(*pll->rate_table),
++						GFP_KERNEL);
++		WARN(!pll->rate_table,
++			"%s: could not allocate rate table for %s\n",
++			__func__, pll_clk->name);
++	}
++
+ 	switch (pll_clk->type) {
+ 	case pll_2126:
+ 		init.ops = &samsung_pll2126_clk_ops;
+@@ -1637,7 +1640,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_a9fracm:
+ 		pll->enable_offs = PLL35XX_ENABLE_SHIFT;
+ 		pll->lock_offs = PLL35XX_LOCK_STAT_SHIFT;
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll35xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll35xx_clk_ops;
+@@ -1656,7 +1659,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_0732x:
+ 		pll->enable_offs = PLL0822X_ENABLE_SHIFT;
+ 		pll->lock_offs = PLL0822X_LOCK_STAT_SHIFT;
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll0822x_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll0822x_clk_ops;
+@@ -1666,7 +1669,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 		break;
+ 	case pll_4502:
+ 	case pll_4508:
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll45xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll45xx_clk_ops;
+@@ -1676,7 +1679,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_2650:
+ 		pll->enable_offs = PLL36XX_ENABLE_SHIFT;
+ 		pll->lock_offs = PLL36XX_LOCK_STAT_SHIFT;
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll36xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll36xx_clk_ops;
+@@ -1684,7 +1687,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_0831x:
+ 		pll->enable_offs = PLL0831X_ENABLE_SHIFT;
+ 		pll->lock_offs = PLL0831X_LOCK_STAT_SHIFT;
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll0831x_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll0831x_clk_ops;
+@@ -1700,7 +1703,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_4650:
+ 	case pll_4650c:
+ 	case pll_1460x:
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll46xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll46xx_clk_ops;
+@@ -1709,29 +1712,30 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 		init.ops = &samsung_pll2550x_clk_ops;
+ 		break;
+ 	case pll_2550xx:
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll2550xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll2550xx_clk_ops;
+ 		break;
+ 	case pll_2650x:
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll2650x_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll2650x_clk_ops;
+ 		break;
+ 	case pll_2650xx:
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll2650xx_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll2650xx_clk_ops;
+ 		break;
+ 	case pll_531x:
+ 	case pll_4311:
++	case pll_309:
+ 		init.ops = &samsung_pll531x_clk_ops;
+ 		break;
+ 	case pll_1031x:
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_pll1031x_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_pll1031x_clk_ops;
+@@ -1739,7 +1743,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_a9fraco:
+ 		pll->enable_offs = PLLA9FRACO_ENABLE_SHIFT;
+ 		pll->lock_offs = PLLA9FRACO_LOCK_STAT_SHIFT;
+-		if (!pll->rate_count)
++		if (!pll->rate_table)
+ 			init.ops = &samsung_a9fraco_clk_min_ops;
+ 		else
+ 			init.ops = &samsung_a9fraco_clk_ops;
+@@ -1758,6 +1762,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	if (ret) {
+ 		pr_err("%s: failed to register pll clock %s : %d\n",
+ 			__func__, pll_clk->name, ret);
++		kfree(pll->rate_table);
+ 		kfree(pll);
+ 		return;
+ 	}
+diff --git a/drivers/clk/samsung/clk-pll.h b/drivers/clk/samsung/clk-pll.h
+index d6eb3246611b..2457cf47c109 100644
+--- a/drivers/clk/samsung/clk-pll.h
++++ b/drivers/clk/samsung/clk-pll.h
+@@ -53,6 +53,7 @@ enum samsung_pll_type {
+ 	pll_1031x,
+ 	pll_a9fracm,
+ 	pll_a9fraco,
++	pll_309,
+ };
+ 
+ #define PLL_RATE(_fin, _m, _p, _s, _k, _ks) \
+
+-- 
+2.54.0
 
 
-Thanks. I will fold zone_device_page_update_template() into
-zone_device_page_init_from_template() and drop the redundant comment.
-
->
->> +	memcpy(page, template, sizeof(*page));
->> +}
->> +
->>   /*
->>    * With compound page geometry and when struct pages are stored in ram most
->>    * tail pages are reused. Consequently, the amount of unique struct pages to
->> @@ -1127,6 +1156,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
->>   	unsigned long zone_idx = zone_idx(zone);
->>   	unsigned long start = jiffies;
->>   	int nid = pgdat->node_id;
->> +	struct page template;
->>   
->>   	if (WARN_ON_ONCE(!pgmap || zone_idx != ZONE_DEVICE))
->>   		return;
->> @@ -1144,7 +1174,22 @@ void __ref memmap_init_zone_device(struct zone *zone,
->>   	for (pfn = start_pfn; pfn < end_pfn; pfn += pfns_per_compound) {
->>   		struct page *page = pfn_to_page(pfn);
->>   
->> -		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
->> +		if (pfn == start_pfn) {
->> +			/*
->> +			 * Seed the reusable head-page template from the
->> +			 * first real struct page. This initializes the
->> +			 * first page through the existing slow path and
->> +			 * then reuses that final state as the template
->> +			 * for subsequent pages.
->> +			 */
->> +			zone_device_page_init_slow(page, pfn, zone_idx,
->> +						   nid, pgmap);
->> +			/* init template page */
->> +			memcpy(&template, page, sizeof(*page));
->> +		} else {
->> +			zone_device_page_init_from_template(page, pfn,
->> +							    &template);
->> +		}
-> Why can't we init the template for the first page being initialized and
-> then call zone_device_page_init_from_template() unconditionally?
->
-> The same applies to the tail pages initialization.
-
-
-The concern is that this would initialize a stack-resident struct page
-template through the normal page-init and refcount helpers.
-
-An earlier version did initialize the template directly:
-
-https://lore.kernel.org/all/20260527033636.28231-5-lizhe.67@bytedance.com/
-
-but Sashiko pointed out that this is unsafe:
-
-https://sashiko.dev/#/patchset/20260527033636.28231-1-lizhe.67@bytedance.com
-
-For example, set_page_count() may call into the page_ref_set tracepoint
-path when the tracepoint is enabled. That path can use helpers such as
-page_to_pfn(), which only make sense for real memmap pages. Passing a
-stack-resident struct page template there can produce a bogus PFN and may
-lead to a kernel panic.
-
-That is why the current version seeds the reusable template from the
-first real struct page instead of running the normal page-init helpers on
-the stack template.
-
-I also kept the first iteration inside the main loop because Alistair
-previously suggested avoiding an unrolled first-page path:
-
-https://lore.kernel.org/all/akxpS3WOP7oUBNKF@nvdebian.thelocal/
-
-The tail-page path follows the same pattern for the same reason.
-
-Thanks,
-Zhe
