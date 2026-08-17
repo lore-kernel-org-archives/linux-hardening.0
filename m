@@ -1,190 +1,182 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013004.outbound.protection.outlook.com [40.107.162.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF15A447819;
-	Mon, 17 Aug 2026 16:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3B538D40A
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Aug 2026 18:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786985412; cv=fail; b=MOTd0DrCdyVJKC87q5wfUGTzQ47xpIbGmuXmoWVEajoE8wXctrT5b+5onfQrbaIhuOodASITjpbL5NKrW9ytgok0CZXI9TdNhSOyawdXsRzjftjAiCDJ43ySbRNNZB7/Qx9FmSCsGJEBrKfOmo5Hn/+GRD0mnCmMCOT5cl1bgrE=
+	t=1786989982; cv=pass; b=Myns0dJNZ7qYp+bSox0A17pm/L+qn/E9VviTVwqMnI99yFPGPR2b0FZuHj/gGSM+k9uL2+wCaOEJON5RtFI3+MqLevgoFHnW7abTNPAxP3HSBm3N36NjfI4hd5KA60aHeqa5jtXpxCM/BJMwTHGyHr4Q5VDwv9jUxeppZFeS8Xg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786985412; c=relaxed/simple;
-	bh=sIkbINLZyAAQ9TFnbuttnr20VZl5Uy203rCZVUjAwks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EZD7rpH5gLCEZEDGoqC53hVjfBNugLkQzlmtb7x+E5HEU+bpbclAUhJk6CNiTMkAqcUhBXltNEK2GRS/W06FAeHPxKkhEt4bErTcfbkucQktazRZ+aNwrI7ELd1rNv3Dmks7jmefeltZtGRBQPKdkB7/X1kiAlbQucAGjM9Agy0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=N7yWRh0C; arc=fail smtp.client-ip=40.107.162.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	s=arc-20240116; t=1786989982; c=relaxed/simple;
+	bh=hY2SxOvT9o/Xp4zyoVoyVI3wZEfRvmTSP3mGP0ibUFk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fQqgATJuPIN7bHFuKXur0lLyUEPEz57ktTukWUpaxGjAIEEpzYQAvaGB+2gm0dU50duXnDEiAw9It5ftrCq6Ds7VNBtqh2YlFjMYThDUpYNPgHDVQ+Zdbk+2Jzj3ER/orw5WI7gVXwP3tJ7vEXUfGO87h0YewOCTMzZ4HRrYTik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJD5nkwb; arc=pass smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="N7yWRh0C"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wn68AXRoXs+5Jd4nj2uYeNGIC+Sdf+ZUst4SVQYzOkU2l4LycqkvdMcQ6p++EV2QhItiw0kGm/0RxIWUxdWjKgTQMuok8OMQDF6ceNYFcmFySItQBMKOzBNR2Un8+6x7KZZQwhi3jGFVSvv2PtppVv98n8WUGUqu6986UsU66PSm66KmhFZb1X4OW0Yc8/X8YBW+ZCoM6dOy867h7ytPM0drBVIIzOahCCAXPipxGgy/DUPw3pF+YV0P1RDjqW7aBOxrzgRx2xOY9IpdNkvjz8ccAevSk31TYMmg6LNSyFBEsEsFmCJcfiDmel2Gw1/oYQCzPKOAV507lLQNYICn6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aP+xReW61x9DVPc1KIECPYpEXVxKO+Il+0rYLR3S5o0=;
- b=ddz52xHk9JcQH86I1JQTuS/YyMAaNmksehZiz7HpXNvEI25iljs/OZ+bRjlbvS41we3LNk38ywbMKmvjRYxEp7DoA2kKexSVBWOBvpfvGTOSjZEQ3Hf18PCBfc80zmVnfDHd813u3X5WSQn4mfZ7k6t0zSdH+d2r15ElaqZwvXgXWq7FxiK2lpe5O/O/06M2hn5Hi/s+7UNRz1OH6zJku2Uy5Q1oIdmvSyDl60zwiUnpZ7YSsAbnPwoonIINCaoyrtbhpMlCuWk/pHtaSV9geJ/PBJbEZdGEABIMT5v5R/Q20Yo4EvBAJeDYJHxGq5YaNAA988haZotVfT/1G6eHmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aP+xReW61x9DVPc1KIECPYpEXVxKO+Il+0rYLR3S5o0=;
- b=N7yWRh0Cszp7KMtfc0pt/uxYrRaKQxQg50zEwEmC1ft3VxwkPQiugMvYJdSqe0WTc49QG9QE+IfLyuDKC53eFzXLrmRSDYH2M1TVSTpI/TmC1/Yr6NK1DirZTekqCwMKd325AXQsTwp2C0x31t85+omDCGjUJN5YENhXkK+PTJV2uD8xNG3DMagIM0IpMWXjt6LYwtXe7f1+Ag5jUJCMV/Nkt3Dpkk5nff8aV13g35V8TTZ6DHtuDUzc8dq7UVLBac9BYzenNBk0q+SgwUwik62NFDa9PH6KAa4PIvns2MblqnqhjEIyJCXbV1RzbhpCi02W9M4mZ8jodoBORePYDA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by PA4PR04MB9639.eurprd04.prod.outlook.com (2603:10a6:102:260::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.17; Mon, 17 Aug
- 2026 16:50:07 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%7]) with mapi id 15.21.0315.016; Mon, 17 Aug 2026
- 16:50:07 +0000
-Date: Mon, 17 Aug 2026 11:49:56 -0500
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: pxa: fix double counting of the hw descriptors
-Message-ID: <aoM7tGzvc4MtkRHP@SMW015318>
-References: <20260817-dmaengine-pxa-v1-1-850c215c1196@pengutronix.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260817-dmaengine-pxa-v1-1-850c215c1196@pengutronix.de>
-X-ClientProxiedBy: PH5P220CA0002.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:34a::17) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJD5nkwb"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5b15c6fb864so2675809e87.1
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Aug 2026 11:06:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786989978; cv=none;
+        d=google.com; s=arc-20260327;
+        b=J/oe0gIGG8WFlNkq1cDwxgAePUj5/0CRJQAVVHDuI4yFssa5zQ/ZLQZmWOqDsGMD1k
+         6sJUDChJ1pmr0pGugREjlCKpLrA603A56ZQFfgcyO1WOLq3y5U0B9kt5lsCrujZKjlR/
+         93jaP9oRO+0Lc86q62qsp3gozM5oyXtycOCVJTJSfQsdBuhug/0e3dgkzOZTRuNeRy3o
+         5j/9u6YWhmKDlh3pDHiZdp9mTABchjNd1xFvDM1msp0+9tbfPaL3Yq3nQdMqFAIsGRkC
+         ej/ng/rcdrhH2Ffpjyh1w4qUji2XY34z4bEEXoz0OSleEDz0T/9hM8dVy1JJFMkH8Oic
+         nzGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=c7o8fQxkzDHp1SWA8zZhLGLxaxvN0qtBR/ePXDA3zRk=;
+        fh=KXac/TxOKcZU4TpB+Aw56f2dcairELsjbRzp+XeFOfg=;
+        b=rkqeQtauSgvmmUn5Q7ELos0dAfINbGPsZv2Q9FtKquXzO6gEdfQ3DTMD6aar0nD2dU
+         wMDgsqVTymlTWQ+GfsVh5In4RGB/B0TIIYDeGFaRsJCL9EYHUf32mxrp/qcjGj/bjzgk
+         g40U7tQ1OoQw1upeGLnjt+/SdZ6Yr9R4HqmHnGTD5Lb/YQd9eM5zpmU2Z+9qqlDpOcP5
+         aua29EaSZvHhI91a5p0nUqyKho5R5JZ2C9lWlQsdnvpN9+lfnGBMZ36rdhGNM3mp11Sj
+         u4omTSxRuGuDZNv0vd3bJZSg8aE7gLZ2VWNz/JUmOKDUPxTmePo4VIKee256gBNqkLKz
+         /mbQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786989978; x=1787594778; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=c7o8fQxkzDHp1SWA8zZhLGLxaxvN0qtBR/ePXDA3zRk=;
+        b=cJD5nkwb+thIWOIDJwA4hC6GwnESECMsljaAWKJ2CbhJD4sbmTHoofqb8pm7mhrxJZ
+         S4is27pBmQe2JdRlYSmz6rYSmmHKqVJGI8fI57Lz4txacKEyeA39PbGSH9wk/1mvQ1HH
+         EF9MG9+QljHr9wZzArfi+kOhjsp/dd/ndLwKnByxb47/0ns4tyBgpyb8DQMS4+CGdwK2
+         qM3UgoRUhpTczsTyXyTqlBsZSNewt1qgcpMQ4Ge/CNtZqAxGpnA4Y1sno0+lSoG7/dSF
+         x1nvy7vskwUR8Bp6f63VROsFInB/ps8V3ttNK1BFXrWGY5pxyzlPF4a0OpNZE0zoHK9/
+         XsBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786989978; x=1787594778;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=c7o8fQxkzDHp1SWA8zZhLGLxaxvN0qtBR/ePXDA3zRk=;
+        b=VCDQH/VukcyEwFIUEysf4EOmkv92kjk3omlYZysJS6mZE6SkoqIhiY57St0AfDkkZ0
+         jfEk+a9FbKDuZ12Fh3jome3nG2Snc5rnp9CangR5xbhR21kbCm3UyVcvabeP95XLJEwj
+         NdRiu38HfNS+5+ztnUnQz4frsNBh6UFtMIRkUsaSITrqJCDwAizF0JofooPH3gUrSv88
+         sRB5J7lBTBPWy3bQAi1TS/8/QezqRd3N+Kd1oRQyRwY0iWYFjaULJ/LahWOcWop8A0Or
+         41vMWrFvaKwplMNz8GpNQGhzH1DHbnIh/KEZ8Ntg4dZOHkVauYH4ioMplrLiSwTlfeAu
+         +mUw==
+X-Forwarded-Encrypted: i=1; AHgh+RpCgu+tMdvmLiAHJA4KmlGASNsEqlna7OC+q2pk8FfflYAvp/FVfrtltcnYVX9XzJlLXekoetekbW9QFqhfJrA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeU4UZ+h/QiptymbeTmUr0KpKX8SmE2S5kIe+6igmDBY5JbxEf
+	sPtrL7tCjUyjuX/Me/4X8Z9PRiQwkrHjGUmqvkUvHnynUBvQR8tmQymT0ws8n5C6Az+W883C7in
+	Vn5zwQ+a/wWx/vuEZQ6PJk3VecpGIh+E=
+X-Gm-Gg: AR+sD10QlHNU0iFrHK80DnXa3ISSIflQ5YnkzZBFIdDOyDz/pO+XqF9EezlKTwj6O6M
+	j5xETWcucOV5NjNSMbEobj3UVDTw2pW0jZ/Nvl3EwlZOolF2wscllepcuZZm58ODSnV3da/Up8V
+	FrktNCsSKHUEjmNRPjQqLsCGHo6XtM4FOiP8d1ngyp1OjQfJxyxf6qd0hhoxtrlm69GW+7rH5Bi
+	oIHBtGro9xKpQjT81hgupN/kyMhf2ccZzz44VHX6ZvSuDxLg/jCNH3hCCpnINfWUAdzArdfdBka
+	p7FVAtqMMTEvQx81luauumT1oLJEb43ojy6tPI+MOXiE9jO3q+cLXSA2mFgigWEv2n+hC5sKE2Q
+	RCWoy+4UDD5Y9V7/wk8YEMNqoSw==
+X-Received: by 2002:a05:6512:39d2:b0:5b2:e890:e6b4 with SMTP id
+ 2adb3069b0e04-5b4591418c8mr4225069e87.36.1786989977421; Mon, 17 Aug 2026
+ 11:06:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PA4PR04MB9639:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb11b4b5-5868-463b-8622-08defc7f97e8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|19092799006|7416014|376014|10067099003|56012099006|11063799006|18002099003|22082099003|41080700001;
-X-Microsoft-Antispam-Message-Info:
-	bQGY7l41pgDgJBzmeUtihCeLzU0LcZUihNQd99E+QXRymIhv4mXYrE2EweY+bbCnNt7z1MI8YMlCrg9wBA7ECAr+ct4j9D9AvYOffj/AZe0doTEwRFdNrIw3HTRCBqZPyEAqivl51JRfKlcF/FvlhKChJ+XpqG2VmWh5bjiOGknmioDqIf9amjAphmw/ldCqHFIBu7GVlTMDFxptRbTZ7mUSO/giTfMUUGCaR6ESLSV8ER1nqfmmKAj0Agkc3O/iEAqIe530QB42xjUhmgBvIpH2j/BtMvR2EgmJ93qRNVx3g1sPgnooPCTZAfXQC5u0rdnciB3bozU9oBzxzCkpH+FbLnKxVn5wBrzKrvrOn+ubBIRhXn1Kg217CN4T+nbtkkESVCy9D/ymQ3TkiKy33LUGo27ORk2q9Fl+f4U/fbCdwA8DDQfqBF3WU3I6euRId2aSPAp6Tv09Ou8F4V0WE1V9mA+8Cm2bgmp612c2cyobsJE1JP55VlsOvhWXFE2UmQ3O5j55s+kVpi5BRM4Szmme37adqLrtwCawxl1h35adbVt9hehFKtqMgQ4+ZzmgmDWUtftDqmLOHD4uUsk4OBkiAdqNiPqgcqcztCz+U9kdav97NeOjr0r+H0LJbTwoXXl1gMHJQZspluauvHPLwZjA6+KTjKHdTz+mx1lzLVyJeh6RPRbYD643YiEp8pe7qDKOnfWQhP8Vr9GjAT/fqg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(19092799006)(7416014)(376014)(10067099003)(56012099006)(11063799006)(18002099003)(22082099003)(41080700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?iU0CgkAu/NOaf4EvMxNgjNThFeLCUYjxFl2couEoyuX+EKp7drUDlGtuOb2z?=
- =?us-ascii?Q?IhgojRzPONNynJRFEGqHwHaV/fqHKlJ+ekHUSnPwgex5xkbNowBWgvgVuqYZ?=
- =?us-ascii?Q?3agKOAjSKFjdhHVlkXJ4gLKCPKg76u8IvuVV5JVud4s2PniFl8rbNmryNOS6?=
- =?us-ascii?Q?NiWsNcJyWP3VX6UkeqmciFom3Xud0mXKG8fvm3cUJ1699P3YRmRfnwpM7gJo?=
- =?us-ascii?Q?ovmGOzCVwNHuf0gDVO6Y0M7FBaMaNBvG9aA8rCcDpm5FFS7RuVWnIOARh8wy?=
- =?us-ascii?Q?7+tPBIeyxuOT4jLCvWlBe0Z5dq3D5+wYdMhzQz+abrXlURQP3CaMhqX1Y2Bj?=
- =?us-ascii?Q?Q2tV7TxTnN0p9eJnNslweQGg0AleQITB7PTXZBRJztDNGZPEjJDMaqv4ZjVh?=
- =?us-ascii?Q?NbbJ3eCsnyHnBy4Z/5+6cbZqDcI7X6ohwaSaNdfFY7Uvpt6Icvg6OumWvbPT?=
- =?us-ascii?Q?0A81E2KvDfiuKL1/dM6BWl8tGDglnfjozhbZ/6Z5IFvzfWusmz8CElMNEVMQ?=
- =?us-ascii?Q?P+98IcSWltEQn0rRSlK59Tw/3YkcyRpsKlaHA1eOShyKYmtwITzVDvGpx913?=
- =?us-ascii?Q?m5i78CyQYBt6wwOevI1I4DXhAJ3BESBfaOPGfq41QlGD4EmtNHlQ+6MFJ3C5?=
- =?us-ascii?Q?7BS5vaLNnAY0pDeiGTkX6OPeSZpV0FuT0LmdgLyq0xAyyPcJBfQzvENphPAb?=
- =?us-ascii?Q?rnIWWqce+isaBxjI/3W9vIzgb0kyiB0Wxyym2j/8vHnNOpWB044LxkmJ2yFr?=
- =?us-ascii?Q?SjmqFOR+eKxDV9juxHbCfbxKsQP/Ur6XX2c+Cbdi20jXTz8nM1Eb8tMp3j8b?=
- =?us-ascii?Q?P/YKYOFYzJH+fQTm+3OJyPLLiONt49/y5qKMqZUWoxSmtSwHHYT0Johje2NU?=
- =?us-ascii?Q?vYAgjM1QxujpBuWCtcOrhF+UIXKTseEXwV2r1Y5ngPE9NByM28MLLBN2v57u?=
- =?us-ascii?Q?b7Rlp2nhyREvJIrjDs9xI1u8jB7JV67vtcvgs9e970HxDh7Ed9wQz8GemCPS?=
- =?us-ascii?Q?ZvmaYPQ7DRM6loWvTQXvwG2d487STbsVrIRFtqlQewb/qVBAbXwimPgCu3Yz?=
- =?us-ascii?Q?XzmydQ50oQAFa7cXKuV/wYmDCi2gFM8ewUMPWuEeHxDuXblAmLyzQMdVcoYv?=
- =?us-ascii?Q?wanQaG/w5IR0qgrPvEU2syAdWJP1XaVoiMZTP27JGcOCgF8jITQgas8p4gq0?=
- =?us-ascii?Q?MuCsGPCpAaA2eZIAFjmhSA63NtxgWUPgSizjSaTK0QdwYLX+9+GQvMupswDb?=
- =?us-ascii?Q?UdP9dVMgkwBYiTC8wAhhy5h9ZZgccpqm6wfdxcS32RU3cRKakvGUqqDcjYic?=
- =?us-ascii?Q?nXOyiyGqVqIMhxgHN4iD2ZhQu/7zeDFkZRoU6ieSFurZqo48ja6aP8HgvHFk?=
- =?us-ascii?Q?78D17axH6XClVj3zGZnuEvBs10nzQzsVJC4cs3Nx5mX1y849DXl7qSGviHLo?=
- =?us-ascii?Q?FMn3jj4FrFIdhMWay8evAnT3KToar1jWWqVqe2K82m2Ru+m6vfBRgOjuy5c9?=
- =?us-ascii?Q?2DS6ZmjO5uzF/08z6pWU27aHHJsnm9VyTxTbhQV7BR2mNt/UCMl/K1NT1RwT?=
- =?us-ascii?Q?HJbgDGm27ldJkD7kc4ed5KRqGh3mdpPqM6Y1NZ//YHT35YP7I8c6o9PI9kP/?=
- =?us-ascii?Q?zwh0u8iPhhRrHI7AABT8op6OlalVBlBr+tQWkJV2Mhvmxeg5aEA3tbdqf/Yb?=
- =?us-ascii?Q?PQO7eiHmOmFx9vG5eiN+aNqN5xhNInNGe1wnX6fg3Lxh5xHF2B2mwif9fgeX?=
- =?us-ascii?Q?UjM4Ghyv8HvqlXQjSrOsewkZFXDdM9TnYR9CV8GQ0W746vDsxPIj?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb11b4b5-5868-463b-8622-08defc7f97e8
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2026 16:50:07.4847
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A4dy2uID8stZWiOTE9+94Q8keiphpelUz1lm255/USq6sRflMJi635UPo/dypJ0/go1ssl7HiCqPuMKS7zlVGyc3fLOKmLa87fskltHAvM66uCDp0P0r4fnOHIOkYUzK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9639
+References: <cover.1786746757.git.ahmadexp@gmail.com> <d5df0bb5c312478279f0d2fd5ec6305e41add5ae.1786747084.git.ahmadexp@gmail.com>
+ <20260817-invaluable-hog-of-current-b0d0bd@quoll>
+In-Reply-To: <20260817-invaluable-hog-of-current-b0d0bd@quoll>
+From: Ahmad Byagowi <ahmadexp@gmail.com>
+Date: Mon, 17 Aug 2026 11:06:05 -0700
+X-Gm-Features: AcwNN1UfcBdidSzggHJjTL7Ud4WaUs0LCKzrRYabM4qhMdfH15u5P0J5gt3C7sw
+Message-ID: <CAOQiBWNKJc8BPgmQg3nRBgzXRaQUphfRXJ6JXT5e=z-y15TupQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v5 1/7] dt-bindings: leds: Add IS32FL3207 controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: netdev@vger.kernel.org, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@lysator.liu.se>, 
+	Nam Tran <trannamatk@gmail.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Richard Cochran <richardcochran@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, linux-leds@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 17, 2026 at 06:09:23PM +0200, Sascha Hauer wrote:
-> pxad_alloc_desc() was converted from
->
-> 	kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc), GFP_NOWAIT)
->
-> to kzalloc_flex(). hw_desc[] is annotated with __counted_by(nb_desc), so
-> __alloc_flex() now initializes sw_desc->nb_desc to nb_hw_desc itself.
-> The loop below it still increments nb_desc for every descriptor it
-> allocates though, so nb_desc ends up being twice the number of
-> descriptors that are actually there.
->
-> Drop the now redundant increment. The error path has to set nb_desc to
-> the number of descriptors allocated so far, otherwise pxad_free_desc()
-> would free entries that were never allocated.
->
-> Fixes: 69050f8d6d075 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
-> Assisted-by: Claude:claude-opus-5
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
+Resending as plain text because the mailing lists rejected the
+previous HTML copy.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+You are right, I should have explained this explicitly. I dropped your
+Reviewed-by because v5 materially changed the binding: it adds the
+dash-suffixed multicolor-group form, makes reg optional for that form
+so groups can begin at outputs 16 or 17, and documents the
+RISET/current-limit relationship.
 
-> pxad_alloc_desc() was converted from
+I did not intend to ask you to repeat the review without explaining
+why. I will record this explicitly in the next revision and will not
+carry the tag unless you renew it. Sorry for the omission.
+
+
+On Sun, Aug 16, 2026 at 11:42=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
 >
->         kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc), GFP_NOWAIT)
+> On Fri, Aug 14, 2026 at 04:10:49PM -0700, Ahmad Byagowi wrote:
+> > The IS32FL3207 is an 18-channel constant-current LED controller with
+> > per-output PWM and current scaling.
+> >
+> > Describe I2C addressing, power and shutdown controls, RISET, and
+> > individual or multicolor output groupings. Require board current limits
+> > for each output and document their relationship to the RISET-derived fu=
+ll
+> > scale.
+> >
+> > Allow dash-suffixed multicolor group names when a group begins at chann=
+el
+> > 16 or 17, which cannot be represented by the common schema unit-address
+> > form.
+> >
+> > Signed-off-by: Ahmad Byagowi <ahmadexp@gmail.com>
+> > ---
+> >  .../bindings/leds/issi,is32fl3207.yaml        | 281 ++++++++++++++++++
 >
-> to kzalloc_flex(). hw_desc[] is annotated with __counted_by(nb_desc), so
-> __alloc_flex() now initializes sw_desc->nb_desc to nb_hw_desc itself.
-> The loop below it still increments nb_desc for every descriptor it
-> allocates though, so nb_desc ends up being twice the number of
-> descriptors that are actually there.
+> I do not see any explanation why you dropped review.
 >
-> Drop the now redundant increment. The error path has to set nb_desc to
-> the number of descriptors allocated so far, otherwise pxad_free_desc()
-> would free entries that were never allocated.
-> ---
->  drivers/dma/pxa_dma.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> We have enough of other patches to review, so if you ask us to do the
+> same work twice, it's only fair if we just skip your patches.
 >
-> diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-> index fa2ee0b3e09f8..8252d27be8c3c 100644
-> --- a/drivers/dma/pxa_dma.c
-> +++ b/drivers/dma/pxa_dma.c
-> @@ -752,10 +752,11 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
->  			dev_err(&chan->vc.chan.dev->device,
->  				"%s(): Couldn't allocate the %dth hw_desc from dma_pool %p\n",
->  				__func__, i, sw_desc->desc_pool);
-> +			/* Only the descriptors below i have been allocated */
-> +			sw_desc->nb_desc = i;
->  			goto err;
->  		}
+> <form letter>
+> This is a friendly reminder during the review process.
 >
-> -		sw_desc->nb_desc++;
->  		sw_desc->hw_desc[i] = desc;
+> It looks like you received a tag and forgot to add it.
 >
->  		if (i == 0)
+> If you do not know the process, here is a short explanation:
+> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+> versions of patchset, under or above your Signed-off-by tag, unless
+> patch changed significantly (e.g. new properties added to the DT
+> bindings). Tag is "received", when provided in a message replied to you
+> on the mailing list. Tools like b4 can help here. However, there's no
+> need to repost patches *only* to add the tags. The upstream maintainer
+> will do that for tags received on the version they apply.
 >
-> ---
-> base-commit: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f
-> change-id: 20260817-dmaengine-pxa-64152bb34313
+> Please read:
+> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/s=
+ubmitting-patches.rst#L577
+>
+> If a tag was not added on purpose, please state in the patch changelog
+> or cover letter why and what changed.
+> </form letter>
 >
 > Best regards,
-> --
-> Sascha Hauer <s.hauer@pengutronix.de>
+> Krzysztof
 >
+
+
+--=20
+73
+With best wishes / Mit herzlichsten Gr=C3=BC=C3=9Fen
+Ahmad Byagowi, Ph.D., Dr. Techn., P.Eng.
+Phone: +1 (650) 924 6653
+
+ Please consider the environment before printing this e-mail.
