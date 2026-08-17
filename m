@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D14B47143E;
-	Mon, 17 Aug 2026 21:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1B9471277;
+	Mon, 17 Aug 2026 21:13:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787001237; cv=none; b=f4rY6rz6TRHMdBA/xiHR5NHpvIA5V+IZqKhsHZqwbeT3ZEI8DnJAfxItI6EcN6e1JTeNIunAe+E5ZgPiUvv9+lV4uhnrj8j7304372XJT7/WNi+GsGApHjL77gPDCA7kUhBQ1Gi9C0WJcR25QhAsNMs5DbtQK+bmmLl7zO6WL28=
+	t=1787001239; cv=none; b=LawJRW+2cEN4Jl6wgsBvjrbLM1Q5yoq04RbWrHwSG6jSDLy5KewF5BhLr3siTDNgeeYgMBmwYpmg5megcWu6Nt71xRcs5F/urBpbgEdgG7P/qK8K8iKka1t+dEPS8tZMq/A1GrbtDIspyt/W2gnZsXZCjPuZtWY/enCcIrnBbqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787001237; c=relaxed/simple;
-	bh=CBX44PKm/Xi3knRk8FQg2jE99ddGVoVm1VWpnH8xu04=;
+	s=arc-20240116; t=1787001239; c=relaxed/simple;
+	bh=wNbP9JYGeknuR3Aatcxc4heTNZbSCpT4sNfZY5+kKpQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r7wrasxNMZCK5/JYZs5ygONJ1igFXXBaaz6tEseioAF9aqOJ0DUV41gOVmQ8UR59BJZsxTAL4q0B5ELUNUvj3n4MuzYlpo6dcw33QtzKCsgDJusDSSmbJN7Hjr8emMSkAflv0l253LCHoB6Yz32vjBgQnaaUFf27Xsz0WkfHILQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUwI5qaw; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=BuE91Mme+zNIQsHwPgjOpkCWeKkel6Z3cTLszm50Ba5kLYydcLW5V2rGXXNp3hGRpdywBDrbGK8ZNizxMHcJBqp+iJ57xpiBfRRu+Pa1Gf6/FEkcqx4tXCwW1sD9Q1mpIclqDSuQNmhfO14s6chNqThgzWxELdDxsl2rDLYO6Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HiAiTxn2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUwI5qaw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E1A81F00A3D;
-	Mon, 17 Aug 2026 21:13:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HiAiTxn2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E38051F000E9;
+	Mon, 17 Aug 2026 21:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787001236;
-	bh=s1Cuv5H4iR10JoyTLdDYm+EiZ/EyrO2G8ZMYUIgGCx0=;
+	s=k20260515; t=1787001237;
+	bh=aRZFeV5QR5rLZxVBVxUNKNx9erPaKPc4qZpWpRNUFl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=FUwI5qawZQayLbI4QekAAwyZr1wHNuVibDV0ET0rMmeHRhp6jvd6P1K4Q7H6imMQz
-	 Q87YzU1o5EujXrh+xmQs+sMoxP379rbTa7fkNjXe7YR/X8naP4EoU0SA8lLcUfjQlj
-	 zTliOM3bywJBdBiN+PIG3fgvWIiQM3XJOZkcD6dAsGUB1RVdKOrnvNMSayQr4/Ga2t
-	 LOYpN9gk2VcTpqPrVH+i9mVi7lGLwpRFLtCKgRN36gVmLUmJA2xo3Iu0eO2ndf0Twf
-	 h2siPx/pdpcwvE0GE4E4UAh93lIwcHF9LjnoNWJIV/CgZXGdprT310XAPVYN8jV3+T
-	 WUhtNbQAcZUxQ==
+	b=HiAiTxn23arJBmP8+7J8lqVwJTO4Ksmklgs77jNEjw8f2qcR5vZWlwTg3H+U8ZhoG
+	 2TqSThKHL7a8agjktW6gXM3tlf5jQyKvU8PBYIQKYgdCd3BZWXNttCQ0Mcx9nkIuw8
+	 6P4xO2wr/CvpEiagNhydZvTVziF0wTUioktYbdQua/O7RMeEtR0uRieRsI83ktMDak
+	 Qrmnp9wk4fpRMKclEiX9seXccSxJ2LqpRU/s8oaIDv3JkTnTfh/fBf9GYpDkuxckKZ
+	 wQsilg9/iiNpp1GiI5G39Hn8RpfXRm0B9cb6Z0a/Hz1wFewWWkW9l6FKcdtasT9YNx
+	 ar1Xwdr6j9cTg==
 From: Jakub Kicinski <kuba@kernel.org>
 To: jensemil.schulzostergaard@microchip.com
 Cc: Jakub Kicinski <kuba@kernel.org>,
@@ -44,12 +44,12 @@ Cc: Jakub Kicinski <kuba@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v2 4/9] net: microchip: vcap: expose helpers in vcap api and update debugfs
-Date: Mon, 17 Aug 2026 14:13:55 -0700
-Message-ID: <20260817211355.3633327-1-kuba@kernel.org>
+Subject: Re: [PATCH net-next v2 6/9] net: sparx5: vcap: add lpm vcap implementation
+Date: Mon, 17 Aug 2026 14:13:56 -0700
+Message-ID: <20260817211356.3633381-1-kuba@kernel.org>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260810-sparx5_l3_routing-v2-4-59e68cc8c8ca@microchip.com>
-References: <20260810-sparx5_l3_routing-v2-4-59e68cc8c8ca@microchip.com>
+In-Reply-To: <20260810-sparx5_l3_routing-v2-6-59e68cc8c8ca@microchip.com>
+References: <20260810-sparx5_l3_routing-v2-6-59e68cc8c8ca@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,134 +61,230 @@ Content-Transfer-Encoding: 8bit
 This is an AI-generated review of your patch. The human sending this
 email has considered the AI review valid, or at least plausible.
 ---
-net: microchip: vcap: expose helpers in vcap api and update debugfs
+net: sparx5: vcap: add lpm vcap implementation
 
-This adds two new client API helpers, vcap_val_add_rule() and
-vcap_rule_mod_action_bit(), renames VCAP_CID_PREROUTING to
-VCAP_CID_PREROUTING_L0 and adds VCAP_USER_L3. The debugfs dump learns
-about the IP4_XIP and IP6_XIP key fields, and the action-field printer
-mask expression is changed to a GENMASK() based form.
+This adds a VCAP_TYPE_LPM instance to the sparx5 and lan969x VCAP instance
+tables and extends the per-vtype switches in sparx5_vcap_impl.c so the LPM
+VCAP reuses the Super VCAP cache, update and move helpers.  On sparx5 the
+IS0 CLM-0 instance drops from two Super VCAP blocks to one to make room.
 
-A couple of questions below.
+A few questions below.
 
-> diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api.c b/drivers/net/ethernet/microchip/vcap/vcap_api.c
-> index 6e1ee15b82b7e..1ad2c44da8bd7 100644
-> --- a/drivers/net/ethernet/microchip/vcap/vcap_api.c
-> +++ b/drivers/net/ethernet/microchip/vcap/vcap_api.c
-> @@ -2389,6 +2389,19 @@ int vcap_add_rule(struct vcap_rule *rule)
->  }
->  EXPORT_SYMBOL_GPL(vcap_add_rule);
->  
-> +/* Validate and add rule to a VCAP instance */
-> +int vcap_val_add_rule(struct vcap_rule *rule, u16 l3_proto)
-> +{
-> +	int err;
-> +
-> +	err = vcap_val_rule(rule, l3_proto);
-> +	if (err)
-> +		return err;
-> +
-> +	return vcap_add_rule(rule);
-> +}
-> +EXPORT_SYMBOL_GPL(vcap_val_add_rule);
+> diff --git a/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_vcap_impl.c b/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_vcap_impl.c
+> index 543a1f2bf6bd9..6e6a1f833deac 100644
+> --- a/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_vcap_impl.c
+> +++ b/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_vcap_impl.c
+> @@ -82,4 +82,16 @@ const struct sparx5_vcap_inst lan969x_vcap_inst_cfg[] = {
+>  		.count = 1024,
+>  		.ingress = false,
+>  	},
+> +	{
+> +		.vtype = VCAP_TYPE_LPM,
+> +		.vinst = 0,
+> +		.map_id = 6,
+> +		.lookups = SPARX5_LPM_LOOKUPS,
+> +		.lookups_per_instance = SPARX5_LPM_LOOKUPS,
+> +		.first_cid = SPARX5_VCAP_CID_LPM_L0,
+> +		.last_cid = SPARX5_VCAP_CID_LPM_MAX,
+> +		.blockno = 5,
+> +		.blocks = 1,
+> +		.ingress = true,
+> +	},
+>  };
+
+[Severity: Low]
+Does the commit message match what happens on lan969x?  The message says:
+
+    "The LPM VCAP is allocated from the Super VCAP Blocks, which is shared
+     amongst different VCAPs. All blocks are used, so we steal a block from
+     IS0, which had 2 assigned."
+
+The lan969x hunk here is purely additive.  Before the patch
+lan969x_vcap_inst_cfg[] used blocks 0-4 (IS2-0 = 0, IS2-1 = 1, IS0-0 = 2,
+IS0-1 = 3, IS0-2 = 4), each with .blocks = 1, and this new entry takes
+block 5 without reducing anything.
+
+So nothing is stolen from IS0 on lan969x, and "all blocks are used" does
+not hold for that platform.  Could the message say where lan969x block 5
+comes from?
+
+Related to that: sparx5_vcap_block_alloc() derives the address range
+directly from blockno without ever consulting VCAP_SUPER_CORE_CNT:
+
+	admin->first_valid_addr = cfg->blockno * SUPER_VCAP_BLK_SIZE;
+	admin->last_used_addr = admin->first_valid_addr +
+		cfg->blocks * SUPER_VCAP_BLK_SIZE;
+
+so for lan969x this maps addresses 15360..18431.  Is block 5 actually
+present in the lan969x Super VCAP?  I could not confirm the lan969x core
+count from the tree.
+
+> diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c b/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c
+> index cf332de6bf736..20450462e2d80 100644
+> --- a/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c
+> +++ b/drivers/net/ethernet/microchip/sparx5/sparx5_vcap_impl.c
+> @@ -54,8 +54,8 @@ const struct sparx5_vcap_inst sparx5_vcap_inst_cfg[] = {
+>  		.lookups_per_instance = SPARX5_IS0_LOOKUPS / 3,
+>  		.first_cid = SPARX5_VCAP_CID_IS0_L0,
+>  		.last_cid = SPARX5_VCAP_CID_IS0_L2 - 1,
+> -		.blockno = 8, /* Maps block 8-9 */
+> -		.blocks = 2,
+> +		.blockno = 8, /* Maps block 8 */
+> +		.blocks = 1,
+>  		.ingress = true,
+>  	},
+>  	{
+
+[Severity: Low]
+The message also says:
+
+    "Since we statically assign blocks, this means IS0 has half the
+     available address space for vcap rules, compared to before."
+
+Is "IS0" the right scope here?  Only the CLM-0 instance changes; CLM-1
+(blocks 6-7) and CLM-2 (blocks 4-5) keep two blocks each, so IS0 loses 1
+of 6 blocks in total.
+
+What actually halves is the address space of chains
+SPARX5_VCAP_CID_IS0_L0..SPARX5_VCAP_CID_IS0_L2 - 1 (1000000-1199999),
+which goes from 6144 to 3072 rule addresses.  Could the message be
+narrowed to that range?
+
+> @@ -124,6 +124,18 @@ const struct sparx5_vcap_inst sparx5_vcap_inst_cfg[] = {
+>  		.count = 12288, /* Addresses according to datasheet */
+>  		.ingress = false,
+>  	},
+> +	{
+> +		.vtype = VCAP_TYPE_LPM,
+> +		.vinst = 0,
+> +		.map_id = 6,
+> +		.lookups = SPARX5_LPM_LOOKUPS,
+> +		.lookups_per_instance = SPARX5_LPM_LOOKUPS,
+> +		.first_cid = SPARX5_VCAP_CID_LPM_L0,
+> +		.last_cid = SPARX5_VCAP_CID_LPM_MAX,
+> +		.blockno = 9,
+> +		.blocks = 1,
+> +		.ingress = true,
+> +	},
+>  };
 
 [Severity: Medium]
-This isn't a pattern introduced by this patch (every existing caller
-already does vcap_val_rule() followed by vcap_add_rule() without holding
-vctrl->lock across both), but now that it is packaged as an exported
-helper, is the check-then-act window worth documenting or closing?
+This registers chain ids VCAP_CID_PREROUTING_L0 (6000000) through
+SPARX5_VCAP_CID_LPM_MAX (6099999) as an ingress VCAP admin on both
+platforms, but the per-vtype switches in sparx5_tc_flower.c were not
+given a VCAP_TYPE_LPM arm.  Is that intentional?
 
-vcap_val_rule() ends with the capacity test and runs entirely without
-vctrl->lock:
+Before the patch, sparx5_tc_flower() rejected chain 6000000 because no
+admin matched:
 
-	/* Finally check if there is room for the rule in the VCAP */
-	return vcap_rule_space(ri->admin, ri->size);
+	admin = vcap_find_admin(vctrl, fco->common.chain_index);
+	if (!admin) {
+		NL_SET_ERR_MSG_MOD(fco->common.extack, "Invalid chain");
 
-vcap_rule_space() reads the shared instance state unlocked:
+Now the same request resolves to the LPM admin and continues into
+sparx5_tc_flower_replace(), where sparx5_tc_add_rule_counter() falls
+into its default arm:
 
-	if (admin->last_used_addr - size < admin->first_valid_addr) {
-		...
-		return -ENOSPC;
+	default:
+		pr_err("%s:%d: vcap type: %d not supported\n",
+		       __func__, __LINE__, admin->vtype);
+		break;
+
+That arm still returns 0, so does the rule end up being built without a
+counter id?  And for an "action pass" filter, sparx5_tc_set_actionset()
+hits its default arm and returns -EINVAL with a bare pr_err() and no
+extack.  sparx5_tc_action_trap() has no LPM arm either.
+
+So something like:
+
+	tc filter add dev eth0 ingress chain 6000000 protocol ip \
+	    flower dst_ip 10.0.0.0/8 action pass
+
+now reaches those pr_err() calls from a netlink request, unratelimited,
+and reports an opaque -EINVAL.  Should the tc-flower path reject the LPM
+chain explicitly instead?  I checked at 010230ef1142 and VCAP_TYPE_LPM
+never appears in sparx5_tc_flower.c, so nothing later in the series adds
+these arms.
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but the new entry adds an
+eighth iteration to a loop that leaks on failure.  In
+sparx5_vcap_init(), sparx5->vcap_ctrl = ctrl is stored before the loop
+and an allocation failure just returns:
+
+	admin = sparx5_vcap_admin_alloc(sparx5, ctrl, cfg);
+	if (IS_ERR(admin)) {
+		err = PTR_ERR(admin);
+		pr_err("%s:%d: vcap allocation failed: %d\n", __func__, __LINE__, err);
+		return err;
 	}
 
-vcap_add_rule() then takes the mutex and the append branch of
-vcap_insert_rule() consumes address space without re-testing against
-admin->first_valid_addr:
+ctrl is not freed, mutex_destroy(&ctrl->lock) is not called, and the
+vcap_admin objects already put on ctrl->list (each with three
+STREAMSIZE cache buffers) are not unwound.
 
-	ri->addr = vcap_next_rule_addr(admin->last_used_addr, ri);
-	admin->last_used_addr = ri->addr;
+The caller cannot clean up either, because cleanup_ports sits below the
+cleanup_vcap label in sparx5_main.c:
 
-If two adds to the same VCAP instance interleave between validation and
-insertion on a nearly full instance, can both pass the stale space check
-and the second one push last_used_addr below first_valid_addr, so the
-rule is encoded into addresses owned by another VCAP block instead of
-returning -ENOSPC?
+	err = sparx5_vcap_init(sparx5);
+	if (err) {
+		dev_err(sparx5->dev, "Failed to initialize VCAP\n");
+		goto cleanup_ports;
+	}
+	...
+	cleanup_vcap:
+		sparx5_vcap_deinit(sparx5);
+	cleanup_ports:
+		sparx5_destroy_netdevs(sparx5);
 
-For the users present at this commit I could not construct such an
-interleaving: the L3/LPM adders added later in the series all run from an
-ordered workqueue under sparx5->router->lock, and the TC and matchall
-paths are serialized by rtnl. The one case I could not rule out is a tc
-filter installed directly into the LPM chain range concurrently with a FIB
-work item, since sparx5_tc_flower_replace() resolves the target instance
-purely from the user-supplied chain index:
-
-	vrule = vcap_alloc_rule(vctrl, ndev, fco->common.chain_index, VCAP_USER_TC,
-				fco->common.prio, 0);
-
-Is such a tc configuration rejected somewhere? If not, would holding
-vctrl->lock across validate plus insert, or re-checking vcap_rule_space()
-in the append branch of vcap_insert_rule(), be preferable?
+so sparx5_vcap_deinit() never runs for this failure.  Should the failure
+path unwind the admins allocated so far, or should the goto target be
+cleanup_vcap?
 
 [ ... ]
 
-> diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api_debugfs.c b/drivers/net/ethernet/microchip/vcap/vcap_api_debugfs.c
-> index e0c65c7ab23e1..36150822ce153 100644
-> --- a/drivers/net/ethernet/microchip/vcap/vcap_api_debugfs.c
-> +++ b/drivers/net/ethernet/microchip/vcap/vcap_api_debugfs.c
-> @@ -133,7 +135,12 @@ vcap_debugfs_show_rule_actionfield(struct vcap_control *vctrl,
->  		out->prf(out->dst, "%d", value[0]);
->  		break;
->  	case VCAP_FIELD_U32:
-> -		fmsk = (1 << actionfield[action].width) - 1;
-> +		if (action == VCAP_AF_MAC_LSB || action == VCAP_AF_MAC_MSB) {
-> +			hex = true;
-> +			break;
-> +		}
-> +		fmsk = actionfield[action].width ?
-> +		       GENMASK(actionfield[action].width - 1, 0) : 0;
->  		val = *(u32 *)value;
->  		out->prf(out->dst, "%u", val & fmsk);
->  		break;
+> @@ -195,6 +213,7 @@ static void _sparx5_vcap_range_init(struct sparx5 *sparx5,
+>  	u32 size = count - 1;
+>  
+>  	switch (admin->vtype) {
+> +	case VCAP_TYPE_LPM:
+>  	case VCAP_TYPE_IS0:
+>  	case VCAP_TYPE_IS2:
+>  		spx5_wr(VCAP_SUPER_CFG_MV_NUM_POS_SET(0) |
 
-[Severity: Low]
-This isn't a bug introduced by this patch, but should the sibling
-key-field printer get the same treatment? vcap_debugfs_show_rule_keyfield()
-in the same file still evaluates the shift first and only repairs the
-value afterwards:
+[Severity: Medium]
+This is a pre-existing issue, but the new LPM block now inherits it.
+sparx5_vcap_block_init() calls this helper with one less than the number
+of addresses in the range:
 
-	} else {
-		u32 fmsk = (1 << keyfield[key].width) - 1;
+	_sparx5_vcap_range_init(sparx5, admin, admin->first_valid_addr,
+				admin->last_valid_addr -
+					admin->first_valid_addr);
 
-		if (keyfield[key].width == 32)
-			fmsk = ~0;
-		out->prf(out->dst, "%u/%u", data->u32.value & fmsk,
-			 data->u32.mask & fmsk);
-	}
+The range is inclusive, as set up in sparx5_vcap_block_alloc():
 
-The printed value is correct because of the width == 32 fixup, but the
-1 << 32 on a signed int has already been evaluated at that point, which
-looks like the same undefined shift the commit message describes fixing
-in the action-field printer.
+	admin->first_valid_addr = cfg->blockno * SUPER_VCAP_BLK_SIZE;
+	admin->last_used_addr = admin->first_valid_addr +
+		cfg->blocks * SUPER_VCAP_BLK_SIZE;
+	admin->last_valid_addr = admin->last_used_addr - 1;
 
-This branch is reachable today: VCAP_KF_IP_PAYLOAD_5TUPLE is
-VCAP_FIELD_U32 with width 32 in is0_normal_5tuple_ip4_keyfield for
-sparx5 and lan969x, and in the lan966x is1 keyset, and VCAP_KF_RT_FRMID
-is another W32 U32 key in lan966x is1. None of them are in the %pI4h or
-hex special cases, so dumping a rule carrying one of those keys via the
-VCAP debugfs rule dump would hit the shift with a width of 32. Would
-converting this site to the same GENMASK() form make sense while the
-area is being touched?
+and here size = count - 1 is programmed into VCAP_SUPER_CFG_MV_SIZE, so
+the INITIALIZE shot clears MV_SIZE + 1 == count addresses.
 
-Reported by an automated review pipeline; both items are pre-existing and
-neither is claimed by the commit message, so they may well be better as
-separate cleanups.
+That count is an address count is visible from the other user of the same
+callback in vcap_api.c:
+
+	vctrl->ops->init(ri->ndev, admin, ri->addr, ri->size);
+
+where ri->size of 1 erases exactly one address.
+
+Does this leave the address equal to admin->last_valid_addr uninitialized
+at probe, even though it is handed out as a usable rule address?  For the
+LPM instance that would be 30719 on sparx5 and 18431 on lan969x, i.e. a
+row of the longest-prefix-match table used by the router in the later
+"net: sparx5: add L3 FIB, nexthop and neighbour entry management" patch.
+
+Would passing admin->last_valid_addr - admin->first_valid_addr + 1 (or
+cfg->blocks * SUPER_VCAP_BLK_SIZE) be correct here?
+
+[ ... ]
