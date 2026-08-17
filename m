@@ -1,47 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274DE30E0E9;
-	Mon, 17 Aug 2026 11:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A9A431E5F
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Aug 2026 13:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786965368; cv=none; b=fomX0HGTwcOvkSw2WODVDr6x+LDzXepwDVZ3iPK4nHeGHNeS5+xBCEEsN1p6hy+aNIoIOtQnGaYYk/XUEItylzUXJ782gp+CeupEYzvFFkGIaU6P8YjdLNGkWXkJCEkso5zRHpBwNMsuwCyT6WFgcjwjFwWY77RCLPV+DTVMnLA=
+	t=1786973093; cv=none; b=Yv6r3GXA9zBr97vXc50rJcyrQPrqv1Q6zX0i4w6C9YkUcIPawH38mzbZ750WSbuJsZa7AiIdBKEYDsUDC5u0O32v3gY5FbDZ1cwD2bpFGd0juRHnYlsKwMnFKr8X2nJ9xPeqk6iYj3a4hWuUy2bB5kTopkovVI7djvWxEl1dL/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786965368; c=relaxed/simple;
-	bh=RlBey3ICrIGs9TtvveUZmJ6NMHs8dDYLBZy4uyLNcuQ=;
+	s=arc-20240116; t=1786973093; c=relaxed/simple;
+	bh=Hw/jfXcPPMobBLBI8W1VNi7tiStnZDpg9z6Ju3cQlQw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7A921S5RlB5hQ5tPvAh7k4cTmHeyvEIc+706wKXsBpVmtnwTgPcpkZ5m0t148z/4lNTHJ3FFZou3wGqdTnbYfiwUaMU/RNzx3ZLDGQXvJfFiZ0PvQnh/8nDGWjAlPkA3w2v58iRWNcpaf32QoTBwQJwT/mNrnfWaKNTyoZUGR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUszP7iB; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=GIhJsXAGXb7D90tWNjy/CcqNpxS6y1771v7qTzoaGFEq7tqsUrP0gT85l0iDgaOJA2B5c1GmXGUUn+FufMXNX7OOnwppDsaL6Kt2tmyIWPVDF9ehPkDZ1UvLdUqwMUAidV9wJnR42Wce0bAsmNcUlwo5M13LGmaQYR4BMscIIRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=Vr+7rqUS; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUszP7iB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 274DB1F000E9;
-	Mon, 17 Aug 2026 11:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786965366;
-	bh=pEiCzvWeUGYIvROwUcLdzkful8DGFhkVU5axYHnXzAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VUszP7iBiEwWM7jmKtcc8MgMRH4a0eQSsEFEfoa70VpX1A6FvPSIknklIJi4I/AYh
-	 yfLB6G7kLoMzpjN3A60NMZNKJe1M+VKut9hayU38wkxmjVO60UTjO/GtNBHjbVjMhE
-	 b/MuzWASuTMIMAwN5TSoU3s0cu5U8paStGq5Q+ZtJSrsKAlhq6LWJZIgL/M7EzIgDy
-	 +LV01x9H3stNdokj7k88f8IVWJbk9zOcPGBaMocn0QhNSUn74vRB+fzjZ+9WFugzp7
-	 smSj05Avv6foZ3ei/8Za9Lld+hAfGQ6O5qvrU3/2FUP+AAr0D/+vtGRuHjNLDtZZsB
-	 dfJxAe+dtzX5w==
-Date: Mon, 17 Aug 2026 14:15:57 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Li Zhe <lizhe.67@bytedance.com>
-Cc: akpm@linux-foundation.org, apopple@nvidia.com, arnd@arndb.de,
-	balbirs@nvidia.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	david@kernel.org, kees@kernel.org, mingo@redhat.com,
-	muchun.song@linux.dev, tglx@kernel.org, linux-arch@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v10 2/8] mm: factor zone-device page init helpers out of
- __init_zone_device_page
-Message-ID: <aoLtbbv5euE4H1xO@kernel.org>
-References: <20260810122057.30447-1-lizhe.67@bytedance.com>
- <20260810122057.30447-3-lizhe.67@bytedance.com>
- <178688187038.2799959.7900723270155108493.b4-review@b4>
- <050c317f-111e-4293-aee5-ac8e154ebc7e@bytedance.com>
+	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="Vr+7rqUS"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4998e0916faso16779995e9.2
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Aug 2026 06:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=asu.edu; s=google; t=1786973088; x=1787577888; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=oBxqkvt2QiyULLxw2yg2sHAVvNGWnYOoHvbaWXtRPBA=;
+        b=Vr+7rqUSSmJQlcFh13E5PEUcs5NjpEBKr1CbNuCsbKC4C8uXbCU1uU/vxfKju1teOs
+         jYGjkaMMapiV2Ag1e3hWftj3u5VTC4qrYkr4XyGS5qQVqK+o1a8GmZ54J9Rc3j8wyOki
+         EWWPHSYwh5EWtxEl+k0XVg22Dz+3a8F/8JLASx4ox+loy/THofG/OjeOThDkzr30H6+/
+         JVQWJs/noLpZ/sdk8odXwzlkO/cc+VJw04xPYbcMaoUzN5a7fcEfnAFckjfmY701GS/a
+         LAB8BoCmE0Q+mgJGQGNCIzbSv16raXt3dmojRPlz/Ky1FYeZ1+0r2lIpJfcbPrM9QAPq
+         YNmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786973088; x=1787577888;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=oBxqkvt2QiyULLxw2yg2sHAVvNGWnYOoHvbaWXtRPBA=;
+        b=H7/8X1KQiYce/Jr3aZzAp6Lg26n1Tqe0BMcaapiD1I7jrzsldOBBFXf/6rApSBpnLO
+         y1LsXmn2hMCp/qnYk+xPSe2ZRDO7eJKVSb7b7x4VeV2FtbfdJ1vl17UuwpMH+8F644zQ
+         CccKpBFoUeHM8cytulaz5P5i79L7Cc8d5bxIsHb6MhSZnpqb6lHlEzhUwb7mGN4pKa98
+         wigKZUfJt/RhMI3z0dXNnCoRikl66wZ3ZOJLRmtmc5rSuwRLJYRhwc1pCpSRhy0XzA9d
+         WivGAE0Iye4pkoeljPmP/iOOaCow/Z2CXoy0HZ7ZVxZ1XBRsonF9YAsswbFAnQTTwagC
+         bkwA==
+X-Forwarded-Encrypted: i=1; AHgh+Rpat6ZcSDcdDQGSixKqPIIzOh+oupBTu1x2RsETb4z339JWT8U5fNfqFkrX4RpL898ZcITsMwpfTPsa/F5Kfsk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywad4HLKLiomQsxdAsp3no3oNHvffnW5p+sVu+XgUlC43KzHqe7
+	qu6vUAfMTBD4DF3CB9GyPYH6LONFIo/fI7qn34MydtSQnuzV4eTNlYRrFxVAUrUfFQ==
+X-Gm-Gg: AR+sD11iFVP8LpBvtdlPMTsKo77lOYDrirAUTCKj8fbmZRf/KOp+DCnI3W4NHT5Ugs9
+	6KCl5UQGFhEtyF4MLEDFOR5YhiDcVPASVrHA+/gXtlUdbovLlZaFKMHKytxS/BfeddyPzfzJzol
+	KZweoieS9/XO8CA9FYyZhoZOFJq9VfON4ESZpIDKrf2j3Zg/djNIv6XsGUU23nIlPXgNUaVnyDp
+	nSSBNBvAIIVZaSUp5w+BdcU+sZCJdYuivnA82s66/SPb4Qln7LUz4CYXRWBZhTN524Z5XUX8vWu
+	wxLDsVtPXmbJtJnQN96vF29yPTO24lH2MFhgQ7IxE3ZEimhrLnZO7D7ruIrMx9f9LMsfgxItNgD
+	19e4Lqg96unqV4+dso5VHHymRgFnjKRbjYbRpDLIdjGds6m+h+rkjCqREqWsmLKzED9Ks9k3nIZ
+	Ggo5EMxR4ybL3C44PPt6Mzqmr5jgb0+h7T4If14ZQdxxw/hZNESlw5wnP00GSB2NDD8QJECkA=
+X-Received: by 2002:a05:600c:3b1d:b0:499:87b6:f3c0 with SMTP id 5b1f17b1804b1-4998807e4c9mr382618245e9.14.1786973087942;
+        Mon, 17 Aug 2026 06:24:47 -0700 (PDT)
+Received: from spiro ([141.5.46.6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49996109652sm188597975e9.4.2026.08.17.06.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2026 06:24:47 -0700 (PDT)
+Date: Mon, 17 Aug 2026 06:24:44 -0700
+From: Jennifer Miller <jmill@asu.edu>
+To: Kees Cook <kees@kernel.org>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	eddyz87@gmail.com, memxor@gmail.com, linux-hardening@vger.kernel.org, xmei5@asu.edu, 
+	samitolvanen@google.com, peterz@infradead.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH bpf-next v1 1/1] bpf: Enable JIT hardening by default
+ when x86_64 CFI is enabled
+Message-ID: <aoL_G-3chdLZGxSJ@spiro>
+References: <20260710191932.120911-1-jmill@asu.edu>
+ <20260710191932.120911-2-jmill@asu.edu>
+ <202608091030.C69278022@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,164 +80,54 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <050c317f-111e-4293-aee5-ac8e154ebc7e@bytedance.com>
+In-Reply-To: <202608091030.C69278022@keescook>
 
-On Mon, Aug 17, 2026 at 03:11:56PM +0800, Li Zhe wrote:
-> On 8/16/26 8:04 PM, Mike Rapoport wrote:
-> > Hi,
-> >
-> >> memmap_init_zone_device() currently mixes refcount policy and core
-> >> ZONE_DEVICE page setup in a single helper.
-> >>
-> >> Factor the refcount-reset predicate into pagemap_requires_refcount_reset(),
-> >> move the common page initialization into __zone_device_page_init(), and
-> >> wrap the existing slow path in zone_device_page_init_slow().
-> >>
-> >> This keeps the slow-path behaviour unchanged and gives later patches
-> >> reusable helper boundaries.
-> >>
-> >> No functional change intended.
-> >>
-> >> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> >> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> >>
-> >> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> >> index 95808ab5cfdb..a70acb7431a6 100644
-> >> --- a/mm/mm_init.c
-> >> +++ b/mm/mm_init.c
-> >> @@ -1005,11 +1005,37 @@ static void __init memmap_init(void)
-> >>   }
-> >>   
-> >>   #ifdef CONFIG_ZONE_DEVICE
-> >> -static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
-> >> +/*
-> >> + * Return true when memmap_init_zone_device() must initialize the page
-> >> + * refcount to 0. MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in
-> >> + * the free path, while the remaining ZONE_DEVICE types start from 0 here
-> >> + * and raise the count again when the allocator or driver hands the page
-> >> + * out.
-> >> + */
-> >> +static inline bool pagemap_requires_refcount_reset(const struct dev_pagemap *pgmap)
-> >> +{
-> >> +	/*
-> >> +	 * MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free
-> >> +	 * path. The remaining ZONE_DEVICE types start from 0 here and raise
-> >> +	 * the count again when the allocator or driver hands the page out.
-> >> +	 */
-> >> +	switch (pgmap->type) {
-> >> +	case MEMORY_DEVICE_FS_DAX:
-> >> +	case MEMORY_DEVICE_PRIVATE:
-> >> +	case MEMORY_DEVICE_COHERENT:
-> >> +	case MEMORY_DEVICE_PCI_P2PDMA:
-> >> +		return true;
-> >> +	case MEMORY_DEVICE_GENERIC:
-> >> +		return false;
-> >> +	}
-> >> +
-> >> +	return false;
-> >> +}
-> >> +
-> >> +static void __ref __zone_device_page_init(struct page *page, unsigned long pfn,
-> >>   					  unsigned long zone_idx, int nid,
-> >>   					  struct dev_pagemap *pgmap)
-> >>   {
-> >> -
-> >>   	__init_single_page(page, pfn, zone_idx, nid);
-> >>   
-> >>   	/*
-> >> @@ -1028,23 +1054,15 @@ static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
-> >>   	 */
-> >>   	page_folio(page)->pgmap = pgmap;
-> >>   	page->zone_device_data = NULL;
-> >> +}
-> >>   
-> >> -	/*
-> >> -	 * MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free
-> >> -	 * path. The remaining ZONE_DEVICE types start from 0 here and raise
-> >> -	 * the count again when the allocator or driver hands the page out.
-> >> -	 */
-> >> -	switch (pgmap->type) {
-> >> -	case MEMORY_DEVICE_FS_DAX:
-> >> -	case MEMORY_DEVICE_PRIVATE:
-> >> -	case MEMORY_DEVICE_COHERENT:
-> >> -	case MEMORY_DEVICE_PCI_P2PDMA:
-> >> +static void __ref zone_device_page_init_slow(struct page *page,
-> >> +		unsigned long pfn, unsigned long zone_idx, int nid,
-> >> +		struct dev_pagemap *pgmap)
-> >> +{
-> >> +	__zone_device_page_init(page, pfn, zone_idx, nid, pgmap);
-> >> +	if (pagemap_requires_refcount_reset(pgmap))
-> >>   		set_page_count(page, 0);
-> >> -		break;
-> >> -
-> >> -	case MEMORY_DEVICE_GENERIC:
-> >> -		break;
-> >> -	}
-> >>   }
-> >>   
-> >>   /*
-> >> @@ -1090,7 +1108,7 @@ static void __ref memmap_init_compound(struct page *head,
-> >>   	for (pfn = head_pfn + 1; pfn < end_pfn; pfn++) {
-> >>   		struct page *page = pfn_to_page(pfn);
-> >>   
-> >> -		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
-> >> +		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
-> >>   		prep_compound_tail(page, head, order);
-> >>   		set_page_count(page, 0);
-> >>   	}
-> >> @@ -1126,7 +1144,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
-> >>   	for (pfn = start_pfn; pfn < end_pfn; pfn += pfns_per_compound) {
-> >>   		struct page *page = pfn_to_page(pfn);
-> >>   
-> >> -		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
-> >> +		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
-> > It looks like all callers of __init_zone_device_page() are now calling
-> > zone_device_page_init_slow() that with series evolution became a thin
-> > wrapper for __zone_device_page_init().
-> >
-> > Maybe we can just rename __init_zone_device_page() to
-> > __zone_device_page_init() and replace the open coded setting of the page
-> > count with the call to pagemap_requires_refcount_reset() an be done
-> > here?
+On Sun, Aug 09, 2026 at 10:30:35AM -0700, Kees Cook wrote:
+> On Fri, Jul 10, 2026 at 12:19:32PM -0700, Jennifer Miller wrote:
+> > Initializes bpf_jit_harden to 1 if x86_64 CFI is enabled. Prevents the
+> > misuse of BPF JIT code to craft CFI signatures or Endbr64 instructions
+> > by enabling constant blinding for JITted BPF code from unprivileged
+> > users.
+> > 
+> > Signed-off-by: Jennifer Miller <jmill@asu.edu>
+> > ---
+> >  kernel/bpf/core.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> > index 47fe047ad30b..ed22b90c6e4e 100644
+> > --- a/kernel/bpf/core.c
+> > +++ b/kernel/bpf/core.c
+> > @@ -548,7 +548,11 @@ void bpf_prog_kallsyms_del_all(struct bpf_prog *fp)
+> >  /* All BPF JIT sysctl knobs here. */
+> >  int bpf_jit_enable   __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_DEFAULT_ON);
+> >  int bpf_jit_kallsyms __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_DEFAULT_ON);
+> > -int bpf_jit_harden   __read_mostly;
+> > +/* Enable hardening by default when x86_64 CFI is enabled to prevent CFI
+> > + * hashes and endbr64 instructions from being crafted.
+> > + */
+> > +int bpf_jit_harden   __read_mostly = IS_ENABLED(CONFIG_X86_64) &&
+> > +					IS_ENABLED(CONFIG_CFI);
 > 
+> Why not just do this for all CONFIG_CFI?
 > 
-> Yes, that would make patch 2 simpler.
-> 
-> The reason I kept the refcount policy outside __zone_device_page_init()
-> is the compound-tail initialization added later in patch 5. Tail pages
-> still need the same basic ZONE_DEVICE struct page initialization as head
-> pages, including __init_single_page(), PageReserved, pgmap and
-> zone_device_data setup. After that, the tail-page path calls
-> prep_compound_tail() and sets the tail refcount to 0 unconditionally.
-> 
-> Folding pagemap_requires_refcount_reset() into __zone_device_page_init()
-> would make that helper include the head-page refcount policy even for
-> callers that will immediately apply the tail-page refcount rule
-> afterwards.
-
-But you still call zone_device_page_init_slow() from
-zone_device_tail_page_init() so it's anyway there.
-
-I'd suggest combining this and the next patch into one, keeping
-__init_zone_device_page() name without renaming it at all and open-coding
-the initialization of the first head and the first tail page to properly
-set refcount and call other prep methods.
-
-I'd also pull the initialization of the first page in both cases out of the
-loop and make the loop only use the _template version.
- 
-> That preserves the final state, but I was trying to keep the common
-> ZONE_DEVICE page setup separate from the head-page refcount policy for
-> this reason.
-> 
-> Would you still prefer the simpler renamed helper here, or should I keep
-> the common ZONE_DEVICE page setup separate from the refcount policy and
-> make the naming clearer in v11?
-> 
-> Thanks,
-> Zhe
+> -Kees
 > 
 
--- 
-Sincerely yours,
-Mike.
+The intention was to not enable JIT hardening by default for other
+architectures when CONFIG_CFI is enabled when we don't know if it would
+be preventing any CFI from being bypassed. It may be possible that kCFI
+on other architectures is able to be bypassed in similar ways to x86_64,
+but we haven't looked into it.
+
+~Jennifer
+
+> >  long bpf_jit_limit   __read_mostly;
+> >  long bpf_jit_limit_max __read_mostly;
+> >  
+> > -- 
+> > 2.34.1
+> > 
+> 
+> -- 
+> Kees Cook
