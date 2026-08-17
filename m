@@ -1,114 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661753D647E;
-	Sun, 16 Aug 2026 22:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAE61EFF93;
+	Mon, 17 Aug 2026 02:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786918296; cv=none; b=Xzfq5V+Q77O1LNi3JOFo/nDjOauwG4EXAmd03VUGLeqz3FMrcOS+wYfZeBhd71TrhRvnP+T0gvg+6s9umlyqkoB06u+LVcvFC2rKvghxmRf778n28+YQu6pl8VM4pFnGDuLx512bTCCtSVOuQFi0lQxXLuh/FEWM6ew5YeuhnaA=
+	t=1786932317; cv=none; b=et08XyScW+/rZ7qbzs7/fXjXqfdaVwwDhpYbaLJZd8RaO1MscCfK/AHPfZWu37MweLnFxZ3eDuExnTemtL4zG91CqItpdoavDMW0UXFV7p8LBC7VkBL1SvB5yrVf6WdnzKaKRyuqKJL8+OD4F77TEI/f5TddZX8aEkow2Ba2XkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786918296; c=relaxed/simple;
-	bh=BetprM0RdBz9U2XhwsqIZQvo/uqW/2vTiRA6sJXlsic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KhQ8tyXMxrg2gGkWk/KmYl16HrGIoRqQL9ygoepSdab8dQMPidnxHYzeTCazxSAUj5zcC6Td8EpEbg0L/00MxVIsORyMt0MVqi7adkAFrTzxdeYwi+vxo87nR/mg3wtQgq7TyoKMgVeD5CIzUrF12XesKV2UR+rQvXKTLQyuanU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IEeEd4aK; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1786932317; c=relaxed/simple;
+	bh=7+AamDYPtJR/i9OTXfbGM8oEtsgABDSKPAIflbvpVCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f6wU+BHXoqnuuIUcBhHK1kaSi3UfwkRkal+12ka0xHOT/I2Ptb63jpB0T/qQWP6oz23XuyWC9Led6Nw9S/PntrSdO+ydDcuC+CPxzBuBoPhyRzGIhkhSA0+VPt9InhPiLgfoZM0JNVU7elJSy+X4sSf6NN5QhzHbY1iS8BSYfHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUbAO8Jj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IEeEd4aK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786918294; x=1818454294;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BetprM0RdBz9U2XhwsqIZQvo/uqW/2vTiRA6sJXlsic=;
-  b=IEeEd4aKdtKrCQDAilyis9lWYadiv8FIiaDABQBpfWMc3jSxJlnN0OpG
-   eFlcNfpBGEcV4+bhjJDMLOM8jB9G5IFeFMwm5AbR0/uH1eIYJvlqOfy+s
-   vN56igwIbllGWLOBKvywdm7yKKiR77KGZPo8UyiwicRbXxhZLFRRUs5Et
-   0H3gA7gX6ZTUFpcMnw4/OGTpqzkZ9YP6n7L5Sqnczjf6AHLNQokPRER2Z
-   BFnJZ94tgj1UMPv4iyyLYYZLuHzUQhHWt996OItDWLWUpSdW7ojm4r+Vw
-   m9hZsNDuJKZPg2fLv91m47ImSIa6fpVHMPUmlBA2BiWx8whAPLo5qtKON
-   Q==;
-X-CSE-ConnectionGUID: C25LUqHZQ5GJT1I7TjLQsg==
-X-CSE-MsgGUID: fjKTFzetRwSqi9aibgkHRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11877"; a="89915456"
-X-IronPort-AV: E=Sophos;i="6.25,227,1779174000"; 
-   d="scan'208";a="89915456"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2026 15:11:33 -0700
-X-CSE-ConnectionGUID: bY3ozt2VS+uJOiiRoOwL0Q==
-X-CSE-MsgGUID: 9R/KWFVPQSK71mWWEsbOZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,227,1779174000"; 
-   d="scan'208";a="263415551"
-Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 16 Aug 2026 15:11:30 -0700
-Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wvj4g-00000000d7m-3x14;
-	Sun, 16 Aug 2026 22:11:26 +0000
-Date: Mon, 17 Aug 2026 06:10:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Woradorn Laodhanadhaworn <woradorn.laon@gmail.com>, rostedt@goodmis.org
-Cc: oe-kbuild-all@lists.linux.dev, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev, shuah@kernel.org,
-	skhan@linuxfoundation.org, me@brighamcampbell.com,
-	jkoolstra@xs4all.nl, woradorn.laon@gmail.com
-Subject: Re: [PATCH v2] tracing: Use seq_buf for string concatenation
-Message-ID: <202608170556.RyB6XrT0-lkp@intel.com>
-References: <20260622094623.18469-1-woradorn.laon@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUbAO8Jj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED2DF1F000E9;
+	Mon, 17 Aug 2026 02:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786932316;
+	bh=6evGcDRt1cnLd4wQNFhfcjpjWiDiPvC7XiNjnBNuQiY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=JUbAO8Jj4xTOrPImFJSG8Z7EL8mqyJEzRKxvp5sMx8Rh6Z7s9R3ekwxERIbq9GfXp
+	 MIEdzinb9mtPWl2Z76qAXnt2ycB8i+vuHQpp8EnwpK1Tg3yKdE7Q6+rFcVpqYK8pgk
+	 TBcXz/yQT8mKsWgOweGSFzbvZNYNBDeUqcQEtv8BQCn51am9RAbyQvvEgBT6OBwtH4
+	 w7sSfV1CCakiLv9pKrmwuLlA7LHs9eT69bQ+CNwwnbZF3hske0sMVZuq4VfAKsojlv
+	 jL0vlicn4lKDReHGJBBsGtCy5tUj+P2J0zDVEI0MxDzZilthLY3dSrivJVgufp+IKx
+	 mgOcfFj2a0BKw==
+Date: Mon, 17 Aug 2026 03:05:12 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>,
+ linux-iio@vger.kernel.org, David Lechner <dlechner@baylibre.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, Luca Weiss
+ <luca.weiss@fairphone.com>
+Subject: Re: [PATCH 2/3] iio: light: stk3310: add per-chip match data
+Message-ID: <20260817030512.67ffeb50@jic23-huawei>
+In-Reply-To: <anr5BeHK-dboSBl3@ashevche-desk.local>
+References: <20260810110423.41697-1-jorijnvdgraaf@catcrafts.net>
+	<20260810110423.41697-3-jorijnvdgraaf@catcrafts.net>
+	<anoZwgq6ZO_VY064@ashevche-desk.local>
+	<20260810215157.154384-1-jorijnvdgraaf@catcrafts.net>
+	<anr5BeHK-dboSBl3@ashevche-desk.local>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260622094623.18469-1-woradorn.laon@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Woradorn,
+On Tue, 11 Aug 2026 13:27:17 +0300
+Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
 
-kernel test robot noticed the following build warnings:
+> On Mon, Aug 10, 2026 at 11:51:57PM +0200, Jorijn van der Graaf wrote:
+> > On Mon, Aug 10, 2026 at 09:34:42PM +0300, Andy Shevchenko wrote: =20
+> > > > +	chip_info =3D i2c_get_match_data(client);
+> > > > +	if (!chip_info) {
+> > > > +		/*
+> > > > +		 * Clients instantiated through the sysfs new_device
+> > > > +		 * interface under the lowercase compatible-derived name
+> > > > +		 * have no firmware node and do not match the uppercase
+> > > > +		 * id table entries.
+> > > > +		 */
+> > > > +		chip_info =3D &stk3310_chip_info; =20
+> > >
+> > > This is an interesting comment and approach.
+> > > =20
+> > > > +	} =20
+> > >
+> > > - Where does this lowercase come from? Is it Linux forced conversion?=
+ =20
+> >=20
+> > No conversion - the client name is whatever is echoed into the sysfs
+> > new_device file, and the lowercase spelling is the one that binds via
+> > the OF table: for a client with no firmware node,
+> > i2c_of_match_device() falls through to i2c_of_match_device_sysfs(),
+> > which matches the client name against each compatible and its part
+> > after the vendor prefix, so "stk3310" binds through
+> > "sensortek,stk3310" - the same lowercase name a DT client gets from
+> > of_alias_from_compatible(). The id table lookup stays case-sensitive,
+> > which is why i2c_get_match_data() comes back NULL for such a client:
+> > device_get_match_data() needs the firmware node it does not have, and
+> > i2c_match_id() only knows the historic uppercase names.
+> >  =20
+> > > - What's wrong with simply failing the probe? =20
+> >=20
+> > It would break a path that works before this patch: probe consumed no
+> > match data, so "echo stk3310 0x48 > new_device" bound and probed fine
+> > (we used exactly that during bring-up, before the DT node existed).
+> > Failing it would be a userspace-visible regression in a patch that
+> > claims no functional change.
+> >  =20
+> > > As far as I understand the problem is preexisted. Or was there any de=
+fault
+> > > taken? How do we know that the chosen default is a good one? =20
+> >=20
+> > The path preexists; only this patch makes probe care about match
+> > data. Before it the driver had no per-chip data at all - every client
+> > got the same two channels and the hardcoded "stk3310" name however it
+> > matched. The fallback selects stk3310_chip_info, which is exactly
+> > that, so a client that probed before this patch behaves identically
+> > after it. What the default cannot give is the new part's extra
+> > channels: an STK36C61 instantiated under the lowercase name gets the
+> > reduced legacy profile, and the id table spelling "STK36C61" selects
+> > the full one. =20
+>=20
+> The problem preexists. I just looked into the Git history of this rather =
+broken
+> table IDs and what I have to say and state is the following:
+>=20
+> - the driver initially was written for ACPI and the author blindly (cargo=
+ cult?)
+>   used the same IDs as for ACPI _HID, while they have different rules
+>=20
+> - there is no existing in kernel driver that supports enumeration based
+> on I2C ID table
+>=20
+> With that being said, I think we may just lower the case for the I=C2=B2C=
+ ID
+> table and fail enumeration when there is no chip_info provided.
+> Yes, it will break very weird use case with capital letters via sysfs,
+> but TBH it's a niche and people should know that most of the devices
+> are enumerated as part number of OF compatible in that case.
+>=20
+> Also note that the DT users should also not use sysfs, and instead call
+> DT overlay.
+>=20
+> I can take all the blame on very unlikely event of a breakage of somebody=
+'s
+> setup in the future. TL;DR: just add a first patch to lower case the IDs
+> with Suggested-by my name and I will give a Rb tag with full conscience a=
+nd
+> responsibility.
+>=20
 
-[auto build test WARNING on v7.2-rc7]
-[also build test WARNING on linus/master]
-[cannot apply to linux-review/Woradorn-Laodhanadhaworn/tracing-Use-seq_buf-for-string-concatenation/20260813-224524 trace/for-next next-20260814]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Hmm. I agree with fixing the capitals. However we have more options than
+usual because we have a single part with which all supported are backwards
+compatible.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Woradorn-Laodhanadhaworn/tracing-Use-seq_buf-for-string-concatenation/20260815-195403
-base:   v7.2-rc7
-patch link:    https://lore.kernel.org/r/20260622094623.18469-1-woradorn.laon%40gmail.com
-patch subject: [PATCH v2] tracing: Use seq_buf for string concatenation
-config: hexagon-randconfig-r123-20260816 (https://download.01.org/0day-ci/archive/20260817/202608170556.RyB6XrT0-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-sparse: v0.6.5-rc1
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260817/202608170556.RyB6XrT0-lkp@intel.com/reproduce)
+For most / maybe all of the other drivers where similar has come up,
+ there is no right answer to what data to use (so we break this path).
+They have two or more parts supported but they are mutually incompatible.
+Here we could at least have provided the subset for now. I would
+be careful though as a future part addition might mean we had to drop
+that default as it wasn't backwards compatible with it.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202608170556.RyB6XrT0-lkp@intel.com/
+Hence it would be a bit of a gamble on whether failing probe on lower
+case inputs is enough of a problem to paper over now, given we may
+have to break it in the future anyway.
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
+Jonathan
 
->> WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x4 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x8 (section: .text) -> bootup_event_buf (section: .init.data)
->> WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0xe0 (section: .text) -> __TRACE_SYSTEM_ERROR_DETECTOR_KFENCE (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0xe4 (section: .text) -> __TRACE_SYSTEM_ERROR_DETECTOR_KFENCE (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0xfc (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x100 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x1cc (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x1d0 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x1f4 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x1f8 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x228 (section: .text) -> bootup_event_buf (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_str+0x22c (section: .text) -> bootup_event_buf (section: .init.data)
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
