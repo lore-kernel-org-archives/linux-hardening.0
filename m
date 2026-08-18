@@ -1,204 +1,218 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013020.outbound.protection.outlook.com [52.101.72.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-114.ptr.blmpb.com (va-1-114.ptr.blmpb.com [209.127.230.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A7A2D8796;
-	Mon, 17 Aug 2026 21:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787002433; cv=fail; b=okCg0IEbzlRvbBC+gK5y6wUa1CnfXhNbnPqhTwq2m8EF1SNkKmR66fc/maQBSa4QqfMKzIYJLR0cairdCIIM2aMzd1ZKPkzil79Ce7PdBVlGCP4Vl6efOEiYkmlQoJg3YbNp3CLbv6YDBu+ep7zqpuM4JzrWPE2+iv/YW0X6Prc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787002433; c=relaxed/simple;
-	bh=cd4AcbSb/zwpCNWGcOL20eSrZn24TGsR+Gn6cw7DvrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gJBgrjFdmSAE+XyrC+31nAszTeJUkbeCxLy+DBILymljfiRK9y+vQkzBJM/j3lZ4pOeVbsP86FNPApjFK08x8Mf0Y0bQYP8hJqqoj4D+zq5cbSlooFf8Lsq6YQ0rW+dnNoa3g8YBjbmDJKBdR3vNoYtClGgdgDWDvU22Gwf3MD4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=n60S8IzT; arc=fail smtp.client-ip=52.101.72.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57433342CB0
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Aug 2026 02:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.114
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787021803; cv=none; b=TJYS+LOGraPAVFngCwe5Q1e3dK7RDsK6NXSsM5fSJDEMPX5l+Q//6D5PTW7NZb0OCIe7fuQrx8w0ZrTb1XCeh+X3O3pZ4hcBXLnuByFS1K3MEzEgMdVFGznqhGvFyIygLJ94VoKQzfUlDLA8qH4Ko8NOrPWdXXv9BZaS4M9EA3c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787021803; c=relaxed/simple;
+	bh=Zuuyx425jd0Ev1tCIi7y/sh8sfTufvyG0prBkgLQF9E=;
+	h=From:Date:Content-Type:References:Subject:Mime-Version:
+	 In-Reply-To:To:Cc:Message-Id; b=ZsXalwsJTY4GljnBdYFT2qId3RWwyupNgrZgsj/CEo7oUTyTG3q4ysmiS9363CH6r7V3vIYssChcDrS78PmiwIMovRDGpxlO6u54OPzeZqLW7a54TmUYxApm35YBJPw5mupXWz2EG8Hng8GmdYPZevRep5fYSZrb2JeCXt7QI0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=G6t8z4aO; arc=none smtp.client-ip=209.127.230.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="n60S8IzT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wVaPYFJ5MaF6bo8n910XAP2Bln0tcYcRGnJSd1qxMqhJC5Acq6UWryW8clz+Ud45/1pmsKdx/rQJL2rmMAHgPFZGSIE1/9znD8IvS+8JZXifsyhMIs+jNSTXlg5eFUkAVHA1G/aqqHPc+CxECuoQZPE97WpYvMgnO+MSJIDnd0Ovzj4P5Gf/hjVgV5xpfZEdRr4+jjbiyRsnETpC119Pkee4GchwdRq+5HosYzPpt6qyBbGTKhOxncN0PZYJBSUmH296Ht/msOsVFHX3AeYsByhzePUSyvK1kc2NNJ/XmCY7GygfDbGHQUZ/zcV+N3Thgon3430yNROH3eYRcoZ4Bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+rqzeZUn/a7gUDGTprWXHacaejLEZINdeqHR1SyZeZY=;
- b=XGRhBX4SHarCL9qwTZPHz5sZYF9p/E1XGTTCSIVp3optvePVDi0qwP21ZAYGSXGVPRiqNW0fbX2BE6NCideanCrwd27n92B7ZqwtVsvzKuRTT+VvILkpfwPxLTI17d3rIKuyYjNkIL/ptCMcoup30IyYKCYi3ap8qCQMCPrpVZGxB42TkHKmKlMI+jPSgn2rIeprdzEwsXA1E2k6AsBC0y17oHEc1HlpI5iDLDPnD+BNkW1hTldONiBOBh4/l3HAvJkeAZsL1vBrsEdb9lqLLMaiQQNk8gYrHI8IzL/IWgDHGs32EvZekF+UJSaGmQYhmEJCMrWLlBrd4ZmpiKyeUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+rqzeZUn/a7gUDGTprWXHacaejLEZINdeqHR1SyZeZY=;
- b=n60S8IzTfUiyvDXG0z/QMkQvF/FDbVBEvc4mk/X1KZTI0y76Vu1sKdzRE7TS7UQvgNl+ZOU4+NTXyGah04WKfezZM4Nd1Lv9Be/02ZFnnwhh69RX2rNjQZgCUA6cgHspqyBFBq+onwkhUotN0J6hRnoUa/r7pl0sH23o/alxLRz0zAZerndTHn0I8qZLbf8GopFvUFVz+zamtyiOEuXXgeIM7PbpffyA9wJsSvrO4WSFeCAWnPg21cISXYfgzwcJQrt5UEptTCeJFEY+0ow8TuW4XAQxr+24E2xI4YfuZGvdg+rVEwBSrlfe42Sh/dlZkQsK7pMSp7vLfS1FOzjFEw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by PAXPR04MB8576.eurprd04.prod.outlook.com (2603:10a6:102:217::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.17; Mon, 17 Aug
- 2026 21:33:49 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%7]) with mapi id 15.21.0315.016; Mon, 17 Aug 2026
- 21:33:49 +0000
-Date: Mon, 17 Aug 2026 16:33:39 -0500
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] dmaengine: pxa: fix double counting of the hw
- descriptors
-Message-ID: <aoN-M5fFrOFT2lgp@SMW015318>
-References: <20260817-dmaengine-pxa-v2-1-f42ab0569a48@pengutronix.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260817-dmaengine-pxa-v2-1-f42ab0569a48@pengutronix.de>
-X-ClientProxiedBy: SA0PR11CA0040.namprd11.prod.outlook.com
- (2603:10b6:806:d0::15) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="G6t8z4aO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1787021794; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=Mmzy2KRppiE9A8Y8ELPAoQZxfCoaZ+1Mf41Owvy1ldo=;
+ b=G6t8z4aOiaCzjzAN2kz662NjpkK/owVRzHLTQhAZXx54Yi1Sg/N02PJ+48Rg9zDruutufI
+ J6WcnvsV5ly2B+1/Eii501RlXt3ImOEXcUw/PbsT15f4+6F6nZ8nRCh5pmKC/k8iM5ITkh
+ 71rQw74bCPphV3R6fxGOk7j5foh8qUZ4sTI3T7V/uJHDYYHro0ZbQ1jqifb8RCd7CtqM9L
+ FzoKg1JMMqvpE0LF7hn3zorSAdJWVP3aCiD4yFjMtXqedwFgrSRlrT8pxlDqqf1T17rKgk
+ PryGbnxPFVBVe8kAL0nRUk7lkKQICKoKzBbFUp1YojXUmxBYxDDjyx+Sbvyv5w==
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Date: Tue, 18 Aug 2026 10:56:10 +0800
+Content-Type: text/plain; charset=UTF-8
+References: <20260810122057.30447-1-lizhe.67@bytedance.com> <20260810122057.30447-3-lizhe.67@bytedance.com> <178688187038.2799959.7900723270155108493.b4-review@b4> <050c317f-111e-4293-aee5-ac8e154ebc7e@bytedance.com> <aoLtbbv5euE4H1xO@kernel.org>
+Subject: Re: [PATCH v10 2/8] mm: factor zone-device page init helpers out of __init_zone_device_page
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PAXPR04MB8576:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3dbcc5b4-008f-4bbb-d542-08defca73974
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|7416014|19092799006|1800799024|366016|18002099003|22082099003|56012099006|11063799006|10067099003|41080700001;
-X-Microsoft-Antispam-Message-Info:
-	ZycxkAVaJxmc3PkZ7nNjbHWbetYaQRi+uKelXjXuUQUIxAin7y+zb+l0DJrSDGrhJySIfKXRvDPrGDrV5qHFttknVUZYF4CPLi9tsF9bPdoGtrcQ9Vosq7FY6yaRdk/HbeMqUb2skcch4848rLpZtgy/de1OvBFdUVwm4llQWSQrNdgcYRj72R0eJ3wl9Cli7SKaRElpxWaCcnpJgkNZANojdGRKY9kajDcUlc7eE8R9/gbGFSiOOTmHyBeIUTDj6TGrdemAJDCkVFjgSl3ytSri7MBt+57qGRKDmJQGh4I2qFhcKHXmGthZ5XRQP2Rx4x2+boRWkG4p5WWyE+x+tNyCQRZMDc9TACz0HzXMJ5l4jaD5/jD12n4Iy904aWMSDN5XDkJvKBzh69RV+0ifj2Tj0VcIMdpodiIZT9ha2yWCUvtQZy7b1ZxyoJGnzJAqrUVt0EXVPvhz5ATR91hBtm1wOAD2EhpUa+VgHzbEHrfe132Dcux83JFkw2sJwe8o8PZvvS051ytnnfMGd4RdKAzZGO7ntmB96ycesoCZ0pWHvZoso+MRTVbR8kMIm824OUT7ThCWXWleP0YEktJJ/JHYAnEFxANeN3bB0Ku0uBslyHhYru+VknyNcOtTk3CL11ZzZVdZ99jmHBSqaeEaCS9i08smlNwuR+8ANZNdbra/2y1d/9sxY521VQTjnn/toGafnv0sPeU5O13z0dk/Ii9SVmRE07X2MZwLIAxEZ0U=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(19092799006)(1800799024)(366016)(18002099003)(22082099003)(56012099006)(11063799006)(10067099003)(41080700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?M6gnTRV0qzcpi2vGpb6HUVgNC48g3Boyp7Yd7jUbHYHEtLVDaT4YaHOvmehQ?=
- =?us-ascii?Q?MrTy0KmjS5m21zHtj6Tf/IzpVmwJequA3Yw2+K4tCJnFX6Msr+58ui3F02bw?=
- =?us-ascii?Q?d7GCHwabnzztztmJzWYhAmB9b1vmvDxHTDU+X44N15uZ+1YmIh3LaOMnPkVz?=
- =?us-ascii?Q?H+q/CuSVNq7jd8Ll5/e87nDLjki1cVyN2frE1V+gskAOIKGIRp81Vgr7VJKX?=
- =?us-ascii?Q?g0cHQVBdrrYHQFqOkuXaqbJx0WL8l7pcZx8ck9v7CCv7r/M0WT7QrQLHtiaA?=
- =?us-ascii?Q?qqoW6zn+bnlQDkhtq7yuaBV6ANmmWklzC9cjMXH19ElIgOTdZGtB6PfXAE+t?=
- =?us-ascii?Q?gHvwV/Jm6t+S6/fC3SlEQHw4bOj76LUBYoMDT1UPnrAzeinvKSSdqZk2VR79?=
- =?us-ascii?Q?6Z1C2aq8ZfvpEMVyF+yatP2lghDM6SUaCpOmm8o6l/qPFiB0bebUUkAlWy91?=
- =?us-ascii?Q?VM5Hbw9A6X62rprCrDcD5XmIyjhK3EUSOxkc+Yxiq/ooh+2FKbAWcP3unGuj?=
- =?us-ascii?Q?1AMO5iiBY2yogkN/rJKDylmQjM5WHiFprO258FnCbiCTeFrOHm9F69gHFGpB?=
- =?us-ascii?Q?ll6ywc62SCmQ608s9aeQeb+PzCOjgwvVlqj+fUmye9ECpXcXGvzmOPj+UNsM?=
- =?us-ascii?Q?dVSMk1fCZt3LDvnfZuC21iuWYJ5XzlTTij0XxLLM5Q6Fh92ku3QJWfoJPrc/?=
- =?us-ascii?Q?kZnSIFhBAQQUfn5XO+ujErHqa5SBWpAk6aZfDzRwjwB0CUscXS3PEo4RDXcZ?=
- =?us-ascii?Q?WLZNbjcgkmueKIfXoN1G72rVnORQ4BYGvasTIvEmllQB2ZW2ljjNq9d0Qdwx?=
- =?us-ascii?Q?h/N/iq5nNB1jrc1gcDLStNSR1+DbsTJzVTDrTW+ltPRpOy22TeYeHqvcEf2q?=
- =?us-ascii?Q?Q2LsZQoM2hZlNX9ksEeUhRu9PgPtBlK6w6NWZNoWtGLFeqVmhGPWc9uYoQTJ?=
- =?us-ascii?Q?q+kPiQ1bI5CnhUjYVLwlaVCOmnchvli/rkwDLZjEFgnhNw973a7wWGUi8l1A?=
- =?us-ascii?Q?8T53HY3BhLb4ugc1OyHqEfZd019kVCytLkX/mLDo2cB0vDcXiRIRZAVlBagj?=
- =?us-ascii?Q?RCFo1LCF7fwRoeyNGT+99TJnOzEB/fJeczb/PoW094x/MZNlnFSfedr0R7Up?=
- =?us-ascii?Q?S2Y64wV4kpw40GgG3qTtAfNW4a6a/F2QsTFWne7HPLEkdJSoJOOSKeJ/woM+?=
- =?us-ascii?Q?LGKA+hxzKZOIoePWb7V63JI4+8DJHNLxdOUPHP0X7AEOJZJa6rP9iq5ymS+a?=
- =?us-ascii?Q?Pok/Xcu4N504gQYsq8USNtq4H9+I+lOEMK1kYDuhJGQhFxS5LaWDJ6FZ3nLH?=
- =?us-ascii?Q?elGOuhDrZTzNJXgaSVRaDQx8ZHhJrL6aOsZP2bzSqcYoTMRp+ZpyeEeHGkxf?=
- =?us-ascii?Q?Y0E9IxJIyEzm8QpSQe/OBtaVV0KzxjikG8qgZExNfPpiy1v90cY3MyEP/gDl?=
- =?us-ascii?Q?GfNoY8z627+SZ+eC13g/wYs9NQCdnMGrfqLTzMnLOmzOoRfSEhL/Rqzjiify?=
- =?us-ascii?Q?BXtKCnMeqQ3UNotqvJV+iDokLPkK5ADNx0XnLbDkeRIfpJx3oH70T/fvgH/a?=
- =?us-ascii?Q?KzfyXnaH500wWEhSZZLXbjReoVItykxAioQpt0ZA81BQTVDCcg7Bm7VabGg3?=
- =?us-ascii?Q?p4Dh/+dyGfGuQrCJvP6+v3Z9KpRz8/nDmidL0s34bfGnEOl6oNozWUg+SGJO?=
- =?us-ascii?Q?DrPqWlZsmYxJtuB7SQiI0I8pcsuI7z0oKtLXs+GjNIP0es3r+N/iQpWIHpiY?=
- =?us-ascii?Q?ry+FRLD0QQZDWgsMrBigpbtdMNdDUxSUDdP67T/530OcUKqIfd3U?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3dbcc5b4-008f-4bbb-d542-08defca73974
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2026 21:33:48.9516
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sJEAcru4qM6SIiQxeBzBEmiBJAN4JMQ0vHjQCI+HuKt4A7DtXOr/u79eDTAhn8p6KmCI0w1pLs3dj8vUBay73PZhaDL9L3WKg8gNaNQEnFi0u7a4MWSPBBv0Uc2feQLn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8576
+Mime-Version: 1.0
+In-Reply-To: <aoLtbbv5euE4H1xO@kernel.org>
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+X-Lms-Return-Path: <lba+26a83c9e0+236816+vger.kernel.org+lizhe.67@bytedance.com>
+To: "Mike Rapoport" <rppt@kernel.org>
+Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
+	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
+	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
+	<muchun.song@linux.dev>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>, 
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-mm@kvack.org>, <x86@kernel.org>
+Message-Id: <6a066922-4528-4c4d-9bb5-bbdb2b6cd56f@bytedance.com>
 
-On Mon, Aug 17, 2026 at 10:44:33PM +0200, Sascha Hauer wrote:
-> pxad_alloc_desc() was converted from
->
->         kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc), GFP_NOWAIT)
->
-> to kzalloc_flex(), which sets the __counted_by() counter sw_desc->nb_desc
-> itself - but only where the compiler has __builtin_counted_by_ref(), so
-> from gcc 15.1 or clang 22.1 on. The loop below it still increments
-> nb_desc, which makes it come out doubled there and correct elsewhere.
->
-> nb_desc is what pxad_free_desc() iterates over and what
-> set_updater_desc() indexes from, so set it explicitly and drop the
-> increment. The error path has to lower it to the number of descriptors
-> allocated so far, otherwise pxad_free_desc() would free entries that were
-> never allocated.
->
-> Fixes: 69050f8d6d075 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
-> Assisted-by: Claude:claude-opus-5
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
+On 8/17/26 7:15 PM, Mike Rapoport wrote:
+> On Mon, Aug 17, 2026 at 03:11:56PM +0800, Li Zhe wrote:
+>> On 8/16/26 8:04 PM, Mike Rapoport wrote:
+>>> Hi,
+>>>
+>>>> memmap_init_zone_device() currently mixes refcount policy and core
+>>>> ZONE_DEVICE page setup in a single helper.
+>>>>
+>>>> Factor the refcount-reset predicate into pagemap_requires_refcount_reset(),
+>>>> move the common page initialization into __zone_device_page_init(), and
+>>>> wrap the existing slow path in zone_device_page_init_slow().
+>>>>
+>>>> This keeps the slow-path behaviour unchanged and gives later patches
+>>>> reusable helper boundaries.
+>>>>
+>>>> No functional change intended.
+>>>>
+>>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>>>> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>>>>
+>>>> diff --git a/mm/mm_init.c b/mm/mm_init.c
+>>>> index 95808ab5cfdb..a70acb7431a6 100644
+>>>> --- a/mm/mm_init.c
+>>>> +++ b/mm/mm_init.c
+>>>> @@ -1005,11 +1005,37 @@ static void __init memmap_init(void)
+>>>>    }
+>>>>    
+>>>>    #ifdef CONFIG_ZONE_DEVICE
+>>>> -static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
+>>>> +/*
+>>>> + * Return true when memmap_init_zone_device() must initialize the page
+>>>> + * refcount to 0. MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in
+>>>> + * the free path, while the remaining ZONE_DEVICE types start from 0 here
+>>>> + * and raise the count again when the allocator or driver hands the page
+>>>> + * out.
+>>>> + */
+>>>> +static inline bool pagemap_requires_refcount_reset(const struct dev_pagemap *pgmap)
+>>>> +{
+>>>> +	/*
+>>>> +	 * MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free
+>>>> +	 * path. The remaining ZONE_DEVICE types start from 0 here and raise
+>>>> +	 * the count again when the allocator or driver hands the page out.
+>>>> +	 */
+>>>> +	switch (pgmap->type) {
+>>>> +	case MEMORY_DEVICE_FS_DAX:
+>>>> +	case MEMORY_DEVICE_PRIVATE:
+>>>> +	case MEMORY_DEVICE_COHERENT:
+>>>> +	case MEMORY_DEVICE_PCI_P2PDMA:
+>>>> +		return true;
+>>>> +	case MEMORY_DEVICE_GENERIC:
+>>>> +		return false;
+>>>> +	}
+>>>> +
+>>>> +	return false;
+>>>> +}
+>>>> +
+>>>> +static void __ref __zone_device_page_init(struct page *page, unsigned long pfn,
+>>>>    					  unsigned long zone_idx, int nid,
+>>>>    					  struct dev_pagemap *pgmap)
+>>>>    {
+>>>> -
+>>>>    	__init_single_page(page, pfn, zone_idx, nid);
+>>>>    
+>>>>    	/*
+>>>> @@ -1028,23 +1054,15 @@ static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
+>>>>    	 */
+>>>>    	page_folio(page)->pgmap = pgmap;
+>>>>    	page->zone_device_data = NULL;
+>>>> +}
+>>>>    
+>>>> -	/*
+>>>> -	 * MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free
+>>>> -	 * path. The remaining ZONE_DEVICE types start from 0 here and raise
+>>>> -	 * the count again when the allocator or driver hands the page out.
+>>>> -	 */
+>>>> -	switch (pgmap->type) {
+>>>> -	case MEMORY_DEVICE_FS_DAX:
+>>>> -	case MEMORY_DEVICE_PRIVATE:
+>>>> -	case MEMORY_DEVICE_COHERENT:
+>>>> -	case MEMORY_DEVICE_PCI_P2PDMA:
+>>>> +static void __ref zone_device_page_init_slow(struct page *page,
+>>>> +		unsigned long pfn, unsigned long zone_idx, int nid,
+>>>> +		struct dev_pagemap *pgmap)
+>>>> +{
+>>>> +	__zone_device_page_init(page, pfn, zone_idx, nid, pgmap);
+>>>> +	if (pagemap_requires_refcount_reset(pgmap))
+>>>>    		set_page_count(page, 0);
+>>>> -		break;
+>>>> -
+>>>> -	case MEMORY_DEVICE_GENERIC:
+>>>> -		break;
+>>>> -	}
+>>>>    }
+>>>>    
+>>>>    /*
+>>>> @@ -1090,7 +1108,7 @@ static void __ref memmap_init_compound(struct page *head,
+>>>>    	for (pfn = head_pfn + 1; pfn < end_pfn; pfn++) {
+>>>>    		struct page *page = pfn_to_page(pfn);
+>>>>    
+>>>> -		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
+>>>> +		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
+>>>>    		prep_compound_tail(page, head, order);
+>>>>    		set_page_count(page, 0);
+>>>>    	}
+>>>> @@ -1126,7 +1144,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+>>>>    	for (pfn = start_pfn; pfn < end_pfn; pfn += pfns_per_compound) {
+>>>>    		struct page *page = pfn_to_page(pfn);
+>>>>    
+>>>> -		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
+>>>> +		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
+>>> It looks like all callers of __init_zone_device_page() are now calling
+>>> zone_device_page_init_slow() that with series evolution became a thin
+>>> wrapper for __zone_device_page_init().
+>>>
+>>> Maybe we can just rename __init_zone_device_page() to
+>>> __zone_device_page_init() and replace the open coded setting of the page
+>>> count with the call to pagemap_requires_refcount_reset() an be done
+>>> here?
+>>
+>> Yes, that would make patch 2 simpler.
+>>
+>> The reason I kept the refcount policy outside __zone_device_page_init()
+>> is the compound-tail initialization added later in patch 5. Tail pages
+>> still need the same basic ZONE_DEVICE struct page initialization as head
+>> pages, including __init_single_page(), PageReserved, pgmap and
+>> zone_device_data setup. After that, the tail-page path calls
+>> prep_compound_tail() and sets the tail refcount to 0 unconditionally.
+>>
+>> Folding pagemap_requires_refcount_reset() into __zone_device_page_init()
+>> would make that helper include the head-page refcount policy even for
+>> callers that will immediately apply the tail-page refcount rule
+>> afterwards.
+> But you still call zone_device_page_init_slow() from
+> zone_device_tail_page_init() so it's anyway there.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-> pxad_alloc_desc() was converted from
+Thanks for pointing this out. I was mistaken about the current split.
+
 >
->         kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc), GFP_NOWAIT)
+> I'd suggest combining this and the next patch into one, keeping
+> __init_zone_device_page() name without renaming it at all and open-coding
+> the initialization of the first head and the first tail page to properly
+> set refcount and call other prep methods.
 >
-> to kzalloc_flex(). hw_desc[] is annotated with __counted_by(nb_desc), so
-> __alloc_flex() now initializes sw_desc->nb_desc to nb_hw_desc itself.
-> The loop below it still increments nb_desc for every descriptor it
-> allocates though, so nb_desc ends up being twice the number of
-> descriptors that are actually there.
->
-> Drop the now redundant increment. The error path has to set nb_desc to
-> the number of descriptors allocated so far, otherwise pxad_free_desc()
-> would free entries that were never allocated.
-> ---
-> Changes in v2:
-> - assign sw_desc->nb_desc manually as it is only automatically assigned
->   for compilers supporting __builtin_counted_by_ref()
-> - Link to v1: https://lore.kernel.org/r/20260817-dmaengine-pxa-v1-1-850c215c1196@pengutronix.de
-> ---
->  drivers/dma/pxa_dma.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-> index fa2ee0b3e09f8..fc43124fefa89 100644
-> --- a/drivers/dma/pxa_dma.c
-> +++ b/drivers/dma/pxa_dma.c
-> @@ -744,6 +744,7 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
->  	sw_desc = kzalloc_flex(*sw_desc, hw_desc, nb_hw_desc, GFP_NOWAIT);
->  	if (!sw_desc)
->  		return NULL;
-> +	sw_desc->nb_desc = nb_hw_desc;
->  	sw_desc->desc_pool = chan->desc_pool;
->
->  	for (i = 0; i < nb_hw_desc; i++) {
-> @@ -752,10 +753,10 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
->  			dev_err(&chan->vc.chan.dev->device,
->  				"%s(): Couldn't allocate the %dth hw_desc from dma_pool %p\n",
->  				__func__, i, sw_desc->desc_pool);
-> +			sw_desc->nb_desc = i;
->  			goto err;
->  		}
->
-> -		sw_desc->nb_desc++;
->  		sw_desc->hw_desc[i] = desc;
->
->  		if (i == 0)
->
-> ---
-> base-commit: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f
-> change-id: 20260817-dmaengine-pxa-64152bb34313
->
-> Best regards,
-> --
-> Sascha Hauer <s.hauer@pengutronix.de>
->
+> I'd also pull the initialization of the first page in both cases out of the
+> loop and make the loop only use the _template version.
+
+
+Thanks for the suggestion. This is indeed clearer. I will fix this in v11.
+
+Thanks,
+Zhe
+
+>   
+>> That preserves the final state, but I was trying to keep the common
+>> ZONE_DEVICE page setup separate from the head-page refcount policy for
+>> this reason.
+>>
+>> Would you still prefer the simpler renamed helper here, or should I keep
+>> the common ZONE_DEVICE page setup separate from the refcount policy and
+>> make the naming clearer in v11?
+>>
+>> Thanks,
+>> Zhe
+>>
