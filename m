@@ -1,218 +1,128 @@
-Received: from va-1-114.ptr.blmpb.com (va-1-114.ptr.blmpb.com [209.127.230.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57433342CB0
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Aug 2026 02:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989903D4137
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Aug 2026 03:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787021803; cv=none; b=TJYS+LOGraPAVFngCwe5Q1e3dK7RDsK6NXSsM5fSJDEMPX5l+Q//6D5PTW7NZb0OCIe7fuQrx8w0ZrTb1XCeh+X3O3pZ4hcBXLnuByFS1K3MEzEgMdVFGznqhGvFyIygLJ94VoKQzfUlDLA8qH4Ko8NOrPWdXXv9BZaS4M9EA3c=
+	t=1787025595; cv=none; b=P4NWBItMOQcOe/DgK0FJjyBbVlMHOjPaH2Whlo+s49Q5wBVjAgVuNrM/uKiXJ3+KSSKBBX+7cg9g+ivTpRADc6z6OG5S0ZfTw43wcwN2qcQBmS7PjXhC7UvQY9jz4gNKvUwuAQhyEzzNv7zyjq76gEiSLr/aoclaXykGoECRn+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787021803; c=relaxed/simple;
-	bh=Zuuyx425jd0Ev1tCIi7y/sh8sfTufvyG0prBkgLQF9E=;
-	h=From:Date:Content-Type:References:Subject:Mime-Version:
-	 In-Reply-To:To:Cc:Message-Id; b=ZsXalwsJTY4GljnBdYFT2qId3RWwyupNgrZgsj/CEo7oUTyTG3q4ysmiS9363CH6r7V3vIYssChcDrS78PmiwIMovRDGpxlO6u54OPzeZqLW7a54TmUYxApm35YBJPw5mupXWz2EG8Hng8GmdYPZevRep5fYSZrb2JeCXt7QI0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=G6t8z4aO; arc=none smtp.client-ip=209.127.230.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1787025595; c=relaxed/simple;
+	bh=cVTG8lZVqP7tC4R+lkdLz1X5btO3fFP6MkuCINexyak=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=fMma5Q1Q657YvRZ5/QMFS6uOU/T+8j1LUHUq7Am1QDo0TF/S7A5aMgRUt21OuPUc7/QvaQYfhYmT0C86kXSh0D6TCI21wLkK6u8haHUd3HVKXZhtrqUyJBRdS5Qawdc/oUnxMlHMRyhdrpiBnnf6HnKQP1r+rH3Rhbrc+I83uQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Nc0iQO4X; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="G6t8z4aO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1787021794; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=Mmzy2KRppiE9A8Y8ELPAoQZxfCoaZ+1Mf41Owvy1ldo=;
- b=G6t8z4aOiaCzjzAN2kz662NjpkK/owVRzHLTQhAZXx54Yi1Sg/N02PJ+48Rg9zDruutufI
- J6WcnvsV5ly2B+1/Eii501RlXt3ImOEXcUw/PbsT15f4+6F6nZ8nRCh5pmKC/k8iM5ITkh
- 71rQw74bCPphV3R6fxGOk7j5foh8qUZ4sTI3T7V/uJHDYYHro0ZbQ1jqifb8RCd7CtqM9L
- FzoKg1JMMqvpE0LF7hn3zorSAdJWVP3aCiD4yFjMtXqedwFgrSRlrT8pxlDqqf1T17rKgk
- PryGbnxPFVBVe8kAL0nRUk7lkKQICKoKzBbFUp1YojXUmxBYxDDjyx+Sbvyv5w==
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Date: Tue, 18 Aug 2026 10:56:10 +0800
-Content-Type: text/plain; charset=UTF-8
-References: <20260810122057.30447-1-lizhe.67@bytedance.com> <20260810122057.30447-3-lizhe.67@bytedance.com> <178688187038.2799959.7900723270155108493.b4-review@b4> <050c317f-111e-4293-aee5-ac8e154ebc7e@bytedance.com> <aoLtbbv5euE4H1xO@kernel.org>
-Subject: Re: [PATCH v10 2/8] mm: factor zone-device page init helpers out of __init_zone_device_page
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Nc0iQO4X"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260818035949epoutp049dfe6f0e325c75d478d9666956ffaf5a~Myk5U1a8J1294012940epoutp04P
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Aug 2026 03:59:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260818035949epoutp049dfe6f0e325c75d478d9666956ffaf5a~Myk5U1a8J1294012940epoutp04P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1787025589;
+	bh=H2J8nu4Hey8UwWctf5x81wbobgR75wzg5QI2g8k9cZU=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=Nc0iQO4XRZTBEr1C8F63Sl+E62UbVdo8KYySkR6MFrbPVke0tbk56GdvdXEfklsH/
+	 C01WHDKLobFKCq6BC4XddKhZHnnCSnr7mQ7rj0HCw+GAowBfQASYw2L6EFPOtRAAFD
+	 /k4opETaKveiFFpxZ2kHGASy8PxDs/1yVRUmj31E=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20260818035949epcas5p44be5b57e72841931cfbaa3fef7d96f32~Myk41pdgw2027520275epcas5p4e;
+	Tue, 18 Aug 2026 03:59:49 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.94]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4hPGDg5jK6z6B9m5; Tue, 18 Aug
+	2026 03:59:47 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20260818035947epcas5p16adfc8c5f942956df7310bf76fc82e86~Myk2tWgjK1737017370epcas5p1j;
+	Tue, 18 Aug 2026 03:59:47 +0000 (GMT)
+Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20260818035944epsmtip24102c5d9b3cde735c82d29b9288e0537~Myk0MRq1f1699416994epsmtip2C;
+	Tue, 18 Aug 2026 03:59:44 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: <aidenisik@member.fsf.org>, "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+	"'Sylwester Nawrocki'" <s.nawrocki@samsung.com>, "'Chanwoo Choi'"
+	<cw00.choi@samsung.com>, "'Peter	Griffin'" <peter.griffin@linaro.org>,
+	"'Michael Turquette'" <mturquette@baylibre.com>, "'Stephen Boyd'"
+	<sboyd@kernel.org>, "'Brian Masney'" <bmasney@redhat.com>, "'Rob Herring'"
+	<robh@kernel.org>, "'Conor Dooley'" <conor+dt@kernel.org>, "'Kees Cook'"
+	<kees@kernel.org>, "'Gustavo A. R. Silva'" <gustavoars@kernel.org>
+Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>, "'Aiden
+ Isik'" <aidenisik+git@member.fsf.org>
+In-Reply-To: <20260817-for-next-lucky7-clock-v1-2-032e4b229c76@member.fsf.org>
+Subject: RE: [PATCH 2/3] clk: samsung: clk-pll: Add support for pll_309
+Date: Tue, 18 Aug 2026 09:29:42 +0530
+Message-ID: <025901dd2ec6$0245bcf0$06d136d0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-In-Reply-To: <aoLtbbv5euE4H1xO@kernel.org>
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
-Content-Transfer-Encoding: 7bit
-User-Agent: Mozilla Thunderbird
-X-Lms-Return-Path: <lba+26a83c9e0+236816+vger.kernel.org+lizhe.67@bytedance.com>
-To: "Mike Rapoport" <rppt@kernel.org>
-Cc: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
-	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
-	<muchun.song@linux.dev>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>, 
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-mm@kvack.org>, <x86@kernel.org>
-Message-Id: <6a066922-4528-4c4d-9bb5-bbdb2b6cd56f@bytedance.com>
-
-On 8/17/26 7:15 PM, Mike Rapoport wrote:
-> On Mon, Aug 17, 2026 at 03:11:56PM +0800, Li Zhe wrote:
->> On 8/16/26 8:04 PM, Mike Rapoport wrote:
->>> Hi,
->>>
->>>> memmap_init_zone_device() currently mixes refcount policy and core
->>>> ZONE_DEVICE page setup in a single helper.
->>>>
->>>> Factor the refcount-reset predicate into pagemap_requires_refcount_reset(),
->>>> move the common page initialization into __zone_device_page_init(), and
->>>> wrap the existing slow path in zone_device_page_init_slow().
->>>>
->>>> This keeps the slow-path behaviour unchanged and gives later patches
->>>> reusable helper boundaries.
->>>>
->>>> No functional change intended.
->>>>
->>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
->>>> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->>>>
->>>> diff --git a/mm/mm_init.c b/mm/mm_init.c
->>>> index 95808ab5cfdb..a70acb7431a6 100644
->>>> --- a/mm/mm_init.c
->>>> +++ b/mm/mm_init.c
->>>> @@ -1005,11 +1005,37 @@ static void __init memmap_init(void)
->>>>    }
->>>>    
->>>>    #ifdef CONFIG_ZONE_DEVICE
->>>> -static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
->>>> +/*
->>>> + * Return true when memmap_init_zone_device() must initialize the page
->>>> + * refcount to 0. MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in
->>>> + * the free path, while the remaining ZONE_DEVICE types start from 0 here
->>>> + * and raise the count again when the allocator or driver hands the page
->>>> + * out.
->>>> + */
->>>> +static inline bool pagemap_requires_refcount_reset(const struct dev_pagemap *pgmap)
->>>> +{
->>>> +	/*
->>>> +	 * MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free
->>>> +	 * path. The remaining ZONE_DEVICE types start from 0 here and raise
->>>> +	 * the count again when the allocator or driver hands the page out.
->>>> +	 */
->>>> +	switch (pgmap->type) {
->>>> +	case MEMORY_DEVICE_FS_DAX:
->>>> +	case MEMORY_DEVICE_PRIVATE:
->>>> +	case MEMORY_DEVICE_COHERENT:
->>>> +	case MEMORY_DEVICE_PCI_P2PDMA:
->>>> +		return true;
->>>> +	case MEMORY_DEVICE_GENERIC:
->>>> +		return false;
->>>> +	}
->>>> +
->>>> +	return false;
->>>> +}
->>>> +
->>>> +static void __ref __zone_device_page_init(struct page *page, unsigned long pfn,
->>>>    					  unsigned long zone_idx, int nid,
->>>>    					  struct dev_pagemap *pgmap)
->>>>    {
->>>> -
->>>>    	__init_single_page(page, pfn, zone_idx, nid);
->>>>    
->>>>    	/*
->>>> @@ -1028,23 +1054,15 @@ static void __ref __init_zone_device_page(struct page *page, unsigned long pfn,
->>>>    	 */
->>>>    	page_folio(page)->pgmap = pgmap;
->>>>    	page->zone_device_data = NULL;
->>>> +}
->>>>    
->>>> -	/*
->>>> -	 * MEMORY_DEVICE_GENERIC pages regain a refcount of 1 in the free
->>>> -	 * path. The remaining ZONE_DEVICE types start from 0 here and raise
->>>> -	 * the count again when the allocator or driver hands the page out.
->>>> -	 */
->>>> -	switch (pgmap->type) {
->>>> -	case MEMORY_DEVICE_FS_DAX:
->>>> -	case MEMORY_DEVICE_PRIVATE:
->>>> -	case MEMORY_DEVICE_COHERENT:
->>>> -	case MEMORY_DEVICE_PCI_P2PDMA:
->>>> +static void __ref zone_device_page_init_slow(struct page *page,
->>>> +		unsigned long pfn, unsigned long zone_idx, int nid,
->>>> +		struct dev_pagemap *pgmap)
->>>> +{
->>>> +	__zone_device_page_init(page, pfn, zone_idx, nid, pgmap);
->>>> +	if (pagemap_requires_refcount_reset(pgmap))
->>>>    		set_page_count(page, 0);
->>>> -		break;
->>>> -
->>>> -	case MEMORY_DEVICE_GENERIC:
->>>> -		break;
->>>> -	}
->>>>    }
->>>>    
->>>>    /*
->>>> @@ -1090,7 +1108,7 @@ static void __ref memmap_init_compound(struct page *head,
->>>>    	for (pfn = head_pfn + 1; pfn < end_pfn; pfn++) {
->>>>    		struct page *page = pfn_to_page(pfn);
->>>>    
->>>> -		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
->>>> +		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
->>>>    		prep_compound_tail(page, head, order);
->>>>    		set_page_count(page, 0);
->>>>    	}
->>>> @@ -1126,7 +1144,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
->>>>    	for (pfn = start_pfn; pfn < end_pfn; pfn += pfns_per_compound) {
->>>>    		struct page *page = pfn_to_page(pfn);
->>>>    
->>>> -		__init_zone_device_page(page, pfn, zone_idx, nid, pgmap);
->>>> +		zone_device_page_init_slow(page, pfn, zone_idx, nid, pgmap);
->>> It looks like all callers of __init_zone_device_page() are now calling
->>> zone_device_page_init_slow() that with series evolution became a thin
->>> wrapper for __zone_device_page_init().
->>>
->>> Maybe we can just rename __init_zone_device_page() to
->>> __zone_device_page_init() and replace the open coded setting of the page
->>> count with the call to pagemap_requires_refcount_reset() an be done
->>> here?
->>
->> Yes, that would make patch 2 simpler.
->>
->> The reason I kept the refcount policy outside __zone_device_page_init()
->> is the compound-tail initialization added later in patch 5. Tail pages
->> still need the same basic ZONE_DEVICE struct page initialization as head
->> pages, including __init_single_page(), PageReserved, pgmap and
->> zone_device_data setup. After that, the tail-page path calls
->> prep_compound_tail() and sets the tail refcount to 0 unconditionally.
->>
->> Folding pagemap_requires_refcount_reset() into __zone_device_page_init()
->> would make that helper include the head-page refcount policy even for
->> callers that will immediately apply the tail-page refcount rule
->> afterwards.
-> But you still call zone_device_page_init_slow() from
-> zone_device_tail_page_init() so it's anyway there.
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHOeIyOJ24EK7guGNA1AUHFAM/4yAG4p0XDAgM/Jlq2orpDUA==
+Content-Language: en-us
+X-CMS-MailID: 20260818035947epcas5p16adfc8c5f942956df7310bf76fc82e86
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-543,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20260817101721epcas5p228e56fa915717b7a547df144ff801c8c
+References: <20260817-for-next-lucky7-clock-v1-0-032e4b229c76@member.fsf.org>
+	<CGME20260817101721epcas5p228e56fa915717b7a547df144ff801c8c@epcas5p2.samsung.com>
+	<20260817-for-next-lucky7-clock-v1-2-032e4b229c76@member.fsf.org>
 
 
-Thanks for pointing this out. I was mistaken about the current split.
 
->
-> I'd suggest combining this and the next patch into one, keeping
-> __init_zone_device_page() name without renaming it at all and open-coding
-> the initialization of the first head and the first tail page to properly
-> set refcount and call other prep methods.
->
-> I'd also pull the initialization of the first page in both cases out of the
-> loop and make the loop only use the _template version.
+> -----Original Message-----
+> From: Aiden Isik via B4 Relay
+> <devnull+aidenisik.member.fsf.org=40kernel.org>
+> Sent: Monday, August 17, 2026 3:47 PM
+> To: Krzysztof Kozlowski <krzk=40kernel.org>; Sylwester Nawrocki
+> <s.nawrocki=40samsung.com>; Chanwoo Choi <cw00.choi=40samsung.com>;
+> Peter Griffin <peter.griffin=40linaro.org>; Alim Akhtar
+> <alim.akhtar=40samsung.com>; Michael Turquette
+> <mturquette=40baylibre.com>; Stephen Boyd <sboyd=40kernel.org>; Brian
+> Masney <bmasney=40redhat.com>; Rob Herring <robh=40kernel.org>; Conor
+> Dooley <conor+dt=40kernel.org>; Kees Cook <kees=40kernel.org>; Gustavo A.
+> R. Silva <gustavoars=40kernel.org>
+> Cc: linux-samsung-soc=40vger.kernel.org; linux-clk=40vger.kernel.org;
+> devicetree=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; lin=
+ux-
+> kernel=40vger.kernel.org; linux-hardening=40vger.kernel.org; Aiden Isik
+> <aidenisik+git=40member.fsf.org>
+> Subject: =5BPATCH 2/3=5D clk: samsung: clk-pll: Add support for pll_309
+>=20
+> From: Aiden Isik <aidenisik=40member.fsf.org>
+>=20
+> pll_309 (referred to in the downstream kernel sources as frd_309_rpll) is=
+ one
+> of two PLLs used in the Exynos5515 SoC. It is an integer/fractional PLL w=
+ith an
+> FVCO of 600-2400MHz.
+>=20
+> It has the same locktime (500), and kdiv/mdiv/pdiv/sdiv masks and shifts =
+as
+> pll_531x, so it can be handled in exactly the same way.
+>=20
+> When defining a PLL, the =22con=22 parameter should be set to the CON3 re=
+gister,
+> like this:
+>=20
+> PLL(pll_309, CLK_FOUT_AUD_PLL, =22fout_aud_pll=22, =22oscclk=22,
+>     PLL_LOCKTIME_PLL_AUD, PLL_CON3_PLL_AUD, NULL),
+>=20
+This patch does more then what is described above; please explain all chang=
+es in the commit.=20
+If needed, split this into common and pll_309 specific changes. Thanks=21
 
+Regards,
+Alim
 
-Thanks for the suggestion. This is indeed clearer. I will fix this in v11.
-
-Thanks,
-Zhe
-
->   
->> That preserves the final state, but I was trying to keep the common
->> ZONE_DEVICE page setup separate from the head-page refcount policy for
->> this reason.
->>
->> Would you still prefer the simpler renamed helper here, or should I keep
->> the common ZONE_DEVICE page setup separate from the refcount policy and
->> make the naming clearer in v11?
->>
->> Thanks,
->> Zhe
->>
