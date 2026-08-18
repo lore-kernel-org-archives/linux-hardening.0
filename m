@@ -1,335 +1,298 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05379479888
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Aug 2026 14:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18F93812FB;
+	Tue, 18 Aug 2026 15:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787062408; cv=none; b=eXYC2Sw0ZZztJbnw7MFF0YjQNOge8GMxqnyCpdzYwMokSFcpup2AKUK8maQiZdzDc6k7mSbvIBAKPJHiWRYln/9D+YrQ9x73gKtQAnFcxaNWbZqyi65d5rPU2r+RcuhSIna/bGvpHtdfa4UPeCelLfEdEWUtS2EFSyOMRKJgM3M=
+	t=1787066988; cv=none; b=Pi1BfuvwmQrT086Bna4zgzKV6YAo0byXQqg1vUXmcx+RygmDyxL0dJb7FTQ0WnH8QI6JEmQudnfLUgp1/uw7CN327adei41NqdEnn4uvAVSl/AonAW6DTG+aPyk/ZZUogVY7wuvVerapepENEQeMbneI5Mfd/pqrGovRbWAU3YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787062408; c=relaxed/simple;
-	bh=sJbE8NLgwo2nj84nkxPSpL2i2LPH5XpUVTvG2CACATQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sZsrbIUWlSrWvHIX1+lSQOOl3D4nMxsj9ZBBCcwJsgJ/60wHuoq828I4ED3Ab+82g8uRE6mnMuLo5ECBKmc/HwgMDXJ3BYS6Pm7U5lTtcFlGnSd7GHAFyD257fU0fEnYNa9JZLjN6lJ+dcAQe/IqZRMG/02yLWK66JfME6jrB2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=pn0sG1iw; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1787066988; c=relaxed/simple;
+	bh=xl0NyXNqSvTP56iARQ/D0BKi55b3jNZbbiRk3wgwyk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BKThDcoYQ6ykC9Z8JrPGTswL7HlFW8uJezM1OQhnrR0zE0JTbdyq3RkRXfLP3RgqJEKtsaDujDCPUrS25pO2BtylsK5j/JX4SzMN8VyXvz2AiF/a9veprPXHKYxzoReOIX1TcURSMtpxO8MOQCPixc/+EdFfVbiYSYBt4aQVLM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=r2mx6SYv; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="pn0sG1iw"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5C1119F0;
-	Tue, 18 Aug 2026 07:13:22 -0700 (PDT)
-Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E129D3F85F;
-	Tue, 18 Aug 2026 07:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1787062406; bh=sJbE8NLgwo2nj84nkxPSpL2i2LPH5XpUVTvG2CACATQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pn0sG1iwAdXKOT8As39XdvEFBPfyHGDscQwApXXCbtq2hCt5N/+FYO6jVj/cRfp3m
-	 2Qnjopn7ObgQ/mbtudgsNE7BxrpFcbry2fUFK2Zl2gX3G5lmJ8SbOgH4LgJspRphpV
-	 +XRir/ROwBftafAib4c/ol4obZUqX+lrFOh17KvA=
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 18 Aug 2026 15:09:07 +0100
-Subject: [PATCH RFC v9 25/25] mm: Add basic tests for
- kpkeys_hardened_pgtables
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="r2mx6SYv"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67IE3Zkv455087;
+	Tue, 18 Aug 2026 15:29:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=adT1B1
+	9TjTjVHbV+6tXcTgDOYZLt+4FWuGuxN8YIy5A=; b=r2mx6SYvk/hRQgqgF92eqK
+	xBp2gu5DgZEDNsQ/ZwLz0Bi6Bt+UX3lj7om03tGtGZ51q7CWF32WB6G6RLRJgxPC
+	DP9HUEABov6vgQ5xcD9YnbarfUOWq+4jP37njU4fok6p2T+8H8BzbiSOwNcp7VBf
+	UDmyk20lE7JRPfXIoMeu3pm0MRlxRU2Vxa00hK338c2mPHS2U0XBaZXEHx5SXyOR
+	4RRlv3o9rrnxpid9T1N6e84DDtX0gtXCeV9NaL8XkSM4wOJ6JSnqPHLKpn/EaYGg
+	FvWIsAT3OenmP9j0ANjTqCRDbpnrQNL2jtEQ0u0lYwF4IM9l1q5K0oXG/4UADAww
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g2fm3s4p3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Aug 2026 15:29:26 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67IFQOQS020197;
+	Tue, 18 Aug 2026 15:29:25 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4g33xh3w3t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Aug 2026 15:29:25 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67IFTLcp47251746
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Aug 2026 15:29:21 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1B5B520043;
+	Tue, 18 Aug 2026 15:29:21 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 19E1E20040;
+	Tue, 18 Aug 2026 15:29:16 +0000 (GMT)
+Received: from [9.39.17.238] (unknown [9.39.17.238])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 18 Aug 2026 15:29:15 +0000 (GMT)
+Message-ID: <f0877836-771e-4f87-bf7b-adc7053d8446@linux.ibm.com>
+Date: Tue, 18 Aug 2026 20:59:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v6 1/3] net/smc: fix use-after-free of the LLC qentry
+ in smc_llc_srv_add_link()
+To: Yehyeong Lee <yhlee@isslab.korea.ac.kr>, alibuda@linux.alibaba.com,
+        dust.li@linux.alibaba.com, wenjia@linux.ibm.com, kuba@kernel.org,
+        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com
+Cc: leitao@debian.org, horms@kernel.org, mjambigi@linux.ibm.com,
+        tonylu@linux.alibaba.com, guwen@linux.alibaba.com,
+        guangguan.wang@linux.alibaba.com, kees@kernel.org,
+        gustavoars@kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20260811231902.47089-1-yhlee@isslab.korea.ac.kr>
+ <20260811231902.47089-2-yhlee@isslab.korea.ac.kr>
+Content-Language: en-US
+From: Sidraya Jayagond <sidraya@linux.ibm.com>
+In-Reply-To: <20260811231902.47089-2-yhlee@isslab.korea.ac.kr>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260818-kpkeys-v9-25-743ad31b2c8f@arm.com>
-References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
-In-Reply-To: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
-To: linux-hardening@vger.kernel.org
-Cc: Kevin Brodsky <kevin.brodsky@arm.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Andy Lutomirski <luto@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- Dave Hansen <dave.hansen@linux.intel.com>, 
- "David Hildenbrand (Arm)" <david@kernel.org>, Jann Horn <jannh@google.com>, 
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>, 
- Kees Cook <kees@kernel.org>, Linu Cherian <linu.cherian@arm.com>, 
- Linus Walleij <linusw@kernel.org>, Marc Zyngier <maz@kernel.org>, 
- Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
- Maxwell Bland <mbland@motorola.com>, 
- "Mike Rapoport (IBM)" <rppt@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, 
- Pierre Langlois <pierre.langlois@arm.com>, 
- =?utf-8?q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>, 
- Quentin Perret <qperret@google.com>, 
- Rick Edgecombe <rick.p.edgecombe@intel.com>, 
- Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>, 
- Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>, 
- Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org, 
- linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>, 
- Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1787062277; l=8176;
- i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=sJbE8NLgwo2nj84nkxPSpL2i2LPH5XpUVTvG2CACATQ=;
- b=/Y+TYwvWUK3vc0eahhukYehcUiD/3b33M9t3s/hJxjH6bh7B3GD/N9ACWMr4VtA5S/wl2fGS6
- WzlkzrrDe4tAwx5fOYQ1z3I8W1zmiXQ9VSvH0YRMMyCH8Gxo/v3UxiX
-X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
- pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: HVmFH0Dq7NDAPlFAaSHP9FCOrXOpKxgN
+X-Proofpoint-ORIG-GUID: iIWA3Bmrpev1fNI1VUGPY8WetMFYBMO1
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODE4MDExMCBTYWx0ZWRfX4qAOgw9+5jU9
+ B3xw7ykniW16ac/ej184Avrde6C7kxU1uq3eMWtOhd7ja5KrnUvVDtGLz3WGNiT5xg0D6igDwWN
+ pFDenC1eOyT7rgnbI6Tq/CHuzJpSRs4=
+X-Authority-Analysis: v=2.4 cv=WtQb99fv c=1 sm=1 tr=0 ts=6a847a57 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=kukDy1qahNa2q44RZiwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODE4MDExMCBTYWx0ZWRfX24F9QwQRwMHe
+ nF1W2GkS2bhBeHMk+Zjou8o3I3G5L7zB13ZCqVYO80Kk5r+7qsWQQkkKEPy0z2Ae6cXIXzUHz1I
+ 6newb0Vi8XwJUuTdJtTdZk3tirIkmKJxvDVkeBfBYjuEtaqajPii8O5vebVI70NfFTMfkGXzEaj
+ NZczenBB3dvww2jSs8wvhLP03foGpiVRNRo0O6ZSDMNvDvYFp5dnWaeqe0Nl1t6ij1fRq1udbxy
+ YX45hx7wd6SMeIOtdFo+0WWqYyX1Y+LySNzqSXQQnJKiYsrAD9BSU5Ie9qJdlft9POzdPQkkwOC
+ 4QH2dQ19XiTOsLc1aL1O2C60hydpmWrKLIqBh3SsN52mpcZ2YtH4lSVNrAsQPV4t4Yx8Tq7BJ8b
+ psfV/i+nfTZHP33arVHw6bdvEQEtjQgweSkrH3ngnZ6X1DEpF/VLFVjDCiNd/7iByeqHD02gavv
+ sN0OBHlm8N67W1SMRLA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-18_02,2026-08-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 spamscore=0 malwarescore=0 suspectscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1011 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608180110
 
-Add basic tests for the kpkeys_hardened_pgtables feature: try to
-perform direct writes to kernel and user page table entries and
-ensure they fail.
 
-Multiple cases are considered for kernel page tables, as early page
-tables are allocated and/or protected in a different way.
 
-The tests are builtin (cannot be built as a module) because they
-refer to multiple symbols that are not exported (e.g.
-copy_to_kernel_nofault()).
+On 12/08/26 4:49 am, Yehyeong Lee wrote:
+> smc_llc_srv_add_link() keeps add_llc pointing into the queue entry:
+> 
+>   add_llc = &qentry->msg.add_link;			smc_llc.c:1482
+>   ...
+>   smc_llc_save_add_link_info(link_new, add_llc);	smc_llc.c:1494
+>   smc_llc_flow_qentry_del(&lgr->llc_flow_lcl);		smc_llc.c:1495
+>   ...
+>   u8 *llc_msg = smc_link_shared_v2_rxbuf(link) ?
+> 	(u8 *)lgr->wr_rx_buf_v2 : (u8 *)add_llc;	smc_llc.c:1504
+>   smc_llc_save_add_link_rkeys(link, link_new, llc_msg);	smc_llc.c:1506
+> 
+> smc_llc_flow_qentry_del() kfree()s the entry, so on a link without a shared
+> v2 receive buffer the pointer handed to smc_llc_save_add_link_rkeys() is
+> already freed.  Before the Fixes: commit that branch always used
+> lgr->wr_rx_buf_v2 and add_llc was not used after the free.
+> 
+> Reproduced on an unpatched tree over rxe, with KASAN, kasan_multi_shot
+> and a link forced to max_recv_sge == 1: the entry is freed and read by
+> the same call, and the freeing frame is smc_llc_srv_add_link() itself.
+> 
+>   [    2.523161] BUG: KASAN: slab-use-after-free in smc_llc_save_add_link_rkeys+0x333/0x350
+>   [    2.523499] Read of size 2 at addr ffff8880052194de by task kworker/0:1/11
+>   [    2.523789] 
+>   [    2.523862] CPU: 0 UID: 0 PID: 11 Comm: kworker/0:1 Not tainted 7.2.0-rc5-p0-g2c9dd296545d #35 PREEMPT(lazy) 
+>   [    2.523865] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_caps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+>   [    2.523866] Workqueue: smc_hs_wq smc_listen_work
+>   [    2.523869] Call Trace:
+>   [    2.523870]  <TASK>
+>   [    2.523871]  dump_stack_lvl+0x53/0x70
+>   [    2.523872]  print_report+0xd0/0x630
+>   [    2.523874]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+>   [    2.523876]  ? smc_llc_save_add_link_rkeys+0x333/0x350
+>   [    2.523878]  kasan_report+0xce/0x100
+>   [    2.523879]  ? smc_llc_save_add_link_rkeys+0x333/0x350
+>   [    2.523881]  smc_llc_save_add_link_rkeys+0x333/0x350
+>   [    2.523883]  ? smcr_buf_reg_lgr+0x2a4/0x660
+>   [    2.523885]  smc_llc_srv_add_link+0xaa2/0x1e50
+>   [    2.523888]  ? _printk+0xba/0xf0
+>   [    2.523897]  ? __pfx_smc_llc_srv_add_link+0x10/0x10
+>   [    2.523899]  ? down_write+0xb0/0x130
+>   [    2.523903]  ? __pfx_down_write+0x10/0x10
+>   [    2.523905]  smc_listen_work+0x489e/0x4d00
+>   [    2.523907]  ? kmem_cache_free+0x1c6/0x3a0
+>   [    2.523911]  ? __pfx_smc_listen_work+0x10/0x10
+>   [    2.523913]  ? release_sock+0x148/0x1d0
+>   [    2.523915]  ? smc_tcp_listen_work+0xb4f/0xfc0
+>   [    2.523917]  ? _raw_spin_lock_irq+0x80/0xe0
+>   [    2.523918]  ? __pfx__raw_spin_lock_irq+0x10/0x10
+>   [    2.523920]  process_one_work+0x633/0x1030
+>   [    2.523922]  ? assign_work+0x11d/0x370
+>   [    2.523924]  worker_thread+0x45b/0xd10
+>   [    2.523926]  ? __pfx_worker_thread+0x10/0x10
+>   [    2.523928]  ? __pfx_worker_thread+0x10/0x10
+>   [    2.523929]  kthread+0x2c6/0x3b0
+>   [    2.523931]  ? recalc_sigpending+0x15c/0x1e0
+>   [    2.523934]  ? __pfx_kthread+0x10/0x10
+>   [    2.523935]  ret_from_fork+0x36e/0x5a0
+>   [    2.523937]  ? __pfx_ret_from_fork+0x10/0x10
+>   [    2.523938]  ? __switch_to+0x572/0xdd0
+>   [    2.523943]  ? __pfx_kthread+0x10/0x10
+>   [    2.523944]  ret_from_fork_asm+0x1a/0x30
+>   [    2.523947]  </TASK>
+>   [    2.523948] 
+>   [    2.531253] Allocated by task 48:
+>   [    2.531399]  kasan_save_stack+0x33/0x60
+>   [    2.531570]  kasan_save_track+0x14/0x30
+>   [    2.531737]  __kasan_kmalloc+0x8f/0xa0
+>   [    2.531905]  __kmalloc_cache_noprof+0x158/0x370
+>   [    2.532100]  smc_llc_enqueue+0x72/0x560
+>   [    2.532268]  smc_wr_rx_tasklet_fn+0x474/0xa80
+>   [    2.532491]  tasklet_action_common+0x20f/0x8a0
+>   [    2.532714]  handle_softirqs+0x18e/0x590
+>   [    2.532886]  do_softirq+0x3b/0x60
+>   [    2.533036]  __local_bh_enable_ip+0x61/0x70
+>   [    2.533221]  __alloc_skb+0x732/0x890
+>   [    2.533384]  rxe_init_packet+0x16b/0x4f0
+>   [    2.533567]  prepare_ack_packet+0xb8/0x830
+>   [    2.533760]  rxe_receiver+0x495/0x96e0
+>   [    2.533933]  do_work+0x144/0x470
+>   [    2.534078]  process_one_work+0x633/0x1030
+>   [    2.534257]  worker_thread+0x45b/0xd10
+>   [    2.534424]  kthread+0x2c6/0x3b0
+>   [    2.534569]  ret_from_fork+0x36e/0x5a0
+>   [    2.534737]  ret_from_fork_asm+0x1a/0x30
+>   [    2.534907] 
+>   [    2.534980] Freed by task 11:
+>   [    2.535112]  kasan_save_stack+0x33/0x60
+>   [    2.535279]  kasan_save_track+0x14/0x30
+>   [    2.535444]  kasan_save_free_info+0x3b/0x60
+>   [    2.535625]  __kasan_slab_free+0x43/0x70
+>   [    2.535798]  kfree+0x121/0x380
+>   [    2.535935]  smc_llc_srv_add_link+0x9a8/0x1e50
+>   [    2.536128]  smc_listen_work+0x489e/0x4d00
+>   [    2.536305]  process_one_work+0x633/0x1030
+>   [    2.536482]  worker_thread+0x45b/0xd10
+>   [    2.536652]  kthread+0x2c6/0x3b0
+>   [    2.536794]  ret_from_fork+0x36e/0x5a0
+>   [    2.536958]  ret_from_fork_asm+0x1a/0x30
+>   [    2.537133] 
+>   [    2.537205] The buggy address belongs to the object at ffff888005219480
+>   [    2.537205]  which belongs to the cache kmalloc-96 of size 96
+>   [    2.537719] The buggy address is located 94 bytes inside of
+>   [    2.537719]  freed 96-byte region [ffff888005219480, ffff8880052194e0)
+>   [    2.538216] 
+>   [    2.538289] The buggy address belongs to the physical page:
+>   [    2.538524] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x5219
+>   [    2.538857] flags: 0x100000000000000(node=0|zone=1)
+>   [    2.539066] page_type: f5(slab)
+>   [    2.539210] raw: 0100000000000000 ffff888001041280 dead000000000122 0000000000000000
+>   [    2.539534] raw: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000
+>   [    2.539863] page dumped because: kasan: bad access detected
+>   [    2.540098] 
+>   [    2.540170] Memory state around the buggy address:
+>   [    2.540379]  ffff888005219380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>   [    2.540684]  ffff888005219400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>   [    2.540988] >ffff888005219480: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+>   [    2.541291]                                                     ^
+>   [    2.541548]  ffff888005219500: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+>   [    2.541857]  ffff888005219580: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+> 
+> The offset is past the 72-byte queue entry because the out-of-bounds read
+> fixed by the next patch is on the same line; what this patch removes is the
+> free at smc_llc_srv_add_link+0x9a8 happening before the read at +0xaa2.
+> 
+> Detach the entry instead of freeing it there, and free it at the single
+> exit label.  The reject path has to detach as well, otherwise it would be
+> freed twice.
+> 
+> This changes only the lifetime of the entry.  The same read still runs past
+> its end until the next two patches bound it, so a backport wants all three.
+> 
+> Fixes: 27ef6a9981fe ("net/smc: support SMC-R V2 for rdma devices with max_recv_sge equals to 1")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Yehyeong Lee <yhlee@isslab.korea.ac.kr>
+> ---
+> Changes since v5: return through the existing exit label.
+> 
+>  net/smc/smc_llc.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/smc/smc_llc.c b/net/smc/smc_llc.c
+> index 954b2ff1815c..055a03eee5b5 100644
+> --- a/net/smc/smc_llc.c
+> +++ b/net/smc/smc_llc.c
+> @@ -1481,7 +1481,7 @@ int smc_llc_srv_add_link(struct smc_link *link,
+>  	}
+>  	add_llc = &qentry->msg.add_link;
+>  	if (add_llc->hd.flags & SMC_LLC_FLAG_ADD_LNK_REJ) {
+> -		smc_llc_flow_qentry_del(&lgr->llc_flow_lcl);
+> +		smc_llc_flow_qentry_clr(&lgr->llc_flow_lcl);
+>  		rc = -ENOLINK;
+>  		goto out_err;
+>  	}
+> @@ -1492,7 +1492,8 @@ int smc_llc_srv_add_link(struct smc_link *link,
+>  		lgr_new_t = SMC_LGR_ASYMMETRIC_PEER;
+>  	}
+>  	smc_llc_save_add_link_info(link_new, add_llc);
+> -	smc_llc_flow_qentry_del(&lgr->llc_flow_lcl);
+> +	/* add_llc still points into qentry, so only detach it here */
+> +	smc_llc_flow_qentry_clr(&lgr->llc_flow_lcl);
+>  
+>  	rc = smc_ib_ready_link(link_new);
+>  	if (rc)
+> @@ -1512,14 +1513,14 @@ int smc_llc_srv_add_link(struct smc_link *link,
+>  	rc = smc_llc_srv_conf_link(link, link_new, lgr_new_t);
+>  	if (rc)
+>  		goto out_err;
+> -	kfree(ini);
+> -	return 0;
+> +	goto out;
+>  out_err:
+>  	if (link_new) {
+>  		link_new->state = SMC_LNK_INACTIVE;
+>  		smcr_link_clear(link_new, false);
+>  	}
+>  out:
+> +	kfree(qentry);
+>  	kfree(ini);
+>  	if (send_req_add_link_resp)
+>  		smc_llc_send_req_add_link_response(req_qentry);
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
- mm/Makefile                               |   1 +
- mm/tests/kpkeys_hardened_pgtables_kunit.c | 200 ++++++++++++++++++++++++++++++
- security/Kconfig.hardening                |  12 ++
- 3 files changed, 213 insertions(+)
-
-diff --git a/mm/Makefile b/mm/Makefile
-index 35982b6efb56..e31e58294845 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -148,3 +148,4 @@ obj-$(CONFIG_EXECMEM) += execmem.o
- obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
- obj-$(CONFIG_LAZY_MMU_MODE_KUNIT_TEST) += tests/lazy_mmu_mode_kunit.o
- obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES) += kpkeys_hardened_pgtables.o
-+obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES_KUNIT_TEST) += tests/kpkeys_hardened_pgtables_kunit.o
-diff --git a/mm/tests/kpkeys_hardened_pgtables_kunit.c b/mm/tests/kpkeys_hardened_pgtables_kunit.c
-new file mode 100644
-index 000000000000..80d4f5144e48
---- /dev/null
-+++ b/mm/tests/kpkeys_hardened_pgtables_kunit.c
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <kunit/test.h>
-+#include <linux/mman.h>
-+#include <linux/pgtable.h>
-+#include <linux/set_memory.h>
-+#include <linux/vmalloc.h>
-+
-+static void free_page_wrapper(void *ctx)
-+{
-+	__free_page((struct page *)ctx);
-+}
-+
-+KUNIT_DEFINE_ACTION_WRAPPER(vfree_wrapper, vfree, const void *);
-+
-+static pud_t *pud_off_k(unsigned long va)
-+{
-+	return pud_offset(p4d_offset(pgd_offset_k(va), va), va);
-+}
-+
-+static pte_t *get_kernel_pte(unsigned long addr)
-+{
-+	pmd_t *pmdp = pmd_off_k(addr);
-+
-+	if (!pmdp || pmd_leaf(*pmdp))
-+		return NULL;
-+
-+	return pte_offset_kernel(pmdp, addr);
-+}
-+
-+#define write_pgtable(type, ptr) do {					\
-+	type##_t val;							\
-+	int ret;							\
-+									\
-+	pr_debug("%s: writing to "#type" at %px\n", __func__, (ptr));	\
-+									\
-+	val = type##p_get(ptr);						\
-+	ret = copy_to_kernel_nofault(ptr, &val, sizeof(val));		\
-+	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,				\
-+			    "Direct "#type" write wasn't prevented");	\
-+} while (0)
-+
-+/*
-+ * Try to write linear map page tables, at every level. This is worthwhile
-+ * because those page table pages are obtained from different allocators:
-+ *
-+ * - Static memory (part of the kernel image) for PGD
-+ * - memblock for PUD and possibly PMD/PTE
-+ * - pagetable_alloc() (buddy allocator) for PMD/PTE if large block mappings are
-+ *   used and the linear map is split after being created
-+ */
-+static void write_direct_map_pgtables(struct kunit *test)
-+{
-+	struct page *page;
-+	unsigned long addr;
-+	pgd_t *pgdp;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
-+	pmd_t *pmdp;
-+	pte_t *ptep;
-+	int ret;
-+
-+	if (!kpkeys_supported())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	page = alloc_page(GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, page);
-+	ret = kunit_add_action_or_reset(test, free_page_wrapper, page);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* Ensure page is PTE-mapped (splitting the linear map if necessary) */
-+	ret = set_direct_map_invalid_noflush(page);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+	ret = set_direct_map_default_noflush(page);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	addr = (unsigned long)page_address(page);
-+
-+	pgdp = pgd_offset_k(addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pgdp, "Failed to get PGD");
-+	/*
-+	 * swapper_pg_dir is still writable at this stage, so don't check it.
-+	 * It is not protected by kpkeys_hardened_pgtables because it should be
-+	 * made read-only by mark_rodata_ro(). However since these
-+	 * KUnit tests are builtin, they are run before mark_rodata_ro() is
-+	 * called.
-+	 */
-+
-+	p4dp = p4d_offset(pgdp, addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, p4dp, "Failed to get P4D");
-+	if (!mm_p4d_folded(&init_mm))
-+		write_pgtable(p4d, p4dp);
-+
-+	pudp = pud_offset(p4dp, addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pudp, "Failed to get PUD");
-+	if (!mm_pud_folded(&init_mm))
-+		write_pgtable(pud, pudp);
-+
-+	pmdp = pmd_offset(pudp, addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pmdp, "Failed to get PMD");
-+	write_pgtable(pmd, pmdp);
-+
-+	ptep = pte_offset_kernel(pmdp, addr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, ptep, "Failed to get PTE");
-+	write_pgtable(pte, ptep);
-+}
-+
-+/* Worth checking since the kernel image is mapped with static page tables */
-+static void write_kernel_image_pud(struct kunit *test)
-+{
-+	pud_t *pudp;
-+
-+	if (!kpkeys_supported())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	/* The kernel is probably block-mapped, check the PUD to be safe */
-+	pudp = pud_off_k((unsigned long)&init_mm);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pudp, "Failed to get PUD");
-+
-+	write_pgtable(pud, pudp);
-+}
-+
-+static void write_kernel_vmalloc_pte(struct kunit *test)
-+{
-+	void *mem;
-+	pte_t *ptep;
-+	int ret;
-+
-+	if (!kpkeys_supported())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	mem = vmalloc(PAGE_SIZE);
-+	KUNIT_ASSERT_NOT_NULL(test, mem);
-+	ret = kunit_add_action_or_reset(test, vfree_wrapper, mem);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* vmalloc() without VM_ALLOW_HUGE_VMAP is PTE-mapped */
-+	ptep = get_kernel_pte((unsigned long)mem);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, ptep, "Failed to get PTE");
-+
-+	write_pgtable(pte, ptep);
-+}
-+
-+static void write_vmemmap_pmd(struct kunit *test)
-+{
-+	struct page *page;
-+	pmd_t *pmdp;
-+
-+	if (!kpkeys_supported())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	/*
-+	 * We just need the address of some struct page, so we can free the
-+	 * page right away.
-+	 */
-+	page = alloc_page(GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, page);
-+	__free_page(page);
-+
-+	/* vmemmap may use PMD block mappings */
-+	pmdp = pmd_off_k((unsigned long)page);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pmdp, "Failed to get PMD");
-+	write_pgtable(pmd, pmdp);
-+}
-+
-+static void write_user_pmd(struct kunit *test)
-+{
-+	pmd_t *pmdp;
-+	unsigned long uaddr;
-+
-+	if (!kpkeys_supported())
-+		kunit_skip(test, "kpkeys are not supported");
-+
-+	uaddr = kunit_vm_mmap(test, NULL, 0, PAGE_SIZE, PROT_READ,
-+			      MAP_ANONYMOUS | MAP_PRIVATE | MAP_POPULATE, 0);
-+	KUNIT_ASSERT_NE_MSG(test, uaddr, 0, "Could not create userspace mm");
-+
-+	/* We passed MAP_POPULATE so a PMD should already be allocated */
-+	pmdp = pmd_off(current->mm, uaddr);
-+	KUNIT_ASSERT_NOT_NULL_MSG(test, pmdp, "Failed to get PMD");
-+
-+	write_pgtable(pmd, pmdp);
-+}
-+
-+static struct kunit_case kpkeys_hardened_pgtables_test_cases[] = {
-+	KUNIT_CASE(write_direct_map_pgtables),
-+	KUNIT_CASE(write_kernel_image_pud),
-+	KUNIT_CASE(write_kernel_vmalloc_pte),
-+	KUNIT_CASE(write_vmemmap_pmd),
-+	KUNIT_CASE(write_user_pmd),
-+	{}
-+};
-+
-+static struct kunit_suite kpkeys_hardened_pgtables_test_suite = {
-+	.name = "kpkeys_hardened_pgtables",
-+	.test_cases = kpkeys_hardened_pgtables_test_cases,
-+};
-+kunit_test_suite(kpkeys_hardened_pgtables_test_suite);
-+
-+MODULE_DESCRIPTION("Tests for the kpkeys_hardened_pgtables feature");
-+MODULE_LICENSE("GPL");
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index bb75b580b7f1..ad6152961f8e 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -283,6 +283,18 @@ config KPKEYS_HARDENED_PGTABLES
- 	  This option has no effect if the system does not support
- 	  kernel pkeys.
- 
-+config KPKEYS_HARDENED_PGTABLES_KUNIT_TEST
-+	bool "KUnit tests for kpkeys_hardened_pgtables" if !KUNIT_ALL_TESTS
-+	depends on KPKEYS_HARDENED_PGTABLES
-+	depends on KUNIT=y
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable this option to check that the kpkeys_hardened_pgtables feature
-+	  functions as intended, i.e. prevents arbitrary writes to user and
-+	  kernel page tables.
-+
-+	  If unsure, say N.
-+
- endmenu
- 
- config CC_HAS_RANDSTRUCT
-
--- 
-2.51.2
-
+Reviewed-by: Sidraya Jayagond <sidraya@linux.ibm.com>
