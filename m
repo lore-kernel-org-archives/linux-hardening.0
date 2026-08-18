@@ -1,35 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74C273E171B
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Aug 2026 14:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72EA7241C8C
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Aug 2026 14:12:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787062358; cv=none; b=ZHK0agvsalC6cpKLAwXHCakuP8qyUPuhbBwm8A7BxfA9qh+YcDVnnf1MRb0tGbB6VgC2e4fvAA7Yfl8vlESqRDZ+3yp3pIZOXtLWNh8HQ379Tg0jVzeHMS0KWaWYP8ie8kUSP1cuUa/gwxlnHkNOHNlHl/gULALA1xe8/7u3zmE=
+	t=1787062364; cv=none; b=gRq1ez3fsYN3LDNtHgADFiIJPew5TTJA/PyDpFmdBatvDp+NIFlKe0CYsqk9etCv19y2d3evUbrkRmneh8/XuE4wbucVGpPBHSqptxzFODNux1ltB+e+ITKU+Bn7PKMmnWbxrDMgUfIIbTAc9HjrSJj5oJpRV8+bYNXpcy1qFpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787062358; c=relaxed/simple;
-	bh=sCntNDaoLvsM7NoPkw3s1TdENhd+CMuf6vjP+qHi6MQ=;
+	s=arc-20240116; t=1787062364; c=relaxed/simple;
+	bh=qzHxEWTQUowU9JyBpIleSksX3kOfPSpORtiEeE9vrLo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GU3YOOTNVa6bR1bjRAPEPxXR9+GvUpudTY6avcLEb29Ru9b/2cLo5fpP37aSim5BxJoQzLpS2QsAKMq9ejNUTuqFfYiiZjcuDgWcCJmpyH91dUnQCeynoA2kt4AEcy0ZRPQkITfnZXjlF+YE5OsbDw59+gRzXB0c8+CLpdTb3bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=oLpWliQ0; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=CM/xTaUxaKu4lR1BHbBHr1y+n7/RE5ZFjuUnlrdw1WTSFdb+2XGr8v/I3hYa90VFgeamnbjdc/uINPbedTLdanC6u94m/sIImEEN4SnQZW0TV/H6sd4AFtYku5plrM+xXcMsDldjcjWiLMJ5vrIUQWyGF9U+hilNzB/yHLYivYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=JNpG2ISg; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="oLpWliQ0"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="JNpG2ISg"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D858819F6;
-	Tue, 18 Aug 2026 07:12:32 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7A7419F0;
+	Tue, 18 Aug 2026 07:12:37 -0700 (PDT)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23D763F85F;
-	Tue, 18 Aug 2026 07:12:32 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DD243F85F;
+	Tue, 18 Aug 2026 07:12:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1787062356; bh=sCntNDaoLvsM7NoPkw3s1TdENhd+CMuf6vjP+qHi6MQ=;
+	t=1787062361; bh=qzHxEWTQUowU9JyBpIleSksX3kOfPSpORtiEeE9vrLo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=oLpWliQ0M1NNKG0njX3y2LijiY8VWcyckxo2BTxDqZ6145pdmeRs8l3WWCXR8MXoA
-	 SKxMdGnhIjEbzsbJwtMduRReTgtzjxLBBXpwxSo6hjFJF1O5/K7MVpbLwJCi+GNNhr
-	 /e/FPY1HsurbVPlcoLwdvVxZ4SRU09iMcm4CuDiQ=
+	b=JNpG2ISgeXbDU6EHIpC4+0vrtGwt76HzvdOMWRTJAj6NAn7AdafCVjI4bRyLdR7jT
+	 k0/aB9/MNBOsf6E2gupjWaYFBzzW+O89e7lXJGf/Vb9TfdYxpuKtLVnJZvWZKkn3nZ
+	 iJXjQ8INUF17DzLw/BKXa+K2MQVeJX1Puvb4yHLQ=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 18 Aug 2026 15:08:57 +0100
-Subject: [PATCH RFC v9 15/25] mm: kpkeys: Introduce hook for protecting
- static page tables
+Date: Tue, 18 Aug 2026 15:08:58 +0100
+Subject: [PATCH RFC v9 16/25] arm64: kpkeys: Implement
+ arch_supports_kpkeys_early()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260818-kpkeys-v9-15-743ad31b2c8f@arm.com>
+Message-Id: <20260818-kpkeys-v9-16-743ad31b2c8f@arm.com>
 References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
 In-Reply-To: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
 To: linux-hardening@vger.kernel.org
@@ -65,60 +65,71 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>, 
  Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1787062276; l=1755;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1787062276; l=1895;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=sCntNDaoLvsM7NoPkw3s1TdENhd+CMuf6vjP+qHi6MQ=;
- b=Iu++Xy+qhdxfJQazuqSVfw66n86Uz6L0S3XrilHQKHEmVOOATMrnPKUSWAEebDavcsaSyjB0c
- b93YFQwDaeDCGwVb5SJHKOcupjCmxwRwq+2wjwiAkg/2/+VfqZDHmz0
+ bh=qzHxEWTQUowU9JyBpIleSksX3kOfPSpORtiEeE9vrLo=;
+ b=1nVIMH/i6iHZpxUI1TCtH+LBvwdmacwViJE9z2ALy5M+p9gUos6coUDPLFQlFXAV0qE9Z2b7Y
+ PCCxFd0xpn0BsMdhASbsERLqg0Gj0WrHKqUQ04TKHxLK06yo1rCDmho
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 
-The kpkeys_hardened_pgtables infrastructure introduced so far allows
-compatible architectures to protect all page table pages (PTPs)
-allocated at runtime (first via memblock, then the buddy allocator).
-Some PTPs are however required even earlier, before any allocator is
-available. This is typically needed for mapping the kernel image
-itself.
+We need to check if the kpkeys_hardened_pgtables feature is going to
+be enabled very early during boot, to decide how to set up the
+linear map and how to allocate early page tables. This happens even
+before boot CPU features are detected.
 
-These PTPs are at least as sensitive as those allocated later on,
-and should be protected by mapping them with the privileged pkey.
-Exactly how these pages are obtained is entirely arch-specific, so
-we introduce a hook to let architectures that implement
-kpkeys_hardened_pgtables do the right thing.
+Implement the arch_supports_kpkeys_early() helper by directly
+checking if the boot CPU supports POE, if it is called before boot
+CPU features are detected. It may also be called later, in which
+case we simply check the POE feature.
 
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- include/linux/kpkeys.h        | 4 ++++
- mm/kpkeys_hardened_pgtables.c | 1 +
- 2 files changed, 5 insertions(+)
+ arch/arm64/include/asm/cpufeature.h | 12 ++++++++++++
+ arch/arm64/include/asm/kpkeys.h     |  7 +++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/include/linux/kpkeys.h b/include/linux/kpkeys.h
-index 23526d3f9ab3..df55ec854586 100644
---- a/include/linux/kpkeys.h
-+++ b/include/linux/kpkeys.h
-@@ -127,6 +127,10 @@ void kpkeys_hardened_pgtables_init(void);
- 
- phys_addr_t kpkeys_physmem_pgtable_alloc(void);
- 
-+#ifndef arch_kpkeys_protect_static_pgtables
-+static inline void arch_kpkeys_protect_static_pgtables(void) {}
-+#endif
-+
- #else /* CONFIG_KPKEYS_HARDENED_PGTABLES */
- 
- static inline bool kpkeys_hardened_pgtables_enabled(void)
-diff --git a/mm/kpkeys_hardened_pgtables.c b/mm/kpkeys_hardened_pgtables.c
-index 9e1e27c2cc96..c133e5896fcc 100644
---- a/mm/kpkeys_hardened_pgtables.c
-+++ b/mm/kpkeys_hardened_pgtables.c
-@@ -66,6 +66,7 @@ void __init kpkeys_hardened_pgtables_init(void)
- 	static_branch_enable(&kpkeys_hardened_pgtables_key);
- 
- 	ppa_finalize();
-+	arch_kpkeys_protect_static_pgtables();
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index a57870fa96db..37aae60c2d7f 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -1085,6 +1085,18 @@ static inline bool cpu_has_lpa2(void)
+ #endif
  }
  
- /*
++static inline bool cpu_has_poe(void)
++{
++	u64 mmfr3;
++
++	if (!IS_ENABLED(CONFIG_ARM64_POE))
++		return false;
++
++	mmfr3 = read_sysreg_s(SYS_ID_AA64MMFR3_EL1);
++	return cpuid_feature_extract_unsigned_field(mmfr3,
++						    ID_AA64MMFR3_EL1_S1POE_SHIFT);
++}
++
+ #endif /* __ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
+index 09fd5a849cb0..284039e9a244 100644
+--- a/arch/arm64/include/asm/kpkeys.h
++++ b/arch/arm64/include/asm/kpkeys.h
+@@ -21,6 +21,13 @@ static inline bool arch_supports_kpkeys(void)
+ 	return system_supports_poe();
+ }
+ 
++static inline bool arch_supports_kpkeys_early(void)
++{
++	/* POE is a boot feature */
++	return boot_capabilities_finalized() ?
++		system_supports_poe() : cpu_has_poe();
++}
++
+ #ifdef CONFIG_ARM64_POE
+ 
+ static inline u64 por_set_kpkeys_context(u64 por, enum kpkeys_ctx ctx)
 
 -- 
 2.51.2
