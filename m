@@ -1,67 +1,68 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5936401492
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46033FD121
 	for <linux-hardening@vger.kernel.org>; Thu, 20 Aug 2026 09:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787218971; cv=none; b=BDBT6XrUmnsYjdmtWOm2MtZHcc6dJPP7zVlL+CbQHYGf3/6HZmFiUUIsgOhLvbg6DOOf+CeUhp7dNKovtysh8lhc03Fqz1G4AY2B17W3nNqZ0H3pTo1Kg/fdepPzf44t+7z7tSyJJAuBTUCzpoOk/1HOHv6HjtdNTXXLmufvDKc=
+	t=1787218972; cv=none; b=QKbKK5v9AEFNLa3wpYXfXRn7hfYyeyFAN4UIB67LgK1KggtVZs+cxojZVyvzaXRpifkKB/8NcKpA8B2WfoN9GuTcuk+bZufqozOe12t4/sresEidHt4IsAGP/VBJ+c8vMyhiF3rGgjGlp0otdYhaFa3Zz8WvtB/TExdaRBs+mqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787218971; c=relaxed/simple;
-	bh=SLgt0+h14ZOfuzmTLwyNLNXs7RHbAk6hjl3WhGYDpWQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FnYtsiM0TxJ5PbL79jpmIHZ4LlpM3l2xgQMm65LVp6yZApN/OCJKnS9xhZrzJZdlOXSsPrBz2TFZO/8JxsU9ImPJBWLuCqLQKXAt212SDVOKXC1+ozc2SNsJn4oxKu3PJmMcsIH00psqQ7CmvywkygfAYvekPbiDcFnm6sbiG/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ki5EYMVz; arc=none smtp.client-ip=209.85.221.42
+	s=arc-20240116; t=1787218972; c=relaxed/simple;
+	bh=lvXJIYHg+Za7wwIfyKwrdptP8jCEhBX03Cv8tnpa48U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nlVfKCI9LW+HtVFGUa8UFk2BotFJ79IE2fZvB18ZLCzx32FCVMqNxa+8iP8bHarG7bk8xCdZ20pZnCtA+tg40+e4S36s78yW73CuUztWcG8GhDpD+WbuqyjAYgXULsGKdglp8ByT3eO0iaT2JeP9XfRtgkrQ24I9aPFEH1R0ETM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OmSKwNBf; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ki5EYMVz"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-47de008b020so560030f8f.1
-        for <linux-hardening@vger.kernel.org>; Thu, 20 Aug 2026 02:42:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OmSKwNBf"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49556f97a9dso13904015e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 20 Aug 2026 02:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787218960; x=1787823760; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=YzL2SO0oanEljmvoZAdumsTt6y7BipjLwI3m0jswq0M=;
-        b=Ki5EYMVzCHWLazlYFIcaQLNvLDDw0B30mlaO61852TGR2lJmPBpa2zCty/UZIAOr+t
-         n9BG8c8tnWslkKfW5EOB37taEUilNL/ZnQqiPeU2SVxtMQQwLYX151BZelMLVYHtMKc8
-         BOhAsKPLeLUuiaE+au/I0p/oxLwDOvjPhoy9Dt5GWSxoYCbo0JZPHl8ptAyI83PqOaAD
-         oz5vzwk6KC3Pbl/Tdgb0QNatUTtXgzCj+E42FuPw+Ik/5srgApCrtwPG+9szrLfEWo1f
-         wfx3QDyPAfokjmMY9vvYVSnfJTWRixcuIz0lyu1NHyf6ExGiITMxDjgwMXwVUj021tEW
-         fz7Q==
+        d=gmail.com; s=20251104; t=1787218961; x=1787823761; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Pna/XzfqXxr5JhHe4C9RpqDZzth/Iq1szA4HTr9J/M4=;
+        b=OmSKwNBfRXl3HffmJ3Zgtv9O9cXY9ahV1itKzw+q6P9mVQo0A5qpTlh1/xhuVPnzmu
+         0uP8UTDiP5HtTjcXSlKWFQyFUE5Nwu+AtoX83t3dhSh17U+cSMFIp26wDdJz7asN8eDh
+         kE+FtJD0mxIN1I4hQpwfwlGsfMQVW0oFAvQRxUhWVusgWrD9SUA9dQozJco8/nZllMiA
+         qIfzaeNa9y1Gz5WPMPSGm8kyUNdke8z+Wwori8GsBhcrtNlNZpAns7UuP3MqNxJy9x3y
+         xQ4jsWhy0v14jt29yau0Gp3WNFCoI48UFhqAduYzMp+qNV82r7hlGNfNyY3FzaypB5Mk
+         XtzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787218960; x=1787823760;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=YzL2SO0oanEljmvoZAdumsTt6y7BipjLwI3m0jswq0M=;
-        b=rr8bC/cPBH4sOl6FUHURObKRKq8pGQ2Pp6nusC7yEm3wGp2lZcrXwF0RrFUykqIOIn
-         wrpMTFxtB2Lh/49A6k2nZ4TW7Anen+i+fppuMNyiLYQvIW3HjqXki93q2XFQgbBLM8mg
-         lVPa90OlPh0x9a2ZFah+pBV0LhtvS80meXDFVO5sARNBBKGgUUFacyELF8ykJ6WwTzj2
-         HAtRMP4mXWPPsG3IcFzsR+BvnfU6N/FmEHasY+11t0FReQDxzIJXiXXAWjEdMhM1qqic
-         mkIjTQ95pqswE+axDBr/gN89Rjezw2d7SjL879UI5gp+syeft7zmp/nRsXpSSUarkTkY
-         0m9g==
-X-Forwarded-Encrypted: i=1; AHgh+RoPQOxcp/bYDGipOC6Qb63l91xSVv8KClx3PXj3KqPAjTMYduoeNpkwulMgUwPHq/b5ji4NWLuT35SxNS+FGcg=@vger.kernel.org
-X-Gm-Message-State: AFuF++kTsZz/4p2CbTGZZmEyoR2dRPU6ORMrzrGmqmJtCGKMCTn3QLSx
-	ib4AknzB0GHwGOqPAzYUNmGYdhHAVQ5+2TitZjMrvaQvLHs9PCWIc+Gz
-X-Gm-Gg: AR+sD12L0d0+vfergKZ7IF3v8hWMBIcKoxhDBbfqE4MN2cSsc6SHlwI6jqf74r/DHMj
-	djil78N9qWbJE9rf1wASZpBnBLQG0n4mxZPCVDPLjikV5uwaFChM3OXyX516YKT5E0cFBA2OffR
-	QiX81bcVLqHxfaKoP8fZ7/WswnbSCLZY7ryb4cCYiFAoIPpN3V3FUUFUZrchhmh/90FsIdEYPCB
-	PZp0Kh40jmygyAgtr8vcqohB/4Oi8Fa96QhQFAFojh5TQcXDOhR4G0/gn4g/R1ZLF400gXbV7aX
-	bkqL1e8Q2K93EFQwKaEi/NnVLptn5Gt8NLb5DcNmgbC3Sd3NEBFWArky9Qsh/UpevcRBB0N3lAm
-	PvkQ+KftGpz47cU82dWn87/VZ6+Mz+iPcPfwgyXxCTP4t19f89lv8tVRRFb0czo2RwZhujNdBM8
-	XZqbz+hL4fIZPmY70fUU3Qfp2gBa0izV7ZW0DIIgTiSEuV6CFWOZWErBSlPP3da9WaB192VNfu/
-	JqAEZCf7ioE6lKZKl733qZL
-X-Received: by 2002:a05:6000:230f:b0:481:562d:6fb1 with SMTP id ffacd0b85a97d-482b782c84fmr7644350f8f.6.1787218959842;
-        Thu, 20 Aug 2026 02:42:39 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1787218961; x=1787823761;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Pna/XzfqXxr5JhHe4C9RpqDZzth/Iq1szA4HTr9J/M4=;
+        b=LnR2ozFYCLex5jvjm+NbZq5w4UTyw8BMkPos0lhZowZcFA+WkvXh0NIO+RzisBMWs6
+         kZlMVqFy/UXGxf7qpQjzt2nPLr7B5tSu2DdfpYqDfpYffa7o/hKG3Nt/uOq2i/hX5QjM
+         fOb7P0LzaVOAEvPVolJIpJRHcpxHzrOiiQ2uolGobZdJw/vJgqMbsmkwQ4qLGNSUJ6O5
+         8QQxIf7rZixc443UkDCjiUiYcVg9KLAx2Fk13cAD9yIH5EMymeYx0d1SRzVjZ0WFJIBd
+         LNiupiwg0Vdr9NuiGos7fAmlnqO8bKfJLAFXUJIljYQ8M0ePSQ2LUq39VNXHjykrZKHf
+         6fqQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpO1Kje8A20Wz01dlO4sfh06rndHt6RZ3y6rcKsf65hGR475yhXoMAawAz3PjxQgqjXNqeZvcuo8TmrGIKGUt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMip4QV4SABPy0h7KRkmkg8IdRSAuuFUvlhfvxiRh4NhGVzAwM
+	OSBeiYdfxRmbOkeUt6BLZM+to9iqUnjJRZqkrIkpiZwKCtYINdYZkN4T
+X-Gm-Gg: AR+sD10YtzVMddKQ7Xif4SBbAnDbQjd/iGn5KwC5rewGf0Gl+IiWqh9my0ILczyTj35
+	oJuzUk+BVFNRdZnJpriSVWZXefg5Vsv0z1eFBdZ1IO8VNQ1itV1S/ggS7Ocq90pQVYlvdFheRj6
+	9SeKpcKbOO5LSPsYxE/7aSh4jNDhjAgV6W/ocYFO0tJkLX04EvnGmxX+oOFuHII+RtlHpqNqFJa
+	YWaVkqqDoxgbCV/MJg3W833qmYwCtxWAjlIw4tPmyDO+qdZLsoMr4ZINHgCBGw2rNn+EZXRkgql
+	Ejr+LEPF2VqITXU10MGZm9chdYLJ1jcpus8XT/dmvIDLHfPwmJy6wS7aPaIPk3raq6lpIdohbMK
+	GaV/fkjUjiq6beNqZIn0V3hUKkLSkFV7Z7odE5ueQ/Va6VtrhBdH2y/8LWZE7UQDFC20j45FK2K
+	VGxCY4vXck2QaOKCBYUiYa7pd+j6vlbal1nKs/6tjSQfItQdfzcQL2l/Ifw6iEOEB3QfOUwfrrA
+	HCtBQvA0q4nojJRnB+7qpX9
+X-Received: by 2002:a05:600d:19:b0:499:b4aa:3d70 with SMTP id 5b1f17b1804b1-499b4aa3dd7mr11458805e9.14.1787218960974;
+        Thu, 20 Aug 2026 02:42:40 -0700 (PDT)
 Received: from [127.0.1.1] (83.31.75.144.ipv4.supernova.orange.pl. [83.31.75.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b144173csm11788090f8f.6.2026.08.20.02.42.38
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b144173csm11788090f8f.6.2026.08.20.02.42.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2026 02:42:39 -0700 (PDT)
+        Thu, 20 Aug 2026 02:42:40 -0700 (PDT)
 From: Adam Skladowski <a39.skl@gmail.com>
-Subject: [PATCH v2 0/7] arm64: dts: qcom: Add 3 new devices
-Date: Thu, 20 Aug 2026 11:42:23 +0200
-Message-Id: <20260820-next-patches-v2-0-7130d68183d9@gmail.com>
+Date: Thu, 20 Aug 2026 11:42:24 +0200
+Subject: [PATCH v2 1/7] dt-bindings: vendor-prefixes: Add LeEco
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,11 +71,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3WNyw6CMBBFf4XM2pppTTriyv8wLGo7whh5pK0EQ
- /h3AdcuT3LuuTMkjsIJLsUMkUdJ0ncrmEMBvnFdzUrCymDQWDxrVB1PWQ0u+4aTsi7YoBGJHMI
- 6GSI/ZNpzt+rH6X1/ss9bYzMaSbmPn/1v1Jv3Jz1qhYpKR1QGsppO17p18jr6voVqWZYviN89T
- boAAAA=
-X-Change-ID: 20260810-next-patches-6ad6d10077a0
+Message-Id: <20260820-next-patches-v2-1-7130d68183d9@gmail.com>
+References: <20260820-next-patches-v2-0-7130d68183d9@gmail.com>
+In-Reply-To: <20260820-next-patches-v2-0-7130d68183d9@gmail.com>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -83,74 +82,30 @@ To: Bjorn Andersson <andersson@kernel.org>,
  "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Adam Skladowski <a39.skl@gmail.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+ Adam Skladowski <a39.skl@gmail.com>
 X-Mailer: b4 0.15.2
 
-Introduce support for 3 new devices:
-- Motorola Moto One based on MSM8953
-- LeEco Le2 based on MSM8976
-- Xiaomi Redmi 9T based on SM6115
-
-Device trees besides enabling most of supported hardware also wires power to
-subsystems like MDSS even if those are not enabled to lower maintenance burden
-on out of tree forks.
+Add vendor prefix for now dead ecosystem company LeEco
 
 Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
 ---
-Changes in v2:
-- Adressed Sashiko-bot warnings
-- Added Krzysztof's Acks
-- Dropped confusing link from first vendor-prefix patch
-- Removed ramoops nodes from Motorola and Leeco patches(now handled via lk2nd)
-- Motorola One USB-C connector and FUSB302 is now fully wired and enabled
-- Motorola One Touchscreen has been disabled due to panel power dependency
-- Motorola One debug memory regions were removed
-- Motorola One regulator setup values were ajusted
-- Motorola One NFC now have more specific compatible
-- All devices now have described reserved GPIOs and trimmed unused ones
-- Leeco Le2 added missing pinctrls for peripheral IRQs
-- Leeco Le2 OTG is no longer enabled as phy dependency is not enabled(need rework)
-- Redmi 9T USB-C connector now is fully wired including pmi632 setup
-- Redmi 9T nodes are sorted now
-- Various changes to styling to keep nodes within single dts consistent
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-- Link to v1: https://patch.msgid.link/20260810-next-patches-v1-0-79a779d76173@gmail.com
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 136681412501..dd0762d3334b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -947,6 +947,8 @@ patternProperties:
+     description: Shenzen LC Technology Co., Ltd.
+   "^leadtek,.*":
+     description: Shenzhen Leadtek Technology Co., Ltd.
++  "^leeco,.*":
++    description: Leshi Holding Beijing.
+   "^leez,.*":
+     description: Leez
+   "^lego,.*":
 
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>
-To: Kees Cook <kees@kernel.org>
-To: Tony Luck <tony.luck@intel.com>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org
-
----
-Adam Skladowski (7):
-      dt-bindings: vendor-prefixes: Add LeEco
-      dt-bindings: arm: qcom: Document Motorola Moto One
-      arm64: dts: qcom: Add Motorola One
-      dt-bindings: arm: qcom: Document LeEco Le2
-      arm64: dts: qcom: Add LeEco Le2
-      dt-bindings: arm: qcom: Document Xiaomi Redmi 9T
-      arm64: dts: qcom: Add Xiaomi Redmi 9T
-
- Documentation/devicetree/bindings/arm/qcom.yaml    |   3 +
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- arch/arm64/boot/dts/qcom/Makefile                  |   3 +
- arch/arm64/boot/dts/qcom/msm8953-motorola-deen.dts | 460 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8976-leeco-s2.dts      | 435 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/sm6115-xiaomi-lemon.dts   | 497 +++++++++++++++++++++
- 6 files changed, 1400 insertions(+)
----
-base-commit: 6b8c8af514d739d0335f5579b585e02babe8a727
-change-id: 20260810-next-patches-6ad6d10077a0
-
-Best regards,
---  
-Adam Skladowski <a39.skl@gmail.com>
+-- 
+2.55.0
 
