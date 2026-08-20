@@ -1,198 +1,130 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D4B3F54DD;
-	Wed, 19 Aug 2026 11:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20713ACA59;
+	Thu, 20 Aug 2026 06:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787139952; cv=none; b=gByWzwBKqbC3+rwLKc1o7PeEeRaDbKCS4UFa2eSxtt8ZxtKYqBRMQZjbF85fz9f2/fTcQ4HsB0TmmufpiLn269tQkWSK9lhSqN6vPwWAtw2iALRRTtc/IPoRsPA8sQqWENaIv3XrbNt9Z16UMFLiOyRILUBkZiYx6B4scLunn3g=
+	t=1787205708; cv=none; b=aI51brNyRmgtit1XAnqYAKQyxpDuX+vC8caQJ9iMpoC5xQRYWhZWCxZf2V8zuaNAK9+WjmN2RhR9woM4clmn7mkEED8wRYrobNq2WyypHVhf49u1jztbfT+7fW+6wDLAnfqv9YAXaFp/L9ov4bY8/RJK1HA0n7qTo6DWMVrhLOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787139952; c=relaxed/simple;
-	bh=sYs6Sg8z01QB2GLvk6s1IsC5i9DXzY/sN5SmRfsk5+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k5r0CPgjIg20/5SIiuFmCWLcaFDR7nwjr+Gbw03XPTOlL2appxyv15MQz8o8HCnceSOht7gCnOrzdBVhnDlt0jdJjko3TYSwSFaP1BY8G2+QHJapfk9RKxJ04VrB085qH5gSkh22KOwtTL3qw1G7HNaTILi2sosj0m0YkQQq/QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=HXS1k7ZS; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1787205708; c=relaxed/simple;
+	bh=8uS5dsRPHfi7icvqcmgyhb3CNDYj77hQkpwH8ooc2yo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jKbDdW2A0M3N9auZVdKRgyLLwDFcNOhlxsgLDXZeJj4KuOkP5UQrGrP9wdeRJKAs6aw/7NAujHl6UAm/m3+FnnjhP+n+INYkum/izIDfwbSDxWC07cC/aH2cRZL5yt76ewTIXz0jAqCOUAwZCaYh/+1Mrj77V7FWTzgVSQS/Wx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com; spf=pass smtp.mailfrom=qti.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lpTkDIuB; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qti.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qti.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="HXS1k7ZS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hLfRj57yEBsc06jH6wJGVAOT1OrEjp5Uv/NlEfdHEFo=; b=HXS1k7ZSluuCyn35A5gwjfUD/w
-	9F/0n8m6v/PowEwOmU0kT6F9mthptoEdQAt61/C/XKOaUTOCoDmVUqrLqRV2Lao6z5GU2Qj3qnRWM
-	Y4tQXz9sYqTtsvMCEq7WTwbqrNWfBg8608si2oZKm0vKXJUozo0waSslYl7lBq4S0R54l/ZvtwrX7
-	Q1aiArQ1aNa0xggKtzponuNJ8V8XOVDMCW1BJoQ9N9fVWqwKzwUlrcmED0u6+e1It4E26jyfsD9LO
-	4YH0E/05mC01I+QkBKW74NBMbLKhmtC10pjkrogLxN94myoWtSLS6sXpuM79n/IJQMTpuW9Nl1MAf
-	q+T1naDg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wwejd-009ldD-1x;
-	Wed, 19 Aug 2026 11:45:34 +0000
-Date: Wed, 19 Aug 2026 04:45:26 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Yehyeong Lee <yhlee@isslab.korea.ac.kr>
-Cc: alibuda@linux.alibaba.com, dust.li@linux.alibaba.com, 
-	sidraya@linux.ibm.com, wenjia@linux.ibm.com, kuba@kernel.org, davem@davemloft.net, 
-	edumazet@google.com, pabeni@redhat.com, horms@kernel.org, mjambigi@linux.ibm.com, 
-	tonylu@linux.alibaba.com, guwen@linux.alibaba.com, guangguan.wang@linux.alibaba.com, 
-	kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH net v7 1/3] net/smc: fix use-after-free of the LLC qentry
- in smc_llc_srv_add_link()
-Message-ID: <aoWXR103vbYblTNp@gmail.com>
-References: <20260819023306.644849-1-yhlee@isslab.korea.ac.kr>
- <20260819023306.644849-2-yhlee@isslab.korea.ac.kr>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lpTkDIuB"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67JL8S041354410;
+	Thu, 20 Aug 2026 06:01:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VVQjbC9+fnH6Vyr1Zks+xvDk69G/N0rKNtI8rI2rI8A=; b=lpTkDIuBMxLSHxGQ
+	xxQtqNBLoluswlZbAqJxAqTpsnVpo5I7a5i2NQ4FwmLUbiUQraekDicZISS59HGy
+	2XxY8vQBNVfMVLTKdCyGxOxxpHj6FkkMvcXu7ea9iJrnj1/YM+wQUu26ndwjh2AJ
+	svZuRtJB+2rSvc/TvypRitOBhXqvmJwPWcav1MW1uvKaoayeVBLqY7pNi/coo3UY
+	cQD0a60brLjzpN8bY/MkBWnLZLBf7WNgoVN950hAlV13sE1ypdZN6P8Y3hgvqdTB
+	Sc6KJkY0lTesR6yZLMgJ0gVMm5i+r4lOunZ1SCqXxh/kIshoHOrMy5I9NZF8XqPi
+	4BRXng==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g5es5bdk3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Aug 2026 06:01:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTPS id 67K61hBv002831
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Aug 2026 06:01:43 GMT
+Received: from quicinc.com (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Wed, 19 Aug
+ 2026 23:01:39 -0700
+From: Jaihind Yadav <jaihindy@qti.qualcomm.com>
+To: <kees@kernel.org>
+CC: <nathan@kernel.org>, <nsc@kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-modules@vger.kernel.org>,
+        Jaihind Yadav <jaihindy@qti.qualcomm.com>
+Subject: [PATCH v3] scripts/gcc-plugins: suppress recorded GCC switches for extmod builds
+Date: Thu, 20 Aug 2026 11:31:16 +0530
+Message-ID: <20260820060116.786173-1-jaihindy@qti.qualcomm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260817185146.GC1249844@ax162>
+References: <20260817185146.GC1249844@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260819023306.644849-2-yhlee@isslab.korea.ac.kr>
-X-Debian-User: leitao
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-ORIG-GUID: n2s15Jq5oFV4WnoqJlERk3BkmEGGKM4M
+X-Proofpoint-GUID: n2s15Jq5oFV4WnoqJlERk3BkmEGGKM4M
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODIwMDA0MiBTYWx0ZWRfX8ZbtTo307tc2
+ gAhQoZu2fa5sWlT0TIfJa3xfy01cB7qgltZKIdx7OSbguvSV3Zad3CdVBmd1Bu1JBJqK9bdlvRi
+ t2OfXpvdwWq11t+/zOg4/fZv+90r2h0=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIwMDA0MiBTYWx0ZWRfXx5HwNLJSQir6
+ ENZEGZNwwh8fAZwyqjXwXRcvzrqB/8bFoywgOupNQ+ZYM70J0WJ/i4q/UCcwsZyX7Ca2mJZqE8/
+ 9euaRA+rwrrTSUsltvG8AL+wXmnlpTg+0tn+TYGwhgivHCgGzjVvHTtQeIbvMLhs044J+ZyJcNI
+ wG8+eh+qKsWT8NsLSQm/rMaOcvOAD2nHPCCrkKjlOAzTJqCc9n8u64pJq582ID7qdLYQVHexQN+
+ oKUXQT1yo61l/K95z+5VMNzsHFfY+8HUfNhhyEBZ481lMdXM0sXV47EZEwDY1RVbgZaw0UBosVf
+ CZk+JOOPf2cBeX0okjdT3jSJP9ujY7rRf+gucUg8UuZDfFIbwmQ/BcyF2LgeSMreM2j/PjNEs7y
+ efD5j2QrqN0vUB1zn681Pw5uIOycdFYYC0GnM6oa2h0sWLLjxeP7xgcmf4BSHqAmjcMk0RLe35r
+ bO8crs/uGqLRzhnw5BQ==
+X-Authority-Analysis: v=2.4 cv=Oc+oyBTY c=1 sm=1 tr=0 ts=6a869848 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=jsFOyA_XevxqPLBfZcQA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-19_06,2026-08-19_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 bulkscore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608200042
 
-On Wed, Aug 19, 2026 at 11:33:04AM +0900, Yehyeong Lee wrote:
-> smc_llc_srv_add_link() keeps add_llc pointing into the queue entry:
-> 
->   add_llc = &qentry->msg.add_link;			smc_llc.c:1482
->   ...
->   smc_llc_save_add_link_info(link_new, add_llc);	smc_llc.c:1494
->   smc_llc_flow_qentry_del(&lgr->llc_flow_lcl);		smc_llc.c:1495
->   ...
->   u8 *llc_msg = smc_link_shared_v2_rxbuf(link) ?
-> 	(u8 *)lgr->wr_rx_buf_v2 : (u8 *)add_llc;	smc_llc.c:1504
->   smc_llc_save_add_link_rkeys(link, link_new, llc_msg);	smc_llc.c:1506
-> 
-> smc_llc_flow_qentry_del() kfree()s the entry, so on a link without a shared
-> v2 receive buffer the pointer handed to smc_llc_save_add_link_rkeys() is
-> already freed. Before the Fixes: commit that branch always used
-> lgr->wr_rx_buf_v2 and add_llc was not used after the free.
-> 
-> Reproduced on an unpatched tree over rxe, with KASAN, kasan_multi_shot
-> and a link forced to max_recv_sge == 1: the entry is freed and read by
-> the same call, and the freeing frame is smc_llc_srv_add_link() itself.
-> 
->   [    2.523161] BUG: KASAN: slab-use-after-free in smc_llc_save_add_link_rkeys+0x333/0x350
->   [    2.523499] Read of size 2 at addr ffff8880052194de by task kworker/0:1/11
->   [    2.523789] 
->   [    2.523862] CPU: 0 UID: 0 PID: 11 Comm: kworker/0:1 Not tainted 7.2.0-rc5-p0-g2c9dd296545d #35 PREEMPT(lazy) 
->   [    2.523865] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_caps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
->   [    2.523866] Workqueue: smc_hs_wq smc_listen_work
->   [    2.523869] Call Trace:
->   [    2.523870]  <TASK>
->   [    2.523871]  dump_stack_lvl+0x53/0x70
->   [    2.523872]  print_report+0xd0/0x630
->   [    2.523874]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
->   [    2.523876]  ? smc_llc_save_add_link_rkeys+0x333/0x350
->   [    2.523878]  kasan_report+0xce/0x100
->   [    2.523879]  ? smc_llc_save_add_link_rkeys+0x333/0x350
->   [    2.523881]  smc_llc_save_add_link_rkeys+0x333/0x350
->   [    2.523883]  ? smcr_buf_reg_lgr+0x2a4/0x660
->   [    2.523885]  smc_llc_srv_add_link+0xaa2/0x1e50
->   [    2.523888]  ? _printk+0xba/0xf0
->   [    2.523897]  ? __pfx_smc_llc_srv_add_link+0x10/0x10
->   [    2.523899]  ? down_write+0xb0/0x130
->   [    2.523903]  ? __pfx_down_write+0x10/0x10
->   [    2.523905]  smc_listen_work+0x489e/0x4d00
->   [    2.523907]  ? kmem_cache_free+0x1c6/0x3a0
->   [    2.523911]  ? __pfx_smc_listen_work+0x10/0x10
->   [    2.523913]  ? release_sock+0x148/0x1d0
->   [    2.523915]  ? smc_tcp_listen_work+0xb4f/0xfc0
->   [    2.523917]  ? _raw_spin_lock_irq+0x80/0xe0
->   [    2.523918]  ? __pfx__raw_spin_lock_irq+0x10/0x10
->   [    2.523920]  process_one_work+0x633/0x1030
->   [    2.523922]  ? assign_work+0x11d/0x370
->   [    2.523924]  worker_thread+0x45b/0xd10
->   [    2.523926]  ? __pfx_worker_thread+0x10/0x10
->   [    2.523928]  ? __pfx_worker_thread+0x10/0x10
->   [    2.523929]  kthread+0x2c6/0x3b0
->   [    2.523931]  ? recalc_sigpending+0x15c/0x1e0
->   [    2.523934]  ? __pfx_kthread+0x10/0x10
->   [    2.523935]  ret_from_fork+0x36e/0x5a0
->   [    2.523937]  ? __pfx_ret_from_fork+0x10/0x10
->   [    2.523938]  ? __switch_to+0x572/0xdd0
->   [    2.523943]  ? __pfx_kthread+0x10/0x10
->   [    2.523944]  ret_from_fork_asm+0x1a/0x30
->   [    2.523947]  </TASK>
->   [    2.523948] 
->   [    2.531253] Allocated by task 48:
->   [    2.531399]  kasan_save_stack+0x33/0x60
->   [    2.531570]  kasan_save_track+0x14/0x30
->   [    2.531737]  __kasan_kmalloc+0x8f/0xa0
->   [    2.531905]  __kmalloc_cache_noprof+0x158/0x370
->   [    2.532100]  smc_llc_enqueue+0x72/0x560
->   [    2.532268]  smc_wr_rx_tasklet_fn+0x474/0xa80
->   [    2.532491]  tasklet_action_common+0x20f/0x8a0
->   [    2.532714]  handle_softirqs+0x18e/0x590
->   [    2.532886]  do_softirq+0x3b/0x60
->   [    2.533036]  __local_bh_enable_ip+0x61/0x70
->   [    2.533221]  __alloc_skb+0x732/0x890
->   [    2.533384]  rxe_init_packet+0x16b/0x4f0
->   [    2.533567]  prepare_ack_packet+0xb8/0x830
->   [    2.533760]  rxe_receiver+0x495/0x96e0
->   [    2.533933]  do_work+0x144/0x470
->   [    2.534078]  process_one_work+0x633/0x1030
->   [    2.534257]  worker_thread+0x45b/0xd10
->   [    2.534424]  kthread+0x2c6/0x3b0
->   [    2.534569]  ret_from_fork+0x36e/0x5a0
->   [    2.534737]  ret_from_fork_asm+0x1a/0x30
->   [    2.534907] 
->   [    2.534980] Freed by task 11:
->   [    2.535112]  kasan_save_stack+0x33/0x60
->   [    2.535279]  kasan_save_track+0x14/0x30
->   [    2.535444]  kasan_save_free_info+0x3b/0x60
->   [    2.535625]  __kasan_slab_free+0x43/0x70
->   [    2.535798]  kfree+0x121/0x380
->   [    2.535935]  smc_llc_srv_add_link+0x9a8/0x1e50
->   [    2.536128]  smc_listen_work+0x489e/0x4d00
->   [    2.536305]  process_one_work+0x633/0x1030
->   [    2.536482]  worker_thread+0x45b/0xd10
->   [    2.536652]  kthread+0x2c6/0x3b0
->   [    2.536794]  ret_from_fork+0x36e/0x5a0
->   [    2.536958]  ret_from_fork_asm+0x1a/0x30
->   [    2.537133] 
->   [    2.537205] The buggy address belongs to the object at ffff888005219480
->   [    2.537205]  which belongs to the cache kmalloc-96 of size 96
->   [    2.537719] The buggy address is located 94 bytes inside of
->   [    2.537719]  freed 96-byte region [ffff888005219480, ffff8880052194e0)
->   [    2.538216] 
->   [    2.538289] The buggy address belongs to the physical page:
->   [    2.538524] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x5219
->   [    2.538857] flags: 0x100000000000000(node=0|zone=1)
->   [    2.539066] page_type: f5(slab)
->   [    2.539210] raw: 0100000000000000 ffff888001041280 dead000000000122 0000000000000000
->   [    2.539534] raw: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000
->   [    2.539863] page dumped because: kasan: bad access detected
->   [    2.540098] 
->   [    2.540170] Memory state around the buggy address:
->   [    2.540379]  ffff888005219380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   [    2.540684]  ffff888005219400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   [    2.540988] >ffff888005219480: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
->   [    2.541291]                                                     ^
->   [    2.541548]  ffff888005219500: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
->   [    2.541857]  ffff888005219580: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
-> 
-> The offset is past the 72-byte queue entry because the out-of-bounds read
-> fixed by the next patch is on the same line; what this patch removes is the
-> free at smc_llc_srv_add_link+0x9a8 happening before the read at +0xaa2.
-> 
-> Detach the entry instead of freeing it there, and free it at the single
-> exit label. The reject path has to detach as well, otherwise it would be
-> freed twice.
-> 
-> This changes only the lifetime of the entry. The same read still runs past
-> its end until the next two patches bound it, so a backport wants all three.
-> 
-> Fixes: 27ef6a9981fe ("net/smc: support SMC-R V2 for rdma devices with max_recv_sge equals to 1")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Sidraya Jayagond <sidraya@linux.ibm.com>
-> Signed-off-by: Yehyeong Lee <yhlee@isslab.korea.ac.kr>
+With GCC plugins enabled, external module builds can record
+-fplugin=... paths in DWARF producer metadata via
+-grecord-gcc-switches, leaking host/build specific paths and
+triggering QA checks.
 
-Reviewed-by: Breno Leitao <leitao@debian.org>
+Handle this in scripts/Makefile.gcc-plugins for KBUILD_EXTMOD
+builds by adding -gno-record-gcc-switches to plugin cflags.
+
+This keeps plugin behavior unchanged while avoiding absolute
+plugin path leakage in external module debug metadata.
+
+Suggested-by: Nathan Chancellor <nathan@kernel.org>
+Link: https://lore.kernel.org/all/20260817185146.GC1249844@ax162/
+Signed-off-by: Jaihind Yadav <jaihindy@qti.qualcomm.com>
+---
+ scripts/Makefile.gcc-plugins | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index b0e1423b09c2..9b9899580571 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -8,6 +8,10 @@ ifdef CONFIG_GCC_PLUGIN_LATENT_ENTROPY
+ endif
+ export DISABLE_LATENT_ENTROPY_PLUGIN
+ 
++# Disable recording GCC options in debug info when building external modules to
++# avoid leaking absolute host build paths
++gcc-plugin-cflags-$(if $(KBUILD_EXTMOD),y) += -gno-record-gcc-switches
++
+ # All the plugin CFLAGS are collected here in case a build target needs to
+ # filter them out of the KBUILD_CFLAGS.
+ GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y)) -DGCC_PLUGINS
+-- 
+2.43.0
+
