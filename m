@@ -1,95 +1,113 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A236C37A487;
-	Thu, 20 Aug 2026 15:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C11347CA88
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Aug 2026 15:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787240148; cv=none; b=u1ffOpAZNcsywF1E7zL4yIqBrgom07wQozoDedW+BnIt4KuUXqvmx7flC381OuSU/8iN0NsL4whltq8faF+prVEy7K4udELRnmQoFcvik3coTjjIwahjJrxFdVteGnGD1xD0x/0uH9ltBQoRu5I9r/Y1U8M61t9D+7k8OcTzOmo=
+	t=1787240464; cv=none; b=SdSql2F+D7Ey+gP3rC5GR22Djokui/3lc8qCuFmbZ8YI9hxs7e+jL50Z1GHEstE5P7MiApFK9muh8p7ngtQG9VBZBDJ9Y5pSEqVRZGD4NITjhpKl1tnghRBqgeNZPieXKmLjCUNnGZH9WYppcT4O4CEGZ5gQtOpBMn5Idz0qL/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787240148; c=relaxed/simple;
-	bh=v2ZdfvVE+c8VBDgC5YLyRGPciNOUQrYqWOZ2REhb+YQ=;
+	s=arc-20240116; t=1787240464; c=relaxed/simple;
+	bh=GruX7oLTdhV3iy2Tf5qHkC3ie6pEwvgQMgJztpukt90=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CBs0JpANZV+F3XP5aqWWR1GHAoqOLDP9w6ro0M5X0SXaO3bt6Y94FMp3w4bWRhISwCOLpcVkovR+GwEISqMNiKK3Xwir6Vzb/LP2nPAVikOiLOzxddR8Ta3tYyP7lWdH5BVN5RsAs0sMtTgd9eps0r2Y2iU0NjVB9hR4ln3r2mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kV9u1/nd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vkUK/vyJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=RCQoZ9nE6WpmRhjW65AxeQgtn9zaX4SOHFzzAKhIpVNFzPzO19p/zqRf0ZaFloW7ZzZsS7nrR0M8LMFtLJEtJ0NhKYSCPM0LMAOlwyk+PIHGEeQ6zVQ/vb5vdpgRNdo2eKIhYq0L/cNK9Y8L3xtiBbI9kyIEzQ4ToYisI4miAhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dZTRhkMG; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kV9u1/nd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vkUK/vyJ"
-Date: Thu, 20 Aug 2026 17:35:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1787240145;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+T9ZPpgIMi97gDw4k1I8pfsAVB2S1vNUsKoFuKa2Wuo=;
-	b=kV9u1/nd7wDk0B3P/LZIKdRPgtn8VlaQ4eX9vjvnxoYEXnIuC3yhcQRQipQGbNU3YWTg8r
-	iLX0Sh3p44huKGmLrfVvptdL+RvAbfYLiuGcmwabamU7ZdWTdH0sZrtimqpCA+KnXZ8fB7
-	XKKsNxfE5haGrHiL1QH5Pl+D/Dx0BzQ5K7gdcvI5jzZOzOQa64UrwIC9BFE4/r8feDBf6+
-	2YCf0Qx1cy3YYR5+UZttn92c1eZ9ZnkHArfqc5yh/OHb9Ez4bg+3ney/0XGgTGTPsTYfOi
-	Xjv9C4GPUzNoYUHwsYajNepa14uSylw/Mlp5cBUsRy5FnD623upReo1lKxEsVQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1787240145;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+T9ZPpgIMi97gDw4k1I8pfsAVB2S1vNUsKoFuKa2Wuo=;
-	b=vkUK/vyJESvmU3hZAFMBiQN0S0NT34oAzLEKjCcmntr4hu/wp0kw71VhN8HZDj3tLJCidT
-	ZuQI0bJ431zyCQCQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dZTRhkMG"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-471eeac43bfso36836f8f.3
+        for <linux-hardening@vger.kernel.org>; Thu, 20 Aug 2026 08:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1787240460; x=1787845260; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=vW2vbLauS6L+WRF0P3Pb5/mw3R9o0oY2tWuO8zELCcs=;
+        b=dZTRhkMG62pOlIDVYienVv5yVksALHGHKaUQBKoqqFq3ZcbB9ybX/XmDbRxgys7Sul
+         QcYyRINiPWisiGt8TCGff1rOuVIroIr0nxC87BOmDd0rHnKBiE7p7Idnta33qlkzYr+A
+         o/fTsBkzhdXZ4ulpQwLalwkMYlfyypk2S7vOeHXnnkIYNiP42ePlviXyZLmH/GBKu9bH
+         tSa0ANce1HAHXzpyVKfCLwt8nn/xLsAzmiVq6EmeR6664ZqZ2Sls5soOXMfjs85YhhoS
+         VVMxidMvvPwEIIo/WCqfvOVcuEL5nfkLailk8PqK5Jel1qXxQf8Zdk3QNyRhEQs9Plx6
+         um6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787240460; x=1787845260;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vW2vbLauS6L+WRF0P3Pb5/mw3R9o0oY2tWuO8zELCcs=;
+        b=GgDtdcL24DMfwBp+gHOBot0yexQEt8c9R6190QQfH06FawEkBpJ99ZpZMp6doZITQg
+         sAyAQIdEshDMzWVPBU8diwpzX5XEOnvb6vK4FHdkuBYNgAkj9cWjECVrVm51H1aU4pSN
+         lgFIrcrHh2z4CuhUyk9adPffcf8qqI1PnTfLOroy/ZDH5bw0uCJCsgIDLGTK8S9NcPXz
+         CK9Uy/wXOaXzEcvb3qu+ydVH1puPVVz43fMvJ3BSn2UDLHcHeauThoaH64mJHhqWyJkU
+         6+4walUQFgphbKYNQgR+IRhAIuH8ASoGkeRBPQM/3PEXRMYFD8RSK2EpIGkFd7HSsWCM
+         3qQw==
+X-Forwarded-Encrypted: i=1; AHgh+Ro4FQfDNUDoFEeYDdTIkP2/rYc3FuX3rrFNHSTgwMpUtUXeM+rMWhZ+2KcTH1Af3lOT+RkScX3yKjzKUmiQcqQ=@vger.kernel.org
+X-Gm-Message-State: AFuF++mSj2aWRM76e6zcaYB1Mc9U5BubcrU5HPTr6iAws2CXFHA/6xac
+	FTxZg8hHMxkI9uY29JQ4SRqd+JsiPOdY8iOudwDEmBFP5cqCnzmVimR/XCrBt5LkfuM=
+X-Gm-Gg: AR+sD130aunzzLIXbpFnowqsLxSBMR+D0hGyfrBFf/vjdsCM5SU75cJmK6sWJJLzkRe
+	wGnlIAM0RVT/p0C+fEyXQc2pyvdtgKKXdEAc0T/OBX1rsYytLinwFU17A04VWpIquKpzLP6oyFJ
+	sBt6U+At/FKqZ++E0yGDFu+NYI1zmZuv34mJaan5PcziwRLyIyeHPrKdkC+TMR06kxMebn18l+U
+	mrrNe2XKZ48UsUeGHadX9FSKaeSUUdZdE4NhJ3+eDHtPVmiq7qOFC7PEP2IBX1Ze+CQVZaXd5k4
+	zw+bwWbZE71TzUNQMlBil7jWBurUeIvOtDjJyFH7L/7KDeYwfFlLumau9BcsD3OwhudMR6Jhp16
+	5GU4uZhjznEryNDZ6QHcwg0Fd4sS0/QLnfNrk4Dr4YjJY5+On32P5P+2+iIHELYJrLplpaZltp0
+	0RPCryb4hih1IDv5pBDNq2E3AOcyKAzqV1P4aRAZBvNkvXpXGXPr56VKv+cIAJqw==
+X-Received: by 2002:a5d:5e02:0:b0:47f:e721:1f77 with SMTP id ffacd0b85a97d-482b1fd3a9cmr25092691f8f.13.1787240460299;
+        Thu, 20 Aug 2026 08:41:00 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14b802dsm12188252f8f.17.2026.08.20.08.40.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2026 08:40:59 -0700 (PDT)
+Date: Thu, 20 Aug 2026 17:40:57 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Kees Cook <kees@kernel.org>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Tycho Andersen <tycho@tycho.pizza>
-Subject: Re: [PATCH 0/2] vsprintf: Don't leak pointers
-Message-ID: <20260820153544.PKYwu35j@linutronix.de>
+Subject: Re: [PATCH 1/2] vsprintf: Don't leak pointers for %ps without
+ KALLSYMS enabled
+Message-ID: <aocgCfQoKIVbaU4k@pathway.suse.cz>
 References: <20260814144854.746840-1-bigeasy@linutronix.de>
- <20260814125647.3e10a3441ca204855b135a5e@linux-foundation.org>
- <aocdGcA6TYe5ascV@pathway.suse.cz>
+ <20260814144854.746840-2-bigeasy@linutronix.de>
+ <aoAqG0kKxvBbed0M@ashevche-desk.local>
+ <20260820142426.Q3y-RHVx@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aocdGcA6TYe5ascV@pathway.suse.cz>
+In-Reply-To: <20260820142426.Q3y-RHVx@linutronix.de>
 
-On 2026-08-20 17:28:25 [+0200], Petr Mladek wrote:
-> On Fri 2026-08-14 12:56:47, Andrew Morton wrote:
-> > On Fri, 14 Aug 2026 16:48:52 +0200 Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-> > 
-> > > It is possible to leak pointers via %ps without KALLSYMS enabled.
-> > > With KALLSYMS pointers can be leaked if they can not be resolved.
+On Thu 2026-08-20 16:24:26, Sebastian Andrzej Siewior wrote:
+> On 2026-08-15 11:58:03 [+0300], Andy Shevchenko wrote:
+> > On Fri, Aug 14, 2026 at 04:48:53PM +0200, Sebastian Andrzej Siewior wrote:
+> > > The "%ps" format modifier prints the name of the symbol which is more
+> > > valuable in terms of debugging and does not leak the actual pointer.
 > > > 
-> > > The tiny series has two patches, one for each issue.
+> > > Without KALLSYMS it will leak the pointer which is not intended. The
+> > > default policy for pointers is to print a hashed value and not to leak
+> > > the actual pointer.
 > > > 
+> > > Print "(unknown)" for any symbol resolution witout KALLSYMS enabled.
 > > 
-> > Thanks.
-> > 
-> > fwiw, Sashiko flagged a few possible issues:
-> > 	https://sashiko.dev/#/patchset/20260814144854.746840-1-bigeasy@linutronix.de
+> > Hmm... I would expect some test cases to be added/modified.
 > 
-> Sashiko basically complains about that this might make
-> dump_stack(), panics, and oopses useless on systems without KALLSYMS
-> which is typical on embedded systems.
-> 
-> IMHO, it is a good point. What about using default_pointer() resp. %p
-> as the fallback? It would allow to see the pointers with
-> "no_hash_pointers" kernel parameter.
+> No bot complained so far, so maybe not ;)
 
-I didn't repost it yet. But this is what I did locally. #1 takes
-no_hash_pointers into consideration and #2 is just a comment _why_ we
-"leak" the actual pointer.
+It seems that we really do not have test cases for this. I guess
+that it is because it is so tricky with the various fallbacks, ...
 
-> Best Regards,
-> Petr
+The existing test cases for %p are tricky as well. As a result
+they are an infinite source of problems ;-)
 
-Sebastian
+Best Regards,
+Petr
