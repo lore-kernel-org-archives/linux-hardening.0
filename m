@@ -1,631 +1,160 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93953F7884
-	for <linux-hardening@vger.kernel.org>; Fri, 21 Aug 2026 12:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D4883B19B0
+	for <linux-hardening@vger.kernel.org>; Fri, 21 Aug 2026 13:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787315245; cv=none; b=ohpGpUT4EaQpCUOZmmWx/6gtj4IBMRIY9XmPs+YgXf/pN17HyasYBSesRfvO60tsCG9v/Pl4tlHU8zKX+j/IiepJBbCq+HUsHHaHCwpo5KFIrs/e9Uz+LuTRO1PlyRAwqPUion44vj9LoErPrrLybVD4UtZy91ZOrZd6QMzVNx0=
+	t=1787318440; cv=none; b=Tm5Hm25HZhe/2cJ3NUnZQ4BJD2Pmtmh8mWsHBnwWzjgWyprNCgchFbUwvHi7Vz7qy/s/t2NPAmDbuQoxDMcQXutYJVsLdAOJAERK2G/jIn54XxWL05AcVCzDXjoR88KMIjvkl5//y3JXLBGeKcOOYvqCazDEWvll4c4D2Qc4/FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787315245; c=relaxed/simple;
-	bh=9tX4vlqIqUDKwRTNzqaZh6vBQ4ue7seqLdlKCinQQ2I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hYuJl8zmHyNMGnjMke47p/xrqEabV22tgHMChEbsnTvwNZAdSoakrdLrn+OWYkoYKZ3cGQ8s7xBPphcc9RDc6wNMmJPHi1GI6Gl8Doe+qFwyFP4yGPp1h3N7cTN65UWegEH54GrUmimC7SU0Wx6WagKSjgKC78QDUUsnjWfpKpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FiICGNoj; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787318440; c=relaxed/simple;
+	bh=2OeUaNMPu+bZ4hOVGmb2LFwuUA0hs71atyCF4/CFKQw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iZQsxZhnZ3kw16NRtnQDOz0rrLId950XFWez7kKDZkMW+0AGG88EZXahgjA9TDCFtEpRrLBBb3EHUCidjS9/IEUJpS7aYpS/g7U678Q6T+b6p59mcRSei2860gYEC9lpO8PTs1sxsvExlg2Q+WTXnG6LWTghzD3REzryWIG7BRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=hza4Dkuj; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiICGNoj"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6a3efa2b38aso1851307a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Aug 2026 05:27:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787315236; x=1787920036; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Pg60NrqAtbFMf+hekjwzsvKyojDNyaSGf41CfCmu3bU=;
-        b=FiICGNojQ86kxLGrIFvQXnbdrukriMW7fN3rbb1heoffZHgZc47jbCtjX+yaOX8pBi
-         X6dvGWtx6T48xpqsqRPtvz1mYE2I7Mn4jVgBLXfqFXaEzRtfUFb2F71jV0kMGKtXrMFb
-         AVWVRpSM9g1wxvoOf5LyrgI8dYKXtMDAgyiNwilV7j5Wqndt4kqqQPac2QyBjItQmb3e
-         GAFY4p4AXZMJNom9kmIOIOXgAYlY9LZsPIA6glxVC0WbtqBzviXanVYKMnj/VTfOsm3J
-         63qHrnLYbrn4mV4Bv5GfrAPMs7z9pjh9vVnsqZtidhb3Zm1hIbnaqOgXmssfp1Prxvm9
-         J/JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787315236; x=1787920036;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Pg60NrqAtbFMf+hekjwzsvKyojDNyaSGf41CfCmu3bU=;
-        b=c6/+fy15/LPmRy1fesI2cxnBf9CVx5vh4MShM6B41BZ3KF8WAY6/5vjoUye5kH4dZx
-         2BahWOHFa48EPfOar4ZTa0rCJ+MZN4bvv1p5cIV8kUvf2YbksPnX+r+24TMCjtLv0Urd
-         dJ1E4dRBltV2+3c84MmKXAw+k5A2gxI+KVnMjncRq8b0sROPdLJMJNvcVsbHOMdcgKOX
-         Y4gmmLSFBjrqnUvkI/mOJIwMbPYB3cRXknsy/pT7H72Dn160vORoVQNi7rvinf0mKuch
-         RAYmGYKjteavxtMrYnazxK8R7TuipaLCd+y7eC5ULMrSiaZurH+lo+5HcRXpWGIB4Rqh
-         jLlA==
-X-Forwarded-Encrypted: i=1; AHgh+Ro+Ae1a5OLNCDC+jGxGF5B7pxzQRkftpjTaOgUMjpCXQhjqGIAVwwvw+a44bZ+bKTWE+Wk6fCUATU/8IDwN2A4=@vger.kernel.org
-X-Gm-Message-State: AFuF++mAaPqgmrzLCs5N6uqz4OHXRHDHx1tLJVI3DCCFPDO6k4afpvyQ
-	hV3XDMYjz6woZhDZun1dUXu1ylISiNYBElxunRC9kNKkBeImBnPBNsho
-X-Gm-Gg: AR+sD11FRxMUfTxVP7wqT6LIl/Jkf6UFDWtzjYlMMvMkTteoM1FL73igb81d8jCPJuE
-	0oDbKal6Rn57zKos30rjjpW9RfebYD6OE0fuLnXFhBLDNdCgQVgXIxglQ4kTWTjKUwDJ2kx6wCU
-	OHMphfRLCwffRfrZ8noWTeR59cWWLc+6mt+k7EvUUkAH1stpzp/Jd1vir5zW2PPd7F2lvoyeK7n
-	man39op1UTeHcJ+pS2wLvuGC46eAVaCYDiypsqTysh9Ia26rSkkEeBQJOliSN/Bx1uMw5x+lmPv
-	NsWnLRnktSbfEtUTs6Tz2fEuzkQk3Tan4VMioKb6McDyNd6UdLq2hr1CIijC87LjUP0ZjLJ76z4
-	k5Qk284FFGZNOcD28B/TruQ6mmXbuRnslCk3aZGyA3/lI5dbuU7Btb0lIK6Jtd2dgrJG0NiaBel
-	2EIHn5qnd7efO1Z/48XDc+vWJqnmCj2xOYhnwqhEt7LyWaqS/lIPm/lueBHKnSiwbzDSgGd7Pxd
-	QvKWsh6X4J/OJCsjHpBgGziDrI=
-X-Received: by 2002:a05:6402:4498:b0:6a1:44c8:edc4 with SMTP id 4fb4d7f45d1cf-6a42f21ee39mr6716416a12.12.1787315236193;
-        Fri, 21 Aug 2026 05:27:16 -0700 (PDT)
-Received: from [127.0.1.1] (83.24.178.112.ipv4.supernova.orange.pl. [83.24.178.112])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a3ff0c315dsm6220262a12.9.2026.08.21.05.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 05:27:15 -0700 (PDT)
-From: Adam Skladowski <a39.skl@gmail.com>
-Date: Fri, 21 Aug 2026 14:27:06 +0200
-Subject: [PATCH v5 7/7] arm64: dts: qcom: Add Xiaomi Redmi 9T
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="hza4Dkuj"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08CDD1476;
+	Fri, 21 Aug 2026 06:20:25 -0700 (PDT)
+Received: from [10.43.18.12] (unknown [10.43.18.12])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 662123F763;
+	Fri, 21 Aug 2026 06:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1787318428; bh=2OeUaNMPu+bZ4hOVGmb2LFwuUA0hs71atyCF4/CFKQw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hza4DkujC7/DIpSTKMt+tG/p7p5i5Klwn99TIX85W/13RztKsk6CbPkZDhFuXn017
+	 hcSu/fYfsj7Gc6azfpkOns3TY3W1mtn8qwSb7ne4tE2LCezmbSJMAyNwVXUaMh0zfk
+	 t5HJeljpPTNDNGSe3MZKxoGw50Hw+Aq1XIbFdj8k=
+Message-ID: <5a3b89a6-bc42-42c3-82e8-25d6f1a2c5d2@arm.com>
+Date: Fri, 21 Aug 2026 15:20:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] arm64: mm: Map fixmap PTE tables r/o in the linear
+ map
+To: Ard Biesheuvel <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org
+Cc: will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+ Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
+ Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
+ linux-hardening@vger.kernel.org
+References: <20260805104042.1107678-2-ardb+git@google.com>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260805104042.1107678-2-ardb+git@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260821-next-patches-v5-7-ec81cee63e09@gmail.com>
-References: <20260821-next-patches-v5-0-ec81cee63e09@gmail.com>
-In-Reply-To: <20260821-next-patches-v5-0-ec81cee63e09@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
- Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Adam Skladowski <a39.skl@gmail.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.15.2
 
-Add a devicetree for the Xiaomi Redmi 9T smartphone, which is based
-on the Bengal/SM6115 SoC.
+On 05/08/2026 12:40, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> Without physical KASLR, the fixmap page tables will appear at an a
+> priori known offset in the physical address space, and due to the lack
+> of randomization, the linear map carries a writeable alias of the fixmap
+> PTE pages, which appears at an offset in the kernel VA space that is
+> also predictable.
+>
+> Given that the placement of the fixmap area is never randomized either,
+> a single store to this linear alias region is sufficient to map any
+> physical page with any permissions at a known offset in the kernel VA
+> space, including on top of the PTI trampoline.
+>
+> Avoid this, by remapping the fixmap PTE pages read-only in the linear
+> map.
 
-Supported functionality as of this initial submission:
+Sounds good, logical next step after unmapping the rest of data/BSS from
+the linear map :)
 
-* Display via SimpleFB/SimpleDRM
-* GPU
-* I2C peripherals (Backlight)
-* Power Button, Volume Keys
-* Regulators
-* Remoteprocs (ADSP, CDSP, MPSS)
-* UFS/SDCARD
-* USB
+> This is possible because all updates to bm_pte[] occur via the
+> mapping of the kernel image in the vmap area. A read-only mapping is
+> still needed for things like ptdump that walk the page tables.
+>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: Kevin Brodsky <kevin.brodsky@arm.com>
+> Cc: Liz Prucka <lizprucka@google.com>
+> Cc: Seth Jenkins <sethjenkins@google.com>
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/arm64/include/asm/set_memory.h |  2 ++
+>  arch/arm64/mm/fixmap.c              |  7 +++++++
+>  arch/arm64/mm/pageattr.c            | 10 ++++++++++
+>  3 files changed, 19 insertions(+)
+>
+> diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm/set_memory.h
+> index 90f61b17275e..a685fb534c3e 100644
+> --- a/arch/arm64/include/asm/set_memory.h
+> +++ b/arch/arm64/include/asm/set_memory.h
+> @@ -11,6 +11,8 @@ bool can_set_direct_map(void);
+>  
+>  int set_memory_valid(unsigned long addr, int numpages, int enable);
+>  
+> +int set_direct_map_ro(unsigned long addr, int numpages);
+> +
+>  int set_direct_map_invalid_noflush(struct page *page);
+>  int set_direct_map_default_noflush(struct page *page);
+>  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid);
+> diff --git a/arch/arm64/mm/fixmap.c b/arch/arm64/mm/fixmap.c
+> index f66a0016dd02..fcb571dffe82 100644
+> --- a/arch/arm64/mm/fixmap.c
+> +++ b/arch/arm64/mm/fixmap.c
+> @@ -14,6 +14,7 @@
+>  #include <asm/fixmap.h>
+>  #include <asm/kernel-pgtable.h>
+>  #include <asm/pgalloc.h>
+> +#include <asm/set_memory.h>
+>  #include <asm/tlbflush.h>
+>  
+>  /* ensure that the fixmap region does not grow down into the PCI I/O region */
+> @@ -173,3 +174,9 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+>  
+>  	return dt_virt;
+>  }
+> +
+> +static int __init fixmap_remap_ro(void)
+> +{
+> +	return set_direct_map_ro((unsigned long)lm_alias(&bm_pte), NR_BM_PTE_TABLES);
 
-Device tree also contains supply maps to other subsystems like MDSS
-but due to missing dependencies like panel those are disabled.
+Should we not also remap bm_pmd and bm_pud?
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
----
- arch/arm64/boot/dts/qcom/Makefile                |   1 +
- arch/arm64/boot/dts/qcom/sm6115-xiaomi-lemon.dts | 497 +++++++++++++++++++++++
- 2 files changed, 498 insertions(+)
+For that matter, do we need RW access via the linear map for any page
+annotated with __bss_pgtbl? I suppose that might be the case for
+kasan_early_shadow_* but I don't know enough about KASAN to tell for sure.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 1487f2beff3d..34789de13552 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -344,6 +344,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= shikra-iqs-evk.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm4250-oneplus-billie2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm4450-qrd.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6115-fxtec-pro1x.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sm6115-xiaomi-lemon.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6115p-lenovo-j606f.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-xiaomi-ginkgo.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm6115-xiaomi-lemon.dts b/arch/arm64/boot/dts/qcom/sm6115-xiaomi-lemon.dts
-new file mode 100644
-index 000000000000..881e05b70116
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm6115-xiaomi-lemon.dts
-@@ -0,0 +1,497 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * Copyright (c) 2026 Adam Skladowski <a39skl@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "sm6115.dtsi"
-+#include "pm6125.dtsi"
-+#include "pmi632.dtsi"
-+#include <dt-bindings/leds/common.h>
-+
-+/delete-node/ &pil_adsp_mem;
-+/delete-node/ &pil_gpu_mem;
-+/delete-node/ &pil_ipa_fw_mem;
-+/delete-node/ &pil_ipa_gsi_mem;
-+
-+/ {
-+	model = "Xiaomi Redmi 9T";
-+	compatible = "xiaomi,lemon", "qcom,sm6115";
-+	chassis-type = "handset";
-+
-+	aliases {
-+		mmc0 = &sdhc_2;
-+	};
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		framebuffer0: framebuffer@5c000000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0 0x5c000000 0 (2340 * 1080 * 4)>;
-+			width = <1080>;
-+			height = <2340>;
-+			stride = <(1080 * 4)>;
-+			format = "a8r8g8b8";
-+			clocks = <&gcc GCC_DISP_HF_AXI_CLK>;
-+		};
-+	};
-+
-+	backlight_dsi: backlight-dsi {
-+		compatible = "led-backlight";
-+		leds = <&led_backlight>;
-+		brightness-levels = <255>;
-+		default-brightness-level = <190>;
-+		/* Backlight controllers can differ between panel variants */
-+		status = "disabled";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&vol_up_n>;
-+		pinctrl-names = "default";
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&pm6125_gpios 5 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <15>;
-+			linux,can-disable;
-+			wakeup-source;
-+		};
-+	};
-+
-+	reserved-memory {
-+		pil_adsp_mem: memory@53400000 {
-+			reg = <0x0 0x53400000 0x0 0x2600000>;
-+			no-map;
-+		};
-+
-+		pil_ipa_fw_mem: memory@55a00000 {
-+			reg = <0x0 0x55a00000 0x0 0x10000>;
-+			no-map;
-+		};
-+
-+		pil_ipa_gsi_mem: memory@55a10000 {
-+			reg = <0x0 0x55a10000 0x0 0x5000>;
-+			no-map;
-+		};
-+
-+		pil_gpu_mem: memory@fa400000 {
-+			reg = <0x0 0xfa400000 0x0 0x2000>;
-+			no-map;
-+		};
-+
-+		ramoops: ramoops@64000000 {
-+			compatible = "ramoops";
-+			no-map;
-+			reg = <0x0 0x64000000 0x0 0x400000>;
-+			record-size = <0x100000>;
-+			console-size = <0x100000>;
-+			pmsg-size = <0x200000>;
-+			ecc-size = <16>;
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
-+
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&dispcc {
-+	/* Prevent simplefb from dying until we wire panel driver */
-+	status = "disabled";
-+};
-+
-+&gpi_dma0 {
-+	status = "okay";
-+};
-+
-+&gpu {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	lm36923_bl: led-controller@36 {
-+		compatible = "ti,lm36923";
-+		reg = <0x36>;
-+
-+		pinctrl-0 = <&lm3692x_bl_active>;
-+		pinctrl-names = "default";
-+
-+		enable-gpios = <&tlmm 99 GPIO_ACTIVE_HIGH>;
-+		ti,ovp-microvolt = <29000000>;
-+		/* Backlight controllers can differ between panel variants */
-+		status = "disabled";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		led_backlight: led@0 {
-+			reg = <0>;
-+			function = LED_FUNCTION_BACKLIGHT;
-+			color = <LED_COLOR_ID_WHITE>;
-+			label = ":backlight";
-+			linux,default-trigger = "backlight";
-+			led-max-microamp = <25000>;
-+		};
-+	};
-+};
-+
-+&mdss_dsi0 {
-+	vdda-supply = <&pm6125_l18>;
-+};
-+
-+&mdss_dsi0_out {
-+	data-lanes = <0 1 2 3>;
-+};
-+
-+&pil_cdsp_mem {
-+	reg = <0x0 0x51a00000 0x0 0xa00000>;
-+};
-+
-+&pm6125_gpios {
-+	vol_up_n: vol-up-n-state {
-+		pins = "gpio5";
-+		function = "normal";
-+		power-source = <0>;
-+		bias-pull-up;
-+		input-enable;
-+	};
-+};
-+
-+&pmi632_typec {
-+	status = "okay";
-+
-+	connector {
-+		compatible = "usb-c-connector";
-+
-+		power-role = "dual";
-+		data-role = "dual";
-+		self-powered;
-+
-+		typec-power-opmode = "default";
-+		pd-disable;
-+
-+		vbus-supply = <&pmi632_vbus>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				pmi632_hs_in: endpoint {
-+					remote-endpoint = <&usb_dwc3_hs>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				pmi632_ss_in: endpoint {
-+					remote-endpoint = <&usb_qmpphy_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&pmi632_vbus {
-+	regulator-min-microamp = <500000>;
-+	regulator-max-microamp = <1000000>;
-+
-+	status = "okay";
-+};
-+
-+&pon_pwrkey {
-+	status = "okay";
-+};
-+
-+&pon_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+
-+	status = "okay";
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&remoteproc_adsp {
-+	status = "okay";
-+};
-+
-+&remoteproc_cdsp {
-+	status = "okay";
-+};
-+
-+&remoteproc_mpss {
-+	status = "okay";
-+};
-+
-+&rpm_requests {
-+	regulators-0 {
-+		compatible = "qcom,rpm-pm6125-regulators";
-+
-+		pm6125_s6: s6 {
-+			regulator-min-microvolt = <304000>;
-+			regulator-max-microvolt = <1456000>;
-+		};
-+
-+		pm6125_s7: s7 {
-+			regulator-min-microvolt = <1280000>;
-+			regulator-max-microvolt = <2080000>;
-+		};
-+
-+		pm6125_s8: s8 {
-+			regulator-min-microvolt = <1064000>;
-+			regulator-max-microvolt = <1304000>;
-+		};
-+
-+		pm6125_l1: l1 {
-+			regulator-min-microvolt = <952000>;
-+			regulator-max-microvolt = <1152000>;
-+		};
-+
-+		pm6125_l4: l4 {
-+			regulator-min-microvolt = <488000>;
-+			regulator-max-microvolt = <1000000>;
-+		};
-+
-+		pm6125_l5: l5 {
-+			regulator-min-microvolt = <1648000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-allow-set-load;
-+
-+			regulator-always-on;
-+		};
-+
-+		pm6125_l6: l6 {
-+			regulator-min-microvolt = <576000>;
-+			regulator-max-microvolt = <656000>;
-+		};
-+
-+		pm6125_l7: l7 {
-+			/* sdhci2 vdd-io-bias supply */
-+			regulator-min-microvolt = <1256000>;
-+			regulator-max-microvolt = <1256000>;
-+
-+			regulator-always-on;
-+		};
-+
-+		pm6125_l8: l8 {
-+			regulator-min-microvolt = <400000>;
-+			regulator-max-microvolt = <728000>;
-+		};
-+
-+		pm6125_l9: l9 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2000000>;
-+		};
-+
-+		pm6125_l10: l10 {
-+			regulator-min-microvolt = <1704000>;
-+			regulator-max-microvolt = <1904000>;
-+		};
-+
-+		pm6125_l11: l11 {
-+			regulator-min-microvolt = <1768000>;
-+			regulator-max-microvolt = <1952000>;
-+		};
-+
-+		pm6125_l12: l12 {
-+			regulator-min-microvolt = <1624000>;
-+			regulator-max-microvolt = <1984000>;
-+		};
-+
-+		pm6125_l13: l13 {
-+			regulator-min-microvolt = <1504000>;
-+			regulator-max-microvolt = <1952000>;
-+		};
-+
-+		pm6125_l14: l14 {
-+			regulator-min-microvolt = <1704000>;
-+			regulator-max-microvolt = <1904000>;
-+		};
-+
-+		pm6125_l15: l15 {
-+			regulator-min-microvolt = <2920000>;
-+			regulator-max-microvolt = <3232000>;
-+		};
-+
-+		pm6125_l16: l16 {
-+			regulator-min-microvolt = <1704000>;
-+			regulator-max-microvolt = <1904000>;
-+		};
-+
-+		pm6125_l17: l17 {
-+			regulator-min-microvolt = <1152000>;
-+			regulator-max-microvolt = <1384000>;
-+		};
-+
-+		pm6125_l18: l18 {
-+			regulator-min-microvolt = <1232000>;
-+			regulator-max-microvolt = <1232000>;
-+		};
-+
-+		pm6125_l19: l19 {
-+			regulator-min-microvolt = <1624000>;
-+			regulator-max-microvolt = <3304000>;
-+		};
-+
-+		pm6125_l20: l20 {
-+			regulator-min-microvolt = <1624000>;
-+			regulator-max-microvolt = <3304000>;
-+		};
-+
-+		pm6125_l21: l21 {
-+			regulator-min-microvolt = <2400000>;
-+			regulator-max-microvolt = <3600000>;
-+		};
-+
-+		pm6125_l22: l22 {
-+			regulator-min-microvolt = <2952000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-allow-set-load;
-+
-+			regulator-always-on;
-+		};
-+
-+		pm6125_l23: l23 {
-+			regulator-min-microvolt = <3200000>;
-+			regulator-max-microvolt = <3400000>;
-+		};
-+
-+		pm6125_l24: l24 {
-+			regulator-min-microvolt = <2704000>;
-+			regulator-max-microvolt = <3600000>;
-+		};
-+	};
-+};
-+
-+&sdhc_2 {
-+	cd-gpios = <&tlmm 88 GPIO_ACTIVE_HIGH>;
-+
-+	pinctrl-0 = <&sdc2_state_on>, <&sdc2_cd_on>;
-+	pinctrl-1 = <&sdc2_state_off>, <&sdc2_cd_off>;
-+	pinctrl-names = "default", "sleep";
-+
-+	vmmc-supply = <&pm6125_l22>;
-+	vqmmc-supply = <&pm6125_l5>;
-+	/* No binding for vdd-io-bias on L7*/
-+	no-sdio;
-+	no-mmc;
-+
-+	status = "okay";
-+};
-+
-+&sleep_clk {
-+	clock-frequency = <32764>;
-+};
-+
-+&spi2 {
-+	status = "okay";
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <14 4>; /* Fingerprint SPI */
-+
-+	lm3692x_bl_active: lm3692x-active-state {
-+		pins = "gpio99";
-+		function = "gpio";
-+		drive-strength = <0x02>;
-+		bias-pull-up;
-+	};
-+
-+	mdss_dsi_active: mdss-dsi-active-state {
-+		pins = "gpio85";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-disable;
-+	};
-+
-+	sdc2_cd_on: sdc2-cd-on-state {
-+		pins = "gpio88";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
-+	sdc2_cd_off: sdc2-cd-off-state {
-+		pins = "gpio88";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	te_active: te-active-state {
-+		pins = "gpio81";
-+		function = "mdp_vsync";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+	};
-+};
-+
-+&ufs_mem_hc {
-+	vcc-max-microamp = <600000>;
-+	vcc-supply = <&pm6125_l24>;
-+	vccq2-max-microamp = <600000>;
-+	vccq2-supply = <&pm6125_l11>;
-+	vdd-hba-supply = <&pm6125_l18>;
-+
-+	status = "okay";
-+};
-+
-+&ufs_mem_phy {
-+	vdda-phy-supply = <&pm6125_l4>;
-+	vdda-pll-supply = <&pm6125_l12>;
-+
-+	status = "okay";
-+};
-+
-+&usb {
-+	status = "okay";
-+};
-+
-+&usb_dwc3 {
-+	maximum-speed = "high-speed";
-+};
-+
-+&usb_dwc3_hs {
-+	remote-endpoint = <&pmi632_hs_in>;
-+};
-+
-+&usb_hsphy {
-+	vdd-supply = <&pm6125_l4>;
-+	vdda-pll-supply = <&pm6125_l12>;
-+	vdda-phy-dpdm-supply = <&pm6125_l15>;
-+
-+	status = "okay";
-+};
-+
-+&usb_qmpphy {
-+	vdda-phy-supply = <&pm6125_l4>;
-+	vdda-pll-supply = <&pm6125_l12>;
-+
-+	status = "okay";
-+};
-+
-+&usb_qmpphy_out {
-+	remote-endpoint = <&pmi632_ss_in>;
-+};
-+
-+&xo_board {
-+	clock-frequency = <19200000>;
-+};
+> +}
+> +late_initcall(fixmap_remap_ro);
 
--- 
-2.55.0
+Is mark_rodata_ro() definitely too early to remap these pages RO?
 
+- Kevin
+
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index bbe98ac9ad8c..5072b14d4f9d 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -251,6 +251,16 @@ int set_memory_valid(unsigned long addr, int numpages, int enable)
+>  					__pgprot(PTE_PRESENT_VALID_KERNEL));
+>  }
+>  
+> +int set_direct_map_ro(unsigned long addr, int numpages)
+> +{
+> +	if (!can_set_direct_map())
+> +		return 0;
+> +
+> +	return __change_memory_common(addr, PAGE_SIZE * numpages,
+> +				      __pgprot(PTE_RDONLY),
+> +				      __pgprot(PTE_WRITE));
+> +}
+> +
+>  int set_direct_map_invalid_noflush(struct page *page)
+>  {
+>  	pgprot_t clear_mask = __pgprot(PTE_PRESENT_VALID_KERNEL);
