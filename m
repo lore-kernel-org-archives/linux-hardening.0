@@ -1,160 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D4883B19B0
-	for <linux-hardening@vger.kernel.org>; Fri, 21 Aug 2026 13:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E8B36F90F;
+	Fri, 21 Aug 2026 15:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787318440; cv=none; b=Tm5Hm25HZhe/2cJ3NUnZQ4BJD2Pmtmh8mWsHBnwWzjgWyprNCgchFbUwvHi7Vz7qy/s/t2NPAmDbuQoxDMcQXutYJVsLdAOJAERK2G/jIn54XxWL05AcVCzDXjoR88KMIjvkl5//y3JXLBGeKcOOYvqCazDEWvll4c4D2Qc4/FA=
+	t=1787325983; cv=none; b=F/FpHKRFEb3Uw42Uh5ryNAWizHCrt0/baB5abJFt7lkgQeT3F5poHfvV+45qYdb04Gj3UnVH33qkMI9/f4GyNeZnZvx2rmFgRvG/alfMOTTgtVKBAN4yuNEEVQnW5wDEWrfOioS14eScm2httVlWbaKr0+1G2HG4magBTJn6yCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787318440; c=relaxed/simple;
-	bh=2OeUaNMPu+bZ4hOVGmb2LFwuUA0hs71atyCF4/CFKQw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iZQsxZhnZ3kw16NRtnQDOz0rrLId950XFWez7kKDZkMW+0AGG88EZXahgjA9TDCFtEpRrLBBb3EHUCidjS9/IEUJpS7aYpS/g7U678Q6T+b6p59mcRSei2860gYEC9lpO8PTs1sxsvExlg2Q+WTXnG6LWTghzD3REzryWIG7BRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=hza4Dkuj; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1787325983; c=relaxed/simple;
+	bh=DquXfD9Tt+0x3MTfcptOq/P/MG1QIM/Maip3YD3JwnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f9BBkfnKgL2JuGWOX7W1ogb7tu3Ww/UskFhUxSSisZZamDBStIdRE9F5xvoVFDh5JnV9l0OdAxr2NEu+pTC+SlGCGXGHc/PC5WJWvAasEnzgJwwmrJitM8m9HrQW1qf0QHKIChruDIXZyRg5T7ZHiyrFVqVlmwiugXAn31/p9gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pmswm066; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aDz9bb9M; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="hza4Dkuj"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08CDD1476;
-	Fri, 21 Aug 2026 06:20:25 -0700 (PDT)
-Received: from [10.43.18.12] (unknown [10.43.18.12])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 662123F763;
-	Fri, 21 Aug 2026 06:20:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1787318428; bh=2OeUaNMPu+bZ4hOVGmb2LFwuUA0hs71atyCF4/CFKQw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hza4DkujC7/DIpSTKMt+tG/p7p5i5Klwn99TIX85W/13RztKsk6CbPkZDhFuXn017
-	 hcSu/fYfsj7Gc6azfpkOns3TY3W1mtn8qwSb7ne4tE2LCezmbSJMAyNwVXUaMh0zfk
-	 t5HJeljpPTNDNGSe3MZKxoGw50Hw+Aq1XIbFdj8k=
-Message-ID: <5a3b89a6-bc42-42c3-82e8-25d6f1a2c5d2@arm.com>
-Date: Fri, 21 Aug 2026 15:20:21 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pmswm066";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aDz9bb9M"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1787325980;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=77gF0INbeIPBg1x8Zq6Y4appNBmm4gaznUcxQdBUVmw=;
+	b=Pmswm066Jm5ywD7nFmb1kvzufWyHCWwDmhAXbvN1NLLAfmUAKKlgII5eSEn8o0/0WawE2k
+	IybirZUSjYj0kMg8Gj2rqm1cSnO+aNThpEtnkP47+5h1023D3eYb/zXQa36gSKWoPB5XW5
+	1OhsBN9G/ZQFU5cwR4hmgkbtKcVUPHmGuDsi6geU77uiSDwtJ7FVzMkoxzUFo0GbvnGqC9
+	hu8ikKh8fLCKAgy7MqS4yxsvj5emOD306huaiqYhTlDaLZrzLD++9HfQ7/QGSqcJ111rYY
+	Fk/Y3q9AJVmxWuSGt1TEkeZaiHPjv4zsfeAz2ADPk4OCExbrQDW1RPKZEZdiag==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1787325980;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=77gF0INbeIPBg1x8Zq6Y4appNBmm4gaznUcxQdBUVmw=;
+	b=aDz9bb9M2buwBbLgbJE0weyBu78dhyz9rVcoVAk/97Npy4pduiLPsBlFuyHRowFSg7gyMm
+	yw9gg6MlkYEiyYBw==
+To: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Kees Cook <kees@kernel.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tycho Andersen <tycho@tycho.pizza>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v2 0/2] vsprintf: Don't leak pointers 
+Date: Fri, 21 Aug 2026 17:26:12 +0200
+Message-ID: <20260821152614.2202196-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] arm64: mm: Map fixmap PTE tables r/o in the linear
- map
-To: Ard Biesheuvel <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org
-Cc: will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
- Ard Biesheuvel <ardb@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
- Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
- linux-hardening@vger.kernel.org
-References: <20260805104042.1107678-2-ardb+git@google.com>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260805104042.1107678-2-ardb+git@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 05/08/2026 12:40, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> Without physical KASLR, the fixmap page tables will appear at an a
-> priori known offset in the physical address space, and due to the lack
-> of randomization, the linear map carries a writeable alias of the fixmap
-> PTE pages, which appears at an offset in the kernel VA space that is
-> also predictable.
->
-> Given that the placement of the fixmap area is never randomized either,
-> a single store to this linear alias region is sufficient to map any
-> physical page with any permissions at a known offset in the kernel VA
-> space, including on top of the PTI trampoline.
->
-> Avoid this, by remapping the fixmap PTE pages read-only in the linear
-> map.
+It is possible to leak pointers via %ps without KALLSYMS enabled.
+With KALLSYMS pointers can be leaked if they can not be resolved.
 
-Sounds good, logical next step after unmapping the rest of data/BSS from
-the linear map :)
+The tiny series has two patches, first addresses the first issue, the
+second documents why we want to keep it that way.
 
-> This is possible because all updates to bm_pte[] occur via the
-> mapping of the kernel image in the vmap area. A read-only mapping is
-> still needed for things like ptdump that walk the page tables.
->
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Kevin Brodsky <kevin.brodsky@arm.com>
-> Cc: Liz Prucka <lizprucka@google.com>
-> Cc: Seth Jenkins <sethjenkins@google.com>
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/arm64/include/asm/set_memory.h |  2 ++
->  arch/arm64/mm/fixmap.c              |  7 +++++++
->  arch/arm64/mm/pageattr.c            | 10 ++++++++++
->  3 files changed, 19 insertions(+)
->
-> diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm/set_memory.h
-> index 90f61b17275e..a685fb534c3e 100644
-> --- a/arch/arm64/include/asm/set_memory.h
-> +++ b/arch/arm64/include/asm/set_memory.h
-> @@ -11,6 +11,8 @@ bool can_set_direct_map(void);
->  
->  int set_memory_valid(unsigned long addr, int numpages, int enable);
->  
-> +int set_direct_map_ro(unsigned long addr, int numpages);
-> +
->  int set_direct_map_invalid_noflush(struct page *page);
->  int set_direct_map_default_noflush(struct page *page);
->  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid);
-> diff --git a/arch/arm64/mm/fixmap.c b/arch/arm64/mm/fixmap.c
-> index f66a0016dd02..fcb571dffe82 100644
-> --- a/arch/arm64/mm/fixmap.c
-> +++ b/arch/arm64/mm/fixmap.c
-> @@ -14,6 +14,7 @@
->  #include <asm/fixmap.h>
->  #include <asm/kernel-pgtable.h>
->  #include <asm/pgalloc.h>
-> +#include <asm/set_memory.h>
->  #include <asm/tlbflush.h>
->  
->  /* ensure that the fixmap region does not grow down into the PCI I/O region */
-> @@ -173,3 +174,9 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
->  
->  	return dt_virt;
->  }
-> +
-> +static int __init fixmap_remap_ro(void)
-> +{
-> +	return set_direct_map_ro((unsigned long)lm_alias(&bm_pte), NR_BM_PTE_TABLES);
+v1=E2=80=A6v2: https://lore.kernel.org/all/20260814144854.746840-1-bigeasy@=
+linutronix.de/
+  - For %ps and !KALLSYMS no_hash_pointers is used to decide if the
+    pointer should be written or not. This aligns with the %p policy.
+  - For %ps and KALLSYMS, unresolved pointer continue to be leaked. It
+    has been pointed out it might be useful to see them in backtraces/
+    crashes if the return address became invalid.
 
-Should we not also remap bm_pmd and bm_pud?
+Sebastian Andrzej Siewior (1):
+  vsprintf: Don't leak pointers for %ps without KALLSYMS enabled
+  kallsyms: Document why unresolved symbols are revealed
 
-For that matter, do we need RW access via the linear map for any page
-annotated with __bss_pgtbl? I suppose that might be the case for
-kasan_early_shadow_* but I don't know enough about KASAN to tell for sure.
+ kernel/kallsyms.c | 7 ++++++-
+ lib/vsprintf.c    | 4 +++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-> +}
-> +late_initcall(fixmap_remap_ro);
-
-Is mark_rodata_ro() definitely too early to remap these pages RO?
-
-- Kevin
-
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index bbe98ac9ad8c..5072b14d4f9d 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -251,6 +251,16 @@ int set_memory_valid(unsigned long addr, int numpages, int enable)
->  					__pgprot(PTE_PRESENT_VALID_KERNEL));
->  }
->  
-> +int set_direct_map_ro(unsigned long addr, int numpages)
-> +{
-> +	if (!can_set_direct_map())
-> +		return 0;
-> +
-> +	return __change_memory_common(addr, PAGE_SIZE * numpages,
-> +				      __pgprot(PTE_RDONLY),
-> +				      __pgprot(PTE_WRITE));
-> +}
-> +
->  int set_direct_map_invalid_noflush(struct page *page)
->  {
->  	pgprot_t clear_mask = __pgprot(PTE_PRESENT_VALID_KERNEL);
+--=20
+2.55.0
