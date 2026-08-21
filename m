@@ -1,68 +1,68 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C758391E72
-	for <linux-hardening@vger.kernel.org>; Fri, 21 Aug 2026 12:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939482DCF74
+	for <linux-hardening@vger.kernel.org>; Fri, 21 Aug 2026 12:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787314757; cv=none; b=Ffg5PBFV+AaXisp5SXFYyXd4XNwlff6crwQWQpNU9a5ikGNckETclgfztrPcyNUsIu1cpMRSDGhtHHV15ePBkE7R0V3xwQcnRWWwIB2CsTSha2C3mEWyWOhUPoZwepF+JEF7aP6xgkGF91U2kwfr6RtBOxcBYBHeVUnngV2ki5U=
+	t=1787314760; cv=none; b=apvpmZM/MSA7lQjb3mcGqsgmCiEadtRJVNVZ0w3lfF/Bc5lvdualdV/DybY65pYAlqDHWGtdihRQYmz8p8xGD1r93QUNagGUaxdf9nnU+YU0f3aWiqxdB62sQYRi/xwzPRzHODDxIACzusvxVRsZ65sTibPH2Gkt7g+5D5JeFOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787314757; c=relaxed/simple;
-	bh=240qChyaHcgAIrUoo9v0o8NSZCJsliQZCuzI/589blE=;
+	s=arc-20240116; t=1787314760; c=relaxed/simple;
+	bh=aRikrKedr8rRD84dJqfsSjKHfSLi0ROhZlN789CUbJc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oxC3EeZXhjY/V/dh78KPR0eBhHPFsfJ2NjCmM494KEx5S2o2RV8/+MHxURtqPEgLR8wZsJG8aXDdMshv89+rckSL6QWcsDVdHcPO8hIcY9b6a71ps9PyCKfF6GXoXd7QGyGpPnRyttpgSzHwgjxKICtxxXH7ewCRyl+RS6WiA0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i51hH9GB; arc=none smtp.client-ip=209.85.218.41
+	 In-Reply-To:To:Cc; b=ryEOwedqchfzxHoV3cF5ii2CB6fFi4eX3IDFwQkUrCcdZIBWpc02Mcwc/M5ADP2ub7mPNnR6Ts5JvkFKt4/twp55VDxy1op4kE8UPL1I7aM44PGf+Yf9z/Q4qYaB5JXD0h0x+oAKX80g3T2K0SV2yQf0mCA91+ICJIFidTRqtxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzsFfPsS; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i51hH9GB"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c214e625259so130481166b.2
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Aug 2026 05:19:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzsFfPsS"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6a36982a875so1598422a12.0
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Aug 2026 05:19:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787314750; x=1787919550; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1787314752; x=1787919552; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=neXALKgIPT0rUNWxa1mqzXGbgJQcvVkrR3q/lkeSSa8=;
-        b=i51hH9GBG06UAbjcFvvZoKxpUF1WLaz0xGL9Xsyb00KffgvLfmJ5ZvT6YO+gXLCcM+
-         FZmxAtHq9MTZo+QEje49vThdm01JPhjsFzqiuu1+57EnToI7WX27sYFX6vt21JmN1OEK
-         Qc0js+WBkskdM3YXyh04Km7ZkIfgEFVThcNINyX9/RyAaMXBgOBy81X9LhpWTGvYFM4n
-         iP2iNtAjGYE95bUDMkiaNHyQ/rr5qktaT9uL9WJo5toYUc6Q5iGSH/fo11Q1SBdPc2HP
-         lPz/CmJR4VVUV3D3TZSVARZcD/X6YMRFEYRlsQwqDMpDl6d7OiCb6jO9dZosAfwj0Y4p
-         mi5w==
+        bh=K/a/K4l60N8ZYR9C9kOGDnGGvsCsbHCt+W0MVudFPQc=;
+        b=LzsFfPsSDbh9w2TUgMQkuyXX8Qp5waeEoHCYLzSeyQYzycvE9cFrkuq1xwFub7iMRT
+         Nkl34CsP9HgorxIsHBxUYVN56dN7jCmrrQ1n7+xS3Sfy4gP/HdUeV3MEElZw1p1uhzZx
+         j0TlzIpXE9TiOsUhAesneh5p/ammSDCyu7qdYOyufZA0Syk2DWEQKhl28g4010DuuYte
+         Hj9nlEnjTlPoK3Y9kf2/Obv9VBDD9YOlMwWKu8kDfJhrCZYUZqzDIrpHYobhGC4WMxgf
+         InwrgiS7ZtHMxDcof0cUdy3wJOeN0DwL+eHuNcXC6PuEAOvDHY6bkZEnazR6VnS1yKmY
+         Zu7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787314750; x=1787919550;
+        d=1e100.net; s=20251104; t=1787314752; x=1787919552;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=neXALKgIPT0rUNWxa1mqzXGbgJQcvVkrR3q/lkeSSa8=;
-        b=q6Wr4/95rBHBob+KXEytUbwDpG5Olrsce5i/g5ljLNebAGsrUNtLEpQJZ4evNP7vtt
-         ukOJ6xCLklC+VcgQ9LQqJHgYKr14v9lU/eik9Io0Eq9iQF/V3UgAG38VRFml72UBKnJt
-         mgVj4KhZOIG/7eVwfEo2ki/WDCdIWE2b0lDCIVVm5LpBcXpA5nS4bvXarPIWhCdJThfb
-         2jYnHlTz245X5QS5sUdadix6peKTKKIF/QRUiYic7KMbmx9StwENSMmAtvZ18uRZhr83
-         9Phxuelur+ltBKq84UDvdC0lD0JhboJmWg7fPAsX4GYfJ6DyL5b9uKb7Uo3Y23BaRNTZ
-         LYcQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rr9A+e0Y0ljx8BbALGqPEce3GNidFW8r4HaGw4vOmh44lLMd9YN7FQoYzuIMGRmRJg4OhzBD7hbIgsRGeTbZPQ=@vger.kernel.org
-X-Gm-Message-State: AFuF++moD5JAhnZLhakgtrVgDx0beoYZ8fdiZ9PBjOyL2SuBBKUdn7H0
-	KbjYmeuSxq76OpkzgJDnIZYf5NAJe8f4ICQ35qSfgYO0JL+Rn7E09jI5
-X-Gm-Gg: AR+sD115FLHHsjl31+ZYlIJKulmplGyqwV81i0Ufw4HMqRkaS00/faazqjYnJq37mWt
-	uDHoo5jXKUDk8tp9OHfpq7omvepiQ/WM1m6z6TsbPWmyqjbVvtWhRk2mOMWI7aMaMHV/KQUcU2w
-	I2O2+TSjPFR+XXBTY2jmMe61NsiFATsKvqD2tqQvZrGPt/SgRU1UFwrD3rDEMhMdQKDbX6Sd5eS
-	wysDXb6nJEliGsgBv9rkG2xgNLPqrZAaOXQ3LAR86cxXiXstKU8kfJ/pCij/UUF+kaOvNqxDT/T
-	9Hkn5/DV1vrgEiTVDTGAGlfDpA65pWEpUOP/k5mN59a30INyCfSxp8wIWiqIEDI5+cf+DepDOKP
-	QwHuI477Iz0j9Ots6FnEh5RqMwSYdnJy2LwiCifEvEc/clLgfKbirLdGRi1BhaM5f7Va1q3te2a
-	j67CSnyOes2LifE5jdY+v9IfZ/mKG2Bn5+kcxSBWGZf/1rvb8DBUO4TbRp6VyXdzILKoDqCzThW
-	d2t6/XRREb4cNR/iMX5r6kWCOPiNzS8YbTtRA==
-X-Received: by 2002:a17:907:948b:b0:c16:6a42:c7d6 with SMTP id a640c23a62f3a-c246a346d3amr601838866b.9.1787314749730;
-        Fri, 21 Aug 2026 05:19:09 -0700 (PDT)
+        bh=K/a/K4l60N8ZYR9C9kOGDnGGvsCsbHCt+W0MVudFPQc=;
+        b=Ef6oedkXKUonmUQ0ov+HJcN4wRPtm22EnPaY1dHjNrFB5d2ChKeazwSmUeV/OkyrYH
+         8U7ajOs9owB2KecN1ynBwf3m7n5r7nby9oR+dTgEQ/x6Q3VgqOxFoAXN9x/KwwAgBjy6
+         b6XvjBdWX416b/QgXtFBLlelEkPLSj9AsrxABQ46UJPOje5qB45M6y97puiMtcQ1JHHh
+         hThfhyqawPSp3vqqpbVxzU/NR3zJ92+X4k/1adhNIMHjCh3q3s3JAaIcMWqA2sEoH4OU
+         Xa2rUz6otUiqYUKkeDfd3gGpU69rRuULYqoMkpvc5yMwV1lTe/b4veipUcsk36+4h3Gq
+         8/fQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rqq+g2HsNBywKHyThIz9ezENTtaRAIF6JccXsrhPoBszaDhL7rd7VpIPcbH8vxIT1d8ohL0tEbFyh92mNIoFws=@vger.kernel.org
+X-Gm-Message-State: AFuF++mGOi8NOf154xSpEd2U0NCvcDpeey8MLdEUytgQoYlqpgsWHgUj
+	sgc0N//wUP0y3LCZAWpDX1+9CWmvs4YlLUJrgimwfi0MwLukIgwAz+EF
+X-Gm-Gg: AR+sD129QZ4ey6OUt/gVwzNMT6BNtQf8X4ylvBY0fEy6du/ov4imjDl/fnfxdBCL/pz
+	bs/Cw8liHMWzFuK6K+SUqdmZtT1mDRNZqNz5/WAu2kT14zWVm+cCaFwImD+gkwXxvqX0fjgRxJZ
+	4Go3RJceYFPVezG9Ej10yPNP1DY5bFXbzW3s66xGX68DukUGhCxkY2a2+h8d+cWu9ochFVb3Xwx
+	lKOqheXXLVD2y2FvC3/bncMNfzAs9Nc9QyNwU3axQmTcshCVXDo2c8SQdWC4t7IUDElQYQu285+
+	J6JBDrMSMi/5+sGtV0DM0AxdRXUF7K5ObHmSa9p0ifY6/wzdT7cmSGUb/gfkcKyWnQvDjx1ZZBd
+	POg73uqFsz2W1MymOayemxbLAPb3vtAT1eHX+tx1d30LzyGX1LxgIrKEYUZcGe4Vdr7tATBhj65
+	ISUmIcX6HWqMvc58qylXhKCsGfBqr0gE6rmdOsS7WV0doKJaIlJz/J02r50ckUrnh0CtLl4O+IM
+	7gsZAYRSKMa6i3MHJaNeDroTWw=
+X-Received: by 2002:a05:6938:a090:20b0:c21:2c32:e2e6 with SMTP id a640c23a62f3a-c246a60cfe4mr460289966b.10.1787314752276;
+        Fri, 21 Aug 2026 05:19:12 -0700 (PDT)
 Received: from [127.0.1.1] (83.24.178.112.ipv4.supernova.orange.pl. [83.24.178.112])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c24589d9df9sm447823866b.1.2026.08.21.05.19.08
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c24589d9df9sm447823866b.1.2026.08.21.05.19.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 05:19:09 -0700 (PDT)
+        Fri, 21 Aug 2026 05:19:11 -0700 (PDT)
 From: Adam Skladowski <a39.skl@gmail.com>
-Date: Fri, 21 Aug 2026 14:19:03 +0200
-Subject: [PATCH v4 4/7] dt-bindings: arm: qcom: Document LeEco Le2
+Date: Fri, 21 Aug 2026 14:19:05 +0200
+Subject: [PATCH v4 6/7] dt-bindings: arm: qcom: Document Xiaomi Redmi 9T
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,7 +71,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260821-next-patches-v4-4-7ab02c0d4eb9@gmail.com>
+Message-Id: <20260821-next-patches-v4-6-7ab02c0d4eb9@gmail.com>
 References: <20260821-next-patches-v4-0-7ab02c0d4eb9@gmail.com>
 In-Reply-To: <20260821-next-patches-v4-0-7ab02c0d4eb9@gmail.com>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -86,7 +86,8 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 X-Mailer: b4 0.15.2
 
-Add compatible for LeEco Le2 codename s2 based on Snapdragon 652 SoC.
+Add compatible for Xiaomi Redmi 9T NFC codename lemon which is one
+of variants of Xiaomi Citrus lineup based on Snapdragon 662 SoC.
 
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
@@ -95,17 +96,17 @@ Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-index 289a3de1d24b..68542f76df30 100644
+index 68542f76df30..5363efadd4ee 100644
 --- a/Documentation/devicetree/bindings/arm/qcom.yaml
 +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-@@ -348,6 +348,7 @@ properties:
- 
+@@ -1035,6 +1035,7 @@ properties:
        - items:
            - enum:
-+              - leeco,s2
-               - longcheer,l9360
-           - const: qcom,msm8976
+               - fxtec,pro1x
++              - xiaomi,lemon
+           - const: qcom,sm6115
  
+       - items:
 
 -- 
 2.55.0
