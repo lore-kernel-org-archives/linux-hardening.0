@@ -1,127 +1,136 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6499637E5E3
-	for <linux-hardening@vger.kernel.org>; Sun, 23 Aug 2026 04:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787460282; cv=pass; b=dIVjkO7zvn1z2mXRsP+WYc05mRdb6h2QO4kB6JwJqcPX1n7VLax3Jct2jV1Yp+0hanKjp42V+otYoFxR4Dv6hGSpx080EPjHdpykw+2Uuby3H+qhAsmV68PviMXmCaAODr6YUF2HH4T2qVyAByasCOcnM6efb8OQyrO7htmqglk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787460282; c=relaxed/simple;
-	bh=rUA8STlsYFYQiRvYWCdYW5+b5xiB+c/F92/ZCn93/g8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pBWc+kNgPfJ1EaEl3xFQwRZxyd9++FXBJd3DvzMwpdLHqAm4fw2davKnyltfXnL1LIrBvoKS7OjavucHxGTFN+FJ6y6mTAW4bM1PeuRZMfWimFf5WKaBvT5qmwybKcfPoDftCKIQJ5+39E9coyrhtdfcu/My+OrGd3UgktIkHto=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c1q/tc0S; arc=pass smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75D53B27E3
+	for <linux-hardening@vger.kernel.org>; Sun, 23 Aug 2026 12:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787488560; cv=none; b=cTAsNCKxLk+5XqsG9TV6r7VNPxn+w1VdZA23F1yFJimqRpqwyP7xftfgpGkjtOJo3Vva/aBAr1PSbuQkBpHg59i8Fh0kMPFUNA14sIOKHRhQi0Utn3sp7tLUtcVNwmo1JqACVisn+u78Yua1EtbdTWTMRrInZqv0xwx70Xythjo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787488560; c=relaxed/simple;
+	bh=yWZFWInH1rLjyv8+mSonhwyX1ShwC2bCnUBa5J/c4L8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WaUUOKxIxpS+SwmjuqG23644zc0TCprcaLdEx5kJMpgEVbag/B4I1gf51wXl69YxIDJqg/X2S+gYFEm7HdMY9eCiqs0qPwfIQ+f9t43MXjlIuD6FyGV1We9/NVlqLyNz7XyeyL5eI1Ho9oZswF6Gtw9V/PaQTPZnf5aWz2llOmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TgK7Bhw7; arc=none smtp.client-ip=209.85.214.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1q/tc0S"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6a1542cdb53so2906480a12.2
-        for <linux-hardening@vger.kernel.org>; Sat, 22 Aug 2026 21:44:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787460280; cv=none;
-        d=google.com; s=arc-20260327;
-        b=YcZNsDp8RwFm93EJv2lynbA8Ml9Zzqg0eRe430yqi+4KN4o66ABo6Kr+4DYE+071+o
-         slUat/1SQVqirP78npKLSOK4uJ7H7FarSbXgvkbpsmK9tFKovXmrtcxJ3SpSQMEdmveS
-         XqQu2JghuLELsgZuYFS7t040Dbn/7+U/uS1jtDQ2U2TlloAsyOSnm00ACP492SfZiCKH
-         rcEcSyhhVvi0YZm1DgjcdsFuXTcX/0b5+SHTYVDNPAYm9JiuLJRZ46AzYMMPFpWUjq2F
-         ohcbAist+na7RHWDlA6+ooMI6ttEt3YVqVDTV8wBjBULXOzn7mSEYekJIHl6pPfcdA93
-         bkTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ZSqjSSah5KBgALutr0hY72c4Zb4Ws8WYQo3Q/l3ach8=;
-        fh=u0wxbN8DkToCLvxtz1LO0jXSiUvL6xJRPzNKkYUvne4=;
-        b=E9qOGUDFM5EWqi+iC2PQ8UHGyVGgrYEbfeNo3khdgULrdU4B0h3UDHTeVwntm+9Nlg
-         Z6TekhBbjVQC8TOecHihXY0NJvrEVP0d1PVi/kFLRTDZa0RHbm+thb1YWQTgc0x0IRI4
-         zNTGd/JcEyw5O6StwH8tlhSFMqE1oQXgbhtnvPMFEeil0b4AJMhqDz5EPZXCKbs3KEYi
-         PFpCSLRwjoYEdsl/JhYfTLhkOoxKvxHo8NDn62WdeUkpdC6ALrTQyH7gPTYKBp8ArYPT
-         fWsZ2fgg1csinjaBHJLGNWhO3voDFS6Q8md44rpjPl2t3Jgt41UDm5GoMdfZIjVH6Kxa
-         J27g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TgK7Bhw7"
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2cc86a9ef97so48164765ad.3
+        for <linux-hardening@vger.kernel.org>; Sun, 23 Aug 2026 05:35:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787460280; x=1788065080; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ZSqjSSah5KBgALutr0hY72c4Zb4Ws8WYQo3Q/l3ach8=;
-        b=c1q/tc0SF6zdK84DnOsm398gjIRp2zwOqHqvWFDxhL5H3RdCoS7UVWxog13Yh47NdK
-         xqYsQln3oDUELzBzegsotci+ihhYGHxRL4aU0dOPQDEGibtfnFeXmLkbbfRd+FKqOd1k
-         7mKtAv5a4tDzzVScjeB+5Xs6AoeNLHRFkdCiOMPR6N+MA+DpPk5IdQiP7uB9kUaD7wy9
-         dy8a80RaSe82u/+4JJpmBtxP8eVxSLLWCG5qf7U1D5BWIhnXjQGXQjbTi0bFuN7QYGM6
-         AyXa13YtswoCxd5m4GfEFc8qa9wJhGTHrkvaFU1v7HbzzeT6dILzQysp5Dk6zNhkjMsO
-         Ze1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787460280; x=1788065080;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1787488558; x=1788093358; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ZSqjSSah5KBgALutr0hY72c4Zb4Ws8WYQo3Q/l3ach8=;
-        b=K/L29ryPn/mGuKVE7ugQl+bfyggYKtXX9E9z5vT/yMu+vEWotZvVWvic5bhGR0T/Ik
-         2sQ4VFfSTulH0oH0t36AWKEunVENgXh7u/817KU7n02E+7IXphDSjCqopOMUKR4ekstA
-         3lPYy2whEer/3Iz19v7PKk9VMzmxCA+DBn6IqOBlR3SaY9kaMY/EMUDucv98GXXiPzKj
-         nXGfIk+5j+gTSFk81PbpRJcOighZEWmb4+2eLf0QzcE6iXsYgX0VRPaYEGAKFsOJupXI
-         cvgnjx2hODohpWVBUYk7rWVkSsa1rueNwm9nFMGxEi4ec5KYhS//GdUc6A4M8xQF3YXw
-         2zCg==
-X-Forwarded-Encrypted: i=1; AHgh+RqOkRM6cbkxVgGSxg/kgGbVfYtJa5qecgPcnKu0w9t0WDMgcHGu07Ay1Q0kWYvw7vEK28T4qLzzXKrFX3KmGuY=@vger.kernel.org
-X-Gm-Message-State: AFuF++lk3aZ8GDfwoR3GTuW6JOnLpwakBkbpF12m1N0asqliZNHLZqe9
-	f9syWLq6KLf9LpfroSz3OUlC3ZNY0ChCHxVArbp/34d6nc9kDZxPAmdpuSNaHCp1YAy4VnSLtVc
-	tPR42f5WU5Kw9ZostwGU+QKqzJdqt4pg=
-X-Gm-Gg: AR+sD13lAwBYsc/qtNU/WGfqYGPfqp8pDDFIYzPmQrIcq9eeTHq5BWGvEEyJURRsM4b
-	uiL18s7uZ88IZGZeHRN+RiYd0gGI4Ir7Bm9QattSOEwUnOf7UBRCrCsskfyxu7FPNexi0q3/gXs
-	1wGqEcs3RB5/yJfrYIpppX6XD1l9F0x2VVDNPeCsjKj+momYiN89CT3In9OiqFEjm2wfW6TtL7t
-	cF0k1NnBAG5IIP13kIdepW1WjBzDOAhWfgouh8CZkOosaZd7vZRt6c00XYeVc0ULTGG4dgaQ9IB
-	MfOhhGy1Fa7Ayi3HDjiY7Ln/RnDi2mKWvCVaRxzTyX07eedITU14ClnIc2NtFv0uTahhfYaXzqm
-	HX1d8Tn8ds5VIPhgcMGe4ngW093x4h26QpYuw2Ci0QkwulvIpi5EHFT7Zkyl/EEO08h1IiujFlJ
-	4PdYEbNBdOBJry20ksrN10Z39J3cx42RWuVeiTZLx5Jod0vaav6YOaPDyW
-X-Received: by 2002:a17:907:8990:b0:c20:3679:a2e6 with SMTP id
- a640c23a62f3a-c24925eb3ffmr1126262966b.10.1787460279494; Sat, 22 Aug 2026
- 21:44:39 -0700 (PDT)
+        bh=c6pl/FAkhJGdRW7xNY1Vo7P4vt1vAKgIpkL7cBZjl4I=;
+        b=TgK7Bhw7L0dLYKOLtqXS928Q5WdXacnro0wu+Pts0iBvvn/b7crp28K1AfrCBgu6HG
+         R/vEc2+Up+d7Zwotbt4CRllsoW67Cwd/xMb7uMyjK3GkQ/XkAgl8iugsNoQc4K1yg9Am
+         j877Q+3a0LgQSQaeiKGCOUXHe2eYepbQTt4dfKGuHEDQVXmt9sxg7gAuWa/s9i7kktTZ
+         NanKuxooawhCp9yiWydnwyEMb02zhKTHbSsdKYset4NE+wVwlwl1eR1MXgP8zAGegi64
+         uRk/JJQDqFb1Z/0ddLy+iC7340mSZGl0Z4dmX/xvLqTWDHFSmRL4qvqG5mcofe3buyKK
+         d1Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787488558; x=1788093358;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=c6pl/FAkhJGdRW7xNY1Vo7P4vt1vAKgIpkL7cBZjl4I=;
+        b=hAiTCE8kSch/O41EMlScvTm0Wybf+scXDdjKsOpSFlxuygJ71XmLe8jQj0Rj3OXaB5
+         IoqBi1+pM26L0PWxyvJEVNg5tIsuYXgKNnH+CyAZUSxO6EF9gvxbc7bkbrgEayTnNaMg
+         iNwbXYoCBNM0A3jEjSvjyvy6mwIzlLMBMSdXQnERHdJc4xzAnjSIoVS7rXph/fqmgHdt
+         cV8wqrNwuHeRRAL+5ZyT1WhTCF4RnOFej98lPF9cFe5zdbzQXH232jmifcyPeJc4syd8
+         H6g1mh9ZX7xTnPo+oi7Yr9hcZS+b+t7VyC1yab0ftt/5ulGkJinDoNLBwFJLom5K4VST
+         4hqA==
+X-Forwarded-Encrypted: i=1; AHgh+Ro9QZjOM1CB3754fZSaP8sUfQqsY0W9MI0fMuweRDfZwQLGM6jXzlK5YfUH7GokJv2rF/sXgDey0XubwSAO8fw=@vger.kernel.org
+X-Gm-Message-State: AFuF++m+coL9kcIR96ckHKvuT5j+YBYFYkJCB88GllTcWU4Vw0R0FxtI
+	ySvFH8NuCkZkwNuf6HGaaZ1O+Ly2lHSTUsJMHYeS7o8QRA833JQ0/irDz6MFk9SWh9nt4L2m4WN
+	f
+X-Received: from plhi12.prod.google.com ([2002:a17:903:2ecc:b0:2c7:ebed:f6e8])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:390d:b0:2c9:fb11:1bf4
+ with SMTP id d9443c01a7336-2d64af4eea9mr368056955ad.7.1787488558140; Sun, 23
+ Aug 2026 05:35:58 -0700 (PDT)
+Date: Sun, 23 Aug 2026 12:35:32 +0000
+In-Reply-To: <20260823123549.1120133-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260504031209.618949-1-rosenp@gmail.com> <20260506110910.su2s6ncsi2xfdiwm@pureblood>
- <CAKxU2N8PUdxo54oHtcroqe+Q88k0obxPg_9OCRsNsoOwvcS25Q@mail.gmail.com> <20260630123029.ozveska7eoenci3s@unturned>
-In-Reply-To: <20260630123029.ozveska7eoenci3s@unturned>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Sat, 22 Aug 2026 21:44:27 -0700
-X-Gm-Features: AcwNN1WOqpjNvvrbFuuZdDr0EWOQvQOz6eBeeTVou_Zk_7DEeqlQ6lYFj7PXzJE
-Message-ID: <CAKxU2N9wE48D2WLPvta98kB6xXciOdvpOzgGrnS9kkBHYfUwXA@mail.gmail.com>
-Subject: Re: [PATCHv2] firmware: ti_sci: simplify resource allocation
-To: Nishanth Menon <nm@ti.com>
-Cc: dmaengine@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
-	Vignesh R <vigneshr@ti.com>, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
-	Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
+Mime-Version: 1.0
+References: <20260823123549.1120133-1-morbo@google.com>
+X-Mailer: git-send-email 2.55.0.860.g4b6b3295ed-goog
+Message-ID: <20260823123549.1120133-2-morbo@google.com>
+Subject: [PATCH 1/2] stacktrace: Add __counted_by_ptr attribute to struct stack_trace
+From: Bill Wendling <morbo@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <david@davidgow.net>, 
+	Rae Moar <raemoar63@gmail.com>, Ryota Sakamoto <sakamo.ryota@gmail.com>, 
+	Kuan-Wei Chiu <visitorckw@gmail.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Dmitry Antipov <dmantipov@yandex.ru>, Petr Mladek <pmladek@suse.com>, Kir Chou <note351@hotmail.com>, 
+	codemender-patching+linux@google.com, linux-hardening@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 30, 2026 at 5:30=E2=80=AFAM Nishanth Menon <nm@ti.com> wrote:
->
-> On 18:42-20260629, Rosen Penev wrote:
-> > On Wed, May 6, 2026 at 4:09=E2=80=AFAM Nishanth Menon <nm@ti.com> wrote=
-:
-> > >
-> > > For some reason, replying drops the CC list. manually added them in.
-> > Found the issue:
-> >
-> > https://lore.kernel.org/lkml/20260630014129.1548147-1-rosenp@gmail.com/=
-T/#u
->
->
-> Please repost with additionally CC LAKML and the TISCI maintainers for
-> the patch, this would go through my tree.
-https://lore.kernel.org/dmaengine/20260630013917.1537819-1-rosenp@gmail.com=
-/
->
-> --
-> Regards,
-> Nishanth Menon
-> Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DD=
-B5 849D 1736 249D
-> https://ti.com/opensource
+For hardening and catching out-of-bounds accesses to the 'entries'
+pointer field in 'struct stack_trace', associate it with its count
+field 'max_entries' using the __counted_by_ptr attribute.
+
+An analysis of the codebase reveals that 'struct stack_trace' is
+instantiated and initialized across several entry points in
+'kernel/stacktrace.c'. In each execution path, 'trace.entries' is
+assigned a buffer of size 'size', and 'trace.max_entries' is assigned
+'size' concurrently within the structure's initializer block. The
+pointer is not accessed before the count is set.
+
+Because 'trace.entries' is always assigned at the same time as
+'trace.max_entries' during initialization and is never reallocated
+or accessed beforehand, there are no uninitialized access windows.
+The 'max_entries' field accurately holds the exact element count
+of the buffer allocated for the 'entries' pointer, ensuring that
+compiler fortification and KASAN bounds checks using __counted_by_ptr
+do not trigger false-positive bounds checks or runtime panics.
+
+Assisted-by: Gemini Next
+Signed-off-by: Bill Wendling <morbo@google.com>
+---
+Cc: Kees Cook <kees@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: David Gow <david@davidgow.net>
+Cc: Rae Moar <raemoar63@gmail.com>
+Cc: Ryota Sakamoto <sakamo.ryota@gmail.com>
+Cc: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Kir Chou <note351@hotmail.com>
+Cc: codemender-patching+linux@google.com
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+Cc: linux-hardening@vger.kernel.org
+---
+ include/linux/stacktrace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
+index 97455880ac41..fbb0925d8864 100644
+--- a/include/linux/stacktrace.h
++++ b/include/linux/stacktrace.h
+@@ -81,7 +81,7 @@ unsigned int filter_irq_stacks(unsigned long *entries, unsigned int nr_entries);
+ /* Internal interfaces. Do not use in generic code */
+ struct stack_trace {
+ 	unsigned int nr_entries, max_entries;
+-	unsigned long *entries;
++	unsigned long *entries __counted_by_ptr(max_entries);
+ 	unsigned int skip;	/* input argument: How many entries to skip */
+ };
+ 
+-- 
+2.55.0.860.g4b6b3295ed-goog
+
