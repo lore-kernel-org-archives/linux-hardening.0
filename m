@@ -1,70 +1,68 @@
 Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1029D38CFE8
-	for <linux-hardening@vger.kernel.org>; Sun, 23 Aug 2026 12:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23573BB9E3
+	for <linux-hardening@vger.kernel.org>; Sun, 23 Aug 2026 12:53:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787489521; cv=none; b=gvpA7HyEp+yjwuCGzfV2Ou4BVyWm9Mp4+WoHs4BZuUBhl9/tSp8GJYvSwzA5B3ZWIu5ZxCjrNt/QjbSNb2Ea+i29ya3aF5Gh4KOuzrUdssng3pJX+kVoCEdhtpy1OjMYhcPPQsbpPfd1uaqLbIN77sC7Mq2elrhnfoDkSAQs/Fc=
+	t=1787489639; cv=none; b=MQlNOc4p7P8NVcg0iN+BDm7+8tdAjA68FfuNsTbV02GbRk4AIajZo5Y3iT7wIoFKBVI8bM29+BNr2mW4pS+T1kfnMh0dzIDgc+RDIqxjJN9EkXeOz8kgbiU0pF+OFRI4TXFOE8qECBKjglC79kPpZnmUIdmn62iAwQxt5i/p3xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787489521; c=relaxed/simple;
-	bh=hT53fJ/77VLdIobcjfLUB2EbnU5TUGJsfyHBZ7/PypE=;
+	s=arc-20240116; t=1787489639; c=relaxed/simple;
+	bh=pfDE5ilD9/MtOD5boSCr08GTdZALEQjop9G7ZZhYAOo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KwXhBpseDGTHfLz39GwtvJdPR03gXtXDnhKHj3GZujaH/CyZXYgIcrymKGIFbS9/Ky5F2oEtMV2sHpqfwCZYxCHIafiU6HilmMx837GhGnEdjzFWvz/m0BDzEQfA+QuMy0oC/oLQ5MuD95bxBCYhVodInCgs6lBa4YtQbL9E5R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j5Prqecx; arc=none smtp.client-ip=209.85.214.199
+	 Cc:Content-Type; b=GeZklDCwjajPKcQpU6w9x380CGep0TK14m0gsZyvr3i12OBXh3bZjaEG1uY7fExSjGnWA0R34wGFyg247JCC+mDS4GaF0pXnNqQ4GSvZV8aLHRLPBRB6PIjjh7Zu7tD3yXFbyhwBIzjGQjUjL3C1l8tJoIpprpIBAVSX1Ui2PW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vv3UMmuU; arc=none smtp.client-ip=209.85.214.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5Prqecx"
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2cccfa32670so41180405ad.2
-        for <linux-hardening@vger.kernel.org>; Sun, 23 Aug 2026 05:51:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vv3UMmuU"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2cacf17c7e0so40674125ad.0
+        for <linux-hardening@vger.kernel.org>; Sun, 23 Aug 2026 05:53:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787489519; x=1788094319; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=/6GuAAUwAMI1WHNA8K+fgQT1FDdUgoWfjJ9wdukQyWY=;
-        b=j5PrqecxXxFt2SRcA1YcMS9AH66O/FD5diukC6yVFNcikl01xCmmEmUGc3OuJUaZE1
-         shDQOPNMZA0HnAgV6BC15mAZZtB1A/T0D1D2xapdRmz+Mbl/y8U+ZB58gtXXY+lDETk9
-         Jblyy+KuCSMoeAQWqVdLqkF8gxDeIAKRPCH94gsP5IWS/TwCeEBMq3M2cynkTbQLr/40
-         IEhb6YtBY9G7AiCcXTjaZO+JaqgM/u54GkcRbM1sdn2zAEhCORu+6tatlOMwZpoZU4HB
-         oJKBtAju1K/Pj4LPuCxDJ23teErBzW123X/831wR5saR6J4y1oVEllVwKDavU4DaSPPy
-         QZ6Q==
+        d=google.com; s=20251104; t=1787489635; x=1788094435; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:from:subject:message-id
+         :references:mime-version:in-reply-to:date:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=2j+jEL9TnE7Z2fsNxTUFdS1e1dXzn2rwQVASjQh/j0E=;
+        b=vv3UMmuUprsAZJFH9ENRpdUM/mkwoeOjTY0i6gTGz8BOnplqaDwnY9l99Hhv/NwR+n
+         Bl0J71+NtlyKTiq19H4O98KfrcF/XnOPiwm9ZvtHZrpROOLMzKQgj5d+IooAO15YcGb1
+         PexWEp1u6edE4WG1IBaFHWegCZZLVW+iJChay9wTJ6V+c/wQrWh3KmCNobuqwxhfvqhL
+         +j5H7Ph7Jl7xbF8vbRMDopcpD/odWOvRG6oQIXmwo32HG90BFTCJJi1Iz2l+ZRqadsiI
+         P5AbPaNGsZDoBzvKnocGtiQpAx7mAH9yBdV5uF368gqMIEA9/bdjK2tsdnwUEX5XozEr
+         ulJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787489519; x=1788094319;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/6GuAAUwAMI1WHNA8K+fgQT1FDdUgoWfjJ9wdukQyWY=;
-        b=TK7JXZXcVvc4AzV2TRk0ofKhxgWLrKFS0ZhxE1IyJJ1jJTqkWQ4k0JUksCOgrrPc7K
-         xbwUxg0ZCBWHpGBW7iz+r8J/vZNHqPPmYEkB93c4B+Whp3b/iZr8ewYbijt5tolvihkS
-         5f9rNiAUo9rm4Jqi4GPAquEOVNqfOLE3MNb7K3TfzQqqk833Bxg85Oq9VH7qIub1dQxW
-         AkUMBwaL2itlxhyZdy/6Fi+GUkUuQ7gFq+8IgiYSFa8cI5VfDSrPi+e9peHa8EYuvRfd
-         OeKQnX5apBjKuqR9abPZdk6XjqOCld77JIWTkg/WMx33TR2+Ctm+X/uqyYCx8SxZcSes
-         RBIQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rq0G+lz9ICu9GBzIKGOeZb6zgW5dCdiXKji14Cy+KQTMFOoMXqpDuFdwPVrG+DnzMYNzEMTM0NgUArt1c7ZUZM=@vger.kernel.org
-X-Gm-Message-State: AFuF++kx5gkar3Pe/cX9RJcsp1HKJM7Sw+oPO1pRyvtewvIB+RlhnP/M
-	d61Jaq/VE8M4uJGjChDoIINrs5F7MT19VYkE8WCnvdg7N+1pqLK84/EEUSom5xgJ+gu8MidmNpk
-	A
-X-Received: from pltk5.prod.google.com ([2002:a17:902:6945:b0:2d5:9dd2:5fc6])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:fa6:b0:2d6:5beb:8692
- with SMTP id d9443c01a7336-2d670bb5042mr219445355ad.6.1787489519251; Sun, 23
- Aug 2026 05:51:59 -0700 (PDT)
-Date: Sun, 23 Aug 2026 12:51:48 +0000
-In-Reply-To: <20260823125155.1136740-1-morbo@google.com>
+        d=1e100.net; s=20251104; t=1787489635; x=1788094435;
+        h=content-transfer-encoding:content-type:cc:from:subject:message-id
+         :references:mime-version:in-reply-to:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=2j+jEL9TnE7Z2fsNxTUFdS1e1dXzn2rwQVASjQh/j0E=;
+        b=nif9SnnZzXzREej2hyMaXFjGhBPp5y7PTm5vUGzjbgoCUg0HQMeeyDGQJXzb7SB+mS
+         d1xSIbatOeVsmo80ABdO0/rcU/uRt0gfGfg5Ze4j0Jx9/81GZlkA5PqKYI5AT462ksDb
+         nHw5yN3mADzImTbnQMoQCsnSM9O8cMTw5nkO9qd2SUaRrR8o6p01eQICP84z6CahNrcq
+         0xOyrNccqyYbBOYk9DuZ5Tt7A2jxYNB/+PQGMjDnQwztYXvFE4hsxJEjApVhUxKqX0ik
+         MIIyHr1OWhiF7S51Bj+MzM1M4MLHhcSYlOM/50iJV5Yw2u9VaVV02jokuV9FAUXGWivT
+         ZQaw==
+X-Forwarded-Encrypted: i=1; AHgh+RofznzXetzqi+oWW1k8Vfs50Ra/J4aT0N2w4ocPLmaAj6YaZyYZH4XBVbpnmkcoI9RngHj9MsdtL5glSxYlGBY=@vger.kernel.org
+X-Gm-Message-State: AFuF++m4auXyzHUC0zvkHSCLzyHLeoKlBa+scv5I35LO5mAwQPuO2qWe
+	PoWK5Rsq0u20eNyLQJ3YYWVn/R7kKiRZuAfeI/ZdCjQnqD73+UH54sAWImd4Vcr1ToJjnuSkjAD
+	e
+X-Received: from plk19.prod.google.com ([2002:a17:902:e9d3:b0:2d1:1cf0:2039])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ec87:b0:2cf:9347:f445
+ with SMTP id d9443c01a7336-2d64b024c86mr319174525ad.10.1787489635107; Sun, 23
+ Aug 2026 05:53:55 -0700 (PDT)
+Date: Sun, 23 Aug 2026 12:53:44 +0000
+In-Reply-To: <20260823125155.1136740-3-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260823125155.1136740-1-morbo@google.com>
+References: <20260823125155.1136740-3-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.860.g4b6b3295ed-goog
-Message-ID: <20260823125155.1136740-3-morbo@google.com>
+Message-ID: <20260823125348.1138649-1-morbo@google.com>
 Subject: [PATCH 2/2] userns: Add KUnit test suite for uid_gid_map
 From: Bill Wendling <morbo@google.com>
-To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>, 
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Christian Brauner <brauner@kernel.org>, 
 	Aleksa Sarai <cyphar@cyphar.com>, Jan Kara <jack@suse.cz>, Nathan Chancellor <nathan@kernel.org>, 
@@ -73,7 +71,7 @@ Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>,
 	"=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?=" <thomas.weissschuh@linutronix.de>, Alice Ryhl <aliceryhl@google.com>, 
 	Douglas Anderson <dianders@chromium.org>, Anand Moon <linux.amoon@gmail.com>, 
 	Oleg Nesterov <oleg@redhat.com>, codemender-patching+linux@google.com, 
-	linux-hardening@vger.kernel.org
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -87,8 +85,9 @@ attribute added to 'forward' and 'reverse' pointers works correctly
 without causing any runtime bounds-checking panics or traps.
 
 Assisted-by: Gemini Next
-Change-Id: If0c2c197a35cd7429cf0d2d6e3b33f0d9f0be66c
 Signed-off-by: Bill Wendling <morbo@google.com>
+---
+v2 - Remove Gerrit tag.
 ---
 Cc: Kees Cook <kees@kernel.org>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
