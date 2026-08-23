@@ -1,57 +1,57 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3EA3101A6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1029D38CFE8
 	for <linux-hardening@vger.kernel.org>; Sun, 23 Aug 2026 12:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787489520; cv=none; b=EFVVe/ASZvUrcQGoKLt2xJLPbB0V/P6TQTtaxsARUYekPmh64vd3qwN2KbGRPdemlPnfdSIPv26rkYhrWfZfLldcWiLrQRZphVk9FDhEN5mV9peKoy+aVdRSjK6ZuM9ciCzeqlZu+JzoiFQ6cOJAxPe5XfCMRTVBeuD47D5KfJ0=
+	t=1787489521; cv=none; b=gvpA7HyEp+yjwuCGzfV2Ou4BVyWm9Mp4+WoHs4BZuUBhl9/tSp8GJYvSwzA5B3ZWIu5ZxCjrNt/QjbSNb2Ea+i29ya3aF5Gh4KOuzrUdssng3pJX+kVoCEdhtpy1OjMYhcPPQsbpPfd1uaqLbIN77sC7Mq2elrhnfoDkSAQs/Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787489520; c=relaxed/simple;
-	bh=y+LROC8XAKNEDoBV1EUp6SDpaGTfmrTNBsAQC7v6vwQ=;
+	s=arc-20240116; t=1787489521; c=relaxed/simple;
+	bh=hT53fJ/77VLdIobcjfLUB2EbnU5TUGJsfyHBZ7/PypE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tXL7c9Jksvy3Z5WKf2WmGA93UWpu/JQhT1+nrITQDTfjOZlBMLKu7gCF3pFP1h8ZIGbK5EmtKXpawU++PKvZdE4jLsDp3JB32nR2KS+dIaFTSY/pwnQJxOZjoBDJe8Am2C1GfIXc3baYxcxiP03x3r8LO5onLvqfXMzBw1X4ytw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JHCvBCaJ; arc=none smtp.client-ip=209.85.216.72
+	 To:Cc:Content-Type; b=KwXhBpseDGTHfLz39GwtvJdPR03gXtXDnhKHj3GZujaH/CyZXYgIcrymKGIFbS9/Ky5F2oEtMV2sHpqfwCZYxCHIafiU6HilmMx837GhGnEdjzFWvz/m0BDzEQfA+QuMy0oC/oLQ5MuD95bxBCYhVodInCgs6lBa4YtQbL9E5R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j5Prqecx; arc=none smtp.client-ip=209.85.214.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JHCvBCaJ"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38e11baa66eso3434393a91.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5Prqecx"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2cccfa32670so41180405ad.2
         for <linux-hardening@vger.kernel.org>; Sun, 23 Aug 2026 05:51:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20251104; t=1787489519; x=1788094319; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=8/j626qUUUtpjEjXH+/BZQ1LG4AVUMqvjzdNkuJ+fuo=;
-        b=JHCvBCaJDD0fKSRAg9LWzdLJamFDsS9wGc+SRBSi77yHZKfIpU/YlRRzvsBkHs+oXe
-         6+Btshki+edlO2G7lZWRvP1c+wzodqq6iG14KyNpCYJsCUO4fEhCN6f9wbGcyIb+233E
-         0yqzqtvohArUwjHIp7BSITKAryjqKDJvug4sLXznf1AUQhlBlLYeVK3Iq9t+Nf3w+518
-         NGY4f93ed/JGtrtNEIes2ZXXAohW7Ce20klmGpfZ4ReXv1Y1NSnN6znM0NUP/KX3IWhy
-         sh+NxgjCrsYzln7t2DVDFcSsbwAqmn9g//GpEI3m7L8NnY2ATW778YQyiPxHq8mDGEv2
-         jUJw==
+        bh=/6GuAAUwAMI1WHNA8K+fgQT1FDdUgoWfjJ9wdukQyWY=;
+        b=j5PrqecxXxFt2SRcA1YcMS9AH66O/FD5diukC6yVFNcikl01xCmmEmUGc3OuJUaZE1
+         shDQOPNMZA0HnAgV6BC15mAZZtB1A/T0D1D2xapdRmz+Mbl/y8U+ZB58gtXXY+lDETk9
+         Jblyy+KuCSMoeAQWqVdLqkF8gxDeIAKRPCH94gsP5IWS/TwCeEBMq3M2cynkTbQLr/40
+         IEhb6YtBY9G7AiCcXTjaZO+JaqgM/u54GkcRbM1sdn2zAEhCORu+6tatlOMwZpoZU4HB
+         oJKBtAju1K/Pj4LPuCxDJ23teErBzW123X/831wR5saR6J4y1oVEllVwKDavU4DaSPPy
+         QZ6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1787489519; x=1788094319;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=8/j626qUUUtpjEjXH+/BZQ1LG4AVUMqvjzdNkuJ+fuo=;
-        b=Fv5rpiwEtEdHXTHfZoItj2NWtrI2QX0ojmeGnZ36IBoR2VCB+xP0puIzuz6X3/2DpN
-         qMCMi5pV1ZhebMJrhHjMyjwIhoNpeK8k5fTMBRuosWl5lnZ1oiMQd+X7RbSQ/lNKX0zs
-         XK/99QmB48tSEs7lToAFWLcLKL/+kCQscUkaEADb4ynK/I49u84uB8L1XlrlgoB331t6
-         bBIcMUhPyFHzC9z7UMWID+DPShtzAq9MDnBqKoHYCgc3sa4PJtGojbcmWaoDHL08nfM2
-         HBJRpDylGWvCuAfqPCiyAhMgf5HeVWuYbWVQrCX94Apl3hjg5Wn9aXdgFx4Z467G/0bW
-         JtOw==
-X-Forwarded-Encrypted: i=1; AHgh+Rpg/4oxW5gU/ciX9YBkGh+DfR1iNvgQEsHvRuctSDvDfOlJsCnMGm30N8yR40uLc5SYS9P9Y+wnmOLv/koYVWg=@vger.kernel.org
-X-Gm-Message-State: AFuF++nXEGbZRg1tnhNJWznM9yuI8E/0Ew/PewKAcChffMfELT2dLkKw
-	UIzCJ0uBNEeGHHc94M49xcWncLe+F7aTjQVYMgC3YWk5jeAxlIvkHO6XK9ScqITtRkKiLg9FM7D
-	4
-X-Received: from plhw14.prod.google.com ([2002:a17:903:2f4e:b0:2c9:b703:3bfb])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:b07:b0:2d0:cc92:f7a9
- with SMTP id d9443c01a7336-2d64add1daamr358614285ad.4.1787489518421; Sun, 23
- Aug 2026 05:51:58 -0700 (PDT)
-Date: Sun, 23 Aug 2026 12:51:47 +0000
+        bh=/6GuAAUwAMI1WHNA8K+fgQT1FDdUgoWfjJ9wdukQyWY=;
+        b=TK7JXZXcVvc4AzV2TRk0ofKhxgWLrKFS0ZhxE1IyJJ1jJTqkWQ4k0JUksCOgrrPc7K
+         xbwUxg0ZCBWHpGBW7iz+r8J/vZNHqPPmYEkB93c4B+Whp3b/iZr8ewYbijt5tolvihkS
+         5f9rNiAUo9rm4Jqi4GPAquEOVNqfOLE3MNb7K3TfzQqqk833Bxg85Oq9VH7qIub1dQxW
+         AkUMBwaL2itlxhyZdy/6Fi+GUkUuQ7gFq+8IgiYSFa8cI5VfDSrPi+e9peHa8EYuvRfd
+         OeKQnX5apBjKuqR9abPZdk6XjqOCld77JIWTkg/WMx33TR2+Ctm+X/uqyYCx8SxZcSes
+         RBIQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rq0G+lz9ICu9GBzIKGOeZb6zgW5dCdiXKji14Cy+KQTMFOoMXqpDuFdwPVrG+DnzMYNzEMTM0NgUArt1c7ZUZM=@vger.kernel.org
+X-Gm-Message-State: AFuF++kx5gkar3Pe/cX9RJcsp1HKJM7Sw+oPO1pRyvtewvIB+RlhnP/M
+	d61Jaq/VE8M4uJGjChDoIINrs5F7MT19VYkE8WCnvdg7N+1pqLK84/EEUSom5xgJ+gu8MidmNpk
+	A
+X-Received: from pltk5.prod.google.com ([2002:a17:902:6945:b0:2d5:9dd2:5fc6])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:fa6:b0:2d6:5beb:8692
+ with SMTP id d9443c01a7336-2d670bb5042mr219445355ad.6.1787489519251; Sun, 23
+ Aug 2026 05:51:59 -0700 (PDT)
+Date: Sun, 23 Aug 2026 12:51:48 +0000
 In-Reply-To: <20260823125155.1136740-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260823125155.1136740-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.860.g4b6b3295ed-goog
-Message-ID: <20260823125155.1136740-2-morbo@google.com>
-Subject: [PATCH 1/2] userns: Add __counted_by_ptr attribute to struct uid_gid_map
+Message-ID: <20260823125155.1136740-3-morbo@google.com>
+Subject: [PATCH 2/2] userns: Add KUnit test suite for uid_gid_map
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>, 
@@ -77,50 +77,17 @@ Cc: Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-The compiler attribute __counted_by_ptr associates a pointer field of a
-struct with a sibling field within the same struct that specifies the
-element count of the allocated memory. This enables KASAN and fortified
-bounds-checking to detect out-of-bounds accesses to the pointer field at
-runtime.
+Add a KUnit test suite to verify the insertion and sorting of mappings
+in struct uid_gid_map. This test suite validates both base extent
+insertion (<=3D 5 mappings) and extended extent insertion (> 5 mappings,
+which triggers the allocation of the forward and reverse pointers).
 
-We can add the __counted_by_ptr attribute to the 'forward' and 'reverse'
-pointer fields of 'struct uid_gid_map', which are counted by
-'nr_extents'. Since 'nr_extents' is defined in a sibling anonymous
-struct inside an anonymous union, the nearest common non-anonymous
-struct level is 'struct uid_gid_map' itself, which is supported by the
-compiler.
-
-However, doing so has runtime implications. In the original
-implementation of insert_extent(), elements are written to
-map->forward[map->nr_extents] before map->nr_extents is incremented:
-
-	if (map->nr_extents < UID_GID_MAP_MAX_BASE_EXTENTS)
-		dest =3D &map->extent[map->nr_extents];
-	else
-		dest =3D &map->forward[map->nr_extents];
-
-	*dest =3D *extent;
-	map->nr_extents++;
-
-At the time of writing to 'map->forward[map->nr_extents]',
-map->nr_extents is still 5, but we are accessing index 5 (which is the
-6th element). Under __counted_by_ptr(nr_extents), the compiler and
-KASAN expect the accessed index to be strictly less than
-map->nr_extents. Therefore, accessing index 5 when the count is 5
-triggers an out-of-bounds panic/trap at runtime.
-
-To resolve this, insert_extent() is refactored to increment
-map->nr_extents first, and then use map->nr_extents - 1 as the index:
-
-	map->nr_extents++;
-	if (map->nr_extents <=3D UID_GID_MAP_MAX_BASE_EXTENTS)
-		dest =3D &map->extent[map->nr_extents - 1];
-	else
-		dest =3D &map->forward[map->nr_extents - 1];
-
-	*dest =3D *extent;
+This is especially useful for verifying that the __counted_by_ptr
+attribute added to 'forward' and 'reverse' pointers works correctly
+without causing any runtime bounds-checking panics or traps.
 
 Assisted-by: Gemini Next
+Change-Id: If0c2c197a35cd7429cf0d2d6e3b33f0d9f0be66c
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Kees Cook <kees@kernel.org>
@@ -142,49 +109,150 @@ Cc: codemender-patching+linux@google.com
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-hardening@vger.kernel.org
 ---
- include/linux/user_namespace.h | 4 ++--
- kernel/user_namespace.c        | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ init/Kconfig                  | 10 ++++
+ kernel/.kunitconfig           |  3 ++
+ kernel/user_namespace.c       |  4 ++
+ kernel/user_namespace_kunit.c | 87 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 104 insertions(+)
+ create mode 100644 kernel/.kunitconfig
+ create mode 100644 kernel/user_namespace_kunit.c
 
-diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.=
-h
-index e38d9e60569f..2962256eddf7 100644
---- a/include/linux/user_namespace.h
-+++ b/include/linux/user_namespace.h
-@@ -29,8 +29,8 @@ struct uid_gid_map { /* 64 bytes -- 1 cache line */
- 			u32 nr_extents;
- 		};
- 		struct {
--			struct uid_gid_extent *forward;
--			struct uid_gid_extent *reverse;
-+			struct uid_gid_extent *forward __counted_by_ptr(nr_extents);
-+			struct uid_gid_extent *reverse __counted_by_ptr(nr_extents);
- 		};
- 	};
- };
+diff --git a/init/Kconfig b/init/Kconfig
+index f63bf5e05e79..ba6a40b7315a 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1457,6 +1457,16 @@ config USER_NS
+=20
+ 	  If unsure, say N.
+=20
++config USER_NAMESPACE_KUNIT_TEST
++	tristate "KUnit test for user namespace map insertion" if !KUNIT_ALL_TEST=
+S
++	depends on USER_NS && KUNIT
++	default KUNIT_ALL_TESTS
++	help
++	  This builds the KUnit test for user namespace uid/gid map insertion.
++	  It validates map insertion, limits, dynamic allocation of the
++	  extended extents array, and mapping sorting functions.
++	  If unsure, say N.
++
+ config PID_NS
+ 	bool "PID Namespaces"
+ 	default y
+diff --git a/kernel/.kunitconfig b/kernel/.kunitconfig
+new file mode 100644
+index 000000000000..7314dce05dc2
+--- /dev/null
++++ b/kernel/.kunitconfig
+@@ -0,0 +1,3 @@
++CONFIG_KUNIT=3Dy
++CONFIG_USER_NS=3Dy
++CONFIG_USER_NAMESPACE_KUNIT_TEST=3Dy
 diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index 0bed462e9b2a..7e5371d8f515 100644
+index 7e5371d8f515..64c64e1028e8 100644
 --- a/kernel/user_namespace.c
 +++ b/kernel/user_namespace.c
-@@ -809,13 +809,13 @@ static int insert_extent(struct uid_gid_map *map, str=
-uct uid_gid_extent *extent)
- 		map->reverse =3D NULL;
- 	}
-=20
--	if (map->nr_extents < UID_GID_MAP_MAX_BASE_EXTENTS)
--		dest =3D &map->extent[map->nr_extents];
-+	map->nr_extents++;
-+	if (map->nr_extents <=3D UID_GID_MAP_MAX_BASE_EXTENTS)
-+		dest =3D &map->extent[map->nr_extents - 1];
- 	else
--		dest =3D &map->forward[map->nr_extents];
-+		dest =3D &map->forward[map->nr_extents - 1];
-=20
- 	*dest =3D *extent;
--	map->nr_extents++;
+@@ -1413,3 +1413,7 @@ static __init int user_namespaces_init(void)
  	return 0;
  }
-=20
+ subsys_initcall(user_namespaces_init);
++
++#if IS_ENABLED(CONFIG_USER_NAMESPACE_KUNIT_TEST)
++#include "user_namespace_kunit.c"
++#endif
+diff --git a/kernel/user_namespace_kunit.c b/kernel/user_namespace_kunit.c
+new file mode 100644
+index 000000000000..6d7662ef1916
+--- /dev/null
++++ b/kernel/user_namespace_kunit.c
+@@ -0,0 +1,87 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KUnit test for user namespace map insertion and sorting.
++ */
++
++#include <kunit/test.h>
++#include <linux/user_namespace.h>
++
++static void test_user_ns_map_insert_base(struct kunit *test)
++{
++	struct uid_gid_map map;
++	struct uid_gid_extent extent;
++	int i, ret;
++
++	memset(&map, 0, sizeof(map));
++
++	/* Insert up to UID_GID_MAP_MAX_BASE_EXTENTS (5) elements */
++	for (i =3D 0; i < UID_GID_MAP_MAX_BASE_EXTENTS; i++) {
++		extent.first =3D i * 10;
++		extent.lower_first =3D i * 100;
++		extent.count =3D 5;
++
++		ret =3D insert_extent(&map, &extent);
++		KUNIT_EXPECT_EQ(test, ret, 0);
++		KUNIT_EXPECT_EQ(test, map.nr_extents, i + 1);
++		KUNIT_EXPECT_EQ(test, map.extent[i].first, i * 10);
++		KUNIT_EXPECT_EQ(test, map.extent[i].lower_first, i * 100);
++		KUNIT_EXPECT_EQ(test, map.extent[i].count, 5);
++	}
++}
++
++static void test_user_ns_map_insert_extended(struct kunit *test)
++{
++	struct uid_gid_map map;
++	struct uid_gid_extent extent;
++	int i, ret;
++
++	memset(&map, 0, sizeof(map));
++
++	/* Insert more than UID_GID_MAP_MAX_BASE_EXTENTS (e.g., 10) elements */
++	for (i =3D 0; i < 10; i++) {
++		extent.first =3D i * 10;
++		extent.lower_first =3D i * 100;
++		extent.count =3D 5;
++
++		ret =3D insert_extent(&map, &extent);
++		KUNIT_EXPECT_EQ(test, ret, 0);
++		KUNIT_EXPECT_EQ(test, map.nr_extents, i + 1);
++
++		if (i < UID_GID_MAP_MAX_BASE_EXTENTS) {
++			KUNIT_EXPECT_EQ(test, map.extent[i].first, i * 10);
++		} else {
++			KUNIT_EXPECT_NOT_ERR_OR_NULL(test, map.forward);
++			KUNIT_EXPECT_EQ(test, map.forward[i].first, i * 10);
++			KUNIT_EXPECT_EQ(test, map.forward[i].lower_first, i * 100);
++			KUNIT_EXPECT_EQ(test, map.forward[i].count, 5);
++		}
++	}
++
++	/* Now sort the map to set up reverse mapping */
++	ret =3D sort_idmaps(&map);
++	KUNIT_EXPECT_EQ(test, ret, 0);
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, map.reverse);
++
++	/* Verify sorting is correct */
++	for (i =3D 0; i < map.nr_extents; i++) {
++		KUNIT_EXPECT_EQ(test, map.forward[i].count, 5);
++		KUNIT_EXPECT_EQ(test, map.reverse[i].count, 5);
++	}
++
++	/* Clean up allocations to avoid leaks */
++	kfree(map.forward);
++	kfree(map.reverse);
++}
++
++static struct kunit_case user_ns_map_test_cases[] =3D {
++	KUNIT_CASE(test_user_ns_map_insert_base),
++	KUNIT_CASE(test_user_ns_map_insert_extended),
++	{}
++};
++
++static struct kunit_suite user_ns_map_test_suite =3D {
++	.name =3D "user_ns_map",
++	.test_cases =3D user_ns_map_test_cases,
++};
++
++kunit_test_suite(user_ns_map_test_suite);
 --=20
 2.55.0.860.g4b6b3295ed-goog
 
