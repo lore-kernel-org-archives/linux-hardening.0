@@ -1,153 +1,132 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E34D3DEAC1;
-	Mon, 24 Aug 2026 06:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A153B42D0;
+	Mon, 24 Aug 2026 06:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787552015; cv=none; b=DSoKSHCL6hK5sePfycggcVxqHeHit0XQvsJwVh/z7dBgbNTT5a4Ile+o02mh4G2Cqr+wce00wCiO6SBaRPU9Py2Yi1PNU3CeX3ymShEbSf6VrsEh4woViQ+KwQzIYpUPPGGWRDRYP7fr0nFgOrBelhWdfcRrKcz32xBeqhrnUD4=
+	t=1787553715; cv=none; b=n4n1n6Tucs0kxjE0+uC3G87xQJ38A/wosMX2rg404qKXiyLxVYrlQ2LoXnrlX4KgMft0GfSz3Qw6dBxaLsd17qz3+1zH3PWmhaQDuJTMnXaQgTxjcBpNkeUoLSA0UJN2aZ/ihqXOc8VutWBAuj9xWSpZTlWFuiKNzqQwP73J6TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787552015; c=relaxed/simple;
-	bh=1L9tMSCy0wrBAPwBYeqZ+nw0ZDjewG/CnhHdnRXZ25w=;
+	s=arc-20240116; t=1787553715; c=relaxed/simple;
+	bh=3PCsfniQhFGRXBnuoNv1DWWS3GKspW+tp81RcRwQSuY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8tGYjSuU6avcG16elrNb36/VT088Uybd7rg6K1azF1Q2FvpPxqPDHDQcaQa+CzTSD+kehtiQ8FXY2y1UPUG7idDzse3yymgTuREcDgmeL3JSDQZQcPP741JqDkOpvZAyTtpNAUEIwyj5Oli1zmPmsZcOEO97I2nCEZ0c2LcM8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P763sNUY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sKL8eZrf; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=V+GmtMhU7TZSrIUdXe5x7WtoCIuP/uyc3oukbPaox6YcqF2tJ0W2+sy1cvQ0TgTgLnIYMD+0PhxwOkZFAccNbUWT4L05gNY9gyLDl6aZOlZ6gFMXLnK39Y3uJkxK5MDBAxcpdClCwsLwrzlUZDBKjyZJtjFY74n9+gMG2Mb8dCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EkBJD9vx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LKP6WXjf; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P763sNUY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sKL8eZrf"
-Date: Mon, 24 Aug 2026 08:13:24 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EkBJD9vx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LKP6WXjf"
+Date: Mon, 24 Aug 2026 08:41:46 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1787552005;
+	s=2020; t=1787553711;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7Esxg00+zdR1OijSa8nmQQ2akLFoa3u5p9vLQFPPi/4=;
-	b=P763sNUYKjbFVNoHv9yyAfdkEg9XvoDrdHSz/Ab0YEI/mT3BwiSGzY11G1tSiWrjE3I4Z+
-	Y/Gv3BfbIdLPiBWfoNUcsL83dGvtbNhit9LUsxA2krUTh/+ex/NjeUIgwvzoAjzfwR7xyf
-	UJHopBG2Pa38z/XdoiHVnEH7vUnHsveNSAxpW/71pGzcjF0QZ7+43eSYDma/tIsoXHJBgQ
-	E3DkrzfhA5hjJA/JlvBFjIfwVoBfjUsXb8ISzeHLs4brYgpYJZhd4rUBS56ViNcJhE3t//
-	DMnvNm0sOeJ7A8B9hFZufuksQ84ZRgVQ8SQ6GCk2XLYlfR31yr6hZb5fdnhxMA==
+	bh=GQ/oJDckZY1z/B4BbBXe5zypr99eyfD/LDs4CTbgQaQ=;
+	b=EkBJD9vxIAQQtzBVzwXUtzHzspL8Ya14rf73Vfa32EZ4fAgp1qHA8KzbhlVmJydW+Z8rZW
+	XnR4e/FclUN6W7ExQfFWycLs0dEix6dxCSTOht9P35S76Xw6B16U5vRVo9UN4a3rM0b7id
+	iIg4EJMp45HQAyCsurZc54/rfFwgB4J5S7X6ddz7hcfJb6ghNmxeCuYRTKalDXinHzcghX
+	bKYYxk87O/Agi74W6Ftu+ESA/mazXVuEAxeMfuX7Y/d8/9hD0NY+RJKsBvnMDczVRydaYC
+	o4cBgkgM3iGrUhEddjfgOI9/ZmFhiDgvet/NJBMg9KDLC+ufYyM0fxPtGIO65A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1787552005;
+	s=2020e; t=1787553711;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7Esxg00+zdR1OijSa8nmQQ2akLFoa3u5p9vLQFPPi/4=;
-	b=sKL8eZrfF17mDG5fNF+0CaDWhx/W8a5nlsGhNIHtYXt26h+GH21QcfykQvhLlk7FjfbLpY
-	sbGLzD9LvCuk0pBA==
+	bh=GQ/oJDckZY1z/B4BbBXe5zypr99eyfD/LDs4CTbgQaQ=;
+	b=LKP6WXjf5vfVYfkVZELvMZMvVHGu1L4rYbBy5VpNigFjlGjWqsxTq0qE/i2mFuLRh+TzYY
+	O5jfgwG1nggJ1VBw==
 From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 To: Bill Wendling <morbo@google.com>
 Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-	Aleksa Sarai <cyphar@cyphar.com>, Jan Kara <jack@suse.cz>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>, Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>, 
-	Douglas Anderson <dianders@chromium.org>, Anand Moon <linux.amoon@gmail.com>, 
-	Oleg Nesterov <oleg@redhat.com>, codemender-patching+linux@google.com, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] userns: Add KUnit test suite for uid_gid_map
-Message-ID: <20260824080214-8b12767a-8b04-4344-b48a-cd2966ad36de@linutronix.de>
-References: <20260823125155.1136740-1-morbo@google.com>
- <20260823125155.1136740-3-morbo@google.com>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <david@davidgow.net>, Rae Moar <raemoar63@gmail.com>, 
+	Ryota Sakamoto <sakamo.ryota@gmail.com>, Kuan-Wei Chiu <visitorckw@gmail.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Dmitry Antipov <dmantipov@yandex.ru>, 
+	Petr Mladek <pmladek@suse.com>, Kir Chou <note351@hotmail.com>, 
+	codemender-patching+linux@google.com, linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com
+Subject: Re: [PATCH 2/2] lib/tests: Add KUnit test for struct stack_trace
+ __counted_by_ptr attribute
+Message-ID: <20260824083538-d0eff358-e1d4-4af6-9e61-d4d816783266@linutronix.de>
+References: <20260823123549.1120133-1-morbo@google.com>
+ <20260823123549.1120133-3-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260823125155.1136740-3-morbo@google.com>
+In-Reply-To: <20260823123549.1120133-3-morbo@google.com>
 
-On Sun, Aug 23, 2026 at 12:51:48PM +0000, Bill Wendling wrote:
-> Add a KUnit test suite to verify the insertion and sorting of mappings
-> in struct uid_gid_map. This test suite validates both base extent
-> insertion (<= 5 mappings) and extended extent insertion (> 5 mappings,
-> which triggers the allocation of the forward and reverse pointers).
+On Sun, Aug 23, 2026 at 12:35:33PM +0000, Bill Wendling wrote:
+> Add a custom KUnit test suite 'stacktrace_counted_by' to verify that the
+> __counted_by_ptr annotation on the 'entries' field of 'struct stack_trace'
+> behaves correctly.
+
+The implementation of __counted_by_ptr should be tested by a dedicated unittest
+for that feature. And I am fairly sure that already exists. It should not be
+tested in random subsystems.
+
+> The test verifies that 'max_entries' correctly limits and validates access
+> to 'entries' when CONFIG_ARCH_STACKWALK is not defined. If it is defined,
+> the test is cleanly skipped at runtime to prevent compile-time or runtime
+> failures due to 'struct stack_trace' being undefined on modern
+> architectures.
 > 
-> This is especially useful for verifying that the __counted_by_ptr
-> attribute added to 'forward' and 'reverse' pointers works correctly
-> without causing any runtime bounds-checking panics or traps.
-
-AFAIU patch 1 is supposed to not change any behavior.
-You could move the unit test to the front to make that clearer
-and also validate it.
-
 > Assisted-by: Gemini Next
-> Change-Id: If0c2c197a35cd7429cf0d2d6e3b33f0d9f0be66c
-
-Change-Id should not be used upstream.
-See Documentation/dev-tools/checkpatch.rst.
-
 > Signed-off-by: Bill Wendling <morbo@google.com>
 > ---
 > Cc: Kees Cook <kees@kernel.org>
 > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Aleksa Sarai <cyphar@cyphar.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Nicolas Schier <nsc@kernel.org>
-> Cc: Gary Guo <gary@garyguo.net>
-> Cc: "Thomas Weiﬂschuh" <thomas.weissschuh@linutronix.de>
-> Cc: Alice Ryhl <aliceryhl@google.com>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Anand Moon <linux.amoon@gmail.com>
-> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> Cc: David Gow <david@davidgow.net>
+> Cc: Rae Moar <raemoar63@gmail.com>
+> Cc: Ryota Sakamoto <sakamo.ryota@gmail.com>
+> Cc: Kuan-Wei Chiu <visitorckw@gmail.com>
+> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Cc: Dmitry Antipov <dmantipov@yandex.ru>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Kir Chou <note351@hotmail.com>
 > Cc: codemender-patching+linux@google.com
 > Cc: linux-kernel@vger.kernel.org
 > Cc: linux-hardening@vger.kernel.org
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: kunit-dev@googlegroups.com
+> Cc: linux-hardening@vger.kernel.org
 > ---
->  init/Kconfig                  | 10 ++++
->  kernel/.kunitconfig           |  3 ++
->  kernel/user_namespace.c       |  4 ++
->  kernel/user_namespace_kunit.c | 87 +++++++++++++++++++++++++++++++++++
->  4 files changed, 104 insertions(+)
->  create mode 100644 kernel/.kunitconfig
->  create mode 100644 kernel/user_namespace_kunit.c
+>  lib/Kconfig.debug            | 10 +++++++
+>  lib/kunit/.kunitconfig       |  1 +
+>  lib/tests/Makefile           |  1 +
+>  lib/tests/stacktrace_kunit.c | 51 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 63 insertions(+)
+>  create mode 100644 lib/tests/stacktrace_kunit.c
 
 (...)
 
-> +static void test_user_ns_map_insert_extended(struct kunit *test)
-> +{
-> +	struct uid_gid_map map;
-> +	struct uid_gid_extent extent;
-> +	int i, ret;
+> diff --git a/lib/tests/stacktrace_kunit.c b/lib/tests/stacktrace_kunit.c
+> new file mode 100644
+> index 000000000000..7ec48edf84fe
+> --- /dev/null
+> +++ b/lib/tests/stacktrace_kunit.c
+> @@ -0,0 +1,51 @@
 
 (...)
 
-> +	/* Now sort the map to set up reverse mapping */
-> +	ret = sort_idmaps(&map);
-> +	KUNIT_EXPECT_EQ(test, ret, 0);
-> +	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, map.reverse);
-
-KUNIT_EXPECT_*() will *not* abort the test when the assertion fails ...
-
-> +
-> +	/* Verify sorting is correct */
-> +	for (i = 0; i < map.nr_extents; i++) {
-> +		KUNIT_EXPECT_EQ(test, map.forward[i].count, 5);
-> +		KUNIT_EXPECT_EQ(test, map.reverse[i].count, 5);
-
-... leading to a crash here if map.reverse is invalid.
-
-To also abort the test on assertion failure use KUNIT_ASSERT_*().
-
-> +	}
-> +
-> +	/* Clean up allocations to avoid leaks */
-
-Pointless comment. This is true for every single call of kfree().
-
-> +	kfree(map.forward);
-> +	kfree(map.reverse);
 > +}
+> +#else
+> +static void test_stack_trace_counted_by(struct kunit *test)
+> +{
+> +	kunit_skip(test, "CONFIG_ARCH_STACKWALK is enabled, struct stack_trace is not defined");
+
+If the test requires a specific kconfig symbol, then depend on it in kconfig.
+Putting all of the code behind a single, giant ifdef is pointless.
+
+> +}
+> +#endif
 
 (...)
