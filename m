@@ -1,27 +1,52 @@
-Received: from sphereful.davidgow.net (sphereful.davidgow.net [203.29.242.92])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7411E0DE8;
-	Tue, 25 Aug 2026 05:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.242.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A012FFFA4
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 05:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787634466; cv=none; b=uOXeywxVew7Qgoj2NHYoQ95znxc5OT0Up/rPZjJo2z16j34S2OKGo/N89bQG38P/QVUBaP9/9ZnjplsT4a133NgMKtMfWKMDeqF88tghp83V+HipCcUJ6+wpIt+q5FsZmatDDoJ34S21RhtNG+I4Z+x6AIVYIMAX7u5eR0sqtfo=
+	t=1787637026; cv=none; b=hfpLUGeH1WmiERzhXFl+7lIpKGw32JMEjGgoTXRpZ9G+r2jgOe9hqUXq5IB3AuuDnIqhtr+ST7Lj1mmgzZDv2VOUPknlDH+nk/4JuF9X7SMNYBWQv8xjr7tRfTiDbmDTwGWuCumvTp89pfFJhhxz0GwptyVOj4goWiUy9wLO6As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787634466; c=relaxed/simple;
-	bh=SQHNn/ts9/ycErKCaZ5tVLTT6zkguL0GgEFvITPmDqA=;
+	s=arc-20240116; t=1787637026; c=relaxed/simple;
+	bh=NJd9dsrn8p3HJ/iy9HUTyDF8V7jVM4mAdC9H/Rbho3M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ChO83n/PrIDkq/0RoN5hvg1FBpCeSCtE/+5Y0XtV4jKzYZAAqMPQ8MdOUBafBXGaAFfkVuIfUm9Z+QCyooHqmmVfyjeZfrAhpUajnGVrsbvpqpfARSZp0ppDvrfaQNOlySb7enKcxkOUN9UY/0nu5qbuVlWzDqZ7kH9ZCn3oeFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=davidgow.net; spf=pass smtp.mailfrom=davidgow.net; arc=none smtp.client-ip=203.29.242.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=davidgow.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidgow.net
-Received: by sphereful.davidgow.net (Postfix, from userid 119)
-	id 2F1811EAAA9; Tue, 25 Aug 2026 13:07:34 +0800 (AWST)
-X-Spam-Level: 
-Received: from [IPV6:2001:8003:8802:7000::41b] (unknown [IPv6:2001:8003:8802:7000::41b])
-	by sphereful.davidgow.net (Postfix) with ESMTPSA id BA6E21EA7C4;
-	Tue, 25 Aug 2026 13:07:28 +0800 (AWST)
-Message-ID: <f165dbd7-d275-4f9c-969c-408399e85830@davidgow.net>
-Date: Tue, 25 Aug 2026 13:07:25 +0800
+	 In-Reply-To:Content-Type; b=ZEIPzC9r5ql1sAHTfPA7M+shkguDVG3tsCpFtMaoXYTW8KJga1vQlOcCj8GhlcWCXcmpej42RQQPN+U1bpU6tTfqpBtLOy7klZbDoqqb1LmOGAq/+88jR4907Oc3t+MjTQneRrxqIkwgau/OU9TiAohxOKwFb2smJcdwCcacWQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Ua6J4Nyv; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Ua6J4Nyv"
+Received: from eig-obgw-6001b.ext.cloudfilter.net ([10.0.30.143])
+	by cmsmtp with ESMTPS
+	id yeNYwtVIJhJKMyk37wn3mv; Tue, 25 Aug 2026 05:50:17 +0000
+Received: from gator4166.hostgator.com ([108.167.190.91])
+	by cmsmtp with ESMTPS
+	id yk36wbr859tXGyk36wHhOT; Tue, 25 Aug 2026 05:50:16 +0000
+X-Authority-Analysis: v=2.4 cv=KK1aDEFo c=1 sm=1 tr=0 ts=6a8d2d18
+ a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=7T7KSl7uo7wA:10 a=PeOOapuUAAAA:8
+ a=VwQbUJbxAAAA:8 a=4CtH7uQIhdueW-2XxFgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=0BaqRfgCL6CLbWgV2pdm:22 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=9T0oQ3UXl7WTwu1jo5pR/9jTVArWjpzVKQbNeLS+u40=; b=Ua6J4NyvRYjDzihfll4eaa1csE
+	ilStAybPhQGYYVby1R5rKpSOMlfWy7xBDEn8foNgccQI3uXucwPJMmIBd8zKuyhJH2PlsZE7JnMkt
+	wc4hal/LSEYN9gm5UrqAU4gvugssc9oAdqXaERtZqaM0y+IoxkvIeDkIL9Zh2/4GzAxQ7Yx2qhvds
+	SiOukBiIF19edCEH+8ldS5HqfbqOpydA2z00jb4VO7hoRpWgrK8YVOi6I8JRmvEYVgE3wmJqLG+H1
+	e/qs5VwvfY9UD1ejlo1qE1V0j8ITAwiCBtLoGoeMqEhzgFZ7QjtffnExm+FpK+moD1EnOrQuwZhX/
+	GqFonbTA==;
+Received: from [59.16.68.142] (port=57282 helo=[192.168.0.146])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.99.5)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1wyk35-00000003aLs-0Jz3;
+	Tue, 25 Aug 2026 00:50:15 -0500
+Message-ID: <0a7868be-635e-4872-8376-6d91a7b73315@embeddedor.com>
+Date: Tue, 25 Aug 2026 14:49:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -29,204 +54,213 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] lib/tests: Add KUnit test for struct stack_trace
- __counted_by_ptr attribute
-To: Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <raemoar63@gmail.com>,
- Ryota Sakamoto <sakamo.ryota@gmail.com>, Kuan-Wei Chiu
- <visitorckw@gmail.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Dmitry Antipov <dmantipov@yandex.ru>, Petr Mladek <pmladek@suse.com>,
- Kir Chou <note351@hotmail.com>, codemender-patching+linux@google.com,
- linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com
-References: <20260823123549.1120133-1-morbo@google.com>
- <20260823123549.1120133-3-morbo@google.com>
+Subject: Re: [PATCH] tree-object-size: Fix type-1 size for pointers to
+ FAM-containing subobjects [PR126975]
+To: Jakub Jelinek <jakub@redhat.com>,
+ Richard Biener <richard.guenther@gmail.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Siddhesh Poyarekar <siddhesh@gotplt.org>, Kees Cook <kees@kernel.org>,
+ gcc-patches@gcc.gnu.org, Martin Uecker <uecker@tugraz.at>,
+ josmyers@redhat.com, Bill Wendling <morbo@google.com>,
+ linux-hardening@vger.kernel.org
+References: <aojDH2Db6XIkVqcf@kspp>
+ <CAFiYyc2Uhw0iCwfmCET7gWLnXXYeV7wwPJv9Ny0uEcOrYA2f4A@mail.gmail.com>
+ <aogVH8UtICMP1Ihv@tucnak>
 Content-Language: en-US
-From: David Gow <david@davidgow.net>
-In-Reply-To: <20260823123549.1120133-3-morbo@google.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <aogVH8UtICMP1Ihv@tucnak>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 59.16.68.142
+X-Source-L: No
+X-Exim-ID: 1wyk35-00000003aLs-0Jz3
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.146]) [59.16.68.142]:57282
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfETVqaqjq/hSKGJ8DVFH7n8CG5e92D1MiHUGm+SC3b7Lwjl5A84vneu3tpd9Sfx+6Lzcv16S4cVrw/1e0EEYNyf3I9WbXVSvojn6O1OiKxdoScfZHHwx
+ 9fW9jEu/hhuydweX3X0tLYFEnc/nj0xKUPCiW4NQq3X6hlZtj7yo9V8vWJpi7jUVMw6AzqBgQG19D1I/uqDBmEmYDzuK0HEMbjIaHYNPgCmLzbs94BEN3auX
 
-Le 23/08/2026 à 20:35, Bill Wendling a écrit :
-> Add a custom KUnit test suite 'stacktrace_counted_by' to verify that the
-> __counted_by_ptr annotation on the 'entries' field of 'struct stack_trace'
-> behaves correctly.
+
+
+On 8/21/26 03:06, Jakub Jelinek wrote:
+> On Fri, Aug 21, 2026 at 10:56:34AM +0200, Richard Biener wrote:
+>> On Fri, Aug 21, 2026 at 8:30 AM Gustavo A. R. Silva
+>> <gustavoars@kernel.org> wrote:
+>>>
+>>> For a pointer to a subobject whose record/union type ends in a flexible-array
+>>> member (directly, or through its trailing nested struct), addr_object_size()
+>>> walked up to the enclosing object (v = TREE_OPERAND (v, 0)) instead of
+>>> measuring the referenced subobject. __builtin_object_size() and
+>>> __builtin_dynamic_object_size() type 1 therefore returned the whole-object
+>>> size, collapsing type 1 onto type 0 and losing the distinction between
+>>> &p->inner and p. FORTIFY_SOURCE relies on the type-1 distinction, so this
+>>> weakens its bounds checks.
+>>>
+>>> Fix this by computing the size directly from the referenced record/union
+>>> instead of walking up, restoring the type-0/type-1 distinction that Clang
+>>> already implements.
+>>>
+>>> Bootstraped and regtested on x86_64-linux-gnu.
+>>>
+>>>          PR tree-optimization/126975
+>>>
+>>> gcc/ChangeLog:
+>>>
+>>>          * tree-object-size.cc (addr_object_size): For a reference to a
+>>>          record or union type, compute the object size from the referenced
+>>>          subobject instead of walking up to the enclosing object when the
+>>>          type recursively includes a flexible array member.
+>>>
+>>> gcc/testsuite/ChangeLog:
+>>>
+>>>          * gcc.dg/builtin-object-size-pr101832.c (main): Update the expected
+>>>          results of __builtin_object_size (..., 1) queries on subobjects
+>>>          whose type contains a flexible array member.
+>>> ---
+>>>   .../gcc.dg/builtin-object-size-pr101832.c      |  6 +++---
+>>>   gcc/tree-object-size.cc                        | 18 +++++-------------
+>>>   2 files changed, 8 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/gcc/testsuite/gcc.dg/builtin-object-size-pr101832.c b/gcc/testsuite/gcc.dg/builtin-object-size-pr101832.c
+>>> index 60078e11634..d76286ae454 100644
+>>> --- a/gcc/testsuite/gcc.dg/builtin-object-size-pr101832.c
+>>> +++ b/gcc/testsuite/gcc.dg/builtin-object-size-pr101832.c
+>>> @@ -92,9 +92,9 @@ int main (int argc, char *argv[])
+>>>     outer = (void *)magic1;
+>>>     outest = (void *)magic2;
+>>>
+>>> -  expect (__builtin_object_size (&outer->a, 1), -1);
+>>> -  expect (__builtin_object_size (&outest->b, 1), -1);
+>>> -  expect (__builtin_object_size (&outest->b.a, 1), -1);
+>>> +  expect (__builtin_object_size (&outer->a, 1), sizeof(outer->a));
+>>
+>> I think this warrants updating the documentation in extend.texi where
+>> I think the
+>> question is how for
+>>
+>> struct A {
+>>    int n;
+>>    char data[];
+>> };
+>>
+>> struct B {
+>>    int m;
+>>    struct A a;
+>> };
+>>
+>> structr B *outer;
+>>
+>> and object &outer->a, how, based on 'type', the enclosing object
+>> size is constrained by its enclosing object.  Also for outer->a.data
+>> what the enclosing object is and similar how the constraint from the
+>> enclosing objects are handled.
+>>
+>> I'll note that __builtin_object_size behavior might be in conflict
+>> with constraints set by -fstrict-flex-arrays.  IIRC "nested" flex arrays
+>> are a GNU extension, flex arrays not at the end of an (enclusing)
+>> object as well (a particularly bad one).
+>>
+>> You also need to update the toplevel comment of the testcase
+>> which explicitly says your change is wrong.
 > 
-> The test verifies that 'max_entries' correctly limits and validates access
-> to 'entries' when CONFIG_ARCH_STACKWALK is not defined. If it is defined,
-> the test is cleanly skipped at runtime to prevent compile-time or runtime
-> failures due to 'struct stack_trace' being undefined on modern
-> architectures.
+> I actually think we don't want to change this, the handling of nested
+> flexible and flexible-like arrays has been completely intentional, it was
+> based on investigation of real-world code and finding some reasonable
+> middle-ground on what we consider already invalid and what we allow as an
+> extension, especially because it occurs a lot in real-world code.
+
+The current behavior was introduced in GCC 14 (mid-2023). Before that,
+the code behaved as expected today.
+
+Before GCC 14:
+ok:  __builtin_object_size (&p->inner, 1) == 8
+ok:  __builtin_dynamic_object_size (&p->inner, 1) == 8
+ok:  __builtin_object_size (&p->inner, 0) == 56
+ok:  __builtin_dynamic_object_size (&p->inner, 0) == 56
+
+GCC 14.1+:
+WAT: __builtin_object_size (&p->inner, 1) == 56 (expected 8)
+WAT: __builtin_dynamic_object_size (&p->inner, 1) == 56 (expected 8)
+ok:  __builtin_object_size (&p->inner, 0) == 56
+ok:  __builtin_dynamic_object_size (&p->inner, 0) == 56
+
+See: https://godbolt.org/z/Td8sW7G47
+
 > 
-> Assisted-by: Gemini Next
-> Signed-off-by: Bill Wendling <morbo@google.com>
-> ---
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Brendan Higgins <brendan.higgins@linux.dev>
-> Cc: David Gow <david@davidgow.net>
-> Cc: Rae Moar <raemoar63@gmail.com>
-> Cc: Ryota Sakamoto <sakamo.ryota@gmail.com>
-> Cc: Kuan-Wei Chiu <visitorckw@gmail.com>
-> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Cc: Dmitry Antipov <dmantipov@yandex.ru>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Kir Chou <note351@hotmail.com>
-> Cc: codemender-patching+linux@google.com
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> Cc: linux-kselftest@vger.kernel.org
-> Cc: kunit-dev@googlegroups.com
-> Cc: linux-hardening@vger.kernel.org
-> ---
-
-I'm a bit confused: what is this actually testing? You're creating an 
-array of size 4 and writing 4 entries to it, after setting max_entries 
-correctly? Removing the __counted_by_ptr attribute doesn't change 
-anything here. Is there any circumstance where this should fail? The 
-only case I can think of is if __counted_by_ptr is either totally 
-broken, or someone randomly points it to a different value. Neither of 
-which seem likely.
-
-Even if this did something more exciting (like try to access elements 
-beyond the end of the array), I'm not sure a KUnit test is the optimal 
-place for it: ultimately we're looking for a compiler warning / error, 
-not a runtime one, and even then, one which probably isn't of much value 
-given it's unlikely __counted_by_ptr will spontaneously break.
-
-Added to that, there are a bunch of stylistic issues with the test below 
-anyway. These mostly seem like LLM-isms, but probably should've been 
-caught before this went to the list.
-
-Unless there's something I'm missing (and, if so, it's probably worth 
-writing a description which better explains the "why" here), I think we 
-can probably drop this test entirely and stick to just patch 1.
-
--- David
-
->   lib/Kconfig.debug            | 10 +++++++
->   lib/kunit/.kunitconfig       |  1 +
->   lib/tests/Makefile           |  1 +
->   lib/tests/stacktrace_kunit.c | 51 ++++++++++++++++++++++++++++++++++++
->   4 files changed, 63 insertions(+)
->   create mode 100644 lib/tests/stacktrace_kunit.c
+> What we certainly can change is the behavior when
+> -fstrict-flex-arrays unless it already behaves the expected way,
+> and perhaps also when the flex array has counted_by attribute.
 > 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index e97bdf3a42a8..51a6ac1a2461 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2716,6 +2716,16 @@ config BITOPS_KUNIT
->   
->   	  If unsure, say N.
->   
-> +config STACKTRACE_KUNIT_TEST
-> +	tristate "KUnit test for stacktrace counted_by attribute" if !KUNIT_ALL_TESTS
-> +	depends on KUNIT
+> Changing this unconditionally will just break a lot of software in the wild
+> when compiled with -O2 -D_FORTIFY_SOURCE=2 or -O2 -D_FORTIFY_SOURCE=3, which
+> is very common.
+I'm fine with implementing this under -fstrict-flex-arrays=3, which is the
+strictest level value for flexible-array members we use in the Linux kernel.
 
-This should also just depend on CONFIG_ARCH_STACKWALK, rather than doing 
-the whole skip test thing.
+However, given that just three years ago (before GCC 14, as shown above) GCC
+already had the behavior this change restores, I think this should probably be
+an unconditional change. What do you think?
 
-> +	default KUNIT_ALL_TESTS
-> +	help
-> +	  This option enables the KUnit test for verifying the __counted_by_ptr
-> +	  attribute on struct stack_trace.
-> +
-> +	  If unsure, say N.
-> +
->   config BITFIELD_KUNIT
->   	tristate "KUnit test bitfield functions at runtime" if !KUNIT_ALL_TESTS
->   	depends on KUNIT
-> diff --git a/lib/kunit/.kunitconfig b/lib/kunit/.kunitconfig
-> index 9235b7d42d38..b3761b41459e 100644
-> --- a/lib/kunit/.kunitconfig
-> +++ b/lib/kunit/.kunitconfig
-> @@ -1,3 +1,4 @@
->   CONFIG_KUNIT=y
->   CONFIG_KUNIT_TEST=y
->   CONFIG_KUNIT_EXAMPLE_TEST=y
-> +CONFIG_STACKTRACE_KUNIT_TEST=y
+Also, notice how the behavior for one-element and zero-length arrays, which
+we call "fake flexible arrays" in the Linux kernel, is exactly the same
+before GCC 14 and now:
 
-Please don't add this here. This is not a test of KUnit itself, which is 
-what the lib/kunit/.kunitconfig file is meant to configure.
+Before GCC 14:
+[ ] C99 flexible-array member
+ok:  __builtin_object_size (&p->inner, 1) == 8
+ok:  __builtin_dynamic_object_size (&p->inner, 1) == 8
+ok:  __builtin_object_size (&p->inner, 0) == 56
+ok:  __builtin_dynamic_object_size (&p->inner, 0) == 56
 
-For general KUnit test build, CONFIG_KUNIT_ALL_TESTS will enable it.
+[1] fake flexible-array member
+ok:  __builtin_object_size (&p_1->inner_1, 1) == 16
+ok:  __builtin_dynamic_object_size (&p_1->inner_1, 1) == 16
+ok:  __builtin_object_size (&p_1->inner_1, 0) == 64
+ok:  __builtin_dynamic_object_size (&p_1->inner_1, 0) == 64
 
-> diff --git a/lib/tests/Makefile b/lib/tests/Makefile
-> index 4ead57602eac..40875e729fc8 100644
-> --- a/lib/tests/Makefile
-> +++ b/lib/tests/Makefile
-> @@ -6,6 +6,7 @@
->   CFLAGS_bitfield_kunit.o := $(DISABLE_STRUCTLEAK_PLUGIN)
->   obj-$(CONFIG_BASE64_KUNIT) += base64_kunit.o
->   obj-$(CONFIG_BITOPS_KUNIT) += bitops_kunit.o
-> +obj-$(CONFIG_STACKTRACE_KUNIT_TEST) += stacktrace_kunit.o
->   obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
->   obj-$(CONFIG_BITS_TEST) += test_bits.o
->   obj-$(CONFIG_SHDI3_KUNIT_TEST) += shdi3_kunit.o
-> diff --git a/lib/tests/stacktrace_kunit.c b/lib/tests/stacktrace_kunit.c
-> new file mode 100644
-> index 000000000000..7ec48edf84fe
-> --- /dev/null
-> +++ b/lib/tests/stacktrace_kunit.c
-> @@ -0,0 +1,51 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * KUnit test for struct stack_trace counted_by attribute.
-> + */
-> +
-> +#include <kunit/test.h>
-> +#include <linux/stacktrace.h>
-> +
-> +#ifndef CONFIG_ARCH_STACKWALK
-> +static void test_stack_trace_counted_by(struct kunit *test)
-> +{
-> +	unsigned long entries_buf[4];
-> +	struct stack_trace trace = {
-> +		.entries = entries_buf,
-> +		.max_entries = 4,
-> +	};
-> +
-> +	KUNIT_EXPECT_EQ(test, trace.max_entries, 4U);
-> +	KUNIT_EXPECT_PTR_EQ(test, trace.entries, (unsigned long *)entries_buf);
-> +
-> +	/* Write to the allocated elements to verify access */
-> +	trace.entries[0] = 0xdeadbeef;
-> +	trace.entries[1] = 0xbeefcafe;
-> +	trace.entries[2] = 0xcafebabe;
-> +	trace.entries[3] = 0x12345678;
-> +
-> +	KUNIT_EXPECT_EQ(test, trace.entries[0], 0xdeadbeefUL);
-> +	KUNIT_EXPECT_EQ(test, trace.entries[1], 0xbeefcafeUL);
-> +	KUNIT_EXPECT_EQ(test, trace.entries[2], 0xcafebabeUL);
-> +	KUNIT_EXPECT_EQ(test, trace.entries[3], 0x12345678UL);
-> +}
-> +#else
-> +static void test_stack_trace_counted_by(struct kunit *test)
-> +{
-> +	kunit_skip(test, "CONFIG_ARCH_STACKWALK is enabled, struct stack_trace is not defined");
-> +}
-> +#endif
-> +
-> +static struct kunit_case stacktrace_test_cases[] = {
-> +	KUNIT_CASE(test_stack_trace_counted_by),
-> +	{}
-> +};
-> +
-> +static struct kunit_suite stacktrace_test_suite = {
-> +	.name = "stacktrace_counted_by",
-> +	.test_cases = stacktrace_test_cases,
-> +};
+[0] fake flexible-array member
+ok:  __builtin_object_size (&p_0->inner_0, 1) == 8
+ok:  __builtin_dynamic_object_size (&p_0->inner_0, 1) == 8
+ok:  __builtin_object_size (&p_0->inner_0, 0) == 56
+ok:  __builtin_dynamic_object_size (&p_0->inner_0, 0) == 56
 
-Is this suite intended to cover more stacktrace tests than just the 
-counted_by one at some point? If so, it'd be better to name it 
-"stacktrace". If not, these structs should be named 
-"stacktrace_counted_by_test_suite", etc.
+GCC 14.1+:
+[ ] C99 flexible-array member
+WAT: __builtin_object_size (&p->inner, 1) == 56 (expected 8)
+WAT: __builtin_dynamic_object_size (&p->inner, 1) == 56 (expected 8)
+ok:  __builtin_object_size (&p->inner, 0) == 56
+ok:  __builtin_dynamic_object_size (&p->inner, 0) == 56
 
-> +
-> +kunit_test_suite(stacktrace_test_suite);
-> +
-> +MODULE_LICENSE("GPL");
+[1] fake flexible-array member
+ok:  __builtin_object_size (&p_1->inner_1, 1) == 16
+ok:  __builtin_dynamic_object_size (&p_1->inner_1, 1) == 16
+ok:  __builtin_object_size (&p_1->inner_1, 0) == 64
+ok:  __builtin_dynamic_object_size (&p_1->inner_1, 0) == 64
+
+[0] fake flexible-array member
+ok:  __builtin_object_size (&p_0->inner_0, 1) == 8
+ok:  __builtin_dynamic_object_size (&p_0->inner_0, 1) == 8
+ok:  __builtin_object_size (&p_0->inner_0, 0) == 56
+ok:  __builtin_dynamic_object_size (&p_0->inner_0, 0) == 56
+
+See: https://godbolt.org/z/8Pn361TM8
+
+So, this change doesn't affect how those arrays are interpreted by
+__bos/__bdos() when used as fake flexible arrays today (that is,
+without -fstrict-flex-arrays).
+
+Thanks for the feedback!
+-Gustavo
 
