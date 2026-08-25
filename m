@@ -1,239 +1,180 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07D03AC00;
-	Tue, 25 Aug 2026 11:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDDD3F328D
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 12:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787656156; cv=none; b=EVxgNqOopETjHhhC6B5RcWDD141mFO5FDWQ4yLYNblVZogstgHBcnelFhj9Od6Lca84YrbyWnrXEhzI7cj6VJjPp9kUEPXpmEaUb6clzDSskHKBFtlBuI0qdJDYjUj0ZQHPEHmqFiD/cc5wEOp50DRZSsgde2zc7KhuDb5kFxLU=
+	t=1787659979; cv=none; b=W+MjGsC8rPorPtLcdPEedR8c6F2XTXw4vZEHTRx5h2cZ/UZ9R0c12u0ULWP+79CBr9lAXCjO8YUzX8vRPi5PPHf3wmqJbW2TweIzvi9GJnGYdrbDNJ7KC0KP/A3gmkfHcMbclW0jiJOox2a93yL98pLCZcx+aUOzDDR8vkPw7hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787656156; c=relaxed/simple;
-	bh=Fu0oF9ep7FRe13cBAiIsRbgK4pvnivRbrmEzm7GLz1M=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GUGhrlLGISF9q0af3s0dAdHMm6STlqqC8mojjxQc2fq3m2eyS0iVYK1ufU3dkYOe4f8+WlLrQBrztsKcA3kW+Pr9DWaX7AykQM3LqH3pdGEBeVVGl1OTRD3wGy9QuVKIU0BBp+sBGr/kA10qJjqRVCsdG75J9hh70a0DNaUDk1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=T542tO7O; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1787659979; c=relaxed/simple;
+	bh=Zy/uplELbej2l31ZzUf+KHC+qlsRNpMsRObEQAmlf2M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Szw5oPCec5hlKcItrK6gS3EMoO2Y+pP4gqL5mxSZDsULK7rmilVBPmYt/XpXisIfq7QBEZ6ENCDLPwWHZvB8hEL8X8yjuGkFODSEmR1iXJHppTjWpBwdnxNf1l1CgNTBf05x+iAL0/E7W6kS3bryoDqqQBWA4AY0Cp+nR5m4K0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=STOUkQyJ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=BRrv3QaN; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="T542tO7O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1787656154; x=1819192154;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=Fu0oF9ep7FRe13cBAiIsRbgK4pvnivRbrmEzm7GLz1M=;
-  b=T542tO7OdU4KGnrS34iw5AUZxg8YblpUztoCvlt9FLmWk9f1v+7cp0PC
-   UkYioB4C8kMiolZiRsPgqB+Ujy+uahCdVRSsEEO7Z429qbe4O1/135Wof
-   8eNrtgopzqUeHAqfiWc9ycVAokiyDrqpU6n8uEa3LF1fdCERH0QY8pXwL
-   DGED2FjA/JFMTyeMe5RCP13oFFZ63FdHLSQ3otvkVitU15T1lGB/JcFx9
-   oAnIZqAKU5hgVL+bSoebqKBWHRxeh8L5MD+oGFd359M+dphYs4io4lxQV
-   e41KcdycA9XMtuw4na2UV0ZXD83uB6tf40FiZOyGpyDAnpBe2VvmBLp3L
-   g==;
-X-CSE-ConnectionGUID: wiPdy7gsTvCs5FTPDln7gQ==
-X-CSE-MsgGUID: UNBvfWi2Ssm4Jaqipfg1og==
-X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
-   d="scan'208";a="294002896"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Aug 2026 04:09:13 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Tue, 25 Aug 2026 04:09:13 -0700
-Received: from DEN-DL-M77643.microsemi.net (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.58 via Frontend Transport; Tue, 25 Aug 2026 04:09:10 -0700
-Message-ID: <029bfcd0e1142c43b3992389d2abe6954a8a5108.camel@microchip.com>
-Subject: Re: [PATCH net-next v2 4/9] net: microchip: vcap: expose helpers in
- vcap api and update debugfs
-From: Jens Emil Schulz Ostergaard <jensemil.schulzostergaard@microchip.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
-	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<pabeni@redhat.com>, <daniel.machon@microchip.com>,
-	<Steen.Hegelund@microchip.com>, <kees@kernel.org>, <gustavoars@kernel.org>,
-	<robert.marko@sartura.hr>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-hardening@vger.kernel.org>
-Date: Tue, 25 Aug 2026 13:09:09 +0200
-In-Reply-To: <20260817211355.3633327-1-kuba@kernel.org>
-References: <20260810-sparx5_l3_routing-v2-4-59e68cc8c8ca@microchip.com>
-	 <20260817211355.3633327-1-kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2.1 
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="STOUkQyJ";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="BRrv3QaN"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67PAutMW1152797
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 12:12:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GFYBfDMFLN7EfoYr1yKrbGv2vHYSkMdELyDJzYvM8Ig=; b=STOUkQyJC7MwAcPo
+	Lbed1T5mcuXzoWZ/nuwaFsLC6jSrjPmBAWI6RJh8b7LtXeUfHOhZRtsXfQxf9Vqp
+	KCQNJJ1FKLH9Eq0r4aRYaAjEztgCNCPhurViedD2PdncOZeug+uuCiuBLlw1VUVH
+	t1C/yMCkhhJVUPN8CkycbQvVo4tfB7wjqggy2VFEDxKNvB53bsInutWnIykI4G6l
+	h+N/Sb+lc1ubOSbSrz7SeulJL61RzM9eRNMaX9i5rMxhcUIafUFJzw73JXVJUWf3
+	MJh4L5jgK64xm9wNlWGMNkigYGmk6dmc7dofB1ZwJaPCAMRKzCqMvJeKwIMurqZ1
+	BJjszQ==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g93nastn5-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 12:12:56 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2cec4226c70so60784005ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 05:12:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1787659976; x=1788264776; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=GFYBfDMFLN7EfoYr1yKrbGv2vHYSkMdELyDJzYvM8Ig=;
+        b=BRrv3QaNeTjSo87ZDwyB5xp2VVjoiWYSLVb9cbx5nFH7E91zKSqMGZYR17cbrBSlVt
+         QwVWmUGu+24nxdkXvk5kcHOzwKx+QOHXkdAMmDFWKiE+eeNpE6wehyYxvWMjm9ydNUqW
+         c5wo5nv7t/rLLiHHGcy1/CFRRpRIk2PZ9MyI0UNA2YKb2HA1d6T7ZaO7mwL3ZpuW5Iu8
+         OC+yUuY8S6WbjKQoKmcERkHJpCYefBem5oQOT/LdbT/w0QtB830ItWnBM67tt2p3G1f2
+         wSStJd+DB/nF6/G7xZvcetQ5x/j2wSZVnVYgGOMv0PJ60SvLrOyeHn5QhJGjVl05/xNu
+         1nXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787659976; x=1788264776;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=GFYBfDMFLN7EfoYr1yKrbGv2vHYSkMdELyDJzYvM8Ig=;
+        b=IzuwPNAWTRniqc+2NVXOiLbygPd1vRJykucroyD128XeCnROMDiPRCnKbt+k/o9THK
+         XzFLelK71vwRQ33qF2gWx3QPksFNAUQ63INL0hL6fRH4A3FE+No4lv4HR6af7cURAGko
+         aCD3CCfJrEXLL2oCGDRX8wS23SIetOckD0q9uxaHLZU/t8WpapPYvL2OMICJg5fG6BFc
+         hkHlPYzwRxG8hUl1xH+LDVOsHU2vdhZF9jNt2fq9AapxPyWU1Xo9TfQRaXagzWNsIMky
+         Og7nKmmaZXThd+3OOticgfX8x1Jqs63EfS/hYzENhWHxtvnUJYwx6J7ExQDwaGTu+6yL
+         vlcA==
+X-Forwarded-Encrypted: i=1; AHgh+RojBVGWn6E/1ML7S99jPecJ7l9Khq+OOksDxBdBMfOdUEhhYcX6gypTGwfedKLPm+VulZ9WIuHeOjj9y+WzHdU=@vger.kernel.org
+X-Gm-Message-State: AFuF++m5aKDNZa3nftUHi7KdhcaUZVrTdeDmEL+ZmOJcmt9Np4t21nU5
+	s84Q1nvzP5nYPVny9orFB8WSSijNcfnrXH97oJ85p3WHuV/IP3YNyqMbIvLi+QHdjeJSkTVrGpC
+	7DdeHANCtq1pdN96kYXiP7l9VXqRZO009ekKEwkSPA1eqdNPJrGOSLRq8Csn014t4Wo716qA=
+X-Gm-Gg: AR+sD13m958x0F6swr1FGEwdi2bb8IKgvSyKeSRJ0hnc0bEpoCxzlFdy7DyYGcy3sJo
+	FlexkT5rxE/CI8R9wMPYQ0Fm1XrEx1hD3qhSLw0AblZoXleT1suYAA3j9A0gokeLBB7ZAbRT5jg
+	7ZjmTTLWxlRShmbGSVyi7Tkxs29WJq658kpuNaftDmCWa+VWUuzWZYRwmOcHSVmYBEZRWIP5UPT
+	V6loZQWZWC0AHaB7grpjKxRucHGItR2/LmBKmo4i5WW1sCSV9biLVtOv9UvikDf3EFz/jlGrd4b
+	+osmR/aIBJ4nQExmoGgo1rpCSp847buzImJT02QzVIDp5uFrAdOMpyQAYneU3R0kAVrvkz5byj/
+	Aza2j9wGIJ2RKNmlWn7VLXx46fsFOS44=
+X-Received: by 2002:a17:902:fd8c:b0:2cc:864b:539 with SMTP id d9443c01a7336-2d64addb782mr652487135ad.6.1787659975989;
+        Tue, 25 Aug 2026 05:12:55 -0700 (PDT)
+X-Received: by 2002:a17:902:fd8c:b0:2cc:864b:539 with SMTP id d9443c01a7336-2d64addb782mr652486155ad.6.1787659975506;
+        Tue, 25 Aug 2026 05:12:55 -0700 (PDT)
+Received: from [192.168.1.16] ([106.222.229.34])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d6768d9241sm28068785ad.71.2026.08.25.05.12.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2026 05:12:55 -0700 (PDT)
+Message-ID: <c9964dab-d396-497d-bb67-5e509fc8a085@oss.qualcomm.com>
+Date: Tue, 25 Aug 2026 17:42:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-On Mon, 2026-08-17 at 14:13 -0700, Jakub Kicinski wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
-e content is safe
->=20
-> This is an AI-generated review of your patch. The human sending this
-> email has considered the AI review valid, or at least plausible.
-> ---
-> net: microchip: vcap: expose helpers in vcap api and update debugfs
->=20
-> This adds two new client API helpers, vcap_val_add_rule() and
-> vcap_rule_mod_action_bit(), renames VCAP_CID_PREROUTING to
-> VCAP_CID_PREROUTING_L0 and adds VCAP_USER_L3. The debugfs dump learns
-> about the IP4_XIP and IP6_XIP key fields, and the action-field printer
-> mask expression is changed to a GENMASK() based form.
->=20
-> A couple of questions below.
->=20
-> > diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api.c b/drivers/n=
-et/ethernet/microchip/vcap/vcap_api.c
-> > index 6e1ee15b82b7e..1ad2c44da8bd7 100644
-> > --- a/drivers/net/ethernet/microchip/vcap/vcap_api.c
-> > +++ b/drivers/net/ethernet/microchip/vcap/vcap_api.c
-> > @@ -2389,6 +2389,19 @@ int vcap_add_rule(struct vcap_rule *rule)
-> >  }
-> >  EXPORT_SYMBOL_GPL(vcap_add_rule);
-> >=20
-> > +/* Validate and add rule to a VCAP instance */
-> > +int vcap_val_add_rule(struct vcap_rule *rule, u16 l3_proto)
-> > +{
-> > +     int err;
-> > +
-> > +     err =3D vcap_val_rule(rule, l3_proto);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     return vcap_add_rule(rule);
-> > +}
-> > +EXPORT_SYMBOL_GPL(vcap_val_add_rule);
->=20
-> [Severity: Medium]
-> This isn't a pattern introduced by this patch (every existing caller
-> already does vcap_val_rule() followed by vcap_add_rule() without holding
-> vctrl->lock across both), but now that it is packaged as an exported
-> helper, is the check-then-act window worth documenting or closing?
->=20
-> vcap_val_rule() ends with the capacity test and runs entirely without
-> vctrl->lock:
->=20
->         /* Finally check if there is room for the rule in the VCAP */
->         return vcap_rule_space(ri->admin, ri->size);
->=20
-> vcap_rule_space() reads the shared instance state unlocked:
->=20
->         if (admin->last_used_addr - size < admin->first_valid_addr) {
->                 ...
->                 return -ENOSPC;
->         }
->=20
-> vcap_add_rule() then takes the mutex and the append branch of
-> vcap_insert_rule() consumes address space without re-testing against
-> admin->first_valid_addr:
->=20
->         ri->addr =3D vcap_next_rule_addr(admin->last_used_addr, ri);
->         admin->last_used_addr =3D ri->addr;
->=20
-> If two adds to the same VCAP instance interleave between validation and
-> insertion on a nearly full instance, can both pass the stale space check
-> and the second one push last_used_addr below first_valid_addr, so the
-> rule is encoded into addresses owned by another VCAP block instead of
-> returning -ENOSPC?
->=20
-> For the users present at this commit I could not construct such an
-> interleaving: the L3/LPM adders added later in the series all run from an
-> ordered workqueue under sparx5->router->lock, and the TC and matchall
-> paths are serialized by rtnl. The one case I could not rule out is a tc
-> filter installed directly into the LPM chain range concurrently with a FI=
-B
-> work item, since sparx5_tc_flower_replace() resolves the target instance
-> purely from the user-supplied chain index:
->=20
->         vrule =3D vcap_alloc_rule(vctrl, ndev, fco->common.chain_index, V=
-CAP_USER_TC,
->                                 fco->common.prio, 0);
->=20
-> Is such a tc configuration rejected somewhere? If not, would holding
-> vctrl->lock across validate plus insert, or re-checking vcap_rule_space()
-> in the append branch of vcap_insert_rule(), be preferable?
->=20
-
-Thanks, this is a good catch. That tc configuration is rejected today, but
-more as an mergent side effect what has nothing to do with LPM. It is
-however possible to add either goto's targeting the LPM chain, or the
-matchall vcap enable rules. These will not write rule data, but the intenti=
-on
-is that the LPM vcap is system only.
-
-I will add explicit checks rejecting the use of the LPM vcap from tc. I wil=
-l
-also add re-checking vcap_rule_space() in the append branch of vcap_insert_=
-rule(),
-even if no caller can reach it. I will add that in patch 1, which already a=
-dds
-the symmetric test to the insert-in-middle branch.
-
-> [ ... ]
->=20
-> > diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api_debugfs.c b/d=
-rivers/net/ethernet/microchip/vcap/vcap_api_debugfs.c
-> > index e0c65c7ab23e1..36150822ce153 100644
-> > --- a/drivers/net/ethernet/microchip/vcap/vcap_api_debugfs.c
-> > +++ b/drivers/net/ethernet/microchip/vcap/vcap_api_debugfs.c
-> > @@ -133,7 +135,12 @@ vcap_debugfs_show_rule_actionfield(struct vcap_con=
-trol *vctrl,
-> >               out->prf(out->dst, "%d", value[0]);
-> >               break;
-> >       case VCAP_FIELD_U32:
-> > -             fmsk =3D (1 << actionfield[action].width) - 1;
-> > +             if (action =3D=3D VCAP_AF_MAC_LSB || action =3D=3D VCAP_A=
-F_MAC_MSB) {
-> > +                     hex =3D true;
-> > +                     break;
-> > +             }
-> > +             fmsk =3D actionfield[action].width ?
-> > +                    GENMASK(actionfield[action].width - 1, 0) : 0;
-> >               val =3D *(u32 *)value;
-> >               out->prf(out->dst, "%u", val & fmsk);
-> >               break;
->=20
-> [Severity: Low]
-> This isn't a bug introduced by this patch, but should the sibling
-> key-field printer get the same treatment? vcap_debugfs_show_rule_keyfield=
-()
-> in the same file still evaluates the shift first and only repairs the
-> value afterwards:
->=20
->         } else {
->                 u32 fmsk =3D (1 << keyfield[key].width) - 1;
->=20
->                 if (keyfield[key].width =3D=3D 32)
->                         fmsk =3D ~0;
->                 out->prf(out->dst, "%u/%u", data->u32.value & fmsk,
->                          data->u32.mask & fmsk);
->         }
->=20
-> The printed value is correct because of the width =3D=3D 32 fixup, but th=
-e
-> 1 << 32 on a signed int has already been evaluated at that point, which
-> looks like the same undefined shift the commit message describes fixing
-> in the action-field printer.
->=20
-> This branch is reachable today: VCAP_KF_IP_PAYLOAD_5TUPLE is
-> VCAP_FIELD_U32 with width 32 in is0_normal_5tuple_ip4_keyfield for
-> sparx5 and lan969x, and in the lan966x is1 keyset, and VCAP_KF_RT_FRMID
-> is another W32 U32 key in lan966x is1. None of them are in the %pI4h or
-> hex special cases, so dumping a rule carrying one of those keys via the
-> VCAP debugfs rule dump would hit the shift with a width of 32. Would
-> converting this site to the same GENMASK() form make sense while the
-> area is being touched?
->=20
-> Reported by an automated review pipeline; both items are pre-existing and
-> neither is claimed by the commit message, so they may well be better as
-> separate cleanups.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 7/9] arm64: dts: qcom: talos: Enable CDSP cooling
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
+        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Rafael J. Wysocki"
+ <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        manaf.pallikunhi@oss.qualcomm.com,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20260809-b4-qmi-tmd-v8-0-b15d47adc379@oss.qualcomm.com>
+ <20260809-b4-qmi-tmd-v8-7-b15d47adc379@oss.qualcomm.com>
+ <b471a134-397a-4f0a-9d79-1777ed067c54@oss.qualcomm.com>
+Content-Language: en-US
+From: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
+In-Reply-To: <b471a134-397a-4f0a-9d79-1777ed067c54@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODI1MDEwMyBTYWx0ZWRfXzYvSHJiBnjeu
+ Qe380RqrjHHWTFv3MYRrMMnL4EXbLqYCKqv5nNJCvAWQO/kLhqSOfapCcVot7Tx5LGykov6oxlg
+ JaxcYwCeA7rCVcPuwuTb7SpmVAyEVxo=
+X-Proofpoint-ORIG-GUID: LBDPlloOdNz1lm4OymF8nGJuD49EgTNy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI1MDEwMyBTYWx0ZWRfX7WZz4/yqKXb3
+ dylINLKvjc1mBEVHLJasxWIAga17k647+pdEIPNIqtAUqj9FEDot3C6f7veYHmYr4Ai5+9QWpQy
+ pgEjzsKZd5XRSjALlS8nTleVgeosLN2lKocTqE866pzrwEoYG35Tt4QQabGQQJOaEe+VCBxu87h
+ lQ7OkmEHPhuWEaS3b5t/8ums2hwhsx3UqxktNXOVDsxJ+kZcztuX1BBPZzzmx71mcXcmf02eRH1
+ vfR6r/ELUbKEgsyPPE384Dvj5qm9J2fL/PcW3z1x41cYBK4hnCHUqlbkKInDbPZx7ZYOt4oGYf2
+ Bp8XFrdSgIdTmNpuAoXas6/YVy/dA+QGCZmG4/b3nNeuFBOXcFAVjFGTk6eQj38PSQhnL40wVo6
+ pfxhKOrAZ1vssgwvfS55SKAmcIqzviAOrWIFD/fko+URMXQ1UwqYDtqRdBXUKCplFcvwgYaGchd
+ wVViq9mI4+s2Kx6JShA==
+X-Proofpoint-GUID: LBDPlloOdNz1lm4OymF8nGJuD49EgTNy
+X-Authority-Analysis: v=2.4 cv=W74IkxWk c=1 sm=1 tr=0 ts=6a8d86c8 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=x3UvaR+l8cLCJ1uKBUlNag==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22
+ a=KkITgS1P2qNXoWSfFRAA:9 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-25_03,2026-08-24_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1015 spamscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608250103
 
 
-Yes, I will fix this case and also add the new VCAP_KF_IP4_{DIP,SIP} under =
-the
-pI4h case, same as IP4_XIP.
+
+On 8/24/2026 7:47 PM, Konrad Dybcio wrote:
+> On 8/9/26 2:29 PM, Gaurav Kohli wrote:
+>> Unlike the CPU, the CDSP does not throttle its speed automatically
+>> when it reaches high temperatures in talos.
+> 
+> [...]
+> 
+>> +			cooling-maps {
+>> +				map0 {
+>> +					trip = <&q6_hvx_alert0>;
+>> +					cooling-device = <&remoteproc_cdsp QCOM_TMD_CDSP_SW
+>> +							 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> +				};
+>> +			};
+>>   		};
+>>   
+>>   		mdm-core-thermal {
+> 
+> Should this sensor also be bound to the rproc?
+
+Thanks for the review, Konrad.
+
+Talos does not have a modem remoteproc device defined in the DTS, looks
+like modem support is not present/disable for this target.
+
+> 
+> Konrad
 
