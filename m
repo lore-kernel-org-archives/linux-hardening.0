@@ -1,284 +1,278 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D4C48F836;
-	Tue, 25 Aug 2026 23:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5FE46C4D1
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 23:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787699520; cv=none; b=bCUotl+qUw7kydUK5DFYcIjHS4yw+J3OYu8zQ6TJbJqfajypMPNpdRxJcCoqYzcOmDNSvTEXIZExoWQoSxpxjVmns5XlEJmuYDnbP33zQjm8X50YK+RX+4Zt1LLYvo2Zc5tAQZ5WXjNf/+EaDpqEVWcD7VDwg5yrVx6VVTYUNuc=
+	t=1787702282; cv=none; b=s34O288TzowgRBsQ4WO2uzR2kxkFq9nPZ3izTSu4nlNjggeo3HlbOJNojAEPdmEZrFFiN+uc3SE5CL1nV2gTMtnRfNESiu63LHEIZjuUYkvkbXrmJIfRGxCMisA4QX3NaztRYfzAIueOq1MZ4THZrAM1+RL9E6Muteykw923Dkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787699520; c=relaxed/simple;
-	bh=0C4YVCEjxcLad+BKcLfu8kXX2dWpU1P3toibe4J1y5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IKQ2RUj28f+tKUYLQkxyY4oKfCK0bzSbfcgMg3oK1wi3vPlBnozwLlhQL7/bh0cWXIbulQJOG8HqWjz8Ub3QXFuAuEJlMkn8KJtsjTmlkrPU52uqdh5PGFMbZNJr8BSgq7d9A08kYNJNgP/QhUX9KtQaLaR1FIOanMlyA8k5+lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=Ma/SKC1r; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DlRDOIhQ; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+	s=arc-20240116; t=1787702282; c=relaxed/simple;
+	bh=bXxNk/+qlUoQ/KthHteYMjMKOHjYdfRl4C3gerxqBMQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DZnr2QU0fptXXmJZYMx0P2+LfF+XQhegyTi0Wl4El7lDIYkl0mbwjVIIms/vy54nQDnRKe4eEGdepxprUFMGFXGThf3l/mern1ENyhP3S8RbVDlGItZS6cxcwvFibYM9rxQY4bBkT8bewhL3VooPpJ2iiowbMBLnZ51SD8HhSMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNpCkNwB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="Ma/SKC1r";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DlRDOIhQ"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4739F140006B;
-	Tue, 25 Aug 2026 19:11:56 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Tue, 25 Aug 2026 19:11:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1787699516;
-	 x=1787785916; bh=s5X5r711sNi76uzB6suJO1vtp6P/krCgOqxtBND7le0=; b=
-	Ma/SKC1rpPa30Xa6WPQLtk6pGQHPQXoodHtqLja/3eANyLHlFpV0PWdn9SBx4FEn
-	A7PvjDgVdnAClY4NLFYUXQ2vCZ48ApjxU/peB1+soNLUXWGO4W6ZtQn/++ZKkmdG
-	R/v5tsCUpXGN4y7zcSv+MgtOD/0pFHbX8T3HwJ92XplPJ6qvmpDaCTsDFkMKLzQ3
-	fWaIbtOEt66ClCkw63il8mRjqx46JLFWQQSpCtj5xt8vDRhI0HVjqvJyqvDEiXZ9
-	0qbAEuskM47q9YUEVxNSX141fXNXNhq2KqEYcff7VjJuzPj17fHGCCQTEVeAnTx5
-	CTIS7jKUaub6zrdC4KnghA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787699516; x=
-	1787785916; bh=s5X5r711sNi76uzB6suJO1vtp6P/krCgOqxtBND7le0=; b=D
-	lRDOIhQh/TfwgHzD/Zh09/8m59q/VAVzL8yS8jEmdP3l7XR41bDA2og/KbIGw9rk
-	qA7+WWtGU3NaWODayQVDDSVVnZW+qOVLYwtaYvwx02nD4nqHUuyRI5sLD1sG/Tej
-	xT49WC2fk+iAJ8ibc/TzP3WZOT8h/Hz3GJ8e+x0t1acqKtiahzy7gANG87Ao2bMK
-	2RclDKa83BS19jtBcTSvMQOXhtHiImAOhsL8RPR+gmCFaNO31ysHAIEMTteyvNGB
-	buWj0YLE98BP4irnG1NIbnB8AkcActomVDRSDyLfgxBCC+XEFeaqNloM3eekCVkN
-	BC1sISMtls7ZFrYRkp4pQ==
-X-ME-Sender: <xms:OyGOaq3FCc4zMnlDKKGyjR23pKByUmeCAke4dXQhBmLiEUspsqV4rw>
-    <xme:OyGOaqtT3hCXXUErl9LaLEcOESN3IiXhyk1pAcfOfrlxSysCX-c9z9M1dxdpy-21A
-    Gd_FVrg3Pk74Ao-yLoSjtSHsmeRMQbL7rOLNRfxsY8hvqGB984hRA>
-X-ME-Received: <xmr:OyGOaqTTsShHyA6fVyYFnDS5tyfYn078_SCzL3J2HfKZEPQqL0ULEy-uF5vFZA>
-X-ME-Proxy-Cause: dmFkZTFZoGsgch79u4aY93SSL6BKHBNgXu/W+inpepofDrQZPSAF4WxXBg4kEq+dw+BHoW
-    +861ZP3bfsY0rJD/xWoRrLWtNui0fe9ILm54nmDjg8Q6vwRes57TxLysC2ja7bqi7XwwRD
-    i1f9D2HOjPUS5QIJrGLotqMxlQGGfvWpvQABxWwvNGAQEEi3mRlL/wjHaepjENE3K2Mr5x
-    ALL3B+ElkR21o4Xm4l52oihFpSfuieDdTyTbDHHZCVKfqL4npNya7SpOOfrbkhS8qxF/Ze
-    sA+uosYNLm9XcD8mSGbf0oFYtyk9c4jQOV8jM9uSPYi/9/zKOfBSEq0kgTvL2edJrh4tK7
-    cXUFiVbdlDelFsCxVLcOa87nb9+a82OlRHvkons6ayKcXrLEZfmQV3uZNeCK4V6VudKLJW
-    8x1N8bNZY+O5Zc3V8AYGqhotTpbvqt4w3rOD/hGwdYxQyrR7Qn4Eb0GO5z6MLQX1gtN0dI
-    ZAVw1kYi2K5R0RBHQ5lvN5W6wMc2tNIdvwmHBhOf2dj/erGdJSy/BzkUrZpBj71PolRx6U
-    0nBZzFrX2juo9MRdIC2icy/UY9BiYO/GlI+N4YeNEJz0ojYwLjPzk3oUbM+rKuFL2ALdg0
-    K5dW05sNK4549X/oDwg1bDBnVqtQdCIXduDf95IdxQlDg9JJPoE/VesGDIUw
-X-ME-Proxy: <xmx:OyGOakBBND2K0X806LL3vcyqvj6Xo7VwsyRjPPgVP_DJtf3BIskYfA>
-    <xmx:OyGOakwAx7IO4048c1qKa29H_lmOOrBCSzgYPP0aHcA94g7WveLo_Q>
-    <xmx:OyGOakvpnvooXh7W-LXH_WCT9Yu08M_BrV0XtGVpeeFLs0r2Rr19Sg>
-    <xmx:OyGOatkBRaF11Vnip9jc7YTRnsLmQxk8GYqAbj1hmTTHxVMr-UzNZA>
-    <xmx:PCGOajAolUVrUz0_O5Ig6NZjPbJ212BqJfByhoOG5jb590fQyI3ht70w>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 25 Aug 2026 19:11:53 -0400 (EDT)
-Date: Tue, 25 Aug 2026 17:11:51 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: <mhonap@nvidia.com>
-Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
- <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
- <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
- <dave@stgolabs.net>, <alison.schofield@intel.com>,
- <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
- <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
- <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
- <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
- <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
- <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
- alex@shazbot.org
-Subject: Re: [PATCH v4 05/27] cxl: Add a function-scoped reset entry for
- vfio-pci
-Message-ID: <20260825171151.2f707b93@shazbot.org>
-In-Reply-To: <20260813093631.2288172-6-mhonap@nvidia.com>
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
-	<20260813093631.2288172-6-mhonap@nvidia.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNpCkNwB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 455841F00A3D;
+	Tue, 25 Aug 2026 23:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787702280;
+	bh=yvNKgqYO/xgs9Spf9+sdD9Kzydj3mhIEuubOm6IoWcY=;
+	h=From:To:Cc:Subject:Date;
+	b=RNpCkNwBX5YqVCwhm69kSpaTwhx6dauTNOwcYRdstS9xSE8mfrokxhiNIBpHAzAvf
+	 dWwtRccjTcoh+kywEx0CsiqK+VCet38XxRcHgreawT6+LjuuhCv4oaSChsmLDfWHDz
+	 pMc8RCQmYDN1T93eNB5/39pWlmgLeIevxW19F4NPDDi1PnN/C3dayHtioJ7FPhUoCS
+	 +sF+OBaeBCfvdr0DhWzpKZL5G6hL/LSLptj7bvd+2HeqFTA0h9geE746GZQTVhoQCi
+	 XrA2Nh8jsp88U/sEZM/J/ulvDEV23ko8kYnhdJV/XIPyaVweOLsRN4qj3CgHzvSQCX
+	 Y6Eu+SHMdYLdw==
+From: Kees Cook <kees@kernel.org>
+To: Andrea Pinski <andrew.pinski@oss.qualcomm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Jeffrey Law <jefflaw@qti.qualcomm.com>,
+	Joseph Myers <josmyers@redhat.com>,
+	Richard Biener <rguenther@suse.de>,
+	Jakub Jelinek <jakub@redhat.com>,
+	Martin Uecker <uecker@tugraz.at>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jan Hubicka <hubicka@ucw.cz>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Richard Sandiford <richard.sandiford@arm.com>,
+	Marcus Shawcroft <marcus.shawcroft@arm.com>,
+	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+	Kito Cheng <kito.cheng@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Waterman <andrew@sifive.com>,
+	Jim Wilson <jim.wilson.gcc@gmail.com>,
+	Dan Li <ashimida.1990@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ramon de C Valle <rcvalle@google.com>,
+	Joao Moreira <joao@overdrivepizza.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	"Osterlund Sebastian" <sebastian.osterlund@intel.com>,
+	"Constable Scott D" <scott.d.constable@intel.com>,
+	gcc-patches@gcc.gnu.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v15 0/7] Introduce Kernel Control Flow Integrity ABI [PR107048]
+Date: Tue, 25 Aug 2026 16:57:50 -0700
+Message-Id: <20260825235748.i.456-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11546; i=kees@kernel.org; h=from:subject:message-id; bh=bXxNk/+qlUoQ/KthHteYMjMKOHjYdfRl4C3gerxqBMQ=; b=owGbwMvMwCVmps19z/KJym7G02pJDFl9OkwzxEK/3g3UPCb14OE3S/v2Txs6vGI8nuypvcyur T/foS+/o5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCLdVYwMJzjMdsp5lmycveMn Q2Gp6bbj/WwBCZpCt3N8GZx/Gre5M/wPz7yy7dKeNzxHzyVsuJfkXzFrozHfybbG1insPcLd6+q YAQ==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Aug 2026 15:06:09 +0530
-<mhonap@nvidia.com> wrote:
+Hi,
 
-> From: Manish Honap <mhonap@nvidia.com>
-> 
-> vfio-pci needs to run a CXL reset on a passthroughed Type-2 device
-> without the host-memory handling in cxl_reset_function(): the memory
-> behind the decoder belongs to the guest.
-> 
-> Add cxl_reset_dvsec_sequence(), which runs the DVSEC reset and HDM decoder
-> restore under pci_dev_lock and cxl_rwsem, and cxl_reset_capable() to gate
-> it on a function-scoped reset.
-> 
-> Parameterize Memory Clear in cxl_reset_execute() so the guest owns the
-> choice; the host path keeps it disabled.
-> 
-> Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> ---
->  drivers/cxl/core/resource.c | 69 ++++++++++++++++++++++++++++++++++---
->  include/cxl/cxl.h           | 12 +++++++
->  2 files changed, 76 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-> index 492ffe8e3576..cd15bd9171e6 100644
-> --- a/drivers/cxl/core/resource.c
-> +++ b/drivers/cxl/core/resource.c
-> @@ -1164,7 +1164,7 @@ static int cxl_reset_enable_cache(struct pci_dev *pdev, int dvsec)
->  				     PCI_DVSEC_CXL_DISABLE_CACHING);
->  }
->  
-> -static int cxl_reset_initiate(struct pci_dev *pdev, int dvsec)
-> +static int cxl_reset_initiate(struct pci_dev *pdev, int dvsec, bool mem_clr_en)
->  {
->  	u16 ctrl2;
->  	int rc;
-> @@ -1173,7 +1173,10 @@ static int cxl_reset_initiate(struct pci_dev *pdev, int dvsec)
->  	if (rc)
->  		return rc;
->  
-> -	ctrl2 &= ~PCI_DVSEC_CXL_RST_MEM_CLR_EN;
-> +	if (mem_clr_en)
-> +		ctrl2 |= PCI_DVSEC_CXL_RST_MEM_CLR_EN;
-> +	else
-> +		ctrl2 &= ~PCI_DVSEC_CXL_RST_MEM_CLR_EN;
->  	ctrl2 |= PCI_DVSEC_CXL_INIT_CXL_RST;
->  	return cxl_reset_write_ctrl2(pdev, dvsec, ctrl2);
->  }
+This series implements[1][2] the Linux Kernel Control Flow Integrity
+ABI, which provides a function prototype based forward edge control flow
+integrity protection by instrumenting every indirect call to check for
+a hash value before the target function address. If the hash at the call
+site and the hash at the target do not match, execution will trap.
 
-I'd again avoid a bool arg here, an enum type might be a better option.
+Regarding the recent AI policy[4], I appear to be compliant, though the
+use of the Assisted-by tag in GCC isn't clear to me: it won't distinguish
+between the human code and the AI-assisted work in a single patch? So
+I left those off in this series but I seek guidance on how it should be
+done. Regardless, to clarify: I have been used LLMs to help me research
+the GCC codebase, debug crashes, minimize PoCs, generate test cases,
+construct and run my multiple architecture build and test orchestration,
+and perform code reviews.
 
-I see in the spec though that CXL Reset Mem Clr Enable is only
-supported when the DVSEC CXL Capability register reports CXL Reset Mem
-Clr Capable though.  Should this return -ENOTTY if memory clearing is
-requested when the device is not capable?
+For folks that are interested in even more details, I presented at FOSSY
+about this work (and will submit it to the Cauldron CFP too); slides
+here[5], and there should be video up eventually, but FOSSY hasn't
+published it yet.
 
-> @@ -1273,7 +1276,7 @@ static int cxl_reset_wait_done(struct pci_dev *pdev, int dvsec, u16 cap)
->  }
->  
->  static int cxl_reset_execute(struct pci_dev *pdev, bool *target_prepared,
-> -			     int dvsec, u16 cap)
-> +			     int dvsec, u16 cap, bool mem_clr_en)
->  {
->  	int rc, rc2;
->  
-> @@ -1283,7 +1286,7 @@ static int cxl_reset_execute(struct pci_dev *pdev, bool *target_prepared,
->  
->  	rc = cxl_pci_target_reset_prepare(pdev, target_prepared);
->  	if (!rc)
-> -		rc = cxl_reset_initiate(pdev, dvsec);
-> +		rc = cxl_reset_initiate(pdev, dvsec, mem_clr_en);
->  	if (!rc)
->  		rc = cxl_reset_wait_done(pdev, dvsec, cap);
->  
-> @@ -1322,7 +1325,8 @@ int cxl_reset_function(struct pci_dev *pdev, bool probe)
->  	scoped_guard(rwsem_write, &cxl_rwsem.region) {
->  		rc = cxl_hdm_ranges_prepare(&range_ctx, pdev);
->  		if (!rc)
-> -			rc = cxl_reset_execute(pdev, &target_prepared, dvsec, cap);
-> +			rc = cxl_reset_execute(pdev, &target_prepared, dvsec,
-> +					       cap, false);
->  		if (!rc) {
->  			u16 command;
->  
-> @@ -1340,3 +1344,58 @@ int cxl_reset_function(struct pci_dev *pdev, bool probe)
->  	cxl_pci_target_reset_done(pdev, &target_prepared);
->  	return rc;
->  }
-> +
-> +/* True when a function-scoped CXL reset is available for @pdev. */
-> +bool cxl_reset_capable(struct pci_dev *pdev)
-> +{
-> +	u16 cap;
-> +
-> +	if (cxl_reset_dvsec(pdev, &cap) < 0)
-> +		return false;
-> +
-> +	if (pdev->multifunction)
-> +		return false;
-> +
-> +	return cxl_reset_hdm_available(pdev);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_reset_capable, "CXL");
-> +
-> +/*
-> + * Run the DVSEC reset sequence and restore HDM state for a caller that owns
-> + * device quiesce and PCI config save/restore, such as vfio-pci. The HDM range
-> + * collection and CPU cache flush that cxl_reset_function() does for host-owned
-> + * memory are skipped; that memory belongs to the guest here.
+I'd really like to be in a position where more people can test with GCC
+snapshots, etc, and there can be some follow-up patches if people find
+issues. Since I don't have commit access, who is the right person to
+commit this?
 
-It's worth noting in the comment that a device memory clear without a
-preceding cache invalidation risks that the cache writes back some of
-the memory we just cleared.  The use case later in the series does that
-cache invalidation, but the requirement is a bit subtle here.  Thanks,
+Thanks!
 
-Alex
+-Kees
 
+Changes since v14[3]:
 
-> + */
-> +int cxl_reset_dvsec_sequence(struct pci_dev *pdev, bool mem_clr_en)
-> +{
-> +	bool target_prepared = false;
-> +	int dvsec;
-> +	int rc;
-> +	u16 cap;
-> +
-> +	dvsec = cxl_reset_dvsec(pdev, &cap);
-> +	if (dvsec < 0)
-> +		return dvsec;
-> +
-> +	if (pdev->multifunction)
-> +		return -ENOTTY;
-> +
-> +	/*
-> +	 * Trylock rather than block: This follows the trylock convention of
-> +	 * pci_reset_bus().
-> +	 */
-> +	if (!pci_dev_trylock(pdev))
-> +		return -EBUSY;
-> +
-> +	scoped_guard(rwsem_write, &cxl_rwsem.region) {
-> +		rc = cxl_reset_execute(pdev, &target_prepared, dvsec, cap,
-> +				       mem_clr_en);
-> +		if (!rc)
-> +			rc = cxl_restore_hdm_after_pci_reset(pdev);
-> +	}
-> +
-> +	cxl_pci_target_reset_done(pdev, &target_prepared);
-> +	pci_dev_unlock(pdev);
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_reset_dvsec_sequence, "CXL");
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index f8e8fddba152..541ed6de75a6 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -164,6 +164,8 @@ void pci_cxl_hdm_init(struct pci_dev *pdev);
->  void pci_cxl_hdm_release(struct pci_dev *pdev);
->  int cxl_restore_hdm_after_pci_reset(struct pci_dev *pdev);
->  int cxl_reset_function(struct pci_dev *pdev, bool probe);
-> +bool cxl_reset_capable(struct pci_dev *pdev);
-> +int cxl_reset_dvsec_sequence(struct pci_dev *pdev, bool mem_clr_en);
->  #else
->  static inline void pci_cxl_hdm_init(struct pci_dev *pdev)
->  {
-> @@ -182,6 +184,16 @@ static inline int cxl_reset_function(struct pci_dev *pdev, bool probe)
->  {
->  	return -ENOTTY;
->  }
-> +
-> +static inline bool cxl_reset_capable(struct pci_dev *pdev)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline int cxl_reset_dvsec_sequence(struct pci_dev *pdev, bool mem_clr_en)
-> +{
-> +	return -ENOTTY;
-> +}
->  #endif
->  
->  struct cxl_reg_map {
+ - Rebase to latest master.
+ - Add a cross-TU / cross-compiler indirect-call compat test. I used
+   ALT_CC_UNDER_TEST to compare against Clang -fsanitize-kcfi-hash=FNV-1a.
+ - Correctly match the existing type-id ABI (the Itanium typeinfo name was
+   missing the "_ZTS" prefix *cough*).
+ - Replace the per-function-type type-id attribute with a hash_map cache
+   to avoiding touching shared TYPE_ATTRIBUTES.
+ - Add a PCH test confirming KCFI type-ids and labels are stable across a
+   precompiled header (KCFI state is all codegen-time.)
+ - Various small comment tweaks/corrections.
+
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=107048
+[2] https://github.com/KSPP/linux/issues/369
+[3] https://inbox.sourceware.org/gcc-patches/20260716005527.it.950-kees@kernel.org/
+[4] https://gcc.gnu.org/ai-policy.html
+[5] https://outflux.net/slides/2026/fossy/gcc-kcfi.pdf
+
+Kees Cook (7):
+  kcfi: Introduce KCFI typeinfo mangling API
+  kcfi: Add core Kernel Control Flow Integrity infrastructure
+  kcfi: Add regression test suite
+  x86: Add x86_64 Kernel Control Flow Integrity implementation
+  aarch64: Add AArch64 Kernel Control Flow Integrity implementation
+  arm: Add ARM 32-bit Kernel Control Flow Integrity implementation
+  riscv: Add RISC-V Kernel Control Flow Integrity implementation
+
+ gcc/kcfi.h                                    |   59 +
+ gcc/kcfi.cc                                   |  622 ++++++++++
+ gcc/config/aarch64/aarch64-protos.h           |    4 +
+ gcc/config/arm/arm-protos.h                   |    4 +
+ gcc/config/i386/i386-protos.h                 |    2 +-
+ gcc/config/i386/i386.h                        |    3 +-
+ gcc/config/riscv/riscv-protos.h               |    3 +
+ gcc/config/aarch64/aarch64.md                 |   56 +
+ gcc/config/arm/arm.md                         |   62 +
+ gcc/config/i386/i386.md                       |   63 +-
+ gcc/config/riscv/riscv.md                     |   76 +-
+ gcc/config/aarch64/aarch64.cc                 |  127 +++
+ gcc/config/arm/arm.cc                         |  217 +++-
+ gcc/config/i386/i386-expand.cc                |   28 +-
+ gcc/config/i386/i386.cc                       |  210 +++-
+ gcc/config/riscv/riscv.cc                     |  199 ++++
+ gcc/doc/extend.texi                           |  141 +++
+ gcc/doc/invoke.texi                           |  141 +++
+ gcc/doc/tm.texi                               |   32 +
+ .../gcc.dg/kcfi-compat/kcfi-compat.exp        |   87 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi.exp            |   51 +
+ gcc/testsuite/lib/target-supports.exp         |   14 +
+ .../gcc.dg/builtin-typeinfo-bitint.c          |   82 ++
+ gcc/testsuite/gcc.dg/builtin-typeinfo-c23.c   |   72 ++
+ .../gcc.dg/builtin-typeinfo-errors.c          |   28 +
+ gcc/testsuite/gcc.dg/builtin-typeinfo-fixed.c |   57 +
+ gcc/testsuite/gcc.dg/builtin-typeinfo.c       |  375 ++++++
+ .../gcc.dg/kcfi-compat/kcfi-indirect-1.h      |   22 +
+ .../gcc.dg/kcfi-compat/kcfi-indirect-1_main.c |   22 +
+ .../gcc.dg/kcfi-compat/kcfi-indirect-1_x.c    |   37 +
+ .../gcc.dg/kcfi-compat/kcfi-indirect-1_y.c    |   34 +
+ .../gcc.dg/kcfi/kcfi-aarch64-ilp32.c          |    7 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c    |  142 +++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-ip.c |   15 +
+ .../gcc.dg/kcfi/kcfi-arm-fixed-r12.c          |   15 +
+ .../gcc.dg/kcfi/kcfi-arm-sibcall-r3.c         |   50 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-asm-name.c     |   16 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c       |  168 +++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c |   92 ++
+ .../gcc.dg/kcfi/kcfi-cold-partition.c         |  126 ++
+ .../gcc.dg/kcfi/kcfi-complex-addressing.c     |  206 ++++
+ .../gcc.dg/kcfi/kcfi-direct-call-shapes.c     |   36 +
+ .../gcc.dg/kcfi/kcfi-ipa-robustness.c         |   54 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-lto-offset.c   |   26 +
+ .../gcc.dg/kcfi/kcfi-move-preservation.c      |  138 +++
+ .../gcc.dg/kcfi/kcfi-no-sanitize-inline.c     |  100 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c  |   41 +
+ .../gcc.dg/kcfi/kcfi-offset-validation.c      |   40 +
+ .../gcc.dg/kcfi/kcfi-patchable-entry-only.c   |   64 ++
+ .../gcc.dg/kcfi/kcfi-patchable-incompatible.c |    7 +
+ .../gcc.dg/kcfi/kcfi-patchable-large.c        |   57 +
+ .../gcc.dg/kcfi/kcfi-patchable-medium.c       |   63 +
+ .../gcc.dg/kcfi/kcfi-patchable-prefix-only.c  |   64 ++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c  |    7 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t1.c         |    7 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t2.c         |    7 +
+ .../gcc.dg/kcfi/kcfi-riscv-fixed-t3.c         |    7 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c      |  276 +++++
+ gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c   |  144 +++
+ .../gcc.dg/kcfi/kcfi-trap-encoding.c          |   88 ++
+ .../gcc.dg/kcfi/kcfi-trap-section-per-func.c  |   23 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c |   29 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c    |    7 +
+ gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c    |   93 ++
+ .../gcc.dg/kcfi/kcfi-x86-fixed-r10.c          |    7 +
+ .../gcc.dg/kcfi/kcfi-x86-fixed-r11.c          |    7 +
+ .../gcc.dg/kcfi/kcfi-x86-retpoline-r11.c      |   40 +
+ gcc/testsuite/gcc.dg/pch/kcfi-1.c             |   50 +
+ gcc/testsuite/gcc.dg/pch/kcfi-1.hs            |   20 +
+ gcc/Makefile.in                               |    3 +
+ gcc/c-family/c-common.h                       |    1 +
+ gcc/flag-types.h                              |    2 +
+ gcc/gimple.h                                  |   22 +
+ gcc/kcfi-typeinfo.h                           |   31 +
+ gcc/selftest.h                                |    1 +
+ gcc/c-family/c-attribs.cc                     |   17 +-
+ gcc/c-family/c-common.cc                      |    2 +
+ gcc/c/c-parser.cc                             |   72 ++
+ gcc/common.opt                                |    8 +
+ gcc/df-scan.cc                                |    7 +
+ gcc/doc/tm.texi.in                            |   12 +
+ gcc/final.cc                                  |   17 +
+ gcc/kcfi-typeinfo.cc                          | 1009 +++++++++++++++++
+ gcc/opts.cc                                   |    5 +-
+ gcc/rtl.def                                   |    6 +
+ gcc/rtlanal.cc                                |    5 +
+ gcc/selftest-run-tests.cc                     |    1 +
+ gcc/target.def                                |   39 +
+ gcc/toplev.cc                                 |   12 +
+ gcc/tree-inline.cc                            |   10 +
+ gcc/varasm.cc                                 |   44 +-
+ 91 files changed, 6539 insertions(+), 56 deletions(-)
+ create mode 100644 gcc/kcfi.h
+ create mode 100644 gcc/kcfi.cc
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi-compat/kcfi-compat.exp
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi.exp
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo-bitint.c
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo-c23.c
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo-errors.c
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo-fixed.c
+ create mode 100644 gcc/testsuite/gcc.dg/builtin-typeinfo.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi-compat/kcfi-indirect-1.h
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi-compat/kcfi-indirect-1_main.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi-compat/kcfi-indirect-1_x.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi-compat/kcfi-indirect-1_y.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-aarch64-ilp32.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-adjacency.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-ip.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-arm-fixed-r12.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-arm-sibcall-r3.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-asm-name.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-basics.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-call-sharing.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-cold-partition.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-complex-addressing.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-direct-call-shapes.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-ipa-robustness.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-lto-offset.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-move-preservation.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize-inline.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-no-sanitize.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-offset-validation.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-entry-only.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-incompatible.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-large.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-medium.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-patchable-prefix-only.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-32bit.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t1.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t2.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-riscv-fixed-t3.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-runtime.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-tail-calls.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-encoding.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section-per-func.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-trap-section.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-32bit.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-arity.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r10.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-fixed-r11.c
+ create mode 100644 gcc/testsuite/gcc.dg/kcfi/kcfi-x86-retpoline-r11.c
+ create mode 100644 gcc/testsuite/gcc.dg/pch/kcfi-1.c
+ create mode 100644 gcc/testsuite/gcc.dg/pch/kcfi-1.hs
+ create mode 100644 gcc/kcfi-typeinfo.h
+ create mode 100644 gcc/kcfi-typeinfo.cc
+
+-- 
+2.34.1
 
