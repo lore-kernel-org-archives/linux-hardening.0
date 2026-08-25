@@ -1,51 +1,51 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1492834750F;
-	Tue, 25 Aug 2026 10:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA0439479B;
+	Tue, 25 Aug 2026 10:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787654061; cv=none; b=paPHX0o1WXXJRtz1jdThy/os2wexa0qZ2ag4JXFFNzARomZAi0EsR7wHuYkmovzJefkheHroYyrZT89Kjpe+SuVlluDH+5vk70SyMx3c3CGvBPb4VBKNtmFtQeGtBPOXDqJwLOTWrP2yI4ldBkplSY5se/fvj+ZAEAzJmGQkBlY=
+	t=1787654158; cv=none; b=QOb/I0fYTtWyHMvyUHbvxRz05Uf+Wzgoqk3WcV+c3mop4lsU8Kr/rQ7bRzB+zcyT5DoLLUE5w6/fxKI0Y/NDBdyLo3Jq/XURiUkDPHoYxPU7KGLvmwxHCHuTeh+dQioGOv9s21+gDH8C82DaEnPdEC+8yKVAWnpy4uHpAL6p7Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787654061; c=relaxed/simple;
-	bh=zrStYGCJI5zg0s0lkCyQJpYcpXw8vJugr3qu2zUu1K8=;
+	s=arc-20240116; t=1787654158; c=relaxed/simple;
+	bh=zM+UWTmbccd041ge3CNoM7JhSXgFO5eDHpVidNkX8WA=;
 	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gp0pVttg03bBeEaJWQXnqle8qz6YIG7Eh4tOFTNkj78XYs3LfLRRA9PvubOzmtSNu9HJYoA9gCa0bL6Vy/fwnHFKkIN0npke4i9Oy9iPGN6Kn6ePE04lywiWSF5U/tEUdo+gZ1aLOz1jKeOY0qKYxIQoDRERJz6pPRBt07ltnQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Q9JsfYTC; arc=none smtp.client-ip=68.232.154.123
+	 Content-Type:MIME-Version; b=EyXImChtGLVJkWDSDWyFzrxyQQI8+2SHGn/9p2E4cYFw3m1H/API45Cx3P9Ap2R1Oq2NUULTjRGI5nXe3oI2/0s70+FOcEgNuB+F5smRR0EfFN+Iih0dsw/05muV4n61uAxY11e/EgsZPDscZEmZR10xOV/rk2SmHUG1+eZT00Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PjM/Y4St; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Q9JsfYTC"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PjM/Y4St"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1787654060; x=1819190060;
+  t=1787654156; x=1819190156;
   h=message-id:subject:from:to:cc:date:in-reply-to:
    references:content-transfer-encoding:mime-version;
-  bh=zrStYGCJI5zg0s0lkCyQJpYcpXw8vJugr3qu2zUu1K8=;
-  b=Q9JsfYTCL4GQ7Qw4ZH1mXupN6hgAyDD/RQSvAjQWn6ov8+PFW2svQ/P6
-   8DomCOd7LeT5gCMF5zvip+7fnXm5FalFAMN2yiyTWkdfeGERRwW8DOTeG
-   J7mVIBVqinOdl8PM/htLws9/mxRjGOCnjihGIenDN+rQHxVWOK48DBvWL
-   Ku/1G9Qmm2ZqjFKAggVSldDEexa0L0UPdtQZ2kq068uKc+HOEC6DcBCaf
-   ttb6lgtmkoKIpKYvfHmeEBtX7mBVmaLvCDHbaTNUacSmYLaMj7RmlXn+M
-   k9xyq3XaSN9oYiPnu5nnsoLnEvW1F6SV5fIZCfFgyclws6Qghp3rE8YpZ
+  bh=zM+UWTmbccd041ge3CNoM7JhSXgFO5eDHpVidNkX8WA=;
+  b=PjM/Y4St1PflDdcyjWmzOHzSI92vHMxqIGMAUpni5GONOLLDFQtABNrL
+   6hlB302vQoJe/kRHlgOWn84Nx2pW8LWvffKFEzEq6jgnngjmuFr8SF0in
+   RwPJEGF1sB88YDmvO6bNUjSHdHhwb5vm4JZck87/DHTAX/8O+Kt7drH3p
+   5rMerqlEQTeyhA5Hu6VpXT3mfzGfl8GLsdAnFP4DqtRqfgpVfr+U4dJ/F
+   ONEHSzVu0KUErQZCl5co3kRgQtrywlC+tAJK/uOqOAnuvaGrRZPYvUEfa
+   Wpa07jR27qri5Ambtz2b5kAkc8AoiyGLJsU/xxPRrEH9EvaftO0151nND
    Q==;
-X-CSE-ConnectionGUID: +3YBZkRuRtiVFAud92hvQg==
-X-CSE-MsgGUID: 7JBZc/kjR/WQTPPfxUaTKA==
+X-CSE-ConnectionGUID: rxAGNm6IQ8eohggFuPa45A==
+X-CSE-MsgGUID: pF6qGJetT+OCwW7ep9hU+Q==
 X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
-   d="scan'208";a="229744370"
+   d="scan'208";a="62615109"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Aug 2026 03:34:12 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 03:35:50 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex1.mchp-main.com (10.10.87.30) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Tue, 25 Aug 2026 03:34:12 -0700
+ 15.2.2562.45; Tue, 25 Aug 2026 03:35:49 -0700
 Received: from DEN-DL-M77643.microsemi.net (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.58 via Frontend Transport; Tue, 25 Aug 2026 03:34:09 -0700
-Message-ID: <cd8c7732d896bafe436204362bf5f20e3fddf3ed.camel@microchip.com>
-Subject: Re: [PATCH net-next v2 1/9] net: microchip: vcap: fix rule move for
- rules of coprime size
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.58 via Frontend Transport; Tue, 25 Aug 2026 03:35:46 -0700
+Message-ID: <daecc0252ffc5502391be729c11c3a663fe5030a.camel@microchip.com>
+Subject: Re: [PATCH net-next v2 3/9] net: microchip: vcap: make vcap
+ actionset decoding type_id aware
 From: Jens Emil Schulz Ostergaard <jensemil.schulzostergaard@microchip.com>
 To: Jakub Kicinski <kuba@kernel.org>
 CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
@@ -55,10 +55,10 @@ CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
 	<robert.marko@sartura.hr>, <netdev@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-hardening@vger.kernel.org>
-Date: Tue, 25 Aug 2026 12:34:08 +0200
-In-Reply-To: <20260817211333.3633182-1-kuba@kernel.org>
-References: <20260810-sparx5_l3_routing-v2-1-59e68cc8c8ca@microchip.com>
-	 <20260817211333.3633182-1-kuba@kernel.org>
+Date: Tue, 25 Aug 2026 12:35:46 +0200
+In-Reply-To: <20260817211353.3633288-1-kuba@kernel.org>
+References: <20260810-sparx5_l3_routing-v2-3-59e68cc8c8ca@microchip.com>
+	 <20260817211353.3633288-1-kuba@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4-0ubuntu2.1 
@@ -76,129 +76,58 @@ e content is safe
 > This is an AI-generated review of your patch. The human sending this
 > email has considered the AI review valid, or at least plausible.
 > ---
-> net: microchip: vcap: fix rule move for rules of coprime size
+> net: microchip: vcap: make vcap actionset decoding type_id aware
 >=20
-> This reworks the VCAP rule move logic so that insert and delete compute a
-> single uniform address offset, aligned to the LCM of the rule sizes in th=
-e
-> moved block, instead of per-rule "optimal" offsets. The goal is to keep t=
-he
-> software rule addresses in sync with what the hardware move command does,
-> which becomes necessary once rules of coprime sizes (2 and 3) appear with
-> the LPM VCAP.
+> This adds a helper, vcap_find_stream_type_id(), that pulls the type_id
+> bits out of stream[0] just after the typegroup bits, and uses it in
+> vcap_verify_actionstream_actionset() to compare the decoded type_id
+> against info->type_id instead of always returning true.  The code change
+> itself looks fine; the comment below is only about the commit message.
 >=20
-> One question about the delete algorithm description in the changelog.
->=20
-> > On delete:
+> > net: microchip: vcap: make vcap actionset decoding type_id aware
 > >=20
-> > 1. Initialize HW memory at the deleted rule's addresses before
-> >    moving, since the moved block may not fully cover them due to
-> >    padding.
-> > 2. Reclaim any padding between rules in the block.
+> > When reading a rule back from hardware, decoding has to identify which
+> > actionset the rule was written as. The existing logic was only aware of
+> > the actionset subword length, which cannot distinguish actionsets that
+> > share a subword length but differ in their type_id field. The LPM VCAP
+> > added in a following patch introduces this case: ARP_PTR, L3MC_PTR and
+> > ARP_ENTRY all occupy one subword and differ only by type_id.
 >=20
 > [Severity: Low]
-> Is step 2 accurate for the new implementation?  As far as I can tell the
-> padding that sits between rules inside the moved block is preserved, not
-> reclaimed, because a single offset is applied to every rule in the block:
+> Should the sentence "The LPM VCAP added in a following patch introduces
+> this case: ARP_PTR, L3MC_PTR and ARP_ENTRY all occupy one subword and
+> differ only by type_id" be reworded?
 >=20
-> drivers/net/ethernet/microchip/vcap/vcap_api.c:vcap_move_rules_sw() {
->         list_for_each_entry_continue(pos, &admin->rules, list)
->                 pos->addr -=3D move->offset;
-> }
+> Two details don't seem to match the tree.  First, there is no L3MC_PTR
+> symbol anywhere at this commit; grepping for L3MC under
+> drivers/net/ethernet/microchip/ only matches the unrelated register name
+> GA_ANA_L3_VLAN_ARP_L3MC_STICKY.  The one-subword LPM actionsets that do
+> exist are just these two, in sparx5_vcap_ag_api.c:
 >=20
-> Since every rule in the block is shifted by the same move->offset, the ga=
-ps
-> between rules within the block are structurally invariant across the move=
-.
+> static const struct vcap_set lpm_actionfield_set[] =3D {
+>         [VCAP_AFS_ARP_PTR] =3D {
+>                 .type_id =3D 0,
+>                 .sw_per_item =3D 1,
+>                 .sw_cnt =3D 12,
+>         },
+>         [VCAP_AFS_ARP_ENTRY] =3D {
+>                 .type_id =3D 2,
+>                 .sw_per_item =3D 1,
+>                 .sw_cnt =3D 12,
+>         },
+> };
 >=20
-> What appears to be reclaimed is the deleted rule's own space plus the
-> padding adjacent to its position, and only down to block_lcm granularity.
-> In the delete path unaligned_offset is always negative (block_first->addr=
- +
-> block_first->size <=3D ri->addr <=3D base_addr), so the truncating branch=
- is
-> taken in vcap_move_from_block():
+> Second, the colliding actionset metadata is not added in a following
+> patch; lpm_actionfield_set, lpm_actionfield_set_map and the
+> sparx5_vcaps[VCAP_TYPE_LPM] entry that references them are already
+> present at this commit, added by the preceding "net: microchip: vcap: add
+> lpm vcap to autogen vcap api".  Only the sparx5/lan969x LPM driver
+> enablement lands later.
 >=20
-> drivers/net/ethernet/microchip/vcap/vcap_api.c:vcap_move_from_block() {
->         unaligned_offset =3D (block_first->addr + block_first->size) - ba=
-se_addr;
->         if (unaligned_offset > 0)
->                 move->offset =3D
->                         ((unaligned_offset + (block_lcm - 1)) / block_lcm=
-) *
->                         block_lcm;
->         else
->                 move->offset =3D (unaligned_offset / block_lcm) * block_l=
-cm;
-> }
->=20
-> Integer division truncating toward zero leaves up to block_lcm - 1 addres=
-ses
-> of the gap unreclaimed at the boundary.
->=20
-> Could the changelog wording be adjusted to describe what is actually
-> reclaimed, for example the deleted rule's addresses plus adjacent padding=
-,
-> rounded down to the block LCM?
->=20
+> Could the message say the LPM actionset model is added by the preceding
+> patch, and drop the L3MC_PTR reference?  The premise that two actionsets
+> share sw_per_item =3D 1 and differ only in type_id does hold, so the chan=
+ge
+> itself still looks justified.
 
-Yes I will update the commit message, this is poorly worded.
-
-> > diff --git a/drivers/net/ethernet/microchip/vcap/vcap_api.c b/drivers/n=
-et/ethernet/microchip/vcap/vcap_api.c
-> > index 788c0728d7636..75c2ca54fddd2 100644
-> > --- a/drivers/net/ethernet/microchip/vcap/vcap_api.c
-> > +++ b/drivers/net/ethernet/microchip/vcap/vcap_api.c
->=20
-> [ ... ]
->=20
-> > @@ -2106,12 +2108,63 @@ static u32 vcap_set_rule_id(struct vcap_rule_in=
-ternal *ri)
-> >       return ri->data.id;
-> >  }
-> >=20
-> > +static void vcap_move_from_block(u32 base_addr,
-> > +                              struct vcap_rule_internal *block_first,
-> > +                              struct vcap_rule_internal *block_last,
-> > +                              int block_lcm, struct vcap_rule_move *mo=
-ve)
-> > +{
-> > +     int unaligned_offset;
-> > +
-> > +     if (!block_first || !block_last)
-> > +             return;
-> > +
-> > +     move->addr =3D block_last->addr;
-> > +     move->count =3D block_first->addr + block_first->size - block_las=
-t->addr;
-> > +     /* Integer division rounds toward zero. We want to round toward +=
-inf
-> > +      * for the positive case (insertion) to ensure enough room.
-> > +      */
-> > +     unaligned_offset =3D (block_first->addr + block_first->size) - ba=
-se_addr;
-> > +     if (unaligned_offset > 0)
-> > +             move->offset =3D
-> > +                     ((unaligned_offset + (block_lcm - 1)) / block_lcm=
-) *
-> > +                     block_lcm;
-> > +     else
-> > +             move->offset =3D (unaligned_offset / block_lcm) * block_l=
-cm;
-> > +}
-> > +
-> > +static void vcap_move_rules_sw(struct vcap_admin *admin,
-> > +                            struct vcap_rule_internal *pos,
-> > +                            struct vcap_rule_move const *move)
-> > +{
-> > +     if (move->count =3D=3D 0 || move->offset =3D=3D 0)
-> > +             return;
-> > +
-> > +     list_for_each_entry_continue(pos, &admin->rules, list)
-> > +             pos->addr -=3D move->offset;
-> > +}
->=20
-> [ ... ]
-> --
-> pw-bot: cr
-
+Yes I will update the message, and remove the stale remarks.
