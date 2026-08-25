@@ -1,266 +1,161 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A012FFFA4
-	for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 05:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EFC3CFF55
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 07:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787637026; cv=none; b=hfpLUGeH1WmiERzhXFl+7lIpKGw32JMEjGgoTXRpZ9G+r2jgOe9hqUXq5IB3AuuDnIqhtr+ST7Lj1mmgzZDv2VOUPknlDH+nk/4JuF9X7SMNYBWQv8xjr7tRfTiDbmDTwGWuCumvTp89pfFJhhxz0GwptyVOj4goWiUy9wLO6As=
+	t=1787643275; cv=none; b=XFTUuODWL1aDz3Fjl93908Y5sV9Z+465br5fCDuHIgNKdEW4saKWsxIkVZ/F/quCY4nsSCKesnwweeB3uDJ6WrO0QYDKp04FR6P05cylL5XexHC+EXOeGJM+Cil12awTEh0LnwZdh75bWLXa0nReQJ43K9uUad9Otndmg53vynE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787637026; c=relaxed/simple;
-	bh=NJd9dsrn8p3HJ/iy9HUTyDF8V7jVM4mAdC9H/Rbho3M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZEIPzC9r5ql1sAHTfPA7M+shkguDVG3tsCpFtMaoXYTW8KJga1vQlOcCj8GhlcWCXcmpej42RQQPN+U1bpU6tTfqpBtLOy7klZbDoqqb1LmOGAq/+88jR4907Oc3t+MjTQneRrxqIkwgau/OU9TiAohxOKwFb2smJcdwCcacWQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Ua6J4Nyv; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1787643275; c=relaxed/simple;
+	bh=vyxandif7e2Gp1fI07oRfATGNarPjCLDQXEIPwqMsj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQvHp6EgMALgIeFEe727HqWuM7RhQpQzTYYjx7z/xCMeExQkNviEvvD8EVSoTGk0mDeK070TiJ9NE8OIcFUxmOPSluGmsXJbN86WQUfYWL5g7R+exXRosdHySNiY8E4GibT4G5s+qwt+c4Lt42cAxbZCEjZQ+x3mRrQ5c/xYrKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DY16voI3; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ff0XVv1k; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Ua6J4Nyv"
-Received: from eig-obgw-6001b.ext.cloudfilter.net ([10.0.30.143])
-	by cmsmtp with ESMTPS
-	id yeNYwtVIJhJKMyk37wn3mv; Tue, 25 Aug 2026 05:50:17 +0000
-Received: from gator4166.hostgator.com ([108.167.190.91])
-	by cmsmtp with ESMTPS
-	id yk36wbr859tXGyk36wHhOT; Tue, 25 Aug 2026 05:50:16 +0000
-X-Authority-Analysis: v=2.4 cv=KK1aDEFo c=1 sm=1 tr=0 ts=6a8d2d18
- a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=7T7KSl7uo7wA:10 a=PeOOapuUAAAA:8
- a=VwQbUJbxAAAA:8 a=4CtH7uQIhdueW-2XxFgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=0BaqRfgCL6CLbWgV2pdm:22 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9T0oQ3UXl7WTwu1jo5pR/9jTVArWjpzVKQbNeLS+u40=; b=Ua6J4NyvRYjDzihfll4eaa1csE
-	ilStAybPhQGYYVby1R5rKpSOMlfWy7xBDEn8foNgccQI3uXucwPJMmIBd8zKuyhJH2PlsZE7JnMkt
-	wc4hal/LSEYN9gm5UrqAU4gvugssc9oAdqXaERtZqaM0y+IoxkvIeDkIL9Zh2/4GzAxQ7Yx2qhvds
-	SiOukBiIF19edCEH+8ldS5HqfbqOpydA2z00jb4VO7hoRpWgrK8YVOi6I8JRmvEYVgE3wmJqLG+H1
-	e/qs5VwvfY9UD1ejlo1qE1V0j8ITAwiCBtLoGoeMqEhzgFZ7QjtffnExm+FpK+moD1EnOrQuwZhX/
-	GqFonbTA==;
-Received: from [59.16.68.142] (port=57282 helo=[192.168.0.146])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.99.5)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1wyk35-00000003aLs-0Jz3;
-	Tue, 25 Aug 2026 00:50:15 -0500
-Message-ID: <0a7868be-635e-4872-8376-6d91a7b73315@embeddedor.com>
-Date: Tue, 25 Aug 2026 14:49:24 -0600
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DY16voI3";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ff0XVv1k"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67P44Cn33846869
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 07:34:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LBVWgoEVbNT5Sr8Zx0TYZA21QAWuf428PE7XhlhKrEE=; b=DY16voI31GQlqpoc
+	rwvFVORgU8wBYhbpGGcXOl4xJYbnE5McA7OBUZr1Sc9saBkwbku7J1DBuH9DuEHg
+	R/YZHQr39cVLvwcJBXKQK65lXtkgSKwwZtqNGN84xG5lArPC/v3PPyM9ZE8tqveE
+	CPwL7+2/iQ20sW7OTAHwDNsxkRQuHmXy0/Z+sl5OLplfHkFP0anChhmMLR5QXwpu
+	UOn3UnV4hx5q/45eVfYgQtT8DjOKBDu/E6fcwsaxtkyaAqsGbB9LDJ+GMprisG0u
+	XB7NHWgkeBb4cXC++1qD0Q57AsLAkXKfRB8XsgR2qmurmcLNsQj4UDlKbmtKa6T3
+	VIsqbw==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g93pvgpc9-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 07:34:32 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-5174a23afcbso63460511cf.3
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Aug 2026 00:34:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1787643271; x=1788248071; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=LBVWgoEVbNT5Sr8Zx0TYZA21QAWuf428PE7XhlhKrEE=;
+        b=ff0XVv1kXlcRDpNmBSnnRUJQ/59WHCtABUcwKy2jxgv3uJWwwJmqDWrM+K3WSSpM1k
+         GBoLWdFz/wSPHpDTXTIH65sNx9kMfy08WQX97a6stBsdxrB7u3ygfkN/1huH+MmwGLBX
+         96RnnYwz97gMMXnqKJUj6sp0bxcuVosNAP2IrtA5smONshMJjCYcWfBxArYKpECuOcJq
+         Qy3r6ew7opNWCdRScEOls1AHsXH/jNGCygcQ+jAlObIXs1jbzHReFxbUVGUmFqNNRSZf
+         buj2EIkEpv9ffQ9vDkTx6dfJM4tzcy7RbJzvFFx0IjaQtgoute20gyS9FeTG+1xMa44p
+         UP9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787643271; x=1788248071;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=LBVWgoEVbNT5Sr8Zx0TYZA21QAWuf428PE7XhlhKrEE=;
+        b=kZRED0oO3ywADkqfkJ83o2OS4ujbLkbtZWvyNtiv73CxNJIQnpYnMpQn2O+Yu8TooE
+         lDeH/9Aom9cv5Jrxj71OitvVJzu+NR+bOd9PBEg53ZtOe0IUlgwZguyZAEvG4aGr2rAl
+         Gj5BPYsX4beXQS8TH84p3rJ7VEIyiEZxqhoe7yaT6GrHTRPJJ5Ca6qWDsmP70eKi47ci
+         Bjv8z64kub5S860YaoBUH8xokUPdwkkaJJCBpsBMJYTTeMeRsCu0J0tF/AtcmS6XlwlW
+         CSvSzmZ1C3x4asE6qioJWn3zZjHH8+lYr3EYWv1j2Uu7sYgtmKT7ofWsu1EeTZGXEtBl
+         cBVA==
+X-Forwarded-Encrypted: i=1; AHgh+RoHuYYyZEPFmrApVmqK/6hL9Eghv6hr/AeigPRlLwDS/gH2oA2hhCGDXHPE5z6UXfz+L3Ex1b2+/015L/PoKmw=@vger.kernel.org
+X-Gm-Message-State: AFuF++nBtJa7MXOd1mM0Kq8Jv/U/15l/PKSKNNYnZPBU/b2fSRgDNmpv
+	xfArOOZ/cXTv+WQURsWcNXAWVwlKpHWbpZZkoLaLzs9TmXw/eQdRmv/EoUUrfpuZAQpHohZb+aI
+	+VyUOlRkeNGHrNmuW733U5BOBD88IVU8w4xdxiSSzcueAjOCSgYmdd1OSJoHRCFR26e37kJE=
+X-Gm-Gg: AR+sD11KfSXE333YjPMaDEmst5ACXIgKGVEz04Fw40NX/D3/bVrhhz+VMxQfgyV6kCD
+	pKQCt2Zzi3xL8EvOqWbPxOPBPkJlnYxFz6VwiWVpDcIa6HS914QxbTJ31N0k/0Jhvj+u1Y0wT7j
+	F2VpTeK/r+uf950RE+IAn07lrTS53kNq9ud2aJKe2T2hY1mxJ+P76CXE7MXDQwXHJkJutHdhw80
+	znfKifVNcm25mx7MzCzKNgi/f5wpdU7dJGncfDGtj3ouZvfAELlaXOyIu3EOHRHQdO0P/YEe41H
+	lZvWcB46sRYgpd9++sfJhOOI51IjNcYFwjLJSGNdj0m+HTlMajlHbB9bCMzLtJbHjIGDc2/cUA6
+	7ue/BcxD2pFYE
+X-Received: by 2002:ac8:7fd5:0:b0:52d:9637:554c with SMTP id d75a77b69052e-52e2f17ff37mr48128451cf.43.1787643271515;
+        Tue, 25 Aug 2026 00:34:31 -0700 (PDT)
+X-Received: by 2002:ac8:7fd5:0:b0:52d:9637:554c with SMTP id d75a77b69052e-52e2f17ff37mr48128051cf.43.1787643270949;
+        Tue, 25 Aug 2026 00:34:30 -0700 (PDT)
+Received: from oss.qualcomm.com ([86.121.170.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c249606a8fasm1790020366b.8.2026.08.25.00.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2026 00:34:29 -0700 (PDT)
+Date: Tue, 25 Aug 2026 10:34:27 +0300
+From: Abel Vesa <abel.vesa@oss.qualcomm.com>
+To: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
+        Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, manaf.pallikunhi@oss.qualcomm.com,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v8 8/9] arm64: dts: qcom: monaco: Enable CDSP cooling
+Message-ID: <zacwmavu3huggr5tb3f4pqxw6ca7hsxuaye7okqgoh5fnnf6zf@73yke2jd5eia>
+References: <20260809-b4-qmi-tmd-v8-0-b15d47adc379@oss.qualcomm.com>
+ <20260809-b4-qmi-tmd-v8-8-b15d47adc379@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tree-object-size: Fix type-1 size for pointers to
- FAM-containing subobjects [PR126975]
-To: Jakub Jelinek <jakub@redhat.com>,
- Richard Biener <richard.guenther@gmail.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Siddhesh Poyarekar <siddhesh@gotplt.org>, Kees Cook <kees@kernel.org>,
- gcc-patches@gcc.gnu.org, Martin Uecker <uecker@tugraz.at>,
- josmyers@redhat.com, Bill Wendling <morbo@google.com>,
- linux-hardening@vger.kernel.org
-References: <aojDH2Db6XIkVqcf@kspp>
- <CAFiYyc2Uhw0iCwfmCET7gWLnXXYeV7wwPJv9Ny0uEcOrYA2f4A@mail.gmail.com>
- <aogVH8UtICMP1Ihv@tucnak>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <aogVH8UtICMP1Ihv@tucnak>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 59.16.68.142
-X-Source-L: No
-X-Exim-ID: 1wyk35-00000003aLs-0Jz3
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.146]) [59.16.68.142]:57282
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfETVqaqjq/hSKGJ8DVFH7n8CG5e92D1MiHUGm+SC3b7Lwjl5A84vneu3tpd9Sfx+6Lzcv16S4cVrw/1e0EEYNyf3I9WbXVSvojn6O1OiKxdoScfZHHwx
- 9fW9jEu/hhuydweX3X0tLYFEnc/nj0xKUPCiW4NQq3X6hlZtj7yo9V8vWJpi7jUVMw6AzqBgQG19D1I/uqDBmEmYDzuK0HEMbjIaHYNPgCmLzbs94BEN3auX
+In-Reply-To: <20260809-b4-qmi-tmd-v8-8-b15d47adc379@oss.qualcomm.com>
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODI1MDA2MyBTYWx0ZWRfX5FO3YYVHaNHx
+ +vB96Q0F2TF2Jj/EGzMILxw2A/XcZx2aA87znB0MfXv/T2Q1Wy7WnHXddCB0rX9PfdPj8dQIWLh
+ 37IC2PN8mtG/HUmzuCqHK5B7E0/EEpc=
+X-Proofpoint-GUID: OfbqzxAAPJryIkfV6D6eCrEoHr2RWbVL
+X-Proofpoint-ORIG-GUID: OfbqzxAAPJryIkfV6D6eCrEoHr2RWbVL
+X-Authority-Analysis: v=2.4 cv=Ru716imK c=1 sm=1 tr=0 ts=6a8d4588 cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=clBUptZa5v5FR042Ey+sjA==:17
+ a=8nJEP1OIZ-IA:10 a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22
+ a=EUspDBNiAAAA:8 a=_nN_CDt7C_a4776dohAA:9 a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
+ a=kacYvNCVWA4VmyqE58fU:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI1MDA2MyBTYWx0ZWRfXwHhlHRMWfcSw
+ r5TyzJSYj9nh1zHDNcxbk9XkRv6pMe2Uu5YV6AVCE+ENBHioDsJ879Wa+1ZOkDvwvj6kPogVESP
+ 5Y2L4LhbSwwWeWE/1SepvQg0otoUt7UEEQ6apw8RHKysi8G9Mmuf4mOnxyF77B1bMKtRJs01VNk
+ M/o9fl0mHeF2VDLEGmdg+m47pK6lUKgGZ0E/RL/vXZwZUfulWPP6cONfAqdCn/2TCxguYI4R/Br
+ i4sLj75sk7P0Ea6Ij5a1MWUNt7iLKYxZMx+NZ4SxoJlGsSC1GJSEthaKP3bKza4Lp85h9aBIv7E
+ 4dBP5xwkMoF7GFGCLrNWAbrN3GDtQz8lq1MNZ/jUwInHmg0k81Du/0tZ3x06cyHHFbE1FPU8qN3
+ YS3COfC9yvFbk/DzXSYey6ZWFvgbP+EWZ82Pf54wrALtkSZ62OwVGM4BbOJ6Ozbr+1jMe0V7V6J
+ zXd7wM9VrPYFnN5ICpQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-25_01,2026-08-24_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 suspectscore=0 adultscore=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 impostorscore=0 spamscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608250063
 
-
-
-On 8/21/26 03:06, Jakub Jelinek wrote:
-> On Fri, Aug 21, 2026 at 10:56:34AM +0200, Richard Biener wrote:
->> On Fri, Aug 21, 2026 at 8:30â€¯AM Gustavo A. R. Silva
->> <gustavoars@kernel.org> wrote:
->>>
->>> For a pointer to a subobject whose record/union type ends in a flexible-array
->>> member (directly, or through its trailing nested struct), addr_object_size()
->>> walked up to the enclosing object (v = TREE_OPERAND (v, 0)) instead of
->>> measuring the referenced subobject. __builtin_object_size() and
->>> __builtin_dynamic_object_size() type 1 therefore returned the whole-object
->>> size, collapsing type 1 onto type 0 and losing the distinction between
->>> &p->inner and p. FORTIFY_SOURCE relies on the type-1 distinction, so this
->>> weakens its bounds checks.
->>>
->>> Fix this by computing the size directly from the referenced record/union
->>> instead of walking up, restoring the type-0/type-1 distinction that Clang
->>> already implements.
->>>
->>> Bootstraped and regtested on x86_64-linux-gnu.
->>>
->>>          PR tree-optimization/126975
->>>
->>> gcc/ChangeLog:
->>>
->>>          * tree-object-size.cc (addr_object_size): For a reference to a
->>>          record or union type, compute the object size from the referenced
->>>          subobject instead of walking up to the enclosing object when the
->>>          type recursively includes a flexible array member.
->>>
->>> gcc/testsuite/ChangeLog:
->>>
->>>          * gcc.dg/builtin-object-size-pr101832.c (main): Update the expected
->>>          results of __builtin_object_size (..., 1) queries on subobjects
->>>          whose type contains a flexible array member.
->>> ---
->>>   .../gcc.dg/builtin-object-size-pr101832.c      |  6 +++---
->>>   gcc/tree-object-size.cc                        | 18 +++++-------------
->>>   2 files changed, 8 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/gcc/testsuite/gcc.dg/builtin-object-size-pr101832.c b/gcc/testsuite/gcc.dg/builtin-object-size-pr101832.c
->>> index 60078e11634..d76286ae454 100644
->>> --- a/gcc/testsuite/gcc.dg/builtin-object-size-pr101832.c
->>> +++ b/gcc/testsuite/gcc.dg/builtin-object-size-pr101832.c
->>> @@ -92,9 +92,9 @@ int main (int argc, char *argv[])
->>>     outer = (void *)magic1;
->>>     outest = (void *)magic2;
->>>
->>> -  expect (__builtin_object_size (&outer->a, 1), -1);
->>> -  expect (__builtin_object_size (&outest->b, 1), -1);
->>> -  expect (__builtin_object_size (&outest->b.a, 1), -1);
->>> +  expect (__builtin_object_size (&outer->a, 1), sizeof(outer->a));
->>
->> I think this warrants updating the documentation in extend.texi where
->> I think the
->> question is how for
->>
->> struct A {
->>    int n;
->>    char data[];
->> };
->>
->> struct B {
->>    int m;
->>    struct A a;
->> };
->>
->> structr B *outer;
->>
->> and object &outer->a, how, based on 'type', the enclosing object
->> size is constrained by its enclosing object.  Also for outer->a.data
->> what the enclosing object is and similar how the constraint from the
->> enclosing objects are handled.
->>
->> I'll note that __builtin_object_size behavior might be in conflict
->> with constraints set by -fstrict-flex-arrays.  IIRC "nested" flex arrays
->> are a GNU extension, flex arrays not at the end of an (enclusing)
->> object as well (a particularly bad one).
->>
->> You also need to update the toplevel comment of the testcase
->> which explicitly says your change is wrong.
+On 26-08-09 17:59:04, Gaurav Kohli wrote:
+> Unlike the CPU, the CDSP does not throttle its speed automatically
+> when it reaches high temperatures in monaco.
 > 
-> I actually think we don't want to change this, the handling of nested
-> flexible and flexible-like arrays has been completely intentional, it was
-> based on investigation of real-world code and finding some reasonable
-> middle-ground on what we consider already invalid and what we allow as an
-> extension, especially because it occurs a lot in real-world code.
-
-The current behavior was introduced in GCC 14 (mid-2023). Before that,
-the code behaved as expected today.
-
-Before GCC 14:
-ok:  __builtin_object_size (&p->inner, 1) == 8
-ok:  __builtin_dynamic_object_size (&p->inner, 1) == 8
-ok:  __builtin_object_size (&p->inner, 0) == 56
-ok:  __builtin_dynamic_object_size (&p->inner, 0) == 56
-
-GCC 14.1+:
-WAT: __builtin_object_size (&p->inner, 1) == 56 (expected 8)
-WAT: __builtin_dynamic_object_size (&p->inner, 1) == 56 (expected 8)
-ok:  __builtin_object_size (&p->inner, 0) == 56
-ok:  __builtin_dynamic_object_size (&p->inner, 0) == 56
-
-See: https://godbolt.org/z/Td8sW7G47
-
+> Set up CDSP cooling by throttling the cdsp, when it reaches 115°C.
 > 
-> What we certainly can change is the behavior when
-> -fstrict-flex-arrays unless it already behaves the expected way,
-> and perhaps also when the flex array has counted_by attribute.
+> Add polling-delay-passive so the governor periodically evaluates
+> the zone during passive cooling and steps up cooling levels when
+> temperature stabilizes below the next trip.
 > 
-> Changing this unconditionally will just break a lot of software in the wild
-> when compiled with -O2 -D_FORTIFY_SOURCE=2 or -O2 -D_FORTIFY_SOURCE=3, which
-> is very common.
-I'm fine with implementing this under -fstrict-flex-arrays=3, which is the
-strictest level value for flexible-array members we use in the Linux kernel.
+> Reviewed-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Signed-off-by: Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
 
-However, given that just three years ago (before GCC 14, as shown above) GCC
-already had the behavior this change restores, I think this should probably be
-an unconditional change. What do you think?
+With Konrad's comment addressed, looks OK to me, so:
 
-Also, notice how the behavior for one-element and zero-length arrays, which
-we call "fake flexible arrays" in the Linux kernel, is exactly the same
-before GCC 14 and now:
-
-Before GCC 14:
-[ ] C99 flexible-array member
-ok:  __builtin_object_size (&p->inner, 1) == 8
-ok:  __builtin_dynamic_object_size (&p->inner, 1) == 8
-ok:  __builtin_object_size (&p->inner, 0) == 56
-ok:  __builtin_dynamic_object_size (&p->inner, 0) == 56
-
-[1] fake flexible-array member
-ok:  __builtin_object_size (&p_1->inner_1, 1) == 16
-ok:  __builtin_dynamic_object_size (&p_1->inner_1, 1) == 16
-ok:  __builtin_object_size (&p_1->inner_1, 0) == 64
-ok:  __builtin_dynamic_object_size (&p_1->inner_1, 0) == 64
-
-[0] fake flexible-array member
-ok:  __builtin_object_size (&p_0->inner_0, 1) == 8
-ok:  __builtin_dynamic_object_size (&p_0->inner_0, 1) == 8
-ok:  __builtin_object_size (&p_0->inner_0, 0) == 56
-ok:  __builtin_dynamic_object_size (&p_0->inner_0, 0) == 56
-
-GCC 14.1+:
-[ ] C99 flexible-array member
-WAT: __builtin_object_size (&p->inner, 1) == 56 (expected 8)
-WAT: __builtin_dynamic_object_size (&p->inner, 1) == 56 (expected 8)
-ok:  __builtin_object_size (&p->inner, 0) == 56
-ok:  __builtin_dynamic_object_size (&p->inner, 0) == 56
-
-[1] fake flexible-array member
-ok:  __builtin_object_size (&p_1->inner_1, 1) == 16
-ok:  __builtin_dynamic_object_size (&p_1->inner_1, 1) == 16
-ok:  __builtin_object_size (&p_1->inner_1, 0) == 64
-ok:  __builtin_dynamic_object_size (&p_1->inner_1, 0) == 64
-
-[0] fake flexible-array member
-ok:  __builtin_object_size (&p_0->inner_0, 1) == 8
-ok:  __builtin_dynamic_object_size (&p_0->inner_0, 1) == 8
-ok:  __builtin_object_size (&p_0->inner_0, 0) == 56
-ok:  __builtin_dynamic_object_size (&p_0->inner_0, 0) == 56
-
-See: https://godbolt.org/z/8Pn361TM8
-
-So, this change doesn't affect how those arrays are interpreted by
-__bos/__bdos() when used as fake flexible arrays today (that is,
-without -fstrict-flex-arrays).
-
-Thanks for the feedback!
--Gustavo
-
+Reviewed-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
