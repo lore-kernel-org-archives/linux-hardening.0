@@ -1,259 +1,308 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778C448BD35
-	for <linux-hardening@vger.kernel.org>; Wed, 26 Aug 2026 22:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787781957; cv=pass; b=fyRgVRxoNd+nhuiopLSleSDHLk+NSIaSueW0jOod06TNxhXrszWqz6fu2rwAaDsIx7Zwfh18b+PASty+ZAgKFz2tFwwtHxVe3d8GmsFrG4ldZW1lSXHrjY/3HHTvwUj2dwzJOtCONwSy5RONjybjzsqKt+YaY/OEbrRFkpdQ4yU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787781957; c=relaxed/simple;
-	bh=91iL9f66E+wP8pylRCnex07f+0OG4EAgBRLF2xhH3XM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fv4ykIS6M/Wd4Ff17QO6qffSklsiSQPFGRu6SOOhSTLaC/4enGneOEqqd+++HCAmLAUn+B1T9qKSVuxr1gdZgKEdjQ9F1H5kyGepPpzK4X5EvRngDtorM7M7KpTGkn/zRYUCZ3ep+EfbBpaucs63B5yAgmoLYDP2L4oFJGMp5RU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BZutVFYt; arc=pass smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D8F485CE8;
+	Wed, 26 Aug 2026 22:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787782656; cv=none; b=YwF1KSdITPmK75JfjmbgWt8YOUAeESgiAffpkdTf32xt2/BJBEn90JizqwfY0ll5I4alRJJkP1JeW8+ebf7/yS4ZHHAC5Lp7TMKclwqgbguuIEGYWtrWeJt3JvJAR6eSQjFd3srUbem2uDUnFBAaFVTwp1OfOMo0IYkyi121hdA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787782656; c=relaxed/simple;
+	bh=mZzIi/wlWpp+nPlHb+tzF7KaE0xhqmViUfNeeAQtN30=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q2OyqC8ORc8QPD3nnC7KK2+19/BHoKt+cc5ku3JLpmBlHp6+zJKw4KEpYoTuondqPzo2RLQyKQU+ueQnDmo4W9XHcC9st06sStotYrQwZMmAfkgunMr9SxlfApEisN3rle3WaRCdfJln4Rw6IhfTiYvg0da/ozk2JD7v5Kk0gp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=vdNxqlq/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RKY9bu4V; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BZutVFYt"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5c664b8c3f3so840244e0c.0
-        for <linux-hardening@vger.kernel.org>; Wed, 26 Aug 2026 15:05:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787781952; cv=none;
-        d=google.com; s=arc-20260327;
-        b=skAJK80g1oeRh6HDY/WQbKFIRzb1mQP95oou3cnkqS+mO24Fq7F9kTnmLz44kp4405
-         eNpyr1XF4nEGD3Z4r/A4ox+bvtFDx761ylLVC5cQWeH759VGnpkOO4hS0PZhqhkg5qSm
-         WWjMWb/hvQI/c7rpDpeh5eFD/hKiVvvN7VzVsCKREgFp4qlngGZQQJFztiLZSaX1w46y
-         cOqLDdx3q2Ix5Dw/JyQl/p25EpcWFZGmxJkMX70rzg5qJH0FJyMw9GBHsHkVVBtelR62
-         lmSrwwG79FceMexisDbE9HCeC36BIFcbDlyK0pgLXw1YC2yarlGcF6Ym+iGyfpA8tgU5
-         5FVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=VjNbxpuIxc8u8B4OZa7lx8RIdcA7nogA195cjmoHW0I=;
-        fh=1f4cGkgVZ7k3D1cfBmc7x9qYV5m6ypsKBcCZgiuPFXE=;
-        b=buvg+MwgkGYS940URZP5avU4EMqEaFa3mMcMgUVxQBHFRrsRV6b7A/ZWGCNevUSUrM
-         lWlwBt0GXc4MnKl3OgQH9KHFlzl5lgHh0xuGPaPUi1hqf9RbJAvAP+katNA8oI9EEkt6
-         GNcyK/x1c8V243R8eCJHk6UfJBf7KkUQMcff6BCiEbm7aPJoVvgMLAVcBB5zzOkuKJmb
-         ns+cR54GdLCBoUWs9q/cpJdCtaLD80pCE+b/NDJry+0p+F5zx/pnsU3jb0/Pd1uYDnX5
-         A+wpFzgobnVLaaZMUPi+IWE3CJFWQI0Vh0bBY+DVSRb0fRDmJteNibnVN+T1wiVicBRw
-         ZTew==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787781952; x=1788386752; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=VjNbxpuIxc8u8B4OZa7lx8RIdcA7nogA195cjmoHW0I=;
-        b=BZutVFYti3QgMatmn8loY8f1RKPvHX+jT3tgoi7KGiMPyshbgT06GgnLqi9uUJPmPh
-         zi+kcj3L/crDHMUuu+//ugOG7mW8Glk9AV9lF4T5hpyrVUdAqkcZzEIFuvB9mWai4CqC
-         8z8mGfYxj6Ft68I43L/PuNJNJ3UksrDy44Bb6/YRERUgUY2NnWNGRUbxNr8e2zGKMRqE
-         v4trOG7xKU3f9JaD/SK3PrL+zDR2ywgnOEuQ52qCh8c/W87LxBjGFXIwXUR2gChKCUNN
-         N+P0IoHn9SWtnUtJTw/Z0Iack+bR6seuoK+hxcFPKVy1HLtCP3LP0LXKx2H/hkj81czx
-         ieCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787781952; x=1788386752;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VjNbxpuIxc8u8B4OZa7lx8RIdcA7nogA195cjmoHW0I=;
-        b=i775aI+RS4uiQ8ag5CsIr/V+q13QOQXhqdgXEYVCiAukjojuriAeYWRElq7QsgyX0+
-         FgaqKaayXI5t0JvYuL+RM8nOxgEL0MWb54MtL+ZvoCxWkUUj4ZdJyE6Teb/YWc1SHoaE
-         DFmy1zr2Zi1/TpLefzVme31QdIsWBYO0Wu9/5vNEwFDZfHel998U0ElGjSUgoPaWRHYy
-         OM2RgJoiqbVSZkpY9MdjK8esi9IrlA+Yx0JduyYfyfHtdWJMwKKB0o1zPJtFiho56yxb
-         /XT7Pv1oNOG5/p2WUOnwhLEfFcDZOXnmd2elUCShqFrs7QIOnX+KlQt8wOHDv8HjmYF5
-         Gn9g==
-X-Forwarded-Encrypted: i=1; AHgh+RrLfZXLlncOPodmFGMCRa6hi0splKaZ4t2EZ0d6aKAr39Ucg0OX0HSHMvi7Iah2xB7J5hzE9Y07raGUQABmfHQ=@vger.kernel.org
-X-Gm-Message-State: AFuF++nslAKTiKhTOViAY33EM1b4dFK2I6G/gBTGB3q8y6zrj45UqxWE
-	VMDNefC1oziz9mpKAvI4otK4a+e8lS4K/lI0W+WeeOqPgQsi/NhnpbRLybeKkQkqXQEOCu/yXbf
-	Sa+sErfUltTl3Zp8nFUpl0HzmOOh418VhGVU97VM=
-X-Gm-Gg: AR+sD11uct0CgGsGDSbiXRxliMYdwvZDBLL9MlsY3PCzJmMkpv1tpRtXSB4CpnQ3TaZ
-	v7EGpmKHGUJCEv3LNGsYl7kKhpqeyDz0OQWkiIgfRN2LTmXDkG8yxrHhddBrVfEYz6c7uszljJA
-	0Y7sS/6YVijHDemp7YVbk8/l+wuS3wA3T5m58PLB0PW1QOdYioAZNcKl5azkffcXpfKk002wzvo
-	C72iIs/HF6VRtQnreNNEXUHB0KnP+FlRXRPN7gDy+MeHgTt//AJdK/vIooeH23GV0kPVCTuQ/B3
-	BNK0SQCob0EoNSptX5BtG4AKmwAnR+D6u5d4uErHxbhMpSfqxRH6FBcl3jN1j8kQHCk7QRJ9KSl
-	dHXa1lKv5xB0TYoj5j7obTPtr4xB9PronQx5lIxo7HA==
-X-Received: by 2002:a05:6122:4885:b0:5bd:a5e1:c7c7 with SMTP id
- 71dfb90a1353d-5c65ba22909mr4924761e0c.1.1787781951366; Wed, 26 Aug 2026
- 15:05:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="vdNxqlq/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RKY9bu4V"
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 87146EC0246;
+	Wed, 26 Aug 2026 18:17:31 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Wed, 26 Aug 2026 18:17:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1787782651;
+	 x=1787869051; bh=6XHZKtGS9r7eVR3+1kXrY80yVGewlayF70fEl2LkXPM=; b=
+	vdNxqlq/d5/BvmpygWelbNKbnx6E/mowEDi8Q3XLolVm4hVgKna53uL93NacDRbv
+	Yi0tg47dJyJAZMnlmJchfrAjf6xCzqciEb2QYvyWOnhmWtolGvnLnL5KgaVFTway
+	PH2NX2bEkdnNwnfrIUbFCeHdQ73HSfNVBMw01qaKkoqtvbiy6avJBRfuPT56CqmC
+	ZKQx23hjlWvz29yNG5IS/fQtqZ9WY5fAd1ghwl2cSfmKxnXLu9dxzHUfHxJ/jMq7
+	Pgz52v7EsRBZ7MwF3un+ahYALEqoHe7j7cs4CliypfIK/ZLMmK+VZ1hnPSqYcM/Z
+	gMl+/z0PAo9Me7WH/q91fQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787782651; x=
+	1787869051; bh=6XHZKtGS9r7eVR3+1kXrY80yVGewlayF70fEl2LkXPM=; b=R
+	KY9bu4V80IBWIImTD/a81uvYCsOCu+1VIgaGfWhWsHOQ9VxjNNTuYZtwoDqUHBz9
+	dLcwQ5LUHInPt7mkpHKfWwIsy3CdZp6l5Ygp+XIQ/6565J6ykS+mNKSvLtDBwwCx
+	QD9GLyR4I2gBE9vnx9FnqGJxtuaehnFDpkseQowOlGEbVmY/07EuLMvtAQ7EP7u5
+	Ut++F6Psi6f2gR4sGQuzsag+Dz07yK5qJBDoSdUadrQPnRN8P/urxV7VSx9z1uIn
+	I03gZtcAd2BU40Yyo2k85ik8SPIFA6q1pcaSZKJpkWYhbKb2UR172D3yQXNBn0FC
+	/chl236vtKjhwI1khFt0g==
+X-ME-Sender: <xms:-mWPapO3u49ZhffqDXhnV_kqlBJwzRCnJ7ZjH0b4cQBfunIZqlDgxw>
+    <xme:-mWPapn2_tyzsxzajdZjFmUvyivOhO3TppAI2DAbpoB9q_yUqrSRRxq7pg7ir0fWC
+    jNfIjGbzaGu81IrTGGT12pChZOu7gMCakpkoxz3ISz7dU-GPaKk>
+X-ME-Received: <xmr:-mWPavoGYfyXbCGwXj_PVgjybx3PrC2Hhs6xAaK4NiazfVue4wmZO2TFjKsaMg>
+X-ME-Proxy-Cause: dmFkZTENpnsSKLoILcJgHHvBxLEE3Ev2YQQTKfGYXxnraj25Hq7sK/w4HvAb2OtQ3MFImJ
+    ZzYL4mT6vjcBqIm4V0+KmjVJf5a42JzLFmZ8ENJjcB7BJ7zqMfoUMibLmVsPVh5gmYTQ58
+    v6pw7vrf8rI/+I2q0N1N7tIigDUtSaFbq55Q5GDbTKPMjw4zMzb87McVEQgTCiWn4IqNzE
+    acT2DkUbvvJ3GUULXyWkQ5dqIJ7Jgi+GckfxxvIqrY9SVn6aH6K4ZbJEauEbHqj/Eh37pk
+    jDNctV0m6IEkqtNGVxN66YaeIa7IKsCmialOXmMqaZfguhllcz+cwOnMG8nZ/KstpXTskS
+    5wnklmMxZ9E8Fs+Hd2J5snu/xUoHdOTyeii11vwO0ogPNfA2ar+c2WNkeBqPMBf1Nq04UK
+    8c4WfaETCwjYhVT0sRznlVV+5sMzGDtQ8PD2qaT5lvaSHZMTycsrwgUeI87NfuPz9o5vgW
+    UuGjmgHT51RTbl4gbZ/9f/q3ZWvJPpwDjgDs4vsRqB207R2dV797PPFYaDRnzAsZpvPDqK
+    t7EtKmXTuX4feR1WPTjxmQeqRo2RwqltJoRc1UL7BJXHZo+rUiu1Eo+CckhvXu/vVqE09A
+    NuXYK83+uCvwFbPkYZBUEn2Y+oPfSerP4IFjwaHRA6nraWRbZo2YOqmijyTw
+X-ME-Proxy: <xmx:-mWPat5gNK6vNdQ8WXxQl2bAI1J5phkp8X7MyXOjk7lxK2W30ZdeFA>
+    <xmx:-mWPapJq5BXmVpPzul-sgPsrT9W91PRUyZh9i1nLvUXqn5iF-2lmKw>
+    <xmx:-mWPahkNKEj29ze__NdCAE94tGXyf_1XHcBcXxQWYiRIid5_PcNY2A>
+    <xmx:-mWPao9UvICmr1SiOvsBQvTsb9jpGYt9bxoeN64AdSMe_paczlXDdg>
+    <xmx:-2WPaq7tVC8PSP1lKAszBhxcT0ngy1PAxrs0tkEvM6kw22LKLZTcjuB0>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Aug 2026 18:17:28 -0400 (EDT)
+Date: Wed, 26 Aug 2026 16:17:25 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: <mhonap@nvidia.com>
+Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
+ <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
+ <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <dave@stgolabs.net>, <alison.schofield@intel.com>,
+ <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
+ <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
+ <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
+ <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
+ <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+ alex@shazbot.org
+Subject: Re: [PATCH v4 07/27] vfio/pci: Detect CXL devices and load vfio-cxl
+ on demand
+Message-ID: <20260826161725.7af1915b@shazbot.org>
+In-Reply-To: <20260813093631.2288172-8-mhonap@nvidia.com>
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	<20260813093631.2288172-8-mhonap@nvidia.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260823125155.1136740-1-morbo@google.com> <20260823125155.1136740-2-morbo@google.com>
- <aosJJXsQbUUcCDpx@redhat.com>
-In-Reply-To: <aosJJXsQbUUcCDpx@redhat.com>
-From: Bill Wendling <morbo@google.com>
-Date: Wed, 26 Aug 2026 15:05:34 -0700
-X-Gm-Features: AcwNN1U-TxlG5zIoBUs2QqswLbS96u-jmZfkR3Z0OUMS7ZiUU8YcDxnDYuExDFQ
-Message-ID: <CAGG=3QXo7bvOJn+T=fLYYZMdC-1SiSicThAHkj_hfyO5i6=pEg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] userns: Add __counted_by_ptr attribute to struct uid_gid_map
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-	Aleksa Sarai <cyphar@cyphar.com>, Jan Kara <jack@suse.cz>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Alice Ryhl <aliceryhl@google.com>, Douglas Anderson <dianders@chromium.org>, 
-	Anand Moon <linux.amoon@gmail.com>, codemender-patching+linux@google.com, 
-	linux-hardening@vger.kernel.org, Alexey Gladkov <legion@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Aug 23, 2026 at 7:52=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 08/23, Bill Wendling wrote:
-> >
-> > The compiler attribute __counted_by_ptr associates a pointer field of a
-> > struct with a sibling field within the same struct that specifies the
-> > element count of the allocated memory. This enables KASAN and fortified
-> > bounds-checking to detect out-of-bounds accesses to the pointer field a=
-t
-> > runtime.
-> >
-> > We can add the __counted_by_ptr attribute to the 'forward' and 'reverse=
-'
-> > pointer fields of 'struct uid_gid_map', which are counted by
-> > 'nr_extents'. Since 'nr_extents' is defined in a sibling anonymous
-> > struct inside an anonymous union, the nearest common non-anonymous
-> > struct level is 'struct uid_gid_map' itself, which is supported by the
-> > compiler.
-> >
-> > However, doing so has runtime implications. In the original
-> > implementation of insert_extent(), elements are written to
-> > map->forward[map->nr_extents] before map->nr_extents is incremented:
-> >
-> >       if (map->nr_extents < UID_GID_MAP_MAX_BASE_EXTENTS)
-> >               dest =3D &map->extent[map->nr_extents];
-> >       else
-> >               dest =3D &map->forward[map->nr_extents];
-> >
-> >       *dest =3D *extent;
-> >       map->nr_extents++;
-> >
-> > At the time of writing to 'map->forward[map->nr_extents]',
-> > map->nr_extents is still 5, but we are accessing index 5 (which is the
-> > 6th element). Under __counted_by_ptr(nr_extents), the compiler and
-> > KASAN expect the accessed index to be strictly less than
-> > map->nr_extents. Therefore, accessing index 5 when the count is 5
-> > triggers an out-of-bounds panic/trap at runtime.
-> >
-> > To resolve this, insert_extent() is refactored to increment
-> > map->nr_extents first, and then use map->nr_extents - 1 as the index:
-> >
-> >       map->nr_extents++;
-> >       if (map->nr_extents <=3D UID_GID_MAP_MAX_BASE_EXTENTS)
-> >               dest =3D &map->extent[map->nr_extents - 1];
-> >       else
-> >               dest =3D &map->forward[map->nr_extents - 1];
-> >
-> >       *dest =3D *extent;
->
-> I leave this to you and other reviewers (add Alexey), you can safely
-> ignore my nit.
->
-> To me
->
->         if (map->nr_extents < UID_GID_MAP_MAX_BASE_EXTENTS)
->                 dest =3D &map->extent;
->         else
->                 dest =3D &map->forward;
->
->         map->nr_extents++;
->         dest[map->nr_extents - 1] =3D *extent;
->
-> looks a bit more clear, but this is minor/subjective.
->
-> Either way, I think this needs a short comment to explain why do we
-> need to increment ->nr_extents first, then subtract 1. IOW, to explain
-> why (say)
->
->         dest[map->nr_extents++] =3D *extent;
->
-> would be wrong.
->
-Hi Oleg,
+On Thu, 13 Aug 2026 15:06:11 +0530
+<mhonap@nvidia.com> wrote:
 
-I added a comment before the code in question explaining why it's
-organized that way. I certainly don't hate your version, but for
-simplicity of reviews I just left the code as is.
+> From: Manish Honap <mhonap@nvidia.com>
+> 
+> A CXL device needs the vfio-cxl callbacks, but pulling vfio-cxl and the
+> CXL core in unconditionally would bloat every vfio-pci setup. At bind,
+> detect a CXL device with pcie_is_cxl() and request_module("vfio-cxl")
+> only then, and hand the device to the registered ops.
+> 
+> Each bound CXL device pins vfio-cxl through try_module_get() and drops
+> the reference at release, so vfio-cxl can unload once no CXL device is
+> bound. If vfio-cxl is absent the device is driven as plain vfio-pci.
+> 
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_core.c | 81 ++++++++++++++++++++++++++++++--
+>  include/linux/vfio_pci_core.h    |  3 ++
+>  2 files changed, 81 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 88e68d43af9a..0f9b5dfeea66 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -2176,6 +2176,44 @@ static void vfio_pci_vga_uninit(struct vfio_pci_core_device *vdev)
+>  					      VGA_RSRC_LEGACY_MEM);
+>  }
+>  
+> +static const struct vfio_cxl_ops *vfio_pci_cxl_ops;
+> +static DEFINE_MUTEX(vfio_pci_cxl_ops_lock);
+> +
+> +static const struct vfio_cxl_ops *vfio_pci_get_cxl_ops(void)
+> +{
+> +	const struct vfio_cxl_ops *ops;
+> +
+> +	mutex_lock(&vfio_pci_cxl_ops_lock);
+> +	ops = vfio_pci_cxl_ops;
+> +	if (ops && !try_module_get(ops->owner))
+> +		ops = NULL;
+> +	mutex_unlock(&vfio_pci_cxl_ops_lock);
+> +
+> +	return ops;
+> +}
 
--bw
+Awkward flow, resolved with guards:
 
-> Oleg.
->
-> > Assisted-by: Gemini Next
-> > Signed-off-by: Bill Wendling <morbo@google.com>
-> > ---
-> > Cc: Kees Cook <kees@kernel.org>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: Christian Brauner <brauner@kernel.org>
-> > Cc: Aleksa Sarai <cyphar@cyphar.com>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: Nathan Chancellor <nathan@kernel.org>
-> > Cc: Miguel Ojeda <ojeda@kernel.org>
-> > Cc: Thomas Gleixner <tglx@kernel.org>
-> > Cc: Nicolas Schier <nsc@kernel.org>
-> > Cc: Gary Guo <gary@garyguo.net>
-> > Cc: "Thomas Wei=C3=9Fschuh" <thomas.weissschuh@linutronix.de>
-> > Cc: Alice Ryhl <aliceryhl@google.com>
-> > Cc: Douglas Anderson <dianders@chromium.org>
-> > Cc: Anand Moon <linux.amoon@gmail.com>
-> > Cc: Oleg Nesterov <oleg@redhat.com>
-> > Cc: codemender-patching+linux@google.com
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-hardening@vger.kernel.org
-> > ---
-> >  include/linux/user_namespace.h | 4 ++--
-> >  kernel/user_namespace.c        | 8 ++++----
-> >  2 files changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/include/linux/user_namespace.h b/include/linux/user_namesp=
-ace.h
-> > index e38d9e60569f..2962256eddf7 100644
-> > --- a/include/linux/user_namespace.h
-> > +++ b/include/linux/user_namespace.h
-> > @@ -29,8 +29,8 @@ struct uid_gid_map { /* 64 bytes -- 1 cache line */
-> >                       u32 nr_extents;
-> >               };
-> >               struct {
-> > -                     struct uid_gid_extent *forward;
-> > -                     struct uid_gid_extent *reverse;
-> > +                     struct uid_gid_extent *forward __counted_by_ptr(n=
-r_extents);
-> > +                     struct uid_gid_extent *reverse __counted_by_ptr(n=
-r_extents);
-> >               };
-> >       };
-> >  };
-> > diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-> > index 0bed462e9b2a..7e5371d8f515 100644
-> > --- a/kernel/user_namespace.c
-> > +++ b/kernel/user_namespace.c
-> > @@ -809,13 +809,13 @@ static int insert_extent(struct uid_gid_map *map,=
- struct uid_gid_extent *extent)
-> >               map->reverse =3D NULL;
-> >       }
-> >
-> > -     if (map->nr_extents < UID_GID_MAP_MAX_BASE_EXTENTS)
-> > -             dest =3D &map->extent[map->nr_extents];
-> > +     map->nr_extents++;
-> > +     if (map->nr_extents <=3D UID_GID_MAP_MAX_BASE_EXTENTS)
-> > +             dest =3D &map->extent[map->nr_extents - 1];
-> >       else
-> > -             dest =3D &map->forward[map->nr_extents];
-> > +             dest =3D &map->forward[map->nr_extents - 1];
-> >
-> >       *dest =3D *extent;
-> > -     map->nr_extents++;
-> >       return 0;
-> >  }
-> >
-> > --
-> > 2.55.0.860.g4b6b3295ed-goog
-> >
->
+	guard(rwsem_read)(&vfio_pci_cxl_ops_lock);
+	ops = vfio_pci_cxl_ops;
+	if (!ops || !try_module_get(ops->owner))
+		return NULL;
+
+	return ops;
+
+> +
+> +/*
+> + * A CXL Type-2 device advertises both CXL.cache and CXL.mem in its CXL DVSEC.
+> + * pcie_is_cxl() is also true for Type-1 (cache only) and Type-3 (mem only)
+> + * devices, which the vfio-cxl provider does not handle, so confirm the Type-2
+> + * identity before engaging it.
+> + */
+> +static bool vfio_pci_is_cxl_type2(struct pci_dev *pdev)
+> +{
+> +	u16 dvsec, cap;
+> +
+> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> +					  PCI_DVSEC_CXL_DEVICE);
+> +	if (!dvsec)
+> +		return false;
+> +
+> +	if (pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CAP, &cap))
+> +		return false;
+> +
+> +	return (cap & PCI_DVSEC_CXL_CACHE_CAPABLE) &&
+> +	       (cap & PCI_DVSEC_CXL_MEM_CAPABLE);
+> +}
+> +
+>  int vfio_pci_core_init_dev(struct vfio_device *core_vdev)
+>  {
+>  	struct vfio_pci_core_device *vdev =
+> @@ -2197,6 +2235,41 @@ int vfio_pci_core_init_dev(struct vfio_device *core_vdev)
+>  	init_rwsem(&vdev->memory_lock);
+>  	xa_init(&vdev->ctx);
+>  
+> +	/*
+> +	 * Load vfio-cxl on demand for a CXL device. If it is absent, drive the
+> +	 * device as plain vfio-pci rather than failing the bind.
+> +	 */
+> +	if (pcie_is_cxl(vdev->pdev) && vfio_pci_is_cxl_type2(vdev->pdev)) {
+
+Nit, embed the pcie_is_cxl() test in vfio_pci_is_cxl_type2().
+
+> +		const struct vfio_cxl_ops *ops;
+> +
+> +		request_module("vfio-cxl");
+> +		ops = vfio_pci_get_cxl_ops();
+> +		if (ops) {
+> +			ret = ops->init_device(vdev);
+> +			if (ret) {
+> +				module_put(ops->owner);
+
+Create a trivial vfio_pci_put_cxl_ops() for consistency.
+
+> +				return ret;
+
+This looks like a regression, a device that previously worked with
+vfio-pci now fails if vfio-cxl .init returns an error.  It should
+continue with a log message.
+
+The disable_cxl option that comes later is a global opt-out, not an
+opt-in.  Users can opt-in to a feature that might fail previous
+behavior but they should not be required to opt-out to retain existing
+functionality, especially with only global granularity.
+
+> +			}
+> +			vdev->cxl_ops = ops;
+> +			/*
+> +			 * Pin the device in D0 while bound rather than let
+> +			 * the host power it down between opens.
+> +			 */
+> +			vdev->disable_idle_d3 = true;
+
+Why?  Letting the host power down the device between opens is exactly
+what we want for non-cxl devices.  If we're trying to do something
+around preserving the coherent memory configuration, it needs to be
+justified as such, and should happen at the point where it's relevant,
+ie. in the vfio-cxl .init path.
+
+However, this alone doesn't prevent the user from using low power
+states, so it also seems insufficient by itself.
+
+> +		} else if (IS_BUILTIN(CONFIG_VFIO_CXL)) {
+> +			/*
+> +			 * Only DEFER for a built-in provider so the bind
+> +			 * retries once vfio-cxl registers its ops.
+> +			 * A modular provider was already loaded synchronously
+> +			 * by request_module() above, so if it is still absent
+> +			 * it is missing, blocked, or failed to init; drive the
+> +			 * device as plain vfio-pci then rather than defer the
+> +			 * bind forever.
+> +			 */
+> +			return -EPROBE_DEFER;
+
+LLM asks if the registration function should call
+driver_deferred_probe_trigger() to make the retry explicit?
+
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_pci_core_init_dev);
+> @@ -2206,6 +2279,11 @@ void vfio_pci_core_release_dev(struct vfio_device *core_vdev)
+>  	struct vfio_pci_core_device *vdev =
+>  		container_of(core_vdev, struct vfio_pci_core_device, vdev);
+>  
+> +	if (vdev->cxl_ops) {
+> +		vdev->cxl_ops->release_device(vdev);
+> +		module_put(vdev->cxl_ops->owner);
+> +	}
+
+Turn both of these into helpers:
+
+static int vfio_pci_core_cxl_init(struct vfio_device *core_vdev);
+static void vfio_pci_core_cxl_release(struct vfio_device *core_vdev);
+
+Include the tests is-cxl/cxl_ops tests in the helpers to
+compartmentalize cxl init/release.  Thanks,
+
+Alex
+
+> +
+>  	mutex_destroy(&vdev->igate);
+>  	mutex_destroy(&vdev->ioeventfds_lock);
+>  	kfree(vdev->region);
+> @@ -2670,9 +2748,6 @@ static void vfio_pci_dev_set_try_reset(struct vfio_device_set *dev_set)
+>  	}
+>  }
+>  
+> -static const struct vfio_cxl_ops *vfio_pci_cxl_ops;
+> -static DEFINE_MUTEX(vfio_pci_cxl_ops_lock);
+> -
+>  int vfio_pci_core_register_cxl_ops(const struct vfio_cxl_ops *ops)
+>  {
+>  	int ret = 0;
+> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+> index 14753972e714..117cd67995d8 100644
+> --- a/include/linux/vfio_pci_core.h
+> +++ b/include/linux/vfio_pci_core.h
+> @@ -29,6 +29,7 @@ struct vfio_pci_core_device;
+>  struct vfio_pci_region;
+>  struct p2pdma_provider;
+>  struct dma_buf_attachment;
+> +struct vfio_cxl_state;
+>  
+>  struct vfio_pci_eventfd {
+>  	struct eventfd_ctx	*ctx;
+> @@ -109,6 +110,8 @@ struct vfio_pci_core_device {
+>  	struct vfio_device	vdev;
+>  	struct pci_dev		*pdev;
+>  	const struct vfio_pci_device_ops *pci_ops;
+> +	const struct vfio_cxl_ops *cxl_ops;
+> +	struct vfio_cxl_state	*cxl;
+>  	void __iomem		*barmap[PCI_STD_NUM_BARS];
+>  	bool			bar_mmap_supported[PCI_STD_NUM_BARS];
+>  	/* Flags modified at runtime - dedicated storage unit */
+
