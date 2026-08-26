@@ -1,144 +1,115 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from out-2z4y-a139.jellyfish.systems (out-2z4y-a139.jellyfish.systems [198.54.127.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3747463B9E
-	for <linux-hardening@vger.kernel.org>; Wed, 26 Aug 2026 16:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB89146EC77
+	for <linux-hardening@vger.kernel.org>; Wed, 26 Aug 2026 17:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787761281; cv=none; b=RbjDjMdYnqFBkByO7zdSkCZBwwOk5RfVYPuF77DJowRikUtnKqB6cS2nqkQF3YEpEQGbIBVMOh2711qUNNyJP/yukBrmRKnEi3yITuDlwWL0Vw8NFxMH6xFyBUucHXyvNoefcC5ikQFzvW0aS0PBbsU6J1PR/2u0KMlAR/dG0QM=
+	t=1787766894; cv=none; b=OUu0XTIy+8xGwlLvxNk296Nw9F9/6S9XEUxa0tBHoyPyzSOUN/NHlxFJ1yNfXrYO6h3LIqAgr4hUvakdx3a51/uAxtb9F3Cj8qSPqEOw22vyqqfCW7x1GA3FUpWRieF1nt02jw8cVeJFwcll23iWUocYBkLQh82ICOAJ9paA7no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787761281; c=relaxed/simple;
-	bh=2+O3WABopMW3GnoKX0HjL+BAqI96gmmbfVTAAvDLcgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6C01YpfVO6WCbqad4LGoB4/3hJA8QpdOXWJekOGNseTIcBjM1C7r4Sjd3n9F7OiycI/SHaX/PPWffYNuFWx9cfSSQs9PmIbXSMdcsCqXtxpE5zDoPqjz/FEo2D0qB8fzxQvrtNfj+uQbtDTC4mrcKMeZy8Gj3u0soOgtQ0Rj0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aMJtpbSb; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aMJtpbSb"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-c247f6687dcso151237866b.2
-        for <linux-hardening@vger.kernel.org>; Wed, 26 Aug 2026 09:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1787761275; x=1788366075; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=A/o2FgUAsfo/UlLxRJQ4K5MewR57krZglChd1nkAI3M=;
-        b=aMJtpbSbSMSm/Q03/E8yCTjchaZsjMI87yLUtE77orb9fRE5gMy6awZHDr0j0DWS5n
-         hU8tPlwGmO087zpzmEjaSjzcMrmbfjWPKzuwtQB7d5OP2rbMW3OCPeGdohh1FnRStI8P
-         Ovu+HeE/43eLMwpjtFk0BnMArpoB6sgku3aqV6lJ3utMqV/5CMHB9kl2VXi9uVKd8QdE
-         64KbNpKnuX7fjSiTcb3OTIdzqEQaAtSFeGc5O347WWbEWlk6g2tAQeB2GCxF9lHGJcy6
-         cW2oHvj/U5YCQ9Emddi461+OFMcDuk3l9O5CQS0S2oozekbaPoPoF6g/63hM1QhUuvzh
-         GxCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787761275; x=1788366075;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=A/o2FgUAsfo/UlLxRJQ4K5MewR57krZglChd1nkAI3M=;
-        b=GccdRTSqj4+bbRs5OVp2EGkdzgu8o9Ln3FT8phtAesbeVg8Gr7DpFebUYN3y+S9MHY
-         R4fxbRPtmvJ6LfTvCikoopSu6uRLlOVvfyyrXwSMMsbiIg6Iip0j26p1tnHXncr405Fx
-         jf8UFa1u/t/0NiOMALA9sLRK3D6RRc0wokRKAQYYiz/m0jTA9kFwR8wd+m1Romd5tB1O
-         PT+hNfuZ2IscgM+GwkNAS6/D9p2adn5wrk7zaVi8DrM6j7HZkCHYGpfK890pHrr+p7+b
-         j6Vg6lJEt5TPx8w7zHqKkbxjaK+d34NH/MeGFdVkafHuQOFywGZFi37o614i94ixyGMG
-         OCxw==
-X-Forwarded-Encrypted: i=1; AHgh+RrIKP01L43XmTXl6W7mi48HIGA//qSwYtWMlkz3X86udru6KfRuK1mwMpMXMqHXSvvMqVUKBIFA/QLEjtWGEGY=@vger.kernel.org
-X-Gm-Message-State: AFuF++nCV6nFkIy2scknFpb2+ZR2RezBP0aPLR2eq0f2w0sPbueFdrGZ
-	QQmcUE4bdkJxmK7k6pzPLL+Ncv9AxwuKH9wBOdPHbjcgPqs8QsNUJCfn91MTN50RyWI=
-X-Gm-Gg: AR+sD12L01HgN4CDDhhx4zpwfjFl49cEFTPOhWkfEupazOs5fOsKrDPVrLZ0MalcWDo
-	qBth7F/UwqaD0Rz8PZx8WOOrFC7EP9pbOGxqxkI4WcQ7E4n/vBkCuMrBfjQe39QYZ+9ilyOCFx8
-	iEGuHNOqu+rE0sy6hgkxTyPiVxMKhL1lLQ5yx+PAwIlS/ntCMK3zGXt01f9muDhjGCTwcbKKNvm
-	uIuSQ0XblL7BZr81QSCsg95xP+SWIQMCiR3fJKZin8G0AK7RhOnroS2lGKezRpV3JqjZ3rxiw//
-	IQBJVoPVqW1rVauSmwX/vFetSCJEXAWXMzWvY9E1QV/mEAYtHhpA1bFTIIisX1k5C+lqMyExeKp
-	qS2VKcHkhU/JodspQtFZ3xFPVb4hB+9iNLKjAIl8TrplmeYWj2YV1g9Jwoni/i7I9soOF+CGHGs
-	PDKqBjIGVBYzkt1jgLRAq8s1oHES/u2THmIpHcE/gFrnT4lScD4NtcqyuWnPIdcg==
-X-Received: by 2002:a17:906:6290:b0:c25:32b0:e56c with SMTP id a640c23a62f3a-c2532b0ef77mr267399066b.4.1787761275095;
-        Wed, 26 Aug 2026 09:21:15 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2533945d0esm67762266b.9.2026.08.26.09.21.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2026 09:21:14 -0700 (PDT)
-Date: Wed, 26 Aug 2026 18:21:12 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	s=arc-20240116; t=1787766894; c=relaxed/simple;
+	bh=5MUS+jSLenmtWtQm3/CNTEcXFg2KOODI/Ydn6oNWr4Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FAI8ObVisXogM7REG3E6Igr2z6Ow2S325sXDp6j7nuy5xAmVMr+QA8UIO/UZTUC2Ec3+tGNjY8YXf3IbmoHsVvJhpRAA7t7QELVlqY09QXslDrZTm7lEwpXqdwYgngSUvr5BNLZSLbcwvPDsXr1z4v/pv9jPZFduZ8UGdOwmdUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net; spf=pass smtp.mailfrom=catcrafts.net; arc=none smtp.client-ip=198.54.127.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=catcrafts.net
+Received: from mail.privateemail.com (unknown [87.215.145.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.privateemail.com (Postfix) with ESMTPSA id 4hVXN41gRtz8sWX;
+	Wed, 26 Aug 2026 17:54:28 +0000 (UTC)
+From: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+To: Jonathan Cameron <jic23@kernel.org>,
+	linux-iio@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
 	Kees Cook <kees@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tycho Andersen <tycho@tycho.pizza>,
-	Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: Re: [PATCH v2 2/2] kallsyms: Document why unresolved symbols are
- revealed
-Message-ID: <ao8SeCCG65uwH-Tk@pathway.suse.cz>
-References: <20260821152614.2202196-1-bigeasy@linutronix.de>
- <20260821152614.2202196-3-bigeasy@linutronix.de>
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luca Weiss <luca.weiss@fairphone.com>,
+	Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+Subject: [PATCH v2 3/5] iio: light: stk3310: move the data registers into the channel address
+Date: Wed, 26 Aug 2026 19:54:07 +0200
+Message-ID: <20260826175409.326131-4-jorijnvdgraaf@catcrafts.net>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260826175409.326131-1-jorijnvdgraaf@catcrafts.net>
+References: <20260826175409.326131-1-jorijnvdgraaf@catcrafts.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260821152614.2202196-3-bigeasy@linutronix.de>
+Content-Transfer-Encoding: 8bit
+X-Envelope-From: jorijnvdgraaf@catcrafts.net
 
-Adding Linus into Cc.
+The RAW read selects its data register with a per-channel-type branch.
+Record each channel's data register in its .address field and read
+from there, so adding a channel does not grow the branch.
 
-On Fri 2026-08-21 17:26:14, Sebastian Andrzej Siewior wrote:
-> __sprint_symbol() is supposed to resolve the passed address to a symbol
-> name. If the symbol can not be resolved it will print the actual pointer
-> that was passed. The pointer policy is to not reveal actual pointer
-> values. However for post-mortem analysis of crashes it is helpful to see
-> the raw pointer if it is a corrupted pointer.
-> 
-> Document why raw unresolved pointers are printed.
+Suggested-by: Jonathan Cameron <jic23@kernel.org>
+Assisted-by: Claude:claude-fable-5
+Signed-off-by: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+---
+ drivers/iio/light/stk3310.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-> --- a/kernel/kallsyms.c
-> +++ b/kernel/kallsyms.c
-> @@ -482,8 +482,13 @@ static int __sprint_symbol(char *buffer, unsigned long address,
->  	address += symbol_offset;
->  	len = kallsyms_lookup_buildid(address, &size, &offset, &modname, &buildid,
->  				       buffer);
-> -	if (!len)
-> +	if (!len) {
-> +		/*
-> +		 * Print the raw pointer to allow post-mortem analysis of corrupted
-> +		 * pointer in backtraces.
+diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
+index 5b5b6812edc7..156888969366 100644
+--- a/drivers/iio/light/stk3310.c
++++ b/drivers/iio/light/stk3310.c
+@@ -184,6 +184,7 @@ static const struct iio_chan_spec_ext_info stk3310_ext_info[] = {
+ static const struct iio_chan_spec stk3310_channels[] = {
+ 	{
+ 		.type = IIO_LIGHT,
++		.address = STK3310_REG_ALS_DATA_MSB,
+ 		.info_mask_separate =
+ 			BIT(IIO_CHAN_INFO_RAW) |
+ 			BIT(IIO_CHAN_INFO_SCALE) |
+@@ -191,6 +192,7 @@ static const struct iio_chan_spec stk3310_channels[] = {
+ 	},
+ 	{
+ 		.type = IIO_PROXIMITY,
++		.address = STK3310_REG_PS_DATA_MSB,
+ 		.info_mask_separate =
+ 			BIT(IIO_CHAN_INFO_RAW) |
+ 			BIT(IIO_CHAN_INFO_SCALE) |
+@@ -370,25 +372,20 @@ static int stk3310_read_raw(struct iio_dev *indio_dev,
+ 			    struct iio_chan_spec const *chan,
+ 			    int *val, int *val2, long mask)
+ {
+-	u8 reg;
+ 	__be16 buf;
+ 	int ret;
+ 	unsigned int index;
+ 	struct stk3310_data *data = iio_priv(indio_dev);
+ 	struct i2c_client *client = data->client;
++	struct regmap *map = data->regmap;
+ 
+ 	if (chan->type != IIO_LIGHT && chan->type != IIO_PROXIMITY)
+ 		return -EINVAL;
+ 
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+-		if (chan->type == IIO_LIGHT)
+-			reg = STK3310_REG_ALS_DATA_MSB;
+-		else
+-			reg = STK3310_REG_PS_DATA_MSB;
+-
+ 		mutex_lock(&data->lock);
+-		ret = regmap_bulk_read(data->regmap, reg, &buf, sizeof(buf));
++		ret = regmap_bulk_read(map, chan->address, &buf, sizeof(buf));
+ 		if (ret < 0) {
+ 			dev_err(&client->dev, "register read failed\n");
+ 			mutex_unlock(&data->lock);
+-- 
+2.55.0
 
-This might be acceptable when the system is going to panic().
-But is this formatting used only during panic?
-
-> +		 */
->  		return sprintf(buffer, "0x%lx", address - symbol_offset);
-
-I expected that we would replace this by "%p" so that the pointer got
-hashed by default. After all, we suggest to use %ps because it should
-not leak pointers.
-
-Hmm, I see %ps or %pS used by many interfaces, like procfs, sysfs,
-ftrace. Many of them are accessible only by root. Maybe, people expect
-to see the valid pointers.
-
-But we do not want to repeate the %pK eperience here. We could not
-reliably check the access rights of the vsprintf() caller.
-So, we should agree on the default behavior which does not
-depend on the caller.
-
-And I think that we want to reduce the risk of leaking.
-So, I would use %p here.
-
-If some callers really want to always print the real pointer when
-the symbol is not resolved then we might add some modifier for
-this, e.g. %p[SsB][R][p], where p would mean plain. But I am
-not sure if we really want it.
-
-> +	}
->  
->  	offset -= symbol_offset;
-
-Best Regards,
-Petr
