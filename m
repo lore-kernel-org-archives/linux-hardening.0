@@ -1,258 +1,257 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C951C31E844;
-	Wed, 26 Aug 2026 22:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9110A48A2DF;
+	Wed, 26 Aug 2026 22:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787783309; cv=none; b=jJD0tXek3MyWtuDpklAwIcHPxXtvoYhIZDlkQcPVJuyIXkpYcTu6APom0i0BgaLyNLFcwj5mHhwxwu6fuFZdMtLYQQtxCIlEqNWvy/XymXSBtwppzuAExsTclecwthSPoL3v3ob3rLzGimfrPpIhIZ/k57aPnVyfuzvA1Gu8dgw=
+	t=1787784644; cv=none; b=XoMs/knqhIE1yLnk0Dzi1kgpg3tfCjsSiV/VYcLocktknJawh63HGdoydfF/ix6sgu+w+iBQ04KPJWoJN99CRiB0WXf/Ca+6ot3hhyYmB2I/WQ8xYJaNdnBNwfCkub/owUm92qHjgQSa/0PTa3/wwmnk55QtUitYx+u8p+914LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787783309; c=relaxed/simple;
-	bh=yAt7chsuQ3yUj0A8Qb5ZD6FDTelm93GvYP2mnoEnyOA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=rb5t1EAYpiv92nAVzeOW+pVeeth196foMvC4sK0yxbBFqjT66haZ1ZHb/uovMNCItSnAvejb7YXs7Yq3ovPr2XIA3dTNubeERLs3AvsfjOVzfCdFD5qlalFMbsHmJnaejlIxxZoRgTn6wbF2vzeN62JPYH5Vaa1EvMvqgk2fMmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=aJ2cc0Cj; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=9EFDm23S; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1787784644; c=relaxed/simple;
+	bh=rwp9r1Nr8znphwZs8a+YFF6d7wcWidDSGZsxf1w3WVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hk0ZWCy4Kd93z/tEMa+pOTaejDQk6Iva91GaBmp6I3+b5Tm9XlZGK7VrgSKYLZ0KWD9/o983Mt7P6iUnBrA016b90WNP/z1iBqVZWwRMrrnlIxwjntxpCr68oonuR0YLueZmoF0JGMGJoX/Dno/0ZvuCv1RnXeFjdimBy8SFyrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=NZ+xGKK1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hPpBUpoy; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="aJ2cc0Cj";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="9EFDm23S"
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1787783268; bh=AlE42pFzaC8xw8talHPrPGM
-	qxNrKTSb1xbJj5kQD+h4=; b=aJ2cc0CjqpjGIKPb7Lw8z8zf9a3mopKgSLssowxHM86ewIp3Nr
-	DXWD5xjuFDWFTRboxdOHKVlcvnyYb13YHx/M1XMUvPT26JeS/6mbNANlEALyuM4oowC0huJcG5R
-	3ekYPNYyHFn8USJ3sL5EvQfp8URocjQ9w9nC0tWqhoCR9pVLXZTLYnJs285lLhw+u2eLyeZPtxl
-	RmIWg3/LDvCfRRTaDu/ossD27ajR5vTAGsXJk+W6FmrzClfDVE/eRizTFojXdVYoOSAxXWEcHes
-	85T5pqik1uSgC0h2JmbI964YqRnJlULqkxk3p/1XguUHeGTi/9N9hT+/ePEe2hVBIFQ==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1787783268; bh=AlE42pFzaC8xw8talHPrPGM
-	qxNrKTSb1xbJj5kQD+h4=; b=9EFDm23SxGTvafSh7JjL9abzKSuJmJllEyVAHU6GIk54DZV3Pw
-	pvQ3XBy+MU40j8Cx56AyCLR2i7dp0GB4zTAA==;
-Date: Wed, 26 Aug 2026 23:27:49 +0100
-From: Bradley Morgan <brads@mainlining.org>
-To: Bill Wendling <morbo@google.com>
-CC: =?ISO-8859-1?Q?Thomas_Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Christian Brauner <brauner@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
- Jan Kara <jack@suse.cz>, Nathan Chancellor <nathan@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Nicolas Schier <nsc@kernel.org>, Gary Guo <gary@garyguo.net>,
- Alice Ryhl <aliceryhl@google.com>, Douglas Anderson <dianders@chromium.org>,
- Anand Moon <linux.amoon@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
- codemender-patching+linux@google.com, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] userns: Add KUnit test suite for uid_gid_map
-In-Reply-To: <20260826220041.4075333-2-morbo@google.com>
-References: <20260823125155.1136740-1-morbo@google.com> <20260826220041.4075333-1-morbo@google.com> <20260826220041.4075333-2-morbo@google.com>
-Message-ID: <21ED2927-4536-432C-B1E5-B446A04ED230@mainlining.org>
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="NZ+xGKK1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hPpBUpoy"
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id A2302EC0277;
+	Wed, 26 Aug 2026 18:50:38 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Wed, 26 Aug 2026 18:50:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1787784638;
+	 x=1787871038; bh=QplW2KxtxglOqcewNzFZRR/OkHVXQZVIXwZYQhVxGak=; b=
+	NZ+xGKK1CDnkI/+Q+3dg9JXY2EpUUV0bwjH0u/z1UZS0DcCepuqqkDxnDyNOJgYr
+	JCDu2T9f6xZlXKfdzQOt7zJXSC3H5cSFAfkTs2TJVslPj0vq3htfWYboswkbaUje
+	kkG0IpLc44JIvs4mVnX9ChBwG/YPZRTPy6YabCQ79FjPCsnYu+USD8Np9k1J640Z
+	oupufBrAPH5bXYMWCFwEQjenEavI81Aw1Lbjw48YIq2UEsvKn0GRbjJhRCOtSSX3
+	Wc4fTFwd3byG4N5i+uqKDGEDkh026MRf9vqhgGQBwNaWyKuhHCsmg4VWTCqp/iqJ
+	vHTPbMwM3oJ2/YJE4+Rx0g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787784638; x=
+	1787871038; bh=QplW2KxtxglOqcewNzFZRR/OkHVXQZVIXwZYQhVxGak=; b=h
+	PpBUpoy7rDfCyo3TpaPczzXGKEuenYj+LAGc4kWJWmdFNWdU5bG2h/D5DVvt68EQ
+	U8/sae8Pn/zNdEl1JOOVylLa1T7gSd9s01W6RLK4nhku5sac2BIXdooaJ7hGkyYx
+	V0o60RftXxj/bb1ftopm5tWn4Gvq46SeQeRdIFqFcICbeY9EVipsN7TGFeOro1ve
+	X4OA4dd2kBm1ddpsRoMUWM6Q+dtnCRfE+4QNSUVoj6h5lLUYByzSQIWbINZ/+WXm
+	LYL/4a9URfBkoyC8BqS0iwkd6tmlIjMIyRo6o64cZoVKF6iYQNiyZZdh07N47m/R
+	hn+JUEIeOPi50ZvUT5WAQ==
+X-ME-Sender: <xms:vW2Pasr7rQ_G5qB6GElMoVev1ckIfQR0Oz0IK7qUZ1FhMCx8WwF5HA>
+    <xme:vW2PagRsI5UzU6N-D9bD1DzNb6hQD0Sy59SMneHVLJ2RIEEAVolE6z9fTsNfii-MI
+    TOjtH8U1CWzueNu6bM-lzrk0Tt6XXK-XTCMnSZp3fe-6_1zJkvY>
+X-ME-Received: <xmr:vW2PaoknCS5K1m_SzqA12SKrf5lB_W97EGRm7woddUIu6LxzYxCH1nQCzdUrig>
+X-ME-Proxy-Cause: dmFkZTF6e4hR1iz/6dIAysFsGCQ71uWDQEuEPYPxGY/BNbu1t2yBp7A8qJ3IBKU8pAioAX
+    kQi2pcgAumZXLtvGdkDjDm8Zb0KsSPzz2VsqnYW42ydMMBwSPS6QnSoQAUAHv07aqMKnRl
+    xelSpx2DhqcMwig8qFnERd46xw36yZ179ft2tapX31kMdCO4EBCDZPMS+OxXASXA0mC8yJ
+    gaTocAtizYKP9ibLshPjnlDekBldB4LL8lduAolpQjZdkKTbOBm7kr4OXXecHyUwbsoYRB
+    yrtxtA8ZLexBsxbJYosZGQLm1U0QGL6Iw3Y3BNRJBkJrhYEGjH1CPTaRnzQ3Hofve2GspD
+    mdCje7Q/C99nzh28J31YfGJkClvIKkECVKoONx3ku5fGohpLpfpVf7hMU8D2ArWaBiu4XT
+    2D2ToyOUiTikWseEXh1BWf1kFEOT+F0em+n/FPKN/CwNo8k6wmSabVSYMfhwRtIuZbaZey
+    C2aaKWIjnz7V2Ica903rgVEmKwvZaAFQwDJWejuL54g0317LPKOKKOnHC6IfoXAi+elSRC
+    cJZiYjoSs/KtHZ69uy7MT8o5sEzJ3UnbXP/gMffJ8o8eVwV3rZKTr6DJjkZQTf1ci1iv5u
+    XkZBZIqLCqdmFI2Hs4FQvLmahoxpdu4sy9AqL05m+bC2lNETs3PiCgTjCxNA
+X-ME-Proxy: <xmx:vW2PasG33uUCS6HXNmERDuuODFOStFcfLQXtMbQKM99NjXMox0Mn2Q>
+    <xmx:vW2Pajlbv8YjV7iD74OwNaKzy_wiEqRehVqyqHNGe_xshYoBKRrbCw>
+    <xmx:vW2PajSOivWBuszMVd4W96Q0Mkf48PT0WgGGGlTBVkEEIt5YzKdPiw>
+    <xmx:vW2Pag6Pj0JHWPDrLEkQqOStYiF1w0zOdUuXYsh-Zfvc9rwYEa81LA>
+    <xmx:vm2PasFQS2R-HHl_00xv3lT8lZ6Xd5hamxoxnBz_Dl2aO4zKala3Jtao>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Aug 2026 18:50:35 -0400 (EDT)
+Date: Wed, 26 Aug 2026 16:50:33 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: <mhonap@nvidia.com>
+Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
+ <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
+ <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <dave@stgolabs.net>, <alison.schofield@intel.com>,
+ <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
+ <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
+ <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
+ <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
+ <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+ alex@shazbot.org
+Subject: Re: [PATCH v4 08/27] vfio/cxl: Add the vfio-cxl module skeleton
+Message-ID: <20260826165033.582735f4@shazbot.org>
+In-Reply-To: <20260813093631.2288172-9-mhonap@nvidia.com>
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	<20260813093631.2288172-9-mhonap@nvidia.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 26 August 2026 23:00:35 BST, Bill Wendling <morbo@google.com> wrote:
->Add a KUnit test suite to verify the insertion and sorting of mappings
->in struct uid_gid_map. This test suite validates both base extent
->insertion (<= 5 mappings) and extended extent insertion (> 5 mappings,
->which triggers the allocation of the forward and reverse pointers).
->
->This is especially useful for verifying that the __counted_by_ptr
->attribute added to 'forward' and 'reverse' pointers works correctly
->without causing any runtime bounds-checking panics or traps.
->
->Assisted-by: Gemini:3.1-pro-preview
+On Thu, 13 Aug 2026 15:06:12 +0530
+<mhonap@nvidia.com> wrote:
 
-Now for all the work s/you/your AI done, I've done the tests and they
-passed, and they LGTM
-
-Tested-by: Bradley Morgan <brads@mainlining.org>
-
-Reviewed-by: Bradley Morgan <brads@mainlining.org>
-
-Thanks for your patch mate, (pls slow down tho, we can review oh so quick)
-
->Signed-off-by: Bill Wendling <morbo@google.com>
->---
->v2 - Remove Gerrit tag.
->v3 - s/KUNIT_EXPECT_NOT_ERR_OR_NULL/KUNIT_ASSERT_NOT_ERR_OR_NULL/
->   - Fixed Kconfig tests.
->v4 - Actually test on unsorted data. Corrected the "Assisted-by" tag.
->---
->Cc: Bradley Morgan <brads@mainlining.org>
->Cc: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
->Cc: Kees Cook <kees@kernel.org>
->Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
->Cc: Christian Brauner <brauner@kernel.org>
->Cc: Aleksa Sarai <cyphar@cyphar.com>
->Cc: Jan Kara <jack@suse.cz>
->Cc: Nathan Chancellor <nathan@kernel.org>
->Cc: Miguel Ojeda <ojeda@kernel.org>
->Cc: Thomas Gleixner <tglx@kernel.org>
->Cc: Nicolas Schier <nsc@kernel.org>
->Cc: Gary Guo <gary@garyguo.net>
->Cc: "Thomas Weißschuh" <thomas.weissschuh@linutronix.de>
->Cc: Alice Ryhl <aliceryhl@google.com>
->Cc: Douglas Anderson <dianders@chromium.org>
->Cc: Anand Moon <linux.amoon@gmail.com>
->Cc: Oleg Nesterov <oleg@redhat.com>
->Cc: codemender-patching+linux@google.com
->Cc: linux-kernel@vger.kernel.org
->Cc: linux-hardening@vger.kernel.org
->---
-> init/Kconfig                  | 10 ++++
-> kernel/.kunitconfig           |  3 ++
-> kernel/user_namespace.c       |  4 ++
-> kernel/user_namespace_kunit.c | 92 +++++++++++++++++++++++++++++++++++
-> 4 files changed, 109 insertions(+)
-> create mode 100644 kernel/.kunitconfig
-> create mode 100644 kernel/user_namespace_kunit.c
->
->diff --git a/init/Kconfig b/init/Kconfig
->index f63bf5e05e79..d460344539a5 100644
->--- a/init/Kconfig
->+++ b/init/Kconfig
->@@ -1457,6 +1457,16 @@ config USER_NS
+> From: Manish Honap <mhonap@nvidia.com>
 > 
-> 	  If unsure, say N.
+> Add the vfio-cxl module that vfio-pci loads on demand for CXL Type-2
+> devices. It registers a set of callbacks with vfio-pci-core at
+> module_init and drops them at exit; the callbacks are stubs here and
+> are filled in by later patches.
 > 
->+config USER_NAMESPACE_KUNIT_TEST
->+	bool "Test user namespace map insertion" if !KUNIT_ALL_TESTS
->+	depends on KUNIT=y
->+	default KUNIT_ALL_TESTS
->+	help
->+	  This builds the KUnit test for user namespace uid/gid map insertion.
->+	  It validates map insertion, limits, dynamic allocation of the
->+	  extended extents array, and mapping sorting functions.
->+	  If unsure, say N.
->+
-> config PID_NS
-> 	bool "PID Namespaces"
-> 	default y
->diff --git a/kernel/.kunitconfig b/kernel/.kunitconfig
->new file mode 100644
->index 000000000000..7314dce05dc2
->--- /dev/null
->+++ b/kernel/.kunitconfig
->@@ -0,0 +1,3 @@
->+CONFIG_KUNIT=y
->+CONFIG_USER_NS=y
->+CONFIG_USER_NAMESPACE_KUNIT_TEST=y
->diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
->index 786dbf0506ca..0e7373085af9 100644
->--- a/kernel/user_namespace.c
->+++ b/kernel/user_namespace.c
->@@ -1417,3 +1417,7 @@ static __init int user_namespaces_init(void)
-> 	return 0;
-> }
-> subsys_initcall(user_namespaces_init);
->+
->+#if IS_ENABLED(CONFIG_USER_NAMESPACE_KUNIT_TEST)
->+#include "user_namespace_kunit.c"
->+#endif
->diff --git a/kernel/user_namespace_kunit.c b/kernel/user_namespace_kunit.c
->new file mode 100644
->index 000000000000..88467361efdf
->--- /dev/null
->+++ b/kernel/user_namespace_kunit.c
->@@ -0,0 +1,92 @@
->+// SPDX-License-Identifier: GPL-2.0
->+/*
->+ * KUnit test for user namespace map insertion and sorting.
->+ */
->+
->+#include <kunit/test.h>
->+#include <linux/user_namespace.h>
->+
->+static void test_user_ns_map_insert_base(struct kunit *test)
->+{
->+	struct uid_gid_map map;
->+	struct uid_gid_extent extent;
->+	int i, ret;
->+
->+	memset(&map, 0, sizeof(map));
->+
->+	/* Insert up to UID_GID_MAP_MAX_BASE_EXTENTS (5) elements */
->+	for (i = 0; i < UID_GID_MAP_MAX_BASE_EXTENTS; i++) {
->+		extent.first = i * 10;
->+		extent.lower_first = i * 100;
->+		extent.count = 5;
->+
->+		ret = insert_extent(&map, &extent);
->+		KUNIT_ASSERT_EQ(test, ret, 0);
->+		KUNIT_EXPECT_EQ(test, map.nr_extents, i + 1);
->+		KUNIT_EXPECT_EQ(test, map.extent[i].first, i * 10);
->+		KUNIT_EXPECT_EQ(test, map.extent[i].lower_first, i * 100);
->+		KUNIT_EXPECT_EQ(test, map.extent[i].count, 5);
->+	}
->+}
->+
->+static void test_user_ns_map_insert_extended(struct kunit *test)
->+{
->+	struct uid_gid_map map;
->+	struct uid_gid_extent extent;
->+	int i, ret;
->+
->+	memset(&map, 0, sizeof(map));
->+
->+	/* Insert more than UID_GID_MAP_MAX_BASE_EXTENTS (e.g., 10) elements */
->+	for (i = 0; i < 10; i++) {
->+		int value = 9 - i;
->+
->+		extent.first = value * 10;
->+		extent.lower_first = value * 100;
->+		extent.count = 5;
->+
->+		ret = insert_extent(&map, &extent);
->+		KUNIT_ASSERT_EQ(test, ret, 0);
->+		KUNIT_EXPECT_EQ(test, map.nr_extents, i + 1);
->+
->+		if (i < UID_GID_MAP_MAX_BASE_EXTENTS) {
->+			KUNIT_EXPECT_EQ(test, map.extent[i].first, value * 10);
->+		} else {
->+			KUNIT_EXPECT_EQ(test, map.forward[i].first, value * 10);
->+			KUNIT_EXPECT_EQ(test, map.forward[i].lower_first, value  * 100);
->+			KUNIT_EXPECT_EQ(test, map.forward[i].count, 5);
->+		}
->+	}
->+
->+	/* Now sort the map to set up reverse mapping */
->+	ret = sort_idmaps(&map);
->+	KUNIT_EXPECT_EQ(test, ret, 0);
->+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, map.reverse);
->+
->+	/* Verify sorting is correct */
->+	for (i = 0; i < map.nr_extents; i++) {
->+		KUNIT_EXPECT_EQ(test, map.forward[i].first, i * 10);
->+		KUNIT_EXPECT_EQ(test, map.forward[i].lower_first, i * 100);
->+		KUNIT_EXPECT_EQ(test, map.forward[i].count, 5);
->+
->+		KUNIT_EXPECT_EQ(test, map.reverse[i].first, i * 10);
->+		KUNIT_EXPECT_EQ(test, map.reverse[i].lower_first, i * 100);
->+		KUNIT_EXPECT_EQ(test, map.reverse[i].count, 5);
->+	}
->+
->+	kfree(map.forward);
->+	kfree(map.reverse);
->+}
->+
->+static struct kunit_case user_ns_map_test_cases[] = {
->+	KUNIT_CASE(test_user_ns_map_insert_base),
->+	KUNIT_CASE(test_user_ns_map_insert_extended),
->+	{}
->+};
->+
->+static struct kunit_suite user_ns_map_test_suite = {
->+	.name = "user_ns_map",
->+	.test_cases = user_ns_map_test_cases,
->+};
->+
->+kunit_test_suite(user_ns_map_test_suite);
->
+> VFIO_CXL depends on CXL_BUS and builds as vfio-cxl.ko, which
+> request_module("vfio-cxl") resolves through MODULE_ALIAS.
+> 
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  MAINTAINERS                          |  7 +++++
+>  drivers/vfio/pci/Kconfig             |  2 ++
+>  drivers/vfio/pci/Makefile            |  2 ++
+>  drivers/vfio/pci/cxl/Kconfig         | 11 ++++++++
+>  drivers/vfio/pci/cxl/Makefile        |  3 ++
+>  drivers/vfio/pci/cxl/vfio_cxl_core.c | 41 ++++++++++++++++++++++++++++
+>  6 files changed, 66 insertions(+)
+>  create mode 100644 drivers/vfio/pci/cxl/Kconfig
+>  create mode 100644 drivers/vfio/pci/cxl/Makefile
+>  create mode 100644 drivers/vfio/pci/cxl/vfio_cxl_core.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c665bf8f1a28..aa8cecbc4cf2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -28312,6 +28312,13 @@ L:	kvm@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/vfio/cdx/*
+>  
+> +VFIO CXL DRIVER
+> +M:	Manish Honap <mhonap@nvidia.com>
+> +L:	kvm@vger.kernel.org
+> +L:	linux-cxl@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/vfio/pci/cxl/
+> +
+>  VFIO DRIVER
+>  M:	Alex Williamson <alex@shazbot.org>
+>  L:	kvm@vger.kernel.org
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index 296bf01e185e..c3f54fc8ccc0 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -70,6 +70,8 @@ source "drivers/vfio/pci/virtio/Kconfig"
+>  
+>  source "drivers/vfio/pci/nvgrace-gpu/Kconfig"
+>  
+> +source "drivers/vfio/pci/cxl/Kconfig"
+> +
+>  source "drivers/vfio/pci/qat/Kconfig"
+>  
+>  source "drivers/vfio/pci/xe/Kconfig"
 
---- Thanks!
-https://lore.kernel.org/all/EE579805-42F2-4C58-B752-F28779EEB717@grrlz.net/
+It seems fair to put this above the variant driver Kconfigs rather than
+bury it among them.
+
+> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+> index 6138f1bf241d..c3031070a1f3 100644
+> --- a/drivers/vfio/pci/Makefile
+> +++ b/drivers/vfio/pci/Makefile
+> @@ -21,6 +21,8 @@ obj-$(CONFIG_VIRTIO_VFIO_PCI) += virtio/
+>  
+>  obj-$(CONFIG_NVGRACE_GPU_VFIO_PCI) += nvgrace-gpu/
+>  
+> +obj-$(CONFIG_VFIO_CXL) += cxl/
+> +
+>  obj-$(CONFIG_QAT_VFIO_PCI) += qat/
+>  
+>  obj-$(CONFIG_XE_VFIO_PCI) += xe/
+
+Here again, cxl is a feature of vfio-pci-core.  I'd promote it to
+between vfio-pci-core and vfio-pci.  The earlier linking also has the
+benefit that in the typical case it will be available before the
+builtin drivers (but keep the deferred loading behavior).  Thanks,
+
+Alex
+
+> diff --git a/drivers/vfio/pci/cxl/Kconfig b/drivers/vfio/pci/cxl/Kconfig
+> new file mode 100644
+> index 000000000000..1392fa4ed15d
+> --- /dev/null
+> +++ b/drivers/vfio/pci/cxl/Kconfig
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config VFIO_CXL
+> +	tristate "VFIO support for CXL Type-2 devices"
+> +	depends on CXL_BUS && CXL_MEM
+> +	select VFIO_PCI_CORE
+> +	help
+> +	  Add CXL HDM handling to vfio-pci so a CXL Type-2 device, such as a
+> +	  CXL-attached accelerator, can be assigned to a virtual machine.
+> +	  vfio-pci loads this module on demand when it binds a CXL device.
+> +
+> +	  If you don't know what to do here, say N.
+> diff --git a/drivers/vfio/pci/cxl/Makefile b/drivers/vfio/pci/cxl/Makefile
+> new file mode 100644
+> index 000000000000..8501bf626108
+> --- /dev/null
+> +++ b/drivers/vfio/pci/cxl/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +obj-$(CONFIG_VFIO_CXL) += vfio-cxl.o
+> +vfio-cxl-y := vfio_cxl_core.o
+> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> new file mode 100644
+> index 000000000000..cbec7319452c
+> --- /dev/null
+> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> @@ -0,0 +1,41 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * VFIO support for CXL Type-2 devices.
+> + *
+> + * Copyright (c) 2026 NVIDIA Corporation & Affiliates
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/vfio_pci_core.h>
+> +
+> +static int vfio_cxl_init_device(struct vfio_pci_core_device *vdev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void vfio_cxl_release_device(struct vfio_pci_core_device *vdev)
+> +{
+> +}
+> +
+> +static const struct vfio_cxl_ops vfio_cxl_ops = {
+> +	.init_device	= vfio_cxl_init_device,
+> +	.release_device	= vfio_cxl_release_device,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int __init vfio_cxl_init(void)
+> +{
+> +	return vfio_pci_core_register_cxl_ops(&vfio_cxl_ops);
+> +}
+> +
+> +static void __exit vfio_cxl_exit(void)
+> +{
+> +	vfio_pci_core_unregister_cxl_ops(&vfio_cxl_ops);
+> +}
+> +
+> +module_init(vfio_cxl_init);
+> +module_exit(vfio_cxl_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("VFIO support for CXL Type-2 devices");
+> +MODULE_ALIAS("vfio-cxl");
+
