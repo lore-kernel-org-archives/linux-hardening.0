@@ -1,25 +1,25 @@
-Received: from out-2z4y-a139.jellyfish.systems (out-2z4y-a139.jellyfish.systems [198.54.127.139])
+Received: from out-zbxj-a71.jellyfish.systems (out-zbxj-a71.jellyfish.systems [198.54.127.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB89146EC77
-	for <linux-hardening@vger.kernel.org>; Wed, 26 Aug 2026 17:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EB147142D
+	for <linux-hardening@vger.kernel.org>; Wed, 26 Aug 2026 17:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787766894; cv=none; b=OUu0XTIy+8xGwlLvxNk296Nw9F9/6S9XEUxa0tBHoyPyzSOUN/NHlxFJ1yNfXrYO6h3LIqAgr4hUvakdx3a51/uAxtb9F3Cj8qSPqEOw22vyqqfCW7x1GA3FUpWRieF1nt02jw8cVeJFwcll23iWUocYBkLQh82ICOAJ9paA7no=
+	t=1787766905; cv=none; b=jJqAVP18XOhOT94jjP8STf+YI2BnqXAVPVfZQMlWxSPzbu3hDHd4LbMt/TXDOGelQKrMorS/cexCr9WjP6aYWgAtEBaBEDQWoDfsQSePMlC08Rn/JvekONou9oGmSTLQLTf1NmDgXdUoo2ngEMrrxyvvWC/uHCycTWoaE2yVJcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787766894; c=relaxed/simple;
-	bh=5MUS+jSLenmtWtQm3/CNTEcXFg2KOODI/Ydn6oNWr4Q=;
+	s=arc-20240116; t=1787766905; c=relaxed/simple;
+	bh=n8EG6axqjMnfb5vB4Ik6vvRPTgDNmmVhOQoJ89A9+Rc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FAI8ObVisXogM7REG3E6Igr2z6Ow2S325sXDp6j7nuy5xAmVMr+QA8UIO/UZTUC2Ec3+tGNjY8YXf3IbmoHsVvJhpRAA7t7QELVlqY09QXslDrZTm7lEwpXqdwYgngSUvr5BNLZSLbcwvPDsXr1z4v/pv9jPZFduZ8UGdOwmdUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net; spf=pass smtp.mailfrom=catcrafts.net; arc=none smtp.client-ip=198.54.127.139
+	 MIME-Version; b=iZsCrEHu7v/3BUnL9QkTprxK9zo/2YI1P7KIuwMQ3aGOUrxt9PeT/9lT9k1+MzLaXvg/xGInAXF4Gehu2aBvOeFgqMI2z3dsFgfXl5M1BawGaqQ1zXNJvdjvozRHQe2kJsuiI0IHnNsiZj1ihEVM/slB3zX+TWXWFyHdrkzcdsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net; spf=pass smtp.mailfrom=catcrafts.net; arc=none smtp.client-ip=198.54.127.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=catcrafts.net
 Received: from mail.privateemail.com (unknown [87.215.145.39])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.privateemail.com (Postfix) with ESMTPSA id 4hVXN41gRtz8sWX;
-	Wed, 26 Aug 2026 17:54:28 +0000 (UTC)
+	by mail.privateemail.com (Postfix) with ESMTPSA id 4hVXMz6q3mz8sWP;
+	Wed, 26 Aug 2026 17:54:23 +0000 (UTC)
 From: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
 To: Jonathan Cameron <jic23@kernel.org>,
 	linux-iio@vger.kernel.org
@@ -35,10 +35,11 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Luca Weiss <luca.weiss@fairphone.com>,
-	Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
-Subject: [PATCH v2 3/5] iio: light: stk3310: move the data registers into the channel address
-Date: Wed, 26 Aug 2026 19:54:07 +0200
-Message-ID: <20260826175409.326131-4-jorijnvdgraaf@catcrafts.net>
+	Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Subject: [PATCH v2 2/5] dt-bindings: iio: light: stk33xx: document the Sensortek STK36C61
+Date: Wed, 26 Aug 2026 19:54:06 +0200
+Message-ID: <20260826175409.326131-3-jorijnvdgraaf@catcrafts.net>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260826175409.326131-1-jorijnvdgraaf@catcrafts.net>
 References: <20260826175409.326131-1-jorijnvdgraaf@catcrafts.net>
@@ -51,65 +52,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Envelope-From: jorijnvdgraaf@catcrafts.net
 
-The RAW read selects its data register with a per-channel-type branch.
-Record each channel's data register in its .address field and read
-from there, so adding a channel does not grow the branch.
+The STK36C61 is a 3-in-1 ambient light / proximity / RGB colour sensor
+found in the Fairphone 6. Its ambient light and proximity register
+interface is compatible with the stk3310's, while the dedicated
+compatible identifies the part, whose colour channels the fallback
+does not describe.
 
-Suggested-by: Jonathan Cameron <jic23@kernel.org>
+Add sensortek,stk36c61 with a sensortek,stk3310 fallback, mirroring
+the stk3013 entry, and widen the title and description to cover the
+part.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 Assisted-by: Claude:claude-fable-5
 Signed-off-by: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
 ---
- drivers/iio/light/stk3310.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/iio/light/stk33xx.yaml | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
-index 5b5b6812edc7..156888969366 100644
---- a/drivers/iio/light/stk3310.c
-+++ b/drivers/iio/light/stk3310.c
-@@ -184,6 +184,7 @@ static const struct iio_chan_spec_ext_info stk3310_ext_info[] = {
- static const struct iio_chan_spec stk3310_channels[] = {
- 	{
- 		.type = IIO_LIGHT,
-+		.address = STK3310_REG_ALS_DATA_MSB,
- 		.info_mask_separate =
- 			BIT(IIO_CHAN_INFO_RAW) |
- 			BIT(IIO_CHAN_INFO_SCALE) |
-@@ -191,6 +192,7 @@ static const struct iio_chan_spec stk3310_channels[] = {
- 	},
- 	{
- 		.type = IIO_PROXIMITY,
-+		.address = STK3310_REG_PS_DATA_MSB,
- 		.info_mask_separate =
- 			BIT(IIO_CHAN_INFO_RAW) |
- 			BIT(IIO_CHAN_INFO_SCALE) |
-@@ -370,25 +372,20 @@ static int stk3310_read_raw(struct iio_dev *indio_dev,
- 			    struct iio_chan_spec const *chan,
- 			    int *val, int *val2, long mask)
- {
--	u8 reg;
- 	__be16 buf;
- 	int ret;
- 	unsigned int index;
- 	struct stk3310_data *data = iio_priv(indio_dev);
- 	struct i2c_client *client = data->client;
-+	struct regmap *map = data->regmap;
+diff --git a/Documentation/devicetree/bindings/iio/light/stk33xx.yaml b/Documentation/devicetree/bindings/iio/light/stk33xx.yaml
+index e4341fdced98..0165a348918b 100644
+--- a/Documentation/devicetree/bindings/iio/light/stk33xx.yaml
++++ b/Documentation/devicetree/bindings/iio/light/stk33xx.yaml
+@@ -4,14 +4,14 @@
+ $id: http://devicetree.org/schemas/iio/light/stk33xx.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
  
- 	if (chan->type != IIO_LIGHT && chan->type != IIO_PROXIMITY)
- 		return -EINVAL;
+-title: |
+-  Sensortek STK33xx I2C Ambient Light and Proximity sensor
++title: Sensortek STK33xx/STK36C61 I2C Ambient Light and Proximity sensor
  
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		if (chan->type == IIO_LIGHT)
--			reg = STK3310_REG_ALS_DATA_MSB;
--		else
--			reg = STK3310_REG_PS_DATA_MSB;
--
- 		mutex_lock(&data->lock);
--		ret = regmap_bulk_read(data->regmap, reg, &buf, sizeof(buf));
-+		ret = regmap_bulk_read(map, chan->address, &buf, sizeof(buf));
- 		if (ret < 0) {
- 			dev_err(&client->dev, "register read failed\n");
- 			mutex_unlock(&data->lock);
+ maintainers:
+   - Jonathan Cameron <jic23@kernel.org>
+ 
+-description: |
+-  Ambient light and proximity sensor over an i2c interface.
++description:
++  Ambient light and proximity sensor over an i2c interface. The STK36C61
++  additionally provides RGBC colour channels.
+ 
+ allOf:
+   - $ref: ../common.yaml#
+@@ -26,6 +26,7 @@ properties:
+       - items:
+           - enum:
+               - sensortek,stk3013
++              - sensortek,stk36c61
+           - const: sensortek,stk3310
+ 
+   reg:
 -- 
 2.55.0
 
