@@ -1,51 +1,51 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACD227603A;
-	Thu, 27 Aug 2026 13:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE96477E38;
+	Thu, 27 Aug 2026 14:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787838489; cv=none; b=LJS74tkUsZe1h2qf/j1QPimzjuidsL6nXFpUnXFoiI42TkcG2S1nMdKZhxzfJQCf6ZpQJniMZOGQoJCmJmnnmIi720xl53OO/1UBTI0a1eWgE8O5mIOv+fdDVlRgHOBKeTRAlDoLTww1g9NNeHn2mVqEpfA15NbHecQEqtcuVXw=
+	t=1787841913; cv=none; b=mK58F0Rsbr2MGZGDAzD1i5TRyD09m/xSai6bUMpk2lWIUV5vISgBLAzXjOOBRh2p9UpF6bUZtej066U5qFS669vbf29W+OEEzhfGSZYx5CoADKKpGPXqx8UmKgIh5yWzOaQ3vpWR3UMmwkXBHo8h+bJ/Oh/xL/uW6Uchb9mX3TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787838489; c=relaxed/simple;
-	bh=CRFg3EI1oCPtd8Vma/4rDZnZjlqkafjzj32aZbqpnco=;
+	s=arc-20240116; t=1787841913; c=relaxed/simple;
+	bh=L9z+EaQEeXZMaM2pN88T3doI8eQzCVfKOB3Yihhri6Y=;
 	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EsqCEPqaNsHMxBGD0/97P8ipsDePLEooL7Wi7ZDJBh25i+jhfSPtAEuVJ4KBX5msh5gqKFWgCGN+GqWoy4JM09vx7kbevLG5jF/aiQBPiMnA8oaiqkSJZrS3Ce9zhKvTFo4JaJHFuJjL3pUvyxHEWV5EWp2pgA5epbwH6LA4V4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=uAdgV5Sg; arc=none smtp.client-ip=68.232.153.233
+	 Content-Type:MIME-Version; b=UiexfvdemWkql9zr2dkGxBCSG759PNoVt0PvFaWE6nlGQKz/ihwZPNg8mnuCDGR6UHbJXhEqjIQOoqXo6y/t0JV5Sucxf1oSXaoikTBOX89nw86n3L09X4eb1/J3t2OPu+fE9DF78KNlTWcl3MNjuSt4mKUssFSEIg7heZ2Dva8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=CqiMA6Is; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="uAdgV5Sg"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CqiMA6Is"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1787838490; x=1819374490;
+  t=1787841912; x=1819377912;
   h=message-id:subject:from:to:cc:date:in-reply-to:
    references:content-transfer-encoding:mime-version;
-  bh=CRFg3EI1oCPtd8Vma/4rDZnZjlqkafjzj32aZbqpnco=;
-  b=uAdgV5SgJGqFSpTZv8nHh0N1bUJ+ioxLPE3bPHowBsAqHuXzpPMpUeqp
-   r38nkTM5qtjRyScFYdi4ztAiyIygHcqaWCSNbs3v2A8nvhdZG+d6HLDOy
-   2NeE3/B32VBzHvygIlIYmhJnz7WLLJ4e7X2tIq1jBGy+4M+Iv+mgVQ4Fe
-   i4Qf3pXJXRVS4EblpujaFXKV8bpgpc60OUlLI/KUVjp0QON5sCC4Kf/6j
-   CoFYVVk9MYaKqdzY0p1BL7n8RM1OMIEOUNjN//UCF2+29gIGtRrQFtFUG
-   zysjqBLOHb1FCVAF9vYJX95xmQHNUPUxX8NPwZwL+YjD4OlmCigVc4gup
-   Q==;
-X-CSE-ConnectionGUID: aUIG+ODvTwOEVj7FVz0ESg==
-X-CSE-MsgGUID: DE4g0wTrS7uiUwnFOOAabQ==
+  bh=L9z+EaQEeXZMaM2pN88T3doI8eQzCVfKOB3Yihhri6Y=;
+  b=CqiMA6IsMKAgbeIpj8cUylcx7Qy2UUlAPiPw4qRO+RPcc92zBvB/0z+v
+   W80i9N9aPBbcU5I/s6xAZm5Ms8838xO6kpG2tJVMNB2rNMK4iU+tRH2et
+   BMtx2uc0JU7yfOpyS6QTSlwXpep5lmotKQNXRzG3sOhLFAFZ0MBmCOvX8
+   /UiyyrqNGGQcToRHQHG7IGP+XU0pdKC/vgLDfQt2ujg3TGmVO67Ab1MjR
+   eYPH+rnB6BTS1NBg5GEd7GOcRH8hXhGmW2HIwbDYLNOww33eyTJyx6/Fm
+   VcfPoRoQwdHxevxyAcCYDVHWEB4bszfKKQe8btL9rk4/c7s8w5DUEizVx
+   g==;
+X-CSE-ConnectionGUID: vfzIX0CYQ3WihH8YEI9y1Q==
+X-CSE-MsgGUID: T6sNDYpHQ5OMT17ggktxpA==
 X-IronPort-AV: E=Sophos;i="6.25,246,1779174000"; 
-   d="scan'208";a="72575563"
+   d="scan'208";a="63063015"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 06:48:09 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 07:45:05 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
- chn-vm-ex4.mchp-main.com (10.10.87.33) with Microsoft SMTP Server
+ chn-vm-ex2.mchp-main.com (10.10.87.31) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.45; Thu, 27 Aug 2026 06:48:05 -0700
+ 15.2.2562.45; Thu, 27 Aug 2026 07:44:46 -0700
 Received: from DEN-DL-M77643.microsemi.net (10.10.85.11) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.58 via Frontend Transport; Thu, 27 Aug 2026 06:48:02 -0700
-Message-ID: <86123c9a2e2c7cb8c8593613a6f374555f0ecafd.camel@microchip.com>
-Subject: Re: [PATCH net-next v2 8/9] net: sparx5: add L3 FIB, nexthop and
- neighbour entry management
+ 15.1.2507.58 via Frontend Transport; Thu, 27 Aug 2026 07:44:43 -0700
+Message-ID: <42e89af07b691122dcd91666da3571a30260d03c.camel@microchip.com>
+Subject: Re: [PATCH net-next v2 9/9] net: sparx5: add neighbour event
+ handling for L3 routing
 From: Jens Emil Schulz Ostergaard <jensemil.schulzostergaard@microchip.com>
 To: Jakub Kicinski <kuba@kernel.org>
 CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
@@ -55,10 +55,10 @@ CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
 	<robert.marko@sartura.hr>, <netdev@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-hardening@vger.kernel.org>
-Date: Thu, 27 Aug 2026 15:48:01 +0200
-In-Reply-To: <20260817211359.3633493-1-kuba@kernel.org>
-References: <20260810-sparx5_l3_routing-v2-8-59e68cc8c8ca@microchip.com>
-	 <20260817211359.3633493-1-kuba@kernel.org>
+Date: Thu, 27 Aug 2026 16:44:43 +0200
+In-Reply-To: <20260817211400.3633528-1-kuba@kernel.org>
+References: <20260810-sparx5_l3_routing-v2-9-59e68cc8c8ca@microchip.com>
+	 <20260817211400.3633528-1-kuba@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4-0ubuntu2.1 
@@ -69,632 +69,368 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2026-08-17 at 14:13 -0700, Jakub Kicinski wrote:
+On Mon, 2026-08-17 at 14:14 -0700, Jakub Kicinski wrote:
 > EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
 e content is safe
 >=20
 > This is an AI-generated review of your patch. The human sending this
 > email has considered the AI review valid, or at least plausible.
 > ---
-> net: sparx5: add L3 FIB, nexthop and neighbour entry management
+> net: sparx5: add neighbour event handling for L3 routing
 >=20
-> This adds the data path for L3 unicast route offload on sparx5: FIB entry
-> lifecycle backed by LPM VCAP rules, nexthop group management using either
-> inline VCAP actions or the hardware ARP table for ECMP, and neighbour
-> entries anchored to router legs.  A few questions about the new code
-> below.
+> This adds a netevent notifier to sparx5 that queues NETEVENT_NEIGH_UPDATE
+> events to the router ordered workqueue, where the resolved MAC is written
+> into the driver neigh entry and pushed to the hardware ARP table and to
+> all linked nexthops. Unreachable neighbours tear down the hardware ARP
+> entry and mark the nexthops as unresolved.
 >=20
 > > diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c b/dr=
 ivers/net/ethernet/microchip/sparx5/sparx5_router.c
-> > index d83cbb84c34e5..6d40d651180e6 100644
+> > index 6d40d651180e6..5f6add84b0d6c 100644
 > > --- a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
 > > +++ b/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
 >=20
 > [ ... ]
 >=20
-> > @@ -422,43 +715,1041 @@ static struct sparx5_port *sparx5_port_dev_lowe=
-r_find(struct net_device *dev)
-> >       port =3D sparx5_port_dev_lower_find_rcu(dev);
-> >       rcu_read_unlock();
+> > @@ -2419,6 +2430,107 @@ static int sparx5_rr_fib_event(struct notifier_=
+block *nb, unsigned long event,
+> >       return NOTIFY_BAD;
+> >  }
 > >=20
-> > -     return port;
-> > +     return port;
-> > +}
->=20
-> [ ... ]
->=20
-> > +static int
-> > +sparx5_rr_nexthop_group_info_init(struct sparx5 *sparx5,
-> > +                               struct sparx5_rr_nexthop_group *nh_grp,
-> > +                               struct sparx5_rr_fib_info *fi)
+> > +static void sparx5_rr_neigh_event_work(struct work_struct *work)
 > > +{
-> > +     unsigned int nhs =3D sparx5_rr_fib_info_nhs(fi);
-> > +     struct sparx5_rr_nexthop_group_info *nhgi;
-> > +     struct sparx5_rr_nexthop *nh;
-> > +     int err, i;
+> > +     struct sparx5_rr_netevent_work *net_work =3D
+> > +             container_of(work, struct sparx5_rr_netevent_work, work);
+> > +     unsigned char hwaddr[ETH_ALEN] __aligned(2);
+> > +     struct sparx5 *sparx5 =3D net_work->sparx5;
+> > +     struct neighbour *n =3D net_work->neigh;
+> > +     struct sparx5_rr_neigh_key key =3D { };
+> > +     struct sparx5_rr_neigh_entry *entry;
+> > +     bool entry_connected;
+> > +     u8 nud_state, dead;
 > > +
-> > +     nhgi =3D kzalloc_flex(*nhgi, nexthops, nhs);
-> > +     if (!nhgi)
-> > +             return -ENOMEM;
+> > +     sparx5_rr_nb2neigh_key(n, &key);
 > > +
-> > +     nh_grp->nhgi =3D nhgi;
-> > +     nhgi->grp =3D nh_grp;
-> > +     nhgi->atbl_offset_valid =3D false;
-> > +     nhgi->atbl_offset =3D 0;
-> > +     nhgi->count =3D nhs;
+> > +     /* Frames with link-local dip are trapped, so ignore the neighbou=
+r. */
+> > +     if (key.iaddr.version =3D=3D SPARX5_IPV6 &&
+> > +         ipv6_addr_type(&key.iaddr.ipv6) & IPV6_ADDR_LINKLOCAL)
+> > +             goto out;
+>=20
+> [Severity: Medium]
+> Does the comment's justification cover neighbours that are used as
+> gateways rather than as destinations?
+>=20
+> The trap rule installed by sparx5_rr_lpm_link_local_create() matches on
+> destination fe80::/64 only, and sparx5_rr_fib_info_should_ignore() only
+> skips routes whose destination is link-local:
+>=20
+>         return fi->version =3D=3D SPARX5_IPV6 &&
+>                ipv6_addr_type(&fi->fe6_info.rt_arr[0]->fib6_dst.addr) &
+>                        (IPV6_ADDR_MULTICAST | IPV6_ADDR_LINKLOCAL);
+>=20
+> A route such as "ip -6 route add 2001:db8::/64 via fe80::1 dev vlanX" is
+> therefore still offloaded, and sparx5_rr_nexthop_init() sets
+> nh->neigh_tbl =3D &nd_tbl for every AF_INET6 gateway without a link-local
+> filter, so sparx5_rr_nexthop_neigh_init() creates a neigh entry for
+> fe80::1.
+>=20
+> Since this work handler is the only writer of entry->hwaddr, can such a
+> nexthop ever obtain a MAC?  sparx5_rr_nexthop_egress_derive() would keep
+> nh->trapped set and program the zero MAC, so routes via a link-local
+> gateway (including RA-derived default routes) stay trapped to the CPU
+> while being reported as offloaded.
+>=20
+
+
+No, it does not cover that case. A link-local destination must not be
+forwareded which the fe80::/64 trap rule takes care of. But a link-local
+gateway must be resolved, because its MAC is what a nexthop egresses with.
+Skipping the neighbour entirely satisfies the first and breaks the second.
+
+> > +
+> > +     /* If n changes after this read section, we will get another neig=
+h
+> > +      * event, which is processed after the current one.
+> > +      */
+> > +     read_lock_bh(&n->lock);
+> > +     ether_addr_copy(hwaddr, n->ha);
+> > +     nud_state =3D n->nud_state;
+> > +     dead =3D n->dead;
+> > +     read_unlock_bh(&n->lock);
+> > +
+> > +     mutex_lock(&sparx5->router->lock);
+> > +
+> > +     entry_connected =3D nud_state & NUD_VALID && !dead;
+> > +     entry =3D sparx5_rr_neigh_entry_lookup(sparx5, &key);
+> > +     if (!entry_connected && !entry)
+> > +             goto out_mutex;
+> > +
+> > +     if (!entry) {
+> > +             entry =3D sparx5_rr_neigh_entry_create(sparx5, &key);
+> > +             if (IS_ERR(entry))
+> > +                     goto out_mutex;
+> > +     }
+>=20
+> [Severity: Medium]
+> With this notifier being the only source of entry->hwaddr, how does an
+> already-resolved kernel neighbour get synchronized into a newly created
+> driver entry?
+>=20
+> sparx5_rr_nexthop_neigh_init() only kicks ARP/NDP when the kernel
+> neighbour did not already exist, and never samples n->ha / n->nud_state:
+>=20
+>         n =3D neigh_lookup(nh->neigh_tbl, &nh->gw_addr, dev);
+>         if (!n) {
+>                 n =3D neigh_create(nh->neigh_tbl, &nh->gw_addr, dev);
+>                 if (IS_ERR(n))
+>                         return PTR_ERR(n);
+>                 /* Start arp process */
+>                 neigh_event_send(n, NULL);
+>         }
+>=20
+> For a NUD_PERMANENT neighbour ("ip neigh add <gw> lladdr <mac> nud
+> permanent dev vlanX") no further NETEVENT_NEIGH_UPDATE is generated -
+> net/core/neighbour.c only emits netevents from __neigh_update(),
+> neigh_timer_handler() and neigh_cleanup_and_release(), and permanent
+> entries have no timer and are skipped by the GC work.  Does that leave
+> entry->hwaddr zero forever, so sparx5_rr_nexthop_egress_derive() keeps
+> nh->trapped set while the FIB entry is reported as offloaded?
+>=20
+> The same applies when the event arrives before a router leg exists:
+> sparx5_rr_neigh_entry_create() returns ERR_PTR(-EINVAL) from
+>=20
+>         leg =3D sparx5_rr_leg_find_by_dev(sparx5, key->dev);
+>         if (!leg)
+>                 return ERR_PTR(-EINVAL);
+>=20
+> and the event is dropped with no replay when the leg later appears.
+>=20
+> For comparison, mlxsw_sp_nexthop_neigh_init() reads nud_state/dead under
+> n->lock and calls __mlxsw_sp_nexthop_neigh_update() at init time:
+>=20
+>         read_lock_bh(&n->lock);
+>         nud_state =3D n->nud_state;
+>         dead =3D n->dead;
+>         read_unlock_bh(&n->lock);
+>         __mlxsw_sp_nexthop_neigh_update(nh, !(nud_state & NUD_VALID && !d=
+ead));
+>=20
+
+
+It is right, nothing else writes entry->hwaddr, so it stays zero and the ne=
+xthop
+is trapped forever. I will fix this by sampling at init as mlxsw does, afte=
+r the
+nexthop is linked into neigh_entry->nexthop_list, so the update
+reaches the nexthop that just attached.
+
+
+> > +
+> > +     if (entry->connected && entry_connected &&
+> > +         ether_addr_equal(entry->hwaddr, hwaddr))
+> > +             goto out_mutex;
+>=20
+> [Severity: Medium]
+> Can this early exit permanently block a retry after a failed hardware
+> write?
+>=20
+> sparx5_rr_neigh_entry_update() marks the entry connected before the
+> fallible hardware apply and only downgrades the offload marking:
+>=20
+>         entry->connected =3D adding;
+>=20
+>         if (adding) {
+>                 err =3D sparx5_rr_neigh_entry_hw_apply(sparx5, entry);
+>                 if (err)
+>                         offloaded =3D false;
+>=20
+> sparx5_rr_lpm_arp_entry_mod() can fail while the rule keeps the previous
+> DMAC:
+>=20
+>         vrule =3D vcap_get_rule(vctrl, vrule_id);
+>         if (IS_ERR(vrule))
+>                 return -EINVAL;
+>=20
+> and sparx5_rr_lpm_arp_entry_create() can fail on rule allocation or
+> vcap_val_add_rule().
+>=20
+> Since the new MAC has already been stored in entry->hwaddr and
+> entry->connected is true, every following NUD_VALID confirmation
+> (REACHABLE/STALE/DELAY) hits the test above and skips both the LPM/ARP
+> update and sparx5_rr_nexthops_update_notify().  For an IP that moves to a
+> new MAC (VRRP failover, VM migration), would hardware keep rewriting DMAC
+> to the old MAC with no trap and no further retry?
+>=20
+> Would keying the skip on hw_route.vrule_id_valid (or propagating the
+> error from sparx5_rr_neigh_entry_update()) avoid that?
+>=20
+
+Yes, it can. I will record the outcome rather than key on vrule_id_valid,
+because that flag is not a reliable proxy any more. A link-local neighbour
+now deliberately has no host route, so vrule_id_valid stays false for it
+and the skip would never trigger. Recording the state enables the next
+event to drive the retry.
+
+> > +
+> > +     ether_addr_copy(entry->hwaddr, hwaddr);
+> > +     sparx5_rr_neigh_entry_update(sparx5, entry, entry_connected);
+> > +     sparx5_rr_nexthops_update_notify(sparx5, entry, entry_connected);
+> > +     if (!entry_connected)
+> > +             sparx5_rr_neigh_entry_put(sparx5, entry);
 >=20
 > [Severity: High]
-> Is nhs bounded on the way in here?  nhgi->count is the u8 __counted_by
-> field for the nexthops flex array, and the only size check in the series
-> is in sparx5_rr_fib_info_should_offload():
+> Should the MAC be committed into entry->hwaddr on the disconnect path as
+> well?
 >=20
->         if (nhs > SPARX5_MAX_ECMP_SIZE)
->                 return false;
->=20
-> For the IPv6 append path that check only sees the delta carried by the
-> event, never the merged total (see the comment on sparx5_rr_fib6_append()
-> below), so repeated "ip -6 route append <prefix> nexthop via <gw>" grows
-> fib_entry->fi.fe6_info.nrt6 without limit.
->=20
-> At 256 accumulated nexthops nhgi->count wraps to 0 while the flex array
-> was allocated for 256 entries.  Then sparx5_rr_fib_entry_hw_apply() does:
->=20
->                 if (!nhgi->nexthops->gateway) {
->=20
-> which is a nexthops[0] access with __counted_by(count) =3D=3D 0, i.e. a t=
-rap
-> on CONFIG_UBSAN_BOUNDS builds, and the ARP programming loop
-> "for (i =3D 0; i < nhgi->count; i++)" writes nothing at all.
->=20
-
-This is correct. I will add the proper checks in the ipv6 case so we can
-refuse configution which pushes the total size above the hardware limitatio=
-n
-of 16.
-
-> > +
-> > +     for (i =3D 0; i < nhgi->count; i++) {
-> > +             struct fib_nh_common *fnhc;
-> > +
-> > +             nh =3D &nhgi->nexthops[i];
->=20
-> [ ... ]
->=20
-> > +static void sparx5_rr_arp_tbl_hw_addr_apply(struct sparx5 *sparx5,
-> > +                                         unsigned char mac[ETH_ALEN],
-> > +                                         u16 evmid, int offset)
-> > +{
-> > +     u32 mac_msb, mac_lsb;
-> > +
-> > +     sparx5_rr_split_mac(mac, 32, &mac_msb, &mac_lsb);
-> > +
-> > +     spx5_rmw(ANA_L3_ARP_CFG_0_MAC_MSB_SET(mac_msb) |
-> > +              ANA_L3_ARP_CFG_0_ARP_VMID_SET(evmid) |
-> > +              ANA_L3_ARP_CFG_0_ARP_ENA_SET(1),
-> > +              ANA_L3_ARP_CFG_0_ARP_ENA |
-> > +              ANA_L3_ARP_CFG_0_ARP_VMID |
-> > +              ANA_L3_ARP_CFG_0_MAC_MSB,
-> > +              sparx5, ANA_L3_ARP_CFG_0(offset));
-> > +
-> > +     spx5_wr(mac_lsb, sparx5, ANA_L3_ARP_CFG_1(offset));
-> > +}
-> > +
-> > +static void sparx5_rr_arp_tbl_hw_addr_clear(struct sparx5 *sparx5, int=
- offset)
-> > +{
-> > +     spx5_rmw(ANA_L3_ARP_CFG_0_ARP_ENA_SET(0), ANA_L3_ARP_CFG_0_ARP_EN=
-A,
-> > +              sparx5, ANA_L3_ARP_CFG_0(offset));
-> > +}
->=20
-> [Severity: Medium]
-> Should the two halves of the MAC be written in the other order here?
-> ARP_CFG_0 carries ARP_ENA and MAC_MSB and is written first, while the low
-> 32 bits only land in ARP_CFG_1 afterwards, so the entry is enabled with
-> the new MSB combined with whatever LSB the slot still held.
->=20
-> sparx5_rr_arp_tbl_hw_addr_clear() only clears ARP_ENA and never touches
-> ARP_CFG_1, so that leftover LSB belongs to the previous owner of the slot=
-.
->=20
-> When sparx5_rr_nexthop_neigh_update() reprograms a member of a live ECMP
-> group (reachable in this commit through
-> sparx5_rr_router_leg_destroy() -> sparx5_rr_nexthop_neigh_update()), do
-> frames hashing to that member get forwarded with a bogus DMAC of
-> new MSB : stale LSB during the window?
->=20
-> The same window also seems to defeat the "zero DMAC means trap" rule: wit=
-h
-> MAC_MSB zeroed and ARP_ENA still 1, a non-zero stale LSB is left in
-> ARP_CFG_1, so the frame is forwarded instead of trapped.  Writing
-> ARP_CFG_1 before the ARP_CFG_0 write that sets ARP_ENA would close both.
->=20
-> [ ... ]
->=20
-
-Also correct and both consequences follow. But i do not think swapping
-the writes is quite enough. That would solve a disabled entry being enabled=
-.
-But a live entry with new MAC programmed, or live entry with a real MAC
-being programmed to trap. But we can disable the entry during the update.
-Disabled entries which are hit, get redirected to the CPU.
-
-After both MAC registers have been programmed, we can enable the entry. Thi=
+> The kernel does not clear n->ha when a neighbour goes to NUD_FAILED or
+> dead - neigh_invalidate() only flushes arp_queue, and neigh->ha is only
+> overwritten when a new lladdr is supplied.  So for !entry_connected this
+> stores the last, now invalid MAC while entry->connected becomes false, an=
+d
+> nothing else ever zeroes entry->hwaddr.  sparx5_rr_neigh_entry_put() keep=
 s
-should solve all the cases.
-
-> > +static void
-> > +sparx5_rr_fib_entry_offload_mark(struct sparx5 *sparx5,
-> > +                              struct sparx5_rr_fib_entry *fib_entry)
-> > +{
-> > +     bool offload, trap, offload_failed;
-> > +
-> > +     offload_failed =3D fib_entry->offload_fail;
-> > +     offload =3D !fib_entry->offload_fail;
-> > +     trap =3D !fib_entry->offload_fail && fib_entry->trap;
-> > +
-> > +     sparx5_rr_fib_info_offload_mark(sparx5, &fib_entry->fi, offload, =
-trap,
-> > +                                     offload_failed);
-> > +}
+> the entry alive while a nexthop still references it.
 >=20
-> [Severity: Medium]
-> Do the flags published here match what hardware actually does with the
-> traffic?
->=20
-> sparx5_rr_fib_entry_hw_apply() sets fib_entry->trap =3D false for
-> SPARX5_RR_FIB_TYPE_UNICAST and then, both for directly connected subnets
-> and for gateway nexthops with an unresolved neighbour MAC, installs an LP=
-M
-> ARP entry with eth_zero_addr(mac) - which the file header documents as
-> "If the DMAC written to HW is all zero, the chip will trap the frame".
->=20
-> So "ip route add 10.0.0.0/24 via 10.1.1.1 dev br0.10" reaches
-> sparx5_rr_fib_entry_offload_mark() with offload_fail =3D=3D false and
-> trap =3D=3D false, and fib_alias_hw_flags_set() publishes RTM_F_OFFLOAD w=
-ith
-> RTM_F_TRAP clear, while every packet is punted to the CPU.  Per the commi=
-t
-> message that is all gateway routes at this point in the series, since MAC
-> resolution only arrives with the next patch.
->=20
-> Going the other way, LOCAL/PROHIBIT/UNREACHABLE set trap =3D true while
-> offload_fail stays false, so those routes are reported as offloaded and
-> trapped at the same time.  mlxsw keeps the two mutually exclusive:
->=20
-> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:mlxsw_sp_fib4_entry=
-_hw_flags_set() {
->         ...
->         fri.offload =3D should_offload;
->         fri.trap =3D !should_offload;
->         fri.offload_failed =3D false;
->         ...
-> }
->=20
-> The per-nexthop state that would answer this is already tracked in
-> sparx5_rr_nexthop_egress_derive():
+> The only other consumer derives "resolved" purely from the MAC being
+> non-zero and ignores entry->connected:
 >=20
 >         nh->trapped =3D !nh_neigh || is_zero_ether_addr(nh_neigh->hwaddr)=
 ;
 >=20
-> but it is never consulted by the flag computation.  Could nh->trapped fee=
+>         if (nh_neigh) {
+>                 memcpy(mac, nh_neigh->hwaddr, ETH_ALEN);
+>=20
+> On ordinary route churn, sparx5_rr_entry_nexthop_group_update() builds an=
 d
-> the reported trap flag?
+> programs the new group before releasing the old one:
 >=20
-
-No, they do not match, and yes it can. Both directions are as you describe:=
- a
-gateway route with an unresolved neighbour is reported offloaded while ever=
-y frame
-is trapped, and LOCAL/PROHIBIT/UNREACHABLE are reported as offloaded and tr=
-apped
-simultaneously. nh->trapped is only ever read at one place today, as an
-optimisation to skip a redundant hardware write:
-
-        if (nh->trapped && !entry_connected)
-                return;
-
-so it never reaches the flags. I will fix the offload flags.
-
-
-> [ ... ]
->=20
-> > +static int
-> > +sparx5_rr_fib_entry_update_arp_entry(struct sparx5 *sparx5,
-> > +                                  struct sparx5_rr_fib_entry *fib_entr=
-y,
-> > +                                  unsigned char mac[ETH_ALEN], u16 evm=
-id)
-> > +{
-> > +     struct net_device *pdev =3D sparx5->router->port_dev;
-> > +     struct vcap_control *vctrl =3D sparx5->vcap_ctrl;
-> > +     u32 vrule_id =3D fib_entry->hw_route.vrule_id;
-> > +     struct vcap_rule *vrule;
-> > +     u32 mac_msb, mac_lsb;
-> > +     int err;
-> > +
-> > +     sparx5_rr_split_mac(mac, 32, &mac_msb, &mac_lsb);
-> > +
-> > +     vrule =3D vcap_get_rule(vctrl, vrule_id);
-> > +     if (IS_ERR(vrule)) {
-> > +             fib_entry->hw_route.vrule_id_valid =3D false;
-> > +             return PTR_ERR(vrule);
-> > +     }
->=20
-> [Severity: Medium]
-> Is it safe to clear vrule_id_valid on any vcap_get_rule() failure?  The
-> lookup can fail on allocation while the rule is still programmed:
->=20
-> drivers/net/ethernet/microchip/vcap/vcap_api.c:vcap_decode_rule() {
+>         /* Prepare new group in SW representation */
+>         new_nh_grp =3D sparx5_rr_nexthop_group_create(sparx5, fib_entry);
 >         ...
->         ri =3D vcap_dup_rule(elem, elem->state =3D=3D VCAP_RS_DISABLED);
->         if (IS_ERR(ri))
->                 return ERR_CAST(ri);
+>         err =3D sparx5_rr_fib_entry_hw_apply(sparx5, fib_entry);
 >         ...
-> }
+>         sparx5_rr_nexthop_group_put(sparx5, old_nh_grp);
 >=20
-> After that, sparx5_rr_fib_entry_destroy() skips vcap_del_rule() because
-> vrule_id_valid is false, so does the LPM rule stay in the TCAM matching
-> the prefix with a stale action?
+> so sparx5_rr_nexthop_neigh_init() re-attaches to the surviving entry and
+> sparx5_rr_nexthop_egress_derive() then clears nh->trapped and installs th=
+e
+> dead MAC.  Does that leave traffic forwarded to a host that no longer
+> exists instead of trapped, with no path back to trapping since the kernel
+> never sees the traffic?
 >=20
-> Related: this function reads fib_entry->hw_route.vrule_id without ever
-> checking hw_route.vrule_id_valid, so a later update can
-> vcap_get_rule()/vcap_mod_rule() an id that vcap_alloc_rule() has since
-> handed to a different route's (or a neighbour host route's) rule.
+> This also seems to differ from the commit message wording "mark linked
+> nexthops as unresolved so traffic traps to the CPU".
 >=20
 
-This is correct, I will check vrule_id_valid, and stop clearing it on error=
-.
+No, it should not. In v3 I will only commit an address when told it is vali=
+d.
+And sparx5_rr_nexthop_egress_derive() no longer treats a non-zero hwaddr as
+proof of resolution, not emits an address when it has decided the nexthop i=
+s
+trapped.
 
 > > +
-> > +     switch (vrule->actionset) {
-> > +     case VCAP_AFS_ARP_ENTRY:
->=20
-> [ ... ]
->=20
-> > +     case VCAP_AFS_ARP_PTR:
-> > +             /* Convert arp_ptr to arp_entry */
-> > +             err =3D sparx5_rr_lpm_arp_entry_create(sparx5,
-> > +                                                  &fib_entry->key.addr=
-,
-> > +                                                  fib_entry->key.prefi=
-x_len,
-> > +                                                  mac, evmid,
-> > +                                                  &fib_entry->hw_route=
-);
-> > +             if (err)
-> > +                     goto free_rule;
+> > +out_mutex:
+> > +     mutex_unlock(&sparx5->router->lock);
+> > +out:
+> > +     neigh_release(n);
+> > +     kfree(net_work);
+> > +}
 > > +
-> > +             sparx5_rr_nh_grp_arp_tbl_grp_clear(sparx5, fib_entry->nh_=
-grp);
-> > +             err =3D vcap_del_rule(vctrl, pdev, vrule_id);
-> > +             goto free_rule;
->=20
-> [Severity: Medium]
-> Should the ARP_PTR rule be deleted before its ARP table entries are
-> released?  sparx5_rr_nh_grp_arp_tbl_grp_clear() disables the entries and
-> returns the offsets to router->arp_tbl_mask while the ARP_PTR rule is
-> still installed, so hardware can keep matching it and dereferencing slots
-> that are disabled or already handed to another route.  The replacement
-> inline rule is already installed at this point, so deleting the old rule
-> first looks safe.
->=20
-> If vcap_del_rule() fails, does that inconsistency become permanent?
->=20
-
-Yes to both. I will reorder these for v3.
-
-> [ ... ]
->=20
-> > +static int sparx5_rr_lpm_arp_ptr_create(struct sparx5 *sparx5,
-> > +                                     struct sparx5_iaddr *addr,
-> > +                                     u32 prefix_len, u32 arp_offset_ad=
-dr,
-> > +                                     u8 ecmp_size,
-> > +                                     struct sparx5_rr_hw_route *hw_rou=
-te)
-> > +{
->=20
-> [ ... ]
->=20
-> > +     err |=3D vcap_rule_add_action_u32(rule, VCAP_AF_ECMP_CNT, ecmp_si=
-ze - 1);
->=20
-> [Severity: High]
-> Is ecmp_size validated against the width of this action field anywhere?
-> VCAP_AF_ECMP_CNT is four bits:
->=20
-> drivers/net/ethernet/microchip/sparx5/sparx5_vcap_ag_api.c {
->         [VCAP_AF_ECMP_CNT] =3D {
->                 .type =3D VCAP_FIELD_U32,
->                 .offset =3D 14,
->                 .width =3D 4,
->         },
-> }
->=20
-> (same width in lan969x_vcap_ag_api.c, documented as W4 in vcap_ag_api.h),
-> and neither vcap_rule_add_action() nor the encoder range checks the value=
-.
->=20
-> With 17 accumulated nexthops, ECMP_CNT =3D 16 & 0xF =3D 0 and hardware us=
-es a
-> single ARP entry for a 17 member group.  With the u8 count wrap described
-> above, ecmp_size is 0 here, so ECMP_CNT gets (0 - 1) truncated to 0xF and
-> hardware forwards using 16 ARP table slots that this group never
-> initialised.
->=20
-
-It was not validated anywhere, no. Both of the scenarios are prevented in v=
-3 by
-the nexthop group bounded added for your earlier comment, since ecmp_size i=
-s now
-confined to 1..16.
-
-> [ ... ]
->=20
-> > +static void sparx5_rr_fib_entry_destroy(struct sparx5 *sparx5,
-> > +                                     struct sparx5_rr_fib_entry *fib_e=
-ntry)
-> > +{
-> > +     struct net_device *pdev =3D sparx5->router->port_dev;
-> > +     struct vcap_control *vctrl =3D sparx5->vcap_ctrl;
-> > +
-> > +     list_del(&fib_entry->fib_node);
-> > +     sparx5_rr_fib_entry_remove(sparx5, fib_entry);
-> > +     sparx5_rr_nexthop_group_put(sparx5, fib_entry->nh_grp);
-> > +     if (fib_entry->hw_route.vrule_id_valid)
-> > +             vcap_del_rule(vctrl, pdev, fib_entry->hw_route.vrule_id);
-> > +     sparx5_rr_fib_info_put(&fib_entry->fi);
-> > +     kfree(fib_entry);
-> >  }
->=20
-> [Severity: Medium]
-> Same ordering question as the ARP_PTR conversion above:
-> sparx5_rr_nexthop_group_put() disables the ARP entries and frees their
-> offsets in arp_tbl_mask before vcap_del_rule() removes the LPM rule that
-> still points at them.  Would deleting the VCAP rule first avoid the windo=
-w
-> where an installed ARP_PTR rule references reallocated slots?
->=20
-
-Yes, same issue and same fix. sparx5_rr_nexthop_group_put() reaches
-sparx5_rr_nh_grp_arp_tbl_grp_clear(), which both disables the entries and c=
-alls
-sparx5_rr_arp_tbl_grp_free() to release them in arp_tbl_mask, so the orderi=
-ng
-matters here exactly as it does in the conversion path.
-
-> [Severity: Low]
-> Should this path also clear the hardware status flags it published
-> earlier?  There is no fib_alias_hw_flags_set()/fib6_info_hw_flags_set()
-> call with offload=3Dfalse, trap=3Dfalse, offload_failed=3Dfalse, and
-> sparx5_rr_router_deinit() unregisters the FIB notifier and then calls
-> sparx5_rr_fib_flush().
->=20
-> After a driver unbind or module unload, do the routes that still exist in
-> init_net keep advertising RTM_F_OFFLOAD/RTM_F_TRAP in route dumps even
-> though their VCAP rules are gone?  mlxsw has
-> mlxsw_sp_fib4_entry_hw_flags_clear() and
-> mlxsw_sp_fib6_entry_hw_flags_clear() for this.
->=20
-
-
-They do, and this is fixed in v3 using the mlxsw helpers as reference.
-
-> [ ... ]
->=20
-> > @@ -660,6 +1982,443 @@ static bool sparx5_rr_dev_real_is_vlan_aware(str=
-uct net_device *dev)
-> > +static bool sparx5_rr_fib_info_should_offload(struct sparx5 *sparx5,
-> > +                                           struct sparx5_rr_fib_info *=
-fi)
-> > +{
-> > +     u32 tb_id =3D sparx5_rr_fib_info_tb_id(fi);
-> > +     u8 type =3D sparx5_rr_fib_info_type(fi);
-> > +     int nhs =3D sparx5_rr_fib_info_nhs(fi);
->=20
-> [ ... ]
->=20
-> > +     if (!(tb_id =3D=3D RT_TABLE_MAIN ||
-> > +           tb_id =3D=3D RT_TABLE_LOCAL))
-> > +             return false;
->=20
-> [ ... ]
->=20
-> > +     if (nhs > SPARX5_MAX_ECMP_SIZE)
-> > +             return false;
->=20
-> [ ... ]
->=20
-> > +static void sparx5_rr_fib4_event_work(struct work_struct *work)
-> > +{
-> > +     struct sparx5_fib_event_work *fib_work =3D
-> > +             container_of(work, struct sparx5_fib_event_work, work);
-> > +     struct sparx5 *sparx5 =3D fib_work->sparx5;
-> > +     int err;
-> > +
-> > +     mutex_lock(&sparx5->router->lock);
-> > +
-> > +     switch (fib_work->event) {
-> > +     case FIB_EVENT_ENTRY_REPLACE:
-> > +             err =3D sparx5_rr_fib_replace(sparx5, &fib_work->fi);
-> > +             if (err)
-> > +                     dev_warn(sparx5->dev, "FIB replace failed, ip=3D%=
-pI4l\n",
-> > +                              &fib_work->fi.fen4_info.dst);
->=20
-> [Severity: Low]
-> Should this be %pI4h rather than %pI4l?  fen4_info.dst is the host order
-> fib_trie key - this patch converts it explicitly elsewhere:
->=20
->         key->addr.ipv4 =3D cpu_to_be32(dst);
->=20
-> and
->=20
->         fri.dst =3D cpu_to_be32(fen4_info->dst);
->=20
-> lib/vsprintf.c's ip4_string() treats 'l' as unconditionally little endian
-> and 'h' as host order, so %pI4l prints the dotted quad reversed on big
-> endian builds.
->=20
-
-Correct on both counts, fixed for v3.
-
-> [ ... ]
->=20
-> > +static int sparx5_rr_fib6_append(struct sparx5 *sparx5,
-> > +                              struct sparx5_rr_fib_info *fi)
-> > +{
-> > +     struct sparx5_rr_fib_entry *fib_entry;
-> > +     struct sparx5_rr_fib_key key;
-> > +     int err =3D 0;
-> > +
-> > +     if (sparx5_rr_fib_info_should_ignore(fi))
-> > +             return 0;
-> > +
-> > +     sparx5_rr_fib_info_to_fib_key(fi, &key);
-> > +
-> > +     fib_entry =3D sparx5_rr_fib_entry_lookup(sparx5, &key);
-> > +     if (!fib_entry)
-> > +             return 0;
-> > +
-> > +     /* Are we adding new nexthops which can not be offloaded */
-> > +     if (!sparx5_rr_fib_info_should_offload(sparx5, fi)) {
-> > +             err =3D -EINVAL;
-> > +             goto out_fib_mark_offload;
-> > +     }
-> > +
-> > +     /* Append new rt_arr data to fen6_info rt data */
-> > +     err =3D sparx5_rr_fib_entry_fib_info_add(fib_entry, fi);
->=20
-> [Severity: High]
-> Can the merged nexthop count exceed SPARX5_MAX_ECMP_SIZE here?
-> sparx5_rr_fib_info_should_offload() is called on the event's fi, whose
-> nrt6 is nsiblings + 1 - that is 1 for a plain
-> "ip -6 route append <prefix> nexthop via <gw>" - so the
->=20
->         if (nhs > SPARX5_MAX_ECMP_SIZE)
->                 return false;
->=20
-> guard always passes, and sparx5_rr_fib_entry_fib6_info_add() then grows
-> f6i->nrt6 to old + new with no limit.
->=20
-> Would checking sparx5_rr_fib_info_nhs(&fib_entry->fi) + nhs against
-> SPARX5_MAX_ECMP_SIZE before the append be the right place to bound this?
->=20
-
-Yes it can, and this is the same defect as your counted_by comment on
-sparx5_rr_nexthop_group_info_init() and your ECMP_CNT comment on
-sparx5_rr_lpm_arp_ptr_create(). It is bounded in v3.
-
-
-> [ ... ]
->=20
-> > +/* Handle fib events, which manage fib_entries. Called in atomic conte=
-xt, with
-> > + * rcu_read_lock().
+> > +/* Handle neighbour update events. Used to manage neigh_entries. Calle=
+d in
+> > + * atomic context, with rcu_read_lock().
 > > + */
-> > +static int sparx5_rr_fib_event(struct notifier_block *nb, unsigned lon=
-g event,
-> > +                            void *ptr)
+> > +static int sparx5_rr_netevent_event(struct notifier_block *nb,
+> > +                                 unsigned long event, void *ptr)
 > > +{
 >=20
 > [ ... ]
 >=20
-> > +     if (event !=3D FIB_EVENT_ENTRY_REPLACE &&
-> > +         event !=3D FIB_EVENT_ENTRY_DEL &&
-> > +         event !=3D FIB_EVENT_ENTRY_APPEND)
-> > +             return NOTIFY_DONE;
+> > +             net_work =3D kzalloc_obj(*net_work, GFP_ATOMIC);
+> > +             if (!net_work)
+> > +                     return NOTIFY_BAD;
 >=20
-> [Severity: Medium]
-> Are FIB rule events intentionally left out?  With this filter,
-> FIB_EVENT_RULE_ADD never reaches the driver, and there is no l3mdev/VRF
-> check when a leg is admitted:
+> [Severity: Low]
+> Would NOTIFY_DONE be a better return value here?
 >=20
->         return netif_is_bridge_master(vlan_rdev) &&
->                br_vlan_enabled(vlan_rdev) &&
->                sparx5_port_dev_lower_find(vlan_rdev);
+> NETEVENT_NEIGH_UPDATE is delivered over the single system-wide atomic
+> chain:
 >=20
-> Meanwhile L3 unicast forwarding is enabled unconditionally per leg
-> (sparx5_rr_leg_hw_init() sets RLEG_IP4_UC_ENA/RLEG_IP6_UC_ENA, and
-> sparx5_rr_router_init() sets ANA_L3_ROUTING_CFG_L3_ENA_MODE plus
-> ANA_L3_L3_UC_ENA =3D ~0) while only RT_TABLE_MAIN/RT_TABLE_LOCAL routes a=
-re
-> programmed into the single LPM VCAP.
+> net/core/netevent.c:call_netevent_notifiers() {
+>         return atomic_notifier_call_chain(&netevent_notif_chain, val, v);
+> }
 >=20
-> So after "ip rule add ... lookup <table>", or with a leg enslaved to a
-> VRF, does the kernel use the policy/VRF table while hardware keeps
-> forwarding from the main table LPM?  mlxsw watches FIB rule events to
-> abort offload in exactly this situation.  If this is a known limitation,
-> could the commit message mention it?
+> and NOTIFY_BAD carries NOTIFY_STOP_MASK, which ends the traversal:
 >=20
-
-I think this is right. VRF is intentionally not implemented here, but
-more works needs to be done to properly refuse the configurations. A leg
-will not be admitted on an l3mdev slave, and moving an already offloaded le=
-g
-into an l3mdev is refused, since NETDEV_PRECHANGEUPPER can be vetoed on the=
- linking
-path.
-
-This is a similar strategy as with vlan_filtering transitions. Refuse a tra=
-nsition
-that would break a live offload, and simply do not offload a configuration =
-that was
-already in that state.
-
-
-> [ ... ]
->=20
-> > @@ -2813,10 +2813,15 @@ int sparx5_rr_router_init(struct sparx5 *sparx5=
-)
-> >                ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_SEL, sparx5,
-> >                ANA_ACL_VCAP_S2_MISC_CTRL);
-> >=20
-> > +     r->fib_nb.notifier_call =3D sparx5_rr_fib_event;
-> > +     err =3D register_fib_notifier(&init_net, &r->fib_nb, NULL, NULL);
-> > +     if (err)
-> > +             goto err_workqueue_destroy;
->=20
-> [Severity: Medium]
-> Is a dump-abort callback needed as the third argument here?  The initial
-> dump is delivered before the block joins the chain, and then:
->=20
-> net/core/fib_notifier.c:fib_dump_is_consistent() {
+> kernel/notifier.c:notifier_call_chain() {
 >         ...
->         atomic_notifier_chain_unregister(&fn_net->fib_chain, nb);
->         if (cb)
->                 cb(nb);
->         return false;
+>                 if (ret & NOTIFY_STOP_MASK)
+>                         break;
 >         ...
 > }
 >=20
-> With cb =3D=3D NULL, nothing discards the state built from an aborted pas=
-s:
-> entries created by sparx5_rr_fib4_event_work()/sparx5_rr_fib6_event_work(=
-)
-> stay in router->fib_ht/fib_list with live LPM VCAP rules and held
-> fib_info/fib6_info references.
->=20
-> If a route is deleted during the dump window, it can never get a
-> FIB_EVENT_ENTRY_DEL (the block was off the chain then, and the retried
-> dump no longer lists it), so does hardware keep forwarding or blackholing
-> that prefix until sparx5_rr_router_deinit()?
->=20
-> mlxsw passes mlxsw_sp_router_fib_dump_flush and netdevsim passes
-> nsim_fib_dump_inconsistent here.  Note that a callback would have to drai=
-n
-> the ordered workqueue first: sparx5_rr_fib_flush() takes no router->lock,
-> which is only safe today because it runs after destroy_workqueue().
->=20
-> >       r->inetaddr_nb.notifier_call =3D sparx5_rr_inetaddr_event;
-> >       err =3D register_inetaddr_notifier(&r->inetaddr_nb);
-> >       if (err)
-> > -             goto err_workqueue_destroy;
-> > +             goto err_unreg_fib_notifier;
+> So a driver-private GFP_ATOMIC failure suppresses the notification for
+> every listener registered after sparx5.  The same idiom exists in
+> mlxsw_sp_router_schedule_work(), so this is minor, but the failure looks
+> purely local and recoverable here.
 >=20
 
-Yes, I think this is needed. I will add a fib dump flush.
+Sure, I will change this to NOTIFY_DONE.
 
+> > +
+> > +             INIT_WORK(&net_work->work, sparx5_rr_neigh_event_work);
+> > +             net_work->sparx5 =3D router->sparx5;
+> > +             net_work->neigh =3D neigh_clone(n);
+> > +             net_work->event =3D event;
+> > +             sparx5_rr_schedule_work(router->sparx5, &net_work->work);
+> > +
+> > +             return NOTIFY_DONE;
+> > +     }
+> > +
+> > +     return NOTIFY_DONE;
+> > +};
+> > +
+>=20
 > [ ... ]
+>=20
+> > @@ -2855,6 +2972,8 @@ int sparx5_rr_router_init(struct sparx5 *sparx5)
+> >       unregister_inetaddr_notifier(&r->inetaddr_nb);
+> >  err_unreg_fib_notifier:
+> >       unregister_fib_notifier(&init_net, &r->fib_nb);
+> > +err_unreg_netevent_notifier:
+> > +     unregister_netevent_notifier(&r->netevent_nb);
+> >  err_workqueue_destroy:
+> >       destroy_workqueue(r->sparx5_router_owq);
+> >       sparx5_rr_fib_flush(sparx5);
+>=20
+> [Severity: Low]
+> While looking at this unwind path, the neighbour hashtable is destroyed
+> before the legs that own entries in it are flushed:
+>=20
+> err_neigh_ht_destroy:
+>         rhashtable_destroy(&r->neigh_ht);
+> err_blackhole_destroy:
+>         sparx5_rr_router_legs_flush(sparx5);
+>=20
+> sparx5_rr_router_leg_destroy() walks leg->neigh_list and reaches
+> rhashtable_remove_fast() via sparx5_rr_neigh_entry_destroy() ->
+> sparx5_rr_neigh_entry_remove(), on a table whose bucket table has already
+> been freed.  sparx5_rr_router_deinit() uses the opposite order (legs
+> flush, WARN_ON(nelems), then rhashtable_destroy).
+>=20
+> The dangerous state does not appear reachable today: neigh entries only
+> exist once a device leg exists, and legs are only created from the
+> inetaddr/inet6addr handlers registered after register_fib_notifier(),
+> which is the only registration here that realistically fails;
+> sparx5_rr_netdevice_event() always returns NOTIFY_OK, and the
+> inet6addr registrations only fail on duplicate registration.  This
+> ordering also comes from the earlier patch in the series that added the
+> FIB/nexthop/neighbour entry management, not from this patch, which only
+> adds one more producer of neigh entries.  Would it still be worth
+> matching the deinit order defensively?
+
+Yes, worth doing, and the reachability analysis matches mine. I will change
+this.
 
