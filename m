@@ -1,161 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8529538423A
-	for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 09:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06755413796;
+	Thu, 27 Aug 2026 09:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787821509; cv=none; b=mKcT3XQ1yNelzgDn1P27HYAziFuHT1T2mmrVndEeJQixYdtJMphaLY9je8D+beH8Meaw+i0Kf6U6wke6Fg0FHuYBPJ8+4RgYtsOl2b2hh+yAZrXhBkAqVg2ljqM/ukEUG3Wciqe5Nk0/zrfHEP6F6i/6xspyTmhN/0fmxFcVdAo=
+	t=1787822055; cv=none; b=Xqin2jivFgGGu4oktSDIXMi59jhJmv6ho7d9fqn4pu2JF/j1QRJzfTItcZOSOnIVLJVf6BuBxzkQosTCEviZqW3AoP+/crE+PKrLL2h+v+Q4lQ0xXxGHvkTElwD8QoTksM/ztG+1TZUZqvTXaGnFe/V1wtfvN8lXIpkAZNRL9gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787821509; c=relaxed/simple;
-	bh=46eODinQSHgqruwzsLbjLe5hKqtKjPlW6wrViGRehgU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=phqeNPLppMVyudmeIxxKq/1QDsQK0+Jr+wQJwLXsxonqelU+qWF7dL4LmGtY4OA6Rfp/kE9rpRpy5Ex3F5BoLbY2ur0VuSQ769itaMpsNBRAT5E68DH2AX15+8JmMVC0/XKpYWx3OuKJWk3O0Lj/h1kkMlNKtOKz6mq2HeI5W8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVrEGwOD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787822055; c=relaxed/simple;
+	bh=ygShvwL25ORUOGZrD/kl+DaX+7KSw/txXgQE5NFIDss=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XWoeTKbonGkaJ+m/FZPxBeX/WiJVulGN9Mzhtn583OxxTxXXXRPPlBtLuQLyApp22sYB0hp1Va6/fG3zulZEL6qG0t4vPJmpXDM3guMPPMOvt4eibhqv/7t9At9uSC6osL2DSqBXiC7TCelEP8Ijfyc4OR+AaJeTr3kiM+H/pPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=McG4Degj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4S5wj43s; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVrEGwOD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D3231F00A3A;
-	Thu, 27 Aug 2026 09:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787821503;
-	bh=R/wTq/5h6B601AMx0G4llf/VxEFalYv5uCBT4yZMs9g=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=EVrEGwODkaBeMvrzrWbxnKuvHTJe2XfMSbwd7+GA7eWJReKwPuPqsHZPw+/M2HMK+
-	 O7AnOVqe6fZY4YeRNPOrtVcn6wHWRw+vahFNpyuNY6TR0FesLTs6XvfjK5AhXAJE7A
-	 7OIU/maYtgJLhQ9iypsBA9gENQFEAsQcruhvId38PV4X+1nbFRC5CLoU/ybbKLM679
-	 6Wmmqipni/jQnjatDW/GwgiyM5Jmwtzsr7SzqL9r6LYY3pWivLPCnIyMfAMuDvSNtW
-	 YgYQ3LMFybpS9np1nyr51RPLG9iEmiVXOdtmca4999q/s3bJmvaxsElHmHa5YfhaGU
-	 icymwBBtw9+Pw==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id DFF761980054;
-	Thu, 27 Aug 2026 05:05:00 -0400 (EDT)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Thu, 27 Aug 2026 05:05:00 -0400
-X-ME-Sender: <xms:uv2PapEcsbDsHBA17pcE_TbDcGzVEuZUTQHUrMHdfI5tQlBFrO70Uw>
-    <xme:uv2PapJDTkoopXDikPKXxe7HaHkhusQRTVLHYEb3Zn-XdhbJ6sO9WnodAPY90w2St
-    TZ_FDokvrRu8nM0_giF5f1VVN4Ztyugkl2ROwOohf02fvULlyajnUU>
-X-ME-Proxy-Cause: dmFkZTGal3LTGiskcZm5hnhJnxJ1Ju61Op2mR279qugGtVZrD2mheMSsjh759w2vrJFl7k
-    3ogR/jxYpOyvp8DRx8rLBqX/CgmTwZbEMeyMpzmYsBtDUJMMlRYm/Ra3AZeeKUcvxua4p8
-    yP5IldUlpKR/lblJdOanc3D1+1uqgKOHrGePH9hDSIf+EMHizlAOXwdWCL81tOFIYcQTQW
-    CrHURoea925DMvaM6vueOkyFKpR6qkCkDH7C83iobGiTtHjQEZtHRbO1hhnYuBSj26NE8Y
-    zcL1mdN+K5SLXBk9vQ3wx8zbgEJmEvS1Rrpb3ha29CljSsl9rhpeUw5836NS2KPFCsU/g7
-    abfUuRn91fRw8DunTiHOcZU+6r+SRr2eqkLI7MukdkS60TaogXjGq4Uw7Ee6yUUIZH2y0w
-    7mIxFWMdMd44pMLWRvHcu56PHv25KD29ZIVwq9ZoQF1aI7BczAJlpjjP0IGbVpUy3J0ogS
-    sF1sniQlbDl/AFYfdWg6CDg4BhWt8pIuA3aVlzqua76GKOQQsNDdaadtz5rt23djd2ZFj7
-    lARXePJS1dOTYFzNB2Q+DZ2aiWj7j/XRxiXZHU62lXu/3RYMuAs+uV7LI4Rqf1SYu7x4BR
-    N/KWlD/GeWDX3kM2tZ3YUyCSAFsiZVKHQFCNwmXQddq04AAcQnq51etoyl/w
-X-ME-Proxy: <xmx:vP2Pau5h6HXffnZdDLDnCx8ir5SdbubSJzDjMpKxhU37SeXXjkZ_zQ>
-    <xmx:vP2PaknS_7QV4_U1v3F-i2CpXeBUq5cHUzn6noRT_a8d0irnw0UzCA>
-    <xmx:vP2PahUCFIuC28uR2sgFRtcWsLqu4sovUQGP91xexrJijC-fmUcmWg>
-    <xmx:vP2PalS0hfDXBU2w8JZqRB7d8Au8deXNsoAbzD9_7VqIEqBlQVNE_Q>
-    <xmx:vP2PamCN2GXtrMZd_Zx9Y0JlwqWeVRWgTlwM-JPOffEauk26RLUz7TV3>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 5E923F8007D; Thu, 27 Aug 2026 05:04:58 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="McG4Degj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4S5wj43s"
+Date: Thu, 27 Aug 2026 11:14:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1787822048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wIRTAYb/f87OGQFp9hzPxLVAzR1bU0s89QDuqkymiN4=;
+	b=McG4DegjIm+tgHEeO2YQhPG+jPlv2qsQKnBKWRTO3W6xVv5DrsrZTV29vd6enJEqF7nZUN
+	YlbBs5KEVw3m4q7ad2FWnOmBeMggS95R1p45j3DhCrtvLLqNVd7dmxuy076V6kFTs+tUmw
+	LdmNkMcr048vIQWNzHfseDoYzgxqbDyUmLtsZtQbmI63xUtD4jBLm2K433/tf2Z03kQe/N
+	2Jw5aSoTde4TOepkqXV6sqeM13jX0eh/ovHBQAPUYBby2Qwd+1pbH0qefYF4eYumjJYHnY
+	A4gT96BhZiYgNHvTS21aEnpOlO1OGs+LVZDMIPSwFmL/FUqPdRSoeggvpV6UEQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1787822048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wIRTAYb/f87OGQFp9hzPxLVAzR1bU0s89QDuqkymiN4=;
+	b=4S5wj43sVtOa82DV4M8LCJRHSK/Z/IrMe6iYBgER/mSFz5DpHkUpn+eE8bNUNU5ZVgcMcN
+	g3axnqYh8FeuoUAQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Petr Mladek <pmladek@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Kees Cook <kees@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tycho Andersen <tycho@tycho.pizza>
+Subject: Re: [PATCH v2 1/2] vsprintf: Don't leak pointers for %ps without
+ KALLSYMS enabled
+Message-ID: <20260827091407.yUpoFiuF@linutronix.de>
+References: <20260821152614.2202196-1-bigeasy@linutronix.de>
+ <20260821152614.2202196-2-bigeasy@linutronix.de>
+ <ao8MnDuF9nnI9KxG@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 27 Aug 2026 11:04:38 +0200
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Kevin Brodsky" <kevin.brodsky@arm.com>,
- "Ard Biesheuvel" <ardb+git@google.com>, linux-arm-kernel@lists.infradead.org
-Cc: "Will Deacon" <will@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Mark Rutland" <mark.rutland@arm.com>, "Ryan Roberts" <ryan.roberts@arm.com>,
- "Anshuman Khandual" <anshuman.khandual@arm.com>,
- "Liz Prucka" <lizprucka@google.com>, "Seth Jenkins" <sethjenkins@google.com>,
- "Kees Cook" <kees@kernel.org>, "Jann Horn" <jannh@google.com>,
- linux-hardening@vger.kernel.org
-Message-Id: <1c0299ab-9f5f-4c7b-826e-a0547f7863dd@app.fastmail.com>
-In-Reply-To: <c33d081b-7886-4db2-b1d9-61dc195844e5@arm.com>
-References: <20260805104042.1107678-2-ardb+git@google.com>
- <5a3b89a6-bc42-42c3-82e8-25d6f1a2c5d2@arm.com>
- <a277a83a-cc01-443d-be42-775ce0bc96dd@app.fastmail.com>
- <c33d081b-7886-4db2-b1d9-61dc195844e5@arm.com>
-Subject: Re: [RFC PATCH] arm64: mm: Map fixmap PTE tables r/o in the linear map
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ao8MnDuF9nnI9KxG@pathway.suse.cz>
 
+On 2026-08-26 17:56:12 [+0200], Petr Mladek wrote:
+> On Fri 2026-08-21 17:26:13, Sebastian Andrzej Siewior wrote:
+> > The "%ps" format modifier prints the name of the symbol which is more
+> > valuable in terms of debugging and does not leak the actual pointer.
+> >=20
+> > Without KALLSYMS it will leak the pointer which is not intended. The
+> > default policy for pointers is to print a hashed value and not to leak
+> > the actual pointer.
+> >=20
+> > For !KALLSYMS, print "(unknown)" for any symbol resolution. If hashed
+> > pointer are disabled print the bare number.
+> >=20
+> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > ---
+> >  lib/vsprintf.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index 2bc6ef483576c..fcb63f22b1997 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -1008,7 +1008,9 @@ char *symbol_string(char *buf, char *end, void *p=
+tr,
+> > =20
+> >  	return string_nocheck(buf, end, sym, spec);
+> >  #else
+> > -	return special_hex_number(buf, end, value, sizeof(void *));
+> > +	if (unlikely(no_hash_pointers))
+> > +		return special_hex_number(buf, end, value, sizeof(void *));
+> > +	return string_nocheck(buf, end, "(unknown)", spec);
+> >  #endif
+> >  }
+>=20
+> My understanding was that we were going to use
+>=20
+> 	return default_pointer(buf, end, ptr, spec);
+>=20
+> It would print the hashed pointer unless no_hash_pointers was set.
+> IMHO, it would make the handling of pointer values more consistent.
 
-On Thu, 27 Aug 2026, at 10:55, Kevin Brodsky wrote:
-> On 26/08/2026 11:07, Ard Biesheuvel wrote:
->>>> [...]
->>>>
->>>> +static int __init fixmap_remap_ro(void)
->>>> +{
->>>> +	return set_direct_map_ro((unsigned long)lm_alias(&bm_pte), NR_BM_PTE_TABLES);
->>> Should we not also remap bm_pmd and bm_pud?
->>>
->>> For that matter, do we need RW access via the linear map for any page
->>> annotated with __bss_pgtbl? I suppose that might be the case for
->>> kasan_early_shadow_* but I don't know enough about KASAN to tell for sure.
->>>
->> bm_pte[] is special because it is only ever written via the kernel mapping,
->> and never via the linear map. This is why it is being singled out in this
->> patch.
->
-> Right I see __set_fixmap(). This is a very special case of calling
-> __set_pte() on a pointer derived from a global (i.e. pointing to the
-> kernel image and not the LM) so it makes sense to treat it differently.
->
-> I do wonder whether there is that much value in protecting bm_pte while
-> all page tables in init_pg_dir (also at a fixed offset in the LM) remain
-> writeable though.
->
+The difference is that prints "Unknown" instead a value where a name was
+expected. Look at this, we have now:
 
-Yes, so those need to be taken care of as well.
+| # cat /proc/timer_list
+=E2=80=A6
+|  next_event:     89340000000 nsecs
+|  set_next_event: (unknown)
+|  shutdown:       (unknown)
+|  periodic:       (unknown)
+|  oneshot:        (unknown)
+|  oneshot stopped: (unknown)
+|  event_handler:  (unknown)
+=E2=80=A6
+| [    1.584810] ------------[ cut here ]------------
+| [    1.584811] WARNING: init/main.c:1572 at (unknown), CPU#2: swapper/0/1
+| [    1.584813] Modules linked in:
+| [    1.584816] CPU: 2 UID: 0 PID: 1 Comm: swapper/0 Not tainted 7.2.0+ #6=
+6 PREEMPT_{RT,(lazy)}
+| [    1.584819] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 2=
+026.05-2 08/06/2026
+| [    1.584820] RIP: 0010:(unknown)
+| [    1.584821] Code: 74 46 e8 89 7c 2d ff e8 14 e5 42 ff e8 df c8 09 ff e=
+8 ba 01 21 ff c7 05 04 2d 75 00 03 00 00 00 e8 8b bf 2b ff e8 56 1b 5c ff <=
+0f> 0b 48 8b 3d bd 41 4a 00 48 85 ff 74 33 e8 33 60 09 ff 85 c0 75
+| [    1.584823] RSP: 0018:ffffc90000023f30 EFLAGS: 00010292
+| [    1.584825] RAX: ffff8881f8d0b000 RBX: ffffffff8216a030 RCX: ffff88810=
+2cae000
+| [    1.584826] RDX: 0000000000000000 RSI: 0000000000000012 RDI: ffff88810=
+02a3480
+| [    1.584827] RBP: 0000000000000000 R08: ffff8881002a3480 R09: ffffea000=
+40b2b80
+| [    1.584828] R10: ffff888100041180 R11: ffffc90000023ec0 R12: ffffc9000=
+0023f58
+| [    1.584829] R13: 0000000000000000 R14: 0000000000000000 R15: 000000000=
+0000000
+| [    1.584833] FS:  0000000000000000(0000) GS:ffff8881f8d0b000(0000) knlG=
+S:0000000000000000
+| [    1.584834] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+| [    1.584835] CR2: 0000000000000000 CR3: 0000000002e46000 CR4: 000000000=
+03506f0
+| [    1.584837] Call Trace:
+| [    1.584846]  <TASK>
+| [    1.584847]  (unknown)
+| [    1.584847]  ? (unknown)
+| [    1.584849]  (unknown)
+| [    1.584850]  </TASK>
+| [    1.584850] ---[ end trace 0000000000000000 ]---
 
-> Either way all this is interesting for my series protecting page tables
-> with pkeys [1] - it seems that to protect the fixmap, the easiest option
-> would be to change the pkey of .pgtlb in both the kernel image and LM
-> (the former for bm_pte, and the latter for everything else).
->
-> [1] https://lore.kernel.org/all/20260818-kpkeys-v9-0-743ad31b2c8f@arm.com/
->
+while printing a hashed pointer instead would give you:
+| # cat /proc/timer_list
+=E2=80=A6
+| next_event:     66384000000 nsecs
+| set_next_event: 0000000095ee31e0
+| shutdown:       00000000c838001a
+| periodic:       000000002e3ab76e
+| oneshot:        0000000019def7ac
+| oneshot stopped: 00000000c838001a
+| event_handler:  0000000053e7a80d
+=E2=80=A6
+| [    1.498126] ------------[ cut here ]------------
+| [    1.498127] WARNING: init/main.c:1572 at 000000007224a107, CPU#6: swap=
+per/0/1
+| [    1.498131] Modules linked in:
+| [    1.498135] CPU: 6 UID: 0 PID: 1 Comm: swapper/0 Not tainted 7.2.0+ #6=
+8 PREEMPT_{RT,(lazy)}
+| [    1.498138] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 2=
+026.05-2 08/06/2026
+| [    1.498140] RIP: 0010:000000007224a107
+| [    1.498142] Code: 74 46 e8 e9 7c 2d ff e8 74 e5 42 ff e8 3f c9 09 ff e=
+8 1a 02 21 ff c7 05 64 2d 75 00 03 00 00 00 e8 eb bf 2b ff e8 b6 1b 5c ff <=
+0f> 0b 48 8b 3d 1d 42 4a 00 48 85 ff 74 33 e8 93 60 09 ff 85 c0 75
+| [    1.498145] RSP: 0018:ffffc90000023f30 EFLAGS: 00010292
+| [    1.498147] RAX: ffff8881f8e0b000 RBX: ffffffff82169fd0 RCX: ffff88810=
+2d9d2a0
+| [    1.498149] RDX: 0000000000000000 RSI: 000000000000001e RDI: ffff88810=
+02a3480
+| [    1.498150] RBP: 0000000000000000 R08: ffff8881002a3480 R09: ffffea000=
+40b6740
+| [    1.498152] R10: ffff888100041180 R11: ffffc90000023ec0 R12: ffffc9000=
+0023f58
+| [    1.498153] R13: 0000000000000000 R14: 0000000000000000 R15: 000000000=
+0000000
+| [    1.498159] FS:  0000000000000000(0000) GS:ffff8881f8e0b000(0000) knlG=
+S:0000000000000000
+| [    1.498161] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+| [    1.498162] CR2: 0000000000000000 CR3: 0000000002e46000 CR4: 000000000=
+03506f0
+| [    1.498164] Call Trace:
+| [    1.498171]  <TASK>
+| [    1.498172]  00000000cb9bc262
+| [    1.498174]  ? 00000000eb5021dd
+| [    1.498176]  00000000ed1a9938
+| [    1.498178]  </TASK>
+| [    1.498179] ---[ end trace 0000000000000000 ]---
 
-Thanks, I've been meaning to go through those but they are a bit overwhelming :-)
+isn't this confusing? There is no added value in printing some random
+numbers. Before this change you would also see "other" random values
+with address randomisation. It confuses at best imho.
 
->> Whether or not bm_pmd[] can be treated as a special case depends on the page
->> size: with 4k pages, the whole array covers a virtual region of 1G, which is
->> currently guaranteed to be shared only with the PCI I/O space (but we could
->> move that out). With 16k pages, it covers 64G, and so it is shared with the
->> vmemmap and other virtual mappings in the vmalloc region, and so the current
->> kernel mapping code expects to be able to write those entries.
->>
->> What we might do is generalize the logic that uses the fixmap to modify
->> pgd level entries in swapper_pg_dir, and use it for all modifications
->> at PMD level or higher if those tables are in .rodata
->>
->> But this is a bit more complicated than this change, so I decided to
->> present this as a separate change.
->
-> Definitely, this is orthogonal to this patch. I wonder what the
-> performance impact would be if we used the fixmap for setting all kernel
-> entries at PMD and above. It would be nice to keep that logic easily
-> togglable, because with the kpkeys approach I mentioned above we have a
-> (most likely) much cheaper way of protecting these page tables.
->
+> Best Regards,
+> Petr
 
-I'm currently experimenting with using __put_kernel_nofault() to update
-the descriptors at all levels (including PTE) and handling the fault
-using the fixmap approach. That way, all statically allocated page
-tables could move to .rodata (except bm_pte[]) and there should be no
-substantial performance impact.
-
->>>> +}
->>>> +late_initcall(fixmap_remap_ro);
->>> Is mark_rodata_ro() definitely too early to remap these pages RO?
->>>
->> No, we might just call this from there, afaict.
->
-> Sounds good, could we then use update_mapping_prot()? I suppose not as
-> that would require mapping bm_pte separately in map_mem()?
->
-
-Yeah, but perhaps we should do the latter anyway, so we can remap the
-region even if !can_set_direct_map().
-
+Sebastian
