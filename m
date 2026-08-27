@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCCA499F17
-	for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 18:00:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD60360EF9
+	for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 18:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787853651; cv=none; b=EUzlzJ51ARNltv9IzwESF6XrBChfN+Mk6/Zv8n/b5eDiCLT2tp4HAm9C5oReDND4w+Z+ze87u0ozEHPOlEH2gRXR2i4BxTuwX+1Jk2nLUuUfpwU5n7NgqGHnpUZ6qj0b5thmnXQCOLu6D3SrZfMGA5yZRRrm9vj6HUsbBpS7u4g=
+	t=1787854135; cv=none; b=A/aPndZ1w997IJcW7O6nyFHuYpoPtfM2+1TeyC3DbFbUnyWjdbrkrFFap1wW90UwVqm3rhxumwpIco/tdwdIQWv4Ozs3tLi0Fuolm36sAT2+2cs12crW6mShHMd5fc/KMxBAM4TftJjfD6AQBiljEEiujGHbotIs5La1/La+RYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787853651; c=relaxed/simple;
-	bh=TF4qf4DXkKgvVqOAfCfV+Rx1AK9CdAsWx9IfmjNYRFg=;
+	s=arc-20240116; t=1787854135; c=relaxed/simple;
+	bh=kODYJxg2XBntoxe6mQ6p7PAc+UGyZAFGFRo1+Viue6Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lih/qyu2c8qs7JDs87I2euZ9sUf+gITK27rChw9mmWd92xXlHGFQiHFKIHh8fYP4qBQ2YdRmKBhY6v/VTbq3irisi/HjSbanCvHcpQeoJ9PoY6j4mbCA+f2EaJ6JqH42Qk1K1ogwPfUHpEWsVsQFoGg5cCmfNuPZQZ4HnfJdi4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VEa7iod/; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=e7w1gY329dEoMI8o8tvuHWmYQkg3n0RYhvRpYQ38E5OIuZPny0/E2pwdOneX1YlBIlAz0DrKSRvGT351bGjwmVY/Kk6JSkfKfNb5Ja8AGpzl8j9rTV6FTQVLsILxaCvWcNJ3K02mPrnjDWKXHfJVUL+0t6YI6dQJTZ23cZdSQaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXyX6QAc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VEa7iod/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E93B1F000E9;
-	Thu, 27 Aug 2026 18:00:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXyX6QAc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2EAB1F000E9;
+	Thu, 27 Aug 2026 18:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787853649;
-	bh=34Dtmvt3zN7M94TyOsy1MTVXxuVNaJjKTkKoeC0jces=;
+	s=k20260515; t=1787854133;
+	bh=oSl5wDfcIkAZ8O8qomImZnYhRdtX0c0/b/+iSOoYbbQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=VEa7iod/ZA7FsZJcJpxmzSDKvjcN95PR5Qd4ONhy+hVd95mVVp1QMNtbgFnN7W7iU
-	 I6icjmCX6987khWYGgiV1XM9/c5RgKHfBh5g/ST1JN1iSzw7qpLwNNfyDWsx89XHaj
-	 DKHZEoGJ0Gc4xGGRvYbLIskyHsA9Y+GO2peSvKBIDZpzt5GPtEVovQ2cBuv34ofuGt
-	 AtjCDDHVI5rsOrIHMXawVh8rtL6BRhv/VPcXZOzE3cf5CNeOyxVGF7o6vtkuu3hlVX
-	 6OsChegan7zURJI9Gy/2OdBv028AOv0S7VLqdq67Ze8OZsRQ792wZ7qBXsqN3gXj+P
-	 1q/uz0r3i8bkw==
-Message-ID: <f082aff3-ec63-48fa-94c5-159ca0c5a33e@kernel.org>
-Date: Thu, 27 Aug 2026 20:00:40 +0200
+	b=cXyX6QAc2K4hCCa6m0zAE3YE+kol844hbwpydqer4TYoxKiPxU9IgtmzJzyCj+b6Q
+	 HbZTJJirRawJp6wgO+QFl2O14dCAoQuGY8J5x15vAraWVlo5V1zIEToDQoMvHfTqfF
+	 d+bO0MJLxRa/Ek6qVt6J+6z1fa+c06GVGlL+9vE99Bvi+eDwvRd6kwxT0POwAhGNAf
+	 ED3biHX6G4Js7XuAL7Expnqsn3eqs9QIJhSf8DYmnz+lVOHdCOgsAa4x/xyB4UcIZe
+	 KRQJJPfq+mQnHzMuh0PBCy45zrAFbWhn1Wr0kD+add/DyPLajZyBIyobOu/Vpw368x
+	 gHi8Emr0IpY/Q==
+Message-ID: <1dc8739e-4eb6-4a71-9534-e03a15afd620@kernel.org>
+Date: Thu, 27 Aug 2026 20:08:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v9 01/25] mm: Introduce kpkeys
+Subject: Re: [PATCH RFC v9 13/25] mm: kpkeys: Introduce early page table
+ allocator
 To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Andy Lutomirski <luto@kernel.org>, Catalin Marinas
@@ -57,7 +58,7 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
  Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
 References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
- <20260818-kpkeys-v9-1-743ad31b2c8f@arm.com>
+ <20260818-kpkeys-v9-13-743ad31b2c8f@arm.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -104,157 +105,36 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260818-kpkeys-v9-1-743ad31b2c8f@arm.com>
+In-Reply-To: <20260818-kpkeys-v9-13-743ad31b2c8f@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/18/26 16:08, Kevin Brodsky wrote:
-> kpkeys is a simple framework to enable the use of protection keys
-> (pkeys) to harden the kernel itself. This patch introduces the basic
-> API in <linux/kpkeys.h>: a couple of functions to enter/leave a
-> kpkeys context and macros to define guard objects.
+> The kpkeys_hardened_pgtables feature aims to protect all page table
+> pages (PTPs) by mapping them with a privileged pkey. This is primarily
+> handled by kpkeys_pgtable_alloc(), called from pagetable_alloc().
+> However, this does not cover PTPs allocated early, before the
+> buddy allocator is available. These PTPs are allocated by architecture
+> code, either 1. from static pools or 2. using the memblock allocator,
+> and should also be protected.
 > 
-> kpkeys introduces a new concept on top of pkeys: the kpkeys context.
-> Each context is associated with a set of permissions for the pkeys
-> managed by the kpkeys framework. kpkeys_enter_context(ctx) sets
-> those permissions according to ctx, and returns the original kpkeys
-> state (typically the arch-specific pkeys register) that is later
-> restored by calling kpkeys_leave_context(). To start with, only
-> KPKEYS_CTX_DEFAULT is available, which is meant to grant RW access
-> to KPKEYS_PKEY_DEFAULT (i.e. all memory since this is the only
-> available pkey for now).
-> 
-> The underlying representation of each kpkeys context is entirely
-> architecture-specific. Support for kpkeys must be explicitly
-> indicated by selecting ARCH_HAS_KPKEYS and defining the following
-> functions in <asm/kpkeys.h>:
-> 
-> * arch_kpkeys_enter_context()
-> * arch_kpkeys_leave_context()
-> * arch_supports_kpkeys()
-> 
-> Additionally, <asm/kpkeys_types.h> must define struct arch_kpkeys_state,
-> which typically provides storage for the pkeys register.
-> 
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> ---
->  include/linux/kpkeys.h       | 104 +++++++++++++++++++++++++++++++++++++++++++
->  include/linux/kpkeys_types.h |  25 +++++++++++
->  mm/Kconfig                   |   2 +
->  3 files changed, 131 insertions(+)
-> 
-> diff --git a/include/linux/kpkeys.h b/include/linux/kpkeys.h
-> new file mode 100644
-> index 000000000000..eac522f55214
-> --- /dev/null
-> +++ b/include/linux/kpkeys.h
-> @@ -0,0 +1,104 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef _LINUX_KPKEYS_H
-> +#define _LINUX_KPKEYS_H
-> +
-> +#include <linux/bug.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/kpkeys_types.h>
-> +
-> +/**
-> + * KPKEYS_GUARD_NOOP() - define a guard type that does nothing
-> + * @name: the name of the guard type
-> + *
-> + * Define a guard type that does nothing, useful to match a real guard type
-> + * that is defined under an #ifdef.
-> + */
-> +#define KPKEYS_GUARD_NOOP(name)						\
-> +	__DEFINE_CLASS_IS_CONDITIONAL(name, false);			\
-> +	DEFINE_CLASS(name, bool, (void)_T, false, void);		\
-> +	static inline void *class_##name##_lock_ptr(bool *_T)		\
-> +	{ return _T; }
-> +
-> +#ifdef CONFIG_ARCH_HAS_KPKEYS
-> +
-> +#include <asm/kpkeys.h>
-> +
-> +/**
-> + * KPKEYS_GUARD_COND() - define a guard type that conditionally switches to
-> + *                       a given kpkeys context
-> + * @name: the name of the guard type
-> + * @ctx: the kpkeys context to switch to
-> + * @cond: an expression that is evaluated as condition
-> + *
-> + * Define a guard type that switches to @ctx if @cond evaluates to true,
-> + * and does nothing otherwise.
-> + */
-> +#define KPKEYS_GUARD_COND(name, ctx, cond)				\
-> +	__DEFINE_CLASS_IS_CONDITIONAL(name, false);			\
-> +	DEFINE_CLASS(name, struct kpkeys_state,				\
-> +		     kpkeys_leave_context(&_T),				\
-> +		     (cond) ? kpkeys_enter_context(ctx) :		\
-> +			      (struct kpkeys_state) {}, void);		\
-> +	static inline							\
-> +	void *class_##name##_lock_ptr(struct kpkeys_state *_T)		\
-> +	{ return _T; }
-> +
-> +/**
-> + * KPKEYS_GUARD() - define a guard type that switches to a given kpkeys context
-> + *                  if kpkeys are supported
-> + * @name: the name of the guard type
-> + * @ctx: the kpkeys context to switch to
-> + *
-> + * Define a guard type that switches to @ctx if the system supports kpkeys.
-> + */
-> +#define KPKEYS_GUARD(name, ctx)						\
-> +	KPKEYS_GUARD_COND(name, ctx, kpkeys_supported())
-> +
-> +/**
-> + * kpkeys_enter_context() - enter a kpkeys context
-> + * @ctx: the context to switch to
-> + *
-> + * Enters the specified kpkeys context. @ctx must be a compile-time constant.
-> + *
-> + * Return: state to be passed to kpkeys_leave_context().
-> + */
-> +static __always_inline
-> +struct kpkeys_state kpkeys_enter_context(enum kpkeys_ctx ctx)
-> +{
-> +	BUILD_BUG_ON_MSG(!__builtin_constant_p(ctx),
-> +			 "kpkeys_enter_context() only takes constant values");
-> +	BUILD_BUG_ON_MSG(ctx < 0 || ctx >= KPKEYS_CTX_COUNT,
-> +			 "Invalid value passed to kpkeys_enter_context()");
-> +
-> +	return arch_kpkeys_enter_context(ctx);
-> +}
-> +
-> +/**
-> + * kpkeys_leave_context() - leave a kpkeys context
-> + * @state: state returned by kpkeys_enter_context()
-> + *
-> + * Restores the state saved when entering a kpkeys context. If no context was
-> + * entered, this function does nothing.
-> + */
-> +static __always_inline
-> +void kpkeys_leave_context(const struct kpkeys_state *state)
-> +{
-> +	if (state->entered_context)
-> +		arch_kpkeys_leave_context(state);
-state->entered_context is a common code variable, but it's not set by
-commoncode. Is there a reason?
+> This patch addresses the second category: PTPs allocated via memblock.
+> Such PTPs are notably used to create the linear map. Protecting them as
+> soon as they are allocated would require modifying the linear map while
+> it is being created, which seems at best difficult. Instead, a
+> simple allocator is introduced, obtaining pages from memblock and
+> keeping track of all allocated ranges to set their pkey once it is
+> safe to do so. PTPs allocated at that stage are not freed, so there
+> is no need to manage a free list.
 
-IOW, should arch_kpkeys_enter_context() only return the arch parts, and
-entered_context would be set in common code?
+I'm think of ways to avoid remembering these ranges. I guess we get called that
+early that we don't even have a ptdesc where we could just link the pages.
 
-Also, should entering bail out if the context was already entered.
+If only page tables would be linked in some datastructure where we could find
+them all ... ;)
 
-Last but not least, when would we expect to call kpkeys_leave_context() but the
-context was not entered?
-
-If this is really arch-specific stuff, probably it should go entirely into arch
-doe. If this is common code stuff, likely it should be maintained entirely in
-common code.
-
-
-Overall this looks much cleaner to me compared to what I reviewed the last time
-(was that v8? I don't remember :D )
-
+... why can't we just scan the page table hierarchy to find all page tables that
+need protection?
 
 -- 
 Cheers,
