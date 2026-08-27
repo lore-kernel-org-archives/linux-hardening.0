@@ -1,326 +1,222 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4F13D75CF;
-	Thu, 27 Aug 2026 22:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787870255; cv=none; b=c6tOntqneh7xj6CjORsvo1VNxVjyT7IBoiEBUYFp6oqTVDTCWhW6yq770N2+SlGRysxGsdch4XmsHMXqfECOk8Ln5gXLmmUxBPbmp2SVwYDmi3wiKc+b6SvIPfljCgvNsDDCPR4Q31qH8OMnVIgPnyO+tW3zgy3jot53mClepLo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787870255; c=relaxed/simple;
-	bh=p1DhIwgHkyC/+qU0441ubEQ/B51A67fFmS+Yo1sEkvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dmuLIixoiu/CJd9gCiEFbedLOi59+IMzZtcUumRrCiBOLLiaMfSP7+HS3rIyXihiRQeY6LX2OfcGs4fqk+hDEctqej5RbOdYSpk/8CuIpm2XVMiMBJ2OxNj4eJBW0CBPYkEtr9WPO2IlbA/0QI1ptNAds8vPvY7XZK3JsKbmmRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=djBle8Sv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mRScJFwk; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55813D7D88;
+	Thu, 27 Aug 2026 22:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787870276; cv=fail; b=RpYG0taGK2cpbOaT13ON8NLowDcLivZxdXI4ke0XesRqdGJif23qJtJ7Q0CEbowOLSqyXWs49KRSJj83JkX4eUxG4g0aJxsWMBMcCUcp3MoApM5ZPXlaLVExvx2x58fYU1A45uNX9oljX69CRxTvuB3TqDVaxN+wENfQWf3pH2Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787870276; c=relaxed/simple;
+	bh=ta/Ts5Q/q33HQg5+aWHpibtWgyn42w9ol/dr0MWmHx8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=j4ZjAgPKPVYPWJMyVQRGlF9Ox2V/L96gEoCvQJe3uzzK48zKzy5GtUwG33u9Vq/LmClcjJG6HeTeUFpZ6mdC5voV+2SK/NHb14/4IDukQrhIVjHBvziYGUhtHPXwoh4LOTNOpmuTn5eBTps7SJ4cmOL71qavzHVCsqgIKrrhEJA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ze/NULIN; arc=fail smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="djBle8Sv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mRScJFwk"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id EA44D7A0253;
-	Thu, 27 Aug 2026 18:37:22 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Thu, 27 Aug 2026 18:37:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1787870242;
-	 x=1787956642; bh=dakfc/rmFKMGOT0sMdXXsPc2Gkm9QF/BBftWQyxnpIU=; b=
-	djBle8SvoXu41Ghwlm6OQf4Hkvy0vWpWs1Aa+aCsmtebjPJPIJIeXOa21CPKSfKl
-	x/CY3PnKrIMWztN4AVzlXuRpbPsJ/KzIV47xST0kpqHZwhcyQsBuWX1HF9htgd80
-	7Ip+0e3Bux6JmIfyBbTLZXstoCQ8TJnQHswcjZzOMF9/ukE8gkyn9W0JMxlgCpsJ
-	ehRsvFZlP0JvSrNDAr8948Ql9Lwyhn/Gra2RTI+VDdM8DhVkO6kiJbbKWYVyH0r+
-	rokP22c9tDLrLOd4obOV/Sjd9cs8UgfzAMe2mJd3pGW2onruy4/YOv/PeJyh966K
-	w9hSjJvqAfr31iNO029KKA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787870242; x=
-	1787956642; bh=dakfc/rmFKMGOT0sMdXXsPc2Gkm9QF/BBftWQyxnpIU=; b=m
-	RScJFwkczWwS31ubqh11Rm11AjNnnCsMk7px6v3+twIKv4ZZsLB0EVr3utk1twiA
-	D1bQyor+2kiyGnbiHgxtTChVjxXKCsQmu3/7jIUHezELHeIyE/ajJ3hEUnNfFalM
-	2qdDDId+k1MXtZycSn1BKjOqizHaCE+S8ZvbIYXlW5sJjWg5DxjkecIpbxT03iVF
-	kYi0haqQrJ8q5gQ2rv04XK6qCyscJ6EFW+sBI/xY59XpcWR1pd41nmA9Z7UoYjF7
-	12HFS+NhDFQqsqwNundLYAu3PyrArM9qUUguBQk8N9AGDr17vGDqEkHyuwyDN2y6
-	toWZpUJQ5BxuO/0BVqcxw==
-X-ME-Sender: <xms:IryQaihglGVpnSWYGBPRP5t2c31iC4atrRiNOkZHMIFrKgNGaM7iZQ>
-    <xme:IryQagqcEDEHciIn6Gx8nG3p2f3QDdPQAklL2eWr68c_pU0RqnT1TzprOMSXoLjOn
-    TcX7xSmtOv1RkH-yvoCMxs1G-u2SN0UWI2iFqTNDppokw_U8-tTUZI>
-X-ME-Received: <xmr:IryQahf-syTDgtCz30uoQaxlNAzktC8dZlWg1Q5V5AlcT4mXEHnmmT2fXStIeQ>
-X-ME-Proxy-Cause: dmFkZTE58lQ9dphN4MDlYdxE/mBrD74TsRzGaXwdp/mC+QURr2jErIhK8xN+DJ5mAHdH1q
-    N5lP9sc0SixyzfuB1e9SzrYXb7AeJmUkqTpdP2KdUEFJNH7ZB0MSdOA6ZwxvUh8lqezwdb
-    mMUWIxxS9971jzVcbBmkAT3ve8ogkX5rex0HYgoG2Mchg0aNuxeg8D/m3K8z5Bde2cJAhp
-    4rkK8ccZQHH2jTJ3qdYMAwH95UAiBKLW1BKyOtuzuh+Cdrs9haHEvmHPlnTwY9xs1HLxCr
-    7bcLTc4AjrHj8H8qvO7Fbz4MmgZOLEEf5cgApDG5EbPbm6Joo0OCxBMTmyVWgnPRxD2fAh
-    J+sCgvFLKrnhHE7J0DHheDmY3HuKR/vUkWlhCFkkSEWkCVGhLzCTYwE8xc5gNPqAesU2P7
-    6bvYnmzLDmM2xIiQwO/jX6B4IFlsijS09/yn+gyfccmTFxSWIJPy+YJYdwspdFZr3xti/F
-    v5crdVYPCXA8r6vnjkp/ZGtzyUOPfgF8jJ6TA/wCpF+ILb6/p57i7Ld1xEB+ivGPWTptUm
-    ZbcoQwHBrSDltLU14Y3iztb1DvZsQo9zhRyeMEMxyUmun5lySkj3v7rITyxBy6aBv2Zb79
-    7iPzA59v7AF3VAQDnGNyTK5CwUO4sF1r3N5aiYa2zw0e09BApdp9GRCWSjNA
-X-ME-Proxy: <xmx:IryQajemR1i9Q7EmNB7Xq_iga2drRLv3RpVKTRyjJgO7WwMHfsjFqQ>
-    <xmx:IryQanfncuxnKjBGfRmWQVyMW5Gz8watk5qTA4g4jriEQUIvORpW_Q>
-    <xmx:IryQapr4JGAQAELSTmAUTYT8PjKVBKvvTRt4nGDghaU7qdlsbm8QHg>
-    <xmx:IryQanyA7uvxCcN29YX4xy50UnFraw2U1jdeXoRKTX51ACVU399s3A>
-    <xmx:IryQapdCU73ZaYl-u3aS-_1-mN7f0LPhyzUv6X6MrJUeTZegqBKeHnxj>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Aug 2026 18:37:19 -0400 (EDT)
-Date: Thu, 27 Aug 2026 16:37:17 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: <mhonap@nvidia.com>
-Cc: <jgg@ziepe.ca>, <ankita@nvidia.com>, <jic23@kernel.org>,
- <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
- <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
- <dave@stgolabs.net>, <alison.schofield@intel.com>,
- <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
- <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
- <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
- <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
- <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
- <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
- alex@shazbot.org
-Subject: Re: [PATCH v4 12/27] vfio/pci: Let a provider exclude a BAR
- sub-range from mmap
-Message-ID: <20260827163717.6b9c1752@shazbot.org>
-In-Reply-To: <20260813093631.2288172-13-mhonap@nvidia.com>
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
-	<20260813093631.2288172-13-mhonap@nvidia.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ze/NULIN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787870272; x=1819406272;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ta/Ts5Q/q33HQg5+aWHpibtWgyn42w9ol/dr0MWmHx8=;
+  b=Ze/NULIN8yMcW8Qf0kxitfNk5CFQ7xjHr+lGJKAFHzo5bLs+EoZE6MEX
+   evweS63R8YHN24iC/ig8DxJpVQhGm41mqb1GEocmXTK3T1dCl9WdNGDYu
+   Uwksx21x//ltMa1LIPBWt6roNhPJYERNUMvyP6uOhf6yAKRkDAS5pqf/x
+   4WrrZDf+/n/WWX75gKiX/crl9+KRLVHTDPsQvDm9YY5Zg7NfF4XOeMjWL
+   wGXIuR4y/CCiu4nPAfCXrMQYPkmNnZAt1S7pBmYq5GVS0+/UdN3aRHi39
+   zrOG+/QbRAyMWsMrTi4VZizez/tYnL6cIeE/yOCVujuB4ISkv7laHHy0w
+   Q==;
+X-CSE-ConnectionGUID: 9IU3kdfGQayMZx3dApSDVQ==
+X-CSE-MsgGUID: XYrkwFBDRpqfX7F3J7Um0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11888"; a="92239297"
+X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
+   d="scan'208";a="92239297"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 15:37:49 -0700
+X-CSE-ConnectionGUID: AsjKIJR6QJCi9+x/zUIbRQ==
+X-CSE-MsgGUID: ruxL5Le1SYeO2tdkCHFZGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
+   d="scan'208";a="297898802"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 15:37:49 -0700
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Thu, 27 Aug 2026 15:37:47 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46 via Frontend Transport; Thu, 27 Aug 2026 15:37:47 -0700
+Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.66) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Thu, 27 Aug 2026 15:37:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VaUTLMGoLUUzlevDRts683gizw7+BTOHkZ1bum2O4jwotrXhtARFfnA1peaFL2sTs6uDreDKXl4AgTxYyp7Cg0Nk2BGvrfx6qSz9kAx/mQ6liIBp2wcCm7u1P4ZqStyooH1EgXRkCyn25P2FsKzK2DDwbGrkiMRreyn5clifp/4CFIOD3q2KQAHsNOHnMoK6q/BK9vKfLh27vnLEy6p2agujkMpeFCdAZ9RhoM9kTGYji79njstEoOoJuRKB3nKppslADGA+Z1jmr2VHhLg2Ok6s5ttbmsFFHnw1Utn+ztxtsHM/axYxDzwYjXNqMG83uv+2SDuBfYmhK4IoZi+5pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ta/Ts5Q/q33HQg5+aWHpibtWgyn42w9ol/dr0MWmHx8=;
+ b=Jwza6fhK538Pwurgg00VFU7IA2o3mb1o9DQt2Cwp2qfPshMG6NDUe0v9TD83Phk40mAKHGRnw2mrklzFW3z/1FEj9wQyNIS9uC4d/hK1JMYLeFsmDbiv195F7GEiA1/4h6P3Qi3rIez11OCEWNTIAP1E12C2J2gyXKIxbQre/DJ/lSp6NxTCleKPGHUklLQ2eP+p2CQLrvJ6S+v/htpqlX5tXSZ9tHzEg9+lKxbBqnkMsLJ2keF/XCIiyEpW+UwUfhvSwkTf4w5k+K8jLxu7lkFV0MuUobgY4jg99CSt1QNQfYBQmfSpH/Vi1AK1Kj8wGil3Ko8dqtS8TOsTDvkY5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from PH7PR11MB6771.namprd11.prod.outlook.com (2603:10b6:510:1b5::20)
+ by SJ5PPF8EC896901.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::844) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.7; Thu, 27 Aug
+ 2026 22:37:45 +0000
+Received: from PH7PR11MB6771.namprd11.prod.outlook.com
+ ([fe80::effa:162e:c9c9:a1b4]) by PH7PR11MB6771.namprd11.prod.outlook.com
+ ([fe80::effa:162e:c9c9:a1b4%4]) with mapi id 15.21.0339.012; Thu, 27 Aug 2026
+ 22:37:45 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "broonie@kernel.org" <broonie@kernel.org>
+CC: "debug@rivosinc.com" <debug@rivosinc.com>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"bill.roberts@foss.arm.com" <bill.roberts@foss.arm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>
+Subject: Re: Shadow Stack Locking Semantics between arch's
+Thread-Topic: Shadow Stack Locking Semantics between arch's
+Thread-Index: AQHdNkfbtZ5ZknJJAkKNElU5hV4EXbayLRYAgAAGJgCAADXRgIAABBmAgAAPo4A=
+Date: Thu, 27 Aug 2026 22:37:45 +0000
+Message-ID: <f2819c4f1a86845b5b2f2b6f0e03f4c334e84eaa.camel@intel.com>
+References: <a1946d93-370e-4ca9-85d6-60b4a20ffd47@arm.com>
+	 <3bb672e0-7bc3-434f-904e-aa00394dd01f@foss.arm.com>
+	 <d20ccb74-69ed-45d7-a810-846904873588@sirena.org.uk>
+	 <01b0fe86d5700847f78b0e6f839119f54ac88b04.camel@intel.com>
+	 <apCvGct9U1yprAUE@sirena.org.uk>
+In-Reply-To: <apCvGct9U1yprAUE@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2.1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR11MB6771:EE_|SJ5PPF8EC896901:EE_
+x-ms-office365-filtering-correlation-id: 705be719-c20a-47de-6c67-08df048bd067
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|23010399003|366016|376014|38070700021|11063799006|4143699003|56012099006|10067099003|22082099003|18002099003;
+x-microsoft-antispam-message-info: lqECK5KCeBSuoIMnuHmThKa8roD3bRL7Gv2icmsSZg16ZodtfpWLv/tc/pVREfulV3fFziMfnXb9p6GesAcaLIHRA3Kee5nMrmFtpgCSsloAr65Ca/uF5S9pkZXqqCVHfAY1/3Imu9UjE7SEshujXJ8Dt1UEB4PahvGmG2L9gjoDbZ0XjiBopuehPY/PYqxttUlyEofOZhH2HJW5PYWpkWoF630GUvmpUV1jjpuIeMm/Ujev0pTlbI2fbYwbauWml3zOSWUbWAVpCJDYrS9I4sDQNfT6V8c+c+ZJ1js4NWSF2NL9vbZ/+GQyP4Rr1Y3hBDrCCJ8kXWbIvYpvXWG+Dq3lB9/RDLOQKEmqhf2cn4fm+UkHOgzfwYa1JJM6BaFqohnzDlRHe4AhF+8mD6m80nvbwvoxkxcgUdsK1hXTcmutw6vesnkvlO7obV7CZLXaNmJcthhuGT4rvM5r1+QqW0KY5zWkzS2xwxTEkUz/Kcny9uF4wQSE1VcIGtv0GunnmuvFzkWj03Fzr3gztoYIffzL0K12SoB+81xgu6aPyEwGt8gsHiZcHlxKLqTDHEE8ufSSYRmmU1TtEqkL24JIErPrnZm0Kgec2wIQTlN01gRT6Zj3JgsWhwPtq7/DR0KI1g/NgAx/mLFy90npNQtMdWX15mq/9q7B0RgMMnIrAKGE9w+F/zIbTdD0w/iouVJOYm/ivobgxl7EwjnO1W1bi3wOoN8FpjwoaPI7K3WdL04=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6771.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(376014)(38070700021)(11063799006)(4143699003)(56012099006)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?S2toQmpLeG02L2dnNHZhbnRVakJLamVDNlZCUlZlM1orY1h4QmFNS0psOGVK?=
+ =?utf-8?B?K1BlVWFUc3pGQ3Zra0paeWRtdTBiczdoU25zdzIyT1NBZCt4MjR6Y1ZMQU41?=
+ =?utf-8?B?NXpINVB3ZWtEWjcwRUJ5SzVndzZGYlJKMk1RelI3RG92SU9HUndUUjBBTzN5?=
+ =?utf-8?B?ZVBaY3V4Tyt5TmJUZjVrMEVGQUlKZjVpblR1YkJkemNHSTg3ajFQVVFnNTVM?=
+ =?utf-8?B?Q3grSTNLeitKSUdhcC9paUJVSkZSZjhQU3dadG51VUhOcGhKUi9OSVo0VDgx?=
+ =?utf-8?B?LzdVNXVoM0dBdEtMbW41QVVVa3JSVm9IemdzVmxvMG9MVHBwLzJqL0Q0Nk9v?=
+ =?utf-8?B?V2RYV1plWkhiNlpwRXBPZUs0MGhobWRlNDNZSit5U2hpQzR6YkFOQU1wTUt3?=
+ =?utf-8?B?Wjd4RE5KNkFHKy8rMllIM2phOGRDT2dNT2ZucEVwQW9paFVFUWNtemlJUitO?=
+ =?utf-8?B?K0dPSWg2RXBwNFNRL011aFBLZWVLUmwxUFM5UE11QVA1eVFoWGJIYVY3dHVC?=
+ =?utf-8?B?VkFTay9oZW0vVVJhbmZkeEdTc0VzbFYxMHQyYzMyenJSaGxnWW84S2ttTXF4?=
+ =?utf-8?B?QUhSV1VWcjZ0OFc5RDc0TWpLZ3k3bmlLcm52V3lpOURuaG9lZUkxSk8xM1Bz?=
+ =?utf-8?B?bG41akZSZElDUWJrOXhTUC9rcnR2eG56NFFWYmtSRlhSWGE2NTI3VnhLSHpC?=
+ =?utf-8?B?a3JDUUdINXlLaU5FajZodWlYWVVsT1lKbEU3VWdhV2Z1M1RJU1lVOTBZU3Nl?=
+ =?utf-8?B?cysvQ29KZTRNb1pzU2lKRUc4Q2pmTGtQZUM4MTRMRkd2ZkhwS0FwY1BZVzl2?=
+ =?utf-8?B?Q1FqeG5sakRZRGNTV0JhVmhJeXYweFg0TFVXMVhnMXF2b2Q5WFd5dkFNSHZw?=
+ =?utf-8?B?KzlSMVdJLzJBRVYzVTUyT0pyTEpVRjNmNHhFL2s5QkRpNzA4QmZGQzVvcldS?=
+ =?utf-8?B?SFZCUU1wRkhLYm1SWmtBRWlQWU9TYndxcWVTZXRCMlJQQVBZSVp5UWpnV2Vj?=
+ =?utf-8?B?UHNvT0RNSlc0blZIT2RhaUIwZFBkVnI1dmFHKzBwQlNFZ2VjK3d0dk1LWVd6?=
+ =?utf-8?B?S1JTckc5RTZRSEs4aDkyazlXM2lTMVV3a2NHYlgxTVp4dHZuM1RoVEN6NXJi?=
+ =?utf-8?B?ODhVdysxS29jZFZzV3Fuay9mZ0svQVluUzNQcnE4emJleFBXd3RaRFJaS0VY?=
+ =?utf-8?B?NmFOL1FFUURQWmZaQm9HRzFoRFdjemNHYXNGOStEZjRYTFBYbHJLRGlrdlJy?=
+ =?utf-8?B?ZDBJY1NWNnFBVXBHYWIyR25pN0hmR1pLR3BwYkhYcWd6cTRvbFNtamtIYVhI?=
+ =?utf-8?B?cXFrbEtFam1lTkpQVE1NMzRmWG9lYzlycTNNNmY1c1JFb0NHUXM4RTZEZmdn?=
+ =?utf-8?B?ME45ZUlmclRoaXZnRGdYSWJDU21mMjV3cGtKSEFCakpwZFB6N2pQKzRoNTV5?=
+ =?utf-8?B?RzVDcWgrU3ZJTGpLOENBY3JSdjZNUHY2TFJtaDBWODAwbmRidHJOUWlYUmFa?=
+ =?utf-8?B?VGlsT1R4V3NISnR2aTBJZElWc3dqOUlWMDA3ejU5THdEa21KaGN1RWtOTGY0?=
+ =?utf-8?B?elJrYXdmaVM3L21VeHp6SkkvOWNRbndvTUw0M1VvcDBMM0VUb01lcTNDZ3Mw?=
+ =?utf-8?B?TnlabjFoS3dZZkFtOFc3NEwyd0xVQXFTY2hhWGI1TnFqNWdXV3QybGY4UTlX?=
+ =?utf-8?B?VFc1UVdKUExEWjFBcUFXcEJXQkV4dDVjb3cwSnFsbEJ5UmVzU0hYUUJ3WkdI?=
+ =?utf-8?B?bmxyS2JLU2s4bzFrN3RIM095UENCOTU3ZHlPNElpRVRjWG9pYk0vU1dhT2oy?=
+ =?utf-8?B?cHpxUlRJMGIrMVhaR3oyc3ZBeFVrQlVka044S1FIY2V1MmZwaTJpaE92OTVy?=
+ =?utf-8?B?MEZVK2pRN29Cayszdnh6Wk9LcWpzdFBYVTJBYnhvR2diS2Y1SEpXZ1NtWHRQ?=
+ =?utf-8?B?TUt1YXhlcjNsZDhQZXhsQTFLb3BIaUgvR2NDRjRiWE1tUFlaNkQvYXFpZVFm?=
+ =?utf-8?B?S29JQzA1SnZZdkF6TmFrVmRVcXY2VW42cGJKNzlFVGk4c2lSUTlaQy9lZXVn?=
+ =?utf-8?B?WW5DOG9FN3pROGpWZTdvMkJITXFTdG9OclNDOXB6TWp1b2tmN1huODNQOFNk?=
+ =?utf-8?B?U2JtZ1ZjUlR6TUI5NURDNFVGaHJhVXoyczRsNFhGQVpLSkZ2KzdDWWxiaGVi?=
+ =?utf-8?B?VWV2MnRaT0Y2a0RqdEh6ODhzNGlnck9yV1d1VjQ1Zm43a20zSDJoN2lJY05R?=
+ =?utf-8?B?ZEZjaDVJN0RVa085OVkrS0FrWHlRQnBSelNhSit2VUtXbEw4VjNVMGJ2VHZj?=
+ =?utf-8?B?YUNBWFEzeWdVVnJtOEovNGM3U01BSUtDck9LU1dWTUU0M2JtaG5UTHhQcnJv?=
+ =?utf-8?Q?H5G3C+AC4/J69lbE=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0833CBF11ABE554EB635ABBB063DAC77@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Exchange-RoutingPolicyChecked: eyDrcZKcneA0XPTNkp8MNmLsDKVeCzaemBDjXO93gJ/OJC7UEeDNUExVz4L/AndyNrgJyHFLRBalmcBOiXjxTAZ5TVkamkDEL8M/U86dNn1Qqvb1VwiddWnNr7zmHLlYYMoljTnJn2/zqQjN950Zz7eU1wWdcIgVdeTMowaFJ6m9HdiND4aAsg0j644zWv+Iw3DfvIhtloHXEsDb/4MHOKiy/+YDti1nZ980Rr//qiw252JB0Ggl4ptAl6rdVTCwmqqimBDBJ0TUsgII2Y/z018XtAxPU03drK72RJk7BlWv2+6Ir6MgRmr3mps6TQ8weqDLAKzeCat51vkzAJqmLg==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6771.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 705be719-c20a-47de-6c67-08df048bd067
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2026 22:37:45.2325
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: D0J4Or4DdARmuZ8YWZdPzaicLR0vsdH6XMDHwkwV6jJi3XLZlpeRjPyAnsQuW1+GxO0aVDus7sni9A4xMZYEVSPzO3RRV+QzciouVgf0SD0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF8EC896901
+X-OriginatorOrg: intel.com
 
-On Thu, 13 Aug 2026 15:06:16 +0530
-<mhonap@nvidia.com> wrote:
-
-> From: Manish Honap <mhonap@nvidia.com>
-> 
-> Some devices expose registers in a BAR that must be reached only through
-> a trap, not a direct guest mapping. A CXL Type-2 device's HDM decoder
-> block is one: mapping it would let userspace reprogram the physical
-> decoder that governs host memory decode. Give a provider a way to mark a
-> BAR sub-range off-limits to mmap; it is advertised as a sparse-mmap
-> region and refused in the mmap path, while the provider's own region
-> still serves it.
-> 
-> Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> ---
->  drivers/vfio/pci/vfio_pci_core.c   | 72 ++++++++++++++++++++++++++++++
->  drivers/vfio/pci/vfio_pci_dmabuf.c | 13 ++++++
->  drivers/vfio/pci/vfio_pci_priv.h   | 13 ++++++
->  include/linux/vfio_pci_core.h      |  6 +++
->  4 files changed, 104 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index 0f9b5dfeea66..49dfbdaf3f05 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -1009,6 +1009,67 @@ static int msix_mmappable_cap(struct vfio_pci_core_device *vdev,
->  	return vfio_info_add_capability(caps, &header, sizeof(header));
->  }
->  
-> +/*
-> + * A provider can keep a BAR sub-range off mmap (for example a CXL device's
-> + * trapped HDM decoder block). Callers hold the resource so /dev/mem is already
-> + * blocked; this only governs the vfio mmap path.
-> + */
-> +void vfio_pci_core_set_mmap_exclude(struct vfio_pci_core_device *vdev, int bar,
-> +				    u64 start, u64 len)
-> +{
-> +	vdev->mmap_exclude_bar = bar;
-> +	vdev->mmap_exclude_start = start;
-> +	vdev->mmap_exclude_len = len;
-> +}
-> +EXPORT_SYMBOL_GPL(vfio_pci_core_set_mmap_exclude);
-
-If we're going to go to the trouble of creating vfio-pci-core
-infrastructure for handling excluded ranges, I'd rather see it handled
-more generically.  One excluded "mmap" range per device is limited,
-leaves MSI-X vector table existing as a separate implementation,
-doesn't accurately describe what it does since it's excluded for both
-mmap, read/write, and ioeventfds, and doesn't make use of the existing
-x_start/x_end infrastructure we already have in read/write paths.
-
-I think we should probably create a list of excluded ranges, each
-containing a BAR index, start, size, and flags.  The flags are
-necessary to manage mmap vs read vs write exclusions, where MSI-X only
-excludes read/write, but this feature wants to exclude them all.
-
-All existing use cases of msix_start/size would be migrated to this new
-interface.  Handling in vfio_pci_bar_rw() would also need to account
-for multiple excluded ranges per BAR (HDM exclusion adds that as a
-possibility), iterating for any access extending beyond the intersecting
-exclusion. mmap would generically fail any intersecting range with the
-mmap exclusion flag set and region info would iterate the same set of
-exclusions in generating the sparse mmap capability.
-
-This would also correct the behavior of the next patch that
-intersecting read/write accesses generate errors rather than fill reads
-with -1 and drop writes.  Thanks,
-
-Alex
-
-> +
-> +/* Advertise the BAR as mmappable minus the excluded sub-range. */
-> +static int vfio_pci_mmap_exclude_cap(struct vfio_pci_core_device *vdev,
-> +				     int index, struct vfio_info_cap *caps)
-> +{
-> +	u64 bar_len = pci_resource_len(vdev->pdev, index);
-> +	u64 excl_start = ALIGN_DOWN(vdev->mmap_exclude_start, PAGE_SIZE);
-> +	u64 excl_end = ALIGN(vdev->mmap_exclude_start + vdev->mmap_exclude_len,
-> +			     PAGE_SIZE);
-> +	struct vfio_region_info_cap_sparse_mmap *sparse;
-> +	int nr_areas = 0, i = 0, ret;
-> +	size_t size;
-> +
-> +	/*
-> +	 * mmap is page granular, so the mmappable areas must stop at the page
-> +	 * boundaries enclosing the excluded sub-range. The byte-granular
-> +	 * exclusion still governs the fault and read/write paths; only the
-> +	 * advertised mmap areas round out to whole pages.
-> +	 */
-> +	if (excl_start > 0)
-> +		nr_areas++;
-> +	if (excl_end < bar_len)
-> +		nr_areas++;
-> +
-> +	size = struct_size(sparse, areas, nr_areas);
-> +	sparse = kzalloc(size, GFP_KERNEL);
-> +	if (!sparse)
-> +		return -ENOMEM;
-> +
-> +	sparse->header.id = VFIO_REGION_INFO_CAP_SPARSE_MMAP;
-> +	sparse->header.version = 1;
-> +	sparse->nr_areas = nr_areas;
-> +
-> +	if (excl_start > 0) {
-> +		sparse->areas[i].offset = 0;
-> +		sparse->areas[i].size = excl_start;
-> +		i++;
-> +	}
-> +	if (excl_end < bar_len) {
-> +		sparse->areas[i].offset = excl_end;
-> +		sparse->areas[i].size = bar_len - excl_end;
-> +	}
-> +
-> +	ret = vfio_info_add_capability(caps, &sparse->header, size);
-> +	kfree(sparse);
-> +	return ret;
-> +}
-> +
->  int vfio_pci_core_register_dev_region(struct vfio_pci_core_device *vdev,
->  				      unsigned int type, unsigned int subtype,
->  				      const struct vfio_pci_regops *ops,
-> @@ -1157,6 +1218,13 @@ int vfio_pci_ioctl_get_region_info(struct vfio_device *core_vdev,
->  				if (ret)
->  					return ret;
->  			}
-> +			if (vdev->mmap_exclude_len &&
-> +			    info->index == vdev->mmap_exclude_bar) {
-> +				ret = vfio_pci_mmap_exclude_cap(vdev, info->index,
-> +								caps);
-> +				if (ret)
-> +					return ret;
-> +			}
->  		}
->  
->  		break;
-> @@ -1851,6 +1919,10 @@ int vfio_pci_core_mmap(struct vfio_device *core_vdev, struct vm_area_struct *vma
->  	if (req_start + req_len > phys_len)
->  		return -EINVAL;
->  
-> +	/* An excluded sub-range is reachable only through its trap, not mmap. */
-> +	if (vfio_pci_bar_is_excluded(vdev, index, req_start, req_len))
-> +		return -EINVAL;
-> +
->  	/*
->  	 * Ensure the BAR resource region is reserved for use.
->  	 */
-> diff --git a/drivers/vfio/pci/vfio_pci_dmabuf.c b/drivers/vfio/pci/vfio_pci_dmabuf.c
-> index c16f460c01d6..51983105d38b 100644
-> --- a/drivers/vfio/pci/vfio_pci_dmabuf.c
-> +++ b/drivers/vfio/pci/vfio_pci_dmabuf.c
-> @@ -177,11 +177,24 @@ int vfio_pci_core_get_dmabuf_phys(struct vfio_pci_core_device *vdev,
->  				  size_t nr_ranges)
->  {
->  	struct pci_dev *pdev = vdev->pdev;
-> +	unsigned int i;
->  
->  	*provider = pcim_p2pdma_provider(pdev, region_index);
->  	if (!*provider)
->  		return -EINVAL;
->  
-> +	/*
-> +	 * A provider (e.g. vfio-cxl) can exclude a BAR sub-range that must be
-> +	 * reached only through its trap. The mmap and read/write paths already
-> +	 * refuse it; reject a DMA-BUF export overlapping it too, so a device fd
-> +	 * holder cannot map the excluded registers to a peer and bypass the trap.
-> +	 */
-> +	for (i = 0; i < nr_ranges; i++)
-> +		if (vfio_pci_bar_is_excluded(vdev, region_index,
-> +					     dma_ranges[i].offset,
-> +					     dma_ranges[i].length))
-> +			return -EINVAL;
-> +
->  	return vfio_pci_core_fill_phys_vec(
->  		phys_vec, dma_ranges, nr_ranges,
->  		pci_resource_start(pdev, region_index),
-> diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
-> index fca9d0dfac90..902d17815ab6 100644
-> --- a/drivers/vfio/pci/vfio_pci_priv.h
-> +++ b/drivers/vfio/pci/vfio_pci_priv.h
-> @@ -44,6 +44,19 @@ ssize_t vfio_pci_config_rw_single(struct vfio_pci_core_device *vdev,
->  ssize_t vfio_pci_bar_rw(struct vfio_pci_core_device *vdev, char __user *buf,
->  			size_t count, loff_t *ppos, bool iswrite);
->  
-> +/*
-> + * A provider (e.g. vfio-cxl) can carve a sub-range out of a BAR that must be
-> + * reached only through its trap, never the direct BAR.  Returns true when
-> + * [start, start + len) on this BAR overlaps that excluded range.
-> + */
-> +static inline bool vfio_pci_bar_is_excluded(struct vfio_pci_core_device *vdev,
-> +					    int bar, u64 start, u64 len)
-> +{
-> +	return vdev->mmap_exclude_len && bar == vdev->mmap_exclude_bar &&
-> +	       start < vdev->mmap_exclude_start + vdev->mmap_exclude_len &&
-> +	       start + len > vdev->mmap_exclude_start;
-> +}
-> +
->  #ifdef CONFIG_VFIO_PCI_VGA
->  ssize_t vfio_pci_vga_rw(struct vfio_pci_core_device *vdev, char __user *buf,
->  			size_t count, loff_t *ppos, bool iswrite);
-> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-> index 117cd67995d8..43755b91880f 100644
-> --- a/include/linux/vfio_pci_core.h
-> +++ b/include/linux/vfio_pci_core.h
-> @@ -162,6 +162,10 @@ struct vfio_pci_core_device {
->  	struct notifier_block	nb;
->  	struct rw_semaphore	memory_lock;
->  	struct list_head	dmabufs;
-> +	/* BAR sub-range a provider keeps off mmap, reached only through a trap */
-> +	int			mmap_exclude_bar;
-> +	u64			mmap_exclude_start;
-> +	u64			mmap_exclude_len;
->  };
->  
->  enum vfio_pci_io_width {
-> @@ -176,6 +180,8 @@ int vfio_pci_core_register_dev_region(struct vfio_pci_core_device *vdev,
->  				      unsigned int type, unsigned int subtype,
->  				      const struct vfio_pci_regops *ops,
->  				      size_t size, u32 flags, void *data);
-> +void vfio_pci_core_set_mmap_exclude(struct vfio_pci_core_device *vdev, int bar,
-> +				    u64 start, u64 len);
->  void vfio_pci_core_close_device(struct vfio_device *core_vdev);
->  int vfio_pci_core_init_dev(struct vfio_device *core_vdev);
->  void vfio_pci_core_release_dev(struct vfio_device *core_vdev);
-
+T24gVGh1LCAyMDI2LTA4LTI3IGF0IDIyOjQxICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
+biBUaHUsIEF1ZyAyNywgMjAyNiBhdCAwOToyNzowNlBNICswMDAwLCBFZGdlY29tYmUsIFJpY2sg
+UCB3cm90ZToNCj4gPiBPbiBUaHUsIDIwMjYtMDgtMjcgYXQgMTk6MTQgKzAxMDAsIE1hcmsgQnJv
+d24gd3JvdGU6DQo+ID4gPiBPbiBUaHUsIEF1ZyAyNywgMjAyNiBhdCAxMjo1MjoyOFBNIC0wNTAw
+LCBCaWxsIFJvYmVydHMgd3JvdGU6DQo+IA0KPiA+ID4gPiBJIGFtIHByb3Bvc2luZyBhbmQgaGF2
+ZSBxdWVzdGlvbnMgb3ZlciB0aGUgZm9sbG93aW5nOg0KPiA+ID4gPiAxLiBXaGF0IHNob3VsZCB0
+aGUgYmVoYXZpb3IgYmUgaWYgeW91IGhhZCB3cml0ZSBsb2NrZWQgYW5kIGRpc2FibGUgdGhlDQo+
+ID4gPiA+IHNoYWRvdyBzdGFjaz8NCj4gPiA+ID4gwqAgLSBJIGNhbiBhcmd1ZSBib3RoIHdheXMg
+aGVyZSwgLUVQRVJNIG9yIHN1Y2Nlc3MuIEkgdGhpbmsgSSBhbmQgbW9zdCBhcmNoZXMNCj4gPiA+
+ID4gbGVhZCB0byBmYWlsdXJlLg0KPiANCj4gPiA+IEdpdmVuIHRoYXQgUklTQy1WIGRvZXNuJ3Qg
+c3VwcG9ydCBjb250cm9sIG9mIHdyaXRlcyBpdCdzIG1vb3QgdGhlcmUNCj4gPiA+IGF0IHRoZSBt
+aW51dGUsIGFuZCB4ODYgY3VycmVudGx5IHVzZXMgYXJjaF9wcmN0bCgpIHNvIHdpbGwgbmVlZCBh
+bg0KPiA+ID4gYWRkaXRpb25hbCBBUEksIGl0IHNlZW1zIHRoZSBwYXRoIG9mIGxlYXN0IHJlc2lz
+dGFuY2UgaXMgdG8gYWxsb3cgaXQuDQo+ID4gPiBUaGlzIGFsc28gYXZvaWRzIGxvY2tpbmcgd3Jp
+dGVzIChvciBwdXNoZXMsIGZvciBhcm02NCkgb24gZWZmZWN0aXZlbHkNCj4gPiA+IGFsc28gbG9j
+a2luZyBlbmFibGUgd2hpY2ggc2VlbXMgbmVhdGVyLg0KPiANCj4gPiBIbW0uIEkgY2FuJ3QgdGhp
+bmsgb2YgYSByZWFzb24gdG8gbG9jayB3cml0ZXMgYW5kIG5vdCBsb2NrIHNoYWRvdyBzdGFjayB0
+b28uDQo+ID4gR2l2ZW4gbGlrZWx5IG5vIG9uZSBpcyBkb2luZyB0aGlzLCBJIHdvbmRlciBpZiB3
+ZSBjb3VsZCBjaGFuZ2UgeDg2J3MgYmVoYXZpb3IgdG8NCj4gPiBtYXRjaCB0aGUgb3RoZXJzPw0K
+PiANCj4gPiBUaGUgQVBJIHdvdWxkIG1ha2VzIG1vcmUgc2Vuc2UgdG8gcHJldmVudCBkaXNhYmxp
+bmcgc2hhZG93IHN0YWNrIGlmIHdyaXRlcyB3ZXJlDQo+ID4gZW5hYmxlZC4gSXQgY291bGQgcmV0
+dXJuIGFuIEVJTlZBTCByZWdhcmRsZXNzIGlmIGl0IGlzIGxvY2tlZCBvciBub3Q/IElzIHRoYXQN
+Cj4gPiB0aGUgYXJtIGJlaGF2aW9yIChmb3JnZXR0aW5nIGFib3V0IGxvY2tlZCk/DQo+IA0KPiBh
+cm02NCBjdXJyZW50bHkgdHJlYXRzIGVhY2ggYml0IGluZGVwZW5kZW50bHkgZm9yIHNpbXBsaWNp
+dHkuICBUaGUgbWFpbg0KPiB1c2UgY2FzZSBJIHNlZSBmb3IgYWN0dWFsbHkgZG9pbmcgdGhhdCBp
+cyBmb3IgcHJldmVudGluZyBlbmFibGluZyB3cml0ZXMNCj4gb3IgcHVzaGVzLCB0aG91Z2ggaW4g
+cHJhY3RpY2UgSSdkIGV4cGVjdCBzb21ldGhpbmcgZG9pbmcgbG9ja3MgdG8ganVzdA0KPiBmdWxs
+eSBsb2NrIGV2ZXJ5dGhpbmcgYWZ0ZXIgaGF2aW5nIGVuYWJsZWQgdGhlIHNoYWRvdyBzdGFjay4N
+Cj4gDQoNCkxvY2tpbmcgd3JpdGVzIGFzIG9mZiBtYWtlcyBzZW5zZSB0byBtZS4gQnV0IGxvY2tp
+bmcgd3JpdGVzIG9uLCB3aGlsZSBsZWF2aW5nDQpzaGFkb3cgc3RhY2sgdW5sb2NrZWQuIEknbSBu
+b3Qgc3VyZSB3aHkgeW91IHdvdWxkIGRvIHRoYXQuIEkgdGhvdWdodCB0aGF0IHdhcw0KQmlsbCdz
+IHNjZW5hcmlvLg0KDQoNCj4gICBXZSBjYW4gY29tcG9zZQ0KPiB0aGUgZmVhdHVyZXMgZWFzaWx5
+IGVub3VnaCBzbyBpdCBzZWVtZWQgbW9zdCBzdHJhaWdodGZvcndhcmQgdG8ganVzdCBsZXQNCj4g
+dXNlcnNwYWNlIGRlY2lkZSB3aGF0IGl0IHdhbnRzLCBpdCBrZWVwcyB0aGUgaW1wbGVtZW50YXRp
+b24gc2ltcGxlci4NCj4gDQo+ID4gPiBJdCBoYXMgYmVlbiBvbiBteSBsaXN0IHRvIGxvb2sgYXQg
+dGhpcw0KPiA+ID4gcmVwaXRpdGlvbiBhdCBzb21lIHBvaW50LCBpdCBoYWQgYmVlbiBoZWxkIHVw
+IGJ5IHRoZSBjbG9uZTMoKSBzdHVmZiBidXQNCj4gPiA+IHRoYXQgc2VlbXMgdG8gaGF2ZSBkaWVk
+IGEgZGVhdGggZm9yIG5vdy4NCj4gDQo+ID4gT2g/IFdoYXQgd2FzIHRoZSBibG9ja2VyPw0KPiAN
+Cj4gQmFzaWNhbGx5IHRoZSBnbGliYyBwZW9wbGUgd2VyZW4ndCBjb252aW5jZWQgdGhleSdkIGV2
+ZXIgd2FudCB0byByZXVzZSBhDQo+IHNoYWRvdyBzdGFjayBhdCB3aGljaCBwb2ludCBoYXZpbmcg
+dGhlIGtlcm5lbCBmcmVlIGFuZCByZWFsbG9jYXRlIGVhY2ggdGltZQ0KPiBpcyBqdXN0IGFzIGVh
+c3kuICBJdCBzYXZlcyBoYXZpbmcgdG8gaGFuZGxlIGNvcm5lciBjYXNlcyB3aXRoIHRocmVhZHMg
+dGhhdA0KPiBkaWRuJ3QgZXhpdCBjbGVhbmx5Lg0KDQpJIHRob3VnaHQgaXQgd2FzIGFsc28gYmVj
+YXVzZSB0aGV5IHdhbnRlZCBmaW5lciBncmFpbmVkIGNvbnRyb2wgb2Ygc3RhY2sgc2l6ZXMNCnRv
+bz8gQnV0IHllYSwgaWYgbm8gbGliYyB3YW50cyBpdCwgaXQncyBhIGhhcmQgc2VsbC4NCg0K
