@@ -1,80 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C222F1FF4
-	for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 12:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB83E476CCD;
+	Thu, 27 Aug 2026 13:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787834079; cv=none; b=GIAeUW7PNMr7TYCNF2QaaG8lUAJFGbUsVUZj/2+HCNKcauKtET1KEdJ7eMTHjjgfjC9IMS6l6SECXD2dhpRYP85B+iHwwuR2+Qxqq+dhoQkIJ8ehJPygUoE8LkcrPY28mb6P4GPFZ+oYDdeqAgfLIZBdkDqurauB2F6URohCafs=
+	t=1787837134; cv=none; b=HhmOJR+vb/tNPHXscr+UApbTVtDAVAev6JVo3RmOrGbCM3EV8Hi5esDdIqkVKhrwOC+214qZp2CnSz6vBsHwURpVVo1hfObMEk8oef3PADfBJtr3sD3fGVamBHWdnlrcKRfajIHWRuRddYGbEE/dt/DMjjOPuRKjLoawn+CQ8WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787834079; c=relaxed/simple;
-	bh=aceFjlRhhVLZ90elGDabHBPqZJUEfYBPbWijqEROSyk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lnWPmx8GfEUzqz8kEFI745NjwFUCrRbttWKZTX7qKyLTSzWVVkm/I6fwOIsjbJy1eabHAv//MIuQ9BeCulS0nOAccGwv6KJQPQYccUvZZkuC+YRDCAsYxvVmCsR/GXE0NE20svcsIyEuWWUeoVmtRtP2el94VO8NqyLFCS2QMNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=dbZVvGlP; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1787837134; c=relaxed/simple;
+	bh=Bhg7JSisuGW0vSc6QK8z6aLaMXzSe/JxqXrV5j7guJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PJHqVDlsH+s9YKSQEyLN3oYrfqH76mn7fbrwPt8qKcPrzGrv7uk9QHGyK/cd9o+6ZraPeRzE8CnIXIB9vxT/+3gS1p2Zy5G8X/jst68k/iq7V5UHMv72SiujQO213Z3f9IVUfKSQtJudbOQUbXUOkWzo0KL717jISJv48Zpvaug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sITvsyFH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TqgolZg+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="dbZVvGlP"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42311169E;
-	Thu, 27 Aug 2026 05:34:33 -0700 (PDT)
-Received: from [10.43.16.29] (e126510-lin.lund.arm.com [10.43.16.29])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35A1A3F85F;
-	Thu, 27 Aug 2026 05:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1787834077; bh=aceFjlRhhVLZ90elGDabHBPqZJUEfYBPbWijqEROSyk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dbZVvGlPRVGbMOS9gpMYjRRCIrdm/QR6t04nNlV0cgrjLxA3CJUJiRs58GGu8Mq8c
-	 0YtvNrcJKGCOaIxn+JC43gVTyluTOGINgGl4oSHWKXmwNzKvd8GUBnu95X8PRRAOBp
-	 v3EndSvhaD48jivJgnVBYGGyqnGbxVAStJx05gUA=
-Message-ID: <e4e7b0d3-e982-4c42-8907-fcb04c7ac83c@arm.com>
-Date: Thu, 27 Aug 2026 14:34:28 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sITvsyFH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TqgolZg+"
+Date: Thu, 27 Aug 2026 15:25:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1787837118;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vpxPpFcIUXLpr1YWo5DMhI8Cj0ygkTCS3zMybRqUN1I=;
+	b=sITvsyFHEVYbjVig0X8wk6Zt5diIRvz0EMccuNLqTiEpQ9H9CuWL2IwgjeGTlSjd0MdNFK
+	boUQ9MtyMZS0hVDDQDuZgEf9zNMEPeRnuIb5pj13G6+5iySUQY75wYyOryj6IPuC0vzJuJ
+	6XPNWXxGiNuDur9iuCsPjGCLSuhtDtDfKoJJJjwJNMUDODgFOxyBmcnEZ4ZaEK4h60jNIs
+	Mu+s0qQqE3YX244nUVsLCl/cnyHYFcjiLamK1CR3vKi6zuoZFn4ORbWL1jikUG3QFqU1vF
+	r1+/0LoCYi9Ssg6e/Cko72HCqE+l136xiMkFvwGlJrNu4E9LnSNKF3DMgkqjRA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1787837118;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vpxPpFcIUXLpr1YWo5DMhI8Cj0ygkTCS3zMybRqUN1I=;
+	b=TqgolZg+C6B1DUSg4A6qBGqFJ5SlgvZxIEq8O7OOMx8SeiQ0SvcYNKgFGYevY9+wfLLVcC
+	jeMOaNuztg2FDhCw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Bill Wendling <morbo@google.com>
+Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Christian Brauner <brauner@kernel.org>, 
+	Aleksa Sarai <cyphar@cyphar.com>, Jan Kara <jack@suse.cz>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Nicolas Schier <nsc@kernel.org>, Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>, 
+	Douglas Anderson <dianders@chromium.org>, Anand Moon <linux.amoon@gmail.com>, 
+	Oleg Nesterov <oleg@redhat.com>, codemender-patching+linux@google.com, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/2] userns: Add KUnit test suite for uid_gid_map
+Message-ID: <20260827152113-4e14b134-4385-4e4c-b3ef-a45cb8b781e3@linutronix.de>
+References: <20260823125155.1136740-1-morbo@google.com>
+ <20260823125155.1136740-3-morbo@google.com>
+ <20260824080214-8b12767a-8b04-4344-b48a-cd2966ad36de@linutronix.de>
+ <CAGG=3QUCowcrBT-7ZUyOOrX5fjQtFSmRyqvnYkZX0tO9+MKp+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] arm64: mm: Map fixmap PTE tables r/o in the linear
- map
-To: Ard Biesheuvel <ardb@kernel.org>, Ard Biesheuvel <ardb+git@google.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
- Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
- linux-hardening@vger.kernel.org
-References: <20260805104042.1107678-2-ardb+git@google.com>
- <5a3b89a6-bc42-42c3-82e8-25d6f1a2c5d2@arm.com>
- <a277a83a-cc01-443d-be42-775ce0bc96dd@app.fastmail.com>
- <c33d081b-7886-4db2-b1d9-61dc195844e5@arm.com>
- <1c0299ab-9f5f-4c7b-826e-a0547f7863dd@app.fastmail.com>
- <aacacc48-4e20-423f-b1cd-d8593485bf9d@arm.com>
- <00b4326d-af1c-429d-9495-c65ed5ce184f@app.fastmail.com>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <00b4326d-af1c-429d-9495-c65ed5ce184f@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGG=3QUCowcrBT-7ZUyOOrX5fjQtFSmRyqvnYkZX0tO9+MKp+g@mail.gmail.com>
 
-On 27/08/2026 12:16, Ard Biesheuvel wrote:
->>> I'm currently experimenting with using __put_kernel_nofault() to update
->>> the descriptors at all levels (including PTE) and handling the fault
->>> using the fixmap approach. That way, all statically allocated page
->>> tables could move to .rodata (except bm_pte[]) and there should be no
->>> substantial performance impact.
->> Doesn't that still mean modifying a fixmap PTE every time we update
->> kernel page tables? That doesn't exactly sound cheap.
->>
-> Only the ones that were allocated statically, which cover the region
-> around the kernel image, and the special cases (fixmap, kasan). Everything
-> else is allocated dynamically, using memblock_alloc() if very early
-> during the boot.
+On Wed, Aug 26, 2026 at 01:40:03PM -0700, Bill Wendling wrote:
+> On Sun, Aug 23, 2026 at 11:13 PM Thomas Weißschuh
+> <thomas.weissschuh@linutronix.de> wrote:
+> >
+> > On Sun, Aug 23, 2026 at 12:51:48PM +0000, Bill Wendling wrote:
+> > > Add a KUnit test suite to verify the insertion and sorting of mappings
+> > > in struct uid_gid_map. This test suite validates both base extent
+> > > insertion (<= 5 mappings) and extended extent insertion (> 5 mappings,
+> > > which triggers the allocation of the forward and reverse pointers).
+> > >
+> > > This is especially useful for verifying that the __counted_by_ptr
+> > > attribute added to 'forward' and 'reverse' pointers works correctly
+> > > without causing any runtime bounds-checking panics or traps.
+> >
+> > AFAIU patch 1 is supposed to not change any behavior.
+> > You could move the unit test to the front to make that clearer
+> > and also validate it.
+> >
+> Patch 1 generates code to assert if a memory address outside of the
+> bounds of a pointer is accessed. So it does change the behavior.
 
-Ah yes I see! Then it does sound very reasonable, those page tables
-should rarely be written if at all. For kpkeys that would mean we would
-just need to map bm_pte with the special pkey to complete the
-protection, the rest being already RO or pkey-protected.
+It should not change the behavior observed by a well-behaved caller.
+And the test only simulates such a well-behaved caller.
 
-- Kevin
+> Should I still move the test case?
+
+I think so. At least if you resend the series anyways.
+Make sure to also run the test before your other patch is applied.
+
+> 
+> > > Assisted-by: Gemini Next
+> > > Change-Id: If0c2c197a35cd7429cf0d2d6e3b33f0d9f0be66c
+> >
+> > Change-Id should not be used upstream.
+> > See Documentation/dev-tools/checkpatch.rst.
+> >
+> I had removed it in v2. :-)
+
+Thanks!
+
+(...)
