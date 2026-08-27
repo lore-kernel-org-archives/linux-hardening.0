@@ -1,142 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4384E4963B3;
-	Thu, 27 Aug 2026 18:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0004BCABE
+	for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 18:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787854474; cv=none; b=n4msWeFIea9+L8gfGOm0YO/fxI8l+NdNC5H1u5cX8d5C/QEoupcJJ3FKbi8Bm2cuBNM8xw0+YhCLqJeihTDYNGo03mpJpGISR+mSWH/81DLQT3H1ytfxofxt81p6B7R3mlfySlHL0W4dP71RPRpwYpmm04F3SSgseX9U3O/eAto=
+	t=1787854623; cv=none; b=aSMNV1+mOHVw20Vidus8bA54K4lwGn81AlNXaDtGzyD9oYeidNc2LF8yoakgTow029qcuJLY0HrX7zwaK9yApzSrxGdXIJEBsBWxx4UFDaWTzzCyIttaruaUHkInauZ6POrZ8FFJHiVkpuMEDMlvJ7owyPLSl22gDSVZ5mRlG/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787854474; c=relaxed/simple;
-	bh=hD6SEZPfkQWz6Ef4vDrsGLc5w6nhOYqqTLzD0CH/ou8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sei5Of1sGnGlbhJe5Q4DTid9YurWfEkOXQp/MAVyzPIybDi8y0DH/I34u4SpaKFJNk4OVeLyPpWK3gslW7EnFRtNiiCtk3rKU7bMFsS58H1H4idG8ike9YpA8Je4+/WCq+bMeZnPjFPHKz2RSKfcxcXxgabHyZGtnZxwigwXxfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vt4ggbUe; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787854623; c=relaxed/simple;
+	bh=HVDMTfuDVLx7uVqlggo3542f1w8eox++6zGai1PxixQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iYvzWzfNwMphfyhSiC7ok0dMxtCMK5vuXdaFSWXfT0+sKiDwWcqv7XwMDSymtaGVdbautroQ1tGvEtS0DbvuMBg0OOetjXN3z4mqoiE/4Ss31Hgxzld5QFST+aX1lRm8+Shk+MqyoTK/xa4ApOMZr1bvlqwg/H6hF6ow8JrlzO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lfiHTGF6; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vt4ggbUe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2219B1F000E9;
-	Thu, 27 Aug 2026 18:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787854472;
-	bh=BLqeMPBBFLZB2XtBVAVDJSZch4XELRlb7qugskkfcMg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Vt4ggbUetYUKJ27EewJQTpgv3qkZTj9ozDFcDv8WygJ3eSNDoxxMV8fBzZLHs9PnA
-	 xxxnvaoZsrRyYqFAX4UZZ7TYobmBeZx/FTo05GSUCcrTcQLPNZ4Q7bH2F5eXgDrWRw
-	 EcaiZurE6opfx44t9QE5Rqn8848DD59WBL5kcMohlgZX5u+Aug4DF2lxQveaKOL0dc
-	 hxzUv8KwTUFyeWOo0IlkU+1ivw7s8z/EI6UmxNB1uUjkZsvnFefYrGbZttRPQN3kTb
-	 iYuXAjqHBj7mSV8h8Zz3m6/VaOOFGxNvypQ+ewn9m3+dCXKfZn19mHLfXQGCUTk2+X
-	 9S9YOem41Zxmw==
-Date: Thu, 27 Aug 2026 19:14:28 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bill Roberts <bill.roberts@foss.arm.com>
-Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	linux-arm-kernel@lists.infradead.org,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	linux-hardening@vger.kernel.org, linux-api@vger.kernel.org,
-	dave.hansen@linux.intel.com, rick.p.edgecombe@intel.com,
-	debug@rivosinc.com
-Subject: Re: Shadow Stack Locking Semantics between arch's
-Message-ID: <d20ccb74-69ed-45d7-a810-846904873588@sirena.org.uk>
-References: <a1946d93-370e-4ca9-85d6-60b4a20ffd47@arm.com>
- <3bb672e0-7bc3-434f-904e-aa00394dd01f@foss.arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lfiHTGF6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787854621; x=1819390621;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HVDMTfuDVLx7uVqlggo3542f1w8eox++6zGai1PxixQ=;
+  b=lfiHTGF6LBsl9phuf9QRQkcP2vqQ/9eORZopjlmafzqt2hrBMnxJYowB
+   c9lUgHfIWU4tjnHnhUKh9ucR50sZg/7V1/vY9RRpmpbeYfLG16BJTfqOK
+   6jdT+ZlloXbAejQSXghCtDOdZWicBiM9ngfKFEF/aijsmMbkVfZiSp0UE
+   mrUM9USU8RQgiwzjKzXWuSRT0XJzsEI4XdqSsACNZnpd7507Rv8UV6+Cj
+   mY4coOJx3yZkwvLP304Af5WVpo8nzd2X8C0IxRvXJwE1fOZtHYhkRYWVW
+   08e8kmOyE1wXrSPM9F0Hc+xZNGtAJc3Vooi/uqbm8VivF+oL7dqV/BXte
+   w==;
+X-CSE-ConnectionGUID: 8XXj2mSuTMCu23vJrvye7g==
+X-CSE-MsgGUID: eSFhQ33fRC+KfEBRKJBP1g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11888"; a="88286785"
+X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
+   d="scan'208";a="88286785"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 11:17:00 -0700
+X-CSE-ConnectionGUID: eQPmF8lcSF+SYQxndLuFCw==
+X-CSE-MsgGUID: uN+GdqPBSAqKphEQRxC5EQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
+   d="scan'208";a="272164505"
+Received: from smithj1-mobl2.amr.corp.intel.com (HELO [10.125.109.108]) ([10.125.109.108])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 11:16:59 -0700
+Message-ID: <9ab4d7b8-6be9-4219-a410-ed26ae25c47e@intel.com>
+Date: Thu, 27 Aug 2026 11:17:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Yf0EwlbjDAgbC5GQ"
-Content-Disposition: inline
-In-Reply-To: <3bb672e0-7bc3-434f-904e-aa00394dd01f@foss.arm.com>
-X-Cookie: Exercise caution in your daily affairs.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v9 13/25] mm: kpkeys: Introduce early page table
+ allocator
+To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "David Hildenbrand (Arm)" <david@kernel.org>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Kees Cook <kees@kernel.org>, Linu Cherian <linu.cherian@arm.com>,
+ Linus Walleij <linusw@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ Maxwell Bland <mbland@motorola.com>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
+ Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
+ <20260818-kpkeys-v9-13-743ad31b2c8f@arm.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20260818-kpkeys-v9-13-743ad31b2c8f@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 8/18/26 07:08, Kevin Brodsky wrote:
+> This patch addresses the second category: PTPs allocated via memblock.
+> Such PTPs are notably used to create the linear map. Protecting them as
+> soon as they are allocated would require modifying the linear map while
+> it is being created, which seems at best difficult. Instead, a
+> simple allocator is introduced, obtaining pages from memblock and
+> keeping track of all allocated ranges to set their pkey once it is
+> safe to do so.
 
---Yf0EwlbjDAgbC5GQ
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Aug 27, 2026 at 12:52:28PM -0500, Bill Roberts wrote:
-
-> I have noticed some semantic differences between the arches. Given this
-> example of current thread state, current thread locking state and the
-> new features requested, as shown below:
-
-> unsigned long locked =3D 0x2; // Kernel Task State -> LOCK WRITE
-> unsigned long cur_val =3D 0x3; // Kernel Task State -> WRITE and SHADOWST=
-ACK
-> ENABLED
-> unsigned long new_val =3D 0x0; // Userspace Feature Change via syscall ->
-> DISABLE
-
-> | x86-64 | risc-v | arm64 |
-> | ---------- | -------- | --------- |
-> | Works=A0 | Fails=A0 | Fails=A0 =A0 =A0|
-
-I would not have expected that combination to work at all with the
-prctl() (as opposed to arch_prctl()) interface TBH, if you've locked
-write on you shouldn't be able to disable it.  The reason that works on
-x86 at the minute is that for x86 you can only change one bit at a time
-so the new value when disabling is effectively 0x2, not 0x0.
-
-> I am proposing and have questions over the following:
-> 1. What should the behavior be if you had write locked and disable the
-> shadow stack?
-> =A0 - I can argue both ways here, -EPERM or success. I think I and most a=
-rches
-> lead to failure.
-
-Given that RISC-V doesn't support control of writes it's moot there
-at the minute, and x86 currently uses arch_prctl() so will need an
-additional API, it seems the path of least resistance is to allow it.
-This also avoids locking writes (or pushes, for arm64) on effectively
-also locking enable which seems neater.
-
-> 2. riscv should check that the low bit is set in locking not just that its
-> 0, it should be 1
-
-I think for ABI compatibility RISC-V will have to continue accepting 0
-as being equivalent to locking PR_SHADOW_STACK_ENABLE (or everything,
-but it only supports that one bit right now).
-
-> 3. riscv should return -EPERM vs -EINVAL
-
-If you mean for arch_lock_shadow_stack_status() I think -EINVAL is a
-sensible error code when the system or task does not support shadow
-stacks, I'm not sure we should return -EPERM at all.  On arm64 we
-support locking any bit, not just the ones that we currently know about.
-This is for future proofing, userspace can lock unknown flags.
-
-> If we can all agree on item 1, that locked bits check can be refactored a=
-nd
-> shared in one of
-> two ways:
-> 1. within prctl itself, before the arch hook is called, we would need
-> helpers per-arch to extract the thread features and lock bits
-> 2. as a helper where folks just pass the unsigned long of the bits to get
-> the result
-
-For me option 1 seems a bit nicer, and moves more of the implementation
-into generic code which is something we should really be doing in
-general with the shadow stack support - there's a lot of cross arch
-duplication at the minute.  It has been on my list to look at this
-repitition at some point, it had been held up by the clone3() stuff but
-that seems to have died a death for now.
-
---Yf0EwlbjDAgbC5GQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmqQfoMACgkQJNaLcl1U
-h9CgJQf/RXCfxOLBrpvqx7CGBBJ+UQyh71H64Yy4Tt40trYCcoJLxK6joixB/sT7
-g0fKTvETGH7NCIr9NJqTGfvOyZ7Bf4gL2ZL79NU5zTtmWdwB21cDG7tmvoXw2mUw
-9SMS62c1y4XEpniYBz7nYA24TgB4ZkpL0J8tOPGVkol0Gjf7ZTnd80JrsdWiYbNY
-pFjWClV4iJ/MEwq0Q7dsrRY/3399co/0ZlRMp2LeLEKGce4gGKgmBAJlSv1wQ/lw
-qhofehL0NPsqRgdVjXpdoUuRwZ9/odMAZav8deL4wvZJiEtppw7em8wuTszq8NxZ
-Ct5MM4+/dYaw4Oh2ftBDOMgYjAL/lA==
-=a0+n
------END PGP SIGNATURE-----
-
---Yf0EwlbjDAgbC5GQ--
+What makes setting a pkey on the memory "unsafe"? Is there something
+preventing just making access permissive during boot?
