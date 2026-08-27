@@ -1,155 +1,117 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670803B6341
-	for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 08:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787817825; cv=pass; b=IV8yUA11J5Bf0ApHtyqs1KDOQLzpGM9cME7QbHfJN55v3wx7dOXwQzxgSAFhvloS8NeE33FxyFaRLTyea48XFslJ4yCgmFcrPr5MmWxOxDuoXVOsYsYEfVd4SL2HRCbNRXAsCgOPDo/IIe7xfs2mLPj5WtuN7Fyrj9xHtyhzt8k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787817825; c=relaxed/simple;
-	bh=ZSKZBu97Em5+YUECjaLwhL0iYklURI341wTIUOciUCI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H4sd0Pvupcv4JI2F2O0B7s+x/RUCdfIyGFPLVR55yud7hEMcfxzqF4FCVHay9MuRd2C/+xD/qmI59k8458VUGnhBymKPt0E/7akGrt3hU+IUzyD9E+ydWz+YAashRM5H7owBcKgQu9s4UUDJGZhG5qKq1hVweuGOnMuZ6UrOXbY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJ9D1/Af; arc=pass smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C7B3FAE14
+	for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 08:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787820968; cv=none; b=XCafkTrZ5rrsOizCewwkH/CoZdqAQxXS+yslYpO7/ngFfMUmpGFPUyvsj/j65MKQVVUqFAR2O6uGH6GqI3K+WPeZyDGVRy1LljtzPoC0T1efs+TeImzDkmQileAUZqfXNtZ3ggXDfSdvl16wcfcu24KA786Wy0w/tk1GJWUNjb4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787820968; c=relaxed/simple;
+	bh=yry31P4khI+DRCBsZQHN2ujbaVqF7+s8d6cewX4+B1I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EVwpoddeIRhtYJksfsid5xEP/VRms2mE3dhg4iqHOPr4hCW/dAduoDkUMV1heuuYMVKB3US5mmPBtD/UXU2I+cRZwhuYpKl++jb3Z8HbXlRVu60OXkMNEqygngxRUqEt2jCX/gjs6NPiNsoJo1pzjybqaFcuwW5/+Wnk4KZ8mOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=eteg5u/K; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJ9D1/Af"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3a1e9f55e03so16934341fa.1
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 01:03:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787817821; cv=none;
-        d=google.com; s=arc-20260327;
-        b=eQZzZy9cfOCr5YR/jGE35qnsygP6LM1a+qhDnIAx2k1QCGL1khGuBvLM5YLeJ+UlaR
-         v6nI97hSaHlMoBSoSoA6DuNDFxUXxc8dkPSI4ndxYAGGLa6VBuzANGmUhVSPmtqN1f5P
-         5IYHnwidPB/5OJqjsRfDnORjnJ7VdijcZqHe/iVXQqMjDiAReRw6MnkylbNgTXp7lCbv
-         UWFbW8UQfJRxO7lss0V9IwJiafQSVElECONIzXdZI5w1ARhJrdfR0pQ1VF72+xXOD6kB
-         wvUTA1ENMqLoO2R21ZFRa5i9dX+0cDgPheNTpDiR8LQ3qoZKCk53MmpWdwNyPiEaHKRd
-         zhDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=7Vo45nXhGNQdl7kufGe+H7ZjNQpx3jh9ESIxnfqfCus=;
-        fh=ESAHl5TEl9C+AovRfJnFTjz3AyBQqwzq9MZ6kk3kpEg=;
-        b=DHGltH/8W5k5eUgRL6CgdYd5hqco+nZML376+RYUuXYz972Wj+y7BTwxFFvrPUnqpt
-         ngibfue2mDNq0x1OxM5HQnp62+kiZ5/Jv6ZsIHROTME81LCE4dG9jcKTLeoSOWfYct7b
-         4ElKPxoDMuhCVZrvG/LglzwXzjoar/oLaRGkNqRnBjWKmtryKbK1fXFl5nmDWQnMJ3Dy
-         PR2SywncIrMk8coBmOV5MqQxzWOiSfbRJ9/7n+tMVOAd24Icj/UCROlwPCWWNZgO4lkA
-         S1C28YTL356ywsk4yUCN+dHCDbGmi3fGoZ0fwXDpbIkfuah53FyqOXGjSrv2uXiOulUu
-         /ynA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787817821; x=1788422621; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=7Vo45nXhGNQdl7kufGe+H7ZjNQpx3jh9ESIxnfqfCus=;
-        b=HJ9D1/Afy8oEZI4jYhJ21qCXRp7RwIM8q6ATKeMI/JxXTwRSBV+07o8RQrIp26KJrL
-         LAkGfW+j65kW+Je7idyCaQFkFFlJVsiUFBe2rVpgnPdV44EHyOJsFbopK/P5fXnh3Xqo
-         J5Xw6XvgrWw9Dvj1goLhNuarH1NlC7kjeGzcfisSyVnrtGJOLlacl2KkbwrwkPHhOsdG
-         oGfk7erI2JixWfh59P47Y/osiobHqATDndsnQ0ZrUsCb3TUponV9QAYqJZgW03KRl4+i
-         uDMMFsRDPp+7DF7YVvwbhWZB2J7NDbPxYQIzFNbtl8qUXRh1nTNbbKVa7UEa9wthx+ZX
-         38oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787817821; x=1788422621;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7Vo45nXhGNQdl7kufGe+H7ZjNQpx3jh9ESIxnfqfCus=;
-        b=m7Hx++jLBBW//Goz4RyulVfnWcIlTRu10twgXXeIp16YfLFC87NaDApTLPh2+Hi85u
-         eW5bgeX+6fBHm4VRkFbXwYPYLTqJB2tLmExfVM9ciIyymUugch2oaPUpMzdgUXTxBJhi
-         OjXeh2E8jxB2kYGo2VXfLw3azvjy+GAkUS4h70KW0hF/S25v+dwyXmUm+Y/UQp8LJ3gR
-         WQL+pts7CPoTppuVoXV8Vg6l+Nk9qxVFDkdkyhOm+hWD5epbMptYP8S8FpR2/lOlxygs
-         Mtaq6iypUwmzMpLz2QVGIr6Dd70whgM+cFU4j1oQJ4Sj9kSwgkqMGfldpVbYTJxrp8HJ
-         1iog==
-X-Forwarded-Encrypted: i=1; AHgh+RqdLCJybh66HcJGxezdS5my7VSvpW/35KTEzcNWwFgNnkJTLoqlOI9wU52/2T6JW0rm8ihNiVq8PHmrudHRpcY=@vger.kernel.org
-X-Gm-Message-State: AFuF++krDiakr85ZcZVAIBYQsrcC+7gdW0+VfnXKOZ1QKsQ7yuhrgR8I
-	CNJtIgjmU5t8RD7DYpzTaefCBMcPgGQVbPb1KHjBkAgJvOHeJGYqfzVvmneMW34S5X0fK7+9A5S
-	soWW5dAa5dloeLMqEIXlMrHWo9VGF2FE=
-X-Gm-Gg: AR+sD11pupRMWFwzdWxCfdXzLcqz4Z2aXPQ7pDG0N6n8/w5yDd1q9L2f9itwhA1v5SI
-	VnLrnPyshySa7E1kS/JxbWMuHeDxQgcso12UGlPB9xo25Qre44b/SHNDjN/aQsZktFoIbq1k1ey
-	/SyLXVQL5axBn0/tmdoDUNDkVDJRtG7YdDfUd0t4ej33Zu9vQHShNohLHc49+OtR7ul1mp4dZVc
-	uv+PpwEZ+8OHDp+W6ln96QmIfzUIwoaOtZwjdEHYVGwh8uXNCmKFl7BmPlMbTXzcZ3XE6mKqmxN
-	UWDmhOPxZFwJyTcsJ8FKScLGeoizMTYRIEFoQqH4YsjqfvTqmczeN6SD43Bxe8GAlxgTLjlm8pr
-	F1TrJqQZDUlwE3PiyKqwQble45OMSLmP0iE7qRYpqXL44b8la15gCUuCqk0JPRg==
-X-Received: by 2002:a05:651c:a388:20b0:3a1:4b92:76b0 with SMTP id
- 38308e7fff4ca-3a1fd5d56b6mr22743561fa.5.1787817820310; Thu, 27 Aug 2026
- 01:03:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="eteg5u/K"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 839861691;
+	Thu, 27 Aug 2026 01:55:57 -0700 (PDT)
+Received: from [10.43.20.79] (unknown [10.43.20.79])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72F0C3F85F;
+	Thu, 27 Aug 2026 01:55:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1787820961; bh=yry31P4khI+DRCBsZQHN2ujbaVqF7+s8d6cewX4+B1I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eteg5u/KjRoj4FqWoRxTrgkSEGR4f8fW0aVO5jwh1hz61B2z2iPGtiU82NS9WV9JT
+	 ZMYCuFuGK/zi0HegqQE/Y/R4pKvDOIk9vBKgcOa699KxUiPkVxDtngXV0YPfqvM7Tv
+	 hUcCWW01AMbuMDiY2Csh1ojTfk35TAijFUYNmMwo=
+Message-ID: <c33d081b-7886-4db2-b1d9-61dc195844e5@arm.com>
+Date: Thu, 27 Aug 2026 10:55:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260825235748.i.456-kees@kernel.org> <20260825235759.3379064-4-kees@kernel.org>
- <CAFULd4ZKxXdw0gk5RHfihOBHJmcs15Y-uLFHcQUp_JMg58RyrA@mail.gmail.com> <202608262159.ED2BB32C4B@keescook>
-In-Reply-To: <202608262159.ED2BB32C4B@keescook>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Thu, 27 Aug 2026 10:03:28 +0200
-X-Gm-Features: AcwNN1UcDdju7Vdw2m0vLZPDdV_OCy8OyKTeLykr1Ioh-ObcAOU1S2OQN9NOHpM
-Message-ID: <CAFULd4bLCFq3dsHdNMZ61YdHkKCq_Cs6DT3Si9rpsGQR7Yu5Bw@mail.gmail.com>
-Subject: Re: [PATCH v15 4/7] x86: Add x86_64 Kernel Control Flow Integrity implementation
-To: Kees Cook <kees@kernel.org>
-Cc: Andrea Pinski <andrew.pinski@oss.qualcomm.com>, Jeffrey Law <jefflaw@qti.qualcomm.com>, 
-	Joseph Myers <josmyers@redhat.com>, Richard Biener <rguenther@suse.de>, 
-	Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>, 
-	Richard Earnshaw <richard.earnshaw@arm.com>, Richard Sandiford <richard.sandiford@arm.com>, 
-	Marcus Shawcroft <marcus.shawcroft@arm.com>, Kyrylo Tkachov <kyrylo.tkachov@arm.com>, 
-	Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Andrew Waterman <andrew@sifive.com>, Jim Wilson <jim.wilson.gcc@gmail.com>, 
-	Dan Li <ashimida.1990@gmail.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Ramon de C Valle <rcvalle@google.com>, Joao Moreira <joao@overdrivepizza.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, 
-	Osterlund Sebastian <sebastian.osterlund@intel.com>, 
-	Constable Scott D <scott.d.constable@intel.com>, gcc-patches@gcc.gnu.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] arm64: mm: Map fixmap PTE tables r/o in the linear
+ map
+To: Ard Biesheuvel <ardb@kernel.org>, Ard Biesheuvel <ardb+git@google.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
+ Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
+ linux-hardening@vger.kernel.org
+References: <20260805104042.1107678-2-ardb+git@google.com>
+ <5a3b89a6-bc42-42c3-82e8-25d6f1a2c5d2@arm.com>
+ <a277a83a-cc01-443d-be42-775ce0bc96dd@app.fastmail.com>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <a277a83a-cc01-443d-be42-775ce0bc96dd@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Aug 27, 2026 at 7:03=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+On 26/08/2026 11:07, Ard Biesheuvel wrote:
+>>> [...]
+>>>
+>>> +static int __init fixmap_remap_ro(void)
+>>> +{
+>>> +	return set_direct_map_ro((unsigned long)lm_alias(&bm_pte), NR_BM_PTE_TABLES);
+>> Should we not also remap bm_pmd and bm_pud?
+>>
+>> For that matter, do we need RW access via the linear map for any page
+>> annotated with __bss_pgtbl? I suppose that might be the case for
+>> kasan_early_shadow_* but I don't know enough about KASAN to tell for sure.
+>>
+> bm_pte[] is special because it is only ever written via the kernel mapping,
+> and never via the linear map. This is why it is being singled out in this
+> patch.
+
+Right I see __set_fixmap(). This is a very special case of calling
+__set_pte() on a pointer derived from a global (i.e. pointing to the
+kernel image and not the LM) so it makes sense to treat it differently.
+
+I do wonder whether there is that much value in protecting bm_pte while
+all page tables in init_pg_dir (also at a fixed offset in the LM) remain
+writeable though.
+
+Either way all this is interesting for my series protecting page tables
+with pkeys [1] - it seems that to protect the fixmap, the easiest option
+would be to change the pkey of .pgtlb in both the kernel image and LM
+(the former for bm_pte, and the latter for everything else).
+
+[1] https://lore.kernel.org/all/20260818-kpkeys-v9-0-743ad31b2c8f@arm.com/
+
+> Whether or not bm_pmd[] can be treated as a special case depends on the page
+> size: with 4k pages, the whole array covers a virtual region of 1G, which is
+> currently guaranteed to be shared only with the PCI I/O space (but we could
+> move that out). With 16k pages, it covers 64G, and so it is shared with the
+> vmemmap and other virtual mappings in the vmalloc region, and so the current
+> kernel mapping code expects to be able to write those entries.
 >
-> On Wed, Aug 26, 2026 at 10:57:44AM +0200, Uros Bizjak wrote:
-> > On Wed, Aug 26, 2026 at 1:59=E2=80=AFAM Kees Cook <kees@kernel.org> wro=
-te:
-> [...]
-> > > +/* Apply x86-64 specific masking to KCFI type ID.  TYPE_ID is the 32=
--bit
-> > > +   KCFI type identifier to potentially mask.  Returns the type ID wi=
-th
-> > > +   x86-64 specific adjustments to avoid embedding ENDBR instruction
-> > > +   sequences in the type identifier values.  */
-> > > +
-> > > +static uint32_t
-> > > +ix86_kcfi_mask_type_id (uint32_t type_id)
-> > > +{
-> > > +  /* Avoid embedding ENDBR instructions in KCFI type IDs.
-> > > +     ENDBR64: 0xfa1e0ff3, ENDBR32: 0xfb1e0ff3
-> > > +     If the type ID matches either instruction encoding, increment b=
-y 1.  */
-> > > +  if (type_id =3D=3D 0xfa1e0ff3U || type_id =3D=3D 0xfb1e0ff3U)
-> >
-> > This should use the ix86_endbr_immediate_operand predicate. Exactly
-> > one target dependent immediate (0xfa1... for TARGET_64BIT and 0xfb1
-> > for TARGET_32BIT) should be avoided only with flag_cf_protection &
-> > CF_BRANCH. All this is handled in the predicate.
+> What we might do is generalize the logic that uses the fixmap to modify
+> pgd level entries in swapper_pg_dir, and use it for all modifications
+> at PMD level or higher if those tables are in .rodata
 >
-> Ah yeah. Hmm, I double checked, and Clang doesn't gate this on
-> -fcf-protection nor arch, which means we have a potential ABI mismatch if
-> I change that logic in GCC's version of this.
->
-> If this is really important, I could look at making Clang check for the
-> flag/arch too, though honestly, I haven't even been able to generate a
-> collision with these values either, so the whole thing is theoretical...
+> But this is a bit more complicated than this change, so I decided to
+> present this as a separate change.
 
-No, it is not *that* important, just noted that these magic constants
-are handled in a different way than elsewhere in the compiler.
+Definitely, this is orthogonal to this patch. I wonder what the
+performance impact would be if we used the fixmap for setting all kernel
+entries at PMD and above. It would be nice to keep that logic easily
+togglable, because with the kpkeys approach I mentioned above we have a
+(most likely) much cheaper way of protecting these page tables.
 
-> I could improve the comment to note the ABI perhaps?
+>>> +}
+>>> +late_initcall(fixmap_remap_ro);
+>> Is mark_rodata_ro() definitely too early to remap these pages RO?
+>>
+> No, we might just call this from there, afaict.
 
-Yes, this would be fine, too.
+Sounds good, could we then use update_mapping_prot()? I suppose not as
+that would require mapping bm_pte separately in map_mem()?
 
-Thanks,
-Uros.
+- Kevin
