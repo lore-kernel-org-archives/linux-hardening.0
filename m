@@ -1,64 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AF62F7AD2;
-	Thu, 27 Aug 2026 11:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C222F1FF4
+	for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 12:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787831467; cv=none; b=KS++qdgXnR7a1HehKrDW5c1oZGap2i2IW96s2/Ks2aQitSmAJMRfxNgYYyZyKdQ/TCxB8wvdbI1THaSpTgqi5H3Xcz0a+fXiRomxXlnSjGtg0YDLkvVFTEqVU5FP4DgCplBX5d9FNH+xeuuEDcguLIxtTHym3njSELsEDhqXPBM=
+	t=1787834079; cv=none; b=GIAeUW7PNMr7TYCNF2QaaG8lUAJFGbUsVUZj/2+HCNKcauKtET1KEdJ7eMTHjjgfjC9IMS6l6SECXD2dhpRYP85B+iHwwuR2+Qxqq+dhoQkIJ8ehJPygUoE8LkcrPY28mb6P4GPFZ+oYDdeqAgfLIZBdkDqurauB2F6URohCafs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787831467; c=relaxed/simple;
-	bh=igkNQlBP2BaTRIlMHhCubWZRuBMJE6Tgnv+PPM4/rRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGhZ6Rw/xEHUEEzaoIDnMHhNDQA/7iJuzw5UG1lhlJlL9pI8fcNb/XdUe6ytmwIsc5nriF0uYEaTN1LncdVdkeYh/zf/aPEv3DL8UMN8xZ62DuiNwFMzVXpQcMQesLt1Y4rc6Ke4ZF3jychaLM/guYlCOy35v7lvNNwijZ+tb0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YcTa+g+w; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787834079; c=relaxed/simple;
+	bh=aceFjlRhhVLZ90elGDabHBPqZJUEfYBPbWijqEROSyk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lnWPmx8GfEUzqz8kEFI745NjwFUCrRbttWKZTX7qKyLTSzWVVkm/I6fwOIsjbJy1eabHAv//MIuQ9BeCulS0nOAccGwv6KJQPQYccUvZZkuC+YRDCAsYxvVmCsR/GXE0NE20svcsIyEuWWUeoVmtRtP2el94VO8NqyLFCS2QMNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=dbZVvGlP; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YcTa+g+w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246AC1F000E9;
-	Thu, 27 Aug 2026 11:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787831466;
-	bh=AJ4bFw8CfJZsyHlG9QLU5hpKk597i8D+mlzTAwmUmDg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YcTa+g+wcKmXSmzNfKtICxQsXauqvCU2YG5aKOU02o2XuHX3ZeGqpdPRkhbeJNsfo
-	 7zvBxm0ONpZ3BNM4eynoojaoWLHwdweOq2/PaeN65cu2sjqewbgi2QFZRdWpF7gQ8B
-	 YLDmBpoFvnb+Qo0bYvnW3Aiv7xnne7V4nP/rnjySQWzbDizwDK7sNN0Ub4dWfGSwdq
-	 CF5hmmAOxxRbYWh4krRVGLYl9NCJAl247eoA7d9kgjxG7dTCPC95iPqBpwk2zHKo6s
-	 L0cKbuIRU6sOq3L0GcIKLV+BMPH+e87LqJw6PN88JVfHgEhq2W3BrWf0oGtv2Q6ad0
-	 cr88I4/7Ay4yQ==
-Date: Thu, 27 Aug 2026 13:51:02 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Adam Skladowski <a39.skl@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 1/7] dt-bindings: vendor-prefixes: Add LeEco
-Message-ID: <20260827-therapeutic-economic-sponge-f0ee47@quoll>
-References: <20260821-next-patches-v5-0-ec81cee63e09@gmail.com>
- <20260821-next-patches-v5-1-ec81cee63e09@gmail.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="dbZVvGlP"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42311169E;
+	Thu, 27 Aug 2026 05:34:33 -0700 (PDT)
+Received: from [10.43.16.29] (e126510-lin.lund.arm.com [10.43.16.29])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35A1A3F85F;
+	Thu, 27 Aug 2026 05:34:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1787834077; bh=aceFjlRhhVLZ90elGDabHBPqZJUEfYBPbWijqEROSyk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dbZVvGlPRVGbMOS9gpMYjRRCIrdm/QR6t04nNlV0cgrjLxA3CJUJiRs58GGu8Mq8c
+	 0YtvNrcJKGCOaIxn+JC43gVTyluTOGINgGl4oSHWKXmwNzKvd8GUBnu95X8PRRAOBp
+	 v3EndSvhaD48jivJgnVBYGGyqnGbxVAStJx05gUA=
+Message-ID: <e4e7b0d3-e982-4c42-8907-fcb04c7ac83c@arm.com>
+Date: Thu, 27 Aug 2026 14:34:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260821-next-patches-v5-1-ec81cee63e09@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] arm64: mm: Map fixmap PTE tables r/o in the linear
+ map
+To: Ard Biesheuvel <ardb@kernel.org>, Ard Biesheuvel <ardb+git@google.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
+ Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
+ linux-hardening@vger.kernel.org
+References: <20260805104042.1107678-2-ardb+git@google.com>
+ <5a3b89a6-bc42-42c3-82e8-25d6f1a2c5d2@arm.com>
+ <a277a83a-cc01-443d-be42-775ce0bc96dd@app.fastmail.com>
+ <c33d081b-7886-4db2-b1d9-61dc195844e5@arm.com>
+ <1c0299ab-9f5f-4c7b-826e-a0547f7863dd@app.fastmail.com>
+ <aacacc48-4e20-423f-b1cd-d8593485bf9d@arm.com>
+ <00b4326d-af1c-429d-9495-c65ed5ce184f@app.fastmail.com>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <00b4326d-af1c-429d-9495-c65ed5ce184f@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 21, 2026 at 02:27:00PM +0200, Adam Skladowski wrote:
-> Add vendor prefix for now dead ecosystem company LeEco
-> 
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+On 27/08/2026 12:16, Ard Biesheuvel wrote:
+>>> I'm currently experimenting with using __put_kernel_nofault() to update
+>>> the descriptors at all levels (including PTE) and handling the fault
+>>> using the fixmap approach. That way, all statically allocated page
+>>> tables could move to .rodata (except bm_pte[]) and there should be no
+>>> substantial performance impact.
+>> Doesn't that still mean modifying a fixmap PTE every time we update
+>> kernel page tables? That doesn't exactly sound cheap.
+>>
+> Only the ones that were allocated statically, which cover the region
+> around the kernel image, and the special cases (fixmap, kasan). Everything
+> else is allocated dynamically, using memblock_alloc() if very early
+> during the boot.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Ah yes I see! Then it does sound very reasonable, those page tables
+should rarely be written if at all. For kpkeys that would mean we would
+just need to map bm_pte with the special pkey to complete the
+protection, the rest being already RO or pkey-protected.
 
-Best regards,
-Krzysztof
-
+- Kevin
