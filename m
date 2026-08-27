@@ -1,105 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64F02BD00C
-	for <linux-hardening@vger.kernel.org>; Thu, 27 Aug 2026 05:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2EF2E7F25;
+	Thu, 27 Aug 2026 06:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787807027; cv=none; b=BLO/FLmvNICr5OzWZD34cf9tTQ1oIs9d3+knOHWV2ScgF2yuCCwAqcr7Y0HgOVuZ2iQJ8lIDoYsOBLOIkVxFsk0WifCSpwtW69KjXQd3nP7sSRBl5SZkBl3lQV72Eg9g9X/Cj2eWpYOnVDxFTNHDi6Zj69htW9bgYZEoPaYaN14=
+	t=1787813143; cv=none; b=QoHD95QXwyn6h74C3u8Zdh1B4YhKxLoGkuq4iP77P0GAmPgwXhGsjTgmLQ9T+RI4t8fpowUFdneFJsiUaF/p9b8uInt0s17+NoaQTKR/btN08mKwnr3cZr5XEC8winmomHZz9XEb8rDrQ5/TXUoIeETpbQCWICxY0Wq+bAQtl2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787807027; c=relaxed/simple;
-	bh=1lvwgnhtKneqd1V4/yrh5NirsAyf1dToguwRBWAgvTQ=;
+	s=arc-20240116; t=1787813143; c=relaxed/simple;
+	bh=r81i8jSaf5Zs6ob6azdt/DA70BWIBkn2ltg30YjO330=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQ8rh/U8+LnXQeiwfF7mm3G6ewX1SVJLoG8nNvQ48in5wMOCbDrACJaJ4xuZrIM76QCLhjazL8qxtilnimnzQ/4cZp0VCaDp3ZdEp9jY2EUQne7cT3LR2PHZ4XDL4uknOpXnJe9HIjCdEw1sZrXUJYBZGsXMk72uGlvgOkRuA5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JF6wrO78; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYA7KrtWX2H3fAF0FuaOi69hNVj77FQKtyWiGbl1H5SH4/FLrDSHwsOqv6dSVLZZCmPltPHo+MC2guh2oJfKsKrDYGUCXPNPNoS+lx2V4Wm7MW2BgvpSFEOQHvwWRAIAfskbBNQggCZDG4/fvuhd+qeENTqnxiTurhOr2pELocA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CGO51eyA; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JF6wrO78"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9284E1F000E9;
-	Thu, 27 Aug 2026 05:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787807025;
-	bh=Hl2M0NFvamO0ktk9oSngedOa1zWC9V2JNQmNFz11uOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=JF6wrO78VbhImi4gr7VCZeO+tCEbqg28VlRBdm4jeQZ3lKe3ronjX0cr2wr/SEilt
-	 uIUeTdeOrpK3RJ20/xfuoUq/FRGrIka1mIjb/HlL8ztLuI8PzrPD6mU5f4vSqOflmF
-	 TaohAA2whHuTtu6sQRRAZ0qsRkErIp3Sw8b2nZsmdOQZp2h/ReZ5+XnXjpUfT81XlM
-	 yTxwLaono0tkxViVKcehkreBknpac9wGQ/DotrPtPCSTMOaLF40utEi3lOQaJxJUI9
-	 gbYm+nIfRP/dfomyDdJN8GM3Zc07wRJb9d8psAO5zqaOXV66AjXhMz5dK459nTnaKw
-	 3/TCLjicOYoSA==
-Date: Wed, 26 Aug 2026 22:03:45 -0700
-From: Kees Cook <kees@kernel.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Andrea Pinski <andrew.pinski@oss.qualcomm.com>,
-	Jeffrey Law <jefflaw@qti.qualcomm.com>,
-	Joseph Myers <josmyers@redhat.com>,
-	Richard Biener <rguenther@suse.de>,
-	Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Dan Li <ashimida.1990@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Joao Moreira <joao@overdrivepizza.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Osterlund Sebastian <sebastian.osterlund@intel.com>,
-	Constable Scott D <scott.d.constable@intel.com>,
-	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v15 4/7] x86: Add x86_64 Kernel Control Flow Integrity
- implementation
-Message-ID: <202608262159.ED2BB32C4B@keescook>
-References: <20260825235748.i.456-kees@kernel.org>
- <20260825235759.3379064-4-kees@kernel.org>
- <CAFULd4ZKxXdw0gk5RHfihOBHJmcs15Y-uLFHcQUp_JMg58RyrA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CGO51eyA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787813141; x=1819349141;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=r81i8jSaf5Zs6ob6azdt/DA70BWIBkn2ltg30YjO330=;
+  b=CGO51eyAGE269KWvG/vKRL8GQgdXAhb9mQloDFrU+hUWKGl9CEa4eO/u
+   33hC47NJ7Lr87rvQxNunGzpsj6xVxYAWLaVPykpSUAbd4iC7D/OZQVZsI
+   TlbJMDvv2dWuPI8i2rXa09oYFOi3Rv+b+YaAN/mum37qEHkRsFFIkFTmv
+   BST5fqix4I6Rl8g1OeEwKH4zbo5B2Eb/KNt2sxp59Ms20Y39RGfI9TiQ1
+   gSsvYsYu8DRpkbV1lleO0VtKMtW1q4ZaoYnTxZ/6cUuWnwybugEppjtc6
+   LSZLgQ6u+MRx18c4exk8tHyOPC0a106S2NLVKK8htnPblAbcWl3UxrfFr
+   A==;
+X-CSE-ConnectionGUID: prMTnFodStaPYhNdpH5+9A==
+X-CSE-MsgGUID: Pu11SQ0RSxCQLVPtGNgzSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11887"; a="88361158"
+X-IronPort-AV: E=Sophos;i="6.25,246,1779174000"; 
+   d="scan'208";a="88361158"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 23:45:34 -0700
+X-CSE-ConnectionGUID: Dn/Q9CMgSW+VHgUnCFwqog==
+X-CSE-MsgGUID: N1629AFNTa+aYhqKHy6dGA==
+X-ExtLoop1: 1
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.244.125])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 23:45:30 -0700
+Date: Thu, 27 Aug 2026 09:45:28 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Luca Weiss <luca.weiss@fairphone.com>
+Subject: Re: [PATCH v2 1/5] iio: light: stk3310: lower-case the i2c device ID
+ names
+Message-ID: <ao_dCDDpw6eBIFhN@ashevche-desk.local>
+References: <20260826175409.326131-1-jorijnvdgraaf@catcrafts.net>
+ <20260826175409.326131-2-jorijnvdgraaf@catcrafts.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFULd4ZKxXdw0gk5RHfihOBHJmcs15Y-uLFHcQUp_JMg58RyrA@mail.gmail.com>
+In-Reply-To: <20260826175409.326131-2-jorijnvdgraaf@catcrafts.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Aug 26, 2026 at 10:57:44AM +0200, Uros Bizjak wrote:
-> On Wed, Aug 26, 2026 at 1:59â€¯AM Kees Cook <kees@kernel.org> wrote:
-[...]
-> > +/* Apply x86-64 specific masking to KCFI type ID.  TYPE_ID is the 32-bit
-> > +   KCFI type identifier to potentially mask.  Returns the type ID with
-> > +   x86-64 specific adjustments to avoid embedding ENDBR instruction
-> > +   sequences in the type identifier values.  */
-> > +
-> > +static uint32_t
-> > +ix86_kcfi_mask_type_id (uint32_t type_id)
-> > +{
-> > +  /* Avoid embedding ENDBR instructions in KCFI type IDs.
-> > +     ENDBR64: 0xfa1e0ff3, ENDBR32: 0xfb1e0ff3
-> > +     If the type ID matches either instruction encoding, increment by 1.  */
-> > +  if (type_id == 0xfa1e0ff3U || type_id == 0xfb1e0ff3U)
+On Wed, Aug 26, 2026 at 07:54:05PM +0200, Jorijn van der Graaf wrote:
+> The i2c device IDs were introduced in capitals, mirroring the ACPI
+> _HID entries added by the same commit be9e6229d676 ("iio: light: Add
+> support for Sensortek STK3310"); at that point the driver enumerated
+> through ACPI only, with no OF table and no i2c module alias export.
+> ACPI _HIDs have their own naming rules; i2c device names
+> conventionally use the lower-case part name, matching the devicetree
+> compatible suffix.
 > 
-> This should use the ix86_endbr_immediate_operand predicate. Exactly
-> one target dependent immediate (0xfa1... for TARGET_64BIT and 0xfb1
-> for TARGET_32BIT) should be avoided only with flag_cf_protection &
-> CF_BRANCH. All this is handled in the predicate.
+> The spelling is visible: a client instantiated through the i2c sysfs
+> interface under the lower-case name taken from a compatible string
+> binds through the OF table's name fallback, but has no firmware node,
+> so i2c_match_id() is the only way for it to reach driver match data,
+> and its string comparison is case-sensitive, so the capitals can never
+> match. Lower-case the names so such clients match the id table, and
+> receive the per-chip match data a subsequent change attaches to it.
+> 
+> The module aliases follow the rename (i2c:STK3310 becomes
+> i2c:stk3310), and a sysfs client instantiated under a capitals name no
+> longer binds.
 
-Ah yeah. Hmm, I double checked, and Clang doesn't gate this on
--fcf-protection nor arch, which means we have a potential ABI mismatch if
-I change that logic in GCC's version of this.
-
-If this is really important, I could look at making Clang check for the
-flag/arch too, though honestly, I haven't even been able to generate a
-collision with these values either, so the whole thing is theoretical...
-
-I could improve the comment to note the ABI perhaps?
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+with all responsibility for the theoretically possible breakages
+of the weird setups. But I strongly believe that no one is using
+capital letters for I²C instantiation of this driver as it was
+submitted for ACPI use and followed by DT support.
 
 -- 
-Kees Cook
+With Best Regards,
+Andy Shevchenko
+
+
