@@ -1,111 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99837242D9B;
-	Sun, 30 Aug 2026 23:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C6C35AC33;
+	Mon, 31 Aug 2026 03:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788133722; cv=none; b=G+SkDHJMLORI1604ayIXWOPIBebpqQM2OHJ+mWDh/3MX1S9686l52KMelPk10iagjnE1w5VXAYFJEHwgImN2M7KiiH6l9J9pGE9gAUc8RanFrk13fSV7Qh1nC52arBlmf/z2u1LDbxj/cSvKd/U1eT1t8xnPkPRJEf2kBf/+kUQ=
+	t=1788147888; cv=none; b=tjln2ONfVGffok7dNllf9My3a3mjkGe0B/G80r3/cAgspxXXnsLY18DPuiuDqJjbjrGhI+UoHw46R/2CXh4Hw4Xd1J6GEZy/aVWtcr+MvdoZNWjLaciZLtCK+N5CoA+VLoFpQ3KXKyRhF4NWeKhLXEcyhAqNhYAvqgA2kko8kBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788133722; c=relaxed/simple;
-	bh=GcbGA9JYdBBBGqKEus3i6V0Fog/Z3w6buBjf28Sw1xg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kYZqWKfn1mOT501MQgWp7aEBzClzYnyz7K/ZhtyalfkLhuX0ZD8r2mJNgydN+NbwUZncjaWmGfWcRs5jglR2N+yeIKUxVo2SaNR8dw4k9nncZ4EOvv+41ilFPliPpqzwpsmeWup9185XOnkg4fh0W4RhqwS3N55nmpP7g5Yp6zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+lJzqRs; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788147888; c=relaxed/simple;
+	bh=V72aHCmF4b7VfASa0RriukX8iwwBYX/nI2WEc7fM5oI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dHtZUanWeM+BwF++hCFCT4HIGCYN+nxMOrppTc7If+BoojBuBspAsYYjwozW7rsDcBi6UyRvlOdXaJ20sDM38q4/XBs42bgtQGbvB6GIAJ0d9BXCYne5hn9ELyPLxoBwJdDEZjDxdVnN3/8/8LVB7k90QoFcVJFD8fl9LVmnTEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=M3T2hIth; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+lJzqRs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4C81F000E9;
-	Sun, 30 Aug 2026 23:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788133721;
-	bh=PcO0U45IrwGYg9QXoz22ey3QRhX6/6WwzaaCcty5J8Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=g+lJzqRsy0KUPUwU2bqb4dtlgiZFTYQjo+vXkFM9A1x8beeCtdzzGFfw0U/+WTkv2
-	 3DEYZZkyxazpMiePZxbvoEywVhGke3JFtbTQn3aYYDVcWtBoIdGTKuQtmQ9E0RbQxn
-	 emh+WlFn5u4EXoREZerqcuJHnd8m+LEF5nab0Wxp3tiH8giJH6T8+yWckwPQgFWCHc
-	 ZwE2saepbBPXu1aQXgL/8GTueKOgicsOYLgjnK6LvM+YfRYTLL5qclDPkFlmiaVuOn
-	 XKIo1OUzVmS0Ky3/K6aU3CZk4ZM+sDpl2CalkrDDJFHpVY8mghHvxfM3B01bwJkbBS
-	 hqkGk0go+Grtg==
-Date: Mon, 31 Aug 2026 00:48:37 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
-Cc: linux-iio@vger.kernel.org, David Lechner <dlechner@baylibre.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, Kees Cook
- <kees@kernel.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, Luca Weiss
- <luca.weiss@fairphone.com>
-Subject: Re: [PATCH v2 0/5] iio: light: stk3310: per-chip match data and
- STK36C61 support
-Message-ID: <20260831004837.406a1108@jic23-huawei>
-In-Reply-To: <20260826175409.326131-1-jorijnvdgraaf@catcrafts.net>
-References: <20260826175409.326131-1-jorijnvdgraaf@catcrafts.net>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="M3T2hIth"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1788147871;
+	bh=tcBolFJ4EIF2q/e/NdkFEkTsXlaM1Jg3zKGnjeS3tug=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=M3T2hIthfByLiB53LvXYC1lLRJ9iwPqGavMIuY/iRqEuVRNCxkNJDRSbqfqlosVkr
+	 yl0sGf/rcW8X1q3cY6M4ObHO1nY+mkXjSZBFyg3qIm/V/UtTFB7nG7ucSqNY7ad9iw
+	 69PLZc4E4NDvOKLCCIHd1sau2tpgbvSV98H7JppBH0vRECNXW59faZDQq1JXCGZ+An
+	 Wvmyk7MBTPk3kXC6Nd3HM8eGsI5yaOWR/HHz5VNRuKvq4oaZ+oSkNyF6bfRvWoDWFu
+	 U9Fm7Yg2YX9Gbn/k4T7WlOR1+ghJRdP+17bKP+DkSCyFIDVm/CHn3vkvuBrxwzFsxH
+	 Zwa1nmrTxjOFQ==
+Received: by codeconstruct.com.au (Postfix, from userid 10004)
+	id 799F368450; Mon, 31 Aug 2026 11:44:31 +0800 (AWST)
+From: James Lee <james@codeconstruct.com.au>
+Date: Mon, 31 Aug 2026 11:43:44 +0800
+Subject: [PATCH 5/7] net: mctp: usblib: Simplify allocation logic in
+ mctp_usblib_test_rx_init
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260831-dev-mctp-usb-lib-test-v1-5-79699bf67a18@codeconstruct.com.au>
+References: <20260831-dev-mctp-usb-lib-test-v1-0-79699bf67a18@codeconstruct.com.au>
+In-Reply-To: <20260831-dev-mctp-usb-lib-test-v1-0-79699bf67a18@codeconstruct.com.au>
+To: Jeremy Kerr <jk@codeconstruct.com.au>, 
+ Matt Johnston <matt@codeconstruct.com.au>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, James Lee <james@codeconstruct.com.au>
+X-Mailer: b4 0.14.2
 
-On Wed, 26 Aug 2026 19:54:04 +0200
-Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net> wrote:
+The if statement testing rx's allocation is unneeded.
 
-> The Sensortek STK36C61 is a 3-in-1 ambient light / proximity / RGB
-> colour sensor whose register interface is compatible with the stk3310
-> across the ALS and proximity data, threshold, gain and
-> integration-time registers this driver uses. The part name comes from
-> the Fairphone 6 manual, which lists the component as "3IN1 ALPS/RGB
-> sensor/STK36C61". There is no public datasheet; the layout was probed
-> on the device: chip ID 0x95, the stk3310 STATE/FLAG bit layout, data
-> and threshold registers, gain steps that scale the ALS reading
-> accordingly, and an RGBC data block directly after the ALS data.
-> 
-> Since v1 the colour block's controls were located, confirming
-> Jonathan's guess on v1's patch 3 that they sit in a register we had
-> not found: the STK37660 datasheet, a documented sibling with the same
-> data register layout, places a clear-channel gain field in a GAINCTRL
-> register at 0x4E, split from the RGB gain in ALSCTRL, and stepping it
-> on the STK36C61 multiplies the clear count by ~4 per step while the
-> other channels hold still. The STK36C61 patch therefore now exposes
-> scale and integration time on the colour channels.
-> 
-> Tested on a Fairphone 6 running a 7.2-based tree: this series'
-> stk3310.c, byte-identical, built as a module against that tree (the
-> i2c core files the binding behaviour depends on are identical between
-> the trees). Verified there: DT boot instantiation, the colour
-> scale/integration-time interface, and the sysfs name behaviours this
-> series changes: a lower-case name selects the full profile through
-> the id table, capitals no longer bind, and a full-compatible-string
-> client now fails probe with the missing-driver-data error. A board
-> DTS node using the new compatible follows separately via
-> linux-arm-msm.
-> 
-> Changes in v2:
-> - new first patch lower-casing the i2c device ID names (Andy), and
->   probe now fails on missing match data instead of falling back to
->   the stk3310 profile (Andy)
-> - new precursor patch moving the data registers into the channel
->   .address field (Jonathan), split out of the match-data patch; the
->   bulk read gains a regmap local variable (Andy)
-> - the ACPI table entries use named initializers (Jonathan)
-> - the STK36C61 patch exposes scale and integration time on the colour
->   channels (Jonathan's suggestion on v1 patch 3; the clear-gain
->   register located via the STK37660 datasheet and verified on the
->   device). With those branches of read_raw now handling the intensity
->   channels, the ret = -EINVAL single-exit form promised on the v1
->   thread (Andy) has no unreachable branch left to apply to
-> - picked up Krzysztof's Reviewed-by on the binding patch
-> 
-> v1: https://lore.kernel.org/all/20260810110423.41697-1-jorijnvdgraaf@catcrafts.net/
-> 
-FWIW I took another look through and with those small things Andy raised
-tidied up (including a more concise commit message for the final patch) this
-looks good to go to me.
+Signed-off-by: James Lee <james@codeconstruct.com.au>
+---
+ drivers/net/mctp/mctp-usblib-test.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Thanks,
+diff --git a/drivers/net/mctp/mctp-usblib-test.c b/drivers/net/mctp/mctp-usblib-test.c
+index ab323a31161a415d93eafe4314e0e52cedfcd42e..772484df32a7d7b4d30e51808e06853febe272b6 100644
+--- a/drivers/net/mctp/mctp-usblib-test.c
++++ b/drivers/net/mctp/mctp-usblib-test.c
+@@ -202,11 +202,9 @@ mctp_usblib_test_rx_init(struct kunit *test, bool span)
+ 	int rc;
+ 
+ 	rx = kzalloc_obj(*rx);
+-	if (rx) {
+-		rc = kunit_add_action_or_reset(test, action_rx_fini, rx);
+-		KUNIT_ASSERT_EQ(test, rc, 0);
+-	}
+ 	KUNIT_ASSERT_NOT_NULL(test, rx);
++	rc = kunit_add_action_or_reset(test, action_rx_fini, rx);
++	KUNIT_ASSERT_EQ(test, rc, 0);
+ 
+ 	rc = mctp_usblib_rx_init(rx, ep_maxpacket, span);
+ 	KUNIT_ASSERT_EQ(test, rc, 0);
 
-Jonathan
+-- 
+2.47.3
+
