@@ -1,69 +1,101 @@
-Received: from outbound.st.icloud.com (st-2003e-snip4-6.eps.apple.com [57.103.77.197])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50984414A2B
-	for <linux-hardening@vger.kernel.org>; Mon, 31 Aug 2026 13:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.77.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C0042CB17;
+	Mon, 31 Aug 2026 13:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788182248; cv=none; b=QVbA6lf0Ihatu3isE6mGiRaQQy9hpJSebN5TQ89o6ZzRhiZVylNrXVu3yTZeVH16JHYHpoMNlEHBUZjSgZSxEYyh9iGes2lYCn3LNHduwNmKRtY+9UZsVilelg3VVK2T5xS+K+y2FvQTQE//TOLpoXMHWYPSJAOCa0UXawXrimE=
+	t=1788183027; cv=none; b=j4zeTfjey9OJ5wBE2fFSjh6efiuzKBjKfhmPl+kQTU5dd/7HputXVs2nutOC6+a65LN8MlX4Zuhe9bYCHcHm3EkAJO7Uzi6UUWW4XS+fW76R2qw7I2KTRvOuyqWJVIYmaedgft+L4T1MTz8PdI/HAxhFHfKbn+gO3+5S9VGXq4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788182248; c=relaxed/simple;
-	bh=/NXqggHsuDWw6b/862OcbvRPaN5QM214yMR59irur7g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uG3RbppQ9LcHdGVw9ZCDNOr8snI0KbhjlWQlP7B8cN/evZyQK/k+S+CRN2ayKmy8KkbGnT5vZ2E7lKsAhv81fAMqlGu3UTzAi+ilfcxY7ugKbAnPL/1itVq3PMQAJPz1PC8pb4Tt28ig2nVaQb22X0LKArNhq8eB5Jhl6nDfYLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=me.com; spf=pass smtp.mailfrom=me.com; dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b=YWoZMdbj; arc=none smtp.client-ip=57.103.77.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=me.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=me.com
+	s=arc-20240116; t=1788183027; c=relaxed/simple;
+	bh=GpJ36QiFihR7ILzrSn52Ene7SEy6i9/ut6OVUX10yM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V/jyocuaiORLSMj8RmEx81uz/F5sPTx9LlV2qmxQv7N5rC8yKcJqtfU45rRDTdsw/ODb7uauyAieWjw4i25ZSOdgLG1opRQfJXq/fnvIU60DL4xZUbt7DlP+BMBcnK0nJtjOehktua4TG1U2j1luW9O0vTzqbTzPOwdNZOtTa2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E9S0sHEA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NLjBWjyN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="YWoZMdbj"
-Received: from outbound.st.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-east-1a-20-percent-0 (Postfix) with ESMTPS id C82C018000AB;
-	Mon, 31 Aug 2026 13:17:24 +0000 (UTC)
-X-ICL-RepId: 01a057f7-ad82-7cef-bcb4-8287cc81275c
-X-ICL-Out-Info: HUtFAUMHWwJACUgATUQeDx5WFlZNRAJCTQhABkMAWBxBDkkdXwVaEhVdRVUIRRlTHhccRgxFGVswVB0dDlgGEhZdRV4IGQhdHRkKUFAAS1oVVRcOAkIfUB9MFldDRB8cGVoUXBhTRVEfVFhDGUVWaUELTx1dGVscQmRYVwkKBldeWhdeTVoCVk0FSgNfAVsKQwhJAFwAWgpeC0gDVARfH0EUHlYfRQpcXl0NUh9FAnIdXFZQAlpVEgRACFZQXgheH0wc
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai; t=1788182246; x=1790774246; bh=/NXqggHsuDWw6b/862OcbvRPaN5QM214yMR59irur7g=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=YWoZMdbjwCIHeb+zsnvWKlg+V5rJSlhlcqvizPdNk+pUNeoqDDWovVaibmsK/vn/MT48KEsQf11z4uK7xVnhqXZqrryAdzMLSTshMxuvYPA9tp92JSrMLg1t0e+M7r6QDPb+YqzCmx+QyfAfRosq19aEsm49XXCV9B9iy61Wz1vpHbBONYZ4U4XHfWIJnKMS0nE7VEL7TB/WE/+BnQfx4JSBzc80CQCseIcUBJMS/MUyaiEsc9Fuz+mClHOQF0ztNKcWX3rZUP0QclUK9Aa1A1yZ/XMoHVbAafGNzg7FjuFJv2A9oQIjow7VUaYpf8kwQvq8Fgii8eq+aSE3sVQQBQ==
-Received: from ncore (unknown [17.156.216.30])
-	by p00-icloudmta-asmtp-us-east-1a-20-percent-0 (Postfix) with ESMTPSA id D7F6818001D8;
-	Mon, 31 Aug 2026 13:17:22 +0000 (UTC)
-From: Ferran Duarri <ferran.duarri@me.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nsc@kernel.org>,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E9S0sHEA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NLjBWjyN"
+Date: Mon, 31 Aug 2026 15:30:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788183023;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cVGuNF8qD6UqnwkTHihKqYq1cd9lNgxObqJddhRcS7Q=;
+	b=E9S0sHEAR/rqboYxmQDQImgTc1cyi1TjztRchyYrKcfqXf49hbqMmE306U0eHseTaoWgvg
+	kJWVM+aLOF33trW1DAMJA9vHa0IYlTmnT56EiiTeFqaoYP/z91ANoE+Fot6oUu1K9jyIuq
+	c38c2cIz3zFLeYTeC3Tz4TPjkdns/BkplmAbmb/AgXzQGOCV14Blog/rIrU6muwwIetK7a
+	ILhqCHAKulpyZVcLcFqaW8ikrQ+LecMnBzfz7WgoDbwOeZtgzPI5T/0TMo5v6xFnRPf3AC
+	MDeuEQjc/3+961+sVkFxXfrKAlxLZI5Ti5EvDguVQBE4SRX7ed/DR08Hux9PKw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788183023;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cVGuNF8qD6UqnwkTHihKqYq1cd9lNgxObqJddhRcS7Q=;
+	b=NLjBWjyNF+towU9TxmUzcgkxELcIvQyCYlvZ5RP3GywbfarxGEC3okL8hB2vLepE5dn3V/
+	BkhD7r+o7FBFTMBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Petr Mladek <pmladek@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	Ferran Duarri <ferran.duarri@me.com>
-Subject: Re: [PATCH] kbuild: ubsan: skip UBSAN for external modules by default
-Date: Mon, 31 Aug 2026 15:17:17 +0200
-Message-ID: <20260831131718.200934-1-ferran.duarri@me.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260821190701.GA3030879@ax162>
-References: <20260821190701.GA3030879@ax162>
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tycho Andersen <tycho@tycho.pizza>
+Subject: Re: [PATCH v2 1/2] vsprintf: Don't leak pointers for %ps without
+ KALLSYMS enabled
+Message-ID: <20260831133021.PtgflU-O@linutronix.de>
+References: <20260821152614.2202196-1-bigeasy@linutronix.de>
+ <20260821152614.2202196-2-bigeasy@linutronix.de>
+ <ao8MnDuF9nnI9KxG@pathway.suse.cz>
+ <20260827091407.yUpoFiuF@linutronix.de>
+ <apAIhJImGHCCPEH-@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODMxMDExNSBTYWx0ZWRfX+nvHO2Wkl41N
- bYPdAXHv+lue6T+9xE4Zhm+ELlV8yLPYOXl9VfqqGkKTKtYf2AcA74uKX2+mPAVcQ/uS9euE57f
- Rdp0zevF0Xd2uRlBzFth76XIQmGSTkZkI9SAr7cPALaCaLe+y8ENZ6Y4Tk/NF810NJO/xihqdYT
- GhVqidXq6GC8FwIree9NNLNfkL/ChKcEpiPLjGLhzZP84NZZJRnBJwVF1aCptcMESs2MC1UNBlK
- wsxjsdEaddxy7uJ1eQ5oirGvWYVtP7jC+cVspUJrSqR+srY8+sd1xWy13vqWB7KvPQI28w7Jb6S
- OYOfGfuToRY4gDjYeWCOTUnvUU981tC2qojuGSCM/57FuG2V4IivzsAJKCCZ20=
-X-Proofpoint-ORIG-GUID: 9j-KgrMVfH6gzULv84ydPs8Z63Ynt-go
-X-Proofpoint-GUID: 9j-KgrMVfH6gzULv84ydPs8Z63Ynt-go
-X-Authority-Info-Out: v=2.4 cv=ZYcQ98VA c=1 sm=1 tr=0 ts=6a957ee5
- cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
- a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=Sv0fKeRqtYgA:10 a=x7bEGLp0ZPQA:10
- a=B9nqV3Rn1-QA:10 a=VkNPw1HP01LnGYTKEx00:22 a=LMDzS8KKjDtqAWibp1EA:9
-X-JNJ: AAAAAAAB9S9rmiJ65TXhQlyBQOc9xr0kE/GOC2HQq+H/9qrEj5UQh60/AgfR/+NN8mz6+g/9Y6xJTYxh/U0DxVQToKsDKyI/apjBxOZBoaFFpivFtACALM9t7dpysYGolaQF6x+cy1yjZchQwgqATg+SnHx3m42RiuRH0SoFhCXdtjdM5a8bmgbYQrGEcCZzjCCWYtx7Iqvvj+LSE3PvGThGmNq/zgdfyWQ43lCeAnYEepJeT3pbPKsUgnI8kKxAS50/f8cOsCUE9H3JoZwtMG5GUzvjg1M7UK+q67bxPr9nex1CfyhMia4Fljk0MJqA1zF1y1e6QDlD9rZtrVFSXVrPzIXD/rSZJUhojTtAj6lvYN4T5A8LcmbIPDncPpA+GhG/pT80zY1BToXbzGXSnX/B4gVBHaGgfv/MsxQoIrQU0YDEXLeDqFZPnC3u4ZZ9iKPWtQeekFqXZnoxFKkJuthnJxQHVW0tb5XKyk6gA4Ti2snNIwto358NuYaJItE+nljb6dXq0ZkUQa+z2cOqLp7vuqxcKiTjkexcMstYac+5zdzs1jQkP/ERKB2UJC/uU4Wk26GqRKzPXCnt63tj9TbKLsX2rAVpvn5h48LGCbAwFXxlRttVbJDl9bdRIfwqRtjRXzYkoAbCLnXelKWyDbFd+Kx7K3qk8LxuJm1UWUXjF97mZoUsyHCwa6q8xgEnQbJ7CO2q4CLRLrFDM4WXJkwmBnFVspHhz6ME2hG004QDhMkiQZ5nPUCjuXl38c+Bc09KW6Ssl/d/Vi+YTufZth6GffhmEFDtcoVy1hqV8Geu0R3/DXKXpxOW+EpMRC2oiSlTEQMU4gVsHNvw0eiDPw/Dq7TdD9baMbsXNmzEoIm2ATfaL6/K2cX51YTeK6zPrk0Jkb438kouZQLY4ED7xUYcRxSIC2Z1WlgAJGh3cGrwMB+wewhH2t3Tj+oVdaItsJNEhi7cOhfCSHLP6DcQPtPJ1i2OjgB
- zIZQqlkNbwt6PEW49xKwOttW54V4O2pbPZhDvJ/pHmZ2jckh/kEwOi0ERZ+3AdqNVPlZlK1L/AgEPAGlEMCtPO/5+Xj/lp+OthB5xhEpZSFKUb+RDq8nb/shg9HU6xXgSIs6hZaMJTrYCpU1ih22H9zNWNbgKwjeJXwRBlVLdGv4o0hQpyqikSZdlAZBvNunhnYk/KvPlIQe/YKc7ekk1pLMIT3Eq1QWZuFHqPKtVZqZxDqDQKaiR8GA=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <apAIhJImGHCCPEH-@pathway.suse.cz>
 
-Nathan, Nicolas - fair, and it's the right call: making UBSAN weaker for
-everyone to fix one out-of-tree module's problem is a bad trade. Dropping
-this, thanks.
+On 2026-08-27 11:51:00 [+0200], Petr Mladek wrote:
+> 
+> I think that it is a matter of taste. I could understand that
+> "(unknown)" might look more obvious to some people.
+> 
+> I would still prefer the hashed pointer. It make it consistent with
+> %p handling. Both print addresses in this case.
 
-Cheers,
-Ferran
+For %p expect a pointer, for %pS you expect a name.
+
+> The motivation for the hash in %p is that it is slightly more useful
+> than a static string, e.g. "(address)" or "(pointer)". The hash allows
+> to match the same addresses. It is not 100% reliable but better
+> than nothing.
+
+but is this helpful?
+
+> Also the hash makes it more obvious the connection with "no_hash_pointer"
+> option.
+
+Assuming you know about the no_hash_pointer. And then you get a
+randomized pointer. Enabling kallsym would be a _bigger_ help than
+rebooting with no_hash_pointer.
+
+> IMHO, the only drawback is that people might confuse the hash with
+> a real value. But it is easier on 64-bit systems because the higher
+> 32-bits are zeros.
+
+That, too. Do you continue to insist on this hashed pointer output here?
+
+> Best Regards,
+> Petr
+
+Sebastian
