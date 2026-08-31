@@ -1,189 +1,69 @@
-Received: from va-2-111.ptr.blmpb.com (va-2-111.ptr.blmpb.com [209.127.231.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound.st.icloud.com (st-2003e-snip4-6.eps.apple.com [57.103.77.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE766337B81
-	for <linux-hardening@vger.kernel.org>; Mon, 31 Aug 2026 11:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50984414A2B
+	for <linux-hardening@vger.kernel.org>; Mon, 31 Aug 2026 13:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.77.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788175231; cv=none; b=EVwuLsIQCm2+nOQzOhXPuaucwIRNK6ptRVTJKE1HA0iz40Vwe81F7BVezSPxAEQDm4oP4385XVMYsw3aJ8b4DCGvJq1AvxeT8eY+AKaVK5KMiHRjgaMIWAOGepxyh9Eo/UFUpjhC37UXyJPgFuubAVrW17CqR9wx4GFKdYdd/+o=
+	t=1788182248; cv=none; b=QVbA6lf0Ihatu3isE6mGiRaQQy9hpJSebN5TQ89o6ZzRhiZVylNrXVu3yTZeVH16JHYHpoMNlEHBUZjSgZSxEYyh9iGes2lYCn3LNHduwNmKRtY+9UZsVilelg3VVK2T5xS+K+y2FvQTQE//TOLpoXMHWYPSJAOCa0UXawXrimE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788175231; c=relaxed/simple;
-	bh=xKWhxymsxv6nIhmLcK0gws/TUia/Ic5UXr9PVYBY7/s=;
-	h=In-Reply-To:Content-Type:To:From:Subject:Mime-Version:Cc:
-	 Message-Id:Date:References; b=cKIZOBqTqLjj7FlZ9hbTrlY5b0JD71PPGukSvhaeFUSQylmKdqivB8EnoxUmn9a0WO6D40f+irg2rPhCJs9YK/M+e9mOfIuN6/MPGq+Xf36IqPwWLlRQcYnqu1p2QGReAuWsPRR9nK+6Xey2NYLNroF6cmNVg/WTmGeX9hGY6gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=qWbZE25+; arc=none smtp.client-ip=209.127.231.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1788182248; c=relaxed/simple;
+	bh=/NXqggHsuDWw6b/862OcbvRPaN5QM214yMR59irur7g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uG3RbppQ9LcHdGVw9ZCDNOr8snI0KbhjlWQlP7B8cN/evZyQK/k+S+CRN2ayKmy8KkbGnT5vZ2E7lKsAhv81fAMqlGu3UTzAi+ilfcxY7ugKbAnPL/1itVq3PMQAJPz1PC8pb4Tt28ig2nVaQb22X0LKArNhq8eB5Jhl6nDfYLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=me.com; spf=pass smtp.mailfrom=me.com; dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b=YWoZMdbj; arc=none smtp.client-ip=57.103.77.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=me.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=me.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="qWbZE25+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1788175224; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=W3mTk0uO3fJ8loj8Vy9eCiD36YUSNCrm55bF0bJb8Z0=;
- b=qWbZE25+Fl/NO3nw9RCvnXO4dihmAdjyq8obIx9OzGhqChQoZCJxhpFItIo7yZKOHm8Dqp
- hn5MsrQa6e1Dn1qbScw3plQ6afOWl3995LkplFaD32gJ7kaBZP3vXXaiw3dlOaoRboNJot
- zzZxOH9zgKiUO5RU86qHZ/d0jaA/FyR3j1FiEfl/9qcZ7u9F3tmuCmTpttEONG6ftWx2y1
- /MjVpCSQg5dKcXUTuyIkDuf/vHItBM08K5AofmSqCAD3M+T9ZLIKUu1GJogzSztN3H/aMZ
- UnehlEqzfbyOLbimAK44vg9maKpRQXiJbhTLCLVG/srG/BloRX725Ad9XXfyxw==
-In-Reply-To: <20260831111638.76012-1-lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-To: <akpm@linux-foundation.org>, <apopple@nvidia.com>, <arnd@arndb.de>, 
-	<balbirs@nvidia.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>, 
-	<david@kernel.org>, <kees@kernel.org>, <mingo@redhat.com>, 
-	<muchun.song@linux.dev>, <rppt@kernel.org>, <tglx@kernel.org>
-From: "Li Zhe" <lizhe.67@bytedance.com>
-Subject: [PATCH v11 7/7] x86/string: extend memcpy_flushcache() fixed-size fastpaths
-X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="YWoZMdbj"
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-1a-20-percent-0 (Postfix) with ESMTPS id C82C018000AB;
+	Mon, 31 Aug 2026 13:17:24 +0000 (UTC)
+X-ICL-RepId: 01a057f7-ad82-7cef-bcb4-8287cc81275c
+X-ICL-Out-Info: HUtFAUMHWwJACUgATUQeDx5WFlZNRAJCTQhABkMAWBxBDkkdXwVaEhVdRVUIRRlTHhccRgxFGVswVB0dDlgGEhZdRV4IGQhdHRkKUFAAS1oVVRcOAkIfUB9MFldDRB8cGVoUXBhTRVEfVFhDGUVWaUELTx1dGVscQmRYVwkKBldeWhdeTVoCVk0FSgNfAVsKQwhJAFwAWgpeC0gDVARfH0EUHlYfRQpcXl0NUh9FAnIdXFZQAlpVEgRACFZQXgheH0wc
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai; t=1788182246; x=1790774246; bh=/NXqggHsuDWw6b/862OcbvRPaN5QM214yMR59irur7g=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=YWoZMdbjwCIHeb+zsnvWKlg+V5rJSlhlcqvizPdNk+pUNeoqDDWovVaibmsK/vn/MT48KEsQf11z4uK7xVnhqXZqrryAdzMLSTshMxuvYPA9tp92JSrMLg1t0e+M7r6QDPb+YqzCmx+QyfAfRosq19aEsm49XXCV9B9iy61Wz1vpHbBONYZ4U4XHfWIJnKMS0nE7VEL7TB/WE/+BnQfx4JSBzc80CQCseIcUBJMS/MUyaiEsc9Fuz+mClHOQF0ztNKcWX3rZUP0QclUK9Aa1A1yZ/XMoHVbAafGNzg7FjuFJv2A9oQIjow7VUaYpf8kwQvq8Fgii8eq+aSE3sVQQBQ==
+Received: from ncore (unknown [17.156.216.30])
+	by p00-icloudmta-asmtp-us-east-1a-20-percent-0 (Postfix) with ESMTPSA id D7F6818001D8;
+	Mon, 31 Aug 2026 13:17:22 +0000 (UTC)
+From: Ferran Duarri <ferran.duarri@me.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nsc@kernel.org>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Ferran Duarri <ferran.duarri@me.com>
+Subject: Re: [PATCH] kbuild: ubsan: skip UBSAN for external modules by default
+Date: Mon, 31 Aug 2026 15:17:17 +0200
+Message-ID: <20260831131718.200934-1-ferran.duarri@me.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260821190701.GA3030879@ax162>
+References: <20260821190701.GA3030879@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2
-Cc: <linux-arch@vger.kernel.org>, <linux-hardening@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <x86@kernel.org>, 
-	<lizhe.67@bytedance.com>
-Message-Id: <20260831111638.76012-8-lizhe.67@bytedance.com>
-Content-Transfer-Encoding: 7bit
-Date: Mon, 31 Aug 2026 19:16:38 +0800
-References: <20260831111638.76012-1-lizhe.67@bytedance.com>
-X-Lms-Return-Path: <lba+26a956377+1b0b11+vger.kernel.org+lizhe.67@bytedance.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODMxMDExNSBTYWx0ZWRfX+nvHO2Wkl41N
+ bYPdAXHv+lue6T+9xE4Zhm+ELlV8yLPYOXl9VfqqGkKTKtYf2AcA74uKX2+mPAVcQ/uS9euE57f
+ Rdp0zevF0Xd2uRlBzFth76XIQmGSTkZkI9SAr7cPALaCaLe+y8ENZ6Y4Tk/NF810NJO/xihqdYT
+ GhVqidXq6GC8FwIree9NNLNfkL/ChKcEpiPLjGLhzZP84NZZJRnBJwVF1aCptcMESs2MC1UNBlK
+ wsxjsdEaddxy7uJ1eQ5oirGvWYVtP7jC+cVspUJrSqR+srY8+sd1xWy13vqWB7KvPQI28w7Jb6S
+ OYOfGfuToRY4gDjYeWCOTUnvUU981tC2qojuGSCM/57FuG2V4IivzsAJKCCZ20=
+X-Proofpoint-ORIG-GUID: 9j-KgrMVfH6gzULv84ydPs8Z63Ynt-go
+X-Proofpoint-GUID: 9j-KgrMVfH6gzULv84ydPs8Z63Ynt-go
+X-Authority-Info-Out: v=2.4 cv=ZYcQ98VA c=1 sm=1 tr=0 ts=6a957ee5
+ cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
+ a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=Sv0fKeRqtYgA:10 a=x7bEGLp0ZPQA:10
+ a=B9nqV3Rn1-QA:10 a=VkNPw1HP01LnGYTKEx00:22 a=LMDzS8KKjDtqAWibp1EA:9
+X-JNJ: AAAAAAAB9S9rmiJ65TXhQlyBQOc9xr0kE/GOC2HQq+H/9qrEj5UQh60/AgfR/+NN8mz6+g/9Y6xJTYxh/U0DxVQToKsDKyI/apjBxOZBoaFFpivFtACALM9t7dpysYGolaQF6x+cy1yjZchQwgqATg+SnHx3m42RiuRH0SoFhCXdtjdM5a8bmgbYQrGEcCZzjCCWYtx7Iqvvj+LSE3PvGThGmNq/zgdfyWQ43lCeAnYEepJeT3pbPKsUgnI8kKxAS50/f8cOsCUE9H3JoZwtMG5GUzvjg1M7UK+q67bxPr9nex1CfyhMia4Fljk0MJqA1zF1y1e6QDlD9rZtrVFSXVrPzIXD/rSZJUhojTtAj6lvYN4T5A8LcmbIPDncPpA+GhG/pT80zY1BToXbzGXSnX/B4gVBHaGgfv/MsxQoIrQU0YDEXLeDqFZPnC3u4ZZ9iKPWtQeekFqXZnoxFKkJuthnJxQHVW0tb5XKyk6gA4Ti2snNIwto358NuYaJItE+nljb6dXq0ZkUQa+z2cOqLp7vuqxcKiTjkexcMstYac+5zdzs1jQkP/ERKB2UJC/uU4Wk26GqRKzPXCnt63tj9TbKLsX2rAVpvn5h48LGCbAwFXxlRttVbJDl9bdRIfwqRtjRXzYkoAbCLnXelKWyDbFd+Kx7K3qk8LxuJm1UWUXjF97mZoUsyHCwa6q8xgEnQbJ7CO2q4CLRLrFDM4WXJkwmBnFVspHhz6ME2hG004QDhMkiQZ5nPUCjuXl38c+Bc09KW6Ssl/d/Vi+YTufZth6GffhmEFDtcoVy1hqV8Geu0R3/DXKXpxOW+EpMRC2oiSlTEQMU4gVsHNvw0eiDPw/Dq7TdD9baMbsXNmzEoIm2ATfaL6/K2cX51YTeK6zPrk0Jkb438kouZQLY4ED7xUYcRxSIC2Z1WlgAJGh3cGrwMB+wewhH2t3Tj+oVdaItsJNEhi7cOhfCSHLP6DcQPtPJ1i2OjgB
+ zIZQqlkNbwt6PEW49xKwOttW54V4O2pbPZhDvJ/pHmZ2jckh/kEwOi0ERZ+3AdqNVPlZlK1L/AgEPAGlEMCtPO/5+Xj/lp+OthB5xhEpZSFKUb+RDq8nb/shg9HU6xXgSIs6hZaMJTrYCpU1ih22H9zNWNbgKwjeJXwRBlVLdGv4o0hQpyqikSZdlAZBvNunhnYk/KvPlIQe/YKc7ekk1pLMIT3Eq1QWZuFHqPKtVZqZxDqDQKaiR8GA=
 
-The x86 memcpy_nontemporal() helper maps to memcpy_flushcache(), and the
-ZONE_DEVICE template-copy path uses it to copy one struct page at a
-time.
+Nathan, Nicolas - fair, and it's the right call: making UBSAN weaker for
+everyone to fix one out-of-tree module's problem is a bad trade. Dropping
+this, thanks.
 
-The relevant copy size is sizeof(struct page). On x86_64, the base struct
-page layout is 64 bytes. Adding either the KMSAN metadata pointers or an
-out-of-flags last_cpupid field can make it 80 bytes after alignment, and
-enabling both can make it 96 bytes.
-
-memcpy_flushcache() currently only has inline fixed-size cases for 4, 8,
-and 16 bytes. As a result, these constant-sized struct page copies fall
-through to __memcpy_flushcache() even though the compiler knows the copy
-size at the call site.
-
-Add fixed-size MOVNTI cases up to 96 bytes so the ZONE_DEVICE
-template-copy path can keep these struct page copies in the inline
-memcpy_flushcache() path.
-
-This matters for ZONE_DEVICE memmap initialization because the copy
-happens once per initialized struct page. For a 100 GB fsdax namespace
-with map=dev, this is about 25 million struct page copies during nd_pmem
-binding or rebinding.
-
-Tested in a VM with a 100 GB fsdax namespace device configured with
-map=dev and a 100 GB devdax namespace (align=2097152) on Intel Ice Lake
-server.
-
-Test procedure:
-Rebind the nd_pmem and dax_pmem drivers 30 times and collect the memmap
-initialization time from the pr_debug() output of
-memmap_init_zone_device().
-
-With memcpy_nontemporal() used by the ZONE_DEVICE template-copy path:
-  Average of rebinds for nd_pmem driver: 150.40 ms
-  Average of rebinds for dax_pmem driver: 161.83 ms
-
-With this x86 fixed-size fastpath patch applied:
-  Average of rebinds for nd_pmem driver: 71.93 ms
-  Average of rebinds for dax_pmem driver: 87.37 ms
-
-This further reduces the average memmap initialization time measured
-during rebind by about 52.2% for nd_pmem and 46.0% for dax_pmem.
-
-Suggested-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
----
- arch/x86/include/asm/string_64.h | 71 +++++++++++++++++++++++++-------
- 1 file changed, 56 insertions(+), 15 deletions(-)
-
-diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
-index 21ae515ae35a..831d3dda3b38 100644
---- a/arch/x86/include/asm/string_64.h
-+++ b/arch/x86/include/asm/string_64.h
-@@ -82,23 +82,64 @@ int strcmp(const char *cs, const char *ct);
- #ifdef CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE
- #define __HAVE_ARCH_MEMCPY_FLUSHCACHE 1
- void __memcpy_flushcache(void *dst, const void *src, size_t cnt);
--static __always_inline void memcpy_flushcache(void *dst, const void *src, size_t cnt)
-+
-+static __always_inline void movnti_4(void *dst, const void *src)
-+{
-+	asm volatile("movntil %1, %0"
-+		     : "=m"(*(u32 *)dst)
-+		     : "r"(*(const u32 *)src)
-+		     : "memory");
-+}
-+
-+static __always_inline void movnti_8(void *dst, const void *src)
-+{
-+	asm volatile("movntiq %1, %0"
-+		     : "=m"(*(u64 *)dst)
-+		     : "r"(*(const u64 *)src)
-+		     : "memory");
-+}
-+
-+static __always_inline void movnti_16(void *dst, const void *src)
-+{
-+	movnti_8(dst, src);
-+	movnti_8(dst + 8, src + 8);
-+}
-+
-+static __always_inline void movnti_32(void *dst, const void *src)
-+{
-+	movnti_16(dst, src);
-+	movnti_16(dst + 16, src + 16);
-+}
-+
-+static __always_inline void movnti_64(void *dst, const void *src)
-+{
-+	movnti_32(dst, src);
-+	movnti_32(dst + 32, src + 32);
-+}
-+
-+static __always_inline void memcpy_flushcache(void *dst, const void *src,
-+					      size_t cnt)
- {
--	if (__builtin_constant_p(cnt)) {
--		switch (cnt) {
--			case 4:
--				asm ("movntil %1, %0" : "=m"(*(u32 *)dst) : "r"(*(u32 *)src));
--				return;
--			case 8:
--				asm ("movntiq %1, %0" : "=m"(*(u64 *)dst) : "r"(*(u64 *)src));
--				return;
--			case 16:
--				asm ("movntiq %1, %0" : "=m"(*(u64 *)dst) : "r"(*(u64 *)src));
--				asm ("movntiq %1, %0" : "=m"(*(u64 *)(dst + 8)) : "r"(*(u64 *)(src + 8)));
--				return;
--		}
-+	if (!__builtin_constant_p(cnt))
-+		return __memcpy_flushcache(dst, src, cnt);
-+
-+	/*
-+	 * The relevant fixed-size copies here are the x86_64 struct page sizes:
-+	 * 64, 80, and 96 bytes. Keep 32-byte and 48-byte copies inline as well
-+	 * instead of sending those nearby fixed-size cases back to
-+	 * __memcpy_flushcache().
-+	 */
-+	switch (cnt) {
-+	case 4:  movnti_4(dst, src); break;
-+	case 8:  movnti_8(dst, src); break;
-+	case 16: movnti_16(dst, src); break;
-+	case 32: movnti_32(dst, src); break;
-+	case 48: movnti_32(dst, src); movnti_16(dst + 32, src + 32); break;
-+	case 64: movnti_64(dst, src); break;
-+	case 80: movnti_64(dst, src); movnti_16(dst + 64, src + 64); break;
-+	case 96: movnti_64(dst, src); movnti_32(dst + 64, src + 64); break;
-+	default: __memcpy_flushcache(dst, src, cnt); break;
- 	}
--	__memcpy_flushcache(dst, src, cnt);
- }
- 
- #define memcpy_nontemporal memcpy_nontemporal
--- 
-2.20.1
+Cheers,
+Ferran
