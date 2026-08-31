@@ -1,33 +1,33 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D1A642901C
-	for <linux-hardening@vger.kernel.org>; Mon, 31 Aug 2026 15:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3876470EA4
+	for <linux-hardening@vger.kernel.org>; Mon, 31 Aug 2026 15:35:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788190441; cv=none; b=WQ3wrR9tqJVA/vkH0VA7t+GxBNwq3JycuaW3P9qmlbxlTogalV1J2mqmbFpIYc4HQv6ylufgAyPCWdBF/NvRoMkQRjw5G86zes50gjQWj6YZw/t4qENMg34SvvKLvsY+l/xt3dHaw/p9pDgWtkjZOkwdxCMgPYE0eAjpRjkY/ro=
+	t=1788190545; cv=none; b=NtOlIBblS0veazJpPIR0tFpqJJ685LfT28/E1EBmh31GEGAmy7fPCjXBDKuUQskQBjHRPq/lksE79pQE8dLIMJFkmk036aHGBwouVGcIskHcGZjTszohhpIkh1D3Tvxx2LT1i+iWIfqZyYsAtunSeYuxIUzlXPat7w6vnMJNFEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788190441; c=relaxed/simple;
-	bh=X9z6SyVZHNkQL1n6gdutBmZdrQmfESATqJ8v2NavtB4=;
+	s=arc-20240116; t=1788190545; c=relaxed/simple;
+	bh=dO5NARjIPnbddOZBqS6Mw077IVWkSrTQV6zN63iQdEw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lEUCthovtdm2JbFhFeHzoxmmlCYHy/GuOyqeDOfEZbB2eKHzcpIPmZLMK2x9NrpmbBo7wOh7akhWGxBmUAv640FjsaZ2CPFqmDHPgbFqf6jP1mbqinjoJdIZhbCBDbBc1LQRosfiGIdN7001zAtlFlqdtZyWpgDy+jvn/L0XHeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=MFHLjXqz; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:Content-Type; b=Wh8XklMNAjmaRF+/KjbYjKdAHXDt3zkshGV78PcE+jOZIuaLrUMyrSsf0ItClJFc9nWsc5m3FxO5CY4Cyg/UgIm1XpB4OGwBerfsrsvNDt9KsqbkXlJba/TuemVc9epyHkA1NeQplbVcU21iba0/Tn+OY9vCrvesf4Aso9XPL9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=NiZ7OBLg; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="MFHLjXqz"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="NiZ7OBLg"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEB5214BF;
-	Mon, 31 Aug 2026 08:33:54 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F29315A1;
+	Mon, 31 Aug 2026 08:35:39 -0700 (PDT)
 Received: from [10.57.6.141] (unknown [10.57.6.141])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E05EF3F882;
-	Mon, 31 Aug 2026 08:33:52 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2598D3F882;
+	Mon, 31 Aug 2026 08:35:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788190438; bh=X9z6SyVZHNkQL1n6gdutBmZdrQmfESATqJ8v2NavtB4=;
+	t=1788190543; bh=dO5NARjIPnbddOZBqS6Mw077IVWkSrTQV6zN63iQdEw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MFHLjXqzK8YmsGP1D4zZK3RcXzt2oW9+8hlLXOvoV0Fn7AylvgVVKPoBc1U9jHEyU
-	 Hg6K/c9dkeMJae718osmui/zp5HMLFDPQccfKI7Zo1sw1M4gobE+XIk7REGXMxLyVl
-	 Uvx2AXIqqX+6lvDZTDPUgRGau8g2gMv80e87vdOY=
-Message-ID: <51e7acb3-43e4-409e-84ef-d932495d356e@arm.com>
-Date: Mon, 31 Aug 2026 17:33:50 +0200
+	b=NiZ7OBLg9FgNOdnwafeP8+TkHYvmSGkO090szXGMy+MnpplKYOpWuYI1HsHwzEF/T
+	 aAL1/ib5Dn9d2tgjkf3EaC2Bnqm+69lSFSxVdYrBehQ+B5lYvj2Ku425wASs32W6/s
+	 FyLaXKRQFipKixyjJCom9cJkBsrwl7/vgjh1lXL0=
+Message-ID: <8264a299-139e-40ea-be84-3be06adea564@arm.com>
+Date: Mon, 31 Aug 2026 17:35:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v9 14/25] mm: kpkeys: Protect vmemmap page tables
-To: linux-hardening@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+Subject: Re: [PATCH RFC v9 00/25] pkeys-based page table hardening
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: linux-hardening@vger.kernel.org, Andrew Morton
+ <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
  "David Hildenbrand (Arm)" <david@kernel.org>, Jann Horn <jannh@google.com>,
  Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
  Kees Cook <kees@kernel.org>, Linu Cherian <linu.cherian@arm.com>,
@@ -53,69 +54,24 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Rick Edgecombe <rick.p.edgecombe@intel.com>,
  Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
  Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org,
+ Ira Weiny <iweiny@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>
 References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
- <20260818-kpkeys-v9-14-743ad31b2c8f@arm.com>
+ <apBy3nB3_GgBvYpB@e129823.arm.com>
 From: Kevin Brodsky <kevin.brodsky@arm.com>
 Content-Language: en-GB
-In-Reply-To: <20260818-kpkeys-v9-14-743ad31b2c8f@arm.com>
+In-Reply-To: <apBy3nB3_GgBvYpB@e129823.arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/08/2026 16:08, Kevin Brodsky wrote:
-> When the kpkeys_hardened_pgtables feature is enabled, make sure that
-> vmemmap page tables are protected by using:
+On 27/08/2026 19:24, Yeoreum Yun wrote:
+> This series looks good to me.
 >
-> * The standard pagetable_alloc() if the buddy allocator is
->   available, as it already allocates protected memory.
->
-> * The memblock-based kpkeys allocator for early allocations.
->
-> These allocators are not NUMA-aware, so the page tables may be
-> allocated on any node. This could potentially incur some overhead on
-> large NUMA systems.
->
-> The arm64 hotplug code is also amended to use a matching
-> pagetable_free(), ensuring that the pkey is reset when the page
-> tables are freed. x86 already uses pagetable_free() on that path.
->
-> Unlike in vmemmap_alloc_block(), __GFP_RETRY_MAYFAIL is not used as
-> it isn't justified for allocating page tables - this disables the
-> OOM and we do not have a fallback if we fail to allocate page
-> tables. See previous discussion linked below.
->
-> Link: https://lore.kernel.org/all/38d2a358-4146-bfc9-2a4f-68ce02f75c94@suse.cz/
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> ---
->
-> This is a minimal patch to protect vmemmmap page tables. More work
-> may be needed here:
+> Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
 
-Another issue that my friendly AI identified: using
-kpkeys_physmem_pgtable_alloc() for vmemmap breaks the main assumption in
-the previous patch, which is that those early page table pages are
-contiguous. vmemmap backing pages and the PTPs that map them are
-allocated serially, which means that we end up scattering vmemmap PTPs
-in the middle of vmemmap backing pages. As a result we could run out of
-space to track the early ranges to protect.
-
-This was much less of an issue in RFC v6 [1] as early PTPs were
-allocated in PMD-sized chunks. This removed most of the fragmentation
-and allowed us to track all these early ranges without extra logic.
-
-That said, allocating these pages in blocks adds complexity that isn't
-really justified when we require the direct map to be PTE-mapped.
-Considering David's comments on patch 13, the plan for the next version
-[2] is instead to revert to the even earlier approach of walking all the
-kernel page tables during early boot. This simplifies the whole series,
-but it will need to be overhauled when we try to support block mappings
-again.
+Thanks for the review! The series is (again) going to change quite a bit
+in the next version, I'll apply your R-b on the patches that remain
+mostly unchanged.
 
 - Kevin
-
-[1]
-https://lore.kernel.org/all/20260227175518.3728055-19-kevin.brodsky@arm.com/
-[2]
-https://lore.kernel.org/all/7af32e98-f2ab-4961-9e3c-72b8a21416c0@arm.com/
