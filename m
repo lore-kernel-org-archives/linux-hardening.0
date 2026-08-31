@@ -1,90 +1,72 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597C937DEBF;
-	Mon, 31 Aug 2026 16:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F241337BAB;
+	Mon, 31 Aug 2026 23:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788194926; cv=none; b=CQx09CUIxNIds3zTWGMR4iHsBys3hjo0WyOam20PjcDgPFVKM6XoJSNbIP6dFWiqRxykgFBjwDwPCyrTL4SuQg8fhM8kV0tHBBGxqDs5DvR60xN8zwRFRDez9b7CypuVI5gL0gip1euTEqjk2UcdrgBzWWL05r4qAFusc4/PV4c=
+	t=1788219934; cv=none; b=TAxmA7j4JBdlhxiYxnO8nDFi0SZXqyO4DcIBNw8+FgSWckwPMdO4CNIcWojihSVmw1myEZP7PvqsdSFDitGvxqdo80CMuUSvjJn8+OiDsWQJu17hXBOq+ckW1+2Na7kphnZorfhGv8mPECmq1uMWcq97bhp0dZQd3TTaxUeYNIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788194926; c=relaxed/simple;
-	bh=lRUd4QhEQ+Tj2B1hEFCQEBwSYlblCpzjx8QTcT/F/BA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ixPe0FKt/AyyZXawC8X8gKC/KXydfDEbGD5jqig5u1nMY/CP7BjfYs4I8cAjAOUsDQXLpng0wgHD23g9ebxQzPDeIOjepusWPG4ySvStIwq8l266YxF2lU9pkd4PmKcEdc9WTwL1rM3RyOB54FkTopVPNy4kJsQzL5bVpmZZO8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=fjkoNEou; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1788219934; c=relaxed/simple;
+	bh=KFg9Z+cYzf+wgTjB4jP0frPMbh2Dw+RY49DZZp2ECaA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bPaJkXa4Evdf7YAKvFNza53irfpJy+KukKbIl6a6gHeJEEaQKXmcuxYVs7fMdhe6JCjo2DLp2sMPKIy2GSN1KRJX/Yzufy/Zfr79nNAeXidH8/gSytACqp7JvWQIiUUWUCrSLyXxfaF7ejakuxcKndUhTrmXf1dNV/tgaUUcD/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Vhuqq3dh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="fjkoNEou"
-Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 9EB131201B5;
-	Mon, 31 Aug 2026 16:48:34 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 1231480013;
-	Mon, 31 Aug 2026 16:48:32 +0000 (UTC)
-Date: Mon, 31 Aug 2026 12:49:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>, Thomas Gleixner <tglx@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kees Cook
- <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey
- Senozhatsky <senozhatsky@chromium.org>, Tycho Andersen <tycho@tycho.pizza>,
- Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: Re: [PATCH v2 2/2] kallsyms: Document why unresolved symbols are
- revealed
-Message-ID: <20260831124928.22e163ab@gandalf.local.home>
-In-Reply-To: <20260831133729.p5ylO7O6@linutronix.de>
-References: <20260821152614.2202196-1-bigeasy@linutronix.de>
-	<20260821152614.2202196-3-bigeasy@linutronix.de>
-	<ao8SeCCG65uwH-Tk@pathway.suse.cz>
-	<20260827102411.NsziRXyJ@linutronix.de>
-	<20260831133729.p5ylO7O6@linutronix.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Vhuqq3dh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0781F000E9;
+	Mon, 31 Aug 2026 23:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1788219932;
+	bh=wj4I/MKj2L9b4J+c08D7cj7b3uNtuGqLdKw3zvVsGww=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Vhuqq3dhS0xj/pd9jp9IoVKDsg24dq5X2+kEEIBjB+a3vki3RCwS4uXdfJC4jqTXJ
+	 thxERrpgvXlbZtgTioLwixWVxFgiZUzOmhCn0EbPB0XODc4QSl1IVOk2OzQ56ZULUD
+	 D/eOxK4ZSBkWfhM21240hACSxmQV00dGRsxfsSsg=
+Date: Mon, 31 Aug 2026 16:45:31 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Li Zhe" <lizhe.67@bytedance.com>
+Cc: <apopple@nvidia.com>, <arnd@arndb.de>, <balbirs@nvidia.com>,
+ <bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>,
+ <kees@kernel.org>, <mingo@redhat.com>, <muchun.song@linux.dev>,
+ <rppt@kernel.org>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <x86@kernel.org>
+Subject: Re: [PATCH v11 0/7] mm: optimize zone-device memmap initialization
+Message-Id: <20260831164531.be5a8fa210401830e85eb974@linux-foundation.org>
+In-Reply-To: <20260831111638.76012-1-lizhe.67@bytedance.com>
+References: <20260831111638.76012-1-lizhe.67@bytedance.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 1231480013
-X-Stat-Signature: ituq6i7baidazb4su8x6ado1funz1tzm
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18ZqRGqxs7puIId+Ef8aZBJDsOIRf12WwY=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=WsljotfB7onrjzTjyEtxNzvepuY6gZ4jRtvpx8W7cqM=; b=fjkoNEouMaMDTWCOK4aay+7yuGukaFP9gZHNq15hUjvwkTTTV2X/dwfVEYBYqmxjMUJjcmoT7kqaLahlmYGx9AUehEfUmgDm0XjTxOFSIl2DAS5nKIXVDP94i6nYxDuJcBclYJuDn8a65/0YFZ5OpkJTszwxwC5852K3FU13uL4=
-X-HE-Tag: 1788194911-300693
-X-HE-Meta: U2FsdGVkX189353ttIQiKGJiTablLs8NIEZkRSyuoaBHovZqSJD/mYcHZe5Gqwy92TuejBV5506vJR6qnmKVnd4YH7QxNQ7uomvA7jlDotKXva6BROYEAiDJzr40JsOCXmRH5mGmZc4ND+YxMRqCFcF3ntInynf3eEyBHS8Chnv4pqSS1th/HqYeHoz9MKqqG1JNsX+LFfX1Yf1efxY6vtDMFCId5ux5aKeLL0/STg87iR90S6li8Fsix9XFff+GhcCp7Tf5WZ/5k38tX49YPL+8x0ETsBHGpGKAi3u5DbOThdVEzZQcS2Ub7X2yQ2UvKmE0AMbtEF7W0xEcU+yV+NTy//9s9HW/
 
-On Mon, 31 Aug 2026 15:37:29 +0200
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+On Mon, 31 Aug 2026 19:16:31 +0800 "Li Zhe" <lizhe.67@bytedance.com> wrote:
 
-> Could someone yell here, please? I convinced myself that hiding
-> unresolved pointers is the good thing to do here since a "wrong" pointer
-> would be seen in backtrace anyway.
+> memmap_init_zone_device() can take a noticeable amount of time when large
+> pmem namespaces are bound or rebound, because it initializes nearly
+> identical struct page descriptors one PFN at a time. This series reduces
+> that ZONE_DEVICE memmap initialization overhead by reusing prepared
+> struct page templates and, on x86, using memcpy_nontemporal() for the
+> template copy path.
 > 
-> Thread starts at
-> 	https://lore.kernel.org/all/20260821152614.2202196-1-bigeasy@linutronix.de/
+> ...
+>
+> This reduces the average memmap initialization time measured during
+> rebind by about 48.0% for nd_pmem and 41.6% for dax_pmem on that arm64
+> VM setup. Since this arm64 setup does not use the x86 MOVNTI fast paths,
+> the result also suggests that the generic template-copy optimization can
+> benefit architectures without an architecture-specific
+> memcpy_nontemporal() backend.
 
-I wonder if we should just tagged hash values as such:
+Well that's nice.
 
-| [    1.498171]  <TASK>
-| [    1.498172]  00000000cb9bc262 [hash]
-| [    1.498174]  ? 00000000eb5021dd [hash]
-| [    1.498176]  00000000ed1a9938 [hash]
-| [    1.498178]  </TASK>
+Sashiko seems to have found some new things to complain about:
+	https://sashiko.dev/#/patchset/20260831111638.76012-1-lizhe.67@bytedance.com
 
-So that people will know that the value is just some random hash value and
-not a real address.
 
-Although rather useless in call stacks, I like hash values because the same
-address will show up the same.
-
-Having '[unknown]' may also be confusing because it doesn't really say
-"why" it was unknown. But having a number goes back to what it always did.
-Hashing it with a "[hash]" marker will also let people know the value was
-hashed.
-
--- Steve
