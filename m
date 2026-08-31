@@ -1,36 +1,36 @@
 Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAF13B0597;
-	Mon, 31 Aug 2026 03:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB3B3B993A;
+	Mon, 31 Aug 2026 03:50:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788148228; cv=none; b=m/A+vvv++7nDJeatfNRAz5dWZrA3B0O3R3TiYLA1CDmvXMuU5VxdhU7/Zn4+yAZzCXSgKNbWNmJOobCS6wqU2uKEh/BL//LwHY+R3bllXR1xwxtNsf6LR6MV4nxoac0lARAwoe1NuzDYV12y5LYFJoWQhiWFbDRqc/SZHX/FpRY=
+	t=1788148229; cv=none; b=NuNVmF0O+cZ0MCrubpQr4PgX9fKsHUZRd6P1owjJgzqmHqnN/tIDmqcN4s6BeM5nvd/KO74N1CMACykDFZu1grM4vsFeUs52dqPcq1pzLMoThEiSUKW7LFpEzr24J5Tm2425S6F4BngkJCrk8h9HnK5tWrkUc6/An2MxBIsJu0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788148228; c=relaxed/simple;
-	bh=eMNksmG246mpogtFnGw7NQKjqaMgijpHuCZKhIxXsAw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ONriNG71fT2d73BaotF1p7+NaXyeDmk+9PKINYYNptNrj70dUnTgY+twGDBeM9SCRrAano6V0PQVbCrnBBKvk+Sm3Miy46+wEtQ/pTB0Vo8kE4Avue3w6STC1Gznrc2VIpWqs17M7eCdmmDVT3lwujXVDjDpxqzxRsUjhrJYbOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Lo1m7J8x; arc=none smtp.client-ip=203.29.241.158
+	s=arc-20240116; t=1788148229; c=relaxed/simple;
+	bh=e82kdNAHTmo5otX2pNkTZpW60n9WJy57NP28Y++r8Mc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TCtz49l7C2oc8svI0ST3nQ/UCRfr+h4QbGji0NvCo7b/2iaux1njJVatT9gVoYy8cMWZUx6bhqfbzApRcDUKUGIktZvVy3aBIZrk3rnAyehH8ADj0TueUk2lzOo45KYjZgETI/tYcHJf1aZiWE2ozEAVGsFfCc0PkjlnousqK0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=VZi5eg3+; arc=none smtp.client-ip=203.29.241.158
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Lo1m7J8x"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="VZi5eg3+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1788147869;
-	bh=QPr6gXN/7uyZQTV9SxUUgaKwIhtQfjpGIPQEZJv4uMI=;
-	h=From:Subject:Date:To:Cc;
-	b=Lo1m7J8xOkAuArwu5eemn9m5+2FQkF9s2x8QRF8vquy+Gi0AuMt8ejq67oG9UNdvK
-	 xN2AS00sBio9maxwz/x9bZi392uOsNi2i7sz0B64V87hJmjZJAjS7+Pw1yFO0oVu4z
-	 ybSqiirZPVCzmdfuGXrVPFJxaj8BN8bNHU80PzVVTqk9Ih4vZpmsu05MAW0AlVb3oy
-	 ekFTEVXsc0XmeVA3evB6sy5+1GeRA8ad1a/Agt5pWRQaYW/pCS/QIHkPqR2ZE8uOZv
-	 mjH2pXm3RcRSQV9YLoU1yunRIFxlRknQQYcIzVsFnSqiIS/QgsZVZpQC7UODEvrikV
-	 nWPJlU3yueCaw==
+	d=codeconstruct.com.au; s=2022a; t=1788147870;
+	bh=PX3VN/N7hHR7v61uN6YmJJLT2IKvrpv5bIjy8LQXpbk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=VZi5eg3+Yc1zFQSprNGWSVOhlHSECKWAhW3Rsjm4d+0Rpe+3PyZsBWngWhT9/DLND
+	 c+nv/gj31cH6PdHkQz0BrC9bwGfj2JMmouXZSiwVviUUCxspoiSdaioukKAgORyiNM
+	 9DDH4KnJnk2LUXtzeSznL42dh+3uDo/c5MKritsGoESDBRlx8Q+L+XTcHN6+gU22ua
+	 bgN054Z8WRfaaEhaVzV06f8yknRKrFuLi1EXBi4y2m5aLtzmYdUcy+x/G8LHypLe62
+	 456IbmZ0FpTH+zllmKQnlnTWD2xmjSKcY0bBDJOijqqa/3ICXhsC7oDD54lP9RHPiR
+	 iVaMRY2gXKzcw==
 Received: by codeconstruct.com.au (Postfix, from userid 10004)
-	id 53CCD682D8; Mon, 31 Aug 2026 11:44:29 +0800 (AWST)
+	id 489D96844C; Mon, 31 Aug 2026 11:44:30 +0800 (AWST)
 From: James Lee <james@codeconstruct.com.au>
-Subject: [PATCH 0/7] net: mctp: usblib: Increase coverage of kunit testing
-Date: Mon, 31 Aug 2026 11:43:39 +0800
-Message-Id: <20260831-dev-mctp-usb-lib-test-v1-0-79699bf67a18@codeconstruct.com.au>
+Date: Mon, 31 Aug 2026 11:43:41 +0800
+Subject: [PATCH 2/7] net: mctp: usblib: Add test for splits inside headers
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,10 +39,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGv4lGoC/x3MTQ5AMBBA4avIrE2iDYqriAU1mMRfOiUS6d01l
- t/ivReEHJNAk7zg6GbhY49QaQJ26feZkMdo0Jkus1IZHOnGzfoTLxlw5QE9iUdVKKMrY3KqC4j
- t6Wji5/+2XQgfJMCYtWcAAAA=
-X-Change-ID: 20260617-dev-mctp-usb-lib-test-151728774e95
+Message-Id: <20260831-dev-mctp-usb-lib-test-v1-2-79699bf67a18@codeconstruct.com.au>
+References: <20260831-dev-mctp-usb-lib-test-v1-0-79699bf67a18@codeconstruct.com.au>
+In-Reply-To: <20260831-dev-mctp-usb-lib-test-v1-0-79699bf67a18@codeconstruct.com.au>
 To: Jeremy Kerr <jk@codeconstruct.com.au>, 
  Matt Johnston <matt@codeconstruct.com.au>, 
  Andrew Lunn <andrew+netdev@lunn.ch>, 
@@ -53,31 +52,113 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org, James Lee <james@codeconstruct.com.au>
 X-Mailer: b4 0.14.2
 
-Current usblib tests only check receipt of a limited combination of 
-packets lengths.
-
-Added tests of receiving packets with invalid fields, and more complex
-packet spanning. Also created tests for transmitting packets, covering
-most code, except for mctp_usblib_tx_cancel() and allocation failures.
+Add test covering every possible split of a packet's headers between
+transfers and remove parameterized tests that are now covered.
 
 Signed-off-by: James Lee <james@codeconstruct.com.au>
 ---
-James Lee (7):
-      net: mctp: usblib: Add to parameterized kunit tests.
-      net: mctp: usblib: Add test for splits inside headers
-      net: mctp: usblib: Add tests of invalid headers
-      net: mctp: usblib: Complete rx tests
-      net: mctp: usblib: Simplify allocation logic in mctp_usblib_test_rx_init
-      net: mctp: usblib: Add initial kunit tx tests
-      net: mctp: usblib: Add test for failing append
+ drivers/net/mctp/mctp-usblib-test.c | 69 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 63 insertions(+), 6 deletions(-)
 
- drivers/net/mctp/mctp-usblib-test.c | 546 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 535 insertions(+), 11 deletions(-)
----
-base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
-change-id: 20260617-dev-mctp-usb-lib-test-151728774e95
+diff --git a/drivers/net/mctp/mctp-usblib-test.c b/drivers/net/mctp/mctp-usblib-test.c
+index 4c27307900fb6116572bc9d89f3def6f06c30397..1a6dd6d10daab314f5e082477ecd3b9518f6b50e 100644
+--- a/drivers/net/mctp/mctp-usblib-test.c
++++ b/drivers/net/mctp/mctp-usblib-test.c
+@@ -14,6 +14,8 @@
+ #include <net/mctpdevice.h>
+ #include <linux/usb/mctp-usb.h>
+ 
++#define HDR_LEN sizeof(struct mctp_usb_hdr)
++
+ struct mctp_usblib_test_dev {
+ 	struct net_device *ndev;
+ 	struct mctp_dev *mdev;
+@@ -378,12 +380,6 @@ static const struct mctp_usblib_test_pkt_span mctp_usblib_test_pkt_spans[] = {
+ 	{ "1p1x-complete", 1, { 8 }, 1, { 8 } },
+ 	/* Two small packets combined within one transfer */
+ 	{ "2p1x-combined", 2, { 8, 8 }, 1, { 16 } },
+-	/* A packet split over two transfers, at the MCTP payload */
+-	{ "1p2x-split-payload", 1, { 16 }, 2, { 8, 8 } },
+-	/* A packet split over two transfers, at the USB transport header */
+-	{ "1p2x-split-usbhdr", 1, { 16 }, 2, { 2, 14 } },
+-	/* A packet split over two transfers, at the MCTP header */
+-	{ "1p2x-split-mctphdr", 1, { 16 }, 2, { 6, 10 } },
+ 	/* Single packet split over 3 transfers, middle entirely continuation */
+ 	{ "1p3x-split", 1, { 12 }, 3, { 4, 4, 4 } },
+ 	/* A packet split over 5 transfers, splitting on and between each header. */
+@@ -403,10 +399,71 @@ static const struct mctp_usblib_test_pkt_span mctp_usblib_test_pkt_spans[] = {
+ KUNIT_ARRAY_PARAM(mctp_usblib_test_rx_pkt_span, mctp_usblib_test_pkt_spans,
+ 		  mctp_usblib_test_pkt_span_to_desc);
+ 
++static void mctp_usblib_test_rx_split_header(struct kunit *test, size_t offset,
++					     struct mctp_usblib_test_dev *dev,
++					     struct mctp_usblib_rx *rx)
++{
++	struct sk_buff *skb;
++	size_t buflen, len;
++	u8 packet[16];
++	void *buf;
++	int rc;
++
++	len = sizeof(packet);
++	mctp_usblib_test_init_pkt(packet, len, len);
++
++	rc = mctp_usblib_rx_prepare(dev->ndev, rx, &buf, &buflen, GFP_KERNEL);
++	KUNIT_ASSERT_EQ(test, rc, 0);
++	KUNIT_ASSERT_GE(test, buflen, len);
++
++	memcpy(buf, packet, offset);
++	mctp_usblib_rx_complete(dev->ndev, rx, offset);
++
++	rc = mctp_usblib_rx_prepare(dev->ndev, rx, &buf, &buflen,
++				    GFP_KERNEL);
++	KUNIT_ASSERT_EQ(test, rc, 0);
++	KUNIT_ASSERT_GE(test, buflen, len);
++	KUNIT_ASSERT_EQ(test, dev->rx_pkts.qlen, 0);
++
++	memcpy(buf, packet + offset, len - offset);
++	mctp_usblib_rx_complete(dev->ndev, rx, len - offset);
++	KUNIT_EXPECT_EQ(test, dev->rx_pkts.qlen, 1);
++
++	skb = __skb_dequeue(&dev->rx_pkts);
++	KUNIT_EXPECT_NOT_NULL(test, skb);
++	if (skb)
++		KUNIT_EXPECT_EQ(test, skb->len, len - HDR_LEN);
++}
++
++static void mctp_usblib_test_rx_header_splits(struct kunit *test)
++{
++	struct mctp_usblib_test_dev *dev;
++	struct mctp_usblib_test_ctx *ctx;
++	struct mctp_usblib_rx *rx;
++	size_t i;
++
++	ctx = mctp_usblib_test_init(test);
++	rx = mctp_usblib_test_rx_init(test, true);
++	dev = ctx->dev;
++
++	/* Unrolling here so stack traces point to the invocation with the
++	 * failing length.
++	 */
++	mctp_usblib_test_rx_split_header(test, 1, dev, rx);
++	mctp_usblib_test_rx_split_header(test, 2, dev, rx);
++	mctp_usblib_test_rx_split_header(test, 3, dev, rx);
++	mctp_usblib_test_rx_split_header(test, 4, dev, rx);
++	mctp_usblib_test_rx_split_header(test, 5, dev, rx);
++	mctp_usblib_test_rx_split_header(test, 6, dev, rx);
++	mctp_usblib_test_rx_split_header(test, 7, dev, rx);
++	mctp_usblib_test_rx_split_header(test, 8, dev, rx);
++}
++
+ static struct kunit_case mctp_usblib_test_cases[] = {
+ 	KUNIT_CASE(mctp_usblib_test_rx_single),
+ 	KUNIT_CASE_PARAM(mctp_usblib_test_rx_pkt_span,
+ 			 mctp_usblib_test_rx_pkt_span_gen_params),
++	KUNIT_CASE(mctp_usblib_test_rx_header_splits),
+ 	{}
+ };
+ 
 
-Best regards,
 -- 
-James Lee <james@codeconstruct.com.au>
+2.47.3
 
