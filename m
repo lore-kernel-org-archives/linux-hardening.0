@@ -1,130 +1,154 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3877049EC41
-	for <linux-hardening@vger.kernel.org>; Mon, 31 Aug 2026 14:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13ECA46D572
+	for <linux-hardening@vger.kernel.org>; Mon, 31 Aug 2026 15:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788186161; cv=none; b=JeS6xbVgipTQEswFyTtzTzSFyFjzVwG4qd5TIUuwcRN5CnWeSDruOLiJ9yvyvvVQc78rQ/ivQRdntYqJjVZ0eVoCx7UvNiIW9HJVauxRtusUv8Xgk9fqTbhd+EnUlXvEAqXvuCIpU7swy0/tMef2cYfL3ASdqXDWLWYvGHudBgc=
+	t=1788189928; cv=none; b=m6dFgk9CrVc00CkH5pqt2VUqq00TCSTl8twASXq+ZqF+HxLGScRwaEVV5MAZ3/+AMXa31OHljmwmMYeaPcDr2F9dkXpBhjokoxza9juSy1Gjazxi0C5D3FqlGMzbh++NwXeEGaD2JUCaaRknFsjcPiv1jUdpzKSmrWaTanxjK1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788186161; c=relaxed/simple;
-	bh=ssy/+J48udsvb8s5cNNtStK7Eh2FqnexA8kGVzmIffA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fvB3YouTwvjqTnS15bg0SpwDrBls9MappZ/cA0F9sao+v3g3QP9UJ0dDwXW1667eOeUlCdKSa9ezoAIrpWHyq+YLbYnGB2nmIXzS5arBgGmaJUiIrjkdofFJHjTRFeIgEYqJvTSzKBr5NrIj8NE/jclV37iH8TK4dfMKCsYLdgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=W4++9lNm; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1788189928; c=relaxed/simple;
+	bh=eK4lq3SDbX0dW+5hYaKysf1ohyjSSfRIS1hTL0ZfAV0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BvfZGgTH1W9leTjpO6FqtV9j84hN1VMM4guZXcMfGDwLRF4UtiNy9KW1vi2Gqtx6VASQh3b/V0fGRsv6hx/eVp7S8/QvjdN+DOZUhyp7fYQejwbBv4g8wDlpDb5cCiIUiWnFhAEn2dO6C3YQb+sj7j3bYvTDrfiw60hAc6L/JXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ERM+z1j/; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="W4++9lNm"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-49b8eeb3ff2so26292785e9.2
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Aug 2026 07:22:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1788186158; x=1788790958; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=7tISTQ9tiSmJaPWdMAEbXQLoa5N7JlHWWmdz6lYTqvQ=;
-        b=W4++9lNmY7OAvvJjC93HMwoh6is4Hz+LWZJJXR6qpAPqNmWj3nfAN1NhLLSYc+/73L
-         GpuNNsTB0ZZFpYB8fU8LBrNR2TLc2UPX3WnJLyxqpHgc51bx1sbHDqw4SsNvohSkldvZ
-         MC9fUpMkCj+Pj+uKbQpzVyM4m4PX9k+BpNGEMSMfNT+kuu6nmCXG+0YU+noT9rMYvRAn
-         QRmeityfgN/mO0xpp9eHKJUfGwSjIBZA12a4ZRwjT6ainhFq+FrSSnY/EbwTJogA6jWC
-         LYPeZHeTxxE/f0AAzZjWkzJUgOdGh6W6XnL88HanJNu6cdEBUBpUh6gPo9/H6nmXchJc
-         ZcOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788186158; x=1788790958;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7tISTQ9tiSmJaPWdMAEbXQLoa5N7JlHWWmdz6lYTqvQ=;
-        b=S1t9Rgak9zioYf6+dfwqeuCeu0rcWHbs71xJm1VakcceWdnQmIKMHVt3/Vg8yqAxfC
-         fE16ACQMS1jdwvrNfS72qPLtoIwLhZFsGTIAiV7GVCsf2JP3N6V8PCgU5a4i6y4i/QZj
-         sHyd58iRWmg1Ak7UdtvBI14OMiS5yOyKQACO03kjOgTDjOcS2st6Wt/+lpgtTEjs2F16
-         170moZ90Rnb1RFejETi2RlCWyVw3zTNf/7C9p9lqJ02FtU80y3SUHqKA64lOdK6+tj0J
-         63mtKnQocrY3H27gfmk59Rh3If/8xAtFRAnRbbNnHHvupVVM+rPa26/Kjaqsa5OUdnni
-         O5JA==
-X-Forwarded-Encrypted: i=1; AHgh+RonIMfoTUSUrLWe/5uZD29IkVAD5A29B53mZP+DSdC8IMJ47o+Ea29nsUe0jVRgy1yXWB1SZB4858peyXrhc4Q=@vger.kernel.org
-X-Gm-Message-State: AFuF++mNxlf/NK4MCaRc0a4Aw35FJgT4iLxpDtbky+DuKPT0ev8bS6/5
-	ok2lcPhMbX8pVaqOj0sK85mpACicnC5Nwjepo0WQx2Ii+rcPpFArLUWBscc7Vzzxjjc=
-X-Gm-Gg: AR+sD105lGjWGr0qBeJ+2LoUUHD9NBo3uYdHadOeCaRLjZx4vytN6QOXJ+l4anWNnx1
-	H9x1T9WAoBkaOhRXVmejWcfj7M+sgo0T1j/A/uX2xKdZPGyzP24J1+2JuUogGeM2eI7+EiYYicr
-	PKeX+QpDfBfcWyhRt+3u+lRn2L+GRw89OTrzpeenAtxwItdkGWpdlclh/yUe75REAYu3W/aA5Gl
-	MTiKeg/hV/VQePC/ovvmtI6kH1v9rBYWQzmk5IP3RmH+j445bcceOjqVVaSph7Pl2lK30ahIpYR
-	XHRikYsS9dbgbZSYUblf5m4kW6Ltf2BdYQPZqAVql9Cl/Culppo02yNySZattliNTJdb7UvuGzB
-	SNK1m6c7j+zncEGNEtBQsFdSEOScFPkJqlrmZW5hBjesWm0qfNbEKSDBcnrANaFlnDqz2dWlh4L
-	NVjAIh7kZ7WxUXDQYCRIm8yKtcGpSmWx+oA72qiJX4YGpizOa2UdG0WLpf2xg3rA==
-X-Received: by 2002:a05:600c:6091:b0:49c:d60c:74e0 with SMTP id 5b1f17b1804b1-49cdc44a420mr20771505e9.13.1788186158256;
-        Mon, 31 Aug 2026 07:22:38 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49b9266be71sm619531775e9.2.2026.08.31.07.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2026 07:22:37 -0700 (PDT)
-Date: Mon, 31 Aug 2026 16:22:35 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kees Cook <kees@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tycho Andersen <tycho@tycho.pizza>
-Subject: Re: [PATCH v2 1/2] vsprintf: Don't leak pointers for %ps without
- KALLSYMS enabled
-Message-ID: <apWOKw7uqM_4R-C3@pathway.suse.cz>
-References: <20260821152614.2202196-1-bigeasy@linutronix.de>
- <20260821152614.2202196-2-bigeasy@linutronix.de>
- <ao8MnDuF9nnI9KxG@pathway.suse.cz>
- <20260827091407.yUpoFiuF@linutronix.de>
- <apAIhJImGHCCPEH-@pathway.suse.cz>
- <20260831133021.PtgflU-O@linutronix.de>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ERM+z1j/"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13B0814BF;
+	Mon, 31 Aug 2026 08:25:14 -0700 (PDT)
+Received: from [10.57.6.141] (unknown [10.57.6.141])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09D9D3FAA1;
+	Mon, 31 Aug 2026 08:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788189917; bh=eK4lq3SDbX0dW+5hYaKysf1ohyjSSfRIS1hTL0ZfAV0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ERM+z1j/JBwlg2fAxsfL8eZW4gRaVWX/j5qdnj1kgq3pJy6J4eZ8K21f5sScC6ngd
+	 66BaVsUlLVYQU2k0g7DZbCjiISMySQ9GE19fNRsy0Eu1baoXaH+Cp05TisgpJMke/3
+	 R/0L4fm8uy9+eRa96GTQNDL+1cNFc3qZl+uTNaHs=
+Message-ID: <25ca0804-f864-4836-a3ed-58e997f265c8@arm.com>
+Date: Mon, 31 Aug 2026 17:25:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260831133021.PtgflU-O@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v9 01/25] mm: Introduce kpkeys
+To: "David Hildenbrand (Arm)" <david@kernel.org>,
+ linux-hardening@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
+ Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
+ Linu Cherian <linu.cherian@arm.com>, Linus Walleij <linusw@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Maxwell Bland <mbland@motorola.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
+ Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
+ <20260818-kpkeys-v9-1-743ad31b2c8f@arm.com>
+ <f082aff3-ec63-48fa-94c5-159ca0c5a33e@kernel.org>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <f082aff3-ec63-48fa-94c5-159ca0c5a33e@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon 2026-08-31 15:30:21, Sebastian Andrzej Siewior wrote:
-> On 2026-08-27 11:51:00 [+0200], Petr Mladek wrote:
-> > 
-> > I think that it is a matter of taste. I could understand that
-> > "(unknown)" might look more obvious to some people.
-> > 
-> > I would still prefer the hashed pointer. It make it consistent with
-> > %p handling. Both print addresses in this case.
-> 
-> For %p expect a pointer, for %pS you expect a name.
-> 
-> > The motivation for the hash in %p is that it is slightly more useful
-> > than a static string, e.g. "(address)" or "(pointer)". The hash allows
-> > to match the same addresses. It is not 100% reliable but better
-> > than nothing.
-> 
-> but is this helpful?
-> 
-> > Also the hash makes it more obvious the connection with "no_hash_pointer"
-> > option.
-> 
-> Assuming you know about the no_hash_pointer. And then you get a
-> randomized pointer. Enabling kallsym would be a _bigger_ help than
-> rebooting with no_hash_pointer.
-> 
-> > IMHO, the only drawback is that people might confuse the hash with
-> > a real value. But it is easier on 64-bit systems because the higher
-> > 32-bits are zeros.
-> 
-> That, too. Do you continue to insist on this hashed pointer output here?
+On 27/08/2026 20:00, David Hildenbrand (Arm) wrote:
+>> [...]
+>>
+>> +/**
+>> + * kpkeys_enter_context() - enter a kpkeys context
+>> + * @ctx: the context to switch to
+>> + *
+>> + * Enters the specified kpkeys context. @ctx must be a compile-time constant.
+>> + *
+>> + * Return: state to be passed to kpkeys_leave_context().
+>> + */
+>> +static __always_inline
+>> +struct kpkeys_state kpkeys_enter_context(enum kpkeys_ctx ctx)
+>> +{
+>> +	BUILD_BUG_ON_MSG(!__builtin_constant_p(ctx),
+>> +			 "kpkeys_enter_context() only takes constant values");
+>> +	BUILD_BUG_ON_MSG(ctx < 0 || ctx >= KPKEYS_CTX_COUNT,
+>> +			 "Invalid value passed to kpkeys_enter_context()");
+>> +
+>> +	return arch_kpkeys_enter_context(ctx);
+>> +}
+>> +
+>> +/**
+>> + * kpkeys_leave_context() - leave a kpkeys context
+>> + * @state: state returned by kpkeys_enter_context()
+>> + *
+>> + * Restores the state saved when entering a kpkeys context. If no context was
+>> + * entered, this function does nothing.
+>> + */
+>> +static __always_inline
+>> +void kpkeys_leave_context(const struct kpkeys_state *state)
+>> +{
+>> +	if (state->entered_context)
+>> +		arch_kpkeys_leave_context(state);
+> state->entered_context is a common code variable, but it's not set by
+> commoncode. Is there a reason?
 
-I do not insist on it. IMHO, this does not have a good solution.
-I wish we got feedback from more people.
+Not a good one, agreed the asymmetry isn't great.
 
-Let's give it few more days. The merge window has just ended.
-People might have more time to go through pending mails.
+> IOW, should arch_kpkeys_enter_context() only return the arch parts, and
+> entered_context would be set in common code?
+>
+> Also, should entering bail out if the context was already entered.
+>
+> Last but not least, when would we expect to call kpkeys_leave_context() but the
+> context was not entered?
 
-Best Regards,
-Petr
+It may be worth clarifying that this is not the same situation as lazy
+MMU mode, where the state is thread-global. Here the state is supposed
+to be on the stack and you should never have nesting or unmatched
+enter/leave calls for a given kpkeys_state. (I could certainly add some
+VM_WARN_ON_ONCE() to check these invariants, like in the lazy MMU API.)
+
+The other difference is that only arch code can decide whether we need
+to enter that state, as this is based on the value of the
+(arch-specific) pkeys register. 
+
+> If this is really arch-specific stuff, probably it should go entirely into arch
+> doe. If this is common code stuff, likely it should be maintained entirely in
+> common code.
+
+The decision is made by the arch, but I think all architectures would
+want this behaviour. So we could have:
+
+    bool arch_kpkeys_enter_context(enum kpkeys_ctx ctx, struct
+arch_kpkeys_state *arch_state);
+    void arch_kpkeys_leave_context(const struct arch_kpkeys_state
+*arch_state);
+
+It's a little less elegant because the state to be set now needs to be
+passed as an extra argument, but maybe that's better encapsulation. It
+also has the advantage of removing the dependency on struct kpkeys_state
+in <asm/kpkeys.h>, so we could get potentially get rid of the separate
+<linux/kpkeys_types.h>.
+
+The alternative is to make the entire struct kpkeys_state arch-specific
+and move all the handling to the arch helpers. Currently the difference
+is academic, but when other architectures implement the interface this
+could lead to undesirable discrepancies.
+
+> Overall this looks much cleaner to me compared to what I reviewed the last time
+> (was that v8? I don't remember :D )
+
+It was indeed RFC v8, and thanks :D
+
+- Kevin
