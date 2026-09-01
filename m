@@ -1,32 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 676E536E494
-	for <linux-hardening@vger.kernel.org>; Tue,  1 Sep 2026 14:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8363B2E975E
+	for <linux-hardening@vger.kernel.org>; Tue,  1 Sep 2026 14:42:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788273715; cv=none; b=b+JtJ+HIH9cefgb5q2z8JsJ1+m2RU2hGvlXVh/9PFZggvawe1DPAWkAMZQwErsUBw38Lfny4gits5083+zM2ne6ZuvXbyBMXnoSTRpaxyUtM/bhmNvNepSVL8ItnbYvEw7mmv3O16Me3sBiHZ4XOC3kVZ4nCvhOtSYhUDaiHs1U=
+	t=1788273778; cv=none; b=Jg+C077YZM/qk8YjHK0Yp6YaQ/RjANweE0ggKF04mLK8faCuAptea6UgxDI8FFgoQ0EeCCI+kZ/V5a1Lvw1Q2hw9de+Xu+/yp1MtQlEZzwDEV6a1ptu1PwytDcerLAIzcdPmScgQLRYkCmZSTM5+AxZUGJWIWg9evznAxuoF7cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788273715; c=relaxed/simple;
-	bh=snJg8J7YvE9qwQxvspmDeoEOz9TuP5DGjyz2EhgFpiI=;
+	s=arc-20240116; t=1788273778; c=relaxed/simple;
+	bh=NZvEgAQVOI7lQrreQcbXEtrWMnYe52kjfKk59Vp8xtY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AWELPxhZ3nznxmCG5lDw1e8MzBRP2bRZD7DyKztkL3QLLV4BVFoztQUVvXtq4o5P+PgyBKWIL3EizIEe5HomCs0o5+4N7ms60NkCoOqWTSPXaU+PRuO73BW910EoPT8bBfIfjQN1novyw1zYTDyFhlxWPp3BW7sYoLhvwPRj5Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=W6jAho6o; arc=none smtp.client-ip=217.140.110.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=dix3vpMzJubrMtBfBjei1Ac1HKqCe70WxV8TXddJG/u3MCf6CJd3loDTOw74O/WcsQUvWH6MKmeA97yuYgDUVA65A2h49EiJZ8OiJeghTyK+RjIoCRtUdsg6pw/wScG02glJ9RNQirlTJb4PNFZZoCuHz8fQ6iNSu9FmjEJJBGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fSf+J4Un; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="W6jAho6o"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fSf+J4Un"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D15FA1756;
-	Tue,  1 Sep 2026 07:41:48 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE2BD1756;
+	Tue,  1 Sep 2026 07:42:51 -0700 (PDT)
 Received: from localhost (a079125.arm.com [10.164.21.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D44793F882;
-	Tue,  1 Sep 2026 07:41:51 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E20CA3F882;
+	Tue,  1 Sep 2026 07:42:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788273712; bh=snJg8J7YvE9qwQxvspmDeoEOz9TuP5DGjyz2EhgFpiI=;
+	t=1788273775; bh=NZvEgAQVOI7lQrreQcbXEtrWMnYe52kjfKk59Vp8xtY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W6jAho6ofGyQs5GQnfQOW5uksCJ1e17WJJ7V7cqlXthypkpqFqQi0SVDcF3ENcGIi
-	 p9fyye/phvqfqVjswNSqg+6c4K6KTZRA6g+RuZyXdhipmVupTw5yvtQ3tFecCsMCiJ
-	 lVDOXidsWDyBk1tSPtcon61p30IJ3cQWyLhgdLfc=
-Date: Tue, 1 Sep 2026 20:11:49 +0530
+	b=fSf+J4UnW13FN1pFvQV4UEn0YkoWj8JEfy5U3rKMvbTohcXug4Ea3BWkGSt+8ZqZS
+	 o5+uj/rcTvrdP0ExVcQ1IlNYH9v/rqsXHNIAm4jVX3qI4omAM3yFbz2Xqd0PButF3W
+	 pPrGdJqssc1yVvF6PH0iCjeXSJCJwq2wSyeOvLJ4=
+Date: Tue, 1 Sep 2026 20:12:52 +0530
 From: Linu Cherian <linu.cherian@arm.com>
 To: Kevin Brodsky <kevin.brodsky@arm.com>
 Cc: linux-hardening@vger.kernel.org,
@@ -54,11 +54,11 @@ Cc: linux-hardening@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
 	x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
 	Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
-Subject: Re: [PATCH RFC v9 03/25] arm64: mm: Enable overlays for all EL1
- indirect permissions
-Message-ID: <apbkLbO40urPNmEH@a079125.arm.com>
+Subject: Re: [PATCH RFC v9 04/25] arm64: Introduce por_elx_set_pkey_perms()
+ helper
+Message-ID: <apbkbH6Q4p5KYmpE@a079125.arm.com>
 References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
- <20260818-kpkeys-v9-3-743ad31b2c8f@arm.com>
+ <20260818-kpkeys-v9-4-743ad31b2c8f@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,50 +67,40 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260818-kpkeys-v9-3-743ad31b2c8f@arm.com>
+In-Reply-To: <20260818-kpkeys-v9-4-743ad31b2c8f@arm.com>
 
 Kevin,
 
-On Tue, Aug 18, 2026 at 03:08:45PM +0100, Kevin Brodsky wrote:
-> In preparation of using POE inside the kernel, enable "Overlay
-> applied" for kernel memory types in PIR_EL1. This ensures that the
-> permissions set in POR_EL1 affect all kernel mappings.
+On Tue, Aug 18, 2026 at 03:08:46PM +0100, Kevin Brodsky wrote:
+> Introduce a helper that sets the permissions of a given pkey
+> (POIndex) in the POR_ELx format, and make use of it in
+> arch_set_user_pkey_access().
 > 
-> User memory types must be left untouched (overlays not applied)
-> because any privileged access to user memory (e.g. futex atomic
-> without FEAT_LSUI) would then be mistakenly checked against POR_EL1.
+> new_por now represents the permissions of a single pkey, so rename
+> it to new_perms and change its type accordingly.
 > 
 > Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 > Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 > ---
->  arch/arm64/include/asm/pgtable-prot.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  arch/arm64/include/asm/por.h |  7 +++++++
+>  arch/arm64/mm/mmu.c          | 26 ++++++++++----------------
+>  2 files changed, 17 insertions(+), 16 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-> index 212ce1b02e15..d4d45ab86a5a 100644
-> --- a/arch/arm64/include/asm/pgtable-prot.h
-> +++ b/arch/arm64/include/asm/pgtable-prot.h
-> @@ -183,9 +183,9 @@ static inline bool __pure lpa2_is_enabled(void)
->  	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_SHARED_EXEC),   PIE_RW)     | \
->  	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_READONLY),      PIE_R)      | \
->  	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_SHARED),        PIE_RW)     | \
-> -	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_ROX),    PIE_RX)     | \
-> -	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_EXEC),   PIE_RWX)    | \
-> -	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_RO),     PIE_R)      | \
-> -	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL),        PIE_RW))
-> +	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_ROX),    PIE_RX_O)   | \
-> +	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_EXEC),   PIE_RWX_O)  | \
-
-As part of hardening, should we really add more constraints to the
-KERNEL_EXEC by making it PIE_X_O. 
-
-Just trying to undersand, not a concern with the patch as such.
-
-> +	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_RO),     PIE_R_O)    | \
-> +	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL),        PIE_RW_O))
+> diff --git a/arch/arm64/include/asm/por.h b/arch/arm64/include/asm/por.h
+> index d913d5b529e4..19b3dd1d43a0 100644
+> --- a/arch/arm64/include/asm/por.h
+> +++ b/arch/arm64/include/asm/por.h
+> @@ -31,4 +31,11 @@ static inline bool por_elx_allows_exec(u64 por, u8 pkey)
+>  	return perm & POE_X;
+>  }
 >  
->  #endif /* __ASM_PGTABLE_PROT_H */
-> 
-> -- 
-> 2.51.2
-> 
+> +static inline u64 por_elx_set_pkey_perms(u64 por, u8 pkey, u8 perms)
+> +{
+> +	u64 shift = POR_ELx_PERM_SHIFT(pkey);
+> +
+> +	return (por & ~(POE_MASK << shift)) | ((u64)perms << shift);
+
+We could use standard bit field access macros here ?
+
+--
+Linu Cherian
