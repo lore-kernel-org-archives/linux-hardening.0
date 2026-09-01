@@ -1,104 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A00A4A441E;
-	Tue,  1 Sep 2026 23:07:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55ED447A88F;
+	Tue,  1 Sep 2026 23:13:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788304054; cv=none; b=cE6fzap5rECBCfoueYQ9CfbK6G2YG4UyX5qL/YnuKkZlACzQcLpCv9tn3d40DSFhjDsowhxaTDmf37Mj3pJUkz+GK49qEv9VqjqPEjp9Dz98V1qdEIddaXLkFJKF7RqMqdPkIMdw7lcO8w9nvLi5ye0UqZhLkjwCQ9EonGpQBeo=
+	t=1788304401; cv=none; b=Tn1ujQdsKFF2UE1nA6FZRRi0beI/H/drsmGmKBYhC74TKKVq4IXS4F2uvnEhFYCKmi7DwykxZBzTtXyIMAaz9JwHoWyQkdWWkrLvQ+KwwrY0mVFc7WANPqzDNmK/JgKqpTFmTH2QRmqQYkX+tYnwOiM3xLK/xHpKtFBcRuUYqu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788304054; c=relaxed/simple;
-	bh=JSCUYOd+oLTmiVORWjY6iYY3FH4mD1g53cDcO6D53UI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZVSpTz7qYYFnAsr5wD5vvzW+jVxJ5s8mhHc/M/ZdPePDo+b8P6mj23V4HS0Sog9HHgsrHH667N2SWfmHTA04mywCJdCh9uKh4nuU8Lwuf+L73EnLFO12eI/i6j+TGDDVIlQW5DElZ1yabKLSKkD4Yg3tEJeiUk5+4wAnA6kOUE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=kerGN5SB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788304401; c=relaxed/simple;
+	bh=77F/xb91mtPvbazAUFTBZpgswH+DCh41EhPVg9t/nGw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=YMmdKkNoLhyUpbC3MliO3Mw2lguRwPhqBhDIObl0DVk54QIbCWczCBocb16y0wM0Q7+WgfkSfZ8ToHz97d/VxFHd1VOreSU+nFZmGWUEDmeKG4zF6Gg9qvKG88NYvQ8avprJlxo+6qf8yS6PraUuq3z9cGayeY+hfeVDmfHaxmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=myfiKrGj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="kerGN5SB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B92E1F00A3A;
-	Tue,  1 Sep 2026 23:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1788304053;
-	bh=7cQ19BHiyrucmJAw/pZFIQ4zM3ytepyEIFxxLDlatXE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=kerGN5SBq3yKVTcKS9bVEW3P3myLlKw6ZtqPBgY7pUSSc2o83gl5duhZsYi7rr+tj
-	 LRBEWhA9KftnxV2h7SwVbVs+/D5ymVIUzWOU30LGP2lOSS8TzdQee7VrwCI3TtfO3R
-	 W8xeOMF2zlRU+87Iw/b+zQmf1KRK+y2fH94NeP50=
-Date: Tue, 1 Sep 2026 16:07:32 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Li Zhe" <lizhe.67@bytedance.com>
-Cc: <apopple@nvidia.com>, <arnd@arndb.de>, <balbirs@nvidia.com>,
- <bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>,
- <kees@kernel.org>, <mingo@redhat.com>, <muchun.song@linux.dev>,
- <rppt@kernel.org>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-mm@kvack.org>, <x86@kernel.org>
-Subject: Re: [PATCH v11 0/7] mm: optimize zone-device memmap initialization
-Message-Id: <20260901160732.8098b853491008465ea81461@linux-foundation.org>
-In-Reply-To: <f7099580-870f-4cdf-84cc-a82cc47a42b0@bytedance.com>
-References: <20260831111638.76012-1-lizhe.67@bytedance.com>
-	<20260831164531.be5a8fa210401830e85eb974@linux-foundation.org>
-	<f7099580-870f-4cdf-84cc-a82cc47a42b0@bytedance.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="myfiKrGj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F571F000E9;
+	Tue,  1 Sep 2026 23:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788304399;
+	bh=VvfbNwt9clnuEqeZDUHIGsWqWppc8V1nLCVpEWh7upg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=myfiKrGjjpQjTnTgmKMnzbwTsI5FE/YXdw8FyPNkpJeIE5Xg4wjptXNf5Sv4fXe/V
+	 O5k5giU1Qkb80zoOBWxJr23n6jt8+pFaoi6a8uChm+m4ujZKx8akfbAOSuPOGbyoRc
+	 4lT2QCIYT6sWjeR6Mc1lppSUJAD6SgL/o5q5hZunfP2MjUJczU5MATnzhfQ+wccYEN
+	 Gdog2Nwt2P+Bla3H253o7OzN4oTvZ+Nj4jMyjCndNv0UyGZ1X+WVvbgWSwtJFVr1GA
+	 QGZ9TjcZuzq5d/EkSReq2hFKjknF46TL7DWURdaAvUMEKy+IV1OvuH5Qq5arXNoPJp
+	 uwJVt1JOBZtNw==
+From: Nathan Chancellor <nathan@kernel.org>
+To: kees@kernel.org, Jaihind Yadav <jaihindy@qti.qualcomm.com>
+Cc: nsc@kernel.org, linux-hardening@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-modules@vger.kernel.org
+In-Reply-To: <20260820060116.786173-1-jaihindy@qti.qualcomm.com>
+References: <20260820060116.786173-1-jaihindy@qti.qualcomm.com>
+Subject: Re: [PATCH v3] scripts/gcc-plugins: suppress recorded GCC switches
+ for extmod builds
+Message-Id: <178830439251.3086667.14013595113820949472.b4-ty@b4>
+Date: Tue, 01 Sep 2026 16:13:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=764; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=77F/xb91mtPvbazAUFTBZpgswH+DCh41EhPVg9t/nGw=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDFnTY7hfxj21CX/TPuWLs3GSTG32VKYP3sUNuXu5p+920
+ y2aXJrcUcrCIMbFICumyFL9WPW4oeGcs4w3Tk2CmcPKBDKEgYtTACay+Q7D/zCOXS8YdESEC7ev
+ UkrZtDIpplEy+hDnEr7Qg8VO25O7fzL8lQ7YpVbwL8Zfewln1VMDk9ua8k3xS1ovtq23bPw+d1o
+ 7JwA=
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue, 1 Sep 2026 10:58:09 +0800 "Li Zhe" <lizhe.67@bytedance.com> wrote:
+On Thu, 20 Aug 2026 11:31:16 +0530, Jaihind Yadav wrote:
+> scripts/gcc-plugins: suppress recorded GCC switches for extmod builds
 
-> On 9/1/26 7:45 AM, Andrew Morton wrote:
-> > On Mon, 31 Aug 2026 19:16:31 +0800 "Li Zhe" <lizhe.67@bytedance.com> wrote:
-> >
-> >> memmap_init_zone_device() can take a noticeable amount of time when large
-> >> pmem namespaces are bound or rebound, because it initializes nearly
-> >> identical struct page descriptors one PFN at a time. This series reduces
-> >> that ZONE_DEVICE memmap initialization overhead by reusing prepared
-> >> struct page templates and, on x86, using memcpy_nontemporal() for the
-> >> template copy path.
-> >>
-> >> ...
-> >>
-> >> This reduces the average memmap initialization time measured during
-> >> rebind by about 48.0% for nd_pmem and 41.6% for dax_pmem on that arm64
-> >> VM setup. Since this arm64 setup does not use the x86 MOVNTI fast paths,
-> >> the result also suggests that the generic template-copy optimization can
-> >> benefit architectures without an architecture-specific
-> >> memcpy_nontemporal() backend.
-> > Well that's nice.
-> >
-> > Sashiko seems to have found some new things to complain about:
-> > 	https://sashiko.dev/#/patchset/20260831111638.76012-1-lizhe.67@bytedance.com
-> >
-> Hi Andrew,
-> 
-> Thanks for taking a look.
-> 
-> For the comment on patch 5 about the cnt == 0 case, I agree that
-> memcpy_flushcache() should preserve the usual zero-length memcpy
-> semantics. This is a pre-existing issue in the x86
-> memcpy_flushcache()/__memcpy_flushcache() implementation, not a bug
-> introduced by this series. The new ZONE_DEVICE call site added by this
-> series always copies sizeof(struct page), so it cannot hit the
-> zero-length case.
+Applied to
 
-OK, thanks.
+  https://git.kernel.org/pub/scm/linux/kernel/git/kbuild/linux.git kbuild-next-unstable
 
-> Since this is a pre-existing issue and is independent of this patchset,
-> would you prefer me to send a separate standalone fix for the x86
-> memcpy_flushcache() zero-length case, rather than folding it into this
-> series?
+Thanks!
 
-A standalone thing please.  It sounds like a candidate for the x86
-tree, as long as Sashiko is wrong in implying that your [5/7] could
-trigger this bug.
+[1/1] scripts/gcc-plugins: suppress recorded GCC switches for extmod builds
+      https://git.kernel.org/kbuild/c/51794b107d54b
 
-> For the MOVNTI ordering concern in patch 6, this was discussed in the
-> previous round. Based on that discussion, I believe the current code is
-> correct, so I do not plan any additional code changes for these items.
-> 
-> Thanks,
-> Zhe
+Please look out for regression or issue reports or other follow up
+comments, as they may result in the patch/series getting dropped or
+reverted. Patches applied to an "unstable" branch are accepted pending
+wider testing in -next and any post-commit review; they will generally
+be moved to the main branch in a week if no issues are found.
+
+Best regards,
+-- 
+Cheers,
+Nathan
+
+
