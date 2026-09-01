@@ -1,130 +1,96 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E7A471CE0;
-	Tue,  1 Sep 2026 08:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D29E479863;
+	Tue,  1 Sep 2026 09:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788249711; cv=none; b=c8sTXGYgJxK+RpGS1cJbZG5kvX07f608pYpEPBF5ykNAr0+WnAnY+kevu5X/ep9pyW6fPB9SdRc97UlzGyZv8FObSIZJ+qtsq16lu5GLeBiuxfKrMIvOqFgmaNoAA13GEzxptGexyzly5G6eXCQV5YGSgJUYh4My8aI1Ez1UP0I=
+	t=1788254500; cv=none; b=Aa15WgKGApR5/JQYXEUWEH/JjSUhgxUHBDn2KqMkJBC5P15gPGC0AoghuE0RgjDkunnpbtFnrXgsrtSugbXt6r5MJ6zTH9TQQza4ppD4/ceAZiHh9OheUWyQaF2D4wod4lXWkkT9cmectZQZ20/ApbNGNZrZX5MQ/dGsMxvdjW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788249711; c=relaxed/simple;
-	bh=9B6Wxdvw3xp5ld7hEtbbwEFIpm4K2FL2RhXsefID288=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mla5y7z1Op7953KiOEMNoRD48BWRUUQVz0RGYt8heBxbSeHQXW8o2i4xa2kUoKsV/7ybMeo3yZv0gYq92eISWvxnC6++lQs3TOVrqPMxZAJDpuTAmZ6RCq2wRrd5iI+wtf0RIsRlis2l/xZLA9vjIYJ1ZYBT8O3BfwU/s/78ggk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4YYzm+vl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yLPpUdCd; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1788254500; c=relaxed/simple;
+	bh=d//sRRyeATR2XER8C63DKurn876rElyS0ew2RlJKmyk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ct3Rh5Whysog7ZxcnN8t/he3zFzChu6cYCJ6/xV4AgU+biPChzDtJuBjgBeF6iJv64FSInPFiG0hsYzawxfYs77M4G87QjvgdzRe0cJXVCbaLm1p6ue+zCq0+N2DrS0hENFeA6T2nNDqyqRdKaPOY7M7TG/J2mf96bsxnM8fVA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=tFZaD8Oo; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4YYzm+vl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yLPpUdCd"
-Date: Tue, 1 Sep 2026 10:01:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1788249704;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G0pI8XTpNn+xxOYdAi7WHG2gkeeqcx1hUF85pJOp+GY=;
-	b=4YYzm+vls8qdZmN6EGlklWzPcwnIuoEQVd3e5ESsC1adh0nXf0IqUqd73abgsshx0rOyQz
-	an8E8ZD5tkzgQ3T4pvFBq0nwXk9ZGAIH+pvO918t1PphVnWxB3lFt14u7WIwldbxsgFx6x
-	HQhO6W91ugFP+NqYfxGvU//WIV0o61+bSiAUV/+Q69fCJ5Q5rtaBQmVlNeKDoeCqvh4YGq
-	kJwqgywKGvuLVl64VOFZzb5CQfGhisurtEQUEVtZ8aCc4ZE3xyP0rn8ejw3jgVYgOTZJDZ
-	xsYb0u/drSSYfl467Sw9+A+bF35BOJdCuDO0NN0dIgZZbY952gTT6kauufjFiw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1788249704;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G0pI8XTpNn+xxOYdAi7WHG2gkeeqcx1hUF85pJOp+GY=;
-	b=yLPpUdCdh4aRuH3xDYiA2EkjygI6oShXPQrWJ792XVzviGfc+PtQ6r4oOZT4Z9RjedP9AT
-	5q6f7SnyIY32TbAw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kees Cook <kees@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Tycho Andersen <tycho@tycho.pizza>,
-	Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: Re: [PATCH v2 2/2] kallsyms: Document why unresolved symbols are
- revealed
-Message-ID: <20260901080142.CMTCw6vE@linutronix.de>
-References: <20260821152614.2202196-1-bigeasy@linutronix.de>
- <20260821152614.2202196-3-bigeasy@linutronix.de>
- <ao8SeCCG65uwH-Tk@pathway.suse.cz>
- <20260827102411.NsziRXyJ@linutronix.de>
- <20260831133729.p5ylO7O6@linutronix.de>
- <20260831124928.22e163ab@gandalf.local.home>
- <apZ9ea1on8A7o6kk@pathway.suse.cz>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="tFZaD8Oo"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A380C1692;
+	Tue,  1 Sep 2026 02:21:34 -0700 (PDT)
+Received: from [10.57.7.38] (unknown [10.57.7.38])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 461E13F882;
+	Tue,  1 Sep 2026 02:21:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788254498; bh=d//sRRyeATR2XER8C63DKurn876rElyS0ew2RlJKmyk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tFZaD8OomT/iBVMAGMTFX2gOOiDx9+faBP6Bu9/PxfBU5aQdrs4A/uRdFNPjZYhGV
+	 lx2S3pjy1cYj8gr76k1bL3/U/0njq8fbKjy9pUshI1Xg4QqXwxOMUcFHXw3bRm7LQo
+	 opNf+lP+KnVLOvnObXaXf5iEz7AJm/P/2ZVDSkd0=
+Message-ID: <16f40b06-e871-4921-bbc6-42637c63e6bd@arm.com>
+Date: Tue, 1 Sep 2026 11:21:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <apZ9ea1on8A7o6kk@pathway.suse.cz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 0/4] arm64: mm: Map fixmap page tables read-only
+To: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
+ Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
+ linux-hardening@vger.kernel.org
+References: <20260827164409.3421848-6-ardb+git@google.com>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260827164409.3421848-6-ardb+git@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2026-09-01 09:23:37 [+0200], Petr Mladek wrote:
-> On Mon 2026-08-31 12:49:28, Steven Rostedt wrote:
-> > On Mon, 31 Aug 2026 15:37:29 +0200
-> > Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-> > 
-> > > Could someone yell here, please? I convinced myself that hiding
-> > > unresolved pointers is the good thing to do here since a "wrong" pointer
-> > > would be seen in backtrace anyway.
-> > > 
-> > > Thread starts at
-> > > 	https://lore.kernel.org/all/20260821152614.2202196-1-bigeasy@linutronix.de/
-> > 
-> > I wonder if we should just tagged hash values as such:
-> > 
-> > | [    1.498171]  <TASK>
-> > | [    1.498172]  00000000cb9bc262 [hash]
-> > | [    1.498174]  ? 00000000eb5021dd [hash]
-> > | [    1.498176]  00000000ed1a9938 [hash]
-> > | [    1.498178]  </TASK>
-> > 
-> > So that people will know that the value is just some random hash value and
-> > not a real address.
-> > 
-> > Although rather useless in call stacks, I like hash values because the same
-> > address will show up the same.
-> > 
-> > Having '[unknown]' may also be confusing because it doesn't really say
-> > "why" it was unknown. But having a number goes back to what it always did.
-> > Hashing it with a "[hash]" marker will also let people know the value was
-> > hashed.
-> 
-> I like this idea. I just wonder whether it might confuse some parsers
-> who expect that symbol name is one string. %ps, %pS, %pB are used
-> in various context.
-> 
-> I think about adding the hint into the hashed value, e.g. by using
-> 'h' instead of the highest number, something like:
-> 
->  [    1.498171]  <TASK>
->  [    1.498172]  h0000000cb9bc262
->  [    1.498174]  ? h0000000eb5021dd
->  [    1.498176]  h0000000ed1a9938
->  [    1.498178]  </TASK>
-> 
-> But 'h' is not a valid number number so it might confuse parsers as
-> well. And it is not that user friedly either.
-> 
-> So, I still like more Steven's variant with [hash].
+On 27/08/2026 18:44, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> This v2 now covers intermediate level page tables as well as the PTE
+> level page table for the fixmap. The latter is a special case, as it
+>
+> a) is only accessed via the kernel image's mapping, and never via the
+>    linear map (except for ptdump etc)
+>
+> b) must be accessible via a read-write mapping, as all manipulation of
+>    read-only page table descriptors relies on the fixmap itself
+>
+> and so it is treated separately. The intermediate page tables may be
+> shared with other mappings in the upper kernel/vmalloc region, so they
+> must be updatable using the ordinary APIs.
+>
+> Build tested and boot tested on a Lenovo Yoga C630 using 16k pages.
+>
+> v1: https://lore.kernel.org/all/20260805104042.1107678-2-ardb+git@google.com/
+>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: Kevin Brodsky <kevin.brodsky@arm.com>
+> Cc: Liz Prucka <lizprucka@google.com>
+> Cc: Seth Jenkins <sethjenkins@google.com>
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: linux-hardening@vger.kernel.org
 
-While it does make sense to add [hash] to make it obvious it breaks
-formatting for some of the %p users where %p is expected to have a fixed
-length depending on 32/64 bit. Here, it is a %pS so adding extra it
-wouldn't break anything but I don't think it should be different between
-%p and %pS assuming we do print the hash instead 'unknown'.
+Looks like the Cc's didn't propagate to the actual patches, fortunately
+my lei filters did catch this series ;)
 
-> Best Regards,
-> Petr
+Either way I quite like this series, it's an elegant approach and it
+should increase security without overhead, what's not to like!
 
-Sebastian
+I also considered it from the perspective of kpkeys protection [1] and I
+think they should work together fine. The kpkeys series still allows
+page table setters to write to all page tables, so if we get a fault
+there it must be because the target is read only, and not because of a
+pkey fault.
+
+- Kevin
+
+[1] https://lore.kernel.org/all/20260818-kpkeys-v9-0-743ad31b2c8f@arm.com/
