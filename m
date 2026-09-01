@@ -1,32 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A720B3CF201
-	for <linux-hardening@vger.kernel.org>; Tue,  1 Sep 2026 14:39:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 676E536E494
+	for <linux-hardening@vger.kernel.org>; Tue,  1 Sep 2026 14:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788273582; cv=none; b=Jg+1y+otsK1OCjnw2rfHondSn+xc2JccPJwBwgBoBqnT9ofP6jdj10bpJtMY2TexgiatdQzvQek8JFESUjihcOCbWXuba+0o5Hrr7fsADgaBuzig0epE44inCTMdKKiJCcC1Sj+AKjUUNJsIGUAGJ4HQ0GyyoGGN1KdcWrsr6mo=
+	t=1788273715; cv=none; b=b+JtJ+HIH9cefgb5q2z8JsJ1+m2RU2hGvlXVh/9PFZggvawe1DPAWkAMZQwErsUBw38Lfny4gits5083+zM2ne6ZuvXbyBMXnoSTRpaxyUtM/bhmNvNepSVL8ItnbYvEw7mmv3O16Me3sBiHZ4XOC3kVZ4nCvhOtSYhUDaiHs1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788273582; c=relaxed/simple;
-	bh=KmiAFVuFMCiQ3kijocFjf2AEfhNaMl006eWKr1VxZWw=;
+	s=arc-20240116; t=1788273715; c=relaxed/simple;
+	bh=snJg8J7YvE9qwQxvspmDeoEOz9TuP5DGjyz2EhgFpiI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1IkvL+Bhyzro19T1vbG3lLSAgY1qJhBMU6L+zmOujAZzlK4icZxKk4sbHH40Z20E/29W7fBgi4R8yceyO1XedCqigWu0U79ZrllNknE+xm65rdmmD6D2L7ECZdUsTyKXEEQbtD00Gfzdx2nGfT2OflNinDTYsm66C+3GnYf9Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=UaaDtqHc; arc=none smtp.client-ip=217.140.110.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=AWELPxhZ3nznxmCG5lDw1e8MzBRP2bRZD7DyKztkL3QLLV4BVFoztQUVvXtq4o5P+PgyBKWIL3EizIEe5HomCs0o5+4N7ms60NkCoOqWTSPXaU+PRuO73BW910EoPT8bBfIfjQN1novyw1zYTDyFhlxWPp3BW7sYoLhvwPRj5Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=W6jAho6o; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="UaaDtqHc"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="W6jAho6o"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96AD21756;
-	Tue,  1 Sep 2026 07:39:34 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D15FA1756;
+	Tue,  1 Sep 2026 07:41:48 -0700 (PDT)
 Received: from localhost (a079125.arm.com [10.164.21.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98E993F882;
-	Tue,  1 Sep 2026 07:39:37 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D44793F882;
+	Tue,  1 Sep 2026 07:41:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788273578; bh=KmiAFVuFMCiQ3kijocFjf2AEfhNaMl006eWKr1VxZWw=;
+	t=1788273712; bh=snJg8J7YvE9qwQxvspmDeoEOz9TuP5DGjyz2EhgFpiI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UaaDtqHcIV5ry2ml0i7WogPk4YgXZq6+Vz7uOn4AHpoOLjAHrS3Gt0mi0drzIiTGw
-	 QJ2c3z9zO9IlLLoALRJ0uXpCEpw+yPtuAEkE+DluchNpazNFM+uecD/ULnvr3RZxj0
-	 lmNvFugY29d55iuycNOG+caifQwbMfIUamHeDOCQ=
-Date: Tue, 1 Sep 2026 20:09:34 +0530
+	b=W6jAho6ofGyQs5GQnfQOW5uksCJ1e17WJJ7V7cqlXthypkpqFqQi0SVDcF3ENcGIi
+	 p9fyye/phvqfqVjswNSqg+6c4K6KTZRA6g+RuZyXdhipmVupTw5yvtQ3tFecCsMCiJ
+	 lVDOXidsWDyBk1tSPtcon61p30IJ3cQWyLhgdLfc=
+Date: Tue, 1 Sep 2026 20:11:49 +0530
 From: Linu Cherian <linu.cherian@arm.com>
 To: Kevin Brodsky <kevin.brodsky@arm.com>
 Cc: linux-hardening@vger.kernel.org,
@@ -56,7 +56,7 @@ Cc: linux-hardening@vger.kernel.org,
 	Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
 Subject: Re: [PATCH RFC v9 03/25] arm64: mm: Enable overlays for all EL1
  indirect permissions
-Message-ID: <apbjpkTgtdXZQ9Sm@a079125.arm.com>
+Message-ID: <apbkLbO40urPNmEH@a079125.arm.com>
 References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
  <20260818-kpkeys-v9-3-743ad31b2c8f@arm.com>
 Precedence: bulk
@@ -100,14 +100,17 @@ On Tue, Aug 18, 2026 at 03:08:45PM +0100, Kevin Brodsky wrote:
 > -	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL),        PIE_RW))
 > +	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_ROX),    PIE_RX_O)   | \
 > +	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_EXEC),   PIE_RWX_O)  | \
+
+As part of hardening, should we really add more constraints to the
+KERNEL_EXEC by making it PIE_X_O. 
+
+Just trying to undersand, not a concern with the patch as such.
+
 > +	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL_RO),     PIE_R_O)    | \
 > +	PIRx_ELx_PERM_PREP(pte_pi_index(_PAGE_KERNEL),        PIE_RW_O))
 >  
 >  #endif /* __ASM_PGTABLE_PROT_H */
-
-IMHO its better to have this patch just before, "arm64: Enable kpkeys" for
-easier review. Otherwise,
-
-Reviewed-by: Linu Cherian <linu.cherian@arm.com>
-
- 
+> 
+> -- 
+> 2.51.2
+> 
