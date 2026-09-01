@@ -1,108 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2013DAAAE;
-	Tue,  1 Sep 2026 23:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A00A4A441E;
+	Tue,  1 Sep 2026 23:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788304052; cv=none; b=Vfi/Fbp2IpHhYCu6TWOVNxby6rvK74RFQeVJ7pGfcQOdVD/JQ3z93yEXL8ulPzlzCkLolBuAOjHZZgV6aKZgDNLDKEI2LIaFC1AIHMTU7p+627ZMrZmfLra+CFiOL5FxEO1lLBnM21oQ08E4LB6w5C9S6JcMe6BgeBRxV9orYQc=
+	t=1788304054; cv=none; b=cE6fzap5rECBCfoueYQ9CfbK6G2YG4UyX5qL/YnuKkZlACzQcLpCv9tn3d40DSFhjDsowhxaTDmf37Mj3pJUkz+GK49qEv9VqjqPEjp9Dz98V1qdEIddaXLkFJKF7RqMqdPkIMdw7lcO8w9nvLi5ye0UqZhLkjwCQ9EonGpQBeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788304052; c=relaxed/simple;
-	bh=i63y7r98zPdQhcmDnBCiNOhfAZFF71DuJYrpPUzIFWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h/+o24NG2+ufewA3NqV2Km/pQk7GIcFfJHcwaclOuYP3uQmjwgjVIIkaKQeKVT51Tdx9HCtbNr+ztwT+mmvPQtO8sKwx6+52INvJM9HTMDK7mCo1Za+0FZWFFymFf9QIjt7/bf/EM8FXd9e/Ax8C/GKFHZiLLPw8bA4UhIVsQ+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHqPdlv0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788304054; c=relaxed/simple;
+	bh=JSCUYOd+oLTmiVORWjY6iYY3FH4mD1g53cDcO6D53UI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ZVSpTz7qYYFnAsr5wD5vvzW+jVxJ5s8mhHc/M/ZdPePDo+b8P6mj23V4HS0Sog9HHgsrHH667N2SWfmHTA04mywCJdCh9uKh4nuU8Lwuf+L73EnLFO12eI/i6j+TGDDVIlQW5DElZ1yabKLSKkD4Yg3tEJeiUk5+4wAnA6kOUE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=kerGN5SB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHqPdlv0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 165091F000E9;
-	Tue,  1 Sep 2026 23:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788304051;
-	bh=C3anIUeB1bB58RQmTGiNdJUaxEJ2R6teXFLUx/u9Y3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=hHqPdlv0zWTfOqpyAorrq1BUAPYRxDE0+9/9NBWB4+t64z+3FpWiLxhHavPnLJDvq
-	 ZPwbarGNxBeExKE3qfQRM9scHGW14xfkLZwcYB7CqvlW6/KpFomEa8z9JDP+VHxP/s
-	 uytYtFAjtRo7v3tbYoG0VNtF5IySJz+2fRJfRSGtBmf5SzUFuVgDgXIryD0qo+TeUM
-	 VGCwIghYTktnHn1prcHYcuKjsWDnJtFxZMSXjTURAQwQvYl4uVsp5dOYZwPzAw3MQa
-	 B/3hjwdUVhlVrJX6LPNkaHrz3xdahiEgxfM+pdfOc7bw8o0keXJRTZDN3OaYVhUOOq
-	 VJLf2i4oBh6MQ==
-Date: Wed, 2 Sep 2026 00:07:25 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v4] hardening: Default randstruct off with rust for
- better allmodconfig support
-Message-ID: <87236b36-fa99-4588-8181-f3ab6dcfc777@sirena.org.uk>
-References: <20260901-rust-reverse-randstruct-dep-v4-1-3bfa19efe1fa@kernel.org>
- <CANiq72nOk-gbd+C9oG5y5RKrYhqNx+BLcwS-8u-uHxUjVTwEtA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="kerGN5SB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B92E1F00A3A;
+	Tue,  1 Sep 2026 23:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1788304053;
+	bh=7cQ19BHiyrucmJAw/pZFIQ4zM3ytepyEIFxxLDlatXE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=kerGN5SBq3yKVTcKS9bVEW3P3myLlKw6ZtqPBgY7pUSSc2o83gl5duhZsYi7rr+tj
+	 LRBEWhA9KftnxV2h7SwVbVs+/D5ymVIUzWOU30LGP2lOSS8TzdQee7VrwCI3TtfO3R
+	 W8xeOMF2zlRU+87Iw/b+zQmf1KRK+y2fH94NeP50=
+Date: Tue, 1 Sep 2026 16:07:32 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Li Zhe" <lizhe.67@bytedance.com>
+Cc: <apopple@nvidia.com>, <arnd@arndb.de>, <balbirs@nvidia.com>,
+ <bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>,
+ <kees@kernel.org>, <mingo@redhat.com>, <muchun.song@linux.dev>,
+ <rppt@kernel.org>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <x86@kernel.org>
+Subject: Re: [PATCH v11 0/7] mm: optimize zone-device memmap initialization
+Message-Id: <20260901160732.8098b853491008465ea81461@linux-foundation.org>
+In-Reply-To: <f7099580-870f-4cdf-84cc-a82cc47a42b0@bytedance.com>
+References: <20260831111638.76012-1-lizhe.67@bytedance.com>
+	<20260831164531.be5a8fa210401830e85eb974@linux-foundation.org>
+	<f7099580-870f-4cdf-84cc-a82cc47a42b0@bytedance.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3KtuDqqo+l8OieTH"
-Content-Disposition: inline
-In-Reply-To: <CANiq72nOk-gbd+C9oG5y5RKrYhqNx+BLcwS-8u-uHxUjVTwEtA@mail.gmail.com>
-X-Cookie: Prevent forest fires.
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 1 Sep 2026 10:58:09 +0800 "Li Zhe" <lizhe.67@bytedance.com> wrote:
 
---3KtuDqqo+l8OieTH
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 9/1/26 7:45 AM, Andrew Morton wrote:
+> > On Mon, 31 Aug 2026 19:16:31 +0800 "Li Zhe" <lizhe.67@bytedance.com> wrote:
+> >
+> >> memmap_init_zone_device() can take a noticeable amount of time when large
+> >> pmem namespaces are bound or rebound, because it initializes nearly
+> >> identical struct page descriptors one PFN at a time. This series reduces
+> >> that ZONE_DEVICE memmap initialization overhead by reusing prepared
+> >> struct page templates and, on x86, using memcpy_nontemporal() for the
+> >> template copy path.
+> >>
+> >> ...
+> >>
+> >> This reduces the average memmap initialization time measured during
+> >> rebind by about 48.0% for nd_pmem and 41.6% for dax_pmem on that arm64
+> >> VM setup. Since this arm64 setup does not use the x86 MOVNTI fast paths,
+> >> the result also suggests that the generic template-copy optimization can
+> >> benefit architectures without an architecture-specific
+> >> memcpy_nontemporal() backend.
+> > Well that's nice.
+> >
+> > Sashiko seems to have found some new things to complain about:
+> > 	https://sashiko.dev/#/patchset/20260831111638.76012-1-lizhe.67@bytedance.com
+> >
+> Hi Andrew,
+> 
+> Thanks for taking a look.
+> 
+> For the comment on patch 5 about the cnt == 0 case, I agree that
+> memcpy_flushcache() should preserve the usual zero-length memcpy
+> semantics. This is a pre-existing issue in the x86
+> memcpy_flushcache()/__memcpy_flushcache() implementation, not a bug
+> introduced by this series. The new ZONE_DEVICE call site added by this
+> series always copies sizeof(struct page), so it cannot hit the
+> zero-length case.
 
-On Wed, Sep 02, 2026 at 12:59:59AM +0200, Miguel Ojeda wrote:
-> On Wed, Sep 2, 2026 at 12:52=E2=80=AFAM Mark Brown <broonie@kernel.org> w=
-rote:
+OK, thanks.
 
-> > Work around this by disabling randstruct by default if we have a usable
-> > rust toolchain and rust support for the architecture, circular
-> > dependencies prevent us directly depending on !RUST. This means we might
-> > end up with a configuration that disables both rust and randstruct but
-> > hopefully it's more likely go give the expected result.
+> Since this is a pre-existing issue and is independent of this patchset,
+> would you prefer me to send a separate standalone fix for the x86
+> memcpy_flushcache() zero-length case, rather than folding it into this
+> series?
 
-> I thought this was already applied:
+A standalone thing please.  It sounds like a candidate for the x86
+tree, as long as Sashiko is wrong in implying that your [5/7] could
+trigger this bug.
 
->   https://git.kernel.org/kees/c/3844a38c9c4a
-
->   https://lore.kernel.org/rust-for-linux/178733378275.2181196.31861729113=
-25132761.b4-ty@kernel.org/
-
-> But it doesn't seem to be in -next -- that branch isn't merged there I th=
-ink.
-
-Yes, I had thought I'd seen something saying it was applied but as you
-did I checked -next, didn't find it and figured I must have been
-confused.  The link in the mail above to the commit says it's missing
-too.
-
---3KtuDqqo+l8OieTH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmqXWqwACgkQJNaLcl1U
-h9CETQf9Guyx2148TKM91A00sc3QY+19XqXFnGPJSW1A5EIxbcbVYdzBofl5fvyV
-52mmkV//F0KZ1TPIZ7lWckDdV5+a7gp7cTjmZKty7xmnLlEUuALBMeURJ7NrldjA
-YWW9ZKUKR9fTNcZUYfzJNf2f9xhwdqr+cvFG0l+6WhFYF0ClWrVQpWRWYLqfnxKa
-1NHlTRZAI+ZwbdYVdLYqPwZVrTBJ6zLetAomGw8Ap/XCXx9GZzDwAHF2sP1LvuWX
-bjou0TdI8tj6SqI/kN/cCNAtZPA3i8h1qWWhjrIIkJivNRjASM5q1VsXmVMSG85w
-/O6gMIrk8ws9o15GtlDLQkRGDScPvw==
-=k7Aj
------END PGP SIGNATURE-----
-
---3KtuDqqo+l8OieTH--
+> For the MOVNTI ordering concern in patch 6, this was discussed in the
+> previous round. Based on that discussion, I believe the current code is
+> correct, so I do not plan any additional code changes for these items.
+> 
+> Thanks,
+> Zhe
