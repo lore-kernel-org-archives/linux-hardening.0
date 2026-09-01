@@ -1,96 +1,96 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D29E479863;
-	Tue,  1 Sep 2026 09:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F094749CA;
+	Tue,  1 Sep 2026 13:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788254500; cv=none; b=Aa15WgKGApR5/JQYXEUWEH/JjSUhgxUHBDn2KqMkJBC5P15gPGC0AoghuE0RgjDkunnpbtFnrXgsrtSugbXt6r5MJ6zTH9TQQza4ppD4/ceAZiHh9OheUWyQaF2D4wod4lXWkkT9cmectZQZ20/ApbNGNZrZX5MQ/dGsMxvdjW4=
+	t=1788269401; cv=none; b=GN/KwCM/ulC7QE/mqJVFuPU5UTdqSuBXETrbr4S6my8pf6EtKc34XM6zRCllKFPe/pwH97VDx9K/bThlZVNy12YuRigkpJb1Aj+4T8SSNVTEPcDJDFuHJODoDKQ5UN5jZEUa4/vm8WYBIj4QNKD7Bc1Z/f96Bk734E7MEFQ5cH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788254500; c=relaxed/simple;
-	bh=d//sRRyeATR2XER8C63DKurn876rElyS0ew2RlJKmyk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ct3Rh5Whysog7ZxcnN8t/he3zFzChu6cYCJ6/xV4AgU+biPChzDtJuBjgBeF6iJv64FSInPFiG0hsYzawxfYs77M4G87QjvgdzRe0cJXVCbaLm1p6ue+zCq0+N2DrS0hENFeA6T2nNDqyqRdKaPOY7M7TG/J2mf96bsxnM8fVA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=tFZaD8Oo; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1788269401; c=relaxed/simple;
+	bh=usUjDosYvvSUEZPW3UYd2xxo/lHyzE5qHlinKDgdaUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rg+YDIDcL9uFtn6tEQ8K4ggVbQHi6nlSxlpg/deukMUdRCZd6XMGbfE8WRBKD02giBSFX+cUqM9vaXOfttZBh3TolMt655A2waLcC+FuWirO3HT9bM1SJo/CNdWCCN820I9kSkQDNj5gl4LZYVTQwkqQDn7jF0a8Trv1AAAxveM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=V5iJIVH0; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="tFZaD8Oo"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A380C1692;
-	Tue,  1 Sep 2026 02:21:34 -0700 (PDT)
-Received: from [10.57.7.38] (unknown [10.57.7.38])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 461E13F882;
-	Tue,  1 Sep 2026 02:21:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788254498; bh=d//sRRyeATR2XER8C63DKurn876rElyS0ew2RlJKmyk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tFZaD8OomT/iBVMAGMTFX2gOOiDx9+faBP6Bu9/PxfBU5aQdrs4A/uRdFNPjZYhGV
-	 lx2S3pjy1cYj8gr76k1bL3/U/0njq8fbKjy9pUshI1Xg4QqXwxOMUcFHXw3bRm7LQo
-	 opNf+lP+KnVLOvnObXaXf5iEz7AJm/P/2ZVDSkd0=
-Message-ID: <16f40b06-e871-4921-bbc6-42637c63e6bd@arm.com>
-Date: Tue, 1 Sep 2026 11:21:32 +0200
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="V5iJIVH0"
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id D2A7C80403;
+	Tue,  1 Sep 2026 13:29:55 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 2C25B20025;
+	Tue,  1 Sep 2026 13:29:53 +0000 (UTC)
+Date: Tue, 1 Sep 2026 09:30:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Petr Mladek <pmladek@suse.com>, Thomas Gleixner <tglx@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kees Cook
+ <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>, Tycho Andersen <tycho@tycho.pizza>,
+ Linus Torvalds <torvalds@linuxfoundation.org>
+Subject: Re: [PATCH v2 2/2] kallsyms: Document why unresolved symbols are
+ revealed
+Message-ID: <20260901093051.51d23697@gandalf.local.home>
+In-Reply-To: <20260901080142.CMTCw6vE@linutronix.de>
+References: <20260821152614.2202196-1-bigeasy@linutronix.de>
+	<20260821152614.2202196-3-bigeasy@linutronix.de>
+	<ao8SeCCG65uwH-Tk@pathway.suse.cz>
+	<20260827102411.NsziRXyJ@linutronix.de>
+	<20260831133729.p5ylO7O6@linutronix.de>
+	<20260831124928.22e163ab@gandalf.local.home>
+	<apZ9ea1on8A7o6kk@pathway.suse.cz>
+	<20260901080142.CMTCw6vE@linutronix.de>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/4] arm64: mm: Map fixmap page tables read-only
-To: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Liz Prucka <lizprucka@google.com>, Seth Jenkins <sethjenkins@google.com>,
- Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
- linux-hardening@vger.kernel.org
-References: <20260827164409.3421848-6-ardb+git@google.com>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260827164409.3421848-6-ardb+git@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: jum7gf11hbcim1eebyd8qqtt97xecbpm
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 2C25B20025
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19P8OiZjvSjTxJbF2y/AZkQEsJDoSOsk4k=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=dcB7zO5lZNNyXZ+fOv0aRdNG78sajV/ilKg2jlXvRzg=; b=V5iJIVH0OWToxJTf3x4oAww5E2BQ39Silo2wt7W1TDtoyXQr25M5LsxnQQO9qm1P9Wlo4vyBqZZ0lJht/9SWEWVdUS/BKKr/Inx+LvEI0kbNDlwh3MKqi4fxZ1wKy0O+zrllG2Fwgiid3AncgcVdYyIdhXZLu39myRxA0T+KUmY=
+X-HE-Tag: 1788269393-235803
+X-HE-Meta: U2FsdGVkX1/3FYWLsjV6G+uwVcd5ovLTgMEUh86EsoKHj9SCx/Lg/RLOuaiz7Vat1p+r5sJ0Bq1jdjPxW6kL0Q7JAovISWeMsXqiaN1HiBEixEKoiNJ96mRiYeH9lKu7ExOy3GcliW3ex6JeycQuUFYu/e+YfkRGChwUN8wCV8dnnFLD5GSk5MH+9LFsn+Z1dUiEbbkKnIEd/AWs2wlc8WI/CQi2w2Yl/K1Oz3MGix1xPPwfryzjPhGk6TesGnVgt3wrF+jfjqFJTUk1xdFYZdN2IzqqLihh9R+RqRMfxRuZrpZoPCFIpkapNajdP3Cj
 
-On 27/08/2026 18:44, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> This v2 now covers intermediate level page tables as well as the PTE
-> level page table for the fixmap. The latter is a special case, as it
->
-> a) is only accessed via the kernel image's mapping, and never via the
->    linear map (except for ptdump etc)
->
-> b) must be accessible via a read-write mapping, as all manipulation of
->    read-only page table descriptors relies on the fixmap itself
->
-> and so it is treated separately. The intermediate page tables may be
-> shared with other mappings in the upper kernel/vmalloc region, so they
-> must be updatable using the ordinary APIs.
->
-> Build tested and boot tested on a Lenovo Yoga C630 using 16k pages.
->
-> v1: https://lore.kernel.org/all/20260805104042.1107678-2-ardb+git@google.com/
->
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Kevin Brodsky <kevin.brodsky@arm.com>
-> Cc: Liz Prucka <lizprucka@google.com>
-> Cc: Seth Jenkins <sethjenkins@google.com>
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: linux-hardening@vger.kernel.org
+On Tue, 1 Sep 2026 10:01:42 +0200
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 
-Looks like the Cc's didn't propagate to the actual patches, fortunately
-my lei filters did catch this series ;)
+> >  [    1.498171]  <TASK>
+> >  [    1.498172]  h0000000cb9bc262
+> >  [    1.498174]  ? h0000000eb5021dd
+> >  [    1.498176]  h0000000ed1a9938
+> >  [    1.498178]  </TASK>
+> > 
+> > But 'h' is not a valid number number so it might confuse parsers as
+> > well. And it is not that user friedly either.
+> > 
+> > So, I still like more Steven's variant with [hash].  
+> 
+> While it does make sense to add [hash] to make it obvious it breaks
+> formatting for some of the %p users where %p is expected to have a fixed
+> length depending on 32/64 bit. Here, it is a %pS so adding extra it
+> wouldn't break anything but I don't think it should be different between
+> %p and %pS assuming we do print the hash instead 'unknown'.
 
-Either way I quite like this series, it's an elegant approach and it
-should increase security without overhead, what's not to like!
+Since the hash value is usually less than a normal pointer length, we could
+have it be:
 
-I also considered it from the perspective of kpkeys protection [1] and I
-think they should work together fine. The kpkeys series still allows
-page table setters to write to all page tables, so if we get a fault
-there it must be because the target is read only, and not because of a
-pkey fault.
+  h:XXXXXX on 32bit and h:XXXXXXXXXXXXXX on 64 bit, where it will not take
+  up more than the size expected.
 
-- Kevin
+ [    1.498171]  <TASK>
+ [    1.498172]  h:000000cb9bc262
+ [    1.498174]  ? h:000000eb5021dd
+ [    1.498176]  h:000000ed1a9938
+ [    1.498178]  </TASK>
 
-[1] https://lore.kernel.org/all/20260818-kpkeys-v9-0-743ad31b2c8f@arm.com/
+-- Steve
