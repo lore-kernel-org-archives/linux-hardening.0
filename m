@@ -1,72 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out-zbxj-a67.jellyfish.systems (out-zbxj-a67.jellyfish.systems [198.54.127.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F241337BAB;
-	Mon, 31 Aug 2026 23:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC9537BE6A
+	for <linux-hardening@vger.kernel.org>; Tue,  1 Sep 2026 00:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788219934; cv=none; b=TAxmA7j4JBdlhxiYxnO8nDFi0SZXqyO4DcIBNw8+FgSWckwPMdO4CNIcWojihSVmw1myEZP7PvqsdSFDitGvxqdo80CMuUSvjJn8+OiDsWQJu17hXBOq+ckW1+2Na7kphnZorfhGv8mPECmq1uMWcq97bhp0dZQd3TTaxUeYNIY=
+	t=1788223906; cv=none; b=TBxTOrDxSzbVduYdQXGRBlbnukl/nXbFqtV8YyzGsTU56TVkvUFisCaXf86F/dqGnyPrtEcbDooBfCs7c7VPMdd0puCTTABpt0lf0Imm4NgXuMKBA/iJ+S0YTPTxXL0jCnVAXZt3GI4Ig57sd8NVWBVOfYFksiblTzmwKg+HPRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788219934; c=relaxed/simple;
-	bh=KFg9Z+cYzf+wgTjB4jP0frPMbh2Dw+RY49DZZp2ECaA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bPaJkXa4Evdf7YAKvFNza53irfpJy+KukKbIl6a6gHeJEEaQKXmcuxYVs7fMdhe6JCjo2DLp2sMPKIy2GSN1KRJX/Yzufy/Zfr79nNAeXidH8/gSytACqp7JvWQIiUUWUCrSLyXxfaF7ejakuxcKndUhTrmXf1dNV/tgaUUcD/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Vhuqq3dh; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Vhuqq3dh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0781F000E9;
-	Mon, 31 Aug 2026 23:45:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1788219932;
-	bh=wj4I/MKj2L9b4J+c08D7cj7b3uNtuGqLdKw3zvVsGww=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Vhuqq3dhS0xj/pd9jp9IoVKDsg24dq5X2+kEEIBjB+a3vki3RCwS4uXdfJC4jqTXJ
-	 thxERrpgvXlbZtgTioLwixWVxFgiZUzOmhCn0EbPB0XODc4QSl1IVOk2OzQ56ZULUD
-	 D/eOxK4ZSBkWfhM21240hACSxmQV00dGRsxfsSsg=
-Date: Mon, 31 Aug 2026 16:45:31 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Li Zhe" <lizhe.67@bytedance.com>
-Cc: <apopple@nvidia.com>, <arnd@arndb.de>, <balbirs@nvidia.com>,
- <bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>,
- <kees@kernel.org>, <mingo@redhat.com>, <muchun.song@linux.dev>,
- <rppt@kernel.org>, <tglx@kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-mm@kvack.org>, <x86@kernel.org>
-Subject: Re: [PATCH v11 0/7] mm: optimize zone-device memmap initialization
-Message-Id: <20260831164531.be5a8fa210401830e85eb974@linux-foundation.org>
-In-Reply-To: <20260831111638.76012-1-lizhe.67@bytedance.com>
-References: <20260831111638.76012-1-lizhe.67@bytedance.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1788223906; c=relaxed/simple;
+	bh=pDHNs5tzOnSgGhVMJwsbSK33nJ4lCp8YGpCMQIp8Z88=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jy6gWa/XGNM9tzMHkxIxRrAqEvS/kEafyftv+0TOXVeQLqck07rlBHSsrkiULs/d2W8OCT6qo/Il2lgo2ccrQ4cWrOmNdrE1yc7hNaGbLAJdh997wlel6o4Kf2CebaAKRbox7SaSOXZMonFxxsP/trPsONaUJjq1qNWB4Ig2U1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net; spf=pass smtp.mailfrom=catcrafts.net; arc=none smtp.client-ip=198.54.127.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=catcrafts.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=catcrafts.net
+Received: from mail.privateemail.com (unknown [87.215.145.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.privateemail.com (Postfix) with ESMTPSA id 4hYnP53ZSnz2x9C;
+	Tue, 01 Sep 2026 00:51:37 +0000 (UTC)
+From: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+To: Jonathan Cameron <jic23@kernel.org>,
+	linux-iio@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luca Weiss <luca.weiss@fairphone.com>,
+	Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
+	Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+Subject: [PATCH v3 0/5] iio: light: stk3310: per-chip match data and STK36C61 support
+Date: Tue,  1 Sep 2026 02:51:09 +0200
+Message-ID: <20260901005114.203062-1-jorijnvdgraaf@catcrafts.net>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Envelope-From: jorijnvdgraaf@catcrafts.net
 
-On Mon, 31 Aug 2026 19:16:31 +0800 "Li Zhe" <lizhe.67@bytedance.com> wrote:
+The Sensortek STK36C61 is a 3-in-1 ambient light / proximity / RGB
+colour sensor whose register interface is compatible with the stk3310
+across the ALS and proximity data, threshold, gain and
+integration-time registers this driver uses. The part name comes from
+the Fairphone 6 manual, which lists the component as "3IN1 ALPS/RGB
+sensor/STK36C61". The layout was probed on the device: chip ID 0x95,
+the stk3310 STATE/FLAG bit layout, data and threshold registers
+(thresholds written through the event interface read back from the
+chip, and the FLAG near/far bit crosses with them), gain and
+integration-time fields the ALS and proximity readings scale with,
+and an RGBC data block directly after the ALS data, the red, green
+and blue assignments each confirmed by the matching channel
+dominating under the matching illumination and clear by its broadband
+response.
 
-> memmap_init_zone_device() can take a noticeable amount of time when large
-> pmem namespaces are bound or rebound, because it initializes nearly
-> identical struct page descriptors one PFN at a time. This series reduces
-> that ZONE_DEVICE memmap initialization overhead by reusing prepared
-> struct page templates and, on x86, using memcpy_nontemporal() for the
-> template copy path.
-> 
-> ...
->
-> This reduces the average memmap initialization time measured during
-> rebind by about 48.0% for nd_pmem and 41.6% for dax_pmem on that arm64
-> VM setup. Since this arm64 setup does not use the x86 MOVNTI fast paths,
-> the result also suggests that the generic template-copy optimization can
-> benefit architectures without an architecture-specific
-> memcpy_nontemporal() backend.
+The colour controls: R, G and B share the illuminance channel's gain.
+Clear is gained by its own field in a GAINCTRL register at 0x4E,
+originally located via the datasheet of the STK37660 (a documented
+sibling with the same data register layout) and verified on the
+device: stepping it multiplies the clear count by ~4 per step while
+the other channels hold still. The STK36C61 patch exposes scale and
+integration time on the colour channels.
 
-Well that's nice.
+A public datasheet exists: the STK36C61-A preliminary datasheet,
+version 0.9, hosted by LCSC [1]. It agrees with the device on the
+colour-engine layout (RGBC data at 0x15-0x1C, the clear gain in
+GAINCTRL 0x4E, the shared RGB-gain and integration-time fields in
+ALSCTRL1), but it documents the -A variant and gives the product ID
+as 0x93 where this part reports 0x95. Luca Weiss reports a newer
+revision (0.9.2) gives 0x95 and different mLux-per-count figures for
+the ALSCTRL1 gain settings. I could not find a published copy of
+that revision.
 
-Sashiko seems to have found some new things to complain about:
-	https://sashiko.dev/#/patchset/20260831111638.76012-1-lizhe.67@bytedance.com
+Tested on a Fairphone 6 running a 7.2-based tree: this series'
+stk3310.c, byte-identical, built as a module against that tree (the
+i2c core files the binding behaviour depends on are identical between
+the trees). Verified there: DT boot instantiation, the colour
+scale/integration-time interface, and the sysfs name behaviours this
+series changes: a lower-case name reaches the id table's match data,
+capitals no longer bind, and a full-compatible-string client now
+fails probe with the missing-driver-data error. A board DTS node
+using the new compatible follows separately via linux-arm-msm.
 
+Patch 5 carries no Datasheet: tag since the sheet at [1] is a
+preliminary for the -A variant: the published revision's product ID
+mismatches this part's, the register map omits the ALS data
+registers, and the later revision disagrees on the mLux-per-count
+figures. I am unable to find specifics for the Datasheet: tag,
+whether it must be the exact sheet for the part or if a "good
+enough" sheet is accepted.
+
+Changes in v3:
+- patch 4: drop the tab alignment of the chip_info members, take the
+  probe failure through a struct device local, and return -ENODATA
+  instead of -ENODEV on missing match data, commit message
+  wording tightened (Andy)
+- patch 5: commit message squeezed to the point, the verification and
+  colour-assignment detail moved into this letter, the scale
+  rationale trimmed to its load-bearing constraint (Andy, Jonathan)
+- cover letter: the "no public datasheet" claim corrected (Marcelo)
+- picked up Andy's Reviewed-by on patches 1 and 3
+
+v2: https://lore.kernel.org/all/20260826175409.326131-1-jorijnvdgraaf@catcrafts.net/
+v1: https://lore.kernel.org/all/20260810110423.41697-1-jorijnvdgraaf@catcrafts.net/
+
+[1] https://www.lcsc.com/datasheet/C49230205.pdf
+
+Assisted-by: Claude:claude-fable-5
+Signed-off-by: Jorijn van der Graaf <jorijnvdgraaf@catcrafts.net>
+
+Jorijn van der Graaf (5):
+  iio: light: stk3310: lower-case the i2c device ID names
+  dt-bindings: iio: light: stk33xx: document the Sensortek STK36C61
+  iio: light: stk3310: move the data registers into the channel address
+  iio: light: stk3310: add per-chip match data
+  iio: light: stk3310: support the Sensortek STK36C61
+
+ Documentation/ABI/testing/sysfs-bus-iio       |   1 +
+ .../bindings/iio/light/stk33xx.yaml           |   9 +-
+ drivers/iio/light/stk3310.c                   | 203 +++++++++++++-----
+ 3 files changed, 156 insertions(+), 57 deletions(-)
+
+
+base-commit: 350d1fb9204b13c5f95e511e98b8bcb47574d425
+-- 
+2.55.0
 
