@@ -1,66 +1,64 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E439B501F21
-	for <linux-hardening@vger.kernel.org>; Thu,  3 Sep 2026 20:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEE4391851
+	for <linux-hardening@vger.kernel.org>; Thu,  3 Sep 2026 20:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788467862; cv=none; b=rYeZuWGJ4QmGP45SRGhcA5I1jRd4eE8KgE4f+4ExP3JYEupB9kVuDSPFkqiWADgSfgrI1s/oHx1Bh827eQ/dYWhSWAMl9DP+nw7eXhaje34MnzHcTVETOfnzVaWFdRAg5ERKwtv6bVjnNEFLwGxKX4po7MKoZMlhbOBIxPQ20Lg=
+	t=1788467864; cv=none; b=P+x6RnkXQ8iJpX3VJl8tUavVDutVx3UHKMMC01UtJ1JSiKdqWkBO607mlq2CO0jnhJ7ihUjQYcChh0i9rZEAHECy0YGanJgVdlRGwnPrVPqEiR27NNINJZTVci23OOuIXRgQmZbkIKl+jCKGYv78UlQsoo8LIWxnAbvHN8vmxAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788467862; c=relaxed/simple;
-	bh=O/xPPZ+sVVTaOOmEwsa+8rqbwM5fmRoimhLyr+2P6bA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PcZSbudtAj8ywQsIm+1j33Fp6DWk/y8+UAcWZfwQ9Dt/2exUu2xuAe8SZfpIaXv7GzhJfRdYk/hGcBbdCSu8N2O3TtPj4BBC0/4SHQd5t4tdMniYHg5fLrUtoDnLRfgE0vyM21d9ysD4/h6lSNEkxGfyxHItDH0uoJctG1h2zs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sxBNSnbM; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1788467864; c=relaxed/simple;
+	bh=Lp/rpmKZfaRLkZH7ZQedQZ1rtoivwaoM23iRcSg0bAo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=inRKjzApMC9837QCmPuq1YyI4hYMhD7BmLRVvgL6yiz7eBrzU6In9sqCMDgoVOCjMgvUuJdL7C6hvgOrfJc0glPtpT77wNhfT7I22qXt+kJpWPBfwDTf1wsbikAu2uvArNbZ5UvSH44iPpEhaA21z8V/tvpgFl8pWJgSpOKNT30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gzAYV3Bk; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sxBNSnbM"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4998b5a63e2so3419125e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Sep 2026 13:37:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzAYV3Bk"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-4843efcbdb2so213721f8f.2
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Sep 2026 13:37:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788467853; x=1789072653; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=rgIj/N8oul9ZLAizfJH63NRBCwMtcxycrJMIa0TwyZo=;
-        b=sxBNSnbM925Xmo5xFRsdYK75FG4jLnidv2k76p3ry07PWePFFgrckheA2t8q5A06xT
-         9Dmv0a49W5WIJMfsgZt0kWw2/KNBYRU11sC6TsKn/8enZf/yVlbe1ocdNRZNINzzDAut
-         YlTSVagBG+H88PVSxMp9BbLLvMkPGw+lojTgiAv9RQ6rr/alybLCjOF12Du3V0WJMeWU
-         xDilYMbZgFjlv5NKAzIU/zSFQLbm9iF1zlSIqlMEsr0pPWdYRTGERvXhUCngxX0Hz/kb
-         FZW2IOZsUnJ6DX/qPaAVczsxdm4t0hQYu/EBLd6+U0TX+ubjrzRje5jmztl1e9BXvlEU
-         cGdQ==
+        d=gmail.com; s=20251104; t=1788467849; x=1789072649; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=OvK9knuWq5uxHuXSn84mygHm6H7cFKDZ8xVelzi2Vf8=;
+        b=gzAYV3BkYhIh+iLCseZOMdubqUnvHnNVSfeVr5E0CnXiH0Ol95sM0X384++NYsJecL
+         i8aKzbWiOcTHHnkyDxW0KGJRMV6SlHo0lixmw1anLqjUj1o4c32IOJuuHYXHk18AXzcj
+         KvFf1h9Q5Xko6iXGIflyV/Pwr9oU1/emnsknRm6MI4elXiya/hMJ0d61xsKJrxWtOm+q
+         EUzsTS29J/KSxYnk7649AJyGfT7Bak72Dn6yV1wOnMO8SBTRhoSg3zs0epUGjydbqshW
+         0FkK5ZXUA3LMUpAIPV17AwpdZ1CkV3RdyvytUHh89g5BYsUFTrHkdiDoIhqFZ9SJEmy2
+         05nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788467853; x=1789072653;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=rgIj/N8oul9ZLAizfJH63NRBCwMtcxycrJMIa0TwyZo=;
-        b=TrE70iwcEfOmvGZiMgvC1rmzNHrorDQ+2tzShmL+CjGy+bwYHIefiGJzh9usYY4fou
-         EBoGe/F5ln9LUTe87qREghQiicJmkPvpQjXW14pgzi4ZZ+Gu9OehukRnRFOfDd19l1Jo
-         yjduaI6OyRGhX0G5v5cu6KFM/m5PTqy0/VSzS8uFO3O2pEfX4WQwS4NQ+vUhsIMf+tp3
-         m2D2xxxFHI2jlheQ5zSskSHELMRz9gbSkXG9nChnGBtAc6jwNZiQNHMFEYmrsArquR5z
-         35077A/eFvkRtJ2wOfct19ptHalHXbLurYX8nZ0abnY3II86CiFxc93LbMApoE+XluDe
-         Buug==
-X-Forwarded-Encrypted: i=1; AKwUvBzkFIPoLVyd8oFB/Q4sjEAeRxRqkDMgz6c2isH2bduSyo4h0JVfmUoNmHzlGMiS9ACOSqAozMF5P3tFMLNAGgw=@vger.kernel.org
-X-Gm-Message-State: AFuF++mX/c8wH8aFZPODcnMxL3Xa6oDmgvU8/c+FgdXRrH7Xn00TpSBA
-	fgSTQjCmTU4uBtmLaHnqap5asAuNlemgsPgH2M+7Jssot0X9RSXIAjZ0
-X-Gm-Gg: AYBFou0+i+PREoDLHL16e0MMHzwXpAJgky7PHRAbNF4mv+hognvq67QmE3WERTllmWW
-	b/Tt8PoZ4Bo5JAIPjyTRb9G16qzBnDb4cjoIOFui1IHwNE4pfv5IbbR+MoOL8dcywr5HwrN0+7h
-	nJq7gkUUfAe2G9ha1RlGwlk7odqRLLo/1B0H84Q0DY6qIASJ5ic0WmQLPDnSXb2N5zODvZWmQKP
-	NZU/7YUz0O0Ft9owbVBvL7xbt36e5ttWZdtxrt4zTKkTD7XHlnqdKTFlCMXifdvKUrgxRmUHpXv
-	Tjrz2Mlk/NjW08q63uQD0wbdOvQLyGwZOM61srI3ofhY8bfPuNvUL/Q48Ii63EUJY9uhoKuC+3Y
-	Q74DRgEHULwIyLHSqYIvCNuMKJnC39TD+wP2rE9vncs9lKI5lg1geru8zE2AMXXCksAKboI6htv
-	zGnJ77pqAUWSoDdHd72geaSByIu7OwsJRKkTJqfVNhKahaMC/STL7YAqhiahT6o1g++RRXgI4Hs
-	sbcHHbH5BjeNypTVgeKGHzrJGQpBiL0e1PM45QN1sFrhGUxcGfsjgXfvhHSJHma66/0zhwVtLCr
-	jDUVZd+VtwNHJOWE3D5wN9P+c9w/9lr539J8aCJGYE74IRiUxGd+XnydKyQjHmp4kp36KHrFTVp
-	88nmH5WJbYdpvxJNk
-X-Received: by 2002:a05:600c:1c23:b0:49c:eb16:9fd with SMTP id 5b1f17b1804b1-49cf820a8e3mr8535635e9.3.1788467852848;
-        Thu, 03 Sep 2026 13:37:32 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1788467849; x=1789072649;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=OvK9knuWq5uxHuXSn84mygHm6H7cFKDZ8xVelzi2Vf8=;
+        b=QRx/WcRDpnXYpfZK69jWCXJn5WkLv2Kf3AF7pjQR0ELW577CfW/ChRVYgSiIVgeAYy
+         TeLNvlOOJoI5wDhJ2E2gDyP/+sm6aTgZWrL04duyfqBUwdfnZzfqY+xGHZA0jR5xRwq7
+         x1rXpmfYcnqlKacx2ApkvR3vUzI6YLXk+5TKfO0C+OXbNv7ahe9mHB1XanRCZu0XjIrf
+         O9fC5icLtxGN/GJALES77V1Z/44tVxkbVNaWc7T5Zmoo0QImiskZPPlE4AL8iA4vad4u
+         VXiafTkNeXlAnEwn9ReJgsdKMF8++4nLNwgSPKfoF2Tc4vtRtOg22C0curRyrIM4jxHt
+         tD/A==
+X-Forwarded-Encrypted: i=1; AKwUvBxcXW81sBBTMFnmLAI0Z4Sh/HPLXzM1n+yGFKqADJq8WpoNnUXLq2+RwwZDq4OpeSk7yd0AsDM8UU/YYO5j0mo=@vger.kernel.org
+X-Gm-Message-State: AFuF++mavldsLw6+nEn+xXwpf9GF5t63aD5HuPh6Uwr2dUXfpTm+ILby
+	R9Ih6SS3AIcrA2Jyw2qgdnSyccl4uTb/rA21GAUR6PO0sF8ilpVRP9dl
+X-Gm-Gg: AYBFou3vcdRZwVgfW2Q6NI5QXR9c0yZANTYl6BKmgDyd9DlRhxp96jx3DkVgbAQDTqQ
+	5L/NwKaEuMvu+qOlsw7kua0IFVALsFlWUfibOiqeff8i+yICZchAqaGXPa+DqaERPgphxCFKD2c
+	2GlV7qQ5636b3002/t1PymOOzCwzLZafwZygpG5jmzB9GPcHLUFJ6LH6Jp9i+gqY4jBN0e5ICa6
+	ywK5YF6ynYSkdK2Eghjnd/j4inVGjTVbIMRu4bsrxxg9DBGxsicbkNroCyRC0KOS1uI3aeHuvYm
+	Ga39C6w732FPZdijvcFpwdJeafLsU+6dkWiuGcJ1jwqMFTcPG9/B7cf61aq7N0eeoCluQbD3BJs
+	wK7kfp/ivTo/BbD565LWPMKF6IswFAnoobePJy7Yu0xQjTf9gUnhRGP9l+8JjzwbzdRJJhqszkQ
+	6RBaovNh7Ce4PAxXfTRPAG9ZIlRXSVNgx3yjA+IW8c+LpTEXezhr5HakTVdTZvFWSQGrnraRaPb
+	0i+c8r4g7SFbRMfKAoutYv4D5D9RZG7elRJsa9o9bog4BA8kz3pNZtkzUZDpKBIX11W0G8tioRM
+	N3yLTSF432aBGsqFXLxnyRHHNEcaLYV/APnqAnzFQbvQT2ceMKAg5DuKJb6sIokrMoc2UCd/wsO
+	pd/nG
+X-Received: by 2002:a05:6000:26d3:b0:481:5b58:c589 with SMTP id ffacd0b85a97d-485870935eamr2874884f8f.10.1788467848463;
+        Thu, 03 Sep 2026 13:37:28 -0700 (PDT)
 Received: from MacBook-Pro-von-Karl.localdomain (dynamic-2a02-3100-a979-9501-3df6-d7fa-8a5a-06c5.310.pool.telefonica.de. [2a02:3100:a979:9501:3df6:d7fa:8a5a:6c5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48588394fa1sm1005070f8f.8.2026.09.03.13.37.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48588394fa1sm1005070f8f.8.2026.09.03.13.37.26
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 03 Sep 2026 13:37:32 -0700 (PDT)
+        Thu, 03 Sep 2026 13:37:27 -0700 (PDT)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Vlastimil Babka <vbabka@kernel.org>,
 	Harry Yoo <harry@kernel.org>,
@@ -86,12 +84,10 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH v3 3/5] slab: handle ERR_PTR values in kfree and hardened usercopy
-Date: Thu,  3 Sep 2026 22:37:18 +0200
-Message-Id: <20260903203720.63689-4-kmehltretter@gmail.com>
+Subject: [PATCH v3 0/5] slab: ZERO_SIZE_PTR alignment and ERR_PTR hardening
+Date: Thu,  3 Sep 2026 22:37:15 +0200
+Message-Id: <20260903203720.63689-1-kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260903203720.63689-1-kmehltretter@gmail.com>
-References: <20260903203720.63689-1-kmehltretter@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -100,52 +96,78 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Passing an ERR_PTR to kfree() currently reaches virt_to_page() and may
-fault. Warn and return instead, leaving the bad caller visible without
-using the pointer as allocator metadata.
+The kmalloc entry points promise ARCH_KMALLOC_MINALIGN alignment but
+return (void *)16 for zero-size requests. Patch 1 aligns the sentinel
+to that promise.
 
-Also reject ERR_PTR values in hardened usercopy. Keep both checks
-separate from ZERO_OR_NULL_PTR(), whose exact matching is required by
-krealloc().
+Patch 2 limits ZERO_OR_NULL_PTR() to NULL and ZERO_SIZE_PTR. Patch 3
+handles ERR_PTR explicitly in kfree() and hardened usercopy, without
+giving ERR_PTR special meaning to other users such as krealloc(). The
+old helper did not match ERR_PTR values either; patch 3 addresses the
+adjacent hardening concern raised during review.
 
-Link: https://lore.kernel.org/r/CAG48ez05QVn6_gQ2TBrRa1a_DWQoaSSYubUsu5YMWxx-gqMijQ@mail.gmail.com
-Link: https://lore.kernel.org/r/202608111716.0FA9DB17@keescook
-Link: https://github.com/KSPP/linux/issues/93
-Assisted-by: LLM
-Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+If backported, patches 1 and 2 should be taken together.
+
+Patch 4 adds zero-size KUnit coverage; patch 5 adds ERR_PTR KUnit,
+LKDTM, and kselftest coverage, which is why Arnd, Greg, Shuah, and
+linux-kselftest@vger.kernel.org are newly copied on v3.
+
+Tested on 940de590b839:
+
+  - GCC 15.2 UML slub_test: 10 passed, 2 skipped, including
+    test_zero_size_alloc and test_kfree_err_ptr; NULL and ZERO_SIZE_PTR
+    produced no warning, and the expected kfree(ERR_PTR) warning was
+    suppressed and counted
+  - GCC 15.2 matched x86_64 builds immediately before and after patch 3:
+    kfree grew by 15 bytes; __check_object_size gained a 13-byte
+    comparison on its normal path and a 23-byte cold abort path
+  - GCC 15.2 x86_64 defconfig with HARDENED_USERCOPY: build and normal
+    QEMU boot passed; the committed LKDTM selftest matched the distinct
+    ERR_PTR diagnostic after reaching usercopy_abort()
+  - Clang 21.1.8 armv5 UBSAN_ALIGNMENT: no alignment-assumption or
+    slab.h report; generated code retains the exact comparison and
+    single evaluation
+  - GCC 15.2 MIPS64 big-endian noncoherent build passed with
+    ARCH_KMALLOC_MINALIGN equal to 128
+  - Microchip SAM9X75 hardware (armv5, ARCH_KMALLOC_MINALIGN=32):
+    ZERO_SIZE_PTR was 0x20; zero-size allocation, ksize(), and free
+    passed with no boot splats
+  - Raspberry Pi 400 hardware (arm64, Cortex-A72,
+    ARCH_KMALLOC_MINALIGN=8): ZERO_SIZE_PTR remained 0x10; the ERR_PTR
+    KUnit and hardened-usercopy rejection paths passed with no boot
+    splats; the revised diagnostic was retested under x86_64 QEMU
+
 ---
- mm/slub.c     | 3 +++
- mm/usercopy.c | 3 +++
- 2 files changed, 6 insertions(+)
+v2 -> v3:
 
-diff --git a/mm/slub.c b/mm/slub.c
-index f9b56cb439e7..027b44dd7f07 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -6780,6 +6780,9 @@ void kfree(const void *object)
- 	if (unlikely(ZERO_OR_NULL_PTR(object)))
- 		return;
- 
-+	if (WARN_ON(IS_ERR(object)))
-+		return;
-+
- 	page = virt_to_page(object);
- 	slab = page_slab(page);
- 	if (!slab) {
-diff --git a/mm/usercopy.c b/mm/usercopy.c
-index 5de7a518b1b1..c8d8703544c6 100644
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -157,6 +157,9 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
- 	/* Reject if NULL or ZERO-allocation. */
- 	if (ZERO_OR_NULL_PTR(ptr))
- 		usercopy_abort("null address", NULL, to_user, ptr, n);
-+
-+	if (IS_ERR_VALUE(ptr))
-+		usercopy_abort("ERR_PTR", NULL, to_user, ptr, n);
- }
- 
- static inline void check_heap_object(const void *ptr, unsigned long n,
+  - document why patch 2's sentinel-derived low-address window in hardened
+    usercopy was incidental
+  - add new patch 3 to warn and return when kfree() receives an ERR_PTR
+    and reject ERR_PTR values in hardened usercopy
+  - replace patch 4's pointer-cast static assertion with a run-time KUnit
+    expectation
+  - add new patch 5 with KUnit and LKDTM coverage for patch 3
+
+v2: https://lore.kernel.org/r/20260811141240.62519-1-kmehltretter@gmail.com
+v1: https://lore.kernel.org/r/20260808105622.62026-1-kmehltretter@gmail.com
+RFC: https://lore.kernel.org/r/20260712120728.96628-1-kmehltretter@gmail.com
+
+Karl Mehltretter (5):
+  slab: align ZERO_SIZE_PTR to ARCH_KMALLOC_MINALIGN
+  slab: check for ZERO_SIZE_PTR by exact match
+  slab: handle ERR_PTR values in kfree and hardened usercopy
+  slab: test zero-size allocations in slub_kunit
+  slab: test ERR_PTR handling in kfree and hardened usercopy
+
+ drivers/misc/lkdtm/usercopy.c           | 27 +++++++++++
+ include/linux/slab.h                    | 20 ++++++--
+ lib/tests/slub_kunit.c                  | 61 +++++++++++++++++++++++++
+ mm/slub.c                               |  3 ++
+ mm/usercopy.c                           |  3 ++
+ tools/testing/selftests/lkdtm/tests.txt |  1 +
+ 6 files changed, 112 insertions(+), 3 deletions(-)
+
+
+base-commit: 940de590b839f71d6dc846160534bf202401b8b7
 -- 
 2.53.0
-
