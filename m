@@ -1,432 +1,89 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-115.ptr.blmpb.com (va-1-115.ptr.blmpb.com [209.127.230.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C643783B4;
-	Thu,  3 Sep 2026 02:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9D219E97B
+	for <linux-hardening@vger.kernel.org>; Thu,  3 Sep 2026 02:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788403375; cv=none; b=gvxY7xphA+rQ/hFP/DFOAfZZb2VV3vZsLtw3z7NCPTu7ZvGUrczp7i+oXN3aJ4efzqvczh7LkP9Lq9Q9FHZ9iXpAfa3KvX50y/dMpzzp1WmAZwK0SIygzHnHdym3aeVBnf0a4n1AKnd1TxKVNyBFxjHYkiyOAt8sXj6ny0sf+eA=
+	t=1788404326; cv=none; b=LWMv9Jzt6I9C35cuBR9E7xebEuwxAUVqIB7+BtJXUpr54C801UNsssWww33g3KyrD1G5DOOJP2xq5bVpTil+yQR/ikl0PK3y03qr9gkNkb1mZ5yXl1wBwQssryYDl1LpfsHpP3ge5ZKlBRx9IuIPs8+l7kaoJuLJOwsaHCcJJCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788403375; c=relaxed/simple;
-	bh=qJ2oHuJ2wmNAoI/KBxN9S2yEYkRgihoqkmyU9c5ngWk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qnorJNEEa2TobB7b9TMwSRb9TMc/vDP3uFVWLoIROczXsdfZ2hZW+AXbMj4ay4PydbW9K+t45AzzQIX8CsP+hg9AnayPJe6+UIXZ0F5MLzY2IQs7fQ9ukdEAM6FtO6XchUgASakf7zMjH+oomycPoZUAywSASfltw9Vh1iyrjQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=O6jDA5nt; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1788404326; c=relaxed/simple;
+	bh=9X84J6Ue1h5bFLffaiUIrYJVatUia20jqN+GHbInAjE=;
+	h=To:References:Content-Type:Cc:Message-Id:Mime-Version:In-Reply-To:
+	 From:Subject:Date; b=bSMxsZvIjKD/USDGpCyzN9Lazm9zmM6BP0qlWzKBLTuUD22oUd0B2awRFIxpT2BeyfyrDGa6eV3v8PYyiqzpbt6zn3gIwDVkfr0SJsPVkqiZDKtHjFAlSmUV64XYuWGX+NL5ZOgwiaAU3d77j6MzYf4MZAKql2awOZtBVNsX8Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=IFFgYTGw; arc=none smtp.client-ip=209.127.230.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="O6jDA5nt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1788403361;
-	bh=AS4RSEAsCORVp176Xj6HC0fiK0ialxjg7zbWbHEE/Po=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=O6jDA5nt55AAErx4/XhwhZCF2q2x8ilgfvf3LAt6JtDoSjBZpifi0aUfMkbx9cWAo
-	 Kiy9Q2z3KnTHUEqVUbfcQLzmKGINmIcHf4VQQalmMwSNSdOFmGkQAi2cfMTfFg+v5U
-	 cGlGA6awtPb6cklEYXjc+ZiIm3VUnnKHSxE2z8HONoZ80ThFox46ZsJiFEHY3e3npZ
-	 g0J6y+DwHf0Qc802mXX29XIFFO0PA/76TdntRMIG47kaspLgHgP91pLRtmFyc4aSqC
-	 Oi3TG/JsjCuh00lf9ulNA6XwTU+u35aqeflCz63/wuykYqbY/6levNuU6WkwGOejez
-	 QDy7ODD37xpGQ==
-Received: by codeconstruct.com.au (Postfix, from userid 10004)
-	id 0A2F068696; Thu,  3 Sep 2026 10:42:41 +0800 (AWST)
-From: James Lee <james@codeconstruct.com.au>
-Date: Thu, 03 Sep 2026 10:42:23 +0800
-Subject: [PATCH net-next v2 6/7] net: mctp: usblib: Add initial kunit tx
- tests
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="IFFgYTGw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1788404312; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=3XGVvSOTCEh6IL41/waks8FQqdiqvKYj9ft+LeKmDH0=;
+ b=IFFgYTGw5DYv/kcaykFZ8cfkcZ3MA4nRQi+7W2wfmS3xIX1EPmMTc+van106O0uN7AL60Z
+ 6Og310N6vMdxR9Ik/euR5Xvph6qSJjBKA513TgW8S3ks/zBlBNFQZ9OI9fPyIlNiU8hb5J
+ 2TeqD5bDIogY8uK2RvSpYxYZj/2WfQuSc1XZQwZHuOheg4dI6QjFJ1vfs4Ad8HMvJm91ad
+ tnm+2iFX5JWA2tj/2h27NZjBurCiwDUltq9Q6sWmEdFyQBY2ReczeTkjdFYJsE5S1DTH0t
+ rQdAz8ETV2qd9z6TEPS8mrV6/gM88OPFjqqI9R+XMczmKJcg5VvlQeLex3HQCg==
+To: <rppt@kernel.org>, <akpm@linux-foundation.org>
+X-Original-From: Li Zhe <lizhe.67@bytedance.com>
+References: <apejDEdW95T-tekb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Cc: <apopple@nvidia.com>, <arnd@arndb.de>, <balbirs@nvidia.com>, 
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <david@kernel.org>, 
+	<kees@kernel.org>, <linux-arch@vger.kernel.org>, 
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-mm@kvack.org>, <lizhe.67@bytedance.com>, <mingo@redhat.com>, 
+	<muchun.song@linux.dev>, <tglx@kernel.org>, <x86@kernel.org>
+X-Mailer: git-send-email 2.45.2
+X-Lms-Return-Path: <lba+26a98e256+e995c3+vger.kernel.org+lizhe.67@bytedance.com>
+Message-Id: <20260903025806.70825-1-lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260903-dev-mctp-usb-lib-test-v2-6-313cf15e0b56@codeconstruct.com.au>
-References: <20260903-dev-mctp-usb-lib-test-v2-0-313cf15e0b56@codeconstruct.com.au>
-In-Reply-To: <20260903-dev-mctp-usb-lib-test-v2-0-313cf15e0b56@codeconstruct.com.au>
-To: Jeremy Kerr <jk@codeconstruct.com.au>, 
- Matt Johnston <matt@codeconstruct.com.au>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, James Lee <james@codeconstruct.com.au>
-X-Mailer: b4 0.14.2
+In-Reply-To: <apejDEdW95T-tekb@kernel.org>
+From: "Li Zhe" <lizhe.67@bytedance.com>
+Subject: Re: [PATCH v11 3/7] mm: add a template-based fast path for zone-device page init
+Date: Thu,  3 Sep 2026 10:58:06 +0800
 
-Add tests for the transmit path, where MCTP packets are handed to
-outgoing USB transfer data. Testing a spanning transfer that is expected
-to succeed, the failure paths when sends fail, and large sequential
-sends.
+On Wed, 2 Sep 2026 07:16:12 +0300, <rppt@kernel.org> wrote:
 
-Signed-off-by: James Lee <james@codeconstruct.com.au>
+> > +	/* Initialize the remaining head pages from template. */
+> > +	for (; pfn < end_pfn; pfn += pfns_per_compound) {
+> > +		page = pfn_to_page(pfn);
+> > +
+> > +		zone_device_page_init_from_template(page, pfn,
+> > +						    &template);
+> 
+> Nit: this seems to fit into 80-chars line without wrapping.
+
+Hi Mike,
+
+Thanks for the review. Yes, this fits on one line.
+
+Hi Andrew, could you please squash the following fixup into patch 3?
 
 ---
-v2:
-- Correct flex array reference
-- Simply return when mctp_usblib_test_tx_send() fails
-- Use skb_put_data() instead of manual assignment
-- Remember span parameter exists
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index ba4148de2b28..84fe53633e44 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1127,8 +1127,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+ 	for (; pfn < end_pfn; pfn += pfns_per_compound) {
+ 		page = pfn_to_page(pfn);
+ 
+-		zone_device_page_init_from_template(page, pfn,
+-						    &template);
++		zone_device_page_init_from_template(page, pfn, &template);
+ 
+ 		if (IS_ALIGNED(pfn, PAGES_PER_SECTION))
+ 			cond_resched();
 ---
- drivers/net/mctp/mctp-usblib-test.c | 286 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 286 insertions(+)
 
-diff --git a/drivers/net/mctp/mctp-usblib-test.c b/drivers/net/mctp/mctp-usblib-test.c
-index 64c758013854c697767d3cc80d46ebaa310188a4..73bda4745433f689504e65685b73da2117f1d3db 100644
---- a/drivers/net/mctp/mctp-usblib-test.c
-+++ b/drivers/net/mctp/mctp-usblib-test.c
-@@ -6,6 +6,7 @@
-  * Copyright (C) 2026 Code Construct Pty Ltd
-  */
- 
-+#include <linux/array_size.h>
- #include <uapi/linux/netdevice.h>
- #include <linux/netdevice.h>
- #include <kunit/test.h>
-@@ -16,6 +17,13 @@
- 
- #define HDR_LEN sizeof(struct mctp_usb_hdr)
- 
-+struct tx_buff {
-+	struct list_head list;
-+
-+	size_t length;
-+	u8 data[] __counted_by(length);
-+};
-+
- struct mctp_usblib_test_dev {
- 	struct net_device *ndev;
- 	struct mctp_dev *mdev;
-@@ -24,9 +32,104 @@ struct mctp_usblib_test_dev {
- 
- struct mctp_usblib_test_ctx {
- 	struct mctp_usblib_test_dev *dev;
-+	struct list_head tx_xfers;
- 	struct mctp_route rt;
- };
- 
-+static int mctp_usblib_test_tx_send(struct mctp_usblib_tx_ctx *tx_ctx,
-+				    void *data, size_t len)
-+{
-+	struct mctp_usblib_test_ctx *ctx;
-+	struct tx_buff *new_node;
-+	struct net_device *ndev;
-+
-+	ctx = mctp_usblib_tx_ctx_priv(tx_ctx);
-+	ndev = ctx->dev->ndev;
-+
-+	new_node = kzalloc_flex(*new_node, data, len, GFP_KERNEL);
-+	if (!new_node)
-+		return -ENOMEM;
-+
-+	new_node->length = len;
-+	memcpy(new_node->data, data, len);
-+	list_add_tail(&new_node->list, &ctx->tx_xfers);
-+
-+	mctp_usblib_tx_send_complete(tx_ctx, ndev, true);
-+	return 0;
-+}
-+
-+static int mctp_usblib_test_tx_send_fail(struct mctp_usblib_tx_ctx *tx_ctx,
-+					 void *data, size_t len)
-+{
-+	return -ENOMEM;
-+}
-+
-+static u8 *mctp_usblib_test_flatten_tx_buff(struct kunit *test,
-+					    struct list_head *in,
-+					    size_t *length_out)
-+{
-+	struct tx_buff *pos;
-+	size_t length;
-+	u8 *buf, *tail;
-+
-+	KUNIT_ASSERT_TRUE(test, length_out);
-+	KUNIT_ASSERT_TRUE(test, in);
-+
-+	length = 0;
-+	list_for_each_entry(pos, in, list)
-+		length = size_add(length, pos->length);
-+
-+	KUNIT_ASSERT_NE(test, length, 0);
-+	KUNIT_ASSERT_NE(test, length, SIZE_MAX);
-+
-+	buf = kunit_kzalloc(test, length, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, buf);
-+
-+	tail = buf;
-+	list_for_each_entry(pos, in, list) {
-+		memcpy(tail, pos->data, pos->length);
-+		tail += pos->length;
-+	}
-+
-+	*length_out = length;
-+	return buf;
-+}
-+
-+static u8 *mctp_usblib_test_init_buf(struct kunit *test, size_t length)
-+{
-+	u8 *buffer;
-+	size_t i;
-+
-+	buffer = kunit_kzalloc(test, length, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, buffer);
-+
-+	for (i = 0; i < length; i++)
-+		buffer[i] = i % 256;
-+
-+	return buffer;
-+}
-+
-+static void mctp_usblib_test_fill_head(struct mctp_usb_hdr *head, size_t len)
-+{
-+	len += HDR_LEN;
-+	head->id = cpu_to_be16(MCTP_USB_DMTF_ID);
-+	head->len = cpu_to_be16(len & MCTP_USB_1_1_PKTLEN_MAX);
-+}
-+
-+static struct sk_buff *mctp_usblib_test_init_skb(struct kunit *test,
-+						 unsigned int length,
-+						 struct net_device *ndev,
-+						 void *data)
-+{
-+	struct sk_buff *skb;
-+
-+	skb = __netdev_alloc_skb(ndev, length, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(test, skb);
-+
-+	skb_put_data(skb, data, length);
-+	return skb;
-+}
-+
- static netdev_tx_t mctp_usblib_dev_tx(struct sk_buff *skb,
- 				      struct net_device *ndev)
- {
-@@ -119,6 +222,7 @@ static int mctp_usblib_test_dst_output(struct mctp_dst *dst,
- static void mctp_usblib_test_fini_action(void *data)
- {
- 	struct mctp_usblib_test_ctx *ctx = data;
-+	struct tx_buff *curr, *temp;
- 
- 	/* The device will have been destroyed, so ->rt will be unlinked.
- 	 * Just ensure that the refcount is as expected.
-@@ -126,6 +230,8 @@ static void mctp_usblib_test_fini_action(void *data)
- 	KUNIT_EXPECT_TRUE(current->kunit_test,
- 			  refcount_dec_and_test(&ctx->rt.refs));
- 
-+	list_for_each_entry_safe(curr, temp, &ctx->tx_xfers, list)
-+		kfree(curr);
- 	kfree(ctx);
- }
- 
-@@ -141,6 +247,7 @@ static struct mctp_usblib_test_ctx *mctp_usblib_test_init(struct kunit *test)
- 	INIT_LIST_HEAD(&ctx->rt.list);
- 	rt = &ctx->rt;
- 	refcount_set(&rt->refs, 1);
-+	INIT_LIST_HEAD(&ctx->tx_xfers);
- 
- 	rc = kunit_add_action_or_reset(test, mctp_usblib_test_fini_action, ctx);
- 	KUNIT_ASSERT_EQ(test, rc, 0);
-@@ -227,6 +334,32 @@ static int mctp_usblib_test_rx_complete(struct net_device *netdev,
- 	return rc;
- }
- 
-+static void action_tx_fini(void *data)
-+{
-+	struct mctp_usblib_tx *tx = data;
-+
-+	mctp_usblib_tx_fini(tx);
-+	kfree(tx);
-+}
-+
-+static struct mctp_usblib_tx *
-+mctp_usblib_test_tx_init(struct kunit *test,
-+			 const struct mctp_usblib_tx_ops *ops,
-+			 void *priv, bool span)
-+{
-+	struct mctp_usblib_tx *tx;
-+	int rc;
-+
-+	tx = kzalloc_obj(*tx);
-+	KUNIT_ASSERT_NOT_NULL(test, tx);
-+	rc = kunit_add_action_or_reset(test, action_tx_fini, tx);
-+	KUNIT_ASSERT_EQ(test, rc, 0);
-+
-+	mctp_usblib_tx_init(tx, ops, priv, span);
-+
-+	return tx;
-+}
-+
- /* Single packet, starting on a transfer boundary, contained entirely within
-  * the transfer
-  */
-@@ -584,6 +717,156 @@ static void mctp_usblib_test_rx_nonspanning_partial(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, dev->rx_pkts.qlen, 0);
- }
- 
-+static void mctp_usblib_test_tx_pkt_span(struct kunit *test)
-+{
-+	struct mctp_usblib_test_ctx *ctx;
-+	struct mctp_usblib_tx_ops ops;
-+	struct mctp_usblib_tx *tx;
-+	struct mctp_usb_hdr head;
-+	struct net_device *ndev;
-+	struct sk_buff *skb;
-+	size_t len, tx_len;
-+	u8 *buf, *flat_tx;
-+	int rc;
-+
-+	len = 1000;
-+
-+	ctx = mctp_usblib_test_init(test);
-+	ndev = ctx->dev->ndev;
-+
-+	ops.send = mctp_usblib_test_tx_send;
-+
-+	tx = mctp_usblib_test_tx_init(test, &ops, ctx, true);
-+
-+	buf = mctp_usblib_test_init_buf(test, len);
-+	mctp_usblib_test_fill_head(&head, len);
-+
-+	skb = mctp_usblib_test_init_skb(test, len, ndev, buf);
-+
-+	rc = mctp_usblib_tx_push(ndev, tx, skb, false);
-+	KUNIT_ASSERT_EQ(test, rc, 0);
-+	KUNIT_ASSERT_FALSE(test, list_empty(&ctx->tx_xfers));
-+
-+	flat_tx = mctp_usblib_test_flatten_tx_buff(test, &ctx->tx_xfers,
-+						   &tx_len);
-+	KUNIT_ASSERT_NOT_NULL(test, flat_tx);
-+
-+	KUNIT_EXPECT_EQ(test, tx_len, len + HDR_LEN);
-+	KUNIT_EXPECT_MEMEQ(test, flat_tx, &head, HDR_LEN);
-+	KUNIT_EXPECT_MEMEQ(test, flat_tx + HDR_LEN, buf, len);
-+}
-+
-+static void mctp_usblib_test_tx_failing_send(struct kunit *test)
-+{
-+	struct mctp_usblib_test_ctx *ctx;
-+	struct mctp_usblib_tx_ops ops;
-+	struct mctp_usblib_tx *tx;
-+	struct net_device *ndev;
-+	struct sk_buff *skb;
-+	size_t len;
-+	u8 *buf;
-+	int rc;
-+
-+	len = 100;
-+
-+	ctx = mctp_usblib_test_init(test);
-+	ndev = ctx->dev->ndev;
-+
-+	ops.send = mctp_usblib_test_tx_send_fail;
-+
-+	tx = mctp_usblib_test_tx_init(test, &ops, ctx, false);
-+	buf = mctp_usblib_test_init_buf(test, len);
-+	skb = mctp_usblib_test_init_skb(test, len, ndev, buf);
-+
-+	/* Doesn't call ops.send as more packets are expected,
-+	 * so the push shouldn't fail.
-+	 */
-+	rc = mctp_usblib_tx_push(ndev, tx, skb, true);
-+	KUNIT_ASSERT_EQ(test, rc, 0);
-+
-+	skb = mctp_usblib_test_init_skb(test, len, ndev, buf);
-+
-+	/* Calls ops.send as no further packets are expected. */
-+	rc = mctp_usblib_tx_push(ndev, tx, skb, false);
-+	KUNIT_EXPECT_EQ(test, rc, 0);
-+	KUNIT_EXPECT_NULL(test, tx->cur_ctx);
-+	KUNIT_EXPECT_TRUE(test, list_empty(&ctx->tx_xfers));
-+}
-+
-+/* Test sending multiple packets in the same transfer, followed by one that
-+ * spans multiple subsequent transfers.
-+ */
-+static void mctp_usblib_test_tx_multi_push(struct kunit *test)
-+{
-+	struct mctp_usblib_test_ctx *ctx;
-+	size_t i, max_length, tx_length;
-+	struct mctp_usblib_tx_ops ops;
-+	u8 *buf, *flat_tx, *index;
-+	struct mctp_usblib_tx *tx;
-+	struct net_device *ndev;
-+	struct sk_buff *skb;
-+	const struct {
-+		size_t len;
-+		bool more;
-+	} sends[] = {
-+		{ 1000, true  },
-+		{  500, false },
-+		{ 5000, false },
-+	};
-+	int rc;
-+
-+	static_assert(!sends[ARRAY_SIZE(sends) - 1].more,
-+		      "The last push must claim there will be no more");
-+
-+	max_length = 0;
-+	for (i = 0; i < ARRAY_SIZE(sends); i++) {
-+		if (sends[i].len > max_length)
-+			max_length = sends[i].len;
-+	}
-+
-+	ctx = mctp_usblib_test_init(test);
-+	ndev = ctx->dev->ndev;
-+
-+	ops.send = mctp_usblib_test_tx_send;
-+
-+	tx = mctp_usblib_test_tx_init(test, &ops, ctx, true);
-+	buf = mctp_usblib_test_init_buf(test, max_length);
-+
-+	for (i = 0; i < ARRAY_SIZE(sends); i++) {
-+		skb = mctp_usblib_test_init_skb(test, sends[i].len, ndev, buf);
-+
-+		rc = mctp_usblib_tx_push(ndev, tx, skb, sends[i].more);
-+		KUNIT_ASSERT_EQ(test, rc, 0);
-+	}
-+	KUNIT_ASSERT_FALSE(test, list_empty(&ctx->tx_xfers));
-+
-+	flat_tx = mctp_usblib_test_flatten_tx_buff(test, &ctx->tx_xfers,
-+						   &tx_length);
-+
-+	for (i = 0, index = flat_tx; i < ARRAY_SIZE(sends); i++) {
-+		size_t length_to_check, remaining_bytes;
-+		struct mctp_usb_hdr head;
-+
-+		if (index - flat_tx >= tx_length - HDR_LEN)
-+			break;
-+
-+		mctp_usblib_test_fill_head(&head, sends[i].len);
-+		KUNIT_EXPECT_MEMEQ(test, index, &head, HDR_LEN);
-+		index += HDR_LEN;
-+		remaining_bytes = tx_length - (index - flat_tx);
-+
-+		length_to_check = sends[i].len;
-+		KUNIT_EXPECT_GE(test, remaining_bytes, length_to_check);
-+		length_to_check = min(remaining_bytes, length_to_check);
-+
-+		KUNIT_EXPECT_MEMEQ(test, index,
-+				   buf, length_to_check);
-+
-+		index += length_to_check;
-+	}
-+	KUNIT_EXPECT_EQ(test, i, ARRAY_SIZE(sends));
-+}
-+
- static struct kunit_case mctp_usblib_test_cases[] = {
- 	KUNIT_CASE(mctp_usblib_test_rx_single),
- 	KUNIT_CASE_PARAM(mctp_usblib_test_rx_pkt_span,
-@@ -593,6 +876,9 @@ static struct kunit_case mctp_usblib_test_cases[] = {
- 	KUNIT_CASE(mctp_usblib_test_rx_invalid_dmtf_id),
- 	KUNIT_CASE(mctp_usblib_test_rx_nonspanning_tiny),
- 	KUNIT_CASE(mctp_usblib_test_rx_nonspanning_partial),
-+	KUNIT_CASE(mctp_usblib_test_tx_pkt_span),
-+	KUNIT_CASE(mctp_usblib_test_tx_multi_push),
-+	KUNIT_CASE(mctp_usblib_test_tx_failing_send),
- 	{}
- };
- 
-
--- 
-2.47.3
-
+Thanks,
+Zhe
