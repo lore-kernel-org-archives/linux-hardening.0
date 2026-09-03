@@ -1,132 +1,233 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7344FECD8;
-	Thu,  3 Sep 2026 21:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C40C20DD51;
+	Thu,  3 Sep 2026 21:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788470512; cv=none; b=fPp7cA4ZHwZuqoRVEUZi1LTE+/mywpDGd4tyF0hJzCjjlpLpdflU+3eDOGXYJsxXGUPWDmqDljOuRGsIKnQYu0RWLrfbjNmi95GlCbXIPSaPwYjuNZR22lAA868DwmYbNjjoqVJ2IrxQg2l9ucXRe/AxqMKehV3KVLZag9O1hJ0=
+	t=1788471966; cv=none; b=DFtuyXBK/nyeV4XfGVxEat3SAzSV6bMkNEhAVLD7yUF4r3lLXT+yqsAiRUcz8U81w6gI7sWolA6XwJFX1Nr0sFmqj7EvdgXATJW13IYYy/lrSAbGhe92FW+nO+HyKd7eRwnPdsXdf0LSpyeo1Ql2sN0XDRiXFRNh4lnJDQg8Z9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788470512; c=relaxed/simple;
-	bh=YJqXVLIYRtuK1/RaNrfAZeRD2nONfYM2Ix9YmxubWZc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qzVLvEb2nrNyMVZmScKXD2mPP0wWzV5fkVA6q/tV7eHpvN5SsNuakxfyMLelGYXfhKjjns+3s5etkp7jIqzuF60piTzuTZaCK4CwwIlHRFELFaW9CPqwuCtuUYlwwiNup84aQKIhF+DhYNM+0XJU0sThdeyxLXfoVZFCWIa+MvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F4Ys67wZ; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1788471966; c=relaxed/simple;
+	bh=Ged1OvuCOT5wAKN5s3gjyhDlcfBNlHtzOGoFGEkWcO4=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fZQ9yDapDJ47wKYwPqSz0CQuUgErZ+UcEfLtXXahD11XKdPihB4X/Wz1NozbFC/2Q6HaGmMAzuVkw8OMXvguHaXootdZ2GF5CmiunNOHxMIWiiI2eiih6YLO386nRdQkuPAcpU52nZlOfQ/UzarHq+BRHrz+9Sdl9kSrkHXqK4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjIMxOc1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F4Ys67wZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788470499; x=1820006499;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YJqXVLIYRtuK1/RaNrfAZeRD2nONfYM2Ix9YmxubWZc=;
-  b=F4Ys67wZBmGd2QQBjbBR5anthklxVP8mhCIQIiw3Do1SVbuIh0PuQggW
-   Dg2zXazB37lpPVNnLikVwjaHgPsW+HokrBQCnTEScPPrEvGDH94amrb3V
-   +54b+zjF8/4dPOt/UJcWFRY3larjcsIefGkw4ZEkD7i+ypwypukmhsXpd
-   RO5WDWAqS8oxQFHx6YZja1CVOQIRV8KyfpIQHpmTjYmj95XeOTTzlc5Zs
-   U0ooWPRCW5eJC/X/R2JUaETgArTltkVbVzHacnL4Z3/eeCD1O2Jq4tKek
-   QpqJjwvVvfQKke+L6Nqx/0JIsgC2s8qH23l9/wczVuw7N3rn+Edy1R8bD
-   g==;
-X-CSE-ConnectionGUID: VwZfF7elQquFsu6iAl/jnQ==
-X-CSE-MsgGUID: UR6dbVM3Q1GkzaN2X6wMQA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="92787516"
-X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="92787516"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:21:32 -0700
-X-CSE-ConnectionGUID: VmKnbi7VSkagMq8lM2A2xQ==
-X-CSE-MsgGUID: ehBiLw4lRIaUJXiZRlIETw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="270366955"
-Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.110.190]) ([10.125.110.190])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 14:21:31 -0700
-Message-ID: <01d2856a-b852-40b0-b144-e0f0ad018c7c@intel.com>
-Date: Thu, 3 Sep 2026 14:21:29 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjIMxOc1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA301F000E9;
+	Thu,  3 Sep 2026 21:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788471964;
+	bh=uGAVaeP0W8LvN/PN6xnor0NvE26XFUvUHT3W2tP0h5Q=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=CjIMxOc1QnxYh/iZPFBY92Rvrj7P7CFMyondjkKH/Gp0OjPabi1F1grBwGyvdOytB
+	 7RakNaZaW+H53ohS/zB0rnj7guYCHhd6qU/TdZ8Mk3GfiYwyA2s8qv3qzDTQWGx9U/
+	 HQJZPC2XAoFWhzutBao25MZDNPhhKRzSVFDAw6729ba1vqbUeLb3iy5j0XJRrF9QN0
+	 JBaa7ap2uLDFycSmDn2tOtUhLx/W6Nwo5I3fnccYaQ5UJ6962OhhmFH2svWcy9Z/vI
+	 sdcAJs6okkmvg+fzxjsF6S2fUWNAc7ZyAnnKJSyeDj06AeITPWy+7tsJEON6c8aFVU
+	 ZV9P2dONFxyjA==
+Subject: Re: [2/7] net: mctp: usblib: Add test for splits inside headers
+From: netdev-bot+sashiko@kernel.org
+To: james@codeconstruct.com.au
+Cc: jk@codeconstruct.com.au, matt@codeconstruct.com.au, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date: Thu, 03 Sep 2026 21:46:03 +0000
+Message-ID: <178847196367.3394541.6002836106059762076@kernel.org>
+In-Reply-To:
+ <20260831-dev-mctp-usb-lib-test-v1-2-79699bf67a18@codeconstruct.com.au>
+References:
+ <20260831-dev-mctp-usb-lib-test-v1-2-79699bf67a18@codeconstruct.com.au>
+X-sashiko-severity: Medium
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/27] vfio/cxl: Reject unsupported decoder topologies
- at bind
-To: mhonap@nvidia.com, alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com,
- jic23@kernel.org, alejandro.lucero-palau@amd.com, smadhavan@nvidia.com,
- corbet@lwn.net, skhan@linuxfoundation.org, dave@stgolabs.net,
- alison.schofield@intel.com, vishal.l.verma@intel.com, iweiny@kernel.org,
- ming.li@zohomail.com, yishaih@nvidia.com, skolothumtho@nvidia.com,
- kevin.tian@intel.com, bhelgaas@google.com, dmatlack@google.com,
- kees@kernel.org, gustavoars@kernel.org
-Cc: cjia@nvidia.com, kjaju@nvidia.com, vsethi@nvidia.com, zhiw@nvidia.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
- <20260813093631.2288172-11-mhonap@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260813093631.2288172-11-mhonap@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 3 potential
+issue(s) to consider:
 
+Critical: 0 · High: 0 · Medium: 2 · Low: 1
 
-On 8/13/26 2:36 AM, mhonap@nvidia.com wrote:
-> From: Manish Honap <mhonap@nvidia.com>
-> 
-> The guest drives a single virtual decoder whose memory maps 1:1, so a
-> device with more than one HDM decoder, or an interleaved one, cannot be
-> represented. Turn that assumption into an explicit refusal at bind rather
-> than a silent misprogramming later.
-> 
-> Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> ---
->  drivers/vfio/pci/cxl/vfio_cxl_core.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> index 125e11354a46..7edc53b25576 100644
-> --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-> @@ -36,10 +36,30 @@ static int vfio_cxl_init_device(struct vfio_pci_core_device *vdev)
->  	if (!pdev->hdm)
->  		return -EPROBE_DEFER;
+- [Medium] SKB leak in the new helper
+  `mctp_usblib_test_rx_split_header()` (drivers/net/mctp/mctp-usblib-…
+- [Medium] `mctp_usblib_test_rx_split_header()` calls the driver's
+  completion entry point `mctp_usblib_rx_complete()` directly…
+- [Low] Unused local variable `size_t i;` in the newly added
+  `mctp_usblib_test_rx_header_splits()` (drivers/net/mctp/mctp-usblib-…
+
+--
+
+net: mctp: usblib: Add test for splits inside headers
+
+Adds a new KUnit case, mctp_usblib_test_rx_header_splits(), which walks a
+helper across every byte offset where a 16-byte packet's headers can be
+split between two transfers, and drops the three parameterized span entries
+that covered a subset of those cases.
+
+A few questions about the new test below.
+
+> diff --git a/drivers/net/mctp/mctp-usblib-test.c b/drivers/net/mctp/mctp-usblib-test.c
+> index 4c27307900fb..1a6dd6d10daa 100644
+> --- a/drivers/net/mctp/mctp-usblib-test.c
+> +++ b/drivers/net/mctp/mctp-usblib-test.c
+
+[ ... ]
+
+> @@ -403,10 +399,71 @@ static const struct mctp_usblib_test_pkt_span mctp_usblib_test_pkt_spans[] = {
+>  KUNIT_ARRAY_PARAM(mctp_usblib_test_rx_pkt_span, mctp_usblib_test_pkt_spans,
+>  		  mctp_usblib_test_pkt_span_to_desc);
 >  
-> +	/* The guest drives one virtual decoder; multiple are unsupported. */
-> +	if (pdev->hdm->decoder_count != 1)
-> +		return -EOPNOTSUPP;
+> +static void mctp_usblib_test_rx_split_header(struct kunit *test, size_t offset,
+> +					     struct mctp_usblib_test_dev *dev,
+> +					     struct mctp_usblib_rx *rx)
+> +{
+> +	struct sk_buff *skb;
+> +	size_t buflen, len;
+> +	u8 packet[16];
+> +	void *buf;
+> +	int rc;
 > +
->  	hdm_size = range_len(&pdev->hdm->settings[0].hpa_range);
->  	if (!hdm_size)
->  		return -ENXIO;
->  
-> +	/* Interleaved decoders are unsupported. */
-> +	if (pdev->hdm->settings[0].interleave_ways != 1)
-
-Just a nit, but why not check the interleave before retrieve the range_len()? Get the simpler checks out of the way.
-
-DJ
-
-
-> +		return -EOPNOTSUPP;
+> +	len = sizeof(packet);
+> +	mctp_usblib_test_init_pkt(packet, len, len);
 > +
-> +	/*
-> +	 * The guest drives resets through the CXL Device DVSEC and polls the
-> +	 * shadow for completion. If the host cannot service a function-scoped
-> +	 * CXL reset (no reset DVSEC, a multifunction device, or no HDM reset
-> +	 * support), that guest request could never complete, so refuse the
-> +	 * device rather than advertise a reset the guest would poll on forever.
+> +	rc = mctp_usblib_rx_prepare(dev->ndev, rx, &buf, &buflen, GFP_KERNEL);
+> +	KUNIT_ASSERT_EQ(test, rc, 0);
+> +	KUNIT_ASSERT_GE(test, buflen, len);
+> +
+> +	memcpy(buf, packet, offset);
+> +	mctp_usblib_rx_complete(dev->ndev, rx, offset);
+
+[Severity: Medium]
+Should these two calls go through the mctp_usblib_test_rx_complete()
+wrapper rather than calling mctp_usblib_rx_complete() directly?
+
+The wrapper in this same file exists specifically to provide the calling
+context the driver expects:
+
+  /* Wrappers for usblib's rx_complete callback, which is intended to be called
+   * from atomic context
+   */
+  static int mctp_usblib_test_rx_complete(struct net_device *netdev,
+                                          struct mctp_usblib_rx *rx, size_t len)
+  {
+          local_bh_disable();
+          rc = mctp_usblib_rx_complete(netdev, rx, len);
+          local_bh_enable();
+          return rc;
+  }
+
+mctp_usblib_test_rx_single() and mctp_usblib_test_rx_pkt_span() both use it,
+but mctp_usblib_test_rx_split_header() calls the raw entry point from
+preemptible kunit process context.
+
+The delivery path starts with a per-CPU pointer fetch in
+drivers/net/mctp/mctp-usblib.c:
+
+  static void mctp_usblib_rx(struct net_device *netdev, struct sk_buff *skb)
+  {
+          struct pcpu_dstats *dstats = this_cpu_ptr(netdev->dstats);
+          ...
+          flags = u64_stats_update_begin_irqsave(&dstats->syncp);
+
+Can this produce a "BUG: using smp_processor_id() in preemptible code"
+splat on a CONFIG_DEBUG_PREEMPT build, given this_cpu_ptr() resolves
+through my_cpu_offset/smp_processor_id() there? The same this_cpu_ptr()
+pattern is in the drop path used when a header is rejected.
+
+Separately, with preemption enabled between the this_cpu_ptr() and the
+u64_stats_update_begin_irqsave(), can the task migrate and leave two
+contexts writing the same per-CPU dstats syncp?
+
+Also, both of these calls discard the return code, unlike every other
+mctp_usblib_rx_complete() call site in the file which does
+KUNIT_ASSERT_EQ(test, rc, 0). Was dropping the check intentional?
+
+> +
+> +	rc = mctp_usblib_rx_prepare(dev->ndev, rx, &buf, &buflen,
+> +				    GFP_KERNEL);
+> +	KUNIT_ASSERT_EQ(test, rc, 0);
+> +	KUNIT_ASSERT_GE(test, buflen, len);
+> +	KUNIT_ASSERT_EQ(test, dev->rx_pkts.qlen, 0);
+> +
+> +	memcpy(buf, packet + offset, len - offset);
+> +	mctp_usblib_rx_complete(dev->ndev, rx, len - offset);
+> +	KUNIT_EXPECT_EQ(test, dev->rx_pkts.qlen, 1);
+> +
+> +	skb = __skb_dequeue(&dev->rx_pkts);
+> +	KUNIT_EXPECT_NOT_NULL(test, skb);
+> +	if (skb)
+> +		KUNIT_EXPECT_EQ(test, skb->len, len - HDR_LEN);
+> +}
+
+[Severity: Medium]
+Does this helper leak the dequeued skb?
+
+The skb is unlinked from dev->rx_pkts by __skb_dequeue() and the function
+returns without a kfree_skb(). The teardown action only purges the queue:
+
+  static void mctp_usblib_test_dev_action(void *data)
+  {
+          struct mctp_usblib_test_dev *dev = data;
+
+          skb_queue_purge(&dev->rx_pkts);
+
+so once the skb has been dequeued it is no longer reachable from there.
+
+The two existing tests free it after dequeue:
+
+  skb = __skb_dequeue(&dev->rx_pkts);
+  ...
+  kfree_skb(skb);
+
+Since mctp_usblib_test_rx_header_splits() calls this helper eight times,
+does that leak eight skbs plus their linear data areas per run of the
+suite? This looks like it is still missing at the end of the series.
+
+> +
+> +static void mctp_usblib_test_rx_header_splits(struct kunit *test)
+> +{
+> +	struct mctp_usblib_test_dev *dev;
+> +	struct mctp_usblib_test_ctx *ctx;
+> +	struct mctp_usblib_rx *rx;
+> +	size_t i;
+
+[Severity: Low]
+This isn't a bug, but i is never referenced in the unrolled body below, so
+this should warn with -Wunused-variable when the KUnit module is built at
+this commit.
+
+The declaration does get removed by the following patch in the series,
+"net: mctp: usblib: Add tests of invalid headers"
+(49a493a0ed5d5a9d6a79967c53761c7a58c76c67), and it is absent at the tip of
+the series, so this is only visible when bisecting through this commit.
+Could it be dropped here instead?
+
+> +
+> +	ctx = mctp_usblib_test_init(test);
+> +	rx = mctp_usblib_test_rx_init(test, true);
+> +	dev = ctx->dev;
+> +
+> +	/* Unrolling here so stack traces point to the invocation with the
+> +	 * failing length.
 > +	 */
-> +	if (!cxl_reset_capable(pdev)) {
-> +		pci_err(pdev, "vfio-cxl: Unsupported device: host cannot service a CXL reset request\n");
-> +		return -EOPNOTSUPP;
-> +	}
+> +	mctp_usblib_test_rx_split_header(test, 1, dev, rx);
+> +	mctp_usblib_test_rx_split_header(test, 2, dev, rx);
+> +	mctp_usblib_test_rx_split_header(test, 3, dev, rx);
+> +	mctp_usblib_test_rx_split_header(test, 4, dev, rx);
+> +	mctp_usblib_test_rx_split_header(test, 5, dev, rx);
+> +	mctp_usblib_test_rx_split_header(test, 6, dev, rx);
+> +	mctp_usblib_test_rx_split_header(test, 7, dev, rx);
+> +	mctp_usblib_test_rx_split_header(test, 8, dev, rx);
+> +}
 > +
->  	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
->  					  PCI_DVSEC_CXL_DEVICE);
->  	serial = pci_get_dsn(pdev);
 
+[ ... ]
+
+-- 
+Sashiko AI review · https://netdev-ai.bots.linux.dev/sashiko/#/patchset/20260831-dev-mctp-usb-lib-test-v1-0-79699bf67a18%40codeconstruct.com.au
