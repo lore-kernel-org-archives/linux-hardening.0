@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C40C20DD51;
-	Thu,  3 Sep 2026 21:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEC12417D1;
+	Thu,  3 Sep 2026 21:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788471966; cv=none; b=DFtuyXBK/nyeV4XfGVxEat3SAzSV6bMkNEhAVLD7yUF4r3lLXT+yqsAiRUcz8U81w6gI7sWolA6XwJFX1Nr0sFmqj7EvdgXATJW13IYYy/lrSAbGhe92FW+nO+HyKd7eRwnPdsXdf0LSpyeo1Ql2sN0XDRiXFRNh4lnJDQg8Z9M=
+	t=1788471967; cv=none; b=Bd9YxAZDrAZWbbbqAuR3cZmZgNcsYEQ37tJy0Ffn8xVoRlMe3eIsWJzTYMnhNMMkJxLjy7nN4E3/6cW7eLH/uAB0H3Ap9iKPM+ZOhW1Ik1YzWgmemXdQxXyriHT0YRqcF7nNgmyX3ieV4OjVtMV2GxkMqVfMmGA4o5MXG+I+ygg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788471966; c=relaxed/simple;
-	bh=Ged1OvuCOT5wAKN5s3gjyhDlcfBNlHtzOGoFGEkWcO4=;
+	s=arc-20240116; t=1788471967; c=relaxed/simple;
+	bh=OSZkD8409RE3z7t3qI++xt0tqEDQcGTo2G0z/Ygg8G0=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fZQ9yDapDJ47wKYwPqSz0CQuUgErZ+UcEfLtXXahD11XKdPihB4X/Wz1NozbFC/2Q6HaGmMAzuVkw8OMXvguHaXootdZ2GF5CmiunNOHxMIWiiI2eiih6YLO386nRdQkuPAcpU52nZlOfQ/UzarHq+BRHrz+9Sdl9kSrkHXqK4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjIMxOc1; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=tcBy2nLPBG1O2lsqGdifaJre/9+XAiqAhEHoxNf+O0TIP5iPJ9+RKUDE/s6HEyyhyOjp365qNM+Qjfx2KuUvAN50f4rHfVi8KhWZb+iBjAi7I33Y/W2x5PRTU056kqY14EIoBjJCVI2kiJAPMEwWFPqNoCk95AsRSVe7IsvSQrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6Gb1lB2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjIMxOc1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA301F000E9;
-	Thu,  3 Sep 2026 21:46:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6Gb1lB2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2F01F00A3D;
+	Thu,  3 Sep 2026 21:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788471964;
-	bh=uGAVaeP0W8LvN/PN6xnor0NvE26XFUvUHT3W2tP0h5Q=;
+	s=k20260515; t=1788471966;
+	bh=KgXEKz1APqLPG4nyWY2AN2NntonWjikKHDW+8kArWTI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=CjIMxOc1QnxYh/iZPFBY92Rvrj7P7CFMyondjkKH/Gp0OjPabi1F1grBwGyvdOytB
-	 7RakNaZaW+H53ohS/zB0rnj7guYCHhd6qU/TdZ8Mk3GfiYwyA2s8qv3qzDTQWGx9U/
-	 HQJZPC2XAoFWhzutBao25MZDNPhhKRzSVFDAw6729ba1vqbUeLb3iy5j0XJRrF9QN0
-	 JBaa7ap2uLDFycSmDn2tOtUhLx/W6Nwo5I3fnccYaQ5UJ6962OhhmFH2svWcy9Z/vI
-	 sdcAJs6okkmvg+fzxjsF6S2fUWNAc7ZyAnnKJSyeDj06AeITPWy+7tsJEON6c8aFVU
-	 ZV9P2dONFxyjA==
-Subject: Re: [2/7] net: mctp: usblib: Add test for splits inside headers
+	b=f6Gb1lB2ycQCnWVKtd8TAkb6Vh29B+JxhJWb3Uotmn1xL67ilA130es81D2+W2ZlQ
+	 9mNyUz9H75UTOm07kFq8FZqIIIddohYUPezblkOBsQBzuyh26A5QXkYC1jAHsyhT9S
+	 iYf1Kru+UmeKaKZT7zMRmU994Pc/MZXVy0USd9bODFyWuYYmQZ0jkyjaZlFPpgETrW
+	 LsEovyO5tF+4BVBVSkEeqReyYKaHQZULWFUZF740uCmDNT63UK132BKtYCHbvyJ0+N
+	 89ugxpfd7Xhp09TXoajmMmvgHNCC1T+CXsXdr7pIC7DPkZdDHdzF6/86wZ269knaIo
+	 eQWMT2flzWWCg==
+Subject: Re: [3/7] net: mctp: usblib: Add tests of invalid headers
 From: netdev-bot+sashiko@kernel.org
 To: james@codeconstruct.com.au
 Cc: jk@codeconstruct.com.au, matt@codeconstruct.com.au, andrew+netdev@lunn.ch,
  davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
  kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date: Thu, 03 Sep 2026 21:46:03 +0000
-Message-ID: <178847196367.3394541.6002836106059762076@kernel.org>
+Date: Thu, 03 Sep 2026 21:46:04 +0000
+Message-ID: <178847196492.3394541.5164042394634621124@kernel.org>
 In-Reply-To:
- <20260831-dev-mctp-usb-lib-test-v1-2-79699bf67a18@codeconstruct.com.au>
+ <20260831-dev-mctp-usb-lib-test-v1-3-79699bf67a18@codeconstruct.com.au>
 References:
- <20260831-dev-mctp-usb-lib-test-v1-2-79699bf67a18@codeconstruct.com.au>
-X-sashiko-severity: Medium
+ <20260831-dev-mctp-usb-lib-test-v1-3-79699bf67a18@codeconstruct.com.au>
+X-sashiko-severity: Low
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -49,183 +49,119 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 3 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider:
 
-Critical: 0 · High: 0 · Medium: 2 · Low: 1
+Critical: 0 · High: 0 · Medium: 0 · Low: 2
 
-- [Medium] SKB leak in the new helper
-  `mctp_usblib_test_rx_split_header()` (drivers/net/mctp/mctp-usblib-…
-- [Medium] `mctp_usblib_test_rx_split_header()` calls the driver's
-  completion entry point `mctp_usblib_rx_complete()` directly…
-- [Low] Unused local variable `size_t i;` in the newly added
-  `mctp_usblib_test_rx_header_splits()` (drivers/net/mctp/mctp-usblib-…
+- [Low] Undisclosed fixup hunk: besides adding the two new test cases
+  described in the changelog, this patch silently deletes the unused…
+- [Low] The new negative test `mctp_usblib_test_rx_short_packet()`
+  documents and exercises the wrong minimum-length boundary.
 
 --
 
-net: mctp: usblib: Add test for splits inside headers
+net: mctp: usblib: Add tests of invalid headers
 
-Adds a new KUnit case, mctp_usblib_test_rx_header_splits(), which walks a
-helper across every byte offset where a 16-byte packet's headers can be
-split between two transfers, and drops the three parameterized span entries
-that covered a subset of those cases.
-
-A few questions about the new test below.
+Adds two kunit cases to the mctp-usblib tests: one submitting a packet
+whose USB transport header length field is below the minimum, and one
+submitting a packet with a corrupted DMTF ID. Both expect -EPROTO from
+mctp_usblib_rx_complete(), a NULL rx->skb, and an empty rx queue.
 
 > diff --git a/drivers/net/mctp/mctp-usblib-test.c b/drivers/net/mctp/mctp-usblib-test.c
-> index 4c27307900fb..1a6dd6d10daa 100644
+> index 1a6dd6d10daa..4f499de9a6ce 100644
 > --- a/drivers/net/mctp/mctp-usblib-test.c
 > +++ b/drivers/net/mctp/mctp-usblib-test.c
-
-[ ... ]
-
-> @@ -403,10 +399,71 @@ static const struct mctp_usblib_test_pkt_span mctp_usblib_test_pkt_spans[] = {
->  KUNIT_ARRAY_PARAM(mctp_usblib_test_rx_pkt_span, mctp_usblib_test_pkt_spans,
->  		  mctp_usblib_test_pkt_span_to_desc);
+> @@ -440,7 +440,6 @@ static void mctp_usblib_test_rx_header_splits(struct kunit *test)
+>  	struct mctp_usblib_test_dev *dev;
+>  	struct mctp_usblib_test_ctx *ctx;
+>  	struct mctp_usblib_rx *rx;
+> -	size_t i;
 >  
-> +static void mctp_usblib_test_rx_split_header(struct kunit *test, size_t offset,
-> +					     struct mctp_usblib_test_dev *dev,
-> +					     struct mctp_usblib_rx *rx)
+>  	ctx = mctp_usblib_test_init(test);
+>  	rx = mctp_usblib_test_rx_init(test, true);
+
+[Severity: Low]
+Should this hunk be squashed into the previous patch instead?  The commit
+message only mentions adding invalid-header tests, but this removes an
+unused declaration from mctp_usblib_test_rx_header_splits(), which is a
+different function and unrelated to the new cases.
+
+That declaration arrives with the preceding patch "net: mctp: usblib: Add
+test for splits inside headers", where the body only contains the unrolled
+calls and never uses i:
+
+	struct mctp_usblib_rx *rx;
+	size_t i;
+
+	ctx = mctp_usblib_test_init(test);
+	rx = mctp_usblib_test_rx_init(test, true);
+	dev = ctx->dev;
+
+	mctp_usblib_test_rx_split_header(test, 1, dev, rx);
+	...
+	mctp_usblib_test_rx_split_header(test, 8, dev, rx);
+
+So the intermediate commit builds with a -Wunused-variable warning, which
+shows up during a bisect.  Would folding the removal into that patch (or at
+least mentioning it in this changelog) be preferable?
+
+> @@ -459,11 +458,79 @@ static void mctp_usblib_test_rx_header_splits(struct kunit *test)
+>  	mctp_usblib_test_rx_split_header(test, 8, dev, rx);
+>  }
+>  
+> +/* Test the submission of a packet with an impossibly small value in the
+> + * header's length field. Values less than HDR_LEN are invalid.
+> + */
+> +static void mctp_usblib_test_rx_short_packet(struct kunit *test)
 > +{
-> +	struct sk_buff *skb;
-> +	size_t buflen, len;
-> +	u8 packet[16];
-> +	void *buf;
-> +	int rc;
-> +
-> +	len = sizeof(packet);
-> +	mctp_usblib_test_init_pkt(packet, len, len);
-> +
+
+[Severity: Low]
+Is "Values less than HDR_LEN are invalid" the right threshold here?
+HDR_LEN is sizeof(struct mctp_usb_hdr), i.e. 4, but the check in
+mctp_usblib_rx_complete() rejects anything below the USB header plus the
+MCTP header, i.e. 8:
+
+drivers/net/mctp/mctp-usblib.c:mctp_usblib_rx_complete() {
+	...
+	if (pkt_len < sizeof(*hdr) + sizeof(struct mctp_hdr)) {
+		netdev_dbg(netdev, "rx: invalid len %d\n", pkt_len);
+		rc = -EPROTO;
+		goto err_reset;
+	}
+	...
+}
+
+> +	len = sizeof(pktbuf);
+> +	mctp_usblib_test_init_pkt(pktbuf, len, HDR_LEN - 1);
+
+Following on from the comment above, does this pin the boundary the test
+name suggests?  With hdr.usb.len set to 3, the case still passes if the
+driver check were weakened to pkt_len < sizeof(*hdr), so lengths of 4..7
+stay uncovered.
+
+Those are the values that would otherwise reach the pkt_len == skb->len /
+skb_clone path and hand mctp_usblib_rx() an skb whose
+skb_pull(skb, sizeof(struct mctp_usb_hdr)) leaves no struct mctp_hdr behind
+the USB header.
+
+Would HDR_LEN + sizeof(struct mctp_hdr) - 1, or a parameterised sweep over
+0..7, be a closer match to the validation being tested?  The comment and
+the value are unchanged through the end of the series (0782a305), so this
+applies to the final state of the file too.
+
+> +	buflen = 0;
 > +	rc = mctp_usblib_rx_prepare(dev->ndev, rx, &buf, &buflen, GFP_KERNEL);
 > +	KUNIT_ASSERT_EQ(test, rc, 0);
 > +	KUNIT_ASSERT_GE(test, buflen, len);
 > +
-> +	memcpy(buf, packet, offset);
-> +	mctp_usblib_rx_complete(dev->ndev, rx, offset);
-
-[Severity: Medium]
-Should these two calls go through the mctp_usblib_test_rx_complete()
-wrapper rather than calling mctp_usblib_rx_complete() directly?
-
-The wrapper in this same file exists specifically to provide the calling
-context the driver expects:
-
-  /* Wrappers for usblib's rx_complete callback, which is intended to be called
-   * from atomic context
-   */
-  static int mctp_usblib_test_rx_complete(struct net_device *netdev,
-                                          struct mctp_usblib_rx *rx, size_t len)
-  {
-          local_bh_disable();
-          rc = mctp_usblib_rx_complete(netdev, rx, len);
-          local_bh_enable();
-          return rc;
-  }
-
-mctp_usblib_test_rx_single() and mctp_usblib_test_rx_pkt_span() both use it,
-but mctp_usblib_test_rx_split_header() calls the raw entry point from
-preemptible kunit process context.
-
-The delivery path starts with a per-CPU pointer fetch in
-drivers/net/mctp/mctp-usblib.c:
-
-  static void mctp_usblib_rx(struct net_device *netdev, struct sk_buff *skb)
-  {
-          struct pcpu_dstats *dstats = this_cpu_ptr(netdev->dstats);
-          ...
-          flags = u64_stats_update_begin_irqsave(&dstats->syncp);
-
-Can this produce a "BUG: using smp_processor_id() in preemptible code"
-splat on a CONFIG_DEBUG_PREEMPT build, given this_cpu_ptr() resolves
-through my_cpu_offset/smp_processor_id() there? The same this_cpu_ptr()
-pattern is in the drop path used when a header is rejected.
-
-Separately, with preemption enabled between the this_cpu_ptr() and the
-u64_stats_update_begin_irqsave(), can the task migrate and leave two
-contexts writing the same per-CPU dstats syncp?
-
-Also, both of these calls discard the return code, unlike every other
-mctp_usblib_rx_complete() call site in the file which does
-KUNIT_ASSERT_EQ(test, rc, 0). Was dropping the check intentional?
-
+> +	memcpy(buf, pktbuf, len);
 > +
-> +	rc = mctp_usblib_rx_prepare(dev->ndev, rx, &buf, &buflen,
-> +				    GFP_KERNEL);
-> +	KUNIT_ASSERT_EQ(test, rc, 0);
-> +	KUNIT_ASSERT_GE(test, buflen, len);
-> +	KUNIT_ASSERT_EQ(test, dev->rx_pkts.qlen, 0);
-> +
-> +	memcpy(buf, packet + offset, len - offset);
-> +	mctp_usblib_rx_complete(dev->ndev, rx, len - offset);
-> +	KUNIT_EXPECT_EQ(test, dev->rx_pkts.qlen, 1);
-> +
-> +	skb = __skb_dequeue(&dev->rx_pkts);
-> +	KUNIT_EXPECT_NOT_NULL(test, skb);
-> +	if (skb)
-> +		KUNIT_EXPECT_EQ(test, skb->len, len - HDR_LEN);
+> +	rc = mctp_usblib_rx_complete(dev->ndev, rx, len);
+> +	KUNIT_EXPECT_EQ(test, rc, -EPROTO);
+> +	KUNIT_EXPECT_NULL(test, rx->skb);
+> +	KUNIT_EXPECT_EQ(test, dev->rx_pkts.qlen, 0);
 > +}
-
-[Severity: Medium]
-Does this helper leak the dequeued skb?
-
-The skb is unlinked from dev->rx_pkts by __skb_dequeue() and the function
-returns without a kfree_skb(). The teardown action only purges the queue:
-
-  static void mctp_usblib_test_dev_action(void *data)
-  {
-          struct mctp_usblib_test_dev *dev = data;
-
-          skb_queue_purge(&dev->rx_pkts);
-
-so once the skb has been dequeued it is no longer reachable from there.
-
-The two existing tests free it after dequeue:
-
-  skb = __skb_dequeue(&dev->rx_pkts);
-  ...
-  kfree_skb(skb);
-
-Since mctp_usblib_test_rx_header_splits() calls this helper eight times,
-does that leak eight skbs plus their linear data areas per run of the
-suite? This looks like it is still missing at the end of the series.
-
-> +
-> +static void mctp_usblib_test_rx_header_splits(struct kunit *test)
-> +{
-> +	struct mctp_usblib_test_dev *dev;
-> +	struct mctp_usblib_test_ctx *ctx;
-> +	struct mctp_usblib_rx *rx;
-> +	size_t i;
-
-[Severity: Low]
-This isn't a bug, but i is never referenced in the unrolled body below, so
-this should warn with -Wunused-variable when the KUnit module is built at
-this commit.
-
-The declaration does get removed by the following patch in the series,
-"net: mctp: usblib: Add tests of invalid headers"
-(49a493a0ed5d5a9d6a79967c53761c7a58c76c67), and it is absent at the tip of
-the series, so this is only visible when bisecting through this commit.
-Could it be dropped here instead?
-
-> +
-> +	ctx = mctp_usblib_test_init(test);
-> +	rx = mctp_usblib_test_rx_init(test, true);
-> +	dev = ctx->dev;
-> +
-> +	/* Unrolling here so stack traces point to the invocation with the
-> +	 * failing length.
-> +	 */
-> +	mctp_usblib_test_rx_split_header(test, 1, dev, rx);
-> +	mctp_usblib_test_rx_split_header(test, 2, dev, rx);
-> +	mctp_usblib_test_rx_split_header(test, 3, dev, rx);
-> +	mctp_usblib_test_rx_split_header(test, 4, dev, rx);
-> +	mctp_usblib_test_rx_split_header(test, 5, dev, rx);
-> +	mctp_usblib_test_rx_split_header(test, 6, dev, rx);
-> +	mctp_usblib_test_rx_split_header(test, 7, dev, rx);
-> +	mctp_usblib_test_rx_split_header(test, 8, dev, rx);
-> +}
-> +
 
 [ ... ]
 
