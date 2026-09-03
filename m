@@ -1,37 +1,37 @@
 Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D391A2C04;
-	Thu,  3 Sep 2026 02:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF9A19E97B;
+	Thu,  3 Sep 2026 02:42:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788403370; cv=none; b=BUQS8nE9KXhAsvwKLCrMCJxwZ/XbQq984+VZjMsYqqdaVrtFo6wcK5d5R9IRpLH7HL0y83fbOLyimApmrar7NbAjfpxbqujzBoYGj4JYNemaY/SveoNfMi62CpLd6NgueZYe6Xba0UldGK5v0a1/bPCr65xvabtUpABwseunzKs=
+	t=1788403370; cv=none; b=UYGPPsGuS8/Ha9jAFSX3oT0uC94h2L3KPjVzhPShyOSQl59QhceO/NN4joUFMrwNIZ14OhooYaNWENAYAubaMBk7tw9sc9C2nQIxg4MZay7PZh1fIa8yxQ6k/2BQ0HTM6Si0WfEeeUR2/QuXWt3Jnqn+aQi7ZJFqXsX/Sb4mcJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788403370; c=relaxed/simple;
-	bh=T2zwEOSKeJVPvjSKm2GKFRJuXwoncrPadWyEQ19not8=;
+	bh=tk6ZrQpBluSr4n3qB5Wk1r0PjpZDCcUfDE4f0xeGZNg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Garjkb+4+aVSlunRsiLZ/r/1G3c1Q7AZIAuMtZX1uCLTCVfPNJqF2JP70w2cm9mq4s0Ftvgc8KMF8132RrLRr3305SlsrqypbFxF9VPFXSgNdzr+4RVwSWVzmaMRu8VMSuIxoKWQlBySl4w83qhLB3EMVNjvcSm00reWICAxJr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=DovHcs0u; arc=none smtp.client-ip=203.29.241.158
+	 In-Reply-To:To:Cc; b=r1gkXCuPismEWP+qhZD5Lwr97bSdGBQbL9YF70npB1QgzxNkFS64VxsmpUG3U6lujCqouuNNGNbX3hyTsD10r6Nov+gky1QX0aMqakH+MNhGBKkjJtfYf5H5FUQnv/4/QppIE0XJziewHP2B97lDsmfJGzGn2VFsDKPIBeMdoWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=LZctovix; arc=none smtp.client-ip=203.29.241.158
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="DovHcs0u"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="LZctovix"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=codeconstruct.com.au; s=2022a; t=1788403359;
-	bh=PbFhoF6jYTVQDww2xy+ijFIf+3flRX07CkM/MkYCtcE=;
+	bh=+Q8Ci2BqhDAB+rnn+iPJ8rjqbPzcO6kXStVqFYnGwHk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=DovHcs0uGp7medxvpAst+3uw8UZSYEu/lX/baVyX1zYPM5lFhZgu6xnTiIeCDu983
-	 0xILcmxk/t0P7jGZ3YEG/ZvxMWSVph+Q5/bXJuELh5xUrYPhwMso1WF+duHwYVaSON
-	 D25miYWRc1JOdIMWHz6F1eATLjgnonLt4iVjgwyD/UJcIEcmKokd4QEdhOjdODti6M
-	 A0M50xATw+ky2sq8NvxUg/jj5YNRhmktaZL4LbFS7GaQ14kmsBOGzV4wj16RH0YBh6
-	 +V1vrqmrl4goxIbh814p7hA+aSAKM24szxPp15mRJOfFPyIkgVBS7ocSXqJXzW2s4c
-	 K88cRcA7CdwgA==
+	b=LZctovixlGOjCkUxvPPspiuZSrfxJl4skdjectOCjLh3YkflJDshLxZaOYTOz2Pu4
+	 b8PSQrCnB1tjff7aXlmbe2hHHXpOxmJMCstqR0tKnDY8mJdrnDzgh4DoMD9xXutM4Z
+	 8aD8ejip/Lc6JP+b37prGYKGVFNsgjyIjV1ogpv95jdRpaT/CuHuMTAv7ju/OM0SIS
+	 USZKj3BZb+Boo1KxqpvqL4aZRh97lim7Sahe0uLtmo8S2Bf+LplAAAeDl+ZT1Uznk0
+	 e22t+K0wFipf8VNblWuB+XBBwMolizftLFfPbk0r4jhtwZg6cIKMJYZKdOFzzB0X48
+	 NngqZP5szJoGw==
 Received: by codeconstruct.com.au (Postfix, from userid 10004)
-	id 095E068690; Thu,  3 Sep 2026 10:42:39 +0800 (AWST)
+	id C8E4D68693; Thu,  3 Sep 2026 10:42:39 +0800 (AWST)
 From: James Lee <james@codeconstruct.com.au>
-Date: Thu, 03 Sep 2026 10:42:18 +0800
-Subject: [PATCH net-next v2 1/7] net: mctp: usblib: Add to parameterized
- kunit tests.
+Date: Thu, 03 Sep 2026 10:42:20 +0800
+Subject: [PATCH net-next v2 3/7] net: mctp: usblib: Add tests of invalid
+ headers
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260903-dev-mctp-usb-lib-test-v2-1-313cf15e0b56@codeconstruct.com.au>
+Message-Id: <20260903-dev-mctp-usb-lib-test-v2-3-313cf15e0b56@codeconstruct.com.au>
 References: <20260903-dev-mctp-usb-lib-test-v2-0-313cf15e0b56@codeconstruct.com.au>
 In-Reply-To: <20260903-dev-mctp-usb-lib-test-v2-0-313cf15e0b56@codeconstruct.com.au>
 To: Jeremy Kerr <jk@codeconstruct.com.au>, 
@@ -53,38 +53,106 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org, James Lee <james@codeconstruct.com.au>
 X-Mailer: b4 0.14.2
 
-Add parameterized tests to cover worst case scenarios for packet
-splitting and length.
+Add tests where the length field of the USB transport header is below
+the minimum value, and where the DMTF ID is invalid.
 
 Signed-off-by: James Lee <james@codeconstruct.com.au>
 ---
- drivers/net/mctp/mctp-usblib-test.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/mctp/mctp-usblib-test.c | 69 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 68 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/mctp/mctp-usblib-test.c b/drivers/net/mctp/mctp-usblib-test.c
-index 9df401a914ff537207911f03bd08f32b5a5e20d1..4c27307900fb6116572bc9d89f3def6f06c30397 100644
+index a2ca79f61910af129af956a6f38ad69d5dae8c10..b0266be79e94c5adb1cf4286d5aeef9768d28b34 100644
 --- a/drivers/net/mctp/mctp-usblib-test.c
 +++ b/drivers/net/mctp/mctp-usblib-test.c
-@@ -386,12 +386,18 @@ static const struct mctp_usblib_test_pkt_span mctp_usblib_test_pkt_spans[] = {
- 	{ "1p2x-split-mctphdr", 1, { 16 }, 2, { 6, 10 } },
- 	/* Single packet split over 3 transfers, middle entirely continuation */
- 	{ "1p3x-split", 1, { 12 }, 3, { 4, 4, 4 } },
-+	/* A packet split over 5 transfers, splitting on and between each header. */
-+	{ "1p5x-split", 1, { 12 }, 5, { 3, 1, 1, 3, 4}},
- 	/* Max-sized single transfer */
- 	{ "1p1x-large", 1, { 8191 }, 1, { 8191 } },
- 	/* Two large packets, split at the worst-case for allocation, with a
- 	 * single byte continuing the span
- 	 */
--	{ "2p2x-large-split", 2, { 8190, 8190 }, 2, { 8191, 8189 } },
-+	{ "2p2x-large-split", 2, { 8190, 8191 }, 2, { 8191, 8190 } },
-+	/* Three large packets, split at the worst-case for allocation,
-+	 * with a single byte continuing each span
-+	 */
-+	{ "3p3x-large-split", 3, { 8190, 8191, 8191 }, 3, { 8191, 8191, 8190 } },
+@@ -442,7 +442,6 @@ static void mctp_usblib_test_rx_header_splits(struct kunit *test)
+ 	struct mctp_usblib_test_dev *dev;
+ 	struct mctp_usblib_test_ctx *ctx;
+ 	struct mctp_usblib_rx *rx;
+-	size_t i;
+ 
+ 	ctx = mctp_usblib_test_init(test);
+ 	rx = mctp_usblib_test_rx_init(test, true);
+@@ -461,11 +460,79 @@ static void mctp_usblib_test_rx_header_splits(struct kunit *test)
+ 	mctp_usblib_test_rx_split_header(test, 8, dev, rx);
+ }
+ 
++/* Test the submission of a packet with an impossibly small value in the
++ * header's length field. Values less than HDR_LEN are invalid.
++ */
++static void mctp_usblib_test_rx_short_packet(struct kunit *test)
++{
++	struct mctp_usblib_test_dev *dev;
++	struct mctp_usblib_test_ctx *ctx;
++	struct mctp_usblib_rx *rx;
++	size_t len, buflen;
++	u8 pktbuf[12];
++	void *buf;
++	int rc;
++
++	ctx = mctp_usblib_test_init(test);
++	rx = mctp_usblib_test_rx_init(test, true);
++	dev = ctx->dev;
++
++	len = sizeof(pktbuf);
++	mctp_usblib_test_init_pkt(pktbuf, len, HDR_LEN - 1);
++
++	buflen = 0;
++	rc = mctp_usblib_rx_prepare(dev->ndev, rx, &buf, &buflen, GFP_KERNEL);
++	KUNIT_ASSERT_EQ(test, rc, 0);
++	KUNIT_ASSERT_GE(test, buflen, len);
++
++	memcpy(buf, pktbuf, len);
++
++	rc = mctp_usblib_rx_complete(dev->ndev, rx, len);
++	KUNIT_EXPECT_EQ(test, rc, -EPROTO);
++	KUNIT_EXPECT_NULL(test, rx->skb);
++	KUNIT_EXPECT_EQ(test, dev->rx_pkts.qlen, 0);
++}
++
++static void mctp_usblib_test_rx_invalid_dmtf_id(struct kunit *test)
++{
++	struct mctp_usblib_test_dev *dev;
++	struct mctp_usblib_test_ctx *ctx;
++	struct mctp_usblib_rx *rx;
++	size_t len, buflen;
++	u8 pktbuf[12];
++	void *buf;
++	int rc;
++
++	ctx = mctp_usblib_test_init(test);
++	rx = mctp_usblib_test_rx_init(test, true);
++	dev = ctx->dev;
++
++	len = sizeof(pktbuf);
++	mctp_usblib_test_init_pkt(pktbuf, len, len);
++
++	// Make packet DMTF ID invalid
++	pktbuf[1] = ~pktbuf[1];
++
++	buflen = 0;
++	rc = mctp_usblib_rx_prepare(dev->ndev, rx, &buf, &buflen, GFP_KERNEL);
++	KUNIT_ASSERT_EQ(test, rc, 0);
++	KUNIT_ASSERT_GE(test, buflen, len);
++
++	memcpy(buf, pktbuf, len);
++
++	rc = mctp_usblib_rx_complete(dev->ndev, rx, len);
++	KUNIT_EXPECT_EQ(test, rc, -EPROTO);
++	KUNIT_EXPECT_NULL(test, rx->skb);
++	KUNIT_EXPECT_EQ(test, dev->rx_pkts.qlen, 0);
++}
++
+ static struct kunit_case mctp_usblib_test_cases[] = {
+ 	KUNIT_CASE(mctp_usblib_test_rx_single),
+ 	KUNIT_CASE_PARAM(mctp_usblib_test_rx_pkt_span,
+ 			 mctp_usblib_test_rx_pkt_span_gen_params),
+ 	KUNIT_CASE(mctp_usblib_test_rx_header_splits),
++	KUNIT_CASE(mctp_usblib_test_rx_short_packet),
++	KUNIT_CASE(mctp_usblib_test_rx_invalid_dmtf_id),
+ 	{}
  };
  
- KUNIT_ARRAY_PARAM(mctp_usblib_test_rx_pkt_span, mctp_usblib_test_pkt_spans,
 
 -- 
 2.47.3
