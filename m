@@ -1,204 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BE441A56F
-	for <linux-hardening@vger.kernel.org>; Thu,  3 Sep 2026 11:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF44485CCA;
+	Thu,  3 Sep 2026 12:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788433390; cv=none; b=sMyFDasU00pNhCYBZ2e9a+kbdGNxfRgoEJbhIrtIVenSwCZw9rWuII3TyQtwXd8exhockcJVudY62NqbDyw9fBcg3cbzeiO3OC2925k1199vUrMoJlPfvtdcDiiedYJjN6fXu+sT7fMNfThuvBlbT2Qf6u+ELpDmUUE5jGbc74k=
+	t=1788438480; cv=none; b=kg3itz8RI1gMz440vKbzneSBn343BglzTD/FEDDWTlYPcSTblSfZD3H1IsZnXrbWNdxsDV4q4V5XK/qIoo8MHJF/iF+pfL0XS0EJoekOyJw2icWnI8xFntpcAw9PCiRS0Cn/05IimhrXqp+YjjvqZyB6nBBuaJuGEgVXFVKSwPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788433390; c=relaxed/simple;
-	bh=McYGF25kbK7AMgfufk8shA9jaV6/zQQ0wSrBPDqfbuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jfGhhOKJm7ryRI2462uJhzOWr8Eq+ZrrJ/37SGE80OsK5m/inLNnonquDDW19XzvznATAKycUcYG0HCGZ9Wdz0Ck3BNE6+hpovEzcpnr56psBghgu5TkcCkPnAph9wfWie1vtL/gi/6qcIT5wO/4JKNHMSVJQVQejviKC54Fwl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473AA1F000E9;
-	Thu,  3 Sep 2026 11:03:06 +0000 (UTC)
-Date: Thu, 3 Sep 2026 20:02:20 -0600
-From: "Gustavo A. R. Silva" <garsilva@embeddedor.com>
-To: Jakub Jelinek <jakub@redhat.com>,
-	Richard Biener <richard.guenther@gmail.com>,
-	Siddhesh Poyarekar <siddhesh@gotplt.org>,
-	Kees Cook <kees@kernel.org>
-Cc: gcc-patches@gcc.gnu.org, Martin Uecker <uecker@tugraz.at>,
-	josmyers@redhat.com, Bill Wendling <morbo@google.com>,
-	linux-hardening@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH v2] tree-object-size: Fix type-1 size for FAM subobjects
- under -fstrict-flex-arrays=3 [PR126975]
-Message-ID: <apomrLZp1ee3NnBF@kspp>
+	s=arc-20240116; t=1788438480; c=relaxed/simple;
+	bh=tPgQPqeQ8tivFoOi8T92/LAwDafbjGB3DMZys3D1d8g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R0ZDxHSP8T8QhpDGbO5RVyX4j54Yc8DUjvKaBVpqqvrulx0lgh9PpNraE4Thd4JPPlFfROHXcpfu542Nn3VRTc3rAbXoajOFj2Xo6FTVTn7rSB9JXkc5Fv5obDYMJl3nUqrNJlPMUJiWPxe4UIMsxdzsrHN90UTWRc21MZkjBaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ewng8sCF; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ewng8sCF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1788438470; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=iSSfdL1I/sWuhejsZXnDXVfRiUf2pDJbtuLEZmLDvb8=;
+	b=ewng8sCFzw4k/iSZrIWhvFJJeaOlW/jA0VOnK5InyKGKdLoPHOX2+s6MFh0kOm+v9/InuIs64r7/+JAsKaFhgUsUmOY5V01k986TGBiXZ/lm81CYqcYzwTwQ5OUIJbjIesewXaYdilDLYWOU6ZRVydVxsOrkdqhfLzBhqeeJ2QU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R361e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0XAFvA3u_1788438466;
+Received: from 30.246.160.252(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XAFvA3u_1788438466 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 03 Sep 2026 20:27:48 +0800
+Message-ID: <3dc96249-5103-4b00-8981-5d309ad9e941@linux.alibaba.com>
+Date: Thu, 3 Sep 2026 20:27:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 17/27] vfio/cxl: Virtualize the CXL DVSEC
+To: mhonap@nvidia.com, alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com,
+ jic23@kernel.org, dave.jiang@intel.com, alejandro.lucero-palau@amd.com,
+ smadhavan@nvidia.com, corbet@lwn.net, skhan@linuxfoundation.org,
+ dave@stgolabs.net, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ iweiny@kernel.org, ming.li@zohomail.com, yishaih@nvidia.com,
+ skolothumtho@nvidia.com, kevin.tian@intel.com, bhelgaas@google.com,
+ dmatlack@google.com, kees@kernel.org, gustavoars@kernel.org
+Cc: cjia@nvidia.com, kjaju@nvidia.com, vsethi@nvidia.com, zhiw@nvidia.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+ <20260813093631.2288172-18-mhonap@nvidia.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260813093631.2288172-18-mhonap@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-For a pointer to a subobject whose record/union type ends in a flexible-array
-member (directly, or through a trailing nested struct), addr_object_size()
-walked up to the enclosing object (v = TREE_OPERAND (v, 0)) instead of
-measuring the referenced subobject.  __builtin_object_size() and
-__builtin_dynamic_object_size() type 1 therefore returned the whole-object
-size, collapsing type 1 onto type 0 and losing the distinction between
-&p->inner and p.  FORTIFY_SOURCE relies on the type-1 distinction, so this
-weakens its bounds checks.
 
-Fix this by computing the size directly from the referenced record/union
-instead of walking up, under -fstrict-flex-arrays=3 specifically to avoid
-conflicting with -fstrict-flex-arrays semantics at lower levels, thereby
-restoring the type-0/type-1 distinction that Clang already implements.
 
-Bootstrapped and regtested on x86_64-linux-gnu.
+On 8/13/26 5:36 PM, mhonap@nvidia.com wrote:
+> From: Manish Honap <mhonap@nvidia.com>
+> 
+> Serve reads of the CXL DVSEC body from the per-open shadow and keep guest
+> writes in the shadow rather than letting them reach the hardware, so a
+> guest cannot reprogram the device through the DVSEC. Accesses outside the
+> CXL DVSEC return -ENODEV and take the default DVSEC handling, so a device
+> that also exposes a vendor DVSEC is unaffected.
+> 
+> Route each shadow write through the CXL r4.0 field class rather than
+> storing it verbatim: Control stays programmable, Status is
+> write-1-to-clear, and Capability, Lock and the Range registers keep their
+> firmware snapshot. The guest can no longer set Config Lock or scribble the
+> capability and range fields.
+> 
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>   drivers/vfio/pci/cxl/vfio_cxl_core.c | 88 ++++++++++++++++++++++++++++
+>   drivers/vfio/pci/vfio_pci_config.c   | 36 +++++++++++-
+>   include/linux/vfio_pci_core.h        |  5 ++
+>   include/uapi/linux/pci_regs.h        |  1 +
+>   4 files changed, 129 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> index 2e516a0929c6..9fed909cb9d3 100644
+> --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
+> @@ -148,11 +148,99 @@ static void vfio_cxl_close_device(struct vfio_pci_core_device *vdev)
+>   	cxl->dvsec_shadow = NULL;
+>   }
+>   
+> +/* Read a 16-bit DVSEC field from the shadow; @off is DVSEC-relative. */
+> +static u16 vfio_cxl_dvsec16(struct vfio_cxl_state *cxl, u32 off)
+> +{
+> +	u32 dw = cxl->dvsec_shadow[off / sizeof(u32)];
+> +
+> +	return (dw >> (8 * (off % sizeof(u32)))) & 0xffff;
+> +}
+> +
+> +/*
+> + * Apply the CXL r4.0 8.1.3 write class for the 16-bit DVSEC register at @off.
+> + * Control is programmable, Status is write-1-to-clear, and Capability, Lock and
+> + * the Range registers stay fixed at their firmware snapshot.
+> + */
+> +static u16 vfio_cxl_dvsec_field(u32 off, u16 old, u16 wval, u16 wmask)
+> +{
+> +	switch (off) {
+> +	case PCI_DVSEC_CXL_CTRL:
+> +		/*
+> +		 * CXL.mem stays enabled for as long as the guest owns the device.
+> +		 * The HDM decoder maps the guest window to device memory, so a
+> +		 * store to it while CXL.mem is disabled completes on the device as
+> +		 * an error that the host fabric reports as an SError, which is
+> +		 * fatal. The spec does not pin down accesses to a decoder whose
+> +		 * CXL.mem is off and many hosts SError, so ignore a guest request
+> +		 * to clear the enable and keep the bit set.
+> +		 */
+> +		return ((old & ~wmask) | (wval & wmask)) | PCI_DVSEC_CXL_MEM_ENABLE;
+> +	case PCI_DVSEC_CXL_CTRL2:
+> +		return (old & ~wmask) | (wval & wmask);
 
-Changes in v2:
- - Change behavior under -fstrict-flex-arrays=3 only.
- - Update subject line and changelog text.
- - Document the new type-1 behavior in extend.texi.
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aojDH2Db6XIkVqcf@kspp/
+Control2 is routed through the r4.0 write class as plain RW,
+but both INITIATE bits are self-clearing doorbells per spec: the guest
+sets the bit, the device performs the operation and clears it, and
+completion is observed in STATUS2 (Cache_Invalid for the WBI). With the
+plain-RW class the shadow latches the bit at 1 forever, and because
+reads are served from the open-time snapshot, Cache_Invalid
+(CXL_DVSEC_STATUS2_CACHE_INVALID) never changes either.
+Both polling paths are dead ends.
 
-	PR tree-optimization/126975
+The interesting part is that the series already models this correctly
+for the sibling command bit -- the vfio_cxl_reset() epilogue does:
 
-gcc/ChangeLog:
+	/*
+	 * The guest-facing DVSEC bookkeeping only applies while the device
+	 * is open. Initiate_CXL_Reset self-clears in hardware; mirror that
+	 * and stamp the outcome onto a fresh hardware STATUS2 read for the
+	 * polling guest.
+	 */
 
-	* tree-object-size.cc (addr_object_size): For a reference to a
-	record or union type that recursively includes a flexible-array
-	member, compute the object size from the referenced subobject
-	instead of walking up to the enclosing object when
-	-fstrict-flex-arrays=3 is in effect.
-	* doc/extend.texi (__builtin_object_size): Document the type-1
-	behavior for pointers to subobjects that end in a flexible array
-	member, and its interaction with -fstrict-flex-arrays=3.
+INIT_CXL_RST is self-cleared in the shadow and the outcome is
+stamped into STATUS2 for the polling guest. Initiate_Cache_WBI just
+never gets the same treatment.
 
-gcc/testsuite/ChangeLog:
+The polling contract is one this series itself implements on the host
+side: cxl_reset_wait_cache_wbi() sets WBI, then polls STATUS2
+Cache_Invalid with a 100ms budget. A guest kernel running the same
+sequence would set WBI, poll the frozen snapshot, and time out before
+ever reaching INIT_CXL_RST, so whether a guest-initiated CXL reset
+succeeds depends on the open-time STATUS2 value rather than on device
+state. The stuck command bit is also directly visible to any guest
+reading CTRL2 back.
 
-	* gcc.dg/builtin-object-size-pr126975.c: New test.
+Would the minimal fix be to mirror the epilogue's INIT_CXL_RST handling
+for WBI: self-clear the bit on the 0->1 write and set Cache_Invalid in
+the shadow (the host already runs the real WBI at VM power on/off via
+cxl_reset_dvsec_sequence(), and the existing W1C class on STATUS2 lets
+the guest clear Cache_Invalid before the next round)? Or is forwarding
+the WBI to hardware and keeping Cache_Invalid live the intended
+long-term model?
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- gcc/doc/extend.texi                           | 32 +++++++++++++
- .../gcc.dg/builtin-object-size-pr126975.c     | 45 +++++++++++++++++++
- gcc/tree-object-size.cc                       |  7 ++-
- 3 files changed, 82 insertions(+), 2 deletions(-)
- create mode 100644 gcc/testsuite/gcc.dg/builtin-object-size-pr126975.c
-
-diff --git a/gcc/doc/extend.texi b/gcc/doc/extend.texi
-index 397b05ab87d..30fdc702f13 100644
---- a/gcc/doc/extend.texi
-+++ b/gcc/doc/extend.texi
-@@ -17894,6 +17894,38 @@ assert (__builtin_object_size (q, 0)
- /* The subobject q points to is var.b.  */
- assert (__builtin_object_size (q, 1) == sizeof (var.b));
- @end smallexample
-+
-+When, for @var{type} 1, the closest surrounding subobject is of a
-+@code{struct} or @code{union} type that ends in a flexible array
-+(@pxref{Zero Length,,Arrays of Length Zero}), either directly or through a
-+trailing nested struct, that subobject can be extended past its declared
-+size.  Its size is therefore constrained only by the enclosing complete
-+object, as it is for @var{type} 0.
-+
-+Under @option{-fstrict-flex-arrays=3}, where only a true C99
-+flexible array member is treated as a flexible array, the declared size of
-+the referenced subobject is used instead, which restores the distinction
-+between @var{type} 0 and @var{type} 1 for such pointers.
-+
-+@smallexample
-+/* Compiled with -fstrict-flex-arrays=3.  */
-+struct A @{ int n; char data[]; @};
-+struct B @{ int m; struct A a; @};
-+struct B *b = malloc (sizeof (struct B) + 48);
-+struct B *volatile vp = malloc (sizeof (struct B) + 48);
-+struct B *op = vp;
-+
-+/* &b->a ends in a flexible array member, but -fstrict-flex-arrays=3 makes
-+   type 1 its declared size, not the whole-object (type 0) size.  */
-+assert (__builtin_object_size (&b->a, 1) == sizeof (b->a));
-+/* Likewise when op is opaque, where type 0 would be (size_t) -1.  */
-+assert (__builtin_object_size (&op->a, 1) == sizeof (op->a));
-+
-+/* For a pointer to the flexible array member itself, type 0 and type 1
-+   both return (size_t) -1 here.  */
-+assert (__builtin_object_size (op->a.data, 0) == (size_t) -1);
-+assert (__builtin_object_size (op->a.data, 1) == (size_t) -1);
-+@end smallexample
- @enddefbuiltin
- 
- @defbuiltin{{size_t} __builtin_dynamic_object_size (const void * @var{ptr}, int @var{type})}
-diff --git a/gcc/testsuite/gcc.dg/builtin-object-size-pr126975.c b/gcc/testsuite/gcc.dg/builtin-object-size-pr126975.c
-new file mode 100644
-index 00000000000..c8c60c4f76e
---- /dev/null
-+++ b/gcc/testsuite/gcc.dg/builtin-object-size-pr126975.c
-@@ -0,0 +1,45 @@
-+/* PR 126975:
-+   Under -fstrict-flex-arrays=3 only a true C99 flexible-array member is
-+   treated as flexible. For &subobject whose type ends in such a member,
-+   __builtin_object_size/__builtin_dynamic_object_size type 1 must measure
-+   the subobject, not the tail of the allocation (type 0). */
-+/* { dg-do run } */
-+/* { dg-options "-O2 -fstrict-flex-arrays=3" } */
-+
-+#include "builtin-object-size-common.h"
-+
-+struct flex {
-+  size_t count;
-+  char fam[];
-+};
-+
-+struct outer {
-+  int hdr;
-+  struct flex inner;
-+};
-+
-+int main (void)
-+{
-+  struct outer *p = __builtin_malloc (sizeof(*p) + 48);
-+  struct outer *volatile vp = __builtin_malloc (sizeof(*vp) + 48);
-+  struct outer *op = vp;
-+
-+  /* True C99 flexible-array member: type 1 measures the subobject. */
-+  EXPECT(__builtin_object_size(&p->inner, 1), sizeof(p->inner));
-+  EXPECT(__builtin_dynamic_object_size(&p->inner, 1), sizeof(p->inner));
-+
-+  /* Type 0 still reports the whole tail of the allocation. */
-+  EXPECT(__builtin_object_size(&p->inner, 0), sizeof(p->inner) + 48);
-+  EXPECT(__builtin_dynamic_object_size(&p->inner, 0), sizeof(p->inner) + 48);
-+
-+  /* When op is opaque, type 0 is unknown (-1), but type 1 still measures
-+     the subobject. */
-+  EXPECT(__builtin_object_size(&op->inner, 0), -1);
-+  EXPECT(__builtin_object_size(&op->inner, 1), sizeof(op->inner));
-+  EXPECT(__builtin_dynamic_object_size(&op->inner, 1), sizeof(op->inner));
-+
-+  __builtin_free (p);
-+  __builtin_free (op);
-+
-+  DONE ();
-+}
-diff --git a/gcc/tree-object-size.cc b/gcc/tree-object-size.cc
-index 54c320d36d0..90d2ac32614 100644
---- a/gcc/tree-object-size.cc
-+++ b/gcc/tree-object-size.cc
-@@ -734,10 +734,13 @@ addr_object_size (struct object_size_info *osi, const_tree ptr,
- 		      }
- 		    /* if the ref is to a record or union type, but the type
- 		       does not include a flexible array recursively, compute
--		       the object size directly.  */
-+		       the object size directly.  With -fstrict-flex-arrays=3 do
-+		       the same even when it does, so type 1 measures the subobject
-+		       instead of collapsing onto the whole-object type-0 size.  */
- 		    if (RECORD_OR_UNION_TYPE_P (TREE_TYPE (v)))
- 		      {
--			if (!TYPE_INCLUDES_FLEXARRAY (TREE_TYPE (v)))
-+			if (!TYPE_INCLUDES_FLEXARRAY (TREE_TYPE (v))
-+			    || flag_strict_flex_arrays == 3)
- 			  {
- 			    v = NULL_TREE;
- 			    break;
--- 
-2.47.3
-
+Thanks.
+Shuai
