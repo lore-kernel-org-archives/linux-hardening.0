@@ -1,144 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15DF43C051;
-	Fri,  4 Sep 2026 11:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788521166; cv=none; b=ErdNNvI+2awZarw/SYQm8ZyK8oY5OisuC5cGYCh0VO9lzewlb7YkfM9hovGrTXQmWNbQE7ZS/g/W5CDmohsBmgDOdS436FiKPdAr7yuUBPbIiCB2TfdGV9Ipw5RFL4ooC13Bm3DRgHXsLwiGtDc0Mry4DNFDXuZqysRq4iWziiA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788521166; c=relaxed/simple;
-	bh=L80i9hlVbUmhAA7RZtkdYwsX5/2+IaWODZria1XvUI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RawAvXP8QkTtKR/A8e+jdghtgddMB5DxilRn6grns8/7QK0oEsebWLdMjEXWIb37lmifXTq9sxWtVwolhgbY+SS71tT/wxzv5Zpq1g5n1+yiozPPYspPSsp/QxPJ/6lB5rEVE1LvXu4+8C9aG260bwwUK6ETshWOk/Davy5cUIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mluJvJ+2; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1119282F10
+	for <linux-hardening@vger.kernel.org>; Fri,  4 Sep 2026 13:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788526962; cv=pass; b=Fi9e7irn7pGPnaWtRJ64nmopuPcLMBCdtxyB+BEbMX82j/SkgKq6qk4SOVeM4GG8LIrefPrjc2QW3LRdRDRbUUVAVIb6OrdWAr+wrZP5kfyN/ZVHc+nVrtqHceyulgPc9M8c2H7aT39Jx63GR2kmY0dRxpTCdaHkBtbJ4dDXd6c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788526962; c=relaxed/simple;
+	bh=jA/Pi3dFWAvnVX/ST1pvVL4fyN3fIOOPQixPvnlSwNM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VDrk2369B2uxfZBtlqVhQHLdMg0KaJHZgnoBEVyEQrdgIZRLIehXDf1+nOJl8GEp6QS9Z79+hMPaqDUR2lPEHMmV1A4Ck5N7ZWxP7PTzTtyKIpIIEKrDJFCBFMZ3ORPZy25Yd47rc8w0UjMxiseksDe4mhr9V9VH4bKSK2s/7Qw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JZnq5QdO; arc=pass smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mluJvJ+2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 356561F00A3D;
-	Fri,  4 Sep 2026 11:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788521164;
-	bh=XXIZF5ElAIHZa1rnUZHWNzzVs/Jy9yMMRkt9sWYgbvI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mluJvJ+244GVSHaOz7Q2krQ0KhxoLZs7iOnA4ksTTISOwY2skVParSwBT9v/4F0OF
-	 g3xtpF8RfDAHJHVIcRhTHSQ+Bqle/H/Hvrnyrb2jk4Zoqbdcqt1HVWBDYJoAjafN8i
-	 9kx6abHPk8ucvAX1eyRsxH/xeCyxC0guHR0CsHqOGT3+Gd1jYXTCRSyyfnROvZFGrn
-	 8qYi5w7eqFltyhRXUIx3S6Vi1pai4OLZej+YcrU3JXyJzalY+QnRbFlhA8E5vImoZn
-	 CKhhb7EZuqP6UXbHbxDA3RXkJWh7XlTBs4tvQRC42O4apjIBSym9i3tloAihiDGU45
-	 e/j5PHm1j3JXQ==
-Date: Fri, 4 Sep 2026 12:25:59 +0100
-From: Harry Yoo <harry@kernel.org>
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 0/5] slab: ZERO_SIZE_PTR alignment and ERR_PTR
- hardening
-Message-ID: <apqmVDiyGJWnEnp8@nixos>
-References: <20260903203720.63689-1-kmehltretter@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZnq5QdO"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c15e2dab83eso157628666b.1
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Sep 2026 06:02:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788526959; cv=none;
+        d=google.com; s=arc-20260327;
+        b=BJ0yRGA7ovDg0RnkxLUipILGlQa0rVLbC7a+PIMBGCfHsi9DBoZrskyCyueMtICvnT
+         giAPv45g5PrE/HaNf4oLrjFONn+GVTPkG+y7r3v2DGR/mG+vf8GbKUwCzNc41IhJe50+
+         aISTXxxen6eo6BTQR4DtWvFE9LKchCu5GszJV+fcVj458cBtXuOrb4VPqXJC4MJpyvJr
+         KVye2TtV3ieGNJ3Awa0tXoxT7KPJAq2jkIJAW/uE3kv3b5PBBNpvc3mFrIVjqufjYJfB
+         ds9AJ6DyanYD4FltdybvgX0ZuvCG7JUj6Kwwvt1vAxeuPJTT3CcWMqWmkyEw+EhYgZmK
+         CcxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=A1Y7YmZWSzxr2iY3IqKw6JuwDP6OUCGK+XiwHXOkRsQ=;
+        fh=DRwHWIgD2IDlR3uf1pPZ7K687iyG1IlXbfO5Afu8aVI=;
+        b=TLQnpdjZ6CDyqLyQP3turNxO+okOsPUfy+MY05mfZZEmp7UN9Ag9QMS6SZ1nvORdZc
+         Jw2bYYvR9RfS13kLZnbndOs6H0HOWy4UgBUrtzdZRhID0XpH/fFC4ZkNl3sIw0ZDHHn6
+         MTfZ7vwz+fO2rOgo8sHh8kC6hW49timiHF3icZ3Whi/ScRCE6ZtjxLw8t3Qz472kfWHO
+         mBf2f6104RBXQUYdAqRNNyIzXoaJ34xfXKRKLdH4Hsa/ZBUszAMrXyHN/JlQsSXkdw4W
+         HwWKuSqrKbb+k61XJP3pepJGOxd03qTVLSf/gmaP0tJ2ziBcSaDX3YoTaMf5LiNvk5xS
+         lR+g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788526959; x=1789131759; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=A1Y7YmZWSzxr2iY3IqKw6JuwDP6OUCGK+XiwHXOkRsQ=;
+        b=JZnq5QdON4iMnuLMfH5/YNToHAXyXFwfD/iLJurxT6EWxtSi/4Jz8al77OPONCaGlC
+         elPEVNw9XivYVVUUQbxqeY7UZ+8PmZD87YILUeDh76S8zTcRofBXgW2yHkC/efdr9aLq
+         TFIJMdr1YMk4w6Vp2DJ4RRkJTzkwUd4+99ICxTjX829nQ3UUYIzixsIYqpS8g9xywwFy
+         LDdoi9k+egyXmKhOun6h5PN/tezIe7c6asy62PM06SICEka89KHQa/D1UyQ7kf6oJ6em
+         OAGNIOSCaJ9OVTewYsDD9pS9Q4jU6TG4JEu17c5ovy7FLY9ZpvPTW6WPZhT/zgf5cRob
+         diiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788526959; x=1789131759;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=A1Y7YmZWSzxr2iY3IqKw6JuwDP6OUCGK+XiwHXOkRsQ=;
+        b=P8cOMY9CZP+HQs91ABYyOX0//pwYYgFXBS4zYwMJ3McwzrcnkOSfzVUr6SuDlzdY0K
+         XrpiMKbMs5EZ1H6dzUQYCVtpcArf8R7Xk0i52ufRm29BqrG15QPPuk0EbBjC/Y8FXo5e
+         gHOxIPL/01uVH0wzcPv/d5S4jL16e9MwFW+uZpKksbb+AV09VPBqqWT2YiNafzRrPYjj
+         8qkoQMPJZ/htYMtFAPairmWSUErJeKRXKqChCjcbhnuNWq3BgOh89X5JW8AgQhd/lhfv
+         GFp6CPr+uElSxp2/nz1Rk/vVsqDb0NIZVtLFBbwTjKYPUqjqllDbNG9ZSjhcLTALs0tO
+         xiSA==
+X-Forwarded-Encrypted: i=1; AKwUvBz+vYYAcBl0lvl+op+KCDZkPftcFYI6OfFRd9gHUAWlMWR2jex1LwrF0OwziuQ/pQaURCR8xNWXjNd+klWOW6o=@vger.kernel.org
+X-Gm-Message-State: AFuF++lN4cqge3V9ArC5+Ar27LtDdJIprpEf32ww/FloPPMVRctBaHiG
+	wtu63QXwrBXjpwZeWeIrI7zhBlIi581S9tVYAv+auT28L1JE+WLIEpiSW0/9/I3CWBKB6FZC95I
+	Begn0hGnPXAJjhUNP8vypBqwX6i+JoRM=
+X-Gm-Gg: AYBFou0oz8lTrheY0wzYNz97IZrPzaPN3vBEzHYwMMUnD1fb+XlrjCzp2OiMwIDhaIj
+	qzsOdqyyMwaHK/3rLeW0Hc3AvuATXWiJ+M3BDDEA/tOZfLdtpVRCKeJWQsaREIRzUMSKNC0/cXi
+	Tx2EVgRuyGnJpJRsyIPS60sO1mjLj5Zpwgmzi0//NaoNM1pAjmxYbI013pr0QOHW6gmrhRCOuA9
+	6VD2dptClCpO3twcWhv9uG1w0aESmOXCUG04QjYE5eDx9T8mZWX7a+Dgb5e5Ru4IPxLoMkOk8K4
+	9onCKZfcztCwH8ol53zdGnwaDYJOKjXrDwP8hL4kiCpAY0HDfyC8VWUbkhayMslid07DTbe0LpG
+	Z5w==
+X-Received: by 2002:a17:907:807:b0:c26:19de:912d with SMTP id
+ a640c23a62f3a-c2619dea0a3mr112357266b.32.1788526957825; Fri, 04 Sep 2026
+ 06:02:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260903203720.63689-1-kmehltretter@gmail.com>
+References: <20260829-swap-pcp-priq-v2-resend-0-68d3d925578c@gmail.com>
+ <appvhlPleahTRklV@yjaykim-PowerEdge-T330> <20260904100900.21517-1-lianux.mm@gmail.com>
+In-Reply-To: <20260904100900.21517-1-lianux.mm@gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Fri, 4 Sep 2026 21:02:00 +0800
+X-Gm-Features: AcwNN1Vm-0llheBPana_0CljCj4L1V8rcsjZv3MdI7EdXVkr6QNxUdxDIn19Bb4
+Message-ID: <CAMgjq7Bh0hdVoRcS4xMRL0YG-zmjh-TxyF9xXCmP2MRarAyksQ@mail.gmail.com>
+Subject: Re: [RESEND RFC PATCH v2 00/13] mm/swap: introduce per-priority
+ allocation queues
+To: "Lian Wang (ProcessMission)" <lianux.mm@gmail.com>
+Cc: Youngjun Park <youngjun.park@lge.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Jihan LIN <linjh22s@gmail.com>, 
+	Kunwu Chan <kunwu.chan@linux.dev>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Thomas Gleixner <tglx@kernel.org>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 03, 2026 at 10:37:15PM +0200, Karl Mehltretter wrote:
-> The kmalloc entry points promise ARCH_KMALLOC_MINALIGN alignment but
-> return (void *)16 for zero-size requests. Patch 1 aligns the sentinel
-> to that promise.
-> 
-> Patch 2 limits ZERO_OR_NULL_PTR() to NULL and ZERO_SIZE_PTR. Patch 3
-> handles ERR_PTR explicitly in kfree() and hardened usercopy, without
-> giving ERR_PTR special meaning to other users such as krealloc(). The
-> old helper did not match ERR_PTR values either; patch 3 addresses the
-> adjacent hardening concern raised during review.
-
-I don't understand why v3 of this patchset suddenly implements
-hardening for kfree() and usercopy to handle ERR_PTR().
-
-The address range for 'zero or NULL PTR' range and ERR_PTR() do not
-overlap. The bugfixes and hardening patches are irrelevant.
-It should be a separate series?
-
-Also usercopy.c changes go through the hardening tree, slub.c and
-slub_kunit.c changes go through the slab tree, and LKDTM has its own
-tree. Patch 3 and 5 touch files across multiple trees, which can be
-avoided.
-
-> If backported, patches 1 and 2 should be taken together.
+On Fri, Sep 4, 2026 at 6:12=E2=80=AFPM Lian Wang (ProcessMission)
+<lianux.mm@gmail.com> wrote:
 >
-> Patch 4 adds zero-size KUnit coverage; patch 5 adds ERR_PTR KUnit,
-> LKDTM, and kselftest coverage, which is why Arnd, Greg, Shuah, and
-> linux-kselftest@vger.kernel.org are newly copied on v3.
-> 
-> Tested on 940de590b839:
-> 
->   - GCC 15.2 UML slub_test: 10 passed, 2 skipped, including
->     test_zero_size_alloc and test_kfree_err_ptr; NULL and ZERO_SIZE_PTR
->     produced no warning, and the expected kfree(ERR_PTR) warning was
->     suppressed and counted
->   - GCC 15.2 matched x86_64 builds immediately before and after patch 3:
->     kfree grew by 15 bytes; __check_object_size gained a 13-byte
->     comparison on its normal path and a 23-byte cold abort path
->   - GCC 15.2 x86_64 defconfig with HARDENED_USERCOPY: build and normal
->     QEMU boot passed; the committed LKDTM selftest matched the distinct
->     ERR_PTR diagnostic after reaching usercopy_abort()
->   - Clang 21.1.8 armv5 UBSAN_ALIGNMENT: no alignment-assumption or
->     slab.h report; generated code retains the exact comparison and
->     single evaluation
->   - GCC 15.2 MIPS64 big-endian noncoherent build passed with
->     ARCH_KMALLOC_MINALIGN equal to 128
->   - Microchip SAM9X75 hardware (armv5, ARCH_KMALLOC_MINALIGN=32):
->     ZERO_SIZE_PTR was 0x20; zero-size allocation, ksize(), and free
->     passed with no boot splats
->   - Raspberry Pi 400 hardware (arm64, Cortex-A72,
->     ARCH_KMALLOC_MINALIGN=8): ZERO_SIZE_PTR remained 0x10; the ERR_PTR
->     KUnit and hardened-usercopy rejection paths passed with no boot
->     splats; the revised diagnostic was retested under x86_64 QEMU
-> 
-> ---
-> v2 -> v3:
-> 
->   - document why patch 2's sentinel-derived low-address window in hardened
->     usercopy was incidental
->   - add new patch 3 to warn and return when kfree() receives an ERR_PTR
->     and reject ERR_PTR values in hardened usercopy
->   - replace patch 4's pointer-cast static assertion with a run-time KUnit
->     expectation
->   - add new patch 5 with KUnit and LKDTM coverage for patch 3
-> 
-> v2: https://lore.kernel.org/r/20260811141240.62519-1-kmehltretter@gmail.com
-> v1: https://lore.kernel.org/r/20260808105622.62026-1-kmehltretter@gmail.com
-> RFC: https://lore.kernel.org/r/20260712120728.96628-1-kmehltretter@gmail.com
-> 
-> Karl Mehltretter (5):
->   slab: align ZERO_SIZE_PTR to ARCH_KMALLOC_MINALIGN
->   slab: check for ZERO_SIZE_PTR by exact match
->   slab: handle ERR_PTR values in kfree and hardened usercopy
->   slab: test zero-size allocations in slub_kunit
->   slab: test ERR_PTR handling in kfree and hardened usercopy
-> 
->  drivers/misc/lkdtm/usercopy.c           | 27 +++++++++++
->  include/linux/slab.h                    | 20 ++++++--
->  lib/tests/slub_kunit.c                  | 61 +++++++++++++++++++++++++
->  mm/slub.c                               |  3 ++
->  mm/usercopy.c                           |  3 ++
->  tools/testing/selftests/lkdtm/tests.txt |  1 +
->  6 files changed, 112 insertions(+), 3 deletions(-)
-> 
-> 
-> base-commit: 940de590b839f71d6dc846160534bf202401b8b7
-> -- 
-> 2.53.0
+> On Fri, 4 Sep 2026 16:13:10 +0900 Youngjun Park <youngjun.park@lge.com> w=
+rote:
+>
+> > Since tiers come up further down, I'd like to raise a point about the
+> > patch subject line too. As Kairui mentioned in RFC v1 that we would
+> > stay aligned with tiers, would it make sense to frame this RFC as a
+> > per-tier allocation policy (or something along those lines)? Kairui,
+> > what's your opinion?
+>
+> Thanks for the thoughtful feedback and for taking an initial pass over
+> the series.
+>
+> I agree that this queue could naturally become an in-tier allocation
+> policy. For this RFC, I would prefer to keep it separate and scoped to
+> the existing priority semantics while the tier and virtual-swap
+> directions are still being settled. We can revisit the subject and
+> naming once that boundary is clearer.
+
+Hi All!
+
+We can start with adpating the default priority if tiering still needs
+more time to land, Not changing the user interface means less risk.
+It's also fine to implement tiering first, there are some other
+blocking issues for tier though.
+
+With tiering I think we will still need rotation of devices in the
+same priorities / tier. Once tier is ready, we can further extend the
+rotation in the same tier; that's something to discuss.
+
+>
+> I will also sync with Kairui when he has time. He has several things in
+> flight, but his view on the ownership and framing would be valuable.
+>
+> > Devices assigned to the same tier already share the same priority, so
+
+Hmm, the current posted tier is a band of priorities. Do you mean that
+when tiering is enabled, devices in the same tier, despite of having
+different priority, will be used equally? And is priority ineffective
+then?
+
+> > I don't think the allocation policy needs more than one option for
+> > that case (I can't think of a use case that would need it).
+> >
+> > 1. For legacy swap with no tier configured, define it as a single
+> >    priority treated as one tier.
+> > 2. When priorities match, allocation naturally falls to a single
+> >    policy (not a queue). the concrete policy here is this
+> >    queue-based scheme.
+> > 3. When tiers are enabled, devices previously assigned under legacy
+> >    swap are reassigned to tiers at runtime.
+> >    (This means different swap device on same tier handled like same pri=
+ority device)
+>
+> These are useful design points. I would like to study the concrete v11
+> before deciding between runtime, boot-time, or compile-time tier
+> assignment. It seems safer not to bind this queue RFC to a permanent
+> tier interface while those semantics and the virtual-swap backend model
+> are still under discussion.
+>
+> > I think this feature will also be needed on the virtualized swap side,
+> > which makes me wonder whether this patch should go back into the swap
+> > tier series instead. Kairui, Lian, what do you think? (Or separately?)
+
+I'm fine as long as there won't be a regression. I remember V10 of
+tier didn't touch this yet so the regression is limited to tier
+enabled case, so no existing case will experience any issue, that is
+fine. Causing a performance regression for existing usecases is
+usually a bad idea.
