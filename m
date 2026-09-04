@@ -1,240 +1,231 @@
-Received: from lgeamrelo12.lge.com (lgeamrelo12.lge.com [156.147.23.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0407427AC45
-	for <linux-hardening@vger.kernel.org>; Fri,  4 Sep 2026 07:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.23.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EE63DCD99;
+	Fri,  4 Sep 2026 08:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788505996; cv=none; b=HQNynaJ4zCsVayScVgRBg+Rs7fMRtBw5AlW0G+TKTBnTz8D9W3jG2OO4oMjAPThWtqY3BeHP2M9ZnkwqJuDqEyt1i8kNGLVXklu/5vq23nPjqhMwdGNA4SeyltmOjT22+nlTas+jKymWN9nTnCRL2NtpbgLziObWNI7CaabUgLY=
+	t=1788508956; cv=none; b=FesiVnB0AvAyVbdsXyJMMkrHuSHhCSSDnEbHr0XDEOObJ+X4vIy62FGm7QBqSuTBMSfOcK7E77fXrmy6WAHQFLIHQllAn9HPbnAMPhl3F68gzJh7ZkyddEzcSkwnVbSPLZCyukSfWtaTwp42cpyb8cMXw5z03VASAE/eFLhE1P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788505996; c=relaxed/simple;
-	bh=LeajCw2QYWhAwDYwOMkw/5LY+k7XA6DJHG8oQycXjtE=;
+	s=arc-20240116; t=1788508956; c=relaxed/simple;
+	bh=zC6P/8Dw+9qonHYZoXWrLn0M+/iwJNffZUmsckbNTq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i1NaNN0nB329zMkRFOvcXnIhdKuvy44KlgyxSuXL6yeLxPI0lHRcWRZj2XtNxRjKwCREFoxi4f0yyMhFdmMpAL2E0H6jgXnTsFXOMLMvLObJhNlemkmP0SiCKFf9NZUkHhTkil2m8S71qWLdNBJu6dWiGQAPza+6ILfHPojU00Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.23.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
-Received: from unknown (HELO lgeamrelo04.lge.com) (156.147.1.127)
-	by 156.147.23.52 with ESMTP; 4 Sep 2026 16:13:10 +0900
-X-Original-SENDERIP: 156.147.1.127
-X-Original-MAILFROM: youngjun.park@lge.com
-Received: from unknown (HELO yjaykim-PowerEdge-T330) (10.177.112.156)
-	by 156.147.1.127 with ESMTP; 4 Sep 2026 16:13:10 +0900
-X-Original-SENDERIP: 10.177.112.156
-X-Original-MAILFROM: youngjun.park@lge.com
-Date: Fri, 4 Sep 2026 16:13:10 +0900
-From: Youngjun Park <youngjun.park@lge.com>
-To: "Lian Wang (ProcessMission)" <lianux.mm@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
-	Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Kairui Song <kasong@tencent.com>, Jihan LIN <linjh22s@gmail.com>,
-	Kunwu Chan <kunwu.chan@linux.dev>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, linux-hardening@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v2 00/13] mm/swap: introduce per-priority
- allocation queues
-Message-ID: <appvhlPleahTRklV@yjaykim-PowerEdge-T330>
-References: <20260829-swap-pcp-priq-v2-resend-0-68d3d925578c@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lT9EWbZguIjJvypDySMkidhph/yPSvUdCGktSsNUPShSmqoKv3uqhGQ8Cq4QHKoX6tM+O7fQ+dMkkDv6Cs93EOaRJ3D+XG6kKBaxeVFx2yLYacM/Qtm/hOdnb8fw48gHqb+et8O+xVeOxubecdcpAJ5Jdo9ukB85aPR1REVLY4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0GDk6LZq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y5q+DdC2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0GDk6LZq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y5q+DdC2"
+Date: Fri, 4 Sep 2026 10:02:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788508951;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XmtmmMFkXoL9UT0a4IJENsFGSfG0aElL5AXlIL2jrr8=;
+	b=0GDk6LZqvxsakm0ZA+iquU5CnSMZMC2f2eM1RGqDs1VFBsC/mOAdYzUWL1Om4bi5loHVjH
+	GLHlUGvi7GL7Sd4E6b5Nu1DbzJDpYKvmLhhtMqL0N5uwERv2oJx8l6Jz0Ew9hLl6BYLA9P
+	QxwOxj/lD5HgNFwl7COeZaxbkFEk3udV1JOaiTi+YmxhsuuiOmaLYTvNDkOWf/VxkzEaTA
+	IPENlOPim6DFPX/4DC+r2OOz1Zrd6+1/qlePbZSYEPq7QtC9PskO8uzPlXtXq8Eu8iFyHG
+	zf3y86FJ/GyCFsraMLlwgvsNcmFhGV3G5NhYWW/HUUevxJWiJ2yO3KBmLwI+uA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788508951;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XmtmmMFkXoL9UT0a4IJENsFGSfG0aElL5AXlIL2jrr8=;
+	b=y5q+DdC2xpe7mtuds2iZT3VOB56N9CVSyqx/m2ogDceA2uBIb9WZvkzkSdY222kQ2hTVoe
+	/J3Q2ACIO+3an1DA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Bill Wendling <morbo@google.com>
+Cc: Bradley Morgan <brads@mainlining.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Christian Brauner <brauner@kernel.org>, 
+	Aleksa Sarai <cyphar@cyphar.com>, Jan Kara <jack@suse.cz>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Nicolas Schier <nsc@kernel.org>, Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>, 
+	Douglas Anderson <dianders@chromium.org>, Anand Moon <linux.amoon@gmail.com>, 
+	Oleg Nesterov <oleg@redhat.com>, codemender-patching+linux@google.com, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] userns: Add KUnit test suite for uid_gid_map
+Message-ID: <20260904091410-3a87d211-edf8-4ead-8b91-004a4a96a161@linutronix.de>
+References: <20260823125155.1136740-1-morbo@google.com>
+ <20260826220041.4075333-1-morbo@google.com>
+ <20260826220041.4075333-2-morbo@google.com>
+ <20260827152612-d0c71c10-cbe5-49f3-9be0-47eb76cd9b48@linutronix.de>
+ <CAGG=3QWPTL5z8MfAxJLpHb0P-3Ah6K+FzgrVHyRRcvRK7-6dSA@mail.gmail.com>
+ <20260831111423-400ed79e-6e52-438c-aa9f-f289e6dbdee5@linutronix.de>
+ <CAGG=3QUAY4BDiJM64uTX8C1A2WPg6dPRexbgUQZoi4QKkkpP9Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260829-swap-pcp-priq-v2-resend-0-68d3d925578c@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGG=3QUAY4BDiJM64uTX8C1A2WPg6dPRexbgUQZoi4QKkkpP9Q@mail.gmail.com>
 
-On Sat, Aug 29, 2026 at 03:43:50PM +0800, Lian Wang (ProcessMission) wrote:
-> Hi all,
->
-> RESEND: Only the first cover letter was sent, with an outdated sender
-> display name.  No patches from the series were sent.  This resend uses
-> the corrected sender identity and starts the complete thread.  There are
-> no code or content changes from the previously reviewed v2 draft.
->
-> This is v2 of Kairui's swap priority queue RFC [1].  With Kairui's
-> agreement, I am carrying this revision while preserving the original
-> authorship of his patches and Youngjun's per-device percpu-cluster patch.
+On Thu, Sep 03, 2026 at 01:21:27PM -0700, Bill Wendling wrote:
+> On Mon, Aug 31, 2026 at 2:22 AM Thomas Weißschuh
+> <thomas.weissschuh@linutronix.de> wrote:
+> > On Thu, Aug 27, 2026 at 12:27:30PM -0700, Bill Wendling wrote:
+> > > On Thu, Aug 27, 2026 at 6:37 AM Thomas Weißschuh
+> > > <thomas.weissschuh@linutronix.de> wrote:
+> >
+> > (...)
+> >
+> > > > > +config USER_NAMESPACE_KUNIT_TEST
+> > > > > +     bool "Test user namespace map insertion" if !KUNIT_ALL_TESTS
+> > > > > +     depends on KUNIT=y
+> > > >
+> > > > Urgh.
+> > > >
+> > > ?? What's wrong? It's identical to the conditional for EXEC_KUNIT_TEST:
+> >
+> > Sorry for this non-descript review comment.
+> >
+> > > config EXEC_KUNIT_TEST
+> > >      bool "Build execve tests" if !KUNIT_ALL_TESTS
+> > >      depends on KUNIT=y
+> > >      default KUNIT_ALL_TESTS
+> > >      help
+> > >           This builds the exec KUnit tests, which tests boundary conditions
+> > >           of various aspects of the exec internals.
+> >
+> > The problem is that KUNIT can be built as module, which would prevent this
+> > test from being built. We have include/kunit/visibility.h to export certain
+> > symbols only to tests and avoid this issue.
+> > But I can see that some maintaines don't like this pattern, so maybe they can
+> > chime in at some point.
+> 
+> Bradley commented on this earlier (which is why I mentioned EXEC_KUNIT_TEST):
+> 
+> <comment>
+> The test is #include'd into user_namespace.c, which is builtin (USER_NS
+> is a bool), so =m here still compiles the suite into vmlinux. With
+> KUNIT=m that calls kunit symbols that live in a module, and the link
+> fails. Make it bool and depend on KUNIT=y, like EXEC_KUNIT_TEST:
+> 
+>  bool "KUnit test for user namespace map insertion" if !KUNIT_ALL_TESTS
+>  depends on USER_NS && KUNIT=y
+> </comment>
+> 
+> So there's a conflict and, because I'm not a KUnit guru, I'm not sure
+> which way is "best".
 
-Hi Lian,
-Thank you for work!
+It's subjective. So as mentioned before, the preference of the maintainers
+should go into it. The aproach I prefer requires a bit more setup boilerplate
+but make the tests usable in more circumstances.
 
-Since tiers come up further down, I'd like to raise a point about the
-patch subject line too. As Kairui mentioned in RFC v1 that we would
-stay aligned with tiers, would it make sense to frame this RFC as a
-per-tier allocation policy (or something along those lines)? Kairui,
-what's your opinion?
+> > > > > +     default KUNIT_ALL_TESTS
+> > > > > +     help
+> > > > > +       This builds the KUnit test for user namespace uid/gid map insertion.
+> > > > > +       It validates map insertion, limits, dynamic allocation of the
+> > > > > +       extended extents array, and mapping sorting functions.
+> > > > > +       If unsure, say N.
+> > > > > +
+> > > > >  config PID_NS
+> > > > >       bool "PID Namespaces"
+> > > > >       default y
+> > > > > diff --git a/kernel/.kunitconfig b/kernel/.kunitconfig
+> > > > > new file mode 100644
+> > > > > index 000000000000..7314dce05dc2
+> > > > > --- /dev/null
+> > > > > +++ b/kernel/.kunitconfig
+> > > > > @@ -0,0 +1,3 @@
+> > > > > +CONFIG_KUNIT=y
+> > > > > +CONFIG_USER_NS=y
+> > > > > +CONFIG_USER_NAMESPACE_KUNIT_TEST=y
+> > > > > diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
+> > > > > index 786dbf0506ca..0e7373085af9 100644
+> > > > > --- a/kernel/user_namespace.c
+> > > > > +++ b/kernel/user_namespace.c
+> > > > > @@ -1417,3 +1417,7 @@ static __init int user_namespaces_init(void)
+> > > > >       return 0;
+> > > > >  }
+> > > > >  subsys_initcall(user_namespaces_init);
+> > > > > +
+> > > > > +#if IS_ENABLED(CONFIG_USER_NAMESPACE_KUNIT_TEST)
+> > > > > +#include "user_namespace_kunit.c"
+> > > > > +#endif
+> > > > > diff --git a/kernel/user_namespace_kunit.c b/kernel/user_namespace_kunit.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..88467361efdf
+> > > > > --- /dev/null
+> > > > > +++ b/kernel/user_namespace_kunit.c
+> > > > > @@ -0,0 +1,92 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +/*
+> > > > > + * KUnit test for user namespace map insertion and sorting.
+> > > > > + */
+> > > > > +
+> > > > > +#include <kunit/test.h>
+> > > > > +#include <linux/user_namespace.h>
+> > > > > +
+> > > > > +static void test_user_ns_map_insert_base(struct kunit *test)
+> > > > > +{
+> > > > > +     struct uid_gid_map map;
+> > > > > +     struct uid_gid_extent extent;
+> > > > > +     int i, ret;
+> > > > > +
+> > > > > +     memset(&map, 0, sizeof(map));
+> > > > > +
+> > > > > +     /* Insert up to UID_GID_MAP_MAX_BASE_EXTENTS (5) elements */
+> > > > > +     for (i = 0; i < UID_GID_MAP_MAX_BASE_EXTENTS; i++) {
+> > > > > +             extent.first = i * 10;
+> > > > > +             extent.lower_first = i * 100;
+> > > > > +             extent.count = 5;
+> > > > > +
+> > > > > +             ret = insert_extent(&map, &extent);
+> > > > > +             KUNIT_ASSERT_EQ(test, ret, 0);
+> > > > > +             KUNIT_EXPECT_EQ(test, map.nr_extents, i + 1);
+> > > > > +             KUNIT_EXPECT_EQ(test, map.extent[i].first, i * 10);
+> > > > > +             KUNIT_EXPECT_EQ(test, map.extent[i].lower_first, i * 100);
+> > > > > +             KUNIT_EXPECT_EQ(test, map.extent[i].count, 5);
+> > > > > +     }
+> > > > > +}
+> > > >
+> > > > The extended test below already tests everything the 'base' one does.
+> > > > Do we need both?
+> > > >
+> > > The one below tests the sorting algorithm.
+> >
+> > It *also* tests the insertion, no?
+> > (Especially if the conditional on UID_GID_MAP_MAX_BASE_EXTENTS is removed)
+> >
+> Correct. So there are three types of tests we should run here:
+> 
+> 1. Insertions and accesses that don't go over the initial extents size.
+> 2. Insertions and accesses that do go over the initial extents size.
+> 3. Accesses outside of the number of entries.
+> 
+> Test (1) is a "smoke" test, where the struct is tested and no
+> sanitizer code is used.
 
-Devices assigned to the same tier already share the same priority, so
-I don't think the allocation policy needs more than one option for
-that case (I can't think of a use case that would need it).
+A "smoke" test is useful when the more complete tests can not be run regularly.
+But here both test cases will always run right after each other. Test (2) is
+just as cheap as this one.
 
-1. For legacy swap with no tier configured, define it as a single
-   priority treated as one tier.
-2. When priorities match, allocation naturally falls to a single
-   policy (not a queue). the concrete policy here is this
-   queue-based scheme.
-3. When tiers are enabled, devices previously assigned under legacy
-   swap are reassigned to tiers at runtime.
-   (This means different swap device on same tier handled like same priority device)
+*Not* testing the overflow checking here sounds also weird. Test (2) will
+excercise the same code, which is not using the checking, anyways.
 
-Point 3 reflects my thinking based on the current tier implementation.
-Current tier concept is good enough, but I keep thinking how to improve...
-(This means I don't think we need runtime tier enablement with
- ability to change swap tier number range. swap device on/off & priority change not that dynamic? right?)
+> Test (2) makes sure that we can still go over
+> the UID_GID_MAP_MAX_BASE_EXTENTS size and the sanitizer won't
+> activate.
 
-There's an alternative tier-assignment approach that might fit this
-series better, and I'd like your thoughts on it.
+Nice.
 
-a. Fix the tier as a boot-time parameter.
-   (This way, legacy swap without tiers never hits case 3 at all. On
-   kernels with tiers enabled, swap devices are assigned per their
-   tier, and devices in the same tier follow the same policy even if
-   their priorities differ. plus ther is no swaptier interface management
-   add, remove, etc)
+> Test (3) (which I'll add in my next upload) throws a sanitizer exception.
 
-b. If boot time isn't preferred, define tiers at compile time by
-   grouping equal priorities, or by splitting the priority range into
-   1/n buckets based on the number of tiers.
-   - The tier interface would then only allow naming (or should this
-     also be fixed at compile time?)
-   - grouping equal priorities strategy has some limit like
+What is the point of testing this specifically for user namespaces?
+Normally we expect a used subsystem to work as advertised.
+It is that used subsystem's responsibility to test that it does so.
+If there is currently no test that validates __counted_by then it surely
+should be created. But not here.
 
-I think this direction aligns well with this patch and, in some
-ways, leads to a cleaner architecture. But, both (a) and (b)
-have rough edges once I try to work them through in practice, and
-each would need to be resolved one at a time with agreement before
-introducing it. I'd like to hear other opinions, and if this
-is acceptable, I'll introduce original and this idea.
 
-> My substantive code changes are concentrated in patches 3, 9 and 11.
-> Patches 5, 10 and 12 contain the dependent adaptations needed to keep
-> the stack coherent and bisectable.  The code patch-ids of patches 1, 2,
-> 4, 6, 7, 8 and 13 are unchanged from v1.  My Signed-off-by on the full
-> series records the handoff and DCO chain; Co-developed-by is limited to
-> the three patches with substantive changes.
->
-> The current swap allocator rotates swap_avail_head with plist_requeue()
-> when it moves between devices of the same priority.  That couples device
-> selection to the global cluster cache and serializes cluster transitions
-> on swap_avail_lock.
-
-> This series first restores per-device percpu clusters, then replaces the
-> allocation-time plist rotation with a priority-ordered queue.  Each
-> priority has a mostly immutable ring of devices.  Per-CPU readers rotate
-
-I think this feature will also be needed on the virtualized swap side,
-which makes me wonder whether this patch should go back into the swap
-tier series instead. Kairui, Lian, what do you think? (Or separately?)
-
-I've also been thinking about how to move the tier series forward
-since v10. I'll prepare v11 shortly.
-
-> within a ring after a fixed allocation quota, so the allocator preserves
-> strict priority ordering without contending on one global rotation point.
->
-> The queue is also intended to separate device selection policy from the
-> per-device cluster allocator.  Youngjun's swap-tier series [2] remains
-
-FYI, the thing I've been hesitating over since v10 is that there was
-feedback that going through the memcg interface needs more swap code matureness (backend transfer)
-and discussion,
-so I needed to settle on a direction first.
-
-This patch itself looks like it could align well with the swap-tier
-use case (see my note on the interface below). As mentioned above,
-I'll follow up with the tier series soon.
-
-> under separate review. This RFC does not introduce a tier ABI or assume
-> that the tier series has landed: a ring is keyed by the existing swap
-> priority.  If tiers land first, the same queue can become an in-tier
-> allocation policy rather than a competing tier definition.
-
-This is the direction I was hoping for. (TBD)
-
-Within a tier. /sys/kernel/mm/swap/tiers/<tier name>/<policy name>
-
-- Across tiers: allocation follows priority based on speed
-  differences.
-- Within a tier: a selectable policy applies.
-  - The default policy is this series' scheme.
-  - Priority-based distribution should also be possible within a
-    tier.
-  - If xswap is introduced, its allocation should be selectable based
-    on memcg.
-  - Other custom allocation methods (round-robin, etc.).
-
-...
-
-> Testing
-> =======
->
-> Kunwu ran an A/B/C/D/E matrix on a Kunpeng 920 server with 256 CPUs,
-> 249 GiB RAM and an aarch64 kernel.  The workload built a fixed kernel
-> source with "make -j96 defconfig Image modules" under 2 GiB and 3 GiB
-> memory cgroups, using eight equal-priority ZRAM devices.  Every arm used
-> one warm-up followed by 12 measured runs.
->
-> A/B/C share the v1 base and reproduce the progression reported in v1:
->
->   A: before the series
->   B: after patch 8, with per-device percpu clusters but the old plist
->   C: after patch 13, with the complete priority queue
->
-> D/E share the tested v2 base and isolate the current series:
->
->   D: before the series
->   E: after all 13 v2 patches
->
-> 1. Reproducing the v1 performance shape
->
-> Average system time over 12 measured kernel builds:
->
->                               2 GiB       3 GiB
->   Before (A)                40899.14s    22621.86s
->   After patch 8 (B)         88712.52s    53244.70s
->   After patch 13 (C)        41140.76s    22925.48s
->
-> Patch 8 alone increased system time by 116.9% in the 2 GiB workload
-> and 135.4% in the 3 GiB workload.  Adding the priority queue returned
-> system time to within 0.59% and 1.34% of A, respectively.  The absolute
-> times differ from the v1 machine, but the expected performance shape is
-> reproduced: moving the cluster cache back to device scope is expensive
-> while allocation still rotates the plist, and the queue removes that
-> contention.
->
-> 2. Isolating the v2 delta
->
-> Average system time over 12 measured runs:
->
->                               2 GiB       3 GiB
->   Base (D)                  39643.77s    22139.66s
->   Full v2 (E)              40336.91s    22984.62s
->   Delta                       +1.75%       +3.82%
->
-> Average elapsed time, with sample standard deviation:
->
->                               2 GiB       3 GiB
->   Base (D)              518.97 +/- 5.87s  334.07 +/- 4.01s
->   Full v2 (E)           527.24 +/- 5.21s  342.98 +/- 2.78s
->   Delta                       +1.59%       +2.67%
->
-> The arms were run sequentially rather than interleaved, so these small
-> D/E deltas may include temporal drift.  They are reported as observed
-> instead of being described as zero regression.
-
-No regression is great news. the plist refactor is valuable on its
-own merits.
-
-That said, could you also share data on other angles, such as lock-
-contention benefits, or advantages in other use-case scenarios? (I'll
-also think about what would be worth testing here.)
-
-I've done an initial pass and given my review. I'll keep providing
-feedback as I go through the patch contents. :)
-
-Youngjun
+Thomas
