@@ -1,155 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0A02222AA;
-	Fri,  4 Sep 2026 09:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788512472; cv=none; b=Fj83OEeStL/dnA0zuY0CXBVCn2uC2SvvSl3sCpUDSFb2hvnTwxg/BXWxKbwNTLIKYMbbJGaRpykfXLxKiskzGs5J3nU++ACBQzimla3Q2OYWkt6LBF8jjaem7soinCNduBQN0N5pLKaXvfaOd8D/P+NlNNScYlTLMk2ToPbS7w8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788512472; c=relaxed/simple;
-	bh=NKQFYA/36+trZ8mR4+iGgQHvRrS7dZWgZnNZFkrK40M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DIEc97JufsSf/k8mIHgS6k+ThYDu/hFEueVTYkMkasobSBPK1tQekw5vNlfe0Oyyz1w/IyXD5kCPtOpfE1E8iVFVk7yW5E7VpE+0s1jvGWo64UV94IX+G2Pgbh9UrByJ99lk9RvEe3iqNXDpNuvxlO7swAelsHFcrAQhjp6ObP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JH8R3oTh; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237CC3AA504
+	for <linux-hardening@vger.kernel.org>; Fri,  4 Sep 2026 09:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.180.131
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788514895; cv=pass; b=tuwesVZwt4sLGlXgwO0wVBKTWn5B+AGKqRj4J9LFfYh+QhKxkux2B1CLy6qoV/ecsXblGq0P8q8KUOhnrZuPHPXpTZyaO1kxHL3jG/VLf+E89iw3ydwasz/hTDpqaaS0t1D8VkatuQ3hFM+hjKpPU1N4vg0j57Nzx54k0fzN79s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788514895; c=relaxed/simple;
+	bh=aeIbZ7Iqe67MQUbdL30yfOYMS5DGGUDI699nLrKwSTI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OCOUvkNTB1M6mhj+Kp2JsYXXBdv6fqNDgGILGxP3CROliZGWp9zEw1nukwM77EIOi/gCNQsbTvCZDmXGURy0jczl9WZbG8iSgPxP8Cb1o415pl1x6jiThkfoLH4vcJEmbHk+1boaA6kRdsluoWTTLMd/Ck02g19Q8eQGu7Zaqcg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i72Z6a9K; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=A8Ihag5g; arc=pass smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JH8R3oTh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D03841F00A3D;
-	Fri,  4 Sep 2026 09:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788512471;
-	bh=NS43r1NlPHoz3Menx8qLeACzHNPCiAWFDDBQZ2Ncqlo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JH8R3oThTjf7VbgyDYAPuSERILexkhuy68q6S1R/j3k/xU/SQ6pKR3M2STiVCtoHB
-	 N4HPsS8DQBcHTVMRDKMixaJfZj6KsdUi6flqlVHchSUh+EefEVewz6t6s7WtAMBOeJ
-	 Ne/DDRDYmPRQsrF1gzDzU68tIP+YLcuaGzUbmyY3aIASIqIJ4ih/2x0Z8NuR9CSIMx
-	 DbsFfSOtbOWzQP6VioFxiuQ4PjtSlyVmMco+ejyW09TzSDfxc5DIUggo2qelo+xcr6
-	 EPF7LjD5kV6at2CbWtfaDYmAXt1icNVl+5k3xYCyClty41Zpigub4q/rajGOS10E/r
-	 a2YCLFTlvAlIw==
-Message-ID: <497a85d3-e062-4930-bcb8-c86a8205e7b2@kernel.org>
-Date: Fri, 4 Sep 2026 11:01:04 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i72Z6a9K";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="A8Ihag5g"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6847mmJH3234634
+	for <linux-hardening@vger.kernel.org>; Fri, 4 Sep 2026 09:41:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VI7GobWclG+P/LAGHzs6kL80cH1L+yzTiHPraa21oAA=; b=i72Z6a9KXUf5KnGC
+	BQonw6JeT+Vjv4bONkiN5R/yDVYIy4owVbuOPcViQ2rgdsioq3JFpI8fDPff+J13
+	SBrDNXi2c6ZJBU/55j5rdEWi4AH2gMUk7myZfe2KJ7yq/lQENXcTlmOrHymAn+RK
+	1okxZnHiy9mF9JRuYYCZeD69q+Fsnt1HOUvM54W+heRsuAPKud8Rx0TmUng+bLcz
+	t2NTi0363Uz6ckoyx2DYmRrDG/oKK0BRouJUiOBIx2ctjEScgjqdClPHa9c15Ht7
+	X0fE0Uykud3+DQLIg9Lli3VWMrgxQ3S3RLfgdNEwORppGHKokMOvEmpLAPtM82bm
+	+g1k6w==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gfp0r1472-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Fri, 04 Sep 2026 09:41:32 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-85321e37104so1054101b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Sep 2026 02:41:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788514892; cv=none;
+        d=google.com; s=arc-20260327;
+        b=sWk90i+pVrQAYrWw6Svg/vO9dvE9+xycmQvVuI/osGbN1B6MSoLvTNpIzKa8whfOzz
+         cHEjf5lzg2iWhUhdOFoz7HSZkdmHmbgHioDnnpO7O3UBfTsmz7ZceXK19RLAoUGQqhPj
+         D4qO7asRLEQobnCz4FkyWDPKfM1zUjnVPg1SeI7uoc2v7WT39+QbwDQN/DQ7fJ+71sTC
+         NGYTGISGOWP6vBbaWka51ydmxFTm85ZFUoe6yPPdodT9D9BDfzVJGvInicWQcl5Ideyp
+         rCT2Q7auCK/EFx4O2poSk9U/iJR1JtLxS5EYbGNT307bZbj1yHUiNe10XpjV8hRXm0Q/
+         SXSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=VI7GobWclG+P/LAGHzs6kL80cH1L+yzTiHPraa21oAA=;
+        fh=euXFVR8yZUItLzc0NtJuJWV9BOzgN89xxOiXwODQwWY=;
+        b=DYtV+oV+NEKgO7svs9B2Lp96wsODMUBIXGne5pV7Nf39CVLBSQ606LQiR4cqR1waV7
+         /0PP28EU8E8hFXTQ+m+cvGi7HjjrDkOcmWgeavxAKaiYCwsy2wCR8MvOLdDCG9eKHbHP
+         XP7IXSo2+5UuHEKvngU9Tp1il7W1//QGUci3Mc0x6quIs6geKp7L4NUk1KEcRj9/NpZX
+         HTifR9LZ4kKBACExnBtYe7A3EWkAXA/oek0ENQjVZu+Rb5Y3m/9rU6GHJVjGbFKaEWgE
+         gyK11p9VC9fS00IUAF7Iwei4wxPMkPYjOKeOP5Krcl4GfoF5sfQ2NOs3u0z4uoS/k4Ev
+         MChA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1788514892; x=1789119692; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=VI7GobWclG+P/LAGHzs6kL80cH1L+yzTiHPraa21oAA=;
+        b=A8Ihag5gsM5mseZmVs/nSzeGC4ZbtJHkUSDmWjug3v+SEjloN0mP/eXWqtyUgqm0wG
+         DP3BD0MDZgL807UPOr1apyvtAIR+IYCOsyAHf7lDlap2b4UB09td0k+YjmIF+w5aGF5b
+         tZDX99hCfyyaBsm9FGiLSEVZe5HmXJxwCkdrDfny2ZTJEtONQQPSp9rC5YihI/zuiRC7
+         CnAqffipYLInuLwDrsKERAh5GUkYHOn1KiL5MB5v61r6cIUJPbIfA6C6YpC2bUAFnXai
+         vMmcQkmibB4Ee79xU1b3/7LCdvHUflQ5P1DHjKDfzOg0DYEyLweidrKvwc17pT9vDWzV
+         nP7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788514892; x=1789119692;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=VI7GobWclG+P/LAGHzs6kL80cH1L+yzTiHPraa21oAA=;
+        b=S5ixgN5OUVIUQjDQHN3ybkLHh/bXarJN4bAf26OEJ/C1xEznR6mD2TdF47Zp1MOqff
+         33bFI40NVARLqMkqYOofsZVXsFFdtkYMeU/oGQzcuEQQTLkn96orBM0Ub0+WoBA1q+Rh
+         4QZPGOM8s49PRklHk5r4bCwbEwr+w/FuaN2rS0cv70p53n+iAx/WNjdVy/OkaTBhPJmc
+         VZgXG0AYJgFRCFRiGgI1q0mPKE7lt67hohp7veCH7aXK/pM1BU0kCYeivZV7/1wl4jy8
+         yECK3CejrbgaCeROm6dSbs7PcTJ6VQwqI9WbWj5qAvaP291gCJb7C5o5bRu9ARrRxdNh
+         B9uw==
+X-Forwarded-Encrypted: i=1; AKwUvBw839ASanNG+UizESeUnPFXMhRXkYnVIoc3vR1jUYlj+cD570FE/X6pkr3Vi+DCTagQvlAifCUfudUQ+4b7TYc=@vger.kernel.org
+X-Gm-Message-State: AFuF++md9hXnDIkHkd6c++pAHUg9/aFtHswp1PVdl473XZyAE7HUkEp1
+	wRMpYRREM3n8sKbu8QHuQoJslC349L+OwkcN2gbYMNhBGvo4UxYKPj/6cVDVUW3DWfpIoJ/Kwsc
+	bJeMm+cT9J1+8VhIA7ML3mQKRFPDx33iLJSTNm0kpzdJvq2vtse8aqoaJNdcNjQ9reqmbrD1Pf8
+	it+C7ov14JTaMIN5E5LzP4NmVI4X6rSNtJwr/0qyvsguD/7A==
+X-Gm-Gg: AYBFou0wQWdyx1X2XOLSVue4OwghKnxlNCoB5d5/BRBpKy4tmyeBwwKhgK0FKVNgSSR
+	FU8FvOjJGEmmJ53vGuvHLASbjIQugKT3E4DJLOyTZUI/PJbVn5on08plyJwwpJwwAJNkiefLCNd
+	r2epuFO6W1EwZq21ZBqOUVKZc84VMosMQuSqx2DQEgYAOsgTGYTUUQKkBNWw==
+X-Received: by 2002:aa7:888b:0:b0:84f:dfce:966b with SMTP id d2e1a72fcca58-8616a06b9eamr5822376b3a.8.1788514891638;
+        Fri, 04 Sep 2026 02:41:31 -0700 (PDT)
+X-Received: by 2002:aa7:888b:0:b0:84f:dfce:966b with SMTP id
+ d2e1a72fcca58-8616a06b9eamr5822324b3a.8.1788514891229; Fri, 04 Sep 2026
+ 02:41:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] slab: handle ERR_PTR values in kfree and hardened
- usercopy
-Content-Language: en-US
-To: Karl Mehltretter <kmehltretter@gmail.com>, Harry Yoo <harry@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Hao Li <hao.li@linux.dev>,
- Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Catalin Marinas <catalin.marinas@arm.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260903203720.63689-1-kmehltretter@gmail.com>
- <20260903203720.63689-4-kmehltretter@gmail.com>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <20260903203720.63689-4-kmehltretter@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260608095523.2606-19-david.laight.linux@gmail.com>
+In-Reply-To: <20260608095523.2606-19-david.laight.linux@gmail.com>
+From: Ulf Hansson <ulf.hansson@oss.qualcomm.com>
+Date: Fri, 4 Sep 2026 11:41:19 +0200
+X-Gm-Features: AcwNN1XghJRFBri_1kHjfvi2ey89ABXgLFgvTbim4Ym2LDpNCA5fwc7QdZp97mA
+Message-ID: <CAPx+jO_btBTkL2Ph9rM6er8SZkSqOB1WmuHhtr5vGBXtwcWxRQ@mail.gmail.com>
+Subject: Re: [PATCH next] drivers/mmc/core/sdio_cis: Replace strcpy() in loop
+ with memcpy() outside
+To: david.laight.linux@gmail.com
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Arnd Bergmann <arnd@kernel.org>, Ulf Hansson <ulfh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA0MDA4OCBTYWx0ZWRfX/zmHrymng3na
+ 9txWFiQAc6HL0RtY2KVpzKNnIw3D833yBJjOeoc4J+qVG4ErIEZyTrmVdnT3QKb1Fy+i/XmP17K
+ mjBHNYyZMOafKCx4cd4Y4xv4WQEitOY=
+X-Proofpoint-ORIG-GUID: g3lx0gh5wn28UpM-sHjDuUW-hYnva5iI
+X-Proofpoint-GUID: g3lx0gh5wn28UpM-sHjDuUW-hYnva5iI
+X-Authority-Analysis: v=2.4 cv=T/S8ifKQ c=1 sm=1 tr=0 ts=6a9a924c cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
+ a=_glEPmIy2e8OvE2BGh3C:22 a=pGLkceISAAAA:8 a=_2Zrk8i5Ywt6DdIg7-0A:9
+ a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA0MDA4OCBTYWx0ZWRfX0MXzvZz9PppY
+ fuqFBZpweVojev56zSjSPVnG2obtk8TTrOV9VZ/k/D5W0psXRtZcZs3kPVi+SFHGkF0vazeLKtB
+ uxTu6XEltivMOkvP7/yVuPVBrjENYp2o7yldEkytfn5z94rd3uSC5+w6rCr8/5T6j6dkHHdfe2+
+ EA0VpNiIayf5Pl6rB0tdqTHbuWcNvQKvfa2kiZua1FXGMtzcQj9b2yfXb6YV01kJ4/WZj+Kkx0M
+ ZAi0an/fg4oyVJ7+x588dmRhNj9+pPMX9l08tZxLxa5dgT8T2K0m8YBLYAIbBc0G4BxmXAx3aQW
+ g5VZLcK/Y7rzA0f2pkUWmdM86iseAUvAYxF+5Wam8bIbfY0J537rHetlUcFAxQdWF3bbijbllMQ
+ HAZ3wwh902YT+L6jLFNRPc16uNg/mcNTL9vdTfaBJkwvTYFFvb6Qa7kqj1iV9dCWe+Mqa2WEgtq
+ we8jItFJAXeZUMWrNJQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-04_02,2026-09-03_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 clxscore=1015 spamscore=0 suspectscore=0
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2609040088
 
-On 9/3/26 22:37, Karl Mehltretter wrote:
-> Passing an ERR_PTR to kfree() currently reaches virt_to_page() and may
-> fault. Warn and return instead, leaving the bad caller visible without
-> using the pointer as allocator metadata.
-> 
-> Also reject ERR_PTR values in hardened usercopy. Keep both checks
-> separate from ZERO_OR_NULL_PTR(), whose exact matching is required by
-> krealloc().
-> 
-> Link: https://lore.kernel.org/r/CAG48ez05QVn6_gQ2TBrRa1a_DWQoaSSYubUsu5YMWxx-gqMijQ@mail.gmail.com
-> Link: https://lore.kernel.org/r/202608111716.0FA9DB17@keescook
-> Link: https://github.com/KSPP/linux/issues/93
-> Assisted-by: LLM
-> Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+On Mon, Jun 8, 2026 at 11:55=E2=80=AFAM <david.laight.linux@gmail.com> wrot=
+e:
+>
+> From: David Laight <david.laight.linux@gmail.com>
+>
+> When copying the info strings and generating a char ** list copy all the
+> strings into the kmalloced buffer outside the loop and use strchr(str, 0)
+> to find the next string inside the loop.
+>
+> Removes some strcpy() that static tools might think are unbounded.
+>
+> Signed-off-by: David Laight <david.laight.linux@gmail.com>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
+
+
 > ---
->  mm/slub.c     | 3 +++
->  mm/usercopy.c | 3 +++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index f9b56cb439e7..027b44dd7f07 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -6780,6 +6780,9 @@ void kfree(const void *object)
->  	if (unlikely(ZERO_OR_NULL_PTR(object)))
->  		return;
->  
-> +	if (WARN_ON(IS_ERR(object)))
-
-Wonder if WARN_ON_ONCE() would be better.
-Also wonder about the benefits for hardening (as opposed to debugging).
-Without this check it would fault. Now it warns, but hardened setups often
-use panic_on_warn anyway, so the result is the same?
-
-> +		return;
-> +
->  	page = virt_to_page(object);
->  	slab = page_slab(page);
->  	if (!slab) {
-> diff --git a/mm/usercopy.c b/mm/usercopy.c
-> index 5de7a518b1b1..c8d8703544c6 100644
-> --- a/mm/usercopy.c
-> +++ b/mm/usercopy.c
-> @@ -157,6 +157,9 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
->  	/* Reject if NULL or ZERO-allocation. */
->  	if (ZERO_OR_NULL_PTR(ptr))
->  		usercopy_abort("null address", NULL, to_user, ptr, n);
-> +
-> +	if (IS_ERR_VALUE(ptr))
-> +		usercopy_abort("ERR_PTR", NULL, to_user, ptr, n);
->  }
->  
->  static inline void check_heap_object(const void *ptr, unsigned long n,
-
+> This is one of a group of patches that remove potentially unbounded
+> strcpy() calls.
+>
+> They are mostly replaced by strscpy() or, when strlen() has just been
+> called, with memcpy() (usually including the '\0').
+>
+> Calls with copy string literals into arrays are left unchanged.
+> They are safe and easily detected as such.
+>
+> The changes were made by getting the compiler to detect the calls and
+> then fixing the code by hand.
+>
+> Note that all the changes are only compile tested.
+>
+> Some Makefiles were changed to allow files to contain strcpy().
+> As well as 'difficult to fix' files, this included 'show' functions
+> as they really need to use sysfs_emit() or seq_printf().
+>
+> All the patches are being sent individually to avoid very long cc lists.
+> Apologies for the terse commit messages and likely unexpected tags.
+> (There are about 100 patches in total.)
+>
+>  drivers/mmc/core/sdio_cis.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/mmc/core/sdio_cis.c b/drivers/mmc/core/sdio_cis.c
+> index afaa6cab1adc..0b818cb478ce 100644
+> --- a/drivers/mmc/core/sdio_cis.c
+> +++ b/drivers/mmc/core/sdio_cis.c
+> @@ -57,12 +57,11 @@ static int cistpl_vers_1(struct mmc_card *card, struc=
+t sdio_func *func,
+>                 return -ENOMEM;
+>
+>         string =3D (char*)(buffer + nr_strings);
+> +       memcpy(string, buf, size);
+>
+>         for (i =3D 0; i < nr_strings; i++) {
+>                 buffer[i] =3D string;
+> -               strcpy(string, buf);
+> -               string +=3D strlen(string) + 1;
+> -               buf +=3D strlen(buf) + 1;
+> +               string =3D strchr(string, 0) + 1;
+>         }
+>
+>         if (func) {
+> --
+> 2.39.5
+>
