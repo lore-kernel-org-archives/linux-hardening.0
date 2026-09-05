@@ -1,68 +1,68 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA593A1681
-	for <linux-hardening@vger.kernel.org>; Sat,  5 Sep 2026 19:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6A0399D00
+	for <linux-hardening@vger.kernel.org>; Sat,  5 Sep 2026 19:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788636594; cv=none; b=jyL+mjDXeJEbIp2IgTaW1ErVvhvdaOjEeQ/I3XxZSAAWClN69/RTkhakNaAAmN8oxhQHb0EULJfiQV8VD4VwemSSzK5O64Fmh3aaguxAojZBDq357b5ciGOuQB07Ehrg8aecpn1PqfFuQQuQCqM47sxyw5QQ4mNQPGXUjw3YwRE=
+	t=1788636595; cv=none; b=Ta+RE02pUEDpbHOZckf3uu9fuk2QI6F9dpYR6BSjSm1ohSSslFJ9wlhtAtbNP7hUBQkCqVDTP97Tvnqpg22vp9Bs0Jzes5snm9p1T7hWMUgl5NcmA/vCamuVuXrcj/32C/ZBnH59w2XH7ad7TCtzrO6J7C6UBfH3i4Yn9XM0Cb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788636594; c=relaxed/simple;
-	bh=CxsncyAy/tDPq6kjsUgXXkzMFX+fCNq5D9C9gc0wrmU=;
+	s=arc-20240116; t=1788636595; c=relaxed/simple;
+	bh=lVWPvO4U0PzjUNH5kaTEpUlpvE87Z4wloLcJMNvypDE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SAV7Hem2Ok5xa1AnsWKDw0sgOQtjdnJFfmw2ZFHPJC1VEC6Tuoykx48ilYOi4taMbtKcYUZ7cV3nqwXCDHZdJbI4qtw+CSoUiF6RqxUy8AiPBkr6WwJNFAgP2HOFpnz1PzWRBo17SQ27A/qquVXlSoTkspYqBkrdcVTFZq6vrfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXyPJ10G; arc=none smtp.client-ip=209.85.128.171
+	 In-Reply-To:To:Cc; b=ahS8j9clSp336Hc4wSIQVbnYh3dF3fNayhCduLN9uCecF++lyqrBNw4COBX2S7tgOBD3iJfNmbj7oSB50feK8KI2qfzhsloeGZz2RwajSbsomjIC1tWcSj/dCA/n0WK/ExrnjL2QKTrKdN6Io1Yh362o5r9qmzlfeyt0+YqDYUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NqmU8tQ4; arc=none smtp.client-ip=209.85.128.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXyPJ10G"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-866e57f63a3so24680717b3.3
-        for <linux-hardening@vger.kernel.org>; Sat, 05 Sep 2026 12:29:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqmU8tQ4"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-86c0e4dd49cso26759297b3.3
+        for <linux-hardening@vger.kernel.org>; Sat, 05 Sep 2026 12:29:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788636590; x=1789241390; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788636588; x=1789241388; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ehyTAAfhkzMCjjTA6sC72BjJDyGKRNvU9QfKc+XQjIY=;
-        b=FXyPJ10GlIyE0TKu9e8SCb2+0OJe5doAUo+Ret1uwshbcspQtdqsc4mXMyqI2Mn5CA
-         9ALwVWojaG+pVEBsQBqGvWIUaAsQL3qQDhTMFhdhsg106RBjYJhUOWdLoeG9q0/3pYex
-         RfLhbupcXM9OJZoEffHqoK4eEfZSnn4NdcYq88DiIlCX1WVn7GuzG77VDTnV41vlBmwX
-         vO3TJXZwuj/RGIm2a8TsBJy4Yw3nV3RcrZuqM7AAhjongaPagY8xKmdvp1EK5mH0xcXx
-         D0MyDRlXBq6YE279Rwl0VA3a0OAW36rPMJGOlkFkeqFQiN6XPBlgZuvWG+jvTwUJKesW
-         NwOA==
+        bh=DA+s/QyodZ5LzLfcrOq12dlBnw99myrSQbNtH+UZd9Y=;
+        b=NqmU8tQ4PofGq4r5bXhBGRDJU4rBvD4X11KTb9znxIO5OyK6RHTWnkRbScmghawQeg
+         pQh3ldPoshfa548E77BhrjCi03B97EdvdRsvzpbTRVx1iFCGHkQcgbQZWzg9Zu5Iw/dt
+         DFo9u9xrR5RmtXqtMNYfCF8Z0FoQ0MA4sQw5lOq0+zTzOmi43tGt9zir2TeLqwXnDYsl
+         C7Afs/k+TOXQm3qYOjNlbDc4uKtd2yfQrbuvl/8CURRUNE/uwR28MX0O6uhA6noD8sYQ
+         I5qvaD+9rJix2E+ih+TL5tguBsNtta6cCwSFMpZIdn9Nh2pPTShAL4BI3Xe4AxMs3H1W
+         yxDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788636590; x=1789241390;
+        d=1e100.net; s=20251104; t=1788636588; x=1789241388;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ehyTAAfhkzMCjjTA6sC72BjJDyGKRNvU9QfKc+XQjIY=;
-        b=N9DlVgPKfAzTViE+H7irf92vViAfJz8x+8jgWGc07ierlRIuVuTYHsbKMg20Ybdb1A
-         riNSBtn7CBJG0baZqIUazCHzQmlvmc/m/ez6PYxFpKe9rQquUVNcrbyFvoIRgk2DKUiI
-         tQ2EhkLz2t0V3SWSpOGgqrUPNS3nkEOUmKovem9gZ0yU6Zpwz8Zy5KRKhwxG+vLGdgC+
-         Rf6UABjiCppNGpoFU2uPVeVulZTV5KX43b/APzSuCD9hdEFWpU7hoGypnDJuhJVOTGUR
-         qaVxafTvryO0MBCVNYrDTkPX1YVNU4O/ITBn5xjVOJvdwm3yQYYqG591+sWm3Tvmm7y6
-         USUw==
-X-Forwarded-Encrypted: i=1; AKwUvBy6+tZP1RapxRtB9o/6RoyLJoABbjqKIJy+5fuBsJUh0MluL9EwjMTcYP5WmFgRgBedjg25WWztvDtcYSoTiio=@vger.kernel.org
-X-Gm-Message-State: AFuF++nuHwZLdC0XJl73e6keEuQNbHx72QZyZuejqjnp1SoZVtEZhJbn
-	bBIL0DK0Avzs9s0LO2DEJzuguuqq5+K9Byb+IYesMcAhvE4ahC5X+bH0
-X-Gm-Gg: AYBFou1kOusfps+vXmBImiy3aO0FO/RR2m8ysR1UBlMz3ARe2ouL+oMTpW5iKLziyHl
-	kvFZFJfw5bwcBrIJTIuwPW7mNG6Zs4vP8RkjIJ74FVDAxGm6LsxwfYC71WrslbEvXZmwrHRhPkM
-	LqMiKnB8Y8XSUZiYjFS5XfdzaNdZDeHb4O3xCCJW2HBtpBPDRwiSPGZYYn9wrQiPzEcFGDF6Sdx
-	ULy/wBr24W4vCxrnUW8MPVyjU56t5XeD9to/7pRDn2u5cvnrAO0BY+xwETLNU6ekBeL7m/gqm0z
-	tpGkfo1f72i6oYOa87b9BNXWVzNdFjLg1GtWhMxGKdccXVWb6JUSwYqB4p8G14zZWN/kjWwZUgA
-	D39ZnNroHfeiES/iaxGuI3MDOBsAY9AWwX65JSYnrPwWWhFkqkqIZiPunwTK5k8Zkl8jAZyyyPW
-	qDee4vLf3IwOVh9qXjg3eVj0stM6q2/73bCR61OMQ+Cu+85y6kLlOasdJ//JOiWw==
-X-Received: by 2002:a05:690c:e3c4:b0:873:5ddf:d863 with SMTP id 00721157ae682-8735ddfd9ddmr28099977b3.46.1788636590256;
-        Sat, 05 Sep 2026 12:29:50 -0700 (PDT)
+        bh=DA+s/QyodZ5LzLfcrOq12dlBnw99myrSQbNtH+UZd9Y=;
+        b=PIKEjiscVFsHbSBeAw729WraLx673TN+0M5DA/xO0E4JtNzttfxtLEd+9mr5Bqq73M
+         GUzXwF9hgqOarOWs5HRQTFFk7P1lSMkj1MwXNlD8RRzjHOYNpEJhb8kJ7kZhuHrsd5bf
+         4hDtt4cBh1Huert6tmfCjXe5hPyQncECMA4lw7bZugjZHEInfEWCyMQ1jCxTDQ1A/33S
+         a+Bde353OgcHhICjdNxSgk4l6Y1bBvs1uYLRlpRqhOLlqw09aC4M2UUc7NtUTNxAsHpN
+         P+52XGkpAqNml+9inPzhnjaM1jxOX6M6s6ofbSZIDencoW5Z+Ocys3SzyqO6Bdvyu9yY
+         NsVw==
+X-Forwarded-Encrypted: i=1; AKwUvBxgvfaPFQ8Y4Rw0TbJkib7YFDSsA37HqOwPsQSagPn8xaTr0+qBSfaP6sS4RKA9WM/P5RlUczQwZ4bKq0UHMoY=@vger.kernel.org
+X-Gm-Message-State: AFuF++n0xGxT6eopOiPg6MC3DE+ID5dOaLdVSfCxzhRR6mruYJMWIVIg
+	2PtGTsROJQhNUg/lOFWPW5nhMvFJ7N+52zIpNi/sy+Lkqw4weac0TstQ
+X-Gm-Gg: AYBFou0xHqEI+MseTGM0TSdvMzRBKgmn3sd+aipfhJDZzEWXXneVQCFEGAecPPG7g9p
+	6OFcq4J+2adexfZw3RGhUifK2eTb70uUBygoSJyEjQhraXkdWsZWt4807VuhbXZ1v0Vq1UySVx8
+	aROp6cjzjboP+ol8xJ/R6T70q46TlZlnC7i5/lU7KN9rSKPyKs6Ui6usmwXDy2yAuou7fwvMbxN
+	/JmW/YdC3WH+GBJpYUxPG8vqe7Ny0eoCeBOsu3CDv3S+92HPJEVi61LQwtGOPbvd7+GV1Lk7HJz
+	U+jyzj2Mn3EiqamZHM6TmeJ9dPdRovjODT2+lZ0pIXaduxGmEB6gkYfnmw99vzZcxeJD2yQadoQ
+	qed9TsLHYz8/v4zdwUggFCTk+yODzptcm2ZzVj7lUZGUXKYl/WAUcTlF/goy/SednolG/Ad1hBr
+	2rjyoD1UTcCdOman5HfmBPG3lv+HoQT/HgSbgD0KCxJhB1wUB3b+GFbdN07ZpK
+X-Received: by 2002:a05:690e:b4c:b0:66f:9cdc:2b09 with SMTP id 956f58d0204a3-66fb5ab575emr4278563d50.47.1788636588384;
+        Sat, 05 Sep 2026 12:29:48 -0700 (PDT)
 Received: from localhost ([2600:1702:7a90:6f9f:8bc4:8aec:108d:7a04])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8714bb0efc1sm43034207b3.45.2026.09.05.12.29.48
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-66fb48ee9easm4992431d50.8.2026.09.05.12.29.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2026 12:29:49 -0700 (PDT)
+        Sat, 05 Sep 2026 12:29:46 -0700 (PDT)
 From: Matt Turner <mattst88@gmail.com>
-Date: Sat, 05 Sep 2026 15:29:32 -0400
-Subject: [PATCH v2 11/22] alpha: add HAVE_ARCH_THREAD_STRUCT_WHITELIST
- support
+Date: Sat, 05 Sep 2026 15:29:31 -0400
+Subject: [PATCH v2 10/22] alpha: select
+ ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,7 +71,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260905-arch-kconfig-options-v2-v2-11-83e8245761a2@gmail.com>
+Message-Id: <20260905-arch-kconfig-options-v2-v2-10-83e8245761a2@gmail.com>
 References: <20260905-arch-kconfig-options-v2-v2-0-83e8245761a2@gmail.com>
 In-Reply-To: <20260905-arch-kconfig-options-v2-v2-0-83e8245761a2@gmail.com>
 To: Richard Henderson <richard.henderson@linaro.org>, 
@@ -84,61 +84,46 @@ Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
  kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
  linux-doc@vger.kernel.org, Matt Turner <mattst88@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1561; i=mattst88@gmail.com;
- h=from:subject:message-id; bh=CxsncyAy/tDPq6kjsUgXXkzMFX+fCNq5D9C9gc0wrmU=;
- b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLLm5E7xnBDyff5cdusPor+VVb9Jxn2c+6aj0E+pvI495
- 71/2X+Hjo8sDGJcDDPFFFni1iuyzGrbsdTntPQvmDmsTCBDpEUaGICAhYEvNzGv1EjHSM9U21DP
- EMjQMYqHyOkxaGQWF5emFummFRQ55OWXJJZk5ucV6+UXpOYVpBfopWWmlWRk5BcVpwKN0MtLLTF
- 1dXQzMjQwsXS0MHOycDQ1cXZ2MnRyc3R0dnUysjQ3MXC2dDRxtTRn4OIUgLmG7wkjw2nGx44zOV
- MfnMvZMOmsqMAUxfxrvvfni9pPLDUu/rh+fSbDT8a1LW7uYRP+vWrc9/yJb+63R6Jla3IuvNqwm
- 63EtOHtAR4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1116; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=lVWPvO4U0PzjUNH5kaTEpUlpvE87Z4wloLcJMNvypDE=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLLm5E72ChM4a7tjV7n9C2Wll7PuLNjEbPTkS+LHy+In3
+ 4eFbN20t+MjC4MYF8NMMUWWuPWKLLPadiz1OS39C2YOKxPIEGmRBgYgYGHgy03MKzXSMdIz1TbU
+ MwQydIziIXJ6DBqZxcWlqUW6aQVFDnn5JYklmfl5xXr5Bal5BekFemmZaSUZGflFxalAI/TyUkt
+ MXR3djAwNTCwdLcycLBxNTZydnQyd3BwdnV2djCzNTQycLR1NXC3NGbg4BWCuKfdjZNg++Uq7IJ
+ +0QtGSyhc3Jn8IOXPqKfsLiYT+L6pr31xpTM1nZJi+2JDPrXXGUavglK1Ja5e3bSgOvlj51OJwW
+ NrHa/N5WXkA
 X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
  fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
-Alpha's thread_struct is empty (all per-thread state lives in
-thread_info), so the whitelist is trivially empty. This is more
-explicit than the generic fallback, which computes the full
-thread_struct size as copyable.
+Alpha has a clean split between user and kernel address spaces: user
+space occupies 0x0000000000000000-0x000003ffffffffff (TASK_SIZE), while
+kernel space uses KSEG and vmalloc regions near the top of the 64-bit
+address space. These are strictly non-overlapping.
+
+This enables optimizations in BPF and tracing that can skip address
+range checks when user and kernel pointers are distinguishable by
+address alone.
 
 Assisted-by: Claude:claude-opus-4-6
 Signed-off-by: Matt Turner <mattst88@gmail.com>
 Tested-by: Magnus Lindholm <linmag7@gmail.com>
 Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
 ---
- arch/alpha/Kconfig                 | 1 +
- arch/alpha/include/asm/processor.h | 7 +++++++
- 2 files changed, 8 insertions(+)
+ arch/alpha/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
-index 8f97d6e22b28..cc69f94a1c5b 100644
+index 237ef0c214dd..8f97d6e22b28 100644
 --- a/arch/alpha/Kconfig
 +++ b/arch/alpha/Kconfig
-@@ -44,6 +44,7 @@ config ALPHA
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_SECCOMP
- 	select HAVE_ARCH_SECCOMP_FILTER
-+	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select LOCK_MM_AND_FIND_VMA
-diff --git a/arch/alpha/include/asm/processor.h b/arch/alpha/include/asm/processor.h
-index 5dce5518a211..c461a26d47b3 100644
---- a/arch/alpha/include/asm/processor.h
-+++ b/arch/alpha/include/asm/processor.h
-@@ -26,6 +26,13 @@
- struct thread_struct { };
- #define INIT_THREAD  { }
- 
-+static inline void arch_thread_struct_whitelist(unsigned long *offset,
-+						unsigned long *size)
-+{
-+	*offset = 0;
-+	*size = 0;
-+}
-+
- /* Do necessary setup to start up a newly executed thread.  */
- struct pt_regs;
- extern void start_thread(struct pt_regs *, unsigned long, unsigned long);
+@@ -9,6 +9,7 @@ config ALPHA
+ 	select ARCH_HAS_DMA_OPS if PCI
+ 	select ARCH_HAS_FAST_MULTIPLIER
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
++	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_UBSAN
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
 
 -- 
 2.54.0
