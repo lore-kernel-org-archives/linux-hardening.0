@@ -1,52 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE996371876;
-	Fri,  4 Sep 2026 23:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161012F7AD2;
+	Sat,  5 Sep 2026 00:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788565304; cv=none; b=aQyBy5UsVKKHSumno6wkHx6lVQ5wsS4YESctXlzctljlPlSZN4hBfqKwYb8J0H+VLzYT6D6eLqjgLvpHKdsTGBgGVFQTYzO71bjWyDavJUqL18dc5TTlChUHkowdbXgpb5+9ZaUsk+Is5AMAd9jXI8qJh8OXPYKS7oL9+PVuhws=
+	t=1788569335; cv=none; b=GvWd4zssiO0PrEaSphHroUSb0vXSK21aDH+i445JY6U/hcrmVXGtjUZvYjh/wiDP/PmNqgCTqPJfWpjjGBIL/6iFQDwJbfHSDo6Fn0HkMdv8lnpYeHIGbDFvZr3ta7FBXQ+C8KedJySJzCtsbh34M/tX5UswXxHqBqZ+ikk9WHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788565304; c=relaxed/simple;
-	bh=8ojUEeh4GBl3hS2E5GLdg4ArR/wjPMKNgBDXF/wMxNk=;
+	s=arc-20240116; t=1788569335; c=relaxed/simple;
+	bh=ieUxajQo8F/H5On/TfCtxOvpIDs2vLDZvcKOlTNIBis=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FoEZnxgFJi/Fnr2WQdGIIjpZ9nNcg1TUY5VtOwCAZ7UwaofpuTad2Oy7nNvgQjZxg1eiGqB2Jk5bvFWk9NV93H4cYR5wnNln/IrbCrGRXsG/c7i5GPtlaI6RCuVAgv6RxCyx2ALyC1C7+QBl2TyOn2RwDiRj/EiMHZpCnK4geAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpmEPS+H; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=dKoMm4xwnMDch0e/rJSTYJOX0Wele6/HQWZyU1k70fnT6f9TGOyO129WcjTYXPGG3HJ4zll0Zd+/rQ4Z/8EDYBKJHN+hXWx8rg3trJ99O1Hgh6fK24rclKUae+rlvadeOfLstp5/lh+DHdLDerDeMR2UPsfrnECgrZUl5RUbURE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVqYZVir; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpmEPS+H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADC41F00A3D;
-	Fri,  4 Sep 2026 23:41:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVqYZVir"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64FFA1F00A3D;
+	Sat,  5 Sep 2026 00:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788565303;
-	bh=D1ah88EdIwGVXmatU+RuiQ97sryB7E37mpW2wjtmshI=;
+	s=k20260515; t=1788569331;
+	bh=bz41QAEg7cxLewfi1vUQSONOCuun/1phJ3ccrrG9tXc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bpmEPS+HJumyXdhQ8yJzsnnVKiwFEKj7YWx5pHX1+Bna7Y74IlHrqrLGk0AeGc3MY
-	 gmayjTIu1dY+6p6GwvEPb4BiF+7vwPC2qeeQpDEnpWP7q/6TCRTi685l7BbwxojrSn
-	 srjcVba/OYAbgJkkc71ppGbh+7PrDrZX/h5qvs3qS8TPT0vkJjFUN4TXiPaDeXwB53
-	 fhwtgrhPjumJmstigujj5E+Am2ID4ISnTmXYDypVmXdL6Qdi3rFCcEnX2JpEkxW8Q7
-	 5qOTvMVn0iUQ+apJKflNHOSnfQ8g7vAGPqJXRbNAdL/jYIu4S48rQIy2odnANHGxqT
-	 jy1TaI8tlA2ig==
-Date: Fri, 4 Sep 2026 16:41:43 -0700
+	b=QVqYZVird6cP7RmSCEi7c2BNv1vik0g7viueBlTPZIkzSLLC5UEMI8OoPv4djAw6z
+	 3zbHo/A5KFzBpb4awLzEmsZFNmeon6P5dvsedPM7vdIxAWIsE2iZN+e4L4J6ySFm4w
+	 j1tNoZcrbxkcgs4UdnHzv4HdvgYhH9cXDw/oU7NklMhVHb5os81W/hP31y8F9/4ugQ
+	 EtbmUSajDm/36Fqu0WSljLafPSblPgnjTJFsfTWCH+n3iv1giDc7QmctgszVuxVmXF
+	 5e39WLpM0baYYsdDHOmRiKg18Jhe1Z7MhkpBHHSzHXLgJeQ/dl/S4APbFCGciCgEB1
+	 6UH+0sVmiYuPA==
+Date: Fri, 4 Sep 2026 17:48:51 -0700
 From: Kees Cook <kees@kernel.org>
 To: Bill Wendling <morbo@google.com>
-Cc: Bradley Morgan <brads@mainlining.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Aleksa Sarai <cyphar@cyphar.com>, Jan Kara <jack@suse.cz>,
+Cc: Vincent Mailhol <mailhol@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>, Gary Guo <gary@garyguo.net>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Anand Moon <linux.amoon@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	codemender-patching+linux@google.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] userns: Add KUnit test suite for uid_gid_map
-Message-ID: <202609041634.6429DB8@keescook>
-References: <20260823125155.1136740-1-morbo@google.com>
- <20260826220041.4075333-1-morbo@google.com>
- <20260826220041.4075333-2-morbo@google.com>
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/2] randstruct: report bad casts as warnings rather than
+ notes
+Message-ID: <202609041748.010B5CA1@keescook>
+References: <20260903232428.i.323-kees@kernel.org>
+ <20260903232438.60394-2-kees@kernel.org>
+ <CAGG=3QUHtqFVCEcnxXO9fan_RBT_jjWtBbA8ECpQeiC1dKMnvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,50 +49,14 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260826220041.4075333-2-morbo@google.com>
+In-Reply-To: <CAGG=3QUHtqFVCEcnxXO9fan_RBT_jjWtBbA8ECpQeiC1dKMnvg@mail.gmail.com>
 
-On Wed, Aug 26, 2026 at 10:00:35PM +0000, Bill Wendling wrote:
-> Add a KUnit test suite to verify the insertion and sorting of mappings
-> in struct uid_gid_map. This test suite validates both base extent
-> insertion (<= 5 mappings) and extended extent insertion (> 5 mappings,
-> which triggers the allocation of the forward and reverse pointers).
-> 
-> This is especially useful for verifying that the __counted_by_ptr
-> attribute added to 'forward' and 'reverse' pointers works correctly
-> without causing any runtime bounds-checking panics or traps.
-> 
-> Assisted-by: Gemini:3.1-pro-preview
-> Signed-off-by: Bill Wendling <morbo@google.com>
+On Fri, Sep 04, 2026 at 11:14:19AM -0700, Bill Wendling wrote:
+> Why not make this an error instead of a warning?
 
-Various style nit-picks as dictated by
-Documentation/dev-tools/kunit/style.rst
-
-(We may need to teach Sashiko about KUnit style?)
-
-> kernel/user_namespace_kunit.c | 92 +++++++++++++++++++++++++++++++++++
-
-Like below's naming, this should be named after the suite, and in the
-tests/ subdir (even when #included), so it should be:
-kernel/tests/user_ns_map_kunit.c
-
-> +config USER_NAMESPACE_KUNIT_TEST
-
-The suite and Kconfig should match, so this should be
-USER_NS_MAP_KUNIT_TEST
-
-> +	bool "Test user namespace map insertion" if !KUNIT_ALL_TESTS
-> +	depends on KUNIT=y
-> +	default KUNIT_ALL_TESTS
-
-I think you need a "depends on USER_NS" ?
-
-> +static struct kunit_suite user_ns_map_test_suite = {
-> +	.name = "user_ns_map",
-> +	.test_cases = user_ns_map_test_cases,
-> +};
-
-
--Kees
+I guess I was thinking of moving from "invisible note" to "visible
+warning", but I'd agree: better to just match Clang on this. I'll send a
+v2.
 
 -- 
 Kees Cook
