@@ -1,211 +1,186 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazolkn19013082.outbound.protection.outlook.com [52.103.46.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358EB14A619;
-	Sat,  5 Sep 2026 20:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.46.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788641332; cv=fail; b=OBSz+OP6E58LeldAmBfhLY2MfvtL/vJ1w67R6ZRHNwxkekZb9F6iq7ncX+CH4eCYfOUoYv5tDSGcZb+oZVR6qf1RHmEFINsnsKX5SdWrd7pwGR2MOW3oM7rt7IOH71iZKed8P/JTGJdFaUX3++SJBYrYDyM6JRb3nKERmgR2xnk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788641332; c=relaxed/simple;
-	bh=FvAyqHkIs1Ip1ZyiBgkiYkt99CH11L7+DJSEFS0izxQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fFUAIzh1yrkc3aDnSDX1d9NxoNxBeIPRXfMEAGYj+7LbjABStpku0a4eCT+0GQesSH8m3eDrS7xUz9rjFpOm+RlRz7lR0bqus5F1RpXwDyGpdMMWuhbaFeItzt/OCneU4C/2PynR2fC20GSw6Gosfg5XgvI6lCAKVczjfCaQCE0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.co.uk; spf=pass smtp.mailfrom=hotmail.co.uk; dkim=pass (2048-bit key) header.d=HOTMAIL.CO.UK header.i=@HOTMAIL.CO.UK header.b=Ek4POoIS; arc=fail smtp.client-ip=52.103.46.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.co.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4242630EF91
+	for <linux-hardening@vger.kernel.org>; Sun,  6 Sep 2026 01:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788658170; cv=none; b=eJ9iMuTcgd5tyV++I10mLopoENiBWzIckqiNpvIcfFBCphSMk0jxJWh9SBQjX7HBPsbrBmKEKJ+UrupqzCaRA8ukzdeBt7SpI+kTfbryuNjmWnG/DIVRXyKUxScxGsVpRjK3raYyDqxB3MpuJu3GQmx1LCoOrySFzU4obKzfXas=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788658170; c=relaxed/simple;
+	bh=Mc7C7vEd+geTmXBQsqBzXuNVgESWzoaEEie4c5Cym1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TIKstafDgkwYXwCiBMzTrZqENPvjcyTrhFGzGNgghBDxPZr71vOX4RMImvwmLMMkmUottYCDQfmhqrbLpnO7Sjl3SO2QS9m0dCGegXvOLsp5lz7fhNdxrnY6cAmrD4MtUgzqa76tsnjQO2ydHv/FjvMBiB9tJHlKZa4aOYrgHBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=K24sJF7B; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=HOTMAIL.CO.UK header.i=@HOTMAIL.CO.UK header.b="Ek4POoIS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=avTVLb0h+Nis2iaNvbl+pPH5iSwlFPVUeIWWtybvgg6SPuyG+0CjNkPxQKaGONEZamWQ3z8IQ0SuBaKAg596QzkZKZ29PRQ4GlVexZiy8W5qYoKwPVKGbKmvum3+ckROsepYn85uLJ1DA0IitvhZhNUDNGype0Nl0OnXNTt+BCm1y2UUardqJ/1NaNQ4mppngGPGbLWegxOYxiUiKQw4RLnMcV2Y8n2z3dkXgRiZvdMqBg12xOqfa2lppW6TnkdHUKM+x4jNVWFYmGFdXOSgIVHjMPaXgO59IC1ybYddp9WxqsXQYV2BdDDI6bz4+WBThEvuYX0FclTCD3FBknldpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Tegd1GECJ9D1sJrLs/B9DOHmTKY2wOxS7gCgv9dsjag=;
- b=iwAugbwkJtWepU08PiFp5j07X5QCNcv67y/MyiRvI7pzrOKLKUPn1RzXMFxkiSm20/hunGNBllSr+rXJv4xLGmzuc223ahiPwko8Uad2Ek5W9o0ycS53KHuZDlGOZQi446Ty9euN1H+8PA1R770U1bbYQzrT1v78NOE4olEN2FsHWzZ6Nsc6SMVh9lAPXoWGHkLLmQjVGbojIoLqYdydo0JB2Y4J+ItF4THQV8oZLUm6px+KVoxKB8MjalW2MKjGjLw8u49bmIhdHq9UKX/XTTyyubStCrrBHXPPw+BvfLRnvvjAfKRPoyJbE05iDnTLMgM9nvSQH2XQzqZ4EcfF9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=HOTMAIL.CO.UK;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tegd1GECJ9D1sJrLs/B9DOHmTKY2wOxS7gCgv9dsjag=;
- b=Ek4POoISXWT4xgpdaGp/Wiu9nB+R2C+B4pDBU5eXf3/w2B+Ksl8HCpX8q/QKvWPhSvHc6VjmlUyvbTtyLuYOZ3q5+zlM/HGpoodPmZCWxvVoLV5JD0G9ODQ11VAbwZp4VDIAelqfFREzH2d31+scNJbFtY0g0HLCNDhoS9Y/23PJthgEtGNLhtVCXQnliuPJ2WZTLUMByyIVcSTJVgKGgdzGuTzPTUIa2Tm+E9msJe0g/UGC118oe9eRU3PvPvMyOeAVyaTRG0opG4jRG0LxukxUpjmfmUsOlgt15nWW40XjLCI1FWyYTVAs74E0HPlK/fZ2p2njDBcbWVYyvrBmPg==
-Received: from AS8P251MB0001.EURP251.PROD.OUTLOOK.COM (2603:10a6:20b:344::22)
- by PA1PPF75DB7739D.EURP251.PROD.OUTLOOK.COM (2603:10a6:108:1::21b) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.10; Sat, 5 Sep
- 2026 20:48:48 +0000
-Received: from AS8P251MB0001.EURP251.PROD.OUTLOOK.COM
- ([fe80::2952:d4d0:4ba:8352]) by AS8P251MB0001.EURP251.PROD.OUTLOOK.COM
- ([fe80::2952:d4d0:4ba:8352%6]) with mapi id 15.21.0382.012; Sat, 5 Sep 2026
- 20:48:48 +0000
-From: Aamir Ahmed <elb12345@hotmail.co.uk>
-To: Georgi Djakov <djakov@kernel.org>
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="K24sJF7B"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2d6fe26ef1cso23091245ad.2
+        for <linux-hardening@vger.kernel.org>; Sat, 05 Sep 2026 18:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=asu.edu; s=google; t=1788658167; x=1789262967; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=fINQR5Ssvu+nKJR1KqypgzqxRtq2wGfTV7dTHptCiTk=;
+        b=K24sJF7BLpo0/5mU99qywjOZgv+czAXJdCaWvSyI/oFqTMTFTY2b89FlBfPUsujla2
+         UlCvbbpIkJY5lAQ+P/E7LhsIu0xx05ByhBr1Uo68aEr/lXr125LO449COz3X5l68jFiZ
+         okB2+YZJiJKa9TCmlryH7+KyytviVGHanBzFyOGqno7p4eBS1T57vz84/R7UCqQm3T2h
+         4wkNSelDRCb3YlH4EXVVgUQPkjTGWxJFxwnqq+Pvl8JsqLEMODUba2i1sh/NC6vsd/yH
+         dhXsa6zBbRaAWEez+tk0ukeNMw/hoT24ZKEfkUVvU6kW7GrGh9Icew84DSLktxmD4pX8
+         7s5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788658167; x=1789262967;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fINQR5Ssvu+nKJR1KqypgzqxRtq2wGfTV7dTHptCiTk=;
+        b=JHUC05vdALxllRcjVMCB2gRcxMzbXyV9UhUJmotZZ9uwiu8hoeWV6xF3cKw8hEynY5
+         cJy5r3EWfS0Sa9M1ol95syK5VD6GYlGFZ24p/qtKSys59PjbSVs7bOcdi9cG5+MhuW2/
+         1WEjc4L73Mme8yP2XvRCvlsoOUYRkY85HF/TOR0bo2MbUnXs1LyyThetn1yOnHJXAt+o
+         Wrd9fYsiLfB846/QGvSnQl6ppEQozKjnQjcf+R13PF+q1x6ZAjy8CLZ9yWVbCMeJjT6N
+         Af/KGGhZbyQ6KaSFshRfOsy/1HbstVcbyIKUnfJ5B0L9odQzpCmXNCJqF3VMonFPQzdk
+         6heg==
+X-Forwarded-Encrypted: i=1; AKwUvBwe8N5GOsi+pMy6iLzs5Rmkl1+ECBf3pEBq3aqLjm/RoTtNUg7uJ5HtCM+TojnW5wnSKDJ05ixtmwWyvrgFheE=@vger.kernel.org
+X-Gm-Message-State: AFuF++kUN57fImbL06ve9HwkPbZLei4x2BVui70YRQtwmPYjhvkhUijp
+	6qYXLnWdENVjtwUzJvvct9migR6JomnmwOZbagxWfdhL0CytWdfubwOHtMBtkrUHiw==
+X-Gm-Gg: AYBFou3d71z2aK4pgekxiw+TmiyYsqnY09+yU48eDo6MuRHsNdm2nnY5TgDAhUeroVO
+	6MjjJQmWExB1dmyUU1Uy23y71JTa9SF2g7ObeMAclJeqffJFguvbCgzEAEA+c16T1byQZzLd80u
+	gAffxx72hmQX18lEMhEi71diYhq51cDIVDh35ImBOti0DGq7JUIKTyZ2zQTq8lOkiRYWYwsQD0/
+	bFaKwSkPJdTaTlUpUvx+NH6tOvn8k6KrTtfXNSyUBS33Xqa3iEo+Kqy6dBasVZr0XLk7/H6mAOf
+	v65Ss2CLyujVEsaZtx573FAxmh1qOjK+XwhG8Vu5gifEm9OdHOzS0cE10NYOr+Had8zcm7OLjLu
+	qhwEbmVQRTy2brUgTiqKYit4XRsKoIeefvBB13Ka049Ep3QPOx59CKaJYXIuRqVgIbZb3HWZq4q
+	SGyOA2fdIZD6WeK5dvwmlJN8Flo0XLjTSPoqZK0va0BmJlbHQuwm0/MnYku4H9pVID94oEF41Cx
+	PXmQmxTqjLCT6BcHmSNAE1OQDLYdes0HkM=
+X-Received: by 2002:a17:903:37c7:b0:2d1:134:b86e with SMTP id d9443c01a7336-2db122ed6femr226702135ad.2.1788658166513;
+        Sat, 05 Sep 2026 18:29:26 -0700 (PDT)
+Received: from p1.. (129-219-8-31.nat.asu.edu. [129.219.8.31])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3339b314cfcsm17456853eec.19.2026.09.05.18.29.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Sep 2026 18:29:26 -0700 (PDT)
+From: Xiang Mei <xmei5@asu.edu>
+To: Joanne Koong <joannelkoong@gmail.com>,
+	Bernd Schubert <bernd@bsbernd.com>,
+	Baokun Li <libaokun@linux.alibaba.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
 	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>
+Cc: fuse-devel@lists.linux.dev,
 	linux-hardening@vger.kernel.org,
-	Aamir Ahmed <elb12345@hotmail.co.uk>,
-	stable@vger.kernel.org
-Subject: [PATCH] interconnect: mediatek: Assign .num_nodes before accessing .nodes
-Date: Sat,  5 Sep 2026 21:48:46 +0100
-Message-ID:
- <AS8P251MB00010F5EE7878E15AF0E49F3C8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.55.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P123CA0218.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a6::7) To AS8P251MB0001.EURP251.PROD.OUTLOOK.COM
- (2603:10a6:20b:344::22)
-X-Microsoft-Original-Message-ID:
- <20260905204846.31973-1-elb12345@hotmail.co.uk>
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Luis Henriques <luis@igalia.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	bestswngs@gmail.com,
+	Xiang Mei <xmei5@asu.edu>
+Subject: [PATCH v6 1/2] fuse: bound io-uring payload copies to the registered buffer size
+Date: Sat,  5 Sep 2026 18:29:22 -0700
+Message-ID: <20260906012924.1928316-1-xmei5@asu.edu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8P251MB0001:EE_|PA1PPF75DB7739D:EE_
-X-MS-Office365-Filtering-Correlation-Id: b178d9a2-bc90-494e-bdd1-08df0b8f15d8
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|24021099003|5062599005|23021999003|5072599009|15080799012|25031999004|37011999003|41001999006|8060799015|19110799012|25010399006|4140399003|52005399003|40105399003|2607281247196008|3412199025|440099028|26104999009|19061999003|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cRAdEVm7dvy6vtTfHRcjqDruyTrqHOCCEcFq1cs5q2dPpZc1c2JuZuQ+/FyC?=
- =?us-ascii?Q?N+maEEfC6GwD2GfZP5NMYIt3PKm0VSqT0swHvOi5sjdiM364Rk2iIT4p22ZH?=
- =?us-ascii?Q?pGbwQSaWLQSph9lFCKVxB3LXjPOnjJzrcV6FnoDZfQOIrAK7bDOq5XvPnrA8?=
- =?us-ascii?Q?vFwXDNKdt8IJftvvHNYCzMfSRWUh4U87EdR9hx24Iozad/zN7Ih/nEQJKmN0?=
- =?us-ascii?Q?QqluHBeca3bkWefJPLLWS/TMsTYl4YVjalv5wD1GaKqZVqrR6UJ1XCWE/AA+?=
- =?us-ascii?Q?oYuVsZMXRNN7051sVrK+L1S0HB7zMNM7uGkMsi6kyc/aQ4jg8TcFra6Fs263?=
- =?us-ascii?Q?+XiSiTsJeRC53Kd6jDBElmB/jigt5vyt6KbBk0rih93XWBdvUmUpiD3uEIAW?=
- =?us-ascii?Q?1K8BsP4wHxrb2DgzX2BjT4CrfgUqThD1w9G49WFAa6ZATwc83Dur1dzpjyGr?=
- =?us-ascii?Q?e1vFleYPbjl1yQTz3WTZBK+yUeGnKcMW/MPVi6H7SlhSLB0ISQy4TU1Wvsww?=
- =?us-ascii?Q?Ia3mvOOvLJyHUlb/MQYKIoFxncDdAbk/iUatR8f4s3/AJanX8C1r+Q0mfHr+?=
- =?us-ascii?Q?70aCbmUYD/N/RlaPh2Qf+2QwONFkvM2Q/9jUBSmp12ExmcJhP4mbeCeXyHL7?=
- =?us-ascii?Q?73OnVxkxChgWXS1kD/tvi8bWn+4XiIQOR9IJpnz8B99HgFNYZMltzZQIyPLJ?=
- =?us-ascii?Q?D4w85rzUzgQUEkfWs32ZJUxU091mi2/rvGZTWs6SLHJr5HhQtaqhB1Z5+vry?=
- =?us-ascii?Q?NFyZbLFK57R+SpQSHh1FQ8lrQA06RmKJ2iqj1lTx+tfpNjN2/6fiSzcJI7uM?=
- =?us-ascii?Q?rBl1aquRBFgDaSl2lYaJX4awfctKMk40KHEWco27Pxsc3SuTtTnpC8OLYx3a?=
- =?us-ascii?Q?YfxEzB1UlOBVfN7YqtNzUCPa4ffZCjYKQw8dDtJAjHrc1DwR09Xy+7WVtAdB?=
- =?us-ascii?Q?MF0i6BW8Yxg/KlY7TWP6MTBedVqu49d3Xddip1JqwJ5Yrc/zUD8Qjk7aNlRz?=
- =?us-ascii?Q?6D8mYpuYO0yjg1LifwEFYd0vCz8NZzfXNHO5Zb7Zdu2STr2go1sOJ6/XGeVw?=
- =?us-ascii?Q?1Keo0AcjXU+O1rLlFXEOCIzIYmyyrvOOh4DlTG+PjfCBs7gT8QZcYrZ7vZWd?=
- =?us-ascii?Q?SaEdW9aM/3c4?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?FOIXuVMssia3Ye0nemadkTpN0guVfP3row4pc4NYJ8zPAk42AfMbafforJEr?=
- =?us-ascii?Q?qw+q+8m0qqRELiKaQVh62hjsH5VCF9GAvfWPGK2CTmTxavFKrJGTOqgt3E0O?=
- =?us-ascii?Q?RWMZjVQ86x2heyVAuvOf9DmVVcDQ5Yal+cbuPbn6SjBJUiafIVSDdpkrYVfn?=
- =?us-ascii?Q?iWiM9euBHvDgPp0C9c3gAlgg0AqBafJuwpc2NVPqf0gOxrIzSV8SDxHK2XRa?=
- =?us-ascii?Q?i2wqrMQ/vo1r8+D6nyGGs9+a1vsnnAV4V3/nq2h9bkojJ2lFOLIU1Davu6Eq?=
- =?us-ascii?Q?P514hl2sKvsdDX5uPnBhb5dYA/1ktF/tM+Tqmdew341ss7pAJqY2430HuTXA?=
- =?us-ascii?Q?NDDz0wL6srpfkNhThwdtt+Re+8mj9ddiByAUJAlSeUwtdz9PvprNw7CZ/8/F?=
- =?us-ascii?Q?eyqDMXNA2EGIF7r/3xwf2GXZJ1i9jERnziaZ8qVyfwK/D53ByqJmllr089cg?=
- =?us-ascii?Q?i3yq9ihn9vctQphg8ARlvRG3X6wFL3bXj7mvX9GtAl9rRc8+5wG1LsWX7Dh/?=
- =?us-ascii?Q?VnWh/7a6qFy3wVCB4lt2mEQNzt/AFR90d/0L+VXdCPvcYVLf/+wFhbuLWsi1?=
- =?us-ascii?Q?EUv7IA5CjeE5iT87lj6bbJo50DLaCtMZC9S23NAEgNVmFFTSNcPLzwshEalo?=
- =?us-ascii?Q?RVOV8ZKImWnLfqBisX5XyjR9UnKGW/x2lmly54z/7LTBXgKhPqP0tC0aPh6C?=
- =?us-ascii?Q?MSexNS74Zv9h9ueWZN61QDGemRZwYNWSyo12y3AR3e3ZgbNFsyD15VF192pi?=
- =?us-ascii?Q?bweo2lprILqozVrQfxtAfpNAinRF3OvKkGbx2Al/motJr7nDy/rYWP8lmNbW?=
- =?us-ascii?Q?BOpN84Na6l7K5V36eTZXEKaD6/us8D9afM5eT9VPizJlqDD8XHNwjdiqMMIi?=
- =?us-ascii?Q?+IysTjzfuNXj9YL1YKv1v/rFaES9Xs126E3/OEx7OKVrtyfG/YisGRmkSE35?=
- =?us-ascii?Q?ur/0DZAq5ns9esmbPRT8ggnEbIOccfpcZknfKyibVmQthxmFg6KUwZzmi+C4?=
- =?us-ascii?Q?DQNqNwxAKhXocJCSZtM5BEJLGPgrh5c+wfPeyIQ6BNW3ud6A3Ln5WC2n92XU?=
- =?us-ascii?Q?lipUiS7inOCx/hyj+Jeiv/V6LNyEfzpdRnsLuVUJuaRf51T0/zE2rZeT1Vrz?=
- =?us-ascii?Q?njPUSS94rI4zQFAf1l1MsjwJpU2y/+J+sWKvMKjrbI6/lKWqZc/CI54rI9wg?=
- =?us-ascii?Q?sl6KLX0Vi7XB4lq5Al0j2unedDOxaVGymzdqRlsdPBvf6T/PrDvxJtNncYrm?=
- =?us-ascii?Q?SHS/nyklhre8pGQh1Olb58iqAMCzcJvBtMe53a/Yj95U/tZU2nrMpQ1/+nt8?=
- =?us-ascii?Q?jkWTZOclIpVrsD63soMCMOuBWpFTFr0bOlJ+wSVb+CdvzTEUVR1Je8Bo5Op+?=
- =?us-ascii?Q?Dk3Zj4zEchsQ3iIswR+DKQVjb96u/mWo0RHio5nMmDXiNh+KYJ3evmyiBNL+?=
- =?us-ascii?Q?rHn0C7062BRGDK1nWhA1UJYLfn3Gr8rA?=
-X-OriginatorOrg: sct-15-20-9412-3-msonline-outlook-fe3f5.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: b178d9a2-bc90-494e-bdd1-08df0b8f15d8
-X-MS-Exchange-CrossTenant-AuthSource: AS8P251MB0001.EURP251.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2026 20:48:48.7656
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PPF75DB7739D
+Content-Transfer-Encoding: 8bit
 
-Commit dd4904f3b924 ("interconnect: qcom: Annotate struct
-icc_onecell_data with __counted_by") annotated the nodes member of
-'struct icc_onecell_data' with __counted_by, which informs the bounds
-sanitizer (UBSAN_BOUNDS) about the number of elements in .nodes[], so
-that it can warn when .nodes[] is accessed out of bounds. As noted in
-that change, the __counted_by member must be initialized with the number
-of elements before the first array access happens, otherwise there will
-be a warning from each access prior to the initialization because the
-number of elements is zero.
+The fuse-io-uring copy paths do not check that the data they copy fits
+in the ring entry's payload buffer.  fuse_uring_copy_from_ring() passes
+the server-supplied payload_sz straight to fuse_copy_out_args(), and
+fuse_uring_args_to_ring() copies the request in-args without comparing
+them against the buffer.  Either can exhaust the imported iterator and
+hit fuse_copy_fill()'s BUG_ON(!err).
 
-This occurs in mtk_emi_icc_probe() due to .num_nodes being assigned only
-after every node has been stored in .nodes[]. With CONFIG_UBSAN_BOUNDS
-and a compiler that implements __counted_by (GCC 15.1+ or Clang 20.1+),
-this triggers an array-index-out-of-bounds report during probe, and with
-CONFIG_UBSAN_TRAP the first store traps so the interconnect provider is
-never registered.
+An unprivileged user can trigger the request side by mounting a FUSE
+filesystem that registers small payload buffers and then issuing a
+setxattr() whose value exceeds them:
 
-Move the .num_nodes initialization to right after the allocation. The
-value assigned is unchanged, and the other users of struct
-icc_onecell_data already initialize it there.
+  kernel BUG at fs/fuse/dev.c:1064!
+  Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+  CPU: 1 UID: 0 PID: 148 Comm: exploit Not tainted 7.3.0-rc1 #2
+  RIP: 0010:fuse_copy_fill (fs/fuse/dev.c:1033)
+  Call Trace:
+   <TASK>
+   fuse_copy_args (fs/fuse/dev.c:1354 fs/fuse/dev.c:1380)
+   fuse_uring_args_to_ring (fs/fuse/dev_uring.c:891)
+   fuse_uring_prepare_send (fs/fuse/dev_uring.c:940 fs/fuse/dev_uring.c:1057)
+   fuse_uring_send_in_task (fs/fuse/dev_uring.c:1745)
+   tctx_task_work_run (io_uring/tw.c:96)
+   tctx_task_work (io_uring/tw.c:133)
+   task_work_run (kernel/task_work.c:233)
+   io_run_task_work (io_uring/tw.h:84)
+   io_cqring_wait (io_uring/wait.c:278)
+   __do_sys_io_uring_enter (io_uring/io_uring.c:2676)
+   do_syscall_64 (arch/x86/entry/syscall_64.c:61)
+   entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+   </TASK>
 
+Bound both directions against ent->payload.iov_len, the length the
+server registered, so an oversized reply is rejected with -EINVAL and an
+oversized request with -E2BIG/-EIO, matching fuse_dev_do_read().
+
+On a zero-copied request the last page-backed argument is handed to the
+server as registered pages rather than copied into the payload buffer,
+so exclude it from the request-side sum to avoid rejecting valid
+zero-copy reads and writes.
+
+Fixes: c090c8abae4b ("fuse: Add io-uring sqe commit and fetch support")
 Cc: stable@vger.kernel.org
-Fixes: b45293799f75 ("interconnect: mediatek: Add MediaTek MT8183/8195 EMI Interconnect driver")
-Assisted-by: LLM
-Signed-off-by: Aamir Ahmed <elb12345@hotmail.co.uk>
+Reported-by: Weiming Shi <bestswngs@gmail.com>
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Xiang Mei <xmei5@asu.edu>
 ---
-Found by a tree-wide audit of every __counted_by annotated flexible
-array whose counter is assigned after the array is first written. This
-was the only remaining user of struct icc_onecell_data with that
-ordering; the same class was fixed earlier in clk-s2mps11
-(3e14c7207a97), exynos-clkout (cf33f0b7df13) and clk-raspberrypi
-(6dc445c19050). The audit, the fix and this changelog were drafted with
-an LLM assistant and reviewed by hand.
+v2: add: Cc stable and Reviewed-by tags
+v3: propose the patch fixing another issue found by Bernd by Joanne suggested way
+v4: no context change as v3; add Reviewed-by: Joanne Koong ...
+v5: no change
+v6: rebase on fuse.git#for-next.  The ring entry already keeps the payload
+    iovec and imports it at iov_len, so only the two bounds checks are left.
+    Skip the page-backed arg on a zero-copied request, it does not consume
+    the payload buffer. 
 
-Compile-tested only (W=1, no warnings), on x86_64 with GCC 13.3, with
-CONFIG_INTERCONNECT_MTK_DVFSRC_EMI=m forced on the make command line
-because the driver depends on MTK_DVFSRC, which has no COMPILE_TEST
-option. GCC 13.3 does not implement __counted_by (CC_HAS_COUNTED_BY
-needs GCC 15.1+ or Clang 20.1+), so the build only confirms that the
-change compiles; the sanitizer path was not exercised. I do not have the
-hardware, so this is not runtime-tested and no UBSAN report was
-captured.
+ fs/fuse/dev_uring.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Based on v7.3-rc1.
-
- drivers/interconnect/mediatek/icc-emi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/interconnect/mediatek/icc-emi.c b/drivers/interconnect/mediatek/icc-emi.c
-index dfa3a9cd939..c4aa0ab566d 100644
---- a/drivers/interconnect/mediatek/icc-emi.c
-+++ b/drivers/interconnect/mediatek/icc-emi.c
-@@ -100,6 +100,8 @@ int mtk_emi_icc_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
+diff --git a/fs/fuse/dev_uring.c b/fs/fuse/dev_uring.c
+index c6dd420c4034..981b7c295e5e 100644
+--- a/fs/fuse/dev_uring.c
++++ b/fs/fuse/dev_uring.c
+@@ -775,6 +775,9 @@ static int fuse_uring_copy_from_ring(struct fuse_req *req,
+ 	if (err)
+ 		return err;
  
-+	data->num_nodes = desc->num_nodes;
++	if (ring_in_out.payload_sz > ent->payload.iov_len)
++		return -EINVAL;
 +
- 	provider->dev = dev;
- 	provider->set = mtk_emi_icc_set;
- 	provider->aggregate = mtk_emi_icc_aggregate;
-@@ -126,7 +128,6 @@ int mtk_emi_icc_probe(struct platform_device *pdev)
- 
- 		data->nodes[i] = node;
+ 	err = setup_fuse_copy_state(&cs, req, ent, ITER_SOURCE, &iter,
+ 				    issue_flags);
+ 	if (err)
+@@ -854,6 +857,7 @@ static int fuse_uring_args_to_ring(struct fuse_req *req,
+ 	int num_args = args->in_numargs;
+ 	int err;
+ 	struct iov_iter iter;
++	size_t copy_size;
+ 	struct fuse_uring_ent_in_out ent_in_out = {
+ 		.flags = 0,
+ 		.commit_id = req->in.h.unique,
+@@ -887,6 +891,16 @@ static int fuse_uring_args_to_ring(struct fuse_req *req,
+ 		num_args--;
  	}
--	data->num_nodes = desc->num_nodes;
  
- 	ret = icc_provider_register(provider);
- 	if (ret)
-
-base-commit: 654ae5d73c05bd2943d65636ce6cd0aa46e62f18
++	copy_size = fuse_len_args(num_args, (struct fuse_arg *)in_args);
++	/* a zero-copied page arg does not consume the payload buffer */
++	if (cs.skip_folio_copy && args->in_pages && num_args)
++		copy_size -= in_args[num_args - 1].size;
++
++	if (copy_size > ent->payload.iov_len) {
++		fuse_copy_finish(&cs);
++		return args->opcode == FUSE_SETXATTR ? -E2BIG : -EIO;
++	}
++
+ 	/* copy the payload */
+ 	err = fuse_copy_args(&cs, num_args, args->in_pages,
+ 			     (struct fuse_arg *)in_args, 0);
 -- 
-2.53.0.windows.1
+2.43.0
 
