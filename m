@@ -1,111 +1,143 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from lgeamrelo12.lge.com (lgeamrelo12.lge.com [156.147.23.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DF6227EA7;
-	Mon,  7 Sep 2026 00:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B3721A447
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Sep 2026 01:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.23.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788741496; cv=none; b=KOOnxE3yKeNl0tt6cvdT1o3ukvsT6RFPoyvHTTceB4IIE5bsHNQe5aLSwbOCdMhkJfTmoTKgyLFVZQl/SO3TgR8yMbkX0L+XZLsAuay1fySN9E9QhZLFuXXF3ETC059hqKmwzGfa6eo1dG5wlr4AP1E8w/JeWew72xRLfoOCXUk=
+	t=1788745565; cv=none; b=shE4aeNf/gbr74GK7HYeSIpNi0t2XlI+Z+6zBurwHLLZuJv8ppXTEaBziNA8z1BBhDpLKkSVKO9moCCDfSTHe6F3ZO71+wjluXT603ApahGmDDUKNkwIdF9/orhaZ7j1ucIOXIut7Es9uE2yUfmCCSbb1yPkT3W2vuRu/ns4ucY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788741496; c=relaxed/simple;
-	bh=Pj+9C4DA+l5GZAnO99jFc3RdrpHzrwLzYWLjwSTMDf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fTRQfSN9fYuQnaRqjOLKX4kcFLTDQUfbvbumauPCLLPANPjJH8aFyvNgX6JuJmBq+0+0Y8t0DlZBqWxVQurhz+9CUo+FJ17GP4lMF3BkSd+AMhqFZBU3MhcDF6uc+W7aUnDqABtmgYPzy7rbAK7p3uO1NTzDc/GR5J3l+D4uy1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=IaTuF5D3; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="IaTuF5D3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:From:Reply-To; bh=aKQV2REp2fcpwnrza2fucinmI1xZTT1H52UGzxMS81A=; b=
-	IaTuF5D3fQ0SQeYmx1ZJF8uWf2TLIcBsb1Oqjy0jGthKF3Xl4Qbcesf7Tex5D70/5LWZjQrte0iWc
-	D1wB+cn3lDRgud/jqBCg8Dqq0RmNSltIeU5d4xxIu8EgkMMlS1Bh+AOtGjXdqs1F62jiBn5VjpCpJ
-	mam26jHpTogsp+lVsQZH5tlqPGMeD5U1zlyYSLzy+agqcvbE0el8kNzOZPQCYVhzbAwyblIacAJim
-	F+wfB6WMi3zIOgE+MjFsnJf1xzmkupyqCfYC31ILIaYAs9Bch+Fl1IOaodZfTEwKjmPWDAmMYkMUu
-	w8RdlJ5ra/5ZkcYrh6syebRel2GWYMIW6Q==;
-Received: from [191.32.245.236] (helo=localhost)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1x3Mky-00Fnp4-N1; Mon, 07 Sep 2026 01:58:41 +0200
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-To: gpiccoli@igalia.com
-Cc: linux-efi@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	ardb@kernel.org,
-	ilias.apalodimas@linaro.org,
-	kees@kernel.org,
-	tony.luck@intel.com,
-	stable@vger.kernel.org,
-	kernel-dev@igalia.com,
-	kernel@gpiccoli.net
-Subject: [PATCH] efi: pstore: Fix pstore_disable parameter setting (if built as module)
-Date: Sun,  6 Sep 2026 20:55:11 -0300
-Message-ID: <20260906235838.2928815-1-gpiccoli@igalia.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1788745565; c=relaxed/simple;
+	bh=Ukfzdh7BQaBlOzsk1ofwfB5Xf1gdNe4E+bFJl5cXSwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UtyGWnQ2eWnmUrqejCeb3Nt1IXPDkZ5IxBiXBuhNlmmz1do3hohcYk6qv05DXPwIhpeopRb/KvPfZ0qPqd7d2gMwrwL4gGCrUQWmpdAvpb3Lt4SC7chDt+ibnWY/UOAO6ATZFmRBM/zS5dCiVylbjk5f4burZudiaDsonw52TS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.23.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
+Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
+	by 156.147.23.52 with ESMTP; 7 Sep 2026 10:45:53 +0900
+X-Original-SENDERIP: 156.147.1.126
+X-Original-MAILFROM: youngjun.park@lge.com
+Received: from unknown (HELO yjaykim-PowerEdge-T330) (10.177.112.156)
+	by 156.147.1.126 with ESMTP; 7 Sep 2026 10:45:53 +0900
+X-Original-SENDERIP: 10.177.112.156
+X-Original-MAILFROM: youngjun.park@lge.com
+Date: Mon, 7 Sep 2026 10:45:53 +0900
+From: Youngjun Park <youngjun.park@lge.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: "Lian Wang (ProcessMission)" <lianux.mm@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
+	Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Jihan LIN <linjh22s@gmail.com>, Kunwu Chan <kunwu.chan@linux.dev>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, linux-hardening@vger.kernel.org
+Subject: Re: [RESEND RFC PATCH v2 00/13] mm/swap: introduce per-priority
+ allocation queues
+Message-ID: <ap4XUQtdLIITU5Dt@yjaykim-PowerEdge-T330>
+References: <20260829-swap-pcp-priq-v2-resend-0-68d3d925578c@gmail.com>
+ <appvhlPleahTRklV@yjaykim-PowerEdge-T330>
+ <20260904100900.21517-1-lianux.mm@gmail.com>
+ <CAMgjq7Bh0hdVoRcS4xMRL0YG-zmjh-TxyF9xXCmP2MRarAyksQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMgjq7Bh0hdVoRcS4xMRL0YG-zmjh-TxyF9xXCmP2MRarAyksQ@mail.gmail.com>
 
-Commit a28655c330ab ("efi: pstore: Allow dynamic initialization based on module parameter")
-introduced the functionality of switching the pstore_disable parameter,
-effectively allowing efi-pstore to be used even if builtin and having
-pstore_disabled=Y (a lot of distros do that at Kconfig level).
+On Fri, Sep 04, 2026 at 09:02:00PM +0800, Kairui Song wrote:
+> On Fri, Sep 4, 2026 at 6:12 PM Lian Wang (ProcessMission)
+> <lianux.mm@gmail.com> wrote:
+> >
+> > On Fri, 4 Sep 2026 16:13:10 +0900 Youngjun Park <youngjun.park@lge.com> wrote:
+> >
+> > > Since tiers come up further down, I'd like to raise a point about the
+> > > patch subject line too. As Kairui mentioned in RFC v1 that we would
+> > > stay aligned with tiers, would it make sense to frame this RFC as a
+> > > per-tier allocation policy (or something along those lines)? Kairui,
+> > > what's your opinion?
+> >
+> > Thanks for the thoughtful feedback and for taking an initial pass over
+> > the series.
+> >
+> > I agree that this queue could naturally become an in-tier allocation
+> > policy. For this RFC, I would prefer to keep it separate and scoped to
+> > the existing priority semantics while the tier and virtual-swap
+> > directions are still being settled. We can revisit the subject and
+> > naming once that boundary is clearer.
+> 
+> Hi All!
+> 
+> We can start with adpating the default priority if tiering still needs
+> more time to land, Not changing the user interface means less risk.
+> It's also fine to implement tiering first, there are some other
+> blocking issues for tier though.
+> 
+> With tiering I think we will still need rotation of devices in the
+> same priorities / tier. Once tier is ready, we can further extend the
+> rotation in the same tier; that's something to discuss.
+> 
+> >
+> > I will also sync with Kairui when he has time. He has several things in
+> > flight, but his view on the ownership and framing would be valuable.
+> >
+> > > Devices assigned to the same tier already share the same priority, so
+> 
+> Hmm, the current posted tier is a band of priorities. Do you mean that
+> when tiering is enabled, devices in the same tier, despite of having
+> different priority, will be used equally? And is priority ineffective
+> then?
 
-Well, it also introduced a bug if efi-pstore is built as module and loaded
-with pstore_disable=N parameter. On load time, load_module() -> parse_args()
-calls our mod_param callback efi_pstore_disable_set(), which initializes
-efi_pstore, registering it as a pstore backend. Happens that, slightly
-later in the module loading process, do_init_module() calls our module
-init function, which currently ... retries registering us as a pstore
-backend. Since this was done successfully before, in the module parameter
-parsing, pstore_register() refuses to re-register us and efi-pstore ends-up
-clearing some structures, like freeing its data buffer allocated memory
-and setting its size to 0.
+Hello Kairui
 
-Net effect of that: efi-pstore ends-up in a weird state, partially
-initialized but with cleared structures. More than that, if we try to
-unload it, it won't call pstore_unregister() but will get the module
-unloaded, hence pstore writes on oops or with other frontends will
-trigger NULL pointer dereferences.
+Right. My thought is to remove the priority semantics within a tier.
 
-Fix it by guarding efivars_pstore_init() against re-running if the
-driver was previously initialized - this is kind of an analog to
-what is already done on efivars_pstore_exit() and fixes the issue.
+Once devices are grouped into the same tier, allocation within that tier
+should be handled by a tier-specific allocation policy.
 
-Fixes: a28655c330ab ("efi: pstore: Allow dynamic initialization based on module parameter")
-Cc: stable@vger.kernel.org
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
----
+If users want the traditional priority-based behavior, I think they should
+assign devices to different tiers and manage them that way.
 
+For swap devices assigned to the same tier, we can still leave the behavior
+flexible through the interfac(they may be treated equally, or priority may
+still be considered). However, there should be a default allocation policy.
 
-Hi folks, apologies for introducing this bug =|
-Cheers,
+> > > I don't think the allocation policy needs more than one option for
+> > > that case (I can't think of a use case that would need it).
+> > >
+> > > 1. For legacy swap with no tier configured, define it as a single
+> > >    priority treated as one tier.
+> > > 2. When priorities match, allocation naturally falls to a single
+> > >    policy (not a queue). the concrete policy here is this
+> > >    queue-based scheme.
+> > > 3. When tiers are enabled, devices previously assigned under legacy
+> > >    swap are reassigned to tiers at runtime.
+> > >    (This means different swap device on same tier handled like same priority device)
+> >
+> > These are useful design points. I would like to study the concrete v11
+> > before deciding between runtime, boot-time, or compile-time tier
+> > assignment. It seems safer not to bind this queue RFC to a permanent
+> > tier interface while those semantics and the virtual-swap backend model
+> > are still under discussion.
+> >
+> > > I think this feature will also be needed on the virtualized swap side,
+> > > which makes me wonder whether this patch should go back into the swap
+> > > tier series instead. Kairui, Lian, what do you think? (Or separately?)
+> 
+> I'm fine as long as there won't be a regression. I remember V10 of
+> tier didn't touch this yet so the regression is limited to tier
+> enabled case, so no existing case will experience any issue, that is
+> fine. Causing a performance regression for existing usecases is
+> usually a bad idea.
 
+Yeah right. will consider regession case.
 
-Guilherme
-
-
- drivers/firmware/efi/efi-pstore.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
-index a5db3534f0a6..2e125db7d43b 100644
---- a/drivers/firmware/efi/efi-pstore.c
-+++ b/drivers/firmware/efi/efi-pstore.c
-@@ -263,6 +263,9 @@ static int efivars_pstore_init(void)
- 	if (pstore_disable)
- 		return 0;
- 
-+	if (efi_pstore_info.bufsize)
-+		return 0;
-+
- 	/*
- 	 * Notice that 1024 is the minimum here to prevent issues with
- 	 * decompression algorithms that were spotted during tests;
--- 
-2.50.1
-
+Thanks
