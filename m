@@ -1,181 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBA151123E
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Sep 2026 16:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788797138; cv=none; b=d+FtdIYCTFjeuWgATUFXhjkX/Kso5EMnUzbavF3+aUaUf6lOlxlx0Tc5t7ALmNFIe0dgpdi1t8bPPRyiB0HCH3sFxofYoUeE4aFchNF3lmqHyav9cYvkFFgUeLFT3rsLHkEvqYcoaDCyEA0fZQtKFdd3O8nvmhkXSKsTwCzyzKA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788797138; c=relaxed/simple;
-	bh=K8J7ZntjfxBxKuXxp44Lq+u8+DvlIo4KmclmfpWWm+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M7jIL7IpXBWrHN54Nj3Emy4goiavqsdEfECD++CuLr0E16DBuo0o7OizUe34TXmgTbsCcvELncMV1AT/t1VIELLI5f4qwtFpzI9t/YhSYWs4CTmR5IyHJg+m3nWnJVzvcv97BPQ4yC/4OXqSfvwNQXwcA4HA4cyyAt6Lsx41GqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tr2FfEF5; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDBE51FCCB
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Sep 2026 16:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788799484; cv=pass; b=ID14MrZodSaSJPZDyH0ut0UMwkQwDL6JatJnBNZ/s5aj0NLgIXHwQmyxPNJjU3WYvhmXSN2ok95UMBbMnmGBuZluT4JZqTlrmJCqo5B3oStkYAKkc7DK1/3rhIn4e7RXvpD9Wu41hDB5S/RrdVhJMoskeI6ReOKdoSRMAvTopgA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788799484; c=relaxed/simple;
+	bh=hu54HuHxaG9TzaXr27h8viqIU9/+3WJ0xcFwySTlB+s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fLSWQxHSrdFC4dbbc8h8Hpvk5VHlrYhFL3fte0Y0YMU5zVuJMkLs2nQxeENrwz7+5zKmCGBBMZvoOsQ5U1Auh9qaDtreVT2fIB7pVkjhR91gWjILxF22gbI148bRTOYfhEKES3nkN+t5n9OsTP5GqSY+5X34F1bgR9tKAmdsfrs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com; spf=none smtp.mailfrom=yjn-systems.com; dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b=vA0uAOFV; arc=pass smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yjn-systems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yjn-systems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tr2FfEF5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 781941F00A3A;
-	Mon,  7 Sep 2026 16:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788797135;
-	bh=cOwjWSZU7sqyLauvsyIOoxB+VUvKj3AIMfesn2Gg0Gs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Tr2FfEF5/if8uJWKIxG0gE5uW6MrLIgXVkxsnhUy2MNYuwpxXo8H+OjnTjCKewBXJ
-	 d79BgOnqHsR7OmNC9i1+jf0O67/1aa8JZWXysbEVcPbVGzNj3oXhcEi6z3SiG7r2JL
-	 +4MTKVg3wKoCBfOBFDSppxqsV3QZ7izVPfXUj0eVgtdZ4TkukInO0lmXpZdjKBvD7S
-	 PXAVKbo5EjdtEfouYHfLhWvHBmIzWabnoPM7yg2O8bNWZIoRqt9sjWWiixxO1ln/OS
-	 MDRbLwpkgPbwt6u54BQApi/TupnPS4tGhC1w8XdKDFKDgxthmAZky7owi8ZMvhDZ+S
-	 fhL50r3JSR4UQ==
-Message-ID: <5491be7c-1bf1-464f-877d-9bb86155310e@kernel.org>
-Date: Mon, 7 Sep 2026 18:05:22 +0200
+	dkim=pass (2048-bit key) header.d=yjn-systems.com header.i=@yjn-systems.com header.b="vA0uAOFV"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-4843e9c5960so3727890f8f.0
+        for <linux-hardening@vger.kernel.org>; Mon, 07 Sep 2026 09:44:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788799480; cv=none;
+        d=google.com; s=arc-20260327;
+        b=FRzZxJT9wGsB8SBaRjNg8RjiNmIQAwUKLW+5RMWVaeDBp9mHZAHCm+xsTho2ETIRly
+         25rWwIErez2qUiPmpVkRORwRVAQgcBjdC23AslnwEv4d18Qp6hmUdILCHj+MyAjy/9JX
+         YhXw3AjQnCfvi3jz/fI/TuggGTXIEzihR1IEGRBeT4KVxU6guvYG96wpivtl6wn8kzZy
+         fAD3iExHbrZvh2GG1cwHbscpPT6QPlJrbCgMv5k5pI3QUIOo8hbDyyah3ipYt+BTORSM
+         N37pxqO/WhQEqmC2i98tw73aVoS5on736XjaHebEDkpknPik+ILeAeDCOiR2MXzXkvJ2
+         Ne1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=no2JTz+593dP2LvPf64iCF24x/Ni6xuZ4pzBDxKo+RM=;
+        fh=xOzpoQAPeuQWO9slhjb5r5h33wBvJWs1Gk0e9jwpkro=;
+        b=YtddRCdKAVQZd5nL1s90Shie24HS1Js/0YmHPh3kDEVjXcY9OzPGGVrPWHMJ2Fh7Pa
+         G64iqWF53YcOKO9fxZ13PHyzQ7vif/RA1djTVr77U3xNxI9F3vLPn2Tf20hwFtDjz+Sb
+         IZL94kRY4qgbnnXYK1XVI1bHs6Exaot1RQQgHzLwDajLfbboJCzwYaE1FZRF0c4WQHUn
+         Ve+5s1RhoYSMsljF7RzoQvCJiSQORWLnPqtcenGXqNH/BT46B9fPdq/lIINr/Yu/W5Jd
+         5SzlPII3SJku/cVpwqUKDxFcRjoPMPx8BX2hMy5nazEg1wIW7CCaTYkbdRmpituMGwFU
+         /Zyg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=yjn-systems.com; s=google; t=1788799480; x=1789404280; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=no2JTz+593dP2LvPf64iCF24x/Ni6xuZ4pzBDxKo+RM=;
+        b=vA0uAOFVN6M7Ffwq/pEtX7gwc2H4wMNjj/k331ZHi0mYvXKdw2j2fOEVmkk0e2+Mfl
+         B9fq7fF9bph/IJRsEq/MruTkEe57jsvAzIYOfRAafL+8OH5KM4fmbmV2HOAn/4cfJ0uV
+         Fa3wg/aJqpiCYYbpI2ZScKB5XN4EqtQKOsSsD7XCJzcPlgmk15IPhzNYWxSCf+AhKUg7
+         GCEqzierDBRJsExmO++NYZ0kdTclGcpUlfzjT3wBpL87krqJS7uZk2gzg/Wl+pDDG9vR
+         gA2jjuYEFsX2ravYgc2ztaPsB1X/kUHy4FVVrmMOro05zsbrb0HvdiU/A9er0mDrUTx5
+         Ct9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788799480; x=1789404280;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=no2JTz+593dP2LvPf64iCF24x/Ni6xuZ4pzBDxKo+RM=;
+        b=kNDTQS/mHAp+aj/bAkz8bIgyh7/B427130LcJ90aLeEzR5m+jQMZ2eydt4HXe2m8TY
+         UY0WasDqiWRktpFgm1DFgXqtQvVVMykBk+JwlrMxjxffnkQ5v9NA3irFGlEvrbzrhBgc
+         CW1SsYSWw/1JgYKhmeF/T/X4y4eg//pUSSSgZ1TZxQD6HuZsJMOo8tZ6eNtf71SLewaI
+         iIinvrerWCXP/Mel654oxQScb5tEN4t3lkWpjB1eHB8Km1SOnmGQ94y0CWBgiA6mbkSh
+         N7o8eKXoBe2fQpFlvL2y/zJQFfwi/xUAZYc7/tXCLFXf+c+PMizPGyNcOFJuTNiUmYZH
+         pP7A==
+X-Forwarded-Encrypted: i=1; AKwUvByZGShvqT/AgArChnwC8p6cJmhnBYxOrHDfwf61wD2B5If9KFPihwWxg6Kay3Xgw80dL8d6YI8cKpzLddh/1Zg=@vger.kernel.org
+X-Gm-Message-State: AFuF++lVUwa6gV5WRXnvEKR7zNVJL6NilUij82w0F5VLY0XHcOQi+bi+
+	CCPMC6k0pIUmr3UaMbohid4k9zA/A6oNgA88dLsu8ZrVBtb40XHUwVj7YIWexPUg8G09JPenlL/
+	HC0JZCVbA+Rp3taQmEtd4IAmBPzR+WequHonx3d9rFRc=
+X-Gm-Gg: AYBFou3u+eo6Tx7y/7GS7ZiHEmVSj9yj4Z9m2AcieJv2+y0Kuqq596gqBgCzVGbHcsT
+	kZZWHhyEk6o9f9Z24qz+ZDpXaclsu7F8HgmjuIQXfb0MsSAAA88JEaNGkBaayRDaA3nJx/CHITR
+	nRLCf+RZO0sI6YSAWfR9gIQtOCptBNFHknAyCl/dPLC5jrpeh86xQeHtbqmMnvXj7EgIdWHV29P
+	jfo7av8mp2e5jQQOrqrWE8fbPd3LCOjNRgedTfSZxTKnaBFkLvlJUYFRM2Vn9cNoE4csQeDNXvN
+	NSz9ug3jaDoDCOrSMLw2lv1QWnxoo7pAkKhfcWK6hclZKkl54Fl7Tb9+xJN10OLg8QBw0CDLDpQ
+	=
+X-Received: by 2002:a05:6000:4304:b0:484:3313:fd86 with SMTP id
+ ffacd0b85a97d-485872d6572mr28878501f8f.27.1788799479962; Mon, 07 Sep 2026
+ 09:44:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v9 13/25] mm: kpkeys: Introduce early page table
- allocator
-To: Kevin Brodsky <kevin.brodsky@arm.com>, linux-hardening@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
- Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
- Linu Cherian <linu.cherian@arm.com>, Linus Walleij <linusw@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Maxwell Bland <mbland@motorola.com>,
- "Mike Rapoport (IBM)" <rppt@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>,
- Quentin Perret <qperret@google.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
- Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
-References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
- <20260818-kpkeys-v9-13-743ad31b2c8f@arm.com>
- <1dc8739e-4eb6-4a71-9534-e03a15afd620@kernel.org>
- <7af32e98-f2ab-4961-9e3c-72b8a21416c0@arm.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <7af32e98-f2ab-4961-9e3c-72b8a21416c0@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260902233338.i.375-kees@kernel.org>
+In-Reply-To: <20260902233338.i.375-kees@kernel.org>
+From: Jasper Niebuhr <yjn@yjn-systems.com>
+Date: Mon, 7 Sep 2026 18:44:28 +0200
+X-Gm-Features: AcwNN1WpoAzs5bQuXOBErpPne_vm3xlt1x9dSUSeK4h4vWSeoZ6T3aoNB79zlM0
+Message-ID: <CAMjCObuPsTDLt5P7H_=K26bw5HcwFgithDn6yyCRz9ax63rGLw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/3] SPSLR-v3 cleanups
+To: Kees Cook <kees@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, franzen@sec.in.tum.de, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 8/31/26 17:28, Kevin Brodsky wrote:
-> On 27/08/2026 20:08, David Hildenbrand (Arm) wrote:
->> On 8/18/26 16:08, Kevin Brodsky wrote:
->>> The kpkeys_hardened_pgtables feature aims to protect all page table
->>> pages (PTPs) by mapping them with a privileged pkey. This is primarily
->>> handled by kpkeys_pgtable_alloc(), called from pagetable_alloc().
->>> However, this does not cover PTPs allocated early, before the
->>> buddy allocator is available. These PTPs are allocated by architecture
->>> code, either 1. from static pools or 2. using the memblock allocator,
->>> and should also be protected.
->>>
->>> This patch addresses the second category: PTPs allocated via memblock.
->>> Such PTPs are notably used to create the linear map. Protecting them as
->>> soon as they are allocated would require modifying the linear map while
->>> it is being created, which seems at best difficult. Instead, a
->>> simple allocator is introduced, obtaining pages from memblock and
->>> keeping track of all allocated ranges to set their pkey once it is
->>> safe to do so. PTPs allocated at that stage are not freed, so there
->>> is no need to manage a free list.
->> I'm think of ways to avoid remembering these ranges. I guess we get called that
->> early that we don't even have a ptdesc where we could just link the pages.
-> 
-> Correct, in both the direct map and (early) vmemmap cases we can't rely
-> on struct page as storage.
-> 
->> If only page tables would be linked in some datastructure where we could find
->> them all ... ;)
->>
->> ... why can't we just scan the page table hierarchy to find all page tables that
->> need protection?
-> 
-> It makes sense doesn't it :) In fact this is exactly what RFC v5 did [1]
-> (a year ago already...). Then in RFC v6 I attempted to support block
-> mappings, and things got a lot more complicated. In that case there are
-> (at least) two issues with protecting the early page tables by walking them:
+Resending to all - I accidentally replied to Kees earlier.
 
-Thanks for the background.
+On Thu, Sep 3, 2026 at 1:33=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> Hi Jasper,
+>
+> I finally carved out some time to build, run, and test this. It works! :)
 
-> 
-> 1. On arm64 with BBML3 we cannot split blocks in the direct map until
-> all secondary cores are up. This makes locking pretty difficult if we're
-> to walk all page tables at that later stage.
-> 
-> 2. Without modifying the allocation strategy, early page tables may not
-> be contiguous and setting their pkey would generate fragmentation.
-> 
-> Naturally neither of these issues is relevant to the present series,
-> where we force page granularity in the direct map. I still kept the same
-> approach as in RFC v6 though, as the goal remains to support block
-> mappings eventually.
-> 
-> That said, as discussed offline it may be sensible to revert to the
-> "walk early page tables" approach to start with, even if we would
-> probably need to change it later. This allows us to drop quite a few
-> patches, since init_pg_dir no longer needs to be explicitly protected.
-> 
-> One caveat is that in RFC v5, any page table page installed after
-> smp_prepare_boot_cpu() is called, and allocated using memblock (or
-> anything else but the buddy allocator), won't be protected. Codex can't
-> find any such case though so we should be good for now.
+Hi Kees,
+Thank you for your review and fixes, I am glad you got it to work!
 
-Great, that will let us focus on getting the other pkey bits into shape without
-having to worry too much about different allocators.
+> - "Boot Patch SLR" vs "Self Patch SLR" confused me briefly. I think the
+>   whole thing should be just called Self Patch SLR?
 
--- 
-Cheers,
+This naming happened because I usually differentiate between
+"Selfpatch-SLR" for the user-space implementation, and "Bootpatch-SLR"
+for the kernel version. But 100% of Pinpoint and about 95% of the runtime
+component are identical between both projects, so I just copied them over.
+I intend to eventually propose the compiler portion to GCC/Clang people
+under the "Selfpatch-SLR" label, and not frame it as kernel-specific at all
+(works for web servers, daemons, etc. too, and might make it considerably
+more attractive to upstream in compilers). Beyond that, I wouldn't mind
+either name for the kernel integration and runtime. At least for the next
+versions, I'll make sure to uniformly use "SPSLR" to avoid unnecessary
+confusion.
 
-David
+> - I was expecting this to build on randstruct, but I see it's making its
+>   own choices about things. I was expecting SPSLR to attempt to randomize
+>   the same things randstruct targets, but it seems not? E.g. It looks lik=
+e
+>   you're trying to randomize the _entire_ task_struct instead of just the
+>   substruct within that is marked with __randomize_layout. And since you'=
+re
+>   doing your own struct randomization, there some thing missing here, e.g=
+.
+>   trailing flexible arrays, auto-randomizing all-function structs, etc.
+>   And as part of not being built on randstruct, probably the Kconfigs
+>   should be mutually exclusive. :P
+
+I figured there is no benefit in running randstruct under this, and there i=
+s
+not much overlap in functionality with randstruct either, since SPSLR does
+not actually make any changes to structs at compile-time. I would have
+reused the Fisher-Yates shuffle, but I needed an algorithm that can handle =
+the
+constraints imposed by the actual compile-time constants (like struct size =
+and
+fixed fields). Turns out such algorithms do not really exist off the shelf,=
+ so I
+wrote my own, beyond messy, and slow randomizer with an O(n^3) runtime
+complexity (task_struct has about n=3D200 fields).
+
+I have plans to circumvent the constraints by no longer allowing individual
+fixed fields (which I needed for development convenience, but not really fo=
+r a
+final version) and padding the randomized structs to their worst-case
+layout size.
+In the case of a defconfig task_struct, this padding would add 320 bytes to=
+ the
+usual 3264. It adds a lot less to more homogeneous structs, and 0 to e.g.
+pointer-only structs which are always the same size, no matter what order o=
+f
+fields you choose. In return, it would allow the runtime to use a normal Fi=
+sher-
+Yates shuffle. This would reduce the current randomization overhead of half=
+ a
+second or so to almost 0, and shave almost 500 lines off the randomizer.
+
+Regarding the substructs: v1 and v2 actually randomized the substruct, but
+the sanemaker_target_tag trap introduced with v3 needs to refer to the type
+that is being randomized, and I wasn't sure how to make that work with
+anonymous nested structs. For v4, I am probably going to add an optional
+handle string to the spslr attribute and have the sanemaker stuff refer to
+those handles instead of the types themselves. That way, v4 can go back to
+randomizing the nested struct.
+
+> Anyway, impressive work! I'm looking forward to seeing this continue
+> to expand and getting the self-reference pointer stuff fixed and the
+> offsetof() stuff working for BPF folks too. :)
+>
+> -Kees
+
+All the issues I didn't just explicitly address will be fixed or mentioned =
+again
+in v4, thanks once more for pointing them out!
+
+Best,
+Jasper
