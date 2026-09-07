@@ -1,156 +1,135 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E6F48C8CD
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Sep 2026 12:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423104921B4
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Sep 2026 13:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788783814; cv=none; b=dABu4z5uMOZDMHqu3aXIdq0SDLG/i8T1dc8ATeWMPMOq8uNVEPB6LTvOyA0HdUBjE8PCLlB5wyw7AQdiYHlLw2uemd8bHtesz7aGse/NXwKcG7ouMz6SVDtrwdc1U3LU3q+lFyz5/hBOGS3Pq4jAdKSQyScS7iWOOMScZewOv0E=
+	t=1788788199; cv=none; b=aHsX7DBpBn0UAjYSsaR5bjDRYTk0cFu5g3UO8Jy85NRR1zT2PWwh6Ei4y4ZCyRSuIp5djG3/cF4HkWNG9FyiBE//sHGavpmlGMHfbGULO74Vd4gJ8ldit994/xl1G4evzwQ+x58K2mJLF59o4/XIXIq95PGj9ncGqgwXJR4EAUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788783814; c=relaxed/simple;
-	bh=YgPQAqGAhvGod4elCi6c9RafBPUF1Jnx4Tkb+xELDMU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vy25Nx07F6ElmiqYmewRfYVoR1DxR3O0IOM1uzLzb8M1aPJ2vf6UrUTXqilLur+qQWgJGHpxftQb6ylvuEuW4u6u/HrOahvH8vW6OwN6PRbFch1VfK83Cgo0ZFVy/G0xDPFIXiqddm8pYQ7rySUDej4SHeAxRfsGWvbMtuRjJF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Umpnsa+A; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=U+YhLcUY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1788788199; c=relaxed/simple;
+	bh=DeeXP5VTRAaxBpRd5mSKpS9jcefo3GPkzMjxSmfNmxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nGbhNR/Ea8f1021rGhH0fVuQrVgqZUXIrmNwqBkUwNUYPQTQoHi9e7vr23qj+dYssib9y3ds3LHp+jFAfRh5YXtaM/+OkbeTJf0b6lRHZLAa8ezfWzeVJDiYm/gq2PtZ6ZwPASjFu9r9vtL87zQ0hPu2Ywafsr8D61efB55xNL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Pp0fBinA; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Umpnsa+A";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="U+YhLcUY"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 687AvLSH496177
-	for <linux-hardening@vger.kernel.org>; Mon, 7 Sep 2026 12:23:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YgPQAqGAhvGod4elCi6c9RafBPUF1Jnx4Tkb+xELDMU=; b=Umpnsa+At5I+OcpJ
-	HrJY1EphneNQ5Wdy1LKbaES1bD0Y3xLT4pF9/G/d5pme8whAsiw7gaAZqhaWI4c9
-	ffg7Pn6I/pMCnupSohA5hB8DLQt3W+6VXAQ8P/3VpAcPY1gwxu55MQKiqOcSaWvo
-	jDhRoCDiDgBxzGsiRo/VQyyNU32Et2Lc4QHoX2PPCvxh/uqNyDZvdRdr6Kq9WLrj
-	nYduZWBPYj7SwhfUJcy343oVXpPkALdqAVWqkooPaCLhEC4iFO+VvxzltJiSb0kb
-	WqkrDYxbQCg1AvlxjYafSoGNOrRkB9t8E8vX60DA3ieSmAV0oQer5eEuWoYautil
-	0+b1vA==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ghuyk893c-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Mon, 07 Sep 2026 12:23:32 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93102454272so49545985a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Sep 2026 05:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1788783805; x=1789388605; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=YgPQAqGAhvGod4elCi6c9RafBPUF1Jnx4Tkb+xELDMU=;
-        b=U+YhLcUY2bBPHMfwir0yol0Pv6Kg0+cXfhKPz68vBRZxaAUZDpxLQJZNZtwiGZm0bu
-         owyLT2/k/ea9dCzjD4aLNYDEvvuenEjT0osS6AG59dUaPOwmJuKGkqfLW9qbrvSA5Kmk
-         WI+hl5peZgUKBNkdmw/qs9hyTGJ75YPOJja35RxM7ZawgBauIm4zliYEMRQZLnhUUqQn
-         t2T3ON9h5CCVZ1eSVQKiNdxbGFhDBAmfHhFEYLLKxwSoJS0PXRebgY/1rcmVNMeeZRLe
-         YlExGaz3x97kPo3fUCcAYA9lx3Pl20Owq9MSKQXY9CN9gWEIxQeGJAV5rvS0ukg3hBJx
-         Tr3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788783805; x=1789388605;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=YgPQAqGAhvGod4elCi6c9RafBPUF1Jnx4Tkb+xELDMU=;
-        b=rw8X1jFh2ugem648kGtx0bh1YiGiKbuaUzAT92c8qwO9lEPZpuyRWg53segEIcAjr1
-         2AqgunH6bB44efHPVRBX3QuwnyVPW/lOSNktxidQ9iHPG0Nk/jVygl/B0ZSoDwyUghxn
-         dvHRVBGHmcXub70VfV3cjJKnQUKhWdOqXzg+dLLD6avcT6V/Isr3lHSfxinIinKCfN0h
-         EVumNHoqr1eMRGQMgNLUfP808g0vu3OYOx+ExQ7HIsGgyS4G8z981XfCkRmK9/rw8AV0
-         jS+AOKjb+xyAIpn/wAsuPE3fDXj8H1toR5Bsl5dJBbdPAHMXCTMFQu6YEg62idDRcbEV
-         SjoA==
-X-Forwarded-Encrypted: i=1; AKwUvBzefortAboMw6MHg+SCKne8hzBdZ3qsZiZfU6eIl06UTYxGb+TmDXzFqZy8WN1+Z696/bUhzkGrKUYUkwLrIUw=@vger.kernel.org
-X-Gm-Message-State: AFuF++meVPiWRbet/lR8sAv0ZGhFqQzemAsztzSCiuvq1050+p7plvl1
-	zlXVJCpx8Tl9lZOYUoExfnO24A9yC8XnpB6cZIJY6OtCjBUt3gRafGemo2NCDb4lL/Rcv0WRT3K
-	7M+ZdbmxP25xFO1FTVchXicy438qCvyn1/KLrgUjE3XizXZhnYLiUqqATb7VaBKmVGaFseT4=
-X-Gm-Gg: AYBFou1qSxBw3wODZdl8j+zxptLOMaJsj1opFDwGVwwCF5MEm0E02tZITZrGJ85JIWC
-	GLkjNCirI4J7Gza8O3+yfla0QBGPPlklcSfpmx9RMTB4u2ot4ZeKGauSveiWpqHdzLTyvbo7+Vl
-	W30se6dbWjyVPnqjSfh4whSpsE5xJAXIJvDOnNhu0PdDd7ywMxznPkfZcl2IK1cGVDlrh9KKrs1
-	IYd1pEQT3cgEnqem8mLt8tZBapJOzp3+tS1W9OMfUzMf+0q9K0m7WA7op5bUqiwCO0ocW0fzuLb
-	wboeJPk9LK8yYyPdTf1XFq2GiBDMkkJA2rzc6rEiS4pwV2GMOxncimQ38Q+oZdb+6bHJrRxEDcp
-	K+vHHAC2YWjzQCBdQOB+wsw==
-X-Received: by 2002:a05:620a:9c4:b0:939:9205:4d78 with SMTP id af79cd13be357-93992054effmr865311385a.3.1788783805436;
-        Mon, 07 Sep 2026 05:23:25 -0700 (PDT)
-X-Received: by 2002:a05:620a:9c4:b0:939:9205:4d78 with SMTP id af79cd13be357-93992054effmr865307685a.3.1788783804918;
-        Mon, 07 Sep 2026 05:23:24 -0700 (PDT)
-Received: from [192.168.202.12] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c26263cb042sm330890766b.47.2026.09.07.05.23.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2026 05:23:24 -0700 (PDT)
-Message-ID: <ac8d6fd6-8bc1-45a1-8b3e-a57b437b77b6@oss.qualcomm.com>
-Date: Mon, 7 Sep 2026 14:23:21 +0200
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Pp0fBinA"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E72CB1476;
+	Mon,  7 Sep 2026 06:36:32 -0700 (PDT)
+Received: from localhost (a079125.arm.com [10.164.21.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBD973F528;
+	Mon,  7 Sep 2026 06:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788788196; bh=DeeXP5VTRAaxBpRd5mSKpS9jcefo3GPkzMjxSmfNmxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pp0fBinAfSAERaH+4GMK9+su2zRdcdSsv6MOvALzgktaheLoMKrQ6T4cii4dcsXm6
+	 cm8NTsibWj8CenWDa8KVg8LzXKEIRur5kVtj095fytxsJ0RlBjy1VgL7lDzLEpFVzf
+	 OMEXSJBomvM/JSvQWC/oz3gdFzrXQeuE3VwPANQk=
+Date: Mon, 7 Sep 2026 19:06:33 +0530
+From: Linu Cherian <linu.cherian@arm.com>
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Maxwell Bland <mbland@motorola.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	=?iso-8859-1?Q?Pierre-Cl=E9ment?= Tosi <ptosi@google.com>,
+	Quentin Perret <qperret@google.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
+	Yang Shi <yang@os.amperecomputing.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+	x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+Subject: Re: [PATCH RFC v9 02/25] set_memory: Introduce set_memory_pkey() stub
+Message-ID: <ap694bZb0crWvLo3@a079125.arm.com>
+References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
+ <20260818-kpkeys-v9-2-743ad31b2c8f@arm.com>
+ <apbiQtt-cAlLkDqV@a079125.arm.com>
+ <66270f42-931f-4043-b24c-edcc4cad74b8@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: qcom: ipq-cmn-pll: Assign .num before accessing .hws
-To: Aamir Ahmed <elb12345@hotmail.co.uk>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Brian Masney <bmasney+clk@redhat.com>,
-        Jerome Brunet <jbrunet+clk@baylibre.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luo Jie <jie.luo@oss.qualcomm.com>,
-        Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
-        stable@vger.kernel.org
-References: <AS8P251MB0001B905088748016A0965F1C8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <AS8P251MB0001B905088748016A0965F1C8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA3MDEzNyBTYWx0ZWRfX77P1UsLoXsru
- VeIsAr1PVKfq6418PkNcL0XKTDvMcYmHqtp7i16tHnq/3IUv9HsvW4EFxnvInVwCYUNEagazETb
- L4nn3EBQTXWx+1SSKPmNd0qSLBIpNQA=
-X-Proofpoint-GUID: NgwQYYExPOn4M0kKu_ngY-Ws56pDwAtV
-X-Authority-Analysis: v=2.4 cv=ObSoyBTY c=1 sm=1 tr=0 ts=6a9eacc4 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
- a=EUspDBNiAAAA:8 a=y7GlcLeVpO5nAozT490A:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: NgwQYYExPOn4M0kKu_ngY-Ws56pDwAtV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA3MDEzNyBTYWx0ZWRfX92yyH3EdbS9j
- exp9kSKa5pliegCyRX1ryejIWa8V8tzbf/Mr6Ut6yVlaiMUoDJdjJvYfQ4Q++G8R3+GMbz+46oy
- syEaSqSuosEgZukrebsVVx5UChRXqizCreSnj78LIus6/DayVg53bGjBajDTuPv14dqEcyKYblS
- R69ocvyiDthZjTwEBD4ij9WysBMCVWh185BR+ncvBAz8TWz5V2TbFi0eDBrtxAtSh6eZDdbTaEb
- 6IlCSbGCX8bb0ZlL8l85PhHKqXhp/kaWs4C3q8X+9+fFTdch3qsS1s2br9zeuAIIKbSVA6Tfc3i
- Id1wafhKSsqFsuSdeTK8Jh3gX3ZNEXhQnHhEwtyo+SpXtEaT0iPCKG5IwJAvUFzJ+0MazV2FWuK
- PiVhkkgBUNfePdCwgqJFGrcFCXml0/xP6hP6QsmD1Gb3dY9I9++1f6qKaqU40CYPW2mYuueNIh5
- sTg4Homp7+k2vR6mqMA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-07_03,2026-09-07_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 clxscore=1015 bulkscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2609070137
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66270f42-931f-4043-b24c-edcc4cad74b8@arm.com>
 
-On 9/5/26 10:48 PM, Aamir Ahmed wrote:
-> Commit f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with
-> __counted_by") annotated the hws member of 'struct clk_hw_onecell_data'
-> with __counted_by, which informs the bounds sanitizer (UBSAN_BOUNDS)
-> about the number of elements in .hws[], so that it can warn when .hws[]
-> is accessed out of bounds. As noted in that change, the __counted_by
-> member must be initialized with the number of elements before the first
-> array access happens, otherwise there will be a warning from each access
-> prior to the initialization because the number of elements is zero.
-> This occurs in ipq_cmn_pll_register_clks() due to .num being assigned
-> only after the fixed rate output clocks and the CMN PLL clock have been
-> stored in .hws[]. If registering one of the fixed rate clocks fails, the
-> unwind loop under unregister_fixed_clk reads .hws[] while .num is still
-> zero as well. With CONFIG_UBSAN_BOUNDS and a compiler that implements
-> __counted_by (GCC 15.1+ or Clang 20.1+), this triggers an
-> array-index-out-of-bounds report during probe, and with
-> CONFIG_UBSAN_TRAP the first store traps so the CMN PLL clocks are never
-> provided.
+On Thu, Sep 03, 2026 at 06:41:33PM +0200, Kevin Brodsky wrote:
+> On 01/09/2026 16:33, Linu Cherian wrote:
+> > Kevin,
+> >
+> > On Tue, Aug 18, 2026 at 03:08:44PM +0100, Kevin Brodsky wrote:
+> >> Introduce a new function, set_memory_pkey(), which sets the
+> >> protection key (pkey) of pages in the specified linear mapping
+> >> range. Architectures implementing kernel pkeys (kpkeys) must
+> >> provide a suitable implementation; an empty stub is added as
+> > Could you make it explicit here why we are restricting this only
+> > to the linear mapping range ? Would be helpful to add the reasoning
+> > in the commit message and as comments.
+> >
+> > Essentially we are also making a assumption here that there are no
+> > aliases to the linear map ?
+> 
+> We're not assuming this, this function is called on pages that are also
+> mapped as part of the kernel image. But indeed it ignores aliases,
+> unlike e.g. set_memory_ro(). Really its name is wrong as discussed below.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Just trying to understand, does it also imply that we dont have use cases that has aliases.
 
-Konrad
+> 
+> >> fallback.
+> >>
+> >> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+> >> ---
+> >>  include/linux/set_memory.h | 7 +++++++
+> >>  1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
+> >> index 3030d9245f5a..7b3a8bfde3c6 100644
+> >> --- a/include/linux/set_memory.h
+> >> +++ b/include/linux/set_memory.h
+> >> @@ -84,4 +84,11 @@ static inline int set_memory_decrypted(unsigned long addr, int numpages)
+> >>  }
+> >>  #endif /* CONFIG_ARCH_HAS_MEM_ENCRYPT */
+> >>  
+> >> +#ifndef CONFIG_ARCH_HAS_KPKEYS
+> >> +static inline int set_memory_pkey(unsigned long addr, int numpages, int pkey)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +#endif
+> > Would be better to make this (linar map range)constraint on the API name or that passed
+> > as a boolean flag ?
+> 
+> Indeed, in fact I've been thinking about renaming this function for a
+> while and I've already done it locally :) It'll be set_direct_map_pkey()
+> in the next version.
+
+Okay.
+
+> 
+> > Also, it would be better to have the __is_lm_address checks in this generic wrapper which
+> > then calls arch_set_memory_pkey ?
+> 
+> That's not unreasonable, but such pattern isn't used by other functions
+> in set_memory.h and I'd rather not deviate too much without a good reason.
+
+Ack.
+> 
+> - Kevin
