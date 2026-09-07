@@ -1,135 +1,122 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423104921B4
-	for <linux-hardening@vger.kernel.org>; Mon,  7 Sep 2026 13:36:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C9AA42E413
+	for <linux-hardening@vger.kernel.org>; Mon,  7 Sep 2026 15:49:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788788199; cv=none; b=aHsX7DBpBn0UAjYSsaR5bjDRYTk0cFu5g3UO8Jy85NRR1zT2PWwh6Ei4y4ZCyRSuIp5djG3/cF4HkWNG9FyiBE//sHGavpmlGMHfbGULO74Vd4gJ8ldit994/xl1G4evzwQ+x58K2mJLF59o4/XIXIq95PGj9ncGqgwXJR4EAUA=
+	t=1788796194; cv=none; b=eRB3Po94iyMajelb0e9YUghn11TzcOnBKxlHD5qP1H3V3apoE4fPgH2CfPkpEdo5ho3reIxkfLvq0lmkdNe0dJ4ofn5cYJWiQ7QLcyMBH8M/5gf5Eugusl+nlIlo1X4vj6owkd2jFjqZIyGhFfOF7utxPnmfyOWtbQF7Arj9Jwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788788199; c=relaxed/simple;
-	bh=DeeXP5VTRAaxBpRd5mSKpS9jcefo3GPkzMjxSmfNmxU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nGbhNR/Ea8f1021rGhH0fVuQrVgqZUXIrmNwqBkUwNUYPQTQoHi9e7vr23qj+dYssib9y3ds3LHp+jFAfRh5YXtaM/+OkbeTJf0b6lRHZLAa8ezfWzeVJDiYm/gq2PtZ6ZwPASjFu9r9vtL87zQ0hPu2Ywafsr8D61efB55xNL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Pp0fBinA; arc=none smtp.client-ip=217.140.110.172
+	s=arc-20240116; t=1788796194; c=relaxed/simple;
+	bh=NgsqfI4UMPdAKy09BfAtIYj/ju7Uvf0+W/vr1pDeSmE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=knGtOkExwEh/KvTyGtiCiNo0WS9/6C/JUafbsGFlnSzv9aNkBpGXylUhbTHLQku+vfN5Eif3FFXTgkxb9IjYbu56hYygIAtuU7rWRNzxGrzI4seGailJqqURdabDhC//0UZZCAa7m8vbgSpduyA30tyU2vCN3Ep073t3PeZDwVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=X8PrVsr7; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Pp0fBinA"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="X8PrVsr7"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E72CB1476;
-	Mon,  7 Sep 2026 06:36:32 -0700 (PDT)
-Received: from localhost (a079125.arm.com [10.164.21.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBD973F528;
-	Mon,  7 Sep 2026 06:36:35 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8D891476;
+	Mon,  7 Sep 2026 08:49:47 -0700 (PDT)
+Received: from [10.57.6.26] (unknown [10.57.6.26])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 634F93F7B4;
+	Mon,  7 Sep 2026 08:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788788196; bh=DeeXP5VTRAaxBpRd5mSKpS9jcefo3GPkzMjxSmfNmxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pp0fBinAfSAERaH+4GMK9+su2zRdcdSsv6MOvALzgktaheLoMKrQ6T4cii4dcsXm6
-	 cm8NTsibWj8CenWDa8KVg8LzXKEIRur5kVtj095fytxsJ0RlBjy1VgL7lDzLEpFVzf
-	 OMEXSJBomvM/JSvQWC/oz3gdFzrXQeuE3VwPANQk=
-Date: Mon, 7 Sep 2026 19:06:33 +0530
-From: Linu Cherian <linu.cherian@arm.com>
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David Hildenbrand (Arm)" <david@kernel.org>,
-	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
-	Linus Walleij <linusw@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Maxwell Bland <mbland@motorola.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	=?iso-8859-1?Q?Pierre-Cl=E9ment?= Tosi <ptosi@google.com>,
-	Quentin Perret <qperret@google.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
-	Yang Shi <yang@os.amperecomputing.com>,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
-Subject: Re: [PATCH RFC v9 02/25] set_memory: Introduce set_memory_pkey() stub
-Message-ID: <ap694bZb0crWvLo3@a079125.arm.com>
-References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
- <20260818-kpkeys-v9-2-743ad31b2c8f@arm.com>
- <apbiQtt-cAlLkDqV@a079125.arm.com>
- <66270f42-931f-4043-b24c-edcc4cad74b8@arm.com>
+	t=1788796191; bh=NgsqfI4UMPdAKy09BfAtIYj/ju7Uvf0+W/vr1pDeSmE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X8PrVsr7qSGJqrvABBYQzM/DbPiLBfiIRsoRicV7kmHmDk4fvFg6Gl0y2kzAN0Etz
+	 Ea7Gi8wO+37xss8GQ8X/AtXdULivI4RHRx1t2vIjhRBNjqhWUfYrjRpUJ+dijf2Dy4
+	 Yv9O0nkLGvLbp7EhNWeac5e0DU5XWNx23239QUAw=
+Message-ID: <3f6e7678-0784-4ac1-acb4-b128887803c5@arm.com>
+Date: Mon, 7 Sep 2026 17:49:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66270f42-931f-4043-b24c-edcc4cad74b8@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v9 01/25] mm: Introduce kpkeys
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-hardening@vger.kernel.org, Andrew Morton
+ <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "David Hildenbrand (Arm)" <david@kernel.org>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Kees Cook <kees@kernel.org>, Linu Cherian <linu.cherian@arm.com>,
+ Linus Walleij <linusw@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ Maxwell Bland <mbland@motorola.com>, Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
+ Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
+ <20260818-kpkeys-v9-1-743ad31b2c8f@arm.com>
+ <178877845406.3691569.6930315020588094755.b4-review@b4>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <178877845406.3691569.6930315020588094755.b4-review@b4>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 03, 2026 at 06:41:33PM +0200, Kevin Brodsky wrote:
-> On 01/09/2026 16:33, Linu Cherian wrote:
-> > Kevin,
-> >
-> > On Tue, Aug 18, 2026 at 03:08:44PM +0100, Kevin Brodsky wrote:
-> >> Introduce a new function, set_memory_pkey(), which sets the
-> >> protection key (pkey) of pages in the specified linear mapping
-> >> range. Architectures implementing kernel pkeys (kpkeys) must
-> >> provide a suitable implementation; an empty stub is added as
-> > Could you make it explicit here why we are restricting this only
-> > to the linear mapping range ? Would be helpful to add the reasoning
-> > in the commit message and as comments.
-> >
-> > Essentially we are also making a assumption here that there are no
-> > aliases to the linear map ?
-> 
-> We're not assuming this, this function is called on pages that are also
-> mapped as part of the kernel image. But indeed it ignores aliases,
-> unlike e.g. set_memory_ro(). Really its name is wrong as discussed below.
+On 07/09/2026 12:54, Mike Rapoport wrote:
+> Hi Kevin,
+>
+>> kpkeys is a simple framework to enable the use of protection keys
+>> (pkeys) to harden the kernel itself. This patch introduces the basic
+>> API in <linux/kpkeys.h>: a couple of functions to enter/leave a
+>> kpkeys context and macros to define guard objects.
+>>
+>> kpkeys introduces a new concept on top of pkeys: the kpkeys context.
+>> Each context is associated with a set of permissions for the pkeys
+>> managed by the kpkeys framework. kpkeys_enter_context(ctx) sets
+>> those permissions according to ctx, and returns the original kpkeys
+>> state (typically the arch-specific pkeys register) that is later
+>> restored by calling kpkeys_leave_context(). To start with, only
+>> KPKEYS_CTX_DEFAULT is available, which is meant to grant RW access
+>> to KPKEYS_PKEY_DEFAULT (i.e. all memory since this is the only
+>> available pkey for now).
+>>
+>> The underlying representation of each kpkeys context is entirely
+>> architecture-specific. Support for kpkeys must be explicitly
+>> indicated by selecting ARCH_HAS_KPKEYS and defining the following
+>> functions in <asm/kpkeys.h>:
+>>
+>> * arch_kpkeys_enter_context()
+>> * arch_kpkeys_leave_context()
+>> * arch_supports_kpkeys()
+>>
+>> Additionally, <asm/kpkeys_types.h> must define struct arch_kpkeys_state,
+>> which typically provides storage for the pkeys register.
+>>
+>> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+>>
+>> diff --git a/include/linux/kpkeys.h b/include/linux/kpkeys.h
+>> new file mode 100644
+>> index 0000000000000..eac522f552141
+>> --- /dev/null
+>> +++ b/include/linux/kpkeys.h
+>> @@ -0,0 +1,104 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +#ifndef _LINUX_KPKEYS_H
+>> +#define _LINUX_KPKEYS_H
+>> +
+>> +#include <linux/bug.h>
+>> +#include <linux/cleanup.h>
+>> +#include <linux/kpkeys_types.h>
+>> +
+>> +/**
+>> + * KPKEYS_GUARD_NOOP() - define a guard type that does nothing
+> Nit: I'd suggest to drop "define" from all the descriptions, they would
+> read better without it IMHO.
 
-Just trying to understand, does it also imply that we dont have use cases that has aliases.
+Fair enough, but if we say just "a guard type that does nothing" is it
+clear that this is a macro defining a type, and not a type itself?
 
-> 
-> >> fallback.
-> >>
-> >> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> >> ---
-> >>  include/linux/set_memory.h | 7 +++++++
-> >>  1 file changed, 7 insertions(+)
-> >>
-> >> diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
-> >> index 3030d9245f5a..7b3a8bfde3c6 100644
-> >> --- a/include/linux/set_memory.h
-> >> +++ b/include/linux/set_memory.h
-> >> @@ -84,4 +84,11 @@ static inline int set_memory_decrypted(unsigned long addr, int numpages)
-> >>  }
-> >>  #endif /* CONFIG_ARCH_HAS_MEM_ENCRYPT */
-> >>  
-> >> +#ifndef CONFIG_ARCH_HAS_KPKEYS
-> >> +static inline int set_memory_pkey(unsigned long addr, int numpages, int pkey)
-> >> +{
-> >> +	return 0;
-> >> +}
-> >> +#endif
-> > Would be better to make this (linar map range)constraint on the API name or that passed
-> > as a boolean flag ?
-> 
-> Indeed, in fact I've been thinking about renaming this function for a
-> while and I've already done it locally :) It'll be set_direct_map_pkey()
-> in the next version.
-
-Okay.
-
-> 
-> > Also, it would be better to have the __is_lm_address checks in this generic wrapper which
-> > then calls arch_set_memory_pkey ?
-> 
-> That's not unreasonable, but such pattern isn't used by other functions
-> in set_memory.h and I'd rather not deviate too much without a good reason.
-
-Ack.
-> 
-> - Kevin
+- Kevin
