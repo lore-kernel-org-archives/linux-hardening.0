@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741573A4F2F;
-	Wed,  9 Sep 2026 05:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F32A38E8BD;
+	Wed,  9 Sep 2026 05:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788932613; cv=none; b=l0zow9OA86O0gETCbDArVXueAVEgLnn+JORxIJbrh25YizqwhanIK6DfGNgOCdF1Aw7do3Xz9t+Dmh1UjrecYBsFnD//vsJyM4EwxgH+lsoMcvGFnFLnQ+vakrfgj8vDAqBfqxljQNH+elk2QA+/R9iEA6BKuXS64Vorg1DD3i4=
+	t=1788932615; cv=none; b=HARHAr5cLc1afiMLln/PKj/echpiTBklSmqRa1bur2RlatlyCYVc3vBWS2KrxSsuQCGuGvUqgGTgeWmFlsCeBrcsobvNtQzzXxWuKjR+G/8RP5Q537fAWTNqlLNh0P2ovye8U3KOL9e5Bi55XrF/QTIjrInuWAohY3xsjK4AnNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788932613; c=relaxed/simple;
-	bh=U7YIk8RrK1ZZAvSrYluqSOisC29WjVIT8ZVlRSOD4UQ=;
+	s=arc-20240116; t=1788932615; c=relaxed/simple;
+	bh=nbp3vJ9M6dnWV+9Gt8heBSp2MC4MZZYdhYahrYt+ZCg=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cH6M/5vQ2+aSNgFpQBzEkpFt/3txb3r8ZjEPsx5UJ4mulIGWO2KjcAnwq/JyaVjK2QaTUaa/LrLbLaa1GXfrg9AwBDMpVvwhVenDQWKb49ahz7Jx0HPx8kv5zx8vuXKcreqbtA2V7RY2lhBjsEsyDsUVWcUILJ0Bn1nS0MVI068=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mrz2QuK8; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:MIME-Version; b=ifplJ7wQRVpGAybWbfYhwkQNr3bEO5irXj9uNExk5EHq2s/kcdUu/xvjn59jCujBja6Px2nezXyIrmUTYbWpd4PqAlnDTZYW7e5Ep8BVx0AK7I0Mq1ULYZlZ8l5h1UO87pwhP+en8Y5MZNTUYjl8Cp8mR/7iXPvfr2gu7gxtp+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBuMSeWm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mrz2QuK8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69E2B1F00A3D;
-	Wed,  9 Sep 2026 05:43:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBuMSeWm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60F31F00A3A;
+	Wed,  9 Sep 2026 05:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788932605;
-	bh=NYko44nI9GsHQK8N8wxewUqZ0WKyYmC6xt2/P9uZEqA=;
+	s=k20260515; t=1788932606;
+	bh=SrgUySBHJx3FdRjq/ffjjyZVSlvYV7wHdbXU/tg5FZI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=mrz2QuK8LJvHL7eQJBwEKTb0ya7lESjbjCWHoGx40QshQGz/wW//1o1pewPI38UQJ
-	 rYdVlSE1U/8iPo6A58rilYLiZG8+AW+5BwJFcjeCa0kfzqOW1XRV0CaARva9hyqqOX
-	 5RXIxy47ts9Y5vaHsOHjyaVfu5WgiYNlAnfwQAVn5PTerB7/j5MXWm3JyJUTpiuy5Y
-	 uniufGZpSCeNitTHdyP04Qu882hYK8ou4cc+wF4BGXq/JOaKcd40i464x+ZlXj+8V0
-	 3V5oPs/LC7l5ml4PPqYAJuNtw7Xe7YJdDA6BdfyF20PTNHR5qHYtnafyt9NsJYuWAe
-	 LtytEaif+lVIA==
+	b=HBuMSeWmh6PBXW7VjBfK/9JUDy7xkpO5OWRZwmnZz6heIG5n4RyKCRANWZapXX9P+
+	 MAuWBMnjXWIFeGq76JR4FybMAzgZ+8JO+kigNFCjZt1JsAYPdQBGOhJ6miyYERHm2O
+	 bSOpaoepZD/tw70BWdnhuYHnLAoNxBSFlvE8hHeE/BSSakTCwq7OP2CG7TQm0rJtz6
+	 srRmjrv6ZAa1Up6IyIGjzEkLBJUaZl3PWJFFKWncPgWhp6T260grT2l8Je2kp+Js4k
+	 mWY5kXhi2bMbfSLm4chO++f1+RJjirEMAFPwCf57vTpfRh8R4UAorS5YGWzOce2lGv
+	 gxKd3FMjZJH1w==
 Subject:
- Re: [PATCH net-next v2 6/7] net: mctp: usblib: Add initial kunit tx tests
+ Re: [PATCH net-next v2 7/7] net: mctp: usblib: Add test for failing append
 From: netdev-bot+sashiko@kernel.org
 To: james@codeconstruct.com.au
 Cc: jk@codeconstruct.com.au, matt@codeconstruct.com.au, andrew+netdev@lunn.ch,
  davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
  kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date: Wed, 09 Sep 2026 05:43:24 +0000
-Message-ID: <178893260401.219967.13741401547777040850@kernel.org>
+Date: Wed, 09 Sep 2026 05:43:25 +0000
+Message-ID: <178893260523.219967.7691706807394215121@kernel.org>
 In-Reply-To:
- <20260903-dev-mctp-usb-lib-test-v2-6-313cf15e0b56@codeconstruct.com.au>
+ <20260903-dev-mctp-usb-lib-test-v2-7-313cf15e0b56@codeconstruct.com.au>
 References:
- <20260903-dev-mctp-usb-lib-test-v2-6-313cf15e0b56@codeconstruct.com.au>
+ <20260903-dev-mctp-usb-lib-test-v2-7-313cf15e0b56@codeconstruct.com.au>
 X-sashiko-severity: High
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -50,227 +50,193 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Thank you for your contribution! Sashiko AI review found 3 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issue(s) to consider:
 
-Critical: 0 · High: 1 · Medium: 0 · Low: 2
+Critical: 0 · High: 1 · Medium: 0 · Low: 1
 
-- [High] Hard compile error: `static_assert(!sends[ARRAY_SIZE(sends) -
-  1].more, ...)` in mctp_usblib_test_tx_multi_push()…
-- [Low] mctp_usblib_test_tx_multi_push() (drivers/net/mctp/mctp-usblib-
-  test.c:796-869) is documented as "Test sending multiple packets in the…
-- [Low] mctp_usblib_test_tx_send() (drivers/net/mctp/mctp-usblib-
-  test.c:39-59) calls mctp_usblib_tx_send_complete(tx_ctx, ndev, true)…
+- [High] drivers/net/mctp/mctp-usblib-
+  test.c:mctp_usblib_test_tx_overflow() disables preemption with `dstats…
+- [Low] The oracle of the new mctp_usblib_test_tx_overflow()
+  (drivers/net/mctp/mctp-usblib-test.c:869-908) is a single aggregate…
 
 --
 
-net: mctp: usblib: Add initial kunit tx tests
+net: mctp: usblib: Add test for failing append
 
-This adds KUnit coverage for the mctp-usblib transmit path: a spanning
-transfer that is expected to succeed, the failure paths when ops->send
-returns an error, and a sequence of larger pushes. The tests record each
-->send() call in a list and compare the resulting bytes against the
-expected MCTP-over-USB headers and payload.
+Adds a KUnit case, mctp_usblib_test_tx_overflow(), to the mctp-usblib
+test suite that pushes three 200-byte packets through
+mctp_usblib_tx_push() with a failing send op, then checks that the
+per-CPU tx_drops counter reached 3.
 
 > diff --git a/drivers/net/mctp/mctp-usblib-test.c b/drivers/net/mctp/mctp-usblib-test.c
-> index 64c758013854..73bda4745433 100644
+> index 73bda4745433..25eac80db3e2 100644
 > --- a/drivers/net/mctp/mctp-usblib-test.c
 > +++ b/drivers/net/mctp/mctp-usblib-test.c
-
-[ ... ]
-
-> @@ -24,9 +32,104 @@ struct mctp_usblib_test_dev {
->  
->  struct mctp_usblib_test_ctx {
->  	struct mctp_usblib_test_dev *dev;
-> +	struct list_head tx_xfers;
->  	struct mctp_route rt;
->  };
->  
-> +static int mctp_usblib_test_tx_send(struct mctp_usblib_tx_ctx *tx_ctx,
-> +				    void *data, size_t len)
-> +{
-> +	struct mctp_usblib_test_ctx *ctx;
-> +	struct tx_buff *new_node;
-> +	struct net_device *ndev;
-> +
-> +	ctx = mctp_usblib_tx_ctx_priv(tx_ctx);
-> +	ndev = ctx->dev->ndev;
-> +
-> +	new_node = kzalloc_flex(*new_node, data, len, GFP_KERNEL);
-> +	if (!new_node)
-> +		return -ENOMEM;
-> +
-> +	new_node->length = len;
-> +	memcpy(new_node->data, data, len);
-> +	list_add_tail(&new_node->list, &ctx->tx_xfers);
-> +
-> +	mctp_usblib_tx_send_complete(tx_ctx, ndev, true);
-> +	return 0;
-> +}
-
-[Severity: Low]
-
-Is completing the transfer inline here consistent with the documented
-ops->send contract?
-
-include/linux/usb/mctp-usb.h says, for struct mctp_usblib_tx_ops::send:
-
-	/* Start a USB TX for @data. On returning success, the implementation
-	 * must arrange for mctp_usblib_tx_send_complete() to be called at some
-	 * later point (eg., on urb completion).
-	 */
-
-mctp_usblib_test_tx_send() instead calls mctp_usblib_tx_send_complete()
-(which runs mctp_usblib_tx_stats_update() and mctp_usblib_tx_ctx_free())
-and then returns 0, so the tx context is already freed at the point
-success is reported.  The only in-tree implementer,
-mctp_usb_out_complete() in drivers/net/mctp/mctp-usb.c, completes
-asynchronously from URB completion.
-
-Nothing breaks today: mctp_usblib_tx_send() reads ctx->tx->ops.send, buf
-and ctx->len before the call and only returns the result, and both send
-sites in mctp_usblib_tx_push() touch the context afterwards only under
-if (rc).  But if the library ever legitimately inspects the context after
-a successful ->send(), this harness would report it as a KASAN
-use-after-free in the test rather than a driver bug.
-
-Would it be better to either record the context and complete it after the
-push returns, or to relax the header comment to explicitly allow
-synchronous completion?
-
-[ ... ]
-
-> +static u8 *mctp_usblib_test_flatten_tx_buff(struct kunit *test,
-> +					    struct list_head *in,
-> +					    size_t *length_out)
-> +{
-[ ... ]
-> +	tail = buf;
-> +	list_for_each_entry(pos, in, list) {
-> +		memcpy(tail, pos->data, pos->length);
-> +		tail += pos->length;
-> +	}
-> +
-> +	*length_out = length;
-> +	return buf;
-> +}
-
-[ ... ]
-
-> @@ -584,6 +717,156 @@ static void mctp_usblib_test_rx_nonspanning_partial(struct kunit *test)
->  	KUNIT_EXPECT_EQ(test, dev->rx_pkts.qlen, 0);
+> @@ -867,6 +867,47 @@ static void mctp_usblib_test_tx_multi_push(struct kunit *test)
+>  	KUNIT_EXPECT_EQ(test, i, ARRAY_SIZE(sends));
 >  }
 >  
-> +static void mctp_usblib_test_tx_pkt_span(struct kunit *test)
+> +static void mctp_usblib_test_tx_overflow(struct kunit *test)
 > +{
-
-[ ... ]
-
-> +/* Test sending multiple packets in the same transfer, followed by one that
-> + * spans multiple subsequent transfers.
-> + */
-> +static void mctp_usblib_test_tx_multi_push(struct kunit *test)
-> +{
-
-[Severity: Low]
-
-Do the assertions in this test actually observe either of the two
-properties named in the comment?
-
-mctp_usblib_test_tx_send() records every ops->send() call as its own
-tx_buff node, but mctp_usblib_test_flatten_tx_buff() concatenates all of
-them into one buffer before any comparison, so the transfer count and the
-transfer boundaries are discarded.  If mctp_usblib_tx_append() or
-mctp_usblib_tx_should_send() regressed and the {1000, true} and
-{500, false} packets each went out in their own transfer, the flattened
-byte stream would be identical and the test would still pass.
-
-For the second half of the comment, the {5000, false} entry does not span
-transfers at the ops layer.  mctp_usblib_tx_push() calls
-mctp_usblib_tx_ctx_create(tx, skb, single = !more), and:
-
-drivers/net/mctp/mctp-usblib.c:mctp_usblib_tx_ctx_create() {
-	...
-	if (single || skb->len > TX_SPAN_MAX) {
-		type = TX_SINGLE;
-	} else {
-	...
-}
-
-so with more == false (and skb->len of 5004 exceeding TX_SPAN_MAX anyway)
-mctp_usblib_tx_send() issues exactly one ops->send() carrying all 5004
-bytes; the library never splits one MCTP packet over several ->send()
-calls.
-
-The same naming question applies to mctp_usblib_test_tx_pkt_span(), which
-also pushes with more == false and produces a single ->send(), so what it
-really covers is the v1.1 13-bit length path in
-mctp_usblib_tx_skb_prepare() rather than spanning.
-
-Could the comment and the test names be reworded, and could the
-per-transfer boundaries be checked instead of flattened, so the packing
-behaviour is actually asserted?
-
 > +	struct mctp_usblib_test_ctx *ctx;
-> +	size_t i, max_length, tx_length;
 > +	struct mctp_usblib_tx_ops ops;
-> +	u8 *buf, *flat_tx, *index;
+> +	struct pcpu_dstats *dstats;
 > +	struct mctp_usblib_tx *tx;
 > +	struct net_device *ndev;
 > +	struct sk_buff *skb;
-> +	const struct {
-> +		size_t len;
-> +		bool more;
-> +	} sends[] = {
-> +		{ 1000, true  },
-> +		{  500, false },
-> +		{ 5000, false },
-> +	};
+> +	unsigned int start;
+> +	size_t len, i;
+> +	u64 stats;
+> +	u8 *buf;
 > +	int rc;
 > +
-> +	static_assert(!sends[ARRAY_SIZE(sends) - 1].more,
-> +		      "The last push must claim there will be no more");
+> +	len = 200;
 
-[Severity: High]
+[Severity: Low]
+This isn't a bug, but len = 200 and the loop count of 3 below silently
+encode a dependency on MCTP_USB_1_0_XFER_SIZE (512) and MCTP_USB_BTU,
+without referencing either constant.
 
-Does this static_assert() compile?
+I traced the intended path and it does run today with span=false: each skb
+becomes 204 bytes after mctp_usblib_tx_skb_prepare() pushes the 4-byte
+header, push 1 creates the 512-byte ctx, push 2 appends (len 408, avail
+104), and push 3 hits mctp_usblib_tx_append():
 
-sends[] is a block-scope object with automatic storage duration; the const
-qualifier does not make a read of one of its members an integer constant
-expression, which is what _Static_assert() requires.  include/linux/build_bug.h
-expands static_assert() straight through:
+	if (mctp_usblib_tx_avail(ctx) < skb->len)
+		return -ENOBUFS;
 
-	#define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
-	#define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+with avail 104 < skb->len 204.
 
-so gcc reports "expression in static assertion is not constant" and clang
-reports "static assertion expression is not an integral constant
-expression" here.
+Could len and the iteration count be derived from
+MCTP_USB_1_0_XFER_SIZE / MCTP_USB_BTU instead, so the case keeps hitting
+the append-failure branch if those change?
 
-Because drivers/net/mctp/mctp-usblib.c textually includes this file:
-
-	#if IS_ENABLED(CONFIG_MCTP_TRANSPORT_USBLIB_TEST)
-	#include "mctp-usblib-test.c"
-	#endif
-
-the failure takes out the whole translation unit, so
-drivers/net/mctp/mctp-usblib.o does not build whenever
-CONFIG_MCTP_TRANSPORT_USBLIB_TEST is enabled, which is exactly the config
-needed to run these tests.  The same static_assert is still present in
-mctp_usblib_test_tx_multi_push() at the end of the series (7b7c42135cec),
-so nothing later in the series fixes it.
-
-Would BUILD_BUG_ON(), which relies on optimizer folding, or a run-time
-KUNIT_ASSERT_FALSE(test, sends[ARRAY_SIZE(sends) - 1].more) express the
-same invariant?
+Also, would tx_overflow be better named after the append failure the
+commit subject describes?
 
 > +
-> +	max_length = 0;
-> +	for (i = 0; i < ARRAY_SIZE(sends); i++) {
-> +		if (sends[i].len > max_length)
-> +			max_length = sends[i].len;
+> +	ctx = mctp_usblib_test_init(test);
+> +	ndev = ctx->dev->ndev;
+> +
+> +	ops.send = mctp_usblib_test_tx_send_fail;
+> +
+> +	tx = mctp_usblib_test_tx_init(test, &ops, ctx, false);
+> +	buf = mctp_usblib_test_init_buf(test, len);
+> +
+> +	dstats = get_cpu_ptr(ndev->dstats);
+> +	for (i = 0; i < 3; i++) {
+> +		skb = mctp_usblib_test_init_skb(test, len, ndev, buf);
+> +
+> +		rc = mctp_usblib_tx_push(ndev, tx, skb, i != 2);
+> +		KUNIT_EXPECT_EQ(test, rc, 0);
 > +	}
+
+[Severity: High]
+Can this sleep with preemption disabled?  get_cpu_ptr() expands to
+preempt_disable() plus this_cpu_ptr(), so the whole loop runs in atomic
+context, and mctp_usblib_test_init_skb() allocates with GFP_KERNEL:
+
+drivers/net/mctp/mctp-usblib-test.c:mctp_usblib_test_init_skb() {
+	skb = __netdev_alloc_skb(ndev, length, GFP_KERNEL);
+	KUNIT_ASSERT_NOT_NULL(test, skb);
+	...
+}
+
+GFP_KERNEL sets __GFP_DIRECT_RECLAIM, so __netdev_alloc_skb() takes the
+blocking slab path:
+
+net/core/skbuff.c:__netdev_alloc_skb() {
+	if (len <= SKB_WITH_OVERHEAD(SKB_SMALL_HEAD_CACHE_SIZE) ||
+	    len > SKB_WITH_OVERHEAD(PAGE_SIZE) ||
+	    (gfp_mask & (__GFP_DIRECT_RECLAIM | GFP_DMA))) {
+		skb = __alloc_skb(len, gfp_mask, SKB_ALLOC_RX, NUMA_NO_NODE);
+	...
+}
+
+With CONFIG_DEBUG_ATOMIC_SLEEP, wouldn't the might_sleep() in the
+allocator produce a "sleeping function called from invalid context" splat
+every time this case runs?
+
+Two further consequences of the same region:
+
+The KUNIT_ASSERT_NOT_NULL() in mctp_usblib_test_init_skb() and the KUnit
+failure reporting behind KUNIT_EXPECT_EQ() also allocate with GFP_KERNEL,
+and the assert variant does not return:
+
+lib/kunit/try-catch.c:kunit_try_catch_throw() {
+	try_catch->try_result = -EFAULT;
+	kthread_exit(0);
+}
+
+so put_cpu_ptr() below is skipped and the thread exits still in atomic
+context, which kernel/exit.c reports:
+
+kernel/exit.c:do_exit() {
+	if (unlikely(in_atomic())) {
+		pr_info("note: %s[%d] exited with preempt_count %d\n",
+			current->comm, task_pid_nr(current),
+			preempt_count());
+		preempt_count_set(PREEMPT_ENABLED);
+	}
+	...
+}
+
+mctp_usblib_tx_push() also takes a spinlock_t here:
+
+drivers/net/mctp/mctp-usblib.c:mctp_usblib_tx_push() {
+	spin_lock_irqsave(&tx->lock, flags);
+	...
+}
+
+On PREEMPT_RT that is a sleeping lock, so is acquiring it from an
+explicitly preempt-disabled section valid?
+
+Note the driver itself uses GFP_ATOMIC on this path
+(mctp_usblib_tx_ctx_create() uses kzalloc_flex(..., GFP_ATOMIC)), so only
+the test's own allocation is out of context.
+
+Since mctp_usblib_tx_stats_update() picks the counter with
+get_cpu_ptr(dev->dstats), could the skb allocation and the assertions move
+outside the pinned region, leaving only the counter read inside
+get_cpu_ptr()/put_cpu_ptr(), or could tx_drops be summed over
+for_each_possible_cpu() instead?
+
+> +
+> +	do {
+> +		start = u64_stats_fetch_begin(&dstats->syncp);
+> +		stats = u64_stats_read(&dstats->tx_drops);
+> +	} while (u64_stats_fetch_retry(&dstats->syncp, start));
+> +	put_cpu_ptr(dstats);
+> +
+> +	KUNIT_EXPECT_EQ(test, stats, 3);
+
+[Severity: Low]
+This is the same finding as the len = 200 comment above: this aggregate
+drop count is the only oracle in the case.
+
+The append-failure path yields 2 drops from the detached two-skb context
+plus 1 from the single-skb context, but so do other paths: if the ctx
+buffer size grew, if the MCTP_USB_BTU margin in
+mctp_usblib_tx_should_send() changed so the ctx flushed after push 2, or
+if all three skbs fit one ctx, the append branch never runs and stats is
+still 3.
+
+Neither the number of ops.send() invocations, nor tx->cur_ctx, nor
+ctx->tx_xfers is checked here, while the neighbouring
+mctp_usblib_test_tx_failing_send() does:
+
+	KUNIT_EXPECT_EQ(test, rc, 0);
+	KUNIT_EXPECT_NULL(test, tx->cur_ctx);
+	KUNIT_EXPECT_TRUE(test, list_empty(&ctx->tx_xfers));
+
+Would checking tx_drops == 0 after the first two pushes and counting the
+send attempts (2 sends carrying 2 and 1 packets) pin down the branch under
+test?
+
+> +}
+> +
+>  static struct kunit_case mctp_usblib_test_cases[] = {
 
 [ ... ]
 
