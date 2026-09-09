@@ -1,83 +1,142 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D4738DC71
-	for <linux-hardening@vger.kernel.org>; Wed,  9 Sep 2026 17:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275E7492E42;
+	Wed,  9 Sep 2026 17:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788975449; cv=none; b=dxCMAGhMKeUmtX4996iH7c+Og5XDiPD7mW2/NWbx9d/YMJepUZI/h1k36VYNu8BNHCR9dY5pfwOs4t7yk2XIulrXOD5JN8QSusy/iuGcy90mTzIa0F4HtS+w3QCrMCnIhL4PuKYorasiCK62MC1oppgQmQj0gKU/HwN5sRfTS1M=
+	t=1788976682; cv=none; b=MomUiSQAFwaUWxkUA1w2u2a62lzNSsGv7BkjFuPUKDMhttZjFvN5UkePTaqV4DnrNVxOrrU3zMmuBtdMHr3t3JSxy/jvGiB6DgUC40ApKXIat5c2t/1PAjiZsNAqKBn646vb1Bi/+v0j13pb+CIY/GGBhFl3TsfOmWJBWFT9eoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788975449; c=relaxed/simple;
-	bh=gllQAeSfz8wD6OjJWJ5fccK3rEpdJJl3i7TSr7C1Q/s=;
-	h=MIME-Version:In-Reply-To:References:Message-ID:Date:Subject:From:
-	 To:Cc:Content-Type; b=VBjm7Y9hT8DO+WkExgojFSvm0n7k4awlEscIYiUrCq7R2jrkZbpYsdn7aosWN1ywWrLupHUNFnPXg2G/MvzlmRRSVfLCagmsFo7K53HkHBdq7JEgJvNlgdvLrFnJyBAF7RJs/9su9dLYksKrpxVetMWALlfSGb8PhOZBtFu810g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rathodpriyank.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gvuO/HSK; arc=none smtp.client-ip=209.85.216.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rathodpriyank.bounces.google.com
+	s=arc-20240116; t=1788976682; c=relaxed/simple;
+	bh=j8s/pkdPWtkxGrVAkD2rab4CbgigKfGGO1TTpT60Ytc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DkXHO5IeoqSKnMIBZ0G4vKdJubFXGznaUQsCnX3ZMaY6EfDGkBhwQFa/cyYVfnrMf9+5tSJwslJiAitf6Vzy25oerajLCyL0aRAh10yCvDoUazfMCs1X01dcsOfVq/LqzRKmGPQjhAQ1/AqYDaqPHwi/BhVAQt2+MFiQVBeMndc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.arm.com; spf=pass smtp.mailfrom=foss.arm.com; dkim=pass (1024-bit key) header.d=foss.arm.com header.i=@foss.arm.com header.b=RPs4/Neb; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gvuO/HSK"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-385d2703b64so84262a91.1
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Sep 2026 10:37:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788975447; x=1789580247; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=gllQAeSfz8wD6OjJWJ5fccK3rEpdJJl3i7TSr7C1Q/s=;
-        b=gvuO/HSK/9iYthsXgB5bsFybkF6WCELlRFvN6jycMcN3Fzj24u00/ioZ36PivkUnmF
-         YqeZWV3FhohwZle0aIxlcdJvY7Qddu0t7uXPM+FVbPUs6c/k1InnWz0YOug5LJh8VQn2
-         Rsuuj8tWfVCzZmuQ/WqW5INOiplmvrTshXEVHrxkCk1cNplAxtsEmWTFbHA/dL/llN8q
-         xWy5GgYU2qr4HtR9SkqmHGB4Ci+PqgnvMbvp1FcsZDbMfRIMEADD0LbuvY3ceAp+NPXF
-         7zF16NTnAOX0SbUlBUAcWrbmqGN3uXCkJu6/Kg6hGIfq0EgJcja1gwoAKzkqDCIu8/lP
-         AIcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788975447; x=1789580247;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=gllQAeSfz8wD6OjJWJ5fccK3rEpdJJl3i7TSr7C1Q/s=;
-        b=EroWu7wAat3K9lhqwJ0tf7LFpdSsdDq/U5/LY4fZ2c4l6nOnyr8uer8lnGLT94eUbR
-         whc6RMJX1ZdOj0Gj/mXgH1rV5i/aCdoJbu1OjoPMirbk+yzYsI7f5HxAk+tlfz9J6fIA
-         pASGjELC5mbN4CoR2BIW8yI/x2KK+ij2NknDlHsvc0+fYP0AvjOu59tz7hcPU7u/zpAc
-         JESIdGTrmAqHJgFsQMgBvP37MQCEfU8Nhp82mAzP1putrNkDxjDGuRGng8i5we9dfPsT
-         DlEbjYUL5Hkmfsv0i3vUn85LknqsI1QS6peTCfdZIDrQOfCs4X1s5XtxNm3t4SwfEMK6
-         i2kg==
-X-Forwarded-Encrypted: i=1; AKwUvBw0N9+FWOaeV3t1Fj2RVQipfX18TimuO7U9p3tgfcztKSGyLTE0hZXzA7DTjct219r//jyiMg4St9hk14Qmif0=@vger.kernel.org
-X-Gm-Message-State: AFuF++kesY/fQ+RDLGXqLyXt987t/5jc065pAE5BGRkin3FEjxUwRoCU
-	DWVzchKlAUfSqVoo3RX+WWLJy0d1rRVjDZxnw8utZW7aQJBoqkenl1mSpMhUWIQnBaI+BFUCfPY
-	fO+lsxuJR3EB/Cz3f8VVjJUCyLN+YL6TdzA==
+	dkim=pass (1024-bit key) header.d=foss.arm.com header.i=@foss.arm.com header.b="RPs4/Neb"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60E561576;
+	Wed,  9 Sep 2026 10:57:55 -0700 (PDT)
+Received: from [10.211.55.7] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B7053F528;
+	Wed,  9 Sep 2026 10:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=foss.arm.com; s=main;
+	t=1788976679; bh=j8s/pkdPWtkxGrVAkD2rab4CbgigKfGGO1TTpT60Ytc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RPs4/Neb/y37OUPUAPtmTMK+coFcLiQBrF3yVred7gBeaz/MeVjBz12tCr7F47QPm
+	 ABzvTt3YlvzFcd7TnQG0PSz8uyeNCufAq99j1K3rmmTkkA378Od8fbwEHJ6LKmH70i
+	 MWzZAmfduRv183pVWxmOljB8e4xFyytHY7XinDH4=
+Message-ID: <0ef9f4ab-4c9f-4089-bed3-f7726ec97804@foss.arm.com>
+Date: Wed, 9 Sep 2026 12:57:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: from pjbpm12.prod.google.com ([2002:a17:90b:3c4c:b0:396:702b:655e])
- (user=rathodpriyank job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:37cf:b0:38f:657:6823 with SMTP id 98e67ed59e1d1-39d77aa1851mr284135a91.8.1788975447027;
- Wed, 09 Sep 2026 10:37:27 -0700 (PDT)
-In-Reply-To: <202608260405.gHL6gOJf-lkp@intel.com>
-References: <20260824-pcie-lmt-v6-1-bab4ce233fa5@google.com> <202608260405.gHL6gOJf-lkp@intel.com>
-Message-ID: <18d3b7b0cfb6fcb1.3137322e31392e39302e313337.965f0.0000sendgmr@google.com>
-Date: Wed, 09 Sep 2026 17:37:27 +0000
-Subject: Re: [PATCH v6] PCI/pcie: Add PCIe Lane Margining at Receiver (LMR) support
-From: Priyank Rathod <rathodpriyank@google.com>
-To: Dan Carpenter <error27@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Helgaas <helgaas@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	lkp@intel.com, oe-kbuild-all@lists.linux.dev, oe-kbuild@lists.linux.dev, 
-	Shuah Khan <skhan@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-kselftest@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Shadow Stack Locking Semantics between arch's
+To: Mark Brown <broonie@kernel.org>, Jesse Huang <jesse.huang@sifive.com>
+Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-api@vger.kernel.org,
+ dave.hansen@linux.intel.com, rick.p.edgecombe@intel.com, debug@rivosinc.com,
+ andrew@sifive.com, kito.cheng@sifive.com
+References: <a1946d93-370e-4ca9-85d6-60b4a20ffd47@arm.com>
+ <3bb672e0-7bc3-434f-904e-aa00394dd01f@foss.arm.com>
+ <d20ccb74-69ed-45d7-a810-846904873588@sirena.org.uk>
+Content-Language: en-US
+From: Bill Roberts <bill.roberts@foss.arm.com>
+In-Reply-To: <d20ccb74-69ed-45d7-a810-846904873588@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Dan,
+<snip> + Jesse, he is working on the glibc side + CC a few others on 
+that thread as submitted on the glibc side from sifive. Sorry for the 
+delay, I was away on vacation.
 
-Thanks for the report!
+>> unsigned long locked = 0x2; // Kernel Task State -> LOCK WRITE
+>> unsigned long cur_val = 0x3; // Kernel Task State -> WRITE and SHADOWSTACK
+>> ENABLED
+>> unsigned long new_val = 0x0; // Userspace Feature Change via syscall ->
+>> DISABLE
+>> | x86-64 | risc-v | arm64 |
+>> | ---------- | -------- | --------- |
+>> | Works  | Fails  | Fails     |
+> I would not have expected that combination to work at all with the
+> prctl() (as opposed to arch_prctl()) interface TBH, if you've locked
+> write on you shouldn't be able to disable it.  The reason that works on
+> x86 at the minute is that for x86 you can only change one bit at a time
+> so the new value when disabling is effectively 0x2, not 0x0.
+Yes, this is exactly what I am pointing out. Implementation aside, is that
+the behavior we want?
+>
+>> I am proposing and have questions over the following:
+>> 1. What should the behavior be if you had write locked and disable the
+>> shadow stack?
+>>    - I can argue both ways here, -EPERM or success. I think I and most arches
+>> lead to failure.
+> Given that RISC-V doesn't support control of writes it's moot there
+> at the minute, and x86 currently uses arch_prctl() so will need an
+> additional API, it seems the path of least resistance is to allow it.
+> This also avoids locking writes (or pushes, for arm64) on effectively
+> also locking enable which seems neater.
+>
+>> 2. riscv should check that the low bit is set in locking not just that its
+>> 0, it should be 1
+> I think for ABI compatibility RISC-V will have to continue accepting 0
+> as being equivalent to locking PR_SHADOW_STACK_ENABLE (or everything,
+> but it only supports that one bit right now).
 
-This series has since been decomposed and restructured into a 3-patch stack,
-and this issue was already resolved in the v3 submission:
-https://lore.kernel.org/r/20260904-pcie-link-endpoints-v3-0-4b9a91bd4b35@google.com
+TL;DR - No users, lets fix it before risc-v lands the userspace side IIUC
 
-Thanks,
-Priyank
+I can't find any libc's that support this for risc-v. It appears the glibc
+patches were not merged and I commented on those patches just now
+that the interface is wrong:
+   - 
+https://inbox.sourceware.org/libc-alpha/8a5e21d0-0628-4910-9ad8-165c829e9680@foss.arm.com/
+
+Additionally, stress-ng does it "generically", and it would be broken on 
+a riscv system:
+   - 
+https://sources.debian.org/src/stress-ng/0.22.00-2/stress-prctl.c?hl=1144#L1144
+
+This is a bug and never followed the convention to begin with. So risc-v is
+non-compliant to the spec and this effectively prevents the a true 
+unification
+of a generic prctl interface. The behavior on riscv doesn't adhere to 
+there own docs:
+
+   - 
+https://cdn.kernel.org/doc/html/latest/arch/riscv/zicfiss.html#prctl-enabling
+
+>
+>> 3. riscv should return -EPERM vs -EINVAL
+> If you mean for arch_lock_shadow_stack_status() I think -EINVAL is a
+> sensible error code when the system or task does not support shadow
+> stacks, I'm not sure we should return -EPERM at all.  On arm64 we
+> support locking any bit, not just the ones that we currently know about.
+> This is for future proofing, userspace can lock unknown flags.
+
+No, I mean when setting a locked bit via prctl 
+and PR_SET_SHADOW_STACK_STATUS.
+Currently, the error codes for changing a locked bit:
+x86: EPERM
+arm64: EBUSY (Which we discussed offline about changing to EPERM)
+risc-v:
+
+>> If we can all agree on item 1, that locked bits check can be refactored and
+>> shared in one of
+>> two ways:
+>> 1. within prctl itself, before the arch hook is called, we would need
+>> helpers per-arch to extract the thread features and lock bits
+>> 2. as a helper where folks just pass the unsigned long of the bits to get
+>> the result
+> For me option 1 seems a bit nicer, and moves more of the implementation
+> into generic code which is something we should really be doing in
+> general with the shadow stack support - there's a lot of cross arch
+> duplication at the minute.  It has been on my list to look at this
+> repitition at some point, it had been held up by the clone3() stuff but
+> that seems to have died a death for now.
+Agreed, it's more work, but I like it better.
