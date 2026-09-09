@@ -1,152 +1,331 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F7256510E
-	for <linux-hardening@vger.kernel.org>; Wed,  9 Sep 2026 15:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60F156510E;
+	Wed,  9 Sep 2026 15:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788968010; cv=none; b=TG9thgx5ioKkTgcGcQS/mMXPRwcssBvPNGSvFIao+a3aRDVtlpDpYs/yGEAZY4GsJRKGk84vqPjDm6Nf8RNt4zXyDi4HG9aQMkJAvQcJlibUxV43kYGnUU2wzCO96Bu0+FN0VCmgLmnC0F74XOlKPThj1gqF0HBOrxyTdZQTFjo=
+	t=1788968237; cv=none; b=iTcaIWses7xh4sMZZwe+X29fnk20+oNwd86bsjqr9PmoSdQG5M0mivnY0SH/GMtVYYvj3YXpWHkRIvPCt6HlijC73liTW7jexzlisyyLbEvuURPkMHX52Il28JTZxyJawIGHlsQyLyuSks1J6SeMeCbSwpTw78xR4uyCkJHhTMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788968010; c=relaxed/simple;
-	bh=pmMRAIJutnk3RAdFT275ZvLGsPRVo3eefCHeXF7xHo8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=RrN9hnylau+x6kq8BYnT5L28OA2elVKpfYtdmwb6S8exC1kTygQcEyo056Fx+TfsKM5S/PGdrl/LcGfo8gWTJPLYW35RRQXzo+wrimbLiuJxID6OG0ZC5Zm7Fpx7wMJ+aN017vyl4UWucwIS6e3fDF1sls9gNbnnNCQjbeuGgmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbLahzXK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788968237; c=relaxed/simple;
+	bh=luQVRUXy09UsxsSG4VuBiLocK41frDwj1A+LRi22K5M=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=MMDdtQ+mSjYxpRrkHMPSZfrZdBQlKDZDgm0wzPevKsjEmRBIK9zbN4DkxKPzoQwL1NEhKIlJNNPwItFdb5rrWFNfe0msQGh8pE/vGvYenBv+rWm1HKvzcS6OAzB3LQ5my+YlsjHRLkpexwKomcg3IxGP7vjCv5Pt5x/nfVG0jDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=qr58ZPVv; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=i4GG0YOh; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbLahzXK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E13E31F00A3A;
-	Wed,  9 Sep 2026 15:33:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788968007;
-	bh=O/7yjukVpaYoYC3upwRCQBRk3zXSImiSToMpsxi8EpM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=fbLahzXKPNusT9MDJ3quZekZ8cPOjj949I5ZjXPvptlKnqPuatbIsP0oobwOsJPmL
-	 VuEkIdm2nlTfkdRS+RL0ohqrTriIICfvHwe2Ay0Rpvv8uq/hzF0o0g0aUG0PkjxOko
-	 yEBxYUQd8oVtY/MYt2MXPCBolMT51LMQrn8dmmNDYa97L7Y/R7Kyad75FcvBG2uxYR
-	 68pps7mJNVfsjxIUd/6jEdvDWZMvYKGdslzNHIneVc9mz1XnV0Mw6CyN8MV4Ixmwii
-	 VnzXlPMsq0fB+hEHNaEB+RfNb08UGySHofzbFjifhykal0rxmDt9C6r1M2hLnDEJxK
-	 J59nY/4FrSk+w==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 6FBA6198003A;
-	Wed,  9 Sep 2026 11:33:25 -0400 (EDT)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Wed, 09 Sep 2026 11:33:25 -0400
-X-ME-Sender: <xms:Q3yhahBvAqjl384R5JUckP2jP_UnYRJ8Dz4pRa-WA7B9ecpBrlSYHg>
-    <xme:Q3yhaqV9INeOxZ_MPbivLTAsYi9VnHM64uKrE7c45p1cKORAu8VpNkQb50o51fuWF
-    KaK5o-vG-GtTZKKUdCAOdSvFpzU51uD7OpDhIN_MC4wrsz6kdzFXmAg>
-X-ME-Proxy-Cause: dmFkZTF1zARIWJeyfo7agylEVa4pRQ4PJDgfdTnOUABSB7j2xisFi4lJlKCCWDthM0G71F
-    V3V4Fbyk6YYPlje6U08oOdJm/chhGmNp8cxRNmbmW38c9vXTzR2W4cErxRdmLj1flTMC3c
-    aOwunmLr4+PXga/5dR+42eHLPyO+ReiAnzt/fV52sQz0lsmmmUn25Yvc+Wwx6HSCMRp2ob
-    jeho8V+x9O+zqRa2G9JuFyzsycTIsLqeAo4flxnLzQZHVlQg/xOmpfsiOIoX/DZzgaKvAk
-    Jju+XdMzWyMILQOlZtsFBCp0sjGRhScBScZcirZJLDoOYJnzlDq7+w+RRBodhUflIQf/jD
-    HxKLTcujaGU39IDcDrNGG2g8Vz19R7Zr2mAA0+Sr336xwyzyzOZ8y1qfvouea+yC5ydzJg
-    Hc5KJfgJdGENePfX1IelKp5r3mrr85Qrbqh2AvQynj/rNnHUq2TfXdA72Qbu9kQoPQT3eR
-    xzDTQJ/qo+eAiyYQralffAEz7s9K5OB/ACg11+YpqwLlMaFmN/ycoBHYNByWZV+rs6oEuD
-    4cR/y6jMueVbdw8oZ67Sd1FzfG05P/PJyziq/tlv6xwOT40GS/O6fvVTaTFbtXUVrcSUtG
-    r0A8+lntlGduHpXG+UAP/ygkdfi0+BlAXjUpTePEshJiUDvtvAYDd4Ofo/QQ
-X-ME-Proxy: <xmx:RXyhaghcOI5Q38ho65UWKV7Vnua2IT2fiaHev4woAP22U8iBUB99pA>
-    <xmx:RXyhallG2m91njc40Ln7h2MvOhy-pbINkNLTxACOIg4-tgWkoup3-Q>
-    <xmx:RXyhasgi1jYpaOHpboL5CEZ6Zd0iw90T0XFYXpb2WE95AYcSPvJmOQ>
-    <xmx:RXyhaoGAQW1SRxjnvcbFjVXbuTstzsBOjaGA4DclGpSf-TApam5flg>
-    <xmx:RXyhaut0YQ_GCzYoz02_0994GOmnNP5siNdLUfCu2Q076FvURpI2t_-1>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 6A165F8007D; Wed,  9 Sep 2026 11:33:23 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="qr58ZPVv";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="i4GG0YOh"
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1788968210; bh=fkFSCvdo5LuLSf4z3fmclGB
+	fz86uj6dQWp9LPZ/W2Cc=; b=qr58ZPVvmSgO7ouudvb9sgozM1OhTDQHmoyq9tLnlyOcg/9IZw
+	bzWRnyrFtuxAYFXRwClGWmLdnkYenedlyqYk8iRGVf5c/KjrkRP3DMTb6mAyFIMOqjZPvaOTlFE
+	w8ncjbttLVj4BeaiBvO6YmZZbUP3VpI8SvC42xV4y3sZQb2qUNFV13vhO8O1g2exPGBXMhV1NPr
+	iZs3eEUcGnYPvVOBCpcVPYZ/jv0sVcyqlqf82IsjcTnPu2qn3WlBbwEOGq5Qipl/6gXBGaw958j
+	1r9sB7fHM8agdNQXnrXgvU49UItbL/UlLP9d1Q/6ZUrR8jP4hHGJh4Mn/2QTqF+3caQ==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1788968210; bh=fkFSCvdo5LuLSf4z3fmclGB
+	fz86uj6dQWp9LPZ/W2Cc=; b=i4GG0YOhB54yf77Rqasf/C5eiqMaIWC2PVXaz+F7qafpWLRZJu
+	IKQqOoayQG0TEV8AQg78HSScL6oRwAtz1/AQ==;
+Date: Wed, 09 Sep 2026 16:36:49 +0100
+From: Bradley Morgan <brads@mainlining.org>
+To: Bill Wendling <morbo@google.com>, Christian Brauner <brauner@kernel.org>
+CC: =?ISO-8859-1?Q?Thomas_Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Aleksa Sarai <cyphar@cyphar.com>, Jan Kara <jack@suse.cz>,
+ Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Nicolas Schier <nsc@kernel.org>,
+ Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>,
+ Douglas Anderson <dianders@chromium.org>, Anand Moon <linux.amoon@gmail.com>,
+ Oleg Nesterov <oleg@redhat.com>, codemender-patching+linux@google.com,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] userns: Add KUnit test suite for uid_gid_map
+In-Reply-To: <20260908222734.3048684-2-morbo@google.com>
+References: <20260823125155.1136740-3-morbo@google.com> <20260908222734.3048684-1-morbo@google.com> <20260908222734.3048684-2-morbo@google.com>
+Message-ID: <76DEB9F0-5263-4AB0-816F-71A57F3B67BB@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 09 Sep 2026 17:32:57 +0200
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- "Kees Cook" <kees@kernel.org>, "Tony Luck" <tony.luck@intel.com>,
- stable@vger.kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net
-Message-Id: <273c9217-4630-4585-8cb5-3c5c8f0b77d3@app.fastmail.com>
-In-Reply-To: <20260906235838.2928815-1-gpiccoli@igalia.com>
-References: <20260906235838.2928815-1-gpiccoli@igalia.com>
-Subject: Re: [PATCH] efi: pstore: Fix pstore_disable parameter setting (if built as
- module)
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Hello Guilherme,
-
-On Mon, 7 Sep 2026, at 01:55, Guilherme G. Piccoli wrote:
-> Commit a28655c330ab ("efi: pstore: Allow dynamic initialization based 
-> on module parameter")
-> introduced the functionality of switching the pstore_disable parameter,
-> effectively allowing efi-pstore to be used even if builtin and having
-> pstore_disabled=Y (a lot of distros do that at Kconfig level).
+On 8 September 2026 23:27:30 BST, Bill Wendling <morbo@google.com> wrote:
+>Add a KUnit test suite to verify the insertion and sorting of mappings
+>in struct uid_gid_map. This test suite validates both base extent
+>insertion (<= 5 mappings) and extended extent insertion (> 5 mappings,
+>which triggers the allocation of the forward and reverse pointers).
 >
-> Well, it also introduced a bug if efi-pstore is built as module and loaded
-> with pstore_disable=N parameter. On load time, load_module() -> parse_args()
-> calls our mod_param callback efi_pstore_disable_set(), which initializes
-> efi_pstore, registering it as a pstore backend. Happens that, slightly
-> later in the module loading process, do_init_module() calls our module
-> init function, which currently ... retries registering us as a pstore
-> backend. Since this was done successfully before, in the module parameter
-> parsing, pstore_register() refuses to re-register us and efi-pstore ends-up
-> clearing some structures, like freeing its data buffer allocated memory
-> and setting its size to 0.
+>This is especially useful for verifying that the __counted_by_ptr
+>attribute added to 'forward' and 'reverse' pointers works correctly
+>without causing any runtime bounds-checking panics or traps.
 >
-> Net effect of that: efi-pstore ends-up in a weird state, partially
-> initialized but with cleared structures. More than that, if we try to
-> unload it, it won't call pstore_unregister() but will get the module
-> unloaded, hence pstore writes on oops or with other frontends will
-> trigger NULL pointer dereferences.
+>Assisted-by: Gemini:3.1-pro-preview
+>Signed-off-by: Bill Wendling <morbo@google.com>
+>Tested-by: Bradley Morgan <brads@mainlining.org>
+>Reviewed-by: Bradley Morgan <brads@mainlining.org>
+>---
+>v2 - Remove Gerrit tag.
+>v3 - s/KUNIT_EXPECT_NOT_ERR_OR_NULL/KUNIT_ASSERT_NOT_ERR_OR_NULL/
+>   - Fixed Kconfig tests.
+>v4 - Actually test on unsorted data. Corrected the "Assisted-by" tag.
+>v5 - Convert the KUnit test to a format that follows the KUnit style
+>     guild more closely. This includes some renameing and using macros
+>     in the "visibility.h" header. We no longer #include the test file
+>     into the implementation file. This should be much cleaner.
+>---
+>Cc: Bradley Morgan <brads@mainlining.org>
+>Cc: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+>Cc: Kees Cook <kees@kernel.org>
+>Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+>Cc: Christian Brauner <brauner@kernel.org>
+>Cc: Aleksa Sarai <cyphar@cyphar.com>
+>Cc: Jan Kara <jack@suse.cz>
+>Cc: Nathan Chancellor <nathan@kernel.org>
+>Cc: Miguel Ojeda <ojeda@kernel.org>
+>Cc: Thomas Gleixner <tglx@kernel.org>
+>Cc: Nicolas Schier <nsc@kernel.org>
+>Cc: Gary Guo <gary@garyguo.net>
+>Cc: "Thomas Weißschuh" <thomas.weissschuh@linutronix.de>
+>Cc: Alice Ryhl <aliceryhl@google.com>
+>Cc: Douglas Anderson <dianders@chromium.org>
+>Cc: Anand Moon <linux.amoon@gmail.com>
+>Cc: Oleg Nesterov <oleg@redhat.com>
+>Cc: codemender-patching+linux@google.com
+>Cc: linux-kernel@vger.kernel.org
+>Cc: linux-hardening@vger.kernel.org
+>---
+> include/linux/user_namespace.h   |  6 ++
+> init/Kconfig                     | 11 ++++
+> kernel/Makefile                  |  1 +
+> kernel/tests/.kunitconfig        |  4 ++
+> kernel/tests/user_ns_map_kunit.c | 98 ++++++++++++++++++++++++++++++++
+> kernel/user_namespace.c          |  8 ++-
+> 6 files changed, 126 insertions(+), 2 deletions(-)
+> create mode 100644 kernel/tests/.kunitconfig
+> create mode 100644 kernel/tests/user_ns_map_kunit.c
 >
-> Fix it by guarding efivars_pstore_init() against re-running if the
-> driver was previously initialized - this is kind of an analog to
-> what is already done on efivars_pstore_exit() and fixes the issue.
->
-> Fixes: a28655c330ab ("efi: pstore: Allow dynamic initialization based 
-> on module parameter")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> ---
->
->
-> Hi folks, apologies for introducing this bug =|
-
-No worries :-)
-
->
->  drivers/firmware/efi/efi-pstore.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/firmware/efi/efi-pstore.c 
-> b/drivers/firmware/efi/efi-pstore.c
-> index a5db3534f0a6..2e125db7d43b 100644
-> --- a/drivers/firmware/efi/efi-pstore.c
-> +++ b/drivers/firmware/efi/efi-pstore.c
-> @@ -263,6 +263,9 @@ static int efivars_pstore_init(void)
->  	if (pstore_disable)
->  		return 0;
+>diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
+>index 2962256eddf7..633157781edc 100644
+>--- a/include/linux/user_namespace.h
+>+++ b/include/linux/user_namespace.h
+>@@ -207,6 +207,12 @@ extern bool in_userns(const struct user_namespace *ancestor,
+> 		       const struct user_namespace *child);
+> extern bool current_in_userns(const struct user_namespace *target_ns);
+> struct ns_common *ns_get_owner(struct ns_common *ns);
+>+
+>+#if IS_ENABLED(CONFIG_USER_NS_MAP_KUNIT_TEST)
+>+extern int insert_extent(struct uid_gid_map *map, struct uid_gid_extent *extent);
+>+extern int sort_idmaps(struct uid_gid_map *map);
+>+#endif /* CONFIG_USER_NS_MAP_KUNIT_TEST */
+>+
+> #else
 > 
-> +	if (efi_pstore_info.bufsize)
-> +		return 0;
-> +
+> static inline struct user_namespace *get_user_ns(struct user_namespace
+> *ns)
+>diff --git a/init/Kconfig b/init/Kconfig
+>index 8583d9f06c52..27c1ffc675bf 100644
+>--- a/init/Kconfig
+>+++ b/init/Kconfig
+>@@ -1457,6 +1457,17 @@ config USER_NS
+> 
+> 	  If unsure, say N.
+> 
+>+config USER_NS_MAP_KUNIT_TEST
+>+	tristate "KUint test for user
 
-Can we please address the root cause rather than paper over it here?
+Hmm! s/KUint/KUnit
 
-What is the point of having a) a pstore_disable= param on a module
-(which can be blacklisted or simply not loaded) and b) having it
-runtime writable so pstore-efi can be toggled on/off at will?
+ namespace map insertion" if !KUNIT_ALL_TESTS
+>+	depends on USER_NS && KUNIT
+>+	default KUNIT_ALL_TESTS
+>+	help
+>+	  This builds the KUnit test for user namespace uid/gid map insertion.
+>+	  It validates map insertion, limits, dynamic allocation of the
+>+	  extended extents array, and mapping sorting functions.
+>+
+>+	  If unsure, say N.
+>+
+> config PID_NS
+> 	bool "PID Namespaces"
+> 	default y
+>diff --git a/kernel/Makefile b/kernel/Makefile
+>index 1e1a31673577..2a64282749b8 100644
+>--- a/kernel/Makefile
+>+++ b/kernel/Makefile
+>@@ -141,6 +141,7 @@ obj-$(CONFIG_WATCH_QUEUE) += watch_queue.o
+> 
+> obj-$(CONFIG_RESOURCE_KUNIT_TEST) += resource_kunit.o
+> obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+>+obj-$(CONFIG_USER_NS_MAP_KUNIT_TEST) += tests/user_ns_map_kunit.o
+> 
+> CFLAGS_kstack_erase.o += $(DISABLE_KSTACK_ERASE)
+> CFLAGS_kstack_erase.o += $(call cc-option,-mgeneral-regs-only)
+>diff --git a/kernel/tests/.kunitconfig b/kernel/tests/.kunitconfig
+>new file mode 100644
+>index 000000000000..b3d1206fd81a
+>--- /dev/null
+>+++ b/kernel/tests/.kunitconfig
+>@@ -0,0 +1,4 @@
+>+CONFIG_KUNIT=y
+>+CONFIG_NAMESPACES=y
+>+CONFIG_USER_NS=y
+>+CONFIG_USER_NS_MAP_KUNIT_TEST=y
+>diff --git a/kernel/tests/user_ns_map_kunit.c b/kernel/tests/user_ns_map_kunit.c
+>new file mode 100644
+>index 000000000000..24c21e43a36c
+>--- /dev/null
+>+++ b/kernel/tests/user_ns_map_kunit.c
+>@@ -0,0 +1,98 @@
+>+// SPDX-License-Identifier: GPL-2.0
+>+/*
+>+ * KUnit test for user namespace map insertion and sorting.
+>+ */
+>+
+>+#define pr_fmt(fmt) "user_namespace: " fmt
+>+
+>+#include <kunit/test.h>
+>+#include <linux/user_namespace.h>
+>+
+>+#define NR_EXTENTS (UID_GID_MAP_MAX_BASE_EXTENTS + 5)
+>+
+>+static void user_ns_map_insert(struct kunit *test)
+>+{
+>+	struct uid_gid_map map;
+>+	struct uid_gid_extent extent;
+>+	int i, ret;
+>+
+>+	memset(&map, 0, sizeof(map));
+>+
+>+	/* Insert up to UID_GID_MAP_MAX_BASE_EXTENTS elements */
+>+	for (i = 0; i < UID_GID_MAP_MAX_BASE_EXTENTS; i++) {
+>+		extent.first = i * 10;
+>+		extent.lower_first = i * 100;
+>+		extent.count = 5;
+>+
+>+		ret = insert_extent(&map, &extent);
+>+		KUNIT_ASSERT_EQ(test, ret, 0);
+>+	}
+>+
+>+	KUNIT_EXPECT_EQ(test, map.nr_extents, UID_GID_MAP_MAX_BASE_EXTENTS);
+>+
+>+	/* Verify the elements ended up in the 'extent' array */
+>+	for (i = 0; i < UID_GID_MAP_MAX_BASE_EXTENTS; i++) {
+>+		KUNIT_EXPECT_EQ(test, map.extent[i].first, i * 10);
+>+		KUNIT_EXPECT_EQ(test, map.extent[i].lower_first, i * 100);
+>+		KUNIT_EXPECT_EQ(test, map.extent[i].count, 5);
+>+	}
+>+}
+>+
+>+static void user_ns_map_insert_extended(struct kunit *test)
+>+{
+>+	struct uid_gid_map map;
+>+	struct uid_gid_extent extent;
+>+	int i, ret;
+>+
+>+	memset(&map, 0, sizeof(map));
+>+
+>+	/* Insert more than UID_GID_MAP_MAX_BASE_EXTENTS elements */
+>+	for (i = 0; i < NR_EXTENTS; i++) {
+>+		int value = 9 - i;
+>+
+>+		extent.first = value * 10;
+>+		extent.lower_first = value * 100;
+>+		extent.count = 5;
+>+
+>+		ret = insert_extent(&map, &extent);
+>+		KUNIT_ASSERT_EQ(test, ret, 0);
+>+	}
+>+
+>+	KUNIT_EXPECT_EQ(test, map.nr_extents, NR_EXTENTS);
+>+
+>+	/* Now sort the map to set up reverse mapping */
+>+	ret = sort_idmaps(&map);
+>+	KUNIT_ASSERT_EQ(test, ret, 0);
+>+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, map.reverse);
+>+
+>+	/* Verify the elements are in 'forward' and that sorting is correct */
+>+	for (i = 0; i < map.nr_extents; i++) {
+>+		KUNIT_EXPECT_EQ(test, map.forward[i].first, i * 10);
+>+		KUNIT_EXPECT_EQ(test, map.forward[i].lower_first, i * 100);
+>+		KUNIT_EXPECT_EQ(test, map.forward[i].count, 5);
+>+
+>+		KUNIT_EXPECT_EQ(test, map.reverse[i].first, i * 10);
+>+		KUNIT_EXPECT_EQ(test, map.reverse[i].lower_first, i * 100);
+>+		KUNIT_EXPECT_EQ(test, map.reverse[i].count, 5);
+>+	}
+>+
+>+	kfree(map.forward);
+>+	kfree(map.reverse);
+>+}
+>+
+>+static struct kunit_case user_ns_map_test_cases[] = {
+>+	KUNIT_CASE(user_ns_map_insert),
+>+	KUNIT_CASE(user_ns_map_insert_extended),
+>+	{}
+>+};
+>+
+>+static struct kunit_suite user_ns_map_test_suite = {
+>+	.name = "user_ns_map",
+>+	.test_cases = user_ns_map_test_cases,
+>+};
+>+
+>+kunit_test_suite(user_ns_map_test_suite);
+>+
+>+MODULE_LICENSE("GPL");
+>+MODULE_DESCRIPTION("KUnit test for user namespace map insertion");
+>+MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
+>diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
+>index 786dbf0506ca..d8cbefd36598 100644
+>--- a/kernel/user_namespace.c
+>+++ b/kernel/user_namespace.c
+>@@ -1,5 +1,6 @@
+> // SPDX-License-Identifier: GPL-2.0-only
+> 
+>+#include <kunit/visibility.h>
+> #include <linux/export.h>
+> #include <linux/nsproxy.h>
+> #include <linux/slab.h>
+>@@ -786,7 +787,8 @@ static bool mappings_overlap(struct uid_gid_map *new_map,
+>  * Takes care to allocate a 4K block of memory if the number of mappings exceeds
+>  * UID_GID_MAP_MAX_BASE_EXTENTS.
+>  */
+>-static int insert_extent(struct uid_gid_map *map, struct uid_gid_extent *extent)
+>+VISIBLE_IF_KUNIT int insert_extent(struct uid_gid_map *map,
+>+				   struct uid_gid_extent *extent)
+> {
+> 	struct uid_gid_extent *dest;
+> 
+>@@ -822,6 +824,7 @@ static int insert_extent(struct uid_gid_map *map, struct uid_gid_extent *extent)
+> 	*dest = *extent;
+> 	return 0;
+> }
+>+EXPORT_SYMBOL_IF_KUNIT(insert_extent);
+> 
+> /* cmp function to sort() forward mappings */
+> static int cmp_extents_forward(const void *a, const void *b)
+>@@ -857,7 +860,7 @@ static int cmp_extents_reverse(const void *a, const void *b)
+>  * sort_idmaps - Sorts an array of idmap entries.
+>  * Can only be called if number of mappings exceeds UID_GID_MAP_MAX_BASE_EXTENTS.
+>  */
+>-static int sort_idmaps(struct uid_gid_map *map)
+>+VISIBLE_IF_KUNIT int sort_idmaps(struct uid_gid_map *map)
+> {
+> 	if (map->nr_extents <= UID_GID_MAP_MAX_BASE_EXTENTS)
+> 		return 0;
+>@@ -878,6 +881,7 @@ static int sort_idmaps(struct uid_gid_map *map)
+> 
+> 	return 0;
+> }
+>+EXPORT_SYMBOL_IF_KUNIT(sort_idmaps);
+> 
+> /**
+>  * verify_root_map() - check the uid 0 mapping
+>
 
-Also, the practice of controlling the functionality of a builtin
-diagnostic feature by poking something under /sys/module/foo/params
-is in rather poor taste IMNSHO.
-
-
-
-
->  	/*
->  	 * Notice that 1024 is the minimum here to prevent issues with
->  	 * decompression algorithms that were spotted during tests;
-> -- 
-> 2.50.1
+--- Thanks!
+https://lore.kernel.org/all/EE579805-42F2-4C58-B752-F28779EEB717@grrlz.net/
