@@ -1,129 +1,135 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AC7332EA0;
-	Wed,  9 Sep 2026 17:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF6E330656
+	for <linux-hardening@vger.kernel.org>; Wed,  9 Sep 2026 17:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788973943; cv=none; b=qcg8H2qiWJ1Z89t/2qf2QQfP+FezzRi0BD+Z3FVjgWc9p2vI0J6p8lE23miWJ6IoHQZMvXfHi3GAFme9oshsg6pl7OuZ0VJ1XtditcnuyATJ75uMnMM/dpUDXy902VTIJpuXK0Ga/E42UtzSgpsgcImsNkbr+CP7ckz7jxlI6YI=
+	t=1788974739; cv=none; b=L+sGcnYLFPVW6cvjeSXCQnrdsN6tS9t98shGNDwHNBu4hfdVJOKjkdLpFAOVv4d5hql6vKmYwRICVRIK31YP1KpbaqarrMLn15VxkbSK0Q4LHy/XTX6NzEqamXwVRdVj+b53pYPHjf+uKJo0ukct7nCyzUqhFh6YWaMqPE1cmaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788973943; c=relaxed/simple;
-	bh=tkFm8ArrEWzeaieZuP5vpupn9vkxk9K5f19tdLq0x6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oTxbAnUOF84sHWvycMgOQ5ItnjKLa2l9LQqsbVPgyNlZf21Bcon4/klTm+nGjYskfvq/I00srQmnCdJmVMlKLeenABnV8kdvAUHqHmtAddQcAMbTLQkN5DxUQPQ+Ko0F2qu6dpGODbg9PcIg6QpDSBrtH3NdvLY/6e1rrhMJoZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=mRoldLWC; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1788974739; c=relaxed/simple;
+	bh=E55QeCRgXjlzg7U0ltqMTCEctDHetcBGNA8/m6k4LD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oEzbLQwX4lIa2UFDB8wumjrmLTnVwiVLb0aNERVuhIKHn05fPUonR22S0Qpoq7PxgEcjN2okDTyotI9qKiHmjvnnkyCUfZEXVMW1MAe9+OIsX1L/mCRxqIQhjAasKqiOP6seCL9PyNNVdmQQ/BdIqCYGvEhjd4G+hKoK7lJuxR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Np2zHsZY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="mRoldLWC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:From:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:From:Reply-To;
-	bh=8XgErxDLDWlJhlMbKCkXJshZlMHhtU9PCEfmJxraKvk=; b=mRoldLWCiE+Lczs6o22SpBAC7s
-	zbihh4qj+xqvm+CI70oQnXGdh7imAFsYLddNd0QC+I6JsS7aJrX7LG9UP5afYSyoh82fh6IU3B0sw
-	/qOOsJOQPNxtPckLL3ccmi86TY1A8OAZ6iuDazFksryg/k7IEI03ipJHXNLT4uhivScVqRt5cWbys
-	4UqiExJPOPOggxCUy/mZgJv19a0NO3I1fOuD9/1SGvvGK5bXZAC+eO1eELPJ4xCtxhEWeXwaBGOyE
-	AKoGcmzwAr0GE7BrO00J01FAl9kdnt4TTqKZ1DjA8qPAwjv99szF2Xe0OLub5rGw0m5rwlStdnpeH
-	5H1t+8Tg==;
-Received: from [191.32.244.59] (helo=[192.168.1.56])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1x4LqF-00H9d9-Jm; Wed, 09 Sep 2026 19:12:11 +0200
-Message-ID: <cdd454e2-a311-71b5-2449-25cdfba893fd@igalia.com>
-Date: Wed, 9 Sep 2026 14:12:05 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Np2zHsZY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1130C1F00893;
+	Wed,  9 Sep 2026 17:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788974737;
+	bh=Pubbd2dNu1LQzdMpKfGD1I+IW+yVdlfvOm5SQzKSwOA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Np2zHsZYyQkXFsoQXHrepxlLGabd+RY/LBmPCa+qEqed8bCT4ZETBek7x/fepo2cf
+	 chc0NHhTyWBOo6MGAe1MrYbgn7rNMGHB+e1UrAiQxAUHgqiXvdoqS10NF4irGfKGVI
+	 OZJQwaSiCY2nNlmpzquIIfCMsl9L+cAJww6j7RQg4rEeYoATXyukmi6ZDsLquBc5uv
+	 jbodWLtGPjBeZ5BJD1s91Ykdq+MH+S8UREAaZvPNBRWDpRr0ED+x0Ok8sayWFcQ6pQ
+	 54ujIFeehVia5phkoxeM18mkzVx3GTUC3a4BKwkk6m7ri25RP/Lk54BM9PfdUa/6sZ
+	 QZyhRCK3nIy1g==
+Date: Wed, 9 Sep 2026 20:25:24 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
+	Linu Cherian <linu.cherian@arm.com>,
+	Linus Walleij <linusw@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Maxwell Bland <mbland@motorola.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	=?iso-8859-1?Q?Pierre-Cl=E9ment?= Tosi <ptosi@google.com>,
+	Quentin Perret <qperret@google.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
+	Yang Shi <yang@os.amperecomputing.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+	x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+Subject: Re: [PATCH RFC v9 12/25] mm: kpkeys: Protect regular page tables
+Message-ID: <aqGWhJjE1VUZf8_3@kernel.org>
+References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
+ <20260818-kpkeys-v9-12-743ad31b2c8f@arm.com>
+ <178877845406.3691569.12554855722197968629.b4-review@b4>
+ <bdba5b54-8733-4d47-952d-e1bd958a1ead@arm.com>
+ <ap-6PZqGZHhPD6u1@kernel.org>
+ <00e97c75-eef1-4587-b299-ab07591a07bc@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] efi: pstore: Fix pstore_disable parameter setting (if
- built as module)
-Content-Language: en-US
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>, Kees Cook <kees@kernel.org>,
- Tony Luck <tony.luck@intel.com>, stable@vger.kernel.org,
- kernel-dev@igalia.com, kernel@gpiccoli.net
-References: <20260906235838.2928815-1-gpiccoli@igalia.com>
- <273c9217-4630-4585-8cb5-3c5c8f0b77d3@app.fastmail.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <273c9217-4630-4585-8cb5-3c5c8f0b77d3@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00e97c75-eef1-4587-b299-ab07591a07bc@arm.com>
 
-Hi Ard, thanks for your prompt response!
-
-
->> [...]
->>  	if (pstore_disable)
->>  		return 0;
->>
->> +	if (efi_pstore_info.bufsize)
->> +		return 0;
->> +
+On Tue, Sep 08, 2026 at 12:11:57PM +0200, Kevin Brodsky wrote:
+> On 08/09/2026 09:33, Mike Rapoport wrote:
+> > On Mon, Sep 07, 2026 at 05:52:32PM +0200, Kevin Brodsky wrote:
+> >> On 07/09/2026 12:54, Mike Rapoport wrote:
+> >>>> [...]
+> >>>>
+> >>>>  static inline struct ptdesc *pagetable_alloc_noprof(gfp_t gfp, unsigned int order)
+> >>>>  {
+> >>>> -	struct page *page = alloc_pages_noprof(gfp | __GFP_COMP, order);
+> >>>> +	struct page *page;
+> >>>> +
+> >>>> +	if (kpkeys_hardened_pgtables_enabled())
+> >>>> +		page = kpkeys_pgtable_alloc(gfp | __GFP_COMP, order);
+> >>>> +	else
+> >>>> +		page = alloc_pages_noprof(gfp | __GFP_COMP, order);
+> >>> Can we make it a sequence rahter than a branch?
+> >>>
+> >>> kpkeys_pgtable_alloc() does alloc_pages and then sets their pkeys, so I
+> >>> think something like this should work:
+> >>>
+> >>> 	page = alloc_pages_noprof(gfp | __GFP_COMP, order);
+> >>> 	if (!page)
+> >>> 		return NULL;
+> >>> 	err = kpkeys_pgtable_alloc(page);
+> >>> 	if (err) {
+> >>> 		__free_pages(page, order);
+> >>> 		return NULL;
+> >>>
+> >>> with if (kpkeys_hardened_pgtables_enabled()) folded into
+> >>> kpkeys_pgtable_alloc().
+> >> I agree this would be less ugly. In fact this is pretty much what this
+> >> series did up to RFC v5 (albeit in the ctor/dtor instead of alloc/free).
+> >> We could go back to this API, *but* the big issue is that it makes it
+> >> impossible to use a smarter allocation strategy for protected pages.
+> >> Patch 14 in RFC v6 [1] will give you an idea of what such an allocator
+> >> (with support for large blocks and splitting) would look like.
+> >>
+> >> As discussed with David H we're first trying to land this feature
+> >> without large block support (fully PTE-mapped direct map), but we do
+> >> want to support large blocks eventually [2] and I would prefer the core
+> >> API to be already compatible with that objective. Very happy to hear
+> >> about suggestions as to how to avoid the explicit condition in
+> >> pagetable_alloc() though!
+> > We could unconditionally replace alloc_pages_noprof() with
+> > kpkeys_pgtable_alloc() and make the latter choose the right allocator, but
+> > that's not very nice either :/
 > 
-> Can we please address the root cause rather than paper over it here?
+> Yep I also thought of that but the naming would be really misleading...
 > 
-> What is the point of having a) a pstore_disable= param on a module
-> (which can be blacklisted or simply not loaded) and b) having it
-> runtime writable so pstore-efi can be toggled on/off at will?
-> 
+> Maybe, maybe, introduce __pagetable_alloc() that is a simple static
+> inline calling alloc_pages_noprof() if !CONFIG_KPKEYS_HARDENED_PGTABLES,
+> and otherwise checks kpkeys_hardened_pgtables_enabled()? Less ugliness
+> in pagetable_alloc() but even more further down, not sure this helps.
 
-Well ... despite we agree on that, I think removing pstore_disable is
-kinda breaking "the contract" we're following since long time ago.
+You are right and I can't say I have any bright ideas.
+ 
+> - Kevin
 
-The thing is: unlike ramoops, or even maybe pstore/blk and other
-potential backends, efi_pstore is a bit of a different beast IIUC.
-
-It doesn't require any config, by having it loaded, it'll just go ahead
-and ...get enabled as pstore backend (unless pstore.backend sets otherwise).
-
-And not only that: efi_pstore is **usually built-in** - I guess in all
-distros I've checked and by default config, it's built-in.
-
-So, probably to avoid having to use {initcall,module}_blacklist
-(depending on the build type), I guess it was decided to have this
-parameter. The commit [0] that added that, >13y ago, mentions that since
-it was enabled by default and some EFI implementations had issues when
-filling its memory with oops logs, the option was to add such
-parameter+Kconfig to force disabling efi_pstore. Good decision or not,
-we should now live with that IMO.
-
-
-> Also, the practice of controlling the functionality of a builtin
-> diagnostic feature by poking something under /sys/module/foo/params
-> is in rather poor taste IMNSHO.
-> 
-
-Not only poor taste, I would say super counter-intuitive. But allowing
-the sysfs playing was added by myself, to enable users to change it
-without requiring a reboot, for a very cheap cost (well...not so cheap,
-since I added a bug and here am I now, trying to fix it heh).
-
-If we require a reboot, we are in the same situation of kdump -
-crashkernel must be set on command-line and requires a reboot to
-properly reserve the memory. There is no technical reason for that in
-case of efi_pstore, at least, none I can see.
-
-
-So, with all that said, what is the path you suggest we follow?
-
-a) This simple fix (or something similar)?
-
-b) Drop entirely pstore_disable, risking a lot of users to just face
-breakages in their setups?
-
-c) Other ideas?
-
-
-Appreciate your/others feedback, thanks in advance!
-Cheers,
-
-Guilherme
-
-
-[0] ec0971ba5372 ("efivars: Add module parameter to disable use as a
-pstore backend")
+-- 
+Sincerely yours,
+Mike.
