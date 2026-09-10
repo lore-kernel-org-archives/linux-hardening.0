@@ -1,148 +1,278 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6754B3AD529
-	for <linux-hardening@vger.kernel.org>; Thu, 10 Sep 2026 18:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CAA4A68AA
+	for <linux-hardening@vger.kernel.org>; Thu, 10 Sep 2026 19:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.177
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789063491; cv=pass; b=Rs6pLNZOSK9WKpe0Teu2hzirpSqFZgaqVDB4Nse6DIHUteZHHWRJSpVdU/lo+MH3xiIdVhFH0mtdZg1Ymc+HadULLm1kosmwH81aes4s362BGibLO6XIk18Z7OLHmGfulo7aJxGCCQTHooZH9mG3BHM2BP+8d9mtC2WYM4y7Qp4=
+	t=1789068688; cv=pass; b=dZQwWtpYvxfDjQ63iuNhKGt2M3kdtsvTGKwZp+lAK2GNWhFhtChGLsZ87TWFfvm9TUmGMxzKa3JaZAAWNo9g63lCAeSaJL52y29jqkKDBekjnTaf3AXtbeggNURIx2txM3m8r6GokvvrFBLsRsn8k5zlXuFElgRJXgmLW43UOBk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789063491; c=relaxed/simple;
-	bh=/JiSL9KtMYW39gs+t7l5GNFcMSkI1SwWlTIMXx+UrPU=;
+	s=arc-20240116; t=1789068688; c=relaxed/simple;
+	bh=KTq9X+5RKd6MevfODoxvkTeUdtyi6rv9KjZTSYh2TKE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EsWITzaOuCTItYN4W8z6rZe9bCLHsnbSxeBOXpinzEqMenjDYSqQyh/g93EUoZtzOQ2q0J8FQ+KifbXso+dDFTdqOCj6OxsN4g1ZApSXaA4Ja7iyJ1J/uWVYb3+Qhu0yc/wzCBfiapeZDnaczYtWjdlghYOpl7l+4Vs3voalCoo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sEskD115; arc=pass smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=DRtzzIx0lHdDv+gIIbu7oZpYX0LMzGUcMy1TalZhemyVb0GUov/WG69vVyGzV/6hHsh52RxLO/JqpaddHCLlQqLWyrds6NRQsXQU/bKQskSzzYm4bEeaZFJ5m+NMjvH0KUpEb+Alv36vfrixkfmfFwJc2yZPJhRgGCBcRl0h004=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bTyEgftU; arc=pass smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sEskD115"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-47de0093c42so11864f8f.3
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Sep 2026 11:04:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789063487; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bTyEgftU"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5c663437fe5so170545e0c.3
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Sep 2026 12:31:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789068677; cv=none;
         d=google.com; s=arc-20260327;
-        b=eWL2XZalYwaKbudEyVzd4CPMAFfd9TUA9fxRPoo0Uu2Fs1HcBLOyWKrz2ZIzOI7d4c
-         6LakFphZ+M+9LQXkWS5HhaK9i2QKkUdWY9b96V4wglWmPedxJlwG3VSv9pFhEdKANb2v
-         xHrn9SVToFJHG9V82pqaYL9GWrsvFMp2ck3NDxmT122QMrHAvR1jxvp2rl7nLSBNVH5U
-         /kO0r7eiH9ua5andKRXJEAF1s1LTJqkCSNO0pE3btupUM8k93i3PdBgDhtkW93uGkmHc
-         hvMJP/LUHn2RbsBZIK7SpjhuIgGr32sI8JGJlFsBD8921a/oCBGms6E7bf+2bbpOPXn4
-         hFIw==
+        b=bbwmdlUHgBDuhCuEhzFQJwwRubICECFCBOm/3Gx5xUkZviUThOHnjn4Mu3gxbk55jV
+         QdkePnNq/vkHvgXszAzOON5QboQ7/hkFFShN2uFbBzVOlt/Lt7kK40YIBK2NO7HTiJ7R
+         d6tbrRAkIn8QGyDxjGguFU0gavZmt6QD9XwvroRWj89k0Clb7ZUOaWFDW4QhS2BWp1kg
+         EF1jqpKY4rUtSRrp98nn/gydhQBDLb8T8WN1UX3mEyiFwV+n6mHl+YzobzYU3RCBrV5x
+         ANC6Vn2Y0U7snnzntB5ZBiCqJHm4rr3N2y/7SULbBX+NbqUIg6TIbNg2QzIiqVN17L3w
+         ieFA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=pmlSkBU7Yx6aRJKzEZrvFOirNAsuneJxXll9dWdAM0g=;
-        fh=UKYOq+/J4C8c9eQVvm6651rYa9X4fF75BH/s/R4O3Ew=;
-        b=m+hRwxr+/rziQRWnVkSq1oaeQMelJ2e6SCB4nTyo1oP7Jjev8yUsk3Ln16y3E3WRrr
-         kEQM80JTjlS5ZwCW/nBlvtBihUBzsRJplDiQZTyAyJUhDK+eIB6KswZRIBuVB/LUwFqI
-         nKDWV6j69rK0LEnXzgTfhAY8vdjnP1y9vMUTR/smZPIsCJNQfV5mJna3fbEG7RFfO7Fn
-         RVodh0/9fM1TZqNSU2aKKTXBVL630KVHzgxO/Fxt3ZHxj6bOXqTERJ7hahta+42sCNEI
-         dGEhloNmtWTPf+OkIYk++NsX1GsSlcY5vsTiYFwtxUnx8dZHkHYBmQEOR5rrwQf8pqtv
-         rCpQ==;
+        bh=0V/f5lIKQxwY8UDJZpxZzCGcHb+M8Wk6F3+yBI8V0a4=;
+        fh=vNhGbl2Lz6lBqA/djJldu8YRf1P0tmOuVZXuoSOpWy0=;
+        b=cT5Lg8FQ5OVd1O3QquPnTSbYQCIwtwW2TIY6V6mWnUyE9yQDC/cr/1Qr2gNVA6A1a9
+         70zGVQzQLdz3gGlCcnoH9Qgk8zFe/epunMx29XnJeY4eCjrKTMfDG231c7qkyHUamgxc
+         uoihljsqdcKvqA5raWK4FF0tXJzqExRT+bd/LHpzIo2NQOv7ZYJJy+OIuDzLTOejfnnm
+         C8BawGWf0aic47iu4p1OeDsW5kPQ+GxlmtbFIGv38JWbJrbCRoJNtgd3sSqjuITwlfD/
+         Sxun+rprg2t/7+Ou/P6B77JvzYfs0Op5pndUGBHsBkMYKccFcoD8LZI/KjP/h0cLCRkZ
+         30IA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789063487; x=1789668287; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789068677; x=1789673477; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=pmlSkBU7Yx6aRJKzEZrvFOirNAsuneJxXll9dWdAM0g=;
-        b=sEskD115CpRrijD4cFzDelRYsF8YWzl7654MOPwh89cY6gbyQnrSMlfZ8+AKtEU6a0
-         yil0X+5Y03DWkpDho47+1NAYo+9/rc5Ntu4BGlZoQvY8681Czq/y3kop9p1YyDoICKUZ
-         Bl/BuaEWMVrX0NR9l6hsA07pLxg3p/uiPEdDDl2wqmLdkocKj3cSuATuNlc55zMhRcXf
-         Yw4XpXsR/QENFv0L1WtfkrnWaBxCIUkK6+UxPETdSNdHUYunrvWKe8sYpr5ECPlUovvX
-         Y4p4bU4kQSYZV/cCZbtjmxVcaudKGD0f5mYvLJEO66Mf2Oe/LztwKisydDQ/AtaAusff
-         op9g==
+        bh=0V/f5lIKQxwY8UDJZpxZzCGcHb+M8Wk6F3+yBI8V0a4=;
+        b=bTyEgftUWKIopOFjcUBu/2KhyIikGf6Tu1DDL0wwWwCBeQuNHF/DSagivn5/pmOxO7
+         7U3doG7W3kvzWMO81f7YlZLMiqtOrQn+32PUDrNIvj1XSYRFFssQku8mVpwT4BpPosUh
+         fthi9hb+NCnSppkJTfPLCdYDX4XPhZNirMuLoetNJ94VKcUTmcWKEKom5ZrXrnpZWz05
+         o7fTBpSEzeel1qee7ZQtEsF70qdoJyYaVODAa9dyKgK/T9kZYZkONNztop09xD3tmWE3
+         Wzau4bN9ObZjURUtR5SxNOFmLx8E8KvX4d3FsBh7p2CB6idxd89ebwg7gc+nBHEXwteD
+         oVtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789063487; x=1789668287;
+        d=1e100.net; s=20251104; t=1789068677; x=1789673477;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=pmlSkBU7Yx6aRJKzEZrvFOirNAsuneJxXll9dWdAM0g=;
-        b=XHkuPufD2UkwfvCvbM/kOaiE9XMekwOUQpvWeRqg1lzNmMcRVpanUGP/2wF6TaVI4g
-         sVjtbyWta7jFRF0t0yU26l2msFRdGstRbG4G+FcPr6sb+vfEwLyRrEgolRFlIgW88Lca
-         5JL3qqhcar40q9csKeUpeU9cprzFz8wfv2ottVCgd6t9+xVJLzYkB8yYb6509yZVpHRw
-         oEJoDdvN1c6d/SZOVBx/OG9TLsyH29seUfO0wc8ZmPXRDVfFPoE1CYkWi4KqfcNHPLaI
-         o5IQwwLcgn2egQr8OJ57r94bfmmVj7q21nbNLlJB0O2vhgkmRTtSZnNoS+O4yeknF/LH
-         oo5w==
-X-Forwarded-Encrypted: i=1; AKwUvBzR7DU64icmRsS/02LOC/C/dJsXlrnYw09GHIj2c0bDhaHQXAxWpBBg+9AtjPkqqo988oHtUQdwKehO6HbhsCM=@vger.kernel.org
-X-Gm-Message-State: AFuF++nz1Q3MwexDskz380YKrPu6bGxjKAcIs3pCeTmjrlx8T+PEfHps
-	FMZavTy1kxQ94a18nSZIkqEMS001cAqLTKZdJtw4N3l3Kpcmwe/kjZUIhK+cRahELMVPRKEf7jY
-	eKM44KYpYjQCAT6mKYIx9bS4JW9UrC1A=
-X-Gm-Gg: AYBFou3tvyklrLYUUul9mLETNYGku5Yzfuq5rXaSAv7oQIcu8paWqT9BawkbLVki2pY
-	1Lm3IkFiXzdcWLjoVShXYWM1Gg8oo+wMIDCxMTs8JS6QmJa/YHMIxU9Sw4alDH2CG5l/JEwZ+J1
-	ezEMf6r8pH1LAUMASbImLVIKtEMwA+Y75t/trsOyWXxrx8kfqOFm+cko7m9J191UF1eTvUJ4Z3t
-	I6/EIpz8VMtqQZrcKAF+EiUjh2xakUh6xGd7ZSMjulri4eGcwGmH4z+lQzij+GxkX1Ra7PJF6vs
-	tR+SSyloi5bvMOiy7px7fZbodA3OKgQWrkOGgDmLAKAy9hUjT2itsm0DWYNu58YKnEopSyGS0Um
-	enanD130FjHFQP+4+Y60F6AFGTEOGgJR+3oo0Sg==
-X-Received: by 2002:a5d:6f10:0:b0:485:8c16:5ef8 with SMTP id
- ffacd0b85a97d-486eb3104f1mr167913f8f.50.1789063487446; Thu, 10 Sep 2026
- 11:04:47 -0700 (PDT)
+        bh=0V/f5lIKQxwY8UDJZpxZzCGcHb+M8Wk6F3+yBI8V0a4=;
+        b=lI2lwK5nbSMYlKAB8g65v9IXXrr6yHGuQUTbDpBYKINZ1K+/y+S4IggoFUeXlPYR2z
+         jHRwQPFiNfIerdMQQp8Zp3HHXcfsdY+oO6g3TRXyh1zyjsjq5uelXW+QoBaEBC9SisaJ
+         KeWxOlgLCq1qUDdfqy/X7xE9hoUa+XSjkAhwYq6+hgRyVsnfFVSnR3J66XiRrMP5wWND
+         m4IyRkvzYDihQhJr9duaiMQmZG9EiBfAqxAiRMwZf71AzqwO/EVt3ZxbkU2ENbrNCqnv
+         t43lDGpp6ZKdNEHSfqBmtF7k0Mt+/QW0AqSGUFxOAUNf/mYCWxr+tz74Yx+3jwxYGtop
+         qQjw==
+X-Forwarded-Encrypted: i=1; AKwUvBz/IW14LE/VmebghlBjNmtSzcEJbvXK9+GRVdAEfxlOkz2PfxTERuD1vMcjnIqPxNUsccJmrkIMnEqoKvCTh18=@vger.kernel.org
+X-Gm-Message-State: AFuF++mdrj7GEVgRvC8S0v8iZLMlTrgSA+qNDWJsW91OdbGsip5TEB4J
+	6DA+5yL/dw3NgtRuPpAICJkcMG0rzDJIEg3yYUln4Jfmzn0Si661OSgB//1k2uMzDOHhcb0VLt8
+	PjDBb3+ZmvenFRxL6RplkomW9vbw1fF8+do+J9ck=
+X-Gm-Gg: AYBFou30JBVyyrTT7ae5c5BM8+B1jf7eGtWGFvB/2psQrj67SYGMMSSZRSHXJluUyGM
+	ZsxOa6yhryGf+jwYOBYS7WQtvX9MWEyOLt31Qkg2uLO/o+0IDUhOFLs05V64oPj4J52KGgXIbR6
+	0cHd8rlprDT1KH2isMZcABVNoto1+XM/GEoK8UEW5JR0bUEQ0wxCEOGMDVkERcw8PxZR+JfVmAV
+	QNprnKy9MoUaTnyY0yAT9RzQMGR7EyUikew5cfnCUv/BMZG3gm024urQl80lw8MXiCl/3cJXMwa
+	0dl9wJ4lczMnA/UN0B3s3LZ8bGcOy3nl4P5QTvpoMHaLWvli2+Xnd5WjRfk0TLYKmoWx4P5qY+q
+	bq2YdqKeHWqjzXgDq1NKDrgFjAwFW/fKc312EwaUAUgly+mr70PCm
+X-Received: by 2002:a05:6122:3417:b0:5c8:3122:ac47 with SMTP id
+ 71dfb90a1353d-5c8462b2288mr1910205e0c.5.1789068676639; Thu, 10 Sep 2026
+ 12:31:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260910022442.3594649-1-xmei5@asu.edu> <20260910022442.3594649-2-xmei5@asu.edu>
-In-Reply-To: <20260910022442.3594649-2-xmei5@asu.edu>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Thu, 10 Sep 2026 11:04:35 -0700
-X-Gm-Features: AcwNN1UPtHpn5Ju1AbUXHO7M6POxnBVC4rOVn1G8Fc3LCftjvo7b6-mIt_6WkRg
-Message-ID: <CAJnrk1b=WoRPqKLEex-WuTVxjjw95Aj77Azwzv=BeR9VTu4PSA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] fuse: return -E2BIG for an oversized SETXATTR over io-uring
-To: Xiang Mei <xmei5@asu.edu>
-Cc: Bernd Schubert <bernd@bsbernd.com>, Baokun Li <libaokun@linux.alibaba.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, fuse-devel@lists.linux.dev, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Luis Henriques <luis@igalia.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, bestswngs@gmail.com
+References: <20260823123549.1120133-1-morbo@google.com> <20260823123549.1120133-3-morbo@google.com>
+ <aosNst7K9zaClFEH@google.com>
+In-Reply-To: <aosNst7K9zaClFEH@google.com>
+From: Bill Wendling <morbo@google.com>
+Date: Thu, 10 Sep 2026 12:30:59 -0700
+X-Gm-Features: AcwNN1UAFW8O5KEENv3dVtojFZT_CRKAdk5AOtP2XF5VqSdFHqLVOslXBPVUWeo
+Message-ID: <CAGG=3QX5PQSioCK+5kM5wZvtYoa7iKrRFtPuwvX2d06C2kw-iQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] lib/tests: Add KUnit test for struct stack_trace
+ __counted_by_ptr attribute
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <david@davidgow.net>, 
+	Rae Moar <raemoar63@gmail.com>, Ryota Sakamoto <sakamo.ryota@gmail.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Dmitry Antipov <dmantipov@yandex.ru>, 
+	Petr Mladek <pmladek@suse.com>, Kir Chou <note351@hotmail.com>, 
+	codemender-patching+linux@google.com, linux-hardening@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 9, 2026 at 7:25=E2=80=AFPM Xiang Mei <xmei5@asu.edu> wrote:
->
-> fuse_dev_do_read() answers a request that does not fit the server's
-> buffer with -EIO, except for FUSE_SETXATTR, which gets -E2BIG since the
-> value may legitimately be larger than the buffer and setxattr(2) reports
-> that to userspace.
->
-> Over io-uring the copy fails with -EIO for every opcode, so the two
-> transports report different errnos for the same condition.  Map that
-> -EIO to -E2BIG for SETXATTR.
->
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Xiang Mei <xmei5@asu.edu>
+Hi Kuan-Wei,
 
-Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
-
-> ---
->  fs/fuse/dev_uring.c | 2 ++
->  1 file changed, 2 insertions(+)
+On Sun, Aug 23, 2026 at 8:11=E2=80=AFAM Kuan-Wei Chiu <visitorckw@gmail.com=
+> wrote:
 >
-> diff --git a/fs/fuse/dev_uring.c b/fs/fuse/dev_uring.c
-> index c6dd420c4034..6351f2470e09 100644
-> --- a/fs/fuse/dev_uring.c
-> +++ b/fs/fuse/dev_uring.c
-> @@ -893,6 +893,8 @@ static int fuse_uring_args_to_ring(struct fuse_req *r=
-eq,
->         fuse_copy_finish(&cs);
->         if (err) {
->                 pr_info_ratelimited("%s fuse_copy_args failed\n", __func_=
-_);
-> +               if (err =3D=3D -EIO && args->opcode =3D=3D FUSE_SETXATTR)
-
-nit: might be worth a comment above saying something like "fuse uring
-doesn't use pipe buffers, so an -EIO err can only mean the in-args
-didn't fit ent->payload"
-
-Thanks,
-Joanne
-
-> +                       err =3D -E2BIG;
->                 return err;
->         }
+> Hi Bill,
 >
-> --
-> 2.43.0
+> On Sun, Aug 23, 2026 at 12:35:33PM +0000, Bill Wendling wrote:
+> > Add a custom KUnit test suite 'stacktrace_counted_by' to verify that th=
+e
+> > __counted_by_ptr annotation on the 'entries' field of 'struct stack_tra=
+ce'
+> > behaves correctly.
+> >
+> > The test verifies that 'max_entries' correctly limits and validates acc=
+ess
+> > to 'entries' when CONFIG_ARCH_STACKWALK is not defined. If it is define=
+d,
+> > the test is cleanly skipped at runtime to prevent compile-time or runti=
+me
+> > failures due to 'struct stack_trace' being undefined on modern
+> > architectures.
+> >
+> > Assisted-by: Gemini Next
+> > Signed-off-by: Bill Wendling <morbo@google.com>
+> > ---
+> > Cc: Kees Cook <kees@kernel.org>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> > Cc: David Gow <david@davidgow.net>
+> > Cc: Rae Moar <raemoar63@gmail.com>
+> > Cc: Ryota Sakamoto <sakamo.ryota@gmail.com>
+> > Cc: Kuan-Wei Chiu <visitorckw@gmail.com>
+> > Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+> > Cc: Dmitry Antipov <dmantipov@yandex.ru>
+> > Cc: Petr Mladek <pmladek@suse.com>
+> > Cc: Kir Chou <note351@hotmail.com>
+> > Cc: codemender-patching+linux@google.com
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-hardening@vger.kernel.org
+> > Cc: linux-kselftest@vger.kernel.org
+> > Cc: kunit-dev@googlegroups.com
+> > Cc: linux-hardening@vger.kernel.org
+> > ---
+> >  lib/Kconfig.debug            | 10 +++++++
+> >  lib/kunit/.kunitconfig       |  1 +
+> >  lib/tests/Makefile           |  1 +
+> >  lib/tests/stacktrace_kunit.c | 51 ++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 63 insertions(+)
+> >  create mode 100644 lib/tests/stacktrace_kunit.c
+> >
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index e97bdf3a42a8..51a6ac1a2461 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -2716,6 +2716,16 @@ config BITOPS_KUNIT
+> >
+> >         If unsure, say N.
+> >
+> > +config STACKTRACE_KUNIT_TEST
+> > +     tristate "KUnit test for stacktrace counted_by attribute" if !KUN=
+IT_ALL_TESTS
+> > +     depends on KUNIT
+> > +     default KUNIT_ALL_TESTS
+> > +     help
+> > +       This option enables the KUnit test for verifying the __counted_=
+by_ptr
+> > +       attribute on struct stack_trace.
+> > +
+> > +       If unsure, say N.
+> > +
+> >  config BITFIELD_KUNIT
+> >       tristate "KUnit test bitfield functions at runtime" if !KUNIT_ALL=
+_TESTS
+> >       depends on KUNIT
+> > diff --git a/lib/kunit/.kunitconfig b/lib/kunit/.kunitconfig
+> > index 9235b7d42d38..b3761b41459e 100644
+> > --- a/lib/kunit/.kunitconfig
+> > +++ b/lib/kunit/.kunitconfig
+> > @@ -1,3 +1,4 @@
+> >  CONFIG_KUNIT=3Dy
+> >  CONFIG_KUNIT_TEST=3Dy
+> >  CONFIG_KUNIT_EXAMPLE_TEST=3Dy
+> > +CONFIG_STACKTRACE_KUNIT_TEST=3Dy
+> > diff --git a/lib/tests/Makefile b/lib/tests/Makefile
+> > index 4ead57602eac..40875e729fc8 100644
+> > --- a/lib/tests/Makefile
+> > +++ b/lib/tests/Makefile
+> > @@ -6,6 +6,7 @@
+> >  CFLAGS_bitfield_kunit.o :=3D $(DISABLE_STRUCTLEAK_PLUGIN)
+> >  obj-$(CONFIG_BASE64_KUNIT) +=3D base64_kunit.o
+> >  obj-$(CONFIG_BITOPS_KUNIT) +=3D bitops_kunit.o
+> > +obj-$(CONFIG_STACKTRACE_KUNIT_TEST) +=3D stacktrace_kunit.o
+> >  obj-$(CONFIG_BITFIELD_KUNIT) +=3D bitfield_kunit.o
+> >  obj-$(CONFIG_BITS_TEST) +=3D test_bits.o
+> >  obj-$(CONFIG_SHDI3_KUNIT_TEST) +=3D shdi3_kunit.o
+> > diff --git a/lib/tests/stacktrace_kunit.c b/lib/tests/stacktrace_kunit.=
+c
+> > new file mode 100644
+> > index 000000000000..7ec48edf84fe
+> > --- /dev/null
+> > +++ b/lib/tests/stacktrace_kunit.c
+> > @@ -0,0 +1,51 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * KUnit test for struct stack_trace counted_by attribute.
+> > + */
+> > +
+> > +#include <kunit/test.h>
+> > +#include <linux/stacktrace.h>
+> > +
+> > +#ifndef CONFIG_ARCH_STACKWALK
+> > +static void test_stack_trace_counted_by(struct kunit *test)
+> > +{
+> > +     unsigned long entries_buf[4];
+> > +     struct stack_trace trace =3D {
+> > +             .entries =3D entries_buf,
+> > +             .max_entries =3D 4,
+> > +     };
+> > +
+> > +     KUNIT_EXPECT_EQ(test, trace.max_entries, 4U);
+> > +     KUNIT_EXPECT_PTR_EQ(test, trace.entries, (unsigned long *)entries=
+_buf);
+> > +
+> > +     /* Write to the allocated elements to verify access */
+> > +     trace.entries[0] =3D 0xdeadbeef;
+> > +     trace.entries[1] =3D 0xbeefcafe;
+> > +     trace.entries[2] =3D 0xcafebabe;
+> > +     trace.entries[3] =3D 0x12345678;
 >
+> This only does in bounds array writes.
+> To test __counted_by_ptr, I thought we were supposed to intentionally
+> trigger an out of bounds access and see if it actually catches the
+> error?
+>
+True. This is testing only that the existing behavior doesn't fail
+with the new attribute. It looks like you're not the only one to
+comment on this, though...
+
+-bw
+
+> > +
+> > +     KUNIT_EXPECT_EQ(test, trace.entries[0], 0xdeadbeefUL);
+> > +     KUNIT_EXPECT_EQ(test, trace.entries[1], 0xbeefcafeUL);
+> > +     KUNIT_EXPECT_EQ(test, trace.entries[2], 0xcafebabeUL);
+> > +     KUNIT_EXPECT_EQ(test, trace.entries[3], 0x12345678UL);
+> > +}
+> > +#else
+> > +static void test_stack_trace_counted_by(struct kunit *test)
+> > +{
+> > +     kunit_skip(test, "CONFIG_ARCH_STACKWALK is enabled, struct stack_=
+trace is not defined");
+> > +}
+> > +#endif
+> > +
+> > +static struct kunit_case stacktrace_test_cases[] =3D {
+> > +     KUNIT_CASE(test_stack_trace_counted_by),
+> > +     {}
+> > +};
+> > +
+> > +static struct kunit_suite stacktrace_test_suite =3D {
+> > +     .name =3D "stacktrace_counted_by",
+> > +     .test_cases =3D stacktrace_test_cases,
+> > +};
+> > +
+> > +kunit_test_suite(stacktrace_test_suite);
+> > +
+> > +MODULE_LICENSE("GPL");
+> > --
+> > 2.55.0.860.g4b6b3295ed-goog
+> >
