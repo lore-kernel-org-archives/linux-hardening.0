@@ -1,75 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475924A64D4;
-	Thu, 10 Sep 2026 14:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCD35481FA5;
+	Thu, 10 Sep 2026 14:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789049220; cv=none; b=udW3kdxXsq3j9a6inO3n0oJTkO+UvFw677wUlhKdikRlZ6vyxoS6OJbzHj9qUSz+IHE/tve3Ml19bFkT2CQ8i+vhSTecFVtDVfIgxlGutcTiTaiMHwC4rM1NxF7DgHdmkzMWYVzys5JtdBXaUq5ZZdzbanhGxPcXvTcO+HeFWFQ=
+	t=1789049971; cv=none; b=gCT7mVjzR4R70B/OF7VHJqxSslAa1eBKnFcG9aKWIUhuuEZhc8iotbnGzyjSDGFNNWaMSn3ktmk4SQLgMq06rA8DKEsS33fl2Fxr6KUTbv0mvN5RcBqObtxDaq+ixrpDSj1ULYqvu3c11/KtMbfJk1tJE1RbcRFviD/8UkakMRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789049220; c=relaxed/simple;
-	bh=0phZ0QDUsMUc6X9QwEMFuur8sUoxHmFRmv2fALjG+7w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NR4ehpxXxA2VCrJvq3UPbDTp5v9AHmWk4Y3y4sRQ4KOx5cdiuS6ULOpOa3H48aMUpWHoD5SGfG3o8SpWgAzl3g8csdYy14qUUuYqL4djLNPpfYrIm16g/nV4nvC3g+ebA9tHLl+tBNIR8JiWfUoXnHXjuO/rJrwqbi0Y9c5pVpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WskmYreA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789049971; c=relaxed/simple;
+	bh=YyZZgELesOQYbwi5589EMzGDv5CnlCwWEAz7cpxWzf4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NIG3jqn7XzjXjIDbZOdmNgSUXvhJ/22to40awHv6quxf9hxXXTgS5qbK//KH/RrUvK3pvCXoUttNr8/NEbso0p4BYxrLatCop5whPP0LaJ84TOkJxaEo9gO4qZnXypaALeJddFsinXk1mXE0HjuPoVjC0bC8/NIZLPI51PIgjuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.arm.com; spf=pass smtp.mailfrom=foss.arm.com; dkim=pass (1024-bit key) header.d=foss.arm.com header.i=@foss.arm.com header.b=npJdqY2l; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WskmYreA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA4821F0089C;
-	Thu, 10 Sep 2026 14:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789049219;
-	bh=9s3dbjpQkzsiVVJyqVDj2DYOx7r7jEs5RAl7koa46/0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=WskmYreAF4fUUx0w9aQ7KU9ip/RwqHAMgCarp2hhnSv+5/AuLtIxnvhlFLlQM2jvu
-	 Qbk1O8JA2RW8JgdSpvFvgOQXw2tYkkIJj8tMYM/q3t4XpKa/ZLwCGB7QsQkeaqT+TO
-	 s8Fkvqzg8wm7FfvgiO6dhooCkQQSq5bOC4UFzJJsRfhk2BkJYWgIfu8x50be9gikkB
-	 Sm4njabqa1Md2c6v0llvrlkcJoSPDS5ddh2pSwb4UCxYpVLe6xOutBe7DDLU/3Qp8i
-	 6d7d5MvMOumrobWJzgOWOUIT9RVlCLPOgSM2kyM2D0RlgjqCQhz2U6NRssgn9JxCLw
-	 cdlBnTKWtA9gA==
-From: Vinod Koul <vkoul@kernel.org>
-To: Daniel Mack <daniel@zonque.org>, 
- Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Robert Jarzmik <robert.jarzmik@free.fr>, Frank Li <Frank.Li@kernel.org>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20260817-dmaengine-pxa-v2-1-f42ab0569a48@pengutronix.de>
-References: <20260817-dmaengine-pxa-v2-1-f42ab0569a48@pengutronix.de>
-Subject: Re: [PATCH v2] dmaengine: pxa: fix double counting of the hw
- descriptors
-Message-Id: <178904921538.109109.3118643113304356856.b4-ty@kernel.org>
-Date: Thu, 10 Sep 2026 19:36:55 +0530
+	dkim=pass (1024-bit key) header.d=foss.arm.com header.i=@foss.arm.com header.b="npJdqY2l"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9536B1570;
+	Thu, 10 Sep 2026 07:19:25 -0700 (PDT)
+Received: from [10.211.55.7] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F0293F7B4;
+	Thu, 10 Sep 2026 07:19:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=foss.arm.com; s=main;
+	t=1789049969; bh=YyZZgELesOQYbwi5589EMzGDv5CnlCwWEAz7cpxWzf4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=npJdqY2lkzMQ1ArUoRWjCHl6JYyGW+9VlY+FuS0oSIaTEVefYoWD5nfgZa3oYgF6v
+	 ay/2+Tge/AzDs2LsbDIQlY088djByVQkbuQy86vTzSrEcx8dA4k2lt+gHCIJrIfhQ1
+	 5pYgG0hGhKhZ4WqQc6JDXsRvcAe54mfMS72pXNHU=
+Message-ID: <615d5d1a-5266-4b83-bff2-21c8f3840040@foss.arm.com>
+Date: Thu, 10 Sep 2026 09:19:23 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: Shadow Stack Locking Semantics between arch's
+From: Bill Roberts <bill.roberts@foss.arm.com>
+To: Mark Brown <broonie@kernel.org>, Jesse Huang <jesse.huang@sifive.com>
+Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-api@vger.kernel.org,
+ dave.hansen@linux.intel.com, rick.p.edgecombe@intel.com, debug@rivosinc.com,
+ andrew@sifive.com, kito.cheng@sifive.com
+References: <a1946d93-370e-4ca9-85d6-60b4a20ffd47@arm.com>
+ <3bb672e0-7bc3-434f-904e-aa00394dd01f@foss.arm.com>
+ <d20ccb74-69ed-45d7-a810-846904873588@sirena.org.uk>
+ <0ef9f4ab-4c9f-4089-bed3-f7726ec97804@foss.arm.com>
+Content-Language: en-US
+In-Reply-To: <0ef9f4ab-4c9f-4089-bed3-f7726ec97804@foss.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-On Mon, 17 Aug 2026 22:44:33 +0200, Sascha Hauer wrote:
-> pxad_alloc_desc() was converted from
-> 
->         kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc), GFP_NOWAIT)
-> 
-> to kzalloc_flex(), which sets the __counted_by() counter sw_desc->nb_desc
-> itself - but only where the compiler has __builtin_counted_by_ref(), so
-> from gcc 15.1 or clang 22.1 on. The loop below it still increments
-> nb_desc, which makes it come out doubled there and correct elsewhere.
-> 
-> [...]
+On 9/9/26 12:57 PM, Bill Roberts wrote:
+>>
+>>> 2. riscv should check that the low bit is set in locking not just 
+>>> that its
+>>> 0, it should be 1
+>> I think for ABI compatibility RISC-V will have to continue accepting 0
+>> as being equivalent to locking PR_SHADOW_STACK_ENABLE (or everything,
+>> but it only supports that one bit right now).
+>
+> TL;DR - No users, lets fix it before risc-v lands the userspace side IIUC
+>
+> I can't find any libc's that support this for risc-v. It appears the 
+> glibc
+> patches were not merged and I commented on those patches just now
+> that the interface is wrong:
+>   - 
+> https://inbox.sourceware.org/libc-alpha/8a5e21d0-0628-4910-9ad8-165c829e9680@foss.arm.com/
+>
+> Additionally, stress-ng does it "generically", and it would be broken 
+> on a riscv system:
+>   - 
+> https://sources.debian.org/src/stress-ng/0.22.00-2/stress-prctl.c?hl=1144#L1144
+>
+> This is a bug and never followed the convention to begin with. So 
+> risc-v is
+> non-compliant to the spec and this effectively prevents the a true 
+> unification
+> of a generic prctl interface. The behavior on riscv doesn't adhere to 
+> there own docs:
+>
+>   - 
+> https://cdn.kernel.org/doc/html/latest/arch/riscv/zicfiss.html#prctl-enabling 
 
-Applied, thanks!
 
-[1/1] dmaengine: pxa: fix double counting of the hw descriptors
-      commit: f6504be006aa4bb4bd26285f410a885c17920d65
+Sorry I confused two interfaces here, anyway, 
+arch_set_shadow_stack_status is fine,
+it's the locking interface arch_lock_shadow_stack_status, code snippet 
+below:
 
-Best regards,
--- 
-~Vinod
+/* If shtstk not supported or not enabled on task, nothing to lock here */
+if (!is_user_shstk_enabled() ||
+     !is_shstk_enabled(task) || arg != 0)
+         return -EINVAL;
+
+So even the glibc patches will be fine. But definitely something we want 
+to fix.
+I am going to float a patch over to the risc-v folks.
+
 
 
