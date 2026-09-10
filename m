@@ -1,196 +1,139 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD95441440A
-	for <linux-hardening@vger.kernel.org>; Thu, 10 Sep 2026 19:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789069751; cv=pass; b=KXyzRjV5HXibR3Ppmas/EHN6oUA+4gFHBJskPriN9NkhyaIT7cbHQlYIfxAI+UIcPjOSC6lb8xB/PYyW1CViNXqNt6z4jJ3J10oxeF0IT1hpl7w19SaidyhAxt+G2MrM9Ybhb+u/Qbin9TXM1/SvAy0VPAs0HtRNkvIA8drZPlQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789069751; c=relaxed/simple;
-	bh=S5QyluVCeJaGYGDzXLLVWroaz+aSorb6LrOcEvmKFPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AtxCrRzrebMGaeElChM6olx8bH4RZITch8Jp6CqO7B76CfV0sfC9anhbImeYQEumBmD9NfsfX/rMzHyka/6klynCFIzEeEYYZ384wjersxWi2fVSDG5T6sDfJvMYSNwO9bzhYoRyUH7u1NFH6O3JR5XiJDFlIsXgKjr4kIua6YI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZBcng1IF; arc=pass smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF11414436;
+	Thu, 10 Sep 2026 20:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789070488; cv=none; b=M+xEuVmwnlaEl6zpylAV3Ekumm1iqqG8OWexYuwpnb3f0Oc6+CfTF185O7fn2vbhRW2Wb/CaU/R8oVZ9OFRyatsG0UddpoC2c6RfGvMGcNUDMJiQYnu7mYu+zn8fYQn2Z5wqoi57z4cepHSkpjHa7cKDqEnup53Ti4mwr4MLr+8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789070488; c=relaxed/simple;
+	bh=K3OhqYapq8/9YGp/iEQ2QKlD/1kQkmtpDwV8tx63Z9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V8UKUC6GWGtK54gBOrWjpEtnzAy+oUHj/HzZMvkUk+Gsm+ZG70BEMGUgjZOQ6RbW32habLA+JltqguSOxRi+AMDtc1mU4Im2+ZybLTL50vZbCqshX8TitKP5inHY8A9E8rztYaB0ZCA/eNvnkV7MmK8y6eNh5HQJu+rnQ6YjBIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fDMx76sD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZBcng1IF"
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-97e9adae64cso111435241.3
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Sep 2026 12:49:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789069749; cv=none;
-        d=google.com; s=arc-20260327;
-        b=XE7qOobNDhZW/FeOObL4/M0LMCyXgxeBnPg37jv3G2NlJod2L6SwGy47kzu5XJH6Jv
-         IZJCf1Wzoif3r37SimDNgfcvlO4MdpEWDyYNHu/aXsJBSP6XuXbD4B7B7LbSUsS8NbeN
-         WbsMMfURNzsGh+niBBXAksho0toJZ+OkFZLS2kuU43ZzSPtqTRYLCir2SXXAgHjIq/Kz
-         PNtWr1XqlvdlV+0rveLf4HGfPQYDqfHj6kpmJEh4je7y3vXNa2N5Qh+UsoYFxMJ1rLnC
-         ejRSTet7b0W36mbK84QppNkFV819KXDKOcLsEbUEme2COXjXMGPY+VajHHDYTXh3EEqZ
-         Vrtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=c0ksCIwXvtdjyIyjGDoU93CuaajQfyrtF2GSd2bTtEE=;
-        fh=DCWnbyYChaIPOzYt1iOmizbcHCZhzp/lW2gD9GCBtWY=;
-        b=pNIZRSAN+JnoyC3T5m8uqwTymhD6dQbuH8kMMQaQ8tLVcM6DZIbRhFPp1bMrVEYFkv
-         +qU8CzLNIuw6idmnlI/Jgyl1NN52qnA37dCBNEf9fY4DvN8d5H0h8T5YHcUjMijetZyS
-         RvHLzN6q1dUiJd7B30NutJY1TqyWBzZwELrz7Ba7JeAC+jjkKQYmpt+6UUCArk4uRrH5
-         rDqwI0kFDbBR1xWneMCdPByvtK2oWZCYFyzm0EIZLcupyM4gkg28tLR0q50U9/5bIBat
-         GZx0+Kp/gp7Ve3FCoPhjtLpj2XYN2CJsljYjVWVSjM9RWUwPiej97w7xoWXXsQvCdmJe
-         HcqA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789069749; x=1789674549; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=c0ksCIwXvtdjyIyjGDoU93CuaajQfyrtF2GSd2bTtEE=;
-        b=ZBcng1IFvBCykMS3ie3o1i6yoMhOoz/8lqeHCwRuk+UfqIRheTE4X17pvfk6KELjSW
-         4/uHwNlyNEB3RyHN77Zc8185qXIJptJzIjX6j6yCFxlrL6BQ2MkHJpc8INwjZry5fxAp
-         NmIglitex/durE3FqJc1cX2l9fL8zhuNWI5clrdQTN0FBphzzzSNWWO7eXocP7BVr5EF
-         1ygepjNSitROspFCGzZNi3P5mo6ecQMV2Jod9RSQLnwTx/V/oKX3qPMuYnSepKhkJMIZ
-         WwBDOkYKMteOoRHGL92vhO/VcC3Ed+GQdSA6dZjgFu9sI3shNyQv8chaQDiKtDP6f8qE
-         q7lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789069749; x=1789674549;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=c0ksCIwXvtdjyIyjGDoU93CuaajQfyrtF2GSd2bTtEE=;
-        b=BYqriZlPiAyVgrFl2M9HhSHJ8OFMaXvBXqS3WKtyahzvmEhvGrT3UJSa7IibZYnOVh
-         C5klGZ7hFqL8ttpHAMn6RlBNF/p/ibGzWm3z3c0eDrcnVgzjO/QYc0Od2nCyRD31E3CH
-         jL51gLJnhrYQLOpZ3ME1ZaJU5HoeEgb20+l51NtvUGGDDn4rtcjhtm+tkT6AyUmIJDwG
-         iNq2O9iIPxAUNKelrlmv7Uo5spzEZ6adCyvSqHl3b2wLQpM6pMF/NaZtJnpdZHtQAKHz
-         n+jLYoUPSNNx1jXdcBHolosMzp1OL78Z9DCGrnL+NwIHby8vLtn9CJjymEBupWkpVmCb
-         jtrQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz6J7XH9/BPCth+rHPa0+m6fHgiEah6v8oRHoOsWrCl/391yc5Nnsxzfl4HvV3bx15o0lQa62YwRvvoboahkzA=@vger.kernel.org
-X-Gm-Message-State: AFuF++mXVxUEZtpC6mhnoxUbLgcuxduELdaoUFeBWmI17RIE4GBwAQs9
-	YEMEClWhLfA8c9C/QP9ioUPblaELrc4KVDBdCVbfxL9oneZOLfJ6kYFiVyEcOcyy6kdmwt7wmsC
-	pU3Y0Hk5nOCiLUyrDMTS2H7Tq749cA1Be6ieuSQg=
-X-Gm-Gg: AYBFou307r7i4QQNfQvkwLqvS9BMzqvnreA8e2BzOg8VO3EyB2fs+NjAWmfo4A0j/m0
-	sfgT5pX9iCydQ93xryhyGuvsmM2rmiXyAktbKNPgabr4PevKYzeVgqoJb+dhHQaG60mDEBXCO73
-	NYzH2ISe3LCoIa7qDvH2M9ZuytO2qsUzxXlO2EAakh5jr68ERybH5LRiw5TOKnuWQEuKkZ99MPT
-	dTB1nZfDbcND1kaBV8gfOEseTmc9xjGuNXciwZJSh2RSymOtLwxhrobJt7Bu3Bhy17RnCR1MA39
-	9d092Y/eFrUPqdWPHSL9yo/cOqrEtAIzLy8W/BoSBw0a2E/aDfMIOrX4FOH3sOU1fNuaZ0mWdY1
-	4bTLk7TbrwRmt6FOC3H0sxzlD6S+PPT2k1p/ZuUr7ke8CWKS8ksvN
-X-Received: by 2002:a05:6102:6402:b0:790:c7bb:43fd with SMTP id
- ada2fe7eead31-792a93b09acmr1242358137.8.1789069748029; Thu, 10 Sep 2026
- 12:49:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fDMx76sD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71C6A1F000FF;
+	Thu, 10 Sep 2026 20:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789070487;
+	bh=qgAjydhKlvBY1ErV3UOJh0vIIGsAjA9VNJHIiNmRqtA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=fDMx76sDO7U5aGA0RooP6/dr82aG7LlUkxDzVccd5diNLWSYslWe92+1bbUKMq6TS
+	 LXbrdy3yX/dxUzSwECydbRPamXbCbWve8ctLjbCkGBZny1XhAIqB8QXlVCvAy2QSgC
+	 rVnbf32Y56UguAh3S0z8Dmb3FWT1nke9+01zUh9khjVFttM686VeHzx2nlITusZMym
+	 S3K39KDErtkxsR1Nkz3Wertn/txD7p7pSakbX2F6qzAyWk3/Xjk+pW5IEmebP6kyV9
+	 T90j400iYY11qKAoQ4qyEyuA92+60x4rPENfy6LJqQFdaOFdf668m3bGgv34BYf2FC
+	 be9WXtnzUEqVw==
+Date: Thu, 10 Sep 2026 15:01:23 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Aamir Ahmed <elb12345@hotmail.co.uk>
+Cc: Stephen Boyd <sboyd@kernel.org>, Brian Masney <bmasney+clk@redhat.com>, 
+	Jerome Brunet <jbrunet+clk@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Luo Jie <jie.luo@oss.qualcomm.com>, Kees Cook <kees@kernel.org>, 
+	linux-hardening@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: ipq-cmn-pll: Assign .num before accessing .hws
+Message-ID: <aqMLw9h-m3eA_UIc@baldur>
+References: <AS8P251MB0001B905088748016A0965F1C8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260823123549.1120133-1-morbo@google.com> <20260823123549.1120133-3-morbo@google.com>
- <20260824083538-d0eff358-e1d4-4af6-9e61-d4d816783266@linutronix.de>
-In-Reply-To: <20260824083538-d0eff358-e1d4-4af6-9e61-d4d816783266@linutronix.de>
-From: Bill Wendling <morbo@google.com>
-Date: Thu, 10 Sep 2026 12:48:51 -0700
-X-Gm-Features: AcwNN1V1PayGvWHzKjDrmg88i9kvWNJySD9iq9lUAMBCtIxwSRTkDSXpz02lxUY
-Message-ID: <CAGG=3QXojhEsqvk-L5vT3w37z_VO+p1=8vrJCJ44sTz_V-YRGg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] lib/tests: Add KUnit test for struct stack_trace
- __counted_by_ptr attribute
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <david@davidgow.net>, 
-	Rae Moar <raemoar63@gmail.com>, Ryota Sakamoto <sakamo.ryota@gmail.com>, 
-	Kuan-Wei Chiu <visitorckw@gmail.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Dmitry Antipov <dmantipov@yandex.ru>, Petr Mladek <pmladek@suse.com>, Kir Chou <note351@hotmail.com>, 
-	codemender-patching+linux@google.com, linux-hardening@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8P251MB0001B905088748016A0965F1C8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
 
-On Sun, Aug 23, 2026 at 11:41=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> On Sun, Aug 23, 2026 at 12:35:33PM +0000, Bill Wendling wrote:
-> > Add a custom KUnit test suite 'stacktrace_counted_by' to verify that th=
-e
-> > __counted_by_ptr annotation on the 'entries' field of 'struct stack_tra=
-ce'
-> > behaves correctly.
->
-> The implementation of __counted_by_ptr should be tested by a dedicated un=
-ittest
-> for that feature. And I am fairly sure that already exists. It should not=
- be
-> tested in random subsystems.
->
-I'm looking at `tools/unittests` and...what in the world is it
-supposed to be testing? It looks like it's testing absolutely nothing
-of substance. I assume you want there to be a test that runs and
-produces a stack trace triggered by an invalid access, right? I'm
-unable to find any tests in `tools/unittests` that do anything like
-that...maybe I'm missing something?
+On Sat, Sep 05, 2026 at 09:48:25PM +0100, Aamir Ahmed wrote:
+> Commit f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with
+> __counted_by") annotated the hws member of 'struct clk_hw_onecell_data'
+> with __counted_by, which informs the bounds sanitizer (UBSAN_BOUNDS)
+> about the number of elements in .hws[], so that it can warn when .hws[]
+> is accessed out of bounds. As noted in that change, the __counted_by
+> member must be initialized with the number of elements before the first
+> array access happens, otherwise there will be a warning from each access
+> prior to the initialization because the number of elements is zero.
+> This occurs in ipq_cmn_pll_register_clks() due to .num being assigned
+> only after the fixed rate output clocks and the CMN PLL clock have been
+> stored in .hws[]. If registering one of the fixed rate clocks fails, the
+> unwind loop under unregister_fixed_clk reads .hws[] while .num is still
+> zero as well. With CONFIG_UBSAN_BOUNDS and a compiler that implements
+> __counted_by (GCC 15.1+ or Clang 20.1+), this triggers an
+> array-index-out-of-bounds report during probe, and with
+> CONFIG_UBSAN_TRAP the first store traps so the CMN PLL clocks are never
+> provided.
 
--bw
+Please have your LLM rewrite this wall of text. It does not need to
+explain how UBSAN works.
 
-> > The test verifies that 'max_entries' correctly limits and validates acc=
-ess
-> > to 'entries' when CONFIG_ARCH_STACKWALK is not defined. If it is define=
-d,
-> > the test is cleanly skipped at runtime to prevent compile-time or runti=
-me
-> > failures due to 'struct stack_trace' being undefined on modern
-> > architectures.
-> >
-> > Assisted-by: Gemini Next
-> > Signed-off-by: Bill Wendling <morbo@google.com>
-> > ---
-> > Cc: Kees Cook <kees@kernel.org>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Brendan Higgins <brendan.higgins@linux.dev>
-> > Cc: David Gow <david@davidgow.net>
-> > Cc: Rae Moar <raemoar63@gmail.com>
-> > Cc: Ryota Sakamoto <sakamo.ryota@gmail.com>
-> > Cc: Kuan-Wei Chiu <visitorckw@gmail.com>
-> > Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > Cc: Dmitry Antipov <dmantipov@yandex.ru>
-> > Cc: Petr Mladek <pmladek@suse.com>
-> > Cc: Kir Chou <note351@hotmail.com>
-> > Cc: codemender-patching+linux@google.com
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-hardening@vger.kernel.org
-> > Cc: linux-kselftest@vger.kernel.org
-> > Cc: kunit-dev@googlegroups.com
-> > Cc: linux-hardening@vger.kernel.org
-> > ---
-> >  lib/Kconfig.debug            | 10 +++++++
-> >  lib/kunit/.kunitconfig       |  1 +
-> >  lib/tests/Makefile           |  1 +
-> >  lib/tests/stacktrace_kunit.c | 51 ++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 63 insertions(+)
-> >  create mode 100644 lib/tests/stacktrace_kunit.c
->
-> (...)
->
-> > diff --git a/lib/tests/stacktrace_kunit.c b/lib/tests/stacktrace_kunit.=
-c
-> > new file mode 100644
-> > index 000000000000..7ec48edf84fe
-> > --- /dev/null
-> > +++ b/lib/tests/stacktrace_kunit.c
-> > @@ -0,0 +1,51 @@
->
-> (...)
->
-> > +}
-> > +#else
-> > +static void test_stack_trace_counted_by(struct kunit *test)
-> > +{
-> > +     kunit_skip(test, "CONFIG_ARCH_STACKWALK is enabled, struct stack_=
-trace is not defined");
->
-> If the test requires a specific kconfig symbol, then depend on it in kcon=
-fig.
-> Putting all of the code behind a single, giant ifdef is pointless.
->
-> > +}
-> > +#endif
->
-> (...)
+In particular the commit message claims this triggers an oob access
+during probe() but below you repeat most of the text (although in a
+more readable form) and there you say that this has only been compile
+tested...
+
+> 
+> Move the .num initialization to right after the allocation.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: f81715a4c87c ("clk: qcom: Add CMN PLL clock controller driver for IPQ SoC")
+> Assisted-by: LLM
+> Signed-off-by: Aamir Ahmed <elb12345@hotmail.co.uk>
+> ---
+> Found while auditing the remaining clk_hw_onecell_data users that assign
+> .num only after touching .hws[], following the fixes already merged for
+> clk-s2mps11 (3e14c7207a97), exynos-clkout (cf33f0b7df13) and
+> clk-raspberrypi (6dc445c19050). The audit, the fix and this changelog
+> were drafted with an LLM assistant and reviewed by hand.
+> 
+> Compile-tested only (W=1, no warnings) on x86_64 with GCC 13.3, via
+> COMPILE_TEST with CONFIG_IPQ_CMN_PLL=m. GCC 13.3 does not implement
+> __counted_by (CC_HAS_COUNTED_BY needs GCC 15.1+ or Clang 20.1+), so the
+> build only confirms that the change compiles; the sanitizer path was not
+> exercised. I do not have the hardware, so this is not runtime-tested and
+> no UBSAN report was captured.
+> 
+> Based on v7.3-rc1. Checked against the pending IPQ5210 CMN PLL series
+> (v3, 2026-08-14): no changed lines overlap, and the fix is still needed
+> after its first patch removes the unwind path.
+> 
+
+None of this noise is necessary, please put the relevant information in
+the commit message and leave it at that.
+
+>  drivers/clk/qcom/ipq-cmn-pll.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/qcom/ipq-cmn-pll.c b/drivers/clk/qcom/ipq-cmn-pll.c
+> index dafe8c1738d..a9abad9ff4e 100644
+> --- a/drivers/clk/qcom/ipq-cmn-pll.c
+> +++ b/drivers/clk/qcom/ipq-cmn-pll.c
+> @@ -380,6 +380,8 @@ static int ipq_cmn_pll_register_clks(struct platform_device *pdev)
+>  	if (!hw_data)
+>  		return -ENOMEM;
+>  
+> +	hw_data->num = num_clks + 1;
+> +
+>  	/*
+>  	 * Register the CMN PLL clock, which is the parent clock of
+>  	 * the fixed rate output clocks.
+> @@ -406,7 +408,6 @@ static int ipq_cmn_pll_register_clks(struct platform_device *pdev)
+>  	 * is configured to 12 GHZ by DT property assigned-clock-rates-u64.
+>  	 */
+>  	hw_data->hws[CMN_PLL_CLK] = cmn_pll_hw;
+> -	hw_data->num = num_clks + 1;
+
+Change looks good though.
+
+Regards,
+Bjorn
+
+>  
+>  	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, hw_data);
+>  	if (ret)
+> 
+> base-commit: 654ae5d73c05bd2943d65636ce6cd0aa46e62f18
+> -- 
+> 2.53.0.windows.1
+> 
