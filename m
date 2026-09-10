@@ -1,170 +1,145 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazolkn19013077.outbound.protection.outlook.com [52.103.46.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C688D27AC4D;
-	Thu, 10 Sep 2026 00:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.46.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789001261; cv=fail; b=rkkz5XXSoKn1b+SJxrjtmZ7bwSNS9512WH6k/REAuOIDTC0NL3MJFA/xQXH/ixsW5jEe0ha0VplpqwS8UiT6Zc4Ve0HTqaN2FVYetN6/KFYQNdJBEZdEdoBMMDwRmaDoykpol4+b2VKL/ybXEofWzlebV6JW1iiGZYbox8Pb9ks=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789001261; c=relaxed/simple;
-	bh=hZM408lgly2Ads8t79bOUsRZQq/HhMsIvp0O/OOqDJI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C8FwrQkRcYcAJuGWwKnrIbvq7cJFzbjUWPcz/wud+mjJk5r231ExlzjGplXT2BoPDCIzAi842/wXJUCgFsvnwNxq8Nm1qWtbeIxS/InR27smII5T7Y2RPBHOHY30TxsW9WBqI01qlwqEIXQGQ41UUvknGClWFjUsdz3Hgeei7zQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.co.uk; spf=pass smtp.mailfrom=hotmail.co.uk; dkim=pass (2048-bit key) header.d=HOTMAIL.CO.UK header.i=@HOTMAIL.CO.UK header.b=mFHNHc8/; arc=fail smtp.client-ip=52.103.46.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.co.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B589437F8C0
+	for <linux-hardening@vger.kernel.org>; Thu, 10 Sep 2026 02:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789007117; cv=none; b=iHEQJ7lyRjgsGWb/kQlMSY4NOnhXb78/yrAI6mBcLqoJdruUIPidScE3QaUSSm6uSYLPsNP5XJeWECbjecT1m3sKbZVcIoEXC/0xYZ90Au6qqhoje63+bm8/izjnhrHnxwcXEcbJbXmOCf90QXpJ3uWB8qzW8Q+5Apo4v71DIcc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789007117; c=relaxed/simple;
+	bh=U+Me3C9+CP6ZrOYDdK5ENtjrkf4pAKYkEsgkRLmN7Bo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gs0oaNrZDxbcPx5rbeLR0M3GwhQt+gXBcE18tepRFDMiIZzHH4lNiFurFsr3uCgAey0CyIyX1qnpAyZl7Teyv3wHy4rfUjkNGiV5ox4QoISggTH67ZqBpjT7B3hfUeH483tAlxNPzhh7iI6vdV29jaDojhzcf8tswsvd7mMM00E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=MVoLSvgK; arc=none smtp.client-ip=74.125.228.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=HOTMAIL.CO.UK header.i=@HOTMAIL.CO.UK header.b="mFHNHc8/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XDePL7quqIYm/sVPboD/G8qqruFuOGIAJhVvHV6J7auHQG5sQ0ISPrYYuLUGKRszfbFksD9NFCoee3QosxKaaV+u9P4AFDCswhvPLkG6+doWRfdSDQpt7rbg7Ztt1V4UvJTa1fAZBsBbKddfymMo12/frSqOwA2HwV0C+q5OhUcHFmNDEoqeM49b4vwiWkRjj6xJV4/sDrSAEJYpOLnOkJ0MrbbfVq+BAUx6JngZ0DV5OR/d8tlVPlyel/2d+JhTZNVLtzcLihIRhCWECwORjYmf3jekYItXzbQ7dPYOml1XGlJPTRDdUTrEmLK4rcnc5pNQlAkqYR76Rn3ZVLSaFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hZM408lgly2Ads8t79bOUsRZQq/HhMsIvp0O/OOqDJI=;
- b=fxRpwlRDMtQ98c1p+TI8xbn91QIUeg9b0Wu6meHVEEnYRP6nX3nzoQluSUrI+l3ll99KH3PFrOrh3YGlFqTPRoVunselk7dxL/25M7B1oz6wxLp/1Z5cm4DvV5ErjwEc44zkO9vIuusVtIzJbBCx+JyZ9/8iEg1NmU6DX8gehcJK97ZYLfTKRW7mQo9qAkC0IC+FydOqHZ6ZmnD0YAJYWdR33oek1/U1Z8XBrb74OFo+ojiYenDLWnusrAAE4AxSf0aCA9vqZI3FOh2ajbWRysKWJbNJwaBCMmlGsmy4Avusj9KjQR7PLDk3l1O4azLeabn6nmlxdN2ICXRZz2FYSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=HOTMAIL.CO.UK;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hZM408lgly2Ads8t79bOUsRZQq/HhMsIvp0O/OOqDJI=;
- b=mFHNHc8/izNqr7d5XpGJOjPjQop7tgXF8MGdhDfHt5H4CkXJH7tc1yweQ6QuJSF72PtycQzbPsQ4TfIYzMkBeN/Przz6tML2E/j2NPRN1PzWK5ikk63uoauhlmbPSD0nAijrfTvdkFyeMrxhCM3YnjUkPPukmVEspzYbmh+GLO3MusgYt4c1gVbYwHqTJeTxne5/XTYI3fygo0JdtXeSdyb/dvFeonCZwcB8OGF2KgtzPnDwcAV6STN2mH80h7ApwlRWt8VSmVE2AYdKrqJtlWwqSIl6CrBp+zRo/Tj+joXgJ5LiOY6POBCsL6HTX/eQyJAWOqfUjdWWWLltUolbtQ==
-Received: from AS8P251MB0001.EURP251.PROD.OUTLOOK.COM (2603:10a6:20b:344::22)
- by AM9P251MB0110.EURP251.PROD.OUTLOOK.COM (2603:10a6:20b:415::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.7; Thu, 10 Sep
- 2026 00:47:36 +0000
-Received: from AS8P251MB0001.EURP251.PROD.OUTLOOK.COM
- ([fe80::2952:d4d0:4ba:8352]) by AS8P251MB0001.EURP251.PROD.OUTLOOK.COM
- ([fe80::2952:d4d0:4ba:8352%3]) with mapi id 15.21.0406.007; Thu, 10 Sep 2026
- 00:47:36 +0000
-From: Aamir Ahmed <elb12345@hotmail.co.uk>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Drew Fustini <dfustini@oss.tenstorrent.com>,
-	Joel Stanley <jms@oss.tenstorrent.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Brian Masney <bmasney+clk@redhat.com>,
-	Jerome Brunet <jbrunet+clk@baylibre.com>
-Cc: Aamir Ahmed <elb12345@hotmail.co.uk>,
-	Anirudh Srinivasan <asrinivasan@oss.tenstorrent.com>,
+	dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b="MVoLSvgK"
+Received: by mail-pz2-f12.google.com with SMTP id d2e1a72fcca58-85469d249c4so494687b3a.2
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Sep 2026 19:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=asu.edu; s=google; t=1789007114; x=1789611914; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=kwJ0wHKRMeWCO4z6Il8uP1M5MtMWeVs9uywjTGYzTi8=;
+        b=MVoLSvgKhI8CgfNVHYOMs0ZJyBH3njU7qKCbNeMBbo86JoglALDc+slYum9P/gVOsx
+         xQtStEiOcqMO6uqlNZleHVPW2P74glA1y6CSHok/v+x2Uvg4GpkG/mBsxh3ja1RtWnuu
+         u+HuRS9mQALnDGjZF1b+aC+bbCPzFZrioSsuhM+5FTPrJl9LSoNmffRB841GO9si4rQA
+         VayWzCcVTbJlfUcBPwj8L+flaonHAIJTQKFVPCTWUmSdqv2H/VdsSqMatqMgORJbwyoq
+         Rj1EZEgUy+c3+hQSmMBCsQr/VHF5Acwh/AQ2N499ANv2/IypmRFGceA0Q/kcZml8vGMx
+         HgYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789007114; x=1789611914;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=kwJ0wHKRMeWCO4z6Il8uP1M5MtMWeVs9uywjTGYzTi8=;
+        b=GszDjnX+sK/QPwIPqRbADkY0bzQ7D5XkKAEPUz1QEGI4F8r4A8/AQM/un0qOJ4cuLB
+         Ww/I2ffyOhPRX7S00Y1L1F/MEXxqNPsqrBx59UMUIVifbUNkRPfmXdjZYhQwKqb72xW8
+         XjuiPDe1GGnQ4CqeuaSk/H8gdqP/GRFdGPx0OV/bnBGxO5XEBKKXRxLpzHp1IF2Adp7z
+         iZdT2O0CrYgcIHFd5l03+qTRG5ibfc0+6AMAoPZHDmkNLVKOKHP4EMJBO/F3SZ63vsgk
+         cIQdE1l4pGD23nW544kHJc7AHuJ/CJws51HuUCTI8UsiqmRTlzv+ko3Py77AIj/yYT+h
+         fY0Q==
+X-Forwarded-Encrypted: i=1; AKwUvBzwEriOnFM6HWTAwLaZaywYPvYqJP/I22HJYVlTbTqMYBjKZYU883HaWXHGexg1BeqlTNuLMmMORJ+g0FvT1uM=@vger.kernel.org
+X-Gm-Message-State: AFuF++lSQeCzYGNS7hm3JauIPkU9/WPoC0xT3vhlVYpy/NY5ax93wjJB
+	+zsRiUxD5YRiC7tRMRd6VuesPQo+KFITA6giO85z6fRwLBeXmh4Dk0djGPFjcIBk0g==
+X-Gm-Gg: AYBFou1ruB0wbIdeb5P5NALZMXpMuRRB85E33FJJxF+dNvSd6i+1DVel7LKDVyN4gR7
+	paJ57enavzKR06O1D1dsdK8VW3Mw2iSq8xR358ajfL3Q3EsmozIlTOJeUuBl/yQi5IHpnhbgXH8
+	XTHMb1VkYLqnoDcpkrnZ2O16RR4HHD0VEW0LwlByhvIYM/RDCyNF1x8KxiDv6MXrnCXFRh9G6Ps
+	8PSlFYayytl6kEecUPjJW2dD3sApS0Fhmtj99gDCcl0Bcw9qKOLyPLCAhX15H6IyiEnWvh+hkCI
+	TdldNva3xNKwFyEABTJV2yxcpF1M1QIsulkhgZxlN7gmqNoaSFAFRTLDEgnhzEFXgcu7Mc0FjgL
+	d9RcV0gKkghXbF9RUQo5tuNsgm4RMU5ZEpAfQec4X925vpZ0+oIIUo73Jl0eJvxBgM7nT+Wvxjw
+	LojNCMBjOSf2ERobBJhLPOioHrVc6oQLyuSptQcvvgGUOIXH0r35mwjYMFdeRKYzg3xVjTcNIDX
+	B9I3khqqe7fSuIQ93Bq4QzKjyh3L88yee0=
+X-Received: by 2002:a05:6a21:4ccc:b0:3d7:b90:acba with SMTP id adf61e73a8af0-3dacbd6d1a2mr7999128637.6.1789007113811;
+        Wed, 09 Sep 2026 19:25:13 -0700 (PDT)
+Received: from p1.. (129-219-8-31.nat.asu.edu. [129.219.8.31])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1435c2ae6b5sm2688847c88.1.2026.09.09.19.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2026 19:25:13 -0700 (PDT)
+From: Xiang Mei <xmei5@asu.edu>
+To: Joanne Koong <joannelkoong@gmail.com>,
+	Bernd Schubert <bernd@bsbernd.com>,
+	Baokun Li <libaokun@linux.alibaba.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
 	Kees Cook <kees@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	linux-clk@vger.kernel.org,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>
+Cc: fuse-devel@lists.linux.dev,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] clk: tenstorrent: Assign .num before accessing .hws
-Date: Thu, 10 Sep 2026 01:47:31 +0100
-Message-ID:
- <AS8P251MB000160067A8B595BB9D743E8C8BF2@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.53.0.windows.1
-In-Reply-To: <ce401b42-9dfb-4c8e-9051-7ba08c107382@embeddedor.com>
-References: <AS8P251MB00013BD9A093C06D2D60E10EC8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM> <ce401b42-9dfb-4c8e-9051-7ba08c107382@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0121.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:192::18) To AS8P251MB0001.EURP251.PROD.OUTLOOK.COM
- (2603:10a6:20b:344::22)
-X-Microsoft-Original-Message-ID:
- <20260910004731.32818-1-elb12345@hotmail.co.uk>
+	stable@vger.kernel.org,
+	Luis Henriques <luis@igalia.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	bestswngs@gmail.com,
+	Xiang Mei <xmei5@asu.edu>
+Subject: [PATCH v7 1/2] fuse: don't BUG when the copy buffer is exhausted
+Date: Wed,  9 Sep 2026 19:24:41 -0700
+Message-ID: <20260910022442.3594649-1-xmei5@asu.edu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8P251MB0001:EE_|AM9P251MB0110:EE_
-X-MS-Office365-Filtering-Correlation-Id: d23f1479-d026-452a-d9b9-08df0ed51ba1
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799012|5072599009|6090799003|25010399006|51005399006|37011999003|19110799012|24021099003|23021999003|55001999006|25031999004|8060799015|19061999003|26104999009|3412199025|440099028|40105399003|2607281247196008|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TnlDc1RHbzM5RGFXNmlvcTdGS2VEbGwwYlIxWE1vYyt5QTU0M0pwaGovZjFU?=
- =?utf-8?B?b2huSS90VUxjYitzSDN2bE4vb3hNUmdlRGZnSFBwVEQ4ZytRUHpkVHVKOTJp?=
- =?utf-8?B?NmJnV1p4Z2xWbUNObkw5Ny9TMmVIc1dGT2x2UUNnWHlKOTI3NmgvM0FwWFgx?=
- =?utf-8?B?SHRUNWRxdWVrZVpVdHRQZ1QwcjA2clNzdUg0RmhzaVhQSHh1Y0RsdXFsV2Nt?=
- =?utf-8?B?SmRTRTRxTzhiSVFCYzlPYXFPOUIveWkvOWxvNHF3UU55S0NlSktLb1NzTVh3?=
- =?utf-8?B?c1hDUUlhajI4M2NxMGRBVnpuYXFKTTE2am51U3c0OG9pZDl4WEVuNXBQZExF?=
- =?utf-8?B?WHZNTis3a3Q5empTQ2pwOVRrQ1VEemZ2aW1KWDl0TVA1aGczRmhNYTRKZ1Jj?=
- =?utf-8?B?OEgvV1Z2SkN0UGhIL0w4UW01RVBUejQxbG5JbDdoVXVWMWN5ZXB0Tm5FREZj?=
- =?utf-8?B?OWtBa1V6aEZ1YnJGRXBmSEhUUzlkbDF5LzJKZXZQU1dEWWo0b01TTS9DRVBQ?=
- =?utf-8?B?SXlxOVdYeUhKa203Z0JUUkU3dUVQZ1gvU2MwU2N5WXN6TXRSY1Yxd1lqRFU5?=
- =?utf-8?B?clNhRGpvbkw3VDhmbXErenMrdCtKTzZFSHgvbjZmMW1PTFJkSnhLU1pEN1Qx?=
- =?utf-8?B?SUo3RStJVm5ZU0doOXdyTDFubTlKTUR5RDlTWTZLL3R1U2Nvazl4aGU5UHp0?=
- =?utf-8?B?WnF3SDRqV1hIUDF0TElnRllxZE5STjN5NmRxQ1daSGNCZEpwczJxMXN6VmdF?=
- =?utf-8?B?M1F3dFF5K2FUdWRBVkhpeGR5NEZyRzJGMFJTWkptMkI2bmp3b0JHdEhhR2pI?=
- =?utf-8?B?bTBwSnNLRGJRK0NCYW9xMXVHazJScDlURE5WTzBYRTB0cnFCS2F5WlFUS2k1?=
- =?utf-8?B?SWYvRzF2VCs5eTFUVFdWb0dEbHRPQldjUzdQVnBhdWsxQWg0MkN0RldKVDQv?=
- =?utf-8?B?WmVWZHVaSEZ0QTU0NEdVMjZjMTBqWGNzeThEQTVYQTFKaXhkSittWE1CSmpp?=
- =?utf-8?B?NFQ0OENWVEo0bGRTUVFtbWE4bkpwSFQrcVFGekMrSEcyR3VMLy9DbmgzWGhy?=
- =?utf-8?B?Qk5RekxjQXhDeFI0NDM4ZDl0eUVMQ0tXSExtNThNdmczVU5YUW5WK0ljY2Y1?=
- =?utf-8?B?amxHVUVmaE1JWGVJajA1NFRRUzFOTDVlWUNTTXVnelZNb3R0NC9vVW9hdUF0?=
- =?utf-8?B?RWE1SWU2TXRPWmhZVU5Eb2I3ZU1tOHF5cDZubEZnK3o2SndKeGxiWEhFcW9J?=
- =?utf-8?B?MC9xUkJydVcwVVRyd3ZZOFFRWGZ2a25oL0kwcXZFQ2xBUnRvT2QrV1dvMEhx?=
- =?utf-8?B?QVh4OFN0bzIzbWNDNk04UVVtSVpIU09rejV4SytJYkxKVnB5T3dTdVBOcXdO?=
- =?utf-8?B?emN1SnFKbU1XVUNYSHhkbWxFWDUzMzBZVnF4ZzZYTXNBWWEwcWdiZGVsZ3Bu?=
- =?utf-8?B?SVRkYnJ1UFZZZmdYYWlsZTRCdVhMS0ozVC9uUzF6OWpsY2M3VVJGTldoMklE?=
- =?utf-8?Q?itd7w42bAt6eSD1KmWCOGLE4H6s?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bVk0MDFDdk56a0pZSkxya2FBaWFWMDUrdnJFWWRXWHg4NVlORDN0QWhvWXdX?=
- =?utf-8?B?YjNTbWZsdEYzUmp0TjdKYkVRWFR2RFpBaGdFR2NsdXd5SCtMLy9UdGh5OUJY?=
- =?utf-8?B?ZCtjL2h3YXZibGRhL0x4R0k1UTVEQUZ1Zm9OSUFsREtvVGUvcWJZV0JuWUZK?=
- =?utf-8?B?d0wyREhtS1diUHJjN2hCUGRmVkZxMmt5ekphVlFLeEdBVkxuNG02VEZOaDM0?=
- =?utf-8?B?MDhqcThqK0VXbzJVRkFoWmJ0N1dYVzJUU2hNZStuekFMTTBMeFhBb3FLTVJC?=
- =?utf-8?B?QlF6RVUyd0xlc1BBN21McHd0cG5uUUk1Ly9UU0JDQ1RyMFhBMmwweGZocGZ3?=
- =?utf-8?B?RmV1RlN1U3ZzU01QRXU2Tyt3NFdHMVRhNkorRTRLcENPdHM0NWlIU2UrQnM3?=
- =?utf-8?B?QjhFWmFzQzVzeWNuRkRoTC9GaDdaQWtTMFVhaTYweW1qQTNGNzdWZzR3ZWJL?=
- =?utf-8?B?bnUzR0J0aXRqdTU4TzhGTXpTeUFJNFR2Zlo2UW0rQUtsZjlLL3VuOVFFZ0Y4?=
- =?utf-8?B?YWQ0THFhY3psazVZYlpwNWJ3am5YRW1KdzFsdlJDbXlhMTBVekYyVHYzTEx5?=
- =?utf-8?B?MmYxMU5HQmVmTmJpM1IvMjZ2YzlJdDIzN3ZNR3MvN042UGxBRE1zS04zSFdZ?=
- =?utf-8?B?eGE4aVhYeHUyVWVlaWszSlZmQk1xSCtsVytKQXF6T3R0SjArcjRWZlhEQUZt?=
- =?utf-8?B?alppcGFSWWxRWE4ycDF3NlhFVjRYTXF3SmZnbTJrTDNnVzZadGRlK3ZObTBu?=
- =?utf-8?B?dnF0aFIvLzIxQWdOSHRSUVFBMVZnRXpZMEF6c0FuRWRCOEx4bWRzNVdsM2lk?=
- =?utf-8?B?cUVQa0ExUUdMTjhmRE11UWtsZjl0WmJSb0krZXRQNU41NmZXM21wek1JNm9p?=
- =?utf-8?B?REJPSW1xVWF1VE44ajFSR0hWWmEwNWtIWlpqeThRZU5HYUtURzd1ZXN6Skhy?=
- =?utf-8?B?ZzBFRFNidTlxUE9jd2E1TUR0RERmUWV3bnN5SDU2dy9YRzg5bjJFOE8vVHZC?=
- =?utf-8?B?KzNmb29HRDJFaTI2UFNJUDAzM3FDb3ZTZHVVTHVJVXBwSXZGM2thcG1wMkVD?=
- =?utf-8?B?QnJOV0k0RE45dTlUdDlxSGxSWHl5ZEJZUzMwWTM4Z0o4SWZHSzQxVmJxT3Q3?=
- =?utf-8?B?MUxSMjM1RW9JS1JFa2dVMHFiM2d3NG9mU1IrUGJJMTE1S0VGbFdNeHdqY0pW?=
- =?utf-8?B?V1BwWUVUM25BZmtXMjJHbUZoRHZNd3JHL1BhQ2UzWnFVSGl0aDVSWWVHbFAz?=
- =?utf-8?B?MTl6NEZoeStmdjYyemtKNlhkRk9ONkVhUDZxSndpWWpLeFh5U29HUFN5cTQr?=
- =?utf-8?B?M0t0RWg4MXFRQWozMytHYmJYSmlpV204TDdDMXpHNWZGbHNtMDgyRGg3TDB2?=
- =?utf-8?B?azBsT3B3QW1YRHdpYjl6dHpPRHlFWUYxMzU0eXZ4ZE42Q1NjYXp5WjVnYS9i?=
- =?utf-8?B?UnBPbm1vTnBRdUpaWUExNjRMaUo0YStHMm5CZXFsc0hMRUdaaUhZcjFuaHZ2?=
- =?utf-8?B?REN6dGs4dDFOTGJMeDVPT1B4K3ZOakMyNkJ1dHNjYkQyVk4rSTJpRTY1eTY5?=
- =?utf-8?B?bGJBeVNMWWl2RFdPcCt6RmdESyswTGttcm52WkJtNzMzNng1MENRbnJ5aDRx?=
- =?utf-8?B?VVhGSHB4Q0V4T2VrdWtWb0Z6R1g3aDVlU3R1dVFuNTBaM1J0OGdXSmI2Sitw?=
- =?utf-8?B?Uk1sMzQzeTJYWlFPTDU1cDJKZGZCSmUrTmpPaGxPdDNodWFUZVZ3M3htSlFr?=
- =?utf-8?B?WEtkMTVVREpoYlRZTTFSWXVPMzN2K3JWMU9oUDFwLzliL1VsRDczOFpmL2VH?=
- =?utf-8?B?ZTh5akFLSXlDTnpwdit0MlVKV2VNWUpHSDdIamQ5eHlyak5XYVpLMi9PdC9q?=
- =?utf-8?B?NjFMWjgvSWdmc1JrMjRFSXpUb29HaURla09RbTI0a040R2xtenFzbWR2Qmwv?=
- =?utf-8?Q?IvDj+zps25/16mJWYb49pAeyMdAR8dOD?=
-X-OriginatorOrg: sct-15-20-9412-3-msonline-outlook-fe3f5.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: d23f1479-d026-452a-d9b9-08df0ed51ba1
-X-MS-Exchange-CrossTenant-AuthSource: AS8P251MB0001.EURP251.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2026 00:47:36.7048
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9P251MB0110
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 08, 2026 at 11:56:12AM +0200, Gustavo A. R. Silva wrote:
-> Looks like variable num_clks can be removed entirely, and just do:
->
-> clk_data->num = data->num;
+fuse_copy_fill() hits BUG_ON(!err) once the iterator backing the copy
+runs out of pages.  Over io-uring the amount copied is not bounded by the
+payload buffer the server registered, so an unprivileged user can drain
+the iterator and panic the host - mount a FUSE filesystem with small
+payload buffers, then setxattr() a larger value:
 
-Yes - it is only read once and data is const.
+  kernel BUG at fs/fuse/dev.c:1064!
+  Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+  CPU: 1 UID: 0 PID: 148 Comm: exploit Not tainted 7.3.0-rc1 #2
+  RIP: 0010:fuse_copy_fill (fs/fuse/dev.c:1033)
+  Call Trace:
+   <TASK>
+   fuse_copy_args (fs/fuse/dev.c:1354 fs/fuse/dev.c:1380)
+   fuse_uring_args_to_ring (fs/fuse/dev_uring.c:891)
+   fuse_uring_prepare_send (fs/fuse/dev_uring.c:940 fs/fuse/dev_uring.c:1057)
+   fuse_uring_send_in_task (fs/fuse/dev_uring.c:1745)
+   tctx_task_work_run (io_uring/tw.c:96)
+   tctx_task_work (io_uring/tw.c:133)
+   task_work_run (kernel/task_work.c:233)
+   io_run_task_work (io_uring/tw.h:84)
+   io_cqring_wait (io_uring/wait.c:278)
+   __do_sys_io_uring_enter (io_uring/io_uring.c:2676)
+   do_syscall_64 (arch/x86/entry/syscall_64.c:61)
+   entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+   </TASK>
 
-Thanks for reviewing, and thanks Anirudh for testing. For the redundant
-variable, since this has a stable Cc, perhaps we can keep the diff
-minimal here and I can send the cleanup as a follow-up once it lands?
+The reply path can drain it the same way, via the server-supplied
+payload_sz in fuse_uring_copy_from_ring().
 
-Kind Regards
+An exhausted iterator is recoverable, so return -EIO.  All three
+fuse_copy_fill() callers already propagate the error.
 
-Aamir A.
+Fixes: c090c8abae4b ("fuse: Add io-uring sqe commit and fetch support")
+Cc: stable@vger.kernel.org
+Reported-by: Weiming Shi <bestswngs@gmail.com>
+Suggested-by: Joanne Koong <joannelkoong@gmail.com>
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Xiang Mei <xmei5@asu.edu>
+---
+ fs/fuse/dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 4fec31fc0b84..4148e4488d77 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1061,7 +1061,8 @@ static int fuse_copy_fill(struct fuse_copy_state *cs)
+ 		err = iov_iter_get_pages2(cs->iter, &page, PAGE_SIZE, 1, &off);
+ 		if (err < 0)
+ 			return err;
+-		BUG_ON(!err);
++		if (!err)
++			return -EIO;
+ 		cs->len = err;
+ 		cs->offset = off;
+ 		cs->pg = page;
+-- 
+2.43.0
+
