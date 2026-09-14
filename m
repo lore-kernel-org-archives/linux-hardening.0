@@ -1,90 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-144.mta0.migadu.com [91.218.175.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FE035C6B2
-	for <linux-hardening@vger.kernel.org>; Sun, 13 Sep 2026 15:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D532D77F7
+	for <linux-hardening@vger.kernel.org>; Mon, 14 Sep 2026 01:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789314372; cv=none; b=CxUXaNoHyUt4tZ/SG8eHoG2kiErGHG36hXcRuSAKpvz1v0EArrC+AESf/9YEsiqwWgtZa0CVTsBMy5pLVywEOwl48YUsBrj5CWK9Opo9E/mPiMpRfCMz+BvsXkEipk1hNqww2NR7eNUKoR9T3M9NEVQGP8Y2LRrQR5pbKj1Q7y0=
+	t=1789349766; cv=none; b=K9mCzz14CJXPpiIeGqpW0ueOKOLWP8YRMmuqH58+EPqVuMCPLVv84Kw497Som1/h+HhQ+20mCqJ8EXqw9AXiNZfVbFIVw24yxE3gafUh6ArKcoxvcXQotCuPbfo6Qi9xLdKhVGzDCFGXfLyzoyHg8LoZYPvqb6SPPjW1m7NDoJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789314372; c=relaxed/simple;
-	bh=eHhbJBJEScMwwOpFI03/WBevKc+GD/HGfdsXGV2CSB0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qYgLZGKh5yGNvi/4XztLEi6MYLWkhG1qKCYfAN0On+5rRfpt5q/igY+IkeP3sPLBJvJAgN83WGb48TcPq7UR0DK85u3Pv8HzYlhOD0xPFl46oat2UtUnqhvW5uXRu3cv9L0+W0eOQm62jTI419QNoqFpPf/6XQYqnMVXEBIdZQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PGIUutvf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789349766; c=relaxed/simple;
+	bh=jptbH70iXgdreHi9nRKzywgG6n8frLVlbAd3co9U8wY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C5YLON+m7/97O/Gx3psCIiaNV38Pl4xS7D8E7ZcEri6ONhihB5YyT1uOR/UBXtpdS0psOIsj8vwCkoTpDKY8BzrDX0eDSMQBNi4kdmgGJJpXY2uXCCJEuU/ErEgwLMmH7+vlSoj+5+jpqrDo14J8ITrrK2mCPXke4hA+32fMIcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TnOapCAM; arc=none smtp.client-ip=91.218.175.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PGIUutvf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29EC41F0089B
-	for <linux-hardening@vger.kernel.org>; Sun, 13 Sep 2026 15:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789314369;
-	bh=eHhbJBJEScMwwOpFI03/WBevKc+GD/HGfdsXGV2CSB0=;
-	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc;
-	b=PGIUutvfasqf3X86OXbWO408i0ZRBduh3L0fHOKpdN3JPF5lUC3Pc6ZTu9d/pyPo+
-	 o/p0BHyE0QM55LbAdPX6IhbOixR5wC0DqNQfF6NLq4GxYWXIbDDrhDqiQAfw6TzxME
-	 hUe+oFg7s9hwXZzEkTwD+qDiZqUsHYtxi/Z94Du69oRS4cixoViodqgHn1rh/ApQDf
-	 46JFO1Ytkfa1eEzPHeQufrAs2T1Fs0t8XQ/YxeKtjoNFvXHvUEinDcNc6gzTdK0Cxi
-	 eqSkbaI8xSvG+A2Oz6FmM6fRwpBJn+rZEbsDWeqfM6yFt4nb3xf6gI7xdpvOxG0CUR
-	 G3lRNygsNzzfQ==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3a4835ab78cso22556281fa.2
-        for <linux-hardening@vger.kernel.org>; Sun, 13 Sep 2026 08:46:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBz7O1hCwGW1WareB0E/OuzdLFI3oURdWF1rVb/bK461WHXLLMvCpAAg/WlI4a0suQt5/VzR2M55beEp/YiZLWI=@vger.kernel.org
-X-Gm-Message-State: AFuF++ke0YJUPrX5xvgeHz6gzuUKJpY378u5/5IGCvibX31v2w5k3sFw
-	9FQp8canfInT06RKutIzZwqeP2vh5CxGBgl1EANtpvufzdgxjQ5/SN0PNyuOR8WLFT1GWSQPLAn
-	R7Q+MJweJ9ByEKksdaCi6rjCQ1HS+EEQ=
-X-Received: by 2002:a05:651c:19a0:b0:3a4:d4de:bad0 with SMTP id
- 38308e7fff4ca-3a5a5022d47mr17692041fa.19.1789314367478; Sun, 13 Sep 2026
- 08:46:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TnOapCAM"
+X-Envelope-To: linux-hardening@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=jptbH70iXgdreHi9nRKzywgG6n8frLVlbAd3co9U8wY=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789349760; v=1; x=1789954560;
+ b=TnOapCAMj32zHMgzSDcpLEOmvtfn3vf1JtFG9g41KbTnYv0S/3El/MAbQHgI1t6Nmw8GEf8o
+ RfNfl4OjYlCkaNhV3di+1rys3ajdLZiJ0Kh2u8cYTcl7hu/+4ZExfZy9J15nQGHruYq+jJG9txT
+ Qbepl6gMd8mXiR3kHzay/C3E=
+X-Envelope-To: linux-hardening@vger.kernel.org
+Received: by mta10.migadu.com with ESMTPS id dc709e117764e5a2;
+	Mon, 14 Sep 2026 01:35:50 +0000
+X-Mizu-Trace-ID: dc709e117764e5a2
+X-Migadu-Flow: FLOW_OUT
+Date: Mon, 14 Sep 2026 09:35:37 +0800
+From: Hangbin Liu <hangbin.liu@linux.dev>
+To: Gris Ge <cnfourt@gmail.com>
+Cc: David Ahern <dsahern@kernel.org>, Ido Schimmel <idosch@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	stable@vger.kernel.org, Simon Horman <horms@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Cosmin Ratiu <cratiu@nvidia.com>, Gal Pressman <gal@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net v2] net: ip_tunnel: initialize `options_len` before
+ referencing options
+Message-ID: <aqdPaYCTbB6cjnQ3@fedora>
+References: <20260913090851.468216-1-cnfourt@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AS8P251MB00013E724A77A355668B6CCEC8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
-In-Reply-To: <AS8P251MB00013E724A77A355668B6CCEC8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
-Reply-To: wens@kernel.org
-From: Chen-Yu Tsai <wens@kernel.org>
-Date: Sun, 13 Sep 2026 23:45:52 +0800
-X-Gmail-Original-Message-ID: <CAGb2v642g_vRUmsaM-G+VP=e1ePmKnNGxXpp6ns475FVBN_WQQ@mail.gmail.com>
-X-Gm-Features: AcwNN1XRBaNDhEEGFuvJdFg63n6MOjJUU82Ly2PgZqYal3wEqs83Cf8POQRGn38
-Message-ID: <CAGb2v642g_vRUmsaM-G+VP=e1ePmKnNGxXpp6ns475FVBN_WQQ@mail.gmail.com>
-Subject: Re: [PATCH] rtc: ac100: Assign .num before accessing .hws
-To: Aamir Ahmed <elb12345@hotmail.co.uk>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, Kees Cook <kees@kernel.org>, 
-	linux-hardening@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260913090851.468216-1-cnfourt@gmail.com>
 
-On Sun, Sep 6, 2026 at 2:40=E2=80=AFAM Aamir Ahmed <elb12345@hotmail.co.uk>=
- wrote:
->
-> Commit f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with
-> __counted_by") annotated the hws member of 'struct clk_hw_onecell_data'
-> with __counted_by, which informs the bounds sanitizer (UBSAN_BOUNDS)
-> about the number of elements in .hws[], so that it can warn when .hws[]
-> is accessed out of bounds. As noted in that change, the __counted_by
-> member must be initialized with the number of elements before the first
-> array access happens, otherwise there will be a warning from each access
-> prior to the initialization because the number of elements is zero.
-> This occurs in ac100_rtc_register_clks() due to .num being assigned only
-> after every clkout clock has been stored in .hws[]. With
-> CONFIG_UBSAN_BOUNDS and a compiler that implements __counted_by (GCC
-> 15.1+ or Clang 20.1+), this triggers an array-index-out-of-bounds report
-> during probe, and with CONFIG_UBSAN_TRAP the first store traps.
->
-> Initialize .num with AC100_CLKOUT_NUM, the number of elements .hws[] was
-> allocated with, right after the allocation. That is the value the loop
-> counter ends up at on the success path anyway, so the provider's
-> behaviour is unchanged.
->
+On Sun, Sep 13, 2026 at 05:08:50PM +0800, Gris Ge wrote:
+> The following command triggers a kernel panic:
+> 
+>   ip link add d0 type dummy; ip link set d0 up
+>   ip route add 10.30.0.0/16 \
+>     encap ip id 300 geneve_opts 4660:66:11223344 dev d0
+> 
+>   memcpy: detected buffer overflow: 4 byte write of buffer size 0
+>   kernel BUG at lib/string_helpers.c:1044!
+>   ...
+>   ip_tun_parse_opts.part.0.cold+0x10/0x10
+>   ip_tun_build_state+0x116/0x2a0
+> 
+> On kernels built with GCC 15+ and `CONFIG_FORTIFY_SOURCE`, the fortified
+> `memcpy()` got 0 sized destination with request of 4 bytes length:
+> 
+>   static int ip_tun_parse_opts_geneve(...)
+>   {
+>       ...
+>       attr = tb[LWTUNNEL_IP_OPT_GENEVE_DATA];
+>       data_len = nla_len(attr); /* == 4 */
+> 
+>       struct geneve_opt *opt = ip_tunnel_info_opts(info) + opts_len;
+>       memcpy(opt->opt_data, nla_data(attr), data_len);
+>       /*     ^^^^^^^^^^^^^ 0 since options_len is assigned afterwards */
+> 
+> Fixed by initializing the counter before the options are referenced.
+> Matching what `tunnel_key_opts_set()` already does.
+> 
+> Fixes: bb5e62f2d547 ("net: Add options as a flexible array to struct ip_tunnel_info")
 > Cc: stable@vger.kernel.org
-> Fixes: f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with __cou=
-nted_by")
-> Assisted-by: LLM
-> Signed-off-by: Aamir Ahmed <elb12345@hotmail.co.uk>
+> Signed-off-by: Gris Ge <cnfourt@gmail.com>
+> ---
+> v2:
+>   - pass opt_len into ip_tun_set_opts() and initialize options_len there,
+>     matching tunnel_key_opts_set(), as suggested by Eric Dumazet.
+> v1: https://lore.kernel.org/netdev/20260912055304.1415016-1-cnfourt@gmail.com/
+> 
+>  net/ipv4/ip_tunnel_core.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/ipv4/ip_tunnel_core.c b/net/ipv4/ip_tunnel_core.c
+> index 5168d546ea2f..bab42b9e277f 100644
+> --- a/net/ipv4/ip_tunnel_core.c
+> +++ b/net/ipv4/ip_tunnel_core.c
+> @@ -680,8 +680,14 @@ static int ip_tun_get_optlen(struct nlattr *attr,
+>  }
+> 
+>  static int ip_tun_set_opts(struct nlattr *attr, struct ip_tunnel_info *info,
+> -			   struct netlink_ext_ack *extack)
+> +			   int opts_len, struct netlink_ext_ack *extack)
+>  {
+> +	/* `options_len` is the __counted_by() annotation of the `options`
+> +	 * flexible array, it must be initialized before parsing writes
+> +	 * into it.
+> +	 */
+> +	info->options_len = opts_len;
+> +
+>  	return ip_tun_parse_opts(attr, info, extack);
+>  }
+> 
+> @@ -712,7 +718,8 @@ static int ip_tun_build_state(struct net *net, struct nlattr *attr,
+> 
+>  	tun_info = lwt_tun_info(new_state);
+> 
+> -	err = ip_tun_set_opts(tb[LWTUNNEL_IP_OPTS], tun_info, extack);
+> +	err = ip_tun_set_opts(tb[LWTUNNEL_IP_OPTS], tun_info, opt_len,
+> +			      extack);
+>  	if (err < 0) {
+>  		lwtstate_free(new_state);
+>  		return err;
+> @@ -753,7 +760,6 @@ static int ip_tun_build_state(struct net *net, struct nlattr *attr,
+>  	}
+> 
+>  	tun_info->mode = IP_TUNNEL_INFO_TX;
+> -	tun_info->options_len = opt_len;
+> 
+>  	*ts = new_state;
+> 
+> @@ -1006,7 +1012,8 @@ static int ip6_tun_build_state(struct net *net, struct nlattr *attr,
+> 
+>  	tun_info = lwt_tun_info(new_state);
+> 
+> -	err = ip_tun_set_opts(tb[LWTUNNEL_IP6_OPTS], tun_info, extack);
+> +	err = ip_tun_set_opts(tb[LWTUNNEL_IP6_OPTS], tun_info, opt_len,
+> +			      extack);
+>  	if (err < 0) {
+>  		lwtstate_free(new_state);
+>  		return err;
+> @@ -1040,7 +1047,6 @@ static int ip6_tun_build_state(struct net *net, struct nlattr *attr,
+>  	}
+> 
+>  	tun_info->mode = IP_TUNNEL_INFO_TX | IP_TUNNEL_INFO_IPV6;
+> -	tun_info->options_len = opt_len;
+> 
+>  	*ts = new_state;
+> 
+> --
+> 2.55.0
+> 
 
+Looks good to me.
 
-Reviewed-by: Chen-Yu Tsai <wens@kernel.org>
+Reviewed-by: Hangbin Liu <liuhangbin@kylinos.cn>
