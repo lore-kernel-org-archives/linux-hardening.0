@@ -1,199 +1,154 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+Received: from mail.stoffel.org (mail.stoffel.org [172.104.24.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256654534BB;
-	Mon, 14 Sep 2026 11:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E3F43F4A3;
+	Mon, 14 Sep 2026 15:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.24.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789386492; cv=none; b=tXzJpp/KiiFMdKazr4oquf/XQqapH5U14EnsjZVVadJu1PxfyfgrQ2WreimGZiq5294+Dkxdlo2KzElH1p20pAbXxS+kKIxMEoXcx/E4K8vZKe9MI2h3ophmCH7l9fs4P7nu6Geb8gLNsqlDNshd+uzChOTRGSzRoj7jn4v6dv0=
+	t=1789398545; cv=none; b=bahhZWxzIiz5d6tXHKjpC7U0CewQVH8N9I+mFawoImRwkwk1hyrgSvYN2no46Wd7Ay4hckoAOcf1zWA2Yl0ReXFz92aB8KltAaA50i1sL3iB5+RuBjpSmWKYBlzqqn+NwUKSOKl3V5cu5wdYd5F4g/x7gQ56XI5aie6OarYSxxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789386492; c=relaxed/simple;
-	bh=ySVw3BtQ8VdlSvwcAcvu2VldK45kYaHXHC6yP9WKKsg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z3tYZIM+bKN5mT0NembYb10YdwI/OdHfKiC4SsISiydeP9+NKiqH77xmjROyFGk8Sj89w/DGxi/TnyU/mmpVG7kqIiW+bOQiPWHlFlOj56ik3JYLCEruACfYGNF5ybnsnvBINk/aeoe12y2wysgVQiuPvdapRfynMhcbZd7ZSCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=SXuEO2sa; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1789398545; c=relaxed/simple;
+	bh=oMblGF1PmYRaqle4YPaaEqUlpIDejeN8jfSd3IyEo/E=;
+	h=MIME-Version:Content-Type:Message-ID:Date:From:To:Cc:Subject:
+	 In-Reply-To:References; b=PV+YwHWcZsjYG6fVGWebIf+OfmGG36YDARmOu6C4ZhqwT0tyWj+pZNg9rkcpTWRDGpB/GI/TKn2pk9rsyS7ybWh+hG9q4/X1P/gOLyg490Qr01eNgzGMpGBQzjjNspf3YyPu4af4kZZK+aTHTVGgTilGzYwMFisT1G3KiAylC44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org; spf=pass smtp.mailfrom=stoffel.org; dkim=pass (2048-bit key) header.d=stoffel.org header.i=@stoffel.org header.b=AlmtH9ST; arc=none smtp.client-ip=172.104.24.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stoffel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stoffel.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="SXuEO2sa"
-Received: from h183.csg.ci.i.u-tokyo.ac.jp (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68EBfjsJ084060
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 14 Sep 2026 20:41:57 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=iW6paRDU1WuHVvPa2Tan4+ENXAFGhAHh39Stpx/lGEU=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-Id:To:Subject:Date;
-        s=rs20250326; t=1789386117; v=1;
-        b=SXuEO2saKk20YD2hI4Bd3B6I1m3y39IXjKSDYVMyTHJVPMTQG/DWMsTfg5ROC63a
-         jQn/hizniPKxQGoa4QtbRLVEU85+E7s2+daO7YVK9mG9QtCn58S1tOauNKKtiSV2
-         rgA9ixQDTlU1/m0K8LG0USQ6+PyjRjdGcSGYV1qGyESosnCt3e+dw6Ii5Bv8hD/0
-         e19rtNxCti9KLIb+3XRWxOaN7rt0DXQJs+t1yWxfjNxqRebhgPZGzMpvOugpvHoi
-         RSX+sNZyTMEjUyAPfeRllhhiUhdOq0z8rIfdEgfUVkAEW7O39oHByZAhKO/t0Tnu
-         QykA1SOKzEoWPoyc1NtBKQ==
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Date: Mon, 14 Sep 2026 20:40:56 +0900
-Subject: [PATCH v10 17/20] KVM: arm64: PMU: Pass the target CPU to
- kvm_pmu_probe_armpmu()
+	dkim=pass (2048-bit key) header.d=stoffel.org header.i=@stoffel.org header.b="AlmtH9ST"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=stoffel.org;
+ i=@stoffel.org; q=dns/txt; s=20250308; t=1789398143; h=mime-version :
+ content-type : content-transfer-encoding : message-id : date : from :
+ to : cc : subject : in-reply-to : references : from;
+ bh=oMblGF1PmYRaqle4YPaaEqUlpIDejeN8jfSd3IyEo/E=;
+ b=AlmtH9STTB3sBPP31THd4Ukf5Z6t561oZCkY6InocAjV6FJV0GlJpESrVaoEiZ4A2uvYj
+ gSessr0w8EU13qxN0B+jYQ20yXsLhCqUZutbGy7AcGcD5CFenB+bVoo/1m8Bw/R1ZtoWetF
+ sBmKOUI3nx0KxE7wUcDCF+5n4994xds9o7lSQH/T2399oBGJXN2k3kZ8PCGsCP8feOVSZt7
+ E2jqE9cJAeF1HOKpro5FXdEZy3YI3ScbXELaBw6grc9sla2gt2x7VXc0k45gBGa5H3OmWN9
+ QSHUKS/Lr8CJN8h1E+WssVpWqEPHuNKBoEAReWkV8A5H3NgyUYydzjMKYCNw==
+Received: from quad.stoffel.org (unknown [24.177.6.168])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail.stoffel.org (Postfix) with ESMTPSA id 929541EB4A;
+	Mon, 14 Sep 2026 11:02:23 -0400 (EDT)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+	id E573BA3288; Mon, 14 Sep 2026 11:02:22 -0400 (EDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260914-hybrid-v10-17-92788053a691@rsg.ci.i.u-tokyo.ac.jp>
-References: <20260914-hybrid-v10-0-92788053a691@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <20260914-hybrid-v10-0-92788053a691@rsg.ci.i.u-tokyo.ac.jp>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Eiden <seiden@linux.ibm.com>, Fuad Tabba <tabba@google.com>,
-        Shannon Zhao <shannon.zhao@linaro.org>,
-        Andrew Jones <drjones@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>,
-        Fuad Tabba <fuad.tabba@linux.dev>
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4142;
- i=odaki@rsg.ci.i.u-tokyo.ac.jp; h=from:subject:message-id;
- bh=ySVw3BtQ8VdlSvwcAcvu2VldK45kYaHXHC6yP9WKKsg=;
- b=owGbwMvMwCWmMbc20y1CyJDxtFoSQ9byu2U355cuY5z6LYFNdSLDjY2nWNJbHYwqTMv2haonR
- tcq65h3lLIwiHExyIopsqQU7ebWiK79VJgQ3wIzh5UJZAgDF6cATGRWH8M/bSkpMyOu3ZuiUyKv
- s+34fcnmwj2ftH1hDPOTZrcb/JjQwciwrdDrxrf1b/cXzY3MPyxivDqlxUfFsIJ1b3pkRcrOA5O
- 5AQ==
-X-Developer-Key: i=odaki@rsg.ci.i.u-tokyo.ac.jp; a=openpgp;
- fpr=AEDC03C9AF734F2EC26A7BFFA4BAEAA73536753C
+Message-ID: <27304.3198.867048.379684@quad.stoffel.home>
+Date: Mon, 14 Sep 2026 11:02:22 -0400
+From: "John Stoffel" <john@stoffel.org>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+    Nathan Chancellor <nathan@kernel.org>,
+    Nicolas Schier <nsc@kernel.org>,
+    Nick Desaulniers <ndesaulniers@google.com>,
+    Bill Wendling <morbo@google.com>,
+    Justin Stitt <justinstitt@google.com>,
+    Masahiro Yamada <masahiroy@kernel.org>,
+    Alexey Gladkov <legion@kernel.org>,
+    Thomas Gleixner <tglx@kernel.org>,
+    Ingo Molnar <mingo@redhat.com>,
+    Borislav Petkov <bp@alien8.de>,
+    Dave Hansen <dave.hansen@linux.intel.com>,
+    x86@kernel.org,
+    "H. Peter Anvin" <hpa@zytor.com>,
+    Paul Walmsley <pjw@kernel.org>,
+    Palmer Dabbelt <palmer@dabbelt.com>,
+    Albert Ou <aou@eecs.berkeley.edu>,
+    Alexandre Ghiti <alex@ghiti.fr>,
+    Arnd Bergmann <arnd@arndb.de>,
+    Catalin Marinas <catalin.marinas@arm.com>,
+    Will Deacon <will@kernel.org>,
+    Mark Rutland <mark.rutland@arm.com>,
+    Ard Biesheuvel <ardb@kernel.org>,
+    Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+    Josh Poimboeuf <jpoimboe@kernel.org>,
+    Peter Zijlstra <peterz@infradead.org>,
+    Miguel Ojeda <ojeda@kernel.org>,
+    Boqun Feng <boqun@kernel.org>,
+    Gary Guo <gary@garyguo.net>,
+    =?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+    Benno Lossin <lossin@kernel.org>,
+    Andreas Hindborg <a.hindborg@kernel.org>,
+    Alice Ryhl <aliceryhl@google.com>,
+    Trevor Gross <tmgross@umich.edu>,
+    Danilo Krummrich <dakr@kernel.org>,
+    Daniel Almeida <daniel.almeida@collabora.com>,
+    Tamir Duberstein <tamird@kernel.org>,
+    Alexandre Courbot <acourbot@nvidia.com>,
+    Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
+    Jonathan Corbet <corbet@lwn.net>,
+    Randy Dunlap <rdunlap@infradead.org>,
+    Kees Cook <kees@kernel.org>,
+    "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+    linux-kbuild@vger.kernel.org,
+    linux-kernel@vger.kernel.org,
+    llvm@lists.linux.dev,
+    linux-riscv@lists.infradead.org,
+    linux-arch@vger.kernel.org,
+    linux-arm-kernel@lists.infradead.org,
+    linux-efi@vger.kernel.org,
+    rust-for-linux@vger.kernel.org,
+    linux-doc@vger.kernel.org,
+    Jens Axboe <axboe@kernel.dk>,
+    linux-hardening@vger.kernel.org
+X-Clacks-Overhead: GNU Terry Pratchett
+Subject: Re: [PATCH v2 11/21] kbuild: avoid re-running compiler and linker
+ probes
+In-Reply-To: <20260914-build-speedup-v2-11-39817ec5db23@kernel.org>
+References: <20260914-build-speedup-v2-0-39817ec5db23@kernel.org>
+	<20260914-build-speedup-v2-11-39817ec5db23@kernel.org>
+X-Mailer: VM 8.3.3snapshot under GNU Emacs 28.2 (x86_64-pc-linux-gnu)
 
-kvm_pmu_probe_armpmu() currently samples the current CPU internally,
-which ties the helper to default PMU selection.
+>>>>> "Lorenzo" == Lorenzo Stoakes (ARM) <ljs@kernel.org> writes:
 
-Move that policy to kvm_arm_set_default_pmu() by passing
-raw_smp_processor_id() from the caller, and make the helper search for
-the pPMU covering an explicit CPU. Move the helper above
-kvm_pmu_create_perf_event() so later code can reuse it when creating
-PMU events for a VCPU's current pCPU.
+> Each kernel make invocation begins with ~30 compiler and linker runs each
+> of which performs duplicate probe for a number of compiler and linker
+> options.
 
-This preserves the existing default PMU selection behavior while
-preparing fixed-counters-only mode to select a pPMU at runtime.
+> This is useless work - the compiler and its version is known, so use these
+> to determine which options are available, once.
 
-Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
----
- arch/arm64/kvm/pmu-emul.c | 72 +++++++++++++++++++++++------------------------
- 1 file changed, 35 insertions(+), 37 deletions(-)
+> A convention already exists for this - CC_HAS_xxx, LD_HAS_xxx in Kconfig
+> files (for example, CC_HAS_COUNTED_BY), so convert these probes to Kconfig
+> options where appropriate.
 
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index 05b48be05abd..ccd268d76235 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -694,6 +694,23 @@ static int kvm_map_pmu_event(struct arm_pmu *pmu, unsigned int eventsel)
- 	return eventsel;
- }
- 
-+static struct arm_pmu *kvm_pmu_probe_armpmu(int cpu)
-+{
-+	struct arm_pmu_entry *entry;
-+	struct arm_pmu *pmu;
-+
-+	guard(rcu)();
-+
-+	list_for_each_entry_rcu(entry, &arm_pmus, entry) {
-+		pmu = entry->arm_pmu;
-+
-+		if (cpumask_test_cpu(cpu, &pmu->supported_cpus))
-+			return pmu;
-+	}
-+
-+	return NULL;
-+}
-+
- /**
-  * kvm_pmu_create_perf_event - create a perf event for a counter
-  * @pmc: Counter context
-@@ -823,42 +840,6 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
- 	list_add_tail_rcu(&entry->entry, &arm_pmus);
- }
- 
--static struct arm_pmu *kvm_pmu_probe_armpmu(void)
--{
--	struct arm_pmu_entry *entry;
--	struct arm_pmu *pmu;
--	int cpu;
--
--	guard(rcu)();
--
--	/*
--	 * It is safe to use a stale cpu to iterate the list of PMUs so long as
--	 * the same value is used for the entirety of the loop. Given this, and
--	 * the fact that no percpu data is used for the lookup there is no need
--	 * to disable preemption.
--	 *
--	 * It is still necessary to get a valid cpu, though, to probe for the
--	 * default PMU instance as userspace is not required to specify a PMU
--	 * type. In order to uphold the preexisting behavior KVM selects the
--	 * PMU instance for the core during vcpu init. A dependent use
--	 * case would be a user with disdain of all things big.LITTLE that
--	 * affines the VMM to a particular cluster of cores.
--	 *
--	 * In any case, userspace should just do the sane thing and use the UAPI
--	 * to select a PMU type directly. But, be wary of the baggage being
--	 * carried here.
--	 */
--	cpu = raw_smp_processor_id();
--	list_for_each_entry_rcu(entry, &arm_pmus, entry) {
--		pmu = entry->arm_pmu;
--
--		if (cpumask_test_cpu(cpu, &pmu->supported_cpus))
--			return pmu;
--	}
--
--	return NULL;
--}
--
- static u64 __compute_pmceid(struct arm_pmu *pmu, bool pmceid1)
- {
- 	u32 hi[2], lo[2];
-@@ -1098,7 +1079,24 @@ static void kvm_arm_set_pmu(struct kvm *kvm, struct arm_pmu *arm_pmu)
-  */
- int kvm_arm_set_default_pmu(struct kvm *kvm)
- {
--	struct arm_pmu *arm_pmu = kvm_pmu_probe_armpmu();
-+	/*
-+	 * It is safe to use a stale cpu to iterate the list of PMUs so long as
-+	 * the same value is used for the entirety of the loop. Given this, and
-+	 * the fact that no percpu data is used for the lookup there is no need
-+	 * to disable preemption.
-+	 *
-+	 * It is still necessary to get a valid cpu, though, to probe for the
-+	 * default PMU instance as userspace is not required to specify a PMU
-+	 * type. In order to uphold the preexisting behavior KVM selects the
-+	 * PMU instance for the core during vcpu init. A dependent use
-+	 * case would be a user with disdain of all things big.LITTLE that
-+	 * affines the VMM to a particular cluster of cores.
-+	 *
-+	 * In any case, userspace should just do the sane thing and use the UAPI
-+	 * to select a PMU type directly. But, be wary of the baggage being
-+	 * carried here.
-+	 */
-+	struct arm_pmu *arm_pmu = kvm_pmu_probe_armpmu(raw_smp_processor_id());
- 
- 	if (!arm_pmu)
- 		return -ENODEV;
+> This change avoids a sublte issue with ppc32 (big endian) - clang doesn't
+                       ^^^^^^
 
--- 
-2.55.0
+subtle
+
+> accept -fno-stack-clash-protection on this sub-target, so keep this option
+> in the Makefile.
+
+> With gcc and clang, defconfig and allmodconfig, the recorded command
+> lines are unchanged, a build with nothing to do rebuilds nothing and W=1
+> continues to function correctly.
+
+> Doing this improves all builds, but has a particularly positive impact on
+> no-op builds (builds where nothing has changed).
+
+> Whole build, 128-thread Threadripper 9980X, best of N runs:
+
+>                                          before   after     delta
+>                                          -------------------------------
+>   x86 defconfig, no-op make, gcc           0.78s    0.60s    -0.18s (-23%)
+>   x86 defconfig, no-op make, clang         0.94s    0.66s    -0.28s (-30%)
+>   x86 defconfig, touch mm/vma.c, gcc        8.6s     8.5s    -0.16s (-2%)
+>   x86 defconfig, touch mm/vma.c, clang      8.0s     7.7s    -0.24s (-3%)
+>   x86 defconfig, clean, clang              29.8s    29.4s    -0.37s (-1%)
+>   x86 allmodconfig, no-op make, gcc        12.9s    12.7s    -0.23s (-2%)
+>   x86 allmodconfig, no-op make, clang      14.2s    13.9s    -0.29s (-2%)
+>   x86 allmodconfig, touch mm/vma.c, clang  32.2s    31.9s    -0.30s (-1%)
+
+Are these deltas just per-patch, but cumulative with all the previous
+patches applied?   
 
