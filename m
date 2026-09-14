@@ -1,95 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B041C39CCE6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04B63F4122;
 	Mon, 14 Sep 2026 22:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789425141; cv=none; b=DtYpDibn6uu6g2yz6ZulGQQUe0FdLOkLFNuDPBMW0hZbC0ueyUNlJZ2fB9SrRH6MW7kQpD7FyDvpfnGVGZLMJ1AjkGD+F046G2WmJGFWkXt7p4y2oLU3kx9SwDKX9150MThGEdhNtikNlOSwWm5i1INrMQ6dAzK1/U8KLly9xdA=
+	t=1789425141; cv=none; b=r/KtdkavxFH5tj2BMR2/mRXeHu5mSWCStOeRgzyTUh0DGUfCtDt315CuA0obxO6VSwOM7pFu21Fz+W/5kf7i3W4KdQVmAlj9D6kteWMiGQ4PWY9f2zmIqDfr7dlufIGvhJqFgWgoXXd9f4bZKuNyn7/oJI/2ceHgpGblv++5SOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789425141; c=relaxed/simple;
-	bh=qijXd2QkQ3HWA4BpjJ7QTWYCf8fopTwhtZmjFOO2pcA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jOrPv5rCCEaU8sV32AsDXfOebq+UexiB13D4g/zf8uwOkpg+OKTM2orZHpy84DwlZ/Fe5Jw0MUfDYgu5WIXWGnJ7DMZPqfu4Gxs4zdo6+IOVLJdfBouvkwRc19nq/AoL64Krkm5xkCQqEQ9qY74IAGxphx1ToN9vVUSAt6BR3ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJIMboED; arc=none smtp.client-ip=100.103.45.18
+	bh=cc1KgfUAzVgKTtRm7QSgi2oe8h4u5bnXQnDl9nlpys0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PBg4rZwTFiOpLux5ieASZdV5K/bN6e9W5urll/Oc+F+wG75Tadz+jCmcyGDXJ0Ymt/KDfulywsyt96MMLo4JF2J361Q9w6Rt6W6Eqj+YMxhR8Y7UHTdyo6IT7rUg5bltwa6Taz+0IsLWdlrQB1seoJIt/FM3OxciUl5pIts8E5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYHbVuIv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJIMboED"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E431F000FF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYHbVuIv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D5021F00893;
 	Mon, 14 Sep 2026 22:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1789425139;
-	bh=KOcA2tcYSGnDhJMYp2xxbrOyIjGECs9CmcVH5IitgEo=;
-	h=From:To:Cc:Subject:Date;
-	b=OJIMboEDjb8wnTlLoFItfkx9VEnB0HBrVsFvYs3nT8IACR02rgiIdWIveIDXmegG4
-	 Chqh8XXbMdMvL5eCfPkx+BCq5z4D2IBAMaTdlpPonu9LpZXccjQr+We+OiqngkUpcI
-	 XqB0kE9fOtGzNYf6bQzn8T+89DxYlyVFop5M7VnXsfLlFVLe3qrg2eYIxt3Xqyr58c
-	 giZrQj9iv681jMvXA7+dIo37n8iMdZ6Ecsbrc2iKHeM239kd6n986RjPQrHQZdwfnx
-	 a51gDM6jAo8CJHlgm77ZSr5CEzN8jyD25hif1eZNNNogp77S6KKNpAI5YBRGxOfH7a
-	 r8kEGVEHlxHew==
+	bh=3GXZPrWtCIjbM7MzBizS35UrFZBS63lQ6m5ygI5gZN4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=GYHbVuIvpBANoOBSPEKv4Z894y1qDNv39u2mQR4BwX1FRY0/TRyT0RimsmUh4RbPd
+	 Lti5s6H+YXVHDVyCidrK4YidWwvUinzMRMRkHg0VIF1uudcW6lght2qsSviRUZn8Zm
+	 zBGm8Gosu3tkEeBiYS5+FDJmlrz5JJrz5GUfGq/3bCJdn7QIN4RtOgRCyYM9aTsNW2
+	 vdoSnTfRDNBzf/gpS34uNYDDaqtatllMo5EHQPp4Ne6RADmK+BkwDc37RbFJVJU0c/
+	 lexiv0GSYMeH0ZT0ABvZl4F1NFN+EAKg0VHiDxu70BqHxJsmB7gwKVz/AqzV94BqKx
+	 zhlJEa4SOnnng==
 From: Kees Cook <kees@kernel.org>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Kees Cook <kees@kernel.org>,
 	Lorenzo Stoakes <ljs@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
 	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Michal Hocko <mhocko@suse.com>,
 	Brendan Jackman <brendan.jackman@linux.dev>,
 	Johannes Weiner <hannes@cmpxchg.org>,
 	Zi Yan <ziy@nvidia.com>,
-	David Hildenbrand <david@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
+	linux-mm@kvack.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	driver-core@lists.linux.dev,
-	linux-mm@kvack.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 0/2] devres: Provide kmalloc_obj*-style API for devm_kmalloc
-Date: Mon, 14 Sep 2026 15:32:15 -0700
-Message-Id: <20260914223212.i.829-kees@kernel.org>
+Subject: [PATCH 1/2] mm: Move default_gfp() into gfp_types.h
+Date: Mon, 14 Sep 2026 15:32:16 -0700
+Message-Id: <20260914223219.901347-1-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260914223212.i.829-kees@kernel.org>
+References: <20260914223212.i.829-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1045; i=kees@kernel.org; h=from:subject:message-id; bh=qijXd2QkQ3HWA4BpjJ7QTWYCf8fopTwhtZmjFOO2pcA=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkrSj9wCz48ajQtkP/S1t6wJyfZ/gcdS+kXu7WqOFh74 hR+s56/HaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABPZ95aRYeML871r0hIWhL+v dNUwyWdVdtrvwhIRv67h6JYo7qfntjP80z1+w8/u4f9kCftJy48Z/ft5KX2u8vLk96eSeeaI/gh L5QcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1894; i=kees@kernel.org; h=from:subject; bh=cc1KgfUAzVgKTtRm7QSgi2oe8h4u5bnXQnDl9nlpys0=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkrSj9Gy66X3ffw3tOPNgwW0a1HC59oy1+taxXUiX//0 ehkgrN2RykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwERUWhj+xzFGvQyQjN0Y6PAr 8NFkz6PnRFirGGs0/O9OP379teIqNoZ/uj8Pqwp96cn9rV39JO8oY5H9tkDlnKJu9iWZMqem16a zAQA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Using default_gfp() only depends on the GFP_KERNEL value. Move
+default_gfp() into gfp_types.h so that future use in devres.h doesn't
+require pulling in all of gfp.h.
 
-As a continuation of the type-based allocator work, this introduces the
-wrappers for devm_kmalloc()-family to use the _obj/_objs/_flex API that
-the kmalloc()-family has moved to. Along with the coming changes to
-scripts/coccinelle/api/kmalloc_objs.cocci to support devm_kmalloc()
-conversions, this will result in the following uses:
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Brendan Jackman <brendan.jackman@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: <linux-mm@kvack.org>
+---
+ include/linux/gfp.h       | 4 ----
+ include/linux/gfp_types.h | 4 ++++
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-            6644    devm_kzalloc_obj()
-            1714    devm_kzalloc_objs()
-             296    devm_kzalloc_flex()
-              89    devm_kmalloc_objs()
-              83    devm_kmalloc_obj()
-               2    devm_kmalloc_flex()
-
-which totals out in diffstat to:
-
- 5908 files changed, 10013 insertions(+), 12082 deletions(-)
-
--Kees
-
-Kees Cook (2):
-  mm: Move default_gfp() into gfp_types.h
-  devres: Provide kmalloc_obj*-style API for devm_kmalloc
-
- include/linux/device/devres.h | 102 ++++++++++++++++++++++++++++++++++
- include/linux/gfp.h           |   4 --
- include/linux/gfp_types.h     |   4 ++
- 3 files changed, 106 insertions(+), 4 deletions(-)
-
+diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+index 872bc53f32ec..b62e2fd53cb4 100644
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -13,10 +13,6 @@
+ struct vm_area_struct;
+ struct mempolicy;
+ 
+-/* Helper macro to avoid gfp flags if they are the default one */
+-#define __default_gfp(a,b,...) b
+-#define default_gfp(...) __default_gfp(,##__VA_ARGS__,GFP_KERNEL)
+-
+ static inline bool gfpflags_allow_blocking(const gfp_t gfp_flags)
+ {
+ 	return !!(gfp_flags & __GFP_DIRECT_RECLAIM);
+diff --git a/include/linux/gfp_types.h b/include/linux/gfp_types.h
+index 190191411009..b1cd143f3c42 100644
+--- a/include/linux/gfp_types.h
++++ b/include/linux/gfp_types.h
+@@ -382,4 +382,8 @@ enum {
+ 			 __GFP_NOMEMALLOC | __GFP_NOWARN) & ~__GFP_RECLAIM)
+ #define GFP_TRANSHUGE	(GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
+ 
++/* Helper macro to avoid gfp flags if they are the default one */
++#define __default_gfp(a,b,...) b
++#define default_gfp(...) __default_gfp(,##__VA_ARGS__,GFP_KERNEL)
++
+ #endif /* __LINUX_GFP_TYPES_H */
 -- 
 2.34.1
 
