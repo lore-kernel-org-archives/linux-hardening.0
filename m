@@ -1,31 +1,31 @@
 Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4315937B40C
-	for <linux-hardening@vger.kernel.org>; Mon, 14 Sep 2026 05:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B6512CDBE
+	for <linux-hardening@vger.kernel.org>; Mon, 14 Sep 2026 05:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789364543; cv=none; b=ALo82ej+rHpQCwoP69A6Twzf650dpTmZjltKVu1QWqokVTyJewf5/SIUiHcgS1zvBaj7vckXi0VO3FjHUFGJ2s+pJr9L9s4R2l/WpJYjC9apFRrZIKUizy4rNGdCFokaEmop+e77/0ERvzuPVwTIIJkqZmljEkCOrbvGmOHuJIY=
+	t=1789364806; cv=none; b=Wqc4GeRWNgJWjHZzMw1J9i74VHWnnUvW41dnNxlZeeOMFyaJ+aduMWY7Hp6FewcVXZeooH+ZinNw5w7FV+yaxqBaxwZvf/C3UL3q70gwlr1nKIpMr6PVDNxHmHskuz2oN8cJpcX5SRGH2X4WirGsSEo+O70Ivc7KLU+LUolS9LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789364543; c=relaxed/simple;
-	bh=z0glGIuBNzWKc1iOxR6Z9tZnSi8z1/HHqKj6IpKEYaw=;
+	s=arc-20240116; t=1789364806; c=relaxed/simple;
+	bh=k/jLuXN0egJkl+RuDIoVDRcHVwABb4ahl7sxOPoZDY0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YUbgGQOCbIZjoezHdIc2g1hag9bPjg06Cg3luHkGgHF/NCrvnl6KqSwt58f0gZhWEIGyIXGHD/Dum1oFopPHxXMTUkVX52FbgB1dqrjmWhYdDamolpqW8/UgzBSnWDYa2lDjGXN7JIGS3G7xk2myjMjlde7BvA2bVrH8HJyc02I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=aCW9FG2z; arc=none smtp.client-ip=35.89.44.37
+	 In-Reply-To:Content-Type; b=H5q8/oqjUBNx9lk5mKjLK0n+KOY3/MD6TW6A6XDjrNyii5tHiDAljKfRfgEQMLEQVNNB7ZvHa9xUTUKM9GBhFr1wGEzOl/WPjnFUJLxMXEXgjzyUNajqR8bMIX+N/6lh1stO0jwka2RPbum/7lkmVjth0z25l8zVS1W6Dy/PRio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=GX5YH3eo; arc=none smtp.client-ip=35.89.44.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aCW9FG2z"
-Received: from eig-obgw-6007b.ext.cloudfilter.net ([10.0.30.166])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GX5YH3eo"
+Received: from eig-obgw-5003b.ext.cloudfilter.net ([10.0.29.155])
 	by cmsmtp with ESMTPS
-	id 5vzHxyaqTv0nd5zSOxXfVq; Mon, 14 Sep 2026 05:42:20 +0000
+	id 5lgZxx9Wbv0nd5zWfxXgfI; Mon, 14 Sep 2026 05:46:45 +0000
 Received: from gator4166.hostgator.com ([108.167.190.91])
 	by cmsmtp with ESMTPS
-	id 5zSMxOcoOF2DA5zSMxKUJL; Mon, 14 Sep 2026 05:42:19 +0000
-X-Authority-Analysis: v=2.4 cv=FaM3xI+6 c=1 sm=1 tr=0 ts=6aa7893b
+	id 5zWdxSduIMSoY5zWexKy4B; Mon, 14 Sep 2026 05:46:44 +0000
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=6aa78a44
  a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
  a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=pGLkceISAAAA:8 a=VSUqd2-QvgQJ3Wj9IooA:9 a=QEXdDO2ut3YA:10
+ a=Zo5euW2OAAAA:8 a=Eac8uTGAbMeodF28N9oA:9 a=QEXdDO2ut3YA:10
  a=2aFnImwKRvkU0tJ3nQRT:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -33,20 +33,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Unsubscribe-Post:List-Subscribe:List-Post:List-Owner:
-	List-Archive; bh=trdCXU9qDUDUsWDOAU5LiSOzE7DFuDct3tTNYESdXB4=; b=aCW9FG2z4NvY
-	R+nSOTVpW0hgplIMbpZNslfcnaB1wjw53rmzTolwUsIKsFpZRXcw84YTAmrVfVxkqdEiMs57LTLLo
-	zIVc4oC/pZV7HUQpElXIoYmxLZywaoUN/0uarr6jFxcOftl/Nr35cvxsYPG11iXeMjWXZF3l6oMi6
-	rjq5UUysXqCYjcF6lgz3d2EnpV0Nl4mUfQLY466Gn9tqYe8v+EALk9qYPR2bxecAo9s9vl5fWDwhP
-	v98C3DhiEoNLu8oVJsHb0p2ZXCqdWE/pedfP/wBXS/OxZJL2BnhAzquY+ww/OMc40BdecTfAbc5Nq
-	XiJp7BQiPwYQX781mJQp7Q==;
-Received: from flh4-125-195-69-90.tky.mesh.ad.jp ([125.195.69.90]:57896 helo=[10.203.100.11])
+	List-Archive; bh=FKmISGsBCPqJ53Kvp3Q4p2bWngpj+u3FfgcCqvkQWbo=; b=GX5YH3eoc5y/
+	cIesr7qjeO2tIfaqFjj6d1sF0xR44ShbNkFI8PDImBXqgziH08CaPo+M8fnTYBQvv+fzeZa4oBGZ9
+	FPD8S5jZ4V3CXuM0XwDScfFj0G2P/xMMs8nsr/yNRmphZRVUR3ZNSdVUROlU9OQRwCKZ03Oi2aiWH
+	w3frKEQRDd2iyIchvu1TtsmcwYmYTDQHGIWglhq1Yt7OvaLLo+Z5KohHEGP3WYi4KZyLWOf7ez/dd
+	W0GAebSuhYsTu1kPJ/n9nxxt540C91zhp7mxHS6ofEkQ51VgDM/sOZ/fc3brDZRl2k/qCiezDRm44
+	YLyOKTdjDfmjB9wxyE0ixg==;
+Received: from flh4-125-195-69-90.tky.mesh.ad.jp ([125.195.69.90]:40280 helo=[10.203.100.11])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
 	(Exim 4.100)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1x5zSJ-00000003koE-3C5B;
-	Mon, 14 Sep 2026 00:42:15 -0500
-Message-ID: <fc4e5815-56da-40df-b3f5-dbf6e0470b1b@embeddedor.com>
-Date: Mon, 14 Sep 2026 14:42:06 +0900
+	id 1x5zWd-00000003pDO-1F9C;
+	Mon, 14 Sep 2026 00:46:43 -0500
+Message-ID: <0ed541fe-5583-4cd2-a794-6890478ad7de@embeddedor.com>
+Date: Mon, 14 Sep 2026 14:46:39 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,21 +54,17 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2] net: ip_tunnel: initialize `options_len` before
- referencing options
-To: Gris Ge <cnfourt@gmail.com>, David Ahern <dsahern@kernel.org>,
- Ido Schimmel <idosch@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: stable@vger.kernel.org, Simon Horman <horms@kernel.org>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Cosmin Ratiu <cratiu@nvidia.com>, Gal Pressman <gal@nvidia.com>,
- Tariq Toukan <tariqt@nvidia.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20260913090851.468216-1-cnfourt@gmail.com>
+Subject: Re: [PATCH] rtc: ac100: Assign .num before accessing .hws
+To: Aamir Ahmed <elb12345@hotmail.co.uk>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Chen-Yu Tsai <wens@kernel.org>, linux-sunxi@lists.linux.dev,
+ Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
+ stable@vger.kernel.org
+References: <AS8P251MB00013E724A77A355668B6CCEC8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
 Content-Language: en-US
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20260913090851.468216-1-cnfourt@gmail.com>
+In-Reply-To: <AS8P251MB00013E724A77A355668B6CCEC8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -79,53 +75,45 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 125.195.69.90
 X-Source-L: No
-X-Exim-ID: 1x5zSJ-00000003koE-3C5B
+X-Exim-ID: 1x5zWd-00000003pDO-1F9C
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: flh4-125-195-69-90.tky.mesh.ad.jp ([10.203.100.11]) [125.195.69.90]:57896
+X-Source-Sender: flh4-125-195-69-90.tky.mesh.ad.jp ([10.203.100.11]) [125.195.69.90]:40280
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
+X-Email-Count: 19
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfI+IkOCr4XpPg89LeDSX4425VZOcuJ/u6elr4Ff66CkRwJLCv2F1zVN7MXZcIlxR+tpTB16zSs1tRXEDFsqj4AVBY7vc807gfrG3cqDcPQuX91N+wHuf
- mDrzs5+i9ahpKpomhN2/MwkUd5Eet8cBCN/Il3xa3I6N2vLvHiitAq7PtV2aTopPbWdSBTi9y8LyPcf4oK3BDhdC80DrvCeLxxnhQUCq+vTgzWKwNLKC1sLo
+X-CMAE-Envelope: MS4xfE/aolte9QV/15zr3ynElPmm5iEuExNgn5iMF8D3sJ+AI/xO9bFblnvTs/NQAnodHLsu1zHqp4p7acNyPwoH7hHxxbokb45v5CixTrwj8FOaRsAQa2MG
+ Vvx+l31eXtxB8byhCWs0cx6C61/eLC88P7xgcepV+W7J+lntlzYpUuTp+I6AHe2Lowxym9eNxVkUAK+xya5oJNQtlZ2KPlByone37xr9yLAzHr+tD6NARVoV
 
 
 
-On 9/13/26 18:08, Gris Ge wrote:
-> The following command triggers a kernel panic:
+On 9/6/26 03:38, Aamir Ahmed wrote:
+> Commit f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with
+> __counted_by") annotated the hws member of 'struct clk_hw_onecell_data'
+> with __counted_by, which informs the bounds sanitizer (UBSAN_BOUNDS)
+> about the number of elements in .hws[], so that it can warn when .hws[]
+> is accessed out of bounds. As noted in that change, the __counted_by
+> member must be initialized with the number of elements before the first
+> array access happens, otherwise there will be a warning from each access
+> prior to the initialization because the number of elements is zero.
+> This occurs in ac100_rtc_register_clks() due to .num being assigned only
+> after every clkout clock has been stored in .hws[]. With
+> CONFIG_UBSAN_BOUNDS and a compiler that implements __counted_by (GCC
+> 15.1+ or Clang 20.1+), this triggers an array-index-out-of-bounds report
+> during probe, and with CONFIG_UBSAN_TRAP the first store traps.
 > 
->    ip link add d0 type dummy; ip link set d0 up
->    ip route add 10.30.0.0/16 \
->      encap ip id 300 geneve_opts 4660:66:11223344 dev d0
+> Initialize .num with AC100_CLKOUT_NUM, the number of elements .hws[] was
+> allocated with, right after the allocation. That is the value the loop
+> counter ends up at on the success path anyway, so the provider's
+> behaviour is unchanged.
 > 
->    memcpy: detected buffer overflow: 4 byte write of buffer size 0
->    kernel BUG at lib/string_helpers.c:1044!
->    ...
->    ip_tun_parse_opts.part.0.cold+0x10/0x10
->    ip_tun_build_state+0x116/0x2a0
-> 
-> On kernels built with GCC 15+ and `CONFIG_FORTIFY_SOURCE`, the fortified
-> `memcpy()` got 0 sized destination with request of 4 bytes length:
-> 
->    static int ip_tun_parse_opts_geneve(...)
->    {
->        ...
->        attr = tb[LWTUNNEL_IP_OPT_GENEVE_DATA];
->        data_len = nla_len(attr); /* == 4 */
-> 
->        struct geneve_opt *opt = ip_tunnel_info_opts(info) + opts_len;
->        memcpy(opt->opt_data, nla_data(attr), data_len);
->        /*     ^^^^^^^^^^^^^ 0 since options_len is assigned afterwards */
-> 
-> Fixed by initializing the counter before the options are referenced.
-> Matching what `tunnel_key_opts_set()` already does.
-> 
-> Fixes: bb5e62f2d547 ("net: Add options as a flexible array to struct ip_tunnel_info")
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Gris Ge <cnfourt@gmail.com>
+> Fixes: f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with __counted_by")
+> Assisted-by: LLM
+> Signed-off-by: Aamir Ahmed <elb12345@hotmail.co.uk>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
@@ -133,71 +121,46 @@ Thanks
 -Gustavo
 
 > ---
-> v2:
->    - pass opt_len into ip_tun_set_opts() and initialize options_len there,
->      matching tunnel_key_opts_set(), as suggested by Eric Dumazet.
-> v1: https://lore.kernel.org/netdev/20260912055304.1415016-1-cnfourt@gmail.com/
+> Found while auditing the remaining clk_hw_onecell_data users that assign
+> .num only after touching .hws[], following the fixes already merged for
+> clk-s2mps11 (3e14c7207a97), exynos-clkout (cf33f0b7df13) and
+> clk-raspberrypi (6dc445c19050). The audit, the fix and this changelog
+> were drafted with an LLM assistant and reviewed by hand.
 > 
->   net/ipv4/ip_tunnel_core.c | 16 +++++++++++-----
->   1 file changed, 11 insertions(+), 5 deletions(-)
+> Compile-tested only (W=1, no warnings) on x86_64 with GCC 13.3, with
+> CONFIG_RTC_DRV_AC100=m forced on the make command line because the
+> driver has no COMPILE_TEST option. GCC 13.3 does not implement
+> __counted_by (CC_HAS_COUNTED_BY needs GCC 15.1+ or Clang 20.1+), so the
+> build only confirms that the change compiles; the sanitizer path was not
+> exercised. I do not have the hardware, so this is not runtime-tested and
+> no UBSAN report was captured.
 > 
-> diff --git a/net/ipv4/ip_tunnel_core.c b/net/ipv4/ip_tunnel_core.c
-> index 5168d546ea2f..bab42b9e277f 100644
-> --- a/net/ipv4/ip_tunnel_core.c
-> +++ b/net/ipv4/ip_tunnel_core.c
-> @@ -680,8 +680,14 @@ static int ip_tun_get_optlen(struct nlattr *attr,
->   }
+> Based on v7.3-rc1.
 > 
->   static int ip_tun_set_opts(struct nlattr *attr, struct ip_tunnel_info *info,
-> -			   struct netlink_ext_ack *extack)
-> +			   int opts_len, struct netlink_ext_ack *extack)
->   {
-> +	/* `options_len` is the __counted_by() annotation of the `options`
-> +	 * flexible array, it must be initialized before parsing writes
-> +	 * into it.
-> +	 */
-> +	info->options_len = opts_len;
+>   drivers/rtc/rtc-ac100.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rtc/rtc-ac100.c b/drivers/rtc/rtc-ac100.c
+> index bba7115ff3a..a2f465438fd 100644
+> --- a/drivers/rtc/rtc-ac100.c
+> +++ b/drivers/rtc/rtc-ac100.c
+> @@ -317,6 +317,8 @@ static int ac100_rtc_register_clks(struct ac100_rtc_dev *chip)
+>   	if (!chip->clk_data)
+>   		return -ENOMEM;
+>   
+> +	chip->clk_data->num = AC100_CLKOUT_NUM;
 > +
->   	return ip_tun_parse_opts(attr, info, extack);
->   }
-> 
-> @@ -712,7 +718,8 @@ static int ip_tun_build_state(struct net *net, struct nlattr *attr,
-> 
->   	tun_info = lwt_tun_info(new_state);
-> 
-> -	err = ip_tun_set_opts(tb[LWTUNNEL_IP_OPTS], tun_info, extack);
-> +	err = ip_tun_set_opts(tb[LWTUNNEL_IP_OPTS], tun_info, opt_len,
-> +			      extack);
->   	if (err < 0) {
->   		lwtstate_free(new_state);
->   		return err;
-> @@ -753,7 +760,6 @@ static int ip_tun_build_state(struct net *net, struct nlattr *attr,
+>   	chip->rtc_32k_clk = clk_hw_register_fixed_rate(chip->dev,
+>   						       AC100_RTC_32K_NAME,
+>   						       NULL, 0,
+> @@ -360,7 +362,6 @@ static int ac100_rtc_register_clks(struct ac100_rtc_dev *chip)
+>   		chip->clk_data->hws[i] = &clk->hw;
 >   	}
+>   
+> -	chip->clk_data->num = i;
+>   	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, chip->clk_data);
+>   	if (ret)
+>   		goto err_unregister_rtc_32k;
 > 
->   	tun_info->mode = IP_TUNNEL_INFO_TX;
-> -	tun_info->options_len = opt_len;
-> 
->   	*ts = new_state;
-> 
-> @@ -1006,7 +1012,8 @@ static int ip6_tun_build_state(struct net *net, struct nlattr *attr,
-> 
->   	tun_info = lwt_tun_info(new_state);
-> 
-> -	err = ip_tun_set_opts(tb[LWTUNNEL_IP6_OPTS], tun_info, extack);
-> +	err = ip_tun_set_opts(tb[LWTUNNEL_IP6_OPTS], tun_info, opt_len,
-> +			      extack);
->   	if (err < 0) {
->   		lwtstate_free(new_state);
->   		return err;
-> @@ -1040,7 +1047,6 @@ static int ip6_tun_build_state(struct net *net, struct nlattr *attr,
->   	}
-> 
->   	tun_info->mode = IP_TUNNEL_INFO_TX | IP_TUNNEL_INFO_IPV6;
-> -	tun_info->options_len = opt_len;
-> 
->   	*ts = new_state;
-> 
-> --
-> 2.55.0
-> 
+> base-commit: 654ae5d73c05bd2943d65636ce6cd0aa46e62f18
 
