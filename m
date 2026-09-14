@@ -1,40 +1,41 @@
 Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0C544C51C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D34F44C51D;
 	Mon, 14 Sep 2026 11:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789386190; cv=none; b=rUmJPvm8XFWOLeiOxoNtW8Z+cadIUEhteMeeBFDozeS9L9knxvt80KgAAF1ox5MdwGoHBAF6p2jpLkMHjVS3jpSBNqwMzEw7pj2iFqaSaYGK4OmyciKkFzyvLfze6y9x7qOYkkGZKtcUyXxM24Oue7+/wVKUHQ6spTecwiqkBmU=
+	t=1789386191; cv=none; b=uznTW9yKaYlKsO/GmFb4wp5c5sHnPB6etHPSb10LgP4DMMJuGk4LP+QbX+cv3jsyexDR2DfHHNmewd/g9HA+2hZgd8Sqd2XKoVhaemCnlE1FsNTIJpRJVDQvX++NX35w9XdA29ZPMGbcEHBJKZzIZH5Qy0zO9Hjfu0ITI5XATpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789386190; c=relaxed/simple;
-	bh=0gFY16czEJJdVIZNruax1OboJIq4DgiNXWKP5yi8iWI=;
+	s=arc-20240116; t=1789386191; c=relaxed/simple;
+	bh=fyAPY3wbyhFxJx0Uh0Y1Wf3h8lp8DodEluZsH4qRO3o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P9oKBt6c8Jw//X5IZJB1mTJglPdMMvNu+JEXxUqr3C5lZuKD5xetbt6uZHJ4ZYAwG84ug8K075AfHKf3969Ok9k+4nlFqVaCsEXEB0xnjYbcZcWFha217voN0lzvJGhw/bC09wyDw8ZPz9wMbwCRTsZL7OXsIwye3y+R2ecxZHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=KasQI7ws; arc=none smtp.client-ip=49.212.243.89
+	 In-Reply-To:To:Cc; b=FtN/dyvpAFI6mf+clDphhF2HUSGejITHXEIsG69GysHMDNrfG7sI2cgK0/BSwtbhU3gda27XiU3ArMU+byTZBrBw4N594DZFa8lWTK38j1DL3BSEBTk+xFQs7lNxgtDUeeuosgH9hQ8aFZHsgx81EwUxYtkJb11hCTBRUfxPNB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=uUkqqHGh; arc=none smtp.client-ip=49.212.243.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="KasQI7ws"
+	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="uUkqqHGh"
 Received: from h183.csg.ci.i.u-tokyo.ac.jp (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
 	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68EBfjsD084060
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68EBfjsI084060
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 14 Sep 2026 20:41:55 +0900 (JST)
+	Mon, 14 Sep 2026 20:41:56 +0900 (JST)
 	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=sdoc/fNZ3/8mGQaouIvfU+D4x9tivmX8+zHcMnaA4Lw=;
+DKIM-Signature: a=rsa-sha256; bh=ph6HSKjKoqZZNsqdUSSmK2O4fifuPfULBi73hh+J6dM=;
         c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
         h=From:Message-Id:To:Subject:Date;
-        s=rs20250326; t=1789386115; v=1;
-        b=KasQI7wsPlS7Dg95M5GXqi9WPs9GW4Pp12r2pPfTSSFQNbB0ZrWdbTcmWCo+2mG7
-         MkSgdhCHg6WxiAT+zXs+0fh9hc+wWOYnNQbA/AiRyA+BIoGsuIlwJ+otlAhEv9z8
-         dZ2MOBBSHfROKhW779+8bdcBj/iYjkvgPmCleEbZPJb6t1ZmMOg26R1BkKSBnC1L
-         I3++om8cP1/Tj25PR03GKZa0Ox8D7DqH2VOc5doNniRI+AS6GERO63CZF0Dhgv+v
-         u2Jtw2E0Zen9rLwSLGD+aO2afMi4ke6XXzx+OwRKShyT4Hg/qul2QgynXX4SxVYJ
-         OYXdEp6ACx9LezOoAMwcvg==
+        s=rs20250326; t=1789386117; v=1;
+        b=uUkqqHGhMeoppu6h32pd368gX+IMWeFJdo/UK7+mtTMxp+d72t/WgvPxcOYjhiqR
+         e7U+AEBeTmu4SpuU21Zc82pVBbw6Luf0skOY5GYO57j8GPPDxgoBHiUbZ00cjoxK
+         b/lrgYhxg+EwTvibicaB06xw6GcpZ45ZnBBfkRzzbPDO6e0AaaURctRrBbgEJB52
+         TsGf+e/XBfQ2IBjq0F8/+FzSGBZvRk9LJsXmYd2h8IymADlhr1VJbwnLhUiqbjOJ
+         3qBgL7so1k2X+ROQoD5HXxe+vQHgF2gkS4uQc6/1sBpwWbTabIjQQoOFMJDpNNBD
+         Ud/+5I7FHj9My7X/4HrfIQ==
 From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Date: Mon, 14 Sep 2026 20:40:50 +0900
-Subject: [PATCH v10 11/20] tools headers: Use u* types for bitfield helpers
+Date: Mon, 14 Sep 2026 20:40:55 +0900
+Subject: [PATCH v10 16/20] KVM: arm64: PMU: Pass the pPMU to
+ kvm_map_pmu_event()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,7 +44,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260914-hybrid-v10-11-92788053a691@rsg.ci.i.u-tokyo.ac.jp>
+Message-Id: <20260914-hybrid-v10-16-92788053a691@rsg.ci.i.u-tokyo.ac.jp>
 References: <20260914-hybrid-v10-0-92788053a691@rsg.ci.i.u-tokyo.ac.jp>
 In-Reply-To: <20260914-hybrid-v10-0-92788053a691@rsg.ci.i.u-tokyo.ac.jp>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
@@ -67,83 +68,52 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
         Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>,
         Fuad Tabba <fuad.tabba@linux.dev>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3005;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1503;
  i=odaki@rsg.ci.i.u-tokyo.ac.jp; h=from:subject:message-id;
- bh=0gFY16czEJJdVIZNruax1OboJIq4DgiNXWKP5yi8iWI=;
- b=owGbwMvMwCWmMbc20y1CyJDxtFoSQ9byu0U3TFvWtF0yCX0cefXyDPHK6n9VBduVvl/pj09b/
- HTiTVfGjlIWBjEuBlkxRZaUot3cGtG1nwoT4ltg5rAygQxh4OIUgIlclGNkuNNe1tPrvPnYwlt8
- tzW/v7BPuvtwgfauPZPTw0RmSJ680sfwk9FTzEjkeHFzT7mw+uvo53WPLf03nF3hyzblnK30kdh
- KTgA=
+ bh=fyAPY3wbyhFxJx0Uh0Y1Wf3h8lp8DodEluZsH4qRO3o=;
+ b=owGbwMvMwCWmMbc20y1CyJDxtFoSQ9byu6WvIn6sUZfcFva88p9SiuGtP2onDPdYFq3LnZoXn
+ z1ZvftCRykLgxgXg6yYIktK0W5ujejaT4UJ8S0wc1iZQIYwcHEKwESOlTL84b7/aXP/0VI3TkmL
+ zZ48Lcc4U964my87oKuaLecz/d7XYEaGmdZLRZ/flG2zkKxacz4z8eY2w/5WJ9vuHVJhtjmNd40
+ 4AQ==
 X-Developer-Key: i=odaki@rsg.ci.i.u-tokyo.ac.jp; a=openpgp;
  fpr=AEDC03C9AF734F2EC26A7BFFA4BAEAA73536753C
 
-Commit 9486aa387716 ("perf tools: Fix 64 bit integer format strings")
-defined the tools-local u64 as uint64_t so that PRI*64 format macros
-match its underlying C type. On architectures where uint64_t and __u64
-are distinct types, however, ____MAKE_OP() still gives the u64_*
-helpers an __u64 interface.
+Replace the VM argument with the pPMU used for event creation. The
+current caller still passes the VM's default pPMU, but this removes the
+implicit lookup from kvm_map_pmu_event() so later changes can map events
+against the pPMU selected for an individual vCPU.
 
-Teach ____MAKE_OP() to accept the helper name and storage type
-separately. Keep endian helpers on __le* and __be*, and generate the
-native helpers using the tools-local u* types.
-
-Assisted-by: Codex:gpt-5.6-sol
 Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
 ---
- tools/include/linux/bitfield.h | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ arch/arm64/kvm/pmu-emul.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/include/linux/bitfield.h b/tools/include/linux/bitfield.h
-index ddf81f24956b..1c633343d576 100644
---- a/tools/include/linux/bitfield.h
-+++ b/tools/include/linux/bitfield.h
-@@ -142,32 +142,32 @@ static __always_inline u64 field_mask(u64 field)
- 	return field / field_multiplier(field);
+diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+index 94bc69727c9f..05b48be05abd 100644
+--- a/arch/arm64/kvm/pmu-emul.c
++++ b/arch/arm64/kvm/pmu-emul.c
+@@ -682,10 +682,8 @@ static bool kvm_pmc_counts_at_el2(struct kvm_pmc *pmc)
+ 	return kvm_pmc_read_evtreg(pmc) & ARMV8_PMU_INCLUDE_EL2;
  }
- #define field_max(field)	((typeof(field))field_mask(field))
--#define ____MAKE_OP(type,base,to,from)					\
--static __always_inline __##type type##_encode_bits(base v, base field)	\
-+#define ____MAKE_OP(name,type,base,to,from)				\
-+static __always_inline type name##_encode_bits(base v, base field)	\
- {									\
- 	if (__builtin_constant_p(v) && (v & ~field_mask(field)))	\
- 		__field_overflow();					\
- 	return to((v & field_mask(field)) * field_multiplier(field));	\
- }									\
--static __always_inline __##type type##_replace_bits(__##type old,	\
--					base val, base field)		\
-+static __always_inline type name##_replace_bits(type old,		\
-+						base val, base field)	\
- {									\
--	return (old & ~to(field)) | type##_encode_bits(val, field);	\
-+	return (old & ~to(field)) | name##_encode_bits(val, field);	\
- }									\
--static __always_inline void type##p_replace_bits(__##type *p,		\
-+static __always_inline void name##p_replace_bits(type *p,		\
- 					base val, base field)		\
- {									\
--	*p = (*p & ~to(field)) | type##_encode_bits(val, field);	\
-+	*p = (*p & ~to(field)) | name##_encode_bits(val, field);	\
- }									\
--static __always_inline base type##_get_bits(__##type v, base field)	\
-+static __always_inline base name##_get_bits(type v, base field)	\
- {									\
- 	return (from(v) & field)/field_multiplier(field);		\
- }
--#define __MAKE_OP(size)							\
--	____MAKE_OP(le##size,u##size,cpu_to_le##size,le##size##_to_cpu)	\
--	____MAKE_OP(be##size,u##size,cpu_to_be##size,be##size##_to_cpu)	\
--	____MAKE_OP(u##size,u##size,,)
--____MAKE_OP(u8,u8,,)
-+#define __MAKE_OP(size)									\
-+	____MAKE_OP(le##size,__le##size,u##size,cpu_to_le##size,le##size##_to_cpu)	\
-+	____MAKE_OP(be##size,__be##size,u##size,cpu_to_be##size,be##size##_to_cpu)	\
-+	____MAKE_OP(u##size,u##size,u##size,,)
-+____MAKE_OP(u8,u8,u8,,)
- __MAKE_OP(16)
- __MAKE_OP(32)
- __MAKE_OP(64)
+ 
+-static int kvm_map_pmu_event(struct kvm *kvm, unsigned int eventsel)
++static int kvm_map_pmu_event(struct arm_pmu *pmu, unsigned int eventsel)
+ {
+-	struct arm_pmu *pmu = kvm->arch.arm_pmu;
+-
+ 	/*
+ 	 * The CPU PMU likely isn't PMUv3; let the driver provide a mapping
+ 	 * for the guest's PMUv3 event ID.
+@@ -737,7 +735,7 @@ static void kvm_pmu_create_perf_event(struct kvm_pmc *pmc)
+ 	 * Don't create an event if we're running on hardware that requires
+ 	 * PMUv3 event translation and we couldn't find a valid mapping.
+ 	 */
+-	eventsel = kvm_map_pmu_event(vcpu->kvm, eventsel);
++	eventsel = kvm_map_pmu_event(vcpu->kvm->arch.arm_pmu, eventsel);
+ 	if (eventsel < 0)
+ 		return;
+ 
 
 -- 
 2.55.0
