@@ -1,57 +1,57 @@
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028CE477994
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC873D812A
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460486; cv=none; b=hMy2iGFbQvy+d3Rpeg8PUM9aK7HRI8CWEkGg2a8yK5wQd/n9GmWW3Jhtx2yGT2fbap0CH8aKLaP3PbJUvukNEHbNoXCIhacCpDglhByGD69H+OzqoiOOMEOauaetuaag9gRaLC6B1PfJk3FoNv1ssvdWd5crrhZIUWaXHbOaKOQ=
+	t=1789460487; cv=none; b=STDBFGCl2836VDlxYdKb/ofFZXoJ7dntlklph38dvaRS7849ftmATgp3zq57yqLjiLY2e0mzNHenefKI1QNWt7W4+K8/xu6ojcwgmEdx06MmfOuPrftxfQVwqzm0Rg2Fh+ib+8N5qRcfinQLK8Pq5qp5pECf1Ymr+02v7pv8prk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460486; c=relaxed/simple;
-	bh=RwAdEk8GoMG+Ylv02Q78v2tXMpN+9oITjoSVCa+/lcI=;
+	s=arc-20240116; t=1789460487; c=relaxed/simple;
+	bh=WLXzasjY0mBK/NrbpJfTCOFtGklzxJ8+ta6QqRZkwNM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IApj+jgn7niz3tVrZl0Os9ZTb5Ro4Rv2GzgR7urVobR8gfk3JgNxleJRPp5vnS8xwiWhLqFqwZjI4kWKaTzl8oAJinoLJC3HmNnaPAljaejZzLVUydW9QHPQi0AZ+i1qIP4zh0jaWaTZiQqA4wRWaTvIil7KCbHEPDzDdzXGsU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KmARG9aJ; arc=none smtp.client-ip=209.85.215.197
+	 To:Cc:Content-Type; b=kwQiYMe6ciB3ZNat+lBCwyuuYaSmfLrWJr75VY8xtLzor3e9t32GZFWArCzfYEdK0hn/dmbiKU3dGDDYfheAHDIh5N4W43vThf64X5qvbKy+ebN+YwROufG7+FXW0ziwyv7i83EflPqYz9v1tQdPmkWZXm/gLBOt88bE1zVyBkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qIH54Pf4; arc=none smtp.client-ip=209.85.214.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KmARG9aJ"
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-c89704da8c7so5652969a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:20:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qIH54Pf4"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2dc7337e2a7so52780715ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:20:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460419; x=1790065219; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789460422; x=1790065222; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=3R1bHblX/YSNAoDVuSots2jijK47BJf7ndWg1gXSC20=;
-        b=KmARG9aJw+EfrxjNpwdI07LN4CIXUR8sFQ6kkwPFhACadzvxbNPSIDqr//33Alc4UY
-         R52INMML5LN0aTuN8HjZxDuM76h1AAPcVXn64yUT5rjit5U+iGgl1MF/BPOb2cuiZPyE
-         Wv+fQiUqjwl3D7XanEH4V1189fAZLMrNUiH5L4sX194GyKiZUpMsh1fcaGDV5CYbubY9
-         zj839tWYTRKD3DVNfwMII7er+yQ1vrEDArJ2YZCq2Nc1++mCm4429OPTjsrTlmItPsPN
-         +wzv3LuzLp959vh3m2lMJbDvEUvDqQ7gTJ7C0wDgVReew1uK7PhFLz5ZO2mKQArH31TA
-         dF6A==
+        bh=RYxDJLbbwpCoc34IeHntB/eNfLB4EmZZnrz8tORBuFs=;
+        b=qIH54Pf4oQk648f0qwor703FV/WhFcWzH1lKrIr+3hScrsEImk2qb9ay5n1JtWUHHc
+         E7LSBliVH4jz5xSaNel1WlgtK37YJLyVMaJcC2ms1yNH2cy5Eg1dtDhbs5SkpUZ33qAy
+         fWtheS+uwl/XcEkiLLQjS2SKzQYJ1b2RQYHPj3Pi1JymadBJqHR82fmTeYUc+yKYEz6t
+         Z80RHmow8rVhXXY/J0zWuDFY9pf8UrAjC+bLFSUx+vFUKtOE8FzIV8zMbJAyp3D819Qi
+         CN7bYmcxip2eS+rZxeJL/k8kaTEiB1JgGeBAPSpv3e7QKTP2D9pTpJ4+f83W4L2sG/Xy
+         RYGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460419; x=1790065219;
+        d=1e100.net; s=20260707; t=1789460422; x=1790065222;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=3R1bHblX/YSNAoDVuSots2jijK47BJf7ndWg1gXSC20=;
-        b=bsyy9SsJATkVeYT1YMrC2thwfxfNFCWcFWsQBure0lx2stPQZXqJTD5WRv6r51gFyE
-         qc4l66qH17Jp7v3KhxXvxYPhmCZ0svJeooZwW0Ua0U56PWBiTPhlQ7Lwu5bdh6xXWJmz
-         mMsRPytXrMZqtRXC/RgNRwo5FGYlOlB19zuGHAOgi1MYEsQbDHv8oQrHF7HPjk8epPey
-         QJA1eSVr36sz+tAX4fTHOhL4EkxCnxdYnityjXktxEQbqGzyYGN57nEO45neVJCE/Bts
-         Zov6ogEjD+A8BJLsn11RtePpsEzM3RqmKys/Koh/q7zWBWOq5MJZZ1ioUVqrdAh4lKXs
-         MnqA==
-X-Forwarded-Encrypted: i=1; AKwUvBwHryiV0ztEruprFto9FZRvN6tCrq3bM+KWx064GqyfRyJKUoD+icR4Yb9c2hs9c7y0xiiAA9e0xtPmtcbZC1Q=@vger.kernel.org
-X-Gm-Message-State: AFuF++lyunTEdB20n4qRzwEpFnGJn8Ipoeb2c0MRTmRccQPbv38tQNAE
-	VZ/gqK73h2LXuLHPGuW3xbB6SV3qF9/SE0LMWqrmrCV4bUCoH3cGvyM4J2UsBA11xOaymQqlxMO
-	z
-X-Received: from pghu21.prod.google.com ([2002:a63:ef15:0:b0:cc4:da05:ef4c])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3315:b0:3d3:aec2:4dcd
- with SMTP id adf61e73a8af0-3db40623e61mr13262094637.25.1789460418341; Tue, 15
- Sep 2026 01:20:18 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:44 +0000
+        bh=RYxDJLbbwpCoc34IeHntB/eNfLB4EmZZnrz8tORBuFs=;
+        b=zporlO4+HKCVMV8sJsncMPeRDOWNX8DdI+ikVjiopYXnmIuXz0FLbKHpOqOsBM2YEF
+         h5Gscd0YEp6f3UnUZGsHneOIsKPaU4XJn+HuTpCVYLmc1RoQezzw+NyK0SxtpI/KRHR0
+         FotI8FOQ+R3DIv5NAmeHbkVHtKcOd5itGVaOgvx+TqlUt9a+avbiz+PwCZ290TMkpONJ
+         GirH/Z7fI+KrHGu1BriggZEoFJgBD6kIeN73PMPDQOVBtUhfp7z+rc7eQpfb+NA37QXw
+         oOtLWG2ryvvtR52nOa3swnM9Vcp21ibUD3ZuofcyfVeeSndnuVLJS44PYbuEgmslmtR4
+         cCSg==
+X-Forwarded-Encrypted: i=1; AKwUvBzu8KEEdAUD8XxrtXTRNWheDa9e3+l75LsbMKroMTIEs/DSeS4jRAjFqVFYlI+nq7lkkdPfO4rzRJYAaW4oAjE=@vger.kernel.org
+X-Gm-Message-State: AFuF++ln0KVxee44LYsUHWkFS6XBFWv5ttuVMmO8NzrgVf6n9zJVx0y+
+	TzLgJvVRD9d036Tp6oS1/gzheCabn2BSp6/srB8YhG1kGesLETfQzlvp/GOeFwBL4FUh7uoLsv8
+	o
+X-Received: from plas19.prod.google.com ([2002:a17:903:2013:b0:2dd:75f1:13f5])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:40c6:b0:2d0:cc92:f7a9
+ with SMTP id d9443c01a7336-2dd837a6aeemr1077095ad.4.1789460419151; Tue, 15
+ Sep 2026 01:20:19 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:45 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-28-morbo@google.com>
-Subject: [PATCH 27/28] drm/xe/pf: Convert strlcat() to seq_buf in control_read()
+Message-ID: <20260915081910.4142719-29-morbo@google.com>
+Subject: [PATCH 28/28] drm/xe/pf: Refactor strlcat() to seq_buf in sched_group_engines_read()
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
@@ -123,17 +123,17 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-control_read() builds a list of supported SR-IOV VF control commands in a
-stack buffer by calling strlcat() twice per command in a loop.
+Similar to control_read(), sched_group_engines_read() constructs a
+space-separated list of hardware engine names in a stack buffer using
+repeated strlcat() calls inside a loop.
 
-In preparation for removing the deprecated strlcat() API[1], use struct
-seq_buf and seq_buf_printf() to format each command line and pass
-seq_buf_used() directly to simple_read_from_buffer().
+In preparation for removing the deprecated strlcat() API[1], refactor
+sched_group_engines_read() to use struct seq_buf and seq_buf_printf().
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Cc: codemender-patching+linux@google.com
-Assisted-by: CoT-Agent:Gemini-2.0-Flash [editor_update_file, shell_command_=
-run]
+Assisted-by: Developer:Gemini [editor_update_file, make_kernel_build_single=
+_file, shell_command_run]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -247,44 +247,50 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c b/drivers/gpu/drm/=
 xe/xe_gt_sriov_pf_debugfs.c
-index 0f242db775e1..5db7fc067c4d 100644
+index 5db7fc067c4d..548a50f74422 100644
 --- a/drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c
 +++ b/drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c
-@@ -4,6 +4,7 @@
-  */
-=20
- #include <linux/debugfs.h>
-+#include <linux/seq_buf.h>
-=20
- #include <drm/drm_print.h>
- #include <drm/drm_debugfs.h>
-@@ -663,15 +664,15 @@ static ssize_t control_write(struct file *file, const=
- char __user *buf, size_t c
- static ssize_t control_read(struct file *file, char __user *buf, size_t co=
-unt, loff_t *ppos)
- {
- 	char help[128];
+@@ -377,8 +377,10 @@ static ssize_t sched_group_engines_read(struct file *f=
+ile, char __user *buf,
+ 	struct xe_hw_engine *hwe;
+ 	enum xe_hw_engine_id id;
+ 	char engines[128];
 +	struct seq_buf s;
- 	size_t n;
++	const char *s_str;
 =20
--	help[0] =3D '\0';
-+	seq_buf_init(&s, help, sizeof(help));
- 	for (n =3D 0; n < ARRAY_SIZE(control_cmds); n++) {
--		strlcat(help, control_cmds[n].cmd, sizeof(help));
--		strlcat(help, "\n", sizeof(help));
-+		seq_buf_printf(&s, "%s\n", control_cmds[n].cmd);
+-	engines[0] =3D '\0';
++	seq_buf_init(&s, engines, sizeof(engines));
+=20
+ 	if (group < num_groups) {
+ 		for_each_hw_engine(hwe, gt, id) {
+@@ -386,15 +388,14 @@ static ssize_t sched_group_engines_read(struct file *=
+file, char __user *buf,
+ 			u16 guc_logical_instance =3D xe_hwe_guc_logical_instance(hwe);
+ 			u32 mask =3D groups[group].engines[guc_class];
+=20
+-			if (mask & BIT(guc_logical_instance)) {
+-				strlcat(engines, hwe->name, sizeof(engines));
+-				strlcat(engines, " ", sizeof(engines));
+-			}
++			if (mask & BIT(guc_logical_instance))
++				seq_buf_printf(&s, "%s ", hwe->name);
+ 		}
+-		strlcat(engines, "\n", sizeof(engines));
++		seq_buf_puts(&s, "\n");
  	}
 =20
--	return simple_read_from_buffer(buf, count, ppos, help, strlen(help));
-+	return simple_read_from_buffer(buf, count, ppos, help, seq_buf_used(&s));
+-	return simple_read_from_buffer(buf, count, ppos, engines, strlen(engines)=
+);
++	s_str =3D seq_buf_str(&s);
++	return simple_read_from_buffer(buf, count, ppos, s_str, strlen(s_str));
  }
 =20
- static const struct file_operations control_ops =3D {
+ static const struct file_operations sched_group_engines_fops =3D {
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
