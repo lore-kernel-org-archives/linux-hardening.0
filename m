@@ -1,66 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CCC3D9DA1;
-	Tue, 15 Sep 2026 15:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761803DA7F8;
+	Tue, 15 Sep 2026 15:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789484655; cv=none; b=ejYAVnRuZvV3VX3j/nTTIUFN5Axl56rdGYZkeUsOZSe6a/tGlHLSy2hYGZHO7tVdneiHxw8yObUme8LvtMJHoeMNuJ13xvf05GbwUiRkvh318v9R7dCgR08zfbSOXPBW3IM7YJkOKcKr3yffXmdpm3Y/eS0hIoL/ErQLC5v+Tzk=
+	t=1789484715; cv=none; b=n9cgZtmnJDObiTU3Dzaz31+a0VE8p5ZkvWNSAbO1BqKOoJRmIWji1QNFhKzdEI2MX0bJ9F/YXI3uyOZdhlfOELsxpQ5knNY/dhvubvT5UW5SBu9uY6EXcsd12KPYAIcKqFSX5y1I4It5zBqPrpVF2mzx2metov7nPf0Tsp3C8wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789484655; c=relaxed/simple;
-	bh=IZYowYo0tr99LV5bF5s2Q786jBuUYkEw4pS9QMyuqbA=;
+	s=arc-20240116; t=1789484715; c=relaxed/simple;
+	bh=DAmlGFJZYAmgnOIvR39oev84RuA6yc2k24v0yU66UX8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VHNp+NlDRMt/80ZGWAjRtlSbBcLMYoA74cEeUlx7ACrxZp7qVH9Dzfg5zm+ftYJd6fWMPI1YYCSAY/TfGCbGuKkv3BVIU7JGQKEj2xCT+uEBwyOuaEasO8XsDmy6QM/hA87bPNHJcq/salGMPkjoJKlpenKD1Ibu5Kssm2fsZZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfUJfxGo; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iv6os0/vSp83JQmPUZT3K8t+sCZv2X60CfX89bJcHxd7tH+hEYtWoG0HV/va1SvJDRZ2I+AyXHKMpAP7G/BJeqN4JAOpZN+SfcdLpV3ADIj9hW6BriMLtKaaFKvMPLPutnyRNXNBS0v0kDuSOoCng4cAiHqi+5c4xOXLqYRZLs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gf5L5wnm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfUJfxGo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445A51F000FF;
-	Tue, 15 Sep 2026 15:04:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gf5L5wnm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 609DE1F00893;
+	Tue, 15 Sep 2026 15:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789484651;
-	bh=6WCAfz85+ZGgRMN8wAwQXLQh8ReFwgRJPZyO/JsNeYI=;
+	s=k20260515; t=1789484714;
+	bh=92Jyv3r5iRKPp9A+0MWzJBMIdxeAT/qbE/UD5yjhWE0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=CfUJfxGo8VPDYjL6tBgfl6L002bEGl1ULF2dCRDxLcUo+ron9vtXHUBT/L1UTJo8L
-	 U0iLglw63rY+yRq09BUmnCcoTd/5o8qIRnxuo2JlsFOAqKr9geNfwGfR1AickYadR1
-	 eZ+UJH8NBVkcyKnuFPyAHxFthRRJgRf2DHU7c2yHI6ZgtsWCDAM9+Dp/WgT7KnklKF
-	 xxwMgPPtPplf0k17pupUP4U4BTD5IWphakn+2wgwPt4Ob7KYYh4Fiufotq7wXJZle1
-	 XndOOWOAK6nwCgJYzumwG2wlhaFBpVgHKhfhm0X9wnZqdojf8v+Yk3NqQjtqoeQ/bI
-	 RWTqH0Scqd2sg==
-Date: Tue, 15 Sep 2026 16:04:00 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Alexey Gladkov <legion@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
-	Gary Guo <gary@garyguo.net>, =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
-	Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, Jonathan Corbet <corbet@lwn.net>, 
-	Randy Dunlap <rdunlap@infradead.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 17/21] objtool: decode instructions and resolve branch
- targets in parallel
-Message-ID: <aqlau0-opF8yG-JU@gremlin>
-References: <20260914-build-speedup-v2-0-39817ec5db23@kernel.org>
- <20260914-build-speedup-v2-17-39817ec5db23@kernel.org>
- <202609141112.F8983EE9C@keescook>
- <aqkR9Xqu-0Tem1zm@gremlin>
- <20260915122959.2348bf90@pumpkin>
+	b=gf5L5wnmtccLwoqcVRv226Jxh21B1B//39SXNk9kc4N8OS1FTlhq9PWO0oO0C2lV5
+	 /puLCofTcTcdOq9gexMECkzKA3ObUOxFvtdLZex77Bqia2hDmeu6n908Nd0hiX8iF9
+	 qTYQDbAMbNgjSO8+cNHSBskD1SEuiooBkMWuneDZS5c3lKtRyIRRattmm2nfwDtRhi
+	 /vDHelzWwxEEbNDJ6m9bDtWIf3Gi0xBkpoRi48jhIlvmxyg1p97zwYUvcCDIpP4GL2
+	 89RyOdTBK97/VTtSVGn5HnnYF5QSg1YyyyGBUWH6C6xYN7eMiLrpeTG7VTkcG879bb
+	 BqI5RrgGxycEw==
+Date: Tue, 15 Sep 2026 10:05:11 -0500
+From: Rob Herring <robh@kernel.org>
+To: Bill Wendling <morbo@google.com>
+Cc: linux-kernel@vger.kernel.org, codemender-patching+linux@google.com,
+	Russell King <linux@armlinux.org.uk>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Matthias Schwarzott <zzam@gentoo.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+	"Martin K. Petersen" <mkp@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Kees Cook <kees@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
+	Simon Horman <horms@kernel.org>, Chuck Lever <cel@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Kanglong Wang <wangkanglong@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Qiang Ma <maqianga@uniontech.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Pengpeng Hou <pengpeng@iscas.ac.cn>,
+	Ard Biesheuvel <ardb@kernel.org>, Breno Leitao <leitao@debian.org>,
+	Thorsten Blum <blum@kernel.org>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lyude Paul <lyude@redhat.com>,
+	Ashutosh Desai <ashutoshdesai993@gmail.com>,
+	Imre Deak <imre.deak@intel.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Johan Hovold <johan@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Cryolitia PukNgae <cryolitia@uniontech.com>,
+	Jiaming Zhang <r772577952@gmail.com>,
+	Will Porter <mrwillporter@gmail.com>,
+	Cen Zhang <zzzccc427@gmail.com>,
+	=?iso-8859-1?Q?C=E1ssio?= Gabriel <cassiogabrielcontato@gmail.com>,
+	Rong Zhang <i@rong.moe>, Arun Raghavan <arunr@valvesoftware.com>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-edac@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
+	devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-nfs@vger.kernel.org, devel@lists.orangefs.org,
+	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 10/28] of/fdt: Replace strlcat() with snprintf() in
+ early_init_dt_scan_chosen()
+Message-ID: <20260915150511.GB1926857-robh@kernel.org>
+References: <20260915081910.4142719-1-morbo@google.com>
+ <20260915081910.4142719-11-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,93 +126,59 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260915122959.2348bf90@pumpkin>
+In-Reply-To: <20260915081910.4142719-11-morbo@google.com>
 
-On Tue, Sep 15, 2026 at 12:29:59PM +0100, David Laight wrote:
-> On Tue, 15 Sep 2026 11:09:25 +0100
-> "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
->
-> > > > +static unsigned int decode_threads(unsigned long text_size)
-> > > > +{
-> > > > +	const long nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
-> > > > +
-> > > > +	if (text_size < DECODE_THREADED_MIN_TEXT || nr_cpus < 2)
-> > > > +		return 1;
->
-> The text_size check ought to be before the sysconf() call.
+On Tue, Sep 15, 2026 at 08:18:27AM +0000, Bill Wendling wrote:
+> When CONFIG_CMDLINE_EXTEND is enabled, early_init_dt_scan_chosen() uses
+> two strlcat() calls to append a space and CONFIG_CMDLINE to the command
+> line buffer.
+> 
+> In preparation for removing the deprecated strlcat() API[1], replace the
+> strlcat() calls with a single snprintf() call using the existing string
+> length.
+> 
+> Additionally, check for a NULL initial_boot_params pointer and jump to
+> "handle_cmdline" so that CONFIG_CMDLINE handling still occurs without
+> dereferencing a NULL FDT pointer in fdt_path_offset().
+> 
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> Cc: codemender-patching+linux@google.com
+> Assisted-by: Assistant:Claude-3.5-Sonnet [editor_update_file, shell_command_run]
+> Signed-off-by: Bill Wendling <morbo@google.com>
+> ---
 
-This is bordering on a silly level of micro-optimisation :)
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index a64afc3ded3d..311021a83f03 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -1095,6 +1095,9 @@ int __init early_init_dt_scan_chosen(char *cmdline)
+>  	const void *rng_seed;
+>  	const void *fdt = initial_boot_params;
+>  
+> +	if (!fdt)
+> +		goto handle_cmdline;
+> +
+>  	node = fdt_path_offset(fdt, "/chosen");
+>  	if (node < 0)
+>  		node = fdt_path_offset(fdt, "/chosen@0");
+> @@ -1133,8 +1136,12 @@ int __init early_init_dt_scan_chosen(char *cmdline)
+>  	 */
+>  #ifdef CONFIG_CMDLINE
+>  #if defined(CONFIG_CMDLINE_EXTEND)
+> -	strlcat(cmdline, " ", COMMAND_LINE_SIZE);
+> -	strlcat(cmdline, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+> +	{
 
-This is ~us runtime, run once. We can live with it.
+No need for brackets.
 
->
-> > > > +
-> > > > +	return min_t(unsigned int, nr_cpus, DECODE_MAX_THREADS);
->
-> Why min_t() -  you might as well make nr_cpus 'unsigned int'.
-
-Except... sysconf() returns a long and -1 on error. Isn't min_t()
-explicitly for cases like this?
-
->
-> > > > +}
-> > >
-> > > No, anything using _SC_NPROCESSORS_ONLN internally is wrong, whether its
-> > > pigz or objtool.
-> >
-> > Why? We shouldn't cap a 4 CPU box to 4 CPUs?
->
-> You almost certainly don't want to use more...
-> (Unless they end up waiting for disk)
-
-Yup on the former.
-
->
-> >
-> > The idea is that the empirically obtained 16 core limit should naturally be
-> > capped to the number of CPUs.
->
-> The 'empirical' limit is very likely to be system dependant.
-
-This same objection could be made against literally anything I do or do not
-do, it's a little silly.
-
-Every single cap like this is heuristic and limited. In any case - for
-smaller machines, the cap will be CPU count, on larger machines 16 CPUs is
-where there stops being an noticeable benefit.
-
-Other solutions are strictly worse, this is a sensible, practical
-engineering solution.
-
-> There might also be situations where you don't want the build to run as fast
-> as possible because the system is performing other workloads.
-
-Umm what? It's 2026, schedulers are pretty good now :)
-
-In any case with the changes here objtool doesn't dominate the runtime, so
-it'll have little impact. So run make j=1 to your heart's content :)
-
-> (Not to mention if you have had to add tracing to find a bug.)
-
-This is almost an argument against parallelism in general.
-
->
-> >
-> > I guess in a world where make hands jobs off this could be dropped, though,
-> > if the complexity there seems worthwhile.
->
-> You need to pull tokens out of the make pipe :-)
-
-Thanks, I understand what's required, as I said to Kees there's simply no
-benefit for the added complexity.
-
-Series like this can die by 1,000 cuts with all the nitpicks and what if's,
-let's focus on the _significant_ improvements introduced here and keep
-things in perspective please!
-
->
-> David
->
-
---
-Cheers, Lorenzo
+> +		size_t len = strlen(cmdline);
+> +
+> +		if (len < COMMAND_LINE_SIZE)
+> +			snprintf(cmdline + len, COMMAND_LINE_SIZE - len, " %s", CONFIG_CMDLINE);
+> +	}
+>  #elif defined(CONFIG_CMDLINE_FORCE)
+>  	strscpy(cmdline, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+>  #else
+> -- 
+> 2.55.0.1032.g73a4cd73de-goog
+> 
