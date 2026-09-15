@@ -1,60 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374ED3815DF;
-	Tue, 15 Sep 2026 20:17:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C7635295C;
+	Tue, 15 Sep 2026 20:22:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789503465; cv=none; b=QrytXbMOiu7kv/GFQugMkYI7eZZ+OAc+amh1fJUoTSvylRFAofrdsUBjkB7+qqKUn0AL7ySrduSCByZDNbBIyD+u7pigT/t4y3ZOHY9cKncVocAVuELnR3Vzeb9z2KV385ghtKyJuBb6r4G7N4SQTbpMCDEW3D9KZ0g6Zos3TvA=
+	t=1789503740; cv=none; b=p4lOWVDS5dJ0brxc7Q10IEUTHoGG09QgFsap0pBmyg422NXALY6pAl4DhEDuQpwykHGRVOPj7REmbubRJpAndQ7NI3z8us96HZKzCIWxYo1WJoYM9LwTOR/KkDTjSavIJfny+Py88yEmZiVu+GxwXMwMIG00wPMtlXFC49rZymU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789503465; c=relaxed/simple;
-	bh=tIBnQJ0BO7Qlvrn7CSRmnaN0Vxg0LtMKz5BcGOdkNTw=;
+	s=arc-20240116; t=1789503740; c=relaxed/simple;
+	bh=nWg+bL6jQTQZEccLBKvYaj9sQSOaC5LEsubZtXHXszM=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SrhjJRAMbPYG6fQwbOqNI/dnXDyrL7/mJmZ/vwKOHSkj1kLOBFJFyKPN5aLchql+UcwXxxdx0FHNbcPK8IMbDAYuhyN50oGnZjVaGnmhg9zvxkmAjyTcNlRtGRJD47zWbBGrvlaJppLFvLj+7Ajmseto0rRYMtBOUh6nm58g4PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CO8fNCyV; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=PIh4Jc1S/RlNyjH8PNDffT0A4Xk3IyTl2kmJ64dO29q+jDNH4XR3rcUThKy9kFF31BnsUIOCjg+WRykKA+LeWnRBMLJmmGL8JNDd9DaSj6Toe0t9REpmTrrLxMN3zdDsTuQ9WwX54e7+Edo9mz4C+u5wiWC91WFQdBEi6rn6HZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X2gji/Fb; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CO8fNCyV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X2gji/Fb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789503463; x=1821039463;
+  t=1789503739; x=1821039739;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=tIBnQJ0BO7Qlvrn7CSRmnaN0Vxg0LtMKz5BcGOdkNTw=;
-  b=CO8fNCyV90Qmevaa7rNcswbXlKDR84TLebvo8dtpmZG8VSdKxNOpGvsv
-   Gmq6tXLNmhefHgB6S0IuiW+Mf0IpYOIGo+QhMMfMMjj+7cuasBWDVBUN3
-   /MkGHzAu0sMv8ik3RMDRteZN9knG+EttwHAzXfSPuRSIoUpT98CJQjfB4
-   MuWFqVbljreuUmoLsQBTQb9QE5QonQ8FGW2snCxNbeVwMeOYfBafk6M8T
-   E4gBa3b4qX09cz2l08i/PGy1sc1bQuEo9vS/WsRwwuyN46Dl81Z+QuuZM
-   9KzoCrwKTpV4vwtIRRDLIE8AxMwfOeWUuHL4RP7JbXlSISZNYnuVY/Bg9
+  bh=nWg+bL6jQTQZEccLBKvYaj9sQSOaC5LEsubZtXHXszM=;
+  b=X2gji/FbSojJsdxM3rKVINiIdu+xuX3BXxPTREZPflk4ISZdrZxECIMk
+   4/6IZxTYWmJzDQ4p3cNXd0NdNO7kJ7CRUMLJB8jpnunaGbLlKABr+iBJD
+   R7tn2DGN+sruaTpOR6qNSDj3+J7yMSJiFrGFbAkwCvpRQDIcSnlvPbjTT
+   FjALNFN5MkAEwplKpulwybYpNq41Eu51xBPQHP2IU3OfWu5scJKrBUmFd
+   SIu6KAiPsUpcuiKTONP++G34XHlLWCYQr/4C2ewUMpFaOa2wVT0JAxUwZ
+   YqVhXP2Ls46XuNDvlWPmMC4EnJeC1h79AHvx7QKZvNZs+QD9gGTx0qj+E
    w==;
-X-CSE-ConnectionGUID: ZE6Y4MatRs2QGiFlw8Soog==
-X-CSE-MsgGUID: wxL7nkoZQ7iD0zmhWphLSg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="93579545"
+X-CSE-ConnectionGUID: +rRLXDbNTqysoYeZs37ZoQ==
+X-CSE-MsgGUID: SfRcbi0FTB2zp1SvZYDFfg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="93579792"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="93579545"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 13:17:42 -0700
-X-CSE-ConnectionGUID: JxE+dlUoT4eFQDkGRxZYnw==
-X-CSE-MsgGUID: IayFazypQ5WGDk8SzpM7+g==
+   d="scan'208";a="93579792"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 13:22:18 -0700
+X-CSE-ConnectionGUID: Wt2Ean30TLOkX55O/W2XDQ==
+X-CSE-MsgGUID: 1CPynWXwQlalgnil7lxGUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="269433303"
+   d="scan'208";a="276869115"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.24])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 13:17:34 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 13:22:12 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 15 Sep 2026 23:17:31 +0300 (EEST)
+Date: Tue, 15 Sep 2026 23:22:08 +0300 (EEST)
 To: Aleksandrs Vinarskis <alex@vinarskis.com>
 cc: Bjorn Andersson <andersson@kernel.org>, 
     Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
     Krzysztof Kozlowski <krzk+dt@kernel.org>, 
     Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Kees Cook <kees@kernel.org>, 
     "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
     Abel Vesa <abel.vesa@oss.qualcomm.com>, 
     Tobias Heider <tobias.heider@canonical.com>, 
     Val Packett <val@packett.cool>, Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -62,7 +61,7 @@ cc: Bjorn Andersson <andersson@kernel.org>,
     linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v4 2/3] platform: arm64: dell-xps-ec: new driver
 In-Reply-To: <20260809-dell-xps-9345-ec-v4-2-88306dbbc7aa@vinarskis.com>
-Message-ID: <7cab6180-d846-74f4-c75d-b553841db9a3@linux.intel.com>
+Message-ID: <f6e88a49-6ca7-0210-b7fa-d2f73e81d399@linux.intel.com>
 References: <20260809-dell-xps-9345-ec-v4-0-88306dbbc7aa@vinarskis.com> <20260809-dell-xps-9345-ec-v4-2-88306dbbc7aa@vinarskis.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -234,14 +233,6 @@ On Sun, 9 Aug 2026, Aleksandrs Vinarskis wrote:
 > +	{ "sys_therm4", 0x06 },
 > +	{ "sys_therm5", 0x07 },
 > +	{ "sys_therm6", 0x08 },
-
-I suppose it's intentional that thermistor_id and the values here do not 
-match?
-
-Take the comment with a grain of salt as this was mentioned by sashiko and 
-I don't really believe it when it comes to assuming things like this, so 
-no action is needed if they're correct as is.
-
 > +};
 > +
 > +static const struct dell_xps_ec_data dell_xps13_9345_data = {
@@ -285,9 +276,7 @@ no action is needed if they're correct as is.
 > +
 > +	/* Convert millicelsius to decicelsius */
 > +	deci_celsius = milli_celsius / 100;
-
-Please use a define from units.h and remove the comment.
-
+> +
 > +	buf[0] = DELL_XPS_EC_TEMP_CMD0;
 > +	buf[1] = DELL_XPS_EC_TEMP_CMD1;
 > +	buf[2] = cmd_byte;
@@ -305,9 +294,6 @@ Please use a define from units.h and remove the comment.
 > +{
 > +	struct dell_xps_ec *ec = container_of(work, struct dell_xps_ec,
 > +					      temp_work.work);
-
-Add include for container_of().
-
 > +	const struct dell_xps_ec_therm *therms = ec->data->therms;
 > +	int val, ret;
 > +	unsigned int i;
@@ -344,11 +330,7 @@ Add include for container_of().
 > +	 *       the thermistor thresholds and potentially fan speeds.
 > +	 */
 > +	dev_info_ratelimited(ec->dev, "IRQ triggered! (irq=%d)\n", irq);
-
-How is this print beneficial to a normal user? Debug level would be more 
-appropriate for something like this if you need to print it at all, there 
-are other ways to track function calls besides printing.
-
+> +
 > +	return IRQ_HANDLED;
 > +}
 > +
@@ -426,6 +408,12 @@ are other ways to track function calls besides printing.
 > +	cancel_delayed_work_sync(&ec->temp_work);
 > +
 > +	return dell_xps_ec_suspend_cmd(ec, true);
+
+Sashiko mentions that if suspend fails, the work remains cancelled.
+
+-- 
+ i.
+
 > +}
 > +
 > +/*
@@ -434,9 +422,6 @@ are other ways to track function calls besides printing.
 > + * This will undo the suspend actions
 > + * Without the resume signal, device would wake up but be forced back into
 > + * suspend by EC within seconds
-
-Please terminate sentences in comments properly with a stop (.).
-
 > + */
 > +static int dell_xps_ec_resume(struct device *dev)
 > +{
@@ -485,7 +470,3 @@ Please terminate sentences in comments properly with a stop (.).
 > +MODULE_IMPORT_NS("IIO_CONSUMER");
 > 
 > 
-
--- 
- i.
-
