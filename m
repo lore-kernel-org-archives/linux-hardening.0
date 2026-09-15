@@ -1,57 +1,57 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F90647207B
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2202346D2C4
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460461; cv=none; b=S1wT7leh0E2eWHoTWURYnnPzDnAsWQTTj/GlnDNbWqSW0KquEJYmW3JzDRhjJlQmUnSmbSQt5UbQdXEAke+z7TwD8VWXXasksCHs1DStvV4JHrgQzE1uykfaxi/GGA3xir9kPahMmzZS+xiBKfb8vplNFq+DZYhuVY2I1CLrIyQ=
+	t=1789460471; cv=none; b=CQuEmq39Xbu5mIRF0E452aO87FOC63dsm9AGEFmcgW0eBLUwB1l0QeZ4QPYjPxeqcP7NQqxz06Jan/MhzHOw8MD0K0OI/L1eA/vrLdavuiBkYDUQqhVTqRp0SzbIlDlHupGaGJGGz0DRrrshuY5uJU/UWA5bO33m7p6RG7GmaTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460461; c=relaxed/simple;
-	bh=gmsmGVxkrCC0joHW7g2qwHGDO+picAoXZWIoiOn43qE=;
+	s=arc-20240116; t=1789460471; c=relaxed/simple;
+	bh=Hf8Hcf3/GVCrKP3bnfnvDYzjoz8pInTEuZeXHBnhpZg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U29bLKsFddS2Lwfn8sD8OfBLm4XjOad50Gnl2wHlo1o/CCuHCSjSqH5ovnouPkTH3yk3TIwD/OzvikVCDHbSF+rxvjPDtlu+M9pRYHiNPHiZsuIIcEZ+wKT8mT49T9B3KfyNZhOZlBlaV8GUKHk0NSOl7mSqINOu4q37oHIHrow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iBtmz3Gn; arc=none smtp.client-ip=209.85.216.71
+	 To:Cc:Content-Type; b=udaDwYJyeKY47YUq3terEtrYCmtY7ZBMIzkBPUL4bb0f6fRFvlipf7O86KtL//B/2mvmAlpV7f0XwzHEY5C44QBwb+q8wJJ5FBcwBDzXn+nzWKcnrVBw/e5FF+lKhJpWvSVhu02JOXHXHJ5+xFq7OunPwhl1gkGrFYZMJwKnQjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L24HfS41; arc=none smtp.client-ip=209.85.214.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iBtmz3Gn"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38ec0f510a9so8327785a91.2
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:20:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L24HfS41"
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2dc7337e2a7so52771795ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:20:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460406; x=1790065206; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789460398; x=1790065198; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=YdNQWB21luiE9Gdv0Q1IFwuCzs7Lvdhhb2Hfuit5b6U=;
-        b=iBtmz3GnJkvwQtWy+snq8/8HkFAvGR9mOsfp8hdBb0LostnrUoKck94CCex9LAtzmZ
-         cktHJtFb3Zlls88Kgu3eEFyjenAz/63MiC5G1N1BFg/IeK8ARfwY7Mj3BU1K1INtHDKH
-         PVbGxM0urGg25cG5s4zzZKfALCFj/T8Mr8u+TlcYBVrdTN7j6/vgGubIvoyOxNiPG2aA
-         /ELkpUtZZmbhkK3qTPlLSoosEDtlIZUtWe2RoUGppaQ+iHD9LyJ5WqtCQMiQf3vHaCL2
-         KeZcl7gyYqfi5/qvIFUHSuORVTl4Xj6ara78RTAfrVb40QfHpR8UoO8RKjvsJwQBfxCI
-         KnVw==
+        bh=q9qHU7CDEu6zWWmniYe9q2ucwWYfoa3UieeTJM1aJto=;
+        b=L24HfS41HHfpDQT5zlyJA0uJuEuN9xySD5geTaPiPzpaZsWIJ4ViCOTZDlYoyqjjgL
+         JsJyZXfg3SYZcc+3emOR9lEe5dIWKzWDQqWfFgOlS0o7TPv0waMYj/kjRQmmiP+mZQYe
+         fn+xe7WXI4uDdP8JcI6wa5TP+rEOIH/DMh5tbLIjo9cmWezCQy0zqkABLMUhnFN7BAHQ
+         5aBOISJpiPFomDtCWTcYjgSdJ9YsmOXAS7sTMwdy+5WpFMubBETlElDi4+ZOsZKt3zMC
+         BuV8YWKWxAThPfTuPiRQUkx30EqzqE739kQ5vIC/+qSCni1GhpYQ9IHH6+pMTAgf6Uny
+         y4LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460406; x=1790065206;
+        d=1e100.net; s=20260707; t=1789460398; x=1790065198;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=YdNQWB21luiE9Gdv0Q1IFwuCzs7Lvdhhb2Hfuit5b6U=;
-        b=AJvNkBmhOYm793s4fJBI+z0p+orNfF5/XAzMx+NBZ4UES1/9iMGfuHyfXSkJxLdnnx
-         51vyNhQ44R+PcJAWt1GHhKO55T3NPf8PIvDV9rowtH+nkc1DUXJlF4Qq5yholdJA0AFZ
-         lErRYijSjtM+9MRnAq185sZUgLwWl7OKOFk+rBmDDzn2kd8+D6ht43jiIomE7PO4TiaK
-         8eOmgswPrH8oUUH/Nz/v+LIozo+mapU2tXGZbp+qYJInB5U5mVmjK/4O4BJVIV/LQkGq
-         6j6/1dIxNIEYgvtKC2sAapBQ9ThE26IPj8/nskPCSCsTf+cnsc+Kp0aTT//sUdx5eVLv
-         ELdw==
-X-Forwarded-Encrypted: i=1; AKwUvBwTfe7b8Iy/i1p/SrsSg06AzH+IClMbRynOWq0eZsf4xUMyyUKftar1aZ0QwJMwBiKltaKiU6qqDwsrqdd64rY=@vger.kernel.org
-X-Gm-Message-State: AFuF++nkqeZS5DXJ4gyMYLOV8g3hWuw4IBiVUpvtFX8lFYbXK25aRYdy
-	M1KBZepK5LkMyetqVHTR5SGZpsEyrrKBWmqOKSUgN2XgKcorAY2vrIBFMXk7vhpV2iiXg91IOd6
-	q
-X-Received: from plld7.prod.google.com ([2002:a17:902:7287:b0:2db:142b:72cc])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:238b:b0:2d8:d4cc:5bb1
- with SMTP id d9443c01a7336-2dd83867c8amr573655ad.17.1789460405925; Tue, 15
- Sep 2026 01:20:05 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:30 +0000
+        bh=q9qHU7CDEu6zWWmniYe9q2ucwWYfoa3UieeTJM1aJto=;
+        b=LX8q8z3w0Rwnmw7pQE/y7NDkenVk4Q3EZgW2MoLxGQ+Cc1L06W+dgZ+oCZ/g6cf3DI
+         /t4B7LvLw/WwYwC5nMk4I/0EdDz9y1etVk4n3hvidI0OMuW16ZuCQa04P8bybPUMOTxD
+         hjCHADoTmVWqaJBGiaM1IHOn08C0GizV1cMQ6FFdugfpYZop0lTuENNLNir3m0MgzH6s
+         MPEUTEqOHQzhpSOAmq3Aj/qBcbQ+5uR6sZmauouz0Hp847l7Qg4tbAAGPVl/WuEup5RF
+         K2TYSBa+2HEQHdVMeUVcwXc4XJMvUidIHBaIakvtz1MqI1KvnRK1wzrmuGzMvJBkV0s9
+         Ua8A==
+X-Forwarded-Encrypted: i=1; AKwUvByC7uIJsLa1NhiibP09NKXR6NCGmgQyi1apUyQp0L+sG4rlU6YEw9wOFQ4DMfp3O1pmC150I0/PaN8MCsuj1QY=@vger.kernel.org
+X-Gm-Message-State: AFuF++n8t5SEjs2IDXrrMEIsbRjUyuBUlZ4ooBZhUfSIXWnOUKOjO3cz
+	3Ov5WE5w7Jwec1+Gjovopy4Aweemd3TophbxCCW0zlalPoN0Rf1HgXiQeLJoDISr3uHwXqU9shg
+	b
+X-Received: from plhc17.prod.google.com ([2002:a17:903:2351:b0:2cf:ca4d:25e3])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2408:b0:2d8:d4ce:9f32
+ with SMTP id d9443c01a7336-2dd83869ae3mr512075ad.16.1789460397125; Tue, 15
+ Sep 2026 01:19:57 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:27 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-14-morbo@google.com>
-Subject: [PATCH 13/28] i40e: Replace strlcat() with snprintf() in i40e_nvm_version_str()
+Message-ID: <20260915081910.4142719-11-morbo@google.com>
+Subject: [PATCH 10/28] of/fdt: Replace strlcat() with snprintf() in early_init_dt_scan_chosen()
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
@@ -123,16 +123,22 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-i40e_nvm_version_str() uses strlcat() to optionally append the EETrackID
-and combo image version strings to the NVM version buffer.
+When CONFIG_CMDLINE_EXTEND is enabled, early_init_dt_scan_chosen() uses
+two strlcat() calls to append a space and CONFIG_CMDLINE to the command
+line buffer.
 
-In preparation for removing the deprecated strlcat() API[1], replace these
-strlcat() calls with bounded snprintf() calls at the current end of the
-buffer.
+In preparation for removing the deprecated strlcat() API[1], replace the
+strlcat() calls with a single snprintf() call using the existing string
+length.
+
+Additionally, check for a NULL initial_boot_params pointer and jump to
+"handle_cmdline" so that CONFIG_CMDLINE handling still occurs without
+dereferencing a NULL FDT pointer in fdt_path_offset().
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Cc: codemender-patching+linux@google.com
-Assisted-by: CoPilot:r1-preview [editor_update_file, shell_command_run]
+Assisted-by: Assistant:Claude-3.5-Sonnet [editor_update_file, shell_command=
+_run]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -246,46 +252,39 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- drivers/net/ethernet/intel/i40e/i40e.h | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/of/fdt.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/=
-intel/i40e/i40e.h
-index 1b6a8fbaa648..9f792128a0ef 100644
---- a/drivers/net/ethernet/intel/i40e/i40e.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e.h
-@@ -1059,19 +1059,26 @@ static inline char *i40e_nvm_version_str(struct i40=
-e_hw *hw, char *buf,
- 					 size_t len)
- {
- 	char ver[16] =3D " ";
-+	size_t offset;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index a64afc3ded3d..311021a83f03 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1095,6 +1095,9 @@ int __init early_init_dt_scan_chosen(char *cmdline)
+ 	const void *rng_seed;
+ 	const void *fdt =3D initial_boot_params;
 =20
- 	/* Get NVM version */
- 	i40e_info_nvm_ver(hw, buf, len);
-=20
- 	/* Append EETrackID if provided */
- 	i40e_info_eetrack(hw, &ver[1], sizeof(ver) - 1);
--	if (strlen(ver) > 1)
--		strlcat(buf, ver, len);
-+	if (strlen(ver) > 1) {
-+		offset =3D strlen(buf);
-+		if (offset < len)
-+			snprintf(buf + offset, len - offset, "%s", ver);
++	if (!fdt)
++		goto handle_cmdline;
++
+ 	node =3D fdt_path_offset(fdt, "/chosen");
+ 	if (node < 0)
+ 		node =3D fdt_path_offset(fdt, "/chosen@0");
+@@ -1133,8 +1136,12 @@ int __init early_init_dt_scan_chosen(char *cmdline)
+ 	 */
+ #ifdef CONFIG_CMDLINE
+ #if defined(CONFIG_CMDLINE_EXTEND)
+-	strlcat(cmdline, " ", COMMAND_LINE_SIZE);
+-	strlcat(cmdline, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
++	{
++		size_t len =3D strlen(cmdline);
++
++		if (len < COMMAND_LINE_SIZE)
++			snprintf(cmdline + len, COMMAND_LINE_SIZE - len, " %s", CONFIG_CMDLINE)=
+;
 +	}
-=20
- 	/* Append combo image version if provided */
- 	i40e_info_civd_ver(hw, &ver[1], sizeof(ver) - 1);
--	if (strlen(ver) > 1)
--		strlcat(buf, ver, len);
-+	if (strlen(ver) > 1) {
-+		offset =3D strlen(buf);
-+		if (offset < len)
-+			snprintf(buf + offset, len - offset, "%s", ver);
-+	}
-=20
- 	return buf;
- }
+ #elif defined(CONFIG_CMDLINE_FORCE)
+ 	strscpy(cmdline, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+ #else
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
