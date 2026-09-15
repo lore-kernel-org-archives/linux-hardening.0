@@ -1,357 +1,366 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406E047ACE3
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 10:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.180.131
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789467442; cv=pass; b=LO3iIGcFcO+6IHzU6ZwJWWXVD+mS1Yr8jDy9gJB982C4GLwty+8MEFz3y7zc5vYrGzh3gxRy3Qz4yzfY4W0hqa9Lp0lf945Nbkh9BkYbg71pDCYcd+pfoaf9W7M8CtzTgC+26KSKWIhTghX5PgwVXBtzMpsNd/uuAu1Htlo0uQM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789467442; c=relaxed/simple;
-	bh=MSWHoWGIFn+iwFs4suHXdlxtL4JfLcvYlTQxB2Sr6m8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Om2lCEo0wxIN3E5CE4N0WM5d2e4u5k39u/RNzxoE6NUZ4ENBA6rPBFLI9cowPSm8z+taoCtRCrv9hEEDfVYcQdZSY20MXWXPrvZvzICZbYqzz69spzgYE9dOOHYqQLiwB7Ncr+XIkhbgPLCmhuf/gl++5Z7Xzma++YiMlJg4zlA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NwlEfJCk; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=kgB+WPfR; arc=pass smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B5A46EC6E;
+	Tue, 15 Sep 2026 10:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789467457; cv=none; b=tq7F96NkxXFxz8jMklGzs75dLA8m18fcUfqH0BOeC1fivEcBIXo/fh3EWFV7nFmqXFCKQuHu7tDGtYlXk5okgMUTzhXmp2DRxIeEOWvCZX0Z5NVZOYvoXX9wXvfzeCxNypgkXjaPGd5A4EIoVHyHKL+anXFpFnrbfU0RytHGD0E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789467457; c=relaxed/simple;
+	bh=N7eYIO6h/d/6bfA2J/f31iT743jo/Vm/RuwX1ltgmQ8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=U4yfxl1IYf/1U/4uT65Xcqf+sGIUbjB5812mkxDMA1tkV15cOX6sctC4JnRXggnP/wI8kqbKod2mYKIQHCMqLgqBKoNT7a0LKSc1LMaXz5HTxeLa6nhf9gnXsPV968lpj2+asODHLDUwbrs7vZnK2yoepJUsCpuEmD9ykfeBTBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmlXJTu5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NwlEfJCk";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="kgB+WPfR"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68F9hPZB3742103
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 10:17:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Y4oAyrq2KtQXNsE5MFIxXDu1u6My17cNb8DrQ/MjMRk=; b=NwlEfJCkHhcoeSOK
-	bmZITvB9u6oxNjBQ7h8OqvduG6KCTuaHaqtd6r7UtHxSq9vvGuJoYmXWue24/YWs
-	MB609WXQEURRd/LJndkTYQ6tbZ9N3xKbp9j4xqrmYqudZRmUR23aOjb1wiSMl9x2
-	WraC9KiG18nhXL5+RWojUvSULL38a1AVIuq5wq4oC2SIwPK/yiuq7QxjLvhDS92V
-	TtLI4pKdvjibQRzT//j2jYyCCunekiY9BJgaAkPJB8tYYO6yH9LJwaixx9l6rHzQ
-	CyuIomy4EwIApyYEM55fZcqdQ+/gbGyH5NI4FWon/jf2iN0qItqpwrYceAbbhvzX
-	5kbpMg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gpyux16y0-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 10:17:19 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-52dcf1bb6e9so14146401cf.1
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 03:17:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789467438; cv=none;
-        d=google.com; s=arc-20260327;
-        b=REYwW+JroRzuKTtSpZHcxMbkYwJpOBzOF7Y55prEiL1iuYe4TabZQVnsCAc/FnZS6X
-         zIgo4VF5842h0dVxcJL/70LfpZ7mfzUMG22Yr+6FLLcKW75p5T5DdUIvQLZMEq75VUOC
-         c2P8gdV3ejMSCshYxfEbgfRSFZ47c75FU4uGyehMKFKUgQcEGNMeYnH++m7Vnxp0fdY9
-         cNMpxWiP+vGYUyjH9oQq3KwINMe4ETDwPsBSbYawSa2cwAXWuSOEH6WXUJAsfvBe/6dC
-         fbY/VbPswFIU/D68wLrdSuEj/l0FWvW+0CV8/iRlXuQTYT1fxl1E3zoMD1amLoIGqZyq
-         xs5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Y4oAyrq2KtQXNsE5MFIxXDu1u6My17cNb8DrQ/MjMRk=;
-        fh=6C8rGvia/1k8uXScAaDI9hRjZ1AANN7YK607d5qIKKk=;
-        b=kI/tTZEkzxawuSfpiihocSn6EN4KYDLmYE4mIkTonjUCgrgKCGDnZZhYJItqygmjYr
-         +whKkOk5NPaPStBwRI/+VE7AMNHHxlpduOBIUQoxQCPDF37L08Ews+yTnfhD8sgpOrBv
-         9wfecn1cqVG46weAMZz6tH7d9IVSRXBtfEF4TCB0eecttpltNaJKWWGWJbfdb/U1uTq8
-         SwUSvoFAt/c3qr/CBvRYRLKXlIeh4YrcG2lZKehtYK/FA+a9z2lkmCry5bOP6ixmw/J1
-         aeiKDXHydLBQ8Nv32z9ej6ttK1Qron4zpTtO/h9b64tuye9Qj0/D/7dNTH/TEHmOMjGG
-         8njA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1789467438; x=1790072238; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Y4oAyrq2KtQXNsE5MFIxXDu1u6My17cNb8DrQ/MjMRk=;
-        b=kgB+WPfRNtBYroWJuT+BADNoMFDxeZv2ePNsQTVDgIz8e5BxZ/O+MmxoFT60ikZgvY
-         0Esw2B42vJuKSEnxNi+8xU3/CTaw75oEPWi1B8B0jZw8y47f5T6hJiB84sUIZrDc3zfY
-         uZTdmgI4XQfMzpCs7LRJtck89ODH+3V25mEPr4W11mt+0lBPQoGJc7X5ZONV+xtCdx9H
-         +6YncmshYoN3FFsDNVIuTmcsvitheVo7shMQeUjL6mlzpd90EGHXukKjJ5vewjuqZVzo
-         GpuLTdhka34ep3JR7bsnLHlgkOqeX0KtTjVGx1N43aQ/dCZDn459wVA3oztAsR/8wt9s
-         bVhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789467438; x=1790072238;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Y4oAyrq2KtQXNsE5MFIxXDu1u6My17cNb8DrQ/MjMRk=;
-        b=Jod5FvwcX/Aklm0E2rywt5CvJHcECUc2jsFCKFvjF5vQERaYPGOK1Cz8AlkYjwvvpy
-         vGEMcSU86BHmEgP43R7EcZ89NYIaKS6plRpcJnuNRceZXXUNCHOff6Syn3mrLj8VPj02
-         qgRXxWNcukDHl/7xPm/QoiMp7m+JM07oIk/6hocVhkfrJXfdqLdOVUnjhuA/5c+GOZmd
-         j5R7gWjU3kKhyQlcdFVvx10ERaNetpXRa9xxvuOgnToJZktgj7EoA1SWujcHBIkfEIeo
-         q4VU+pbBEyYWFqjPs5Vx1+22RcOF8412PhGkPrLAFWdgGZSfiZ/Q6zEvqS6sdJeIgkC4
-         dzFw==
-X-Forwarded-Encrypted: i=1; AKwUvBz3RbvvBtb3fpIG5UEcTKPPszYfGIq6YH0gqbIZkHt5WIQ10ty2vumMuw2yXpVJe6Gup0i4s5ayDji/ECWMWC0=@vger.kernel.org
-X-Gm-Message-State: AFuF++meah9qeuIxrXyuZ6sECQmwAdD7Nuux7eUJ+dle9FbEUNlqtCwp
-	PmfWqZmI4niYbVAcya9y5YLiibdLbf84fbr/+578Ym2zC/aa/h6JEJLnSMpCoEgaLOalVCkh9B2
-	d6dLw7DvZ3Dp2BQ7G3WreItZMRmuLmxCpTMCSWc5ExJHkRV3mobkeXpmVJZ0kfMhoNbLBsz0m37
-	hDUAPUA2t4soGSdac2l/Ae6uOdOGvvOPbefRZe/5lc8I52cQ==
-X-Gm-Gg: AYBFou1/NWn8CBDuf76CT+szGC9h764K+9CPItNz8XPPtLKzt0xcKU0k33STWbTHwZ5
-	nFtaZSEVueOfWwlxBitaAhE6wRB9zbDuFRIv+QK/FCXGbOYgtRLyJ9G/2oIafqX2/0a1CvSHhBu
-	q3BzncwJZ5vvlUZsZqrB+k7Sc4ZAV49oSjErgq+jbkg1ABNzz3nR8bVeFcRbK6UV96QlNRLDjeP
-	6ps3cbt5C6PCtvtnA1nzDgi1kitm/VAg3y0tyWT2jI81BNl/TtsRLUHTgB/ghElEH2XCJt0RLj7
-	Obj7zd3izRS5AlAlwmAqZfsUfsrD
-X-Received: by 2002:a05:620a:2b8f:b0:936:d00a:4947 with SMTP id af79cd13be357-93a345745demr388744685a.2.1789467433590;
-        Tue, 15 Sep 2026 03:17:13 -0700 (PDT)
-X-Received: by 2002:a05:620a:2b8f:b0:936:d00a:4947 with SMTP id
- af79cd13be357-93a345745demr388741685a.2.1789467433112; Tue, 15 Sep 2026
- 03:17:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmlXJTu5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06521F000FF;
+	Tue, 15 Sep 2026 10:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789467454;
+	bh=HyDScdwCUnZ6enJgBgFDn7eANm9IMu9XwvWhbn13gM8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=EmlXJTu5VbhJ7/WBqBdUKhfW0RYldQ+P4RsoXoiLYeYBAjdlVTQ6GyoH+XTkgQI2S
+	 WHQZbEdSrmH7QSqlPxuEctAsY2uMqY2BrHi/SCAdbUiWL8AUnsGcpzYgMZOSTw1DsO
+	 o/4EhLlu0B8UUVBMFP/3cy+fQYlxbzkEsXqCF1a5D20wSvtOe8Sdwwly6fSrwVIaA1
+	 tSSyvEUOAbcCKIZaCDGrcZinqWae1nLhlDwywEeBeIeB1CGOUPh8JdVOyxQQ4FFkGM
+	 jY4ArBiG+Y5rmPz5vraDDGwnYrENRcaMfGycxKYMdA1niw7qswA0sKbcAacKqViyjs
+	 16wfSo0FVH8Vw==
+Message-ID: <8a9fe28336742405a5cb02a5c343371f32568fbd.camel@kernel.org>
+Subject: Re: [PATCH 02/28] sunrpc: Refactor rpc_sockaddr2uaddr() to use
+ snprintf() instead of strlcat()
+From: Jeff Layton <jlayton@kernel.org>
+To: Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org
+Cc: codemender-patching+linux@google.com, Russell King
+ <linux@armlinux.org.uk>,  Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Thomas Bogendoerfer	 <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley"	 <James.Bottomley@HansenPartnership.com>, Helge
+ Deller <deller@gmx.de>,  Thomas Gleixner	 <tglx@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,  Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Ian Abbott	 <abbotti@mev.co.uk>, H Hartley Sweeten
+ <hsweeten@visionengravers.com>, Tony Luck <tony.luck@intel.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>, Matthew Brost
+ <matthew.brost@intel.com>, Thomas =?ISO-8859-1?Q?Hellstr=F6m?=	
+ <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Schwarzott
+ <zzam@gentoo.org>, Mauro Carvalho Chehab	 <mchehab@kernel.org>, Tony Nguyen
+ <anthony.l.nguyen@intel.com>, Przemek Kitszel	
+ <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Arend van
+ Spriel <arend.vanspriel@broadcom.com>, Rob Herring	 <robh@kernel.org>,
+ Saravana Kannan <saravanak@kernel.org>, Krzysztof Kozlowski	
+ <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Peter
+ Griffin	 <peter.griffin@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Linus Walleij <linusw@kernel.org>, Anil Gurumurthy
+ <anil.gurumurthy@qlogic.com>, Sudarsana Kalluru	
+ <sudarsana.kalluru@qlogic.com>, "Martin K. Petersen" <mkp@kernel.org>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Mike Marshall <hubcap@omnibond.com>,  Martin Brandenburg	
+ <martin@omnibond.com>, Kees Cook <kees@kernel.org>, Jiri Pirko
+ <jiri@resnulli.us>,  Simon Horman <horms@kernel.org>, Chuck Lever
+ <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>,  Jaroslav Kysela	 <perex@perex.cz>, Takashi Iwai
+ <tiwai@suse.com>, Andrew Morton	 <akpm@linux-foundation.org>, "Mike
+ Rapoport (Microsoft)" <rppt@kernel.org>,  Kanglong Wang
+ <wangkanglong@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Qiang Ma	
+ <maqianga@uniontech.com>, Randy Dunlap <rdunlap@infradead.org>, Pengpeng
+ Hou	 <pengpeng@iscas.ac.cn>, Ard Biesheuvel <ardb@kernel.org>, Breno Leitao
+	 <leitao@debian.org>, Thorsten Blum <blum@kernel.org>, Harshit Mogalapalli	
+ <harshit.m.mogalapalli@oracle.com>, Greg Kroah-Hartman	
+ <gregkh@linuxfoundation.org>, Lyude Paul <lyude@redhat.com>, Ashutosh Desai
+	 <ashutoshdesai993@gmail.com>, Imre Deak <imre.deak@intel.com>, Dmitry
+ Baryshkov	 <dmitry.baryshkov@oss.qualcomm.com>, Johan Hovold
+ <johan@kernel.org>,  Johannes Berg <johannes.berg@intel.com>, Miri
+ Korenblit <miriam.rachel.korenblit@intel.com>, Alexander Stein	
+ <alexander.stein@ew.tq-group.com>, Cryolitia PukNgae
+ <cryolitia@uniontech.com>,  Jiaming Zhang <r772577952@gmail.com>, Will
+ Porter <mrwillporter@gmail.com>, Cen Zhang <zzzccc427@gmail.com>, 
+ =?ISO-8859-1?Q?C=E1ssio?= Gabriel	 <cassiogabrielcontato@gmail.com>, Rong
+ Zhang <i@rong.moe>, Arun Raghavan	 <arunr@valvesoftware.com>,
+ linux-arm-kernel@lists.infradead.org, 	loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, 	linux-parisc@vger.kernel.org,
+ linux-edac@vger.kernel.org, 	dri-devel@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, 	linux-input@vger.kernel.org,
+ linux-media@vger.kernel.org, 	intel-wired-lan@lists.osuosl.org,
+ netdev@vger.kernel.org, 	linux-wireless@vger.kernel.org,
+ brcm80211@lists.linux.dev, 	brcm80211-dev-list.pdl@broadcom.com,
+ devicetree@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, 	linux-scsi@vger.kernel.org,
+ linux-nfs@vger.kernel.org, devel@lists.orangefs.org, 
+	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
+Date: Tue, 15 Sep 2026 06:17:25 -0400
+In-Reply-To: <20260915081910.4142719-3-morbo@google.com>
+References: <20260915081910.4142719-1-morbo@google.com>
+	 <20260915081910.4142719-3-morbo@google.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260915-camss-isp-ope-v7-0-77b13d131d3d@oss.qualcomm.com>
- <20260915-camss-isp-ope-v7-4-77b13d131d3d@oss.qualcomm.com> <4b8f4fd6-53e0-4efd-953a-cd8ebad7d479@linaro.org>
-In-Reply-To: <4b8f4fd6-53e0-4efd-953a-cd8ebad7d479@linaro.org>
-From: Loic Poulain <loic.poulain@oss.qualcomm.com>
-Date: Tue, 15 Sep 2026 12:17:00 +0200
-X-Gm-Features: AcwNN1Xege-7rQu-hUK_GBF3L260MNhym32h4wKC90S0C1_dNyEg6Nm0Y0W-5zQ
-Message-ID: <CAFEp6-3bvRtjDhmRy+G3AzP9vL=TrnGpOf1gU-=aQKNcdyzn_w@mail.gmail.com>
-Subject: Re: [PATCH v7 4/9] media: uapi: Add CAMSS ISP configuration definition
-To: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE1MDE0NyBTYWx0ZWRfX4n6vGerLMIbL
- ws9WkavyImnMCAI9vFQIdIybodjWTFLhiyuP5QySQwQON74zuk60zI/y8dQeEW2F0BHKoljs3pe
- ctXCse52KVkOETezUhtn95cg1j5Jh8abSRsLxCo4g2IxbAAKNPtX2s7v/sQ/j3TDshUkIG54kHq
- Ujofk3rdfUj1ZQatuk5Jxrq1/WF9TXb6TNjxqP5c6xBClKnuQXMTK91+mhv+9rO0Xc3224n3eiM
- pjSzr+67QswkbxUgtW9Vs4eEyZHZ7GThB9gsGnHzHKVmCdJePKBKnJ3YySUq9Bsi3rIVP3A0HnH
- JrdmPJWBEGj+HUJV47LPcbVCexsVjZhTDhl8+E+fCcivog+AFUawdI1BQA0vZO1c2jkSdUgmUWs
- PCrWTbpA/4dB4j01+25La4CEE/jiKMu/WcIWIexITx1B7xsA/NeTXrepH+DGReLWNiAovLKnuZB
- FSSFhSOOHFK3SjVm8tQ==
-X-Proofpoint-ORIG-GUID: i7vvdwdNiyn_fyL8XQlP1aTxnYjf_G4M
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE1MDE0NyBTYWx0ZWRfXz6F6HQ1QIzha
- gKBOyOr6lHoj1R1nPu/lIYpB9k2zv5oFlAyfSwMx4GPflXzFqlV2O85i7cI9PmWZ+XSNpMoMgM8
- F4SGuk9ZXOTFN8tD+xkVvteJKcwG6v8=
-X-Proofpoint-GUID: i7vvdwdNiyn_fyL8XQlP1aTxnYjf_G4M
-X-Authority-Analysis: v=2.4 cv=QYLzLcbv c=1 sm=1 tr=0 ts=6aa91b2f cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=_glEPmIy2e8OvE2BGh3C:22 a=xq3W2uTSAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=_-fwvmfW1z61RZSq5NcA:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
- a=P5L7wpMTXyg1GfFA3Gwx:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-15_03,2026-09-14_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
- definitions=main-2609150147
 
-Hi Bryan,
-
-On Tue, Sep 15, 2026 at 11:11=E2=80=AFAM Bryan O'Donoghue
-<bryan.odonoghue@linaro.org> wrote:
->
-> On 15/09/2026 09:11, Loic Poulain wrote:
-> > Add the uapi header qcom-camss-config.h defining the ISP parameter
-> > structures used by the CAMSS Offline Processing Engine (OPE) driver.
-> > This includes structures for white balance, chroma enhancement and
-> > color correction configuration.
-> >
-> > The block type enum is shared across CAMSS ISPs so that userspace only
-> > has to deal with a single set of block identifiers.
-> >
-> > Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
-> > ---
-> >   include/uapi/linux/qcom-camss-config.h | 212 ++++++++++++++++++++++++=
-+++++++++
-> >   1 file changed, 212 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/qcom-camss-config.h b/include/uapi/linu=
-x/qcom-camss-config.h
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..e3d6cc4df7de00345e8142c=
-81392dd42338c6ead
-> > --- /dev/null
-> > +++ b/include/uapi/linux/qcom-camss-config.h
-> > @@ -0,0 +1,212 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-> > +/*
-> > + * Qualcomm CAMSS ISP Driver - Userspace API
-> > + *
-> > + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-> > + */
-> > +
-> > +#ifndef _UAPI_LINUX_QCOM_CAMSS_CONFIG_H
-> > +#define _UAPI_LINUX_QCOM_CAMSS_CONFIG_H
-> > +
-> > +#include <linux/types.h>
-> > +#include <linux/media/v4l2-isp.h>
-> > +
-> > +/**
-> > + * enum camss_params_block_type - CAMSS ISP parameter block identifier=
-s
-> > + *
-> > + * Each value identifies one ISP processing block.  The value is place=
-d in
-> > + * the @type field of &struct v4l2_isp_params_block_header.
-> > + *
-> > + * @CAMSS_PARAMS_OPE_WB_GAIN: white balance gains and offsets (CLC_WB)=
-,
-> > + *   &struct camss_params_ope_wb_gain
-> > + * @CAMSS_PARAMS_OPE_CHROMA_ENHAN: RGB to YUV colour transfer matrix
-> > + *   (CLC_CHROMA_ENHAN), &struct camss_params_ope_chroma_enhan
-> > + * @CAMSS_PARAMS_OPE_COLOR_CORRECT: colour correction matrix (CLC_CC),
-> > + *   &struct camss_params_ope_color_correct
-> > + * @CAMSS_PARAMS_OPE_GAMMA: per-channel gamma correction curves (CLC_G=
-LUT),
-> > + *   &struct camss_params_ope_gamma
-> > + */
-> > +enum camss_params_block_type {
-> > +     CAMSS_PARAMS_OPE_WB_GAIN =3D 1,
-> > +     CAMSS_PARAMS_OPE_CHROMA_ENHAN =3D 2,
-> > +     CAMSS_PARAMS_OPE_COLOR_CORRECT =3D 3,
-> > +     CAMSS_PARAMS_OPE_GAMMA =3D 4,
-> > +};
->
-> Most of the OPE specific naming can be dropped, I shared the ICP
-> data-structure analysis already:
->
-> https://patchwork.linuxtv.org/project/linux-media/patch/20260426000346.11=
-58633-1-bryan.odonoghue@linaro.org/
-
-Ok, I thought we agreed on having OPE specific structures, that is why
-I recently moved everything to OPE specific name.
-
->
-> i.e.
-> > +struct camss_params_ope_color_correct {
-> > +     struct v4l2_isp_params_block_header header;
-> > +     __u16 a[3];
-> > +     __u16 b[3];
-> > +     __u16 c[3];
-> > +     __u16 k[3];
-> > +     __u16 qfactor;
-> > +     __u16 _pad[3];
-> > +} __attribute__((aligned(8)));
->
-> For ICP I have:
->
-> +struct camss_params_color_correct {
-> +       struct v4l2_isp_params_block_header header;
-> +       __u16 a[3];
-> +       __u16 b[3];
-> +       __u16 c[3];
-> +       __u16 k[3];
-> +       __u16 qfactor;
-> +       __u16 _pad[3];
-> +} __attribute__((aligned(8)));
->
-> So this data-structure is shared camss_params_ope_color_correct ->
-> camss_params_color_correct
-
-Ack.
-
-Also, I will remove the _ope_ suffix from the wb_gain and
-color_correct structures. These structures may differ or even be
-absent in the ICP case, but they should remain aligned with the IFE
-implementation since both use the same underlying blocks.
-
->
-> > +/**
-> > + * struct camss_params_ope_gamma - per-channel gamma correction curves
-> > + *
-> > + * Implements the CLC_GLUT pipeline module, applied in the RGB domain.=
-  It
-> > + * holds one independent lookup table per colour channel. Each table i=
-s a
-> > + * direct (not segmented) map of input level to output level.
-> > + *
-> > + * Each table has @CAMSS_OPE_GAMMA_LUT_SIZE (256) entries of 16-bit un=
-signed
-> > + * output. Each entry holds an X-bit output value depending on interna=
-l bus,
-> > + * the upper bits are ignored by the hardware.
-> > + *
-> > + * On Agatti OPE, The module maps a 12-bit input to an 8-bit output, t=
-he top
-> > + * 8 input bits index the table and the low 4 bits are used to linearl=
-y
-> > + * interpolate between adjacent entries. Entry i therefore represents =
-the
-> > + * output for input level i/255 of full scale.
-> > + * Output range: 0x00 =3D black, 0xFF =3D white.
->
-> That's not specific to Agatti, its hwo the Qcom gamma silicon works right=
- ?
-
-Yes, as far as I know. However, we may observe some variation if the
-internal bus width changes.
-Considering the hardware platforms we currently support with OPE, as
-well as the upcoming platforms, I think we can treat this as a generic
-assumption for now.
-
-> Same RTL synthesised in OPE, IPE and IFE. So you don't need to make this
-> OPE specific commentary.
-
-Ack.
-
->
-> > + *
-> > + * How to fill a curve (same on all three channels for pure luminance
-> > + * gamma; different curves per channel additionally shift colour balan=
-ce):
-> > + *
-> > + *   Identity (pass-through, gamma 1.0):
-> > + *     lut[i] =3D i;                                // i =3D 0..255
-> > + *
-> > + *   Encode with gamma g (e.g. sRGB-like, g =3D 2.2):
-> > + *     lut[i] =3D round(pow(i / 255.0, 1.0 / g) * 255.0);
-> > + *
-> > + * @header:  block header; @header.type =3D CAMSS_PARAMS_OPE_GAMMA
-> > + * @glut:    green channel gamma curve
-> > + * @blut:    blue  channel gamma curve
-> > + * @rlut:    red   channel gamma curve
-> > + */
-> > +struct camss_params_ope_gamma {
-> > +     struct v4l2_isp_params_block_header header;
-> > +     __u16 glut[CAMSS_OPE_GAMMA_LUT_SIZE];
-> > +     __u16 blut[CAMSS_OPE_GAMMA_LUT_SIZE];
-> > +     __u16 rlut[CAMSS_OPE_GAMMA_LUT_SIZE];
-> > +} __attribute__((aligned(8)));
->
-> For the ICP I have
->
-> +struct camss_params_glut {
-> +       struct v4l2_isp_params_block_header header;
-> +       __u8  instance;
-> +       __u8  _pad[7];
-> +       __u16 r[CAMSS_GLUT_LUT_SIZE];
-> +       __u16 g[CAMSS_GLUT_LUT_SIZE];
-> +       __u16 b[CAMSS_GLUT_LUT_SIZE];
-> +} __attribute__((aligned(8)));
->
-> So it makes more sense to differentiate the firmware type to the
-> register-mapping type. i.e. the above becomes camss_params_icp_gamma {}
-> whereas your subumitted change would be just camss_params_gamma {}
-
-ok!
+On Tue, 2026-09-15 at 08:18 +0000, Bill Wendling wrote:
+> rpc_sockaddr2uaddr() formats the IP address into "addrbuf", formats the
+> port into a temporary "portbuf" buffer with snprintf(), and then appends
+> "portbuf" to "addrbuf" using strlcat().
+>=20
+> In preparation for removing the deprecated strlcat() API[1], capture the
+> length returned by rpc_ntop4() and rpc_ntop6_noscopeid() and format the
+> port directly onto the end of "addrbuf" with snprintf(). This eliminates
+> the strlcat() call and the temporary "portbuf" buffer.
+>=20
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> Cc: codemender-patching+linux@google.com
+> Assisted-by: CoPilot:3.5-sonnet [editor_update_file, shell_command_run]
+> Signed-off-by: Bill Wendling <morbo@google.com>
+> ---
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> Cc: Helge Deller <deller@gmx.de>
+> Cc: Thomas Gleixner <tglx@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ian Abbott <abbotti@mev.co.uk>
+> Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: Matthew Brost <matthew.brost@intel.com>
+> Cc: "Thomas Hellstr=C3=B6m" <thomas.hellstrom@linux.intel.com>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Matthias Schwarzott <zzam@gentoo.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Tony Nguyen <anthony.l.nguyen@intel.com>
+> Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Saravana Kannan <saravanak@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Peter Griffin <peter.griffin@linaro.org>
+> Cc: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: Linus Walleij <linusw@kernel.org>
+> Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
+> Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+> Cc: "Martin K. Petersen" <mkp@kernel.org>
+> Cc: Trond Myklebust <trondmy@kernel.org>
+> Cc: Anna Schumaker <anna@kernel.org>
+> Cc: Mike Marshall <hubcap@omnibond.com>
+> Cc: Martin Brandenburg <martin@omnibond.com>
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Jiri Pirko <jiri@resnulli.us>
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: Chuck Lever <cel@kernel.org>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: NeilBrown <neil@brown.name>
+> Cc: Olga Kornievskaia <okorniev@redhat.com>
+> Cc: Dai Ngo <Dai.Ngo@oracle.com>
+> Cc: Tom Talpey <tom@talpey.com>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: Bill Wendling <morbo@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> Cc: Kanglong Wang <wangkanglong@loongson.cn>
+> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Cc: Qiang Ma <maqianga@uniontech.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Pengpeng Hou <pengpeng@iscas.ac.cn>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Breno Leitao <leitao@debian.org>
+> Cc: Thorsten Blum <blum@kernel.org>
+> Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Lyude Paul <lyude@redhat.com>
+> Cc: Ashutosh Desai <ashutoshdesai993@gmail.com>
+> Cc: Imre Deak <imre.deak@intel.com>
+> Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Cc: Johan Hovold <johan@kernel.org>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+> Cc: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Cc: Cryolitia PukNgae <cryolitia@uniontech.com>
+> Cc: Jiaming Zhang <r772577952@gmail.com>
+> Cc: Will Porter <mrwillporter@gmail.com>
+> Cc: Cen Zhang <zzzccc427@gmail.com>
+> Cc: "C=C3=A1ssio Gabriel" <cassiogabrielcontato@gmail.com>
+> Cc: Rong Zhang <i@rong.moe>
+> Cc: Arun Raghavan <arunr@valvesoftware.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: loongarch@lists.linux.dev
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-parisc@vger.kernel.org
+> Cc: linux-edac@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: intel-xe@lists.freedesktop.org
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: intel-wired-lan@lists.osuosl.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-wireless@vger.kernel.org
+> Cc: brcm80211@lists.linux.dev
+> Cc: brcm80211-dev-list.pdl@broadcom.com
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-samsung-soc@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-scsi@vger.kernel.org
+> Cc: linux-nfs@vger.kernel.org
+> Cc: devel@lists.orangefs.org
+> Cc: linux-hardening@vger.kernel.org
+> Cc: linux-sound@vger.kernel.org
+> ---
+>  net/sunrpc/addr.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+> index 97ff11973c49..a1e4173e5a53 100644
+> --- a/net/sunrpc/addr.c
+> +++ b/net/sunrpc/addr.c
+> @@ -264,18 +264,20 @@ EXPORT_SYMBOL_GPL(rpc_pton);
+>   */
+>  char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
+>  {
+> -	char portbuf[RPCBIND_MAXUADDRPLEN];
+>  	char addrbuf[RPCBIND_MAXUADDRLEN];
+>  	unsigned short port;
+> +	size_t len;
+> =20
+>  	switch (sap->sa_family) {
+>  	case AF_INET:
+> -		if (rpc_ntop4(sap, addrbuf, sizeof(addrbuf)) =3D=3D 0)
+> +		len =3D rpc_ntop4(sap, addrbuf, sizeof(addrbuf));
+> +		if (len =3D=3D 0 || len >=3D sizeof(addrbuf))
+>  			return NULL;
+>  		port =3D ntohs(((struct sockaddr_in *)sap)->sin_port);
+>  		break;
+>  	case AF_INET6:
+> -		if (rpc_ntop6_noscopeid(sap, addrbuf, sizeof(addrbuf)) =3D=3D 0)
+> +		len =3D rpc_ntop6_noscopeid(sap, addrbuf, sizeof(addrbuf));
+> +		if (len =3D=3D 0 || len >=3D sizeof(addrbuf))
+>  			return NULL;
+>  		port =3D ntohs(((struct sockaddr_in6 *)sap)->sin6_port);
+>  		break;
+> @@ -283,11 +285,8 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap,=
+ gfp_t gfp_flags)
+>  		return NULL;
+>  	}
+> =20
+> -	if (snprintf(portbuf, sizeof(portbuf),
+> -		     ".%u.%u", port >> 8, port & 0xff) >=3D (int)sizeof(portbuf))
+> -		return NULL;
+> -
+> -	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >=3D sizeof(addrbuf))
+> +	if (snprintf(addrbuf + len, sizeof(addrbuf) - len,
+> +		     ".%u.%u", port >> 8, port & 0xff) >=3D sizeof(addrbuf) - len)
+>  		return NULL;
+> =20
+>  	return kstrdup(addrbuf, gfp_flags);
+> @@ -352,3 +351,4 @@ size_t rpc_uaddr2sockaddr(struct net *net, const char=
+ *uaddr,
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(rpc_uaddr2sockaddr);
+> +
 
 
+The last blank line here is not needed. The rest looks fine though.
 
->
-> > +#define CAMSS_PARAMS_OPE_MAX_PAYLOAD         \
-> > +     (sizeof(struct camss_params_ope_wb_gain)        +\
-> > +      sizeof(struct camss_params_ope_chroma_enhan)   +\
-> > +      sizeof(struct camss_params_ope_color_correct)  +\
-> > +      sizeof(struct camss_params_ope_gamma))
-> > +
-> > +#endif /* _UAPI_LINUX_QCOM_CAMSS_CONFIG_H */
-> >
->
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
