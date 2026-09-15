@@ -1,366 +1,4820 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B5A46EC6E;
-	Tue, 15 Sep 2026 10:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4813047A0B7
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 10:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789467457; cv=none; b=tq7F96NkxXFxz8jMklGzs75dLA8m18fcUfqH0BOeC1fivEcBIXo/fh3EWFV7nFmqXFCKQuHu7tDGtYlXk5okgMUTzhXmp2DRxIeEOWvCZX0Z5NVZOYvoXX9wXvfzeCxNypgkXjaPGd5A4EIoVHyHKL+anXFpFnrbfU0RytHGD0E=
+	t=1789467603; cv=none; b=VZ/MdDluoGx48U6gsiwV1wzKiBxIwudKUfUop8s+C8TvIqTi+wdfgBrRAoRy2Ybe1l3eLCk04rCsfl0+/V+g/XwfZUOWbMMQBBSdgW2w49JJALk2ZbhjIdVtC7N66gLcz9pBJTQFa0SZZpxZ+DBt57Gnf1MIfBKgcyxTOEn/xok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789467457; c=relaxed/simple;
-	bh=N7eYIO6h/d/6bfA2J/f31iT743jo/Vm/RuwX1ltgmQ8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U4yfxl1IYf/1U/4uT65Xcqf+sGIUbjB5812mkxDMA1tkV15cOX6sctC4JnRXggnP/wI8kqbKod2mYKIQHCMqLgqBKoNT7a0LKSc1LMaXz5HTxeLa6nhf9gnXsPV968lpj2+asODHLDUwbrs7vZnK2yoepJUsCpuEmD9ykfeBTBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmlXJTu5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789467603; c=relaxed/simple;
+	bh=LEM2ZQ5EB+V3OF5/5bjhYbbb2+DpBnjp/T3fXAfjvzI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RGxtDlw4AgTPoxZzJrQYV4K/63h7H5Ihm0AfaJz17olpYE3aFzrC8SGe/KYwRA8UVAinMhzUAc6qqqx0Awe0PXXq8A9INfMdiUwRq/kg5STwGu62G36aylRycPV7TmMvu0/Z8PvFYBe+2jA3SKTWZHZdjUFWz38F0PUSYZPi+MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dVYg/1KS; arc=none smtp.client-ip=74.125.228.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmlXJTu5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06521F000FF;
-	Tue, 15 Sep 2026 10:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789467454;
-	bh=HyDScdwCUnZ6enJgBgFDn7eANm9IMu9XwvWhbn13gM8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=EmlXJTu5VbhJ7/WBqBdUKhfW0RYldQ+P4RsoXoiLYeYBAjdlVTQ6GyoH+XTkgQI2S
-	 WHQZbEdSrmH7QSqlPxuEctAsY2uMqY2BrHi/SCAdbUiWL8AUnsGcpzYgMZOSTw1DsO
-	 o/4EhLlu0B8UUVBMFP/3cy+fQYlxbzkEsXqCF1a5D20wSvtOe8Sdwwly6fSrwVIaA1
-	 tSSyvEUOAbcCKIZaCDGrcZinqWae1nLhlDwywEeBeIeB1CGOUPh8JdVOyxQQ4FFkGM
-	 jY4ArBiG+Y5rmPz5vraDDGwnYrENRcaMfGycxKYMdA1niw7qswA0sKbcAacKqViyjs
-	 16wfSo0FVH8Vw==
-Message-ID: <8a9fe28336742405a5cb02a5c343371f32568fbd.camel@kernel.org>
-Subject: Re: [PATCH 02/28] sunrpc: Refactor rpc_sockaddr2uaddr() to use
- snprintf() instead of strlcat()
-From: Jeff Layton <jlayton@kernel.org>
-To: Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org
-Cc: codemender-patching+linux@google.com, Russell King
- <linux@armlinux.org.uk>,  Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Thomas Bogendoerfer	 <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley"	 <James.Bottomley@HansenPartnership.com>, Helge
- Deller <deller@gmx.de>,  Thomas Gleixner	 <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,  Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Ian Abbott	 <abbotti@mev.co.uk>, H Hartley Sweeten
- <hsweeten@visionengravers.com>, Tony Luck <tony.luck@intel.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>, Matthew Brost
- <matthew.brost@intel.com>, Thomas =?ISO-8859-1?Q?Hellstr=F6m?=	
- <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Schwarzott
- <zzam@gentoo.org>, Mauro Carvalho Chehab	 <mchehab@kernel.org>, Tony Nguyen
- <anthony.l.nguyen@intel.com>, Przemek Kitszel	
- <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Arend van
- Spriel <arend.vanspriel@broadcom.com>, Rob Herring	 <robh@kernel.org>,
- Saravana Kannan <saravanak@kernel.org>, Krzysztof Kozlowski	
- <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Peter
- Griffin	 <peter.griffin@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Linus Walleij <linusw@kernel.org>, Anil Gurumurthy
- <anil.gurumurthy@qlogic.com>, Sudarsana Kalluru	
- <sudarsana.kalluru@qlogic.com>, "Martin K. Petersen" <mkp@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- Mike Marshall <hubcap@omnibond.com>,  Martin Brandenburg	
- <martin@omnibond.com>, Kees Cook <kees@kernel.org>, Jiri Pirko
- <jiri@resnulli.us>,  Simon Horman <horms@kernel.org>, Chuck Lever
- <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>,  Jaroslav Kysela	 <perex@perex.cz>, Takashi Iwai
- <tiwai@suse.com>, Andrew Morton	 <akpm@linux-foundation.org>, "Mike
- Rapoport (Microsoft)" <rppt@kernel.org>,  Kanglong Wang
- <wangkanglong@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Qiang Ma	
- <maqianga@uniontech.com>, Randy Dunlap <rdunlap@infradead.org>, Pengpeng
- Hou	 <pengpeng@iscas.ac.cn>, Ard Biesheuvel <ardb@kernel.org>, Breno Leitao
-	 <leitao@debian.org>, Thorsten Blum <blum@kernel.org>, Harshit Mogalapalli	
- <harshit.m.mogalapalli@oracle.com>, Greg Kroah-Hartman	
- <gregkh@linuxfoundation.org>, Lyude Paul <lyude@redhat.com>, Ashutosh Desai
-	 <ashutoshdesai993@gmail.com>, Imre Deak <imre.deak@intel.com>, Dmitry
- Baryshkov	 <dmitry.baryshkov@oss.qualcomm.com>, Johan Hovold
- <johan@kernel.org>,  Johannes Berg <johannes.berg@intel.com>, Miri
- Korenblit <miriam.rachel.korenblit@intel.com>, Alexander Stein	
- <alexander.stein@ew.tq-group.com>, Cryolitia PukNgae
- <cryolitia@uniontech.com>,  Jiaming Zhang <r772577952@gmail.com>, Will
- Porter <mrwillporter@gmail.com>, Cen Zhang <zzzccc427@gmail.com>, 
- =?ISO-8859-1?Q?C=E1ssio?= Gabriel	 <cassiogabrielcontato@gmail.com>, Rong
- Zhang <i@rong.moe>, Arun Raghavan	 <arunr@valvesoftware.com>,
- linux-arm-kernel@lists.infradead.org, 	loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, 	linux-parisc@vger.kernel.org,
- linux-edac@vger.kernel.org, 	dri-devel@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, 	linux-input@vger.kernel.org,
- linux-media@vger.kernel.org, 	intel-wired-lan@lists.osuosl.org,
- netdev@vger.kernel.org, 	linux-wireless@vger.kernel.org,
- brcm80211@lists.linux.dev, 	brcm80211-dev-list.pdl@broadcom.com,
- devicetree@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, 	linux-scsi@vger.kernel.org,
- linux-nfs@vger.kernel.org, devel@lists.orangefs.org, 
-	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
-Date: Tue, 15 Sep 2026 06:17:25 -0400
-In-Reply-To: <20260915081910.4142719-3-morbo@google.com>
-References: <20260915081910.4142719-1-morbo@google.com>
-	 <20260915081910.4142719-3-morbo@google.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
- n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
- egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
- T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
- 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
- YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
- VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
- cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
- CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
- LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
- MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
- gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
- 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
- R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
- rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
- ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
- Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
- lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
- iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
- QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
- YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
- wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
- LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
- 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
- c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
- LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
- TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
- 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
- xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
- +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
- Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
- BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
- N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
- naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
- RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
- FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
- 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
- P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
- aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
- T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
- dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
- 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
- kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
- uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
- AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
- FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
- 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
- sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
- qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
- sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
- IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
- UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
- dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
- EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
- apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
- M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
- dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
- 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
- jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
- flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
- BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
- AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
- 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
- HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
- 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
- uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
- DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
- CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
- Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
- AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
- aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
- f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dVYg/1KS"
+Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c254f705536so709840866b.1
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 03:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1789467585; x=1790072385; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=p0Wg2RvVB0Gay2atXJpcXr39i+ZAIDROBlOySqTHDVs=;
+        b=dVYg/1KSCmlVHk0nnm3BEsDBXKrwsqnAIruOWfWKqKaB6/lUveISi7OZZQYyhmqWRo
+         fbx7hX2X+pPokGRN85tkqqjGKhaIytJaxch7uT9XnffZ5M7Ekz4SFNVOQzlAqPshEp31
+         Cbqfs1luUAn3+53Fs6s4W3yiBG2NJAtvd1PTNu6Qcpub+DaR3yginW9+Kuc7C1S7szl/
+         UYZ589sRacilr+sbtL1gpLL/FDMvi+yapyAwJ6HbbzC4xHkEgP80eIm3Wn1aOtmQvNMP
+         jkR0FJpKtosg6MAqb/95rh6Y75gQIAqh+MqbN2fuem2FBcdOfOySj8yFLHVIHIZAImfy
+         hzfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789467585; x=1790072385;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=p0Wg2RvVB0Gay2atXJpcXr39i+ZAIDROBlOySqTHDVs=;
+        b=mzQlvL+CXe9CYe4R1LKmXVTf+groCKNWrA7Za8L79lJOobkjGf1X8Jr3XaSg6p1yQD
+         E2Zy8Ti4quTuVDTQ9410yIRtqwW7VkAXhHkGEtGKdCbirSsXKOuW6TYk6qecgzy0vEE0
+         jZR8lNJ3npYs+tUCzV5wurrUqEhhkiCWSmAFM7BV3G63UBZXHLqUGN+5rIcI0RWi/oWT
+         ctlhJuWxAtHYaWBrA8TfX1WN9m2QFZGOequO9yfe/0Ph7/iCpB7QntvVwER3F+SOSUnN
+         82GHFRT+k+e4pzZUkdU4faRJHpAB5hKHK+LmvqMUmeSgzYTLK62tuTkPz9wGEjpIIk43
+         QB9Q==
+X-Forwarded-Encrypted: i=1; AKwUvBwXBHKGfb/B0DoL1WnzpH5qK0MYP2KW5Y51osnly1L4lZEqu6Fpri1EF8PlGbHuwwHI5hXZBkK0xu9NJjUpbp8=@vger.kernel.org
+X-Gm-Message-State: AFuF++kplpEqUClGZQPZ37EUuuagw2DwDZBcQirhyW1xrHM4pN2KEqa1
+	7c6Jdn+qMvXobLYB9wzzl5u5xcABo6WPnAFWstZSehqlCy9/zUeH/JZBJtVgnIDDXc8=
+X-Gm-Gg: AYBFou3DZ06LZqUAq+GwSMLkV6m4sbI88jNZlUyNhXhG4hFY8V/Tv6Gl6OYumzOHrbb
+	2suCwV1odC+tmwE9I1x2C8Le39PnWz+ka5JSgaiOqJlSqA7VUZ5uQcM8aEClR0SADZ4Wgu/1vkg
+	7U91A46SBvwxF8dkxs/yVlmRZDFi4xmNfZE05ezs8j4w6ioxHQGT0Sib0edw4g9MmJyugHdrjY0
+	YJXuTtJFPhcYo9VdoqbF19zyvLaBQr2ApYEJe3Xahznw16/8mW/Hp6EVfbM133EGUnxBaK7P6qP
+	w7CrbIjw+ENevqXR3JSPz/S4XgFbPoY8jHnMqIK40jwSLuiSxICaTwc0Aw8UN610Gmsuc/ak1gN
+	9iJF6w/AsOyzgKQ4UkIWslpIxPixSI6ycjq00CB6D5l86rbKNtd3rg/j7Na3uzyv+VhJa8TVi7c
+	nDHpqgW5xgBtNPHGqJZxYbRtMgqwCRRRC9riEpkXX56yEXY0bsFdemCdL3oaXWT3jCQYHK+neL5
+	U+3XYVPpaMvpjVHKDpgMnY=
+X-Received: by 2002:a17:907:3ccc:b0:c26:1648:a069 with SMTP id a640c23a62f3a-c29b875479bmr419378866b.36.1789467584340;
+        Tue, 15 Sep 2026 03:19:44 -0700 (PDT)
+Received: from [192.168.0.167] ([109.76.15.202])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2965c4f77asm557610366b.8.2026.09.15.03.19.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Sep 2026 03:19:43 -0700 (PDT)
+Message-ID: <b0bab6df-a9e0-46c9-8a41-7ff22dd8f7f9@linaro.org>
+Date: Tue, 15 Sep 2026 11:19:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 6/9] media: qcom: camss: Add CAMSS Offline Processing
+ Engine driver
+To: Loic Poulain <loic.poulain@oss.qualcomm.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ Hans de Goede <johannes.goede@oss.qualcomm.com>
+References: <20260915-camss-isp-ope-v7-0-77b13d131d3d@oss.qualcomm.com>
+ <20260915-camss-isp-ope-v7-6-77b13d131d3d@oss.qualcomm.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Content-Language: en-GB
+In-Reply-To: <20260915-camss-isp-ope-v7-6-77b13d131d3d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2026-09-15 at 08:18 +0000, Bill Wendling wrote:
-> rpc_sockaddr2uaddr() formats the IP address into "addrbuf", formats the
-> port into a temporary "portbuf" buffer with snprintf(), and then appends
-> "portbuf" to "addrbuf" using strlcat().
->=20
-> In preparation for removing the deprecated strlcat() API[1], capture the
-> length returned by rpc_ntop4() and rpc_ntop6_noscopeid() and format the
-> port directly onto the end of "addrbuf" with snprintf(). This eliminates
-> the strlcat() call and the temporary "portbuf" buffer.
->=20
-> Link: https://github.com/KSPP/linux/issues/370 [1]
-> Cc: codemender-patching+linux@google.com
-> Assisted-by: CoPilot:3.5-sonnet [editor_update_file, shell_command_run]
-> Signed-off-by: Bill Wendling <morbo@google.com>
+On 15/09/2026 09:11, Loic Poulain wrote:
+> Add an image processing driver for the Qualcomm Offline Processing Engine
+> (OPE). OPE is a memory-to-memory ISP block that converts raw Bayer
+> frames to YUV, performing white balance, demosaic, chroma enhancement,
+> color correction and downscaling.
+> 
+> The hardware architecture consists of Fetch Engines and Write Engines,
+> connected through intermediate pipeline modules for pix processing.
+> 
+> The driver exposes three video nodes per pipeline instance:
+>    - ope_input: Bayer RAW input (V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+>    - ope_disp_output: YUV output     (V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
+>    - ope_params: ISP parameters (V4L2_BUF_TYPE_META_OUTPUT)
+> 
+> Hardware features:
+>    - Stripe-based processing (up to 336 pixels wide per stripe)
+>    - White balance (CLC_WB)
+>    - Demosaic / Bayer-to-RGB (CLC_DEMO)
+>    - Color correction matrix (CLC_CC)
+>    - Gamma LUT (CLC_GAMMA)
+>    - RGB-to-YUV conversion (CLC_CHROMA_ENHAN)
+>    - MN downscaler for chroma and luma planes
+> 
+> Default configuration values are based on public standards such as BT.601.
+> 
+> Processing Model:
+> OPE processes frames in stripes of up to 336 pixels. Therefore, frames
+> must be split into stripes for processing. Each stripe is configured after
+> the previous one has been acquired (double buffered registers). To minimize
+> inter-stripe latency, stripe configurations are generated ahead of time.
+> 
+> The driver is split into three source files under the ope/ directory:
+> 
+>    - core.c: the OPE m2m driver itself: probe, power management, V4L2/media
+>      device setup, format handling, stripe generation and hardware
+>      programming.
+> 
+>    - pipeline.c/.h: a small declarative media-controller topology builder.
+>      Drivers describe their entire media graph, entities (video devices,
+>      subdevs, or base entities), their pads, and the links between them, in
+>      a static descriptor table. The builder validates the table, allocates
+>      and registers all entities, and creates all MC pad links. It is kept
+>      generic but currently only used by OPE.
+> 
+>    - params.c/.h: V4L2 ISP parameter buffer validation and dispatch. It
+>      wraps the extensible V4L2 ISP parameters buffer format, validating
+>      the buffer size and each per-block header before forwarding every
+>      block to its driver-supplied handler.
+> 
+> A userspace libcamera support can be found at:
+> https://github.com/jwrdegoede/libcamera/commits/camss_pipeline_v2.1/
+> 
+> A test tool, camss-isp-m2m, can be found at:
+> https://github.com/loicpoulain/camss-isp-m2m-test
+> 
+> Co-developed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+> Signed-off-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+> Link: https://github.com/jwrdegoede/libcamera/commits/camss_pipeline_v2.1/
+> Link: https://github.com/loicpoulain/camss-isp-m2m-test
+> Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
+
+Should there be an Assisted-by here ?
+
 > ---
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ian Abbott <abbotti@mev.co.uk>
-> Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Simona Vetter <simona@ffwll.ch>
-> Cc: Matthew Brost <matthew.brost@intel.com>
-> Cc: "Thomas Hellstr=C3=B6m" <thomas.hellstrom@linux.intel.com>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Matthias Schwarzott <zzam@gentoo.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Tony Nguyen <anthony.l.nguyen@intel.com>
-> Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Saravana Kannan <saravanak@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Peter Griffin <peter.griffin@linaro.org>
-> Cc: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: Linus Walleij <linusw@kernel.org>
-> Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
-> Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
-> Cc: "Martin K. Petersen" <mkp@kernel.org>
-> Cc: Trond Myklebust <trondmy@kernel.org>
-> Cc: Anna Schumaker <anna@kernel.org>
-> Cc: Mike Marshall <hubcap@omnibond.com>
-> Cc: Martin Brandenburg <martin@omnibond.com>
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: Jiri Pirko <jiri@resnulli.us>
-> Cc: Simon Horman <horms@kernel.org>
-> Cc: Chuck Lever <cel@kernel.org>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: NeilBrown <neil@brown.name>
-> Cc: Olga Kornievskaia <okorniev@redhat.com>
-> Cc: Dai Ngo <Dai.Ngo@oracle.com>
-> Cc: Tom Talpey <tom@talpey.com>
-> Cc: Jaroslav Kysela <perex@perex.cz>
-> Cc: Takashi Iwai <tiwai@suse.com>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> Cc: Kanglong Wang <wangkanglong@loongson.cn>
-> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Cc: Qiang Ma <maqianga@uniontech.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Pengpeng Hou <pengpeng@iscas.ac.cn>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Breno Leitao <leitao@debian.org>
-> Cc: Thorsten Blum <blum@kernel.org>
-> Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Lyude Paul <lyude@redhat.com>
-> Cc: Ashutosh Desai <ashutoshdesai993@gmail.com>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Cc: Johan Hovold <johan@kernel.org>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-> Cc: Alexander Stein <alexander.stein@ew.tq-group.com>
-> Cc: Cryolitia PukNgae <cryolitia@uniontech.com>
-> Cc: Jiaming Zhang <r772577952@gmail.com>
-> Cc: Will Porter <mrwillporter@gmail.com>
-> Cc: Cen Zhang <zzzccc427@gmail.com>
-> Cc: "C=C3=A1ssio Gabriel" <cassiogabrielcontato@gmail.com>
-> Cc: Rong Zhang <i@rong.moe>
-> Cc: Arun Raghavan <arunr@valvesoftware.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: loongarch@lists.linux.dev
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linux-edac@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: intel-xe@lists.freedesktop.org
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: intel-wired-lan@lists.osuosl.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-wireless@vger.kernel.org
-> Cc: brcm80211@lists.linux.dev
-> Cc: brcm80211-dev-list.pdl@broadcom.com
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-scsi@vger.kernel.org
-> Cc: linux-nfs@vger.kernel.org
-> Cc: devel@lists.orangefs.org
-> Cc: linux-hardening@vger.kernel.org
-> Cc: linux-sound@vger.kernel.org
-> ---
->  net/sunrpc/addr.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->=20
-> diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-> index 97ff11973c49..a1e4173e5a53 100644
-> --- a/net/sunrpc/addr.c
-> +++ b/net/sunrpc/addr.c
-> @@ -264,18 +264,20 @@ EXPORT_SYMBOL_GPL(rpc_pton);
->   */
->  char *rpc_sockaddr2uaddr(const struct sockaddr *sap, gfp_t gfp_flags)
->  {
-> -	char portbuf[RPCBIND_MAXUADDRPLEN];
->  	char addrbuf[RPCBIND_MAXUADDRLEN];
->  	unsigned short port;
-> +	size_t len;
-> =20
->  	switch (sap->sa_family) {
->  	case AF_INET:
-> -		if (rpc_ntop4(sap, addrbuf, sizeof(addrbuf)) =3D=3D 0)
-> +		len =3D rpc_ntop4(sap, addrbuf, sizeof(addrbuf));
-> +		if (len =3D=3D 0 || len >=3D sizeof(addrbuf))
->  			return NULL;
->  		port =3D ntohs(((struct sockaddr_in *)sap)->sin_port);
->  		break;
->  	case AF_INET6:
-> -		if (rpc_ntop6_noscopeid(sap, addrbuf, sizeof(addrbuf)) =3D=3D 0)
-> +		len =3D rpc_ntop6_noscopeid(sap, addrbuf, sizeof(addrbuf));
-> +		if (len =3D=3D 0 || len >=3D sizeof(addrbuf))
->  			return NULL;
->  		port =3D ntohs(((struct sockaddr_in6 *)sap)->sin6_port);
->  		break;
-> @@ -283,11 +285,8 @@ char *rpc_sockaddr2uaddr(const struct sockaddr *sap,=
- gfp_t gfp_flags)
->  		return NULL;
->  	}
-> =20
-> -	if (snprintf(portbuf, sizeof(portbuf),
-> -		     ".%u.%u", port >> 8, port & 0xff) >=3D (int)sizeof(portbuf))
-> -		return NULL;
-> -
-> -	if (strlcat(addrbuf, portbuf, sizeof(addrbuf)) >=3D sizeof(addrbuf))
-> +	if (snprintf(addrbuf + len, sizeof(addrbuf) - len,
-> +		     ".%u.%u", port >> 8, port & 0xff) >=3D sizeof(addrbuf) - len)
->  		return NULL;
-> =20
->  	return kstrdup(addrbuf, gfp_flags);
-> @@ -352,3 +351,4 @@ size_t rpc_uaddr2sockaddr(struct net *net, const char=
- *uaddr,
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(rpc_uaddr2sockaddr);
+>   MAINTAINERS                                      |    1 +
+>   drivers/media/platform/qcom/camss/Kconfig        |    2 +
+>   drivers/media/platform/qcom/camss/Makefile       |    2 +
+>   drivers/media/platform/qcom/camss/ope/Kconfig    |   16 +
+>   drivers/media/platform/qcom/camss/ope/Makefile   |    9 +
+>   drivers/media/platform/qcom/camss/ope/core.c     | 3658 ++++++++++++++++++++++
+>   drivers/media/platform/qcom/camss/ope/params.c   |   78 +
+>   drivers/media/platform/qcom/camss/ope/params.h   |   95 +
+>   drivers/media/platform/qcom/camss/ope/pipeline.c |  412 +++
+>   drivers/media/platform/qcom/camss/ope/pipeline.h |  239 ++
+>   10 files changed, 4512 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b5593f814b60fcbcd88f4b4aad25880d19825dc0..a165b356e81d5cb362831245c18382452bac12ff 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22365,6 +22365,7 @@ F:	Documentation/admin-guide/media/qcom_camss.rst
+>   F:	Documentation/devicetree/bindings/media/qcom,*camss*
+>   F:	Documentation/userspace-api/media/v4l/metafmt-qcom-isp.rst
+>   F:	drivers/media/platform/qcom/camss/
+> +F:	include/uapi/linux/qcom-camss-config.h
+>   
+>   QUALCOMM CLOCK DRIVERS
+>   M:	Bjorn Andersson <andersson@kernel.org>
+> diff --git a/drivers/media/platform/qcom/camss/Kconfig b/drivers/media/platform/qcom/camss/Kconfig
+> index 4eda48cb1adf049a7fb6cb59b9da3c0870fe57f4..414dfd3d0ecea0d0c575f5a2aba31846d10deb11 100644
+> --- a/drivers/media/platform/qcom/camss/Kconfig
+> +++ b/drivers/media/platform/qcom/camss/Kconfig
+> @@ -7,3 +7,5 @@ config VIDEO_QCOM_CAMSS
+>   	select VIDEO_V4L2_SUBDEV_API
+>   	select VIDEOBUF2_DMA_SG
+>   	select V4L2_FWNODE
 > +
+> +source "drivers/media/platform/qcom/camss/ope/Kconfig"
+> diff --git a/drivers/media/platform/qcom/camss/Makefile b/drivers/media/platform/qcom/camss/Makefile
+> index 27898b3cc7d3c8f275567f81f0952e2a0e18f189..b79c40626c401767fe31b3a2fc68c1db38a5a11d 100644
+> --- a/drivers/media/platform/qcom/camss/Makefile
+> +++ b/drivers/media/platform/qcom/camss/Makefile
+> @@ -31,3 +31,5 @@ qcom-camss-objs += \
+>   		camss-video.o
+>   
+>   obj-$(CONFIG_VIDEO_QCOM_CAMSS) += qcom-camss.o
+> +
+> +obj-$(CONFIG_VIDEO_QCOM_CAMSS_OPE) += ope/
+> diff --git a/drivers/media/platform/qcom/camss/ope/Kconfig b/drivers/media/platform/qcom/camss/ope/Kconfig
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..822ca2188c6244eba7363565afd635e145effe50
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/camss/ope/Kconfig
+> @@ -0,0 +1,16 @@
+> +config VIDEO_QCOM_CAMSS_OPE
+> +	tristate "Qualcomm Offline Processing Engine (OPE) driver"
+> +	depends on V4L_PLATFORM_DRIVERS
+> +	depends on VIDEO_DEV
+> +	depends on (ARCH_QCOM && IOMMU_DMA) || COMPILE_TEST
+> +	select V4L2_ISP
+> +	select VIDEOBUF2_DMA_CONTIG
+> +	select VIDEOBUF2_VMALLOC
+> +	help
+> +	  Enable support for the Qualcomm Offline Processing Engine (OPE).
+> +	  OPE is a memory-to-memory ISP block that converts raw Bayer frames
+> +	  to YUV, performing white balance, demosaic, chroma enhancement and
+> +	  downscaling. Found on QCM2290 and related SoCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called qcom-camss-ope.
+> diff --git a/drivers/media/platform/qcom/camss/ope/Makefile b/drivers/media/platform/qcom/camss/ope/Makefile
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..02599a7b46e17640cbdda8600c95bb268ef8ab31
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/camss/ope/Makefile
+> @@ -0,0 +1,9 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# Makefile for Qualcomm CAMSS Offline Processing Engine (OPE) driver
+> +
+> +qcom-camss-ope-objs := \
+> +		core.o \
+> +		pipeline.o \
+> +		params.o
+> +
+> +obj-$(CONFIG_VIDEO_QCOM_CAMSS_OPE) += qcom-camss-ope.o
+> diff --git a/drivers/media/platform/qcom/camss/ope/core.c b/drivers/media/platform/qcom/camss/ope/core.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..c9d3e3910b443fc265b23e3a2b1007d23d9717bc
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/camss/ope/core.c
+> @@ -0,0 +1,3658 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ope/core.c
+> + *
+> + * Qualcomm MSM Camera Subsystem - Offline Processing Engine
+> + *
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +/*
+> + * This driver provides driver implementation for the Qualcomm Offline
+> + * Processing Engine (OPE). OPE is a memory-to-memory hardware block
+> + * designed for image processing on a source frame. Typically, the input
+> + * frame originates from the SoC CSI capture path, though not limited to.
+> + *
+> + * The hardware architecture consists of Fetch Engines and Write Engines,
+> + * connected through intermediate pipeline modules:
+> + *   [FETCH ENGINES] => [Pipeline Modules] => [WRITE ENGINES]
+> + *
+> + * Current Configuration:
+> + *     Fetch Engine: One fetch engine is used for Bayer frame input.
+> + *     Write Engines: Two display write engines for Y and UV planes output.
+> + *
+> + * Only a subset of the pipeline modules are enabled:
+> + *   WB: White balance for channel gain configuration
+> + *   DEMO: Demosaic for Bayer to RGB conversion
+> + *   CC: Color Correct, coefficient based RGB correction
+> + *   GLUT: Gamma LUT, redistributes brightness levels
+> + *   CHROMA_ENHAN: for RGB to YUV conversion
+> + *   DOWNSCALE*: Downscaling for UV (YUV444 -> YUV422/YUV420) and YUV planes
+> + *
+> + * Default configuration values are based on public standards such as BT.601.
+> + *
+> + * Processing Model:
+> + * OPE processes frames in stripes of up to 336 pixels. Therefore, frames must
+> + * be split into stripes for processing. Each stripe is configured after the
+> + * previous one has been acquired (double buffered registers). To minimize
+> + * inter-stripe latency, the stripe configurations are generated ahead of time.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/clk.h>
+> +#include <linux/completion.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/interconnect.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_clock.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/pm_opp.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+> +#include <linux/units.h>
+> +
+> +#include <media/v4l2-device.h>
+> +#include <media/media-device.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-event.h>
+> +#include <media/v4l2-fh.h>
+> +#include <media/v4l2-ioctl.h>
+> +#include <media/v4l2-rect.h>
+> +
+> +#include "pipeline.h"
+> +
+> +#include <media/videobuf2-dma-contig.h>
+> +#include <media/videobuf2-vmalloc.h>
+> +
+> +#include <uapi/linux/qcom-camss-config.h>
+> +
+> +#include "params.h"
+> +
+> +#define OPE_NAME	"qcom-camss-ope"
+> +
+> +/* Format descriptor */
+> +struct ope_fmt {
+> +	u32		fourcc;
+> +	unsigned int	depth;
+> +	unsigned int	align;
+> +	unsigned int	num_planes;
+> +	u32		mbus_code;
+> +	unsigned int	c_hsub;
+> +	unsigned int	c_vsub;
+> +};
+> +
+> +/* Per-queue format state */
+> +struct ope_fmt_state {
+> +	const struct ope_fmt	*fmt;
+> +	unsigned int		width;
+> +	unsigned int		height;
+> +	struct v4l2_rect	crop;
+> +	unsigned int		bytesperline;
+> +	unsigned int		sizeimage;
+> +	enum v4l2_colorspace	colorspace;
+> +	enum v4l2_xfer_func	xfer_func;
+> +	enum v4l2_ycbcr_encoding	ycbcr_enc;
+> +	enum v4l2_quantization	quantization;
+> +	unsigned int		sequence;
+> +	struct v4l2_fract	timeperframe;
+> +};
+> +
+> +/* -------- Register layout -------- */
+> +
+> +#define OPE_TOP_HW_VERSION					0x000
+> +#define		OPE_TOP_HW_VERSION_STEP		GENMASK(15, 0)
+> +#define		OPE_TOP_HW_VERSION_REV		GENMASK(27, 16)
+> +#define		OPE_TOP_HW_VERSION_GEN		GENMASK(31, 28)
+> +#define OPE_TOP_RESET_CMD					0x004
+> +#define		OPE_TOP_RESET_CMD_HW		BIT(0)
+> +#define		OPE_TOP_RESET_CMD_SW		BIT(1)
+> +#define OPE_TOP_IRQ_STATUS					0x014
+> +#define OPE_TOP_IRQ_MASK					0x018
+> +#define		OPE_TOP_IRQ_STATUS_RST_DONE	BIT(0)
+> +#define		OPE_TOP_IRQ_STATUS_WE		BIT(1)
+> +#define		OPE_TOP_IRQ_STATUS_FE		BIT(2)
+> +#define		OPE_TOP_IRQ_STATUS_VIOL		BIT(3)
+> +#define		OPE_TOP_IRQ_STATUS_IDLE		BIT(4)
+> +#define OPE_TOP_IRQ_CLEAR					0x01c
+> +#define OPE_TOP_IRQ_CMD						0x024
+> +#define		OPE_TOP_IRQ_CMD_CLEAR		BIT(0)
+> +#define OPE_TOP_VIOLATION_STATUS				0x028
+> +
+> +/* Fetch engine */
+> +#define OPE_BUS_RD_INPUT_IF_IRQ_MASK				0x00c
+> +#define OPE_BUS_RD_INPUT_IF_IRQ_CLEAR				0x010
+> +#define OPE_BUS_RD_INPUT_IF_IRQ_CMD				0x014
+> +#define		OPE_BUS_RD_INPUT_IF_IRQ_CMD_CLEAR	BIT(0)
+> +#define OPE_BUS_RD_INPUT_IF_IRQ_STATUS				0x018
+> +#define		OPE_BUS_RD_INPUT_IF_IRQ_STATUS_RST_DONE		BIT(0)
+> +#define		OPE_BUS_RD_INPUT_IF_IRQ_STATUS_RUP_DONE		BIT(1)
+> +#define		OPE_BUS_RD_INPUT_IF_IRQ_STATUS_BUF_DONE		GENMASK(3, 2)
+> +#define		OPE_BUS_RD_INPUT_IF_IRQ_STATUS_CCIF_VIOL	GENMASK(17, 16)
+> +#define OPE_BUS_RD_INPUT_IF_CMD					0x01c
+> +#define		OPE_BUS_RD_INPUT_IF_CMD_GO_CMD		BIT(0)
+> +#define OPE_BUS_RD_CLIENT_0_CORE_CFG				0x050
+> +#define		OPE_BUS_RD_CLIENT_0_CORE_CFG_EN	BIT(0)
+> +#define OPE_BUS_RD_CLIENT_0_CCIF_META_DATA			0x054
+> +#define		OPE_BUS_RD_CLIENT_0_CCIF_MD_PIX_PATTERN GENMASK(7, 2)
+> +#define OPE_BUS_RD_CLIENT_0_ADDR_IMAGE				0x058
+> +#define OPE_BUS_RD_CLIENT_0_RD_BUFFER_SIZE			0x05c
+> +#define OPE_BUS_RD_CLIENT_0_RD_STRIDE				0x060
+> +#define OPE_BUS_RD_CLIENT_0_UNPACK_CFG_0			0x064
+> +
+> +/* Write engines */
+> +#define OPE_BUS_WR_INPUT_IF_IRQ_MASK_0				0x018
+> +#define OPE_BUS_WR_INPUT_IF_IRQ_MASK_1				0x01c
+> +#define OPE_BUS_WR_INPUT_IF_IRQ_CLEAR_0				0x020
+> +#define OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0			0x028
+> +#define		OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_RUP_DONE	BIT(0)
+> +#define		OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_BUF_DONE	BIT(8)
+> +#define		OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_CONS_VIOL	BIT(28)
+> +#define		OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_VIOL		BIT(30)
+> +#define		OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_IMG_SZ_VIOL	BIT(31)
+> +#define OPE_BUS_WR_INPUT_IF_IRQ_CMD				0x030
+> +#define		OPE_BUS_WR_INPUT_IF_IRQ_CMD_CLEAR	BIT(0)
+> +#define OPE_BUS_WR_VIOLATION_STATUS				0x064
+> +#define OPE_BUS_WR_IMAGE_SIZE_VIOLATION_STATUS			0x070
+> +#define OPE_BUS_WR_CLIENT_CFG(c)				(0x200 + (c) * 0x100)
+> +#define		OPE_BUS_WR_CLIENT_CFG_EN		BIT(0)
+> +#define		OPE_BUS_WR_CLIENT_CFG_AUTORECOVER	BIT(4)
+> +#define OPE_BUS_WR_CLIENT_ADDR_IMAGE(c)				(0x204 + (c) * 0x100)
+> +#define OPE_BUS_WR_CLIENT_IMAGE_CFG_0(c)			(0x20c + (c) * 0x100)
+> +#define OPE_BUS_WR_CLIENT_IMAGE_CFG_1(c)			(0x210 + (c) * 0x100)
+> +#define OPE_BUS_WR_CLIENT_IMAGE_CFG_2(c)			(0x214 + (c) * 0x100)
+> +#define OPE_BUS_WR_CLIENT_PACKER_CFG(c)				(0x218 + (c) * 0x100)
+> +
+> +/* Pipeline modules */
+> +
+> +#define OPE_PP_HW_VERSION(base)				((base) + 0x00)
+> +#define OPE_PP_HW_STATUS(base)				((base) + 0x04)
+> +#define OPE_HW_VERSION_GEN(v)	((u32)FIELD_GET(OPE_TOP_HW_VERSION_GEN, (v)))
+> +#define OPE_HW_VERSION_REV(v)	((u32)FIELD_GET(OPE_TOP_HW_VERSION_REV, (v)))
+> +#define OPE_HW_VERSION_STEP(v)	((u32)FIELD_GET(OPE_TOP_HW_VERSION_STEP, (v)))
+> +
+> +#define OPE_PP_WB_GAIN_BASE			0x200
+> +#define OPE_PP_WB_GAIN_MODULE_CFG			(OPE_PP_WB_GAIN_BASE + 0x60)
+> +#define		OPE_PP_WB_GAIN_MODULE_CFG_EN	BIT(0)
+> +#define OPE_PP_WB_GAIN_WB_CFG(ch)			(OPE_PP_WB_GAIN_BASE + 0x68 + 4 * (ch))
+> +#define		OPE_PP_WB_GAIN_WB_CFG_GAIN	GENMASK(14, 0)
+> +#define OPE_PP_WB_GAIN_WB_SUB_CFG(ch)			(OPE_PP_WB_GAIN_BASE + 0x74 + 4 * (ch))
+> +#define		OPE_PP_WB_GAIN_WB_SUB_CFG_VAL	GENMASK(31, 20)
+> +#define OPE_PP_WB_GAIN_WB_ADD_CFG(ch)			(OPE_PP_WB_GAIN_BASE + 0x80 + 4 * (ch))
+> +#define		OPE_PP_WB_GAIN_WB_ADD_CFG_VAL	GENMASK(31, 20)
+> +
+> +#define OPE_PP_CC_BASE				0xa00
+> +#define OPE_PP_CC_MODULE_CFG				(OPE_PP_CC_BASE + 0x60)
+> +#define		OPE_PP_CC_MODULE_CFG_EN		BIT(0)
+> +#define OPE_PP_CC_COEFF_A_CFG_0				(OPE_PP_CC_BASE + 0x68)
+> +#define		OPE_PP_CC_COEFF_A_CFG_0_A0	GENMASK(11, 0)
+> +#define		OPE_PP_CC_COEFF_A_CFG_0_A1	GENMASK(27, 16)
+> +#define OPE_PP_CC_COEFF_A_CFG_1				(OPE_PP_CC_BASE + 0x6c)
+> +#define		OPE_PP_CC_COEFF_A_CFG_1_A2	GENMASK(11, 0)
+> +#define OPE_PP_CC_COEFF_B_CFG_0				(OPE_PP_CC_BASE + 0x70)
+> +#define		OPE_PP_CC_COEFF_B_CFG_0_B0	GENMASK(11, 0)
+> +#define		OPE_PP_CC_COEFF_B_CFG_0_B1	GENMASK(27, 16)
+> +#define OPE_PP_CC_COEFF_B_CFG_1				(OPE_PP_CC_BASE + 0x74)
+> +#define		OPE_PP_CC_COEFF_B_CFG_1_B2	GENMASK(11, 0)
+> +#define OPE_PP_CC_COEFF_C_CFG_0				(OPE_PP_CC_BASE + 0x78)
+> +#define		OPE_PP_CC_COEFF_C_CFG_0_C0	GENMASK(11, 0)
+> +#define		OPE_PP_CC_COEFF_C_CFG_0_C1	GENMASK(27, 16)
+> +#define OPE_PP_CC_COEFF_C_CFG_1				(OPE_PP_CC_BASE + 0x7c)
+> +#define		OPE_PP_CC_COEFF_C_CFG_1_C2	GENMASK(11, 0)
+> +#define OPE_PP_CC_COEFF_K_CFG_0				(OPE_PP_CC_BASE + 0x80)
+> +#define		OPE_PP_CC_COEFF_K_CFG_0_K0	GENMASK(31, 21)
+> +#define OPE_PP_CC_COEFF_K_CFG_1				(OPE_PP_CC_BASE + 0x84)
+> +#define		OPE_PP_CC_COEFF_K_CFG_1_K1	GENMASK(31, 21)
+> +#define OPE_PP_CC_COEFF_K_CFG_2				(OPE_PP_CC_BASE + 0x88)
+> +#define		OPE_PP_CC_COEFF_K_CFG_2_K2	GENMASK(31, 21)
+> +#define OPE_PP_CC_COEFF_M_CFG				(OPE_PP_CC_BASE + 0x8c)
+> +#define		OPE_PP_CC_COEFF_M_CFG_M		GENMASK(1, 0)
+> +
+> +#define OPE_PP_GLUT_BASE			0x1000
+> +#define OPE_PP_GLUT_DMI_CFG				(OPE_PP_GLUT_BASE + 0x08)
+> +#define		OPE_PP_GLUT_DMI_CFG_AUTO_LOAD_EN	BIT(20)
+> +#define		OPE_PP_GLUT_DMI_CFG_ADDR	GENMASK(7, 0)
+> +#define OPE_PP_GLUT_DMI_LUT_CFG				(OPE_PP_GLUT_BASE + 0x0c)
+> +#define		OPE_PP_GLUT_DMI_LUT_CFG_SEL	GENMASK(1, 0)
+> +#define OPE_PP_GLUT_DMI_DATA				(OPE_PP_GLUT_BASE + 0x10)
+> +#define OPE_PP_GLUT_DMI_LUT_BANK_CFG			(OPE_PP_GLUT_BASE + 0x58)
+> +#define		OPE_PP_GLUT_DMI_LUT_BANK_CFG_SEL	BIT(0)
+> +#define OPE_PP_GLUT_MODULE_LUT_BANK_CFG			(OPE_PP_GLUT_BASE + 0x5c)
+> +#define		OPE_PP_GLUT_MODULE_LUT_BANK_CFG_SEL	BIT(0)
+> +#define OPE_PP_GLUT_MODULE_CFG				(OPE_PP_GLUT_BASE + 0x60)
+> +#define		OPE_PP_GLUT_MODULE_CFG_EN	BIT(0)
+> +
+> +#define OPE_PP_DEMO_BASE				0x800
+> +#define OPE_PP_DEMO_MODULE_CFG					(OPE_PP_DEMO_BASE + 0x60)
+> +#define		OPE_PP_DEMO_MODULE_CFG_EN		BIT(0)
+> +#define		OPE_PP_DEMO_MODULE_CFG_DYN_G_CLAMP_EN	BIT(14)
+> +#define		OPE_PP_DEMO_MODULE_CFG_DYN_RB_CLAMP_EN	BIT(15)
+> +#define OPE_PP_DEMO_INTERP_COEFF_CFG				(OPE_PP_DEMO_BASE + 0x68)
+> +#define		OPE_PP_DEMO_INTERP_COEFF_CFG_LAMBDA_G	GENMASK(7, 0)
+> +#define		OPE_PP_DEMO_INTERP_COEFF_CFG_LAMBDA_RB	GENMASK(23, 16)
+> +#define OPE_PP_DEMO_INTERP_CLASSIFIER_CFG_0			(OPE_PP_DEMO_BASE + 0x6c)
+> +#define		OPE_PP_DEMO_INTERP_CLASSIFIER_CFG_0_AK	GENMASK(31, 20)
+> +#define OPE_PP_DEMO_INTERP_CLASSIFIER_CFG_1			(OPE_PP_DEMO_BASE + 0x70)
+> +#define		OPE_PP_DEMO_INTERP_CLASSIFIER_CFG_1_WK	GENMASK(9, 0)
+> +
+> +#define OPE_PP_DOWNSCALE_MN_DS_C_PRE_BASE		0x1c00
+> +#define OPE_PP_DOWNSCALE_MN_DS_Y_DISP_BASE		0x3000
+> +#define OPE_PP_DOWNSCALE_MN_DS_C_DISP_BASE		0x3200
+> +#define OPE_PP_CROP_RND_CLAMP_Y_DISP_BASE		0x3400
+> +#define OPE_PP_CROP_RND_CLAMP_C_DISP_BASE		0x3600
+> +#define OPE_PP_CROP_RND_CLAMP_HW_STATUS(base)			OPE_PP_HW_STATUS(base)
+> +#define		OPE_PP_CROP_RND_CLAMP_HEIGHT_VIOL	BIT(2)
+> +#define		OPE_PP_CROP_RND_CLAMP_WIDTH_VIOL	BIT(1)
+> +#define OPE_PP_CROP_RND_CLAMP_MODULE_CFG(base)			((base) + 0x60)
+> +#define		OPE_PP_CROP_RND_CLAMP_EN		BIT(0)
+> +#define		OPE_PP_CROP_RND_CLAMP_CROP_EN		BIT(9)
+> +#define OPE_PP_CROP_RND_CLAMP_CROP_LINE_CFG(base)		((base) + 0x68)
+> +#define OPE_PP_CROP_RND_CLAMP_CROP_PIXEL_CFG(base)		((base) + 0x6c)
+> +#define		OPE_PP_CROP_RND_CLAMP_CROP_FIRST	GENMASK(29, 16)
+> +#define		OPE_PP_CROP_RND_CLAMP_CROP_LAST		GENMASK(13, 0)
+> +#define OPE_PP_DOWNSCALE_MN_CFG(ds)				((ds) + 0x60)
+> +#define		OPE_PP_DOWNSCALE_MN_CFG_EN		BIT(0)
+> +#define OPE_PP_DOWNSCALE_MN_DS_CFG(ds)				((ds) + 0x64)
+> +#define		OPE_PP_DOWNSCALE_MN_DS_CFG_H_SCALE_EN	BIT(9)
+> +#define		OPE_PP_DOWNSCALE_MN_DS_CFG_V_SCALE_EN	BIT(10)
+> +#define OPE_PP_DOWNSCALE_MN_DS_IMAGE_SIZE_CFG(ds)		((ds) + 0x68)
+> +#define OPE_PP_DOWNSCALE_MN_DS_MN_H_CFG(ds)			((ds) + 0x6c)
+> +#define OPE_PP_DOWNSCALE_MN_DS_MN_H_PHASE_CFG(ds)		((ds) + 0x70)
+> +#define OPE_PP_DOWNSCALE_MN_DS_MN_V_CFG(ds)			((ds) + 0x74)
+> +#define OPE_PP_DOWNSCALE_MN_DS_MN_V_PHASE_CFG(ds)		((ds) + 0x78)
+> +
+> +#define OPE_PP_CHROMA_ENHAN_BASE			0x1200
+> +#define OPE_PP_CHROMA_ENHAN_MODULE_CFG				(OPE_PP_CHROMA_ENHAN_BASE + 0x60)
+> +#define		OPE_PP_CHROMA_ENHAN_MODULE_CFG_EN	BIT(0)
+> +#define OPE_PP_CHROMA_ENHAN_LUMA_CFG_0				(OPE_PP_CHROMA_ENHAN_BASE + 0x68)
+> +#define		OPE_PP_CHROMA_ENHAN_LUMA_CFG_0_V0	GENMASK(11, 0)
+> +#define		OPE_PP_CHROMA_ENHAN_LUMA_CFG_0_V1	GENMASK(27, 16)
+> +#define OPE_PP_CHROMA_ENHAN_LUMA_CFG_1				(OPE_PP_CHROMA_ENHAN_BASE + 0x6c)
+> +#define		OPE_PP_CHROMA_ENHAN_LUMA_CFG_1_K	GENMASK(31, 23)
+> +#define OPE_PP_CHROMA_ENHAN_LUMA_CFG_2				(OPE_PP_CHROMA_ENHAN_BASE + 0x70)
+> +#define		OPE_PP_CHROMA_ENHAN_LUMA_CFG_2_V2	GENMASK(11, 0)
+> +#define OPE_PP_CHROMA_ENHAN_COEFF_A_CFG				(OPE_PP_CHROMA_ENHAN_BASE + 0x74)
+> +#define		OPE_PP_CHROMA_ENHAN_COEFF_A_CFG_AP	GENMASK(11, 0)
+> +#define		OPE_PP_CHROMA_ENHAN_COEFF_A_CFG_AM	GENMASK(27, 16)
+> +#define OPE_PP_CHROMA_ENHAN_COEFF_B_CFG				(OPE_PP_CHROMA_ENHAN_BASE + 0x78)
+> +#define		OPE_PP_CHROMA_ENHAN_COEFF_B_CFG_BP	GENMASK(11, 0)
+> +#define		OPE_PP_CHROMA_ENHAN_COEFF_B_CFG_BM	GENMASK(27, 16)
+> +#define OPE_PP_CHROMA_ENHAN_COEFF_C_CFG				(OPE_PP_CHROMA_ENHAN_BASE + 0x7C)
+> +#define		OPE_PP_CHROMA_ENHAN_COEFF_C_CFG_CP	GENMASK(11, 0)
+> +#define		OPE_PP_CHROMA_ENHAN_COEFF_C_CFG_CM	GENMASK(27, 16)
+> +#define OPE_PP_CHROMA_ENHAN_COEFF_D_CFG				(OPE_PP_CHROMA_ENHAN_BASE + 0x80)
+> +#define		OPE_PP_CHROMA_ENHAN_COEFF_D_CFG_DP	GENMASK(11, 0)
+> +#define		OPE_PP_CHROMA_ENHAN_COEFF_D_CFG_DM	GENMASK(27, 16)
+> +#define OPE_PP_CHROMA_ENHAN_CHROMA_CFG_0			(OPE_PP_CHROMA_ENHAN_BASE + 0x84)
+> +#define		OPE_PP_CHROMA_ENHAN_CHROMA_CFG_0_KCB GENMASK(31, 21)
+> +#define OPE_PP_CHROMA_ENHAN_CHROMA_CFG_1			(OPE_PP_CHROMA_ENHAN_BASE + 0x88)
+> +#define		OPE_PP_CHROMA_ENHAN_CHROMA_CFG_1_KCR GENMASK(31, 21)
+> +
+> +/* -------- OPE-specific constants -------- */
+> +
+> +#define OPE_STRIPE_MAX_W	336
+> +#define OPE_STRIPE_MAX_H	8192
+> +#define OPE_STRIPE_MIN_W	16
+> +#define OPE_STRIPE_MIN_H	OPE_STRIPE_MIN_W
+> +#define OPE_MAX_STRIPE		16
+> +#define OPE_ALIGN_H		1
+> +#define OPE_ALIGN_W		1
+> +#define OPE_MIN_W		24
+> +#define OPE_MIN_H		16
+> +#define OPE_MAX_W		(OPE_STRIPE_MAX_W * OPE_MAX_STRIPE)
+> +#define OPE_MAX_H		OPE_STRIPE_MAX_H
+> +#define OPE_MAX_STRIDE		0xffff
+> +#define OPE_RESET_TIMEOUT_MS	100
+> +#define DEFAULT_FRAMERATE	60
+> +#define OPE_MAX_FRAMERATE	1000
+> +
+> +/*
+> + * AXI clock is shared across CAMSS blocks and not dynamically scaled,
+> + * just request the highest supported rate.
+> + */
+> +#define OPE_AXI_CLK_RATE	(300 * HZ_PER_MHZ)
+> +
+> +/* Downscaler fixed-point helpers */
+> +#define Q21(v)			(((uint64_t)(v)) << 21)
+> +#define DS_Q21(n, d)		((uint32_t)(((uint64_t)(n) << 21) / (d)))
+> +#define DS_RESOLUTION(in, out) \
+> +	(((out) * 128 <= (in)) ? 0x0 : \
+> +	 ((out) * 16  <= (in)) ? 0x1 : \
+> +	 ((out) * 8   <= (in)) ? 0x2 : 0x3)
+> +#define DS_OUTPUT_PIX(in, phase_init, phase_step) \
+> +	((Q21(in) - (phase_init)) / (phase_step))
+> +#define OPE_WB(n, d)		(((n) << 10) / (d))
+> +
+> +enum ope_downscaler {
+> +	OPE_DS_C_PRE,
+> +	OPE_DS_C_DISP,
+> +	OPE_DS_Y_DISP,
+> +	OPE_DS_MAX,
+> +};
+> +
+> +enum ope_glut_sel {
+> +	OPE_GLUT_SEL_NONE,
+> +	OPE_GLUT_SEL_G,
+> +	OPE_GLUT_SEL_B,
+> +	OPE_GLUT_SEL_R,
+> +};
+> +
+> +static const u32 ope_ds_base[OPE_DS_MAX] = {
+> +	OPE_PP_DOWNSCALE_MN_DS_C_PRE_BASE,
+> +	OPE_PP_DOWNSCALE_MN_DS_C_DISP_BASE,
+> +	OPE_PP_DOWNSCALE_MN_DS_Y_DISP_BASE,
+> +};
+> +
+> +enum ope_wr_client {
+> +	OPE_WR_CLIENT_VID_Y,
+> +	OPE_WR_CLIENT_VID_C,
+> +	OPE_WR_CLIENT_DISP_Y,
+> +	OPE_WR_CLIENT_DISP_C,
+> +	OPE_WR_CLIENT_MAX,
+> +};
+> +
+> +enum ope_pixel_pattern {
+> +	OPE_PIXEL_PATTERN_RGRGRG,
+> +	OPE_PIXEL_PATTERN_GRGRGR,
+> +	OPE_PIXEL_PATTERN_BGBGBG,
+> +	OPE_PIXEL_PATTERN_GBGBGB,
+> +	OPE_PIXEL_PATTERN_YCBYCR,
+> +	OPE_PIXEL_PATTERN_YCRYCB,
+> +	OPE_PIXEL_PATTERN_CBYCRY,
+> +	OPE_PIXEL_PATTERN_CRYCBY,
+> +};
+> +
+> +enum ope_stripe_location {
+> +	OPE_STRIPE_LOCATION_FULL,
+> +	OPE_STRIPE_LOCATION_LEFT,
+> +	OPE_STRIPE_LOCATION_RIGHT,
+> +	OPE_STRIPE_LOCATION_MIDDLE,
+> +};
+> +
+> +enum ope_unpacker_format {
+> +	OPE_UNPACKER_FMT_PLAIN_8	= 1,
+> +	OPE_UNPACKER_FMT_PLAIN_16_10BPP	= 2,
+> +	OPE_UNPACKER_FMT_MIPI_10	= 13,
+> +};
+> +
+> +enum ope_packer_format {
+> +	OPE_PACKER_FMT_PLAIN_8		= 1,
+> +	OPE_PACKER_FMT_PLAIN_8_ODD_EVEN = 2,
+> +	OPE_PACKER_FMT_MIPI_10		= 12,
+> +};
+> +
+> +struct ope_hw_fmt {
+> +	u32			fourcc;
+> +	enum ope_pixel_pattern	pattern;
+> +	enum ope_unpacker_format	unpacker;
+> +	enum ope_packer_format	packer;
+> +};
+> +
+> +static const struct ope_hw_fmt ope_hw_fmts[] = {
+> +	{ V4L2_PIX_FMT_SBGGR10P, OPE_PIXEL_PATTERN_BGBGBG,
+> +	  OPE_UNPACKER_FMT_MIPI_10,  OPE_PACKER_FMT_MIPI_10 },
+> +	{ V4L2_PIX_FMT_SGBRG10P, OPE_PIXEL_PATTERN_GBGBGB,
+> +	  OPE_UNPACKER_FMT_MIPI_10,  OPE_PACKER_FMT_MIPI_10 },
+> +	{ V4L2_PIX_FMT_SGRBG10P, OPE_PIXEL_PATTERN_GRGRGR,
+> +	  OPE_UNPACKER_FMT_MIPI_10,  OPE_PACKER_FMT_MIPI_10 },
+> +	{ V4L2_PIX_FMT_SRGGB10P, OPE_PIXEL_PATTERN_RGRGRG,
+> +	  OPE_UNPACKER_FMT_MIPI_10,  OPE_PACKER_FMT_MIPI_10 },
+> +	{ V4L2_PIX_FMT_SRGGB8,   OPE_PIXEL_PATTERN_RGRGRG,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8 },
+> +	{ V4L2_PIX_FMT_SBGGR8,   OPE_PIXEL_PATTERN_BGBGBG,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8 },
+> +	{ V4L2_PIX_FMT_SGBRG8,   OPE_PIXEL_PATTERN_GBGBGB,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8 },
+> +	{ V4L2_PIX_FMT_SGRBG8,   OPE_PIXEL_PATTERN_GRGRGR,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8 },
+> +	{ V4L2_PIX_FMT_NV24,     OPE_PIXEL_PATTERN_YCBYCR,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8 },
+> +	{ V4L2_PIX_FMT_NV42,     OPE_PIXEL_PATTERN_YCRYCB,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8_ODD_EVEN },
+> +	{ V4L2_PIX_FMT_NV16,     OPE_PIXEL_PATTERN_CBYCRY,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8 },
+> +	{ V4L2_PIX_FMT_NV61,     OPE_PIXEL_PATTERN_CBYCRY,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8_ODD_EVEN },
+> +	{ V4L2_PIX_FMT_NV12,     OPE_PIXEL_PATTERN_CBYCRY,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8 },
+> +	{ V4L2_PIX_FMT_NV21,     OPE_PIXEL_PATTERN_CBYCRY,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8_ODD_EVEN },
+> +	{ V4L2_PIX_FMT_GREY,     OPE_PIXEL_PATTERN_RGRGRG,
+> +	  OPE_UNPACKER_FMT_PLAIN_8,  OPE_PACKER_FMT_PLAIN_8 },
+> +};
+> +
+> +static const struct ope_hw_fmt *ope_find_hw_fmt(u32 fourcc)
+> +{
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(ope_hw_fmts); i++)
+> +		if (ope_hw_fmts[i].fourcc == fourcc)
+> +			return &ope_hw_fmts[i];
+> +
+> +	return NULL;
+> +}
+> +
+> +static const struct ope_fmt ope_input_fmts[] = {
+> +	{ V4L2_PIX_FMT_SBGGR10P, 10, 2, 1, MEDIA_BUS_FMT_SBGGR10_1X10 },
+> +	{ V4L2_PIX_FMT_SGBRG10P, 10, 2, 1, MEDIA_BUS_FMT_SGBRG10_1X10 },
+> +	{ V4L2_PIX_FMT_SGRBG10P, 10, 2, 1, MEDIA_BUS_FMT_SGRBG10_1X10 },
+> +	{ V4L2_PIX_FMT_SRGGB10P, 10, 2, 1, MEDIA_BUS_FMT_SRGGB10_1X10 },
+> +	{ V4L2_PIX_FMT_SRGGB8,    8, 0, 1, MEDIA_BUS_FMT_SRGGB8_1X8 },
+> +	{ V4L2_PIX_FMT_SBGGR8,    8, 0, 1, MEDIA_BUS_FMT_SBGGR8_1X8 },
+> +	{ V4L2_PIX_FMT_SGBRG8,    8, 0, 1, MEDIA_BUS_FMT_SGBRG8_1X8 },
+> +	{ V4L2_PIX_FMT_SGRBG8,    8, 0, 1, MEDIA_BUS_FMT_SGRBG8_1X8 },
+> +};
+> +
+> +static const struct ope_fmt ope_output_fmts[] = {
+> +	{ V4L2_PIX_FMT_NV24,  24, 0, 1, MEDIA_BUS_FMT_YUV8_1X24,   1, 1 },
+> +	{ V4L2_PIX_FMT_NV42,  24, 0, 1, MEDIA_BUS_FMT_YUV8_1X24,   1, 1 },
+> +	{ V4L2_PIX_FMT_NV16,  16, 1, 1, MEDIA_BUS_FMT_YUYV8_2X8,   2, 1 },
+> +	{ V4L2_PIX_FMT_NV61,  16, 1, 1, MEDIA_BUS_FMT_YUYV8_2X8,   2, 1 },
+> +	{ V4L2_PIX_FMT_NV12,  12, 1, 1, MEDIA_BUS_FMT_YUYV8_1_5X8, 2, 2 },
+> +	{ V4L2_PIX_FMT_NV21,  12, 1, 1, MEDIA_BUS_FMT_YUYV8_1_5X8, 2, 2 },
+> +	{ V4L2_PIX_FMT_GREY,   8, 0, 1, MEDIA_BUS_FMT_Y8_1X8,      1, 1 },
+> +};
+> +
+> +struct ope_dsc_config {
+> +	u32 input_width;
+> +	u32 input_height;
+> +	u32 output_width;
+> +	u32 output_height;
+> +	u32 phase_step_h;
+> +	u32 phase_step_v;
+> +	u32 crop_last_pixel;
+> +	u32 crop_last_line;
+> +};
+> +
+> +struct ope_stripe {
+> +	struct {
+> +		dma_addr_t addr;
+> +		u32 width;
+> +		u32 height;
+> +		u32 stride;
+> +		enum ope_stripe_location location;
+> +		enum ope_pixel_pattern	pattern;
+> +		enum ope_unpacker_format format;
+> +	} src;
+> +	struct {
+> +		dma_addr_t addr;
+> +		u32 width;
+> +		u32 height;
+> +		u32 stride;
+> +		u32 x_init;
+> +		enum ope_packer_format format;
+> +		bool enabled;
+> +	} dst[OPE_WR_CLIENT_MAX];
+> +	struct ope_dsc_config dsc[OPE_DS_MAX];
+> +};
+> +
+> +/* OPE tuning parameter state */
+> +
+> +/* Demosaic (CLC_DEMO) coefficients, internal only, not user-configurable. */
+> +#define CAMSS_PARAMS_INTERNAL	(-1)
+> +
+> +struct ope_params_demo {
+> +	struct v4l2_isp_params_block_header header;
+> +	u8 lambda_rb;
+> +	u8 lambda_g;
+> +	u16 a_k;
+> +	u16 w_k;
+> +	u16 _pad;
+> +};
+> +
+> +/* OPE tuning parameter state */
+> +struct ope_config {
+> +	struct camss_params_ope_wb_gain		wb_gain;
+> +	struct camss_params_ope_chroma_enhan	chroma_enhan;
+> +	struct camss_params_ope_color_correct	color_correct;
+> +	struct camss_params_ope_gamma		gamma;
+> +	struct ope_params_demo			demo;
+> +};
+> +
+> +enum ope_entity {
+> +	OPE_ENTITY_FRAME_IN,
+> +	OPE_ENTITY_PARAMS,
+> +	OPE_ENTITY_PROC,
+> +	OPE_ENTITY_DISP,
+> +	OPE_ENTITY_DISP_OUT,
+> +	OPE_ENTITY_COUNT
+> +};
+> +
+> +enum ope_queue_idx {
+> +	OPE_QUEUE_FRAME_IN,
+> +	OPE_QUEUE_DISP_OUT,
+> +	OPE_QUEUE_PARAMS,
+> +	OPE_QUEUE_COUNT
+> +};
+> +
+> +struct camss_isp_buf {
+> +	struct vb2_v4l2_buffer	vb;	/* must be first */
+> +	struct list_head	list;
+> +};
+> +
+> +struct ope_queue {
+> +	struct vb2_queue	vq;
+> +	struct list_head	rdy_queue;
+> +	spinlock_t		rdy_spinlock;
+> +};
+> +
+> +enum ope_proc_pad {
+> +	OPE_PROC_PAD_SINK_IN,
+> +	OPE_PROC_PAD_SINK_PAR,
+> +	OPE_PROC_PAD_SOURCE,
+> +	OPE_PROC_PADS_NUM,
+> +};
+> +
+> +enum ope_disp_pad {
+> +	OPE_DISP_PAD_SINK,
+> +	OPE_DISP_PAD_SOURCE,
+> +	OPE_DISP_PADS_NUM,
+> +};
+> +
+> +/* per-context state */
+> +struct ope_ctx {
+> +	bool			queued;
+> +	struct ope_dev		*ope;
+> +	struct mutex		vbq_lock;
+> +	struct ope_queue	queues[OPE_QUEUE_COUNT];
+> +
+> +	unsigned int		framerate;
+> +	struct ope_fmt_state	fmt_in;
+> +	struct ope_fmt_state	fmt_out;
+> +
+> +	struct list_head	list;
+> +	bool			started;
+> +	bool			first_start;
+> +
+> +	struct ope_config	config;
+> +	u8			current_stripe;
+> +	struct ope_stripe	stripe[OPE_MAX_STRIPE];
+> +
+> +	struct v4l2_isp_params_buffer *params_buf;
+> +};
+> +
+> +/* Per OPE device state */
+> +struct ope_dev {
+> +	struct device		*dev;
+> +	struct v4l2_device	v4l2_dev;
+> +	struct media_device	mdev;
+> +	struct camss_isp_pipeline *pipeline;
+> +	struct mutex		mutex;
+> +	struct work_struct	run_work;
+> +	struct ope_ctx		*curr_ctx;
+> +	struct ope_ctx		*prev_ctx;
+> +	spinlock_t		sched_lock;
+> +	int			irq;
+> +	u32			hw_version;
+> +
+> +	struct icc_path		*icc_data;
+> +	struct icc_path		*icc_config;
+> +
+> +	void __iomem		*base;
+> +	void __iomem		*base_rd;
+> +	void __iomem		*base_wr;
+> +	void __iomem		*base_pp;
+> +
+> +	struct completion	reset_complete;
+> +
+> +	struct list_head	ctx_list;
+> +	spinlock_t		ctx_lock;
+> +	struct ope_ctx		*shared_ctx;
+> +	unsigned int		open_count;
+> +
+> +	/* Currently active hardware context (set at job start) */
+> +	struct ope_ctx		*hw_ctx;
+> +
+> +	/* Gamma LUTs handling */
+> +	struct {
+> +		struct ope_ctx	*owner;
+> +		bool		valid;
+> +	} glut_bank[2];
+> +	u8			glut_cur_bank;
+> +	u8			glut_mru_bank;
+> +};
+> +
+> +/* -------- Register accessors -------- */
+> +
+> +static inline u32 ope_read(struct ope_dev *ope, u32 reg)
+> +{
+> +	return readl(ope->base + reg);
+> +}
+> +
+> +static inline void ope_write(struct ope_dev *ope, u32 reg, u32 val)
+> +{
+> +	writel(val, ope->base + reg);
+> +}
+> +
+> +static inline void ope_write_wr(struct ope_dev *ope, u32 reg, u32 val)
+> +{
+> +	writel_relaxed(val, ope->base_wr + reg);
+> +}
+> +
+> +static inline u32 ope_read_wr(struct ope_dev *ope, u32 reg)
+> +{
+> +	return readl_relaxed(ope->base_wr + reg);
+> +}
+> +
+> +static inline void ope_write_rd(struct ope_dev *ope, u32 reg, u32 val)
+> +{
+> +	writel_relaxed(val, ope->base_rd + reg);
+> +}
+> +
+> +static inline void ope_write_pp(struct ope_dev *ope, u32 reg, u32 val)
+> +{
+> +	writel_relaxed(val, ope->base_pp + reg);
+> +}
+> +
+> +static inline u32 ope_read_pp(struct ope_dev *ope, u32 reg)
+> +{
+> +	return readl_relaxed(ope->base_pp + reg);
+> +}
+> +
+> +static inline void ope_start(struct ope_dev *ope)
+> +{
+> +	wmb(); /* ensure all register writes are visible before GO_CMD */
+> +	ope_write_rd(ope, OPE_BUS_RD_INPUT_IF_CMD, OPE_BUS_RD_INPUT_IF_CMD_GO_CMD);
+> +}
+> +
+> +static inline bool ope_hw_available(struct ope_dev *ope)
+> +{
+> +	/* v4l2_device_unregister() clear the dev pointer */
+> +	return !!ope->v4l2_dev.dev;
+> +}
+> +
+> +/* -------- Stripe helpers -------- */
+> +
+> +static inline enum ope_stripe_location ope_stripe_location(unsigned int idx, unsigned int count)
+> +{
+> +	if (count == 1)
+> +		return OPE_STRIPE_LOCATION_FULL;
+> +	if (idx == 0)
+> +		return OPE_STRIPE_LOCATION_LEFT;
+> +	if (idx == count - 1)
+> +		return OPE_STRIPE_LOCATION_RIGHT;
+> +
+> +	return OPE_STRIPE_LOCATION_MIDDLE;
+> +}
+> +
+> +static inline bool ope_stripe_is_last(const struct ope_stripe *s)
+> +{
+> +	return s && (s->src.location == OPE_STRIPE_LOCATION_RIGHT ||
+> +		     s->src.location == OPE_STRIPE_LOCATION_FULL);
+> +}
+> +
+> +static inline struct ope_stripe *ope_current_stripe(struct ope_ctx *ctx)
+> +{
+> +	if (ctx->current_stripe >= OPE_MAX_STRIPE)
+> +		return NULL;
+> +
+> +	return &ctx->stripe[ctx->current_stripe];
+> +}
+> +
+> +static inline unsigned int ope_stripe_index(struct ope_ctx *ctx, const struct ope_stripe *stripe)
+> +{
+> +	return stripe - &ctx->stripe[0];
+> +}
+> +
+> +static inline struct ope_stripe *ope_prev_stripe(struct ope_ctx *ctx, struct ope_stripe *stripe)
+> +{
+> +	unsigned int idx = ope_stripe_index(ctx, stripe);
+> +
+> +	return idx ? &ctx->stripe[idx - 1] : NULL;
+> +}
+> +
+> +
+> +static inline unsigned int ope_last_stripe_width(unsigned int src_width, unsigned int nstripes)
+> +{
+> +	unsigned int last_sw = src_width - (nstripes - 1) * OPE_STRIPE_MAX_W;
+> +
+> +	if (last_sw < OPE_STRIPE_MIN_W)
+> +		last_sw += OPE_STRIPE_MIN_W * 2;
+> +
+> +	return last_sw;
+> +}
+> +
+> +static unsigned int ope_calc_h_scale(unsigned int src, unsigned int dst,
+> +				     unsigned int nstripes, unsigned int c_hsub,
+> +				     unsigned int sw_align)
+> +{
+> +	unsigned int last_sw = ope_last_stripe_width(src, nstripes);
+> +	unsigned int denom;
+> +
+> +	if (src == dst)
+> +		return DS_Q21(src, src);
+> +
+> +	/* Find the smallest h_scale denominator >= dst such that the
+> +	 * last-stripe adjustment can satisfy both Y and C pixel counts.
+> +	 */
+> +	for (denom = dst; denom <= dst + 16 * nstripes; denom++) {
+> +		unsigned int hs = DS_Q21(src, denom);
+> +		unsigned int tw = (nstripes - 1) * DS_OUTPUT_PIX(OPE_STRIPE_MAX_W, 0, hs);
+> +		unsigned int tc = (nstripes - 1) * DS_OUTPUT_PIX(OPE_STRIPE_MAX_W / c_hsub, 0, hs);
+> +		unsigned int ry = dst - tw;
+> +		unsigned int rc = dst / c_hsub - tc;
+> +		unsigned int s_y = DIV_ROUND_UP((u64)ry * hs, Q21(1));
+> +		unsigned int s_c = DIV_ROUND_UP((u64)rc * hs, Q21(1)) * c_hsub;
+> +		unsigned int s = ALIGN(max(s_y, s_c), sw_align);
+> +
+> +		s = clamp(s, OPE_STRIPE_MIN_W, last_sw);
+> +		tw += DS_OUTPUT_PIX(s, 0, hs);
+> +		tc += DS_OUTPUT_PIX(s / c_hsub, 0, hs);
+> +
+> +		if (tw == dst && tc * c_hsub == dst)
+> +			return hs;
+> +	}
+> +
+> +	return DS_Q21(src, dst);
+> +}
+> +
+> +static unsigned int ope_calc_v_scale(unsigned int src, unsigned int dst)
+> +{
+> +	return DS_Q21(src, dst);
+> +}
+> +
+> +static void ope_gen_stripe_chroma_dsc(struct ope_ctx *ctx,
+> +				      struct ope_stripe *stripe)
+> +{
+> +	struct ope_dsc_config *dsc = &stripe->dsc[OPE_DS_C_PRE];
+> +	const struct ope_fmt *fmt = ctx->fmt_out.fmt;
+> +
+> +	dsc->input_width  = stripe->src.width;
+> +	dsc->input_height = stripe->src.height;
+> +
+> +	dsc->output_width  = dsc->input_width  / fmt->c_hsub;
+> +	dsc->output_height = dsc->input_height / fmt->c_vsub;
+> +
+> +	dsc->phase_step_h = DS_Q21(dsc->input_width, dsc->output_width);
+> +	dsc->phase_step_v = DS_Q21(dsc->input_height, dsc->output_height);
+> +}
+> +
+> +static void ope_gen_stripe_dsc(struct ope_ctx *ctx, struct ope_stripe *stripe,
+> +			       unsigned int h_scale, unsigned int v_scale)
+> +{
+> +	struct ope_dsc_config *dsc_c = &stripe->dsc[OPE_DS_C_DISP];
+> +	struct ope_dsc_config *dsc_y = &stripe->dsc[OPE_DS_Y_DISP];
+> +	unsigned int sw = stripe->src.width;
+> +	unsigned int sw_c = stripe->dsc[OPE_DS_C_PRE].output_width;
+> +
+> +	dsc_c->phase_step_h = dsc_y->phase_step_h = h_scale;
+> +	dsc_c->phase_step_v = dsc_y->phase_step_v = v_scale;
+> +
+> +	dsc_c->input_width  = stripe->dsc[OPE_DS_C_PRE].output_width;
+> +	dsc_c->input_height = stripe->dsc[OPE_DS_C_PRE].output_height;
+> +	dsc_y->input_width  = stripe->src.width;
+> +	dsc_y->input_height = stripe->src.height;
+> +
+> +	/* Clip the output so the WE always receives the expected count */
+> +	dsc_y->output_width  = DS_OUTPUT_PIX(sw, 0, h_scale);
+> +	dsc_y->output_height = DS_OUTPUT_PIX(stripe->src.height, 0, v_scale);
+> +	dsc_c->output_width  = DS_OUTPUT_PIX(sw_c, 0, h_scale);
+> +	dsc_c->output_height = DS_OUTPUT_PIX(stripe->dsc[OPE_DS_C_PRE].output_height, 0, v_scale);
+> +
+> +	dsc_y->output_width  = max_t(unsigned int, dsc_y->output_width, 1);
+> +	dsc_y->output_height = max_t(unsigned int, dsc_y->output_height, 1);
+> +	dsc_c->output_width  = max_t(unsigned int, dsc_c->output_width, 1);
+> +	dsc_c->output_height = max_t(unsigned int, dsc_c->output_height, 1);
+> +
+> +	dsc_y->crop_last_pixel = dsc_y->output_width  - 1;
+> +	dsc_y->crop_last_line  = dsc_y->output_height - 1;
+> +	dsc_c->crop_last_pixel = dsc_c->output_width  - 1;
+> +	dsc_c->crop_last_line  = dsc_c->output_height - 1;
+> +}
+> +
+> +static void ope_gen_stripe_yuv_dst(struct ope_ctx *ctx, struct ope_stripe *stripe,
+> +				   dma_addr_t dst, const struct v4l2_rect *compose)
+> +{
+> +	const struct ope_fmt_state *fo = &ctx->fmt_out;
+> +	const struct ope_hw_fmt *hw = ope_find_hw_fmt(fo->fmt->fourcc);
+> +	struct ope_stripe *prev = ope_prev_stripe(ctx, stripe);
+> +	unsigned int bpl = fo->bytesperline;
+> +	unsigned int img_h = fo->height;
+> +	unsigned int c_stride;
+> +	unsigned int x_init;
+> +	dma_addr_t base;
+> +
+> +	stripe->dst[OPE_WR_CLIENT_DISP_Y].enabled = true;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_C].enabled = true;
+> +
+> +	/* Y plane */
+> +	base = dst + compose->top * bpl;
+> +
+> +	if (prev)
+> +		x_init = prev->dst[OPE_WR_CLIENT_DISP_Y].x_init +
+> +			 prev->dst[OPE_WR_CLIENT_DISP_Y].width;
+> +	else
+> +		x_init = compose->left;
+> +
+> +	stripe->dst[OPE_WR_CLIENT_DISP_Y].addr   = base;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_Y].x_init = x_init;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_Y].width  = stripe->dsc[OPE_DS_Y_DISP].output_width;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_Y].height = stripe->dsc[OPE_DS_Y_DISP].output_height;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_Y].stride = bpl;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_Y].format = OPE_PACKER_FMT_PLAIN_8;
+> +
+> +	/* UV plane (appended to Y plane)*/
+> +	c_stride = bpl * 2 / fo->fmt->c_hsub;
+> +	base = dst + bpl * img_h + (compose->top / fo->fmt->c_vsub) * c_stride;
+> +
+> +	if (prev)
+> +		x_init = prev->dst[OPE_WR_CLIENT_DISP_C].x_init +
+> +			 prev->dst[OPE_WR_CLIENT_DISP_C].width;
+> +	else
+> +		x_init = compose->left * 2 / fo->fmt->c_hsub;
+> +
+> +	stripe->dst[OPE_WR_CLIENT_DISP_C].addr   = base;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_C].x_init = x_init;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_C].format = hw ? hw->packer : OPE_PACKER_FMT_PLAIN_8;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_C].width  = stripe->dsc[OPE_DS_C_DISP].output_width * 2;
+> +	stripe->dst[OPE_WR_CLIENT_DISP_C].height = stripe->dsc[OPE_DS_C_DISP].output_height;
+> +
+> +	switch (fo->fmt->fourcc) {
+> +	case V4L2_PIX_FMT_GREY:
+> +		stripe->dst[OPE_WR_CLIENT_DISP_C].enabled = false;
+> +		break;
+> +	default:
+> +		stripe->dst[OPE_WR_CLIENT_DISP_C].stride = c_stride;
+> +		break;
+> +	}
+> +}
+> +
+> +static void ope_gen_stripes(struct ope_ctx *ctx, dma_addr_t src, dma_addr_t dst)
+> +{
+> +	const struct ope_fmt_state *fi = &ctx->fmt_in;
+> +	const struct ope_hw_fmt *src_hw = ope_find_hw_fmt(fi->fmt->fourcc);
+> +	unsigned int num_stripes, width, x_out, x_out_c, i;
+> +	const struct ope_fmt_state *fo = &ctx->fmt_out;
+> +	unsigned int c_hsub = fo->fmt->c_hsub;
+> +	struct v4l2_subdev_state *sd_state;
+> +	const struct v4l2_rect *compose;
+> +	const struct v4l2_rect *crop;
+> +	struct v4l2_subdev *proc_sd;
+> +	unsigned int h_scale, v_scale;
+> +
+> +	proc_sd = camss_isp_pipeline_get_subdev(ctx->ope->pipeline, OPE_ENTITY_PROC);
+> +	sd_state = v4l2_subdev_lock_and_get_active_state(proc_sd);
+> +	crop = v4l2_subdev_state_get_crop(sd_state, OPE_PROC_PAD_SINK_IN);
+> +	compose = v4l2_subdev_state_get_compose(sd_state, OPE_PROC_PAD_SOURCE);
+> +
+> +	/* Advance source pointer to the crop origin */
+> +	src += crop->top * fi->bytesperline + crop->left * fi->fmt->depth / 8;
+> +	width = crop->width;
+> +	num_stripes = DIV_ROUND_UP(crop->width, OPE_STRIPE_MAX_W);
+> +	h_scale = ope_calc_h_scale(crop->width,  compose->width, num_stripes, c_hsub,
+> +				   max(2u, 1u << fi->fmt->align));
+> +	v_scale = ope_calc_v_scale(crop->height, compose->height);
+> +
+> +	x_out = x_out_c = 0;
+> +
+> +	for (i = 0; i < num_stripes; i++) {
+> +		struct ope_stripe *stripe = &ctx->stripe[i];
+> +
+> +		memset(stripe, 0, sizeof(*stripe));
+> +
+> +		stripe->src.addr = src;
+> +		stripe->src.width = width;
+> +		stripe->src.height = crop->height;
+> +		stripe->src.stride = fi->bytesperline;
+> +		stripe->src.location = ope_stripe_location(i, num_stripes);
+> +		stripe->src.pattern = src_hw ? src_hw->pattern : 0;
+> +		stripe->src.format = src_hw ? src_hw->unpacker : 0;
+> +
+> +		/* Ensure last stripe is wide enough */
+> +		if (width > OPE_STRIPE_MAX_W && width < OPE_STRIPE_MAX_W + OPE_STRIPE_MIN_W)
+> +			stripe->src.width -= OPE_STRIPE_MIN_W * 2;
+> +
+> +		v4l_bound_align_image(&stripe->src.width,
+> +				      OPE_STRIPE_MIN_W, OPE_STRIPE_MAX_W,
+> +				      fi->fmt->align,
+> +				      &stripe->src.height,
+> +				      OPE_STRIPE_MIN_H, OPE_STRIPE_MAX_H,
+> +				      OPE_ALIGN_H, 0);
+> +
+> +		width -= stripe->src.width;
+> +		src += stripe->src.width * fi->fmt->depth / 8;
+> +
+> +		/* Last-stripe adjustment: compute the minimum input width that
+> +		 * delivers exactly the remaining output pixels for Y and C.
+> +		 */
+> +		if (ope_stripe_is_last(stripe)) {
+> +			unsigned int rem_y = compose->width - x_out;
+> +			unsigned int rem_c = compose->width / c_hsub - x_out_c;
+> +			unsigned int s_y = DIV_ROUND_UP((u64)rem_y * h_scale, Q21(1));
+> +			unsigned int s_c = DIV_ROUND_UP((u64)rem_c * h_scale, Q21(1)) * c_hsub;
+> +			unsigned int s = ALIGN(max(s_y, s_c), max(2u, 1u << fi->fmt->align));
+> +
+> +			stripe->src.width = clamp(s, OPE_STRIPE_MIN_W, stripe->src.width);
+> +		}
+> +
+> +		ope_gen_stripe_chroma_dsc(ctx, stripe);
+> +		ope_gen_stripe_dsc(ctx, stripe, h_scale, v_scale);
+> +		ope_gen_stripe_yuv_dst(ctx, stripe, dst, compose);
+> +
+> +		x_out += stripe->dsc[OPE_DS_Y_DISP].output_width;
+> +		x_out_c += stripe->dsc[OPE_DS_C_DISP].output_width;
+> +
+> +		/* Width in bytes for the fetch engine */
+> +		stripe->src.width = stripe->src.width * fi->fmt->depth / 8;
+> +	}
+> +
+> +	v4l2_subdev_unlock_state(sd_state);
+> +}
+> +
+> +/* -------- Pipeline IQ module programming -------- */
+> +
+> +static bool ope_module_update(struct ope_ctx *ctx, u32 module_cfg_reg, u32 enable_mask,
+> +			      struct v4l2_isp_params_block_header *hdr, bool force)
+> +{
+> +	bool enable = !(hdr->flags & V4L2_ISP_PARAMS_FL_BLOCK_DISABLE);
+> +	bool dirty  = hdr->flags & CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY;
+> +
+> +	/* skip if neither forced (new context) nor dirty (updated params) */
+> +	if (!force && !dirty)
+> +		return false;
+> +
+> +	hdr->flags &= ~CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY;
+> +
+> +	ope_write_pp(ctx->ope, module_cfg_reg, enable ? enable_mask : 0);
+> +
+> +	/* If module is disabled, not need to update content */
+> +	if (!enable)
+> +		return false;
+> +
+> +	dev_dbg(ctx->ope->dev, "IQ module (%u) update (flags:0x%x)\n", hdr->type, hdr->flags);
+> +
+> +	return true;
+> +}
+> +
+> +static void ope_prog_wb(struct ope_ctx *ctx, bool force)
+> +{
+> +	struct camss_params_ope_wb_gain *wb = &ctx->config.wb_gain;
+> +	struct ope_dev *ope = ctx->ope;
+> +
+> +	if (!ope_module_update(ctx, OPE_PP_WB_GAIN_MODULE_CFG,
+> +			       OPE_PP_WB_GAIN_MODULE_CFG_EN,
+> +			       &wb->header, force))
+> +		return;
+> +
+> +	ope_write_pp(ope, OPE_PP_WB_GAIN_WB_CFG(0),
+> +		     FIELD_PREP(OPE_PP_WB_GAIN_WB_CFG_GAIN, wb->g_gain));
+> +	ope_write_pp(ope, OPE_PP_WB_GAIN_WB_CFG(1),
+> +		     FIELD_PREP(OPE_PP_WB_GAIN_WB_CFG_GAIN, wb->b_gain));
+> +	ope_write_pp(ope, OPE_PP_WB_GAIN_WB_CFG(2),
+> +		     FIELD_PREP(OPE_PP_WB_GAIN_WB_CFG_GAIN, wb->r_gain));
+> +	ope_write_pp(ope, OPE_PP_WB_GAIN_WB_SUB_CFG(0),
+> +		     FIELD_PREP(OPE_PP_WB_GAIN_WB_SUB_CFG_VAL, wb->g_sub));
+> +	ope_write_pp(ope, OPE_PP_WB_GAIN_WB_SUB_CFG(1),
+> +		     FIELD_PREP(OPE_PP_WB_GAIN_WB_SUB_CFG_VAL, wb->b_sub));
+> +	ope_write_pp(ope, OPE_PP_WB_GAIN_WB_SUB_CFG(2),
+> +		     FIELD_PREP(OPE_PP_WB_GAIN_WB_SUB_CFG_VAL, wb->r_sub));
+> +	ope_write_pp(ope, OPE_PP_WB_GAIN_WB_ADD_CFG(0),
+> +		     FIELD_PREP(OPE_PP_WB_GAIN_WB_ADD_CFG_VAL, wb->g_add));
+> +	ope_write_pp(ope, OPE_PP_WB_GAIN_WB_ADD_CFG(1),
+> +		     FIELD_PREP(OPE_PP_WB_GAIN_WB_ADD_CFG_VAL, wb->b_add));
+> +	ope_write_pp(ope, OPE_PP_WB_GAIN_WB_ADD_CFG(2),
+> +		     FIELD_PREP(OPE_PP_WB_GAIN_WB_ADD_CFG_VAL, wb->r_add));
+> +}
+> +
+> +static void ope_prog_bayer2rgb(struct ope_ctx *ctx, bool force)
+> +{
+> +	struct ope_params_demo *demo = &ctx->config.demo;
+> +	struct ope_dev *ope = ctx->ope;
+> +
+> +	if (!ope_module_update(ctx, OPE_PP_DEMO_MODULE_CFG,
+> +			       OPE_PP_DEMO_MODULE_CFG_EN |
+> +			       OPE_PP_DEMO_MODULE_CFG_DYN_G_CLAMP_EN |
+> +			       OPE_PP_DEMO_MODULE_CFG_DYN_RB_CLAMP_EN,
+> +			       &demo->header, force))
+> +		return;
+> +
+> +	ope_write_pp(ope, OPE_PP_DEMO_INTERP_COEFF_CFG,
+> +		     FIELD_PREP(OPE_PP_DEMO_INTERP_COEFF_CFG_LAMBDA_G,  demo->lambda_g) |
+> +		     FIELD_PREP(OPE_PP_DEMO_INTERP_COEFF_CFG_LAMBDA_RB, demo->lambda_rb));
+> +	ope_write_pp(ope, OPE_PP_DEMO_INTERP_CLASSIFIER_CFG_0,
+> +		     FIELD_PREP(OPE_PP_DEMO_INTERP_CLASSIFIER_CFG_0_AK, demo->a_k));
+> +	ope_write_pp(ope, OPE_PP_DEMO_INTERP_CLASSIFIER_CFG_1,
+> +		     FIELD_PREP(OPE_PP_DEMO_INTERP_CLASSIFIER_CFG_1_WK, demo->w_k));
+> +}
+> +
+> +static void ope_prog_rgb2yuv(struct ope_ctx *ctx, bool force)
+> +{
+> +	struct camss_params_ope_chroma_enhan *cc = &ctx->config.chroma_enhan;
+> +	struct ope_dev *ope = ctx->ope;
+> +
+> +	if (!ope_module_update(ctx, OPE_PP_CHROMA_ENHAN_MODULE_CFG,
+> +			       OPE_PP_CHROMA_ENHAN_MODULE_CFG_EN,
+> +			       &cc->header, force))
+> +		return;
+> +
+> +	ope_write_pp(ope, OPE_PP_CHROMA_ENHAN_LUMA_CFG_0,
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_LUMA_CFG_0_V0, cc->luma_v0) |
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_LUMA_CFG_0_V1, cc->luma_v1));
+> +	ope_write_pp(ope, OPE_PP_CHROMA_ENHAN_LUMA_CFG_1,
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_LUMA_CFG_1_K, cc->luma_k));
+> +	ope_write_pp(ope, OPE_PP_CHROMA_ENHAN_LUMA_CFG_2,
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_LUMA_CFG_2_V2, cc->luma_v2));
+> +	ope_write_pp(ope, OPE_PP_CHROMA_ENHAN_COEFF_A_CFG,
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_COEFF_A_CFG_AP, cc->coeff_ap) |
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_COEFF_A_CFG_AM, cc->coeff_am));
+> +	ope_write_pp(ope, OPE_PP_CHROMA_ENHAN_COEFF_B_CFG,
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_COEFF_B_CFG_BP, cc->coeff_bp) |
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_COEFF_B_CFG_BM, cc->coeff_bm));
+> +	ope_write_pp(ope, OPE_PP_CHROMA_ENHAN_COEFF_C_CFG,
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_COEFF_C_CFG_CP, cc->coeff_cp) |
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_COEFF_C_CFG_CM, cc->coeff_cm));
+> +	ope_write_pp(ope, OPE_PP_CHROMA_ENHAN_COEFF_D_CFG,
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_COEFF_D_CFG_DP, cc->coeff_dp) |
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_COEFF_D_CFG_DM, cc->coeff_dm));
+> +	ope_write_pp(ope, OPE_PP_CHROMA_ENHAN_CHROMA_CFG_0,
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_CHROMA_CFG_0_KCB, cc->kcb));
+> +	ope_write_pp(ope, OPE_PP_CHROMA_ENHAN_CHROMA_CFG_1,
+> +		     FIELD_PREP(OPE_PP_CHROMA_ENHAN_CHROMA_CFG_1_KCR, cc->kcr));
+> +}
+> +
+> +static void ope_prog_color_correct(struct ope_ctx *ctx, bool force)
+> +{
+> +	struct camss_params_ope_color_correct *cc = &ctx->config.color_correct;
+> +	struct ope_dev *ope = ctx->ope;
+> +
+> +	if (!ope_module_update(ctx, OPE_PP_CC_MODULE_CFG,
+> +			       OPE_PP_CC_MODULE_CFG_EN,
+> +			       &cc->header, force))
+> +		return;
+> +
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_A_CFG_0,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_A_CFG_0_A0, cc->a[0]) |
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_A_CFG_0_A1, cc->a[1]));
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_A_CFG_1,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_A_CFG_1_A2, cc->a[2]));
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_B_CFG_0,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_B_CFG_0_B0, cc->b[0]) |
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_B_CFG_0_B1, cc->b[1]));
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_B_CFG_1,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_B_CFG_1_B2, cc->b[2]));
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_C_CFG_0,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_C_CFG_0_C0, cc->c[0]) |
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_C_CFG_0_C1, cc->c[1]));
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_C_CFG_1,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_C_CFG_1_C2, cc->c[2]));
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_K_CFG_0,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_K_CFG_0_K0, cc->k[0]));
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_K_CFG_1,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_K_CFG_1_K1, cc->k[1]));
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_K_CFG_2,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_K_CFG_2_K2, cc->k[2]));
+> +	ope_write_pp(ope, OPE_PP_CC_COEFF_M_CFG,
+> +		     FIELD_PREP(OPE_PP_CC_COEFF_M_CFG_M, cc->qfactor));
+> +}
+> +
+> +static void ope_glut_load_lut(struct ope_dev *ope, enum ope_glut_sel ch,
+> +			      u8 bank, const u16 *lut)
+> +{
+> +	ope_write_pp(ope, OPE_PP_GLUT_DMI_LUT_BANK_CFG,
+> +		     FIELD_PREP(OPE_PP_GLUT_DMI_LUT_BANK_CFG_SEL, bank));
+> +	ope_write_pp(ope, OPE_PP_GLUT_DMI_LUT_CFG,
+> +		     FIELD_PREP(OPE_PP_GLUT_DMI_LUT_CFG_SEL, ch));
+> +	ope_write_pp(ope, OPE_PP_GLUT_DMI_CFG,
+> +		     OPE_PP_GLUT_DMI_CFG_AUTO_LOAD_EN |
+> +		     FIELD_PREP(OPE_PP_GLUT_DMI_CFG_ADDR, 0));
+> +	for (unsigned int i = 0; i < CAMSS_OPE_GAMMA_LUT_SIZE; i++)
+> +		ope_write_pp(ope, OPE_PP_GLUT_DMI_DATA, lut[i]);
+> +}
+> +
+> +static void ope_glut_upload(struct ope_ctx *ctx, u8 bank)
+> +{
+> +	struct camss_params_ope_gamma *gamma = &ctx->config.gamma;
+> +	struct ope_dev *ope = ctx->ope;
+> +
+> +	ope_glut_load_lut(ope, OPE_GLUT_SEL_R, bank, gamma->rlut);
+> +	ope_glut_load_lut(ope, OPE_GLUT_SEL_G, bank, gamma->glut);
+> +	ope_glut_load_lut(ope, OPE_GLUT_SEL_B, bank, gamma->blut);
+> +
+> +	ope_write_pp(ope, OPE_PP_GLUT_DMI_LUT_CFG,
+> +		     FIELD_PREP(OPE_PP_GLUT_DMI_LUT_CFG_SEL,
+> +				OPE_GLUT_SEL_NONE));
+> +
+> +	ope->glut_bank[bank].owner = ctx;
+> +	ope->glut_bank[bank].valid = true;
+> +}
+> +
+> +static bool ope_glut_bank_resident(struct ope_dev *ope, u8 bank,
+> +				    struct ope_ctx *ctx)
+> +{
+> +	return ope->glut_bank[bank].valid &&
+> +	       ope->glut_bank[bank].owner == ctx;
+> +}
+> +
+> +static void ope_prog_gamma(struct ope_ctx *ctx, bool force)
+> +{
+> +	struct camss_params_ope_gamma *gamma = &ctx->config.gamma;
+> +	bool enable = !(gamma->header.flags & V4L2_ISP_PARAMS_FL_BLOCK_DISABLE);
+> +	bool dirty = gamma->header.flags & CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY;
+> +	struct ope_dev *ope = ctx->ope;
+> +	u8 bank;
+> +
+> +	if (!force && !dirty)
+> +		return;
+> +
+> +	gamma->header.flags &= ~CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY;
+> +
+> +	if (!enable) {
+> +		ope_write_pp(ope, OPE_PP_GLUT_MODULE_CFG, 0);
+> +		return;
+> +	}
+> +
+> +	if (!dirty && ope_glut_bank_resident(ope, ope->glut_cur_bank, ctx)) {
+> +		/* Already active in the read bank: only (re)enable the module. */
+> +		bank = ope->glut_cur_bank;
+> +	} else if (!dirty && ope_glut_bank_resident(ope, !ope->glut_cur_bank, ctx)) {
+> +		/* Resident in the other bank: flip to it, no upload. */
+> +		bank = !ope->glut_cur_bank;
+> +	} else {
+> +		/* Dirty, or miss in both banks: upload into the LRU bank. */
+> +		bank = !ope->glut_mru_bank;
+> +		ope_glut_upload(ctx, bank);
+> +	}
+> +
+> +	ope->glut_mru_bank = bank;
+> +
+> +	dev_dbg(ope->dev,
+> +		"IQ module (%u) update (flags:0x%x) glut bank %u->%u)\n",
+> +		gamma->header.type, gamma->header.flags,
+> +		ope->glut_cur_bank, bank);
+> +
+> +	ope_write_pp(ope, OPE_PP_GLUT_MODULE_LUT_BANK_CFG,
+> +		     FIELD_PREP(OPE_PP_GLUT_MODULE_LUT_BANK_CFG_SEL, bank));
+> +	ope->glut_cur_bank = bank;
+> +
+> +	ope_write_pp(ope, OPE_PP_GLUT_MODULE_CFG, OPE_PP_GLUT_MODULE_CFG_EN);
+> +}
+> +
+> +static void ope_glut_cache_invalidate(struct ope_dev *ope)
+> +{
+> +	ope->glut_bank[0].valid = false;
+> +	ope->glut_bank[1].valid = false;
+> +	ope->glut_cur_bank = 0;
+> +	ope->glut_mru_bank = 0;
+> +}
+> +
+> +static void ope_prog_crop_rnd_clamp(struct ope_dev *ope, const struct ope_stripe *stripe)
+> +{
+> +	static const u32 crop_bases[] = {
+> +		OPE_PP_CROP_RND_CLAMP_Y_DISP_BASE,
+> +		OPE_PP_CROP_RND_CLAMP_C_DISP_BASE,
+> +	};
+> +	static const enum ope_downscaler ds_idx[] = {
+> +		OPE_DS_Y_DISP,
+> +		OPE_DS_C_DISP,
+> +	};
+> +
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(crop_bases); i++) {
+> +		const struct ope_dsc_config *dsc = &stripe->dsc[ds_idx[i]];
+> +		u32 cbase = crop_bases[i];
+> +
+> +		if (!dsc->output_width || !dsc->output_height) {
+> +			ope_write_pp(ope,  OPE_PP_CROP_RND_CLAMP_MODULE_CFG(cbase), 0);
+> +			continue;
+> +		}
+> +
+> +		ope_write_pp(ope, OPE_PP_CROP_RND_CLAMP_CROP_PIXEL_CFG(cbase),
+> +			     FIELD_PREP(OPE_PP_CROP_RND_CLAMP_CROP_FIRST, 0) |
+> +			     FIELD_PREP(OPE_PP_CROP_RND_CLAMP_CROP_LAST,
+> +					dsc->crop_last_pixel));
+> +		ope_write_pp(ope, OPE_PP_CROP_RND_CLAMP_CROP_LINE_CFG(cbase),
+> +			     FIELD_PREP(OPE_PP_CROP_RND_CLAMP_CROP_FIRST, 0) |
+> +			     FIELD_PREP(OPE_PP_CROP_RND_CLAMP_CROP_LAST, dsc->crop_last_line));
+> +		ope_write_pp(ope, OPE_PP_CROP_RND_CLAMP_MODULE_CFG(cbase),
+> +			     OPE_PP_CROP_RND_CLAMP_EN | OPE_PP_CROP_RND_CLAMP_CROP_EN);
+> +	}
+> +}
+> +
+> +static void ope_prog_stripe(struct ope_ctx *ctx, struct ope_stripe *stripe)
+> +{
+> +	struct ope_dev *ope = ctx->ope;
+> +
+> +	dev_dbg(ope->dev, "ctx=%p programming stripe %u\n",
+> +		ctx, (unsigned int)(stripe - ctx->stripe));
+> +
+> +	/* Fetch Engine */
+> +	ope_write_rd(ope, OPE_BUS_RD_CLIENT_0_UNPACK_CFG_0, stripe->src.format);
+> +	ope_write_rd(ope, OPE_BUS_RD_CLIENT_0_RD_BUFFER_SIZE,
+> +		     (stripe->src.width << 16) | stripe->src.height);
+> +	ope_write_rd(ope, OPE_BUS_RD_CLIENT_0_ADDR_IMAGE, stripe->src.addr);
+> +	ope_write_rd(ope, OPE_BUS_RD_CLIENT_0_RD_STRIDE, stripe->src.stride);
+> +	ope_write_rd(ope, OPE_BUS_RD_CLIENT_0_CCIF_META_DATA,
+> +		     FIELD_PREP(OPE_BUS_RD_CLIENT_0_CCIF_MD_PIX_PATTERN,
+> +				stripe->src.pattern));
+> +	ope_write_rd(ope, OPE_BUS_RD_CLIENT_0_CORE_CFG,
+> +		     OPE_BUS_RD_CLIENT_0_CORE_CFG_EN);
+> +
+> +	/* Write Engines */
+> +	for (int i = 0; i < OPE_WR_CLIENT_MAX; i++) {
+> +		if (!stripe->dst[i].enabled) {
+> +			ope_write_wr(ope, OPE_BUS_WR_CLIENT_CFG(i), 0);
+> +			continue;
+> +		}
+> +
+> +		ope_write_wr(ope, OPE_BUS_WR_CLIENT_ADDR_IMAGE(i),
+> +			     stripe->dst[i].addr);
+> +		ope_write_wr(ope, OPE_BUS_WR_CLIENT_IMAGE_CFG_0(i),
+> +			     (stripe->dst[i].height << 16) | stripe->dst[i].width);
+> +		ope_write_wr(ope, OPE_BUS_WR_CLIENT_IMAGE_CFG_1(i),
+> +			     stripe->dst[i].x_init);
+> +		ope_write_wr(ope, OPE_BUS_WR_CLIENT_IMAGE_CFG_2(i),
+> +			     stripe->dst[i].stride);
+> +		ope_write_wr(ope, OPE_BUS_WR_CLIENT_PACKER_CFG(i),
+> +			     stripe->dst[i].format);
+> +		ope_write_wr(ope, OPE_BUS_WR_CLIENT_CFG(i),
+> +			     OPE_BUS_WR_CLIENT_CFG_EN |
+> +			     OPE_BUS_WR_CLIENT_CFG_AUTORECOVER);
+> +	}
+> +
+> +	/* Downscalers */
+> +	for (int i = 0; i < OPE_DS_MAX; i++) {
+> +		struct ope_dsc_config *dsc = &stripe->dsc[i];
+> +		u32 base = ope_ds_base[i];
+> +		u32 cfg = 0;
+> +
+> +		if (dsc->input_width != dsc->output_width) {
+> +			dsc->phase_step_h |=
+> +				DS_RESOLUTION(dsc->input_width,
+> +					      dsc->output_width) << 30;
+> +			cfg |= OPE_PP_DOWNSCALE_MN_DS_CFG_H_SCALE_EN;
+> +		}
+> +		if (dsc->input_height != dsc->output_height) {
+> +			dsc->phase_step_v |=
+> +				DS_RESOLUTION(dsc->input_height,
+> +					      dsc->output_height) << 30;
+> +			cfg |= OPE_PP_DOWNSCALE_MN_DS_CFG_V_SCALE_EN;
+> +		}
+> +
+> +		ope_write_pp(ope, OPE_PP_DOWNSCALE_MN_DS_CFG(base), cfg);
+> +		ope_write_pp(ope, OPE_PP_DOWNSCALE_MN_DS_IMAGE_SIZE_CFG(base),
+> +			     ((dsc->input_width - 1) << 16) | (dsc->input_height - 1));
+> +		ope_write_pp(ope, OPE_PP_DOWNSCALE_MN_DS_MN_H_CFG(base),
+> +			     dsc->phase_step_h);
+> +		ope_write_pp(ope, OPE_PP_DOWNSCALE_MN_DS_MN_V_CFG(base),
+> +			     dsc->phase_step_v);
+> +		ope_write_pp(ope, OPE_PP_DOWNSCALE_MN_CFG(base),
+> +			     cfg ? OPE_PP_DOWNSCALE_MN_CFG_EN : 0);
+> +
+> +		dev_dbg(ope->dev, "DS[%d] cfg=0x%x in=%ux%u out=%ux%u\n",
+> +			i, cfg, dsc->input_width, dsc->input_height,
+> +			dsc->output_width, dsc->output_height);
+> +	}
+> +
+> +	ope_prog_crop_rnd_clamp(ope, stripe);
+> +}
+> +
+> +static void ope_params_apply_wb(void *priv, const union camss_isp_params_block *block)
+> +{
+> +	struct ope_ctx *ctx = priv;
+> +
+> +	if (!camss_isp_params_copy_block(&ctx->config.wb_gain, block, sizeof(ctx->config.wb_gain)))
+> +		return;
+> +
+> +	ctx->config.wb_gain.g_sub = block->wb_gain.g_sub >> 4;
+> +	ctx->config.wb_gain.b_sub = block->wb_gain.b_sub >> 4;
+> +	ctx->config.wb_gain.r_sub = block->wb_gain.r_sub >> 4;
+> +	ctx->config.wb_gain.g_add = block->wb_gain.g_add >> 4;
+> +	ctx->config.wb_gain.b_add = block->wb_gain.b_add >> 4;
+> +	ctx->config.wb_gain.r_add = block->wb_gain.r_add >> 4;
+> +}
+> +
+> +static void ope_params_apply_chroma_enhan(void *priv, const union camss_isp_params_block *block)
+> +{
+> +	struct ope_ctx *ctx = priv;
+> +
+> +	camss_isp_params_copy_block(&ctx->config.chroma_enhan, block,
+> +				    sizeof(ctx->config.chroma_enhan));
+> +}
+> +
+> +static void ope_params_apply_color_correct(void *priv, const union camss_isp_params_block *block)
+> +{
+> +	struct ope_ctx *ctx = priv;
+> +
+> +	camss_isp_params_copy_block(&ctx->config.color_correct, block,
+> +				    sizeof(ctx->config.color_correct));
+> +}
+> +
+> +static void ope_params_apply_gamma(void *priv, const union camss_isp_params_block *block)
+> +{
+> +	struct ope_ctx *ctx = priv;
+> +
+> +	camss_isp_params_copy_block(&ctx->config.gamma, block, sizeof(ctx->config.gamma));
+> +}
+> +
+> +static const struct v4l2_isp_params_block_type_info ope_params_type_info[] = {
+> +	[CAMSS_PARAMS_OPE_WB_GAIN]       = { sizeof(struct camss_params_ope_wb_gain) },
+> +	[CAMSS_PARAMS_OPE_CHROMA_ENHAN]  = { sizeof(struct camss_params_ope_chroma_enhan) },
+> +	[CAMSS_PARAMS_OPE_COLOR_CORRECT] = { sizeof(struct camss_params_ope_color_correct) },
+> +	[CAMSS_PARAMS_OPE_GAMMA]         = { sizeof(struct camss_params_ope_gamma) },
+> +};
+> +
+> +static const camss_isp_params_handler_fn ope_params_handlers[] = {
+> +	[CAMSS_PARAMS_OPE_WB_GAIN]       = ope_params_apply_wb,
+> +	[CAMSS_PARAMS_OPE_CHROMA_ENHAN]  = ope_params_apply_chroma_enhan,
+> +	[CAMSS_PARAMS_OPE_COLOR_CORRECT] = ope_params_apply_color_correct,
+> +	[CAMSS_PARAMS_OPE_GAMMA]         = ope_params_apply_gamma,
+> +};
+> +
+> +static struct vb2_v4l2_buffer *ope_queue_remove(struct ope_ctx *ctx,
+> +					 unsigned int idx)
+> +{
+> +	struct ope_queue *q = &ctx->queues[idx];
+> +	struct camss_isp_buf *buf;
+> +
+> +	scoped_guard(spinlock_irqsave, &q->rdy_spinlock) {
+> +		buf = list_first_entry_or_null(&q->rdy_queue, struct camss_isp_buf, list);
+> +		if (buf)
+> +			list_del(&buf->list);
+> +	}
+> +
+> +	return buf ? &buf->vb : NULL;
+> +}
+> +
+> +static struct vb2_v4l2_buffer *ope_queue_peek(struct ope_ctx *ctx,
+> +					       unsigned int idx)
+> +{
+> +	struct ope_queue *q = &ctx->queues[idx];
+> +	struct camss_isp_buf *buf;
+> +
+> +	scoped_guard(spinlock_irqsave, &q->rdy_spinlock)
+> +		buf = list_first_entry_or_null(&q->rdy_queue, struct camss_isp_buf, list);
+> +
+> +	return buf ? &buf->vb : NULL;
+> +}
+> +
+> +static void ope_queue_drain(struct ope_ctx *ctx, unsigned int idx,
+> +			    enum vb2_buffer_state state)
+> +{
+> +	struct vb2_v4l2_buffer *vbuf;
+> +
+> +	while ((vbuf = ope_queue_remove(ctx, idx)))
+> +		vb2_buffer_done(&vbuf->vb2_buf, state);
+> +}
+> +
+> +static int ope_apply_params(struct ope_ctx *ctx)
+> +{
+> +	struct vb2_v4l2_buffer *vbuf;
+> +
+> +	vbuf = ope_queue_peek(ctx, OPE_QUEUE_PARAMS);
+> +	if (!vbuf)
+> +		return 0;
+> +
+> +	return camss_isp_params_apply(ctx->ope->dev, &vbuf->vb2_buf,
+> +				      ctx->params_buf,
+> +				      ope_params_type_info,
+> +				      ope_params_handlers,
+> +				      ARRAY_SIZE(ope_params_handlers),
+> +				      ctx);
+> +}
+> +
+> +/* Default/initial tuning parameters */
+> +static const struct ope_config ope_default_config = {
+> +	.wb_gain = {
+> +		.header.type = CAMSS_PARAMS_OPE_WB_GAIN,
+> +		.header.flags = V4L2_ISP_PARAMS_FL_BLOCK_ENABLE |
+> +				CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY,
+> +		.g_gain = OPE_WB(1, 1),
+> +		.b_gain = OPE_WB(3, 2),
+> +		.r_gain = OPE_WB(3, 2),
+> +	},
+> +	.demo = {
+> +		.header.type = CAMSS_PARAMS_INTERNAL,
+> +		.header.flags = V4L2_ISP_PARAMS_FL_BLOCK_ENABLE |
+> +				CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY,
+> +		.lambda_rb = 0,
+> +		.lambda_g  = 128,
+> +		.a_k       = 128,
+> +		.w_k       = 102,
+> +	},
+> +	.chroma_enhan = { /* RGB -> YUV values from BT.601/Full-Range */
+> +		.header.type = CAMSS_PARAMS_OPE_CHROMA_ENHAN,
+> +		.header.flags = V4L2_ISP_PARAMS_FL_BLOCK_ENABLE |
+> +				CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY,
+> +		.luma_v0  = 0x04d, /* 0.299 */
+> +		.luma_v1  = 0x096, /* 0.587 */
+> +		.luma_v2  = 0x01d, /* 0.114 */
+> +		.luma_k   = 0,
+> +		.coeff_ap = 0x077, /* 0.464  */
+> +		.coeff_am = 0x070, /* 0.438  */
+> +		.coeff_bp = 0xfac, /* -0.329 */
+> +		.coeff_bm = 0xfc4, /* -0.234 */
+> +		.coeff_cp = 0x086, /* 0.524  */
+> +		.coeff_cm = 0x089, /* 0.535  */
+> +		.coeff_dp = 0xfff, /* -0.004 */
+> +		.coeff_dm = 0xfdf, /* -0.130 */
+> +		.kcb      = 128,
+> +		.kcr      = 128,
+> +	},
+> +	.color_correct = {
+> +		.header.type = CAMSS_PARAMS_OPE_COLOR_CORRECT,
+> +		.header.flags = V4L2_ISP_PARAMS_FL_BLOCK_DISABLE |
+> +				CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY,
+> +	},
+> +	.gamma = {
+> +		.header.type = CAMSS_PARAMS_OPE_GAMMA,
+> +		.header.flags = V4L2_ISP_PARAMS_FL_BLOCK_DISABLE |
+> +				CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY,
+> +	},
+> +};
+> +
+> +static void ope_try_schedule(struct ope_ctx *ctx);
+> +
+> +/* -------- Job scheduling -------- */
+> +static bool ope_job_ready(void *priv)
+> +{
+> +	struct ope_ctx *ctx = priv;
+> +
+> +	return ctx->started &&
+> +	       !list_empty(&ctx->queues[OPE_QUEUE_FRAME_IN].rdy_queue) &&
+> +	       !list_empty(&ctx->queues[OPE_QUEUE_DISP_OUT].rdy_queue);
+> +}
+> +
+> +static void ope_job_finish(struct ope_ctx *ctx, enum vb2_buffer_state state)
+> +{
+> +	struct vb2_v4l2_buffer *src, *dst, *params;
+> +	struct ope_dev *ope = ctx->ope;
+> +
+> +	src    = ope_queue_remove(ctx, OPE_QUEUE_FRAME_IN);
+> +	dst    = ope_queue_remove(ctx, OPE_QUEUE_DISP_OUT);
+> +	params = ope_queue_remove(ctx, OPE_QUEUE_PARAMS);
+> +
+> +	if (dst) {
+> +		dst->sequence = ctx->fmt_in.sequence++;
+> +		if (src)
+> +			dst->vb2_buf.timestamp = src->vb2_buf.timestamp;
+> +	}
+> +
+> +	if (dst)
+> +		vb2_buffer_done(&dst->vb2_buf, state);
+> +	if (src)
+> +		vb2_buffer_done(&src->vb2_buf, state);
+> +	if (params)
+> +		vb2_buffer_done(&params->vb2_buf, state);
+> +
+> +	scoped_guard(spinlock_irqsave, &ope->sched_lock) {
+> +		ope->hw_ctx = NULL;
+> +		ope->curr_ctx = NULL;
+> +		ctx->queued = false;
+> +
+> +		if (state != VB2_BUF_STATE_DONE)
+> +			ope->prev_ctx = NULL;
+> +	}
+> +
+> +	dev_dbg(ctx->ope->dev, "done ctx=%p state=%u\n", ctx, state);
+> +
+> +	ope_try_schedule(ctx);
+> +}
+> +
+> +static dma_addr_t ope_buf_dma_addr(struct ope_ctx *ctx, unsigned int queue_idx)
+> +{
+> +	struct vb2_v4l2_buffer *vbuf = ope_queue_peek(ctx, queue_idx);
+> +
+> +	if (!vbuf)
+> +		return 0;
+> +
+> +	return vb2_dma_contig_plane_dma_addr(&vbuf->vb2_buf, 0);
+> +}
+> +
+> +static void ope_run_job(void *priv, bool ctx_changed)
+> +{
+> +	struct ope_ctx *ctx = priv;
+> +	struct ope_dev *ope = ctx->ope;
+> +	dma_addr_t src, dst;
+> +
+> +	src = ope_buf_dma_addr(ctx, OPE_QUEUE_FRAME_IN);
+> +	dst = ope_buf_dma_addr(ctx, OPE_QUEUE_DISP_OUT);
+
+ope_hw_reset_sync() can schedule this function with !src && dst -> 
+ope_job_finish() runs with dst true.
+
+ope_sched_cancel() and ope_v4l2_unregister() call ope_hw_reset_sync();
+
+->
+
+ope_job_finish() will rescind the buffer with the hardware thinking it 
+still owns them ?
+
+You should proably do a OPE_TOP_RESET_CMD
+
+> +	if (!src || !dst) {
+> +		dev_warn(ope->dev, "Job cannot run, missing buffer\n");
+> +		ope_job_finish(ctx, VB2_BUF_STATE_ERROR);
+> +		return;
+> +	}
+> +
+> +	dev_dbg(ope->dev, "start ctx=%p->%p src=%pad dst=%pad\n",
+> +		ope->hw_ctx, ctx, &src, &dst);
+> +
+> +	if (ope_apply_params(ctx))
+> +		dev_warn_ratelimited(ope->dev, "Invalid parameters\n");
+> +
+> +	if (ctx->first_start) {
+> +		ctx_changed = true;
+> +		ctx->first_start = false;
+> +	}
+> +
+> +	ope_gen_stripes(ctx, src, dst);
+> +
+> +	ope_prog_wb(ctx, ctx_changed);
+> +	ope_prog_bayer2rgb(ctx, ctx_changed);
+> +	ope_prog_color_correct(ctx, ctx_changed);
+> +	ope_prog_gamma(ctx, ctx_changed);
+> +	ope_prog_rgb2yuv(ctx, ctx_changed);
+> +
+> +	ctx->current_stripe = 0;
+> +	ope->hw_ctx = ctx;
+> +	ope_prog_stripe(ctx, &ctx->stripe[0]);
+> +
+> +	ope_start(ope);
+> +}
+> +
+> +static int ope_hw_reset_sync(struct ope_dev *ope)
+> +{
+> +	reinit_completion(&ope->reset_complete);
+> +	ope_write(ope, OPE_TOP_RESET_CMD, OPE_TOP_RESET_CMD_SW);
+> +
+> +	if (!wait_for_completion_timeout(&ope->reset_complete,
+> +					 msecs_to_jiffies(OPE_RESET_TIMEOUT_MS)))
+> +		return -ETIMEDOUT;
+> +
+> +	return 0;
+> +}
+> +
+> +static void ope_sched_cancel(struct ope_ctx *ctx)
+> +{
+> +	struct ope_dev *ope = ctx->ope;
+> +	bool running;
+> +
+> +	disable_work_sync(&ope->run_work);
+> +
+> +	scoped_guard(spinlock_irqsave, &ope->sched_lock)
+> +		running = (ope->curr_ctx == ctx);
+> +
+> +	if (running && ope_hw_reset_sync(ope)) {
+> +		dev_err(ope->dev, "reset timeout during cancel\n");
+> +		synchronize_irq(ope->irq);
+> +		ope_job_finish(ctx, VB2_BUF_STATE_ERROR);
+> +	}
+> +
+> +	scoped_guard(spinlock_irqsave, &ope->sched_lock)
+> +		ctx->queued = false;
+> +}
+> +
+> +static void ope_sched_resume(struct ope_ctx *ctx)
+> +{
+> +	if (enable_work(&ctx->ope->run_work))
+> +		ope_try_schedule(ctx);
+> +}
+> +
+> +static void ope_run_work(struct work_struct *work)
+> +{
+> +	struct ope_dev *ope = container_of(work, struct ope_dev, run_work);
+> +	struct ope_ctx *ctx;
+> +	bool ctx_changed;
+> +
+> +	if (unlikely(!ope_hw_available(ope)))
+> +		return;
+> +
+> +	scoped_guard(spinlock_irqsave, &ope->sched_lock) {
+> +		ctx = ope->shared_ctx;
+
+shared_ctx is written holding ope->mutex but read holding sched_lock
+  > +		if (!ctx || !ctx->queued || ope->curr_ctx)
+> +			return;
+> +		if (!ope_job_ready(ctx))
+> +			return;
+> +		ctx_changed = (ope->prev_ctx != ctx);
+> +		ope->prev_ctx = ctx;
+> +		ope->curr_ctx = ctx;
+> +	}
+> +
+> +	ope_run_job(ctx, ctx_changed);
+> +}
+> +
+> +static void ope_try_schedule(struct ope_ctx *ctx)
+> +{
+> +	struct ope_dev *ope = ctx->ope;
+> +
+> +	if (!ope_job_ready(ctx))
+> +		return;
+> +
+> +	scoped_guard(spinlock_irqsave, &ope->sched_lock) {
+> +		if (ctx->queued || ope->curr_ctx)
+> +			return;
+> +		ctx->queued = true;
 
 
-The last blank line here is not needed. The rest looks fine though.
+> +	}
+> +
+> +	schedule_work(&ope->run_work);
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
+> +}
+> +
+> +/* -------- Interrupt handlers -------- */
+> +
+> +static void ope_fe_irq(struct ope_dev *ope)
+> +{
+> +	u32 status = readl_relaxed(ope->base_rd + OPE_BUS_RD_INPUT_IF_IRQ_STATUS);
+> +
+> +	writel_relaxed(status, ope->base_rd + OPE_BUS_RD_INPUT_IF_IRQ_CLEAR);
+> +	writel_relaxed(OPE_BUS_RD_INPUT_IF_IRQ_CMD_CLEAR,
+> +		       ope->base_rd + OPE_BUS_RD_INPUT_IF_IRQ_CMD);
+> +
+> +	if (status & OPE_BUS_RD_INPUT_IF_IRQ_STATUS_CCIF_VIOL)
+> +		dev_err_ratelimited(ope->dev, "FE: CCIF violation (status=0x%08x)\n", status);
+> +}
+> +
+> +static bool ope_we_irq(struct ope_dev *ope, struct ope_ctx *ctx)
+> +{
+> +	bool reset = false;
+> +	u32 status;
+> +
+> +	status = ope_read_wr(ope, OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0);
+> +	ope_write_wr(ope, OPE_BUS_WR_INPUT_IF_IRQ_CLEAR_0, status);
+> +	ope_write_wr(ope, OPE_BUS_WR_INPUT_IF_IRQ_CMD, OPE_BUS_WR_INPUT_IF_IRQ_CMD_CLEAR);
+> +
+> +	if (!ctx)
+> +		return false;
+> +
+> +	if (status & OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_CONS_VIOL) {
+> +		u32 viol = ope_read_wr(ope, OPE_BUS_WR_VIOLATION_STATUS);
+> +
+> +		dev_err_ratelimited(ope->dev, "constraint violation (clients=0x%x)\n", viol);
+> +		reset = true;
+> +	}
+> +
+> +	if (status & OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_IMG_SZ_VIOL) {
+> +		u32 viol = ope_read_wr(ope, OPE_BUS_WR_IMAGE_SIZE_VIOLATION_STATUS);
+> +
+> +		for (int i = 0; i < OPE_WR_CLIENT_MAX; i++) {
+> +			if (BIT(i) & viol)
+> +				dev_err_ratelimited(ope->dev, "WE%d: image size violation\n", i);
+> +		}
+> +		reset = true;
+> +	}
+> +
+> +	if (status & OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_VIOL) {
+> +		u32 viol = ope_read_wr(ope, OPE_BUS_WR_VIOLATION_STATUS);
+> +
+> +		dev_err_ratelimited(ope->dev, "fatal violation (status=0x%08x)\n", viol);
+> +		reset = true;
+> +	}
+> +
+> +	if (reset) {
+> +		ope_write(ctx->ope, OPE_TOP_RESET_CMD, OPE_TOP_RESET_CMD_SW);
+> +		return true;
+> +	}
+> +
+> +	if (status & OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_RUP_DONE) {
+> +		/* Register update done: program next stripe (double-buffered) */
+> +		struct ope_stripe *stripe = ope_current_stripe(ctx);
+> +
+> +		if (stripe && !ope_stripe_is_last(stripe))
+> +			ope_prog_stripe(ctx, stripe + 1);
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +
+> +static void __ope_irq_init(struct ope_dev *ope)
+> +{
+> +	ope_write(ope, OPE_TOP_IRQ_MASK,
+> +		  OPE_TOP_IRQ_STATUS_RST_DONE |
+> +		  OPE_TOP_IRQ_STATUS_WE |
+> +		  OPE_TOP_IRQ_STATUS_FE |
+> +		  OPE_TOP_IRQ_STATUS_VIOL |
+> +		  OPE_TOP_IRQ_STATUS_IDLE);
+> +	ope_write_wr(ope, OPE_BUS_WR_INPUT_IF_IRQ_MASK_0,
+> +		     OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_RUP_DONE |
+> +		     OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_CONS_VIOL |
+> +		     OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_VIOL |
+> +		     OPE_BUS_WR_INPUT_IF_IRQ_STATUS_0_IMG_SZ_VIOL);
+> +	/* The fetch engine only needs to report bus errors */
+> +	writel_relaxed(OPE_BUS_RD_INPUT_IF_IRQ_STATUS_CCIF_VIOL,
+> +		       ope->base_rd + OPE_BUS_RD_INPUT_IF_IRQ_MASK);
+> +}
+> +
+> +static irqreturn_t ope_irq(int irq, void *dev_id)
+> +{
+> +	struct ope_dev *ope = dev_id;
+> +	struct ope_ctx *ctx;
+> +	u32 status;
+> +
+> +	/*
+> +	 * hw_ctx is safe to read here without a lock: ope_run_job() sets it
+> +	 * before calling ope_start(), so the hardware cannot raise an IRQ
+> +	 * before hw_ctx is visible. ope_job_finish() clears it in IRQ context
+> +	 * here, so the clear is serialised with this read by the IRQ itself.
+> +	 */
+> +	ctx = ope->hw_ctx;
+> +
+> +	status = ope_read(ope, OPE_TOP_IRQ_STATUS);
+
+if (!status)
+	return IRQ_NONE;
+
+> +	ope_write(ope, OPE_TOP_IRQ_CLEAR, status);
+> +	ope_write(ope, OPE_TOP_IRQ_CMD, OPE_TOP_IRQ_CMD_CLEAR);
+> +
+> +	if (status & OPE_TOP_IRQ_STATUS_RST_DONE) {
+> +		dev_dbg(ope->dev, "reset done ctx=%p\n", ctx);
+> +		ope_glut_cache_invalidate(ope);
+> +		if (ctx)
+> +			ope_job_finish(ctx, VB2_BUF_STATE_ERROR);
+> +
+> +		complete(&ope->reset_complete);
+> +
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	if (status & OPE_TOP_IRQ_STATUS_VIOL)
+> +		dev_warn(ope->dev, "OPE violation: 0x%08x\n",
+> +			 ope_read(ope, OPE_TOP_VIOLATION_STATUS));
+> +
+> +	if (status & OPE_TOP_IRQ_STATUS_FE)
+> +		ope_fe_irq(ope);
+> +
+> +	if (status & OPE_TOP_IRQ_STATUS_WE) {
+> +		if (ope_we_irq(ope, ctx))
+> +			return IRQ_HANDLED;
+> +	}
+> +
+> +	if ((status & OPE_TOP_IRQ_STATUS_IDLE) && ctx) {
+> +		struct ope_stripe *stripe = ope_current_stripe(ctx);
+> +
+> +		dev_dbg(ope->dev, "stripe %u done ctx=%p\n", ctx->current_stripe, ctx);
+> +
+> +		if (unlikely(!stripe)) {
+> +			dev_err(ope->dev, "stripe index %u out of range\n", ctx->current_stripe);
+> +			ctx->current_stripe = 0;
+> +			ope_job_finish(ctx, VB2_BUF_STATE_ERROR);
+> +		} else if (ope_stripe_is_last(stripe)) {
+> +			ctx->current_stripe = 0;
+> +			ope_job_finish(ctx, VB2_BUF_STATE_DONE);
+> +		} else {
+> +			ctx->current_stripe++;
+> +			ope_start(ope);
+> +		}
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/* -------- vb2 queue private data -------- */
+> +
+> +struct ope_vq_priv {
+> +	struct ope_ctx		*ctx;
+> +	unsigned int		queue_idx;
+> +	struct video_device	*vdev;
+> +};
+> +
+> +static inline struct ope_ctx *ope_ctx_from_vq(struct vb2_queue *q)
+> +{
+> +	return ((struct ope_vq_priv *)vb2_get_drv_priv(q))->ctx;
+> +}
+> +
+> +static inline unsigned int ope_idx_from_vq(struct vb2_queue *q)
+> +{
+> +	return ((struct ope_vq_priv *)vb2_get_drv_priv(q))->queue_idx;
+> +}
+> +
+> +static inline struct video_device *ope_vdev_from_vq(struct vb2_queue *q)
+> +{
+> +	return ((struct ope_vq_priv *)vb2_get_drv_priv(q))->vdev;
+> +}
+> +
+> +/* -------- vb2 ops -------- */
+> +
+> +static int ope_queue_setup(struct vb2_queue *q, unsigned int *nbuffers,
+> +			   unsigned int *nplanes, unsigned int sizes[],
+> +			   struct device *alloc_devs[])
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_vq(q);
+> +	unsigned int idx = ope_idx_from_vq(q);
+> +	unsigned int size;
+> +
+> +	if (idx == OPE_QUEUE_FRAME_IN)
+> +		size = ctx->fmt_in.sizeimage ? ctx->fmt_in.sizeimage : PAGE_SIZE;
+> +	else if (idx == OPE_QUEUE_DISP_OUT)
+> +		size = ctx->fmt_out.sizeimage ? ctx->fmt_out.sizeimage : PAGE_SIZE;
+> +	else
+> +		size = v4l2_isp_buffer_size(CAMSS_PARAMS_OPE_MAX_PAYLOAD);
+> +
+> +	if (*nplanes) {
+> +		if (*nplanes != 1 || sizes[0] < size)
+> +			return -EINVAL;
+> +	} else {
+> +		*nplanes = 1;
+> +		sizes[0] = size;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_buf_prepare(struct vb2_buffer *vb)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_vq(vb->vb2_queue);
+> +	unsigned int idx = ope_idx_from_vq(vb->vb2_queue);
+> +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
+> +	unsigned int sizeimage;
+> +
+> +	if (idx == OPE_QUEUE_FRAME_IN)
+> +		sizeimage = ctx->fmt_in.sizeimage;
+> +	else if (idx == OPE_QUEUE_DISP_OUT)
+> +		sizeimage = ctx->fmt_out.sizeimage;
+> +	else
+> +		sizeimage = v4l2_isp_buffer_size(CAMSS_PARAMS_OPE_MAX_PAYLOAD);
+> +
+> +	if (V4L2_TYPE_IS_OUTPUT(vb->vb2_queue->type)) {
+> +		if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+> +			if (vbuf->field == V4L2_FIELD_ANY)
+> +				vbuf->field = V4L2_FIELD_NONE;
+> +			if (vbuf->field != V4L2_FIELD_NONE)
+> +				return -EINVAL;
+> +		}
+> +	}
+> +
+> +	if (vb2_plane_size(vb, 0) < sizeimage)
+> +		return -EINVAL;
+> +
+> +	if (V4L2_TYPE_IS_CAPTURE(vb->vb2_queue->type))
+> +		vb2_set_plane_payload(vb, 0, sizeimage);
+> +
+> +	return 0;
+> +}
+> +
+> +static void ope_buf_queue(struct vb2_buffer *vb)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_vq(vb->vb2_queue);
+> +	unsigned int idx = ope_idx_from_vq(vb->vb2_queue);
+> +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
+> +	struct ope_queue *q = &ctx->queues[idx];
+> +	struct camss_isp_buf *buf = container_of(vbuf, struct camss_isp_buf, vb);
+> +
+> +	guard(spinlock_irqsave)(&q->rdy_spinlock);
+> +	list_add_tail(&buf->list, &q->rdy_queue);
+> +
+> +	ope_try_schedule(ctx);
+> +}
+> +
+> +/* -------- Power scaling -------- */
+> +
+> +static inline unsigned long ope_pixclk(const struct ope_fmt_state *fs, unsigned int fps)
+> +{
+> +	return (unsigned long)fs->width * fs->height * fps;
+> +}
+> +
+> +static inline unsigned int ope_load_avg(const struct ope_fmt_state *fs, unsigned int fps)
+> +{
+> +	return mult_frac(ope_pixclk(fs, fps), fs->fmt->depth, 1000) / 8;
+> +}
+> +
+> +static inline unsigned int ope_load_peak(const struct ope_fmt_state *fs, unsigned int fps)
+> +{
+> +	return ope_load_avg(fs, fps) * 2;
+> +}
+> +
+> +static inline unsigned int ope_load_config(const struct ope_fmt_state *fs, unsigned int fps)
+> +{
+> +	unsigned int stripe_count = fs->width / OPE_STRIPE_MAX_W + 1;
+> +
+> +	/* In worst case we have ~50 32-bit registers to write */
+> +	return mult_frac(stripe_count * 50 * 4, fps, 1000);
+> +}
+> +
+> +static void ope_adjust_power(struct ope_dev *ope)
+> +{
+> +	unsigned int loadavg = 0, loadpeak = 0, loadconfig = 0;
+> +	unsigned long pixclk = 0;
+> +	struct dev_pm_opp *opp;
+> +	struct ope_ctx *ctx;
+> +	int ret;
+> +
+> +	if (unlikely(!ope_hw_available(ope)))
+> +		return;
+> +
+> +	scoped_guard(spinlock, &ope->ctx_lock) {
+> +		list_for_each_entry(ctx, &ope->ctx_list, list) {
+> +			unsigned int fps;
+> +
+> +			if (!ctx->started)
+> +				continue;
+> +
+> +			fps = ctx->framerate ? ctx->framerate : DEFAULT_FRAMERATE;
+> +
+> +			pixclk     += ope_pixclk(&ctx->fmt_in, fps);
+> +			loadavg    += ope_load_avg(&ctx->fmt_in,  fps);
+> +			loadavg    += ope_load_avg(&ctx->fmt_out, fps);
+> +			loadpeak   += ope_load_peak(&ctx->fmt_in,  fps);
+> +			loadpeak   += ope_load_peak(&ctx->fmt_out, fps);
+> +			loadconfig += ope_load_config(&ctx->fmt_in, fps);
+> +		}
+> +	}
+> +
+> +	/* 30% margin for overhead */
+> +	pixclk = mult_frac(pixclk, 13, 10);
+> +
+> +	dev_dbg(ope->dev, "adjust power: clk=%luHz avg=%uKBps peak=%uKBps cfg=%uKBps\n",
+> +		pixclk, loadavg, loadpeak, loadconfig);
+> +
+> +	opp = dev_pm_opp_find_freq_ceil(ope->dev, &pixclk);
+> +	if (IS_ERR(opp))
+> +		dev_warn(ope->dev, "Requested pixel clock %luHz exceeds hardware limit\n", pixclk);
+> +	else
+> +		dev_pm_opp_put(opp);
+> +
+> +	ret = dev_pm_opp_set_rate(ope->dev, pixclk);
+> +	if (ret)
+> +		dev_warn(ope->dev, "Failed to set OPP rate: %d\n", ret);
+> +
+> +	ret = icc_set_bw(ope->icc_data, loadavg, loadpeak);
+> +	if (ret)
+> +		dev_warn(ope->dev, "Failed to set data path BW: %d\n", ret);
+> +
+> +	ret = icc_set_bw(ope->icc_config, loadconfig, loadconfig * 5);
+> +	if (ret)
+> +		dev_warn(ope->dev, "Failed to set config path BW: %d\n", ret);
+> +}
+> +
+> +static int ope_start_streaming(struct vb2_queue *q, unsigned int count)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_vq(q);
+> +	struct video_device *vdev = ope_vdev_from_vq(q);
+> +	unsigned int idx = ope_idx_from_vq(q);
+> +	int ret;
+> +
+> +	dev_dbg(ctx->ope->dev, "streaming start ctx=%p queue=%u\n", ctx, idx);
+> +
+> +	if (!ope_hw_available(ctx->ope)) {
+> +		ret = -ENODEV;
+> +		goto err_drain;
+> +	}
+> +
+> +	ret = video_device_pipeline_alloc_start(vdev);
+> +	if (ret)
+> +		goto err_drain;
+> +
+> +	ret = pm_runtime_resume_and_get(ctx->ope->dev);
+> +	if (ret) {
+> +		dev_err(ctx->ope->dev, "resume failed (%d)\n", ret);
+> +		goto err_pipeline_stop;
+> +	}
+> +
+> +	if (idx == OPE_QUEUE_FRAME_IN) {
+> +		ctx->fmt_in.sequence = 0;
+> +		ctx->started = true;
+> +		ctx->first_start = true;
+> +		ope_adjust_power(ctx->ope);
+> +		__ope_irq_init(ctx->ope);
+> +	}
+> +
+> +	ope_try_schedule(ctx);
+> +
+> +	return 0;
+> +
+> +err_pipeline_stop:
+> +	video_device_pipeline_stop(vdev);
+> +err_drain:
+> +	ope_queue_drain(ctx, idx, VB2_BUF_STATE_QUEUED);
+> +	return ret;
+> +}
+> +
+> +static void ope_stop_streaming(struct vb2_queue *q)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_vq(q);
+> +	struct video_device *vdev = ope_vdev_from_vq(q);
+> +	unsigned int idx = ope_idx_from_vq(q);
+> +
+> +	dev_dbg(ctx->ope->dev, "streaming stop ctx=%p queue=%u\n", ctx, idx);
+> +
+> +	if (idx == OPE_QUEUE_FRAME_IN) {
+> +		ctx->started = false;
+> +		ope_adjust_power(ctx->ope);
+> +	}
+> +
+> +	/* Drain with the scheduler held off, so no job can pick up a buffer */
+> +	ope_sched_cancel(ctx);
+> +	ope_queue_drain(ctx, idx, VB2_BUF_STATE_ERROR);
+> +	ope_sched_resume(ctx);
+
+ope->hw_ctx = NULL;
+ope->curr_ctx = NULL;
+ctx->queued = false;
+ope->prev_ctx = NULL; ?
+
+> +
+> +	pm_runtime_put(ctx->ope->dev);
+> +
+> +	if (ope_hw_available(ctx->ope))
+> +		video_device_pipeline_stop(vdev);
+> +}
+> +
+> +static const struct vb2_ops ope_vb2_ops = {
+> +	.queue_setup     = ope_queue_setup,
+> +	.buf_prepare     = ope_buf_prepare,
+> +	.buf_queue       = ope_buf_queue,
+> +	.start_streaming = ope_start_streaming,
+> +	.stop_streaming  = ope_stop_streaming,
+> +};
+> +
+> +static const unsigned int ope_queue_to_entity[] = {
+> +	[OPE_QUEUE_FRAME_IN] = OPE_ENTITY_FRAME_IN,
+> +	[OPE_QUEUE_DISP_OUT] = OPE_ENTITY_DISP_OUT,
+> +	[OPE_QUEUE_PARAMS]   = OPE_ENTITY_PARAMS,
+> +};
+> +
+> +static int ope_init_vq(struct ope_ctx *ctx, unsigned int idx)
+> +{
+> +	struct ope_dev *ope = ctx->ope;
+> +	struct ope_vq_priv *qpriv;
+> +	struct vb2_queue *q = &ctx->queues[idx].vq;
+> +	int ret;
+> +
+> +	qpriv = kzalloc_obj(*qpriv);
+> +	if (!qpriv)
+> +		return -ENOMEM;
+> +
+> +	qpriv->ctx = ctx;
+> +	qpriv->queue_idx = idx;
+> +	qpriv->vdev = camss_isp_pipeline_get_vdev(ope->pipeline, ope_queue_to_entity[idx]);
+> +	q->drv_priv = qpriv;
+> +	q->ops = &ope_vb2_ops;
+> +	q->lock = &ctx->vbq_lock;
+> +	q->dev = ope->dev;
+> +	q->buf_struct_size    = sizeof(struct camss_isp_buf);
+> +	q->timestamp_flags    = V4L2_BUF_FLAG_TIMESTAMP_COPY;
+> +	q->min_queued_buffers = (idx == OPE_QUEUE_PARAMS) ? 0 : 1;
+> +
+> +	if (idx == OPE_QUEUE_PARAMS) {
+> +		q->type = V4L2_BUF_TYPE_META_OUTPUT;
+> +		q->mem_ops = &vb2_vmalloc_memops;
+> +		q->io_modes = VB2_MMAP | VB2_USERPTR;
+> +	} else if (idx == OPE_QUEUE_DISP_OUT) {
+> +		q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+> +		q->mem_ops = &vb2_dma_contig_memops;
+> +		q->io_modes = VB2_MMAP | VB2_DMABUF;
+> +	} else {
+> +		q->type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+> +		q->mem_ops = &vb2_dma_contig_memops;
+> +		q->io_modes = VB2_MMAP | VB2_DMABUF;
+> +	}
+> +
+> +	ret = vb2_queue_init(q);
+> +	if (ret) {
+> +		q->drv_priv = NULL;
+> +		kfree(qpriv);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/* -------- Format helpers -------- */
+> +
+> +static const struct ope_fmt *ope_find_fmt(const struct ope_fmt *fmts,
+> +				  unsigned int n, u32 fourcc)
+> +{
+> +	for (unsigned int i = 0; i < n; i++)
+> +		if (fmts[i].fourcc == fourcc)
+> +			return &fmts[i];
+> +
+> +	return NULL;
+> +}
+> +
+> +static const struct ope_fmt *ope_fmt_try(struct ope_dev *ope, bool is_output,
+> +					 struct v4l2_pix_format_mplane *pix)
+> +{
+> +	const struct ope_fmt *fmts = is_output ? ope_output_fmts : ope_input_fmts;
+> +	unsigned int n = is_output ? ARRAY_SIZE(ope_output_fmts) : ARRAY_SIZE(ope_input_fmts);
+> +	unsigned int max_w = OPE_MAX_W, max_h = OPE_MAX_H;
+> +	const struct ope_fmt *fmt;
+> +	unsigned int bytesperline;
+> +	unsigned int align;
+> +
+> +	fmt = ope_find_fmt(fmts, n, pix->pixelformat);
+> +	if (!fmt) {
+> +		fmt = &fmts[0];
+> +		pix->pixelformat = fmt->fourcc;
+> +	}
+> +
+> +	v4l_bound_align_image(&pix->width,  OPE_MIN_W, max_w, fmt->align,
+> +			      &pix->height, OPE_MIN_H, max_h, 0, 0);
+> +
+> +	pix->num_planes = 1;
+> +	pix->field = V4L2_FIELD_NONE;
+> +	if (!pix->colorspace)
+> +		pix->colorspace = is_output ? V4L2_COLORSPACE_SRGB : V4L2_COLORSPACE_RAW;
+> +	if (is_output) {
+> +		pix->ycbcr_enc = V4L2_MAP_YCBCR_ENC_DEFAULT(pix->colorspace);
+> +		pix->quantization = V4L2_QUANTIZATION_FULL_RANGE;
+> +	}
+> +
+> +	/*
+> +	 * Output formats are semi-planar or grey-scale (Y plane only) always
+> +	 * using 1 byte per Y value. pix->bytesperline stores the Y-plane bpl.
+> +	 * Depth tracks the total storage size including the second combined
+> +	 * Cb + Cr plane which directly follows the Y plane and is used for
+> +	 * sizeimage calculations rather then for bytesperline.
+> +	 */
+> +	if (is_output)
+> +		bytesperline = pix->width;
+> +	else
+> +		bytesperline = pix->width * fmt->depth / 8;
+> +
+> +	if (pix->plane_fmt[0].bytesperline > bytesperline)
+> +		bytesperline = pix->plane_fmt[0].bytesperline;
+> +
+> +	/*
+> +	 * The WE requires the C plane base address to be 16-byte aligned.
+> +	 * c_base = bpl * img_h + (compose_top / c_vsub) * c_stride where
+> +	 * c_stride = bpl * 2 / c_hsub.  To guarantee alignment for any
+> +	 * compose_top, bpl must be a multiple of 16 / c_hsub:
+> +	 *   NV12/NV16 (c_hsub=2): bpl must be multiple of 8... but c_stride=bpl
+> +	 *   so we need bpl % 16 == 0.
+> +	 *   NV24/NV42 (c_hsub=1): c_stride=bpl*2, need bpl*2 % 16 == 0,
+> +	 *   so bpl must be a multiple of 8.
+> +	 *   GREY: no C plane, no constraint.
+> +	 */
+> +	if (is_output && fmt->fourcc != V4L2_PIX_FMT_GREY)
+> +		align = 8 * fmt->c_hsub;
+> +	else
+> +		align = 1;
+> +
+> +	bytesperline = min(bytesperline, ALIGN_DOWN(OPE_MAX_STRIDE, align));
+> +	bytesperline = ALIGN(bytesperline, align);
+> +
+> +	pix->plane_fmt[0].bytesperline = bytesperline;
+> +
+> +	if (is_output)
+> +		pix->plane_fmt[0].sizeimage = (u64)bytesperline * pix->height * fmt->depth / 8;
+> +	else
+> +		pix->plane_fmt[0].sizeimage = (u64)bytesperline * pix->height;
+> +
+> +	return fmt;
+> +}
+> +
+> +/* -------- ioctl helpers/ops -------- */
+> +
+> +static inline unsigned int ope_queue_idx_from_file(struct file *file)
+> +{
+> +	return (unsigned int)(uintptr_t)video_get_drvdata(video_devdata(file));
+> +}
+> +
+> +static struct vb2_queue *ope_vq_from_file(struct file *file, struct ope_ctx *ctx)
+> +{
+> +	unsigned int idx = ope_queue_idx_from_file(file);
+> +
+> +	if (idx >= OPE_QUEUE_COUNT)
+> +		return NULL;
+> +
+> +	return &ctx->queues[idx].vq;
+> +}
+> +
+> +static struct ope_ctx *ope_ctx_from_file(struct file *file)
+> +{
+> +	struct ope_dev *ope = container_of(video_devdata(file)->v4l2_dev,
+> +					   struct ope_dev, v4l2_dev);
+
+lockdep_assert_held(ope->mutex);
+
+> +	return ope->shared_ctx;
+> +}
+> +
+> +static int ope_querycap(struct file *file, void *priv, struct v4l2_capability *cap)
+> +{
+> +	strscpy(cap->driver, OPE_NAME, sizeof(cap->driver));
+> +	strscpy(cap->card, "Qualcomm CAMSS OPE", sizeof(cap->card));
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_enum_fmt_vid_out(struct file *file, void *priv, struct v4l2_fmtdesc *f)
+> +{
+> +	unsigned int i, n = 0;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ope_input_fmts); i++) {
+> +		if (f->mbus_code && ope_input_fmts[i].mbus_code != f->mbus_code)
+> +			continue;
+> +		if (n++ == f->index) {
+> +			f->pixelformat = ope_input_fmts[i].fourcc;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ope_g_fmt_vid_out(struct file *file, void *priv, struct v4l2_format *f)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct ope_fmt_state *fs = &ctx->fmt_in;
+> +	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
+> +
+> +	pix->pixelformat		= fs->fmt->fourcc;
+> +	pix->width			= fs->width;
+> +	pix->height			= fs->height;
+> +	pix->num_planes			= 1;
+> +	pix->field			= V4L2_FIELD_NONE;
+> +	pix->colorspace			= fs->colorspace;
+> +	pix->xfer_func			= fs->xfer_func;
+> +	pix->ycbcr_enc			= fs->ycbcr_enc;
+> +	pix->quantization		= fs->quantization;
+> +	pix->plane_fmt[0].bytesperline	= fs->bytesperline;
+> +	pix->plane_fmt[0].sizeimage	= fs->sizeimage;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_try_fmt_vid_out(struct file *file, void *priv, struct v4l2_format *f)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +
+> +	ope_fmt_try(ctx->ope, false, &f->fmt.pix_mp);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_s_fmt_vid_out(struct file *file, void *priv, struct v4l2_format *f)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	const struct ope_fmt *fmt;
+> +
+> +	if (vb2_is_busy(&ctx->queues[OPE_QUEUE_FRAME_IN].vq))
+> +		return -EBUSY;
+> +
+> +	fmt = ope_fmt_try(ctx->ope, false, &f->fmt.pix_mp);
+> +	ctx->fmt_in.fmt		    = fmt;
+> +	ctx->fmt_in.width	    = f->fmt.pix_mp.width;
+> +	ctx->fmt_in.height	    = f->fmt.pix_mp.height;
+> +	ctx->fmt_in.bytesperline    = f->fmt.pix_mp.plane_fmt[0].bytesperline;
+> +	ctx->fmt_in.sizeimage	    = f->fmt.pix_mp.plane_fmt[0].sizeimage;
+> +	ctx->fmt_in.colorspace	    = f->fmt.pix_mp.colorspace;
+> +	ctx->fmt_in.xfer_func	    = f->fmt.pix_mp.xfer_func;
+> +	ctx->fmt_in.ycbcr_enc	    = f->fmt.pix_mp.ycbcr_enc;
+> +	ctx->fmt_in.quantization    = f->fmt.pix_mp.quantization;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_enum_fmt_vid_cap(struct file *file, void *priv, struct v4l2_fmtdesc *f)
+> +{
+> +	unsigned int i, n = 0;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ope_output_fmts); i++) {
+> +		if (f->mbus_code && ope_output_fmts[i].mbus_code != f->mbus_code)
+> +			continue;
+> +		if (n++ == f->index) {
+> +			f->pixelformat = ope_output_fmts[i].fourcc;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ope_g_fmt_vid_cap(struct file *file, void *priv, struct v4l2_format *f)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct ope_fmt_state *fs = &ctx->fmt_out;
+> +	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
+> +
+> +	pix->pixelformat		= fs->fmt->fourcc;
+> +	pix->width			= fs->width;
+> +	pix->height			= fs->height;
+> +	pix->num_planes			= 1;
+> +	pix->field			= V4L2_FIELD_NONE;
+> +	pix->colorspace			= fs->colorspace;
+> +	pix->xfer_func			= fs->xfer_func;
+> +	pix->ycbcr_enc			= fs->ycbcr_enc;
+> +	pix->quantization		= fs->quantization;
+> +	pix->plane_fmt[0].bytesperline	= fs->bytesperline;
+> +	pix->plane_fmt[0].sizeimage	= fs->sizeimage;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_try_fmt_vid_cap(struct file *file, void *priv, struct v4l2_format *f)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +
+> +	ope_fmt_try(ctx->ope, true, &f->fmt.pix_mp);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_s_fmt_vid_cap(struct file *file, void *priv, struct v4l2_format *f)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	const struct ope_fmt *fmt;
+> +
+> +	if (vb2_is_busy(&ctx->queues[OPE_QUEUE_DISP_OUT].vq))
+> +		return -EBUSY;
+> +
+> +	fmt = ope_fmt_try(ctx->ope, true, &f->fmt.pix_mp);
+> +
+> +	ctx->fmt_out.fmt	    = fmt;
+> +	ctx->fmt_out.width	    = f->fmt.pix_mp.width;
+> +	ctx->fmt_out.height	    = f->fmt.pix_mp.height;
+> +	ctx->fmt_out.bytesperline   = f->fmt.pix_mp.plane_fmt[0].bytesperline;
+> +	ctx->fmt_out.sizeimage	    = f->fmt.pix_mp.plane_fmt[0].sizeimage;
+> +	ctx->fmt_out.colorspace	    = f->fmt.pix_mp.colorspace;
+> +	ctx->fmt_out.xfer_func	    = f->fmt.pix_mp.xfer_func;
+> +	ctx->fmt_out.ycbcr_enc	    = f->fmt.pix_mp.ycbcr_enc;
+> +	ctx->fmt_out.quantization   = f->fmt.pix_mp.quantization;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_g_fmt_meta(struct file *file, void *priv, struct v4l2_format *f)
+> +{
+> +	f->fmt.meta.dataformat = V4L2_META_FMT_QCOM_ISP_PARAMS;
+> +	f->fmt.meta.buffersize = v4l2_isp_buffer_size(CAMSS_PARAMS_OPE_MAX_PAYLOAD);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_enum_fmt_meta_out(struct file *file, void *priv, struct v4l2_fmtdesc *f)
+> +{
+> +	if (f->index > 0)
+> +		return -EINVAL;
+> +
+> +	f->pixelformat = V4L2_META_FMT_QCOM_ISP_PARAMS;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_g_parm(struct file *file, void *priv, struct v4l2_streamparm *sp)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +
+> +	if (!V4L2_TYPE_IS_OUTPUT(sp->type))
+> +		return -EINVAL;
+> +
+> +	sp->parm.output.capability = V4L2_CAP_TIMEPERFRAME;
+> +	sp->parm.output.timeperframe = ctx->fmt_in.timeperframe;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_s_parm(struct file *file, void *priv, struct v4l2_streamparm *sp)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct v4l2_fract *tpf = &sp->parm.output.timeperframe;
+> +
+> +	if (!V4L2_TYPE_IS_OUTPUT(sp->type))
+> +		return -EINVAL;
+> +
+> +	if (vb2_is_busy(&ctx->queues[OPE_QUEUE_FRAME_IN].vq))
+> +		return -EBUSY;
+> +
+> +	if (!tpf->denominator)
+> +		tpf->denominator = 1;
+> +	if (!tpf->numerator)
+> +		tpf->numerator = 1;
+> +
+> +	ctx->framerate = clamp(tpf->denominator / tpf->numerator, 1U, (u32)OPE_MAX_FRAMERATE);
+> +	tpf->numerator = 1;
+> +	tpf->denominator = ctx->framerate;
+> +
+> +	ctx->fmt_in.timeperframe = *tpf;
+> +	sp->parm.output.capability = V4L2_CAP_TIMEPERFRAME;
+> +
+> +	ope_adjust_power(ctx->ope);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_enum_framesizes(struct file *file, void *priv, struct v4l2_frmsizeenum *fsize)
+> +{
+> +	unsigned int idx = ope_queue_idx_from_file(file);
+> +	const struct ope_fmt *fmts;
+> +	unsigned int n;
+> +
+> +	if (idx == OPE_QUEUE_FRAME_IN) {
+> +		fmts = ope_input_fmts;
+> +		n = ARRAY_SIZE(ope_input_fmts);
+> +	} else {
+> +		fmts = ope_output_fmts;
+> +		n = ARRAY_SIZE(ope_output_fmts);
+> +	}
+> +
+> +	if (fsize->index > 0 || !ope_find_fmt(fmts, n, fsize->pixel_format))
+> +		return -EINVAL;
+> +
+> +	fsize->type = V4L2_FRMSIZE_TYPE_STEPWISE;
+> +	fsize->stepwise.min_width = OPE_MIN_W;
+> +	fsize->stepwise.max_width = OPE_MAX_W;
+> +	fsize->stepwise.step_width = 1;
+> +	fsize->stepwise.min_height = OPE_MIN_H;
+> +	fsize->stepwise.max_height = OPE_MAX_H;
+> +	fsize->stepwise.step_height = 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_reqbufs(struct file *file, void *priv, struct v4l2_requestbuffers *rb)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct vb2_queue *vq = ope_vq_from_file(file, ctx);
+> +	int ret;
+> +
+> +	if (!vq)
+> +		return -EINVAL;
+> +
+> +	if (vb2_queue_is_busy(vq, file))
+> +		return -EBUSY;
+> +
+> +	ret = vb2_reqbufs(vq, rb);
+> +	if (!ret)
+> +		vq->owner = rb->count ? file->private_data : NULL;
+> +
+> +	return ret;
+> +}
+> +
+> +static int ope_querybuf(struct file *file, void *priv, struct v4l2_buffer *buf)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct vb2_queue *vq = ope_vq_from_file(file, ctx);
+> +
+> +	return vq ? vb2_querybuf(vq, buf) : -EINVAL;
+> +}
+> +
+> +static int ope_qbuf(struct file *file, void *priv, struct v4l2_buffer *buf)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct video_device *vdev = video_devdata(file);
+> +	struct vb2_queue *vq = ope_vq_from_file(file, ctx);
+> +
+> +	if (!vq)
+> +		return -EINVAL;
+> +	if (vb2_queue_is_busy(vq, file))
+> +		return -EBUSY;
+> +
+> +	return vb2_qbuf(vq, vdev->v4l2_dev->mdev, buf);
+> +}
+> +
+> +static int ope_dqbuf(struct file *file, void *priv, struct v4l2_buffer *buf)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct vb2_queue *vq = ope_vq_from_file(file, ctx);
+> +
+> +	return vq ? vb2_dqbuf(vq, buf, file->f_flags & O_NONBLOCK) : -EINVAL;
+> +}
+> +
+> +static int ope_prepare_buf(struct file *file, void *priv, struct v4l2_buffer *buf)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct video_device *vdev = video_devdata(file);
+> +	struct vb2_queue *vq = ope_vq_from_file(file, ctx);
+> +
+> +	if (!vq)
+> +		return -EINVAL;
+> +	if (vb2_queue_is_busy(vq, file))
+> +		return -EBUSY;
+> +
+> +	return vb2_prepare_buf(vq, vdev->v4l2_dev->mdev, buf);
+> +}
+> +
+> +static int ope_create_bufs(struct file *file, void *priv, struct v4l2_create_buffers *create)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct vb2_queue *vq = ope_vq_from_file(file, ctx);
+> +	int ret;
+> +
+> +	if (!vq)
+> +		return -EINVAL;
+> +	if (vb2_queue_is_busy(vq, file))
+> +		return -EBUSY;
+> +	ret = vb2_create_bufs(vq, create);
+> +	if (!ret && create->count)
+> +		vq->owner = file->private_data;
+> +
+> +	return ret;
+> +}
+> +
+> +static int ope_expbuf(struct file *file, void *priv, struct v4l2_exportbuffer *eb)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct vb2_queue *vq = ope_vq_from_file(file, ctx);
+> +
+> +	if (!vq)
+> +		return -EINVAL;
+> +	if (vb2_queue_is_busy(vq, file))
+> +		return -EBUSY;
+> +
+> +	return vb2_expbuf(vq, eb);
+> +}
+> +
+> +static int ope_streamon(struct file *file, void *priv, enum v4l2_buf_type type)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct vb2_queue *vq = ope_vq_from_file(file, ctx);
+> +
+> +	if (!vq)
+> +		return -EINVAL;
+> +	if (vb2_queue_is_busy(vq, file))
+> +		return -EBUSY;
+> +
+> +	return vb2_streamon(vq, type);
+> +}
+> +
+> +static int ope_streamoff(struct file *file, void *priv, enum v4l2_buf_type type)
+> +{
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct vb2_queue *vq = ope_vq_from_file(file, ctx);
+> +
+> +	if (!vq)
+> +		return -EINVAL;
+> +
+> +	if (vb2_queue_is_busy(vq, file))
+> +		return -EBUSY;
+> +
+> +	return vb2_streamoff(vq, type);
+> +}
+> +
+> +/* -------- proc subdev ops -------- */
+> +
+> +static const struct v4l2_rect ope_sd_min_rect = {
+> +	.width = OPE_MIN_W,
+> +	.height = OPE_MIN_H,
+> +};
+> +
+> +static void ope_sd_adjust_crop_rect(struct v4l2_rect *crop, const struct v4l2_rect *bounds)
+> +{
+> +	v4l2_rect_set_min_size(crop, &ope_sd_min_rect);
+> +	v4l2_rect_map_inside(crop, bounds);
+> +}
+> +
+> +static void ope_sd_adjust_crop(struct v4l2_rect *crop, const struct v4l2_mbus_framefmt *bounds)
+> +{
+> +	struct v4l2_rect crop_bounds = {
+> +		.left = 0, .top = 0,
+> +		.width = bounds->width, .height = bounds->height,
+> +	};
+> +
+> +	ope_sd_adjust_crop_rect(crop, &crop_bounds);
+> +}
+> +
+> +static void ope_proc_set_src_fmt(struct v4l2_subdev_state *state,
+> +			 struct v4l2_mbus_framefmt *format)
+> +{
+> +	struct v4l2_mbus_framefmt *src_fmt;
+> +	const struct v4l2_rect *compose;
+> +
+> +	src_fmt = v4l2_subdev_state_get_format(state, OPE_PROC_PAD_SOURCE);
+> +	compose = v4l2_subdev_state_get_compose(state, OPE_PROC_PAD_SOURCE);
+> +
+> +	src_fmt->code = MEDIA_BUS_FMT_YUYV8_1_5X8;
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(ope_output_fmts); i++) {
+> +		if (ope_output_fmts[i].mbus_code == format->code) {
+> +			src_fmt->code = format->code;
+> +			break;
+> +		}
+> +	}
+> +
+> +	src_fmt->width      = compose->width;
+> +	src_fmt->height     = compose->height;
+> +	src_fmt->field      = V4L2_FIELD_NONE;
+> +	src_fmt->colorspace = V4L2_COLORSPACE_SRGB;
+> +	*format = *src_fmt;
+> +}
+> +
+> +static void ope_proc_set_src_compose(struct v4l2_subdev_state *state, struct v4l2_rect *r)
+> +{
+> +	struct v4l2_rect *compose = v4l2_subdev_state_get_compose(state, OPE_PROC_PAD_SOURCE);
+> +	struct v4l2_rect bounds;
+> +
+> +	const struct v4l2_rect *sink_crop =
+> +		v4l2_subdev_state_get_crop(state, OPE_PROC_PAD_SINK_IN);
+> +
+> +	bounds = (struct v4l2_rect){ 0, 0, sink_crop->width, sink_crop->height };
+> +	*compose = *r;
+> +	ope_sd_adjust_crop_rect(compose, &bounds);
+> +	*r = *compose;
+> +
+> +	/* Propagate to out format */
+> +	ope_proc_set_src_fmt(state, v4l2_subdev_state_get_format(state, OPE_PROC_PAD_SOURCE));
+> +}
+> +
+> +static void ope_proc_set_sink_crop(struct v4l2_subdev_state *state, struct v4l2_rect *r)
+> +{
+> +	struct v4l2_rect *crop;
+> +
+> +	crop = v4l2_subdev_state_get_crop(state, OPE_PROC_PAD_SINK_IN);
+> +
+> +	*crop = *r;
+> +	ope_sd_adjust_crop(crop, v4l2_subdev_state_get_format(state, OPE_PROC_PAD_SINK_IN));
+> +	*r = *crop;
+> +
+> +	/* Propagate to out format */
+> +	ope_proc_set_src_compose(state, v4l2_subdev_state_get_compose(state, OPE_PROC_PAD_SOURCE));
+> +}
+> +
+> +static void ope_proc_set_sink_fmt(struct v4l2_subdev_state *state,
+> +				  struct v4l2_mbus_framefmt *format)
+> +{
+> +	struct v4l2_mbus_framefmt *sink_fmt;
+> +	struct v4l2_rect *crop;
+> +
+> +	sink_fmt = v4l2_subdev_state_get_format(state, OPE_PROC_PAD_SINK_IN);
+> +	crop = v4l2_subdev_state_get_crop(state, OPE_PROC_PAD_SINK_IN);
+> +
+> +	sink_fmt->code = ope_input_fmts[0].mbus_code;
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(ope_input_fmts); i++) {
+> +		if (ope_input_fmts[i].mbus_code == format->code) {
+> +			sink_fmt->code = format->code;
+> +			break;
+> +		}
+> +	}
+> +
+> +	sink_fmt->width = clamp(format->width,  (u32)OPE_MIN_W, (u32)OPE_MAX_W);
+> +	sink_fmt->height = clamp(format->height, (u32)OPE_MIN_H, (u32)OPE_MAX_H);
+> +	sink_fmt->field = V4L2_FIELD_NONE;
+> +	sink_fmt->colorspace = V4L2_COLORSPACE_RAW;
+> +	*format = *sink_fmt;
+> +
+> +	/* Propagate to in crop */
+> +	ope_proc_set_sink_crop(state, crop);
+> +}
+> +
+> +static int ope_proc_init_state(struct v4l2_subdev *sd,
+> +			       struct v4l2_subdev_state *state)
+> +{
+> +	struct v4l2_mbus_framefmt fmt = {
+> +		.width  = OPE_MIN_W,
+> +		.height = OPE_MIN_H,
+> +		.code   = MEDIA_BUS_FMT_SRGGB8_1X8,
+> +	};
+> +
+> +	/* Params sink: fixed format, width carries the payload size in bytes */
+> +	*v4l2_subdev_state_get_format(state, OPE_PROC_PAD_SINK_PAR) =
+> +		(struct v4l2_mbus_framefmt){
+> +			.code       = MEDIA_BUS_FMT_FIXED,
+> +			.width      = v4l2_isp_buffer_size(CAMSS_PARAMS_OPE_MAX_PAYLOAD),
+> +			.height     = 1,
+> +			.field      = V4L2_FIELD_NONE,
+> +			.colorspace = V4L2_COLORSPACE_DEFAULT,
+> +		};
+> +
+> +	/* Initialise source compose default before cascade */
+> +	*v4l2_subdev_state_get_compose(state, OPE_PROC_PAD_SOURCE) =
+> +		(struct v4l2_rect){ 0, 0, OPE_MIN_W, OPE_MIN_H };
+> +	v4l2_subdev_state_get_format(state, OPE_PROC_PAD_SOURCE)->code =
+> +		MEDIA_BUS_FMT_YUYV8_1_5X8;
+> +
+> +	/* Drive the full cascade from sink-in fmt */
+> +	ope_proc_set_sink_fmt(state, &fmt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_proc_set_fmt(struct v4l2_subdev *sd,
+> +			    struct v4l2_subdev_state *state,
+> +			    struct v4l2_subdev_format *fmt)
+> +{
+> +	if (fmt->pad == OPE_PROC_PAD_SINK_PAR)
+> +		return v4l2_subdev_get_fmt(sd, state, fmt);
+> +
+> +	if (fmt->pad == OPE_PROC_PAD_SINK_IN) {
+> +		ope_proc_set_sink_fmt(state, &fmt->format);
+> +		return 0;
+> +	}
+> +
+> +	ope_proc_set_src_fmt(state, &fmt->format);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_proc_enum_mbus_code(struct v4l2_subdev *sd,
+> +				   struct v4l2_subdev_state *state,
+> +				   struct v4l2_subdev_mbus_code_enum *code)
+> +{
+> +	const struct ope_fmt *fmts;
+> +	unsigned int nfmts;
+> +	unsigned int n = 0;
+> +
+> +	if (code->pad == OPE_PROC_PAD_SINK_PAR) {
+> +		if (code->index)
+> +			return -EINVAL;
+> +		code->code = MEDIA_BUS_FMT_FIXED;
+> +		return 0;
+> +	}
+> +
+> +	if (code->pad == OPE_PROC_PAD_SOURCE) {
+> +		fmts  = ope_output_fmts;
+> +		nfmts = ARRAY_SIZE(ope_output_fmts);
+> +	} else {
+> +		fmts  = ope_input_fmts;
+> +		nfmts = ARRAY_SIZE(ope_input_fmts);
+> +	}
+> +
+> +	for (unsigned int i = 0; i < nfmts; i++) {
+> +		u32 mc = fmts[i].mbus_code;
+> +		bool seen = false;
+> +
+> +		for (unsigned int j = 0; j < i; j++) {
+> +			if (fmts[j].mbus_code == mc) {
+> +				seen = true;
+> +				break;
+> +			}
+> +		}
+> +		if (!seen && n++ == code->index) {
+> +			code->code = mc;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ope_proc_get_selection(struct v4l2_subdev *sd,
+> +				  struct v4l2_subdev_state *state,
+> +				  struct v4l2_subdev_selection *sel)
+> +{
+> +	if (sel->pad == OPE_PROC_PAD_SINK_IN) {
+> +		const struct v4l2_mbus_framefmt *sink_fmt =
+> +			v4l2_subdev_state_get_format(state, OPE_PROC_PAD_SINK_IN);
+> +
+> +		switch (sel->target) {
+> +		case V4L2_SEL_TGT_CROP:
+> +			sel->r = *v4l2_subdev_state_get_crop(state, OPE_PROC_PAD_SINK_IN);
+> +			return 0;
+> +		case V4L2_SEL_TGT_CROP_DEFAULT:
+> +		case V4L2_SEL_TGT_CROP_BOUNDS:
+> +			sel->r = (struct v4l2_rect){ 0, 0, sink_fmt->width, sink_fmt->height };
+> +			return 0;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	if (sel->pad == OPE_PROC_PAD_SOURCE) {
+> +		const struct v4l2_rect *crop =
+> +			v4l2_subdev_state_get_crop(state, OPE_PROC_PAD_SINK_IN);
+> +
+> +		switch (sel->target) {
+> +		case V4L2_SEL_TGT_COMPOSE:
+> +			sel->r = *v4l2_subdev_state_get_compose(state, OPE_PROC_PAD_SOURCE);
+> +			return 0;
+> +		case V4L2_SEL_TGT_COMPOSE_DEFAULT:
+> +		case V4L2_SEL_TGT_COMPOSE_BOUNDS:
+> +			sel->r = *crop;
+> +			return 0;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ope_proc_set_selection(struct v4l2_subdev *sd,
+> +				  struct v4l2_subdev_state *state,
+> +				  struct v4l2_subdev_selection *sel)
+> +{
+> +	if (sel->pad == OPE_PROC_PAD_SINK_IN) {
+> +		if (sel->target != V4L2_SEL_TGT_CROP)
+> +			return -EINVAL;
+> +		ope_proc_set_sink_crop(state, &sel->r);
+> +		return 0;
+> +	}
+> +
+> +	if (sel->pad == OPE_PROC_PAD_SOURCE) {
+> +		if (sel->target != V4L2_SEL_TGT_COMPOSE)
+> +			return -EINVAL;
+> +		ope_proc_set_src_compose(state, &sel->r);
+> +		return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct v4l2_subdev_pad_ops ope_proc_pad_ops = {
+> +	.get_fmt	= v4l2_subdev_get_fmt,
+> +	.set_fmt	= ope_proc_set_fmt,
+> +	.enum_mbus_code	= ope_proc_enum_mbus_code,
+> +	.get_selection	= ope_proc_get_selection,
+> +	.set_selection	= ope_proc_set_selection,
+> +};
+> +
+> +static const struct v4l2_subdev_internal_ops ope_proc_internal_ops = {
+> +	.init_state = ope_proc_init_state,
+> +};
+> +
+> +static const struct v4l2_subdev_ops ope_proc_ops = {
+> +	.pad = &ope_proc_pad_ops,
+> +};
+> +
+> +/* -------- disp subdev ops -------- */
+> +
+> +static int ope_disp_set_fmt(struct v4l2_subdev *sd,
+> +			    struct v4l2_subdev_state *state,
+> +			    struct v4l2_subdev_format *fmt)
+> +{
+> +	struct v4l2_mbus_framefmt *pad_fmt;
+> +	u32 code = fmt->format.code;
+> +
+> +	/* The disp subdev is pass-through: the source pad always mirrors the
+> +	 * sink pad, so source format is read-only and derived from the sink.
+> +	 */
+> +	if (fmt->pad == OPE_DISP_PAD_SOURCE)
+> +		return v4l2_subdev_get_fmt(sd, state, fmt);
+> +
+> +	fmt->format.code = MEDIA_BUS_FMT_YUYV8_1_5X8;
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(ope_output_fmts); i++) {
+> +		if (ope_output_fmts[i].mbus_code == code) {
+> +			fmt->format.code = code;
+> +			break;
+> +		}
+> +	}
+> +
+> +	v4l_bound_align_image(&fmt->format.width,  OPE_MIN_W, OPE_MAX_W, 0,
+> +			      &fmt->format.height, OPE_MIN_H, OPE_MAX_H, 0, 0);
+> +	fmt->format.field      = V4L2_FIELD_NONE;
+> +	fmt->format.colorspace = V4L2_COLORSPACE_SRGB;
+> +
+> +	pad_fmt  = v4l2_subdev_state_get_format(state, fmt->pad);
+> +	*pad_fmt = fmt->format;
+> +
+> +	/* Propagate to source */
+> +	*v4l2_subdev_state_get_format(state, OPE_DISP_PAD_SOURCE) = fmt->format;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_disp_init_state(struct v4l2_subdev *sd,
+> +			       struct v4l2_subdev_state *state)
+> +{
+> +	struct v4l2_mbus_framefmt def = {
+> +		.width      = OPE_MIN_W,
+> +		.height     = OPE_MIN_H,
+> +		.code       = MEDIA_BUS_FMT_YUYV8_1_5X8,
+> +		.field      = V4L2_FIELD_NONE,
+> +		.colorspace = V4L2_COLORSPACE_SRGB,
+> +	};
+> +
+> +	*v4l2_subdev_state_get_format(state, OPE_DISP_PAD_SINK)   = def;
+> +	*v4l2_subdev_state_get_format(state, OPE_DISP_PAD_SOURCE) = def;
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_subdev_pad_ops ope_disp_pad_ops = {
+> +	.get_fmt       = v4l2_subdev_get_fmt,
+> +	.set_fmt       = ope_disp_set_fmt,
+> +	.link_validate = v4l2_subdev_link_validate_default,
+> +};
+> +
+> +static const struct media_entity_operations ope_disp_entity_ops = {
+> +	.link_validate = v4l2_subdev_link_validate,
+> +};
+> +
+> +static const struct v4l2_subdev_internal_ops ope_disp_internal_ops = {
+> +	.init_state = ope_disp_init_state,
+> +};
+> +
+> +static const struct v4l2_subdev_ops ope_disp_ops = {
+> +	.pad = &ope_disp_pad_ops,
+> +};
+> +
+> +/* -------- disp-output video ops -------- */
+> +
+> +static int ope_disp_output_link_validate(struct media_link *link)
+> +{
+> +	struct video_device *vdev = media_entity_to_video_device(link->sink->entity);
+> +	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(link->source->entity);
+> +	struct ope_dev *ope = container_of(vdev->v4l2_dev, struct ope_dev, v4l2_dev);
+
+lockdep_assert_held(ope->mutex);
+
+> +	struct ope_ctx *ctx = ope->shared_ctx;
+> +	struct v4l2_subdev_state *sd_state;
+> +	struct v4l2_subdev_format sd_fmt = {
+> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+> +		.pad   = link->source->index,
+> +	};
+> +	int ret;
+> +
+> +	if (!ctx)
+> +		return 0;
+> +
+> +	sd_state = v4l2_subdev_lock_and_get_active_state(sd);
+> +	ret = v4l2_subdev_call(sd, pad, get_fmt, sd_state, &sd_fmt);
+> +	v4l2_subdev_unlock_state(sd_state);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (ctx->fmt_out.fmt->mbus_code != sd_fmt.format.code) {
+> +		dev_dbg(ctx->ope->dev, "link validate: mbus 0x%04x incompatible with %p4cc\n",
+> +			sd_fmt.format.code, &ctx->fmt_out.fmt->fourcc);
+> +		return -EPIPE;
+> +	}
+> +
+> +	if (sd_fmt.format.width > ctx->fmt_out.width ||
+> +	    sd_fmt.format.height > ctx->fmt_out.height) {
+> +		dev_dbg(ctx->ope->dev,
+> +			"link validate: compose %ux%u exceeds output buffer %ux%u\n",
+> +			sd_fmt.format.width, sd_fmt.format.height,
+> +			ctx->fmt_out.width, ctx->fmt_out.height);
+> +		return -EPIPE;
+> +	}
+> +
+> +	/* Check compose rect (including offset) fits within output buffer */
+> +	{
+> +		struct v4l2_subdev *proc_sd =
+> +			camss_isp_pipeline_get_subdev(ctx->ope->pipeline,
+> +						      OPE_ENTITY_PROC);
+> +		struct v4l2_subdev_state *proc_state =
+> +			v4l2_subdev_lock_and_get_active_state(proc_sd);
+> +		const struct v4l2_rect *compose =
+> +			v4l2_subdev_state_get_compose(proc_state,
+> +						      OPE_PROC_PAD_SOURCE);
+> +
+> +		if (compose->left + compose->width  > ctx->fmt_out.width ||
+> +		    compose->top  + compose->height > ctx->fmt_out.height) {
+> +			dev_dbg(ctx->ope->dev,
+> +				"link: compose %ux%u+%u+%u overflows output buffer %ux%u\n",
+> +				compose->width, compose->height,
+> +				compose->left, compose->top,
+> +				ctx->fmt_out.width, ctx->fmt_out.height);
+> +			v4l2_subdev_unlock_state(proc_state);
+> +			return -EPIPE;
+> +		}
+> +		v4l2_subdev_unlock_state(proc_state);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct media_entity_operations ope_disp_output_entity_ops = {
+> +	.link_validate = ope_disp_output_link_validate,
+> +};
+> +
+> +static int ope_input_link_validate(struct media_link *link)
+> +{
+> +	struct video_device *vdev = media_entity_to_video_device(link->source->entity);
+> +	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(link->sink->entity);
+> +	struct ope_dev *ope = container_of(vdev->v4l2_dev, struct ope_dev, v4l2_dev);
+
+lockdep_assert_held(ope->mutex);
+
+> +	struct ope_ctx *ctx = ope->shared_ctx;
+
+> +	struct v4l2_subdev_state *sd_state;
+> +	struct v4l2_subdev_format sd_fmt = {
+> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+> +		.pad   = link->sink->index,
+> +	};
+> +	int ret;
+> +
+> +	if (!ctx)
+> +		return 0;
+> +
+> +	sd_state = v4l2_subdev_lock_and_get_active_state(sd);
+> +	ret = v4l2_subdev_call(sd, pad, get_fmt, sd_state, &sd_fmt);
+> +	v4l2_subdev_unlock_state(sd_state);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (ctx->fmt_in.fmt->mbus_code != sd_fmt.format.code ||
+> +	    ctx->fmt_in.width != sd_fmt.format.width ||
+> +	    ctx->fmt_in.height != sd_fmt.format.height) {
+> +		dev_dbg(ctx->ope->dev,
+> +			"link validate: input %dx%d/0x%04x != pad %dx%d/0x%04x\n",
+> +			ctx->fmt_in.width, ctx->fmt_in.height,
+> +			ctx->fmt_in.fmt->mbus_code,
+> +			sd_fmt.format.width, sd_fmt.format.height,
+> +			sd_fmt.format.code);
+> +		return -EPIPE;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct media_entity_operations ope_input_entity_ops = {
+> +	.link_validate = ope_input_link_validate,
+> +};
+> +
+> +static const struct v4l2_ioctl_ops ope_video_ioctl_ops = {
+> +	.vidioc_querycap		= ope_querycap,
+> +	.vidioc_enum_fmt_vid_out	= ope_enum_fmt_vid_out,
+> +	.vidioc_g_fmt_vid_out_mplane	= ope_g_fmt_vid_out,
+> +	.vidioc_try_fmt_vid_out_mplane	= ope_try_fmt_vid_out,
+> +	.vidioc_s_fmt_vid_out_mplane	= ope_s_fmt_vid_out,
+> +	.vidioc_enum_fmt_vid_cap	= ope_enum_fmt_vid_cap,
+> +	.vidioc_g_fmt_vid_cap_mplane	= ope_g_fmt_vid_cap,
+> +	.vidioc_try_fmt_vid_cap_mplane	= ope_try_fmt_vid_cap,
+> +	.vidioc_s_fmt_vid_cap_mplane	= ope_s_fmt_vid_cap,
+> +	.vidioc_enum_framesizes		= ope_enum_framesizes,
+> +	.vidioc_g_parm			= ope_g_parm,
+> +	.vidioc_s_parm			= ope_s_parm,
+> +	.vidioc_reqbufs			= ope_reqbufs,
+> +	.vidioc_querybuf		= ope_querybuf,
+> +	.vidioc_qbuf			= ope_qbuf,
+> +	.vidioc_dqbuf			= ope_dqbuf,
+> +	.vidioc_prepare_buf		= ope_prepare_buf,
+> +	.vidioc_create_bufs		= ope_create_bufs,
+> +	.vidioc_expbuf			= ope_expbuf,
+> +	.vidioc_streamon		= ope_streamon,
+> +	.vidioc_streamoff		= ope_streamoff,
+> +	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
+> +	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
+> +};
+> +
+> +static const struct v4l2_ioctl_ops ope_meta_ioctl_ops = {
+> +	.vidioc_querycap		= ope_querycap,
+> +	.vidioc_enum_fmt_meta_out	= ope_enum_fmt_meta_out,
+> +	.vidioc_g_fmt_meta_out		= ope_g_fmt_meta,
+> +	.vidioc_s_fmt_meta_out		= ope_g_fmt_meta,
+> +	.vidioc_try_fmt_meta_out	= ope_g_fmt_meta,
+> +	.vidioc_reqbufs			= ope_reqbufs,
+> +	.vidioc_querybuf		= ope_querybuf,
+> +	.vidioc_qbuf			= ope_qbuf,
+> +	.vidioc_dqbuf			= ope_dqbuf,
+> +	.vidioc_prepare_buf		= ope_prepare_buf,
+> +	.vidioc_create_bufs		= ope_create_bufs,
+> +	.vidioc_expbuf			= ope_expbuf,
+> +	.vidioc_streamon		= ope_streamon,
+> +	.vidioc_streamoff		= ope_streamoff,
+> +};
+> +
+> +/* -------- File/Context ops -------- */
+> +
+> +static struct ope_ctx *ope_ctx_create(struct ope_dev *ope)
+> +{
+> +	struct v4l2_pix_format_mplane pix_in = { .pixelformat = ope_input_fmts[0].fourcc };
+> +	struct v4l2_pix_format_mplane pix_out = { .pixelformat = ope_output_fmts[0].fourcc };
+
+lockdep_assert_held(ope->mutex);
+
+> +	struct ope_ctx *ctx;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ctx = kvzalloc_obj(*ctx);
+> +	if (!ctx)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ctx->ope = ope;
+> +
+> +	mutex_init(&ctx->vbq_lock);
+> +
+> +	ctx->params_buf = kvzalloc(v4l2_isp_buffer_size(CAMSS_PARAMS_OPE_MAX_PAYLOAD),
+> +				   GFP_KERNEL);
+> +	if (!ctx->params_buf) {
+> +		ret = -ENOMEM;
+> +		goto err_destroy_lock;
+> +	}
+> +
+> +	ctx->config = ope_default_config;
+> +
+> +	ctx->fmt_in.fmt		 = ope_fmt_try(ope, false, &pix_in);
+> +	ctx->fmt_in.width	 = pix_in.width;
+> +	ctx->fmt_in.height	 = pix_in.height;
+> +	ctx->fmt_in.bytesperline = pix_in.plane_fmt[0].bytesperline;
+> +	ctx->fmt_in.sizeimage	 = pix_in.plane_fmt[0].sizeimage;
+> +	ctx->fmt_in.colorspace	 = pix_in.colorspace;
+> +	ctx->fmt_in.xfer_func	 = pix_in.xfer_func;
+> +	ctx->fmt_in.ycbcr_enc	 = pix_in.ycbcr_enc;
+> +	ctx->fmt_in.quantization = pix_in.quantization;
+> +	ctx->fmt_in.timeperframe.numerator = 1;
+> +	ctx->fmt_in.timeperframe.denominator = DEFAULT_FRAMERATE;
+> +
+> +	ctx->fmt_out.fmt	  = ope_fmt_try(ope, true, &pix_out);
+> +	ctx->fmt_out.width	  = pix_out.width;
+> +	ctx->fmt_out.height	  = pix_out.height;
+> +	ctx->fmt_out.bytesperline = pix_out.plane_fmt[0].bytesperline;
+> +	ctx->fmt_out.sizeimage	  = pix_out.plane_fmt[0].sizeimage;
+> +	ctx->fmt_out.colorspace	  = pix_out.colorspace;
+> +	ctx->fmt_out.xfer_func	  = pix_out.xfer_func;
+> +	ctx->fmt_out.ycbcr_enc	  = pix_out.ycbcr_enc;
+> +	ctx->fmt_out.quantization = pix_out.quantization;
+> +
+> +	for (i = 0; i < OPE_QUEUE_COUNT; i++) {
+> +		INIT_LIST_HEAD(&ctx->queues[i].rdy_queue);
+> +		spin_lock_init(&ctx->queues[i].rdy_spinlock);
+> +		ret = ope_init_vq(ctx, i);
+> +		if (ret)
+> +			goto err_release_vq;
+> +	}
+> +
+> +	INIT_LIST_HEAD(&ctx->list);
+> +
+> +	scoped_guard(spinlock, &ope->ctx_lock)
+> +		list_add(&ctx->list, &ope->ctx_list);
+> +
+> +	ope->shared_ctx = ctx;
+
+> +
+> +	return ctx;
+> +
+> +err_release_vq:
+> +	while (i--) {
+> +		vb2_queue_release(&ctx->queues[i].vq);
+> +		kfree(ctx->queues[i].vq.drv_priv);
+> +	}
+> +	kvfree(ctx->params_buf);
+> +err_destroy_lock:
+> +	mutex_destroy(&ctx->vbq_lock);
+> +	kvfree(ctx);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +static void ope_ctx_destroy(struct ope_ctx *ctx)
+> +{
+> +	ctx->started = false;
+> +
+> +	ope_sched_cancel(ctx);
+> +	for (unsigned int i = 0; i < OPE_QUEUE_COUNT; i++) {
+> +		vb2_queue_release(&ctx->queues[i].vq);
+> +		kfree(ctx->queues[i].vq.drv_priv);
+> +	}
+> +	ope_sched_resume(ctx);
+
+ope->hw_ctx = NULL;
+ope->curr_ctx = NULL;
+ctx->queued = false;
+ctx->prev_ctx = NULL;
+
+> +
+> +	/* Do not leave the LUT cache pointing at a context about to be freed */
+> +	ope_glut_cache_invalidate(ctx->ope);
+> +
+> +	kvfree(ctx->params_buf);
+> +	mutex_destroy(&ctx->vbq_lock);
+> +	kvfree(ctx);
+> +}
+> +
+> +static int ope_open(struct file *file)
+> +{
+> +	struct video_device *vdev = video_devdata(file);
+> +	struct ope_dev *ope = container_of(vdev->v4l2_dev, struct ope_dev, v4l2_dev);
+> +	struct v4l2_fh *fh;
+> +	int ret = 0;
+> +
+> +	fh = kzalloc_obj(*fh);
+> +	if (!fh)
+> +		return -ENOMEM;
+> +
+> +	if (mutex_lock_interruptible(&ope->mutex)) {
+> +		kfree(fh);
+> +		return -ERESTARTSYS;
+> +	}
+> +
+> +	v4l2_fh_init(fh, vdev);
+> +	v4l2_fh_add(fh, file);
+> +
+> +	/*
+> +	 * For now, only a single shared context is supported,
+> +	 * until media multi-context support is available.
+> +	 */
+> +	if (!ope->shared_ctx) {
+> +		struct ope_ctx *ctx = ope_ctx_create(ope);
+> +
+> +		if (IS_ERR(ctx)) {
+> +			ret = PTR_ERR(ctx);
+> +			goto err_fh_del;
+> +		}
+> +	}
+> +
+> +	ope->open_count++;
+> +	mutex_unlock(&ope->mutex);
+> +
+> +	return 0;
+> +
+> +err_fh_del:
+> +	v4l2_fh_del(fh, file);
+> +	v4l2_fh_exit(fh);
+> +	kfree(fh);
+> +	mutex_unlock(&ope->mutex);
+
+This is not in the same order as allocation/lock above.
+
+> +	return ret;
+> +}
+> +
+> +static int ope_release(struct file *file)
+> +{
+> +	struct v4l2_fh *fh = file_to_v4l2_fh(file);
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct ope_dev *ope = ctx->ope;
+> +
+> +	v4l2_fh_del(fh, file);
+> +	v4l2_fh_exit(fh);
+> +	kfree(fh);
+> +
+> +	scoped_guard(mutex, &ope->mutex) {
+> +		if (--ope->open_count != 0)
+> +			return 0;
+> +		ope->shared_ctx = NULL;
+> +		scoped_guard(spinlock, &ope->ctx_lock)
+> +			list_del(&ctx->list);
+> +	}
+> +
+> +	ope_ctx_destroy(ctx);
+> +
+> +	return 0;
+> +}
+> +
+> +static __poll_t ope_poll(struct file *file, poll_table *wait)
+> +{
+> +	unsigned int idx = ope_queue_idx_from_file(file);
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +	struct v4l2_fh *fh = file_to_v4l2_fh(file);
+> +	struct vb2_queue *vq;
+> +	unsigned long flags;
+> +	__poll_t rc = 0;
+> +
+> +	if (idx >= OPE_QUEUE_COUNT)
+> +		return EPOLLERR;
+> +
+> +	vq = &ctx->queues[idx].vq;
+> +
+> +	poll_wait(file, &vq->done_wq, wait);
+> +	poll_wait(file, &fh->wait, wait);
+> +
+> +	spin_lock_irqsave(&vq->done_lock, flags);
+> +	if (!list_empty(&vq->done_list)) {
+> +		if (V4L2_TYPE_IS_OUTPUT(vq->type))
+> +			rc |= EPOLLOUT | EPOLLWRNORM;
+> +		else
+> +			rc |= EPOLLIN | EPOLLRDNORM;
+> +	}
+> +	spin_unlock_irqrestore(&vq->done_lock, flags);
+> +
+> +	if (v4l2_event_pending(fh))
+> +		rc |= EPOLLPRI;
+> +
+> +	return rc;
+> +}
+> +
+> +static int ope_mmap(struct file *file, struct vm_area_struct *vma)
+> +{
+> +	unsigned int idx = ope_queue_idx_from_file(file);
+> +	struct ope_ctx *ctx = ope_ctx_from_file(file);
+> +
+> +	if (idx >= OPE_QUEUE_COUNT)
+> +		return -EINVAL;
+> +
+> +	return vb2_mmap(&ctx->queues[idx].vq, vma);
+> +}
+> +
+> +static const struct v4l2_file_operations ope_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= ope_open,
+> +	.release	= ope_release,
+> +	.poll		= ope_poll,
+> +	.unlocked_ioctl	= video_ioctl2,
+> +	.mmap		= ope_mmap,
+> +};
+> +
+> +/* Pipeline descriptor  */
+> +static const struct camss_isp_entity_desc ope_entity_descs[] = {
+> +	[OPE_ENTITY_FRAME_IN] = {
+> +		.name      = "ope_input",
+> +		.obj_type  = MEDIA_ENTITY_TYPE_VIDEO_DEVICE,
+> +		.function  = MEDIA_ENT_F_IO_V4L,
+> +		.vdev.caps = V4L2_CAP_VIDEO_OUTPUT_MPLANE | V4L2_CAP_STREAMING,
+> +		.vdev.drvdata = (void *)(uintptr_t)OPE_QUEUE_FRAME_IN,
+> +		.vdev.fops = &ope_fops,
+> +		.vdev.ioctl_ops = &ope_video_ioctl_ops,
+> +		.vdev.entity_ops = &ope_input_entity_ops,
+> +		.pads = (const struct camss_isp_pad_desc[]) {
+> +			{ MEDIA_PAD_FL_SOURCE, OPE_ENTITY_PROC, OPE_PROC_PAD_SINK_IN, 0 },
+> +			{ }
+> +		},
+> +	},
+> +	[OPE_ENTITY_DISP_OUT] = {
+> +		.name      = "ope_disp_output",
+> +		.obj_type  = MEDIA_ENTITY_TYPE_VIDEO_DEVICE,
+> +		.function  = MEDIA_ENT_F_IO_V4L,
+> +		.vdev.caps = V4L2_CAP_VIDEO_CAPTURE_MPLANE | V4L2_CAP_STREAMING,
+> +		.vdev.drvdata = (void *)(uintptr_t)OPE_QUEUE_DISP_OUT,
+> +		.vdev.fops = &ope_fops,
+> +		.vdev.ioctl_ops = &ope_video_ioctl_ops,
+> +		.vdev.entity_ops = &ope_disp_output_entity_ops,
+> +		.pads = (const struct camss_isp_pad_desc[]) {
+> +			{ MEDIA_PAD_FL_SINK, OPE_ENTITY_DISP, OPE_DISP_PAD_SOURCE, 0 },
+> +			{ }
+> +		},
+> +	},
+> +	[OPE_ENTITY_PARAMS] = {
+> +		.name      = "ope_params",
+> +		.obj_type  = MEDIA_ENTITY_TYPE_VIDEO_DEVICE,
+> +		.function  = MEDIA_ENT_F_IO_V4L,
+> +		.vdev.caps = V4L2_CAP_META_OUTPUT | V4L2_CAP_STREAMING,
+> +		.vdev.drvdata = (void *)(uintptr_t)OPE_QUEUE_PARAMS,
+> +		.vdev.fops = &ope_fops,
+> +		.vdev.ioctl_ops = &ope_meta_ioctl_ops,
+> +		.pads = (const struct camss_isp_pad_desc[]) {
+> +			{ MEDIA_PAD_FL_SOURCE, OPE_ENTITY_PROC, OPE_PROC_PAD_SINK_PAR, 0 },
+> +			{ }
+> +		},
+> +	},
+> +	[OPE_ENTITY_PROC] = {
+> +		.name       = "ope_proc",
+> +		.obj_type   = MEDIA_ENTITY_TYPE_V4L2_SUBDEV,
+> +		.function   = MEDIA_ENT_F_PROC_VIDEO_ISP,
+> +		.subdev.ops = &ope_proc_ops,
+> +		.subdev.internal_ops = &ope_proc_internal_ops,
+> +		.pads = (const struct camss_isp_pad_desc[]) {
+> +			{ MEDIA_PAD_FL_SINK,   OPE_ENTITY_FRAME_IN, 0, 0 },
+> +			{ MEDIA_PAD_FL_SINK,   OPE_ENTITY_PARAMS, 0, 0 },
+> +			{ MEDIA_PAD_FL_SOURCE, OPE_ENTITY_DISP, OPE_DISP_PAD_SINK,
+> +				MEDIA_LNK_FL_ENABLED },
+> +			{ }
+> +		},
+> +	},
+> +	[OPE_ENTITY_DISP] = {
+> +		.name     = "ope_disp",
+> +		.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV,
+> +		.function = MEDIA_ENT_F_PROC_VIDEO_SCALER,
+> +		.subdev.ops          = &ope_disp_ops,
+> +		.subdev.internal_ops = &ope_disp_internal_ops,
+> +		.subdev.entity_ops   = &ope_disp_entity_ops,
+> +		.pads = (const struct camss_isp_pad_desc[]) {
+> +			{ MEDIA_PAD_FL_SINK,   OPE_ENTITY_PROC, OPE_PROC_PAD_SOURCE, 0 },
+> +			{ MEDIA_PAD_FL_SOURCE, OPE_ENTITY_DISP_OUT, 0, 0 },
+> +			{ }
+> +		},
+> +	},
+> +};
+> +
+> +static void ope_v4l2_dev_release(struct v4l2_device *v4l2_dev)
+> +{
+> +	struct ope_dev *ope = container_of(v4l2_dev, struct ope_dev, v4l2_dev);
+> +
+> +	/* Reached once the V4L2 core has released every video and subdev node */
+> +	camss_isp_pipeline_free(ope->pipeline);
+> +	media_device_cleanup(&ope->mdev);
+> +	mutex_destroy(&ope->mutex);
+> +	kfree(ope);
+> +}
+> +
+> +static int ope_v4l2_register(struct ope_dev *ope)
+> +{
+> +	int ret;
+> +
+> +	ope->mdev.dev = ope->dev;
+> +	strscpy(ope->mdev.model, OPE_NAME, sizeof(ope->mdev.model));
+> +	ope->mdev.hw_revision = ope->hw_version;
+> +	media_device_init(&ope->mdev);
+> +	ope->v4l2_dev.mdev = &ope->mdev;
+> +	ope->v4l2_dev.release = ope_v4l2_dev_release;
+> +
+> +	ret = v4l2_device_register(ope->dev, &ope->v4l2_dev);
+> +	if (ret) {
+> +		/* No v4l2_device reference exists yet, so release @ope directly */
+> +		ope_v4l2_dev_release(&ope->v4l2_dev);
+> +		return ret;
+> +	}
+> +
+> +	ret = media_device_register(&ope->mdev);
+> +	if (ret)
+> +		goto err_v4l2;
+> +
+> +	ope->pipeline = camss_isp_pipeline_alloc(OPE_ENTITY_COUNT);
+> +	if (IS_ERR(ope->pipeline)) {
+> +		ret = PTR_ERR(ope->pipeline);
+> +		ope->pipeline = NULL;
+> +		goto err_media;
+> +	}
+> +
+> +	ret = camss_isp_pipeline_register(ope->pipeline, &ope->v4l2_dev, ope_entity_descs,
+> +					  ARRAY_SIZE(ope_entity_descs));
+> +	if (ret)
+> +		goto err_media;
+> +
+> +	ope->pipeline->drv_priv = ope;
+> +	return 0;
+> +
+> +err_media:
+> +	media_device_unregister(&ope->mdev);
+> +err_v4l2:
+> +	/* Rely on v4l2 dev release callback to free ope/resources */
+> +	v4l2_device_unregister(&ope->v4l2_dev);
+> +	v4l2_device_put(&ope->v4l2_dev);
+> +	return ret;
+> +}
+> +
+> +static void ope_v4l2_unregister(struct ope_dev *ope)
+> +{
+> +	struct ope_ctx *ctx;
+> +
+> +	if (ope->pipeline)
+> +		camss_isp_pipeline_unregister(ope->pipeline);
+> +
+> +	media_device_unregister(&ope->mdev);
+> +
+> +	/* Clears v4l2_dev.dev, after which no new job can reach the hardware */
+> +	v4l2_device_unregister(&ope->v4l2_dev);
+> +
+> +	scoped_guard(spinlock_irqsave, &ope->sched_lock)
+> +		ctx = ope->curr_ctx;
+
+Its either ope->mutex that owns this pointer or sched_lock not both.
+
+> +
+> +	/* A job may still be in flight. */
+> +	if (ctx && ope_hw_reset_sync(ope)) {
+> +		dev_err(ope->dev, "reset timeout on unbind\n");
+> +		synchronize_irq(ope->irq);
+> +		ope_job_finish(ctx, VB2_BUF_STATE_ERROR);
+> +	}
+
+You should finish the jobs before unregistering the pipeline not the 
+reverse ..
+
+> +
+> +	synchronize_irq(ope->irq);
+> +	cancel_work_sync(&ope->run_work);
+> +
+> +	/* media_device_cleanup() is deferred to ope_v4l2_dev_release() */
+> +}
+> +
+> +static void ope_dump_pipeline(struct ope_dev *ope)
+> +{
+> +	static const struct {
+> +		const char	*name;
+> +		u32		base;
+> +	} blocks[] = {
+> +		{ "wb_gain",	OPE_PP_WB_GAIN_BASE },
+> +		{ "demo",	OPE_PP_DEMO_BASE },
+> +		{ "cc",		OPE_PP_CC_BASE },
+> +		{ "glut",	OPE_PP_GLUT_BASE },
+> +		{ "chroma_enhan", OPE_PP_CHROMA_ENHAN_BASE },
+> +		{ "ds_c_pre",	OPE_PP_DOWNSCALE_MN_DS_C_PRE_BASE },
+> +		{ "ds_y_disp",	OPE_PP_DOWNSCALE_MN_DS_Y_DISP_BASE },
+> +		{ "ds_c_disp",	OPE_PP_DOWNSCALE_MN_DS_C_DISP_BASE },
+> +		{ "crop_y_disp", OPE_PP_CROP_RND_CLAMP_Y_DISP_BASE },
+> +		{ "crop_c_disp", OPE_PP_CROP_RND_CLAMP_C_DISP_BASE },
+> +	};
+> +
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(blocks); i++) {
+> +		u32 version = ope_read_pp(ope, OPE_PP_HW_VERSION(blocks[i].base));
+> +
+> +		dev_dbg(ope->dev, "pipeline %-13s HW version %u.%u.%u\n",
+> +			blocks[i].name,
+> +			OPE_HW_VERSION_GEN(version),
+> +			OPE_HW_VERSION_REV(version),
+> +			OPE_HW_VERSION_STEP(version));
+> +	}
+> +}
+> +
+> +static int ope_soft_reset(struct ope_dev *ope)
+> +{
+> +	u32 version;
+> +	int ret;
+> +
+> +	ret = pm_runtime_resume_and_get(ope->dev);
+> +	if (ret)
+> +		return dev_err_probe(ope->dev, ret, "resume failed\n");
+> +
+> +	version = ope_read(ope, OPE_TOP_HW_VERSION);
+> +	ope->hw_version = version;
+> +	dev_dbg(ope->dev, "HW version %u.%u.%u\n",
+> +		OPE_HW_VERSION_GEN(version),
+> +		OPE_HW_VERSION_REV(version),
+> +		OPE_HW_VERSION_STEP(version));
+> +
+> +	ope_dump_pipeline(ope);
+> +
+> +	__ope_irq_init(ope);
+> +
+> +	ret = ope_hw_reset_sync(ope);
+> +	if (ret)
+> +		dev_err(ope->dev, "Reset timeout\n");
+> +
+> +	pm_runtime_put_sync(ope->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static const char * const ope_pds[] = { "camss" };
+> +static const char * const ope_opp_pds[] = { "cx" };
+> +
+> +static const struct dev_pm_domain_attach_data ope_pd_data = {
+> +	.pd_names = ope_pds,
+> +	.num_pd_names = ARRAY_SIZE(ope_pds),
+> +};
+> +
+> +static const struct dev_pm_domain_attach_data ope_opp_pd_data = {
+> +	.pd_names = ope_opp_pds,
+> +	.num_pd_names = ARRAY_SIZE(ope_opp_pds),
+> +	.pd_flags = PD_FLAG_DEV_LINK_ON | PD_FLAG_REQUIRED_OPP,
+> +};
+> +
+> +static int ope_init_power(struct ope_dev *ope)
+> +{
+> +	struct device *dev = ope->dev;
+> +	struct dev_pm_domain_list *pmdomains;
+> +	struct dev_pm_domain_list *opp_pmdomains;
+> +	struct clk *axi_clk;
+> +	int ret;
+> +
+> +	ope->icc_data = devm_of_icc_get(dev, "data");
+> +	if (IS_ERR(ope->icc_data))
+> +		return dev_err_probe(dev, PTR_ERR(ope->icc_data),
+> +				     "failed to get interconnect data path\n");
+> +
+> +	ope->icc_config = devm_of_icc_get(dev, "config");
+> +	if (IS_ERR(ope->icc_config))
+> +		return dev_err_probe(dev, PTR_ERR(ope->icc_config),
+> +				     "failed to get interconnect config path\n");
+> +
+> +	ret = devm_pm_domain_attach_list(dev, &ope_pd_data, &pmdomains);
+> +	if (ret < 0 && ret != -EEXIST)
+> +		return dev_err_probe(dev, ret, "failed to attach power domains\n");
+> +
+> +	ret = devm_pm_domain_attach_list(dev, &ope_opp_pd_data, &opp_pmdomains);
+> +	if (ret < 0 && ret != -EEXIST)
+> +		return dev_err_probe(dev, ret, "failed to attach OPP power domain\n");
+> +
+> +	axi_clk = devm_clk_get_optional(dev, "axi");
+> +	if (IS_ERR(axi_clk))
+> +		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get AXI clock\n");
+> +
+> +	ret = clk_set_rate(axi_clk, OPE_AXI_CLK_RATE);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to set AXI clock rate\n");
+> +
+> +	ret = devm_pm_opp_set_clkname(dev, "core");
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_pm_opp_of_add_table(dev);
+> +	if (ret && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "invalid OPP table\n");
+> +
+> +	ret = devm_pm_runtime_enable(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_pm_clk_create(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = of_pm_clk_add_clks(dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_init_mmio(struct ope_dev *ope)
+> +{
+> +	struct platform_device *pdev = to_platform_device(ope->dev);
+> +
+> +	ope->base = devm_platform_ioremap_resource_byname(pdev, "top");
+> +	if (IS_ERR(ope->base))
+> +		return PTR_ERR(ope->base);
+> +
+> +	ope->base_rd = devm_platform_ioremap_resource_byname(pdev, "bus_read");
+> +	if (IS_ERR(ope->base_rd))
+> +		return PTR_ERR(ope->base_rd);
+> +
+> +	ope->base_wr = devm_platform_ioremap_resource_byname(pdev, "bus_write");
+> +	if (IS_ERR(ope->base_wr))
+> +		return PTR_ERR(ope->base_wr);
+> +
+> +	ope->base_pp = devm_platform_ioremap_resource_byname(pdev, "pipeline");
+> +	if (IS_ERR(ope->base_pp))
+> +		return PTR_ERR(ope->base_pp);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ope_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ope_dev *ope;
+> +	int ret, irq;
+> +
+> +	/* OPE lifetime is refcounted through the embedded v4l2_device */
+> +	ope = kzalloc_obj(*ope);
+> +	if (!ope)
+> +		return -ENOMEM;
+> +
+> +	ope->dev = dev;
+> +	init_completion(&ope->reset_complete);
+> +	mutex_init(&ope->mutex);
+> +	INIT_LIST_HEAD(&ope->ctx_list);
+> +	spin_lock_init(&ope->ctx_lock);
+> +	spin_lock_init(&ope->sched_lock);
+> +	INIT_WORK(&ope->run_work, ope_run_work);
+> +
+> +	ret = dma_set_mask(dev, DMA_BIT_MASK(32));
+> +	if (ret) {
+> +		ret = dev_err_probe(dev, ret, "Failed to set DMA mask\n");
+> +		goto err_free;
+> +	}
+> +
+> +	ret = ope_init_power(ope);
+> +	if (ret) {
+> +		ret = dev_err_probe(dev, ret, "Power init failed\n");
+> +		goto err_free;
+> +	}
+> +
+> +	ret = ope_init_mmio(ope);
+> +	if (ret) {
+> +		ret = dev_err_probe(dev, ret, "MMIO init failed\n");
+> +		goto err_free;
+> +	}
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		ret = dev_err_probe(dev, irq, "Unable to get IRQ\n");
+> +		goto err_free;
+> +	}
+> +
+> +	ret = devm_request_irq(dev, irq, ope_irq, 0, "camss-ope", ope);
+> +	if (ret < 0) {
+> +		ret = dev_err_probe(dev, ret, "Requesting IRQ failed\n");
+> +		goto err_free;
+> +	}
+> +
+> +	ope->irq = irq;
+> +
+> +	ret = ope_soft_reset(ope);
+> +	if (ret)
+> +		goto err_free;
+
+
+> +
+> +	/* ope ownership is transferred to ope_v4l2_register(), even on failure */
+> +	ret = ope_v4l2_register(ope);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "V4L2 registration failed\n");
+> +
+> +	platform_set_drvdata(pdev, ope);
+> +
+> +	return 0;
+> +
+> +err_free:
+
+I believe *ope as passed to opq_irq is racy with your reset here - why 
+not just devm_ the ope pointer allocation.
+
+devm_free_irq();
+
+> +	mutex_destroy(&ope->mutex);
+> +	kfree(ope);
+> +	return ret;
+> +}
+> +
+> +static void ope_remove(struct platform_device *pdev)
+> +{
+> +	struct ope_dev *ope = platform_get_drvdata(pdev);
+> +
+> +	ope_v4l2_unregister(ope);
+> +	v4l2_device_put(&ope->v4l2_dev);
+> +}
+> +
+> +static const struct of_device_id ope_dt_ids[] = {
+> +	{ .compatible = "qcom,qcm2290-camss-ope" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, ope_dt_ids);
+> +
+> +static const struct dev_pm_ops ope_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(pm_clk_suspend, pm_clk_resume, NULL)
+> +};
+> +
+> +static struct platform_driver ope_driver = {
+> +	.probe  = ope_probe,
+> +	.remove = ope_remove,
+> +	.driver = {
+> +		.name           = OPE_NAME,
+> +		.of_match_table = ope_dt_ids,
+> +		.pm             = pm_ptr(&ope_pm_ops),
+> +	},
+> +};
+> +
+> +module_platform_driver(ope_driver);
+> +
+> +MODULE_DESCRIPTION("CAMSS Offline Processing Engine");
+> +MODULE_AUTHOR("Loic Poulain <loic.poulain@oss.qualcomm.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/media/platform/qcom/camss/ope/params.c b/drivers/media/platform/qcom/camss/ope/params.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..55f9a9002e34818e828ce51f5cde25955926018c
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/camss/ope/params.c
+> @@ -0,0 +1,78 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ope/params.c
+> + *
+> + * CAMSS ISP parameter buffer parser.
+> + *
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/kernel.h>
+> +#include <media/videobuf2-core.h>
+> +#include <media/v4l2-isp.h>
+> +
+> +#include "params.h"
+> +
+> +int camss_isp_params_apply(struct device *dev,
+> +			   struct vb2_buffer *vb,
+> +			   struct v4l2_isp_params_buffer *scratch,
+> +			   const struct v4l2_isp_params_block_type_info *type_info,
+> +			   const camss_isp_params_handler_fn *handlers,
+> +			   unsigned int num_handlers,
+> +			   void *priv)
+> +{
+> +	const struct v4l2_isp_params_buffer *buf = scratch;
+> +	const void *src;
+> +	unsigned int remaining;
+> +	unsigned int offset = 0;
+> +	int ret;
+> +
+> +	ret = v4l2_isp_params_validate_buffer_size(dev, vb,
+> +					v4l2_isp_buffer_size(CAMSS_PARAMS_OPE_MAX_PAYLOAD));
+> +	if (ret)
+> +		return ret;
+> +
+> +	src = vb2_plane_vaddr(vb, 0);
+> +
+> +	if (!src) {
+> +		dev_dbg(dev, "params: buffer has no kernel mapping\n");
+> +		return -EFAULT;
+> +	}
+> +
+> +	/*
+> +	 * The payload lives in a vmalloc'd buffer that userspace keeps mapped
+> +	 * while the buffer is queued, so it must not be validated in place:
+> +	 * copy it into kernel-only memory first, then work exclusively on the
+> +	 * copy.  See the v4l2_isp_params_validate_buffer() documentation.
+> +	 */
+> +	memcpy(scratch, src, vb2_get_plane_payload(vb, 0));
+> +
+> +	ret = v4l2_isp_params_validate_buffer(dev, vb, buf, type_info, num_handlers);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(dev, "params: version=%u data_size=%u\n", buf->version, buf->data_size);
+> +
+> +	remaining = buf->data_size;
+> +
+> +	while (remaining >= sizeof(struct v4l2_isp_params_block_header)) {
+> +		const union camss_isp_params_block *block =
+> +			(const union camss_isp_params_block *)&buf->data[offset];
+> +		u16 type  = block->header.type;
+> +		u32 bsize = block->header.size;
+
+You should bounds check this against remaining and as non-zero.
+
+> +
+> +		if (type < num_handlers && handlers[type])
+> +			handlers[type](priv, block);
+> +		else
+> +			dev_dbg(dev, "params: no handler for block type %u\n", type);
+> +
+> +		offset += bsize;
+> +		remaining -= bsize;
+> +	}
+> +
+> +	dev_dbg(dev, "params: buffer parsed successfully\n");
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/media/platform/qcom/camss/ope/params.h b/drivers/media/platform/qcom/camss/ope/params.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..5bc1984a67b8d31e5c84238cf93076158f367032
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/camss/ope/params.h
+> @@ -0,0 +1,95 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * ope/params.h
+> + *
+> + * CAMSS ISP parameter buffer parser.
+> + *
+> + * Wraps the upstream v4l2_isp_params_validate_buffer() validation and adds
+> + * a dispatch layer: after validation each block is forwarded to a
+> + * driver-supplied handler.
+> + *
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +#ifndef CAMSS_PARAMS_H
+> +#define CAMSS_PARAMS_H
+> +
+> +#include <linux/string.h>
+> +#include <linux/types.h>
+> +#include <media/v4l2-isp.h>
+> +#include <uapi/linux/qcom-camss-config.h>
+> +
+> +#define CAMSS_ISP_PARAMS_FMT_INIT \
+> +	{ .fourcc = V4L2_META_FMT_QCOM_ISP_PARAMS, .depth = 8, .align = 0, .num_planes = 1 }
+> +
+> +#define CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY   (1U << V4L2_ISP_FL_DRIVER_FLAGS(0))
+> +
+> +struct device;
+> +struct vb2_buffer;
+> +struct camss_isp_fmt;
+> +
+> +union camss_isp_params_block {
+> +	struct v4l2_isp_params_block_header header;
+> +	struct camss_params_ope_wb_gain         wb_gain;
+> +	struct camss_params_ope_chroma_enhan   chroma_enhan;
+> +	struct camss_params_ope_color_correct  color_correct;
+> +	struct camss_params_ope_gamma          gamma;
+> +};
+> +
+> +typedef void (*camss_isp_params_handler_fn)(void *priv, const union camss_isp_params_block *block);
+> +
+> +/**
+> + * camss_isp_params_copy_block - copy one validated block into driver state
+> + *
+> + * @dst:   destination block in the driver's shadow configuration
+> + * @block: validated source block
+> + * @size:  size of the destination block
+> + *
+> + * Returns true if the payload was copied, false if only the header was.
+> + */
+> +static inline bool camss_isp_params_copy_block(void *dst,
+> +					       const union camss_isp_params_block *block,
+> +					       size_t size)
+> +{
+> +	struct v4l2_isp_params_block_header *hdr = dst;
+> +	bool header_only = block->header.size == sizeof(block->header);
+> +
+> +	if (header_only)
+> +		*hdr = block->header;
+> +	else
+> +		memcpy(dst, block, size);
+> +
+> +	hdr->flags |= CAMSS_ISP_PARAMS_FL_BLOCK_DIRTY;
+> +
+> +	return !header_only;
+> +}
+> +
+> +/**
+> + * camss_isp_params_apply - validate and dispatch a params buffer
+> + *
+> + * @dev:          device for error logging
+> + * @vb:           the vb2 buffer (used for size validation)
+> + * @scratch:      kernel-only bounce buffer, at least
+> + *                v4l2_isp_buffer_size(CAMSS_PARAMS_OPE_MAX_PAYLOAD) bytes
+> + * @type_info:    per-block-type validation info, indexed by block type
+> + * @handlers:     per-block-type handlers, indexed by block type
+> + * @num_handlers: number of entries in @type_info and @handlers
+> + * @priv:         opaque pointer forwarded to each handler
+> + *
+> + * Copies the buffer payload into @scratch, calls
+> + * v4l2_isp_params_validate_buffer_size(), then
+> + * v4l2_isp_params_validate_buffer(), then walks the validated block stream
+> + * dispatching each block to its handler.  Validation and dispatch operate
+> + * only on @scratch, never on the userspace-visible mapping.
+> + *
+> + * Returns 0 on success, negative errno on validation failure.
+> + */
+> +int camss_isp_params_apply(struct device *dev,
+> +			   struct vb2_buffer *vb,
+> +			   struct v4l2_isp_params_buffer *scratch,
+> +			   const struct v4l2_isp_params_block_type_info *type_info,
+> +			   const camss_isp_params_handler_fn *handlers,
+> +			   unsigned int num_handlers,
+> +			   void *priv);
+> +
+> +#endif /* CAMSS_PARAMS_H */
+> diff --git a/drivers/media/platform/qcom/camss/ope/pipeline.c b/drivers/media/platform/qcom/camss/ope/pipeline.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..bbb076717ef77718045b6ac0008b4dc6ed84673a
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/camss/ope/pipeline.c
+> @@ -0,0 +1,412 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * CAMSS ISP pipeline helper — declarative MC topology builder
+> + *
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +#include <linux/slab.h>
+> +
+> +#include <media/media-device.h>
+> +#include <media/media-entity.h>
+> +#include <media/v4l2-dev.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-subdev.h>
+> +#include "pipeline.h"
+> +
+> +#if !IS_ENABLED(CONFIG_MEDIA_CONTROLLER)
+> +static inline int media_entity_pads_init(struct media_entity *e, u16 n,
+> +					 struct media_pad *p) { return 0; }
+> +static inline void media_entity_remove_links(struct media_entity *e) {}
+> +static inline int media_create_pad_link(struct media_entity *src, u16 sp,
+> +					struct media_entity *sink, u16 dp,
+> +					u32 flags) { return 0; }
+> +#endif
+> +
+> +/* -------- Internal elpers -------- */
+> +
+> +static enum vfl_devnode_direction isp_caps_to_vfl_dir(u32 caps)
+> +{
+> +	if (caps & (V4L2_CAP_VIDEO_M2M | V4L2_CAP_VIDEO_M2M_MPLANE))
+> +		return VFL_DIR_M2M;
+> +	if (caps & (V4L2_CAP_VIDEO_OUTPUT | V4L2_CAP_VIDEO_OUTPUT_MPLANE |
+> +		    V4L2_CAP_META_OUTPUT | V4L2_CAP_VBI_OUTPUT | V4L2_CAP_SDR_OUTPUT))
+> +		return VFL_DIR_TX;
+> +	return VFL_DIR_RX;
+> +}
+> +
+> +static unsigned int isp_count_pads(const struct camss_isp_pad_desc *pads)
+> +{
+> +	unsigned int n = 0;
+> +
+> +	if (!pads)
+> +		return 0;
+> +	while (pads[n].flags)
+> +		n++;
+> +	return n;
+> +}
+> +
+> +static struct media_entity *isp_pipeline_media_entity(struct camss_isp_pipeline *pipeline,
+> +						      unsigned int idx)
+> +{
+> +	struct camss_isp_pipeline_entity *slot = &pipeline->entities[idx];
+> +
+> +	switch (slot->obj_type) {
+> +	case MEDIA_ENTITY_TYPE_VIDEO_DEVICE:
+> +		return &slot->vdev.entity;
+> +	case MEDIA_ENTITY_TYPE_V4L2_SUBDEV:
+> +		return &slot->subdev.entity;
+> +	default:
+> +		return &slot->entity;
+> +	}
+> +}
+> +
+> +/* -------- Validation -------- */
+> +
+> +static int isp_pipeline_validate(struct device *dev,
+> +				 const struct camss_isp_entity_desc *descs,
+> +				 unsigned int num_entities)
+> +{
+> +	unsigned int i, pi;
+> +
+> +	for (i = 0; i < num_entities; i++) {
+> +		const struct camss_isp_pad_desc *pads = descs[i].pads;
+> +		unsigned int num_pads = isp_count_pads(pads);
+> +
+> +		for (pi = 0; pi < num_pads; pi++) {
+> +			const struct camss_isp_pad_desc *pad = &pads[pi];
+> +			const struct camss_isp_pad_desc *peer_pad;
+> +			unsigned int peer_num_pads;
+> +			int peer_ent = pad->peer_entity;
+> +
+> +			if (peer_ent < 0)
+> +				continue;
+> +
+> +			if ((unsigned int)peer_ent >= num_entities) {
+> +				dev_err(dev, "entity[%u].p%u: peer_entity %d out of range\n",
+> +					i, pi, peer_ent);
+> +				return -EINVAL;
+> +			}
+> +
+> +			peer_num_pads = isp_count_pads(descs[peer_ent].pads);
+> +			if (pad->peer_pad >= peer_num_pads) {
+> +				dev_err(dev, "entity[%u].p%u: peer_pad %u out of range\n",
+> +					i, pi, pad->peer_pad);
+> +				return -EINVAL;
+> +			}
+> +
+> +			peer_pad = &descs[peer_ent].pads[pad->peer_pad];
+> +
+> +			/* Links are SOURCE->SINK; reject SOURCE->SOURCE or SINK->SINK */
+> +			if (((pad->flags & MEDIA_PAD_FL_SOURCE) &&
+> +			     (peer_pad->flags & MEDIA_PAD_FL_SOURCE)) ||
+> +			    ((pad->flags & MEDIA_PAD_FL_SINK) &&
+> +			     (peer_pad->flags & MEDIA_PAD_FL_SINK))) {
+> +				dev_err(dev, "entity[%u].p%u -> entity[%d].p%u: invalid\n",
+> +					i, pi, peer_ent, pad->peer_pad);
+> +				return -EINVAL;
+> +			}
+> +
+> +			/* A link must be described symmetrically from both ends */
+> +			if ((unsigned int)peer_pad->peer_entity != i ||
+> +			    peer_pad->peer_pad != pi) {
+> +				dev_err(dev, "entity[%u].p%u <-> entity[%d].p%u: mismatch\n",
+> +					i, pi, peer_ent, pad->peer_pad);
+> +				return -EINVAL;
+> +			}
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/* -------- Allocation / Release -------- */
+> +
+> +struct camss_isp_pipeline *camss_isp_pipeline_alloc(unsigned int num_entities)
+> +{
+> +	struct camss_isp_pipeline *pipeline;
+> +
+> +	pipeline = kzalloc(struct_size(pipeline, entities, num_entities),
+> +			   GFP_KERNEL);
+> +	if (!pipeline)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pipeline->num_entities = num_entities;
+> +	mutex_init(&pipeline->vdev_lock);
+> +	return pipeline;
+> +}
+> +
+> +void camss_isp_pipeline_free(struct camss_isp_pipeline *pipeline)
+> +{
+> +	unsigned int i;
+> +
+> +	if (!pipeline)
+> +		return;
+> +
+> +	/* Release pads and subdevs state */
+> +	for (i = 0; i < pipeline->num_entities; i++) {
+> +		struct camss_isp_pipeline_entity *slot = &pipeline->entities[i];
+> +
+> +		if (slot->obj_type == MEDIA_ENTITY_TYPE_V4L2_SUBDEV)
+> +			v4l2_subdev_cleanup(&slot->subdev);
+> +
+> +		kfree(slot->pads);
+> +		slot->pads = NULL;
+> +	}
+> +
+> +	mutex_destroy(&pipeline->vdev_lock);
+> +	kfree(pipeline);
+> +}
+> +
+> +/* -------- Registration -------- */
+> +
+> +void camss_isp_pipeline_unregister(struct camss_isp_pipeline *pipeline)
+> +{
+> +	int i;
+> +
+> +	/* Unregister entities in reverse order. */
+> +	for (i = (int)pipeline->num_entities - 1; i >= 0; i--) {
+> +		struct camss_isp_pipeline_entity *slot = &pipeline->entities[i];
+> +
+> +		if (slot->registered) {
+> +			switch (slot->obj_type) {
+> +			case MEDIA_ENTITY_TYPE_VIDEO_DEVICE:
+> +				video_unregister_device(&slot->vdev);
+> +				break;
+> +			case MEDIA_ENTITY_TYPE_V4L2_SUBDEV:
+> +				v4l2_device_unregister_subdev(&slot->subdev);
+> +				break;
+> +			case MEDIA_ENTITY_TYPE_BASE:
+> +				media_entity_remove_links(&slot->entity);
+> +				media_device_unregister_entity(&slot->entity);
+> +				slot->entity.name = NULL;
+> +				break;
+> +			}
+> +
+> +			slot->registered = false;
+> +		}
+> +	}
+> +
+> +	pipeline->v4l2_dev = NULL;
+> +}
+> +
+> +static int isp_register_vdev(struct camss_isp_pipeline *pipeline,
+> +			     struct camss_isp_pipeline_entity *slot,
+> +			     const struct camss_isp_entity_desc *desc,
+> +			     struct v4l2_device *v4l2_dev)
+> +{
+> +	struct video_device *vdev = &slot->vdev;
+> +	int ret;
+> +
+> +	if (!desc->name || !desc->name[0] || !desc->vdev.fops)
+> +		return -EINVAL;
+> +
+> +	strscpy(vdev->name, desc->name, sizeof(vdev->name));
+> +	vdev->vfl_dir     = isp_caps_to_vfl_dir(desc->vdev.caps);
+> +	vdev->v4l2_dev    = v4l2_dev;
+> +	vdev->device_caps = desc->vdev.caps | V4L2_CAP_IO_MC;
+> +	vdev->release     = video_device_release_empty;
+> +	vdev->fops        = desc->vdev.fops;
+> +	vdev->lock        = &pipeline->vdev_lock;
+> +	if (desc->vdev.ioctl_ops)
+> +		vdev->ioctl_ops = desc->vdev.ioctl_ops;
+> +	if (desc->vdev.entity_ops)
+> +		vdev->entity.ops = desc->vdev.entity_ops;
+> +
+> +	vdev->entity.obj_type = MEDIA_ENTITY_TYPE_VIDEO_DEVICE;
+> +	vdev->entity.function = desc->function ? desc->function : MEDIA_ENT_F_IO_V4L;
+> +
+> +	ret = media_entity_pads_init(&vdev->entity, slot->num_pads, slot->pads);
+> +	if (ret)
+> +		return ret;
+> +
+> +	video_set_drvdata(vdev, desc->vdev.drvdata);
+> +
+> +	ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int isp_register_subdev(struct camss_isp_pipeline_entity *slot,
+> +			       const struct camss_isp_entity_desc *desc,
+> +			       struct v4l2_device *v4l2_dev)
+> +{
+> +	struct v4l2_subdev *sd = &slot->subdev;
+> +	int ret;
+> +
+> +	if (!desc->name || !desc->name[0] || !desc->subdev.ops)
+> +		return -EINVAL;
+> +
+> +	v4l2_subdev_init(sd, desc->subdev.ops);
+> +	strscpy(sd->name, desc->name, sizeof(sd->name));
+> +	sd->entity.function = desc->function ?
+> +			      desc->function : MEDIA_ENT_F_V4L2_SUBDEV_UNKNOWN;
+> +	/* Create a /dev/v4l-subdevN node so userspace can query pad formats */
+> +	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	if (desc->subdev.internal_ops)
+> +		sd->internal_ops = desc->subdev.internal_ops;
+> +	if (desc->subdev.entity_ops)
+> +		sd->entity.ops = desc->subdev.entity_ops;
+> +
+> +	ret = media_entity_pads_init(&sd->entity, slot->num_pads, slot->pads);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = v4l2_subdev_init_finalize(sd);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = v4l2_device_register_subdev(v4l2_dev, sd);
+> +	if (ret) {
+> +		v4l2_subdev_cleanup(sd);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int isp_register_base_entity(struct camss_isp_pipeline_entity *slot,
+> +				    const struct camss_isp_entity_desc *desc,
+> +				    struct v4l2_device *v4l2_dev)
+> +{
+> +	struct media_entity *entity = &slot->entity;
+> +	int ret;
+> +
+> +	if (!desc->name || !desc->name[0])
+> +		return -EINVAL;
+> +
+> +	entity->obj_type = MEDIA_ENTITY_TYPE_BASE;
+> +	entity->name     = desc->name;
+> +	entity->function = desc->function;
+> +
+> +	ret = media_entity_pads_init(entity, slot->num_pads, slot->pads);
+> +	if (ret) {
+> +		entity->name = NULL;
+> +		return ret;
+> +	}
+> +
+> +	ret = media_device_register_entity(v4l2_dev->mdev, entity);
+> +	if (ret) {
+> +		entity->name = NULL;
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int isp_alloc_pads(struct camss_isp_pipeline_entity *slot,
+> +			  const struct camss_isp_entity_desc *desc)
+> +{
+> +	unsigned int num_pads = isp_count_pads(desc->pads);
+> +	unsigned int i;
+> +
+> +	if (!num_pads)
+> +		goto done;
+> +
+> +	slot->pads = kcalloc(num_pads, sizeof(*slot->pads), GFP_KERNEL);
+> +	if (!slot->pads)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_pads; i++)
+> +		slot->pads[i].flags = desc->pads[i].flags;
+> +done:
+> +	slot->num_pads = num_pads;
+> +	return 0;
+> +}
+> +
+> +int camss_isp_pipeline_register(struct camss_isp_pipeline *pipeline,
+> +				struct v4l2_device *v4l2_dev,
+> +				const struct camss_isp_entity_desc *descs,
+> +				unsigned int num_entities)
+> +{
+> +	unsigned int i, pi;
+> +	int ret;
+> +
+> +	if (WARN_ON(num_entities != pipeline->num_entities))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(!v4l2_dev || !v4l2_dev->mdev))
+> +		return -EINVAL;
+> +
+> +	ret = isp_pipeline_validate(v4l2_dev->dev, descs, num_entities);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pipeline->v4l2_dev = v4l2_dev;
+> +
+> +	/* Register each entity */
+> +	for (i = 0; i < num_entities; i++) {
+> +		const struct camss_isp_entity_desc *desc = &descs[i];
+> +		struct camss_isp_pipeline_entity *slot = &pipeline->entities[i];
+> +
+> +		slot->obj_type = desc->obj_type;
+> +
+> +		ret = isp_alloc_pads(slot, desc);
+> +		if (ret)
+> +			goto err_unregister;
+> +
+> +		switch (desc->obj_type) {
+> +		case MEDIA_ENTITY_TYPE_VIDEO_DEVICE:
+> +			ret = isp_register_vdev(pipeline, slot, desc, v4l2_dev);
+> +			break;
+> +		case MEDIA_ENTITY_TYPE_V4L2_SUBDEV:
+> +			ret = isp_register_subdev(slot, desc, v4l2_dev);
+> +			break;
+> +		case MEDIA_ENTITY_TYPE_BASE:
+> +		default:
+> +			ret = isp_register_base_entity(slot, desc, v4l2_dev);
+> +			break;
+> +		}
+> +		if (ret)
+> +			goto err_unregister;
+> +
+> +		slot->registered = true;
+> +	}
+> +
+> +	/* Create links — only from SOURCE side to avoid duplicates */
+> +	for (i = 0; i < num_entities; i++) {
+> +		const struct camss_isp_entity_desc *desc = &descs[i];
+> +		unsigned int num_pads = isp_count_pads(desc->pads);
+> +
+> +		for (pi = 0; pi < num_pads; pi++) {
+> +			const struct camss_isp_pad_desc *pad = &desc->pads[pi];
+> +			struct media_entity *src_entity, *sink_entity;
+> +			unsigned int src_pad_idx, sink_pad_idx;
+> +			u32 lflags;
+> +
+> +			if (!(pad->flags & MEDIA_PAD_FL_SOURCE))
+> +				continue;
+> +			if (pad->peer_entity < 0)
+> +				continue;
+> +
+> +			src_entity   = isp_pipeline_media_entity(pipeline, i);
+> +			sink_entity  = isp_pipeline_media_entity(pipeline,
+> +								 (unsigned int)pad->peer_entity);
+> +			src_pad_idx  = pi;
+> +			sink_pad_idx = pad->peer_pad;
+> +
+> +			lflags = pad->link_flags ?
+> +				 pad->link_flags :
+> +				 (MEDIA_LNK_FL_IMMUTABLE | MEDIA_LNK_FL_ENABLED);
+> +
+> +			ret = media_create_pad_link(src_entity,  src_pad_idx,
+> +						    sink_entity, sink_pad_idx,
+> +						    lflags);
+> +			if (ret)
+> +				goto err_unregister;
+> +		}
+> +	}
+> +
+> +	/* Create /dev/v4l-subdevN nodes for all registered subdevs */
+> +	ret = v4l2_device_register_subdev_nodes(v4l2_dev);
+> +	if (ret)
+> +		goto err_unregister;
+> +
+> +	return 0;
+> +
+> +err_unregister:
+> +	camss_isp_pipeline_unregister(pipeline);
+> +	return ret;
+> +}
+> diff --git a/drivers/media/platform/qcom/camss/ope/pipeline.h b/drivers/media/platform/qcom/camss/ope/pipeline.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..f7d50734ed61f45e988328de980ac5793f7d38dd
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/camss/ope/pipeline.h
+> @@ -0,0 +1,239 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * CAMSS ISP pipeline helper — declarative MC topology builder
+> + *
+> + * Drivers describe their entire media graph — entities (video devices,
+> + * subdevs, or base entities), their pads, and the links between them —
+> + * in a single static descriptor table.  The builder validates the table,
+> + * allocates and registers all entities, and creates all MC links.
+> + *
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +#ifndef _CAMSS_PIPELINE_H
+> +#define _CAMSS_PIPELINE_H
+> +
+> +#include <linux/mutex.h>
+> +#include <media/media-device.h>
+> +#include <media/media-entity.h>
+> +#include <media/v4l2-dev.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +/**
+> + * struct camss_isp_pad_desc - descriptor for one pad and its optional link
+> + *
+> + * @flags:       Pad flags: MEDIA_PAD_FL_SINK, MEDIA_PAD_FL_SOURCE,
+> + *               MEDIA_PAD_FL_MUST_CONNECT.  A zero @flags value acts as
+> + *               the sentinel that terminates the pad list.
+> + * @peer_entity: Index of the peer entity in the descriptor array, or -1
+> + *               if this pad has no link.
+> + * @peer_pad:    Pad index on the peer entity to link to.
+> + * @link_flags:  MC link flags (MEDIA_LNK_FL_*).  Defaults to
+> + *               MEDIA_LNK_FL_IMMUTABLE | MEDIA_LNK_FL_ENABLED when zero.
+> + *
+> + * Links are described from both sides (each endpoint references the other),
+> + * but the builder only creates each link once — from the SOURCE side.
+> + */
+> +struct camss_isp_pad_desc {
+> +	u32          flags;
+> +	int          peer_entity;
+> +	unsigned int peer_pad;
+> +	u32          link_flags;
+> +};
+> +
+> +/**
+> + * struct camss_isp_entity_desc - descriptor for one entity in the pipeline
+> + *
+> + * @name:      Human-readable entity name (also used as video device name
+> + *             suffix when @obj_type is MEDIA_ENTITY_TYPE_VIDEO_DEVICE).
+> + *             Mandatory and must be non-empty.
+> + * @obj_type:  MEDIA_ENTITY_TYPE_VIDEO_DEVICE, MEDIA_ENTITY_TYPE_V4L2_SUBDEV,
+> + *             or MEDIA_ENTITY_TYPE_BASE.
+> + * @function:  MEDIA_ENT_F_* function identifier.
+> + * @pads:      Sentinel-terminated (flags == 0) array of pad descriptors.
+> + *
+> + * Fields used only for MEDIA_ENTITY_TYPE_VIDEO_DEVICE:
+> + * @vdev.caps: V4L2_CAP_* device capabilities.
+> + *             The video device direction (VFL_DIR_RX/TX/M2M) is derived
+> + *             automatically from @caps by the builder.
+> + * @vdev.drvdata: Opaque pointer set via video_set_drvdata() after registration.
+> + * @vdev.fops:      File operations (mandatory).
+> + * @vdev.ioctl_ops: ioctl operations (may be NULL).
+> + *
+> + * Fields used only for MEDIA_ENTITY_TYPE_V4L2_SUBDEV:
+> + * @subdev.ops: Subdev operations (mandatory).
+> + * @subdev.internal_ops: Internal subdev operations (may be NULL).
+> + */
+> +struct camss_isp_entity_desc {
+> +	const char				*name;
+> +	u32					obj_type;
+> +	u32					function;
+> +	const struct camss_isp_pad_desc		*pads;
+> +
+> +	union {
+> +		/* MEDIA_ENTITY_TYPE_VIDEO_DEVICE */
+> +		struct {
+> +			u32					caps;
+> +			void					*drvdata;
+> +			const struct v4l2_file_operations	*fops;
+> +			const struct v4l2_ioctl_ops		*ioctl_ops;
+> +			const struct media_entity_operations	*entity_ops;
+> +		} vdev;
+> +		/* MEDIA_ENTITY_TYPE_V4L2_SUBDEV */
+> +		struct {
+> +			const struct v4l2_subdev_ops		*ops;
+> +			const struct v4l2_subdev_internal_ops	*internal_ops;
+> +			const struct media_entity_operations	*entity_ops;
+> +		} subdev;
+> +	};
+> +};
+> +
+> +/**
+> + * struct camss_isp_pipeline_entity - one registered entity slot
+> + *
+> + * Internal to the pipeline; drivers access entities via the accessor helpers.
+> + *
+> + * @obj_type: mirrors the descriptor's @obj_type.
+> + * @registered: set once the entity has been successfully registered, so that
+> + *              teardown only undoes what actually succeeded.
+> + * @pads:     allocated pad array for this entity.
+> + * @num_pads: number of entries in @pads.
+> + * @vdev:     valid when @obj_type == MEDIA_ENTITY_TYPE_VIDEO_DEVICE.
+> + * @subdev:   valid when @obj_type == MEDIA_ENTITY_TYPE_V4L2_SUBDEV.
+> + * @entity:   valid when @obj_type == MEDIA_ENTITY_TYPE_BASE.
+> + */
+> +struct camss_isp_pipeline_entity {
+> +	u32			 obj_type;
+> +	bool			 registered;
+> +	struct media_pad	*pads;
+> +	unsigned int		 num_pads;
+> +	union {
+> +		struct video_device  vdev;
+> +		struct v4l2_subdev   subdev;
+> +		struct media_entity  entity;
+> +	};
+> +};
+> +
+> +/**
+> + * struct camss_isp_pipeline - registered ISP pipeline topology
+> + *
+> + * Allocate with camss_isp_pipeline_alloc(), register with
+> + * camss_isp_pipeline_register(), tear down with
+> + * camss_isp_pipeline_unregister(), free with camss_isp_pipeline_free().
+> + *
+> + * @v4l2_dev:     Pointer to the caller-provided V4L2 device.
+> + * @drv_priv:     Driver-private pointer; not touched by the framework.
+> + * @vdev_lock:    Pipeline-wide mutex assigned to video_device.lock of every
+> + *                registered video device, so the V4L2 core serialises ioctl2
+> + *                handlers across all of the pipeline's video nodes.
+> + * @num_entities: Number of entries in @entities.
+> + * @entities:     Per-entity state; flexible array.
+> + */
+> +struct camss_isp_pipeline {
+> +	struct v4l2_device	*v4l2_dev;
+> +	void			*drv_priv;
+> +	struct mutex		 vdev_lock;
+> +
+> +	unsigned int		 num_entities;
+> +	struct camss_isp_pipeline_entity entities[] __counted_by(num_entities);
+> +};
+> +
+> +/**
+> + * camss_isp_pipeline_alloc() - allocate a pipeline for @num_entities entities
+> + *
+> + * Returns a pointer to the new pipeline or ERR_PTR on failure.
+> + * Free with camss_isp_pipeline_free().
+> + */
+> +struct camss_isp_pipeline *camss_isp_pipeline_alloc(unsigned int num_entities);
+> +
+> +/**
+> + * camss_isp_pipeline_free() - free a pipeline
+> + * @pipeline: pipeline to free (may be NULL)
+> + */
+> +void camss_isp_pipeline_free(struct camss_isp_pipeline *pipeline);
+> +
+> +/**
+> + * camss_isp_pipeline_register() - validate descriptors and register the graph
+> + * @pipeline:    pipeline (allocated with camss_isp_pipeline_alloc())
+> + * @v4l2_dev:    caller-owned and already-registered V4L2 device; its
+> + *               associated media_device (v4l2_dev->mdev) must also be
+> + *               initialised and registered before this call.
+> + * @descs:       array of @num_entities entity descriptors
+> + * @num_entities: number of entities; must equal pipeline->num_entities
+> + *
+> + * Validates the descriptor table (link direction consistency, index bounds),
+> + * then registers all entities into the provided v4l2_device / media_device
+> + * and creates all MC pad links.
+> + *
+> + * Returns 0 on success or a negative error code.
+> + */
+> +int camss_isp_pipeline_register(struct camss_isp_pipeline *pipeline,
+> +				struct v4l2_device *v4l2_dev,
+> +				const struct camss_isp_entity_desc *descs,
+> +				unsigned int num_entities);
+> +
+> +/**
+> + * camss_isp_pipeline_unregister() - tear down a registered pipeline
+> + * @pipeline: pipeline to unregister.
+> + */
+> +void camss_isp_pipeline_unregister(struct camss_isp_pipeline *pipeline);
+> +
+> +/**
+> + * camss_isp_pipeline_get_vdev() - return the video_device for entity @idx
+> + * @pipeline: registered pipeline
+> + * @idx:      entity index (must be MEDIA_ENTITY_TYPE_VIDEO_DEVICE)
+> + *
+> + * Returns NULL if @idx is out of range or the entity is not a video device.
+> + */
+> +static inline struct video_device *
+> +camss_isp_pipeline_get_vdev(struct camss_isp_pipeline *pipeline,
+> +			    unsigned int idx)
+> +{
+> +	if (WARN_ON(idx >= pipeline->num_entities))
+> +		return NULL;
+> +	if (WARN_ON(pipeline->entities[idx].obj_type !=
+> +		    MEDIA_ENTITY_TYPE_VIDEO_DEVICE))
+> +		return NULL;
+> +	return &pipeline->entities[idx].vdev;
+> +}
+> +
+> +/**
+> + * camss_isp_pipeline_get_subdev() - return the v4l2_subdev for entity @idx
+> + * @pipeline: registered pipeline
+> + * @idx:      entity index (must be MEDIA_ENTITY_TYPE_V4L2_SUBDEV)
+> + *
+> + * Returns NULL if @idx is out of range or the entity is not a subdev.
+> + */
+> +static inline struct v4l2_subdev *
+> +camss_isp_pipeline_get_subdev(struct camss_isp_pipeline *pipeline,
+> +			      unsigned int idx)
+> +{
+> +	if (WARN_ON(idx >= pipeline->num_entities))
+> +		return NULL;
+> +	if (WARN_ON(pipeline->entities[idx].obj_type !=
+> +		    MEDIA_ENTITY_TYPE_V4L2_SUBDEV))
+> +		return NULL;
+> +	return &pipeline->entities[idx].subdev;
+> +}
+> +
+> +/**
+> + * camss_isp_pipeline_get_entity() - return the media_entity for entity @idx
+> + * @pipeline: registered pipeline
+> + * @idx:      entity index (must be MEDIA_ENTITY_TYPE_BASE)
+> + *
+> + * Returns NULL if @idx is out of range or the entity is not a base entity.
+> + */
+> +static inline struct media_entity *
+> +camss_isp_pipeline_get_entity(struct camss_isp_pipeline *pipeline,
+> +			      unsigned int idx)
+> +{
+> +	if (WARN_ON(idx >= pipeline->num_entities))
+> +		return NULL;
+> +	if (WARN_ON(pipeline->entities[idx].obj_type !=
+> +		    MEDIA_ENTITY_TYPE_BASE))
+> +		return NULL;
+> +	return &pipeline->entities[idx].entity;
+> +}
+> +
+> +#endif /* _CAMSS_PIPELINE_H */
+> 
+
