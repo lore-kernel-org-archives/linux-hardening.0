@@ -1,323 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012047.outbound.protection.outlook.com [52.101.43.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F5240EB9C;
-	Mon, 14 Sep 2026 22:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789425472; cv=none; b=GWItlBwyyRdYd7P+zSMY6TQvbpB0VA00SwQ62q00w5g/xPZdlVHzgSUhSn+s7EJdrb8D09wDCBg1UKHXx3cyxZV9FJigKGSd93HvJAQMC/D49hHW5tVYTBJrYAz6BkXz20JOsYqFJ3lyiKogqxE21Gzuu6SIQxzujNsJLm28v04=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789425472; c=relaxed/simple;
-	bh=5Y3Qv8aSWtG1ldbvwnoLA2PLP4W7OW/PZbwFVfjYd74=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cOnlHNb06GYa72u3C+2hHOv+p69krFzr/rZqZuUsyLTMkE6fOMe3Y2QK37t++avwko8VyFKpRHXqSBbIu7+Rysdk+gI2oy6RP4WcvbrVj8NyiDtYVmjVtcXaRDWArQBuY97jcAlNQFxxvdtUqRzFRDiu1Bo5dHhHt+XHpXQ1qSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwR7Z/+b; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CD830DEA3;
+	Tue, 15 Sep 2026 02:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789438412; cv=fail; b=QLikBDqt9MqulrhvnlpA2Sc6c26Zo2SEsBgofECTTiGhMnSq+BAD50pyu0jsK0hMGlVLxOdh/nlvI0q8p6An9XeTfwMQ2nHC/bZHtFDopUWDr4pYARs4QvlUP+3b9BTSPl/XWGxmgLvh+8urkPytQ4BBaOqSrX3a8Bt5hfCKGGA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789438412; c=relaxed/simple;
+	bh=ZRJXAdwmdecErpHwqU+yXrfJ2rWXklVXQsJX9kzqMxA=;
+	h=Content-Type:Date:Message-Id:Cc:To:From:Subject:References:
+	 In-Reply-To:MIME-Version; b=GauVKCzjLN/2MmwoO6xA7pmSiJyJi5CsndpqEuxutfAoXkL7vn8ZVzu3o8BE1gNWWmD9/7V9h8nW3f2vQsXcje+bEQq9cKvitIon7zxLGfr/1NhlLq6rgdcczPup5ftemXp5I+dbSMqRIuq8Wv86FuM6kPZ78151/PlYlCtBSvg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OoaANltP; arc=fail smtp.client-ip=52.101.43.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwR7Z/+b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C9C1F000FF;
-	Mon, 14 Sep 2026 22:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789425470;
-	bh=oFoR9qQIdwt3+vZZkEYKmSOPISctBhe05eYTvaM9nRc=;
-	h=From:To:Cc:Subject:Date;
-	b=nwR7Z/+brNyjYCiKk5tA1AWiP71C0jjpBP4OUjVWMIY8zC1DHCgYLPJPQ9k2fjm7e
-	 afcKlGR/P40QmBQ+JB7za6HgqcNZHHubYdNqQFi4TGbannqx9lfyQVk09FvLqZGbRQ
-	 W6WChnoOdw1GEJvDm+7Bx6Xi00/XgC5+wLRJAfBhqfc91zhPWbmGn9Jm4Rxqlne9WI
-	 MNFVsUOjTcQQsdgAnQnprRRJDjY+M0+2nJhFLEWmnCGXZ2zdDeTUN3FjRlt0XKL1+z
-	 U/ya0cBc+R6oNUiWgxI7Qw5I6/3TtkNxc1Hnac4DHOGjLvtEaI/+ZqFDxCOBp2Oau0
-	 dB68PFECv9lcg==
-From: Kees Cook <kees@kernel.org>
-To: Julia Lawall <Julia.Lawall@inria.fr>
-Cc: Kees Cook <kees@kernel.org>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	cocci@inria.fr,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] coccinelle: kmalloc_obj: Convert multi-byte integral allocations
-Date: Mon, 14 Sep 2026 15:37:49 -0700
-Message-Id: <20260914223748.i.971-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OoaANltP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YViOoxHn9ZL5AcWD8KzI0VWPNIZDT5lWBUKi41X/IIwTBzo9+f5prkrK/bIbjz/H6No4t2JCpkRAtKeQUhFAGpI3/GdsL3bRB7RXCXQ8jlHIiFEOji2OjkZ7MNPhzUyZ4oHCVw5RqwA511h9msZ2wgBINElwr9/68WoX3taoa1PqvsVAabBaKbytIarvK5u/xuk3Wn558min1FIyb1tBkHnhsTOEjgYRDYr4YW34UzR8qtcUHdlrFOwLD/cYDXgD0ckQ0HehzpbfzgUVlo7mvKdFva1ixeC4THEt01q77ZrTOkqZIRo6corkqCTU3/VU4DESTaVn48QhL2z98rSRPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=F17wByKd8svqGXYvVX5yqWhs9EXaFnB6+/zLUYkf4KY=;
+ b=JZBFf2WYfqCpifGU4L1fwiArN/Vf29HKY4WYmH720t8kNzGdcez2KdJ0pakgdodPgFdCfCNBZfwmwKMULwGWLEPHa7fic8cEbwT5xP2+VovbMxFvvwKGwUgutAmVJvUTuV0efk6sqQiaRrodMikXgC5h72StvveJz+VUN+fSi/lFFwJRttYgYDIHxILbgmC/fbPhykHPkOUR3Oyvrb6XtD4zm5TnAlDOFkJA9tIZ7qhdntFjbORykPdtkKD758hRnmPiGfv7LIwmcfKZNGEHb6huOw+BlpVImmLExI3/mNl1KXwskSStiVkI2+CuYa8ZiQHodu1P1OXG0uQwB3hbgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F17wByKd8svqGXYvVX5yqWhs9EXaFnB6+/zLUYkf4KY=;
+ b=OoaANltPW1fPocGEHz07nsXu6RI/7JhJglEhUdz1cH9MrEWYlIc38/vhgPNhGkv6xrATtj/G9A74X87mBzQRs6N18OX/1G1VuO7aZa18HIVEitRWabVaT1b+7+ATwLSA7CbDm+4BEi1KC9rweJTGxG8+RASBtYgN0PwMIS+m7QmRytHXdPVRbN3Q9ELTnDnSLjGzaIF99SQGDMYziONxOK8yxTAxNQTaZVdYlW+H15FDt4880vq22qd+c7jV5ydXT+D0xJSLosADv3Bk+wxlzXiLD/hZRStC2WeW6lyi0AdOoh3k6BbSqHJ1dOZoV63PRqXkyVU0Hy2D8rSO8I0ISg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by DS5PPF5E0E7945E.namprd12.prod.outlook.com (2603:10b6:f:fc00::650) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Tue, 15 Sep
+ 2026 02:13:23 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0406.007; Tue, 15 Sep 2026
+ 02:13:16 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 14 Sep 2026 22:13:15 -0400
+Message-Id: <DLFIYY1VZWYD.15RG8EIQ4M749@nvidia.com>
+Cc: "Lorenzo Stoakes" <ljs@kernel.org>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "David Hildenbrand" <david@kernel.org>, "Liam
+ R. Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>,
+ "Mike Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan"
+ <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Brendan Jackman"
+ <brendan.jackman@linux.dev>, "Johannes Weiner" <hannes@cmpxchg.org>,
+ <linux-mm@kvack.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <driver-core@lists.linux.dev>, <linux-hardening@vger.kernel.org>
+To: "Kees Cook" <kees@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>
+From: "Zi Yan" <ziy@nvidia.com>
+Subject: Re: [PATCH 1/2] mm: Move default_gfp() into gfp_types.h
+X-Mailer: aerc 0.22.0
+References: <20260914223212.i.829-kees@kernel.org>
+ <20260914223219.901347-1-kees@kernel.org>
+In-Reply-To: <20260914223219.901347-1-kees@kernel.org>
+X-ClientProxiedBy: YQBPR0101CA0265.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:68::9) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11778; i=kees@kernel.org; h=from:subject:message-id; bh=5Y3Qv8aSWtG1ldbvwnoLA2PLP4W7OW/PZbwFVfjYd74=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkrym2SOLM6ZnZl3HqwQu5f07ID4jlbZeO+8tTtCNURf ZCZtN+oo5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCLHCxgZlm37xp/3hjtz2gfP A8vFhaM4Fp5mzvu5VDeRKaBAtSTSg5Hhye/S/2KHkpoCFl090HzIjz/C1mlW6tbfquc86rfU6Ac xAAA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DS5PPF5E0E7945E:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0021f77-47b4-4720-27b5-08df12cee783
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|366016|23010399003|376014|1800799024|10067099003|56012099006|4143699003|11063799006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	tuIm/3rRzQ9A9LEoQM/oUPlzk1hfmTRDI1veQ9Yu7EESWGWwRhKDLdXHd2rRz2EFAOuIsT9VBOoGfQzrao5oMuOwQ/CQ7LLAtUS4ZRZd5tco1isZveW8dMxW312D+s+OJ09K5OKXTcboMgXMFIZf0XqVLl3f4O6EpjrajpYKIT425g4uPJeu9st92K87QBhzlrpg2+n4gbq1c1MfAYTljWTrnBQ1uvpsYH9ZORlX6UJvuMySHwGyo7R21eejl5tpWlXCxONbL9SB6y7uOG9quLAaDzIqxlLJ5dGj3/tVEZIXcO6o1nJ58wAFW/FRpEapwd+7sQUEhSZzakhQyMnMrob2i0g4l926I/e5r/lNk2lDNH/TDoRDNDXK1x/MpfhKahSC+McFmLIAYnoBu/PM2+GlnLFinuZ2drqozZnYkeslqhpyRvt5+rMhEcXN9ocQzDGIvlZm7tug2J0qUxIloqSdaZiEPPLlbIdi6MgOcp6347wfxrEHrybyhY4WhX57ZKSS6B077aoshzhv7E8VMuHY2RS76dRwWxASN5CG1FxaCm8lHUmQJvKIqIfwdhebWx2AlAwTz6ipHfTlWbJd/bwDao7CXB7h40tM8cOJWF+47ElUZe0ZpWoByxr8XPo1NSKaw+lnZT3RhAvtFqDKW30MDlsgzmHshA1VLyrh+qE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(23010399003)(376014)(1800799024)(10067099003)(56012099006)(4143699003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aXJkcEM1c3kyS0hzOFRlT1VsejhZN1VhTjd3ckhYYzZ6OElMbXU5dlV6OENW?=
+ =?utf-8?B?eEZiZWdMQVgvSFRlTzQxLy9aYkUvZ1pOZkF0bWU0Ui8raGZGSW9lKzBIRklJ?=
+ =?utf-8?B?MnYvSmdDVDNPQ25PSFNNZzFNL2xRclZKcy82ek5IMnBEb3FBVXhnMDhMVzZu?=
+ =?utf-8?B?S2NZMldDR2JURzN3dkM0MUl5U1lHMU9HMjBJWXFrU0ZzR2tJSDFFNlZSSXlP?=
+ =?utf-8?B?UkZESFVmUmcrdEVSU1V0RjAyYWNMS3UwU3lVeVh1MU1ldDlNOGNnWFBPUU5q?=
+ =?utf-8?B?SDA5WjRpdFdRcFZSUnp3dXh4dUFMSUoyYXJtaktSNVRpSVVYYUhYQlN4Q1Qx?=
+ =?utf-8?B?bDZjYUptWFJGeVdKR3g1dW0zQ0JjWWhKUGx1U21aT0V4MG5jdjh5WDhMUmpU?=
+ =?utf-8?B?NDFERzdvbXdETlI0T2tPSm91UHZrUHJ1WEJEc0NBNXN4YWk5ZS91dVowL1FZ?=
+ =?utf-8?B?QjZ3UnNGekNBRlR4MHFXSWdLS0loQUdicXh2emVzangwQVFCTzcrQ3F1ZlZY?=
+ =?utf-8?B?WHVxQlBZZGpxSG9nM3lxbm5uSWtkdDNMOTFDdjJONXVnVEFNZG9jQ2ZIdjZh?=
+ =?utf-8?B?SGlzY2p2ZG5GUkZyY3B5cGpzZURGQkpXRGh6L2swQzVTS0VRUUF1dE1tbEZx?=
+ =?utf-8?B?NEcvOUlGMnNnS0U5YXNLVUxDV0lDbmpHYzNmSVhlOGtCMFh3OE9yQTl1ZW9K?=
+ =?utf-8?B?KytrcFJKdVBlUUlqWDhYRnJvQjR2MlVGYnB6bWZia0lHbU9Zc25aNGQyVFNo?=
+ =?utf-8?B?ZXRMNWlRR1RDSUZKbkVvUDM5UlhCRExKVnZnN3NVdkVSckZvalVDZ0NjZzdS?=
+ =?utf-8?B?TnNncllTVXRwZHQzQyt4S0RwZGR4QkovQnJ2K1k4NHlqQ0VnWkYvakNHUnpr?=
+ =?utf-8?B?Y0ZnSVdITWZCaGhNTEQ1TGRmUXBBeFlYUkV2VFFKR0lKNTRGTjFTU01PY2M5?=
+ =?utf-8?B?Y2ljRDNaMVNpTmhTOHFRT2NTTEtWam80SGxSUFNuQ0dEN0Exb2dEZ1lVTVVi?=
+ =?utf-8?B?bnkyeDE4YUVXZTlpWStWNnhjTitHbWtOb1huUDhJTzVFekp5QSswMGk0REE2?=
+ =?utf-8?B?VGNBelJwelBXV1hyRy9uVjR0L0ppV0ZsS2dwUjZkZkNNY25JT0ZHTWJROUYr?=
+ =?utf-8?B?UkhyaE9mVzJVZ0xUUGhqaXd2TmUvNGNOSjFWWFlNOVVxZnV6NmY2Y2VFMHg2?=
+ =?utf-8?B?bjFyTWthSzc1a2hIcWxKV0ZQK01VSzY1bU9XTm54SXRTRENoaDJxZzFURURV?=
+ =?utf-8?B?bVlMOGRReUluWlFkM252dDNKUTdqRGZzRit1Q3lDTHc2RzJ6b2Z4Y2N6Z1c0?=
+ =?utf-8?B?c0VTK0RjcGxmb2pmbXY4T3dHRUlXUTdLNHdOR0JJUGIvQ3FrMWhZQStCSU1J?=
+ =?utf-8?B?Ynk3c0RaWjl2MXkxK2VCTFZqOW5ZSU1QVzE3d1hpVGRPVGVJNmZtK2M5RXFi?=
+ =?utf-8?B?V3RmeVJrbDBwTWpsMlhMdkZ5d0phNUp1TkdGM3pVK3dIeGp1a1dlaGJuZWEr?=
+ =?utf-8?B?dlExR0czUUxWSk9CWWNHUkR2YkRVRzFEYlBJZXZZbzFaakN1RzA0UEFmSE85?=
+ =?utf-8?B?aVRWKzZoU200YmwyZVBlVTQybUI4aS9vTjZrYlJ0YndiMzNlVXFWWjZCYXJH?=
+ =?utf-8?B?UnNKVUhnZVk2bTdrdUJQRkR6WkxzdjJ2Um11aDNpVGRqS0svUjR6bXZ5cnJO?=
+ =?utf-8?B?aE1TeGdlbHpuNE5kS3p4RkxDTlllVWpCOEhWQmpQNi80S1lUdlRYMnBPUk5T?=
+ =?utf-8?B?MUptZnBxd2R6VVVEcXVEMFdQUm9SRVNQNlg3RWVBVjJNTnEvMUJnNHJPbzJs?=
+ =?utf-8?B?RTRFWEJhUDdVcS9rRHp1dEhTRFJMdDdxVUpibDY2Q1hFejUweXFvVEVzU1hL?=
+ =?utf-8?B?LzBTZXF2Q3NVd1I4ditFNUtZZUlpeXZxRzJKRTNxWXlBaUZNcWQxdjBWWjlw?=
+ =?utf-8?B?RDdVa25KSXlpRDY1VVFVN1lDck8zNFVSVkZnZGdpazlnb3RUejdxV1JuSWJE?=
+ =?utf-8?B?MkJXY2Y1LzhRbXJzVUM5K2xGeW9kNTc3UjB6Z0E4bEtjQ0ZmdHdVNEN5MTl1?=
+ =?utf-8?B?TU04L0xUSGRWc0MyanlibVROSzdhWmExNTR4UFhWbWxtQVEzZWhYQzlSSFFL?=
+ =?utf-8?B?SXZXWTdsb1pkTWNuR1RFZlFBTDB0Z0ZoM0Y5ZzVVNHNzOTVZWU04VjFOSE1P?=
+ =?utf-8?B?QTk0SHZXVHd6ZVdNZlRIY2FHZDk5Zkp4bWJZUUZHTXBoS0d3WGg0eWh5UENU?=
+ =?utf-8?B?QkNlcHFNRks5cUg4Q2E2QytEd2hvSVdxNVB5aFVIeVJtdzdZQTZBZjYzSWhQ?=
+ =?utf-8?Q?25RBBiSSyu6mEOg6BT?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0021f77-47b4-4720-27b5-08df12cee783
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2026 02:13:16.8193
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kcLrU2mSk67mgmYXzDjqbBXLEesz8eJAInseNSsZZgNiSobCZDrSnkw/FqboiFB6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF5E0E7945E
 
-Currently the kmalloc_obj conversion rules leave alone every allocation
-sized to an integral type, or assigned to a pointer to one, so that byte
-buffers keep being allocated with a byte count. That also leaves alone
-arrays of multi-byte integers, such as
+On Mon Sep 14, 2026 at 6:32 PM EDT, Kees Cook wrote:
+> Using default_gfp() only depends on the GFP_KERNEL value. Move
+> default_gfp() into gfp_types.h so that future use in devres.h doesn't
+> require pulling in all of gfp.h.
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Lorenzo Stoakes <ljs@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@kernel.org>
+> Cc: "Liam R. Howlett" <liam@infradead.org>
+> Cc: Vlastimil Babka <vbabka@kernel.org>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Brendan Jackman <brendan.jackman@linux.dev>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Zi Yan <ziy@nvidia.com>
+> Cc: <linux-mm@kvack.org>
+> ---
+>  include/linux/gfp.h       | 4 ----
+>  include/linux/gfp_types.h | 4 ++++
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
 
-	vals = kcalloc(n, sizeof(u32), GFP_KERNEL);
+Makes sense.
 
-which count objects like any other array. At the same time the signed
-types (s8 through s64 and their variants) were not in the list at all.
-But these multi-byte types are better handled through the full
-kmalloc_obj-style allocation, as they are, in fact, typed and aren't
-just a byte string, so they would benefit from type checking.
+Reviewed-by: Zi Yan <ziy@nvidia.com>
 
-Split INTEGRAL into BYTE_TYPES and MULTIBYTE_TYPES:
 
- - Allocations sized by a byte type or a string literal, or assigned to
-   a pointer to a byte type, are still left alone.
- - Allocations sized by a multi-byte type are converted when they are
-   assigned to a pointer, or a pointer to const, of that same type.
-   Other allocations sized by a multi-byte type are left alone, as their
-   target may be a pointer to an array.
- - Allocations of other types assigned to a pointer to a multi-byte type
-   are still left alone.
- - Arrays of pointers to integral types sized by type, such as
-   sizeof(char *), are still left alone, now including the signed
-   types, as their target may be a pointer to an array of pointers, like
-   "const char *(*fmts)[]". Sized as sizeof(*target), they are converted
-   like any other array.
-
-List the signed types and the other spellings of the standard integer
-types (short int, unsigned, long long int, and so on), so that a
-declaration and a sizeof() that spell the same type differently still
-match.
-
-Assisted-by: LLM coccinelle
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Julia Lawall <Julia.Lawall@inria.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: <cocci@inria.fr>
----
- scripts/coccinelle/api/kmalloc_objs.cocci | 161 +++++++++++++++++-----
- 1 file changed, 129 insertions(+), 32 deletions(-)
-
-diff --git a/scripts/coccinelle/api/kmalloc_objs.cocci b/scripts/coccinelle/api/kmalloc_objs.cocci
-index e9a415b7b6f4..0a98ddf03eca 100644
---- a/scripts/coccinelle/api/kmalloc_objs.cocci
-+++ b/scripts/coccinelle/api/kmalloc_objs.cocci
-@@ -24,27 +24,57 @@ def alloc_array(name):
- 		print(f"Unknown transform for {name}", file=sys.stderr)
- 	return func
- 
--// This excludes anything that is assigning to or from integral types or
--// string literals. Everything else gets the sizeof() extracted for the
--// kmalloc_obj() type/var argument. sizeof(void *) is also excluded because
--// it will need case-by-case double-checking to make sure the right type is
-+// Allocations sized by a byte-sized type (BYTE_TYPES) or a string literal,
-+// and allocations assigned to a pointer to a byte-sized type, are byte
-+// buffers and are left alone. sizeof(void *) is also excluded because it
-+// will need case-by-case double-checking to make sure the right type is
- // being assigned.
-+//
-+// Allocations sized by a multi-byte integral type (MULTIBYTE_TYPES) are
-+// converted when they are assigned to a pointer to that same type.
-+// Otherwise they are left alone: the target may be a pointer to an array
-+// of that type, such as "s16 (*pairs)[2]", for which the converted
-+// allocation would have the wrong pointer type. For the same reason,
-+// arrays of pointers to integral types sized as sizeof(char *) and the
-+// like are left alone. Allocations of other types assigned to a pointer to
-+// a multi-byte integral type are left alone too.
-+//
-+// Everything else gets the sizeof() extracted for the kmalloc_obj()
-+// type/var argument.
-+//
-+// The first matching alternative below wins, so the exclusions must come
-+// before the more general conversions.
- @direct depends on patch && !(file in "tools") && !(file in "samples")@
- typedef u8, u16, u32, u64;
- typedef __u8, __u16, __u32, __u64;
- typedef uint8_t, uint16_t, uint32_t, uint64_t;
-+typedef s8, s16, s32, s64;
-+typedef __s8, __s16, __s32, __s64;
-+typedef int8_t, int16_t, int32_t, int64_t;
- typedef uchar, ushort, uint, ulong;
- typedef __le16, __le32, __le64;
- typedef __be16, __be32, __be64;
- typedef wchar_t;
--type INTEGRAL = {u8,__u8,uint8_t,char,unsigned char,uchar,wchar_t,
--		 u16,__u16,uint16_t,unsigned short,ushort,
--		 u32,__u32,uint32_t,unsigned int,uint,
--		 u64,__u64,uint64_t,unsigned long,ulong,
--		 __le16,__le32,__le64,__be16,__be32,__be64};
-+type BYTE_TYPES = {char,signed char,unsigned char,uchar,
-+		   u8,__u8,uint8_t,s8,__s8,int8_t};
-+type MULTIBYTE_TYPES = {short,short int,signed short,signed short int,
-+			unsigned short,unsigned short int,ushort,
-+			int,signed,signed int,unsigned,unsigned int,uint,
-+			long,long int,signed long,signed long int,
-+			unsigned long,unsigned long int,ulong,
-+			long long,long long int,
-+			signed long long,signed long long int,
-+			unsigned long long,unsigned long long int,
-+			u16,__u16,uint16_t,s16,__s16,int16_t,
-+			u32,__u32,uint32_t,s32,__s32,int32_t,
-+			u64,__u64,uint64_t,s64,__s64,int64_t,
-+			__le16,__le32,__le64,__be16,__be32,__be64,
-+			wchar_t};
- char [] STRING;
--INTEGRAL *BYTES;
--INTEGRAL **BYTES_PTRS;
-+BYTE_TYPES *BYTES;
-+MULTIBYTE_TYPES *MULTIBYTES;
-+const MULTIBYTE_TYPES *CONST_MULTIBYTES;
-+MULTIBYTE_TYPES MULTIBYTE;
- type TYPE;
- expression VAR;
- expression GFP;
-@@ -59,66 +89,133 @@ fresh identifier ALLOC_OBJS = script:python(ALLOC_ARRAY) { alloc_array(ALLOC_ARR
- @@
- 
- (
-+// Convert a single object sized by its target: p = kmalloc(sizeof(*p), gfp)
- -	VAR = ALLOC((sizeof(*VAR)), GFP)
- +	VAR = ALLOC_OBJ(*VAR, GFP)
- |
--	ALLOC((\(sizeof(STRING)\|sizeof(INTEGRAL)\|sizeof(INTEGRAL *)\)), GFP)
-+// Exclude byte buffers and integral pointers: kmalloc(sizeof(u8), gfp),
-+//   kmalloc(sizeof("str"), gfp), kmalloc(sizeof(char *), gfp)
-+	ALLOC((\(sizeof(STRING)\|sizeof(BYTE_TYPES)\|
-+		sizeof(BYTE_TYPES *)\|sizeof(MULTIBYTE_TYPES *)\)), GFP)
- |
--	BYTES = ALLOC((sizeof(E)), GFP)
-+// Exclude anything assigned to a byte pointer:
-+//   u8 *buf = kmalloc(sizeof(*hdr), gfp)
-+	BYTES = ALLOC((\(sizeof(E)\|sizeof(TYPE)\)), GFP)
- |
--	BYTES = ALLOC((sizeof(TYPE)), GFP)
-+// Convert a multi-byte type to a pointer to it:
-+//   u32 *p = kmalloc(sizeof(u32), gfp)
-+	\(MULTIBYTES\|CONST_MULTIBYTES\) =
-+-		ALLOC((sizeof(MULTIBYTE_TYPES)), GFP)
-++		ALLOC_OBJ(MULTIBYTE_TYPES, GFP)
- |
--	BYTES_PTRS = ALLOC((sizeof(E)), GFP)
-+// Same by expression: u32 *p = kmalloc(sizeof(p[0]), gfp)
-+	\(MULTIBYTES\|CONST_MULTIBYTES\) =
-+-		ALLOC((sizeof(MULTIBYTE)), GFP)
-++		ALLOC_OBJ(MULTIBYTE, GFP)
- |
--	BYTES_PTRS = ALLOC((sizeof(TYPE)), GFP)
-+// Exclude other multi-byte sizes, e.g. to pointers to arrays: s16 (*p)[2] = ...
-+	ALLOC((\(sizeof(MULTIBYTE_TYPES)\|sizeof(MULTIBYTE)\)), GFP)
- |
-+// Exclude anything else assigned to a multi-byte pointer:
-+//   u32 *p = kmalloc(sizeof(*hdr), gfp)
-+	\(MULTIBYTES\|CONST_MULTIBYTES\) = ALLOC((\(sizeof(E)\|sizeof(TYPE)\)), GFP)
-+|
-+// Exclude void pointers, to be checked by hand: kmalloc(sizeof(void *), gfp)
- 	ALLOC((sizeof(void *)), GFP)
- |
-+// Convert any other expression: p = kmalloc(sizeof(s->item), gfp)
- -	ALLOC((sizeof(E)), GFP)
- +	ALLOC_OBJ(E, GFP)
- |
-+// Convert any other type: p = kmalloc(sizeof(struct item), gfp)
- -	ALLOC((sizeof(TYPE)), GFP)
- +	ALLOC_OBJ(TYPE, GFP)
- |
--	ALLOC_ARRAY(COUNT, (\(sizeof(STRING)\|sizeof(INTEGRAL)\|sizeof(INTEGRAL *)\)), GFP)
--|
--	BYTES = ALLOC_ARRAY(COUNT, (sizeof(E)), GFP)
--|
--	BYTES = ALLOC_ARRAY(COUNT, (sizeof(TYPE)), GFP)
--|
--	BYTES_PTRS = ALLOC_ARRAY(COUNT, (sizeof(E)), GFP)
-+// The same, for arrays allocated as (count, size):
-+// Exclude byte buffers and integral pointers: kcalloc(n, sizeof(u8), gfp),
-+//   kcalloc(n, sizeof(char *), gfp)
-+	ALLOC_ARRAY(COUNT, (\(sizeof(STRING)\|sizeof(BYTE_TYPES)\|
-+			    sizeof(BYTE_TYPES *)\|sizeof(MULTIBYTE_TYPES *)\)), GFP)
- |
--	BYTES_PTRS = ALLOC_ARRAY(COUNT, (sizeof(TYPE)), GFP)
-+// Exclude arrays assigned to a byte pointer:
-+//   u8 *buf = kcalloc(n, sizeof(*hdr), gfp)
-+	BYTES = ALLOC_ARRAY(COUNT, (\(sizeof(E)\|sizeof(TYPE)\)), GFP)
- |
--	ALLOC_ARRAY((\(sizeof(STRING)\|sizeof(INTEGRAL)\|sizeof(INTEGRAL *)\)), COUNT, GFP)
-+// Convert a multi-byte array to a pointer to it:
-+//   u32 *p = kcalloc(n, sizeof(u32), gfp)
-+	\(MULTIBYTES\|CONST_MULTIBYTES\) =
-+-		ALLOC_ARRAY(COUNT, (sizeof(MULTIBYTE_TYPES)), GFP)
-++		ALLOC_OBJS(MULTIBYTE_TYPES, COUNT, GFP)
- |
--	BYTES = ALLOC_ARRAY((sizeof(E)), COUNT, GFP)
-+// Same by expression: u32 *p = kcalloc(n, sizeof(*p), gfp)
-+	\(MULTIBYTES\|CONST_MULTIBYTES\) =
-+-		ALLOC_ARRAY(COUNT, (sizeof(MULTIBYTE)), GFP)
-++		ALLOC_OBJS(MULTIBYTE, COUNT, GFP)
- |
--	BYTES = ALLOC_ARRAY((sizeof(TYPE)), COUNT, GFP)
-+// Exclude other multi-byte arrays:
-+//   s16 (*pairs)[2] = kcalloc(n, sizeof(s16), gfp)
-+	ALLOC_ARRAY(COUNT, (\(sizeof(MULTIBYTE_TYPES)\|sizeof(MULTIBYTE)\)), GFP)
- |
--	BYTES_PTRS = ALLOC_ARRAY((sizeof(E)), COUNT, GFP)
--|
--	BYTES_PTRS = ALLOC_ARRAY((sizeof(TYPE)), COUNT, GFP)
-+// Exclude other arrays assigned to a multi-byte pointer:
-+//   u32 *p = kcalloc(n, sizeof(*hdr), gfp)
-+	\(MULTIBYTES\|CONST_MULTIBYTES\) = ALLOC_ARRAY(COUNT, (\(sizeof(E)\|sizeof(TYPE)\)), GFP)
- |
-+// Exclude arrays of void pointers: kcalloc(n, sizeof(void *), gfp)
- 	ALLOC_ARRAY(COUNT, (sizeof(void *)), GFP)
- |
--	ALLOC_ARRAY((sizeof(void *)), COUNT, GFP)
--|
-+// Convert any other expression: p = kcalloc(n, sizeof(*p), gfp)
- -	ALLOC_ARRAY(COUNT, (sizeof(E)), GFP)
- +	ALLOC_OBJS(E, COUNT, GFP)
- |
-+// Convert any other type: p = kcalloc(n, sizeof(struct item), gfp)
- -	ALLOC_ARRAY(COUNT, (sizeof(TYPE)), GFP)
- +	ALLOC_OBJS(TYPE, COUNT, GFP)
- |
-+// The same, for arrays allocated as (size, count):
-+// Exclude byte buffers and integral pointers: kcalloc(sizeof(u8), n, gfp),
-+//   kcalloc(sizeof(char *), n, gfp)
-+	ALLOC_ARRAY((\(sizeof(STRING)\|sizeof(BYTE_TYPES)\|
-+		      sizeof(BYTE_TYPES *)\|sizeof(MULTIBYTE_TYPES *)\)), COUNT, GFP)
-+|
-+// Exclude arrays assigned to a byte pointer:
-+//   u8 *buf = kcalloc(sizeof(*hdr), n, gfp)
-+	BYTES = ALLOC_ARRAY((\(sizeof(E)\|sizeof(TYPE)\)), COUNT, GFP)
-+|
-+// Convert a multi-byte array to a pointer to it:
-+//   u32 *p = kcalloc(sizeof(u32), n, gfp)
-+	\(MULTIBYTES\|CONST_MULTIBYTES\) =
-+-		ALLOC_ARRAY((sizeof(MULTIBYTE_TYPES)), COUNT, GFP)
-++		ALLOC_OBJS(MULTIBYTE_TYPES, COUNT, GFP)
-+|
-+// Same by expression: u32 *p = kcalloc(sizeof(*p), n, gfp)
-+	\(MULTIBYTES\|CONST_MULTIBYTES\) =
-+-		ALLOC_ARRAY((sizeof(MULTIBYTE)), COUNT, GFP)
-++		ALLOC_OBJS(MULTIBYTE, COUNT, GFP)
-+|
-+// Exclude other multi-byte arrays:
-+//   s16 (*pairs)[2] = kcalloc(sizeof(s16), n, gfp)
-+	ALLOC_ARRAY((\(sizeof(MULTIBYTE_TYPES)\|sizeof(MULTIBYTE)\)), COUNT, GFP)
-+|
-+// Exclude other arrays assigned to a multi-byte pointer:
-+//   u32 *p = kcalloc(sizeof(*hdr), n, gfp)
-+	\(MULTIBYTES\|CONST_MULTIBYTES\) = ALLOC_ARRAY((\(sizeof(E)\|sizeof(TYPE)\)), COUNT, GFP)
-+|
-+// Exclude arrays of void pointers: kcalloc(sizeof(void *), n, gfp)
-+	ALLOC_ARRAY((sizeof(void *)), COUNT, GFP)
-+|
-+// Convert any other expression: p = kcalloc(sizeof(*p), n, gfp)
- -	ALLOC_ARRAY((sizeof(E)), COUNT, GFP)
- +	ALLOC_OBJS(E, COUNT, GFP)
- |
-+// Convert any other type: p = kcalloc(sizeof(struct item), n, gfp)
- -	ALLOC_ARRAY((sizeof(TYPE)), COUNT, GFP)
- +	ALLOC_OBJS(TYPE, COUNT, GFP)
- |
-+// Convert flexible array structures: p = kmalloc(struct_size(p, data, n), gfp)
- -	ALLOC(struct_size(VAR, FLEX, COUNT), GFP)
- +	ALLOC_FLEX(*VAR, FLEX, COUNT, GFP)
- |
-+// Same by type: kmalloc(struct_size_t(struct item, data, n), gfp)
- -	ALLOC(struct_size_t(TYPE, FLEX, COUNT), GFP)
- +	ALLOC_FLEX(TYPE, FLEX, COUNT, GFP)
- )
--- 
-2.34.1
+--=20
+Best Regards,
+Yan, Zi
 
