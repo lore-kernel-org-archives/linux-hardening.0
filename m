@@ -1,166 +1,173 @@
-Received: from flow-b8-smtp.messagingengine.com (flow-b8-smtp.messagingengine.com [202.12.124.143])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE893BB128;
-	Tue, 15 Sep 2026 18:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.143
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705D44399CC;
+	Tue, 15 Sep 2026 18:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789495430; cv=none; b=tK4FFG8ohWsp5+XDk7sY5HDSHWhrl7zpA1HVcXy8oWwz/yb4HSSOGyHE/JV/KOmZa7w0AzD81ylvTzJr59pgEcAXtFF/IN+hQTVwmNZSatbH8G7rSDFAraPhGkEz1S9BVRNCL37Yor7BPsSXfDYXZGXO58YKSmisJa8b/PNadog=
+	t=1789495532; cv=none; b=scEk3jaJqbfeet0JDqfFF0hblNplzvmS+1lPz5NwnsVrm4u1kVOCfExiYi/g6Hcz/08l4v56diz5hEAm6GLeiPHgwD5vF0ECUh6ZHM6V+9zH5qgIzxHNOxKGwTLx8eYsV+cO0V34F90js4GWpfA4rKUMxDgVeEre50pX0LwffPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789495430; c=relaxed/simple;
-	bh=acA8Pl0ra8uGRhaY3yUxU7JeUeRVK1VSh+mJtBE56Dw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=FjRt/+BS8Hn6v7Iig5+S2PbQwc3+TzJco9Px79pzrcaif7dTkFr+tA6ullkbQpIq8+llqCoACoCyW0i9BxC8aSKLvwX/FDq6/wON5VwzStrS2x8A5rdZNVyx0VtF/AO4ZKYQgxEODbBk06FYXPAcGMpExxU0HzdpOMK0uSW16VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=U4sf78++; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oq9Ixf7y; arc=none smtp.client-ip=202.12.124.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1789495532; c=relaxed/simple;
+	bh=V6K4OlMCnUsCbDMREVaUa2vUImH9KQWys0wgaxngXJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gfuPf03J7lxn0tqT5OuVYHZ4DS/aVd4KrSy2EDRM8b982EshWCpuzHWUr+D9KdPANs83cOFX09kIsaIw7aDm2lEcsp6xot0jmqiCR0NzNGmwbnunVarZnX3eiEP4fnf2GnWnQ/YsopuMzFiqjYgckczMy+23ng8N45508TCOPxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTo4X3Om; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="U4sf78++";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oq9Ixf7y"
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailflow.stl.internal (Postfix) with ESMTP id 5358A1300085;
-	Tue, 15 Sep 2026 14:03:43 -0400 (EDT)
-Received: from ams-imap-03 ([10.64.2.23])
-  by ams-compute-02.internal (MEProxy); Tue, 15 Sep 2026 14:03:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1789495422;
-	 x=1789502622; bh=M+18z9TRevaxtOpUOsKP4yasoi0N4a+EiZHqRi1jYdY=; b=
-	U4sf78++DYavqgGlejlEwUXoEqhIsCFB/2NyMKaj1PndBkbO10J1TMqWCQzUYQ9k
-	CTbm52mBhfYJSzo7pJnhLJi2SRLdZ/DVdPmXmQb1D3hIh8EpSvsDulGT6hQvUFIl
-	s0XDhlwy8JxTxnRPbwZ8jQBUc/hT3IDcWw2vdOWMrVTXA9ZLM45kBy2fOChmGOqv
-	0+L20OS6Ia1ohb1HeKO1C98ue8KmLWJK5lQn+jdj5x6oU046t+BwxkTtESnJG923
-	Lu2frFKww9pEJwXwyFRjRWXBSJW2faQu3PiYgYk4lGG/swolQik/CSxOyRbDqKzZ
-	5i/cSlA0RTVVNA5vyJ1UPg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789495422; x=
-	1789502622; bh=M+18z9TRevaxtOpUOsKP4yasoi0N4a+EiZHqRi1jYdY=; b=o
-	q9Ixf7yRpyn6OvcbGl5rXjJFa1njovmQxMYA4/EkJhzjD+maxV5GG3ba19SaW++G
-	QOs6J0Fa/LV1lhtIdMIv5u3xcXBUQ/BkWbwv2PwZIHlLdfK4i2AUGu8CtspgtS8c
-	EWbgkgpdTYWZOz/tN4VFpLBiz9bx7j7kSMWM1k6IOH5QrWdbjh9m+DsvGh3OX/+q
-	Taj+DrKSfg4H32xe+YDJe5XD6ZR2tm8J04XsaAu0J35LGaavhJOritpYkOeAJ783
-	j8NjM0zLLgbkFuWyOYBUo5LLRpGC7dSHRYUJ8wIUxD2UbwvDMvzzE9DiB6DFOo42
-	tzIy3NobehRhziIOFHhPA==
-X-ME-Sender: <xms:cYipailbmg0-tN27ofHkhd07IO9gZOWNIOQrLQ9DCYqzmFuBBSchdw>
-    <xme:cYipakp6-uuZN1YnstpXkrEp_5StGTOJ0BtK_HxcCa3-ZFjlPC2cZMGQDppbVG_uA
-    JTnyuDh-VT8k9QjS8W0fkX0MgtjMGCzioAvPHVpm5r0ohPlZ5ZtiQ>
-X-ME-Proxy-Cause: dmFkZTFLubBmkF9VxUXZctMrdWBp2PvxU3vddrDMSNApH/C34f5Jo4vGvSjFWGqcIiCAm3
-    t2jJUO6j4wP3lQHA6L91qY+aXHlhV17TaNSiKSTmW0xstZgu79Dl5jU03KzK1s2YlOJo/3
-    wa4j2nKMRel037MnTHQ8te/M/aE7zD4CsPrI9tQLPGUChDom3CR70v4zVmv3gD6zyRZry/
-    fxHOTxmp3YVEprGwCEBNhJAcVk1vsP7wwArzoSgdgEFZ4vL9ELlAkcVUbdVwjHtuSZqaWP
-    AWe9eJ3y4fgUpnZHio/2j2aSBhv/10jGSapZIF0QaWlVDG6ssnreMapOlCHyUWq6kttutf
-    oDo7WlKZ5fFrKrT5By2389BEZwy+E2RhGE3phrfshauQuSZFgNJgWkijQF179i664QRgP6
-    LWCHtGbyIntI8ToE6NC1nHUqRV3n/l7uF4Eg8HGHeMFuBET58m59Ywkhe67LY7fOzyBVcI
-    2Q7BJAsK3NiPZYa+Jk7vj6XEdScnNdAgzPbI5zWgH6tlyIhnXAgIix0rQDdHElBplOBVyO
-    ekn2oaLCLvIcziLphnqNFkN6LJXV4JahCtpz7G1bwv76eoWQ39SAfPB6eTwfYtTu3wFAkR
-    34zZQJYlvXiTbuPfeqaj/5YlnP92Hdkc8ppMPu1ilrNf3/OICLnd/8+gehrQ
-X-ME-Proxy: <xmx:eIipatwHmU1_ouWm4I4RW_lK9XEMTS_CpIwSlkIYf8iZURXKG1MQPg>
-    <xmx:eIiparsReeDpWZOQeMc6tmSPPtMQx5IHt8-Vd8XR-iDUaNV_5h26nQ>
-    <xmx:eIipaucVS9uDmW_RRTNLCtqQ-2PAstNP4U_wVoGhtDrwlfy64or6jg>
-    <xmx:eIipajGS1AnUEw8rJ-AJ0f-ObcOldpUsOc-p5zmlPVGDO0QxR48S1A>
-    <xmx:foipaoajkqxqQ1sWqPi4SzqugSxTjUav0JGVACWsRKXejYebtAmyZxYQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 2D5C132A0081; Tue, 15 Sep 2026 14:03:29 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTo4X3Om"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF23A1F00898;
+	Tue, 15 Sep 2026 18:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789495529;
+	bh=mPeI+6lTU/Y8EitQI5ZfnrfapFmX8wWN22xo6A7UJaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jTo4X3Om6pjYJxMpPsXGw742bcwi+fNKt1WirPMCjMB3CN4+QeGCMAad0HowUYo27
+	 zkPX73/bpXrtYTMe0XsfHOKvy0auvvNyZSnejxr33FwP5Y4EAzd8YeVUzA5p/dgDEw
+	 5cFlE/iE3GLNGT0ByRP+/biS9WQfT2P4HJ97Jm9P9K/qgKyfL5uH3H46GOijU3awQE
+	 U05QkDGXb1dMAlMiuCtrF46H69n28W2iJaBayGHH26y3LSBp2/268of5pUNUCjMz6C
+	 lP5HOIiL9QmsIGugbJJQ+XSzW3eNNY7uy3+IQE3mKC77JsHqvgv78X1PoCadcnYcJG
+	 U7RPeBeWp4lDg==
+Date: Tue, 15 Sep 2026 11:05:29 -0700
+From: Kees Cook <kees@kernel.org>
+To: Bill Wendling <morbo@google.com>
+Cc: linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Matthias Schwarzott <zzam@gentoo.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+	"Martin K. Petersen" <mkp@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Jiri Pirko <jiri@resnulli.us>, Simon Horman <horms@kernel.org>,
+	Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Kanglong Wang <wangkanglong@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Qiang Ma <maqianga@uniontech.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Pengpeng Hou <pengpeng@iscas.ac.cn>,
+	Ard Biesheuvel <ardb@kernel.org>, Breno Leitao <leitao@debian.org>,
+	Thorsten Blum <blum@kernel.org>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lyude Paul <lyude@redhat.com>,
+	Ashutosh Desai <ashutoshdesai993@gmail.com>,
+	Imre Deak <imre.deak@intel.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Johan Hovold <johan@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Cryolitia PukNgae <cryolitia@uniontech.com>,
+	Jiaming Zhang <r772577952@gmail.com>,
+	Will Porter <mrwillporter@gmail.com>,
+	Cen Zhang <zzzccc427@gmail.com>,
+	=?iso-8859-1?Q?C=E1ssio?= Gabriel <cassiogabrielcontato@gmail.com>,
+	Rong Zhang <i@rong.moe>, Arun Raghavan <arunr@valvesoftware.com>,
+	nikitash.mariiaw@gmail.com, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-edac@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+	linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, devicetree@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-nfs@vger.kernel.org,
+	devel@lists.orangefs.org, linux-hardening@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH 00/28] Replace remaining strlcat() call sites with
+ snprintf()/seq_buf()
+Message-ID: <202609151055.AFC6267@keescook>
+References: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ArHA-gVR6p-N
-Date: Tue, 15 Sep 2026 20:02:38 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Nick Desaulniers" <ndesaulniers@google.com>,
- "Kees Cook" <kees@kernel.org>
-Cc: "Lorenzo Stoakes" <ljs@kernel.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nsc@kernel.org>, "Bill Wendling" <morbo@google.com>,
- "Justin Stitt" <justinstitt@google.com>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Alexey Gladkov" <legion@kernel.org>,
- "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Paul Walmsley" <pjw@kernel.org>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng" <boqun@kernel.org>,
- "Gary Guo" <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <lossin@kernel.org>,
- "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>,
- "Daniel Almeida" <daniel.almeida@collabora.com>,
- "Tamir Duberstein" <tamird@kernel.org>,
- "Alexandre Courbot" <acourbot@nvidia.com>,
- =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- "Jonathan Corbet" <corbet@lwn.net>,
- "Randy Dunlap" <rdunlap@infradead.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
- Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org,
- "Jens Axboe" <axboe@kernel.dk>, linux-hardening@vger.kernel.org
-Message-Id: <90006ad1-73df-4bd0-a434-61875edd5bb9@app.fastmail.com>
-In-Reply-To: 
- <CAKwvOdmgeyqivO4pVa=30XDWpXvdRzBR8f13rfuPzDx=LJ1Tsw@mail.gmail.com>
-References: <20260914-build-speedup-v2-0-39817ec5db23@kernel.org>
- <20260914-build-speedup-v2-21-39817ec5db23@kernel.org>
- <202609140844.FA7E848A@keescook> <aqk9gakQhxToLnDI@gremlin>
- <202609150955.A51C9F7A20@keescook>
- <CAKwvOdmgeyqivO4pVa=30XDWpXvdRzBR8f13rfuPzDx=LJ1Tsw@mail.gmail.com>
-Subject: Re: [PATCH v2 21/21] kbuild: use pigz for gzip compression if available
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 
-On Tue, Sep 15, 2026, at 19:47, Nick Desaulniers wrote:
-> On Tue, Sep 15, 2026 at 10:31=E2=80=AFAM Kees Cook <kees@kernel.org> w=
-rote:
->> On Tue, Sep 15, 2026 at 03:30:43PM +0100, Lorenzo Stoakes (ARM) wrote:
->> a)
->> My main concern is the lack of respecting the -j make argument. In my
->> mind, this is a blocker, because it means a build will now _always_ s=
-pin
->> up max CPUs (not what -j has limited it to), and for CIs, shared comp=
-ute
->> systems, or whatever, this violates the requested parallelism level. =
-For
->> example, if I'm doing a long-running Coccinelle replacement in one tr=
-ee
->> (which uses half the CPUs), any builds I launch I'm asking for the ot=
-her
->> half of my CPUs to be used so they don't thrash my cache.
->>
->> This is the kind of "why are all the CPUs spinning up?" question I
->> helped track down with commit 51e46c7a4007 ("docs, parallelism: Rearr=
-ange
->> how jobserver reservations are made") forever ago.
->
-> Parse -j from MAKEFLAGS (https://stackoverflow.com/a/76517886),
-> forward it to pigz?
+On Tue, Sep 15, 2026 at 08:18:17AM +0000, Bill Wendling wrote:
+> strlcat() is deprecated: like strcat(), it requires re-scanning the
+> destination string from the beginning on every call, which is O(n^2)
+> when used to build up a string incrementally, and its truncation
+> behavior is easy to get wrong. See:
+> 
+>   https://github.com/KSPP/linux/issues/370
+> 
+> This series removes the remaining strlcat() call sites in the tree
+> (plus the one inside fortify-string.h's strcat() implementation
+> itself), replacing each with snprintf(), scnprintf(), or the seq_buf()
+> API, whichever best fits the surrounding code.
 
-That still has a potential O(n=C2=B2) problem: if one builds N kernels
-with a top-level jobserver on N CPUs, and they all take the same
-amount of time, you end up with N pigz processes each trying to use
-N cpus at the same time. Ideally we'd use the equivalent of
--flto=3Dauto in the compiler, which respects jobserver settings,
-but I don't think pigz supports this at the moment.
+Thanks for tackling this!
 
-      Arnd
+A few global notes:
+
+- This series almost certainly needs to be sent as separate single
+  patches to each subsystem maintainer (rather than a giant CC list).
+
+- As others noted already, we don't want to do anything as just an
+  open-coded strlen/sprintf; this doesn't gain us anything. If we can't
+  use seq_buf or some other solution, we need to figure out what we _can_
+  do for a given use.
+
+- There are some collisions with other in-flight patches, e.g.  Mariia's[1]
+
+- The "Assisted-by:" trailer doesn't need the level of detail you've
+  got, which changed recently[2]. Now the desired trailer would just be:
+    Assisted-by: LLM
+
+- Please avoid including the Cc list in the email body (above or below
+  the "---" line), as it ends up being redundant.
+
+I'll go look through the individual patches...
+
+-Kees
+
+[1] https://lore.kernel.org/all/27956255dde39f58d73a7b51cb53cbe3d7804f54.1786411026.git.mariianikitash@google.com/
+[2] https://git.kernel.org/linus/816d9992d9ed ("coding-assistants: simplify attribution")
+
+-- 
+Kees Cook
