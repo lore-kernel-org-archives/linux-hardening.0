@@ -1,57 +1,57 @@
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA4248EC98
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B44D47ECC2
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460809; cv=none; b=H3CmibGRoLzkFbrsdFyxzle5xAuJuckKbLfXPaMrnUqsviuIVp4Ma0P0D1s+Pq+kwSzpbzwt3vQnZUEJGvrNEBqxUCnMGYnTeY0xUDW1VS5uR0JpfcFC+t36fPcGROOsj9UIsj0Whr1jGryXGzrf7lmAlnie8Cl7woRQ3tokk2E=
+	t=1789460834; cv=none; b=brSO3eflh7cNgwnzqlmDP4H2tUDBkdAY/BNjqs6N9NwvEKDM1ZFJ3bVs1yuDAgK08obSI2DX8c5JmMpNSMayHmc1+BYdaiH9trpWbNT1S3ouIoFnoC6cSSQCepsx4fray7RaVN4TwAIEkvHVRFAXMEW/5iP4ifThNjyk7uBcq8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460809; c=relaxed/simple;
-	bh=Uf7uxHQ/vmaAoZCZZPN2XUoRZ9miHwSqTeOUYXKdUpY=;
+	s=arc-20240116; t=1789460834; c=relaxed/simple;
+	bh=EqxPY8uDyH4sIF56bisQGVYV4UgUVWe6Fa26kaXaoOs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TeSu9jgDUpnmHbLz1tTobkM5/DfysNWwtGpWRrLUIk7TLxjq0S7yLzBGrV+67NSeqyK9aUL0Djd+E9bsZUjDChilC34guasbH3zBSr8vXHllBVzTKX5OBQ4usUNIwUdJGPjG5HX52seAFQBojcumTBanL8sYUJt2lOuGuFC6gG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fylHvou/; arc=none smtp.client-ip=209.85.222.197
+	 To:Cc:Content-Type; b=c2TY3FYJGnxCJMweaH9YDtGZa2sD0s3+L25Fimkz1AqWa4lp56fAbV1AqYQSanhdZpPLx8EBVGd4NUPxAbvBeQZvdrvzgolYMkZAacubeD7ePq/OcCEEMmqjK/BuSEZc3JcqJWlR62AUFdlrF/GP92u7zZGeysKAofx8BS5gQfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VVl3H3h1; arc=none smtp.client-ip=209.85.219.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fylHvou/"
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-93a3f673221so9740285a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:26:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VVl3H3h1"
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-90e8472ee1eso90212576d6.0
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:27:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460805; x=1790065605; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789460831; x=1790065631; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=LcsuffwFDxj4u6SThnIq1nFzZdsoWr9GB9tsbe2KVjo=;
-        b=fylHvou/Wh22FiyVWKAR0O2x56wmVGTz+de5J215XohvQeoCpEpjtkJ3se9y0MRCcT
-         nSHPWY9xXtiKDQmQTYC7Ns6XQjhsDw50rj80UC188aaBw6bM1GepL6PJir3Un9u2h8Sn
-         TlZzfSNMDRCeJ2zsdOhKmF7tW6yRaqTncT6oScNoG3qDgm2RD0fp6kjAVjEAXj7YaTU6
-         0BkDjWxHIyvM4zW+fkvhXwWJv5O9jxn5+OuhhwVaG+nXBrPucOHxX93gPQkFR+QdAA8R
-         7vJXGAfx156LJU/nheMIcj867Xkhmn/3FUi2RF04nO/EE5yx6x2aSBg31bqr7GYxKNTY
-         4N8Q==
+        bh=XkXp/XZtfYpYjiXJEDXdoQGA1NlHq2kVyqBGidLpG58=;
+        b=VVl3H3h1H95cxAemb3sAW4b8EPkrm0YXZUBUigLAls5YhHSckurKbNfscigoC9Sky7
+         ja7Gl0LFVc/07RFKFaWp5+FechYaz3duuGLPruYdbfxIkevsV5luHlmcgf9kzKsYXyfv
+         uqsXxYP/nHWL9Fu14iRT7gKZB4OflCigq70WLR0M8PmcJ3B0QDgGpX95TBYicYx7r/6i
+         tbCMaY6OURMWV71242PHLZR1cWwspjB6Eey9qhRef1GHrg/FhU4RpBNozcgjuFcKtNve
+         MbVusqlSNf5T+AS4LeT5EXqz3B4VlG/hsYwp9EdbCUks6HVAfYCNkX8uslxUk/m+TcQr
+         Shvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460805; x=1790065605;
+        d=1e100.net; s=20260707; t=1789460831; x=1790065631;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=LcsuffwFDxj4u6SThnIq1nFzZdsoWr9GB9tsbe2KVjo=;
-        b=O/xNl7Ne4FnqdV/mYZsPoCKG/ec97Xu5aACWkbPsoMXMTMQ2kgufGoyAlt1m06ZoiY
-         bJUSUqngG819K1CyDCmTU/mHiDI3TRBGput3l+9DAC0aygDQNfQ0t65IKHj0JxJM7iAz
-         pjyNjCYb8g2KVw9NnDMJNiwldCe3I1gFm3/+9Uzsvz7W4wuz0BJp6rC5uD3EMaUIud9L
-         LkboNCza+3+A+UIxlcZUCP0R/+STmS5NFXcHSZscgSsDBmqPipWjrtvhc1q+nsPWcuqr
-         Ch7QIfyIvgHzs72hlrLy7Aydrs589IeeTKJ93FpNQ+KcEdSes59U7UaJWD1a1wNIDpJM
-         2+tg==
-X-Forwarded-Encrypted: i=1; AKwUvByS5AM+Tkm95lyQDCiDa1LvsjmELQ3PvMUsblh7ASyADA63gDCTXTDptW/X3dTp40zrpe/6iE8+dzwaVX06HXA=@vger.kernel.org
-X-Gm-Message-State: AFuF++mLuXQytKkwO9ennIIyUesoevt0ZNKigNBRIwQUsSpR+Hq3qlIM
-	AMvgkB7Pu/j6BADibQ/7PXnmageJmo37JTAdT3DE3pup2e7rSI8UB+iOXDYD1KKm6Cn7ixLsid4
-	2
-X-Received: from plxm10.prod.google.com ([2002:a17:902:db0a:b0:2d9:7bf:6891])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b50:b0:2db:8ae7:a5d2
- with SMTP id d9443c01a7336-2dd6c5f39camr129000865ad.9.1789460415373; Tue, 15
- Sep 2026 01:20:15 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:41 +0000
+        bh=XkXp/XZtfYpYjiXJEDXdoQGA1NlHq2kVyqBGidLpG58=;
+        b=f7Kw8K+egLNUAA3juaqjqu4MW00OoiC6Kfnqc08Q5NLCZZEoio+/1AOHAacHnvucUy
+         cmvxqM3dXzAjstUlflmQ5Ecj3Ur5lkSoueQ2egGgcy/6jPzi13j2TDHmCTsaqMWa3fv+
+         vb4XTV3SuMp1ABvBtn28MJH6C4/7drlZJOGlnyjcyxCxf0ZOx8rKGDK+lCwSKHT9gP0M
+         cUdrhZ0OmcmNcKT/E/fJMFWRsSrXM6upaQMNaHa3NAeJr71j5F5SCtHeu9XZha6M6/As
+         /2xtd4/sUEuUj/czHFpwKl06mR5APniOABJ1TLGdmpNdlwwoV5K73Oe4X45k2HRvA1D/
+         bU/A==
+X-Forwarded-Encrypted: i=1; AKwUvBwgZohdrvlpGYnOr/rjdYk3NBls9CUtLAXcWoyj0Tog47qpf03SSQGG0BD54uDJJ8B/M6VR9VsFarTNXPT2McM=@vger.kernel.org
+X-Gm-Message-State: AFuF++kSGWJqdq2/Zb1dE+i9rU2wJrfuzsaGJLnhPl+xuO5Em4IyS2NM
+	hvrIbAkbbFa7sAsRjrUORuOhq7lKyY9KTIQ1FjWQ/RsSyMd3KwFwotj+nDGZW3B2P2xm9BwwQAX
+	q
+X-Received: from plbkc7.prod.google.com ([2002:a17:903:33c7:b0:2dd:630:cea4])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1965:b0:2d3:716e:e2ae
+ with SMTP id d9443c01a7336-2dd6c5ef019mr154580855ad.6.1789460411846; Tue, 15
+ Sep 2026 01:20:11 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:37 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -61,13 +61,13 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-25-morbo@google.com>
-Subject: [PATCH 24/28] EDAC/thunderx: Fix stale error context in thunderx_l2c_threaded_isr()
+Message-ID: <20260915081910.4142719-21-morbo@google.com>
+Subject: [PATCH 20/28] parisc: Refactor strlcat() to seq_buf in setup_cmdline()
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
-Cc: Bill Wendling <morbo@google.com>, Russell King <linux@armlinux.org.uk>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
+	Russell King <linux@armlinux.org.uk>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
 	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
 	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -123,17 +123,16 @@ Cc: Bill Wendling <morbo@google.com>, Russell King <linux@armlinux.org.uk>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-thunderx_l2c_threaded_isr() computes "tail" and "ctx" once before entering
-the loop that drains the L2C error ring, and never updates them on
-subsequent iterations. When multiple errors are queued, every iteration
-reports the first ring entry rather than advancing through the ring,
-causing subsequent hardware errors in a batch to go unreported.
+setup_cmdline() uses multiple strlcat() calls to conditionally append
+default console and earlycon parameters to boot_command_line.
 
-Recompute "tail" and "ctx" at the start of each loop iteration, matching
-the sibling thunderx_ocx_com_threaded_isr() and
-thunderx_ocx_lnk_threaded_isr() handlers.
+In preparation for removing the deprecated strlcat() API[1], initialize a
+struct seq_buf with the existing boot_command_line contents and use
+seq_buf_printf() to append the console parameters.
 
-Fixes: 41003396f932 ("EDAC, thunderx: Add Cavium ThunderX EDAC driver")
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Cc: codemender-patching+linux@google.com
+Assisted-by: CoPilot:Gemini-1.5-Pro [editor_update_file, shell_command_run]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -247,24 +246,57 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- drivers/edac/thunderx_edac.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/parisc/kernel/setup.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/edac/thunderx_edac.c b/drivers/edac/thunderx_edac.c
-index 9c0a1e48f96f..e7c335ca0c36 100644
---- a/drivers/edac/thunderx_edac.c
-+++ b/drivers/edac/thunderx_edac.c
-@@ -1880,6 +1880,9 @@ static irqreturn_t thunderx_l2c_threaded_isr(int irq,=
- void *irq_id)
+diff --git a/arch/parisc/kernel/setup.c b/arch/parisc/kernel/setup.c
+index d3e17a7a8901..fa3efc82ad87 100644
+--- a/arch/parisc/kernel/setup.c
++++ b/arch/parisc/kernel/setup.c
+@@ -17,6 +17,7 @@
+ #include <linux/init.h>
+ #include <linux/console.h>
+ #include <linux/seq_file.h>
++#include <linux/seq_buf.h>
+ #define PCI_DEBUG
+ #include <linux/pci.h>
+ #undef PCI_DEBUG
+@@ -42,6 +43,7 @@ static char __initdata command_line[COMMAND_LINE_SIZE];
+ static void __init setup_cmdline(char **cmdline_p)
+ {
+ 	extern unsigned int boot_args[];
++	struct seq_buf s;
+ 	char *p;
 =20
- 	while (CIRC_CNT(l2c->ring_head, l2c->ring_tail,
- 			ARRAY_SIZE(l2c->err_ctx))) {
-+		tail =3D ring_pos(l2c->ring_tail, ARRAY_SIZE(l2c->err_ctx));
-+		ctx =3D &l2c->err_ctx[tail];
+ 	*cmdline_p =3D command_line;
+@@ -54,19 +56,21 @@ static void __init setup_cmdline(char **cmdline_p)
+ 	strscpy(boot_command_line, (char *)__va(boot_args[1]),
+ 		COMMAND_LINE_SIZE);
+=20
++	s.buffer =3D boot_command_line;
++	s.size =3D COMMAND_LINE_SIZE;
++	s.len =3D strlen(boot_command_line);
 +
- 		snprintf(msg, L2C_MESSAGE_SIZE,
- 			 "%s: %s: %016llx, %s: %016llx",
- 			 l2c->edac_dev->ctl_name, reg_int_name, ctx->reg_int,
+ 	/* autodetect console type (if not done by palo yet) */
+ 	p =3D boot_command_line;
+ 	if (!str_has_prefix(p, "console=3D") && !strstr(p, " console=3D")) {
+-		strlcat(p, " console=3D", COMMAND_LINE_SIZE);
+-		if (PAGE0->mem_cons.cl_class =3D=3D CL_DUPLEX)
+-			strlcat(p, "ttyS0", COMMAND_LINE_SIZE);
+-		else
+-			strlcat(p, "tty0", COMMAND_LINE_SIZE);
++		seq_buf_printf(&s, " console=3D%s",
++			       PAGE0->mem_cons.cl_class =3D=3D CL_DUPLEX ?
++			       "ttyS0" : "tty0");
+ 	}
+=20
+ 	/* default to use early console */
+ 	if (!strstr(p, "earlycon"))
+-		strlcat(p, " earlycon=3Dpdc", COMMAND_LINE_SIZE);
++		seq_buf_printf(&s, " earlycon=3Dpdc");
+=20
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	/* did palo pass us a ramdisk? */
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
