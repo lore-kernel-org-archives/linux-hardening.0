@@ -1,159 +1,246 @@
-Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed2-f12.google.com (mail-ed2-f12.google.com [74.125.228.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352003DAAD0;
-	Tue, 15 Sep 2026 08:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FCC368D42
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 09:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789462482; cv=none; b=gSgCI4rHVlYLvzPdGp9TlhB2Iql1KlMASpv/fEDF7wFcyakvDZLSqH/vAt0hvt73CJfvj6xwVZr87UWdX5Ir1tzwgdlSkKfXAqy+eHXNGHDGwFb1xj9n+Za9LmGDXjHPadP5SNisjgwAme7y94+LON2MNZms6wyK6jKM/csp0pU=
+	t=1789463475; cv=none; b=NlkpJygQWQSrKi/13qBZdF28qxCGE0DAiD4CwNRSQMnRNLmgLeGgnNoqK05omgVdhnats7YEecEKg6bfS/Sk2AmYclsp8heLPCMEhsBsN/gsa5jJouBkuySNfVOhNPGef9CyRJfDbbNkYuBEVwZjXFkPJt0H588gKpegroom0yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789462482; c=relaxed/simple;
-	bh=TrFy84WFLihamQ2UtPEIp9cWrnbixhLsx/cx/JOsURw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Gwt4J9BJ21kueYZ6sw8cWxnQruGt+nMmD0NCOT9JiWGooP9zDApwclP9IhjwmMEwiL0geGEbIr2MUOYCwgsgPOItY2qj0on2lHENyGJ++QchgU/uUtSaMOgdRsGdp4ZdVnq4UR4jZtKfa819jIQQqCt7PlXVRnjP/T6JeVLkSkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Xody1oJN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Fr6fJyQZ; arc=none smtp.client-ip=103.168.172.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1789463475; c=relaxed/simple;
+	bh=fQkaQGH966gFPO5U3wwOm+ett7I82/RABfQ7YT2NVGk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AQt61pScWxXkPm41JKFY6HXlYDumJ4LRoMDvdCvDBH57Nz9OM9xu5M6MlD8eBzz9pFDu+aumJJKkFm/zAtvsJxshiiK/sI8lQLBaBn+2lMw8lOXP0ZjDnMMxBOhO0roYx3a1KrPjOZeks0F4z8GGe+ua/fzgccTZux0zegoBKB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CnVacH6R; arc=none smtp.client-ip=74.125.228.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Xody1oJN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Fr6fJyQZ"
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailflow.phl.internal (Postfix) with ESMTP id 0CFA21380347;
-	Tue, 15 Sep 2026 04:54:35 -0400 (EDT)
-Received: from ams-imap-03 ([10.64.2.23])
-  by ams-compute-02.internal (MEProxy); Tue, 15 Sep 2026 04:54:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1789462475;
-	 x=1789469675; bh=l+Dca6AU7f0s7A11m75QKiePhth6dKEUN646ZUyOcxw=; b=
-	Xody1oJNWEMViAMOHPbGMbFFJWDXAlekhcwJV2SoNNjV3Itz044FXU72K/NOTqui
-	dGNVaAbLlZulA5UBbJ7XisJ4/Tvb8vxRSHZgr1rg86rZaW2N6A20pRXX6CjuJFzZ
-	qN4XhD+zqJj7G6GzdewHzc9Ub5bvOnhXRm5+AIgWAw6aKT926nad1Knuxbpc675A
-	AzTOl0hJn/NZF15+dJYlH0kXOE9oaDD1dkmsAcj8fBTRb96rHKlGhQLyQSuMNDH/
-	4VAddWv+NRh+YnPkx2GOowIODOGAueKi2AxYNKtoPrv0OBaFTazekFo9yS6tBLOp
-	1Q82whhHv8fjGkGI4JpxpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789462475; x=
-	1789469675; bh=l+Dca6AU7f0s7A11m75QKiePhth6dKEUN646ZUyOcxw=; b=F
-	r6fJyQZ3B1K5YtWjMoTp/fRKQnkOGDNwUteDe4nSuymkyvq2WsfTel5mLEsiIniB
-	Q8Mg3SaUa+hsdJwDYad3RVOHqY6wVuGBbRMXj+q0YdMMGPUOsGRVwT87zBxsoxES
-	RO9e/Kk1iPvbMNYiJPlnyVnmhvk9iZJMC0Hl8RMrWAZ2w+CFpRVPeszShBh7jyY4
-	8pafu94pmoPvJ37O6z8ACe0BUJ66rCCYt+VIRpYGoi+zNkUwBU0gu7mu7AArH7H1
-	kfhRzCurvSNdhnOouyFcmOZ/aEYZowpWKOguKfCcIqTeATR2Y52GrsDRnY4YlRT8
-	4mvRCMtRoq3C+WpdMDmrA==
-X-ME-Sender: <xms:vgepagxIogvlk792euZsMnA2AD-07upm7o1gQScllFz15_5556isuA>
-    <xme:vgepavFIcm_1MvsAOmz2-JbwyBuNZNrMJpYsNzJOlp3FsY8ocFhn_i6RRbVtbI_xh
-    1ZW5w582V70b24GHPa0lC4s3Vi_hKlkZoAkL5CnvbECiIVQRZ2bC7IS>
-X-ME-Proxy-Cause: dmFkZTFl07Cd2pNoRIcz+Y9DRXa9I+CAUbyY73IeYUKFyinqRYJWqvWva9WPMlSrUtrXXQ
-    4Ce7uDNbLSoFWkhxcsl23fov82rHUN8DJQrUSxcE/UGH5WEDUUFVVGsxSlX9y1C16y1ikq
-    1Hzd/K8lu3qfyVrj+2Esn9a+9urCLgaUn1/Hd12DOGJvXPGzYSt8nJENaQptMkY/jEyE+u
-    S9faTEM6ZNXS1Rhf+11JTufpU/muQclYTOYI+iNfCTdQIpuxlsrqU2hRdRCR3my42gTIci
-    foRjjuFQi3I4plLW/2yjK9qsVn6rhO1nfI17QxL4uXxeeZVrN1VwQjZE4ge9q8fo1rM0X9
-    rhiOoth3vgfsKc6+FhKiMgmD69qMeWJU5dx0D71/c9CvyFGUfnl5G7No2fZi2vJmcmsWv/
-    +UST0qDeQsCHTDbJGGyedoSdHZ7/3mF5Q1wzNjHqpNnUUAF7MF/RhXwaQA8Qj3bpXpRWZk
-    WM2pUx2qPAmh1y6xmTh8nd0xCpzZHILt4JYJprl0AWZ62t80PI4UgOxCQLgGPoRTb8KlzB
-    7SSwnrEvKdcy0NSaAHG069l+OP4bVIt5jLLqs+Vt+azYtoLHe7W+0DYJTzaj831I7mO2gR
-    af3uM0A9HNtxo2qLYSmTeYYtjD/xXjNAVQ8rRDyPxRvaGwqUBq2NMVTlab5g
-X-ME-Proxy: <xmx:xAepagJ83hBWhUGi-qVtm002tZ6nTUV_OQ9QV71wb8cZ5sDkjqBMPA>
-    <xmx:xAeparBNN9LUMZgDPwhes7U75oqanecICHjUTVaE1k1UIFiw3-JoVg>
-    <xmx:xAepajlQfJFGq9Ujz61CsXpfe6X8ZyU-XYpSbmHIXAFjLrnSj5AGjA>
-    <xmx:xAepanETL89xwgdJrVvqYbWpq6B3LGj8dODqxwt8wrzrZnsIIpowVw>
-    <xmx:ywepaiFG3kexiM5eVna2DP0CZbgBhmkObpO3qC-5-C8A-WnmgHPjeTq->
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 268F432A0081; Tue, 15 Sep 2026 04:54:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CnVacH6R"
+Received: by mail-ed2-f12.google.com with SMTP id 4fb4d7f45d1cf-6a99391ffb2so5234478a12.0
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 02:11:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1789463471; x=1790068271; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4S77UvxmKvQGEySDdGGt+bawAL6b3X54Q38xL2/BalY=;
+        b=CnVacH6R6tI+sMYnpardK/lSWHogum4Dv34ECxiVVx5po07L9D4EHGlJp/3zcgFvLG
+         crl4KhDkiCcvJtAfkuE2Vl6XhKZw2yqv6E2k325vbbHExBtr0RmYVB3zITdX7/7F4XZA
+         apBXWwiyVrkXD9HGkAu/OvXi73naLPF6RxI6Jt5MVzesVQ/izih7kmR3bPgpRKBk+skp
+         28+jfNSoH/kgZJMcV+Futv0Huo3NqzE7hLewDjqvG0kiPmrrP3pbsseSaUCcYAcZ9cRZ
+         G8yQLRRSaqg4Q1kX1qn9jT+jooKw4Obl8NX6guEqWv7SbVrdz6rvvF3yV24eKQ4Rpa50
+         WExw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789463471; x=1790068271;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=4S77UvxmKvQGEySDdGGt+bawAL6b3X54Q38xL2/BalY=;
+        b=wRJdxGXTE4Pq2Mc+omgu8G4jKrS/JcqLOwXLTFPs6+leX39JQDlGwfzfBkKOw4YjMc
+         1yAdbAlzwovQQ0Lvl6+5IEW6eZcbeBgpxPyGes5XAEywulAIShxl2d4qsSIWEjN1X6Jn
+         1d1bctwFnsUyujBJ7eK1Fff76f/Qdv9Z1mrzRd36kadFXyp5IXVvePOTuLrKfa6JBFJ7
+         kqKWoKeANYLoQAbVYWHnAw4AfLcxygWmaGbTL78gLAvlF53T9F5u0ohirLRfSlKSLNIg
+         SYumzeEDbmycnyvLssynDDoiVUHAOEq3oqUVbdyfgnpZ+T+VQhS3zmaoa5Tg15SiyJ+P
+         JaFw==
+X-Forwarded-Encrypted: i=1; AKwUvBzYy/AL/WmeqK6zSt5r336TlUNARdWhPT6u5PXUk2IQMFJgbFODIemhOMUfs8U9RqWv3mJipNn83PrblPxkZwc=@vger.kernel.org
+X-Gm-Message-State: AFuF++ngA7KfuBPe5RXnlTBmH2QZKOpirxSWJxWOycNokKWKMxP5kbj9
+	PeczlOoln194HQ+wg4s2ev+tiTygHawr0uXTiyJ8idDC8wWts+9nJf/pPDA1o1fGCOo=
+X-Gm-Gg: AYBFou35T37I3dmikCDXU8+vgXIcCLXkf5FQeZtOdqHxDb1x4/2NGmLAg/vH//stHlZ
+	zttdF0GHmnRbd+g1u5snwZoM58Lfmv4n+h1tvPzQ8/XxMVuS0wPYZK6vdMMr7khdMjKPyKQqE0f
+	AnC3EMbyiQa38a83jQUbHUt4bQeoLuZ668CYp/LY5c6xqGE3Zjj0QgdqH3debDe97Z0qne9JJ5d
+	V8eIORB1z9Z3BliJdPbmiwE4vo39BZo63Py6GTKqer4vImGbD3EgE8CQqlt4UkzZKW/95e6jlxt
+	X0NaDFpsmn2XQN+Hxki6exRWbuDMVHjls6pKSARNIhSw0+Sxd5paeEEZ6eEuJwjLOk6+Kc8cK6a
+	+Cpcm83+Ao5YOSu4kwvtxPeyCpsJQ9ENYOQhnca4szD2z8HYGMxrMxSrAoTcKRzlhgZN6GvqasC
+	euTP0Kh2c5z3I81tSjB+KtyCD+qjy9bpIIpmUu5Tgn/TwYzFEu+1ym0e1L3XNSPbiCPC/6T+nF+
+	nG7R4I0dHo=
+X-Received: by 2002:a05:6402:e8b:b0:6a9:d959:c94e with SMTP id 4fb4d7f45d1cf-6a9f63cd955mr3622644a12.25.1789463471264;
+        Tue, 15 Sep 2026 02:11:11 -0700 (PDT)
+Received: from [192.168.0.167] ([109.76.15.202])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a9ba8f3ab9sm5100887a12.15.2026.09.15.02.11.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Sep 2026 02:11:10 -0700 (PDT)
+Message-ID: <4b8f4fd6-53e0-4efd-953a-cd8ebad7d479@linaro.org>
+Date: Tue, 15 Sep 2026 10:11:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AGrkui6Nx9zw
-Date: Tue, 15 Sep 2026 10:53:51 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Kees Cook" <kees@kernel.org>
-Cc: "Lorenzo Stoakes" <ljs@kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nsc@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Bill Wendling" <morbo@google.com>,
- "Justin Stitt" <justinstitt@google.com>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Alexey Gladkov" <legion@kernel.org>,
- "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Paul Walmsley" <pjw@kernel.org>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng" <boqun@kernel.org>,
- "Gary Guo" <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <lossin@kernel.org>,
- "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>,
- "Daniel Almeida" <daniel.almeida@collabora.com>,
- "Tamir Duberstein" <tamird@kernel.org>,
- "Alexandre Courbot" <acourbot@nvidia.com>,
- =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- "Jonathan Corbet" <corbet@lwn.net>,
- "Randy Dunlap" <rdunlap@infradead.org>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 4/9] media: uapi: Add CAMSS ISP configuration
+ definition
+To: Loic Poulain <loic.poulain@oss.qualcomm.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
  "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
- Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org,
- "Jens Axboe" <axboe@kernel.dk>, linux-hardening@vger.kernel.org
-Message-Id: <7646eb0c-7c4a-4ec2-9562-66a74c4d9858@app.fastmail.com>
-In-Reply-To: 
- <CAHk-=whB0X28MNAg71it=1SfFyV7rB+PK3qajpRyWoxXHW81fw@mail.gmail.com>
-References: <20260914-build-speedup-v2-0-39817ec5db23@kernel.org>
- <202609140833.88C0E16E50@keescook>
- <CAHk-=whB0X28MNAg71it=1SfFyV7rB+PK3qajpRyWoxXHW81fw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/21] kbuild: significantly speed up kernel builds
-Content-Type: text/plain
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260915-camss-isp-ope-v7-0-77b13d131d3d@oss.qualcomm.com>
+ <20260915-camss-isp-ope-v7-4-77b13d131d3d@oss.qualcomm.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Content-Language: en-GB
+In-Reply-To: <20260915-camss-isp-ope-v7-4-77b13d131d3d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 14, 2026, at 17:53, Linus Torvalds wrote:
-> On Mon, 14 Sept 2026 at 08:41, Kees Cook <kees@kernel.org> wrote:
->>
->> One area I think might solved via an LLM is the 3-pass kallsyms stuff.
->> If we could get a deterministic kallsyms build in 1 pass, that would be
->> very nice. A lot of people have tried, but it has eluded upstreaming.
->
-> Even the three-pass one hasn't apparently always been entirely
-> deterministic. We've had random reports over the years of it failing
-> in some circumstances.
+On 15/09/2026 09:11, Loic Poulain wrote:
+> Add the uapi header qcom-camss-config.h defining the ISP parameter
+> structures used by the CAMSS Offline Processing Engine (OPE) driver.
+> This includes structures for white balance, chroma enhancement and
+> color correction configuration.
+> 
+> The block type enum is shared across CAMSS ISPs so that userspace only
+> has to deal with a single set of block identifiers.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
+> ---
+>   include/uapi/linux/qcom-camss-config.h | 212 +++++++++++++++++++++++++++++++++
+>   1 file changed, 212 insertions(+)
+> 
+> diff --git a/include/uapi/linux/qcom-camss-config.h b/include/uapi/linux/qcom-camss-config.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e3d6cc4df7de00345e8142c81392dd42338c6ead
+> --- /dev/null
+> +++ b/include/uapi/linux/qcom-camss-config.h
+> @@ -0,0 +1,212 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+> +/*
+> + * Qualcomm CAMSS ISP Driver - Userspace API
+> + *
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +#ifndef _UAPI_LINUX_QCOM_CAMSS_CONFIG_H
+> +#define _UAPI_LINUX_QCOM_CAMSS_CONFIG_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/media/v4l2-isp.h>
+> +
+> +/**
+> + * enum camss_params_block_type - CAMSS ISP parameter block identifiers
+> + *
+> + * Each value identifies one ISP processing block.  The value is placed in
+> + * the @type field of &struct v4l2_isp_params_block_header.
+> + *
+> + * @CAMSS_PARAMS_OPE_WB_GAIN: white balance gains and offsets (CLC_WB),
+> + *	&struct camss_params_ope_wb_gain
+> + * @CAMSS_PARAMS_OPE_CHROMA_ENHAN: RGB to YUV colour transfer matrix
+> + *	(CLC_CHROMA_ENHAN), &struct camss_params_ope_chroma_enhan
+> + * @CAMSS_PARAMS_OPE_COLOR_CORRECT: colour correction matrix (CLC_CC),
+> + *	&struct camss_params_ope_color_correct
+> + * @CAMSS_PARAMS_OPE_GAMMA: per-channel gamma correction curves (CLC_GLUT),
+> + *	&struct camss_params_ope_gamma
+> + */
+> +enum camss_params_block_type {
+> +	CAMSS_PARAMS_OPE_WB_GAIN = 1,
+> +	CAMSS_PARAMS_OPE_CHROMA_ENHAN = 2,
+> +	CAMSS_PARAMS_OPE_COLOR_CORRECT = 3,
+> +	CAMSS_PARAMS_OPE_GAMMA = 4,
+> +};
 
-This tends to break whenever a linker (rather than the compiler) starts
-creating a new type of symbols that show up in pass 2.
+Most of the OPE specific naming can be dropped, I shared the ICP 
+data-structure analysis already:
 
-> Maybe we've fixed it all, or maybe the failures just go imperceptibly
-> rare. Regardless, it has definitely been fragile.
+https://patchwork.linuxtv.org/project/linux-media/patch/20260426000346.1158633-1-bryan.odonoghue@linaro.org/
 
-The rate seems to be once every few years, looking at the list
-of exceptions added to scripts/kallsyms.c (now scripts/mksysmap):
+i.e.
+> +struct camss_params_ope_color_correct {
+> +	struct v4l2_isp_params_block_header header;
+> +	__u16 a[3];
+> +	__u16 b[3];
+> +	__u16 c[3];
+> +	__u16 k[3];
+> +	__u16 qfactor;
+> +	__u16 _pad[3];
+> +} __attribute__((aligned(8)));
 
-efe6e3068067 ("kallsyms: fix nonconverging kallsyms table with lld")
-516d980f8541 ("scripts/kallsyms: skip ppc compiler stub *.long_branch.* / *.plt_branch.*")
-b9b74be163a2 ("ARM: 8555/1: kallsyms: ignore ARM mode switching veneers")
+For ICP I have:
 
-I'm sure there are other instances on architectures that get less
-build coverage.
++struct camss_params_color_correct {
++	struct v4l2_isp_params_block_header header;
++	__u16 a[3];
++	__u16 b[3];
++	__u16 c[3];
++	__u16 k[3];
++	__u16 qfactor;
++	__u16 _pad[3];
++} __attribute__((aligned(8)));
 
-     Arnd
+So this data-structure is shared camss_params_ope_color_correct -> 
+camss_params_color_correct
+
+> +/**
+> + * struct camss_params_ope_gamma - per-channel gamma correction curves
+> + *
+> + * Implements the CLC_GLUT pipeline module, applied in the RGB domain.  It
+> + * holds one independent lookup table per colour channel. Each table is a
+> + * direct (not segmented) map of input level to output level.
+> + *
+> + * Each table has @CAMSS_OPE_GAMMA_LUT_SIZE (256) entries of 16-bit unsigned
+> + * output. Each entry holds an X-bit output value depending on internal bus,
+> + * the upper bits are ignored by the hardware.
+> + *
+> + * On Agatti OPE, The module maps a 12-bit input to an 8-bit output, the top
+> + * 8 input bits index the table and the low 4 bits are used to linearly
+> + * interpolate between adjacent entries. Entry i therefore represents the
+> + * output for input level i/255 of full scale.
+> + * Output range: 0x00 = black, 0xFF = white.
+
+That's not specific to Agatti, its hwo the Qcom gamma silicon works right ?
+
+Same RTL synthesised in OPE, IPE and IFE. So you don't need to make this 
+OPE specific commentary.
+
+> + *
+> + * How to fill a curve (same on all three channels for pure luminance
+> + * gamma; different curves per channel additionally shift colour balance):
+> + *
+> + *   Identity (pass-through, gamma 1.0):
+> + *     lut[i] = i;                                // i = 0..255
+> + *
+> + *   Encode with gamma g (e.g. sRGB-like, g = 2.2):
+> + *     lut[i] = round(pow(i / 255.0, 1.0 / g) * 255.0);
+> + *
+> + * @header:  block header; @header.type = CAMSS_PARAMS_OPE_GAMMA
+> + * @glut:    green channel gamma curve
+> + * @blut:    blue  channel gamma curve
+> + * @rlut:    red   channel gamma curve
+> + */
+> +struct camss_params_ope_gamma {
+> +	struct v4l2_isp_params_block_header header;
+> +	__u16 glut[CAMSS_OPE_GAMMA_LUT_SIZE];
+> +	__u16 blut[CAMSS_OPE_GAMMA_LUT_SIZE];
+> +	__u16 rlut[CAMSS_OPE_GAMMA_LUT_SIZE];
+> +} __attribute__((aligned(8)));
+
+For the ICP I have
+
++struct camss_params_glut {
++	struct v4l2_isp_params_block_header header;
++	__u8  instance;
++	__u8  _pad[7];
++	__u16 r[CAMSS_GLUT_LUT_SIZE];
++	__u16 g[CAMSS_GLUT_LUT_SIZE];
++	__u16 b[CAMSS_GLUT_LUT_SIZE];
++} __attribute__((aligned(8)));
+
+So it makes more sense to differentiate the firmware type to the 
+register-mapping type. i.e. the above becomes camss_params_icp_gamma {} 
+whereas your subumitted change would be just camss_params_gamma {}
+
+> +#define CAMSS_PARAMS_OPE_MAX_PAYLOAD		\
+> +	(sizeof(struct camss_params_ope_wb_gain)	+\
+> +	 sizeof(struct camss_params_ope_chroma_enhan)	+\
+> +	 sizeof(struct camss_params_ope_color_correct)	+\
+> +	 sizeof(struct camss_params_ope_gamma))
+> +
+> +#endif /* _UAPI_LINUX_QCOM_CAMSS_CONFIG_H */
+> 
+
