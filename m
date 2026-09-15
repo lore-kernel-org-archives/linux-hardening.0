@@ -1,102 +1,64 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C274747D462
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 09:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3245E412294;
+	Tue, 15 Sep 2026 10:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789465909; cv=none; b=YpQn3foVW9Xx+VkmwSY+sH77Mg1xsGEsG4bvDSoB2nPlkw7fgF5wV+maGQWlzRAkQK+Pzm3QXKjawh0z6AIbfkt0JUfcM4MsWXlEICdRs20ejo5AG8UV+7+La9REFrq6wKxsHKOnVf7xKlRnUlWiqsllE2aZCYwCrNYDgbW8D1U=
+	t=1789466981; cv=none; b=OEZbQzWfjPx5Em6125ARuMPBdibxw+Fqj7CJLwNwdP99V+VkQYwEosQSkEpAbcp2MpTSTe4mjlPbctdJfrIkdZZ5a/inU3j1xCeqUnr+Uqej0x2u0AuUc+5aW6L9NNHEWYLOCU5Na5HIGO59EM3JDPjnRid1jjhaK8GsrNBEkzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789465909; c=relaxed/simple;
-	bh=fsv5FuQjdenUC/MA7KEcDcRD5qJ+JKikKx3HzE58Udg=;
+	s=arc-20240116; t=1789466981; c=relaxed/simple;
+	bh=sU13gsIPUMKUUtL+qE3bab68IEWBsOM0qs/yA9Hs9x0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a0eq1F8/xg8yqPX3aj5E3Enj1cF/LtBJ7us2wIQkgtDkg67AC0Hf5vYlp8gsMpAIXgs2eKPiJP80+D0XgBSvDY5dEnPlGnJvnX/3mvtLV59zSceWF8n7KXa1aWBLY35dS5bW4cvuEuThuSylnfV2Zq/Zj4inMiN2ArmsIbEgfb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CI8gvr/1; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=T50S8B/m; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cnIPh522vrTCUiO9Lo5JJIcyVSCnXTQQ2hkpSiDbW7lAKomqn7vpsVK4jUITRPbLNvbYy/d5m3UWN9kO+xApMS7X5d3r8jGxQzbgojtQ1sruvT1MI9LHrDhk+9MaNVviZy804pZnhrLwtTHTIrnWZq0qt0F8gItipxuEwPYdzng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B494kHSs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CI8gvr/1";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="T50S8B/m"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68F9h7s53415788
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 09:51:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=m1XFciMC/FLa8VakPPfRy3mt
-	kacc3Afj+FPNQf0K3uE=; b=CI8gvr/1w5ZXZRm38i+8BGRL88LIfWTnN0MqNM8e
-	L+61VU2lXgzj8J7GVB6+g5+zLW1gJxbmQWVmvYRDteXttBIHoLWOHVmlUEPu29/A
-	Y+taWVgNqPwHl8KW6fcDSrUUgOl9FAWMfk0c92p00UWd5a+2cNHLE4wuvYP2H4H4
-	hP9rm3BslPj98pVC4i8qek5qWxRbNGgYN+jU2NOGruhzl5l5jy6ZVPLnhn4mB4ep
-	FH+QsCovJGjapiJnqpChffwKXZkdK7Ra6JN8IXFlzghDAbHIzKgRgFQ8pFGdpUj8
-	J+7L+v4HBvMXUHLGlfCLD6vybnqAcIypHxGNtS69f0A1Qg==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gq3hc02hg-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 09:51:47 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-939d6c515deso865106585a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 02:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1789465906; x=1790070706; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=m1XFciMC/FLa8VakPPfRy3mtkacc3Afj+FPNQf0K3uE=;
-        b=T50S8B/mf9KarFy/9tnh/e0gADLD9yaZuqGjPWYnx9KybHN+c6cdRlUO/IT7fBILTo
-         aTGFbNXqt1tDXBUO4NSvEzNKs0YP1hzA7nPM7YrP2E9fDS4wSf/IOA7GbjGYZw06HJ11
-         tRAAv4fNYDqUSBU64iOXYUkPslPJt4gew6bsCr5iMjFEoPxPmx9XhPMkqBGI2hzsOS7w
-         +LueLqfLNCsnWRND/EGqNXjcuMoBaGS+Tpu08VXa0HqkVGZ61xAG9Tzyk1n+wG9xwm4F
-         GmQF3TaPtL/kYT/vPDhir07kyfiqQzwK4FGGyQENn256mouggQ1Ovu2397QIuxn3QXsO
-         Wiag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789465906; x=1790070706;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=m1XFciMC/FLa8VakPPfRy3mtkacc3Afj+FPNQf0K3uE=;
-        b=DfVyInpMoCKmjB5VA3lPJyKViZ8eQ0UkT4DMdfe2RsJCZub77g/rD3Aeh7+Dfp+uFF
-         hCTB4mPWqXn5nXpl/PpvI5hkBpn1qPW7jDQK+kEIqq84z422ss4UVYRhwGRLeaDCU1sL
-         UibeRi3tt++fKiva96I7PXANtOyNLZV33OJjn/pmxjFaGocd82pU2Ys1j+H6P+Q05aos
-         KgHBcbrkWX6IdlOIh+R3eUmjbsI9ZD/ezGVTvgpi1xbd4pXxwaVjVu4s397nMe3UdOJR
-         w7MxF1iOCrwemw7FfJ+6xjKasdvo4oFlj3Xx7Pz3a2ICIYSpiXhBj1cWE7gZbZsuwGkd
-         jjCg==
-X-Forwarded-Encrypted: i=1; AKwUvByyu6WWi3j94WRizuW5Ls76/3Ftevy1trYFTphN7nnyV+x/xApZH9LzRpsntNwrFGoqf6PK7NiKIGo6xuIwAQg=@vger.kernel.org
-X-Gm-Message-State: AFuF++lq+VVNkz+ETqD48B4UYANY5Y3q3nfypJupDSgVSlzf8yYD7Cu4
-	mX685YSH2aO0gy2GDCT9SeuL5O8o70BZs+EefpT2NGTiNg4Pdt2noMF+Zc0u91EUg0orVXgCq3E
-	tAOHvESa8TfOmRglSqgje1jyUNTQqDq/z73f0nVZV/M3DS93jIytRsEnWmLE/3dvxe0GFmos=
-X-Gm-Gg: AYBFou170shOokrWy7X3BnkJX81LkpBDKTa0gWxPSVm/79MDcJzmsukyoLhkbfpU7uy
-	k4SKK8dZ4TVfpEgJceYZp1s7dtg0oUu/e1Zf6xCxEBgYYjjSD8OsvZX67vl3fAzx4bj/lMVjpv1
-	05MO3Zizxqn8e4iWBs3XF19CGT7aSI1FB54LjcPailRngmx00FGIJG8eqM+49icU5BQo5xfkJpb
-	hQBKQlPHgF2XQbuZulY4+ayRaBWoY+KdddZkRPB43ueO6CYQ9QcrPrWwqKDLFWS8k+Cpm8LfXZX
-	6XTAPnGKo8wxmus8rZDfkRiY4BtaZDOgB9kGY5Eqhm/3vwaV/mvJ7BkRaDAxwXZmOBZWlQ3vO/Q
-	rVzfBNvxcfKULQ7Q=
-X-Received: by 2002:a05:620a:601c:b0:939:c555:efb6 with SMTP id af79cd13be357-93a29838e3dmr882760785a.12.1789465906055;
-        Tue, 15 Sep 2026 02:51:46 -0700 (PDT)
-X-Received: by 2002:a05:620a:601c:b0:939:c555:efb6 with SMTP id af79cd13be357-93a29838e3dmr882757585a.12.1789465905439;
-        Tue, 15 Sep 2026 02:51:45 -0700 (PDT)
-Received: from oss.qualcomm.com ([86.121.170.232])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-486eb35f3d9sm32642467f8f.35.2026.09.15.02.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 02:51:44 -0700 (PDT)
-Date: Tue, 15 Sep 2026 12:51:42 +0300
-From: Abel Vesa <abel.vesa@oss.qualcomm.com>
-To: Loic Poulain <loic.poulain@oss.qualcomm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Nihal Kumar Gupta <nihal.gupta@oss.qualcomm.com>
-Subject: Re: [PATCH v7 8/9] arm64: dts: qcom: shikra: Add OPE node
-Message-ID: <nu5u3hr7erxzd5l5g4xnktdnnl2w43tjt75la4tkq4ddv5mfbx@npts3dwmx6wp>
-References: <20260915-camss-isp-ope-v7-0-77b13d131d3d@oss.qualcomm.com>
- <20260915-camss-isp-ope-v7-8-77b13d131d3d@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B494kHSs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 449E81F0089B;
+	Tue, 15 Sep 2026 10:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789466979;
+	bh=qEaRhFWvrYZ8Js/oY4HcGJ8ME90lEWxqY3aLTqH5KyM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=B494kHSs2gB2n5O4XU5l5u4V/Q/sS++B6kGyBZOR535KU1TWDZmwMMYCGp5O+FFLE
+	 xxT0t0QsTYnsS3G12slf9EspLZLdWzI+D1IKJNiA5Ok00xFOxdhbVZLW89Y2V4ayrC
+	 s6LOyYyFWPV1X0R6ewuA/oDLo2FfJdbws9raBUSysfLvEaus/W7wtlk2a0FesZFRN6
+	 kOBAVKiwCZY3+W0BAdIR/QQna09maOGiFxgH8LqpSIgkIglLfQPn0ntPnjejywJycD
+	 DaZ9+wwtk+XVvb6Ck559Q41rkc81kQE6wUEUTlTFiotHQyZSReT61+ZA3L/k3pLVDm
+	 1FxU7Bt0z8Jqg==
+Date: Tue, 15 Sep 2026 11:09:25 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Alexey Gladkov <legion@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
+	Gary Guo <gary@garyguo.net>, =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
+	Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, Jonathan Corbet <corbet@lwn.net>, 
+	Randy Dunlap <rdunlap@infradead.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 17/21] objtool: decode instructions and resolve branch
+ targets in parallel
+Message-ID: <aqkR9Xqu-0Tem1zm@gremlin>
+References: <20260914-build-speedup-v2-0-39817ec5db23@kernel.org>
+ <20260914-build-speedup-v2-17-39817ec5db23@kernel.org>
+ <202609141112.F8983EE9C@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -105,47 +67,138 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260915-camss-isp-ope-v7-8-77b13d131d3d@oss.qualcomm.com>
-X-Proofpoint-ORIG-GUID: iouMbj1xrkP_9o8bQLJ3OWIvpR9lipfN
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE1MDE0MSBTYWx0ZWRfXx48IPhZ+Q3rp
- hx2qPQ6Gqk4fuAFwbJPDrP2XS7tstLn5ieAIzmTQCv1LWbBGe+d/D5IOnJ0J59s+FlHkAaOOFDt
- SvRyYiDCXrXwG38azebEgDGvGhVGAi8=
-X-Authority-Analysis: v=2.4 cv=dcUVTnXe c=1 sm=1 tr=0 ts=6aa91533 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=po8fGBi+ks8MzcVQGuqtFQ==:17
- a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
- a=EUspDBNiAAAA:8 a=I_ukrOqQsWpVYGr8uL4A:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE1MDE0MSBTYWx0ZWRfX+0natCtQ2HwE
- qLH3tQLojYYZBcr9GfFrLdtCLKmgdVU0uTAqvp2zeRVRXhzcpeh07tfhRWw/L1OXCmyDWAjXqEm
- TDpby2hceuoXgDdpHFVdLjbG+2R2pIls/T3z2i7Zm7RR8mCpkcJXzW3YWQQCXCelKFWMrNAzqKj
- JVVh54AADQ3CkWLERbqIJTz+E7DoRPsnCuE/mNlJ9FY3UDqBsE4h2o1crjna3NAky2dVB+suM95
- H1e6w1BCwVCa+O0+q1m6FxNqThoPD6svWBtXZ5qO4v9OJX7YE65Y2deEOFitcw2/Ols9wvUvx4R
- 1T0v+AeP/68WlKrR2i0Qm6kiONJXl3RzweCOR0OzAmaNDIJ5r/hyP4GAcoCgmtinRbcZjDowU9i
- zzYTFTBzqufDin+RGS1sYpXn3o/8Tftyk9QySGtYTVGa8oC5GsSh0JCBrMWpOofOBcPn+uMgn4x
- 8LMQtDIp/S0FWj/TZUw==
-X-Proofpoint-GUID: iouMbj1xrkP_9o8bQLJ3OWIvpR9lipfN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-15_03,2026-09-14_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 bulkscore=0 impostorscore=0 malwarescore=0 phishscore=0
- suspectscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609150141
+In-Reply-To: <202609141112.F8983EE9C@keescook>
 
-On 26-09-15 10:11:11, Loic Poulain wrote:
-> From: Nihal Kumar Gupta <nihal.gupta@oss.qualcomm.com>
-> 
-> Add the Offline Processing Engine (OPE) device tree node for Shikra.
-> The node describes the six register regions (cdm, top, qos, pipeline,
-> bus_read, bus_write), clocks, interrupt, interconnects, IOMMU mappings,
-> and OPP table.
-> 
-> OPE is a memory-to-memory block with no board-level dependencies, so
-> the node is left enabled for all Shikra boards.
-> 
-> Signed-off-by: Nihal Kumar Gupta <nihal.gupta@oss.qualcomm.com>
-> Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
+On Mon, Sep 14, 2026 at 11:20:37AM -0700, Kees Cook wrote:
+> On Mon, Sep 14, 2026 at 10:22:16AM +0100, Lorenzo Stoakes (ARM) wrote:
+> > Threads are only created for objects with 8 MiB or more of text, meaning
+> > that runs involving smaller objects remain unaffected.
+> > [...]
+> > objtool on vmlinux.o is on the serial tail of every build that links
+> > vmlinux, no-op builds are unchanged.
+>
+> This isn't limited to vmlinux.o, though? With CONFIG_X86_KERNEL_IBT
+> (default y on x86_64), delay-objtool is set in scripts/Makefile.lib, and
+> objtool then runs on every multi-object module, in the middle of the
+> parallel part of the build. In an x86_64 allmodconfig build here,
+> amdgpu.o has 46.2 MiB of executable text and i915.o has 10.2 MiB, so
+> each of those objtool runs gets 16 threads on top of the -jN jobs that
+> are already running.
 
-Reviewed-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+Ack, will fix in v3 to limit to only the --link run without --module, which
+is how vmlinux.o is processed, leaves modules as they are.
+
+>
+> Any parallelism added need to be handled by the make jobserver, not
+> hard-coded anyway.
+
+I'm not sure that really gains us anything - at the point of doing the
+vmlinux.o processing (which with the above change is all that is being done
+now) everything's idle so the jobserver would just hand over the same 16
+threads.
+
+It'd need quite a bit of work to interact with it too with added complexity
++ some overhead so would have to check impact on perf here.
+
+You did complain about added complexity also ;) if you insist I can try.
+
+>
+> > [...]
+> > +/* Only an object this large, e.g. vmlinux.o, is decoded on several threads. */
+> > +#define DECODE_THREADED_MIN_TEXT	SZ_8M
+> > +/* Only decoding and the branch passes are threaded, so more gains nothing. */
+> > +#define DECODE_MAX_THREADS		16
+> > +#define DECODE_RANGES_PER_THREAD	4
+>
+> I just don't think a size-based approach is going to work. And any max
+> parallelism needs a rationale.
+
+A rationale was provided:
+
+	Threading is limited to decoding and the jump pass, so the gain
+	flattens out at 16 threads and any further threads were found to
+	only add overhead.
+
+	When performing an allmodconfig build, the clang invocation of
+	objtool when processing vmlinux.o took 5.93s on 1 thread, 4.56s on
+	8, 4.51s on 16 and 4.63s on 128.
+
+Let me know what you feel was missing there? These things inevitably have
+to be somewhat heuristic.
+
+The size threshold is about paying for too many threads for no real gain,
+and now (for v3) the code is limited to a --link operation only, that'll
+only really stop a tinyconfig vmlinux.o :)
+
+>
+> > +static unsigned int decode_threads(unsigned long text_size)
+> > +{
+> > +	const long nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
+> > +
+> > +	if (text_size < DECODE_THREADED_MIN_TEXT || nr_cpus < 2)
+> > +		return 1;
+> > +
+> > +	return min_t(unsigned int, nr_cpus, DECODE_MAX_THREADS);
+> > +}
+>
+> No, anything using _SC_NPROCESSORS_ONLN internally is wrong, whether its
+> pigz or objtool.
+
+Why? We shouldn't cap a 4 CPU box to 4 CPUs?
+
+The idea is that the empirically obtained 16 core limit should naturally be
+capped to the number of CPUs.
+
+I guess in a world where make hands jobs off this could be dropped, though,
+if the complexity there seems worthwhile.
+
+>
+> > [...]
+> > +static int add_jump_destinations(struct objtool_file *file)
+> > +{
+> > +	return run_insn_ranges(file, add_jump_destinations_range);
+> > +}
+>
+> I haven't examined this myself yet, but my LLM doesn't like this,
+> saying:
+>
+>   For an internal sibling call, add_jump_destination() calls
+>   add_call_dest(file, insn, dest_sym, true), and add_call_dest() calls
+>   annotate_call_site(), which for --hack-noinstr profiling calls, and for
+>   __fentry__ calls with --mcount --mnop, does set_reloc_type() and
+>   elf_write_insn() on file->elf. The per-range shadow gives each thread
+>   its own lists, but the struct elf is shared, and both helpers write to
+>   the section and mark it changed without any locking.
+>   add_call_destinations() is kept serial because "annotating a call site
+>   rewrites instructions the dead end walks read", so it looks like this
+>   path needs the same care: a lock, or deferring those writes until the
+>   threads have been joined. This is from reading the code; I haven't hit
+>   a failure. Was the thread sanitizer run mentioned in the cover letter
+>   done with those objtool options enabled?
+>
+> So, take it with a grain of salt. ;)
+
+I mean sashiko is hallucinating at a rate >50% on this series, so pinches
+of salt all round :) I do think frontier models with a good amount of
+checking + e.g. Chris Mason's review-prompts are helpful to rein in stuff.
+
+Anyway I had mine check it ;) and I also have a beefy threadripper sitting
+around for bounding reality on this stuff and it all came back clean:
+
+	Those writes go to the thread's own instruction bytes and its own
+	relocation, the only shared state touched is the section and elf
+	"changed" flags, which every writer sets to true, and the mcount
+	case for a sibling call is a warning path. The v2 sanitizer run
+	used the gcc allmodconfig options, which lack
+	--mcount/--mnop/--cfi/--fineibt, so I reran it on the clang
+	allmodconfig vmlinux.o with its full option set: zero reports, the
+	jump pass included.
+
+>
+> -Kees
+>
+> --
+> Kees Cook
+
+--
+Cheers, Lorenzo
