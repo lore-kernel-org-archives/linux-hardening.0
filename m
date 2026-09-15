@@ -1,200 +1,156 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F634908AF;
-	Tue, 15 Sep 2026 11:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAA44A2046
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 11:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789471507; cv=none; b=GvygBlBAHMbT4UGFSmFjg8itlxtQx7I4gi1pH2HhuMbbAZFK7yyqyxMg2GMSbZRVwTFu1CPqE7axMlxNc5H0lKYydBPq8cYfzkflr7wp9harB0mgMlrorxBv59sLEr6LLc0jlK3wfx4zuzoTF8AYjqhbs2AV034dCAuzvwhAEVY=
+	t=1789471807; cv=none; b=KL+6eq0Q/VuB1XEZ5LLqBtRhLdekA9ELOJBBk6jVA/Q3WmxDBlUfIJPojqaR0o9IRoVqZYb7fFytTn6jYH9hwaHXTKmPUycEfy7KkQQ4+gyHqVWXQPykQnZXn1KJlEdvCw/8iSUXFs+BAdCFUEsela8BlEAXcUSLuF3eaJxeMvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789471507; c=relaxed/simple;
-	bh=0ve7/DDdcigv05770gqszO21YREHojJv3JBfh9LpjKU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uZHNKjrEu44ztKi2hvGZMlYUm271ahEg7JLj+qsLWAwmqwakoNfpZXv6/tbsW+ZNpc5UptWqdBMczZdqzGOR7HD599M4dt2wIbRvJHc1quf3RAVGrnPKGPAZ24vuERxHNYyqeMCKTk/oilchcEcw/+WaUZU6689GGwwLYid9dQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FSRxqY26; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aSsl2yJ1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fM3MazBW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mZlA7k8x; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1789471807; c=relaxed/simple;
+	bh=APKTuDGLjMsk92bnnkXJ0rRlkzi8IPJqTj2KURSVBU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jkqhMaeAaQKwX0FFw5xTC0peybIA/6iP7gcCGZt2rUusA295R+zLvhgvXafjxYZMtZQ7jxhaNOKLogVRFraP8UOsQbwpnz+AuZE5K0BAPg1ITBk9rU/Y3bNAn3sziTeKKuTD0OyOG7BRdH0YjuC6hjqKfpwEh7birG/vCxT4ZAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QfmW0HZG; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FSRxqY26";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aSsl2yJ1";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fM3MazBW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mZlA7k8x"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D6D911FD70;
-	Tue, 15 Sep 2026 11:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789471494; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=psqF+EOKBnDir7oSpdYk0cv/7bWaGxT8GNrr5rPj7yg=;
-	b=FSRxqY266D0vmKnF9nLIRDyWWQM9yhSRf7SWuTSbWdHKmTZfPMBWgLsJq7H8V56FVkky//
-	8MrE9PciUwBdoFcR4M6TLhf0Be1H7UyuT3X6eiMNzlMbbIthbvGQDSnAd0oqm56+IjjTWt
-	ZfmEPFx5zXWF3FpvnKWoZi5XGYuzP5E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789471494;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=psqF+EOKBnDir7oSpdYk0cv/7bWaGxT8GNrr5rPj7yg=;
-	b=aSsl2yJ1+boxtQdbyNVNOLHSB2zJu6wAGQi+9pbebbTp2ClXENyw6idF+ycsnZ57BL4LP5
-	ZfcRP6lnX00QOOBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789471489; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=psqF+EOKBnDir7oSpdYk0cv/7bWaGxT8GNrr5rPj7yg=;
-	b=fM3MazBW+hs/hKtvuJpOhLlGSwWwaQ2djpqh86ob84pD05SZM2CRj5VxxQICSBHMVzGpmM
-	q+b1hMqeOfBJ55X5lnPhdG5/NgEY6B1UbwH5ynoyuWcf7dFOEalvw2kJzBP8r3CSUcnebL
-	CgYXNAhYVAwFaBsCwZ7WQRZMQk8ez5c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789471489;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=psqF+EOKBnDir7oSpdYk0cv/7bWaGxT8GNrr5rPj7yg=;
-	b=mZlA7k8xRY7/6eU8iSFueII5CBhiyVG2bEJOGnMSAtyaRqGo3EYAuYa/xTgran4MSxXe1Y
-	Y2dwysvA+85ERcBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E1B7713693;
-	Tue, 15 Sep 2026 11:24:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2riGLf4qqWqtagAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 15 Sep 2026 11:24:46 +0000
-Date: Tue, 15 Sep 2026 13:24:46 +0200
-Message-ID: <877bkmn4e9.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Bill Wendling <morbo@google.com>
-Cc: linux-kernel@vger.kernel.org,	Russell King <linux@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>,	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,	"James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>,	Helge Deller <deller@gmx.de>,
-	Thomas Gleixner <tglx@kernel.org>,	Ingo Molnar <mingo@redhat.com>,	Borislav
- Petkov <bp@alien8.de>,	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,	"H. Peter Anvin" <hpa@zytor.com>,	Ian Abbott
- <abbotti@mev.co.uk>,	H Hartley Sweeten <hsweeten@visionengravers.com>,	Tony
- Luck <tony.luck@intel.com>,	Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>,	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,	Matthew Brost <matthew.brost@intel.com>,
-	=?ISO-8859-1?Q?=22Thomas_Hellstr=F6m=22?=
- <thomas.hellstrom@linux.intel.com>,	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,	Matthias Schwarzott
- <zzam@gentoo.org>,	Mauro Carvalho Chehab <mchehab@kernel.org>,	Tony Nguyen
- <anthony.l.nguyen@intel.com>,	Przemek Kitszel
- <przemyslaw.kitszel@intel.com>,	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,	Eric Dumazet
- <edumazet@google.com>,	Jakub Kicinski <kuba@kernel.org>,	Paolo Abeni
- <pabeni@redhat.com>,	Arend van Spriel <arend.vanspriel@broadcom.com>,	Rob
- Herring <robh@kernel.org>,	Saravana Kannan <saravanak@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,	Sylwester Nawrocki
- <s.nawrocki@samsung.com>,	Peter Griffin <peter.griffin@linaro.org>,	Alim
- Akhtar <alim.akhtar@samsung.com>,	Linus Walleij <linusw@kernel.org>,	Anil
- Gurumurthy <anil.gurumurthy@qlogic.com>,	Sudarsana Kalluru
- <sudarsana.kalluru@qlogic.com>,	"Martin K. Petersen" <mkp@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,	Anna Schumaker <anna@kernel.org>,
-	Mike Marshall <hubcap@omnibond.com>,	Martin Brandenburg
- <martin@omnibond.com>,	Kees Cook <kees@kernel.org>,	Jiri Pirko
- <jiri@resnulli.us>,	Simon Horman <horms@kernel.org>,	Chuck Lever
- <cel@kernel.org>,	Jeff Layton <jlayton@kernel.org>,	NeilBrown
- <neil@brown.name>,	Olga Kornievskaia <okorniev@redhat.com>,	Dai Ngo
- <Dai.Ngo@oracle.com>,	Tom Talpey <tom@talpey.com>,	Jaroslav Kysela
- <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,	Andrew Morton
- <akpm@linux-foundation.org>,	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Kanglong Wang <wangkanglong@loongson.cn>,	Tiezhu Yang
- <yangtiezhu@loongson.cn>,	Qiang Ma <maqianga@uniontech.com>,	Randy Dunlap
- <rdunlap@infradead.org>,	Pengpeng Hou <pengpeng@iscas.ac.cn>,	Ard
- Biesheuvel <ardb@kernel.org>,	Breno Leitao <leitao@debian.org>,	Thorsten
- Blum <blum@kernel.org>,	Harshit Mogalapalli
- <harshit.m.mogalapalli@oracle.com>,	Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,	Lyude Paul <lyude@redhat.com>,	Ashutosh Desai
- <ashutoshdesai993@gmail.com>,	Imre Deak <imre.deak@intel.com>,	Dmitry
- Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,	Johan Hovold
- <johan@kernel.org>,	Johannes Berg <johannes.berg@intel.com>,	Miri Korenblit
- <miriam.rachel.korenblit@intel.com>,	Alexander Stein
- <alexander.stein@ew.tq-group.com>,	Cryolitia PukNgae
- <cryolitia@uniontech.com>,	Jiaming Zhang <r772577952@gmail.com>,	Will
- Porter <mrwillporter@gmail.com>,	Cen Zhang <zzzccc427@gmail.com>,
-	=?ISO-8859-1?Q?=22C=E1ssio_Gabriel=22?= <cassiogabrielcontato@gmail.com>,
-	Rong Zhang <i@rong.moe>,	Arun Raghavan <arunr@valvesoftware.com>,
-	linux-arm-kernel@lists.infradead.org,	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,	linux-parisc@vger.kernel.org,
-	linux-edac@vger.kernel.org,	dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,	linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org,	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,	brcm80211-dev-list.pdl@broadcom.com,
-	devicetree@vger.kernel.org,	linux-samsung-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,	linux-scsi@vger.kernel.org,
-	linux-nfs@vger.kernel.org,	devel@lists.orangefs.org,
-	linux-hardening@vger.kernel.org,	linux-sound@vger.kernel.org
-Subject: Re: [PATCH 00/28] Replace remaining strlcat() call sites with snprintf()/seq_buf()
-In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
-References: <20260915081910.4142719-1-morbo@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfmW0HZG"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-495437bb891so5802065e9.1
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 04:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789471803; x=1790076603; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=dGOErKOPioTgO3v0/s/JdPfHHqPEsYrQAaTIvwRdmxw=;
+        b=QfmW0HZGIofUmjnkWGL2TIVkFUxUuxZhOFjQCkuHPy/WVprMzaImb5IXvjMXS/wCGL
+         uT++ASkA8Nzq8SsnOaIO0UueO+47EwRvo5F5Q2iv3015O88zbQeDLcIPKzLSIcrifmLG
+         RVNd4ny1+Cy+QmrUym6h9ZUTtl8MXydeYJyp4q1FqUlyFJQXlfCStv7fqRBhRq+m6drU
+         2MOKbXWfrGw4Cn3wFCJXObY+cq2LnTd2bB/lN0FlToSkrHYz2p1ue1fBhw1OzHr5z4oA
+         4tpDK1zE80uk+drClpQQOLiuwshUO/kVmbzbC0pFA/whcZ8lOZHZwDWrcDKDnhhs+UpU
+         /o/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789471803; x=1790076603;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=dGOErKOPioTgO3v0/s/JdPfHHqPEsYrQAaTIvwRdmxw=;
+        b=j2hGbAn9xJroNN94YTujeCnuvLdTZXby6mDOeovhAPyF6fRR4G7cqS3RLqSPipb06L
+         Az7Xga8R4b3ouyGWgkVYnlJ7pSydEY1//FrYN6oUCE2v1T3cXsDykl8AC7pB4XoJ+TNJ
+         3I2UCqRY3sf++byJ/g88Ff1a//aru3WxAUUfb58pPiCrQq38FYaDP4Fyon/z7eYER8eV
+         0CO7Dy+ws4lyHisJn7Tjfs52E/S9EkmGPglcORpLmvOnY/gIUk1Civk8A40jd3dK3DQT
+         5zkgHp7KeKL+Ap4QjFqEK2+TZUN1Az6Da7mT0oH5QeJxrK74ZC8bnSEJbtX/12JvCT4J
+         iSHg==
+X-Forwarded-Encrypted: i=1; AKwUvBy3S6zVWAcp7PIYdRWJoEes0zNx19Ff8oVpXk+Kh1rtsSy2PnQ42s5WKaQ4wBZC+Pbka49MH1pcWvfRCkvw8qc=@vger.kernel.org
+X-Gm-Message-State: AFuF++l3KxvUxaBderUlUsJXbxA3AooIfhUqn89QoRGUIAuwFUv7K9Hx
+	YReeZpE8qlLx0Tbfu3rn9p1XBNRWR1dSUhuSmVehz4ykygFTGaWCftB/
+X-Gm-Gg: AYBFou0dn9+ISpyCJD8dlXvMVU+noYST1I5noFhEotwf+r8G2qOMKD5JOHJj2oBRrH3
+	Cm08hEi5bHD1pnw09fu4QUGe/hQNLYFQN3yWLowWcRFZQmyQyS9j7hC6DTQIehodUjpNS9X5IfE
+	Uvk91U2Xe8xv6W9KQtVVfeG2GLnYZ+eensYP3n8Copg2vCI81H/0SyTUzVaRauLdu6hernJV8p5
+	nV/b7n3imV7uGUgPgY7cocqYQ8qm3cshp/NrbqZU6Ki1IE2ZOWXj3aYBWDtov23aOJKMCEbB5Qs
+	3Q+oSVIwK1Y10isdbZCv/YM43IjhiQ3s4hcs7G46WJ9N3WadPnaGOoiu9pfE21VPzN5N/sGeQJo
+	zoIlFtKfKsEqwIB62Yc53xsm9//v4rPx3LCwdTf0ZOUEx3Lorw07LtaWZsjUyUpiXuRKdAA3eRL
+	CsINeLfQLuM+TSksvIXUGeTkqYyrpMZWBCmgWblTP6IaZXADsAChS77Z61eVXzNxF5fnFICID0+
+	VYwv6xXBUOZPeftGLuBxdAcgnKuOIWz6TDi
+X-Received: by 2002:a05:600c:33a1:b0:49d:28b1:260d with SMTP id 5b1f17b1804b1-49e7d74ce16mr30558965e9.12.1789471802734;
+        Tue, 15 Sep 2026 04:30:02 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-486eb32d3c7sm31448164f8f.10.2026.09.15.04.30.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Sep 2026 04:30:02 -0700 (PDT)
+Date: Tue, 15 Sep 2026 12:29:59 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nsc@kernel.org>, Nick Desaulniers
+ <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, Alexey
+ Gladkov <legion@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
+ <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas
+ <ilias.apalodimas@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Boqun
+ Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, =?UTF-8?B?QmrDtnJu?=
+ Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich
+ <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir
+ Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>,
+ Onur =?UTF-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, Jonathan Corbet
+ <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, Jens Axboe
+ <axboe@kernel.dk>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 17/21] objtool: decode instructions and resolve
+ branch targets in parallel
+Message-ID: <20260915122959.2348bf90@pumpkin>
+In-Reply-To: <aqkR9Xqu-0Tem1zm@gremlin>
+References: <20260914-build-speedup-v2-0-39817ec5db23@kernel.org>
+	<20260914-build-speedup-v2-17-39817ec5db23@kernel.org>
+	<202609141112.F8983EE9C@keescook>
+	<aqkR9Xqu-0Tem1zm@gremlin>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spam-Score: 0.20
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [0.20 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	FORGED_RECIPIENTS(2.00)[m:morbo@google.com,m:linux@armlinux.org.uk,m:kernel@xen0n.name,m:tsbogend@alpha.franken.de,m:James.Bottomley@HansenPartnership.com,m:deller@gmx.de,m:bp@alien8.de,m:hpa@zytor.com,m:hsweeten@visionengravers.com,m:tony.luck@intel.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:matthew.brost@intel.com,m:rodrigo.vivi@intel.com,m:dmitry.torokhov@gmail.com,m:zzam@gentoo.org,m:anthony.l.nguyen@intel.com,m:przemyslaw.kitszel@intel.com,m:davem@davemloft.net,m:edumazet@google.com,m:arend.vanspriel@broadcom.com,m:neil@brown.name,m:rdunlap@infradead.org,m:pengpeng@iscas.ac.cn,m:leitao@debian.org,m:ashutoshdesai993@gmail.com,m:imre.deak@intel.com,m:johannes.berg@intel.com,m:miriam.rachel.korenblit@intel.com,m:alexander.stein@ew.tq-group.com,m:r772577952@gmail.com,m:mrwillporter@gmail.com,m:zzzccc427@gmail.com,m:cassiogabrielcontato@gmail.com,s:brcm80211@lists.linux.dev,s:devel@lists.orangefs.org];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[netdev];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,armlinux.org.uk,kernel.org,xen0n.name,alpha.franken.de,HansenPartnership.com,gmx.de,redhat.com,alien8.de,linux.intel.com,zytor.com,mev.co.uk,visionengravers.com,intel.com,suse.de,gmail.com,ffwll.ch,gentoo.org,lunn.ch,davemloft.net,google.com,broadcom.com,samsung.com,linaro.org,qlogic.com,omnibond.com,resnulli.us,brown.name,oracle.com,talpey.com,perex.cz,suse.com,linux-foundation.org,loongson.cn,uniontech.com,infradead.org,iscas.ac.cn,debian.org,linuxfoundation.org,oss.qualcomm.com,ew.tq-group.com,rong.moe,valvesoftware.com,lists.infradead.org,lists.linux.dev,lists.freedesktop.org,lists.osuosl.org,lists.orangefs.org];
-	R_RATELIMIT(0.00)[to_ip_from(RL638gsp8obb334m9k7xcnfris)];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[110];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+Content-Transfer-Encoding: 7bit
 
-On Tue, 15 Sep 2026 10:18:17 +0200,
-Bill Wendling wrote:
+On Tue, 15 Sep 2026 11:09:25 +0100
+"Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
+
+> > > +static unsigned int decode_threads(unsigned long text_size)
+> > > +{
+> > > +	const long nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
+> > > +
+> > > +	if (text_size < DECODE_THREADED_MIN_TEXT || nr_cpus < 2)
+> > > +		return 1;
+
+The text_size check ought to be before the sysconf() call.
+
+> > > +
+> > > +	return min_t(unsigned int, nr_cpus, DECODE_MAX_THREADS);
+
+Why min_t() -  you might as well make nr_cpus 'unsigned int'.
+
+> > > +}  
+> >
+> > No, anything using _SC_NPROCESSORS_ONLN internally is wrong, whether its
+> > pigz or objtool.  
 > 
-> strlcat() is deprecated: like strcat(), it requires re-scanning the
-> destination string from the beginning on every call, which is O(n^2)
-> when used to build up a string incrementally, and its truncation
-> behavior is easy to get wrong.
+> Why? We shouldn't cap a 4 CPU box to 4 CPUs?
 
-... but what many of your patches do is to replace strlcat() with
-open-codes, which is more error-prone and easier to get wrong than
-a single strlcat() call.
+You almost certainly don't want to use more...
+(Unless they end up waiting for disk)
 
-> See:
 > 
->   https://github.com/KSPP/linux/issues/370
+> The idea is that the empirically obtained 16 core limit should naturally be
+> capped to the number of CPUs.
 
-It's clear that strlcat() isn't perfect and sometimes inefficient.
-But blindly deprecating without providing a good alternative doesn't
-sound like a right approach to me.
+The 'empirical' limit is very likely to be system dependant.
+There might also be situations where you don't want the build to run as fast
+as possible because the system is performing other workloads.
+(Not to mention if you have had to add tracing to find a bug.)
 
+> 
+> I guess in a world where make hands jobs off this could be dropped, though,
+> if the complexity there seems worthwhile.
 
-thanks,
+You need to pull tokens out of the make pipe :-)
 
-Takashi
+David
+
