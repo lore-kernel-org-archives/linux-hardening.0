@@ -1,57 +1,57 @@
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com [209.85.160.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC873D812A
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AD1480953
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460487; cv=none; b=STDBFGCl2836VDlxYdKb/ofFZXoJ7dntlklph38dvaRS7849ftmATgp3zq57yqLjiLY2e0mzNHenefKI1QNWt7W4+K8/xu6ojcwgmEdx06MmfOuPrftxfQVwqzm0Rg2Fh+ib+8N5qRcfinQLK8Pq5qp5pECf1Ymr+02v7pv8prk=
+	t=1789460753; cv=none; b=Vy3VhztoVl04tBlsypHwy/nfIt4A2t6rXkSZVCfQ7CoPmaBMS81LKX4wc4xP8D1u/0UaY78xo0FF0BoETlYGgfQK3Yzwk8V43llbZ7SoyCPaJBV8e3IwOASzy/WbKRqD2s7yIQ3cYQJ17gz0WXzkfwro198bWk8lq6BYOYLN6co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460487; c=relaxed/simple;
-	bh=WLXzasjY0mBK/NrbpJfTCOFtGklzxJ8+ta6QqRZkwNM=;
+	s=arc-20240116; t=1789460753; c=relaxed/simple;
+	bh=Te8HD9YkwxCOhstie9EUJ32KLA4oNHtDIGXeNIM9YkI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kwQiYMe6ciB3ZNat+lBCwyuuYaSmfLrWJr75VY8xtLzor3e9t32GZFWArCzfYEdK0hn/dmbiKU3dGDDYfheAHDIh5N4W43vThf64X5qvbKy+ebN+YwROufG7+FXW0ziwyv7i83EflPqYz9v1tQdPmkWZXm/gLBOt88bE1zVyBkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qIH54Pf4; arc=none smtp.client-ip=209.85.214.199
+	 To:Cc:Content-Type; b=tJYvqsR40WMO/eR0lceviAghX0QEy188GH0MZu+D5SqYwWe+Rh13RKPwkPm5zmZVqqsQLuurqdXATeglq+bXehgc5ptsOtPkyTcF0ymXh6TwSy3vOBPwKzx38S9Fkp25U5oEXAwnpAktZA68nAPzD7p7C+b10epm+xBy6A4aFDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RftEYiIX; arc=none smtp.client-ip=209.85.160.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qIH54Pf4"
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2dc7337e2a7so52780715ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:20:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RftEYiIX"
+Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-44899f99756so6603589fac.2
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:25:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460422; x=1790065222; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789460750; x=1790065550; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=RYxDJLbbwpCoc34IeHntB/eNfLB4EmZZnrz8tORBuFs=;
-        b=qIH54Pf4oQk648f0qwor703FV/WhFcWzH1lKrIr+3hScrsEImk2qb9ay5n1JtWUHHc
-         E7LSBliVH4jz5xSaNel1WlgtK37YJLyVMaJcC2ms1yNH2cy5Eg1dtDhbs5SkpUZ33qAy
-         fWtheS+uwl/XcEkiLLQjS2SKzQYJ1b2RQYHPj3Pi1JymadBJqHR82fmTeYUc+yKYEz6t
-         Z80RHmow8rVhXXY/J0zWuDFY9pf8UrAjC+bLFSUx+vFUKtOE8FzIV8zMbJAyp3D819Qi
-         CN7bYmcxip2eS+rZxeJL/k8kaTEiB1JgGeBAPSpv3e7QKTP2D9pTpJ4+f83W4L2sG/Xy
-         RYGg==
+        bh=aUeRHnlHuLyd8Os/OfUYHyanuI/6gSGpcAdXKzgjG1A=;
+        b=RftEYiIXO6iqo5ew3liwYDCF0LOLD2bJT8qwhYbLko6w4ciM2nAwLvTUBbSBgkgzIU
+         wPBXw5Vg1tuFVD3Jpn/3SXGgrPea4ls0/TJjiyeac3gb++wQRUzx1DaFGU0bzDXstAGJ
+         7FDrujzVKcfpDfe9J9p3SAVQ+6lxSkD/YIYtKZ+YKLhme+ySGYV9GTIwGVg3XWz+21+U
+         nr1f+Ej1cEHfabIKnwnsSSrQxkQ7XZTegJk4H39m+M+zIOUe61sxgZO9GzdFG3yglIHb
+         4Jvd9mC+JCGgDzlWHwU1lUkzdk9YfKEOntC3hHofBgZkk0fntrDapaVk4d3MImTem5Uc
+         ibEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460422; x=1790065222;
+        d=1e100.net; s=20260707; t=1789460750; x=1790065550;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=RYxDJLbbwpCoc34IeHntB/eNfLB4EmZZnrz8tORBuFs=;
-        b=zporlO4+HKCVMV8sJsncMPeRDOWNX8DdI+ikVjiopYXnmIuXz0FLbKHpOqOsBM2YEF
-         h5Gscd0YEp6f3UnUZGsHneOIsKPaU4XJn+HuTpCVYLmc1RoQezzw+NyK0SxtpI/KRHR0
-         FotI8FOQ+R3DIv5NAmeHbkVHtKcOd5itGVaOgvx+TqlUt9a+avbiz+PwCZ290TMkpONJ
-         GirH/Z7fI+KrHGu1BriggZEoFJgBD6kIeN73PMPDQOVBtUhfp7z+rc7eQpfb+NA37QXw
-         oOtLWG2ryvvtR52nOa3swnM9Vcp21ibUD3ZuofcyfVeeSndnuVLJS44PYbuEgmslmtR4
-         cCSg==
-X-Forwarded-Encrypted: i=1; AKwUvBzu8KEEdAUD8XxrtXTRNWheDa9e3+l75LsbMKroMTIEs/DSeS4jRAjFqVFYlI+nq7lkkdPfO4rzRJYAaW4oAjE=@vger.kernel.org
-X-Gm-Message-State: AFuF++ln0KVxee44LYsUHWkFS6XBFWv5ttuVMmO8NzrgVf6n9zJVx0y+
-	TzLgJvVRD9d036Tp6oS1/gzheCabn2BSp6/srB8YhG1kGesLETfQzlvp/GOeFwBL4FUh7uoLsv8
-	o
-X-Received: from plas19.prod.google.com ([2002:a17:903:2013:b0:2dd:75f1:13f5])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:40c6:b0:2d0:cc92:f7a9
- with SMTP id d9443c01a7336-2dd837a6aeemr1077095ad.4.1789460419151; Tue, 15
- Sep 2026 01:20:19 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:45 +0000
+        bh=aUeRHnlHuLyd8Os/OfUYHyanuI/6gSGpcAdXKzgjG1A=;
+        b=LcPZBo48DDjqS7/1aUkMJVLwSjbK5rMrNAIdBgJzCzYyoTbFEEkGNocKaXZbjEGMo5
+         tO36f6hyCYQOV4pYOEjkopMCoUgUUxIHQUELlq9fxlA8h7l3AfatgD0NhtHUEjvw1Yrj
+         wnUqhb9s+cYuTmEwEt6g7und95f9eWytKOJ5ZuYLa8DEn+8P8lXPYYY3De2mYmbyXQF5
+         JoxNjoVb5E9wkgID7RjfalbPGa9oKuN4Fdcpuggj4KFZDGNY4zXqcaJJ75/yrnIJxyHa
+         33UVYQvvCZkRhm27ZCJ2lVTAbfv2UJ2At1WufZqmZBK3nR7fs04occqcVB8kiG8M9O/K
+         +OIA==
+X-Forwarded-Encrypted: i=1; AKwUvBy60GPKjDxb44NUdIFIBiyKDyx/soTPblTHo7Ksi8v8YOc7fmADbjCmSCuGE4zG/WzWZtbIYXVcz5xZg8m16EQ=@vger.kernel.org
+X-Gm-Message-State: AFuF++meZ4f1g/SORMyBjoTTovhHVOqL0TXFS25+uOimZDUrIOrpyHqB
+	kv7KLhkpbrMJavzAFjAFFefHg07s7H0wUZLHLFH1rdktAja8RG2syuWX3ev+vwp4IvfTFQCY0Vm
+	D
+X-Received: from plbmz16.prod.google.com ([2002:a17:903:3510:b0:2dd:2adc:aa80])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:a8b:b0:2d9:26b3:547
+ with SMTP id d9443c01a7336-2dd83882243mr420135ad.20.1789460414438; Tue, 15
+ Sep 2026 01:20:14 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:40 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-29-morbo@google.com>
-Subject: [PATCH 28/28] drm/xe/pf: Refactor strlcat() to seq_buf in sched_group_engines_read()
+Message-ID: <20260915081910.4142719-24-morbo@google.com>
+Subject: [PATCH 23/28] Input: synaptics_usb - use seq_buf and snprintf() for
+ name and phys
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
@@ -123,17 +124,17 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Similar to control_read(), sched_group_engines_read() constructs a
-space-separated list of hardware engine names in a stack buffer using
-repeated strlcat() calls inside a loop.
+synusb_probe() constructs the device name and physical path using a mix of
+strscpy(), strlcat(), and snprintf().
 
-In preparation for removing the deprecated strlcat() API[1], refactor
-sched_group_engines_read() to use struct seq_buf and seq_buf_printf().
+In preparation for removing the deprecated strlcat() API[1], use struct
+seq_buf to incrementally build synusb->name, and format synusb->phys with
+snprintf() after generating the USB path.
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Cc: codemender-patching+linux@google.com
-Assisted-by: Developer:Gemini [editor_update_file, make_kernel_build_single=
-_file, shell_command_run]
+Assisted-by: Gemini:1.5-Pro-002 [editor_update_file, make_kernel_build_sing=
+le_file, test_runner_run_kunit_test]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -247,50 +248,73 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/input/mouse/synaptics_usb.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c b/drivers/gpu/drm/=
-xe/xe_gt_sriov_pf_debugfs.c
-index 5db7fc067c4d..548a50f74422 100644
---- a/drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c
-+++ b/drivers/gpu/drm/xe/xe_gt_sriov_pf_debugfs.c
-@@ -377,8 +377,10 @@ static ssize_t sched_group_engines_read(struct file *f=
-ile, char __user *buf,
- 	struct xe_hw_engine *hwe;
- 	enum xe_hw_engine_id id;
- 	char engines[128];
+diff --git a/drivers/input/mouse/synaptics_usb.c b/drivers/input/mouse/syna=
+ptics_usb.c
+index 880a0c79148c..d13d2d6202ee 100644
+--- a/drivers/input/mouse/synaptics_usb.c
++++ b/drivers/input/mouse/synaptics_usb.c
+@@ -41,6 +41,7 @@
+ #include <linux/usb.h>
+ #include <linux/input.h>
+ #include <linux/usb/input.h>
++#include <linux/seq_buf.h>
+=20
+ #define USB_VENDOR_ID_SYNAPTICS	0x06cb
+ #define USB_DEVICE_ID_SYNAPTICS_TP	0x0001	/* Synaptics USB TouchPad */
+@@ -278,6 +279,8 @@ static int synusb_probe(struct usb_interface *intf,
+ 	struct input_dev *input_dev;
+ 	unsigned int intf_num =3D intf->cur_altsetting->desc.bInterfaceNumber;
+ 	unsigned int altsetting =3D min(intf->num_altsetting, 1U);
 +	struct seq_buf s;
-+	const char *s_str;
++	char path[64];
+ 	int error;
 =20
--	engines[0] =3D '\0';
-+	seq_buf_init(&s, engines, sizeof(engines));
+ 	error =3D usb_set_interface(udev, intf_num, altsetting);
+@@ -334,27 +337,29 @@ static int synusb_probe(struct usb_interface *intf,
+ 			 ep->bInterval);
+ 	synusb->urb->transfer_flags |=3D URB_NO_TRANSFER_DMA_MAP;
 =20
- 	if (group < num_groups) {
- 		for_each_hw_engine(hwe, gt, id) {
-@@ -386,15 +388,14 @@ static ssize_t sched_group_engines_read(struct file *=
-file, char __user *buf,
- 			u16 guc_logical_instance =3D xe_hwe_guc_logical_instance(hwe);
- 			u32 mask =3D groups[group].engines[guc_class];
++	seq_buf_init(&s, synusb->name, sizeof(synusb->name));
++
+ 	if (udev->manufacturer)
+-		strscpy(synusb->name, udev->manufacturer,
+-			sizeof(synusb->name));
++		seq_buf_puts(&s, udev->manufacturer);
 =20
--			if (mask & BIT(guc_logical_instance)) {
--				strlcat(engines, hwe->name, sizeof(engines));
--				strlcat(engines, " ", sizeof(engines));
--			}
-+			if (mask & BIT(guc_logical_instance))
-+				seq_buf_printf(&s, "%s ", hwe->name);
- 		}
--		strlcat(engines, "\n", sizeof(engines));
-+		seq_buf_puts(&s, "\n");
+ 	if (udev->product) {
+ 		if (udev->manufacturer)
+-			strlcat(synusb->name, " ", sizeof(synusb->name));
+-		strlcat(synusb->name, udev->product, sizeof(synusb->name));
++			seq_buf_puts(&s, " ");
++		seq_buf_puts(&s, udev->product);
  	}
 =20
--	return simple_read_from_buffer(buf, count, ppos, engines, strlen(engines)=
-);
-+	s_str =3D seq_buf_str(&s);
-+	return simple_read_from_buffer(buf, count, ppos, s_str, strlen(s_str));
- }
+-	if (!strlen(synusb->name))
+-		snprintf(synusb->name, sizeof(synusb->name),
+-			 "USB Synaptics Device %04x:%04x",
+-			 le16_to_cpu(udev->descriptor.idVendor),
+-			 le16_to_cpu(udev->descriptor.idProduct));
++	if (!seq_buf_used(&s))
++		seq_buf_printf(&s, "USB Synaptics Device %04x:%04x",
++			       le16_to_cpu(udev->descriptor.idVendor),
++			       le16_to_cpu(udev->descriptor.idProduct));
 =20
- static const struct file_operations sched_group_engines_fops =3D {
+ 	if (synusb->flags & SYNUSB_STICK)
+-		strlcat(synusb->name, " (Stick)", sizeof(synusb->name));
++		seq_buf_puts(&s, " (Stick)");
+=20
+-	usb_make_path(udev, synusb->phys, sizeof(synusb->phys));
+-	strlcat(synusb->phys, "/input0", sizeof(synusb->phys));
++	seq_buf_str(&s);
++
++	usb_make_path(udev, path, sizeof(path));
++	snprintf(synusb->phys, sizeof(synusb->phys), "%s/input0", path);
+=20
+ 	input_dev->name =3D synusb->name;
+ 	input_dev->phys =3D synusb->phys;
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
