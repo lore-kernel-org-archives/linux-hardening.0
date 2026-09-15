@@ -1,57 +1,57 @@
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DE13D3334
-	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5E143F8DE
+	for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 08:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789460770; cv=none; b=jQ9d/IwWWnDoVT4G5KSNnO/vBmJG58Z4Yjl+tGGsx/Ev+lUKMRoVefd3CfPtJ0um6WkEELGKwr6Ebg4ApobqhN9TgpL8h9a6i6J0fmmAh66Jhech409JreT/tnGZelfVDFfRG0bFlBfkNbeip4qJ4yeDPYunHVST09W6sCLN3/k=
+	t=1789460784; cv=none; b=Uld5/t1wjv/9E/dwcLXmM2adVDLT6x9tV4twQWwlyCWDLRKMzITiBpdC0f90fMf/g6IkQWzUgWHoXJQr6fjo6RDgN4BPDGeo9nAZTixOktG88+M7Eb/F2SvPRwagH/3NZUICYgvKtRKoB0JLAVZQXWma0pOmVIWSfLwjjOz6G5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789460770; c=relaxed/simple;
-	bh=lI3TjsMof+VUseu3jlc4aD2v6CaqWDV2PaTkxHX+GRE=;
+	s=arc-20240116; t=1789460784; c=relaxed/simple;
+	bh=Hbrp06lq3B7opj8tzjJVqcfrxhhZTvzJ1WqUPePmYuc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UloJcjmIUmE78pen1no5lhEOnOm5kzG2nrd/qif8t8/uM6yFOicqUELPVTJZjo/04St5oeDDp3ZVGcuPug0exxaM3v6kfQGs28VmGADf5PzY/O2KpsIk5sBMjI9fp+ePJWzvIgzT4zuzx8FJ1KBe5BTb9BUmDq3rPD/E0w2Ct18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mS/JXOeb; arc=none smtp.client-ip=209.85.219.72
+	 To:Cc:Content-Type; b=eIAM6bOunfHYeqDRzNoti01G6NX5mjFsrsRiX7GJshBlGj3OJEOtJGuo3vMcPfgotzDjy2EeAYAbTlAJzun/I8EkTTOpIBFM95k/SmNvuDcZZu+cvG47eJ66thKKYwdo3hnXOlcr+0/J7GeKHetj1xJU6Gft/YP0ckmCoNBj8vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KOGorF2Z; arc=none smtp.client-ip=209.85.216.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mS/JXOeb"
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-912195e911aso66808996d6.0
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:26:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KOGorF2Z"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-39b6416441eso8120910a91.1
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Sep 2026 01:26:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789460767; x=1790065567; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789460782; x=1790065582; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=jD1fGYdmSfmtHfbCTu69NC0iIcRgu3QWne7aaYuG46g=;
-        b=mS/JXOebjx/SN/cExANKxLIecofyLAm7a7YuB7UveVVjOLWjU32Zi3Arei5qLZii0/
-         wGTpe/0VKbB1KKrvvKfq2MrCT1xFYDZapIveklMfHYNkak9jy3+dg68S/1BhV2GWZvQx
-         yIwK1xoYuF/eBHw67CIlOeAGoM14riRAqaEXVg+bN32h/tj29XgcpZeV7uJC/pZXsDW9
-         A8B7PD994TzIOEdCQAGhg4rFVXzhOx2jHoAzv8GHt6XF8Mi887LjecANafOs7EKR/Og/
-         xaEScFNj39Wa0eMWBtc4pcFlvJCxaQ1ECi1pGsv2zxtQtqF/OSfGTijhiIXCX/hbklsd
-         TQFw==
+        bh=tzVl62qjzRm92BALDDypl3TnCOJSNAaLaOJ/zmWRh10=;
+        b=KOGorF2ZlodnVWvGMpqUa1jsGZQXPJnTrPBjnabb33TIx4E8luq2RlpmBS7uYuUTYu
+         40vUgEI0BxRO5EgMwsB9h8MCARAlUXH8AbQL69yEWAFIwHTZokJRXVcNFbTsi7F5dqXQ
+         r3dIIVEe8VPQwi3c5/30XSgdFj50dFJVKbXU5QBr4NMVVQ9hujIHxGsNQNU64V/EDQR8
+         RkmjaL9ui86yBJQp1Ak/CbyeC8gYVi3tEFtu/AbkOdRMFncG32yCNcpJtE53MHghAaWv
+         gnvlPRE/YIEbjdwP98W2dLX4BIvfeI81AU9WAblA9qpFHWSPxC5+hawKpp2dPOrpy7xU
+         A40A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789460767; x=1790065567;
+        d=1e100.net; s=20260707; t=1789460782; x=1790065582;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=jD1fGYdmSfmtHfbCTu69NC0iIcRgu3QWne7aaYuG46g=;
-        b=TcD1S+Bk0aaM/Bdpbx/0Tk4ylOux+Qg/28y48/mxSqUYnYQLJ9lwtAXz4Pk2y6TrZP
-         MfsXrFWZZWy1Z2gAFkKgravK7NC8gHtPzNQr4yo5f4+0pkITErje+Pp+MsUosuYreMhB
-         nfHuK7fcjgwbh28OXE59Qyb+8P9Hu/KnUkFUmb3DhB83zrsjC5eFI/uaGVNjchqByGjY
-         90KOSnm6eRc2F4m6xq/V8XYSayczYb52A/xcH1hiUEpSV+OqX1O6gTBNhytpN96i5EL3
-         M1VJ2m7c6g5pLQLW1WSFxry6DUTmOc6cy9nloD9TPLMCQGoOoPB/xfC+I2KH1DD8R7K1
-         oCyA==
-X-Forwarded-Encrypted: i=1; AKwUvBwMpme3G2BNdwEi5tku5ZeNgRAMRqcc/YGc5ZEhiB7DGdosoJ9Eo5WHk9paD8WRGXaNo0SBjLY8R3dNpawclH8=@vger.kernel.org
-X-Gm-Message-State: AFuF++nN1WthJ2jlqQ0pyuTZmmQ0mFCJ2YA4tWuH5A0q4BhOaOypUpnR
-	ULvHxMcLS7B08/8V5O0YFRBSmMLgvW0KWIBhj+/R/ckyjGRopkJRAkvb9TZVfDDT+re7Swxj3t9
+        bh=tzVl62qjzRm92BALDDypl3TnCOJSNAaLaOJ/zmWRh10=;
+        b=dPKWqd7WxdXFDCGp/19SGFaTANZirkbc4InAaVxjYsugiK/9yblThalbY/zErjG9z+
+         gb3HESPLE9grkivGmqgBafIzEQH6+ukfC/nxcHprjrHqu1qduK1c5TcjxZqy0eiCjQn8
+         Pd2vuQW0NOCG37B1EGCw4g/p8csZt+fDa3kSf+emJySVdhEyVJAa1LU6+jPT/9Q0C8BY
+         DUHHmgyQGKPRWdIbuT1Z0BXneqa/5qOeleA0yQCIf4klukgO42pbMpeAb13XkPpE0+IN
+         AuFItay6VZ+AB6wRHstvqu239IrcwVbN8yzSLaaj2eV3CLMRvmfW9wwCIXgLZ0I3+N6B
+         VUIw==
+X-Forwarded-Encrypted: i=1; AKwUvBz8oe87hsm1CA8Sl9/Q3NxNBmlclW92f2opFBoesbxKpSd0Wjm9HgoJZNNLMup8ij0+kV0TaM6EMqsVtLf64yo=@vger.kernel.org
+X-Gm-Message-State: AFuF++nD2In8jC5SlMllGF4Rfn1rb43qVwF1kSn1osUyzSO4Z4H+k1R8
+	WoFM8LnQ7n5Zj4pd7d8WIQSA7s9WNkpbdFsCKE1FZ4mRb9KzjBPQjTeOIV/cFaCYYy8ZxL5yxW6
 	f
-X-Received: from plbkq15.prod.google.com ([2002:a17:903:284f:b0:2dd:1c44:fe2])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a0c:b0:2d9:464f:d45f
- with SMTP id d9443c01a7336-2dd6c5ba2f0mr129830935ad.5.1789460408347; Tue, 15
- Sep 2026 01:20:08 -0700 (PDT)
-Date: Tue, 15 Sep 2026 08:18:33 +0000
+X-Received: from plbjx4.prod.google.com ([2002:a17:903:1384:b0:2dd:1457:fac8])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:190d:b0:2dd:4168:7bd3
+ with SMTP id d9443c01a7336-2dd6c6c0cb1mr140747065ad.12.1789460411041; Tue, 15
+ Sep 2026 01:20:11 -0700 (PDT)
+Date: Tue, 15 Sep 2026 08:18:36 +0000
 In-Reply-To: <20260915081910.4142719-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260915081910.4142719-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260915081910.4142719-17-morbo@google.com>
-Subject: [PATCH 16/28] pinctrl: samsung: Use snprintf() to construct pin bank names
+Message-ID: <20260915081910.4142719-20-morbo@google.com>
+Subject: [PATCH 19/28] x86/setup: Use snprintf() to concatenate builtin and
+ boot command lines
 From: Bill Wendling <morbo@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com, 
@@ -123,17 +124,20 @@ Cc: Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-samsung_banks_node_get() constructs each pin bank node name by copying
-bank->name with strscpy() and appending the suffix with strlcat().
+When CONFIG_CMDLINE_BOOL is enabled without CONFIG_CMDLINE_OVERRIDE,
+setup_arch() appends boot_command_line to builtin_cmdline using two
+strlcat() calls before copying the result back to boot_command_line.
 
 In preparation for removing the deprecated strlcat() API[1], format the
-node name in a single snprintf() call, which preserves the existing
-truncation check against sizeof(node_name).
+combined command line into a temporary buffer using a single snprintf()
+call and copy the result to both builtin_cmdline and boot_command_line.
+Using a temporary buffer avoids undefined behavior from passing overlapping
+source and destination buffers to snprintf().
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Cc: codemender-patching+linux@google.com
-Assisted-by: Gemini:Pro [editor_update_file, make_kernel_build_single_file,=
- checkpatch_run]
+Assisted-by: Developer:Gemini_2.5_Pro [editor_update_file, make_kernel_buil=
+d_single_file, checkpatch_run]
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 Cc: Russell King <linux@armlinux.org.uk>
@@ -247,26 +251,29 @@ Cc: devel@lists.orangefs.org
 Cc: linux-hardening@vger.kernel.org
 Cc: linux-sound@vger.kernel.org
 ---
- drivers/pinctrl/samsung/pinctrl-samsung.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/kernel/setup.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/sa=
-msung/pinctrl-samsung.c
-index 5ecc9ed4c44d..0d639eec689c 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -1155,8 +1155,7 @@ static void samsung_banks_node_get(struct device *dev=
-, struct samsung_pinctrl_dr
-=20
- 	bank =3D d->pin_banks;
- 	for (i =3D 0; i < d->nr_banks; ++i, ++bank) {
--		strscpy(node_name, bank->name, sizeof(node_name));
--		len =3D strlcat(node_name, suffix, sizeof(node_name));
-+		len =3D snprintf(node_name, sizeof(node_name), "%s%s", bank->name, suffi=
-x);
- 		if (len >=3D sizeof(node_name)) {
- 			dev_err(dev, "Too long pin bank name '%s', ignoring\n",
- 				bank->name);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index cda6adb9f69c..c40e0edd7c13 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -916,9 +916,11 @@ void __init setup_arch(char **cmdline_p)
+ #else
+ 	if (builtin_cmdline[0]) {
+ 		/* append boot loader cmdline to builtin */
+-		strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
+-		strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+-		strscpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
++		char tmp[COMMAND_LINE_SIZE];
++
++		snprintf(tmp, COMMAND_LINE_SIZE, "%s %s", builtin_cmdline, boot_command_=
+line);
++		strscpy(builtin_cmdline, tmp, COMMAND_LINE_SIZE);
++		strscpy(boot_command_line, tmp, COMMAND_LINE_SIZE);
+ 	}
+ #endif
+ 	builtin_cmdline_added =3D true;
 --=20
 2.55.0.1032.g73a4cd73de-goog
 
