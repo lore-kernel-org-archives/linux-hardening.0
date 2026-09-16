@@ -1,69 +1,69 @@
-Received: from mail-qv2-f20.google.com (mail-qv2-f20.google.com [74.125.230.148])
+Received: from mail-qv2-f12.google.com (mail-qv2-f12.google.com [74.125.230.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA214AE11E
-	for <linux-hardening@vger.kernel.org>; Wed, 16 Sep 2026 18:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2EB415F2B
+	for <linux-hardening@vger.kernel.org>; Wed, 16 Sep 2026 19:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789584595; cv=none; b=e1j+ilgEtPDHuX58shZ5NwSlVg+nCA10zo2qyOj/G+lcRQ+jdGsT7fZbhZZ5DY+7MoEAVFS21ilIaVwR2ieOJUfRFa1QaR7X/qLvQUUga5Pyqn9yWWz6JIF0l+IyxT0od+7sIoMGPvu8zbHy/KEnPyz38bjMQq2N6V6rIcqvpRo=
+	t=1789587220; cv=none; b=lO4wP5ute7W5plSxb2FxukvvOdjSwd63Y+vBD9CiW/wqKjfe+Q/S59bBu0nULyWArJcTb6yHa2jN+ByS14tUxwse/srgcmfqjSGgHMkcU0n2GyyEYo+sms57udvoETaGDHowHU2Ck0yiIZ1jNF82vn+Lp6fABOKLAmPBYHD6MgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789584595; c=relaxed/simple;
-	bh=qjO05h8NCgW9DdH4l85dlmT24Ysl3YzDoaGNJA1xrmE=;
+	s=arc-20240116; t=1789587220; c=relaxed/simple;
+	bh=Kpo0OyWi0CO746t44DDgn1hn3lqL6Qj9kQMB/VsQdtI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MRMPb3wd5CqguPF8I3l5y4tnup3fjgnEv7D3Zi3Q9MN7lI8AnyEtYlud7jpuJv3LIjxLuBJuOAeOm6YduP0Cpmz5ATNB/pMUQlxhJiPcXm2dp0C6zfE7KxeaAaZTaHyEkxoWE8S8/rmN4R2yZN29wKrFe6/xg6XOlovOrppyQZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ur49RFow; arc=none smtp.client-ip=74.125.230.148
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQykqnz51t1NemsrdSW6TNS2XJxZhaqLSxtbqUSVTaFnif4sBJaeDA2KlV+yVwlOTiZDeOaR70H8o5H7wPVCseLMr6FJDgMLz6JQVngUp3ZqToz620pQc1lvC3ewZQ1S6B6GaIEphxvrMyNe4M2PRxZr8ynU9EFBce3tY0JXskk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=RSzzeEYp; arc=none smtp.client-ip=74.125.230.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ur49RFow"
-Received: by mail-qv2-f20.google.com with SMTP id 6a1803df08f44-90cdfc9b6e4so11317166d6.3
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Sep 2026 11:49:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="RSzzeEYp"
+Received: by mail-qv2-f12.google.com with SMTP id 6a1803df08f44-91059280d58so90966d6.1
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Sep 2026 12:33:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1789584579; x=1790189379; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1789587211; x=1790192011; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=c0iIgJwWQvCfxDYTtHwJ9R8OwiKsFPaAaYmGvWCYHto=;
-        b=ur49RFowrugsitDaOgTStbQHm+W6D/02S+/MOvhvMB009kC6tZjAi82Ko/N58VLPxD
-         pyXFXamCYOw+3E+3qoL6beXSB2Y+gpDfO5z9awOvcWz7nw9t2V0Xr537zaWfHFk++/Rq
-         0GuINYEzdF0e+POW4Y/Do/mCRSlGCD3kXhWFx7qIwwwqIV7ufFvS0J+Er7wZz3IiM4tn
-         TJMnvlbZZ94JK4CDfNX+/YXNcrPPNLKYtV8st/9DMgMPbLzXWFPaxS5GLdZSU4TG1PXV
-         q8FDrb8A3DsRRBqB+9r2Z6tpBjpAyMpR/lJ3LDNi14KfyPnY2vUxIrxPEgEqezIy/u6a
-         SLvg==
+        bh=eJtIecQvwkVEDPm/6dNtwM/FqSFHvdTn3Czip8ta20A=;
+        b=RSzzeEYp51xyMflEt24hgwFSPgHtW1nrLj3gzOsux+BYrVHqPq+MBJDHkgcBE0IrmV
+         qZGteJmf5nvplXr5hPFVIldhBVKQVujfnj1U+9iQEXbzQvvKfa4YBK6oEUEWTiH2t+W6
+         c0spJB+mCL0Giv46yabqNPKEWMxFk5LvvEq44AGVjebZ4mTj7r36ODIyJXG3EMKmT4aK
+         YYCCH8K4Vsj/dUt0IRddDyX02VS6nqKoGr/BxN2yWilB+Qpc408H15zR3BkT/QREp6lV
+         bqYdUZLDY16rbNFi1KO33uo7l4wDajjwgmsZo1cjyrrMI2hzEUy7UIx5CVAeFz3zIxY3
+         qE5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789584579; x=1790189379;
+        d=1e100.net; s=20260707; t=1789587211; x=1790192011;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=c0iIgJwWQvCfxDYTtHwJ9R8OwiKsFPaAaYmGvWCYHto=;
-        b=tIQ8ceAPxMtXnVaBvLjKV8OoPB2fU1glAP3cnGGNK30tcZ+sVxZchHOjk9h3IlTcic
-         OkZm4VJLPDtbzuMkLBpLqtTLwCCXArSevOtUq/jd1iE1LNs6c1fPQtHKj0m6gdizBJb1
-         1ggCdJ0KJMY5sTk4vMES/lXgGsj3Jrfd9V6h1ZToLc2KZpgGrEZAqbgbAHGi5Tgr/5iQ
-         lg1vVWRUuGaq4Sxu4MgbOgqpCEzOMCq5TyUUeYE5ybgwPxmcfjLJLaCelZ4gL9eRBYv8
-         IGytQiKCD0VnAc74l+JiX2Tt07vriimciyddYjgxTHOODat0yt4jcex3r31uAmujlpcA
-         itBg==
-X-Forwarded-Encrypted: i=1; AKwUvBz1E0tbyeoNEAHq2uxXoGwqK3EAqMwS/2WfTE13jD7wecOn5WzmswnuHSem9bZyZAydJGJ80SjRvJa1rzOV8Cg=@vger.kernel.org
-X-Gm-Message-State: AFuF++nVrw0YrVTp0fl/ZZ2h2LdAhuWCELIh2JK7L+iBAV6e1CY6U3RK
-	2AB63hWfltqEdR3/gqsEdHvOX64Lem0eVCLrBy0nGXe+17YZRBfVb6B2uLC3cUNAnmM=
-X-Gm-Gg: AYBFou1sJGtbm6b27Bxrr0XdoGJzos4m+UNI9/BOgnXjT08sVhECZXf/tlKToABtKCE
-	Ke59qOj8fdtftpxazGiM3jw9WWl9LCIZ0Zl8LcE9llp07mQPaSDT4g/hI2shopahDbHiIfcqDgl
-	xj7z5WO6R66erk3vQBZQz5SRVP5K8TyVjH1QCIybIbOpgFih5AJtktQaalMjs2awPIoehNADyt0
-	dzn5pP5nUgeS/vFtG1CpuuuzD0ItZGXJZ+DIygK1wEGN6K2FgWFBdianPgS8eAbHRoWJ9doolxw
-	76mo9QWMvwJQf0y0pSLr3bcExYqP67foHCWvVy0uk3pWghb8b0mwhbAHE+yN3zR5oAs0oj1jlk5
-	Pw6Al0A4C685ObhoPM+2zCLu+8NFk2Xk1KKE20EqqOOW4qQ/F79Jm8p9JA53FuPk6+0wE5ySaAd
-	VpPHedGoSwwemDa8irdGiQmxLNoEhg28xb4WpUp91XNc/q8igUeKAq971yJfKR0K11COuQqQFKV
-	2ROxSQzxctjgQV4Vfw7wIQtUMHQEfwN9ZBqVwU3kAPAHAb0djaHess=
-X-Received: by 2002:a05:620a:17a3:b0:939:8905:ce9b with SMTP id af79cd13be357-93bb77461a9mr631916885a.17.1789584579016;
-        Wed, 16 Sep 2026 11:49:39 -0700 (PDT)
+        bh=eJtIecQvwkVEDPm/6dNtwM/FqSFHvdTn3Czip8ta20A=;
+        b=mwP4Q0IULFarteLIsD2Kg5RTwcmRacFH4rUqs2Ym87ktXs/9OTEm0j2PmRASM/GW3H
+         CiHGKPcRI4oVhi7rlJJlyUu/i1mRCV3iywxoIn8kYns3eekAUCD9atn9YiW/J1IB9S6/
+         q8xDJDFTFMI9wdgXs7H97WyH9wHgNNy6LYRVwndOsq6MAp0FDEnR+IKC4kGmwmc4jONx
+         mFviANJJ4JapJay7qjb+ynOUoGmPlYf4poBETA+pHzwfMdJBIPXMvVbU8ifvmu3Ywk3m
+         lb2V84w6dD7xWepFWp/rLKQWFHWX5fTSQRxbJwav0dG+AYLetBnZF1ByoDPjsrp/bz03
+         OBAw==
+X-Forwarded-Encrypted: i=1; AKwUvBxP33bVrvrSd0TXT7NxnMO6WkppEXoybw/XKddqH/v2F32L9cDcOBV5taDG2KePTNc3liRble3LUgPlkpHewLw=@vger.kernel.org
+X-Gm-Message-State: AFuF++liO7gq8pZPpa0x/kZv350v7nOdlR/u3n7YWqvmLjhPprHg5GQh
+	hrigrOOKwtkgnma4bWxUKB/l08QBJQFUz6LaUxuzfWbebRCRxPJW8auFQU+fdGlrlu8=
+X-Gm-Gg: AYBFou1TGb+11GPxnyUPcNsIA/z3ObSsxFYe63/SmyiQ488meNb+Vy2QvE/bm6V8E/a
+	QqvZFspiI8uQYG3GDpZabOE7y/P07N7TPylC8wEhT/tO03/x1sIo7TbfKe17+N9jbZcPssIdmWh
+	tJ+1ZmISv+/umIrzGsMCGgxeEH0pl/Mb07+z2lBY0IBYN4bV/9zHcN5uaIQZqaNd9oyiOKiPwme
+	gaH+JzrQZt0cVRuYKANb/VBZF5rdOo5kGun+iDHw1krZkFlhdIDs8TKcqb1E6MUmVtK2wAQmZ5a
+	HNF5KXFrTYO6izbdvxEiArV9iegp5+va13YgHR4dUOqTUu3kl36jmCR8w6rGMlYOpSzgbopDNhu
+	I0wMjAfmE6nyAW1iNmjVevg3v1oQHZt/BQFTDGWNiBnyCqeG6Bm9mv9C9WNPIh0nDAfeP4qzVQ3
+	Y4h7OwQoYDbwuy5P6EBYC7WhvzJ/pCdMlyuu/2nAILYm0J/Ccf7xE56kZT//pVvbjqoNjO5cIIw
+	vJSjnyittbTnpQvo7wdhdxBAap8IqK0sQK/zyLRboJ3Nqj/lKaCGBU=
+X-Received: by 2002:a05:6214:448b:b0:910:31f7:3bd7 with SMTP id 6a1803df08f44-9123d7d57f2mr72582036d6.29.1789587210868;
+        Wed, 16 Sep 2026 12:33:30 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93b81d147ffsm281088485a.43.2026.09.16.11.49.38
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91246979f17sm6900666d6.34.2026.09.16.12.33.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2026 11:49:38 -0700 (PDT)
-Date: Wed, 16 Sep 2026 14:49:36 -0400
+        Wed, 16 Sep 2026 12:33:30 -0700 (PDT)
+Date: Wed, 16 Sep 2026 15:33:28 -0400
 From: Gregory Price <gourry@gourry.net>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: mhonap@nvidia.com, alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com, 
+To: mhonap@nvidia.com
+Cc: alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com, jic23@kernel.org, 
 	dave.jiang@intel.com, alejandro.lucero-palau@amd.com, smadhavan@nvidia.com, 
 	corbet@lwn.net, skhan@linuxfoundation.org, dave@stgolabs.net, 
 	alison.schofield@intel.com, vishal.l.verma@intel.com, iweiny@kernel.org, 
@@ -73,12 +73,11 @@ Cc: mhonap@nvidia.com, alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com,
 	zhiw@nvidia.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	kvm@vger.kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 07/27] vfio/pci: Detect CXL devices and load vfio-cxl
- on demand
-Message-ID: <aqrg9AJBh0GUsP0l@gourry-fedora-PF4VCD3F>
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
- <20260813093631.2288172-8-mhonap@nvidia.com>
- <20260916191659.1d3cb36b@jic23-hlaptop>
+Subject: Re: [PATCH v5 26/27] Documentation: vfio-pci: Document CXL Type-2
+ device passthrough
+Message-ID: <aqrl_FyWEBOZundU@gourry-fedora-PF4VCD3F>
+References: <20260916183540.3813685-1-mhonap@nvidia.com>
+ <20260916183540.3813685-27-mhonap@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -87,62 +86,232 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260916191659.1d3cb36b@jic23-hlaptop>
+In-Reply-To: <20260916183540.3813685-27-mhonap@nvidia.com>
 
-On Wed, Sep 16, 2026 at 07:16:59PM +0100, Jonathan Cameron wrote:
-> > +/*
-> > + * A CXL Type-2 device advertises both CXL.cache and CXL.mem in its CXL DVSEC.
-> > + * pcie_is_cxl() is also true for Type-1 (cache only) and Type-3 (mem only)
-> > + * devices, which the vfio-cxl provider does not handle, so confirm the Type-2
-> > + * identity before engaging it.
-> 
-> We don't expect to handle type 3 class code compliant devices, but what about
-> the things referred to sometimes as CXL Type 3+?
-
-Dan has previously (and I think would continue) to just call that
-an accelerator - because it is.
-
-I think the Type 1/2/3 nomenclature is stale and needs to go away,
-it's outlived its usefulness.
-
-To your point below, a compressed ram device is really an accelerator
-with CXL.io and CXL.mem.  All the spec says (used to say?) about
-"Type 2" is that it *may* support CXL.cache - it doesn't require it.
-
-> It is also plausible we'd pass a full compressed RAM device through to the
-> guest without paravirtualizing like we currently plan to do for class
-> code Type 3 devices (for DCD, sharing etc). +CC Gregory to point out where
-> I am wrong on this ;)
+On Thu, Sep 17, 2026 at 12:05:39AM +0530, mhonap@nvidia.com wrote:
+> From: Manish Honap <mhonap@nvidia.com>
 > 
 
-Plausible, possible, feasible - yes.
+1) Thank you so much for writing documentation, i truly appreciate this.
 
-Sane?  More sane than using it as a normal memory device on the host
-assuming RAS signals from the device can't overwhelm the host (unknown).
+2) I apologize in advance for my terseness, I know writing is hard,
+   please do not interpret this as disliking your writing or series.
 
-> More generally, why are we controlling usecases?  A class code compliant type 3
-> device 'could' be passed through I think if someone wanted to do that.
-> I'd not encourage it but why is it a linux policy to not support it?
-> 
+> +Address model
+> +=============
+> +
+> +The HDM memory is a coherent host physical range (HPA). The host kernel
+> +resolves that range before the guest sees the device, and owns it for the
+> +bind lifetime. The guest only chooses where the memory appears in its own
+> +physical address space (GPA), by programming a virtual endpoint HDM
+> +decoder. The guest never reprograms the physical decoder.
+> +
+> +The kernel holds the HPA and does not see the GPA. The guest programs a
+> +GPA and does not see the HPA. The VMM holds the device fd, reads the
+> +committed base from the decoder-register region described below, and maps
+> +the HPA-backed HDM region at the GPA the guest committed. The base the
+> +guest reads back is the GPA, not the HPA.
+> +
 
-The only scenario I can think of that you'd want to pass a simple
-expander all the way through to the guest would be RAS signals - which
-I think still require host plumbing anyway to avoid passing said signals
-to the wrong guest depending on how you've chopped up the region.
+I think this must be slightly inaccurate / imprecise wording.
 
-Basically if you need DPA/HPA data from the device to be interpreted by
-the kernel, the guest needs a translation mechanism.
+The host *must* provide some form of physical memory window to the guest
+at initialization time, otherwise the guest has no way to know - at boot
+time - that there's even a window of memory it can use.
 
-In practice I can see passing a virtualized, locked auto-decoder through
-to the guest with the same HPA/DPA values as the real device so the
-signals can be delivered quickly with limited host interposition.
+That's what the CFMWS is.  This is initialized by the hypervisor - which
+is controlled by the host.
 
-You would probably need on-device vitualization support to do "proper"
-passthrough so the device can route signals to the guest directly.
+So the host (at least the VMM) must know, for the region the entire
+device *could* inhabit, what that GPA is - because it's the one that makes
+the CFMWS for the guest.
 
-Anyway, you could pass it through, sure, why not.
+If this is not the case, then something is missing from this
+documentation to explain why.
 
-We shouldn't limit it, if only because we're not clairvoyant about
-what will be useful tomorrow.
+
+If you're actually trying to say is that the GPA's programmed into the
+virtual decoders are largely symbolic - this at best feels a bit
+inaccurate and simply an implementation detail.
+
+The host's virtio device could enforce ....:
+
+Host Range:
+   CFMWS HPA - [0x10000, 0x20000]
+                   |         |
+Guest Range:       |         |
+   CFMWS GPA - [0x50000, 0x60000]
+
+In that case, you'd get the following translation...
+   vdecoder0.0 - [0x58000, 0x60000]
+   CFMWS GPA   - [0x58000, 0x60000]
+   CFMWS HPA   - [0x18000, 0x20000]
+
+Or the virtio device could not enforce that and let the host page-fault
+just hand it a random page from the actual CXL device.
+
+   vdecoder0.0 - [0x58000, 0x60000]
+   CFMWS GPA   - [0x58000, 0x60000]
+                         |
+              No discrete host mapping
+
+
+The former makes sense if the device (accelerator) requires exact
+physical placement to do its accelerator nonsense.
+
+The latter makes sense if the device (accelerator) doesn't care
+about placement (compressed memory).
+
+This is not saying we need support both out of the box, but we shouldn't
+lock ourselves into the former unless there's some reason why the latter
+is not reasonable.
+
+Can you please help document what the actual expected behavior is with
+examples in the Address model section so it's easier to understand the
+intent?  That will help quite a bit.
+
+> +Guest decoder and commit
+> +========================
+> +
+> +The guest programs its virtual endpoint decoder through the trapped
+> +region: it writes a base (a GPA), a size, and then the COMMIT bit. The
+> +host already resolved and committed the physical placement before the
+> +guest ran,
+
+So the host does know GPA, just not exact placement.
+
+> so a live read of the decoder always shows COMMITTED and the
+> +guest's commit poll completes. The physical decoder is never rewritten;
+> +the guest's writes are absorbed.
+> +
+
+Rather clunky, round-about way to say "The guest decoders are
+virtualized".   If possible, it would be nice to formalize this concept
+into "Virtual Decoders" - since that's what this is.
+
+With that concept i think you can probably generate some nice diagrams
+that show how the guest vdecoder's interact with the host drivers.
+
+> +The VMM observes the commit, reads the committed base, and maps the HDM
+> +region at that GPA.
+> +
+
+So the host does know the GPA.
+
+> +CXL Device DVSEC
+> +================
+> +
+> +The kernel virtualizes the CXL Device DVSEC body through the config-space
+> +permission hooks. Reads and writes inside the DVSEC body use a per-open
+> +shadow; a guest write stays in the shadow and does not reach hardware.
+> +Accesses outside the DVSEC body go to the device as usual.
+> +
+
+"The kernel" - what part? vfio-pci ? the vmm ?
+
+
+> +DMA and iommufd
+> +===============
+> +
+> +A Type-2 accelerator issues ATS-translated DMA to addresses inside its own
+> +HDM window, so that range must be present in the guest IOAS that backs the
+> +nested stage-2 translation.
+
+Type-2, ATS, DMA, HDM window, guest IOAS, stage-2 translation
+
+I think the only thing i don't know in this sentence is "guest IOAS" and
+it's still hurting my brain to read.
+
+Are all accelerators expect to have this particular interaction, or just
+yours?
+
+> The HDM range is struct-page-less coherent
+> +memory, which a userspace-VA ``IOMMU_IOAS_MAP`` cannot pin.
+> +
+
+The hardest part about writing about virtualization is keeping a
+consistent mental model from section to section.
+
+which userspace? guest? host?  (i presume guest here)
+
+`struct-page-less coherent memory`
+   e.g. the host never hotplugs this, it hands the entire region
+   directly to the VFIO device, right?
+
+   I think this would be nice to spell out somewhere.
+
+> +The HDM memory region is therefore exportable as a dma-buf:
+> +``VFIO_DEVICE_FEATURE_DMA_BUF`` on that region returns an fd that iommufd
+> +maps with ``IOMMU_IOAS_MAP_FILE``, mapping the physical range without a VA
+> +or a page pin. The dma-buf is revoked whenever the mapping is torn down
+> +(reset, power transition, teardown), so a stale stage-2 mapping cannot
+> +outlive the HDM window.
+> +
+
+For the sake of readers, I think either a little bit more information
+on this "stage-2 mapping" concept is needed to make sense of what's
+going on here and why it mustn't outlive the HDM window.
+
+> +Reset
+> +=====
+> +
+> +A CXL Type-2 function must not take a Function Level Reset: an FLR resets
+> +the coherent CXL.mem state and the HDM decoder. The PCI core reflects this
+> +by preferring the CXL reset over FLR, so a function reset of a CXL device
+> +runs the CXL DVSEC reset sequence, which resets the function and then
+> +restores the HDM decoder and the PCI config state.
+> +
+
+I think what you're trying to say is that FLRs are never passed to the
+device because it can cause physical device effects that defeat the
+purpose of the virtualization, yes?
+
+So we virtualize FLRs...
+
+> +A guest requests a reset by writing Initiate CXL Reset in the DVSEC. That
+> +write only stamps completion in the shadow. The real reset runs at the vfio
+> +reset points (the reset ioctl and a virtualized FLR through config space):
+
+As you describe here.
+
+So it's not that an accelerator "must not take an FLR" - it's that FLRs
+are virtualized to prevent deleterious effects on the host / hardware.
+
+Am I misunderstanding this?
+
+> +the kernel zaps the HDM mapping and revokes the dma-buf, then runs the CXL
+> +reset, which always clears the device memory, and restores and re-samples
+> +the decoder afterwards. A CXL port masks Secondary Bus Reset by default, so a
+> +``VFIO_DEVICE_PCI_HOT_RESET`` does not reach the endpoint and the HDM
+> +state is untouched. If the port has SBR unmasked the reset can decommit
+> +the decoder without restoring it, so the reset_done handler gates HDM
+> +access; a ``VFIO_DEVICE_RESET`` then runs the CXL reset sequence and
+> +restores it.
+> +
+> +The decoder register region is served by live reads of the hardware
+> +decoder with guest writes absorbed: the decoder is committed and locked by
+> +the host, so a guest can neither decommit nor reprogram it, and the kernel
+> +keeps no shadow of the decoder state.
+
+This is basically what I said at the beginning - it must either be that
+the host provides locked auto-decoders at boot, or it must provide
+proper virtualization so that the decoders settings are fully
+virtualized.
+
+Seems it's the former, and that makes sense.  Please correct me if i'm
+misunderstanding.
+
+> After a reset the kernel restores and
+> +re-samples the firmware-committed decoder, so the geometry the guest reads
+> +back is unchanged. A VMM that dropped its HDM mapping, for example across a
+> +reset or a D3hot->D0 transition, must rescan the decoder and rebuild its
+> +stage-2 mapping before it resumes HDM access.
+> +
+
+Yeah i think we need a bit more information about this stage-2 mapping
+rebuild to make sense of this.  Maybe I'm just not read-up enough on
+this particular setup - is there another part of the docs you can link
+to that talk about this, or are you able to share some details as to
+what this rebuild process looks like?
 
 ~Gregory
