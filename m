@@ -1,99 +1,104 @@
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37274BA1F5
-	for <linux-hardening@vger.kernel.org>; Wed, 16 Sep 2026 22:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C20647887A
+	for <linux-hardening@vger.kernel.org>; Wed, 16 Sep 2026 22:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789596946; cv=none; b=q2XgrybAhmdZjTKFoI0Eva7jS9j8AoOR2E4uDObLWgkB3rxXURt3xvhIEP8FvxBETO614Vbx01Wt9DUrUrWx6cYDwF6fA0Xg0sfHY0yU0I78+OzLTHN6VYJ6EaIcHaqkzW+JHufeXowsY5LCbLWJDCDp8Nq+WHQW6dN38sgSY0A=
+	t=1789597300; cv=none; b=sy5xTG7sF+DPe4ksYX7idWGDYquG3Su7TMV3MFPF6yzN8R0ZeRbcRNOD/rmrbzeksu1HCQk1QT6leCEY13Px5MmQIG7k/iZg6zm7Y04W0uhhgLQ50M86QltaXQX8JrZ8FOWHRDOuye+bv/J6DYu5uLbI5J4AjHEkIXyUj1yRppw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789596946; c=relaxed/simple;
-	bh=OTWaLEXPWBhQzeYYwpzf8NSRkb261QT0xbFLmxx6C24=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IrGwCpjBeDOwzQqteCDasBwCwFaB9okYWZZaHGQuC4OBC39JXspj/fEHbulMgezAzTFANREQ1wey0YdQ26tt06JbK0cgNSZzTKHBTNf8AMBq0EWlLuaZjFSNGJf4xWLT2pToRxO+FKiFZJ2CK+6IVxmC7sYlNHFnPFP2kjikzxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uOvwBjtf; arc=none smtp.client-ip=209.85.214.199
+	s=arc-20240116; t=1789597300; c=relaxed/simple;
+	bh=3IUthFCIQe0CN7x8Mg7+90SA1ewsCpM6PLVBE4HZS44=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CfpuekK0rfTbUc3MK7X30MG+HhOAuivWRyCmlJBWmAKF22tkqHy9xCNujvUAmMCsZLFhc7Taf4zHMo/s3OTy1t7Y28Uv4/Rc4meJzLPLjXv2BcoZMv4Dpe8oftxmTzXtIlq5eowbWVKLk48Yue0xbGLvcwlpDRSC43r8E/kcdJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eU+xYvOv; arc=none smtp.client-ip=209.85.215.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uOvwBjtf"
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2d6fed0652bso2621155ad.2
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Sep 2026 15:15:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eU+xYvOv"
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cc1a439db36so154682a12.2
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Sep 2026 15:21:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789596937; x=1790201737; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VT9yxlG3sy4p8RM6yvQR98/kAjakpHzOMZ+6UgJJ6ZA=;
-        b=uOvwBjtftUm57L0pGcU04fXOHevdpbG/LQ7pnXkCbK5tezWxplEJXbWkqhW/vYoBQN
-         yDuO6jvUKYl+ABKD0lYHeRjY5VARJXm7iXI4neOSCyyFBb3IL88g5bzsdM4euiL7M+gP
-         78NfH/XdPv2AhaWYKn4pp8XDIZ4+FSm60D5GsJwTLzPo3anxIl1YIS+lwnLph69OWdvi
-         a4fCXnbsghFe77Oe/rNP6tx/Q/ccamwOr4sIhbTgqcTyzzEeBjkuzWRlxDFKs6waf+Q7
-         avvm0nYctItMrSwDOsJNwvZ1aVi4keeEZcIEqGg5dPG5wOpQ+7DPvjALCreEU/4ru4a/
-         IzGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789596937; x=1790201737;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1789597288; x=1790202088; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=VT9yxlG3sy4p8RM6yvQR98/kAjakpHzOMZ+6UgJJ6ZA=;
-        b=tJpgjxXR1nzlwRDZNqHDuASrV/pDrRRGTDqHiupYFwA7NrjpLLjXDwsJMSsxayQTdx
-         Ja/RsSvFO0lNGR6Z81bj8ZycIcZJR6dwC6U18f9SY/hEJjt7lhuFdKBJGVeRDbHTVc/Q
-         Xfrzk0CO+BYL/63v6gMyZCVrdrsXsJ7siXXoqCe3KMoj3Fr8zYD63IFeAAi3xHAu+3Ag
-         NRQnDwWV1IYZzULcM2JxUXs4P2yMe3VeoSAE/i6Tyy9TIoGbVoXnJlO2/8ZmVsPMMqSE
-         ZX4jhsSWt1xFi5fZlQ074I47UXk/tBrNA8qln8Uh6S+3yT9XbXbNMC24WvVuyryRXyMV
-         jXnA==
-X-Forwarded-Encrypted: i=1; AKwUvBwQ2TsA536JnVDitaMpFIv499wW6BJa+J2itA/mhk70L2LqafYBd8gFhlFLPfHJuGYcmfJJycn/0WBFPLT2qSw=@vger.kernel.org
-X-Gm-Message-State: AFuF++nOT6estbOJc+QNN/b5Svmks2e2bhqUIFGVILPOqX6Be6B1zetr
-	L7i8tbp7ooM8A6QS1JsKA0xRz9Q2kZ6vl0zQASLov/cVelfLSTpGnd3y3x55dvLkYybepwFfC9d
-	D
-X-Received: from plbbg3.prod.google.com ([2002:a17:902:8e83:b0:2db:7978:1b17])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce89:b0:2db:5052:fd6f
- with SMTP id d9443c01a7336-2dd8e636afcmr84599995ad.17.1789596937146; Wed, 16
- Sep 2026 15:15:37 -0700 (PDT)
-Date: Wed, 16 Sep 2026 22:15:27 +0000
+        bh=cdC0Aij8DIx1VpvwjMV99CPapZgugvAI9la0yQFpjcc=;
+        b=eU+xYvOveSpQCzax4NbbMciXVi0+Fk5YaOy4U2Z17rt336Gh+ReqdwmK8anC1OSQqh
+         0YkyT/Vm+AQmCWcQVCplilenIXIPW42+jBxlpXFl5ipawiAtWS/KnChBwvUBoBY7KAqx
+         M0T93a+uqoFrw0s4ZphR7QGoLEkGmd5KhXedwu4o7Lp37VWC+sVf2p6/rxQG8bKfFexy
+         /QH61xnnnxhKSByZ3FaFZTVsrQLd1ew9R69oVkXWZDeNYYgw7eXKDUOiIKpYbnDYReH3
+         QaYWWju11vyxFN/Y6dOjB4067J5KJJtKWqk3NCMmm2/3XTrnPZbUg346Z9V2t02FUcT9
+         rH0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789597288; x=1790202088;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=cdC0Aij8DIx1VpvwjMV99CPapZgugvAI9la0yQFpjcc=;
+        b=1WIlXq6WXRbsIWAxtzRi+jU7TaVQkvCQUrH0BkZUTMcioSoZUmcDfhqvrRpIH1CwB7
+         wVPy+IUzv+oYw7s3+jD3CXl6BBXVRDB1QKFD1YS2pGCNu87ry286NF261lISaf2PUQtH
+         xCxWAoMf8PB+4c5BP7LygH/rJWfIHni5WQFP++jmuhY0QZ7BaE6WZsjbODfcPLreJCLn
+         kyxjGG1Ey+lrlF0wov+zcYkika5qUbLvRrhyA/AJ5/husYCbuAFcXj9Pj/aB9OTECVDF
+         rU2HgcSdNx+OiSCx5IAjx0j4oXRcHrpG1ZjzGtKTXSu4zqE9XbVw59OYpY3C8JpZEkQn
+         zY5w==
+X-Forwarded-Encrypted: i=1; AKwUvBxm9PVRJml4jp5RHqiXMJSRW1gPSwZSI1mhxedIjGuz4SPY7OW5UQAo39bypP/iODWRHDGfmJwnY5MPS+MDGsE=@vger.kernel.org
+X-Gm-Message-State: AFuF++kpfEBwgL4FI1BtzxxJs3IyKWWgrzox82EFNN9BxyN4iIZ+YPhI
+	RtQtOkzhz3k7Rp6/pvKc0pWR1vunlowYDJsR5oPzIk2kRNvt0Yuz9TzuMrwcXyIDU/ZxA3k22Ky
+	5
+X-Received: from plhy3.prod.google.com ([2002:a17:902:d643:b0:2dd:7e95:7c98])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:faf:b0:2dd:8e5:28d
+ with SMTP id d9443c01a7336-2dd8e026e01mr89207705ad.8.1789597287619; Wed, 16
+ Sep 2026 15:21:27 -0700 (PDT)
+Date: Wed, 16 Sep 2026 22:21:25 +0000
+In-Reply-To: <20260916221528.1256283-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20260916221528.1256283-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260916221528.1256283-1-morbo@google.com>
-Subject: [PATCH] seq_buf: add seq_buf_strlen(), seq_buf_init_append(), seq_buf_puts_trunc()
+Message-ID: <20260916222125.1259631-1-morbo@google.com>
+Subject: [PATCH v2] seq_buf: add seq_buf_strlen(), seq_buf_init_append(), seq_buf_puts_trunc()
 From: Bill Wendling <morbo@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, Bill Wendling <morbo@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Several strlcat() call sites being converted to seq_buf in this series
-need behavior seq_buf doesn't currently provide, either directly or
-without introducing subtle bugs:
+Converting some strlcat() call sites seq_buf need behavior seq_buf doesn't
+currently provide, either directly or without introducing subtle bugs:
 
- - seq_buf_used() reports the full buffer size when the buffer is
-   completely filled, even though seq_buf_str() then overwrites the
+ - seq_buf_strlen(): seq_buf_used() reports the full buffer size when the
+   buffer is completely filled, even though seq_buf_str() then overwrites the
    final byte with a NUL terminator, leaving only size - 1 bytes of
    actual content. Callers that need the true length of the
    NUL-terminated string have to fall back to strlen(seq_buf_str(s)).
-   Add seq_buf_strlen(), which mirrors seq_buf_str()'s NUL-termination
-   logic but returns the resulting string's length directly.
+   seq_buf_strlen() mirrors seq_buf_str()'s NUL-termination logic but returns
+   the resulting string's length directly.
 
- - seq_buf_init() always clears the buffer it's given via
-   seq_buf_clear(). Code migrating from strlcat(buf, ...), which
+ - seq_buf_init_append(): seq_buf_init() always clears the buffer it's given
+   via seq_buf_clear(). Code migrating from strlcat(buf, ...), which
    appends to whatever @buf already contains, can't use seq_buf_init()
-   without silently discarding that existing content. Add
-   seq_buf_init_append(), which preserves it and positions the seq_buf
-   to append after it.
+   without silently discarding that existing content. seq_buf_init_append()
+   preserves it and positions the seq_buf to append after it.
 
- - seq_buf_puts() (like seq_buf_printf() and friends) writes nothing
-   at all if the string doesn't fully fit, whereas strlcat() always
-   copies as much of the source as there is room for. Converting a
+ - seq_buf_puts_trunc(): seq_buf_puts() (like seq_buf_printf() and friends)
+   writes nothing at all if the string doesn't fully fit, whereas strlcat()
+   always copies as much of the source as there is room for. Converting a
    strlcat() call site that relied on that partial-copy behavior to
    plain seq_buf_puts() can silently drop content that used to survive
-   truncated. Add seq_buf_puts_trunc(), which keeps the leading bytes
-   of the string that fit.
+   truncated. seq_buf_puts_trunc() keeps the leading bytes of the string
+   that fit.
 
 Assisted-by: LLM
 Suggested-by: Kees Cook <kees@kernel.org>
 Signed-off-by: Bill Wendling <morbo@google.com>
+---
+v2: Reword the commit message to be clearer and not refer to a series of
+    patches
 ---
  include/linux/seq_buf.h | 60 +++++++++++++++++++++++++++++++++++++++++
  lib/seq_buf.c           | 35 ++++++++++++++++++++++++
