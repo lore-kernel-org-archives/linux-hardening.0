@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750AB40928B;
-	Thu, 17 Sep 2026 21:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D9B48FF7B;
+	Thu, 17 Sep 2026 21:12:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789679501; cv=none; b=D/8+nM6dD19X7tY2mZjjbsSRvPxOJnZkc0H4GsanhJlzbjbT3hckW1mA+B5eXbz84bgN70zBNsJFAt3VHDBGoLlsRwVZlQOw+XshechBABf0iC6zkEooIv/hUUiGDy+ekdvBIlii2I3OeVSC+oC9ZlpnnUpo5kJzdVuhok+qESE=
+	t=1789679521; cv=none; b=IpIfTphDP/R9jlWZbogi1Myat9ezYiZGRmkqECJrffyOZuUTuIkqjh2ZTYw3MyUuoBXZm0j3sSyKdKGR2BwzNmadgpTgoCMlJoXy0gGCX7eVMwI2blMIiQZdJrsD1PpROrV228aAGaUlQgWowA5dJAyCb+18JjtQIqFt68Jfi8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789679501; c=relaxed/simple;
-	bh=MJ97ti6kE1FqMOweapUYAZexCKOQKohuEFRfs0ffhrM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gI6W62t7i6hZYG/rVTfcV/h3xsAH05Y3pQeTrKCxcF8M7eQSB6U3znvzN/9h+yzo1cnK/W69+GqneKXxVHrwIdi/58kGqy9uZl0aOR7ijTwRNtB0/Av/nGrPAi2MgkPU5zPWp8tEymZp5VaNDfTb3gTDjg0SsKQQdOm6q3d9Hak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHUQfzGr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789679521; c=relaxed/simple;
+	bh=yYJdJktxv6SmdwbH72DdlJ7DZZjc/VLvBTn0FUqQ93M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UbN02AcEfrZTBQZ/41jcgt4ZTGELrg06eyH7P5Mc0uAK1L/REJ26W1FDKYonAFMPnXRfQdCmRUv6NSc3copWDsyxVXdHbnd6KhAexbcojaEIBXLCBxCWmZiWanF9JWtHKHFSqijJPwPb2xM+z7H4vcrq9pU9toqx7iecWkNJYJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dp4vw4aC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHUQfzGr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21AB61F000FF;
-	Thu, 17 Sep 2026 21:11:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dp4vw4aC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 962C61F000FF;
+	Thu, 17 Sep 2026 21:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789679500;
-	bh=sqk96yXCSHVBTjHFA/xCjbv2qiuPygIeoxuQkhu1c+c=;
+	s=k20260515; t=1789679520;
+	bh=4sH8FfJgHrsFtML3yksq13yWqqfP0VV+WMgF70KYqEM=;
 	h=From:To:Cc:Subject:Date;
-	b=bHUQfzGrNAiCgpujMDYiq2GnnyXN01GOqTsgGsTDBuBZxcv5MsEoY/Qs6pXs2zbn2
-	 QxNpVAcMS+DWdGdZkG/i0BFWU6MoMCRGvmuSPCVYCy+ckvELv50SK0oYf1e6Qv/ADU
-	 A6GFEXJEwlG0+flS8A0EI95oIwuq5caABlzgSN65Cv3AUelBoum5H2PJZA2JXuQFZF
-	 ppZFNjfIQHAqik+p66YsoGWkv/YQnMDRAwkXh+PpSdGNeiqyFWbosZtNIm4noZ7nde
-	 RAaZ9whLiZ78pmNgwoTdPka+H6UNpoqzAUulWjAI8uWRxs7JsTwdNFuF1Zx15Tex7m
-	 FpDr5E1THkX/g==
+	b=dp4vw4aCpF3BUue31pTDqi8sfYJ8qEsgT64kpGB3wSehRo7PqGZInljmLLvjJMtOm
+	 EUFuE8CYjCmSP4VLvAR9mq4/iD/7yIadfDIzXrd0O8ckC1kWybFwCEcs/zHeDTULzk
+	 n3UJOC/NpUml3EajQhrSoXTFuSr0AvNqXF+IdeOCGUClv0lGXqUFk2Kuww7+H2KozC
+	 D37lOIr2p5ApqdLc1bV8F0m/A4V0Jysf3DfvZMQ4r6TicvtxYXWmhkSdR1l/4wrqWw
+	 PXm/CWKpzy2lG+1a5Md2lG1qY8xx9oTMKk2sHeq1bFIUQUfVS3G+o26hgqE2xAGzeV
+	 +HmhewNY2Dn8w==
 From: Kees Cook <kees@kernel.org>
-To: Don Brace <don.brace@microchip.com>
+To: Eric Van Hensbergen <ericvh@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
 	Kees Cook <kees+treewide@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <mkp@kernel.org>,
-	storagedev@microchip.com,
-	linux-scsi@vger.kernel.org,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	v9fs@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] scsi: hpsa: Make buff allocation type unsigned
-Date: Thu, 17 Sep 2026 14:11:38 -0700
-Message-Id: <20260917211137.i.357-kees@kernel.org>
+Subject: [PATCH] 9p: Add const and unsigned to wnames allocation type
+Date: Thu, 17 Sep 2026 14:11:59 -0700
+Message-Id: <20260917211158.i.129-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -45,7 +45,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1613; i=kees@kernel.org; h=from:subject:message-id; bh=O+otsY4zhFP5y7nRMxvKWQ/3WJnnb0Wp73WvCWz9wrk=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrwrsyWHosRVvPMDBp1tpsS2D8tzF+psaDeAc9qTMWb icDZpzuKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmAhLFiPDqUXqspd+/xIx+Pyj wtBOYsNbl+mn+FbvYvq8P/ykakiXKcP/bM3bW1Nvt2buPCXycTLj2d1nN/HuCS+PWLNr4hTvkn9 p/AA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1479; i=kees@kernel.org; h=from:subject:message-id; bh=VDxcphf5qMk3sXbUDyiWqc6nSnhoFpZtrzxznn/pkK4=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrwuc7hT06s5T1nm/gxLmWuT3ld2V/iMvLb0xp0Uk2r mcTXDino5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCJHNjAyzHVYfGVZIAfb59h6 7vPc3JxbP3ufvfEgYp5Q7wV2m5etsgz/dHP81sVFLcm69XjtHFXRI30OS62i9czmOgnq3U+/neH ODwA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -57,40 +57,39 @@ type from the allocation matches the type of the variable being
 assigned. (The kmalloc family returns "void *", which can be implicitly
 cast to any pointer type.)
 
-The assigned type is "unsigned char **", but the converted allocation
-type would be "char **", whose elements point to a character type of a
-different signedness, so the two pointer types are not compatible. Take
-the size from the assignment target instead. No change in allocation
-size results.
+The assigned type is "const unsigned char **", but the converted
+allocation type would be "char **", which differs in both the const
+qualifier and the signedness of the character type. Take the size from
+the assignment target instead. No change in allocation size results.
 
 Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
-drivers/scsi/hpsa.o
+fs/9p/fid.o
 
 Assisted-by: LLM coccinelle
 Signed-off-by: Kees Cook <kees+treewide@kernel.org>
 ---
-Cc: Don Brace <don.brace@microchip.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: "Martin K. Petersen" <mkp@kernel.org>
-Cc: <storagedev@microchip.com>
-Cc: <linux-scsi@vger.kernel.org>
+Cc: Eric Van Hensbergen <ericvh@kernel.org>
+Cc: Latchesar Ionkov <lucho@ionkov.net>
+Cc: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Christian Schoenebeck <linux_oss@crudebyte.com>
+Cc: <v9fs@lists.linux.dev>
 ---
- drivers/scsi/hpsa.c | 2 +-
+ fs/9p/fid.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 8edad1830abe..364cff7671e5 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -6499,7 +6499,7 @@ static int hpsa_big_passthru_ioctl(struct ctlr_info *h,
- 		return -EINVAL;
- 	if (ioc->buf_size > ioc->malloc_size * SG_ENTRIES_IN_CMD)
- 		return -EINVAL;
--	buff = kcalloc(SG_ENTRIES_IN_CMD, sizeof(char *), GFP_KERNEL);
-+	buff = kcalloc(SG_ENTRIES_IN_CMD, sizeof(*buff), GFP_KERNEL);
- 	if (!buff) {
- 		status = -ENOMEM;
- 		goto cleanup1;
+diff --git a/fs/9p/fid.c b/fs/9p/fid.c
+index 76242d450aa7..65dc7972b396 100644
+--- a/fs/9p/fid.c
++++ b/fs/9p/fid.c
+@@ -154,7 +154,7 @@ static int build_path_from_dentry(struct v9fs_session_info *v9ses,
+ 	for (ds = dentry; !IS_ROOT(ds); ds = ds->d_parent)
+ 		n++;
+ 
+-	wnames = kmalloc_array(n, sizeof(char *), GFP_KERNEL);
++	wnames = kmalloc_array(n, sizeof(*wnames), GFP_KERNEL);
+ 	if (!wnames)
+ 		goto err_out;
+ 
 -- 
 2.34.1
 
