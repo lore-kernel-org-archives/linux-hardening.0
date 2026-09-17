@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DC64D6C2E;
-	Thu, 17 Sep 2026 21:10:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010894E50B3;
+	Thu, 17 Sep 2026 21:10:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789679417; cv=none; b=fptrHXtIRcEVzm2TpEtJO/6+gDYGKfXs90KdLNaUaBG94Q9qiQETzIrw+6UgPwmbnJ4r+lCDxOvJEqdDABUKv6aXxgmghjL7cTqwVfsgwOpZApL8hFhBx+/5H427m1q8CeYWbRN4LyDetLhgYrv6fIf2BPrxXtcbuoDqoSBh0/Q=
+	t=1789679426; cv=none; b=tB/WqQH+K5rO4fi22oTl5sl3uXeBATVJ02qM7jfmjxYvKvlmx+IjdRRlDCT+hf3xuo268bTiVw16N5KHXMTA9C+QhcHgnHQYw8ge6ZeSUt3QrTITgx/p44HSlzF93hhegKZuAVGEs64xumlaWW6MveEtnzNsMOJBR2B5OtmAQbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789679417; c=relaxed/simple;
-	bh=YyplxO1FYDBoCwkRYxrG9GoRFXGjMFSJ719nyMvuXvE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZYkByJqRG8Y238Imw/B20HP1PtoZOm9BGKZx3VcXY2FeSwIQcQqi/A53rhBMHh5eBdQUaOhtI/3d1PP6Lw5eHEYI35NsfvsK0iUiqBbOQx0Hktua3uEzN5u2ocT+dli8Ov3LQp7oZNFP8VDHuiV0Y+LbPPey1hPTMtPHHhKT66Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XnjdYy9j; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789679426; c=relaxed/simple;
+	bh=Qz7wsNBn7X0IRNJQxffHD0+eZ3qZSae3dTtj99C4zjM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VsWTR/dzMfeSN0oS7Ps1j1rX1x8v2Xiz8Rb54tI39VNcoZMrro5SbSzdrgfXTYXaxdogBO3Qbunf+XQOJyxkSVQU8he6UMB9L+XU/7JyPsMohjzyuY87b/JcHZbZjlarocc27n7xFJc7gQpknhjYKqE4Hf+ZZFMpyzULBD3nwB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nVJ5XdcR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XnjdYy9j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB481F00898;
-	Thu, 17 Sep 2026 21:10:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nVJ5XdcR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B1BE1F00893;
+	Thu, 17 Sep 2026 21:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789679415;
-	bh=nBIBAHF5QiEYD6khKyc7wkw4VjrKtirq8vqbGK1IVw0=;
+	s=k20260515; t=1789679424;
+	bh=L/Y01rtw2Oa+Vy9CCrV4xDyr+hvwgS9qc/chBYxmU0E=;
 	h=From:To:Cc:Subject:Date;
-	b=XnjdYy9jMY/Yn3tCO9xNLsKxzM3XzuWOndhRhVbMrYEUBQb9DjCmDbxvwzkkVhO6o
-	 iqIh3s9qFeBPOoOiReskvaxc3aRx8wDb/0UtLyB79iEOgMuEI9rxLsCAV8vnV+rMM7
-	 D6NajpWnb9Gl0Fiek4glWqf7D/w6AJX0v91RMZiAYosgWTll548NpQe2EP18StEKsn
-	 uK0zg4uv2DB9a2xjLdxCjORmAcmDSfZEGSq6Aten9Ka20PGXobQzOlWLZAPRHpY0T6
-	 OeEFTrtoaIc0e+UV7BTAxjxim2v6O9BdaK9soQvSkiAQae1gB8xHIToLSEuhfmxBxA
-	 QLocO5SZchS5Q==
+	b=nVJ5XdcR61rgsGMU0iAkviBzIksPhSNQjUjmlUbWs0ZPj/ATrBeJuo09DFcFsBjbB
+	 yLhfqdmp84ymo3ox4BmdSC+PcRDFm4UNMBZ/8xq23I8AJnn2X5rbOCLhXrKbZi4SJs
+	 G2Kwhzxc3n9ExyRL2AxZCQa53KUEkEoRS/w874xe1JNmEC9V9W/WUOX6z/VADQyh2a
+	 LvwGpM43AtQ3rK8QI2SocbsOdv7VIwdluz+Nb7K5tgg9cBANom6roTvcpLbnqzyFWZ
+	 hluUfB3HD/T70g4qhulvYQlX2CEstpCjr8kBO+oMjAgKyHxBb6AxIT0/AEClQeEPjN
+	 nL5y+/51NSJYA==
 From: Kees Cook <kees@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Kees Cook <kees@kernel.org>,
 	Kees Cook <kees+treewide@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] pinctrl: qcom: tlmm-test: Add const to reg_names allocation type
-Date: Thu, 17 Sep 2026 14:10:13 -0700
-Message-Id: <20260917211009.i.312-kees@kernel.org>
+Subject: [PATCH] tracing/probes: Add const to new_argv allocation type
+Date: Thu, 17 Sep 2026 14:10:23 -0700
+Message-Id: <20260917211022.i.677-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -45,7 +44,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1581; i=kees@kernel.org; h=from:subject:message-id; bh=eflgxqLQ3jvvOFsS5xysZVN91V4zzRm1RYFz/ZEtyXk=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrwk233dk3Q7HsVfX0Oge1rPMRxnuutU+3OXV6pkRwX YSLUNP/jlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlYr2Fk2OvyqsXX6+SNPXWK 9w/NaO/3s2qNqdj6x8O/Z803qai9Nxj+18k7/DJ5Evev47T7eeapkp87RB2LHe49eP15jefEYx+ C2AE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1552; i=kees@kernel.org; h=from:subject:message-id; bh=E+R4+qF8O/jjXRPY3YPnl4j+s4OUrIzo0YyCbGvax0o=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrwu20X78ynMR3tuqCzdVMU/ddnRs/vJNZq/tDz8Q+2 qv0y4wHHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABN5PZnhf2XeDN11txKnTZQ6 9fzhWt5DDtqPXB85FFrXLuKbOHXeHHeGf0YWGU9dFu/qNJyvsbUkhSeoKzfFmYFJpKn8Vtnq974 rGQE=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -64,32 +63,31 @@ from the assignment target instead. No change in allocation size
 results.
 
 Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
-drivers/pinctrl/qcom/tlmm-test.o
+kernel/trace/trace_probe.o
 
 Assisted-by: LLM coccinelle
 Signed-off-by: Kees Cook <kees+treewide@kernel.org>
 ---
-Cc: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>
-Cc: <linux-arm-msm@vger.kernel.org>
-Cc: <linux-gpio@vger.kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: <linux-trace-kernel@vger.kernel.org>
 ---
- drivers/pinctrl/qcom/tlmm-test.c | 2 +-
+ kernel/trace/trace_probe.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/tlmm-test.c b/drivers/pinctrl/qcom/tlmm-test.c
-index 13c417731be7..8bff92dc0d0b 100644
---- a/drivers/pinctrl/qcom/tlmm-test.c
-+++ b/drivers/pinctrl/qcom/tlmm-test.c
-@@ -587,7 +587,7 @@ static int tlmm_reg_base(struct device_node *tlmm, struct resource *res)
- 		return count;
- 	}
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 804442b2f7d2..cfb710095f65 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -2316,7 +2316,7 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
+ 	else
+ 		*new_argc = argc;
  
--	reg_names = kcalloc(count, sizeof(char *), GFP_KERNEL);
-+	reg_names = kcalloc(count, sizeof(*reg_names), GFP_KERNEL);
- 	if (!reg_names)
- 		return -ENOMEM;
+-	new_argv = kcalloc(*new_argc, sizeof(char *), GFP_KERNEL);
++	new_argv = kcalloc(*new_argc, sizeof(*new_argv), GFP_KERNEL);
+ 	if (!new_argv)
+ 		return ERR_PTR(-ENOMEM);
  
 -- 
 2.34.1
