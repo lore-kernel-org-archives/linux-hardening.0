@@ -1,70 +1,98 @@
-Received: from k25.k3ae2098.use4.send.mailgun.net (k25.k3ae2098.use4.send.mailgun.net [204.220.183.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6344A5C33
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Sep 2026 21:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.220.183.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D50842E43A;
+	Thu, 17 Sep 2026 22:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789681018; cv=none; b=Sp2iGIbsqq+tTf3axdIDvTBE2NrNOb2HkBtf/I6l8biyGHWcGNt1K67D6HKBQb2ZXUm/vdRPHpCwCeHeCzTkKjM4cB8661OBbS4VGKNE2gA9C9KW+WaXLo551h8FLmpE9M8UuTywVvaexGniHStCjkexxmPjXamZMbuIp5UDv6U=
+	t=1789685254; cv=none; b=eosT2ry/2MWrIQ8njZEBweA255Xhu1ELZhyY7+olmSVZOVl/BVq5RY4OY5fqeQmr1R0Z31oeiWQk7lhI92J2SgUQAqllQLBlbhel9Rh4p1s/RP7tN2vKuvFHnsApjuFhHEPSdkyVt4aM1Bj7yxTLArDCoKOyLcLxNvsMWb+urcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789681018; c=relaxed/simple;
-	bh=t3N3cMXiQFEq4nhxvATM3kN0reVjqgVeSWrzjIzkV+c=;
+	s=arc-20240116; t=1789685254; c=relaxed/simple;
+	bh=SMqYdfiPwRXRyTKswGzz5iO1soozNB7Bw2nAH6gFfqE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NlWZhLjPxoZrUsw7Mj9mWbmdwzk9r2z6gX4kp04saeRRDQLbGbYs9WiH8cqXpAOkXFsmvI3BEL9Q6FS+lxarjOalT5iSBQo9Cadhs5DLqg3pzOlisgbzabjr6rmZG4v+1kfMZf5Z/33nHpb63V0DLaG24skT1CIQ15pk9fCIUrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equiv.tech; spf=pass smtp.mailfrom=equiv.tech; dkim=pass (2048-bit key) header.d=equiv.tech header.i=@equiv.tech header.b=mQyz4vp8; arc=none smtp.client-ip=204.220.183.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equiv.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=equiv.tech
+	 Content-Type:Content-Disposition:In-Reply-To; b=aPmZZiWDoXLWn5U2DmTCV+ZmI/mT3lr0NtVHT/jts/9uhmQqIENv1cicpyBwm7N9dK0AkS7HHSRRc0LyCeMGXpeY/bgYkoSYkp+JOymCbgAusEfRkVz6BfyzI+tOcH+yim84snEdScWwu+zVOzvZWNBxZvNJKM6hOXyCQKojoMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n5wRw5JL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=equiv.tech header.i=@equiv.tech header.b="mQyz4vp8"
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=equiv.tech; q=dns/txt; s=pdk1; t=1789681015; x=1789688215;
- h=In-Reply-To: Content-Type: MIME-Version: References: Message-ID: Subject: Subject: Cc: To: To: From: From: Date: Sender: Sender;
- bh=tmCjTtf74fJzZCxzPTtdpsX+Bj9MyF0VdQaJp6zwaZM=;
- b=mQyz4vp81lPA9eTLGl57xhZdJQyClHEu949fRLdpmzB/VPCZqvYdMlmCpvplLCq3/IzzwEEITSI5Rb8YYU7QFr4rx5vOzAMVodw6An459Wq8ilBR7S7ZXV5qnBgzJpLbYCYRC1JJ2OCC2Y3+vNaa6AujYFbiPzXzOHW4fzo6yKWnyiezplDYf5OvApOYWBgonZ7w4seHJEwHFNBORIiKTKDu25DMbpSdwV1oW8LNUobyp44C3OzXG3wcL9m9YyS90pRW+ZMoaNsXk7kH1nt79Ozie+1nfY9bLCJ9tkHM3jWhS6ejt6uNrxlzv5QOsXoY0b8kuXVJAPayo4w5KxHCog==
-X-Mailgun-Sid: WyJmYjNhMyIsImxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmciLCI5M2Q1YWIiXQ==
-Received: from mail.equiv.tech (equiv.tech [142.93.28.83]) by
- 1d83990cfc41646456b83b879f462e6ff8167ee03124f26cddc22a86bca75460 with SMTP id
- 6aac5d772dfa5e6eb605ceba (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 17 Sep 2026 21:36:55 GMT
-X-Mailgun-Sending-Ip: 204.220.183.25
-Sender: james@equiv.tech
-Date: Thu, 17 Sep 2026 14:36:54 -0700
-From: James Seo <james@equiv.tech>
-To: Kees Cook <kees@kernel.org>
-Cc: Kees Cook <kees+treewide@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] hwmon: hp-wmi-sensors: Fix info_map[] allocation type
-Message-ID: <aqxddgcDH1khPlwq@equiv.tech>
-References: <20260917211338.i.682-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5wRw5JL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 557C61F000FF;
+	Thu, 17 Sep 2026 22:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789685253;
+	bh=8Li/olbUQ7G8GFrX4U0/Y+lzE3EV3zjQFNNG4WPCqrg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=n5wRw5JLBeFR1hel4a/n8LSxMtWLORFssE+amPgpyU65X393AnLKWj6EYDT4rctR8
+	 JGMcR+6Q78oK2krKLDunCtuTySxFTMPziAS3azB5bp+p/5Q//cUsePeP3Sf4bmmlCk
+	 uFpmrKLThNbtNNL47WaOBdXaMZbYIalYNznB1gl68ScxwakaHPcbtCsIMBf1BEpP21
+	 sYHy0lm+VN/w/Vty/1druh+PytAH5gZIAgJkU589Go7b8e7tdu49qWfiNhuwvJA1nO
+	 150e9b03Ry4vxiBF/RIKuJvt0q+dVDC+p3ThWUTOIs5kWAxYypQevEMHygaM4Rnglw
+	 QItmzN/8aQo/g==
+Date: Thu, 17 Sep 2026 15:47:33 -0700
+From: Kees Cook <kees@kernel.org>
+To: Srinivas Kandagatla <srini@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] nvmem: core: Add const to pattrs allocation type
+Message-ID: <202609171545.A37F12B74F@keescook>
+References: <20260917211423.i.786-kees@kernel.org>
+ <37f07dcb-9b4a-4767-8d0c-471148729c20@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260917211338.i.682-kees@kernel.org>
+In-Reply-To: <37f07dcb-9b4a-4767-8d0c-471148729c20@kernel.org>
 
-On Thu, Sep 17, 2026 at 02:13:39PM -0700, Kees Cook wrote:
->  drivers/hwmon/hp-wmi-sensors.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Sep 17, 2026 at 10:32:15PM +0100, Srinivas Kandagatla wrote:
 > 
-> diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors.c
-> index 03c684ba83bd..cc193a8890f2 100644
-> --- a/drivers/hwmon/hp-wmi-sensors.c
-> +++ b/drivers/hwmon/hp-wmi-sensors.c
-> @@ -1788,7 +1788,7 @@ static int init_numeric_sensors(struct hp_wmi_sensors *state,
->  
->  		if (!info_map[type]) {
->  			info_map[type] = devm_kcalloc(dev, channel_count[type],
-> -						      sizeof(*info_map),
-> +						      sizeof(*info_map[type]),
->  						      GFP_KERNEL);
->  			if (!info_map[type])
->  				return -ENOMEM;
-> -- 
-> 2.34.1
->
-Acked-by: James Seo <james@equiv.tech>
+> 
+> On 9/17/26 10:14 PM, Kees Cook wrote:
+> > From: Kees Cook <kees+treewide@kernel.org>
+> > 
+> > In preparation for making the devm_kmalloc family of allocators type
+> > aware, we need to make sure that the returned type from the allocation
+> > matches the type of the variable being assigned. (Before, the allocator
+> > would always return "void *", which can be implicitly cast to any
+> > pointer type.)
+> > 
+> > The assigned type is "const struct bin_attribute **", but the converted
+> > allocation type would be "struct bin_attribute **", which is the same
+> > type without the const qualifier. As there is no general way to safely
+> > add const qualifiers, take the size from the assignment target instead.
+> > No change in allocation size results.
+> > 
+> > Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
+> > drivers/nvmem/core.o
+> > 
+> > Assisted-by: LLM coccinelle
+> > Signed-off-by: Kees Cook <kees+treewide@kernel.org>
+> > ---
+> > Cc: Srinivas Kandagatla <srini@kernel.org>
+> > ---
+> >  drivers/nvmem/core.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> > index 0556d140170a..19edc9ab0282 100644
+> > --- a/drivers/nvmem/core.c
+> > +++ b/drivers/nvmem/core.c
+> > @@ -485,7 +485,7 @@ static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
+> >  	/* Allocate an array of attributes with a sentinel */
+> >  	ncells = list_count_nodes(&nvmem->cells);
+> >  	pattrs = devm_kcalloc(&nvmem->dev, ncells + 1,
+> > -			      sizeof(struct bin_attribute *), GFP_KERNEL);
+> > +			      sizeof(*pattrs), GFP_KERNEL);
+> 
+> Thanks for the patch, while you are at it, there are few more instances
+> just below this.
 
+There are, but there were no type mismatches with those. pattrs is const,
+but attrs and attrs[i].attr.name aren't, so no change is needed there.
+Do you want me to flip the attrs devm_kcalloc sizeof to *attrs to much
+style, though?
+
+-Kees
+
+-- 
+Kees Cook
