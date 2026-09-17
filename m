@@ -1,273 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F9941835B;
-	Thu, 17 Sep 2026 20:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DC64D6C2E;
+	Thu, 17 Sep 2026 21:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789678768; cv=none; b=m/jipdN84NmnIh6q8GmUM2VdnJgR2KDobZg61JCrU7Eyg72mTAIhDcq++8hYYOvJt+OULkRok7UvyP8y5DchEIzX4pxqoWBF7Vrv+sXYsgWLliT5DJVRcIp7S1Ge8A+VEqrk+7qJHUvXPF1WhhE+moTGyP41IjqgF7DYSgOiGc0=
+	t=1789679417; cv=none; b=fptrHXtIRcEVzm2TpEtJO/6+gDYGKfXs90KdLNaUaBG94Q9qiQETzIrw+6UgPwmbnJ4r+lCDxOvJEqdDABUKv6aXxgmghjL7cTqwVfsgwOpZApL8hFhBx+/5H427m1q8CeYWbRN4LyDetLhgYrv6fIf2BPrxXtcbuoDqoSBh0/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789678768; c=relaxed/simple;
-	bh=s16KJQRcC14LLQy4pTYvXckO3rme4Dl2pTMLZe1/3VM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t3jY10Cnq4WLiR3iqaeGmY2ik3muaVokB2S/dRfnQwU7ALDlL8j5VnEdYggbROQpBIFvDD/g0GzL2UEhsGJTTcIII6Bbj1O213ORATqGhncyk6+2M18+yuyeQJQwSCgmCo5Sox6txBSJDMpx05iyxqBQzLmcUDv/EyuyP2vnikw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1iJnrT5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789679417; c=relaxed/simple;
+	bh=YyplxO1FYDBoCwkRYxrG9GoRFXGjMFSJ719nyMvuXvE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZYkByJqRG8Y238Imw/B20HP1PtoZOm9BGKZx3VcXY2FeSwIQcQqi/A53rhBMHh5eBdQUaOhtI/3d1PP6Lw5eHEYI35NsfvsK0iUiqBbOQx0Hktua3uEzN5u2ocT+dli8Ov3LQp7oZNFP8VDHuiV0Y+LbPPey1hPTMtPHHhKT66Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XnjdYy9j; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1iJnrT5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 654E71F00893;
-	Thu, 17 Sep 2026 20:59:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XnjdYy9j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB481F00898;
+	Thu, 17 Sep 2026 21:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789678766;
-	bh=jCN23Z098/jrBfz0bmrygNbGxnLmKn6q7+PuR1I0LGk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=K1iJnrT5zwIrpIGfCXw3tperSIg5wg+ccx1MerSVNbZKcKAO2Wen+D59D8D5DLJnc
-	 iF217QvkXDUQ+4iHuY8eEUZ7yL8xlYISWkK8SQeYTnqwssMCw1OEbjQgFp9u0lgKvJ
-	 pqHbYnMRym6T6Hhf9CzyK6P9da+oWQN2sQ93SDO+FC20DvtsVGBsMi2ArzaNwg5bVk
-	 UJIdWn+vHQPYc8juD9NnTa5TnDl/Bw97Dt4DPOYHw8xO/jPT0st5vqM2dTssTOnZXI
-	 gyAXZsmWH+tHCCKaZqYgmKl++M7jkh48ll258Xjdsminj3GIfk0yO8jAHheJBA5Nip
-	 ltqEn+yZO5xpw==
-Date: Thu, 17 Sep 2026 13:59:26 -0700
+	s=k20260515; t=1789679415;
+	bh=nBIBAHF5QiEYD6khKyc7wkw4VjrKtirq8vqbGK1IVw0=;
+	h=From:To:Cc:Subject:Date;
+	b=XnjdYy9jMY/Yn3tCO9xNLsKxzM3XzuWOndhRhVbMrYEUBQb9DjCmDbxvwzkkVhO6o
+	 iqIh3s9qFeBPOoOiReskvaxc3aRx8wDb/0UtLyB79iEOgMuEI9rxLsCAV8vnV+rMM7
+	 D6NajpWnb9Gl0Fiek4glWqf7D/w6AJX0v91RMZiAYosgWTll548NpQe2EP18StEKsn
+	 uK0zg4uv2DB9a2xjLdxCjORmAcmDSfZEGSq6Aten9Ka20PGXobQzOlWLZAPRHpY0T6
+	 OeEFTrtoaIc0e+UV7BTAxjxim2v6O9BdaK9soQvSkiAQae1gB8xHIToLSEuhfmxBxA
+	 QLocO5SZchS5Q==
 From: Kees Cook <kees@kernel.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Alexey Gladkov <legion@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@kernel.org>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Kees Cook <kees+treewide@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 09/20] kbuild: implement and use depcheck to check
- dependency timestamps
-Message-ID: <202609171229.31BB336E1@keescook>
-References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
- <20260917-build-speedup-v3-9-9ecf4163ff36@kernel.org>
- <202609171117.35BFDCC13@keescook>
+Subject: [PATCH] pinctrl: qcom: tlmm-test: Add const to reg_names allocation type
+Date: Thu, 17 Sep 2026 14:10:13 -0700
+Message-Id: <20260917211009.i.312-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202609171117.35BFDCC13@keescook>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1581; i=kees@kernel.org; h=from:subject:message-id; bh=eflgxqLQ3jvvOFsS5xysZVN91V4zzRm1RYFz/ZEtyXk=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrwk233dk3Q7HsVfX0Oge1rPMRxnuutU+3OXV6pkRwX YSLUNP/jlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlYr2Fk2OvyqsXX6+SNPXWK 9w/NaO/3s2qNqdj6x8O/Z803qai9Nxj+18k7/DJ5Evev47T7eeapkp87RB2LHe49eP15jefEYx+ C2AE=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 17, 2026 at 11:42:50AM -0700, Kees Cook wrote:
-> On Thu, Sep 17, 2026 at 05:06:19PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > This can be done faster in C, so implement scripts/basic/depcheck to do so.
-> >
-> > It does as little work as possible, reading the .cmd files from a
-> > directory's targets and running stat on each dependency only a single time.
->
-> Doesn't this run the risk of missing transitive deps?
->
-> C.cmd:	C.o depends on A.c and B.c and B.h
-> B.cmd:	B.h depends on B.data and B.script
->
-> depcheck looks at C.o and B.h's times and is happy so it drops C.cmd file,
-> but then see B.script has changed compared to B.h, so it keeps B.cmd,
-> and then the build runs and doesn't have the C.o dep list any more,
-> and C.o goes unbuilt?
->
-> Also, I don't think this handles if_changed commands at all? The kbuild
-> rebuild condition is timestamps plus if_changed's command-line check.
+From: Kees Cook <kees+treewide@kernel.org>
 
-tl;dr: I spent way too long looking at this. I think my conclusion is
-"Hm, this makes some cases of missed Makefile deps on generated files
-harder to find, but there don't *appear* to be any obviously wrong
-instances of this in the tree."
+In preparation for converting the kmalloc family of allocators to the
+type-aware kmalloc_obj family, we need to make sure that the returned
+type from the allocation matches the type of the variable being
+assigned. (The kmalloc family returns "void *", which can be implicitly
+cast to any pointer type.)
 
-Long version:
+The assigned type is "const char **", but the converted allocation type
+would be "char **", which is the same type without the const qualifier.
+As there is no general way to safely add const qualifiers, take the size
+from the assignment target instead. No change in allocation size
+results.
 
-There does appear to be a problem in the case of generated targets where
-the Makefile deps are build-order correct but lack explicit deps. As
-in, a clean build generates the needed dependencies due to some prior
-explicit Makefile rule dependency, and a later source-level "#include"
-for the generated file exists (and the build doesn't fail since the
-included file got generated before the source that "#include"d it got
-built), and then the normal dep tracking (-Wp,-MMD,... -> .cmd) catches
-it and any direct changes to that dep would normally get noticed going
-forward on incremental builds.
+Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
+drivers/pinctrl/qcom/tlmm-test.o
 
-However, with the depcheck .cmd pruning, changes to transitive deps
-(either via file contents or Kconfig options) will go unnoticed during
-incremental builds without that explicit dep (but stock doesn't miss
-it). Though actually it's kind of worse because it'll get noticed on
-rebuild #N+1 for N level of transitive depth, so something will break,
-and then you build again, and the changes from 2 builds ago suddenly
-get rebuilt...
+Assisted-by: LLM coccinelle
+Signed-off-by: Kees Cook <kees+treewide@kernel.org>
+---
+Cc: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>
+Cc: <linux-arm-msm@vger.kernel.org>
+Cc: <linux-gpio@vger.kernel.org>
+---
+ drivers/pinctrl/qcom/tlmm-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think you maybe encountered an instance of this in your series, too,
-but it got exposed due to a clean build no longer having the ordering
-correct:
-https://lore.kernel.org/lkml/20260917-build-speedup-v3-18-9ecf4163ff36@kernel.org/
-
-See the trailing diff for a demo:
-
-
-  git apply demo.diff
-  make O=b defconfig
-  # simulate a earlier-stage header generation...
-  make O=b lib/byfile_anchor.o lib/byconf_anchor.o
-  make O=b lib/
-
-  # trigger 1: the header's input file changes
-  echo FROMFILE-two > lib/byfile_gen.in
-  make O=b lib/
-
-  # trigger 2: a Kconfig value changes; no file is touched
-  ./scripts/config --file b/.config --set-str LOCALVERSION -demo2
-  make O=b lib/
-
-  # what each object ended up holding
-  strings b/lib/byfile_anchor.o | grep FROMFILE-    # FROMFILE-two   both trees
-  strings b/lib/byfile_victim.o | grep FROMFILE-    # FROMFILE-two   stock
-                                                    # FROMFILE-one   patched  <-- stale
-
-  strings b/lib/byconf_anchor.o | grep CONF-        # CONF--demo2    both trees
-  strings b/lib/byconf_victim.o | grep CONF-        # CONF--demo2    stock
-                                                    # CONF-          patched  <-- stale
-
-
-This means adding depcheck would silently expose any current (and future)
-missing explicit deps on generated files where those files get generated
-by either an earlier build stage or an earlier rule. :(
-
-I went looking for the kind of missed Makefile dep for a generated file,
-and while it's not a very grep-able condition, I did look at stuff that
-fell into include/generated/, but it's safe due to the prepare/archprepare
-ordering AFAICT. So then I looked at places where -I had $(obj) added to
-it, and all of those seemed to have explicit Makefile deps too. Well, all
-except for arch/x86/boot/compressed/sev-handle-vc.c which includes
-"../../lib/inat.c" but that seems safe today due to ordering from
-arch/x86/lib/ being needed before arch/x86/boot/compressed/.
-
-So, yeah, it makes me nervous, and it may make incremental builds less
-idempotent. But I can't really find extant problems and the demo is
-slightly contrived, but not exactly an impossible situation.
-
--Kees
-
-
-diff --git a/lib/Makefile b/lib/Makefile
-index dfab958327c5c..aed0bd9eb7d6a 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -350,3 +350,36 @@ CONTEXT_ANALYSIS_test_context-analysis.o := y
- obj-$(CONFIG_CONTEXT_ANALYSIS_TEST) += test_context-analysis.o
+diff --git a/drivers/pinctrl/qcom/tlmm-test.c b/drivers/pinctrl/qcom/tlmm-test.c
+index 13c417731be7..8bff92dc0d0b 100644
+--- a/drivers/pinctrl/qcom/tlmm-test.c
++++ b/drivers/pinctrl/qcom/tlmm-test.c
+@@ -587,7 +587,7 @@ static int tlmm_reg_base(struct device_node *tlmm, struct resource *res)
+ 		return count;
+ 	}
  
- subdir-$(CONFIG_FORTIFY_SOURCE) += test_fortify
-+
-+# --- depcheck demo ---
-+obj-y += byfile_anchor.o byfile_victim.o byconf_anchor.o byconf_victim.o
-+
-+quiet_cmd_byfile = GENFILE $@
-+      cmd_byfile = printf '\#define BYFILE_STR "%s"\n' "$$(cat $<)" > $@
-+
-+quiet_cmd_byconf = GENCONF $@
-+      cmd_byconf = printf '\#define BYCONF_STR "CONF-%s"\n' '$(CONFIG_LOCALVERSION)' > $@
-+
-+# Regenerated when its input file changes.
-+$(obj)/byfile_gen.h: $(src)/byfile_gen.in FORCE
-+	$(call if_changed,byfile)
-+
-+# No input file: regenerated only when its command line changes, which here
-+# means when CONFIG_LOCALVERSION changes. No file is touched.
-+$(obj)/byconf_gen.h: FORCE
-+	$(call if_changed,byconf)
-+
-+targets += byfile_gen.h byconf_gen.h
-+
-+# The anchors declare the dependency. That is what generates the headers on
-+# a clean build: fixdep only records a header once the object has compiled
-+# successfully, so on a first build there is no .cmd file to rely on. The
-+# victims include the same headers without declaring them, so the only
-+# record of that edge is the deps_ list in their .cmd files.
-+$(obj)/byfile_anchor.o: $(obj)/byfile_gen.h
-+$(obj)/byconf_anchor.o: $(obj)/byconf_gen.h
-+
-+CFLAGS_byfile_anchor.o += -I$(obj)
-+CFLAGS_byfile_victim.o += -I$(obj)
-+CFLAGS_byconf_anchor.o += -I$(obj)
-+CFLAGS_byconf_victim.o += -I$(obj)
-diff --git a/lib/byconf_anchor.c b/lib/byconf_anchor.c
-new file mode 100644
-index 0000000000000..8035eaa352a3b
---- /dev/null
-+++ b/lib/byconf_anchor.c
-@@ -0,0 +1,3 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "byconf_gen.h"
-+const char byconf_anchor_marker[] = BYCONF_STR;
-diff --git a/lib/byconf_victim.c b/lib/byconf_victim.c
-new file mode 100644
-index 0000000000000..285a8de8bdf6e
---- /dev/null
-+++ b/lib/byconf_victim.c
-@@ -0,0 +1,3 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "byconf_gen.h"
-+const char byconf_victim_marker[] = BYCONF_STR;
-diff --git a/lib/byfile_anchor.c b/lib/byfile_anchor.c
-new file mode 100644
-index 0000000000000..9ea0b8ad55963
---- /dev/null
-+++ b/lib/byfile_anchor.c
-@@ -0,0 +1,3 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "byfile_gen.h"
-+const char byfile_anchor_marker[] = BYFILE_STR;
-diff --git a/lib/byfile_gen.in b/lib/byfile_gen.in
-new file mode 100644
-index 0000000000000..7da9e5e0cd83c
---- /dev/null
-+++ b/lib/byfile_gen.in
-@@ -0,0 +1 @@
-+FROMFILE-one
-diff --git a/lib/byfile_victim.c b/lib/byfile_victim.c
-new file mode 100644
-index 0000000000000..763c5ef8f1514
---- /dev/null
-+++ b/lib/byfile_victim.c
-@@ -0,0 +1,3 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "byfile_gen.h"
-+const char byfile_victim_marker[] = BYFILE_STR;
-
-
+-	reg_names = kcalloc(count, sizeof(char *), GFP_KERNEL);
++	reg_names = kcalloc(count, sizeof(*reg_names), GFP_KERNEL);
+ 	if (!reg_names)
+ 		return -ENOMEM;
+ 
 -- 
-Kees Cook
+2.34.1
+
