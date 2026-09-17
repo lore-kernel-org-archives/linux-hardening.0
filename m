@@ -1,46 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A54438F253;
-	Thu, 17 Sep 2026 21:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF1D495AEA;
+	Thu, 17 Sep 2026 21:14:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789679646; cv=none; b=cJ9V3aCrbIJAuIbnDtliFBiS8psWu5q4gZnF2o6SX+fm2kt2BBP19b89sPRp8tzOI+7Fkx0UYwNW9sr46cWXx1raBwWB/bbZOvcHXq4lQvo14NqmN5ZUkGINzSmIPLFs0eoY3HtPUrgBuWLZ3lWDcb8feuSpqeK1+1I2vBjTwls=
+	t=1789679653; cv=none; b=ewqYMdqpZlUqyoSyr7GbktkHtd+A/83o96uyjgRRQGUF3cDcWwtfF7J67Zg8LQFk2OMQ3MRM8f+7jBQV7Vi/s7o2T6PusM1g3XVkkU3JPA6eynjWZ7IVCPMSWBgiMmKwb2maS6JCoDEs7II+ubCh2NRP1Qi6yqCAJQwwCnNmlIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789679646; c=relaxed/simple;
-	bh=lP8jGFyRHTaPDaOe8j0khplskj1tqPo0xw3k/wtu5Ik=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u6qJahvTbbjuE/RRowXFJObvapNEfjh+H2Nl37SbHp/gRGxipxgfU0Ey+pOgjTsYqaKzHaPjhhkcgL6yFt1GoqbGjrk4GFEXIjtyqk5VrASM4avillVk4gijpCdOub5u8nrUfDYi7vrODVHKese8J7HO3Nlvw+W535sUUe8asQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYz3VNie; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789679653; c=relaxed/simple;
+	bh=vF/C/jh8Yyq1TttNkZ7wvPqg6Ta/Xu02VhcAcdrtyP0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a4Eg0GMslBlq1tdYTv6Y5UdCL7i2XvdaQfzcblnOtbSxmeGMuBrimmvbIiEoFtleeG/huw0tbg1EVJt67XO/+85WOBLpMqsia2CCkjK3GRm2uUrOJLXacYEAPcLTXKXKqkm8qWw1tN0Du6YrAMksajt8bwyrm1x7vfkTqYFYnP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4EHs5DI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYz3VNie"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E08C41F000FF;
-	Thu, 17 Sep 2026 21:14:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4EHs5DI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A1031F000FF;
+	Thu, 17 Sep 2026 21:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789679644;
-	bh=vVLWU6hu9o3St41DNREmW0G/Wl2S2sbPor3jCAzvQLc=;
+	s=k20260515; t=1789679651;
+	bh=Sc8ieypAeHqBZdmMtqdCr2cjquV+KlJHxrA4JO+plA8=;
 	h=From:To:Cc:Subject:Date;
-	b=aYz3VNieHISjVjRl171VfOM1LIF536Ca1nZL2yVVTPZQapY9GAzBiarIG/YGuQ1cV
-	 51cytjyxRlRu4oSHK1VdA4XDKycd6a7kwhdW/ZH1JiJM0d6iS1vhxCziA7/1/CcC1G
-	 8e7IJNhGKl33ER18KO8QCnsY/KyUTjB1QJ9/Yz1OsPIB+2FV5/XGfl+jwKssnA4gpn
-	 7N3utaSb4nyeP6GMhli17QIRfy36U/w+MSMjgZbNaW18KLWLLHavHfQkHwfso28UjP
-	 I6vh8RRsbotRB3LWHAPIf99EuKa007Q5BbXfci/3sX8uwi/NQBr/Js6JS1TWhiaiNB
-	 e4tZMnYzAmpng==
+	b=d4EHs5DI7QHVqfX6qf1ElETDdIxJdP+4tnyZ/Hx6tc0LndoQ4zxSJB0TSuPs7x5pe
+	 8ZIC8bZtiYtoJNtSR+6Yo9U6Ou+y6bLsV/S+4ipIsG0zA3M6fNMRn7CKZfrPSnm9mt
+	 OalUvMeNxiB5ZK8py3xuihj8z91SmEgrfONdT3xl5qockxzqSKUp/8LQSh44gBgpbM
+	 k6aScPS5wNOUM8xKtuRobunwJMeIo5Z1i1k2Qkxh4DfPigbsPJ/eEmYkAx/bTCz/pb
+	 7Khccxo5XAHvopDQc6VepvazLlyJUUtpJ1786zJHuZKuoiUdBSk1Mtbg4bXutWxnF1
+	 3LgSFtxX4ee7w==
 From: Kees Cook <kees@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>
+To: Sunil Goutham <sgoutham@marvell.com>
 Cc: Kees Cook <kees@kernel.org>,
 	Kees Cook <kees+treewide@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
+	Ratheesh Kannoth <rkannoth@marvell.com>,
+	Geetha sowjanya <gakula@marvell.com>,
+	Subbaraya Sundeep <sbhatta@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] ASoC: rockchip: rk3399_gru_sound: Allocate dai_link with ARRAY_SIZE()
-Date: Thu, 17 Sep 2026 14:14:04 -0700
-Message-Id: <20260917211403.i.984-kees@kernel.org>
+Subject: [PATCH net-next] octeontx2-af: Allocate ikpu2 with ARRAY_SIZE()
+Date: Thu, 17 Sep 2026 14:14:10 -0700
+Message-Id: <20260917211409.i.425-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -48,7 +50,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1851; i=kees@kernel.org; h=from:subject:message-id; bh=YPscJPXSG26pxamepuqPmb0syryk1A1xxqn90YUkCNs=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrIqRtar7o9xS/7437YbSZ/UfXxtXHMnPN8w7lbWDJM 7HMKw/rKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMgmZ0aGDWKO6+fPbv0U+k57 qbuyROimQsv+2RYXV92Z/nvxyziJ+YwMK4RrfjYddeHi9Y2a/SfqfZ2gp08by0655vUzLv3f9im JHwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2168; i=kees@kernel.org; h=from:subject:message-id; bh=u4FLDg6ay/ceE56fC27/idBYNlgegQ3KQZ0PQKlaN9o=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrIpSCn7xiE/dzPMWw9r64iszpX1mhf5rCdy6WvvJaa 8r28KvMHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABPR1mb4xey9bU6D1d0zZTMV Jk+UE/037fCvyLYvapNfpz0tutVR9oHhf4zBeYcdWV1xIYopU26ULpA5HLbDQ9z/b0H4d55Xin/ /MAEA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -60,45 +62,49 @@ matches the type of the variable being assigned. (Before, the allocator
 would always return "void *", which can be implicitly cast to any
 pointer type.)
 
-This is allocating a copy of rockchip_dais, which is an array of struct
-snd_soc_dai_link, but the size was taken from the whole array, which
-would make the allocation type a pointer to the array rather than the
-"struct snd_soc_dai_link *" being assigned. Allocate ARRAY_SIZE-many
-entries instead. The resulting allocation size is the same.
+This is allocating room for a copy of ikpu_action_entries, which is an
+array of struct npc_kpu_profile_action, but it asked for a single object
+the size of the whole array, which would make the allocation type a
+pointer to the array rather than the "struct npc_kpu_profile_action *"
+being assigned. Allocate ARRAY_SIZE-many entries instead. The resulting
+allocation size is the same.
 
 Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
-sound/soc/rockchip/rk3399_gru_sound.o
+drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.o
 
 Assisted-by: LLM coccinelle
 Signed-off-by: Kees Cook <kees+treewide@kernel.org>
 ---
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: <linux-sound@vger.kernel.org>
-Cc: <linux-arm-kernel@lists.infradead.org>
-Cc: <linux-rockchip@lists.infradead.org>
+Cc: Sunil Goutham <sgoutham@marvell.com>
+Cc: Ratheesh Kannoth <rkannoth@marvell.com>
+Cc: Geetha sowjanya <gakula@marvell.com>
+Cc: Subbaraya Sundeep <sbhatta@marvell.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: <netdev@vger.kernel.org>
 ---
- sound/soc/rockchip/rk3399_gru_sound.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-index b80acb221d24..04e7bed8275d 100644
---- a/sound/soc/rockchip/rk3399_gru_sound.c
-+++ b/sound/soc/rockchip/rk3399_gru_sound.c
-@@ -505,8 +505,8 @@ static int rockchip_sound_of_parse_dais(struct device *dev,
- 	int i, index;
- 	int num_routes;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
+index c34f8d86cc8a..42a601976db3 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
+@@ -1959,8 +1959,9 @@ static int npc_apply_custom_kpu_from_fs(struct rvu *rvu,
+ 	fw = rvu->kpu_fwdata;
  
--	card->dai_link = devm_kzalloc(dev, sizeof(rockchip_dais),
--				      GFP_KERNEL);
-+	card->dai_link = devm_kcalloc(dev, ARRAY_SIZE(rockchip_dais),
-+				      sizeof(*card->dai_link), GFP_KERNEL);
- 	if (!card->dai_link)
+ 	/* Binary blob contains ikpu actions entries at start of data[0] */
+-	profile->ikpu2 = devm_kcalloc(rvu->dev, 1,
+-				      sizeof(ikpu_action_entries),
++	profile->ikpu2 = devm_kcalloc(rvu->dev,
++				      ARRAY_SIZE(ikpu_action_entries),
++				      sizeof(*profile->ikpu2),
+ 				      GFP_KERNEL);
+ 	if (!profile->ikpu2)
  		return -ENOMEM;
- 
 -- 
 2.34.1
 
