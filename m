@@ -1,148 +1,273 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DA83FBB4D;
-	Thu, 17 Sep 2026 20:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F9941835B;
+	Thu, 17 Sep 2026 20:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789678127; cv=none; b=uZrcuQ0VecR7uF/eJP6JrzaK5JThvL9iBPpmWxMPuNNMR0B3qXF21Yo0efu2fC/39EGLNwq1TI86a5bNTLlxI/vvyM6NfS+Ln/jBmdazjfCYWY+E55i64WSCEW1buybB/oex0ERMO/4JXJg4uZhL1OTSEDdygDdmlSKQGOnVdT0=
+	t=1789678768; cv=none; b=m/jipdN84NmnIh6q8GmUM2VdnJgR2KDobZg61JCrU7Eyg72mTAIhDcq++8hYYOvJt+OULkRok7UvyP8y5DchEIzX4pxqoWBF7Vrv+sXYsgWLliT5DJVRcIp7S1Ge8A+VEqrk+7qJHUvXPF1WhhE+moTGyP41IjqgF7DYSgOiGc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789678127; c=relaxed/simple;
-	bh=j92afSGgbOckodNiEOu7f8ALpu4hQ1eL612RHdF55Bw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kQPgMuuRNHnymegGZwXej7Y/UG29h1oUnWEYAUYUh2ZQwmUIRDiw5gjw2DBxsaaKh8X6ET6O2BcxSnV3LEKyR1wO8pFRzY2f8vmQFB7mcH67+mjlEratO39fIIlHFUDiRMQ2DAMC/+Um2zvX6qFaMBayHg+KrOlOAZQXtbbsD4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJ1tetIU; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789678768; c=relaxed/simple;
+	bh=s16KJQRcC14LLQy4pTYvXckO3rme4Dl2pTMLZe1/3VM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t3jY10Cnq4WLiR3iqaeGmY2ik3muaVokB2S/dRfnQwU7ALDlL8j5VnEdYggbROQpBIFvDD/g0GzL2UEhsGJTTcIII6Bbj1O213ORATqGhncyk6+2M18+yuyeQJQwSCgmCo5Sox6txBSJDMpx05iyxqBQzLmcUDv/EyuyP2vnikw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1iJnrT5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJ1tetIU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96251F00893;
-	Thu, 17 Sep 2026 20:48:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1iJnrT5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 654E71F00893;
+	Thu, 17 Sep 2026 20:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789678125;
-	bh=j0AQ+9htqhtcT6dEBdky8OefeVWQ2THGkLTpHxFQPV0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=oJ1tetIULg2XpLBOnZUPvhTxlKaak8pEtjAVpvlijuEahJjxVOcIYt8X/YhwBegFJ
-	 EXwkdVPTIm+OCh4taS6k/wYEhhNcKzEskzxuV/dgQkfgfdPnO8Sp3mYvb/YaS8LI+3
-	 YMkXNT/iN90KrNlL97E/HwpQ9wYTv4S9SIkeTSrtzMBn9TfPvsmVbiCvLj4mXDtTI5
-	 lt22TV0VSpgIGvp51Y56zgE9cy0SWhc9dVwzL8LPXBfrGkdW/gelqakSoAS7PllrLf
-	 TZV2EG0sanfDfAg1SX8iPKZuJlgOJ1TY9Z+Uti4+Lz4E0uu5Inyrukh8z9y0v4XRq/
-	 lNj3kN7s3wnvw==
-Date: Thu, 17 Sep 2026 21:48:37 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gregory Price <gourry@gourry.net>
-Cc: mhonap@nvidia.com, alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com,
- dave.jiang@intel.com, alejandro.lucero-palau@amd.com, smadhavan@nvidia.com,
- corbet@lwn.net, skhan@linuxfoundation.org, dave@stgolabs.net,
- alison.schofield@intel.com, vishal.l.verma@intel.com, iweiny@kernel.org,
- ming.li@zohomail.com, yishaih@nvidia.com, skolothumtho@nvidia.com,
- kevin.tian@intel.com, bhelgaas@google.com, dmatlack@google.com,
- kees@kernel.org, gustavoars@kernel.org, cjia@nvidia.com, kjaju@nvidia.com,
- vsethi@nvidia.com, zhiw@nvidia.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 07/27] vfio/pci: Detect CXL devices and load vfio-cxl
- on demand
-Message-ID: <20260917214837.46f8237d@jic23-hlaptop>
-In-Reply-To: <aqrg9AJBh0GUsP0l@gourry-fedora-PF4VCD3F>
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
-	<20260813093631.2288172-8-mhonap@nvidia.com>
-	<20260916191659.1d3cb36b@jic23-hlaptop>
-	<aqrg9AJBh0GUsP0l@gourry-fedora-PF4VCD3F>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	s=k20260515; t=1789678766;
+	bh=jCN23Z098/jrBfz0bmrygNbGxnLmKn6q7+PuR1I0LGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=K1iJnrT5zwIrpIGfCXw3tperSIg5wg+ccx1MerSVNbZKcKAO2Wen+D59D8D5DLJnc
+	 iF217QvkXDUQ+4iHuY8eEUZ7yL8xlYISWkK8SQeYTnqwssMCw1OEbjQgFp9u0lgKvJ
+	 pqHbYnMRym6T6Hhf9CzyK6P9da+oWQN2sQ93SDO+FC20DvtsVGBsMi2ArzaNwg5bVk
+	 UJIdWn+vHQPYc8juD9NnTa5TnDl/Bw97Dt4DPOYHw8xO/jPT0st5vqM2dTssTOnZXI
+	 gyAXZsmWH+tHCCKaZqYgmKl++M7jkh48ll258Xjdsminj3GIfk0yO8jAHheJBA5Nip
+	 ltqEn+yZO5xpw==
+Date: Thu, 17 Sep 2026 13:59:26 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alexey Gladkov <legion@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Tamir Duberstein <tamird@kernel.org>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 09/20] kbuild: implement and use depcheck to check
+ dependency timestamps
+Message-ID: <202609171229.31BB336E1@keescook>
+References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
+ <20260917-build-speedup-v3-9-9ecf4163ff36@kernel.org>
+ <202609171117.35BFDCC13@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202609171117.35BFDCC13@keescook>
 
-On Wed, 16 Sep 2026 14:49:36 -0400
-Gregory Price <gourry@gourry.net> wrote:
+On Thu, Sep 17, 2026 at 11:42:50AM -0700, Kees Cook wrote:
+> On Thu, Sep 17, 2026 at 05:06:19PM +0100, Lorenzo Stoakes (ARM) wrote:
+> > This can be done faster in C, so implement scripts/basic/depcheck to do so.
+> >
+> > It does as little work as possible, reading the .cmd files from a
+> > directory's targets and running stat on each dependency only a single time.
+>
+> Doesn't this run the risk of missing transitive deps?
+>
+> C.cmd:	C.o depends on A.c and B.c and B.h
+> B.cmd:	B.h depends on B.data and B.script
+>
+> depcheck looks at C.o and B.h's times and is happy so it drops C.cmd file,
+> but then see B.script has changed compared to B.h, so it keeps B.cmd,
+> and then the build runs and doesn't have the C.o dep list any more,
+> and C.o goes unbuilt?
+>
+> Also, I don't think this handles if_changed commands at all? The kbuild
+> rebuild condition is timestamps plus if_changed's command-line check.
 
-> On Wed, Sep 16, 2026 at 07:16:59PM +0100, Jonathan Cameron wrote:
-> > > +/*
-> > > + * A CXL Type-2 device advertises both CXL.cache and CXL.mem in its CXL DVSEC.
-> > > + * pcie_is_cxl() is also true for Type-1 (cache only) and Type-3 (mem only)
-> > > + * devices, which the vfio-cxl provider does not handle, so confirm the Type-2
-> > > + * identity before engaging it.  
-> > 
-> > We don't expect to handle type 3 class code compliant devices, but what about
-> > the things referred to sometimes as CXL Type 3+?  
-> 
-> Dan has previously (and I think would continue) to just call that
-> an accelerator - because it is.
-> 
-> I think the Type 1/2/3 nomenclature is stale and needs to go away,
-> it's outlived its usefulness.
-> 
-> To your point below, a compressed ram device is really an accelerator
-> with CXL.io and CXL.mem.  All the spec says (used to say?) about
-> "Type 2" is that it *may* support CXL.cache - it doesn't require it.
-> 
-> > It is also plausible we'd pass a full compressed RAM device through to the
-> > guest without paravirtualizing like we currently plan to do for class
-> > code Type 3 devices (for DCD, sharing etc). +CC Gregory to point out where
-> > I am wrong on this ;)
-> >   
-> 
-> Plausible, possible, feasible - yes.
-> 
-> Sane?  More sane than using it as a normal memory device on the host
-> assuming RAS signals from the device can't overwhelm the host (unknown).
-> 
-> > More generally, why are we controlling usecases?  A class code compliant type 3
-> > device 'could' be passed through I think if someone wanted to do that.
-> > I'd not encourage it but why is it a linux policy to not support it?
-> >   
-> 
-> The only scenario I can think of that you'd want to pass a simple
-> expander all the way through to the guest would be RAS signals - which
-> I think still require host plumbing anyway to avoid passing said signals
-> to the wrong guest depending on how you've chopped up the region.
-> 
-Taking just the compressed case...
-If there are capacity signals etc I'm not sure I'd want to have to paravirtualize
-those. Plus I really don't fancy making a single compressed device provide memory
-into multiple hosts. That's a whole new level of paravirtualization of noisy
-neighbours.  Ma! Someone else wrote really uncompressible memory and now there
-is none left for me.
+tl;dr: I spent way too long looking at this. I think my conclusion is
+"Hm, this makes some cases of missed Makefile deps on generated files
+harder to find, but there don't *appear* to be any obviously wrong
+instances of this in the tree."
 
-> Basically if you need DPA/HPA data from the device to be interpreted by
-> the kernel, the guest needs a translation mechanism.
+Long version:
 
-Hmm. That is potentially ugly. But I guess a problem for any accelerator.
-If they are firmware first not too bad as it's just normal memory error
-reporting so we create a cper in the host with the GPA and send it on
-it's merry way.  
+There does appear to be a problem in the case of generated targets where
+the Makefile deps are build-order correct but lack explicit deps. As
+in, a clean build generates the needed dependencies due to some prior
+explicit Makefile rule dependency, and a later source-level "#include"
+for the generated file exists (and the build doesn't fail since the
+included file got generated before the source that "#include"d it got
+built), and then the normal dep tracking (-Wp,-MMD,... -> .cmd) catches
+it and any direct changes to that dep would normally get noticed going
+forward on incremental builds.
 
-> 
-> In practice I can see passing a virtualized, locked auto-decoder through
-> to the guest with the same HPA/DPA values as the real device so the
-> signals can be delivered quickly with limited host interposition.
+However, with the depcheck .cmd pruning, changes to transitive deps
+(either via file contents or Kconfig options) will go unnoticed during
+incremental builds without that explicit dep (but stock doesn't miss
+it). Though actually it's kind of worse because it'll get noticed on
+rebuild #N+1 for N level of transitive depth, so something will break,
+and then you build again, and the changes from 2 builds ago suddenly
+get rebuilt...
 
-We'd lie (trap / emulate) the device decoder and probably the topology so that
-what you see matches up and device provided DPAs will translate to GPAs.
-I forget if that bit is in this patch set or not.
+I think you maybe encountered an instance of this in your series, too,
+but it got exposed due to a clean build no longer having the ordering
+correct:
+https://lore.kernel.org/lkml/20260917-build-speedup-v3-18-9ecf4163ff36@kernel.org/
 
-> 
-> You would probably need on-device vitualization support to do "proper"
-> passthrough so the device can route signals to the guest directly.
+See the trailing diff for a demo:
 
-Hmm. We may get a way to do that at somepoint but so far it's pretty
-simple so I'd argue only a few things need to look different in the
-guest to what they do in the host.
 
-> 
-> Anyway, you could pass it through, sure, why not.
-> 
-> We shouldn't limit it, if only because we're not clairvoyant about
-> what will be useful tomorrow.
+  git apply demo.diff
+  make O=b defconfig
+  # simulate a earlier-stage header generation...
+  make O=b lib/byfile_anchor.o lib/byconf_anchor.o
+  make O=b lib/
 
-Agreed.
+  # trigger 1: the header's input file changes
+  echo FROMFILE-two > lib/byfile_gen.in
+  make O=b lib/
 
-J
-> 
-> ~Gregory
+  # trigger 2: a Kconfig value changes; no file is touched
+  ./scripts/config --file b/.config --set-str LOCALVERSION -demo2
+  make O=b lib/
 
+  # what each object ended up holding
+  strings b/lib/byfile_anchor.o | grep FROMFILE-    # FROMFILE-two   both trees
+  strings b/lib/byfile_victim.o | grep FROMFILE-    # FROMFILE-two   stock
+                                                    # FROMFILE-one   patched  <-- stale
+
+  strings b/lib/byconf_anchor.o | grep CONF-        # CONF--demo2    both trees
+  strings b/lib/byconf_victim.o | grep CONF-        # CONF--demo2    stock
+                                                    # CONF-          patched  <-- stale
+
+
+This means adding depcheck would silently expose any current (and future)
+missing explicit deps on generated files where those files get generated
+by either an earlier build stage or an earlier rule. :(
+
+I went looking for the kind of missed Makefile dep for a generated file,
+and while it's not a very grep-able condition, I did look at stuff that
+fell into include/generated/, but it's safe due to the prepare/archprepare
+ordering AFAICT. So then I looked at places where -I had $(obj) added to
+it, and all of those seemed to have explicit Makefile deps too. Well, all
+except for arch/x86/boot/compressed/sev-handle-vc.c which includes
+"../../lib/inat.c" but that seems safe today due to ordering from
+arch/x86/lib/ being needed before arch/x86/boot/compressed/.
+
+So, yeah, it makes me nervous, and it may make incremental builds less
+idempotent. But I can't really find extant problems and the demo is
+slightly contrived, but not exactly an impossible situation.
+
+-Kees
+
+
+diff --git a/lib/Makefile b/lib/Makefile
+index dfab958327c5c..aed0bd9eb7d6a 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -350,3 +350,36 @@ CONTEXT_ANALYSIS_test_context-analysis.o := y
+ obj-$(CONFIG_CONTEXT_ANALYSIS_TEST) += test_context-analysis.o
+ 
+ subdir-$(CONFIG_FORTIFY_SOURCE) += test_fortify
++
++# --- depcheck demo ---
++obj-y += byfile_anchor.o byfile_victim.o byconf_anchor.o byconf_victim.o
++
++quiet_cmd_byfile = GENFILE $@
++      cmd_byfile = printf '\#define BYFILE_STR "%s"\n' "$$(cat $<)" > $@
++
++quiet_cmd_byconf = GENCONF $@
++      cmd_byconf = printf '\#define BYCONF_STR "CONF-%s"\n' '$(CONFIG_LOCALVERSION)' > $@
++
++# Regenerated when its input file changes.
++$(obj)/byfile_gen.h: $(src)/byfile_gen.in FORCE
++	$(call if_changed,byfile)
++
++# No input file: regenerated only when its command line changes, which here
++# means when CONFIG_LOCALVERSION changes. No file is touched.
++$(obj)/byconf_gen.h: FORCE
++	$(call if_changed,byconf)
++
++targets += byfile_gen.h byconf_gen.h
++
++# The anchors declare the dependency. That is what generates the headers on
++# a clean build: fixdep only records a header once the object has compiled
++# successfully, so on a first build there is no .cmd file to rely on. The
++# victims include the same headers without declaring them, so the only
++# record of that edge is the deps_ list in their .cmd files.
++$(obj)/byfile_anchor.o: $(obj)/byfile_gen.h
++$(obj)/byconf_anchor.o: $(obj)/byconf_gen.h
++
++CFLAGS_byfile_anchor.o += -I$(obj)
++CFLAGS_byfile_victim.o += -I$(obj)
++CFLAGS_byconf_anchor.o += -I$(obj)
++CFLAGS_byconf_victim.o += -I$(obj)
+diff --git a/lib/byconf_anchor.c b/lib/byconf_anchor.c
+new file mode 100644
+index 0000000000000..8035eaa352a3b
+--- /dev/null
++++ b/lib/byconf_anchor.c
+@@ -0,0 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "byconf_gen.h"
++const char byconf_anchor_marker[] = BYCONF_STR;
+diff --git a/lib/byconf_victim.c b/lib/byconf_victim.c
+new file mode 100644
+index 0000000000000..285a8de8bdf6e
+--- /dev/null
++++ b/lib/byconf_victim.c
+@@ -0,0 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "byconf_gen.h"
++const char byconf_victim_marker[] = BYCONF_STR;
+diff --git a/lib/byfile_anchor.c b/lib/byfile_anchor.c
+new file mode 100644
+index 0000000000000..9ea0b8ad55963
+--- /dev/null
++++ b/lib/byfile_anchor.c
+@@ -0,0 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "byfile_gen.h"
++const char byfile_anchor_marker[] = BYFILE_STR;
+diff --git a/lib/byfile_gen.in b/lib/byfile_gen.in
+new file mode 100644
+index 0000000000000..7da9e5e0cd83c
+--- /dev/null
++++ b/lib/byfile_gen.in
+@@ -0,0 +1 @@
++FROMFILE-one
+diff --git a/lib/byfile_victim.c b/lib/byfile_victim.c
+new file mode 100644
+index 0000000000000..763c5ef8f1514
+--- /dev/null
++++ b/lib/byfile_victim.c
+@@ -0,0 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "byfile_gen.h"
++const char byfile_victim_marker[] = BYFILE_STR;
+
+
+-- 
+Kees Cook
