@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227F64EDCBA;
-	Thu, 17 Sep 2026 21:13:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9770B38F253;
+	Thu, 17 Sep 2026 21:13:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789679599; cv=none; b=lBWDU/PNMyA1FMYi4IxxMizgKXaFd6IE+8UegtfPhQGr/VUJAwM3h/wsrGNbQC8dcW+E/1H5nnbtOy0SHIUENvddiWEx4eFUelTOJ+eRZXh3AlaK3K5dhVNtFJ3Kauv3imOk3vqus6E3IQuFMgpmKc70/yaPjcJ3Ulhapx2QFcM=
+	t=1789679608; cv=none; b=Y6slumGZX4gqKbr9QrjL+aDemDA+HpppbttKTQcD7CJOuqSXt7z/U9GXrLX2oesDV25g98YtoYwKtNZCqLPfO1oT6Cu01t7ZXC2+vKKQP0tqFAiZazGCKXs80BG5UxBjAtygF0Nr3hLL9zVgK7VBuZqg30hLMN07g+VVVxlKWLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789679599; c=relaxed/simple;
-	bh=m0X8VrsASi1kfyr4HC/ICcMBRaf/o7N6b/EYcPQ5VMk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OQJ4t0Iw+ftzeMrqI6SZCU4ejW6WXWkWD8PXb2JmoVMEowPAK3NfLBAWKAlumNurMLf6aaYuotWV8TeIVCEAnbnIk2sDwyNzr8NplCojRDmrgdWjMmK6YLyOs7ZccZ748r25RZLkCWYNopk5vl0PCji2DKFbxT6GpGbKMjWyu7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byKDWpFx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789679608; c=relaxed/simple;
+	bh=qi8NGj3GV5+JaJsEBaW++2H2bVjNFFa8a+Ot/7Oteh4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RXxjb1+LLxtD+4fEhrz8PJJd+j7G5pbgRhgtZwKCY9kT5O31uTOTQkfB6VXZBkny/xGuTWS4uU4N44t1oQ06R8O+K2DNox7EWf8aaZ8vVhloTTAjTlthUwsJftas/sobqAiihbvEK7H4vqnsgb2/K4EYmuQ7kKklgDVlpty8D/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h59j228G; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byKDWpFx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0781D1F000FF;
-	Thu, 17 Sep 2026 21:13:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h59j228G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D0211F000FF;
+	Thu, 17 Sep 2026 21:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789679598;
-	bh=7e18Sa+MwEdOb8KcbbXVUJipOg2vOL1/dkGtTJlkEDg=;
+	s=k20260515; t=1789679606;
+	bh=cAYHB91mBe/nX9GCFhnVlPHTeBX8SwymcKLkPAPtfA0=;
 	h=From:To:Cc:Subject:Date;
-	b=byKDWpFx2mt8H1ORvSgEKbybaAsAgivP5Ar9KAlCHUa8CoonfhYNKB6YYFvUxNjqG
-	 PpYd568o4NjY+ZREHNLEJsUPApLdUWH2tud7OeyjinzowLsueVpQraX+ZRzAtZfO64
-	 mc4PZvMu1uRpqm9lJ9NwtQouI4Aw5E3+ZQiLDhCLZ5SxQD0ow3zqnAHAUvS7m0lbfV
-	 c2ZDQoclchfx5cTLvIF5eylFqB49zF78Lh/j81KaR+hZhJPGAy3wPZ+j4lFuvJh4wp
-	 UA/mB3siSqi/j4gCdS8lz8lr4QBm0BB/lznp4fz3ErQmsu4B5EzZF9VSnUXrwXbbLV
-	 aUeImp+/AY3Og==
+	b=h59j228Gw9TPAONxrGOjGq3evcR70tMHJkQJpxI7gQ5Ckg330CrOwl4gUroSCPtYZ
+	 rZhOO3pFWGNWGJcGehsZxeS/psrqRMpsz/DjTmj70n/UUxjb5A4b1//cx/56M+MDpD
+	 iGYgN3ZEUsliz6cbt+aDXJSC8HEYqE+fS0a+PjASx3kSv3imFU25Pbka/2xKgRVUIx
+	 miMPYlgq84NprmJliCErWPaNEHDqlLpS5aeLcT8J/5xb0igU5eTpgD6eLWQjO+85X0
+	 8e8GPSSMNK8wgcwiZ+BJHkZuW7+fLeGxChk5uz5/2iWVWk0HgH4sLwPSG5Ye1FJFpN
+	 EIrwIc8yCltOA==
 From: Kees Cook <kees@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>
+To: Sean Wang <sean.wang@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
 	Kees Cook <kees+treewide@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Chen-Yu Tsai <wens@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mediatek@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] regulator: axp20x: Remove const from new_desc allocation types
-Date: Thu, 17 Sep 2026 14:13:16 -0700
-Message-Id: <20260917211315.i.973-kees@kernel.org>
+Subject: [PATCH] pinctrl: mediatek: Fix eint->base allocation type
+Date: Thu, 17 Sep 2026 14:13:24 -0700
+Message-Id: <20260917211323.i.101-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -43,7 +47,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2586; i=kees@kernel.org; h=from:subject:message-id; bh=5WUoWYFLCwF9+dFAIjiVxpXgWaC8PLG5R5iG3Q++Xbk=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrwt9I/5J1XFK81kdqEbP55JuNAveiOXcy6t88KBAwd faFPxwRHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABNhms/I8Cwvp8RfyvXuqqv/ 1/eqr5BU9GNwu9gZY3rBVsrO1vWNCsM/hQlaJfFnNp451X7TaXfHiUU9lY/Xnj64+haL2/zFj3x 28QMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1996; i=kees@kernel.org; h=from:subject:message-id; bh=/FZNV9o1ewTwlu5GAymRgTjU768+QMlUG/XB6uW9yEM=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrwj9fmqEtGX7sgKPW54DouNsL7FbdWWmd4L1XfI7VJ Iko10SdjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgInEbWX4Zzk1r0Cx5kLjg9y3 8zO5z8gsOWw91/bCj5QXAepb1jWIZDL8034SmmCpnvZq6ZnSO1YJ1zqkH55Snj4n4+xhYYGlS+8 l8gMA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -55,57 +59,44 @@ matches the type of the variable being assigned. (Before, the allocator
 would always return "void *", which can be implicitly cast to any
 pointer type.)
 
-The assigned type is "struct regulator_desc *", but the converted
-allocation types would be "const struct regulator_desc *", as all three
-sizeof()s were taken from "*desc", and "desc" is
-"const struct regulator_desc *". As there is no general way to remove
-const qualifiers, take the size from the assignment target instead. No
-change in allocation size results.
+This allocates the single-entry array that mtk-eint expects (nbase is
+set to 1). The assigned type is "void __iomem **", but the converted
+allocation type would be "void __iomem ***", as the size was taken from
+"pctl->eint->base" itself rather than from what it points at. Luckily
+"void __iomem **" and "void __iomem *" are the same size. Take the size
+from the pointed-at type to match the assignment.
 
 Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
-drivers/regulator/axp20x-regulator.o
+drivers/pinctrl/mediatek/pinctrl-mtk-common.o
 
 Assisted-by: LLM coccinelle
 Signed-off-by: Kees Cook <kees+treewide@kernel.org>
 ---
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Chen-Yu Tsai <wens@kernel.org>
+Cc: Sean Wang <sean.wang@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: <linux-mediatek@lists.infradead.org>
+Cc: <linux-gpio@vger.kernel.org>
+Cc: <linux-arm-kernel@lists.infradead.org>
 ---
- drivers/regulator/axp20x-regulator.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index da891415efc0..ec6ec071ffde 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -1652,7 +1652,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		    (regulators == axp803_regulators && i == AXP803_DC1SW) ||
- 		    (regulators == axp809_regulators && i == AXP809_DC1SW) ||
- 		    (regulators == axp15060_regulators && i == AXP15060_SW)) {
--			new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
-+			new_desc = devm_kzalloc(&pdev->dev, sizeof(*new_desc),
- 						GFP_KERNEL);
- 			if (!new_desc)
- 				return -ENOMEM;
-@@ -1665,7 +1665,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		if ((regulators == axp22x_regulators && i == AXP22X_DC5LDO) ||
- 		    (regulators == axp809_regulators && i == AXP809_DC5LDO) ||
- 		    (regulators == axp15060_regulators && i == AXP15060_CPUSLDO)) {
--			new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
-+			new_desc = devm_kzalloc(&pdev->dev, sizeof(*new_desc),
- 						GFP_KERNEL);
- 			if (!new_desc)
- 				return -ENOMEM;
-@@ -1677,7 +1677,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+index 1a977acd6883..857d39f3438d 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+@@ -1032,7 +1032,8 @@ static int mtk_eint_init(struct mtk_pinctrl *pctl, struct platform_device *pdev)
  
+ 	pctl->eint->nbase = 1;
+ 	/* mtk-eint expects an array */
+-	pctl->eint->base = devm_kzalloc(pctl->dev, sizeof(pctl->eint->base), GFP_KERNEL);
++	pctl->eint->base = devm_kzalloc(pctl->dev, sizeof(*pctl->eint->base),
++					GFP_KERNEL);
+ 	if (!pctl->eint->base)
+ 		return -ENOMEM;
  
- 		if (regulators == axp15060_regulators && i == AXP15060_RTC_LDO) {
--			new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
-+			new_desc = devm_kzalloc(&pdev->dev, sizeof(*new_desc),
- 						GFP_KERNEL);
- 			if (!new_desc)
- 				return -ENOMEM;
 -- 
 2.34.1
 
