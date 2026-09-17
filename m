@@ -1,332 +1,194 @@
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2094.outbound.protection.partner.outlook.cn [139.219.17.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AD0371CE4
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Sep 2026 01:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789607646; cv=none; b=VTTomleeFOPiGR7sIdJvWNCqFLsctWY9rj8N+hVkQjt00a2RfPGD1ucPZP9VoL74RmDUC1zLTxOmiqyB1cbbuFUGCKrqqN2NJdLuIISrDCSmC/59PX3any4gLVmzIDJEez/N0UFESt0EbtHcQHDicIppTfq5tvfTAjIB6i9YEZY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789607646; c=relaxed/simple;
-	bh=Ul6j9WsyP/r/ydqbSfLgKbi1bbJx+nz92awCbQVj1eM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=b8gvGs0WeLwKe/RFPj5+0PM+ToFBXA6W4DsGYt9/CSyk4oo9D76B7hqJ/c0zH248w5n61wZkbrXdDpCTFeWmHuD7vpI3AYTC5edHPeCfu5qPjnhVqtbpJmlXhyuWAQUmlRZYR7ocNg7qsgvSFGgF7Pi+hHqXGZRj2D+jQj4XFOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LTruY1Ul; arc=none smtp.client-ip=209.85.215.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LTruY1Ul"
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cc1ca15334cso361815a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Sep 2026 18:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789607643; x=1790212443; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=a+CdnO7yh4efRshGKkV5OBVfJv13nuMpKztWCTLiXjE=;
-        b=LTruY1Ul670RJDhVV+Rl9kI7Chsnp+tcmrzI/yfpY/dwxpYOM9pshD68YCW/FRpGV0
-         Z8uaaxOe5Qch8gojqY3oGPTdpmeaHdAYb2KjyzTrg8rB0KOf6sFYC5Mty3R+KZCmWbTt
-         Gz7zapMTW3cdKdrhnmj19FbBy6z/+Z7ozcciQQFSChx9xIMkxN/MchvWO8MP6lTrEs9M
-         DH3Uu8oV8w0AU7S0BghX4mP1DfbO7fqv6s3qLBxPx8FiCI+292MWk8/hKCxH2BvkCb2b
-         Hx7fvbj069/NwbrZD4/RV9GjIENeEG4zU6kd5TPzaOBkVLSLPWi5ZyzVX5sp+m3wybsd
-         Vasw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789607643; x=1790212443;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=a+CdnO7yh4efRshGKkV5OBVfJv13nuMpKztWCTLiXjE=;
-        b=QczNaaR6r1JDhRG9aesddxOWBIcLpM1fixfbdxkY9J3IzRtdNoG+BgK7/ISN0KJ4C/
-         dfyLH1MyflcP8MAx0XuSpi1PMhVgn8cjgF8/INp6U1YBSnNBXn8YMapmL+k7Gx5kTKTu
-         GMP1t6YYGra69V076XMmdYTOk2pniQCGSUoW+UyBYkVNILbaJKtYEcpsRlTFI6tS7MEz
-         rNAgxzPRUnlZ5eFH8Xy3qhwZmoL6hGzBGYy6rPj7ASGR68HLWaNt7PsLmdHZozri2pXG
-         yB4f9VuRt/eJpSA+39IpUOGf77LLFBEbPMlf5IeC2RjJISzS6i6mDtweHisYNOKkfU9H
-         6UxA==
-X-Forwarded-Encrypted: i=1; AKwUvBy+HMBJ+MiHCpGPJRwmD+QuS2clCWD7R3m9RibLzlKZF8VoLwzp5qJkerQSJTxX3ay4/3w0W8V6/xdHK4wsbNY=@vger.kernel.org
-X-Gm-Message-State: AFuF++ntArrZMVWz945CGRRyrIILklpJdCtPXSTbKVeUai8WP1F2wrgt
-	3+kftUsVksWKkMDc8x1plzSnMmlvOY/WNyWls+MhmjuBmKav9p7TGNtKHAGYNqwN8e6Heubz280
-	1
-X-Received: from plcg5.prod.google.com ([2002:a17:902:c985:b0:2db:6c6c:8a80])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:b0b:b0:2dd:7646:35cd
- with SMTP id d9443c01a7336-2dd8ccccf6fmr106356295ad.0.1789607642593; Wed, 16
- Sep 2026 18:14:02 -0700 (PDT)
-Date: Thu, 17 Sep 2026 01:13:59 +0000
-In-Reply-To: <20260916222125.1259631-1-morbo@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7C433CE80;
+	Thu, 17 Sep 2026 03:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789615780; cv=fail; b=nvQ08T7kXgSCjj9Smq0B0QVqbMB9OIC6MqhhmcFE6QhHoOgzQvxSqQvncQfbl3+8mWzRVld5M3+hzjNWqRX39V0L/BmY/ScUPWfTPP9nMMVQgCtnLTPVjVz7DKooYtvAHdjPMiusfWtu78RTEQ3bga1vBns+UF4p76TP+HoyeXI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789615780; c=relaxed/simple;
+	bh=UjjAUIC2sujlyjkQaA4IN8pXo+5xYWtaXsGWVbdtOt0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=oLba9cf9Xd8c0qoQkWNWinuOCoy32HQuRc9QIDgoBLLfLuVsknIyP/ezSvzj1fSGim0j7jEnXW51dSDn7i3D9ShbhQtfoG73T9bYnltk+lNSxVv2cW8VA8YJrsJdE+/2lSA4ILaQCI3D7DpXhUn0z4X499HJlP/QSz/bvO9Rn9w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PBGK246pu4t26mH+i3ni7SW5tLwAEVBcjhmx584Ap+7+alCx8SUpWljCFq0VbhrJW5V0/eMdLBp5rpxefDXXMzbKpYTD8BuvfiS+W6+sp2j2P+flBzB8KQevtP2+501GsdyL7gQ/IhtCXgJ8NOCK3LHy4PVek/rxWtbXriFEj65pGNgf/mjin0xIaWh5e15t+U0r6JimMQ9cjNzhoRIAxtiH+zhJn1POQ4Ur11GqjkpQLjldQ9Cw6s//ZtBQr+QswzMQdPezgv9KqArw49BlZreGFuHjoJ2YMSDdB3wAW7o8YBfUpigq0ZKF1EPXS5Zv+GcfgEJd1jf/9TEWLLaWvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yhUE2wBAdpCxDowA8LMGsJCj+6KXO8laPHfX+WgM5R8=;
+ b=hjUrXjgbs2HlBcyvXxPOGfHa+pI82ub9eOeKcJ+nmpypHN2AMaxF/xCnqfSDVd6buQmJmqg5bCuiJxYwpyZ3Wf8nOvmPVfY9tz2Qjje9zEfEv3jcHp5NdWgSIHuQHXJ47/StGA0hGUOgaALC+ZlCpba09gbITDYao3SVJkd6rm4naAHD6BeVf011JSRTJHKh1wiFDfdublyoTEawmUefJyuq/D4rwq0+XeK/aFr2OnmCxgzeawpwzLYkRo4vQH7qCguSAtfkEMZG0YnHwFjkTEpDSnXhdgIr4FSw8RAcPXtf2pTIRfy531cJOwbR36gDqTBKbdNlfoX6ED65/Lh7ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from NT0PR01MB1102.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:7::10) by NT0PR01MB1006.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:7::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.9; Thu, 17 Sep
+ 2026 03:29:25 +0000
+Received: from NT0PR01MB1102.CHNPR01.prod.partner.outlook.cn
+ ([fe80::be4a:d29e:5188:b37e]) by
+ NT0PR01MB1102.CHNPR01.prod.partner.outlook.cn ([fe80::be4a:d29e:5188:b37e%3])
+ with mapi id 15.21.0428.009; Thu, 17 Sep 2026 03:29:24 +0000
+From: Hal Feng <hal.feng@starfivetech.com>
+To: Changhuang Liang <changhuang.liang@starfivetech.com>, Michael Turquette
+	<mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Stephen Boyd
+	<sboyd@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
+	<alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>, Emil Renner Berthing
+	<kernel@esmil.dk>, Kees Cook <kees@kernel.org>, "Gustavo A . R . Silva"
+	<gustavoars@kernel.org>, Richard Cochran <richardcochran@gmail.com>
+CC: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH v3 12/22] clk: starfive: Introduce inverter and divider
+Thread-Topic: [PATCH v3 12/22] clk: starfive: Introduce inverter and divider
+Thread-Index: AQHdJmAQzGtl/CzpbE2DV2ErMGmNbbbSW3sA
+Date: Thu, 17 Sep 2026 03:29:24 +0000
+Message-ID:
+ <NT0PR01MB1102A3B324F14495B35AF310E6B82@NT0PR01MB1102.CHNPR01.prod.partner.outlook.cn>
+References: <20260807112923.191627-1-changhuang.liang@starfivetech.com>
+ <20260807112923.191627-13-changhuang.liang@starfivetech.com>
+In-Reply-To: <20260807112923.191627-13-changhuang.liang@starfivetech.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: NT0PR01MB1102:EE_|NT0PR01MB1006:EE_
+x-ms-office365-filtering-correlation-id: 4f3f89da-9bb0-41d0-64de-08df146bdf37
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|23010399003|366016|7416014|1800799024|10067099003|18002099003|22082099003|56012099006|4143699003|921020|38070700021;
+x-microsoft-antispam-message-info:
+ Fk6je+0tf9zQos4M6eGkOAII7feXXUPM+l9qqS3p181nOWWG0SkvxKNbr6S4hFyyAQjJYxmJNse/NvMj+PsgIuktKAeIRvCmoEriE7OXX6Dd/EZBCVrnaCkzbvuFgu3UnljDG7u7DLYCfaI8/0uU33Pp4a67nYyJFWwIZuyh75nrtlPXSqrwRoPAIPiCt9SyvEvYxodNoog4+JAOzknZBush0QYmFI4rMgMlVE1aq1+63M+mzKfKZulepicNulNZcUs9HssKQHSBy8jjLgkQ8n8MyGKnlJLxUbVM+b2QnXgdJ0Kq985AadqrM3xE6Yxd3bQPywq2PfP9OwOQVP8IYB58zTYYFVFbzM9MSVOlSK7Qo7hhuHkfzB21Nt/T/+llB9mOnPOfymkveaOlXAHY2V2r1mdqTQ8PD9i1f5IzwB3OFzI71Ep3O5WfPN+C/adoheZKan5iML5xJThaf3M+6F2h2Gll7B+2GoFk09Seqerq5sWzErrKOAXn5+V26xnqD+XJn40pkgMvAXtecvcpz2CcjmlM5g6XMM+jNv914CY27wBtCuz/cPEAmUsg5xCscEwSi/VnaSRHOHBm5qv1Ig==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1102.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(7416014)(1800799024)(10067099003)(18002099003)(22082099003)(56012099006)(4143699003)(921020)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?vkPAM0xeLiullzfi2EScRkTpTuIV+Fd6lFdUS8PztcH8/bmhSn3xER9ypGuO?=
+ =?us-ascii?Q?+aPlzDvkohuVhaRctQ2T7bAEJ90p4t/7jj+OW7zeNrVIND9UGFPfS/diaWQO?=
+ =?us-ascii?Q?+qQVOdcBpg7GQeNnbh3x9tGVvdF8UXUCocTI44DZl1RNV+kMdofWjtCOW/Ig?=
+ =?us-ascii?Q?I5jC4xiYAHRIffguEyazz5SKdeTW2qBlfGVipEdefwhzMJKqyqJIi/BJFBXB?=
+ =?us-ascii?Q?bT4r+klB1PBYKRXpQb18R52FViUd9nnPJpC2+JVlEhBEhUzzPywaMmGqYq/p?=
+ =?us-ascii?Q?xuQeSvAQFZns2IwOQCW+Qoa3vEvCMnwPaAtfTgEO0aSyMMeORvO9o332Q0en?=
+ =?us-ascii?Q?K/fg6pvuCdPPdaukTTnsrgwwMcylZowyBX9OBmXX94FLOXCkLk5bAZAK1c2b?=
+ =?us-ascii?Q?cQaaCVN195mu2rlEgNAZNMkoWk0bl8oJ4F3phx4zfCxKWwWnNqekH8ELN59P?=
+ =?us-ascii?Q?PP6dPu3lbe3WckPyK9yGRDxoBTdrgqN+v5xdtcPSZ9WEwMUyy1Kjsw0oiH1A?=
+ =?us-ascii?Q?RUXZ7TMUPZJCJ/0FQ7IApHAVmOCz/F8Ayg5Cjs/gLqS8ln3uTxM/7DzI3qwW?=
+ =?us-ascii?Q?JR0X2p2OP7u3RnCwT8Lv/SM8o6UUpN2PJCiCTLon+Had+jKccYYrep1dbGbx?=
+ =?us-ascii?Q?JlfdM3RIgoOLPW9dtdoRW0EmLKLyWBG003LUcFeAtD2Fm/SvaYVZB+9qrooX?=
+ =?us-ascii?Q?6SJNJW1DjS1lb0EKdsghtRPSbeMinZsUgovjJPoB05OThTTqhYkbLvrp7W2G?=
+ =?us-ascii?Q?KlBREsa3yeznHB5UdpsL7EMHEqbxJFtY8pMq+0zwAyqj/io3rwmi4kfC/rAO?=
+ =?us-ascii?Q?Wg9TN8PSNVurZaRSURRyeHMvTn9IogU8ijZD0AM2XDASbtlNnegbg05ulmiP?=
+ =?us-ascii?Q?2eGYVU6xf2lvZFdxrwaFT62AG85LXzEqx7sEqBFnI/Z3zT+Eycqbf549cAHf?=
+ =?us-ascii?Q?CUAdWwHDw2GNpnCfnD0vTm4qm4wGBK1/CiJbhe8iwLxkGlyzjSj07+qaXUKm?=
+ =?us-ascii?Q?fiCLKgJCQoH+qDlo8DaurF4drMJj390niG7+QlSVHRBzbX0SNbVHogwP3YAp?=
+ =?us-ascii?Q?Q8x6eVCmj5J0TCqjyzoM98ppUBdNZsXtr8eto/y0M3rRrNC0Y5iUCAOIl2Ip?=
+ =?us-ascii?Q?6nHJ7/sseH78GzvGw8vTENj09j6EHusY7pDPMk47CAARAcl7GJa5dt69FljK?=
+ =?us-ascii?Q?RCBre+KsMHcUPw9jlBMTwtSss3whe+a6ivMLSOzOHJALv8pBJja/nWjObBgB?=
+ =?us-ascii?Q?IOXI+fd/8L73odTT4UMTKDTKtGeQQvcrccylcTb85nlnhYedUnrXACYGrgw4?=
+ =?us-ascii?Q?0KhS645FYEepP7NsyH/aUahTfn+mdY6mmqa+rM1HMMAVtSwOwbJ26d1tTE4x?=
+ =?us-ascii?Q?p4k4yBfX903eQj3MiEOOcsp7zSrl2nTDjuE+duRjpHm2i3JcxFIbKFTVJqfv?=
+ =?us-ascii?Q?tjIQtNGN6r6AXjz4ZuR6vQoPU/JdI+m3A0w4LnNuj8HwJVOyt3bB0eShPYY3?=
+ =?us-ascii?Q?XgUm65KwPXhjfeP+jz5OIU01LVWeudP1qcKA5Mcfmn5JcrpojJibbC5PKVwN?=
+ =?us-ascii?Q?lvk4tDoSnHFjmb0W8PlcyGhk/MkactZ5X392DdIQG2D1Ca3T2Gn12l2twTqW?=
+ =?us-ascii?Q?/LhX0FdJ3mTSAnn4nYv1QaE6ZXAnfT5xXEPmF4fin3IkCJIR7KsrgxE8iYWl?=
+ =?us-ascii?Q?GJw3jyCp6zYaDB8ZOUgsv8+wNLk53J0mgcozKD8TP4f5pstLv0DJcGlt8JGc?=
+ =?us-ascii?Q?GlIsQz2YZw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260916222125.1259631-1-morbo@google.com>
-X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260917011359.1585961-1-morbo@google.com>
-Subject: [PATCH v3] seq_buf: add seq_buf_strlen(), seq_buf_init_append(), seq_buf_puts_trunc()
-From: Bill Wendling <morbo@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Bill Wendling <morbo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1102.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f3f89da-9bb0-41d0-64de-08df146bdf37
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2026 03:29:24.8431
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xs1CyE2SHmycldhrIHQu4h1RzxzDj8EsC+EXd3lbP+ErQh+VtUXOu9s+cnhJO5luijqYuBabq0/TrjGpdZG4WdPQV3MyPHeWqnZvxzDLVM4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1006
 
-Converting some strlcat() call sites seq_buf need behavior seq_buf
-doesn't currently provide, either directly or without introducing subtle
-bugs:
+> On 26.08.07 19:29, Changhuang Liang wrote:=20
+> Introduce inverter and divider for starfive clocks.
 
- - seq_buf_strlen(): seq_buf_used() reports the full buffer size when
-   the buffer is completely filled, even though seq_buf_str() then
-   overwrites the final byte with a NUL terminator, leaving only size -
-   1 bytes of actual content. Callers that need the true length of the
-   NUL-terminated string have to fall back to strlen(seq_buf_str(s)).
-   seq_buf_strlen() mirrors seq_buf_str()'s NUL-termination logic but
-   returns the resulting string's length directly.
+Maybe you mean an inverted divider? Not inverter and divider
 
- - seq_buf_init_append(): seq_buf_init() always clears the buffer it's
-   given via seq_buf_clear(). Code migrating from strlcat(buf, ...),
-   which appends to whatever @buf already contains, can't use
-   seq_buf_init() without silently discarding that existing content.
-   seq_buf_init_append() preserves it and positions the seq_buf to
-   append after it.
+Best regards,
+Hal
 
- - seq_buf_puts_trunc(): seq_buf_puts() (like seq_buf_printf() and
-   friends) writes nothing at all if the string doesn't fully fit,
-   whereas strlcat() always copies as much of the source as there is
-   room for. Converting a strlcat() call site that relied on that
-   partial-copy behavior to plain seq_buf_puts() can silently drop
-   content that used to survive truncated. seq_buf_puts_trunc() keeps
-   the leading bytes of the string that fit.
-
-Assisted-by: LLM
-Suggested-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Bill Wendling <morbo@google.com>
----
-v2: Reword the commit message to be clearer and not refer to a series of
-    patches
-v3: Add EXPORT_SYMBOL_GPL, make sure to overflow when truncating, correct
-    some logic discovered by the KUnit tests, and add KUnit tests.
----
- include/linux/seq_buf.h   | 60 +++++++++++++++++++++++++++++++++++++++
- lib/seq_buf.c             | 33 +++++++++++++++++++++
- lib/tests/seq_buf_kunit.c | 48 +++++++++++++++++++++++++++++++
- 3 files changed, 141 insertions(+)
-
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index 9f2839e73f8a..a552bcaab07f 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -30,6 +30,10 @@ struct seq_buf {
- 		.size = SIZE,				\
- 	}
- 
-+/**
-+ * seq_buf_clear - reset the seq_buf to be read / appended from the beginning
-+ * @s: the seq_buf handle
-+ */
- static inline void seq_buf_clear(struct seq_buf *s)
+>=20
+> Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+> ---
+>  drivers/clk/starfive/clk-starfive-common.c | 12 ++++++++++++
+> drivers/clk/starfive/clk-starfive-common.h |  8 ++++++++
+>  2 files changed, 20 insertions(+)
+>=20
+> diff --git a/drivers/clk/starfive/clk-starfive-common.c
+> b/drivers/clk/starfive/clk-starfive-common.c
+> index 1b5e56af4138..58ab93d9748b 100644
+> --- a/drivers/clk/starfive/clk-starfive-common.c
+> +++ b/drivers/clk/starfive/clk-starfive-common.c
+> @@ -300,6 +300,15 @@ static const struct clk_ops starfive_clk_inv_ops =3D=
  {
- 	s->len = 0;
-@@ -37,6 +41,14 @@ static inline void seq_buf_clear(struct seq_buf *s)
- 		s->buffer[0] = '\0';
- }
- 
-+/**
-+ * seq_buf_init - initialize a seq_buf
-+ * @s: the seq_buf handle
-+ * @buf: pointer to the buffer
-+ * @size: total size of @buf
-+ *
-+ * The contents of the buffer are ignored.
-+ */
- static inline void
- seq_buf_init(struct seq_buf *s, char *buf, unsigned int size)
- {
-@@ -45,6 +57,26 @@ seq_buf_init(struct seq_buf *s, char *buf, unsigned int size)
- 	seq_buf_clear(s);
- }
- 
-+/**
-+ * seq_buf_init_append - initialize a seq_buf over a buffer that may
-+ *			 already hold NUL-terminated content
-+ * @s: the seq_buf handle
-+ * @buf: pointer to the (possibly non-empty) buffer
-+ * @size: total size of @buf
-+ *
-+ * Unlike seq_buf_init(), which always clears @buf, this preserves
-+ * whatever NUL-terminated content @buf already holds and positions
-+ * @s to append after it. Useful for converting code that used to
-+ * append to an existing buffer with strlcat()/scnprintf() and friends.
-+ */
-+static inline void
-+seq_buf_init_append(struct seq_buf *s, char *buf, unsigned int size)
-+{
-+	s->buffer = buf;
-+	s->size = size;
-+	s->len = strnlen(buf, size);
-+}
-+
- /*
-  * seq_buf have a buffer that might overflow. When this happens
-  * len is set to be greater than size.
-@@ -108,6 +140,33 @@ static inline const char *seq_buf_str(struct seq_buf *s)
- 	return s->buffer;
- }
- 
-+/**
-+ * seq_buf_strlen - get the length of the NUL-terminated string in seq_buf
-+ * @s: the seq_buf handle
-+ *
-+ * Like seq_buf_str(), this makes sure that the buffer in @s is
-+ * NUL-terminated, and returns the length of the resulting string.
-+ * Unlike seq_buf_used(), the returned length is always correct, even
-+ * when the buffer is completely full: in that case seq_buf_used()
-+ * reports @s->size, but the last byte was overwritten with the
-+ * trailing NUL, so only @s->size - 1 bytes of content remain.
-+ *
-+ * Returns: the length of the NUL-terminated string in @s->buffer.
-+ */
-+static inline size_t seq_buf_strlen(struct seq_buf *s)
-+{
-+	if (WARN_ON(s->size == 0))
-+		return 0;
-+
-+	if (seq_buf_buffer_left(s)) {
-+		s->buffer[s->len] = 0;
-+		return s->len;
-+	}
-+
-+	s->buffer[s->size - 1] = 0;
-+	return s->size - 1;
-+}
-+
- /**
-  * seq_buf_get_buf - get buffer to write arbitrary data to
-  * @s: the seq_buf handle
-@@ -179,6 +238,7 @@ extern int seq_buf_putmem(struct seq_buf *s, const void *mem, unsigned int len);
- extern int seq_buf_putmem_hex(struct seq_buf *s, const void *mem,
- 			      unsigned int len);
- extern int seq_buf_path(struct seq_buf *s, const struct path *path, const char *esc);
-+extern size_t seq_buf_puts_trunc(struct seq_buf *s, const char *str);
- extern int seq_buf_hex_dump(struct seq_buf *s, const char *prefix_str,
- 			    int prefix_type, int rowsize, int groupsize,
- 			    const void *buf, size_t len, bool ascii);
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index a92093f346da..831a1542fb78 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -199,6 +199,39 @@ int seq_buf_puts(struct seq_buf *s, const char *str)
- }
- EXPORT_SYMBOL_GPL(seq_buf_puts);
- 
-+/**
-+ * seq_buf_puts_trunc - append as much of a string as fits, keeping any of it
-+ * @s: the seq_buf handle
-+ * @str: the string to append
-+ *
-+ * This copies the leading bytes of @str that fit, reserving room for the NUL
-+ * terminator later added by seq_buf_str(). This differs from seq_buf_puts(),
-+ * which writes nothing at all if @str doesn't fully fit.
-+ *
-+ * Unlike seq_buf_puts(), this does NOT NUL-terminate @s->buffer as it
-+ * goes (it copies raw bytes via seq_buf_putmem(), not @str's own
-+ * terminator). Callers MUST call seq_buf_str() or seq_buf_strlen()
-+ * before using @s->buffer as a C string.
-+ *
-+ * Returns: the number of bytes copied from @str.
-+ */
-+size_t seq_buf_puts_trunc(struct seq_buf *s, const char *str)
-+{
-+	size_t len = strlen(str);
-+
-+	WARN_ON(s->size == 0);
-+
-+	if (seq_buf_can_fit(s, len))
-+		return seq_buf_puts(s, str);
-+
-+	/* Truncate the string to fit the buffer. */
-+	len = s->size - s->len;
-+	memcpy(s->buffer + s->len, str, len);
-+	seq_buf_set_overflow(s);
-+	return len;
-+}
-+EXPORT_SYMBOL_GPL(seq_buf_puts_trunc);
-+
- /**
-  * seq_buf_putc - sequence printing of simple character
-  * @s: seq_buf descriptor
-diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
-index eb466386bbef..a16b1365b503 100644
---- a/lib/tests/seq_buf_kunit.c
-+++ b/lib/tests/seq_buf_kunit.c
-@@ -23,6 +23,21 @@ static void seq_buf_init_test(struct kunit *test)
- 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "");
- }
- 
-+static void seq_buf_init_append_test(struct kunit *test)
-+{
-+	char buf[32] = "hello world";
-+	struct seq_buf s;
-+
-+	seq_buf_init_append(&s, buf, sizeof(buf));
-+
-+	KUNIT_EXPECT_EQ(test, s.size, 32);
-+	KUNIT_EXPECT_EQ(test, s.len, 11);
-+	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_EQ(test, seq_buf_buffer_left(&s), 32 - 11);
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 11);
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hello world");
-+}
-+
- static void seq_buf_declare_test(struct kunit *test)
- {
- 	DECLARE_SEQ_BUF(s, 24);
-@@ -51,6 +66,36 @@ static void seq_buf_clear_test(struct kunit *test)
- 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "");
- }
- 
-+static void seq_buf_strlen_test(struct kunit *test)
-+{
-+	DECLARE_SEQ_BUF(s, 16);
-+
-+	seq_buf_puts(&s, "hello world!");
-+	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&s), 12);
-+	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hello world!");
-+
-+	seq_buf_puts(&s, " It's a small world!");
-+	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&s), s.size - 1);
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hello world!");
-+}
-+
-+static void seq_buf_puts_trunc_test(struct kunit *test)
-+{
-+	DECLARE_SEQ_BUF(s, 10);
-+
-+	seq_buf_puts(&s, "hello");
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 5);
-+	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hello");
-+
-+	seq_buf_puts_trunc(&s, " world!");
-+	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&s), s.size - 1);
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hello wor");
-+}
-+
- static void seq_buf_puts_test(struct kunit *test)
- {
- 	DECLARE_SEQ_BUF(s, 16);
-@@ -218,8 +263,11 @@ static void seq_buf_putmem_hex_overflow_test(struct kunit *test)
- 
- static struct kunit_case seq_buf_test_cases[] = {
- 	KUNIT_CASE(seq_buf_init_test),
-+	KUNIT_CASE(seq_buf_init_append_test),
- 	KUNIT_CASE(seq_buf_declare_test),
- 	KUNIT_CASE(seq_buf_clear_test),
-+	KUNIT_CASE(seq_buf_strlen_test),
-+	KUNIT_CASE(seq_buf_puts_trunc_test),
- 	KUNIT_CASE(seq_buf_puts_test),
- 	KUNIT_CASE(seq_buf_puts_overflow_test),
- 	KUNIT_CASE(seq_buf_putc_test),
--- 
-2.55.0.1082.g2b9226bbc0-goog
+>  	.debug_init =3D starfive_clk_debug_init,  };
+>=20
+> +static const struct clk_ops starfive_clk_idiv_ops =3D {
+> +	.get_phase =3D starfive_clk_get_phase,
+> +	.set_phase =3D starfive_clk_set_phase,
+> +	.recalc_rate =3D starfive_clk_recalc_rate,
+> +	.determine_rate =3D starfive_clk_determine_rate,
+> +	.set_rate =3D starfive_clk_set_rate,
+> +	.debug_init =3D starfive_clk_debug_init, };
+> +
+>  const struct clk_ops *starfive_clk_ops(u32 max)  {
+>  	if (max & STARFIVE_CLK_DIV_MASK) {
+> @@ -310,6 +319,9 @@ const struct clk_ops *starfive_clk_ops(u32 max)
+>  		}
+>  		if (max & STARFIVE_CLK_ENABLE)
+>  			return &starfive_clk_gdiv_ops;
+> +		else if (max & STARFIVE_CLK_INVERT)
+> +			return &starfive_clk_idiv_ops;
+> +
+>  		if (max =3D=3D STARFIVE_CLK_FRAC_MAX)
+>  			return &starfive_clk_fdiv_ops;
+>  		return &starfive_clk_div_ops;
+> diff --git a/drivers/clk/starfive/clk-starfive-common.h
+> b/drivers/clk/starfive/clk-starfive-common.h
+> index 4cd4357f8366..fd9d13735896 100644
+> --- a/drivers/clk/starfive/clk-starfive-common.h
+> +++ b/drivers/clk/starfive/clk-starfive-common.h
+> @@ -104,6 +104,14 @@ struct starfive_clk_data {
+>  	.parents =3D { [0] =3D _parent },						\
+>  }
+>=20
+> +#define STARFIVE_IDIV(_idx, _name, _flags, _max, _parent)			\
+> +[_idx] =3D {									\
+> +	.name =3D _name,								\
+> +	.flags =3D _flags,							\
+> +	.max =3D STARFIVE_CLK_INVERT | (_max),					\
+> +	.parents =3D { [0] =3D _parent },						\
+> +}
+> +
+>  struct starfive_clk {
+>  	struct clk_hw hw;
+>  	unsigned int idx;
+> --
+> 2.25.1
 
