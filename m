@@ -1,62 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA8E4FB9DF;
-	Thu, 17 Sep 2026 12:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5204733938F
+	for <linux-hardening@vger.kernel.org>; Thu, 17 Sep 2026 12:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789648347; cv=none; b=MdSN5ppXSRVe0pWmMEVuxe+EDQmdYIRosH4+nAneJzZXnb3/XAYG5cfnNbRmkCNAAk6++2AS1uBnkXFgcBjxvHtBlkaaBmlDCSLp+jUrUdcfU/6AWKUGDfsEe/N0Jc31mP+BlnQ3x1agBWrkCkC3ml69ytVDeX6DFjavRQhVeno=
+	t=1789649443; cv=none; b=q1TQ/8320Zx9wxFDRGUr1f2C1/MjLmLcvPqw7ascKUGXTp9Wn8Uf95RcRzU5nq+PQHcvxYR3/tx/urGruXCAocBUcFlXSKjBJh6/cnoSv3Wt1ogSAIgFzD8euhuuNr8FjwTo0rvTyyUN6zCRWc7EV0PBqHSx1u2+F6WUeG9LUVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789648347; c=relaxed/simple;
-	bh=TXviPstt43oqdt/S8lXvxEH3Jr6SXOhu1KleLF12y6c=;
+	s=arc-20240116; t=1789649443; c=relaxed/simple;
+	bh=ZzWXhI3KvUI5kNn0oJ2dnLkm0fr70XcUjNU3CpyXKjY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XR35wXosWlU29+dgRny8/vmIHC/CsrVsanD/YraiaMn2JKpJLlfNBWqvHuohinibziFjXiK0S6+0tTnC+ghBjM3WwZIgnEGgwBd6B5GQbOhypcIV+YDQGLGiQedg2ifOnO7FeEa+xelzwWgkV+wzY5l0NuQQvAVxLAbKQgXMgdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CvJfGXP5; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hJaZ5BknGekGulrTG+iVWES3WCtLWKEe0BHi9ko2PqtPmmqPhWz9TWLIDToOngFaLUoO6qLvXr8Gzm5Y+lH8dBRloatJLpPzkguo0oKsS3eKEnD823P7Op8QR9CWQFcdvkVdc8hUmMip9B/oIK1aZhH8CXNddrGxn/eFYISfYxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FrlMCHxW; arc=none smtp.client-ip=192.198.163.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CvJfGXP5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FrlMCHxW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789648338; x=1821184338;
+  t=1789649435; x=1821185435;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=TXviPstt43oqdt/S8lXvxEH3Jr6SXOhu1KleLF12y6c=;
-  b=CvJfGXP5wyUuxGdCvsw58yK4Y81RJYej6JffpAex7IoWAB3UQXsByplr
-   ZOsLUasJ+J2E6SzyIneQ0gnHjnpfI6o2as+T8N9as0Gckfa/KtyhSvcCY
-   FI1SDfcmSA57+DnRMYZANDQihjzDqK7thLJJHqlPfssAQsY7x6lzJhEiI
-   Q13F8ccggGYxsdBSUlSy8R8yk2pO8Y33h6HvBl1/JRxlmT+X+3LzJXbf1
-   wX/PqxvgIltPJ0Pz0LSyDqiA6vqJBhqWlolsPGKshNK4/YAGOpOqD5QNU
-   pi5GZjk5yeKfUjpCbbTa8ImQfcSSeBJPjHEXu94AQU0vBxYae1QmqU0Tg
-   Q==;
-X-CSE-ConnectionGUID: s5Cr9iIFSTK94DGTzPetqA==
-X-CSE-MsgGUID: W02mfBVdROu8AcPrr47/kw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="115601473"
+  bh=ZzWXhI3KvUI5kNn0oJ2dnLkm0fr70XcUjNU3CpyXKjY=;
+  b=FrlMCHxWfViVdJpH+7WNj7dRS5emye04BDuqFTFsmnTYhj57/FWhIVBf
+   mzu2XXTCHJBQKTtPc8b4WDDTqrzPEEDOT42vrdeVBld0cYboGuYvjm3a+
+   /gXlv0uwbfpHHTp/SQa0zrAKAosGf0wFq8kTZb0SfIuv8chWCmnxJOwR7
+   KdIT8+LB9uC4tgGyZQ1D+atrPCwtkRxJxxfcOjdLqAEYUYV6CGsDitOhh
+   3tK4WC/bLooZ/sMfEm1a2twYWOQxPJWQpPijoMZPKPog5H4a36GHbDgl/
+   6J2l7wAkY2Rw2KAIZmqWooZNlsacTEPFazuzvkztXoCPatRl7WRgqzMh7
+   w==;
+X-CSE-ConnectionGUID: fUh3CIUmQSKt8pOOllTjFw==
+X-CSE-MsgGUID: 9oP4Ahx2Rw6j23wekWvUcQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="571540"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="115601473"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:32:13 -0700
-X-CSE-ConnectionGUID: b/gsi3SeQ/6QBcJHA1l55A==
-X-CSE-MsgGUID: SHWTCUXiTXanZepb4szeag==
+   d="scan'208";a="571540"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa115.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:50:29 -0700
+X-CSE-ConnectionGUID: BHUVFHlUS6KIwZ6rSaE9JA==
+X-CSE-MsgGUID: iF++V9+jRoaQSIqQ04iddg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="271123228"
+   d="scan'208";a="278986712"
 Received: from abityuts-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.11])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:32:10 -0700
-Date: Thu, 17 Sep 2026 15:32:08 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jonas Rebmann <jre@pengutronix.de>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH 4/5] lib/string_helpers: use full destination buffer in
- string_unescape()
-Message-ID: <aqvdyIsM_TV4OC4W@ashevche-desk.local>
-References: <20260916-string_unescape-v1-0-7f8bd986fa33@pengutronix.de>
- <20260916-string_unescape-v1-4-7f8bd986fa33@pengutronix.de>
- <aquahuZKdB1haZrN@ashevche-desk.local>
- <ae3d04de-b12b-454d-93f7-31ce912f6f8c@pengutronix.de>
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:50:25 -0700
+Date: Thu, 17 Sep 2026 15:50:23 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Bill Wendling <morbo@google.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Thorsten Blum <blum@kernel.org>,
+	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org, Steven Rostedt <rostedt@goodmis.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 6/7] powerpc/papr_scm: Return the string length from the
+ sysfs show functions
+Message-ID: <aqviD9ow5HLGcLTK@ashevche-desk.local>
+References: <20260917002312.i.923-kees@kernel.org>
+ <20260917002333.2306346-6-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -65,31 +69,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ae3d04de-b12b-454d-93f7-31ce912f6f8c@pengutronix.de>
+In-Reply-To: <20260917002333.2306346-6-kees@kernel.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Sep 17, 2026 at 11:02:52AM +0200, Jonas Rebmann wrote:
-> On 2026-09-17 09:45, Andy Shevchenko wrote:
-> > On Wed, Sep 16, 2026 at 07:38:09PM +0200, Jonas Rebmann wrote:
+On Wed, Sep 16, 2026 at 05:23:18PM -0700, Kees Cook wrote:
+> perf_stats_show() and flags_show() build their output with a seq_buf
+> and return seq_buf_used(), which may include the trailing NUL byte
+> when the seq_buf has overflowed. Use seq_buf_strlen() instead.
+> 
+> Build tested ARCH=powerpc ppc64_defconfig with GCC powerpc64-linux-gnu
+> 16.1.0:
+> arch/powerpc/platforms/pseries/papr_scm.o
 
 ...
 
-> > > +	test_string_unescape_one(test, "short buffer", UNESCAPE_HEX, "\\x41\\x41B", 4, "AAB", 3);
-> > > +	test_string_unescape_one(test, "unrecognized escape at end", UNESCAPE_HEX, "B\\qX", 4, "B\\q", 3);
-> > 
-> > Still wondering if we can incorporate this into the "combined" loop?
-> 
-> Both these tests really only fail without my fixes because the
-> destination buffer is short, barely fitting the result.
-> 
-> With a buffer length of 4 it yields "A\", for 5 "AA" and for 6 "AAB",
-> a bug because "AAB" would fit the 4 byte buffer too.
+>  free_stats:
+>  	kfree(stats);
+> -	return rc ? rc : (ssize_t)seq_buf_used(&s);
+> +	return rc ? rc : (ssize_t)seq_buf_strlen(&s);
+>  }
 
-So, we need to extend the current loop to pass the buffer length like -5, -4,
--3, -2, -1, 0, +1 from the expected length and check that it's cut correctly
-along with no garbage at the end. It will help all test cases, and not just
-a single one or a couple.
+On a brief look it's a single ternary like this in the file, perhaps while at
+it move to Elvis op?
+
+	return rc ?: (ssize_t)seq_buf_strlen(&s);
 
 -- 
 With Best Regards,
