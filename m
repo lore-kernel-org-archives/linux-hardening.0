@@ -1,183 +1,148 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1F44E4C40
-	for <linux-hardening@vger.kernel.org>; Thu, 17 Sep 2026 20:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.225.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789675384; cv=pass; b=jSr7EHHFyglGGePSkWGZXTdKWA9OCN94yyVbyUS7PzdnCN5ZWV2xzUionmuLNuCbIOrGDz3sAjsZXObA7vTObCuRsBnYlrQ4m9vf0PYIGYjdZm7dXDhubevZbIsHKw+VfamYoh8TuE/kKLrAnelV3jIIlaAlp0asqFWpQhUE10s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789675384; c=relaxed/simple;
-	bh=GpHjDtqu+AzW6bYVn14IR7601Ha7EtaAYwvYSeYG9jc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OHgHd/T8RsCf7Vr2JiLFM2wfNHOkwgc7oCkGQHFGIzJJbQSRui0h5TKLMVAp0B7za+03PJG9TY/oVK5hbDIIMH4pSpws5DF4kNsHRRLizKDzU6cJPG+XJAacqhcWub46W2Q1Tai27NzHvF/looCwWylli1m0agzhhiraMmxiFDY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RfRoG1si; arc=pass smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DA83FBB4D;
+	Thu, 17 Sep 2026 20:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789678127; cv=none; b=uZrcuQ0VecR7uF/eJP6JrzaK5JThvL9iBPpmWxMPuNNMR0B3qXF21Yo0efu2fC/39EGLNwq1TI86a5bNTLlxI/vvyM6NfS+Ln/jBmdazjfCYWY+E55i64WSCEW1buybB/oex0ERMO/4JXJg4uZhL1OTSEDdygDdmlSKQGOnVdT0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789678127; c=relaxed/simple;
+	bh=j92afSGgbOckodNiEOu7f8ALpu4hQ1eL612RHdF55Bw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kQPgMuuRNHnymegGZwXej7Y/UG29h1oUnWEYAUYUh2ZQwmUIRDiw5gjw2DBxsaaKh8X6ET6O2BcxSnV3LEKyR1wO8pFRzY2f8vmQFB7mcH67+mjlEratO39fIIlHFUDiRMQ2DAMC/+Um2zvX6qFaMBayHg+KrOlOAZQXtbbsD4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJ1tetIU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RfRoG1si"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ccfd61ecaso244305e9.3
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Sep 2026 13:03:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789675380; cv=none;
-        d=google.com; s=arc-20260327;
-        b=b+QZ1aFS7N6Qr0DJcXrx9m8cYPEBRhYAVrwcwPhS+/0vryZA35DD64QRoI6f/mOMeb
-         W8HKyR1kjaSDk0rtrNRhmbkCC1x/CVwratSog3AzYWtaiBCNcEci1a7LMsmasq/bPIEZ
-         zx2Spi1Sm8u5Ti2zcwfo5A8UU4+IdTKneUdBmzcyrNFE97do+7mOmZ+WVSOI1EY4GdYS
-         xXm+OfH5DCG3GxdAsDKjcNLXe5dG0EgRfZx2Nf4DHBN6hRhIRWUlqFztO3D0AUldTBRM
-         DxwaTOdvVNQeph9t8W7kkKMRUWFnrLIGAUKnEBm2K2fHYmwIgns7tgStshMvISvdnutP
-         GBcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=25a39fQthoJQenvf3ilsmj4we8U0R1UDFLTQO2djkUo=;
-        fh=rBm1bn1b7YH6Z2Insdbg8XR82zhe6X4wxehs8+VgsMk=;
-        b=hFrDQsOs0LDTAHNk5cOandNhw3+AhkM62eeUfBzEqIHam+9sckp7h4/ecQDkrJ0CSM
-         tKAHKyKZF+FMHVF0zwO8DXRdjiC4+zkPtSCeDyRhKHme0msFfgZ2oc27gOOcIM9BDRo6
-         xc873HAGpHDnB8GqBlwtfZJsWtS3M7Vkbb0g2kDC59Mqy1L+CAve1XNpXFBLnhZuFn11
-         n/ElozpmmDOx0uaaYk90et6DqiuwCzKMpXjaUuU2XpW2wbM7k4YY2mEV+He4uqXhFQUg
-         pvx2YMDm6AaetppyFaZIrDJpvM4bIUMNLV5k50wYJ7d281LP+/LeYIxPpabMZS0gkLHI
-         sUsA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789675380; x=1790280180; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=25a39fQthoJQenvf3ilsmj4we8U0R1UDFLTQO2djkUo=;
-        b=RfRoG1sioHwQsGYSkcve3ZDGfErdmSWrgCWHA2JlCBaobnXxnBfdr0TKVq27LK2zIZ
-         UOvE17R6vYGLa6zQAttig93toa0GDEpwxIgGBTum0FIhjWQ2ZvB9dyNYwvdV/otOI5vm
-         A3ZFMmlVd6uq3DhAGMGK/mu80sINzK4rP2D3RMyU2gORKLRV1tGre9kz1kts6W1QAYaT
-         9XuABFIURZMRzl1KZihvHVFw9CQ9VbWSNQiQyhE/Rv/Yb9DXy8oRagR/6b1gegQS3v8y
-         YYEboH4Y45Pq3GkmJCdeXvha1ezGt4n7sH0US7ujlIUX6kFFOMpc2oolhcFXbjqXk/zG
-         N+qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789675380; x=1790280180;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=25a39fQthoJQenvf3ilsmj4we8U0R1UDFLTQO2djkUo=;
-        b=KMgpnH1mbpOnsbTzKUaVXDZIXuVVNsYOrpPd50qtY1OX7v0X4ELqAUnlxecvhadPUC
-         CDXYS655xi8UpHJqVbWUAF6KvViPq6M1Ww6D/jvTNwn24V7XUPjetJZLq2YBlkqYL3tz
-         SJYDmiF9S2PQelVpAKvLzKCl9I4voJAJgqqe8DGFmxNn9gBc+d+FQajzdEoS2nTlNb8j
-         /eMZNjPeKJcjdMyLAl40XZ3pIQ2qN5xRRyZBZ3cDilUxfww7tQBzw8XPglBJ0SfWha4Q
-         tZ+cMyuXLuNSx34GuJ0pnO/Emx+rMPxaAKuaQSZ3Hs+FZctfGP0w3kfJyE7idKg7GwzK
-         H47A==
-X-Forwarded-Encrypted: i=1; AKwUvBxt/5wulbICW3iyaFn+qLJJA/bCLXzIjLW8NpaJhzkf6pifbuukX68oqj9FIZlmyOOKXLw+aSgP+kpLfx0sQO8=@vger.kernel.org
-X-Gm-Message-State: AFuF++k3su85Ay77cYzhiEVGrCn1JjJS6xf7T7lGUAI3oZ6yVYiXTekK
-	wBeuNsxu4kMNNKc05ScmwMH5HFRdY7q/aIJ+DaQteuGsYWTjUApxSNfHQ7nun2NpchLuZ395JuO
-	YB5mhALjVpMaXyndYtXtq96RenPSkureEYzsZ7I1g
-X-Gm-Gg: AYBFou23cOCI40Dsy9TWu1KHHdBrNQ4BO9uFsDoSItTkGIr48COoIRtY6KymJ7YFfYy
-	ujQgUP2WxEV1ueCtCGXnm6qm5YVR4EuU90ipN3JzGX2nX4+xCGi3NDhNrijxHmnc+1RHj1e8sMx
-	XRNycPYh5hRpVoh5VxJK0iYDCDTml0T7g9708fuvZONg5kV7ElF0VKuoJMXpJVHM8fJ6a0mh9kQ
-	Tmvi55w5IwE1DKRL+96i5FpkvZko7dKq/2c+aYEUDMUeJrZpSSQDFcPxNyB64Qn1Rp1S9YSAeQw
-	cCvk988ZHfEBCptdj1IPMI5jyT514xYy55Ef565l5UwhpRuuQbLMxgzsxC7t6cOfREbYKKN9wZM
-	P9t5KGotc1iatrIT8Y0O8rNYeIazyK0BMSynf4DZeARNfHTse+HpXs7H9Oq2tcQZ/gvCFOUQ=
-X-Received: by 2002:a05:600c:a013:b0:49e:6891:27a8 with SMTP id
- 5b1f17b1804b1-49fc574a9bcmr72735e9.25.1789675379819; Thu, 17 Sep 2026
- 13:02:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJ1tetIU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96251F00893;
+	Thu, 17 Sep 2026 20:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789678125;
+	bh=j0AQ+9htqhtcT6dEBdky8OefeVWQ2THGkLTpHxFQPV0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=oJ1tetIULg2XpLBOnZUPvhTxlKaak8pEtjAVpvlijuEahJjxVOcIYt8X/YhwBegFJ
+	 EXwkdVPTIm+OCh4taS6k/wYEhhNcKzEskzxuV/dgQkfgfdPnO8Sp3mYvb/YaS8LI+3
+	 YMkXNT/iN90KrNlL97E/HwpQ9wYTv4S9SIkeTSrtzMBn9TfPvsmVbiCvLj4mXDtTI5
+	 lt22TV0VSpgIGvp51Y56zgE9cy0SWhc9dVwzL8LPXBfrGkdW/gelqakSoAS7PllrLf
+	 TZV2EG0sanfDfAg1SX8iPKZuJlgOJ1TY9Z+Uti4+Lz4E0uu5Inyrukh8z9y0v4XRq/
+	 lNj3kN7s3wnvw==
+Date: Thu, 17 Sep 2026 21:48:37 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: mhonap@nvidia.com, alex@shazbot.org, jgg@ziepe.ca, ankita@nvidia.com,
+ dave.jiang@intel.com, alejandro.lucero-palau@amd.com, smadhavan@nvidia.com,
+ corbet@lwn.net, skhan@linuxfoundation.org, dave@stgolabs.net,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, iweiny@kernel.org,
+ ming.li@zohomail.com, yishaih@nvidia.com, skolothumtho@nvidia.com,
+ kevin.tian@intel.com, bhelgaas@google.com, dmatlack@google.com,
+ kees@kernel.org, gustavoars@kernel.org, cjia@nvidia.com, kjaju@nvidia.com,
+ vsethi@nvidia.com, zhiw@nvidia.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 07/27] vfio/pci: Detect CXL devices and load vfio-cxl
+ on demand
+Message-ID: <20260917214837.46f8237d@jic23-hlaptop>
+In-Reply-To: <aqrg9AJBh0GUsP0l@gourry-fedora-PF4VCD3F>
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	<20260813093631.2288172-8-mhonap@nvidia.com>
+	<20260916191659.1d3cb36b@jic23-hlaptop>
+	<aqrg9AJBh0GUsP0l@gourry-fedora-PF4VCD3F>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
- <CAHk-=wjwtJQPW+MRAkQCcSGA1EZWehxBTUiEUUhdACCNHSKvTQ@mail.gmail.com>
- <aqwkk7FcQ0XWeqJW@gremlin> <aqxCNyxYRzN2Oher@gremlin>
-In-Reply-To: <aqxCNyxYRzN2Oher@gremlin>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Thu, 17 Sep 2026 13:02:48 -0700
-X-Gm-Features: AcwNN1XUt93HLe1Zu-oZLdknUZyAU05hxj4P7Ko_JzOHOx4U0fnT6yaI1XKYaw4
-Message-ID: <CAKwvOd=zbE8MZXCNCBJNpd2WWn7f+AOfxYcmCp7e-8uFSM+D9g@mail.gmail.com>
-Subject: Re: [PATCH v3 00/20] kbuild: significantly speed up kernel builds
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>, Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Alexey Gladkov <legion@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
-	=?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
-	Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 17, 2026 at 12:42=E2=80=AFPM Lorenzo Stoakes (ARM) <ljs@kernel.=
-org> wrote:
->
-> On Thu, Sep 17, 2026 at 06:36:18PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > On Thu, Sep 17, 2026 at 10:15:26AM -0700, Linus Torvalds wrote:
-> > > On Thu, 17 Sept 2026 at 09:06, Lorenzo Stoakes (ARM) <ljs@kernel.org>=
- wrote:
-> > > >
-> > > >                 =3D=3D defconfig FULL build =3D=3D
-> > > >
-> > > >                         before    after     delta
-> > > >                       ----------------------------------
-> > > > Threadripper, gcc        32.5s    26.3s     -6.1s (-19%)
-> > > > Threadripper, clang      34.5s    27.2s     -7.3s (-21%)
-> > > > EPYC, gcc                28.7s    20.6s     -8.1s (-28%)
-> > > > EPYC, clang              39.8s    32.2s     -7.6s (-19%)
-> > > > M2, gcc                 519.3s   512.4s     -6.9s (-1%)
-> > > > M2, clang               634.5s   569.4s    -65.1s (-10%)
-> > >
-> > > There's something odd going on with that M2 gcc build. Why is it such
-> > > an odd duck?
-> >
-> > Ugh dear lord I think the LLM somehow corrupted the numbers... Let me
-> > re-run those myself locally and come back with the actual times!
->
-> OK numbers are in:
->
-> M2, gcc                 564.7s   512.1s    -52.6s (-9%)
-> M2, clang               615.1s   564.1s    -51.0s (-8%)
->
-> From the v1:
->
-> M2, gcc                 564.0s   512.4s    -51.6s (-9%)
-> M2, clang               616.1s   569.4s    -46.7s (-8%)
->
-> (Tested as per the cover letter pre-reqs, i.e. applying dependent series
-> first etc.)
->
-> Not sure on the -5s delta on the clang build :) that might have been me
+On Wed, 16 Sep 2026 14:49:36 -0400
+Gregory Price <gourry@gourry.net> wrote:
 
-Clang is faster on Thursdays.
+> On Wed, Sep 16, 2026 at 07:16:59PM +0100, Jonathan Cameron wrote:
+> > > +/*
+> > > + * A CXL Type-2 device advertises both CXL.cache and CXL.mem in its CXL DVSEC.
+> > > + * pcie_is_cxl() is also true for Type-1 (cache only) and Type-3 (mem only)
+> > > + * devices, which the vfio-cxl provider does not handle, so confirm the Type-2
+> > > + * identity before engaging it.  
+> > 
+> > We don't expect to handle type 3 class code compliant devices, but what about
+> > the things referred to sometimes as CXL Type 3+?  
+> 
+> Dan has previously (and I think would continue) to just call that
+> an accelerator - because it is.
+> 
+> I think the Type 1/2/3 nomenclature is stale and needs to go away,
+> it's outlived its usefulness.
+> 
+> To your point below, a compressed ram device is really an accelerator
+> with CXL.io and CXL.mem.  All the spec says (used to say?) about
+> "Type 2" is that it *may* support CXL.cache - it doesn't require it.
+> 
+> > It is also plausible we'd pass a full compressed RAM device through to the
+> > guest without paravirtualizing like we currently plan to do for class
+> > code Type 3 devices (for DCD, sharing etc). +CC Gregory to point out where
+> > I am wrong on this ;)
+> >   
+> 
+> Plausible, possible, feasible - yes.
+> 
+> Sane?  More sane than using it as a normal memory device on the host
+> assuming RAS signals from the device can't overwhelm the host (unknown).
+> 
+> > More generally, why are we controlling usecases?  A class code compliant type 3
+> > device 'could' be passed through I think if someone wanted to do that.
+> > I'd not encourage it but why is it a linux policy to not support it?
+> >   
+> 
+> The only scenario I can think of that you'd want to pass a simple
+> expander all the way through to the guest would be RAS signals - which
+> I think still require host plumbing anyway to avoid passing said signals
+> to the wrong guest depending on how you've chopped up the region.
+> 
+Taking just the compressed case...
+If there are capacity signals etc I'm not sure I'd want to have to paravirtualize
+those. Plus I really don't fancy making a single compressed device provide memory
+into multiple hosts. That's a whole new level of paravirtualization of noisy
+neighbours.  Ma! Someone else wrote really uncompressible memory and now there
+is none left for me.
 
-> being more disciplined this time to not use the laptop at the same time.
->
-> But broadly in line with the original numbers.
->
-> >
-> > >
-> > >              Linus
-> >
-> > --
-> > Cheers, Lorenzo
->
-> --
-> Cheers, Lorenzo
+> Basically if you need DPA/HPA data from the device to be interpreted by
+> the kernel, the guest needs a translation mechanism.
 
+Hmm. That is potentially ugly. But I guess a problem for any accelerator.
+If they are firmware first not too bad as it's just normal memory error
+reporting so we create a cper in the host with the GPA and send it on
+it's merry way.  
 
+> 
+> In practice I can see passing a virtualized, locked auto-decoder through
+> to the guest with the same HPA/DPA values as the real device so the
+> signals can be delivered quickly with limited host interposition.
 
---=20
-Thanks,
-~Nick Desaulniers
+We'd lie (trap / emulate) the device decoder and probably the topology so that
+what you see matches up and device provided DPAs will translate to GPAs.
+I forget if that bit is in this patch set or not.
+
+> 
+> You would probably need on-device vitualization support to do "proper"
+> passthrough so the device can route signals to the guest directly.
+
+Hmm. We may get a way to do that at somepoint but so far it's pretty
+simple so I'd argue only a few things need to look different in the
+guest to what they do in the host.
+
+> 
+> Anyway, you could pass it through, sure, why not.
+> 
+> We shouldn't limit it, if only because we're not clairvoyant about
+> what will be useful tomorrow.
+
+Agreed.
+
+J
+> 
+> ~Gregory
+
