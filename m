@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3108A4E0B7A;
-	Thu, 17 Sep 2026 21:13:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3D34E9C30;
+	Thu, 17 Sep 2026 21:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789679587; cv=none; b=X9s9BR0QQsuYcW5ngdscvOt/oGHPUmvqidLgoBsiJOjWPUHLpGRbBC6KwJ5GB+Clhj5FXEoiMo4pRx6HETElKWpzc3bvMTAg1O+4VauPZzVgv0/vsHZXrMRZKWFLPnUiZPhhRzG0fN1maYVupB08A1qjOlOQrZWl52ICDzN8R3I=
+	t=1789679593; cv=none; b=shSbLsWNLyOaHPG4jHwIC52AxGEQ+h7cn4Ls541Q51zFMF78c9fw3O6/AhCxvrcrR2YbSJCw3ALQUBjKrI2c5/Ry2aEn5jVdTrtL7r998eOTLLnbR7CiAsl9R00eJg+m0YLCA5a02vXnbvFYQvRRKWho5O4l8CJwhpOAjmshzzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789679587; c=relaxed/simple;
-	bh=d4tVVwHJienj9tH8PhjAwkusagBy7idEegdJpCu4X74=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=sU7wQx0gFViUqsUuBvBzoVDBmvMAFcfFIiEzVEPpwBjInLSQxQzCpCOd86uLVrTiTR2C1Y2q8rPPdRwbJs8voeUyoAD5eKw1D4+hq7urN4PeTVQKOkzwvcoWn41NHE0Up3NxfdPES21DSLI9Y6kH+IYBMT3ajZBRw5L/K+JbGhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmMzq+Iu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789679593; c=relaxed/simple;
+	bh=R+SizyncqRzs4RCcj/HNfRyJr28NYCp0+mg4stLKRMY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W5GZn72RLfJvwCsNq9XtGoS6DUD+KxNcQffZJvrNnu4HxpKsswWAF3IeYvCfph+0iyLiR6HLTq6rCGP+1r+r2I1JFLFSSl+DgTeqMGOGkufnwhX32pEnrm7Jkq64Lkr3ukaJ2i29e/xDANCJseZke0b+ez8uwA6oQY1WTaQKAy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDpGxW/c; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmMzq+Iu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C81A31F00893;
-	Thu, 17 Sep 2026 21:13:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDpGxW/c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F14F1F000FF;
+	Thu, 17 Sep 2026 21:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789679585;
-	bh=IysZGj9mvs6CQv7lZ09Up1KR0PwOX6bfDHWl8P/2Jvk=;
+	s=k20260515; t=1789679591;
+	bh=AEQ3+Fko84e980IO5IKlOLRqL9IvEcOHZBjrRhYU9e8=;
 	h=From:To:Cc:Subject:Date;
-	b=mmMzq+IugAXiI9SHOJDRvwMsw3OuV9e1h4IGUKwGCbcUvj7Sy/jn9kBmRHLEhTR3F
-	 c/x02B+uRdv9SZdqhMZEZ6s350HUDSvw9DV+2E+h7HExtIAhDbWyIC0JhFtuGvqLRv
-	 E8fDgeINWKVIJbesQxuc651UZRkRYv0t3o21ESXc7uyzMMivfs7j5Z69GHuRl5OIhV
-	 V2Z7HN5apM0PbgV7JlCc1UBFINJvbPyHXqBzMBhJlxDlG63xwCQfEkYkbIGRUPeIxP
-	 pzKoJRQC6jgr9isLG+d8K8THcTLZA1rpX6hnOQ5ywDCo4A9C2joouDFN+DgEi8RPTt
-	 zKAdUyHv7BuzA==
+	b=oDpGxW/c7eiIyB1gCw/gJkhXZsae+EJBC+aPVPCnkkfBFIqDQ1LMqEGaD66URLyn1
+	 FQ2PehoDsWKxdLtGqWINUK7OmgT0lEgCZmH/QR2tZgNb9tzEmnSULZP0OotR5n42Ci
+	 EvGcsJEdOwI1zcQazwj6u3wjMF5Uvo08f7UQwTR3NJeKm213syBQOcYnneUcRNSoE9
+	 MAy5KLiOD8s3Apna1G61fGXbQkyuibhCPGMOhc/zmsxqgdLLMn0idhGR3/meyIhV4b
+	 jnwr6tZnZgghRGcEsdP74rSkZUlqx5bAFEY1icbiNMPuEI6cCNKM18K6Wu7oI0Pc1W
+	 PCrIiqqyHYl/A==
 From: Kees Cook <kees@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>
+To: Casey Connolly <casey.connolly@linaro.org>
 Cc: Kees Cook <kees@kernel.org>,
 	Kees Cook <kees+treewide@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Stanley Chang <stanley_chang@realtek.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Rob Herring <robh@kernel.org>,
-	Charles Han <hanchunchao@inspur.com>,
-	linux-phy@lists.infradead.org,
+	Sebastian Reichel <sre@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] phy: realtek: usb: Remove const from phy_cfg allocation type
-Date: Thu, 17 Sep 2026 14:13:04 -0700
-Message-Id: <20260917211303.i.538-kees@kernel.org>
+Subject: [PATCH] power: supply: qcom_smbx: Remove const from desc allocation type
+Date: Thu, 17 Sep 2026 14:13:10 -0700
+Message-Id: <20260917211309.i.765-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -51,8 +44,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2685; i=kees@kernel.org; h=from:subject:message-id; bh=dAqZ8oM1ediuouK8ipj2w379RAQqiQUmISyB1GxVvm4=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrwh/kCr/Nunbz5+cQ9w1bzG5m7VB98FnnNS+f0X2rK 7cnaNcadpSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEzEdgYjw/tTTTlCPK9EC5tE EyvOHrvfZfC86pLpxA+WC25PUZzfEsrI8CQxbOUKT8sHdxPmzNd79cNLUCXg+ish+YDJElfWpBw zYgcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1703; i=kees@kernel.org; h=from:subject:message-id; bh=r/Yq118DXNdt++OJ+k9hUFeJCcuXwgA66344qidRmsA=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrwp8dXXXd2qPs4xx3vRmW/uGpfPwpokVRW3+z/VzCM NHqka91RwkLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwESShBh+HLFlMJWuXbNUSYZ5 b/tvzuCpk9ids16XXYoo+1In03qJ4X/4/Xs+yfH/Fp6QnJoTn7l6i7PV3cA5V11Xrllv0s/rJsA BAA==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -64,65 +56,40 @@ matches the type of the variable being assigned. (Before, the allocator
 would always return "void *", which can be implicitly cast to any
 pointer type.)
 
-In both the USB2 and USB3 PHY drivers, the assigned type is
-"struct phy_cfg *", but the converted allocation type would be
-"const struct phy_cfg *", as the size was taken from the local
-"phy_cfg", which points to const as it comes from
-of_device_get_match_data(). As there is no general way to remove const
-qualifiers, take the size from the assignment target instead. No change
-in allocation size results.
+The assigned type is "struct power_supply_desc *", but the converted
+allocation type would be "const struct power_supply_desc *", as the size
+was taken from "smb_psy_desc", which is a
+"static const struct power_supply_desc". As there is no general way to
+remove const qualifiers, take the size from the assignment target
+instead. No change in allocation size results.
 
 Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
-drivers/phy/realtek/phy-rtk-usb2.o
-drivers/phy/realtek/phy-rtk-usb3.o
+drivers/power/supply/qcom_smbx.o
 
 Assisted-by: LLM coccinelle
 Signed-off-by: Kees Cook <kees+treewide@kernel.org>
 ---
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Stanley Chang <stanley_chang@realtek.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>
-Cc: "Uwe Kleine-König" <u.kleine-koenig@baylibre.com>
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Charles Han <hanchunchao@inspur.com>
-Cc: <linux-phy@lists.infradead.org>
+Cc: Casey Connolly <casey.connolly@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: <linux-arm-msm@vger.kernel.org>
+Cc: <linux-pm@vger.kernel.org>
 ---
- drivers/phy/realtek/phy-rtk-usb2.c | 3 ++-
- drivers/phy/realtek/phy-rtk-usb3.c | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/power/supply/qcom_smbx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/realtek/phy-rtk-usb2.c b/drivers/phy/realtek/phy-rtk-usb2.c
-index 248550ef98ca..1f08b151d90a 100644
---- a/drivers/phy/realtek/phy-rtk-usb2.c
-+++ b/drivers/phy/realtek/phy-rtk-usb2.c
-@@ -1022,7 +1022,8 @@ static int rtk_usb2phy_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom_smbx.c
+index 67fdb4335338..71c5448aecff 100644
+--- a/drivers/power/supply/qcom_smbx.c
++++ b/drivers/power/supply/qcom_smbx.c
+@@ -972,7 +972,7 @@ static int smb_probe(struct platform_device *pdev)
+ 	supply_config.drv_data = chip;
+ 	supply_config.fwnode = dev_fwnode(&pdev->dev);
  
- 	rtk_phy->dev			= &pdev->dev;
--	rtk_phy->phy_cfg = devm_kzalloc(dev, sizeof(*phy_cfg), GFP_KERNEL);
-+	rtk_phy->phy_cfg = devm_kzalloc(dev, sizeof(*rtk_phy->phy_cfg),
-+					GFP_KERNEL);
- 	if (!rtk_phy->phy_cfg)
+-	desc = devm_kzalloc(chip->dev, sizeof(smb_psy_desc), GFP_KERNEL);
++	desc = devm_kzalloc(chip->dev, sizeof(*desc), GFP_KERNEL);
+ 	if (!desc)
  		return -ENOMEM;
- 
-diff --git a/drivers/phy/realtek/phy-rtk-usb3.c b/drivers/phy/realtek/phy-rtk-usb3.c
-index cce453686db2..4231a8aa0ba5 100644
---- a/drivers/phy/realtek/phy-rtk-usb3.c
-+++ b/drivers/phy/realtek/phy-rtk-usb3.c
-@@ -576,7 +576,8 @@ static int rtk_usb3phy_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	rtk_phy->dev			= &pdev->dev;
--	rtk_phy->phy_cfg = devm_kzalloc(dev, sizeof(*phy_cfg), GFP_KERNEL);
-+	rtk_phy->phy_cfg = devm_kzalloc(dev, sizeof(*rtk_phy->phy_cfg),
-+					GFP_KERNEL);
- 	if (!rtk_phy->phy_cfg)
- 		return -ENOMEM;
- 
+ 	memcpy(desc, &smb_psy_desc, sizeof(smb_psy_desc));
 -- 
 2.34.1
 
