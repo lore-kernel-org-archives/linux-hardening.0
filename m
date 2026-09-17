@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73F74E0B9B;
-	Thu, 17 Sep 2026 21:13:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A54438F253;
+	Thu, 17 Sep 2026 21:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789679640; cv=none; b=a7ggjTQhVAGTce/f8KasFIJioYSQQXkt2UQsKrNFa7ANSBtchEHw+/97s72X7h0NzXrwKOb2HGeGzppg9j41LbakIOBaFSavucRyB3myFy6al4OorX0k0LW7ov0OhtUeHPUW5GprI+BFZ0kkqPUd98fUFzGRjz3dyV9bac4xdPE=
+	t=1789679646; cv=none; b=cJ9V3aCrbIJAuIbnDtliFBiS8psWu5q4gZnF2o6SX+fm2kt2BBP19b89sPRp8tzOI+7Fkx0UYwNW9sr46cWXx1raBwWB/bbZOvcHXq4lQvo14NqmN5ZUkGINzSmIPLFs0eoY3HtPUrgBuWLZ3lWDcb8feuSpqeK1+1I2vBjTwls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789679640; c=relaxed/simple;
-	bh=ofEJ47tNLt/HFtg44TmVSsWDDo+tRcQPsX3AIjNqt1c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=I0OqHcqblmOUCmXasak88y1s7L5KBux0l1qiaJNKmdWGTX8IEwT8wa1xHoA/jm/6FEPJGDWaAzfPD0GIa8IJeQfSmlvEc+Gqrj0QLpkmhwxHP7LVhASPAjVgCnRBQwA5holLw4/Ukm0HMXc/+D8P6SPs2OaHFtg0rpkJ3ZL9Z5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dt17S+ou; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789679646; c=relaxed/simple;
+	bh=lP8jGFyRHTaPDaOe8j0khplskj1tqPo0xw3k/wtu5Ik=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u6qJahvTbbjuE/RRowXFJObvapNEfjh+H2Nl37SbHp/gRGxipxgfU0Ey+pOgjTsYqaKzHaPjhhkcgL6yFt1GoqbGjrk4GFEXIjtyqk5VrASM4avillVk4gijpCdOub5u8nrUfDYi7vrODVHKese8J7HO3Nlvw+W535sUUe8asQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYz3VNie; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dt17S+ou"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB4DF1F000FF;
-	Thu, 17 Sep 2026 21:13:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYz3VNie"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E08C41F000FF;
+	Thu, 17 Sep 2026 21:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789679639;
-	bh=OE+Wj0fpGyisw2MXJpbTjlrIt2+GcxdlJZdBx5zr86c=;
+	s=k20260515; t=1789679644;
+	bh=vVLWU6hu9o3St41DNREmW0G/Wl2S2sbPor3jCAzvQLc=;
 	h=From:To:Cc:Subject:Date;
-	b=dt17S+ouYGQbqjcS6GHZQBi+auFgrqqZNznjwkFeAaPSDFN5f1Dg0Y07BiWq+tIkw
-	 aQHmtzuw6gja6UCNHu2WhVYFbaPUU8vFSYDchL7sZQN8ifpMDwHA1YV6ITr7pehDZn
-	 ax58m71NtiO29XtlnJKT/cVrVuavvWT+rCSChbMNqIfJg0V/IutlAb2TMoX0AgAc+L
-	 ol/hlc1ZUkfhaQCjeOkf/Lo6FeROwdPJS9pYu5rdyzh39u2Glu+t70oy73GWVgbxcP
-	 5KAbNj6L69T3I1JO/WLjKxAXRwK0bTibCCp2BMhneftdrEM1CfnuAyBOCN8+7pyMC4
-	 jUKu+DEWpcezQ==
+	b=aYz3VNieHISjVjRl171VfOM1LIF536Ca1nZL2yVVTPZQapY9GAzBiarIG/YGuQ1cV
+	 51cytjyxRlRu4oSHK1VdA4XDKycd6a7kwhdW/ZH1JiJM0d6iS1vhxCziA7/1/CcC1G
+	 8e7IJNhGKl33ER18KO8QCnsY/KyUTjB1QJ9/Yz1OsPIB+2FV5/XGfl+jwKssnA4gpn
+	 7N3utaSb4nyeP6GMhli17QIRfy36U/w+MSMjgZbNaW18KLWLLHavHfQkHwfso28UjP
+	 I6vh8RRsbotRB3LWHAPIf99EuKa007Q5BbXfci/3sX8uwi/NQBr/Js6JS1TWhiaiNB
+	 e4tZMnYzAmpng==
 From: Kees Cook <kees@kernel.org>
-To: Lee Jones <lee@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>
 Cc: Kees Cook <kees@kernel.org>,
 	Kees Cook <kees+treewide@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-leds@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] leds: aat1290: Allocate mm_current_scale with ARRAY_SIZE()
-Date: Thu, 17 Sep 2026 14:13:58 -0700
-Message-Id: <20260917211357.i.412-kees@kernel.org>
+Subject: [PATCH] ASoC: rockchip: rk3399_gru_sound: Allocate dai_link with ARRAY_SIZE()
+Date: Thu, 17 Sep 2026 14:14:04 -0700
+Message-Id: <20260917211403.i.984-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -46,8 +48,7 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1909; i=kees@kernel.org; h=from:subject:message-id; bh=eGGHpkaMaK90I/Wg0MunopjNv0+PUxvjzTZDxaTFuX0=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrIkSPzKn+e1D71sEjJywkG5iZRKO/TAw0VLC+qHLIx qn5Ju+vjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgImYXGNkWKvBKz71ZfEOYSkb pu0fFNWEzVvKM/6FfS3lK+ROrslUZmT4tVNevn3OVutllxuWNTYoxXayt+28fGm+jLUGO7NCyyl WAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1851; i=kees@kernel.org; h=from:subject:message-id; bh=YPscJPXSG26pxamepuqPmb0syryk1A1xxqn90YUkCNs=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrIqRtar7o9xS/7437YbSZ/UfXxtXHMnPN8w7lbWDJM 7HMKw/rKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMgmZ0aGDWKO6+fPbv0U+k57 qbuyROimQsv+2RYXV92Z/nvxyziJ+YwMK4RrfjYddeHi9Y2a/SfqfZ2gp08by0655vUzLv3f9im JHwA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -59,45 +60,45 @@ matches the type of the variable being assigned. (Before, the allocator
 would always return "void *", which can be implicitly cast to any
 pointer type.)
 
-This allocates one int per entry of max_mm_current_percent, but the size
-was taken from the whole array, which would make the allocation type a
-pointer to the array rather than the "int *" being assigned. Allocate
-ARRAY_SIZE-many entries instead. The resulting allocation size is the
-same: AAT1290_MM_CURRENT_SCALE_SIZE and
-ARRAY_SIZE(max_mm_current_percent) are both 15.
+This is allocating a copy of rockchip_dais, which is an array of struct
+snd_soc_dai_link, but the size was taken from the whole array, which
+would make the allocation type a pointer to the array rather than the
+"struct snd_soc_dai_link *" being assigned. Allocate ARRAY_SIZE-many
+entries instead. The resulting allocation size is the same.
 
 Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
-drivers/leds/flash/leds-aat1290.o
+sound/soc/rockchip/rk3399_gru_sound.o
 
 Assisted-by: LLM coccinelle
 Signed-off-by: Kees Cook <kees+treewide@kernel.org>
 ---
-Cc: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@kernel.org>
-Cc: "Uwe Kleine-König" <u.kleine-koenig@baylibre.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: <linux-leds@vger.kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: <linux-sound@vger.kernel.org>
+Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: <linux-rockchip@lists.infradead.org>
 ---
- drivers/leds/flash/leds-aat1290.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/soc/rockchip/rk3399_gru_sound.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/flash/leds-aat1290.c b/drivers/leds/flash/leds-aat1290.c
-index 49251cfd3350..4bde0b07fe78 100644
---- a/drivers/leds/flash/leds-aat1290.c
-+++ b/drivers/leds/flash/leds-aat1290.c
-@@ -311,8 +311,9 @@ static int init_mm_current_scale(struct aat1290_led *led,
- 	int i, max_mm_current =
- 			AAT1290_MAX_MM_CURRENT(cfg->max_flash_current);
+diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
+index b80acb221d24..04e7bed8275d 100644
+--- a/sound/soc/rockchip/rk3399_gru_sound.c
++++ b/sound/soc/rockchip/rk3399_gru_sound.c
+@@ -505,8 +505,8 @@ static int rockchip_sound_of_parse_dais(struct device *dev,
+ 	int i, index;
+ 	int num_routes;
  
--	led->mm_current_scale = devm_kzalloc(&led->pdev->dev,
--					sizeof(max_mm_current_percent),
-+	led->mm_current_scale = devm_kcalloc(&led->pdev->dev,
-+					ARRAY_SIZE(max_mm_current_percent),
-+					sizeof(*led->mm_current_scale),
- 					GFP_KERNEL);
- 	if (!led->mm_current_scale)
+-	card->dai_link = devm_kzalloc(dev, sizeof(rockchip_dais),
+-				      GFP_KERNEL);
++	card->dai_link = devm_kcalloc(dev, ARRAY_SIZE(rockchip_dais),
++				      sizeof(*card->dai_link), GFP_KERNEL);
+ 	if (!card->dai_link)
  		return -ENOMEM;
+ 
 -- 
 2.34.1
 
