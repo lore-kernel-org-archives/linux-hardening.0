@@ -1,53 +1,60 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79AD38838F;
-	Thu, 17 Sep 2026 07:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E114388878;
+	Thu, 17 Sep 2026 08:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789631735; cv=none; b=gCH8IuLPqdCLVPVxKhpbWLtKwpwNmR5dVXlNuUptfJmBhR/LvaFxG46cf1JjGULsSFRxS6pImNO+SyEQt7LwJg5IjZkY1Ytu5qnAdFzLlL55bEz350F+j6pbv2J2+vGLw5nqtmCKC960lXP2t8YObA+pEpeOEXVEnQxKpujaWXg=
+	t=1789632293; cv=none; b=QXNo4NbQkui9PFPwXHnHX6F4690/Q2KzjfrmAOYWZ/9bbOPHoKd77vdd3B2DankAJfaaAT9cKkWZ6nLUqC8t02npa3Mo406u9Hn0Kty3/Qio1lPzqExkoLWsKrQg5dSd27oAweDCRv4PU5dS7+k5hhWsT6zXSZLC6V47PO5wi3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789631735; c=relaxed/simple;
-	bh=RlhF7L+pBEDU5OBMw41Kj2szL2t3Yun19dG2JjwZqOU=;
+	s=arc-20240116; t=1789632293; c=relaxed/simple;
+	bh=ZakSworF3b8jW7lQweEFXuAAZdxo/4SEjVDDfFiOzLc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1MYor8iSrF4HWmOTQsHne94MEhM/pIXjtQTb1+KhYknxIVrcNK4oJQPlTclSDqCuEwa80DW1fQc44HEvrFbl35tvGilFUYRwcQoUDUjkf8VdhmLuCjiyDgCuqFmhyzjH/YOdJkuzdxFuE5h5t28uOav/A1OK1/G/vQkommKrRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=NL7Nk2ML; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=oN0EHDKhPElyT1+tgHaoMrbR/aTPo5WGq2ytaKNVoj50EokuyXZ81vi30h46hTjHpBdPg78NCQ2pUdzAeggv8jkZud2v9v3U0Dznl+L2UhCIXVnZ3GV/TRx08v/U9O6wKEGjwxxFiHlCP4QmEpDIfKzpkWP2TKSbMrvH5wLQoG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f20dqGsC; arc=none smtp.client-ip=192.198.163.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="NL7Nk2ML"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=y+BBorB8UjNfPj18a02Ttz+ma2x3+ZsgejxOfpcGN8g=; b=NL7Nk2MLiJlR+bTcMjLA3n2OhA
-	pIlu4U13+s0silnfT0lEjwzhW+1t5WKZh9uSuH6nc0l/q4wU2Dvs+u6+VKvjjIY6/nnsvtFZYis0Z
-	goMk6nj1iZgQkm39d+fhOvdJWcVZtElyqXjgusloWY99JkSEnlwfWphitKCylhZiyzn2G7TvhewvS
-	g0FocsINtLn0BajDeo4+pL/rIf+tgj9X8vvl3yv58aPwITYfGYyKHOKteO4+eAtp1noy5uhhMrfmI
-	BSu3HmXGUbq/2CPq40sKsKoWG8TEXMYLNOYnW3sV9uM60dNw5TV2+CROjbbP2W0PitSTnuvRLS0qi
-	HW1FeSig==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1x76xd-005nU1-0M;
-	Thu, 17 Sep 2026 07:55:13 +0000
-Date: Thu, 17 Sep 2026 00:54:51 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	Maximilian Huber <maximilian.huber@tngtech.com>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Luis Augenstein <luis.augenstein@tngtech.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Andrew Jones <andrew.jones@linux.dev>, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] docs: Makefile: Add a testdocs target for the
- documentation unit tests
-Message-ID: <aqucmDHFYxH1s4H6@gmail.com>
-References: <20260916184107.i.183-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f20dqGsC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789632290; x=1821168290;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZakSworF3b8jW7lQweEFXuAAZdxo/4SEjVDDfFiOzLc=;
+  b=f20dqGsCG3geNw0hGXu2MelaBx+0xdLIzdeF/Wq9RyQ01MOBOp9iGgXt
+   ldXIqZYiI7l01y73ovUWwjgsW6Lwt1WovyFbP6YtMDayrUs+sIlT8RCjf
+   ZwoOpQnC8oTEcaAEnALYoG2bumovWa6qAlTme8VVTxpofIOCL3ffwmPqS
+   qLHXRkGzbigol0E0bDb6Li9vPEqlPk+niA5hbrnY+m1slVNaSXkr4+lz3
+   MJfJzEwcyTBTeYYNZJN5OfH2h0BcQ9GQ1Cfx6awwAHo7yOE2todc9fqM+
+   QUJSqiWY6nk4osQxC5xfRbrfpNlDPbIuCBPeqJCY19lPkdxFESNXS+Lw8
+   A==;
+X-CSE-ConnectionGUID: igU5dFA7TCOiqriJM0Emjw==
+X-CSE-MsgGUID: jZ2lXq4ORRC64dswGsxJ4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="536901"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="536901"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa114.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:04:48 -0700
+X-CSE-ConnectionGUID: fUDMFHp6QwWcfURGQwGgLg==
+X-CSE-MsgGUID: 8eiTUaR9STaFQt16ktJN7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="269954554"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.11])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:04:46 -0700
+Date: Thu, 17 Sep 2026 11:04:44 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jonas Rebmann <jre@pengutronix.de>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: Re: [PATCH 5/5] lib/string_helpers: fix counting of remaining bytes
+ in string_unescape()
+Message-ID: <aqufHDWKoR1gdg8U@ashevche-desk.local>
+References: <20260916-string_unescape-v1-0-7f8bd986fa33@pengutronix.de>
+ <20260916-string_unescape-v1-5-7f8bd986fa33@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,32 +63,35 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260916184107.i.183-kees@kernel.org>
-X-Debian-User: leitao
+In-Reply-To: <20260916-string_unescape-v1-5-7f8bd986fa33@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Sep 16, 2026 at 11:41:11AM -0700, Kees Cook wrote:
-> tools/unittests/run.py discovers and runs the unit tests there (which
-> are primarily documentation tools), but nothing in the build calls it,
-> so the tests are only run by whoever remembers that the script is there.
+On Wed, Sep 16, 2026 at 07:38:10PM +0200, Jonas Rebmann wrote:
+> All of the available sequences expand to exactly one byte, the size
+> check in the loop condition is sufficient for the case of an escaped
+> character too.
 > 
-> Give it a target, next to the other checks that need no Sphinx. The name
-> ends in "docs", so it matches the "%docs" pattern already in
-> no-dot-config-targets and runs without a configured tree, and it sets
-> PYTHONPYCACHEPREFIX as the other Python targets here do, to keep
-> __pycache__ directories out of the source tree.
+> Otherwise, an escape sequence that should be unescaped to the last
+> character before terminating with null in the destination buffer will be
+> output as backslash instead of the escaped character.
 > 
->   $ make testdocs
->   ...
->   Ran 121 tests
+> The only exception is when encountering a backslash that turns out to
+> not start a valid escape sequence and both the backslash and the
+> character following are handled in one iteration. Move the check there.
+> 
+> Add a kunit regression-test that unescapes a character to right in front
+> of the null terminator of the destination buffer.
 
-Very nice! Thanks!
+Without examples (and the respective hexdumps) it's hard to get.
+I re-read the code and see no issues there. The size > 1 check is for the \\
+and \0 at the end of the destination buffer.
 
-> with "make dochelp" listing it between refcheckdocs and cleandocs.
-> 
-> Tested with GNU Make 4.4.1 and Python 3.14.7, on a tree with no .config,
-> where it ran 121 tests and left no __pycache__ behind.
-> 
-> Assisted-by: LLM
-> Signed-off-by: Kees Cook <kees@kernel.org>
+So, if the sequence is not recognized it means that it's separate \\ in the
+stream and has to be copied as is.
 
-Reviewed-by: Breno Leitao <leitao@debian.org>
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
