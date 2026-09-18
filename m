@@ -1,125 +1,119 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F3D319617;
-	Fri, 18 Sep 2026 02:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BBC39A7FE
+	for <linux-hardening@vger.kernel.org>; Fri, 18 Sep 2026 03:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789696981; cv=none; b=EcJ0xx/gIsoN43YwodW7Bc1cJj6gl65d+AQXxUAFj+lQQhXQndmRoO13/ccf7lRDhhlkHHuqokcqEy0rDNuZCoVNabstHIa+Ezen7ZFzUkh1GPl9x9tc5R+0cAboBp1ilMxEjIQaeCoMCHvIJauLL31X3Fx2jfI3ujen4dNwI70=
+	t=1789701877; cv=none; b=P/m5qNqGtvIKHwDnKWYtQpji8xmKB42Sg5JZTTO+s3BLQiQehHod+4xrgNhH/JrviNXseRpRQInlHJUKgkDHMCzH8JY8KxE5Uo9sEpbxbErUyrgcYFXNlykfIOgSfs747qosY4aYV/theqRwyQh91H+QQI3eyNweKNCYIVMpenE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789696981; c=relaxed/simple;
-	bh=YX2X5YmARDNrcOgHPk72LiQfqcj7uPNPCetVbYtrMhE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gfg0vDEPTNzbSvSMeAcvmAU/1a185y89DhQ3MVgiLSRd0SE6tkk/mKKt6/U1FCVxnNTR6wqs0c4iQqySmapktBtwnMb9RREZKDNYK03bDpf3lyi/FayxZbm9hVgkbTfcMNW5yB16x3tnd2hB8g6AH7biLjL7lAUAZ80yJCvd1yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=XgXnJM0T; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1789701877; c=relaxed/simple;
+	bh=IMiA2t8PF7ryssxhuS1Skhk4PglIN9eC+tUJe+dUmw8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HzRtlS9H2Oft7wM5RK4H6YdZ7DLhQiT6DP8KJ3+2JXwalwjyiKZVOdV7pWzHIMWqxBcR/Jql8S0YbOO2Vndtwvk5xQkIyCi3qp9TH3F0LuEXPjms2eYc9vp1M/kshz6PU59Fe9kLAVX/w2TTa5DQs4tQ/NV9vKaMIFDeoD+BKR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h2m32yjd; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="XgXnJM0T"
-Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68HMQ6QE4109281;
-	Thu, 17 Sep 2026 19:02:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=geFosgHb6vlCyU6ufD7beIf9t
-	Aqr7hsT77kxbv1WTFc=; b=XgXnJM0Tg3OVcrgztD7x7Mks4UDzHufJDkM0wgzys
-	VYgXpeaL5E2ptxLNcdSQmD+XVS852AXS6O10s4zz8JdGHXDq8mFk3aY7GYjwQxcs
-	uEY2asalU9DpXwdABIB5KQ26yaGKvc8N6iH5raU8bRLk9+xfMJI4RW2ayhZhbe85
-	yAi3UukSCcprvhshU/livYrwYEgmQb/9fdHTXHZiBxhYHcIa+EgTpWo2ivEtBGhw
-	9grQtgtSbP+1LfvU7uVtlnzTZHzBqouPNEKVctqcrQgU+sXsKq2zy8+VVEkQ3Xu9
-	axnNvj9dAJHENEYJ8Fxc+Yu4OJNU6oo+sXPPnLI1T3iEQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 4grs0e8xe5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Sep 2026 19:02:45 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 17 Sep 2026 19:02:45 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
- Transport; Thu, 17 Sep 2026 19:02:44 -0700
-Received: from rkannoth-OptiPlex-7090 (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id D7E403F7055;
-	Thu, 17 Sep 2026 19:02:40 -0700 (PDT)
-Date: Fri, 18 Sep 2026 07:32:34 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
-To: Kees Cook <kees@kernel.org>
-CC: Sunil Goutham <sgoutham@marvell.com>,
-        Kees Cook
-	<kees+treewide@kernel.org>,
-        Geetha sowjanya <gakula@marvell.com>,
-        "Subbaraya
- Sundeep" <sbhatta@marvell.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David
- S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH net-next] octeontx2-af: Allocate ikpu2 with ARRAY_SIZE()
-Message-ID: <aqybujD1TdU2wziP@rkannoth-OptiPlex-7090>
-References: <20260917211409.i.425-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h2m32yjd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789701875; x=1821237875;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IMiA2t8PF7ryssxhuS1Skhk4PglIN9eC+tUJe+dUmw8=;
+  b=h2m32yjd0fRsBRhu6cGknX0RnXdvcB4n5UHkVHAJgr/vXcYH1rtZCfs7
+   shKZM9vSDiUoqPOhJdgjBtHBQNvE8usDGul1xnlxU1ArxM4Lor1SRB6Jn
+   zGFhTgJ7epJuXvXq8/rPiPddfN5oF3UqohYxy0CWePWl9QuJH3ApRfeDr
+   unPKjx+OLko22cB96YdL8+ZXV/l0NoJ+06ZPbd2197H4kSQrrz3YQjDh3
+   2622Em+D2R3HRLDwclj67z2m2la4SimQcRuf1QwwJGwYUX+jwdEfOcYsn
+   UhuEkGeMEjDvXTYh0ITERXZxaLDDJBQTC6ypW6+itWnTGIOfJ9eAZwru1
+   g==;
+X-CSE-ConnectionGUID: oguBAvvfQCWblad1OF3YNw==
+X-CSE-MsgGUID: nYpmogPRRSO2b1nLUyKvyw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="90045441"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="90045441"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 20:24:34 -0700
+X-CSE-ConnectionGUID: qgrS1QczQAuv/e6rJFNhFA==
+X-CSE-MsgGUID: MHtiyldCTaeu7CulBSbu0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="271509459"
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.63]) ([10.125.109.63])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 20:24:33 -0700
+Message-ID: <26018729-d231-4c72-af8e-67c0a46c3911@intel.com>
+Date: Thu, 17 Sep 2026 20:24:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260917211409.i.425-kees@kernel.org>
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE4MDAyNCBTYWx0ZWRfX/FKQL/Jgrz+N
- WeVAmTl/djfr90bt6RQwXAmpRQTR5f3M/g+4Oa+wjyIMXNg+mRydy7LvBrejvM1NIgEQ4smyv7e
- j1oPmVLnjKyX+jckgye6SK1q20oMNn8=
-X-Authority-Analysis: v=2.4 cv=U6YHnuru c=1 sm=1 tr=0 ts=6aac9bc6 cx=c_pps
- a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17
- a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=l0iWHRpgs5sLHlkKQ1IR:22 a=qit2iCtTFQkLgVSMPQTB:22 a=VwQbUJbxAAAA:8
- a=M5GUcnROAAAA:8 a=KZ3UCWYt-kdRGBrMIHIA:9 a=CjuIK1q_8ugA:10
- a=OBjm3rFKGHvpk9ecZwUJ:22 a=lhd_8Stf4_Oa5sg58ivl:22
-X-Proofpoint-GUID: G-dUJ-2k_KYLD_Hi8X3rP5zvBGSptr1W
-X-Proofpoint-ORIG-GUID: G-dUJ-2k_KYLD_Hi8X3rP5zvBGSptr1W
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE4MDAyNCBTYWx0ZWRfXwSb+USgHAyHC
- vVtWKNaHrKkA8nfFcDlorMYCyRtskE/kQfezXqfDk3xzRfKpgDVTDYkcVfHXhZuxFcF6bIW6jrK
- tW5Spi//Iwx3ePn8+ZukRazr58+OwffKLGCOAQ0w7OhopZXgt1hZQk7AX0ENBAZg7w84QE2U7LK
- fKs+MDldrzrrnb44a7Fv1POXEcPjLXbmMIxA0TQTSVj97Eh8zntUkN61k5RamzeHUKubTYtx3KD
- rArrAfS59RXt53eL8dPy6zmAx1LxyCBwegN/OFT1xb+B0IHTCtVeCRQIihOCyqtYc73O21F6+1+
- Suk8pfaEQtyDe5Tq1jon3gH+lE5S0BN2gdOjRkOwHJXSShwARX6A11jocpohm6UbltLJfGB3Ym1
- t1Z2LlYf6Vw/I2X+RkUEnBBaF5YTpcn32OE9UvTNxLT6rwfG6d6B1sO2Bmk0Zzqp/UsOmn9mMX9
- yr+PlWLJ9GxwEUpkl/Q==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-17_05,2026-09-16_02,2025-10-01_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/7] nvdimm: ndtest: Return the string length from
+ flags_show()
+To: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Guangshuo Li <lgs201920130244@gmail.com>, nvdimm@lists.linux.dev,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-hardening@vger.kernel.org
+References: <20260917002312.i.923-kees@kernel.org>
+ <20260917002333.2306346-7-kees@kernel.org>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260917002333.2306346-7-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2026-09-18 at 02:44:10, Kees Cook (kees@kernel.org) wrote:
-> From: Kees Cook <kees+treewide@kernel.org>
->
-> In preparation for making the devm_kmalloc family of allocators type
-> aware, we need to make sure that the returned type from the allocation
-> matches the type of the variable being assigned. (Before, the allocator
-> would always return "void *", which can be implicitly cast to any
-> pointer type.)
->
-> This is allocating room for a copy of ikpu_action_entries, which is an
-> array of struct npc_kpu_profile_action, but it asked for a single object
-> the size of the whole array, which would make the allocation type a
-> pointer to the array rather than the "struct npc_kpu_profile_action *"
-> being assigned. Allocate ARRAY_SIZE-many entries instead. The resulting
-> allocation size is the same.
->
-> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
-> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
-> @@ -1959,8 +1959,9 @@ static int npc_apply_custom_kpu_from_fs(struct rvu *rvu,
->  	fw = rvu->kpu_fwdata;
->
->  	/* Binary blob contains ikpu actions entries at start of data[0] */
-> -	profile->ikpu2 = devm_kcalloc(rvu->dev, 1,
-> -				      sizeof(ikpu_action_entries),
-> +	profile->ikpu2 = devm_kcalloc(rvu->dev,
-> +				      ARRAY_SIZE(ikpu_action_entries),
-> +				      sizeof(*profile->ikpu2),
->  				      GFP_KERNEL);
-Reviewed-by: Ratheesh Kannoth <rkannoth@marvell.com>
+
+
+On 9/16/26 5:23 PM, Kees Cook wrote:
+> flags_show() build their output with a seq_buf and return seq_buf_used(),
+> which may include the trailing NUL byte when the seq_buf has
+> overflowed. Use seq_buf_strlen() instead.
+> 
+> The flag names are far shorter than the PAGE_SIZE buffer sysfs
+> provides, so this cannot overflow today.
+> 
+> Build tested ARCH=x86_64 with GCC 16.2.0, built out of tree with
+> make M=tools/testing/nvdimm:
+> tools/testing/nvdimm/test/ndtest.o
+> 
+> Assisted-by: LLM
+> Signed-off-by: Kees Cook <kees@kernel.org>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Ira Weiny <iweiny@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Cc: Guangshuo Li <lgs201920130244@gmail.com>
+> Cc: <nvdimm@lists.linux.dev>
+> ---
+>  tools/testing/nvdimm/test/ndtest.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/nvdimm/test/ndtest.c b/tools/testing/nvdimm/test/ndtest.c
+> index 2051ad5d4882..f097f2992966 100644
+> --- a/tools/testing/nvdimm/test/ndtest.c
+> +++ b/tools/testing/nvdimm/test/ndtest.c
+> @@ -693,7 +693,7 @@ static ssize_t flags_show(struct device *dev,
+>  	if (seq_buf_used(&s))
+>  		seq_buf_printf(&s, "\n");
+>  
+> -	return seq_buf_used(&s);
+> +	return seq_buf_strlen(&s);
+>  }
+>  static DEVICE_ATTR_RO(flags);
+>  
+
