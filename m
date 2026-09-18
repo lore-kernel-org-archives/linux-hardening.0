@@ -1,162 +1,98 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.94])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95723D3CEF;
-	Fri, 18 Sep 2026 19:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A9F525A9B;
+	Fri, 18 Sep 2026 21:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789761273; cv=none; b=M7TGXoDmwlGmiskbtg/PoYVa/fr4zPGFPoSGWjNmdSuS2u3JYcR9y5/CuSx3pTgCInjVQrhQDtOFtdHgEuVctktxhqmDvpzLUcML1zLKigO9vp50bQBTg0sIL8/m/igx28fwxUOpwJY5+BV2ZNjWvqmHX6wqanz9/UND8A+9NbI=
+	t=1789765475; cv=none; b=NFFvpQG6zLBWFJ0dTFPV8WZxxeRktKDItk/TIbsPfrv017v8R5v7d8hZXcv157g4JgRPODxrY1+OeZsYceIdF7EJCGm4RNsMKcEgy7Yt9e6xCnIfP/sPCNYJF9tODHWCCoIppMpRIGoImBRKi8kb2ZnGMuJOQ0vq9WWiYiEmpeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789761273; c=relaxed/simple;
-	bh=JKkgIua3kpizh32NNqU1zVU4J9KvaFpPPrVmLN48emc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqs3kEQl4VGtM5iuh0z7t1EGY9lfOGVbBzEULQctsb/C5NdBBP57MPALwdqLEhftrMr14MZyRpKgYV9hXYQVNoS1+4HxnY/ALQULAiE0BZ+dPB1s9UvRcXDqfTy8tP1xQ8choNjyXTNZcmnujb9O376H/F2yYCRsbNsp0VoohNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fritz.com; spf=pass smtp.mailfrom=fritz.com; dkim=pass (2048-bit key) header.d=fritz.com header.i=@fritz.com header.b=Y3Haz+T+; arc=none smtp.client-ip=212.42.244.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fritz.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fritz.com
+	s=arc-20240116; t=1789765475; c=relaxed/simple;
+	bh=nzk5wW7kAA8eerNpYLGvzTJkvarBED5JH9U0irj7+qs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=C2Al8FF8cGga622a3magv/Kn5+TIsyiEpVSQX/nVh8jyYrYFjs1H5469sAivGLCvMJEhGdCAJTXpJmkHCvHLHjENQRo0GeCyQZGtsYtfsPTJ/fhBEPL22tj5lCNtrte3+fcRNWcDNSKjJjXjVW1dzF8q2AK+99HLYADVwRMr/Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbQxyuAC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fritz.com header.i=@fritz.com header.b="Y3Haz+T+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fritz.com; s=mail;
-	t=1789761269; bh=JKkgIua3kpizh32NNqU1zVU4J9KvaFpPPrVmLN48emc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y3Haz+T+fPTF6wAuhVZOXAxXZs67ULnV0g8BUG/DktxFVFrFAEr9eqX03SQrnV+vT
-	 YZueGMLvfoe2AYpfP6aT9j2htVca0pIvRKlNddMMoHijDk+es3NOe66e0B/y/xSUpL
-	 /ilOPtZp6TpJDHcJ8o5kk36gU04zB8RfdXt/gLj8a75Ty00NmsGG52Y/fUwxxpHzAI
-	 /y2MRARUAhBeHzAHGfdXPJAklS2kpSf0phtNA0dGkDpFupKcxzbmLraYa7mL+oS91w
-	 GvwQapwwZ1bNu6Kl1f6DPnr1MEwIZIclBDxMRjA/cxhzUAML+Cqv/JshxhDN/h/s9T
-	 KtJb3aIuDhn8w==
-Received: from [212.42.244.78] (helo=mail.avm.de)
-	by mail.avm.de with ESMTP (eXpurgate 4.57.1)
-	(envelope-from <n.schier@fritz.com>)
-	id 6aad96f4-03cd-7f0000032729-7f000001ad04-1
-	for <multiple-recipients>; Fri, 18 Sep 2026 21:54:28 +0200
-Received: from mail-auth.fritz.com (unknown [212.42.244.78])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Fri, 18 Sep 2026 21:54:28 +0200 (CEST)
-Date: Fri, 18 Sep 2026 21:54:27 +0200
-From: Nicolas Schier <n.schier@fritz.com>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Alexey Gladkov <legion@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@kernel.org>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 10/20] kbuild: move the toolchain checks into
- init/Kconfig.toolchain
-Message-ID: <20260918-athletic-agile-echidna-114f16@l-nschier-aarch64>
-References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
- <20260917-build-speedup-v3-10-9ecf4163ff36@kernel.org>
- <202609171149.6454DC6@keescook>
- <20260918010729.GB1585590@ax162>
- <aq1MG8I1BsUUDFkx@gremlin>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbQxyuAC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41A01F000FF;
+	Fri, 18 Sep 2026 21:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789765473;
+	bh=be10aNrUJkHOHyZrqZpgGWxoT8ul9EcuQqU4OKqbMXc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=TbQxyuACBj0trEa5qAbkg/5Fjh5fyI+ovaktgjmPawmL6xAZnNCRkiCx1OCbh4sfA
+	 Y0NzLSjOuYIT5kuPDhDwPm99D+0z/ks4iC4+mtYXGGHr5Av56JMVMt7aI2OeyaBtOP
+	 9Cz0g5izW6USvcWlnsPlsCjhnSf/P5J+koPy8fXNGPLVPdxZuaypUhOwak7O1Pd2Nr
+	 hEyXe64RIr8M/07SU1GRKTZS4gibjq4BABL6u95Cu7N/weaYfyYHqw9GbwXMnciuO+
+	 b1+4OBZcQblBl9NJRBZy/LY7Lx+3jqaZQDwlR/6ehOyZdc4AP55kFxdOGlrRltdcOv
+	 QncqBsd09G+LA==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Kees Cook <kees@kernel.org>
+Cc: Kees Cook <kees+treewide@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+ Ernest Van Hoecke <ernest.vanhoecke@toradex.com>, 
+ Francesco Dolcini <francesco.dolcini@toradex.com>, 
+ Andrew Davis <afd@ti.com>, patches@opensource.cirrus.com, 
+ linux-sound@vger.kernel.org, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20260917211042.i.810-kees@kernel.org>
+References: <20260917211042.i.810-kees@kernel.org>
+Subject: Re: [PATCH] ASoC: codecs: wm8904: Add const to drc_texts
+ allocation type
+Message-Id: <178975015968.1717936.8503596777337073130.b4-ty@b4>
+Date: Fri, 18 Sep 2026 17:49:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aq1MG8I1BsUUDFkx@gremlin>
-Organization: FRITZ! Technology GmbH
-x-ms-reactions: disallow
-X-purgate-ID: 149429::1789761268-177ACEE1-09F10706/0/0
-X-purgate-type: clean
-X-purgate-size: 2499
-X-Notice: Whitelisted
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
-X-pfmilter: host: postfix-mx-03  mail-id: EE9C1A02D1  external: no
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1135; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=nzk5wW7kAA8eerNpYLGvzTJkvarBED5JH9U0irj7+qs=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqradY1oQe6ozA0d+MuW6OcGiiNyAsETgNvImBC
+ 5c+YhozLdKJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaq2nWAAKCRAk1otyXVSH
+ 0BkoB/9R+9qyWZBWC0tJGIya02dt7mEELy1iyCoAi+yDu4kDucUAjrCoCIi3bu1uH8MH7tKprAX
+ qiB7scyxB5iV/sywtBrgVCgI6TyFDVgT7cJdvwAxld9QA+IiSArdd3QL2qugn4PS6TXKUvOHOet
+ xG8SNCYJGZzN0k/QeGVfIuXLeJEDl4xd/cI4ylN53fJH3ykaAIlaNXCQL0uc3LS4jUsfVDTvbg/
+ klTlUrhd7b7Fc+9nSD8rjpkSc+8DQgE57mWjt5WR+ZdecLRHysVR6+L75tp6EeicEzMXr3D+GwX
+ 1S6ZFvKgoE/I7GswbnfdjoGn2DvIumkrxfjeV2/MANUIck5X
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Fri, Sep 18, 2026 at 03:35:57PM +0100, Lorenzo Stoakes (ARM) wrote:
-> On Thu, Sep 17, 2026 at 06:07:29PM -0700, Nathan Chancellor wrote:
-> > On Thu, Sep 17, 2026 at 11:53:13AM -0700, Kees Cook wrote:
-> > > On Thu, Sep 17, 2026 at 05:06:20PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > > > Move them into their own file, sourced from the top of init/Kconfig=
-, so
-> > > > that the next commit can add to them without growing init/Kconfig f=
-urther.
-> > > >
-> > > > No functional change.
-> > > >
-> > > > Assisted-by: LLM
-> > > > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > > > ---
-> > > >  init/Kconfig           | 197 +------------------------------------=
------------
-> > > >  init/Kconfig.toolchain | 198 +++++++++++++++++++++++++++++++++++++=
-++++++++++++
-> > > >  2 files changed, 199 insertions(+), 196 deletions(-)
-> > >
-> > > Yeah, totally right to move to a separate file. I think, however, I
-> > > would prefer this wasn't in init/ though. Kbuild uses scripts/ as its
-> > > Makefile.$topic dumping ground, and Kconfig.include also lives there.=
- To
-> > > me, this new file should be scripts/Kconfig.toolchain instead. And
-> > > arguably, this should be included by the top-level Kconfig rather than
-> > > init/Kconfig...
-> > >
-> > > I defer to kbuild folks, though.
-> >
-> > We talked about this previously:
-> >
-> >   https://lore.kernel.org/aqPW1FsBVYHSWl1r@gremlin/
-> >
-> > I do feel like scripts/ is a better location given that these are really
-> > things internal to Kbuild but I also see where Lorenzo is coming from
-> > that scripts/ is a little weird for this to live for discoverability,
-> > especially if we want people to put checks here instead of in a Makefile
-> > directly. To be honest, it would be kind of nice to separate the Kbuild
-> > parts of scripts into their own directory to make it clear what Kbuild
-> > uses versus what users/contributors should use but that is obviously too
-> > big of a project to tackle as a prerequisite for this.
->=20
-> Yeah it just seemed really weird/surprising to me (in the sense of
-> 'principle of least surprise') to put that in scripts/ and it doesn't seem
-> that traditionally anything else like this lives there.
->=20
-> But if you guys feel strongly enough I can put it there.
->=20
-> And agreed probably a 'third place' is the right way, but probably not
-> right as part of this series :)
+On Thu, 17 Sep 2026 14:10:43 -0700, Kees Cook wrote:
+> ASoC: codecs: wm8904: Add const to drc_texts allocation type
 
-yeah, then I'd also slightly favor scripts/ for now.
+Applied to
 
-Kind regards,
-Nicolas
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.4
+
+Thanks!
+
+[1/1] ASoC: codecs: wm8904: Add const to drc_texts allocation type
+      https://git.kernel.org/broonie/sound/c/13b4ab33642b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
