@@ -1,83 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6B545D908;
-	Fri, 18 Sep 2026 05:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F80A397942;
+	Fri, 18 Sep 2026 06:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789710074; cv=none; b=GBV96ukPQaQ532ioWlYAtOAw2Mmg7g7p6zVrFGIoFf453s9vgKt+IwtHAQFMJ37NqnL53gnIP2gZhFTtHyRmzjW3dOUI4zSA/3vgP9nX4GGs6iorIaXaKPE3fTPgV+eO0sKI56dDx3swfaoOVL8zU3F/xtRjg6Qe1wEzaoQJlbM=
+	t=1789713251; cv=none; b=lbuuISqOdH5NDes734DkQPzriTRuLG6H8Op5Zjp6p71V5TJBt08QOupZepgF0pd78vdC63GigESI8+FO1wDFqkK/Wl2pO0JTJyVOywT1IQPQtLReJmfGKLvSvKziSkyYKj3BpfBSxxV0xKwQvG5b1aFOHvGwbkGEF6zjH/wtL2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789710074; c=relaxed/simple;
-	bh=q81s4VRJ10fHWXZi7mqz8BJjAODdW6bRd9tOdGWEU3k=;
+	s=arc-20240116; t=1789713251; c=relaxed/simple;
+	bh=rUujryF2iB0lJ3blGjVqeYJLcuB3dM844Pc7VuljCJA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qFKx73Uk0Ct8yuow5xNB8V8bfxsWBmMIXhxIdjZfbWprXjiyMGmfkyo2Vkf1rMlDiV5EfmQjCRE2PLD6FyU/ASkaSZo1xKC3NiQVoEEXstOQQg0gmSS5UsE+1ZBrqMiDiFd5k2hYJGzH/smQFU6ITd/A69VoBdxuwUrpx7Lz2Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mm2MU//K; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=YFk9PW2WSweZa6quxQ46LtqS4NslI8a1i847QQDJ5viAsbNfYpvenD4X3xAVREOqGjDAb0AlyFlNhkF6IigPWRVsXEFJm8ePkEvqXzQawjSsfwXwqAndlb/1Ydm5JkcrPOsv3vnKQo8YHYTr0gEdComcX9GmmFEL9M2iDefxCjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AgOKUZ6V; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mm2MU//K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B0C1F000FF;
-	Fri, 18 Sep 2026 05:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789710071;
-	bh=nHd6+0HC/1nPCk+6Tm6Uyj6WwdTzSmqKCRyfLZwz4Js=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Mm2MU//KnClCqSqTzNYerNrxjAq+FvG29dS83BnDmwvFqi3DX6rp174BcDccwAzMy
-	 CnDZJF5NO67EZaqviRLLQizWwNt++tMwZVUv6rve6qhUHE5KkbcL7yoUn4QMwtcMb+
-	 J7/I7DzTEVhddYQS1Hf8p5zoYucUAfWC6iMMd2cy6jJCHzuhcBimIpmeEeeEDGZ/aI
-	 PaAGna5sA0SeZs/ylvheVEeDvmDFnUgqPDcFN5VSGJlo2kXwXfR3QccNRJvloa7vW2
-	 xbeQjifYIbf4BE3igjVi0tGeJsmSDJeZdq55shnuTsF5lSqMT3vJqwEtY1mLnH5c51
-	 AI80yPMRfMhAQ==
-Date: Thu, 17 Sep 2026 22:40:58 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Alexey Gladkov <legion@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@kernel.org>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 11/20] kbuild: avoid re-running compiler and linker
- probes
-Message-ID: <20260918054058.GA384222@ax162>
-References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
- <20260917-build-speedup-v3-11-9ecf4163ff36@kernel.org>
- <202609171154.BEA5134F7@keescook>
- <20260918012119.GC1585590@ax162>
- <202609172130.3DF0D66@keescook>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AgOKUZ6V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789713248; x=1821249248;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rUujryF2iB0lJ3blGjVqeYJLcuB3dM844Pc7VuljCJA=;
+  b=AgOKUZ6VDBVlQiBNY+hdhxmdIFFxoy7EVElQEuHfOOIjhGU9xMJDu3U6
+   DNGIIGNgBmGQFfD39188upXHGx0ZKC9n79WVZ0kM1cmK70GkNvJVGvIBU
+   KwtZ5t0fdiU5do7PIUR8h/8GEtzwBA+3XBVt0/xbzMYolEb+7eeN1e+7t
+   I4IbbTH3WR6jzLemclXWxF61lyGLPnJhJPNCLdpA3uSvweuS5Bs2IcRYQ
+   qRdisuurf2kVwaF1T9tLv/yuEfqjP57BizOMTlZqBooEcop1mtFl1R2uA
+   uFVmKEYu4K0KO4K9UMckqvPFEf/ghA3H0pSwyhNTFlqZwtitONRaL16fr
+   w==;
+X-CSE-ConnectionGUID: XMx8OmcWRT6Tkg/igwLuNg==
+X-CSE-MsgGUID: 6puTXz+WQSC9T/XzeSNP6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="90062433"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="90062433"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 23:34:07 -0700
+X-CSE-ConnectionGUID: 9I1tD5X3R8qgpVKUIogg3w==
+X-CSE-MsgGUID: 0rjRQy3RT+WQACat3fMVzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="2462825"
+Received: from carterle-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.170])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 23:34:02 -0700
+Date: Fri, 18 Sep 2026 09:33:56 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jonas Rebmann <jre@pengutronix.de>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: Re: [PATCH 4/5] lib/string_helpers: use full destination buffer in
+ string_unescape()
+Message-ID: <aqzbVLNAXGnSM_9R@ashevche-desk.local>
+References: <20260916-string_unescape-v1-0-7f8bd986fa33@pengutronix.de>
+ <20260916-string_unescape-v1-4-7f8bd986fa33@pengutronix.de>
+ <aquahuZKdB1haZrN@ashevche-desk.local>
+ <ae3d04de-b12b-454d-93f7-31ce912f6f8c@pengutronix.de>
+ <aqvdyIsM_TV4OC4W@ashevche-desk.local>
+ <ecabfbfd-ead5-49a5-841b-eb532dbaab6f@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -86,59 +67,56 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202609172130.3DF0D66@keescook>
+In-Reply-To: <ecabfbfd-ead5-49a5-841b-eb532dbaab6f@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Sep 17, 2026 at 09:44:24PM -0700, Kees Cook wrote:
-> On Thu, Sep 17, 2026 at 06:21:19PM -0700, Nathan Chancellor wrote:
-> > While we could certainly try to cook something like this up, we could
-> > also avoid the split across two files by just defining the flags in
-> > Kconfig directly and using them in the Makefile through their symbol,
-> > like we already do for -Wimplicit-fallthrough. For example, instead of
+On Thu, Sep 17, 2026 at 05:47:30PM +0200, Jonas Rebmann wrote:
+> On 2026-09-17 14:32, Andy Shevchenko wrote:
+> > On Thu, Sep 17, 2026 at 11:02:52AM +0200, Jonas Rebmann wrote:
+> > > On 2026-09-17 09:45, Andy Shevchenko wrote:
+> > > > On Wed, Sep 16, 2026 at 07:38:09PM +0200, Jonas Rebmann wrote:
+
+...
+
+> > > > > +	test_string_unescape_one(test, "short buffer", UNESCAPE_HEX, "\\x41\\x41B", 4, "AAB", 3);
+> > > > > +	test_string_unescape_one(test, "unrecognized escape at end", UNESCAPE_HEX, "B\\qX", 4, "B\\q", 3);
+> > > > 
+> > > > Still wondering if we can incorporate this into the "combined" loop?
+> > > 
+> > > Both these tests really only fail without my fixes because the
+> > > destination buffer is short, barely fitting the result.
+> > > 
+> > > With a buffer length of 4 it yields "A\", for 5 "AA" and for 6 "AAB",
+> > > a bug because "AAB" would fit the 4 byte buffer too.
 > > 
-> >   config CC_HAS_STRICT_FLEX_ARRAYS
-> >       def_bool $(cc-option,-fstrict-flex-arrays=3)
-> > 
-> >   KBUILD_CFLAGS += $(if $(CONFIG_CC_HAS_STRICT_FLEX_ARRAYS),-fstrict-flex-arrays=3)
-> > 
-> > We would just do
-> > 
-> >   config CC_STRICT_FLEX_ARRAYS
-> >       string
-> >       default "-fstrict-flex-arrays=3" if $(cc-option,-fstrict-flex-arrays=3)
-> > 
-> >   KBUILD_CFLAGS += $(CONFIG_CC_STRICT_FLEX_ARRAYS)
-> > 
-> > While we still get the duplication (and we could look at getting rid of
-> > it with your cc-option-str idea or whatever), it is at least contained
-> > to the same location, so out of sync issues should be much rarer. I do
-> > diff Kconfigs so this might make certain issues with checks a little bit
-> > more obvious if something changes on the compiler side.
+> > So, we need to extend the current loop to pass the buffer length like -5, -4,
+> > -3, -2, -1, 0, +1 from the expected length and check that it's cut correctly
+> > along with no garbage at the end. It will help all test cases, and not just
+> > a single one or a couple.
 > 
-> Yeah, and note that cc-option-bit already exists. It's just a weird name
-> is all and there isn't an ld-option-bit.
+> I suppose I could for v2 rewrite test_string_unescape_combined() to test
+> each case individually instead of concatenating all strings. So we'd be
+> invoking string_unescape() once per possible flag combination and repeat
+> that for the inplace test.
 
-Ah, I see. I worry that the current cc-option-bit is not sufficient for
-all options that we may want to test because it uses '-E' to stop after
-preprocessing (whereas some options may need to get to code generation
-to be validated properly) and it does not use $(CLANG_FLAGS) to properly
-set the target (so we might not get consistent results). I wonder if we
-would be better off refactoring cc-option-bit into cc-option-str that
-shares most of the machinery of cc-option. Then we could just add
-ld-option-str.
+We can add a flag in the testing structure and have the second loop over it
+to run test individually. We should not reduce the existing test coverage
+(the concatenated strings are for the reason: other flags should have no
+ effect on the non-matched pieces).
 
-> As for naming conventions, I think "CC_OPT_" would be a good prefix. And
-> this works today with no change:
-> 
-> config CC_OPT_STRICT_FLEX_ARRAYS
-> 	string
-> 	default "$(cc-option-bit,-fstrict-flex-arrays=3)"
+> struct test_string gets the extra field regarding destination buffer
+> size. However we'd need to skip the inplace test in the 'short buffer'
+> scenarios. Therefore I suppose we just pass the destination buffer size,
+> not an offset. If that size field is zero than the test can run either
+> inplace or with any large enough destination buffer. For nonzero values,
+> inplace tests are skipped.
 
-This does look pretty nice.
-
-> (do we need "def_string" now?)
-
-def_string would certainly make these even nicer.
+Perhaps this will work. I haven't checked it with the code. So, make a v2
+and we get another round of review.
 
 -- 
-Cheers,
-Nathan
+With Best Regards,
+Andy Shevchenko
+
+
