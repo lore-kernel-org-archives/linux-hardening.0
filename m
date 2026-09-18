@@ -1,158 +1,135 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1D64A2A43
-	for <linux-hardening@vger.kernel.org>; Fri, 18 Sep 2026 08:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D03848E0EB;
+	Fri, 18 Sep 2026 10:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789718552; cv=none; b=i0gOSr+rbONMb3e+0bDuJYowzETGNok38ITnW2QMJVK8cifDKn6u4ezD+cqvnC6iU2LBcxXLA0MzeTnKOc6kzohDx+3LjOgt3nNR2Y0mx0nEHdiZMk8CKv8fIx8KGB1ZAGZuKix10hGLrrqEILXs+4RNw2mGqXNG/kB03M7AGJU=
+	t=1789726382; cv=none; b=OPIx+SN74gpjWeBkli4G1+ZY0hfYYVoy0We/5oQzqXPNSINcfQqnNSW0hz77sXsf9HZPkRf99Llo8FRr2iC9+yZBZKnNv7Y5crNAHIiJBhb6r2MkbhP0A1nlv5VGbff89mXqO7dhxQCWoj2dF9nbflQwt+pU2KHfsG8P6v4cm1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789718552; c=relaxed/simple;
-	bh=H0JBUe/EMO1jDRgyP3JDlGDtcpO2ZiZNH1bkYAtEw5E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TRG1uMRdbRuP3VoWYOSIRgrfi345ya1fWAaZmKPX9O+WYtaZdtjKpIcoXrsa+H0T6AfzYaj8wZ6YDV7yScXbBw/VEucirc8DeBRtCRPCp+NOsmyhJh9LNepz3pY9vh+Fmo8TjKBRX7cKJtgjeuwTf7cPFkbHIIsXPtzklbyjM8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EulsZUwO; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Q6+rbisc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1789726382; c=relaxed/simple;
+	bh=FmtnlxlGgBnDEFGUyMnIpvCu3NgZ3Bkijcc69vnr93s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=htMU1wifpzU6rBgIRDnsvqBu7Z/I/yoh1KBJMZQsOCF1zsGHEKF6to+mfD3l9kg3PSALawivo9PQPIrGZxPwTb0D6anaUdqEJOeZeqH4CnFCDMhSmQym74HSZbDHZr1oWHfXVxQW25OSRMteKThUSJX1AvnUZ05b0HQvWb6134A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ckQDWr/m; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EulsZUwO";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Q6+rbisc"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68I5xpH6910693
-	for <linux-hardening@vger.kernel.org>; Fri, 18 Sep 2026 08:02:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yecFht45A3Z4564vTTjcaZ4Yfxl5AMB1C6lm2vKtsvI=; b=EulsZUwOr1HtmugT
-	76JcKklLlxafRkkNiGxkvh1QFsZqImpSCTtX5RbOGBnwErhP2+/jaJylUWMQO1zV
-	vw3+Qfz7sjeq5KewahfVEVw9X63m7sZSwHE8ULsI9AuQEPigcwut6kEseF3mJops
-	4pBYeVIfyr+3Ucw7klbyFp4yQNDI6Kh75M+rXxP33x96nQFebyH5Eqj9XQGFM5pO
-	Kwi2bJz4WiMwgRYAOQtniAFUlQ4bUVZ5ozjTThagXEH51uGmdpsD3rJuR9yEhZHh
-	eVoTmUACezDeOuIt5UC+GI8A3mXlJZgP2KQL9wfKlXhb++gmMb3zhGJz2AlH6SgW
-	N4Sygg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4grtdpsm4q-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 18 Sep 2026 08:02:29 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-53002215979so1239891cf.0
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Sep 2026 01:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1789718548; x=1790323348; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yecFht45A3Z4564vTTjcaZ4Yfxl5AMB1C6lm2vKtsvI=;
-        b=Q6+rbiscp9z9VLTZ6/uHLpINecuFm4VQ4P3suDYIF2EUHc9bJsWbMVDqQeS/4uS0aG
-         Ei/fQSlytOJhxizp5NZZrvRaY9IzeCrvwJI4rv7Udpy2J5KvOSix/YCS0fwtenczcOMi
-         eYK+haC9ea+tjAhq1mw8emKjm4eZ6AdzMgUlp2tV0LzDAEPm0nkjy5ctyrtEj+upylUD
-         bmcV2mYwRPvZcxG+93MuJ48ld3htQiBCTbRndDoPsaHe+rjKUcUpPRCjvBuu9uwFJALF
-         1V0oG390BhWOxK8uqVKfqdwvK5nh6AYb5vnPsoPRctJFS4Xk/IKBFPGFQbDPZJH2Q+Tu
-         FjXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789718548; x=1790323348;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=yecFht45A3Z4564vTTjcaZ4Yfxl5AMB1C6lm2vKtsvI=;
-        b=FDrpJgq6y92bitmof34L1hmLIw+ByN3XvULDWvp1s3s+bR4HMf0F0Lj0IUFZGY7hTr
-         v+nfc7PUac1xqyxOZMJFkgQxhD0jMNbXQUDAlKfJa/ijWpGm3yQh3NkY7YbpGETDHAzw
-         tmqXt5G5gndHzvcxIBSoxbAERMoCYC1Ivazqm+IUpbzQTC62UIgCYKhsxVTSmiyoJyJD
-         lROGz5K3dYvmSiVJZ9pwTyj05LorUnXvFNQr/PtGk2aaFdwre9Kz+RFKW4T851bRkCri
-         YyhrrYKRjfDu4dfKuVYXKZKrbQVeFC4jRwD7PM1Pxg/pUBUZF3kZkTbu5UuAzrzpdW6k
-         21Qg==
-X-Forwarded-Encrypted: i=1; AKwUvBxdYHlFOudYqNEwvfdisULLk4oDkhlvZ4ExIKM4MxZ0JeVTt1ZGqjJNAhBoO0mbPFu3W8jXlyKkgVFlAd1Xp9k=@vger.kernel.org
-X-Gm-Message-State: AFuF++kGlH0WJmOkCvmz1tCpS/5LJMMExfpgYtVAVrv2KSUTgCTOBsdZ
-	NRwGdrvhq9KgcbZvYMmLu0DSfw6XLBs6OfsEpBtA2p8n1W63rjz30PraYY9goPBYu2Ajml4i8lO
-	1zvDZPXwfRgbEUqtV3nmkdOs6YiNGfozs48XuHCF1HKZcIE6fASXvT0+661SO1p/ElfSGtXg=
-X-Gm-Gg: AYBFou0g6qxUoqObKG9aL+jqd5KClWFE7mzsad60iom3c/3DaxWHf926xxvMqLNEa9Q
-	FZ1eEGKBn9N+j/3169//pSdz4Jtvp3sS/XUGbxtNmpb8VXg1Sf6nTdkQSS5hSCRGUQGVUZw/5jU
-	iILr1rszx6zxOVF8yxf1hw5MUMx0T7egNAlwRNV15hvKza9KATEtToZdb/tL/X6b/iVzKJkgMKk
-	rsGSfhF5QWabYrapqpCt+lUx3e0VFHVNNSjv+kX76QNkoDm2Vl0SjhQ0uGq/zq8PgbtHyp5Xsoy
-	LArgBHz858V9A97Rspm5jpPGZbJ6Stb9MwJ4KiHFh/Cekwj3nYLgsLkPOvN56MoSYr6a/4eZQzk
-	sLX+F2chNxGXs6AuJN4qe4g==
-X-Received: by 2002:a05:6214:e8d:b0:912:16fd:b389 with SMTP id 6a1803df08f44-912570aade9mr19737496d6.5.1789718548092;
-        Fri, 18 Sep 2026 01:02:28 -0700 (PDT)
-X-Received: by 2002:a05:6214:e8d:b0:912:16fd:b389 with SMTP id 6a1803df08f44-912570aade9mr19736916d6.5.1789718547676;
-        Fri, 18 Sep 2026 01:02:27 -0700 (PDT)
-Received: from [192.168.202.12] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6aa5975d070sm505624a12.23.2026.09.18.01.02.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Sep 2026 01:02:26 -0700 (PDT)
-Message-ID: <be0e4cf6-f16e-4dbb-a5e4-85760c20f37d@oss.qualcomm.com>
-Date: Fri, 18 Sep 2026 10:02:24 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ckQDWr/m"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68IA2mpU991014;
+	Fri, 18 Sep 2026 10:12:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=0lSdrkNDltAhbRuMWme/U0ipws/Aby
+	PRu0m/UnAj43M=; b=ckQDWr/mmQBFn/GfMWulIaBryHUdih6+U+MS5EAmOUrwXV
+	OuehMDZsq+A3aMZ1knyopdYo6h2mImJ9kYWFT9oOpYxgTiOJHKygjhzFmhDkEz1/
+	+cZMzFaaluPTwUqhbZIRMWc7YJdJpPibe+M08CwnBEqcOp3VYtFejc1XyaSd5OrC
+	PWifGCbrwQR39jyZCAKBBaWfaoiwejP7QyXu0mm2pP1E+tWxHYLla81jxKgFtwec
+	z2FkEZjUJz1GMKb39WOGteSX6RJHfOpJFfERJRQmNlbCm8KWA7/MUzN7pA46vok2
+	zJYBqSwK+r8UR7xPV8Pnw9kEGRwin4DWY5/wNUJA==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gmxcveuj3-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 18 Sep 2026 10:12:57 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68I9o8oS466646;
+	Fri, 18 Sep 2026 10:12:56 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gr5xa6rf6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Sep 2026 10:12:56 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68IACrZK47972614
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 18 Sep 2026 10:12:53 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F2A892004B;
+	Fri, 18 Sep 2026 10:12:52 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9DFAE2004D;
+	Fri, 18 Sep 2026 10:12:52 +0000 (GMT)
+Received: from osiris (unknown [9.111.38.246])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 18 Sep 2026 10:12:52 +0000 (GMT)
+Date: Fri, 18 Sep 2026 12:12:51 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Kees Cook <kees+treewide@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] s390/keyboard: Allocate key_maps and func_table with
+ ARRAY_SIZE()
+Message-ID: <20260918101251.20386B25-hca@linux.ibm.com>
+References: <20260917211239.i.576-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] power: supply: qcom_smbx: Remove const from desc
- allocation type
-To: Kees Cook <kees@kernel.org>, Casey Connolly <casey.connolly@linaro.org>
-Cc: Kees Cook <kees+treewide@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20260917211309.i.765-kees@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20260917211309.i.765-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE4MDEwOSBTYWx0ZWRfX8mKZGaT1wJIY
- xjxaRNLjvLxjzqd9Fho2xTPXhth+U04z/+bSjdkxPeWOljHRj+680YBBP0eVc9Eny9hoCJufUEp
- hk5ROoHMDGkbg1/Mrbq4j6p/BEsPHAe2FBLoKmHBQNYUs3zCU3eUgSC0LDI3XeNJpjd4MM6ujM+
- IlFmyVnn1fhwQkFbidMTtIlS3YurwrlTt/1Duqrq6F2cjO2USCmocZdWenvkWMRYsIGzo7YHPeT
- WLZ8U3m6yDQZ2IPKpdUEEbC8Ild6uBlNoYgVrHaf1n/XExM5vWxc9T8Mi1K3zwgidwKIhrl0ua5
- rxpjlZSFy6Xu7044ZBLsda5VgMkNKqVor/4I3c1He1abs6HjDPX+8v7hgdLYa5bkpUrHPlpo0uC
- A2YY2DSKXESUaTpKa72ZRg6piiAg72CxG2Kvi52lhzBWbG+6GKBX+/bzvDzB9KCSW6W2qBhZRSX
- lo26o+n8OOVUAF4SGqA==
-X-Authority-Analysis: v=2.4 cv=N+e8hG9B c=1 sm=1 tr=0 ts=6aacf015 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=SE4sDywN97dQNR5h7vgA:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE4MDEwOSBTYWx0ZWRfX6V9Ykl2drzNn
- aYAZKdEYglyilW68grDfoMQ3QJwrPM583vd/0p9rkj2xtbvdtAEmnlkHwMREtCWKFj3dWIUddSU
- jSI2h2bMGdUeLg6UQDt0/RFeze5xOdQ=
-X-Proofpoint-ORIG-GUID: HO4_DzI2Wk0e-wenKsnStc7uXxVFYeo5
-X-Proofpoint-GUID: HO4_DzI2Wk0e-wenKsnStc7uXxVFYeo5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260917211239.i.576-kees@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE4MDEzOSBTYWx0ZWRfX9912iJO1DwPs
+ S5QPPhPf6NKGkj6Rr26obFAqMu1e0DzVrsU9w7JrN4pOxLA5rXzjefrps1rEjm4zssdNSQsEy99
+ PK/p+NH82TmWDVxUCByRGLrPOggwsEA=
+X-Proofpoint-ORIG-GUID: tyyMeam7HCp8G8FvVvve__JSNZgVAHN5
+X-Proofpoint-GUID: tyyMeam7HCp8G8FvVvve__JSNZgVAHN5
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE4MDEzOSBTYWx0ZWRfXzIUNZHu7dxw/
+ tBmbCDsAHJo5ghF+/wWUsTHnd3EP9Fd/8Or8Un+PWBsj1HzbVRVvWi3T/m8IStaXd92a4sfCA0W
+ FtRfkwSuBuIqICYmLxu5m2wUqVv2kXSC3UMkDDpA2eo9GkQYs4xzpnmZtirUrRYeLPUNyu6rTP8
+ I2IB4hKvspWWUuzvb0yZGcl7iAEBIh4UEgkAkhtmKS9fP+VgGlFSj1DouMsiCjUQf7yMl6hLnyN
+ U8Pki6uXp8FkN0rOLnfIZovurhzUqr6ZFD9mC4yc5bOKpEs4M50s96VrL74uQn7DPA1LMk+DzHv
+ gGdlCdgDjsBtPGuhZl0pTA621lYrnARF+R/zLDKgpU5sADdwzGtHJfM43RHjW4sQeoefVJ56MG3
+ TeipEAEMce4uCZBovtHQ4ah/3YyvIPmv+ShZqij/UQWBPrVCqo7BDLD5ENe0ofInsf8vQeI4fXG
+ +IGYAcVb571JdcJoQxQ==
+X-Authority-Analysis: v=2.4 cv=F+7C5ahN c=1 sm=1 tr=0 ts=6aad0ea9 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=Ez8LhxAq2v69tQbn6GgA:9 a=CjuIK1q_8ugA:10
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-18_02,2026-09-16_02,2025-10-01_01
+ definitions=2026-09-18_03,2026-09-16_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
- malwarescore=0 clxscore=1015 spamscore=0 adultscore=0 impostorscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
- definitions=main-2609180109
+ priorityscore=1501 suspectscore=0 phishscore=0 clxscore=1011 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609180139
 
-On 9/17/26 11:13 PM, Kees Cook wrote:
+On Thu, Sep 17, 2026 at 02:12:40PM -0700, Kees Cook wrote:
 > From: Kees Cook <kees+treewide@kernel.org>
 > 
-> In preparation for making the devm_kmalloc family of allocators type
-> aware, we need to make sure that the returned type from the allocation
-> matches the type of the variable being assigned. (Before, the allocator
-> would always return "void *", which can be implicitly cast to any
-> pointer type.)
+> In preparation for converting the kmalloc family of allocators to the
+> type-aware kmalloc_obj family, we need to make sure that the returned
+> type from the allocation matches the type of the variable being
+> assigned. (The kmalloc family returns "void *", which can be implicitly
+> cast to any pointer type.)
 > 
-> The assigned type is "struct power_supply_desc *", but the converted
-> allocation type would be "const struct power_supply_desc *", as the size
-> was taken from "smb_psy_desc", which is a
-> "static const struct power_supply_desc". As there is no general way to
-> remove const qualifiers, take the size from the assignment target
-> instead. No change in allocation size results.
+> These allocate as many pointers as ebc_key_maps and ebc_func_table hold,
+> but the sizes were taken from the whole arrays, which would make the
+> allocation types pointers to those arrays rather than the "u_short **"
+> and "char **" being assigned. Allocate ARRAY_SIZE-many entries instead.
+> The resulting allocation sizes are the same.
 > 
-> Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
-> drivers/power/supply/qcom_smbx.o
+> Build tested ARCH=s390 allmodconfig with GCC s390x-linux-gnu 16.1.0:
+> drivers/s390/char/keyboard.o
 > 
 > Assisted-by: LLM coccinelle
 > Signed-off-by: Kees Cook <kees+treewide@kernel.org>
 > ---
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: <linux-s390@vger.kernel.org>
+> ---
+>  drivers/s390/char/keyboard.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
+Applied, thanks!
