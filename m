@@ -1,101 +1,164 @@
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.120])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C77650E59E
-	for <linux-hardening@vger.kernel.org>; Fri, 18 Sep 2026 17:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B705519913;
+	Fri, 18 Sep 2026 17:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789750968; cv=none; b=r5mX5eBqRDmpq11S6Jr8skgkjZi1Fr91NXVgtrmK/aqhSIQQgI1G8EY3E6i+No9tZqsXXTLPXjtvIEjwADwYMS67dXe0M/jBMdsc9Nua7rdhMkVXRgZvXsLuPRx2K3Gtx+nG/Q+6Fczwyp2l5IFeBOhc0CmTTS9cwLbxxVsm/Uk=
+	t=1789751385; cv=none; b=LsZUY6d8tE4jwPq5UtyfMhD2RVQ1E2DucLBhHI8fRXVNmzomNHaC7+vugw6vcfHStFVDosje7IS2Hp4M7MZBshOuxu6ST2oJgLLhVb7XVlfgfkVypOuOKa9XaCik1xKE++R3Ro3okb2jPW6pEprFpSRtFimzqPMGXG04OIuekAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789750968; c=relaxed/simple;
-	bh=bDpGvspOu4nFgSreC2Aw9attytrT9KqmqH3NWl0cZ7g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Vtz3Sbfz1P0dbMV+2c7DFvilm0bS7W8JWF54uCjK/ZVUXmLy/cOIyS1BDdaPcH3r8DXYtMojn/kpTdDjVaomkC7D3KC24ynFdCugPVU4I4NXeUeGHCYf5N+19iD1yMLGDQsf4O/qNYzlGq74mwkUkgIfv+LzM3MTTz4dAG2Ae+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rathodpriyank.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gOGp/X5O; arc=none smtp.client-ip=209.85.214.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rathodpriyank.bounces.google.com
+	s=arc-20240116; t=1789751385; c=relaxed/simple;
+	bh=cLlatevR+/SpRjJpDb9SSz0QigrGJ3OmsCk/osE+jMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7EBsPkKhoY5BWmO2qCYs7RmMtVpLfkpKFbNyyX3m97dTBESW8O2zuLDCvkmTMgjID0rZwZoUxfO9nB5BmaiuFfMEy6A3vYhanhmq6tEs+wzALJJ+4ZIFCKhcir/Eo+/xLjRotWihm8HbaiveN/UhpjdJEljDGAfYvI/xYHXXag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fritz.com; spf=pass smtp.mailfrom=fritz.com; dkim=pass (2048-bit key) header.d=fritz.com header.i=@fritz.com header.b=LQDSykd5; arc=none smtp.client-ip=212.42.244.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fritz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fritz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gOGp/X5O"
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2dd8920c132so21059895ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Sep 2026 10:02:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789750966; x=1790355766; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=NSaA4/uDxQE6ypmPHF+DraAaXm7U/OoqsySVnlQHd24=;
-        b=gOGp/X5OCAeXmkvZ6r/Rs8YgHIjxwsD4iWl8xR6EtKhO+1n4tmQvRRh0oN/g1vaJFu
-         nRFnfmsKiwTaDwsW9ABmVAFhLI62xiMEqch1O0weqCakyYiHZmAujXnJ8XB4/0yelwsB
-         jiews6SI5vLdvuetGbilTiBz5P1vMAKLxeZQxPOIYz9Kt7L+4ep1QM9Z8dr6QMwqg4E1
-         FNjGrx/goyoZggC21S6a/or1wwh22RrZqZNByU7MV/Sna5n64S+9/zE+dNaRlFPS4sQ/
-         ZFAtE9e52SoSEnxFZnoicfy8e0rIJGjpXBJx8qeSdbZZbGuyGqkXQk6vU1Om/k1s/ewp
-         1leg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789750966; x=1790355766;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=NSaA4/uDxQE6ypmPHF+DraAaXm7U/OoqsySVnlQHd24=;
-        b=VhGYwAwdY4eqdB9hIfJyjPRSCEiEgFTjwLC+dZM4WAkJv8h7Z3zk6wuNDMpvb40uO+
-         P9FE2ESK2NEPE7tHZAEclA7GCE26ReuPOnEQOwxZKU3MNy/K4sqSo8n/q1HVY1Ql1Fvs
-         QRE/MmJeS9RziqAo2ut4AvFc5E9g/LsevWTe791EZPye6oromtXpfv6KP3rja2N1V9kf
-         VqpZfbe+Wvd+0eMZKRfS4QeTPorBuqUdy6/uUuU6KwE/+zZEfstaY/biqTSbCoXInnkA
-         lG/Sad0xYkd8jquimrOTi2bADZbamTM8ENc/QxcoK7kUaU8oN/VYoPbPpGomckLuwjJg
-         6wQg==
-X-Forwarded-Encrypted: i=1; AKwUvBzuZma8R57u8JMjS5JKxJx8A9uI2qBGdCWAgAu/G21stwX2sKTF5H+CBlnaSUBoJ1H/NPKS7Sy3y8xaJu7I6Cc=@vger.kernel.org
-X-Gm-Message-State: AFuF++m3e9N+KlQbTz0o/t04ZtPfY2GvMj6G/CJnUz2KmE9HwDT8w30N
-	gpWzB84OrDKSW12JFdsEd6YgPksa5AsMxEUQUmDGecBD6W/lu8EwW2yxLoIoMaaQPoWdhg3sWO9
-	dbkG12dMLBqSJ+TM8EhEinjvCOiUB12YZFg==
-X-Received: from plld8.prod.google.com ([2002:a17:902:7288:b0:2db:60a3:afae])
- (user=rathodpriyank job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:2388:b0:2dd:ad74:ac1d with SMTP id d9443c01a7336-2ddb1bb0740mr74481335ad.24.1789750965612;
- Fri, 18 Sep 2026 10:02:45 -0700 (PDT)
-Date: Fri, 18 Sep 2026 17:02:44 +0000
-In-Reply-To: <20260904-pcie-link-endpoints-v3-0-4b9a91bd4b35@google.com>
+	dkim=pass (2048-bit key) header.d=fritz.com header.i=@fritz.com header.b="LQDSykd5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fritz.com; s=mail;
+	t=1789751370; bh=cLlatevR+/SpRjJpDb9SSz0QigrGJ3OmsCk/osE+jMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LQDSykd56gacw5EUr8bpoLQSK3PfoaLuuC+KH3NaLr+bO3vedzncsIsvEL2wV1fqd
+	 gmWI7Zw16BgOxN3OIKVzm/BQpgKm+TpurMQeXv2DgUKJqFB5e9pKB2ISPJQnD8b0xs
+	 hzOdst7knXiA9+BT0NItt7lSx8A+6xCMhT9pHjaKRsUugAQRL0X+r5ZOEq072FgkCF
+	 VDVZlzGrsltxUhermvWhle++FjWRW88AE/unZ/zHVIF2ppwE2ajBJiv1H4eD0kJlUf
+	 t7EPQZmpXwEAxhONfiGhcbqVAyZsHUnSJyclki+4aaiuEBh9UsURcDAv9U9EOlPmby
+	 XpoWmvL0V5Ing==
+Received: from [2001:bf0:244:244::78] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.57.1)
+	(envelope-from <n.schier@fritz.com>)
+	id 6aad704a-0449-7f0000032729-7f000001b198-1
+	for <multiple-recipients>; Fri, 18 Sep 2026 19:09:30 +0200
+Received: from mail-auth.fritz.com (unknown [IPv6:2001:bf0:244:244::78])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Fri, 18 Sep 2026 19:09:30 +0200 (CEST)
+Date: Fri, 18 Sep 2026 19:09:30 +0200
+From: Nicolas Schier <n.schier@fritz.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alexey Gladkov <legion@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Tamir Duberstein <tamird@kernel.org>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 01/20] kbuild: do not allocate .modinfo in vmlinux
+Message-ID: <20260918-meek-spectral-nightingale-53d88d@l-nschier-aarch64>
+References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
+ <20260917-build-speedup-v3-1-9ecf4163ff36@kernel.org>
+ <202609170950.480F90A28@keescook>
+ <20260918005142.GA1585590@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260904-pcie-link-endpoints-v3-0-4b9a91bd4b35@google.com>
-X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260918170244.75711-1-rathodpriyank@google.com>
-Subject: Re: [PATCH v3 0/3] PCI/pcie: Add PCIe Lane Margining at Receiver
- (LMR) support
-From: Priyank Rathod <rathodpriyank@google.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc: "=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260918005142.GA1585590@ax162>
+Organization: FRITZ! Technology GmbH
+x-ms-reactions: disallow
+X-purgate-ID: 149429::1789751370-2AFCB965-576FC76A/0/0
+X-purgate-type: clean
+X-purgate-size: 2436
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
+X-pfmilter: host: postfix-mx-01  mail-id: C2325A07EE  external: no
 
-Hi Bjorn, Ilpo,
+On Thu, Sep 17, 2026 at 05:51:42PM -0700, Nathan Chancellor wrote:
+[...]
+> 
+> From 008046b33ef4b476048e3ddb2c679a453254e535 Mon Sep 17 00:00:00 2001
+> From: Nathan Chancellor <nathan@kernel.org>
+> Date: Thu, 17 Sep 2026 17:29:53 -0700
+> Subject: [PATCH] kbuild: Remove alignment on .modinfo section
+> 
+> Commit d50f21091358 ("kbuild: align modinfo section for Secureboot
+> Authenticode EDK2 compat") aligned .modinfo because it appeared in the
+> x86_64 compressed kernel image after commit 3e86e4d74c04 ("kbuild: keep
+> .modinfo section in vmlinux.unstripped"), breaking boot.
+> 
+> Commit 8678591b4746 ("kbuild: Split .modinfo out from ELF_DETAILS")
+> properly addresses .modinfo appearing in unexpected contexts like
+> compressed images by moving it out of ELF_DETAILS and explicitly
+> specifying its location in every architecture's vmlinux linker script or
+> discarding it where it may appear elsewhere.
+> 
+> Effectively revert commit d50f21091358 ("kbuild: align modinfo section
+> for Secureboot Authenticode EDK2 compat") and its follow up fix,
+> commit a26a6c93edfe ("kbuild: Strip trailing padding bytes from
+> modules.builtin.modinfo"), as they are no longer necessary in the
+> current tree. This simplifies future cleanups.
+> 
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
 
-Gentle ping on this series - it has been two weeks since v3 was posted
-and I haven't seen any feedback yet.
+[...]
+> 
+> Then this patch becomes much more obvious (at least to me)
+> 
 
-v3 restructured the original monolithic LMR driver (v7) into the 3-patch
-stack Ilpo suggested during the v7 review, moving the link endpoint
-traversal into the PCI core rather than duplicating it in the feature
-driver:
+Yes, thanks.  Looks good to me and I think it's a good idea to apply 
+that patch first.
 
-  1/3 PCI: Add pcie_get_link_endpoints() helper
-  2/3 PCI/ASPM: Add pci_aspm_inhibit() helper for temporary link state
-      suppression
-  3/3 PCI/pcie: Add PCIe Lane Margining at Receiver (LMR) support
+for Nathans patch:  Reviewed-by: Nicolas Schier <n.schier@fritz.com>
 
-The LMR driver itself is now strictly self-contained in
-drivers/pci/pcie/margin.c, with no modifications to drivers/pci/pci.c,
-drivers/pci/pci-driver.c or drivers/pci/pci.h. The series builds clean
-with W=1 and is checkpatch clean on x86_64 and arm64.
 
-Feedback on patches 1 and 2 would be especially useful, since they are
-the core helpers patch 3 builds on. I'm happy to respin if the split
-isn't what you had in mind, or to rebase onto a newer base if that helps
-review.
+[ Lorenzo's patch, updated by Nathan ]
+[...]
+> diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
+> index 6833b517cacb..95b523fe4f9e 100644
+> --- a/scripts/Makefile.vmlinux
+> +++ b/scripts/Makefile.vmlinux
 
-Thanks,
-Priyank
+[...]
+> @@ -103,10 +100,7 @@ vmlinux: vmlinux.unstripped FORCE
+>  # ---------------------------------------------------------------------------
+>  
+>  quiet_cmd_modules_builtin_modinfo = GEN     $@
+> -      cmd_modules_builtin_modinfo = $(cmd_objcopy); \
+> -                                    chmod -x $@
+> -
+> -OBJCOPYFLAGS_modules.builtin.modinfo := -j .modinfo -O binary
+> +      cmd_modules_builtin_modinfo = $(OBJCOPY) -O binary -j .modinfo --dump-section .modinfo=$@ $< /dev/null
+
+By shifting from "$(cmd_objcopy)" to "$(OBJCOPY) + args", 
+$(OBJCOPYFLAGS) is dropped.  It this by intention?
+
+Kind regards,
+Nicolas
