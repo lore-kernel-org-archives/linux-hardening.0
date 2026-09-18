@@ -1,127 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67771381EB9;
-	Fri, 18 Sep 2026 01:07:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8EF2749DC;
+	Fri, 18 Sep 2026 01:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789693667; cv=none; b=bhmzFq/hp6ITpm/QpTKdgj72UA+JwAwhPeJqevWpRkz8b7mQizSYrGBWmfJkwUMkngNSOuA563Wal4wPvInPWBv/82yXVkrGu+mTY4Sv6cj8CkIBRN8WzLJaCpfJ3LcenUfN3nXSu5pA7U8hk4wjajxZrhrOj30PNMjwvMS5Ypc=
+	t=1789693965; cv=none; b=hHPec4Z4Jjt2o8RrdYFRT/N1uyAO3NmKLpnGjX9hXb1gegTP02/4WAyNrK3vD2tLpwHGOPc3xaeSWeKGw324GzswulGx/wfA/c4xVKR9om1P2Fs4pgXFsZPPWmVxLKeWs2j25ao3mfeZArwrNwwmW6Rheha6x0p1w+fVw7W1q9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789693667; c=relaxed/simple;
-	bh=zd4n6T+KNJlcv49XYrrNuIpekHrLVb254IIMObQi4Ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=icy2gm3h0MtVzBuJG2AfHXoannwRL9yjbjE3KxAsaz0B2vnfFVD/xst6mkpCLs1ScE+DVurJaczqFAUPViYveEcDW3PDSpSVt/2WsPkOwBd+2KhtkP0jFrXG09Ss+2ch46lKK9qRBifmnp9CaCXg53aGYs65a1kqNFnm93tX7fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5cWkWse; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789693965; c=relaxed/simple;
+	bh=u6p9v/sQpbAvDgX6JM9uTM03Yy7+MS4LqF7SpSntSW8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=POhXJbIVHMM/PAdWEAjwiPxoUZI4oUXNB6z2GeLNtguIU/jjj3U3U0yaMnDQujvPQZm2ikfeKhH3S98NMKVH/mb2tjsJFPGb0X4h7HLo3BAFe8aVfwmgcdZXQD0vbxJ9ME+hdSzjz9QQZaoR8y3Q/4KOIrVzX+4fTRh1UIpNV/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWPITrmm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5cWkWse"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58B681F00893;
-	Fri, 18 Sep 2026 01:07:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWPITrmm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535D71F000FF;
+	Fri, 18 Sep 2026 01:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789693662;
-	bh=4K9MjrbYytfjUKZsWDZQNZLjwWqitvV2RncrKp6V+PA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=k5cWkWseKfeadwsaVPXCsS8lvGsd+tdSmPOrVtqEMbk75KqTkD4zy+7En6LhD2ywa
-	 DaRsd83TwV0mOIZho690nEmO3idWB8XQkIziKwCh0GcwjjjU70EpJbTmEi/cF0GuaP
-	 /7/pXwyCpUq0e7QXW37qfDqLOT7I2G7zCvNO2mNiHwQarbF5EybADwKGrWUy41EbBI
-	 zTDD9URKYYpbd/eKGmEPGtH9D9AREbGz+aRY2dyE64e+faqRl2rwDc8cmsA58OEqGc
-	 WurYI1M8cJohHT6NtQSs49BdhFIdDtVANA86k0AT2mqjHWvvHIV+ycSb20M+TACXFn
-	 um2yh7n0v+EZQ==
-Date: Thu, 17 Sep 2026 18:07:29 -0700
-From: Nathan Chancellor <nathan@kernel.org>
+	s=k20260515; t=1789693963;
+	bh=F/YlIWDvAo1XjVKHwEMXxvDrzwtCtsm1MWgy0h+IsGo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=mWPITrmmTzETtVKysrDIuRf9zsa3ilEIob2YbzSHsXyA7WH906ymUXY4sUCzEu2A5
+	 ksKouLF+OPo9KYnwHzd8kYd+rENhyGNPAUa5f8w8gOr/eguiZaIZ4nEL6JTfpIl02T
+	 fgwiZU7m6vsW8uvCvv4JXpfB3KV2otl1mo4mJJ/UpCha0Kb3QfGQgYFPEtMoaxUrT1
+	 eDGqWnyiH8DtLZkPXefWXchabKZrJ38og3DRP84TUqGrR/OhII1O/eFk5P4N8Ed2xG
+	 WzDMyAXwEXyLqglGox+HxULYf3WHHh5kIYqyKb/KMGbrVmI5rRBZiAHYLAQbsmWKLB
+	 ySYWUwjZdaZlQ==
+Date: Fri, 18 Sep 2026 10:12:38 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Kees Cook <kees@kernel.org>
-Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Alexey Gladkov <legion@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@kernel.org>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 10/20] kbuild: move the toolchain checks into
- init/Kconfig.toolchain
-Message-ID: <20260918010729.GB1585590@ax162>
-References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
- <20260917-build-speedup-v3-10-9ecf4163ff36@kernel.org>
- <202609171149.6454DC6@keescook>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Kees Cook
+ <kees+treewide@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] tracing/probes: Add const to new_argv allocation type
+Message-Id: <20260918101238.62bc61f7a4c55bcc1ab83ab8@kernel.org>
+In-Reply-To: <20260917211022.i.677-kees@kernel.org>
+References: <20260917211022.i.677-kees@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202609171149.6454DC6@keescook>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 17, 2026 at 11:53:13AM -0700, Kees Cook wrote:
-> On Thu, Sep 17, 2026 at 05:06:20PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > Move them into their own file, sourced from the top of init/Kconfig, so
-> > that the next commit can add to them without growing init/Kconfig further.
-> > 
-> > No functional change.
-> > 
-> > Assisted-by: LLM
-> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > ---
-> >  init/Kconfig           | 197 +-----------------------------------------------
-> >  init/Kconfig.toolchain | 198 +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 199 insertions(+), 196 deletions(-)
+On Thu, 17 Sep 2026 14:10:23 -0700
+Kees Cook <kees@kernel.org> wrote:
+
+> From: Kees Cook <kees+treewide@kernel.org>
 > 
-> Yeah, totally right to move to a separate file. I think, however, I
-> would prefer this wasn't in init/ though. Kbuild uses scripts/ as its
-> Makefile.$topic dumping ground, and Kconfig.include also lives there. To
-> me, this new file should be scripts/Kconfig.toolchain instead. And
-> arguably, this should be included by the top-level Kconfig rather than
-> init/Kconfig...
+> In preparation for converting the kmalloc family of allocators to the
+> type-aware kmalloc_obj family, we need to make sure that the returned
+> type from the allocation matches the type of the variable being
+> assigned. (The kmalloc family returns "void *", which can be implicitly
+> cast to any pointer type.)
 > 
-> I defer to kbuild folks, though.
+> The assigned type is "const char **", but the converted allocation type
+> would be "char **", which is the same type without the const qualifier.
+> As there is no general way to safely add const qualifiers, take the size
+> from the assignment target instead. No change in allocation size
+> results.
 
-We talked about this previously:
+This looks good to me. Let me pick it for-next.
 
-  https://lore.kernel.org/aqPW1FsBVYHSWl1r@gremlin/
+Thanks!
 
-I do feel like scripts/ is a better location given that these are really
-things internal to Kbuild but I also see where Lorenzo is coming from
-that scripts/ is a little weird for this to live for discoverability,
-especially if we want people to put checks here instead of in a Makefile
-directly. To be honest, it would be kind of nice to separate the Kbuild
-parts of scripts into their own directory to make it clear what Kbuild
-uses versus what users/contributors should use but that is obviously too
-big of a project to tackle as a prerequisite for this.
+> 
+> Build tested ARCH=x86_64 allmodconfig with GCC 16.2.0:
+> kernel/trace/trace_probe.o
+> 
+> Assisted-by: LLM coccinelle
+> Signed-off-by: Kees Cook <kees+treewide@kernel.org>
+> ---
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: <linux-trace-kernel@vger.kernel.org>
+> ---
+>  kernel/trace/trace_probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 804442b2f7d2..cfb710095f65 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -2316,7 +2316,7 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
+>  	else
+>  		*new_argc = argc;
+>  
+> -	new_argv = kcalloc(*new_argc, sizeof(char *), GFP_KERNEL);
+> +	new_argv = kcalloc(*new_argc, sizeof(*new_argv), GFP_KERNEL);
+>  	if (!new_argv)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -- 
+> 2.34.1
+> 
+
 
 -- 
-Cheers,
-Nathan
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
