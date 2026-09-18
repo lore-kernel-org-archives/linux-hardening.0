@@ -1,119 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BBC39A7FE
-	for <linux-hardening@vger.kernel.org>; Fri, 18 Sep 2026 03:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF5F30C146;
+	Fri, 18 Sep 2026 04:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789701877; cv=none; b=P/m5qNqGtvIKHwDnKWYtQpji8xmKB42Sg5JZTTO+s3BLQiQehHod+4xrgNhH/JrviNXseRpRQInlHJUKgkDHMCzH8JY8KxE5Uo9sEpbxbErUyrgcYFXNlykfIOgSfs747qosY4aYV/theqRwyQh91H+QQI3eyNweKNCYIVMpenE=
+	t=1789706666; cv=none; b=kmWezw9TxTtbELslxAYLZCaetbZypWKjbXIDZbhDWvkJcjBNzm1wZv+JOlOYgkFMRbuF5G2M4JAY1uzkrhTPTAMbGYl3u2P77pgEQpN54H+5suiNZqhAq8gYUEJok+4akwKvhrHzQ158UCzT6YtinNmraiQz7WRqpaI3stbliHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789701877; c=relaxed/simple;
-	bh=IMiA2t8PF7ryssxhuS1Skhk4PglIN9eC+tUJe+dUmw8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HzRtlS9H2Oft7wM5RK4H6YdZ7DLhQiT6DP8KJ3+2JXwalwjyiKZVOdV7pWzHIMWqxBcR/Jql8S0YbOO2Vndtwvk5xQkIyCi3qp9TH3F0LuEXPjms2eYc9vp1M/kshz6PU59Fe9kLAVX/w2TTa5DQs4tQ/NV9vKaMIFDeoD+BKR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h2m32yjd; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789706666; c=relaxed/simple;
+	bh=nRntUvG8VfqjqmV6gXAQEPBy9XEX9TT0/57eELrdPC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8h86vK21yBtnR+CjzxHxAMkjUUg69FGNv+o0lA+dQi41Yf2/Asy5PqXa19FP+UlJVcz1V6Dxz2X2HmeZ+F7v9rnLL8ZOaaDsuf+TzuwikzKs2KoxzIFywzA3PUU45RT4qcw/pIla7Px9C43jXGNkVPv9bkZDz3VuGi3lG9+/zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRJTfYRa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h2m32yjd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789701875; x=1821237875;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IMiA2t8PF7ryssxhuS1Skhk4PglIN9eC+tUJe+dUmw8=;
-  b=h2m32yjd0fRsBRhu6cGknX0RnXdvcB4n5UHkVHAJgr/vXcYH1rtZCfs7
-   shKZM9vSDiUoqPOhJdgjBtHBQNvE8usDGul1xnlxU1ArxM4Lor1SRB6Jn
-   zGFhTgJ7epJuXvXq8/rPiPddfN5oF3UqohYxy0CWePWl9QuJH3ApRfeDr
-   unPKjx+OLko22cB96YdL8+ZXV/l0NoJ+06ZPbd2197H4kSQrrz3YQjDh3
-   2622Em+D2R3HRLDwclj67z2m2la4SimQcRuf1QwwJGwYUX+jwdEfOcYsn
-   UhuEkGeMEjDvXTYh0ITERXZxaLDDJBQTC6ypW6+itWnTGIOfJ9eAZwru1
-   g==;
-X-CSE-ConnectionGUID: oguBAvvfQCWblad1OF3YNw==
-X-CSE-MsgGUID: nYpmogPRRSO2b1nLUyKvyw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="90045441"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="90045441"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 20:24:34 -0700
-X-CSE-ConnectionGUID: qgrS1QczQAuv/e6rJFNhFA==
-X-CSE-MsgGUID: MHtiyldCTaeu7CulBSbu0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="271509459"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.63]) ([10.125.109.63])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 20:24:33 -0700
-Message-ID: <26018729-d231-4c72-af8e-67c0a46c3911@intel.com>
-Date: Thu, 17 Sep 2026 20:24:31 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRJTfYRa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C98C41F00893;
+	Fri, 18 Sep 2026 04:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789706664;
+	bh=bqZx/AptVhZLcudKvv7eqc5S9GWWoF0mLVu5mPMuXVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hRJTfYRamoTrmtZroOVByfenuYfGDp7MAxXhTqbsJrtj0eHWEbinP0LsZWILEq+XD
+	 OikV6J85b7zSxwh87Jb/ngzwEe6TQTPZxtT9eHmp/66v0Gc75aPTGTthkiqQLOdlYe
+	 qYTEfEURoLvzbT9rOGpjjnSsMmQWWjtMDvS8dZoc5ls+HJcvM9EDRA1tJjv4BNpzKk
+	 j7xKqxF2anKKWQ67STCZVhSh5UZ5d+MNO5B66dAmPxWJgfVu+5+V3BTAONMkZxsyu+
+	 FphLF7BOAaSJ1VxHjt5+8ncx7gpMmCitABngv2FjDsJH7Nyc5mgeR7imudcUYsMgbc
+	 i/8dYQEK1Smgw==
+Date: Thu, 17 Sep 2026 21:44:24 -0700
+From: Kees Cook <kees@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alexey Gladkov <legion@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Tamir Duberstein <tamird@kernel.org>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 11/20] kbuild: avoid re-running compiler and linker
+ probes
+Message-ID: <202609172130.3DF0D66@keescook>
+References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
+ <20260917-build-speedup-v3-11-9ecf4163ff36@kernel.org>
+ <202609171154.BEA5134F7@keescook>
+ <20260918012119.GC1585590@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] nvdimm: ndtest: Return the string length from
- flags_show()
-To: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Guangshuo Li <lgs201920130244@gmail.com>, nvdimm@lists.linux.dev,
- Steven Rostedt <rostedt@goodmis.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-hardening@vger.kernel.org
-References: <20260917002312.i.923-kees@kernel.org>
- <20260917002333.2306346-7-kees@kernel.org>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260917002333.2306346-7-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260918012119.GC1585590@ax162>
 
-
-
-On 9/16/26 5:23 PM, Kees Cook wrote:
-> flags_show() build their output with a seq_buf and return seq_buf_used(),
-> which may include the trailing NUL byte when the seq_buf has
-> overflowed. Use seq_buf_strlen() instead.
+On Thu, Sep 17, 2026 at 06:21:19PM -0700, Nathan Chancellor wrote:
+> While we could certainly try to cook something like this up, we could
+> also avoid the split across two files by just defining the flags in
+> Kconfig directly and using them in the Makefile through their symbol,
+> like we already do for -Wimplicit-fallthrough. For example, instead of
 > 
-> The flag names are far shorter than the PAGE_SIZE buffer sysfs
-> provides, so this cannot overflow today.
+>   config CC_HAS_STRICT_FLEX_ARRAYS
+>       def_bool $(cc-option,-fstrict-flex-arrays=3)
 > 
-> Build tested ARCH=x86_64 with GCC 16.2.0, built out of tree with
-> make M=tools/testing/nvdimm:
-> tools/testing/nvdimm/test/ndtest.o
+>   KBUILD_CFLAGS += $(if $(CONFIG_CC_HAS_STRICT_FLEX_ARRAYS),-fstrict-flex-arrays=3)
 > 
-> Assisted-by: LLM
-> Signed-off-by: Kees Cook <kees@kernel.org>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Ira Weiny <iweiny@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Cc: Guangshuo Li <lgs201920130244@gmail.com>
-> Cc: <nvdimm@lists.linux.dev>
-> ---
->  tools/testing/nvdimm/test/ndtest.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> We would just do
 > 
-> diff --git a/tools/testing/nvdimm/test/ndtest.c b/tools/testing/nvdimm/test/ndtest.c
-> index 2051ad5d4882..f097f2992966 100644
-> --- a/tools/testing/nvdimm/test/ndtest.c
-> +++ b/tools/testing/nvdimm/test/ndtest.c
-> @@ -693,7 +693,7 @@ static ssize_t flags_show(struct device *dev,
->  	if (seq_buf_used(&s))
->  		seq_buf_printf(&s, "\n");
->  
-> -	return seq_buf_used(&s);
-> +	return seq_buf_strlen(&s);
->  }
->  static DEVICE_ATTR_RO(flags);
->  
+>   config CC_STRICT_FLEX_ARRAYS
+>       string
+>       default "-fstrict-flex-arrays=3" if $(cc-option,-fstrict-flex-arrays=3)
+> 
+>   KBUILD_CFLAGS += $(CONFIG_CC_STRICT_FLEX_ARRAYS)
+> 
+> While we still get the duplication (and we could look at getting rid of
+> it with your cc-option-str idea or whatever), it is at least contained
+> to the same location, so out of sync issues should be much rarer. I do
+> diff Kconfigs so this might make certain issues with checks a little bit
+> more obvious if something changes on the compiler side.
 
+Yeah, and note that cc-option-bit already exists. It's just a weird name
+is all and there isn't an ld-option-bit.
+
+As for naming conventions, I think "CC_OPT_" would be a good prefix. And
+this works today with no change:
+
+config CC_OPT_STRICT_FLEX_ARRAYS
+	string
+	default "$(cc-option-bit,-fstrict-flex-arrays=3)"
+
+(do we need "def_string" now?)
+
+-- 
+Kees Cook
