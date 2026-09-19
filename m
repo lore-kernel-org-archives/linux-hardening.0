@@ -1,157 +1,94 @@
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646562571DA
-	for <linux-hardening@vger.kernel.org>; Sat, 19 Sep 2026 11:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DD72F691D;
+	Sat, 19 Sep 2026 13:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789815904; cv=none; b=FKSPi6QVV07G7ozrGgVIirmWeHpIqDQbAh/Q4u4TcvfQ9c04WBVctJz5fgW+5fZ+Y7pSZn74IxWMQJmvJ0IxmEmAVJNsa5OlZPOU8zjos8n8Z2ciOUxL6thE0lBsmyW+eJHlzfiUZPham9vEoeyg7QkpgrTEmr1xux3EVwaO3H8=
+	t=1789824698; cv=none; b=ZMg5nGvYAeUljODDPXcXwBpKpHtPVWQsfcPqsdbZIJHISjWgVDie2JeQ1yuMjoOQaDBkJaUHgogqofnJ+hAwSwtQ93J6edcFY7HirY5VQmRlN9c4CjU2Wp4TvMdP1VG8F9GQjtq/v2TaFmkS1PFgUdjj9z/5Febz8i23j5OWkPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789815904; c=relaxed/simple;
-	bh=gQDfqWyvWhhukz0RZPe3Rxu+FRVDAMr+ZZPy6EzA9hs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B2ThiE4zInLscv2LkQFa0ef1+NYjZG7r4Tz+wwEHj7Jj3OP77R4yoy33YsVo4pfZWRh782E5Z0jUQex6atTPF/91z4L6sKNoL0xkbMRIB6JVJPyEPNno6bnyKZcFCRLmNr2mE4oc/+rHN77fCNQifRUlRcUmUYEv6LDFFQFASyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aIKZrqxj; arc=none smtp.client-ip=74.125.225.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789824698; c=relaxed/simple;
+	bh=uiuuTERZGcy4ko3mNXucZBk1RKFtye2kgYm6hagJsng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qRosL8MjMC6JnqqlykKShizTz0Dmmjfj18wkTFWXmFCbWEJkF+WcmlZi1FfaF0eQQQSPmF+PirbmZD/H6Spufr2QxViEQwcaF0MXsqDla63ET+8ytl9UjM3pojoBqqUr4yI34/PvLXrTt3d1tXSD74ty6LTgaRj06bRuz1osMQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QO3Y2XsE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIKZrqxj"
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4843c3ee4cfso820351f8f.2
-        for <linux-hardening@vger.kernel.org>; Sat, 19 Sep 2026 04:05:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789815899; x=1790420699; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=7rwy3osRntuCmj5MLCO/i0SriZXb6Zy0hh2IOAi6LGs=;
-        b=aIKZrqxjF4VPN1406UeZ5bCtjM0v7OATVattud/Vgqfpi6VI5CN4dIoxiRwXGqvccH
-         JcbdKdV83LLv3hndd3GQaMKJ2V8q5XmwYEZJaIaAlrnpRg52hjnRkvxkIiQokSlkBVOb
-         RYUdGliBMWg1LOorOB0MG9VsFyRTKmLXLCf0xDJELBBsUMxpiBJIccrbrsbRD1N6WxPF
-         rwZzN7Y2gVQwIB93QWEDzJ3le3YoYEVk+4jEuiiXOaApfcSTH6jOBIMPnsUmEkd+izLD
-         IJSfVghYfk8of+6CG8ToupnlUn9CaERhykWxJ1PbRaWCgjIJ5VWvA5124A9grCHwrhZA
-         aAvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789815899; x=1790420699;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7rwy3osRntuCmj5MLCO/i0SriZXb6Zy0hh2IOAi6LGs=;
-        b=N0qCnAw8TPHTHKkEvtd9DaBKp1mTHAv/t8uQcQpz1okoATtz45gA0QFd89dkV9UYOr
-         8ni/N0XHfv5BvRDOeXTQo7ttspENCcmSLVo6Ey4W1YXc5rLMK1S85iK7Zhut7ybfZRm6
-         wruoVsXO2fJy6FYdJxTgvOlrNjSEuF7iJa3HuAnxO0XKq1JOn/WoRMIIq8iR3pVBXTmk
-         LLNKKY/aftxQLxrv9ALv6FELevXWjVBEj/OaGHS3EBFfCeh7A0COPkBBzDkpmhIHLFKA
-         ED727G83Y9l4tO21BntMMLuAUCcPZIVm+hORJM1VqDrXfhXTeMBzCkHPsckZUGk+8f6+
-         37uA==
-X-Forwarded-Encrypted: i=1; AKwUvBx34n1SgZZqilUJICJpWcMyXcZa01iAgeRym+nmjxgCKsPu85/XEFbBWTP7UY/miwSh3fax5AT8rWW1Eo0YWmk=@vger.kernel.org
-X-Gm-Message-State: AFuF++lYb9ZftXivZxg/5Cq5noc8ZAcJw8TlQDOE3hQiBDeGYuCshv3z
-	JpMyIP/VoLrjPmdb+kmi+zBrnuIDYmFj/wLpY0FrfAYhAp3qeARQBldB
-X-Gm-Gg: AYBFou2CiOCjiAFQo/zwkrmHa7NxCVd6ltkl0RRH0kgFbJ4ZzmCgioc0YK8Yf2PZ9Tc
-	LfMPKX7HXBSplL1DRdBAIWgD8eQqeZHa1yq+jpLgm+sgJOXmrVuA9FtbCm0tb/aAwYOtXeoH0qe
-	5tUZ9SFqXy9/HlrsIL+GkOrYWO53oki9RbDs373QMLryiEi+j3Rt9FEPycJq5KMujoEshvFiODy
-	5FZ/C/KdlvQAvKXhIqW3K7amiSGkA8yFcFMdbh+pfvawF+MbFEyxxBTIwJKhrMmTXiOwjPhNyup
-	sSIvux+td/Y66mNDrCzRZ5LpJWRIGHNeDCMxezc/xfGLX0PL5oJfUZe8QqRP373ZjDl1Y9eL2zm
-	/vwtCdQWmRHzl90DUUTK+hWgdEyHGScRyeEQ8HB72YV+UVUnd+py9pDJd+0TQoaL6l+/mzpLYvq
-	EV2pGSDdeAJpIXgwLM7VUSygOtJt0jPJzg0bBgvy9e46om3WFGlXvewebnyF6o35D8g52tTpbiL
-	Tx9FMGPMgN8y3A3r9gKKviEpl2kfSdF5559
-X-Received: by 2002:a5d:5d02:0:b0:485:8ee5:5ffa with SMTP id ffacd0b85a97d-4871e36b1c7mr7900927f8f.38.1789815898629;
-        Sat, 19 Sep 2026 04:04:58 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48724460767sm6267511f8f.13.2026.09.19.04.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Sep 2026 04:04:58 -0700 (PDT)
-Date: Sat, 19 Sep 2026 12:04:56 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>, Hao Li <hao.li@linux.dev>, Christoph Lameter
- <cl@gentwo.org>, David Rientjes <rientjes@google.com>, Roman Gushchin
- <roman.gushchin@linux.dev>, Catalin Marinas <catalin.marinas@arm.com>, Kees
- Cook <kees@kernel.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-Subject: Re: [PATCH v3 3/5] slab: handle ERR_PTR values in kfree and
- hardened usercopy
-Message-ID: <20260919120456.5575e0a4@pumpkin>
-In-Reply-To: <20260903203720.63689-4-kmehltretter@gmail.com>
-References: <20260903203720.63689-1-kmehltretter@gmail.com>
-	<20260903203720.63689-4-kmehltretter@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QO3Y2XsE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46CF41F000FF;
+	Sat, 19 Sep 2026 13:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789824697;
+	bh=LRxkL+FNxgiZNVxZ1edJUWhUkP0aSqg5kr3XlruhiC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=QO3Y2XsEPGiSzCvLFdPBPK4Z3MfogKpXSSlnRO/Y7+i4SIEzJAhRAK1FEt8aS4wuW
+	 NVcbTYOmIxXOPI09HqJiLNEjwv1U362YGxd+T0qDY30SYcNfjz7rN3r/O1bvNtNfAh
+	 49ebuXswm4/ol9whV47iYP+7DPtAmDX2MIRPaDjhC+5Xva64V57DKQf6IRoQka0Rh6
+	 QibKjBxAkVoX90Am6LsWqxITR1nzhv7V5KAEjfLkAT+sPVPZXftHkAoKEojaYaMNHr
+	 nOKorKOhVpPBljLVdYLIQrY08YumNrqRnpSbxGNay9ZsBWK/jOEmIglNsqBFxFu+xs
+	 3EeTtBNRaHaxg==
+Date: Sat, 19 Sep 2026 14:31:28 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Julian Braha <julianbraha@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Nauman Sabir <officialnaumansabir@gmail.com>, 
+	Tejun Heo <tj@kernel.org>, Nicolas Pitre <nico@fluxnic.net>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Matthew Maurer <mmaurer@google.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Jones <andrew.jones@linux.dev>, 
+	Graham Roff <grahamr@qti.qualcomm.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
+	Gary Guo <gary@garyguo.net>, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/3] kconfig: Introduce cc-option-str
+Message-ID: <aq6OPchSSrgXhicS@gremlin>
+References: <20260919005923.i.879-kees@kernel.org>
+ <20260919012508.GA3573999@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260919012508.GA3573999@ax162>
 
-On Thu,  3 Sep 2026 22:37:18 +0200
-Karl Mehltretter <kmehltretter@gmail.com> wrote:
+On Fri, Sep 18, 2026 at 06:25:08PM -0700, Nathan Chancellor wrote:
+> On Fri, Sep 18, 2026 at 05:59:24PM -0700, Kees Cook wrote:
+> > Hi,
+> >
+> > While reviewing the recent build speedup series[1], it became clear
+> > that we needed a general solution in kconfig to avoid repeating detected
+> > toolchain options. Implement cc-option-str and ld-option-str, and while
+> > at it, create "def_string" and friends to match "def_bool".
+> >
+> > -Kees
+> >
+> > [1] https://lore.kernel.org/all/20260918054058.GA384222@ax162/
+> >
+> > Kees Cook (3):
+> >   kconfig: Add "def_string", "def_int" and "def_hex"
+> >   kconfig: Replace "cc-option-bit" with "cc-option-str"
+> >   kconfig: Add "ld-option-str"
+>
+> Thanks, exactly what I had in mind. This seems reasonable to me and
+> passes my basic testing. I will let folks chime in for a few days then
+> apply this to kbuild-next so that Lorenzo can use it as part of the
+> speed up series.
 
-> Passing an ERR_PTR to kfree() currently reaches virt_to_page() and may
-> fault. Warn and return instead, leaving the bad caller visible without
-> using the pointer as allocator metadata.
-> 
-> Also reject ERR_PTR values in hardened usercopy. Keep both checks
-> separate from ZERO_OR_NULL_PTR(), whose exact matching is required by
-> krealloc().
-> 
-> Link: https://lore.kernel.org/r/CAG48ez05QVn6_gQ2TBrRa1a_DWQoaSSYubUsu5YMWxx-gqMijQ@mail.gmail.com
-> Link: https://lore.kernel.org/r/202608111716.0FA9DB17@keescook
-> Link: https://github.com/KSPP/linux/issues/93
-> Assisted-by: LLM
-> Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
-> ---
->  mm/slub.c     | 3 +++
->  mm/usercopy.c | 3 +++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index f9b56cb439e7..027b44dd7f07 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -6780,6 +6780,9 @@ void kfree(const void *object)
->  	if (unlikely(ZERO_OR_NULL_PTR(object)))
->  		return;
->  
-> +	if (WARN_ON(IS_ERR(object)))
-> +		return;
-> +
+Agreed, I will base my local v4 on it and send that (obviously once I've
+gone through review commentary etc.) once things have settled and rebase
+the series on kbuild-next!
 
-Since kfree isn't usually called with NULL it is likely to be better to
-have a initial single check for all the error cases.
-Something like:
-	if (unlikely((unsigned long)object + MAX_ERRNO <= MAX_ERRNO + ZERO_SIZE_PTR) {
-		WARN_ON(!ZERO_OR_NULL_PTR(object))
-		return;
-	}
+since I sent v3 on thurs I'll likely aim for weds/thurs next week for v4
+but I'll wait until this series is in place before I do it obviously! :)
 
-Although is would save a lot of code elsewhere if kfree(-errno) were valid.
+>
+> --
+> Cheers,
+> Nathan
 
-David
-
->  	page = virt_to_page(object);
->  	slab = page_slab(page);
->  	if (!slab) {
-> diff --git a/mm/usercopy.c b/mm/usercopy.c
-> index 5de7a518b1b1..c8d8703544c6 100644
-> --- a/mm/usercopy.c
-> +++ b/mm/usercopy.c
-> @@ -157,6 +157,9 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
->  	/* Reject if NULL or ZERO-allocation. */
->  	if (ZERO_OR_NULL_PTR(ptr))
->  		usercopy_abort("null address", NULL, to_user, ptr, n);
-> +
-> +	if (IS_ERR_VALUE(ptr))
-> +		usercopy_abort("ERR_PTR", NULL, to_user, ptr, n);
->  }
->  
->  static inline void check_heap_object(const void *ptr, unsigned long n,
-
+--
+Cheers, Lorenzo
