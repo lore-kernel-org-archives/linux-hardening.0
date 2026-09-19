@@ -1,48 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A502BEC52;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C802E266C;
 	Sat, 19 Sep 2026 00:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789777639; cv=none; b=We9i1FcLbTk2T6ac+6iVULyCIgylxRrfap/uevQu+9pEYR3zJ06PC5FWq064AAtgjx0uzCol833SDhCNkY2i507EMFyXcrQPokXjjk5halznQVl+JEI+dVAEoW23WCQEPBvqXIuC8OlpzLLJ9IgEYwZcoBtY+rFQYDGbt72zrXY=
+	t=1789777640; cv=none; b=namq9MPaWcBbeOKl6HOAnLux5TdaEUjfpq2oSGe1VA1xbjZNdRZ9+0H9fWuITBS84JmuqfGhvBVwUrakapFlNr/9BpAgFEKrj8wlA6c7w+TX+3RzGqtjQEDTQiy5dO/Kd2OXzMASxQOo0DIRKg9WmvxocKzmjq8T5CXKJ3buqIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789777639; c=relaxed/simple;
-	bh=lP3YhXtwooEdkZJ58qzwIIDJ3xb1I/f2TrN/HlOVr44=;
+	s=arc-20240116; t=1789777640; c=relaxed/simple;
+	bh=6sS3lCaxpbylrZBGqAyiYN0iG8JpfAtgL0QBWavvjDc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p5YDwhtxW/1JTs67b16OQchsgZ5fsqhn2hIWY+Dv/FCXkkvxQE6pQ+4a2OUczVKYQWJeMXZg56SxtSS2xDMHIVGLVCjRS6niB1sFW4HFMz49jHdT2D/t6lLyDBuc6K43NRX3cdzP/DMr7ZStqfXyXYNDtzu6UKqKmezo7YeCUEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EfUm/5uT; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=b8jdgHWa/f7j+53lyfa0gN9i6YFzd9NSCwqnfuZ6gjMwlqRAGSdRRIN4sOpUUdHdzk4l+3MxvLsQOZbeV1V+nNdLP0tyzApu6xS7NaaH6JuLBK0aJFKtCPhHn7kwufdBCyghVWbTsvFPB4k3wnHkyGgYwzYPviCTCMJQ9JJjeX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WqGeHqZx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EfUm/5uT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9006E1F0089B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WqGeHqZx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF5C1F00898;
 	Sat, 19 Sep 2026 00:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1789777634;
-	bh=OpVR3zREuIGoT8snYnyTYbBAZywT2YlMcq79Rbv9Za4=;
+	bh=3du1dVGxAjbniIsaDQVhASvOjLK8SuKVCNpO8T0Zxjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EfUm/5uTSrP9dKhUju6qj7MwdQtJvKpKQ6+LULwxB/B6yNicSHSAJpNQ3KaSVMaga
-	 UtuCzUhcllR45gNREprc9vFwOrksAHvRDW8oRIfjr0IahFck3+7XaUUCo40kUo6Vvu
-	 Ervm4zuLUD8XOI7TrwuqbTRmosWDGmdEGUKEl3eSLFnEfW2Wg+uGCxAwFUmyOrzfOx
-	 Q0953zgHDY+Fu2wBBKN8MHO08B359BIXo8fP46HVQKPGeEjK7KfC2StshFvatH1Pza
-	 JWsh2i6yT+nCzoK9EBbNcuQrCyvBgGVrPew2jZySLw0jRcxFMvDoNJwJdH7T2n6SJw
-	 ZDQ3ykQNJVltQ==
+	b=WqGeHqZxVFo53H0qlAES6z5qwm8ET0WK9iL+wLXzSqJ9JTYjvuBruRmezCzw2I67c
+	 pykV5nODfPuHA0PT0GRdiiafs4QULmPZpzIeqbYbr/ADUfoko7Gc+W/viOQibHhUb4
+	 odT64By60EoQFxUNjaIXhvzfqKT78GBI3JY5xB9WE0NoK2T9aZaHq6hvknl3xXK8X+
+	 J6D4dC6569d4fe8Nh0LVhvlypDrt5lH2a4dZuRuukzk6QqfyoYZirylKHGurPahDoF
+	 AXcRIPj4vVL1JAYii56v72vcCkVQVBYqwDWSOw+Oez4yD5M9s3crmUFxXYPOza+UBK
+	 6yJTN7jNbM3LA==
 From: Kees Cook <kees@kernel.org>
 To: Bill Wendling <morbo@google.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	David Gow <david@davidgow.net>,
-	Jiri Kosina <jikos@kernel.org>,
 	Petr Mladek <pmladek@suse.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Shuvam Pandey <shuvampandey1@gmail.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	nikitash.mariiaw@gmail.com,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 4/9] seq_buf: Clear what a writer did not claim when a seq_buf overflows
-Date: Fri, 18 Sep 2026 17:27:02 -0700
-Message-Id: <20260919002714.4060307-4-kees@kernel.org>
+Subject: [PATCH v2 1/9] seq_buf: Do not print an empty line from an overflowed seq_buf_do_printk()
+Date: Fri, 18 Sep 2026 17:26:59 -0700
+Message-Id: <20260919002714.4060307-1-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260919002658.stay.929-kees@kernel.org>
 References: <20260919002658.stay.929-kees@kernel.org>
@@ -52,172 +51,215 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5946; i=kees@kernel.org; h=from:subject; bh=lP3YhXtwooEdkZJ58qzwIIDJ3xb1I/f2TrN/HlOVr44=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrr93sDP1mo8UQ++R/xtTXph5T4t1m1FyJkH1ZIBfsU LHoxvQ7HaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABPpNGP4w69ew7yg+pO4+815 R/6l7drW9Lb0kCbP9Ltmf3PEzDPZ3zL8lT0+5Z186C237VELcqefWbP/2ZIS7tfijeXOR6f3rLr xjgUA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7028; i=kees@kernel.org; h=from:subject; bh=6sS3lCaxpbylrZBGqAyiYN0iG8JpfAtgL0QBWavvjDc=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlrr9044S3S/XDNV4OdRq2KeZvDEl/uzpxprZx5S2G/D e/uPfyXOkpZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACbSvZWRYc2rp1e7TOZ+ON0/ q2be8QdVq363HunymCz2dAdv47YVFisZGXbW7X4m8Hf3lOgoMSfeNheJeb+vHPUu3crfZO8tqBr 6ghMA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Using seq_buf_set_overflow() would leave the bytes between "len"
-and "size" untouched, so if seq_buf_str() is used on an overflowed
-seq_buf, those bytes may be exposed. For any paths that don't claim
-partially written bytes, by setting "len = size" before calling
-seq_buf_set_overflow(), wipe the unclaimed bytes. The seq_buf_puts()
-and related APIs already claim those bytes now, so only the unclaimed
-cases remain. A specific example of this was seq_buf_path() which uses
-d_path() and would write to the tail before discovering it was out
-of space, and would correctly mark a seq_buf as overflowed, but the
-path fragment would be left over.
+seq_buf_do_printk() prints a buffer line by line, then prints whatever
+follows the last newline. When a string has overflowed at exactly a
+newline, an empty line is printed since the pointer hasn't reached the
+overflow mark of the seq_buf. Switch to just check if the string is
+already empty and only print if not.
 
-Clear from len to the end of the buffer in seq_buf_set_overflow(), which
-every overflow goes through, including seq_buf_commit() with a negative
-count.
+The only caller is the memory cgroup OOM report, so this could only ever
+add a blank line to a report whose statistics already did not fit.
 
-Add a test that fills a seq_buf, leaves it too little room for a path, and
-checks that nothing of the path is left in the buffer. The tests run before
-anything writable is mounted, so it takes its file from shmem.
+Add a test that registers a console to count the records that
+seq_buf_do_printk() emits. It counts the records carrying the test's
+marker, and the records holding nothing but a line feed that arrive
+after one, so that unrelated kernel messages do not disturb it. Both
+states that reach the flaw are covered: exactly full, and overflowed.
 
 Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
 and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.1.0.
 
+Fixes: 96928d9032a7c ("seq_buf: Add seq_buf_do_printk() helper")
 Assisted-by: LLM
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: David Gow <david@davidgow.net>
-Cc: Jiri Kosina <jikos@kernel.org>
 Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
 Cc: Shuvam Pandey <shuvampandey1@gmail.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 ---
- include/linux/seq_buf.h   |  8 +++++--
- lib/seq_buf.c             |  4 ++++
- lib/tests/seq_buf_kunit.c | 45 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 55 insertions(+), 2 deletions(-)
+ lib/seq_buf.c             |   2 +-
+ lib/tests/seq_buf_kunit.c | 133 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 134 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index 77e76e283370..0c0a0db04b09 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -5,6 +5,7 @@
- #include <linux/bug.h>
- #include <linux/minmax.h>
- #include <linux/seq_file.h>
-+#include <linux/string.h>
- #include <linux/types.h>
- 
- /*
-@@ -58,12 +59,15 @@ seq_buf_has_overflowed(struct seq_buf *s)
- /*
-  * Mark @s as overflowed, which discards the length of what it holds. The
-  * bytes up to its last one are the string from then on, as that is where
-- * seq_buf_str() terminates it, so a caller that could not fill the buffer
-- * has to NUL them itself before calling this.
-+ * seq_buf_str() terminates it, so clear whatever was not written: a writer
-+ * sets len to how much it filled, and anything past that was never adopted.
-  */
- static inline void
- seq_buf_set_overflow(struct seq_buf *s)
- {
-+	if (s->len < s->size)
-+		memset(s->buffer + s->len, 0, s->size - s->len);
-+
- 	s->len = s->size + 1;
- }
- 
 diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index 00abdec8760e..7e3bf837da01 100644
+index a92093f346da..35a5964370b4 100644
 --- a/lib/seq_buf.c
 +++ b/lib/seq_buf.c
-@@ -76,6 +76,8 @@ int seq_buf_vprintf(struct seq_buf *s, const char *fmt, va_list args)
- 			s->len += len;
- 			return 0;
- 		}
-+		/* vsnprintf() wrote as much as fits, so none of it is stale */
-+		s->len = s->size;
+@@ -128,7 +128,7 @@ void seq_buf_do_printk(struct seq_buf *s, const char *lvl)
  	}
- 	seq_buf_set_overflow(s);
- 	return -1;
-@@ -164,6 +166,8 @@ int seq_buf_bprintf(struct seq_buf *s, const char *fmt, const u32 *binary)
- 			s->len += ret;
- 			return 0;
- 		}
-+		/* bstr_printf() wrote as much as fits, so none of it is stale */
-+		s->len = s->size;
- 	}
- 	seq_buf_set_overflow(s);
- 	return -1;
+ 
+ 	/* No trailing LF */
+-	if (start < s->buffer + s->len)
++	if (*start)
+ 		printk("%s%s\n", lvl, start);
+ }
+ EXPORT_SYMBOL_GPL(seq_buf_do_printk);
 diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
-index e0057eaeeb36..852eb645e253 100644
+index eb466386bbef..9ceccdc3029f 100644
 --- a/lib/tests/seq_buf_kunit.c
 +++ b/lib/tests/seq_buf_kunit.c
-@@ -6,6 +6,9 @@
+@@ -6,7 +6,9 @@
   */
  
  #include <kunit/test.h>
-+#include <linux/fs.h>
-+#include <linux/seq_buf.h>
-+#include <linux/shmem_fs.h>
- #include <linux/console.h>
++#include <linux/console.h>
  #include <linux/seq_buf.h>
- #include <linux/string.h>
-@@ -466,6 +469,47 @@ static void seq_buf_do_printk_test(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, seq_buf_printk_empty, 0);
++#include <linux/string.h>
+ 
+ static void seq_buf_init_test(struct kunit *test)
+ {
+@@ -216,6 +218,136 @@ static void seq_buf_putmem_hex_overflow_test(struct kunit *test)
+ 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
  }
  
-+/* Long enough that it cannot fit in the room the test leaves for it. */
-+#define SEQ_BUF_TEST_PATH	"/seq_buf_kunit_path_name"
 +
-+static void seq_buf_path_overflow_test(struct kunit *test)
++/*
++ * Counters for the console that seq_buf_do_printk_test() registers while it
++ * runs. Only records carrying the marker are counted, so unrelated kernel
++ * messages do not disturb them.
++ *
++ * An empty record carries nothing to recognize it by, so count one only
++ * where the flaw puts it: directly after a record of ours, with nothing in
++ * between. That still misreads a bare line feed printed by another CPU in
++ * exactly that gap, but no longer counts one printed at any point while the
++ * console happens to be registered.
++ */
++#define SEQ_BUF_PRINTK_MARKER	"sbdpkx"
++
++static unsigned int seq_buf_printk_marked;
++static unsigned int seq_buf_printk_empty;
++static bool seq_buf_printk_last_was_ours;
++
++static void seq_buf_printk_capture(struct console *con, const char *s,
++				   unsigned int count)
 +{
-+	DECLARE_SEQ_BUF(s, 32);
-+	const char *expected = "keep:xxxxxxxxxxxxxxxxxxxxxxx";
-+	struct file *file;
-+	size_t len;
-+	int i;
++	const char *text = s;
++	const char *prefix;
 +
 +	/*
-+	 * The tests run before anything writable is mounted, so take the file
-+	 * whose path gets printed from shmem, which needs no mount of its own.
++	 * Skip what printk() puts in front of the message: a timestamp,
++	 * and the caller id as well under CONFIG_PRINTK_CALLER, so strip
++	 * every bracketed group rather than just the first.
 +	 */
-+	file = shmem_file_setup(SEQ_BUF_TEST_PATH, 0, EMPTY_VMA_FLAGS);
-+	if (IS_ERR(file))
-+		kunit_skip(test, "cannot create a file to print the path of");
++	while (count && text[0] == '[') {
++		prefix = memchr(text, ']', count);
++		if (!prefix)
++			break;
++		count -= prefix + 1 - text;
++		text = prefix + 1;
++		if (count && text[0] == ' ') {
++			text++;
++			count--;
++		}
++	}
 +
-+	/* Leave less room than the path needs, so d_path() cannot fit it. */
-+	seq_buf_puts(&s, "keep:");
-+	len = seq_buf_used(&s);
-+	for (i = len; i < 28; i++)
-+		seq_buf_putc(&s, 'x');
++	if (strnstr(text, SEQ_BUF_PRINTK_MARKER, count)) {
++		seq_buf_printk_marked++;
++		seq_buf_printk_last_was_ours = true;
++		return;
++	}
 +
-+	KUNIT_EXPECT_EQ(test, seq_buf_path(&s, &file->f_path, "\n"), -1);
-+	fput(file);
++	if (seq_buf_printk_last_was_ours &&
++	    (count == 0 || (count == 1 && text[0] == '\n')))
++		seq_buf_printk_empty++;
 +
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
++	seq_buf_printk_last_was_ours = false;
++}
++
++static void seq_buf_printk_run(struct console *capture, struct seq_buf *s)
++{
++	seq_buf_printk_marked = 0;
++	seq_buf_printk_empty = 0;
++	seq_buf_printk_last_was_ours = false;
 +
 +	/*
-+	 * d_path() keeps as much of the path as fits when it does not fit
-+	 * whole, and seq_buf_str() would hand out that fragment, as it ends
-+	 * the string at the last byte of an overflowed buffer.
++	 * register_console() will not take an unmatched console without
++	 * CON_ENABLED, and unregister_console() clears it, so set it on
++	 * every run to keep the test repeatable.
 +	 */
-+	for (i = 28; i < 32; i++)
-+		KUNIT_EXPECT_EQ_MSG(test, s.buffer[i], '\0',
-+				    "byte %d past the data is not cleared", i);
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
++	capture->flags = CON_ENABLED;
++	register_console(capture);
++	seq_buf_do_printk(s, KERN_INFO);
++	unregister_console(capture);
++}
++
++static void seq_buf_do_printk_test(struct kunit *test)
++{
++	/*
++	 * A registered console is a global object: printk() reaches it
++	 * through the console list from any CPU, and the console code writes
++	 * back into it, so keep it out of this function's stack frame the
++	 * way every other console in the tree does.
++	 */
++	static struct console capture = {
++		.name = "sbufcap",
++		.write = seq_buf_printk_capture,
++		.index = -1,
++	};
++	DECLARE_SEQ_BUF(s, 8);
++	DECLARE_SEQ_BUF(t, 16);
++	DECLARE_SEQ_BUF(u, 8);
++
++	/*
++	 * Fill the buffer exactly, so that the NUL takes the place of the
++	 * last byte and the string ends with the line feed before it.
++	 */
++	seq_buf_puts(&s, SEQ_BUF_PRINTK_MARKER);
++	seq_buf_putc(&s, '\n');
++	seq_buf_putc(&s, '!');
++	KUNIT_ASSERT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_ASSERT_EQ(test, seq_buf_used(&s), 8);
++	KUNIT_ASSERT_EQ(test, strlen(seq_buf_str(&s)), 7);
++
++	seq_buf_printk_run(&capture, &s);
++
++	/* The one line that was written, and nothing after it. */
++	KUNIT_EXPECT_EQ(test, seq_buf_printk_marked, 1);
++	KUNIT_EXPECT_EQ(test, seq_buf_printk_empty, 0);
++
++	/* Check that lines without a trailing newline are shown. */
++	seq_buf_puts(&t, SEQ_BUF_PRINTK_MARKER "\n" SEQ_BUF_PRINTK_MARKER);
++	KUNIT_ASSERT_FALSE(test, seq_buf_has_overflowed(&t));
++
++	seq_buf_printk_run(&capture, &t);
++
++	KUNIT_EXPECT_EQ(test, seq_buf_printk_marked, 2);
++	KUNIT_EXPECT_EQ(test, seq_buf_printk_empty, 0);
++
++	/*
++	 * The buffer above was exactly full, where "len" equals the size. A
++	 * buffer that actually overflowed reaches the same bug by the other
++	 * route the old test had, with "len" one past the size.
++	 */
++	seq_buf_puts(&u, SEQ_BUF_PRINTK_MARKER "\n");
++	KUNIT_EXPECT_EQ(test, seq_buf_puts(&u, "yy"), -1);
++	KUNIT_ASSERT_TRUE(test, seq_buf_has_overflowed(&u));
++	KUNIT_ASSERT_EQ(test, u.len, u.size + 1);
++
++	seq_buf_printk_run(&capture, &u);
++
++	KUNIT_EXPECT_EQ(test, seq_buf_printk_marked, 1);
++	KUNIT_EXPECT_EQ(test, seq_buf_printk_empty, 0);
 +}
 +
  static struct kunit_case seq_buf_test_cases[] = {
  	KUNIT_CASE(seq_buf_init_test),
  	KUNIT_CASE(seq_buf_declare_test),
-@@ -482,6 +526,7 @@ static struct kunit_case seq_buf_test_cases[] = {
- 	KUNIT_CASE(seq_buf_puts_partial_overflow_test),
- 	KUNIT_CASE(seq_buf_putmem_partial_overflow_test),
- 	KUNIT_CASE(seq_buf_putmem_hex_partial_overflow_test),
-+	KUNIT_CASE(seq_buf_path_overflow_test),
- 	KUNIT_CASE(seq_buf_do_printk_test),
+@@ -228,6 +360,7 @@ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_get_buf_commit_test),
+ 	KUNIT_CASE(seq_buf_putmem_hex_test),
+ 	KUNIT_CASE(seq_buf_putmem_hex_overflow_test),
++	KUNIT_CASE(seq_buf_do_printk_test),
  	{}
  };
+ 
 -- 
 2.34.1
 
