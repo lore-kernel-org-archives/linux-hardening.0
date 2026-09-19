@@ -1,112 +1,532 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2124.outbound.protection.partner.outlook.cn [139.219.146.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46033F39E8
-	for <linux-hardening@vger.kernel.org>; Sat, 19 Sep 2026 09:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789810794; cv=none; b=mr0LS3PhTkhvX17n2BJNT0bSilMnj8mfihS6ue9grBr7j1cIyAH7Jomu0PJPcm7A8+cDf3V3OKohN+lVSnlw0gVYZ/btqjG1ou6Bp99jRdQwsBPZt9CPq4wYWfLyl/PHljLKGBDnUUpDuYp/2mIlDiuty46FZkFk7r8Tb6QTQsc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789810794; c=relaxed/simple;
-	bh=tHdHCeV3i/53pBzx+BvRaG4iEMebCHpkPsy50Fuskxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvB1wVhBEJJleEjtiU/2odtZsF2aHUtluxKD2AGFv7Hv71ZFXpYWBU8gVIkZed31pMzMz2xgqDNkIlUg+p2MSQeW82MiQPDzFAv9Oya6H04+CYa22VqwUoMZ0hJoLMTl+oTpDMIx08WEHMJgspM03eXlD4OtGDjtM1/q6uxQtac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QcDGXE9v; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QcDGXE9v"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ccff31419so12886035e9.3
-        for <linux-hardening@vger.kernel.org>; Sat, 19 Sep 2026 02:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789810791; x=1790415591; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=G7D6znmpASqvbzZksdBAJ2aUTbJ7HvmNoE6FBY58urg=;
-        b=QcDGXE9vmm/H8m4H5M7wjApIcK1rfcHQ4bH6+pzWqT/pcTdIEgATWEUucjdZPixKK0
-         ELFSRmPrh1/I82b3TSRUZE7sMNGGxJAcAPCYS5Tu6oTiwZwYVo75pnao4p7E9DRO1xxs
-         FE2dhZ9g+MCW0DkDaqh4F7yNxvViK2ClO9JUcgsV0e03pXZyhqM1lCoL29UF5E3m+NBY
-         1slOKaaOnH+bzU+qLC/lXcVFIZ3qc3myHL08DAs3aJLYNydQf9o2H2Twx8MIYl0pVzFi
-         lfM72nR1e96Am1bEriXQUISdbDBXfeTcf0JOglWdsAb0funNzAsxxm+z+zbCUiUOoLAo
-         Tpag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789810791; x=1790415591;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=G7D6znmpASqvbzZksdBAJ2aUTbJ7HvmNoE6FBY58urg=;
-        b=qm0mOIHMAixbge518iGilfqvos0G6rr5ey8MDN9bDtB/fhiH3C7Br27DusnJVWoudc
-         zequWFvY3mNzQog2CIWD+33+LxXf3NWepgebkwioRr4aibU8gHiu0Y+FeGzWFhrWHyUG
-         2SkivPKtw4vET4QcUvll6I8MqroZAvzQA8TuaF+/sz4F8BfHXb54ilXdAg1TkRMztesL
-         HDkJEkzl+Lt0a+Bmm0omX0xvc54xvxZA/uLleHJy5uKjq6xB99wPiMdPnap8vJOwc8J2
-         vsl7/o7FFrXr53UfsNaYij1LSxpoq0+PPxYhM/A1m6jXQv0YFxw4Gm023mlbp1b+FJK2
-         91lw==
-X-Forwarded-Encrypted: i=1; AKwUvBzlmc5v5HknLm2OhCslGtaV2BJa9Bxkeb/VQ0sGzVnD6OTPUXHzu7lyRmk/6CCcubyGC/GgoEjdI2IL4t9Ic5w=@vger.kernel.org
-X-Gm-Message-State: AFuF++nPDyc2gexzccKkRxFjf0zzpuleUvE81tWYS7mv4I68DYwBqNiv
-	z0aSm8Um6Uqh0ywnTlTKRQXQ4NQLNnFPEu1jqPM4Isylb6dsvVrJVvct
-X-Gm-Gg: AYBFou0pluhm7OSjTI3YoORuLIFC/eJwQlb2y7O9gH0FPk0C1IYVXbPa/oFJaoJzyl7
-	yJJGeK8WLT3kuDj4NG8nrNqyD3WewoHEHTnzfNnqJ48xdUblfrOCItft2KNE44kgXqBoOVLUMi7
-	8OriQf38uB4t3L8CHwDcRqW+O4Gc5BsE3wVxNZAilh4nU0Hk5dZx8ANZk7uc3hkt8VFXz+Hc27Y
-	eEJ1EJKTAH4FHwm6eBu3ydn+n8ISs95G7vNf1ZbVwRyeA319DVLrycMxNchsJfi6QhYf3V+388Z
-	NbT+y3lCQgOc6HtcYroULADVf5H8ZgK8aUKhf9GmwJCqc1XQZ6IhYAgSLDjNAPmUc3XrWisGjNi
-	uXopD2BHJuH6NGzXeUfePYRK9zQvTGVKDzJVoj+PahtnzH01YiUsYArOp+1EUlxtRUxbFoU9m5G
-	OyAyrrk/hmzShCaxr0otrHwAaSh8+BnVcsXYsww0WONgCOjpJyOO5uQ8BxMrMoozKwV5rIk76SA
-	f4jsT73LpN8Hk2g9LplA74xAYAyRv8S24CnfPBBXPb8PnoL1lsXKkmWL7nJn5301j+Pand6xTbS
-	sIDEhTXIVe7QjudmTUr/44CnTQTxcfovw1yanm+jZTrkuqswje9k3gFLdudoN+i2qj1BDnsERH2
-	FXhopJbMY
-X-Received: by 2002:a05:600d:848f:10b0:49d:827:e5b6 with SMTP id 5b1f17b1804b1-49fc5735351mr48923145e9.20.1789810790822;
-        Sat, 19 Sep 2026 02:39:50 -0700 (PDT)
-Received: from unknown748F3CBA5068 (dynamic-2a02-3100-a017-2b01-05fe-203b-7cd2-a640.310.pool.telefonica.de. [2a02:3100:a017:2b01:5fe:203b:7cd2:a640])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fc6ca43edsm124495965e9.0.2026.09.19.02.39.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Sep 2026 02:39:50 -0700 (PDT)
-Date: Sat, 19 Sep 2026 11:39:47 +0200
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: Harry Yoo <harry@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 3/5] slab: handle ERR_PTR values in kfree and hardened
- usercopy
-Message-ID: <aq5YL3P6tuFy4eTU@gmail.com>
-References: <20260903203720.63689-1-kmehltretter@gmail.com>
- <20260903203720.63689-4-kmehltretter@gmail.com>
- <497a85d3-e062-4930-bcb8-c86a8205e7b2@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD44913D51E;
+	Sat, 19 Sep 2026 09:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789811453; cv=fail; b=Vo86Nx6xK2C3/TzF+VBrvZXMLd6U5kgF9epZYHiPScbwgdfzfEeykp5GMr8tIUpU6jRgsuWsnbnYZh11SZzhch2ZhrLtolNahjvEYE89stsOFJIi9YpAt3UJ9WVXtNfJV11m7kK2Y+JfLmhOz+07IkCuZMs2KRUTSIldIuaaXVs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789811453; c=relaxed/simple;
+	bh=5628H7uG3PgV4wzWxh96MpalpcfqLYrFlXCoArRcFEU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UZe9KVKCXd29URCzoC0nC9+96eE/eEjRCn5my3u/w8yF/pztUNS7Jgmg5u8tyBcDEXs4LIuhryso0BonLObHqvZ0TuUWNjd4T36IQQtcye2fV5OiNsqTIy0DlgvpTjMmfg1M000OY1Rn2AzL43wpkO78Qj0/M9a5uJC7aZTsyZ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JOTePNji6lLF+9eusknmTaZRwo1Kfxql7WYhdElcfGQTddc8kG3OoU1Cj/oIg57RE/ta3kCwrzUzUHZ424ZtUkovzJYCLNTMg994RxiNrkJDrKCVjHLn9a8f/fhJJ5lCkCdK+dcaoQDDnnDQEiLHqMOHl9Nc9NAUkqNKIaalm29636TEPyi/VVbxiySqJ1dGQkx4XQHw7p22LttS5pAtN5sc+B+9CwKVnay9SYyIDQPwMqL4UtimmHCqEqhe65rGRXOMqQIUFLYOSFlPwo/Eoq99bKoWHNKQGmpe7bDb1OXqy4PhudDqq246RhsbT67vjuK1Cm7aiWrzJHSwwVyHGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TyZaVw9wxLCsApLWkPAEgsUAgtG9AwbscEiaG942Gr4=;
+ b=eSShHYT59GaV+lfe8ZPox4xI3vZN1cp2Y57ozUqvhNqoJEErf4+5kwjnBB63+tnHR3rcmwVkWS5yEFdgouv/lUgQ4HQJiRFdeMHZeeRlNUTDHrZoocQBAx0N+I9AB1bunSYEyx1qnZaPYG49TlGRASd2ym7xlTh2vHGPbj1o15PFMTVQrh7OYvS8a4rE0x2HljGu9xsGUZeYDvawyFLQ5uEgaJLZv230rJBkpD2eYB9nQ40udQZ28BsaIBTsMr9fp2sCCksaZ6bW0kLTccSWyzu0YMxVdgyXhBsfdY3W/60NlNAg0xGeSpkQdRUZRJHxzzyEgnp5TyMDgzjXMBf3Uw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::6) by ZQ4PR01MB1329.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:16::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.14; Sat, 19 Sep
+ 2026 09:50:38 +0000
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e7d4:256c:b066:850d]) by
+ ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn ([fe80::e7d4:256c:b066:850d%4])
+ with mapi id 15.21.0428.014; Sat, 19 Sep 2026 09:50:38 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Hal Feng <hal.feng@starfivetech.com>, Michael Turquette
+	<mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Stephen Boyd
+	<sboyd@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
+	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
+	<alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>, Emil Renner Berthing
+	<kernel@esmil.dk>, Kees Cook <kees@kernel.org>, "Gustavo A . R . Silva"
+	<gustavoars@kernel.org>, Richard Cochran <richardcochran@gmail.com>
+CC: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3 06/22] clk: starfive: Add JHB100 System-0 clock
+ generator driver
+Thread-Topic: [PATCH v3 06/22] clk: starfive: Add JHB100 System-0 clock
+ generator driver
+Thread-Index: AQHdJmAKp/CXNkJMgU61cKgC1AMm37bSWzKAgAOQspA=
+Date: Sat, 19 Sep 2026 09:50:38 +0000
+Message-ID:
+ <ZQ4PR01MB12029A0067C12837C502A712F2862@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+References: <20260807112923.191627-1-changhuang.liang@starfivetech.com>
+ <20260807112923.191627-7-changhuang.liang@starfivetech.com>
+ <NT0PR01MB110298F21FF8FC06DB4EAE34E6B82@NT0PR01MB1102.CHNPR01.prod.partner.outlook.cn>
+In-Reply-To:
+ <NT0PR01MB110298F21FF8FC06DB4EAE34E6B82@NT0PR01MB1102.CHNPR01.prod.partner.outlook.cn>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ4PR01MB1202:EE_|ZQ4PR01MB1329:EE_
+x-ms-office365-filtering-correlation-id: 70059de2-5735-4e1c-36db-08df163375b1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|23010399003|1800799024|7416014|376014|366016|56012099006|4143699003|10067099003|3023799007|921020|22082099003|18002099003|38070700021;
+x-microsoft-antispam-message-info:
+ XcfhDZGTwUv/p5gjKcXGTHuy9iIUFo6G5DkoCOB9iz0eecC680+5faWyvd/gU2TtXg+tnK9SpMKBa54J7t9S2x/XWOQLsUHiGncAMIWQme7zjbbaX4smKyFuoC6N1W4LydJ3sNXMd1irKiSN0jzAbNR4vUInOx61jqNnLTa0gaV4lFXoOHj5nto1UBEyYd8SSwBvj7BLhS4LiuQJ0Ky734yetmVAyek6bU0x/GVvgJ5+9mHFL+L0G3/FzcITEspCnHfru3XLPBuro0gwIzlOcCMhCKpsasFexwKZRaFnLbAIEvI5QZKAOa9TrALZo/rttyoKmrvDt8ISYckDwpzTBGeeBJyg226eC2NYZXR1rTYOQWD6g2mLgUWO/QoJrTsf79Xusq59fQ8nA2W8hT8WnttBDv9tRfyTaz+ofHsSKFqnYtXVNIWveuYgAw5IY1UdZ14fsGHojkv1NiLtQ1niChkGoJsrpSfPWl55HgsZlQZAfP5+Vlk8W9FP0AngLJosMWRhj4QEezCtdujTbLPaXPN09wji3oClf6MIQ+KG45insTwNSQs7fd8j7bgc1WSZDrdhJ1oiSR5HOQLWVn0nJw==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(7416014)(376014)(366016)(56012099006)(4143699003)(10067099003)(3023799007)(921020)(22082099003)(18002099003)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?JnPg95b7RDrj53trAGDpbPEuWAcuaT4Drhym5xbnaVT3rqj1AfgmI9OWQ8R2?=
+ =?us-ascii?Q?ijEqboTNmsb20Mg9ixI9cPnO67kDiugGxBPZpf3Tzf4/ZE34CeUFG33NMdAV?=
+ =?us-ascii?Q?+zodSQPGzFVDQN881OxASWZGJfkUbOEd0uFUDDzrlDu1JAc/QzKZnk06h06H?=
+ =?us-ascii?Q?1smP2jhd8ile02f4UxlLt7RSRLLonGN+RivTM7rsag0Rtlxx04e13XNkspJr?=
+ =?us-ascii?Q?KT3wZtmUEsYRI0jYoxPanJEFnXeCzCZL58nzbPSa+tPBu1Hm4UXN1X1i9oai?=
+ =?us-ascii?Q?VHI3Ps1/0jUytCL/uVyN7ysCs6mNilg3uRovN/YV3Kn8JeKFRD4nBfXQfNgB?=
+ =?us-ascii?Q?MfLUJBGetDBTVVURKvGBSAHTsHrLHSYVKuBfxYh5jTPu2tkY/g6T/1r9tlIQ?=
+ =?us-ascii?Q?BCnDXXbvVSCJWEAfE0AzhMKJbgCIFJMXKI9BsKLJNGCqDbfSkiOBT5FfhMaO?=
+ =?us-ascii?Q?pbugIXF4VX6r006PXdInukKMAEJ+dIu2XU+g6TmHjAY02/2z1lPKh13O43uF?=
+ =?us-ascii?Q?T5/k0fVit6/6JvMl19BCLTAdDvoZ7OSwx7+5sSgMy7mPCiWRgGzsjAdgD+0T?=
+ =?us-ascii?Q?/0JUI4vYuK8SnI8xUUCL1jQtF1uK7gFvYkvDeLa/qVB/4A1rX2Pm5P9WavmT?=
+ =?us-ascii?Q?CfeoBJ+sKwj3d9C96kAhYUZKGIj67oeVJ4Ql8/09PFU/XdPXridWw0L7aIAC?=
+ =?us-ascii?Q?sNopKmS1GLQo0y5WY7rX21+4y5sBuBTuelfoRFTDuRI+nzYR7q09yioBHKEn?=
+ =?us-ascii?Q?ttUMYWYgoLC4bjc3k+n1pt4Dm3cfNolUF7+/LGM/BY5Hjxit9bDKw3Dztjge?=
+ =?us-ascii?Q?KgQ+yImhWFNlMwyjy5B1CV6eX11PyClU2lmZEkrYKU6qRmyEBAi826TWQmtR?=
+ =?us-ascii?Q?qwys9qVoYxusYmeuehI8VHA3+3BP2PmTbNj/rhu99FdqJUTPKtaXU4Y9uX01?=
+ =?us-ascii?Q?pVnK0PI0EUWKK0wHXAIubB5ul1fBujAgjJ1ablG8kV5QdyujsnVprEFxsPxY?=
+ =?us-ascii?Q?lixuXmF7B+5aj+/S78fttIDQ7Y46+vmWCJChG3G7gYQRFK/RdviA2wvPL1sB?=
+ =?us-ascii?Q?t+lWFMJ9AVxe8Vq37PdvJOcagsYDpKwFFICy2h9+OQhQhzh68gPOMdBwvHpG?=
+ =?us-ascii?Q?0SNC0jvcpw9dU6VtURZHr9A6F54VErcUlzXqwYmlnqoNDdPVpgS3FtBd5glT?=
+ =?us-ascii?Q?Q1uu2aMDGNIDhPMQij3GOh2i17W8+8q0SB3eSUfHKXTb5Lsx1sfb9rHiJEF4?=
+ =?us-ascii?Q?MZL10LhGr8MN1Vlrn4aWnSVMPrf+1h5rqsD54hWx8gjRykRU1Pyzsb6HgD4l?=
+ =?us-ascii?Q?17hM5Xemwiiikddc1RfqvmaCjcMyjkobH11jV9j6mHeZzZYEhJ8h8vlaQA6R?=
+ =?us-ascii?Q?GOFQOyf9FlvQoHT4+/+kIGZI2/qKbvCS7q/qOCljA9UFtShz4FMtK+n7JUfr?=
+ =?us-ascii?Q?TnU3bVPT0zxC7e8wwq9oLdzmLG/JRR563kRcxifPjcC6bylNZgFDXwcQIzpL?=
+ =?us-ascii?Q?7HIiEQ4q7d/5LoLcQJAxfq/A+5KHAd74Y8perQR1IITkQVxmE1b9Po8O3hhw?=
+ =?us-ascii?Q?mgBNKYLr9yakVIG07IgIrug6lM57Pi4xm7b6/e0OvNYad5xwWfBNCJ4PTHr2?=
+ =?us-ascii?Q?0sk4YNytHdBICYPFWRMF73dGW2F5IT1pQCtWVnw4R5ip41vBrMqupcdjw4YE?=
+ =?us-ascii?Q?6qCSll278LyXWcCQ3ux060r7st2A2J5V8W1pUMoeqte1JVKdXgPBkhXtxuP4?=
+ =?us-ascii?Q?uCJYbPKTtszLKncxuwvy6d/18NHn2Rg=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <497a85d3-e062-4930-bcb8-c86a8205e7b2@kernel.org>
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70059de2-5735-4e1c-36db-08df163375b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2026 09:50:38.3467
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: O7ZqFEQuSyegMacONDShf+s4VXY+Rc8S6vXuBO7ZLKjgAIGsX/s/e5qDsf0bJhA4yYZFNoPqu+zsDVLtf1QnKET9WgfId49Hd+ZcnoK58Jp+PA6FYUD+kFbe9Hf37LS2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1329
 
-> > +	if (WARN_ON(IS_ERR(object)))
-> 
-> Wonder if WARN_ON_ONCE() would be better.
-> Also wonder about the benefits for hardening (as opposed to debugging).
-> Without this check it would fault. Now it warns, but hardened setups often
-> use panic_on_warn anyway, so the result is the same?
-> 
+Hi, Hal
 
-Yes, I'll switch to WARN_ON_ONCE().
+> > On 26.08.07 19:29, Changhuang Liang wrote:
+> > Add support for JHB100 System-0 clock generator (SYS0CRG).
+> >
+> > The StarFive JHB100 SoC has multiple CRGs with similar probe flows, so
+> > a generic starfive_crg_probe() function is introduced to facilitate
+> > the registration process of other CRGs in the future.
+> >
+> > Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+> > ---
+> >  MAINTAINERS                                   |   7 +
+> >  drivers/clk/starfive/Kconfig                  |  11 ++
+> >  drivers/clk/starfive/Makefile                 |   2 +
+> >  drivers/clk/starfive/clk-starfive-common.c    | 142
+> ++++++++++++++++-
+> >  drivers/clk/starfive/clk-starfive-common.h    |  12 ++
+> >  .../clk/starfive/clk-starfive-jhb100-sys0.c   | 150 ++++++++++++++++++
+> >  6 files changed, 321 insertions(+), 3 deletions(-)  create mode
+> > 100644 drivers/clk/starfive/clk-starfive-jhb100-sys0.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS index
+> > ce97de46e610..c48b56d0ab94 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -26069,6 +26069,13 @@ F:
+> > 	Documentation/devicetree/bindings/phy/starfive,jh7110-usb-phy.yaml
+> >  F:	drivers/phy/starfive/phy-jh7110-pcie.c
+> >  F:	drivers/phy/starfive/phy-jh7110-usb.c
+> >
+> > +STARFIVE JHB100 CLOCK DRIVERS
+> > +M:	Changhuang Liang <changhuang.liang@starfivetech.com>
+> > +S:	Maintained
+> > +F:	Documentation/devicetree/bindings/clock/starfive,jhb1*.yaml
+> > +F:	drivers/clk/starfive/clk-starfive-jhb1*
+> > +F:	include/dt-bindings/clock/starfive,jhb1*.h
+> > +
+> >  STARFIVE JHB100 DEVICETREES
+> >  M:	Changhuang Liang <changhuang.liang@starfivetech.com>
+> >  L:	linux-riscv@lists.infradead.org
+> > diff --git a/drivers/clk/starfive/Kconfig
+> > b/drivers/clk/starfive/Kconfig index ff8eace36e64..7926e02ccd7d 100644
+> > --- a/drivers/clk/starfive/Kconfig
+> > +++ b/drivers/clk/starfive/Kconfig
+> > @@ -72,3 +72,14 @@ config CLK_STARFIVE_JH7110_VOUT
+> >  	help
+> >  	  Say yes here to support the Video-Output clock controller
+> >  	  on the StarFive JH7110 SoC.
+> > +
+> > +config CLK_STARFIVE_JHB100_SYS0
+> > +	bool "StarFive JHB100 system-0 clock support"
+> > +	depends on ARCH_STARFIVE || COMPILE_TEST
+> > +	select AUXILIARY_BUS
+> > +	select CLK_STARFIVE_COMMON
+> > +	select RESET_STARFIVE_JHB100 if RESET_CONTROLLER
+> > +	default ARCH_STARFIVE
+> > +	help
+> > +	  Say yes here to support the system-0 clock controller on the
+> > +	  StarFive JHB100 SoC.
+> > diff --git a/drivers/clk/starfive/Makefile
+> > b/drivers/clk/starfive/Makefile index 012f7ee83f8e..2c5e66d1d44e
+> > 100644
+> > --- a/drivers/clk/starfive/Makefile
+> > +++ b/drivers/clk/starfive/Makefile
+> > @@ -10,3 +10,5 @@ obj-$(CONFIG_CLK_STARFIVE_JH7110_AON)	+=3D
+> > clk-starfive-jh7110-aon.o
+> >  obj-$(CONFIG_CLK_STARFIVE_JH7110_STG)	+=3D clk-starfive-jh7110-stg.o
+> >  obj-$(CONFIG_CLK_STARFIVE_JH7110_ISP)	+=3D clk-starfive-jh7110-isp.o
+> >  obj-$(CONFIG_CLK_STARFIVE_JH7110_VOUT)	+=3D
+> clk-starfive-jh7110-vout.o
+> > +
+> > +obj-$(CONFIG_CLK_STARFIVE_JHB100_SYS0)		+=3D
+> > clk-starfive-jhb100-sys0.o
+> > diff --git a/drivers/clk/starfive/clk-starfive-common.c
+> > b/drivers/clk/starfive/clk-starfive-common.c
+> > index 9c0eb7a50d1e..1b5e56af4138 100644
+> > --- a/drivers/clk/starfive/clk-starfive-common.c
+> > +++ b/drivers/clk/starfive/clk-starfive-common.c
+> > @@ -9,6 +9,8 @@
+> >  #include <linux/debugfs.h>
+> >  #include <linux/device.h>
+> >  #include <linux/io.h>
+> > +#include <linux/pm_runtime.h>
+> > +#include <soc/starfive/reset-starfive-common.h>
+> >
+> >  #include "clk-starfive-common.h"
+> >
+> > @@ -331,9 +333,143 @@ struct clk_hw *starfive_clk_get(struct
+> > of_phandle_args *clkspec, void *data)
+> >  	struct starfive_clk_priv *priv =3D data;
+> >  	unsigned int idx =3D clkspec->args[0];
+> >
+> > -	if (idx < priv->num_reg)
+> > -		return &priv->reg[idx].hw;
+> > +	if (idx >=3D priv->num_reg)
+> > +		return ERR_PTR(-EINVAL);
+> >
+> > -	return ERR_PTR(-EINVAL);
+> > +	/* Index space is sparse: reject holes that were never registered. */
+> > +	if (priv->info && !priv->info->clk_data[idx].name)
+> > +		return ERR_PTR(-ENOENT);
+> > +
+> > +	return &priv->reg[idx].hw;
+> >  }
+> >  EXPORT_SYMBOL_GPL(starfive_clk_get);
+> > +
+> > +static void starfive_reset_unregister_adev(void *_adev) {
+> > +	struct auxiliary_device *adev =3D _adev;
+> > +
+> > +	auxiliary_device_delete(adev);
+> > +	auxiliary_device_uninit(adev);
+> > +}
+> > +
+> > +static void starfive_reset_adev_release(struct device *dev) {
+> > +	struct auxiliary_device *adev =3D to_auxiliary_dev(dev);
+> > +	struct starfive_reset_adev *rdev =3D to_starfive_reset_adev(adev);
+> > +
+> > +	kfree(rdev);
+> > +}
+> > +
+> > +static int starfive_reset_controller_register(struct starfive_clk_priv=
+ *priv,
+> > +					      const char *adev_name,
+> > +					      u32 adev_id)
+> > +{
+> > +	struct starfive_reset_adev *rdev;
+> > +	struct auxiliary_device *adev;
+> > +	int ret;
+> > +
+> > +	rdev =3D kzalloc_obj(*rdev);
+> > +	if (!rdev)
+> > +		return -ENOMEM;
+> > +
+> > +	rdev->base =3D priv->base;
+> > +
+> > +	adev =3D &rdev->adev;
+> > +	adev->name =3D adev_name;
+> > +	adev->dev.parent =3D priv->dev;
+> > +	adev->dev.release =3D starfive_reset_adev_release;
+> > +	adev->id =3D adev_id;
+> > +
+> > +	ret =3D auxiliary_device_init(adev);
+> > +	if (ret) {
+> > +		kfree(rdev);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret =3D auxiliary_device_add(adev);
+> > +	if (ret) {
+> > +		auxiliary_device_uninit(adev);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return devm_add_action_or_reset(priv->dev,
+> > +					starfive_reset_unregister_adev, adev); }
+>=20
+> You add starfive_reset_controller_register() but a most similiar
+> jh7110_reset_controller_register()
+> remains in drivers/clk/starfive/clk-starfive-jh7110-sys.c. Can we merge
+> them?
+>=20
 
-You're right about panic_on_warn. The benefit is a clearer diagnostic
-and, when warnings aren't fatal, returning before virt_to_page().
+The current series is quite large. To reduce the review burden of the curre=
+nt series,
+I plan to release a separate series later for JH7110 to reduce these simila=
+r interfaces.
 
-I'll split out the ERR_PTR patches as Harry suggested and recheck the
-KUnit warning-count test with WARN_ON_ONCE().
+Same with other comments.
 
-Thanks,
-Karl
+> > +
+> > +int starfive_crg_probe(struct platform_device *pdev) {
+>=20
+> This function name is too generic and we know not all starfive SoCs use i=
+t to
+> probe.
+>=20
+> > +	const struct starfive_crg_domain_info *info;
+> > +	struct starfive_clk_priv *priv;
+> > +	unsigned int idx;
+> > +	int ret;
+> > +
+> > +	info =3D of_device_get_match_data(&pdev->dev);
+> > +	if (!info)
+> > +		return -ENODEV;
+> > +
+> > +	priv =3D devm_kzalloc(&pdev->dev, struct_size(priv, reg, info->num_cl=
+k),
+> > +			    GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	spin_lock_init(&priv->rmw_lock);
+> > +	priv->info =3D info;
+> > +	priv->num_reg =3D info->num_clk;
+> > +	priv->dev =3D &pdev->dev;
+> > +	priv->base =3D devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(priv->base))
+> > +		return PTR_ERR(priv->base);
+> > +
+> > +	if (info->power_domain) {
+> > +		ret =3D devm_pm_runtime_enable(priv->dev);
+> > +		if (ret)
+> > +			return dev_err_probe(priv->dev, ret,
+> > +					     "failed to enable runtime PM\n");
+> > +	}
+> > +
+> > +	for (idx =3D 0; idx < info->num_clk; idx++) {
+> > +		u32 max =3D info->clk_data[idx].max;
+> > +		struct clk_parent_data parents[4] =3D {};
+> > +		struct clk_init_data init =3D {
+> > +			.name =3D info->clk_data[idx].name,
+> > +			.ops =3D starfive_clk_ops(max),
+> > +			.parent_data =3D parents,
+> > +			.num_parents =3D
+> > +				((max & STARFIVE_CLK_MUX_MASK) >>
+> > STARFIVE_CLK_MUX_SHIFT) + 1,
+> > +			.flags =3D info->clk_data[idx].flags,
+> > +		};
+> > +		struct starfive_clk *clk =3D &priv->reg[idx];
+> > +		unsigned int i;
+> > +
+> > +		if (!init.name)
+> > +			continue;
+> > +
+> > +		for (i =3D 0; i < init.num_parents; i++) {
+> > +			unsigned int pidx =3D info->clk_data[idx].parents[i];
+> > +
+> > +			if (pidx < info->num_clk) {
+> > +				parents[i].hw =3D &priv->reg[pidx].hw;
+> > +			} else {
+> > +				if (pidx - info->num_clk >=3D info->num_ext_clk)
+> > +					return -EINVAL;
+> > +
+> > +				parents[i].fw_name =3D info->ext_clk[pidx - info->num_clk];
+> > +			}
+> > +		}
+> > +
+> > +		clk->hw.init =3D &init;
+> > +		clk->idx =3D idx;
+> > +		clk->max_div =3D max & STARFIVE_CLK_DIV_MASK;
+> > +
+> > +		ret =3D devm_clk_hw_register(&pdev->dev, &clk->hw);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	ret =3D devm_of_clk_add_hw_provider(&pdev->dev, starfive_clk_get,
+> priv);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return starfive_reset_controller_register(priv, info->rst_name, 0);
+> > +} EXPORT_SYMBOL_GPL(starfive_crg_probe);
+> > diff --git a/drivers/clk/starfive/clk-starfive-common.h
+> > b/drivers/clk/starfive/clk-starfive-common.h
+> > index a03824e9e75f..4cd4357f8366 100644
+> > --- a/drivers/clk/starfive/clk-starfive-common.h
+> > +++ b/drivers/clk/starfive/clk-starfive-common.h
+> > @@ -5,6 +5,7 @@
+> >  #include <linux/bits.h>
+> >  #include <linux/clk-provider.h>
+> >  #include <linux/device.h>
+> > +#include <linux/platform_device.h>
+> >  #include <linux/spinlock.h>
+> >
+> >  /* register fields */
+> > @@ -109,6 +110,15 @@ struct starfive_clk {
+> >  	unsigned int max_div;
+> >  };
+> >
+> > +struct starfive_crg_domain_info {
+> > +	const struct starfive_clk_data *clk_data;
+> > +	unsigned int num_clk;
+> > +	const char * const *ext_clk;
+> > +	unsigned int num_ext_clk;
+> > +	const char *rst_name;
+> > +	bool power_domain;
+> > +};
+>=20
+> Is the starfive_crg_domain_info struct introduced only for JHB100? Could =
+we
+> also use it for JH7110?
+
+Some domains can reuse it.
+
+>=20
+> Best regards,
+> Hal
+>=20
+> > +
+> >  struct starfive_clk_priv {
+> >  	/* protect clk enable and set rate/parent from happening at the same
+> > time */
+> >  	spinlock_t rmw_lock;
+> > @@ -116,6 +126,7 @@ struct starfive_clk_priv {
+> >  	void __iomem *base;
+> >  	struct clk *original_clk;
+> >  	struct notifier_block pll_clk_nb;
+> > +	const struct starfive_crg_domain_info *info;
+> >  	struct clk_hw *pll[3];
+> >  	unsigned int num_reg;
+> >  	struct starfive_clk reg[] __counted_by(num_reg); @@ -123,5 +134,6
+> @@
+> > struct starfive_clk_priv {
+> >
+> >  const struct clk_ops *starfive_clk_ops(u32 max);  struct clk_hw
+> > *starfive_clk_get(struct of_phandle_args *clkspec, void *data);
+> > +int starfive_crg_probe(struct platform_device *pdev);
+> >
+> >  #endif
+> > diff --git a/drivers/clk/starfive/clk-starfive-jhb100-sys0.c
+> > b/drivers/clk/starfive/clk-starfive-jhb100-sys0.c
+> > new file mode 100644
+> > index 000000000000..eb3cd33e2309
+> > --- /dev/null
+> > +++ b/drivers/clk/starfive/clk-starfive-jhb100-sys0.c
+> > @@ -0,0 +1,150 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * StarFive JHB100 System-0 Clock Driver
+> > + *
+> > + * Copyright (C) 2024 StarFive Technology Co., Ltd.
+> > + *
+> > + * Author: Changhuang Liang <changhuang.liang@starfivetech.com>
+> > + *
+> > + */
+> > +
+> > +#include <dt-bindings/clock/starfive,jhb100-crg.h>
+> > +#include <linux/init.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include "clk-starfive-common.h"
+> > +
+> > +#define JHB100_SYS0CLK_NUM_CLKS
+> > 	(JHB100_SYS0CLK_GPU1_NCNOC_INIT + 1)
+> > +
+> > +/* external clocks */
+> > +#define JHB100_SYS0CLK_OSC
+> 	(JHB100_SYS0CLK_NUM_CLKS +
+> > 0)
+> > +#define JHB100_SYS0CLK_PLL0
+> 	(JHB100_SYS0CLK_NUM_CLKS +
+> > 1)
+> > +#define JHB100_SYS0CLK_PLL1
+> 	(JHB100_SYS0CLK_NUM_CLKS +
+> > 2)
+> > +#define JHB100_SYS0CLK_PLL2
+> 	(JHB100_SYS0CLK_NUM_CLKS +
+> > 3)
+> > +
+> > +static const char * const jhb100_sys0_ext_clk[] =3D {
+> > +	"osc",
+> > +	"pll0",
+> > +	"pll1",
+> > +	"pll2",
+> > +};
+> > +
+> > +static const struct starfive_clk_data jhb100_sys0crg_clk_data[] =3D {
+> > +	/* bmcpcierp */
+> > +	STARFIVE__DIV(JHB100_SYS0CLK_BMCPCIERP_NCNOC_MAIN,
+> > "bmcpcierp_ncnoc_main", 6,
+> > +		      JHB100_SYS0CLK_PLL0),
+> > +	STARFIVE__DIV(JHB100_SYS0CLK_BMCPCIERP_NCNOC_CFG,
+> > "bmcpcierp_ncnoc_cfg", 12,
+> > +		      JHB100_SYS0CLK_PLL1),
+> > +	STARFIVE__DIV(JHB100_SYS0CLK_PCIE_REF_CML, "pcie_ref_cml", 24,
+> ...
+> > +	/* gpu1 */
+> > +	STARFIVE__DIV(JHB100_SYS0CLK_GPU1_NCNOC_INIT,
+> > "gpu1_ncnoc_init", 10,
+> > +		      JHB100_SYS0CLK_PLL0),
+> > +};
+> > +
+> > +static const struct starfive_crg_domain_info jhb100_sys0crg_info =3D {
+> > +	.clk_data	=3D jhb100_sys0crg_clk_data,
+> > +	.num_clk	=3D ARRAY_SIZE(jhb100_sys0crg_clk_data),
+> > +	.ext_clk	=3D jhb100_sys0_ext_clk,
+> > +	.num_ext_clk	=3D ARRAY_SIZE(jhb100_sys0_ext_clk),
+> > +	.rst_name	=3D "jhb100-r-sys0",
+> > +	.power_domain	=3D false,
+> > +};
+> > +
+> > +static const struct of_device_id jhb100_sys0crg_match[] =3D {
+> > +	{
+> > +		.compatible =3D "starfive,jhb100-sys0crg",
+> > +		.data =3D &jhb100_sys0crg_info,
+> > +	},
+> > +	{ /* sentinel */ }
+> > +};
+> > +
+> > +static struct platform_driver jhb100_sys0crg_driver =3D {
+> > +	.probe =3D starfive_crg_probe,
+> > +	.driver =3D {
+> > +		.name =3D "clk-starfive-jhb100-sys0",
+> > +		.of_match_table =3D jhb100_sys0crg_match,
+> > +		.suppress_bind_attrs =3D true,
+> > +	},
+> > +};
+> > +builtin_platform_driver(jhb100_sys0crg_driver);
+> > --
+> > 2.25.1
