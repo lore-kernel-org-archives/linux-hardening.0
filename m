@@ -1,394 +1,522 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151C936729C
-	for <linux-hardening@vger.kernel.org>; Sat, 19 Sep 2026 15:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3350933D6FD;
+	Sat, 19 Sep 2026 16:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789832101; cv=none; b=DraOZEO2HaMNlVTDbnqSahdHVy1xuKdkppRt4xc7ksT4/MsL4VX810MroFy/Ld+oze3tB+gS7e4E19kYRLvr0SyMwOlbTSVv9yVHU+N/3KkcOw1BQS2ZONREkESGfn1UiLdPU8ycTRmeByGzFb2ZqsH7FrrjItAf6Zck59lh4U8=
+	t=1789835062; cv=none; b=iZYYZG8cchLPHLcS9L5VRxeIB/YZ8jTm8cwvADmH+s459hGL13QbrN1oODsJHyT/+Vi4AcnPTzkx9H32c+jh3QtnDH4yGP1QTzWjXaWmWJNb8lFckdZSyA4IyZniBuGcz23J3Ih7UVIkBVB2rR+FqyB2UiSq52mHqxT5YGJrqbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789832101; c=relaxed/simple;
-	bh=r8uZ6cbMPFCpPEsjD4R5PSBJwGAVgcajYlWqKZANcWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b19V+49q5SQ9kIg9ZEG7ydDJSzIgLir61pjznhrYwPGyDWYqqVwKxXfQ1N3vaIAj7xaFPo3CFKIjMpX9FR61d5f81GdbU/jrkjBsomN980X/FgDh8U4GMnlJ6YhY9ei4r3xE1x37YicRTeJkE6cJ46GK5g0XL0afa/7VVaB61rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dEAx5wbF; arc=none smtp.client-ip=74.125.225.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789835062; c=relaxed/simple;
+	bh=KYo3PDJDdxuswr8Pqu8HX+pePR0/EIUGKt59uIxGLFk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=by+kS7MMxtf2pESfkGgJen3tG4FeoU4LI2NpllIM3fXjmBJUI2ZF66U9PHJbJXJpunT/0LoWIqvN38x4Rka6qMIoEXTjLfS9YXCmbNnjH2lbhyYy1rt+/6i7XQ7+hu+T/9/LTTZM2syOqHBKiYIdhO3QIjPh04hoZnrJYstBk00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kE9RYjXF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEAx5wbF"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49ccead2aecso8168935e9.0
-        for <linux-hardening@vger.kernel.org>; Sat, 19 Sep 2026 08:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789832097; x=1790436897; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=rnmxa+I/y/WovjQwepcy66tvkG9fBv5IMAXIabUtoDI=;
-        b=dEAx5wbF4JzZfer7o16byIqDW1qOtDJkVca4zWjuC/OFkdz26pbFLEjQt6f2qcx3kq
-         q5pGJWHqcVefVu7kIxJ/8nEPdVJyw+fIJO+tucZDvDehyhNvJDIATRRbg3ylsQmi4eAQ
-         I16vG4a/6nNAP+oIx+hMM6w0/wYtu/heTmD9FJurBzAmdB/R2SWEBLqL/FRZ4mp2QAGd
-         gfITX6ZN0RBixqGNBQylM2/N7RTzKeCnz6f4LM0DMqog99vDQ/X/zNohB0vgJILhUO4A
-         3dLXigmV2eTE6jGKZOLoOW0o+8dklAUQ8HAgGdStpDhz5MoyjJhHiJjt16wHs/82APNz
-         bNtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789832097; x=1790436897;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=rnmxa+I/y/WovjQwepcy66tvkG9fBv5IMAXIabUtoDI=;
-        b=VrLQJWvNwaRz/0z+my7umeoyezJEQKlSFatjuAAUuwtCbvNH1LjpzTKuHp61PZQKSA
-         DiWq0nTP8CZWAfer53CGVQLytn/GYluGOBJfufAwx/7Q6Ef/srFOCN4MlpCnLAlCSqPc
-         EsaJ5dmyXw83mgJFsb3r8ahNvPVMr6xwAeRb02i2vg7Dxn9nRZsSvGRY+RBx2J6utFGf
-         YtvfeCZN5zivclUqUIISQexBhVI0ZTp22aNp9bAw2oOMctXYkVc2kwH5F6qv4al5FhZS
-         CbFqidlLtA7650eJa2hGByo/vXizqkFMBQZunu7CkWV3Hv72BRQrobqSEp9wK9JUg1H+
-         f9/A==
-X-Forwarded-Encrypted: i=1; AKwUvBwv2HPuG/K/wlKt52opGrRPdmYNCXlYj49lYgpnZxruUmhQCwgSAcotZku7IDa0F+CKn3YkZJyNEYFGX+aJMb4=@vger.kernel.org
-X-Gm-Message-State: AFuF++kKS4yDOD9Nh0vnjYgz3nCXeBcBhQAPlXLXuUqZUycZAUg1LdJJ
-	fGRxYOa5a+aaIrHQhWQQ+yuT9JdcoLJs5rGWjoWbNY/ICUCe30Wm7uBE
-X-Gm-Gg: AYBFou1XqCFTIlnP8kQfNIMezGxFGNuna8t4WZgV7qkKeTcHVraFVtExLbf0CPmSe8F
-	6Djh/v13wj95EpGwX605T8x9zJyr7rbvdXptF5BPd69q3ApRwgF9OEWQa8SST8TyDtlg7uzjzSN
-	4tyo6pAG2K2KbhILzBsqpPDGbcg9je7HSZDf4ltcgJQMHkPeUsfH1fIhxM/aYuJ0VVmLT4IyWKX
-	W1c1w0cl11jWjd9oT1HC0Y24x9f/9QLqVPT4NFZKNQPaGoRPHk/L2pUEbDYgw5KApS2nJXHE4eY
-	hGugyHr/MWKWpl3SB0tSJ6hwbtiVXfuRrElv8aJVT+r/nIB15POsj/Bhkki8CCrU3oyJWeoJfJ4
-	U4cBFagM9iHpkxCixnTLVc2VS1L9nY6X5AFJKdsQIv39ptaZCKbuZ9k9NtRF1CVySu2AA2xaBz5
-	du81FY2f6OhZvu7YE4diC6/k7uLdZGrSPgmFSlN4Ss4l/0xUf2oAFwFbc+eTWD8MawQDY0nju6R
-	0owEHSKtv+FGBnfIZiYU5/E6DyNkbA09VEIBrCR4TcgnRG2FJzj2LVsPbVRmGQU0ztp3wLFrF3U
-	Cg==
-X-Received: by 2002:a05:600c:3588:b0:49c:d26a:cf70 with SMTP id 5b1f17b1804b1-49fcc3772bamr70227405e9.15.1789832096898;
-        Sat, 19 Sep 2026 08:34:56 -0700 (PDT)
-Received: from [10.128.10.232] (195-23-151-163.net.novis.pt. [195.23.151.163])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48724422790sm7066857f8f.5.2026.09.19.08.34.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Sep 2026 08:34:56 -0700 (PDT)
-Sender: Julian Braha <julian.braha@gmail.com>
-Message-ID: <cdebaad4-00c2-4b80-b688-0f5a723d6009@gmail.com>
-Date: Sat, 19 Sep 2026 16:34:54 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kE9RYjXF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F33B1F000FF;
+	Sat, 19 Sep 2026 16:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789835060;
+	bh=sk1uiA0a3uJ6Mh7cOavRLqQqvYzmfEooA+BMJDeb3vA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kE9RYjXFkYKOrnh9EFwiMwo0P5krC4j9biK6rNG6z10jldKfON6pzXrEk3KWR5MOy
+	 EFwCSkBWdZ+yWNgpSqRCMJnezINNnDqV5DpOPbo6kWNK/nRr4DmQP31RgHW75DXW9A
+	 E9gQriwoo4WnXNgMC0SCg2Upmh1Ipk51mPV5Q8OlODKolgzgVAfrfW7h7p15JHQulG
+	 58Mby4tgH3oD1vkvQOaV4+fkkxH30Ilgm8b4ytgNoSe4zEENF1cYKguWQLOVM4hzS3
+	 81MeFEGe7Tro3lAUItvsm+kq5s4dlY+yelHdEpMF9b70rcWG1ju2Z2nJDtfJRpmons
+	 TX4vv5x4ywAuQ==
+Date: Sat, 19 Sep 2026 17:24:06 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Alexey Gladkov <legion@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
+	Gary Guo <gary@garyguo.net>, =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
+	Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, Jonathan Corbet <corbet@lwn.net>, 
+	Randy Dunlap <rdunlap@infradead.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 07/20] kallsyms: reimplement mksysmap in C
+Message-ID: <aq6zQng28spcTD88@gremlin>
+References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
+ <20260917-build-speedup-v3-7-9ecf4163ff36@kernel.org>
+ <202609171046.146CAE972B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] kconfig: Add "def_string", "def_int" and "def_hex"
-To: Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nsc@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap
- <rdunlap@infradead.org>, Masahiro Yamada <masahiroy@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@fluxnic.net>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Andrew Jones <andrew.jones@linux.dev>, linux-kbuild@vger.kernel.org,
- linux-doc@vger.kernel.org, "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
- Vegard Nossum <vegard.nossum@oracle.com>,
- Nauman Sabir <officialnaumansabir@gmail.com>, Tejun Heo <tj@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Matthew Maurer <mmaurer@google.com>, Graham Roff <grahamr@qti.qualcomm.com>,
- Miguel Ojeda <ojeda@kernel.org>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Gary Guo <gary@garyguo.net>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, conor.dooley@microchip.com
-References: <20260919005923.i.879-kees@kernel.org>
- <20260919005929.4077729-1-kees@kernel.org>
-Content-Language: en-US
-From: Julian Braha <julianbraha@gmail.com>
-In-Reply-To: <20260919005929.4077729-1-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202609171046.146CAE972B@keescook>
 
-Hi Kees,
+On Thu, Sep 17, 2026 at 11:07:31AM -0700, Kees Cook wrote:
+> On Thu, Sep 17, 2026 at 05:06:17PM +0100, Lorenzo Stoakes (ARM) wrote:
+> > mksysmap is a sed script consisting of 30 patterns which link-vmlinux.sh
+> > uses to generate *.syms files, and which kallsyms is then called against to
+> > generate *.kallsyms files, with the final vmlinux build ultimately
+> > generating System.map.
+> >
+> > For an x86-64 allmodconfig build, this involves three nm runs over a 250
+> > MiB file and half a million lines written and read each time - 0.5s per
+> > pass for llvm-nm, and 0.2s for GNU nm, with parsing on top of that.
+> >
+> > This is unnecessary, instead have kallsyms simply read the ELF file
+> > directly making use of the existing elf-parse library in scripts/.
+> >
+> > This changes kallsyms such that its input is no longer the output from nm,
+> > but rather an ELF file.
+> >
+> > However, if the input file is empty, it outputs an empty table, which
+> > retains the same behaviour on first pass that the build system expects.
+> >
+> > System.map is byte-identical to nm | mksysmap for GNU nm and llvm-nm on
+> > two x86 configurations each, and for llvm-nm on arm64, arm, s390 and
+> > loongarch defconfigs, so are the kallsyms tables of every pass.
+> >
+> > Relinking vmlinux, link steps included:
+> >
+> >                         before    after
+> >   allmodconfig clang     9.1s     7.9s
+> >   allmodconfig gcc       7.8s     7.6s
+> >   defconfig clang        3.7s     3.0s
+> >   defconfig gcc          3.5s     3.4s
+> >
+> > Whole build, 128-thread Threadripper 9980X, best of N runs:
+> >
+> >                                          before   after     delta
+> >                                          -------------------------------
+> >   x86 defconfig, touch mm/vma.c, gcc        9.1s     8.6s    -0.43s (-5%)
+> >   x86 defconfig, touch mm/vma.c, clang      9.0s     8.0s     -1.1s (-12%)
+> >   x86 defconfig, clean, gcc                29.5s    28.9s    -0.64s (-2%)
+> >   x86 defconfig, clean, clang              31.2s    29.8s     -1.4s (-5%)
+> >   x86 allmodconfig, touch mm/vma.c, gcc    35.8s    35.0s    -0.77s (-2%)
+> >   x86 allmodconfig, touch mm/vma.c, clang  35.8s    33.7s     -2.0s (-6%)
+> >
+> > Assisted-by: LLM
+> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> > ---
+> >  scripts/Makefile          |   4 +-
+> >  scripts/kallsyms-sysmap.c | 269 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  scripts/kallsyms.c        | 162 ++++++++++++++++------------
+> >  scripts/kallsyms.h        |  44 ++++++++
+> >  scripts/link-vmlinux.sh   |  15 +--
+> >  scripts/mksysmap          |  94 ----------------
+> >  6 files changed, 415 insertions(+), 173 deletions(-)
+> >
+> > diff --git a/scripts/Makefile b/scripts/Makefile
+> > index 3434a82a119f..d46932113b5f 100644
+> > --- a/scripts/Makefile
+> > +++ b/scripts/Makefile
+> > @@ -3,7 +3,7 @@
+> >  # scripts contains sources for various helper programs used throughout
+> >  # the kernel for the build process.
+> >
+> > -hostprogs-always-$(CONFIG_KALLSYMS)			+= kallsyms
+> > +hostprogs-always-y				+= kallsyms
+> >  hostprogs-always-$(BUILD_C_RECORDMCOUNT)		+= recordmcount
+> >  hostprogs-always-$(CONFIG_BUILDTIME_TABLE_SORT)		+= sorttable
+> >  hostprogs-always-$(CONFIG_ASN1)				+= asn1_compiler
+> > @@ -13,6 +13,7 @@ hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_builder
+> >  hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_gen
+> >  hostprogs-always-$(CONFIG_TRACEPOINTS)			+= tracepoint-update
+> >
+> > +kallsyms-objs := kallsyms.o kallsyms-sysmap.o elf-parse.o
+> >  sorttable-objs := sorttable.o elf-parse.o
+> >  tracepoint-update-objs := tracepoint-update.o elf-parse.o
+> >
+> > @@ -30,6 +31,7 @@ rustdoc_test_builder-rust := y
+> >  rustdoc_test_gen-rust := y
+> >
+> >  HOSTCFLAGS_tracepoint-update.o = -I$(srctree)/tools/include
+> > +HOSTCFLAGS_kallsyms-sysmap.o = -I$(srctree)/tools/include
+> >  HOSTCFLAGS_elf-parse.o = -I$(srctree)/tools/include
+> >  HOSTCFLAGS_sorttable.o = -I$(srctree)/tools/include
+> >  HOSTLDLIBS_sorttable = -lpthread
+> > diff --git a/scripts/kallsyms-sysmap.c b/scripts/kallsyms-sysmap.c
+> > new file mode 100644
+> > index 000000000000..64b2e11d0344
+> > --- /dev/null
+> > +++ b/scripts/kallsyms-sysmap.c
+> > @@ -0,0 +1,269 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Obtain symbols from vmlinux for usage by kallsyms. Replaces mksysmap.
+> > + *
+> > + * To retain compatibility, it provides the same output as nm, only faster.
+> > + */
+> > +
+> > +#include <ctype.h>
+> > +#include <stdio.h>
+> > +#include <stdlib.h>
+> > +#include <string.h>
+> > +#include <xalloc.h>
+> > +
+> > +#include "elf-parse.h"
+> > +#include "kallsyms.h"
+> > +
+> > +/* The mapped file and its symbol table. */
+> > +struct elf_file {
+> > +	void *base;
+> > +	size_t size;
+> > +	const char *shdrs;
+> > +	unsigned int shnum, shentsize;
+> > +	const char *shstrtab;
+> > +	Elf_Shdr *symtab;
+> > +	const char *strtab;
+> > +	size_t nr_syms;
+> > +};
+> > +
+> > +/* What mksysmap dropped from System.map, by name. */
+> > +static const char *const sysmap_omit_prefixes[] = {
+> > +	"$", ".L", "__efistub_", "__pi_$", "__pi_.L", "__kvm_nvhe_$",
+> > +	"__kvm_nvhe_.L", "__kcfi_typeid_", "__kvm_nvhe___kcfi_typeid_",
+> > +	"__pi___kcfi_typeid_", "__crc_", "__kstrtab_", "__kstrtabns_",
+> > +	"__mod_device_table__",
+> > +};
+>
+> I really think these need to be 1 per line with the comments from
+> scripts/mksysmap retained. It's going to be changed over time, and we
+> want to be able to review the rationale for entries without having to
+> dig through commit history.
 
-On 9/19/26 01:59, Kees Cook wrote:
-> Kconfig has offered "def_bool" and "def_tristate" as a shorthand for a
-> type definition plus a default since before the git era, but has never
-> offered the equivalent for the other three types. Conor Dooley ran into
+Ack, done for v4.
 
-CC'd Conor.
+>
+> > +static const char *const sysmap_omit_suffixes[] = {
+> > +	"_from_arm", "_from_thumb", "_veneer",
+> > +};
+> > +static const char *const sysmap_omit_names[] = {
+> > +	"L0", "_SDA_BASE_", "_SDA2_BASE_",
+> > +};
+>
+> Same for these 2 tables.
 
-> this gap[1] when fixing a symbol that had been given the wrong type:
-> 
->   Unfortunately, there is no such thing as "def_string", but in this
->   case we can use "default" to propagate the value of ...
-> 
-> Nothing in the grammar requires the restriction. The rule that consumes
-> a default is already type agnostic. Add the three missing types. No
-> changes are needed to existing diagnostics. E.g. declaring a symbol
-> "bool" and then assigning it with "def_string" still reports
-> 
->   warning: ignoring type redefinition of 'CONFLICT' from 'bool' to 'string'
+Ack, done for v4.
 
-I like this change, as the Kconfiglib implementation of Kconfig used by
-Zephyr already extended the language to add this [1], so it unifies the
-ecosystem a bit.
+>
+> > +
+> > +/* __<alnum>*Thunk_: the linker's range extension thunks on arm. */
+> > +static bool is_range_thunk(const char *name)
+> > +{
+> > +	const char *p;
+> > +
+> > +	if (!string_starts_with(name, "__"))
+> > +		return false;
+> > +	for (p = name + 2; isalnum((unsigned char)*p); p++)
+> > +		;
+> > +	return p - name >= 7 && *p == '_' && strncmp(p - 5, "Thunk", 5) == 0;
+> > +}
+> > +
+> > +/* __UNIQUE_ID_modinfo_<n>: the MODULE_INFO() strings of built-in code. */
+> > +static bool is_modinfo_id(const char *name)
+> > +{
+> > +	static const char prefix[] = "__UNIQUE_ID_modinfo_";
+> > +	const char *p;
+> > +
+> > +	if (!string_starts_with(name, prefix))
+> > +		return false;
+> > +	for (p = name + strlen(prefix); isdigit((unsigned char)*p); p++)
+> > +		;
+> > +	return !*p;
+> > +}
+>
+> I'm less excited about these "open coded" regular expression matches.
+> Having to do this feels like it'll make future exceptions annoying to
+> add. Can't there be another class of table that is just regular
+> expressions? It is probably faster to keep the prefix/suffix/exact
+> tables as-is, but is_range_thunk() and is_modinfo_id() just feel clunky
+> compared to the more expressive re, e.g. r'^__UNIQUE_ID_modinfo[0-9]*$'
 
-But... I must say that I think def_bool / def_tristate is possibly the
-worst part of the language. First, because the condition only applies
-to a part of the statement (unintuitive). For example:
+I don't think it's too much of an issue, the two cases like this aren't too
+many lines of code, it seems a bit overkill, and I think that'd be the only
+use of regex here?
 
-  def_bool 'y' if X
+If a new pattern like this turns up it's easy enough to revisit it.
 
-the X condition here only applies to the value of y, but not to the type
-declaration of bool. Besides hurting readability, I can imagine a user
-making a mistake by attempting something like this:
+>
+> > +static bool sysmap_omits(const char *name, char type)
+> > +{
+> > +	size_t i;
+> > +
+> > +	/* Absolute, undefined and debugging symbols. */
+> > +	if (type == 'a' || type == 'N' || type == 'U' || type == 'w')
+> > +		return true;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(sysmap_omit_prefixes); i++)
+> > +		if (string_starts_with(name, sysmap_omit_prefixes[i]))
+> > +			return true;
+> > +	for (i = 0; i < ARRAY_SIZE(sysmap_omit_suffixes); i++)
+> > +		if (string_ends_with(name, sysmap_omit_suffixes[i]))
+> > +			return true;
+> > +	for (i = 0; i < ARRAY_SIZE(sysmap_omit_names); i++)
+> > +		if (strcmp(name, sysmap_omit_names[i]) == 0)
+> > +			return true;
+> > +
+> > +	return is_range_thunk(name) || is_modinfo_id(name) ||
+> > +	       strstr(name, ".long_branch.") || strstr(name, ".plt_branch.");
+>
+> And then mixing data-driven search with in-line patterns I don't like.
+> The .long_branch. and .plt_branch. matches should be in a new "any
+> position" table, IMO.
 
-  def_bool 'y' if X
-  def_tristate 'y' if !X
+Ack done for v4 in sysmap_omit_patterns[].
 
-thinking that they're making the type conditional. Of course, the
-interpreter warns if this is attempted, so you won't actually find any
-of these in the tree.
+>
+> > +/* nm's letter for a symbol defined in a section, as BFD classifies it. */
+> > +static char section_symbol_type(Elf_Shdr *shdr, const char *secname)
+> > +{
+> > +	static const char *const debug_prefixes[] = {
+> > +		".debug", ".zdebug", ".gnu.debuglto_.debug_",
+> > +		".gnu.linkonce.wi.", ".line", ".stab",
+> > +	};
+>
+> I worry about maintenance overhead on this: are we going to have to
+> chase changes to "nm" when other debug prefixes get added here?
 
-The second problem, is that since the order of defaults matters and
-conditions can shadow each other, def_<type> makes it harder for users
-to get defaults right. In the past, I've seen several config options
-with bugged defaults due to 'default' + 'def_<type>' [2][3][4].
+It mirrors what BFD has and it hasn't changed for years so I think it's
+fine :)
 
-Yet, all this adds for users, is avoiding typing four letters: "ault".
+>
+> > +	const uint64_t flags = shdr_flags(shdr);
+> > +	size_t i;
+> > +
+> > +	if (flags & SHF_EXECINSTR)
+> > +		return 't';
+> > +	if (flags & SHF_ALLOC) {
+> > +		if (shdr_type(shdr) == SHT_NOBITS)
+> > +			return 'b';
+> > +		return flags & SHF_WRITE ? 'd' : 'r';
+> > +	}
+> > +	for (i = 0; i < ARRAY_SIZE(debug_prefixes); i++)
+> > +		if (string_starts_with(secname, debug_prefixes[i]))
+> > +			return 'N';
+> > +	if (shdr_type(shdr) != SHT_NOBITS && !(flags & SHF_WRITE))
+> > +		return 'n';
+> > +	return '?';
+>
+> And to that end: instead of "?" shouldn't this fail hard when a section
+> symbol type is unknown to the tool?
 
-But since this def_bool / def_tristate is already used *everywhere*
-throughout the tree, I don't think it's realistic to remove it, and
-would be better to support the other types.
+It mirrors what nm does (as with the rest of the code obv.) which prints
+'?' rather than failing, and that's never caused an issue, failling hard
+here would turn what wasn't a build failure into one so I think best to
+leave as-is?
 
-> 
-> Added tests for the types.
-> 
-> Build tested ARCH=x86_64 with GCC 16.2.0. Tests pass with "make testconfig".
-> 
-> Link: https://lore.kernel.org/all/20230111104848.2088516-1-conor.dooley@microchip.com/ [1]
-> Assisted-by: LLM
-> Signed-off-by: Kees Cook <kees@kernel.org>
+>
+> > +}
+> > +
+> > +/* The letter nm prints for a symbol, or 0 for one it leaves out. */
+> > +static char elf_symbol_type(const struct elf_file *elf, Elf_Sym *sym)
+> > +{
+> > +	unsigned int bind = sym_bind(sym), type = sym_type(sym);
+> > +	unsigned int shndx = sym_shndx(sym);
+> > +	Elf_Shdr *shdr;
+> > +	char c;
+> > +
+> > +	if (type == STT_SECTION || type == STT_FILE)
+> > +		return 0;
+> > +	if (shndx == SHN_COMMON)
+> > +		return 'C';
+> > +	if (shndx == SHN_UNDEF) {
+> > +		if (bind == STB_WEAK)
+> > +			return type == STT_OBJECT ? 'v' : 'w';
+> > +		return 'U';
+> > +	}
+> > +	if (type == STT_GNU_IFUNC)
+> > +		return 'i';
+> > +	if (bind == STB_WEAK)
+> > +		return type == STT_OBJECT ? 'V' : 'W';
+> > +	if (bind == STB_GNU_UNIQUE)
+> > +		return 'u';
+> > +	if (bind != STB_GLOBAL && bind != STB_LOCAL)
+> > +		return '?';
+> > +
+> > +	if (shndx == SHN_ABS) {
+> > +		c = 'a';
+> > +	} else if (shndx < elf->shnum) {
+> > +		shdr = elf_section(elf, shndx);
+> > +		c = section_symbol_type(shdr, elf_section_name(elf, shdr));
+> > +	} else {
+> > +		return '?';
+>
+> Same concerns...
 
-Tested-by: Julian Braha <julianbraha@gmail.com>
-Reviewed-by: Julian Braha <julianbraha@gmail.com>
+See above
 
-> ---
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nicolas Schier <nsc@kernel.org>
-> Cc: Julian Braha <julianbraha@gmail.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Shuah Khan <skhan@linuxfoundation.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Nicolas Pitre <nico@fluxnic.net>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Andrew Jones <andrew.jones@linux.dev>
-> Cc: <linux-kbuild@vger.kernel.org>
-> Cc: <linux-doc@vger.kernel.org>
-> ---
->  scripts/kconfig/tests/def_type/Kconfig        | 28 +++++++++++++++++++
->  scripts/kconfig/tests/def_type/guard_n.config |  1 +
->  scripts/kconfig/tests/def_type/guard_y.config |  1 +
->  scripts/kconfig/tests/def_type/__init__.py    | 18 ++++++++++++
->  .../kconfig/tests/def_type/expected_guard_n   |  9 ++++++
->  .../kconfig/tests/def_type/expected_guard_y   | 11 ++++++++
->  scripts/kconfig/kconfig-sym-check.pl          |  2 +-
->  scripts/kconfig/lexer.l                       |  3 ++
->  scripts/kconfig/parser.y                      |  6 ++++
->  Documentation/kbuild/kconfig-language.rst     | 13 ++++++++-
->  10 files changed, 90 insertions(+), 2 deletions(-)
->  create mode 100644 scripts/kconfig/tests/def_type/Kconfig
->  create mode 100644 scripts/kconfig/tests/def_type/guard_n.config
->  create mode 100644 scripts/kconfig/tests/def_type/guard_y.config
->  create mode 100644 scripts/kconfig/tests/def_type/__init__.py
->  create mode 100644 scripts/kconfig/tests/def_type/expected_guard_n
->  create mode 100644 scripts/kconfig/tests/def_type/expected_guard_y
-> 
-> diff --git a/scripts/kconfig/tests/def_type/Kconfig b/scripts/kconfig/tests/def_type/Kconfig
-> new file mode 100644
-> index 000000000000..fbee37a63179
-> --- /dev/null
-> +++ b/scripts/kconfig/tests/def_type/Kconfig
-> @@ -0,0 +1,28 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# The def_<type> shorthands: a type definition plus a default value.
-> +
-> +config MODULES
-> +	bool "Enable loadable module support"
-> +	modules
-> +	default y
-> +
-> +config GUARD
-> +	bool "Guard symbol"
-> +
-> +config DEF_BOOL
-> +	def_bool GUARD
-> +
-> +config DEF_TRISTATE
-> +	def_tristate m if GUARD
-> +
-> +config DEF_STRING
-> +	def_string "guarded" if GUARD
-> +	default "fallback"
-> +
-> +config DEF_INT
-> +	def_int 64 if GUARD
-> +	default 32
-> +
-> +config DEF_HEX
-> +	def_hex 0xdead if GUARD
-> +	default 0x0
-> diff --git a/scripts/kconfig/tests/def_type/guard_n.config b/scripts/kconfig/tests/def_type/guard_n.config
-> new file mode 100644
-> index 000000000000..ed9ad6c1a2d4
-> --- /dev/null
-> +++ b/scripts/kconfig/tests/def_type/guard_n.config
-> @@ -0,0 +1 @@
-> +# CONFIG_GUARD is not set
-> diff --git a/scripts/kconfig/tests/def_type/guard_y.config b/scripts/kconfig/tests/def_type/guard_y.config
-> new file mode 100644
-> index 000000000000..afe35b084542
-> --- /dev/null
-> +++ b/scripts/kconfig/tests/def_type/guard_y.config
-> @@ -0,0 +1 @@
-> +CONFIG_GUARD=y
-> diff --git a/scripts/kconfig/tests/def_type/__init__.py b/scripts/kconfig/tests/def_type/__init__.py
-> new file mode 100644
-> index 000000000000..1ebaf5da07c8
-> --- /dev/null
-> +++ b/scripts/kconfig/tests/def_type/__init__.py
-> @@ -0,0 +1,18 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +"""
-> +Set a symbol's type and its default value in one line.
-> +
-> +"def_bool", "def_tristate", "def_string", "def_int" and "def_hex" are
-> +shorthand for a type definition plus a "default" property.  Check that
-> +each one sets the type, and that an "if" on the shorthand does not
-> +disturb the usual default cascade: the shorthand is only the first arm
-> +of the list, so a later "default" still applies when its condition is
-> +not met.
-> +"""
-> +
-> +def test(conf):
-> +    assert conf.olddefconfig(dot_config='guard_y.config') == 0
-> +    assert conf.config_matches('expected_guard_y')
-> +
-> +    assert conf.olddefconfig(dot_config='guard_n.config') == 0
-> +    assert conf.config_matches('expected_guard_n')
-> diff --git a/scripts/kconfig/tests/def_type/expected_guard_n b/scripts/kconfig/tests/def_type/expected_guard_n
-> new file mode 100644
-> index 000000000000..14719720a8b9
-> --- /dev/null
-> +++ b/scripts/kconfig/tests/def_type/expected_guard_n
-> @@ -0,0 +1,9 @@
-> +#
-> +# Automatically generated file; DO NOT EDIT.
-> +# Main menu
-> +#
-> +CONFIG_MODULES=y
-> +# CONFIG_GUARD is not set
-> +CONFIG_DEF_STRING="fallback"
-> +CONFIG_DEF_INT=32
-> +CONFIG_DEF_HEX=0x0
-> diff --git a/scripts/kconfig/tests/def_type/expected_guard_y b/scripts/kconfig/tests/def_type/expected_guard_y
-> new file mode 100644
-> index 000000000000..b2844072d0b8
-> --- /dev/null
-> +++ b/scripts/kconfig/tests/def_type/expected_guard_y
-> @@ -0,0 +1,11 @@
-> +#
-> +# Automatically generated file; DO NOT EDIT.
-> +# Main menu
-> +#
-> +CONFIG_MODULES=y
-> +CONFIG_GUARD=y
-> +CONFIG_DEF_BOOL=y
-> +CONFIG_DEF_TRISTATE=m
-> +CONFIG_DEF_STRING="guarded"
-> +CONFIG_DEF_INT=64
-> +CONFIG_DEF_HEX=0xdead
+>
+> > +	}
+> > +
+> > +	return bind == STB_GLOBAL ? toupper(c) : c;
+> > +}
+> > +
+> > +/* nm -n order: by address, then by name. */
+> > +static int compare_symbols(const void *a, const void *b)
+> > +{
+> > +	const struct sysmap_symbol *sa = a, *sb = b;
+> > +
+> > +	if (sa->addr != sb->addr)
+> > +		return sa->addr < sb->addr ? -1 : 1;
+> > +	return strcmp(sa->name, sb->name);
+> > +}
+> > +
+> > +static void elf_open(struct elf_file *elf, const char *path)
+> > +{
+> > +	Elf_Ehdr *ehdr;
+> > +	unsigned int i;
+> > +
+> > +	elf->base = elf_map_ro(path, &elf->size, (1 << ET_EXEC) | (1 << ET_DYN));
+> > +	if (!elf->base)
+> > +		exit(EXIT_FAILURE);
+> > +
+> > +	ehdr = elf->base;
+> > +	elf->shdrs = (const char *)elf->base + ehdr_shoff(ehdr);
+> > +	elf->shnum = ehdr_shnum(ehdr);
+> > +	elf->shentsize = ehdr_shentsize(ehdr);
+> > +	elf->shstrtab = (const char *)elf->base +
+> > +			shdr_offset(elf_section(elf, ehdr_shstrndx(ehdr)));
+> > +
+> > +	for (i = 0; i < elf->shnum && !elf->symtab; i++)
+> > +		if (shdr_type(elf_section(elf, i)) == SHT_SYMTAB)
+> > +			elf->symtab = elf_section(elf, i);
+> > +
+> > +	if (!elf->symtab) {
+> > +		fprintf(stderr, "%s: no symbol table\n", path);
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +
+> > +	elf->strtab = (const char *)elf->base +
+> > +		      shdr_offset(elf_section(elf, shdr_link(elf->symtab)));
+> > +	elf->nr_syms = shdr_size(elf->symtab) / shdr_entsize(elf->symtab);
+> > +}
+>
+> These 2 functions kind of feel like they should live in elfparse instead?
 
-The added test is great.
+Ack, updated this and patch 4 to share code for v4!
 
-> diff --git a/scripts/kconfig/kconfig-sym-check.pl b/scripts/kconfig/kconfig-sym-check.pl
-> index daa5285fdefc..c8dd07f8b27c 100755
-> --- a/scripts/kconfig/kconfig-sym-check.pl
-> +++ b/scripts/kconfig/kconfig-sym-check.pl
-> @@ -90,7 +90,7 @@ foreach my $file (@files) {
->  			next;
->  		}
->  
-> -		if (/^\s*(default|def_bool|def_tristate|select|depends\s+on|imply|visible\s+if|range|if|bool|tristate|int|hex|string|prompt)\s+(.+)\s*$/) {
-> +		if (/^\s*(default|def_bool|def_tristate|def_string|def_int|def_hex|select|depends\s+on|imply|visible\s+if|range|if|bool|tristate|int|hex|string|prompt)\s+(.+)\s*$/) {
->  			my $s = $2;
->  			$s =~ s/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'//g;
->  			$s =~ s/#.*//;
-> diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
-> index a6155422b4a6..1fa521199d4a 100644
-> --- a/scripts/kconfig/lexer.l
-> +++ b/scripts/kconfig/lexer.l
-> @@ -105,6 +105,9 @@ n	[A-Za-z0-9_-]
->  "comment"		return T_COMMENT;
->  "config"		return T_CONFIG;
->  "def_bool"		return T_DEF_BOOL;
-> +"def_hex"		return T_DEF_HEX;
-> +"def_int"		return T_DEF_INT;
-> +"def_string"		return T_DEF_STRING;
->  "def_tristate"		return T_DEF_TRISTATE;
->  "default"		return T_DEFAULT;
->  "depends"		return T_DEPENDS;
-> diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
-> index 5fb6f07b6ad2..2174baf2b3fd 100644
-> --- a/scripts/kconfig/parser.y
-> +++ b/scripts/kconfig/parser.y
-> @@ -53,6 +53,9 @@ struct menu *current_menu, *current_entry, *current_choice;
->  %token T_CONFIG
->  %token T_DEFAULT
->  %token T_DEF_BOOL
-> +%token T_DEF_HEX
-> +%token T_DEF_INT
-> +%token T_DEF_STRING
->  %token T_DEF_TRISTATE
->  %token T_DEPENDS
->  %token T_ENDCHOICE
-> @@ -309,6 +312,9 @@ type:
->  default:
->  	  T_DEFAULT		{ $$ = S_UNKNOWN; }
->  	| T_DEF_BOOL		{ $$ = S_BOOLEAN; }
-> +	| T_DEF_HEX		{ $$ = S_HEX; }
-> +	| T_DEF_INT		{ $$ = S_INT; }
-> +	| T_DEF_STRING		{ $$ = S_STRING; }
->  	| T_DEF_TRISTATE	{ $$ = S_TRISTATE; }
->  
->  /* if entry */
-> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> index d9338407c1c6..00402d43e0dc 100644
-> --- a/Documentation/kbuild/kconfig-language.rst
-> +++ b/Documentation/kbuild/kconfig-language.rst
-> @@ -113,11 +113,22 @@ applicable everywhere (see syntax).
->  
->  - type definition + default value::
->  
-> -	"def_bool"/"def_tristate" <expr> ["if" <expr>]
-> +	"def_bool" <expr> ["if" <expr>]
-> +	"def_tristate" <expr> ["if" <expr>]
-> +	"def_string" <expr> ["if" <expr>]
-> +	"def_int" <expr> ["if" <expr>]
-> +	"def_hex" <expr> ["if" <expr>]
->  
->    This is a shorthand notation for a type definition plus a value.
->    Optionally dependencies for this default value can be added with "if".
->  
-> +  The shorthand supplies the type once, and is otherwise an ordinary
-> +  default: it is the first entry of the list described above, so any
-> +  further "default" entries still apply when its "if" is not met. Since
-> +  that leaves the type definition inside one arm of a list, spelling the
-> +  type out on its own line reads better for a symbol with several
-> +  defaults.
-> +
->  - dependencies: "depends on" <expr> ["if" <expr>]
->  
->    This defines a dependency for this menu entry. If multiple
+>
+> > +
+> > +/* The symbols "nm -n | mksysmap" would list, in that order. */
+> > +static struct sysmap_symbol *elf_read_symbols(const struct elf_file *elf,
+> > +					   size_t *nr_kept)
+> > +{
+> > +	struct sysmap_symbol *syms = xmalloc(elf->nr_syms * sizeof(*syms));
+> > +	size_t i, n = 0;
+> > +
+> > +	for (i = 1; i < elf->nr_syms; i++) {
+> > +		Elf_Sym *sym = elf_symbol(elf, i);
+> > +		const char *name = elf->strtab + sym_name(sym);
+> > +		char type = elf_symbol_type(elf, sym);
+> > +
+> > +		if (!type || sysmap_omits(name, type))
+> > +			continue;
+> > +
+> > +		syms[n].addr = sym_value(sym);
+> > +		syms[n].name = name;
+> > +		syms[n].type = type;
+> > +		n++;
+> > +	}
+> > +
+> > +	qsort(syms, n, sizeof(*syms), compare_symbols);
+> > +	*nr_kept = n;
+> > +	return syms;
+> > +}
+>
+> And this one too, with maybe a "maybe_omit" callback passed in so this
+> mksysmap could pass sysmap_omits in as?
 
-[1] https://docs.zephyrproject.org/latest/build/kconfig/extensions.html
-[2]
-https://lore.kernel.org/all/20260405161545.161006-1-julianbraha@gmail.com/
-[3]
-https://lore.kernel.org/all/20260322220125.1380776-1-julianbraha@gmail.com/
-[4]
-https://lore.kernel.org/linux-s390/20260512174336.907050-1-julianbraha@gmail.com/
+This is pretty specific to this code so I think makes less sense to port
+this.
 
-- Julian Braha
+>
+> > -static void read_map(const char *in)
+> > +static void add_table_entry(struct sym_entry *sym)
+> >  {
+> > -	FILE *fp;
+> > -	struct sym_entry *sym;
+> > -	char *buf = NULL;
+> > -	size_t buflen = 0;
+> > +	sym->seq = table_cnt;
+> >
+> > -	fp = fopen(in, "r");
+> > -	if (!fp) {
+> > -		perror(in);
+> > -		exit(1);
+> > +	if (table_cnt >= table_size) {
+> > +		table_size += 10000;
+> > +		table = xrealloc(table, sizeof(*table) * table_size);
+>
+> I realize this is just moving logic around, but traditional xrealloc
+> loop uses doubling. I think this was linear only because it wanted to
+> jump-start the initial allocation size to 10000 entries. Could be:
+>
+> 	table_size = table_size ? table_size * 2 : 10000;
+
+Ack, done for v4!
+
+>
+> But maybe even that initial allocation number should be bumped up?
+
+Not sure it's really worth it with doubling in place, better to assume less
+and use more I think, and the time taken for the realloc should be minimal
+in comparison to the run as a whole.
+
+>
+> > [...]
+> > +	if (optind + 1 == argc) {
+> > +		read_elf(in, sysmap_out);
+> > +		if (fclose(sysmap_out)) {
+>
+> This needs to check ferror() too.
+
+Ack, done for v4!
+
+>
+> > +			perror(sysmap);
+> > +			exit(EXIT_FAILURE);
+> > +		}
+> > +		return 0;
+> > +	}
+> > +
+> >  	out_bin_name = argv[optind + 1];
+> >  	out_bin_file = fopen(out_bin_name, "w");
+> >  	if (!out_bin_file) {
+> > @@ -852,7 +868,11 @@ int main(int argc, char **argv)
+> >  		exit(EXIT_FAILURE);
+> >  	}
+> >
+> > -	read_map(argv[optind]);
+> > +	read_elf(in, sysmap_out);
+> > +	if (sysmap_out && fclose(sysmap_out)) {
+>
+> Same: this needs to check ferror() too.
+
+Ack, done for v4!
+
+>
+>
+> -Kees
+>
+> --
+> Kees Cook
+
+--
+Cheers, Lorenzo
