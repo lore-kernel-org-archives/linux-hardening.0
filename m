@@ -1,40 +1,41 @@
 Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2573F5BFC
-	for <linux-hardening@vger.kernel.org>; Sun, 20 Sep 2026 11:16:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4A23FAE09
+	for <linux-hardening@vger.kernel.org>; Sun, 20 Sep 2026 11:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789902979; cv=none; b=rJJJ4LhxfJpdlQ0Reii8V0+Bhyz/lP/3zYQe/2fclYmrd65nThrOIl08H9kGmBhuJY1zhhbJDSAznMVfAXLnkB2QNzsoIUibFaK+tORKkDzkKNVx3qIjdEpV2HYhae/+2DK7168REx069VjHMkwDhLytAvB68CT03mz35k8z68Y=
+	t=1789902979; cv=none; b=CNrPjh8biR7pO4nOzh7Hk8xQL8C0Ecgp6rbG/F05F4T8d+NKNeCBSldWSSwbk7AGB5DQlLcsOv9G8NZe7Kr5a1wTOTkpcwRbCROZcWZ2t8dY9TsnCHQ2Tr9xcjW+1deiaUk82eKyqZ3Fb1XdqWJXUaSNlF2yTV6TebA5kluvvbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789902979; c=relaxed/simple;
-	bh=SdD7QKCPzHpguy40o7rYhu+tBzjzpk28GiGdpXJQFh8=;
+	bh=3wHsuhm1EOsX6FnaaZCz7S9AObKXD0J2nrSu7LVseb8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hjx93wu44CuwCiBlWUCIA6zvid8C5pqHpaKF6k/KZqRoEBKspeGIGxAnMW99sREAu4c9F6p7YYC3h8uhel8FfGPKW/erzJDo+bZxb5wwkRiogwcYrbnxnpb7gKLpeyHzqrO5GsUe1UX7QgPd1gmcmZl03JugETp3z1nJ+/wsCw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=X2oaeVfx; arc=none smtp.client-ip=49.212.243.89
+	 In-Reply-To:To:Cc; b=YPN/9G7UdEDf8oeXaJhJRY28UE6fP0opUP6+lKmm+DaudApA3kPv0vI/4m3vYjgKwWqcrDBulaqAxh5H46bzZoZ0itNmb6Rj/EnLWI5w6g9cRdV8fzViQY1eL8J3NA23D5AzCw2XyHK0VWurrJ9rDroxCMn6VZ0gXt1gTR+wdeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=mInm2XTu; arc=none smtp.client-ip=49.212.243.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="X2oaeVfx"
+	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="mInm2XTu"
 Received: from [192.168.10.153] (p865013-ipoe.ipoe.ocn.ne.jp [153.242.222.12])
 	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68KBG36V088236
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68KBG36b088236
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Sun, 20 Sep 2026 20:16:11 +0900 (JST)
+	Sun, 20 Sep 2026 20:16:14 +0900 (JST)
 	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=QcYwkKg0EnciG/3+VJYlWGWl/x9B81dAxeYRS4KaIBc=;
+DKIM-Signature: a=rsa-sha256; bh=xY3f7CW2k+sxURpCWyIEkta47r/Ail7h0q2vhhuON5Y=;
         c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
         h=From:Message-Id:To:Subject:Date;
-        s=rs20250326; t=1789902972; v=1;
-        b=X2oaeVfxSYXc1L08PH182vqPfSKgjIFM6u1YkSiADOqBOBNuLPBTYaNm7OIAST8o
-         itmJ2FVb4gn6LXNQB+XLMHkCPF+m6seBINGdINZ3fJ6EZxh/b+A5+aiVJ6av0Daq
-         vYfsPv4qM27O4sAvDqSogxEgdQ7wAfForxfWBkZwoqcVH6Vd+o5pPu1TjkxaPUXo
-         VMj/iWuwQw5UTJ9gUnQ6X8JdJYsOs4E2ofm+c38RXY/CC5hSEo5389NBU3ydFFm5
-         ZzdjExLn5JD5G6lcHbmt1fK1ofpQPx6FXzXnzengfkqWWoasyRcAUdPQThNUQDAQ
-         gcno27do6srUEHIzMLZNGg==
+        s=rs20250326; t=1789902975; v=1;
+        b=mInm2XTuQIO9C+YXeqfebcOFmmo0frr1Zm8g8p5z6Jq7UKBcwKjgVAAMFAfVJiUd
+         xBenMftkF3iNMlA9lfJY3+/fWwDb25KsqHMCkpJxfIgzhWjYEBbHTAvPC4LvdadC
+         HvvXchwGjR19oAIws8ZLHbg0Oi6lIWRSVuFi7nXBPkFJ3LuA9Ug+B8Rup7Sia7o+
+         D0wcK8iqvjULQE2aTFv9oRsuQT/wCajOsPxekCfr6Hz6kwxXBQIM1SXQNu/1Abt3
+         Mty7ERJ9aLaBleu2qmxKWuIyf/Lc0dLr8W57cIzhjjc5Eq71ClnHRD4nzz5BCieM
+         xBbespM5NLD2jRJLBXhs9g==
 From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Date: Sun, 20 Sep 2026 20:15:49 +0900
-Subject: [PATCH v11 08/21] Revert "KVM: arm64: PMU: Reload when resetting"
+Date: Sun, 20 Sep 2026 20:15:55 +0900
+Subject: [PATCH v11 14/21] arm64: errata: Require Apple IMPDEF PMUv3 traps
+ on all CPUs
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,7 +44,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260920-hybrid-v11-8-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
+Message-Id: <20260920-hybrid-v11-14-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
 References: <20260920-hybrid-v11-0-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
 In-Reply-To: <20260920-hybrid-v11-0-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
@@ -70,105 +71,64 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
         linux-kselftest@vger.kernel.org,
         Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3326;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2262;
  i=odaki@rsg.ci.i.u-tokyo.ac.jp; h=from:subject:message-id;
- bh=SdD7QKCPzHpguy40o7rYhu+tBzjzpk28GiGdpXJQFh8=;
- b=owGbwMvMwCWmMbc20y1CyJDxtFoSQ9b6A5l3bOt9p00LXH7K+YlsZ19ik0tHe+D8LyeVS/law
- 5293kp2lLIwiHExyIopsqQU7ebWiK79VJgQ3wIzh5UJZAgDF6cATOTSRYY/PNvqa9fmNSbHrtrL
- byy48w7PYT5/PoHdh1X173AeiZSOYmToPfXn+a5bm/LZuJdUzHHxkLxidvG69NG+9okls0WWb/7
- GAwA=
+ bh=3wHsuhm1EOsX6FnaaZCz7S9AObKXD0J2nrSu7LVseb8=;
+ b=owGbwMvMwCWmMbc20y1CyJDxtFoSQ9b6A7lnUxVOBxxlDNxw5oBdoJXrzRyT78vT9ioa8B0NP
+ PU2+VpCRykLgxgXg6yYIktK0W5ujejaT4UJ8S0wc1iZQIYwcHEKwEQ+xDP896rZWnpzyrw5Iu9n
+ 6q4y753/ZV/N7VDRi8oTLF7G1P8xfMXwT50rRNB9npSOKMParUeWf9G515Jh7jF7GafQ9MRvXSd
+ 3cAAA
 X-Developer-Key: i=odaki@rsg.ci.i.u-tokyo.ac.jp; a=openpgp;
  fpr=AEDC03C9AF734F2EC26A7BFFA4BAEAA73536753C
 
-This reverts commit fe53538069bb4f625bc8734103ba044a83138fea.
+KVM relies on ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS as a system-wide
+precondition for PMUv3 emulation on affected Apple CPUs. A local CPU
+erratum is too weak for that: once the workaround is enabled, a late CPU
+that misses it may still be onlined.
 
-Restore PMU event teardown before system-register reset so existing
-perf events cannot retain configuration from the previous run. All
-counters are disabled by the reset PMCR_EL0 and MDCR_EL2 values, so
-reset does not need to request a PMU reload.
+Make the workaround an all-early-CPU capability instead. The matcher is
+still local because it depends on MIDR_EL1, but the capability is only
+advertised if all early CPUs match. A late CPU that misses an advertised
+capability is therefore rejected.
 
-Assisted-by: Codex:gpt-6-astra
+Although kept in the errata capability table, this capability describes
+optional trap support, not a workaround required for safe CPU operation.
+Therefore, a late CPU can safely match the capability even when the
+system does not advertise it.
+
+On these CPUs, ID_AA64DFR0_EL1.PMUVer == 0xf means the
+Arm-architected PMUv3 is not implemented. Without the system
+capability, KVM does not advertise PMUv3, and direct accesses to
+architected PMUv3 registers remain UNDEFINED. HACR_EL2[56] only makes
+those accesses trap to EL2 so KVM can emulate PMUv3; leaving it clear
+does not make them access Apple's native PMU.
+
+The native Apple PMU uses separate implementation-defined system
+register encodings, which KVM independently traps with
+HCR_EL2.TIDCP. Allowing a late CPU with extra HACR_EL2 trap support
+therefore does not expose host PMU state to a guest.
+
+Fixes: bed9b8ec8c71 ("KVM: arm64: Advertise PMUv3 if IMPDEF traps are present")
+Assisted-by: Codex:gpt-5.5
 Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
 ---
- arch/arm64/kvm/pmu-emul.c | 14 ++++++++++++++
- arch/arm64/kvm/reset.c    |  3 +++
- arch/arm64/kvm/sys_regs.c |  3 ---
- include/kvm/arm_pmu.h     |  2 ++
- 4 files changed, 19 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/cpu_errata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index a5ccb6ae44d5..14fcdbdb4587 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -258,6 +258,20 @@ void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu)
- 		pmu->pmc[i].idx = i;
- }
- 
-+/**
-+ * kvm_pmu_vcpu_reset - reset pmu state for cpu
-+ * @vcpu: The vcpu pointer
-+ *
-+ */
-+void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long mask = kvm_pmu_implemented_counter_mask(vcpu);
-+	int i;
-+
-+	for_each_set_bit(i, &mask, 32)
-+		kvm_pmu_stop_counter(kvm_vcpu_idx_to_pmc(vcpu, i));
-+}
-+
- /**
-  * kvm_pmu_vcpu_destroy - free perf event of PMU for cpu
-  * @vcpu: The vcpu pointer
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index 10eb7249aa9e..adcb460a5287 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -185,6 +185,9 @@ void kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 	vcpu->arch.reset_state.reset = false;
- 	spin_unlock(&vcpu->arch.mp_state_lock);
- 
-+	/* Reset PMU outside of the non-preemptible section */
-+	kvm_pmu_vcpu_reset(vcpu);
-+
- 	preempt_disable();
- 	loaded = (vcpu->cpu != -1);
- 	if (loaded)
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 1481dd5c99a8..75624725adf1 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -5388,9 +5388,6 @@ void kvm_reset_sys_regs(struct kvm_vcpu *vcpu)
- 	}
- 
- 	set_bit(KVM_ARCH_FLAG_ID_REGS_INITIALIZED, &kvm->arch.flags);
--
--	if (kvm_vcpu_has_pmu(vcpu))
--		kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
- }
- 
- /**
-diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-index 6b4a118d17ca..51f5e4ca3326 100644
---- a/include/kvm/arm_pmu.h
-+++ b/include/kvm/arm_pmu.h
-@@ -48,6 +48,7 @@ u64 kvm_pmu_implemented_counter_mask(struct kvm_vcpu *vcpu);
- u64 kvm_pmu_accessible_counter_mask(struct kvm_vcpu *vcpu);
- u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, bool pmceid1);
- void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu);
-+void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu);
- void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu);
- void kvm_pmu_reprogram_counter_mask(struct kvm_vcpu *vcpu, u64 val);
- void kvm_pmu_flush_hwstate(struct kvm_vcpu *vcpu);
-@@ -125,6 +126,7 @@ static inline u64 kvm_pmu_accessible_counter_mask(struct kvm_vcpu *vcpu)
- 	return 0;
- }
- static inline void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu) {}
-+static inline void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu) {}
- static inline void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu) {}
- static inline void kvm_pmu_reprogram_counter_mask(struct kvm_vcpu *vcpu, u64 val) {}
- static inline void kvm_pmu_flush_hwstate(struct kvm_vcpu *vcpu) {}
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index b33dccfafaf8..3dc598a9fdd2 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -1020,7 +1020,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ 	{
+ 		.desc = "Apple IMPDEF PMUv3 Traps",
+ 		.capability = ARM64_WORKAROUND_PMUV3_IMPDEF_TRAPS,
+-		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
++		.type = ARM64_CPUCAP_EARLY_LOCAL_CPU_FEATURE,
+ 		.matches = has_impdef_pmuv3,
+ 		.cpu_enable = cpu_enable_impdef_pmuv3_traps,
+ 	},
 
 -- 
 2.55.0
