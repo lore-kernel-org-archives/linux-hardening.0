@@ -1,75 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE9247127E;
-	Sun, 20 Sep 2026 17:09:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5266A3DF01C;
+	Sun, 20 Sep 2026 18:18:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789924144; cv=none; b=BKrghZT2f4+5Ks9SA5EJUJ9DHxOugixnD0M0Gms/b9D5oU5DevhW7cnzSgVL6VihbA4GAbOostMkwP5OWRGDoDMIeazfJZE+puIQklQctZza6flvFv1xm0wf7jLZw7B/mlU1knTHVZQtkGq9NMB0QSKQi8yKoL0xfwwdGr/JBaY=
+	t=1789928326; cv=none; b=oR1BqfTDPqhE6Oa8j90eEBa9R7cjNzk0TiWoZamNbRbWKW3j0+KP3yBtYJrZsjulaxhYNfCS5mUZOXgLR3V3g6Io2SLZp72dxGo7aHM0sk/ikXmSwEr7d/Z+B2lhatspvtb7MN1lyvRhy+r7RoEpklSBhribLfHPKzqJJiI/OUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789924144; c=relaxed/simple;
-	bh=PVwzTAfDbpdqV36ICbXuiy9gs987Rys+zxMKo9i7PWE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JpmSZ0HoblyeGtZg4M6on6yehCWEEd4sVAotykeSSBXPqqkF4n/OBBZbWgv2nZP6t8KDt5Y3o8nA3qoGqSOc9Ni7NATSj6DDORXKv9TLHrLHuRRDOZr+DVAIhoW1eREQHD6vw6/DYej6Hgqlxdu5H+Pt7St4ZRv0VeVkaMJZCWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOkeKLEc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789928326; c=relaxed/simple;
+	bh=oColPJm7byDapCx6KUmBg6fWkywzUvd2Yt8UBbtrxIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JF+YLi3KJ+UG7Bo3r2kCdsqycLcszk1rZfjin5j0qHVTHYH6HeYLkvFOYNQuz6iI7TgRyter7oPZai7FqKcb64uvi/dVrUNCqCelUCdQ+D+mr0qlAfNYA5mSDdGKwpsaLEDih73bJvwtUWtX7vVzXY72m4oa1pQyDxeknF+DaoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dW0QsLK1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOkeKLEc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 669D21F00898;
-	Sun, 20 Sep 2026 17:09:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dW0QsLK1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6401F000FF;
+	Sun, 20 Sep 2026 18:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789924143;
-	bh=IH2Hu+LoUs1U17Bi1CdBu9OUsMj+vs4g5/x81CSnGd4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=FOkeKLEci1bvvlZtgUK95VNREAwG72jFH1aPhxtRJs1WAqqpFpV4PP1g1QRFXfNti
-	 vzAh5fbdYG2IxVEWCoWSSHiKRfVjI8uXTUlr7snh5Y98VwhjJLSdKoba7P3wtJbpzb
-	 Rzlb/KefIPMfcomXGetFMw5H+yonspHDMOKIGUdf5gJSfJ+CJ4V3RqRAmAiocPq+7n
-	 qPZ7v7L0QKLSKPO4MU/FmtKZZkg/fDhe819xWCz7itfr/ECKMZU/NdoP7qACTh6xl9
-	 4irvU2DkHMVbwWYAznrdYNuz+lLzjWgTZczbN9uiUJdcSEP62E0RbaDgE7zPWE2tdg
-	 er7aOu4n3f7yQ==
+	s=k20260515; t=1789928324;
+	bh=mHGhS5D3hwDg2bZdL0zyDjYJ+/3CST/aN6uzLGqVjq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=dW0QsLK1o62TrLNh2bC1MdK9kcwGTMIPy+Wo4jcbbAjmzwhTnwFKT6NzjKkLGnBX2
+	 vnQdvIf7Cqum22EdvRwXCB5C8xUGxpUrbmQzv8f3Bu6ASz7DenPt53PO7PSJpFeKI4
+	 9hZaOABik7O+MjcOiEG4fLjqj99XRFZ5d/sAndzQXhRB8NV/EAP7DfSJAlaKVwnRxW
+	 k27M/6A2yMmxo+BDZpnqhOWEBeP4l2lbFGt2TkfasXhoqUIYa3Te3S4Xv0LGt3EB/o
+	 Ok3KiX6d8CokRGm8ghHTUU64cDCltyrF8k23OUi+R+UghqYfKH4S2kSrMg+bJHjN2r
+	 dml0Np+kcX/OQ==
+Date: Sun, 20 Sep 2026 20:18:42 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Santosh Shilimkar <ssantosh@kernel.org>, Kees Cook <kees@kernel.org>
-Cc: Kees Cook <kees+treewide@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20260917211253.i.532-kees@kernel.org>
-References: <20260917211253.i.532-kees@kernel.org>
-Subject: Re: [PATCH] memory: emif: Remove const from min_tck allocation
- type
-Message-Id: <178992414218.36544.17553172588859398493.b4-ty@b4>
-Date: Sun, 20 Sep 2026 19:09:02 +0200
+To: Alex Elder <elder@riscstar.com>
+Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org, 
+	andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org, kees@kernel.org, 
+	gustavoars@kernel.org, p.zabel@pengutronix.de, daniel@riscstar.com, 
+	mohd.anwar@oss.qualcomm.com, lorenzo.bianconi@oss.qualcomm.com, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, mfd@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: mfd: introduce the TC9564 config syscon
+Message-ID: <20260920-fiery-fanatic-manticore-6abf0a@quoll>
+References: <20260918165234.687224-1-elder@riscstar.com>
+ <20260918165234.687224-2-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260918165234.687224-2-elder@riscstar.com>
 
-
-On Thu, 17 Sep 2026 14:12:54 -0700, Kees Cook wrote:
-> In preparation for making the devm_kmalloc family of allocators type
-> aware, we need to make sure that the returned type from the allocation
-> matches the type of the variable being assigned. (Before, the allocator
-> would always return "void *", which can be implicitly cast to any
-> pointer type.)
+On Fri, Sep 18, 2026 at 11:52:30AM -0500, Alex Elder wrote:
+> Define the binding for a system controller used in the Toshiba
+> TC9564 SoC.
 > 
-> The size was taken from "*pd->min_tck", so the converted allocation type
-> would be "const struct lpddr2_min_tck *", as "pd->min_tck" points to
-> const. The allocation is a writable copy assigned to a "void *" and then
-> memcpy()ed into, so name the unqualified type directly, for a converted
-> allocation type of "struct lpddr2_min_tck *". As there is no general way
-> to remove const qualifiers, this keeps the allocation type matching how
-> the memory is used. No change in allocation size results.
+> Co-developed-by: Daniel Thompson <daniel@riscstar.com>
+> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> ---
+>  .../bindings/mfd/toshiba,tc9564.yaml          | 56 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/toshiba,tc9564.yaml
 > 
-> [...]
+> diff --git a/Documentation/devicetree/bindings/mfd/toshiba,tc9564.yaml b/Documentation/devicetree/bindings/mfd/toshiba,tc9564.yaml
+> new file mode 100644
+> index 0000000000000..32e73a727c82a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/toshiba,tc9564.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/toshiba,tc9564.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Toshiba TC9564 System Controller
+> +
+> +maintainers:
+> +  - Alex Elder <elder@riscstar.com>
+> +  - Daniel Thompson <daniel@riscstar.com>
+> +
+> +description: |
 
-Applied, thanks!
+Do not need '|' unless you need to preserve formatting.
 
-[1/1] memory: emif: Remove const from min_tck allocation type
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/e3049c9edd4181e5ce4f83bbac4b611d921f45ff
+> +  The Toshiba TC9564 is an SoC accessed by a host system through the
+> +  upstream PCIe port on the PCIe switch it implements.  The switch includes
+> +  an embedded PCIe endpoint on one of its downstream ports that provides
+> +  access to various SoC peripherals (including a clock and reset controller)
+> +  via one of its BARs.  A system controller provides managed access to the
+> +  first two pages of this memory region to ensure accesses made by these
+> +  peripherals produce well-defined results.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: toshiba,tc9564-config
+> +      - const: syscon
+> +      - const: simple-mfd
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ranges: true
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 1
+
+Both properties and simple-mfd are redundant. You do not have children.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +unevaluatedProperties: false
+
+And this should be additionalProperties instead
+
+> +
+> +examples:
+> +  - |
+> +    syscon@0 {
+> +        compatible = "toshiba,tc9564-config",
+> +                     "syscon",
+> +                     "simple-mfd";
+> +        reg = <0x0 0x2000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges;
+
+As you can see here - no children.
+
+I also have doubts that this is needed - I see no updates to the misc
+binding, which would be referencing it. But then another point would be,
+that you do not need separate child node, which has no properties.
+
+Well, has one - address space.
+
+Lack of full picture is not helping here.
 
 Best regards,
--- 
-Krzysztof Kozlowski <krzk@kernel.org>
+Krzysztof
 
