@@ -1,82 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523183CB541;
-	Sun, 20 Sep 2026 03:48:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBE53D6664;
+	Sun, 20 Sep 2026 05:36:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789876106; cv=none; b=NA/LeuJsWEIPD2wokqvLxV7hFQaQgPESwDygfcv8w3+0XIBXfZMbwsaRJtFfb/3Koum5EbX+YS1L4PBR+s7bY1BH3OvGTvn1ovHTl7r6BjHhE200XJX3PZgogJg0RqWI7BpbSDZoi+LueQNCuSRsJ+x0WqD7V/s8JxCwqy5HnNs=
+	t=1789882591; cv=none; b=guXykLYlrokEZ5WdH7Q3sYkgQW8uidE0SWf2CKW0qFeHlQRuf5EQBNEUko6IjQLdPqgugba/95+sy4jCI3JatSlvOqmmphLC3WK6sgsRbjm3kGDz5b2iNIiGK39rFdbTxxc3Sy/XHbaFzPv9gODg6oGmFU0ALK5uxsq8vzf3wKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789876106; c=relaxed/simple;
-	bh=GSrtFVQAoq72BuT4l8bSIy6B2kt0Hd5qAgqf+SK4zMM=;
+	s=arc-20240116; t=1789882591; c=relaxed/simple;
+	bh=J+1Jh9o2qiwvJqeTp9hdZcVFdwLvu3larl5CMX2B+XQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ajp3i2J+MOgHiq4Hmw3p5FHfTHG4Z1MD8VAiCwaZr77KBEIP5rC6LU/PzuajvJCiTMDHwFxJhPz23e/xPVGoSiSBqI72HkUVFBQ60/fdE/IEDvL8iukunYpNEh/BgAqh8KkHYEgEtIRzxyTuF4xsVJNMHFvmSxPow2Z0IEO+jWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YBC6aBoZ; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=AUGmS9TsVA3GTq8uOdyw5AXLgAlb6//NHdLAktGe3L1hZ59p71F9exzM8GjXOECjLeR1fHlrDGr9VBqALca3VFagbEAdechUo0OYc3qHnPMu6FIzMPn1oBOlKpbEN/e4gJJmdYEZNQR5KiUbWS0zcGH/N9o9b67n+Ame6hKA8jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T/p/9p5t; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YBC6aBoZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2AA1F00893;
-	Sun, 20 Sep 2026 03:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789876104;
-	bh=ybCr0oF8quCv/avwZgHBTOG1l69Dfvx6Rf/qRs6G0NM=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T/p/9p5t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 247921F000FF;
+	Sun, 20 Sep 2026 05:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1789882589;
+	bh=fWrBhysyw42qClS8B0lj8HQDSpNC/Rg4f42Pu01QRGs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YBC6aBoZFH8ZoVIjcCysvgKQWPCeAZnK7xSXqRi8+dyWiyNvuz6IjqFWVKI+gEzA3
-	 oaMZt+GfiWWPwZO+L7WtXR6zTVPWm8J5aEQddxqJ9e8w9wdXf9cgyQkwYsShqX/3y3
-	 N6q33sbNYcxGvAtrsYo3EEQ1xP8Sx7eo8YiTsMCwsBDDR8h5oUZoUzzWD7hn+yryq/
-	 dmoy7MMUFxy9hhJgZ1IuBPQFuWfx1BGqdpXi0ELNTQT7jOC3pbUc6TgXZiNsFdvHgO
-	 2IPsOuX8fnt1Lpf/zBLFIb5c3OeIqw4T36I3/T9Np3Fk0ATdmUGrQeHxMxPs1dTCJs
-	 9OLkkJAmVBHTA==
-Date: Sat, 19 Sep 2026 20:48:24 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Alexey Gladkov <legion@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@kernel.org>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 09/20] kbuild: implement and use depcheck to check
- dependency timestamps
-Message-ID: <202609192047.17BD9B1F@keescook>
-References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
- <20260917-build-speedup-v3-9-9ecf4163ff36@kernel.org>
- <202609171117.35BFDCC13@keescook>
- <aq6-KMkAx7q_xLO4@gremlin>
+	b=T/p/9p5tBuONOoT6lEvlMdvfLEGSyib15uOjmzJCmkkLfRH0cc25qDKzFs+OPRFXZ
+	 ROO+aooJUNP+TK03UirR1qFfHzHBB+LEucngpM7OoPMH+a20MbR4LTpxidC85eOumT
+	 KYCXdJc/qMayspfjlY2zHdN+IA9U/oR7YUNWfQHM=
+Date: Sun, 20 Sep 2026 06:34:32 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Bill Wendling <morbo@google.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>, nikitash.mariiaw@gmail.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 5/9] seq_buf: Add seq_buf_strlen()
+Message-ID: <2026092037-antsy-shrapnel-6139@gregkh>
+References: <20260919002658.stay.929-kees@kernel.org>
+ <20260919002714.4060307-5-kees@kernel.org>
+ <2026091953-cherub-empty-ef35@gregkh>
+ <202609191326.4042FC4@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -85,24 +48,37 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aq6-KMkAx7q_xLO4@gremlin>
+In-Reply-To: <202609191326.4042FC4@keescook>
 
-On Sat, Sep 19, 2026 at 05:57:36PM +0100, Lorenzo Stoakes (ARM) wrote:
-> On Thu, Sep 17, 2026 at 11:42:50AM -0700, Kees Cook wrote:
-> > On Thu, Sep 17, 2026 at 05:06:19PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > > [...]
-> > > +static bool next_line(const char **pos, const char *end, struct line *line)
-> >
-> > There is a lot of string handling in here. I know you're going for speed,
-> > but it just feels like a python script doing all this would be much more
-> > readable without wrecking speed compared to C much. Yes, C will win out,
-> > but the maintainability of this helper does not fill me with joy. :P
+On Sat, Sep 19, 2026 at 02:15:58PM -0700, Kees Cook wrote:
+> On Sat, Sep 19, 2026 at 08:38:37AM +0100, Greg KH wrote:
+> > On Fri, Sep 18, 2026 at 05:27:03PM -0700, Kees Cook wrote:
+> > > +static inline size_t seq_buf_strlen(struct seq_buf *s)
+> > > +{
+> > > +	if (WARN_ON(s->size == 0))
+> > > +		return 0;
+> > 
+> > Why WARN_ON()?  Are you wanting to just mint new CVEs with this code
+> > path, do we not give out enough already?  :)
+> > 
+> > I can see returning 0, if it's empty, but isn't that a valid check for
+> > people to wish to know at times?  Why crash the box?  (remember about
+> > panic-on-warn being enabled in a few billion Linux instances...)
 > 
-> Well I had the LLM look at that and for an allmodconfig python's startup time
-> would take 40s of CPU time _alone_ and it'd kill the no op improvement. So C it
-> has to be :)
+> We have to figure out a line somewhere. :P Making a seq_buf with size 0
+> is a nonsense construction, but seq_buf_init is non-allocating, so
+> there's no feedback about setting it to size 0. We could move the WARN
+> to the init? I was just following the existing style here.
 
-Yikes, that's huge. C it is. ;)
+WARN on the init makes more sense, but even then it feels odd as if we
+wanted to make a seq_buf with data from a device or userspace, we would
+have to verify the size is non-zero _before_ creating the seq_buf or we
+would crash.  So someone has to check the "untrusted" data somewhere,
+right?
 
--- 
-Kees Cook
+And why can't we have buffers of 0 size work just fine?  What prevents
+that?  People have "empty" strings for lots of things.
+
+thanks,
+
+greg k-h
