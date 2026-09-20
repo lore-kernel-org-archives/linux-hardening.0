@@ -1,135 +1,152 @@
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A57353A77
-	for <linux-hardening@vger.kernel.org>; Sun, 20 Sep 2026 08:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC4B3F4DC5
+	for <linux-hardening@vger.kernel.org>; Sun, 20 Sep 2026 11:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789894718; cv=none; b=HXNsHisEQxoGXGQ5ishOGqXVDB+xttxXAY9S3Xbj0NwgLJVqTOM+uKI/QmU7ndMy8e5t5S8N2b5ssMTDy0C6XQbQ7hA1jf3O+SXuNEoynw6TbbWgirVkRMLJazBhg0/JVoARHsp4cxS3bW4NHJ9Vafi5DrKx7beay+BNodj9eHM=
+	t=1789902976; cv=none; b=WgQoYsSxW6aoR09JWGeq70m5xO8o1zjlVkZxwwRr397k4pcqLcO+MoNMWUDDhq5cX1rJIHKgbE/pO7ijtAeT4PoiVWNYb6eVsU7oKYC06DvjUTL6FsgnnxWqizljRlDHtH0/5A8xU3+rlXfJ4HD7rPbvH/+3L+yKV05+IqLtLYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789894718; c=relaxed/simple;
-	bh=ulT7ug30BS3kQe8AssR0HTE8pww9RYiAYwua19h4QeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cx2HEnWpotL+ApixSS54soLGjt9UmFYr8dC/1KeLl8z23bL0SpOVSpfzMEH5iSMRFGAqodytmWUYbOHT+2blA9eHYwXx1yh7j5KSbTSHSnDYQSJ9xeQkRLVOsxhivVLAbzd3BH4XTdQ5GHSEYgsdFvXJ9g/iklmV+NtjwIO5Fqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W0XlKD78; arc=none smtp.client-ip=74.125.225.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789902976; c=relaxed/simple;
+	bh=4Obo9XjIF0UkNH8AWri0rSIBncxG4P+FKPM/rfdlUYk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hNyKxCKetIohOjm5COXZL7VFGA69S/gGTcxEHaRFwSBjnLO4KGoFuM4SowiTNRgrMaYw9V68wTzfjX0zbQIUUds4vS6nhyBTdOphlfH7G13t8ReUafPnDrl4y9nFFcf+neIWCme1DxnUFVUj9PTFrfBJcqkkdrHIIaoYyBYQNEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=Rbb9uuT2; arc=none smtp.client-ip=49.212.243.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0XlKD78"
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-485933b2522so1415465f8f.0
-        for <linux-hardening@vger.kernel.org>; Sun, 20 Sep 2026 01:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789894715; x=1790499515; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=kVcSeGrILNL/3yAIXQLY6tssLOIk6fAE7TJXvBIsnxM=;
-        b=W0XlKD78YUi8OKyOmLeXYSGLZf/wcsx7U90IFwKjFc3KYMaSacH6eWEaQtlNi20n/G
-         nZ07vtej1YaOHm//WAbW20BWuz4fvDWOcEpAhcd31X1BcQWHcEmftXtXYL9FrNy4Fcv7
-         IjiDq0KIST1GOxeaMzfcyc+h0do/RL+Y2aPDjSUuFnuTYv2mG/w4A1ZkBzswirsFUpvu
-         Xysn43OazS93mD6y2L3D5JIU0Q4wvMWlFIdlTYWTqRj3aB738/H0RAS+RJ5PaIR800dK
-         XdhLlCRLLc6MVN0/sNv5bN7IK+C9eCi1IU2AB4T/LMYCH3YijjjzqvvvCCDuwEzGvcxJ
-         KI1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789894715; x=1790499515;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kVcSeGrILNL/3yAIXQLY6tssLOIk6fAE7TJXvBIsnxM=;
-        b=Ak8hFBMlC4BgWz7ie739uB/dlk7rWY0/8Tt0hoAo9AVHhSRu7kDOY56poewam5XIQV
-         Iz4r6lqYxRMSRn1qKuFDvAApjphVuizX4DFCTuvZLBy/DMybZNdG5htnOmR7E3kDkalU
-         IHMASDLpHPTsBYBXKVM941HGjN9AmA+jWT86Wk0bX6J7hN0iittJeQoGxd9MVnxQlf8/
-         YzuSTE5UEeaWZKcModjbm4rucYv8MfanIeJ9OM689MtIxR8uemB4DQzN67xUJu2GzUcs
-         3FErn24vrz+IxNHNpqsPUE4wRTToYuuoHXEJ6b4kxQJ0oaRP9nNBjK8c+4dxHFH0ozgM
-         JS4A==
-X-Forwarded-Encrypted: i=1; AKwUvBxABhTKnDA9l0YVPx6XZMtmxHoY/5XDqZQUSkGLquqRsfmn2NfrL++0LQqOQxUKoTuilZrscgKiYtatreAre1k=@vger.kernel.org
-X-Gm-Message-State: AFuF++l6+CDI2NMvEeNeZ2z04uKsOjwgE7DDqqI+rU7jXtyKejiO1X7Q
-	vkJNe1AB5HOhBvrr1Qsr8HG5WKVr5CHWdY/5NwcI430Yxs4zcr4eu2U4
-X-Gm-Gg: AYBFou0CRdY4pS0EtCVvfM3Omsj33KTNj+mYVRLxvjNQhVsxAvgPufi4Bhj/9LND1Q6
-	mvnnKNE/ifKqe00n9nAxOGhnY4SFq5v4xGj8AkM4yUCwl4IO1qvH6Jq0T8zdbzDPryjoXWuiZXR
-	qw+ZSWN/nZpepYZbo28re38WfBfMWUFcznOTPMfxaI9rjIcHPuPNYx3OfZgjFmuxBNTQB5hxeuV
-	ET2fexfJyDUylai+D1tfSxQ4siGXqcXJQSUcSRS/6hIyTz52YQ4QjNk1iWGmoAOXUAq3PseOXhO
-	E9v9dux5hIWMR13dcLqCv4ujBq5lNiEvP1dSi5i903BzLqbByUEc62VxjLQ3PMZ/ypVde42xul0
-	DtUCBPL8WWZVWEo7BzMaI8N7kmpZhX7lD0zKdJ7UTytt0K8VWp+djPpKYrn8blExzr2MGoP2Tkt
-	I8+ysYfwlPR6UtbtQX1BL12PNtPlzuLPR9+ObvakPkh5OYPc6ve7dsUxv3q27Wu8Ote0bcm1cSl
-	Oa3QPdnEPqSU7Mlr2qQkN7CTLe33ouztkff
-X-Received: by 2002:a05:6000:26c6:b0:487:fa6:d7e5 with SMTP id ffacd0b85a97d-4871e386ffdmr15519930f8f.25.1789894714784;
-        Sun, 20 Sep 2026 01:58:34 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48724460978sm12865886f8f.11.2026.09.20.01.58.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2026 01:58:34 -0700 (PDT)
-Date: Sun, 20 Sep 2026 09:58:30 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, David Gow
- <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, Shuvam Pandey
- <shuvampandey1@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- nikitash.mariiaw@gmail.com, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 5/9] seq_buf: Add seq_buf_strlen()
-Message-ID: <20260920095830.6f56f66d@pumpkin>
-In-Reply-To: <2026092037-antsy-shrapnel-6139@gregkh>
-References: <20260919002658.stay.929-kees@kernel.org>
-	<20260919002714.4060307-5-kees@kernel.org>
-	<2026091953-cherub-empty-ef35@gregkh>
-	<202609191326.4042FC4@keescook>
-	<2026092037-antsy-shrapnel-6139@gregkh>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="Rbb9uuT2"
+Received: from [192.168.10.153] (p865013-ipoe.ipoe.ocn.ne.jp [153.242.222.12])
+	(authenticated bits=0)
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68KBG36O088236
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Sun, 20 Sep 2026 20:16:08 +0900 (JST)
+	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
+DKIM-Signature: a=rsa-sha256; bh=zmfuG+7dS3FcYFGM455cq0LUuDyDjiU3XUc0eMviZCU=;
+        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
+        h=From:Message-Id:To:Subject:Date;
+        s=rs20250326; t=1789902968; v=1;
+        b=Rbb9uuT2coqtm36v3HFjEpsHy109ixacCKT60ybmEKoONtVBGERz59oyiX3u5XxY
+         Nma9hoGUvVDmoja+DjQvk+sNqNSWLKoqcM2ArLaMGNYoDoc4jip/vbGUPDlrGmqz
+         DFD1RakXFcgskRGnehj8HJvj57cpwxvUSDBLZSVRn25zNiYvG2jvIKjZLpSrzna9
+         pDdTR2WK10H7spQslASJEmH9/eCQ/ELMSV/BaGILp16EhoKQdSnYXYrWpjdl5Y1U
+         Xa9yR1Z5RHKG7AAYXo3MOBQUJuWfzgeXG41fS9KqPDO8C56J8dDDf0E/6vn5eZtk
+         R7cL0QnNJIUIC9M4sKia0Q==
+From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Date: Sun, 20 Sep 2026 20:15:42 +0900
+Subject: [PATCH v11 01/21] KVM: arm64: Serialize repeated vCPU
+ initialization
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260920-hybrid-v11-1-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
+References: <20260920-hybrid-v11-0-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
+In-Reply-To: <20260920-hybrid-v11-0-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Eiden <seiden@linux.ibm.com>,
+        Andrew Jones <andrew.jones@oss.qualcomm.com>,
+        Fuad Tabba <fuad.tabba@linux.dev>, Mark Rutland <mark.rutland@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Shannon Zhao <shannon.zhao@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Fuad Tabba <fuad.tabba@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2195;
+ i=odaki@rsg.ci.i.u-tokyo.ac.jp; h=from:subject:message-id;
+ bh=4Obo9XjIF0UkNH8AWri0rSIBncxG4P+FKPM/rfdlUYk=;
+ b=owGbwMvMwCWmMbc20y1CyJDxtFoSQ9b6A8n8r0rTYp6ra6+1enjkVaabcdZRtfpWJt1LKbX1P
+ 3y+TyjtKGVhEONikBVTZEkp2s2tEV37qTAhvgVmDisTyBAGLk4BmEiqJSPDAtm29tsRrGpuc2Z1
+ m3xMeaQqangs43/ld/kfNkl6s7ctY2S45Xx9ftg7N+2qCilDYdPfc6xXT17CG9W00dfK8tELW2s
+ +AA==
+X-Developer-Key: i=odaki@rsg.ci.i.u-tokyo.ac.jp; a=openpgp;
+ fpr=AEDC03C9AF734F2EC26A7BFFA4BAEAA73536753C
 
-On Sun, 20 Sep 2026 06:34:32 +0100
-Greg KH <gregkh@linuxfoundation.org> wrote:
+The initial KVM_ARM_VCPU_INIT path holds config_lock while resetting the
+vCPU, but repeated initialization of an existing vCPU does not. As a
+result, reset_mdcr() can race with VM-wide PMU configuration and
+overwrite MDCR_EL2 with a stale counter count.
 
-> On Sat, Sep 19, 2026 at 02:15:58PM -0700, Kees Cook wrote:
-> > On Sat, Sep 19, 2026 at 08:38:37AM +0100, Greg KH wrote:  
-> > > On Fri, Sep 18, 2026 at 05:27:03PM -0700, Kees Cook wrote:  
-> > > > +static inline size_t seq_buf_strlen(struct seq_buf *s)
-> > > > +{
-> > > > +	if (WARN_ON(s->size == 0))
-> > > > +		return 0;  
-> > > 
-> > > Why WARN_ON()?  Are you wanting to just mint new CVEs with this code
-> > > path, do we not give out enough already?  :)
-> > > 
-> > > I can see returning 0, if it's empty, but isn't that a valid check for
-> > > people to wish to know at times?  Why crash the box?  (remember about
-> > > panic-on-warn being enabled in a few billion Linux instances...)  
-> > 
-> > We have to figure out a line somewhere. :P Making a seq_buf with size 0
-> > is a nonsense construction, but seq_buf_init is non-allocating, so
-> > there's no feedback about setting it to size 0. We could move the WARN
-> > to the init? I was just following the existing style here.  
-> 
-> WARN on the init makes more sense, but even then it feels odd as if we
-> wanted to make a seq_buf with data from a device or userspace, we would
-> have to verify the size is non-zero _before_ creating the seq_buf or we
-> would crash.  So someone has to check the "untrusted" data somewhere,
-> right?
-> 
-> And why can't we have buffers of 0 size work just fine?  What prevents
-> that?  People have "empty" strings for lots of things.
+Take config_lock around the repeated-init checks and reset. The vCPU
+ioctl already holds vcpu->mutex, matching the established lock ordering.
 
-If someone passes 0 to an allocate you might be able to use a global
-char[1] buffer (that always contains 0) just to keep everything happy.
-In particular you can return a '\0' terminated string without adding
-conditionals anywhere else.
+Fixes: c8823e51b534 ("KVM: arm64: Fix MDCR_EL2.HPMN reset value")
+Closes: https://sashiko.dev/#/patchset/20260710-hybrid-v8-0-621409f3a592@rsg.ci.i.u-tokyo.ac.jp?part=1
+Assisted-by: Codex:gpt-5.6-sol
+Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
+---
+ arch/arm64/kvm/arm.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-David
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index b0de4ea7dc39..997f24f5fb91 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -1691,29 +1691,26 @@ static int __kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ {
+ 	unsigned long features = init->features[0];
+ 	struct kvm *kvm = vcpu->kvm;
+-	int ret = -EINVAL;
++	int ret;
+ 
+-	mutex_lock(&kvm->arch.config_lock);
++	lockdep_assert_held(&kvm->arch.config_lock);
+ 
+ 	if (test_bit(KVM_ARCH_FLAG_VCPU_FEATURES_CONFIGURED, &kvm->arch.flags) &&
+ 	    kvm_vcpu_init_changed(vcpu, init))
+-		goto out_unlock;
++		return -EINVAL;
+ 
+ 	bitmap_copy(kvm->arch.vcpu_features, &features, KVM_VCPU_MAX_FEATURES);
+ 
+ 	ret = kvm_setup_vcpu(vcpu);
+ 	if (ret)
+-		goto out_unlock;
++		return ret;
+ 
+ 	/* Now we know what it is, we can reset it. */
+ 	kvm_reset_vcpu(vcpu);
+ 
+ 	set_bit(KVM_ARCH_FLAG_VCPU_FEATURES_CONFIGURED, &kvm->arch.flags);
+ 	vcpu_set_flag(vcpu, VCPU_INITIALIZED);
+-	ret = 0;
+-out_unlock:
+-	mutex_unlock(&kvm->arch.config_lock);
+-	return ret;
++	return 0;
+ }
+ 
+ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+@@ -1729,6 +1726,8 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 	if (ret)
+ 		return ret;
+ 
++	guard(mutex)(&vcpu->kvm->arch.config_lock);
++
+ 	if (!kvm_vcpu_initialized(vcpu))
+ 		return __kvm_vcpu_set_target(vcpu, init);
+ 
 
-> 
-> thanks,
-> 
-> greg k-h
-> 
+-- 
+2.55.0
 
