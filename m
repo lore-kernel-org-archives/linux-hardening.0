@@ -1,41 +1,41 @@
 Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54473D4118
-	for <linux-hardening@vger.kernel.org>; Sun, 20 Sep 2026 11:16:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B65F344D9B
+	for <linux-hardening@vger.kernel.org>; Sun, 20 Sep 2026 11:16:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789902977; cv=none; b=G4lVZovLOvnYmkI1MaQv3bwzIFAOmqS+Mz+5BMTHhheSsLNQhUeL4QH91Aeg4PJ8UpWrrc1cvGNnW7mniKYa5hHVtWYd8bWCcz8GtESg78b84GgbXq7sX5gcMKMFhp+fN7MeS9B5ohvzw9Zai8P0ABob4kYERnnQ/pXphGQ37GI=
+	t=1789902978; cv=none; b=m/ydraHBByR5eI0c8T1RjJ7t9d1q3mnGWvvwt5dUMw31PBcNFT1W5Edsc6T9HaUWGhL2S0KOJxjHXqUqv1mVcZX0S8OZ3RxKNDRw6h0spUxp5teJZDhDhDCl5F32EdHP3J6p08JOYxahPAqLybzCMQx9wF6Q7SS+WBOrG1RTrT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789902977; c=relaxed/simple;
-	bh=OkvBLyzd2QOHEMuSfHYwvhh6JbY910F/L4YLee/eXFI=;
+	s=arc-20240116; t=1789902978; c=relaxed/simple;
+	bh=7qyZ3yw8xwXvroToHAs5qx3zfIpA0akFceWmVOkFa8E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X8Ds7cZXLRLcw0CSzy9SB3/htv4WvlhDoifb9bc0S70SNenzycgZ2SIwgXmnhEPfaQL+zil0qZjHJJYgL8MVxrSEfrh6YTXnIQnPl9TQEYO7+tDMLOH5oxZu4VYYpLa2LHMgpdKnErFJET20dZhZ62T6L8l7DF0LE3D2mNf3/Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=DZ7tb1Zg; arc=none smtp.client-ip=49.212.243.89
+	 In-Reply-To:To:Cc; b=SY2rXMJBfvJCFKMHRDdBdqMacbmIyPV2ebWKdBW54/ZRPNNmt+5yR7JZyjTYsRDMh8UW6ku8iz54MV8jSxsoFm6Ch7OxM6uY1H1+rYRdpmvJSHPjaobLfPxHSDLqzicpZG1j43yR60xWbp0y+oTY2V/U0AgWmkfaOzcHJzOAyj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=swLXvuxC; arc=none smtp.client-ip=49.212.243.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="DZ7tb1Zg"
+	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="swLXvuxC"
 Received: from [192.168.10.153] (p865013-ipoe.ipoe.ocn.ne.jp [153.242.222.12])
 	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68KBG36T088236
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68KBG36R088236
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Sun, 20 Sep 2026 20:16:10 +0900 (JST)
+	Sun, 20 Sep 2026 20:16:09 +0900 (JST)
 	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=ZW/Tdj3bVLx1UwE3X/hNQWAdAvY+Hiob2QqqnLyGvfE=;
+DKIM-Signature: a=rsa-sha256; bh=CpstWXsEGNxvTAnG53+JLBqVzfY5FoROk7Pvi0Mk+sY=;
         c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
         h=From:Message-Id:To:Subject:Date;
-        s=rs20250326; t=1789902971; v=1;
-        b=DZ7tb1Zg7KJa7r9NzOcrdVSkBeYjnnHwOMG/8kMHjjYtgwSxzHF53V29mspJ0tEr
-         43zUWR1U/DxM7/AwCtqitnPnYdtAE/WOA2lW2VvQJbzk5oAwIbX0HucRH3/Xuilr
-         PRIruXe/v04gCEvdJHFHWWtb8+hIDGN/aQnJqYAemIZKjAVZIRyEkobgwoc6m69P
-         pSMjp4wIuNx6Iud63Cs3nV7QUDggBRa41RzEkLL21HFgBAXN9Q9i2E8XFL8m//Vq
-         zG9m8wJ28I/8bMBa6fohZU78V3SsARSwpSEurQPL5KWJGaEfBzr0IZKIYJmDLp5W
-         5k65ECzCRmKoUn9OUYKqDg==
+        s=rs20250326; t=1789902970; v=1;
+        b=swLXvuxCmaz8hB04AEW2oFrcON647nR1UZTKe4ffJumEjp8MwV04mAcw7Tszh5kk
+         rIR4jQq2ERwzr3gHkpCW8a4XMpn/b0O/7or2OjHupmFhUHQaG04SlEx2aKcTQv+C
+         eBnAvwCtAlI881VIIebctlKfQPILNl6dRbCuPMELx0Wdu1AAZR9wO+naO366C7BT
+         I1eWgTPvMegh3THZvdq7orqHnUt/MeP8ZDF65Vfuh5ZRMVTQiATHXOFH25lvHuEF
+         1j7sxL2da5EF+ei3qtnc3hq8y54tJzMEEdLcZUk4gvaPgCFpSNyxGEMThPCWESMK
+         6qaXH5Qy00xhxk8BOH7kpg==
 From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Date: Sun, 20 Sep 2026 20:15:47 +0900
-Subject: [PATCH v11 06/21] KVM: arm64: PMU: Keep implemented counter mask
- EL-independent
+Date: Sun, 20 Sep 2026 20:15:45 +0900
+Subject: [PATCH v11 04/21] KVM: arm64: selftests: Test SET_NR_COUNTERS
+ after first run
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,7 +44,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260920-hybrid-v11-6-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
+Message-Id: <20260920-hybrid-v11-4-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
 References: <20260920-hybrid-v11-0-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
 In-Reply-To: <20260920-hybrid-v11-0-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
@@ -71,55 +71,122 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
         linux-kselftest@vger.kernel.org,
         Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1575;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3449;
  i=odaki@rsg.ci.i.u-tokyo.ac.jp; h=from:subject:message-id;
- bh=OkvBLyzd2QOHEMuSfHYwvhh6JbY910F/L4YLee/eXFI=;
- b=owGbwMvMwCWmMbc20y1CyJDxtFoSQ9b6A+nXOiXZp7lr/YvNnvj95sVnjqpq9dVP8yzKXaZ+2
- lDsfL+no5SFQYyLQVZMkSWlaDe3RnTtp8KE+BaYOaxMIEMYuDgFYCJxcgz/NCL+829oKJn7QtpR
- 9uUCT96dh3+xsz+QNFx9SCp914OV7YwMbwI0OAINj9Vv2sIltv9Rh9eXs9e+cRrfv2AvVmZdYCT
- GAQA=
+ bh=7qyZ3yw8xwXvroToHAs5qx3zfIpA0akFceWmVOkFa8E=;
+ b=owGbwMvMwCWmMbc20y1CyJDxtFoSQ9b6A2lXr+g7PReYfHOn6usjIZ/dmvRe1F09wP3FpOeE3
+ 9l5R7lcOkpZGMS4GGTFFFlSinZza0TXfipMiG+BmcPKBDKEgYtTACYSvpzhv9tLz/1h7+6p8CiL
+ MO7inyL9vfzY2p8dzsLpJ7sF2R5VXWb4K/w1d+XRP88/m8rJORQ/Y9YuEbTuLtA7O/fsp/8KXS6
+ u3AA=
 X-Developer-Key: i=odaki@rsg.ci.i.u-tokyo.ac.jp; a=openpgp;
  fpr=AEDC03C9AF734F2EC26A7BFFA4BAEAA73536753C
 
-kvm_pmu_implemented_counter_mask() derives the counter count from
-kvm_vcpu_read_pmcr(). For a nested vCPU outside EL2, PMCR_EL0.N reflects
-MDCR_EL2.HPMN instead of the VM-wide counter count.
+Add a regression test that runs one vCPU and then tries to change the
+VM-scoped PMU counter count through an idle sibling. Verify that
+SET_NR_COUNTERS fails with EBUSY once any vCPU has run.
 
-Consequently, processing a PMU reload while the saved context is L2 can
-clear and fail to recreate state for counters reserved for EL2.
-
-Build the implemented counter mask from nr_pmu_counters instead. Keep
-the EL-dependent HPMN restriction in
-kvm_pmu_accessible_counter_mask(), where it controls guest access.
-
-Fixes: 600f6fa5c90c ("KVM: arm64: Let kvm_vcpu_read_pmcr() return an EL-dependent value for PMCR_EL0.N")
 Assisted-by: Codex:gpt-5.6-sol
 Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-Reviewed-by: Fuad Tabba <fuad.tabba@linux.dev>
 ---
- arch/arm64/kvm/pmu-emul.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../selftests/kvm/arm64/vpmu_counter_access.c      | 47 ++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index 950b7a349659..a5ccb6ae44d5 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -317,12 +317,12 @@ u64 kvm_pmu_accessible_counter_mask(struct kvm_vcpu *vcpu)
- 
- u64 kvm_pmu_implemented_counter_mask(struct kvm_vcpu *vcpu)
- {
--	u64 val = FIELD_GET(ARMV8_PMU_PMCR_N, kvm_vcpu_read_pmcr(vcpu));
-+	u64 n = vcpu->kvm->arch.nr_pmu_counters;
- 
--	if (val == 0)
-+	if (n == 0)
- 		return BIT(ARMV8_PMU_CYCLE_IDX);
- 	else
--		return GENMASK(val - 1, 0) | BIT(ARMV8_PMU_CYCLE_IDX);
-+		return GENMASK(n - 1, 0) | BIT(ARMV8_PMU_CYCLE_IDX);
+diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
+index 22223395969e..05135bcdb462 100644
+--- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
++++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
+@@ -443,11 +443,10 @@ static void destroy_vpmu_vm(void)
+ 	kvm_vm_free(vpmu_vm.vm);
  }
  
- static void kvm_pmc_enable_perf_event(struct kvm_pmc *pmc)
+-static void run_vcpu(struct kvm_vcpu *vcpu, u64 pmcr_n)
++static void run_vcpu(struct kvm_vcpu *vcpu)
+ {
+ 	struct ucall uc;
+ 
+-	vcpu_args_set(vcpu, 1, pmcr_n);
+ 	vcpu_run(vcpu);
+ 	switch (get_ucall(vcpu, &uc)) {
+ 	case UCALL_ABORT:
+@@ -461,6 +460,11 @@ static void run_vcpu(struct kvm_vcpu *vcpu, u64 pmcr_n)
+ 	}
+ }
+ 
++static void guest_code_done(void)
++{
++	GUEST_DONE();
++}
++
+ static void test_create_vpmu_vm_with_nr_counters(unsigned int nr_counters, bool expect_fail)
+ {
+ 	struct kvm_vcpu *vcpu;
+@@ -503,7 +507,8 @@ static void run_access_test(u64 pmcr_n)
+ 	/* Save the initial sp to restore them later to run the guest again */
+ 	sp = vcpu_get_reg(vcpu, ctxt_reg_alias(vcpu, SYS_SP_EL1));
+ 
+-	run_vcpu(vcpu, pmcr_n);
++	vcpu_args_set(vcpu, 1, pmcr_n);
++	run_vcpu(vcpu);
+ 
+ 	/*
+ 	 * Reset and re-initialize the vCPU, and run the guest code again to
+@@ -516,7 +521,8 @@ static void run_access_test(u64 pmcr_n)
+ 	vcpu_set_reg(vcpu, ctxt_reg_alias(vcpu, SYS_SP_EL1), sp);
+ 	vcpu_set_reg(vcpu, ARM64_CORE_REG(regs.pc), (u64)guest_code);
+ 
+-	run_vcpu(vcpu, pmcr_n);
++	vcpu_args_set(vcpu, 1, pmcr_n);
++	run_vcpu(vcpu);
+ 
+ 	destroy_vpmu_vm();
+ }
+@@ -622,6 +628,37 @@ static bool kvm_supports_nr_counters_attr(void)
+ 	return supported;
+ }
+ 
++static void test_set_nr_counters_after_vcpu_run(void)
++{
++	struct kvm_vcpu *running_vcpu, *stopped_vcpu;
++	unsigned int nr_counters = 0;
++	struct kvm_vcpu_init init;
++	struct kvm_vm *vm;
++	int ret;
++	u64 irq = 23;
++
++	vm = vm_create(2);
++	vm_ioctl(vm, KVM_ARM_PREFERRED_TARGET, &init);
++	init.features[0] |= BIT(KVM_ARM_VCPU_PMU_V3);
++	running_vcpu = aarch64_vcpu_add(vm, 0, &init, guest_code_done);
++	stopped_vcpu = aarch64_vcpu_add(vm, 1, &init, guest_code_done);
++	kvm_arch_vm_finalize_vcpus(vm);
++
++	vcpu_device_attr_set(running_vcpu, KVM_ARM_VCPU_PMU_V3_CTRL,
++			     KVM_ARM_VCPU_PMU_V3_IRQ, &irq);
++	vcpu_device_attr_set(running_vcpu, KVM_ARM_VCPU_PMU_V3_CTRL,
++			     KVM_ARM_VCPU_PMU_V3_INIT, NULL);
++	run_vcpu(running_vcpu);
++
++	ret = __vcpu_device_attr_set(stopped_vcpu, KVM_ARM_VCPU_PMU_V3_CTRL,
++				     KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS,
++				     &nr_counters);
++	TEST_ASSERT(ret == -1 && errno == EBUSY,
++		    KVM_IOCTL_ERROR(KVM_SET_DEVICE_ATTR, ret));
++
++	kvm_vm_free(vm);
++}
++
+ int main(void)
+ {
+ 	u64 i, pmcr_n;
+@@ -630,6 +667,8 @@ int main(void)
+ 	TEST_REQUIRE(kvm_supports_vgic_v3());
+ 	TEST_REQUIRE(kvm_supports_nr_counters_attr());
+ 
++	test_set_nr_counters_after_vcpu_run();
++
+ 	pmcr_n = get_pmcr_n_limit();
+ 	for (i = 0; i <= pmcr_n; i++) {
+ 		run_access_test(i);
 
 -- 
 2.55.0
