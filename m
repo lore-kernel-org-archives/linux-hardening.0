@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1714825DC;
-	Mon, 21 Sep 2026 23:25:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A642647C116;
+	Mon, 21 Sep 2026 23:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790033135; cv=none; b=d3ollZ3chK59CecgtUbB3y2rfKZ8bPC5FToklaCrQSoutfVV+5U0kpU3q+5yBdT/oeuKbW2gra6eD+S/2MfOXGgHdJU3IQ85vk9PPFLMgL7MoCHBYyGWeWuaxizuNefagTb4IIseeUjgs5koXYzRNCo3UktfoPh5bJ7kKue9ids=
+	t=1790033211; cv=none; b=gj85sI+es65EDj+B5MlUtTYXEW+BIoKRMKnc7VxhRYc8mMIPt8oAnseEoLyBNkUxycqb87ZYpqyX1n3jm2WvwbMVYNpRQU/5yiElPihmOiaKg6Az6ZuhQgdYV0PXAxcy65lhdaSbaZAJfaNOoAd+H5nBNnoLC6CcgUmP3yNw4qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790033135; c=relaxed/simple;
-	bh=MJ2Hp/KWZc5i0XyNPx+/X7OdyoIGYk7ogHruNQqEYpk=;
+	s=arc-20240116; t=1790033211; c=relaxed/simple;
+	bh=L/D1VBpSzR1XeQJNrXqUys+cTWArQNCxiy9cWg8e9YQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B2ONTJombjck2G/6C9rngu+Y3Vk/ovXbYtToDQxGGDBT/PRarA/6IVHQZWDehSU9CnuTWyOIep8Z6n0bWlwxvAcDprb5sFppb3dHM5iOvhzJVKfJFow5G3/+xBa4BLl1TuB7dw/nA4HES4a9byO+VdJm1Gpia24xvWyYVvugyf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azIn/d0w; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=iAn6yOo9fC9vrDWYVMHgcdH6hFgGrvbSuqUfKUmZ8F9X5hO+YOW7uVxhigBpnmT7RGBooXO0rMU6vqRVcsejczTAbliz4hO0E/heG1pg3Hm9V4v4hLofCWYq4VgOGhpazghvgwkpW4go07zx7szXDTrEwdTPnVS8carqCPNALWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsfpG4wq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azIn/d0w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4CC31F00893;
-	Mon, 21 Sep 2026 23:25:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsfpG4wq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF721F000FF;
+	Mon, 21 Sep 2026 23:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790033126;
-	bh=oaGIE4gQUBGH4tcAm0OKjGErwoNdUaA0Sne6xnAyux0=;
+	s=k20260515; t=1790033200;
+	bh=hM5mTuDQ4dfNK5Z8XPoMxZFJdoiMu0qCdKMcLrxKa3Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=azIn/d0wCBW/n5NuSAAvioZRTS6hsz/Zzmk86xwjKslNuC+NfEG2OnH1ZfzQ3TRz/
-	 3cro52SIhBBCt2l3ERGmS9tyrTutoW2wkR/hIcoE8WXd0jAVCrFmXdAtIROZ+AIl+L
-	 mZunPKrWZ9NH7wotaotbcWy1jLlQG8AY+mu2J+ZtfZlmW8ci62EJWLiLIbYeUpfJG9
-	 Xn7R+a8VNffucyoETZHR1hjCQqsc31YOS1uipcHkLK6NSFO+mKrQNeu0qUGVDrEYTT
-	 nN48t9N17wjW6roUjjostFNHgjYqWZkqJbefoyyzfHGd3NkjlW7+HtwXrktWeN6lhZ
-	 jp1Vo/FxK1B0Q==
-Date: Mon, 21 Sep 2026 16:25:25 -0700
+	b=JsfpG4wqpOafQFBopqW3RNxUYW2gAwzPzWoeHVqBzw8tKKe1B0s4t63iQSWnV8EQ1
+	 rSGPeW4M7vzIvlk+heYi85lhmuPaRw4CEYvxRFoMudbkW//0iO+tB/IICwZJPAYJR+
+	 jf6H2CYP/ekh2L58Vi5xfINtZos2WrvrwYrJSBmFAMg8V9w/mUIXUsP6Dxb5kHLenH
+	 ZH5/C25uUC4b793UVhAx4RRACAJzZdJaQQE08kzGuwQ5EgOcWrsH9yKQSPLFppbHHZ
+	 dnO93SqbtdBPl863CAVJvqPS9wsaTfT7c/g0CxDGpB7QRrgYkcgDEiEi60mZ/7mBtZ
+	 S8Oeg4uEOfhaw==
+Date: Mon, 21 Sep 2026 16:26:40 -0700
 From: Kees Cook <kees@kernel.org>
 To: Harry Yoo <harry@kernel.org>
 Cc: Vlastimil Babka <vbabka@kernel.org>,
@@ -45,12 +45,11 @@ Cc: Vlastimil Babka <vbabka@kernel.org>,
 	Jiayuan Chen <jiayuan.chen@linux.dev>,
 	Willem de Bruijn <willemb@google.com>, linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: Re: [PATCH v4 2/7] mm/slab: Give bucket caches the alignment of the
- caches they mirror
-Message-ID: <202609211620.342AAA61@keescook>
+Subject: Re: [PATCH v4 6/7] mm/slab: Let a bucket set handle __GFP_ACCOUNT
+Message-ID: <202609211625.B1F704163@keescook>
 References: <20260921075811.too.775-kees@kernel.org>
- <20260921075820.1718334-2-kees@kernel.org>
- <arEdcaJz4i5HP26a@thinkstation>
+ <20260921075820.1718334-6-kees@kernel.org>
+ <arEvspsSl3bLyYgs@thinkstation>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,70 +58,20 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <arEdcaJz4i5HP26a@thinkstation>
+In-Reply-To: <arEvspsSl3bLyYgs@thinkstation>
 
-On Mon, Sep 21, 2026 at 02:17:21PM +0100, Harry Yoo wrote:
-> On Mon, Sep 21, 2026 at 12:58:13AM -0700, Kees Cook wrote:
-> > A bucket set is created with kmem_cache_create_usercopy(..., align = 0),
-> > so calculate_alignment() falls back to arch_slab_minalign(), typically 8
-> > bytes. The general kmalloc caches it stands in for are created through
-> > create_boot_cache(), which starts from ARCH_KMALLOC_MINALIGN and raises
-> > it to the largest power-of-two divisor of the size:
-> > 
-> > 	if (flags & SLAB_KMALLOC)
-> > 		align = max(align, 1U << (ffs(size) - 1));
-> > 
-> > This is only a problem when slab metadata is enabled with
-> > CONFIG_KASAN=y, CONFIG_SLUB_DEBUG_ON=y, or "slab_debug=...", because
-> > metadata changes the stride size off a power of two, for example:
-> >
-> > 	size 128:  bucket align=8 size=224  | kmalloc align=128  size=384
-> > 	size 512:  bucket align=8 size=608  | kmalloc align=512  size=1536
-> > 	size 2048: bucket align=8 size=2144 | kmalloc align=2048 size=6144
+On Mon, Sep 21, 2026 at 02:25:57PM +0100, Harry Yoo wrote:
+> On Mon, Sep 21, 2026 at 12:58:17AM -0700, Kees Cook wrote:
+> Didn't take a deeper look at this yet but this is causing an error:
 > 
-> Hmm... I think what adds confusion here is that in new_kmalloc_cache()
-> we adjust the size based on alignment, but in create_boot_cache() we
-> don't do that. Perhaps let's make it consistent and move it to
-> new_kmalloc_cache()?
+> MODPOST Module.symvers
+> ERROR: modpost: lib/tests/slub_kunit.ko: symbol 'mem_cgroup_kmem_disabled' undefined!
 
-Yeah, I really couldn't figure out what was "correct" here.
+Argh, modular build. Of all the things I tested, I didn't actually test
+kunit modular build. :P It's so easy to use kunit.py that I forget it's
+doing a monolithic build under the hood. :P
 
-> > So bucket allocations will fail the IS_ALIGNED(p, ARCH_DMA_MINALIGN)
-> > check, potentially creating problems for non-coherent DMA situation.
-> 
-> I was wondering "Why should they respect kmalloc alignment..." but yeah,
-> It makes sense if the users were using kmalloc and depended on its
-> alignment.
-
-Right, it was a "visible" change between standard kmalloc and bucketed
-kmalloc, so I figured the right action was to be (bug?) identical.
-
-> Well, but that's already done in new_kmalloc_cache() and
-> kmem_buckets_create() should already honor ARCH_KMALLOC_MINALIGN? 
-> 
-> The largest-power-of-two-divisor-alignment guarantee was introduced by
-> commit ad59baa31695 ("slab, rust: extend kmalloc() alignment guarantees
-> to remove Rust padding")
-> 
-> ...which makes me wonder what you're trying to fix here?
-
-What Sashiko noticed was that alignment might not match under certain
-configs, and then I verified it at runtime, and figured I'd best fix it
-just on the basis that it was a difference from what a user might expect,
-and it might be especially important for skb data.
-
-> >  			if (WARN_ON(!cache_name))
-> >  				goto fail;
-> >  			(*b)[aligned_idx] = kmem_cache_create_usercopy(cache_name, size,
-> > -					0, flags, cache_useroffset,
-> > +					kmalloc_caches[KMALLOC_NORMAL][idx]->align,
-> > +					flags, cache_useroffset,
-> >  					cache_usersize, ctor);
-> >  			kfree(cache_name);
-> >  			if (WARN_ON(!(*b)[aligned_idx]))
-
-It looks "obviously correct", but I probably failed to correctly
-describe it. I'm happy to do whatever here.
+I'll get that fixed.
 
 -- 
 Kees Cook
