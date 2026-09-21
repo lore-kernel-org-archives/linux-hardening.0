@@ -1,68 +1,52 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F65C47CA65
-	for <linux-hardening@vger.kernel.org>; Mon, 21 Sep 2026 11:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E92048E0E7
+	for <linux-hardening@vger.kernel.org>; Mon, 21 Sep 2026 11:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789989921; cv=none; b=PY46w9jb8MwQ3QQwOfq1AQdq11F0qq0YZubtZdcSmZ501Z1NosYIrmURJ6qdvt+74NHY5aBPZ4M05LFYmRaSINXO77QRHRk2tWR7LZXTidHYJwh/82g1kb+zdvpYBQKY7WfneBOEjoXnoiXAhFfL6L8K2Te33LKwLdXXgvh6fzo=
+	t=1789991470; cv=none; b=qnvAWy0ra6CMgq8gDVqtRQ0Pd00jAJV0xLJqB3TbNBy5g5BF/kRgU26RaPDUxugJgYh5Qr98xzEjFfMAyVwZAklU9eeFAQebcB0v30Rw/gkXjKguvjQiQWBSj8bPzj3ph92FIcaMXnBJvpLN4JY+uRpIV7g4zb7Gnmnjp+TIZGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789989921; c=relaxed/simple;
-	bh=vL7H9bUFob8ldX6kiSUwQbR/mxtlpznZdS9IX5wHg4g=;
+	s=arc-20240116; t=1789991470; c=relaxed/simple;
+	bh=10nfhjAIJnsXe1hZcXAe82N07s0DDGp1qST1Dsza1zI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fj3ym587+C+29JEe/zP05A6pb632BWnXt9z5Yz5n4eEsZ+LdsQmNC1OW1K2q1adIv1LEmMyd9GHdAFhwgV5flhI2EdeXzPzXBvDV2G3W8fZh2JwX5r9j1dUwHoHabQMxSi+br7Yfo83CvVh2PQHpo5fSb+VrOdRFvhfljBxW/Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Vhw7aLhr; arc=none smtp.client-ip=74.125.225.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=cQe8UfsglU1X8gnUOU6ALHV7Elbu94g0wFWV9LoLvO32lPrLCFyxrkJE2Qv0GY5ujE/eXMlLbD8XgbCot2xDJKd6wkNHJvrGc9dLLLbuSZIxg67AZSdIR4IBJjAzU0Ms7sbSR2xCW2lV9Fyvw24C5cHLaSQysl9TbciYucqBtoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=GUBtPJMC; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Vhw7aLhr"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e6c0fce17so14439155e9.1
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Sep 2026 04:25:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1789989912; x=1790594712; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kLlCULrw1v/vSqZnviB/Cu2fC1Y7qRZoJjKlQFtW/cc=;
-        b=Vhw7aLhr2hs5mUDvFtaiWafzn0SQAB1KRD3UcypFgjyciceWezvD3sAcaZGlpKQf6W
-         1Pkq0qMMKHYM5Rd2B08kzj+uihssv08doCjawZjeQluEFwn+egW/I5Bx/1xkA0HW+f+X
-         vz39sSyQ+YoStFTF/niNt3RR3eGt9q/kamO/OBff7CdspOx1OC07psQyi2ANOQ/hk4Qu
-         IYXDiJ2YW9IVbqOOYm4EGJHnIxDaezKxS9oDyHdnKSsWxCDjNXdag62eGIuOUJQQOV8B
-         oaipJI8lf17IzDe+9hOp2CWXSS0kHWR+gCvGw0TzZd5MPj541wzj/ilXlfAsnpQ//tSC
-         U/iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789989912; x=1790594712;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kLlCULrw1v/vSqZnviB/Cu2fC1Y7qRZoJjKlQFtW/cc=;
-        b=nkKGftVx6wp9aydafc/g+FMPe52cUCUD2LndrYM6YBnPDs/8ypuS5F4Zk3WirMZM1v
-         R9aHnQWnMotlGDoZBMEFc9BcjLjYwWyLoIq0/HGWqFiA9DmYTwRx7NwllIHlrdP3/wOt
-         /nSNUhreHVs9grveNIWB/hDlmT8MRqxtvcZAT2w2ud0VS0CYYIxdz9FroDxvmR4i/Y50
-         jrooGpFJW7TmJ2rHrtDWQnmUtO3/QSOYGwiJ+VD2P3Y2UfVcqCXaTl9gpoJvDFgmMYhn
-         WGcMpPjdm6FA0rUSFHLrY1gCdFw+iFx4BDw/k/vNQvHTon3UKE/6T/6VTGcujqz1lagq
-         d3uQ==
-X-Forwarded-Encrypted: i=1; AKwUvByob/EKK8oavh9ylXrikUmMyiMFM73MzQgNyzVj8A39sFaj7aG+hJQFeplgd665bca6l+IgdAlOMDcqSlRlCq4=@vger.kernel.org
-X-Gm-Message-State: AFuF++nhYQQk9ihcWFcRzkWEWx2VDkJfaO2SStrQsYQc6TJ/2xnAwaS3
-	Um9CEhzGmEe/y9e30WRSVKbFzcSwHSzwtSSeZ2agFVCYLj1/clQU4SaZV8F8lL1fk/s=
-X-Gm-Gg: AYBFou3/IF+hGvSj9ygPOvhZnNOgQjo3LFp6+XZ7xpOuFcN8X6gYRSgPgRe9bB5GUKr
-	t1NZPAAuUbtxeHTS3gohRRxN5gRmT+kTXfX923XZ7h+hAiEmpa0eoA2HHTrKoD34zsRAStmydAo
-	mwMEJOlxjmp12oNf6vdE6PFjRoisfpp5u+KB9ypsCvyH8H0S+O5KAvc5HW3SyAZncis0iLP7Txo
-	TRsa2EvsDlKM8fDwC7Nz53nOBbXS9X2WjNrBST7n/cjfdcUY4Nyka4KKdvqKqHqjc3hR0MFlgms
-	x1XFZdEX2w/I50aq/z/zHx8mCgr70DHRPSKWmc5eYWke01On2P/0CEWXd7q4X/uygsQudT7Hw32
-	a4NR65X3arwPYlqNuJP9fUuSZqxmnwtGXxKEF2qqSPHKQ+bdPrK/mGtKkFUsD0bu4RDHvtXQxxi
-	nWZn4/9Yj6ueDaIuoFNR/xt/ib9aKGcaDxaPSREhdmSs2FUycb+r6Lz7kyxqdcMHIyg9PBJ6xlT
-	3KFCemgrU9iDNjmokuHGfl6wDE9t/ELMhJj
-X-Received: by 2002:a05:600c:4f44:b0:49f:ce73:7a9 with SMTP id 5b1f17b1804b1-49fce730888mr97408375e9.34.1789989911838;
-        Mon, 21 Sep 2026 04:25:11 -0700 (PDT)
-Received: from ?IPV6:2a07:de40:8100:0:89a9:fd0e:583d:4a53? ([2001:af0:8000:1409:193:86:92:181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fd757e97esm7376075e9.8.2026.09.21.04.25.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Sep 2026 04:25:11 -0700 (PDT)
-Message-ID: <95baacfb-d8d9-4d2f-bc89-592df6f6f8e3@suse.com>
-Date: Mon, 21 Sep 2026 13:25:09 +0200
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GUBtPJMC"
+Received: from eig-obgw-6007b.ext.cloudfilter.net ([10.0.30.166])
+	by cmsmtp with ESMTPS
+	id 8be9xlqczc3Xs8cWYxrgRq; Mon, 21 Sep 2026 11:49:30 +0000
+Received: from gator4166.hostgator.com ([108.167.190.91])
+	by cmsmtp with ESMTPS
+	id 8cWXxNiafMB9V8cWYxfW38; Mon, 21 Sep 2026 11:49:30 +0000
+X-Authority-Analysis: v=2.4 cv=d5D1yQjE c=1 sm=1 tr=0 ts=6ab119ca
+ a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=7T7KSl7uo7wA:10 a=mDV3o1hIAAAA:8
+ a=VwQbUJbxAAAA:8 a=n1VusUbl1kj_oJ1DzoQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Unsubscribe-Post:List-Subscribe:List-Post:List-Owner:
+	List-Archive; bh=e0ORIRaW1pRFVLSVMe9CQtNJd9lWH1Pfzw3oEBrxTQo=; b=GUBtPJMC+h8Q
+	6ACAAWzKjMUDVHPrh03uGCjTaM/86Bhkm6PM75gBQ8AAv8i69jNE1ExzVWGXsesgplLiX3et/Djbt
+	rtOrngx6NHgA4cc529T83B3K+503fFdgv1hUVmXlxh1SK9WvNIRpTYs6ZrO8+vJgKQC5+Wnj+LUup
+	BrYcYNW+pafZAI7DwAaq2K9mJ8eu8+qMyIFYMAm5Plg/Ex7Uz0Yt8bFXwN+M/EA6+siXEXQpXRl3f
+	gpY4TOBmOhPSLvdjLXk+jpO2nrxTf1ngfCN5XOUCNlyNw9n6rv6Z71Vr+WWqCDbkFwCeEvzbl1ju1
+	0oihA+dMymcPy5ubngHqhA==;
+Received: from [61.251.99.138] (port=6891 helo=[10.98.166.146])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.100)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1x8cWW-000000006C0-3WTe;
+	Mon, 21 Sep 2026 06:49:29 -0500
+Message-ID: <2df2f47d-5bef-4272-936b-13cfb350aac7@embeddedor.com>
+Date: Mon, 21 Sep 2026 20:48:56 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,502 +54,158 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/21] modpost: emit module descriptors as assembly
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Masahiro Yamada <masahiroy@kernel.org>, Alexey Gladkov <legion@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot
- <acourbot@nvidia.com>, =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- linux-hardening@vger.kernel.org
-References: <20260914-build-speedup-v2-0-39817ec5db23@kernel.org>
- <20260914-build-speedup-v2-13-39817ec5db23@kernel.org>
+Subject: Re: [PATCH v2] tree-object-size: Fix type-1 size for FAM subobjects
+ under -fstrict-flex-arrays=3 [PR126975]
+To: Siddhesh Poyarekar <siddhesh@gotplt.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <garsilva@embeddedor.com>
+Cc: Jakub Jelinek <jakub@redhat.com>,
+ Richard Biener <richard.guenther@gmail.com>, gcc-patches@gcc.gnu.org,
+ Martin Uecker <uecker@tugraz.at>, josmyers@redhat.com,
+ Bill Wendling <morbo@google.com>, linux-hardening@vger.kernel.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <apomrLZp1ee3NnBF@kspp> <202609182117.7AFD5B1@keescook>
+ <7f43c0b9-2ea7-4038-82c5-ca01aa2c1309@gotplt.org>
 Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20260914-build-speedup-v2-13-39817ec5db23@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <7f43c0b9-2ea7-4038-82c5-ca01aa2c1309@gotplt.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 61.251.99.138
+X-Source-L: No
+X-Exim-ID: 1x8cWW-000000006C0-3WTe
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([10.98.166.146]) [61.251.99.138]:6891
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMRXv8Gf4rPHYGcYjozK7Ajaq9ZffGav7jlO8m6nEm/GVu5c8z5WUOcXY5p1uX8VRMvTRducYE/DMiH86S2Occr42ZzfBnpIzm07ULm+48Dk3H1cngNO
+ mRglU70Ti4vCNUBPvTFLk+X37TOfYfLpL/6eQdIM+F7muMLozidrnTciN+9a130R4MGtGqDgraeahRbFQU9aDB50uFqm/xE7NY6q3UEpu9umw01+YTE4BfRC
 
-On 9/14/26 11:22 AM, Lorenzo Stoakes (ARM) wrote:
-> modpost generates a descriptor for every module in the form of a
-> <module>.mod.c file with .modinfo strings, the __this_module descriptor,
-> exported symbol tables and (with CONFIG_MODVERSIONS set), the CRC of
-> imported symbols.
+
+
+On 9/19/26 22:27, Siddhesh Poyarekar wrote:
+> On 2026-09-19 00:22, Kees Cook wrote:
+>> On Thu, Sep 03, 2026 at 08:02:20PM -0600, Gustavo A. R. Silva wrote:
+>>> For a pointer to a subobject whose record/union type ends in a flexible-array
+>>> member (directly, or through a trailing nested struct), addr_object_size()
+>>> walked up to the enclosing object (v = TREE_OPERAND (v, 0)) instead of
+>>> measuring the referenced subobject.  __builtin_object_size() and
+>>> __builtin_dynamic_object_size() type 1 therefore returned the whole-object
+>>> size, collapsing type 1 onto type 0 and losing the distinction between
+>>> &p->inner and p.  FORTIFY_SOURCE relies on the type-1 distinction, so this
+>>> weakens its bounds checks.
+>>
+>> Looking at the PR:
+>>
+>> struct flex {
+>>    size_t count;
+>>    char fam[] __attribute__((counted_by(count)));
+>> };                    /* sizeof(struct flex) == 8  */
+>>
+>> struct outer {
+>>    int hdr;
+>>    struct flex inner;
+>> };                    /* sizeof(struct outer) == 16 */
+>>
+>> int main (void)
+>> {
+>>    struct outer *p = __builtin_malloc (sizeof (*p) + 48); /* 64-byte object */
+>>
+>>    /* This is a bug. */
+>>    expect(__builtin_object_size (&p->inner, 1), sizeof(p->inner));
+>>    expect(__builtin_dynamic_object_size (&p->inner, 1), sizeof(p->inner));
+>> ...
+>> }
+>>
+>> Before:
+>>
+>> WAT: __builtin_object_size (&p->inner, 1) == 56 (expected 8)
+>> WAT: __builtin_dynamic_object_size (&p->inner, 1) == 56 (expected 8)
+>>
+>> After:
+>>
+>> ok:  __builtin_object_size (&p->inner, 1) == 8
+>> ok:  __builtin_dynamic_object_size (&p->inner, 1) == 8
+>>
+>>
+>> This makes sense to me, the dynamic size of "fam" is ambiguous between
+>> being 0 or 48 (from the "alloc_size" attribute), so type 1 chooses the
+>> smaller.
 > 
-> These files are compiled like any other kernel C file with all of the
-> -include preamble, as well as including linux/module.h, header dependencies
-> generated by fixdep of a few hundred headers, an objtool run and if LTO is
-> being performed, a link is performed to generate native code.
+> I think you're confusing type 1 with type 2; type 1 is the *maximum* subobject size, not the minimum.  The whole object and subobject size distinction is only 
+> material if there are members after inner, which is technically "supported" by the complier as an extension, but is a terrible idea for members with FAM.
+> 
+> Here are the different possibilities for &p->inner:
+> 
+> 1. If the allocation via __builtin_malloc is visible: same result for types 0, 1, 2 and 3, i.e. allocated size - offsetof (struct outer, inner)
 
-As a side note, I'm currently working on cleaning up what linux/module.h
-includes. This was also originally motivated by an effort to reduce the
-compilation time of .mod.c files, though cleaning up that header makes
-sense in general, since it is the most explicitly included file in the
-kernel.
+When the allocation is visible and the FAM is annotated with counted_by, we use
+the information provided by counted_by. See commit 6f17933548fc ("Use the
+.ACCESS_WITH_SIZE in builtin object size.")
+
+BTW, I recently filed this related issue:
+
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=127234
 
 > 
-> On an x86-64 allmodconfig build 11,189 *.mod.c files are built, each
-> taking ~0.24s of CPU time to compile, and module finalisation as a whole
-> 6,300 CPU seconds, or 64 seconds of wall time when run over 128 threads.
+> 2. If the __builtin_malloc is not visible and there's no counted_by annotation:
+>    - type 0 and type 1: cannot determine size, since FAM could be any arbitrary size. So, -1
+>    - type 2 and type 3: sizeof (&p->inner), since that's the minimum estimate.
 > 
-> It also generates ~1.3 GiB of *.mod.o.cmd files that every subsequent build
-> has to read back.
+> 3. if the __builtin_malloc is not visible and FAM has __counted_by__ annotation: same result for all types: sizeof (&p->inner) + p->count
 > 
-> Avoid all this by emitting the descriptors as assembly instead.
+>> I would, however, expect the use of counted_by to change it. For
+>> example, if it were this:
+>>
+>> struct flex {
+>>    size_t count;
+>>    char fam[] __attribute__((counted_by(count)));
+>> };
+>> ...
+>>    struct outer *p = __builtin_malloc (sizeof (*p) + 48); /* 64-byte object */
+>>    p->inner.count = 48;
+>>
+>> I would expect the results to be:
+>>
+>> ok:  __builtin_object_size (&p->inner, 1) == 8        /* compile-time size */
+>> ok:  __builtin_dynamic_object_size (&p->inner, 1) == 56 /* run-time size */
+
+I agree with counted_by changing things here. This is actually something
+that Jakub mentioned in a comment to v1 of this patch:
+
+"What we certainly can change is the behavior when
+-fstrict-flex-arrays unless it already behaves the expected way,
+and perhaps also when the flex array has counted_by attribute."
+
+See: https://lore.kernel.org/linux-hardening/aogVH8UtICMP1Ihv@tucnak/#t
+
+BTW, I have a patch ready for PR127234 (the missed counted_by bug) where
+I implemented some helper functions to get the size of the object based
+on the information provided by counted_by. I could use those in this PR. :)
+
+Thanks
+-Gustavo
+
+>>
+>> As the known size of p->inner is everything contained by "inner" and
+>> that now includes the 48 bytes of "fam".
+> __builtin_object_size is not the compile time size, it is a runtime constant size estimate, with the `type` argument deciding if the size estimate is on the 
+> maximum or minimum end, and if it considers the whole object or only the immediate containing subobject that the input pointer points to.  In the presence of 
+> FAMs I think sizeof (i.e. the compile time size) should be seen as a minimum size estimate for the subobject, if you want to make an equivalence with 
+> __builtin_object_size.
 > 
-> The layout required (size and alignment of struct module, struct
-> modversion_info, the module's name offsets, init, and exit fields and
-> whether the architecture uses PREL32 ksymtab references) can all be derived
-> from scripts/mod/module-offsets.h.
+> Similarly, __builtin_dynamic_object_size is exactly the same as __builtin_object_size, except that it can return non-constant expressions too, not just constants.
 > 
-> The fields of __this_module are emitted in offset order rather than
-> declaration order, as CONFIG_RANDSTRUCT shuffles struct module so the name,
-> init and exit fields can land anywhere.
-> 
-> An assembly file avoids all of the issues previously mentioned so this
-> conversion results in a very significant performance win on kernel build.
-> 
-> As a consequence of this change, since module-offsets.c includes
-> linux/module.h, scripts/mod is now built after the generated headers in
-> prepare0, rather than before.
-> 
-> Also update .gitignore and make clean to handle .mod.S files, but keep
-> .mod.c files there to ensure that users do not end up with untracked
-> changes/dirty trees after the change takes effect.
-> 
-> The sections were confirmed to be byte-for-byte identical to the C version
-> produced - each of .modinfo, .gnu.linkonce.this_module, __ksymtab*,
-> __ksymtab_strings, __kcrctab*, __kflagstab*, __versions,
-> __version_ext_crcs, __version_ext_names and their relocations - for all
-> 8,135 modules of a clang allmodconfig build with CONFIG_COMPILE_TEST off
-> and CONFIG_MODVERSIONS, CONFIG_EXTENDED_MODVERSIONS and
-> CONFIG_MODULE_SRCVERSION_ALL on, and for a sample built with gcc.
+> Thanks,
+> Sid
 
-Lowering the data to assembly loses debug information for __this_module,
-specifically that it has type `struct module`. It might be worth
-restoring that information in same way. A small hack would be to add
-something like the following to scripts/module-common.c:
-
-__weak __section(".discard.this_module") struct module __this_module;
-
-> diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-> index 01a37ec872b9..75e9effdf02c 100644
-> --- a/scripts/Makefile.modfinal
-> +++ b/scripts/Makefile.modfinal
-> @@ -20,10 +20,14 @@ __modfinal: $(modules:%.o=%.ko)
->  modname = $(notdir $(@:.mod.o=))
->  part-of-module = y
->  GCOV_PROFILE := n
-> -ccflags-remove-y := $(CC_FLAGS_CFI)
->  
-> -%.mod.o: %.mod.c FORCE
-> -	$(call if_changed_rule,cc_o_c)
-> +# modpost lays the <module>.mod.S out completely (write_mod_S_file()), so it
-> +# needs only the assembler and no dependency tracking.
-> +quiet_cmd_as_mod_o = AS [M]  $@
-> +      cmd_as_mod_o = $(CC) $(_a_flags) $(modkern_aflags) -c -o $@ $<
-> +
-> +%.mod.o: %.mod.S FORCE
-> +	$(call if_changed,as_mod_o)
->  
->  .module-common.o: $(srctree)/scripts/module-common.c FORCE
->  	$(call if_changed_rule,cc_o_c)
-
-If the <module>.mod.S files are fully self-contained and do not even use
-something like KBUILD_MODNAME, would it be possible to name them
-<module>.mod.s and skip the C preprocessor as well?
-
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 0fd43c8a89ea..b4550b545330 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -2191,30 +2042,483 @@ static void write_vmlinux_export_c_file(struct module *mod)
->  	free(buf.p);
->  }
->  
-> -/* do sanity checks, and generate *.mod.c file */
-> -static void write_mod_c_file(struct module *mod)
-> +#if MOD_SIZEOF_LONG == 8
-> +#define MOD_PTR_DIRECTIVE	".quad"
-> +#else
-> +#define MOD_PTR_DIRECTIVE	".long"
-> +#endif
-> +
-> +/* See KSYM_FUNC() in include/linux/export-internal.h. */
-> +#if MOD_FUNC_PLABEL
-> +#define MOD_FUNC_PREFIX		"P%"
-> +#else
-> +#define MOD_FUNC_PREFIX		""
-> +#endif
-> +
-> +/* See __KSYM_ALIGN in include/linux/export-internal.h. */
-> +#if MOD_PREL32_RELOCATIONS || MOD_SIZEOF_LONG == 4
-> +#define KSYM_ALIGN		4
-> +#else
-> +#define KSYM_ALIGN		8
-> +#endif
-> +
-> +/* Append the body of an assembler string literal, escaped as needed. */
-> +static void buf_escaped(struct buffer *buf, const char *str)
-> +{
-> +	unsigned char chr;
-> +
-> +	while ((chr = *str++)) {
-> +		if (chr == '"' || chr == '\\')
-> +			buf_printf(buf, "\\%c", chr);
-> +		else if (isprint(chr))
-> +			buf_printf(buf, "%c", chr);
-> +		else
-> +			buf_printf(buf, "\\%03o", chr);
-> +	}
-> +}
-> +
-> +static void buf_asciz(struct buffer *buf, const char *str)
->  {
-> -	struct buffer buf = { };
-> -	struct module_alias *alias, *next;
-> -	char fname[PATH_MAX];
-> -	int ret;
-> +	buf_printf(buf, "\t.asciz \"");
-> +	buf_escaped(buf, str);
-> +	buf_printf(buf, "\"\n");
-> +}
->  
-> -	add_header(&buf, mod);
-> -	add_exported_symbols(&buf, mod);
-> -	add_versions(&buf, mod);
-> -	add_extended_versions(&buf, mod);
-> -	add_depends(&buf, mod);
-> +/* The equivalent of MODULE_INFO(tag, info). */
-> +static void add_asm_modinfo(struct buffer *buf, const char *tag,
-> +			    const char *info)
-> +{
-> +	buf_printf(buf, "\t.section .modinfo,\"a\",%%progbits\n");
-> +	buf_printf(buf, "\t.asciz \"%s=", tag);
-> +	buf_escaped(buf, info);
-> +	buf_printf(buf, "\"\n");
-> +}
->  
-> -	buf_printf(&buf, "\n");
-> +/* See __KSYM_REF() in include/linux/export-internal.h. */
-> +static void add_asm_ksym_ref(struct buffer *buf, const char *prefix,
-> +			     const char *sym)
-> +{
-> +#if MOD_PREL32_RELOCATIONS
-> +	buf_printf(buf, "\t.long %s%s - .\n", prefix, sym);
-> +#else
-> +	buf_printf(buf, "\t" MOD_PTR_DIRECTIVE " %s%s\n", prefix, sym);
-> +#endif
-> +}
-> +
-> +/* The name and namespace strings a ksymtab entry refers to. */
-> +static void add_asm_kstrtab(struct buffer *buf, const struct symbol *sym)
-> +{
-> +	buf_printf(buf, "\t.section \"__ksymtab_strings\",\"aMS\",%%progbits,1\n");
-> +	buf_printf(buf, "__kstrtab_%s:\n", sym->name);
-> +	buf_asciz(buf, sym->name);
-> +	buf_printf(buf, "__kstrtabns_%s:\n", sym->name);
-> +	buf_asciz(buf, sym->namespace);
-> +	buf_printf(buf, "\t.previous\n");
-> +}
-> +
-> +/* The equivalent of SYMBOL_FLAGS(). */
-> +static void add_asm_kflagstab(struct buffer *buf, const struct symbol *sym)
-> +{
-> +	buf_printf(buf, "\t.section \"___kflagstab+%s\", \"a\"\n", sym->name);
-> +	buf_printf(buf, "__flags_%s:\n", sym->name);
-> +	buf_printf(buf, "\t.byte 0x%02x\n", get_symbol_flags(sym));
-> +	buf_printf(buf, "\t.previous\n");
-> +}
-> +
-> +/* The equivalent of KSYMTAB_FUNC()/KSYMTAB_DATA(). */
-> +static void add_asm_ksymtab(struct buffer *buf, const struct symbol *sym)
-> +{
-> +	const char *name = sym->name;
-> +
-> +	add_asm_kstrtab(buf, sym);
-> +
-> +	buf_printf(buf, "\t.section \"___ksymtab+%s\", \"a\"\n", name);
-> +	buf_printf(buf, "\t.balign %d\n", KSYM_ALIGN);
-> +	buf_printf(buf, "__ksymtab_%s:\n", name);
-> +	add_asm_ksym_ref(buf, sym->is_func ? MOD_FUNC_PREFIX : "", name);
-> +	add_asm_ksym_ref(buf, "__kstrtab_", name);
-> +	add_asm_ksym_ref(buf, "__kstrtabns_", name);
-> +	buf_printf(buf, "\t.previous\n");
-> +
-> +	add_asm_kflagstab(buf, sym);
-> +}
-> +
-> +/* The equivalent of SYMBOL_CRC(). */
-> +static void add_asm_crc(struct buffer *buf, const struct symbol *sym)
-> +{
-> +	buf_printf(buf, "\t.section \"___kcrctab+%s\",\"a\"\n", sym->name);
-> +	buf_printf(buf, "\t.balign 4\n");
-> +	buf_printf(buf, "__crc_%s:\n", sym->name);
-> +	buf_printf(buf, "\t.long 0x%08x\n", sym->crc);
-> +	buf_printf(buf, "\t.previous\n");
-> +}
-
-It would be good to avoid duplicating these symbol-related
-implementations in include/linux/export-internal.h and
-scripts/mod/modpost.c. Perhaps .vmlinux.export.c could also be lowered
-to assembly, so the implementation in include/linux/export-internal.h
-can be removed and scripts/mod/modpost.c becomes the only source of
-truth.
-
-> +
-> +static bool export_is_kept(const struct symbol *sym)
-> +{
-> +	return !trim_unused_exports || sym->used;
-> +}
-> +
-> +/* Record the CRCs of the exported symbols. */
-> +static void add_asm_crcs(struct buffer *buf, struct module *mod)
-> +{
-> +	struct symbol *sym;
-> +
-> +	list_for_each_entry(sym, &mod->exported_symbols, list) {
-> +		if (!export_is_kept(sym))
-> +			continue;
-> +
-> +		if (!sym->crc_valid)
-> +			mod_warn(mod, "EXPORT symbol '%s' version generation failed, symbol will not be versioned.\n"
-> +				 "Is '%s' prototyped in <asm/asm-prototypes.h>?\n",
-> +				 sym->name, sym->name);
-> +		add_asm_crc(buf, sym);
-> +	}
-> +}
-> +
-> +static void add_asm_exported_symbols(struct buffer *buf, struct module *mod)
-> +{
-> +	struct symbol *sym;
-> +
-> +	list_for_each_entry(sym, &mod->exported_symbols, list) {
-> +		if (export_is_kept(sym))
-> +			add_asm_ksymtab(buf, sym);
-> +	}
-> +
-> +	if (modversions)
-> +		add_asm_crcs(buf, mod);
-> +}
-
-Nit: This could be kept shorter as a single function, similarly to how
-the original C version was implemented solely as add_exported_symbols().
-
-static void add_asm_exported_symbols(struct buffer *buf, struct module *mod)
-{
-	struct symbol *sym;
-
-	list_for_each_entry(sym, &mod->exported_symbols, list) {
-		if (trim_unused_exports && !sym->used)
-			continue;
-
-		add_asm_ksymtab(buf, sym);
-
-		if (!modversions)
-			continue;
-
-		if (!sym->crc_valid)
-			mod_warn(mod, "EXPORT symbol '%s' version generation failed, symbol will not be versioned.\n"
-				 "Is '%s' prototyped in <asm/asm-prototypes.h>?\n",
-				 sym->name, sym->name);
-		add_asm_crc(buf, sym);
-	}
-}
-
-> +/*
-> + * An unresolved symbol without a module is not versioned; one without a CRC
-> + * cannot be, so warn about it.
-> + */
-> +static bool skip_unversioned(struct module *mod, const struct symbol *sym)
-> +{
-> +	if (!sym->module)
-> +		return true;
-> +	if (sym->crc_valid)
-> +		return false;
-> +
-> +	mod_warn(mod, "symbol '%s' has no CRC!\n", sym->name);
-> +	return true;
-> +}
-> +
-> +/* One struct modversion_info: the CRC, then the name padded to the end. */
-> +static void add_asm_version(struct buffer *buf, const struct symbol *sym)
-> +{
-> +	buf_printf(buf, "\t" MOD_PTR_DIRECTIVE " 0x%08x\n", sym->crc);
-> +	buf_printf(buf, "\t.ascii \"%s\"\n", sym->name);
-> +	buf_printf(buf, "\t.skip %zu\n", MOD_SIZEOF_struct_modversion_info -
-> +		   MOD_OFF_modversion_info_name - strlen(sym->name));
-> +}
-> +
-> +/*
-> + * The equivalent of:
-> + *
-> + *	static const struct modversion_info ____versions[]
-> + *	__used __section("__versions") = { { crc, "name" }, ... };
-> + *
-> + * for unresolved symbols.
-> + */
-> +static void add_asm_versions(struct buffer *buf, struct module *mod)
-> +{
-> +	struct symbol *sym;
-> +
-> +	if (!basic_modversions)
-> +		return;
-> +
-> +	buf_printf(buf, "\n\t.section __versions,\"a\",%%progbits\n");
-> +	buf_printf(buf, "\t.balign %d\n", MOD_ALIGNOF_struct_modversion_info);
-> +	list_for_each_entry(sym, &mod->unresolved_symbols, list) {
-> +		if (skip_unversioned(mod, sym))
-> +			continue;
-> +
-> +		if (strlen(sym->name) >= MOD_NAME_LEN) {
-> +			/* Only the extended table can hold it. */
-> +			if (extended_modversions)
-> +				continue;
-> +
-> +			mod_error(mod, "too long symbol '%s'\n", sym->name);
-> +			break;
-> +		}
-> +
-> +		add_asm_version(buf, sym);
-> +	}
-> +}
-> +
-> +static void add_asm_version_ext_crcs(struct buffer *buf, struct module *mod)
-> +{
-> +	struct symbol *sym;
-> +
-> +	buf_printf(buf, "\n\t.section __version_ext_crcs,\"a\",%%progbits\n");
-> +	buf_printf(buf, "\t.balign 4\n");
-> +	list_for_each_entry(sym, &mod->unresolved_symbols, list) {
-> +		if (skip_unversioned(mod, sym))
-> +			continue;
-> +
-> +		buf_printf(buf, "\t.long 0x%08x\n", sym->crc);
-> +	}
-> +}
-> +
-> +/*
-> + * A symbol without a CRC was warned about with the CRCs, and is skipped here
-> + * too so that the names line up with them.
-> + */
-> +static void add_asm_version_ext_names(struct buffer *buf, struct module *mod)
-> +{
-> +	struct symbol *sym;
-> +
-> +	buf_printf(buf, "\t.section __version_ext_names,\"a\",%%progbits\n");
-> +	list_for_each_entry(sym, &mod->unresolved_symbols, list) {
-> +		if (!sym->module || !sym->crc_valid)
-> +			continue;
-> +
-> +		buf_asciz(buf, sym->name);
-> +	}
-> +	/* The terminator of the string literal this used to be. */
-> +	buf_printf(buf, "\t.byte 0\n");
-
-This is ok since the conversion aims to be byte-identical. In the
-future, I believe the extra NUL byte should be removed and
-elf_validity_cache_index_versions() also be updated to report when
-__version_ext_names contains more names than there are CRCs in
-__version_ext_crcs.
-
-> +}
-> +
-> +/*
-> + * The equivalent of:
-> + *	static const u32 ____version_ext_crcs[] __section("__version_ext_crcs") = { crc, ... };
-> + *	static const char ____version_ext_names[] __section("__version_ext_names") = "name\0" ...;
-> + *
-> + * for unresolved symbols.
-> + */
-> +static void add_asm_extended_versions(struct buffer *buf, struct module *mod)
-> +{
-> +	if (!extended_modversions)
-> +		return;
-> +
-> +	add_asm_version_ext_crcs(buf, mod);
-> +	add_asm_version_ext_names(buf, mod);
-> +}
-
-Nit: add_asm_version_ext_crcs() and add_asm_version_ext_names() are both
-fairly short and are called only from add_asm_extended_versions(), so
-I think they could be inlined into that function. This would be similar
-to the original implementation, which does all the work in
-add_extended_versions().
-
-> +
-> +/* Clear ->seen of the modules that own symbols this one needs. */
-> +static void clear_seen_dependencies(struct module *mod)
-> +{
-> +	struct symbol *sym;
-> +
-> +	list_for_each_entry(sym, &mod->unresolved_symbols, list) {
-> +		if (sym->module)
-> +			sym->module->seen = sym->module->is_vmlinux;
-> +	}
-> +}
-> +
-> +/* The modules this one depends on, each once, comma separated. */
-> +static void collect_dependencies(struct module *mod, struct buffer *deps)
-> +{
-> +	struct symbol *sym;
-> +	bool first = true;
-> +
-> +	clear_seen_dependencies(mod);
-> +
-> +	list_for_each_entry(sym, &mod->unresolved_symbols, list) {
-> +		struct module *owner = sym->module;
-> +
-> +		if (!owner || owner->seen)
-> +			continue;
-> +
-> +		owner->seen = true;
-> +		buf_printf(deps, "%s%s", first ? "" : ",",
-> +			   get_basename(owner->name));
-> +		first = false;
-> +	}
-> +	buf_write(deps, "", 1);
-> +}
-> +
-> +static void add_asm_depends(struct buffer *buf, struct module *mod)
-> +{
-> +	struct buffer deps = { };
-> +
-> +	collect_dependencies(mod, &deps);
-> +	buf_printf(buf, "\n");
-> +	add_asm_modinfo(buf, "depends", deps.p);
-> +	free(deps.p);
-> +}
-
-Nit: Same here. I think this would be more straightforward if
-collect_dependencies() and clear_seen_dependencies() were inlined into
-add_asm_depends(), matching the original add_depends().
-
--- 
-Thanks,
-Petr
