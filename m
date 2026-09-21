@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8CF3B42CC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB94544CF29;
 	Mon, 21 Sep 2026 07:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789977505; cv=none; b=eO5pXowWc3xAD7tRYXYBvv1MxJGebWjhe6qxnoTbngWIwYXr3t98xrOY9xjCzTYyWs614W1I3tDwaviTuufISZW4VbERmjRRuj0IWP61RQwEIrXG1knLe83x6DnLFtS1QkyBP8mRtvYAhOfyurq9j0964iBcbO/Q0G0nfWWII2c=
+	t=1789977506; cv=none; b=h6d6g6wL+RlzCMiIjA0NjOI5qKpSo+2EEJuWs00641TjV9FdtOKlWirX7O/Ga5Fwen0EP7FJFdAAPddPqNjW8kZMDrmxbqvxVX+c38A/4KjTrNHMz5DOeW/6WwDF4frFc6GBxBJpFDOEdgrTJz+dV2UDiXP5+j8vU/JB4vWLs7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789977505; c=relaxed/simple;
-	bh=+WGfdR3Y4f4MJOabUzkDEAYVtCQqjvgmchKMVu5bAso=;
+	s=arc-20240116; t=1789977506; c=relaxed/simple;
+	bh=SnTKIJvg4KJffuAyuRjPcaAaTJbJzSFi0J72zvJPYgY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mG5vXLvzuKlTDEduePUHGXHBL6Q7FeQ0qGwVNJ1G8ixts7z9NyH4wn0dWnOCDTLc5KHG7JILPGbelnOOrQ1KbKuC6i3hZ74ALVwH0ASdWWrehWUpgLo0CUbPJhDGSYdD28hTOjzPVfalUQzArSPM2NnznzO2GkXi82m7o6+FhS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/Tbm2wJ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=QNLPXDZaMwNtIcu5BluK10qhdzLLpLNcxeOWWqmKIpM7TbiNYZ0FJN6ItCp1GgEploQZPcA5uNGuVFeUNnYOwt5yAFb5xgvouzjTADEv3ECtcT0cSemkZOHveamkOIl90RiKZkMdi9nwfB5krj0LDYYzjl4EHyhz8wRkW6RPDeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8nZF8ha; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/Tbm2wJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 745871F00898;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8nZF8ha"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84BEA1F0089A;
 	Mon, 21 Sep 2026 07:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1789977500;
-	bh=L/18n8TfyaFMDLnAYEp51nwGZPC1Y8Qvb7X09zPa7Vc=;
+	bh=SPdbaNQoVg5IDwmkrXrppVKDvRdhDZUAbimxg5b38Z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=A/Tbm2wJxme0+N0pPuGOo8l68ppGyPNpDhIC88m3xFlT8W2gs2H0UtOcaFX9iXwkS
-	 COcGAExn661bK6PWCy47/Y9KvNRK9Capy8ppPxO3wWFDlJV5njIu70kOH9B8waNcL6
-	 d6b/mpFAr35uy3KaVJDRyPlxeT1kPwDY4TDyg3KiNWt9J1VHjqAzIcp80PjutjKnqS
-	 K3D9lhTABsKYOqMjzwN3SKVtRrBzxlWF96B+TLvD3c4i7oouEgH78A03DroLWGeF2Z
-	 JuJwF8pMShZX1rKiCS5CtTF1YuKEr/PwoCl8dl2GystyIzixncFflxEEHpkeOvvb/l
-	 2GcjE3lK1EDJw==
+	b=h8nZF8ham89fKiaZ+iAiVedjQM1Rb6NmE/n3hNFTPyGvwzrlgOgR4gp2zr52ZhVgx
+	 CAcDjy/Rb6z1cCgwPIzyCgR5etTaKm/xrBr6VFMeT/a5tzEs9RqIzmQdXgYIrwjv8p
+	 sIx1QVr/BfNISn/RDP2AaaM+5aCA2CAXKG8YnuttVRejN8re+QkDChBCZH4PiGfQbf
+	 NFK4zXmS6QSzjWwsTh8CsC9wWV5y04OB0fCANqhb2ydIf4FQO/27P06BJsiIqwBoie
+	 neZ22vlS57CN8yc/v7LVq8bwBwhXJgH8kv6QTGA9re2KEQDokPvp45KA0hx1qfcdiB
+	 OHeE4qj67Kt1Q==
 From: Kees Cook <kees@kernel.org>
 To: Vlastimil Babka <vbabka@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH v4 3/7] mm/slab: Add kmem_buckets_destroy()
-Date: Mon, 21 Sep 2026 00:58:14 -0700
-Message-Id: <20260921075820.1718334-3-kees@kernel.org>
+Subject: [PATCH v4 4/7] mm/slab: Add tests for the existing kmem_buckets behaviour
+Date: Mon, 21 Sep 2026 00:58:15 -0700
+Message-Id: <20260921075820.1718334-4-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260921075811.too.775-kees@kernel.org>
 References: <20260921075811.too.775-kees@kernel.org>
@@ -62,24 +62,36 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4729; i=kees@kernel.org; h=from:subject; bh=+WGfdR3Y4f4MJOabUzkDEAYVtCQqjvgmchKMVu5bAso=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkbHs9UUVx8Nfu38g2JFUlnXu/wXSKoUZe4uPxUm0ODS qZpdcy7jlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIkkVjD8z+N5yGySI+I2a/8V v7vmn5ezRey+emMBg+2JhF2itXI8uQz/a1aHH9OSFKp4G/eEN0gx01qHScXVznvTV4XDy6Kd8vg 5AA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9846; i=kees@kernel.org; h=from:subject; bh=SnTKIJvg4KJffuAyuRjPcaAaTJbJzSFi0J72zvJPYgY=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkbHs/cvWajh9Ls5vQbukJz9C566fP/D/796jybyh27I MlrIqExHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABOZosbwv5pHism0f3n/p6AT ft0ZeecD3GNF338s417iK7vUc3tlIsM/fX6ehPenDlef5WHeduuP7b9QsSush3zkayvjfkZe5nV iAgA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-kmem_buckets_create() intentionally had no "destroy" counterpart. Every
-caller has lived in core kernel code and creates its set once at boot,
-so nothing has needed to take one down. However, KUnit tests may be
-built module, so we need it now to support the coming tests.
+kmem_buckets has had no test coverage since it was added. Add tests,
+including stuff unique to the bucket design:
 
-Some caches have size aliases, so the same pointer is stored at more
-then one index, so we have to save it, clear all matching instances, and
-then free the saved cache pointer. (This is what the bitmap was tracking
-before in the "allocation failed" error path.)
+ - A bucket allocation comes from a cache of the set's own, and that
+   cache carries SLAB_NO_MERGE.
 
-When CONFIG_SLAB_BUCKETS=n the whole body compiles away, matching the
-ZERO_SIZE_PTR that kmem_buckets_create() hands back in that configuration.
+ - Each size class is served by the set, including 96 and 192, which are
+   not powers of two and are filled in from an aligned index by
+   kmem_buckets_create(). Sizes above KMALLOC_MAX_CACHE_SIZE go to the
+   page allocator instead, bucket set or not.
 
-Link: https://lore.kernel.org/all/20240809073309.2134488-1-kees@kernel.org/
+ - With CONFIG_SLAB_BUCKETS=n, kmem_buckets_create() still returns a
+   non-NULL (zero size alloc pointer), so that callers only have to check
+   for failure, and allocations through it come from the general caches.
+
+ - Destroying a set takes its caches down rather than only freeing the
+   set, which is what a module creating one on each load depends on.
+   A set freed without its caches would leave the names taken, and the
+   next load would warn about every one of them.
+
+The tests skip rather than compile out, which is useful for testing
+the CONFIG_SLAB_BUCKETS=n behaviors.
+
+Built and tests passing (with expected skips) on ARCH=x86_64 defconfig
+with GCC 16.2.0, with CONFIG_SLAB_BUCKETS as y and n.
+
 Assisted-by: LLM
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
@@ -95,104 +107,248 @@ Cc: Pedro Falcato <pfalcato@suse.de>
 Cc: Kuniyuki Iwashima <kuniyu@google.com>
 Cc: <linux-hardening@vger.kernel.org>
 ---
- include/linux/slab.h |  1 +
- mm/slab_common.c     | 49 +++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 43 insertions(+), 7 deletions(-)
+ lib/tests/slub_kunit.c | 214 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 214 insertions(+)
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index cda126def67a..18a2351f9084 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -893,6 +893,7 @@ void kmem_cache_free(struct kmem_cache *s, void *objp);
- kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
- 				  unsigned int useroffset, unsigned int usersize,
- 				  void (*ctor)(void *));
-+void kmem_buckets_destroy(kmem_buckets *bucket);
- 
- /*
-  * Bulk allocation and freeing operations. These are accelerated in an
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index cc58f192f349..eb29cfb2f0a9 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -434,12 +434,9 @@ kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
- 				  unsigned int usersize,
- 				  void (*ctor)(void *))
- {
--	unsigned long mask = 0;
- 	unsigned int idx;
- 	kmem_buckets *b;
- 
--	BUILD_BUG_ON(ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]) > BITS_PER_LONG);
--
- 	/*
- 	 * When the separate buckets API is not built in, just return
- 	 * a non-NULL value for the kmem_buckets pointer, which will be
-@@ -493,7 +490,6 @@ kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
- 			kfree(cache_name);
- 			if (WARN_ON(!(*b)[aligned_idx]))
- 				goto fail;
--			set_bit(aligned_idx, &mask);
- 		}
- 		if (idx != aligned_idx)
- 			(*b)[idx] = (*b)[aligned_idx];
-@@ -502,14 +498,53 @@ kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
- 	return b;
- 
- fail:
--	for_each_set_bit(idx, &mask, ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]))
--		kmem_cache_destroy((*b)[idx]);
--	kmem_cache_free(kmem_buckets_cache, b);
-+	kmem_buckets_destroy(b);
- 
- 	return NULL;
+diff --git a/lib/tests/slub_kunit.c b/lib/tests/slub_kunit.c
+index e3b63f0338d5..d6467dd5cf9b 100644
+--- a/lib/tests/slub_kunit.c
++++ b/lib/tests/slub_kunit.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <kunit/test.h>
+ #include <kunit/test-bug.h>
++#include <kunit/resource.h>
+ #include <linux/mm.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+@@ -474,6 +475,214 @@ static int test_init(struct kunit *test)
+ 	return 0;
  }
- EXPORT_SYMBOL(kmem_buckets_create);
  
-+/**
-+ * kmem_buckets_destroy - Destroy a set of caches made by kmem_buckets_create()
-+ * @bucket: The set to destroy, which may be NULL.
-+ *
-+ * Destroys each cache in @bucket and then frees @bucket itself. As for
-+ * kmem_cache_destroy(), every object allocated from @bucket must have been
-+ * freed beforehand, and @bucket must not be used afterwards.
-+ *
-+ * Context: Process context. May sleep, as kmem_cache_destroy() takes the
-+ *	    slab mutex and can wait on RCU callbacks for each cache.
++/* Destroy buckets on test exit so a failed KUNIT_ASSERT_*() doesn't leak. */
++KUNIT_DEFINE_ACTION_WRAPPER(destroy_buckets, kmem_buckets_destroy, kmem_buckets *);
++
++#define KUNIT_ASSERT_BUCKETS_CREATED(test, b)					\
++	do {									\
++		KUNIT_ASSERT_NOT_NULL(test, b);					\
++		KUNIT_ASSERT_EQ(test, 0,					\
++				kunit_add_action_or_reset(test,			\
++							  destroy_buckets, b)); \
++	} while (0)
++
++/*
++ * The cache an allocation came from, or NULL if it came from no cache at
++ * all, e.g. a size too big for any of them is served by the page allocator.
 + */
-+void kmem_buckets_destroy(kmem_buckets *bucket)
++static struct kmem_cache *cache_of(void *p)
 +{
-+	unsigned int idx, i;
++	struct slab *slab = virt_to_slab(p);
 +
-+	if (!IS_ENABLED(CONFIG_SLAB_BUCKETS) || ZERO_OR_NULL_PTR(bucket))
-+		return;
++	return slab ? slab->slab_cache : NULL;
++}
 +
-+	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
-+		struct kmem_cache *cache = (*bucket)[idx];
++/*
++ * A bucket set exists to keep its allocations out of the caches everything
++ * else uses, so check the two things that make that true: they come from a
++ * cache of the set's own, and that cache is never merged into another.
++ */
++static void test_kmem_buckets_isolation(struct kunit *test)
++{
++	struct kmem_cache *bucket_cache, *general_cache;
++	kmem_buckets *b;
++	void *p, *q;
 +
-+		if (!cache)
-+			continue;
++	if (!IS_ENABLED(CONFIG_SLAB_BUCKETS))
++		kunit_skip(test, "needs CONFIG_SLAB_BUCKETS");
 +
-+		/*
-+		 * Sizes below arch_slab_minalign() share one cache, which
-+		 * kmem_buckets_create() then stores at each of their indices.
-+		 * Drop every reference to it before destroying it, so that no
-+		 * later pass reads a pointer to a cache that is already gone.
-+		 */
-+		for (i = idx; i < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); i++)
-+			if ((*bucket)[i] == cache)
-+				(*bucket)[i] = NULL;
++	b = kmem_buckets_create("isolated_buckets", 0, 0, INT_MAX, NULL);
++	KUNIT_ASSERT_BUCKETS_CREATED(test, b);
 +
-+		kmem_cache_destroy(cache);
++	/*
++	 * Free each allocation before asserting on the next one: the cache
++	 * outlives its objects, so nothing below needs them, and an assertion
++	 * that leaves one behind would make the deferred teardown report a
++	 * cache that is still in use.
++	 */
++	p = kmem_buckets_alloc(b, 128, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, p);
++	bucket_cache = cache_of(p);
++	kfree(p);
++	KUNIT_ASSERT_NOT_NULL(test, bucket_cache);
++
++	KUNIT_EXPECT_TRUE_MSG(test, strstarts(bucket_cache->name, "isolated_buckets-"),
++			      "expected a bucket cache, got %s", bucket_cache->name);
++
++	/*
++	 * Cache merging is on by default, and a bucket cache merged into a
++	 * same-sized general one would quietly undo the whole separation.
++	 */
++	KUNIT_EXPECT_TRUE(test, bucket_cache->flags & SLAB_NO_MERGE);
++
++	q = kmalloc(128, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, q);
++	general_cache = cache_of(q);
++	kfree(q);
++	KUNIT_ASSERT_NOT_NULL(test, general_cache);
++
++	KUNIT_EXPECT_PTR_NE(test, bucket_cache, general_cache);
++}
++
++/*
++ * Every size class gets its own cache in the set, including the ones that
++ * are not powers of two and are filled in from an aligned index. Sizes past
++ * the largest cache are served by the page allocator, bucket set or not.
++ */
++static void test_kmem_buckets_sizes(struct kunit *test)
++{
++	static const size_t sizes[] = { 8, 96, 192, 1024, 4096 };
++	struct kmem_cache *c;
++	kmem_buckets *b;
++	void *p;
++	int i;
++
++	if (!IS_ENABLED(CONFIG_SLAB_BUCKETS))
++		kunit_skip(test, "needs CONFIG_SLAB_BUCKETS");
++
++	b = kmem_buckets_create("sized_buckets", 0, 0, INT_MAX, NULL);
++	KUNIT_ASSERT_BUCKETS_CREATED(test, b);
++
++	for (i = 0; i < ARRAY_SIZE(sizes); i++) {
++		p = kmem_buckets_alloc(b, sizes[i], GFP_KERNEL);
++		KUNIT_ASSERT_NOT_NULL(test, p);
++		c = cache_of(p);
++		kfree(p);
++		KUNIT_ASSERT_NOT_NULL(test, c);
++
++		KUNIT_EXPECT_TRUE_MSG(test, strstarts(c->name, "sized_buckets-"),
++				      "size %zu: expected a bucket cache, got %s",
++				      sizes[i], c->name);
++		KUNIT_EXPECT_GE(test, c->object_size, sizes[i]);
 +	}
 +
-+	kmem_cache_free(kmem_buckets_cache, bucket);
-+}
-+EXPORT_SYMBOL(kmem_buckets_destroy);
++	/* Too big for any cache: a folio from the page allocator, not a slab. */
++	p = kmem_buckets_alloc(b, KMALLOC_MAX_CACHE_SIZE + 1, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, p);
++	c = cache_of(p);
++	kfree(p);
 +
- /*
-  * For a given kmem_cache, kmem_cache_destroy() should only be called
-  * once or there will be a use-after-free problem. The actual deletion
++	KUNIT_EXPECT_NULL(test, c);
++}
++
++/*
++ * A bucket cache stands in for a kmalloc cache, so it has to be aligned like
++ * one. The DMA layer decides whether a buffer needs bouncing from its size,
++ * on the grounds that a kmalloc cache of that size is already aligned for
++ * the device, so a weaker alignment here is not something a caller can see
++ * coming. Without slab debugging the size implies the alignment and this
++ * holds either way; with it, only the cache's own alignment does.
++ */
++static void test_kmem_buckets_alignment(struct kunit *test)
++{
++	static const size_t sizes[] = { 128, 512, 2048 };
++	struct kmem_cache *bucket_cache, *general_cache;
++	kmem_buckets *b;
++	void *p;
++	int i;
++
++	if (!IS_ENABLED(CONFIG_SLAB_BUCKETS))
++		kunit_skip(test, "needs CONFIG_SLAB_BUCKETS");
++
++	b = kmem_buckets_create("aligned_buckets", 0, 0, INT_MAX, NULL);
++	KUNIT_ASSERT_BUCKETS_CREATED(test, b);
++
++	for (i = 0; i < ARRAY_SIZE(sizes); i++) {
++		p = kmem_buckets_alloc(b, sizes[i], GFP_KERNEL);
++		KUNIT_ASSERT_NOT_NULL(test, p);
++		bucket_cache = cache_of(p);
++		KUNIT_EXPECT_TRUE_MSG(test,
++				      IS_ALIGNED((unsigned long)p, ARCH_DMA_MINALIGN),
++				      "size %zu: object %p is not %d byte aligned",
++				      sizes[i], p, (int)ARCH_DMA_MINALIGN);
++		kfree(p);
++
++		p = kmalloc(sizes[i], GFP_KERNEL);
++		KUNIT_ASSERT_NOT_NULL(test, p);
++		general_cache = cache_of(p);
++		kfree(p);
++
++		KUNIT_ASSERT_NOT_NULL(test, bucket_cache);
++		KUNIT_ASSERT_NOT_NULL(test, general_cache);
++		KUNIT_EXPECT_EQ_MSG(test, bucket_cache->align, general_cache->align,
++				    "size %zu: bucket cache aligned to %u, %s to %u",
++				    sizes[i], bucket_cache->align,
++				    general_cache->name, general_cache->align);
++	}
++}
++
++/*
++ * With the feature compiled out, kmem_buckets_create() still returns
++ * something non-NULL so that callers only have to check for failure, and
++ * allocations through it work (i.e. come from the general caches).
++ */
++static void test_kmem_buckets_disabled(struct kunit *test)
++{
++	kmem_buckets *b;
++	struct kmem_cache *c;
++	void *p;
++
++	if (IS_ENABLED(CONFIG_SLAB_BUCKETS))
++		kunit_skip(test, "only meaningful without CONFIG_SLAB_BUCKETS");
++
++	b = kmem_buckets_create("disabled_buckets", 0, 0, INT_MAX, NULL);
++	KUNIT_ASSERT_BUCKETS_CREATED(test, b);
++
++	p = kmem_buckets_alloc(b, 128, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, p);
++	c = cache_of(p);
++	kfree(p);
++	KUNIT_ASSERT_NOT_NULL(test, c);
++
++	KUNIT_EXPECT_TRUE_MSG(test, !strstarts(c->name, "disabled_buckets-"),
++			      "expected a general cache, got %s", c->name);
++}
++
++/* Destroying a set has to take its caches down, not just free the set. */
++static void test_kmem_buckets_destroy(struct kunit *test)
++{
++	kmem_buckets *b;
++	void *p;
++
++	if (!IS_ENABLED(CONFIG_SLAB_BUCKETS))
++		kunit_skip(test, "needs CONFIG_SLAB_BUCKETS");
++
++	b = kmem_buckets_create("destroyed_buckets", 0, 0, INT_MAX, NULL);
++	KUNIT_ASSERT_NOT_NULL(test, b);
++
++	/*
++	 * Deliberately leaked, as test_leak_destroy() leaks its own: the
++	 * teardown below has to find it. kmem_cache_destroy() unlists the
++	 * cache either way, so the name is still released.
++	 */
++	p = kmem_buckets_alloc(b, 128, GFP_KERNEL);
++	KUNIT_EXPECT_NOT_NULL(test, p);
++
++	kmem_buckets_destroy(b);
++
++	KUNIT_EXPECT_EQ(test, 2, slab_errors);
++}
++
+ static struct kunit_case test_cases[] = {
+ 	KUNIT_CASE(test_clobber_zone),
+ 
+@@ -495,6 +704,11 @@ static struct kunit_case test_cases[] = {
+ #if defined(CONFIG_KPROBES) && defined(CONFIG_SMP)
+ 	KUNIT_CASE_SLOW(test_kmalloc_nolock_and_friends_kprobe),
+ #endif
++	KUNIT_CASE(test_kmem_buckets_isolation),
++	KUNIT_CASE(test_kmem_buckets_sizes),
++	KUNIT_CASE(test_kmem_buckets_alignment),
++	KUNIT_CASE(test_kmem_buckets_disabled),
++	KUNIT_CASE(test_kmem_buckets_destroy),
+ 	{}
+ };
+ 
 -- 
 2.34.1
 
