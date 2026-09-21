@@ -1,68 +1,60 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bumble.birch.relay.mailchannels.net (bumble.birch.relay.mailchannels.net [23.83.209.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A24B49DB8B
-	for <linux-hardening@vger.kernel.org>; Mon, 21 Sep 2026 13:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944CE4A1DF8
+	for <linux-hardening@vger.kernel.org>; Mon, 21 Sep 2026 14:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789998612; cv=none; b=OdU5ehSM02GyEaZljEX+aBuvWT/bdTeRz5BveVaT7xS1M5rBEutD2IYCEjhObBggiPgvgwhAyiawJB+FazsOsfs43rE5qXuicBAn91C6F0fG50bDIqouknKkCj1rjGpgHd1vHfQCoNrWqjAsfl1ZrzfvbIU7Zmfuq0fYD0FT/kE=
+	t=1789999481; cv=none; b=P2L6AT/Zo+CyFGQgpG2ahcC1fRChTgvj3D8L39xRDKDP7IRv1gsRov29iJrKqjf9vUOIiKrfN4jZXneByfWEuJJJ5V/O1ML3+H64l2c+5oClhsLFh9PVO57fGkh2xKmq1rl+SO43d2b2Y8dmD54mFMh4n7342gMmf5ve/e7A6bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789998612; c=relaxed/simple;
-	bh=5UQ+/b9voSw2XbVSVpGgsHCN+16v45r/eO2PjQuRZp8=;
+	s=arc-20240116; t=1789999481; c=relaxed/simple;
+	bh=qV43YwvHNDbICRlF1TEf3aYCeOo6/eQgG/qT4ElCmqQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iBkV3freJz4yg2PyqNsETsI5vqw3QPUUscgEEIv20UOmVG1y3zSR05aexnNvK5779J+1isY2X26R/F9P+UipScUXTnDi0MxHqa9IFYepBh0ibQfGCcZZm7mJYDe4WiJ4Hgc7luGeOF5JiLMMaI3ITCFnBg/OE9mvPI3PTOy/Hzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dA95zy47; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=E6ZCK2LLXGX4Grd0mM8Ok8NssRqnXotLrgCi/CZ1uNzwY1xXM6G3EKkgKf+ypciYHKMz6EDXF6hN2sqILThltmZy5O6na5hJSN4tv2MurhFiiOakJsKdRlfLnlxy9GS+L16d0/+7rY++2ed2VeIwBcnLeKoEayQNaiXd2hwp5xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gotplt.org; spf=pass smtp.mailfrom=gotplt.org; dkim=pass (2048-bit key) header.d=gotplt.org header.i=@gotplt.org header.b=HuM9EXZF; arc=none smtp.client-ip=23.83.209.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gotplt.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gotplt.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dA95zy47"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-48431648f33so1629525f8f.0
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Sep 2026 06:50:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1789998608; x=1790603408; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=J4xPQrVJdFgFl8luzeo5fY/IUnv52YMtHgLJT02PkgQ=;
-        b=dA95zy47+9E+6Wj7pNYsrxpyB60MgweGLYJbZWECxloBtnCxSAfVgRTPb4n832bVN4
-         ioIHKLkAkdYc7/JT7hGCtIW/h2DDR9L2+ZHYH1NwtM/zrWohbxtmzZMw6cpxK0JyfEtx
-         AqkpxNrZ4pSf2uRNpuMoQAp9vqC6PLpWHJOOI82PimUrE8ewf1JfOpaqogd3nTsoLHUR
-         8ZVxLQrp1IZp55/gmH4uCmtu+XrmMNXsUWSLSAA3NFPhfhJvcGZvneivOdCykpCzfQUe
-         2ywIwODlr+jiLKyVnmujMraj7i+JFm9NAOspeLiIoPsIhZ3Aj9oHVhk+dIPIc5eINdGB
-         UhWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789998608; x=1790603408;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=J4xPQrVJdFgFl8luzeo5fY/IUnv52YMtHgLJT02PkgQ=;
-        b=BN0pooZiiCsV7rCo7XpqhkouTDZFjezmqljGsba2hFdPYVnXszY/A7tMWQIu10f/Uw
-         OLj4Jgk66DQT8r1Clp8yCJS+zdxWDeRDey/wQOD9BtZskHmeVPcK406Cyuc2hs2Ka40B
-         fwUCmYYARe6Kg7HXMUOf6cq/LlzTKObJBDUPqC/oB2hslurDK+99xKngHSIoq1ycpF3P
-         waKr4AlWEqsl9K5neS4JMMMHpgmg6OQyWdl929dh2oNuu53aK54mHNcXgfq5XrGhM1MX
-         7yAtEjzlz+DCCLndmTT4TUjeCJMfj7iB72/WxUWPCUQ86CuoCKO0XYEVBIqalf1f5FXX
-         w5TA==
-X-Forwarded-Encrypted: i=1; AKwUvBx5em4huM6yOzvCf/UyR07xauqJ3+IUus9tbrDhiCASeqoeV0gZx9E85YUAr+qMHQHFD1c/nvdL40jHbm4Z8dI=@vger.kernel.org
-X-Gm-Message-State: AFuF++kGxmumz2azi0Cr1Ogfp96v1C5HG3cpr4G3w/1pZbcyoq+H0v/R
-	6xV6Ipt52UMq/G7mcGJ98Z+SR/J2rBsSZKoqekGQpeZUTtO3ES9Qt6cTMSSjgpGhywY=
-X-Gm-Gg: AYBFou0ILuarE+aKTGAnJBxPAZjRVIQbVIzFGNN5EF8Vldb3VwjzrTPXM4fv+DmpdMU
-	+YdUiM5cmn74pY3wdYu+2ukEzSjk3RiXDtv3Z2qIpJ5H+w1zycLmp3unNenxN+8/KeiEmRMlCTS
-	R3o2WzqSKNvAMDiEh4HSIfp1rQRPMcezJUNiw6oOh0+RPluH3e2HtIHjdxZyiP/b5vmmysI65WD
-	k6kDLFCgwy8KVHmsgqDqYPqSAevqY+/fYPg8AAKko6wlMdsT1s6oSa6FZru2cMyaFCbkymUUAbS
-	CGZoE8Phn5Ngg4BqCmiP1MQ3PBwFAJ3k+EBwJ4M6CqKoIheFicjvQluNVw1c3ZQq1z5zCYReciy
-	sR/dQHmwpY63Gvtk2RJNPdoJfIgmC7ViH+cpNnmlgDv9Fmd3n3r8JKYblAuAVd+u+kp2SjuBp09
-	g4oP1E6OqLKJ4tunwZzzWn+Uu+MpFcxOrOyKABzyIgzd8gK1xfYL1Fe13Cpn8XVeBxq/yzDPX7L
-	5xOD/pPExJfImrEXmPCJ3plYuCl0+L8jo8=
-X-Received: by 2002:a05:6000:64a:b0:487:c3e:d6cc with SMTP id ffacd0b85a97d-48713c7f005mr24266022f8f.31.1789998608134;
-        Mon, 21 Sep 2026 06:50:08 -0700 (PDT)
-Received: from ?IPV6:2a07:de40:8100:0:89a9:fd0e:583d:4a53? ([2001:af0:8000:1409:193:86:92:181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48724596604sm23426141f8f.30.2026.09.21.06.50.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Sep 2026 06:50:07 -0700 (PDT)
-Message-ID: <58605613-8a43-40e7-a00a-b0d09f089ec8@suse.com>
-Date: Mon, 21 Sep 2026 15:50:06 +0200
+	dkim=pass (2048-bit key) header.d=gotplt.org header.i=@gotplt.org header.b="HuM9EXZF"
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 7E11A402ABD;
+	Mon, 21 Sep 2026 12:46:34 +0000 (UTC)
+Received: from pdx1-sub0-mail-a249.dreamhost.com (trex-green-9.trex.outbound.svc.cluster.local [100.99.242.205])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 45120402C5B;
+	Mon, 21 Sep 2026 12:46:29 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MailChannels-Auth-Id: dreamhost
+X-Towering-Whimsical: 2ee206466aab4b0f_1789994794387_3768880453
+X-MC-Loop-Signature: 1789994794387:1564987128
+X-MC-Ingress-Time: 1789994794386
+Received: from pdx1-sub0-mail-a249.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.242.205 (trex/8.0.2);
+	Mon, 21 Sep 2026 12:46:34 +0000
+Received: from [192.168.8.195] (unknown [38.74.41.78])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: siddhesh@gotplt.org)
+	by pdx1-sub0-mail-a249.dreamhost.com (Postfix) with ESMTPSA id 4hpNJh0D2rz105D;
+	Mon, 21 Sep 2026 05:46:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gotplt.org;
+	s=dreamhost; t=1789994788;
+	bh=VqszO7lUsJIXYJ6O9Ii+Z+i0nLuQRHtAL4uhSHrSsto=;
+	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+	b=HuM9EXZFSVRqEYF4ti4xpeB6maBgNlazPvfLvj6L276istdUvqwDacWKfX4O07EJi
+	 e9qUaS36FBq5ZkYzjGUGu54yHSoOjdLvEG9DE7ZGMc3mBKlgLb38FcBV5tROkWxeSf
+	 xpHiPzjlLVEw8qUK4Z4bFY2/789jyuRO7qhtHzcIN23wZTUkXCMzLvnJWiV4Q8my1k
+	 zvnE5CSC2LwOa6dywwqIJhGsU5HCwar7KRi4uZ+pEhXXkIMqlGF4t7dArumtCky9uR
+	 2Q3YHZF0T52TCzWMTFbA6BI0shZ3JytYQ3CPsEK8NbyGqwfaK8Te8fYicziWTMxMWH
+	 twAo3+Atd13yg==
+Message-ID: <ece8a3e4-8792-473e-b8cd-c0921f1edf95@gotplt.org>
+Date: Mon, 21 Sep 2026 08:46:17 -0400
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,109 +62,96 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/21] modpost: emit module descriptors as assembly
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Masahiro Yamada <masahiroy@kernel.org>, Alexey Gladkov <legion@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot
- <acourbot@nvidia.com>, =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- linux-hardening@vger.kernel.org
-References: <20260914-build-speedup-v2-0-39817ec5db23@kernel.org>
- <20260914-build-speedup-v2-13-39817ec5db23@kernel.org>
- <95baacfb-d8d9-4d2f-bc89-592df6f6f8e3@suse.com> <arEZrFmXeCO4hZpP@gremlin>
- <2b27bb4b-47e3-45ed-a26a-4b9de2b20542@suse.com> <arEnCzzQa9XDd4LT@gremlin>
+Subject: Re: [PATCH v2] tree-object-size: Fix type-1 size for FAM subobjects
+ under -fstrict-flex-arrays=3 [PR126975]
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <garsilva@embeddedor.com>
+Cc: Jakub Jelinek <jakub@redhat.com>,
+ Richard Biener <richard.guenther@gmail.com>, gcc-patches@gcc.gnu.org,
+ Martin Uecker <uecker@tugraz.at>, josmyers@redhat.com,
+ Bill Wendling <morbo@google.com>, linux-hardening@vger.kernel.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <apomrLZp1ee3NnBF@kspp> <202609182117.7AFD5B1@keescook>
+ <7f43c0b9-2ea7-4038-82c5-ca01aa2c1309@gotplt.org>
+ <2df2f47d-5bef-4272-936b-13cfb350aac7@embeddedor.com>
 Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <arEnCzzQa9XDd4LT@gremlin>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Siddhesh Poyarekar <siddhesh@gotplt.org>
+In-Reply-To: <2df2f47d-5bef-4272-936b-13cfb350aac7@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 9/21/26 2:48 PM, Lorenzo Stoakes (ARM) wrote:
-> On Mon, Sep 21, 2026 at 02:36:30PM +0200, Petr Pavlu wrote:
->> On 9/21/26 1:57 PM, Lorenzo Stoakes (ARM) wrote:
->>> (note there's a v3 see [0])
->>>
->>> [0]: https://lore.kernel.org/linux-kbuild/20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org/
+On 2026-09-21 07:48, Gustavo A. R. Silva wrote:
+>> I think you're confusing type 1 with type 2; type 1 is the *maximum* 
+>> subobject size, not the minimum.  The whole object and subobject size 
+>> distinction is only material if there are members after inner, which 
+>> is technically "supported" by the complier as an extension, but is a 
+>> terrible idea for members with FAM.
 >>
->> Thanks, I missed it.
+>> Here are the different possibilities for &p->inner:
 >>
->>> On Mon, Sep 21, 2026 at 01:25:09PM +0200, Petr Pavlu wrote:
->>>> On 9/14/26 11:22 AM, Lorenzo Stoakes (ARM) wrote:
->>>>> The sections were confirmed to be byte-for-byte identical to the C version
->>>>> produced - each of .modinfo, .gnu.linkonce.this_module, __ksymtab*,
->>>>> __ksymtab_strings, __kcrctab*, __kflagstab*, __versions,
->>>>> __version_ext_crcs, __version_ext_names and their relocations - for all
->>>>> 8,135 modules of a clang allmodconfig build with CONFIG_COMPILE_TEST off
->>>>> and CONFIG_MODVERSIONS, CONFIG_EXTENDED_MODVERSIONS and
->>>>> CONFIG_MODULE_SRCVERSION_ALL on, and for a sample built with gcc.
->>>>
->>>> Lowering the data to assembly loses debug information for __this_module,
->>>> specifically that it has type `struct module`. It might be worth
->>>
->>> No, it keeps it - every module includes linux/module.h, and the extern
->>> declaration of __this_module carries the type, so all of the stuff gdb
->>> needs (e.g. ptype, p & field access), DWARF etc. is all there in the same
->>> way as with .mod.c.
->>>
->>> Have confirmed locally.
->>
->> An extern declaration alone shouldn't cause its name and type to be
->> included in debug information. They should appear only when the variable
->> is referenced by some code.
+>> 1. If the allocation via __builtin_malloc is visible: same result for 
+>> types 0, 1, 2 and 3, i.e. allocated size - offsetof (struct outer, inner)
 > 
-> Ack yeah sorry my mistake, I had the LLM check that and should have known
-> better than to trust it without reviewing what it said (as I have done for
-> the most part for everything in this series).
-> 
->>
->> Testing with a simple module that previously referenced __this_module
->> only in .mod.c and in no other file, such as lib/test_module.c, shows
->> that the .ko no longer contains debug information for this variable.
->>
->> I've verified this behavior with GCC 16 and Clang 19.
-> 
-> Ack confirmed locally.
-> 
-> Can put a fix in module-common.c.
-> 
-> The LLM came up with a reference as an alternative:
-> 
-> static struct module *const __this_module_dbg __used __section(".discard.this_module") = &__this_module;
-> 
-> Would that work? Or should we go with your original suggestion? -
-> 
-> __weak __section(".discard.this_module") struct module __this_module;
+> When the allocation is visible and the FAM is annotated with counted_by, 
+> we use
+> the information provided by counted_by. See commit 6f17933548fc ("Use the
+> .ACCESS_WITH_SIZE in builtin object size.")
 
-With GCC, the LLM's suggestion produces debug information for both
-__this_module_dbg and __this_module. However, Clang only generates debug
-information for __this_module_dbg, so it is not quite what is needed.
+Yes, the counted_by would basically override allocated size information, 
+since the .ACCESS_WITH_SIZE gets emitted after the allocation.
 
--- 
+> BTW, I recently filed this related issue:
+> 
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=127234
+
+OK, so is this the core problem you're trying to solve?  It's different 
+from pr126975, which AFAICT is NOTABUG since it confuses type-1 with type-3.
+
+>> 2. If the __builtin_malloc is not visible and there's no counted_by 
+>> annotation:
+>>    - type 0 and type 1: cannot determine size, since FAM could be any 
+>> arbitrary size. So, -1
+>>    - type 2 and type 3: sizeof (&p->inner), since that's the minimum 
+>> estimate.
+>>
+>> 3. if the __builtin_malloc is not visible and FAM has __counted_by__ 
+>> annotation: same result for all types: sizeof (&p->inner) + p->count
+>>
+>>> I would, however, expect the use of counted_by to change it. For
+>>> example, if it were this:
+>>>
+>>> struct flex {
+>>>    size_t count;
+>>>    char fam[] __attribute__((counted_by(count)));
+>>> };
+>>> ...
+>>>    struct outer *p = __builtin_malloc (sizeof (*p) + 48); /* 64-byte 
+>>> object */
+>>>    p->inner.count = 48;
+>>>
+>>> I would expect the results to be:
+>>>
+>>> ok:  __builtin_object_size (&p->inner, 1) == 8        /* compile-time 
+>>> size */
+>>> ok:  __builtin_dynamic_object_size (&p->inner, 1) == 56 /* run-time 
+>>> size */
+> 
+> I agree with counted_by changing things here. This is actually something
+> that Jakub mentioned in a comment to v1 of this patch:
+> 
+> "What we certainly can change is the behavior when
+> -fstrict-flex-arrays unless it already behaves the expected way,
+> and perhaps also when the flex array has counted_by attribute."
+> 
+> See: https://lore.kernel.org/linux-hardening/aogVH8UtICMP1Ihv@tucnak/#t
+> 
+> BTW, I have a patch ready for PR127234 (the missed counted_by bug) where
+> I implemented some helper functions to get the size of the object based
+> on the information provided by counted_by. I could use those in this PR. :)
+Yes, I agree this would be interesting to fix.  I'm not sure if it needs 
+  to be under -fstrict-flex-arrays=3 though, since the size of the FAM 
+itself will always be dictated by the counted_by; this will just be an 
+extension of that behaviour.
+
 Thanks,
-Petr
+Sid
