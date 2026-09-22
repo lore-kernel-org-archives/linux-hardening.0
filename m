@@ -1,226 +1,211 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE6A39F190;
-	Tue, 22 Sep 2026 14:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.135.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790087738; cv=fail; b=qe8iz2tsKd6agId9VoMYP2irngD9H8mJdgaoGe6Vbqn2n/RPPinD8tHJg4IT2ZaByj72hZ4JeJIzYojbW6rTncaf0VfltLka1/xoCo8ANuPKV3AUHrwArbsqLqPzSPBuaZvUTqY0PQszkgRcfCHas7reT+CCDcZDLbmRhqCgaJs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790087738; c=relaxed/simple;
-	bh=c94ERG8LuprI5pjaPEHf0sztvoUtQv5xeTrv1MiKFpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dPlEMlYJkmOMjEA9sqgFm0kKGTAknjMws1IQmGZFJThcgnjiXvmyG0pHVAHEsiKsH8M7U3VDcBzZz0VRHVsYysToGHbDNDWFDqysToYTkP6yp1nQxtbgDXTpDMsHuDvlVt2fR6YDGxYsKP5tDp5nu/Ips7uSGtSy+SDh3xfFzmI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=dGw5mLWP; arc=fail smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCBC550DC6
+	for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 14:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790089141; cv=none; b=lMASq6Erh5WkVpnArqGc5FYIay6Etqbuja5nB7jM1jwuFoImRJs75BnDoGjyUwCY8bgg7oc1f5z3QOlA7yI0huhHmlb0X1sEcGGYHWw23Em6uHUDifAX6GV4bmHxNO22vZsx6x2RhrtxF/yduKtb8l1HQO4VMQ8N1Fiesc/FFuA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790089141; c=relaxed/simple;
+	bh=Xcv6XqGr8GRDrZTYE+bcfGYsESnoIwDYOn1wqnCy4NA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JyhMgjAmnGo7Y9gIFqa1/66LKEME2WxWti1yqnOF0s2lopMaVlmVH6hRcfe+FeHZTlHcpcshJ0ZHAEBV4Bh/78hc+0DK0xeQHDUGfw7pCSgMypKhT6DJAbT5F+tueCDwqHXxwKugmwvh02VrIxOl9jOY8MfyO8BLzbPq02d9PR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P9vpbU/G; arc=none smtp.client-ip=74.125.228.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="dGw5mLWP"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68MBQ7pR3783298;
-	Tue, 22 Sep 2026 10:35:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=wZDTD
-	VF3eqi7WEEn4NS9bVosLqbd5vgU4XZjUIwfRnc=; b=dGw5mLWPF8wtb9Hm527E3
-	7DxiP2lou8thym/6200Z35yAdFCjJhUhNF6yIYNw8BGQBbQn0WEKjHOjStBH+qJe
-	2A/TAFyNMpxT9cjTTiwINXrzNJfPrGTb72Hbi6vI89VAgasmW5+1IcoWmZ9/D0Z2
-	wlhbKUI761ChtVaYQ0SzUkh61rX7ucWqGBM5+6zIz46138e9GImvzUTP790YOtn/
-	n5/K8Xh4CZrgPJorbZufoWmDfhITxrJmTwWNEESS0hjq/zLx9gL50bbUdV9QBoDV
-	aMIqrPxIt5k+H2+PIxyCCis7Ak6y0clikPhmK0VnNZn99yCuDDbWwgFNF4P2Dkdi
-	Q==
-Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazon11010045.outbound.protection.outlook.com [40.93.198.45])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4gsm83feta-2
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 22 Sep 2026 10:35:23 -0400 (EDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=voPuoKgTGX+JY4JBqdz0LzsZmlxsZBh/cWi+iTVsCVgfV75gkESs//0Gso288CxzQFyIZCuijOPhs4ohaaVwcTsDypu2Ni0pDWiepBjKVG4eZkLZFdrtSnmr4GH70F38WDP5N5XhDktQswStwDgk9UgvEI8JlUxvGadbjGK6vEp6OT23hBmf2B9mKg0Yw3DNJN3qtIL910sQCSHnHEq7ZTfrNFelDyysfZpPsZYILLxgEKAkHKaKFWxBVBY9mMvfKfHrXez7qZ9QQPEv90VVd9cKtdoZoxJ3PqjZfS1e0wFkJsp8HZzctG2q01jJpKDbFc+8uqvujU5AfsT+BQBdTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wZDTDVF3eqi7WEEn4NS9bVosLqbd5vgU4XZjUIwfRnc=;
- b=hXrw5hn6Wp3M5fXupKp/1jpgayq9/AWY0Xeply9UW1sL2TMvPS2tRsK2y3lxVyC2Ue5gSa7GD8s4rCpyYzpr53r+h3qhlzOlwvaPXr6dLegCCMzNm9wBknAtk4X3eYlfS3erVHgfW7oG6a4aPGDgPzBOdRJzyfuceMv3ApeBikXFfZxv5RNLnqBA2OG8m+K/yOLRFBsPZ7tz9aqSje8m3viytmpfVq3/N9SfXQ6PPDPJL3PNfEulzQuhd0BGBQwHAv6G3gHz3u3m689BY+YJDzjMt7uwZoA6zn+jfTY7drOPsqqvZEE1tfcD5GGWBZ/fbkvHUGoHfH1J2Zy16gyz5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from SJ0PR03MB5469.namprd03.prod.outlook.com (2603:10b6:a03:28a::17)
- by SJ0PR03MB5456.namprd03.prod.outlook.com (2603:10b6:a03:28c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.13; Tue, 22 Sep
- 2026 14:35:20 +0000
-Received: from SJ0PR03MB5469.namprd03.prod.outlook.com
- ([fe80::2a19:76b2:e731:8c5a]) by SJ0PR03MB5469.namprd03.prod.outlook.com
- ([fe80::2a19:76b2:e731:8c5a%6]) with mapi id 15.21.0428.015; Tue, 22 Sep 2026
- 14:35:20 +0000
-Date: Tue, 22 Sep 2026 15:36:36 +0100
-From: Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>
-To: Bill Wendling <morbo@google.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>,
-        Andy Shevchenko <andy@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        codemender-patching+linux@google.com
-Subject: Re: [PATCH] iio: st_sensors: add __counted_by_ptr to struct
- st_sensor_settings
-Message-ID: <arKSPA7hGmWbXVIu@nsa>
-References: <20260922112111.1970872-1-morbo@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260922112111.1970872-1-morbo@google.com>
-X-ClientProxiedBy: MR1P264CA0025.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:2f::12) To SJ0PR03MB5469.namprd03.prod.outlook.com
- (2603:10b6:a03:28a::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9vpbU/G"
+Received: by mail-pz2-f12.google.com with SMTP id d2e1a72fcca58-85469f20513so404b3a.0
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 07:58:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790089138; x=1790693938; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=GBsYZYC2tty9xsMubEGxI75zG2Y/0N6IAo5rsTEyC18=;
+        b=P9vpbU/GKY22GSz+f0k3PPTLbtIEa1DRbrDXoeJrdM4jONBG2jsqCMs+6DtAQ6bzS+
+         uktvirJHaQKj9zrUgPwYJkJICqlWWTsFXlvQHpByKLnKZtL2eIoAEQWEWxstultGQfOd
+         eXf4DZyXrXwDK3PbO3iu936rnFq4pjkyuiTXDA19gz/iK7qLP+cOLx6d+QeP7DgpZnMS
+         gz0YDKLTfGq8oLtscpfbnvn6HU84bsFr82Wf2TVvcFvgtcfpK2d359LJEf9XyQNXplkU
+         FSP3W/HQ2bTH21U8ytVcHY2ZBJLnrr/I9CJWFP3GdRqag++3uPSZybjN0A33mRu0nAQB
+         sDPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790089138; x=1790693938;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=GBsYZYC2tty9xsMubEGxI75zG2Y/0N6IAo5rsTEyC18=;
+        b=w0G2Jz3Ra0e1nlg6W0Aa234KzW7fcSRYbRT6cwutKeeenEoJOBMERTB6IWARpKOPrC
+         OgWUc9FIGDIV8GP4/oMGADrmj54zjlGDabY+oOXVCudUm+A4cP0AIrrtVdZn2I01uTxW
+         jrwkXDhhxjyGF8KPCqCjfjoGPye/QkwC+brzDsaEWIQX/Oda02EpzTfo/W/ZY+kDKiRL
+         goAdv00LiAvcrFxaQpqLVq3XOyceY/lcVtvAjGHoi6hS2HyDdmkRbNX6Vf62d7cArczh
+         lKXCGYRXdfm5Sw/9766b1Wb2HF5/ZYBOylMjpSbzB1MlLa0Ac294MWxQcl7zWN9mL60i
+         /ARA==
+X-Forwarded-Encrypted: i=1; AKwUvBz9LiYkd1kpsiRPGwDZlFCrjgs8g31UPoln0SJdGsJ2t4lqBnpG750/t18j3QWAtMRrIntqGfi8Lh2b19qNrd0=@vger.kernel.org
+X-Gm-Message-State: AFuF++l48lCanjIWOjS9DQ1syYkAhkqUz+PfvKbvSw+rNkEDy4TBCKlp
+	fpGR+69o2rSkK5QiBrK9ADS8RpAnxIryMqKKiCHnbeMABTRaLMGM/gx9
+X-Gm-Gg: AYBFou2y/nu3ZOtKw6G/GZFOooHgQG+z8oHgMhvfkxc6MTVM/4ZM3iCZf96SiyhcUrQ
+	bXfHQ3j19rbTi/ABIBWVryAqU2H0o5H5g2Mp1lq0/pFXvjw3MQn++7VtVqf8OyR6Irvh8EczdBQ
+	JP7YFBmeqCCU9hmUr2pku2wGqdKcAWJ42dHaB0C+WOx45PSV3xvRA3YhkikpBW67luHuleL9M5n
+	WMkT0mmItDwQjjG2FoqaxCr634fik3dZRb5Z3MHyERl4mutxU/BWI4JfsyzVySe7gvE+F6jE55R
+	zTx8r3eG+lOA4+LNNiWsivfwrt5QK3cto/oiye+OiILqLUlAqBjX7TiznXk4xk+AczglVQJqyfr
+	9ZSZgO7r9dGyU/C4JOKx5DeaH3hACWwhu/Et019iytgXCmGRY9Gt9/c03fnEkuyYtcabtGqwZNc
+	0mNFCNG/NF/hNnRcUL3NF4ioUiU7zrnX/vw4pimL6VmFR6t3ksE78hIqWiG0atr1aYEQFtjk/+t
+	vigKkKahJUM
+X-Received: by 2002:a05:6a00:8085:b0:874:708d:b620 with SMTP id d2e1a72fcca58-87c8403d93amr1485976b3a.30.1790089137920;
+        Tue, 22 Sep 2026 07:58:57 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-87c31ee8fb4sm1046216b3a.12.2026.09.22.07.58.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 07:58:57 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 22 Sep 2026 07:58:56 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Marco Elver <elver@google.com>
+Cc: Vlastimil Babka <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	David Hildenbrand <david@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	KP Singh <kpsingh@kernel.org>, Kees Cook <kees@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Suren Baghdasaryan <surenb@google.com>,
+	linux-hardening@vger.kernel.org, Nicolas Schier <nsc@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>,
+	Hao Li <hao.li@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
+	Alexander Potapenko <glider@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kasan-dev@googlegroups.com, llvm@lists.linux.dev,
+	Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org
+Subject: csky ICe (was: Re: [PATCH v4 2/3] slab: improve
+ KMALLOC_PARTITION_RANDOM randomness)
+Message-ID: <6106aefa-47c7-4bda-a51f-8a2fba3bf715@roeck-us.net>
+References: <20260511200136.3201646-1-elver@google.com>
+ <20260511200136.3201646-2-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR03MB5469:EE_|SJ0PR03MB5456:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7f457f11-b8b3-4d79-800c-08df18b6bab7
-X-LD-Processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|23010399003|1800799024|7416014|376014|366016|56012099006|10067099003|11063799006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
- AmFRBb3nYzAyqaMetqZQn3izVkSWZt+zg0Ua3z4pGvkHakn5iCflhL/LGKV4y4/v2g33KFGWLXCPJdGVcyUWvjn1lUfkstR6rWxNYjrA/fuqiGqwDN9qfgeDSSKNsglhiNEkIiNVF9BN6wFcQMB4qPXMA9H0YiEXnEzwkhuS3nkU+w45fCHUaN0QHCmH/QauWcwqft8awEPeka484AhU+oNKhaSJ84QUjfYkMiK6WhrRCE4NKLxV5LwdQblTYK7HR9fLpawsCEcyKtnEkByjxOA1dE1BzSSDOG5nwCF9exotduWIQM+bTmV5CikKTqaf7XBUWhov2oTZZbBQDEYxxw2/BoRO8cxrJkukneOtprzoIdQcoEUNNBNvebZIprQN575RMhMPOj2+gikNfSW0vhBPm8stkFdGiYmC7S0Tqu9fI4dyOwNyEHh/Jxh01wj/y8eoR/SR5ajm43335+AO+/uChckSZZGG63nKXbrH3QkPMnRPXbdex5iVbDB+JUssL86MhiKirS53m/NeKrI2888utZJdrsOv071aDqNBHzsUo4MPAlnLIZc6Dl1eKTgBRPDdN9SzczqO+aOJ043yjsZcZNeipyXrRBNqggMAEMhWgAJIKxmeFRJI29h0PX8UBRzu7f5PIYaVHqUdY0PZ476JbN7wtKVbcYzpKSl/a3I=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR03MB5469.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(7416014)(376014)(366016)(56012099006)(10067099003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?MWdOWVhqMGRVeHhkNFFQMDJHKzlNZ0dFTXp5cU45amR2OWNpa25YSm9zejd3?=
- =?utf-8?B?UkhUSGt0K1I4UzdzeDlXRGozSHpjSkNyb2FIckFSZFJkcXU0OW1DVnhsb1N1?=
- =?utf-8?B?TlltdDl2dEQ1aU03MGFJaUhnTFdTZFVyOElwaEVIdGNYRUpFVVJwTXZ0Wmda?=
- =?utf-8?B?bGY4QnNUM29lcEwrNVV4aElpMm1xN2RaYTVnWGkrRVluUlVtRG1lbTI0a3da?=
- =?utf-8?B?NHEwWUdPMVN6ZUN1S2NmRndSd2VPTVlobTNPUHowa0RLMmtSVDU5eUlHZEg5?=
- =?utf-8?B?TFlqUExQQmFVa3FGeTF2a0ZJRS9RSyt1aWlJTHJUdjhnNU4wcWpaODFaQXls?=
- =?utf-8?B?dVdlcXJETlBkOFVaZ0ZzVmM0c25wSnZaRGpuMEg3VUVLaG53aGU4K0trbGFy?=
- =?utf-8?B?SUx5b3pZZndHd0d1WlVrYkRZOHJYRzc3bk1ZNTZ4SGpjRml6c2RtSGo0RXRB?=
- =?utf-8?B?YWpRZ2ZnVUl0UVRMRGFkVmhySjFoZmFRdXh2VDBaYm5paDVNV1RySzdieldt?=
- =?utf-8?B?a1dTWVZZbEFXVkpYanMydDlRU1ZrbGZOTjRPbVlWL1h4TnZhWUhJdy9ET2FV?=
- =?utf-8?B?ZGljbnBFTFJNL2FNWlgvVy9VeVZsV00zSk1wMWZBTjdXWW84SHRMbVJmVlVx?=
- =?utf-8?B?SXRNaDBjUWNGM1hRMGhSaFBjRXlaWmpSSjhNQXBtbnJRTWtXVU1XS01JTS9x?=
- =?utf-8?B?N2FwN0dnbVJiQ1hMOVNaUmFCcWs0K3hibitQME55ejEycVc3RDlqTUFwUTFU?=
- =?utf-8?B?UStnRlVDMlQ2K2hCL0ZINWUrSlFXOXVxczNqSmhXSi9PQmFxR0VEdTJ5Q05L?=
- =?utf-8?B?QUgxMEx3RUZnbzJMeHhqa3hTc0ZQSWpMWWtqbkpvNUE3a2c1NmhHdzdML1Nm?=
- =?utf-8?B?cEZseHBvYmtWZ2wxUTdUd2ZHNDBGU01VeGw4Tk5rMlV6a1VIcHBkMWl0aHVP?=
- =?utf-8?B?UkVoc0QxTXQyKy9BYWZGZ2xUbDBZU0JKY1ZoV1VIRmdCSFdMQ3dleE1rOUw0?=
- =?utf-8?B?Y0ZuOHdUaXlHdVc3TUUyZk4zdGpBd3BySGVSc1k3dHNDaFZCZVFNWU5UNVA1?=
- =?utf-8?B?dHBNSENQclRjeEVjMUlFM2ZYVTNCaGVBUFpMczBuK2twRzRNU1ZCQTExalgv?=
- =?utf-8?B?QnFQZ3QzT0tIbG45VU5DaExPTVI0WmJaTVFFeC9pOTFMRzJNeGVxQWlRcEx3?=
- =?utf-8?B?WlFZTnY1NWdWWUU1blJyajlBY0RXaHBjWGJYVVdzR3hvbHhWZE41T2FBVTly?=
- =?utf-8?B?bG5rbUdLNVQxdTVTQnVjbXBXTTIvemkwTkZuMFpjNmFLZTI3WHY0RXU1NDdX?=
- =?utf-8?B?bnoyaXhKNUtVVXFpOUNZZkFIN3VydmNnMWt1UmYzeU5pcWZIeHh0eHBVcnB5?=
- =?utf-8?B?bThVTTBSNTlZcFFuSDBWMS9pT09WcVZVNEU4WEQ2dzk3QnFJbXhiUXdUTDB2?=
- =?utf-8?B?QW5xaFVhR2ZLc2V3UFR5bS9hVFh4UnYzSks1UWR5NWtnVTlWZVRXUmxyeE52?=
- =?utf-8?B?eklweUs0dFRFWU9NNkhUZlU4ZFAwUU03R3MzTDlaS1p0QTNoekxwQzZKSlZ2?=
- =?utf-8?B?Q05FaVlCdzZjWHZuK250UHJtd1lKWU9xUDhkUm1DV2NBNjhyM1EzcUIrRnI5?=
- =?utf-8?B?bng0ZndXaU4xZGVKbW1DeEppdFJOajF5NkVhTzJsWU5FUGxmajZkc2pVekJq?=
- =?utf-8?B?YlFMZEk1dXZtSVRsNGNSNGZGZjdxZTVzVUFTTCtWQ2dja1BFaElTQ01zVjkz?=
- =?utf-8?B?TFpiQVBBbnJaMkczN2pGc0JoMkVPNnFhSVo5TUlSM1FHajJxckZDSUdvbzRO?=
- =?utf-8?B?KzR1ZE9ITGg0V2VqK2ppYlhTbnR6UE1xaVV0ekpGelpXYWFxMHV3bnJWamRQ?=
- =?utf-8?B?bjdDaGNyay9VaU8rZFlsU2tOYllvcFF6cEVGWERYbEo4WHF5MkJmTjgrUWk5?=
- =?utf-8?B?ZHg4MUdsVEYweklXa2ttbjVWVkRCV2U3V2hCQ3Bha0JjUXp6NUN5OFcwakF3?=
- =?utf-8?B?U1NObS9aWW90dERhMHE2NjQvTTdvUHJ0cjRkd1hTcFlYbm1tcTZTY2lCTnQr?=
- =?utf-8?B?MDkvb0JNSE5xNGdlSTdmNDhyZzhiV3RRV3NManpzakVVakRpYkx5VjZNR296?=
- =?utf-8?B?S1NMUFpMMlZ1TE9LREpyTk03bkJHa0ZhdkRmcHZHYXB1M1o5NGxGclMzSzdl?=
- =?utf-8?B?M3JmQW5uQktGV1NlNWM2K1ZLN1NqT3d0MnowL2ZxNm5MRC9aODYvdU10K1c2?=
- =?utf-8?B?MGdhTEFNV0gwZ3VPeURFcnhlRDNRR1B5Ukc4M3UxN2JhZlJFcE4xREZmVGln?=
- =?utf-8?B?M2tqU01PblBEVk50TFhvWTViMWVtNC9OeCtieU1uWnBIWGdKdFlxUT09?=
-X-Exchange-RoutingPolicyChecked:
-	EQZCWre6SMRMGcXqYu+R1pckbF8uNa8tXtbi16RBe/Wfuc3mFLO96N7sGceQod/YGrGJDqBjLqA0xwTPqNKEo6UjJWhfuQ88IXw6ZJ3fvzsYqHtYu1MY3e+xHY+bYJZZT3wx7YnZSoMRR74WyzfXJEdJL5BJ8J6Rh3tfeeB8Ok11hHsDvoiGU3WHaU8u6zCs+z8RgRm8pRrnzWYxPwzyQyHw91nCfecC8SM+WyCSAkWLNfXMPx1Tzp0KomB9/G5B8Q1V+5IZW0sGn3waF4eWaWT/M0Iv5kUu3HFGXZpQx1TnZr01HTWcQ6Lpnsr8lv2wSj0fPLKIlN9A19PFbl9/BA==
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f457f11-b8b3-4d79-800c-08df18b6bab7
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR03MB5469.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2026 14:35:20.7341
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lcMFB43aorx5FlHirx4ZNTf4UfakKa7l0eKdmKtvnjWKev116dHVQ9vsAjE7jR7ASxJ2JEAOiWpBCGwM97D66w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR03MB5456
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTIyMDIxMiBTYWx0ZWRfX4p6Nljxf2jcB
- I7fkwctgy67hvRhIXGL1IrkCCPBtvwrxL87VUcKiqdvm2LPKnH1CYcsbW+uHlLEwwkqxRYNpfT/
- Ewyq3w29Y42gDrlvwLbl2FSPWKQqAd0apbzYJ3mkL41hI8dWqXPK
-X-Proofpoint-GUID: t-bGcMkg6BtMY71oVB8ReqI41DbLcxWy
-X-Authority-Analysis: v=2.4 cv=e66T2qp/ c=1 sm=1 tr=0 ts=6ab2922b cx=c_pps
- a=zLftBE+EtYxwi/BgDV84wA==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
- a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=M51BFTxLslgA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=0sLvza09kfJOxVLZPwjg:22 a=uXIjobp8t2wMuQ0fPvqm:22
- a=1XWaLZrsAAAA:8 a=gAnH3GRIAAAA:8 a=8A-kgZgV7H4LFlDSZ1UA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTIyMDIxMiBTYWx0ZWRfX800tNImx2K2z
- voLPpPLXYJgdugQQFeHkvt3g5Am0zmcmOqLLgOsRyBU67c1MYruAG6TvJtuJ7gGoFyiAfHp7Zye
- QwYVKsY1TJ4lAyuETsaCmeSsNeh/jegl+7JGpFA+luJjtL/D6VRR2sO8+JpbiMEEvbmkXICx/83
- CYUbS9ZleXPFfrcA2lH8KnWICZpZCw0nY0+2nRMcZ6rWALufdp2Cnzt+gsl2RuiJEx3XgWoPCw6
- 7wwX92SNgT/34UKbGhNKFGEvM2CORQqtjE0STjjf1+oJ3H0dI3UcSU5k9/57J1dXs/PiVDNG6d1
- /ssa7rMCjKSPmUt9Il25U5gd8+GogJ7Qds6r0BY/BoHZqBsGyvoTvm4QOZk4I/n3knNVRAqq0ae
- 05cAUuMzBhMHt7dsab9NDoQTbNaPJxzGTqXK8oES3STAGtXkVMVZCre2fic2WMjYH68aiihO33D
- UeDbAqukTpWsax99yQQ==
-X-Proofpoint-ORIG-GUID: t-bGcMkg6BtMY71oVB8ReqI41DbLcxWy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-22_01,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 bulkscore=0 spamscore=0 clxscore=1011 impostorscore=0
- adultscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
- definitions=main-2609220212
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260511200136.3201646-2-elver@google.com>
 
-On Tue, Sep 22, 2026 at 11:21:11AM +0000, Bill Wendling wrote:
-> Annotate the "ch" pointer member of "struct st_sensor_settings" with the
-> "__counted_by_ptr" attribute. The elements of "ch" are counted by the
-> "num_ch" member in the same struct.
-> 
-> All instances of "struct st_sensor_settings" are defined as "static
-> const" arrays across the ST sensor core drivers. For pressure sensors,
-> "num_ch" is explicitly initialized with the size of the respective
-> channel array using "ARRAY_SIZE(...)" during static definition.
-> 
-> For accelerometer, gyroscope, and magnetometer sensors, "num_ch" is not
-> explicitly initialized (and thus defaults to 0). This is because those
-> drivers hardcode the channel count to "ST_SENSORS_NUMBER_ALL_CHANNELS"
-> rather than using "num_ch" from the settings struct.
-> 
-> Since these structures are static const, both "ch" and "num_ch" are
-> fully initialized at compile time and available immediately at boot
-> time.  The only accesses to the "ch" field of "st_sensor_settings" occur
-> when assigning it to "indio_dev->channels" during device probing.
-> 
-> Because "sensor_settings->ch" is never dereferenced or accessed as an
-> array, adding the "__counted_by_ptr" annotation does not cause any
-> runtime panics or false-positive bounds checks under KASAN or UBSAN.
-> 
-> Cc: codemender-patching+linux@google.com
-> Assisted-by: LLM
-> Signed-off-by: Bill Wendling <morbo@google.com>
-> ---
+Hi,
 
-Reviewed-by: Nuno Sá <nuno.sa@analog.com>
+On Mon, May 11, 2026 at 10:00:49PM +0200, Marco Elver wrote:
+> When using CONFIG_KMALLOC_PARTITION_RANDOM, _RET_IP_ was previously used
+> to identify the allocation site. _RET_IP_, however, evaluates to the
+> caller's parent's instruction pointer rather than the actual allocation
+> site; this would lead to collisions where a function performs multiple
+> allocations.
+> 
+> With the generalization to kmalloc_token_t, we now generate the token at
+> the outermost macro, and using _THIS_IP_ would fix this for all cases.
+> 
+> Unfortunately, the generic implementation of _THIS_IP_ relies on taking
+> the address of a local label, which is considered broken by both GCC [1]
+> and Clang [2] because label addresses are only expected to be used with
+> computed gotos. While the generic version more or less works today, it
+> is known to be brittle. For example, Clang -O2 always returns 1 when
+> this function is inlined:
+> 
+>         static inline unsigned long get_ip(void)
+>         { return ({ __label__ __here; __here: (unsigned long)&&__here; }); }
+> 
+> To provide a reliable unique identifier without breaking architectures
+> relying on the generic _THIS_IP_, introduce _CODE_LOCATION_: it resolves
+> to _THIS_IP_ where architectures provide a safe implementation, and
+> falls back to a zero-cost static marker where _THIS_IP_ is broken.
+> 
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071 [1]
+> Link: https://github.com/llvm/llvm-project/issues/138272 [2]
+> Signed-off-by: Marco Elver <elver@google.com>
 
->  include/linux/iio/common/st_sensors.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/iio/common/st_sensors.h b/include/linux/iio/common/st_sensors.h
-> index 1ba496f0fea5..6e914ed49529 100644
-> --- a/include/linux/iio/common/st_sensors.h
-> +++ b/include/linux/iio/common/st_sensors.h
-> @@ -206,7 +206,7 @@ struct st_sensor_settings {
->  	u8 wai;
->  	u8 wai_addr;
->  	char sensors_supported[ST_SENSORS_MAX_4WAI][ST_SENSORS_MAX_NAME];
-> -	struct iio_chan_spec *ch;
-> +	struct iio_chan_spec *ch __counted_by_ptr(num_ch);
->  	int num_ch;
->  	struct st_sensor_odr odr;
->  	struct st_sensor_power pw;
-> -- 
-> 2.55.0.1082.g2b9226bbc0-goog
-> 
+With this patch in the tree, I get ICE erors when trying to build
+csky:allmodconfig.
+
+Example:
+
+Error log:
+sound/core/oss/mixer_oss.c: In function 'snd_mixer_oss_proc_write':
+sound/core/oss/mixer_oss.c:1202:1: error: could not split insn
+ 1202 | }
+      | ^
+(insn 183 400 184 (set (reg:SI 0 a0 [orig:307 _55 ] [307])
+        (xor:SI (reg:SI 3 a3 [orig:308 random_kmalloc_seed ] [308])
+            (const:SI (plus:SI (symbol_ref:SI ("*.LANCHOR0") [flags 0x182])
+                    (const_int 132 [0x84]))))) "include/linux/slab.h":759:52 288 {cskyv2_xorsi3}
+     (expr_list:REG_DEAD (reg:SI 3 a3 [orig:308 random_kmalloc_seed ] [308])
+        (nil)))
+during RTL pass: final
+sound/core/oss/mixer_oss.c:1202:1: internal compiler error: in final_scan_insn_1, at final.cc:2813
+0x779b51e2a1c9 __libc_start_call_main
+	../sysdeps/nptl/libc_start_call_main.h:58
+0x779b51e2a28a __libc_start_main_impl
+	../csu/libc-start.c:360
+
+This happens with lots of files, not just this one. It is seen with all
+versions of gcc starting with at least v13.x. Reverting this patch fixes
+the problem. Bisect log is attached for reference.
+
+Any idea what I could do to avoid the problem other than stopping to build
+csky:allmodconfig ?
+
+Thanks,
+Guenter
+
+---
+# bad: [93f51579e7df248780214094418f205253383cc5] Linux 7.3-rc4
+# good: [7d0a66e4bb9081d75c82ec4957c50034cb0ea449] Linux 6.18
+git bisect start 'HEAD' 'v6.18'
+# good: [df8f6181ab57d65a99e61fcfc5be22a42df58642] Merge tag 'perf-tools-for-v7.1-2026-04-17' of git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools
+git bisect good df8f6181ab57d65a99e61fcfc5be22a42df58642
+# bad: [093239070573637ad2b4cb56abc9c4c7ee109294] Merge tag 'v7.2-rc2' into togreg
+git bisect bad 093239070573637ad2b4cb56abc9c4c7ee109294
+# bad: [b85966adbf5de0668a815c6e3527f87e0c387fb4] Merge tag 'net-next-7.2' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+git bisect bad b85966adbf5de0668a815c6e3527f87e0c387fb4
+# good: [25447851777a53bd4b501e7f2cb418332ad584cc] Merge tag 'char-misc-7.1-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
+git bisect good 25447851777a53bd4b501e7f2cb418332ad584cc
+# good: [bd77e50c9a70f844d6073499f3d1a6fd193eae73] Merge tag 'fbdev-for-7.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev
+git bisect good bd77e50c9a70f844d6073499f3d1a6fd193eae73
+# good: [972c4dd19cb92e03d75b66c426cfade07582a1ba] Merge tag 'wireless-next-2026-06-10' of https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next
+git bisect good 972c4dd19cb92e03d75b66c426cfade07582a1ba
+# bad: [9b40ba14edcdf70240af8114092a76f75f070774] Merge tag 'for-7.2/io_uring-20260615' of git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux
+git bisect bad 9b40ba14edcdf70240af8114092a76f75f070774
+# bad: [0d8c1134936f1fb6678156ab4248ac740d274525] Merge tag 'v7.2-p1' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+git bisect bad 0d8c1134936f1fb6678156ab4248ac740d274525
+# good: [42a58f08b70a7a320c168a1ce15e3fcfc8568708] crypto: atmel-sha204a - Use named initializers for struct i2c_device_id
+git bisect good 42a58f08b70a7a320c168a1ce15e3fcfc8568708
+# good: [2c1ccd9a1d786503086e83fe83e5c3b3c953b70e] docs: changes.rst: restore pahole 1.26 minimum (regressed by sort)
+git bisect good 2c1ccd9a1d786503086e83fe83e5c3b3c953b70e
+# bad: [f8115f0e8a0585ef1c03d07a68b989023097d16c] Merge tag 'slab-for-7.2' of git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab
+git bisect bad f8115f0e8a0585ef1c03d07a68b989023097d16c
+# bad: [dfdfd58cce1c3f5df8733b64595448996c08e424] Merge branch 'slab/for-7.2/alloc_token' into slab/for-next
+git bisect bad dfdfd58cce1c3f5df8733b64595448996c08e424
+# good: [648927ceb84021a25a0fbd5673740956f318d534] mm/slab: do not limit zeroing to orig_size when only red zoning is enabled
+git bisect good 648927ceb84021a25a0fbd5673740956f318d534
+# good: [d196ea36a2f2118833ca648af53654553a4a1e7b] Merge branch 'slab/for-7.2/tools' into slab/for-next
+git bisect good d196ea36a2f2118833ca648af53654553a4a1e7b
+# bad: [e0f54249a491c62ef8196b9f13bd7d95dba47c6f] slab: fix kernel-docs for mm-api
+git bisect bad e0f54249a491c62ef8196b9f13bd7d95dba47c6f
+# bad: [0fc1bd38a19c108395d8338fb034f90c2d3fbe55] slab: improve KMALLOC_PARTITION_RANDOM randomness
+git bisect bad 0fc1bd38a19c108395d8338fb034f90c2d3fbe55
+# good: [feb662d9168b63e1d4c02671ec96005410c6f3ce] slab: support for compiler-assisted type-based slab cache partitioning
+git bisect good feb662d9168b63e1d4c02671ec96005410c6f3ce
+# first bad commit: [0fc1bd38a19c108395d8338fb034f90c2d3fbe55] slab: improve KMALLOC_PARTITION_RANDOM randomness
