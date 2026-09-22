@@ -1,295 +1,165 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A8B52D2D6;
-	Tue, 22 Sep 2026 09:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C6E4E7816;
+	Tue, 22 Sep 2026 09:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790068499; cv=none; b=DeANVsjoLYVnLyrrYwYM+TT6NhXJ9Ao/6uBhI2l86xF7xJjEwn9OINDo4fxwOlfRraSePAOlooA6Xs775S+uyYAwJT99z3bHR+TjHVw1UmeMPbPre+xI1YjpP4lvAOWiRn7dpXEWkzY+K0W0aG0Pwvki9CcPpybzKxNDEMbCO/8=
+	t=1790070243; cv=none; b=Y+LXhBg9aQZ2jMGOME4FCy4wLcQXRor/OAopbrPRf7bGn8gdbYPn0BkVAOJ7CKyoFHbgt74w2Slt4CKQREmRL9RnwQDVIg9ArkekAX4yQS+Yuuamc+dcPOVUJxohPx18Lmb7smwjY5nNUALnz3xKgW9fKYkxfk4CYz2G1G11PXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790068499; c=relaxed/simple;
-	bh=eEC+vMrtdNvqtTE2iVXtcrgWXjMqf0Mo+dgesmgS96o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z+g+eQyDPuC/fkOG65P1Y0Qv3End7vDhFUBKtHB4rmxxlNGwv0HMZPEek7kr6BMP3xUeY34FpBT7XB3ZL8yHo134UWIgW4cYgqQ9law5hoUSbJiD1g3hF0R1+sMRBf4WiJUDyjQRxPoBiefbelo6sz/T6XOiGn9H2X2MX/GuLXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=r18MYRiH; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1790070243; c=relaxed/simple;
+	bh=crbT9+5MObVWuFXEa9N+TkXuUnbKPdLY1NFH+JJ4wGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FiJaH39KMXbxO1e7IJvZVdzY8PxMqnKXNbNMwI5eaZx0Ts1DXCm22aWkzoIc0E6Rz174mwmoesdsNtgqXfXmE4dQzPzGaTTjRh2yvhFRO0ofY1dHX5O/BEd5cw/RXmjrlJ6mn1XPVIyvadJZ+RcoTNYxXDsGkeSM6Y6Df332nl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jy3U+Jxc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="r18MYRiH"
-Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68M9DR7H021356
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 22 Sep 2026 18:13:27 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=qWdukw8Lwo5D178NeO++XInMp2aCtmIcsueteb32N9I=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1790068407; v=1;
-        b=r18MYRiHmKiGcRo1ZPIgYuDx5mT4Drk6ugS5wVEuTfrZQkbGInaUGH+XIPh/w69U
-         EaZH2vvrBWmoDHnWpbISp25FtvQA2v0gjQ5yon66dc1n3QEib6WWio7l4+4L7FEv
-         DXKAd/bZ53zq5YqBBzHqZPhMypM/YuZpMZLe69B9n87ojxufmhNquUSW+GtAzRUz
-         DVeO5038q+phoXydYDcRNPXK/KEmg7rhveGLZ0Xx6uV7GcRz/ZsMTG11Vibs+A9D
-         L/owohAYoUw2rEZrcuw9ml3lcEy++eoq9besVkLLO/rmSspTSt1Kt7GqlRbzLvo+
-         C/E2ZOEmuixnNMsre8OiWw==
-Message-ID: <b9c1b996-2c01-4889-8f93-154ceb58c529@rsg.ci.i.u-tokyo.ac.jp>
-Date: Tue, 22 Sep 2026 18:13:26 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jy3U+Jxc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113741F0089A;
+	Tue, 22 Sep 2026 09:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790070240;
+	bh=YTT+dkVu7tWPKjS3DFi060r/rlKRC0HzmitVIec+iIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jy3U+JxcId7zmfYkIr1r7u3noV5oRtTv3+3FbbQxFWzLtL+STTIwAbXmdb0Ene9HI
+	 1+a7y9W33iqDoUkRTyaFkdEdhyxU4mtChStxqOWiYEMJ8Jqg7m0YmoABhfoSe9DgVF
+	 pi4hN43C7Rs7zg5iDpGuqFUPaDmHfpRsFefjZ/gma6zPCY0usIXBeI1wBK+qR6PYJH
+	 iesQMJwGVINhl3cSO+pgnPecINN1L34B75FLiqqDn/ulF582FizRK6GnDfJw2+2hPD
+	 rsneXl39GgR4xuDRTGTeKge+B4Zs7cN7OXc3v+uw4jHCi4Yw/YppZ87MJ321hS8QYh
+	 xNfZ0IyAbqvAw==
+Date: Tue, 22 Sep 2026 10:43:45 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Alexey Gladkov <legion@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
+	Alexandre Courbot <acourbot@nvidia.com>, Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, 
+	Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 17/20] objtool: decode instructions and resolve branch
+ targets in parallel
+Message-ID: <arJFPXN5SsrkUyJY@gremlin>
+References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
+ <20260917-build-speedup-v3-17-9ecf4163ff36@kernel.org>
+ <arICcrXVFLVzO-Jx@jpoimboe>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 20/21] KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
-To: Oliver Upton <oupton@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu
- <yuzenghui@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Eiden <seiden@linux.ibm.com>,
-        Andrew Jones <andrew.jones@oss.qualcomm.com>,
-        Fuad Tabba <fuad.tabba@linux.dev>, Mark Rutland <mark.rutland@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Shannon Zhao <shannon.zhao@linaro.org>,
-        Randy Dunlap
- <rdunlap@infradead.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-References: <20260920-hybrid-v11-0-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
- <20260920-hybrid-v11-20-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
- <arIqMO-f8X0gCzjA@kernel.org>
-Content-Language: en-US
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <arIqMO-f8X0gCzjA@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <arICcrXVFLVzO-Jx@jpoimboe>
 
-On 2026/09/22 16:11, Oliver Upton wrote:
-> On Sun, Sep 20, 2026 at 08:16:01PM +0900, Akihiko Odaki wrote:
->> Introduce the KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY attribute to
->> create a "fixed-counters-only" PMU.
->>
->> Much like KVM_ARM_VCPU_PMU_V3_IRQ and other read-write attributes, this
->> attribute provides a getter that facilitates kernel and userspace
->> debugging/testing.
->>
->> Allow strict PMUv3 vCPUs to initialize the PMU after selecting
->> fixed-counters-only mode, without selecting a VM-wide hardware PMU.
->>
->> Assisted-by: Codex:gpt-5.6-sol
->> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
->> ---
->>   Documentation/virt/kvm/api.rst          |  8 +++++--
->>   Documentation/virt/kvm/devices/vcpu.rst | 42 ++++++++++++++++++++++++++-------
->>   arch/arm64/include/uapi/asm/kvm.h       |  1 +
->>   arch/arm64/kvm/pmu-emul.c               | 34 ++++++++++++++++++++++----
->>   tools/arch/arm64/include/uapi/asm/kvm.h |  1 +
->>   5 files changed, 71 insertions(+), 15 deletions(-)
->>
->> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->> index 1a90598901c5..a6aef405ef87 100644
->> --- a/Documentation/virt/kvm/api.rst
->> +++ b/Documentation/virt/kvm/api.rst
->> @@ -3531,9 +3531,13 @@ Possible features:
->>   
->>   	    * Userspace must explicitly select a PMU implementation before
->>   	      initializing the PMU or configuring a PMU event filter
->> +	      (KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY also satisfies the
->> +	      initialization requirement; event filtering remains unavailable
->> +	      in that mode)
->>   
->> -	    * If the PMU implements FEAT_PMUv3p4, PMMIR_EL1.SLOTS provides the
->> -	      hardware value of the underlying implementation
->> +	    * If a hardware PMU is selected and implements FEAT_PMUv3p4,
->> +	      PMMIR_EL1.SLOTS provides its hardware value. In fixed-counters-only
->> +	      mode, PMMIR_EL1 reads as zero
->>   
->>   	    * Writes to PMCR_EL0.N via KVM_SET_ONE_REG are ignored
->>   
->> diff --git a/Documentation/virt/kvm/devices/vcpu.rst b/Documentation/virt/kvm/devices/vcpu.rst
->> index a3f20a4ee4b1..41f6d708ff43 100644
->> --- a/Documentation/virt/kvm/devices/vcpu.rst
->> +++ b/Documentation/virt/kvm/devices/vcpu.rst
->> @@ -53,9 +53,9 @@ Returns:
->>   	 =======  ======================================================
->>   	 -EEXIST  Interrupt number already used
->>   	 -ENODEV  PMUv3 not supported or GIC not initialized
->> -	 -ENXIO   PMUv3 not supported, missing VCPU feature, missing
->> -                  hardware PMU, or interrupt number not set (non-GICv5
->> -                  guests, only)
->> +	 -ENXIO   PMUv3 not supported, missing VCPU feature,
->> +		  neither hardware PMU nor FIXED_COUNTERS_ONLY selected,
->> +		  or interrupt number not set (non-GICv5 guests only)
->>   	 -EBUSY   PMUv3 already initialized
->>   	 =======  ======================================================
->>   
->> @@ -64,7 +64,8 @@ virtual GIC implementation, this must be done after initializing the in-kernel
->>   irqchip.
->>   
->>   When the KVM_ARM_VCPU_PMU_V3_STRICT vCPU feature is enabled this must be done
->> -after selecting a hardware PMU.
->> +after selecting a hardware PMU or enabling
->> +KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY.
->>   
->>   1.3 ATTRIBUTE: KVM_ARM_VCPU_PMU_V3_FILTER
->>   -----------------------------------------
->> @@ -78,7 +79,8 @@ after selecting a hardware PMU.
->>   	 -ENODEV  PMUv3 not supported or GIC not initialized
->>   	 -ENXIO   PMUv3 not properly configured or in-kernel irqchip not
->>   	 	  configured as required prior to calling this attribute
->> -	 -EBUSY   PMUv3 already initialized or a VCPU has already run
->> +	 -EBUSY   PMUv3 already initialized, a VCPU has already run or
->> +		  FIXED_COUNTERS_ONLY has already been set
->>   	 -EINVAL  Invalid filter range
->>   	 =======  ======================================================
->>   
->> @@ -123,14 +125,14 @@ after selecting a hardware PMU.
->>   
->>   :Returns:
->>   
->> -	 =======  ====================================================
->> +	 =======  ===========================================================
->>   	 -EBUSY   PMUv3 already initialized, a VCPU has already run or
->> -                  an event filter has already been set
->> +                  an event filter or FIXED_COUNTERS_ONLY has already been set
->>   	 -EFAULT  Error accessing the PMU identifier
->>   	 -ENXIO   PMU not found
->>   	 -ENODEV  PMUv3 not supported or GIC not initialized
->>   	 -ENOMEM  Could not allocate memory
->> -	 =======  ====================================================
->> +	 =======  ===========================================================
->>   
->>   Request that the VCPU uses the specified hardware PMU when creating guest events
->>   for the purpose of PMU emulation. The PMU identifier can be read from the "type"
->> @@ -172,6 +174,30 @@ explicitly selected, or the number of counters is out of range for the
->>   selected PMU. Selecting a new PMU cancels the effect of setting this
->>   attribute.
->>   
->> +1.6 ATTRIBUTE: KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
->> +------------------------------------------------------
->> +
->> +:Parameters: no additional parameter in kvm_device_attr.addr
->> +
->> +:Returns:
->> +
->> +	 =======  ==================================================
->> +	 -EBUSY   PMUv3 already initialized, a VCPU has already run,
->> +		  an event filter has already been set or
->> +		  a hardware PMU has already been specified
->> +	 -ENXIO   Attempted to get before setting
->> +	 -ENODEV  Attempted to set while PMUv3 not supported
->> +	 =======  ==================================================
->> +
->> +If set, KVM emulates PMUv3 without programmable event counters.
->> +
->> +With KVM_ARM_VCPU_PMU_V3_STRICT, enabling this attribute satisfies the
->> +PMU selection requirement for KVM_ARM_VCPU_PMU_V3_INIT.
->> +
->> +When this attribute is enabled, the vCPU can run on any physical CPU
->> +that has a PMU, regardless of the underlying implementation. This
->> +attribute is VM-scoped.
->> +
->>   2. GROUP: KVM_ARM_VCPU_TIMER_CTRL
->>   =================================
->>   
->> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
->> index 65ee09bd1463..7a6a0af14f5a 100644
->> --- a/arch/arm64/include/uapi/asm/kvm.h
->> +++ b/arch/arm64/include/uapi/asm/kvm.h
->> @@ -453,6 +453,7 @@ struct kvm_vgic_v5_ist {
->>   #define   KVM_ARM_VCPU_PMU_V3_FILTER		2
->>   #define   KVM_ARM_VCPU_PMU_V3_SET_PMU		3
->>   #define   KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS	4
->> +#define   KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY	5
->>   #define KVM_ARM_VCPU_TIMER_CTRL		1
->>   #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
->>   #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
->> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
->> index 9c1e2f3e41db..ebb648eabdc6 100644
->> --- a/arch/arm64/kvm/pmu-emul.c
->> +++ b/arch/arm64/kvm/pmu-emul.c
->> @@ -1017,8 +1017,8 @@ int kvm_arm_pmu_v3_enable(struct kvm_vcpu *vcpu)
->>   
->>   static int kvm_arm_pmu_v3_init(struct kvm_vcpu *vcpu)
->>   {
->> -	/* Only possible when using KVM_ARM_VCPU_PMU_V3_STRICT */
->> -	if (!vcpu->kvm->arch.arm_pmu)
->> +	/* Strict PMUv3 requires a hardware PMU or fixed-counters-only mode. */
->> +	if (!vcpu->kvm->arch.arm_pmu && !kvm_pmu_fixed_counters_only(vcpu->kvm))
->>   		return -ENXIO;
->>   
->>   	if (irqchip_in_kernel(vcpu->kvm)) {
->> @@ -1153,8 +1153,8 @@ int kvm_arm_set_default_pmu(struct kvm *kvm)
->>   	 * affines the VMM to a particular cluster of cores.
->>   	 *
->>   	 * In any case, userspace should just do the sane thing and use the UAPI
->> -	 * to select a PMU type directly. But, be wary of the baggage being
->> -	 * carried here.
->> +	 * to select a PMU type directly, or request fixed-counters-only
->> +	 * emulation. But, be wary of the baggage being carried here.
->>   	 */
->>   	struct arm_pmu *arm_pmu = kvm_pmu_probe_armpmu(raw_smp_processor_id());
->>   
->> @@ -1179,11 +1179,13 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
->>   		arm_pmu = entry->arm_pmu;
->>   		if (arm_pmu->pmu.type == pmu_id) {
->>   			if (kvm_vm_has_ran_once(kvm) ||
->> +			    kvm_pmu_fixed_counters_only(kvm) ||
->>   			    (kvm->arch.pmu_filter && kvm->arch.arm_pmu != arm_pmu)) {
->>   				ret = -EBUSY;
->>   				break;
->>   			}
->>   
->> +			set_bit(KVM_ARCH_FLAG_PMU_V3_EXPLICIT, &kvm->arch.flags);
->>   			kvm_arm_set_pmu(kvm, arm_pmu);
->>   			cpumask_copy(kvm->arch.supported_cpus, &arm_pmu->supported_cpus);
->>   
->> @@ -1205,6 +1207,22 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
->>   	return ret;
->>   }
->>   
->> +static int kvm_arm_pmu_v3_set_pmu_fixed_counters_only(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm *kvm = vcpu->kvm;
->> +
->> +	lockdep_assert_held(&kvm->arch.config_lock);
->> +
->> +	if (kvm_vm_has_ran_once(kvm) || kvm->arch.pmu_filter ||
->> +	    test_bit(KVM_ARCH_FLAG_PMU_V3_EXPLICIT, &kvm->arch.flags))
->> +		return -EBUSY;
->> +
->> +	set_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &kvm->arch.flags);
->> +	kvm->arch.nr_pmu_counters = 0;
->> +
->> +	return 0;
->> +}
->> +
-> 
-> I'd rather that FIXED_COUNTERS_ONLY depend on the KVM_ARM_VCPU_PMU_V3_STRICT
-> feature flag. The expectation of that flag is that userspace specifies a
-> backing PMU implementation; your FIXED_COUNTERS_ONLY could just be seen
-> as one such PMU implementation.
+On Mon, Sep 21, 2026 at 09:27:33PM -0700, Josh Poimboeuf wrote:
+> On Thu, Sep 17, 2026 at 05:06:27PM +0100, Lorenzo Stoakes (ARM) wrote:
+> > During a kernel build objtool is used to decode vmlinux.o's instructions
+> > and resolve every jump and call destination.
+> >
+> > This forms a large part of the work objtool does during the build process,
+> > and it is all done in serial.
+> >
+> > Decode these in parallel at a function granularity to speed things up, but
+> > limit this to invocations that pass --link, and only where the there is 8
+> > MiB or more text to justify it.
+> >
+> > In practice this limits this to processing vmlinux.o in the kernel build
+> > and modules are processed as they were before.
+> >
+> > Only the instruction hash is shared between the threads and nothing is ever
+> > removed from it, so an insertion is a compare-and-swap on the bucket head.
+> >
+> > Threading is limited to decoding and the jump pass, so the gain flattens
+> > out at 16 threads and any further threads were found to only add overhead.
+> >
+> > When performing an allmodconfig build, the clang invocation of objtool when
+> > processing vmlinux.o took 5.93s on 1 thread, 4.56s on 8, 4.51s on
+> > 16 and 4.63s on 128.
+> >
+> > Therefore cap the thread count at 16 or the number of CPUs, whichever is
+> > fewer.
+> >
+> > The output of objtool before and after this change was confirmed to be
+> > byte-for-byte identical for x86_64 defconfig and allmodconfig with gcc and
+> > clang, and for a loongarch defconfig, where objtool runs on every object.
+> >
+> > On a 128-thread machine, objtool on the clang allmodconfig vmlinux.o goes
+> > from 5.2s to 4.4s (6.5s to 4.4s together with the previous two patches),
+> > and on defconfig from 1.99s to 1.38s.
+> >
+> > objtool on vmlinux.o is on the serial tail of every build that links
+> > vmlinux, no-op builds are unchanged.
+> >
+> > Whole build, 128-thread Threadripper 9980X, best of N runs:
+> >
+> >                                          before   after     delta
+> >                                          -------------------------------
+> >   x86 defconfig, touch mm/vma.c, gcc        8.2s     7.7s    -0.55s (-7%)
+> >   x86 defconfig, touch mm/vma.c, clang      7.3s     6.9s    -0.44s (-6%)
+> >   x86 defconfig, clean, gcc                28.6s    28.2s    -0.47s (-2%)
+> >   x86 defconfig, clean, clang              29.1s    28.7s    -0.45s (-2%)
+> >   x86 allmodconfig, touch mm/vma.c, gcc    25.7s    23.7s     -2.0s (-8%)
+> >   x86 allmodconfig, touch mm/vma.c, clang  24.1s    22.5s     -1.6s (-7%)
+> >
+> > Assisted-by: LLM
+> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> > ---
+> >  tools/objtool/Makefile  |   2 +-
+> >  tools/objtool/check.c   | 717 ++++++++++++++++++++++++++++++++++++------------
+> >  tools/objtool/objtool.c |  14 +-
+> >  3 files changed, 546 insertions(+), 187 deletions(-)
+>
+> This is an interesting patch, but I'm not really convinced it's worth
+> the pain.
 
-Hi Oliver,
+Obviously I defer to you as the maintainer :)
 
-Agreed. That will make the kernel code simpler by removing the need to 
-track explicit hardware PMU selection separately with 
-KVM_ARCH_FLAG_PMU_V3_EXPLICIT, since STRICT does not select a default 
-PMU. Hopefully, it will also make maintaining the code a bit easier by 
-reducing possible configuration combinations and encourage userspace to 
-use STRICT.
+But I think the numbers are pretty significant, certainly for allmodconfig
+incremental it's a fairly significant chunk of the improvement.
 
-I'll make this change for v2.
+Yes it's a relatively large-ish change but it's sensible and
+straight-forward one and certainly in the direction you'd expect to see
+changes in (parallelise things we can do less work where possible).
 
-Regards,
-Akihiko Odaki
+And note that the work is limited only to those tasks which have
+singificant data to process and only if --link is specified, so the scope
+is relatively small.
+
+We could add a flag for this also potentially?
+
+Obviously if you feel firmly that this isn't something you want I can also
+drop it but I think it is worth having.
+
+One thing to note is that I went through a (bloody painful :) process of
+dropping everything that felt like bad RoI which the LLM came up with, it
+started at something crazy like 30-35 patches :)
+
+(This was prior to reworking code, checking everything, etc. - gawd the
+schloppers have it easy not doing all that! :)
+
+Anyway let me know what makes sense.
+
+>
+> --
+> Josh
+
+--
+Cheers, Lorenzo
