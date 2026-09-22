@@ -1,150 +1,295 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9115478859;
-	Tue, 22 Sep 2026 09:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A8B52D2D6;
+	Tue, 22 Sep 2026 09:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790067976; cv=none; b=jR7aQk2jrCWJa0+lYQY/Zm12J53fxWgf6QM/bXOXMGCPNWcO6F+yhEYIKP0ZVsBwnbKK1UgajBnVyVyVihuMr/hiTabMIIwifPY0LZlkhDmDvBeAK9oLLH9Q3bpSC6XdPTdfu4PqyCWWgREPxvsdP3GZfDWsje6kY5VfBxFnmAE=
+	t=1790068499; cv=none; b=DeANVsjoLYVnLyrrYwYM+TT6NhXJ9Ao/6uBhI2l86xF7xJjEwn9OINDo4fxwOlfRraSePAOlooA6Xs775S+uyYAwJT99z3bHR+TjHVw1UmeMPbPre+xI1YjpP4lvAOWiRn7dpXEWkzY+K0W0aG0Pwvki9CcPpybzKxNDEMbCO/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790067976; c=relaxed/simple;
-	bh=EioVh31ovcIoXKm70lu2jzPBUC1Ew7mE2jaz8o7SFLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABShdFIzavEkLw0cWsL2gDNwdIV3T9SghMAsLr8avWVIcvsP90nCS0hkJdD5I30jdLfv36EjqSHX86PFhxBo4RjyyIw6yD0bM6HH3pD/CM6Ho8b9DUkvKkCMu5R2mHJ1VnuNsPEH+b48vbk11FiUfza6KX7FOlO1au3KwAs/lgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FGdwsJa8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790068499; c=relaxed/simple;
+	bh=eEC+vMrtdNvqtTE2iVXtcrgWXjMqf0Mo+dgesmgS96o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z+g+eQyDPuC/fkOG65P1Y0Qv3End7vDhFUBKtHB4rmxxlNGwv0HMZPEek7kr6BMP3xUeY34FpBT7XB3ZL8yHo134UWIgW4cYgqQ9law5hoUSbJiD1g3hF0R1+sMRBf4WiJUDyjQRxPoBiefbelo6sz/T6XOiGn9H2X2MX/GuLXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=r18MYRiH; arc=none smtp.client-ip=49.212.243.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FGdwsJa8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 069B31F000FF;
-	Tue, 22 Sep 2026 09:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790067974;
-	bh=CL9p8oAwo1crfQMWT3WgokRQnTrKkgMRfNiucR/BKyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=FGdwsJa8/IRiDiXqu5im9UYEKsBW8xKPj8UeyC1zG50ICzIqoaS4sBV5uWR6ySljY
-	 Wz1QwM7ElBxL98PaNnSCTjPhanEq8KXo+IkM7KxVyNgGKUB1r0GFZvHtEhtSofBU5c
-	 4VTIrdtA6vzaIUg8etnNBBES2NLReY7mu8Xdo3wUU039vDzRbQBsxcv06PHQfhmuUd
-	 Gz1UmGbN9kIDO7bpH2UzpB2zlu20T3+GJqJbBP4ibpnSmxA97SOaRunJBW3uINc6Ts
-	 ajL0SgRxi2ONttf0op7dKynauL25bY890dZT7JNNwz06ehY0EDaZ+7z7MlqJ/FhK1i
-	 VoPZDvngT8CnQ==
-Date: Tue, 22 Sep 2026 10:05:59 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Alexey Gladkov <legion@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
-	Alexandre Courbot <acourbot@nvidia.com>, Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, 
-	Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 15/20] objtool: cache relocations, do less work,
- eliminate relocation hash
-Message-ID: <arI0sqCSIJKjbu0C@gremlin>
-References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
- <20260917-build-speedup-v3-15-9ecf4163ff36@kernel.org>
- <arG07kfxJCmnVPY4@jpoimboe>
+	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="r18MYRiH"
+Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
+	(authenticated bits=0)
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 68M9DR7H021356
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Tue, 22 Sep 2026 18:13:27 +0900 (JST)
+	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
+DKIM-Signature: a=rsa-sha256; bh=qWdukw8Lwo5D178NeO++XInMp2aCtmIcsueteb32N9I=;
+        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
+        h=From:Message-ID:To:Subject:Date;
+        s=rs20250326; t=1790068407; v=1;
+        b=r18MYRiHmKiGcRo1ZPIgYuDx5mT4Drk6ugS5wVEuTfrZQkbGInaUGH+XIPh/w69U
+         EaZH2vvrBWmoDHnWpbISp25FtvQA2v0gjQ5yon66dc1n3QEib6WWio7l4+4L7FEv
+         DXKAd/bZ53zq5YqBBzHqZPhMypM/YuZpMZLe69B9n87ojxufmhNquUSW+GtAzRUz
+         DVeO5038q+phoXydYDcRNPXK/KEmg7rhveGLZ0Xx6uV7GcRz/ZsMTG11Vibs+A9D
+         L/owohAYoUw2rEZrcuw9ml3lcEy++eoq9besVkLLO/rmSspTSt1Kt7GqlRbzLvo+
+         C/E2ZOEmuixnNMsre8OiWw==
+Message-ID: <b9c1b996-2c01-4889-8f93-154ceb58c529@rsg.ci.i.u-tokyo.ac.jp>
+Date: Tue, 22 Sep 2026 18:13:26 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <arG07kfxJCmnVPY4@jpoimboe>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 20/21] KVM: arm64: PMU: Introduce FIXED_COUNTERS_ONLY
+To: Oliver Upton <oupton@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu
+ <yuzenghui@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Eiden <seiden@linux.ibm.com>,
+        Andrew Jones <andrew.jones@oss.qualcomm.com>,
+        Fuad Tabba <fuad.tabba@linux.dev>, Mark Rutland <mark.rutland@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Shannon Zhao <shannon.zhao@linaro.org>,
+        Randy Dunlap
+ <rdunlap@infradead.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <20260920-hybrid-v11-0-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
+ <20260920-hybrid-v11-20-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
+ <arIqMO-f8X0gCzjA@kernel.org>
+Content-Language: en-US
+From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+In-Reply-To: <arIqMO-f8X0gCzjA@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 21, 2026 at 09:16:21PM -0700, Josh Poimboeuf wrote:
-> On Thu, Sep 17, 2026 at 05:06:25PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > This relies upon the entries within a section being sorted, which is the
-> > case for all sections supplied to objtool by the link step during the
-> > kernel build.
->
-> This is wrong (or at least actively misleading).  Objtool doesn't *only*
-> run on linked objects.  In some configs it runs on individual .o files.
-> And GCC doesn't sort relocs:
->
->   Relocation section '.rela.text' at offset 0xc0d0 contains 724 entries:
->       Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
->       ...
->   0000000000005c50  0000009000000004 R_X86_64_PLT32         0000000000000000 _raw_spin_lock - 4
->   0000000000005c65  0000009100000004 R_X86_64_PLT32         0000000000000000 _raw_spin_unlock - 4
->   0000000000005c6d  0000019f00000004 R_X86_64_PLT32         0000000000000000 put_files_struct - 4
->   000000000000004d  0000008f00000004 R_X86_64_PLT32         0000000000000000 __x86_return_thunk - 4
->   0000000000000075  0000008f00000004 R_X86_64_PLT32         0000000000000000 __x86_return_thunk - 4
->   00000000000000cd  0000008f00000004 R_X86_64_PLT32         0000000000000000 __x86_return_thunk - 4
->
-> (JMP target relocations are emitted in a second pass, for whatever
-> reason)
->
-> So the hash may actually be needed as a fallback after all.  Or some
-> other scheme.
+On 2026/09/22 16:11, Oliver Upton wrote:
+> On Sun, Sep 20, 2026 at 08:16:01PM +0900, Akihiko Odaki wrote:
+>> Introduce the KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY attribute to
+>> create a "fixed-counters-only" PMU.
+>>
+>> Much like KVM_ARM_VCPU_PMU_V3_IRQ and other read-write attributes, this
+>> attribute provides a getter that facilitates kernel and userspace
+>> debugging/testing.
+>>
+>> Allow strict PMUv3 vCPUs to initialize the PMU after selecting
+>> fixed-counters-only mode, without selecting a VM-wide hardware PMU.
+>>
+>> Assisted-by: Codex:gpt-5.6-sol
+>> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+>> ---
+>>   Documentation/virt/kvm/api.rst          |  8 +++++--
+>>   Documentation/virt/kvm/devices/vcpu.rst | 42 ++++++++++++++++++++++++++-------
+>>   arch/arm64/include/uapi/asm/kvm.h       |  1 +
+>>   arch/arm64/kvm/pmu-emul.c               | 34 ++++++++++++++++++++++----
+>>   tools/arch/arm64/include/uapi/asm/kvm.h |  1 +
+>>   5 files changed, 71 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>> index 1a90598901c5..a6aef405ef87 100644
+>> --- a/Documentation/virt/kvm/api.rst
+>> +++ b/Documentation/virt/kvm/api.rst
+>> @@ -3531,9 +3531,13 @@ Possible features:
+>>   
+>>   	    * Userspace must explicitly select a PMU implementation before
+>>   	      initializing the PMU or configuring a PMU event filter
+>> +	      (KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY also satisfies the
+>> +	      initialization requirement; event filtering remains unavailable
+>> +	      in that mode)
+>>   
+>> -	    * If the PMU implements FEAT_PMUv3p4, PMMIR_EL1.SLOTS provides the
+>> -	      hardware value of the underlying implementation
+>> +	    * If a hardware PMU is selected and implements FEAT_PMUv3p4,
+>> +	      PMMIR_EL1.SLOTS provides its hardware value. In fixed-counters-only
+>> +	      mode, PMMIR_EL1 reads as zero
+>>   
+>>   	    * Writes to PMCR_EL0.N via KVM_SET_ONE_REG are ignored
+>>   
+>> diff --git a/Documentation/virt/kvm/devices/vcpu.rst b/Documentation/virt/kvm/devices/vcpu.rst
+>> index a3f20a4ee4b1..41f6d708ff43 100644
+>> --- a/Documentation/virt/kvm/devices/vcpu.rst
+>> +++ b/Documentation/virt/kvm/devices/vcpu.rst
+>> @@ -53,9 +53,9 @@ Returns:
+>>   	 =======  ======================================================
+>>   	 -EEXIST  Interrupt number already used
+>>   	 -ENODEV  PMUv3 not supported or GIC not initialized
+>> -	 -ENXIO   PMUv3 not supported, missing VCPU feature, missing
+>> -                  hardware PMU, or interrupt number not set (non-GICv5
+>> -                  guests, only)
+>> +	 -ENXIO   PMUv3 not supported, missing VCPU feature,
+>> +		  neither hardware PMU nor FIXED_COUNTERS_ONLY selected,
+>> +		  or interrupt number not set (non-GICv5 guests only)
+>>   	 -EBUSY   PMUv3 already initialized
+>>   	 =======  ======================================================
+>>   
+>> @@ -64,7 +64,8 @@ virtual GIC implementation, this must be done after initializing the in-kernel
+>>   irqchip.
+>>   
+>>   When the KVM_ARM_VCPU_PMU_V3_STRICT vCPU feature is enabled this must be done
+>> -after selecting a hardware PMU.
+>> +after selecting a hardware PMU or enabling
+>> +KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY.
+>>   
+>>   1.3 ATTRIBUTE: KVM_ARM_VCPU_PMU_V3_FILTER
+>>   -----------------------------------------
+>> @@ -78,7 +79,8 @@ after selecting a hardware PMU.
+>>   	 -ENODEV  PMUv3 not supported or GIC not initialized
+>>   	 -ENXIO   PMUv3 not properly configured or in-kernel irqchip not
+>>   	 	  configured as required prior to calling this attribute
+>> -	 -EBUSY   PMUv3 already initialized or a VCPU has already run
+>> +	 -EBUSY   PMUv3 already initialized, a VCPU has already run or
+>> +		  FIXED_COUNTERS_ONLY has already been set
+>>   	 -EINVAL  Invalid filter range
+>>   	 =======  ======================================================
+>>   
+>> @@ -123,14 +125,14 @@ after selecting a hardware PMU.
+>>   
+>>   :Returns:
+>>   
+>> -	 =======  ====================================================
+>> +	 =======  ===========================================================
+>>   	 -EBUSY   PMUv3 already initialized, a VCPU has already run or
+>> -                  an event filter has already been set
+>> +                  an event filter or FIXED_COUNTERS_ONLY has already been set
+>>   	 -EFAULT  Error accessing the PMU identifier
+>>   	 -ENXIO   PMU not found
+>>   	 -ENODEV  PMUv3 not supported or GIC not initialized
+>>   	 -ENOMEM  Could not allocate memory
+>> -	 =======  ====================================================
+>> +	 =======  ===========================================================
+>>   
+>>   Request that the VCPU uses the specified hardware PMU when creating guest events
+>>   for the purpose of PMU emulation. The PMU identifier can be read from the "type"
+>> @@ -172,6 +174,30 @@ explicitly selected, or the number of counters is out of range for the
+>>   selected PMU. Selecting a new PMU cancels the effect of setting this
+>>   attribute.
+>>   
+>> +1.6 ATTRIBUTE: KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY
+>> +------------------------------------------------------
+>> +
+>> +:Parameters: no additional parameter in kvm_device_attr.addr
+>> +
+>> +:Returns:
+>> +
+>> +	 =======  ==================================================
+>> +	 -EBUSY   PMUv3 already initialized, a VCPU has already run,
+>> +		  an event filter has already been set or
+>> +		  a hardware PMU has already been specified
+>> +	 -ENXIO   Attempted to get before setting
+>> +	 -ENODEV  Attempted to set while PMUv3 not supported
+>> +	 =======  ==================================================
+>> +
+>> +If set, KVM emulates PMUv3 without programmable event counters.
+>> +
+>> +With KVM_ARM_VCPU_PMU_V3_STRICT, enabling this attribute satisfies the
+>> +PMU selection requirement for KVM_ARM_VCPU_PMU_V3_INIT.
+>> +
+>> +When this attribute is enabled, the vCPU can run on any physical CPU
+>> +that has a PMU, regardless of the underlying implementation. This
+>> +attribute is VM-scoped.
+>> +
+>>   2. GROUP: KVM_ARM_VCPU_TIMER_CTRL
+>>   =================================
+>>   
+>> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+>> index 65ee09bd1463..7a6a0af14f5a 100644
+>> --- a/arch/arm64/include/uapi/asm/kvm.h
+>> +++ b/arch/arm64/include/uapi/asm/kvm.h
+>> @@ -453,6 +453,7 @@ struct kvm_vgic_v5_ist {
+>>   #define   KVM_ARM_VCPU_PMU_V3_FILTER		2
+>>   #define   KVM_ARM_VCPU_PMU_V3_SET_PMU		3
+>>   #define   KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS	4
+>> +#define   KVM_ARM_VCPU_PMU_V3_FIXED_COUNTERS_ONLY	5
+>>   #define KVM_ARM_VCPU_TIMER_CTRL		1
+>>   #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
+>>   #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
+>> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+>> index 9c1e2f3e41db..ebb648eabdc6 100644
+>> --- a/arch/arm64/kvm/pmu-emul.c
+>> +++ b/arch/arm64/kvm/pmu-emul.c
+>> @@ -1017,8 +1017,8 @@ int kvm_arm_pmu_v3_enable(struct kvm_vcpu *vcpu)
+>>   
+>>   static int kvm_arm_pmu_v3_init(struct kvm_vcpu *vcpu)
+>>   {
+>> -	/* Only possible when using KVM_ARM_VCPU_PMU_V3_STRICT */
+>> -	if (!vcpu->kvm->arch.arm_pmu)
+>> +	/* Strict PMUv3 requires a hardware PMU or fixed-counters-only mode. */
+>> +	if (!vcpu->kvm->arch.arm_pmu && !kvm_pmu_fixed_counters_only(vcpu->kvm))
+>>   		return -ENXIO;
+>>   
+>>   	if (irqchip_in_kernel(vcpu->kvm)) {
+>> @@ -1153,8 +1153,8 @@ int kvm_arm_set_default_pmu(struct kvm *kvm)
+>>   	 * affines the VMM to a particular cluster of cores.
+>>   	 *
+>>   	 * In any case, userspace should just do the sane thing and use the UAPI
+>> -	 * to select a PMU type directly. But, be wary of the baggage being
+>> -	 * carried here.
+>> +	 * to select a PMU type directly, or request fixed-counters-only
+>> +	 * emulation. But, be wary of the baggage being carried here.
+>>   	 */
+>>   	struct arm_pmu *arm_pmu = kvm_pmu_probe_armpmu(raw_smp_processor_id());
+>>   
+>> @@ -1179,11 +1179,13 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
+>>   		arm_pmu = entry->arm_pmu;
+>>   		if (arm_pmu->pmu.type == pmu_id) {
+>>   			if (kvm_vm_has_ran_once(kvm) ||
+>> +			    kvm_pmu_fixed_counters_only(kvm) ||
+>>   			    (kvm->arch.pmu_filter && kvm->arch.arm_pmu != arm_pmu)) {
+>>   				ret = -EBUSY;
+>>   				break;
+>>   			}
+>>   
+>> +			set_bit(KVM_ARCH_FLAG_PMU_V3_EXPLICIT, &kvm->arch.flags);
+>>   			kvm_arm_set_pmu(kvm, arm_pmu);
+>>   			cpumask_copy(kvm->arch.supported_cpus, &arm_pmu->supported_cpus);
+>>   
+>> @@ -1205,6 +1207,22 @@ static int kvm_arm_pmu_v3_set_pmu(struct kvm_vcpu *vcpu, int pmu_id)
+>>   	return ret;
+>>   }
+>>   
+>> +static int kvm_arm_pmu_v3_set_pmu_fixed_counters_only(struct kvm_vcpu *vcpu)
+>> +{
+>> +	struct kvm *kvm = vcpu->kvm;
+>> +
+>> +	lockdep_assert_held(&kvm->arch.config_lock);
+>> +
+>> +	if (kvm_vm_has_ran_once(kvm) || kvm->arch.pmu_filter ||
+>> +	    test_bit(KVM_ARCH_FLAG_PMU_V3_EXPLICIT, &kvm->arch.flags))
+>> +		return -EBUSY;
+>> +
+>> +	set_bit(KVM_ARCH_FLAG_PMU_V3_FIXED_COUNTERS_ONLY, &kvm->arch.flags);
+>> +	kvm->arch.nr_pmu_counters = 0;
+>> +
+>> +	return 0;
+>> +}
+>> +
+> 
+> I'd rather that FIXED_COUNTERS_ONLY depend on the KVM_ARM_VCPU_PMU_V3_STRICT
+> feature flag. The expectation of that flag is that userspace specifies a
+> backing PMU implementation; your FIXED_COUNTERS_ONLY could just be seen
+> as one such PMU implementation.
 
-Ack, that's fair enough.
+Hi Oliver,
 
-Definitely need something that isn't the linear scan as a truly worst case can
-be horrible.
+Agreed. That will make the kernel code simpler by removing the need to 
+track explicit hardware PMU selection separately with 
+KVM_ARCH_FLAG_PMU_V3_EXPLICIT, since STRICT does not select a default 
+PMU. Hopefully, it will also make maintaining the code a bit easier by 
+reducing possible configuration combinations and encourage userspace to 
+use STRICT.
 
-I think the hash can be avoided though, Do the read_relocs() without ordering,
-track whether things are in order, on decode if sorted then just read from
-relocs[], if not can allocate an order[] array and qsort() and build the index
-over that.
+I'll make this change for v2.
 
-So O(n lg n) at that point, but avoids bothering to sort for anything not looked
-up, works similarly for added sections.
-
-So still avoids all of the hash stuff, but efficient when things are actually
-out of order.
-
->
-> Either way it's overkill to have more than a single fallback.  No second
-> fallback for "just in case".  Attempting to search an unhashed section
-> (DWARF) can just be a fatal error instead of the "just in case"
-> WARN+linear fallback thing.
-
-Honestly this is what I instinctively preferred, but objtool is not my realm so
-I worried there'd be some odd outlier thing that it'd somehow break!
-
->
-> > @@ -1168,19 +1286,26 @@ static int read_relocs(struct elf *elf)
-> >  				return -1;
-> >  			}
-> >
-> > -			elf_hash_add(reloc, &reloc->hash, reloc_hash(reloc));
-> >  			set_sym_next_reloc(reloc, sym->relocs);
-> >  			sym->relocs = reloc;
-> >
-> >  			nr_reloc++;
-> >  		}
-> >  		max_reloc = max(max_reloc, nr_reloc);
-> > +
-> > +		/* DWARF relocs are never looked up, so are not worth indexing. */
-> > +		if (is_dwarf_section(rsec->base))
-> > +			continue;
->
-> This DWARF reloc skipping is a standalone improvement, can you split
-> this out to another patch?
-
-Ack will do!
-
->
-> --
-> Josh
-
---
-Cheers, Lorenzo
+Regards,
+Akihiko Odaki
