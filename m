@@ -1,96 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx2-f42.google.com (mail-yx2-f42.google.com [74.125.224.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E94353E313;
-	Tue, 22 Sep 2026 13:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94785551989
+	for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 13:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790082579; cv=none; b=H9mCJO9Bl7E44XAhl8KQQ255pKRuyPZ6hptAoBIjsQBVZH6Cez+8+GQ8I8Ntia2fiHWhkv97xIR9PHjLTY1fTR3AhjV3xUV8mgMzCV1zWgxC7ON2SzOuHTpTyRDUAiChfvylV+cfzm2I3injNp+kVUX1gNLR1Bp9lYcyqPHa+ps=
+	t=1790082808; cv=none; b=dO43bWBFtq8OldThDMf+Cmq4pK/hKUqt3zCwomhHQ3k3QvTWoDDwgrc7kqJ33C/GcX5f/OJXIificz98hD3n9Z9RwB40GWa6z5YzdOZTHgYPGWQPrnos19nUM+4YwcOJS4MSBQ85JgU7b/olgfM8JOqq0nJpcgBHJoJnuu2143E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790082579; c=relaxed/simple;
-	bh=AgYRKeGx6YrxHo5tLOfYUAdJiIfBFhEsQpTA/20bgCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EmCsgFVgTlNW0Lx7HUbYewalUroonFo1ztFGFVBlssabeCxOG+THkLsdIZE3+Y8GchhmM3dXNO5fQihxhQL8LGkoud+YbggHqdrktmPke4L+LNEUgilT48jMdyZvSy0KpzBrbNn8yM1ejhNEmOj3w8h+FzBMeBmEmGxDkAEh7G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MtUom7eB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790082808; c=relaxed/simple;
+	bh=7ScoP72loie+KDTnxQPNwCK69btdw+khKMf6M0k1bJA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gh579xdXfMoforrlCIvgHEiMcIRVweyyIefRCFEgskTMz1/IxONeGcRk7kH43fU61HcOPE+EAEms2hSL1EwGs9bEkbG4gnCZwb9CoXXQvKhuHfAzZcBUfUnr/RiudFRCA70lSygpwLg5Cf2dbuQJacEvBBm6V8uqg/p4x4H/nXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=GBYP3/qi; arc=none smtp.client-ip=74.125.224.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MtUom7eB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 037D31F000FF;
-	Tue, 22 Sep 2026 13:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790082578;
-	bh=AgYRKeGx6YrxHo5tLOfYUAdJiIfBFhEsQpTA/20bgCU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=MtUom7eBTFRpDBmC5PC16C5qIL5Ywu9NH+SE0K9c1jgXsItXNIbsoXLlqLDE9nyLi
-	 fD7w9uOE4hQ6p5C3WrqxT9iCd0Ti9bY1Yp11pFK8cfEu4cnBoF7cmLzyf7YGb6puUL
-	 ACqI1nfguAjSKdnRWZ4sCh5yWXK6a8eUMMQdhCtTvyURYIw0gBPNcz4vv6YhkLixLP
-	 tucoL78ZEps4VrU6pRz+AsOmtwsdrdrlTDmZVX01Ew2uILwbH/zWwnPkDwKfCO6QOS
-	 DpTalaKpOS69IVpTTWiDFgWTYeUf916M1x0zOQ/73Ce0EJamJnVZsGD0S0GuuSE19p
-	 nfnZlw89sqKgA==
-Date: Tue, 22 Sep 2026 14:09:22 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Alexey Gladkov <legion@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, 
-	Gary Guo <gary@garyguo.net>, =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
-	Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, Jonathan Corbet <corbet@lwn.net>, 
-	Randy Dunlap <rdunlap@infradead.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 13/21] modpost: emit module descriptors as assembly
-Message-ID: <arJ9QwpjQq5Z512z@gremlin>
-References: <20260914-build-speedup-v2-0-39817ec5db23@kernel.org>
- <20260914-build-speedup-v2-13-39817ec5db23@kernel.org>
- <95baacfb-d8d9-4d2f-bc89-592df6f6f8e3@suse.com>
- <arEZrFmXeCO4hZpP@gremlin>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="GBYP3/qi"
+Received: by mail-yx2-f42.google.com with SMTP id 00721157ae682-89666ee9b3bso28184437b3.0
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 06:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1790082802; x=1790687602; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5TqBGWJ1w7neWAQnzpWPy+Fm8xr9GVtFmSS2aSnE1bQ=;
+        b=GBYP3/qiGHlVXy433bYLRW9PjhfS7OKvCDGOjVEmh9d8D8QRFCTG85fy55aM1kNQcc
+         4O7+bbcwdWY7dEirIhHHkA/GQVc18SVOFYPn08OapoImcfZBytBY0BpiS9t0AYmXLw3C
+         /eVOSXMeweM7ocPjjOJTB9938GX1m+RJdZmU23aZlnzqxc2YRI90NrWkYKGxiMZd+gmz
+         4TNuuZ7TbB/Mn7+KY0z6pS9qDGD2n/lPg+kGGYc5DIVLQSZcTY4sPncRj6wU/ubL+OrO
+         Jds89XV7bXART5XbrYckJI4rPlETlN7e0LrTvgQS96TEHKrVhTCsab87RLvMinOwDG4V
+         YZvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790082802; x=1790687602;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=5TqBGWJ1w7neWAQnzpWPy+Fm8xr9GVtFmSS2aSnE1bQ=;
+        b=h8JxhJKSKc9zLDnaUPY30TJJm33UNF7uml8OLonEidHWVb8ZV/o9zuwRg+2tHktu7/
+         IQ4VLpxipxOw3splALdbbsXgRdSLONt3uTj3ob2QBVNLYWQ4xe2MetCVAsr2iPyHG8QN
+         75uFHbZuzF2+WTsK6LYNTjxw/H8sRGlcOJ+Kk++RR3tMCK46+8vfOGPBpYXZpGtjRTh3
+         Osd0vkbGKspj/PcPhD1pXmhqbDnbzvFmhzBO6vjXIF31lRyiBbX7spmJ+8NGnfuwHsx5
+         dtHiJHqX7xT/1g3YUj/WwWu6g3KfO+PY+Na/i9I0WsMenN/NDyyQe7Lm1QXmut1Jhbvq
+         jJLA==
+X-Forwarded-Encrypted: i=1; AKwUvBz0uZV3dG4wGlr76heTBBhQKZ1FNbnfLTetpII3MYUb5mXEIEfLjC5i58Rtp/TRQzV8xx9brnTQeNnNFrqC8XU=@vger.kernel.org
+X-Gm-Message-State: AFuF++kueLXeq7NmMjTArQx6kUly0dUHOx08l6oyzG5n/kKX77V4/joI
+	K/JeP7JSZ+FNDS7LlxpOS6Ox44EkqaSwPvKrVyVsPvQCEQKa8NSCEk+mUoOOSvYfJjk=
+X-Gm-Gg: AYBFou2uAkQVJ5NmoikEEllJD2ZIBAsDQqwn1ue3kjsJizpGrfBwdRWid0aLH7kRi7w
+	G3qhT9c7hc8QyIhTvMyKRVNilOMigzAcoSvk3YU7HkwUZ7gmUsKy3GuGzxFkaLLYnxh0EHUdOgw
+	FN7izKb9+LuxgIYQgu4MRz39BCqowhYuXR4+DTTLvtrwZTiyWpLIfVG6xWqhLuBT1/YfiP3DZXp
+	1rHrZbrv5MHFWmi/f456x0LdTCxn/FDqVFHcgEIL6n+aX4yLFoJ9didlWvNvD87nfdT2H7kCRBp
+	XROXRiodiD0Q2NYLzqd3t8f6qT3+YOGRXjnv/IuimVKHkhjd0DSBnOLFytts44DPREd12OlYw1Y
+	0cicbTuBah2A/HnXJUExC2yFZXa/QYZe2ZVNRhvKrssR+EDLPn7kD+QH/blEitEUWBx9eSybeS8
+	ICP/sogiRWe5A5L2eUF/GDOZZneP2Dgu7mzrBWGVWC8jTpM9brnwV87ipnF4E/KgHpLr6wXw7pm
+	IyPjJ9umg==
+X-Received: by 2002:a05:690c:d:b0:81d:472c:17a8 with SMTP id 00721157ae682-8972beadba5mr62389717b3.0.1790082801845;
+        Tue, 22 Sep 2026 06:13:21 -0700 (PDT)
+Received: from [172.22.22.28] ([73.62.185.64])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8a2c25bacffsm5463367b3.24.2026.09.22.06.13.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Sep 2026 06:13:21 -0700 (PDT)
+Message-ID: <1ac16236-284a-4d01-b68a-4b32d5c5287c@riscstar.com>
+Date: Tue, 22 Sep 2026 08:13:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <arEZrFmXeCO4hZpP@gremlin>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] dt-bindings: clock: introduce
+ toshiba,tc9564-clock.yaml
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org,
+ kees@kernel.org, gustavoars@kernel.org, p.zabel@pengutronix.de,
+ daniel@riscstar.com, mohd.anwar@oss.qualcomm.com,
+ lorenzo.bianconi@oss.qualcomm.com, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, mfd@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260918165234.687224-1-elder@riscstar.com>
+ <20260918165234.687224-3-elder@riscstar.com>
+ <20260920-messy-successful-caracara-fcdbcd@quoll>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20260920-messy-successful-caracara-fcdbcd@quoll>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 21, 2026 at 12:57:57PM +0100, Lorenzo Stoakes (ARM) wrote:
-> On Mon, Sep 21, 2026 at 01:25:09PM +0200, Petr Pavlu wrote:
-> > If the <module>.mod.S files are fully self-contained and do not even use
-> > something like KBUILD_MODNAME, would it be possible to name them
-> > <module>.mod.s and skip the C preprocessor as well?
->
-> Ack will do for v4!
->
+On 9/20/26 1:21 PM, Krzysztof Kozlowski wrote:
+>> diff --git a/include/dt-bindings/clock/toshiba,tc9564.h b/include/dt-bindings/clock/toshiba,tc9564.h
+>> new file mode 100644
+>> index 0000000000000..75732fddd3025
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/toshiba,tc9564.h
+>> @@ -0,0 +1,54 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+>> +
+>> +/*
+>> + * Copyright (C) 2026 by RISCstar Solutions Corporation.  All rights reserved.
+>> + */
+>> +
+>> +#ifndef __ClOCK_TOSHIBA_TC9564_H__
+>> +#define __ClOCK_TOSHIBA_TC9564_H__
+>> +
+>> +/* Clock IDs */
+>> +
+>> +#define CLOCK_MCU		0
+>> +#define CLOCK_INTC		1
+>> +/* #define CLOCK_PCIE		2 */
+>> +/* #define CLOCK_I2C		3 */
+> Drop both, and SRAM is number 2. Or enable and implement them.
 
-Unfortunately this broke because the build passes flags that are only
-meaningful to the preprocessor (esp. on an LLVM=1 build) and
--Qunused-arguments was removed from kbuild in commit 8d9acfce3332 ("kbuild:
-Stop using '-Qunused-arguments' with clang") purposefully.
+I forgot to respond to this.  I think you are confused.
 
-And some flags are needed and others not so keeping track of which is which
-just for this is asking for things to be fragile/break, esp. on the rando
-arches.
+SRAM is BAR number 2.  This is defining clock IDs.
 
-The win here isn't very much overall so I think I will revert this change
-for v4.
+And the reason these are commented out is that, while they
+do exist, we explicitly do not want anyone to disable either
+of these clocks because PCIe uses them.  This clock (and
+reset) control is accessed via PCIe.
 
-(All your other requests have already been applied for v4 :)
+I do accept that someone might want me to simply omit
+these commented-out definitions, and I'd be fine with
+that.
 
---
-Cheers, Lorenzo
+But your suggestion wasn't sensible so I wanted to clear
+that up before deleting these.
+
+					-Alex
