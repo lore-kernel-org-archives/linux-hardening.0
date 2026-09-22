@@ -1,64 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C6E4E7816;
-	Tue, 22 Sep 2026 09:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370844D2EE0;
+	Tue, 22 Sep 2026 09:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790070243; cv=none; b=Y+LXhBg9aQZ2jMGOME4FCy4wLcQXRor/OAopbrPRf7bGn8gdbYPn0BkVAOJ7CKyoFHbgt74w2Slt4CKQREmRL9RnwQDVIg9ArkekAX4yQS+Yuuamc+dcPOVUJxohPx18Lmb7smwjY5nNUALnz3xKgW9fKYkxfk4CYz2G1G11PXk=
+	t=1790071125; cv=none; b=XlA5os/ZCHXMF6/8NMGt3I4LFCu6zAz1i3P1fr8wy3XlsgwjS6vhS0oJUA51TE9T4/1k2VdjipWLMt3CBlYjJADUUfsbBTqYhF5mtq/LXvY65MEiOTMHG7OhcB3DazEeNcz2bOzfPXspynglV3P40luWgZMDI72krE8NLkDnktI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790070243; c=relaxed/simple;
-	bh=crbT9+5MObVWuFXEa9N+TkXuUnbKPdLY1NFH+JJ4wGI=;
+	s=arc-20240116; t=1790071125; c=relaxed/simple;
+	bh=HK+yU08m52K64K0cBVvpLuj+tM/+NPiar/AAhtTvtv0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FiJaH39KMXbxO1e7IJvZVdzY8PxMqnKXNbNMwI5eaZx0Ts1DXCm22aWkzoIc0E6Rz174mwmoesdsNtgqXfXmE4dQzPzGaTTjRh2yvhFRO0ofY1dHX5O/BEd5cw/RXmjrlJ6mn1XPVIyvadJZ+RcoTNYxXDsGkeSM6Y6Df332nl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jy3U+Jxc; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=PdGN4yM9kQScQhi4HhGl2EE3v5DFOg87AXQ8JHZPY7PsJxFy6cwxe8NS/NrcllDXlP+XWbUK/+dK5qB7GAkPqPbKuK8b+LrvnbAc0+3q1IQlJdf6L01ysW4t5aEQ0MQz2mJ6o7z1iwegCkFOTSvGq1FZFbGN2YlB5Ol/H8XT33w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LiZEolQL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YTCIb160; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Dse2xfk9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5ej2gdRk; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jy3U+Jxc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113741F0089A;
-	Tue, 22 Sep 2026 09:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790070240;
-	bh=YTT+dkVu7tWPKjS3DFi060r/rlKRC0HzmitVIec+iIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jy3U+JxcId7zmfYkIr1r7u3noV5oRtTv3+3FbbQxFWzLtL+STTIwAbXmdb0Ene9HI
-	 1+a7y9W33iqDoUkRTyaFkdEdhyxU4mtChStxqOWiYEMJ8Jqg7m0YmoABhfoSe9DgVF
-	 pi4hN43C7Rs7zg5iDpGuqFUPaDmHfpRsFefjZ/gma6zPCY0usIXBeI1wBK+qR6PYJH
-	 iesQMJwGVINhl3cSO+pgnPecINN1L34B75FLiqqDn/ulF582FizRK6GnDfJw2+2hPD
-	 rsneXl39GgR4xuDRTGTeKge+B4Zs7cN7OXc3v+uw4jHCi4Yw/YppZ87MJ321hS8QYh
-	 xNfZ0IyAbqvAw==
-Date: Tue, 22 Sep 2026 10:43:45 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Alexey Gladkov <legion@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
-	Alexandre Courbot <acourbot@nvidia.com>, Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, 
-	Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 17/20] objtool: decode instructions and resolve branch
- targets in parallel
-Message-ID: <arJFPXN5SsrkUyJY@gremlin>
-References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
- <20260917-build-speedup-v3-17-9ecf4163ff36@kernel.org>
- <arICcrXVFLVzO-Jx@jpoimboe>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LiZEolQL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YTCIb160";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Dse2xfk9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5ej2gdRk"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E23F41F8B9;
+	Tue, 22 Sep 2026 09:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1790071118; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4URFwrM0sI0j5Ml44Xiz56jlMa8XLSjTXuYmxFnBgOw=;
+	b=LiZEolQLtrOcnCpKNhtTGFVrWufQc0pBzKwAnq8xgsyHtt7FOTAXPaGMzM2B/JNZSCQTkP
+	5qfTeqjvY5gtkYNBndsHUXbuVY2JO236TnFlQWs55eJ8IEw1eYvcqTq1xjKJBCZ4UX+YTA
+	sJuczxH3Rovjnb6cpJGa0ZwWvfJOJxU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1790071118;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4URFwrM0sI0j5Ml44Xiz56jlMa8XLSjTXuYmxFnBgOw=;
+	b=YTCIb160AgoMyuaZDpwuiYTv1e3GB6uMNI3lb6iPSY56aTD87HB360Q467sPor9jhfSTSP
+	XAq/xJqeWkRW0WAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1790071113; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4URFwrM0sI0j5Ml44Xiz56jlMa8XLSjTXuYmxFnBgOw=;
+	b=Dse2xfk9rYhsNzWipCoS1JcIReryX19OOYSEO/y6U6h2/Th6M27X1kd3BZhUtd0bGx7baP
+	UP9EmCy/KL78BGJ5wf2ePGumoYg4w5Paa0AiWxasn1OWy8L39PUyEjwIptrg2VB5Vlwdh/
+	xL4WP2Fe5+ktc2rbQdg+CmKsKBELHGo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1790071113;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4URFwrM0sI0j5Ml44Xiz56jlMa8XLSjTXuYmxFnBgOw=;
+	b=5ej2gdRkyDcZftLUT6SaJNLl6a+lu/u772HFMDHv4wdhUy35JgSfKA/2YzV4rMORb7JPRE
+	NuaXw1RHmy24dMCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0640E136D9;
+	Tue, 22 Sep 2026 09:58:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id knt0I0dRsmrVBwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Tue, 22 Sep 2026 09:58:31 +0000
+Date: Tue, 22 Sep 2026 10:58:25 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org, 
+	Kuniyuki Iwashima <kuniyu@google.com>, linux-hardening@vger.kernel.org, 
+	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Jason Xing <kerneljasonxing@gmail.com>, =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Jiayuan Chen <jiayuan.chen@linux.dev>, Willem de Bruijn <willemb@google.com>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] mm/slab: Mark the kmem_buckets_create() context
+ as a Context: section
+Message-ID: <arJRHFs-r8hkTLhx@pedro-suse.tail5790ac.ts.net>
+References: <20260921075811.too.775-kees@kernel.org>
+ <20260921075820.1718334-1-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,99 +94,44 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <arICcrXVFLVzO-Jx@jpoimboe>
+In-Reply-To: <20260921075820.1718334-1-kees@kernel.org>
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	FREEMAIL_CC(0.00)[kernel.org,linux-foundation.org,linux.dev,gentwo.org,google.com,kvack.org,vger.kernel.org,davemloft.net,redhat.com,gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,pedro-suse.tail5790ac.ts.net:mid]
+X-Spam-Flag: NO
 
-On Mon, Sep 21, 2026 at 09:27:33PM -0700, Josh Poimboeuf wrote:
-> On Thu, Sep 17, 2026 at 05:06:27PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > During a kernel build objtool is used to decode vmlinux.o's instructions
-> > and resolve every jump and call destination.
-> >
-> > This forms a large part of the work objtool does during the build process,
-> > and it is all done in serial.
-> >
-> > Decode these in parallel at a function granularity to speed things up, but
-> > limit this to invocations that pass --link, and only where the there is 8
-> > MiB or more text to justify it.
-> >
-> > In practice this limits this to processing vmlinux.o in the kernel build
-> > and modules are processed as they were before.
-> >
-> > Only the instruction hash is shared between the threads and nothing is ever
-> > removed from it, so an insertion is a compare-and-swap on the bucket head.
-> >
-> > Threading is limited to decoding and the jump pass, so the gain flattens
-> > out at 16 threads and any further threads were found to only add overhead.
-> >
-> > When performing an allmodconfig build, the clang invocation of objtool when
-> > processing vmlinux.o took 5.93s on 1 thread, 4.56s on 8, 4.51s on
-> > 16 and 4.63s on 128.
-> >
-> > Therefore cap the thread count at 16 or the number of CPUs, whichever is
-> > fewer.
-> >
-> > The output of objtool before and after this change was confirmed to be
-> > byte-for-byte identical for x86_64 defconfig and allmodconfig with gcc and
-> > clang, and for a loongarch defconfig, where objtool runs on every object.
-> >
-> > On a 128-thread machine, objtool on the clang allmodconfig vmlinux.o goes
-> > from 5.2s to 4.4s (6.5s to 4.4s together with the previous two patches),
-> > and on defconfig from 1.99s to 1.38s.
-> >
-> > objtool on vmlinux.o is on the serial tail of every build that links
-> > vmlinux, no-op builds are unchanged.
-> >
-> > Whole build, 128-thread Threadripper 9980X, best of N runs:
-> >
-> >                                          before   after     delta
-> >                                          -------------------------------
-> >   x86 defconfig, touch mm/vma.c, gcc        8.2s     7.7s    -0.55s (-7%)
-> >   x86 defconfig, touch mm/vma.c, clang      7.3s     6.9s    -0.44s (-6%)
-> >   x86 defconfig, clean, gcc                28.6s    28.2s    -0.47s (-2%)
-> >   x86 defconfig, clean, clang              29.1s    28.7s    -0.45s (-2%)
-> >   x86 allmodconfig, touch mm/vma.c, gcc    25.7s    23.7s     -2.0s (-8%)
-> >   x86 allmodconfig, touch mm/vma.c, clang  24.1s    22.5s     -1.6s (-7%)
-> >
-> > Assisted-by: LLM
-> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > ---
-> >  tools/objtool/Makefile  |   2 +-
-> >  tools/objtool/check.c   | 717 ++++++++++++++++++++++++++++++++++++------------
-> >  tools/objtool/objtool.c |  14 +-
-> >  3 files changed, 546 insertions(+), 187 deletions(-)
->
-> This is an interesting patch, but I'm not really convinced it's worth
-> the pain.
+On Mon, Sep 21, 2026 at 12:58:12AM -0700, Kees Cook wrote:
+> kmem_buckets_create() had the same sentence about calling context as
+> kmem_cache_create(), but lacked the "Context:" prefix, so kernel-doc
+> rendered in the body instead of as a "context" section.
+> 
+> Give it the missing prefix. Additionally fix the "a interrupt" typo
+> __kmem_cache_create_args() had.
+> 
+> Fixes: b32801d1255be ("mm/slab: Introduce kmem_buckets_create() and family")
+> Assisted-by: LLM
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Obviously I defer to you as the maintainer :)
+Acked-by: Pedro Falcato <pfalcato@suse.de> 
 
-But I think the numbers are pretty significant, certainly for allmodconfig
-incremental it's a fairly significant chunk of the improvement.
-
-Yes it's a relatively large-ish change but it's sensible and
-straight-forward one and certainly in the direction you'd expect to see
-changes in (parallelise things we can do less work where possible).
-
-And note that the work is limited only to those tasks which have
-singificant data to process and only if --link is specified, so the scope
-is relatively small.
-
-We could add a flag for this also potentially?
-
-Obviously if you feel firmly that this isn't something you want I can also
-drop it but I think it is worth having.
-
-One thing to note is that I went through a (bloody painful :) process of
-dropping everything that felt like bad RoI which the LLM came up with, it
-started at something crazy like 30-35 patches :)
-
-(This was prior to reworking code, checking everything, etc. - gawd the
-schloppers have it easy not doing all that! :)
-
-Anyway let me know what makes sense.
-
->
-> --
-> Josh
-
---
-Cheers, Lorenzo
+-- 
+Pedro
