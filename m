@@ -1,132 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4B43F329E;
-	Tue, 22 Sep 2026 04:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1C32FF672;
+	Tue, 22 Sep 2026 06:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790051258; cv=none; b=llPc7/PCQRUv+b/Cw2H+XiJjC9KHO0C+pxq/0pOYQJP5DcsscTPtrVjNqMopuZ287MXEGK+3sNaCyUS9fGp5KFou00RnxW7OMdzwb1QxqMJ9o6BszRYIv3+SIYS67VkuZ6u/HVXFnm+RDnN5lodqbV195Mjq6X6eIodKooNp8NY=
+	t=1790059401; cv=none; b=uXMocVp/Cs9OqwayN5jADKtOGZnbFl37KhmasEUrCM5w+81n3a3EoDogGAtUq5P+vLHNw1cFqdVGoO03p45RcnrFRF54rYVj18lpWtZj+iipunyQQPvRI0uPVB18AMuK1IphzDhqr9BcDpMOH8pYhTPxqFtYZ6pCn+1qDHvmfdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790051258; c=relaxed/simple;
-	bh=HhudhUK5yzn8hhCT6NM2I9TPL8fH9kTRoXbU8Ec24+U=;
+	s=arc-20240116; t=1790059401; c=relaxed/simple;
+	bh=/JTvVwAa8wp2p8UY5azd/n4TXS07TMF1QBglfodrLWA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rpw9TmcJ5KtZb53ACH1Vo5Qhb+K0H95UCsgrIrZryMfwIqSYgHm7j3Uag20cBwJXa/l81/b1L3O5pkWb8uCD0dT8TYiSOqUa47n+bI7qrM8mBmrj8nAr2kvDK29wQJ0KnBNyI+PB1Xnbox85u5pjkV6fWXhwE+0oa5st6BAvFGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXA4r0PH; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=RezzVq71dMSk9cyenjhdD3fMNT7nn56CRxdvtg+yx/J1HJFEtaJz1kE0Lws6odVKEikjppT5GShFpB7pVxFpxR9XTcvHcL9P+way8MSNJQSSwBZ66idr8PGSpVER1YDckL3r2utM3M65yVsuo5BTho5nR+Uwrw9aj6DByntlW9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MdX9Ya7V; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXA4r0PH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF0961F000FF;
-	Tue, 22 Sep 2026 04:27:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MdX9Ya7V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 537431F000FF;
+	Tue, 22 Sep 2026 06:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790051256;
-	bh=dG15CqrnbAsOXWaUpYt6BDYQSM8cnW2c3KA5Prsjavo=;
+	s=k20260515; t=1790059399;
+	bh=ZNn+S45uuHSM1MevwqL8L/OLU6cXbDvK1jrtFFoJQRo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=MXA4r0PH3HgT3iDgDRuDNJmWk/ZUsYEcSUJgSYAhpCjtRahhxqjcteIyBCizLYuR0
-	 bBcv4s83G+WwaXS5KJIdHDIYvBEBAngTAH1AaI0rrEoQcEKpcNfu3zSGwNVgguzjMh
-	 1InYjz1c3D/m00ZJZGR8MhjhkI+oOV8ibVQ8HUEQ8RzM2H7mHeFtHzZsVntWowVopS
-	 2ZQ4NnVHqPr8zHY3I3ZDAhrTkSgT+St3c/kIcL9PMtgwMk5+lHZuOMccwaQxqBZhQj
-	 U2y7anUp4MeMk91bn7KDUqq6BkJW/ggpJujiZoPQkT92dO4tVzXyTjeUJjh6lxoukO
-	 9/QiAbsZRdy+w==
-Date: Mon, 21 Sep 2026 21:27:33 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Alexey Gladkov <legion@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@kernel.org>, 
-	Alexandre Courbot <acourbot@nvidia.com>, Onur =?utf-8?B?w5Z6a2Fu?= <work@onurozkan.dev>, 
-	Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 17/20] objtool: decode instructions and resolve branch
- targets in parallel
-Message-ID: <arICcrXVFLVzO-Jx@jpoimboe>
-References: <20260917-build-speedup-v3-0-9ecf4163ff36@kernel.org>
- <20260917-build-speedup-v3-17-9ecf4163ff36@kernel.org>
+	b=MdX9Ya7V1NXVARco19qfnbcVEbNm56zISiZkNG3b9akDoeSs0/EYgTd7QCnlnaoa6
+	 j2PV5pmtakJaak1Co1gKLHuRiQlcvuwsQVoRCQbgks6IvTtVgn5Ypxr4Iu5PrPl4IA
+	 Yf1e8Snkoq3cpLt6pTMAUx7tdUM6zilk6a/UUJ2ClgIao2M5/Wb7me08izuBgK/1Ar
+	 kwpLRIdauWOmK9foRBd5P1ZbFjUQcVNcqytK16X+JIl4Pf6Xkg75w+lZFanHIgdaFK
+	 +kL6xFN42h9oNj9HCgbS9x9NuXH6tolh7CmaQg6Vd8tWkKZB02d1OZutpNm+t8BUfG
+	 ITmBh1WGyx0Kw==
+Date: Mon, 21 Sep 2026 23:43:18 -0700
+From: Oliver Upton <oupton@kernel.org>
+To: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Steffen Eiden <seiden@linux.ibm.com>,
+	Andrew Jones <andrew.jones@oss.qualcomm.com>,
+	Fuad Tabba <fuad.tabba@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shannon Zhao <shannon.zhao@linaro.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	devel@daynix.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v11 08/21] Revert "KVM: arm64: PMU: Reload when resetting"
+Message-ID: <arIjhlqqzt4AKTOr@kernel.org>
+References: <20260920-hybrid-v11-0-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
+ <20260920-hybrid-v11-8-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260917-build-speedup-v3-17-9ecf4163ff36@kernel.org>
+In-Reply-To: <20260920-hybrid-v11-8-03618771b0e1@rsg.ci.i.u-tokyo.ac.jp>
 
-On Thu, Sep 17, 2026 at 05:06:27PM +0100, Lorenzo Stoakes (ARM) wrote:
-> During a kernel build objtool is used to decode vmlinux.o's instructions
-> and resolve every jump and call destination.
+Hi Akihiko,
+
+On Sun, Sep 20, 2026 at 08:15:49PM +0900, Akihiko Odaki wrote:
+> This reverts commit fe53538069bb4f625bc8734103ba044a83138fea.
 > 
-> This forms a large part of the work objtool does during the build process,
-> and it is all done in serial.
-> 
-> Decode these in parallel at a function granularity to speed things up, but
-> limit this to invocations that pass --link, and only where the there is 8
-> MiB or more text to justify it.
-> 
-> In practice this limits this to processing vmlinux.o in the kernel build
-> and modules are processed as they were before.
-> 
-> Only the instruction hash is shared between the threads and nothing is ever
-> removed from it, so an insertion is a compare-and-swap on the bucket head.
-> 
-> Threading is limited to decoding and the jump pass, so the gain flattens
-> out at 16 threads and any further threads were found to only add overhead.
-> 
-> When performing an allmodconfig build, the clang invocation of objtool when
-> processing vmlinux.o took 5.93s on 1 thread, 4.56s on 8, 4.51s on
-> 16 and 4.63s on 128.
-> 
-> Therefore cap the thread count at 16 or the number of CPUs, whichever is
-> fewer.
-> 
-> The output of objtool before and after this change was confirmed to be
-> byte-for-byte identical for x86_64 defconfig and allmodconfig with gcc and
-> clang, and for a loongarch defconfig, where objtool runs on every object.
-> 
-> On a 128-thread machine, objtool on the clang allmodconfig vmlinux.o goes
-> from 5.2s to 4.4s (6.5s to 4.4s together with the previous two patches),
-> and on defconfig from 1.99s to 1.38s.
-> 
-> objtool on vmlinux.o is on the serial tail of every build that links
-> vmlinux, no-op builds are unchanged.
-> 
-> Whole build, 128-thread Threadripper 9980X, best of N runs:
-> 
->                                          before   after     delta
->                                          -------------------------------
->   x86 defconfig, touch mm/vma.c, gcc        8.2s     7.7s    -0.55s (-7%)
->   x86 defconfig, touch mm/vma.c, clang      7.3s     6.9s    -0.44s (-6%)
->   x86 defconfig, clean, gcc                28.6s    28.2s    -0.47s (-2%)
->   x86 defconfig, clean, clang              29.1s    28.7s    -0.45s (-2%)
->   x86 allmodconfig, touch mm/vma.c, gcc    25.7s    23.7s     -2.0s (-8%)
->   x86 allmodconfig, touch mm/vma.c, clang  24.1s    22.5s     -1.6s (-7%)
-> 
-> Assisted-by: LLM
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Restore PMU event teardown before system-register reset so existing
+> perf events cannot retain configuration from the previous run. All
+> counters are disabled by the reset PMCR_EL0 and MDCR_EL2 values, so
+> reset does not need to request a PMU reload.
+
+Sorry, I'm not following the intent here. KVM_REQ_RELOAD_PMU should
+already be discarding + recomputing perf events based on the state of
+the vPMU. What's the problem?
+
+Thanks,
+Oliver
+
+> Assisted-by: Codex:gpt-6-astra
+> Signed-off-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 > ---
->  tools/objtool/Makefile  |   2 +-
->  tools/objtool/check.c   | 717 ++++++++++++++++++++++++++++++++++++------------
->  tools/objtool/objtool.c |  14 +-
->  3 files changed, 546 insertions(+), 187 deletions(-)
-
-This is an interesting patch, but I'm not really convinced it's worth
-the pain.
-
--- 
-Josh
+>  arch/arm64/kvm/pmu-emul.c | 14 ++++++++++++++
+>  arch/arm64/kvm/reset.c    |  3 +++
+>  arch/arm64/kvm/sys_regs.c |  3 ---
+>  include/kvm/arm_pmu.h     |  2 ++
+>  4 files changed, 19 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+> index a5ccb6ae44d5..14fcdbdb4587 100644
+> --- a/arch/arm64/kvm/pmu-emul.c
+> +++ b/arch/arm64/kvm/pmu-emul.c
+> @@ -258,6 +258,20 @@ void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu)
+>  		pmu->pmc[i].idx = i;
+>  }
+>  
+> +/**
+> + * kvm_pmu_vcpu_reset - reset pmu state for cpu
+> + * @vcpu: The vcpu pointer
+> + *
+> + */
+> +void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu)
+> +{
+> +	unsigned long mask = kvm_pmu_implemented_counter_mask(vcpu);
+> +	int i;
+> +
+> +	for_each_set_bit(i, &mask, 32)
+> +		kvm_pmu_stop_counter(kvm_vcpu_idx_to_pmc(vcpu, i));
+> +}
+> +
+>  /**
+>   * kvm_pmu_vcpu_destroy - free perf event of PMU for cpu
+>   * @vcpu: The vcpu pointer
+> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+> index 10eb7249aa9e..adcb460a5287 100644
+> --- a/arch/arm64/kvm/reset.c
+> +++ b/arch/arm64/kvm/reset.c
+> @@ -185,6 +185,9 @@ void kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+>  	vcpu->arch.reset_state.reset = false;
+>  	spin_unlock(&vcpu->arch.mp_state_lock);
+>  
+> +	/* Reset PMU outside of the non-preemptible section */
+> +	kvm_pmu_vcpu_reset(vcpu);
+> +
+>  	preempt_disable();
+>  	loaded = (vcpu->cpu != -1);
+>  	if (loaded)
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 1481dd5c99a8..75624725adf1 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -5388,9 +5388,6 @@ void kvm_reset_sys_regs(struct kvm_vcpu *vcpu)
+>  	}
+>  
+>  	set_bit(KVM_ARCH_FLAG_ID_REGS_INITIALIZED, &kvm->arch.flags);
+> -
+> -	if (kvm_vcpu_has_pmu(vcpu))
+> -		kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
+>  }
+>  
+>  /**
+> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
+> index 6b4a118d17ca..51f5e4ca3326 100644
+> --- a/include/kvm/arm_pmu.h
+> +++ b/include/kvm/arm_pmu.h
+> @@ -48,6 +48,7 @@ u64 kvm_pmu_implemented_counter_mask(struct kvm_vcpu *vcpu);
+>  u64 kvm_pmu_accessible_counter_mask(struct kvm_vcpu *vcpu);
+>  u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, bool pmceid1);
+>  void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu);
+> +void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu);
+>  void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu);
+>  void kvm_pmu_reprogram_counter_mask(struct kvm_vcpu *vcpu, u64 val);
+>  void kvm_pmu_flush_hwstate(struct kvm_vcpu *vcpu);
+> @@ -125,6 +126,7 @@ static inline u64 kvm_pmu_accessible_counter_mask(struct kvm_vcpu *vcpu)
+>  	return 0;
+>  }
+>  static inline void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu) {}
+> +static inline void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu) {}
+>  static inline void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu) {}
+>  static inline void kvm_pmu_reprogram_counter_mask(struct kvm_vcpu *vcpu, u64 val) {}
+>  static inline void kvm_pmu_flush_hwstate(struct kvm_vcpu *vcpu) {}
+> 
+> -- 
+> 2.55.0
+> 
