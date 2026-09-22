@@ -1,54 +1,54 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4375C23BCED
-	for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 22:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866D9404BC8
+	for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 22:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790115007; cv=none; b=e+BuhYvz/DvP2M1c7UPoFm4TzduHwaZolK9QlyUW8L8lQtV5wrD+HHZWKOv8NEgZyJANMqvJzlmtp5BXw+1J8779DQs5raqvmaLTpg5N2G2VE8zrsjznP4NoML7jKeYlpamq23m2pZauaJwueUPHfn715IzCZpWHVhVIbA53jQI=
+	t=1790116554; cv=none; b=H9PpQLrfORCUyi+r9VPV4AfDXOTEjkxM46OqiD/q+4rcMvG0ijDAbCVOysZSVtuVlp+u32MUuuDxcd2WcCR1upo2bve0MgqZKc7B2KLqPG98EmMV5kJq6Xe+4NdBpZJw9HU6BIXTvcbLMZqioKndK5le1W11KnG2PsPCCSNhrjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790115007; c=relaxed/simple;
-	bh=ez6IjVz1RI/L1fCWYZYoXXXQ0XI9Qbd928iUK8xMI1Q=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=l3w52M9+7TEuQsxlsRnKw7UVi+otsfyquw/FmYvr1UFfFCt2UwMgbEAiM0N7IucF5FMwRmIeP2urbkG4SLjaJDL04f7K1uNI24T01DkvE5Pf0L/qHG/ipayeRF0VNhXxDEKZkX+p044KwTGhRq2s5NhxOE7Ode9RmSNkf2Gx9rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L13afg3S; arc=none smtp.client-ip=209.85.216.72
+	s=arc-20240116; t=1790116554; c=relaxed/simple;
+	bh=ftsPX/fDZ63mdRI0VYix5XzvXzGHoQOQqLssy3pY5d8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YRcyxbXB50eiD/BqwPJo5LQGXz0CVsC8UB2iIzVDsvW/Q8Gu6MLWF0vDRQ9nx2/nhMb5rLrhllMft7vA30tG6k1zFiBy8eXZIOln14XyNwjLSaZktJanxhMcq/9wfMyiLxU90TviqreBEK/xeIcuDsooRd75GhnE/1MbAH4S154=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=do96jpRk; arc=none smtp.client-ip=209.85.214.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L13afg3S"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-39e25a5f6e8so384042a91.0
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 15:09:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="do96jpRk"
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2dd667770efso15292555ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 15:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790114994; x=1790719794; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790116542; x=1790721342; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:mime-version:date:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KStyCSuaz3JtzFB2fu+E5KRM99Ww/CsJLkB3+qyDWQQ=;
-        b=L13afg3SJ8OAsLJU4yUbZ2cLRTNRhLsm4SF7IAlw5qEvtKqwJiL8Tx5MengxIA/wTK
-         GjyqlaZ6bpVkTnTdoGVTLKsenaazIt+Y746Pk+Id0kEfYlz+LTPzVjgMyajLusIgc9uZ
-         r6LB30kexihn4vyRir/7JL4RH2X8sA0OocD6cDYgy0GYYuzXDRvbEiacTYKfn87iXkzq
-         nLouAVmJq/zdiAo95Njw41J2szM2kucQu23BhSIgbZ+M/BNaVIGc2SvSujgO4Ber+MM0
-         tRZWjMNmmTHy2NvUMfo3q5GEGdydUCbGIAyFxu6ojdu3/oy8ZGtbP8O++SsWbCIIrWNG
-         pC4g==
+        bh=8GRxp3EYFeG4RHE5TRXwDLoJws/VabvUKmMB/dI5TDY=;
+        b=do96jpRkvtAMnkEyu4hJx178R6tNsgIIH6XYZDOuqoupyoyoC3Rc0xchEI8yA23l1g
+         K8+rv8OyCwHk+IpwrGQcDbwMRsGC5+36Xxmo0dCWsnCPSRXjyaEOXmWAJ9Apo/T31D2r
+         uGA93azynXbec/I5GqbL2u8D+leJRWBDMloP5rNksUNRgkzeLX/8QtCQyVTNZU/r3pzU
+         Iu4kHXhq6ZUftr6EiFJOqHqD/Ta9GU6wEaszOP6YJpUF3Jqa46ljsaLpk16vXWhXYWpm
+         7rLQOB3Lh19oFmAgJwMZQFIyqYG6ciFs93yqW43iEb+4RchWCs4si4bFh0tksh7k5Bu4
+         VO1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790114994; x=1790719794;
+        d=1e100.net; s=20260707; t=1790116542; x=1790721342;
         h=content-type:cc:to:from:subject:message-id:mime-version:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=KStyCSuaz3JtzFB2fu+E5KRM99Ww/CsJLkB3+qyDWQQ=;
-        b=BD8hZZmauSpzif5SmVZslvsd2xVkGesxfmDfVQP/7zg6kPzn1ujIbPekVmPvOX7tmy
-         KEMPIwbmI0rFULzVK6RX7liMfokMMxqRSOfOEivSNQl+GW/AjHZzCwLZO0fAGF1WioO9
-         ryDzhAfd93oeTFS5UcrzO7zEmthm4Wwv8vx36YiJZJA/x1ug3Ttkgw4vdOY3fD+rdLlX
-         LavIAuqP6IvmUabd1H2Gl7szGKtzGhsxu8lu1BSrUT52petmnEUzOBBnCoRYDNEYjEmo
-         zd+GVLHykLMLkpG13gakhQ5oOs4geRoBxjFmOBTj0CNR+Uvh52Iv9I1z5fDZ+ad+y97U
-         7I/g==
-X-Forwarded-Encrypted: i=1; AKwUvByt/vJ75cSDV30nAbidEYgfDQM6IhssjWIYAiwMIm8GUp9TIYHW0jyAbvOMem1lNIYHhXhL4Pi+dkwfXLmBshY=@vger.kernel.org
-X-Gm-Message-State: AFuF++kpUUH5U3X2YkjkEjOOeTHmv3cDm/EMqYPZn/fucas93YCQHbMZ
-	iHLxU1S5/KYVhUZof6Eh8oENP0kFF1TGZHvDqlNG7FvTfUbJ5t7/KoDk40IXxl58c6dT+nnwxmv
-	I
-X-Received: from pgbcn9.prod.google.com ([2002:a05:6a02:a89:b0:cbe:e432:1cc2])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d8e:b0:38e:fea2:df53
- with SMTP id 98e67ed59e1d1-3a07e5adc58mr635171a91.4.1790114994291; Tue, 22
- Sep 2026 15:09:54 -0700 (PDT)
-Date: Tue, 22 Sep 2026 22:09:50 +0000
+        bh=8GRxp3EYFeG4RHE5TRXwDLoJws/VabvUKmMB/dI5TDY=;
+        b=v8NhdMzXyk7WE8zVaTRHW9AJvbkAl+ujdQtkr+hV5YAAeVr3oQqju32v3/PY+OJP8z
+         MteuBN+yz3N72O8+RoUN7tlAlQSlsY0v54mzY/r8NbUhBT4fzSISJdGTWgCvtx/ZPvid
+         L0TypWiuKjmcEjvRIuHIz3UzKnXvpO1BhklAdNQHg7u1dH8/Ljw4y7Vt1wmqGzgRi191
+         iq+FnBrSYlFSfB8+Gw2F22OX5dOHligdzSNWmFGVtVJswldgPrjHd1VlN08MvKipSZCf
+         upQspfKDKaq/tslflRF/433MsiC6aS5AuKyvbv2a0JO24oBm0VGE6AGiX5ACg612WQpZ
+         svnw==
+X-Forwarded-Encrypted: i=1; AKwUvBwTOve9F7GPkoYA/NmBkJI9Ciwg8Oxu2Jfs1LOQS/qZPiZZ9DDy7i2KozoE3rEFP8+2v0NSMpavPBpIfaUgG5E=@vger.kernel.org
+X-Gm-Message-State: AFuF++mVTzPLevadyLHh2gr47qRY6geO2PFZQ4WhE0atVNcqpr87h4Dv
+	k7pezUov08D/XaXZiO+JcVzFz1buWP2euWQsa7ISYUTQGXDrR5yM4xqy04WVSUaI2sOhm95JzIs
+	H
+X-Received: from ploc2.prod.google.com ([2002:a17:902:8482:b0:2dd:53b8:ff02])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2ec3:b0:2df:69d4:86bf
+ with SMTP id d9443c01a7336-2df69d4884cmr5081645ad.11.1790116541866; Tue, 22
+ Sep 2026 15:35:41 -0700 (PDT)
+Date: Tue, 22 Sep 2026 22:35:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,55 +56,50 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260922220950.2267270-1-morbo@google.com>
-Subject: [PATCH] iio: adc: qcom-adc5-gen3: Annotate struct adc5_device_data
- with __counted_by_ptr
+Message-ID: <20260922223538.2287676-1-morbo@google.com>
+Subject: [PATCH] bus: fsl-mc: Annotate fsl_mc_io.portal_virt_addr with __counted_by_ptr
 From: Bill Wendling <morbo@google.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, "=?UTF-8?q?Nuno=20S=C3=A1?=" <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linuxppc-dev@lists.ozlabs.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev, 
 	Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-Under compiler-supported bounds checking (via KASAN or UBSAN), pointer
-fields inside structures can be annotated with the '__counted_by_ptr'
-attribute to specify which field in the same structure holds the element
-count. This enables the compiler to perform runtime bounds checking on
-the pointer.
+The GCC and Clang compilers provide the __counted_by_ptr attribute,
+which is used by KASAN and compiler bounds-checking to detect
+out-of-bounds accesses to pointer fields.
 
-Annotate the "base" pointer field in "struct adc5_device_data" with the
-"__counted_by_ptr" attribute pointing to "num_sdams". The number of
-SDAMs is determined from the device property and assigned to "num_sdams"
-which is then used to initialize "base" via "devm_kcalloc".
+In "struct fsl_mc_io", the "portal_virt_addr" pointer points to the MC
+command portal virtual address. The size of this allocated portal in
+bytes is tracked by the "portal_size" field within the same structure.
 
-By ensuring "num_sdams" is set to the correct element count prior to
-the "base" pointer allocation, and since the size of "base" is never
-reallocated or changed, this annotation is safe and will not cause any
-false-positive runtime bounds check panics or KASAN issues.
+Annotate the "portal_virt_addr" pointer field with
+"__counted_by_ptr(portal_size)" to enable compiler bounds-checking and
+harden against potential out-of-bounds accesses.
 
 Cc: codemender-patching+linux@google.com
 Assisted-by: LLM
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
- include/linux/iio/adc/qcom-adc5-gen3-common.h | 2 +-
+ include/linux/fsl/mc.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/iio/adc/qcom-adc5-gen3-common.h b/include/linux/iio/adc/qcom-adc5-gen3-common.h
-index 39cbfcbdb101..b3e2c2f50e8f 100644
---- a/include/linux/iio/adc/qcom-adc5-gen3-common.h
-+++ b/include/linux/iio/adc/qcom-adc5-gen3-common.h
-@@ -137,7 +137,7 @@ struct adc5_sdam_data {
-  */
- struct adc5_device_data {
- 	struct regmap *regmap;
--	struct adc5_sdam_data *base;
-+	struct adc5_sdam_data *base __counted_by_ptr(num_sdams);
- 	int num_sdams;
- };
- 
+diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+index c25f0f7e6dd4..0b2c0eb9b605 100644
+--- a/include/linux/fsl/mc.h
++++ b/include/linux/fsl/mc.h
+@@ -336,7 +336,7 @@ struct fsl_mc_io {
+ 	u16 flags;
+ 	u32 portal_size;
+ 	phys_addr_t portal_phys_addr;
+-	void __iomem *portal_virt_addr;
++	void __iomem *portal_virt_addr __counted_by_ptr(portal_size);
+ 	struct fsl_mc_device *dpmcp_dev;
+ 	union {
+ 		/*
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
