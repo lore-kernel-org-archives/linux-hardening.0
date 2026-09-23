@@ -1,179 +1,199 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013036.outbound.protection.outlook.com [40.107.159.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B991C44F548
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 09:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790155633; cv=none; b=C4K1WmTQKcNckw0pI2o4/ENrc8xRuKsqnCuyBQu3PqfBOTC0akhoYRzpcwpU6owq6bpagw/9WdhKkASDUAsypBYpPCOqFGs7i2O+xHGdLqG16QL0fZlhj2XvZKXreZ+bo6BjFMX8pcYx+I+zErWFVGiofgChDHN1X6/9fZGPxVQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790155633; c=relaxed/simple;
-	bh=itrao9DgTvkjqRsZAiGnludjXbS6j4/W6eR3cUjyeK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e0vbyfVYcPBWdud2ioSMZwmVX2d1HhDq5BRUSDItP+rswjK/mPykpYRINp6kvwlNnJc9T3cZAvXQhchIz+z1aSxxcZ14zL3ywgSfTVx5HbcdqY9GP53xyhfd67/0WrGkl4EhQcJNXYEs5oNcR5QqsoNiujWp6VsxpojBVpk70xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PPCR+cuS; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2286B4718E1;
+	Wed, 23 Sep 2026 09:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.36
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790157076; cv=fail; b=Y9Oo1MQ9frZChGfW9t/vbIyOqqjRBICc3KLWmq+RFgz9PO6ZaaKykjcEfV1gH9e/QeMJjeIpGEvD3RgcX7T4A8sfhFaacSybmWLPlK48fVHfa/oAbp3p/JlzES2XCxNIyUZMzndwdlxVllNbXgcm9Qi9S1CdCYSHFcSL5AOy1PA=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790157076; c=relaxed/simple;
+	bh=yZ2AXOlb6os1ZX935Q0G59RLLtBI4nMBS0Ej6BiYzwY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TdsT1N2V6e9plD8HoRTxz3DGVK/M61LrSNXGcfLxXZetCP1n6CGhxLRlo8Q4SjHL7b35vJT0GBSN4NWzMdzu+xI/vLyT2OMoB3EglzhTTwFByoBUZZFb4mbwzmyYhoMIjy/wNETM4CIMboWkPibTCCUq5/7QWLsMPT6kfnl6zPk=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=FQgazqZx; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=FQgazqZx; arc=fail smtp.client-ip=40.107.159.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PPCR+cuS"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68N8Zacj2908867;
-	Wed, 23 Sep 2026 09:25:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=GPrlOXqEGMawbxZqVTygdaeUstJSN1
-	Mm6PS72qOco/8=; b=PPCR+cuSzybld/ZPi+JmTDRWXpw0AtFF9Tspx9ueJWCabE
-	YtRmfuvRXNGSEkXvqJ9VGPBprrxE8hzThT93VoeixTPxATdqP7pZzjm8+2YNHWaT
-	HZnWtGHE5CMS/vEndCOrf5kKT+iyGl0Qrho6KjcONXrcdHbKghB6djmzdPKHmlYR
-	8n5gghhDj9AqhXrxFyXZgm1Pj9dc5ZxujqwtGpcME6SlVcLhE8luzxLFcLou1Nhm
-	plOT1TJiADFXWN2hBgKy+uKbqDJmmdEgpDR+lgPK588S9yNVsjavMwz3dVwqAX+S
-	c3RZWFGERWZ//MjbPzudzcjAOniRzPKVYx1WS1Jg==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gskg2jb0a-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 23 Sep 2026 09:25:13 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68N8bcbe008006;
-	Wed, 23 Sep 2026 09:25:12 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gvbe1r534-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Sep 2026 09:25:12 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68N9PAwv13304136
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Sep 2026 09:25:10 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 712CA20040;
-	Wed, 23 Sep 2026 09:25:10 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 75B6F2004B;
-	Wed, 23 Sep 2026 09:25:09 +0000 (GMT)
-Received: from li-3a824ecc-34fe-11b2-a85c-eae455c7d911.ibm.com (unknown [9.87.155.4])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 23 Sep 2026 09:25:09 +0000 (GMT)
-Date: Wed, 23 Sep 2026 11:25:07 +0200
-From: Juergen Christ <jchrist@linux.ibm.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Andrea Pinski <andrew.pinski@oss.qualcomm.com>,
-        Jeffrey Law <jefflaw@qti.qualcomm.com>,
-        Joseph Myers <josmyers@redhat.com>, Richard Biener <rguenther@suse.de>,
-        Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
-        Richard Earnshaw <richard.earnshaw@arm.com>,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        Marcus Shawcroft <marcus.shawcroft@arm.com>,
-        Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-        Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Waterman <andrew@sifive.com>,
-        Jim Wilson <jim.wilson.gcc@gmail.com>,
-        Dan Li <ashimida.1990@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ramon de C Valle <rcvalle@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Bill Wendling <morbo@google.com>,
-        Osterlund Sebastian <sebastian.osterlund@intel.com>,
-        Constable Scott D <scott.d.constable@intel.com>,
-        gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v15 1/7] kcfi: Introduce KCFI typeinfo mangling API
-Message-ID: <283975a8-ccf6-4a3a-9a9b-4bc450657bbf-jchrist@linux.ibm.com>
-References: <20260825235748.i.456-kees@kernel.org>
- <20260825235759.3379064-1-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="FQgazqZx";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="FQgazqZx"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=JqlRY4ZZQb3OFJGas+XME5X1N0yJWLOlMO++e2QSVz4MhZyzSx2MpNHQ45Va9Ok6J6s5Y5GMVZQsrXcixFddv1AfE/P6WQ/Bt5rOsLu81QxEa1l71mEUDxuWdNyosfXILTaG/YQIH2OA1z7I8oEPvHlscLumQOE/x9kvRb3UOdBnnEUuGwlWQcCphdwvfx5NZ8PHe7mzSukIsh5IZmOBcaQAjtVDQ4rQK7ljHCJfC8r0SfrwBvC+TWKcGGLcze8dDDhmPKQjfMhjIHDPGAug5NwKTvQowgjbo4D36Dp/SOTDDNxtnHlzc+V8NA3YiVRbfM9PFFJlSH4OUIOds755nA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9KaNTlX9FU+epr6GjR21phgJRbalGPA8peFjdpZ3/LY=;
+ b=B842NvSXalMweRktFE7NztA8goLjCmJ6TSsdIG1UsWtGXPkqdlKXF7msxrriBzdo4jXHyQxGpyZw/yUAdYANvLWMmkdDAtDQ4I8ZX+wZ7rPWUxJDTau70a8a5jmgd2waopfJ3cI49Uqp2luCV+4S8V32sjIG4AXaw8xNed46BJhEcgsLD5f/erfACRRIr1s9P1v6F7uEIHdKU8JMXPiVdkFd6lhp7nr115rJF/TfcwaU2fJL/MtlqXR0DbtGzmkojHULcM7eWRW+HtLuAiJ7tHn4/xcLPOQPVDqszPUD2mIsYT49Zp1ucjUvKOdSCYCK9hT0RZRDQnmTGXTErKyV6w==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=kernel.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9KaNTlX9FU+epr6GjR21phgJRbalGPA8peFjdpZ3/LY=;
+ b=FQgazqZx3zW2DaBSNtOpoicwVVfGzR8IZCnrmqilgCigTO9EIEI7EvPZKaa7/R4ZEeGSaEfmdRztiE49ETiF05EXhgfW/hY4XOM5w4AHlG7H7K+v9fnbhlewQu/BKTt579Wl49PgyvG1iv80lvK6fbNR7ysMoDCNZ+qTGjd1zCQ=
+Received: from DU2P251CA0027.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:230::33)
+ by GV2PR08MB9422.eurprd08.prod.outlook.com (2603:10a6:150:dd::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.14; Wed, 23 Sep
+ 2026 09:51:03 +0000
+Received: from DB3PEPF0000885D.eurprd02.prod.outlook.com
+ (2603:10a6:10:230:cafe::6c) by DU2P251CA0027.outlook.office365.com
+ (2603:10a6:10:230::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.451.14 via Frontend Transport; Wed,
+ 23 Sep 2026 09:51:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DB3PEPF0000885D.mail.protection.outlook.com (10.167.242.8) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.451.8
+ via Frontend Transport; Wed, 23 Sep 2026 09:51:02 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MVlY+jPUn7iSdsmO9FtZZW+2AtWWKB69CM5a50lj7h/SFAKtXUkMVRf+Ud03B+VzIikWjyQ5bJzI9l8VxEvJos3dl4srkdJJUuhhHBgMxwMvLso49fx+/H34ziTw2gmPpb8QFQ/oTGl5/Ykjmo/Ybo6TnsPecr1lUKxQNRJGSqMK9FAW1QobzI0o2s4erE/h/dfeimqTgfHE7DHq80hbcFsZVcpCXWtiWOp2Kj6pd+Gf9Ht5d9vjRtPC0+fYitJ8DBAOkm6NgoMMf8grmfkhTWVK/LzbgqCt5dMN3DdcUEVG5vp8YgFTsGU3n7B1PedBErzTQERQv6hB/Ckywnn4Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9KaNTlX9FU+epr6GjR21phgJRbalGPA8peFjdpZ3/LY=;
+ b=nlp0vW7pCCpFvSBLvO+KAeeCM0j08+GrANX2FdYWVDqTfgAfHmTS6Sxqe3GW6AYeZqLToVBwU9rz2TSoKwhs7EkFpi7ukR1uFvX2DX6E3vZtS/5MQ8hsh99x4JVuoPpL5oVO0ZV/z79K6NKiVPPBMQbkRYyZCriT86ZBZ+8Pbf0ebPi101WB4deo8jb9v0utweJtECm3gcn0n1OU5wTcuI6SFd8LwDHFyI8FfrBnw3GXE8SYzo7HG2wVD++UDd98HpgH4AN2tvoY8Wa+coL0ONeAMZTff3Nlz4SO5iHs3iPIugZe6u8jmgrtSt7Tx8R7CaMvSBgLRHSC4es2q7BM1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9KaNTlX9FU+epr6GjR21phgJRbalGPA8peFjdpZ3/LY=;
+ b=FQgazqZx3zW2DaBSNtOpoicwVVfGzR8IZCnrmqilgCigTO9EIEI7EvPZKaa7/R4ZEeGSaEfmdRztiE49ETiF05EXhgfW/hY4XOM5w4AHlG7H7K+v9fnbhlewQu/BKTt579Wl49PgyvG1iv80lvK6fbNR7ysMoDCNZ+qTGjd1zCQ=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from PAVPR08MB9674.eurprd08.prod.outlook.com (2603:10a6:102:31d::14)
+ by DUYPR08MB12014.eurprd08.prod.outlook.com (2603:10a6:10:65f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.14; Wed, 23 Sep
+ 2026 09:50:30 +0000
+Received: from PAVPR08MB9674.eurprd08.prod.outlook.com
+ ([fe80::6f25:3681:7c97:ea2e]) by PAVPR08MB9674.eurprd08.prod.outlook.com
+ ([fe80::6f25:3681:7c97:ea2e%5]) with mapi id 15.21.0451.012; Wed, 23 Sep 2026
+ 09:50:30 +0000
+Message-ID: <8bfd64e2-5201-4eef-a32a-b118b2804fce@arm.com>
+Date: Wed, 23 Sep 2026 10:50:29 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight: cti: Add const to con_groups allocation type
+To: Kees Cook <kees@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Kees Cook <kees+treewide@kernel.org>, James Clark
+ <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, nd@arm.com
+References: <20260917211428.i.947-kees@kernel.org>
+Content-Language: en-US
+From: Mike Leach <mike.leach@arm.com>
+In-Reply-To: <20260917211428.i.947-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0141.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c4::11) To PAVPR08MB9674.eurprd08.prod.outlook.com
+ (2603:10a6:102:31d::14)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260825235759.3379064-1-kees@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: sjw34ZS27MbVOgUoJnr1-MDF2bF5GQ-k
-X-Authority-Analysis: v=2.4 cv=I43w19gg c=1 sm=1 tr=0 ts=6ab39afa cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=-9YWfmC76tWNdudIEtIA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTIzMDAzNSBTYWx0ZWRfX5QjuNSZfDxts
- PqYnMavlweFdu1lYijlC1NwvntmOBDNsMNMmpharj7oljh/b4c5QrrXiavahu1t42QYyP68YDO+
- u8Jn57zASw80orn9tDJYdIH4BLsz7lBima401SlpsFMg8nX4LemXnQGjs5anaCivvuz/45CuP8g
- SU8z+nIrac9O3jaJYczLgb+KiNoB6Q3su/bqH9jA6NI7zhV5cLj6VZ/eeC2/HLb1Q8A0z+2YK8c
- XTX/Bv+4yze3cdgHQe825NpP8Ke4sTMpY83SgH/CWGoTvJNtxi0OCqfM2L7jE526zN0JHEjvFzr
- h+W+o9y/dUsHSNJacHP57x7kAx/92Xm+3A56/t9UeIITOXW7UXZ2m4sucMYS1+Y0OR68clJKPht
- CMI+Pclho2KQpDdygHlHGSK3uFrWIM8i6MSamFF/sGxr1lUFI7PknEqzuj1YenecQeh/VodLNcG
- WP2drO+wLP/BVuLuM3A==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTIzMDAzNSBTYWx0ZWRfX7Iq3/nvofmhA
- n2+DjkBTQjHvpzo8HiPeqzq5vm1PLfTP0juSFexfNp/Bm0JUWBM7w6DN/dxYfOW8Ot8LCsIUHn+
- L1tgZP5LsNbKFnBD99MC4sQEZ5+oqf8=
-X-Proofpoint-GUID: USOnRB00xxNXf0YM9SgNGMfTpy18ya4J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-23_04,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1011 adultscore=0 suspectscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609230035
+X-MS-TrafficTypeDiagnostic:
+	PAVPR08MB9674:EE_|DUYPR08MB12014:EE_|DB3PEPF0000885D:EE_|GV2PR08MB9422:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1d45d8ca-dba6-4160-4552-08df19582e07
+X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr,ExtAddr
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|10067099003|56012099006|11063799006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info-Original:
+ fKwySk98TGr++ZEZAD7xJasd0I6et93gblOIds8gWthr1P8EA3c66x6I9yJrKID40LGJ8HS00N4DebyxjyyM79zXsn9EqSI0SO/sG1xHKOKMdjlLYykfy+KFrpcc5uiACDtCwVV7g3PJf9U5LeWIUyZikAzj2xzNgOvZjoWcXlBM/bjrGwCGY6bg3vUVGuP8vyvBeLh+ueXE9JoZzQy+QKZDYfkdb19S2RToWwgzL5wN1pVZz2rk+WbeWqLCWHe+yhGGZrJ/tnz8bXMFbxw5PirokHVLijlIw9n6Ctmjs/pcnGr37+giH/48HrmyOp2AlpWcYf42rOBz7J1tW6ZKNArgd6CyXSCebHdZM15bpvoBaeGNBOAvg8PNDqlHNdadoW4/YLIhXoa/KXslPzbNk075Ef0uxdj2yTjJi+T9Y2N/AwePvqkEe4Dm3MN9uptnCZn8hJ2mMOOKD274u7kvZfsorvEJ61nKBAgEG43k3uZp+rNKOX0vpinsycO3kRui+XSDrLBQI/yog+26uDyHX+xdu7IBYVlDC4vqcLu6YUkM9AbTl8Nj6Ujs+IyqNgxAYBa9b/6HH9OsgdS6ZduzqCSLjGnOODeer/jxUmHvughtw6FZC/idK3Xdf4At5BEW02+DoTG48a7EwhFALnK8K3CT6/AZbeRM/NQBlddhr4g=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAVPR08MB9674.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(10067099003)(56012099006)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-Exchange-RoutingPolicyChecked:
+ eNZwg/5mbHXtMhJMVhVqnhicYhgmiRzsD+KcSnoTrQCl+VdmuMSEAGbeR1bIN1eO0a95kAmdEHFpvsH+J5u+7bNzqx9fvwpyaX3ZyYVdaRzOVJzcGD+bEu2RCOsEIAAV3AVN1SqtckG6G0jM8QVe3GbmteXPq7Id0Y9ECX8l+3TqEXuCqc255Fub0Xb06gUTLS3tYm4q7XQRSM5gOK5JsczGdm2HwEH/S+moMK2CSes3ZrX00YbcyTZ1qRG6ggvGDTngzTI8OAwDn7VyG4B96TEpvAu0UiIVYEv6xQkIaIfzSTNWo+0Z5jEf6PuX2EEUeT9CcOiza7c0frgVCuT2ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUYPR08MB12014
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DB3PEPF0000885D.eurprd02.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	13c0a9e1-dc60-4a70-fc96-08df19581a40
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|14060799003|23010399003|36860700016|82310400026|35042699022|376014|10067099003|56012099006|11063799006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	nN1Vb7eSNSJRvefpnYOscglDCKz2abyKw9LYfbuzeRtXriLiD3MrHCuoO+wcuhuJQIrD6EKqwc9UiLp1C1318ms5xH1xAiZfLPx01nbeYPev/gA9fj5gzXquuNO23zeCsxBMntVZpyuHptaghU3it4UsTi6y2zb3uvebj24W4KIuBOsTn82vL2P+oORR99boHyx5F3Q/dtKYxzkZxjEBpMBD7Y6hqspm6a2C4DGnLpRWrmvH1qtIubgimdbZnZx3cgRWgydZrN0ArDyrS61I81/UR4OVnZn5V4qjTY3WUwpotturzfpX/Yc1gafHTDZrgBrmoiMHdxDCl0IoP/Azjp11L++ku94wiCScSm8ZkTNw1gKiBYOg2sJ4fbCFgP0j3+LRAo+FS+SrTNgrCE7WN23LxrP/kePybHQyBvJZQYwzWNUk3XgC/qb0Jlo0XDK/AwGiu0EFd/CgTZWoGfriXA4kRh0KDpkgGQta6Al4gVN5aAzo4DHxei43uvfebAsvM1fAAK3Cfuw3YvdksiK8XJ2WRyoPqq5OcJevfBtsGClcK3P5lur1yKlOYoYID4RePt/gTDKWBBajD92sujcSg4eXAL4BKqK8pgNZUwzdDXuOqXNgaAiW4Ohl2+GhnfEmVl3BXWur9/yMQ1NpNrOMfcPh7r9eL84kTT+6Mlt8yJQ85OOkH43o4bn1Sb7W5pMLhZbhZY35cFY66faf/tdgYQ==
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(14060799003)(23010399003)(36860700016)(82310400026)(35042699022)(376014)(10067099003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	Lj8STNOhwdEsdnDt0V1QAxLSTshjdImdkA0OYb+A92Cem2Y+G38uVMChobu1GylodTay1VbNF609PK7sQu6nQYE5ka1iAAj/NwJXu+SUcyIHZRoafcJ+dRi62LntMGBqEB/gEumg3S0xWh/c6EFFkDXi0gKSN5ln0iIgJSKCLqj1rjo58awiR5RC24T4AEFxjCWbOMbU7QjDACl49JeWmaFI2Qpf641xf6SBPo/0rfL7yNF9onFHMnlxFMUeNLNrge32E13Jaicz6CtMKJCjXJFVNXs0wUVoRydt5r00tR4Kr9PDMuwzrz3kEia02upDWIppiiwYWzmeUUywPRmBqVrhquCjsw7kDjFYsmDiOeeutKrkE3yLiNxmUSabP+tODmlG6wANm3xcEdN9YhHaygmDPjCw1jvVsyMF3lrBXtKKl1h8dI+wBCg0P9xgavUi
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2026 09:51:02.8854
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d45d8ca-dba6-4160-4552-08df19582e07
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB3PEPF0000885D.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB9422
 
-Hi,
-
-thanks for your work on this.  I will implement the s390x specific
-part once this series is accepted.
-
-> diff --git a/gcc/kcfi-typeinfo.cc b/gcc/kcfi-typeinfo.cc
-> new file mode 100644
-> index 000000000000..b6723fac48da
-> --- /dev/null
-> +++ b/gcc/kcfi-typeinfo.cc
+Reviewed-by: Mike Leach <mike.leach@arm.com>
 
 
-> +/* Test mangling of basic builtin types.  */
-> +
-> +static void
-> +test_typeinfo_basic_types ()
-> +{
-> +  ASSERT_STREQ ("v", kcfi_test_mangle (void_type_node).c_str ());
-> +  ASSERT_STREQ ("c", kcfi_test_mangle (char_type_node).c_str ());
-> +  ASSERT_STREQ ("a", kcfi_test_mangle (signed_char_type_node).c_str ());
-> +  ASSERT_STREQ ("h", kcfi_test_mangle (unsigned_char_type_node).c_str ());
-> +  ASSERT_STREQ ("s", kcfi_test_mangle (short_integer_type_node).c_str ());
-> +  ASSERT_STREQ ("t", kcfi_test_mangle (short_unsigned_type_node).c_str ());
-> +  ASSERT_STREQ ("i", kcfi_test_mangle (integer_type_node).c_str ());
-> +  ASSERT_STREQ ("j", kcfi_test_mangle (unsigned_type_node).c_str ());
-> +  ASSERT_STREQ ("l", kcfi_test_mangle (long_integer_type_node).c_str ());
-> +  ASSERT_STREQ ("m", kcfi_test_mangle (long_unsigned_type_node).c_str ());
-> +  ASSERT_STREQ ("x", kcfi_test_mangle (long_long_integer_type_node).c_str ());
-> +  ASSERT_STREQ ("y", kcfi_test_mangle (long_long_unsigned_type_node).c_str ());
-> +  ASSERT_STREQ ("f", kcfi_test_mangle (float_type_node).c_str ());
-> +  ASSERT_STREQ ("d", kcfi_test_mangle (double_type_node).c_str ());
-> +  ASSERT_STREQ ("e", kcfi_test_mangle (long_double_type_node).c_str ());
-
-I looked at this on s390x.  We actually change the mangling of long
-double if we are on a target where long double is 128bit IEEE to a
-"g".  This causes this self-test to fail.  I suggest to add this patch
-on top of our patch to fix this:
-
-diff --git a/gcc/kcfi-typeinfo.cc b/gcc/kcfi-typeinfo.cc
-index b6723fac48da..fab06249ae16 100644
---- a/gcc/kcfi-typeinfo.cc
-+++ b/gcc/kcfi-typeinfo.cc
-@@ -659,7 +659,14 @@ test_typeinfo_basic_types ()
-   ASSERT_STREQ ("y", kcfi_test_mangle (long_long_unsigned_type_node).c_str ());
-   ASSERT_STREQ ("f", kcfi_test_mangle (float_type_node).c_str ());
-   ASSERT_STREQ ("d", kcfi_test_mangle (double_type_node).c_str ());
-+#if defined (__s390x__)
-+  if (TARGET_LONG_DOUBLE_128)
-+    ASSERT_STREQ ("g", kcfi_test_mangle (long_double_type_node).c_str ());
-+  else
-+    ASSERT_STREQ ("e", kcfi_test_mangle (long_double_type_node).c_str ());
-+#else
-   ASSERT_STREQ ("e", kcfi_test_mangle (long_double_type_node).c_str ());
-+#endif
- }
- 
- /* Test mangling of pointer types.  */
+On 9/17/26 22:14, Kees Cook wrote:
+> From: Kees Cook <kees+treewide@kernel.org>
+> 
+> In preparation for making the devm_kmalloc family of allocators type
+> aware, we need to make sure that the returned type from the allocation
+> matches the type of the variable being assigned. (Before, the allocator
+> would always return "void *", which can be implicitly cast to any
+> pointer type.)
+> 
+> The assigned type is "const struct attribute_group **", but the
+> converted allocation type would be "struct attribute_group **", which is
+> the same type without the const qualifier. As there is no general way to
+> safely add const qualifiers, take the size from the assignment target
+> instead. No change in allocation size results.
+> 
+> Build tested ARCH=arm64 allmodconfig with GCC aarch64-linux-gnu 16.1.0:
+> drivers/hwtracing/coresight/coresight-cti-sysfs.o
+> 
+> Assisted-by: LLM coccinelle
+> Signed-off-by: Kees Cook <kees+treewide@kernel.org>
+> ---
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mike Leach <mike.leach@arm.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Leo Yan <leo.yan@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: <coresight@lists.linaro.org>
+> Cc: <linux-arm-kernel@lists.infradead.org>
+> ---
+>   drivers/hwtracing/coresight/coresight-cti-sysfs.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> index 3fe2c916d228..2ed5d8eb1dda 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> @@ -1132,7 +1132,7 @@ static int cti_create_cons_groups(struct device *dev, struct cti_device *ctidev)
+>   	/* nr groups = dynamic + static + NULL terminator */
+>   	nr_groups = ctidev->nr_trig_con + CORESIGHT_CTI_STATIC_GROUPS_MAX;
+>   	ctidev->con_groups = devm_kcalloc(dev, nr_groups,
+> -					  sizeof(struct attribute_group *),
+> +					  sizeof(*ctidev->con_groups),
+>   					  GFP_KERNEL);
+>   	if (!ctidev->con_groups)
+>   		return -ENOMEM;
 
