@@ -1,54 +1,54 @@
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B12F36D9E9
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 04:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFEA37B3FE
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 04:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790137710; cv=none; b=vCR8bK3RDNaPv/9lJxNYAgvxhCB5ap3/OZXTKUZk2BlA1CrVzoaXr6tE5OK7E73/geSiIb13Y/42ltKjsmUrbCuczRa1fsznfIm0lgvsTbKudcW/e6wSoPTJIYyBzircMV8gJxe913+LQy5cLPYXiHLUaZ9ReP4OVnOySbciLdE=
+	t=1790139158; cv=none; b=Y/YVzGU2jLUwD+JShPyCmiJRTH4w17ciaFpZrchDQblyVEKAa8poDU6S2XrXG1RyzUuG08XQ7Fbp5Ga44qStQ6EADXV+xXGSDwk5ftjennVoNOES1gopzkckIqJJeJPgicy+y104rbD7kKiamMXcEKq8bvmp8iPTNyCP2HAI6eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790137710; c=relaxed/simple;
-	bh=IqV1Sr0fSrDMt47qWNQ+9YAMvUWzYdiSXARmQmR1aMs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gJ1UmCA+Jjc/oUqD80/v1MNBGdi6JNPOWOLnG6LTpIpKtY988buYzxukJ8gmPpjnwk8eU31mrX1Hdt+J3iZe66x5cm0BGFl8+a+VlWsHHk08EnRSX5RwsxwstXxb5DanfXjf+OwSG1QT3r60INDunWF4oG5YADa2oB9mj7oeCtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YEkbdkaw; arc=none smtp.client-ip=209.85.216.69
+	s=arc-20240116; t=1790139158; c=relaxed/simple;
+	bh=7y7GXnhSDovHIpVLBgt1Fd+3FmTisgFDfMLhG7uux9Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=vGPq5AEu6NzkzTW2Wqj/9+OPmYmYzMSuJeSH/kBAjjuSpSY6WuSzYnqQDKazGW1sAPnXV4+VwuweyZL1d8eBQ+2B5YckO+tuKyIcLMN4/sE0mONxU5XTEw/JakGqJezxXRIW+L/+rRR8sSpYoMOeBpn7/a5vudNG4qZQcYXHP6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TvkcGhtD; arc=none smtp.client-ip=209.85.214.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YEkbdkaw"
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-398d0010cfaso554691a91.3
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 21:28:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TvkcGhtD"
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2dc7337e2a7so5286205ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 21:52:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790137708; x=1790742508; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790139157; x=1790743957; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:mime-version:date:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ngy4XhNxX90C6pR7bGxz/LIb3bO/nvGfahStoZKtl5Q=;
-        b=YEkbdkawAy/a8+2S4ylWed96ck+j1g+9bGox3XZ935krOO8g48/lUGl8Sx9OmuQPJR
-         AV/szlby6OWJKuV02BqVeC6yQUbSc226IgiC+BcbuVtd/b4i5Tze+/WFKpbaXFzQegea
-         /2xIi6JdvR2U3Y57zMe2n9QmxzRoCtks2CR2D4mTi2XztUs2M5eCmelpGI3HeV6F2f6m
-         DdtAzSn3OoBUw6D/pdqtzPk57/WmLQVlR0VLYQU3SoguJefm5nkCqbzWTG5qcH3leFzt
-         coruBivqCIr4YQK9fbDRK4btcq5VfreJTZWDdEt18ONv9SPz04mRvxv2u+oMAcLNdzLZ
-         hm2g==
+        bh=o0WespfEuphhz3CCLrHdjFoExifMJMtXw8rgeMcCZTM=;
+        b=TvkcGhtDW6yDF9616MzwCqnGmPVx4INIJ/dnGZmO2dW6BBGXBmsWLhWEw5v0sgC3pg
+         HR4LzhnHbNBLg167Zi+Zo/6je1FKy6i7mynvMgMjX4mpV07CnrbUdLA8PCxcyZfZ5muA
+         T9my6xvecErngctOdKVLG2sTShu4pMsBwE1CUXnP0G+yrxDVJxJcF6QLReWVtgiH92+e
+         W/qklne1uesq6w5s52TVqlsiLTsQekfYPdcYIiZmqiJJOQ1zOV9TUE1MzdbcC9BzvW/w
+         IwZGSRWwjw9bBdwhvfiAeuUcFFYYfays5Y/hohtnwAEIXqF11XvGtcm/vG+Kf7mNj5FN
+         DYQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790137708; x=1790742508;
+        d=1e100.net; s=20260707; t=1790139157; x=1790743957;
         h=content-type:cc:to:from:subject:message-id:mime-version:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ngy4XhNxX90C6pR7bGxz/LIb3bO/nvGfahStoZKtl5Q=;
-        b=m93drXxxTsLZVLRVm7CqcdUrCM8hm/ojjzrwnnT55by/iuLzgXMWN3gIpazpR3x3PG
-         bAGn1rRDCEtXuxjy2f9W0abLzk6BAS43zvET4IE5bg7Yw450Z99iEzMU8LxtKDopoy9C
-         SYvkazKwkwzCPHrqCACxYLyCWFPys8+Y4UdiIvDnV/6q8biYW0dEbruV/GVppZLhBkPl
-         B6r+CoxLrHBFK+XzNtLkExXTY/GydYAyTFZIoGhFGrw+FMh69AIrjZVS0TJ8SApAOhd5
-         jCBFQ6hbAiDdvMRwnyBqWu27kDbYalVKXP4dKNtJrbBtJ/66SkBCEnEIL2Irb88cfzdL
-         /91g==
-X-Forwarded-Encrypted: i=1; AKwUvBxI9GwIornMbrBsxnoqiszXYfbW6XPX8xXF6PJ6A4EmXJzOLbA2n+AFzlnFkd2E913FD5ghXF3bW7tZXqeiqVs=@vger.kernel.org
-X-Gm-Message-State: AFuF++mrsHuyWsTHR7TDw/4oCBKi820VtJWTUMIdC+hF7df2atCqEgEt
-	TMILClPQfzPcqaNgkzICjmjsNmD8LcyM+Y2Pt2/WB2+ZNQ08BfnbL6ZfXA+ETlKoywBcicMO+Sv
-	h
-X-Received: from pjbkr5.prod.google.com ([2002:a17:90b:4905:b0:3a0:7de0:6fac])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4f8a:b0:3a0:42a9:9c81
- with SMTP id 98e67ed59e1d1-3a07e65d0d7mr1242952a91.17.1790137707448; Tue, 22
- Sep 2026 21:28:27 -0700 (PDT)
-Date: Wed, 23 Sep 2026 04:28:25 +0000
+        bh=o0WespfEuphhz3CCLrHdjFoExifMJMtXw8rgeMcCZTM=;
+        b=HeA5Wg79gj1ERI2nvRKppmPlOE9op+yD77+JDafWt7gjkf0Z0Tlx7r0EBtiC9LM++L
+         iZWQL1ZYIbOThYOuYcpWdN58q2brWN4iiU0TksczNZfAKvL6gQ0POwhYyvCATaozikVF
+         UkULWrAjrv7mdkiCC3qjavcVF8pZCX3r98sBEcZ/h1TGCrpnD541Dgz+AMQe7SRDMiv2
+         eLHdzZ5KCFzD3CY919YJl+IGpn+MLNAuS5n0pTIGKKAPDbUVU/iBFzrV7Ct1pcIccCmF
+         UjL+xvTspQx5wY83Pf3vd0yXR5dpLhWeQo23jaoe1fwsKLBvs4NyshAwyXXMOsduIfV0
+         iteA==
+X-Forwarded-Encrypted: i=1; AKwUvBxxo63BinLQ7X5180mKvl//HeP0bjCR67q7UhZhToTZa/R+0+fuqMLTvUP3jy4VWdyu/Dl8Wxe4254faaB7ZvM=@vger.kernel.org
+X-Gm-Message-State: AFuF++lF5/ukXyOcNlVLZ4mScHSP9ndU48IMiUeL69IZ9K2pRAY0sa7g
+	QJ0PiDbABk5II+LmzVeDGQGlcV8KDVoeAdMTcLj5MzaePYlhHEvETN628yPjAHFQ1xGu1C7XWAb
+	R
+X-Received: from pldv21.prod.google.com ([2002:a17:902:ca95:b0:2df:6d4f:f536])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:144f:b0:2dd:c100:80c0
+ with SMTP id d9443c01a7336-2df69e1f9bfmr13350505ad.59.1790139156378; Tue, 22
+ Sep 2026 21:52:36 -0700 (PDT)
+Date: Wed, 23 Sep 2026 04:52:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,46 +56,48 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260923042825.2558762-1-morbo@google.com>
-Subject: [PATCH] iio: add __counted_by_ptr attribute to channels in struct iio_dev
+Message-ID: <20260923045233.2579591-1-morbo@google.com>
+Subject: [PATCH] wifi: ieee80211: annotate struct s1g_tim_enc_block with __counted_by_ptr
 From: Bill Wendling <morbo@google.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, "=?UTF-8?q?Nuno=20S=C3=A1?=" <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-iio@vger.kernel.org, 
+To: Kees Cook <kees@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Bryam Vargas <hexlabsecurity@proton.me>, Lachlan Hodges <lachlan.hodges@morsemicro.com>, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com
+	llvm@lists.linux.dev, Bill Wendling <morbo@google.com>, 
+	codemender-patching+linux@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-In 'struct iio_dev', the 'channels' pointer refers to an array of IIO
-channel specifications ('struct iio_chan_spec const'), and the size of
-this array is tracked by the 'num_channels' field within the same
-struct.
+The GCC and Clang compilers support the "__counted_by_ptr" attribute on
+pointer fields to associate them with an element count in the same
+struct. This enables KASAN and UBSan bounds checking to detect
+out-of-bounds accesses to the pointer.
 
-Applying the '__counted_by_ptr' attribute to 'channels' allows KASAN
-and compiler-based bounds checkers to verify that accesses to 'channels'
-remain within bounds at runtime.
+In "include/linux/ieee80211-s1g.h", "struct s1g_tim_enc_block" has a
+pointer member "ptr" of type "const u8 *" whose size is described by the
+"len" member, which is correctly populated with the size of the buffer
+before any pointer dereferences.
 
 Cc: codemender-patching+linux@google.com
 Assisted-by: LLM
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
- include/linux/iio/iio.h | 2 +-
+ include/linux/ieee80211-s1g.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 711c00f67371..20505139a61b 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -648,7 +648,7 @@ struct iio_dev {
- 	struct iio_poll_func		*pollfunc;
- 	struct iio_poll_func		*pollfunc_event;
+diff --git a/include/linux/ieee80211-s1g.h b/include/linux/ieee80211-s1g.h
+index 3f9626ad3d97..8f6107782c38 100644
+--- a/include/linux/ieee80211-s1g.h
++++ b/include/linux/ieee80211-s1g.h
+@@ -349,7 +349,7 @@ struct s1g_tim_aid {
+ struct s1g_tim_enc_block {
+ 	u8 enc_mode;
+ 	bool inverse;
+-	const u8 *ptr;
++	const u8 *ptr __counted_by_ptr(len);
+ 	u8 len;
  
--	struct iio_chan_spec const	*channels;
-+	struct iio_chan_spec const	*channels __counted_by_ptr(num_channels);
- 	int				num_channels;
- 
- 	const char			*name;
+ 	/*
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
