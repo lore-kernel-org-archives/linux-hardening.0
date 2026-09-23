@@ -1,132 +1,116 @@
-Received: from omta033.useast.a.cloudfilter.net (omta033.useast.a.cloudfilter.net [44.202.169.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A900429038
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 06:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E506B37F338
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 06:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790144081; cv=none; b=g8BEpNn+bHyn2RHd73yY9a0cgJZ8qw727NsSc0ZAbmB1wh9gpuyE0N+4hBxURmsLot3ItjkPFvOUM54MqrFtVjgUfj0H5rlJGAPIuQD7d8dpMj+HdHzlXSR5noZPVBPSX7k75zdbK4Mak1rM/4odObtNXxj6c7YFW7O0PyYGwI8=
+	t=1790145082; cv=none; b=mboMktkkBi62tpuRvOXzskffakVB/GrGlzEyZfnsR9e/WqhOmdOqFGUCO72mkNIZZX9JmyrgQy48MTNAjtAW5sss8GI5t6wawFgHdN3qfSgQTtV1KmlRaruuzWCETlgi/wJNSRS+yKJj0GL5pqONQbHaev4UP/5j6RAYLsyMVOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790144081; c=relaxed/simple;
-	bh=1fRPmNbQXvHC53xMbdAtoAdeMF4gnTqois2bu9TUmow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AB5J+znVDxVfdXaOYF0TSmr0SFZI3wjztdPZVmEIgzHZggAJ+3BNog1w2wWEmw1ZPCpzSvAJY159SEyYxXmnJUdp2/x1TODqtNZogliWj5YtcdqcgKXFSIMqM4cxV1onHlclaFhaylSHVoqDnaoFo08NAxonBDvnWompxDPAdrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=NH9KNzny; arc=none smtp.client-ip=44.202.169.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1790145082; c=relaxed/simple;
+	bh=yMpiKx3kguhJmc8qDGn1V3CoMpzc68Grv59UbQqZkL0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=NrF99gGx3uhpirzp1v7AdICdkPxcigBH9y78laVxqx9S/22sCtTtm/moUvS7uU9b8URChJtKPrwy1SCWpnmiWVj0NxiO760jTJ76fSK6ojnkIAKRF/HK28y9AcDIDbaiZcv47bLtev2eiBYRhUzSVszbU0anrFaN65fQ1cf5qGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FxpHxazF; arc=none smtp.client-ip=209.85.214.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NH9KNzny"
-Received: from eig-obgw-5001b.ext.cloudfilter.net ([10.0.29.181])
-	by cmsmtp with ESMTPS
-	id 973xxfd64PG7Q9GDxxgnBU; Wed, 23 Sep 2026 06:12:57 +0000
-Received: from gator4166.hostgator.com ([108.167.190.91])
-	by cmsmtp with ESMTPS
-	id 9GDwxoOopX1zQ9GDwxjxwN; Wed, 23 Sep 2026 06:12:56 +0000
-X-Authority-Analysis: v=2.4 cv=PP4P+eqC c=1 sm=1 tr=0 ts=6ab36de8
- a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=7T7KSl7uo7wA:10 a=1XWaLZrsAAAA:8
- a=VwQbUJbxAAAA:8 a=veQ4WiWKPWtZt7Vb73kA:9 a=QEXdDO2ut3YA:10
- a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Unsubscribe-Post:List-Subscribe:List-Post:List-Owner:
-	List-Archive; bh=ZO1i4ggFjC7Ha9WvUkpYNEJJNq9r0nBtBbotd8bB72o=; b=NH9KNznycqCa
-	BU4ju8H1PMxR+58tyqj2tg5Na1X7gtSQqh+WYZc4zLltb+/d6BCPWESWEZhXdenMKm6epntaWWVFx
-	PI2554lhHsxwz8BMCIRu+taZlOarboUmWN6yZcSsSO8w8WkyxV38U0dNVcrkd75nlcyBN7IqrS3CB
-	gac6G7hWqOXtm/CaOyIOlmKRG68fEE516VUykP2yaZcsYWliVe+lZK5CEq4UHFVCNjVDyEcsoslDM
-	E3HPw8Fl39XcOvtKQqmAIQLk2Zm6EVbCyeilLx4zt46yC4DGTRZPuJXswW5UTWgW/izDkyLTk//1k
-	sW+sTo6YNZUoKDUgmkwSFw==;
-Received: from flh4-125-195-69-90.tky.mesh.ad.jp ([125.195.69.90]:54704 helo=[10.203.100.34])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.100)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1x9GDv-00000002NYs-2PLz;
-	Wed, 23 Sep 2026 01:12:55 -0500
-Message-ID: <b2bc7fc9-baf3-4717-a012-cda73a9fe977@embeddedor.com>
-Date: Wed, 23 Sep 2026 15:12:51 +0900
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FxpHxazF"
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2db8c152622so4143615ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 23:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790145077; x=1790749877; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=tFs7REmvg7ALs7gDnIPL2Cm/x5EKpm+iCAcxe/e+E3M=;
+        b=FxpHxazFm8D/CPAXV5DSHZoW+G0poMCEivZO3tIXv92LeWfvEvfuB2U8yNyWoEzEPG
+         lNwmf7/LPBRcypLAD3FHrlFwqeGFTOusgZzeEM5tyUCxcAEsB6wMbpZTzFrXE1wXFVpf
+         KHpD/wgsKjtiGKABseYf9aEaJRFpMUHx5XfYPFkQUZO6eJZfpUEPJOIXx1giRWZ2Pamj
+         3hU3IGzGNs8A9WrxKzmi9QgO2Og9saYy0gBukEhgrXtr71pn+7vxjC8Zdiwy/luzg2v0
+         vN68O9D5l3+9h1hvMl+XDfCMIRPfM4yfCrpw9K4klVjuOyngqhar66wM7YpBzXDIYaP0
+         VF6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790145077; x=1790749877;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=tFs7REmvg7ALs7gDnIPL2Cm/x5EKpm+iCAcxe/e+E3M=;
+        b=2CvDQ+BX89TKtFLiJ5Ai2XZyvgH97h/Sh/R78sxwGRpJJ/L9jhyJC60MUhSb6q2c6m
+         2PgRZau+Tyz8PwyZZoQZnYcVUtnALaA7leX/66MetPPKItCz2F/LWd3DKSbaA/4rGnRT
+         7JT2wZ1Qg8RysoAgBG3kAsdgerB8Feda7QMcvbynZQOM+Fs7uS/Dj7g6HDqPg/DNDbfQ
+         ptrLKk5wk3GKTjqEVxnnABQg7d2I9FYcVfunDQjLV6DlGWTfkU6NLR+FBqQKP5zrC19i
+         WUAWSmB33wUuPUwJTwC2WqZFeqiTzqG4dAhoqjzEUrvx/HMY1NwBlY0XpSMyzrMEmXq4
+         7BnQ==
+X-Forwarded-Encrypted: i=1; AKwUvBymYdS3Du3SDF1hSPCM0a2OaY36mdzgjY3JPcjNn251cAnXJ0+zuIDHyDPX+zHBgTmH0nzQymoG6cfYECf1C+s=@vger.kernel.org
+X-Gm-Message-State: AFuF++nlSM9/X+lc2ogkYA6zr+HNc4yuaHJtF6ieQnFjQM0l4JUNFeuM
+	uK0kBV5R2M89Fr1K3Up3kC0734c+0Zs9WYM+s/8mkXTAvKfvDEmSzFrpjipVXgVmWlwwRbJFmsa
+	7
+X-Received: from pleg9.prod.google.com ([2002:a17:902:e389:b0:2dd:26c1:6565])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3d05:b0:2dd:319:c9ef
+ with SMTP id d9443c01a7336-2df69d28094mr16150785ad.3.1790145077322; Tue, 22
+ Sep 2026 23:31:17 -0700 (PDT)
+Date: Wed, 23 Sep 2026 06:31:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: hisilicon/qm - add __counted_by_ptr to
- dfx_diff_registers
-To: Bill Wendling <morbo@google.com>, Weili Qian <qianweili@huawei.com>,
- Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, linux-crypto@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- codemender-patching+linux@google.com
-References: <20260923061027.2650324-1-morbo@google.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20260923061027.2650324-1-morbo@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 125.195.69.90
-X-Source-L: No
-X-Exim-ID: 1x9GDv-00000002NYs-2PLz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: flh4-125-195-69-90.tky.mesh.ad.jp ([10.203.100.34]) [125.195.69.90]:54704
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 32
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFX0bKGPBWRvYWViCZZh6jO1DcLPuwfenu5AEjSFKbz5Yixu0sZZfK5EtLlWoOsuCsfLIjoWy8MFpX7PPZDZ/DqZoP18WT/LIh1SDjYp80O0/jroINaa
- VmKgW+H6cxKbb7tKNmsy3DmL/utfXCsEyAuoUeOd1pMjyCJbwvyadLBJDnMJfehJ/bNzaBUqms+5tE4y2EreRjGqBOGvHFLEhDZlJw8HzJPtp52w3SyTvrIZ
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
+Message-ID: <20260923063114.2683575-1-morbo@google.com>
+Subject: [PATCH] HID: bpf: add __counted_by_ptr attribute to device_data
+From: Bill Wendling <morbo@google.com>
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	bpf@vger.kernel.org, Bill Wendling <morbo@google.com>, 
+	codemender-patching+linux@google.com
+Content-Type: text/plain; charset="UTF-8"
 
+The 'struct hid_bpf' contains a 'device_data' pointer field (of type
+'u8 *') and an 'allocated_data' field (of type 'u32') that specifies the
+size in bytes of the allocated memory for 'device_data'. Since
+'device_data' is a pointer to 'u8' (elements of size 1 byte),
+'allocated_data' represents the exact count of elements allocated for
+'device_data'.
 
+Annotate the 'device_data' field of 'struct hid_bpf' with the
+'__counted_by_ptr' attribute, pointing to 'allocated_data'. This enables
+bounds-checking sanitizers (like KASAN and UBSAN) to detect
+out-of-bounds accesses to 'device_data'.
 
-On 9/23/26 15:10, Bill Wendling wrote:
-> Annotate the pointer field 'regs' in 'struct dfx_diff_registers' with
-> the '__counted_by_ptr' attribute, referencing the 'reg_len' member
-> which holds the element count of the allocated memory.
-> 
-> In 'drivers/crypto/hisilicon/debugfs.c', the 'dfx_regs_init' function
-> allocates the 'diff_regs' array and initializes each element's 'regs'
-> pointer after setting its 'reg_len'.
-> 
-> Since 'reg_len' is set before 'regs' is assigned, the compiler's bounds
-> sanitizer can correctly associate the pointer with its allocated size.
-> 
-> Cc: codemender-patching+linux@google.com
-> Assisted-by: LLM
-> Signed-off-by: Bill Wendling <morbo@google.com>
+Because the count 'allocated_data' is always set before any access and
+accurately tracks the allocated buffer size at all times, adding
+'__counted_by_ptr' will not cause runtime panics or false-positive
+bounds checks.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: codemender-patching+linux@google.com
+Assisted-by: LLM
+Signed-off-by: Bill Wendling <morbo@google.com>
+---
+ include/linux/hid_bpf.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Thanks
--Gustavo
-
-> ---
->   include/linux/hisi_acc_qm.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/hisi_acc_qm.h b/include/linux/hisi_acc_qm.h
-> index 8dc49fa2123b..f2885d60b468 100644
-> --- a/include/linux/hisi_acc_qm.h
-> +++ b/include/linux/hisi_acc_qm.h
-> @@ -196,7 +196,7 @@ struct qm_dev_dfx {
->   };
->   
->   struct dfx_diff_registers {
-> -	u32 *regs;
-> +	u32 *regs __counted_by_ptr(reg_len);
->   	u32 reg_offset;
->   	u32 reg_len;
->   };
+diff --git a/include/linux/hid_bpf.h b/include/linux/hid_bpf.h
+index 19fffa4574a4..f45fb9cccece 100644
+--- a/include/linux/hid_bpf.h
++++ b/include/linux/hid_bpf.h
+@@ -185,10 +185,12 @@ struct hid_bpf_ops {
+ 
+ /* stored in each device */
+ struct hid_bpf {
+-	u8 *device_data;		/* allocated when a bpf program of type
+-					 * SEC(f.../hid_bpf_device_event) has been attached
+-					 * to this HID device
+-					 */
++	/*
++	 * allocated when a bpf program of type
++	 * SEC(f.../hid_bpf_device_event) has been attached
++	 * to this HID device
++	 */
++	u8 *device_data __counted_by_ptr(allocated_data);
+ 	u32 allocated_data;
+ 	bool destroyed;			/* prevents the assignment of any progs */
+ 
+-- 
+2.55.0.1082.g2b9226bbc0-goog
 
