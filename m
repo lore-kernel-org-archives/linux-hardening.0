@@ -1,173 +1,164 @@
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFB33E639E
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 06:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3433EDAB3
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 06:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790143282; cv=none; b=WO/O3OYL3PjFHkwqvVb70V8iKZjDBiVmQY+3suPI8xWL9r2nXbrBIgzKcVAmHRAmMYBt25Bz9kRF1VRlwFc1e/1xUMhsaZMuubIpp92dkbs7dSetqTvs5k9HbkAnZ272aqKKw/8Aq+kqQ1PAcK3frjCyccUcGpHdH25Y/cuXmiA=
+	t=1790143818; cv=none; b=rcklnGT2alQo8qyR1qB9oKSjNj7/YJjojIOk4GlwYdGs5o3AL6BqavilsHFp7huDdHkVhm2TxRa0ObxbkH/03hQZHAbhh814AwPRyl6oeKd6qRM1p8wi9r4c8D/TqEivwT+dSbUiZdM5RZKG4ZyCSgm5Mpq0TvjEh4OK+8Tceo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790143282; c=relaxed/simple;
-	bh=pteB5a4ppTtEC+Qr6+ZHmeG6rGYW4XCAWYqIiSDQpOw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=N0/2wF5UAjaj3W1II51bhrgf13+NDDjpueT17UwFPuM9cQzmTJUKo3iHO+LRx9jFiA2X2mMVl6vxGYNlzeYsw+JSMCc1iAYvGDrpHocjxjo3ZTDvy6r/Aix5NCeu7Rtdao8fpogoUI/mEVxfGL15i1BbFkNFqALmDCBcjj63j7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H+BZrR3v; arc=none smtp.client-ip=209.85.210.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
+	s=arc-20240116; t=1790143818; c=relaxed/simple;
+	bh=dy2CeYpd+lXAnmlW07mW4QKCWyh5ASqU6aif4ORmxO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dxp4qBiB4uO3VC6XK1C/F3dS4Zrez4Y3Pa1g3KZlV9zso1mspHfwavTtzGX9jGd2pqBMdZMzAFReoVqBLELuTQeQ0xoacUnCmF6hZT3qpQyJZPyBoSP+h5z3uQwVkKCC/KVK3Nd6fBIx1FJ9R2NZpore8oUoqhGP9qRtYZOnbto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=qzxqJIpN; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H+BZrR3v"
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-86a43fc3527so1925801b3a.1
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 23:01:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790143280; x=1790748080; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=8hrAtPjqsJPtZ07wpmzE/ZnFtTfixynLllFoyC+ikp8=;
-        b=H+BZrR3vytDRhkE+KMnlH7liPYsWLNgPCTpzKgIrAuqKdVAWQsSck+jES8AQEaC+EV
-         7mPfTsUOPpcn2REnXq8DuaWVM7c7n5II7bhByApl2t+2i8q8U6L6USe9YT3kgK5Ml3HR
-         6qXtMa8G6NtM6z2uHkE0M5vAdWV5wvirQtZHLHVe+PTO7PNea4gqgJnZXImpF8vXTFio
-         /N3ECHp8Mvn7ATlcRhZ4vEA63dSw4MLUyAhUZc0xRSzNI3Z7tZ5zm6KgMKPtoTEqGT+U
-         mdXP9WRAH2tXlAnAgmoi4osgzq8QgqIT3NQv3qQ2qh9CJ0WAz0pT+4x1d50nXlZ0lrAZ
-         D83A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790143280; x=1790748080;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8hrAtPjqsJPtZ07wpmzE/ZnFtTfixynLllFoyC+ikp8=;
-        b=b3yaWa8jcl4Cc9qAGjwSEaCKy3mFzJwDn1ZsODVY8Py00S/3axkDEjZWfd4o4FzTmo
-         +XIucqDt9O5Hi1rMcox+p90whf3ccT04GQu/EoE0i5Ykwap7suG7eHy4fJ9OC4fnv7mw
-         uGu8UysAdg9aUYgjUzndVhsW9lp9i+iSpiam2tM+1VYlazolV//0nqjAfU967cguBq4B
-         /zQRDijBXPPi0IOsbcGLLwPqhN9BDHQDtnRA39Fxlc7QkfpfD0uce45sPfl8i1k9DClj
-         r/m0QUki1TqJ96Pc9TVCq35ExJpCZnan0dgLwak5kHLjhSHMj0kE69zkPoPmCVx9vRL+
-         J3Mg==
-X-Forwarded-Encrypted: i=1; AKwUvBwtVkBVfgMWAgEifPQljrkwW7ZDOtmr3SHTRUuC5RVH9qTMdMwBnY9qs1k7GuQS75fmYS8MYElr7BnzNvNn+WU=@vger.kernel.org
-X-Gm-Message-State: AFuF++lhaLKMDQv6hJhKrXNfamNTSvbV2N1gCgcnVemk7t6+Asiwnv0V
-	8gWhPzkq++MRfgseaSpcD3Vzb7Fuh9/GarN7YRJ0JtsQ6y0sw1ukVCGn2eGW+vDWV6EuqyFQuRp
-	k
-X-Received: from pgdg16.prod.google.com ([2002:a05:6a02:51d0:b0:cc5:1163:519f])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:a347:b0:3dd:65a5:a33
- with SMTP id adf61e73a8af0-3ddf7f6f170mr1230569637.10.1790143280074; Tue, 22
- Sep 2026 23:01:20 -0700 (PDT)
-Date: Wed, 23 Sep 2026 06:01:14 +0000
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qzxqJIpN"
+Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
+	by cmsmtp with ESMTPS
+	id 8ZdWxu2J1FNWB9GBLxUiRO; Wed, 23 Sep 2026 06:10:15 +0000
+Received: from gator4166.hostgator.com ([108.167.190.91])
+	by cmsmtp with ESMTPS
+	id 9GBLxq1qFIRv99GBLxhsNt; Wed, 23 Sep 2026 06:10:15 +0000
+X-Authority-Analysis: v=2.4 cv=GIUIEvNK c=1 sm=1 tr=0 ts=6ab36d47
+ a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=7T7KSl7uo7wA:10 a=1XWaLZrsAAAA:8
+ a=VwQbUJbxAAAA:8 a=vmMgSTcIRG_wnqpSMZkA:9 a=QEXdDO2ut3YA:10
+ a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Unsubscribe-Post:List-Subscribe:List-Post:List-Owner:
+	List-Archive; bh=0+Ti3ClvEeyB0mxjZ6Y5EozLt9wFOSnnKiPH9XINcK8=; b=qzxqJIpNrJXl
+	3zJRZ6IK7MgKuMmJuyFiMJ3YHCWMzzbhJ0Al6OcwtbFRyunv+E39aorQU6e1yGW6heNp/swhwkp4M
+	LxReoQFGHv0kdBmkKM5Ip/itJIaZzl9H10IxE0HVyyLskyhGAEpFB/aBQHO3o0cVX1ik7aKZwiQFR
+	cgi8Gas1OrtSZsaSPuTkVXxLhyCzOF3fNEWJalsyUIQS+AqCdha6Vbzp2I7xS5GpAwHVkpAa+63KX
+	YDIPER3OUvxPiqcog+cEc8LFN9OjeygVafALX88uRADuWhb/YjyVzTg3N3r5/VmZRoOV/uGpY42ch
+	BD3PN/5igNRDKI1yJ3MAjg==;
+Received: from flh4-125-195-69-90.tky.mesh.ad.jp ([125.195.69.90]:35276 helo=[10.203.100.34])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.100)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1x9GBJ-00000002LmZ-1RVU;
+	Wed, 23 Sep 2026 01:10:13 -0500
+Message-ID: <a51283e0-7d55-4d06-bf7d-3cd7b7a21faa@embeddedor.com>
+Date: Wed, 23 Sep 2026 15:10:08 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260923060114.2605310-1-morbo@google.com>
-Subject: [PATCH] crypto: hisilicon/qm - annotate cap_tables with __counted_by_ptr
-From: Bill Wendling <morbo@google.com>
-To: Zhiqi Song <songzhiqi1@huawei.com>, Longfang Liu <liulongfang@huawei.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Weili Qian <qianweili@huawei.com>, Zhou Wang <wangzhou1@hisilicon.com>, 
-	Chenghai Huang <huangchenghai2@huawei.com>
-Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Drivers: hv: vmbus: annotate struct vmbus_gpadl with
+ __counted_by_ptr
+To: Bill Wendling <morbo@google.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Justin Stitt <justinstitt@google.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev, codemender-patching+linux@google.com
+References: <20260923055320.2602534-1-morbo@google.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20260923055320.2602534-1-morbo@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 125.195.69.90
+X-Source-L: No
+X-Exim-ID: 1x9GBJ-00000002LmZ-1RVU
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: flh4-125-195-69-90.tky.mesh.ad.jp ([10.203.100.34]) [125.195.69.90]:35276
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJOeKFMpgII6lfn38TFJdpD2rJWjoV/FqeIeBPbtxeYJa7MzACRPYxN1WWt65Eyp2t73bMLPNJAcwesHEb+26ijyYYOypm4xCbN7WsWw+2Cu9oSdMSTx
+ 18I8kX8pNm4eg6NGAtROkTIBgdFwaOMYiq10O66kWkqsDHGblJLFoVHLg4WpISZTHCVd9boekvuOqM90MM7zBNehIRZFib8Fy3Q2WOxnRykG9S67xKbGWUi5
 
-Annotate the 'qm_cap_table' and 'dev_cap_table' pointer fields in
-'struct hisi_qm_cap_tables' with the '__counted_by_ptr' attribute.
-This improves bounds checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE, allowing KASAN and compiler diagnostics to
-detect out-of-bounds accesses.
 
-The 'qm_cap_table' pointer is associated with 'qm_cap_size' which
-specifies its element count. Similarly, 'dev_cap_table' is associated
-with 'dev_cap_size'.
 
-To ensure safety under compiler instrumentation, the assignments in the
-initialization paths have been updated to set the 'size'/'count' fields
-prior to setting the pointer fields. This prevents any transient state
-where the pointer is valid but the count is 0 (or uninitialized),
-ensuring that subsequent accesses to these tables do not trigger
-false-positive bounds check panics.
+On 9/23/26 14:53, Bill Wendling wrote:
+> Add the "__counted_by_ptr" attribute to the buffer field of "struct
+> vmbus_gpadl". This allows compilers (GCC and Clang) to perform
+> compile-time and runtime bounds-checking when KASAN is enabled, preventing
+> potential out-of-bounds accesses to the GPADL buffer.
+> 
+> The fields "buffer" and "size" of "struct vmbus_gpadl" are assigned
+> exactly once, during GPADL establishment inside
+> "__vmbus_establish_gpadl()" in "drivers/hv/channel.c".
+> 
+> To ensure that the count field ("size") is initialized before the
+> pointer field ("buffer") is assigned, we reorder the assignments in
+> "__vmbus_establish_gpadl()" so that "gpadl->size" is written before
+> "gpadl->buffer".
+> 
+> Cc: codemender-patching+linux@google.com
+> Assisted-by: LLM
+> Signed-off-by: Bill Wendling <morbo@google.com>
+> ---
+>   drivers/hv/channel.c   | 2 +-
+>   include/linux/hyperv.h | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> index 7e4cc6f55237..7042de2dd481 100644
+> --- a/drivers/hv/channel.c
+> +++ b/drivers/hv/channel.c
+> @@ -548,8 +548,8 @@ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
+>   
+>   	/* At this point, we received the gpadl created msg */
+>   	gpadl->gpadl_handle = gpadlmsg->gpadl;
+> -	gpadl->buffer = kbuffer;
+>   	gpadl->size = size;
+> +	gpadl->buffer = kbuffer;
 
-Cc: codemender-patching+linux@google.com
-Assisted-by: LLM
-Signed-off-by: Bill Wendling <morbo@google.com>
----
- drivers/crypto/hisilicon/hpre/hpre_main.c | 2 +-
- drivers/crypto/hisilicon/qm.c             | 2 +-
- drivers/crypto/hisilicon/sec2/sec_main.c  | 2 +-
- drivers/crypto/hisilicon/zip/zip_main.c   | 2 +-
- include/linux/hisi_acc_qm.h               | 4 ++--
- 5 files changed, 6 insertions(+), 6 deletions(-)
+I think in some cases these subtle changes are worth a short but
+informative comment saying that the _counter_ must be initialized
+before the first reference to the pointer.
 
-diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
-index b6903fce6071..4a1b2de476f5 100644
---- a/drivers/crypto/hisilicon/hpre/hpre_main.c
-+++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
-@@ -1234,8 +1234,8 @@ static int hpre_pre_store_cap_reg(struct hisi_qm *qm)
- 		return -EINVAL;
- 	}
- 
--	qm->cap_tables.dev_cap_table = hpre_cap;
- 	qm->cap_tables.dev_cap_size = size;
-+	qm->cap_tables.dev_cap_table = hpre_cap;
- 
- 	return 0;
- }
-diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-index c01966a4a33f..7d13476451e3 100644
---- a/drivers/crypto/hisilicon/qm.c
-+++ b/drivers/crypto/hisilicon/qm.c
-@@ -5743,8 +5743,8 @@ static int qm_pre_store_caps(struct hisi_qm *qm)
- 							i, qm->cap_ver);
- 	}
- 
--	qm->cap_tables.qm_cap_table = qm_cap;
- 	qm->cap_tables.qm_cap_size = size;
-+	qm->cap_tables.qm_cap_table = qm_cap;
- 
- 	return 0;
- }
-diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
-index 752565200c16..ac423d016998 100644
---- a/drivers/crypto/hisilicon/sec2/sec_main.c
-+++ b/drivers/crypto/hisilicon/sec2/sec_main.c
-@@ -1285,8 +1285,8 @@ static int sec_pre_store_cap_reg(struct hisi_qm *qm)
- 				     i, qm->cap_ver);
- 	}
- 
--	qm->cap_tables.dev_cap_table = sec_cap;
- 	qm->cap_tables.dev_cap_size = size;
-+	qm->cap_tables.dev_cap_table = sec_cap;
- 
- 	return 0;
- }
-diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-index 706a73656977..10091ad4a6a8 100644
---- a/drivers/crypto/hisilicon/zip/zip_main.c
-+++ b/drivers/crypto/hisilicon/zip/zip_main.c
-@@ -1400,8 +1400,8 @@ static int zip_pre_store_cap_reg(struct hisi_qm *qm)
- 				     i, qm->cap_ver);
- 	}
- 
--	qm->cap_tables.dev_cap_table = zip_cap;
- 	qm->cap_tables.dev_cap_size = size;
-+	qm->cap_tables.dev_cap_table = zip_cap;
- 
- 	return 0;
- }
-diff --git a/include/linux/hisi_acc_qm.h b/include/linux/hisi_acc_qm.h
-index f7570a409905..8dc49fa2123b 100644
---- a/include/linux/hisi_acc_qm.h
-+++ b/include/linux/hisi_acc_qm.h
-@@ -332,9 +332,9 @@ struct hisi_qm_cap_record {
- 
- struct hisi_qm_cap_tables {
- 	u32 qm_cap_size;
--	struct hisi_qm_cap_record *qm_cap_table;
-+	struct hisi_qm_cap_record *qm_cap_table __counted_by_ptr(qm_cap_size);
- 	u32 dev_cap_size;
--	struct hisi_qm_cap_record *dev_cap_table;
-+	struct hisi_qm_cap_record *dev_cap_table __counted_by_ptr(dev_cap_size);
- };
- 
- struct hisi_qm_list {
--- 
-2.55.0.1082.g2b9226bbc0-goog
+We can see this as part of the learning curve people have to go
+through before the counted_by annotations and their requirements
+are more widely known and understood. But I guess this can be
+handled on a case-by-case basis.
+
+Regardless:
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+-Gustavo
+
+>   
+>   
+>   cleanup:
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index 9e109d91aa14..408748a05440 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -780,7 +780,7 @@ struct vmbus_device {
+>   struct vmbus_gpadl {
+>   	u32 gpadl_handle;
+>   	u32 size;
+> -	void *buffer;
+> +	void *buffer __counted_by_ptr(size);
+>   	bool decrypted;
+>   };
+>   
 
