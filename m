@@ -1,31 +1,31 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9244534F497
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 05:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786553DDAE2
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 05:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790142342; cv=none; b=tEmeiQOy4vsNSZfFxK+TbH5aa4A6Oq8iDenDnygqf6QW+JZDG82+ewrp1FM6yVZDqDvq8OwFy/tZBsp1X24RVJjy+yybqUPgwd1lh93KOns7GjAfG6OYb8XQ7WP4yEdufqJuSq7TCdDN9rFNbZ1ZqQpsMnrQti0yNDxc5hF3mRU=
+	t=1790142406; cv=none; b=NjV8sIORmbpZpsSGl1+cwSmvXcTu2VTZORMrzcCP5vdw+PvWef5YJ/a0vcTtD/7bSFoqeSNtLbT9j2n5jusZWuamVZMbLzNiqJ192lj8JGaAHIWipBy24vA0WSudpML6SDSPY21CMkjUQA9cpZtaRjf0YCww7JALzSdSyWA5L3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790142342; c=relaxed/simple;
-	bh=Hpchx+TeVg+3320N2ZLza2s70qLylkvHKlXE793d4Z4=;
+	s=arc-20240116; t=1790142406; c=relaxed/simple;
+	bh=RFcuOwEqjf9SaP/OTSaZv2iojCmoDJVvJIjDiQ7k58Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UFOvpZ/TBdl0utMmBJUW1rJiE14DVqSgMTltFYXrv2gF+HStbOGYdPr1+8IFvUlNqpAQLxZd1K8aaoWQN5hy7Bu0Q8ERMcdQj5o9hohkJibp+E64RZTCxgwcm7DOE1P08ajL5sUrRIqm1tsLg6fuEWVbY1TGalK9XpHzBTu9No8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=U36gbV3M; arc=none smtp.client-ip=35.89.44.33
+	 In-Reply-To:Content-Type; b=SUMLOsFSSLmQBfCQVLlRuvBJb8eeTvRG23saqSoM4oGsejWbjp/W0a9VbtroCJhhwS00bgA9Zhtog1ggFFOg/6/a+wbmsoK+MF6Nmbj9TXHVnRMrdAGPBj4OabXEkeZh8W0Hohj+ZU9eHe/6TRfs2saRcXNPTtO11NN16wzxMpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=UEfECF5T; arc=none smtp.client-ip=35.89.44.39
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="U36gbV3M"
-Received: from eig-obgw-6006b.ext.cloudfilter.net ([10.0.30.211])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UEfECF5T"
+Received: from eig-obgw-5003b.ext.cloudfilter.net ([10.0.29.155])
 	by cmsmtp with ESMTPS
-	id 9E9PxYJl5aC0U9FnZx8mZL; Wed, 23 Sep 2026 05:45:41 +0000
+	id 9CHDxtUfec3Xs9FoYx9cfN; Wed, 23 Sep 2026 05:46:42 +0000
 Received: from gator4166.hostgator.com ([108.167.190.91])
 	by cmsmtp with ESMTPS
-	id 9FnXxVMlUvfbR9FnYxoYJ8; Wed, 23 Sep 2026 05:45:40 +0000
-X-Authority-Analysis: v=2.4 cv=X7FSKHTe c=1 sm=1 tr=0 ts=6ab36785
+	id 9FoXxGrvdkH8b9FoXxuSjP; Wed, 23 Sep 2026 05:46:41 +0000
+X-Authority-Analysis: v=2.4 cv=d6X1yQjE c=1 sm=1 tr=0 ts=6ab367c2
  a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
  a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=7T7KSl7uo7wA:10 a=1XWaLZrsAAAA:8
- a=VwQbUJbxAAAA:8 a=4ffO35K8LLM2FldQJH0A:9 a=QEXdDO2ut3YA:10
+ a=VwQbUJbxAAAA:8 a=GayhebFrRX0EwB9RMoAA:9 a=QEXdDO2ut3YA:10
  a=2aFnImwKRvkU0tJ3nQRT:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -33,20 +33,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Unsubscribe-Post:List-Subscribe:List-Post:List-Owner:
-	List-Archive; bh=/E5qcA3QzsXosiYS9VqPceYIRRHq3vwJ1GMOPH5S7j8=; b=U36gbV3Mix/x
-	WIQjz6KImRom22m14NU17nkw2Fz9/BzozX7h8i445DOlqIky7qEU2Ko0uaWY72P3QKkAB2vwMh3DV
-	z3GccUJyHkhSvmxM8MdZT9Dr2mByWNDmnsm5Uv64/k4mXHrwrZvUpQVro6qkg3CuafvSJ7ZyoARzF
-	yWnVDH2AFHAjE/g7CftfEa2a4b4EyrC7MPNSj/S0d79W9lMYod2wX3hHhmBhoMngx5GcdWnpWx2h4
-	UinxsBdLkVY0fMD6ot2o6xHlSzcgAS2BG3rxOUBLHbrlJPd0tB2IoWbjW+6/wCgzvMMDVTuNQ0Kym
-	jfgitaiY82MPrUluK+MEqg==;
-Received: from flh4-125-195-69-90.tky.mesh.ad.jp ([125.195.69.90]:36818 helo=[10.203.100.34])
+	List-Archive; bh=OTwx4w9402ve7XEVGULW94SFMv5Tl4N0r/phY59l/8k=; b=UEfECF5TgEW3
+	KGIj5aT/C29st5hACjcHuxVLxBSR5tOuRMT/rmWCDjiSiI+BzQMiTkM0qDAMxbHWK0jWLqRxQEoAr
+	ro+Og+0qw7/KJY6TDfCr4pB3RfKZ8OPRmY157FqncfrM24JAx8Vq1qu9OrVkMYXgVi9TNeOphlT6a
+	4XmHPaMDFoirjhxsqZ4uTut9sorVP017tpwM+iI1+6BS5oO2mfQIrBgWaYEYcjTbj0xYX4QGH9Zpd
+	5J3/hzOu3YEydLLXFA7/I/gyV41+wvDJxLQiZwGHasg9hWiT3sD7NJRft+6+8i0pYdAUSndXnjvkA
+	87RFK8+svAIE2Wy1cUW05w==;
+Received: from flh4-125-195-69-90.tky.mesh.ad.jp ([125.195.69.90]:43316 helo=[10.203.100.34])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
 	(Exim 4.100)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1x9FnX-00000001zQT-0WFg;
-	Wed, 23 Sep 2026 00:45:39 -0500
-Message-ID: <8d82177e-5347-4e7e-898b-01cfe244e1af@embeddedor.com>
-Date: Wed, 23 Sep 2026 14:45:34 +0900
+	id 1x9FoW-0000000204S-0DM9;
+	Wed, 23 Sep 2026 00:46:40 -0500
+Message-ID: <3e9d09ef-5766-4f19-aa8c-641e15572950@embeddedor.com>
+Date: Wed, 23 Sep 2026 14:46:35 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,20 +54,21 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: adc: qcom-adc5-gen3: Annotate struct
- adc5_device_data with __counted_by_ptr
-To: Bill Wendling <morbo@google.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+Subject: Re: [PATCH] bus: fsl-mc: Annotate fsl_mc_io.portal_virt_addr with
+ __counted_by_ptr
+To: Bill Wendling <morbo@google.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Justin Stitt <justinstitt@google.com>, linuxppc-dev@lists.ozlabs.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
  codemender-patching+linux@google.com
-References: <20260922220950.2267270-1-morbo@google.com>
+References: <20260922223538.2287676-1-morbo@google.com>
 Content-Language: en-US
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20260922220950.2267270-1-morbo@google.com>
+In-Reply-To: <20260922223538.2287676-1-morbo@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -78,37 +79,33 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 125.195.69.90
 X-Source-L: No
-X-Exim-ID: 1x9FnX-00000001zQT-0WFg
+X-Exim-ID: 1x9FoW-0000000204S-0DM9
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: flh4-125-195-69-90.tky.mesh.ad.jp ([10.203.100.34]) [125.195.69.90]:36818
+X-Source-Sender: flh4-125-195-69-90.tky.mesh.ad.jp ([10.203.100.34]) [125.195.69.90]:43316
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 39
+X-Email-Count: 53
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKfmOY5Gzs0F3Z7mLvYLSjJGkfdVTh1sSMOfCEXuI+VffWODhSHA9d42rgisN7jW166+tCZMKLeRb5sIN5weBI08E6NvJkJ99wzlA0F9dKlbV1OiAWcG
- jqStMKEBiGaOYxBgsufbaiU4RNU4eq3wIOYftRgpdOvKk1M01HFOr0k9doRc0kygF+qbeK/qQAqGpOiaVd/qqydgqyaa/7MDLZDP4MoMs/BWzjRgLGXbaLtf
+X-CMAE-Envelope: MS4xfPctvs8GpUxVUd+KIjwAPuXoUvZVght0A993cs2oaDuVamWb97ytUeE2KVUSeKcVx5xGpm1JFzkysA2H+ScNf3ObGrBfMATkVuiUADgRbxeRH4ZpSSpC
+ hbU6H8Zmn46hOt7veb3g8c3JmdLH5SB0jAB0igSjkGQ4kKl/1jydPnY7AkwSYrpR13/CU+tFLX02uy5rTcdWJkRb+1+bJmwWyuGQ+C4qSZtsObQh/ZuIOMvo
 
 
 
-On 9/23/26 07:09, Bill Wendling wrote:
-> Under compiler-supported bounds checking (via KASAN or UBSAN), pointer
-> fields inside structures can be annotated with the '__counted_by_ptr'
-> attribute to specify which field in the same structure holds the element
-> count. This enables the compiler to perform runtime bounds checking on
-> the pointer.
+On 9/23/26 07:35, Bill Wendling wrote:
+> The GCC and Clang compilers provide the __counted_by_ptr attribute,
+> which is used by KASAN and compiler bounds-checking to detect
+> out-of-bounds accesses to pointer fields.
 > 
-> Annotate the "base" pointer field in "struct adc5_device_data" with the
-> "__counted_by_ptr" attribute pointing to "num_sdams". The number of
-> SDAMs is determined from the device property and assigned to "num_sdams"
-> which is then used to initialize "base" via "devm_kcalloc".
+> In "struct fsl_mc_io", the "portal_virt_addr" pointer points to the MC
+> command portal virtual address. The size of this allocated portal in
+> bytes is tracked by the "portal_size" field within the same structure.
 > 
-> By ensuring "num_sdams" is set to the correct element count prior to
-> the "base" pointer allocation, and since the size of "base" is never
-> reallocated or changed, this annotation is safe and will not cause any
-> false-positive runtime bounds check panics or KASAN issues.
+> Annotate the "portal_virt_addr" pointer field with
+> "__counted_by_ptr(portal_size)" to enable compiler bounds-checking and
+> harden against potential out-of-bounds accesses.
 > 
 > Cc: codemender-patching+linux@google.com
 > Assisted-by: LLM
@@ -120,20 +117,20 @@ Thanks
 -Gustavo
 
 > ---
->   include/linux/iio/adc/qcom-adc5-gen3-common.h | 2 +-
+>   include/linux/fsl/mc.h | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/iio/adc/qcom-adc5-gen3-common.h b/include/linux/iio/adc/qcom-adc5-gen3-common.h
-> index 39cbfcbdb101..b3e2c2f50e8f 100644
-> --- a/include/linux/iio/adc/qcom-adc5-gen3-common.h
-> +++ b/include/linux/iio/adc/qcom-adc5-gen3-common.h
-> @@ -137,7 +137,7 @@ struct adc5_sdam_data {
->    */
->   struct adc5_device_data {
->   	struct regmap *regmap;
-> -	struct adc5_sdam_data *base;
-> +	struct adc5_sdam_data *base __counted_by_ptr(num_sdams);
->   	int num_sdams;
->   };
->   
+> diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+> index c25f0f7e6dd4..0b2c0eb9b605 100644
+> --- a/include/linux/fsl/mc.h
+> +++ b/include/linux/fsl/mc.h
+> @@ -336,7 +336,7 @@ struct fsl_mc_io {
+>   	u16 flags;
+>   	u32 portal_size;
+>   	phys_addr_t portal_phys_addr;
+> -	void __iomem *portal_virt_addr;
+> +	void __iomem *portal_virt_addr __counted_by_ptr(portal_size);
+>   	struct fsl_mc_device *dpmcp_dev;
+>   	union {
+>   		/*
 
