@@ -1,99 +1,139 @@
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417AE3242B8
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 06:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668FA443C23
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 06:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790145570; cv=none; b=kGGmHPpGCtnrwB5NwM/9I1VnJiFaPp8weNzJkE6+dNllfPoryPXxVo3zpUZCTucfxlD6d0Bc0j0jzchaIluUqEWdECJQ6YO+nfxgQxExfeHcRCwUAXGsR9ZfYeL7+Zes8B19e4XTcHeJtA1UHPTh1+1TdzGtBRfRmKojokbgKqU=
+	t=1790146580; cv=none; b=qyCoI+K1BzOjMxFSDD5KYONd8oB+miulmubshrLJyJeWzF3V3AiButcXqnUacuwzP+96qilrnyei74KPZbFtZ74GYf0h5ApZvei6GqnVCqwcthzl/DfDVe1FAILP92SVnnN2GoAGeErtFTWfeIry4KqYUmnuUo7Rkl2UR87MdN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790145570; c=relaxed/simple;
-	bh=SR47e5VLRjptkH7hoXhuOEzDVgkJjAgGQHeZ6l3/JIA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=UbKbHizvK1d9viiJLERK+FDp2bEHtwKsgn6XwmpvSDOgTnWCCk8+WF5zeM/osRVsJmDg83gECv/oETmUFNn3f4FD3l9OJZmvXBx6N14vgorC9x9JKXXWo0rlySqWcS8V6HE+v9A/00l2NJubhg+8StkAo8mdlLmwzO1VppJXFOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bgblwmvI; arc=none smtp.client-ip=209.85.216.69
+	s=arc-20240116; t=1790146580; c=relaxed/simple;
+	bh=qSM6L8Tt3Bo6L6FvVJnkZL8zE3lNbmNDUjzd5ZZnFUQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=AXbs1fF9vq58i+wjMLxRprWOKXXYduqO3Io0TfAA/OOH9TkZEjYXZp0+Wlr6L8GgDVzOGLmczM9d4V2OQJPj/cak1Ewc6o9Tn6REkJl6Kqlus96g4RUNJmKKMsQDL5frAmhYolr2+TZ2bwDSpo2fVr08sh0k65ImGOb1IO9Lov0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h6bR4ahW; arc=none smtp.client-ip=209.85.214.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bgblwmvI"
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-39b6416441eso1013105a91.1
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 23:39:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h6bR4ahW"
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2d02df2bf09so4517165ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 23:56:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790145565; x=1790750365; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=3fYXiK1IIs224YYvsOKYTsSB/R9PTPIaZUM4TNW3LiQ=;
-        b=bgblwmvI2yMv+uyKXE+VRlWRoQxlbpZZAih5kNRxF3FlZwvMZTRZCa2LTSMco/uM+h
-         rBmkIcygKMppxC+5FLvF9Z1yzH3d/SKHtCUuo0sTHTHP+DlZRuJwQKbyzBzX5wCli61j
-         h1o/wQVOb/QgmUTxVsbSDHalM/dDoxOP91A8iFPSr0N96qzXnc3sGlD9G1dU8WhxS9Kp
-         TLGCuiV0ytxmF69+dcDK7gpSdNS71UAXqMf/ev0DJFxbQ3u2SDswmJiwrZKHgUJMFRYU
-         d7rIW5LtjT1Qo9y3S7EgY8FHWjhiT3ijQNwah6nFwGTmgPGrJ5d22B/jAxgy8pZwjieq
-         8Z/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790145565; x=1790750365;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1790146576; x=1790751376; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=3fYXiK1IIs224YYvsOKYTsSB/R9PTPIaZUM4TNW3LiQ=;
-        b=sVl9dTGyB0lc/Igj1aHz5eHkr1sms7q8t9KzEaCtTk0+gOf+5sBjU276n9vpgAVeTX
-         GGjdIMb1CPV0B6InOEHEBbOPZ/wBXN71MYBMO5Fo3Kp1PDrP5FgLkBoGBMlya8+OSTpC
-         o5gG9qO2KH72ZU30dCQmqoC10+/W0oZeBN+I3hmFYPtFqsqtvkwx1sYVK7e4f7a/gXVT
-         9ZB3LAP0di8+kUMF1uMJaJDFqQC8l06t981EyLiimkxe+fK7joSu6q68q5vDx//WIqIl
-         vBt9qr3/k9D/R/ZIkIFGLXaH0HbaYkJvNUB/YaVGquOhFX6ZPHoek9be18kUxZFOhCd5
-         cLZg==
-X-Forwarded-Encrypted: i=1; AKwUvBy3yptRRUNfzP9MAHSRlKywCJx8o8RGzD7hJHvr4jb8Kw2BliO1yMa5nMvQOEap2fEhKlUh2O6/JPIik4EeaCs=@vger.kernel.org
-X-Gm-Message-State: AFuF++n0GFaXQ1iT0zx8l062f95jbhpvw+KW9NXBcRx6RYsGioJslueb
-	adrw34guKMY3vYKqRfrGUdgYSFrXDmnZ35WSe6+Oj8RuZtSXQ7H0hvu2vmd1ipo1l4csXv3R+Di
-	m
-X-Received: from pgei9.prod.google.com ([2002:a05:6a02:5269:b0:cc7:52a8:e3b6])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1fcc:b0:3a0:6b20:678e
- with SMTP id 98e67ed59e1d1-3a07e516c46mr1787372a91.13.1790145564662; Tue, 22
- Sep 2026 23:39:24 -0700 (PDT)
-Date: Wed, 23 Sep 2026 06:39:22 +0000
+        bh=93ESgb5epDnv42DkJ10ZS+s0RrMivyUc06fbtYjyWtw=;
+        b=h6bR4ahWE7rcBTDXRq3CVjKuPEu8aVwyXD+umoRXjaUSUmrIogEdxYYcJtk5zJmLXX
+         BYskt+n4hYl+spdtR4gzAhlvqrabrg3zZps8wMuYxGoEnTG5U6SKtfJkk1FG3/OFsgRK
+         gLIZ4slcZ14hmDb5EaFZ6GRQdVDImx9vrdtxgargKZWh/XRmO4TnqpSZLUr+PN2ZPSlQ
+         YvaWS4fgBjhXphgN4k8ueHXI2TGkhvaRYzTuEl9yslPoC3O5UgxWka2vPW9w1074ll0x
+         TCCZ7BbETGU2B/L/i/aO0z0AB/qsYKAwQGjZYwVnPxX4cgIPYMOV7cbOZjcTccGsOy8X
+         nbOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790146576; x=1790751376;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=93ESgb5epDnv42DkJ10ZS+s0RrMivyUc06fbtYjyWtw=;
+        b=kqjCZL8WNrQTtouNOl/ZeWvgWNeFeiQDj0j+vlZQ/pdrFPlitquR2+eur1sMyqXMxC
+         zt1AaPmHoC/p8PSRK7CiiUiO5TrROEkM8zlzDZ75jsem2KrHjfovEdPxdE0hlSUlBjs3
+         H4T/FM30g7x7CFQw9tyMW9VbnonW7yfjdNOsu3KNnVLi3MI/Fjs7JBklenprbty/PCjd
+         Wd/BXqROZ1fds6mn6svhqqXxx3UtjKwhShGrDDLljVE3GsHl/1iPF3Ewxs+37uFT3M6R
+         +rsVUrUFNTe5DPnQ66DZu/5N8R5lAjmjxoEXJ2Mh2axY2h21jypDSvbqjCUolOox94fU
+         S/Rg==
+X-Forwarded-Encrypted: i=1; AKwUvBwo/+F6v6Cl2lOESma7xWkRqyPbIThNjfKCBGcnR9/qmCwJnTCHSxuCwWQw/bTtxC9199MB0Zxj/AVyOxz6H1E=@vger.kernel.org
+X-Gm-Message-State: AFuF++kHHIbc4Vetc42gAsBqqi+dtgEC3gNY71uQcK03Cday0BmAr2si
+	AATAgTNKPE73q+G33vWKTYoHBksGfV9cvrnsY896TYQGn8gOVt56jwHVnZ/sJvuLXCLKMWPyfr5
+	6
+X-Received: from pldy20.prod.google.com ([2002:a17:902:cad4:b0:2df:3fbc:5137])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a6f:b0:2dd:c053:82f3
+ with SMTP id d9443c01a7336-2df69dc5153mr13412295ad.42.1790146575481; Tue, 22
+ Sep 2026 23:56:15 -0700 (PDT)
+Date: Wed, 23 Sep 2026 06:56:12 +0000
+In-Reply-To: <20260923063114.2683575-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20260923063114.2683575-1-morbo@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260923063922.2693049-1-morbo@google.com>
-Subject: [PATCH] HID: core: add __counted_by_ptr to struct hid_parser
+Message-ID: <20260923065612.2707049-1-morbo@google.com>
+Subject: [PATCH v2] HID: bpf: add __counted_by_ptr attribute to device_data
 From: Bill Wendling <morbo@google.com>
 To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
 Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-input@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com
+	bpf@vger.kernel.org, Bill Wendling <morbo@google.com>, 
+	codemender-patching+linux@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-In 'struct hid_parser', the 'collection_stack' pointer field is used
-to store a dynamically-allocated array of collection indices. The
-size of this allocated array is tracked by 'collection_stack_size'.
+The 'struct hid_bpf' contains a 'device_data' pointer field (of type
+'u8 *') and an 'allocated_data' field (of type 'u32') that specifies the
+size in bytes of the allocated memory for 'device_data'. Since
+'device_data' is a pointer to 'u8' (elements of size 1 byte),
+'allocated_data' represents the exact count of elements allocated for
+'device_data'.
 
-Annotate 'collection_stack' with the '__counted_by_ptr' attribute
-referencing 'collection_stack_size'. This allows compiler hardening
-features (such as KASAN and UBSAN bounds-checking) to detect potential
-out-of-bounds accesses to 'collection_stack'.
+Annotate the 'device_data' field of 'struct hid_bpf' with the
+'__counted_by_ptr' attribute, pointing to 'allocated_data'. This enables
+bounds-checking sanitizers (like KASAN and UBSAN) to detect
+out-of-bounds accesses to 'device_data'.
+
+Because the count 'allocated_data' is always set before any access and
+accurately tracks the allocated buffer size at all times, adding
+'__counted_by_ptr' will not cause runtime panics or false-positive
+bounds checks.
 
 Cc: codemender-patching+linux@google.com
 Assisted-by: LLM
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
- include/linux/hid.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2: Reorder the assignment of the buffer and the count field. It won't
+    generate an exception during execution, but it's a good coding
+    habit that also satisfies LLMs' paranoia.
+---
+ drivers/hid/bpf/hid_bpf_dispatch.c |  2 +-
+ include/linux/hid_bpf.h            | 10 ++++++----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index 8d17b741638c..403da4cef890 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -790,7 +790,7 @@ struct hid_parser {
- 	struct hid_global     global_stack[HID_GLOBAL_STACK_SIZE];
- 	unsigned int          global_stack_ptr;
- 	struct hid_local      local;
--	unsigned int         *collection_stack;
-+	unsigned int         *collection_stack __counted_by_ptr(collection_stack_size);
- 	unsigned int          collection_stack_ptr;
- 	unsigned int          collection_stack_size;
- 	struct hid_device    *device;
+diff --git a/drivers/hid/bpf/hid_bpf_dispatch.c b/drivers/hid/bpf/hid_bpf_dispatch.c
+index d46779b63660..fb302d0b9797 100644
+--- a/drivers/hid/bpf/hid_bpf_dispatch.c
++++ b/drivers/hid/bpf/hid_bpf_dispatch.c
+@@ -255,8 +255,8 @@ static int __hid_bpf_allocate_data(struct hid_device *hdev, u8 **data, u32 *size
+ 	if (!alloc_data)
+ 		return -ENOMEM;
+ 
+-	*data = alloc_data;
+ 	*size = alloc_size;
++	*data = alloc_data;
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/hid_bpf.h b/include/linux/hid_bpf.h
+index 19fffa4574a4..f45fb9cccece 100644
+--- a/include/linux/hid_bpf.h
++++ b/include/linux/hid_bpf.h
+@@ -185,10 +185,12 @@ struct hid_bpf_ops {
+ 
+ /* stored in each device */
+ struct hid_bpf {
+-	u8 *device_data;		/* allocated when a bpf program of type
+-					 * SEC(f.../hid_bpf_device_event) has been attached
+-					 * to this HID device
+-					 */
++	/*
++	 * allocated when a bpf program of type
++	 * SEC(f.../hid_bpf_device_event) has been attached
++	 * to this HID device
++	 */
++	u8 *device_data __counted_by_ptr(allocated_data);
+ 	u32 allocated_data;
+ 	bool destroyed;			/* prevents the assignment of any progs */
+ 
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
