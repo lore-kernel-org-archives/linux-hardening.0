@@ -1,137 +1,227 @@
-Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
+Received: from mail-vs2-f40.google.com (mail-vs2-f40.google.com [74.125.227.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD9F4398FA
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 21:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.205
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790199221; cv=none; b=uz31Bt3F0UlgoBEhMDa0sYFmp+f8sxRoMfNUyj6x/PISa4y56nxQdMSjZG1J0ejz1vFbEZRlfN2TvhR4YulhgjpHk+vp2BaM05uqTWZmSnNQtgOBW0HV7WBUNnePV6udc4kOcr+lVGgHj0VtR9T5z8vyjq16GZ4zZWdKvitv8ts=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790199221; c=relaxed/simple;
-	bh=AIosAjl/qfQ0+4SRj6KraAsMA9o8Ij1Mh3Om3uxMQ5M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QhdSsvG4dLZRqqP4OE6cbRLJ0v2K4eYu/WWbGGLyThJ8/2UY9quPx2eNhAABhdR9amhBRu4yY+AO6T7Q52iFL5LLW9mYUky7wHWvG1ZmwYT52SHyiC0vGF6XPG/jrfK9eNCiUE+84tkmyvn7oi0nrTmrE93YqBzTV0hy13gUeh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=jd3c43c7; arc=none smtp.client-ip=74.125.230.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA62576EB9
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 22:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790201184; cv=pass; b=SYTIRssprqWQ2LIE138NosKGNrseltE/iox54PgmOOK9LCTT9EAIoaiK9CJoL8CA/2UmQpUPpAbI+ds+ruWo59kmx1abW3a4IhIq3Gp9QXLdN/EWpJqRwmwcHgj5eiiqYS/iaBuG7qnbRmyjfrIT+jAtghKJqAtm8T1Jxlnb0iQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790201184; c=relaxed/simple;
+	bh=AsWbvRuBs6JsB6ieQaz86pXFNDyRQud0rrGGSGlxzuY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NCcSDnWGcezaLNAUuqlSKw/6LxNoUad63QMMCdNgUpygLGJvU6tPH6THISSkTb8J4eMNme8hd1Dwhbc53eud3F2gxiZwbCDknv1nbcQa5Ndlm9WGN68sepn+lhMapGQbYNeDD1Del/jGkVInwhVhR4YLVg+0npiC1nGtH6ZSsvM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HS3+hd2L; arc=pass smtp.client-ip=74.125.227.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="jd3c43c7"
-Received: by mail-qk2-f13.google.com with SMTP id d75a77b69052e-530de452c33so12005541cf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 14:33:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HS3+hd2L"
+Received: by mail-vs2-f40.google.com with SMTP id ada2fe7eead31-7ac5b4011a4so700706137.2
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 15:06:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790201180; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ZfjDoXxmcKqwqVMNtrH/eT8eev4+BO2T3dcIEkzDOX0Y/1MlFK6mIKGLlKfE6Fpnho
+         k2OYLfTJnNDEoEC4SyWw50r9y71HR0Ue4X3R6l9TNDFd7PtPqdndEAq3bd/R8mon26a6
+         LfJ3jNm90xhkD9H45Vyr72sAgpMkDiUcLwrIL9lZjHegPiyjkUkOnfeUOOEhOfd7UpoB
+         iiCKGWKmvtKvmJgYXJGc97NWB+WH2XIvTk+vHYBjVaJd3qJ450XEbr/MymtgWgFDuw5j
+         KGCNLjTRvx7j9TvK7g42zit7i2Da5buTnMgiz8IecT1TyIxs86TjNaybhM8YXlKPw8VW
+         6C6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=3yKK+WuchgTTwdNLrz4OxJ2b7Qi8+fI+db9UtwpFLIo=;
+        fh=gw8jUpqPjihEuUagvjh8IGAc8ATjeUvs9/giOXfGbJk=;
+        b=Ws6LVyInn1haGobc/qYBzr/h8wb7WRGaCzXgzdKZ47681SwjR2hpMAJE/CuqW8ozYZ
+         lFQz10x05V0xWDrtSp6qfvp4g4JmgDXJYHEMajMthPdXHSB7xw09udtbp1g11K9GhaqV
+         zIm6o3bryR52fQjvFV5e7k7TxtaZZWELB3AyiIZXbH5J88v5yUMlfRAjNtAfQE5dpIk+
+         7GR2EM9viymGFSArQszssDMPKvBsSq3gFAiiRoiz1+CthggXXfQ2Lm4coHDnYyKwwKyF
+         0lnh2gJV7MEnzxFZtOIa1qEpFBMyGIYelXjGVnO5M+3E9pvOAVbmQ30OgN8isYv1NzEd
+         ewzQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1790199218; x=1790804018; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=dJzkV1wEUwUk4mOjqXcbC0Tz78XuSDZNKDr6Z/EZbvA=;
-        b=jd3c43c7nauj+yMvirxC4UfGyRphA/GxL/+2BJnU9jziqab/ma0IjDy9juAzUTwhnM
-         ga5RRcAOzSI8z05NWeZgmUyHrhukQNW2ztBRDGTNni1MpDSI1ko51SXAsXpzxsmGyg5l
-         qaPL9/OxYvoxZYTiC8w/8d1qANNb6Y51PuTWFSeQNLErFwVg6MUQETBt8fw3r+EIscYM
-         d5OJ5eB3Z0bhbaHP14KevkHQ7SBAiYLoeknr4BQKoBKYLA/V3vua3fFCRQNw+aLpckLq
-         iJiPsW77MEzSsHPiOza9/C3bNRYXZFR+l5hZVHQOs3WMmVuLUe1pShMwyjWfiUf2qwCR
-         mFBA==
+        d=google.com; s=20251104; t=1790201180; x=1790805980; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=3yKK+WuchgTTwdNLrz4OxJ2b7Qi8+fI+db9UtwpFLIo=;
+        b=HS3+hd2LNIXxo51Lo08u/4zA+eKjJTYh/z+YZ/iJuZzIVK8UCdK2zz2G3TjboIMapd
+         SUVSki8eM7T9Nxd/CABC7JJUIiPKL2XQcyfNAk0ng1IDvdUyebs224vozRCCPgcu4PJg
+         OdVCyQIUkpDst0NEMsTutZJB7Te6Eros3gqVOVRoMPV9grBZeD1vx8dJ0hJFoQNDS5nQ
+         RF8hwA4H6+RVxsL8a+FAAs9Zm9X8C9P3K0UiKr18rnvl7I3SLa1mbFZ1l5HwijmlynnM
+         IBXhigQm+/Tnfn3Dd+O1F1Yxv7tOXw5H8XJawYndPvHbokkPm+54c5J+5y3c4BdEVeku
+         Rrzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790199218; x=1790804018;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=dJzkV1wEUwUk4mOjqXcbC0Tz78XuSDZNKDr6Z/EZbvA=;
-        b=oJaT6qhkXPV44OwmDzEGIIqymD9ZHiZF5zFZ00DdacbiG9Yj5Hl1gvTdbd8UylVxB2
-         ByV95xKC5sTrioHQdEZZP+PIF4aoYsWqvncIENQVaPJiB0xCRtXwLki8RQ28tp0tnEvl
-         nnXeB/p3dk/DaGoXhez96n22gUrvG2QB5xKwbc9mLHggASLxymZqnfWXgjzzZ9sG/mYS
-         UpmkGyBynHGu4D6mWew0XZq2Ze+oRGJOlkGUeYozDUM+TJJKhz+JW4nWuPZvGElGqccP
-         gosgw72s8qvHIXaI2RFHbBXRMdYHEjSjzmW1unRzHu7InCyxVZIk3BIkHCgn3b1Ukhb9
-         5kLA==
-X-Forwarded-Encrypted: i=1; AKwUvBxyLGOMsHgpb2tgw9bsI6FCvomBfTyN0kfm1USb1gnxuqzV9MJmocSKS0NSOeaWuoCGEJ1c+BMITS06OLsMOkU=@vger.kernel.org
-X-Gm-Message-State: AFuF++m7slWekfQrbgTncN2iyVy2gVtopzBSYs49N45pzttP9x/H3Y4c
-	7n80u9zCs3AXLXqURd9SPIulzwjfwl6kbRPYCENzYxGtF+3cO2u1Fp8KsyBByQLfgOg=
-X-Gm-Gg: AYBFou2Q8Tt9JY+2CvI7HWDXVCtW2gXrzuc37lkIWI8bq/5WHcrVhH+dOajiEMgK7u+
-	2NAo8QrcGg07/TE6DY/Q4Rj/D83NIVwdL7JWlCqGLYxLeX57mvtVV3OvnQ5QLft+eCo51Wu5ixT
-	blKb2DhbwrHS17YGItGca1yZYelFrziWATkjn4GIl0SZE9iilpRjpbYQbg3KHrRo7NHghxggIsU
-	878CvDc1GB3bvCgE73UtJheqfic6I57cjKy2CT+ocTUcgprYcq5nzM5/0hgseAKzcuiLvNswyiU
-	8Bb1RWOs+bkGvWYvIIaDmEWkt8BVSr9AqSSgi2frRRO6L0pb5BMY8y8ZnuXMjZdVZD3J+rPyiZn
-	387JIAYSUcA7T+R1aXamKij4DAJ9Fv7azj3n/tj1ByMz5vhs2AKTEA+vE9FisCtfAlivMbO0DVS
-	6tu8cvw2LmTPiRuQCK9OUMhv0jbZRP3z4BKqoK98EUirPVFA/+IJ8Wfdst/MiA2wLyN0bd0mQ=
-X-Received: by 2002:a05:622a:1806:b0:531:d7d:64ea with SMTP id d75a77b69052e-532fb63b162mr8219331cf.26.1790199218185;
-        Wed, 23 Sep 2026 14:33:38 -0700 (PDT)
-Received: from [172.22.22.28] ([73.62.185.64])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-532fb287d92sm3634361cf.20.2026.09.23.14.33.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Sep 2026 14:33:37 -0700 (PDT)
-Message-ID: <7147ce22-fc6d-4cff-9470-98e341da0a87@riscstar.com>
-Date: Wed, 23 Sep 2026 16:33:35 -0500
+        d=1e100.net; s=20260707; t=1790201180; x=1790805980;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=3yKK+WuchgTTwdNLrz4OxJ2b7Qi8+fI+db9UtwpFLIo=;
+        b=AjqvgxEpCj/2pGkhJw3N0Om41l6YaM+VNCvHqlE0TSkN0pJGyiZQJwCb0r9RXU4z6k
+         Pl6CWhf/MaXmDkzUFZ4m25BMKApqnUETTQLELnhiMJuuL7wGuWR3i3q4a6rHsceVn6P9
+         nAL3pWUuPz/uW5ZYF5x8oJVHgi/oFf3oVKjl6C8fFYvHRnvzzct6ohP9ILqJFBR8vgH3
+         O0qfPRdM7fKiujl11ARv/Q8R3lPmUXpJwSmC/YdWWLLaY/gp9qVJWAf0QJhn1qoM+nr2
+         HV5YuwgGHeI+4oU1pcMpUrM9BQlRZB8b0v20vnxy2irDcBODiEz1HmXEKAVmPIeOkUHw
+         knfw==
+X-Forwarded-Encrypted: i=1; AKwUvBwOUHooRY64KHKJZg6SVCD8Ll/njB7F8ociVZ+bkVvuMKiEqXmyiKwiYUVz825z0PAsT02VJcqHO6zDqdonKsA=@vger.kernel.org
+X-Gm-Message-State: AFuF++na7PUViLUjahYuIFV1bGnUhZREZf61O2DPDCjHMcuQ8YxcaQ7T
+	ND/FG5MWAiCRSQhV73G31C1KN30+Y/F3RxXnd1697NB3TlSJD+gRc7KxIajM7QGWg2bPuvgwBYH
+	1Q/NmESC0023cD59z5BQTV2m5i7NSxJ18AE0lTWu6YEBOu3B3A3lvcVw=
+X-Gm-Gg: AYBFou3bQbevb1azT3Ahz++u1URayeNvYIOqHmfthgMfdZJ+nQ2jFUKS9eVMDPHWD2Y
+	wh9zZ3GemBRlbPMP+F+U2BBzrCezIhb+BoucstnyjnEhpBp57a0CDpc5dpTJeOrbe48jP5FO0nV
+	YsagCGl1SJc2yOO4ZXdebAWjkt5x9tCSL/O/ZVAk7GQDvxpeR1CxhY25H0uysTXXJmxtxSkznXI
+	DVa9udBAe/d5iAiYqXFmf2/4H3NlVYiczQn/RoFGy5BReRSWXf6y68wZQtX/j3oa4e/eLKG6XQh
+	wK5XlF1/jT8pkJWz1t3CMCQQBGkFQC7y16pyxMIVtYEHJxOtxUb/ftfbJBvbrKiwytKNR4mXZbv
+	929P5BfcPAcg6zVgVwBxn
+X-Received: by 2002:a05:6102:61c4:b0:7a7:b6a:b022 with SMTP id
+ ada2fe7eead31-7af38bbded1mr142471137.22.1790201179622; Wed, 23 Sep 2026
+ 15:06:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] clk: toshiba: introduce a TC9564 SoC clock and reset
- driver
-To: Jerome Brunet <jbrunet@baylibre.com>, Brian Masney <bmasney@redhat.com>
-Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org,
- kees@kernel.org, gustavoars@kernel.org, p.zabel@pengutronix.de,
- daniel@riscstar.com, mohd.anwar@oss.qualcomm.com,
- lorenzo.bianconi@oss.qualcomm.com, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, mfd@lists.linux.dev,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260918165234.687224-1-elder@riscstar.com>
- <20260918165234.687224-4-elder@riscstar.com> <arG238GS8bMB6DkW@redhat.com>
- <0785235b-de06-44d4-9068-ec706eeba848@riscstar.com>
- <1jcxu3adn6.fsf@starbuckisacylon.baylibre.com>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <1jcxu3adn6.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260922112111.1970872-1-morbo@google.com> <202609230033.E3A658F@keescook>
+ <CAGG=3QW+N1FoUL2GOLfU=U1Pj-eb_o99Z_Mq76ocrZ29S-NyZg@mail.gmail.com>
+In-Reply-To: <CAGG=3QW+N1FoUL2GOLfU=U1Pj-eb_o99Z_Mq76ocrZ29S-NyZg@mail.gmail.com>
+From: Bill Wendling <morbo@google.com>
+Date: Wed, 23 Sep 2026 15:06:03 -0700
+X-Gm-Features: AclHuK_fY_1P8WjIOJbnwMFJqwDTCUFnN7YSyMbkDR7oEaQHX-fU05ol8keeeJ8
+Message-ID: <CAGG=3QXAoU8cPQHFLDPa7KZGPWMEqS9iLXY2KeBt2us=K6Z6hQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: st_sensors: add __counted_by_ptr to struct st_sensor_settings
+To: Kees Cook <kees@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	codemender-patching+linux@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9/23/26 3:58 PM, Jerome Brunet wrote:
->>>> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
->>>> index f9592fd9ec2bb..50efa10d48450 100644
->>>> --- a/drivers/clk/Kconfig
->>>> +++ b/drivers/clk/Kconfig
->>>> @@ -292,6 +292,17 @@ config COMMON_CLK_S2MPS11
->>>>    	  clock. These multi-function devices have two (S2MPS14) or three
->>>>    	  (S2MPS11, S5M8767) fixed-rate oscillators, clocked at 32KHz each.
->>>>    
->>>> +config COMMON_CLK_TC9564
->>>> +	tristate "Toshiba TC9564 clock support"
->>>> +	depends on TC9564_PCI
->>> select RESET_CONTROLLER
->> Thank you.  The reset and clock drivers were previously separate
->> and the reset only became available if RESET_CONTROLLER was enabled.
->> Combining them means I need this.  I will add it.
-> Why did you combine them ?
-> 
-> it would be a lot better if the reset were handled in
-> drivers/reset rather than in clock. There has already been some work to
-> move reset from clock back to reset. This often involve auxiliary drivers.
-To be honest, I got a suggestion from someone to combine them, but
-I said "no, I got feedback last year that separating them was
-better."  But then a second person told me that these are often
-combined, so I took that as "two against one" and decided to
-merge them.
+On Wed, Sep 23, 2026 at 12:34=E2=80=AFPM Bill Wendling <morbo@google.com> w=
+rote:
+> On Wed, Sep 23, 2026 at 12:52=E2=80=AFAM Kees Cook <kees@kernel.org> wrot=
+e:
+> > On Tue, Sep 22, 2026 at 11:21:11AM +0000, Bill Wendling wrote:
+> > > Annotate the "ch" pointer member of "struct st_sensor_settings" with =
+the
+> > > "__counted_by_ptr" attribute. The elements of "ch" are counted by the
+> > > "num_ch" member in the same struct.
+> > >
+> > > All instances of "struct st_sensor_settings" are defined as "static
+> > > const" arrays across the ST sensor core drivers. For pressure sensors=
+,
+> > > "num_ch" is explicitly initialized with the size of the respective
+> > > channel array using "ARRAY_SIZE(...)" during static definition.
+> >
+> > I wanted to understand this so, in drivers/iio/accel/st_accel_core.c:
+> >
+> > static const struct st_sensor_settings st_accel_sensors_settings[] =3D =
+{
+> > ...
+> >                 .ch =3D (struct iio_chan_spec *)st_accel_12bit_channels=
+,
+> > ...
+> > }
+> >
+> > static const struct iio_chan_spec st_accel_12bit_channels[] =3D {
+> >         ST_SENSORS_LSM_CHANNELS_EXT(IIO_ACCEL,
+> >                         BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCAL=
+E),
+> >                         ST_SENSORS_SCAN_X, 1, IIO_MOD_X, 's', IIO_LE, 1=
+2, 16,
+> >                         ST_ACCEL_DEFAULT_OUT_X_L_ADDR,
+> >                         st_accel_mount_matrix_ext_info),
+> >         ...
+> >         IIO_CHAN_SOFT_TIMESTAMP(3)
+> > };
+> >
+> > #define IIO_CHAN_SOFT_TIMESTAMP(_si) (struct iio_chan_spec) {          =
+ \
+> >         .type =3D IIO_TIMESTAMP,                                       =
+   \
+> >         .channel =3D -1,                                               =
+   \
+> >         .scan_index =3D _si,                                           =
+   \
+> >         .scan_type =3D {                                               =
+   \
+> >                 .sign =3D 's',                                         =
+   \
+> >                 .realbits =3D 64,                                      =
+   \
+> >                 .storagebits =3D 64,                                   =
+   \
+> >         },                                                             =
+ \
+> > }
+> >
+> > So .ch is assigned an array of items which looks to end with a terminat=
+ion
+> > sentinel. And .num_ch is unassigned:
+> >
+> > $ git grep '\.ch =3D ' drivers/iio/accel/st_accel_core.c | wc -l
+> > 16
+> > $ git grep '\.num_ch =3D ' drivers/iio/accel/st_accel_core.c | wc -l
+> > 0
+> >
+> > > For accelerometer, gyroscope, and magnetometer sensors, "num_ch" is n=
+ot
+> > > explicitly initialized (and thus defaults to 0). This is because thos=
+e
+> > > drivers hardcode the channel count to "ST_SENSORS_NUMBER_ALL_CHANNELS=
+"
+> > > rather than using "num_ch" from the settings struct.
+> >
+> > Yeah, checks out:
+> >
+> > $ git grep '\.ch =3D ' | cut -d: -f1 | sort | uniq -c
+> >      16 accel/st_accel_core.c
+> >       4 gyro/st_gyro_core.c
+> >       5 magnetometer/st_magn_core.c
+> >       6 pressure/st_pressure_core.c
+> > $ git grep '\.num_ch =3D ' | cut -d: -f1 | sort | uniq -c
+> >       6 pressure/st_pressure_core.c
+> >
+> > Interestingly, the pressure/st_pressure_core.c uses both assigned .num_=
+ch
+> > _and_ a sentinel.
+> >
+> > > Since these structures are static const, both "ch" and "num_ch" are
+> > > fully initialized at compile time and available immediately at boot
+> > > time.  The only accesses to the "ch" field of "st_sensor_settings" oc=
+cur
+> > > when assigning it to "indio_dev->channels" during device probing.
+> >
+> > Heh, so the bounds check gets laundered. :) Even pressure:
+> >
+> > pressure/st_pressure_core.c:    press_data->num_data_channels =3D press=
+_data->sensor_settings->num_ch - 1;
+> > pressure/st_pressure_core.c:    indio_dev->num_channels =3D press_data-=
+>sensor_settings->num_ch;
+> >
+> > > Because "sensor_settings->ch" is never dereferenced or accessed as an
+> > > array, adding the "__counted_by_ptr" annotation does not cause any
+> > > runtime panics or false-positive bounds checks under KASAN or UBSAN.
+> >
+> > I would argue that either __counted_by_ptr has no use here ("accidental=
+ly
+> > safe because no one dereferences .ch" isn't a great justification)
+> > or that the accelerometer, gyroscope, and magnetometer sensors should
+> > have their .num_ch assigned correctly so that the "contract" is correct=
+,
+> > even if nothing does the deref.
+> >
+> This is all very weird. Below is the full output from CodeMender. It
+> might give some insight into this, but perhaps we should just NACK
+> this patch?
+>
+After further review, I'm going to NACK this patch as having no
+effect. I think this makes me a real kernel developer now? :-)
 
-The other reason is that four registers are used:
-   #define CLK_CTRL0_OFFSET	0x1004
-   #define RST_CTRL0_OFFSET	0x1008
-   #define CLK_CTRL1_OFFSET	0x100c
-   define RST_CTRL1_OFFSET	0x1010
+NACK: Bill Wendling <morbo@google.com>
 
-They alternate between clock and reset.  The previous separated
-drivers specified the two offsets for each driver in the reg
-property.  But somehow these interleaved registers seemed a
-little off, so I thought the combined driver cleaned that up
-a little.
-
-I don't have any strong preference one way or another.  If you
-think they're better separate, I don't mind separating them
-again.  The two drivers are extremely simple.
-
-					-Alex
+-bw
