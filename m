@@ -1,39 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F253B446052
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 07:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405303E1204;
+	Wed, 23 Sep 2026 07:23:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790148007; cv=none; b=CnU2DE4LjAjwU4g4zEXOhoMFhGKFXyNJT5AHRxXpoVdw11Pqm/UnYQW0SAa8b9ZY5Dkl8uPbP/HUlEiiCyXburXS8RD5V6i3kDs/RHsvzCx2rF9rZ53VyfpeauVaDrqcmfJWsTQmfU7HoZ1N7GjXIHgHt9AJ1tl+MLhF574W03s=
+	t=1790148186; cv=none; b=jtmxgU7XN/ZfiZT0DvJRpYqDLvbhFIUNRQdbabH84j+7RdWgsV/sG1rKNmehFfUWxMYeDFylsczXR3atRRXz8gjRfB3zv2J57hkFIBg4bvrRXpthsFJz2N2ydHt7fSLtLLR5aci+iT4XRPqMxt/Lc+veWUZdKF1j7CPLnzCH3HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790148007; c=relaxed/simple;
-	bh=Z5HXik1TEpwNXoISK6jKd9g0KtaddSbZS8dem+QPyBA=;
+	s=arc-20240116; t=1790148186; c=relaxed/simple;
+	bh=oCN1KbF54mPhtRZ1+Re4+FxfSHl0cJYsKsBOTSfQ/PQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BPmM5v5d9GNv6LmzVBPeDUWXba3W0MZxIpIzVtHpDVh00baXWlYNagWXQ9IDb1iIWkw1jsLSsPBYQ2ETXx9pZGA9bnpeVMJgQDGiufOsw+Xhfio1nQKoEn0366nsIIiCB/tXf72dK6SFSM4MU4uu3YMsVzlsYIYHzp/tETNMNlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhvQCiG6; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9abBnopsjM89ZBJomvkIsVWcewtpcudo4ZP+//cQZzaQd6atuacQkDYM3d0rYcdMyg6MZp3HMJTP/i6ITbVX12axv3SXsTKoDRv0OX2u1+3/lDa0v7SsHsliG3t882hyCL9yWAmJEfPL9E8cc91cP4YNG4KjRQg6EwY9upwwTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhl+A7Wz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhvQCiG6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF0F71F0089C;
-	Wed, 23 Sep 2026 07:20:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhl+A7Wz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 422821F000FF;
+	Wed, 23 Sep 2026 07:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790148001;
-	bh=iV6tsPP7FMUE2ViOpQrvTbhHAu4oOtyI3MUTKdllcOA=;
+	s=k20260515; t=1790148181;
+	bh=iWP0JfqpS7KoO6l/InDB/IDX8Qgt3W/nlO+IzCSYcfc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jhvQCiG6/YGN8Pxn++L5bTH238GbAIufSXR1wQdDnw4WCL5jU8ekiza+bTatAwGaD
-	 4HFlhWZrhAy/kSBS8On3MqeaMk62iqd+u2+/ViQPmd/PzYBJnrF7/KTjtOQBuDpdy8
-	 aUKoT71f7B25a+xfXfaNQhJCVB8ewTMS4rRXNjYOMHDr0fzUT+jJxelbxX8viRX2T/
-	 joMGcTMZywAhL2obJ8w5cAFOzlIECDsLC5hYOt6etyCTPoEnW9eROjZlH4bUsRZpq1
-	 EhxSPfzR9ZiI3lSx3zh0GRoCFZVKtXFw2hSDVqMsvwPoAh++0thI61AYPDlcaApa8S
-	 hxcoENcM9x3PA==
-Date: Wed, 23 Sep 2026 00:20:01 -0700
+	b=lhl+A7WzgpOerXuR8PJ0U6DFAGu088foHRA3S0KQbC3UlTBrHWw47qGkRAbRmNNy/
+	 OuJ6kGvpVJgNgIUepXmuL4wPrF/6+wCAq2uNzvwCFrAmndd4nKuM1qYWhsUTpdanNp
+	 OQdOK9W1OaemiylkeVO1brYr4Kpio3A5OPlhdthspIR3K6AlteFKDkHtOZTf0O3bSJ
+	 l7leDdm6ArB8cM8b/hOK+v1w+VJF6D1mIvj0/T/KfPOwCnYi73+FoRsgE1WeFsDpMq
+	 xUbyk91sQeSdthV5bZzKs6GiKTH+hr8BR9gocFUaBAc8P+D150TtQAlb3OAwC2U/a4
+	 UX3aioxlAQaOQ==
+Date: Wed, 23 Sep 2026 00:23:01 -0700
 From: Kees Cook <kees@kernel.org>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: tony.luck@intel.com, linux-hardening@vger.kernel.org,
-	kernel-dev@igalia.com, kernel@gpiccoli.net
-Subject: Re: [PATCH 0/2] Small improvements on pstore user experience
-Message-ID: <202609230016.101B0479BF@keescook>
-References: <20260922212532.98571-1-gpiccoli@igalia.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Bill Wendling <morbo@google.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev, codemender-patching+linux@google.com
+Subject: Re: [PATCH] Drivers: hv: vmbus: annotate struct vmbus_gpadl with
+ __counted_by_ptr
+Message-ID: <202609230021.7F6F2140@keescook>
+References: <20260923055320.2602534-1-morbo@google.com>
+ <a51283e0-7d55-4d06-bf7d-3cd7b7a21faa@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,32 +53,54 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260922212532.98571-1-gpiccoli@igalia.com>
+In-Reply-To: <a51283e0-7d55-4d06-bf7d-3cd7b7a21faa@embeddedor.com>
 
-On Tue, Sep 22, 2026 at 06:19:00PM -0300, Guilherme G. Piccoli wrote:
-> Hi Kees, Tony,
+On Wed, Sep 23, 2026 at 03:10:08PM +0900, Gustavo A. R. Silva wrote:
 > 
-> Here are some small things I've noticed in pstore usage that annoyed
-> me a bit, so it's not they must be fixed - no bugs here that I can't see.
 > 
-> But the fact kmsg_bytes can be changed via mount option but I can't
-> write on its sysfs parameter, or that I can set compression to like
-> "zstd" even when PSTORE_COMPRESS is unset, is a bit confusing to the
-> point I tried to improve them with these patches heh
+> On 9/23/26 14:53, Bill Wendling wrote:
+> > Add the "__counted_by_ptr" attribute to the buffer field of "struct
+> > vmbus_gpadl". This allows compilers (GCC and Clang) to perform
+> > compile-time and runtime bounds-checking when KASAN is enabled, preventing
+> > potential out-of-bounds accesses to the GPADL buffer.
+> > 
+> > The fields "buffer" and "size" of "struct vmbus_gpadl" are assigned
+> > exactly once, during GPADL establishment inside
+> > "__vmbus_establish_gpadl()" in "drivers/hv/channel.c".
+> > 
+> > To ensure that the count field ("size") is initialized before the
+> > pointer field ("buffer") is assigned, we reorder the assignments in
+> > "__vmbus_establish_gpadl()" so that "gpadl->size" is written before
+> > "gpadl->buffer".
+> > 
+> > Cc: codemender-patching+linux@google.com
+> > Assisted-by: LLM
+> > Signed-off-by: Bill Wendling <morbo@google.com>
+> > ---
+> >   drivers/hv/channel.c   | 2 +-
+> >   include/linux/hyperv.h | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> > index 7e4cc6f55237..7042de2dd481 100644
+> > --- a/drivers/hv/channel.c
+> > +++ b/drivers/hv/channel.c
+> > @@ -548,8 +548,8 @@ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
+> >   	/* At this point, we received the gpadl created msg */
+> >   	gpadl->gpadl_handle = gpadlmsg->gpadl;
+> > -	gpadl->buffer = kbuffer;
+> >   	gpadl->size = size;
+> > +	gpadl->buffer = kbuffer;
+> 
+> I think in some cases these subtle changes are worth a short but
+> informative comment saying that the _counter_ must be initialized
+> before the first reference to the pointer.
 
-Thanks for poking at it! Yeah, that PSTORE_COMPRESS=n seems like it
-needs to get fixed. :P
+But that's only for dereferencing it... there's no ordering requirement
+here at all (and I think swapping order is needless churn). Neither
+order is correct: only having them both set before dereferencing
+"buffer" is required.
 
-> Thanks for reviews and comments, and feel free to reject them if in
-> your opinion, they make things worse.
-
-Sashiko has some notes:
-https://sashiko.dev/#/patchset/20260922212532.98571-1-gpiccoli%40igalia.com
-
-I fear it is uncovered some other (small) preexisting issues, but I do
-agree the kmsg_bytes concurrency race is troublesome.
-
--Kees
 
 -- 
 Kees Cook
