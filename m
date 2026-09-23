@@ -1,120 +1,169 @@
-Received: from mail-pz2-f43.google.com (mail-pz2-f43.google.com [74.125.228.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360FF414A3B
-	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 05:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DE321A459
+	for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 05:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790140275; cv=none; b=SEgHkLyfo1g8/CA6leaqEvsTnaa9p9NjD9CN1KnFsJQECuBBoBRZcbFD+rsvLQC2XwY4kN7BW3fEFhPcCrNUWB6xn1f5jy9Zy75guuj7uB3GgwJuJsUVa4ozk0v28DryXnvBCWdb5e4aUClVYw5YoOWrxLC5MOAzTJwsJXtCdv0=
+	t=1790142000; cv=none; b=PcKhUvQ2AW8Z9quLcit1vyIxE8poomfi+O4UHaub3R2ZZpDFAPMTIWdIS/0KDNn7cU3epJIU9OUE1aCcjcobnM1yP/ZObY7SLUNqj2u4ytoFwO65xgggTuuNoFU1tIbkfros4thfMmEvSNsWFgHh2yPRYXYxDobSMOg+iCugNK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790140275; c=relaxed/simple;
-	bh=sylCtSF2MlCfq1b39cak/n9U1b8c8EdsoicVmdhuVhk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AKvxksCG8TsUJ95UmkHN7s5by40+k3gMeKflQrqPlzEdJ/Sh1mjzhGXZaZYM9Oub/KeQOx4FUWizd1GqeZG8dBFQAwaRqVQT4UXmqXoSqvyUPp1DSvM8/kTbewNUqTsjPczP5Cn+Ha5VVzl0UQbopGKuGFxoCVwMfiBLxcnfo3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=morsemicro.com; spf=pass smtp.mailfrom=morsemicro.com; dkim=pass (2048-bit key) header.d=morsemicro-com.20251104.gappssmtp.com header.i=@morsemicro-com.20251104.gappssmtp.com header.b=hkDBI41l; arc=none smtp.client-ip=74.125.228.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=morsemicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morsemicro.com
+	s=arc-20240116; t=1790142000; c=relaxed/simple;
+	bh=CHf7YR2P1zfqC8/qUYW8PpUaHXWITc/4OJW3WX30+6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aqRh1470+d2v3wqVK0/U8DIotudwXpDvPnt4sxUWEqztJ2DMb7070vr72K4Y9v4yn9x7pwSaRCPNSNaCBZK48nlhvmU8t5EYRhFs9Ppt+IIxSKx6T9amT3BWNuznETSaR7OOsTkuNUgm7rFh//wskwHzCq+/B3TMpp/56hlRbQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=wcavxlZ1; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=morsemicro-com.20251104.gappssmtp.com header.i=@morsemicro-com.20251104.gappssmtp.com header.b="hkDBI41l"
-Received: by mail-pz2-f43.google.com with SMTP id d2e1a72fcca58-85a4329731cso324950b3a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Sep 2026 22:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=morsemicro-com.20251104.gappssmtp.com; s=20251104; t=1790140273; x=1790745073; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=JoQb5pHgIxz8ZF+3NPp5p/PXUFzw+s+TYUg7wlblHUk=;
-        b=hkDBI41lKKn9Chq2Iu1D8GJJOw74FzWgCNOSY/PdPITZrLZW3xjObUtCtGJVBFqRwH
-         3XD2dF+/NzqHHzaYWeAiDhzGHY+ZlJiXZQeOsq9BkjwrowcGGP330es8AI3561KX60RB
-         wtT7Wofg4Xh5hu7ZDx7vwnlaLKvOUM0HIIZxfStpse6UaYabApX9mD7JRM9q/szrrNOG
-         Ic+8LeRz3MG5la3F3w7btJy3RaFEuomDNqSatmG/WopYCzwhrBqChSYJ4QQ2kpRS4zFK
-         gMxOxFFO1dn18enx2GC5ISkwmKNAO0nyUxZtmXy5wQR3tE+/e+R45b8dvfrB+PWCR18F
-         L0CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790140273; x=1790745073;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=JoQb5pHgIxz8ZF+3NPp5p/PXUFzw+s+TYUg7wlblHUk=;
-        b=rqk7+UJ7o9rp2ME5K38Emf0180ZCvUM4cUc5VjX7boGOkgf6TMGTSa2i2K4eqboBCl
-         cgVtYEgOeg1lYYs+T27rnjzaUwxqa7MtXs1QQPCmyqVlZ31GQZEu1w0JqUsGZpTXMXbh
-         RLu22k9xVRLsDq39ZtIAs8SOJSTqc218E/ZRiuwbb8BNJBCMRjTnAF/D19T44sIekZE4
-         uRFI5+eldqQ5YL0ZRl8oiBvtfzv+sZwrfrXKgAyB55aySVPB/LoE7Qg7be43F6VwVNwD
-         3VMubcreiMchGvAQ/k0pTo+pDlzriM0PjtB+qYmqld/zZAlQB4Sor5RZNOCwYZKiwwHM
-         s80w==
-X-Forwarded-Encrypted: i=1; AKwUvByHtXXcVYAvqSTde8w5q64UVR8I2/WOmwptkQcUzR4rQZmvjgI3MA784WSq3+DftvIMERm/qdO5EGS08nO7PYE=@vger.kernel.org
-X-Gm-Message-State: AFuF++mo3m+VHSCNUMpVycCILAAhYBfBQc+yAp2v9B7VDViZ57bxPOdp
-	o/1JG/jQ4D6o+Q5VYaZL2GZ6RDLPyOCsSDjsgOj3hoBBGTKfn2P5lmi8A50GXP9UC14=
-X-Gm-Gg: AYBFou0T2fREyDo4EbZFKPgPlaODCULiUW+QmNhR/FO5JhzSg6G3E8dJoqfpkoUOMsL
-	/Um5bXb5roR/0LwUmuZnznMyTaUHwrotWob+gzoUVC13lI9264wrFhEiYUT/vkPuyjdmxvhopQX
-	w+F0xY1GTDLrAqXkXP9+GBw9jfNWjI2/Etam0yhWqYHUCgJSBqNkqiJKab+qLVAvdvZTIXzLuN+
-	oNfkCXvK9apGbH4iitdEpi26wJK0KdOJ9Nuk8Gcanz4SLO2egvSWl0dgvjuiLUNXHD+08R5tPDB
-	mzoKuaKy9k8lrnmDDdfohCK6Ijo2yJaUd5lhyvBxjHrjaqiPu5ygAK3S1oQKprjmZZJjoCOwhFf
-	8zDCXaa8KNx4P5dMYLU8MDd49HQw4BqijZHBqKFnY5BcklC2NlgGobeWnWuc3i9puT/+TIuulbw
-	Xuf1lLe6uEYZrLWQo0M9aXp66IQg4RCx1881c3jOSNaJTskjBzOfyERwXVkGd3v3Ao0+WIJQiR4
-	LzYi0ipSKlzRzVXAitCVEwfYMzQY90zcn8dB5tA5vS5SUAiz4FiyL8jXPKmzmKv33PrTyE=
-X-Received: by 2002:a05:6a00:761a:b0:87d:3894:197d with SMTP id d2e1a72fcca58-87d3894223amr1197529b3a.40.1790140273603;
-        Tue, 22 Sep 2026 22:11:13 -0700 (PDT)
-Received: from localhost (60-242-93-14.static.tpgi.com.au. [60.242.93.14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-87d1cfc0a05sm693810b3a.10.2026.09.22.22.11.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Sep 2026 22:11:13 -0700 (PDT)
-Date: Wed, 23 Sep 2026 15:11:10 +1000
-From: Lachlan Hodges <lachlan.hodges@morsemicro.com>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Bryam Vargas <hexlabsecurity@proton.me>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, codemender-patching+linux@google.com, johannes@sipsolutions.net, 
-	linux-wireless@vger.kernel.org
-Subject: Re: [PATCH] wifi: ieee80211: annotate struct s1g_tim_enc_block with
- __counted_by_ptr
-Message-ID: <lia5ezt3tyf6vcpe742sel3vz4w2fuxva25uxgnztc7rkftk56@4qrkx22hmx5v>
-References: <20260923045233.2579591-1-morbo@google.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wcavxlZ1"
+Received: from eig-obgw-5005b.ext.cloudfilter.net ([10.0.29.189])
+	by cmsmtp with ESMTPS
+	id 9BLAxXvaLaC0U9FgVx8kS6; Wed, 23 Sep 2026 05:38:23 +0000
+Received: from gator4166.hostgator.com ([108.167.190.91])
+	by cmsmtp with ESMTPS
+	id 9FgUxygpGZOPw9FgUxIP9I; Wed, 23 Sep 2026 05:38:22 +0000
+X-Authority-Analysis: v=2.4 cv=H8Xbw/Yi c=1 sm=1 tr=0 ts=6ab365ce
+ a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=7T7KSl7uo7wA:10 a=1XWaLZrsAAAA:8
+ a=VwQbUJbxAAAA:8 a=uNDWqsvZ2givMv5jDzEA:9 a=QEXdDO2ut3YA:10
+ a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Unsubscribe-Post:List-Subscribe:List-Post:List-Owner:
+	List-Archive; bh=9nKFyigc1frVZS9CIQh1jg/E4/ykOvn8MgO5qeg9drw=; b=wcavxlZ1EV72
+	KhTCSyaArt7b0uBYHi1VUzqkhgnSKazZlRWTo7Ge0PMh0ZM9c+58vANvfPu1F+SQM4wRBJ+QEvt+C
+	WX47oewvI/760U4RB8BSmchKsE0TMxyja8sZxb5aKH6NiCV02EysGyYmxazcNgoJoKkfwkbvuhn+a
+	pSYBDx2Cvj/u00eNS6Drk4f+jCKVpZd1FtnN0v8pW+tFffO5xNkTY6cJV+KojtKwq/W4/W8m2L2O+
+	2Xil3PpKFMAWS5uJqqiA6FhIgKqnqs4zVe0HuLwY/ZN3lXna2K+RRyPGRpufMEHAMbua5+Jkk+7hB
+	5iPQjEo2FzKcXZ8hKBxn6g==;
+Received: from flh4-125-195-69-90.tky.mesh.ad.jp ([125.195.69.90]:37820 helo=[10.203.100.34])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.100)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1x9FgS-00000001tuW-1rCn;
+	Wed, 23 Sep 2026 00:38:20 -0500
+Message-ID: <00310b7b-7367-4546-90f3-4c0bc23f36d7@embeddedor.com>
+Date: Wed, 23 Sep 2026 14:37:45 +0900
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260923045233.2579591-1-morbo@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: gts-helper: add __counted_by_ptr to struct iio_gts
+To: Bill Wendling <morbo@google.com>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, codemender-patching+linux@google.com
+References: <20260923041630.2553973-1-morbo@google.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20260923041630.2553973-1-morbo@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 125.195.69.90
+X-Source-L: No
+X-Exim-ID: 1x9FgS-00000001tuW-1rCn
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: flh4-125-195-69-90.tky.mesh.ad.jp ([10.203.100.34]) [125.195.69.90]:37820
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFWPl6QZnjczNmuzu8fKCvWtz8W0SrRf/xGSV6op8YmwENfbOxPufNhd7xUY3X9l9FrDAbZ+FznlZCefHKEXlU4SzRWx+XQI0KfMv5oFyUTysEyLLQHn
+ Ex6cYXh6VWi/WLs9fYJZhTdF8g9E2FfZNmoCnHK5Ffia4T3DB5duBocQ6q5O86jTcQ6SN7ENIOoC/trwPDALEKNsHp4U7vacECtJnUJNctA+ozGfFU/oIl2Z
 
-+CC Johannes
 
-On Wed, Sep 23, 2026 at 04:52:33AM +0000, Bill Wendling wrote:
-> The GCC and Clang compilers support the "__counted_by_ptr" attribute on
-> pointer fields to associate them with an element count in the same
-> struct. This enables KASAN and UBSan bounds checking to detect
-> out-of-bounds accesses to the pointer.
+
+On 9/23/26 13:16, Bill Wendling wrote:
+> The compiler attribute __counted_by_ptr can be used by KASAN and UBSAN
+> to detect out-of-bounds accesses to pointer fields in structs where a
+> corresponding element count field is available.
 > 
-> In "include/linux/ieee80211-s1g.h", "struct s1g_tim_enc_block" has a
-> pointer member "ptr" of type "const u8 *" whose size is described by the
-> "len" member, which is correctly populated with the size of the buffer
-> before any pointer dereferences.
+> In "struct iio_gts", there are multiple pointer fields associated with
+> an element count. This patch annotates these pointer fields with
+> "__counted_by_ptr" to improve runtime safety:
+> 
+> - 'hwgain_table': counted by 'num_hwgain'
+> - 'itime_table': counted by 'num_itime'
+> - 'per_time_avail_scale_tables': counted by 'num_itime'
+> - 'avail_all_scales_table': counted by 'num_avail_all_scales'
+> - 'avail_time_tables': counted by 'num_avail_time_tables'
+> 
+> To ensure that the count is set correctly before any pointer is
+> accessed or assigned, we update "iio_init_iio_gts()" to set the counts
+> prior to assigning the pointers.
 > 
 > Cc: codemender-patching+linux@google.com
 > Assisted-by: LLM
 > Signed-off-by: Bill Wendling <morbo@google.com>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+-Gustavo
+
 > ---
->  include/linux/ieee80211-s1g.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/iio/industrialio-gts-helper.c |  4 ++--
+>   include/linux/iio/iio-gts-helper.h    | 10 +++++-----
+>   2 files changed, 7 insertions(+), 7 deletions(-)
 > 
-> diff --git a/include/linux/ieee80211-s1g.h b/include/linux/ieee80211-s1g.h
-> index 3f9626ad3d97..8f6107782c38 100644
-> --- a/include/linux/ieee80211-s1g.h
-> +++ b/include/linux/ieee80211-s1g.h
-> @@ -349,7 +349,7 @@ struct s1g_tim_aid {
->  struct s1g_tim_enc_block {
->  	u8 enc_mode;
->  	bool inverse;
-> -	const u8 *ptr;
-> +	const u8 *ptr __counted_by_ptr(len);
->  	u8 len;
+> diff --git a/drivers/iio/industrialio-gts-helper.c b/drivers/iio/industrialio-gts-helper.c
+> index 4f52dc373abf..4de6324fd923 100644
+> --- a/drivers/iio/industrialio-gts-helper.c
+> +++ b/drivers/iio/industrialio-gts-helper.c
+> @@ -652,10 +652,10 @@ static int iio_init_iio_gts(int max_scale_int, int max_scale_nano,
+>   	if (ret)
+>   		return ret;
+>   
+> -	gts->hwgain_table = gain_tbl;
+>   	gts->num_hwgain = num_gain;
+> -	gts->itime_table = tim_tbl;
+> +	gts->hwgain_table = gain_tbl;
+>   	gts->num_itime = num_times;
+> +	gts->itime_table = tim_tbl;
+>   
+>   	return iio_gts_sanity_check(gts);
+>   }
+> diff --git a/include/linux/iio/iio-gts-helper.h b/include/linux/iio/iio-gts-helper.h
+> index 66f830ab9b49..7e7d3396ff1a 100644
+> --- a/include/linux/iio/iio-gts-helper.h
+> +++ b/include/linux/iio/iio-gts-helper.h
+> @@ -58,14 +58,14 @@ struct iio_itime_sel_mul {
+>   
+>   struct iio_gts {
+>   	u64 max_scale;
+> -	const struct iio_gain_sel_pair *hwgain_table;
+> +	const struct iio_gain_sel_pair *hwgain_table __counted_by_ptr(num_hwgain);
+>   	int num_hwgain;
+> -	const struct iio_itime_sel_mul *itime_table;
+> +	const struct iio_itime_sel_mul *itime_table __counted_by_ptr(num_itime);
+>   	int num_itime;
+> -	int **per_time_avail_scale_tables;
+> -	int *avail_all_scales_table;
+> +	int **per_time_avail_scale_tables __counted_by_ptr(num_itime);
+> +	int *avail_all_scales_table __counted_by_ptr(num_avail_all_scales);
+>   	int num_avail_all_scales;
+> -	int *avail_time_tables;
+> +	int *avail_time_tables __counted_by_ptr(num_avail_time_tables);
+>   	int num_avail_time_tables;
+>   };
+>   
 
-Sure
-
-Reviewed-by: Lachlan Hodges <lachlan.hodges@morsemicro.com>
