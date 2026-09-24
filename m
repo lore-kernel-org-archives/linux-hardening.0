@@ -1,239 +1,173 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AF43254B8
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 03:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.168.131
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790222285; cv=pass; b=bzjlQZB2e84+ipOh6ztah76a8Dr75jZm6PfKocKCy3C73cy9WmGVFs+rIKVDAR4Cm+ppQ7K0m7bCHGdnq8MjqKtBozGFk0pzID5rWUOQ80hQFLwIQFNDKSUWFWJQOFinlmlsIPrZ6vxu8TokHnB7AMPpclPGvKkqrSuZNoyEOiU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790222285; c=relaxed/simple;
-	bh=CHiFbp1Ht+KYSTodND2btb1Fv+evJPyxUrGiPlT2uGA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UpivPR9Am+qzm7qcciDnMEXuQNRwYltFsshEuyOozMrbmMYwrEpHrQwoMOJVKVohJMN2rpDNNeTVhzFdEXC1bAo3tcbrjlpeCknesTQz6ITziCMdE6fvWGtM8beJYmrXaaErPnL7Ek9Z+pDhio62CvcMhcRO4Pr/SiMGzmzBIvg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Jy0GwHx9; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=iIkRAWHe; arc=pass smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CFF381E92;
+	Thu, 24 Sep 2026 04:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790223103; cv=none; b=YQJH9xz17upeZr3x8On8pBrvqGB501dSP8OENQQtHHFCzcCJFjAR5QaQIAZU9LLrPDAa0AOMPh9I2JIfVeuvTi9mpQRHF1kZB+fw2o77ytT08gYJ8UoHWohJmzaIi4Q0Wxk7Cxl7ItMCYoFHEE18zKp8VKjKgmJ2qO7QzafX7P8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790223103; c=relaxed/simple;
+	bh=29U8SrS6AdO6lFFos4hTHxTPuzEqeGJOKIbIIOI38mc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KE62rUqYFna8I4lLMao06xMeNEDBKyGTzAH8PUP5SmrmHPjqK3pRZZVInCx/0g4DTpD/rC4A+KEXgAdZjJf3p50SyD4+JnbCb1mw/lt/sg8CxFkouFQawCP+rVS/lyRwkAyrF4AxO648eB8rMfbC8qlDlJ56xPgVng7oHybEP3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=OzxKUUwZ; arc=none smtp.client-ip=113.46.200.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Jy0GwHx9";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="iIkRAWHe"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68O36gXP445600
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 03:58:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	cd4jf5QP6ZagO78mSAQTIruVq5OTGM8ayjqqwkV0qS0=; b=Jy0GwHx9OQqZd2qP
-	Sw6rJPwqFBg0rTtRNolbGIRdQemXodY2pQHHfubbr3nYBkSaOlOYj0bnY658yLRZ
-	wpAIpE4zy84+5aXJP1SClkGsNUL8+rHIxCojijEWGlVN1zBuyIVRVttAOOgCrCri
-	n3i/FZnhMAf2/O2E7Rx8vPtctdzwWFZ7S5XlCGrjUR4JL0F81SYea0yErDVEOcP+
-	Vx+LAndkzhbDmEqqA3Ie7x+LNsBe4Gw3jH+EmieTVAAr5gsEQJQJ/CbkASi+ErrT
-	PQY3HAMo/nJESbSS+N1w5m96yhbt+J6XFCtFb0kX70AClXfVqHjW1qDkmRNqukff
-	GZHhJw==
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gvr908tjn-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 03:58:03 +0000 (GMT)
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-3286d2bac04so1923376eec.0
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 20:58:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790222282; cv=none;
-        d=google.com; s=arc-20260327;
-        b=HJog1sMXhAGOvdVbsjk/rZHyMMb2DohjtWcEVBhvU+9aGztghxdwLxeLSEF9H5Qdo6
-         NXhmw3EcTdHK5CfbesioImBWNVDWHZV5BzbrwjhnSr1zhJdg/0Z2HtcaJX53CpmUL0JC
-         tRO+Iu9ptvLQ7+I+77y1CI+1DqSfO/9pdxFwOIiXjxzeodsHZzb/k/RzopKxCAweEvPX
-         SzZWUM4ikaSNSn7N5G/zpyYwxubfQVxlB7xpINnIZm/eeUL52wmIx0LVtVmCiqaKlGK/
-         pAD7dsWhqBFKDtYb0keMAJ8iFzB/lMBAQZ93fPj4RePZbpIXNlh4fLvDmH9sAB+PQ/Nn
-         ztog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=cd4jf5QP6ZagO78mSAQTIruVq5OTGM8ayjqqwkV0qS0=;
-        fh=d962wSHhfGKjrnW7d/mTDZS0EwD2O/Klc3PazfgXJmE=;
-        b=RMkV1syYdMvOVV0oPhB+29gkDgQiT6TvdHM5dpTf6TXcMazY0aQfB8pTyej1w7o5Zy
-         kwX4FVuFk/abz9vIg+a3a39vcS9MdaZswgpyYA5ZetQobcHflJmK9I1TQeleKgaGkCOP
-         A55we7BVA/pXgEOKYGaW9c7ugfGKI4LLhSAXuGYABnFbHBLNweQ/vo050Bit9DH4WGjr
-         OaVxzXkKZ3NnLMkAd5ki3C0wIpLvrqOeysXDrubNJTc4RQVj3dqJu8mRK9PaXZI66N6S
-         IH8GAU7YeinVp15ZDqha7K2YYoqRJKvBRC1SBuv3CEteN/EJsfmf4CeH2NgyNH21w1yT
-         +myg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1790222282; x=1790827082; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=cd4jf5QP6ZagO78mSAQTIruVq5OTGM8ayjqqwkV0qS0=;
-        b=iIkRAWHe0uPUrCSdemlXk/KDAjDpG6z/j4n4jgfjY+Nxo6Yu+GwH12whCGmflSDRzW
-         duVNAGIldTu3urx3x/jPT1P9WksFpLEjdHi1zFL29yS1ijBg9RJth38jJwZ3CGoHL7F9
-         wc03GqB1mTVMAn/3hrJK5W/cRvTQZWe+xxpI1/dL4XMhsrLkZ0tQx/EgwemqyXguEVp2
-         xRW6gq7IC68SHe/GgLrau/Q0Am06ivxBTc8msLuEy05a5gAcRKUhKvzAZmBchffgFglW
-         ngeCuc8Kcc9z4HrmO2+YfuiT89Aydynh4tCf9VbClVHfXJ4aPzxQiz/gIJ1f6CLtcf1q
-         V94A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790222282; x=1790827082;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=cd4jf5QP6ZagO78mSAQTIruVq5OTGM8ayjqqwkV0qS0=;
-        b=LLv7MMQxHCqLoY1Kg11Lt6l/JrexLynn6zI9QhBmeCdxQkqrLOyTF4tgUsHn3y+f/I
-         LXLImcz2KBO+ispagM+l+2OdXIoLZN2MYCY6esIkit3yrUDyfFztmXnpPP+SdmKapUBs
-         aXVBbMk4RVFxulyo3MUjTndAr7p2PtZxVBsMafMckOWcRkVqC0g5vmYuR0j1qaTLFeMr
-         nDQu7we6l4efosDB5Vn2UQLS4P1v948ZyELoVMzCsYooQ36xH9IHKj0TWadxXu0eoyLl
-         U3TWfAeesHEWWl6WUMCf4jp+l1a1VqB4r3SWyn2psabUDU+hDyatVSadeWM+tSUKfYgq
-         rvUQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzn/UhjNnQHqT+I7ywWv7q8VKGJd/JfWglyYXQSymhBhuLPzXmdJpm9H+4Y1lWA7WEL5r2Xhvv/6ZM5nKIjF80=@vger.kernel.org
-X-Gm-Message-State: AFuF++kfhDOHS32HTSnlg5DXYFEf2g2ejlQtIg6sVifK+bHSn9tVCHpX
-	mvqMdjYvTy8l6ABBURRAyJKv+FZ3CN0xT5VYckQuVy+yd60jpPj31v+9zaXi4jv3MzbH6ULGvY7
-	Ws9bA55VfsG0NoUwss9ERsajf6wYBpVsCNomt+M/MT3Y1HKELpZjb1MBfO0cd4JbZt8HDSvu+x6
-	hBOfQ6lCirb/FodO2EwnmRuhyBiwqBqmuQcozORZHbBvhz1w==
-X-Gm-Gg: AYBFou1qcLBRiSOpneuHVPZy7tqqfYIpMGo6fPkEfZv+PnqkVsLoyIZITAaNfvKE+Gv
-	UiHpKvmSYndLA7Cq7JAGJfO6UB1E1XAQ6JcSMkqaeYj1SP9n+HU5kV3VY2Qdn4Zk4W6fnMICzp7
-	3LYVAo81wBdIAb1t2n6kL3UKOtcxwfJdne+SQLFJct58PNte66eXOXTKM=
-X-Received: by 2002:a05:7301:e0f:b0:33e:4ad0:4bc0 with SMTP id 5a478bee46e88-340031cd6c3mr719949eec.9.1790222282068;
-        Wed, 23 Sep 2026 20:58:02 -0700 (PDT)
-X-Received: by 2002:a05:7301:e0f:b0:33e:4ad0:4bc0 with SMTP id
- 5a478bee46e88-340031cd6c3mr719906eec.9.1790222280889; Wed, 23 Sep 2026
- 20:58:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="OzxKUUwZ"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=ZRQ0VxqpuNoSza6zOLG1gwykGEw7zwH/fbhRzlWY/Lc=;
+	b=OzxKUUwZYTuTrykXXNDe9n63OFnXxUP++ZLONoERb3YuLUzDD9i/1X+acua3ZB0ygehiv+eB4
+	Ca2QoSb4sbF6lfkJvaGgSUJp0QiJV+KR8CD9CGAMtq4xueFC11/v+HxiBlPz6WHm5vSky1Ra14s
+	EL3oup3ikADUirUxoh+Z2pw=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4hr0TC39yJz12LFc;
+	Thu, 24 Sep 2026 11:59:27 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 238AB40561;
+	Thu, 24 Sep 2026 12:11:33 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemk200008.china.huawei.com (7.202.194.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Thu, 24 Sep 2026 12:11:31 +0800
+Message-ID: <bbd65e4d-8096-4939-8308-f0f54c5cb3bc@huawei.com>
+Date: Thu, 24 Sep 2026 12:11:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260825235748.i.456-kees@kernel.org> <20260825235759.3379064-1-kees@kernel.org>
- <283975a8-ccf6-4a3a-9a9b-4bc450657bbf-jchrist@linux.ibm.com>
-In-Reply-To: <283975a8-ccf6-4a3a-9a9b-4bc450657bbf-jchrist@linux.ibm.com>
-From: Andrea Pinski <andrew.pinski@oss.qualcomm.com>
-Date: Wed, 23 Sep 2026 20:57:49 -0700
-X-Gm-Features: AclHuK_KDSmvsqIk8hliNPcSXFCDVV8Tc7L9IwRRF6nhQYqSpohUv6tQDur_EeA
-Message-ID: <CALvbMcDRqkVH2gBbX-Ss8d7yM=-w3dunZYXuibp7dDrYbuJH3Q@mail.gmail.com>
-Subject: Re: [PATCH v15 1/7] kcfi: Introduce KCFI typeinfo mangling API
-To: Juergen Christ <jchrist@linux.ibm.com>
-Cc: Kees Cook <kees@kernel.org>, Jeffrey Law <jefflaw@qti.qualcomm.com>,
-        Joseph Myers <josmyers@redhat.com>, Richard Biener <rguenther@suse.de>,
-        Jakub Jelinek <jakub@redhat.com>, Martin Uecker <uecker@tugraz.at>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
-        Richard Earnshaw <richard.earnshaw@arm.com>,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        Marcus Shawcroft <marcus.shawcroft@arm.com>,
-        Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-        Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Waterman <andrew@sifive.com>,
-        Jim Wilson <jim.wilson.gcc@gmail.com>,
-        Dan Li <ashimida.1990@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ramon de C Valle <rcvalle@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Bill Wendling <morbo@google.com>,
-        Osterlund Sebastian <sebastian.osterlund@intel.com>,
-        Constable Scott D <scott.d.constable@intel.com>,
-        gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/ptrace: Add PTRACE_SYSEMU_SINGLESTEP
+ syscall-exit-stop test
+To: Kees Cook <kees@kernel.org>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<oleg@redhat.com>, <luto@amacapital.net>, <wad@chromium.org>,
+	<peterz@infradead.org>, <ada.coupriediaz@arm.com>, <linusw@kernel.org>,
+	<yeoreum.yun@arm.com>, <kevin.brodsky@arm.com>, <anshuman.khandual@arm.com>,
+	<james.morse@arm.com>, <thuth@redhat.com>, <vladimir.murzin@arm.com>,
+	<tglx@kernel.org>, <broonie@kernel.org>, <liqiang01@kylinos.cn>,
+	<ryan.roberts@arm.com>, <pengcan@kylinos.cn>, <kmehltretter@gmail.com>,
+	<linux-arm-kernel@lists.infradead.org>, Shuah Khan <shuah@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+References: <20260922195719.i.211-kees@kernel.org>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20260922195719.i.211-kees@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI0MDAxNyBTYWx0ZWRfX1ZfhKUDSuQMD
- Udyjsm53ZQd95CjiTfBP/RrwBZhE0QDBEVZoouPP39D0IXpQmPQTxqxOhAcgd2+WM7j9ruwHqTl
- B3w/1CAg7thYOMfp+IQlGtL15KU6wrY=
-X-Proofpoint-GUID: BS8QTRSH_jCwadVLIQg1D2t6G3vmglMd
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI0MDAxNyBTYWx0ZWRfXyZH5Oa97TxAS
- 4Bk7fp3lM+8WB1RqgUAwLNoKKpipaoegfficF3hRI8+AawfSC3cL/7kZ3FIopkGEPMlLM2+vPbj
- Z93jY1M1F016zMlWKSYC1jlrU6iShTgvyaH5wwUYXoSWcCTjRleSkibB2pB29V7hxkbTiuaSqde
- 2eu56e7ZoJ0Oas+uLtabtrLtwkiIAoX4ap4AhWfCpPke2AlGpSi69uDqvV5o8zT4MRBFgUHCK7G
- qMQ6QWEXp6u27p9xXqDbV0BgsNu1XHlQtqdwIau8ru676ShyHItkOX8VkuU376omSFDUNdW36sC
- OEun5ieYVgPEYX4poCOWofIXDuj/tjIq0o8JgRnDhwrIa8muhouDT1SjXRQHnuDNQsaltFJEk2B
- 9kmaYlIMa6oc65ir7MYSfAq3A/XAvYhE8kuviXhVuLXmAqUjhPZE+/6VRj+OrXFEEwn03JBjsHr
- 5OcR6jvsw8MsZP5auog==
-X-Proofpoint-ORIG-GUID: BS8QTRSH_jCwadVLIQg1D2t6G3vmglMd
-X-Authority-Analysis: v=2.4 cv=fMusTpae c=1 sm=1 tr=0 ts=6ab49fcb cx=c_pps
- a=cFYjgdjTJScbgFmBucgdfQ==:117 a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=_K5XuSEh1TEqbUxoQ0s3:22 a=VnNF1IyMAAAA:8 a=33k4SOAeE5V9mVv2dKMA:9
- a=QEXdDO2ut3YA:10 a=scEy_gLbYbu1JhEsrz4S:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-24_01,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 bulkscore=0 adultscore=0 lowpriorityscore=0 spamscore=0
- clxscore=1011 impostorscore=0 malwarescore=0 priorityscore=1501 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609240017
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 
-On Wed, Sep 23, 2026 at 2:25=E2=80=AFAM Juergen Christ <jchrist@linux.ibm.c=
-om> wrote:
->
-> Hi,
->
-> thanks for your work on this.  I will implement the s390x specific
-> part once this series is accepted.
->
-> > diff --git a/gcc/kcfi-typeinfo.cc b/gcc/kcfi-typeinfo.cc
-> > new file mode 100644
-> > index 000000000000..b6723fac48da
-> > --- /dev/null
-> > +++ b/gcc/kcfi-typeinfo.cc
->
->
-> > +/* Test mangling of basic builtin types.  */
-> > +
-> > +static void
-> > +test_typeinfo_basic_types ()
-> > +{
-> > +  ASSERT_STREQ ("v", kcfi_test_mangle (void_type_node).c_str ());
-> > +  ASSERT_STREQ ("c", kcfi_test_mangle (char_type_node).c_str ());
-> > +  ASSERT_STREQ ("a", kcfi_test_mangle (signed_char_type_node).c_str ()=
-);
-> > +  ASSERT_STREQ ("h", kcfi_test_mangle (unsigned_char_type_node).c_str =
-());
-> > +  ASSERT_STREQ ("s", kcfi_test_mangle (short_integer_type_node).c_str =
-());
-> > +  ASSERT_STREQ ("t", kcfi_test_mangle (short_unsigned_type_node).c_str=
- ());
-> > +  ASSERT_STREQ ("i", kcfi_test_mangle (integer_type_node).c_str ());
-> > +  ASSERT_STREQ ("j", kcfi_test_mangle (unsigned_type_node).c_str ());
-> > +  ASSERT_STREQ ("l", kcfi_test_mangle (long_integer_type_node).c_str (=
-));
-> > +  ASSERT_STREQ ("m", kcfi_test_mangle (long_unsigned_type_node).c_str =
-());
-> > +  ASSERT_STREQ ("x", kcfi_test_mangle (long_long_integer_type_node).c_=
-str ());
-> > +  ASSERT_STREQ ("y", kcfi_test_mangle (long_long_unsigned_type_node).c=
-_str ());
-> > +  ASSERT_STREQ ("f", kcfi_test_mangle (float_type_node).c_str ());
-> > +  ASSERT_STREQ ("d", kcfi_test_mangle (double_type_node).c_str ());
-> > +  ASSERT_STREQ ("e", kcfi_test_mangle (long_double_type_node).c_str ()=
-);
->
-> I looked at this on s390x.  We actually change the mangling of long
-> double if we are on a target where long double is 128bit IEEE to a
-> "g".  This causes this self-test to fail.  I suggest to add this patch
-> on top of our patch to fix this:
->
-> diff --git a/gcc/kcfi-typeinfo.cc b/gcc/kcfi-typeinfo.cc
-> index b6723fac48da..fab06249ae16 100644
-> --- a/gcc/kcfi-typeinfo.cc
-> +++ b/gcc/kcfi-typeinfo.cc
-> @@ -659,7 +659,14 @@ test_typeinfo_basic_types ()
->    ASSERT_STREQ ("y", kcfi_test_mangle (long_long_unsigned_type_node).c_s=
-tr ());
->    ASSERT_STREQ ("f", kcfi_test_mangle (float_type_node).c_str ());
->    ASSERT_STREQ ("d", kcfi_test_mangle (double_type_node).c_str ());
-> +#if defined (__s390x__)
-> +  if (TARGET_LONG_DOUBLE_128)
-> +    ASSERT_STREQ ("g", kcfi_test_mangle (long_double_type_node).c_str ()=
-);
-> +  else
-> +    ASSERT_STREQ ("e", kcfi_test_mangle (long_double_type_node).c_str ()=
-);
-> +#else
->    ASSERT_STREQ ("e", kcfi_test_mangle (long_double_type_node).c_str ());
-> +#endif
 
-Maybe we should use out the target hook here instead of hard coding
-the encoding.
 
->  }
->
->  /* Test mangling of pointer types.  */
->
+在 2026/9/23 3:57, Kees Cook 写道:
+> ptrace(2) states that no syscall-exit-stop occurs when a tracee is
+> continued with PTRACE_SYSEMU or PTRACE_SYSEMU_SINGLESTEP. arm64 gated
+> its syscall-exit report on
+> 
+> 	flags & (_TIF_SYSCALL_TRACE | _TIF_SINGLESTEP)
+
+Hi Kees,
+
+The original fix description is a bit off: on arm64 there is no extra
+syscall-exit-stop; instead, there's an additional pseudo single-step
+injection.
+
+As sashiko pointed out, as commit ac2081cdc4d9 ("arm64: ptrace:
+Consistently use pseudo-singlestep exceptions") described, for
+PTRACE_SYSEMU_SINGLESTEP, arm64 still needs the pseudo single-step
+because its hardware single-step state machine is fast-forwarded over
+the SVC instruction.
+
+static void report_syscall_exit(struct pt_regs *regs)
+{
+   ...
+   if (test_thread_flag(TIF_SINGLESTEP)) {
+       /*
+        * Signal a pseudo-step exception since we are stepping but
+        * tracer modifications to the registers may have rewound the
+        * state machine.
+        */
+       ptrace_report_syscall_exit(regs, 1);
+          -> user_single_step_report(regs);
+    }
+}
+
+https://sashiko.dev/#/patchset/20260922035510.1090299-1-ruanjinjie%40huawei.com
+
+> 
+> and ptrace_resume() clears SYSCALL_TRACE for both SYSEMU requests while
+> PTRACE_SYSEMU_SINGLESTEP additionally sets TIF_SINGLESTEP, so the
+> single-step bit alone produced a stop that must not exist. Nothing in
+> tools/testing/selftests covered this.
+> 
+> Detecting the extra stop is less direct than it looks. The report is
+> emitted with step=1, so ptrace_report_syscall_exit() dispatches to
+> user_single_step_report() rather than ptrace_report_syscall(), and it
+> arrives as a plain SIGTRAP indistinguishable by signal from the
+> legitimate single-step trap: neither PTRACE_O_TRACESYSGOOD nor
+> PTRACE_GET_SYSCALL_INFO separates the two. What does separate them is
+> the PC. The redundant report fires before the tracee has moved past the
+> syscall instruction, so it lands on the PC of the syscall-entry stop:
+> 
+> 	[0] sig=133 SYSCALL-STOP  pc=0x41ec28
+> 	[1] sig=5   trap          pc=0x41ec28   <-- must not exist
+> 	[2] sig=5   trap          pc=0x41ec2c
+> 
+> A fixed kernel reports pc=0x41ec2c already at stop [1]. The test
+> therefore asserts that the first stop after the syscall-entry stop is at
+> a different PC, which tests the consequence rather than the mechanism
+> and does not depend on how many pseudo-step traps follow.
+> 
+> PTRACE_SYSEMU is used to reach the syscall-entry stop, as single-
+> stepping there costs one stop per instruction and takes roughly 200000
+> stops. Architectures without a PC accessor here, or without SYSEMU
+> support, skip rather than fail.
+> 
+> Build tested ARCH=arm64 with GCC aarch64-linux-gnu 16.1.0, ARCH=arm
+> with GCC arm-linux-gnueabihf 16.1.0, and ARCH=x86_64 with GCC 16.2.0.
+> 
+> Tests passing on ARCH=arm64 under qemu-system-aarch64, and the same
+> test fails as expected on v7.3-rc2 without the fix[1]:
+> 
+> 	# entry stop pc=0x41ec28, next stop sig=5 pc=0x41ec28
+> 	# Expected next_pc (4320296) != entry_pc (4320296)
+> 	not ok 1 sysemu.no_syscall_exit_stop
+> 
+> An AArch32 build of the same test on an arm64 kernel reproduces the
+> failure identically, covering the is_compat_task() path. It also passes
+> on x86_64, which already uses generic entry, so the test does not report
+> a false positive against a correct implementation.
+> 
+> Link: https://lore.kernel.org/all/20260922035510.1090299-2-ruanjinjie@huawei.com/ [1]
+> Assisted-by: LLM
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  tools/testing/selftests/ptrace/Makefile       |   3 +-
+>  .../selftests/ptrace/sysemu_singlestep.c      | 176 ++++++++++++++++++
+>  tools/testing/selftests/ptrace/.gitignore     |   1 +
+>  3 files changed, 179 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/ptrace/sysemu_singlestep.c
+
+[...]
+
+> +TEST_HARNESS_MAIN
+> diff --git a/tools/testing/selftests/ptrace/.gitignore b/tools/testing/selftests/ptrace/.gitignore
+> index f6be8efd57ea..792c81f804c0 100644
+> --- a/tools/testing/selftests/ptrace/.gitignore
+> +++ b/tools/testing/selftests/ptrace/.gitignore
+> @@ -4,3 +4,4 @@ get_set_sud
+>  peeksiginfo
+>  vmaccess
+>  set_syscall_info
+> +sysemu_singlestep
+
+-- 
+Best regards,
+Jinjie
+
