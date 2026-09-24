@@ -1,153 +1,225 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3890432BD6
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 08:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0985477E
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 12:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790238506; cv=none; b=I8P1Av+gDTdWJJRIhUg/J3Zt75s8nTO93DtYsqC4Gzs/bySrE5zU7bLKeH6LWOQUgv625+QJBBZaNGVmjhBSWriTD0QRNlhlHiEiu2aQ0ZFSQ+Dm+0ZweypgkVxf0N8SCieZbCvoG/LpNC6bN0oqe6Vox4UXAyLP/aroNKF5Iuc=
+	t=1790253416; cv=none; b=dBYMMTYbyI+SEVNvWCymvPVWe4pC7YRZnYIyp3Wrvu4pZa8m7uZI/24CPCbLUliKqlwOdcbbu4d+scjfrSNYEjQ3Di6vepVOlKAO2/jTp4hk/5ymoVmy1swwWaCqaToqJHAR/aFaIjKZxq5dV6ry/jaI6maMP4R+yw0z1NQpCH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790238506; c=relaxed/simple;
-	bh=DUspM/oNodnMNdfgeoQ+UxAJJLrtHJ+XpmqtQN1AeGs=;
+	s=arc-20240116; t=1790253416; c=relaxed/simple;
+	bh=CLLX1WGSyy5uutnydf7E+boNfhnOuNdZ5bWoEr7Diic=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=nmohGBQQtI5JdFzRbxRvQIfIA1xS1Phc1oEJmJk60Q2NNtS+lajkPXdsWyX//r+kk6W4V7DjB4rl/cwdyoxyigtPipp81lWtJikYaBtciH0XOuhVWq1zDhtGUeuSZ37Z1pAs99CHb6pv6iNKo8/Hj25/VxVwIbmvahIWvwzrJ9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rduo5fvP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vfr8vI4EbL4yB7YrxmlxT54iW56hCX6R5tTaCSc9/j/D7Q5dACVaz3YKG6roAUIbMDaprWiXA+WAN2UnFpotdhiDlRSzTl8+wVVpIyDjhHo8Sze/jYyldNToGasWjXeoK5fK4ZRguTR37zZPXJxB6+kPkrzm7IDsmfPYVhs4bQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PM2KQyXd; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rduo5fvP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1790238503;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
-	bh=E7l+yPnrqsYMPZm7GAD6CpPMTa4JzYl3QRtJjgNueTQ=;
-	b=Rduo5fvPL3jZa3Wo6LvyackfgABoCRmmcTfkeRwjtHXdTuIwh6exT1zPBimzBdoMEkICEw
-	MdUMl6baSG4wPxDicE5SzSYw2Gq9SGvCNUb/0/LFON2Ci1y+xrhi6brYZ9hr38bEHypI6V
-	D8HyBlhVdnKyxstiPd47QLSMFID2PvE=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-50-_CBLju1vNoqiisrblErt8w-1; Thu,
- 24 Sep 2026 04:28:19 -0400
-X-MC-Unique: _CBLju1vNoqiisrblErt8w-1
-X-Mimecast-MFC-AGG-ID: _CBLju1vNoqiisrblErt8w_1790238495
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5108B197753D;
-	Thu, 24 Sep 2026 08:28:14 +0000 (UTC)
-Received: from tucnak.zalov.cz (unknown [10.44.33.31])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2012C180057E;
-	Thu, 24 Sep 2026 08:28:11 +0000 (UTC)
-Received: from tucnak.zalov.cz (localhost [127.0.0.1])
-	by tucnak.zalov.cz (8.18.1/8.18.1) with ESMTPS id 68O8S8Ji1889880
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 24 Sep 2026 10:28:08 +0200
-Received: (from jakub@localhost)
-	by tucnak.zalov.cz (8.18.1/8.18.1/Submit) id 68O8Rgd81889878;
-	Thu, 24 Sep 2026 10:27:42 +0200
-Date: Thu, 24 Sep 2026 10:27:42 +0200
-From: Jakub Jelinek <jakub@redhat.com>
-To: Andrea Pinski <andrew.pinski@oss.qualcomm.com>
-Cc: Juergen Christ <jchrist@linux.ibm.com>, Kees Cook <kees@kernel.org>,
-        Jeffrey Law <jefflaw@qti.qualcomm.com>,
-        Joseph Myers <josmyers@redhat.com>, Richard Biener <rguenther@suse.de>,
-        Martin Uecker <uecker@tugraz.at>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
-        Richard Earnshaw <richard.earnshaw@arm.com>,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        Marcus Shawcroft <marcus.shawcroft@arm.com>,
-        Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-        Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Waterman <andrew@sifive.com>,
-        Jim Wilson <jim.wilson.gcc@gmail.com>,
-        Dan Li <ashimida.1990@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ramon de C Valle <rcvalle@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Bill Wendling <morbo@google.com>,
-        Osterlund Sebastian <sebastian.osterlund@intel.com>,
-        Constable Scott D <scott.d.constable@intel.com>,
-        gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v15 1/7] kcfi: Introduce KCFI typeinfo mangling API
-Message-ID: <arTe_idboRBVfJLY@tucnak>
-Reply-To: Jakub Jelinek <jakub@redhat.com>
-References: <20260825235748.i.456-kees@kernel.org>
- <20260825235759.3379064-1-kees@kernel.org>
- <283975a8-ccf6-4a3a-9a9b-4bc450657bbf-jchrist@linux.ibm.com>
- <CALvbMcDRqkVH2gBbX-Ss8d7yM=-w3dunZYXuibp7dDrYbuJH3Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PM2KQyXd"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49d1ca5b0d6so13604785e9.0
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 05:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790253413; x=1790858213; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:content-type
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=gAR7nTOPxRo/mfR2u3OdcokbjHynlMhWcl3pdNDsUgo=;
+        b=PM2KQyXdNyMkZKSZ5df0/DRIQ1EX3ZgXrFINpng5lwi2SbPcINWs2eAUIMzZbNn5M+
+         9H6rqGUSAaWzXqKymsrVIVxFqTkuejCq8u4KBUzbr3XXgiGM9Z6wedvpMpzOo37nyPkR
+         4O72dC48+6gCqlPHRmKxlINMy+oCF5WwoYi65n1YuYxn3S522XH7kVbv1LojNjcYDs53
+         tMOSVNRs7jWduQyB7EypqqSriNHj5D+E1WeI8HzacBkkXwV8LaLoM0cS3l8Kxtk2T9s5
+         XXiDmCgUCgMnWrdwa2Issfd+okN20nMNnNmejF1Y5eHL9tBrOTIIcu7f/mu40Zlkl51h
+         8ndA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790253413; x=1790858213;
+        h=user-agent:in-reply-to:content-disposition:content-type
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=gAR7nTOPxRo/mfR2u3OdcokbjHynlMhWcl3pdNDsUgo=;
+        b=tJgdNoirwCOjwz40UgMDFS02rBw26ybhFKH+h7qlojIPj0WO8/HD9z+pXYPEXHHOsi
+         voVYGXP6K/VDF79Ku5F1iQS5sb1HBQXlcvL5wty+mRDwGuUy9YZGEvod3djFWGMibZwU
+         lSTl7gt1MdAGUWGgyXptpIOFYtt/IqQZ7Zu6eQXlujtulez3RaI6AFSYEtfwwf5XKnNe
+         UWPW3URfXKwYpeNG058O2601LjOMgraW7LRH3Z5aoWUhFStgsLRTRo8yVJFEbipMjtWg
+         cRWh2Sct55z2F3bXNAHwQXPDSe3pGZ/1dwKLC/RVODQIpPnUkPm9oW3byxBxGxYiDG1e
+         OeAw==
+X-Forwarded-Encrypted: i=1; AKwUvBwOwiGklxR0kNaYTf/GUtI+EhQ67RbKA3mI/MKSnZeQb5T+NGXgM9d9j6/Eywo2+mEopwr75XeC+ja/tmCDOTw=@vger.kernel.org
+X-Gm-Message-State: AFuF++l8NYLGtkQS4aDMjPzJZkIleXw/V8AJUjCg1VzRoqICNPZgvSb0
+	7oBcusdqpUsL/mawvC+syXiWTicnLecjOO6yFOXD2igeNOhMPTHdbx4a3voPJYigIA==
+X-Gm-Gg: AYBFou2M7jehaw7bOGN9X7QRIcWcMoXSViCHk88rk0tinRDHdXUqhwptrwXK0C5CiGk
+	lrHUTCscIp+9cOwkOOejaUtC6kneYPIQ8LpSVtVhT7imaGM6cOTwiJtOC2nSVs2PYm2oFFoIdFp
+	lC6oQA4yqfrlpYNW6W4ZSgMPYWQ57/aE8BWEXgPc8QPp1cyc3fafvsPvNeNhyZIKbBH20ISZHBU
+	zt4L+o35nnXbBO565/79osAe1T8UZZrwcMCfg1SVtA5xb2XYWEQZL5AzbGF9IX7rIPeid/FT4DB
+	nwWtMQ4glHet0pt7WXMmiTzmyxDy/1AavkQcE0pn8SXA8m+hmtpzIKhCx4qqauMA7XYl7UiUkKd
+	vgyrJ4WmtFU2qjeS54sxgqfVMvd0ZLpfJc8ZEcerDEONpXOEoNNw+X7vvSgDPBsVGDmtKZlX4JN
+	Pz8/LwKc9wbDqqkZ05tK4Sk0aaUZqJji8aQYG/zqwuC2Co58glYE4HOIXrkA3hSGsTAILKOETar
+	E6ULx8S22ObVmVDbtHxn3N3NpTa4LAM9HUNcs8VeQ==
+X-Received: by 2002:a05:600c:3514:b0:49f:ce72:e931 with SMTP id 5b1f17b1804b1-49fe6701e7emr38631215e9.35.1790253412640;
+        Thu, 24 Sep 2026 05:36:52 -0700 (PDT)
+Received: from elver.google.com (17.83.155.104.bc.googleusercontent.com. [104.155.83.17])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe0c4cc01sm56905385e9.3.2026.09.24.05.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2026 05:36:47 -0700 (PDT)
+Date: Thu, 24 Sep 2026 12:36:40 +0000
+From: Marco Elver <elver@google.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Vlastimil Babka <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	David Hildenbrand <david@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	KP Singh <kpsingh@kernel.org>, Kees Cook <kees@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Suren Baghdasaryan <surenb@google.com>,
+	linux-hardening@vger.kernel.org, Nicolas Schier <nsc@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>,
+	Hao Li <hao.li@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
+	Alexander Potapenko <glider@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kasan-dev@googlegroups.com, llvm@lists.linux.dev,
+	Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org
+Subject: Re: csky ICe (was: Re: [PATCH v4 2/3] slab: improve
+ KMALLOC_PARTITION_RANDOM randomness)
+Message-ID: <arUZWKjKr5I5tlOj@elver.google.com>
+References: <20260511200136.3201646-1-elver@google.com>
+ <20260511200136.3201646-2-elver@google.com>
+ <6106aefa-47c7-4bda-a51f-8a2fba3bf715@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALvbMcDRqkVH2gBbX-Ss8d7yM=-w3dunZYXuibp7dDrYbuJH3Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: uge-mw9co34dAW2_smF4oc-5NNJsmihV3h_Y9rhysfw_1790238495
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <6106aefa-47c7-4bda-a51f-8a2fba3bf715@roeck-us.net>
+User-Agent: Mutt/2.3.2 (2026-04-26)
 
-On Wed, Sep 23, 2026 at 08:57:49PM -0700, Andrea Pinski wrote:
-> > > +/* Test mangling of basic builtin types.  */
-> > > +
-> > > +static void
-> > > +test_typeinfo_basic_types ()
-> > > +{
-> > > +  ASSERT_STREQ ("v", kcfi_test_mangle (void_type_node).c_str ());
-> > > +  ASSERT_STREQ ("c", kcfi_test_mangle (char_type_node).c_str ());
-> > > +  ASSERT_STREQ ("a", kcfi_test_mangle (signed_char_type_node).c_str ());
-> > > +  ASSERT_STREQ ("h", kcfi_test_mangle (unsigned_char_type_node).c_str ());
-> > > +  ASSERT_STREQ ("s", kcfi_test_mangle (short_integer_type_node).c_str ());
-> > > +  ASSERT_STREQ ("t", kcfi_test_mangle (short_unsigned_type_node).c_str ());
-> > > +  ASSERT_STREQ ("i", kcfi_test_mangle (integer_type_node).c_str ());
-> > > +  ASSERT_STREQ ("j", kcfi_test_mangle (unsigned_type_node).c_str ());
-> > > +  ASSERT_STREQ ("l", kcfi_test_mangle (long_integer_type_node).c_str ());
-> > > +  ASSERT_STREQ ("m", kcfi_test_mangle (long_unsigned_type_node).c_str ());
-> > > +  ASSERT_STREQ ("x", kcfi_test_mangle (long_long_integer_type_node).c_str ());
-> > > +  ASSERT_STREQ ("y", kcfi_test_mangle (long_long_unsigned_type_node).c_str ());
-> > > +  ASSERT_STREQ ("f", kcfi_test_mangle (float_type_node).c_str ());
-> > > +  ASSERT_STREQ ("d", kcfi_test_mangle (double_type_node).c_str ());
-> > > +  ASSERT_STREQ ("e", kcfi_test_mangle (long_double_type_node).c_str ());
-> >
-> > I looked at this on s390x.  We actually change the mangling of long
-> > double if we are on a target where long double is 128bit IEEE to a
-> > "g".  This causes this self-test to fail.  I suggest to add this patch
-> > on top of our patch to fix this:
-> >
-> > diff --git a/gcc/kcfi-typeinfo.cc b/gcc/kcfi-typeinfo.cc
-> > index b6723fac48da..fab06249ae16 100644
-> > --- a/gcc/kcfi-typeinfo.cc
-> > +++ b/gcc/kcfi-typeinfo.cc
-> > @@ -659,7 +659,14 @@ test_typeinfo_basic_types ()
-> >    ASSERT_STREQ ("y", kcfi_test_mangle (long_long_unsigned_type_node).c_str ());
-> >    ASSERT_STREQ ("f", kcfi_test_mangle (float_type_node).c_str ());
-> >    ASSERT_STREQ ("d", kcfi_test_mangle (double_type_node).c_str ());
-> > +#if defined (__s390x__)
-> > +  if (TARGET_LONG_DOUBLE_128)
-> > +    ASSERT_STREQ ("g", kcfi_test_mangle (long_double_type_node).c_str ());
-> > +  else
-> > +    ASSERT_STREQ ("e", kcfi_test_mangle (long_double_type_node).c_str ());
-> > +#else
-> >    ASSERT_STREQ ("e", kcfi_test_mangle (long_double_type_node).c_str ());
-> > +#endif
+On Tue, Sep 22, 2026 at 07:58AM -0700, Guenter Roeck wrote:
+> Hi,
 > 
-> Maybe we should use out the target hook here instead of hard coding
-> the encoding.
+> On Mon, May 11, 2026 at 10:00:49PM +0200, Marco Elver wrote:
+> > When using CONFIG_KMALLOC_PARTITION_RANDOM, _RET_IP_ was previously used
+> > to identify the allocation site. _RET_IP_, however, evaluates to the
+> > caller's parent's instruction pointer rather than the actual allocation
+> > site; this would lead to collisions where a function performs multiple
+> > allocations.
+> > 
+> > With the generalization to kmalloc_token_t, we now generate the token at
+> > the outermost macro, and using _THIS_IP_ would fix this for all cases.
+> > 
+> > Unfortunately, the generic implementation of _THIS_IP_ relies on taking
+> > the address of a local label, which is considered broken by both GCC [1]
+> > and Clang [2] because label addresses are only expected to be used with
+> > computed gotos. While the generic version more or less works today, it
+> > is known to be brittle. For example, Clang -O2 always returns 1 when
+> > this function is inlined:
+> > 
+> >         static inline unsigned long get_ip(void)
+> >         { return ({ __label__ __here; __here: (unsigned long)&&__here; }); }
+> > 
+> > To provide a reliable unique identifier without breaking architectures
+> > relying on the generic _THIS_IP_, introduce _CODE_LOCATION_: it resolves
+> > to _THIS_IP_ where architectures provide a safe implementation, and
+> > falls back to a zero-cost static marker where _THIS_IP_ is broken.
+> > 
+> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071 [1]
+> > Link: https://github.com/llvm/llvm-project/issues/138272 [2]
+> > Signed-off-by: Marco Elver <elver@google.com>
+> 
+> With this patch in the tree, I get ICE erors when trying to build
+> csky:allmodconfig.
+> 
+> Example:
+> 
+> Error log:
+> sound/core/oss/mixer_oss.c: In function 'snd_mixer_oss_proc_write':
+> sound/core/oss/mixer_oss.c:1202:1: error: could not split insn
+>  1202 | }
+>       | ^
+> (insn 183 400 184 (set (reg:SI 0 a0 [orig:307 _55 ] [307])
+>         (xor:SI (reg:SI 3 a3 [orig:308 random_kmalloc_seed ] [308])
+>             (const:SI (plus:SI (symbol_ref:SI ("*.LANCHOR0") [flags 0x182])
+>                     (const_int 132 [0x84]))))) "include/linux/slab.h":759:52 288 {cskyv2_xorsi3}
+>      (expr_list:REG_DEAD (reg:SI 3 a3 [orig:308 random_kmalloc_seed ] [308])
+>         (nil)))
+> during RTL pass: final
+> sound/core/oss/mixer_oss.c:1202:1: internal compiler error: in final_scan_insn_1, at final.cc:2813
+> 0x779b51e2a1c9 __libc_start_call_main
+> 	../sysdeps/nptl/libc_start_call_main.h:58
+> 0x779b51e2a28a __libc_start_main_impl
+> 	../csu/libc-start.c:360
+> 
+> This happens with lots of files, not just this one. It is seen with all
+> versions of gcc starting with at least v13.x. Reverting this patch fixes
+> the problem. Bisect log is attached for reference.
+> 
+> Any idea what I could do to avoid the problem other than stopping to build
+> csky:allmodconfig ?
 
-Certainly.  Note, the ifdef is just wrong, that is testing the host
-architecture, while it actually cares about the target architecture.
-So, this would also fail miserably with cross-compilers (both from s390x
-to something else, then TARGET_LONG_DOUBLE_128 macro wouldn't often even
-exist), or from say x86_64 to s390x.
-Also, it isn't really s390x specific, alpha also g or e based on options,
-ia64 too, on rs6000 it can be e, g or u9__ieee128, on sparc also g or e.
+No idea what gcc is falling over here, but the below patch could be a
+workaround/fix. Does that work better?
 
-	Jakub
+------ >8 ------
+
+From: Marco Elver <elver@google.com>
+Date: Fri, 8 May 2026 14:51:45 +0200
+Subject: [PATCH] csky: Implement _THIS_IP_ using inline asm
+
+Both GCC [1] and Clang [2] consider the generic version of _THIS_IP_ to
+be broken:
+
+        #define _THIS_IP_  ({ __label__ __here; __here: (unsigned long)&&__here; })
+
+In particular, the address of a label is only expected to be used with a
+computed goto.
+
+While the generic version more or less works today, it is known to be
+brittle and may break with current and future optimizations. For
+example, Clang -O2 always returns 1 when this function is inlined:
+
+        static inline unsigned long get_ip(void)
+        { return ({ __label__ __here; __here: (unsigned long)&&__here; }); }
+
+Fix it by overriding _THIS_IP_ in <asm/linkage.h> (which is included by
+<linux/instruction_pointer.h>) using an architecture-specific inline asm
+version. Additionally, avoiding taking the address of a label prevents
+compilers from emitting spurious indirect branch targets (e.g. ENDBR or
+BTI) under control-flow integrity schemes.
+
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071 [1]
+Link: https://github.com/llvm/llvm-project/issues/138272 [2]
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ arch/csky/include/asm/linkage.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 arch/csky/include/asm/linkage.h
+
+diff --git a/arch/csky/include/asm/linkage.h b/arch/csky/include/asm/linkage.h
+new file mode 100644
+index 000000000000..04afd3583e25
+--- /dev/null
++++ b/arch/csky/include/asm/linkage.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_CSKY_LINKAGE_H
++#define __ASM_CSKY_LINKAGE_H
++
++#define _THIS_IP_ ({ unsigned long __ip; asm volatile("grs %0, ." : "=r" (__ip)); __ip; })
++
++#endif /* __ASM_CSKY_LINKAGE_H */
+-- 
+2.56.0.rc1.315.gc6ed9934b7-goog
 
