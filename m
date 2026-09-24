@@ -1,88 +1,89 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86FB3D7D70
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 02:41:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115D733372A
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 02:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790217696; cv=none; b=pQJKFpFVP7f7Pb84+zmsBuVsX20IXumySdVGilOhcpDLJAA+k8FfxCIKk1x9K71zYWFfCnrKHeCIDIvA5QpsYJ4rP+h5kNraADaXLqDzaLoex5RYtXKNiWcrUbtL7nGDcLsECW2RHiVJ6Vdhe3kSVcn5Xp8QfI8XXZvARUN0I80=
+	t=1790217703; cv=none; b=cMarSs1A00hQzUjaNFb40Oez+kiLTw8kGVHeN9aUmBd2mYD1iyhNGl4YjkUzwgk2TELPGcgUxxQdE/3TDkf/3zNCp4zUW/qV4rLGenN37/xLA0zDWavpbXwb2xa5SzbS00OHHuNKNusKf9Em/M6vW3Hea9Gwmi9y8hNZbM0wfC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790217696; c=relaxed/simple;
-	bh=/9w5q2UZtiN63unZO6x+fdZXRWbclI5wkZJUvm7FhLI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gEk+ATkKGo0Na8CTeErsK/bsIDUjniGeeLdPfwT3q6kVt9gHX4TmRlgJr8GZz5luGMPLaiwsB3K88vbyay54V0IP3IdUKq3aRF7lWxU8LLkr3INNBN5tCejhiD173VYGpMhX/nyhXMJqrI6VIzR8MjU5XaPWHw7xY14HYtnWiwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=iEcHCMxb; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Guor+u7i; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1790217703; c=relaxed/simple;
+	bh=EyWLR8HT45CAln0XcNXl0Swx1iiDzFpgEV+ivaL8IlM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ak35Ysk4w2TEUetm3fbRoaBx9fzwBuKTkD8JE972vCCzXKIsXlOcrQo++8qhvyYUqyda9UENqS+HtysK4+hdOA6oyf9NVwtgj75MABROaMVNLJhaPPIuPa7GiOVVxay+0GGDol2lQwNGW3AaYOGJcfwaedYOeAl3XyQUoRvBScg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WT0ALLL8; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ZJmYicwO; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="iEcHCMxb";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Guor+u7i"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68O2K3GC1317071
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 02:41:33 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WT0ALLL8";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ZJmYicwO"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68O2K31u853874
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 02:41:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=0nzk71Z/a/OJRy4Wvd2k18
-	mEehJYeU7+sulfI7+0Deg=; b=iEcHCMxbhHgvLAejtHniySHDHRmIym1RJeyQpr
-	h3XI/fwG959CHHBSpQTdQ01zCFZEhuYYJbjSWTMofv8AVZlRtoe81ZO5riqmaBK8
-	/9GtJi6mqT0vD96tFQQbqgueJETRex6LNe130DHYNtkpwxfP1nWzOYxOHC+TPNyO
-	ZMYZoAHwWulgrHwiPaqCs4F3zOFN1gy/4MRfYROGUUEeCygQwlBBsx8nlwF5TJOt
-	meEmHyMrd7igzxeRZwoKCogYUqul7q+8XG9d1phqFhDFjFPSd5Z0019eGlOZnZuN
-	LNgnc2DeWOEr3nHjSxP76crULnMPW3CrwlU1F41hBM4Dm+Xw==
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gvfkbjwex-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	28JFi8aQFyfFe/wqTpKPLr2ytagGCO4P3M2TiHnNNmg=; b=WT0ALLL8GCdyvton
+	Eok1FIZvqH2OxbrwYcXSxfwlkecLxdZOatKff2W1cNwGd1uJg+PnvszVHMzxtgkN
+	9ezr+k3+5FI6a9NMsm+dtgFTXWoqmYHbbKzb9BGrseVWSMe862vuqFnxo8zLoJR0
+	HHRE0cZYL5Mv2yowRMrRDra8Y15go1gvWGit38bZ02kuS5PtEvS/Z0k1f/8akXoz
+	XLYTkvqSyVaMNFqbnrmFN/BmFdNS8N9yzZNn28rY6mqTUtUdIEjVj8G8SwpwOtrK
+	vpU5pS2lpym2+giVe7ryFJUMMJ+PKcgLK1BBwtCNTV5CGXIXu/OMj2K0blYxsLKZ
+	6gTO5Q==
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gvhsb28ww-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 02:41:33 +0000 (GMT)
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-33713e5e6daso2044477eec.0
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 19:41:32 -0700 (PDT)
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 02:41:35 +0000 (GMT)
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-33baaba6371so834753eec.1
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Sep 2026 19:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1790217692; x=1790822492; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=0nzk71Z/a/OJRy4Wvd2k18mEehJYeU7+sulfI7+0Deg=;
-        b=Guor+u7iz5okPrNboVMQpThF9ig6DpZ6ISpOb/gBLOJRnfXiw+mT5OKbriSVrPfMkB
-         1dYfd/psVWLloR2+kK7iSOQmN4owg805OkoXYo7xZ7pSZt0oP4R3EraXrTYWVIyTxf98
-         Q1Vy8idyFj/3fVJbWeULxnC/xS0kaSF3HT4jh5tyFyWeE/SjzqZp+AX7BVLT4AlG71mt
-         JoAgoYFv4nVdb5x7UdRwR2UKba3JdEOc5LDiZFR5CppS42Fg58BV/5ZrsskrJth1cFXz
-         cviwcht3xj9xlMeYe4gvxMk3b3fX9rx63gBARAzakIVhhOpTVHY6WU2dW+6N7eqjaLHR
-         ObUA==
+        d=oss.qualcomm.com; s=google; t=1790217695; x=1790822495; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=28JFi8aQFyfFe/wqTpKPLr2ytagGCO4P3M2TiHnNNmg=;
+        b=ZJmYicwO7dJtq4G/RC5X0fD56wmdq+iRD7DWtjPt7vnHmrtm1MIfnRMRwxbQ56GqXJ
+         ojncJIFdpyV7mzlKosWCu6/VsAuVkejE7XFadT1R3w79GMrv8+PR1RJUlrkSpnaFl5oX
+         Z26LI4lDx4HbDDR5+hQzcEz3thMRZtkSSeXJR49VlyGbOl69DgzRco4MMUJ6655nIV5x
+         RFOOHFqcl8Lp0CT/WAumTROND4jVypijK9DDFAZB4Go4ZIuxVZgDlf+6LfFwURxBzo/X
+         N24q6L/YuGBDWubjyjENBgJtgGQ7AvOACe+HYMXIWk6C4gizBi2cJup5jCQrHVxqOn46
+         XiFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790217692; x=1790822492;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=0nzk71Z/a/OJRy4Wvd2k18mEehJYeU7+sulfI7+0Deg=;
-        b=Al5WrU5hBODGJDYzH81a1sfqVrgvuRGu+CeAYNHjFgNjTqqBZvSHmj0UthRsDj0NIR
-         WLvLuQ03LtSaMGTWJP76o/pur6GpW4bhhqU1+OMMGlMj6JYd8/C90QYiMtBJzSN0KIa7
-         lCIs0mK066mii0ISDidw4Xt88qW3Du2KBT9eL62FJwCiKF+XyxpPu2ZsF9Wdx3aJs5B+
-         TG7anLLFbd3m8LPdwyWaEIP/GP1KQ25ZvFq+CzIOIXjcLbigBdK7hpocPQc8pxm+eomK
-         NIQVMxBd7Y+L4IonmTHjymVAE28Wl0mjP28FxvPsGkxZZW8+EPX5acyHbIiPdMSBYayM
-         TCHA==
-X-Forwarded-Encrypted: i=1; AKwUvBw9zV2sFzV+cgpDvAiIPmAwVdS9S9RErz+9e3AzagNpCnChqimpsBnTxh9gIQ/4gZ+W3opF50VMBAWrkxzbQf0=@vger.kernel.org
-X-Gm-Message-State: AFuF++nluDFnCERL5rgoKI9iQQuzdKy9PVRqfUZLFImgKTSCTNcWzM3X
-	eCW+y3Y0FuKYl53tr+FjE9pxaLaYFpW4SieD1aZiifLs+0bXR2hAYJBd+FLU6+6gorr+6psySB8
-	k6IIL41nomrOK1urL6pfEx8D3Ug4MyuM4t4l+JP2z4VNw5Gx4YcpEvMhuibvaMqiW3yFE/KhIrH
-	NUvw==
-X-Gm-Gg: AYBFou01MFd6rCAk4Zc5ZTTOd2l8M1TftmfY4MX9hK0MMkyMVAItjDYsrBFaVa7sN1M
-	O5D85KZ+i3upvWU963MOu/VG9fYsr62gbW1vLJovQ2/SJE8HmwzGIst3Qd9ZO0CFvq34snX5hcr
-	4CoXK0h0aNarIiwkAhEfWgawFGi2QLR+0u9jVz6sHscAuEq25+rehev8mij2D96ZzfbS6WrN/Qb
-	d9/YFvo0LXgf90MwH8okbUDHIZoZE+lUYQ+dU0BNjf+dWU9cikDZYyv8ZNBWBIEDQ2lO71fBJkC
-	XSO7OVcsig/oNIakimL8tLMDe4qtjPfy7RpJ419rP0NXyqwQPYZZhuaCJEawb/+UajlVByYsI9N
-	WeI0ZJkUCcyazHB+dqOORlG1wWQx1XzyWaiD0xZ4BJz2nDs7/qvRfqc+Rkka/RBHNrRnkX0W89u
-	3Qb7lKDySdbZtNb8FQVWqTUA==
-X-Received: by 2002:a05:7301:f21:b0:33c:e95:2eb2 with SMTP id 5a478bee46e88-3400171d8f9mr794841eec.41.1790217691922;
-        Wed, 23 Sep 2026 19:41:31 -0700 (PDT)
-X-Received: by 2002:a05:7301:f21:b0:33c:e95:2eb2 with SMTP id 5a478bee46e88-3400171d8f9mr794818eec.41.1790217691115;
-        Wed, 23 Sep 2026 19:41:31 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1790217695; x=1790822495;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=28JFi8aQFyfFe/wqTpKPLr2ytagGCO4P3M2TiHnNNmg=;
+        b=wtWGlKFxkf+EemcS/1EOKZ1NqZHeit1C8vGDh9NLq+ZgVpjC7rXJcwxxC0p8u+kj1D
+         k00Ocl9H/rEbgVlPy+ZMAutuCdBLaVdi9flkkIoM11l6xaw+OjwDLJqkgKVYA8Fx6ez7
+         fa5NdtswrNmXK9rxEfm0pIN/Fersdb8GVcKiIbop0VrCvd8BG2bRcu74U4I6yjVgjiQO
+         /MnglpwMCYUz1Om54PFERBptn7IvNU9Bd1k5F9RnPDQ1Q5sglP1W+X6u9iODSvvSacoc
+         pSuqDMbmaHNNC+OETm7K8qCiJbdqC1BEzjDaRgvBRje/Zz/dRCPXqJQZ/ikfAgms1ANL
+         rn+w==
+X-Forwarded-Encrypted: i=1; AKwUvBw8Hq+b6naxFllcH2lEpZQNiDs2StNxV2nX6qWGt6tMv5H2pXlJv4uzMitbmwRfhRvQI4rULAlacyk0KV952NY=@vger.kernel.org
+X-Gm-Message-State: AFuF++k5slEwmJlFqm4yuMhiUo7BNkAws/Gq+5dPeZOF2RtAeJOPYvRp
+	Rrl28wqJImM3Av8UGiStYwmKBofIMaCar+IhXUajUy6gpoKBVLmYDDKGgC4cw5uwLHVb/lyJpSz
+	5QoEXGYSUX8y8yu625mJbpGRJKf2DWHbP1RsdOMEKQthWAHtSckcPPROgWndhw5l2hO+d0w==
+X-Gm-Gg: AYBFou1UnUG4OuVTgqHzCLkHtZvNp2Xt0xfrWUIAhPeLq0vj4TdWBDM1x8Dij9awMMQ
+	hmVBbDGsIKXdAmghiP589Q/Mo8RLXaQ5XYO50JQn1aJiPRVqlCqQ3zDzzETPABcBjWYMAa5+LAe
+	avCN1p+2FLTt8zXp9elHrJR+hR7Cr0pSb7gdQjoI4gDVB9mYvgrMBbUW8JxUWjrueNLwJtgKeUw
+	FBoAJPa5Mfw3sQZHR2MEF2IrgCQj9E8mGoVvSDewaTStbwAWwrXrS/qiV+KflDjN/IAsQFWticd
+	3FJqZ2d5BWeexV4KFvU0FWaj7CR76ij+M4FeMuR4OLOxsLM1e08d8SDLNjCGTT8jZ7p9XSy320i
+	7KK3LpzVPwDSUSNMNcKJXUuCNSYmJV4fxWYqs8BvlcN+3DAGGDhMeHAfa5G64fDRwPRYYSJCV8e
+	J0SN3u6iCdkUkRyctIrYZ+FQ==
+X-Received: by 2002:a05:7300:8189:b0:33c:3515:daf4 with SMTP id 5a478bee46e88-340034c1e5amr1109995eec.27.1790217694823;
+        Wed, 23 Sep 2026 19:41:34 -0700 (PDT)
+X-Received: by 2002:a05:7300:8189:b0:33c:3515:daf4 with SMTP id 5a478bee46e88-340034c1e5amr1109965eec.27.1790217694179;
+        Wed, 23 Sep 2026 19:41:34 -0700 (PDT)
 Received: from hu-pooventh-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33e96258351sm9692263eec.12.2026.09.23.19.41.28
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33e96258351sm9692263eec.12.2026.09.23.19.41.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2026 19:41:30 -0700 (PDT)
+        Wed, 23 Sep 2026 19:41:33 -0700 (PDT)
 From: Pooventhiran G <pooventhiran.g@oss.qualcomm.com>
-Subject: [PATCH wireless-next v2 00/16] wifi: Add Seamless Mobility Domain
- (SMD) AP support
-Date: Thu, 24 Sep 2026 08:10:37 +0530
-Message-Id: <20260924-smd-v2-0-bb40094da1d4@oss.qualcomm.com>
+Date: Thu, 24 Sep 2026 08:10:38 +0530
+Subject: [PATCH wireless-next v2 01/16] wifi: nl80211: Define Seamless
+ Mobility Domain (SMD) device capability
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -91,267 +92,103 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKiNtGoC/x2M0QqDMAwAf0XyvEAt2FV/RfZQbTYDMxuJbIL47
- 1YfjztuAyNlMuiqDZR+bPyRAv5WwTgleRFyLgze+eBaF9HmjHVoY4iNy3ffQCm/Sk9er0sPf1Z
- 6kxkKrQs8ih6SEQ6aZJzO1ZxYYN8P3DHYeXsAAAA=
-X-Change-ID: 20260908-smd-16986850d725
+Message-Id: <20260924-smd-v2-1-bb40094da1d4@oss.qualcomm.com>
+References: <20260924-smd-v2-0-bb40094da1d4@oss.qualcomm.com>
+In-Reply-To: <20260924-smd-v2-0-bb40094da1d4@oss.qualcomm.com>
 To: Johannes Berg <johannes@sipsolutions.net>, Kees Cook <kees@kernel.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org, pooventhiran.g@oss.qualcomm.com
 X-Mailer: b4 0.14.3
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI0MDAxMiBTYWx0ZWRfX0x6AlTJQQava
- kK//uBjcODXdut4A9a13m06s7qVyxSfXleJoYWqprbNUVrI6i02sP+0tKN5PUPHt/eFkXWho6Wk
- oUF3dM7y+EZN+obCV2BEgbUOsF+07II=
-X-Proofpoint-GUID: 07ZDOm68dI91kLY5k7cDJQS7I3T_hOCw
-X-Authority-Analysis: v=2.4 cv=RYMFmFtv c=1 sm=1 tr=0 ts=6ab48ddd cx=c_pps
- a=PfFC4Oe2JQzmKTvty2cRDw==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+X-Proofpoint-GUID: FRZAihLrjcHQU2dsxnlf89JpLScmeqVa
+X-Proofpoint-ORIG-GUID: FRZAihLrjcHQU2dsxnlf89JpLScmeqVa
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI0MDAxMiBTYWx0ZWRfX4HyIbnJ5z4he
+ Cz5yHiIdrpk+qVB7opsXOfa8qgcqzEHfg+EodHGGr6PpzjPZWqJh8Hteut0hG4dElVWDyYQGCyS
+ TYUEvxjTcNECzoGVfVteYzBMf5BIo4ze463oguUIYYS7qUXU+afMj8CEuTYnO26CNR4UowfJx2A
+ JEhgExgSbRIc0pCG51YMllvHTTxDRZseMAMkgNXlIjSAB306DTiM0+hD9vCI5/eVtB0hHrVLPVz
+ 4y09QLY8s+mQsfqLrWt4yjN1XdPkrn061nz0U33tzdpO/4FHYJtPDeZx0uj1WLL+nwRCItex0vK
+ quZRB+3CNEMtKRs6KId5Mt2ajA6Uil6vFICeErg9ZQ7xEYfhuLkcdUhB5nrD/1cgY3m0xBXFIDk
+ HbPJXuTQcjxa2mUrc0ztF+ncGNasOPSj7mPMpGs+BPPA5PWyhxlVkcCxNC6bMkApV6GWWdYt4NO
+ N+nLXb4NmInfYmfkg5Q==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI0MDAxMiBTYWx0ZWRfX9uZPgZQm3PUP
+ xUBzim+Dwlzc0cpEp61rElGyGUszDmno3bk+MKmF2FOighw5KkzFYTRzJBOS9y1K9RyzzLmOSif
+ DElDhb7gUisdmwu7dIpSn8Z4NShW7VI=
+X-Authority-Analysis: v=2.4 cv=f7vdl+yM c=1 sm=1 tr=0 ts=6ab48ddf cx=c_pps
+ a=Uww141gWH0fZj/3QKPojxA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
  a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22
- a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=F2qdJgZ5oIuqAjiy4j8A:9
- a=8cEOZIRkEOD5qctY:21 a=QEXdDO2ut3YA:10 a=6Ab_bkdmUrQuMsNx7PHu:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI0MDAxMiBTYWx0ZWRfX6miA5K918Ikm
- aE2osoervK1RJzWt0SbxIx95UQxOeCbdmCZs6GVpuCo6jWQic4O7JkGEaitSfza6iXiZ+E4iZSf
- n7qCm3knXxWPN+lYwVQFMdkLrLM5VriRaaAHoLTfaLvFP4sCJZ9y0wxa8MSNz5bqxr5pGvpGgjO
- Oth1jYJKD5HuEK4pNQSWfPwnTQR1js7r/jgbgdQw+DJK8pGyhLSC4xaaXT8pnmsnhr03iNiEic+
- wSewDQ9QJ91xJrrQuC2R/30IdQ1mc+wmKeBi84KYlUdAqfhfvZDn839RUVnC4lUoh8Tpr3Z+iW7
- ip4B12HV8HEiBv6FbJFWTcmA9TsFGMI/wUW0aWdRiQYqms0YDKlGsX461P278lZ9iVyYyLBud1y
- 0rkDCnovwZSInrtyhBTJR+3C8Xh6/vdncgGUlLfAXktE8a7go0Hx5ST42BpZOuDx5ZL0qc/WJju
- cHBoJP+4ScYD48Sx7tQ==
-X-Proofpoint-ORIG-GUID: 07ZDOm68dI91kLY5k7cDJQS7I3T_hOCw
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
+ a=EUspDBNiAAAA:8 a=-9rhnhb8Ej--qkh-m00A:9 a=QEXdDO2ut3YA:10
+ a=PxkB5W3o20Ba91AHUih5:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-09-24_01,2026-09-21_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 clxscore=1011 priorityscore=1501 phishscore=0
- adultscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0
+ clxscore=1015 phishscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609240012
 
-IEEE P802.11bn introduces the Seamless Mobility Domain (SMD) - a mobility
-domain uniquely identified by the SMD identifier MAC address - where
-a non-AP MLD that is associated to the SMD Management Entity (SMD-ME) can
-transition from its current AP MLD to a non-colocated target AP MLD
-without requiring reassociation via SMD BSS Transition (ST) procedure.
+From: Sidhanta Sahu <sidhanta.sahu@oss.qualcomm.com>
 
-This series implements the nl80211, cfg80211, and mac80211 support for
-SMD BSS Transition in AP mode. Along with a summary of the ST procedure,
-the design of this series and patch structure are presented below.
+Per IEEE P802.11bn/D2.0, Aug 2026, subclause 37.16, an AP MLD can be
+managed by a Seamless Mobility Domain Management Entity (SMD-ME) along
+with partner AP MLDs to enable seamless transition of an associated
+non-AP MLD from the current AP MLD to a target AP MLD. A non-AP MLD
+advertising SMD supports association to an SMD-ME and SMD BSS
+Transition between AP MLDs within an SMD.
 
-The ST procedure broadly involves
-  - ST Discovery and association to SMD-ME
-  - ST Preparation
-  - ST Execution and Downlink Draining
-  - ST Context
+Subclause 37.16.11 defines an optional capability for the current AP
+MLD to forward buffered downlink (DL) data frames for the non-AP MLD to
+the target AP MLD.
 
-The communication between the current AP MLD and target AP MLD are via
-Inter-AP (IAP) communication (solicited and unsolicited) over the backhaul
-which is managed entirely within userspace (hostapd) - as per the
-discussions on the RFC [1].
+Userspace needs a way to be aware of the driver's SMD capabilities so that
+it can enable SMD configuration and operation only on capable devices.
 
-The IEEE standard defines only the type of data that may be exchanged via IAP
-but does not define the format and method of the IAP communication protocol
-and keeps it out of scope (subclause 37.16.9). So, those details are not
-part of this series.
+Define two extended feature flags
+ - NL80211_EXT_FEATURE_SMD for SMD management and BSS Transition
+   capability
+ - NL80211_EXT_FEATURE_SMD_DL_PKT_FORWARDING for DL data forwarding
+   capability
 
-ST Discovery and association to SMD-ME (subclauses 37.16.2 through 37.16.4)
-===========================================================================
-A non-AP MLD may use techniques like active scanning, neighbor reports,
-or BSS Transition Management to discover the neighboring SMD AP MLDs.
-Once discoverred, the non-AP MLD can perform authentication and
-association with the SMD-ME and negotiate SMD capabilities. While
-generating PTK, based on SMD PTK mode, either SMD Identifier is involved
-in the PTK formula or only SMD KDK is generated.
+so that userspace can gate SMD setup and data forwarding configuration
+on driver support.
 
- - This series supports configuring an AP MLD as managed by an SMD-ME
-   with attributes such as SMD Identifier, SMD Preparation Timeout, SMD
-   Type, PTK Mode, etc., via NL80211_CMD_START_AP.
- - This series supports managing the associated non-AP MLD that has
-   negotiated SMD via NL80211_CMD_NEW_STATION and
-   NL80211_CMD_CHANGE_STATION.
-
-ST Preparation (subclauses 37.16.5 and 37.16.6)
-===============================================
-The current AP MLD and non-AP MLD can use BTM frames to select a target
-AP MLD that the non-AP MLD can transition to. Once the target is
-selected, the ST procedure is invoked in two phases: ST Preparation and
-ST Execution.
-
-The non-AP MLD sends an ST Preparation Request (UHR Link Reconfiguration
-Request frame to with Type set to ST Preparation and Per-STA Profile
-subelements of the setup links for the target AP MLD carried in a
-Reconfiguration Multi-Link element) to the current AP MLD.
-
-On reception of this frame, the current AP MLD collects the non-AP MLD's
-dynamic sesion context and attach it to the same frame while delivering it
-to userspace. Userspace then sends this information as an IAP message to
-the target AP MLD. If Per-AP MLD PTK mode is used, DH key exchange
-happens in ST Preparation to derive the new PTK at the target AP MLD.
-
-The target, once processed the message, will set up the links as rquested
-and sends back the ST Preparation Response so that the current AP MLD can
-send the ST Preparation Response (UHR Link Reconfiguration Response frame
-with Type set to ST Preparation and statuses for each setup link) to the
-non-AP MLD.
-
- - This series defines the layout for STA's dynamic context and supports
-   reporting the driver-attached STA's dynamic context along with the frame
-   via NL80211_CMD_FRAME event (this avoids roundtrips between driver and
-   userspace to separately request context for the recently received frame).
- - The target AP MLD leverages the existing flows to set up the links
-   (NONE -> AUTH -> ASSOC).
- - This series supports moving the STA to the prepared state (4a) via
-   the new STA flags (subclause 11.3.1).
- - This series supports programming the STA's dynamic context via
-   NL80211_CMD_SET_CTX on the target AP MLD.
-
-NOTE:
-(a) While implementing the suggestion to follow the approach similar
-to how radiotap headers are attached to the SKB, for tagging the STA's
-dynamic context to the frame SKB from driver to mac80211, an alternative
-approach was found.
-(b) This reserves a new field in &struct ieee80211_rx_status as part of
-an existing union (please see this patch [2]). Since this was simpler
-than _pushing_ the context pointer to the frame SKB and _pulling_ back,
-this series follows this approach.
-
-ST Execution and Downlink Draining (subclauses 37.16.7, 37.16.8, and 37.16.10)
-==============================================================================
-When the non-AP STA is ready to transition to the target AP MLD that it
-has already been prepared with, it can send the ST Execution Request
-(UHR Link Reconfiguration Request frame with Type set to ST Execution)
-in two ways:
-
-Via the current AP MLD
-----------------------
-This path traces a similar flow to ST Preparation for context collection
-and reporting to userspace of the current AP MLD, transport to the
-target AP MLD, and ST Execution Response back to the current AP MLD and
-non-AP MLD. If there is a Nominal Maximum DL Draining Period Duration
-field is present in the ST Execution Response, the current AP MLD may
-start the DL draining period to drain the pendign buffered frames to the
-non-AP MLD.
-
- - This series supports moving the non-AP MLD to the execution
-   in-progress state (state 4b) via the new STA flags on the current
-   AP MLD
-   upon reception of the ST Execution Rquest.
- - This series supports moving the non-AP MLD to the DL draining started
-   state (state 4c) via the new STA flags on the current AP MLD and
-   implements proper validation for these flags as they are mutually
-   exclusive.
-
-Upon successful ST Execution, the non-AP MLD moves to the authorized state
-(state 4) on the target AP MLD and the unauthenticated and unassociated
-state (state 1) on the current AP MLD, without reassociation.
-
-Via the target AP MLD
----------------------
-The non-AP MLD might send the ST Execution Request directly to the
-target AP MLD when the current AP MLD links are not reliable (RSSI drops
-after ST Preparation, etc.,).
-
-When the target AP MLD receives such a frame, it cannot collect the STA's
-dynamic context. Hence, the context is requested from the current AP MLD
-via IAP and then programmed on the target AP MLD. There is no DL draining
-in this path.
-
- - This series supports fetching of context on the current AP MLD on
-   behalf of the target AP MLD via NL80211_CMD_GET_SMD_CTX and
-   NL80211_CMD_SMD_CTX_EVENT.
-
-ST Context (subclause 37.16.9)
-==============================
-The following information are part of the STA's dynamic context and transferred
-from the current AP MLD to the target AP MLD during ST Preparation and
-ST Execution:
- - Block-ack parameters and timeout per TID
- - Next DL sequence numbers per TID
- - Duplicate receiver cache entries
- - Replay counters
- - Starting PN for DL individually addressed frames
- - SCS stream descriptors
- - MSCS Descriptor
- - EPCS authorization info and priority access state
- - WinStartO for existing DL block-ack agreements
-
-The non-AP STA may optionally request that sequence numbers not be transferred
-(to reset SN at the target AP MLD).
-
-This series suporting the SMD BSS Transition is structured as:
- - AP configuration: patches 1-3
- - STA association: patch 4 and 5
- - SMD BSS Transition state machine: patches 6 and 7
- - SMD Context handling: patches 8-16
-
-[1] RFC: https://lore.kernel.org/linux-wireless/fbf4209c-4fd8-4047-96d7-7fa34d9ba44d@quicinc.com/
-[2] Patch 11 ("wifi: cfg80211/mac80211: Handle UHR Link Reconfiguration frame")
-
+Signed-off-by: Sidhanta Sahu <sidhanta.sahu@oss.qualcomm.com>
 Signed-off-by: Pooventhiran G <pooventhiran.g@oss.qualcomm.com>
 ---
-Changes in v2:
- - Replaced SKB extension with a mac80211-contained solution using
-   ieee80211_rx_status to forward the ST Preparation and Execution
-   frames along with the context.
- - Fixed cover letter, commit text, and kdocs to clean up the
-   AI-suggested style and words.
- - Fixed the build failure from v1.
- - Rebased onto a latest snapshot of wireless-next
-   (6c0b7357e3c7f365ec51dd8d2b626130ee983ce1).
+ include/uapi/linux/nl80211.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-v1: https://lore.kernel.org/all/20260908-smd-v1-0-65ad4ab30fbd@oss.qualcomm.com/
+diff --git a/include/uapi/linux/nl80211.h b/include/uapi/linux/nl80211.h
+index 9a2ccb8d66b8..d05103889912 100644
+--- a/include/uapi/linux/nl80211.h
++++ b/include/uapi/linux/nl80211.h
+@@ -7126,6 +7126,15 @@ enum nl80211_feature_flags {
+  *	offload in station mode, including Fast Transition or Opportunistic
+  *	Key Caching.
+  *
++ * @NL80211_EXT_FEATURE_SMD: Driver supports Seamless Mobility Domain (SMD)
++ *	and is managed by an SMD-ME to support SMD BSS Transition in AP mode
++ *	and supports association to an SMD-ME and SMD BSS transition in
++ *	non-AP STA mode.
++ *
++ * @NL80211_EXT_FEATURE_SMD_DL_PKT_FORWARDING: Driver supports forwarding of
++ *	buffered downlink (DL) data packets in AP mode to the non-AP STA during
++ *	SMD BSS Transition.
++ *
+  * @NUM_NL80211_EXT_FEATURES: number of extended features.
+  * @MAX_NL80211_EXT_FEATURES: highest extended feature index.
+  */
+@@ -7209,6 +7218,8 @@ enum nl80211_ext_feature_index {
+ 	NL80211_EXT_FEATURE_SET_KEY_LTF_SEED,
+ 	NL80211_EXT_FEATURE_PROBE_AP,
+ 	NL80211_EXT_FEATURE_FAST_ROAM_OFFLOAD,
++	NL80211_EXT_FEATURE_SMD,
++	NL80211_EXT_FEATURE_SMD_DL_PKT_FORWARDING,
+ 
+ 	/* add new features before the definition below */
+ 	NUM_NL80211_EXT_FEATURES,
 
----
-Aditya Sathish (2):
-      wifi: nl80211: Add kernel interfaces for Seamless Mobility Domain setup
-      wifi: cfg80211/mac80211: Parse SMD parameters in STA addition/modification
-
-Pooventhiran G (11):
-      wifi: nl80211/mac80211: Add SMD BSS Transition sub-state STA flags
-      wifi: mac80211: Add driver_op for SMD substate changes
-      wifi: mac80211: Send BlockAck policy in AMPDU action
-      wifi: mac80211: Define layouts for SMD BSS Transition context
-      wifi: nl80211: Define attributes to pack SMD BSS Transition context
-      wifi: cfg80211/mac80211: Handle UHR Link Reconfiguration frame
-      wifi: nl80211: Pack SMD dynamic context along with frame
-      wifi: nl80211/cfg80211: Add support for SMD context programming
-      wifi: mac80211: Add mac80211 support to handle NL80211_CMD_SET_SMD_CTX
-      wifi: nl80211/cfg80211: Add support for querying SMD context for target AP MLD
-      wifi: mac80211: Add mac80211 support to handle NL80211_CMD_GET_SMD_CTX
-
-Rohan Dutta (2):
-      wifi: cfg80211/mac80211: Configure AP with SMD capabilities
-      wifi: nl80211/cfg80211: Indicate STA creation via SMD BSS Transition
-
-Sidhanta Sahu (1):
-      wifi: nl80211: Define Seamless Mobility Domain (SMD) device capability
-
- include/linux/ieee80211-uhr.h | 149 +++++++
- include/net/cfg80211.h        | 115 ++++++
- include/net/mac80211.h        |  80 +++-
- include/uapi/linux/nl80211.h  | 302 ++++++++++++++
- net/mac80211/agg-rx.c         |   1 +
- net/mac80211/cfg.c            | 170 ++++++++
- net/mac80211/debugfs_sta.c    |   4 +
- net/mac80211/driver-ops.c     |  24 ++
- net/mac80211/driver-ops.h     |  54 +++
- net/mac80211/ieee80211_i.h    |   2 +
- net/mac80211/rx.c             |  96 +++--
- net/mac80211/sta_info.c       | 146 +++++++
- net/mac80211/sta_info.h       |  19 +
- net/mac80211/trace.h          | 117 +++++-
- net/wireless/core.c           |  25 ++
- net/wireless/mlme.c           |  30 ++
- net/wireless/nl80211.c        | 941 +++++++++++++++++++++++++++++++++++++++++-
- net/wireless/nl80211.h        |   9 +
- net/wireless/rdev-ops.h       |  28 ++
- net/wireless/trace.h          |  73 ++++
- 20 files changed, 2343 insertions(+), 42 deletions(-)
----
-base-commit: 6c0b7357e3c7f365ec51dd8d2b626130ee983ce1
-change-id: 20260908-smd-16986850d725
-
-Best regards,
 -- 
+2.34.1
 
