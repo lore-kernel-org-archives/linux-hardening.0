@@ -1,173 +1,150 @@
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CFF381E92;
-	Thu, 24 Sep 2026 04:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43EC42EEA3
+	for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 07:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790223103; cv=none; b=YQJH9xz17upeZr3x8On8pBrvqGB501dSP8OENQQtHHFCzcCJFjAR5QaQIAZU9LLrPDAa0AOMPh9I2JIfVeuvTi9mpQRHF1kZB+fw2o77ytT08gYJ8UoHWohJmzaIi4Q0Wxk7Cxl7ItMCYoFHEE18zKp8VKjKgmJ2qO7QzafX7P8=
+	t=1790235007; cv=none; b=bRaiyEJ4OvIITtyBjmU1UmGC7MR0/y4XaWVhvV6f0895YzPWuWkPK5Z1mfgHE2c6Mtwu5dY96u5r9VX1iRcSAnBdI4M6G7flRbUkkjWONGpPVLx4RPhb7YA6BYE14FiTf8hAktLsKMy1AnWg1NMRbXiXSB1yeiQ6HlUlECwBz94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790223103; c=relaxed/simple;
-	bh=29U8SrS6AdO6lFFos4hTHxTPuzEqeGJOKIbIIOI38mc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KE62rUqYFna8I4lLMao06xMeNEDBKyGTzAH8PUP5SmrmHPjqK3pRZZVInCx/0g4DTpD/rC4A+KEXgAdZjJf3p50SyD4+JnbCb1mw/lt/sg8CxFkouFQawCP+rVS/lyRwkAyrF4AxO648eB8rMfbC8qlDlJ56xPgVng7oHybEP3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=OzxKUUwZ; arc=none smtp.client-ip=113.46.200.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1790235007; c=relaxed/simple;
+	bh=uLnagpfUFVqNy8Hx6YY4OSsrTwJNd/dKrsdS6zcaC5A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rdQhK7u2sGphMM1FIxB1PP9/7zirbKMfUEUEirIrlyG7oOdReWaU3Xoy/Q5LNXva+8IBv1pKxFhDlnlk0KK4Y+R+LA13iIRcChMkChcaxdIo5h3r5ISdQjWNNPzMbVBt7ERsyk1tre/lx6AWFylgtu3fNNvoXXtILP87JN6tj2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=HBfQbUYa; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="OzxKUUwZ"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=ZRQ0VxqpuNoSza6zOLG1gwykGEw7zwH/fbhRzlWY/Lc=;
-	b=OzxKUUwZYTuTrykXXNDe9n63OFnXxUP++ZLONoERb3YuLUzDD9i/1X+acua3ZB0ygehiv+eB4
-	Ca2QoSb4sbF6lfkJvaGgSUJp0QiJV+KR8CD9CGAMtq4xueFC11/v+HxiBlPz6WHm5vSky1Ra14s
-	EL3oup3ikADUirUxoh+Z2pw=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4hr0TC39yJz12LFc;
-	Thu, 24 Sep 2026 11:59:27 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 238AB40561;
-	Thu, 24 Sep 2026 12:11:33 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemk200008.china.huawei.com (7.202.194.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Thu, 24 Sep 2026 12:11:31 +0800
-Message-ID: <bbd65e4d-8096-4939-8308-f0f54c5cb3bc@huawei.com>
-Date: Thu, 24 Sep 2026 12:11:31 +0800
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="HBfQbUYa"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b912d37b5so10067505e9.2
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 00:30:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1790235003; x=1790839803; darn=vger.kernel.org;
+        h=content-type:mime-version:message-id:date:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Mdc4xxWsL55mn3imyt0LizMFSY4UfYvhYLzlk2F0w9U=;
+        b=HBfQbUYadkpBJvEeftpMYsA9H2eDOHHBeXZb6/tTo95bkBiTqEEVk6EUNtcbUKNqhz
+         3TEZBI7qfSsBWG/qE/Wzdz3jc1kQatAr8yp5g3i/AwvqISj2/RW4cZS8sJUFCgH/J1fB
+         uDUybzSuIw01kr6cPFGw3LM1Z6pXjQguyquvtlhpPTRDjip5S2uPRDtEYutkpxGH9WuM
+         1+EzT/gZVTZmnP7ebKZHdo5Nj+E39kdaSAOgncx62Iro4hxCWpGMGsD9KMxo557bG/Ps
+         Ky/wEcFbY1kz6nMp9V/b1LZPaN5gKz7rDgEysgJ5sI60ruRBA0+d49oTIF+MdTEZj443
+         gbKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790235003; x=1790839803;
+        h=content-type:mime-version:message-id:date:references:in-reply-to
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Mdc4xxWsL55mn3imyt0LizMFSY4UfYvhYLzlk2F0w9U=;
+        b=QmtOE+wr+TMP4hCwh2NTZu64XMudfCI7bo1UkGzeCERunonBDeHDB8xcXPWEDPKmP9
+         nh2OmXVDgqWMfNyU7cyz6J+DQ/RoRPQdyDcUmm8iRO4boe5cAqtInA8JFaMrLre+4J9k
+         6PDrWIyPMxE9DsnunUf7ZWuonBDzSdUR6/dOHO9CbpGbdYehZ7CNy9h14uDcQ2Sfgg4M
+         XBNFeTRNGfYG1jNlbYtBadc7YTT4Vq26YvB8lX3uT4hVZ4IT0yPXujoEsjObOAn0bWz1
+         SjSy1A1Oq+SN4jthLFdpZHKY6qZTYbHtabz4QsqSfGF6SD9KHDq20JQIc94G+18aousH
+         ggqg==
+X-Forwarded-Encrypted: i=1; AKwUvBzadcuTqmL92K5xm5iDHQhax/MoXww0zx6QOWobF56pEi1cNf59pXesAK8MDfoTqXLOUFCCykAghJ0iuwTyAik=@vger.kernel.org
+X-Gm-Message-State: AFuF++kdQzfp9eu0Dhmozuu+ZSKDg8aUCt8XHboevlIwx3LvyCRg3+SL
+	gmfRWNrmbcnqvur3YWnbvvKZggv1/xXTB7AZp9+YzRGChrnjr0GmLhiDMcFBMo2qL4E=
+X-Gm-Gg: AYBFou1LASUhqZGtwTEfZCrNcGgEs6LrDl1RIiIJ/eIrBofsXQZLln5kDq2mLY3JUUJ
+	+dJ7bc3H+1MjlJFd54/wUSRo0ikd/BgjZcZb7O7z2M5UPRDD/SmqyGYVj3fpM6P1BLTQc8/m1BS
+	q5LlfcCAMRFWTDhGuzFyUoyENGjxUhDEvCE+bfH0gJBL4D2v2bty7liqRG9Ma4IynApa9uNhUJ6
+	dPcPbqbbigJhXPn+7/Q/xIPbxz+xNx8iPzgcy9lwSOo01Qqx7NyeRDW8OD2+iwoPCHrca2jT1Fm
+	icwIkTO9VRaDBBF0LinsmPsdQedCe/o7EdNCXLEL6JmHm4hStb8KBh2rdsYUAyG1FfzouQyxyBj
+	I4VFISic+6LpaiO0I7qD+5oxo7f26C0dsqulDhVhqTFYoIazFX+oIy24D2iW+U3SQmxCf0imppb
+	mIufcIWgqT3F+PdHX8WTghy+wy9lB6spoaYKI26v9LrPXc3+ghvK477WCwXvXPJ1uej4MNQpjVF
+	mDEgRWA3VvaoK92yw==
+X-Received: by 2002:a05:600c:a47:b0:49e:823a:9dec with SMTP id 5b1f17b1804b1-49fe66c892cmr22336635e9.3.1790235002814;
+        Thu, 24 Sep 2026 00:30:02 -0700 (PDT)
+Received: from localhost (82-67-6-57.subs.proxad.net. [82.67.6.57])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fe5bae43dsm45721935e9.5.2026.09.24.00.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2026 00:30:02 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Alex Elder <elder@riscstar.com>, Brian Masney <bmasney@redhat.com>
+Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org,
+ andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org,
+ kees@kernel.org, gustavoars@kernel.org, p.zabel@pengutronix.de,
+ daniel@riscstar.com, mohd.anwar@oss.qualcomm.com,
+ lorenzo.bianconi@oss.qualcomm.com, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, mfd@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] clk: toshiba: introduce a TC9564 SoC clock and
+ reset driver
+In-Reply-To: <7147ce22-fc6d-4cff-9470-98e341da0a87@riscstar.com>
+References: <20260918165234.687224-1-elder@riscstar.com>
+ <20260918165234.687224-4-elder@riscstar.com> <arG238GS8bMB6DkW@redhat.com>
+ <0785235b-de06-44d4-9068-ec706eeba848@riscstar.com>
+ <1jcxu3adn6.fsf@starbuckisacylon.baylibre.com>
+ <7147ce22-fc6d-4cff-9470-98e341da0a87@riscstar.com>
+Date: Thu, 24 Sep 2026 09:29:56 +0200
+Message-ID: <1ja4p79kej.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/ptrace: Add PTRACE_SYSEMU_SINGLESTEP
- syscall-exit-stop test
-To: Kees Cook <kees@kernel.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<oleg@redhat.com>, <luto@amacapital.net>, <wad@chromium.org>,
-	<peterz@infradead.org>, <ada.coupriediaz@arm.com>, <linusw@kernel.org>,
-	<yeoreum.yun@arm.com>, <kevin.brodsky@arm.com>, <anshuman.khandual@arm.com>,
-	<james.morse@arm.com>, <thuth@redhat.com>, <vladimir.murzin@arm.com>,
-	<tglx@kernel.org>, <broonie@kernel.org>, <liqiang01@kylinos.cn>,
-	<ryan.roberts@arm.com>, <pengcan@kylinos.cn>, <kmehltretter@gmail.com>,
-	<linux-arm-kernel@lists.infradead.org>, Shuah Khan <shuah@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>
-References: <20260922195719.i.211-kees@kernel.org>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260922195719.i.211-kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemk200008.china.huawei.com (7.202.194.74)
+Content-Type: text/plain
 
+On mer. 23 sept. 2026 at 16:33, Alex Elder <elder@riscstar.com> wrote:
 
+> On 9/23/26 3:58 PM, Jerome Brunet wrote:
+>>>>> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+>>>>> index f9592fd9ec2bb..50efa10d48450 100644
+>>>>> --- a/drivers/clk/Kconfig
+>>>>> +++ b/drivers/clk/Kconfig
+>>>>> @@ -292,6 +292,17 @@ config COMMON_CLK_S2MPS11
+>>>>>    	  clock. These multi-function devices have two (S2MPS14) or three
+>>>>>    	  (S2MPS11, S5M8767) fixed-rate oscillators, clocked at 32KHz each.
+>>>>>    
+>>>>> +config COMMON_CLK_TC9564
+>>>>> +	tristate "Toshiba TC9564 clock support"
+>>>>> +	depends on TC9564_PCI
+>>>> select RESET_CONTROLLER
+>>> Thank you.  The reset and clock drivers were previously separate
+>>> and the reset only became available if RESET_CONTROLLER was enabled.
+>>> Combining them means I need this.  I will add it.
+>> Why did you combine them ?
+>> 
+>> it would be a lot better if the reset were handled in
+>> drivers/reset rather than in clock. There has already been some work to
+>> move reset from clock back to reset. This often involve auxiliary drivers.
+> To be honest, I got a suggestion from someone to combine them, but
+> I said "no, I got feedback last year that separating them was
+> better."  But then a second person told me that these are often
+> combined, so I took that as "two against one" and decided to
+> merge them.
+>
+> The other reason is that four registers are used:
+>    #define CLK_CTRL0_OFFSET	0x1004
+>    #define RST_CTRL0_OFFSET	0x1008
+>    #define CLK_CTRL1_OFFSET	0x100c
+>    define RST_CTRL1_OFFSET	0x1010
+>
+> They alternate between clock and reset.  The previous separated
+> drivers specified the two offsets for each driver in the reg
+> property.  But somehow these interleaved registers seemed a
+> little off, so I thought the combined driver cleaned that up
+> a little.
+>
+> I don't have any strong preference one way or another.  If you
+> think they're better separate, I don't mind separating them
+> again.  The two drivers are extremely simple.
 
-在 2026/9/23 3:57, Kees Cook 写道:
-> ptrace(2) states that no syscall-exit-stop occurs when a tracee is
-> continued with PTRACE_SYSEMU or PTRACE_SYSEMU_SINGLESTEP. arm64 gated
-> its syscall-exit report on
-> 
-> 	flags & (_TIF_SYSCALL_TRACE | _TIF_SINGLESTEP)
+Yes, SoC manufacturer tend to mix the 2, it is fairly usual and we used
+to have many drivers in clock providing reset too. We have been slowly
+cleaning that up over the past few years.
 
-Hi Kees,
+To be clear it is not strictly forbbiden to mix ressources but putting
+things where they belong help review and maintainance.
 
-The original fix description is a bit off: on arm64 there is no extra
-syscall-exit-stop; instead, there's an additional pseudo single-step
-injection.
+There are several examples you can look at with auxiliary device
+support, ./tenstorrent/atlantis-prcm.c is a good example.
 
-As sashiko pointed out, as commit ac2081cdc4d9 ("arm64: ptrace:
-Consistently use pseudo-singlestep exceptions") described, for
-PTRACE_SYSEMU_SINGLESTEP, arm64 still needs the pseudo single-step
-because its hardware single-step state machine is fast-forwarded over
-the SVC instruction.
-
-static void report_syscall_exit(struct pt_regs *regs)
-{
-   ...
-   if (test_thread_flag(TIF_SINGLESTEP)) {
-       /*
-        * Signal a pseudo-step exception since we are stepping but
-        * tracer modifications to the registers may have rewound the
-        * state machine.
-        */
-       ptrace_report_syscall_exit(regs, 1);
-          -> user_single_step_report(regs);
-    }
-}
-
-https://sashiko.dev/#/patchset/20260922035510.1090299-1-ruanjinjie%40huawei.com
-
-> 
-> and ptrace_resume() clears SYSCALL_TRACE for both SYSEMU requests while
-> PTRACE_SYSEMU_SINGLESTEP additionally sets TIF_SINGLESTEP, so the
-> single-step bit alone produced a stop that must not exist. Nothing in
-> tools/testing/selftests covered this.
-> 
-> Detecting the extra stop is less direct than it looks. The report is
-> emitted with step=1, so ptrace_report_syscall_exit() dispatches to
-> user_single_step_report() rather than ptrace_report_syscall(), and it
-> arrives as a plain SIGTRAP indistinguishable by signal from the
-> legitimate single-step trap: neither PTRACE_O_TRACESYSGOOD nor
-> PTRACE_GET_SYSCALL_INFO separates the two. What does separate them is
-> the PC. The redundant report fires before the tracee has moved past the
-> syscall instruction, so it lands on the PC of the syscall-entry stop:
-> 
-> 	[0] sig=133 SYSCALL-STOP  pc=0x41ec28
-> 	[1] sig=5   trap          pc=0x41ec28   <-- must not exist
-> 	[2] sig=5   trap          pc=0x41ec2c
-> 
-> A fixed kernel reports pc=0x41ec2c already at stop [1]. The test
-> therefore asserts that the first stop after the syscall-entry stop is at
-> a different PC, which tests the consequence rather than the mechanism
-> and does not depend on how many pseudo-step traps follow.
-> 
-> PTRACE_SYSEMU is used to reach the syscall-entry stop, as single-
-> stepping there costs one stop per instruction and takes roughly 200000
-> stops. Architectures without a PC accessor here, or without SYSEMU
-> support, skip rather than fail.
-> 
-> Build tested ARCH=arm64 with GCC aarch64-linux-gnu 16.1.0, ARCH=arm
-> with GCC arm-linux-gnueabihf 16.1.0, and ARCH=x86_64 with GCC 16.2.0.
-> 
-> Tests passing on ARCH=arm64 under qemu-system-aarch64, and the same
-> test fails as expected on v7.3-rc2 without the fix[1]:
-> 
-> 	# entry stop pc=0x41ec28, next stop sig=5 pc=0x41ec28
-> 	# Expected next_pc (4320296) != entry_pc (4320296)
-> 	not ok 1 sysemu.no_syscall_exit_stop
-> 
-> An AArch32 build of the same test on an arm64 kernel reproduces the
-> failure identically, covering the is_compat_task() path. It also passes
-> on x86_64, which already uses generic entry, so the test does not report
-> a false positive against a correct implementation.
-> 
-> Link: https://lore.kernel.org/all/20260922035510.1090299-2-ruanjinjie@huawei.com/ [1]
-> Assisted-by: LLM
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  tools/testing/selftests/ptrace/Makefile       |   3 +-
->  .../selftests/ptrace/sysemu_singlestep.c      | 176 ++++++++++++++++++
->  tools/testing/selftests/ptrace/.gitignore     |   1 +
->  3 files changed, 179 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/ptrace/sysemu_singlestep.c
-
-[...]
-
-> +TEST_HARNESS_MAIN
-> diff --git a/tools/testing/selftests/ptrace/.gitignore b/tools/testing/selftests/ptrace/.gitignore
-> index f6be8efd57ea..792c81f804c0 100644
-> --- a/tools/testing/selftests/ptrace/.gitignore
-> +++ b/tools/testing/selftests/ptrace/.gitignore
-> @@ -4,3 +4,4 @@ get_set_sud
->  peeksiginfo
->  vmaccess
->  set_syscall_info
-> +sysemu_singlestep
+>
+> 					-Alex
 
 -- 
-Best regards,
-Jinjie
-
+Jerome
