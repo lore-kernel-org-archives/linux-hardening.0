@@ -1,87 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70B92C027C;
-	Thu, 24 Sep 2026 23:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE8626FA60;
+	Fri, 25 Sep 2026 01:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790294202; cv=none; b=t74qKUgWqvWNWMss0bd2uYE/qqt8RF9LowyCcBAt0thay0/QIlrKMfEopyA2xMwZnDLmdULU8Y4q0xvD6T8XpUtWSCO/kuMeccn3Wga6ng4WAdxM3HOore9KctC/BPla4NjxYs4VTvg88QcdiJj60ezTycZlkN1XkNvSKIsKo24=
+	t=1790298042; cv=none; b=cwaphaWSYLaXeYWRETtqc3v7LyIpo7BhuMJcWLOsu2LwhLwWxS/wmbVB3JjXOFsUBBp2sYudgEP2lYCyrH5j0NtTEfqEtahqWEohmynJ4/dTLaUm0rsfyQIkOhree0Ra0RcGgDHFCewW+1IEFTgpI8aSq68dyzNlCP0xtY9ZfHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790294202; c=relaxed/simple;
-	bh=tM0DuN3n8msF0/tfYTxALsC4nwPop0gAbLpk09sxOO0=;
+	s=arc-20240116; t=1790298042; c=relaxed/simple;
+	bh=n2M63cCDwEgRsvfj0eKZ5Gek1qU2HHR0yQ5PqQ9u3mg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hz5REKtYlICfXL/sATKPKIkG3z1OTBQ2AHxVm3Tp7CDSWJbO510eEcc+v0c5B3pcTHlteElGZ6E0zBIjuPd235+wX6bUQ6UNhc1gYyfmYLqFg5nImgUjuBvl0o5bXLZefD7L+FZmvMpT/0a1SyBc4HE71TBhKOB496UdTxjFXvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToswNape; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=U7aFfOw8W4krg6/vimSdWfwzMO8hV89GF8hrc0pReawJXNJlRO+O5QmOzZeK7u9LjoEgHInkI1O+E75CxpGV8R+JrKKO6PoTfxjKKQ43eMDGowwO7EpDapqk7N1aktTo5ztBZ5hXCvC7qqplXIr1DigUZNKaoF76Mj9BtBLIksk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAnXNKC6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToswNape"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 686591F000FF;
-	Thu, 24 Sep 2026 23:56:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAnXNKC6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB4461F00893;
+	Fri, 25 Sep 2026 01:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790294201;
-	bh=JSwuAGPzX8RoJMccYGVKtdfyo6odqNj35F2Uzl7Q2qA=;
+	s=k20260515; t=1790298040;
+	bh=zGt/QJuXYmz1FRSRmOhHZebQauxVGaioH05IWjWbi8s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ToswNapex2IFgKhaY1s/8FdlMabI62hEDEpKUTy1dJMd0Rv5/09AWVjiYrc4Pyo/y
-	 Sd8Wra9/4mCWlbBt9+69kDdw3zrDwK6FCVbaDi/BeY7rzjlVfatdKntHdqBLW+/zcg
-	 7X1fcOH76ng9qOOnN9LC2FkxAc157ysF26o4JGHt5pmAObQ8QjsEeVKjmXXfIZYCPH
-	 YahCxN1lXj7cZf99dwEmnaiONZlVDatYaroDN7e1ZRRAXk1OdImMOQyGxvJ+tm9b4M
-	 J/v8Gsu3DSLFOr96KxPPOx5u6e9I5TS7sk/v+B9Xvb7M9iorBkU7PxtCcLJo/kBN60
-	 bPjBi0UYUhwkA==
-Date: Thu, 24 Sep 2026 16:56:41 -0700
+	b=XAnXNKC6Zq14Zt9SIfzI3L/LSHhEAIyJeHjMuS1eXzEsLIzj8XfD7kokWyb1Lmcb6
+	 3AWiUliSPoDFnB0+Ua835jlZLlOKe25jr/hdD6kjvn0KrmvRmbTFjndr7vCr25B9ru
+	 n0QUHaMAYbygcI0Gzk8d36sT0tQtZSLIWfQbYKW2LNjMRV24rR5m+FtW4DeHqxH9ur
+	 b1KXStABsK2Jd94K2FSpZGdf+6JtIYjxEll9DE369uKn70zH9xmF0VmuWdE65t/6Va
+	 BDqwwU9TwG8JflV1zb+zOe5ef9gORRPElIM38D+9zZo84DKypA5Q7eD8pgdPujiTuH
+	 KXKExAE2P2f0A==
+Date: Thu, 24 Sep 2026 18:00:40 -0700
 From: Kees Cook <kees@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-	oleg@redhat.com, luto@amacapital.net, wad@chromium.org,
-	peterz@infradead.org, ada.coupriediaz@arm.com, linusw@kernel.org,
-	yeoreum.yun@arm.com, kevin.brodsky@arm.com,
-	anshuman.khandual@arm.com, james.morse@arm.com, thuth@redhat.com,
-	vladimir.murzin@arm.com, tglx@kernel.org, broonie@kernel.org,
-	liqiang01@kylinos.cn, ryan.roberts@arm.com, pengcan@kylinos.cn,
-	kmehltretter@gmail.com, linux-arm-kernel@lists.infradead.org,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] selftests/ptrace: Add PTRACE_SYSEMU_SINGLESTEP
- syscall-exit-stop test
-Message-ID: <202609241654.F545D3A88@keescook>
-References: <20260922195719.i.211-kees@kernel.org>
- <bbd65e4d-8096-4939-8308-f0f54c5cb3bc@huawei.com>
+To: Harry Yoo <harry@kernel.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
+	Pedro Falcato <pfalcato@suse.de>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	linux-hardening@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Willem de Bruijn <willemb@google.com>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v4 2/7] mm/slab: Give bucket caches the alignment of the
+ caches they mirror
+Message-ID: <202609241759.28EC6970@keescook>
+References: <20260921075811.too.775-kees@kernel.org>
+ <20260921075820.1718334-2-kees@kernel.org>
+ <arEdcaJz4i5HP26a@thinkstation>
+ <202609211620.342AAA61@keescook>
+ <arViR2Miz61-3fV4@thinkstation>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bbd65e4d-8096-4939-8308-f0f54c5cb3bc@huawei.com>
+In-Reply-To: <arViR2Miz61-3fV4@thinkstation>
 
-On Thu, Sep 24, 2026 at 12:11:31PM +0800, Jinjie Ruan wrote:
-> 
-> 
-> 在 2026/9/23 3:57, Kees Cook 写道:
-> > ptrace(2) states that no syscall-exit-stop occurs when a tracee is
-> > continued with PTRACE_SYSEMU or PTRACE_SYSEMU_SINGLESTEP. arm64 gated
-> > its syscall-exit report on
+On Thu, Sep 24, 2026 at 07:22:58PM +0100, Harry Yoo wrote:
+> On Mon, Sep 21, 2026 at 04:25:25PM -0700, Kees Cook wrote:
+> > On Mon, Sep 21, 2026 at 02:17:21PM +0100, Harry Yoo wrote:
+> > > On Mon, Sep 21, 2026 at 12:58:13AM -0700, Kees Cook wrote:
+> > > >  			if (WARN_ON(!cache_name))
+> > > >  				goto fail;
+> > > >  			(*b)[aligned_idx] = kmem_cache_create_usercopy(cache_name, size,
+> > > > -					0, flags, cache_useroffset,
+> > > > +					kmalloc_caches[KMALLOC_NORMAL][idx]->align,
+> > > > +					flags, cache_useroffset,
+> > > >  					cache_usersize, ctor);
+> > > >  			kfree(cache_name);
+> > > >  			if (WARN_ON(!(*b)[aligned_idx]))
 > > 
-> > 	flags & (_TIF_SYSCALL_TRACE | _TIF_SINGLESTEP)
+> > It looks "obviously correct", but I probably failed to correctly
+> > describe it. I'm happy to do whatever here.
 > 
-> Hi Kees,
+> That is correct, but is there any reason why kmem_buckets users should
+> not specify their own alignment requirement and inherit the alignment
+> from kmalloc?
 > 
-> The original fix description is a bit off: on arm64 there is no extra
-> syscall-exit-stop; instead, there's an additional pseudo single-step
-> injection.
-> 
-> As sashiko pointed out, as commit ac2081cdc4d9 ("arm64: ptrace:
-> Consistently use pseudo-singlestep exceptions") described, for
-> PTRACE_SYSEMU_SINGLESTEP, arm64 still needs the pseudo single-step
-> because its hardware single-step state machine is fast-forwarded over
-> the SVC instruction.
+> For DMA yeah it might be confusing for every user to figure out that
+> the alignment should be __kmalloc_minalign(), but otherwise there isn't
+> really a good enough reason to inherit the alignment from kmalloc, no?
 
-Ah! Okay. So this test should be tweaked to deal with that? Feel free to
-snag/update this test for the series. We didn't have anything testing
-syscall exit stops, so it seemed reasonable to get it written.
-
--Kees
+Oh, so you mean explicitly add an alignment arg to kmem_buckets_create()?
+And perhaps if _that_ one is "0" we can fallback to whatever
+kmalloc_caches uses?
 
 -- 
 Kees Cook
