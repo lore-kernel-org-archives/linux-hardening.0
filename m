@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB134A4405;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC284A4406;
 	Fri, 25 Sep 2026 13:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790343824; cv=none; b=SEdZkoSoIJ9DIppMO0mUOC7y6gw06ZPDgNjiZCzn0S5/2+TTcwl7WSnyAXHbJacaZXiSEIxDZykvr58AQs0yDKg4EgXii6Js1Mj6RX3H3IVIBIpjJAzG0m6cb1a08KDuAg5mBqbm6/d1XfF34B4oQ03Nb3T2regRPp2w+hfTMIY=
+	t=1790343824; cv=none; b=HXYVaV7vndwp4onmt/0YSUzwRPRH2TvZ1UzL1jSZhicXP32U3Hh4ON5S1sfCP1oJ/SKbARdu/Yb4UxRH7zlgbm/EGE9w4q4SuHsO6QAqB6vtaGhY2fzZkaBW3sRxKT4DA/AGd9GacT8aLTvRU/OLFjs1OrU1PkWc9E+U8wS0Ap8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790343824; c=relaxed/simple;
-	bh=EACSzqpchk5UQkiLJZNHF5JvMOwAbMSQbN3eANIx5to=;
+	bh=2IZcOIMYvjMVyFcdg0P5nb7s41zU8OLy93/0VhzVXkI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h39knuhih5T0/aVTZRXiQFWLjy16rkFfaTCW4fJRQ7NfcqV7sg3ynwov1xMFv4kPBVn62stDvGVfIjHW1G15b226Q0ufaT0ExWog0Q2QbvNzVp44xnSPy8k+6+CFBfFgq2f8oduW8ZjO1SdKUsi+YVcwh2uhdONsc7L9avK0KZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9eY5cFI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=rCdwuAEMXlSoJ8muKfJU4m2/53jC1+CwFatVLlMoOVWVN/swWY1IAV2/iqJDDamW0w/1vJ2SU5yBJELJNNDRzn3CRtiEAFEcIU3THaJpugCpmEDFUZMUMwon8RGiByDo30EYEu6oa5ck2FSvM01O6UF8kbLgcYjc77H4eqKFhfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzgRcekj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9eY5cFI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 59EF6C2BD01;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzgRcekj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 82A65C2BCFC;
 	Fri, 25 Sep 2026 13:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1790343824;
-	bh=EACSzqpchk5UQkiLJZNHF5JvMOwAbMSQbN3eANIx5to=;
+	bh=2IZcOIMYvjMVyFcdg0P5nb7s41zU8OLy93/0VhzVXkI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=S9eY5cFIIv25987yMoffdOnD+rTymbx27FqT+IZpk/KXJ0eJIXdQIk4ZlvYTczUn+
-	 kPgThlqwMMUouM3aUP4KGBWBbO7O8uE13EQLifO4v5OYzuvyHiF+qvf3v55Y52Epxw
-	 g0Xtse5mVI6JiFsplA0Xt4IBhJGrsfnWUFl/Q45hZtjEPoSLYbvawWNyPXi73nu8Wu
-	 qZk5Ko0yWCAmx01fpwDX/I2/c7ymZiJRvPiCx82glsR/grAsX4ci2CfB2b2O4/4bTq
-	 +Yl9MpHtY0eBl+U8dohGcJLsdi4HrbduiClt5fJzMAPfNlHfzHLHT/WVlb5maMbGW7
-	 j5iZ1hX0ZBrxw==
+	b=DzgRcekjltzCDnMOhElwmLvlzHUjTTEk9Cp1gb56mTWiniZEXnTXFHqm+bIrtqq3j
+	 OoRpjWNaK6d8ba78+K+hux0pijPn6XFJj/dV5Apn7aq3QB1r13kQGhXbcUulG++esn
+	 KBNiwJVeuTiJxpe5AyucOps+oxC58yk19/XA8zTyA0ROrMqlSUp5HZuYsy7pBguB0+
+	 UnejBbo6ZIMewleoKJSMOPtXfQcwwoIIv5wgYazzuAjfomnYPIcnX0lo3ZuZKGaf0W
+	 kbdBLaJ8ueE39kxW2eoVKpPZ3FpkoIyWLStCOW6/HqeN2WORD8AwykOXzDKQxudq9V
+	 lvkSGkAhLqemQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4831FC98321;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71449C98321;
 	Fri, 25 Sep 2026 13:43:44 +0000 (UTC)
 From: Michael Reeves via B4 Relay <devnull+michael.reeves077.gmail.com@kernel.org>
-Date: Fri, 25 Sep 2026 23:43:40 +1000
-Subject: [PATCH 05/13] wifi: brcmfmac: Negotiate PCIe mailbox transport
- with firmware
+Date: Fri, 25 Sep 2026 23:43:42 +1000
+Subject: [PATCH 07/13] wifi: brcmfmac: Use event_msgs_ext for event masks
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260925-brcm4388-submit-v1-5-b5cbc2cde2fb@gmail.com>
+Message-Id: <20260925-brcm4388-submit-v1-7-b5cbc2cde2fb@gmail.com>
 References: <20260925-brcm4388-submit-v1-0-b5cbc2cde2fb@gmail.com>
 In-Reply-To: <20260925-brcm4388-submit-v1-0-b5cbc2cde2fb@gmail.com>
 To: Arend van Spriel <arend.vanspriel@broadcom.com>, 
@@ -56,12 +55,12 @@ Cc: linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
  Hante Meuleman <meuleman@broadcom.com>, linux-hardening@vger.kernel.org, 
  Michael Reeves <michael.reeves077@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1790343821; l=11852;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1790343821; l=13074;
  i=michael.reeves077@gmail.com; s=fedora-20260918;
  h=from:subject:message-id;
- bh=z12uZXAdpCm7fB14uNoxBi8KMK8oCUp0FM3husdGKRw=;
- b=ZI5mPY0E4uj1xvpPSiaj6e+1rfOZalvNvZx/8Y4VfGIc61mwIIMBKya9wJIX0MbZb3iWasZId
- lp3E67RBufcAl+8OV6CcfKUce5scxDTfKoRQZOjih3ECJnJ/bCaSYtb
+ bh=FRG6tUUizYoumB0K87m2z0Yh8XdJwwc0mIsYEg2R708=;
+ b=/jqkdO9EsyE3WGCOaeXPoK3R4L1emZkd3S+BkqTywohjCNDimMV7i/1MWmJGkyK61hecZZM0J
+ rIn1E/6f3NoDUANeEIgxtkmwx/K4JRlwDUmdKz6nLy7E1mZp4cI1Z1z
 X-Developer-Key: i=michael.reeves077@gmail.com; a=ed25519;
  pk=VJ0TvyQ9TvfzYZa908YSE9kpkjFLLD5luv0bERu+boc=
 X-Endpoint-Received: by B4 Relay for
@@ -69,339 +68,388 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Michael Reeves <michael.reeves077@gmail.com>
 Reply-To: michael.reeves077@gmail.com
 
-From: Hector Martin <marcan@marcan.st>
+From: Michael Reeves <michael.reeves077@gmail.com>
 
-Shared protocol version 6 and later allows mailbox messages over the
-control ring as an alternative to the shared-memory mailbox.
+BCM4388 firmware rejects the legacy event_msgs query during preinit but
+supports the structured event_msgs_ext command.
 
-Advertise host capabilities using the negotiated shared protocol
-version. Select the control-ring transport when firmware does not set
-BRCMF_PCIE_SHARED_USE_MAILBOX, and dispatch received mailbox data
-through bus operations.
+Probe event_msgs_ext during feature detection and initialize the event
+mask after feature flags are set. Use the extended command when
+supported and retain the legacy path otherwise.
 
+Co-developed-by: Hector Martin <marcan@marcan.st>
 Signed-off-by: Hector Martin <marcan@marcan.st>
-Co-developed-by: Michael Reeves <michael.reeves077@gmail.com>
 Signed-off-by: Michael Reeves <michael.reeves077@gmail.com>
 ---
- .../net/wireless/broadcom/brcm80211/brcmfmac/bus.h |  9 +++
- .../wireless/broadcom/brcm80211/brcmfmac/msgbuf.c  | 57 +++++++++++++++
- .../wireless/broadcom/brcm80211/brcmfmac/msgbuf.h  |  5 ++
- .../wireless/broadcom/brcm80211/brcmfmac/pcie.c    | 83 ++++++++++++++++++----
- 4 files changed, 139 insertions(+), 15 deletions(-)
+ .../wireless/broadcom/brcm80211/brcmfmac/common.c  |  23 ----
+ .../wireless/broadcom/brcm80211/brcmfmac/core.c    |   5 +-
+ .../wireless/broadcom/brcm80211/brcmfmac/feature.c |  39 +++++++
+ .../wireless/broadcom/brcm80211/brcmfmac/feature.h |   2 +
+ .../wireless/broadcom/brcm80211/brcmfmac/fweh.c    | 130 ++++++++++++++++++++-
+ .../wireless/broadcom/brcm80211/brcmfmac/fweh.h    |   1 +
+ .../broadcom/brcm80211/brcmfmac/fwil_types.h       |  26 +++++
+ 7 files changed, 199 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h
-index 9371c14899..421039759b 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bus.h
-@@ -86,6 +86,8 @@ struct brcmf_bus_dcmd {
-  * @get_ramsize: obtain size of device memory.
-  * @get_memdump: obtain device memory dump in provided buffer.
-  * @get_blob: obtain a firmware blob.
-+ * @d2h_mb_rx: handle device-to-host mailbox data received through a transport
-+ *	specific side channel.
-  * @remove: initiate unbind of the device.
-  *
-  * This structure provides an abstract interface towards the
-@@ -108,6 +110,7 @@ struct brcmf_bus_ops {
- 	void (*debugfs_create)(struct device *dev);
- 	int (*reset)(struct device *dev);
- 	void (*remove)(struct device *dev);
-+	void (*d2h_mb_rx)(struct device *dev, u32 data);
- };
- 
- 
-@@ -292,6 +295,12 @@ static inline void brcmf_bus_remove(struct brcmf_bus *bus)
- 	bus->ops->remove(bus->dev);
- }
- 
-+static inline void brcmf_bus_d2h_mb_rx(struct brcmf_bus *bus, u32 data)
-+{
-+	if (bus->ops->d2h_mb_rx)
-+		bus->ops->d2h_mb_rx(bus->dev, data);
-+}
-+
- /*
-  * interface functions from common layer
-  */
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
-index 069ba70166..8e5c697e7f 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
-@@ -47,6 +47,8 @@
- #define MSGBUF_TYPE_RX_CMPLT			0x12
- #define MSGBUF_TYPE_LPBK_DMAXFER		0x13
- #define MSGBUF_TYPE_LPBK_DMAXFER_CMPLT		0x14
-+#define MSGBUF_TYPE_H2D_MAILBOX_DATA		0x23
-+#define MSGBUF_TYPE_D2H_MAILBOX_DATA		0x24
- 
- #define NR_TX_PKTIDS				2048
- #define NR_RX_PKTIDS				1024
-@@ -218,6 +220,19 @@ struct msgbuf_flowring_flush_resp {
- 	__le32				rsvd0[3];
- };
- 
-+struct msgbuf_h2d_mailbox_data {
-+	struct msgbuf_common_hdr	msg;
-+	__le32				data;
-+	__le32				rsvd0[7];
-+};
-+
-+struct msgbuf_d2h_mailbox_data {
-+	struct msgbuf_common_hdr	msg;
-+	struct msgbuf_completion_hdr	compl_hdr;
-+	__le32				data;
-+	__le32				rsvd0[2];
-+};
-+
- struct brcmf_msgbuf_work_item {
- 	struct list_head queue;
- 	u32 flowid;
-@@ -1319,6 +1334,15 @@ brcmf_msgbuf_process_flow_ring_delete_response(struct brcmf_msgbuf *msgbuf,
- 	brcmf_msgbuf_remove_flowring(msgbuf, flowid);
- }
- 
-+static void brcmf_msgbuf_process_d2h_mailbox_data(struct brcmf_msgbuf *msgbuf,
-+						  void *buf)
-+{
-+	struct msgbuf_d2h_mailbox_data *d2h_mb_data = buf;
-+
-+	brcmf_bus_d2h_mb_rx(msgbuf->drvr->bus_if,
-+			    le32_to_cpu(d2h_mb_data->data));
-+}
-+
- 
- static void brcmf_msgbuf_process_msgtype(struct brcmf_msgbuf *msgbuf, void *buf)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+index 2a37b42ca9..93458c2fbc 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+@@ -269,7 +269,6 @@ static int brcmf_c_process_cal_blob(struct brcmf_if *ifp)
+ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
  {
-@@ -1362,6 +1386,10 @@ static void brcmf_msgbuf_process_msgtype(struct brcmf_msgbuf *msgbuf, void *buf)
- 		brcmf_dbg(MSGBUF, "MSGBUF_TYPE_RX_CMPLT\n");
- 		brcmf_msgbuf_process_rx_complete(msgbuf, buf);
- 		break;
-+	case MSGBUF_TYPE_D2H_MAILBOX_DATA:
-+		brcmf_dbg(MSGBUF, "MSGBUF_TYPE_D2H_MAILBOX_DATA\n");
-+		brcmf_msgbuf_process_d2h_mailbox_data(msgbuf, buf);
-+		break;
- 	default:
- 		bphy_err(drvr, "Unsupported msgtype %d\n", msg->msgtype);
- 		break;
-@@ -1500,6 +1528,35 @@ void brcmf_msgbuf_delete_flowring(struct brcmf_pub *drvr, u16 flowid)
- 	}
+ 	struct brcmf_pub *drvr = ifp->drvr;
+-	struct brcmf_fweh_info *fweh = drvr->fweh;
+ 	u8 buf[BRCMF_DCMD_SMLEN];
+ 	struct brcmf_bus *bus;
+ 	struct brcmf_rev_info_le revinfo;
+@@ -415,27 +414,6 @@ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
+ 
+ 	brcmf_c_set_joinpref_default(ifp);
+ 
+-	/* Setup event_msgs, enable E_IF */
+-	err = brcmf_fil_iovar_data_get(ifp, "event_msgs", fweh->event_mask,
+-				       fweh->event_mask_len);
+-	if (err) {
+-		bphy_err(drvr, "Get event_msgs error (%d)\n", err);
+-		goto done;
+-	}
+-	/*
+-	 * BRCMF_E_IF can safely be used to set the appropriate bit
+-	 * in the event_mask as the firmware event code is guaranteed
+-	 * to match the value of BRCMF_E_IF because it is old cruft
+-	 * that all vendors have.
+-	 */
+-	setbit(fweh->event_mask, BRCMF_E_IF);
+-	err = brcmf_fil_iovar_data_set(ifp, "event_msgs", fweh->event_mask,
+-				       fweh->event_mask_len);
+-	if (err) {
+-		bphy_err(drvr, "Set event_msgs error (%d)\n", err);
+-		goto done;
+-	}
+-
+ 	/* Setup default scan channel time */
+ 	err = brcmf_fil_cmd_int_set(ifp, BRCMF_C_SET_SCAN_CHANNEL_TIME,
+ 				    BRCMF_DEFAULT_SCAN_CHANNEL_TIME);
+@@ -637,4 +615,3 @@ static void __exit brcmfmac_module_exit(void)
+ 
+ module_init(brcmfmac_module_init);
+ module_exit(brcmfmac_module_exit);
+-
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
+index d2ae679856..bb9a0aeb06 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
+@@ -1260,6 +1260,10 @@ static int brcmf_bus_started(struct brcmf_pub *drvr, struct cfg80211_ops *ops)
+ 
+ 	brcmf_feat_attach(drvr);
+ 
++	ret = brcmf_fweh_init_events(ifp);
++	if (ret < 0)
++		goto fail;
++
+ 	ret = brcmf_proto_init_done(drvr);
+ 	if (ret < 0)
+ 		goto fail;
+@@ -1613,4 +1617,3 @@ void __exit brcmf_core_exit(void)
+ 	brcmf_usb_exit();
+ 	brcmf_pcie_exit();
+ }
+-
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index a3c221117d..d289451644 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/netdevice.h>
+ #include <linux/module.h>
++#include <linux/slab.h>
+ 
+ #include <brcm_hw_ids.h>
+ #include <brcmu_wifi.h>
+@@ -226,6 +227,43 @@ static void brcmf_feat_iovar_data_set(struct brcmf_if *ifp,
+ 	ifp->fwil_fwerr = false;
  }
  
-+int brcmf_msgbuf_h2d_mb_write(struct brcmf_pub *drvr, u32 data)
++static void brcmf_feat_event_msgs_ext(struct brcmf_if *ifp)
 +{
-+	struct brcmf_msgbuf *msgbuf = (struct brcmf_msgbuf *)drvr->proto->pd;
-+	struct brcmf_commonring *commonring;
-+	struct msgbuf_h2d_mailbox_data *request;
-+	void *ret_ptr;
++	struct brcmf_pub *drvr = ifp->drvr;
++	struct brcmf_fweh_info *fweh = drvr->fweh;
++	struct brcmf_eventmsgs_ext_le *eventmsgs;
++	size_t size;
 +	int err;
 +
-+	commonring = msgbuf->commonrings[BRCMF_H2D_MSGRING_CONTROL_SUBMIT];
-+	brcmf_commonring_lock(commonring);
-+	ret_ptr = brcmf_commonring_reserve_for_write(commonring);
-+	if (!ret_ptr) {
-+		bphy_err(drvr, "Failed to reserve space in commonring\n");
-+		brcmf_commonring_unlock(commonring);
-+		return -ENOMEM;
++	if (!fweh || fweh->event_mask_len > 0xff)
++		return;
++
++	size = struct_size(eventmsgs, mask, fweh->event_mask_len);
++	eventmsgs = kzalloc(size, GFP_KERNEL);
++	if (!eventmsgs)
++		return;
++
++	eventmsgs->version = EVENTMSGS_VER;
++	eventmsgs->command = EVENTMSGS_NONE;
++	eventmsgs->len = fweh->event_mask_len;
++	eventmsgs->maxgetsize = fweh->event_mask_len;
++
++	ifp->fwil_fwerr = true;
++	err = brcmf_fil_iovar_data_get(ifp, "event_msgs_ext", eventmsgs, size);
++	ifp->fwil_fwerr = false;
++
++	if (!err) {
++		brcmf_dbg(INFO, "enabling feature: %s\n",
++			  brcmf_feat_names[BRCMF_FEAT_EVENT_MSGS_EXT]);
++		drvr->feat_flags |= BIT(BRCMF_FEAT_EVENT_MSGS_EXT);
++	} else {
++		brcmf_dbg(TRACE, "%s feature check failed: %d\n",
++			  brcmf_feat_names[BRCMF_FEAT_EVENT_MSGS_EXT], err);
 +	}
 +
-+	request = (struct msgbuf_h2d_mailbox_data *)ret_ptr;
-+	memset(request, 0, sizeof(*request));
-+	request->msg.msgtype = MSGBUF_TYPE_H2D_MAILBOX_DATA;
-+	request->msg.ifidx = 0xff;
-+	request->data = cpu_to_le32(data);
++	kfree(eventmsgs);
++}
 +
-+	err = brcmf_commonring_write_complete(commonring);
-+	brcmf_commonring_unlock(commonring);
+ #define MAX_CAPS_BUFFER_SIZE	768
+ static void brcmf_feat_firmware_capabilities(struct brcmf_if *ifp)
+ {
+@@ -348,6 +386,7 @@ void brcmf_feat_attach(struct brcmf_pub *drvr)
+ 
+ 	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_FWSUP, "sup_wpa");
+ 	brcmf_feat_iovar_int_get(ifp, BRCMF_FEAT_SCAN_V2, "scan_ver");
++	brcmf_feat_event_msgs_ext(ifp);
+ 
+ 	brcmf_feat_wlc_version_overrides(drvr);
+ 	brcmf_feat_firmware_overrides(drvr);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.h
+index 8165a286b6..45a05642bb 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.h
+@@ -31,6 +31,7 @@
+  * FWAUTH: Firmware authenticator
+  * DUMP_OBSS: Firmware has capable to dump obss info to support ACS
+  * SCAN_V2: Version 2 scan params
++ * EVENT_MSGS_EXT: Firmware supports event_msgs_ext for event masks
+  * SAE_EXT: SAE authentication handled by user-space supplicant
+  */
+ #define BRCMF_FEAT_LIST \
+@@ -59,6 +60,7 @@
+ 	BRCMF_FEAT_DEF(SCAN_V2) \
+ 	BRCMF_FEAT_DEF(PMKID_V2) \
+ 	BRCMF_FEAT_DEF(PMKID_V3) \
++	BRCMF_FEAT_DEF(EVENT_MSGS_EXT) \
+ 	BRCMF_FEAT_DEF(SAE_EXT) \
+ 	BRCMF_FEAT_DEF(FBT) \
+ 	BRCMF_FEAT_DEF(OKC)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
+index 1cff4ba769..034f90ad6c 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
+@@ -12,7 +12,9 @@
+ #include "debug.h"
+ #include "tracepoint.h"
+ #include "fweh.h"
++#include "feature.h"
+ #include "fwil.h"
++#include "fwil_types.h"
+ #include "proto.h"
+ #include "bus.h"
+ #include "fwvid.h"
+@@ -430,6 +432,128 @@ void brcmf_fweh_unregister(struct brcmf_pub *drvr,
+ 	drvr->fweh->evt_handler[evt_handler_idx] = NULL;
+ }
+ 
++static bool brcmf_fweh_use_event_msgs_ext(struct brcmf_if *ifp)
++{
++	return brcmf_feat_is_enabled(ifp, BRCMF_FEAT_EVENT_MSGS_EXT);
++}
++
++static const char *brcmf_fweh_event_mask_iovar(struct brcmf_if *ifp)
++{
++	return brcmf_fweh_use_event_msgs_ext(ifp) ? "event_msgs_ext" :
++						    "event_msgs";
++}
++
++static int brcmf_fweh_get_event_mask(struct brcmf_if *ifp)
++{
++	struct brcmf_pub *drvr = ifp->drvr;
++	struct brcmf_fweh_info *fweh = drvr->fweh;
++	struct brcmf_eventmsgs_ext_le *eventmsgs;
++	size_t size;
++	u8 fw_len;
++	int err;
++
++	memset(fweh->event_mask, 0, fweh->event_mask_len);
++
++	if (!brcmf_fweh_use_event_msgs_ext(ifp))
++		return brcmf_fil_iovar_data_get(ifp, "event_msgs",
++						fweh->event_mask,
++						fweh->event_mask_len);
++
++	if (fweh->event_mask_len > 0xff)
++		return -E2BIG;
++
++	size = struct_size(eventmsgs, mask, fweh->event_mask_len);
++	eventmsgs = kzalloc(size, GFP_KERNEL);
++	if (!eventmsgs)
++		return -ENOMEM;
++
++	eventmsgs->version = EVENTMSGS_VER;
++	eventmsgs->command = EVENTMSGS_NONE;
++	eventmsgs->len = fweh->event_mask_len;
++	eventmsgs->maxgetsize = fweh->event_mask_len;
++
++	err = brcmf_fil_iovar_data_get(ifp, "event_msgs_ext", eventmsgs, size);
++	if (!err) {
++		fw_len = eventmsgs->len;
++		memcpy(fweh->event_mask, eventmsgs->mask,
++		       min_t(u8, fw_len, fweh->event_mask_len));
++		if (fw_len != fweh->event_mask_len)
++			brcmf_dbg(EVENT, "event_msgs_ext returned mask len=%u, driver len=%u\n",
++				  fw_len, fweh->event_mask_len);
++	}
++
++	kfree(eventmsgs);
++	return err;
++}
++
++static int brcmf_fweh_set_event_mask(struct brcmf_if *ifp)
++{
++	struct brcmf_pub *drvr = ifp->drvr;
++	struct brcmf_fweh_info *fweh = drvr->fweh;
++	struct brcmf_eventmsgs_ext_le *eventmsgs;
++	size_t size;
++	int err;
++
++	if (!brcmf_fweh_use_event_msgs_ext(ifp))
++		return brcmf_fil_iovar_data_set(ifp, "event_msgs",
++						fweh->event_mask,
++						fweh->event_mask_len);
++
++	if (fweh->event_mask_len > 0xff)
++		return -E2BIG;
++
++	size = struct_size(eventmsgs, mask, fweh->event_mask_len);
++	eventmsgs = kzalloc(size, GFP_KERNEL);
++	if (!eventmsgs)
++		return -ENOMEM;
++
++	eventmsgs->version = EVENTMSGS_VER;
++	eventmsgs->command = EVENTMSGS_SET_MASK;
++	eventmsgs->len = fweh->event_mask_len;
++	memcpy(eventmsgs->mask, fweh->event_mask, fweh->event_mask_len);
++
++	err = brcmf_fil_iovar_data_set(ifp, "event_msgs_ext", eventmsgs, size);
++
++	kfree(eventmsgs);
++	return err;
++}
++
++/**
++ * brcmf_fweh_init_events() - initialize firmware event mask.
++ *
++ * @ifp: primary interface object.
++ */
++int brcmf_fweh_init_events(struct brcmf_if *ifp)
++{
++	struct brcmf_pub *drvr = ifp->drvr;
++	struct brcmf_fweh_info *fweh = drvr->fweh;
++	const char *iovar = brcmf_fweh_event_mask_iovar(ifp);
++	int err;
++
++	brcmf_dbg(EVENT, "using %s for firmware event masks (len=%u)\n", iovar,
++		  fweh->event_mask_len);
++
++	err = brcmf_fweh_get_event_mask(ifp);
++	if (err) {
++		bphy_err(drvr, "Get %s error (%d)\n", iovar, err);
++		return err;
++	}
++
++	/*
++	 * BRCMF_E_IF can safely be used to set the appropriate bit in the
++	 * event mask as the firmware event code is guaranteed to match the
++	 * value of BRCMF_E_IF because it is old cruft that all vendors have.
++	 */
++	brcmf_dbg(EVENT, "enable event IF\n");
++	setbit(fweh->event_mask, BRCMF_E_IF);
++
++	err = brcmf_fweh_set_event_mask(ifp);
++	if (err)
++		bphy_err(drvr, "Set %s error (%d)\n", iovar, err);
 +
 +	return err;
 +}
 +
- #ifdef DEBUG
- static int brcmf_msgbuf_stats_read(struct seq_file *seq, void *data)
+ /**
+  * brcmf_fweh_activate_events() - enables firmware events registered.
+  *
+@@ -439,6 +563,7 @@ int brcmf_fweh_activate_events(struct brcmf_if *ifp)
  {
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.h
-index 6a849f4a94..18b56d0789 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.h
-@@ -32,12 +32,17 @@ int brcmf_proto_msgbuf_rx_trigger(struct device *dev);
- void brcmf_msgbuf_delete_flowring(struct brcmf_pub *drvr, u16 flowid);
- int brcmf_proto_msgbuf_attach(struct brcmf_pub *drvr);
- void brcmf_proto_msgbuf_detach(struct brcmf_pub *drvr);
-+int brcmf_msgbuf_h2d_mb_write(struct brcmf_pub *drvr, u32 data);
- #else
- static inline int brcmf_proto_msgbuf_attach(struct brcmf_pub *drvr)
- {
- 	return 0;
- }
- static inline void brcmf_proto_msgbuf_detach(struct brcmf_pub *drvr) {}
-+static inline int brcmf_msgbuf_h2d_mb_write(struct brcmf_pub *drvr, u32 data)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif
+ 	struct brcmf_fweh_info *fweh = ifp->drvr->fweh;
+ 	enum brcmf_fweh_event_code code;
++	const char *iovar = brcmf_fweh_event_mask_iovar(ifp);
+ 	int i, err;
  
- #endif /* BRCMFMAC_MSGBUF_H */
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-index 5917ee5fd7..ad8567e2b9 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-@@ -219,9 +219,13 @@ static const struct brcmf_firmware_mapping brcmf_pcie_fwnames[] = {
- #define BRCMF_PCIE_SHARED_VERSION_MASK		0x00FF
- #define BRCMF_PCIE_SHARED_DMA_INDEX		0x10000
- #define BRCMF_PCIE_SHARED_DMA_2B_IDX		0x100000
-+#define BRCMF_PCIE_SHARED_USE_MAILBOX		0x2000000
- #define BRCMF_PCIE_SHARED_HOSTRDY_DB1		0x10000000
- #define BRCMF_PCIE_SHARED_DAR			0x80000000
+ 	memset(fweh->event_mask, 0, fweh->event_mask_len);
+@@ -459,10 +584,9 @@ int brcmf_fweh_activate_events(struct brcmf_if *ifp)
+ 	if (!brcmf_fwvid_activate_events(ifp))
+ 		return 0;
  
-+#define BRCMF_HOSTCAP_H2D_ENABLE_HOSTRDY	0x400
-+#define BRCMF_HOSTCAP_DS_NO_OOB_DW		0x1000
-+#define BRCMF_HOSTCAP_H2D_DAR			0x10000
- 
- #define BRCMF_PCIE_FLAGS_HTOD_SPLIT		0x4000
- #define BRCMF_PCIE_FLAGS_DTOH_SPLIT		0x8000
-@@ -237,6 +241,8 @@ static const struct brcmf_firmware_mapping brcmf_pcie_fwnames[] = {
- #define BRCMF_SHARED_DMA_SCRATCH_ADDR_OFFSET	56
- #define BRCMF_SHARED_DMA_RINGUPD_LEN_OFFSET	64
- #define BRCMF_SHARED_DMA_RINGUPD_ADDR_OFFSET	68
-+#define BRCMF_SHARED_HOST_CAP_OFFSET		84
-+#define BRCMF_SHARED_HOST_CAP2_OFFSET		112
- 
- #define BRCMF_RING_H2D_RING_COUNT_OFFSET	0
- #define BRCMF_RING_D2H_RING_COUNT_OFFSET	1
-@@ -318,6 +324,7 @@ struct brcmf_pcie_shared_info {
- 	void *ringupd;
- 	dma_addr_t ringupd_dmahandle;
- 	u8 version;
-+	bool mb_via_ctl;
- };
- 
- #define BRCMF_OTP_MAX_PARAM_LEN 16
-@@ -843,6 +850,18 @@ brcmf_pcie_send_mb_data(struct brcmf_pciedev_info *devinfo, u32 htod_mb_data)
- 	u32 i;
- 
- 	shared = &devinfo->shared;
-+	if (shared->mb_via_ctl) {
-+		struct pci_dev *pdev = devinfo->pdev;
-+		struct brcmf_bus *bus = dev_get_drvdata(&pdev->dev);
-+		int ret;
-+
-+		ret = brcmf_msgbuf_h2d_mb_write(bus->drvr, htod_mb_data);
-+		if (ret < 0)
-+			brcmf_err(bus, "Failed to send H2D mailbox data (%d)\n",
-+				  ret);
-+		return ret;
-+	}
-+
- 	addr = shared->htod_mb_data_addr;
- 	cur_htod_mb_data = brcmf_pcie_read_tcm32(devinfo, addr);
- 
-@@ -871,21 +890,9 @@ brcmf_pcie_send_mb_data(struct brcmf_pciedev_info *devinfo, u32 htod_mb_data)
+-	err = brcmf_fil_iovar_data_set(ifp, "event_msgs", fweh->event_mask,
+-				       fweh->event_mask_len);
++	err = brcmf_fweh_set_event_mask(ifp);
+ 	if (err)
+-		bphy_err(fweh->drvr, "Set event_msgs error (%d)\n", err);
++		bphy_err(fweh->drvr, "Set %s error (%d)\n", iovar, err);
+ 	return err;
  }
  
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
+index e327dd58d2..53c4b58e63 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
+@@ -356,6 +356,7 @@ int brcmf_fweh_register(struct brcmf_pub *drvr, enum brcmf_fweh_event_code code,
+ 				       void *data));
+ void brcmf_fweh_unregister(struct brcmf_pub *drvr,
+ 			   enum brcmf_fweh_event_code code);
++int brcmf_fweh_init_events(struct brcmf_if *ifp);
+ int brcmf_fweh_activate_events(struct brcmf_if *ifp);
+ void brcmf_fweh_process_event(struct brcmf_pub *drvr,
+ 			      struct brcmf_event *event_packet,
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+index e74a23e118..d591f17960 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+@@ -1236,4 +1236,30 @@ struct brcmf_mkeep_alive_pkt_le {
+ 	u8   data[];
+ } __packed;
  
--static void brcmf_pcie_handle_mb_data(struct brcmf_pciedev_info *devinfo)
-+static void brcmf_pcie_handle_mb_data(struct brcmf_pciedev_info *devinfo,
-+				      u32 dtoh_mb_data)
- {
--	struct brcmf_pcie_shared_info *shared;
--	u32 addr;
--	u32 dtoh_mb_data;
--
--	shared = &devinfo->shared;
--	addr = shared->dtoh_mb_data_addr;
--	dtoh_mb_data = brcmf_pcie_read_tcm32(devinfo, addr);
--
--	if (!dtoh_mb_data)
--		return;
--
--	brcmf_pcie_write_tcm32(devinfo, addr, 0);
--
- 	brcmf_dbg(PCIE, "D2H_MB_DATA: 0x%04x\n", dtoh_mb_data);
- 	if (dtoh_mb_data & BRCMF_D2H_DEV_DS_ENTER_REQ)  {
- 		brcmf_dbg(PCIE, "D2H_MB_DATA: DEEP SLEEP REQ\n");
-@@ -906,6 +913,32 @@ static void brcmf_pcie_handle_mb_data(struct brcmf_pciedev_info *devinfo)
- }
- 
- 
-+static void brcmf_pcie_poll_mb_data(struct brcmf_pciedev_info *devinfo)
-+{
-+	struct brcmf_pcie_shared_info *shared;
-+	u32 addr;
-+	u32 dtoh_mb_data;
++enum event_msgs_ext_command {
++	EVENTMSGS_NONE		= 0,
++	EVENTMSGS_SET_BIT	= 1,
++	EVENTMSGS_RESET_BIT	= 2,
++	EVENTMSGS_SET_MASK	= 3,
++};
 +
-+	shared = &devinfo->shared;
-+	addr = shared->dtoh_mb_data_addr;
-+	dtoh_mb_data = brcmf_pcie_read_tcm32(devinfo, addr);
++#define EVENTMSGS_VER		1
 +
-+	if (!dtoh_mb_data)
-+		return;
++/**
++ * struct brcmf_eventmsgs_ext_le - event_msgs_ext iovar data
++ *
++ * @version: structure version.
++ * @command: requested operation.
++ * @len: mask size for set, actual firmware mask size for get.
++ * @maxgetsize: maximum mask size that may be returned by firmware.
++ * @mask: event mask.
++ */
++struct brcmf_eventmsgs_ext_le {
++	u8 version;
++	u8 command;
++	u8 len;
++	u8 maxgetsize;
++	u8 mask[] __counted_by(len);
++};
 +
-+	brcmf_pcie_write_tcm32(devinfo, addr, 0);
-+
-+	brcmf_pcie_handle_mb_data(devinfo, dtoh_mb_data);
-+}
-+
-+static void brcmf_pcie_d2h_mb_rx(struct device *dev, u32 data)
-+{
-+	struct brcmf_bus *bus = dev_get_drvdata(dev);
-+	struct brcmf_pciedev *buspub = bus->bus_priv.pcie;
-+
-+	brcmf_pcie_handle_mb_data(buspub->devinfo, data);
-+}
-+
- static void brcmf_pcie_bus_console_init(struct brcmf_pciedev_info *devinfo)
- {
- 	struct brcmf_pcie_shared_info *shared;
-@@ -1042,7 +1075,7 @@ static irqreturn_t brcmf_pcie_isr_thread(int irq, void *arg)
- 	if (status) {
- 		brcmf_pcie_write_pcie32(devinfo, devinfo->reginfo->mailboxint, status);
- 		if (status & devinfo->reginfo->int_fn0)
--			brcmf_pcie_handle_mb_data(devinfo);
-+			brcmf_pcie_poll_mb_data(devinfo);
- 	}
- 	if (devinfo->have_msi || status & devinfo->reginfo->int_d2h_db) {
- 		if (devinfo->state == BRCMFMAC_PCIE_STATE_UP)
-@@ -1695,6 +1728,7 @@ static const struct brcmf_bus_ops brcmf_pcie_bus_ops = {
- 	.get_blob = brcmf_pcie_get_blob,
- 	.reset = brcmf_pcie_reset,
- 	.debugfs_create = brcmf_pcie_debugfs_create,
-+	.d2h_mb_rx = brcmf_pcie_d2h_mb_rx,
- };
- 
- 
-@@ -1726,6 +1760,7 @@ brcmf_pcie_init_share_ram_info(struct brcmf_pciedev_info *devinfo,
- {
- 	struct brcmf_bus *bus = dev_get_drvdata(&devinfo->pdev->dev);
- 	struct brcmf_pcie_shared_info *shared;
-+	u32 host_cap;
- 	u32 addr;
- 
- 	shared = &devinfo->shared;
-@@ -1766,6 +1801,24 @@ brcmf_pcie_init_share_ram_info(struct brcmf_pciedev_info *devinfo,
- 	addr = sharedram_addr + BRCMF_SHARED_RING_INFO_ADDR_OFFSET;
- 	shared->ring_info_addr = brcmf_pcie_read_tcm32(devinfo, addr);
- 
-+	if (shared->version >= 6) {
-+		shared->mb_via_ctl =
-+			!(shared->flags & BRCMF_PCIE_SHARED_USE_MAILBOX);
-+
-+		host_cap = shared->version;
-+		if (shared->flags & BRCMF_PCIE_SHARED_HOSTRDY_DB1)
-+			host_cap |= BRCMF_HOSTCAP_H2D_ENABLE_HOSTRDY;
-+		if (shared->flags & BRCMF_PCIE_SHARED_DAR)
-+			host_cap |= BRCMF_HOSTCAP_H2D_DAR;
-+		host_cap |= BRCMF_HOSTCAP_DS_NO_OOB_DW;
-+
-+		brcmf_pcie_write_tcm32(devinfo, sharedram_addr +
-+				       BRCMF_SHARED_HOST_CAP_OFFSET,
-+				       host_cap);
-+		brcmf_pcie_write_tcm32(devinfo, sharedram_addr +
-+				       BRCMF_SHARED_HOST_CAP2_OFFSET, 0);
-+	}
-+
- 	brcmf_dbg(PCIE, "max rx buf post %d, rx dataoffset %d\n",
- 		  shared->max_rxbufpost, shared->rx_dataoffset);
- 
+ #endif /* FWIL_TYPES_H_ */
 
 -- 
 2.55.0
