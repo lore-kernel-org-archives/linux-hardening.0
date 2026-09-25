@@ -1,54 +1,54 @@
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11E34F55B1
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Sep 2026 20:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E080F4F55CC
+	for <linux-hardening@vger.kernel.org>; Fri, 25 Sep 2026 21:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790369698; cv=none; b=poZuujJFTYOG6XPFkQO0reWcDLwWw0IFgo/1eaFwpTQeNEjBcrD3yaXv0z7QhVBWeGBxFBEe0YTq5gDM/pyljHcksUqrxyx800vloC3X+a4o/xAGlc0fwbI4HD10isOGd5cAhBgSXtnupV6vgMQPBzR8eN7WBgUhxjwuz+qVzV8=
+	t=1790370557; cv=none; b=QlKWTRTN0v4NKUlIHBcDdvMxllbgBNBTJiRlEpmP51woySnw5LUCo2T2aULfBr3JpAooQLTVnYmdsmUGo7drOP/py/sz/rWn1REeUTUk0A4FW1fdROdQvjMGZffW0jAQ/8oH4l8vkQdxCckhlH8bLtyJ+4I7Cp2IMs8X54Xz0LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790369698; c=relaxed/simple;
-	bh=w3FlHTyK81Tlr7c/mJgReWF0sV3jCKURpg/1/QYttMw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=l/OL6kwkB8JUsDKP57VCW/Z1Tyo7eRCMV00Uk+Oi3IiV8Blnvo1G5HXmGVFn1ZzMJ6IGk5VFjpR4/aujRw3KrWg5hLj2VME2uu1SpGuRzZc7DVY3f2zL5kQYyZobPJ5BMwdo0mcQqPvVowb1UsxzRXqVahuIpoTf8Mjng5y38qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GvK9nJJ6; arc=none smtp.client-ip=209.85.214.198
+	s=arc-20240116; t=1790370557; c=relaxed/simple;
+	bh=sQu7/0fi62ZQ9XV/rC2dLD1jlmGus/lbm4Uepx4HqUg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JphSbed/vNfCDVltUV+yykV3OtsZ2YGY2FFTHrdZ4aAn8R1EFyns6gDYUMMnvinzmS1oo95EZMb3c1RSNkAHZBmQLH2dAeeMR7b3JvZi+Gq3VIw3uO1DAXCVgdUBHDMGhmKl6HHPy5JtY5XFIhoEdQ2vdG75KFPtUCupyjSrugY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fwi+xEl5; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GvK9nJJ6"
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2dc7337e2a7so11517035ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Sep 2026 13:54:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fwi+xEl5"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-398dcfabbf8so3373960a91.0
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Sep 2026 14:09:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790369696; x=1790974496; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790370555; x=1790975355; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:mime-version:date:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=bdMFNTSejRCqI1rOR93/C7sNH9qJNtDawPM7MlpnxMU=;
-        b=GvK9nJJ6fouJtVvHeWucwcY86Z9R6Z/mC9nbx1l/cZOlqPrzWFsf1RGfH5Eu5ESvAb
-         0xET6K/7DVQmKHUEjDwk5lWtKQGg3pyxY/t4PSfNK16/wDZLT9wplI5A2bwMu+Orr3dq
-         kyfILx1UmFapUEf5q1ZwpRTvKpO+5vFHekLUQHnSNJSIt2loPBw5YBx5g9AuXztWwqwH
-         O2PODuYpB3XAz6soJm4u8ytuv8hqn4UQF8U+LU+gg75e+Mn4rx0jpJSs6Krodx3qE1vX
-         r/DXc+8gez2RHe32S3GDef6u+YhmA3xo4zR2hhXSQqHo+xsWVZ3q+RyO26bjs5Blyh1u
-         +tGg==
+        bh=kxvoww2RND8pvTVP1dZor0+GTIlQncozKtYuhxF38ww=;
+        b=fwi+xEl5dnoUY+cYv/1LNruUjGLzIlXDYtLWtuGq2rzX4D1LLu6HoUwz/dAL9YbRiK
+         cTXcrmdThaeXQUpPCW9yho4T9A8HagPYZHkzK4NNP61barts44aWXyNucQcL8xAKNWqN
+         ZyH1oMhwz8aJ8rzavc4GQwYp+4aWG5l4zBZ4gqv8HJi7kc1c5dTlPF9K9UzNi5GGZwDf
+         OaJtKmhZN9sbfiKbp+ThyqcKT/0VQwmU7haMuH7yYW554U9LtyziZl7h+FmOzwZLdE+Z
+         RxNKOqD6MUEVhZ+PtHNKcC0j8+KzrC1GYB07mMF5PX1AgyO488Uj73jNSXsMv5YvxuVc
+         rB1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790369696; x=1790974496;
+        d=1e100.net; s=20260707; t=1790370555; x=1790975355;
         h=content-type:cc:to:from:subject:message-id:mime-version:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=bdMFNTSejRCqI1rOR93/C7sNH9qJNtDawPM7MlpnxMU=;
-        b=YiS9AU+0bLYSUuDcJXQ1a5GNEcKRShbefb+XEDW2CR75WJVdTKl5qnWN670gkQSu5a
-         Yj/vX1IgQ6aQdKaOqAyu3LHECeS0razJiTw3IYntbR/Igglewnt9BHOL7ZFg2Ej+zY1H
-         zcDc8wnxwF3SJpM0GC8R72xQrQbzZTA3xY+//8iGI4J7fS/PS+eFXm2SlQPss/3i50SN
-         goaCXceUGWoFkg6E9HrYbKmdeA2+i7A3VNDOAFdQOuRWjPy6FvMNAe5E80odS53bBVf2
-         Qql9PMc2qRkVQWrTvyv3506EHQbO/BgsSvkSZwrPi+ILJ9sOxX4jFXwSKG7h08rXL0Rn
-         1ArA==
-X-Forwarded-Encrypted: i=1; AKwUvBywxsUHsMxI7egacZDOt5ggjYWVjBlLP8//aH9X9Rox0OGw51pgChPVeKw0OasM9FK3Txm++2HM5vhUCgBQX20=@vger.kernel.org
-X-Gm-Message-State: AFuF++mSncaKVwSyxzHc9dGjP3UyD3gx73qxDyiImV4cXQo7ygY210hR
-	qA4oLTvYumb33VhA1WKYFUkUC0GYJD68Rpozjx2c5gZDkdA+Rv3sd/iVlDUy6D4Zi4/kOg4oDxz
-	Y
-X-Received: from pjbkw10.prod.google.com ([2002:a17:90b:220a:b0:3a0:6f7a:7f86])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ad0:b0:39d:b1bd:b384
- with SMTP id 98e67ed59e1d1-3a0985b949fmr6190618a91.17.1790369696074; Fri, 25
- Sep 2026 13:54:56 -0700 (PDT)
-Date: Fri, 25 Sep 2026 20:54:53 +0000
+        bh=kxvoww2RND8pvTVP1dZor0+GTIlQncozKtYuhxF38ww=;
+        b=kHpLKbNGrkIro8oAArpVRiFg9pQpNt9sGjzbc1YhJZs/rxMT04g7a/8IxfN7WP+opL
+         +WzdXkP4qey/QKaXtd67CxdP/Cz7IARjsZSZgVDG7wx/8v4NNsZvoufAKPj7Q+lEPLFF
+         fNi6tExV56hn9NyjjgMKQN6+Ou/A64MIttA10JoF3NsJnH03ttO+80D9SdzDB5/Xyfmc
+         1++ebxETL8MkD9tlYKz1AJLH913H+zbRQft4ErFeiJb8w4dwsQg8EHmm6bscHdWaECKO
+         8dSqjDLuFbVd0WPYV/WsR3vsY9RDYJE0IlB4cFQKAE0GbSM3eWERDeOavpMJN4NgO2Cj
+         hvFQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwJWWJp61phcE0TUrIIONQ9ZE74dkZauIPn0Zqw0Uj7azpOx4F1wGihZ0GhcT4RBgISh+5t1+rz3HDdKZjRB2I=@vger.kernel.org
+X-Gm-Message-State: AFuF++nwmk8smyU+asJ/G3cf3bZFqlvoMmvwdeMo6fW0ch4ixmj5m00h
+	Y44GxbJX2tMhbBnVRoOUcjt1pCfVzNCqY6jZEfobRzgwuIlzpNmMNsLWCe5Xn40mf9Z8h660SyG
+	h
+X-Received: from pgqs12.prod.google.com ([2002:a65:690c:0:b0:cc7:5a7a:c5d9])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c49:b0:3a0:7d60:450d
+ with SMTP id 98e67ed59e1d1-3a098feb5d1mr7042271a91.43.1790370555057; Fri, 25
+ Sep 2026 14:09:15 -0700 (PDT)
+Date: Fri, 25 Sep 2026 21:09:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,46 +56,49 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260925205453.93297-1-morbo@google.com>
-Subject: [PATCH] fpga: Add __counted_by_ptr annotation to fpga_image_info
+Message-ID: <20260925210912.113052-1-morbo@google.com>
+Subject: [PATCH] firewire: core: add __counted_by_ptr to struct fw_packet
 From: Bill Wendling <morbo@google.com>
-To: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>
-Cc: Tom Rix <trix@redhat.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-fpga@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Bill Wendling <morbo@google.com>, 
+	codemender-patching+linux@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-The 'const char *buf' pointer in 'struct fpga_image_info' is used to hold
-the FPGA image data, and its element count is stored in 'size_t count'.
-To strengthen runtime boundary checks via KASAN and
-'__builtin_dynamic_object_size', annotate the 'buf' field with the
-'__counted_by_ptr' attribute, pointing to 'count'.
+In 'struct fw_packet', the 'payload' field points to a buffer of size
+'payload_length' bytes. To enable compiler bounds checking (via KASAN
+and __builtin_dynamic_object_size), add the '__counted_by_ptr' attribute
+to the 'payload' pointer, associated with the 'payload_length' count.
 
-All allocation and assignment paths of 'struct fpga_image_info' have been
-verified to ensure that 'count' is initialized before or alongside 'buf',
-and 'buf' is never accessed before 'count' is set.
+A thorough analysis of all allocation and initialization points for
+'struct fw_packet' was conducted. The pointer and its length are
+assigned together.
+
+Because the count field is always correctly initialized before the
+pointer is accessed, the '__counted_by_ptr' attribute is fully safe and
+will not cause runtime false positives or panics.
 
 Cc: codemender-patching+linux@google.com
 Assisted-by: LLM
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
- include/linux/fpga/fpga-mgr.h | 2 +-
+ include/linux/firewire.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
-index 0d4fe068f3d8..fb9b0978bd34 100644
---- a/include/linux/fpga/fpga-mgr.h
-+++ b/include/linux/fpga/fpga-mgr.h
-@@ -103,7 +103,7 @@ struct fpga_image_info {
- 	u32 config_complete_timeout_us;
- 	char *firmware_name;
- 	struct sg_table *sgt;
--	const char *buf;
-+	const char *buf __counted_by_ptr(count);
- 	size_t count;
- 	size_t header_size;
- 	size_t data_size;
+diff --git a/include/linux/firewire.h b/include/linux/firewire.h
+index fd35a6570cd8..9f313b47a694 100644
+--- a/include/linux/firewire.h
++++ b/include/linux/firewire.h
+@@ -322,7 +322,7 @@ struct fw_packet {
+ 	int generation;
+ 	u32 header[4];
+ 	size_t header_length;
+-	void *payload;
++	void *payload __counted_by_ptr(payload_length);
+ 	size_t payload_length;
+ 	dma_addr_t payload_bus;
+ 	bool payload_mapped;
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
