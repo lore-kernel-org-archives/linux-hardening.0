@@ -1,99 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk2-f42.google.com (mail-qk2-f42.google.com [74.125.230.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089354908A7;
-	Fri, 25 Sep 2026 14:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790345923; cv=none; b=eRm939lBRKZtyMED/KXMA7ImN2BnE7VsN1v2WBUHsfWbvqdZgXOQEs+z1MaT/K63kRE5rKyVOR6hj6Z/3FP8iuzk6EgLOFimUQNCQDCNXqoi/gRJCKFBUBugbpUjg5AxO8eprdXKsO+4WqN4zl5Ry9mIICbPRlsWxTscRt52T10=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790345923; c=relaxed/simple;
-	bh=O0UQlcpBePEhCtE60o4RB9ewz0ke7JOvuoOv6HWv36E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SqZPTI+zQ8ZUVT/0HPeY+UpJn0dxDmmNJMWWAnIqaKiGXnc40i7tG/7l0KYCj1QZsEXyvgF1mKotlUe4F0mhNgs9PMdtxC/bamWoHFTt0BemE3lhEPkuVz6G5O9RgQaQCPwCish1QgTJSssEc4l5wiV++GwxWAoLC987t2A5C+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eftRXca8; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007944BD78C
+	for <linux-hardening@vger.kernel.org>; Fri, 25 Sep 2026 14:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.234
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790348409; cv=pass; b=SvXwRG3zpnaQywy/H6Nd+wFnIs7WeVR1mJsfwlsFsfZk2c0+8uJV0F7SRze66yo48YfK4orDXMcTFrW3+OEGmMVbH7hLnRcJB5W2gchIWrE8zykqFns32Q53nE+Y/f6HCTaA/iVZx7iTlhOGaNl2Wx0pv+qmIZ8SqyQd+WzVoYE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790348409; c=relaxed/simple;
+	bh=G7PD1SsyWtfXJXkRv2FlPB9lAjfDo8cMbMk/Mdw9V7U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HlbaAqPcCuIzBcXmEV4xsPE3EExhmO64o/avSIVUePKodwXHyU5s1EZ9qN++uu1QptugO9BUw9ucy1ERT6J0cLWgxHqeSKVniXOewrmhKT37EwNQ4GlPqmmaTWNFCvNal4anIiOa1nM5AtpxH5PyfPPg9jXj59W0Zox7E+n/UQ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=VU+craBP; arc=pass smtp.client-ip=74.125.230.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eftRXca8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7642B1F00899;
-	Fri, 25 Sep 2026 14:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790345921;
-	bh=lfwbK6aQOk9FHQe0F0mk3C3hQbetkzcccmn4T4ffiAA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eftRXca8xtBhE587iml/z29FSktAe7JYuF53Y224sbx+Rt8BUUYPtDLXRpFmCIXDx
-	 xiJIjaDaj34GBdm3rQSCSMZFfvZjSsPm9ZQ6efPQHGvQtqnfQfGmfQqvxNdlRC3SAE
-	 XDwvEqbCu2+wxv98uliQUd6g49Wqp9vpJ+nsix7Qihek/OZqOAIaZuUkBoRqbguU1q
-	 zgJ+0VaIILgnADgAG8rrnhVbtayQG7MbnMknzPHjpMBJ1opbJevYcK8aUDWxFPPD5z
-	 XVM6gpIxE84k1AqGu9OGk59r8iy9InuNxC2gHthmlc1JxqKBG6Qawohv8pjDqgkKPx
-	 BsF9i4rXq+YOw==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>,
-	Amit Kucheria <amit.kucheria@oss.qualcomm.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	manaf.pallikunhi@oss.qualcomm.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
-	Casey Connolly <casey.connolly@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Dipa Ramesh Mantre <dipa.mantre@oss.qualcomm.com>,
-	Abel Vesa <abel.vesa@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v8 0/9] Add support for Qualcomm remoteproc subsystem cooling
-Date: Fri, 25 Sep 2026 09:18:31 -0500
-Message-ID: <179034590772.712210.9030677461364721298.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260809-b4-qmi-tmd-v8-0-b15d47adc379@oss.qualcomm.com>
-References: <20260809-b4-qmi-tmd-v8-0-b15d47adc379@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="VU+craBP"
+Received: by mail-qk2-f42.google.com with SMTP id d75a77b69052e-5329fc7e0bcso11364401cf.1
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Sep 2026 07:59:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790348391; cv=none;
+        d=google.com; s=arc-20260327;
+        b=c22fyB0ctWtPcCMEUUY2r2R7BwU7l2jTCYIaOpMGYR67GVuhAxUMG2a3gYrdg2P8/4
+         rO27sowNPup7j7BATSKtr1O+QZ6QYE9u+UCdyiLB3Cd8sWXCqd+KXeGvghanomAJ/ZfL
+         ipPPtNLKHk/YqMQU321LtD2N+AlUs/mqLxMYNhBGbj6W9mMVD3HOehPNRKveOSWDZsLc
+         re9QAKRop+XAQEYUM+atHw+DaEkLnDX0g7Wn7DQQKWaceA+5i78EWTvRoU76nhRyMuOu
+         HqM/TaUYlR3QN7VZn7fefXFKapCToThNz2Nk6DrCqlh89wxnWugamQ+jn6phkIS3kTVL
+         cCTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=oNCxj1Tkne1Dd9zOhmWp2sMzjpmd3KFTSPzHbdHwTl8=;
+        fh=yfXwwabre9XsCwKeWJ07GTxOP49gpAQol0/AQWUxJZY=;
+        b=G9JVrKEBtnCKfmEgu03FXRrloA/opqotZlcko8RgSPtOjHuOwQYuA6fXXFg6m+qMZm
+         trZS46hPva334b4keM0R176GJyujtTskjv1cAv2MMTXxN35b4Qhq+ag569K79dL2CqDj
+         +WClUb4wcvgehxM0/bsmWjVLe6zI4hMzDAOPecXeB6ShVXv9sJNaAs+a/kJjPW5keROg
+         dQD+wPJT8525KG0pMgIPzpeq5Z8lCMOLFR4clezhUFcf8bhkuMUwyNq9SJ9MzQqqS9aA
+         pa3pR+vIwpQDXeFIA1Q9PqocTm1uok9xKcMWCZ1UyFqn7TcmAlwomZd3aTs8S2uN8/RC
+         0SZw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1790348391; x=1790953191; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=oNCxj1Tkne1Dd9zOhmWp2sMzjpmd3KFTSPzHbdHwTl8=;
+        b=VU+craBP5sTfmgsks6GqGyE/aSlKFV/uYtDlbeOzYSOfhZM0LCRTW9xsMii7u5DKPP
+         ee+c9I/OHN3XyjUODNRuDCK0Kc+tq2ddcB9We9B5h0V6rfU7Ena6Hzd3gZ9r2rPCXGqY
+         gWDr2/Ff5lGSfoHuHqx1lh1188vB1iCslgZSU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790348391; x=1790953191;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=oNCxj1Tkne1Dd9zOhmWp2sMzjpmd3KFTSPzHbdHwTl8=;
+        b=cuoaQmeYnvmvU2BwObOjPEm7E2sANtdXcB3Sxy8uWm+SO85TEEEmoKWsvtjGAvfv2c
+         7VYxnf0QitIbSXY11P69dOSNvr7A0dYDbQNMKfzKwzQYpBBBCiGvq7/9uWzvYN4RLdm5
+         eHcue7hHgitCBrnktDAEcE2EsVhv66BPSwiWHOLmsNB+8NYA4dYzeQM+qAIwHbNl/kcv
+         mZwKrcWcTwAUfcl+nM4R1XXqMZse5cZTnUCsTxnNihzHMl1RekmaTqmWLGrdFlZCKtm5
+         Hl1LD2p8l44j/ssDgkAGaWgma3pym+kn3+j8atMFTfcg+g9sGTWkbbmh3/zW4TrDA8gq
+         7aUA==
+X-Forwarded-Encrypted: i=1; AKwUvBwZbbKbHgBjgmDFz1L15+mwpjtr9eJKLuENsm/z1JCXNNzr4Bbr4V1fVbiN9fmse9rUigmKya1AeNXot2DPQgc=@vger.kernel.org
+X-Gm-Message-State: AFuF++lPSNgM2tDB1EeHkiK2zRfZXIvY2Tv7dycUe6FUAPNaiZKozD1/
+	KWIojsXK3ya+F79rNHl2Xwxn7HqzjndOYbPJuDVGAMQyyEItQnX7DCU2NUtugZEfvyeW3rfQLTW
+	s4TxFZTI5+9ruLwu4xUPTXy3tsidt9NNKWTAl/A4yBJ9mU2/KX0o7
+X-Gm-Gg: AYBFou3rmpGp1s9CGkypEBEIpqhjDqbQqO6KLF0tR5nMg3dKLTMT9+ZPA+gPjNEG9l0
+	M4PFPzDmaQVVb1RuQaZQKS2G5Xd4KX24T6Yk8oXBD5bo0lvSyj+KYnH/rM+GWsulxDGz9VQ37rq
+	H6FJf6+UejRdI0K6gsg6p4b/kdNIHcC/g0x8hPRa5SyIYjdhEBYxLiTQJYwdo10gy/6oyoCxNpb
+	STlJnSz4tPIYW8RNwLQlRR8CPZY8rM/8UWN5A29vVzqawscZgUi3kYR7F1bpbsILveGAa5/9mg7
+	1Nc+mFDTgdvrBh1GbrH5YdMj/ZvahHuTZkdMZMS10ckIU9IFSricTdCjc15TWZ25TAIsSWu91f5
+	43P2ug5/w2A==
+X-Received: by 2002:a05:622a:508:b0:530:2cc6:c8ad with SMTP id
+ d75a77b69052e-5330b5ad6e9mr51539751cf.19.1790348391358; Fri, 25 Sep 2026
+ 07:59:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20260910235110.3922068-1-xmei5@asu.edu>
+In-Reply-To: <20260910235110.3922068-1-xmei5@asu.edu>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Fri, 25 Sep 2026 16:59:40 +0200
+X-Gm-Features: AclHuK8PxhLjayeNK4Ioc2AfP1egLwmVYg_0ZofucCJ6SB6GJuae3F4l1SVQLt0
+Message-ID: <CAJfpegsxW3gf6Dj+zVKTTHx8bsASXiMboZ6UWd5WWtBMqd8WZQ@mail.gmail.com>
+Subject: Re: [PATCH v8 1/2] fuse: don't BUG when the copy buffer is exhausted
+To: Xiang Mei <xmei5@asu.edu>
+Cc: Joanne Koong <joannelkoong@gmail.com>, Bernd Schubert <bernd@bsbernd.com>, 
+	Baokun Li <libaokun@linux.alibaba.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, fuse-devel@lists.linux.dev, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, Luis Henriques <luis@igalia.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, bestswngs@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 11 Sept 2026 at 01:51, Xiang Mei <xmei5@asu.edu> wrote:
+>
+> fuse_copy_fill() hits BUG_ON(!err) once the iterator backing the copy
+> runs out of pages.  Over io-uring the amount copied is not bounded by the
+> payload buffer the server registered, so an unprivileged user can drain
+> the iterator and panic the host - mount a FUSE filesystem with small
+> payload buffers, then setxattr() a larger value:
 
-On Sun, 09 Aug 2026 17:58:56 +0530, Gaurav Kohli wrote:
-> This series introduces Qualcomm Messaging Interface based Thermal
-> Mitigation Device (QMI TMD) support to control thermal mitigation
-> on remote subsystems such as the Modem and CDSP.
-> 
-> The QMI TMD is an interface that instructs a remote subsystem to adjust
-> the performance level of the devices it manages, reducing power consumption
-> in response to critically low battery charge, overcurrent alerts, or
-> overheating conditions.
-> 
-> [...]
+Applied series, thanks.
 
-Applied, thanks!
-
-[1/9] dt-bindings: remoteproc: qcom,pas: add #cooling-cells property
-      commit: 1a61afc42cff8397cbc430666cf4ce9dec72e076
-[2/9] soc: qcom: Add QMI TMD support for remote thermal mitigation
-      commit: 2ff581c2185c3797fae2725537c7de1da3bc89fd
-[3/9] remoteproc: qcom: pas: add support for TMD thermal cooling devices
-      commit: 8eef721027127b7bd8ec06246bf1bbd975dc5f64
-[4/9] remoteproc: qcom_q6v5_pas: enable QMI TMD cooling support
-      commit: 586a2fadadb160295a93e5d5d32db1a2558a4d3f
-
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+Miklos
