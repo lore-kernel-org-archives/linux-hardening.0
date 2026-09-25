@@ -1,87 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22778369D7B;
-	Fri, 25 Sep 2026 19:16:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E607E3AFB06;
+	Fri, 25 Sep 2026 20:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790363798; cv=none; b=pFqmdvMq54Vw5QplTUptvECoXgbBW2fAdinqwaaw0KBTTzm5H29eADsNx+KUp2oXfxoog+8Q/279rk3ueoUin8C0XaQMZZJ3FqEjxfNiX9P0ZoSO7bhrXbgOGCgXzRjfP8yU3g61fy6Fbzgr+pTibLjHL2nJmvmhzJkJoW23cvw=
+	t=1790368878; cv=none; b=k44ABtRPrM+dqOUsbTA1FOFKn2iEW9AJmgG5J/SxTX1u77LbJ4jWwiQPIajIE3dIf+NXJylZgvLNIluq6R1LV45/SzUbEK6AkwFE4cMdjuvaZh4ClCYzkHaES7cIVvHLBWidY4E0qs2SyZg8WGmLAzy0ufkismgn+74gigSCM4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790363798; c=relaxed/simple;
-	bh=ciqAqHKZFqUwNJiT/mEjmsE0Q8QhLdWu5sXU+qXgbUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gvxIh+ky5VoRwKPZDfJHbY7RpDT87AIs7NHUBr9Jha16Yhn2h5XSD7kivMIZWA8g+QuF4cXHFSE2aMh4sRwF+7l8HOc+RkTt8niXNjYaX4IjQbZXvuEJrl4+KvW/bRU8boqhEL2Ou6PCwgWwWxdmupOdRAX6or8vmrjjhygqWt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4d4tHpX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790368878; c=relaxed/simple;
+	bh=e09smwXb4XfYUPPvBg0iolq1lK/fM+M6JbT5JkWpZXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TDgjEQLs5DTHxxoy84ZIRKzTf04qW0KnxWgmIsKvITrWcGTL3HK78MMSuqc4b/EdnHqez5dncQ1ZqGJ1E026Xajzivt4ba0qtGcmJgrPJJcDIrWe1M6lPzKmBlZXs8GeuRTozBECj2iipQF3U1h9/Nzzqa6f0S9/gNhmB3OvDDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hr39Zsho; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4d4tHpX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B44F1F00893;
-	Fri, 25 Sep 2026 19:16:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hr39Zsho"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A15E1F000FF;
+	Fri, 25 Sep 2026 20:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790363796;
-	bh=YTYRm/xoixV6fXMnDS8ROSQRp8DdXpSaJEUlFSgdyrs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=U4d4tHpXzsjaz91N51UlHo1rM8lrE1YQ0fGQZAxeaQ+QTXtIh4k8PIVPFOsntkGFs
-	 qfsW/sYS0vo892ERmIteXgDQiBUrGkc+bcojeYtktwiIkDW5Ki1aZ3Muj/FCJN2OtE
-	 udppRWabXQGaR65ZTA38L/mL5XulW4+NoDN5nK392vsI45d2I9XIfGEdBPKdCvx7xy
-	 RLN1Q3mL2FrWPZADKe+CCoMitepCitntz6CUVvrynNTZYJH/FRD1u+cGXC1b11tVBN
-	 yxD2hGbMcts8MOkFv21ifqPrmvxeq2UwkwksnsT9/UTJLhBucSVknYldessbOCfxBv
-	 0ekeqdnJKiOYw==
-Date: Fri, 25 Sep 2026 12:16:35 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Kees Cook <kees@kernel.org>, Thomas Huth <thuth@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/purgatory: Compile purgatory with -D__DISABLE_EXPORTS
-Message-ID: <20260925191635.GC2060@quark>
-References: <20260925130217.3912329-1-arnd@kernel.org>
+	s=k20260515; t=1790368876;
+	bh=na8PAI+6ga1GQK+sTI+pCTAUkoQSsH8cS8w0kTyUHL4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Hr39Zshoz7y7veoPBxXyeyI5h1VfvoGVc7sfuQSZhmhu2OARFEe2le+QeDrTKIG9q
+	 H1fU0BLpRg2P+wykrgOdeDC6Nt+xSAjnT57D/0vye8xdltAPohFmLTLO0p6tUENr7X
+	 c55ZaraAwreyHENT+iQKYyr9vN4UBIBJElIF8xW2V0pCNsRUYh71GEpylpg+e98rtS
+	 1t4pHZpX9098ZV4g8/SXotORIFaGOx8gWf0i9oLU3RGdc+8xjGdPZ2Bnnu+23C9PnH
+	 hGPmD1ML45EE79p04XdKlfz6+w+3/RtgMCOJwdr6iAkp47Q4DP8wLM5rhwrB5YMOLg
+	 ZJBapdzmhiIUg==
+Date: Fri, 25 Sep 2026 21:41:10 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: <mhonap@nvidia.com>
+Cc: <alex@shazbot.org>, <jgg@ziepe.ca>, <ankita@nvidia.com>,
+ <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
+ <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <dave@stgolabs.net>, <alison.schofield@intel.com>,
+ <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
+ <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
+ <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
+ <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
+ <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v5 04/27] cxl: Add cxl_reset_dvsec_sequence() for
+ vfio-pci
+Message-ID: <20260925214110.3500b4d9@jic23-hlaptop>
+In-Reply-To: <20260916183540.3813685-5-mhonap@nvidia.com>
+References: <20260916183540.3813685-1-mhonap@nvidia.com>
+	<20260916183540.3813685-5-mhonap@nvidia.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260925130217.3912329-1-arnd@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 25, 2026 at 03:01:49PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> A previous patch fixed compile-time issues by setting __NO_FORTIFY
-> for all of the purgatory code, but this is insufficient and still
-> leaves build failures that appeared recently in linux-next:
-> 
-> ld.lld: error: undefined symbol: __memset
-> >>> referenced by string.c
-> >>>               arch/x86/purgatory/purgatory.ro:(__UNIQUE_ID_addressable___memset_2)
-> 
-> ld.lld: error: undefined symbol: __memmove
-> >>> referenced by string.c
-> >>>               arch/x86/purgatory/purgatory.ro:(__UNIQUE_ID_addressable___memmove_3)
-> 
-> Set __DISABLE_EXPORTS as well, to avoid pulling in a reference to the
-> wrong string functions.
-> 
-> Fixes: 65cbe410d312 ("x86/purgatory: Compile purgatory with -D__NO_FORTIFY")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/x86/purgatory/Makefile | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
+On Thu, 17 Sep 2026 00:05:17 +0530
+<mhonap@nvidia.com> wrote:
 
-I dropped the patch this fixes already, as I mentioned at
-https://lore.kernel.org/linux-crypto/20260924174911.GA1978@sol/ .  It's
-gone from linux-next now.  I think Thomas Huth is planning to send a
-fixed version, together with the two patches that depend on this.
+> From: Manish Honap <mhonap@nvidia.com>
+> 
+> vfio-pci needs to run a CXL reset on a passed-through Type-2 device
+> without the host-memory handling in cxl_reset_function(): the memory
+> behind the decoder belongs to the guest, so the HDM range collection and
+> host CPU cache flush that the host path performs must be skipped.
 
-But compiling all of purgatory (and not just sha256.o as is the status
-quo) with -D__NO_FORTIFY -D__DISABLE_EXPORTS sounds good to me.
+Hi Manish,
 
-Alternatively it could be just sha256.o and purgatory.o specifically.
-But it seems it might as well just be all files.
+This cache flush being skipped bit concerns me.  Who is issuing the
+necessary flushes in the vfio case? That is there to ensure we don't
+end up with random lines cached by PA (as well as VA if relevant),
+so they affect a guest just as much as the host.
+I'm not sure why it makes any difference who the memory belongs to.
 
-- Eric
+> 
+> Add cxl_reset_dvsec_sequence(), which runs the DVSEC reset under the
+> device lock and restores HDM state through
+> cxl_restore_state_after_pci_reset(), and cxl_reset_capable() to gate it on
+> a function-scoped reset. Both are exported to the vfio-cxl module so
+> vfio-pci core does not import the CXL namespace.
+> 
+> CXL Reset always clears memory, so there is no caller Memory Clear choice.
+> 
+> Assisted-by: LLM
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
