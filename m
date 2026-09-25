@@ -1,235 +1,196 @@
-Received: from mail-pz2-f39.google.com (mail-pz2-f39.google.com [74.125.228.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F160E339847
-	for <linux-hardening@vger.kernel.org>; Fri, 25 Sep 2026 04:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778CE396585;
+	Fri, 25 Sep 2026 06:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790311250; cv=none; b=u1VVygYVGNlKaZLkLkA8S7e7ednkw1yO3wZkzwKW4ij7QRmn1hPfSkzjC8wxfhKHYTjDes5GP5KM10dr0uF7Sbeh0aKIONXPBnXP3mTibGo7gnDGOBF+Vg37WNZhDG93oIpqY9SyK0PjfE643jvhsOApqQJBNzlAZofY2ASiTQw=
+	t=1790317167; cv=none; b=Oh6iAyxpUaoWvqrQPrMLg7eibdiVFJTC9SI4ks4nXZYA/kxbviGNa5ZqjzAPNbvSbMBWf/cGNsdss04RJ7Mx5H/qPmA/6U+3bMS3QwYIMwXabs4mSA0s4CHPUKn0uSxSM3iSfzw6m27W1Hi0RPBJNyalT1H2kJhIVdiNUmNmCc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790311250; c=relaxed/simple;
-	bh=nc//00UX5nLrzlcPRwZdsOCugNvIuS44f43pgVSjYZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DIDQkbXelAFBvoOSLXf9VITBtlBxTkOKYddTXs//k8lKSTnDYlPO5zSUrr54UfNoFjzISutJElt1Jvm0LP7wmIKQJKkXiPDhVctOwCwaOWqHqS7w+3i7A3zwTEJVMJrvgTPwb5ynTb7Yn/e/6y8Wd/xFtL/Xt2XBWZ5Kd0ildfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WlkhyOUO; arc=none smtp.client-ip=74.125.228.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790317167; c=relaxed/simple;
+	bh=hzyKINgYV+02Ombguje7nNnSMiMEPjCZCNaKplEhEbQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iBWccdoLAOwUTv4Zp3n456z6/ufLtEmMpzy8aK2HEO0kDMbbMPq1aVy/H3tFtNd7ElYk+dkAOxzQfj/fxp0Q+7igoElhw69hzPrfMDpdGmrWSkdDB3hM74zj8E3ghK1poKv28wBG/7NPFYWf+pvNmK/0eh9RP7OoPiV1pxoDFTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Kev/huUu; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlkhyOUO"
-Received: by mail-pz2-f39.google.com with SMTP id 41be03b00d2f7-cc78d59bb02so35528a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Sep 2026 21:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790311248; x=1790916048; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=14MXQzJGNSJiHny7BrCIDsUY2XvMualsJzu7fkY6FZ8=;
-        b=WlkhyOUODXsmoAlqPjcu0D+3IEj4ZvbVeM3IuBlcvX8M8iOHgF5lAFnFCU178fWrjx
-         zZY06EDi/4ky8K5NpTv6fbBu2j8A0Kc9gQrn7c4s9JFq457JiBbJBf/6ajVLQ0d7BK5U
-         X1zy1OtTBozw5ExM/yl92J5tH1lYmHwNI5vvSln4NVUfBAEMXifbZ8o4ZtVDzO+0Aagr
-         qsvAFGDixtD+px6WwTR4dUoT7C+DaVRmarl9vFCJ3cmM8oqUbnw6XQjOY/sDrgO8GjLR
-         Sf1rUZL3UOi5MVpMixGfdZYSML/FTq8Qxj21nJPemc+7hVRVqox6HG4O1CV5SLI+SDsP
-         m7lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790311248; x=1790916048;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=14MXQzJGNSJiHny7BrCIDsUY2XvMualsJzu7fkY6FZ8=;
-        b=Buf3ZMAIX8NROf0SDozAVYxlURxBOimHqwnSQs8vkgxK64xfiGO2kqWghHkMMw86UT
-         cpsxQ2zz3ZrXYqecLFsZbAIxJqLsY3mPea7TrF7Y7mcjwUE/tNB3Q9vQvLv1zszp568Q
-         PqRmX8ZUlKuGzpyld8N2h0BICcb53nIqj0E85/WQJoBiFtObFAUPvWAvJ4llgSjSXBEB
-         n0Gyqmvsr22ZMSRRAVtRZvgaOd5aiv6o54UPN82091ua9DpOkZO36mfaUpJxo3MM9KXG
-         UD5+4F6jT0Y5RSNY8UzHz0oM+42LRavlFcIL3z02puHZArZoo2gLvfI4MIArSTVPLTsO
-         nMdw==
-X-Forwarded-Encrypted: i=1; AKwUvByu255xWieq4hbGQaw77edbcwFMq9nbRWiJ40aZvk1AO2NFkn8OSCrRJSUOOkxHws/C49LS5H9zh4Dsp2gW0Sw=@vger.kernel.org
-X-Gm-Message-State: AFuF++k9iZENZ+y2ISAK//D0sQWO2JOWQrnn5rh/9OfDwM4Z/9sm7/8V
-	036wnwR85GHBr5tODVhcUKVYK/1iV0sE2bUdEVXZvZGITeW05AeI58Kr
-X-Gm-Gg: AYBFou1QHkeIq8D+uViKkMHaNbh7eDu6abmk94P2LMTN4CmaypcDaWkXRfK77MCfLvf
-	tEcB+fqDR0i8MR47Se/3GWYf2HOUvH2mCTje/Ktv6ztCpECK9a2+dD/ioGTogq9sceHbEvh+nbL
-	NAFQvVS0RrFU13abTRuuxkAdmm4occQgJvQk1yMEhKmF64yiCPjxjqg2hVJcD5rTA3mX2TgO4py
-	NRDhStDoaaDnQIjxn0D7yIQs5vd6pyKZyh7sDLlL4j5e8MZabHDunBLr1s0F0UH2egU+jNIyVjo
-	bxXZEZJnQvm24AJ+Bzc16ZtwbrRnDqyx0INeptPaH3LRDCMSbz3TbGuYjQX5AyN591gFjKV0epb
-	LwUDF3fX/eHuEglAnRxZjDcUjeQK+pnFnZVpjE2dRSboDizkx93KHWjLEd+zAxLs5Sh4r/k+QLi
-	s9HUhMPcJmjLx0dhkVr7/wzCuqpwmBzZJU3k+lIK0uERYdbCv0grN0xsp5hq9nplpU2E6uN2/kQ
-	G2v+V4dBojy
-X-Received: by 2002:a17:90b:2745:b0:39e:5c75:acbb with SMTP id 98e67ed59e1d1-3a098ad3c68mr3886722a91.11.1790311248198;
-        Thu, 24 Sep 2026 21:40:48 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a0c3f74e5bsm192594a91.5.2026.09.24.21.40.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 21:40:47 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 24 Sep 2026 21:40:46 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Marco Elver <elver@google.com>
-Cc: Vlastimil Babka <vbabka@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	David Hildenbrand <david@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	KP Singh <kpsingh@kernel.org>, Kees Cook <kees@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Matteo Rizzo <matteorizzo@google.com>,
-	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Suren Baghdasaryan <surenb@google.com>,
-	linux-hardening@vger.kernel.org, Nicolas Schier <nsc@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@gentwo.org>, Harry Yoo <harry@kernel.org>,
-	Hao Li <hao.li@linux.dev>, "Liam R. Howlett" <liam@infradead.org>,
-	Alexander Potapenko <glider@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kasan-dev@googlegroups.com, llvm@lists.linux.dev,
-	Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org
-Subject: Re: csky ICe (was: Re: [PATCH v4 2/3] slab: improve
- KMALLOC_PARTITION_RANDOM randomness)
-Message-ID: <4e2ea11c-7227-4790-af7c-67ffc86a12b1@roeck-us.net>
-References: <20260511200136.3201646-1-elver@google.com>
- <20260511200136.3201646-2-elver@google.com>
- <6106aefa-47c7-4bda-a51f-8a2fba3bf715@roeck-us.net>
- <arUZWKjKr5I5tlOj@elver.google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Kev/huUu"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68P4ZpJG074220;
+	Fri, 25 Sep 2026 06:19:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=JwZgfB
+	U2cREjbDtpwGI4XkkI+d3E0FjVL1IG8XF+KY8=; b=Kev/huUuCocM9Y8+dm6Plc
+	WK3+phbVO1WP1AL9J+59CnklWTXSEXvLiHQlDE5R8x6DLB7Pt8tRfHFJXkEJgh2F
+	UuL8DvzyXM4F5sto/fJ9Vhro4Nz/2IN3CB03dR5LtECUW5z7EfEW4XHsqzaBPCkM
+	O/0Bpz+mKOD9Udqc/gdBHRavWiXNYL50Ia2z6d6J8H0RZo20DKNPZIdOz0OS67Xb
+	niLJsAT0T+fIBM3pdxS/aZXyVHiyR55gyt4HsteJA0/5F5KnMvRjUtHYIG1dVpjj
+	uSRTgEktYVlJWUljOcy8yj6xLwc/4CHmzeNHtlI9RYv54IGkJgV2KycDSGAbakMg
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gskg2wm2s-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 25 Sep 2026 06:19:12 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68P4lbPb1959571;
+	Fri, 25 Sep 2026 06:19:11 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gvu7edhjy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Sep 2026 06:19:11 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68P6J8rC49873336
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Sep 2026 06:19:08 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 098C620080;
+	Fri, 25 Sep 2026 06:19:08 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D7E8620082;
+	Fri, 25 Sep 2026 06:19:05 +0000 (GMT)
+Received: from [9.123.14.142] (unknown [9.123.14.142])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 25 Sep 2026 06:19:05 +0000 (GMT)
+Message-ID: <7d99725f-9c90-48ca-bee1-30e2e6c06617@linux.ibm.com>
+Date: Fri, 25 Sep 2026 11:49:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <arUZWKjKr5I5tlOj@elver.google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/kexec: Annotate umem_info members with
+ __counted_by_ptr
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Aditya Gupta <adityag@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20260730130248.597249-2-thorsten.blum@linux.dev>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20260730130248.597249-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: mNbLq6I6mXD6iqo2GJL9pRkCfLgKik4w
+X-Authority-Analysis: v=2.4 cv=I43w19gg c=1 sm=1 tr=0 ts=6ab61261 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=6Q4QNdrZViBaKdIFhXcA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI1MDAyNCBTYWx0ZWRfX3pd6JQ3v9BR9
+ r1ocZx/kvamcpOyDn/bssgBItZDhkD/HFeIRqiR7qXvGYF+qE8+vufsBWeZHQXzjcvhXlu8xIHC
+ XkD2neREomXhXk2+0rH5bsPdR8vTGM0mKInnSqyeTA1sz/p2LHpqLt1017ceNrXM6G+GD7G5RvZ
+ dxnVmhI5GtotzfudNlF5dDzfKejqxxdEaWSJgidvTmTTd/bH6xpljPtpFWdJAt/aqfNRfProREw
+ PFn02yTIi4TgifYdzEGYfdXucvfP6vKOinTSNJN3/jzPgTot3M4IIeN80i/THXijyNA77io/YqD
+ X0gB2GFJeeGPQ2vEzJRgo/H2pDrMoTeAyKKFX+kVi962G8Cqe1A+f6Kdnfa1D0+2WAhcLzMoGYi
+ qsmLlIvpqjkhPLB77qrr5fYvWlo5cF67Jt4Tw+Cj+8pwKBD3Jx5Xfwz9BX0G+ojT9OknDmpYlAO
+ jggUU0OSP4RC1i+oq3g==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI1MDAyNCBTYWx0ZWRfX084viY8Lz2/K
+ T4uWXOy72gkyuegNCY7fXDBrqa8w8DeBwjAzMNU1du80L3/DsknGpNlQtrPYRYiMuZk4LHlNQqB
+ cADmyjMT/pulHxUrB5ueKg4JBnWIfco=
+X-Proofpoint-GUID: B7-TwWXS-zTQGGCuxC_rk4Lc6jcddlNN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-25_02,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1011 adultscore=0 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609250024
 
-On Thu, Sep 24, 2026 at 12:36:40PM +0000, Marco Elver wrote:
-> On Tue, Sep 22, 2026 at 07:58AM -0700, Guenter Roeck wrote:
-> > Hi,
-> > 
-> > On Mon, May 11, 2026 at 10:00:49PM +0200, Marco Elver wrote:
-> > > When using CONFIG_KMALLOC_PARTITION_RANDOM, _RET_IP_ was previously used
-> > > to identify the allocation site. _RET_IP_, however, evaluates to the
-> > > caller's parent's instruction pointer rather than the actual allocation
-> > > site; this would lead to collisions where a function performs multiple
-> > > allocations.
-> > > 
-> > > With the generalization to kmalloc_token_t, we now generate the token at
-> > > the outermost macro, and using _THIS_IP_ would fix this for all cases.
-> > > 
-> > > Unfortunately, the generic implementation of _THIS_IP_ relies on taking
-> > > the address of a local label, which is considered broken by both GCC [1]
-> > > and Clang [2] because label addresses are only expected to be used with
-> > > computed gotos. While the generic version more or less works today, it
-> > > is known to be brittle. For example, Clang -O2 always returns 1 when
-> > > this function is inlined:
-> > > 
-> > >         static inline unsigned long get_ip(void)
-> > >         { return ({ __label__ __here; __here: (unsigned long)&&__here; }); }
-> > > 
-> > > To provide a reliable unique identifier without breaking architectures
-> > > relying on the generic _THIS_IP_, introduce _CODE_LOCATION_: it resolves
-> > > to _THIS_IP_ where architectures provide a safe implementation, and
-> > > falls back to a zero-cost static marker where _THIS_IP_ is broken.
-> > > 
-> > > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071 [1]
-> > > Link: https://github.com/llvm/llvm-project/issues/138272 [2]
-> > > Signed-off-by: Marco Elver <elver@google.com>
-> > 
-> > With this patch in the tree, I get ICE erors when trying to build
-> > csky:allmodconfig.
-> > 
-> > Example:
-> > 
-> > Error log:
-> > sound/core/oss/mixer_oss.c: In function 'snd_mixer_oss_proc_write':
-> > sound/core/oss/mixer_oss.c:1202:1: error: could not split insn
-> >  1202 | }
-> >       | ^
-> > (insn 183 400 184 (set (reg:SI 0 a0 [orig:307 _55 ] [307])
-> >         (xor:SI (reg:SI 3 a3 [orig:308 random_kmalloc_seed ] [308])
-> >             (const:SI (plus:SI (symbol_ref:SI ("*.LANCHOR0") [flags 0x182])
-> >                     (const_int 132 [0x84]))))) "include/linux/slab.h":759:52 288 {cskyv2_xorsi3}
-> >      (expr_list:REG_DEAD (reg:SI 3 a3 [orig:308 random_kmalloc_seed ] [308])
-> >         (nil)))
-> > during RTL pass: final
-> > sound/core/oss/mixer_oss.c:1202:1: internal compiler error: in final_scan_insn_1, at final.cc:2813
-> > 0x779b51e2a1c9 __libc_start_call_main
-> > 	../sysdeps/nptl/libc_start_call_main.h:58
-> > 0x779b51e2a28a __libc_start_main_impl
-> > 	../csu/libc-start.c:360
-> > 
-> > This happens with lots of files, not just this one. It is seen with all
-> > versions of gcc starting with at least v13.x. Reverting this patch fixes
-> > the problem. Bisect log is attached for reference.
-> > 
-> > Any idea what I could do to avoid the problem other than stopping to build
-> > csky:allmodconfig ?
-> 
-> No idea what gcc is falling over here, but the below patch could be a
-> workaround/fix. Does that work better?
-> 
 
-Yes, it does.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-
-Thanks,
-Guenter
-
-> ------ >8 ------
-> 
-> From: Marco Elver <elver@google.com>
-> Date: Fri, 8 May 2026 14:51:45 +0200
-> Subject: [PATCH] csky: Implement _THIS_IP_ using inline asm
-> 
-> Both GCC [1] and Clang [2] consider the generic version of _THIS_IP_ to
-> be broken:
-> 
->         #define _THIS_IP_  ({ __label__ __here; __here: (unsigned long)&&__here; })
-> 
-> In particular, the address of a label is only expected to be used with a
-> computed goto.
-> 
-> While the generic version more or less works today, it is known to be
-> brittle and may break with current and future optimizations. For
-> example, Clang -O2 always returns 1 when this function is inlined:
-> 
->         static inline unsigned long get_ip(void)
->         { return ({ __label__ __here; __here: (unsigned long)&&__here; }); }
-> 
-> Fix it by overriding _THIS_IP_ in <asm/linkage.h> (which is included by
-> <linux/instruction_pointer.h>) using an architecture-specific inline asm
-> version. Additionally, avoiding taking the address of a label prevents
-> compilers from emitting spurious indirect branch targets (e.g. ENDBR or
-> BTI) under control-flow integrity schemes.
-> 
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120071 [1]
-> Link: https://github.com/llvm/llvm-project/issues/138272 [2]
-> Signed-off-by: Marco Elver <elver@google.com>
+On 30/07/26 18:32, Thorsten Blum wrote:
+> Add __counted_by_ptr() to umem_info::buf and umem_info::ranges to
+> improve access bounds checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE.
+>
+> Set the count fields before assigning the corresponding pointers, return
+> early on krealloc() failure, and use sizeof(*buf) when deriving
+> max_entries from the allocation size.
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 > ---
->  arch/csky/include/asm/linkage.h | 7 +++++++
->  1 file changed, 7 insertions(+)
->  create mode 100644 arch/csky/include/asm/linkage.h
-> 
-> diff --git a/arch/csky/include/asm/linkage.h b/arch/csky/include/asm/linkage.h
-> new file mode 100644
-> index 000000000000..04afd3583e25
-> --- /dev/null
-> +++ b/arch/csky/include/asm/linkage.h
-> @@ -0,0 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ASM_CSKY_LINKAGE_H
-> +#define __ASM_CSKY_LINKAGE_H
+>   arch/powerpc/kexec/file_load_64.c | 22 ++++++++++++----------
+>   1 file changed, 12 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+> index 8c72e12ea44e..6424b668f0e9 100644
+> --- a/arch/powerpc/kexec/file_load_64.c
+> +++ b/arch/powerpc/kexec/file_load_64.c
+> @@ -34,14 +34,15 @@
+>   #include <asm/cputhreads.h>
+>   
+>   struct umem_info {
+> -	__be64 *buf;		/* data buffer for usable-memory property */
+> +	/* data buffer for usable-memory property */
+> +	__be64 *buf __counted_by_ptr(max_entries);
+>   	u32 size;		/* size allocated for the data buffer */
+>   	u32 max_entries;	/* maximum no. of entries */
+>   	u32 idx;		/* index of current entry */
+>   
+>   	/* usable memory ranges to look up */
+>   	unsigned int nr_ranges;
+> -	const struct range *ranges;
+> +	const struct range *ranges __counted_by_ptr(nr_ranges);
+>   };
+[...]
+>   
+>   const struct kexec_file_ops * const kexec_file_loaders[] = {
+> @@ -83,11 +84,12 @@ static __be64 *check_realloc_usable_mem(struct umem_info *um_info, int cnt)
+>   
+>   	new_size = um_info->size + MEM_RANGE_CHUNK_SZ;
+>   	tbuf = krealloc(um_info->buf, new_size, GFP_KERNEL);
+> -	if (tbuf) {
+> -		um_info->buf = tbuf;
+> -		um_info->size = new_size;
+> -		um_info->max_entries = (um_info->size / sizeof(u64));
+> -	}
+> +	if (!tbuf)
+> +		return NULL;
 > +
-> +#define _THIS_IP_ ({ unsigned long __ip; asm volatile("grs %0, ." : "=r" (__ip)); __ip; })
-> +
-> +#endif /* __ASM_CSKY_LINKAGE_H */
-> -- 
-> 2.56.0.rc1.315.gc6ed9934b7-goog
-> 
+> +	um_info->size = new_size;
+> +	um_info->max_entries = um_info->size / sizeof(*um_info->buf);
+> +	um_info->buf = tbuf;
+
+
+Could you please explain why size and max_entries are updated before the 
+buffer itself?
+
+- Sourabh Jain
+
+
+>   
+>   	return tbuf;
+>   }
+> @@ -288,13 +290,13 @@ static int update_usable_mem_fdt(void *fdt, struct crash_mem *usable_mem)
+>   		return -EINVAL;
+>   	}
+>   
+> -	um_info.buf  = NULL;
+>   	um_info.size = 0;
+>   	um_info.max_entries = 0;
+> -	um_info.idx  = 0;
+> +	um_info.buf = NULL;
+> +	um_info.idx = 0;
+>   	/* Memory ranges to look up */
+> -	um_info.ranges = &(usable_mem->ranges[0]);
+>   	um_info.nr_ranges = usable_mem->nr_ranges;
+> +	um_info.ranges = usable_mem->ranges;
+>   
+>   	dn = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
+>   	if (dn) {
+>
+
