@@ -1,39 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133413E00B4;
-	Fri, 25 Sep 2026 19:06:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22778369D7B;
+	Fri, 25 Sep 2026 19:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790363177; cv=none; b=GJIyijyEoRYlrNdM8/E+s+M2eIo51NgbaK4HxGRZeJgzzBVfoSMn4530aht3GkCbjSI0ZT/8XPaHr7/noBw5WjR3Pq38nE/qVq6OsX6O6IIDD0wVG/yHP43qyQb/8OvFHpXuOpVPeL/BucnZAPoX9Zpq9fVyC8ufJWNK7c1kHvs=
+	t=1790363798; cv=none; b=pFqmdvMq54Vw5QplTUptvECoXgbBW2fAdinqwaaw0KBTTzm5H29eADsNx+KUp2oXfxoog+8Q/279rk3ueoUin8C0XaQMZZJ3FqEjxfNiX9P0ZoSO7bhrXbgOGCgXzRjfP8yU3g61fy6Fbzgr+pTibLjHL2nJmvmhzJkJoW23cvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790363177; c=relaxed/simple;
-	bh=4lQL8gvWv/CFv31QtGZeKfHoIiCncwG4xwXyGmUI0rg=;
+	s=arc-20240116; t=1790363798; c=relaxed/simple;
+	bh=ciqAqHKZFqUwNJiT/mEjmsE0Q8QhLdWu5sXU+qXgbUA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=plUhzbGEuSpUZ4cXfW648C3OFRwEfmjVxF7A00EU2TnaDdoIL14VpCgZPHYmsXXYwZzos82phGOfKaGBp3AmfLZzWY4KzVtPSDvm8mbKzDx9b2t6a8YPL4/LBqBgCCNG07t9N+NNOA4lKkfqXAN1QO0YwOC7Txy8mtIbINlplbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SsFiR1YG; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=gvxIh+ky5VoRwKPZDfJHbY7RpDT87AIs7NHUBr9Jha16Yhn2h5XSD7kivMIZWA8g+QuF4cXHFSE2aMh4sRwF+7l8HOc+RkTt8niXNjYaX4IjQbZXvuEJrl4+KvW/bRU8boqhEL2Ou6PCwgWwWxdmupOdRAX6or8vmrjjhygqWt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4d4tHpX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SsFiR1YG"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 2BC441F000FF;
-	Fri, 25 Sep 2026 19:06:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4d4tHpX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B44F1F00893;
+	Fri, 25 Sep 2026 19:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790363175;
-	bh=VrjegtRrcpHSSr45DJrYT3eYx+8WnvK+ZO8tTcjuv4g=;
+	s=k20260515; t=1790363796;
+	bh=YTYRm/xoixV6fXMnDS8ROSQRp8DdXpSaJEUlFSgdyrs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=SsFiR1YGFJy5AdhnxNWv5YhA82om7Bft1hdAbO06IyE4VjaAOVVJlpSlU+2sugNMG
-	 fIQqXfx8svme6i88RRuuqYbEV2/nF72+E9aih7GqJ2p9DbmdQI7iOUGnzpuBbxBzpD
-	 DvqNRPKbaLpyulbLRn/m0Nz6AmIp2E2e0ItJKPr5D2g/vBl1RiVGNFPlIrjxmfg3yS
-	 ck+TGuZgjiemPHHYiCTX5cZsYi9FnjNyfLPQ6SAT4f/wSyEazJ3mCv00ac30x66/Uu
-	 HLF/nYcrxpRSDz/cDo93W4i3DibTEuZIyRUl2wnbsdnQqkP+XjU2UD1u5SNCWIuzKQ
-	 pHEPBSZqXJ7YA==
-Date: Fri, 25 Sep 2026 20:58:47 +0200
-From: Nicolas Schier <nsc@kernel.org>
-To: iav@iav.lv
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH] fortify: Disable colored diagnostics in test_fortify.sh
-Message-ID: <arbEZ5YW_sF4yMjp@levanger>
-References: <20260924-fortify-test-color-v1-1-37f6d50e31ec@iav.lv>
+	b=U4d4tHpXzsjaz91N51UlHo1rM8lrE1YQ0fGQZAxeaQ+QTXtIh4k8PIVPFOsntkGFs
+	 qfsW/sYS0vo892ERmIteXgDQiBUrGkc+bcojeYtktwiIkDW5Ki1aZ3Muj/FCJN2OtE
+	 udppRWabXQGaR65ZTA38L/mL5XulW4+NoDN5nK392vsI45d2I9XIfGEdBPKdCvx7xy
+	 RLN1Q3mL2FrWPZADKe+CCoMitepCitntz6CUVvrynNTZYJH/FRD1u+cGXC1b11tVBN
+	 yxD2hGbMcts8MOkFv21ifqPrmvxeq2UwkwksnsT9/UTJLhBucSVknYldessbOCfxBv
+	 0ekeqdnJKiOYw==
+Date: Fri, 25 Sep 2026 12:16:35 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Kees Cook <kees@kernel.org>, Thomas Huth <thuth@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/purgatory: Compile purgatory with -D__DISABLE_EXPORTS
+Message-ID: <20260925191635.GC2060@quark>
+References: <20260925130217.3912329-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,69 +46,42 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260924-fortify-test-color-v1-1-37f6d50e31ec@iav.lv>
+In-Reply-To: <20260925130217.3912329-1-arnd@kernel.org>
 
-On Thu, Sep 24, 2026 at 11:34:29PM +0300, Igor Velkov via B4 Relay wrote:
-> From: Igor Velkov <iav@iav.lv>
+On Fri, Sep 25, 2026 at 03:01:49PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> When the build forces colored diagnostics, e.g. with
-> KCFLAGS=-fdiagnostics-color=always, the compiler wraps the expected
-> error in ANSI escape sequences and the grep does not match it. Every
-> test then reports "lacked '__write_overflow' warning" although FORTIFY
-> caught the overflow, and a real FORTIFY regression looks the same.
+> A previous patch fixed compile-time issues by setting __NO_FORTIFY
+> for all of the purgatory code, but this is insufficient and still
+> leaves build failures that appeared recently in linux-next:
 > 
->   warning: unsafe strcpy() usage lacked '__write_overflow' warning in lib/test_fortify/write_overflow-strcpy.c
+> ld.lld: error: undefined symbol: __memset
+> >>> referenced by string.c
+> >>>               arch/x86/purgatory/purgatory.ro:(__UNIQUE_ID_addressable___memset_2)
 > 
-> Pass -fdiagnostics-color=never after the caller's flags so that the
-> test compile always emits plain text.
+> ld.lld: error: undefined symbol: __memmove
+> >>> referenced by string.c
+> >>>               arch/x86/purgatory/purgatory.ro:(__UNIQUE_ID_addressable___memmove_3)
 > 
-> Fixes: be58f7103700 ("fortify: Add compile-time FORTIFY_SOURCE tests")
-> Assisted-by: LLM
-> Signed-off-by: Igor Velkov <iav@iav.lv>
+> Set __DISABLE_EXPORTS as well, to avoid pulling in a reference to the
+> wrong string functions.
+> 
+> Fixes: 65cbe410d312 ("x86/purgatory: Compile purgatory with -D__NO_FORTIFY")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> Found in Armbian kernel builds, which pass -fdiagnostics-color=always
-> in KCFLAGS: all 18 tests reported "lacked".
-> 
-> Tested on arm64, 7.2.y, KCFLAGS=-fdiagnostics-color=always,
-> building lib/test_fortify/ (tests ok out of 18):
-> 
->                  before   after   after, -D__NO_FORTIFY
->   GCC 14.2          0       18        0
->   clang 19.1.7      0       18        0
-> 
-> An LLM assistant found the cause, wrote the fix and the changelog,
-> and ran the tests; I reviewed all of it.
-> ---
->  lib/test_fortify/test_fortify.sh | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/test_fortify/test_fortify.sh b/lib/test_fortify/test_fortify.sh
-> index ad6dd44fa31c..c07eb3302c9d 100644
-> --- a/lib/test_fortify/test_fortify.sh
-> +++ b/lib/test_fortify/test_fortify.sh
-> @@ -37,7 +37,8 @@ export LANG=C
->  
->  status=
->  # Attempt to build a source that is expected to fail with a specific warning.
-> -if "$@" -Werror -c "$IN" -o "$OUT".o 2> "$TMP" ; then
-> +# Disable colors so that the grep below can match the warning.
-> +if "$@" -Werror -fdiagnostics-color=never -c "$IN" -o "$OUT".o 2> "$TMP" ; then
->  	# If the build succeeds, either the test has failed or the
->  	# warning may only happen at link time (Clang). In that case,
->  	# make sure the expected symbol is unresolved in the symbol list.
-> 
-> ---
-> base-commit: 760f96b7f54beb8dc6f85d97ac7854fddba86835
-> change-id: 20260924-fortify-test-color-f34a31b56bcc
-> 
-> Best regards,
-> -- 
-> Igor Velkov <iav@iav.lv>
-> 
+>  arch/x86/purgatory/Makefile | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
 
-Tested-by: Nicolas Schier <nsc@kernel.org>
-Reviewed-by: Nicolas Schier <nsc@kernel.org>
+I dropped the patch this fixes already, as I mentioned at
+https://lore.kernel.org/linux-crypto/20260924174911.GA1978@sol/ .  It's
+gone from linux-next now.  I think Thomas Huth is planning to send a
+fixed version, together with the two patches that depend on this.
 
--- 
-Nicolas
+But compiling all of purgatory (and not just sha256.o as is the status
+quo) with -D__NO_FORTIFY -D__DISABLE_EXPORTS sounds good to me.
+
+Alternatively it could be just sha256.o and purgatory.o specifically.
+But it seems it might as well just be all files.
+
+- Eric
