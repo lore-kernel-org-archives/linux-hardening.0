@@ -1,100 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489B849E5ED;
-	Fri, 25 Sep 2026 13:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1C52C027C;
+	Fri, 25 Sep 2026 13:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790341345; cv=none; b=QxBlKk4F8b1LdVyboJxMkMGOCvpRvn2NcVfrzZJw4B/+bxl6heT22jQN7kmV14f0Tj4V/Oamgo8uk8ctzX0kJGbK4+rr14+Hej/NwCF8Ry8cCTwjnLV1RhXirp4eaVjclfom2NRAc48vU5xdXv0Thtw9E0DP6ZEdXAI2xf+ptuc=
+	t=1790343824; cv=none; b=K4Z9wyP8rGjVWtYARMuRCbjvTnRa2HsLY/kBXdTLuUIljClyZ3rHdoyrZykf53Ri2CZWNwB+8tJw9D75pRiDYFt2Az/7DBQmjQiS2abC3i1qGAQ5C84RB5q3WnfqLTjpbgZMjE0C23pzqhBoBoOqlcSDXLJHP2tcAIT0XzpjUiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790341345; c=relaxed/simple;
-	bh=TOo7AQXQrHPpBBc7jATvGFKdQIms7xUVUjisG+rwHKQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MDbe8p4Hrm65GIT1ZIStTYZRR19DJjWyG1Ysa6Xpb7QgpoO8+lArqwNxa3mIiAF3MeMwhbG4WX4GrglMD50smb+nsuPF9SgZWfIFOUqgxaWVDiuGJ/LKywiNSSs2fSZ36s3FV7eVoGF5hP3o9zlnKDSIRtPbyYnJpC2d+TJCiK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjptmjPs; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790343824; c=relaxed/simple;
+	bh=5hnr3fAyqdNNH4Z/RHXKEByNtheCTZZ0q+ta1pJAZc4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XcyKjT9uP5H6k3acXFLls4u9oKbIJIYAjf1dZbSZ26NBqd0HaaKkEj58phfwgNkdr4by24g73rtRixaOqHbeLC5lNJO907ffLyl046UqVWcS1sM7vDc7r0WI007wPZvpDa0MjvWN163wa5cdaogFvri/TIZJST5iT6peFsa8xss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHPe0auN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjptmjPs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 669A51F00898;
-	Fri, 25 Sep 2026 13:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790341343;
-	bh=Nrvcb5k/fSmMlLH7+4k+1YnJOu1ZD9csl9cvsYCyWSY=;
-	h=From:To:Cc:Subject:Date;
-	b=GjptmjPsmEjy7D/GEKRCs9XF3kSnhQMAmOBkj3yTDjPs9dTAeMuje5T2q7/AaeI6L
-	 A2YFjXPMVN6D8+mh7s3Kl1HMa+mwrDVe2vQw0DevGXBYf2u/PCCpA6mA8RoxCoNqUu
-	 wlRUx3DZcQvfsRwLePXz+pzXpbe3X58VqCFQ21IEB+61Am2rDQMXBhyZqzN9hVef/1
-	 dauhOB2ZKIdq3yKuGsqxBu9XtpSPo0mvvfvIEtxK1i8T/ngYUCHqD5LRM/1y0W60da
-	 /mQXY/b3c5tBYFE2pwNvFV6VTYpayOJ+oAayxGbBz4lrSN4WSONV61B8Pvj63vb8p6
-	 c9GM/AbwbVXmg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	Kees Cook <kees@kernel.org>,
-	Thomas Huth <thuth@redhat.com>,
-	Eric Biggers <ebiggers@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] x86/purgatory: Compile purgatory with -D__DISABLE_EXPORTS
-Date: Fri, 25 Sep 2026 15:01:49 +0200
-Message-ID: <20260925130217.3912329-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHPe0auN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 06650C2BCB8;
+	Fri, 25 Sep 2026 13:43:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1790343824;
+	bh=5hnr3fAyqdNNH4Z/RHXKEByNtheCTZZ0q+ta1pJAZc4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=jHPe0auNcE+XIs/bjAxL7fK/gGigpjb/UmQpCcU/vpD0awhpEV68amv3QDs2pJZO4
+	 0M0y4tIyAlloWvJf0Il8sH8dW5yHHou+7OZDFr/cVyqjvbecys3vvgNIiCZfNvdPux
+	 b5khnOnJIFclMwHZ1eMyETF12POP+wTc8wz7muLfJ1AwYTirKCXBsy0gRlWhqMfzij
+	 RBt1Q01W7FcAd9q3lcClwmnhohtaslk89QKjrHx5IblCEC2jcKPHieNAzLXK+mKTt9
+	 1V8KPhDsZJYye2uleL0c0oqiKX5hoBzwsG3tgMfTz9vg1LwGVzOiVuW+5EI+xHU/x4
+	 +Z5rFiW8n96Tg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C94C98321;
+	Fri, 25 Sep 2026 13:43:43 +0000 (UTC)
+From: Michael Reeves via B4 Relay <devnull+michael.reeves077.gmail.com@kernel.org>
+Subject: [PATCH 00/13] wifi: brcmfmac: Add BCM4388 support
+Date: Fri, 25 Sep 2026 23:43:35 +1000
+Message-Id: <20260925-brcm4388-submit-v1-0-b5cbc2cde2fb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MSw7CMAwA0atUXmNRUhIFrlKxyMdQS8SguEClq
+ ncnsHyLmRWUKpPCuVuh0puVH9Jw2HWQpiA3Qs7NYHrj+pOxGGsqx8F71FcsPKNN0eeBXHbBQqu
+ ela68/I/jpTkGpRYFSdPv8+FKd1JFoWXel8AC2/YFSIfTIIYAAAA=
+X-Change-ID: 20260925-brcm4388-submit-5cb8d3e6d6a5
+To: Arend van Spriel <arend.vanspriel@broadcom.com>, 
+ Pieter-Paul Giesberts <pieterpg@broadcom.com>, 
+ "Franky Lin (Zhenhui)" <frankyl@broadcom.com>, 
+ Mathy Vanhoef <vanhoefm@gmail.com>, Kalle Valo <kvalo@kernel.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, 
+ brcm80211-dev-list.pdl@broadcom.com, asahi@lists.linux.dev, 
+ Hector Martin <marcan@marcan.st>, Daniel Berlin <dberlin@dberlin.org>, 
+ Janne Grunau <j@jannau.net>, linux-kernel@vger.kernel.org, 
+ Hante Meuleman <meuleman@broadcom.com>, linux-hardening@vger.kernel.org, 
+ Michael Reeves <michael.reeves077@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1790343821; l=3446;
+ i=michael.reeves077@gmail.com; s=fedora-20260918;
+ h=from:subject:message-id;
+ bh=5hnr3fAyqdNNH4Z/RHXKEByNtheCTZZ0q+ta1pJAZc4=;
+ b=2zb9vdF2U2FJDxFeenmSGQAJOSIzHQXiK9t30lcN+L0v6QhVIQgtkg/RsJbZaTxd71l0QYYey
+ HZ5HraR1EVYAaQ5L1OGgep2DC+ENDJ2b9Vbhh0AKYyNALZBZZrGOt0r
+X-Developer-Key: i=michael.reeves077@gmail.com; a=ed25519;
+ pk=VJ0TvyQ9TvfzYZa908YSE9kpkjFLLD5luv0bERu+boc=
+X-Endpoint-Received: by B4 Relay for
+ michael.reeves077@gmail.com/fedora-20260918 with auth_id=1035
+X-Original-From: Michael Reeves <michael.reeves077@gmail.com>
+Reply-To: michael.reeves077@gmail.com
 
-From: Arnd Bergmann <arnd@arndb.de>
+The Broadcom BCM4388 chipset requires new PCIe initialization and
+firmware interfaces. Add support for these interfaces to brcmfmac to
+enable basic station operation.
 
-A previous patch fixed compile-time issues by setting __NO_FORTIFY
-for all of the purgatory code, but this is insufficient and still
-leaves build failures that appeared recently in linux-next:
+This series adds:
+- Signed firmware loading and mailbox transport
+- Fixes for chip identification and firmware capability matching
+- Versioned scan and join requests, and extended PMK payloads
+- Updated event mask handling
 
-ld.lld: error: undefined symbol: __memset
->>> referenced by string.c
->>>               arch/x86/purgatory/purgatory.ro:(__UNIQUE_ID_addressable___memset_2)
+These changes include work by Hector Martin and Daniel Berlin from Asahi
+Linux, refactored where needed for upstream inclusion.
 
-ld.lld: error: undefined symbol: __memmove
->>> referenced by string.c
->>>               arch/x86/purgatory/purgatory.ro:(__UNIQUE_ID_addressable___memmove_3)
+The series provides basic station support only. 6 GHz support is planned
+for a follow-up patchset after this lands. The driver retains legacy
+interfaces for older firmware.
 
-Set __DISABLE_EXPORTS as well, to avoid pulling in a reference to the
-wrong string functions.
+Tested on an Apple M3 MacBook Air (J613):
+- Device boot and network scanning
+- 5 GHz WPA2-PSK association and DHCP
+- Bidirectional TCP traffic
 
-Fixes: 65cbe410d312 ("x86/purgatory: Compile purgatory with -D__NO_FORTIFY")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Testing required separate Apple PCIe and devicetree patches, as well as
+Janne Grunau's port-authorization fix [1].
+
+[1] https://lore.kernel.org/linux-wireless/20260915-brcmfmac-4way-handshake-offload-authenticated-event-v2-1-fbb9cc7ac177@jannau.net/
+
 ---
- arch/x86/purgatory/Makefile | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Daniel Berlin (1):
+      wifi: brcmfmac: Support versioned scan parameter layouts
 
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index cde8463b4d84..df7dbb5b3387 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -11,8 +11,6 @@ $(obj)/string.o: $(srctree)/arch/x86/boot/compressed/string.c FORCE
- $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
- 	$(call if_changed_rule,cc_o_c)
- 
--CFLAGS_sha256.o := -D__DISABLE_EXPORTS
--
- # When profile-guided optimization is enabled, llvm emits two different
- # overlapping text sections, which is not supported by kexec. Remove profile
- # optimization flags.
-@@ -37,7 +35,7 @@ PURGATORY_CFLAGS := -mcmodel=small -ffreestanding -fno-zero-initialized-in-bss -
- PURGATORY_CFLAGS += -fpic -fvisibility=hidden
- PURGATORY_CFLAGS += $(DISABLE_KSTACK_ERASE) -DDISABLE_BRANCH_PROFILING
- PURGATORY_CFLAGS += -fno-stack-protector
--PURGATORY_CFLAGS += -D__NO_FORTIFY
-+PURGATORY_CFLAGS += -D__NO_FORTIFY -D__DISABLE_EXPORTS
- 
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+Hector Martin (6):
+      wifi: brcmfmac: Support newer PCIe core startup and interrupts
+      wifi: brcmfmac: Negotiate PCIe mailbox transport with firmware
+      wifi: brcmfmac: Load signed PCIe firmware images
+      wifi: brcmfmac: Accept newer BSS information versions
+      wifi: brcmfmac: Support versioned join requests
+      wifi: brcmfmac: Add BCM4388 support
+
+Michael Reeves (6):
+      wifi: brcmfmac: pcie: Report the detected chip ID to the bus
+      wifi: brcmfmac: Match complete firmware capability names
+      wifi: brcmfmac: Fall back to RSSI-only default join preferences
+      wifi: brcmfmac: Use event_msgs_ext for event masks
+      wifi: brcmfmac: Handle larger firmware band lists
+      wifi: brcmfmac: Handle extended PMK command payloads
+
+ .../wireless/broadcom/brcm80211/brcmfmac/Makefile  |   1 +
+ .../net/wireless/broadcom/brcm80211/brcmfmac/bus.h |   9 +
+ .../broadcom/brcm80211/brcmfmac/cfg80211.c         | 368 +++++++-------
+ .../wireless/broadcom/brcm80211/brcmfmac/chip.c    |  36 +-
+ .../wireless/broadcom/brcm80211/brcmfmac/common.c  |  27 +-
+ .../wireless/broadcom/brcm80211/brcmfmac/core.c    |   5 +-
+ .../wireless/broadcom/brcm80211/brcmfmac/core.h    |  18 +
+ .../wireless/broadcom/brcm80211/brcmfmac/feature.c | 124 ++++-
+ .../wireless/broadcom/brcm80211/brcmfmac/feature.h |   2 +
+ .../wireless/broadcom/brcm80211/brcmfmac/fweh.c    | 130 ++++-
+ .../wireless/broadcom/brcm80211/brcmfmac/fweh.h    |   1 +
+ .../broadcom/brcm80211/brcmfmac/fwil_types.h       | 141 +++++-
+ .../wireless/broadcom/brcm80211/brcmfmac/msgbuf.c  |  65 ++-
+ .../wireless/broadcom/brcm80211/brcmfmac/msgbuf.h  |   9 +-
+ .../wireless/broadcom/brcm80211/brcmfmac/pcie.c    | 560 +++++++++++++++++----
+ .../broadcom/brcm80211/brcmfmac/scan_param.c       | 416 +++++++++++++++
+ .../broadcom/brcm80211/brcmfmac/scan_param.h       |  13 +
+ .../broadcom/brcm80211/include/brcm_hw_ids.h       |   2 +
+ .../broadcom/brcm80211/include/chipcommon.h        |   5 +
+ 19 files changed, 1593 insertions(+), 339 deletions(-)
+---
+base-commit: 42a9fb3382fc2573e92f41d203b095d9a372cfc9
+change-id: 20260925-brcm4388-submit-5cb8d3e6d6a5
+
+Best regards,
 -- 
-2.53.0
+Michael Reeves <michael.reeves077@gmail.com>
+
 
