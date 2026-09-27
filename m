@@ -1,89 +1,96 @@
 Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE09286A4;
-	Sun, 27 Sep 2026 01:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B4B21B192;
+	Sun, 27 Sep 2026 01:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790473703; cv=none; b=cFwsopuH25boPkkMf+7pnEpvEbVNjSeDeCCSgeMPd6KUJKe+EDR7/rb07pxexdBmUMkqMBC1aPoYkKsfY+NdYDvy1enpcghsW8DDyMVQ7gdBVxm0RhJUXa6VdhiAJVDl9tfWLEBBvg8sPIKfFSWbD45SRTp1sTxEqnfx3E6qRk8=
+	t=1790473775; cv=none; b=ktT4f+MfA9fEKVReP5DMaQED9JTXbt/omC1yq54m4FwLyZAXE8fUpXt91zYw06FlIfZk9Fx28JvK7pMWVdx3ZS0oLt4zpkprS6sl9iIYnxPi5+DNhxdVnnyxRvNZgd11S9cjgjIxTP118fsseQM0h+CTbqDKywmH/hs51qQXrhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790473703; c=relaxed/simple;
-	bh=AjF81T39KEvWhZMb55n0e4H+RSfysG7EYcFp/wy6LiY=;
+	s=arc-20240116; t=1790473775; c=relaxed/simple;
+	bh=J2EjSK4GYCP9UonLY0FnYK7LFQsBJBbcc8GokYxw6uE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ak0rePyNFY3+v0VGCUV5FTqL0+q6/6QNuEgVSJGjEmyhKF2ZVTrd35yOCqwWOnOILffFin/XseR6LjkMxavf1hpbhSD08ImeuSd6wPjphI1LXwi+aLCfZcMlvg8YH/GegcqKFLnoeINlG5/L7XFvF7Qg0RmCjWLt5ksa5zwaAuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=5utP4Ply; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xGQcNlfW; arc=none smtp.client-ip=202.12.124.146
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tm+qKB+ap63NpNu0uXMFPyavtj0RVgAQG/pI6bwT89JWjONWIQV9WUB0wQKeiwWEPEQgek7zOKCkOcCgMue1MBtvNjD11IKJ5/QSMSVT3NXUuk8ZM7W8bCsfen6vvmdzgRoVsZKIB9wBIBK5BJvqAgHLonqwlGR4O8xQ0XoB5/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=LzPL2/+n; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tHNWO0xW; arc=none smtp.client-ip=202.12.124.146
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="5utP4Ply";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xGQcNlfW"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.stl.internal (Postfix) with ESMTP id 670391D00073;
-	Sat, 26 Sep 2026 21:48:21 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Sat, 26 Sep 2026 21:48:21 -0400
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="LzPL2/+n";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tHNWO0xW"
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 979E61D00073;
+	Sat, 26 Sep 2026 21:49:31 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Sat, 26 Sep 2026 21:49:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
 	 h=cc:cc:content-type:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1790473701; x=
-	1790560101; bh=PZ4zM8dBttNCoyc/5E3e2jTUTQxLhBIaPaJqr1Ygukg=; b=5
-	utP4Ply1JOzOrvOiE6sKhHPkoNsJolczum3jm3WajnMJz8G8HBvjsjlFsFejHjHO
-	/k03op9OK1yM2ZLLGBgiuGW24VOU22MwW4j0Nygt7IPU1ZfVhTew9HQ5GQnb4tqY
-	BGNFhS/Gs+fMlAQqBlHNTjLqMgkP0pt9TPSkMqXZi0Zg1x2Cz5Im/7YRUjODSTXd
-	TvUNHy2qxqmxRfL8j+sAHv6CxKyYVLMBXBOh+ArPJ3eOM0Qd5YgOk2DBNfbCrMwQ
-	PtiutKYOkpK2Qj4hUu+BE7hMcyOAoYqFTjD8UEcsVdTpq0oN7QetWKkuFAYZeAh8
-	aVO+k8/wWnY1nW1qBI9Ew==
+	:reply-to:subject:subject:to:to; s=fm1; t=1790473771; x=
+	1790560171; bh=rA4LSxCVQPuct0fsk7/K44YfG8wp4yBOm4ZEsSk0LG4=; b=L
+	zPL2/+nSqmacqfU+pP+weBayNYxcQQQD1iomlGUghRM5AU/ZrSjeeOb9twWQ5JiB
+	qBvI3GICXvG7fvSgwWJMO5n6HcfEuYyiy22/RJwnrDd/JvlaytqIjvsUeq6M+x1C
+	Dq5EVl7t9GeRkipjQ2Z1BySsiMv03gh57eJ2k/vkgX5lqYKfCccRN4jG591/T2Ig
+	UNZTfjjUmjhtJReZKvwtCcrb/G71RfKhEJEomecv/2mdPXgU0Y/W7WBwkvMpXqQy
+	tvtCXIxix2mTmyInQgWU3u8+y1EOjEq1tB2wxBpLa0IVEl/iSoNAOZEt9Jf3tp6o
+	e8xptOFoWNyN30m+rqKdQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1790473701; x=1790560101; bh=PZ4zM8dBttNCoyc/5E3e2jTUTQxLhBIaPaJ
-	qr1Ygukg=; b=xGQcNlfW+e2UNSBRVQXWWuy4xlnq75RnegNxxwR/xPLpDZLtqg5
-	ihBjZo4YHLRUNUKy3yT9JCOvmdcnPYXDQkuEkjhwKzDr0dr6IcsdA6kUZzn2YYsd
-	zKdkmOC/uxyvILOernlfmrjrqORjpW2mwx36K4LlnzggE1J7iNArHcXSGNjQ7Hdu
-	pe8I+O+PG7QJxvCBPD+eXn+XOb8PpPhH85lkVJBM9PsTRamptN/4AxRM4IrQ65Xl
-	w09ZgFt5372suwpt06xcsTfIL8Enahjk7qaFA3d+wqMvHzARZ2Y1oJmajEGYFD6B
-	GTiqDtmcGgTHNptelL2Mo5+nuPsCtmFm08A==
-X-ME-Sender: <xms:5XW4apqpyaFXFdqmIjzwW_7MKc9vjEAWdz6wwQ0MKuUK2z2v3fv9fw>
-    <xme:5XW4alvygklJ-p_c0dukwQj4LSPhMdnDOdsf6ilv0wJwTtqpcE4XNnGQNJmLvE70a
-    SQLuOR05PSQ5yH8GPzLXR8yX1SGS8FXUngS-0u28azHbYiyc1_oBUKC>
-X-ME-Received: <xmr:5XW4amFOPbygAaM22IevJd71xZ48NE76yGQKNoJs2G3bN0Yq1f6cpNPlUelDweXmJRCnr9dnX88nG2Ug_p84FsoUPDNYbQ>
-X-ME-Proxy-Cause: dmFkZTEdcxc8kt02CLiTaT/9YI+yINJTzhEM3LUFehMhj4KVXjZyWu3TjzUTW1CM9QpXy+
-    nlPlhwUiBgfOmDPKnL809Dc3tidtL3oBD6XCrMzuBUzsx9HAMCmrGTAghxiJf15DH2QvLB
-    mjRosHRKpFbYyIWZRi5le1IA3/t+mbC5IujIr9RneWhyUB4a6jUhMOE54QRTTIW4pcQ2It
-    PLiB2yGjR7D/RkIt+CDz46TWqg3CZOzdwcQTkwUG75JcxYChZ6D+heEJEGZqvAbbybXVSC
-    vbUm1ovYYUFoknZUu0k0ZBQAme55qZrbZq704VEqlUptRYpQWvhiftOnwvck1v03MerZDv
-    b8O7FOT1cy2Odhanvd3+VFFg/n/hoKSu1RJo0qofjRhpu+yzw6M1OCgmmi/jA+VLHGnGK4
-    knp/NRGJREyErBUHMwtbCWG7sYrLrzOvARsldpYwXQwsHErNXpOenHWiXY0lsOaDKOTnrn
-    2sVVbmH/EGw9FMTBGs3u719CQqzEgTAR+eFL4visOUnoL2AeeVxgv6Nyq1hsuRpFVm79xw
-    sWBcRBjmr/3cFUpVaOBUtNnZ2YzI09jBB43pGkpz3KRnVyFZUo2IUxh/pYNNkI0oYDQrsT
-    mkKi6iMDnSgajqZMirn45W9pAezmXQdvvmoEPvPyRsogQPc4B/km87Qi1TIw
-X-ME-Proxy: <xmx:5XW4amaAWiiWbbw5OLxYzz79AqfGQvnD2fauqwcoZt_6watQiOKr4Q>
-    <xmx:5XW4amUNeeMWdk2g63nBLjrBao8tlH29hkWS9FzLDD55a5YcnSJ_Cg>
-    <xmx:5XW4asmPmADCqOSZAEZjQK88Ejl6Zh85-IIxBdlbfXdQuaB4VDpO0w>
-    <xmx:5XW4ahBdrlWo-BprDfnIkLigUnF8fW9aWbwYblUlGfKA3wNgaOJO8Q>
-    <xmx:5XW4ak4CkVy-D9LWqm9vw0xpw0dc1at1WWXptK02V5Sn9icOxj85A4c_>
+	1790473771; x=1790560171; bh=rA4LSxCVQPuct0fsk7/K44YfG8wp4yBOm4Z
+	EsSk0LG4=; b=tHNWO0xWjSKY+9dPihBJx55Xt8twJ3R5cZ05lPavuVzgPJM3mCK
+	MR4liOHINL9suYu44+FayyblqX936PKelPaPZZCGfuETkhoyKSWGUecpVq/KZp0k
+	IaZDmvutw5giXoQRROZzLw0GIR0VCbk8/f4tYa+zTTpTT0MbAcq5QNW1LQCQoT/5
+	/JMk/xd2CKflOFt+3Aywej/wWFup/YTqxK6QSxK7fvugYT4b8xIbBi9X6H8yF9fL
+	9bLoArh8k0ZBGXf0cAATf6MGHaeEoXWuS+HX7DSqLsvv01XomQGVkMxYjN4us7SN
+	WWNJbm/5luRu6FNAXzPQfSKl5szaMYmH2Iw==
+X-ME-Sender: <xms:K3a4amjL98eNNELjka8IFLDoJ9htQbnltsyuEepuvOk9l2QHorrikg>
+    <xme:K3a4ai12UjbL-kP7XJxYxk8vq5mX04icJnLaTprvHhVkW91QmCLsz2SddduGbrnug
+    _CysXyGQgVrkzI8Zw6EltWVDcRZCozRUEQIQLIBezPd6PJ3AMlLG9cF>
+X-ME-Received: <xmr:K3a4apf4FfdEV1LuCDlYPCxTdFcte-OTDJaU6aTQV7pgQOc0dr7lTCadVtGUedNFyNwir6m_C8NNIznUoCpic0s_4dHVcg>
+X-ME-Proxy-Cause: dmFkZTFnQ57NGncRnmBI3BkhWhFtNBO/q5DQ0aOxPo0phctjA38R7yQSje04TRLCD1R0U5
+    a/VQiP7RnC+3OtH4iKh9eG4HRKaiSU7kvKYUSexmV5j6C+UmXZ+222uU/KOONHUxfEm4k1
+    JPHJCU030jxTnprLucdt1VS1zMUCYRmU6YziR6+ytQc/WT47ZQJdU8rZQ5mD+2gu0NDRJn
+    OeMKBBF52j7/zCEdJJQ7oXXhquV0O5Ug/o4RgTKyn4FEX/AODMiYEtYZtJP6syB5vbPBzR
+    q1fycm03968BX4vO5gwdKEEvZpCRObuD74E7Na8anzkSKRFV16tkbyegzKM7KM9PdfeoJc
+    orLdy3OCW6bKuAMuub3C5CpFCmm16HPEMto7phbNHBwLoLruca1/zEFEfXpROKbD2YDE4C
+    iYEvOJCamCthomtncHUrOQppbs/Q/Rt9ZHrHZPCUu5enHEvG304+LUymaW5g0CL3fXll8s
+    A6EF4cTP/h4/Uf4aGTdeA1GCuuGVCkWxjzfXBv7cfAtdeeOZQQWWfPDWqCR/91n1Q5oeGt
+    U9MEFMnfsSjc7iJPMnRZ1LiE8YNqavgy18TJcBYONaeRu91vqmPSP6PWwqoLP5qZmaBsbk
+    fSQKDgAX2Wfh/xNhrGe0MG+/zPkjZltp3oBb4xZ0vO2m9/5PAs2tJiKhxg3A
+X-ME-Proxy: <xmx:K3a4aoy_lEFbaqrEjBUR-Yi-pOAS5GsMzdFDFce27Q_6LMhbOB8TSw>
+    <xmx:K3a4ahztB9RLNqdtMwYr36rzB_5gK1WlLbmrC_wRkM4tzxU9I-9_SQ>
+    <xmx:K3a4apbuNW9Gkb4nlF7fVbKnd9NxZGyZUiAaUV4eN9fMbH3QZzr40w>
+    <xmx:K3a4aq1nMp7hOamoF8wtHjDgELx-nJ4V3rGRyeEFHpsKOa10a3vrhA>
+    <xmx:K3a4anFkfq2WxUmjeYLSQR1YD9UPOkDVBFxz2SVGDuY4vJkDeqjRmpit>
 Feedback-ID: ie8e14432:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 26 Sep 2026 21:48:19 -0400 (EDT)
-Date: Sun, 27 Sep 2026 10:48:17 +0900
+ 26 Sep 2026 21:49:28 -0400 (EDT)
+Date: Sun, 27 Sep 2026 10:49:26 +0900
 From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 To: Bill Wendling <morbo@google.com>
 Cc: Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Justin Stitt <justinstitt@google.com>,
 	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
 	codemender-patching+linux@google.com
-Subject: Re: [PATCH] firewire: core: add __counted_by_ptr to struct fw_packet
-Message-ID: <20260927014817.GB9201@sakamocchi.jp>
+Subject: Re: [PATCH] firewire: core: add __counted_by_ptr attribute to struct
+ fw_device
+Message-ID: <20260927014926.GC9201@sakamocchi.jp>
 Mail-Followup-To: Bill Wendling <morbo@google.com>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Justin Stitt <justinstitt@google.com>,
 	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
 	codemender-patching+linux@google.com
-References: <20260925210912.113052-1-morbo@google.com>
+References: <20260925212552.125652-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -92,30 +99,35 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260925210912.113052-1-morbo@google.com>
+In-Reply-To: <20260925212552.125652-1-morbo@google.com>
 
-On Fri, Sep 25, 2026 at 09:09:12PM +0000, Bill Wendling wrote:
-> In 'struct fw_packet', the 'payload' field points to a buffer of size
-> 'payload_length' bytes. To enable compiler bounds checking (via KASAN
-> and __builtin_dynamic_object_size), add the '__counted_by_ptr' attribute
-> to the 'payload' pointer, associated with the 'payload_length' count.
+On Fri, Sep 25, 2026 at 09:25:52PM +0000, Bill Wendling wrote:
+> The GCC and Clang attribute '__counted_by_ptr' associates a pointer
+> field with an integer field holding its element count. This enables
+> runtime bounds checking by KASAN and UBSAN to prevent out-of-bounds
+> accesses to the pointer.
 > 
-> A thorough analysis of all allocation and initialization points for
-> 'struct fw_packet' was conducted. The pointer and its length are
-> assigned together.
+> In 'struct fw_device' (defined in 'include/linux/firewire.h'), the
+> field 'config_rom' is a pointer to the device's Configuration ROM data,
+> and its associated element count is stored in 'config_rom_length'.
 > 
-> Because the count field is always correctly initialized before the
-> pointer is accessed, the '__counted_by_ptr' attribute is fully safe and
-> will not cause runtime false positives or panics.
+> Additionally, update the existing KUnit test in
+> 'drivers/firewire/device-attribute-test.c' where 'config_rom_length'
+> was incorrectly initialized with the byte size
+> ('sizeof(simple_avc_config_rom)') instead of the element count
+> ('ARRAY_SIZE(simple_avc_config_rom)'). This ensures the
+> '__counted_by_ptr' bounds-checking annotation does not trigger any
+> false-positive panics or compile/runtime checks.
 > 
 > Cc: codemender-patching+linux@google.com
 > Assisted-by: LLM
 > Signed-off-by: Bill Wendling <morbo@google.com>
 > ---
->  include/linux/firewire.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/firewire/device-attribute-test.c | 4 ++--
+>  include/linux/firewire.h                 | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
-Applied to for-next branch.
+Thank you to correct the KUnit tests as well. Applied to for-next branch.
 
 
 Thanks
