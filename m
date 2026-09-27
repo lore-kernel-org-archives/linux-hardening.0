@@ -1,135 +1,157 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl2-f12.google.com (mail-dl2-f12.google.com [74.125.229.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B4B21B192;
-	Sun, 27 Sep 2026 01:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0997C3B776A
+	for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 06:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790473775; cv=none; b=ktT4f+MfA9fEKVReP5DMaQED9JTXbt/omC1yq54m4FwLyZAXE8fUpXt91zYw06FlIfZk9Fx28JvK7pMWVdx3ZS0oLt4zpkprS6sl9iIYnxPi5+DNhxdVnnyxRvNZgd11S9cjgjIxTP118fsseQM0h+CTbqDKywmH/hs51qQXrhM=
+	t=1790488808; cv=none; b=IyMknvF6EK10Ep4TEKsYNyUIG+9ezOw5UC4vbBtmdRuzgqt6jaLV1ABzWhcGVsXf/s7VVim68eiIi5RHchcNMUj/ZgBvROz7w6cwitSzmKuiVqRHbztmY9w7GT4ZWQL9wU8pf4nYOMZfl24p5Qj1ByoPt2ZJZbeKQfmlKnQX+sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790473775; c=relaxed/simple;
-	bh=J2EjSK4GYCP9UonLY0FnYK7LFQsBJBbcc8GokYxw6uE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tm+qKB+ap63NpNu0uXMFPyavtj0RVgAQG/pI6bwT89JWjONWIQV9WUB0wQKeiwWEPEQgek7zOKCkOcCgMue1MBtvNjD11IKJ5/QSMSVT3NXUuk8ZM7W8bCsfen6vvmdzgRoVsZKIB9wBIBK5BJvqAgHLonqwlGR4O8xQ0XoB5/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=LzPL2/+n; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tHNWO0xW; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1790488808; c=relaxed/simple;
+	bh=uav7FpdcMvoPqAG2gm25FMa/ksIC4Z/tBnVXRFPwCpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=agSVROKYK36W65w9SAm1+oWMHJ3+ZF3xg2tGsJ4W9lSdHKO3h0IeTJwPNW8QzUN3BlTioy7gG4oG1fNa8KnZ3vxC3rBetGBssTC2Vijj3eu1l9F0e2JFIJDqwT+VmgGrk1ib/TjtJoMHXGLgD2lzsXOppJeMplODQiZPnMT7944=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OyZ45tRV; arc=none smtp.client-ip=74.125.229.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="LzPL2/+n";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tHNWO0xW"
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 979E61D00073;
-	Sat, 26 Sep 2026 21:49:31 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Sat, 26 Sep 2026 21:49:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1790473771; x=
-	1790560171; bh=rA4LSxCVQPuct0fsk7/K44YfG8wp4yBOm4ZEsSk0LG4=; b=L
-	zPL2/+nSqmacqfU+pP+weBayNYxcQQQD1iomlGUghRM5AU/ZrSjeeOb9twWQ5JiB
-	qBvI3GICXvG7fvSgwWJMO5n6HcfEuYyiy22/RJwnrDd/JvlaytqIjvsUeq6M+x1C
-	Dq5EVl7t9GeRkipjQ2Z1BySsiMv03gh57eJ2k/vkgX5lqYKfCccRN4jG591/T2Ig
-	UNZTfjjUmjhtJReZKvwtCcrb/G71RfKhEJEomecv/2mdPXgU0Y/W7WBwkvMpXqQy
-	tvtCXIxix2mTmyInQgWU3u8+y1EOjEq1tB2wxBpLa0IVEl/iSoNAOZEt9Jf3tp6o
-	e8xptOFoWNyN30m+rqKdQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1790473771; x=1790560171; bh=rA4LSxCVQPuct0fsk7/K44YfG8wp4yBOm4Z
-	EsSk0LG4=; b=tHNWO0xWjSKY+9dPihBJx55Xt8twJ3R5cZ05lPavuVzgPJM3mCK
-	MR4liOHINL9suYu44+FayyblqX936PKelPaPZZCGfuETkhoyKSWGUecpVq/KZp0k
-	IaZDmvutw5giXoQRROZzLw0GIR0VCbk8/f4tYa+zTTpTT0MbAcq5QNW1LQCQoT/5
-	/JMk/xd2CKflOFt+3Aywej/wWFup/YTqxK6QSxK7fvugYT4b8xIbBi9X6H8yF9fL
-	9bLoArh8k0ZBGXf0cAATf6MGHaeEoXWuS+HX7DSqLsvv01XomQGVkMxYjN4us7SN
-	WWNJbm/5luRu6FNAXzPQfSKl5szaMYmH2Iw==
-X-ME-Sender: <xms:K3a4amjL98eNNELjka8IFLDoJ9htQbnltsyuEepuvOk9l2QHorrikg>
-    <xme:K3a4ai12UjbL-kP7XJxYxk8vq5mX04icJnLaTprvHhVkW91QmCLsz2SddduGbrnug
-    _CysXyGQgVrkzI8Zw6EltWVDcRZCozRUEQIQLIBezPd6PJ3AMlLG9cF>
-X-ME-Received: <xmr:K3a4apf4FfdEV1LuCDlYPCxTdFcte-OTDJaU6aTQV7pgQOc0dr7lTCadVtGUedNFyNwir6m_C8NNIznUoCpic0s_4dHVcg>
-X-ME-Proxy-Cause: dmFkZTFnQ57NGncRnmBI3BkhWhFtNBO/q5DQ0aOxPo0phctjA38R7yQSje04TRLCD1R0U5
-    a/VQiP7RnC+3OtH4iKh9eG4HRKaiSU7kvKYUSexmV5j6C+UmXZ+222uU/KOONHUxfEm4k1
-    JPHJCU030jxTnprLucdt1VS1zMUCYRmU6YziR6+ytQc/WT47ZQJdU8rZQ5mD+2gu0NDRJn
-    OeMKBBF52j7/zCEdJJQ7oXXhquV0O5Ug/o4RgTKyn4FEX/AODMiYEtYZtJP6syB5vbPBzR
-    q1fycm03968BX4vO5gwdKEEvZpCRObuD74E7Na8anzkSKRFV16tkbyegzKM7KM9PdfeoJc
-    orLdy3OCW6bKuAMuub3C5CpFCmm16HPEMto7phbNHBwLoLruca1/zEFEfXpROKbD2YDE4C
-    iYEvOJCamCthomtncHUrOQppbs/Q/Rt9ZHrHZPCUu5enHEvG304+LUymaW5g0CL3fXll8s
-    A6EF4cTP/h4/Uf4aGTdeA1GCuuGVCkWxjzfXBv7cfAtdeeOZQQWWfPDWqCR/91n1Q5oeGt
-    U9MEFMnfsSjc7iJPMnRZ1LiE8YNqavgy18TJcBYONaeRu91vqmPSP6PWwqoLP5qZmaBsbk
-    fSQKDgAX2Wfh/xNhrGe0MG+/zPkjZltp3oBb4xZ0vO2m9/5PAs2tJiKhxg3A
-X-ME-Proxy: <xmx:K3a4aoy_lEFbaqrEjBUR-Yi-pOAS5GsMzdFDFce27Q_6LMhbOB8TSw>
-    <xmx:K3a4ahztB9RLNqdtMwYr36rzB_5gK1WlLbmrC_wRkM4tzxU9I-9_SQ>
-    <xmx:K3a4apbuNW9Gkb4nlF7fVbKnd9NxZGyZUiAaUV4eN9fMbH3QZzr40w>
-    <xmx:K3a4aq1nMp7hOamoF8wtHjDgELx-nJ4V3rGRyeEFHpsKOa10a3vrhA>
-    <xmx:K3a4anFkfq2WxUmjeYLSQR1YD9UPOkDVBFxz2SVGDuY4vJkDeqjRmpit>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 26 Sep 2026 21:49:28 -0400 (EDT)
-Date: Sun, 27 Sep 2026 10:49:26 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	codemender-patching+linux@google.com
-Subject: Re: [PATCH] firewire: core: add __counted_by_ptr attribute to struct
- fw_device
-Message-ID: <20260927014926.GC9201@sakamocchi.jp>
-Mail-Followup-To: Bill Wendling <morbo@google.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	codemender-patching+linux@google.com
-References: <20260925212552.125652-1-morbo@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyZ45tRV"
+Received: by mail-dl2-f12.google.com with SMTP id a92af1059eb24-142dd025d06so1409530c88.1
+        for <linux-hardening@vger.kernel.org>; Sat, 26 Sep 2026 23:00:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790488806; x=1791093606; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Gr7sKNDFLbCxJHInGWFYwlfKrCf9Hw79pJZTHn3AM4g=;
+        b=OyZ45tRVDBcdD7hgU3xinj2wrLWKbz7i/swgT0vz6VdxyCujChQndhhgV1r+PnEYKd
+         7wEIhh5BH6jzoLP2iK/Dt76Y4jJTIvPW0nGkOKjy/sAYXw1bS9RVj0YrMzzWc1OkMhQj
+         UreO76kNpW4I6AdBDSE+c+P1NMUEhtUt5sERJTk+z/kRMwxUQqWCK3ogqg9BvIGRQLTF
+         0F8ExhD2XhpxXnrA6BCFJhWGZq3dEOqSDeAs1X4YxZiEeJDdYwhUA2a6dugVmTnGHXA4
+         ysEDGIMCSOwjUCG4qyGiURdQybfm7KxjOKZLpUyT7i/aBEwFoB4kg62ofTeeD0AMQcjA
+         W1yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790488806; x=1791093606;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Gr7sKNDFLbCxJHInGWFYwlfKrCf9Hw79pJZTHn3AM4g=;
+        b=pjFO9zDaJnLslE1yRR9/AcA9yg3cwpBu4n94TUzwCRzTlUXW8C6kP2RPcN+iKqjEjG
+         QKEtPATsZad/tx9xPRzddSOgocXnXUZwFFsRwUuFO6Lcd7JbcK5DRm3ejpA0z2tu/MRy
+         GiYdEhAolTNgLOTPwULZrfFsAVvUMI7bpWBDEohQNM8TMCFdHiyCu4WRU9FXONIKveed
+         sLnPqe3fVGyzJ2CwIZL/01Hfhuhf/TxWCo5pz10PrToCgEaNHYWthF67JZpi6yDVQrdm
+         gBMTNnhTv8Dg9ueg+YRSdPOgIpQao6GLQneBQ71qpDM2MJ8Sw9zEDbUe0Wlr7FMMuzFX
+         2EOQ==
+X-Forwarded-Encrypted: i=1; AKwUvBy/nYTegRuCaqZu1pZf4HqLvrVvflBgjQ+Z44+2KYod/KJMvlhYFZGtIH6/ERSsMyWLs5pYUHRCurDbl6pRmBI=@vger.kernel.org
+X-Gm-Message-State: AFuF++lvjJIYIUe6Ptdevl7gwP/spRscufiZETEIoJKLU1yC9kn7jvTq
+	mIbALX2/9k1EzTxo2LcFKSlT0tYTozkauUJQJi9lb8HV91ES0uFNbrYb
+X-Gm-Gg: AYBFou2KKJI35wgEE8uLPeUM5SJB2PntDSUAJf8ssbChFBS1wMMYUFo1ZMJHJ5+UjTK
+	xY84bl4U5Nxhp7XsEWsvNNKWGfwxo6cCG+pI8zXzBhZLfCuvv0NihM7D2z5HaD3A5VPCUENgnvW
+	0KSNjNUIjO98BLqNXA+1YhWrYkdMmCyZWfK/HKNWCRrw5PUb9LEiYi5XFeS42j73wfWrOj94ETh
+	IvZHRvzbvgyvlJ/Bc9lFQHIoN0hJwR+iBLaCDKp9J/wzp7N7yNSARu7sAeqiqdlUotj8rlYm/vQ
+	+wxGRr3fPXrSXCxPr86YZTahNyXsb2BQ45R6tSbJcu2E+h2+QaWviVXLzkcNRDZCZtyXzM3dLRN
+	9KC4qtqe3VuvF5unEPxRtgprcsfhFrhpREfLPgm0WajQEfPdJPmiNsTKI/qw7wtaVrCsDlWSJjM
+	2q3TOsSDgbrv1VLCIFYKucWdOQfHGI6Zf3c4GcTk7n//AqOL/5pgKzJwMf114kaP4v+DyyG5POM
+	U/Z6mVOpp39kcn8oMIo5pNWoOp2
+X-Received: by 2002:a05:7022:43a9:b0:143:4710:a869 with SMTP id a92af1059eb24-146cdfbecc6mr8275381c88.2.1790488805361;
+        Sat, 26 Sep 2026 23:00:05 -0700 (PDT)
+Received: from homik.search.charter.net ([2603:8002:ad40:56f0:be8c:736b:d7b9:ea97])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34145c166cfsm17500013eec.28.2026.09.26.23.00.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Sep 2026 23:00:04 -0700 (PDT)
+From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+To: abbotti@mev.co.uk,
+	hsweeten@visionengravers.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	morbo@google.com,
+	kees@kernel.org,
+	justinstitt@google.com,
+	codemender-patching+linux@google.com,
+	Mariia Nikitash <nikitash.mariiaw@gmail.com>
+Subject: [PATCH] comedi: comedi_bond: Refactor strlcat() to seq_buf in do_dev_config()
+Date: Sat, 26 Sep 2026 23:00:00 -0700
+Message-ID: <20260927060000.518354-1-nikitash.mariiaw@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260925212552.125652-1-morbo@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 25, 2026 at 09:25:52PM +0000, Bill Wendling wrote:
-> The GCC and Clang attribute '__counted_by_ptr' associates a pointer
-> field with an integer field holding its element count. This enables
-> runtime bounds checking by KASAN and UBSAN to prevent out-of-bounds
-> accesses to the pointer.
-> 
-> In 'struct fw_device' (defined in 'include/linux/firewire.h'), the
-> field 'config_rom' is a pointer to the device's Configuration ROM data,
-> and its associated element count is stored in 'config_rom_length'.
-> 
-> Additionally, update the existing KUnit test in
-> 'drivers/firewire/device-attribute-test.c' where 'config_rom_length'
-> was incorrectly initialized with the byte size
-> ('sizeof(simple_avc_config_rom)') instead of the element count
-> ('ARRAY_SIZE(simple_avc_config_rom)'). This ensures the
-> '__counted_by_ptr' bounds-checking annotation does not trigger any
-> false-positive panics or compile/runtime checks.
-> 
-> Cc: codemender-patching+linux@google.com
-> Assisted-by: LLM
-> Signed-off-by: Bill Wendling <morbo@google.com>
-> ---
->  drivers/firewire/device-attribute-test.c | 4 ++--
->  include/linux/firewire.h                 | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
+From: Bill Wendling <morbo@google.com>
 
-Thank you to correct the KUnit tests as well. Applied to for-next branch.
+do_dev_config() builds a space-separated list of bonded devices in
+devpriv->name by formatting each "minor:subdev " pair into a temporary
+stack buffer with snprintf() and appending it with strlcat() in a loop.
 
+In preparation for removing the deprecated strlcat() API[1], use struct
+seq_buf and seq_buf_printf() to format each entry directly into
+devpriv->name. This avoids repeated rescanning of devpriv->name and
+eliminates the temporary buffer.
 
-Thanks
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Cc: codemender-patching+linux@google.com
+Assisted-by: LLM
+Signed-off-by: Bill Wendling <morbo@google.com>
+Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+---
+ drivers/comedi/drivers/comedi_bond.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-Takashi Sakamoto
+diff --git a/drivers/comedi/drivers/comedi_bond.c b/drivers/comedi/drivers/comedi_bond.c
+index 8e10ecab4f0d..a10cfbd04c72 100644
+--- a/drivers/comedi/drivers/comedi_bond.c
++++ b/drivers/comedi/drivers/comedi_bond.c
+@@ -39,6 +39,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/string.h>
++#include <linux/seq_buf.h>
+ #include <linux/slab.h>
+ #include <linux/comedi.h>
+ #include <linux/comedi/comedilib.h>
+@@ -170,10 +171,11 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
+ {
+ 	struct comedi_bond_private *devpriv = dev->private;
+ 	DECLARE_BITMAP(devs_opened, COMEDI_NUM_BOARD_MINORS);
++	struct seq_buf s;
+ 	int i;
+ 
+ 	memset(&devs_opened, 0, sizeof(devs_opened));
+-	devpriv->name[0] = 0;
++	seq_buf_init(&s, devpriv->name, sizeof(devpriv->name));
+ 	/*
+ 	 * Loop through all comedi devices specified on the command-line,
+ 	 * building our device list.
+@@ -250,15 +252,9 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
+ 			}
+ 			devpriv->devs = devs;
+ 			devpriv->devs[devpriv->ndevs++] = bdev;
+-			{
+-				/* Append dev:subdev to devpriv->name */
+-				char buf[20];
+-
+-				snprintf(buf, sizeof(buf), "%u:%u ",
+-					 bdev->minor, bdev->subdev);
+-				strlcat(devpriv->name, buf,
+-					sizeof(devpriv->name));
+-			}
++
++			/* Append dev:subdev to devpriv->name */
++			seq_buf_printf(&s, "%u:%u ", bdev->minor, bdev->subdev);
+ 		}
+ 	}
+ 
+@@ -267,6 +263,8 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
+ 		return -EINVAL;
+ 	}
+ 
++	seq_buf_str(&s);
++
+ 	return 0;
+ }
+ 
+-- 
+2.43.0
+
