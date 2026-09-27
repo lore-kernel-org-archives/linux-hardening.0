@@ -1,157 +1,136 @@
-Received: from mail-dl2-f12.google.com (mail-dl2-f12.google.com [74.125.229.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0997C3B776A
-	for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 06:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC513CE4B2
+	for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 08:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790488808; cv=none; b=IyMknvF6EK10Ep4TEKsYNyUIG+9ezOw5UC4vbBtmdRuzgqt6jaLV1ABzWhcGVsXf/s7VVim68eiIi5RHchcNMUj/ZgBvROz7w6cwitSzmKuiVqRHbztmY9w7GT4ZWQL9wU8pf4nYOMZfl24p5Qj1ByoPt2ZJZbeKQfmlKnQX+sM=
+	t=1790497468; cv=none; b=hb4T2IqKGGSZmzHMfIy4dpO8Ej+I7/AQfFzBUtdHgQDsgsLJyY0SKu03ykyMBwuq9HJ+4MLnkDIXQxVN1aO6cG036qlUUTHxb8W+QwCBa5ZluGSuYso9u6/d15iRgXx2r5vHWDCZ6FGboxxKOWL/7azbCQzh6WKzR8+9CPk3GfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790488808; c=relaxed/simple;
-	bh=uav7FpdcMvoPqAG2gm25FMa/ksIC4Z/tBnVXRFPwCpI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=agSVROKYK36W65w9SAm1+oWMHJ3+ZF3xg2tGsJ4W9lSdHKO3h0IeTJwPNW8QzUN3BlTioy7gG4oG1fNa8KnZ3vxC3rBetGBssTC2Vijj3eu1l9F0e2JFIJDqwT+VmgGrk1ib/TjtJoMHXGLgD2lzsXOppJeMplODQiZPnMT7944=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OyZ45tRV; arc=none smtp.client-ip=74.125.229.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790497468; c=relaxed/simple;
+	bh=3rxqKQhNHuL7o+xcCUTkX75IBd8KS+Bj2j0NN6nk9ZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K27qb07XVxtdgeZyoEiYV1dvxIuXzEFEA0w5t5XZ6mvEe16YToEyx2Md6skJ2EUzcB827ROhXsYWYah+bTE7PV9oKxCoXac6FJpsLpXN0KninO3gtM7zkpabBoke5857sK5vP0riVC4puApuIkbH7m2+5IaM3G55u7eQmuO0vGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LiwPjk0D; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyZ45tRV"
-Received: by mail-dl2-f12.google.com with SMTP id a92af1059eb24-142dd025d06so1409530c88.1
-        for <linux-hardening@vger.kernel.org>; Sat, 26 Sep 2026 23:00:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790488806; x=1791093606; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Gr7sKNDFLbCxJHInGWFYwlfKrCf9Hw79pJZTHn3AM4g=;
-        b=OyZ45tRVDBcdD7hgU3xinj2wrLWKbz7i/swgT0vz6VdxyCujChQndhhgV1r+PnEYKd
-         7wEIhh5BH6jzoLP2iK/Dt76Y4jJTIvPW0nGkOKjy/sAYXw1bS9RVj0YrMzzWc1OkMhQj
-         UreO76kNpW4I6AdBDSE+c+P1NMUEhtUt5sERJTk+z/kRMwxUQqWCK3ogqg9BvIGRQLTF
-         0F8ExhD2XhpxXnrA6BCFJhWGZq3dEOqSDeAs1X4YxZiEeJDdYwhUA2a6dugVmTnGHXA4
-         ysEDGIMCSOwjUCG4qyGiURdQybfm7KxjOKZLpUyT7i/aBEwFoB4kg62ofTeeD0AMQcjA
-         W1yA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LiwPjk0D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1790497463;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CwGov1WfVqjaD3uyRV6IMvRELVNTsPWtY2wOQdAbySA=;
+	b=LiwPjk0D+ndrNTCR+LMbb5/pDl9PZcbJZvbBXQp/QSyZHyc840xLgbZiYSQg8kZ3TTzjY+
+	V+9/FAZY0Kv2+peAPhhy2vGTqJ8HL1s+nDmGqFVaTwKDQ2+EEvHbGfCxm1nT+FizRT12dP
+	PHcjXwJGrhnO1loZVGLR0ITS7aLK4tg=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-577-0yXf3j95MDKnoFqofhqCyA-1; Sun, 27 Sep 2026 04:24:22 -0400
+X-MC-Unique: 0yXf3j95MDKnoFqofhqCyA-1
+X-Mimecast-MFC-AGG-ID: 0yXf3j95MDKnoFqofhqCyA_1790497461
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49ffe287240so5540575e9.2
+        for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 01:24:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790488806; x=1791093606;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1790497461; x=1791102261;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Gr7sKNDFLbCxJHInGWFYwlfKrCf9Hw79pJZTHn3AM4g=;
-        b=pjFO9zDaJnLslE1yRR9/AcA9yg3cwpBu4n94TUzwCRzTlUXW8C6kP2RPcN+iKqjEjG
-         QKEtPATsZad/tx9xPRzddSOgocXnXUZwFFsRwUuFO6Lcd7JbcK5DRm3ejpA0z2tu/MRy
-         GiYdEhAolTNgLOTPwULZrfFsAVvUMI7bpWBDEohQNM8TMCFdHiyCu4WRU9FXONIKveed
-         sLnPqe3fVGyzJ2CwIZL/01Hfhuhf/TxWCo5pz10PrToCgEaNHYWthF67JZpi6yDVQrdm
-         gBMTNnhTv8Dg9ueg+YRSdPOgIpQao6GLQneBQ71qpDM2MJ8Sw9zEDbUe0Wlr7FMMuzFX
-         2EOQ==
-X-Forwarded-Encrypted: i=1; AKwUvBy/nYTegRuCaqZu1pZf4HqLvrVvflBgjQ+Z44+2KYod/KJMvlhYFZGtIH6/ERSsMyWLs5pYUHRCurDbl6pRmBI=@vger.kernel.org
-X-Gm-Message-State: AFuF++lvjJIYIUe6Ptdevl7gwP/spRscufiZETEIoJKLU1yC9kn7jvTq
-	mIbALX2/9k1EzTxo2LcFKSlT0tYTozkauUJQJi9lb8HV91ES0uFNbrYb
-X-Gm-Gg: AYBFou2KKJI35wgEE8uLPeUM5SJB2PntDSUAJf8ssbChFBS1wMMYUFo1ZMJHJ5+UjTK
-	xY84bl4U5Nxhp7XsEWsvNNKWGfwxo6cCG+pI8zXzBhZLfCuvv0NihM7D2z5HaD3A5VPCUENgnvW
-	0KSNjNUIjO98BLqNXA+1YhWrYkdMmCyZWfK/HKNWCRrw5PUb9LEiYi5XFeS42j73wfWrOj94ETh
-	IvZHRvzbvgyvlJ/Bc9lFQHIoN0hJwR+iBLaCDKp9J/wzp7N7yNSARu7sAeqiqdlUotj8rlYm/vQ
-	+wxGRr3fPXrSXCxPr86YZTahNyXsb2BQ45R6tSbJcu2E+h2+QaWviVXLzkcNRDZCZtyXzM3dLRN
-	9KC4qtqe3VuvF5unEPxRtgprcsfhFrhpREfLPgm0WajQEfPdJPmiNsTKI/qw7wtaVrCsDlWSJjM
-	2q3TOsSDgbrv1VLCIFYKucWdOQfHGI6Zf3c4GcTk7n//AqOL/5pgKzJwMf114kaP4v+DyyG5POM
-	U/Z6mVOpp39kcn8oMIo5pNWoOp2
-X-Received: by 2002:a05:7022:43a9:b0:143:4710:a869 with SMTP id a92af1059eb24-146cdfbecc6mr8275381c88.2.1790488805361;
-        Sat, 26 Sep 2026 23:00:05 -0700 (PDT)
-Received: from homik.search.charter.net ([2603:8002:ad40:56f0:be8c:736b:d7b9:ea97])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34145c166cfsm17500013eec.28.2026.09.26.23.00.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Sep 2026 23:00:04 -0700 (PDT)
-From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-To: abbotti@mev.co.uk,
-	hsweeten@visionengravers.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	morbo@google.com,
-	kees@kernel.org,
-	justinstitt@google.com,
-	codemender-patching+linux@google.com,
-	Mariia Nikitash <nikitash.mariiaw@gmail.com>
-Subject: [PATCH] comedi: comedi_bond: Refactor strlcat() to seq_buf in do_dev_config()
-Date: Sat, 26 Sep 2026 23:00:00 -0700
-Message-ID: <20260927060000.518354-1-nikitash.mariiaw@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        bh=CwGov1WfVqjaD3uyRV6IMvRELVNTsPWtY2wOQdAbySA=;
+        b=tLMS5/eKLOlJ/UnjRlhRuN+keOhV9zNDELp+DCTV3q0Kna6VbhIqsb+1/JearW6njU
+         XHKkuIiAstin+vJEA91H0voYOxzKZmvd9B8swCcmNFM2qnJbOC7rcn50b7XAioVYX3GA
+         aBMQOZC8wKoFX+NKdkGOTm8gxqQVV88nXTNqRNp1ERKMKxpHNgDPT6hpycFNQQ0i+gBn
+         4CxjbiK5HIdc0jE8OPcB8v5uAKKC3NX9DPcpSyejiEj0z33MQuFvJiDKq3cKzrGmWVpv
+         E4CXv3dAZ9uOdyZJDKWmDMuRYD0XjUqXTDXfAerqb+M0EpX1uS/fLqc6M/eh5M1x55kO
+         7Irw==
+X-Forwarded-Encrypted: i=1; AKwUvBw4/DJ2Qu0U8NCsQvyZNTc2n9Sq0mSQM510+nOAgaFO6EiyBwXN7/wpouQP7iKF9H92b/UbIHHMD3USd9Bp1os=@vger.kernel.org
+X-Gm-Message-State: AFuF++lu/L4sLiaENSUppNe6svhNVDRrH+f7F5sA9oW7yu0iiXJkne0g
+	V31U/9RjjsJtMAa3/wLTqW/EzkqTAUHWNHPPXKo7+ZGx7XTCB6W3dkvieWhaRWyQZ8wXrhsPs3y
+	Zw1hGlT1VMxUs+4cjNVIZM3bRfTnTP+XwbZY5pX5Ma03mXa390jZmneGyX1CERLz6n0r9wg==
+X-Gm-Gg: AYBFou0mpz0rjJLwOJ+j2qNqjuuMJtyluXjKoLJh1XPbGG7nnjotTFmADRxaygYmSPk
+	Dn5A2xT1MtjoD8Qfq82IH6Az5uugKrQ8xS3DR/Z54O9K2W72BzxfDMRJHAhN8oz+nz9juWtkOpa
+	SegVuC4PbFVWreBNI/eQoemULvBVSktXSy7LCS/gbQ5H1PyGVE650odIIMvi0n5inFWi2x/D6T8
+	Fu0v7YhevhbE/GbIeyOHabOLRWWEX6EgGJx5ZsloGCknyiVKKDo4G32mr0L5R1PbFac4MF5L8Mm
+	3kgA/9yLIRmfrrfBcJBMH9RgY+pwRpFvFpUizd1jYUxse19cxamoVirQASWK94xUPr6Jp0u6KaX
+	kSye4+hXWPwv6M8z/gfZO/ymAj3USDxbxGOrQhgrk0qzbp8c0Lcm6/7emedJfdzK9CDClPv6+SA
+	==
+X-Received: by 2002:a05:600c:83c3:b0:49f:fdca:c348 with SMTP id 5b1f17b1804b1-49ffdcac594mr41989035e9.10.1790497460719;
+        Sun, 27 Sep 2026 01:24:20 -0700 (PDT)
+X-Received: by 2002:a05:600c:83c3:b0:49f:fdca:c348 with SMTP id 5b1f17b1804b1-49ffdcac594mr41988585e9.10.1790497460317;
+        Sun, 27 Sep 2026 01:24:20 -0700 (PDT)
+Received: from [192.168.188.234] (ip232-47-231-195.pool-bba.aruba.it. [195.231.47.232])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0018f3e68sm40012525e9.9.2026.09.27.01.24.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Sep 2026 01:24:19 -0700 (PDT)
+Message-ID: <8862b9ed-6f96-48c6-a134-6e8635c38987@redhat.com>
+Date: Sun, 27 Sep 2026 10:24:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 7/7] net: skb: isolate skb data area allocations into a
+ separate bucket
+To: Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@kernel.org>
+Cc: Pedro Falcato <pfalcato@suse.de>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+ Willem de Bruijn <willemb@google.com>, Jason Xing
+ <kerneljasonxing@gmail.com>, netdev@vger.kernel.org,
+ Kuniyuki Iwashima <kuniyu@google.com>, linux-hardening@vger.kernel.org,
+ Harry Yoo <harry@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
+ David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Jiayuan Chen <jiayuan.chen@linux.dev>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20260921075811.too.775-kees@kernel.org>
+ <20260921075820.1718334-7-kees@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20260921075820.1718334-7-kees@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: QALcOy14BSd0SqxNrpJwm6t8XXA70nl5VgmBYC1Cz8U_1790497461
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Bill Wendling <morbo@google.com>
+On 9/21/26 09:58, Kees Cook wrote:
+> From: Pedro Falcato <pfalcato@suse.de>
+> 
+> SKB data area allocations (as done from alloc_skb()) use kmalloc().
+> These allocations can be variably sized and their contents can be more
+> or less controlled from userspace, which makes them useful for attackers
+> that want to overwrite a use-after-free'd object from the same kmalloc slab
+> (which often just requires the sizes to roughly match into the same kmalloc
+> bucket). [0] is an easy example of an exploit that uses netlink skb
+> allocation to target another similarly-sized accidentally freed object.
+> 
+> While other mitigations like CONFIG_RANDOM_KMALLOC_CACHES exist, these are
+> probabilistic. Use the existing kmem buckets API to further isolate these
+> allocations in a guaranteed fashion, when CONFIG_SLAB_BUCKETS=y.
+> 
+> Ask for the accounted kmalloc type as well as the normal one. AF_UNIX
+> sets sk_allocation to GFP_KERNEL_ACCOUNT, so without it every AF_UNIX
+> skb data area would fall back to the general caches, and those are the
+> ones most worth isolating. GFP_DMA is left to fall back, being passed to
+> an skb allocator only by rare devices.
+> 
+> Link: https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2023-4207_lts_cos_mitigation_2/docs/exploit.md [0]
+> Reviewed-by: Kees Cook <kees@kernel.org>
+> Signed-off-by: Pedro Falcato <pfalcato@suse.de>
 
-do_dev_config() builds a space-separated list of bonded devices in
-devpriv->name by formatting each "minor:subdev " pair into a temporary
-stack buffer with snprintf() and appending it with strlcat() in a loop.
+I would be curious to learn how about the memory usage delta.
+However I see buckets are protected by their own kconfig, small
+systems can unselect them.
 
-In preparation for removing the deprecated strlcat() API[1], use struct
-seq_buf and seq_buf_printf() to format each entry directly into
-devpriv->name. This avoids repeated rescanning of devpriv->name and
-eliminates the temporary buffer.
+For the networking bits:
 
-Link: https://github.com/KSPP/linux/issues/370 [1]
-Cc: codemender-patching+linux@google.com
-Assisted-by: LLM
-Signed-off-by: Bill Wendling <morbo@google.com>
-Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
----
- drivers/comedi/drivers/comedi_bond.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/comedi/drivers/comedi_bond.c b/drivers/comedi/drivers/comedi_bond.c
-index 8e10ecab4f0d..a10cfbd04c72 100644
---- a/drivers/comedi/drivers/comedi_bond.c
-+++ b/drivers/comedi/drivers/comedi_bond.c
-@@ -39,6 +39,7 @@
- 
- #include <linux/module.h>
- #include <linux/string.h>
-+#include <linux/seq_buf.h>
- #include <linux/slab.h>
- #include <linux/comedi.h>
- #include <linux/comedi/comedilib.h>
-@@ -170,10 +171,11 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
- {
- 	struct comedi_bond_private *devpriv = dev->private;
- 	DECLARE_BITMAP(devs_opened, COMEDI_NUM_BOARD_MINORS);
-+	struct seq_buf s;
- 	int i;
- 
- 	memset(&devs_opened, 0, sizeof(devs_opened));
--	devpriv->name[0] = 0;
-+	seq_buf_init(&s, devpriv->name, sizeof(devpriv->name));
- 	/*
- 	 * Loop through all comedi devices specified on the command-line,
- 	 * building our device list.
-@@ -250,15 +252,9 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
- 			}
- 			devpriv->devs = devs;
- 			devpriv->devs[devpriv->ndevs++] = bdev;
--			{
--				/* Append dev:subdev to devpriv->name */
--				char buf[20];
--
--				snprintf(buf, sizeof(buf), "%u:%u ",
--					 bdev->minor, bdev->subdev);
--				strlcat(devpriv->name, buf,
--					sizeof(devpriv->name));
--			}
-+
-+			/* Append dev:subdev to devpriv->name */
-+			seq_buf_printf(&s, "%u:%u ", bdev->minor, bdev->subdev);
- 		}
- 	}
- 
-@@ -267,6 +263,8 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
- 		return -EINVAL;
- 	}
- 
-+	seq_buf_str(&s);
-+
- 	return 0;
- }
- 
--- 
-2.43.0
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
