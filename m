@@ -1,136 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC513CE4B2
-	for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 08:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504DD23C8AE;
+	Sun, 27 Sep 2026 17:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790497468; cv=none; b=hb4T2IqKGGSZmzHMfIy4dpO8Ej+I7/AQfFzBUtdHgQDsgsLJyY0SKu03ykyMBwuq9HJ+4MLnkDIXQxVN1aO6cG036qlUUTHxb8W+QwCBa5ZluGSuYso9u6/d15iRgXx2r5vHWDCZ6FGboxxKOWL/7azbCQzh6WKzR8+9CPk3GfA=
+	t=1790530831; cv=none; b=kXp0B24KjpE4q1Gxry+9Yeil3XbntNiyqsQ0D2DxZGuUjfKsK5oc50t9lmlHs/TfKdLYZ1+9qqCOXeH4M42El+3r7WD62j4n+F97QAh6KOeCg4udOtp0S/hEtSKRz5oxZDy1T7+GRXtcvZopECGlASc89cx7BBYjgqQkKsukFX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790497468; c=relaxed/simple;
-	bh=3rxqKQhNHuL7o+xcCUTkX75IBd8KS+Bj2j0NN6nk9ZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K27qb07XVxtdgeZyoEiYV1dvxIuXzEFEA0w5t5XZ6mvEe16YToEyx2Md6skJ2EUzcB827ROhXsYWYah+bTE7PV9oKxCoXac6FJpsLpXN0KninO3gtM7zkpabBoke5857sK5vP0riVC4puApuIkbH7m2+5IaM3G55u7eQmuO0vGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LiwPjk0D; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1790530831; c=relaxed/simple;
+	bh=yEFV3lkIaPKi7zVGKiJPo1Sjy0OlfxaF4BS2U1sBqUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U2eMoouuyyu01LLi7IekxFbJulSePyp32L0cELAfWc2Epk2ckLl1D5QZaA9JnTdJ6sH+XBkUh2aqTXYr4NeayURmdG+h3iWII/g/h7HL3Ai+S/IvcyWtby5qxdaevvO8vk7Xdxy3OMBpVVF7prkttAF9r/JL6+PsIUnQG4qraS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1QS/gdz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LiwPjk0D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1790497463;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CwGov1WfVqjaD3uyRV6IMvRELVNTsPWtY2wOQdAbySA=;
-	b=LiwPjk0D+ndrNTCR+LMbb5/pDl9PZcbJZvbBXQp/QSyZHyc840xLgbZiYSQg8kZ3TTzjY+
-	V+9/FAZY0Kv2+peAPhhy2vGTqJ8HL1s+nDmGqFVaTwKDQ2+EEvHbGfCxm1nT+FizRT12dP
-	PHcjXwJGrhnO1loZVGLR0ITS7aLK4tg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-577-0yXf3j95MDKnoFqofhqCyA-1; Sun, 27 Sep 2026 04:24:22 -0400
-X-MC-Unique: 0yXf3j95MDKnoFqofhqCyA-1
-X-Mimecast-MFC-AGG-ID: 0yXf3j95MDKnoFqofhqCyA_1790497461
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49ffe287240so5540575e9.2
-        for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 01:24:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790497461; x=1791102261;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=CwGov1WfVqjaD3uyRV6IMvRELVNTsPWtY2wOQdAbySA=;
-        b=tLMS5/eKLOlJ/UnjRlhRuN+keOhV9zNDELp+DCTV3q0Kna6VbhIqsb+1/JearW6njU
-         XHKkuIiAstin+vJEA91H0voYOxzKZmvd9B8swCcmNFM2qnJbOC7rcn50b7XAioVYX3GA
-         aBMQOZC8wKoFX+NKdkGOTm8gxqQVV88nXTNqRNp1ERKMKxpHNgDPT6hpycFNQQ0i+gBn
-         4CxjbiK5HIdc0jE8OPcB8v5uAKKC3NX9DPcpSyejiEj0z33MQuFvJiDKq3cKzrGmWVpv
-         E4CXv3dAZ9uOdyZJDKWmDMuRYD0XjUqXTDXfAerqb+M0EpX1uS/fLqc6M/eh5M1x55kO
-         7Irw==
-X-Forwarded-Encrypted: i=1; AKwUvBw4/DJ2Qu0U8NCsQvyZNTc2n9Sq0mSQM510+nOAgaFO6EiyBwXN7/wpouQP7iKF9H92b/UbIHHMD3USd9Bp1os=@vger.kernel.org
-X-Gm-Message-State: AFuF++lu/L4sLiaENSUppNe6svhNVDRrH+f7F5sA9oW7yu0iiXJkne0g
-	V31U/9RjjsJtMAa3/wLTqW/EzkqTAUHWNHPPXKo7+ZGx7XTCB6W3dkvieWhaRWyQZ8wXrhsPs3y
-	Zw1hGlT1VMxUs+4cjNVIZM3bRfTnTP+XwbZY5pX5Ma03mXa390jZmneGyX1CERLz6n0r9wg==
-X-Gm-Gg: AYBFou0mpz0rjJLwOJ+j2qNqjuuMJtyluXjKoLJh1XPbGG7nnjotTFmADRxaygYmSPk
-	Dn5A2xT1MtjoD8Qfq82IH6Az5uugKrQ8xS3DR/Z54O9K2W72BzxfDMRJHAhN8oz+nz9juWtkOpa
-	SegVuC4PbFVWreBNI/eQoemULvBVSktXSy7LCS/gbQ5H1PyGVE650odIIMvi0n5inFWi2x/D6T8
-	Fu0v7YhevhbE/GbIeyOHabOLRWWEX6EgGJx5ZsloGCknyiVKKDo4G32mr0L5R1PbFac4MF5L8Mm
-	3kgA/9yLIRmfrrfBcJBMH9RgY+pwRpFvFpUizd1jYUxse19cxamoVirQASWK94xUPr6Jp0u6KaX
-	kSye4+hXWPwv6M8z/gfZO/ymAj3USDxbxGOrQhgrk0qzbp8c0Lcm6/7emedJfdzK9CDClPv6+SA
-	==
-X-Received: by 2002:a05:600c:83c3:b0:49f:fdca:c348 with SMTP id 5b1f17b1804b1-49ffdcac594mr41989035e9.10.1790497460719;
-        Sun, 27 Sep 2026 01:24:20 -0700 (PDT)
-X-Received: by 2002:a05:600c:83c3:b0:49f:fdca:c348 with SMTP id 5b1f17b1804b1-49ffdcac594mr41988585e9.10.1790497460317;
-        Sun, 27 Sep 2026 01:24:20 -0700 (PDT)
-Received: from [192.168.188.234] (ip232-47-231-195.pool-bba.aruba.it. [195.231.47.232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0018f3e68sm40012525e9.9.2026.09.27.01.24.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Sep 2026 01:24:19 -0700 (PDT)
-Message-ID: <8862b9ed-6f96-48c6-a134-6e8635c38987@redhat.com>
-Date: Sun, 27 Sep 2026 10:24:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1QS/gdz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF1651F000FF;
+	Sun, 27 Sep 2026 17:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790530829;
+	bh=rRicdbRpdSMevJVjz0k9ySyuClDHkZPdx7+N/XrY8Xk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=A1QS/gdz5FrsJEDgePvIQvIDiUwOEyInkviYgzx/9+hBfEeEc8pymb8o+pJY1M8oh
+	 8L0mn5VXjz0rWJz5/UwLUUXb/SOl5vHH5zt5WYu/qCbnMy1hN7ZYmhzLxASav1oooc
+	 NSaiVY0Hmd3Fkm59yFY62+rHFC+ItPVWukVFAtNZROFPRdjIebaAGK3tCpAzVq2Ltt
+	 Tc3WZ+BzimCSWOaWfZBaGrAi+1srwhejw8DkcioK7Jg8VteKRiy/vEC7GBIDRwI3Zv
+	 ULcVnZ1fJawAVCzy9KKccZM+cgPp7qHitVH/Le98PXnIaXD1P4Ii525hrYXoh1W58g
+	 DucM6bhq1+FWQ==
+Date: Sun, 27 Sep 2026 19:40:25 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Changhuang Liang <changhuang.liang@starfivetech.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Brian Masney <bmasney@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, Richard Cochran <richardcochran@gmail.com>, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-hardening@vger.kernel.org, netdev@vger.kernel.org, 
+	Hal Feng <hal.feng@starfivetech.com>
+Subject: Re: [PATCH v4 17/22] dt-bindings: clock: Add StarFive JHB100
+ Peripheral-2 clock and reset generator
+Message-ID: <20260927-wild-modest-goat-b79b3c@quoll>
+References: <20260920120044.194901-1-changhuang.liang@starfivetech.com>
+ <20260920120044.194901-18-changhuang.liang@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 7/7] net: skb: isolate skb data area allocations into a
- separate bucket
-To: Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@kernel.org>
-Cc: Pedro Falcato <pfalcato@suse.de>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
- Willem de Bruijn <willemb@google.com>, Jason Xing
- <kerneljasonxing@gmail.com>, netdev@vger.kernel.org,
- Kuniyuki Iwashima <kuniyu@google.com>, linux-hardening@vger.kernel.org,
- Harry Yoo <harry@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
- David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Jiayuan Chen <jiayuan.chen@linux.dev>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20260921075811.too.775-kees@kernel.org>
- <20260921075820.1718334-7-kees@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20260921075820.1718334-7-kees@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: QALcOy14BSd0SqxNrpJwm6t8XXA70nl5VgmBYC1Cz8U_1790497461
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260920120044.194901-18-changhuang.liang@starfivetech.com>
 
-On 9/21/26 09:58, Kees Cook wrote:
-> From: Pedro Falcato <pfalcato@suse.de>
+On Sun, Sep 20, 2026 at 05:00:39AM -0700, Changhuang Liang wrote:
+> Add bindings for the Peripheral-2 clock and reset generator (PER2CRG)
+> on the JHB100 RISC-V SoC by StarFive Ltd.
 > 
-> SKB data area allocations (as done from alloc_skb()) use kmalloc().
-> These allocations can be variably sized and their contents can be more
-> or less controlled from userspace, which makes them useful for attackers
-> that want to overwrite a use-after-free'd object from the same kmalloc slab
-> (which often just requires the sizes to roughly match into the same kmalloc
-> bucket). [0] is an easy example of an exploit that uses netlink skb
-> allocation to target another similarly-sized accidentally freed object.
-> 
-> While other mitigations like CONFIG_RANDOM_KMALLOC_CACHES exist, these are
-> probabilistic. Use the existing kmem buckets API to further isolate these
-> allocations in a guaranteed fashion, when CONFIG_SLAB_BUCKETS=y.
-> 
-> Ask for the accounted kmalloc type as well as the normal one. AF_UNIX
-> sets sk_allocation to GFP_KERNEL_ACCOUNT, so without it every AF_UNIX
-> skb data area would fall back to the general caches, and those are the
-> ones most worth isolating. GFP_DMA is left to fall back, being passed to
-> an skb allocator only by rare devices.
-> 
-> Link: https://github.com/google/security-research/blob/master/pocs/linux/kernelctf/CVE-2023-4207_lts_cos_mitigation_2/docs/exploit.md [0]
-> Reviewed-by: Kees Cook <kees@kernel.org>
-> Signed-off-by: Pedro Falcato <pfalcato@suse.de>
+> Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+> ---
+>  .../clock/starfive,jhb100-per2crg.yaml        | 76 +++++++++++++++++++
+>  .../dt-bindings/clock/starfive,jhb100-crg.h   | 57 ++++++++++++++
+>  .../dt-bindings/reset/starfive,jhb100-crg.h   | 17 +++++
+>  3 files changed, 150 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/starfive,jhb100-per2crg.yaml
 
-I would be curious to learn how about the memory usage delta.
-However I see buckets are protected by their own kconfig, small
-systems can unselect them.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
-For the networking bits:
-
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Best regards,
+Krzysztof
 
