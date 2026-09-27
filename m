@@ -1,74 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504DD23C8AE;
-	Sun, 27 Sep 2026 17:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B370D37F727
+	for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 19:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790530831; cv=none; b=kXp0B24KjpE4q1Gxry+9Yeil3XbntNiyqsQ0D2DxZGuUjfKsK5oc50t9lmlHs/TfKdLYZ1+9qqCOXeH4M42El+3r7WD62j4n+F97QAh6KOeCg4udOtp0S/hEtSKRz5oxZDy1T7+GRXtcvZopECGlASc89cx7BBYjgqQkKsukFX4=
+	t=1790536091; cv=none; b=pFBueLdk93PwV+y/CzCY5tfvDjn81NrhEH33wH8kGVm12fSRAlLNEq7BbOdxkoA3aZ0/GDWwWrzoseMfwAAX+1gVeBFnGzXARE5R8Bhpm9XDKsLPh5e26NWsrq7vew6af1p7Lt6IDG9U/2TBJMGbKMaQUKz0B6urDytLJ4vagrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790530831; c=relaxed/simple;
-	bh=yEFV3lkIaPKi7zVGKiJPo1Sjy0OlfxaF4BS2U1sBqUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U2eMoouuyyu01LLi7IekxFbJulSePyp32L0cELAfWc2Epk2ckLl1D5QZaA9JnTdJ6sH+XBkUh2aqTXYr4NeayURmdG+h3iWII/g/h7HL3Ai+S/IvcyWtby5qxdaevvO8vk7Xdxy3OMBpVVF7prkttAF9r/JL6+PsIUnQG4qraS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1QS/gdz; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790536091; c=relaxed/simple;
+	bh=h2liHw+Cb3T5OCreOlX8AWj3tP3/1dELU2ASsfx2NuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VLW6QB212rRIf8msFIKyUoLuDRYG/ew5XRsEq4Y6m7NpWYsL8u0rAWcB4FLC91REd+SXQmh6L95cAll8qgd/gAI7dcYd9PyvhyIaV5Wk4qeyIw6ooGAuKJ0UQa/A0ZdWilA/cSELeuO6e+yYsnShRZQT8Sn+xYH7YIqVH3rGMGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p3P73Cy0; arc=none smtp.client-ip=74.125.229.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1QS/gdz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF1651F000FF;
-	Sun, 27 Sep 2026 17:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790530829;
-	bh=rRicdbRpdSMevJVjz0k9ySyuClDHkZPdx7+N/XrY8Xk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=A1QS/gdz5FrsJEDgePvIQvIDiUwOEyInkviYgzx/9+hBfEeEc8pymb8o+pJY1M8oh
-	 8L0mn5VXjz0rWJz5/UwLUUXb/SOl5vHH5zt5WYu/qCbnMy1hN7ZYmhzLxASav1oooc
-	 NSaiVY0Hmd3Fkm59yFY62+rHFC+ItPVWukVFAtNZROFPRdjIebaAGK3tCpAzVq2Ltt
-	 Tc3WZ+BzimCSWOaWfZBaGrAi+1srwhejw8DkcioK7Jg8VteKRiy/vEC7GBIDRwI3Zv
-	 ULcVnZ1fJawAVCzy9KKccZM+cgPp7qHitVH/Le98PXnIaXD1P4Ii525hrYXoh1W58g
-	 DucM6bhq1+FWQ==
-Date: Sun, 27 Sep 2026 19:40:25 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Brian Masney <bmasney@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Stephen Boyd <sboyd@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Emil Renner Berthing <kernel@esmil.dk>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, Richard Cochran <richardcochran@gmail.com>, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-hardening@vger.kernel.org, netdev@vger.kernel.org, 
-	Hal Feng <hal.feng@starfivetech.com>
-Subject: Re: [PATCH v4 17/22] dt-bindings: clock: Add StarFive JHB100
- Peripheral-2 clock and reset generator
-Message-ID: <20260927-wild-modest-goat-b79b3c@quoll>
-References: <20260920120044.194901-1-changhuang.liang@starfivetech.com>
- <20260920120044.194901-18-changhuang.liang@starfivetech.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p3P73Cy0"
+Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-3411e0ace58so3339302eec.0
+        for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 12:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790536088; x=1791140888; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=SDDgjq+FLrfVveApew+3CiL9S8tkEEemKYxqci8Nfsc=;
+        b=p3P73Cy0m/JAEVgMTPDvZ8gAy2t8YeP0+fMmxyFbB/6SvL2gYwvyvNfxRrWU2w6rEe
+         /ScO/8ONQ+2k/8+wtc/sLvOq5FtcIK2SVGLJq1WJhjT09D7CphPhi/+V2LQ4WaELU/hj
+         AQrK02teIAsEgiDDAUOtr3nS8h0US3f8VFumQ2PL5Lo3REUu4pw+FWt2KqcTA4awBdxi
+         liNfHb81WgY/M6oxn/itDLt9tQBoEHZWO3qo1PEpnc5qHly7oTSWkQ8Bq2nr65af4vfK
+         r+qm/yN1C7Am2IxIlD4itndRKt4EYbAUYIhnCIhSeIz3ljxewXvnMBPZCMyM880046mU
+         pBdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790536088; x=1791140888;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=SDDgjq+FLrfVveApew+3CiL9S8tkEEemKYxqci8Nfsc=;
+        b=vtw9vXD8GlACNMPZ2dAhFjABJgSxiMpm7eQ5v3nAcsAmQaV9Jxi7xlHDAxVJcAL7Pl
+         MMyYcqZmfEGTlSKEeojiqQIRPj+iKf95oCSllax3e0+oXUfyQQ7E/TO1ptfkkp3pfpxu
+         vXCSxL12CJb++qfv14LgaxFnLqfX6p/7UVb6Br/Wb24NDXSJBK+90nW7NPMq1w+se8k0
+         BjI5sjQdRM4PnWqTNlPCUkHqBLTe7voVBJcGKAfD5t1AJ3oByy+u1UKsE1CiT/OIa6dU
+         c2uLKmE75xkI9Xsgx+5OFqhll9ogo5OAsazC4MEG4df7YUi4PCVWMjSwW9nbwtFIFZ5K
+         2m7g==
+X-Forwarded-Encrypted: i=1; AKwUvByD4YWVhXOvuDCX+GIBYIGEEDty+c8nxRiDmtKsTuHlFZOTyNJKsbsTkMA4SYNqAVLNWa92x6JsrjwuHe0OjyU=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKNJcA81TxSDDOemLihC4LoYOgyydjDpYi1N/h1cwJa4cl84/G7
+	hlvcJho9JJwKnp7t/PeOyOTnodV6BBmv+LuSKlcFZC9+yWHMnW66J1+O
+X-Gm-Gg: AYBFou03UnphHlW4F0tGvYe6sWkY/iG3apGGCxRvmjentGNNWMn1M11mNepxBTYyGmA
+	+go2cuIc4CxAoXwq6Dh1TeEP8KNWaUxL2qpSu9XmiCTg8BhlLaTigRtL1bHc9SKYKgBbs7tSQgi
+	JgJaB6hSfm18c/IbC49sUN5MKjMgp0pFYhtiYLb6J4XMAF9G8sfGhT3t39Xzsel9YduD30FxCYY
+	FIHEDRWAwMVOyVCrVOU5oObN/pnchT7Rh0qdOGYpzzzWealMiXnD4i7f1iOKfFVAw7JKLYdLqmm
+	9UFOmNlSWDq3pcX9NEIpLVNxIhFuhc55aLyza+gKcHzKsrJ5tqgT3CbiKyGwgh9wavap9DmvUf8
+	DK1i3E8F+fX15XKMHzKD3wtf9AhgyhWCgVbuwBeJmTgtfggnuzwkwxT5zmzviNC3MFWoN/8jxzg
+	86mauaEa7wifr+LzW/jfYSEwyI0Q1q7IIdzvVOnz0T8O3MNbxsTVB6vaNGA7ik1dMgIYafOFfWE
+	GbGtenguBsebahowKRLzSPxkmXt
+X-Received: by 2002:a05:7300:4f1c:b0:342:19b0:1c92 with SMTP id 5a478bee46e88-34273549d27mr7996388eec.35.1790536087021;
+        Sun, 27 Sep 2026 12:08:07 -0700 (PDT)
+Received: from homik.search.charter.net ([2603:8002:ad40:56f0:5bb1:340f:98dd:fd61])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-343580930e2sm13639702eec.16.2026.09.27.12.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Sep 2026 12:08:03 -0700 (PDT)
+From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+To: krzk@kernel.org,
+	s.nawrocki@samsung.com,
+	peter.griffin@linaro.org,
+	linusw@kernel.org
+Cc: alim.akhtar@samsung.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	morbo@google.com,
+	kees@kernel.org,
+	justinstitt@google.com,
+	aleksandr.loktionov@intel.com,
+	codemender-patching+linux@google.com,
+	Mariia Nikitash <nikitash.mariiaw@gmail.com>
+Subject: [PATCH] pinctrl: samsung: Use snprintf() to construct pin bank names
+Date: Sun, 27 Sep 2026 12:07:58 -0700
+Message-ID: <20260927190758.609156-1-nikitash.mariiaw@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260920120044.194901-18-changhuang.liang@starfivetech.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Sep 20, 2026 at 05:00:39AM -0700, Changhuang Liang wrote:
-> Add bindings for the Peripheral-2 clock and reset generator (PER2CRG)
-> on the JHB100 RISC-V SoC by StarFive Ltd.
-> 
-> Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
-> ---
->  .../clock/starfive,jhb100-per2crg.yaml        | 76 +++++++++++++++++++
->  .../dt-bindings/clock/starfive,jhb100-crg.h   | 57 ++++++++++++++
->  .../dt-bindings/reset/starfive,jhb100-crg.h   | 17 +++++
->  3 files changed, 150 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/starfive,jhb100-per2crg.yaml
+From: Bill Wendling <morbo@google.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+samsung_banks_node_get() constructs each pin bank node name by copying
+bank->name with strscpy() and appending the suffix with strlcat().
 
-Best regards,
-Krzysztof
+In preparation for removing the deprecated strlcat() API[1], format the
+node name in a single snprintf() call, which preserves the existing
+truncation check against sizeof(node_name).
+
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Cc: codemender-patching+linux@google.com
+Assisted-by: LLM
+Signed-off-by: Bill Wendling <morbo@google.com>
+Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
+Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+---
+ drivers/pinctrl/samsung/pinctrl-samsung.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+index 5ecc9ed4c44d..0d639eec689c 100644
+--- a/drivers/pinctrl/samsung/pinctrl-samsung.c
++++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+@@ -1155,8 +1155,7 @@ static void samsung_banks_node_get(struct device *dev, struct samsung_pinctrl_dr
+ 
+ 	bank = d->pin_banks;
+ 	for (i = 0; i < d->nr_banks; ++i, ++bank) {
+-		strscpy(node_name, bank->name, sizeof(node_name));
+-		len = strlcat(node_name, suffix, sizeof(node_name));
++		len = snprintf(node_name, sizeof(node_name), "%s%s", bank->name, suffix);
+ 		if (len >= sizeof(node_name)) {
+ 			dev_err(dev, "Too long pin bank name '%s', ignoring\n",
+ 				bank->name);
+-- 
+2.43.0
 
