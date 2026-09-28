@@ -1,217 +1,156 @@
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+Received: from mail-vs2-f39.google.com (mail-vs2-f39.google.com [74.125.227.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DF04EA37B
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 17:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.71
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790617333; cv=none; b=WsfBET2o0Z4w6gSjLYzpmGCGy2/yYvRgNf8ZozL9SRZzfzbaEQStevgxtqfckgD2uSySTM3jIHsmpZMmKr8OeFDJrwu9v9mGvrgB5+yv9UOWX+1VD40bWQi3AtfxACjZdPjwce2A71yJ155kesJfTQ4zFNB9znDY9himDePYVms=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790617333; c=relaxed/simple;
-	bh=z3qI62qf4mT1gEi8u87wgjjXgOWjBMNHyAjBz41QMeQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tMdddhZw7Wp+YQAWoxkSbFZwpud8vKUxbwoXui4DdOo4ETclIK3QxTIX3HRbbsiSz+P2VMIjd58tLXE73084gyUdm9Yf4G8I0M+1nsQgNBziBOxE8skGpdq2HXGyXc3fX3hUUPCNGd0uC7zUgP1xo+QHZwrVIGgAFZllTbCG97o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QaeWoEEt; arc=none smtp.client-ip=209.85.128.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2C13845D3
+	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 18:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790621096; cv=pass; b=bvPR24QqUT7s2E5TrhwueA2foaqcVQb3owZ/NzS2VnqSfHrqJIbit5oClU9uc9r2FpLVjZYdMjorzDS2cvnPxHjLb7fImxx/NhUT59GbY3wuPYOR2Eyd5Lv0YWRmwDwMvxGmJ52eY5yXeWeJ76kW65xejFLSS5XIfkTCoBpYpxo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790621096; c=relaxed/simple;
+	bh=XbAAAKuCIZsrCvYM1W9GX9bz0Evcj+nhL3IrdoI29kg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AatOYjjjeOafh0cximXIQMxt+pOnLDpiA9WH2/Q0OxKNqCgNyS4ev1wnPhfPSgQIj/jnwHCr3i6tGleb+tX+bEwDoulTe7FyXpjPTHWbCSDXhNmt3TIT5HfLwuVHYsT7IvjouhTF2ab5AxByo1JUHWXbJhl2AoEL/Zfh/yzalek=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YVM2gbMd; arc=pass smtp.client-ip=74.125.227.39
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QaeWoEEt"
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49fff093efcso25655975e9.1
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 10:42:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YVM2gbMd"
+Received: by mail-vs2-f39.google.com with SMTP id 71dfb90a1353d-5cca96ec1feso961734e0c.1
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 11:44:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790621093; cv=none;
+        d=google.com; s=arc-20260327;
+        b=GTGiNyPiwC37axB0JEej2/OXOyB0cq3isMTmQugSH1/OeDCEZ4/vIzAMlZ5zIKg1g8
+         vooPkIbTgxcUfaIJpyHNxaT3unv1rOeHZDWIg+cRzAN5NV/bF2E2g67W5WLLCI2d8uxu
+         EqCe4BzM8cGwwYFfI+uSuA/6rMd7Ngcdr1MtmYRsTIgGnkjRsk3xebaMbDtDMxvpLgff
+         JcJqcXS3cxG3wFVE2HpmlhZyo2g3r8Yynas+7bMpwKUGSSNJvV2JdZSLHFcAF96JmwMy
+         OaTM6ihatbmgVssLMBE4n7zvqwpzmeVtcJLhdAENG4vvcJWyaarYJBq9Wk6n/xe56gMa
+         nRdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=9MUoqVvpT69Aq5ZarehzNgWsu7OePV3YFvLIai8Gmus=;
+        fh=4TbeHZOL5zr9bwT9HGPzqhmwnJAPR/amKrxv+s1d1LE=;
+        b=Ccp60CaFx+EI+M2TwgRpw3tlxBKTN0XTj5Bzzm7KY2ubkiAOD+0fMp/X3A2JKlJG/j
+         sW5FmRGWvD6G/8xqVpi7I3jGYG9PjoF/yUiFJtGA3+/cpivJaB7b8eEpyP2zJEZTzdGK
+         /o8RwKvs1qt27bGT8DyUBX5DY9/1K/XDT2IREFIh3ZdP0+BjdCHUofE/5+pG+CGESoAl
+         cU2CVOkuS4nB2LbPUBowFSJdxFSJgO2914rT7RPvy2s+omMOUuMQmBMstpTjyF+/Cdn4
+         OfrfrNuBzcuuvoiAP7de7xVKbHur8pDriiNAqMZLj1RDh5tgkwwmB/QFdEWoMGdCIw7M
+         0tkw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790617327; x=1791222127; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=GvWsjS4kJdvoXcVGD6geTFWpf+d6azd0mBr60JzC1QM=;
-        b=QaeWoEEteMcnPyDKE1CvBElqp8ump6EO5ObA9YQ1xYHSoiawrxPCMTY40Ik98EqRIp
-         PK0i3HCeGRWCzEoitDjN0PZTc+0cMvR8fO8pIkHwpWdDlHGFXsGPZgO0M3d0zqmfD2B+
-         jqr1sNOO8HRROPzPhmuYRhoUQxOXsfNY3MFXMWdl9bJ2rhkBGcOJyPf1sL7ACYn70rvI
-         1HkQUOD+doKHr0iGxVZwe7/27xbimMdGkyPo41MlgVfGNGcOTKRuuAnjpzcAiBjpLdqX
-         7kOme88ugQ0x5VvcH9xyNnQ3gEbD7FM1oEoni2lnhpQnX7S4KFGM1T4OKe+Id5WrwVow
-         QGkw==
+        d=google.com; s=20251104; t=1790621093; x=1791225893; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=9MUoqVvpT69Aq5ZarehzNgWsu7OePV3YFvLIai8Gmus=;
+        b=YVM2gbMdA2Q47HpupznRjIt+6Fc4f/48cCj/As3vU2RaaIbdRDqLEg75M+w//aMJNi
+         kStmG0+tXsAmiI770/XWOBRjgd5JDhdDfalto1XXpI3Gsa5RxnZEpqp51t1Vkc7YYbtK
+         Oakttb6L8xZAmjifur3UK4jEM61pzNgrmykW5fKPmqmDTvSnthAoswR/kZ3kAVqmhkW9
+         E8E/vKVbRo1TS0kSuurhkO4EWsUMPIpTMuDTY9Ig/VXUl8YWoivMhMiEAgPL4i+Aepi4
+         YKiXoWEjDj2qEhh8yQ44yvJGfR29OaspgiSDk3dloURE/v+pvjphKo8Ohz82xv+fv6V7
+         oa7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790617327; x=1791222127;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=GvWsjS4kJdvoXcVGD6geTFWpf+d6azd0mBr60JzC1QM=;
-        b=DoXUL3grxgZZQfdpt3q5CnRYKtjyqMrk229bUxUEjVbAKxXBklAZ5L0O5EXjwXysH+
-         ODVT3RuneYmpcI5dyLDmdz7k87Ud2NLLGqnr5aAhpo3jbedFyZiGludX9G5lWVwTcTCe
-         pMBhRqxTGrJALaxiMO3JEeJnsjgMfJizj0gfMHpcbcrz6wFQv9+3BZLfkyOWaUjMv4ij
-         w2ctbx8P5R5ipk768NYvWnICb0/2Da4keknpuPiNddF07mPDBUujzwKRWDEFMFW84bQz
-         VJT5orTwd6t4KX9U2fo2V5rwxjx2kMEm9EASDtWwtf2uC1BoZ2wdzhRshTId1h4t5zQy
-         vaEQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxDucBxm54w8XQAfGr40KAOODvLl3dre70rwx4gkHg87VRpMj++lGyLnz+lNgUXTTxW2KG5Y6YcxtV7rrpX4r8=@vger.kernel.org
-X-Gm-Message-State: AFuF++lPT/qiEoRFY33pjPJrtKUr7M5jETL2fz5t+ae+MK1sZzsBfAOV
-	H7UFn6urBESpB9ZMXcVPAFL97Q8NMQdZ4Ts8fZcoxiWQIQO1b7UDIgB57oAGOrm8rXDI4QgkUsP
-	JWYhlomXvY4DMQw==
-X-Received: from wmpr40.prod.google.com ([2002:a05:600c:3228:b0:49f:fde6:649f])
- (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:6287:b0:49d:827:e5b6 with SMTP id 5b1f17b1804b1-49fe7babaadmr223084505e9.20.1790617327143;
- Mon, 28 Sep 2026 10:42:07 -0700 (PDT)
-Date: Mon, 28 Sep 2026 17:41:22 +0000
-In-Reply-To: <20260928174122.3380703-1-smostafa@google.com>
+        d=1e100.net; s=20260707; t=1790621093; x=1791225893;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=9MUoqVvpT69Aq5ZarehzNgWsu7OePV3YFvLIai8Gmus=;
+        b=Q7M1gZIMfpJvbdmfKWihDXVQBwFztsxuJ9islXYkrLKSRlbCVOtWgeiOgp+NAfzTza
+         MLN21qLtlnbw1f/aFRziczH1+GQDfelJuLXRxKRIuyb0B0xTpKPcxhNmgH13tTJEBJfk
+         QUdmKSqhXE+stEIcS91eNc6cbC6cu1c7UxZzRQZckazSTLr9ZhrufBW5pJIqmDzNKXeW
+         a7mPUVgnvr7Oujq0GMODK4NGd8Rhrx180g1RR3HDTS/LXlAJdh9pkib7ujEew4I1117e
+         Q8y+f2mrJLYaQkTBQ9q77iirxKyYtTnE08Y7iKHH67/NcQlDsXhw8wZtUWjQ08UTMsc9
+         mOPw==
+X-Forwarded-Encrypted: i=1; AKwUvBzcUul7/mSFC06akdm3NgbVayIsAuzXXKK5xQdo3Z6+h4jh6dcov0EEPU4RoEjp27lzFEnmO/icutdhPZKhRO0=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK27ciE9H/exWRmRy+t57Dao2nBnTOugtGaRwIamKsCilaDGYUn
+	jRRT4tr8onOiHmwbROD4Xl3qHAP0UGwqvUuJCNZGCFtlpM8l9tHPTyNMivBWjCfS+b4J4PgwGie
+	zBntmZcWsJqe66Cdd/GyOEAaXiqxADZzKeAs2Ye4=
+X-Gm-Gg: AYBFou1ANVGvqL7tGeieEDpsCbNT4q6dZY0TvO9N3BcmtSFA4EKBIm3NyIfLPLSQldj
+	iMTQwRk3+fyaz2FLSO/6nsYD4YIXeuRh+/SmZHIYlFxZgD5t5zCrhj9DHK9x+geeytHbVAKU3eH
+	2TNm5i+5TcFwqp7Hfjuq1BCoFWbtRvSbUJAFFLUGFJAiL7T3Wwc1A/Be95ZviKbnC91Hmmbk/hZ
+	ObpGHWw3wbYAtNh614D8ZEmCmFYHnfn5NbQU8mwwjIud5mQQwBmQy0e0IwiZuOc3wHd/5dT80Yq
+	agboMpN0XRSIKzcqzZ2UgyQB3ZJqFgJiDQT18shF+SNZ1/g/jv5RfhU3VeZ3iy1AaJZCA7cU4pW
+	jtTp0dA==
+X-Received: by 2002:a05:6102:549e:b0:7b3:3b4e:e4 with SMTP id
+ ada2fe7eead31-7b33b4e251emr2377156137.2.1790621092753; Mon, 28 Sep 2026
+ 11:44:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260928174122.3380703-1-smostafa@google.com>
-X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260928174122.3380703-16-smostafa@google.com>
-Subject: [RFC PATCH 15/15] arm64: mm: Set stack size from the kernel command line
-From: Mostafa Saleh <smostafa@google.com>
-To: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, linux-rt-devel@lists.linux.dev
-Cc: corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org, 
-	catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
-	akpm@linux-foundation.org, urezki@gmail.com, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, kprateek.nayak@amd.com, kees@kernel.org, 
-	david@kernel.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, gustavoars@kernel.org, 
-	bigeasy@linutronix.de, clrkwllms@kernel.org, 
-	Mostafa Saleh <smostafa@google.com>
+MIME-Version: 1.0
+References: <20260925204423.80661-1-morbo@google.com> <605221ed-a1b5-4179-be8d-b206c79487d7@intel.com>
+In-Reply-To: <605221ed-a1b5-4179-be8d-b206c79487d7@intel.com>
+From: Bill Wendling <morbo@google.com>
+Date: Mon, 28 Sep 2026 11:44:36 -0700
+X-Gm-Features: AclHuK9vzOTIpe5NYpVAFSvvrNTDuflNtvpsUCuDxpjVBNqxintxAyJXqYTQDl8
+Message-ID: <CAGG=3QWoa0sK1P2VEAW+76EkFsjzXEZ9ucJg4iiOv29i8Sgzxw@mail.gmail.com>
+Subject: Re: [PATCH] gpu/buddy: add __counted_by_ptr attribute to roots
+To: Matthew Auld <matthew.auld@intel.com>
+Cc: Arun Pravin <arunpravin.paneerselvam@amd.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	codemender-patching+linux@google.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Select CONFIG_ARCH_HAS_VARIABLE_STACK_SIZE for arm64 and override
-arch_vm_stack_pages() to a value set from the command line, this
-value have the following properties:
-- Aligned to page size (doesn't need to be a power of 2), so it can
-  be 12kB for example
-- Min value is chosen to be 8kB
-- Max value will be the default stack size on arm64 which is used to
-  allocate the VA range for the kernel stack.
+On Mon, Sep 28, 2026 at 5:20=E2=80=AFAM Matthew Auld <matthew.auld@intel.co=
+m> wrote:
+>
+> On 25/09/2026 21:44, Bill Wendling wrote:
+> > In 'struct gpu_buddy', the 'roots' field points to an array of pointers
+> > to 'struct gpu_buddy_block'. The number of allocated roots is tracked
+> > by the 'n_roots' field.
+> >
+> > Annotate the 'roots' pointer with the '__counted_by_ptr' attribute
+> > referencing 'n_roots' to enable compile-time and runtime bounds-checkin=
+g
+> > via KASAN and '__builtin_dynamic_object_size'.
+> >
+> > In 'gpu_buddy_init', 'mm->n_roots' is initialized first, and 'mm->roots=
+' is
+> > subsequently allocated with 'kmalloc_objs(struct gpu_buddy_block *,
+> > mm->n_roots)'.
+> >
+> > Since the bounds associated with 'roots' ('n_roots') are fully set prio=
+r
+> > to any array allocation or access and remain invariant, this annotation
+> > will not cause runtime panics or false-positive bounds checks.
+> >
+> > Cc: codemender-patching+linux@google.com
+> > Assisted-by: LLM
+> > Signed-off-by: Bill Wendling <morbo@google.com>
+>
+> Reviewed-by: Matthew Auld <matthew.auld@intel.com>
+>
+> Would it make sense to also do this for *_scoreboard and free_tree, if
+> we add a new field n_orders?
+>
+Sure! There's already a 'max_order'. I assume that 'n_orders' would be
+more dynamic?
 
-Signed-off-by: Mostafa Saleh <smostafa@google.com>
----
- .../admin-guide/kernel-parameters.txt         |  7 ++++++
- arch/arm64/Kconfig                            |  1 +
- arch/arm64/include/asm/memory.h               | 12 ++++++++++
- arch/arm64/kernel/entry.S                     | 10 +++++---
- arch/arm64/kernel/setup.c                     | 24 +++++++++++++++++++
- 5 files changed, 51 insertions(+), 3 deletions(-)
+-bw
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 33cd30996e47..e6ef22f01e01 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2920,6 +2920,13 @@ Kernel parameters
- 
- 	keepinitrd	[HW,ARM] See retain_initrd.
- 
-+	kernel_stack_pages=
-+			[ARM64,EARLY]
-+			Format: <integer>
-+			Number of pages mapped for each task kernel stack.
-+			The virtual area stays THREAD_SIZE and only its top
-+			pages are mapped.
-+
- 	kernelcore=	[KNL,X86,PPC,EARLY]
- 			Format: nn[KMGTPE] | nn% | "mirror"
- 			This parameter specifies the amount of memory usable by
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 020fcaf36b1b..5e09ae904e34 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -58,6 +58,7 @@ config ARM64
- 	select ARCH_HAS_SYSCALL_WRAPPER
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_ZONE_DMA_SET if EXPERT
-+	select ARCH_HAS_VARIABLE_STACK_SIZE
- 	select ARCH_HAVE_ELF_PROT
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_HAVE_TRACE_MMIO_ACCESS
-diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-index 4545d9b39bd5..1d300b16032d 100644
---- a/arch/arm64/include/asm/memory.h
-+++ b/arch/arm64/include/asm/memory.h
-@@ -113,6 +113,13 @@
- #define DIRECT_MAP_PHYSMEM_END	__pa(PAGE_END - 1)
- 
- #define MIN_THREAD_SHIFT	(14 + KASAN_THREAD_SHIFT)
-+#define MIN_KERNEL_STACK_SHIFT	(13 + KASAN_THREAD_SHIFT)
-+
-+#if (MIN_KERNEL_STACK_SHIFT < PAGE_SHIFT)
-+#define MIN_KERNEL_STACK_SIZE	PAGE_SIZE
-+#else
-+#define MIN_KERNEL_STACK_SIZE	(UL(1) << MIN_KERNEL_STACK_SHIFT)
-+#endif
- 
- /*
-  * VMAP'd stacks are allocated at page granularity, so we must ensure that such
-@@ -130,6 +137,11 @@
- 
- #define THREAD_SIZE		(UL(1) << THREAD_SHIFT)
- 
-+#ifndef __ASSEMBLY__
-+extern unsigned long kernel_stack_pages;
-+#define arch_vm_stack_pages()	(kernel_stack_pages)
-+#endif
-+
- #define THREAD_ALIGN		THREAD_SIZE
- 
- #define IRQ_STACK_SIZE		THREAD_SIZE
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index ea733b673970..39e68aace0a6 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -76,9 +76,13 @@
- 	msr	spsel, #0
- 	mov	x1, sp
- 	msr	spsel, #1
--	sub	x1, x1, x0
--	cmp	x1, #THREAD_SIZE
--	b.lo	.Lstack_ok\@
-+
-+	add	x0, x0, #THREAD_SIZE
-+	sub	x1, x0, x1
-+	adr_l	x0, kernel_stack_pages
-+	ldr	x0, [x0]
-+	cmp	x1, x0, lsl #PAGE_SHIFT
-+	b.ls	.Lstack_ok\@
- 
- 	/* Check whether we are on the IRQ, SDEI or EFI stacks. */
- 	stp	x2, x30, [sp, #-16]!
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 29c6100f0c50..34559048dcca 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -278,6 +278,30 @@ u64 cpu_logical_map(unsigned int cpu)
- 	return __cpu_logical_map[cpu];
- }
- 
-+unsigned long kernel_stack_pages __ro_after_init = THREAD_SIZE / PAGE_SIZE;
-+
-+static int __init setup_kernel_stack_pages(char *str)
-+{
-+	unsigned long min = MIN_KERNEL_STACK_SIZE / PAGE_SIZE;
-+	unsigned long max = THREAD_SIZE / PAGE_SIZE;
-+	unsigned long val;
-+
-+	if (!str)
-+		return -EINVAL;
-+
-+	if (kstrtoul(str, 10, &val) || val < min || val > max) {
-+		pr_err("Invalid kernel_stack_pages=%s, should be between %lu and %lu\n",
-+		       str, min, max);
-+		return 0;
-+	}
-+
-+	kernel_stack_pages = val;
-+	pr_info("Kernel stack size set to %lu KiB\n", (val * PAGE_SIZE) / SZ_1K);
-+
-+	return 0;
-+}
-+early_param("kernel_stack_pages", setup_kernel_stack_pages);
-+
- void __init __no_sanitize_address setup_arch(char **cmdline_p)
- {
- 	setup_initial_init_mm(_text, _etext, _edata, _end);
--- 
-2.56.0.rc1.315.gc6ed9934b7-goog
-
+> > ---
+> >   include/linux/gpu_buddy.h | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/gpu_buddy.h b/include/linux/gpu_buddy.h
+> > index 2c36124bb696..d7249e500ab6 100644
+> > --- a/include/linux/gpu_buddy.h
+> > +++ b/include/linux/gpu_buddy.h
+> > @@ -172,7 +172,7 @@ struct gpu_buddy {
+> >        * a power of two, with each root being the largest power-of-two
+> >        * that fits in the remaining space.
+> >        */
+> > -     struct gpu_buddy_block **roots;
+> > +     struct gpu_buddy_block **roots __counted_by_ptr(n_roots);
+> >       /*
+> >        * Per-order free block scoreboard: free_scoreboard[order] holds =
+the
+> >        * number of blocks of that order currently in the free state.
+>
