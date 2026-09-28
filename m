@@ -1,63 +1,68 @@
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF824D1780
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 17:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0E54E50AD
+	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 17:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790617311; cv=none; b=hjam8N/kXx+bcgHz1oQBo2uU/k2Z2eE0bXjDvZt5C1Pzja41Rrl5ffaqK1wi4nHWezcjD5y3XRKNO2oMCKv+TPzpKtKLDR9gPaTCPK10Rq38zIlScZXBa5mi4RelarbRAELgIVG9OEWJfJkXMkY15InoCtylliOMFfXP3tbAgRI=
+	t=1790617313; cv=none; b=cj5LiqvlXuFKHAIxr0RkdT5Y+s7Ze+Q//nEgEDLMXrosTAbp6uscO1Lr2QxUN1ldXaOgeoFOnCLaWl9+OTfD/mEY5Eth8UPwKqvvvTA9qvam8xAk77Qya+QZT2CPU/WunV76YXotaBiy0sG0M8wM7esLIw0pyIWKntWn5CCsRWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790617311; c=relaxed/simple;
-	bh=ig53hfXLZhnnOYcVWzo/9m+ADZMcLmZw2ofGmkQ9Cy0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=cQ4FJZ/YRbRXaoWlT7yW3HLdFSsCa+9TkPbgHarDxvnSteTkf83/07milLerEvb/6BEUvbmdMpgs6UizbACUiL/5qcgph1uG9Pgp0ZD3ML7l4wEVQtpoffFNECsLKvtM5jx8n8peJyKkPHHaPg5PyMPZMpDJC9yQCCkxAU6DAN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d6IKXXM5; arc=none smtp.client-ip=209.85.128.69
+	s=arc-20240116; t=1790617313; c=relaxed/simple;
+	bh=oBxdLKzu1tEOdRfcRuf4qFtiL4lcXsW2YMerrRbbXZQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=aApZ+xDcDQfBfPFmaHY6C2RswFC5NdMUVIkGfdrXUxqTYZsTgzyboUZlP72kaWxoxyINKuX93hwQSU2LWi0fgvSwQRwQAmJP7XY6KNExq52xX2BD3w7JrDxQdztHpD734hQQjTUb7HjnmMUTAp+4O/riiWbfL3yibGAXlM/5mxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K7iUmNHF; arc=none smtp.client-ip=209.85.221.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d6IKXXM5"
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a006552b00so7629655e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 10:41:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K7iUmNHF"
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-4887b0303b0so1873951f8f.3
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 10:41:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790617307; x=1791222107; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=i6dOIeR3pXAhPYZMt7PFHzXVozdl2RGhyvaCgErXxW0=;
-        b=d6IKXXM581sOgkZZ2UajNIas2hDTefX+aDT5fmpv+1kzcBdZ1RhGik5eJq4kwwA/er
-         MioHuUMUf9jy0kb8Yd6UdIi9OD49zxysNNeAwe4iRKKZekUwTjj8v3WGJCq/dlXrVs2N
-         WekWAnJ0VqQtIUOuaGsM9U23NLvkGYpQHaLNhf7C76gEAAB1Ja5XhMUynYNZ+4OH2Tta
-         /sqVyi9qsBy/L8Gq8Wswi/kpbFUd6M006LoTyD2TRP1p2iAxsISo72YXO3l9bmfCCHHI
-         VO3F4QDKIqYJdK2LKFUp6M2Vlr4EiuWZ+5zcYUF0lN8IpbctuYT7HDJ6YpUGYcVvEimo
-         GQjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790617307; x=1791222107;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1790617308; x=1791222108; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=i6dOIeR3pXAhPYZMt7PFHzXVozdl2RGhyvaCgErXxW0=;
-        b=JDdIe0TyIM9zhF7JLaQ0UoG9JJvyTAwJLLrNzfZaQMn3K5izsRe3Ftc9Wst8Mz92Lt
-         y49YvpfxDW8WY2qrmzBmpmjG2Vy4ooBqICvRuPh6kzH1G7+hgnaq41ba5+rTb4UzjmLX
-         uQIv9h4tRk9reXb/3j5j7tS76bc4yi/qqSnjmXZHOrADo89DGgA10iLgi8jW+mWxf5oz
-         gnq7m7jojxpanD4/g1iLWliMWw1wYAnq4bIhnqmVaY6NlfeqOu15M/zW7ckacQyQKSzZ
-         Mmra+mxX76rtIg4yftTRF1KLgVY17JBwakMe5z6Y8Tho11J2bbTwj6Cw8vTMZlyNTApI
-         kbJw==
-X-Forwarded-Encrypted: i=1; AKwUvByFI5hMXRRjiJ2i+x3glwRcW2FsxhFan46rEI/hxHoN8jPnAbr+mYDit2lqCD0R2fZIo8pM4/ZQ+9TGVyqpMvE=@vger.kernel.org
-X-Gm-Message-State: AFuF++lvZN+udKsuGsh0f6OhIud4t1VRG7F4zSmNncAL4aa24zJCb97v
-	fMXHWVVkQIN0YQ/R3iiRSoj9j1LhvOTQld8ILoxId4gNzIiw/kzJXYXjwCWslf9B4X18mbi2YRO
-	+jWd5AAuJEywQUA==
-X-Received: from wmdv19.prod.google.com ([2002:a05:600c:12d3:b0:49f:f099:7fc3])
+        bh=/R3jIsuFxLI+ycNCkUkycnkKQylo65Jf0ypcBShLiJ0=;
+        b=K7iUmNHFkvdPI6eeZM38hawvFWytRuLT41xJ6X7TBNoi36AvY4jOHai0Z4KbPAs3Dg
+         7roEu+nfr8sL/Gcv5LDCwSU1X2RO5Jo3rlZ5KZZM5kxWc54puzp4yx+wQXHDDJHjXkHC
+         BJDf4rugv2dWNDx24YC3NmrZRtxqLDzpNDGZu+T8k340d1JDALDHyMdAJtRReoqNSNkE
+         Cr0fBH1coDzPKGA6vb5jtz2IFEW4jCfFMWUjLBN+Z86EtdC1orJZqweVM+UoqU95uO5g
+         Zb6NGP7VqdXKPGTic5NrSzOYT1/KeH/ul5kvdbcWQFBQIk1ybk8BisiKzAnP2LMaVAq6
+         5xDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790617308; x=1791222108;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=/R3jIsuFxLI+ycNCkUkycnkKQylo65Jf0ypcBShLiJ0=;
+        b=gUPqiYaqF49Qgv3aJbmoGolB+cR/Xf474BBlbGppgxgrioi1KtF9cLdLNfpzIPOpG7
+         4Bci4IjI4M4HUlKPcpCRjCWk3W9DdzohqnDfcRBW3O0O8IvXlCyWlhdJJoDR/p9CUJ6a
+         WNQPPEkYvjb9v2w/HNkwQXtjDnVxb0RvCAvwq5kAu9WNONPRk/hOk1ubnZVovuQM/q4f
+         MGSaUdngLss0xmS+xz9v2QKyfUlBU7WQR/6PnOPDFH1Vdlqdx6Gwj0XiQOlwM5xtdkL/
+         clUB6Gu7m3tCmTLROo8rUP/09b9wP3CuoLpOypMftQAiqWucEYGU+pm4c3sm0S3vrlct
+         Tp6Q==
+X-Forwarded-Encrypted: i=1; AKwUvByjUXh/OgUcRsccSaepP9eR7evShQrEPjz4j+TcDonGltrsD2gxZHzl/GRKySmbroxY/EfsM8jccpI/bQSsX8Y=@vger.kernel.org
+X-Gm-Message-State: AFuF++n06LfnoF+Vb8yICiiez8GigDf2jMUuaEoTEMvAkvLBftUkJBg6
+	IMGL2ku7oJ/YQxJSE4Uqv4gv8tuVi93OVrhxRyxSaE4dgo4GKsRPpNtZflIdEfT3LMQ2IrK0yoq
+	/X3uEbo+QPioLzw==
+X-Received: from wmoy19.prod.google.com ([2002:a05:600c:17d3:b0:4a0:23b:31a7])
  (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:c494:b0:49c:fa21:1c81 with SMTP id 5b1f17b1804b1-49fe7bab979mr230718305e9.22.1790617307210;
- Mon, 28 Sep 2026 10:41:47 -0700 (PDT)
-Date: Mon, 28 Sep 2026 17:41:07 +0000
+ 2002:a05:600c:3b1b:b0:49c:de80:b833 with SMTP id 5b1f17b1804b1-49fe66c8a1emr263025785e9.2.1790617308191;
+ Mon, 28 Sep 2026 10:41:48 -0700 (PDT)
+Date: Mon, 28 Sep 2026 17:41:08 +0000
+In-Reply-To: <20260928174122.3380703-1-smostafa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20260928174122.3380703-1-smostafa@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260928174122.3380703-1-smostafa@google.com>
-Subject: [RFC PATCH 00/15] arm64: Set kernel stack size from cmdline
+Message-ID: <20260928174122.3380703-2-smostafa@google.com>
+Subject: [RFC PATCH 01/15] fork: Remove assumption that vm_area->nr_pages
+ equals to THREAD_SIZE
 From: Mostafa Saleh <smostafa@google.com>
 To: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, 
@@ -71,135 +76,64 @@ Cc: corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org,
 	david@kernel.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, 
 	rppt@kernel.org, surenb@google.com, mhocko@suse.com, gustavoars@kernel.org, 
 	bigeasy@linutronix.de, clrkwllms@kernel.org, 
-	Mostafa Saleh <smostafa@google.com>
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	David Stevens <stevensd@google.com>, Mostafa Saleh <smostafa@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Summary
-=======
-This patch series adds the ability to configure the kernel stack size
-for arm64 from the kernel command line.
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
 
-On some systems (specifically, Android), this provides a mechanism to
-reduce the kernel memory consumption, as the default kernel stack size
-of 16kB (with 4kB pages) can result in ~100MB of allocated memory,
-despite the fact that most threads do not come close to exhausting
-their allocation [1].
+In many places number of pages in the stack is determined via
+(THREAD_SIZE / PAGE_SIZE). There is also a BUG_ON() that ensures that
+(THREAD_SIZE / PAGE_SIZE) is indeed equals to vm_area->nr_pages.
 
-There have been multiple alternative attempts to improve this
-situation, including for x86 and cloud workloads. However, these
-have typically focussed on more dynamic behaviours such as allocating
-kernel stack pages lazily (based on faults) [2] or reclaiming unused
-stack pages from blocked tasks [1], whereas this series focusses on
-making the kernel stack size configurable without changing the way in
-which it is allocated.
-It also permits a 12kB stack size, which is currently not supported
-by arm64's stack overflow checking logic.
+In the next patches the kernel stack size will not be a compile
+time constant and would be less than or equal THREAD_SIZE based
+on a command line arg. Therefore, use vm_area->nr_pages to
+determine the actual number of pages allocated in stack.
 
-This series re-uses the first part of the dynamic stack patches which
-makes it possible to partially back the VA space of the stack
-(THREAD_SIZE) with memory, but never attempts to dynamically grow the
-stack.
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+[Rebased, also skipped intermediary helper variable nr_pages]
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: David Stevens <stevensd@google.com>
+[Update commit message]
+Signed-off-by: Mostafa Saleh <smostafa@google.com>
+---
+ kernel/fork.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-The size of the stack (<= THREAD_SIZE) is determined from the kernel
-command line and is not further configurable at runtime, all threads
-on the system (except the init_task, see below) will use the size set
-from the command line.
-
-Patches
-=======
-The patches have dependency on the ongoing arm re-work[3] to move the
-overflow stack to sp_el1 allowing the early kernel exception to use it
-without clobbering any registers.
-
-- Patches 01-09: have no functional change, they abstract the code
-  dealing with the stack to avoid hardcoding the stack size
-- Patches 10-13: Introduce the new ARCH_HAS_VARIABLE_STACK_SIZE and
-  make the kernel deal with stack sizes set in the run time.
-- Patches 14-15: arm64 selecting ARCH_HAS_VARIABLE_STACK_SIZE and
-  setting the kernel stack size from the command line.
-
-KASAN
-======
-The KASAN stack helpers keep unpoisoning the whole THREAD_SIZE area.
-As they only write shadow memory which is populated for the whole vmap
-area.
-
-init_task
-=========
-init_task is the only kernel thread that has a full stack allocation
-as it is allocated statically. However, the additional stack pages are
-not usable because the overflow check on exception entry will continue
-to check against the configured stack size.
-
-Future work
-===========
-There are multiple paths that can build on this
-- Per task stack size (either via an in-kernel API for kthreads or
-  potentially a prctl() for userspace to configure)
-- It is still possible to build on top of this on the fault path to
-  add dynamic stacks if the challenges raised in [2] can be solved.
-
-Will Deacon will host a discussion at LPC next week [4]
-
-Testing
-=======
-I tested on Lenovo Mini-x gen 10 (Qualcomm X1 CPU).
-
-With configs KMEMLEAK, DEBUG_STACK_USAGE, SCHED_STACK_END_CHECK.
-
-1) 4kB kernel - 16kB stack (default)
-2) 4kB kernel - 8kB stack
-3) 4kB kernel - 12kB stack
-4) 64kB kernel - 64kB stack
-
-With running VMs with KVM, stress-ng and LKDTM.
-
-16kB tests done on Qemu.
-
-[1] https://lore.kernel.org/all/20260827232948.2520558-1-stevensd@google.com/
-[2] https://lore.kernel.org/all/20260424191456.2679717-1-stevensd@google.com/
-[3] https://lore.kernel.org/all/20260918161407.2300-1-will@kernel.org/
-[4] https://lpc.events/event/20/contributions/2419/
-
-David Stevens (3):
-  fork: Don't assume fully populated stack during reuse
-  fork: Move vm_stack to the beginning of the stack
-  fork: Move vmap stack freeing to work queue
-
-Mostafa Saleh (9):
-  sched/task_stack: Add helpers for stack high/low
-  exit: Don't assume the kernel stack size
-  usercopy: Don't assume the kernel stack size
-  mm: kmemleak: Don't assume the kernel stack size
-  arm64: Don't assume the kernel stack size
-  sched/task_stack: Introduce ARCH_HAS_VARIABLE_STACK_SIZE
-  fork: Implement partial VMAP stack allocation
-  arm64: mm: Relax kernel stack alignment
-  arm64: mm: Set stack size from the kernel command line
-
-Pasha Tatashin (3):
-  fork: Remove assumption that vm_area->nr_pages equals to THREAD_SIZE
-  fork: Separate vmap stack allocation and free calls
-  mm/vmalloc: Add a get_vm_area_node()
-
- .../admin-guide/kernel-parameters.txt         |   7 +
- arch/Kconfig                                  |  10 ++
- arch/arm64/Kconfig                            |   1 +
- arch/arm64/include/asm/memory.h               |  19 ++-
- arch/arm64/include/asm/stacktrace.h           |   4 +-
- arch/arm64/kernel/entry.S                     |  91 ++++++++++--
- arch/arm64/kernel/setup.c                     |  24 ++++
- arch/arm64/kernel/traps.c                     |   5 +-
- include/linux/sched/task_stack.h              |  61 +++++++-
- include/linux/thread_info.h                   |   8 ++
- include/linux/vmalloc.h                       |   3 +
- kernel/exit.c                                 |   2 +-
- kernel/fork.c                                 | 134 +++++++++++++++---
- mm/kmemleak.c                                 |   2 +-
- mm/usercopy.c                                 |   4 +-
- mm/vmalloc.c                                  |  24 ++++
- 16 files changed, 348 insertions(+), 51 deletions(-)
-
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 5ef413368912..2065693e762c 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -315,9 +315,7 @@ static int memcg_charge_kernel_stack(struct vm_struct *vm_area)
+ 	int ret;
+ 	int nr_charged = 0;
+ 
+-	BUG_ON(vm_area->nr_pages != THREAD_SIZE / PAGE_SIZE);
+-
+-	for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++) {
++	for (i = 0; i < vm_area->nr_pages; i++) {
+ 		ret = memcg_kmem_charge_page(vm_area->pages[i], GFP_KERNEL, 0);
+ 		if (ret)
+ 			goto err;
+@@ -488,7 +486,7 @@ static void account_kernel_stack(struct task_struct *tsk, int account)
+ 		struct vm_struct *vm_area = task_stack_vm_area(tsk);
+ 		int i;
+ 
+-		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++)
++		for (i = 0; i < vm_area->nr_pages; i++)
+ 			mod_lruvec_page_state(vm_area->pages[i], NR_KERNEL_STACK_KB,
+ 					      account * (PAGE_SIZE / 1024));
+ 	} else {
+@@ -509,7 +507,7 @@ void exit_task_stack_account(struct task_struct *tsk)
+ 		int i;
+ 
+ 		vm_area = task_stack_vm_area(tsk);
+-		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++)
++		for (i = 0; i < vm_area->nr_pages; i++)
+ 			memcg_kmem_uncharge_page(vm_area->pages[i], 0);
+ 	}
+ }
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
