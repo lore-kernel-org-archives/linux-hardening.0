@@ -1,60 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFA5348C76;
-	Mon, 28 Sep 2026 08:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58496218592;
+	Mon, 28 Sep 2026 08:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790583437; cv=none; b=S3Pr13oolKzuaU//XjKD7nGaKJIbsUkGXuUbYzF0fgPDVzOvHy9Uhck0KbkSaixZx7Kk6m9xAEhGcviS2wSVzZyqGp5li9hcw5zmb6KjLoJkT/5lj/W8EEnnC99mr2PL6WH/ivr6mIN6Mxfl1vvob2eTJaaF6seion8Dh7O+TkA=
+	t=1790584194; cv=none; b=d3d5605c4GxN/ooe/ufWFpowVm80vPc6QxDnpgvOLdXs0PPJRYMEXUYI3g532axrXcIFJ89fcwhYoIERZvojhBjD4F7GtjVD/CVTe8I5xO+iqrKVm4kIa5Ba62jT2+Z7tUY69N4qLYat3o1svuGDlpSO0BWRiBdokAVs/tqzgEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790583437; c=relaxed/simple;
-	bh=RMwnknzyporCh2N44aQGjZo/9Mdx15w0HVQJ5oSd1wI=;
+	s=arc-20240116; t=1790584194; c=relaxed/simple;
+	bh=lPgY0OX2361XcCtAX56rWcvG1KCkVjI4PrpEC+nDM3w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NGKknk82HZ3Pm5FYtuB02mletw1yS6qqSaEP2lJw7Id5eB/p3Bky83rYpCBRaogwPNSZRqJIdQxrx6xepnI19emw2yqk7G0pCU5X1exnSS2FvOvMqDY0BUAPxK2YemFhaKSNwbVp83hbcNgCElJ8Exf3b40sjyTgvOcpgPNvq8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YdEbYCu+; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7m3bCTOPa/urznPz0GRTJVEE5owYYgK9nnJR+WkghwWDFR1Ya8g75b6jAJHEEHL40a9pfzZ/1lYAMyadoW+HG16tnl7P6PpPjENS+aSZUROgEzkAj7WPlGfrfL8nC0++JkMU3okRW5WRoWfH/wIPKHMR3e98HsO3j/rKttGKkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fsVvxdTE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IGyhlSa+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YdEbYCu+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790583437; x=1822119437;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=RMwnknzyporCh2N44aQGjZo/9Mdx15w0HVQJ5oSd1wI=;
-  b=YdEbYCu+frE/NukK8CVwYgxPJnEvJhY9MtZb50A5vofQOGv/Km7LNkP/
-   +vcJWZRZg+SU1XJfMa7c+ZJJ61emMi5G3DIlRjdb6MFZD6pdcYCWRuUBz
-   2kBkFjWXPaPF+/U1K1SX7D2BXPnEguqeybsmeHfEJz2xfrtz1NfkLZMpd
-   pPJwCcxPJQrMwDyYR/D3gC+1K8J2Ck1HSZikQRi/KiDuPuCYJZZo+8ON/
-   lPWTINPCXCcRu0IIECWRFlpJvy7r+bFP83I+/lT7jPhFyNZ7wbVlrxzii
-   3VNCwD9npK6YnXr4yUbHRfKXqqNwwfZgssBw4FjDbZeXAKU5K3PeT7UAB
-   A==;
-X-CSE-ConnectionGUID: HL0LTN1uR02jRDZrzHczXQ==
-X-CSE-MsgGUID: T/GYgMgsT9uYyGRLIJzcdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90319296"
-X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="90319296"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 01:17:16 -0700
-X-CSE-ConnectionGUID: hF/y2tFsTZmnScPlRpoEtQ==
-X-CSE-MsgGUID: ZmQYASSmQLin5E05x0bwMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="302934554"
-Received: from conormcd-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.244.42])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 01:17:13 -0700
-Date: Mon, 28 Sep 2026 11:17:11 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Muhammad Bilal <meatuni001@gmail.com>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] lib/string_helpers: add ESCAPE_BACKSLASH flag to
- string_escape_mem()
-Message-ID: <aroih4_AQYlsNctC@ashevche-desk.local>
-References: <20260926205708.384308-1-meatuni001@gmail.com>
- <CAHp75Vdj8qVY-hCoCxxd1Pg2JaaDjc+QgAK-G=w+Cb=FTYYJEQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fsVvxdTE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IGyhlSa+"
+Date: Mon, 28 Sep 2026 10:29:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1790584191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lPgY0OX2361XcCtAX56rWcvG1KCkVjI4PrpEC+nDM3w=;
+	b=fsVvxdTEB7rvAJoJAplF2ONYu+C4T1ZUVXgqcqQtPwk1tQJJiaFHJKogITDOpf5YWDeLr3
+	xQudJRHRGuV36Uq3ALyluIOGeNy49aB7hg1Zif9Fy/3yDjx+mNns5uqXQnXBZrMZs6Wvsw
+	GHIzHMPCvEeAlPReNMVDFRkxQBWre7tBI7EQ/IV9I1D7R7AswqCSoSdBQqQr/kGrdtZAuE
+	26ejtT7tJ9GHecg9hEcPV9MRgo0CNQEHRe2tkOdqZ7/lC7v9zMsS5Gyhl4tnHnKq2hTv2d
+	CC5azOpBcpza3VQal2ABjCkXwyWGp3BOg7j3MW1A142DePwrwa54TL7S7gzMdw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1790584191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lPgY0OX2361XcCtAX56rWcvG1KCkVjI4PrpEC+nDM3w=;
+	b=IGyhlSa+Ce/L0Up8OJsQFD06YDqiqM2IsqUVvRsKygzDSHOPKFA2QaNjSmWq5RO0HcNsz6
+	6bmifjpyKghPd+BA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Bill Wendling <morbo@google.com>
+Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <david@davidgow.net>, Rae Moar <raemoar63@gmail.com>, 
+	Ryota Sakamoto <sakamo.ryota@gmail.com>, Kuan-Wei Chiu <visitorckw@gmail.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Dmitry Antipov <dmantipov@yandex.ru>, 
+	Petr Mladek <pmladek@suse.com>, Kir Chou <note351@hotmail.com>, 
+	codemender-patching+linux@google.com, linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com
+Subject: Re: [PATCH 2/2] lib/tests: Add KUnit test for struct stack_trace
+ __counted_by_ptr attribute
+Message-ID: <20260928101929-4f53f80d-7194-434e-bbd6-ee6f5838ac4f@linutronix.de>
+References: <20260823123549.1120133-1-morbo@google.com>
+ <20260823123549.1120133-3-morbo@google.com>
+ <20260824083538-d0eff358-e1d4-4af6-9e61-d4d816783266@linutronix.de>
+ <CAGG=3QXojhEsqvk-L5vT3w37z_VO+p1=8vrJCJ44sTz_V-YRGg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,43 +65,55 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vdj8qVY-hCoCxxd1Pg2JaaDjc+QgAK-G=w+Cb=FTYYJEQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <CAGG=3QXojhEsqvk-L5vT3w37z_VO+p1=8vrJCJ44sTz_V-YRGg@mail.gmail.com>
 
-On Mon, Sep 28, 2026 at 11:11:53AM +0300, Andy Shevchenko wrote:
-> On Sat, Sep 26, 2026 at 11:57 PM Muhammad Bilal <meatuni001@gmail.com> wrote:
+Hi Bill,
+
+sorry for the long delay.
+
+On Thu, Sep 10, 2026 at 12:48:51PM -0700, Bill Wendling wrote:
+> On Sun, Aug 23, 2026 at 11:41 PM Thomas Weißschuh
+> <thomas.weissschuh@linutronix.de> wrote:
 > >
-> > ESCAPE_SPECIAL escapes '\\', '\a', '\e' and '"' as one group. A caller
-> > that wants '\\' escaped but needs '"' left untouched, because it has
-> > its own handling for quotes or because quoting is not meaningful in
-> > its output, currently has no way to pull just the backslash case out
-> > of that set.
+> > On Sun, Aug 23, 2026 at 12:35:33PM +0000, Bill Wendling wrote:
+> > > Add a custom KUnit test suite 'stacktrace_counted_by' to verify that the
+> > > __counted_by_ptr annotation on the 'entries' field of 'struct stack_trace'
+> > > behaves correctly.
 > >
-> > Add ESCAPE_BACKSLASH, which escapes only '\\'. It can be combined with
-> > ESCAPE_SPACE, or used on its own, without pulling in ESCAPE_SPECIAL's
-> > quote and control-character handling.
-> 
-> But why? I believe it can be done in the current implementation using
-> the last argument @only (id est use the list of the characters you
-> want to escape).
-> 
-> > This only adds a new opt-in flag; no existing caller changes
-> > behavior.
-> 
-> No test cases --> automatically NAK.
+> > The implementation of __counted_by_ptr should be tested by a dedicated unittest
+> > for that feature. And I am fairly sure that already exists. It should not be
+> > tested in random subsystems.
+> >
+> I'm looking at `tools/unittests` and...what in the world is it
+> supposed to be testing?
 
-...
+This seems to be testing the documentation generator.
+An assumption which is corroborated by 'git log'.
 
-> Also you missed printk() update and respective documentation.
+> It looks like it's testing absolutely nothing of substance.
 
-And on top of that, I have neither cover letter, nor patch 2/2 in my mailbox.
-If you think that it's not important to me as lib/string* reviewer/contributor,
-you are mistaken (yes, I can retrieve from lore, but this doesn't change
-the fact).
+Debatable...
 
--- 
-With Best Regards,
-Andy Shevchenko
+> I assume you want there to be a test that runs and
+> produces a stack trace triggered by an invalid access, right?
+
+Correct.
+
+> I'm unable to find any tests in `tools/unittests` that do anything like
+> that...maybe I'm missing something?
+
+Look for KUnit tests instead. For example lib/tests/fortify_kunit.c.
+Or non-KUnit tests in lib/test_fortify/.
+Or LKDTM tests in drivers/misc/lkdtm/.
+
+Also see Kees' recent message about testing traps with KUnit [0].
+Apparently it is not so easy to test this from KUnit. But your proposed
+stack_trace-specific test would have run into the same issues.
 
 
+[0] https://lore.kernel.org/lkml/202609041620.81446C2A@keescook/
+
+(...)
+
+
+Thomas
