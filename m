@@ -1,113 +1,105 @@
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963A017A305;
-	Mon, 28 Sep 2026 01:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31FE7083C
+	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 04:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790560747; cv=none; b=eHsVSGnDq/n6dsAlFYFWeg+V9DE/IODlb7CdP6CSB911ab6ZNOu/AZxu4A94NBv+o9ITJhlBI7htbdCaSm1j7nk5prrT3Sf8UAXni6F3OaS6hlQZRaeAtWbtJsnkRn/8Z6j2vXUd8VlpeZQV7TxrReKVtVMRAOiuz+euWNgSTzU=
+	t=1790569861; cv=none; b=pPID2j28SLgiDA7gxrgGMcrUoENx53wE5XKk5665khA2KwKlZfdSKjJs5Nkt0rFIp9TBfO5/jFVq9fWXJ2/jmt6W98g4BQozGMxFcTDUQsUQ99lE6stM0LnTncqfA7wzmcT2i0njZzkHtCWESoXMeoQDD2VKi65l8ROtW64RseY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790560747; c=relaxed/simple;
-	bh=qB62AJSN3Sg4eqEMY1QmfXeoC2Eq6WxKoVkEaEb7qyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Pf0EuPiIySMU7nUHH72Vw/QxgWv7pjDST+YQSXl1obkUsCjf1VGxVIVyQ8YAv688W7EpGiSqiA1iVqR7N8PJQ6i+eG1lfspPl1RIdrJ9Ng0sXSzhF9jDyzsX/zbBm01zNiu9uENTVvQgEd/X8/2PVGgnZryLzA0Clhh8nopJSts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=c8dcqaXp; arc=none smtp.client-ip=113.46.200.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1790569861; c=relaxed/simple;
+	bh=2KIiz6iGLxRFIVVJFBxG4zc9wLGsSqHTSc5A+eLla0M=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=iZpj3xb0dNh1YVGi1Gz5o5H4LGjrp71PuP+IxjmF57TUPY0xbcWPJDNv1CLhOps7zHkTHpb5V335fwH4X9YZEwbghAV2/WeqmWvZ9OqaWINiJb5ZA1ziwZVF2WDd9U+eC9S0S7rq+H/qM5POH+ZeoVG5RkvIPlH8sJwAF1fG5f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GmrfNZ+b; arc=none smtp.client-ip=209.85.216.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="c8dcqaXp"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=ezDik2QaMp/3ORzwR99KO4kmsJHD+sAI1866xdo9UFo=;
-	b=c8dcqaXpuskHliNTYZeLq0e3Pj81CJDeoPIqV+h3UR+jeMo9uTIBckSAig2RFSP7D/5X1jkSQ
-	Kri/L0EkszIApThuKCQWIUkH3ozc+qoSq/k09tuhFDiGJIZpQSdJMxQgaWWjE3J9lJEESgRbTfg
-	p3oPCSGaBJkwhzuCuW8e38I=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4htPLN0C5mz1prQs;
-	Mon, 28 Sep 2026 09:46:52 +0800 (CST)
-Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0033D40538;
-	Mon, 28 Sep 2026 09:59:02 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemk200008.china.huawei.com (7.202.194.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 28 Sep 2026 09:59:00 +0800
-Message-ID: <a8a8edfd-0f01-4a30-9876-a9eab172eb0e@huawei.com>
-Date: Mon, 28 Sep 2026 09:58:59 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GmrfNZ+b"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-39512608fb1so4372371a91.1
+        for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 21:30:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790569859; x=1791174659; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=F4a/2U6MDyhfh6OctZetk7ga+hEdDkfQe/jf3hv28p0=;
+        b=GmrfNZ+bAySqQzM3dC1Y9PJWS8Tb52nVM24iWDQgRS++8tj1S49rDot22RI4c7h0Jo
+         /rTNzxFKHigi4PAOfXWbT2i191V+PoaN+6DPSKzT/A625zbPVNUjz0gdLL+AS3i02zVD
+         98tRRMmD+Hox0CdWC0V83ETcEzS+gjdnAeL3cUrtSB2cNsyazI4iA4UfaHwCUlTwA9tx
+         LdibilKWxB7wUisBd/MhgkgwuGPYWQzGe7U9/V7pt3RZ0dnw79a6TkYmn+VPmTsI0Jne
+         KKjgW01js8PajIUFmpTVSj9wU6orRre2uRSAxLq5D7yeGb56Pop0nf8ltj8/Fm3S63D7
+         6lww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790569859; x=1791174659;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=F4a/2U6MDyhfh6OctZetk7ga+hEdDkfQe/jf3hv28p0=;
+        b=iVFyIRYQfSjjIgz0kXBuYA5GbFhQxg5WD5/8N/0+oLVUyN0IvqYSuziCViGeMYuRyZ
+         nbXb0olQZWR5octZbrklu5+wKCIqNnRm/d8BbXJCm2i+lBSOIBR7Tzy5XsFDah8S+n86
+         xXBmQHJQYsIJes5RvsJ1SuI898qM68xKpconMHMWvwmNB9Q9LCV+StLbEKa/bZpD1olm
+         lWTPNe/0msW5w8d8NuCTrcIQOWCnSymqWPef8cJPbj1qTrKRKStk44WM40eAOvGudUxZ
+         TQ+6u27dIEeZ5kCzCLRz1PKHvK14rcMVEd1GOvCWmfW1V8pVrvC3a5EgiU36mOsxEwwm
+         ojiQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzGfQ8NyaP37chdvbMao8K9JVbxBN3JG7kGd52AsaNhgl0BVcOKcLfXfaFdz37i/q9jG6hHQunW/64Zs9dovxk=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKeRDRVamcBEsaPFIMGgHSOR2vhmqk0gTsW96nj2Y1xgfbBO5rA
+	kZblWHoht/Srw63XhrweEj+SMjMVta8CnSDHNO/9XzwhEPEG3F1xurxrGRPyGCBi2BehAWHHdS3
+	H
+X-Received: from pjqo14.prod.google.com ([2002:a17:90a:ac0e:b0:3a0:70aa:2cef])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c2cb:b0:3a4:7a96:5209
+ with SMTP id 98e67ed59e1d1-3a47a966299mr377611a91.33.1790569858850; Sun, 27
+ Sep 2026 21:30:58 -0700 (PDT)
+Date: Mon, 28 Sep 2026 04:30:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/ptrace: Add PTRACE_SYSEMU_SINGLESTEP
- syscall-exit-stop test
-To: Kees Cook <kees@kernel.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<oleg@redhat.com>, <luto@amacapital.net>, <wad@chromium.org>,
-	<peterz@infradead.org>, <ada.coupriediaz@arm.com>, <linusw@kernel.org>,
-	<yeoreum.yun@arm.com>, <kevin.brodsky@arm.com>, <anshuman.khandual@arm.com>,
-	<james.morse@arm.com>, <thuth@redhat.com>, <vladimir.murzin@arm.com>,
-	<tglx@kernel.org>, <broonie@kernel.org>, <liqiang01@kylinos.cn>,
-	<ryan.roberts@arm.com>, <pengcan@kylinos.cn>, <kmehltretter@gmail.com>,
-	<linux-arm-kernel@lists.infradead.org>, Shuah Khan <shuah@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>
-References: <20260922195719.i.211-kees@kernel.org>
- <bbd65e4d-8096-4939-8308-f0f54c5cb3bc@huawei.com>
- <202609241654.F545D3A88@keescook>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <202609241654.F545D3A88@keescook>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+Message-ID: <20260928043056.1324568-1-morbo@google.com>
+Subject: [PATCH] dma-buf/dma_fence_array: Annotate fences with __counted_by_ptr
+From: Bill Wendling <morbo@google.com>
+To: Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	Bill Wendling <morbo@google.com>, codemender-patching+linux@google.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemk200008.china.huawei.com (7.202.194.74)
 
+The 'struct dma_fence_array' holds a pointer field 'fences' that points
+to an array of 'dma_fence' pointers, and its element count is stored in
+the 'num_fences' field within the same structure.
 
+Annotate 'fences' with the '__counted_by_ptr' attribute to allow
+compilers supporting this attribute to perform runtime bounds checking
+via KASAN and '__builtin_dynamic_object_size'.
 
-在 2026/9/25 7:56, Kees Cook 写道:
-> On Thu, Sep 24, 2026 at 12:11:31PM +0800, Jinjie Ruan wrote:
->>
->>
->> 在 2026/9/23 3:57, Kees Cook 写道:
->>> ptrace(2) states that no syscall-exit-stop occurs when a tracee is
->>> continued with PTRACE_SYSEMU or PTRACE_SYSEMU_SINGLESTEP. arm64 gated
->>> its syscall-exit report on
->>>
->>> 	flags & (_TIF_SYSCALL_TRACE | _TIF_SINGLESTEP)
->>
->> Hi Kees,
->>
->> The original fix description is a bit off: on arm64 there is no extra
->> syscall-exit-stop; instead, there's an additional pseudo single-step
->> injection.
->>
->> As sashiko pointed out, as commit ac2081cdc4d9 ("arm64: ptrace:
->> Consistently use pseudo-singlestep exceptions") described, for
->> PTRACE_SYSEMU_SINGLESTEP, arm64 still needs the pseudo single-step
->> because its hardware single-step state machine is fast-forwarded over
->> the SVC instruction.
-> 
-> Ah! Okay. So this test should be tweaked to deal with that? Feel free to
+The structure is allocated in 'dma_fence_array_alloc()' which
+initializes all fields, including 'fences' and 'num_fences', to zero.
+The structure is initialized in 'dma_fence_array_init()'.
 
-Yes, I understand that these two cases should be distinguished.
+Cc: codemender-patching+linux@google.com
+Assisted-by: LLM
+Signed-off-by: Bill Wendling <morbo@google.com>
+---
+ include/linux/dma-fence-array.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> snag/update this test for the series. We didn't have anything testing
-> syscall exit stops, so it seemed reasonable to get it written.
-
-I agree with adding a syscall exit stop test case to check whether it
-violates what the man page describes.
-
-At the same time, I think we could also add a test case to verify the
-problems that may arise from arm64's own missing pseudo single-step.
-
-> 
-> -Kees
-> 
-
+diff --git a/include/linux/dma-fence-array.h b/include/linux/dma-fence-array.h
+index 0c49d7ccefb6..85e5879e8a1e 100644
+--- a/include/linux/dma-fence-array.h
++++ b/include/linux/dma-fence-array.h
+@@ -39,7 +39,7 @@ struct dma_fence_array {
+ 
+ 	unsigned num_fences;
+ 	atomic_t num_pending;
+-	struct dma_fence **fences;
++	struct dma_fence **fences __counted_by_ptr(num_fences);
+ 
+ 	struct irq_work work;
+ 
 -- 
-Best regards,
-Jinjie
+2.56.0.rc1.315.gc6ed9934b7-goog
 
