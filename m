@@ -1,122 +1,133 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-ej2-f43.google.com (mail-ej2-f43.google.com [74.125.228.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0334C10E5
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 13:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790602226; cv=none; b=gQg3ajiygLky2g7me6wiVJ1AWv4xLrHzaL+fTX5hCzDWYvV6lSYfEuL7Mns0S1RdysQmDA6VnpHxp8kl7XRAELGPTrbaoO7XiFF403DIOpST3kx6GoYF5PAVNiH+WgVDmwUl35EjxDjKFtkAd80lwbKO5GAuEe6lTMWXAkp2yGM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790602226; c=relaxed/simple;
-	bh=u4F+lc3vx+jYByWGzH3MQLi5+iszxVz9Dw6kvDqbkF0=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-version:Content-type; b=Rp1te07SRlwOxxXPKn/+KuyRwxdOjFvY3bXMvtr0YbHA+K+2S71fjoqro8Eytxoz0VsK2OG5VCaWKv+E1do1rjIyYyMP3kh5G1k4ow8W0z4IcgvhXe1cv9f42UrdyDJJuZ39aS8JJdxMjmpMiR+7At5Divc1ePl6SKmMVEoLVOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2wNPCkI; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D18C4CB8A1
+	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 13:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790602760; cv=pass; b=Bo42v47id3/j+JdsyTVR/Jdym8yYEbyf7mWgZZloSNCHcHjyGMJHt3+suNfWVqJUjTVvyZUocnatOF3gZP3WCHbai6PMjavE/jrZ+xt9vQvzhWa0OSzA/H8QIBQESpGJ755fYoraBDnIN1r/xxciOEBudvzYpKvtZk8jfEW8RuM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790602760; c=relaxed/simple;
+	bh=kkoVXtyBSbX/hlAjoM5EXYeotLKKyXHsImySYu3kOBI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H2s6MFBScElaoLC1YamCK0Anq86iUw4zPLWHDvl3pDGIFYuLv9Xl0zi1d41h9K95yXZO7l6SfHOU1VB9xxpXTiesJ4Xh0WM2aanHNxAQlchPlNdqPHwqHx5W2FGyn4Wqemclo1tBE7GVSxB4tx7ll1iH4u+DTx2MU/fWmmFMu48=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4a7I3Nw; arc=pass smtp.client-ip=74.125.228.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2wNPCkI"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-93c5b7f5bfaso159719485a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 06:30:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4a7I3Nw"
+Received: by mail-ej2-f43.google.com with SMTP id a640c23a62f3a-c2a4fbc5586so463404466b.2
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 06:39:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790602757; cv=none;
+        d=google.com; s=arc-20260327;
+        b=G39dYkWI1UWAwG0euIJymaRLwOMNDGEMp/+OjYRGxJNyUX5BF736gT4fj9L/+OA53i
+         hYvtSQDf3u+ykXv+UY8iiADlzUozeoe1/q3ljNTOP0s+UiDynPpLyLNTx28Wgp/3R4kt
+         H1a8hYbtT2xyoe+lfI1zd9x2xro3EETgXskIliEI8tPQ/T0R5JyU+EhjK4HE0B3sKv8/
+         18c4lUMbYxXWA4fRhxNWFIYdCfdDq8fZf23G452Ycc4iCabFUE60vKTBmv1xsdfOb8Oa
+         yDGpvV6ffFnpybJJObw8rrFauh1RXTS5WCl9H8RkV9mWLFwcEHajtItO+QeFzznpZqD9
+         zLEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=kkoVXtyBSbX/hlAjoM5EXYeotLKKyXHsImySYu3kOBI=;
+        fh=nzlI5PB+FXMOwmjR57BAzJlk6283yHzANdRgqNsWE0k=;
+        b=TjnDP6+vSCMS0RLWPVTBAcml7Kp9+GRiGvKhPv5evEuZctIYFVMw4eZCDZiE9tD5MB
+         T4S0tovJ7MwFScnjV15KfxWhQfQ4NwWLqxJy8Jo+idgtwTLS/sv8j+Eq/Sih+cMPkQ18
+         tp0f70Wsf9eqCnIpA2zIMG0kcd/mDs4fF/SfI0RIsuzoH2jhwdQU6JwRVKZJnSvNNivl
+         MPRXJ3nh6tr5m2EvEnK1PLdQMvzZwMP49duhfu3bpxitZhcxGisX/ifw1EijMWIB46Z5
+         Sn5jZlqaMPhA6W+oyz1HMbc4N9DntdtRgEtWTnw/W8ZqrXxFeVX+/2JVD20r2UVGSlSm
+         2jaQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790602223; x=1791207023; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :message-id:date:in-reply-to:subject:cc:to:from:from:to:cc:subject
+        d=gmail.com; s=20251104; t=1790602757; x=1791207557; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=Xh2NHRfJCMfylFQd8bfgqsz1kSEX8TvOZMy0ZzkkjyY=;
-        b=j2wNPCkIPr9VY64Ou+l1UKH4JEasIeLDhfuXps5KjDziKY0MBhMwSMBkLujCyyIeqh
-         +IR/kE5K5ihWxaz2uuAQ1Zuek69IUSrvE4+xVFUKbOyZX7YLpvyKJglloMPSaZv4AnAG
-         bQKxDS7tzeANVycaCJm+qgI5oQt0c1/1wacosE5hQIh+bhhHMc2quSBhq1sBcAGWMk5l
-         6c8k8MOgM6pYRd0ZA2VRzi2Q1+u2/eKp44pVtkz2/xiXwDARznEM2FSLGzzOfbdCIw47
-         wl2Vz4Qc4KYx+eIafnaLoKEqUVcUHWeYaiEhSyWQscYqnDizWF+zjvZgqp4VKxdeK4Zq
-         w5fg==
+        bh=kkoVXtyBSbX/hlAjoM5EXYeotLKKyXHsImySYu3kOBI=;
+        b=b4a7I3NwDQFNBCVAgiuFBdB8iqEB/ceqqZU7HZgl4Ui9HCN7vyf464/O2tDbS1tM+V
+         wYTPLVfmT69ave9jcWzKXMqpJCcXiClzHvs2WHwDLkpBdu0xR6MqqHKARH9tVhZfZREK
+         XwpzfqVX/CWpe3ukPYxpJtin15QCDBenvUcLtCiN//iWL5uea4Zh8FpA6czm8cRi8vDF
+         LJSjlJYnjHxBDWz/FEW+qngUVNIifdervUPxzjb25wqwYyyOZVu0dghWXCFOKkjIS5BT
+         5Q7ffuxv31zLnvI6ldNWcSBBEDCOEmlZpRvPrradtlBDsHtsrjyd+C3oc2K6S4/ZEqpc
+         XabQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790602223; x=1791207023;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :message-id:date:in-reply-to:subject:cc:to:from:x-gm-gg
+        d=1e100.net; s=20260707; t=1790602757; x=1791207557;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Xh2NHRfJCMfylFQd8bfgqsz1kSEX8TvOZMy0ZzkkjyY=;
-        b=PFKNzWm8wOcSiukUnZU2rGo0RFRZ0zQqW1Q1GXcHcCBGFRnAdVzY0qmVwei8oqOy4t
-         +ITeFPWtTMe8Kj7uHpsODS79srw8VW81Ajjpmfr8mwS+5jdlJ2B+IwwH3YbB2T1g3Owz
-         4qDotaSXGJnZFq3C/es4fn/WxJtZ8itapEwdynGh4C2jfIsnkON6fo3tug19obU1GuWy
-         SdIfe1vFR//3JjOwEYYZ1Oj549HibNWWvrz1HDZawBHZElQRdaA6mxz8jJnw+CtnncGk
-         Seaw8i6/UFizTJ5OQT+O/y2r+mjSdkg3f4xHMIKfVKIiawY3Pwt3FrPuvS1B7Ymltke6
-         wR6w==
-X-Forwarded-Encrypted: i=1; AKwUvBxlMHWqDlfosL85rjytReFL1WJsUzYb4T2+0Xt1QN5xiOVruxE6FJTlQzZA6K8ZD4M81bTR5iqZBrb5RLBIe2I=@vger.kernel.org
-X-Gm-Message-State: AFuF++k9cjNNLE1dq6SbAwpBWLYlzyWs4yNhS9SlO7puyw0HwkWg3lyr
-	Ya6mEUSyd2MVwdLX/2n1jqm+Re/gvr2sktACUScEgUaOfAUs/hmI/MA4
-X-Gm-Gg: AYBFou3oXFPy/ikSymYDuEBz4MNTKrJcBSu1+8Cq9/PUNA3Jck5jvh+MbHhyjMwdAFl
-	stZGNUzcvCFAXMysSFupbBAujP25EY+kjPllwjzMtadN9uYBJhofX17Wu87bfVDBDHJIxinW0Pq
-	cmdddgwpV75OoUJzQla9r9vSNwsfpiGKQXx2nyWGD1VAI/4c9h/dZuqvXU7iY29TL7C7S5n+2A6
-	+BF34aEziDOzkM8ETZzwGp5Lx5k1zfLCCFo8wjLrtPtxb9rvxPJEr+dZypH8h4ry8/mPEZNjjht
-	rVZebTvKLbzZ4nxpsWb+/DsGiYoRM3hhRdKpVO1a3A2C/ZeCL3AHjTZmnM9MX8InNQbG7x37EvJ
-	hVuQuALk42KZgAa/AZzqsWJgag+eI6BBCg0cSVOBSD4SF3tLjvFgbp2041NaCJsQj6XaxcQGc70
-	GWkI/827n+VKtTQ+tLVB7ugg9WDWwabbj/CwEVYdKJb6e4rSC3GxrD0fdgcjTSQGRIOigiWXBfr
-	fd5h0T9WpUQD5eqOK8xe2T8UQy4g08G3QoYj67W0J/nmldqtx74Qw==
-X-Received: by 2002:a05:620a:2888:b0:93a:ea:b00e with SMTP id af79cd13be357-93c43d9e0eemr2013943785a.30.1790602206503;
-        Mon, 28 Sep 2026 06:30:06 -0700 (PDT)
-Received: from pve-server ([49.205.216.49])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93c813a443fsm151650285a.12.2026.09.28.06.29.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2026 06:30:05 -0700 (PDT)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Amit Machhiwal <amachhiw@linux.ibm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Amit Machhiwal <amachhiw@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Shrikanth Hegde <sshegde@linux.ibm.com>, kvm-ppc@vger.kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Gautam Menghani <gautam@linux.ibm.com>, Harsh Prateek Bora <harshpb@linux.ibm.com>, R Nageswara Sastry <rnsastry@linux.ibm.com>, Alexander Graf <agraf@suse.de>, linux-hardening@vger.kernel.org, stable@vger.kernel.org, Avi Kivity <avi@redhat.com>
-Subject: Re: [RESEND PATCH 1/3] KVM: PPC: Book3S HV: Add SRCU protection for virtual-mode HPT hcalls
-In-Reply-To: <20260928122837.8782-2-amachhiw@linux.ibm.com>
-Date: Mon, 28 Sep 2026 18:57:16 +0530
-Message-ID: <v77pjykr.ritesh.list@gmail.com>
-References: <20260928122837.8782-1-amachhiw@linux.ibm.com> <20260928122837.8782-2-amachhiw@linux.ibm.com>
+        bh=kkoVXtyBSbX/hlAjoM5EXYeotLKKyXHsImySYu3kOBI=;
+        b=GzjIMwtC8yT4gfagJVK3+wGNFd9Fh0LURSuu38k9WwFKK9gGqhR/qY9Fr5n5KTqikD
+         l3VQ+jBFxq1u1jHFXo+bwDYf4KtSL3j8JML8qqPk6CrSss+u6uHkNu4ztdjS2erGKss+
+         NqECO5AGFpU3+HW78XKBk9oXvPo30v2LOIakClcbJMmX25HUGy27JRbx84c3ETui3jK+
+         lKNZ3sFsdlwaioyLPT3BRmQ/mPnhBxGIh2vf1sTboVz4kSSuPRhKznUFQ5xW49rnNOKF
+         ih093PMjx6DncPRgo3PDP82BEDMiZQzx/maowsnOESEXGACUxyqmJEP7kTUO+6nr3HxK
+         4Shw==
+X-Forwarded-Encrypted: i=1; AKwUvByqrDags1pe3P11MpFcqrgoGEbw3eq2R+b7lzJRF5pPWY3/jeJQGwLBdiJK2SzJjJ+RyK1yYsRY7Ny6LMkcWOw=@vger.kernel.org
+X-Gm-Message-State: AFuF++k819qLxtJhHail4aGyMz4vtRNTB3vC2ggIDaQOCIKhGVE0lK3W
+	GVJqnclEy7s7urIApnW4d4cUBhE3n/QqOFZq6t++ncAQx9Mo2k4VL5hyltiRIs2yN0k3Gn+yg+b
+	Zqn48NMxsrt/CJnZI/ZRXVrrg4GmtX4Q=
+X-Gm-Gg: AYBFou1A+401L42XBrdG0iVm6JdoxsfNI7f2F5r5ja0FsrKl2pIfQHe3JHBnl3hNr57
+	jdx9MLwfwrjI/bSc3KKFyAwEUXG2qyvZTIJjNnC+gKEye5q/+h6tuRfh5kmbbpN2ezVibie7s9e
+	qLQgMDraSc9WWWtMglqKyhZ6fIN8T5i+bWbXfbJedoK38OlKMEMqJMrbKa6T3rV0NnoCF03LZMV
+	8tKjEJfnpPsl16LGHfYCEyYRsW17B5OQ8UrNUi2Lp6NEDk18YdDJFb5NJSnlemxWRAVHqvI6wbW
+	p5pNthv15+JDzqFGpVVkDQRPuvnQRqxy2KimT4pN9H3avo2Oozfb6LuTb8PJAj2scEvVLXgplYC
+	8QML8KwnoXwEpYJHXRb2X0dHrofMzwsBjcZnBYMcxoJAkGoaHdgsn7VV14qDX39SWLQTuIbaXgs
+	pU/TVGaKWbEhP7U6iJ6O8ey2Ao2HQBl5ieJv/9GxoX
+X-Received: by 2002:a17:907:7b8d:b0:c2d:c800:d797 with SMTP id
+ a640c23a62f3a-c2dc800ea64mr422085366b.6.1790602756657; Mon, 28 Sep 2026
+ 06:39:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-version: 1.0
-Content-type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20260926205708.384308-1-meatuni001@gmail.com> <CAHp75Vdj8qVY-hCoCxxd1Pg2JaaDjc+QgAK-G=w+Cb=FTYYJEQ@mail.gmail.com>
+ <a2687bd9-8cf7-1d08-41fc-9d6e69b5ca17@linux.intel.com>
+In-Reply-To: <a2687bd9-8cf7-1d08-41fc-9d6e69b5ca17@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 28 Sep 2026 16:38:40 +0300
+X-Gm-Features: AclHuK_yar-ZYML8PKehmtqFyK3Su6decS3wuti4NDLvEmj_PsHR7tuGCThvPLs
+Message-ID: <CAHp75VffMOx6q1JKHFz6-_rByiC=1xTqn8Aw47i1KvWPBLCPkw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] lib/string_helpers: add ESCAPE_BACKSLASH flag to string_escape_mem()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Muhammad Bilal <meatuni001@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Amit Machhiwal <amachhiw@linux.ibm.com> writes:
+On Mon, Sep 28, 2026 at 3:59=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+> On Mon, 28 Sep 2026, Andy Shevchenko wrote:
+> > On Sat, Sep 26, 2026 at 11:57=E2=80=AFPM Muhammad Bilal <meatuni001@gma=
+il.com> wrote:
 
-> The virtual-mode HPT hcall handlers (H_ENTER, H_REMOVE, H_BULK_REMOVE,
-> H_CLEAR_REF, H_CLEAR_MOD) call into book3s_hv_rm_mmu.c, which accesses
-> memslots via kvm_memslots_raw().  kvm_memslots_raw() uses
-> rcu_dereference_raw_check() to bypass SRCU lockdep annotation checking.
-> This is safe in real mode because the entire guest entry/exit is wrapped
-> in srcu_read_lock/unlock inside kvmppc_run_core() and
-> kvmhv_run_single_vcpu().
->
-> However, since commit 6165d5dd99db ("KVM: PPC: Book3S HV: add virtual
-> mode handlers for HPT hcalls and page faults"), these same handlers are
-> also executed in virtual mode via kvmppc_pseries_do_hcall(), which runs
-> after SRCU has already been released on guest exit.
->
-> A concurrent KVM_SET_USER_MEMORY_REGION deletion or move can therefore
-> call synchronize_srcu_expedited() — which does not wait for this thread —
-> and then kfree(slot) and vfree(slot->arch.rmap) while the hcall handler
-> still holds a raw pointer to the memslot.  lock_rmap() then writes to
-> freed vmalloc memory, leading to use-after-free and memory corruption.
-> Because kvm_memslots_raw() suppresses lockdep checks, this race is
-> entirely silent.
->
-> Fix this by factoring out the 7 HPT hcall handlers (H_REMOVE, H_ENTER,
-> H_READ, H_CLEAR_MOD, H_CLEAR_REF, H_PROTECT, H_BULK_REMOVE) into a
-> helper function, kvmppc_pseries_do_hpt_hcall(), and wrapping its call
-> site in srcu_read_lock(&kvm->srcu) / srcu_read_unlock(&kvm->srcu, idx).
-> Targeting only the HPT hcalls avoids wrapping non-HPT hcalls that sleep
-> (such as H_CONFER, H_REGISTER_VPA, H_PAGE_INIT) or handlers that already
-> acquire SRCU internally (such as H_RTAS).
->
-> Fixes: 6165d5dd99db ("KVM: PPC: Book3S HV: add virtual mode handlers for HPT hcalls and page faults")
-> Cc: stable@vger.kernel.org # v5.14+
-> Suggested-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
-> ---
->  arch/powerpc/kvm/book3s_hv.c | 70 ++++++++++++++++++------------------
->  1 file changed, 35 insertions(+), 35 deletions(-)
+...
 
-I had looked at this path in depth earlier itself. LGTM.
-Please feel free to add:
+> > > Add ESCAPE_BACKSLASH, which escapes only '\\'. It can be combined wit=
+h
+> > > ESCAPE_SPACE, or used on its own, without pulling in ESCAPE_SPECIAL's
+> > > quote and control-character handling.
+> >
+> > But why? I believe it can be done in the current implementation using
+> > the last argument @only (id est use the list of the characters you
+> > want to escape).
+>
+> Ah, that's my fault for suggesting this and not noticing there was way to
+> negatively filter them.
 
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+No problem, not a big issue :-)
+
+I think here is the list of those 4 characters that we want to escape
+should be passed along with ESCAPE_SPACE | ESCAPE_SPECIAL. This will
+get exact code behaviour as of today. In current patch 2/2 AFAICS the
+additional SPACE-class characters might have also been escaped which
+was not in the original implementation (not sure if it's desired
+change or not).
+
+--=20
+With Best Regards,
+Andy Shevchenko
