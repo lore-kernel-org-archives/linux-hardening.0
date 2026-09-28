@@ -1,56 +1,56 @@
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97C04F052B
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 17:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F2F34887B
+	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 17:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790617320; cv=none; b=eR4GnJGMTFwwL4MnC/LPHwGxmretChOQL0mLnp6FPo/btxson0uahBMsSJh+2J7FmgrNSnhizKhjKYVRh2LvquL/3niQ73rPyOPb7ucmp2Lkd7HRWe70y/v4+KozHSCejLfMDpzWK4ENnaHXgxaSaOPh/xa1UJR08J8krD5xhmQ=
+	t=1790617321; cv=none; b=fwscLEr0ldzxt2OsoRo/DmAVFwJcEkGbaVRA8X0yN/c25MlwfKQoHpuaBRj7oRJPDgAVCP8Cv9CGvmmZWcJvAB+5yKedSacuOqFPevP/02xNA9JHV+lxjlgfVKehgDJGdZnfMCwjjOYJIR3ffQxS+nE5ZQS6ni3U7WpmZJvBuRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790617320; c=relaxed/simple;
-	bh=fxbdyOtQyXxGPt9dE6qJI2lO85bbyV/d17xndfVGn+o=;
+	s=arc-20240116; t=1790617321; c=relaxed/simple;
+	bh=OjWnAwqkXs+i44MTqOp1Ck5J5mQ7pY35YplCenpi9Mc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AWJsPFd3WOr+16+UW4jz6dKlQQFC+WClcPIT+on/gnv8GL0G8+T0zx6nS4nwwn4XxlIOzoSfu8CURYJqbLCwEKJM85TTgBBbUHiMxfnVTpUp6694gLrum8a+XgPanqi4aPsqgg2mtnJkRNI/jVjO+WYjSUeOzThIwc9gC1rIwx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qx/ZR6PG; arc=none smtp.client-ip=209.85.128.71
+	 To:Cc:Content-Type; b=M3eAv8CRnmI8IZwyxGMXsTCL+5sOo/4YaFM1376bRSCetToyteFy1kGELmi9Ixj59hsIE43fCuqQDLpWpVO+EVoRcP9GKZMsiFCqwLFT7nZIbbHE7fHFPwHN350VzCZqn4wrRdB7nKajLnsEq01t0Z5DHJAxYRhJzmRG9ngA1OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GhkNQzfK; arc=none smtp.client-ip=209.85.221.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qx/ZR6PG"
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49e6ba4abdfso35203545e9.1
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 10:41:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GhkNQzfK"
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-4888382a9e9so1863752f8f.1
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 10:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790617316; x=1791222116; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790617314; x=1791222114; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ci6kw3U2QUuQ8iEQWyGnN3yV0fEIMUBiQ7ACCZCMmiU=;
-        b=Qx/ZR6PGU3d/Y5pORJOfCc4fPIY3UCdq8sHmkmxRq8+Ixuqa9If/prcX2nGUH/YWDH
-         V31xpP4upmF9E0oqzUsqtUEW6S7AwBYJbzNd79Aun/d4VnLJPljsWqbM97LKpQuF9xn0
-         nilNyi5W3utDHtWXc1dQhqqK1TK1VdzvCtbb2fHaLEXRb5IF3P1frHpeNOBMwMvYUWFS
-         kCjN11FjLVUZlqO5ikGhSMIewbkq3i7W3akEw/ShHOA3AvpYKLELmmIeTqZweVnAh9xH
-         5kmmBTt1g4+PpwBSd5mPucc7ZUUncEgzMeWKMo1tLTSkdei/ZZT/KtXzARgcBHMFmIMf
-         tLSw==
+        bh=jUO525MYjN5YsfP/KDhp3xMzNW05smVZVp3S7wkbxmU=;
+        b=GhkNQzfK74LzqYlGLXENrhteifhPIk5q689GbRVErIK6osnD7gRq0aQRMBfmIShMpQ
+         4Ri4wNOvGKjiPmcy82hoDGOtSmm/jb0mjai3bAA8rMtjforAENUVCiHsqeVlqTsb1tla
+         h5tuGcMopU/6BwCqeXoC560cpD8SEr3va1g8x9Edo+wF1W7RjQT9tPh9JJTM/me6kpQX
+         ESg9JTeJSaSoQp6fuhvb4S68T59Xge0lm372Ne6i5yrJZtH2NRc5szRfc1v0dhzkdqk2
+         aQ160AT3zR44ZoMFJZWSK5ahbM+0wbeLjxmITmTyK3nyeyNFywbChkSEOI3xR4vrOrF8
+         QJDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790617316; x=1791222116;
+        d=1e100.net; s=20260707; t=1790617314; x=1791222114;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ci6kw3U2QUuQ8iEQWyGnN3yV0fEIMUBiQ7ACCZCMmiU=;
-        b=KqeqgmUm+o9FoKgIS5lQrTdRME42qjd7rjjhbwFiXl/4EpZWllFsICUCD83GmxZUAB
-         W1HOf+xdtXC0Pe0BkPAC2dHVRnKXaZ+80CPvbkz2FsRGk2HS3FaVNkckS8Z9Zswo2at2
-         0Uz3MlWw2zXGenG1Tuitt3qHca8KYTzYaIkD6dHLVkrRJHDqa6m66LWzloBv4mlGgsWq
-         VrYUCgxNZJx4yktktaZOJlr9PnsDqHG8wATDVIdcYkhE7Ya26b0VAxPJLhK0yRUKcKIM
-         CrKAsyeOw+NxAoOucR0r3/etCZnVVfjdVsZm/JB8ZjKZg/6a9ExKovjCPgRJ0Id9KoME
-         mV1Q==
-X-Forwarded-Encrypted: i=1; AKwUvByDw+8/s0U0ke/IPNrURPTqFMtCeYjbmlvvj+Hy9NmB4zuVTziMYJsvtKblFY7M0dyDKODSC3mzd9NbtQlNrL4=@vger.kernel.org
-X-Gm-Message-State: AFuF++n8QBLBngxZsHBfOrQ5C9wXmwhCy1brjq96DUJvOmJyR5Zt7vXM
-	DI9L+haY8D8pVddWhC0Ioh3H1OIbaYaBFwyD/+DAh9ezb5QUpLLCF5k+RJp4onKgtYPCs4VJVNg
-	5MIrKpGJ3RWH5mQ==
-X-Received: from wmoz7.prod.google.com ([2002:a05:600c:787:b0:49f:e26d:37ea])
+        bh=jUO525MYjN5YsfP/KDhp3xMzNW05smVZVp3S7wkbxmU=;
+        b=E/YhJm7kopO6mWZXhdAWgYnOIsCbTuSg23vCuvnth2zRIVwbVkHe7XhBTnUEldqDy/
+         umVI+WrUU806jiclb7eq8Tw5JRwnX8zkexHD2U3sXyxSa9g+WGCV33ACyAClj95+BaKq
+         6MT1vfq3ffY1vuHi3I2AcuHKXYs8Dme/cl0nEvCN+JA/NTHvRV8RW0xHY0YPc6V3aydw
+         jKHb2hhrrblMVROwUsRoYTHgCBydKbfGHrfizmeali8gw66bPfbsliLTYYmWpFF0a2HF
+         RcrgrnT8AO09YDJ6RtWCaUF21Bty043b8YKed3u8ninfW2ql03OzkhriU19Ix0BQjovq
+         ckIQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzjX5MKUcdUAaDC/km+vdc8ziAI6qtPe9YzlYdNZCjmIei3bSbb1esDMf6ipoTqUYU0b0iSCHYH36+ZcwF7fkA=@vger.kernel.org
+X-Gm-Message-State: AFuF++kNxPmvpM8UdgI89Nb9AIi1ODqSO8SUCHv5rce2S7VQmiLgX+A/
+	wu2mQ4mGyfhE2zDdCEWqs7Rgchy/maozrP1V5hi2ZB04T3q+FNkmCR0c+LkbqfWD64a4jn0Kzsi
+	g2CNeWUjfLp6DgQ==
+X-Received: from wmgb3.prod.google.com ([2002:a05:600c:1503:b0:49f:fec8:8e56])
  (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:a16:b0:49f:eddb:bcb1 with SMTP id 5b1f17b1804b1-49feddbbe6dmr202116635e9.25.1790617315540;
- Mon, 28 Sep 2026 10:41:55 -0700 (PDT)
-Date: Mon, 28 Sep 2026 17:41:14 +0000
+ 2002:a05:600c:5487:b0:49e:7c8c:361d with SMTP id 5b1f17b1804b1-49fe66ee809mr241216335e9.22.1790617314094;
+ Mon, 28 Sep 2026 10:41:54 -0700 (PDT)
+Date: Mon, 28 Sep 2026 17:41:13 +0000
 In-Reply-To: <20260928174122.3380703-1-smostafa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260928174122.3380703-1-smostafa@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260928174122.3380703-8-smostafa@google.com>
-Subject: [RFC PATCH 07/15] usercopy: Don't assume the kernel stack size
+Message-ID: <20260928174122.3380703-7-smostafa@google.com>
+Subject: [RFC PATCH 06/15] exit: Don't assume the kernel stack size
 From: Mostafa Saleh <smostafa@google.com>
 To: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, 
@@ -78,32 +78,28 @@ Cc: corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org,
 	Mostafa Saleh <smostafa@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-check_stack_object() assumes that the kernel stack size is
-THREAD_SIZE.
-
+check_stack_usage() assumes that the kernel stack size is THREAD_SIZE.
 The allocated kernel stack size may not be THREAD_SIZE anymore, rely
-on the newly introduced helper task_stack_{low, high}()
+on the newly introduced helpers task_stack_size()
 
 Signed-off-by: Mostafa Saleh <smostafa@google.com>
 ---
- mm/usercopy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/exit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/usercopy.c b/mm/usercopy.c
-index 5de7a518b1b1..f31a42b9f9c4 100644
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -36,8 +36,8 @@
-  */
- static noinline int check_stack_object(const void *obj, unsigned long len)
- {
--	const void * const stack = task_stack_page(current);
--	const void * const stackend = stack + THREAD_SIZE;
-+	const void * const stack = task_stack_low(current);
-+	const void * const stackend = task_stack_high(current);
- 	int ret;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 424c44a42a4d..899d3bf048d4 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -883,7 +883,7 @@ static void check_stack_usage(void)
+ 	unsigned long free;
  
- 	/* Object is not on the stack at all. */
+ 	free = stack_not_used(current);
+-	kstack_histogram(THREAD_SIZE - free);
++	kstack_histogram(task_stack_size(current) - free);
+ 
+ 	if (free >= lowest_to_date)
+ 		return;
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
