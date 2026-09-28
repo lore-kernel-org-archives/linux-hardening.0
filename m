@@ -1,95 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from 011.lax.mailroute.net (011.lax.mailroute.net [199.89.1.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F154D1793;
-	Mon, 28 Sep 2026 14:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4004EC653;
+	Mon, 28 Sep 2026 17:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790607184; cv=none; b=XOuKZGchFN6WZItd7u+CwjoDo4HcpVFgbpRwCGBy1jUw8recWUO1G9Smn/Jtzr/TyoZH2YZfHwjvKiH9IcR1H0khzUJexSdL+JD1JOaktYusjcRP5OPekavaaxHmiQ8FP0V6tp4gGcZyTG3dNIeWCrlnqOfSixQXTsX9fb/8tp0=
+	t=1790617009; cv=none; b=OL3MS7IAYloP9Ye5qtakpxsBfv5ee4FdlUJTFO4ZRXumcAo/fAbO0ocIIOA659+sqaOhwN1Je36L0v0RrcnoWePoQykn7bqKUgA6F0zZFHhT51F3RNSWiW5S6xHONxZUaU7E9nv7Ai+3i/zOuDuwiVWHTqJaOYDoJfxA7JiD6eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790607184; c=relaxed/simple;
-	bh=a/jsc/xq5Agts61sHn5pJxm1EPhrLCwXq8yATvBL2zs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ZQ8+Jja/6rZ0eQsmNjQmcQoNGCp0cDe1NaXRnUh0sPKY7BhReMeQgOJ3zjYoqcuQURHwyeAtPxhzh5Cc+WB1e9p4cH7CJksizkWNb8vOFZF+u+apaTxYToqrxNlloKCBOSMq+EFKf0nKvkPWjUDO+Sr+dj6N4eTH/rBNYicsuQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdXRz2DE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790617009; c=relaxed/simple;
+	bh=mWiDXp9cBL2bV3GI3t1gQgk/lSAycgALIomUQLzG9Fg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=br2N4wFOQjf/RtAN13jsKAMSx6tjwLWTkiHvoY5o277ZcT8qInzKokD+kg1lFh+CBizCnmPUAxL4cLWigSlyAbQ2bMQmKci1PwqOcFekmfrjllYTFsvCbMn4bQpUBKRzN6QGEGwfzIz+WDb9KE5tYU/E705DO5KsandvT6JMJBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=DsuOKrL4; arc=none smtp.client-ip=199.89.1.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdXRz2DE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C22D1F000FF;
-	Mon, 28 Sep 2026 14:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790607183;
-	bh=QR6GezIDvFHdYOKISOF8W1B781j0J/OKViYYdAjnthI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=QdXRz2DEElDzT260hgGcl9iIljs7rS6VJp8/JaXbUgDahUBpuagGDm1c6XtlilAHY
-	 A+MsZWKOrR2J2HImbAm22KmB3s1pq6fuR2fQ/abbKmlt4xlZIUF0CqIaeDVohruoBO
-	 gQfM2bnGvzr4HkvDuZZpxtRmnNfMgoQaxyTphNXfKh/ztUkeV8geK/u0WbqDnXbt5e
-	 jEoqz6bzqlpATcFyZbmL4EdG8FAMcYjbZijhdQ+vVY7u3naGeZ2Xm/IWY60ouzlie3
-	 9TvWyAkBpqzYNz00ODjpnr+kTeLcm8xkdPWAkIADXRybcBXan+cVofQSy6IkhkJnCQ
-	 l/bf+SxgpQoRQ==
-From: Mark Brown <broonie@kernel.org>
-To: Simon Trimmer <simont@opensource.cirrus.com>, 
- Charles Keepax <ckeepax@opensource.cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, codemender-patching+linux@google.com
-In-Reply-To: <20260928044513.1330392-1-morbo@google.com>
-References: <20260928044513.1330392-1-morbo@google.com>
-Subject: Re: [PATCH] firmware: cs_dsp: Annotate struct cs_dsp_coeff_ctl
- with __counted_by_ptr
-Message-Id: <179059773213.139547.5313569313368617305.b4-ty@b4>
-Date: Mon, 28 Sep 2026 13:15:32 +0100
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="DsuOKrL4"
+Received: from localhost (localhost [127.0.0.1])
+	by 011.lax.mailroute.net (Postfix) with ESMTP id 4htpQR4MdLz1XM4TB;
+	Mon, 28 Sep 2026 17:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1790617002; x=1793209003; bh=mWiDXp9cBL2bV3GI3t1gQgk/
+	lSAycgALIomUQLzG9Fg=; b=DsuOKrL4tCvJ6BdYwGNj+70yh64TRLaVuOf+HGwC
+	keIf9tAuxCFGbE+YTHKYv9hpn7uQSlbTGpZKvaKTtvtq7EmN1GB/fI0olmEkost5
+	iqOrc5+/euh8b1/q6AhoQS+0xuFeA6FOSHe87gXy11Z2EZnGZNK0TeunBO7UYKaF
+	Zi1v6vzr+3HfVLg0d7sQYMtpeKnmYP8KyDnCV6Fhrcjz5vgzfVjlZIcBIa2GC5br
+	NqT/0YFtXEq/+I7zqr+dwlcemYvQ0FllJUo2TgAXsFfx2WRX6pj4FqJKnDw198fV
+	IP6HgN0mpGFm1Mrjr0pg7UJW2cFIaLw2g0kj5yhCoGH0sA==
+X-Virus-Scanned: by MailRoute
+Received: from 011.lax.mailroute.net ([127.0.0.1])
+ by localhost (011.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id kPp6LyesfQg7; Mon, 28 Sep 2026 17:36:42 +0000 (UTC)
+Received: from [100.80.231.125] (unknown [104.135.182.41])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 011.lax.mailroute.net (Postfix) with ESMTPSA id 4htpQH08Jwz1XM4Sx;
+	Mon, 28 Sep 2026 17:36:38 +0000 (UTC)
+Message-ID: <9c6ab443-051a-47dd-80c7-3b023cc29d68@acm.org>
+Date: Mon, 28 Sep 2026 10:36:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] scsi: bfa: Use snprintf() in
+ bfa_fcs_fabric_nsymb_init()
+To: Mariia Nikitash <nikitash.mariiaw@gmail.com>, anil.gurumurthy@qlogic.com,
+ sudarsana.kalluru@qlogic.com, James.Bottomley@HansenPartnership.com,
+ mkp@kernel.org
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, morbo@google.com, kees@kernel.org,
+ justinstitt@google.com, codemender-patching+linux@google.com
+References: <20260928090031.712418-1-nikitash.mariiaw@gmail.com>
+ <20260928090031.712418-2-nikitash.mariiaw@gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20260928090031.712418-2-nikitash.mariiaw@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1163; i=broonie@kernel.org;
- h=from:subject:message-id; bh=a/jsc/xq5Agts61sHn5pJxm1EPhrLCwXq8yATvBL2zs=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqun9K5Ac+W6gjLRpcJh4WH83SIltzARzPQZJ0x
- Mh/0e9K472JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCarp/SgAKCRAk1otyXVSH
- 0OpUB/kBYlWtHF89wsfc/QisM8KWxBCBflMFaoPP3i28byPb0GvIWlzOhEv9Z4XM5WeXMKDhMPq
- sPCALgXaJo0IPIGgr3Pp12LNnuQGDd2UtZX3hyWWXhRH1ayxbwNq/hqxmYZQmi5wAh11rH96Iu+
- YyrNtqX2PfZKnu5F5BehXXw7P4fb8yhwXANbaFXRHDaqOeXQ+LyYeRO97z4nsrlpqT09vagyg01
- Q6fpuZivxOXzSkqHyOE/LOPm5WdQnpgJQFH+quZfIygywhSWlud0wSbZdX4yUGwImki3nbpUQhA
- c9jVT85dXmBARmnbKgDJz21GPWbFnpbt0iQDlQzR+F75XFVp
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Mon, 28 Sep 2026 04:45:13 +0000, Bill Wendling wrote:
-> firmware: cs_dsp: Annotate struct cs_dsp_coeff_ctl with __counted_by_ptr
+On 9/28/26 2:00 AM, Mariia Nikitash wrote:
+> In preparation for removing the deprecated strlcat() API[1], replace the
+> chained string copies with a single snprintf() call.
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.4
-
-Thanks!
-
-[1/1] firmware: cs_dsp: Annotate struct cs_dsp_coeff_ctl with __counted_by_ptr
-      https://git.kernel.org/broonie/sound/c/3e71ea6dca1d
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
