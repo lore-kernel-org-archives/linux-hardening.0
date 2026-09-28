@@ -1,132 +1,109 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C952264D9;
-	Mon, 28 Sep 2026 12:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27BC3839A3;
+	Mon, 28 Sep 2026 12:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790598736; cv=none; b=M+A8nVAMsdf5QPNvwBkOZFFR241uo2OPLOzOiBsESD0T/iKC+k4jWtUZJPznt+rJNRh9aud6zFq5h9mHEGuCQALK4+Fwqg5e7hsGqOSHQ7tHCtM4lX04LMdYBserf26UgoyryI6RVmahbPMl+q5sE9S/vW1t8X3Gyv0XWIZhST4=
+	t=1790600399; cv=none; b=fvlT3BlvIZo6TCxyODEINK7ZWVQEVRPR4VBIeFuaITJUNekD3LCAtbdXmnCVYt1+Nra3r2KlHq/mS/p09n2ErD0JPvN98VJPwDycJkRpcjIPttsJF2/QnTbP2/hfZNmaFIRTh2Q7eQtLaCztIjoCEjT8eb5HzBql7vgqLop90xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790598736; c=relaxed/simple;
-	bh=uHlA7KRJP/MrVEKhBIg2C2BuxuFIZkCLNeSulR1bOb0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A9e8nHyB3paZEkCiZ2mLfSP1HeUbNupct/utl0fCiMBWmdAcFQzMx3TzTWMXy0jDx8YTF1HESKul6obwOt2CsGH0uCguCcdH4Hr/Bk4fCbUCDjVL6RjlY406QTd7+ozLGjqWKl+4ZTZrFLDluzbADoyZx+JPDPf3ehccOwoclK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=B/Cug50B; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1790600399; c=relaxed/simple;
+	bh=ZZqnXXy1+FwVGUghP1bNR9O8KWl+oZKLZs1e+0rpo+Y=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V5ODnfYXqveFO6AhjrfgjJuMHnBgTXdvzS6owJxgJ8FnMksPnWKQB9byfjNIOZNh/v11E7YNFXOTl9LiZ90C2sTchFfLz6oNizlBUDIFn+cOvsFO/5M4s8HIJed4OrYkSOPinpSd2LAS1Gk3lsfvJou3GYNEZaBlKWw0EcH7yNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EFi9IQuT; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="B/Cug50B"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68SBZZKE1047082;
-	Mon, 28 Sep 2026 12:32:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=cWVmcFQgkWwK5TQ2EqXUonYtZWJMhC
-	3DjJ3zw153gL8=; b=B/Cug50B6TFCsq9Er9mT+zxJKqiTaXFCgPh1eIspxRz9IB
-	Rl8RYuT1zKUz+SDcAZPtj7ueIG5VyVLjgkxehBoj14GqmvPKmGrwyjGlm1EeqIG1
-	pB+0B727EV0aiE+LghxPh9Fw7t4N6BlsOnqnGO/7/tVhq30ZHlaB22nGaaSWq5d/
-	5rTeY0JCDWaHfyvKlip3HFhROc9YfcXWVZJNfc+lz+rUnEELjZd2f320fvhhpfAN
-	te7kO0KkEFGfyYPIO9YVnQ2z4mg2PLjxiDjtKs1n7uEl//TpI2BGYK3CNidyY6YH
-	vH8AidAVf1OFz/Ynb1obMkh0K0uy/J/3qCaSO3hQ==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gx5j51a8j-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 28 Sep 2026 12:32:01 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68SBHXE5017627;
-	Mon, 28 Sep 2026 12:32:00 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gxsck55sc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Sep 2026 12:32:00 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68SCVuJX32506164
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Sep 2026 12:31:56 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A4C1A20040;
-	Mon, 28 Sep 2026 12:31:56 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1E4BE2004B;
-	Mon, 28 Sep 2026 12:31:53 +0000 (GMT)
-Received: from fedora (unknown [9.5.7.39])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 28 Sep 2026 12:31:52 +0000 (GMT)
-Date: Mon, 28 Sep 2026 18:02:04 +0530
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Amit Machhiwal <amachhiw@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gautam Menghani <gautam@linux.ibm.com>,
-        Harsh Prateek Bora <harshpb@linux.ibm.com>,
-        R Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Alexander Graf <agraf@suse.de>, linux-hardening@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] KVM: PPC: Book3S HV: Add SRCU protection for
- virtual-mode HPT hcalls
-Message-ID: <20260928180031.2e2f0bdc-13-amachhiw@linux.ibm.com>
-Mail-Followup-To: Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	linuxppc-dev@lists.ozlabs.org, Nicholas Piggin <npiggin@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, Shrikanth Hegde <sshegde@linux.ibm.com>, kvm-ppc@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Gautam Menghani <gautam@linux.ibm.com>, Harsh Prateek Bora <harshpb@linux.ibm.com>, 
-	R Nageswara Sastry <rnsastry@linux.ibm.com>, Alexander Graf <agraf@suse.de>, linux-hardening@vger.kernel.org, 
-	stable@vger.kernel.org
-References: <20260928113704.48912-1-amachhiw@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EFi9IQuT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790600398; x=1822136398;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZZqnXXy1+FwVGUghP1bNR9O8KWl+oZKLZs1e+0rpo+Y=;
+  b=EFi9IQuTF8VUPSFuJ0g9NUPRcOqVuzV/a+5ppnSfmDb82e9thpc62QrY
+   IWgOaG1Ay/y211M9sMrACVDPCGZWNmq3Ts8xBIQsMpYCJn1zAn/A+HMJs
+   tKwcC7eu2jAZR8yYHV7WIvVscH2t9MLP0MeAyYLIJytWP5rw42YKueGM+
+   HrXfng7PnE3SgKT03pabpUCHNwQJrymp5ZhTc7WaJ23ZIGGG5r5YBpLlU
+   K87nK17XfslycKBvBU50Obfi4+Pl4giMHkYw+fAE4px8P8rpgLTjNaQnd
+   FprWysI/NwkMIXNVpKTTWMPZlaBkN3U8Zu34PxHZkiYeuFVjFRrR+t7Ea
+   g==;
+X-CSE-ConnectionGUID: TKue2eRZQ7CcHITxOxDUKw==
+X-CSE-MsgGUID: twplA6Q6TQScXvBBFVuOVA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90349873"
+X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
+   d="scan'208";a="90349873"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 05:59:57 -0700
+X-CSE-ConnectionGUID: KI+8cUNnR1+54rg4z/kupQ==
+X-CSE-MsgGUID: pcmIGNDDSRKIpHfhWBMAHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
+   d="scan'208";a="275170226"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.109])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 05:59:55 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 28 Sep 2026 15:59:51 +0300 (EEST)
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+cc: Muhammad Bilal <meatuni001@gmail.com>, Kees Cook <kees@kernel.org>, 
+    Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] lib/string_helpers: add ESCAPE_BACKSLASH flag to
+ string_escape_mem()
+In-Reply-To: <CAHp75Vdj8qVY-hCoCxxd1Pg2JaaDjc+QgAK-G=w+Cb=FTYYJEQ@mail.gmail.com>
+Message-ID: <a2687bd9-8cf7-1d08-41fc-9d6e69b5ca17@linux.intel.com>
+References: <20260926205708.384308-1-meatuni001@gmail.com> <CAHp75Vdj8qVY-hCoCxxd1Pg2JaaDjc+QgAK-G=w+Cb=FTYYJEQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260928113704.48912-1-amachhiw@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI4MDA0OCBTYWx0ZWRfXwZz865v3Qh6H
- z1WlFEUZc4nfAXnwMk/XklARZY1Z1H8jfobrvbT+9VipO9sny37qN6pG5thKvxJ+Ftx3Pb+4H1V
- yKQ+5wJCC1cO2C/ROXQm+Hot1sdUJB4=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI4MDA0OCBTYWx0ZWRfXzPlq/CVXvVcP
- cXh40P9rZsQdPwrdEskbXCA3a9DQJauuUSABJwzj2mU9cERNHbWPmrB0qKdfACYeC4PEB4byinP
- 80jOl01v2g++oxucCisXhhxJkJ4nisSjgUQ7IaXrcoi002tWvsAKvLTmT43Y5WByO48d0wBa/tt
- Zk4ibQkdCFCTw9IXnvaYf1sNWzZUD4VYYvbGUjJhPwkd1rteRS2tq/6BOQe+SDj7ReJdR4SRoEQ
- qOYzjeB4utO6HAmG7uPZNIrt/jN6YjLdrhfX2Utg/MJ8dyuv0UDwCW6OBORENWGYYvX6JYFcDoM
- DqfdjkiQvIF8opF/0XhrBzJB9oWjJEtr2+U3pI+L89KRIPNzXTsDgb1BLnU9KMPJt/DmsXZy0YP
- oRm/jeRdZqUrmNSu1e5dlBYMQueI8vdIOAIqci+uOqWFBOJlAOxHqS+2FPBpmgOd0UIXAWIOnVc
- bgLL4ilHryRqdlAhobw==
-X-Proofpoint-GUID: AZRzVH3h1Z9MhqPtwlS-GvIfWJ_q1lpa
-X-Authority-Analysis: v=2.4 cv=RKcmjIi+ c=1 sm=1 tr=0 ts=6aba5e42 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=idfDjKrkMIz4rnwQVkIA:9 a=CjuIK1q_8ugA:10 a=Qzt0FRFQUfIA:10
-X-Proofpoint-ORIG-GUID: S5WsGqJVWKqwvg_OQSi0FUlEMEYG9jrK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-28_03,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 priorityscore=1501 spamscore=0 bulkscore=0 impostorscore=0
- adultscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609280048
+Content-Type: multipart/mixed; boundary="8323328-1885734108-1790600391=:1168"
 
-Hi all,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Apologies for the noise.  Due to a mishap while sending, the cover letter (0/3)
-was omitted and patch 1/3 was posted as the thread parent.
+--8323328-1885734108-1790600391=:1168
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-I have resent the entire series cleanly with the cover letter (0/3) included:
+On Mon, 28 Sep 2026, Andy Shevchenko wrote:
 
-https://lore.kernel.org/all/20260928122837.8782-1-amachhiw@linux.ibm.com/
+> On Sat, Sep 26, 2026 at 11:57=E2=80=AFPM Muhammad Bilal <meatuni001@gmail=
+=2Ecom> wrote:
+> >
+> > ESCAPE_SPECIAL escapes '\\', '\a', '\e' and '"' as one group. A caller
+> > that wants '\\' escaped but needs '"' left untouched, because it has
+> > its own handling for quotes or because quoting is not meaningful in
+> > its output, currently has no way to pull just the backslash case out
+> > of that set.
+> >
+> > Add ESCAPE_BACKSLASH, which escapes only '\\'. It can be combined with
+> > ESCAPE_SPACE, or used on its own, without pulling in ESCAPE_SPECIAL's
+> > quote and control-character handling.
+>=20
+> But why? I believe it can be done in the current implementation using
+> the last argument @only (id est use the list of the characters you
+> want to escape).
 
-Please discard this thread and follow up on the resent series instead.
+Ah, that's my fault for suggesting this and not noticing there was way to=
+=20
+negatively filter them.
 
-Thanks,
-Amit
+> > This only adds a new opt-in flag; no existing caller changes
+> > behavior.
+>=20
+> No test cases --> automatically NAK.
+>=20
+> ...
+>=20
+> Also you missed printk() update and respective documentation.
+>=20
+>=20
+
+--=20
+ i.
+
+--8323328-1885734108-1790600391=:1168--
