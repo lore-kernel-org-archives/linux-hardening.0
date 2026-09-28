@@ -1,156 +1,135 @@
-Received: from mail-vs2-f39.google.com (mail-vs2-f39.google.com [74.125.227.39])
+Received: from mail-vs2-f37.google.com (mail-vs2-f37.google.com [74.125.227.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2C13845D3
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 18:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295263BED42
+	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 18:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.37
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790621096; cv=pass; b=bvPR24QqUT7s2E5TrhwueA2foaqcVQb3owZ/NzS2VnqSfHrqJIbit5oClU9uc9r2FpLVjZYdMjorzDS2cvnPxHjLb7fImxx/NhUT59GbY3wuPYOR2Eyd5Lv0YWRmwDwMvxGmJ52eY5yXeWeJ76kW65xejFLSS5XIfkTCoBpYpxo=
+	t=1790621884; cv=pass; b=d3zpXyL19e9xxO5MEG+4H6eE2KuFBl/zaTk26bMRfc7dzz7OPT5rCJlEOWYP4HCYWi80aZI6oEOu5MmGkJT033n5Cd6sl6esywCVoIi8JpvVULwyRCrkrI6McJHm0rzoLALSwTvbxwNMFLDaer/4GU4SQrIQka4ZKdNsjL3jCzw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790621096; c=relaxed/simple;
-	bh=XbAAAKuCIZsrCvYM1W9GX9bz0Evcj+nhL3IrdoI29kg=;
+	s=arc-20240116; t=1790621884; c=relaxed/simple;
+	bh=Im1NAfF0TnV3CDpW6n2DT1Ez9Xb/l8e1pIhIoS8My2A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AatOYjjjeOafh0cximXIQMxt+pOnLDpiA9WH2/Q0OxKNqCgNyS4ev1wnPhfPSgQIj/jnwHCr3i6tGleb+tX+bEwDoulTe7FyXpjPTHWbCSDXhNmt3TIT5HfLwuVHYsT7IvjouhTF2ab5AxByo1JUHWXbJhl2AoEL/Zfh/yzalek=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YVM2gbMd; arc=pass smtp.client-ip=74.125.227.39
+	 To:Cc:Content-Type; b=Qgk1XfDbaHbo65iF6L346Qhl18QqhWmaFIYukiHSg5dp5t5DDiVC0dWKnsPmKN1cnn0HmK22EysY088cGN+SGLkdvVINilq45FTbJ/yfocARTdO/UXBRB2DEVeCAiDsDnx/SPjfskz0KQgDNooAWnTr021xEnKhTh/sHPYfr1g4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sZqVXuoc; arc=pass smtp.client-ip=74.125.227.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YVM2gbMd"
-Received: by mail-vs2-f39.google.com with SMTP id 71dfb90a1353d-5cca96ec1feso961734e0c.1
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 11:44:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790621093; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sZqVXuoc"
+Received: by mail-vs2-f37.google.com with SMTP id 71dfb90a1353d-5cfd29f1208so533126e0c.3
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 11:58:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790621882; cv=none;
         d=google.com; s=arc-20260327;
-        b=GTGiNyPiwC37axB0JEej2/OXOyB0cq3isMTmQugSH1/OeDCEZ4/vIzAMlZ5zIKg1g8
-         vooPkIbTgxcUfaIJpyHNxaT3unv1rOeHZDWIg+cRzAN5NV/bF2E2g67W5WLLCI2d8uxu
-         EqCe4BzM8cGwwYFfI+uSuA/6rMd7Ngcdr1MtmYRsTIgGnkjRsk3xebaMbDtDMxvpLgff
-         JcJqcXS3cxG3wFVE2HpmlhZyo2g3r8Yynas+7bMpwKUGSSNJvV2JdZSLHFcAF96JmwMy
-         OaTM6ihatbmgVssLMBE4n7zvqwpzmeVtcJLhdAENG4vvcJWyaarYJBq9Wk6n/xe56gMa
-         nRdQ==
+        b=Adr5RGFNlosDqau+1C4Ux55qBZ4r59OlYpUzuDhh87mgW+hxIPS2TSZnLpy5Kh2bjf
+         G2Dd6Y3Seg3v+F35cAdV6U9WpcpNlvDIoHYIpBfGde78XpDAcqV1zI8t/F0jKTvbepXw
+         lAJqxLqj1Q3wIw+4l2XjMjRg+y4u5MKoVcvchl5VOfh9hPE1xeom3eU+BmzWl2cI/Xtm
+         cTFzvn8WUjLPPniDmYNWLSWPVewmauiQKEdn1RzZXPYITppome7z/u3sFVXilAeHwsIg
+         1sXwa0TXvygT3cuverNYFVHQva4s4tmijDD6xkbaW+a0Kh2V0Xx/MF+Cp6b/7OEQN7Wi
+         db2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=9MUoqVvpT69Aq5ZarehzNgWsu7OePV3YFvLIai8Gmus=;
-        fh=4TbeHZOL5zr9bwT9HGPzqhmwnJAPR/amKrxv+s1d1LE=;
-        b=Ccp60CaFx+EI+M2TwgRpw3tlxBKTN0XTj5Bzzm7KY2ubkiAOD+0fMp/X3A2JKlJG/j
-         sW5FmRGWvD6G/8xqVpi7I3jGYG9PjoF/yUiFJtGA3+/cpivJaB7b8eEpyP2zJEZTzdGK
-         /o8RwKvs1qt27bGT8DyUBX5DY9/1K/XDT2IREFIh3ZdP0+BjdCHUofE/5+pG+CGESoAl
-         cU2CVOkuS4nB2LbPUBowFSJdxFSJgO2914rT7RPvy2s+omMOUuMQmBMstpTjyF+/Cdn4
-         OfrfrNuBzcuuvoiAP7de7xVKbHur8pDriiNAqMZLj1RDh5tgkwwmB/QFdEWoMGdCIw7M
-         0tkw==;
+        bh=t2cIO50UyguhSiU6G2c4CxKHoZiSwBuo4uMuhhmaldo=;
+        fh=He2e7b1GINLPerr0k9ayNoDuKUp/8cX453JhOpLEp+8=;
+        b=CvprPlKiOqAn7xSwaAInY7bCY7MmuZYPSj1TW1k4VwXZVyX7k9/nzfqH9d2njoGcFP
+         jgQZ6oDR4F2thm9X1j6WfE3UPNdHrUpK4ZP1PRSnNjwour8QT3qb1ZbhRfIZujMXIKRB
+         EmeDRMX7ycHdhxrc/Nj8CJaM5/5Om4/HdBFxxju3JMHYrjUaTVyca7n2EyWft5mk1Us/
+         W1VBV/UJAeSqVW6Lyeu7/t6CrtQDigU+06LAQCgAW0CnJk8XiXaFXJlQj+Po+2dA7MJv
+         CU3BWNbQuMWwuM7UmTjXNdU7gCNp8sJGZociZO2an7ZipMMnKa+L5ObaQYmJ7av81ARB
+         Ezgw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790621093; x=1791225893; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790621882; x=1791226682; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=9MUoqVvpT69Aq5ZarehzNgWsu7OePV3YFvLIai8Gmus=;
-        b=YVM2gbMdA2Q47HpupznRjIt+6Fc4f/48cCj/As3vU2RaaIbdRDqLEg75M+w//aMJNi
-         kStmG0+tXsAmiI770/XWOBRjgd5JDhdDfalto1XXpI3Gsa5RxnZEpqp51t1Vkc7YYbtK
-         Oakttb6L8xZAmjifur3UK4jEM61pzNgrmykW5fKPmqmDTvSnthAoswR/kZ3kAVqmhkW9
-         E8E/vKVbRo1TS0kSuurhkO4EWsUMPIpTMuDTY9Ig/VXUl8YWoivMhMiEAgPL4i+Aepi4
-         YKiXoWEjDj2qEhh8yQ44yvJGfR29OaspgiSDk3dloURE/v+pvjphKo8Ohz82xv+fv6V7
-         oa7w==
+        bh=t2cIO50UyguhSiU6G2c4CxKHoZiSwBuo4uMuhhmaldo=;
+        b=sZqVXuoc6h7XgKkZ6kU3dpZ6kYOv6gI4W9xnXG2hM6Z1O344XYWhjK/63pN2esHBRI
+         H05fFVuuhbEhKGu8CF+3nhPraTmlbDyN6xSLF+ayaP/3m3HjCX4vR41ye7bTb4EKQGNS
+         QlRlWu0YUff0rpSPmNpr4vOub6G6TwpULNbKe6P3TdmZTVoItMEeaJ93cWPMLRq1hNjV
+         vLnjnFjIv7byHsvBAlsQ2FCpzAkSB7vvofs96fgARyVgszBZcDtkuxkjpEp43pwP9/xU
+         AjZM/ObJ0zTOUWAmiVf/sj/7CFQvBt3D6zFXx9aCiwjBh3b51jTX0pUKYiJjseZqB5tr
+         dm3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790621093; x=1791225893;
+        d=1e100.net; s=20260707; t=1790621882; x=1791226682;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=9MUoqVvpT69Aq5ZarehzNgWsu7OePV3YFvLIai8Gmus=;
-        b=Q7M1gZIMfpJvbdmfKWihDXVQBwFztsxuJ9islXYkrLKSRlbCVOtWgeiOgp+NAfzTza
-         MLN21qLtlnbw1f/aFRziczH1+GQDfelJuLXRxKRIuyb0B0xTpKPcxhNmgH13tTJEBJfk
-         QUdmKSqhXE+stEIcS91eNc6cbC6cu1c7UxZzRQZckazSTLr9ZhrufBW5pJIqmDzNKXeW
-         a7mPUVgnvr7Oujq0GMODK4NGd8Rhrx180g1RR3HDTS/LXlAJdh9pkib7ujEew4I1117e
-         Q8y+f2mrJLYaQkTBQ9q77iirxKyYtTnE08Y7iKHH67/NcQlDsXhw8wZtUWjQ08UTMsc9
-         mOPw==
-X-Forwarded-Encrypted: i=1; AKwUvBzcUul7/mSFC06akdm3NgbVayIsAuzXXKK5xQdo3Z6+h4jh6dcov0EEPU4RoEjp27lzFEnmO/icutdhPZKhRO0=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK27ciE9H/exWRmRy+t57Dao2nBnTOugtGaRwIamKsCilaDGYUn
-	jRRT4tr8onOiHmwbROD4Xl3qHAP0UGwqvUuJCNZGCFtlpM8l9tHPTyNMivBWjCfS+b4J4PgwGie
-	zBntmZcWsJqe66Cdd/GyOEAaXiqxADZzKeAs2Ye4=
-X-Gm-Gg: AYBFou1ANVGvqL7tGeieEDpsCbNT4q6dZY0TvO9N3BcmtSFA4EKBIm3NyIfLPLSQldj
-	iMTQwRk3+fyaz2FLSO/6nsYD4YIXeuRh+/SmZHIYlFxZgD5t5zCrhj9DHK9x+geeytHbVAKU3eH
-	2TNm5i+5TcFwqp7Hfjuq1BCoFWbtRvSbUJAFFLUGFJAiL7T3Wwc1A/Be95ZviKbnC91Hmmbk/hZ
-	ObpGHWw3wbYAtNh614D8ZEmCmFYHnfn5NbQU8mwwjIud5mQQwBmQy0e0IwiZuOc3wHd/5dT80Yq
-	agboMpN0XRSIKzcqzZ2UgyQB3ZJqFgJiDQT18shF+SNZ1/g/jv5RfhU3VeZ3iy1AaJZCA7cU4pW
-	jtTp0dA==
-X-Received: by 2002:a05:6102:549e:b0:7b3:3b4e:e4 with SMTP id
- ada2fe7eead31-7b33b4e251emr2377156137.2.1790621092753; Mon, 28 Sep 2026
- 11:44:52 -0700 (PDT)
+        bh=t2cIO50UyguhSiU6G2c4CxKHoZiSwBuo4uMuhhmaldo=;
+        b=CHBkKTt4FeQd0R7EiyHSPbAdWsitqCS5mBt117yOhuS+S0ZLh0iXUHMpb6FzSV9rjV
+         jd4l5se842uaLzpkQ0xmhb9EtP+63gcfelF+eTMVwXY1g7jzyRcJ2AcejxAHjIo+hYO3
+         MtDrYHCKBfAF/H07122Kaeytb4pxFzzRLAyuZkfCYJRLcMJyu1Wm/1DpqjthlUYWZe/0
+         cq9W0sRYnmRigmvqJX7BgccrxSsKZTIeX2AmGLwT1EYck/of9KHnZu2cxUnOkr09kzri
+         fQrpvZybXFY3UV7G+G4X9nmdl+qlH97ocRTKTXXLE9MH9tc1CBzrLyqqmi8/YudY4wi9
+         Ty2w==
+X-Forwarded-Encrypted: i=1; AKwUvByOwk5UkFcnwz3jSzQ7Oe/sE8D55hxLH02sq33VUrzl9+8HrbUWWBIZwSyGgz3V3LhY9W3NH7+uHh4wWhznbjY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLO9aqKwWe0Dysg4g4RHXVVeo7gsIvV+6URClaFNxEEEWqyH4wu
+	R0xPlWihlpr1XHuBSoylHqi2V/O4amuaFC8jI186sfI1V7nZAcgFuVKkBOW9F4wwzyEP3YWfcHa
+	NhUnxgppKCRjF15pnGk7EyLsnw7+q+INleDvKqWQZMuczdfNY+qIKKE2eYw==
+X-Gm-Gg: AYBFou1bSZWvtImoYwfsLYEBb4o9UaZxgVkDb687JFwDBK3H3iZ5jr+V077SgAQxBOt
+	524ihxdTfNi1lYB+smAi8IywKcQjcIZRVx6xIMHahopVNH/GeBjEd215NCLasQSo8KEjkdY7iGS
+	6ZxDkHIhh4CP3O7AkNmgYxl/J4RNdgv2EYdgwwCvfXummIRFPE8UnuOn6xL4dWZae+2eHh36FA7
+	k7jy0ti+FnOr9+90BrXWOkrRcur4/wtOIcoNpa6jPozGEUOomexCqI+UOIlzpUzN9AGS/K+yG62
+	dbVZrzhF59zF+k23Y1fcF0iA0UoDH8cgmkeQe0P5wsFBoaQfWxIz2dBVb9Z7n+rsbcj7yDYTlv7
+	dtdCeV9Xd05/sD3lUUqeX
+X-Received: by 2002:a05:6102:2d04:b0:7a6:accf:72c1 with SMTP id
+ ada2fe7eead31-7af19740319mr4949454137.0.1790621880968; Mon, 28 Sep 2026
+ 11:58:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260925204423.80661-1-morbo@google.com> <605221ed-a1b5-4179-be8d-b206c79487d7@intel.com>
-In-Reply-To: <605221ed-a1b5-4179-be8d-b206c79487d7@intel.com>
+References: <20260928044513.1330392-1-morbo@google.com> <fb409745-856d-44c6-b9a9-387bb7499811@opensource.cirrus.com>
+In-Reply-To: <fb409745-856d-44c6-b9a9-387bb7499811@opensource.cirrus.com>
 From: Bill Wendling <morbo@google.com>
-Date: Mon, 28 Sep 2026 11:44:36 -0700
-X-Gm-Features: AclHuK9vzOTIpe5NYpVAFSvvrNTDuflNtvpsUCuDxpjVBNqxintxAyJXqYTQDl8
-Message-ID: <CAGG=3QWoa0sK1P2VEAW+76EkFsjzXEZ9ucJg4iiOv29i8Sgzxw@mail.gmail.com>
-Subject: Re: [PATCH] gpu/buddy: add __counted_by_ptr attribute to roots
-To: Matthew Auld <matthew.auld@intel.com>
-Cc: Arun Pravin <arunpravin.paneerselvam@amd.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, dri-devel@lists.freedesktop.org, 
+Date: Mon, 28 Sep 2026 11:57:44 -0700
+X-Gm-Features: AclHuK_sC2R2kVmE83msZCKkzBaFLDE0QnCGPY-epZGSZc4zNKjrTMXfdmX0tnM
+Message-ID: <CAGG=3QWAhuHptY1qGsMoP_s6rkBthx3nWadPmYQdjWRMcRCH=w@mail.gmail.com>
+Subject: Re: [PATCH] firmware: cs_dsp: Annotate struct cs_dsp_coeff_ctl with __counted_by_ptr
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: Simon Trimmer <simont@opensource.cirrus.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, patches@opensource.cirrus.com, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
 	codemender-patching+linux@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 28, 2026 at 5:20=E2=80=AFAM Matthew Auld <matthew.auld@intel.co=
-m> wrote:
+On Mon, Sep 28, 2026 at 1:51=E2=80=AFAM Richard Fitzgerald
+<rf@opensource.cirrus.com> wrote:
 >
-> On 25/09/2026 21:44, Bill Wendling wrote:
-> > In 'struct gpu_buddy', the 'roots' field points to an array of pointers
-> > to 'struct gpu_buddy_block'. The number of allocated roots is tracked
-> > by the 'n_roots' field.
+> On 28/09/2026 5:45 am, Bill Wendling wrote:
+> > Annotate the 'cache' pointer member of 'struct cs_dsp_coeff_ctl' with
+> > the '__counted_by_ptr' attribute. This allows the compiler and KASAN
+> > to perform run-time bounds checking on accesses to the 'cache' buffer,
+> > preventing potential out-of-bounds reads or writes.
 > >
-> > Annotate the 'roots' pointer with the '__counted_by_ptr' attribute
-> > referencing 'n_roots' to enable compile-time and runtime bounds-checkin=
-g
-> > via KASAN and '__builtin_dynamic_object_size'.
+> > The 'cache' pointer points to a buffer of size 'len' bytes, allocated
+> > to hold the cached value of a DSP coefficient control. The 'cache' and
+> > 'len' are initialized in 'cs_dsp_create_control()'.
 > >
-> > In 'gpu_buddy_init', 'mm->n_roots' is initialized first, and 'mm->roots=
-' is
-> > subsequently allocated with 'kmalloc_objs(struct gpu_buddy_block *,
-> > mm->n_roots)'.
-> >
-> > Since the bounds associated with 'roots' ('n_roots') are fully set prio=
-r
-> > to any array allocation or access and remain invariant, this annotation
-> > will not cause runtime panics or false-positive bounds checks.
-> >
-> > Cc: codemender-patching+linux@google.com
-> > Assisted-by: LLM
-> > Signed-off-by: Bill Wendling <morbo@google.com>
+> > Every subsequent access to 'ctl->cache' is strictly validated to
+> Is that true?
+> When I last looked at these __counted_by they were only checked by
+> a subset of library functions (which was documented) so I was still
+> able to write code that overran the buffer.
 >
-> Reviewed-by: Matthew Auld <matthew.auld@intel.com>
->
-> Would it make sense to also do this for *_scoreboard and free_tree, if
-> we add a new field n_orders?
->
-Sure! There's already a 'max_order'. I assume that 'n_orders' would be
-more dynamic?
+There are several flags that need to be specified when trying to
+trigger an out-of-bounds error, like this:
+
+  -fsanitize=3Darray-bounds,object-size,local-bounds
+
+They should produce code to check each array access if the compiler
+can determine that it's from a struct. E.g., Clang probably won't
+generate the bounds checks if the field was passed into a function
+that isn't inlined. GCC may have better luck with that.
 
 -bw
 
-> > ---
-> >   include/linux/gpu_buddy.h | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/gpu_buddy.h b/include/linux/gpu_buddy.h
-> > index 2c36124bb696..d7249e500ab6 100644
-> > --- a/include/linux/gpu_buddy.h
-> > +++ b/include/linux/gpu_buddy.h
-> > @@ -172,7 +172,7 @@ struct gpu_buddy {
-> >        * a power of two, with each root being the largest power-of-two
-> >        * that fits in the remaining space.
-> >        */
-> > -     struct gpu_buddy_block **roots;
-> > +     struct gpu_buddy_block **roots __counted_by_ptr(n_roots);
-> >       /*
-> >        * Per-order free block scoreboard: free_scoreboard[order] holds =
-the
-> >        * number of blocks of that order currently in the free state.
+> However, recent compilers might do more checking now.
 >
+> Reviewed-by: Richard Fitzgerald <rf@opensource.cirrus.com>
