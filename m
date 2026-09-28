@@ -1,124 +1,113 @@
-Received: from mail-dy2-f42.google.com (mail-dy2-f42.google.com [74.125.229.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B370D37F727
-	for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 19:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963A017A305;
+	Mon, 28 Sep 2026 01:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790536091; cv=none; b=pFBueLdk93PwV+y/CzCY5tfvDjn81NrhEH33wH8kGVm12fSRAlLNEq7BbOdxkoA3aZ0/GDWwWrzoseMfwAAX+1gVeBFnGzXARE5R8Bhpm9XDKsLPh5e26NWsrq7vew6af1p7Lt6IDG9U/2TBJMGbKMaQUKz0B6urDytLJ4vagrA=
+	t=1790560747; cv=none; b=eHsVSGnDq/n6dsAlFYFWeg+V9DE/IODlb7CdP6CSB911ab6ZNOu/AZxu4A94NBv+o9ITJhlBI7htbdCaSm1j7nk5prrT3Sf8UAXni6F3OaS6hlQZRaeAtWbtJsnkRn/8Z6j2vXUd8VlpeZQV7TxrReKVtVMRAOiuz+euWNgSTzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790536091; c=relaxed/simple;
-	bh=h2liHw+Cb3T5OCreOlX8AWj3tP3/1dELU2ASsfx2NuM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VLW6QB212rRIf8msFIKyUoLuDRYG/ew5XRsEq4Y6m7NpWYsL8u0rAWcB4FLC91REd+SXQmh6L95cAll8qgd/gAI7dcYd9PyvhyIaV5Wk4qeyIw6ooGAuKJ0UQa/A0ZdWilA/cSELeuO6e+yYsnShRZQT8Sn+xYH7YIqVH3rGMGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p3P73Cy0; arc=none smtp.client-ip=74.125.229.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790560747; c=relaxed/simple;
+	bh=qB62AJSN3Sg4eqEMY1QmfXeoC2Eq6WxKoVkEaEb7qyI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Pf0EuPiIySMU7nUHH72Vw/QxgWv7pjDST+YQSXl1obkUsCjf1VGxVIVyQ8YAv688W7EpGiSqiA1iVqR7N8PJQ6i+eG1lfspPl1RIdrJ9Ng0sXSzhF9jDyzsX/zbBm01zNiu9uENTVvQgEd/X8/2PVGgnZryLzA0Clhh8nopJSts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=c8dcqaXp; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p3P73Cy0"
-Received: by mail-dy2-f42.google.com with SMTP id 5a478bee46e88-3411e0ace58so3339302eec.0
-        for <linux-hardening@vger.kernel.org>; Sun, 27 Sep 2026 12:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790536088; x=1791140888; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=SDDgjq+FLrfVveApew+3CiL9S8tkEEemKYxqci8Nfsc=;
-        b=p3P73Cy0m/JAEVgMTPDvZ8gAy2t8YeP0+fMmxyFbB/6SvL2gYwvyvNfxRrWU2w6rEe
-         /ScO/8ONQ+2k/8+wtc/sLvOq5FtcIK2SVGLJq1WJhjT09D7CphPhi/+V2LQ4WaELU/hj
-         AQrK02teIAsEgiDDAUOtr3nS8h0US3f8VFumQ2PL5Lo3REUu4pw+FWt2KqcTA4awBdxi
-         liNfHb81WgY/M6oxn/itDLt9tQBoEHZWO3qo1PEpnc5qHly7oTSWkQ8Bq2nr65af4vfK
-         r+qm/yN1C7Am2IxIlD4itndRKt4EYbAUYIhnCIhSeIz3ljxewXvnMBPZCMyM880046mU
-         pBdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790536088; x=1791140888;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=SDDgjq+FLrfVveApew+3CiL9S8tkEEemKYxqci8Nfsc=;
-        b=vtw9vXD8GlACNMPZ2dAhFjABJgSxiMpm7eQ5v3nAcsAmQaV9Jxi7xlHDAxVJcAL7Pl
-         MMyYcqZmfEGTlSKEeojiqQIRPj+iKf95oCSllax3e0+oXUfyQQ7E/TO1ptfkkp3pfpxu
-         vXCSxL12CJb++qfv14LgaxFnLqfX6p/7UVb6Br/Wb24NDXSJBK+90nW7NPMq1w+se8k0
-         BjI5sjQdRM4PnWqTNlPCUkHqBLTe7voVBJcGKAfD5t1AJ3oByy+u1UKsE1CiT/OIa6dU
-         c2uLKmE75xkI9Xsgx+5OFqhll9ogo5OAsazC4MEG4df7YUi4PCVWMjSwW9nbwtFIFZ5K
-         2m7g==
-X-Forwarded-Encrypted: i=1; AKwUvByD4YWVhXOvuDCX+GIBYIGEEDty+c8nxRiDmtKsTuHlFZOTyNJKsbsTkMA4SYNqAVLNWa92x6JsrjwuHe0OjyU=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKNJcA81TxSDDOemLihC4LoYOgyydjDpYi1N/h1cwJa4cl84/G7
-	hlvcJho9JJwKnp7t/PeOyOTnodV6BBmv+LuSKlcFZC9+yWHMnW66J1+O
-X-Gm-Gg: AYBFou03UnphHlW4F0tGvYe6sWkY/iG3apGGCxRvmjentGNNWMn1M11mNepxBTYyGmA
-	+go2cuIc4CxAoXwq6Dh1TeEP8KNWaUxL2qpSu9XmiCTg8BhlLaTigRtL1bHc9SKYKgBbs7tSQgi
-	JgJaB6hSfm18c/IbC49sUN5MKjMgp0pFYhtiYLb6J4XMAF9G8sfGhT3t39Xzsel9YduD30FxCYY
-	FIHEDRWAwMVOyVCrVOU5oObN/pnchT7Rh0qdOGYpzzzWealMiXnD4i7f1iOKfFVAw7JKLYdLqmm
-	9UFOmNlSWDq3pcX9NEIpLVNxIhFuhc55aLyza+gKcHzKsrJ5tqgT3CbiKyGwgh9wavap9DmvUf8
-	DK1i3E8F+fX15XKMHzKD3wtf9AhgyhWCgVbuwBeJmTgtfggnuzwkwxT5zmzviNC3MFWoN/8jxzg
-	86mauaEa7wifr+LzW/jfYSEwyI0Q1q7IIdzvVOnz0T8O3MNbxsTVB6vaNGA7ik1dMgIYafOFfWE
-	GbGtenguBsebahowKRLzSPxkmXt
-X-Received: by 2002:a05:7300:4f1c:b0:342:19b0:1c92 with SMTP id 5a478bee46e88-34273549d27mr7996388eec.35.1790536087021;
-        Sun, 27 Sep 2026 12:08:07 -0700 (PDT)
-Received: from homik.search.charter.net ([2603:8002:ad40:56f0:5bb1:340f:98dd:fd61])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-343580930e2sm13639702eec.16.2026.09.27.12.08.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2026 12:08:03 -0700 (PDT)
-From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-To: krzk@kernel.org,
-	s.nawrocki@samsung.com,
-	peter.griffin@linaro.org,
-	linusw@kernel.org
-Cc: alim.akhtar@samsung.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	morbo@google.com,
-	kees@kernel.org,
-	justinstitt@google.com,
-	aleksandr.loktionov@intel.com,
-	codemender-patching+linux@google.com,
-	Mariia Nikitash <nikitash.mariiaw@gmail.com>
-Subject: [PATCH] pinctrl: samsung: Use snprintf() to construct pin bank names
-Date: Sun, 27 Sep 2026 12:07:58 -0700
-Message-ID: <20260927190758.609156-1-nikitash.mariiaw@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="c8dcqaXp"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=ezDik2QaMp/3ORzwR99KO4kmsJHD+sAI1866xdo9UFo=;
+	b=c8dcqaXpuskHliNTYZeLq0e3Pj81CJDeoPIqV+h3UR+jeMo9uTIBckSAig2RFSP7D/5X1jkSQ
+	Kri/L0EkszIApThuKCQWIUkH3ozc+qoSq/k09tuhFDiGJIZpQSdJMxQgaWWjE3J9lJEESgRbTfg
+	p3oPCSGaBJkwhzuCuW8e38I=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4htPLN0C5mz1prQs;
+	Mon, 28 Sep 2026 09:46:52 +0800 (CST)
+Received: from kwepemk200008.china.huawei.com (unknown [7.202.194.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0033D40538;
+	Mon, 28 Sep 2026 09:59:02 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemk200008.china.huawei.com (7.202.194.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Mon, 28 Sep 2026 09:59:00 +0800
+Message-ID: <a8a8edfd-0f01-4a30-9876-a9eab172eb0e@huawei.com>
+Date: Mon, 28 Sep 2026 09:58:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/ptrace: Add PTRACE_SYSEMU_SINGLESTEP
+ syscall-exit-stop test
+To: Kees Cook <kees@kernel.org>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<oleg@redhat.com>, <luto@amacapital.net>, <wad@chromium.org>,
+	<peterz@infradead.org>, <ada.coupriediaz@arm.com>, <linusw@kernel.org>,
+	<yeoreum.yun@arm.com>, <kevin.brodsky@arm.com>, <anshuman.khandual@arm.com>,
+	<james.morse@arm.com>, <thuth@redhat.com>, <vladimir.murzin@arm.com>,
+	<tglx@kernel.org>, <broonie@kernel.org>, <liqiang01@kylinos.cn>,
+	<ryan.roberts@arm.com>, <pengcan@kylinos.cn>, <kmehltretter@gmail.com>,
+	<linux-arm-kernel@lists.infradead.org>, Shuah Khan <shuah@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+References: <20260922195719.i.211-kees@kernel.org>
+ <bbd65e4d-8096-4939-8308-f0f54c5cb3bc@huawei.com>
+ <202609241654.F545D3A88@keescook>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <202609241654.F545D3A88@keescook>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemk200008.china.huawei.com (7.202.194.74)
 
-From: Bill Wendling <morbo@google.com>
 
-samsung_banks_node_get() constructs each pin bank node name by copying
-bank->name with strscpy() and appending the suffix with strlcat().
 
-In preparation for removing the deprecated strlcat() API[1], format the
-node name in a single snprintf() call, which preserves the existing
-truncation check against sizeof(node_name).
+在 2026/9/25 7:56, Kees Cook 写道:
+> On Thu, Sep 24, 2026 at 12:11:31PM +0800, Jinjie Ruan wrote:
+>>
+>>
+>> 在 2026/9/23 3:57, Kees Cook 写道:
+>>> ptrace(2) states that no syscall-exit-stop occurs when a tracee is
+>>> continued with PTRACE_SYSEMU or PTRACE_SYSEMU_SINGLESTEP. arm64 gated
+>>> its syscall-exit report on
+>>>
+>>> 	flags & (_TIF_SYSCALL_TRACE | _TIF_SINGLESTEP)
+>>
+>> Hi Kees,
+>>
+>> The original fix description is a bit off: on arm64 there is no extra
+>> syscall-exit-stop; instead, there's an additional pseudo single-step
+>> injection.
+>>
+>> As sashiko pointed out, as commit ac2081cdc4d9 ("arm64: ptrace:
+>> Consistently use pseudo-singlestep exceptions") described, for
+>> PTRACE_SYSEMU_SINGLESTEP, arm64 still needs the pseudo single-step
+>> because its hardware single-step state machine is fast-forwarded over
+>> the SVC instruction.
+> 
+> Ah! Okay. So this test should be tweaked to deal with that? Feel free to
 
-Link: https://github.com/KSPP/linux/issues/370 [1]
-Cc: codemender-patching+linux@google.com
-Assisted-by: LLM
-Signed-off-by: Bill Wendling <morbo@google.com>
-Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
-Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
----
- drivers/pinctrl/samsung/pinctrl-samsung.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Yes, I understand that these two cases should be distinguished.
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index 5ecc9ed4c44d..0d639eec689c 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -1155,8 +1155,7 @@ static void samsung_banks_node_get(struct device *dev, struct samsung_pinctrl_dr
- 
- 	bank = d->pin_banks;
- 	for (i = 0; i < d->nr_banks; ++i, ++bank) {
--		strscpy(node_name, bank->name, sizeof(node_name));
--		len = strlcat(node_name, suffix, sizeof(node_name));
-+		len = snprintf(node_name, sizeof(node_name), "%s%s", bank->name, suffix);
- 		if (len >= sizeof(node_name)) {
- 			dev_err(dev, "Too long pin bank name '%s', ignoring\n",
- 				bank->name);
+> snag/update this test for the series. We didn't have anything testing
+> syscall exit stops, so it seemed reasonable to get it written.
+
+I agree with adding a syscall exit stop test case to check whether it
+violates what the man page describes.
+
+At the same time, I think we could also add a test case to verify the
+problems that may arise from arm64's own missing pseudo single-step.
+
+> 
+> -Kees
+> 
+
 -- 
-2.43.0
+Best regards,
+Jinjie
 
