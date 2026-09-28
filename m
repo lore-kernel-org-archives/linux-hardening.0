@@ -1,144 +1,244 @@
-Received: from smtp113.iad3b.emailsrvr.com (smtp113.iad3b.emailsrvr.com [146.20.161.113])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8BB49A3BD
-	for <linux-hardening@vger.kernel.org>; Mon, 28 Sep 2026 10:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7742B4AAC65;
+	Mon, 28 Sep 2026 11:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790590896; cv=none; b=WpH9BtyvWqf3OaHWgZEpjBDoJWrVia7bvm5ZbA/7hMfhZ5mlIHHhS8Ruw3thcF3HEqywsxfr26zLzLGoHFSgpsoCWsxQ8+6GnCHTLlUUx6DPhGq1uWdgt1NUm3mt7XE8ABrwgai7N76bF42+KfyBx5AH4uXkCvSaFNtsn2gvack=
+	t=1790595460; cv=none; b=Kq6E4QzumCrr3UnEO/qqmpuxQXG6r0DptBQfcZMeK1JqVE2v9llzkZ4ophTVO6Y7shL7ppDb4OagYy32f6Z9e259xaPykCmwlvHviyTF40wBryREqs3EMBy1AvInke2ZsvIwVGLm6l5YljKftBArIoOtk7lIv6I8eRL5ze5vqAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790590896; c=relaxed/simple;
-	bh=Y7Qw7W5qMjGxVfGumDi7SR3QDvt0n6QdbufdrETuCeM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dEuKXp1QTjqsFQW0sUiSPZxvLuTGzN48IuqaeScHEoEzor7yFUqSUda+aILGneQbYaAY4ei0SscZFRWf7bJ9b9bH86pDZDOTlWCoJHbN/+s3K8LdmdDphLkLYKUTRVWC1NHuCTLY8DhtFchrSZodfP/alXfGn56yttrM204A7Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b=NTeJ7+nx; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=aw8T3DXu; arc=none smtp.client-ip=146.20.161.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+	s=arc-20240116; t=1790595460; c=relaxed/simple;
+	bh=+0wbYyylv2W4FDEGmwWMhUk9rw0i2g9ChKu77yaMt9E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MtjdyVUvSbQkkbeLTyk97wudoLz+RZ8blyAvKXOVt2ftxrhXrEF9nLxXpFckb6L1OFDAsCJ+1aeJa+zVZOJFWLECvOVDpGiSvRe7tDNbHMNbKaFwCeI+dxIijuomaR5RNrY1i7MAAk2ydf57rnacv3zwvsqBSmyR0/PlMjtvEl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D1ekfnnU; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="NTeJ7+nx";
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="aw8T3DXu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-	s=feedback; t=1790589733;
-	bh=Y7Qw7W5qMjGxVfGumDi7SR3QDvt0n6QdbufdrETuCeM=;
-	h=Date:Subject:To:From:From;
-	b=NTeJ7+nxk76Lecl3m6v/Ega4DT/rvEqWbWT+tqdBD+DYjPT8LcD/SUm6Chw8yh1i1
-	 w3e81q00njwFoGLSwmTNFTk5tI7zVZAu23ty3HF3jd02AtSYo8RNtKJFwD9QBGyPjM
-	 AJNw3TgIEYlioyKMzEV3YoYAdP9RSdjMI6mJ4wUI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1790589733;
-	bh=Y7Qw7W5qMjGxVfGumDi7SR3QDvt0n6QdbufdrETuCeM=;
-	h=Date:Subject:To:From:From;
-	b=aw8T3DXu1MUnWKIgIPGGedkDvOoZfOFAP9ZXkieQYI9CeJBmqTdASpyednGgMn7hz
-	 6jlC77Qo17cjniY3kMbGlgxKekU9RfDwVVqUeE6LVgTP02wMoeGS/UYCZsP+zBc+lF
-	 HR9PfawWeeQxMDa7F0DxVjd6tDlqtcaL2Ehtllc8=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp7.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id E3EF5600BF;
-	Mon, 28 Sep 2026 06:02:12 -0400 (EDT)
-Message-ID: <998d8eab-5a4b-4e5d-9844-16022d571d18@mev.co.uk>
-Date: Mon, 28 Sep 2026 11:02:11 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="D1ekfnnU"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68SBZUtI3374963;
+	Mon, 28 Sep 2026 11:37:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=owG7PdSKZiKgNxplioX22//h+Uij
+	uj+ymNAWo5x5JvU=; b=D1ekfnnUi+GkkiEURWZsxtlG4aeZ8xZQLHUQ5ojtwW3A
+	TmPmf2NWU5t1bLxNl38DiDzNSS28wb75o4Nm4DScY1VkZ4suuMW32KxsOVpeb/il
+	hISuYH4tnoWIjs85+8/zW0rJY+ec3BlL3KpLNgAnZg9VkoeW3mDD4pdckRLoMx+p
+	Jrjwh8CEaZrRlVXXumN8GNh41gQk9/eoRZ+0Dgpn4eln0F+Ss2HGiNwE0VQYNc4u
+	0hbaJPM0J3TmWtiUEsykRBdDeoRAia+Qu7Imq0+QLpYoCzkImV1Tp2glZYuqQiK8
+	Zf0XsDsfkcAONJll5lXdJ8brRMojxFjvcox048uvkA==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gx5qr0yy5-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 28 Sep 2026 11:37:23 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68SBHVQJ057241;
+	Mon, 28 Sep 2026 11:37:22 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gxu2y4rsx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Sep 2026 11:37:22 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68SBbIS545416850
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Sep 2026 11:37:18 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 95A9A2004E;
+	Mon, 28 Sep 2026 11:37:18 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8E2772004B;
+	Mon, 28 Sep 2026 11:37:14 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.213.32])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 28 Sep 2026 11:37:14 +0000 (GMT)
+From: Amit Machhiwal <amachhiw@linux.ibm.com>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Amit Machhiwal <amachhiw@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gautam Menghani <gautam@linux.ibm.com>,
+        Harsh Prateek Bora <harshpb@linux.ibm.com>,
+        R Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Alexander Graf <agraf@suse.de>, linux-hardening@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH 1/3] KVM: PPC: Book3S HV: Add SRCU protection for virtual-mode HPT hcalls
+Date: Mon, 28 Sep 2026 17:07:01 +0530
+Message-ID: <20260928113704.48912-1-amachhiw@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] comedi: comedi_bond: Refactor strlcat() to seq_buf in
- do_dev_config()
-To: Mariia Nikitash <nikitash.mariiaw@gmail.com>, hsweeten@visionengravers.com
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- morbo@google.com, kees@kernel.org, justinstitt@google.com,
- codemender-patching+linux@google.com
-References: <20260927060000.518354-1-nikitash.mariiaw@gmail.com>
-Content-Language: en-GB
-From: Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-In-Reply-To: <20260927060000.518354-1-nikitash.mariiaw@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Classification-ID: 2b9ad3f3-7b10-40dd-b0b5-dd7844833867-1-1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTI4MDA0NiBTYWx0ZWRfX2ZuAdkI5Ussw
+ LRCIBD3UqcTIaz2FA3M4OkX1tJh7W9teybSIPXr5h+iGDBNZTMVZmQkA3taJbjQ3/Wb5gmM+dwg
+ GY/eidcPBCV5pqJaWBvassE74mdblkYY6WyJZBzqv8xDdYa+p3rPVsYW68Kn5Mu5bm6qVx6RUwe
+ LDW5Gyy89bfv632cZLYyXjrzfjMlbJsFmuc865277aWnlcVDmbGiqamSSJ7/Oal5QkZS44tXLZv
+ dJgrxj5sFBPIOXeBO9QrmH0IebbG4rgzZa0luNCEBRfflfuiXoKMAHGT8cE+ge+Ay5I8HbxK1ly
+ rM8dyaSiyAE2+D5RMU5mQh2lJpgxNe9RWK4DwensoMXPi5XL32RDwpgb3iEriU1kxcbSWpmlrNn
+ nnRdjiHBYWVPbtpCAS5MCVguFZ3l7eLGljPoNeObwgowNQiiWP0Ikr6oh+Q2y+mOCjnezacwDPN
+ 9U1Qc0+vzbAb5LI32pA==
+X-Authority-Analysis: v=2.4 cv=SPbXx+vH c=1 sm=1 tr=0 ts=6aba5173 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=VnNF1IyMAAAA:8 a=DgxhUou5BkHipWTGidQA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: EzQiaEYNpTDL5GYT4jphrLfaa_tpmb1h
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTI4MDA0NiBTYWx0ZWRfX+yC0UJb1l+QX
+ 8nvjN9+ELBH3xiJK3llmn5/l8R7nL8u18YxS47DgtRKjS19rwnm8wK7z7IYZ1z9nUMVnuHZD2pU
+ NMBjE6sNWsQWX+cq7cdjR/gYnPmTcXU=
+X-Proofpoint-GUID: 431P1MB3VSeFlb-OZeLTUlNfY4df4jFw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-28_03,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 clxscore=1011 spamscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
+ definitions=main-2609280046
 
-On 27/09/2026 07:00, Mariia Nikitash wrote:
-> From: Bill Wendling <morbo@google.com>
-> 
-> do_dev_config() builds a space-separated list of bonded devices in
-> devpriv->name by formatting each "minor:subdev " pair into a temporary
-> stack buffer with snprintf() and appending it with strlcat() in a loop.
-> 
-> In preparation for removing the deprecated strlcat() API[1], use struct
-> seq_buf and seq_buf_printf() to format each entry directly into
-> devpriv->name. This avoids repeated rescanning of devpriv->name and
-> eliminates the temporary buffer.
-> 
-> Link: https://github.com/KSPP/linux/issues/370 [1]
-> Cc: codemender-patching+linux@google.com
-> Assisted-by: LLM
-> Signed-off-by: Bill Wendling <morbo@google.com>
-> Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-> ---
->   drivers/comedi/drivers/comedi_bond.c | 18 ++++++++----------
->   1 file changed, 8 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/comedi/drivers/comedi_bond.c b/drivers/comedi/drivers/comedi_bond.c
-> index 8e10ecab4f0d..a10cfbd04c72 100644
-> --- a/drivers/comedi/drivers/comedi_bond.c
-> +++ b/drivers/comedi/drivers/comedi_bond.c
-> @@ -39,6 +39,7 @@
->   
->   #include <linux/module.h>
->   #include <linux/string.h>
-> +#include <linux/seq_buf.h>
->   #include <linux/slab.h>
->   #include <linux/comedi.h>
->   #include <linux/comedi/comedilib.h>
-> @@ -170,10 +171,11 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
->   {
->   	struct comedi_bond_private *devpriv = dev->private;
->   	DECLARE_BITMAP(devs_opened, COMEDI_NUM_BOARD_MINORS);
-> +	struct seq_buf s;
->   	int i;
->   
->   	memset(&devs_opened, 0, sizeof(devs_opened));
-> -	devpriv->name[0] = 0;
-> +	seq_buf_init(&s, devpriv->name, sizeof(devpriv->name));
->   	/*
->   	 * Loop through all comedi devices specified on the command-line,
->   	 * building our device list.
-> @@ -250,15 +252,9 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
->   			}
->   			devpriv->devs = devs;
->   			devpriv->devs[devpriv->ndevs++] = bdev;
-> -			{
-> -				/* Append dev:subdev to devpriv->name */
-> -				char buf[20];
-> -
-> -				snprintf(buf, sizeof(buf), "%u:%u ",
-> -					 bdev->minor, bdev->subdev);
-> -				strlcat(devpriv->name, buf,
-> -					sizeof(devpriv->name));
-> -			}
-> +
-> +			/* Append dev:subdev to devpriv->name */
-> +			seq_buf_printf(&s, "%u:%u ", bdev->minor, bdev->subdev);
->   		}
->   	}
->   
-> @@ -267,6 +263,8 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
->   		return -EINVAL;
->   	}
->   
-> +	seq_buf_str(&s);
-> +
->   	return 0;
->   }
->   
+The virtual-mode HPT hcall handlers (H_ENTER, H_REMOVE, H_BULK_REMOVE,
+H_CLEAR_REF, H_CLEAR_MOD) call into book3s_hv_rm_mmu.c, which accesses
+memslots via kvm_memslots_raw().  kvm_memslots_raw() uses
+rcu_dereference_raw_check() to bypass SRCU lockdep annotation checking.
+This is safe in real mode because the entire guest entry/exit is wrapped
+in srcu_read_lock/unlock inside kvmppc_run_core() and
+kvmhv_run_single_vcpu().
 
-Looks good, thanks!
+However, since commit 6165d5dd99db ("KVM: PPC: Book3S HV: add virtual
+mode handlers for HPT hcalls and page faults"), these same handlers are
+also executed in virtual mode via kvmppc_pseries_do_hcall(), which runs
+after SRCU has already been released on guest exit.
 
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+A concurrent KVM_SET_USER_MEMORY_REGION deletion or move can therefore
+call synchronize_srcu_expedited() — which does not wait for this thread —
+and then kfree(slot) and vfree(slot->arch.rmap) while the hcall handler
+still holds a raw pointer to the memslot.  lock_rmap() then writes to
+freed vmalloc memory, leading to use-after-free and memory corruption.
+Because kvm_memslots_raw() suppresses lockdep checks, this race is
+entirely silent.
 
+Fix this by factoring out the 7 HPT hcall handlers (H_REMOVE, H_ENTER,
+H_READ, H_CLEAR_MOD, H_CLEAR_REF, H_PROTECT, H_BULK_REMOVE) into a
+helper function, kvmppc_pseries_do_hpt_hcall(), and wrapping its call
+site in srcu_read_lock(&kvm->srcu) / srcu_read_unlock(&kvm->srcu, idx).
+Targeting only the HPT hcalls avoids wrapping non-HPT hcalls that sleep
+(such as H_CONFER, H_REGISTER_VPA, H_PAGE_INIT) or handlers that already
+acquire SRCU internally (such as H_RTAS).
+
+Fixes: 6165d5dd99db ("KVM: PPC: Book3S HV: add virtual mode handlers for HPT hcalls and page faults")
+Cc: stable@vger.kernel.org # v5.14+
+Suggested-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+---
+ arch/powerpc/kvm/book3s_hv.c | 70 ++++++++++++++++++------------------
+ 1 file changed, 35 insertions(+), 35 deletions(-)
+
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index dbac3573b2c8..aa51968e206a 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -1159,6 +1159,38 @@ static long kvmppc_h_rpt_invalidate(struct kvm_vcpu *vcpu,
+ 	return H_SUCCESS;
+ }
+ 
++static long kvmppc_pseries_do_hpt_hcall(struct kvm_vcpu *vcpu, unsigned long req)
++{
++	switch (req) {
++	case H_REMOVE:
++		return kvmppc_h_remove(vcpu, kvmppc_get_gpr(vcpu, 4),
++				       kvmppc_get_gpr(vcpu, 5),
++				       kvmppc_get_gpr(vcpu, 6));
++	case H_ENTER:
++		return kvmppc_h_enter(vcpu, kvmppc_get_gpr(vcpu, 4),
++				      kvmppc_get_gpr(vcpu, 5),
++				      kvmppc_get_gpr(vcpu, 6),
++				      kvmppc_get_gpr(vcpu, 7));
++	case H_READ:
++		return kvmppc_h_read(vcpu, kvmppc_get_gpr(vcpu, 4),
++				     kvmppc_get_gpr(vcpu, 5));
++	case H_CLEAR_MOD:
++		return kvmppc_h_clear_mod(vcpu, kvmppc_get_gpr(vcpu, 4),
++					  kvmppc_get_gpr(vcpu, 5));
++	case H_CLEAR_REF:
++		return kvmppc_h_clear_ref(vcpu, kvmppc_get_gpr(vcpu, 4),
++					  kvmppc_get_gpr(vcpu, 5));
++	case H_PROTECT:
++		return kvmppc_h_protect(vcpu, kvmppc_get_gpr(vcpu, 4),
++					kvmppc_get_gpr(vcpu, 5),
++					kvmppc_get_gpr(vcpu, 6));
++	case H_BULK_REMOVE:
++		return kvmppc_h_bulk_remove(vcpu);
++	}
++
++	return H_FUNCTION;
++}
++
+ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm *kvm = vcpu->kvm;
+@@ -1174,47 +1206,15 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
+ 
+ 	switch (req) {
+ 	case H_REMOVE:
+-		ret = kvmppc_h_remove(vcpu, kvmppc_get_gpr(vcpu, 4),
+-					kvmppc_get_gpr(vcpu, 5),
+-					kvmppc_get_gpr(vcpu, 6));
+-		if (ret == H_TOO_HARD)
+-			return RESUME_HOST;
+-		break;
+ 	case H_ENTER:
+-		ret = kvmppc_h_enter(vcpu, kvmppc_get_gpr(vcpu, 4),
+-					kvmppc_get_gpr(vcpu, 5),
+-					kvmppc_get_gpr(vcpu, 6),
+-					kvmppc_get_gpr(vcpu, 7));
+-		if (ret == H_TOO_HARD)
+-			return RESUME_HOST;
+-		break;
+ 	case H_READ:
+-		ret = kvmppc_h_read(vcpu, kvmppc_get_gpr(vcpu, 4),
+-					kvmppc_get_gpr(vcpu, 5));
+-		if (ret == H_TOO_HARD)
+-			return RESUME_HOST;
+-		break;
+ 	case H_CLEAR_MOD:
+-		ret = kvmppc_h_clear_mod(vcpu, kvmppc_get_gpr(vcpu, 4),
+-					kvmppc_get_gpr(vcpu, 5));
+-		if (ret == H_TOO_HARD)
+-			return RESUME_HOST;
+-		break;
+ 	case H_CLEAR_REF:
+-		ret = kvmppc_h_clear_ref(vcpu, kvmppc_get_gpr(vcpu, 4),
+-					kvmppc_get_gpr(vcpu, 5));
+-		if (ret == H_TOO_HARD)
+-			return RESUME_HOST;
+-		break;
+ 	case H_PROTECT:
+-		ret = kvmppc_h_protect(vcpu, kvmppc_get_gpr(vcpu, 4),
+-					kvmppc_get_gpr(vcpu, 5),
+-					kvmppc_get_gpr(vcpu, 6));
+-		if (ret == H_TOO_HARD)
+-			return RESUME_HOST;
+-		break;
+ 	case H_BULK_REMOVE:
+-		ret = kvmppc_h_bulk_remove(vcpu);
++		idx = srcu_read_lock(&kvm->srcu);
++		ret = kvmppc_pseries_do_hpt_hcall(vcpu, req);
++		srcu_read_unlock(&kvm->srcu, idx);
+ 		if (ret == H_TOO_HARD)
+ 			return RESUME_HOST;
+ 		break;
 -- 
--=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
--=( registered in England & Wales.  Regd. number: 02862268.  )=-
--=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
--=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
+2.54.0 (Apple Git-157)
+
