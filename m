@@ -1,51 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4724C33ED;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2004C33D3;
 	Wed, 30 Sep 2026 23:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790812375; cv=none; b=lHEOoN2ypWar8iX2PQw74zEu2EEoqmtdfEKnBJOx497gmayJ3zIxLlgrbwPDUtHZXmPrdxQOMcDaQJktWL1HJBT/f/scy6154/03oAUX1g/krQpyoUaXMwjDK6YHPlqMUeTGLdugdCsM5eVTV9E4GJqiD6afTj6zwFiiFeGi8vk=
+	t=1790812375; cv=none; b=bDbJi8z8f+da709+9YDZphSsnJTpW/cv5l6T8lTZmS7hwORqS7Y1s7eUZa60/yYnuQv4VPKvlI6Wkx5KVQ3miqpkC+GhHFTJsdQEUU2CebEijCJwKp03uXMIgoDHfehzFzoOKTz24ljYI7lIlCpHLGPZ3sml5FPWyxun0eNdsPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790812375; c=relaxed/simple;
-	bh=qTdDoPd0Ksi1U8I5fG05y9W5Ggvnl1eHPIzcw+f38s8=;
+	bh=2pWbibimYJjEXAHdaatZyQiBGge4J8y7TGlnBYdtUpk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VyCd6sKnJOwXDraohM/bnq9JGQhPp5X/Z9/piiL1YebHQa9Q/69+HppJ3892lCZh3KmO7/sew+927Kc+WUdOWQfmQucD1FTlqj6JEErBR5NXa0tX3wPLgODXO9IkzlcajA82SE+AIT6JnP/HcVZ73x35Mx0BE5urcSu/wKm6emw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXjDpTIS; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=AQs24sLcp6etvdsr8uHwjc2iZt3zXt7Vwz31vJdyDRQv/PWseyc/a7UWASNWe9xaNiB2OX4qSk8/poL7UPq7hUKH92muiVprremwqz+nyl1ogNQBzsDVVXkHNk7W9ZMSx2AcN0rS8QU2mmB6u0gGU8cCAS+uBZzBHv1Tc6aB9vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTqH4x8u; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXjDpTIS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E16C1F0089F;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTqH4x8u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15CD71F0089D;
 	Wed, 30 Sep 2026 23:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1790812371;
-	bh=fnir0UfbY9fTB7q6F0wLenGmJSxBViPfzZ07mhGO01w=;
+	bh=0rGd0l6phK5RjyIfaqlGeNty+f5gO7jzOqYdPkB7HTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lXjDpTIS/H2BjiV8CVHN1bPjTNueAWwdoQwFipOwHT8LRX87hfM9F9uaeJ5UwArQW
-	 C9J0+6DC3/UoPFelLQO8dATeVAf8Hk8uy7d6WKfhjWDv7pwDvc5UcAORFbChNCIV3M
-	 yLCbKfRR2DPtlQPfGH/hIG9fdDQ2bKIkEyEzajnDh/TNGVynCweaA8m8XS4HKcAZs6
-	 4M8ZqNP2bsesmBdu9q6+GWxI7a3EAnQNdD3rXDFbiOhqRtxzCEVIG822lPKI4kT5QD
-	 I8tgRRNE1tHDilVLLCHhdnBk9tdE/twrHO9qQ7LL7Ac0W92WubhEOI5jo6OZ+n6NH+
-	 a48MorAppU7Xg==
+	b=fTqH4x8uFZnteW656odC+z6VqmAhSEJnkaKwZ7XfXo/zIuNLr/pYWyNOz2UbATeK6
+	 e2HUvDwyphEucY0fsAGcTzqmZ3prg3i8/r92B0TpZK8O8gj79LBiDrO3iLW+NablZN
+	 I3gU7hIBSqilk5HJyWd548AK5e6BUyM5fqEX/up4TC3Z51HZU+fF0je5V9YydCVpLF
+	 Ci9HLLDFfZSPORayHWSajwFmv35DdTyqP0oHp5voPCz9Gx5Clqvqt5EHuH3Un/vZzd
+	 uQPQQyPpi8XsrhHuGYTB2C3ToFN7K/ag0g3dS+6h2w6bICSv6QuMLoGEQh0w8aXC7J
+	 W+910TYT3RyZw==
 From: Kees Cook <kees@kernel.org>
 To: Bill Wendling <morbo@google.com>
 Cc: Kees Cook <kees@kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
-	Thorsten Blum <blum@kernel.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	David Gow <david@davidgow.net>,
+	Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	nikitash.mariiaw@gmail.com,
 	Greg KH <gregkh@linuxfoundation.org>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v3 09/11] powerpc/papr_scm: Return the string length from the sysfs show functions
-Date: Wed, 30 Sep 2026 16:52:37 -0700
-Message-Id: <20260930235247.157921-9-kees@kernel.org>
+Subject: [PATCH v3 08/11] seq_buf: Add seq_buf_init_append()
+Date: Wed, 30 Sep 2026 16:52:36 -0700
+Message-Id: <20260930235247.157921-8-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260930235231.out.387-kees@kernel.org>
 References: <20260930235231.out.387-kees@kernel.org>
@@ -55,48 +52,134 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1287; i=kees@kernel.org; h=from:subject; bh=qTdDoPd0Ksi1U8I5fG05y9W5Ggvnl1eHPIzcw+f38s8=; b=owGbwMvMwCVmps19z/KJym7G02pJDFl7FxxjdhP1OyM2dz9nNEdZap913693nZret7Q/3l+f/ I9h2T/XjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgImcPMfwh7M0ZHFBXuPsrx+d 73puX5b2renq9ofVZ/7I6UYZHWKVM2H4zaLZLc3ulXfkSmUdj1F02qtVD2ZvO7dvwtVr23meGXc JsAIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4828; i=kees@kernel.org; h=from:subject; bh=BwcCXVyHW3lUCTkHo6Pgo9IWy8KBkwjAuRDkuIELs1I=; b=owGbwMvMwCVmps19z/KJym7G02pJDFl7FxxbJ9bQb2f/75B2rFc2x9Y1jn9UFt2/1RD8OHraT I7NtW31HaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABOZL8PI8ExX7vMMsxdx659O 7mqre+lldEh02y/7OYfTF/M6VBwUO8bwz672/u2NSW35VjOd/vpt+lXE3LJdfXGY6ZYFSV4r26r ecQIA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-perf_stats_show() and flags_show() build their output with a seq_buf
-and return seq_buf_used(), which may include the trailing NUL byte
-when the seq_buf has overflowed. Use seq_buf_strlen() instead.
+From: Bill Wendling <morbo@google.com>
 
-Build tested ARCH=powerpc ppc64_defconfig with GCC powerpc64-linux-gnu
-16.1.0:
-arch/powerpc/platforms/pseries/papr_scm.o
+Several strlcat() call sites being converted to seq_buf need behavior
+seq_buf doesn't currently provide. The normal seq_buf_init() always
+sets the new buffer size to 0 via seq_buf_clear(). Code migrating from
+strlcat(buf, ...), which appends to whatever buf already contains,
+can't use seq_buf_init() without discarding that existing content. Add
+seq_buf_init_append(), which preserves the existing contents and positions
+the seq_buf to append after it. Add KUnit tests for behavior coverage.
+
+Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
+and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.1.0.
 
 Assisted-by: LLM
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bill Wendling <morbo@google.com>
+Co-developed-by: Kees Cook <kees@kernel.org>
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- arch/powerpc/platforms/pseries/papr_scm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/seq_buf.h   | 20 +++++++++++++++
+ lib/tests/seq_buf_kunit.c | 53 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
 
-diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-index 75da96c08cdd..b03cfd8528f5 100644
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -1108,7 +1108,7 @@ static ssize_t perf_stats_show(struct device *dev,
- 
- free_stats:
- 	kfree(stats);
--	return rc ? rc : (ssize_t)seq_buf_used(&s);
-+	return rc ?: (ssize_t)seq_buf_strlen(&s);
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 195e612a212a..4a2415fcb185 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -46,6 +46,26 @@ seq_buf_init(struct seq_buf *s, char *buf, unsigned int size)
+ 	seq_buf_clear(s);
  }
- static DEVICE_ATTR_ADMIN_RO(perf_stats);
  
-@@ -1150,7 +1150,7 @@ static ssize_t flags_show(struct device *dev,
- 	if (seq_buf_used(&s))
- 		seq_buf_printf(&s, "\n");
- 
--	return seq_buf_used(&s);
-+	return seq_buf_strlen(&s);
++/**
++ * seq_buf_init_append - initialize a seq_buf over a buffer that may
++ *			 already hold NUL-terminated content
++ * @s: the seq_buf handle
++ * @buf: pointer to the (possibly non-empty) buffer
++ * @size: total size of @buf
++ *
++ * Unlike seq_buf_init(), which always starts @buf at len=0, this
++ * preserves whatever NUL-terminated content @buf already holds and
++ * positions @s to append after it. Useful for converting code that used
++ * to append to an existing buffer with strlcat()/scnprintf() and friends.
++ */
++static inline void
++seq_buf_init_append(struct seq_buf *s, char *buf, unsigned int size)
++{
++	s->buffer = buf;
++	s->size = size;
++	s->len = strnlen(buf, size);
++}
++
+ /*
+  * seq_buf have a buffer that might overflow. When this happens
+  * len is set to be greater than size.
+diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
+index 8e879a4082ad..84caa552870b 100644
+--- a/lib/tests/seq_buf_kunit.c
++++ b/lib/tests/seq_buf_kunit.c
+@@ -29,6 +29,58 @@ static void seq_buf_init_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&s), 0);
  }
- DEVICE_ATTR_RO(flags);
  
++static void seq_buf_init_append_test(struct kunit *test)
++{
++	char buf[32] = "hello";
++	struct seq_buf s;
++
++	/* Initial string contents match. */
++	seq_buf_init_append(&s, buf, sizeof(buf));
++	KUNIT_EXPECT_EQ(test, s.size, 32);
++	KUNIT_EXPECT_EQ(test, s.len, 5);
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_buffer_left(&s), 32 - 5);
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 5);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hello");
++	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&s), 5);
++
++	/* Appending with space works. */
++	seq_buf_puts(&s, " world");
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 11);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hello world");
++	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&s), 11);
++
++	/* No truncation when space for NUL is present. */
++	seq_buf_init_append(&s, buf, 12);
++	KUNIT_EXPECT_EQ(test, s.size, 12);
++	KUNIT_EXPECT_EQ(test, s.len, 11);
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 11);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hello world");
++	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&s), 11);
++
++	/* Check for required truncation when full. */
++	seq_buf_init_append(&s, buf, 11);
++	KUNIT_EXPECT_EQ(test, s.size, 11);
++	KUNIT_EXPECT_EQ(test, s.len, 11);
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_buffer_left(&s), 0);
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 11);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hello worl");
++	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&s), 10);
++
++	/*
++	 * The size bounds the scan: the string reaches past it, so an
++	 * unbounded strlen() would report 10 here and leave @s overflowed.
++	 */
++	seq_buf_init_append(&s, buf, 5);
++	KUNIT_EXPECT_EQ(test, s.size, 5);
++	KUNIT_EXPECT_EQ(test, s.len, 5);
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_buffer_left(&s), 0);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hell");
++}
+ 
+ static void seq_buf_declare_test(struct kunit *test)
+ {
+@@ -664,6 +716,7 @@ static void seq_buf_terminate_test(struct kunit *test)
+ 
+ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_init_test),
++	KUNIT_CASE(seq_buf_init_append_test),
+ 	KUNIT_CASE(seq_buf_declare_test),
+ 	KUNIT_CASE(seq_buf_clear_test),
+ 	KUNIT_CASE(seq_buf_puts_test),
 -- 
 2.34.1
 
