@@ -1,50 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB243568FCA;
-	Tue, 29 Sep 2026 19:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1E7367B85;
+	Wed, 30 Sep 2026 02:28:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790711725; cv=none; b=EX2avFS030Xu6tWhe6nJ6aDsL9f9fEZxcD0RvdwO80Z/TZEBt32hEIU6yJ5dlVxvSVR7L2VDk+1y1w/QroBEdoAVvK77qGkJOWvEVbvPfcPGNBNxOafYsEs4yZXRFOUlloeV4r2BMfybGHJjbRmMx151enqShiiyOHBL0KypU/I=
+	t=1790735328; cv=none; b=C3qn60xecKjWA98ohxbKlEBR9JIoqAqE76Tz4/snuSbl48lI0KxOOHYz/NCFadDqsvL1G8Gkul8ddhBfreyzZXnZzaSu+HnuOg0PPo3s+5LAeXqO+WMMFkWTTo6pI0s8aK1ZnhtdC6vEbM51wO40rN6ewpERNRPQ1lou/fQ4X0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790711725; c=relaxed/simple;
-	bh=ZdBVVYhs8ucGQJsrN69gWfFbyyqgSaNpY0JZk86j1zQ=;
+	s=arc-20240116; t=1790735328; c=relaxed/simple;
+	bh=zB0otH/hVEu1Wr4tyBHwbPwBa/K1KHpyemdLa5Z69u4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i/LKhSs52ZxqTbyax9p1vPj+2hxWLtUhp9fKCT4/s5WjW9kV0GNwLp4+RXivFhV3P/gKQB5YpeRJtKxf+TlcIfOzLxazQdPAyumMT+uzMQWqhuOGnEzJ66n5N4fnKXVvI0/KWhKiueLdp1/W6gwrEDyzQOK8QOVllbqwQQ/hKZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOwkZk8E; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=uCRsU7BjheAzI9xLV2rCIjtgScf1t5cmyMjEdG0Aaa74dPM30iiXJbTgC9/QuzcA72zxMtTgwQxfub5SOpiqdYyZtKKDWlcyg2mCd7yWziZiHNbBQ503QdxWWi9nZPV5eAdZG1S4F7/xzVfFXCDjlc58UKN0RkahvNCBddTF3dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlV4/Pjo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOwkZk8E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC061F000FF;
-	Tue, 29 Sep 2026 19:55:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlV4/Pjo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A801F000FF;
+	Wed, 30 Sep 2026 02:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790711724;
-	bh=iB9OihUdNpovJy2l/Ipn5MetrsvjMVExaZ/AmkjE4LA=;
+	s=k20260515; t=1790735324;
+	bh=5tiPKJQOAbmGdP7F/ZZTAcs55NJ2xHhHsVb8/IhifjI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=OOwkZk8EKiaZ4g55alEPL1ivnLz4sCKU0U2L7EdfvB3tUPTnqVDgjHkcxbgLTlrCk
-	 hCvPCXdgKce/gCGULTuSJliOUBPdGK0KRQQkGE1OHqEyIgQ59SpDp83NqagfXtw90Y
-	 uq8mXG5KRGRid3MjtA1SMExTAQLh8w9MF7pSXM811RyyU0eXTLDGXR2O5u3RV4Iyph
-	 2gMBFM372a0O+ErgHQtvUNorN5RxhKw4vpcOMdULNCBKgZKp99J/TJr6GNVXiX1qXX
-	 dcF0f3kffbKNSQF9HcePMw0OMBFjjotvrb+bs2K5/n6N99jdPLWbEeqQ2ZHq13KBho
-	 BuOR8hqvmBXAg==
-Date: Tue, 29 Sep 2026 12:55:22 -0700
-From: Drew Fustini <fustini@kernel.org>
-To: Aamir Ahmed <elb12345@hotmail.co.uk>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Drew Fustini <dfustini@oss.tenstorrent.com>,
-	Joel Stanley <jms@oss.tenstorrent.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Brian Masney <bmasney+clk@redhat.com>,
-	Jerome Brunet <jbrunet+clk@baylibre.com>,
-	Anirudh Srinivasan <asrinivasan@oss.tenstorrent.com>,
-	Kees Cook <kees@kernel.org>, linux-riscv@lists.infradead.org,
-	linux-clk@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] clk: tenstorrent: Assign .num before accessing .hws
-Message-ID: <arwXqtNq63F9D9M6@x1>
-References: <AS8P251MB00013BD9A093C06D2D60E10EC8B42@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
- <ce401b42-9dfb-4c8e-9051-7ba08c107382@embeddedor.com>
- <AS8P251MB000160067A8B595BB9D743E8C8BF2@AS8P251MB0001.EURP251.PROD.OUTLOOK.COM>
- <arSHQglLv0FfAmiw@x1>
+	b=mlV4/Pjo9HdddtFvEqunjDInLUpUpfhsvKPFuo2vdYVkPL7KGqOUVUAztl2BSs3qS
+	 1XKwBwYLcR5Ad+OwR0yvAPuDfmqRxkd9Oh0FooyEKtBXg0wqui4nHB0+x8UZN1+CQ8
+	 FkDrfLtcsc/SSc7pyBRLQSaK6zOhGqZ+lDqEsHaPWg2YT7kXKHzWpR4rhsRlRu/MSe
+	 SyVmQE3p2pOsJWUEk2kARp9vAH6decN9qpXdu0iqguwltyXeVH/roaX7N3U5+StQqO
+	 QeGIB7N0wgJ3XA78hRs7XnGGubQCLMLETLPVPjXFY2TxvEotUcmkOvxuugd3w1vYpx
+	 8lVrud6y7liMw==
+Date: Tue, 29 Sep 2026 19:28:44 -0700
+From: Kees Cook <kees@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Bill Wendling <morbo@google.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>, nikitash.mariiaw@gmail.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 5/9] seq_buf: Add seq_buf_strlen()
+Message-ID: <202609291927.9D27E60@keescook>
+References: <20260919002658.stay.929-kees@kernel.org>
+ <20260919002714.4060307-5-kees@kernel.org>
+ <2026091953-cherub-empty-ef35@gregkh>
+ <202609191326.4042FC4@keescook>
+ <2026092037-antsy-shrapnel-6139@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,36 +52,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <arSHQglLv0FfAmiw@x1>
+In-Reply-To: <2026092037-antsy-shrapnel-6139@gregkh>
 
-On Wed, Sep 23, 2026 at 07:13:22PM -0700, Drew Fustini wrote:
-> On Thu, Sep 10, 2026 at 01:47:31AM +0100, Aamir Ahmed wrote:
-> > On Tue, Sep 08, 2026 at 11:56:12AM +0200, Gustavo A. R. Silva wrote:
-> > > Looks like variable num_clks can be removed entirely, and just do:
-> > >
-> > > clk_data->num = data->num;
-> > 
-> > Yes - it is only read once and data is const.
-> > 
-> > Thanks for reviewing, and thanks Anirudh for testing. For the redundant
-> > variable, since this has a stable Cc, perhaps we can keep the diff
-> > minimal here and I can send the cleanup as a follow-up once it lands?
-> > 
-> > Kind Regards
-> > 
-> > Aamir A.
+On Sun, Sep 20, 2026 at 06:34:32AM +0100, Greg KH wrote:
+> WARN on the init makes more sense, but even then it feels odd as if we
+> wanted to make a seq_buf with data from a device or userspace, we would
+> have to verify the size is non-zero _before_ creating the seq_buf or we
+> would crash.  So someone has to check the "untrusted" data somewhere,
+> right?
 > 
-> Thanks for sending the patch.
-> 
-> I would prefer a v2 with this change in order to avoid a trivial patch
-> later. We are still in the process of upstreaming support for the
-> Atlantis platform, so there are no users yet that would be affected by
-> this issue.
+> And why can't we have buffers of 0 size work just fine?  What prevents
+> that?  People have "empty" strings for lots of things.
 
-Applied to tenstorrent-clk-for-next with that fixup so there is no need
-for a v2:
+Yeah, okay. I'll not add the WARN for seq_buf_strlen() and remove it
+from seq_buf_str().
 
-  da9f1312b06e clk: tenstorrent: Assign .num before accessing .hws
+-Kees
 
-Thanks,
-Drew
+-- 
+Kees Cook
