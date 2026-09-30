@@ -1,175 +1,141 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2090.outbound.protection.partner.outlook.cn [139.219.146.90])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8502645D5FE;
-	Wed, 30 Sep 2026 08:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.90
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790756895; cv=fail; b=Fj4gbwX72a3YiUhVfU2/1owUfpKt1vMaYAGSM4+O2Utj9YInjufN/WDkJ/MfcfkDLZGPlup8gm6jS2vtL8as4NUwZ53Euk9Ft24OArWXblGK1GxDRgELYeV1PgXeMkR64ZB0QJFIdet0hxfFbt6835pXcn+KmYXCVV4YcFyzXa0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790756895; c=relaxed/simple;
-	bh=/qtUxTpZeBf1fIpkeUG3jp0Wm19P1AexI7jxJ5mVCMk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NNsApoLsVZMLmUnAo8HlfaUW8R9huFtzzZDUXy3ZM0OswkEWM980r/EV3c42MRiV4R8c/UBQSG67/FZQwo/vK2l0nTZYrB/PuDlkDjQT8zYtc+/1wmOn+mcmx3cggpC5UKQIm0/6YG9bG6Yy8lb66jeitASNRWLLQMrY42AQH6U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kSMDGsiQRLvkv9xCd7D5oGgjBKoaxMy81zUxXoX1qLoygw9QjSCfPSobNQXol6bqMJL4fSKhGePD0K0lzWfmoRoAHbi26QsBdylL83wd1NkMRAc4o7z0n5cLC16hFAKmTHdo9GYANeABJhCaKRRaJMtPhpSrXDoo045SWxfU0v+cuA+NsXUQjuhiOp+4vMDHDHGR/OWNO8rP4gPkM9bO3qZ31vh/8cFGWeYHK4L1wy8MwQnj2E8Irk24TLmPoQCIQTB+D1reG+VxijiYF6Wi74IrUWMlZol0E/J2ZlRDSjdSLRm+AysdO0J4+CCkn/w/tn++PqQOUtmFrwNdg1BM3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/qtUxTpZeBf1fIpkeUG3jp0Wm19P1AexI7jxJ5mVCMk=;
- b=A9QIsKyUPrppQ9+zFA0AUbG6UDhIPBFDDMKFp/VbQ1Qpzj338qGb/noG2Np/BWxabUp9N7MwXabqIcr5A6n0KeRFxX1St5MX2dVVOSw92FyvkLc90uq4oQMUaLCxmOnbuo0Smy28qwdefIernTfg7lEfdLDlMaIJ768aF3ZgDF6MhpjNvfWJO7LpDtdnu3KDJo8fjhVQCXXDsMNBW1HQhSGnKsVM1CLzg2wvQo44DVGXTcb2BFm9+jF0EwcO5zfQNxqXwlKlCqJNw9IkA0kfpNSSpmF7dwl+dOhbBSlzSajlzd1yxxfywBH+3tglpVvLXdYA+6x9Skr2hSG4qbBykA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:17::6) by ZQ4PR01MB1331.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:16::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.26; Wed, 30 Sep
- 2026 08:27:59 +0000
-Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
- ([fe80::e7d4:256c:b066:850d]) by
- ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn ([fe80::e7d4:256c:b066:850d%4])
- with mapi id 15.21.0451.026; Wed, 30 Sep 2026 08:27:59 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Jerome Brunet <jbrunet@baylibre.com>, Michael Turquette
-	<mturquette@baylibre.com>, Brian Masney <bmasney@redhat.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Paul Walmsley
-	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Emil Renner Berthing <kernel@esmil.dk>, Kees Cook
-	<kees@kernel.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Richard
- Cochran <richardcochran@gmail.com>
-CC: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Hal Feng
-	<hal.feng@starfivetech.com>
-Subject: Re: [PATCH v4 03/22] clk: starfive: Rename file name "jh71x0" to
- "common"
-Thread-Topic: [PATCH v4 03/22] clk: starfive: Rename file name "jh71x0" to
- "common"
-Thread-Index: AQHdSPew5FxIBMEJ4kOnpM+hu5x6v7bfcogAgARvjxCAAvFdgIAABc8Q
-Date: Wed, 30 Sep 2026 08:27:59 +0000
-Message-ID:
- <ZQ4PR01MB12026522469590AF04BAB1ACF28B2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
-References: <20260920120044.194901-1-changhuang.liang@starfivetech.com>
- <20260920120044.194901-4-changhuang.liang@starfivetech.com>
- <1jqzih73ob.fsf@starbuckisacylon.baylibre.com>
- <ZQ4PR01MB12022FD5940DAA1AC1279B8FF28D2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
- <1jtsn72mds.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jtsn72mds.fsf@starbuckisacylon.baylibre.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ4PR01MB1202:EE_|ZQ4PR01MB1331:EE_
-x-ms-office365-filtering-correlation-id: 49c02d1e-5925-43d3-7c81-08df1eccbc7b
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|23010399003|7416014|366016|376014|10067099003|56012099006|921020|4143699003|18002099003|22082099003|38070700021;
-x-microsoft-antispam-message-info:
- WGDEY3LJNKj90KJ6294/RSj/FVaQfmaYoOc0t1siAzZ0LX2h4/1HlA27Yy0rNvaUShx4GGe7TWtBqOAcWmiCkpUAnchhyEoUacDqdZOLjXmITXmP4zDb2tQXPB/gGbgp0nu1APC43NS8C1vilK+TKrgPzTySItjX4TaCdiSp4HTuI9W0K1vRWmJTL/CHl6Bk+It9qSVjzHFaoNcD5/UD1fOaQrPkUnJzjUR0zSDh2gXAxQxNVUNUci7djA3RkIMxSEodIow8Rcue7vLouNnfiQj3VSfrtCzjuxp7pWtCwCqYgGb70AnrLgSylPn+BV7BjNegGxilJ17vXJcqpY6PEZOwUFEJ/Rc92tT0jI+NJg13+PMLD4MqfFWMT+HFzUBcFhbUTk3MulQR+Kekka6OxjesgKvJMERR8sPbP1onKlbPQgknDHOy3/AQ4GnBDpagB/uCTCRRxekcqtX3M1QXUktn2leA9enkFJm4hy5zu1AhxIQjmtlT9xmpXUzKYjB5sFNtdQJr8k+k9fRmpwUDo+H+6l8M8nmoZcjyvRdXG9MVCSXCJztZIsOiRnA2DuVLufNWcAqNrBp6xjtmoLwAeg==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(7416014)(366016)(376014)(10067099003)(56012099006)(921020)(4143699003)(18002099003)(22082099003)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?8v9TTaOqdj84DaDw+hiAPNng2a9tk3GQZBJ+E2w899+Uz+HSOVRF0KaX5IG1?=
- =?us-ascii?Q?S3MyVYshi3NhNfgr5KqiJyfaCqO9Tmd9EcZGK/y+b/mkIFPgcEBmOHhYKNjf?=
- =?us-ascii?Q?f7zuw8tTNFUMv82XaRHiUBpHwektEQZKG49OFUJJaxA0/fSrPscl6k+o/0w1?=
- =?us-ascii?Q?TPSsaumHXR0RXwYd7drE4lt2Ylj1gFK9APWh2Hm7UlKt8JqHR4XxQdAHI9DQ?=
- =?us-ascii?Q?BDZmVCFdTHmNSNrqaFcsS+RB5v+4BD+eMXQheHY1iyx+y2Qqb6ib+Pj759TC?=
- =?us-ascii?Q?Z836acmRHzACZfPyMTBpfL+Uym3pfpPRnJJS5P9QtmXBaxiGtEVNu/9rq4le?=
- =?us-ascii?Q?8ISSxEA6DqPfF2306S+83HtbPmPtvb7rsudmHpwzqUT+XBX8NwYqPqUVFRlv?=
- =?us-ascii?Q?IjYpiwxoZJNTk8LZ0Ng6cvW1Vq5Z4OBYoyku1gJ4JQvpbjq5T6zNLBN92SII?=
- =?us-ascii?Q?Y62tjbJsrLEldutX1ImzH13dBwCcY6p4R5d/0+7lDhHHO6JNSAEG/PwAwRCV?=
- =?us-ascii?Q?G6JwZK/QSpVhTbZ7iU2VNf/cqD1XzNU75b+Ecgni/PeJzebdMB5e7jr9oO+Q?=
- =?us-ascii?Q?2l2pg0JTP7COeSVLXtr6jvt9U21+pR5PHWxjozEhaKGSt4PpiPDsYkbeEUxP?=
- =?us-ascii?Q?wAZxYkSgoaZrojcue/6I8VYEKT57+OKD62tTcI/kfpGyqLJSUiR2Oni2QGsM?=
- =?us-ascii?Q?LfQZ6B2ZGKWwRAPj7fNoW79qxD5QggyLJ/OUytvflmS0Ka2jHvyf4XodmXEo?=
- =?us-ascii?Q?z2KVlq5pH/7is8wb77E7sXfQV2sgjwBQOd+I8/eOwT2wfmNxyAjqVSr/7VeF?=
- =?us-ascii?Q?qc4DS8YDyFiD/sbYIdfVr7YhUb8i48L2eQF87yHk+tMVuP520GIUa1I/jk87?=
- =?us-ascii?Q?9Yoit+SNn5kIDw5BeQf+Pqwk8eh9Y/r0GCzvvijJFjTic1PQL1kLQdrDp8KW?=
- =?us-ascii?Q?Kd/O/7qFNQIUGFYHmpE0aMbVAW6w93SPsTJ8EJZEBV8Wcax7+7f6gm0CgaBL?=
- =?us-ascii?Q?fENFZdXdvw2P63JwaPTWw78MKdN4lxh4bnJF2AmCBIgopjeTPEeESevAcD5s?=
- =?us-ascii?Q?VQdGl1/OMzNG/ioL4LnJ7mx2IgXi0vI8cQ/CEKo+OP16ghumAPAmNoYQxvaD?=
- =?us-ascii?Q?F2yu9WFGvgA6jKWbiweTgTCtww4kfscWygdCmV4MQGFQOaN8FwzNshWNXzN1?=
- =?us-ascii?Q?y4hXZ/rVOFOZrBkdDskSkDL6Y6wBFwxi8xlMVBpOqZNKLlXJB1bkHrDwVm6n?=
- =?us-ascii?Q?IPhmYQe9pmgnbelx9RVgq1S2gTqTLNU6Zno5pLvBT+ERw5655YN16nZ65L3u?=
- =?us-ascii?Q?SrP5UvaMKQHbhJ5Hd56j755QpWiEElsVSXO/n1VngiKHDvoZqdxg9OODt/Wc?=
- =?us-ascii?Q?OM7lDUVxFz3t7RzN6AQFmIWCyLyy9OdvbZQiPQm/ymUT+1XSat/ugZHMn4nv?=
- =?us-ascii?Q?2DqPxiNdya4rjQN7lBrXBFPlLih8KJzuFBmZzs6duDBEZeWUonng176p400I?=
- =?us-ascii?Q?a0tBb4siBQjrb6HyplmBgEodXuJqq4wBmbIOApU48pRHDXQ48MMQtVX+EAAL?=
- =?us-ascii?Q?xtlZAEnq2pF0gEBGpDYr9RpEtL5dLQUevyi6z2xuwWYGXvcl+cKmFTzxLiQK?=
- =?us-ascii?Q?q1/giKuAQKbA2tjV/1nHduDSGBAc4bdJrNJrmNa76tyOVEZasFXdwTSbnXFq?=
- =?us-ascii?Q?fiUCHerh1OUluqtzqWTDqDoxAUCPeS+Z+i+y+ClVLLlrt/5lR4OtPB/4wFyN?=
- =?us-ascii?Q?MLiF3mHrkJ2eCQtqzziqZVfzJ5pf+Gg=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE663845DC;
+	Wed, 30 Sep 2026 09:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790760560; cv=none; b=qHvywGwkwUv0N7fPEFrNWdpXS8+Mei/iYmqFNVv3hZCSucgGZcLP3GMz1aw4pjUfPyP4asNxW+07P3XkyJImROQmcPkR4WZtDcydMgOAzsaM+0D+OwaZhG/PXwzD7SO39t3YslHwxbSyjc4cKrIRLe9ZzWOzSZPAyDZFnEUHOkA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790760560; c=relaxed/simple;
+	bh=Fj2CGpbn18h2x9Ix9QU2iCE10XquvaqfV4WsW5n8CWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J74MkpOo2OEHMIeq+aJmfFgHyjf8K6w0pONTeTVIBUPY0Z2mYiKwo4/IfELNxx7FbLW8gSUi/y0x+KjGR+JVKRO9x2aXnLLjrB9HuLqQPMK4rh0fXg9QJHFSCCI8Ib2eTj+o/5Yn/Vj5Pqa/F57Z4sRCQAzQMhQOlJzoaQ2oNtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GpgMMVM9; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GpgMMVM9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82CCC1F000FF;
+	Wed, 30 Sep 2026 09:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790760559;
+	bh=/I2j8EtervZUekqkoXeInY0fb0//oNYCQBLFthnmKww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=GpgMMVM9zSyI7cseyP4ugRp0T06ijIk4rue1FO8ILmV97WBeoC6sOEJahhiN4PEH9
+	 KWngsyLOunNALWj0Qqqr0xYCNpIA06Orymz3d1DdkVEXAovuvXy+X3sRuUZKq5W7E0
+	 HR0pQVZeIVY7nscUBSHM9pUE0CMK8RLwjFf4iZ/MIU7HsYvET8DQzNbsFlIVktdcBZ
+	 Ao/0qb7BKB9aHDoBp2j8a/f739LR1BxZCAMxO6yB//m4sVaBVLSxjY5O8TDvk7FBFS
+	 HiKOtaVIdxul++gFC1tbEiuKBeLYZi+kJebEbAFksMZdapQU1cNZEU6elALisQBOn+
+	 sylcFDHEX+XJQ==
+Date: Wed, 30 Sep 2026 11:29:16 +0200
+From: Thierry Reding <thierry.reding@kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Rosen Penev <rosenp@gmail.com>, linux-clk@vger.kernel.org, 
+	Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Brian Masney <bmasney+clk@redhat.com>, Jerome Brunet <jbrunet+clk@baylibre.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH RESEND] clk: tegra: bmp: remove kcalloc
+Message-ID: <arzWBhCQCCUBI95M@orome>
+References: <20260929192437.27775-1-rosenp@gmail.com>
+ <1jwls32msl.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49c02d1e-5925-43d3-7c81-08df1eccbc7b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2026 08:27:59.3809
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Sb9tN59D5hGUQ+ZHGSvtQAarEITcs9Ym6/pD6Ybo+oHSiwAOhGR9PPupSshXXPSfrFd3kq0exhF6JKfQXvMlC2Djac5YPCzdYBnH+RdUNSnjdE32PL+rw1GwXc6b1ycn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1331
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wv6hlsxowlo3aj7c"
+Content-Disposition: inline
+In-Reply-To: <1jwls32msl.fsf@starbuckisacylon.baylibre.com>
 
-Hi, Jerome
 
-> On lun. 28 sept. 2026 at 11:10, Changhuang Liang
-> <changhuang.liang@starfivetech.com> wrote:
+--wv6hlsxowlo3aj7c
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RESEND] clk: tegra: bmp: remove kcalloc
+MIME-Version: 1.0
+
+On Wed, Sep 30, 2026 at 09:58:18AM +0200, Jerome Brunet wrote:
+> On mar. 29 sept. 2026 at 12:24, Rosen Penev <rosenp@gmail.com> wrote:
 >=20
-> > Hi, Jerome
+> > Use a flexible array member to avoid allocating separately.
 > >
-> > Thanks for the review.
+> > Use __counted_by for extra runtime analysis.
 > >
-> >> On dim. 20 sept. 2026 at 05:00, Changhuang Liang
-> >> <changhuang.liang@starfivetech.com> wrote:
-> >>
-> >> > From: Sia Jee Heng <jeeheng.sia@starfivetech.com>
-> >> >
-> >> > StarFive JHB100 shares a similar clock and reset design with JH7110.
-> >> > To facilitate the reuse of the file and its functionalities, files
-> >> > containing the "jh71x0" naming convention are renamed to use the
-> >> > "common" wording.
-> >>
-> >> Is this really necessary ? Rename are generally not recommended.
-> >> Do we really care if your new soc use something named after the older
-> one ?
-> >>
-> >> You are naming it common now but how long is it going to stay "common"=
- ?
-> >> If your next SoC does not use this anymore it won't be common for long=
- ...
-> >>
+> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > ---
+> >  drivers/clk/tegra/clk-bpmp.c | 12 +++---------
+> >  1 file changed, 3 insertions(+), 9 deletions(-)
 > >
-> > Okay, I will drop the current PATCH 1/2/3/4 and directly reuse the curr=
-ent
-> JH71x0-related interfaces.
-> >
+> > diff --git a/drivers/clk/tegra/clk-bpmp.c b/drivers/clk/tegra/clk-bpmp.c
+> > index 067a8555c4e7..15b976162b59 100644
+> > --- a/drivers/clk/tegra/clk-bpmp.c
+> > +++ b/drivers/clk/tegra/clk-bpmp.c
+> > @@ -32,7 +32,7 @@ struct tegra_bpmp_clk {
+> >  	unsigned int id;
+> > =20
+> >  	unsigned int num_parents;
+> > -	unsigned int *parents;
+> > +	unsigned int parents[] __counted_by(num_parents);
+> >  };
+> > =20
+> >  static inline struct tegra_bpmp_clk *to_tegra_bpmp_clk(struct clk_hw *=
+hw)
+> > @@ -518,20 +518,14 @@ tegra_bpmp_clk_register(struct tegra_bpmp *bpmp,
+> >  	unsigned int i;
+> >  	int err;
+> > =20
+> > -	clk =3D devm_kzalloc(bpmp->dev, sizeof(*clk), GFP_KERNEL);
+> > +	clk =3D devm_kzalloc(bpmp->dev, struct_size(clk, parents, info->num_p=
+arents), GFP_KERNEL);
+> >  	if (!clk)
+> >  		return ERR_PTR(-ENOMEM);
+> > =20
+> > +	clk->num_parents =3D info->num_parents;
+> >  	clk->id =3D info->id;
+> >  	clk->bpmp =3D bpmp;
+> > =20
+> > -	clk->parents =3D devm_kcalloc(bpmp->dev, info->num_parents,
+> > -				    sizeof(*clk->parents), GFP_KERNEL);
+> > -	if (!clk->parents)
+> > -		return ERR_PTR(-ENOMEM);
+> > -
+> > -	clk->num_parents =3D info->num_parents;
+> > -
 >=20
-> Please make sure your series applies on clk-next next time around.
-> This one failed to apply when it was sent.
+> What is the benefit of doing this ? It looks like you are just trading
+> one alloc for another here ?
 
-Okay, I will send the next version based on clk-next.
+I think the point is allocating the parents array as part of the main
+allocation, so we end up with one allocation instead of two. This avoids
+fragmentation and overhead and is possibly a little bit faster.
 
-Best Regards,
+Seems fine to me.
 
+Thierry
+
+--wv6hlsxowlo3aj7c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmq81mwACgkQ3SOs138+
+s6E3tQ//R14tkkjFYJZEQEQ5qTwdA1ZQSnxQ28D0oYUUvcyOkCUoUBq9KKQ0/P+9
+0xqFSfaQC/porrzG78vdnj//AxyzEgt6CLXFPHm+m4uNWvH5yOPJ3aSavFY75zeb
+iaX0kpvoaSxnMrmJAJJEixiOF1jBIaDUc5qSB4J1sO5m8E/QDeyPJRACF2Wvd2Mf
+9Zfjdk62/UYkSSybAlwEQn6DUw/Ew3Bdeu5N33MrP9PuuU4feBKXjlVrqdbUHx87
+TUshE5VIZMHfZrSq46Tx8oUBl/74UWqyTm01OBFbTKajWPtyWmBorZzU6bzhMbcG
+FP/ZH9jIZQq9Hs/MiDFgj1/ThlAZy+E/FwcYaiUDvoiZdmBbPKp63Ul/DFr/2V+y
+quHYHXkxLrhoFrOWuqXm0Wffn2SkXk2PfcvO5t9AoEvQzzIS86zsmzUw3DAyqQ31
+3pu/ouKhxCav0mI+XNLiNQewlP1vXuoFHaTjIGtZms3kg5Ip06PjdipeXia7a124
+eJoESshKBci4hsF55CKJiPtJ4TzT6TuRQoJr9hSfyHOf+18Ciq7JPz2Te8wN/2QE
+rWWt00XUuDhrZTKYRVcfgGFEFY2j0KSGFj59uf0vEIZktBrplAAdLfx/9JPsusPW
+pDwJkGs0/Sq5ajSQahBZHcFJEQmDA964dqs2Y11HclzKMrlp6fs=
+=xOlJ
+-----END PGP SIGNATURE-----
+
+--wv6hlsxowlo3aj7c--
