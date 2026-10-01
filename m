@@ -1,179 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4EF49BD6D;
-	Thu,  1 Oct 2026 21:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CE244E64A
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Oct 2026 21:25:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790889162; cv=none; b=n0sAwm0gzUC5FUWfuiBFsoVir6Jp15rlmKRiYKZ0L3mOgODUFdF641eXUeNw1aK81/8ZUGpGdIpouwQo/3XMsrFGHIrNYCMERECIKY2QFlFJ3n9VgA4HlDqVt+jis+B0U2T8uevXuv/sXhb6s33i4hRjJU41iXxZAPS6jjpO3M0=
+	t=1790889912; cv=none; b=lVhVdR/+Hx4pwnDwcohXSnLb8mUfIJApoVbI4IPm/XEes52eEtlqNyIvm0bkt1CPxQ/B7qfSOrnje4vjzOfAvAxVAq4MjrbaaoOfxPoPRMBcofsUERKShdzeKiCSSiByHt5kVG9UdazAfKrDfQAUVDiyFFS9bT2mZZ1rmDfjNME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790889162; c=relaxed/simple;
-	bh=RDlxXsIVmSOW9EvSGpxVY3V9f1QX8L/coartXlMr17o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WMJ7vihRLJo2a2TgALJ43rDP4sLfbWM+IxgLEspIk8lcZoHaiolAiXaID5WuUKjwzDnFL7IyCi3F+XE0czEdwBvmFxkQepASvUCWxMx5RhzL7xUeXrjhkuoHQqno7qmQH+lvFUQ1NF1yfYIIwV19C0Iv7R7y1Dqq1IY5dr95a1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNv4T5Ze; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790889912; c=relaxed/simple;
+	bh=H56gwjziJywH3m5Bz2P+G9ZTWG7bfHpXRO40aJaL4hA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mqhC8EE6fIm2Sj7PTGvnFPm4pwahPWvUsaBD+bCcUqVScrbZCOep6dMi0kf7c7VLdmph0n/MNYeYrG3UxfXMvRkeLYkxWb3ZFaIe5PuMkcu/CY5TXsVJahnSQ2tU9YFcWcJSbb4NDn3l95zMr2flu6v6/j6+xokGhKLmauJZEbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JSR6adbr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNv4T5Ze"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A931F000FF;
-	Thu,  1 Oct 2026 21:12:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JSR6adbr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 898F51F00898
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Oct 2026 21:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790889159;
-	bh=yUe8foPO/YGnw6igCq/IGQXtyjmk4q2ZsCnNJOWDHC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=XNv4T5ZetRF09dzG85bpGSDwZTvnZa/nRqbYsEeE9NBYClRVU21lmlJBRZrqX03Xy
-	 /ehL+UDNqWZLA7aDzyHTIlsDzWvS4o1eU/n+fMpXMgMmp19AvzC0nfdz9V3ujGvhUT
-	 KdhQzzDhZEkh6DDy/zdkh/EppA1/enHlEFcFb76aA004hMTJycE3l/axV6XdcoFpjF
-	 ro7XLrFCO3Etsi5drAqHGudFDqR9aEDcaEPW8Uy/5FvJR5GVG0iBHc9zWrtNyogqiP
-	 gzmKh37kXNFgx2gPM6o+dWfxWPg8BkSmCVD8poI9q+55Wi7wQ1Nz7DsRzL+swKILQM
-	 uEXNiAGYXca+w==
-Date: Thu, 1 Oct 2026 22:12:34 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.li@oss.nxp.com>
-Cc: CL Wang <cl634@andestech.com>, Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	tim609@andestech.com, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: dmaengine: Add support for
- ATCDMAC300 DMA engine
-Message-ID: <20261001-outdoors-gainfully-ff7902568cfd@spud>
-References: <20261001014503.786490-1-cl634@andestech.com>
- <20261001014503.786490-2-cl634@andestech.com>
- <ar67FuFDeVQe0-wp@lizhi-Precision-Tower-5810>
+	s=k20260515; t=1790889910;
+	bh=Tvs6fkP3/Le/Tutf9udarKKG9JiN4dlqSpw4nvMlQag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=JSR6adbr+/D+zLJm/9W+9CMYKU6h73aJ5gKupkKP9hpTDpJD6RsQKbYMmu9euWDGJ
+	 h15Sa90syJKnJwFC5PAemEmtRcuIHbVUEUFb7DqnitfRmAFm5WiTzH2tygsnFcWURR
+	 esinUCy9eT24BclYaO9HOVjvmBc+ifETiwk+LEumVDifx9mh8ECOJriOs5wNzLhObq
+	 uXpMcZ9YEboKTbijNPZDdmjZxHScAizu4O66PsDW+irDMf2p/MIJ39Y6hGYqTG6TZU
+	 Z1/JX4EK5Z8hxWKWWbmVmO/1DshMw199ZMxnqPw9C9x99Vp0o7nu7kHdxDRt01e2WZ
+	 4KEd5PQbqMyfQ==
+Received: by mail-lf2-f13.google.com with SMTP id 2adb3069b0e04-5ba3feee1d2so1967799e87.2
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Oct 2026 14:25:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBwTIj4rxovAw/2oWcDPob7+rYdxjl+v+a30Nam4FjJ0+LrIakwM7AoGdXz8EK4bYoATiPy83mUqLA5yTuQQMZM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLQ+XzEr/VXeoY1oEsFHmfX3htZRx+iFAQOGWyvlOvKu6cZ4Tm7
+	pHEgQsL270nrV4ZdzxlAW8U2DhzCGYM5/6m1pf3JP5DJmk0Mf/ysUyJ0s/5heI8+RoU8LiEXfyN
+	O0VOo88bcaRDWOqew+l+QnCkhaiZHEu8=
+X-Received: by 2002:ac2:4898:0:b0:5b6:4ad:77b3 with SMTP id
+ 2adb3069b0e04-5bb9bb0c0d4mr124079e87.27.1790889909323; Thu, 01 Oct 2026
+ 14:25:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IjTKwb2qVh0/lgHk"
-Content-Disposition: inline
-In-Reply-To: <ar67FuFDeVQe0-wp@lizhi-Precision-Tower-5810>
-
---IjTKwb2qVh0/lgHk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20260928063824.1386524-1-morbo@google.com> <CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com>
+ <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com> <CAGG=3QV2k-nsZHNSuKEixZb+-LcxvhQsG379ghgyOpiDLTJWzw@mail.gmail.com>
+In-Reply-To: <CAGG=3QV2k-nsZHNSuKEixZb+-LcxvhQsG379ghgyOpiDLTJWzw@mail.gmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Thu, 1 Oct 2026 23:24:56 +0200
+X-Gmail-Original-Message-ID: <CAD++jLnOm3ua7hom_L4YQwN5z81M17WmL_VGqx+-ugrAJ-6_Dg@mail.gmail.com>
+X-Gm-Features: AclHuK_3CuY_lvP3v92lNOvBLIMvkbfO2hErlC_rqJvappsJIFQnzmPZMMVY-s8
+Message-ID: <CAD++jLnOm3ua7hom_L4YQwN5z81M17WmL_VGqx+-ugrAJ-6_Dg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: annotate struct acpi_gpio_mapping with __counted_by_ptr
+To: Bill Wendling <morbo@google.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy Kerr <jk@ozlabs.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	codemender-patching+linux@google.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 01, 2026 at 03:57:10PM -0400, Frank Li wrote:
-> On Thu, Oct 01, 2026 at 09:45:02AM +0800, CL Wang wrote:
-> > Document devicetree bindings for Andes ATCDMAC300 DMA engine
+On Thu, Oct 1, 2026 at 10:05=E2=80=AFPM Bill Wendling <morbo@google.com> wr=
+ote:
+> On Thu, Oct 1, 2026 at 12:56=E2=80=AFPM Linus Walleij <linusw@kernel.org>=
+ wrote:
+> > On Mon, Sep 28, 2026 at 9:22=E2=80=AFAM Bill Wendling <morbo@google.com=
+> wrote:
+> > > On Sun, Sep 27, 2026 at 11:38=E2=80=AFPM Bill Wendling <morbo@google.=
+com> wrote:
+> > > >
+> > > > The 'data' pointer field in 'struct acpi_gpio_mapping' is associate=
+d
+> > > > with the 'size' field, which represents the number of elements of
+> > > > type 'struct acpi_gpio_params' allocated for 'data'.
+> > > >
+> > > > To improve bounds checking via CONFIG_UBSAN_BOUNDS and
+> > > > CONFIG_FORTIFY_SOURCE, annotate 'data' with the __counted_by_ptr
+> > > > attribute.
+> > > >
+> > > > Analysis of allocation, assignment, and access points shows that th=
+e
+> > > > pointer is never accessed before the count is set, which guarantees=
+ that
+> > > > this annotation is safe and will not cause runtime panics or
+> > > > false-positive bounds checks.
+> > > >
+> > > > Cc: codemender-patching+linux@google.com
+> > > > Assisted-by: LLM
+> > > > Signed-off-by: Bill Wendling <morbo@google.com>
+> > > > ---
+> > > >  include/linux/gpio/consumer.h | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/con=
+sumer.h
+> > > > index fceeefd5f893..2b80cf7aa7e7 100644
+> > > > --- a/include/linux/gpio/consumer.h
+> > > > +++ b/include/linux/gpio/consumer.h
+> > > > @@ -667,7 +667,7 @@ struct acpi_gpio_params {
+> > > >
+> > > >  struct acpi_gpio_mapping {
+> > > >         const char *name;
+> > > > -       const struct acpi_gpio_params *data;
+> > > > +       const struct acpi_gpio_params *data __counted_by_ptr(size);
+> > > >         unsigned int size;
+> > > >
+> > > >  /* Ignore IoRestriction field */
+> > >
+> > > There's a problem with 'drivers/firmware/efi/libstub/Makefile'. Clang
+> > > needs a compiler flag to support the "__counted_by_ptr" attribute
+> > > referencing a field *after* the pointer, like in this patch. However,
+> > > the Makefile blasts the flag away for x86 platforms. Below is a hack
+> > > that copies the part of the top-level Makefile that adds the flag. I
+> > > don't think that's a good solution. The comment in the driver's
+> > > Makefile says that the stub code executes before the kernel does,
+> > > which I assume is why a lot of the flags are blown away... In any
+> > > event, I'm not sure how best to address this.
 > >
-> > ATCDMAC300 is the IP name, which is embedded in AndesCore-based
-> > platforms or SoCs such as AE350 and Qilai.
+> > But is this a problem with the current patch?
 > >
-> > Signed-off-by: CL Wang <cl634@andestech.com>
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > Does libefistub use <linux/gpio/consumer.h> in any way, shape
+> > or form?
 > >
-> > ---
-> >   Changes for v7:
-> >     - Rebase onto the current dmaengine/next; no changes from v6
-> >
-> >   Changes for v6:
-> >     - Rebase onto dmaengine/next; no changes from v5
-> >
-> >   Changes for v5:
-> >     - No changes from v4
-> >
-> >   Changes for v4:
-> >     - Use items list format with descriptions for reg property
-> >       as suggested by Conor Dooley
-> >
-> >   Changes for v3:
-> >     - Rename DT binding file from andestech,qilai-dma.yaml to
-> >       andestech,ae350-dma.yaml.
-> >     - Deprecate IP-core-based compatible usage and align with
-> >       SoC/platform-based strings.
-> >     - Dropped Acked-by tag from Conor Dooley due to the above change.
-> > ---
-> >  .../bindings/dma/andestech,ae350-dma.yaml     | 67 +++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/andestech,ae3=
-50-dma.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/andestech,ae350-dma.=
-yaml b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
-> > new file mode 100644
-> > index 000000000000..f040a2bf7d4b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
-> > @@ -0,0 +1,67 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/andestech,ae350-dma.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Andes ATCDMAC300 DMA Controller
-> > +
-> > +maintainers:
-> > +  - CL Wang <cl634@andestech.com>
-> > +
-> > +allOf:
-> > +  - $ref: dma-controller.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - andestech,qilai-dma
-> > +          - const: andestech,ae350-dma
-> > +      - const: andestech,ae350-dma
-> > +
-> > +  reg:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: DMA controller register range
-> > +      - description: cache control in IOCP controller
-> > +
-> > +  reg-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: dma
-> > +      - const: iocp
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  "#dma-cells":
-> > +    const: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - "#dma-cells"
-> > +
-> > +additionalProperties: false
->=20
-> According to Documentation/devicetree/bindings/writing-bindings.rst
-> ref to other yaml(ref: dma-controller.yaml)
->=20
-> should use
-> unevaluatedProperties: false
+> It's being #included transitively:
+>
+> In file included from drivers/firmware/efi/libstub/efi-stub-helper.c:12:
+> In file included from ./include/linux/efi.h:20:
+> In file included from ./include/linux/rtc.h:18:
+> In file included from ./include/linux/nvmem-provider.h:16:
+> ./include/linux/gpio/consumer.h:670:55: error: use of undeclared
+> identifier 'size'; did you
+>       mean 'ksize'?
+>   670 |         const struct acpi_gpio_params *data __counted_by_ptr(size=
+);
+>       |                                                              ^~~~
+>       |                                                              ksiz=
+e
+> ././include/linux/compiler_types.h:392:64: note: expanded from macro
+> '__counted_by_ptr'
+>   392 | #define __counted_by_ptr(member)
+> __attribute__((__counted_by__(member)))
+>       |
+>        ^~~~~~
+> ./include/linux/slab.h:602:8: note: 'ksize' declared here
+>   602 | size_t ksize(const void *objp);
+>       |        ^
 
-It's fine to use additionalProperties: false though, and is correct to
-do IMO when the other properties being imported do not apply.
+Hm I see.
 
-Thanks,
-Conor.
+Certainly Jeremy or Ard will have an idea about how to solve this,
+so paging them in.
 
---IjTKwb2qVh0/lgHk
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCar7MwgAKCRB4tDGHoIJi
-0qwzAQCFN1rL6Q89xuOcVB30GAlyjF1xcv6VODIfxy2W2V8g/QD6A+L/HEGbzpfM
-jccMAdR6FCwY3WPK/AP9GDxJC2tQgwk=
-=XlD3
------END PGP SIGNATURE-----
-
---IjTKwb2qVh0/lgHk--
+Yours,
+Linus Walleij
