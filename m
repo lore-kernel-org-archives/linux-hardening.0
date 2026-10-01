@@ -1,246 +1,183 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013012.outbound.protection.outlook.com [40.107.159.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs2-f41.google.com (mail-vs2-f41.google.com [74.125.227.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D400235E956;
-	Thu,  1 Oct 2026 19:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EA335950
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Oct 2026 20:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790884645; cv=fail; b=MCnbC3bdMm7Rx6L/zWJepWwSMiNM6+kFghpzCCYSOQjKTJLuFBI+9FOP3p9t+d5FALzmlR4EhKyMUsUNbOv5zp5JHPnn1wKHK169ZctvpnMYaYyjbULmi9X+EWOgV8HzuE/N6t6x+yQw2pL07JYXAlO72Z/jOeZ9GhfrT1QDEz8=
+	t=1790885109; cv=pass; b=CmlFXK/VWeafOFXUt/OgOBpToE0sDO9arNF1tuHc03lx/5pbc3Sm6GjdI30X2bPPyii7+MglWBBydAmVYjJr+/Q/nj5DYGfNj9xTRyIeA1NDfSVumgihrIOOHNv/D4uGF/nYAURm4AtU5ssKwiGXH6Bwb65H+/8xyf/7mCdS2dI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790884645; c=relaxed/simple;
-	bh=qru2g245di2IieRujSQpVCm2TAO/62lDerZmBaXo0Is=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=WXHw1ziSrl2ylMrA6dZi6gzuEdvD4udp+oT96IHcQ+8J5yC9cEGUn1j/OyDfWV5wgJ+BWLSocVmfXVQsKwRiT2amW+89optrTMRPTSmmpXmW6kn6LRYljKk2P1cQiJQWRVlWPi9tORxdp+JDHLPohsV/qawegCpQvjYYidypTVk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=OCAUX5dN; arc=fail smtp.client-ip=40.107.159.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	s=arc-20240116; t=1790885109; c=relaxed/simple;
+	bh=D5b2njgM22Yn9YX8W7fqgN5Wxt0Lao05fQOXJfkjPyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=isMTrZxGOfA0JktRYwWAozNnpLu2PXTh6P6gOviKGuhEy+P8PlHHL5kNSTkCAs8+vPcqyxMkwevg2u4amBWz6W2U5jDiN87jycRUbG/e1DWjfzVlGTlWIs6aOgv7WVHvWZbxeac5QDljOum40pO8nzSdUYezM1f1m9Flot1nfOc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l3Z2gU4K; arc=pass smtp.client-ip=74.125.227.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="OCAUX5dN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GzRkC+lOykN2zL5eENDffg0YyQi8bUOSPvaWuafw5dGgfYtKYmqr0YIlzN60+pHbvx/t5/eAokMpDAoFsDXfSehYaYrHDDbB3oMQJviLEwI7Cy6uQ7ibyAemj9EoQVvKUsBOH4TRKnqrGGPwipEeuBFiIfIEoi+0lbU9bm7QJv8wDSgeEQcGZzfvcNyCiUBNElX3mHwJXFT6QJOFgazXn/xuBN/iVnNaKEueO6r2/2SO7M2vFtVZDb8A/Bi4zKOxRV5ToQ8II9KWU933MOpj6wmkhthgg++y6+56/7MdQDuTmO5UB7yeNZ3pnTkgbz3fPjknhwGC1FhqUH0gpz9zIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=giE66s6LU4F2ezlTEqAK9bEkVNxS3iTwEALakrkKN4c=;
- b=Ik37nLxEI72CPBYyln7vYt3lWow+ELXl1yf8DGxbSVVV5R1T9L8JlEfWyEU/n2ugFi/mJf7Y55+I40SwZLaaSCsyTM6i5MdPaP4v/uv9Z2K0UvOJmIvJ7l+Y6RvKlrIsFPqulEmd3AJLieT0Y2clC5nSwHSQgpbYhrBqNzbnuBVKlJoeE13hcNKhJw3pg1TcmDi6ryukG7fp7u1WMBWjh9TpkY0/uvTMEJsrltDrUpY9rAVH7RbRncIsE3gZhJT7SwU3mPPwizUfyqafQoQRjwan0KlPvkA1AEBkKzhT94f1vDm42EOoJDrrt1rfatmfYBA+1I8Dm9J1Frxz+hOS+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=giE66s6LU4F2ezlTEqAK9bEkVNxS3iTwEALakrkKN4c=;
- b=OCAUX5dNbxhKrCWjwIZdC2UdxAu9NX7CUS2sbcMSpaRrNE0D9TSHpyXXBGkqv0RqkwWJ2SGaDrDCqG2/yjDngtXSvn4JuD60U3JaQoClEkDoeGfFttVYe7zg6wKQrZuWD6z4Qu4ocWjJHYJhHeuDP9eo4ir/M15rTVf8tWVYn91oB/uI1Ju5Lp2TBF4MdPihGgHmfVSgT/P9lY3n2Y+D+Ic2y4U/XbdO0N9y7rKVWV0Ba2Zq7aLCxee74OvweiJ2FKj2feD0AKUdvYSeeaZ9a7C5botYXV7Pi6LRzGuPdw3n7PiLRwa4mqi+vR7swrg2Aqk7xaj+JCTq/2/Xz1dyuw==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by MRWPR04MB12120.eurprd04.prod.outlook.com (2603:10a6:501:97::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.18; Thu, 1 Oct
- 2026 19:57:20 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%7]) with mapi id 15.21.0451.022; Thu, 1 Oct 2026
- 19:57:20 +0000
-Date: Thu, 1 Oct 2026 15:57:10 -0400
-From: Frank Li <Frank.li@oss.nxp.com>
-To: CL Wang <cl634@andestech.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	tim609@andestech.com, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: dmaengine: Add support for
- ATCDMAC300 DMA engine
-Message-ID: <ar67FuFDeVQe0-wp@lizhi-Precision-Tower-5810>
-References: <20261001014503.786490-1-cl634@andestech.com>
- <20261001014503.786490-2-cl634@andestech.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261001014503.786490-2-cl634@andestech.com>
-X-ClientProxiedBy: PH8P223CA0026.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:510:2db::16) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l3Z2gU4K"
+Received: by mail-vs2-f41.google.com with SMTP id 71dfb90a1353d-5c963a787c9so2783702e0c.2
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Oct 2026 13:05:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790885107; cv=none;
+        d=google.com; s=arc-20260327;
+        b=hV1VkeqrQk07heUJ3hyp0EodDP5qr4bbmAP3M/vV2UJI4BzvsLr9T72PIs2Tl5ZzvF
+         WL6fDL4IBmjSZROsbLW+xT7ojMBjmXuhOm+E0ev07DLVLwFyu1A37ejUEy3iwADzV3cc
+         5rgMcrg8/OiyWYE+ajRQPXKFKIJ5k2PBo9DrvPTOGqmfbvL7rul1LIaEviyCc8bZptCi
+         /KqEBKkmHKdFEgL7Vg9uImxQTmBILTSDFsenDsDZBD851RSi3Sl1y2OXD546UvP7Z8wT
+         NtMsVtMGBwX4TUmuq7gX/dnv95gz7FUEy23zzyFWacMZYD/NJEO0mbN9vDD1PGsRmulC
+         Qb7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Pp6TH4DCeYfMYH0YGkv0J3I5da3ZUSWKwlkhgwd0Jrw=;
+        fh=CIG8DGbZAmblNUTmnfTKsadx9qxukqKDXSX4UR3b0YM=;
+        b=mOmDrmrg4Vjyx9WNiszenrO/00PNeE/z6Q0f2ZbyaH3CpjWYbnDOo/gnkCpETBf9M3
+         UHaB7xer+rS0VZG9UTiRRyYgWys+HwO+lfiA8ia00JaaYgsyTgd1RujRpeB2fXsMXvOR
+         PgAbbkwosXhMJiICjY5JzwF71O8xZ/B3fVsk8BbpfUzOuXVZ7sS/zY0mBe2bngr0lABW
+         phTnXiHI6lakT6wYLq8CzKiyM3Wv/tHdGfhpktEJ8kdgUHe9xy8slGktZntujgywdsrw
+         el3DwG/IAhwFkPHFoH5WxYuH6tE5zCfTMvUq5QXdJHOctw6PKiLOSK7p43RfWFNxFuBn
+         xwcQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790885107; x=1791489907; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Pp6TH4DCeYfMYH0YGkv0J3I5da3ZUSWKwlkhgwd0Jrw=;
+        b=l3Z2gU4KhQsMA9YMXinRcvYtpIzGgk14S1IBSJSBq88U6VP4ZfVP7SfjnJb5Hn8bHt
+         vpFLO7zpgaG2A9PTX3UWagVDwSf1+SErtRlpB8euAO9ZwZKStPk+ZKWyTRqG7ZWIvDO9
+         4LXgoJX8+tmkJtycYfGzSfgilHCoQFe0+VI2J2QsunWjNpU4CxFL4wtH+gD6hmjavlVR
+         1mwGzZki5ISbcCTB30CxtMfxZiko8bLZo2MpFAQEobUxVt3d0kno5VXzh6Nec3uclkWz
+         OiVK7oTvDOrKUGzJL/RWni7KQtAZZe/+ERoQG5CcxyNOZ9enG5HTGFytiGfY3NIJ/KF2
+         FA/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790885107; x=1791489907;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Pp6TH4DCeYfMYH0YGkv0J3I5da3ZUSWKwlkhgwd0Jrw=;
+        b=FOq7oQgvrkyyE+819MTNt0HUTnK6uq9EXC7ol0g/T/NxFfVmP2ygXm4cBy3WncviNs
+         pIz9m7inLrJ8TcnH7Knz851Ub5AbMp+NZL/pgOQ/At/Q5TSGllq+sKvCm/pFj9UVPNRv
+         vw+DHXdHGZ0Pa6o1422sncr/NAeZ40My+EvOXopa9SPkdbSKfavRaXc+xAGLgTOeka4p
+         ERr/tRhlE27dcFLTP2s+rQiQ96ohuAIV3f11llhEXs2M8x8G0OA+UYaF6Nc3kh9wYNag
+         8AG3NJkdcudPvFTO2aRDWFBi67YDdr+yHUEGOdZwZoKNgDCm7o4Q36ubZBUJao6ZZ7An
+         kX5w==
+X-Forwarded-Encrypted: i=1; AKwUvBw6roc27ojIqewjmJIygZb0gjZR2Crri1S2xTVbnbplSdcq650hqmlFQgOIIz79okFwVrI3JOM6ZIlKBqWAYXg=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLXvsYfzxTJWjrNWpe0Aj8UOPf2k+sQewMjcqcHHEPwdZBARYD/
+	YpW2Y/mGMFJL7nCw2s11K04gUPpg9FiGMP9wGSHKHS7H1Ok68m8NFMsjz11YGbhXue/XAeA9nC+
+	DA6CiBvV6KLmOdYimRvU9tqNnb+CHqelTKGlJJP8=
+X-Gm-Gg: AYBFou3QNlzkt4zV2J8nbkiugsywo/Gd4uKGDvMNw0ZfOaq+PFETBOl1ghP7XSfjPaK
+	tAI+NCMg8BszxFWiSftvhqAJ8N0ie/J+NQD7PZLk2M4lP7pDCuySn8dTbzLKKuQAfqBfWuX+3TY
+	LtsKPapmKVS046i6dYnPo6CePSK6Wm6dI09BOjHB+c5CNjYSuxYJxh/oHA4fwHOARCrsCVind88
+	fkUpaLSC9T80nxAv+Fcu1PCqVrJIWfaQoGaVAa4qzGdM/hlxK99s1thmsbnfmgkUxlZx1yfSSnV
+	aJ1aY3LDSrwfIvDQUILaYBXZfE8tKj1dWk9rrUMhEFdX71bRbo0TiY9x0adlfsf1h7j4Wdsm4GY
+	JMqNWsUWByzjlP22IuZaH
+X-Received: by 2002:a05:6102:162c:b0:7a8:6ffc:1c25 with SMTP id
+ ada2fe7eead31-7c0f48951dcmr137774137.18.1790885104867; Thu, 01 Oct 2026
+ 13:05:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|MRWPR04MB12120:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f195e06-7aca-41da-1afb-08df1ff633b0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|366016|19092799006|18002099003|22082099003|4143699003|3023799007|56012099006|10067099003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	pD4U0FaBHnrahWgFn8in1BjR96oXxDCSXuzy4NwGva+CGCS698lMyQH/LZ+SWxesxT5MGsIym/CXPI/lA8Iut6Z4Ylq3PdVMdlpZxQuTaK5wgcud75xSj8mvAGNngbNIcZ5r/3YlUsblhcCSXbvQdohVqyqw9qyKyb+pT1/xXAKowLtojGVeMzY877Mvw3j9tOvdS7JuOByoHwf+vT9nvem2mZZlH1ZuQIBIEq7Ku1GRTmuOzxJaAceJWyUokJgrQQ1QJYU5ft1AQd0gHFYWhUEbLOkTaxEVtZmZAalaLtyeGDcTv4t+ocXqhyXA3xgHCwXy1MxqRI8OkRUP8jnM8EsDEuAD2R4QjXd/foeK65i7AUFZbwWGvMlQoCzq8h61HUT0zh0RQGYzUPG6hc4G2odTcxj5FsHwyWFIGGHueinse2nyvT5xUdoL7gqQJ7Mg7wkxyhnuqCYwmcJonC11qnKgt9ZUCd0wPutTHaWGCl2JipKzZLBTHon9e2448iq+XnxFzrs9Vd+Xds5puHkLvB4R6DvA7iMThMT+oFszFx4DMDrj3Zq2Tw12ubUj1aGG13wh4ZkvTfDM1fw2GyCZqnEk7f6NNcIW5lJDPmWBEeMRxPAdpXVL7yYOTB+JH0zo
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(366016)(19092799006)(18002099003)(22082099003)(4143699003)(3023799007)(56012099006)(10067099003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?2wolP68/AotQh5Koe4uRMuzD3j2qqEtopxeSm8AWZ/XFbNMatCd4n0Ow5psa?=
- =?us-ascii?Q?0NPasXot+pTddbtYVWGMoR+bMfGZ9rGRJOEtGU5zlqgjlOlbJasNVZq6xGkk?=
- =?us-ascii?Q?xL4kcthl9DjDcV++dQyREmc0h9pny43TCVdt5DguKShw8EqIjJBfeAGcmZKJ?=
- =?us-ascii?Q?QZ2quBQnoUERWFzETmfUqVCJ3Zt5VHKfewyz8uu0RY9UsvuH377iUUAYmyDh?=
- =?us-ascii?Q?/Ojn0E6vzk5o2aqom3qqN88KnuQv/gP7nBS2jPaqs02RmbV8+uQ/Q7obuMOq?=
- =?us-ascii?Q?PnyYJfBhHPCPoY44cGCKFnWz1dfHPMlRuKeDZyfqxDBEHvmIbhjpEdRIR7nJ?=
- =?us-ascii?Q?zy6JmQdBxJ9aObW16bKFO7VnZUwz93YiEvIU/Io68m3IFqF5PbFkL7mi8kmK?=
- =?us-ascii?Q?L7I9gJKF8D6wSurbfrCruguEpJU36vU6lxdIJHtPxlADmM/eisQpEjlFISHR?=
- =?us-ascii?Q?oycn+GRMs4wHKMDFGCiCf9kIPr2uMZoZAcWVQ651NZZCGG5SFjzbyYSWNrHd?=
- =?us-ascii?Q?sZryU7p14mzqqB7dUTqNhUMidue6CNpB5ewLC//7Ojww/Vf/OQmLy24vVsRX?=
- =?us-ascii?Q?U6tQAjzDqSwRQS1adkjbzgpSnWSn9ZbVIVOug/zmXYrlJQ0a4tSe4KfWjgxq?=
- =?us-ascii?Q?oC5dx2JyPHTAKDRpRn1PZsxjN+daSgFRR6Yb6GgYXB7Puv/b8zrAC5OlgVxu?=
- =?us-ascii?Q?agcSSKaE7yoNDN1cvxkbB3ByT1atz21MFgILYe4xYJJtdcQ0srK7W52npMNs?=
- =?us-ascii?Q?dttjhbDnsrjapD5F/HM05S6DoJFinjsHVQ/Vw7UOc5kQ2Lq7C/X/msLrW3PH?=
- =?us-ascii?Q?x4zqguPCt5L0k4iTtsRSfozvaflH/erkGk8cSnfsdKC1wsbmFQNuvTq5Ez+8?=
- =?us-ascii?Q?ZyEF28QeVcREGKJiAFVh8uPrKsKoRaVQyB/SOmDUmF4Dbu8L2CttRfnihruK?=
- =?us-ascii?Q?+ecPYNLVm0wnJGYxziX4Wyy0vvt0AsQa8wmSgjw7KG7pVH95EE8sOt9u9qlK?=
- =?us-ascii?Q?+QVtF9jlsn+PqfmtE4ADw8RG+TZ7K2IS2YYvNvp3iG4ur7yCiBsrWAYorUvm?=
- =?us-ascii?Q?a13x0380QZszAWxkOzHG8nDPgQn6/E+8BW9Yl1WiQVwVVOM5zo3KpFwInis/?=
- =?us-ascii?Q?j77CP6CuMgfGNnNaRh8VsJmB2ntAN+0XJkDaxHVZVsOqfsxtSmPwhsq2wcxF?=
- =?us-ascii?Q?qaZJ1PLNmWSA5i+6VQqpt5ggoHzUSQStLRKKf/ZAx/gQl3iZvFmEjTaus6hF?=
- =?us-ascii?Q?CcU5pcv35/YH9IF93dXd0sEPX+BQe36PT/ATtMRflXPYkAuH8A8ZT8fd9E5e?=
- =?us-ascii?Q?3R2pr5Aj79M96oiFUgbveDi5azUMBt7O/6u09EVRwUaez07XY3Tqq3PeNHM0?=
- =?us-ascii?Q?UejpG+RA3Z5Qr9wYpCECEzjhiJzbVuKUaBb9KxdAAQDQ48HLnKWdB4oIGrQT?=
- =?us-ascii?Q?QtASDgibB6i9datbSs2vsXd24soOuv8GVelR1maJFcR3dBKYSyQx/6sgjyF9?=
- =?us-ascii?Q?X5HZTMt2t4uXAX8HE7hvvKGS32smVClT2GenfQGJ5e/22H+XLY2KutxA7SYT?=
- =?us-ascii?Q?gbKhxXGbYFSjRxkRmuiKnMLQVieC4ry9QVprtbmL6BguvaXwIfHXwm7QWnCM?=
- =?us-ascii?Q?7Ol9Bghs0ZeaQfV12iT0U8RAjU4HgcltMIoJ4inzDGHDwFOfPC20BcfgQpQg?=
- =?us-ascii?Q?EWVuEAP936Yk4Qrvl8NKAUbjZH7okU+p/WNp7MHvRhEMDVrOSMSmYnukW/6K?=
- =?us-ascii?Q?p7+s3UppfWlm5Wc5hnMua8r0h+P802pw2bJFSz7HQxf7kW0Xmn13?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f195e06-7aca-41da-1afb-08df1ff633b0
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 19:57:20.2386
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2Ee1CQ0vXyLxkNU9BQywkK09cWES+MPcIBReWasQ0aGNgUKgSp4sDM5iE3DxOoYcoHs2m+u516iERsTVZMXNcZURPi0rTW47sXVGvUZ9r3IVhhYUzpsGqFbg+1vOWoR1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRWPR04MB12120
+References: <20260928063824.1386524-1-morbo@google.com> <CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com>
+ <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com>
+In-Reply-To: <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com>
+From: Bill Wendling <morbo@google.com>
+Date: Thu, 1 Oct 2026 13:04:47 -0700
+X-Gm-Features: AclHuK_OsmZsgIWlUXnGIOeGgxR5RkcvYLN5aGCG1e6Tds9_TT0UwWgbTocjZcw
+Message-ID: <CAGG=3QV2k-nsZHNSuKEixZb+-LcxvhQsG379ghgyOpiDLTJWzw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: annotate struct acpi_gpio_mapping with __counted_by_ptr
+To: Linus Walleij <linusw@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	codemender-patching+linux@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 01, 2026 at 09:45:02AM +0800, CL Wang wrote:
-> Document devicetree bindings for Andes ATCDMAC300 DMA engine
+On Thu, Oct 1, 2026 at 12:56=E2=80=AFPM Linus Walleij <linusw@kernel.org> w=
+rote:
+> On Mon, Sep 28, 2026 at 9:22=E2=80=AFAM Bill Wendling <morbo@google.com> =
+wrote:
+> > On Sun, Sep 27, 2026 at 11:38=E2=80=AFPM Bill Wendling <morbo@google.co=
+m> wrote:
+> > >
+> > > The 'data' pointer field in 'struct acpi_gpio_mapping' is associated
+> > > with the 'size' field, which represents the number of elements of
+> > > type 'struct acpi_gpio_params' allocated for 'data'.
+> > >
+> > > To improve bounds checking via CONFIG_UBSAN_BOUNDS and
+> > > CONFIG_FORTIFY_SOURCE, annotate 'data' with the __counted_by_ptr
+> > > attribute.
+> > >
+> > > Analysis of allocation, assignment, and access points shows that the
+> > > pointer is never accessed before the count is set, which guarantees t=
+hat
+> > > this annotation is safe and will not cause runtime panics or
+> > > false-positive bounds checks.
+> > >
+> > > Cc: codemender-patching+linux@google.com
+> > > Assisted-by: LLM
+> > > Signed-off-by: Bill Wendling <morbo@google.com>
+> > > ---
+> > >  include/linux/gpio/consumer.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consu=
+mer.h
+> > > index fceeefd5f893..2b80cf7aa7e7 100644
+> > > --- a/include/linux/gpio/consumer.h
+> > > +++ b/include/linux/gpio/consumer.h
+> > > @@ -667,7 +667,7 @@ struct acpi_gpio_params {
+> > >
+> > >  struct acpi_gpio_mapping {
+> > >         const char *name;
+> > > -       const struct acpi_gpio_params *data;
+> > > +       const struct acpi_gpio_params *data __counted_by_ptr(size);
+> > >         unsigned int size;
+> > >
+> > >  /* Ignore IoRestriction field */
+> >
+> > There's a problem with 'drivers/firmware/efi/libstub/Makefile'. Clang
+> > needs a compiler flag to support the "__counted_by_ptr" attribute
+> > referencing a field *after* the pointer, like in this patch. However,
+> > the Makefile blasts the flag away for x86 platforms. Below is a hack
+> > that copies the part of the top-level Makefile that adds the flag. I
+> > don't think that's a good solution. The comment in the driver's
+> > Makefile says that the stub code executes before the kernel does,
+> > which I assume is why a lot of the flags are blown away... In any
+> > event, I'm not sure how best to address this.
 >
-> ATCDMAC300 is the IP name, which is embedded in AndesCore-based
-> platforms or SoCs such as AE350 and Qilai.
+> But is this a problem with the current patch?
 >
-> Signed-off-by: CL Wang <cl634@andestech.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Does libefistub use <linux/gpio/consumer.h> in any way, shape
+> or form?
 >
-> ---
->   Changes for v7:
->     - Rebase onto the current dmaengine/next; no changes from v6
->
->   Changes for v6:
->     - Rebase onto dmaengine/next; no changes from v5
->
->   Changes for v5:
->     - No changes from v4
->
->   Changes for v4:
->     - Use items list format with descriptions for reg property
->       as suggested by Conor Dooley
->
->   Changes for v3:
->     - Rename DT binding file from andestech,qilai-dma.yaml to
->       andestech,ae350-dma.yaml.
->     - Deprecate IP-core-based compatible usage and align with
->       SoC/platform-based strings.
->     - Dropped Acked-by tag from Conor Dooley due to the above change.
-> ---
->  .../bindings/dma/andestech,ae350-dma.yaml     | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
->
-> diff --git a/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
-> new file mode 100644
-> index 000000000000..f040a2bf7d4b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/andestech,ae350-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Andes ATCDMAC300 DMA Controller
-> +
-> +maintainers:
-> +  - CL Wang <cl634@andestech.com>
-> +
-> +allOf:
-> +  - $ref: dma-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - andestech,qilai-dma
-> +          - const: andestech,ae350-dma
-> +      - const: andestech,ae350-dma
-> +
-> +  reg:
-> +    minItems: 1
-> +    items:
-> +      - description: DMA controller register range
-> +      - description: cache control in IOCP controller
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    items:
-> +      - const: dma
-> +      - const: iocp
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#dma-cells":
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#dma-cells"
-> +
-> +additionalProperties: false
+It's being #included transitively:
 
-According to Documentation/devicetree/bindings/writing-bindings.rst
-ref to other yaml(ref: dma-controller.yaml)
+In file included from drivers/firmware/efi/libstub/efi-stub-helper.c:12:
+In file included from ./include/linux/efi.h:20:
+In file included from ./include/linux/rtc.h:18:
+In file included from ./include/linux/nvmem-provider.h:16:
+./include/linux/gpio/consumer.h:670:55: error: use of undeclared
+identifier 'size'; did you
+      mean 'ksize'?
+  670 |         const struct acpi_gpio_params *data __counted_by_ptr(size);
+      |                                                              ^~~~
+      |                                                              ksize
+././include/linux/compiler_types.h:392:64: note: expanded from macro
+'__counted_by_ptr'
+  392 | #define __counted_by_ptr(member)
+__attribute__((__counted_by__(member)))
+      |
+       ^~~~~~
+./include/linux/slab.h:602:8: note: 'ksize' declared here
+  602 | size_t ksize(const void *objp);
+      |        ^
 
-should use
-unevaluatedProperties: false
-
-Frank
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        dma-controller@f0c00000 {
-> +            compatible = "andestech,ae350-dma";
-> +            reg = <0x0 0xf0c00000 0x0 0x1000>,
-> +                  <0x0 0xe8000000 0x0 0x10>;
-> +            reg-names = "dma", "iocp";
-> +            interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +            #dma-cells = <1>;
-> +        };
-> +    };
-> +...
-> --
-> 2.34.1
->
+> Yours,
+> Linus Walleij
