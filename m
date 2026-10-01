@@ -1,83 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAAD395DAA;
-	Thu,  1 Oct 2026 14:39:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCF7470EA8
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Oct 2026 19:56:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790865563; cv=none; b=VzckQHEwzskW7ymwSpaPMVkdZAoHjDK2j+LvYlS04Q3WCGan6ENQTU/hwc/Kx52cC8aF2/eYXdpHDI681GKf3V5urw7g1Ic7m8EEQYzECT/wlU3MSXfE5o6V3ZQ+UoBCWNonEZI0Yz+F2Z/IydRoO9O5ISDaEV4V4R1yWJNNoxc=
+	t=1790884601; cv=none; b=DH0yT3QZqO2xiJSCxbHNoyfbNxky7TKIOkJMmOKOoJyR3kH+zpqcXVsZrA9gi/Ay6qQl4rW617YIaJeafeH6AOmazDyDhu8gy89beap7QB3R2TuH2C2D90fPl/Piqn3Y9T9LJ9yhaVTAKfJXXuuLviMbuxI+MkhZL/cFq4XRvaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790865563; c=relaxed/simple;
-	bh=DJoIGeyxobBGuIlmWIySxC7RO/wC/ni1Y/UROMailfU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aUuTt6mBZ/jOMYUd5bgrvG/qS+5UeTf+D0IMibREhHa0rvqrsKIL1cXeYthyhd7r9M5CY7UyEK0Zf7NEIFKANn7FktOmDVk1bPgyiaZDthCRvzA6H6qAdlh0xu20f5AQz99BDeJVgSeEXYIw4XObdQ5Z1k9mt8uZ1/LPi4RklLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cTPPC8g9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790884601; c=relaxed/simple;
+	bh=+TSzO1Oud8M29DYbZ1dSt/XDqgpcjgR0kBmiqzdh85c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qvyXbJGMPYKuR6dkA8uTzAgNfnXYAAJtajGmMqbgoAm1LAPdmAYwuw0HJsGd9AjIJRgCaFu4OhIoMIm5FQGGwjE9QICfBBnBf0l+PtiHZqqFao85FrT5Tn2b008E6JSrJMlh5NhjFiOIQ+xsVjtpeuJzBK3/eFnoWYktBOcrOkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSxkjuT5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cTPPC8g9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F11E41F000FF;
-	Thu,  1 Oct 2026 14:39:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSxkjuT5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F05BF1F0089B
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Oct 2026 19:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790865556;
-	bh=Ybk1Xis+LpwT/k2kTLipkYUSY35nd3DiPvV8woUxbvQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cTPPC8g9OlpZvy/kyZaCvfZUHhQRTLZKlGgVRF0pftYKJgcUz5Zllvt7X9xTeV/OI
-	 Y3PtdI57K7ZAhaeuhCXdcLQ18argu6mQ2sR9HH1qZVQNrGWewlGPtCEazLG35eNixw
-	 33fdkLCtYtyxyCJVieYHZWDjwsVJ4ljU9V1jMU9N23rntGdEnzfR3oZ5M7Se8whjDP
-	 lqEut1ndV80rg0k8cpn7GBzld8au5qy8WAGUJLzlo5QfJaYhY+2NQ2F3P4GQ5VGJyg
-	 qbnCPeEsJph8pHjr+/72uEJi7kTgPJa7CUYEyvUftAQlit5YR2zbtePyZEdC4t7Brt
-	 gtSxmJQtg2aUw==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Adam Skladowski <a39.skl@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v5 0/7] arm64: dts: qcom: Add 3 new devices
-Date: Thu,  1 Oct 2026 09:39:03 -0500
-Message-ID: <179086552997.3495936.2903144550735593923.b4-ty@b4>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260821-next-patches-v5-0-ec81cee63e09@gmail.com>
-References: <20260821-next-patches-v5-0-ec81cee63e09@gmail.com>
+	s=k20260515; t=1790884600;
+	bh=RqFuQUcoULCnWt4HCqIQWB5CTIYtbfgDUYFNXv+Jrkk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=oSxkjuT5L9DOnhqNvik4oLZHTB8vGxF28AlivmFvCjcxelX73QhKYEs+rBxBwoifl
+	 ukfCoIGMXTsKtJtdM+lFPES6brPTIOfV8BbFH21dZ0jEqcOhmMTugvKfbn4296Vt1H
+	 9X4CeyHQS8+OglSREEpjXOlLqQEOsNRDIuLr8k/KN9PUPblNfaHuEAQssoGkrqmlI9
+	 pCtOv3+bOtQ+Dp9eVcyz0dX//k71Q+tNWPD1odEj+lx+FwtDOPBwQaOkoIq1BfC6qf
+	 l6Mrs2SONB+Zc8iUOKiWRR6YOq/6JZQrPz0TcTANR815xvwc3WN/S4o4SsboY1ibUZ
+	 LenlxxYHLmhmg==
+Received: by mail-lr2-f33.google.com with SMTP id 38308e7fff4ca-3a872cadb93so9791201fa.2
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Oct 2026 12:56:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBwPor5O1ySgVBNs/ztXxmwHCyoHHZS2r9CcHFGSA7AcnGcvA59mLiEYhQdqKYYsm/ZCAwrB3o2epZOcpX37kTc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLbdjHGPO2Gv3P8APC9VikYrHa0yGsjqVhbIMevsRZu4PXMqyyG
+	eyow16kJd7SEEKmU7wuYx7t/anchH8L2oChdfSUAcIIFbOFeMWR0p6GacXgXamRqSvgC7N0WTEY
+	Flvs55Z885OvMMEnj3loVT+pRDu6UTaY=
+X-Received: by 2002:a2e:b8c3:0:b0:3a7:d217:3b22 with SMTP id
+ 38308e7fff4ca-3a8828d87a6mr910541fa.1.1790884598724; Thu, 01 Oct 2026
+ 12:56:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20260928063824.1386524-1-morbo@google.com> <CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com>
+In-Reply-To: <CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Thu, 1 Oct 2026 21:56:25 +0200
+X-Gmail-Original-Message-ID: <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com>
+X-Gm-Features: AclHuK8IEImV4NsE_nvLp6iR6ObXgp229xXfDlfrNR7zmTMQOJK4axWXfRI78vU
+Message-ID: <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: annotate struct acpi_gpio_mapping with __counted_by_ptr
+To: Bill Wendling <morbo@google.com>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	codemender-patching+linux@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Sep 28, 2026 at 9:22=E2=80=AFAM Bill Wendling <morbo@google.com> wr=
+ote:
+> On Sun, Sep 27, 2026 at 11:38=E2=80=AFPM Bill Wendling <morbo@google.com>=
+ wrote:
+> >
+> > The 'data' pointer field in 'struct acpi_gpio_mapping' is associated
+> > with the 'size' field, which represents the number of elements of
+> > type 'struct acpi_gpio_params' allocated for 'data'.
+> >
+> > To improve bounds checking via CONFIG_UBSAN_BOUNDS and
+> > CONFIG_FORTIFY_SOURCE, annotate 'data' with the __counted_by_ptr
+> > attribute.
+> >
+> > Analysis of allocation, assignment, and access points shows that the
+> > pointer is never accessed before the count is set, which guarantees tha=
+t
+> > this annotation is safe and will not cause runtime panics or
+> > false-positive bounds checks.
+> >
+> > Cc: codemender-patching+linux@google.com
+> > Assisted-by: LLM
+> > Signed-off-by: Bill Wendling <morbo@google.com>
+> > ---
+> >  include/linux/gpio/consumer.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consume=
+r.h
+> > index fceeefd5f893..2b80cf7aa7e7 100644
+> > --- a/include/linux/gpio/consumer.h
+> > +++ b/include/linux/gpio/consumer.h
+> > @@ -667,7 +667,7 @@ struct acpi_gpio_params {
+> >
+> >  struct acpi_gpio_mapping {
+> >         const char *name;
+> > -       const struct acpi_gpio_params *data;
+> > +       const struct acpi_gpio_params *data __counted_by_ptr(size);
+> >         unsigned int size;
+> >
+> >  /* Ignore IoRestriction field */
+>
+> There's a problem with 'drivers/firmware/efi/libstub/Makefile'. Clang
+> needs a compiler flag to support the "__counted_by_ptr" attribute
+> referencing a field *after* the pointer, like in this patch. However,
+> the Makefile blasts the flag away for x86 platforms. Below is a hack
+> that copies the part of the top-level Makefile that adds the flag. I
+> don't think that's a good solution. The comment in the driver's
+> Makefile says that the stub code executes before the kernel does,
+> which I assume is why a lot of the flags are blown away... In any
+> event, I'm not sure how best to address this.
 
-On Fri, 21 Aug 2026 14:26:59 +0200, Adam Skladowski wrote:
-> Introduce support for 3 new devices:
-> - Motorola Moto One based on MSM8953
-> - LeEco Le2 based on MSM8976
-> - Xiaomi Redmi 9T based on SM6115
-> 
-> Device trees besides enabling most of supported hardware also wires power to
-> subsystems like MDSS even if those are not enabled to lower maintenance burden
-> on out of tree forks.
-> 
-> [...]
+But is this a problem with the current patch?
 
-Applied, thanks!
+Does libefistub use <linux/gpio/consumer.h> in any way, shape
+or form?
 
-[3/7] arm64: dts: qcom: Add Motorola One
-      commit: b62af30ebdb4ae4ec6230c5e39eea97f65b9f5ea
-[5/7] arm64: dts: qcom: Add LeEco Le2
-      commit: 88e66b7b609ea27e1ceddd1bd2c581a4a29f0574
-[7/7] arm64: dts: qcom: Add Xiaomi Redmi 9T
-      commit: 76fbf547548ccd1a650c096836d8cf01f3ce3ce6
-
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+Yours,
+Linus Walleij
