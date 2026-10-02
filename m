@@ -1,157 +1,201 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2E238DC7B
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Oct 2026 18:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC58B35FF58
+	for <linux-hardening@vger.kernel.org>; Fri,  2 Oct 2026 19:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790967124; cv=none; b=nQSECebh915NgqFIj9rYemIKroGdX/JuAoJPdVJPoWfftacidgYLCV+7ippZnjhHNCOAL83rEgEPYZ72v+aiGKzyJSAgYJCEHseUTbG1n4gaJEiyxbEyxokafFXAeTqKNsnQM3/A7PPqka/n7H6lmstfw2kWPEwXrBSZ5mOHuNY=
+	t=1790968377; cv=none; b=oZmvGgrUXUaF1fVlkOnCXiabCJsLNSjCqUm8SGFC5WDBJftY4GytKlwq0W/yu2C3VssawDxCIKCGnyFjoViNRhakyMgjwOsg98AsJwuMtSoaR6Bvwr47VGRE1SopMG4GBiqNckI9u1iAqcZvzGMbfAK9B6pNMpypdpfB6cSowSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790967124; c=relaxed/simple;
-	bh=DHchWNZ1wELl9N/w6lEvEhX4ovGIqMkBB+Mj5IaftOY=;
-	h=MIME-Version:Subject:From:To:Cc:In-Reply-To:References:Date:
-	 Message-Id:Content-Type; b=Gwoeo4KVl4Ex87ELdgqR3rPF91AbdXkkidxN+5OwNaQuY1y/hYD1PeYuPf9WeMDCsNiuPhHqFm6ei26T11kY7uNH3QYokKK9ae7xeqIEueS+M5YNscOq8mBqsZOC/f1bl3WOjXxuvpqZAlz7hRPVj7HQbbplHnJz3KsA/ER7QKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KpwvNA6y; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1790968377; c=relaxed/simple;
+	bh=VXYscRPCLO7/B51vHKehDNHl1fFhWkTSNPgHZbmLDBE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Vrc+PHelWNdfHAvRkCofmk+BZUaj3XDz7TRPTpBboEQzKFnCfOvMn+g6mXcPIvdHfHOfQB3+gdTFdSD8dnBy8q3acsEe8aY82UqALp6F+/d2f1+gsg8gZhmQ9tl8yRMiFRI334tPo16W5XjubKxtZqNpfL5cGmA8Stc73vabXRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WCb0bZ60; arc=none smtp.client-ip=209.85.167.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpwvNA6y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1790967121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8ZbusdJQDLU9CqEcp+iezpSfVMrYKCe1NKRzE9U8ZfQ=;
-	b=KpwvNA6yyHps7fBy23Jiy6/hPp/Nzm3EqGCQYLs6FY/iUkxwaRokU50jEp5EmLK7kVu6TO
-	3MgGuRovlVpDX7/V+QMNsfYQn6JHFJZFDKF8qIboU2x6yyrkY1Wm01rmN7V2qZcckiM0Qs
-	2HVwjkWml7cSg0/IjClbNvSwioib3SY=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-640-Iu5pFw1TPiGA4TPIiCuWaQ-1; Fri, 02 Oct 2026 14:52:00 -0400
-X-MC-Unique: Iu5pFw1TPiGA4TPIiCuWaQ-1
-X-Mimecast-MFC-AGG-ID: Iu5pFw1TPiGA4TPIiCuWaQ_1790967120
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-93cc5f70c8dso166803285a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Oct 2026 11:52:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WCb0bZ60"
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-4cc89e86e9eso11541032b6e.3
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Oct 2026 12:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790968375; x=1791573175; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ju7lYd5Yw64Z3Dvl1ezRi6rNcZFkDznJ7WatWUwaWnE=;
+        b=WCb0bZ608q75jsSV9HbRvoALBTMxDyUEzvwzVHoZwHmB1C8rXLagN6bBmNS8xt4nKJ
+         fJ317/s6YSoXWk5zCUxe5MdT4cAQyStuJgVclPyUXCaJFRpI5KXTEeX5Bx/T8T25kEFe
+         mLGXcNIUOv6FnqO6ig33l3pQvrlz/n89ZBOJlIrxEfhxrALdMUdflrO5q5WMF/eQ45Hb
+         Ot4rZYzFXCng3h29XN9wOgl32emRASZXEN1rrV+fdheYP0ad84+1iLy4p3FDmnGXluPm
+         aBcHVUnqBz+Sh4ctVrat8kAYZKmdLR0Hu5Hkah++5TUBS7PX1lrjPkd69f6blOX7hetk
+         WsYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790967120; x=1791571920;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1790968375; x=1791573175;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=8ZbusdJQDLU9CqEcp+iezpSfVMrYKCe1NKRzE9U8ZfQ=;
-        b=T2/x4RcHELjT2cdKwMx0KS2knQbZTzaZ8VjfG0g2kMruu7bLPZfyBxkmhFVcgnoc2k
-         RSSdWaHrhXP2fGmZmCENIv8KXWfR0crI2B7tQMXoZVWCWOvWckniYkr+73h/Liia8dn7
-         fGTCLZnm5pmEbvQrMPXOrGG/zDZLjuuYOzQsnxOqealzo9JGSRzxjYARjQvyQSQ+mW0S
-         ApshFR2EoIPwX+/RDRR/AJZ2XvN+K5zCPOr9FVQu3XpHRYybgfuVN951GT7zwuLZC1nm
-         RrEksemS9bwkl2aAZ3hmyrFVvTJlIKHrpXM9kssQv5Myt0QZ2vdHNS2B5reqGWNl18nQ
-         aINQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzPyTmnC3Y/BrmEB0UerXtankjCNVB3snJUogSvaa7TXdVOAqWZHeT0+nWL3Kb01ud+NngENzudshvfNf4WQBQ=@vger.kernel.org
-X-Gm-Message-State: AFuF++n0PfKAPEcd7lP5O7cRYF1ohe/Y7m06Ex+Px8JBWRvMSFY+GCdo
-	SKTfxz8WpPVcIR0eauf7zDBwnCjaS/5PZCRg+4FA8tqQlKlPiVwp0fwql3YgLFPqpe10d3c5iMN
-	qAImAKu9PHMLmK0lqnbXrqRhct5ojo5dPcwx4Njp5TUXaNFVBAA7poxkJbsFFNIBAQZuLsw==
-X-Gm-Gg: AYBFou2X9aWLonlUmObsImNDO4RyrfllQTr1EXdW3NP+bDa7It+Yy6DqyA37QrF/R1f
-	Ovskoq+VfwQWSKRLmC/l7GdRGqGUOZ7nNui8FjozNC8S6+JB8ZHKwNbLzzKS5AGBI0UJsqH3VwJ
-	maS/yDtlMSGBPpPWV9WuTYbgE68wuKAogoCxw2S27Bs7H1D2T5SSJaXknrZZh3B5RUJRREn9/3Y
-	5xulUB3feA/LE4HNWuRytonaqq7f+xpAwutBG7q+sENSBFDzRETXK1Df0ICPfONNIL5aV/p6PjM
-	26tlSVq5ptFGlSL+c1Zig1zRMx9NtpWeQOL3Cjs9zqtVy6irCDXZshwWYg00wN6wi8R+jyVBBx1
-	zj9fGK0TnjxZoJg==
-X-Received: by 2002:a05:620a:1707:b0:93c:ab7d:af7 with SMTP id af79cd13be357-93e510eda88mr48339985a.54.1790967119634;
-        Fri, 02 Oct 2026 11:51:59 -0700 (PDT)
-X-Received: by 2002:a05:620a:1707:b0:93c:ab7d:af7 with SMTP id af79cd13be357-93e510eda88mr48333485a.54.1790967118935;
-        Fri, 02 Oct 2026 11:51:58 -0700 (PDT)
-Received: from bmasney-x1.rmtuswv.csb ([2600:382:7723:4eba:66b1:961f:1a2d:af55])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93cca03a1bbsm290352485a.1.2026.10.02.11.51.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2026 11:51:58 -0700 (PDT)
+        bh=ju7lYd5Yw64Z3Dvl1ezRi6rNcZFkDznJ7WatWUwaWnE=;
+        b=DQJbDVjN61oc878C47GtGd4TMR0Zi6N00g1GkACwI2ZX45fYVvIEw0StLtwFEuyovU
+         TMxHLx+2tNf1XP+KI5RusHvkMyIAnEn0lipZN+ySgBsQqTwyxB8aid4YXcymZFiaHx5G
+         eTlafBwxnKhw+JcSV4E17g1MCla6hzkPseo4u92V6HOfavHjJ0c0wnINAhz9xs6Mpd+s
+         NqU4wel5J8Kj8q65clVEZuyqv1KnJI5gLxLRqBitjLHcR+AGLhtprAtf4XtyjNMW2vjr
+         4QSf3ZVl5Mcx/MhdOYxgUzmGPA51vSZRGZo/kKgUoJHaT+765RA2lhixQWz208ZQxwry
+         tygw==
+X-Gm-Message-State: AFuF++nIduERV/mzvMXGUliK92pIVg93FeLuyN5TcGeV1OJjsOsXF1+L
+	a109Awb9oGiecsi+Lvj55izPglhEJlMZmKjlo5SPIZB6isKI5oZ2fhAwDmi0LjWGvs6QYTR6B5X
+	hwLPkGXQHFM4lkQndBZPo06dlKw==
+X-Received: from jaso12.prod.google.com ([2002:a05:6638:124c:b0:5f9:6f05:3fd8])
+ (user=justinstitt job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6808:6409:b0:4d5:2b09:a6a8 with SMTP id 5614622812f47-4f67bb70fd6mr326114b6e.66.1790968374329;
+ Fri, 02 Oct 2026 12:12:54 -0700 (PDT)
+Date: Fri, 2 Oct 2026 12:12:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH v5 12/23] clk: starfive: Introduce idiv ops for
- inverted divider clocks
-From: Brian Masney <bmasney@redhat.com>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
- Brian Masney <bmasney@redhat.com>, Jerome Brunet <jbrunet+clk@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Emil Renner Berthing <kernel@esmil.dk>, 
- Kees Cook <kees@kernel.org>, 
- "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
- Richard Cochran <richardcochran@gmail.com>, linux-clk@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, linux-hardening@vger.kernel.org, 
- netdev@vger.kernel.org, Hal Feng <hal.feng@starfivetech.com>
-In-Reply-To: <20260930124317.5648-13-changhuang.liang@starfivetech.com>
-References: <20260930124317.5648-1-changhuang.liang@starfivetech.com>
- <20260930124317.5648-13-changhuang.liang@starfivetech.com>
-Date: Fri, 02 Oct 2026 14:51:13 -0400
-Message-Id: <179096707366.821688.7143884804671628088.b4-review@b4>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1581; i=bmasney@redhat.com;
- s=20250903; h=from:subject:message-id;
- bh=DHchWNZ1wELl9N/w6lEvEhX4ovGIqMkBB+Mj5IaftOY=;
- b=owGbwMvMwCW2/dJd9di6A+2Mp9WSGLL2/7W9zLXuyMqzenaif56235iYH37vy6njq2S21Ouo+
- +7y2HUxvaOUhUGMi0FWTJFlSa5RQUTqKtt7dzRZYOawMoEMYeDiFICJdK5hZOiut5vCynTqZcHe
- S+F3wxhvO356uFlMyslMe9Iri3Oa/ikM/2MWlG1+tWHSu7i1E1iyY9Z/9z/fdPbqy3Oxs2tXT/8
- VOYsRAA==
-X-Developer-Key: i=bmasney@redhat.com; a=openpgp;
- fpr=A46D32705865AA3DDEDC2904B7D2DD275D7EC087
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Az1vkzFaiZFkuRVF4VWpEKdS6kStgCm-ePseYnQXPlo_1790967120
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXM0QpAQBCF4VfRXNvanQ3lVeTCMhiKbQcpeXeLy
+ 6/+cy4QCkwCZXJBoIOF1yXCpAm0Y7MMpLiLBtSYG61RzeK9MpgpS7YhdE6bwkLMfaCez++qqn/ L7iZqt3cP9/0AJ59dH2wAAAA=
+X-Change-Id: 20261002-kspp-125-3e3ae2bb0173
+X-Developer-Key: i=justinstitt@google.com; a=openpgp; fpr=E8700888482CBCD3779E67F32D8CB922E382C412
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4319; i=justinstitt@google.com;
+ h=from:subject:message-id; bh=CMxtKQblFVuOs9yO0cOd0qjokWPxJqtBuipzA4VLqOk=;
+ b=owEBbQKS/ZANAwAKAS2MuSLjgsQSAcsmYgBqwAE2r0gF8ef+9zrb/Tnx5YDs+uDLCUy900v6U
+ kKaVNpzhvWJAjMEAAEKAB0WIQTocAiISCy803eeZ/MtjLki44LEEgUCasABNgAKCRAtjLki44LE
+ EruhEACo681vlkH22FDTfWSqCvpuIODD+WjYFnnSK5TVc/3YmBNBVYd34ULTGijvGhh39H7Z5bh
+ D5zUjNlbu7NXvlXE5QqoacRc/RPi3BQdxkrC+YGjiaS53nyoWkkFBsW+No4r11gRw1Pbu0UATKs
+ JgXyMbb4ev3Ep/c2eDhTgywCsvURzhy3rU/sCKgmZ+WuUtIwa0IGHuQKrwy/+iZxpLDnYlYzEl3
+ cigkyHDf1igCYUdh/vk24sBixs/AI+jWoy1+bHoOJsZt7jUwdd0/gZ9WRmflqhcHFRk+Dn6UdVY
+ uye+kEyRR45nNTnju6tfHs+dr2fJGjM/iJRrYpvbyJ83iwwjDSjiHLYZ+bYzndYwkhzTcYT/BZH
+ UEz580uo3+nA57hgzSjpX5vPQ2HcGlfTt6MC05E9TXMm4DKF8+5OTjc48EHSf1WTANbFtOnVJG0
+ iLvEv4eVD8lol8YXkv/dVdXM2rSpcM30sb3fUN6nFPiaLgJ0+ra7I9KF/3g+m5EMjfbV+UkFfVz
+ PDRP/fj+L2t/z0OKL29LkKqEcO05ZfW39dHP+ADHcI9wz5jx+LluT16T465qcdeAaMzfSsz4iqo
+ vervsLOV9SxujrHtS0bx/m2SyWMo4i45eCL3jyTtCj6JYM/j6ZCn2ytvyN/sxhTzUau88EK4uzr jmAdEgNtYEPzPBA==
+X-Mailer: b4 0.15.2
+Message-ID: <20261002-kspp-125-v1-1-91286a454fda@google.com>
+Subject: [PATCH] kunit/stackinit: Cover declarations bypassed by goto and switch
+From: Justin Stitt <justinstitt@google.com>
+To: Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Changhuang,
+From: Justin Stitt <justinstitt@google.com>
 
-> Some StarFive clocks only advertise the divider and invert capabilities
-> (via JH71X0_CLK_INVERT, without ENABLE). Add the JH71X0_IDIV() macro
-> to declare such clocks, and jh71x0_clk_idiv_ops, which combines the
-> divider rate operations with get_phase/set_phase.
-> 
-> Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
->
-> diff --git a/drivers/clk/starfive/clk-starfive-jh71x0.c b/drivers/clk/starfive/clk-starfive-jh71x0.c
-> index bb7706ede1a6..1f98f1f8f0a5 100644
-> --- a/drivers/clk/starfive/clk-starfive-jh71x0.c
-> +++ b/drivers/clk/starfive/clk-starfive-jh71x0.c
-> @@ -302,6 +302,15 @@ static const struct clk_ops jh71x0_clk_inv_ops = {
->  	.debug_init = jh71x0_clk_debug_init,
->  };
->  
-> +static const struct clk_ops jh71x0_clk_idiv_ops = {
-> +	.get_phase = jh71x0_clk_get_phase,
-> +	.set_phase = jh71x0_clk_set_phase,
-> +	.recalc_rate = jh71x0_clk_recalc_rate,
-> +	.determine_rate = jh71x0_clk_determine_rate,
-> +	.set_rate = jh71x0_clk_set_rate,
-> +	.debug_init = jh71x0_clk_debug_init,
-> +};
-> +
->  const struct clk_ops *starfive_jh71x0_clk_ops(u32 max)
->  {
->  	if (max & JH71X0_CLK_DIV_MASK) {
-> @@ -312,6 +321,9 @@ const struct clk_ops *starfive_jh71x0_clk_ops(u32 max)
->  		}
->  		if (max & JH71X0_CLK_ENABLE)
->  			return &jh71x0_clk_gdiv_ops;
-> +		else if (max & JH71X0_CLK_INVERT)
-> +			return &jh71x0_clk_idiv_ops;
-> +
->  		if (max == JH71X0_CLK_FRAC_MAX)
->  			return &jh71x0_clk_fdiv_ops;
+Under -ftrivial-auto-var-init= the initialization is emitted where a
+variable is declared. A switch dispatch that reaches a case label below
+the declaration, or a goto that jumps past it, never reaches that point,
+so the variable was left uninitialized.
 
-else if so that it's with the block above.
+Commit 9cf016e6b49b ("lib: test_stackinit.c: XFAIL switch variable init
+tests") marked test_switch_1_none and test_switch_2_none as expected
+failures, noting the test should be retained "so that we can evaluate
+compiler fixes". Clang 24 emits the initialization on the jumps that
+bypass the declaration, so make the expectation depend on the compiler
+version instead of failing unconditionally.
 
-Brian
+Add test_goto_none as well. The existing cases only cover a declaration
+sitting between a switch and its first case label, while the compiler
+change covers plain goto too.
 
--- 
-Brian Masney <bmasney@redhat.com>
+GCC continues to initialize only at the declaration, and reports as much
+with -Wtrivial-auto-var-init, so it keeps the expected-failure path.
+
+Link: https://github.com/llvm/llvm-project/pull/181937
+Link: https://github.com/KSPP/linux/issues/125
+Link: https://llvm.org/pr44916
+Assisted-by: LLM
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+ lib/tests/stackinit_kunit.c | 53 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 47 insertions(+), 6 deletions(-)
+
+diff --git a/lib/tests/stackinit_kunit.c b/lib/tests/stackinit_kunit.c
+index ff2784769772..a0029f3b894d 100644
+--- a/lib/tests/stackinit_kunit.c
++++ b/lib/tests/stackinit_kunit.c
+@@ -493,6 +493,36 @@ static int noinline __leaf_switch_none(int path, bool fill)
+ 	return 0;
+ }
+ 
++static noinline int __leaf_goto_none(bool fill)
++{
++	goto bypass;
++	/*
++	 * This declaration is jumped over by the goto above, so it is
++	 * never reached. Compilers that initialize only at the point of
++	 * declaration leave this variable untouched.
++	 */
++	uint64_t var[10];
++
++bypass:
++	target_start = &var;
++	target_size = sizeof(var);
++	if (fill) {
++		fill_start = &var;
++		fill_size = sizeof(var);
++
++		memset(fill_start, (forced_mask | 0x55) & FILL_BYTE, fill_size);
++	}
++	memcpy(check_buf, target_start, target_size);
++
++	return 0;
++}
++
++static noinline int leaf_goto_none(unsigned long sp, bool fill,
++					  uint64_t *arg)
++{
++	return __leaf_goto_none(fill);
++}
++
+ static noinline int leaf_switch_1_none(unsigned long sp, bool fill,
+ 					      uint64_t *arg)
+ {
+@@ -506,13 +536,23 @@ static noinline int leaf_switch_2_none(unsigned long sp, bool fill,
+ }
+ 
+ /*
+- * These are expected to fail for most configurations because neither
+- * GCC nor Clang have a way to perform initialization of variables in
+- * non-code areas (i.e. in a switch statement before the first "case").
+- * https://llvm.org/pr44916
++ * A declaration whose definition point is jumped over, either by a switch
++ * dispatch reaching a "case" label below it or by a goto, used to be left
++ * uninitialized: the initialization is emitted where the variable is
++ * declared, and that point is never reached.
++ *
++ * Clang 24 and later emit the initialization on the jumps that bypass the
++ * declaration instead. GCC still initializes only at the declaration, and
++ * says so with -Wtrivial-auto-var-init.
+  */
+-DEFINE_TEST_DRIVER(switch_1_none, uint64_t, SCALAR, ALWAYS_FAIL);
+-DEFINE_TEST_DRIVER(switch_2_none, uint64_t, SCALAR, ALWAYS_FAIL);
++#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION >= 240000
++# define BYPASS_PASS	WANT_SUCCESS
++#else
++# define BYPASS_PASS	XFAIL
++#endif
++DEFINE_TEST_DRIVER(switch_1_none, uint64_t, SCALAR, BYPASS_PASS);
++DEFINE_TEST_DRIVER(switch_2_none, uint64_t, SCALAR, BYPASS_PASS);
++DEFINE_TEST_DRIVER(goto_none, uint64_t, SCALAR, BYPASS_PASS);
+ 
+ #define KUNIT_test_scalars(init)			\
+ 		KUNIT_CASE(test_u8_ ## init),		\
+@@ -568,6 +608,7 @@ static struct kunit_case stackinit_test_cases[] = {
+ 	KUNIT_test_scalars(none),
+ 	KUNIT_CASE(test_switch_1_none),
+ 	KUNIT_CASE(test_switch_2_none),
++	KUNIT_CASE(test_goto_none),
+ 	/* STRUCTLEAK_BYREF should cover from here down. */
+ 	KUNIT_test_structs(none),
+ 	/* STRUCTLEAK will only cover this. */
+
+---
+base-commit: 5e0f8396d4805a3e7f753fa58c8c55f1f3cc2160
+change-id: 20261002-kspp-125-3e3ae2bb0173
+
+Best regards,
+--  
+Justin Stitt <justinstitt@google.com>
 
