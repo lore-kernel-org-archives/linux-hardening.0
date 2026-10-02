@@ -1,222 +1,142 @@
-Received: from mail-vs2-f37.google.com (mail-vs2-f37.google.com [74.125.227.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013056.outbound.protection.outlook.com [52.101.72.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909C347ACC4
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Oct 2026 12:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AFE4078C1;
+	Fri,  2 Oct 2026 12:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790945097; cv=pass; b=qrtYvqTVdOhvHaNU3VZswIcQ83pMiVKZrG0nuISMXy+rHgu8m+rrg4tVjhu5FzFsGnI0hLMUpOrL4CL39RuPVis81ZWMpjdm/tgxB9a4gYP55DpQazEbFA0VcZOBxFYd8m54IwEr/EC2FEeWw9zWkSDp5qFfEG4PZ3/jHmrK0Xg=
+	t=1790945711; cv=fail; b=L0iimEqUWtW0yvKyATJreGdwj6a7SvZsKXxV/9aeLP5fmBC7GPcdMnqEzQrDjBFLOv1aFY6qsD9PbdcUiVm/9IEPHMHRNxj4A7W/Sa08sY7pOc0rf4MzZ/nybFyUC1Wc5z36Nbv9XUKhDEQYR90yCRidV8nQe1yAgonUYJ3/LP0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790945097; c=relaxed/simple;
-	bh=g9QfHi8EzjRCWHnUBkrwS8yo0cu4ylZ5SZytJAxSQ9Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QU62WWouGcvxaAHBaZIlQBu+WNhAyMpVdOMVtE8jhG6FSdqeI7mSbVQQURPCDiReyRPAHJLRVV+KzNSfebNN2XkYdGMvyHf4rkTNyeLjFgKqlTfLslTsFb6riKH2ud+ChLDzq8uaIwHYySjIelevoVwcgPwKT9gyttbrPZNJvI0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t1/SzPtT; arc=pass smtp.client-ip=74.125.227.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1790945711; c=relaxed/simple;
+	bh=Rs2hSpOUyNTCiPNvJ5XZezHRU0s4fdpUJ454rB1HeNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jcfvzVXIVSJuFRstSKyIwzjcYI9j+PxVzfselIWo4QbwB6O1SCb9hMqb+vNhbi0dtLIqWgDON+2JF7kC0csbhqYO5H8R57GZOdK/9owpRAKj4/7D1zZqdQkiBC7iJ1uo9ip3lEFoEd3mIKGEyJ+63gEWfEjoPou6Kd/FDfaHEDQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GEYeMEvh; arc=fail smtp.client-ip=52.101.72.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t1/SzPtT"
-Received: by mail-vs2-f37.google.com with SMTP id ada2fe7eead31-7ba698eb7cfso1500619137.1
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Oct 2026 05:44:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790945086; cv=none;
-        d=google.com; s=arc-20260327;
-        b=suAzgsQGyCpHhFaidsvlr8QxiZvrgwpinGqmcuM1EOeHSNL1L+t8o6qGGmVa002KVs
-         uyVC8OAK4954kIbOagF7GwMNxcxlPqmpsdnHxGnzqqtjx14j6zf59GJ9bwh6A9ehHDqw
-         zxViA3d8GIMzYAjN13ODgNu2CqGZmfO3NvDb7BKi1tqR5fIj/mlEz5hyV+T2Akr2BA3c
-         SX+fSvesxVQYGM1TJxSOfLqHhBuhsHU1amd1is6BNvUjf5zSmvC/KOWcT8JV1YnvAD2d
-         jlmKuIPi9AtfAKIa57H50r6Cs5tf3WO7GvMsZkmQQlvlzcRxICewBVokhXcKYQUeTxG+
-         yWqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ErdmA/wWdWdz3Q1T8+D4rKzpmGRrXQnnjgGThiMrKlY=;
-        fh=yKME9VNIY2n5q+Hsbk1cyAN9FGyNtrlS5NiWBPtD5Rs=;
-        b=DHPkx2YMjNU6DU6dQ3l0PksvhoQvQDiJ+dmrN5P2KPFMGDOL/OE2XM3kiWNeKUGgZz
-         48/xY7Mt81dowpXoYBZNiHU+p7fHp05TKc5aPqdSaq3IR1K5d2liCvyqUnpc6UcC8cGv
-         QusIMaRLQfNGvRa2xv7YjI0iIH40uyEBUwKXI+pGMBId7wwbI73i9I3kJhH8agyRajv6
-         AFFYyqTJxCE84nKJFgI5RZovMIOiSm841yLQ75hjYuyHiDVNHPYdFlVdAG1b0O1U1ihF
-         eZEY4WiCuQlNycFUHP2oSPIc9Vdcjrwfne9uzErNvSPMvc7zoleVEIxCBFzlG3z2C6UD
-         MU5w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790945086; x=1791549886; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ErdmA/wWdWdz3Q1T8+D4rKzpmGRrXQnnjgGThiMrKlY=;
-        b=t1/SzPtTPzxep1BpfG4ZxuzMwcZhlOV8lonbOZJjpLt8BIkNabFrrClCPnLuwm9wgX
-         7b/Q54+InRgujDMldIQbuRpNEDEVdVrEaIKduFeWASu+EqbCP303a5W9V/Q0FqcwVtQW
-         MjpoT6nfFsYXna6FGQRm7AZgduLyS1RLFtondxXTYTiZJBIQ2efi/ngcgfyKq5gIzH0V
-         f49/V/UMDn5+6u/BtcDgXrqEtYNuJZI1ANmnKd8usg8guJ9VsGjhzfGqUmnMojWYT+2i
-         3r9ln59xaOjxoedKcXKTtjnRlnp5BdRkeLRKzbwaBqt+1zItyOIoTGq7JtRVel5L7fPn
-         XM4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790945086; x=1791549886;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ErdmA/wWdWdz3Q1T8+D4rKzpmGRrXQnnjgGThiMrKlY=;
-        b=cfYC4NFfcrytP7dXUxXFYBAwKFkxvCk+GG3hcKaSnz+O3hTdO80/VGeeQu8u6VSi2Z
-         7S1W9DE7DYXqEekFR9J4H9pANSzhyIvy/RvAvFWMcMdb7YYwYxs0ZLhupivmfzAoLJMB
-         5GTo6ljWmwSufbTsnROe7wpMNXxuG93HnEeJ0dkHCASN/H6MCpo+rxxsBgETpVynWIEa
-         FaS3IxSvCFIbQBUNlxXtSVOFDGWHkpFD/n7rfefPXPS+aIhlGIBnuUYa8RteTgRw1p01
-         Pmhfpj6YkeUG54s1kfRAA/wqDXyExS//HhvN4B4aNkO4YQb5wroIsPotSnlJA/f1WCHE
-         Wf9A==
-X-Forwarded-Encrypted: i=1; AKwUvBwIwMxu7+IljGTwpss6DTg5uRYAz74wR26ThtggSjmB9qNSZfRRH2bUm3C0u7k8TXEUJCtU6F8+3zpcfTf79+c=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKO8kCbc40yPMspjBBEkjsk4WaPve0pAROZ/4zFGWn8zvmTkfQA
-	yNJtoL8SE9Ff5Ob7SodQsQYwhubY1+Ci5eEjk3TlWZTRr3gqB9QA4IXs96RSYxcI7vBlyni4MCJ
-	nA7p7pQ6vMWP1sJ++dWjYaVeeIdIrwJlUdMX+Gu4=
-X-Gm-Gg: AYBFou2ydyTVC9dWPmkKkjShswESZgf1IF0YQuaKj3WtwCH1L6sfqMa9pVuu05E8xIX
-	mQIxTJGeOyuTMkcuX5p3WysBxxHbUs/hyFzbNn9/Ur+gmJjWxM8DL5+gPPCs+eUeLmxngGGiwh/
-	JBse+G24QIAs6kOwKZdPUS71yfq//5cxIvYUvYakuzgU/Ufmixy2Xt2TIndCZRQW7AA2XHjc/HT
-	OEskCegP2DR+CdZuV8RakxnUWUJjGbVTQryw4u46sIpTg6FFJbPKKy0qkd7loRqPiw7ejpxjv32
-	do5XfHMrBJ116HdfpvT4d+kyEEEBhxYsOjYyi5LlSRammT0zLbw/BwQPeGd01745fBl6WeDJ/I9
-	cHMw5gGTUOMCrBqG35/v9
-X-Received: by 2002:a05:6102:1627:b0:779:5049:87b2 with SMTP id
- ada2fe7eead31-7c0ef026e4fmr542712137.0.1790945085222; Fri, 02 Oct 2026
- 05:44:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GEYeMEvh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ug+P746c7tcVr4kSwkDTqakg83YnlKJ2QYR7NId+da9Iqo5+E+KH/qdprOeMwLTuWEGo5V2nixwAJEMH0oTlxSLuEiVfpOOW0B6bPibRo7ZN6biOJKUHujGZBxJvdxZ3u83HKthFcrAcS0HTNZBNBAdMZXv/hbYu42Uk7GrYf8H1F78I+QVFe6Yc6gUE5ih5hjcUU7FRG0rHEmBEkUL3DO5w2TuhHDAJkemqFsR4nJ/KD72rZ4Yuv9dRj6JBA/jZE+YmW2p4Ti7hpr9CzN2hDrpzuic2vK6KnL38HI10AGC1eh06iMXgGd0iVA9NrI9Hqctvcob3IOA9fUI/Vf/t1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QXCm89YgWlOfFMMcD+ln38RylJPQVlzhUuqL1d8yYkk=;
+ b=Mvs4dBfTWM3QnDxOEMtbfqL3unvR+xXKzKGYk2zQbjaHThn/XTRbSDPF5+OrgPFgTh/vqY7QvEmEvkVt9QEVgRXERLdqDi+b5Xk2COwvhE9k/x4XgRcWvd4AF+KgMPhcTqjbhG/rSMU+xNNtkBM58VZBy/p1H9TVyojtzoIxZMTn3rmqxcZ4Iz/r27ZYyCkoK0uKnovMRNWFJzzjiinjmzhSBEQVzYzFKzlvds6OEeqr3m1WrYm2EIFw4ZwArrIGPYjuLqGKkqbADP7xH/SuY31PaI4ibJPADnG80xCGo7DF2e7YxV6j9XKctiz0uhGOgcBbElYbcuCWjL5S9CZpWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QXCm89YgWlOfFMMcD+ln38RylJPQVlzhUuqL1d8yYkk=;
+ b=GEYeMEvhZga2xppCbj+R0+QkYF2ICtynuore4YjC2faaMmnITqyZf4Wkz5mQvxbL1GKqwByO36fnRaUvzn+gc1MTN2Oq2smA3CE6yvDf5bf5HKqydGHvGGKTnKNmmQrNwH9Q/UpJixMGTxZueNO/YAhb9GwIrNPHAxIJCx1VOV+Ts/kgOBZpAfFBEIfEgCrF3siI3ZgRV9neTSzv8TSQbqrDp6juZH5LG2vViTAUj066raLy+6mzqaDU8cfp4qgJtUJ0/4fOamoA2zzWKtwtv5Oe5c7wzvLnzMOLnzmBtdjViJkpFHuVJRGsnlaTEup4Ev8sxOO55jVGSGvQsHV1ow==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from MI9PR04MB019273.eurprd04.prod.outlook.com
+ (2603:10a6:290:d3::17) by VI2PR04MB10168.eurprd04.prod.outlook.com
+ (2603:10a6:800:229::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.18; Fri, 2 Oct
+ 2026 12:55:05 +0000
+Received: from MI9PR04MB019273.eurprd04.prod.outlook.com
+ ([fe80::263c:943a:dcb0:29d8]) by MI9PR04MB019273.eurprd04.prod.outlook.com
+ ([fe80::263c:943a:dcb0:29d8%5]) with mapi id 15.21.0472.016; Fri, 2 Oct 2026
+ 12:55:05 +0000
+Date: Fri, 2 Oct 2026 15:55:01 +0300
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+To: Bill Wendling <morbo@google.com>
+Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linuxppc-dev@lists.ozlabs.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev, codemender-patching+linux@google.com
+Subject: Re: [PATCH] bus: fsl-mc: Annotate fsl_mc_io.portal_virt_addr with
+ __counted_by_ptr
+Message-ID: <kgtsddrbn2b3bseck7ac4gtuxjhqnqwxwlmcimumvduxmxxtqa@tnhtf6mfu7ls>
+References: <20260922223538.2287676-1-morbo@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260922223538.2287676-1-morbo@google.com>
+X-ClientProxiedBy: FR0P281CA0043.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:48::8) To MI9PR04MB019273.eurprd04.prod.outlook.com
+ (2603:10a6:290:d3::17)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260928063824.1386524-1-morbo@google.com> <CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com>
- <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com>
- <CAGG=3QV2k-nsZHNSuKEixZb+-LcxvhQsG379ghgyOpiDLTJWzw@mail.gmail.com>
- <CAD++jLnOm3ua7hom_L4YQwN5z81M17WmL_VGqx+-ugrAJ-6_Dg@mail.gmail.com> <7e847715-6bd5-4f69-a9a6-339788810fec@app.fastmail.com>
-In-Reply-To: <7e847715-6bd5-4f69-a9a6-339788810fec@app.fastmail.com>
-From: Bill Wendling <morbo@google.com>
-Date: Fri, 2 Oct 2026 05:44:28 -0700
-X-Gm-Features: AclHuK_2BHsoBwbSP1Le028scX0dX0GO_oD4fcefHQV9KFQAl-gpbu7HNCV6U34
-Message-ID: <CAGG=3QWKEgeggp+OcVsS4QLOX1zxN23HHZp1SfHX0rQVA_7nDQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: annotate struct acpi_gpio_mapping with __counted_by_ptr
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, Jeremy Kerr <jk@ozlabs.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	codemender-patching+linux@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MI9PR04MB019273:EE_|VI2PR04MB10168:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e40d0e6-6e31-43f5-df7a-08df20846189
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|19092799006|7416014|376014|1800799024|366016|10067099003|56012099006|11063799006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	sIZGr+F2eKIhP4E0pSM0EZMA8fHhcJs7NMWCtusTgn736J57HQVyM/4HJ0LhL6jhfxs0hCqO4CTv/wM6TZAGKhXqgMU6T0iyPbHJrbe9qjuTQMOLERZVN7o0LdpoT2NnmnyXykr0M2hQuHaGZ2rqyR3in2Z9C5QBTlCRdpVznlXL8+Kn+cjdsIc66hmNbqZT6S1+rNzTP3DA1YNefwm9y5C+T8JztNVd11bX3jUex0kvd7zfTIra5rFfcsZTQ2damfbIYxZ3wzAnrDvjx3wkqk3H/iwk4M8U7itQYjQMRNAUAPR2ePvbMLkN1iBUTRTIifWbWrnh2cHSc6VDnb9sQHPTB/ghRVXl1OhT/KZLFlpN1DMR/3+88hTKXvWb0pPqrJUkQH11vDfMIHYmHZlZvZowv/AWi2DBhYxVKxCvvgjFKLzs7gJF3uq/CPebW5tt31J/HdkRbcxSBqqjIM+vOfsl+UI8gbfH4uQaLPObolotP9ymgmxgqL7hv+HxXOwlAEuvn7tJ/mPM67ecteo8m/DhdEZoxpeZ80Bt+xe52Vzhz/ZODLI2vbWaJYVTTN8ejAG9Pr+D0khBjCVs71ggSe1hP9dur0cBmA3fKCZbKUKPhwTY3Yd0ar8lJ7WOWiaqTQbs2Y5uxJvi8bUzd12GyK7KImYylxuCdBr7slRzUPg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MI9PR04MB019273.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(19092799006)(7416014)(376014)(1800799024)(366016)(10067099003)(56012099006)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?6MFWMwBcMmSK8wzCkT1T/+ecGiXi4Fe+CHZ8XS6wztHDMkwbJwUE09wRsFHF?=
+ =?us-ascii?Q?UG+DcsvdLX0vozJt/tsz9WAo74JKGm02WPjnmrADQF/6pfj1JGM45wWPtDZV?=
+ =?us-ascii?Q?dTA5QYIsLsgTdS87zQrmxTsIowhoKL7BERaYNmI7rUuVPgO/IFS8LFgS2Mxq?=
+ =?us-ascii?Q?EpPlQ2I1ffj5fJy0EXLeafq9ddgu+2nlnAUr00lEfKRkMRVs8iSXEma68hBA?=
+ =?us-ascii?Q?kputeUDJallAdY3zQag3vXIMwN9GuavOaT0S3/EHJAxih8QwVaFCdf3PWdVA?=
+ =?us-ascii?Q?Kru/r+9lZf264lZZ5ZU8+MdbAjzedW3Qu4zSWg2EjbVLY4gmwGtEK9yt45xD?=
+ =?us-ascii?Q?T21+SM0BjjbaDPHeL0eGWUk2+zcirQRpNKd1LusXcsVj/sFLZxY7vhii9hXo?=
+ =?us-ascii?Q?4/BXoyIlnSPHw7kR1oJ5D0nj8BmLnh2aQbp176oRw2yKBva/rmRRzuxKqZ/Y?=
+ =?us-ascii?Q?ThePcnLLDyX2Y+YIgDrOPLuBMCVrz3E7XpQ9FS6RIyIikxsyZuYTElXpyENf?=
+ =?us-ascii?Q?dG+nwalmNm3dmUbkrPlp+Wbw2Mf59JvZwPMCm96V1dE4rlS3KLo5VL0RJfbU?=
+ =?us-ascii?Q?bdBEZ22SPaKosRJrn2iLemCeT9XQZNzQqFCH406QKXDkoGiXWK2duibDu1vQ?=
+ =?us-ascii?Q?ckWs4FjD7mM2OvmuRt1/3N+xApLGtxGeCE352am+B3fQWpeKOSzD1EUYXAdk?=
+ =?us-ascii?Q?I7oSjZc46LUqBbdMnHrL2E7A00fMzflyJ/4ZN2qULwSHmGZX5aBqQLYwbBk9?=
+ =?us-ascii?Q?qH0BoGc5GfMgN5k1N0YLwG4UHmktMgZnu294qHx+El2kJPk3mBng89DLHc0X?=
+ =?us-ascii?Q?An6fFbQnO/8e/XI4MuKT0Y8y55puuDG/J/rk9Jh9CieOx7dI+B+c859NPx+c?=
+ =?us-ascii?Q?3ssifC39wxbs2gNB9SwtlcfkxHa18JAwz+oYK862lUDsOBbu87x8v10rb1OX?=
+ =?us-ascii?Q?Ay7TJEleJjuXQKAV9gksGlOJQITGeiNpHh7kz9n07kJdsi6/aGmFweSSbuuC?=
+ =?us-ascii?Q?JZk5Gy7qCQpwk4c6wp16FcXUZYZH+a6Iff0Zv9ttp78xQ/+/nqa6XUZikKoA?=
+ =?us-ascii?Q?K8OpAonTzntQVaPSDNBeKF3b2WTZniXnougLQ/wtq44nvcOtjkDe3LkvMBzI?=
+ =?us-ascii?Q?SR/qcCMW0sBbIpgP+3VPiDiGwHPVVWjWlFyltJyPSEj4Vm5OBv/uUBqQnDhR?=
+ =?us-ascii?Q?mKYuQ5c+yLVK0MODb+EUsgY4BxwsTfVh66ev1H4r3lXFFjrjmcCaM5DU3vsQ?=
+ =?us-ascii?Q?K+v8Jr78BZ3v7is5546tBvfTMKavC5snUT2jmeWwFRSDVFhDYSGY5iflu5We?=
+ =?us-ascii?Q?37O36zVnCjCCXLcg0oK8WfN+tfetbuBfm/SvUKv495c/RaY8KrzyfgvdXEce?=
+ =?us-ascii?Q?VHuk4qOU9DPXUP8ZW9jeoGOseECwAkK/cTqzV6OkiYa5BUvTlitbNe2oXmss?=
+ =?us-ascii?Q?fvDqZlUDcTreiyljQ5jTKPpV2RBJwC3fQI4NCqXVTlrVzOafbzvuXzZujxCV?=
+ =?us-ascii?Q?H1pevgbxA/pe+z75zvXNxMEyth3z1lHeM7fG+YrSJ5IHSfgjzewI7Hwiulgx?=
+ =?us-ascii?Q?5g813Rll4LE0kIkT6QRV9FPn1rySfiyFONYqSNsiw4obCqHEp5Yofu+4Oh1L?=
+ =?us-ascii?Q?TXUzWtlmY/sfMX6vSx4r6ztbvfOF2NzrPTT8eid9Wf2k60dRIK03PRfLuu+m?=
+ =?us-ascii?Q?Io/Uuwu8h6y74gdzfd0mZAl4WOE5r4y3gGGf/5kAJqnkhJ0kXQhF5GA0rXz2?=
+ =?us-ascii?Q?GqSNnFMmoQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e40d0e6-6e31-43f5-df7a-08df20846189
+X-MS-Exchange-CrossTenant-AuthSource: MI9PR04MB019273.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2026 12:55:05.4679
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: N1C+VZQapDohbRaiVlbV+09jredN/v6LRGy9IJV3MV8O/WCJs0TNZQQLPI1E5ZstMp00O+Y6jJ+YafboaLfXog==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10168
 
-On Fri, Oct 2, 2026 at 12:38=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wr=
-ote:
-> On Thu, 1 Oct 2026, at 23:24, Linus Walleij wrote:
-> > On Thu, Oct 1, 2026 at 10:05=E2=80=AFPM Bill Wendling <morbo@google.com=
-> wrote:
-> >> On Thu, Oct 1, 2026 at 12:56=E2=80=AFPM Linus Walleij <linusw@kernel.o=
-rg> wrote:
-> >> > On Mon, Sep 28, 2026 at 9:22=E2=80=AFAM Bill Wendling <morbo@google.=
-com> wrote:
-> >> > > On Sun, Sep 27, 2026 at 11:38=E2=80=AFPM Bill Wendling <morbo@goog=
-le.com> wrote:
-> >> > > >
-> >> > > > The 'data' pointer field in 'struct acpi_gpio_mapping' is associ=
-ated
-> >> > > > with the 'size' field, which represents the number of elements o=
-f
-> >> > > > type 'struct acpi_gpio_params' allocated for 'data'.
-> >> > > >
-> >> > > > To improve bounds checking via CONFIG_UBSAN_BOUNDS and
-> >> > > > CONFIG_FORTIFY_SOURCE, annotate 'data' with the __counted_by_ptr
-> >> > > > attribute.
-> >> > > >
-> >> > > > Analysis of allocation, assignment, and access points shows that=
- the
-> >> > > > pointer is never accessed before the count is set, which guarant=
-ees that
-> >> > > > this annotation is safe and will not cause runtime panics or
-> >> > > > false-positive bounds checks.
-> >> > > >
-> >> > > > Cc: codemender-patching+linux@google.com
-> >> > > > Assisted-by: LLM
-> >> > > > Signed-off-by: Bill Wendling <morbo@google.com>
-> >> > > > ---
-> >> > > >  include/linux/gpio/consumer.h | 2 +-
-> >> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> > > >
-> >> > > > diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/=
-consumer.h
-> >> > > > index fceeefd5f893..2b80cf7aa7e7 100644
-> >> > > > --- a/include/linux/gpio/consumer.h
-> >> > > > +++ b/include/linux/gpio/consumer.h
-> >> > > > @@ -667,7 +667,7 @@ struct acpi_gpio_params {
-> >> > > >
-> >> > > >  struct acpi_gpio_mapping {
-> >> > > >         const char *name;
-> >> > > > -       const struct acpi_gpio_params *data;
-> >> > > > +       const struct acpi_gpio_params *data __counted_by_ptr(siz=
-e);
-> >> > > >         unsigned int size;
-> >> > > >
-> >> > > >  /* Ignore IoRestriction field */
-> >> > >
-> >> > > There's a problem with 'drivers/firmware/efi/libstub/Makefile'. Cl=
-ang
-> >> > > needs a compiler flag to support the "__counted_by_ptr" attribute
-> >> > > referencing a field *after* the pointer, like in this patch. Howev=
-er,
-> >> > > the Makefile blasts the flag away for x86 platforms. Below is a ha=
-ck
-> >> > > that copies the part of the top-level Makefile that adds the flag.=
- I
-> >> > > don't think that's a good solution. The comment in the driver's
-> >> > > Makefile says that the stub code executes before the kernel does,
-> >> > > which I assume is why a lot of the flags are blown away... In any
-> >> > > event, I'm not sure how best to address this.
-> >> >
-> >> > But is this a problem with the current patch?
-> >> >
-> >> > Does libefistub use <linux/gpio/consumer.h> in any way, shape
-> >> > or form?
-> >> >
-> >> It's being #included transitively:
-> >>
-> >> In file included from drivers/firmware/efi/libstub/efi-stub-helper.c:1=
-2:
-> >> In file included from ./include/linux/efi.h:20:
-> >> In file included from ./include/linux/rtc.h:18:
-> >> In file included from ./include/linux/nvmem-provider.h:16:
-> >> ./include/linux/gpio/consumer.h:670:55: error: use of undeclared
-> >> identifier 'size'; did you
-> >>       mean 'ksize'?
-> >>   670 |         const struct acpi_gpio_params *data __counted_by_ptr(s=
-ize);
-> >>       |                                                              ^=
-~~~
-> >>       |                                                              k=
-size
-> >> ././include/linux/compiler_types.h:392:64: note: expanded from macro
-> >> '__counted_by_ptr'
-> >>   392 | #define __counted_by_ptr(member)
-> >> __attribute__((__counted_by__(member)))
-> >>       |
-> >>        ^~~~~~
-> >> ./include/linux/slab.h:602:8: note: 'ksize' declared here
-> >>   602 | size_t ksize(const void *objp);
-> >>       |        ^
-> >
-> > Hm I see.
-> >
-> > Certainly Jeremy or Ard will have an idea about how to solve this,
-> > so paging them in.
-> >
->
-> libstub code never executes in the context of the kernel, but only in
-> the context of the boot firmware. Generally, we disable instrumentation
-> there that has a significant runtime component, basically because we
-> cannot crash or panic the kernel before we have even booted it.
->
-> Can we just #define __counted_by_ptr(...) to nothing when building
-> from that Makefile?
->
-Doing it in the Makefile is tricky, because of how the "c_flags"
-variable is defined and used. I couldn't find a good way to do it.
-Instead, I inserted "#undef __counted_by{_ptr}" at the top of the
-affected files. It's gross. If there's a way I'm missing, please let
-me know.
+On Tue, Sep 22, 2026 at 10:35:38PM +0000, Bill Wendling wrote:
+> The GCC and Clang compilers provide the __counted_by_ptr attribute,
+> which is used by KASAN and compiler bounds-checking to detect
+> out-of-bounds accesses to pointer fields.
+> 
+> In "struct fsl_mc_io", the "portal_virt_addr" pointer points to the MC
+> command portal virtual address. The size of this allocated portal in
+> bytes is tracked by the "portal_size" field within the same structure.
+> 
+> Annotate the "portal_virt_addr" pointer field with
+> "__counted_by_ptr(portal_size)" to enable compiler bounds-checking and
+> harden against potential out-of-bounds accesses.
+> 
+> Cc: codemender-patching+linux@google.com
+> Assisted-by: LLM
+> Signed-off-by: Bill Wendling <morbo@google.com>
 
--bw
+Reviewed-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+
