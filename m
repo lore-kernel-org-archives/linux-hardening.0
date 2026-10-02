@@ -1,116 +1,154 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0F63537FF
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Oct 2026 15:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0C7515882
+	for <linux-hardening@vger.kernel.org>; Fri,  2 Oct 2026 18:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790955991; cv=none; b=duezfTPS/SBePP4w/C3WkRyMHPio8uUCielBzNT89veDvXncjyOIptgRIbvQa5BTWG/LAi/PGuFGciSkNZshXahozNCKPSWeG/Kr1Hn7UZSp4ajauurHJyHX6olfedJjJFDp7+h2ejPCS4ZR4WhTX6lv2dsoD7333GDgz05EcbA=
+	t=1790965829; cv=none; b=Lb2shEDuq6TPElqDRKjfvDW3oBCiG+K4RPKS8zhQGCOcOYZSBWnMH26eXUQ2xLwOeWNPIfuJAmg9KHiKTMbSvNaK0bjKziIEJsL2l2ZK5DDrBy/gScbYg6qTzfxVxqkFSNuGR95umOrasCs8BdMgLAUHi+UxS5Bid9CF3KP8EL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790955991; c=relaxed/simple;
-	bh=h28xSIp17OKs/AgiIrNq+DdSPKZiP/ZhWr17OJaw6v0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iXz1aePJ/RXQyWoTen7/cs8GfWO0RqXf7SkiptJ1da8nWiUI6rVLF8mpVioIAFQKvHE76yLZ5tOX5ckNsPE1L2hzqpjzYVa2iuaf2kmag8Vf5ia6TtGYHRFhScZuSZIdoHJXfFaP7Qh2tJHfnZJEaStuZUnwIwF/wSdmqpgyFeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=boSRXA0u; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1790965829; c=relaxed/simple;
+	bh=a9DGLc0NeseciOnf2q1+7VtYJ5eoK8nd7Li3zgPWEig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=U4pgNDKF2YMGtBO1duzMbpcriODa8CI+Q6PiH9lcbSxMSO29jIfVi8I7aNZhuCDi/vZ0L2IpWlGu02zv9JAUozoVlNRnbNjnmD8s7vSCMzSKr9G1ZA5gOBClO4asfXVfTVDi3g8djJgl46qGTM53Nf8vtJenxWktIE/isYYz3G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PP3bvG8A; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="boSRXA0u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PP3bvG8A"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1790955989;
+	s=mimecast20190719; t=1790965821;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dkAUcAmviJBE+AfFgIHguRjot4BcqQHezlPnJllPFWc=;
-	b=boSRXA0uww2VevY/aVLg9v4AFUOOzUCGmolfLvfnq+FOJrGXiTQXexejCYMSHKsAFJsGmn
-	XDooiy1VP08H2BzSSb5BmCVuWx6dez890OkGDwbHhxv6CQb2r94iwiD85F48MMpiQHKc/7
-	gesjC/rcFrriTGYnv+ef0oxGCy+d+18=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=yHtc6IteGKWmX+tDrjk0Un6qMA2HmnuYgSyxy+UifAQ=;
+	b=PP3bvG8AJ/yLV0Grw5HWjynqb8S14s4Mc0yMT8W0HCnP1upuJyRQG9nzXF/tsWlodBV2Bv
+	LWtWTI6eZ4CWK8Eb3f3km+ADKxnEtsUPhVWR+G+VJEj54xd+Oat/Wl9ZltInOv/Kl30CE8
+	eZeEbm3+5mvrpBNvDvaPEBXFCCE+Rpo=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-221-h_OPafmZPe-EEBAS-eT-1g-1; Fri, 02 Oct 2026 11:46:27 -0400
-X-MC-Unique: h_OPafmZPe-EEBAS-eT-1g-1
-X-Mimecast-MFC-AGG-ID: h_OPafmZPe-EEBAS-eT-1g_1790955987
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-917a510b22fso866246d6.1
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Oct 2026 08:46:27 -0700 (PDT)
+ us-mta-507-4FUBd4BxP0uq0Ox_4-Cnpw-1; Fri, 02 Oct 2026 14:30:18 -0400
+X-MC-Unique: 4FUBd4BxP0uq0Ox_4-Cnpw-1
+X-Mimecast-MFC-AGG-ID: 4FUBd4BxP0uq0Ox_4-Cnpw_1790965818
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-93cb6391e89so485950585a.1
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Oct 2026 11:30:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790955987; x=1791560787;
-        h=content-transfer-encoding:content-type:mime-version:date:message-id
-         :subject:references:in-reply-to:cc:to:from:x-gm-gg
+        d=1e100.net; s=20260707; t=1790965818; x=1791570618;
+        h=user-agent:in-reply-to:content-disposition:content-type
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=dkAUcAmviJBE+AfFgIHguRjot4BcqQHezlPnJllPFWc=;
-        b=yIqPBPH9edIioAoQ8ap1GlhrgXRarifCRiCUJyEyfzsNTQ4ohe3ilMQdEz8VqK/USO
-         XvdMqx86h2+6dngMX9LofkaCGF9K5cGmABb0WIX1HBxPSnIvI6nXBq2WmDvwhIsB3zo/
-         vDBUqdluTZ9WPqUnSwFq72iODHiUqtDR70Q405/gyO8B99QG62hNoR/IgQRUg3KNTgS1
-         tYzJAfD9Rcc0YZriTfOam/pLQMXJFlrtbVR62EvxuHzu8ptgrwtdcLlBVAqq148Sxpcl
-         e4Lnr+5E3y/3EKDqN222/RhhKZpApU16Igf4HYM4vRRAwGpLuhdini0dcBiAJBIKtDQi
-         ICdA==
-X-Forwarded-Encrypted: i=1; AKwUvBxOKrARzVin2gtYicECJpWAKxOZlfRHgBA3ZnSpB/haS4zTwjhYMRwK7c7B7MkrfVID2PHpoLo2Cc7qJs1Zvdo=@vger.kernel.org
-X-Gm-Message-State: AFuF++mmICuYTqNZHvAFvdi6zf9Ew6iYKvgeC9CUriydgOOCk0jCpFxM
-	gwplS+JjdAgZXGvp1+WUfUH35wEAV0ME7LlFGK/dBqsUVI+82eYuaZfhAIKHDu413dNiErMk7KI
-	95Qq4aPxqoD4c/lGPcD071zIJG1HLsH+yY8X9sumySTAhskkR//p6h9d/IAjBvassGPRNCg==
-X-Gm-Gg: AYBFou1HrSY8KQNRjMkE4Ng0OpAo753qRAPgqf3+Ifr/lQe8qXnEkAifxJ6Di4zn3sN
-	zf/Dtz7N/auk+WiaDsNwUxeX1EAZVNEbJjwS/WwlsyEzR5yM01hgfK38pYmtgCkyvPPh+aq/gHk
-	/85Wwc5gee92I62oeSNtVi8bNbOAu9nvFBcOnGNG3bhabFJKBLJEuFvGdGoVqWxbYaY+RGige7J
-	D0pP5YeKhDNGykYxQKtl4T1fniLsela0ybt4+iOHLHdBPqYaJkMZKHNA3afmrMxnpOu+hX9l4qM
-	f0b/9lt19z//smvtyep0wV3j/LEq8niblWC+x1/talwKUHYqVlA5sjOmNj7uWRYfWVRnj+MGUmD
-	48nMRRQWJXAMT1K/NMe0oKOY/XCQqc0BY94nIgVgKyM3fLqHiG+g=
-X-Received: by 2002:a05:620a:1a13:b0:93c:c98d:e1b6 with SMTP id af79cd13be357-93cf178a238mr541163185a.48.1790955987056;
-        Fri, 02 Oct 2026 08:46:27 -0700 (PDT)
-X-Received: by 2002:a05:620a:1a13:b0:93c:c98d:e1b6 with SMTP id af79cd13be357-93cf178a238mr541159185a.48.1790955986487;
-        Fri, 02 Oct 2026 08:46:26 -0700 (PDT)
-Received: from bmasney-x1.rmtuswv.csb (c-73-183-53-213.hsd1.pa.comcast.net. [73.183.53.213])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93cca209601sm250629285a.20.2026.10.02.08.46.24
+        bh=yHtc6IteGKWmX+tDrjk0Un6qMA2HmnuYgSyxy+UifAQ=;
+        b=hd0vNb+TCRGkyuPz6utpg7cL5AwGt6Um0Q0pn1o3CMIH9WSQL4T0I+bdUrXeHN4KUW
+         WCrBMVvSbXDUJrSSkH5qjuquVigefkCHgGJdeQ0uw/KmKwO3cpqwhX7y24dkacvhcdb3
+         9cpON0GsDRZiMOiw7NDpW/0Gn1s5ETU3rpvRvzQVqn7Y+rFjjMOjagRILIM9w0wnIMrB
+         //UT6aAKICYlMLcpq+5DEPUqtcsckugIAisdVAyFGBlBdRKfZilhjITXtH3dNFGKtnvU
+         RTToYmTo7UGY7q6VL35tvD5C4q5ezmpTb27JzsZl+S2YXJwNbcLwCO8R3D2KxslDKLAJ
+         FLaQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzmlhvjTo6q3rf4ICZ6wfpl6IKZ1wt+uDbpvlkRn3S5eWNotWEGgEfCVz3Sjgl6L5ye0A/0cX0Ogxz6yzrvx30=@vger.kernel.org
+X-Gm-Message-State: AFuF++mmYPzIcLGCBxcW6wHS9k7BORcewAvkkNMTMRv9DWZ7eaxtro60
+	ZNiq2hDk2+Z7/4b+gfNZZUCxrW+yI0+VdM23IhRonlJQwkwmM6kK97VxmQxQ/5hA5Nb1NLZEP0V
+	PPp06MLzdlGaMlt8LCcoGqRwNAyIUJPbA9Ld/lir51jttN6/epkX81sCUlBvGdYObiNsI9g==
+X-Gm-Gg: AYBFou1WQUjREBdNH7SZcLFt/1ejhwu1HSiJxeXqcINwoGOPzG1LW4Czy09YM/O6lGY
+	lSjfCrtDXFdBnf1IQUXrycUm+Bx2unaQ8jZ93IbNcs/vse7wzK1RkPHoKjSxgzW05o+XD2OznMu
+	v2lC+e/lSicQXyKWdCLIIT87nOncx5c7D+3C/bQQXkwiyVKVOZjSDoyGsT4/WjCXD/UimIYKJ85
+	IZ/ACB2zAVYsyFxCXTqmkFru9jj3VxHfkjqNsF4q38NCsQMCkhBhYjJKPf+Z696GKkvc/4uz2as
+	cAMl/XoDiTmLoio/5LFaQVIofRJ3Ubre+nvbmMpTjAQHlORwg2pN5orzp8zDQ/Xz0MZb4kGgRg=
+	=
+X-Received: by 2002:a05:620a:31a3:b0:930:9091:f0ce with SMTP id af79cd13be357-93cf16b3b8bmr674429785a.22.1790965817924;
+        Fri, 02 Oct 2026 11:30:17 -0700 (PDT)
+X-Received: by 2002:a05:620a:31a3:b0:930:9091:f0ce with SMTP id af79cd13be357-93cf16b3b8bmr674421085a.22.1790965817184;
+        Fri, 02 Oct 2026 11:30:17 -0700 (PDT)
+Received: from redhat.com ([2600:382:7723:4eba:66b1:961f:1a2d:af55])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-93cca0395dbsm285252285a.5.2026.10.02.11.30.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2026 08:46:25 -0700 (PDT)
+        Fri, 02 Oct 2026 11:30:15 -0700 (PDT)
+Date: Fri, 2 Oct 2026 14:30:12 -0400
 From: Brian Masney <bmasney@redhat.com>
-To: linux-clk@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
-Cc: Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, 
- Brian Masney <bmasney+clk@redhat.com>, 
- Jerome Brunet <jbrunet+clk@baylibre.com>, 
- Thierry Reding <thierry.reding@kernel.org>, 
- Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20261001054701.39160-1-rosenp@gmail.com>
-References: <20261001054701.39160-1-rosenp@gmail.com>
-Subject: Re: [PATCH v2] clk: tegra: bpmp: remove kcalloc
-Message-Id: <179095597991.810253.6056329084530494982.b4-ty@b4>
-Date: Fri, 02 Oct 2026 11:46:19 -0400
+To: Conor Dooley <conor@kernel.org>
+Cc: Changhuang Liang <changhuang.liang@starfivetech.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Jerome Brunet <jbrunet+clk@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Emil Renner Berthing <kernel@esmil.dk>, Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	Hal Feng <hal.feng@starfivetech.com>
+Subject: Re: [PATCH v5 00/23] Add basic clocks and resets for JHB100 SoC
+Message-ID: <ar_4NBLHrq2W7_vc@redhat.com>
+References: <20260930124317.5648-1-changhuang.liang@starfivetech.com>
+ <20260930-grafting-undertake-ff3e01060284@spud>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=267; i=bmasney@redhat.com;
- s=20250903; h=from:subject:message-id;
- bh=p9s0POduzL50uWCzmc8L//0zD1FZFy8osEfnLmwPpCE=;
- b=owGbwMvMwCW2/dJd9di6A+2Mp9WSGLL2X7xwlD3q0Mk3N81nbOcpuVDJ4shx5VqkofuNK0t8q
- 5zkd/vXd5SyMIhxMciKKbIsyTUqiEhdZXvvjiYLzBxWJpAhDFycAjCRac0M/7NLc2IttmQFTU5a
- uPWu9kv/HRz/0lkjLru9WDHz87aLs/4xMlwpS5q7a8bS/AVXHn6vDbqh6rXRLriQfRnnxPz6rHz
- lB4wA
-X-Developer-Key: i=bmasney@redhat.com; a=openpgp;
- fpr=A46D32705865AA3DDEDC2904B7D2DD275D7EC087
+In-Reply-To: <20260930-grafting-undertake-ff3e01060284@spud>
+User-Agent: Mutt/2.4.2 (2026-08-30)
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 32F2xNKZTZ8qLHjVMOaC_ec7352a245ZS5ek7mWaeu8_1790955987
+X-Mimecast-MFC-PROC-ID: TrfkOYb-czjE7ZwoTRxvHgBZ2zu5MVIc4LayZIp31Pg_1790965818
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi Conor,
 
-On Wed, 30 Sep 2026 22:47:01 -0700, Rosen Penev wrote:
-> clk: tegra: bpmp: remove kcalloc
+On Wed, Sep 30, 2026 at 11:43:22PM +0100, Conor Dooley wrote:
+> FYI clock folks,
+> 
+> On Wed, Sep 30, 2026 at 05:42:54AM -0700, Changhuang Liang wrote:
+> > The JHB100 SoC includes CRG (Clock and Reset Generator) for multiple
+> > subsystems:
+> > 
+> > The JHB100 SoC is divided into multiple subsystems, and basically
+> > each subsystem includes a CRG(Clock and Reset Generator):
+> >  - sys0crg/sys1crg/sys2crg/
+> >  - per0crg/per1crg/per2crg/per3crg/
+> >  - voutcrg
+> >  - vcecrg
+> >  - gpu0crg/gpu1crg
+> >  - cpucrg
+> >  - usbcrg
+> >  - host0crg/host1crg
+> >  - pcierpcrg
+> >  - husb0crg/husb1crg
+> >  - husbcmncrg
+> >  - husbd0crg/husbd1crg
+> >  - npucrg
+> > 
+> > In the current series, we will only add the following CRG:
+> >  - sys0crg/sys1crg/sys2crg/
+> >  - per0crg/per1crg/per2crg/per3crg/
+> > 
+> > The remaining CRG will be implemented in future series.
+> > 
+> > This series depends on the series:
+> > https://lore.kernel.org/all/20260806122553.182449-1-changhuang.liang@starfivetech.com/
+> > and it has been tested on the StarFive JHB100 EVB-1.
+> 
+> If this revision of the series is acceptable, I'd (although I'm not a
+> listed driver maintainer) like to send you a PR as I've done in the past
+> for Starfive stuff so that I can get some of these binding patches that
+> contain headers as part of a shared tag to be able to unblock a bunch of
+> the soc tree stuff. With conferences next week I understand that, with it
+> being -rc5, it's probably this doesn't make v7.4 but I figured it was
+> worth getting my intentions out there!
 
-Applied, thanks!
+I am going through this series now, and I have a few minor changes to
+the clk drivers themselves.
 
-[1/1] clk: tegra: bpmp: remove kcalloc
-      commit: 2fdfb2abce2fcc157de840949fa3e6af9e915363
+Feel free to send a pull for the bindings and headers though.
 
-Best regards,
--- 
-Brian Masney <bmasney@redhat.com>
+Brian
 
