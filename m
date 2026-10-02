@@ -1,130 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CE6414433;
-	Fri,  2 Oct 2026 07:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF7043CEE3;
+	Fri,  2 Oct 2026 07:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790926347; cv=none; b=WpwCvcPuu2csjaJ8DD98qMS1EQilxopfz8aEHcvI+osoF5/f4d+a8xboimMYIA89gQSwzYzbNGJZZA/ZGL8/ylyIZRjACNqJ/2ignMVw3g/aQGDndftL8/85THoVX//EeFbuvkWkQb2G1Bc60Ok2Ycm8zobGUUHGC2/kVS+O18w=
+	t=1790926712; cv=none; b=j2JLS9cE2u4zdP3txtubBRsYxmaGCM1AW5JjyaPqswTayqCIJDr8ol3eDinzSPzANB4+GY8mk+UH1fevJ9Ppe5Tyg8QtyEL++WY5z5M/0/tqsDmp15UuYywn8vRZq4D9LtcIJQ5CFfK7/kdcBslu8UA6JRPBVIUd931/r2ZcRpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790926347; c=relaxed/simple;
-	bh=btldWsCbqHoNxvjzFOJI/17XbxQYFuRlpBMjx6jPdgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IGVFggUjckhqi5+WTqO/zsOL/Xfg7sRC8YHnqeCfUxbAdd1rAVMrt55DtpgainLxccLLnQjD0LXTaYshXsNMi88BrUkHSNbB0I3G3jmrEwYEoHhth9OfWxYnLPd1sDr4mocC79rZLvIdKBaGE1ApUue5HwBX5bUTYEusnOlr6po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FvbBaWIF; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1790926712; c=relaxed/simple;
+	bh=uxpK6vzv53tP4a7NeeHGhYR+8OkiQgrSzeHoa5Cljy4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=O0ZQaOZviJux4nokxy/pPmvAs370lVHA20D2xd9NV94f8HbusHQBywR8qJHhHHEqqKAgrcq+t8HREAtJAKw096zH+H3boQ2PsDRdT8i1sqSSsOhlSvbc2lqm6e5N0sqGiRIn23S43liloy2UFJLKz+9lsVJEev31MPo99c2KrAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K92ZDcGX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FvbBaWIF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790926341; x=1822462341;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=btldWsCbqHoNxvjzFOJI/17XbxQYFuRlpBMjx6jPdgs=;
-  b=FvbBaWIFlzjr76liCQb6RzC21tuUQSeIjlJ8455BIL007feDQvQu0o/6
-   /w6ySZXD6JMIrjrmMVa7up8wSf4bXXm2n7haNPzIuiLHOMjlaTP2kx7IO
-   yBxMBXJQKJDX5/Q0mn5m97k9QsSsgzKCblvwa7bn668B5oS3+2CnXSxgK
-   bUh2sp80VEb2Tvja23rXR3WX+srviMUEV3yjXYWBCC2tIT9C7gNZC0WaT
-   iZGmrdoYSFsJoQWpMasT+TTpzf0r62XCtW7eyrXTt/MDpoVvkMLLCDoL9
-   UFoeCrlvPr97Z5FWdeKaB2s5/ideEsK8FNaeTp7Im/BifOxAHQBMYpFba
-   w==;
-X-CSE-ConnectionGUID: HWhq5O4pQ5GXPTd0wWc9uA==
-X-CSE-MsgGUID: WZ9S/kgTTROPKWVuk/0/YA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="94573134"
-X-IronPort-AV: E=Sophos;i="6.27,136,1787036400"; 
-   d="scan'208";a="94573134"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 00:32:09 -0700
-X-CSE-ConnectionGUID: uwyVdmBISRqYoZMJFYuzAQ==
-X-CSE-MsgGUID: ya4CTRq4R42UO27nTex8pQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,136,1787036400"; 
-   d="scan'208";a="276301895"
-Received: from conormcd-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.244.188])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 00:32:06 -0700
-Date: Fri, 2 Oct 2026 10:32:04 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Bill Wendling <morbo@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Shuvam Pandey <shuvampandey1@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>, nikitash.mariiaw@gmail.com,
-	Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 01/11] seq_buf: Do not print an empty line from an
- overflowed seq_buf_do_printk()
-Message-ID: <ar9d9ChvEvBDX9j0@ashevche-desk.local>
-References: <20260930235231.out.387-kees@kernel.org>
- <20260930235247.157921-1-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K92ZDcGX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535401F00893;
+	Fri,  2 Oct 2026 07:38:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790926711;
+	bh=XtSWMODzZRMemFY6O5+w7nKBIt1ojmfxNPujwIIo1pM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=K92ZDcGXpNj2kZ7B7rF76L6o74uWMwVDHLV7RHruKiu5sPyzSaww5VbOy5uQQOSTD
+	 EsduIzswJnKxxlAdP3JDCELv9cEf20A1IdGwStTBJYFWfNAjyoURDto43inFoGSzGn
+	 jx91um3s8BySk4y6tdNDDn50IYXSVlQnknAseEu+QIy3Dk2DEEJPuWAGQ450zGJBj5
+	 uZOEzwYYLV4tvrfYkgxwiFhZ9RfVSDgSe2f0l75647aeAoH6AFRzlntrF9fpC9N8EZ
+	 gaoKqwL3AjPWOXHFq8XVPWbeEWAgneTwtix7yB8UHkKkdIf00ML6hukTf06zXFRISS
+	 h1D3udUEBJAkQ==
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailfauth.ams.internal (Postfix) with ESMTP id C080D198003A;
+	Fri,  2 Oct 2026 03:38:28 -0400 (EDT)
+Received: from ams-imap-11 ([10.64.2.31])
+  by ams-compute-02.internal (MEProxy); Fri, 02 Oct 2026 03:38:28 -0400
+X-ME-Sender: <xms:c1-_aoMxJIXM9u8qgLYFXh1jD3wmlA1Sp70YqaVBLFjeH0WXCH1U2A>
+    <xme:c1-_apyaN0-TmpoZAuWIxhRfTU_PoSLvMmkwDWQ8xfnFBq3Z4lu0h4nyQ5y34ImFk
+    A2kPbR5DtCk_l4uH3WHfsnGYyBuAZ2_ObHRtRhZzujPZ3IVGJsmQxVg>
+X-ME-Proxy-Cause: dmFkZTFj5SHra/C1CsSY6JjKDNLgrncTSuKCsVZg37Q6vWpK6cQ0urV5rL0EOpMpw74RH0
+    v6mXpnl1+qfRY2aOEZ5gc08XjonARkwl3nYAm00P+hNLt6QoQOmYyss2I5et+iz+6GsY4x
+    MYJIHbE36C+uLmzYlsDoXyRulQRWj4IsCnwbIGJsA3aX3tzZOR01oRm0QzIMdxf8vIW7kl
+    I8qNm6BEyxt/q76vUVI9/St5IIBKXv4F31DoVCsSeCF0q5EEeKU40Y8AeJ56E4oGhqi9tz
+    NJBwnnq7DD/nzgeemIai7mErXg1/rt52kINa6mp2Smb3YlgXDP6Jtu8YNhFyhSQ8EaSioa
+    O6vR2LZ5WeNxms2YL+D2KtEwAO0u2N1yXjp9JfdalfkDgwSe5AA9EkV9n2cQKoYxruc2MD
+    hOIoQKgsZwoMdQa3kOGv2/6i9zBKgIvUlvcBu8CgIL0kMu0M1fSfPP3/bZcXmJ7RiLtiQy
+    72VRIFV5T3sAe4X646InkTuYBJPqIlELJR3NMdCvMxPvxYpH51LqCWWOnPNjipF2YH4caz
+    VuVjNgKj3mA8EUzR49+IWjXrT4WnKFZXF8Tomns8NYsHSy/2fcK/Z93uHCwJkHbl/toJe0
+    zrmNp19pEe8FUJAPDr3+pW/Tp2GNcL1C+dhLx0SG1nPHQx2cqIVtYtfUwvlw
+X-ME-Proxy: <xmx:dF-_auwRaVuocg_eq8roLK1nmoQMTq0XZbJZgLsD8Vr7qCMtAJNQKw>
+    <xmx:dF-_aie62EG-HBNmU39K6joMXustf7BxZvNZXO-O9e8jaZTptoZVeA>
+    <xmx:dF-_ar4O9bcO-pnCqLopyJHtkA6_hh-E9dBvj-D-KMp3jlcG2DnfIw>
+    <xmx:dF-_avKANjwW3ItwfDM7kWOwzDN1vaUjpKufblGRReVc5Bi0FJpnJA>
+    <xmx:dF-_aryWdE2Z6djpuv_k0hHdhpuW9ab9YEn3Bgl4TeKlzz3ysBxj-qXJ>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id E7824F80084; Fri,  2 Oct 2026 03:38:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260930235247.157921-1-kees@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Date: Fri, 02 Oct 2026 09:38:05 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Linus Walleij" <linusw@kernel.org>, "Bill Wendling" <morbo@google.com>,
+ "Jeremy Kerr" <jk@ozlabs.org>
+Cc: "Bartosz Golaszewski" <brgl@kernel.org>, "Kees Cook" <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ codemender-patching+linux@google.com
+Message-Id: <7e847715-6bd5-4f69-a9a6-339788810fec@app.fastmail.com>
+In-Reply-To: 
+ <CAD++jLnOm3ua7hom_L4YQwN5z81M17WmL_VGqx+-ugrAJ-6_Dg@mail.gmail.com>
+References: <20260928063824.1386524-1-morbo@google.com>
+ <CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com>
+ <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com>
+ <CAGG=3QV2k-nsZHNSuKEixZb+-LcxvhQsG379ghgyOpiDLTJWzw@mail.gmail.com>
+ <CAD++jLnOm3ua7hom_L4YQwN5z81M17WmL_VGqx+-ugrAJ-6_Dg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: annotate struct acpi_gpio_mapping with __counted_by_ptr
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 30, 2026 at 04:52:29PM -0700, Kees Cook wrote:
-> seq_buf_do_printk() prints a buffer line by line, then prints whatever
-> follows the last newline. When a string has overflowed at exactly a
-> newline, an empty line is printed since the pointer hasn't reached the
-> overflow mark of the seq_buf. Switch to just check if the string is
-> already empty and only print if not.
-> 
-> The only caller is the memory cgroup OOM report, so this could only ever
-> add a blank line to a report whose statistics already did not fit.
-> 
-> Add a test that registers a console to count the records that
-> seq_buf_do_printk() emits. It counts the records carrying the test's
-> marker, and the records holding nothing but a line feed that arrive
-> after one, so that unrelated kernel messages do not disturb it. Both
-> states that reach the flaw are covered: exactly full, and overflowed.
-> 
-> Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
-> and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.1.0.
 
-...
+On Thu, 1 Oct 2026, at 23:24, Linus Walleij wrote:
+> On Thu, Oct 1, 2026 at 10:05=E2=80=AFPM Bill Wendling <morbo@google.co=
+m> wrote:
+>> On Thu, Oct 1, 2026 at 12:56=E2=80=AFPM Linus Walleij <linusw@kernel.=
+org> wrote:
+>> > On Mon, Sep 28, 2026 at 9:22=E2=80=AFAM Bill Wendling <morbo@google=
+.com> wrote:
+>> > > On Sun, Sep 27, 2026 at 11:38=E2=80=AFPM Bill Wendling <morbo@goo=
+gle.com> wrote:
+>> > > >
+>> > > > The 'data' pointer field in 'struct acpi_gpio_mapping' is assoc=
+iated
+>> > > > with the 'size' field, which represents the number of elements =
+of
+>> > > > type 'struct acpi_gpio_params' allocated for 'data'.
+>> > > >
+>> > > > To improve bounds checking via CONFIG_UBSAN_BOUNDS and
+>> > > > CONFIG_FORTIFY_SOURCE, annotate 'data' with the __counted_by_ptr
+>> > > > attribute.
+>> > > >
+>> > > > Analysis of allocation, assignment, and access points shows tha=
+t the
+>> > > > pointer is never accessed before the count is set, which guaran=
+tees that
+>> > > > this annotation is safe and will not cause runtime panics or
+>> > > > false-positive bounds checks.
+>> > > >
+>> > > > Cc: codemender-patching+linux@google.com
+>> > > > Assisted-by: LLM
+>> > > > Signed-off-by: Bill Wendling <morbo@google.com>
+>> > > > ---
+>> > > >  include/linux/gpio/consumer.h | 2 +-
+>> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> > > >
+>> > > > diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio=
+/consumer.h
+>> > > > index fceeefd5f893..2b80cf7aa7e7 100644
+>> > > > --- a/include/linux/gpio/consumer.h
+>> > > > +++ b/include/linux/gpio/consumer.h
+>> > > > @@ -667,7 +667,7 @@ struct acpi_gpio_params {
+>> > > >
+>> > > >  struct acpi_gpio_mapping {
+>> > > >         const char *name;
+>> > > > -       const struct acpi_gpio_params *data;
+>> > > > +       const struct acpi_gpio_params *data __counted_by_ptr(si=
+ze);
+>> > > >         unsigned int size;
+>> > > >
+>> > > >  /* Ignore IoRestriction field */
+>> > >
+>> > > There's a problem with 'drivers/firmware/efi/libstub/Makefile'. C=
+lang
+>> > > needs a compiler flag to support the "__counted_by_ptr" attribute
+>> > > referencing a field *after* the pointer, like in this patch. Howe=
+ver,
+>> > > the Makefile blasts the flag away for x86 platforms. Below is a h=
+ack
+>> > > that copies the part of the top-level Makefile that adds the flag=
+. I
+>> > > don't think that's a good solution. The comment in the driver's
+>> > > Makefile says that the stub code executes before the kernel does,
+>> > > which I assume is why a lot of the flags are blown away... In any
+>> > > event, I'm not sure how best to address this.
+>> >
+>> > But is this a problem with the current patch?
+>> >
+>> > Does libefistub use <linux/gpio/consumer.h> in any way, shape
+>> > or form?
+>> >
+>> It's being #included transitively:
+>>
+>> In file included from drivers/firmware/efi/libstub/efi-stub-helper.c:=
+12:
+>> In file included from ./include/linux/efi.h:20:
+>> In file included from ./include/linux/rtc.h:18:
+>> In file included from ./include/linux/nvmem-provider.h:16:
+>> ./include/linux/gpio/consumer.h:670:55: error: use of undeclared
+>> identifier 'size'; did you
+>>       mean 'ksize'?
+>>   670 |         const struct acpi_gpio_params *data __counted_by_ptr(=
+size);
+>>       |                                                              =
+^~~~
+>>       |                                                              =
+ksize
+>> ././include/linux/compiler_types.h:392:64: note: expanded from macro
+>> '__counted_by_ptr'
+>>   392 | #define __counted_by_ptr(member)
+>> __attribute__((__counted_by__(member)))
+>>       |
+>>        ^~~~~~
+>> ./include/linux/slab.h:602:8: note: 'ksize' declared here
+>>   602 | size_t ksize(const void *objp);
+>>       |        ^
+>
+> Hm I see.
+>
+> Certainly Jeremy or Ard will have an idea about how to solve this,
+> so paging them in.
+>
 
->  	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), expected);
->  }
->  
-> +
+libstub code never executes in the context of the kernel, but only in
+the context of the boot firmware. Generally, we disable instrumentation
+there that has a significant runtime component, basically because we
+cannot crash or panic the kernel before we have even booted it.
 
-I believe a single blank line is enough.
-
-> +/*
-> + * Counters for the console that seq_buf_do_printk_test() registers while it
-> + * runs. Only records carrying the marker are counted, so unrelated kernel
-> + * messages do not disturb them.
-> + *
-> + * An empty record carries nothing to recognize it by, so count one only
-> + * where the flaw puts it: directly after a record of ours, with nothing in
-> + * between. That still misreads a bare line feed printed by another CPU in
-> + * exactly that gap, but no longer counts one printed at any point while the
-> + * console happens to be registered.
-> + */
-
-...
-
-> +static void seq_buf_printk_capture(struct console *con, const char *s,
-> +				   unsigned int count)
-
-I would re-split to have it wrapped on logical boundary:
-
-static void seq_buf_printk_capture(struct console *con,
-				   const char *s, unsigned int count)
-
-Or having the whole on a single line.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Can we just #define __counted_by_ptr(...) to nothing when building
+from that Makefile?
 
