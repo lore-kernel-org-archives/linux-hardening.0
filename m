@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196674477E7;
-	Fri,  2 Oct 2026 22:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56F43C4555;
+	Fri,  2 Oct 2026 22:29:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790980027; cv=none; b=fza91s1AW5Ayo9uSKY4TsEC4WPpNgJo6fHsxbaD30AVcefLJjlmhJGDWzaRC8ISOuQrHYymVWTZ1OAwJqo9LQ10E7v+ox8psKoVObZV3ViXnIcjmhvYiCXJyS6ibMbMdNv+qNJsmFxJ/KEC0XkQ9p7CBnxa95tvKe7C1IbblxoE=
+	t=1790980156; cv=none; b=lZu/3/C8RNlPTaHnVSJbukHbsBQCpiA6r/j38C0dVBu8mmf3dbhkYFhNy7I6ghqDm7Iz23EmrNUSwSWKaLkxuy3n5PB5UY2SvtKNN0LM8bTjLAgh2IIw6/mpbyKfTd8YD8e67vckibrj3ALZwqj0Vsw6srOtQGbr5RPkgXzxqGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790980027; c=relaxed/simple;
-	bh=rKUJ1Ht/OLxCT4JuW4/2eoRS1UlSZ4jSo532PpnCiZI=;
+	s=arc-20240116; t=1790980156; c=relaxed/simple;
+	bh=7NqPI33wWj3E3HGOhRNy1PdMcEnBLLWf3Cm+Xw+Pbtc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AUPH2+YmSysNSupsi/Oou9bR11XjBvuDU5l1CZ0nOsz9qKKwUtQYbzpeyyNW8GuKF8OdpuQsC6nhtf9TkQq7yae45ZVTumxcc9idoa3ZBlHu/6WBOciNZCPpQ5sYnEb66A0r+B3vYGrusKNUA+o85JMasmQ7Po3CkYR3gyy9Vrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ewi4IOFJ; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=ta7/G6krL+1LxeKmbOOBAfGyCoIBO55siXATbFg5piusjWIIwV7lOyz/QSUYGltrzUVNbVtufkH0Kpyt7AsRs4hVtKBgM0mC43rL/hzvJVbI3HiqAFE81ghwL/KKQfs8Dk89/4L6KgeYqvUiYBnVZqE+NkhE08NJlg1kfjUTKK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lRCVkEFu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ewi4IOFJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2D61F000FF;
-	Fri,  2 Oct 2026 22:27:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lRCVkEFu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50AC71F000FF;
+	Fri,  2 Oct 2026 22:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790980025;
-	bh=XrFDa5YTwQsxjtBU29z2wtgxI1YYa8NMh9+Em7kIbVw=;
+	s=k20260515; t=1790980155;
+	bh=3LDJZikpkdkKQKzaoHH23Q/qctw3NfStM2vrlGtB09E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ewi4IOFJxxoQ7Qg9VWdgyzC60dmnonJEslzal0W/O13I2WiUEd2OP/DezZ5E4pgi3
-	 7l1+sZFtSsPGxggjrflW+1IAZvAkZi2jJSVGKUYoRJlwBgQhmlb3UUY6La6gXNmPHU
-	 A3USpiyM1HyNfkNSLVznW0/MYCSV8gEg/Wf+/wBwuJwFAdTtC8Doqh9yVInGN1L6HI
-	 yS+4DARPK6rUH+NdAOIAkSrrom0PFGPpqiaJgzToMJAYeTKaK+YR96RrIeVOSR9Y2E
-	 6rvOSb6NFJ9v5Xk/Jn3g4y5f5nwYLV6XRmOJH0rwuteh6/RKU9XZcTPyFeB0Ptl+1J
-	 ePgpKPyaWT8Pg==
-Date: Fri, 2 Oct 2026 15:27:05 -0700
+	b=lRCVkEFu/g3U8/pLg2nCTSt7SYCYTyH9AN7U/6z9HXSuZ+zwDWhYtk8laPi8XuFkY
+	 pWkWEnrIdUo8Sm6Am7r5D92dCCpN+I+eugyDbt6trBHgZFmpDnCnuXRPmODz+OuEDl
+	 wX/O7GVJHH5C4klKKhOPs2PmXsSXalAFCCCcdKW+VxhvUfUgATSCDDKqKOp154xty9
+	 +mBZYh5KoXpb9fX6tm9podxVkjCQvHEeWx3gWbHPm7b5u1LrrYi2/SL0/G0F9SEyl+
+	 0ZGmRcuAqO10Pmm6BMYp6elNVXm3wpkKCcca0V/ECCq+t/hPpVBQZK2XuFkyU4H/mH
+	 lhdmDf/7k8UEA==
+Date: Fri, 2 Oct 2026 15:29:15 -0700
 From: Kees Cook <kees@kernel.org>
 To: Pedro Falcato <pfalcato@suse.de>
 Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
@@ -44,12 +44,11 @@ Cc: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
 	Jiayuan Chen <jiayuan.chen@linux.dev>,
 	Willem de Bruijn <willemb@google.com>, linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: Re: [PATCH v4 5/7] mm/slab: Provide kmalloc type fallback for bucket
- allocations
-Message-ID: <202610021520.5A076C2A0@keescook>
+Subject: Re: [PATCH v4 6/7] mm/slab: Let a bucket set handle __GFP_ACCOUNT
+Message-ID: <202610021527.05F3D63AA@keescook>
 References: <20260921075811.too.775-kees@kernel.org>
- <20260921075820.1718334-5-kees@kernel.org>
- <arJSz0r5u_78NWKe@pedro-suse.tail5790ac.ts.net>
+ <20260921075820.1718334-6-kees@kernel.org>
+ <arJVktqS-CL7zNX0@pedro-suse.tail5790ac.ts.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,53 +57,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <arJSz0r5u_78NWKe@pedro-suse.tail5790ac.ts.net>
+In-Reply-To: <arJVktqS-CL7zNX0@pedro-suse.tail5790ac.ts.net>
 
-On Tue, Sep 22, 2026 at 11:11:58AM +0100, Pedro Falcato wrote:
-> Big thanks for continuing this effort :))
-
-Thanks for starting it! :) I've had a few folks wanting it, so I'm happy
-to help.
-
-> On Mon, Sep 21, 2026 at 12:58:16AM -0700, Kees Cook wrote:
-> [...]
-> > +/*
-> > + * The kmalloc types a bucket set can hold a copy of. This is deliberately not
-> > + * enum kmalloc_cache_type: the KMALLOC_PARTITION copies are all "normal" to a
-> > + * bucket set, which already separates what they were there to separate, so
-> > + * indexing by those would mean up to KMALLOC_PARTITION_CACHES_NR unusable
-> > + * rows per set. Allocations of any type not listed here are served by the
-> > + * general caches.
-> > + */
+On Tue, Sep 22, 2026 at 11:20:40AM +0100, Pedro Falcato wrote:
+> On Mon, Sep 21, 2026 at 12:58:17AM -0700, Kees Cook wrote:
+> > A bucket set holds one row of caches, cloned from KMALLOC_NORMAL, and an
+> > allocation of any other kmalloc type falls back to the general caches.
+> > Extend this to handle __GFP_ACCOUNT, so that a single bucket user can
+> > isolate either GFP_KERNEL or GFP_KERNEL_ACCOUNT allocations, as is
+> > needed for skb data, where AF_UNIX uses:
+> > 
+> > 	sk->sk_allocation = GFP_KERNEL_ACCOUNT;
+> > 
+> > The coverage is selected at bucket creation time:
+> > 
+> > 	b = kmem_buckets_create_types(name, flags, 0, INT_MAX, NULL,
+> > 				      BIT(KMEM_BUCKET_NORMAL) |
+> > 				      BIT(KMEM_BUCKET_CGROUP));
+> > 
+> > The prior kmem_buckets_create() function keeps its name and defaults
+> > to only KMEM_BUCKET_NORMAL, leaving existing users as-is.
+> > 
+> > Only the accounted type is offered. Nothing wants a reclaimable or
+> > no-obj-ext row, and of the twelve places passing GFP_DMA to an skb
+> > allocator, all rare hardware: b44, b43legacy, prestera and s390 ctcm.
 > 
-> This sounds odd. Is there a good reason why KMALLOC_PARTITIONs are kmalloc_cache_types?
-> Perhaps that bit should be reworked instead?
+> Well, yes, BUT I don't think silently falling back is a great option.
+> I would rather things be done Properly(tm) and kmem_buckets allowing
+> instantiation of most/all kmalloc cache types. Given it's security stuff,
+> I would prefer being quite explicit over silent.
 
-I'm not sure I follow. Do you mean the partition copies themselves
-shouldn't be kmalloc_cache_types? That predates this series. For a
-bucket set, they're all the same "normal" type, so a set indexed by
-kmalloc_cache_type would carry rows it can never use: on x86_64 with
-CONFIG_KMALLOC_PARTITION_CACHES=y, that's 20 rows (2240 bytes) per set
-instead of 2 (224 bytes). I've put the numbers in the commit log for
-v5.
-
-> [...]
-> > +	if (type <= KMALLOC_PARTITION_END)
-> > +		btype = KMEM_BUCKET_NORMAL;
-> > +	else
-> > +		return &kmalloc_caches[type];	/* No set holds a row for it. */
-> 
-> Hitting this case sounds like a bug in the kernel. WARN_ON_ONCE()?
-
-The next patch warns where a set could have held the row but wasn't
-created with it (an accounted allocation without KMEM_BUCKET_CGROUP).
-What's left here are types no set can hold, like DMA and reclaimable,
-and those already come from caches of their own, so falling back
-doesn't lose the separation.
-
-> Otherwise LGTM.
-
-Thanks!
+The types that fall back (DMA, reclaimable) are already isolated in
+caches of their own, away from the normal ones, so the security goal
+holds for them as-is. The one fallback that would undo the isolation,
+an accounted allocation on a set made without the cgroup row, will
+warn now.
 
 -- 
 Kees Cook
