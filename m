@@ -1,441 +1,79 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F4339DBD3
-	for <linux-hardening@vger.kernel.org>; Sat,  3 Oct 2026 09:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538AF41D631;
+	Sat,  3 Oct 2026 10:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791020427; cv=none; b=B4ZkUR/O8nZz/a+0kJ1EjKpLtHR6largdRKlvFsb1ohYc6builY0+RVZ1WR44vD7aU5Z4SdEPORkQh8ZhlW1k639inyTcJ1ZldKctPwf3Pcg7xan+YqTdmhjU2ee1Z78CesVewaHQsv/4CN1bOYzMrOf/iTPPb/o1OFmTnoZzAY=
+	t=1791023489; cv=none; b=GCQ0lxT9tBoaVb+wD/PSat9g4SPJWVd/vKn3dgfP/BGa+MjcSBlBxpOHPmSLCHuZn6c7rdQmOKccO7t+dFkTYizjq81iGoFwQkQ3EvERwmomaq8z4YJF75QdIbksNYz98tGEYlq62KtCgHZ7iVuM78qalCfNJg/YM8sRRPv5VuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791020427; c=relaxed/simple;
-	bh=RA39MnveqAgjclwXw3oUk344huvfzEMR/AULj89t0IM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OZW5RvVDsLt/eQJ1UcXBzev4PQHqysPe/FfwzBAls/ff78f6VwMNc42EUeldjJuHvAHxARlKjzPG0edeagavchOeCHo4OpVZBJ5xmb6CBFpsrxkYEqHfF/pWFKJq7U+OfIU2XmoxplS9B4jgwQmruvlnJ/eBA57GztvmGIcvRbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLXiejWy; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791023489; c=relaxed/simple;
+	bh=ygUoJLCQKFWKOx+5CSMmis9wmbifBrGa+KU1TJomdPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYx3CGATF8Ey92F8+BHEobUvbnReWVpZvJM0qgfSRAc5aK6/h3Lv5rpeccD2iUqv6EFOlNsJEpySqpNXIVtHR4+fSRWWchn18cDhcptqD/r5E7baYiWLq0wEBjJU6qpNpCKhLeBZLwrDkYQTGUyd9etzPe7/fieqJQqfzWfuBM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJubNwg8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLXiejWy"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-34bb8b31647so648999eec.0
-        for <linux-hardening@vger.kernel.org>; Sat, 03 Oct 2026 02:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791020424; x=1791625224; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=nfYeoE0FlNoYRCBgtkrLlvam3mS1qxhXTtp4SykzoVE=;
-        b=RLXiejWyG01L35nBRF9p7O9PODenMWnqQSK5kLLgWlMXd5KnoKwOOw4bQEZbO1yFyo
-         z/m4LnvXCdOdxHuNEEfI7SFx/b7Li4SlKNtmhTE2/EoJoWaxZDO6RzMsaOIW6ER0JcsC
-         QCp6CHUt02CvqytTXS8slU2+RtpFoT3+tP3Ivu+HhIHIvRWOCa80nAYi10spkGnR+Bz/
-         eflE7UApBANAiCuZA767gJGbwvB02w8Ki28tJuuOxlebyJetbKcQruqv7mXkt4PSE/9G
-         uKqUKt88SikuavejNWhn4NXPwLmNJj2UFwsD0Pjg+YC84uyUvubur6/doPDJ+fimB/+O
-         bkRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791020424; x=1791625224;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=nfYeoE0FlNoYRCBgtkrLlvam3mS1qxhXTtp4SykzoVE=;
-        b=dWfLZuXmkEauME+02shZJU1lT/BjVTNbkXbekISaCzAarjwNak7+DHYdBfoCmGu3ae
-         I9i34XNO/T2lDIBMQHvTLnxsC06BIO/UQE+elbI7m6eUqeujRPy8CGqUhoeRPlWFFLle
-         It0PKb7uWSJ4e3cRbvICjgXhvy6ejJ1c8LJJMTW4nTURBCV5nJHGYmwTKNnCYEiC3pY/
-         ccJh+FiGpyr9I+NYvIcgXdvU64uQ+kTCXwJao45YpymizgLgSmBHkf2d293YSU8Hkx0p
-         jB3G2qjuhi6eyxuGizqubc1ztVbxLr7V4IMGjfN55998Ep8xWCbPYg38F4m4dmx8GXd7
-         uE/A==
-X-Forwarded-Encrypted: i=1; AKwUvBw4gkK8cel8Xs+muyQ+abaOF2BZn7UFiC+A9rNvS678gIhGqIJPWYttz4l32Ki6/ApDF3aepWf5qgJ16Gzmxuk=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKa80MNsRYGPEcmmON/qXA7KbtWKcKV1/18RFf/oanrOBw/WtG2
-	hr+Xb6Wkd7Sne9zzpkooZVCT5KN3ielNV62E8hukKjn/KCNU8YrFs3Yp
-X-Gm-Gg: AYBFou3aH5gGNt7zadkiJssYXXXh5ykMSP+5XRJH4eUMq4/uwp4WzDi9/J6Rb7dJ0/3
-	2IGKZ39Kk7b5seC2bqKC76i58NvsTzw9v2pvj2YxtY37c2SnGTc0Fy09ORTqgBe8FtP9Vu0N8fD
-	ZfkR/rv8jzmUe0v0HXTXdbksRB1G6aDIrCokmWLzBrqmDZGU5it0pTzU5Vz1uYqLqegXxpuggcp
-	MgOpxFq4464+g+Le29BvI44GxdjToUYFeyvi2tcJ6Ho/0ImuC3u3Qd7I3Xr3D7KN85g6JwWZp9S
-	ZT6dEsXLsRspjBKpaDcuwWgvrmY4zPxvEfzHy75Es1hzZfjYuUbVGuht7ifov+6dqJS16JeHoKY
-	BeMl1MsIynwa9jZOh0nCM8o2M6bGc5f41cJQEr2gVfX0ONRA0n8/RQQ6gX4cN4VQkat+Ju3v23K
-	TxTcQLLDNQSEK4Kg1kgdCzDUdRHzzOtFvQfrySZhEWKhLx7i5y80OsiuS5lNfcRTJOMtgy1vo1j
-	Io7FhTIO9sTKal9jeRCQMkBbYfaDOsYEmhO80Ho6QecCHZCvg==
-X-Received: by 2002:a05:693c:88dc:10b0:33b:e264:362a with SMTP id 5a478bee46e88-351113c0c4emr2626032eec.13.1791020424112;
-        Sat, 03 Oct 2026 02:40:24 -0700 (PDT)
-Received: from li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com.com ([106.51.165.23])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-34f1500b59bsm13653306eec.28.2026.10.03.02.40.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Oct 2026 02:40:23 -0700 (PDT)
-From: "Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com>
-To: ryabinin.a.a@gmail.com,
-	glider@google.com,
-	andreyknvl@gmail.com,
-	dvyukov@google.com,
-	vincenzo.frascino@arm.com,
-	maddy@linux.ibm.com,
-	mpe@ellerman.id.au,
-	npiggin@gmail.com,
-	chleroy@kernel.org,
-	ritesh.list@gmail.com,
-	sshegde@linux.ibm.com,
-	kees@kernel.org,
-	mkchauras@gmail.com,
-	mahesh@linux.ibm.com,
-	nikhilks@linux.ibm.com,
-	amachhiw@linux.ibm.com,
-	sayalip@linux.ibm.com,
-	robh@kernel.org,
-	mkchauras@linux.ibm.com,
-	kasan-dev@googlegroups.com,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Subject: [PATCH V4] powerpc/kasan: fix r2 corruption in mem*() on GENERIC_ENTRY with old compilers
-Date: Sat,  3 Oct 2026 15:10:06 +0530
-Message-ID: <20261003094006.3404731-1-mkchauras@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJubNwg8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F7FC1F0089B;
+	Sat,  3 Oct 2026 10:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791023476;
+	bh=JD1KrrdpLVmHcYg9pYizr+EY3Jnx/IklgTtkuzFE98c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jJubNwg8UjkFZDFCgXganeVccWeCUC64B+nvX/QJCoMYXCR46IeLHcDEoC9WXNkcA
+	 5ruXH4DMtVtjhNA3d7Uv9pKe+IwqKHYmShLEdJJbzIpK4vuV9dVpZIJ60E6msg+z9i
+	 4ti2IfPt7tuWzkUfzzC3uOvSCdCs+N7Wy58NOZc9wgMz5chltNhTn0TZzkalwkJPMG
+	 XYVBwyjFfZ1ZdXt14iY8a8VKJi/DAPbLmvDeLBF1DvlcoMfWEqbZ45BNIbuT/5yazm
+	 nRU/EDsrSmIva7nHl/5b7LeLaGnBwdw1GGhmcVLS3nQJaKo9nu1Q/zcaFKDoywybDy
+	 to4My81OLjUmQ==
+Date: Sat, 3 Oct 2026 03:31:15 -0700
+From: Kees Cook <kees@kernel.org>
+To: bot+bpf-ci@kernel.org
+Cc: morbo@google.com, willy@infradead.org, akpm@linux-foundation.org,
+	andriy.shevchenko@linux.intel.com, david@davidgow.net,
+	pmladek@suse.com, shuvampandey1@gmail.com, rostedt@goodmis.org,
+	corbet@lwn.net, senozhatsky@chromium.org, gnoack@google.com,
+	mic@digikod.net, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, jikos@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
+	memxor@gmail.com, martin.lau@linux.dev, song@kernel.org,
+	yonghong.song@linux.dev, jolsa@kernel.org, emil@etsalapatis.com,
+	ihor.solodrai@linux.dev, chleroy@kernel.org,
+	u.kleine-koenig@baylibre.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, npiggin@gmail.com, sbhat@linux.ibm.com,
+	blum@kernel.org, alison.schofield@intel.com, dave.jiang@intel.com,
+	gregkh@linuxfoundation.org, lgs201920130244@gmail.com,
+	iweiny@kernel.org, u.kleine-koenig@pengutronix.de,
+	vishal.l.verma@intel.com, rdunlap@infradead.org,
+	skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-trace-k@lists.ozlabs.org, ernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+	martin.lau@kernel.org, mason@kernel.org
+Subject: Re: [PATCH v4 08/11] seq_buf: Add seq_buf_init_append()
+Message-ID: <20261003103059.9e0b86-kees@kernel.org>
+References: <20261003035921.1918874-8-kees@kernel.org>
+ <f3b5a05404cc45b59981e869a0203ed07497f6f6942e6d72cee63b37612b7cda@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f3b5a05404cc45b59981e869a0203ed07497f6f6942e6d72cee63b37612b7cda@mail.kernel.org>
 
-bee25f97ad24 ("powerpc: Enable GENERIC_ENTRY feature") introduced
-a bug that, when CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX is not
-set, expand to two consecutive ELFv2 global entry points for the
-same function body:
+On Sat, Oct 03, 2026 at 04:33:59AM +0000, bot+bpf-ci@kernel.org wrote:
+> This isn't a bug in the code, but is the changelog accurate when it says
+> seq_buf_init() "always sets the new buffer size to 0 via seq_buf_clear()"?
 
-  _GLOBAL_TOC_KASAN(memcpy) expands to:
-    _GLOBAL_TOC(memcpy);
-    _GLOBAL_TOC(__memcpy)
+Yeah, fair. It's not worded clearly. I've fixed the wording for v5
+to say seq_buf_init() 'empties the buffer (sets its "len" to 0) via
+seq_buf_clear()'.
 
-On powerpc64le this produces:
+-Kees
 
-  memcpy:
-    addis r2,r12,(.TOC.-0b)@ha     <- global entry, sets up r2
-    addi  r2,r2,(.TOC.-0b)@l
-    .localentry memcpy,.-memcpy    <- local entry at memcpy+8
-  __memcpy:
-    addis r2,r12,(.TOC.-0b)@ha    <- memcpy+8: __memcpy global entry
-    addi  r2,r2,(.TOC.-0b)@l
-    .localentry __memcpy,.-__memcpy
-
-The assembler sets memcpy's st_other field so its local entry offset is
-8 bytes past the global entry point.  The linker resolves same-TOC
-calls to the local entry, so every same-TOC caller of memcpy() lands
-at memcpy+8 — which is the beginning of the __memcpy global-entry TOC
-prologue.  That prologue uses r12 as the base to recompute r2, but r12
-holds whatever the caller left in it (not the address of memcpy+8).
-The result is r2 pointing at garbage on return.  Same-TOC callers do
-not reload r2 after the call, so the first TOC-relative access after
-returning from memcpy() or memmove() crashes or silently corrupts data.
-
-With GENERIC_ENTRY selected, mm/kasan/shadow.c no longer provides its
-own memcpy()/memmove()/memset() wrappers, so on a toolchain without
--mllvm -asan-kernel-mem-intrinsic-prefix=1 (e.g. GCC 9) every
-instrumented file resolves mem*() directly to the assembly symbols and
-hits this corrupt-r2 path.  This manifests as an early boot hang unique
-to powerpc with GCC 9 and CONFIG_KASAN=y.
-
-Fix this by removing the dual-entry macros entirely.  The assembly
-files in mem_64.S, memcpy_64.S and copy_32.S now use plain
-_GLOBAL()/_GLOBAL_TOC() for memset/memcpy/memmove, emitting a single
-correct ELFv2 entry point.  The __mem* aliases required by mm/kasan
-(used in mm/kasan/shadow.c and mm/kasan/generic.c as raw backends to
-bypass KASAN checking) are provided entirely through the #define
-redirections in asm/string.h, which already handles both the
-CC_HAS_KASAN_MEMINTRINSIC_PREFIX and non-prefix cases in C.
-
-As a consequence the _GLOBAL_KASAN(), _GLOBAL_TOC_KASAN() and
-EXPORT_SYMBOL_KASAN() macros have no remaining users and are removed
-from asm/kasan.h.  The has_renamed_memintrinsics() branch in
-prom_init_check.sh, which conditionally whitelisted __memcpy/__memset
-when CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX was absent, is dead code
-after this change and is removed; the whitelist now unconditionally
-lists memcpy and memset.
-
-Fixes: bee25f97ad24 ("powerpc: Enable GENERIC_ENTRY feature")
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Closes: https://lore.kernel.org/all/96dae110-f79b-4e54-8a9b-514369019b5d@linux.ibm.com
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Signed-off-by: Mukesh Kumar Chaurasiya (IBM) <mkchauras@gmail.com>
----
-Changelog:
-V3 -> V4:
-- Kasan only disabled for mem intrinsics function for older compilers
-V3: https://lore.kernel.org/all/20260915100938.1337401-1-mkchauras@gmail.com
-V2 -> V3:
-- *dest = *src used instead of memcpy in cputable.c and prom_init.c
-V2: https://lore.kernel.org/all/20260911180536.3234640-2-mkchauras@gmail.com
-
-V1 -> V2:
-- Comments reworded
-- Commit message reworded
-V1: https://lore.kernel.org/all/20260908064948.999530-1-mkchauras@gmail.com
-
- arch/powerpc/include/asm/kasan.h       | 15 ---------------
- arch/powerpc/include/asm/string.h      | 21 +--------------------
- arch/powerpc/kernel/cputable.c         | 14 +++-----------
- arch/powerpc/kernel/prom_init.c        | 10 ++--------
- arch/powerpc/kernel/prom_init_check.sh | 15 +--------------
- arch/powerpc/lib/copy_32.S             | 10 +++-------
- arch/powerpc/lib/mem_64.S              |  7 ++-----
- arch/powerpc/lib/memcpy_64.S           |  4 +---
- 8 files changed, 13 insertions(+), 83 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-index a690e7da53c2..599a9e02af02 100644
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -2,21 +2,6 @@
- #ifndef __ASM_KASAN_H
- #define __ASM_KASAN_H
- 
--#if defined(CONFIG_KASAN) && !defined(CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX)
--#define _GLOBAL_KASAN(fn)			\
--	_GLOBAL(fn);				\
--	_GLOBAL(__##fn)
--#define _GLOBAL_TOC_KASAN(fn)			\
--	_GLOBAL_TOC(fn);			\
--	_GLOBAL_TOC(__##fn)
--#define EXPORT_SYMBOL_KASAN(fn)			\
--	EXPORT_SYMBOL(__##fn)
--#else /* CONFIG_KASAN && !CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX */
--#define _GLOBAL_KASAN(fn)	_GLOBAL(fn)
--#define _GLOBAL_TOC_KASAN(fn)	_GLOBAL_TOC(fn)
--#define EXPORT_SYMBOL_KASAN(fn)
--#endif /* CONFIG_KASAN && !CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX */
--
- #ifndef __ASSEMBLER__
- 
- #include <asm/page.h>
-diff --git a/arch/powerpc/include/asm/string.h b/arch/powerpc/include/asm/string.h
-index 1981bd4036b5..161b949683b3 100644
---- a/arch/powerpc/include/asm/string.h
-+++ b/arch/powerpc/include/asm/string.h
-@@ -29,29 +29,10 @@ extern void * memchr(const void *,int,__kernel_size_t);
- void memcpy_flushcache(void *dest, const void *src, size_t size);
- 
- #ifdef CONFIG_KASAN
--/* __mem variants are used by KASAN to implement instrumented meminstrinsics. */
--#ifdef CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX
-+/* Used by mm/kasan as raw backends to bypass KASAN checking. */
- #define __memset memset
- #define __memcpy memcpy
- #define __memmove memmove
--#else /* CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX */
--void *__memset(void *s, int c, __kernel_size_t count);
--void *__memcpy(void *to, const void *from, __kernel_size_t n);
--void *__memmove(void *to, const void *from, __kernel_size_t n);
--#ifndef __SANITIZE_ADDRESS__
--/*
-- * For files that are not instrumented (e.g. mm/slub.c) we
-- * should use not instrumented version of mem* functions.
-- */
--#define memcpy(dst, src, len) __memcpy(dst, src, len)
--#define memmove(dst, src, len) __memmove(dst, src, len)
--#define memset(s, c, n) __memset(s, c, n)
--
--#ifndef __NO_FORTIFY
--#define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
--#endif
--#endif /* !__SANITIZE_ADDRESS__ */
--#endif /* CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX */
- #endif /* CONFIG_KASAN */
- 
- #ifdef CONFIG_PPC64
-diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputable.c
-index 6f6801da9dc1..4731e27bb7bc 100644
---- a/arch/powerpc/kernel/cputable.c
-+++ b/arch/powerpc/kernel/cputable.c
-@@ -35,12 +35,7 @@ void __init set_cur_cpu_spec(struct cpu_spec *s)
- 	struct cpu_spec *t = &the_cpu_spec;
- 
- 	t = PTRRELOC(t);
--	/*
--	 * use memcpy() instead of *t = *s so that GCC replaces it
--	 * by __memcpy() when KASAN is active
--	 */
--	memcpy(t, s, sizeof(*t));
--
-+	*t = *s;
- 	*PTRRELOC(&cur_cpu_spec) = &the_cpu_spec;
- }
- 
-@@ -53,11 +48,8 @@ static struct cpu_spec * __init setup_cpu_spec(unsigned long offset,
- 	t = PTRRELOC(t);
- 	old = *t;
- 
--	/*
--	 * Copy everything, then do fixups. Use memcpy() instead of *t = *s
--	 * so that GCC replaces it by __memcpy() when KASAN is active
--	 */
--	memcpy(t, s, sizeof(*t));
-+	/* Copy everything, then do fixups. */
-+	*t = *s;
- 
- 	/*
- 	 * If we are overriding a previous value derived from the real
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-index eb9f556b0937..e8e071024da5 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -1362,14 +1362,8 @@ static void __init prom_check_platform_support(void)
- 	int prop_len = prom_getproplen(prom.chosen,
- 				       "ibm,arch-vec-5-platform-support");
- 
--	/*
--	 * First copy the architecture vec template
--	 *
--	 * use memcpy() instead of *vec = *vec_template so that GCC replaces it
--	 * by __memcpy() when KASAN is active
--	 */
--	memcpy(&ibm_architecture_vec, &ibm_architecture_vec_template,
--	       sizeof(ibm_architecture_vec));
-+	/* First copy the architecture vec template */
-+	ibm_architecture_vec = ibm_architecture_vec_template;
- 
- 	prom_strscpy_pad(ibm_architecture_vec.vec7.os_id, linux_banner, 256);
- 
-diff --git a/arch/powerpc/kernel/prom_init_check.sh b/arch/powerpc/kernel/prom_init_check.sh
-index 3090b97258ae..3155cc722e48 100644
---- a/arch/powerpc/kernel/prom_init_check.sh
-+++ b/arch/powerpc/kernel/prom_init_check.sh
-@@ -13,21 +13,8 @@
- # If you really need to reference something from prom_init.o add
- # it to the list below:
- 
--has_renamed_memintrinsics()
--{
--	grep -q "^CONFIG_KASAN=y$" "${KCONFIG_CONFIG}" && \
--		! grep -q "^CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX=y" "${KCONFIG_CONFIG}"
--}
--
--if has_renamed_memintrinsics
--then
--	MEM_FUNCS="__memcpy __memset"
--else
--	MEM_FUNCS="memcpy memset"
--fi
--
- WHITELIST="add_reloc_offset __bss_start __bss_stop copy_and_flush
--_end enter_prom $MEM_FUNCS reloc_offset __secondary_hold
-+_end enter_prom memcpy memset reloc_offset __secondary_hold
- __secondary_hold_acknowledge __secondary_hold_spinloop __start
- logo_linux_clut224 btext_prepare_BAT
- reloc_got2 kernstart_addr memstart_addr linux_banner _stext
-diff --git a/arch/powerpc/lib/copy_32.S b/arch/powerpc/lib/copy_32.S
-index 933b685e7ab6..97eb9ca0cc23 100644
---- a/arch/powerpc/lib/copy_32.S
-+++ b/arch/powerpc/lib/copy_32.S
-@@ -10,7 +10,6 @@
- #include <asm/errno.h>
- #include <asm/ppc_asm.h>
- #include <asm/code-patching-asm.h>
--#include <asm/kasan.h>
- 
- #define COPY_16_BYTES		\
- 	lwz	r7,4(r4);	\
-@@ -87,7 +86,7 @@ EXPORT_SYMBOL(memset16)
-  * We therefore skip the optimised bloc that uses dcbz. This jump is
-  * replaced by a nop once cache is active. This is done in machine_init()
-  */
--_GLOBAL_KASAN(memset)
-+_GLOBAL(memset)
- 	cmplwi	0,r5,4
- 	blt	7f
- 
-@@ -147,7 +146,6 @@ _GLOBAL_KASAN(memset)
- 	bdnz	9b
- 	blr
- EXPORT_SYMBOL(memset)
--EXPORT_SYMBOL_KASAN(memset)
- 
- /*
-  * This version uses dcbz on the complete cache lines in the
-@@ -160,12 +158,12 @@ EXPORT_SYMBOL_KASAN(memset)
-  * We therefore jump to generic_memcpy which doesn't use dcbz. This jump is
-  * replaced by a nop once cache is active. This is done in machine_init()
-  */
--_GLOBAL_KASAN(memmove)
-+_GLOBAL(memmove)
- 	cmplw	0,r3,r4
- 	bgt	backwards_memcpy
- 	/* fall through */
- 
--_GLOBAL_KASAN(memcpy)
-+_GLOBAL(memcpy)
- 1:	b	generic_memcpy
- 	patch_site	1b, patch__memcpy_nocache
- 
-@@ -241,8 +239,6 @@ _GLOBAL_KASAN(memcpy)
- 65:	blr
- EXPORT_SYMBOL(memcpy)
- EXPORT_SYMBOL(memmove)
--EXPORT_SYMBOL_KASAN(memcpy)
--EXPORT_SYMBOL_KASAN(memmove)
- 
- generic_memcpy:
- 	srwi.	r7,r5,3
-diff --git a/arch/powerpc/lib/mem_64.S b/arch/powerpc/lib/mem_64.S
-index 6fd06cd20faa..40eaedd31486 100644
---- a/arch/powerpc/lib/mem_64.S
-+++ b/arch/powerpc/lib/mem_64.S
-@@ -8,7 +8,6 @@
- #include <asm/processor.h>
- #include <asm/errno.h>
- #include <asm/ppc_asm.h>
--#include <asm/kasan.h>
- 
- #ifndef CONFIG_KASAN
- _GLOBAL(__memset16)
-@@ -29,7 +28,7 @@ EXPORT_SYMBOL(__memset32)
- EXPORT_SYMBOL(__memset64)
- #endif
- 
--_GLOBAL_KASAN(memset)
-+_GLOBAL(memset)
- 	neg	r0,r3
- 	rlwimi	r4,r4,8,16,23
- 	andi.	r0,r0,7			/* # bytes to be 8-byte aligned */
-@@ -95,9 +94,8 @@ _GLOBAL_KASAN(memset)
- 	stb	r4,0(r6)
- 	blr
- EXPORT_SYMBOL(memset)
--EXPORT_SYMBOL_KASAN(memset)
- 
--_GLOBAL_TOC_KASAN(memmove)
-+_GLOBAL_TOC(memmove)
- 	cmplw	0,r3,r4
- 	bgt	backwards_memcpy
- 	b	memcpy
-@@ -139,4 +137,3 @@ _GLOBAL(backwards_memcpy)
- 	mtctr	r7
- 	b	1b
- EXPORT_SYMBOL(memmove)
--EXPORT_SYMBOL_KASAN(memmove)
-diff --git a/arch/powerpc/lib/memcpy_64.S b/arch/powerpc/lib/memcpy_64.S
-index b5a67e20143f..0cedd455231a 100644
---- a/arch/powerpc/lib/memcpy_64.S
-+++ b/arch/powerpc/lib/memcpy_64.S
-@@ -7,7 +7,6 @@
- #include <asm/ppc_asm.h>
- #include <asm/asm-compat.h>
- #include <asm/feature-fixups.h>
--#include <asm/kasan.h>
- 
- #ifndef SELFTEST_CASE
- /* For big-endian, 0 == most CPUs, 1 == POWER6, 2 == Cell */
-@@ -15,7 +14,7 @@
- #endif
- 
- 	.align	7
--_GLOBAL_TOC_KASAN(memcpy)
-+_GLOBAL_TOC(memcpy)
- BEGIN_FTR_SECTION
- #ifdef __LITTLE_ENDIAN__
- 	cmpdi	cr7,r5,0
-@@ -227,4 +226,3 @@ END_FTR_SECTION_IFCLR(CPU_FTR_UNALIGNED_LD_STD)
- 	blr
- #endif
- EXPORT_SYMBOL(memcpy)
--EXPORT_SYMBOL_KASAN(memcpy)
 -- 
-2.55.0
-
+Kees Cook
