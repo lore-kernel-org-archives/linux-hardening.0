@@ -1,133 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8531738AC90;
-	Sat,  3 Oct 2026 03:59:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F40450F2;
+	Sat,  3 Oct 2026 04:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790999968; cv=none; b=bel8DiA0M4J7g+vkOs2say0O4/YN13QBBf/hH/HgbcGuNsqgdh/Q9XriXnR3WwIcUNdLes8FcCxMths6F8vniCLn9rsVxLAjlbEMqDMI/GwO7NSlbAI8Nnb3JTfieWDMz5/pM2WNFWxHU/A29wzd4DcW4Ba+vEYA58aLq4p5uQk=
+	t=1791002043; cv=none; b=KnCERuzadMNQu5B5GQ/4ShdFtM8O9SW5HzSsZT5tpT+HiIvoWx9n0NrTao2ksWUQedy09OwF9HJh6yKzYbIe7y+8Et8x8oWv4zgBSOLa1uE3nS3K5DQJcucsy8L1B4MGnpj3xZhLA086QRhK53mPSIN5g7blE9D4gkq4IEVmgDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790999968; c=relaxed/simple;
-	bh=83ejdE21ZGKoH4IcbNOtIYCWNlvKIrQjgUzARamzwfE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=okYv+OskvnVAl+jXo1f4Ii4hadiBvDTjpcPqqtJbZL+L7nHpwEcehQsYp0MljFKiAWds/6SmfnGKmWCeDgfN9k1MD6qGxXfzbQ6pIsTJIaq3ADliwZZaHXlmOgMl6caA4a28Wz51grdpJBtHn+7vJoa+SHay37ioC7LKvuzzu10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esNzDwkF; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791002043; c=relaxed/simple;
+	bh=zGsMMCFnuZoFawv7/XTqHVMWITtkX2O6G8xrb12kjxs=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=CnE0kVGkNNBTUtK5EWrW/xJEH42blNe62YWDLfMHsFRLhnPXpzX8rskK1tHXMUMe3rNWaNHqmF6xwDwuaTGce6yCi9nFOf4+6A4RNuAc/kB4iQs2s3bIE0KI8N2RfGLeWomfqksiLdL+Iw/KVGOGH69+sTNzkQIEpY5Cg9GVQ7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=fail (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMZBO/0C reason="signature verification failed"; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esNzDwkF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 048601F008A2;
-	Sat,  3 Oct 2026 03:59:22 +0000 (UTC)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMZBO/0C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2089C1F000FF;
+	Sat,  3 Oct 2026 04:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790999962;
-	bh=3OTiHc1/0syaVTh9plxPSwZX9JA+w6f18TNYUs4mWiI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=esNzDwkF/ZPzuVHUwOX/wWg1G8q95GJofpLCNZ8CqjZQ3tSrgZVSe0wl0i/6tgYuB
-	 b+Og8ah3xsZ8t9cxtea4sG661YTsOMgK8WVA8wpEoh1BTI8kBHx36q6v+G2wPY7mPx
-	 z4I5y1NwZKx3SFzjqzalrK3VNGzGzXi+Mz5t8hh+znJCYY/w/7zYGnJf7LEk0Ev38H
-	 z5LVKQGZpj2BeyE843ig3p7wNG9C7eq7HmfrKRy6iuRy1T6I4c49+fSOADaKVkxXWO
-	 kl9SSeOeX8e292rsoebDYCW364bXxFepgepHcQXFCiqAipN3wEtdDK2FQylf72d8Ko
-	 +8U5XvTRO77ng==
-From: Kees Cook <kees@kernel.org>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>,
-	nvdimm@lists.linux.dev,
-	Alison Schofield <alison.schofield@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guangshuo Li <lgs201920130244@gmail.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Gow <david@davidgow.net>,
-	Petr Mladek <pmladek@suse.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Shuvam Pandey <shuvampandey1@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
-	Thorsten Blum <blum@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v4 10/11] nvdimm: ndtest: Return the string length from flags_show()
-Date: Fri,  2 Oct 2026 20:59:15 -0700
-Message-ID: <20261003035921.1918874-10-kees@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261003035906.too.263-kees@kernel.org>
-References: <20261003035906.too.263-kees@kernel.org>
+	s=k20260515; t=1791002041;
+	bh=T5WqpPkABYIUr+bdw9uNCeIvTTslukdoECjwAYUP7k8=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=CMZBO/0C5xeumMuL3ncSkFagppcPpT5dOBjyZc+U25dEpLF/06r0ZRaHPXYDLuqD6
+	 SNcQRLrq+gVgrsRiZKbdWdUuby/voNjj10L7uz5SMzAVj3vpKVOtP/p6BjKY5bgDGa
+	 mKbfI1DXTb4RaywucblX8VTCk2IVBVBv32LzbGlrHmPLImUMnup8WdULwUFxyR7b3S
+	 xU4XPlOThF3RXjVJfDS3SprBoad763bLCItuU1Wu1M6MngY1qY3pbifawvQrozhrgG
+	 Dzz5fuCF0GcT9b6O5AIJJsItZDm/UXZINp0EBqrWEbp2sT4jVzKo5EYUNgCqDGWxqH
+	 8sGRvF90o/fvg==
+Content-Type: multipart/mixed; boundary="===============0675329118283778615=="
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1205; i=kees@kernel.org; h=from:subject; bh=83ejdE21ZGKoH4IcbNOtIYCWNlvKIrQjgUzARamzwfE=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkHaieLvLjkuOz2nWpmDfsU5q917HcOHpCrm/clZhVX5 dEteh/WdJSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEzEo5Thf0HjJa6f2wWCLz5Z ndCTresx5Vpd30Jz8x/NP1assHW/ZMzwT78//eJ0f787O6pSOef+ZToVzRjHcTRt/ZT+eYtmCc4 o4QUA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Message-Id: <f3b5a05404cc45b59981e869a0203ed07497f6f6942e6d72cee63b37612b7cda@mail.kernel.org>
+In-Reply-To: <20261003035921.1918874-8-kees@kernel.org>
+References: <20261003035921.1918874-8-kees@kernel.org>
+Subject: Re: [PATCH v4 08/11] seq_buf: Add seq_buf_init_append()
+From: bot+bpf-ci@kernel.org
+To: kees@kernel.org,morbo@google.com
+Cc: kees@kernel.org,willy@infradead.org,akpm@linux-foundation.org,andriy.shevchenko@linux.intel.com,david@davidgow.net,pmladek@suse.com,shuvampandey1@gmail.com,rostedt@goodmis.org,corbet@lwn.net,senozhatsky@chromium.org,gnoack@google.com,mic@digikod.net,mhiramat@kernel.org,mathieu.desnoyers@efficios.com,jikos@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,ihor.solodrai@linux.dev,chleroy@kernel.org,u.kleine-koenig@baylibre.com,maddy@linux.ibm.com,mpe@ellerman.id.au,npiggin@gmail.com,sbhat@linux.ibm.com,blum@kernel.org,alison.schofield@intel.com,dave.jiang@intel.com,gregkh@linuxfoundation.org,lgs201920130244@gmail.com,iweiny@kernel.org,u.kleine-koenig@pengutronix.de,vishal.l.verma@intel.com,rdunlap@infradead.org,skhan@linuxfoundation.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,linux-security-module@vger.kernel.org,linux-trace-k
+ ernel@vger.kernel.org,linuxppc-dev@lists.ozlabs.org,nvdimm@lists.linux.dev,linux-doc@vger.kernel.org,linux-hardening@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Sat,  3 Oct 2026 04:33:59 +0000 (UTC)
 
-flags_show() build their output with a seq_buf and return seq_buf_used(),
-which may include the trailing NUL byte when the seq_buf has
-overflowed. Use seq_buf_strlen() instead.
+--===============0675329118283778615==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-The flag names are far shorter than the PAGE_SIZE buffer sysfs
-provides, so this cannot overflow today.
+> seq_buf: Add seq_buf_init_append()
 
-Build tested ARCH=x86_64 with GCC 16.2.0, built out of tree with
-make M=tools/testing/nvdimm:
-tools/testing/nvdimm/test/ndtest.o
+TL;DR: Commit message only: it says seq_buf_init() sets the buffer size to 0
+via seq_buf_clear(), but it resets the length, not the size. The code is not
+reported as buggy.
 
-Assisted-by: LLM
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Kees Cook <kees@kernel.org>
+> seq_buf: Add seq_buf_init_append()
+>
+> Several strlcat() call sites being converted to seq_buf need behavior
+> seq_buf doesn't currently provide. The normal seq_buf_init() always
+> sets the new buffer size to 0 via seq_buf_clear(). Code migrating from
+> strlcat(buf, ...), which appends to whatever buf already contains,
+> can't use seq_buf_init() without discarding that existing content. Add
+> seq_buf_init_append(), which preserves the existing contents and positions
+> the seq_buf to append after it. A buffer with no NUL within its size
+> starts out overflowed, as strlcat() treats it as already truncated.
+> Add KUnit tests for behavior coverage.
+>
+> Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
+> and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.2.0.
+>
+> Assisted-by: LLM
+> Signed-off-by: Bill Wendling <morbo@google.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Co-developed-by: Kees Cook <kees@kernel.org>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+
+This isn't a bug in the code, but is the changelog accurate when it says
+seq_buf_init() "always sets the new buffer size to 0 via seq_buf_clear()"?
+
+seq_buf_init() stores the size it was given in s->size, and seq_buf_clear()
+leaves s->size alone.  It only resets the length and terminates the first
+byte:
+
+    static inline void seq_buf_clear(struct seq_buf *s)
+    {
+    	s->len = 0;
+    	if (s->size)
+    		s->buffer[0] = '\0';
+    }
+
+Should the sentence say that seq_buf_init() always sets the length (s->len)
+to 0 via seq_buf_clear(), rather than the buffer size?
+
+
 ---
- tools/testing/nvdimm/test/ndtest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/tools/testing/nvdimm/test/ndtest.c b/tools/testing/nvdimm/test/ndtest.c
-index 2051ad5d4882..f097f2992966 100644
---- a/tools/testing/nvdimm/test/ndtest.c
-+++ b/tools/testing/nvdimm/test/ndtest.c
-@@ -693,7 +693,7 @@ static ssize_t flags_show(struct device *dev,
- 	if (seq_buf_used(&s))
- 		seq_buf_printf(&s, "\n");
- 
--	return seq_buf_used(&s);
-+	return seq_buf_strlen(&s);
- }
- static DEVICE_ATTR_RO(flags);
- 
--- 
-2.55.0
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/37096036516
+--===============0675329118283778615==--
