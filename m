@@ -1,149 +1,142 @@
-Received: from mail-vs2-f43.google.com (mail-vs2-f43.google.com [74.125.227.43])
+Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com [209.85.160.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0ED4746AD
-	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 10:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791196017; cv=pass; b=p3a7t7AhlsS6HPQmRxqDnZO7of2GrcDkVudIB/XESv3K0mKDbtoySVRrTK/TEs1S3N8aMorTxXZh1OKuBV8qzmpzmKVO0yROLVas3bhKJwj7qVEppsqF3rLNGSfG3O4PIyrmYiAuEmzSMuASf2BKYTbXdyuyjoM9Se0S2KVN7is=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791196017; c=relaxed/simple;
-	bh=FoH71T1sttzcTK7jTd/MV4MMsSrOgn3/fa5zywp33Rk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C87yhq/MnOBZGlszaKxX0/aFkjH2/j9icOixbF185tq961OdMZ9QdjMqimJvMDdv6hSCBKkCjDbC8X9jxky+an/Xq1RRpBwFOOCH/a1pOs2xTr0O8fBBTjViehvaNudFW0VHY/Z08pFu/ln8RZhgc4LKXJv+wmI8kjmBWU5BWGM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rKIcyWF+; arc=pass smtp.client-ip=74.125.227.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CEC478E57
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 10:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.70
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791197060; cv=none; b=ENlW1GYw8/BKZb2Yu34MQo5I6rmTyyO5tPnNKVVc/WGEaWk6l9/g0XCWrcaWg3CmVA8tbMyQ+ZkAP4Bha1iFBXg4SOwHHvJrz8qCn2TQAZfZxKVf48OXt93oKHw10fA8jDuEzIWKBLR+xxe7oAuT+t363H406IzXbLOcaLlJjaI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791197060; c=relaxed/simple;
+	bh=hXqAAVZ7iU9coIiuKsZdIYbDpWgQ81ehzhxS/8jQUaw=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=OKEcuwpPjSxuC/GDNIbSvF3WfC/gR3M21+M7X17spPP9ewVCE5Omdd2oWm9v818OdTC6GpZaLMs6ST4iH89EEtfUIlxZk8ZI4tHu/yzsEaI9TGpQKu1bldkRaCLlCJ81v/7Iu+AUBCQqDA4gMBodJGPBFHycrkbEemF2QPDObkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UydTROGy; arc=none smtp.client-ip=209.85.160.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rKIcyWF+"
-Received: by mail-vs2-f43.google.com with SMTP id ada2fe7eead31-7beb81b2834so370517137.2
-        for <linux-hardening@vger.kernel.org>; Mon, 05 Oct 2026 03:26:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791196015; cv=none;
-        d=google.com; s=arc-20260327;
-        b=L5sy0j5HFwYjK65TALPF+BPRUU7Dakjusa2/o6e0LThZC3uLpw7dmSx9UgTzLgHY2j
-         7CVIIZkneB7ed4HRhZ1fAoXJ0ssT6ruq4nkExO95ZMWgO6XUsoE9gt0DRITmjZMgi6w7
-         7lAZ8zL6ivKbn7HdWpXmO5N76h6c7uQciP5d0HQWOPnoeJkgOprju1g932653jCwqkCR
-         OMmycizhiU5u4gieMqlawJbCSDhvmRBYG+A8XqR4j1qxBQAr8LS7MxRy1CgFJFW8EswN
-         5W/8K05rYiMicWwrhMRIxGFP+XiOFJkfB8Nd6I9DIdD1jh2C7gvWqb8bXqo8hqSckQ5U
-         myzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=S967s+iSBQZ44jx/2IytRD1jtlv2+1P1I8JkvdWsI7c=;
-        fh=UIvMSpvjHeL9P8mavkt+a75tbtKOpzaIbDCC3WqOUAk=;
-        b=IAhUKD6Rgg52IvWYfNS+mbqZtsY0eQtGDdb++hJ4749h8KWF8rEXp//UoOo8kmksQm
-         f4QydcTBBCijI1jHanYla+hZDbA5oFd6HqL67HnN8NN3HtS7zkmeUx5WsWes06PJoMZe
-         BidoTKQwApkZJxDYXPN6wbFpmFcOfLSNExQZuwcSlP5ZL/5KfKggXWcVgVRho5DWZPGk
-         1jfQb9MvsSdpuGWCd2sk/WB+LaAmnfV8kCFFBHoOhOCQvOkXa0rRaJ3Di/gL2FwVAbsW
-         CNeS1hFdXASnffT6c9GxSEXhKC6pkUjV9JCvgIM4qwoi4OBKiAf8/SutB++Pcgcn92Iz
-         jyug==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UydTROGy"
+Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-47b7f5b898aso1218669fac.3
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Oct 2026 03:44:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791196015; x=1791800815; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=S967s+iSBQZ44jx/2IytRD1jtlv2+1P1I8JkvdWsI7c=;
-        b=rKIcyWF+0tKspgAGKUAW0rACoFDD7SAn9urDOW5mRABwj5etQgrIOcGQSY0tPgDvFb
-         cutlpZoUfDpouR+rRMDTLwJXc0T+1jx2T18BSrfIoztqTQhlYB88ghIkxAalLblekSYH
-         b8NqKdCt77d+/ineoHHQdVJT6IywQwHuacoo1XlxZgSPoKeDFzGBppJef5JdI1nljsKU
-         2vDXGyOo7UIoecDZmgOqj0byb9usUx8PIbJCzA4i7a5+A3nxkdun2gSWDM11/UXGolAo
-         eGDO9FcMIS0rh6ZfMU1VztBEC0D91aCbAQ6FnR/zKhVlehp4vDQBY6LSxLy/Fk2QQYq4
-         w69A==
+        d=google.com; s=20251104; t=1791197057; x=1791801857; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=+TZBKNvvBhmDD3cSiSzM94pM4ii0iFMxmeGyibiGnBg=;
+        b=UydTROGy9SgK3t03M6KfrD4/sZvouL8vZQ9MG2mZ3C2zkLTXYq6rfhp9PaOTDZaT9A
+         bCkxEtZhYelXKj/FKQrm+oj9dJIiZJbV1lKF+AYjCauYx7/MSdcCIGYg6azdROFfAmNm
+         MrAVal7V2jnEm04vX8wouJaSVcnaohJIVGxJvaUixmW+phb9++5RrzgcznO3izltQogK
+         WazUCaa4BRU4IGZl/OFZLdLxh0TRq+lteCFtgqPie38XIENLaoRqQvj8VT1cAjunUy56
+         ZZh/aGf3L6G2cKNv9E6l40mxn2vsz5faZyYT7jE0GZS4lp5hQVBYiOil8NLvH3a01a74
+         +N7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791196015; x=1791800815;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=1e100.net; s=20260707; t=1791197057; x=1791801857;
+        h=content-type:cc:to:from:subject:message-id:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=S967s+iSBQZ44jx/2IytRD1jtlv2+1P1I8JkvdWsI7c=;
-        b=znsRCBEg9ChQbAG1/obYU5Zpi0eLfkFPi3ALUJ0vMRqCO+i5kzhZQ1RLceD1fVTEl2
-         0x1jAZBo8t2TaVA9x6ntshyuGQs04McOTET8f2v3OBw61vUdrhAWuNs5ipbqXiz+bT78
-         797npfFxI+O2tVUU/Z7UofjbD/0z6e9arW51rwD9M51PpAwEvYLaSVQvE7CN85nmrWCR
-         dPmaubrRxGdaQP+086eW2oVHPLxuTAcUB1Pz9t6h1zFui5VvXpMEQRkDiJMu471UUs4j
-         MB4p29iudL1QPTcZHim63uclp85182nj/HJygA8Id7x9IPQZGS0AJJPGlv4Fkafcscmh
-         /Mfw==
-X-Forwarded-Encrypted: i=1; AKwUvBytDwI3krfxJVHv/jcSxrzWNMqxUqVSzJ8RdqwKaujgbWya6v+b/fQfWo2ZQXHOQYNfFANvw0LNe4wZnFe2RXk=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLd6CXlb45WuDMWOHA9wshGgXjGKUyzXXrrCvLVR9WehOX0VY+I
-	k9hGMf9CMI24WrTrZHOmEvN9AByDL+yvSdBG9MpWoglB/vcBq3f5wzBeZaCOp1NyG0hGPQMbagr
-	F18o6F54A9Vastkeltm1FKRoAyMYE1Tpw8oF/C0o=
-X-Gm-Gg: AYBFou3k1vDEfNxrdQSylGovSgQvXdS02hpA7JEwaHgcLHqmDVb8OmGNDNtwh0uAn4R
-	1MgX5uuEQcOhodbfi2E/74Grvbr7hF3XMBjC2mPajn+fPaAUvZelM/MqmhkicapK8vYcwbWf2oJ
-	PUPdwna+Ngm7IpXI6jBwbig8oigP5n2q+rgcVrBxJTZC/LWS4KN/CNYKbtmQ6wxwpzAEhzb7oxu
-	7I+g53aAzhFsnnv98PwIYM+Evm1KqWeSExEXjAP5LD3KZ7iOCE7nwWDRSL7ARa91vZaoFILkNIV
-	wnS6p3uju/9T16DZuHEjT5dnTyzSL7jmeRDakPQdQBpGuCiGgn8GWdmebE3+SxurqEq8f4AWoh7
-	nt8yTwZ5ln+4+yswC1LwX7gtfOYpjbOY=
-X-Received: by 2002:a05:6102:291e:b0:7c0:c723:2053 with SMTP id
- ada2fe7eead31-7c0f4c96e41mr1732042137.17.1791196014389; Mon, 05 Oct 2026
- 03:26:54 -0700 (PDT)
+        bh=+TZBKNvvBhmDD3cSiSzM94pM4ii0iFMxmeGyibiGnBg=;
+        b=BdIeKPzrZRXOvwyXPDa/DA8z5FJEtOtwMlbQmZgOWki9JI43QrWsC2AtV7mnLtb82N
+         y+f4mvAF7953z3K4JUpXy6+4bS8gKKOPHZbRUl3K/F1H5KHrVDPCyRZFtOTYZz+VIu0g
+         P5BLjqTV6nTGkx+MvfCRV315RS4gXKJQO/sA7Y8h4IbWPkfT8a6NGh3OooG/1Mz7Xu6p
+         /WU3n9nlrQklQv6+U9xjvuR6nWag/9aSQDk2J8/fFtlB0AeUghnIXhFKn8dzFwLVJecc
+         2kNAoGj/EHyKLNjJv3Mz/Kh57zlueV5cJn2i0civO3yx6zvFv2EOwtp3+N04u6V4MucS
+         k94A==
+X-Forwarded-Encrypted: i=1; AKwUvBzH1qd/ZVZuAwvuq107IiMxLfi0wIfcuGMFSUXFc2xRM+wNxx0OT3kNBmHQ/tCQgjjYbYies0o9LrqQTLal7RA=@vger.kernel.org
+X-Gm-Message-State: AFuF++nJuGNFZhZBQVuYl9xBSgC9EhS+E4jDplRql4dmMrK3EWkxJoD5
+	STyLX+Inz8qT/9xLbzKGPSU4Gw8Z8kS3ZoFKshpTXDE0FxaI7bfgY94w3CsJhV1FrWu9V0KJ5lk
+	CUebfLSeC96COq2kJrH/C8yyLyQ==
+X-Received: from ioa7.prod.google.com ([2002:a05:6602:8007:b0:9c7:3c39:1ace])
+ (user=justinstitt job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6808:1811:b0:4e6:46cf:4a14 with SMTP id 5614622812f47-4f528ee2d7bmr10154776b6e.25.1791197056690;
+ Mon, 05 Oct 2026 03:44:16 -0700 (PDT)
+Date: Mon, 5 Oct 2026 03:44:15 -0700
+In-Reply-To: <20261005102518.2400984-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260928063824.1386524-1-morbo@google.com> <CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com>
- <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com>
- <CAGG=3QV2k-nsZHNSuKEixZb+-LcxvhQsG379ghgyOpiDLTJWzw@mail.gmail.com> <asNuMzqz3G-gmIiD@google.com>
-In-Reply-To: <asNuMzqz3G-gmIiD@google.com>
-From: Bill Wendling <morbo@google.com>
-Date: Mon, 5 Oct 2026 03:26:37 -0700
-X-Gm-Features: AclHuK9GJaR-vXymBVjABDCTEzvCLBikCIuMwz9R2xSRvkQQKV3rpJQ1IPlyOco
-Message-ID: <CAGG=3QV1eLy-eAfi3Q49qwMw_Yw-BJ1tmd3J=SLJB_qWrx4bNg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: annotate struct acpi_gpio_mapping with __counted_by_ptr
-To: Justin Stitt <justinstitt@google.com>
-Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	codemender-patching+linux@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Message-ID: <asN_J2XBnJgbJijS@google.com>
+Subject: Re: [PATCH] compiler_types: Allow opting out of __counted_by and __counted_by_ptr
+From: Justin Stitt <justinstitt@google.com>
+To: Bill Wendling <morbo@google.com>
+Cc: Kees Cook <kees@kernel.org>, ardb@kernel.org, gustavoars@kernel.org, 
+	nathan@kernel.org, ndesaulniers@google.com, broonie@kernel.org, 
+	elver@google.com, alan.maguire@oracle.com, namjain@linux.microsoft.com, 
+	peterz@infradead.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Oct 5, 2026 at 2:31=E2=80=AFAM Justin Stitt <justinstitt@google.com=
-> wrote:
->
-> Hi,
->
-> On Thu, Oct 01, 2026 at 01:04:47PM -0700, Bill Wendling wrote:
-> > On Thu, Oct 1, 2026 at 12:56=E2=80=AFPM Linus Walleij <linusw@kernel.or=
-g> wrote:
->
-> <snip>
->
-> > It's being #included transitively:
-> >
-> > In file included from drivers/firmware/efi/libstub/efi-stub-helper.c:12=
-:
-> > In file included from ./include/linux/efi.h:20:
-> > In file included from ./include/linux/rtc.h:18:
-> > In file included from ./include/linux/nvmem-provider.h:16:
-> > ./include/linux/gpio/consumer.h:670:55: error: use of undeclared
-> > identifier 'size'; did you
-> >       mean 'ksize'?
-> >   670 |         const struct acpi_gpio_params *data __counted_by_ptr(si=
-ze);
-> >       |                                                              ^~=
-~~
-> >       |                                                              ks=
-ize
-> > ././include/linux/compiler_types.h:392:64: note: expanded from macro
-> > '__counted_by_ptr'
-> >   392 | #define __counted_by_ptr(member)
-> > __attribute__((__counted_by__(member)))
-> >       |
-> >        ^~~~~~
-> > ./include/linux/slab.h:602:8: note: 'ksize' declared here
-> >   602 | size_t ksize(const void *objp);
-> >       |        ^
-> >
->
-> I wonder if we could have a better warning here guiding you towards
-> -fexperimental-late-parse-attributes?
->
-I sent a patch to add `__NO_COUNTED_BY` AND `__NO_COUNTED_BY_PTR`
-macros to prevent this. They're similar to `__NO_FORTIFY`.
+Hi,
 
-https://lore.kernel.org/all/20261005102518.2400984-1-morbo@google.com/
+On Mon, Oct 05, 2026 at 10:25:18AM +0000, Bill Wendling wrote:
+> Code that runs outside the kernel proper, such as the EFI stub, gets
+> nothing out of the counted_by annotations: the bounds checks they feed
+> (FORTIFY_SOURCE, UBSAN_BOUNDS) are already disabled there.
+> 
+> The annotations can also break the build. A __counted_by_ptr() that
+> names a member declared after the pointer needs Clang's
+> '-fexperimental-late-parse-attributes', which the top-level Makefile
+> adds to 'KBUILD_CFLAGS'. The x86 EFI stub builds its own cflags and does
+> not get that flag, so it fails as soon as such a struct is pulled in
+> through a common header.
+> 
+> Overriding the macros from a Makefile doesn't work:
+> 'compiler_types.h' is pulled in with '-include', which is processed
+> after all -D/-U options, so it re-establishes the definitions. Follow
+> the '__NO_FORTIFY' precedent instead: let a build define
+> '__NO_COUNTED_BY' or '__NO_COUNTED_BY_PTR' to turn the corresponding
+> annotation into a no-op.  The two are kept separate but parallel so they
+> can be folded together once all supported compilers handle
+> '__counted_by' on pointers.
+> 
+> Assisted-by: LLM
+> Signed-off-by: Bill Wendling <morbo@google.com>
+> ---
+>  include/linux/compiler_types.h | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index c5921f139007..916a946f623c 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -371,8 +371,14 @@ struct ftrace_likely_data {
+>   *
+>   * __bdos on clang < 19.1.3 can be off by 4:
+>   * https://github.com/llvm/llvm-project/pull/112636
+> + *
+> + * Code that runs outside the kernel proper (e.g. the EFI stub) can define
+> + * __NO_COUNTED_BY to drop the annotation, since it gains nothing from the
+> + * bounds checks. Kept in step with __NO_COUNTED_BY_PTR below so the two can
+> + * be folded together once __counted_by covers pointers on all supported
+> + * compilers.
+>   */
+> -#ifdef CONFIG_CC_HAS_COUNTED_BY
+> +#if defined(CONFIG_CC_HAS_COUNTED_BY) && !defined(__NO_COUNTED_BY)
+>  # define __counted_by(member)		__attribute__((__counted_by__(member)))
+>  #else
+>  # define __counted_by(member)
+> @@ -387,8 +393,13 @@ struct ftrace_likely_data {
+>   *
+>   *   gcc: https://gcc.gnu.org/pipermail/gcc-patches/2025-April/681727.html
+>   * clang: https://clang.llvm.org/docs/AttributeReference.html#counted-by-counted-by-or-null-sized-by-sized-by-or-null
+> + *
+> + * Code that runs outside the kernel proper (e.g. the EFI stub) can define
+> + * __NO_COUNTED_BY_PTR to drop the annotation, as with __NO_COUNTED_BY. Such
+> + * code may also lack the flag Clang needs to parse a reference to a
+> + * later-declared member (-fexperimental-late-parse-attributes).
+>   */
+> -#ifdef CONFIG_CC_HAS_COUNTED_BY_PTR
+> +#if defined(CONFIG_CC_HAS_COUNTED_BY_PTR) && !defined(__NO_COUNTED_BY_PTR)
+>  #define __counted_by_ptr(member)	__attribute__((__counted_by__(member)))
+>  #else
+>  #define __counted_by_ptr(member)
+> -- 
+> 2.56.0.rc1.315.gc6ed9934b7-goog
+> 
 
--bw
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+
+Thanks
+Justin
