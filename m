@@ -1,173 +1,178 @@
-Received: from mail-pj2-f41.google.com (mail-pj2-f41.google.com [74.125.227.169])
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030024CE68A
-	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 19:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791228388; cv=none; b=uwiCx3pU/hT2niOXLAMK9S0g9ZxJVhP11cC9M2YCN9/r2VrDnLgS06g0QueDM0CO9/neq6J1sxQS42QYdvi4VF+sS/ssQQay8qZ8nhOo8KCyfJSKDfxyoWygrt9+8oFI1CuqqWygrHgYjcBaG+vD4oP62whcMDBETzEe/SQCMOk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791228388; c=relaxed/simple;
-	bh=qLo0sLQGLGk/Qb1aLrPVxsDkLEujWQRRC1IGWA5JPvw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gc3zy7qDb2U1duKjeKsnA0+GfZQdOIzqGtVnQf6kBni5/OkH1qci5LE9SuT/Ef9rMHESarPjYZt8UJypuJYSC/WyBcTfPCv40+BtuNB++7MqJkEfBTlC2qbyG2zMUb0peyMg7jTCXgVdeaxupepwsgRN9G3ErFmMZdSyLpoY2AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LfJfX7sD; arc=none smtp.client-ip=74.125.227.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D288430DD00
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 19:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791228813; cv=pass; b=f9yV3Ygc8PlSe7msCe+3qz9iBg+k3cQSiQ8tkaMZxdIDLYsa5/R4nELeEDt8/kdMGunWydSrq6wC5DNKejs3/u56hY8jAWZncXdPnZsBk0fLFISwVMGGv1f3LHIpmQ6mc94Gb2vpDJnWo3F8sn4DANgc7nJrm1LB0Ey0RUMgfa8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791228813; c=relaxed/simple;
+	bh=jsLpsyC+KaNvNvqB9CLckEKnWKLK5lRXm5n/C+GqoYI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q1b5TZaBoVJKbE/0Wv5CT7+smzRnYePVdaeMvbZ+S+PojmQesQTVraVMeiZ9E1jkuQHEW8KJLAROeZsIxLvjcPqCv3dAmZa9r7JqtTXgX+UoNlGBSU3rtQAiZqBA5aBGAqdNvAkR170wilHBndsG5AWEeVzRsR+BBJVjks2klIs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dUtjYobt; arc=pass smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfJfX7sD"
-Received: by mail-pj2-f41.google.com with SMTP id 98e67ed59e1d1-3a7906f463dso1679379a91.3
-        for <linux-hardening@vger.kernel.org>; Mon, 05 Oct 2026 12:26:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dUtjYobt"
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-74ab6c88052so1263107137.2
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Oct 2026 12:33:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791228811; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Asqzg3Elg+1dIJ26kRSDLFlBE6GdUt84auBozW5pwFF9T9E8cwnYNB6SoWwqx9gEHK
+         /4AeX1uBBmynG/3C5h/Btr2fvNyqLZwFCNNO5omRgKfENi/GY4RhD6PyYjvoSoEsY8XE
+         wrc+/VLOP0suKuRL7By6KbKsMsLNKKCqJO/qfBWFFIOESLmaWRoF6R/si7m5k1Nb49he
+         jk9J9FQ3EsDF7H1ugfcLd7q+f3EoTiorZUT1u+wI7cnIzaA6QtGcdFu/mcG0l9A3inwZ
+         Ej1882WRDDU/f2a9vRnhOSyDRfvmybKiZ56203KaSK5thi0C3mB9pj0uEc/Pw/3QlLb7
+         m92A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+lWtKVXMW2++bit7wvkgTZ38ocIpzbCdiXdguzjZOQY=;
+        fh=dlCbEIv9/+iU8flMCN6EgQnGl1/QIztaVPIF6A9NKhk=;
+        b=GQBGil/c5FKf4ZfeRpXMGS1aGhsAuYfGWrgig+unBGSnJmsSXjrIygt2pLjmfW2Mc1
+         Ip/3ZCsnoFskYU9TUhmWQxDazL9uWvg03m85WCaNPJe9HID61zLBt0/BQXI/IxowKb2n
+         TWHMwZN7DrXLOvy9MEgt84XReJpOY1H8AqreRS6RzLWAa+VWeFJ+0zkUcgRGqyvSRwCW
+         RD5Gtq1A73gV4RRVrCIIn9x1L1pMXroLl/dVFKCqRkGP/4pWqRjS7t0OHhLKV7a9/QrP
+         nUrC2brNC/7VxuRg3NEtHDo+Rgdy0aAE1ovpFsU5cOVKcb8sW8pIHqVeyGu/M+Jze/lM
+         eCYA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791228385; x=1791833185; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Vw763NV5BjSaZVhghdUwJpS8A2L5IAuXgkLi18vef04=;
-        b=LfJfX7sDLcrlC2YFzXRa8lQDTQ1idEntfujB+Ef0r9KDtDq2aUc7VPGHL7tyegu8c/
-         RJDEeUqCdG2Nf3vvV9iexCWuxX/RSzsnYQ9NUVXP+tpAuZOrDfA6s+vmt1miL5Yblf0s
-         M+SJSHuKhwxJr0EOvcM15SF+MF732Xi8syZsUiEde6HZ1ve6BijFMxjcv6C1Oa/BJnp2
-         rqAN4OAWduogL9dW6WfgSCeO2hDiLSc2Xdb5K6Ca3b0L72zlsgsMRHi0U8UFwA4zfnSx
-         OzQCDaf3Q3OdcqaCf5wgyvt+sXNsJzsIcXWS8qrK4VzQM2e+LKPKzty1iz4uCZyg+Je7
-         bO1Q==
+        d=google.com; s=20251104; t=1791228811; x=1791833611; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+lWtKVXMW2++bit7wvkgTZ38ocIpzbCdiXdguzjZOQY=;
+        b=dUtjYobtufLPMhmG2rDtmGsQPayGA+L1glKWeIwFTLtufv0wO00MBuc7bT6ZlVg81t
+         0wWnEe5TLaduRNYup36ugDEwSeOSTfLYHAWmMK5cRq8fJlCgq9U6dDGpx4EKh6Ubgbnn
+         FS7VzromC13+fsPtSd4Bxztbx3e4/sUyJ1I9SSoRag9QRGX0zQlxjcn3MQAskjoHGBq5
+         hm9pUAid4CPuzKm29jFl1HwoXEKqzjO7V7mCra6spWpdta1hNg789VMY1IXWzuoosQ08
+         vZNDBzD4YkvNsN7H3OiGOxyDMkwDVJkiHD8yVGjhP/elrVE5epljq39C5xZCxBHkQ2F3
+         /pvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791228385; x=1791833185;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Vw763NV5BjSaZVhghdUwJpS8A2L5IAuXgkLi18vef04=;
-        b=zzrUXjQsDQlODFe9BeJIvk628aCT1xn+H2+MuRK70OXJX7nMfCjcCT3AZUgTWyZI8A
-         +JUT3DOq3831KQUMbqe9H+ubUwyZJeCcQXdfv+a13Z7bMOWBk2+ahqa/meAPjRKpmK2E
-         tl661ayMvllGDi4PDlQt9Q/iy7gwxLUlOlUqP/NFga99gLwR0kOgV1bd9vnDsBq1onZ0
-         r8zYXJgYj91AVsS0nA+osXIKc7SQIo/MOu3I5wb+CUGGJVHdMRcePABtoxpjzV7xcH85
-         dVoE/k1mqBeyNcu/zRQryXYZBcdjAjLoI0nMt1gF+tYDgUKURcpF+t+9ZU49btFZrQlQ
-         PFOg==
-X-Forwarded-Encrypted: i=1; AKwUvBy5loik/yoVP7MT9Dz3E8rcvckP/QCmetlAtWb+UJdVxe5N4hm1B6hCu/n9bhs7SsGZ7To6FxGIInohN0Pan8Y=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKNWeBnPqku/No42e/iBrS1jG6g7xLM2llwO438Wwr8I71lJwjr
-	FcmzcuDIN9KRNFz9pUG9wXKs8J0Qgs4P/y2gZueJuDFRNvB+tszUtfN2FNYCqb+f4R0=
-X-Gm-Gg: AYBFou14XbkDxTSaAc38PCrkh033lhOnJ0Vws16uJ/gL7J+43JirCHEhcFamOii39Ul
-	KG2tzII/yPTWs2EruM2PracnArN0pAkRHTjgikLW80WpbtUpWCP8GF9CoDNDiHHcxFeNmum/Bwd
-	wUJ0o9IsmyDVys/9zjcqYakGH8hjVqVNsPfoVRsKSg6S0BHqhp6BcYAU2nuLJVoiyEF6gLv3cr9
-	tg87pQ76p7x9lvQ1bmKiKP4YAqlSyc3upLQStbVk9J7NCAzVh0W05n0fcRWdJne9E6mXIuKgG1m
-	BBDk072mSPNSGh7rGgz3NsXPviaHVzroUu7lTc0mHa0C3JziXAcE9y3Jm0OwYq9AzMEsJG0QUSM
-	/yo4LhM76Q8QheZ5nULSvlF8kcuMvH2WusB06PaDUEalnJLXWU5MYwglJ2mZzOJPnEiA8jR3FLh
-	gsEJ+n8UltM6OCnvjPp43tb/TSJN4vqL3MEyLLawBorG+wxaSkLC9UhYKqaOgObEhVFUcfs1Jvu
-	YlL+2cTskydnuyt3DUUlhe1FQm2e1BbpZZcny5OM7Tu0IWX8WsY3MIOO+cHP1cX0WYf6YmM/2RH
-	UiRYw5TOdVcP0mmdDBbClSf/7VHCNKfVWzVM5CtQQ5zX/BHh6RPafIQ9f80=
-X-Received: by 2002:a17:90b:498e:b0:3a7:9ad9:68e1 with SMTP id 98e67ed59e1d1-3a79ad96bd7mr6814909a91.13.1791228385236;
-        Mon, 05 Oct 2026 12:26:25 -0700 (PDT)
-Received: from ryzen.lan ([2601:644:8000:7a86::e35])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a853b92679sm850955a91.6.2026.10.05.12.26.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2026 12:26:24 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Lizhi Hou <lizhi.hou@amd.com>,
-	Brian Xu <brian.xu@amd.com>,
-	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCH v2] dmaengine: xilinx: xdma: use kzalloc_flex()
-Date: Mon,  5 Oct 2026 12:26:21 -0700
-Message-ID: <20261005192621.99880-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.56.0
+        d=1e100.net; s=20260707; t=1791228811; x=1791833611;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+lWtKVXMW2++bit7wvkgTZ38ocIpzbCdiXdguzjZOQY=;
+        b=wjm7b2hTHNwGqz1AQ/gwqwP72bWNQzt1ofWYtFyOmpejE+LyvYtrYDKBxu77pEdw3j
+         eYIPeWMj5/FUBNOMhvZz5UCScZAhtFHA04iBUBAsCzfxVnEh7gT/a+gPnMDRKSfLsAzD
+         7+eBmw6PkIimcgOvsezQvbn0fgMbwpl1xgTaMfAAwF8v2bEnJ5EZRVNCiIEDcD/HzXIP
+         SG6TglCSd/Ck3aiqYluEY3n7VSpIBWV4x3TRUb/epTPC5mM0ksWDGxlGA/N5a6JJLX26
+         z+c/Lm8Ml/7CjdsvV23SKib+tqItE4j9daOk6I0H75/pUQyFu0SD98BLwnSqCMQRpl9N
+         EoIQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxYjTRCAHl89jb4J1SeF+eCfGRD5g0ZCCM5IifEzPrMOuhvc9Phgh+zNTMu85DqteoMllP8zhTp6PWzCOAnMM8=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIIFa67d/JLVHiKJs2dUDJreD0GOC8lcCGNhGjfVVVsyxhi8FgH
+	IewMHRgIH5IsWnE0dG/0bFn52MvBvP72yv7LSUGt2AlIgSIGv+QZdM65oj2UoR50dNGnC2YqKVN
+	JwQJ9wtMNyQ3Yh2XC+DDLbfOSpAlS5yLK87Y5pWg=
+X-Gm-Gg: AYBFou0CxyTHRUSmzyEqUdLcUD7Ya6n/yaOfWR0sCWGEGw8c6Wakg9f6yeEKb4Y1mLj
+	/h1z5Em0uuI+KskitgO7YyIo0iK3F0Bgk+euoUIb5M3I68Pg7OJLKe+FSt9g2IOgCpF9kL712nQ
+	tFC5QOYqnHGv93sHBZLUxNn9Qpb5SAD2vQeQnkG9YMW9Pq5UXhAgW3dTdzjtUSf4UhbizxBfzpC
+	k2HbJP0a2HrBMqxMoIa82tvg6c80s1ZGOq2pQ9mr23RS7BptyD8h7RsVUYoH6Eua5ooaIcGio9S
+	o5aqUv6hMc6Sdn/kPLK9FK9iQmN6IEjfX9YPD+1v0rWEspbJfoO/kJhcIBRYtB71ii6Cj845caA
+	nSDgBH5YHmE4lIiqGmhjpr6mw+HM8ds9CxmCE+RAomquIKmLpLxpO
+X-Received: by 2002:a05:6102:4494:b0:7c3:7ce9:4382 with SMTP id
+ ada2fe7eead31-7c37ce9454dmr1299257137.23.1791228809910; Mon, 05 Oct 2026
+ 12:33:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260925204423.80661-1-morbo@google.com> <605221ed-a1b5-4179-be8d-b206c79487d7@intel.com>
+ <CAGG=3QWoa0sK1P2VEAW+76EkFsjzXEZ9ucJg4iiOv29i8Sgzxw@mail.gmail.com> <8093ecff-842a-4063-bb29-4eb4903f7f73@intel.com>
+In-Reply-To: <8093ecff-842a-4063-bb29-4eb4903f7f73@intel.com>
+From: Bill Wendling <morbo@google.com>
+Date: Mon, 5 Oct 2026 12:33:13 -0700
+X-Gm-Features: AclHuK-08Gp8lXrK0ezKgiJftqCSrSRzq-iRMR2siWd-Z9YgizK2rcJ2TL6POD4
+Message-ID: <CAGG=3QVooPkjbNi10D7MwN7WHgyhHderziJzdmEet5ne6dPQSA@mail.gmail.com>
+Subject: Re: [PATCH] gpu/buddy: add __counted_by_ptr attribute to roots
+To: Matthew Auld <matthew.auld@intel.com>
+Cc: Arun Pravin <arunpravin.paneerselvam@amd.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	codemender-patching+linux@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Change desc_blocks to a flexible array member so the descriptor and
-its block array are allocated together, removing one allocation and
-its error handling.
+On Tue, Sep 29, 2026 at 1:36=E2=80=AFAM Matthew Auld <matthew.auld@intel.co=
+m> wrote:
+> On 28/09/2026 19:44, Bill Wendling wrote:
+> > On Mon, Sep 28, 2026 at 5:20=E2=80=AFAM Matthew Auld <matthew.auld@inte=
+l.com> wrote:
+> >>
+> >> On 25/09/2026 21:44, Bill Wendling wrote:
+> >>> In 'struct gpu_buddy', the 'roots' field points to an array of pointe=
+rs
+> >>> to 'struct gpu_buddy_block'. The number of allocated roots is tracked
+> >>> by the 'n_roots' field.
+> >>>
+> >>> Annotate the 'roots' pointer with the '__counted_by_ptr' attribute
+> >>> referencing 'n_roots' to enable compile-time and runtime bounds-check=
+ing
+> >>> via KASAN and '__builtin_dynamic_object_size'.
+> >>>
+> >>> In 'gpu_buddy_init', 'mm->n_roots' is initialized first, and 'mm->roo=
+ts' is
+> >>> subsequently allocated with 'kmalloc_objs(struct gpu_buddy_block *,
+> >>> mm->n_roots)'.
+> >>>
+> >>> Since the bounds associated with 'roots' ('n_roots') are fully set pr=
+ior
+> >>> to any array allocation or access and remain invariant, this annotati=
+on
+> >>> will not cause runtime panics or false-positive bounds checks.
+> >>>
+> >>> Cc: codemender-patching+linux@google.com
+> >>> Assisted-by: LLM
+> >>> Signed-off-by: Bill Wendling <morbo@google.com>
+> >>
+> >> Reviewed-by: Matthew Auld <matthew.auld@intel.com>
+> >>
+> >> Would it make sense to also do this for *_scoreboard and free_tree, if
+> >> we add a new field n_orders?
+> >>
+> > Sure! There's already a 'max_order'. I assume that 'n_orders' would be
+> > more dynamic?
+>
+> Yeah, I think just mm.n_orders =3D max_order + 1. I assume the
+> __counted_by_ptr() only works with a field?
+>
+Well, yes*.
 
-Add __counted_by for extra runtime analysis, and set dblk_num right
-after allocation which is already done by kzalloc_flex() for GCC >= 15.
+* The original Clang design of __counted_by (and associated)
+attributes accepted context-free expressions. However, GCC isn't able
+to handle expressions and we weren't able to agree on a syntax that
+was acceptable to both compiler teams. Thus, we won't be supporting
+expressions in these attributes, unless something miraculous happens.
 
-Assisted-by: LLM
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/dma/xilinx/xdma.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+-bw
 
-diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index 8d4a5d14e8db..16d202722245 100644
---- a/drivers/dma/xilinx/xdma.c
-+++ b/drivers/dma/xilinx/xdma.c
-@@ -81,7 +81,6 @@ struct xdma_chan {
-  * @vdesc: Virtual DMA descriptor
-  * @chan: DMA channel pointer
-  * @dir: Transferring direction of the request
-- * @desc_blocks: Hardware descriptor blocks
-  * @dblk_num: Number of hardware descriptor blocks
-  * @desc_num: Number of hardware descriptors
-  * @completed_desc_num: Completed hardware descriptors
-@@ -91,12 +90,12 @@ struct xdma_chan {
-  * @period_size: Size of a period in bytes in cyclic transfers
-  * @frames_left: Number of frames left in interleaved DMA transfer
-  * @error: tx error flag
-+ * @desc_blocks: Hardware descriptor blocks
-  */
- struct xdma_desc {
- 	struct virt_dma_desc		vdesc;
- 	struct xdma_chan		*chan;
- 	enum dma_transfer_direction	dir;
--	struct xdma_desc_block		*desc_blocks;
- 	u32				dblk_num;
- 	u32				desc_num;
- 	u32				completed_desc_num;
-@@ -106,6 +105,7 @@ struct xdma_desc {
- 	u32				period_size;
- 	u32				frames_left;
- 	bool				error;
-+	struct xdma_desc_block		desc_blocks[] __counted_by(dblk_num);
- };
- 
- #define XDMA_DEV_STATUS_REG_DMA		BIT(0)
-@@ -255,7 +255,6 @@ static void xdma_free_desc(struct virt_dma_desc *vdesc)
- 			      sw_desc->desc_blocks[i].virt_addr,
- 			      sw_desc->desc_blocks[i].dma_addr);
- 	}
--	kfree(sw_desc->desc_blocks);
- 	kfree(sw_desc);
- }
- 
-@@ -276,26 +275,22 @@ xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num, bool cyclic)
- 	void *addr;
- 	int i, j;
- 
--	sw_desc = kzalloc_obj(*sw_desc, GFP_NOWAIT);
-+	dblk_num = DIV_ROUND_UP(desc_num, XDMA_DESC_ADJACENT);
-+	sw_desc = kzalloc_flex(*sw_desc, desc_blocks, dblk_num, GFP_NOWAIT);
- 	if (!sw_desc)
- 		return NULL;
- 
-+	sw_desc->dblk_num = dblk_num;
- 	sw_desc->chan = chan;
- 	sw_desc->desc_num = desc_num;
- 	sw_desc->cyclic = cyclic;
- 	sw_desc->error = false;
--	dblk_num = DIV_ROUND_UP(desc_num, XDMA_DESC_ADJACENT);
--	sw_desc->desc_blocks = kzalloc_objs(*sw_desc->desc_blocks, dblk_num,
--					    GFP_NOWAIT);
--	if (!sw_desc->desc_blocks)
--		goto failed;
- 
- 	if (cyclic)
- 		control = XDMA_DESC_CONTROL_CYCLIC;
- 	else
- 		control = XDMA_DESC_CONTROL(1, 0);
- 
--	sw_desc->dblk_num = dblk_num;
- 	for (i = 0; i < sw_desc->dblk_num; i++) {
- 		addr = dma_pool_alloc(chan->desc_pool, GFP_NOWAIT, &dma_addr);
- 		if (!addr)
--- 
-2.56.0
-
+> >
+> > -bw
+> >
+> >>> ---
+> >>>    include/linux/gpu_buddy.h | 2 +-
+> >>>    1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/include/linux/gpu_buddy.h b/include/linux/gpu_buddy.h
+> >>> index 2c36124bb696..d7249e500ab6 100644
+> >>> --- a/include/linux/gpu_buddy.h
+> >>> +++ b/include/linux/gpu_buddy.h
+> >>> @@ -172,7 +172,7 @@ struct gpu_buddy {
+> >>>         * a power of two, with each root being the largest power-of-t=
+wo
+> >>>         * that fits in the remaining space.
+> >>>         */
+> >>> -     struct gpu_buddy_block **roots;
+> >>> +     struct gpu_buddy_block **roots __counted_by_ptr(n_roots);
+> >>>        /*
+> >>>         * Per-order free block scoreboard: free_scoreboard[order] hol=
+ds the
+> >>>         * number of blocks of that order currently in the free state.
+> >>
+>
