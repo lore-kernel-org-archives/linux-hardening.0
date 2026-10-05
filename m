@@ -1,132 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5103456DF7;
-	Mon,  5 Oct 2026 09:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67146429CD3;
+	Mon,  5 Oct 2026 09:41:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791193200; cv=none; b=f0NFJP7lZem+/uFwaHJ1UUKa5OE360uCCIe9W2O2rGtlg356R0WkgJNTvKCQYS6bB0DZnE7INgdbiCPBhyqT53thTgk1Dvk3qD3d72uhaat6JBUFoePIqOP1f7tV7WlgAbs6bzzMTWM94EN8iTGDVjLkXi25xObQFdQGdVtrno8=
+	t=1791193312; cv=none; b=Gfm7jIDTuiHcJA8E8zRexONseAPtbv3RX5I0rQFkypnvNb/Xbf4o4bpAWxDTsqZiaRRMzmWCBadla1D3IOjn9DA1VkIkC/KubbXFZiagXoia9HxSKQ03+JEM9hgZApImWKGZUfQ9yP8bCbAGMDCyaOde4McemaHg73qgbWc3sUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791193200; c=relaxed/simple;
-	bh=dZqaVEMkMsvnLB4knzso3sC80VZrS3VpEn9EcK5gSgA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bcrpnIAH5gS4IsM0rr8B8/KYijXn8FQroBCPwLZVMlix3jB0EpiZRTRVlGYkCyJhL/khdzQcg/yyRxrPpuIvDPkn/p5N/GduezB37+40gZgSDzmvm1FE3UMZj511fa7Zo53LSD4ojMsHOfup71KRJK3korUP1FXIZWa2QJokfbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClE1enZJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791193312; c=relaxed/simple;
+	bh=YmA6dwPnB7fspACQ+NAapvSS8JHNs0dU4uIYKCI0t+o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=efTliqloxfMjv+iNKsZeM2VYRTLwDSJbKbj0/5glCnqrYAKbfhTGFAJOIFmsin0hMK3A+cHR0yka/99e8Os3hwZ9IbHD/sNyz8yGcR2+Hpy+wqu2dQ+IDYAtle7DESFx/Kmmh+X3l3La7ssApYp1wziw9eTHwhTyOBKTAiWa55Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkKSOTKS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClE1enZJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7C581F000FF;
-	Mon,  5 Oct 2026 09:39:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkKSOTKS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B793C1F000FF;
+	Mon,  5 Oct 2026 09:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791193191;
-	bh=R+OW8qZ/8Z1xmR8Z8rFTwHf1YOIvisi5Vg+5hWQxj8w=;
-	h=From:To:Cc:Subject:Date;
-	b=ClE1enZJTDGEwfipmLMu/DU0gs1dKXhgSjedX2Xhi74DCTEEBFRJfspe5csuV+uLn
-	 jgJsHCFVZTQcaIGJenJBdhP24dot4BEiFPqcc99MyDwdiXAj7bV17lvr5IwR+wG5sf
-	 F8s1H+THDp8Fme3BLs7Qad/ddTfJfMf75Xb35xR5+rZaiFkjcIYhL4tAcwX/LHcxVt
-	 hrtVe4Qgo1zkVdhjkGo3Ph2vWoY+SmfD6KTda/WIYLNEnlw9RgTLQzjYoPChlBqv/d
-	 4vzqrwm5j7ZONV8sUivzrqrwqwKizwy9djVqc/6FkhvWe7oOhjackXZFesZ6rgIjMP
-	 a8C+RjfXIv7wQ==
+	s=k20260515; t=1791193304;
+	bh=5qRaFVG1znfEgV3eRV8N3tWdGJuQmQSHqzBWXBhLT+g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=fkKSOTKSO1AbCyGCaTIOrzCj1t6fSVSy6PgjZ6bjOvK990c51a8SS6KyAqgrCrIdY
+	 NBBbtkZYrY5rLHvjXez8ug53fXZBV4Kxz4gmZuFZJjhpPFzqKs3n+37WbBs9pVLKQO
+	 KIEA1b/qFVcBlDFB5iqMrB8RjNiTcfZ9Mq8k8bJc0JP1t+gwDCYs0xndE5KfXnYLyg
+	 NgU4KquCug07i7ZfU+gLIkbK5ltjP8hZz8bFpKknE/nXf86lRMLWHJg0Ayyhy3S6i6
+	 Fi0uXd9QwPwOuXYL2ajQAHDIAMiVKsAAU8B0rwKHwJceesRFobEcLJaqrDyAOJFc9L
+	 Zz5oTAFbbtqdg==
 From: Kees Cook <kees@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
+To: Nathan Chancellor <nathan@kernel.org>,
+	Justin Stitt <justinstitt@google.com>
 Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kunit/stackinit: Clean up XFAIL under instrumentation
-Date: Mon,  5 Oct 2026 02:39:49 -0700
-Message-ID: <20261005093945.i.566-kees@kernel.org>
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] kunit/stackinit: Cover declarations bypassed by goto and switch
+Date: Mon,  5 Oct 2026 02:41:35 -0700
+Message-ID: <179119329489.226996.14504267736248191429.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261002-kspp-125-v1-1-91286a454fda@google.com>
+References: <20261002-kspp-125-v1-1-91286a454fda@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3538; i=kees@kernel.org; h=from:subject:message-id; bh=dZqaVEMkMsvnLB4knzso3sC80VZrS3VpEn9EcK5gSgA=; b=owGbwMvMwCVmps19z/KJym7G02pJDFmHC1INeqZNM+LgWyswce8uSbnTM7evm3JUc//Be88Oy v8IP2t/tKOUhUGMi0FWTJElyM49zsXjbXu4+1xFmDmsTCBDGLg4BWAiDmWMDEf6liaL3l5f787r 1e0RZPSzc96WaUmMgb6tqV5CnT+ZgSr+eK4xmb7pkpRS4b+n/MlZkhM9ynh2W3VWbtzGG+7uH8U GAA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Commit 8530ea3c9b97 ("Kbuild: remove structleak gcc plugin") dropped
-the stackinit GCC plugins, so there is no longer a gradient of test
-coverage. Collapse the now identical USER_PASS, BYREF_PASS, STRONG_PASS
-into a single INSTRUMENTED_PASS definition.
+On Fri, 02 Oct 2026 12:12:53 -0700, Justin Stitt wrote:
+> Under -ftrivial-auto-var-init= the initialization is emitted where a
+> variable is declared. A switch dispatch that reaches a case label below
+> the declaration, or a goto that jumps past it, never reaches that point,
+> so the variable was left uninitialized.
+> 
+> Commit 9cf016e6b49b ("lib: test_stackinit.c: XFAIL switch variable init
+> tests") marked test_switch_1_none and test_switch_2_none as expected
+> failures, noting the test should be retained "so that we can evaluate
+> compiler fixes". Clang 24 emits the initialization on the jumps that
+> bypass the declaration, so make the expectation depend on the compiler
+> version instead of failing unconditionally.
+> 
+> [...]
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- lib/tests/stackinit_kunit.c | 40 +++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
+Applied to for-next/hardening, thanks!
 
-diff --git a/lib/tests/stackinit_kunit.c b/lib/tests/stackinit_kunit.c
-index 4788f6c10c04..d589536afa20 100644
---- a/lib/tests/stackinit_kunit.c
-+++ b/lib/tests/stackinit_kunit.c
-@@ -369,17 +369,13 @@ union test_small_end {
- 	char four;
- };
- 
--#define ALWAYS_PASS	WANT_SUCCESS
--#define ALWAYS_FAIL	XFAIL
-+#define ALWAYS_PASS		WANT_SUCCESS
-+#define ALWAYS_FAIL		XFAIL
- 
- #ifdef CONFIG_INIT_STACK_NONE
--# define USER_PASS	XFAIL
--# define BYREF_PASS	XFAIL
--# define STRONG_PASS	XFAIL
-+# define INSTRUMENTED_PASS	XFAIL
- #else
--# define USER_PASS	WANT_SUCCESS
--# define BYREF_PASS	WANT_SUCCESS
--# define STRONG_PASS	WANT_SUCCESS
-+# define INSTRUMENTED_PASS	WANT_SUCCESS
- #endif
- 
- /*
-@@ -388,7 +384,7 @@ union test_small_end {
-  * test expectation based on CONFIG_INIT_STACK_NONE above.
-  */
- #if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION >= 240000
--# define BYPASS_PASS	STRONG_PASS
-+# define BYPASS_PASS	INSTRUMENTED_PASS
- #else
- # define BYPASS_PASS	XFAIL
- #endif
-@@ -443,23 +439,23 @@ DEFINE_STRUCT_TESTS(old_zero, ALWAYS_PASS);
- DEFINE_UNION_TESTS(zero, ALWAYS_PASS);
- DEFINE_UNION_TESTS(old_zero, ALWAYS_PASS);
- /* Struct initializers: padding may be left uninitialized. */
--DEFINE_STRUCT_INITIALIZER_TESTS(static, STRONG_PASS);
--DEFINE_STRUCT_INITIALIZER_TESTS(dynamic, STRONG_PASS);
--DEFINE_STRUCT_INITIALIZER_TESTS(runtime, STRONG_PASS);
--DEFINE_STRUCT_INITIALIZER_TESTS(assigned_static, STRONG_PASS);
--DEFINE_STRUCT_INITIALIZER_TESTS(assigned_dynamic, STRONG_PASS);
-+DEFINE_STRUCT_INITIALIZER_TESTS(static, INSTRUMENTED_PASS);
-+DEFINE_STRUCT_INITIALIZER_TESTS(dynamic, INSTRUMENTED_PASS);
-+DEFINE_STRUCT_INITIALIZER_TESTS(runtime, INSTRUMENTED_PASS);
-+DEFINE_STRUCT_INITIALIZER_TESTS(assigned_static, INSTRUMENTED_PASS);
-+DEFINE_STRUCT_INITIALIZER_TESTS(assigned_dynamic, INSTRUMENTED_PASS);
- DEFINE_STRUCT_TESTS(assigned_copy, ALWAYS_FAIL);
--DEFINE_UNION_INITIALIZER_TESTS(static, STRONG_PASS);
--DEFINE_UNION_INITIALIZER_TESTS(dynamic, STRONG_PASS);
--DEFINE_UNION_INITIALIZER_TESTS(runtime, STRONG_PASS);
--DEFINE_UNION_INITIALIZER_TESTS(assigned_static, STRONG_PASS);
--DEFINE_UNION_INITIALIZER_TESTS(assigned_dynamic, STRONG_PASS);
-+DEFINE_UNION_INITIALIZER_TESTS(static, INSTRUMENTED_PASS);
-+DEFINE_UNION_INITIALIZER_TESTS(dynamic, INSTRUMENTED_PASS);
-+DEFINE_UNION_INITIALIZER_TESTS(runtime, INSTRUMENTED_PASS);
-+DEFINE_UNION_INITIALIZER_TESTS(assigned_static, INSTRUMENTED_PASS);
-+DEFINE_UNION_INITIALIZER_TESTS(assigned_dynamic, INSTRUMENTED_PASS);
- DEFINE_UNION_TESTS(assigned_copy, ALWAYS_FAIL);
- /* No initialization without compiler instrumentation. */
--DEFINE_SCALAR_TESTS(none, STRONG_PASS);
--DEFINE_STRUCT_TESTS(none, BYREF_PASS);
-+DEFINE_SCALAR_TESTS(none, INSTRUMENTED_PASS);
-+DEFINE_STRUCT_TESTS(none, INSTRUMENTED_PASS);
- /* Initialization of members with __user attribute. */
--DEFINE_TEST(user, struct test_user, STRUCT, none, USER_PASS);
-+DEFINE_TEST(user, struct test_user, STRUCT, none, INSTRUMENTED_PASS);
- 
- /*
-  * Check two uses through a variable declaration outside either path,
+[1/1] kunit/stackinit: Cover declarations bypassed by goto and switch
+      https://git.kernel.org/kees/c/6bf37b9c59dc
+
+Take care,
+
 -- 
-2.55.0
+Kees Cook
 
