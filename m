@@ -1,118 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6E9419FBE
-	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 22:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB7D34EF1F;
+	Mon,  5 Oct 2026 23:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791239907; cv=none; b=HglG//OosNmv0QpWUVnL9ut5uR3ocGwRm2wE2v5UiUyuNdbtVWvNK5CCMO2lxrK6OswdlVkkHuiJevQZDknCVqpHZGXD6Fkm0EPiIczc5BrwrTmjEZI4z2H9fC+1dyebrtvhDpuVkNvXOHtb7qoP+bCIu2TMz/EDx/qa+XUariI=
+	t=1791241438; cv=none; b=TzOg6zM8LWRzVxCZzSwAawns9DM7DtpZw2OXNGFqT3Z2MFtUVXR6rbLywbTOtB4G+GdZUjo28pFaGO/epjJd28v2SSI1ji0oayOlCHXf0xCO0d0VVDnAxuhJpghn2GSvwxZ3qYYV3/Xevm6fjip+0uSXh7tyySYP6G7dWWEGirw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791239907; c=relaxed/simple;
-	bh=Bhu2uapcjjCS2hQDun65SSmI7hee53RbiELHGh8w+v0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dapb9yjoEx6ynEuIg3jNriRWEjxwPRsvZK6RpY2obbiIlck4QtyKOx8BPYD0OhSuq0I1Gp9Hr4NYM9pevX4KNDrLUx7sKShBQ7aHyp0I0Ad4lrPhLwC2GvuFF47FMnXRSKCFlApRWywuU28KBgSEnxHJulfXcAUisYDaV3eKUrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMpU4ey5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791241438; c=relaxed/simple;
+	bh=P6JQPlHoeafJGRYinVjy9w8WTTzF6bJg18Bvk4Fd1vQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=MUQtcWKg4VV/+xiL0mPgX6WW3VamTn2N9qRJD5D/dFCMbPNa49tG5H0k5eMEDMdlTkkTYPbpXFYvewdGY4lLmpBfW2UL7j+DJu+YsfBvAA9oII7Xeqku5vz968V/d8lHe9ahj02tZg4gAD9BMAcmEY8zFlCIbLYJ9fkG+Uq6kJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=qOJnVq0f; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMpU4ey5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92AF51F000FF;
-	Mon,  5 Oct 2026 22:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791239905;
-	bh=wNWJWgmViHDiOoH4De29+OQ98Oh1OCsBApNbFhTo+Mo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aMpU4ey5kJLsTZyL3BfeZYdxhr/HI7H6seAjUEioEjByXu493V+3lq09dWjklZ/fn
-	 HFxP9jkFnUXg/mzL1k0D6k/edvC5pMHQtHWcfe8fbvClgIVb6gNX/0yVY9K/cqOPEP
-	 t4tQ+RUkqQxaG9W0/VuH+wu9x1QuN/UOVRSLxsoKVUUu15M9iRClHXlyI/lfMup3Md
-	 ksQWJpegGDLeuhzpfyhfE741Vvx6vuW5kgXfjw6Z/gh9bSkoj6nCvMcM/TMeUOUSmV
-	 1MbK/ab+ObmUfcIp69/x9EDC0TG1KWGgoSrfCpG+/IeGyx9rgbp4Y4Ss31CThTrQf2
-	 2yM9yq6bGXPgA==
-Date: Mon, 5 Oct 2026 15:38:25 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jakub Jelinek <jakub@redhat.com>
-Cc: Andrea Pinski <andrew.pinski@oss.qualcomm.com>,
-	Jeffrey Law <jefflaw@qti.qualcomm.com>,
-	Joseph Myers <josmyers@redhat.com>,
-	Richard Biener <rguenther@suse.de>,
-	Martin Uecker <uecker@tugraz.at>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Uros Bizjak <ubizjak@gmail.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Jan Hubicka <hubicka@ucw.cz>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Richard Sandiford <richard.sandiford@arm.com>,
-	Marcus Shawcroft <marcus.shawcroft@arm.com>,
-	Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-	Kito Cheng <kito.cheng@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Waterman <andrew@sifive.com>,
-	Jim Wilson <jim.wilson.gcc@gmail.com>,
-	Dan Li <ashimida.1990@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Joao Moreira <joao@overdrivepizza.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Osterlund Sebastian <sebastian.osterlund@intel.com>,
-	Constable Scott D <scott.d.constable@intel.com>,
-	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v16 4/7] x86: Add x86_64 Kernel Control Flow Integrity
- implementation
-Message-ID: <20261005221221.ca9a3d-kees@kernel.org>
-References: <20260902164928.stay.466-kees@kernel.org>
- <20260902164935.1390773-4-kees@kernel.org>
- <asOBQfGfzUOX4uFq@tucnak>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="qOJnVq0f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:Cc:To:From:Subject:
+	MIME-Version:Date:Message-ID:From:Reply-To;
+	bh=zUJ5Wg4hDTNRhIDxP93tWlP4XCV4f22ojxdYcCOKUDI=; b=qOJnVq0fAk9690E4Y+J8xQDk4C
+	wHTkhnooMFjCLB2rcjuYLl6wPWvgQPmVhEV20SPd9G7xkz5ddTFnKASJ2IQ42wfjCdNbokhlC1FaN
+	3JgPAa1njzOD7NwMIaG+LsasgaoV/I4rEQEG4u0lCru2lOVaTLCtvv9mc1v9JGXIowhHKQxBSRpA1
+	12j6pZ7gAPDVjVUlQKF2XuoZQkTtkrkdCnasJjROAiRoN8SXjtgg284hpDeJtbx5JcGURPYMgEGYy
+	Ut9cxcRikDPoxeKQA37plB1z7WBo/mIHeyh0E5qWL3ZQYatpAw/Mk3knmW/EyIy1rgbJW2BfoPUP1
+	m0O7IGOg==;
+Received: from [187.90.178.110] (helo=[192.168.15.93])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1xDrih-00C5aM-42; Tue, 06 Oct 2026 01:03:43 +0200
+Message-ID: <9b44943a-fd07-ba56-b5b4-77777f64685f@igalia.com>
+Date: Mon, 5 Oct 2026 20:03:37 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <asOBQfGfzUOX4uFq@tucnak>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] efi: pstore: Fix pstore_disable parameter setting (if
+ built as module)
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: Ard Biesheuvel <ardb@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: linux-efi@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Tony Luck <tony.luck@intel.com>, stable@vger.kernel.org,
+ kernel-dev@igalia.com, kernel@gpiccoli.net
+References: <20260906235838.2928815-1-gpiccoli@igalia.com>
+ <273c9217-4630-4585-8cb5-3c5c8f0b77d3@app.fastmail.com>
+ <cdd454e2-a311-71b5-2449-25cdfba893fd@igalia.com>
+Content-Language: en-US
+In-Reply-To: <cdd454e2-a311-71b5-2449-25cdfba893fd@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 05, 2026 at 12:51:45PM +0200, Jakub Jelinek wrote:
-> What is reason to use movl + addl instead of just cmpl?
-> I mean,
-> int foo (int *p) { return *p == 0x12345678; }
-> is compiled into
-> 	cmpl	$305419896, (%rdi)
-> so I wonder why you can't just compare -4(%r11) with
-> a 32-bit immediate.
-> Are you trying to avoid the immediate to be present in the insn
-> sequence, so that nothing can do an indirect call to the insn after this
-> compare?
+On 09/09/2026 14:12, Guilherme G. Piccoli wrote:
+> Hi Ard, thanks for your prompt response!
+> 
+> 
+>>> [...]
+>>>  	if (pstore_disable)
+>>>  		return 0;
+>>>
+>>> +	if (efi_pstore_info.bufsize)
+>>> +		return 0;
+>>> +
+>>
+>> Can we please address the root cause rather than paper over it here?
+>>
+>> What is the point of having a) a pstore_disable= param on a module
+>> (which can be blacklisted or simply not loaded) and b) having it
+>> runtime writable so pstore-efi can be toggled on/off at will?
+>>
+> 
+> Well ... despite we agree on that, I think removing pstore_disable is
+> kinda breaking "the contract" we're following since long time ago.
+> 
+> The thing is: unlike ramoops, or even maybe pstore/blk and other
+> potential backends, efi_pstore is a bit of a different beast IIUC.
+> 
+> It doesn't require any config, by having it loaded, it'll just go ahead
+> and ...get enabled as pstore backend (unless pstore.backend sets otherwise).
+> 
+> And not only that: efi_pstore is **usually built-in** - I guess in all
+> distros I've checked and by default config, it's built-in.
+> 
+> So, probably to avoid having to use {initcall,module}_blacklist
+> (depending on the build type), I guess it was decided to have this
+> parameter. The commit [0] that added that, >13y ago, mentions that since
+> it was enabled by default and some EFI implementations had issues when
+> filling its memory with oops logs, the option was to add such
+> parameter+Kconfig to force disabling efi_pstore. Good decision or not,
+> we should now live with that IMO.
+> 
+> 
+>> Also, the practice of controlling the functionality of a builtin
+>> diagnostic feature by poking something under /sys/module/foo/params
+>> is in rather poor taste IMNSHO.
+>>
+> 
+> Not only poor taste, I would say super counter-intuitive. But allowing
+> the sysfs playing was added by myself, to enable users to change it
+> without requiring a reboot, for a very cheap cost (well...not so cheap,
+> since I added a bug and here am I now, trying to fix it heh).
+> 
+> If we require a reboot, we are in the same situation of kdump -
+> crashkernel must be set on command-line and requires a reboot to
+> properly reserve the memory. There is no technical reason for that in
+> case of efi_pstore, at least, none I can see.
+> 
+> 
+> So, with all that said, what is the path you suggest we follow?
+> 
+> a) This simple fix (or something similar)?
+> 
+> b) Drop entirely pstore_disable, risking a lot of users to just face
+> breakages in their setups?
+> 
+> c) Other ideas?
+> 
 
-Right, though there are actually a couple reasons. And Peter, please
-keep me honest here if I've forgotten something...
 
-First is to keep the resulting live register contents free of
-the hash value itself so it can't be used for register content
-re-use/exfiltration/side-channels[0]. (While the emitted binary for KCFI
-has "known" hashes, Linux mutates all hash locations on x86_64 with a
-per-boot random value. This is another use of the trap annotation section:
-all KCFI call sites are known, and similarly all KCFI targets are known,
-so Linux XORs them all. And let me tell you how much fun it was to debug
-THAT[1] when I messed up making the targets visible correctly.)
+Hey Ard / Kees, gentle ping - how should / could we proceed here?
 
-Second is to avoid always injecting a valid target into the insn sequence,
-but this is less important because lots of modern hardware will have
-IBT active, so it wouldn't actually be a usable entry point.
+Apologies for the ping during LPC week, no hurries - just didn't want to
+leave this bug without fixing waaay too much time heh
 
-And then, pragmatically, it's what Linux expects there. The kernel's
-KCFI FineIBT implementation[2] and the trap handlers[3] both expect
-exactly that sequence of bytes today.
 
-The commit log kind of hints at part of this, but you make a good point
-that it is not really well spelled out. Should I improve the commit
-log or the comments? It seems lengthy for a code comment, but it's less
-discoverable in the commit log.
-
--Kees
-
-[0] https://lore.kernel.org/lkml/656a965d6241d3a697180cc4d05ada2b@overdrivepizza.com/
-[1] https://lore.kernel.org/lkml/20250904034656.3670313-5-kees@kernel.org/
-[2] https://elixir.bootlin.com/linux/v7.3-rc2/source/arch/x86/kernel/alternative.c#L1316
-[3] https://elixir.bootlin.com/linux/v7.3-rc2/source/arch/x86/include/asm/cfi.h#L47
-
--- 
-Kees Cook
+Cheers!
