@@ -1,127 +1,288 @@
-Received: from sunucu.ihale.com.tr (unknown [95.173.178.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F3D343899
-	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 06:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.173.178.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D8430E0F2;
+	Mon,  5 Oct 2026 08:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791182285; cv=none; b=H5zL1w5ZcNdpflmNbtijaLsbDndBOfIrISulINQpYlMzR1X62lybbzCrZGFNLftyJ/20bv4WUB1lkTw60dNfnw1RE31VeyDQqTshmwCQqdOZ3VkeCqgxP6xNX06bekWtNYwB97Qd3rhIyAg57/J6JjKSaitqJ73kucPaHAmT254=
+	t=1791187633; cv=none; b=teeseZxfoGViWoQbgnYrESujSf2qVluY7v55v/F04bLFNesLk+SvKMOmQjNTZLluyUqMUxFiWYmg0VNu+q8MNIOpKUUFsNEB9Ro9grBgRbnnuh572OoRGZE584jtDe4wL/odvBEXmYJ28nHAoGNPvQ0CxsmnGqVjY5MalYQ7p0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791182285; c=relaxed/simple;
-	bh=GCuqivoAUOuohjs7VuXXiIbk8atlNTAptE1Sgr60/eU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=glhMDkOfKCZHr2SjMP7EPeRLylQceG7Mos4i0w/rhmuDe7LT+EcznHHLbPf3vDaUgBP89jVITO34O0ARscn0TLlhB22wfpCAqMJGR4Uo2PsFM5vhxMbC8FNZfW/q22Xrz8678A20ArgKb3B0wLgV+Z7LdvhXcq97xQZLSTxUZGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=legendhomework.com; spf=pass smtp.mailfrom=legendhomework.com; dkim=pass (2048-bit key) header.d=legendhomework.com header.i=@legendhomework.com header.b=g6lY3/Sl; arc=none smtp.client-ip=95.173.178.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=legendhomework.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=legendhomework.com
+	s=arc-20240116; t=1791187633; c=relaxed/simple;
+	bh=oAzDZvJEFg6Zv5WuIIwGSr2KQzitVQAnj6q1eGpQJxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ScuiqWF2/AqDhvCEZdPUicG6y0v1z8Z05ZbvKXxTbri7Qz43/FTN9AOykHnSKLP3+pkqwkWe4qpSGkgJAY3XaZYqoZMQ6hsgdNfWCI1a977yAjwy7KaKe1JVYgse5SNNr//CZKV6O5wM1vvBaIV4JqXJunP/uM10TPmV9dNL8mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJOnsvUU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=legendhomework.com header.i=@legendhomework.com header.b="g6lY3/Sl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=legendhomework.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Sender:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Unsubscribe-Post:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5lmJJ0mEKCC15dQaupFmVY6/ZNMzkad8UFLiXk6+8uk=; b=g6lY3/Sl2u1adHkcT1kWh8DrT7
-	7vkYONAxs8TL40yJ/EFzpfAaM8FdhY8MivdZnpTSKvVlartwWj7IwB6vW9Ur/5b0eFfAMzQyRkeRK
-	YQAK03vYBcPBgb9CMWmh7calc/7MUitPNVe1elsUEc67XqxljbwczzeqVJSZ4mQIp8VqovCTT8YWO
-	cSk3UIVoHw0swwdJOiXCgsEabAvAMzBg4v6U5hE6DHrIrJBjSdR81PVFuL4fRmDWrkWEszLMio0sr
-	bORCCu+4URu8bKABzPlLdxL7wQDGBfylruR//KO4kVisZf3X/RYVdxbOzlnFMYj5qDvIei6WCbRB1
-	UxN1vhqQ==;
-Received: from [154.120.97.226] (port=65242 helo=legendhomework.com)
-	by 95-173-178-186.cprapid.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.100.1)
-	(envelope-from <info-llhm@legendhomework.com>)
-	id 1xDcKe-0000000CPqH-01xM
-	for linux-hardening@vger.kernel.org;
-	Mon, 05 Oct 2026 09:37:54 +0300
-Reply-To: perrymail@tutamail.com
-From: info-llhm@legendhomework.com
-To: linux-hardening@vger.kernel.org
-Subject: Your Consent
-Date: 04 Oct 2026 23:37:54 -0700
-Message-ID: <20261004233754.04FE86EFC30060C4@legendhomework.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJOnsvUU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D401F000FF;
+	Mon,  5 Oct 2026 08:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791187631;
+	bh=pfHW3K5w13Dkio99Zn3/wVEATo3Ndc3O152LdPxJdVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=nJOnsvUUQdb6Wx362HMhtoXW9DFoKE9CCIukGK2zMmoxR4DsKElNx1TMaxSZ7qglB
+	 NrR0cpYD03ZsPZ8W7pUG5lcjsGaLl5kQZcwEFOC2soOavPjFpkebt1RxxpxCQUo8me
+	 88ELUiHvazikTOV/XyQBiJbhmVqg2WKYBUDw/BeGoXLJKvAgTMGmkg9VSe3qzs9bJO
+	 TwHjVJ/9yx4Z7DnyGnWQljYvui+IadUlc9raED2+FwnscbybBLer9lZVYgbCYDDlPp
+	 RAJ0kdvJEvWAHAEoK5t3ckkLkpr+eEnruXbUWTWeR/cF/Vh9gIFimaiIbSQ1ATf0JE
+	 K6tSEBXibbcGw==
+Date: Mon, 5 Oct 2026 10:07:02 +0200
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Rosen Penev <rosenp@gmail.com>, Kees Cook <kees@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, 
+	Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
+Subject: *allocflex() (was: [PATCH] drm/exynos: fimc: allocate formats as a
+ flexible array member)
+Message-ID: <asNWiJT4Io2R7xGt@debian>
+References: <20261005001118.576198-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cd4qmvxj2ervr6g5"
+Content-Disposition: inline
+In-Reply-To: <20261005001118.576198-1-rosenp@gmail.com>
+
+
+--cd4qmvxj2ervr6g5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - 95-173-178-186.cprapid.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - legendhomework.com
-X-Get-Message-Sender-Via: 95-173-178-186.cprapid.com: authenticated_id: info-llhm@legendhomework.com
-X-Authenticated-Sender: 95-173-178-186.cprapid.com: info-llhm@legendhomework.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Rosen Penev <rosenp@gmail.com>, Kees Cook <kees@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, 
+	Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
+Subject: *allocflex() (was: [PATCH] drm/exynos: fimc: allocate formats as a
+ flexible array member)
+Message-ID: <asNWiJT4Io2R7xGt@debian>
+References: <20261005001118.576198-1-rosenp@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <20261005001118.576198-1-rosenp@gmail.com>
 
-Greetings,
+Hi,
 
-My name is Dr. Innocent Bariate Barikor, Director-General of the=20
-National Environmental Standards and Regulations Enforcement=20
-Agency Nigeria - (NESREA).
+> Date: 2026-10-04 17:11:18-0700
+> From: Rosen Penev <rosenp@gmail.com>
+>
+> The formats array is allocated separately with devm_kcalloc() and only
+> referenced through the fimc_context. Make it a flexible array member at
+> the end of the context and allocate both in one go with struct_size().
+>=20
+> Annotate it with __counted_by(num_formats) so the array accesses can be
+> bounds checked with FORTIFY_SOURCE and UBSAN_BOUNDS.
+>=20
+> Assisted-by: LLM
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_fimc.c | 17 +++++------------
+>  1 file changed, 5 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimc.c b/drivers/gpu/drm/e=
+xynos/exynos_drm_fimc.c
+> index 09e33a26caaf..079d24d0671c 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+> @@ -99,7 +99,6 @@ struct fimc_context {
+>  	void		*dma_priv;
+>  	struct device	*dev;
+>  	struct exynos_drm_ipp_task	*task;
+> -	struct exynos_drm_ipp_formats	*formats;
+>  	unsigned int			num_formats;
+> =20
+>  	void __iomem	*regs;
+> @@ -108,6 +107,7 @@ struct fimc_context {
+>  	struct fimc_scaler	sc;
+>  	int	id;
+>  	int	irq;
+> +	struct exynos_drm_ipp_formats	formats[] __counted_by(num_formats);
+>  };
+> =20
+>  static u32 fimc_read(struct fimc_context *ctx, u32 reg)
+> @@ -1273,20 +1273,16 @@ static int fimc_probe(struct platform_device *pde=
+v)
+>  	if (exynos_drm_check_fimc_device(dev) !=3D 0)
+>  		return -ENODEV;
+> =20
+> -	ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	num_formats =3D ARRAY_SIZE(fimc_formats) + ARRAY_SIZE(fimc_tiled_format=
+s);
+> +	ctx =3D devm_kzalloc(dev, struct_size(ctx, formats, num_formats), GFP_K=
+ERNEL);
 
-As part of my official responsibilities, I monitor environmental=20
-compliance and pollution associated with oil and gas exploration,=20
-drilling, and production activities in the Niger Delta and=20
-submits relevant findings to the Presidency.
+Unrelated to this patch, but this has triggered my attention.
 
-In the course of carrying out these responsibilities, my=20
-investigations identified significant environmental compliance=20
-concerns involving four major oil-producing companies:
+I have been recently researching into allocation of FAMs, trying to make
+them more type safe, and found it safer to have a specialized API for
+such allocations, whose pseudo-prototype would look like this:
 
-1.      Shell Petroleum Development Company Limited
+	T *mallocflex(typename S, size_t n, flex);
 
-2.      Mobil Producing Nigeria Unlimited / Esso Exploration &=20
-Production Nigeria Limited
+A devm_kzallocflex() could then have an extra 'dev' parameter at the
+front, and the usual 'gpf' one at the end.  It could be used here as:
 
-3.      Chevron Nigeria Limited / Texaco Overseas
+	n =3D ARRAY_SIZE(fimc_formats) + ARRAY_SIZE(fimc_tiled_formats);
+	ctx =3D devm_kzallocflex(dev, struct fimc_context, n, formats, GFP_KERNEL);
 
-4.      Elf Petroleum Limited / Total Exploration Limited.
+Kees, do you think we could add something like this?
 
-The four companies were subsequently assessed penalties of=20
-US$1.2Billion, with the applicable sanctions providing for the=20
-potential revocation of their operating licenses in the event of=20
-non-compliance. Given the importance of their operating licenses=20
-to their continued activities in Nigeria, the four companies=20
-appealed for a reduction or waiver of the assessed penalties.=20
-Their requests were subsequently considered by the Federal=20
-Government, and the applicable fines were reduced to US$800=20
-Million.
+Here's a small program showing how it could be implemented:
 
-The companies have since settled the revised penalties with the=20
-Ministry of Environment. They have also indicated their intention=20
-to provide a US$50,000,000.00 payment in recognition of my role=20
-in the process. However, as a senior public official, I am=20
-subject to the applicable Code of Conduct and therefore cannot=20
-maintain or operate a foreign bank account for the receipt of=20
-such funds. Consequently, I am unable to provide a foreign=20
-account for this purpose. In view of the foregoing, I am unable=20
-to personally receive or facilitate the transfer of any such=20
-payment because of the restrictions applicable to my position as=20
-a public official.
+	$ cat fam.c=20
+	#include <errno.h>
+	#include <stddef.h>
+	#include <stdint.h>
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <sys/param.h>
 
-I therefore seek your assistance in identifying a resourceful and=20
-transparent mechanism through which the matter in relation to the=20
-gratification can be addressed without any traces to me=20
-considering the fact that I am still in active service. Any=20
-proposed arrangement should be properly documented and, where=20
-required, discussed with a financial facilitator locally without=20
-mentioning names; so that all parties are adequately protected=20
-and the transaction is handled through the proper channels.
+	#define typeof_typename(T)      typeof(*(typeof(T) *){_Generic(0, T: NULL,=
+ default: NULL)})
+	#define memberof(T, member)     ((T){}.member)
+	#define sizeof_flex(T, n, fam)  MAX(sizeof(T), offsetof(T, fam[n]))
+	#define ptr_cast(T, p)          rvalue((typeof_typename(T) *){(p)})
+	#define rvalue(lv)              ((void)0, (lv))
 
-I would appreciate your guidance and cooperation in resolving=20
-this matter in a manner that is fully compliant with existing=20
-financial regulations.
+	#define reallocflex_T(p, S, n, flex)   reallocflex_T_(p, typeof_typename(S=
+), n, flex)
+	#define reallocflex_T_(p, S, n, flex)                         \
+	(                                                             \
+		_Generic(p, S *: (void)0),                            \
+		ptr_cast(S, reallocflex_T__(p, S, n, flex))           \
+	)
+	#define reallocflex_T__(p, S, n, f)                           \
+	(                                                             \
+		reallocflex(p, sizeof(S), offsetof(S, f), n, sizeof(memberof(S, f)[0]))\
+	)
+	#define mallocflex_T(S, n, flex)                              \
+	(                                                             \
+		ptr_cast(S, reallocflex_T__(NULL, S, n, flex))        \
+	)
 
-Best regards,
 
-Dr. Innocent Bariate Barikor
-Director General
-NESREA.
-Direct Phone/Whatsapp: +2349019779152
+	void *
+	reallocflex(void *p, size_t headsize, size_t off, size_t n, size_t eltsize)
+	{
+		if (n !=3D 0 && eltsize > SIZE_MAX / n) {
+			errno =3D ENOMEM;
+			return NULL;
+		}
+		if (off > SIZE_MAX - n*eltsize) {
+			errno =3D ENOMEM;
+			return NULL;
+		}
+		if (off > headsize) {
+			errno =3D ENOMEM;
+			return NULL;
+		}
+
+	#ifndef NDEBUG
+		printf("%zu (%zu, %zu, %zu, %zu)\n", MAX(headsize, off + n * eltsize), he=
+adsize, off, n, eltsize);
+	#endif
+
+		return realloc(p, MAX(headsize, off + n * eltsize));
+	}
+
+	struct s {
+		long a;
+		char b,c,d;
+		int f[];
+	};
+
+	int
+	main(void)
+	{
+		struct s  *p;
+
+		printf("s: %zu\n", sizeof(struct s));
+		printf("o: %zu\n", offsetof(struct s, f));
+
+		p =3D mallocflex_T(struct s, 2, f);
+		p =3D reallocflex_T(p, struct s, 0, f);
+		p =3D reallocflex_T(p, struct s, 1, f);
+
+		bzero(p, sizeof_flex(struct s, 1, f));
+
+		free(p);
+	}
+
+
+Have a lovely day!
+Alex
+
+
+>  	if (!ctx)
+>  		return -ENOMEM;
+> =20
+> +	ctx->num_formats =3D num_formats;
+> +	formats =3D ctx->formats;
+>  	ctx->dev =3D dev;
+>  	ctx->id =3D of_alias_get_id(dev->of_node, "fimc");
+> =20
+> -	/* construct formats/limits array */
+> -	num_formats =3D ARRAY_SIZE(fimc_formats) + ARRAY_SIZE(fimc_tiled_format=
+s);
+> -	formats =3D devm_kcalloc(dev, num_formats, sizeof(*formats),
+> -			       GFP_KERNEL);
+> -	if (!formats)
+> -		return -ENOMEM;
+> -
+>  	/* linear formats */
+>  	if (ctx->id < 3) {
+>  		limits =3D fimc_4210_limits_v1;
+> @@ -1320,9 +1316,6 @@ static int fimc_probe(struct platform_device *pdev)
+>  		formats[j].num_limits =3D num_limits;
+>  	}
+> =20
+> -	ctx->formats =3D formats;
+> -	ctx->num_formats =3D num_formats;
+> -
+>  	/* resource memory */
+>  	ctx->regs =3D devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(ctx->regs))
+> --=20
+> 2.56.0
+>=20
+>=20
+
+--=20
+<https://www.alejandro-colomar.es>
+
+--cd4qmvxj2ervr6g5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrDWp8ACgkQ64mZXMKQ
+wqndww/8CDDAAm5f2tvfl0SP7UHg8H1zYS8pI0IPC5gQvEXr78/43DWG87YRfZEn
+XLhyDfxCJgWC6OlTTR3mgp31+zNRCwuG7kzPSxxx/LsO528gPWajhkHsS0zdjgc8
++aGeJEMHRnBCkCLHLJFjgISSaCxseWGd4147RZYe5TxhDCUlM32g3UJCb3otvRMa
+RgqkFYMGCZ0mXbipj/PCzbSqy+QQPDw/1b3AKs+2NG1yOEKfQtyVmYCKRrWNPebb
+qSJIDdYIV5p2EcUTudH96Em+WaEC4lFklggB6YhNRvEmI6cAlAmlfRAHByTe6S9S
+aU7o5ExRfSrtuG63opsDafOL8hCHQqaoiZi7JfzO8dFFa6CxLDQOejz7rolHlqTB
+OvN+ppiVr+ehocq/IZmBdCWRQnjL2VM6WpgeyVPU0fImqTR12oHtxNUbnE2w17Wc
+dbUPhKLJh4eGwFQiBugdXXBzW0CBCaFS8Wrmm2zdxNv9CzbwD9NowZMHBx43/CDs
+naJIVnK2y+SOOz63AEIkaeqpSC1z7mxbHM0skWvu49MQEqSye5MWsDjqz71/4zQe
+mB185gQyBsY4Hw0jM0AZj47G6B5S6l4i/LDfyfRS/Mqqv912n+dTZWdC3N1M9KMR
+auNLd06e/+X6tIgz4lnMHtaJ64cPgmEThP0lME+bF3qhblsZM8A=
+=xQu8
+-----END PGP SIGNATURE-----
+
+--cd4qmvxj2ervr6g5--
