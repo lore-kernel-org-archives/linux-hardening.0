@@ -1,205 +1,120 @@
-Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D5436B931
-	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 19:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF2A2F6577
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 19:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791227940; cv=none; b=nuWlPosda/u8w50rb/1ByxDjq0W4Tgx+s6esyOy1WaYyMeGZAQ3+2dSlKNejwxIwmrX2QMcYAw2UrT1NQHQUfRyQVbXjhwcpPO/Sf5DKNlBrvkBIgLpS5G+ANbf+5sIi481YiXBF099/IXzSoDxfriqhf9SodAfFc8YZBk/fGkI=
+	t=1791227989; cv=none; b=TCq0fuzc8gbfaGNvc3esDP7f1ZhhQzC4caLz8GSacGi+9PtZ5pFscQiq7+TKahe5U2S6lIOPiyEt1MF7v4W9DNliGhvC/No/mmSvE0UfTzreZ6O5VhDBP26wlUkHgixUIwEtXXSID7lgmB+axQTZfxxTydB5jV8j/Lc1exMlQog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791227940; c=relaxed/simple;
-	bh=Qef6evUi2G4yjczQH3lndRw0J5twWf88Bw4M2ky/1xE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cJdh/CMJll+DKxypxPfT8g2xuz8qjWArIGBrQ9alO7+tFOKvSd6s9oUzdnALA6XMhXqXUQNaCm4t1Hf+sR5OCRHPyg/rJdJmIVujKVHax4O2egyAwwnzk6KPmyR/9QQBCcfUG8fVmEAalzVjAlGNTm4n9uyPO7sv/5MZiUguaDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E6Nom2Oq; arc=none smtp.client-ip=74.125.227.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791227989; c=relaxed/simple;
+	bh=bnlqihMoP+OehsOX4Qu9na8XM6RJuc5xI2jSiqejPOU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BOgfR4+4wTny+sn8gFKnIJ+dt1gX4l1kHIk303p0iMbAU6n6TBC4/fyvlp8gXDybOmkkijXgUXQ9GzC/xnttDdYrBQO0hCBL9nqYciLeo4F234651dTUMFyKy07GGYIREWx++pBpDBB5e75E53Un/sS/6yfbu0GJeicf4etcrHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SPZrW0dG; arc=none smtp.client-ip=209.85.214.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6Nom2Oq"
-Received: by mail-pj2-f13.google.com with SMTP id 98e67ed59e1d1-39dacf053eeso1023174a91.2
-        for <linux-hardening@vger.kernel.org>; Mon, 05 Oct 2026 12:18:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SPZrW0dG"
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2df8d1e91c9so37956355ad.0
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Oct 2026 12:19:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791227938; x=1791832738; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=bn5bbgyZyDecjZPI18WaWxFgg4DefMuMpoggO6iLfzw=;
-        b=E6Nom2OqKeb0lOx1wzcwdfCeJ1k+ThHWcEvXJe6niQbuR9z9i9jZJKjYefnm1yrXQ/
-         xMp4N9ct435Ah0ShYAa8lmHKe43TzIJgikCff97NESmHfuSttM/N8vldSD5tOUdJLLpA
-         iclpHd0C1iHseXXAD3OrZV80KS0aMoVRPoNFu7slRU8n5uAsTLeLwgMf3kqYUa6OKiAX
-         GyLcwAx6K9ExYTLijk3rfmSjbn49aN8IldvDtb+NJdC4hpF7t6cX+6g9L3DoYF5tDnTZ
-         +t+65DPB1fsr1X6Q+ZrX8yFVEkW7C+C7OLxvzHSvtP8cYTcSgvuX96v1SHoDeliyp5dI
-         MpHw==
+        d=google.com; s=20251104; t=1791227986; x=1791832786; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=G7eLGK4KvBHDJUYriBrlxQjC7HPa3mfoBvjU5hS2xzk=;
+        b=SPZrW0dGEExcHGc6mE9HYApEoK1aTiyY145GAnjAleYeX9ihUgGx89mGrSZubURDfH
+         BPp7K8u3MXFQoB5NYrQZFjWmWJmi5a5nTG42JdkIzjzSetIS/FYvaOWPBpz9cvbIRu66
+         BPRc/5lbw9j6gCLZQLIYaS53OtGJp1I8Wxeki82MVDFDeDXZ9BSVRvg+sfdj+yiBKNnF
+         B4Q+YioO0DcJAIOV7IEZYKFOJzMAugJuAboPwwmaDAyIE1WKhkjptMfXYphfaU0mzBhq
+         WH4dorl8bMHmXQDsd/vEWtuxp1NtV9QKOCqaFQAtW0t//CpWHR5MQGbSQ0MypQcCSzmp
+         N3aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791227938; x=1791832738;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1791227986; x=1791832786;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=bn5bbgyZyDecjZPI18WaWxFgg4DefMuMpoggO6iLfzw=;
-        b=t/pjUvUHRZ4qI3sfAfiyyIOMjLWJMKiDEJEiEY2QgeCxGbtWQGGYcgAYEkpynjLIHd
-         3Up9r1gGm+4XsqxbHVtDeDpCdOUzYm2BKCKSMa4mrbeKJtfePgGKOusvrHriD9c1q2yO
-         FNcRTVqMYhmJMqnEtOMM2KvNN8qShQbQy11eB1AAtF6UjImR0Z8Cp2/BQP11kBplLO5h
-         E5+4Q26LlkE1rL/RBislAQV7XIv8cmFzxgyPS1AbkmVix7jiSGH2WQseTqBdBt2YFrsW
-         Pf5mhtnVfS9EE30kNpnQWDYTk4sOT5t4L08EWg4mWlsB7aivmd2R0vrHJwQ4DQFtxmwy
-         PBvg==
-X-Forwarded-Encrypted: i=1; AKwUvByawe7LMODBGoH12VFoa9qE83b25d0uWo4e3ecI++QQnamwKJljrZKBTCkoAtOaVh5ZQgbYjqd3/eL6fD/K0a0=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJPLXSgPW25/AvcUA1f01LGDdHvzKwA4UUMRtGEOTW8JXrnp4Do
-	Bztm2TDbw5RWat7hJhqafCSvzkwrFy+UMFl9W/TdWdBwUSECXtcMFbcQ
-X-Gm-Gg: AYBFou3AbubYulglFfCEoSZriS3mMLHt1GusiLliQew4xVDPtHsZnU9F1s2Nal6jcTN
-	hTfMmyxye1vEP5bbBcrZiXFZya2hcN4DXY4akHZ2eRUr20VD1xxxFKo960uOBjbDUH/wxDEwxQb
-	WPswBxyDeWWYkTx0fDY4UA0u7YGWE4zhXrQcG/eSNFeZVOOAqRug03Ci1bpBsbe/egRnsPIifhk
-	U/re8v0K+1tN22djrjNie4O/s7qC/0QLcEZoD85mVeqKNn5mId4QfrmWX5X1IspZNReIpK4Q7Wt
-	wbYEHJm2cMpNCQ1U26JQygGgtvNr/gVQIwctYoB/iiLZJ4r+u+A3aQ8efdrIqqMR/ckjbLUSL1r
-	U/GZkO8NfodKl26bZf9tWramVZMUKVjc4NODvxXtOhChJv1w04a84CjA5Vq72MDapVpvQTrqqbd
-	vSslnRKRNiWw8GDHJpf5Dx4pbZaYd5L9PIid0ywsXUJ1fvcanrL/oNxuoqDFNsUcb8+hMIEYIoD
-	8aNsEws2ilPCi0jO2to0Q9En4m1GHrRMMFzpRapchiTdmFPySn9GrlRaHgTMqB4OG/0c06ChWEE
-	B6NfKQ9SgzCSbmuQ5ZLx1yu3sn04OWnmDiS1Cz1KbN6sjFKz
-X-Received: by 2002:a17:90b:3843:b0:3a4:fa1a:2b1d with SMTP id 98e67ed59e1d1-3a6ce983720mr9469973a91.62.1791227938253;
-        Mon, 05 Oct 2026 12:18:58 -0700 (PDT)
-Received: from ryzen.lan ([2601:644:8000:7a86::e35])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a85436a39dsm806267a91.9.2026.10.05.12.18.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2026 12:18:57 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dri-devel@lists.freedesktop.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCH v2] drm: property: use kzalloc_flex
-Date: Mon,  5 Oct 2026 12:18:56 -0700
-Message-ID: <20261005191856.90267-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.56.0
+        bh=G7eLGK4KvBHDJUYriBrlxQjC7HPa3mfoBvjU5hS2xzk=;
+        b=l9g5pb6K+lYRKE24Iwzv/+ypkVeuRF9l1ZHo3CFO0T2mqk7E7Dl/vjF9hNeAwBKuKF
+         Cl2kXvD+bj8zYriZ3v+rqRVG5Z1Oh7rHkViZgfbe5HswwSFQZcoB67CHwcTkhZMvNVvL
+         1wf0gummbPXAdUpzdIh1/vR59UU0H1kg6EzgZV8Dh0tr9X7bLvqkq9Vweq2jCvAYGhm1
+         8PioqwkfoM+V82Nx4eICh9p3EZfyw9FJKlZSyOm8c8gtwbRzBiUtQAf4n51ftVATQWcO
+         dVi6KBrTcePl7lnUJcf0mVdS8Zctg0fkHOFoT8E/csVkt2U7HOq8icAeVDgBNwOk2qRb
+         Q7Mg==
+X-Forwarded-Encrypted: i=1; AKwUvBzWsY70SRgVHniYhdQxtA7MdRZ7ksUnsjDqQO1zCC1KmYXd1QYKQbh2lgS2MgJQvD25L6/asPMH0BqicfQXqWU=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIcuybOu4vniSIRecik/0ZO8pz5FrYS8LIJlr3nwleYRcRbiXi8
+	tAEmE0gLrzorfnhU9yaPMaGCYMQRrVStGB177CFxQoJwbGRdmWa4dke1KeTyvgRJVqkvjIlMp3M
+	8
+X-Received: from plic14.prod.google.com ([2002:a17:903:370e:b0:2e4:90ac:5fc4])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f682:b0:2dd:ad73:c936
+ with SMTP id d9443c01a7336-2e49b60bf8emr102328605ad.23.1791227985632; Mon, 05
+ Oct 2026 12:19:45 -0700 (PDT)
+Date: Mon,  5 Oct 2026 19:19:43 +0000
+In-Reply-To: <20261005102518.2400984-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20261005102518.2400984-1-morbo@google.com>
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+Message-ID: <20261005191943.2588899-1-morbo@google.com>
+Subject: [PATCH] compiler_types: Allow opting out of __counted_by and __counted_by_ptr
+From: Bill Wendling <morbo@google.com>
+To: Kees Cook <kees@kernel.org>, ardb@kernel.org
+Cc: gustavoars@kernel.org, nathan@kernel.org, ndesaulniers@google.com, 
+	justinstitt@google.com, broonie@kernel.org, elver@google.com, 
+	alan.maguire@oracle.com, namjain@linux.microsoft.com, peterz@infradead.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev, Bill Wendling <morbo@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Store the property values as a flexible array member instead of a
-separately allocated array. This removes an allocation and its error
-handling.
+Code that runs outside the kernel proper, such as the EFI stub, gets
+nothing out of the counted_by annotations: the bounds checks they feed
+(FORTIFY_SOURCE, UBSAN_BOUNDS) are already disabled there.
 
-Add __counted_by for extra runtime analysis. Move the counting variable
-assignment to right after allocation as required by __counted_by.
+The annotations can also break the build. A __counted_by_ptr() that
+names a member declared after the pointer needs Clang's
+'-fexperimental-late-parse-attributes', which the top-level Makefile
+adds to 'KBUILD_CFLAGS'. The x86 EFI stub builds its own cflags and does
+not get that flag, so it fails as soon as such a struct is pulled in
+through a common header.
 
-struct drm_property now ends in a flexible array, so move it to the end
-of struct drm_damage_mock in the damage helper KUnit test to avoid
--Wflex-array-member-not-at-end.
+Overriding the __counted_by_ptr macro from a Makefile doesn't work:
+'compiler_types.h' is pulled in with '-include', which is processed
+after all -D/-U options, so it re-establishes the definitions. Follow
+the '__NO_FORTIFY' precedent instead: let a build define
+'__NO_COUNTED_BY_PTR' to turn the corresponding annotation into a no-op.
 
 Assisted-by: LLM
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Signed-off-by: Bill Wendling <morbo@google.com>
 ---
- v2: move test struct member
- drivers/gpu/drm/drm_property.c                 | 14 ++------------
- drivers/gpu/drm/tests/drm_damage_helper_test.c |  2 +-
- include/drm/drm_property.h                     | 16 ++++++++--------
- 3 files changed, 11 insertions(+), 21 deletions(-)
+v2: Only specify __NO_COUNTED_BY_PTR. Leave __NO_COUNTED_BY until we need it.
+---
+ include/linux/compiler_types.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_property.c b/drivers/gpu/drm/drm_property.c
-index f38f2c5437e6..a6008e5c2b58 100644
---- a/drivers/gpu/drm/drm_property.c
-+++ b/drivers/gpu/drm/drm_property.c
-@@ -107,25 +107,18 @@ struct drm_property *drm_property_create(struct drm_device *dev,
- 	if (WARN_ON(strlen(name) >= DRM_PROP_NAME_LEN))
- 		return NULL;
- 
--	property = kzalloc_obj(struct drm_property);
-+	property = kzalloc_flex(*property, values, num_values);
- 	if (!property)
- 		return NULL;
- 
-+	property->num_values = num_values;
- 	property->dev = dev;
- 
--	if (num_values) {
--		property->values = kcalloc(num_values, sizeof(uint64_t),
--					   GFP_KERNEL);
--		if (!property->values)
--			goto fail;
--	}
--
- 	ret = drm_mode_object_add(dev, &property->base, DRM_MODE_OBJECT_PROPERTY);
- 	if (ret)
- 		goto fail;
- 
- 	property->flags = flags;
--	property->num_values = num_values;
- 	INIT_LIST_HEAD(&property->enum_list);
- 
- 	strscpy_pad(property->name, name, DRM_PROP_NAME_LEN);
-@@ -134,7 +127,6 @@ struct drm_property *drm_property_create(struct drm_device *dev,
- 
- 	return property;
- fail:
--	kfree(property->values);
- 	kfree(property);
- 	return NULL;
- }
-@@ -447,8 +439,6 @@ void drm_property_destroy(struct drm_device *dev, struct drm_property *property)
- 		kfree(prop_enum);
- 	}
- 
--	if (property->num_values)
--		kfree(property->values);
- 	drm_mode_object_unregister(dev, &property->base);
- 	list_del(&property->head);
- 	kfree(property);
-diff --git a/drivers/gpu/drm/tests/drm_damage_helper_test.c b/drivers/gpu/drm/tests/drm_damage_helper_test.c
-index 0df2e1a54b0d..c0da8dc591a9 100644
---- a/drivers/gpu/drm/tests/drm_damage_helper_test.c
-+++ b/drivers/gpu/drm/tests/drm_damage_helper_test.c
-@@ -17,10 +17,10 @@ struct drm_damage_mock {
- 	struct drm_device device;
- 	struct drm_object_properties obj_props;
- 	struct drm_plane plane;
--	struct drm_property prop;
- 	struct drm_framebuffer fb;
- 	struct drm_plane_state state;
- 	struct drm_plane_state old_state;
-+	struct drm_property prop;	/* has a flexible array, must be last */
- };
- 
- static int drm_damage_helper_init(struct kunit *test)
-diff --git a/include/drm/drm_property.h b/include/drm/drm_property.h
-index aa49b5a42bb5..8c7cef4418c4 100644
---- a/include/drm/drm_property.h
-+++ b/include/drm/drm_property.h
-@@ -175,14 +175,6 @@ struct drm_property {
- 	 */
- 	uint32_t num_values;
- 
--	/**
--	 * @values:
--	 *
--	 * Array with limits and values for the property. The
--	 * interpretation of these limits is dependent upon the type per @flags.
--	 */
--	uint64_t *values;
--
- 	/**
- 	 * @dev: DRM device
- 	 */
-@@ -195,6 +187,14 @@ struct drm_property {
- 	 * enum and bitmask values.
- 	 */
- 	struct list_head enum_list;
-+
-+	/**
-+	 * @values:
-+	 *
-+	 * Array with limits and values for the property. The
-+	 * interpretation of these limits is dependent upon the type per @flags.
-+	 */
-+	uint64_t values[] __counted_by(num_values);
- };
- 
- /**
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index c5921f139007..8bde6798b4ec 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -387,8 +387,13 @@ struct ftrace_likely_data {
+  *
+  *   gcc: https://gcc.gnu.org/pipermail/gcc-patches/2025-April/681727.html
+  * clang: https://clang.llvm.org/docs/AttributeReference.html#counted-by-counted-by-or-null-sized-by-sized-by-or-null
++ *
++ * Code that runs outside the kernel proper (e.g. the EFI stub) can define
++ * __NO_COUNTED_BY_PTR to drop the annotation. Such code may also lack the flag
++ * Clang needs to parse a reference to a later-declared member
++ * (-fexperimental-late-parse-attributes).
+  */
+-#ifdef CONFIG_CC_HAS_COUNTED_BY_PTR
++#if defined(CONFIG_CC_HAS_COUNTED_BY_PTR) && !defined(__NO_COUNTED_BY_PTR)
+ #define __counted_by_ptr(member)	__attribute__((__counted_by__(member)))
+ #else
+ #define __counted_by_ptr(member)
 -- 
-2.56.0
+2.56.0.rc1.315.gc6ed9934b7-goog
 
