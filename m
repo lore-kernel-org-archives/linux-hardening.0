@@ -1,63 +1,63 @@
-Received: from mail-dl2-f43.google.com (mail-dl2-f43.google.com [74.125.229.171])
+Received: from mail-dy2-f43.google.com (mail-dy2-f43.google.com [74.125.229.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96501547077
-	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 00:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4D0547077
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 00:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791159084; cv=none; b=M+/EaHI9JHdsWQGHI6zbFQLOUqG8hspqWSltzFzeSZ7QUEAp+WTHhcrCe1vTkmGlufmikpqHmsweL7VzjiebW7xaZgi12lIYEL59KFGaKJGHJutwnEQdE8YjW1sAktIejqShqZinzxSDO/cC51TmMTzA8SBQldIo3lCoBq5w36I=
+	t=1791159108; cv=none; b=F9VOLdfIEspUmIfmVW+RXbHVs+MNVHmdxYx9kdmJWTwlCq/HyHnXtG+BcYMxQrLhMD6E4SxcEbia2bNRspVufv4Y2ozfHSs7F6THThu3S7axogyLWu7dfgdUQIu3T+0wsyXwb6V6Hcm/4UhXq/vy5Dh7s61GHDO3BTZ/drNABAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791159084; c=relaxed/simple;
-	bh=L7XOJZwLjudfLM2ulu+SHqQ8eTBn5mGIxFFPTtYoB8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FEmF6p7e1iArVQlA9vIpraWuCBkpL5uuXAoPOFt/moGIWxWplmZ037rBlR0H3hKuEAEo6HhZNIXhRE5MYRPaAfXqgniw90k+xh9XjisG0dxni2wF4gvx9E4HjoNZEjMUYFqHpEWoUEg5DD8rLf/Sb4mrnCTdYhZ4oeP0dAGv5NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BpdCBUtG; arc=none smtp.client-ip=74.125.229.171
+	s=arc-20240116; t=1791159108; c=relaxed/simple;
+	bh=296SdEqVR+pPMlsK/a0UhLFwbJBWB82EbfeBWYgP+e0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DxJ5HPO+7sEOOJwz1qD3nterfE33bMvb4dQR4nCf4y6efpo86LXHrnRtkCbHnAN4Hsx3rncgZAqh7Tf6/83zGH0cZyiz0vF1w5t7NzAc9sC546ZALs7d/ZFWWjvRos+dNC5deuPIpQV3Lf6XY2Hr+xACThXSaHzOMq1yQ13j9eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kB4fhWe3; arc=none smtp.client-ip=74.125.229.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpdCBUtG"
-Received: by mail-dl2-f43.google.com with SMTP id a92af1059eb24-142dd025d07so35297c88.2
-        for <linux-hardening@vger.kernel.org>; Sun, 04 Oct 2026 17:11:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kB4fhWe3"
+Received: by mail-dy2-f43.google.com with SMTP id 5a478bee46e88-34b1743e9c7so1066658eec.3
+        for <linux-hardening@vger.kernel.org>; Sun, 04 Oct 2026 17:11:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791159082; x=1791763882; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1791159106; x=1791763906; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=dpTVtuLsZCKAP9AgVyjYlCoNh2JMBgdKfaKYvWUv55Y=;
-        b=BpdCBUtGkty+h3hB+uehSfZhqrVJRmgts6jE/SHndicYAEg6kt2HGxcJXE/e/RN46o
-         JTgHi9abNV/WSseMzmFTq5b+qXuzB/EtDhr2LjZWtS13p2V4CRBdF/rvuwL2BAnXopp7
-         zwnQRUcv/LPmcVKiBhOcSnoBKD7xN6kTyFKC0Gnjh5ly93iHRCM1AeUqO+SRqy+Kjqzq
-         WlfxJfROukWVRW1W/uFA5R9wMo0BX+KLWJ0Jt46OWXrhOV3WXBFAar1lroQ5jYPiSKoi
-         FiYqGgvsaumDPXLtJsISCMeFLWuZcZGPGneHad8D9lsjAO9A1YXCLCv0CaaRRRfTSRK3
-         0OLA==
+        bh=LFk7ga35z3NrHS6umKXq0xUG3dzK46r7JSMoXY1ndGw=;
+        b=kB4fhWe3L92jaSWIfsZjF5T1rpLcyzIHHJ0ZAJC3lBVd+pHqhxdAHf1ogAxNZEdAPc
+         VaWWQj064PwGUvNMH2QB9zSimpi0FRl5XYsUOwJV0qRoWSivVTsxUTaJlirq+eNWmAxk
+         pw02/aXmfEtNRBVzUsKaoZMgsMnjWWncXDaaZF8x/RlESdEf9FPd348hoJQyf0VvK0r0
+         skf+QB4UFtv+LzDOhhw4Jms5+ouYlqYlwXltz+ICuR8u0suBkq9j/9o90k0rPOjs0BT9
+         aT0h+hLt3+xyFD8J2Dtd0CkGG59ZM+K3dBCcudAunuOPEfKWWlC/2N7pLKFAYS3LQi3z
+         AiQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791159082; x=1791763882;
+        d=1e100.net; s=20260707; t=1791159106; x=1791763906;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=dpTVtuLsZCKAP9AgVyjYlCoNh2JMBgdKfaKYvWUv55Y=;
-        b=foIsIBuyFaafRsK1rqCOD/cHsSHDNTs5BWuNyxm68rznUEhD++izbdKY1kfiWcCuql
-         m9fG2B7D4WmRCZMeOmO5D1Kvi1gcra+0dwoCCQGU1+21fH6soL33e3TQ6KBDZM/jpvUL
-         J1QY6StRjU36wIAQsjdEZ/uVvyCLcjsH9YSs1CpmWqTegfR3i33fb86nE2KNm2asMwxe
-         tPU9Kk+W0RJJV2Gb5PJ64UUHHspNbu36hb7UftoIVMdSnvlAiynGIgOyyy4WLFMKzr2J
-         ml1sL9qC6NiXGnQW73Ueco8bjEq1Msq+QUzwByoFYzVlvivGHSH+1h70lYp/JWlt5ILv
-         JjZA==
-X-Forwarded-Encrypted: i=1; AKwUvBy/yvFji71mfoY54gAYE0UPqGMlTtWMW/jly1afe+dRkcCEYlfn9ADvwGxxadNQmhw+Y5tJA6UunKofjnJBvEc=@vger.kernel.org
-X-Gm-Message-State: AFuF++k47SPt1gB7meJAbLUWRsaoAZzQYtMt1TxNZVfyN9pRBa2/SHme
-	G6H/8rn/zz7uduuXk6loTJMuLJybdfd6jyR1C2fwXryUaueKqhp2mPC5
-X-Gm-Gg: AYBFou1nzmd+JirjxLaAJpTh4C6C/qh/2O7znh816hLnfBW+lUrJW04yUOZTONjIsoa
-	dQYPxAL3GKVuFKi6io4MFtPI6C9pF5E2ahySA2j1AOTCACQreOADJXzyWslzVbowuVA/Ddqyt/p
-	p/jK9M08OIA4jo0moPPXL1Wlbiaq7jnG+O0Nv41vvLpg1bY5k8JCZrqmmP0bB/d8pjAFJjhP6Nv
-	Nft3cxTIFVpF32r/55zzQ6+eGGg7jpS6kcl3iBj5O4fViSpwUSh/SEETSr6u3X7rtLs+6X+EHE+
-	aAcXizbUOF/aNhahtXTxOtyfVJUs8UJFY5Lq2dLM516YbF0Dse4yNyoMWgTFzA52ipzY7J7DVn1
-	WprBNRjrEkmCnTsPLgtEcgWESnAh7HAMgE6ioLH92QkX3kCcFyPtZF4MpzMAZtOGz5V6tJ5mKKz
-	14skzRfvVCLza3Ck87AecxMPyz+eBZ5Oe1Ch6Z1c7FDi4DM0fOfkg6vSnZcCrk2/kLtVS2Xm7HN
-	xJmirMsA6WYbeDE8ESbyFDoDvTnO0yz2lyBpOh54+I/uMJ+uxrDpD9A8DgghwxTj8t5seyrXcGr
-	4gjtY8Jigb+UJLWQJFA8SOdBJlsOsPn7dxCNnwT9utWU+Bh99ulPFg4bWZs=
-X-Received: by 2002:a05:7023:a87:b0:153:3c50:ab85 with SMTP id a92af1059eb24-1533c50abdamr6557346c88.12.1791159081504;
-        Sun, 04 Oct 2026 17:11:21 -0700 (PDT)
+        bh=LFk7ga35z3NrHS6umKXq0xUG3dzK46r7JSMoXY1ndGw=;
+        b=CyUpAJHLnwZcTgECMQvQ9aAwm6Nf/jotZoeT+GdC3wd+Pty/yo/4hxqWG35qxTOREt
+         TB37Yy+81UxIO/MVt92zCClo/Emq6F0812xomCLdrUFeKzPydUnsvqceZ3EtBW9rZfcz
+         l6FMKJZ8uA4VEi1AN3AAHDFi2n3pxIX40Tjg/GqywdUud/gpFYyLJleU5E53AV+iW1Dj
+         n87elKkwAI8M2xNRvVLwhARaA/TO1+AG+eKRKQ85HrVeC9FoGVz404yrpyMc1WvvIaF6
+         g8Cmr/6RE/hTN/LazsNN2eyfezkk+Y1vVHcddfHcpx5pDRReiUkZjDWXaHkD2JqudHyH
+         seqg==
+X-Forwarded-Encrypted: i=1; AKwUvBwutvLaJwzKSqyGMcENIEKzvQJ2kt4KDDB4EjhpWdjEimbQjZMFxt+HjWwj9SZv1VNDZ0Ik5F9IkJqJu2EK63o=@vger.kernel.org
+X-Gm-Message-State: AFuF++lci9oQxu3HvQbAOgXxG/pWgxX5Ne7KWocEpPPrdp5SS3MEdQdJ
+	t4EsP4cuBuJcfXgnu/CYGYAFNcC8BJxyINbYXrMbG5im0WqjcaafR30h
+X-Gm-Gg: AYBFou0kE9ZTrtKYdkaG35eTxGFV2QFGCGkKuaf+h6NHWgtNwZdidEfmYqiOo9Bpvsw
+	4HaBn3genZPii6Dx5mUxNuGN+PBmI5nrfNu3mEb27rLRt8e2uq3QlHQB0HBZ3x5qKNygjatx0gv
+	OZjQY5lPnWN8YCm+Hz/C4FAzJtsP/o3291AMMdUnypPJTaLLaUNA3XHRqSwwiX13gz9XWpZEFD8
+	BK07kHjoDQqeZg+/n2YWGYVriaRqrQ86IfrSqRv4d3+xM4O9REo9Z3xWbuHAXupj/GufOweTHeG
+	7joBJjf+ckuaNSrlMNXuqNPxCI9UaE5a0YyM8fPvuLjjwo+TWACd/v5DoLkg8GKKNDFs6kKooyP
+	RqWQuHafaAAt7MNog+qQMBCF2YfFpGZWIfPu6byhS779Nw+lhgKRWimP7KQ6ZTDrLBrNlOpomeH
+	YtfvQOEVPJtzzihLiO5sRL0bp+Jb5S2Nu8pKZJLcVnY64hKk57MQ3gTpwtGUGslONHNBl517I3I
+	aMFdQWmnFBh6N+A9aPCjIv/iBTxG5sSC/Nkj1T1yeyLnUt6Qcov2kWo+boBhD5eWR2RHJA4mVlh
+	MDgXaTZB0chDSMHIim743I2sK1V8wai5Dup62XQqBMFAq/j7
+X-Received: by 2002:a05:7022:eb47:20b0:143:7001:7643 with SMTP id a92af1059eb24-14f5cdc92f3mr12086833c88.46.1791159105797;
+        Sun, 04 Oct 2026 17:11:45 -0700 (PDT)
 Received: from ryzen.lan ([2601:644:8000:7a86::e35])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-151fa751693sm38784720c88.2.2026.10.04.17.11.19
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-151fc39a6cbsm16540732c88.5.2026.10.04.17.11.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Oct 2026 17:11:20 -0700 (PDT)
+        Sun, 04 Oct 2026 17:11:45 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: dri-devel@lists.freedesktop.org
 Cc: Inki Dae <inki.dae@samsung.com>,
@@ -74,9 +74,9 @@ Cc: Inki Dae <inki.dae@samsung.com>,
 	linux-samsung-soc@vger.kernel.org (open list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES),
 	linux-kernel@vger.kernel.org (open list),
 	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCH] drm/exynos: fimc: allocate formats as a flexible array member
-Date: Sun,  4 Oct 2026 17:11:18 -0700
-Message-ID: <20261005001118.576198-1-rosenp@gmail.com>
+Subject: [PATCH] drm/exynos: gsc: allocate formats as a flexible array member
+Date: Sun,  4 Oct 2026 17:11:43 -0700
+Message-ID: <20261005001143.576737-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -87,7 +87,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 The formats array is allocated separately with devm_kcalloc() and only
-referenced through the fimc_context. Make it a flexible array member at
+referenced through the gsc_context. Make it a flexible array member at
 the end of the context and allocate both in one go with struct_size().
 
 Annotate it with __counted_by(num_formats) so the array accesses can be
@@ -96,14 +96,14 @@ bounds checked with FORTIFY_SOURCE and UBSAN_BOUNDS.
 Assisted-by: LLM
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/gpu/drm/exynos/exynos_drm_fimc.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/exynos/exynos_drm_gsc.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimc.c b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-index 09e33a26caaf..079d24d0671c 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-@@ -99,7 +99,6 @@ struct fimc_context {
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_gsc.c b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
+index d9637ddfcfc4..f1807ef664e1 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_gsc.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
+@@ -99,7 +99,6 @@ struct gsc_context {
  	void		*dma_priv;
  	struct device	*dev;
  	struct exynos_drm_ipp_task	*task;
@@ -111,49 +111,51 @@ index 09e33a26caaf..079d24d0671c 100644
  	unsigned int			num_formats;
  
  	void __iomem	*regs;
-@@ -108,6 +107,7 @@ struct fimc_context {
- 	struct fimc_scaler	sc;
+@@ -110,6 +109,7 @@ struct gsc_context {
  	int	id;
  	int	irq;
+ 	bool	rotation;
 +	struct exynos_drm_ipp_formats	formats[] __counted_by(num_formats);
  };
  
- static u32 fimc_read(struct fimc_context *ctx, u32 reg)
-@@ -1273,20 +1273,16 @@ static int fimc_probe(struct platform_device *pdev)
- 	if (exynos_drm_check_fimc_device(dev) != 0)
- 		return -ENODEV;
+ /**
+@@ -1222,21 +1222,19 @@ static int gsc_probe(struct platform_device *pdev)
+ 	struct gsc_context *ctx;
+ 	int num_formats, ret, i, j;
  
 -	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	num_formats = ARRAY_SIZE(fimc_formats) + ARRAY_SIZE(fimc_tiled_formats);
++	num_formats = ARRAY_SIZE(gsc_formats) + ARRAY_SIZE(gsc_tiled_formats);
 +	ctx = devm_kzalloc(dev, struct_size(ctx, formats, num_formats), GFP_KERNEL);
  	if (!ctx)
  		return -ENOMEM;
  
 +	ctx->num_formats = num_formats;
 +	formats = ctx->formats;
++
+ 	driver_data = device_get_match_data(dev);
  	ctx->dev = dev;
- 	ctx->id = of_alias_get_id(dev->of_node, "fimc");
+ 	ctx->num_clocks = driver_data->num_clocks;
+ 	ctx->clk_names = driver_data->clk_names;
  
 -	/* construct formats/limits array */
--	num_formats = ARRAY_SIZE(fimc_formats) + ARRAY_SIZE(fimc_tiled_formats);
--	formats = devm_kcalloc(dev, num_formats, sizeof(*formats),
--			       GFP_KERNEL);
+-	num_formats = ARRAY_SIZE(gsc_formats) + ARRAY_SIZE(gsc_tiled_formats);
+-	formats = devm_kcalloc(dev, num_formats, sizeof(*formats), GFP_KERNEL);
 -	if (!formats)
 -		return -ENOMEM;
 -
  	/* linear formats */
- 	if (ctx->id < 3) {
- 		limits = fimc_4210_limits_v1;
-@@ -1320,9 +1316,6 @@ static int fimc_probe(struct platform_device *pdev)
- 		formats[j].num_limits = num_limits;
+ 	for (i = 0; i < ARRAY_SIZE(gsc_formats); i++) {
+ 		formats[i].fourcc = gsc_formats[i];
+@@ -1256,9 +1254,6 @@ static int gsc_probe(struct platform_device *pdev)
+ 		formats[j].num_limits = driver_data->num_limits;
  	}
  
 -	ctx->formats = formats;
 -	ctx->num_formats = num_formats;
 -
- 	/* resource memory */
- 	ctx->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ctx->regs))
+ 	/* clock control */
+ 	for (i = 0; i < ctx->num_clocks; i++) {
+ 		ctx->clocks[i] = devm_clk_get(dev, ctx->clk_names[i]);
 -- 
 2.56.0
 
