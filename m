@@ -1,45 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68964CB8DD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69AD4CDA3A;
 	Mon,  5 Oct 2026 15:57:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791215840; cv=none; b=O0isrrvBSRJ7Adez2RZcpSWNHG2H5YpI+0mzIASieJQ1JFIUHBXlyShsiLftqY9WL2j2IhSHUVW27DYjfsayu09p4//DZyzU855ukbDnh7mu+UhePeA6thnImzXGWy+TMQ8pegphiWW4p0riGLHNSo9TbbcUvdAtIsp4vEOM870=
+	t=1791215840; cv=none; b=t3gVFxQq5pqLDFZFDHhoZjLJwp8TOYJ3iCVtjne7/xkLBZtEBgTIq+/eL+sO5RGvaaAqyThjy0wYWzLDJd1RGXPpZRb0InDtyV89UrixvaKqnDr3q8avhRS3kTcLosOFWp8BHWc0/7vg/FgdFXzL2vmfDtp7T23Y6gFo7s2RuUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1791215840; c=relaxed/simple;
-	bh=4x/rggUe3FoPbP2vQGa0IfGARqg+sTYPhCQM+9x9034=;
+	bh=Y6zIobaHfAH25spVVd3tRtK22OpsmMUzA9m4akP1URw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qMy/oAC2NHGcce0oGRrG2Q4YJ6IIQ7kUM4Pb+w3YtmBzMJZ2M1LJhfPWUI9oxfmmKQBVqC8vR3OitwNo//+PnJ6uxRd2woCBjt2+L9lPkizNpg2Mwz7xK3FO+xVArDYvhID4zqeF0HVW3xKk5ZBqeMQFBHM0cro5LFplHQQb5wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zzrp2T7e; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=p6TPzK2WyeO3/MGmi1+tr21UX0Jmg1Z/BGYl4u+N5FN2p7+l7m58h6s7IEf1rysJ5iZnLe2/iQPIKqcjyeCcqrOxaXKYEPxaRoJ+K5P8cKTevTgMRGfSEAzHzic9PsEulr1jtOqwGvlWr/6r5+RR8uZdV7szzyIHz+0a2AviaEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BntoAAVe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zzrp2T7e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BF0F1F00893;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BntoAAVe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E36D1F000FF;
 	Mon,  5 Oct 2026 15:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1791215838;
-	bh=lDEwT/kJtxLnQzyVwnYdvIREEI0cxdELQ5TKUhzaHBE=;
+	bh=0Fe4ObO/b/TE5s1PNVsS4XfT/c4N/SLhXa9vwlS3HrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Zzrp2T7elK6M4JBUF+PyMYalrQK25TTX9CMUWpC5s6VXvnWHp3ocfydNIKCsf+CvZ
-	 ebyHz8cbLSQ17XiO63nAK2sPWkV4HyArobsQ4SIAfNK0jrMCANtJxsbT8C2hqMCG9G
-	 AOFbBr04dTJnqBMk/FE2psHmOwVtEaouthoFD0bfwRhdHvryUb1wewiNHj1uaYvP/2
-	 UBizqRRAn6u3+PxoTJVagVGx8UIkOcWHFCOxhhxolKVqPyDxvBasdhcn1b0ZTZzbcj
-	 vB+4/Jue0JZuWjjtbOIauMtOhmBS8Ra5K+8JHNIne4YOhJEMLUUV1MGcipxoy9VTW8
-	 v2h8svXN4Y3Hg==
+	b=BntoAAVepFtL24WpSXFkvVOvlZQ2XNzqoMzX/oGT2IrDJ08YRNDEdVfxkOJrau6da
+	 EQDDbIKtKwkgSkG57w/z7F5/g2o2i4SHk1K5gjczqaNq7Mj7q4wnhe91LwMPnsKr0J
+	 jTylrtsI6n2YPsJoBIyMReDNFivmxb4gwbu8L97lKYCuslZr/uhtXdOYEGQh6dLWZp
+	 HGITYqSM3RSACTnQEunn2RMMxlNFeG1FPypB6Rd2Pjvy5se5L0Af5KhGl/VCVpk5CO
+	 y0EYziJr49LVrwPSh87wYHcxj8kJfwCmqzzloelO55weXDu1STfeHKJMDR9OT7qJ9R
+	 MdKxWZ8a0KSqQ==
 From: Kees Cook <kees@kernel.org>
 To: Bill Wendling <morbo@google.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Ian Bridges <icb@fastmail.org>,
-	Justin Tee <justin.tee@broadcom.com>,
-	Paul Ely <paul.ely@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <mkp@kernel.org>,
-	linux-scsi@vger.kernel.org,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	bpf@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	David Gow <david@davidgow.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v5 03/12] scsi: lpfc: Print rx monitor records straight into the seq_buf
-Date: Mon,  5 Oct 2026 08:56:53 -0700
-Message-ID: <20261005155708.1471260-3-kees@kernel.org>
+Subject: [PATCH v5 02/12] seq_buf: Do not pop from an overflowed seq_buf
+Date: Mon,  5 Oct 2026 08:56:52 -0700
+Message-ID: <20261005155708.1471260-2-kees@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261005155653.late.426-kees@kernel.org>
 References: <20261005155653.late.426-kees@kernel.org>
@@ -49,96 +57,136 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3097; i=kees@kernel.org; h=from:subject; bh=4x/rggUe3FoPbP2vQGa0IfGARqg+sTYPhCQM+9x9034=; b=owGbwMvMwCVmps19z/KJym7G02pJDFmHT5w+3PUqXONk7tl1q6Q2JTyKigq/we905U7vQTueH DF2tdq6jlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgInUqjIynGqP3Mam4Xa1KOCE 2ObVW3NumwmGpcg41EhPWyy4Z2eKDMM/u4TqmNcSWkfu3bL78eYKA4PXEQe7VBU3UYaXE5r5UnL 5AA==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4958; i=kees@kernel.org; h=from:subject; bh=Y6zIobaHfAH25spVVd3tRtK22OpsmMUzA9m4akP1URw=; b=owGbwMvMwCVmps19z/KJym7G02pJDFmHT5z6Ls15Odk1t6hwzUSLFA2OdOapKQZW95YscC1re //DN3xCRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwES8bjMyPLsV+bRr567z4tdu tz5pW/h09Y44DW0WJe56+XerVJ6ZqTP8ZjX/+q18Sr546MXit49nvXvVdpblqkYJn/zO32r7zBI 6GQE=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-lpfc_rx_monitor_report() formats each record into a stack buffer, then
-appends it with seq_buf_puts(), relying on seq_buf_puts() appending
-nothing when a string does not fit: the debugfs output then ends at the
-last whole record, and the record left out is read in full next time.
-The next patch makes seq_buf_puts() copy as much as fits instead, as
-seq_buf_printf() and strlcat() do.
+When a seq_buf has overflowed, its len is size + 1, so seq_buf_pop()
+decrements len to size and reads buffer[size], one byte past the end of
+the buffer. It also leaves len equal to size, which no longer counts as
+overflowed, so a truncated seq_buf then looks like a complete, full one.
 
-Print each record with seq_buf_printf(), and when it does not fit, end
-the string where the record began, since the reader takes the buffer up
-to its NUL. This also takes the DBG_LOG_STR_SZ buffer off the stack.
+An overflowed seq_buf logically has no last character to pop: the
+length of what was written has been lost, and the last byte of the
+buffer may be the NUL written by vsnprintf() or bytes that were never
+committed. Return -1 for an overflowed seq_buf, as for an empty one,
+and leave it overflowed, as the rest of the seq_buf API does until
+seq_buf_clear() or seq_buf_init().
 
-Build tested ARCH=x86_64 with GCC 16.2.0, CONFIG_SCSI_LPFC=m and W=1.
+The current callers do not reach this, e.g. trace_syscalls only calls
+trace_seq_pop() when the trace_seq it pops from has not overflowed, and
+kernel/bpf/diagnostics.c sets the length from strnlen() before popping.
 
+Add tests for the pop corner cases.
+
+Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
+and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.1.0.
+
+Fixes: 32e0f607ac6a2 ("tracing: Add trace_seq_pop() and seq_buf_pop()")
 Assisted-by: LLM
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 45 +++++++++++++++++++++---------------
- 1 file changed, 27 insertions(+), 18 deletions(-)
+ include/linux/seq_buf.h   |  4 ++--
+ include/linux/trace_seq.h |  5 ++++-
+ lib/tests/seq_buf_kunit.c | 42 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 48 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index cfa4371169f1..a7b1ea67ed98 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -8108,7 +8108,6 @@ u32 lpfc_rx_monitor_report(struct lpfc_hba *phba,
- 	spinlock_t *ring_lock = &rx_monitor->lock;
- 	u32 ring_size = rx_monitor->entries;
- 	u32 cnt = 0;
--	char tmp[DBG_LOG_STR_SZ] = {0};
- 	bool log_to_kmsg = (!buf || !buf_len) ? true : false;
- 	struct seq_buf s;
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 9f2839e73f8a..f5a350347bc5 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -155,11 +155,11 @@ static inline void seq_buf_commit(struct seq_buf *s, int num)
+  *
+  * Removes the last written character to the seq_buf @s.
+  *
+- * Returns the last character or -1 if it is empty.
++ * Returns the last character, or -1 if @s is empty or has overflowed.
+  */
+ static inline int seq_buf_pop(struct seq_buf *s)
+ {
+-	if (!s->len)
++	if (!s->len || seq_buf_has_overflowed(s))
+ 		return -1;
  
-@@ -8133,27 +8132,37 @@ u32 lpfc_rx_monitor_report(struct lpfc_hba *phba,
+ 	s->len--;
+diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+index 697d619aafdc..7174ebf3f015 100644
+--- a/include/linux/trace_seq.h
++++ b/include/linux/trace_seq.h
+@@ -86,7 +86,10 @@ static inline bool trace_seq_has_overflowed(struct trace_seq *s)
+  *
+  * Removes the last written character to the trace_seq @s.
+  *
+- * Returns the last character or -1 if it is empty.
++ * Returns the last character, or -1 if the underlying seq_buf is empty or
++ * has overflowed. Note that only that buffer is consulted: a @s marked
++ * full by a write that did not fit, which trace_seq_has_overflowed()
++ * reports as overflowed, still pops the last character written.
+  */
+ static inline int trace_seq_pop(struct trace_seq *s)
+ {
+diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
+index 0934dfb602ff..de491f96c1ac 100644
+--- a/lib/tests/seq_buf_kunit.c
++++ b/lib/tests/seq_buf_kunit.c
+@@ -115,6 +115,47 @@ static void seq_buf_putc_test(struct kunit *test)
+ 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "");
+ }
  
- 		/* Read out this entry's data. */
- 		if (!log_to_kmsg) {
-+			unsigned int len;
++static void seq_buf_pop_test(struct kunit *test)
++{
++	DECLARE_SEQ_BUF(s, 8);
++	struct seq_buf t;
++	char *buf;
 +
-+			/* A header that did not fit leaves no room. */
-+			if (seq_buf_has_overflowed(&s))
-+				break;
-+			len = seq_buf_used(&s);
++	/* Nothing to pop. */
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), -1);
++	KUNIT_EXPECT_EQ(test, s.len, 0);
 +
-+			seq_buf_printf(&s,
-+				       "%03d:\t%-16llu%-16llu%-16llu%-16llu%-8llu%-8llu%-8llu%-8u%-8u%-8u%u(%u)\n",
-+				       *head_idx,
-+				       entry->max_bytes_per_interval,
-+				       entry->cmf_bytes,
-+				       entry->total_bytes,
-+				       entry->rcv_bytes,
-+				       entry->avg_io_latency,
-+				       entry->avg_io_size,
-+				       entry->max_read_cnt,
-+				       entry->cmf_busy, entry->io_cnt,
-+				       entry->cmf_info,
-+				       entry->timer_utilization,
-+				       entry->timer_interval);
++	seq_buf_puts(&s, "hello");
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'o');
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 4);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hell");
 +
- 			/*
- 			 * Drop a record whole if it does not fit, without
--			 * consuming its ring entry.
-+			 * consuming its ring entry: the reader takes the
-+			 * string up to its NUL.
- 			 */
--			scnprintf(tmp, sizeof(tmp),
--				  "%03d:\t%-16llu%-16llu%-16llu%-16llu%-8llu%-8llu%-8llu%-8u%-8u%-8u%u(%u)\n",
--				  *head_idx,
--				  entry->max_bytes_per_interval,
--				  entry->cmf_bytes,
--				  entry->total_bytes,
--				  entry->rcv_bytes,
--				  entry->avg_io_latency,
--				  entry->avg_io_size,
--				  entry->max_read_cnt,
--				  entry->cmf_busy, entry->io_cnt,
--				  entry->cmf_info,
--				  entry->timer_utilization,
--				  entry->timer_interval);
--
--			if (seq_buf_puts(&s, tmp) < 0)
-+			if (seq_buf_has_overflowed(&s)) {
-+				buf[len] = '\0';
- 				break;
-+			}
- 		} else {
- 			lpfc_printf_log(phba, KERN_INFO, LOG_CGN_MGMT,
- 					"4410 %02u: MBPI %llu Xmit %llu "
++	/* A 0xff byte must not be mistaken for an empty buffer. */
++	seq_buf_putc(&s, 0xff);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 0xff);
++
++	/* A full buffer pops its last byte. */
++	seq_buf_puts(&s, "abc");
++	seq_buf_putc(&s, 'd');
++	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 8);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), 'd');
++	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 7);
++	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "hellabc");
++
++	/*
++	 * An overflowed buffer has nothing to pop, and stays overflowed. Use
++	 * a buffer allocated at its exact size, so that KASAN reports any
++	 * read past its end.
++	 */
++	buf = kunit_kmalloc(test, 16, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(test, buf);
++	seq_buf_init(&t, buf, 16);
++	KUNIT_EXPECT_EQ(test, seq_buf_printf(&t, "%s", "longer than sixteen"), -1);
++	KUNIT_EXPECT_EQ(test, seq_buf_pop(&t), -1);
++	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&t));
++}
++
+ static void seq_buf_printf_test(struct kunit *test)
+ {
+ 	DECLARE_SEQ_BUF(s, 32);
+@@ -354,6 +395,7 @@ static struct kunit_case seq_buf_test_cases[] = {
+ 	KUNIT_CASE(seq_buf_puts_test),
+ 	KUNIT_CASE(seq_buf_puts_overflow_test),
+ 	KUNIT_CASE(seq_buf_putc_test),
++	KUNIT_CASE(seq_buf_pop_test),
+ 	KUNIT_CASE(seq_buf_printf_test),
+ 	KUNIT_CASE(seq_buf_printf_overflow_test),
+ 	KUNIT_CASE(seq_buf_get_buf_commit_test),
 -- 
 2.55.0
 
