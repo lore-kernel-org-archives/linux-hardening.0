@@ -1,196 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077F637BE9E;
-	Mon,  5 Oct 2026 08:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0433803D3;
+	Mon,  5 Oct 2026 08:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791187740; cv=none; b=CfHINN5qf/NBl5l+T0s/+kPnnukOttY6mIekEJOUTD5Y+tlssrTj353W+Z8cX31cFGTiiwlOtF/eHMl4in4GaLOGmxNoIgLDs7dJgTzjfLtd5yJ22Y/70CCHGwMMkg4Qfm6MV3SFbeUC+mQhzzn4B8iXVL8qOCN0FkzfOMIBMKM=
+	t=1791187950; cv=none; b=jouXTCehZhDsqh6fArSxjCZiLQrocs/PUmXY6TkPZT60qKCBlg+26idxpXgKCi+4h5/IkQ5SjkDEs892V0uBXXTPpAbmX9qpXDgWsQRBO/HOY7Ng50hwFVmxibsRexTW/Rb0cex60XaW9AXLVz0ZBLpDWjmhEfhxQietbNq5vD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791187740; c=relaxed/simple;
-	bh=trtZaLJC3MhlKv9lnybxB/PWGn/R7M4m35xhpGgXBiM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vih9S/b955qFBMv6qQ20CeB5FUZXIsjE9MXtClZeJ5L/qfJb1KNTf3dr1rZJhQmaRNtR978s+wGUSerGRJh9z9oo/LY8CPPXTzYiMy3Yp9wfrgZGsmQaYqzyLqW2VC+jha6/32k82bg3gbTtldA9o3LDDRvQkHINnKPnIY9y86I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jt3a4Fpp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791187950; c=relaxed/simple;
+	bh=WRtZ/cz/FT4VfIcKEIK+ePSLetGDOvNcYIBTZcilCgc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GkKN1Z4Vn/hPjwCnpjoZ8SqcY/YcpTnvOnlUUWPVPRS5ev10KVskDb1AshvkQlt1GRTlA+LRkH0EWZ1Q+VKIMJErRkLJZu3Du5bC/9OJ/hhcK6tmFda3ESh01+43RIGwAJf8BsgpB/7vwKxzkL1m5GuIv18G0aXEwzgOCfKM6Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ngO95+Jh; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jt3a4Fpp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3591F000FF;
-	Mon,  5 Oct 2026 08:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791187738;
-	bh=Mx+nbYRXzNl44D5NyykgGkBrWZ5MiNy9Yx1ZnBFphJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Jt3a4FppBZLrmmVsjVqAQ6buJqHNbIHxZvpGHls9B6SuenV5GY6qGf33ihRhDEGJN
-	 /2XigapzV3e62VBA6v9gCoMuUy9lgXX5n8NZT7o4kn0saqAOuCX96JRtpqByjgkrrP
-	 EAWq+dvVkp2EwdNhv/ujRQRjsmChbFaNiTyyYSe36fsd1H223aZGjio8mq+GU3/Fnk
-	 K5FwvnpSivfB777OxCgRjMFt7VIAPB20FfDakoaqSOa1nNpwvEYg2j/ql8+GqNJsKN
-	 zKhr6Krro9ba3xlKPMqV5Lqa/Enz5ADn8sjtozG+4TLk/0nVHHuwzFbu6MLiIAZ3TY
-	 fwjzCwLUxo98g==
-Date: Mon, 5 Oct 2026 10:08:53 +0200
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: ceph-devel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>, 
-	Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] ceph: use a flexible array for monitor addresses
-Message-ID: <asNa11wqowvRtIXE@debian>
-References: <20261005001955.589395-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ngO95+Jh"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69516P9m3139667;
+	Mon, 5 Oct 2026 08:12:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=3cbbU7
+	41SbgqZJRcAAr1PPJbwn07RoCYANAWs6/OtKM=; b=ngO95+JhozgjhU+iiLHEhU
+	R2UdJuTuHQZigkxpC2zy/K805ixzcp2SeEQi8B+Hddb+3/0lOUJ4iN8g18xGC/GM
+	um7ghf1OA9xQlmU+vyYX115CT7Kp56QM+LNk4CRNsg5Q+pwPuZSfLR64UAg85RKQ
+	xTiI4HQzzBrsg4PMPqlQt6AEfZfERDI0BvttWOYZlEaRTvrp1oE41yHd/Kiyrlug
+	XpWLznX3NJav+xP1GNTmCl+rURDCiBn9jSS2r9Iu4QabfUtxkbJnTd/RNoQh8UNM
+	7BYlBhPi1vYT+Pf8naF538N//wDa2KE1UAQjKhy96mdl/qUQjiYy6OLNd10IeVYQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4h2q4jgsfe-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 05 Oct 2026 08:12:09 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6956Ex0M2165217;
+	Mon, 5 Oct 2026 08:12:08 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4h3c1pmr90-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Oct 2026 08:12:08 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6958C4Ox45679086
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 Oct 2026 08:12:04 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BAA0920043;
+	Mon,  5 Oct 2026 08:12:04 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6496C2004D;
+	Mon,  5 Oct 2026 08:12:02 +0000 (GMT)
+Received: from [9.123.14.142] (unknown [9.123.14.142])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  5 Oct 2026 08:12:02 +0000 (GMT)
+Message-ID: <dbb4580d-7e20-4c38-9716-f39cf81a4942@linux.ibm.com>
+Date: Mon, 5 Oct 2026 13:42:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="22jjbyyticpuppkd"
-Content-Disposition: inline
-In-Reply-To: <20261005001955.589395-1-rosenp@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/kexec: Annotate umem_info members with
+ __counted_by_ptr
+To: Thorsten Blum <blum@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Aditya Gupta <adityag@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260730130248.597249-2-thorsten.blum@linux.dev>
+ <7d99725f-9c90-48ca-bee1-30e2e6c06617@linux.ibm.com>
+ <asDClaRrHuKB44X-@kernel.org>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <asDClaRrHuKB44X-@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: SQmkxSjXfSF0Aigi6LvjR4rGT_ajmLVq
+X-Proofpoint-GUID: 9Ws2SgDQDx_bhgExN4tr_8LPPrwIjVn5
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDA1MDAzMiBTYWx0ZWRfX+0yfOZeCg6vm
+ Uy7QXUgn19+yDolbA9djlMEm0MsnAaGWc4YDmeIld5zNQsRh1jOe9pxpSVioqG2wbrs+5QWdj1n
+ 3nJfH1jcwRPqWO4BfZ1az6/cuHK3i5Y=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA1MDAzMiBTYWx0ZWRfXwpwS+slmMMhU
+ K3S8luuLydR1udZG+G+vNHsDKRrMNlFKF4lFAxhh2tlqbiNu74aQvmUvrWzxQyyOe5zN/jjyMNf
+ 718++icBmYkCM+OGsi2UUMqO5lXYD3N2r6featpLN4qYbAPHNVSQtCI8lLxcfPnBrzAPl1sfXiV
+ k6JVFlr2785uNn8IXFCwp+Z5z15K64eEAPPDnvBWOFebO8+xGDJEtwODjt9qFOyUobAXQrWaRnR
+ r4FxDZ4HJZ9mB6uAneEtHtP0fRsDTRSeYyqHj4rXfMdxUSWZcK5D+9nVE3h7k+Onl8f436/i9Tk
+ 75HW7nDmWpQZQLpwLEDga7BxJTlncIsy0uo9PVXxX3t/Y2CpAsZywVjdMhS4Hqwx4kbfABNs9dS
+ hejRV326jVGq3qwrQUlKL9OTE9Ed8T84g1mUbywhTIsFJcsPOsr1YOxZy+K3SXnSGx4Pvxg7uvX
+ ewiN5topA2limY/olZA==
+X-Authority-Analysis: v=2.4 cv=eYeo7LEH c=1 sm=1 tr=0 ts=6ac35bda cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=9AdMxfjQAAAA:20
+ a=EDIrg12U6glrp4Io1RoA:9 a=QEXdDO2ut3YA:10 a=bA3UWDv6hWIuX7UZL3qL:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-05_01,2026-10-02_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ spamscore=0 malwarescore=0 priorityscore=1501 impostorscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2610050032
 
 
---22jjbyyticpuppkd
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: ceph-devel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>, 
-	Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] ceph: use a flexible array for monitor addresses
-Message-ID: <asNa11wqowvRtIXE@debian>
-References: <20261005001955.589395-1-rosenp@gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <20261005001955.589395-1-rosenp@gmail.com>
 
-Hi,
+On 03/10/26 14:23, Thorsten Blum wrote:
+> On Fri, Sep 25, 2026 at 11:49:04AM +0530, Sourabh Jain wrote:
+>> On 30/07/26 18:32, Thorsten Blum wrote:
+>>> Add __counted_by_ptr() to umem_info::buf and umem_info::ranges to
+>>> improve access bounds checking via CONFIG_UBSAN_BOUNDS and
+>>> CONFIG_FORTIFY_SOURCE.
+>>>
+>>> Set the count fields before assigning the corresponding pointers, return
+>>> early on krealloc() failure, and use sizeof(*buf) when deriving
+>>> max_entries from the allocation size.
+>>>
+>>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+>>> ---
+>>>    arch/powerpc/kexec/file_load_64.c | 22 ++++++++++++----------
+>>>    1 file changed, 12 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+>>> index 8c72e12ea44e..6424b668f0e9 100644
+>>> --- a/arch/powerpc/kexec/file_load_64.c
+>>> +++ b/arch/powerpc/kexec/file_load_64.c
+>>> @@ -34,14 +34,15 @@
+>>>    #include <asm/cputhreads.h>
+>>>    struct umem_info {
+>>> -	__be64 *buf;		/* data buffer for usable-memory property */
+>>> +	/* data buffer for usable-memory property */
+>>> +	__be64 *buf __counted_by_ptr(max_entries);
+>>>    	u32 size;		/* size allocated for the data buffer */
+>>>    	u32 max_entries;	/* maximum no. of entries */
+>>>    	u32 idx;		/* index of current entry */
+>>>    	/* usable memory ranges to look up */
+>>>    	unsigned int nr_ranges;
+>>> -	const struct range *ranges;
+>>> +	const struct range *ranges __counted_by_ptr(nr_ranges);
+>>>    };
+>> [...]
+>>>    const struct kexec_file_ops * const kexec_file_loaders[] = {
+>>> @@ -83,11 +84,12 @@ static __be64 *check_realloc_usable_mem(struct umem_info *um_info, int cnt)
+>>>    	new_size = um_info->size + MEM_RANGE_CHUNK_SZ;
+>>>    	tbuf = krealloc(um_info->buf, new_size, GFP_KERNEL);
+>>> -	if (tbuf) {
+>>> -		um_info->buf = tbuf;
+>>> -		um_info->size = new_size;
+>>> -		um_info->max_entries = (um_info->size / sizeof(u64));
+>>> -	}
+>>> +	if (!tbuf)
+>>> +		return NULL;
+>>> +
+>>> +	um_info->size = new_size;
+>>> +	um_info->max_entries = um_info->size / sizeof(*um_info->buf);
+>>> +	um_info->buf = tbuf;
+>>
+>> Could you please explain why size and max_entries are updated before the
+>> buffer itself?
+> __counted_by_ptr() requires the counter ->max_entries to be set before
+> the ->buf pointer is assigned; otherwise you have an inconsistent state
+> where the counter doesn't match the pointer.
 
-> Date: 2026-10-04 17:19:55-0700
-> From: Rosen Penev <rosenp@gmail.com>
->
-> ceph_alloc_options() allocates the monitor address array separately,
-> always sized for CEPH_MAX_MON entries. Make it a flexible array member
-> at the end of struct ceph_options and allocate both together with
-> kzalloc_flex(). The array was already an 8 KiB slab object, so this
-> only drops the separate allocation and its error path.
->=20
-> num_mon is the number of addresses in use, not the capacity, so the
-> array cannot be annotated with __counted_by().
->=20
-> ceph_compare_options() memcmp()s the simple fields up to the first
-> member that needs a custom comparison. With mon_addr gone from there,
-> use num_mon as that boundary; the compared fields are unchanged.
-> Document that num_mon has to stay first past that point.
->=20
-> Assisted-by: LLM
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  include/linux/ceph/libceph.h |  7 ++++---
->  net/ceph/ceph_common.c       | 11 ++---------
->  2 files changed, 6 insertions(+), 12 deletions(-)
->=20
-> diff --git a/include/linux/ceph/libceph.h b/include/linux/ceph/libceph.h
-> index f92fdd853f1f..e585d6d11303 100644
-> --- a/include/linux/ceph/libceph.h
-> +++ b/include/linux/ceph/libceph.h
-> @@ -57,15 +57,16 @@ struct ceph_options {
->  	/*
->  	 * any type that can't be simply compared or doesn't need
->  	 * to be compared should go beyond this point,
-> -	 * ceph_compare_options() should be updated accordingly
-> +	 * ceph_compare_options() should be updated accordingly.
-> +	 * num_mon must stay the first member past this point, as
-> +	 * ceph_compare_options() uses it as the end of the memcmp().
->  	 */
-> =20
-> -	struct ceph_entity_addr *mon_addr; /* should be the first
-> -					      pointer type of args */
->  	int num_mon;
->  	char *name;
->  	struct ceph_crypto_key *key;
->  	struct rb_root crush_locs;
-> +	struct ceph_entity_addr mon_addr[];
->  };
-> =20
->  /*
-> diff --git a/net/ceph/ceph_common.c b/net/ceph/ceph_common.c
-> index a797c7360e3c..95dc18257056 100644
-> --- a/net/ceph/ceph_common.c
-> +++ b/net/ceph/ceph_common.c
-> @@ -133,7 +133,7 @@ int ceph_compare_options(struct ceph_options *new_opt,
->  {
->  	struct ceph_options *opt1 =3D new_opt;
->  	struct ceph_options *opt2 =3D client->options;
-> -	int ofs =3D offsetof(struct ceph_options, mon_addr);
-> +	int ofs =3D offsetof(struct ceph_options, num_mon);
->  	int i;
->  	int ret;
-> =20
-> @@ -309,17 +309,11 @@ struct ceph_options *ceph_alloc_options(void)
->  {
->  	struct ceph_options *opt;
-> =20
-> -	opt =3D kzalloc_obj(*opt);
-> +	opt =3D kzalloc_flex(*opt, mon_addr, CEPH_MAX_MON);
+But isn't updating the counter holding the buffer size before the actual 
+buffer
+can cause problems?
 
-Oh, there's indeed a kzalloc_flex().  Why is it not used in the other
-patches?  (I'm not all that happy with the current API of this _flex()
-variant, but it's better than nothing.)
+Can you share the document link of __counted_by_ptr() which says that 
+size counter to be
+updated before the buffer pointer.
+
+Here is an example in fs/coredump.c file where size counter is updated 
+after the buffer
+with __counter_by_ptr():
+
+https://github.com/torvalds/linux/blob/a90ee4305c4a5df72c11b31dacfdc76e00fcf78a/fs/coredump.c#L98
+https://github.com/torvalds/linux/blob/a90ee4305c4a5df72c11b31dacfdc76e00fcf78a/fs/coredump.c#L115
+
+- Sourabh Jain
+
+> And ->size is moved up because ->max_entries depends on it.
 
 
-Have a lovely day!
-Alex
-
->  	if (!opt)
->  		return NULL;
-> =20
->  	opt->crush_locs =3D RB_ROOT;
-> -	opt->mon_addr =3D kzalloc_objs(*opt->mon_addr, CEPH_MAX_MON);
-> -	if (!opt->mon_addr) {
-> -		kfree(opt);
-> -		return NULL;
-> -	}
-> -
->  	opt->flags =3D CEPH_OPT_DEFAULT;
->  	opt->osd_keepalive_timeout =3D CEPH_OSD_KEEPALIVE_DEFAULT;
->  	opt->mount_timeout =3D CEPH_MOUNT_TIMEOUT_DEFAULT;
-> @@ -344,7 +338,6 @@ void ceph_destroy_options(struct ceph_options *opt)
->  		ceph_crypto_key_destroy(opt->key);
->  		kfree(opt->key);
->  	}
-> -	kfree(opt->mon_addr);
->  	kfree(opt);
->  }
->  EXPORT_SYMBOL(ceph_destroy_options);
-> --=20
-> 2.56.0
->=20
->=20
-
---=20
-<https://www.alejandro-colomar.es>
-
---22jjbyyticpuppkd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrDWxQACgkQ64mZXMKQ
-wqntOA//a86yyT3keMHPYFgUbEkw/SV6QoeAAvRkk0BuLl729WRbSRL8SIiEyldW
-2SDHSk3OZgP2MUuEX7DO+vx2FJxkWlaD3Fuwx126ZuERASAP17a5gBMnb4UJ8yFo
-rLWd87SbOhS7pHsV1jFUbw7lMftkQ+wM7G9D42Mfax03UWuQ2jTGSAGsLXccngbz
-Ed7yaGbaLLorjunzIMhLicM5mMnhtoUGhgMW0bFRnoVQgxea+HlyRuiMyp3eJsoc
-2+zsA4ioTsdY/WUoyXyeaWIiCqQB4WZ59qw2qDVA4JHdp+HqR2AF62xFehXB9jxn
-cPlidWAi1ZBrEkPmSGx+ckufdwdmOZB80ntm5JV6ldRkNcUFpXZ29qT9tGtV4X0Q
-2eP0JBzkizlaijztW+zbVfzgfowSKdcSMtzJAppGFKJ6xP8bQH+xSgiSO3ekmuVs
-SjKcSsdPi923KIsQoqPvtboFPL70ga5uJE3sLNW0nQeeQl/WecPNainlDYrkIxAU
-XwitnyvHgjKgO+yskTH+65rZKOyNm9ATc+CYtTRzGIkk+LEhIfVl8/A3NIlhC/wa
-qiWISYKKHrbnZbXpBK4NOLkNZc58ilfHkAdDKCuAF4vt0MoMkOdOuxHKMqsgjVy7
-BpZpgd00FxYVowg/fen2eZFPrQs9c20UDzRoaswRfW6xaBO7NIo=
-=eXCR
------END PGP SIGNATURE-----
-
---22jjbyyticpuppkd--
