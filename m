@@ -1,56 +1,56 @@
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF2A2F6577
-	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 19:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A281364052
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Oct 2026 19:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791227989; cv=none; b=TCq0fuzc8gbfaGNvc3esDP7f1ZhhQzC4caLz8GSacGi+9PtZ5pFscQiq7+TKahe5U2S6lIOPiyEt1MF7v4W9DNliGhvC/No/mmSvE0UfTzreZ6O5VhDBP26wlUkHgixUIwEtXXSID7lgmB+axQTZfxxTydB5jV8j/Lc1exMlQog=
+	t=1791228067; cv=none; b=MUD9TKTvTi3syUKIyjYlhVpnpGqdeApOKvR233TiSD08NBld0gJSgaQr/eVdsIOhyUn1+rzeg5ndWw2/0yJfEEs0AC+bFA8h3Fs8WowAXKIZ70uIHT0DdFvgxkm6lf4FRRyYK33J5FA8VEjgtdrqM7ZOwR5f3asBRDoF7gCpE/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791227989; c=relaxed/simple;
-	bh=bnlqihMoP+OehsOX4Qu9na8XM6RJuc5xI2jSiqejPOU=;
+	s=arc-20240116; t=1791228067; c=relaxed/simple;
+	bh=YQ7/Ax0UxErTNnT63wTa7fRKhXKFuf3K2gplq2MDpb4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BOgfR4+4wTny+sn8gFKnIJ+dt1gX4l1kHIk303p0iMbAU6n6TBC4/fyvlp8gXDybOmkkijXgUXQ9GzC/xnttDdYrBQO0hCBL9nqYciLeo4F234651dTUMFyKy07GGYIREWx++pBpDBB5e75E53Un/sS/6yfbu0GJeicf4etcrHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SPZrW0dG; arc=none smtp.client-ip=209.85.214.200
+	 To:Cc:Content-Type; b=MfsQLtPC++/TioVdNWDWds+TM+OkLdylaT74he2dbegTbC4p9dWIlTTkH4Fwglh8XU+MbQAOW5Pv+JBqE7Yqne4XrMeRWbPTvFBqVhlnDxGP01AGp6xV4o1Lu24Xeuviyau8n6qIw8UAU2WKxYvb19vivabWBsVko0eiO3PU9tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VtWMHxRe; arc=none smtp.client-ip=209.85.214.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SPZrW0dG"
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2df8d1e91c9so37956355ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 05 Oct 2026 12:19:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VtWMHxRe"
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2df7bc60df6so12787255ad.3
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Oct 2026 12:21:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791227986; x=1791832786; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1791228066; x=1791832866; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=G7eLGK4KvBHDJUYriBrlxQjC7HPa3mfoBvjU5hS2xzk=;
-        b=SPZrW0dGEExcHGc6mE9HYApEoK1aTiyY145GAnjAleYeX9ihUgGx89mGrSZubURDfH
-         BPp7K8u3MXFQoB5NYrQZFjWmWJmi5a5nTG42JdkIzjzSetIS/FYvaOWPBpz9cvbIRu66
-         BPRc/5lbw9j6gCLZQLIYaS53OtGJp1I8Wxeki82MVDFDeDXZ9BSVRvg+sfdj+yiBKNnF
-         B4Q+YioO0DcJAIOV7IEZYKFOJzMAugJuAboPwwmaDAyIE1WKhkjptMfXYphfaU0mzBhq
-         WH4dorl8bMHmXQDsd/vEWtuxp1NtV9QKOCqaFQAtW0t//CpWHR5MQGbSQ0MypQcCSzmp
-         N3aw==
+        bh=rrTypWKyXrNGtquOYVr8mPkgvP23qIJmTIldcFVC0/Y=;
+        b=VtWMHxReun91lPUi3FXOy0ahEp/8E68w98EPHn1S693AdOdpV268ykB8PaNPK/7tK2
+         zWksmwHLruEGpdacf9Bhwv2qAt/miKigpWAQ5N8vr7s5J5I9/jIJOuswwfCUqnIk3VHl
+         ensYXYJoufVVPch3FlYpgJ+iwzwCnWr81630Wouw0luzejUpv/laPJnL+ZkZnP2y7tWP
+         y6OXvEON+L1ragiXgjJfIc6teWJSLcIryiLuWPqLi1stx9OjniPW7Hbh7hSkp5e0Rvn/
+         1sn7gfsP5bDSqPGBeBIzNp4EKEupj0uCBph2TSGIHLqAWyJ4WPZhHdtH0MK5ly6X1ioG
+         wxVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791227986; x=1791832786;
+        d=1e100.net; s=20260707; t=1791228066; x=1791832866;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=G7eLGK4KvBHDJUYriBrlxQjC7HPa3mfoBvjU5hS2xzk=;
-        b=l9g5pb6K+lYRKE24Iwzv/+ypkVeuRF9l1ZHo3CFO0T2mqk7E7Dl/vjF9hNeAwBKuKF
-         Cl2kXvD+bj8zYriZ3v+rqRVG5Z1Oh7rHkViZgfbe5HswwSFQZcoB67CHwcTkhZMvNVvL
-         1wf0gummbPXAdUpzdIh1/vR59UU0H1kg6EzgZV8Dh0tr9X7bLvqkq9Vweq2jCvAYGhm1
-         8PioqwkfoM+V82Nx4eICh9p3EZfyw9FJKlZSyOm8c8gtwbRzBiUtQAf4n51ftVATQWcO
-         dVi6KBrTcePl7lnUJcf0mVdS8Zctg0fkHOFoT8E/csVkt2U7HOq8icAeVDgBNwOk2qRb
-         Q7Mg==
-X-Forwarded-Encrypted: i=1; AKwUvBzWsY70SRgVHniYhdQxtA7MdRZ7ksUnsjDqQO1zCC1KmYXd1QYKQbh2lgS2MgJQvD25L6/asPMH0BqicfQXqWU=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIcuybOu4vniSIRecik/0ZO8pz5FrYS8LIJlr3nwleYRcRbiXi8
-	tAEmE0gLrzorfnhU9yaPMaGCYMQRrVStGB177CFxQoJwbGRdmWa4dke1KeTyvgRJVqkvjIlMp3M
-	8
-X-Received: from plic14.prod.google.com ([2002:a17:903:370e:b0:2e4:90ac:5fc4])
- (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f682:b0:2dd:ad73:c936
- with SMTP id d9443c01a7336-2e49b60bf8emr102328605ad.23.1791227985632; Mon, 05
- Oct 2026 12:19:45 -0700 (PDT)
-Date: Mon,  5 Oct 2026 19:19:43 +0000
+        bh=rrTypWKyXrNGtquOYVr8mPkgvP23qIJmTIldcFVC0/Y=;
+        b=qO4tGcx0phzBOy6pVOw8uqZSm070QAwhvryEn7cC1Quvib3Dz940ldxOLqvnHKof8y
+         F3gNI4QmMrP3ImzMsOfRABkr79yL5YXwu1J6MrV/ahWw1UqSlZC0fENwTMXVdTmeyZIT
+         x/P45y4/1SOii7E8Nar890Ydf/xpqr4qPZNAwslhhExAhbpYQ3Xqi9/ZkGcs/QFszfW7
+         4iss6CjdcujbvwnYOrhlo1aNKSe8Vz4C0nIHXB9X137E/5joUi1DewtgNO83ugAe2i8P
+         4NGd6qQPFqEE7W+tmAyTraJ9jJHVn8JSiJDqI4oA3WgOlaVuSOOGJwkjjz7F6IXrvOni
+         ZSuQ==
+X-Forwarded-Encrypted: i=1; AKwUvBy79jFpyDEQ2QDHJ6Y0KbjKEvboPHPSftL+EULGtTsXdsXCaF4fUQpM4kf9lKQiJTJoIJwx3R3k26HAUadYVJw=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJOQ9Zbm91xiuBIhdcoGqUSqMqP1RQBpPGfYjxPfnXiK9ootg77
+	5R7uA9fkVVQ6SKoZNEraODa1GUyqGqbxmsIXdRkOKbt2ikln+KDC2LhBp/cbPh+QNjzRZwX1KhJ
+	Z
+X-Received: from plbmh14.prod.google.com ([2002:a17:903:9ce:b0:2e2:cbb6:3b7d])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:9341:b0:2df:ab09:2656
+ with SMTP id d9443c01a7336-2e49b6ad7famr81214365ad.44.1791228065326; Mon, 05
+ Oct 2026 12:21:05 -0700 (PDT)
+Date: Mon,  5 Oct 2026 19:20:52 +0000
 In-Reply-To: <20261005102518.2400984-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20261005102518.2400984-1-morbo@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20261005191943.2588899-1-morbo@google.com>
-Subject: [PATCH] compiler_types: Allow opting out of __counted_by and __counted_by_ptr
+Message-ID: <20261005192052.2589382-1-morbo@google.com>
+Subject: [PATCH v3] compiler_types: Allow opting out of __counted_by and __counted_by_ptr
 From: Bill Wendling <morbo@google.com>
 To: Kees Cook <kees@kernel.org>, ardb@kernel.org
 Cc: gustavoars@kernel.org, nathan@kernel.org, ndesaulniers@google.com, 
@@ -92,6 +92,7 @@ Assisted-by: LLM
 Signed-off-by: Bill Wendling <morbo@google.com>
 ---
 v2: Only specify __NO_COUNTED_BY_PTR. Leave __NO_COUNTED_BY until we need it.
+v3: Add the version to the Subject line.
 ---
  include/linux/compiler_types.h | 7 ++++++-
  1 file changed, 6 insertions(+), 1 deletion(-)
