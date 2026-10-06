@@ -1,177 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4B43A8736;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3D03822B1;
 	Tue,  6 Oct 2026 09:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791278437; cv=none; b=o/VOxD2I5r4aIOiTjXsiefO19ko0VFCkKqvgIxPhfFE8ijGPc1tF7ZHDdTxdw7hFUCVDyQ3QcYLFCm9risssEcLnEQUpiJ/vrUC7XSQo5OdPgsdFogM5N5wwaoc9Rlht8BUWN9GNGfxvHMP4OTfGD/iUG9FnPzg2U8IgcYpXjuU=
+	t=1791278438; cv=none; b=IfHY6t+s55RDjT4wqMqcN2lAysPG/R+taPulAbqz43EZ0W65EYixckA/KvNAGWAy7+8gLLoHYYZe1qgbLGJTs/pzM+sKA3ZmwPdIxpieliB98baT9T5yTE8e8vFGml6jT/XwnvXKQL57G9wHuVUrnZ1+HuZra0yclCn5wQ+wjiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791278437; c=relaxed/simple;
-	bh=Qc4gibobM/KiTch6bZpTHBpEl8CwkLveGZU5LrXrSHk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=muhZ4NU3z8chhpiXhwAbRc8AGkDU0s28yHbonmg9V1iP2i22cEIShPjIpCyzfgZdXmPqV6i9RyNvvXWo6u/Odys2OWcOWZcmTpA5ZIoEpwx4tzdqY9xTR5LQt+GCG8ggkHLn5GK1vo6CYtLuILvbheQtr4Bbu5OcHKlk7MZD5K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMdhQHzq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791278438; c=relaxed/simple;
+	bh=Cp0If3PbWZZsepP088/3ZWOMHF574LM44+zI328FUaQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HdR0RiNZwEgEbpltiSphdmWjwflMr0Je/vtZtnufc4HkQFHRbThFnn9BydgpaPnCSTs7FsN/zevRiY2FB6g7he+BPXJG5wVRtp/iLnhyIVG7wlIV5bYP1jjSeD/7jQ6+i4CEKe8uL2nUN7t3xSLq3mu+L183v76nAR2B1exBlV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVuoYX+y; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMdhQHzq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F44F1F00899;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVuoYX+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32D291F00893;
 	Tue,  6 Oct 2026 09:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1791278436;
-	bh=bQARg85OdF5eGN4sTix/VU3mJvlcuBipIV6C7S90Sf0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bMdhQHzqdI4P9vGs4735+trKLMRhRI0V8H/o4q2jl8pdDlT8ie3YnFFrbvS+qLxX4
-	 7vswKvj3s8lcAAJQIwedRBsfOuh6GN1nsv9a20stUq1gzoHVsTdbHTve3yxHOwPsIT
-	 Tcz4TbaVpHfcHz00go1EFZ2tI4aFzv1JnlxbraZHbaLbWcoI8Ke7IsK7quVG05safR
-	 yUZyX2tVW/3vIBS0wv499KIMmXqdIzTP6hwRE3q9/hAW2OQJqM8stMh6IoW/YKst7y
-	 W9ixi3JR+sNrq2ff1ZKSO8tLGGEo6alocFRCg0nN7y54RCIOKi/Aauoh56zsFgPBsm
-	 MApiu+vzmRMIA==
+	bh=UWdiWm/AeZBjUn1Ge2ocDynm/vUX0V3PYEyMJDJeYUM=;
+	h=From:To:Cc:Subject:Date;
+	b=CVuoYX+y8Vr+gukSpcCxEQbbhTSWy/L5mHvb1sMV1kE2IfUWTiDJXkjhPokuaEqlp
+	 o4FU9LWhcopNf2xTSPyodRjM1qg1/Mzm2Wh1K0UU+CO9KcG322EOvqHCu98bYfjECu
+	 eL8QxLSiZdzNL87wCdvE2W84LKXmkuJza85xBzNrOodnO8iczZEPxaNev6BFmNjPYG
+	 ZcMt4HZcF7RsC1WSCHLiKzLsd/NO/UPuKZZEBhR5ogqnBblCWd0CMMxTdLkVOA/EmQ
+	 BPuIfzqHB8EK63TeKn94rBzvhXqgCwZOgJCNkZKdHffeKOvkcYqGGEHyytb3CmFj3v
+	 b25qlF8nYyvvg==
 From: Kees Cook <kees@kernel.org>
 To: Vlastimil Babka <vbabka@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
 	Harry Yoo <harry@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Hao Li <hao.li@linux.dev>,
 	Christoph Lameter <cl@gentwo.org>,
 	David Rientjes <rientjes@google.com>,
 	Roman Gushchin <roman.gushchin@linux.dev>,
-	linux-mm@kvack.org,
 	Pedro Falcato <pfalcato@suse.de>,
 	Kuniyuki Iwashima <kuniyu@google.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v6 3/8] mm/slab: Drop the ctor and flags arguments from kmem_buckets_create()
-Date: Tue,  6 Oct 2026 02:20:29 -0700
-Message-ID: <20261006092035.166776-3-kees@kernel.org>
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	cgroups@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next v6 0/8] net: skb: isolate skb data area allocations into a separate bucket
+Date: Tue,  6 Oct 2026 02:20:26 -0700
+Message-ID: <20261006092030.got.500-kees@kernel.org>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261006092030.got.500-kees@kernel.org>
-References: <20261006092030.got.500-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4654; i=kees@kernel.org; h=from:subject; bh=Qc4gibobM/KiTch6bZpTHBpEl8CwkLveGZU5LrXrSHk=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlH9iYsELHlDNGfpXea+WDn85cTcg/fn6H0RD/utP0s4 cm/hF/97ShlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZhIYQ3D//yKmZceL9px6567 3zZVx2uRdr9Vlsb2qvZ+Uoh6c0w4s5qR4fSunydahBQTmgIyfXt12pVa+4NS9DvapY66r7SU+aL OAAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4195; i=kees@kernel.org; h=from:subject:message-id; bh=Cp0If3PbWZZsepP088/3ZWOMHF574LM44+zI328FUaQ=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlH9sbn8PqKeBx/z3et2s7w3kf1fLa24IU2lX9Eav9uc LX5J3S6o5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCJfJzH8r78uHXPRZIKdz/Xi vuzYfUk5J7+I3FmqdFHM496DZYsWpjP8j5hzc9+hl9HT1Df95vUP+XNNK+FGweV6X2+PXUVpLO0 TuAE=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-A bucket set passes its constructor and slab flags to its own caches,
-but its allocations do not always come from them. With
-CONFIG_SLAB_BUCKETS=n, kmem_buckets_create() returns ZERO_SIZE_PTR, and
-when creating the set fails it returns NULL. Either way
-kmem_buckets_alloc() is served by the general kmalloc caches, which have
-neither, so a caller cannot depend on them. msg_msg depended on
-SLAB_ACCOUNT, which it no longer passes since accounting through
-GFP_KERNEL_ACCOUNT instead.
+Hi!
 
-No caller passes a constructor or flags; drop both arguments. The set's
-caches keep SLAB_NO_MERGE, which kmem_buckets_create() always added.
+This gets the buckets able to handle memcg (GFP_KERNEL_ACCOUNT) with
+isolation (since it's common due to AF_UNIX), and GFP_DMA with fall back
+(since it's rare). It gave me an excuse to build out bucket kunit tests
+too, and that (and LLM review) found a couple other issues that needed
+fixing too, including msg_msg allocations going uncharged to their memcg
+when CONFIG_SLAB_BUCKETS=n (fixed in 2/8).
 
-Assisted-by: LLM
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- include/linux/slab.h |  5 ++---
- ipc/msgutil.c        |  5 ++---
- mm/slab_common.c     | 14 ++++----------
- mm/util.c            |  2 +-
- 4 files changed, 9 insertions(+), 17 deletions(-)
+Harry, on your v4 question[1] about bucket users giving their own
+alignment: I tried that in v5, but a set's allocations don't always
+come from its own caches. With CONFIG_SLAB_BUCKETS=n, after a failed
+kmem_buckets_create(), and for the DMA and reclaimable fallbacks, they
+come from the general kmalloc caches, which can only give kmalloc()'s
+alignment. So v6 goes back to mirroring the kmalloc cache's alignment,
+and drops the ctor and flags arguments for the same reason. And the whole
+exploration made me realize I had a completely wrong understanding of
+how memcg worked. :P
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index cda126def67a..31f97e2579a7 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -890,9 +890,8 @@ void *kmem_cache_alloc_lru_noprof(struct kmem_cache *s, struct list_lru *lru,
- bool kmem_cache_charge(void *objp, gfp_t gfpflags);
- void kmem_cache_free(struct kmem_cache *s, void *objp);
- 
--kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
--				  unsigned int useroffset, unsigned int usersize,
--				  void (*ctor)(void *));
-+kmem_buckets *kmem_buckets_create(const char *name, unsigned int useroffset,
-+				  unsigned int usersize);
- 
- /*
-  * Bulk allocation and freeing operations. These are accelerated in an
-diff --git a/ipc/msgutil.c b/ipc/msgutil.c
-index 1ba8e59cb255..10ce3087b089 100644
---- a/ipc/msgutil.c
-+++ b/ipc/msgutil.c
-@@ -43,9 +43,8 @@ static kmem_buckets *msg_buckets __ro_after_init;
- 
- static int __init init_msg_buckets(void)
- {
--	msg_buckets = kmem_buckets_create("msg_msg", 0,
--					  sizeof(struct msg_msg),
--					  DATALEN_MSG, NULL);
-+	msg_buckets = kmem_buckets_create("msg_msg", sizeof(struct msg_msg),
-+					  DATALEN_MSG);
- 
- 	return 0;
- }
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 270408ce5a9d..f8bb70d76eb4 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -415,12 +415,10 @@ static struct kmem_cache *kmem_buckets_cache __ro_after_init;
-  *			 allocations via kmem_buckets_alloc()
-  * @name: A prefix string which is used in /proc/slabinfo to identify this
-  *	  cache. The individual caches with have their sizes as the suffix.
-- * @flags: SLAB flags (see kmem_cache_create() for details).
-  * @useroffset: Starting offset within an allocation that may be copied
-  *		to/from userspace.
-  * @usersize: How many bytes, starting at @useroffset, may be copied
-  *		to/from userspace.
-- * @ctor: A constructor for the objects, run when new allocations are made.
-  *
-  * Context: Cannot be called within an interrupt, but can be interrupted.
-  *
-@@ -429,10 +427,8 @@ static struct kmem_cache *kmem_buckets_cache __ro_after_init;
-  * subsequent calls to kmem_buckets_alloc() will fall back to kmalloc().
-  * (i.e. callers only need to check for NULL on failure.)
-  */
--kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
--				  unsigned int useroffset,
--				  unsigned int usersize,
--				  void (*ctor)(void *))
-+kmem_buckets *kmem_buckets_create(const char *name, unsigned int useroffset,
-+				  unsigned int usersize)
- {
- 	unsigned long mask = 0;
- 	unsigned int idx;
-@@ -455,8 +451,6 @@ kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
- 	if (WARN_ON(!b))
- 		return NULL;
- 
--	flags |= SLAB_NO_MERGE;
--
- 	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
- 		char *short_size, *cache_name;
- 		unsigned int cache_useroffset, cache_usersize;
-@@ -487,8 +481,8 @@ kmem_buckets *kmem_buckets_create(const char *name, slab_flags_t flags,
- 			if (WARN_ON(!cache_name))
- 				goto fail;
- 			(*b)[aligned_idx] = kmem_cache_create_usercopy(cache_name, size,
--					0, flags, cache_useroffset,
--					cache_usersize, ctor);
-+					0, SLAB_NO_MERGE, cache_useroffset,
-+					cache_usersize, NULL);
- 			kfree(cache_name);
- 			if (WARN_ON(!(*b)[aligned_idx]))
- 				goto fail;
-diff --git a/mm/util.c b/mm/util.c
-index bf0513d1d3d0..0cd125f1ea99 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -199,7 +199,7 @@ static kmem_buckets *user_buckets __ro_after_init;
- 
- static int __init init_user_buckets(void)
- {
--	user_buckets = kmem_buckets_create("memdup_user", 0, 0, INT_MAX, NULL);
-+	user_buckets = kmem_buckets_create("memdup_user", 0, INT_MAX);
- 
- 	return 0;
- }
+The bulk of this is mm/slab, but the final patch is netdev, which Paolo
+acked in v4, so I'm hoping this whole series can go via slab?
+
+Thanks!
+
+-Kees
+
+ v6:
+ - drop v5's 6/7 ("Let a bucket set handle __GFP_ACCOUNT") and its
+   kmem_buckets_create_types(): memcg charges each object in whatever
+   cache serves it, so accounted allocations can stay in a set's single
+   row of caches, and the fallback now covers only DMA, reclaimable, and
+   no-obj-ext allocations (Sashiko)
+ - 2/8: new: account msg_msg with GFP_KERNEL_ACCOUNT again; with
+   CONFIG_SLAB_BUCKETS=n it went uncharged, since its accounting lived in
+   SLAB_ACCOUNT on bucket caches that are not created (Sashiko)
+ - 3/8: new: drop the ctor and flags arguments from kmem_buckets_create();
+   neither reaches allocations that fall back to the general kmalloc
+   caches, and no caller needs them any more (Sashiko)
+ - 4/8: go back to v4's form: no alignment argument, and each bucket cache
+   takes the alignment of the kmalloc cache it mirrors, since the fallbacks
+   to kmalloc can give no other (Sashiko, Harry)
+ - 5/8: say in the teardown comment that cache sharing comes from kmalloc
+   rounding sizes up to a larger class (Sashiko)
+ - 6/8: drop the explicit alignment tests; check that each size lands in
+   the cache of the size kmalloc() rounds it up to, not just a big enough
+   one; and in the destroy test, assert on the allocation, skip when KFENCE
+   serves it, and tear the set down through its KUnit cleanup action
+   (Sashiko)
+ - 7/8: keep __GFP_ACCOUNT allocations in the set, document what an
+   allocation that falls back loses, and test the reclaimable fallback
+   (Sashiko)
+ - 8/8: create the skb_data set with kmem_buckets_create(), and make the
+   comment above kmalloc_reserve() name no allocator (Sashiko)
+ - v5..v6 diff: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/diff/?id=dev/v7.3-rc2/skb-buckets/v6&id2=dev/v7.3-rc2/skb-buckets/v5
+ v5: https://lore.kernel.org/all/20261002231120.late.500-kees@kernel.org/
+ v4: https://lore.kernel.org/all/20260921075811.too.775-kees@kernel.org/
+ v3: https://lore.kernel.org/all/20260702170728.168755-1-pfalcato@suse.de/
+
+[1] https://lore.kernel.org/all/arViR2Miz61-3fV4@thinkstation/
+
+Kees Cook (7):
+  mm/slab: Mark the kmem_buckets_create() context as a Context: section
+  ipc, msg: Account msg_msg allocations with GFP_KERNEL_ACCOUNT again
+  mm/slab: Drop the ctor and flags arguments from kmem_buckets_create()
+  mm/slab: Give bucket caches the alignment of the caches they mirror
+  mm/slab: Add kmem_buckets_destroy()
+  mm/slab: Add tests for the existing kmem_buckets behaviour
+  mm/slab: Provide kmalloc type fallback for bucket allocations
+
+Pedro Falcato (1):
+  net: skb: isolate skb data area allocations into a separate bucket
+
+ include/linux/slab.h   |   6 +-
+ mm/slab.h              |  19 ++-
+ ipc/msgutil.c          |   8 +-
+ lib/tests/slub_kunit.c | 291 +++++++++++++++++++++++++++++++++++++++++
+ mm/slab_common.c       |  74 ++++++++---
+ mm/util.c              |   2 +-
+ net/core/skbuff.c      |  10 +-
+ 7 files changed, 378 insertions(+), 32 deletions(-)
+
 -- 
 2.55.0
 
