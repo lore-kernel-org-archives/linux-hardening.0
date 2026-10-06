@@ -1,60 +1,106 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47003812DB
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Oct 2026 20:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2483D5645;
+	Tue,  6 Oct 2026 20:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791318948; cv=none; b=pZlh++I7QXrfT4erinzRwXZlmq0faSfNCeqnJhxjKsemZ6gMEJiQSVhTtO2i2coZqMk2GBhlQS7sIA1hjLyTjNJMkviQOPG7KvvWX04mUcg6KgWs4t9iJcqqREMdXe5yLqwaOUI2HEW90DnOUjzARt55y7MWUj4TOsJT5i3PZIU=
+	t=1791319346; cv=none; b=hoq5XcTasDFhtPF6Zp75NAD9nno07XHdU/9MG3toa8cwiAFQMappdPgOUdZQTvrkAm9dynqTRVi3tuIw/OMEUSZ/Gx0KU9DtYSEE14lUhTNVsPd7jgwryRzDEX7FO4p/lnK3y8HiGG/mU+epmuMCdWPHbmPyeJpPsaStE5cQUHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791318948; c=relaxed/simple;
-	bh=KqBA8VViuw8N3Es4Y4QnkWH50mYc0aPmfReMZO/px7E=;
-	h=Message-ID:Date:MIME-Version:Subject:From:Cc:References:
-	 In-Reply-To:Content-Type; b=FvNMkZomroOBslRuUT7zJggXZ7l1ogzI1syOb8HSFE+unNv78KtLnVGsfn0yB8ZSNCXFuGFvQToNt3ULsAB0DQPN1oB3QAV7WR8DVUNqeLs0zZDf/hNRFT8U8B9/fPc3lOybzO71XGSZMA9p2IGRF81wKHDghGQUrNQTzgkEXbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=jZx5P2j0; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1791319346; c=relaxed/simple;
+	bh=WFpdf4n+77QgourCDpWIcEBk2OgKMZKX3U0kB6OtEn0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=I7FiXSvzgIL1J4CZ93B4cNNCqLPBpx7nGV1/tF4pcjSJ2pXJtWiUzdGf94KWyLMmWjXflQ7zLoPfle9Z8/iUfwDsKvx2MxhCHF+u5kw3JUJN8MXaciuRIiQMmm1WdczVjzGTmhIr+/q3CSPB4JFR543CML0K3epTbWJP11OFKxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+N5m2xS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="jZx5P2j0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:Cc:From:Subject:
-	MIME-Version:Date:Message-ID:From:Reply-To;
-	bh=KqBA8VViuw8N3Es4Y4QnkWH50mYc0aPmfReMZO/px7E=; b=jZx5P2j0oRHFX+5xL6Vys7IFdu
-	kftJ4ksFXlShoJdtyS8BBsgdAEn9+mblod5tYTI45/lQgbgrzu4hU9ofwfw17dzIxx02Th9nI5Q3j
-	ugvn0Z1pSsmCBgwPgZH+83yWTmCDmeuFWmay8BY7UyA8o97tgo5imcSssORr/1FIZtk9yTBildD4h
-	qkTC8xvLSChf/lEvXdVcPyONh7Lno+mHOUHurTe8XJzMUEmCCSJspBHcKQCj0EznlF43Bm86V8Dfl
-	zcMdFTtv5bt+C92DFuW6+xkhBqSkWxnCfux/5EKelB46Y6s+4AWhAnAgoeT9wNd75BQHB+9/LIsCb
-	RZYSmGgw==;
-Received: from [187.90.178.110] (helo=[192.168.15.93])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1xEBsy-00DcMi-Hb; Tue, 06 Oct 2026 22:35:40 +0200
-Message-ID: <ded6fce8-f2b7-afac-6742-0a6391b556e5@igalia.com>
-Date: Tue, 6 Oct 2026 17:35:37 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+N5m2xS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A86C1F0089E;
+	Tue,  6 Oct 2026 20:42:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791319345;
+	bh=pDH61hg2/e2bhJ+lbUL/OXjbHM69BvK0AUcNZlUWMlo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=a+N5m2xSffV3lTCAY13XISPi2l/XDJVpNp8OO2CE1ePbUZ4pyYYZdrUYeYDlFRBBG
+	 Mzc9Ha6HoM0Tf1Cq6BxjSG7bT7Zedk2+eFMNffvoAnyuCaWiC/8FI18oU45LXz0lid
+	 gyobkZnga5Vi+HT2XI1zOh6B8Xoe4sfEidlOrsFyebUV+SlS2Ta8DDhfZujlIZC/SJ
+	 zpPrAkvhI7PO892brvZ8gf5v660BhyjjLy+d6YIb16psrP5OwI0wCHu13MI799SKdL
+	 ao49SmGmGkabhylZ2AEGuM7AdMCWc/UnEWGw11csT+eWsi16xsIkJxS//jqR03yJRW
+	 qWRO4mJr7EIgw==
+From: Kees Cook <kees@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v1 3/3] efi/libstub: Disable kernel stack erasing in the common flags
+Date: Tue,  6 Oct 2026 13:42:23 -0700
+Message-ID: <20261006204224.1536491-3-kees@kernel.org>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261006204210.i.137-kees@kernel.org>
+References: <20261006204210.i.137-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 0/2] Small improvements on pstore user experience
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Kees Cook <kees@kernel.org>, tony.luck@intel.com,
- linux-hardening@vger.kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net
-References: <20260922212532.98571-1-gpiccoli@igalia.com>
- <202609230016.101B0479BF@keescook>
- <dd3810e4-7b98-ca4e-f20d-0a7e863d7983@igalia.com>
-Content-Language: en-US
-In-Reply-To: <dd3810e4-7b98-ca4e-f20d-0a7e863d7983@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2234; i=kees@kernel.org; h=from:subject; bh=WFpdf4n+77QgourCDpWIcEBk2OgKMZKX3U0kB6OtEn0=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlHY/VXcTxxjbC+Men2iZKy1r989tm6/ml/tjinNuWlV aYd3Levo5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCJTUhj+h29Xu7LfdYaQlK7d ev9KSy67uis9yWoNiaXOkWdvzvvNy8jw42wJ4zp2Jj43Th2DMy+M1z3PW6iZm+Bx9oBD94JF/YI sAA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-V2 here:
-https://lore.kernel.org/r/20261006203412.175427-1-gpiccoli@igalia.com/
+Every architecture that builds the stub now adds $(DISABLE_KSTACK_ERASE)
+to its own flags, so add it once to the flags they share instead.
 
-Thanks,
+Assisted-by: LLM
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ drivers/firmware/efi/libstub/Makefile | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 1f588591f458..d6fe69c3af87 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -19,22 +19,18 @@ cflags-$(CONFIG_X86)		:= $(filter-out -mcmodel=kernel \
+ 				     $(PADDING_CFLAGS), $(cflags-y))
+ cflags-$(CONFIG_X86_32)		+= -march=i386
+ cflags-$(CONFIG_X86_64)		+= -mcmodel=small
+-cflags-$(CONFIG_X86)		+= -fPIC $(DISABLE_KSTACK_ERASE)
++cflags-$(CONFIG_X86)		+= -fPIC
+ # Nothing enables IBT while the stub runs, so ENDBR would only take space.
+ cflags-$(CONFIG_X86)		+= $(call cc-option,-fcf-protection=none)
+ 
+-# arm64 uses the full KBUILD_CFLAGS so it's necessary to explicitly
+-# disable the stackleak plugin
+-cflags-$(CONFIG_ARM64)		+= -fpie $(DISABLE_KSTACK_ERASE) \
+-				   -fno-unwind-tables -fno-asynchronous-unwind-tables
++cflags-$(CONFIG_ARM64)		+= -fpie -fno-unwind-tables \
++				   -fno-asynchronous-unwind-tables
+ cflags-$(CONFIG_ARM)		+= -DEFI_HAVE_STRLEN -DEFI_HAVE_STRNLEN \
+ 				   -DEFI_HAVE_MEMCHR -DEFI_HAVE_STRRCHR \
+ 				   -DEFI_HAVE_STRCMP -fno-builtin -fpic \
+-				   $(call cc-option,-mno-single-pic-base) \
+-				   $(DISABLE_KSTACK_ERASE)
+-cflags-$(CONFIG_RISCV)		+= -fpic -DNO_ALTERNATIVE -mno-relax \
+-				   $(DISABLE_KSTACK_ERASE)
+-cflags-$(CONFIG_LOONGARCH)	+= -fpie $(DISABLE_KSTACK_ERASE)
++				   $(call cc-option,-mno-single-pic-base)
++cflags-$(CONFIG_RISCV)		+= -fpic -DNO_ALTERNATIVE -mno-relax
++cflags-$(CONFIG_LOONGARCH)	+= -fpie
+ 
+ cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)	+= -I$(srctree)/scripts/dtc/libfdt
+ 
+@@ -44,6 +40,7 @@ KBUILD_CFLAGS			:= $(subst $(CC_FLAGS_FTRACE),,$(cflags-y)) \
+ 				   -D__NO_FORTIFY \
+ 				   -ffreestanding \
+ 				   -fno-stack-protector \
++				   $(DISABLE_KSTACK_ERASE) \
+ 				   $(call cc-option,-fno-addrsig) \
+ 				   -D__DISABLE_EXPORTS
+ 
+-- 
+2.55.0
 
-Guilherme
