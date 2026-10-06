@@ -1,136 +1,60 @@
 Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E47A3AA50A
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Oct 2026 20:34:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47003812DB
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Oct 2026 20:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791318873; cv=none; b=gp5yR6jz1oN1HXHbqCaNEG5+vYvY1VZOQjmVIMuRSV2DhR8Q8AJETJIeBKC72Z9v7TTRY+2UB3ciDvc+o0rrb6Cyqnfn8BFA40aMn4F79BdOkXaUrR9BIp3keKKvhYJvrc/XXPvoa1R3OHZ4JU9RycxvW4k7q4k7XLZxLJQ14VU=
+	t=1791318948; cv=none; b=pZlh++I7QXrfT4erinzRwXZlmq0faSfNCeqnJhxjKsemZ6gMEJiQSVhTtO2i2coZqMk2GBhlQS7sIA1hjLyTjNJMkviQOPG7KvvWX04mUcg6KgWs4t9iJcqqREMdXe5yLqwaOUI2HEW90DnOUjzARt55y7MWUj4TOsJT5i3PZIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791318873; c=relaxed/simple;
-	bh=jayCsNyrBnfBekfY0GztIpaMWngf/KsMUXs9yhFcuh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=el+uz2RwDHdb+S6pkhU7ZdqfxHD+cHng4KITxyEwH/01tdVftm5/yY/eVj6ulg7cOJu4bpwBXCk5F9EImPsPlCe3ZuGSLEjXzlsXcUetGNwjAeEfnhtZE6YTi1s7qlgIF/FyqPCtK/2nh1VJadRiCx2Pmqiia022HK6APtKWMCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=XnAMfDET; arc=none smtp.client-ip=213.97.179.56
+	s=arc-20240116; t=1791318948; c=relaxed/simple;
+	bh=KqBA8VViuw8N3Es4Y4QnkWH50mYc0aPmfReMZO/px7E=;
+	h=Message-ID:Date:MIME-Version:Subject:From:Cc:References:
+	 In-Reply-To:Content-Type; b=FvNMkZomroOBslRuUT7zJggXZ7l1ogzI1syOb8HSFE+unNv78KtLnVGsfn0yB8ZSNCXFuGFvQToNt3ULsAB0DQPN1oB3QAV7WR8DVUNqeLs0zZDf/hNRFT8U8B9/fPc3lOybzO71XGSZMA9p2IGRF81wKHDghGQUrNQTzgkEXbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=jZx5P2j0; arc=none smtp.client-ip=213.97.179.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="XnAMfDET"
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="jZx5P2j0"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:From:Reply-To; bh=1YsI9ftuQYWnALYqVzcjMJ/Asp/D1VIcVn/Gm7naG8Q=; b=
-	XnAMfDETz4eJ2CFJ26EbGfiafYTznNJQi4z1XqlnlzSIoyWMMf/GHLqADgwrXnSFMu3OqD4pQyfH2
-	gzDivpa915G8lwiLPDIGz3EP8I3ygTTexDlwfL9YWprt0NsMPtyaMzeaWzDuCW5eVkl1QEdFkLt07
-	qUKJE+jIDHMEdV0Jk4PIddr5RgmW5J7Bl3bt3E8gBmWohwfDLJpvBVmJNj13FKHDThji+fjwl0FqU
-	lnW6ME6RPUogaX6HIjGmJ2swKCS7MeMW68BnpAybZAKJY9JCnqj8yVvqwY2xtYo13uDlmXllhQby8
-	O3Q8P+DIKSxZk5UyiFbHVadoGTyMnsD7Ug==;
-Received: from [187.90.178.110] (helo=localhost)
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:Cc:From:Subject:
+	MIME-Version:Date:Message-ID:From:Reply-To;
+	bh=KqBA8VViuw8N3Es4Y4QnkWH50mYc0aPmfReMZO/px7E=; b=jZx5P2j0oRHFX+5xL6Vys7IFdu
+	kftJ4ksFXlShoJdtyS8BBsgdAEn9+mblod5tYTI45/lQgbgrzu4hU9ofwfw17dzIxx02Th9nI5Q3j
+	ugvn0Z1pSsmCBgwPgZH+83yWTmCDmeuFWmay8BY7UyA8o97tgo5imcSssORr/1FIZtk9yTBildD4h
+	qkTC8xvLSChf/lEvXdVcPyONh7Lno+mHOUHurTe8XJzMUEmCCSJspBHcKQCj0EznlF43Bm86V8Dfl
+	zcMdFTtv5bt+C92DFuW6+xkhBqSkWxnCfux/5EKelB46Y6s+4AWhAnAgoeT9wNd75BQHB+9/LIsCb
+	RZYSmGgw==;
+Received: from [187.90.178.110] (helo=[192.168.15.93])
 	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1xEBrm-00DcK1-3M; Tue, 06 Oct 2026 22:34:26 +0200
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-To: kees@kernel.org
-Cc: tony.luck@intel.com,
-	gpiccoli@igalia.com,
-	linux-hardening@vger.kernel.org,
-	kernel-dev@igalia.com,
-	kernel@gpiccoli.net
-Subject: [PATCH V2 2/2] pstore: Allow kmsg_bytes parameter to be written at runtime
-Date: Tue,  6 Oct 2026 17:22:52 -0300
-Message-ID: <20261006203412.175427-3-gpiccoli@igalia.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20261006203412.175427-1-gpiccoli@igalia.com>
-References: <20261006203412.175427-1-gpiccoli@igalia.com>
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1xEBsy-00DcMi-Hb; Tue, 06 Oct 2026 22:35:40 +0200
+Message-ID: <ded6fce8-f2b7-afac-6742-0a6391b556e5@igalia.com>
+Date: Tue, 6 Oct 2026 17:35:37 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 0/2] Small improvements on pstore user experience
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Kees Cook <kees@kernel.org>, tony.luck@intel.com,
+ linux-hardening@vger.kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net
+References: <20260922212532.98571-1-gpiccoli@igalia.com>
+ <202609230016.101B0479BF@keescook>
+ <dd3810e4-7b98-ca4e-f20d-0a7e863d7983@igalia.com>
+Content-Language: en-US
+In-Reply-To: <dd3810e4-7b98-ca4e-f20d-0a7e863d7983@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Currently the kmsg_bytes parameter is read-only in sysfs, though
-it can be changed both via command-line at boot time, and through
-the pstore filesystem mount option, at runtime.
+V2 here:
+https://lore.kernel.org/r/20261006203412.175427-1-gpiccoli@igalia.com/
 
-Add a module parameter callback in order for users to change kmsg_bytes
-via the runtime sysfs interface, the same way they can do it using
-the mount option.
+Thanks,
 
-Notice this exposes more potential races on reading / writing the
-variable, since the parameter can now be written at any time through
-sysfs, so annotate the concurrent accesses to kmsg_bytes with
-{READ,WRITE}_ONCE to pair the readers with the writers.
 
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
----
-
-V2:
-- Add READ_ONCE() to missing places on inode.c, given that now,
-  with the sysfs writing possibility, we increase the potential
-  race on reading/writing kmsg_bytes from different CPUs.
-
- fs/pstore/inode.c    |  8 +++++---
- fs/pstore/platform.c | 20 +++++++++++++++++++-
- 2 files changed, 24 insertions(+), 4 deletions(-)
-
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index cf499ba72702..233793b3f42f 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -267,8 +267,10 @@ static int pstore_parse_param(struct fs_context *fc, struct fs_parameter *param)
-  */
- static int pstore_show_options(struct seq_file *m, struct dentry *root)
- {
--	if (kmsg_bytes != CONFIG_PSTORE_DEFAULT_KMSG_BYTES)
--		seq_printf(m, ",kmsg_bytes=%u", kmsg_bytes);
-+	unsigned int bytes = READ_ONCE(kmsg_bytes);
-+
-+	if (bytes != CONFIG_PSTORE_DEFAULT_KMSG_BYTES)
-+		seq_printf(m, ",kmsg_bytes=%u", bytes);
- 	return 0;
- }
- 
-@@ -488,7 +490,7 @@ static int pstore_init_fs_context(struct fs_context *fc)
- 	 * every time we (re)mount the single-sb filesystem with the
- 	 * option specified.
- 	 */
--	ctx->kmsg_bytes = kmsg_bytes;
-+	ctx->kmsg_bytes = READ_ONCE(kmsg_bytes);
- 
- 	fc->fs_private = ctx;
- 	fc->ops = &pstore_context_ops;
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 081c2134a60c..d0afb76ff18d 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -93,7 +93,25 @@ MODULE_PARM_DESC(compress, "compression to use (deflate/none)");
- 
- /* How much of the kernel log to snapshot */
- unsigned int kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
--module_param(kmsg_bytes, uint, 0444);
-+static int param_set_kmsg_bytes(const char *val, const struct kernel_param *kp)
-+{
-+	unsigned int num;
-+
-+	if (kstrtouint(val, 0, &num))
-+		return -EINVAL;
-+
-+	WRITE_ONCE(kmsg_bytes, num);
-+
-+	return 0;
-+}
-+
-+static const struct kernel_param_ops kmsg_bytes_ops = {
-+	.set = param_set_kmsg_bytes,
-+	.get = param_get_uint,
-+};
-+
-+module_param_cb(kmsg_bytes, &kmsg_bytes_ops, &kmsg_bytes, 0644);
-+__MODULE_PARM_TYPE(kmsg_bytes, "uint");
- MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
- 
- static void *compress_workspace;
--- 
-2.50.1
-
+Guilherme
