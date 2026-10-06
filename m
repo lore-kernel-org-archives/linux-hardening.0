@@ -1,134 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585823B27E7
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Oct 2026 10:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10443B5850;
+	Tue,  6 Oct 2026 12:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791281344; cv=none; b=fWKe2TmFHl2vCK3BRngJokGG0UHMTQ9UAIPkTXEp46kSD58Oycx+PiAEwmtFde+5ivDQpW5bEdURLGOuo3JLsY57EUndeNA/p8dhtmjC0MiooebIScPhZsKlUcdpqy2pcnIV1VS3zga8tXs6Q4EJBoXnmCVVdC0LeQPeo3ztg1o=
+	t=1791289485; cv=none; b=XH6av6sWZWg6aA1EsFMNxd9Kv+NtIBpsTJFH0mmyJZMeT3d/TBTsp+Awq5T0lo2TirHmOKaxQOc/0jobjQYD4cYyEJd1yNXZ6EksX5bLKG1PGQ0pzj48w3PaBqwpXNKYXNEufOG1K9wSPSRynzbmKJgguIkzzW2U8L4GJLNcilU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791281344; c=relaxed/simple;
-	bh=ZjNZoI+rGqLRyY3RwMj8Agbv0dAl9XH/ttIPMSUr+3U=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=a51nTZf8BsW3jQZBgXlCVSx9mxT8+3EgLqQI5D/vkUmTO9sA1Y9YFw4Qv1CXMUHkAI/SJJY0PbEAW/7GsH6RaqDsS706UuMKU4JjAq296mHgtvJxk2USiMyunRB2MgDygIh2/LgNqCTi2U4dLBBpjTsUXYusxQcgr8wie6NKAw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4sEPz/L; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791289485; c=relaxed/simple;
+	bh=JMtXyub75LHZzq5CenikW83L6TMi58/yCremmTq73tc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C578M33xDSvZ1hshss2Icugf8ZynfHSahOTR9htYNOUG5JY1F6/l1fuxbg9BRKtktvksBYWtPYRVLrPEfROKmeJAL9C+/QFkyMWTw74dZNoK+7nbxqCyVcEE0zc2uqpmJbJmfJAnxeufWb/w9O5lsWqTM3d5mgsOHWXkfcYBrYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=r6BpvhNV; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4sEPz/L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E62B71F000FF;
-	Tue,  6 Oct 2026 10:09:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791281343;
-	bh=Pit7TIoPf8Hm7UQIvsoa+f0tkbDqlmehivHW56Xafno=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=U4sEPz/LFbpwFIR9JgSy46s60mOk8INEwamr/dyEPnSI2g9WWuP2JxSnBusC6db+V
-	 ZfxKeCJLOn539Q7jhHABn9dyuU0x2RJWZybBv/4KFwUHuUOyG6yD87mKpssftB2MEi
-	 FJ5e1OcpCt576g/dLc8aKBwYzHEs6bBlZg4+FdRoaqLJ4g3JWNd9A0bteeNnRrKg2G
-	 7AU6lQF0IH4TJ3+wwtTHCNbTvl7kTB+oe6SIgPTDU23IgGHPpMdoGbJm9+8xMeynd0
-	 9SNmrKUzkE0sGwa4nenY++I7i1tF2GO2qAlZvVIfr+CMBv7Fsnldxegs7D/CyeB3Mj
-	 YfmzfQWSGZR4w==
-Received: from ams-compute-01.internal (ams-compute-01.internal [10.64.2.61])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 73F85198003A;
-	Tue,  6 Oct 2026 06:09:00 -0400 (EDT)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-01.internal (MEProxy); Tue, 06 Oct 2026 06:09:00 -0400
-X-ME-Sender: <xms:ucjEatjqd2KS91mJP5iD5kxjg-gpMH9w0v3P22wgNsKtK1yS5phLuQ>
-    <xme:ucjEavblStUXJdfFXfKLdNOwsWnIbBbvrW1dTfUnwYNl7FA8kdPEuWbESeApZWHv5
-    PAWcO1XVKLJ_lSFpLx_C9g28zXxowJAqWMkji7JH66lBpg96SHksmIpIw>
-X-ME-Proxy-Cause: dmFkZTGGdtQL4KJ/yz/XyXqolrCqNbVBG5rtYaAIwxjM//tDvJw7IYP8SBY86Dv6h0AeE8
-    cMAUKKarzN4jJmXnPMvjjV7ugSWLOJ57BNtImrwfyweOa0WN51y47SRkhwI2TTH1BXH/Cr
-    WPBWNud37nt/wKLse1XgIZEusaWLWsJ5eCVOYJNygOdkz7bSGyyna8NWrslB2ig9d71KP9
-    0mXpNZttPZ0jbit2kpkzcdx6gavXdzg5v3F+Z9rG5TSHTsxZWTJaOAtfyCXEwKW3VbsAo+
-    ldWach8O0DMUW402p6KWBxg9FQkrWxVr2PB9OnVQ5QQympaJ7Ko6uPZGNY2V0rwrCFQDX+
-    6K8kRC1TEddxdt75CjCL91Z9DftHH+fvGrkrncUqWD4PDa8+2YWMMdAymeGS9o9s7eGnzR
-    KT3aiYPNF+CU9RuMvpObtoGhwq5HUu6QI7CzIubmFKpE1zAg4/FysN1ajmZxrglqXwyRmU
-    wrBgNUFT5chMAd5yov4cM6OZAslX53512y5Aff6oI8unZ++VoR3Kg4+oILb+hojA234mnv
-    tugCXpuVzwP1HNF/1su5jI+Je0Ee6Lylbx0dNLsXdW7AAuPbfAXz08U78hbtG+CEUTjHmg
-    MFMaYsst55MNRJIiQ7nG8An5i7FrHm+H/9Hub5rzVPBWCnPggN+6IxKdtfAA
-X-ME-Proxy: <xmx:vMjEag9lEAboEdhlMfS6Yui2Ysben86piXFlGHTIkux5IirEJhOGbA>
-    <xmx:vMjEaqYc9w6ObkeGqBwKeexe6KiDTa9JIPBUyJh2dqg82MgzjwMpXA>
-    <xmx:vMjEapcH-7zKecoK52ed5RAnRiuaiEmC1VRGl0A-usqiXsA0b8w4ww>
-    <xmx:vMjEagTbVkon90cJEvsOXTA9T5OkhO0W01ZTJxgNBqYBZ9qNkB8nXg>
-    <xmx:vMjEark13RO5Y6MI_CWEln_yJSiZVO21InO5r0_kDXzHwmbf42B5tsaT>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id E31EEF80090; Tue,  6 Oct 2026 06:08:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="r6BpvhNV"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 696BZYqU2400147;
+	Tue, 6 Oct 2026 12:24:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=C+zoc7oGbtC3fEjZzjfOVnYalrPV
+	zXXdmo8kUzPqF00=; b=r6BpvhNVBWKEj78vbom2svpfGZ8JM+eDMcsI98A9oIBY
+	8oK1McjGjjqbb8OOkglw/jnGPK+MMRQIdyynB+wcnusbBFhGHxPndMEeS3J73GS7
+	pDoIFmZpU0f+o/aOIGiyefC9CW9XCBp9lPKnaGuwVTUAvYjflwC5rbsS3tq3TRIF
+	djqvc75h9Hd9acenSMjFKyn9TSYThwIdH2nE7gECEIjFej65/oaAf0nUFRgUE23W
+	Xz/Oje+dLweS79fMS44rNgp+9HOBFMFnJ3m2RHxPTpftl3EUaNFqIZxbZryK9AXV
+	/KsA7l1KOQDUYUMieJwjBRU1blaXVlSgiZN0BaZ+bA==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4h2r4fy3ek-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 06 Oct 2026 12:24:20 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 696BWVl4242255;
+	Tue, 6 Oct 2026 12:24:19 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4h3eqy9ka2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Oct 2026 12:24:19 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 696COFcs37814758
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 6 Oct 2026 12:24:15 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 141672004E;
+	Tue,  6 Oct 2026 12:24:15 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A62AF2004B;
+	Tue,  6 Oct 2026 12:24:10 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.214.4])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  6 Oct 2026 12:24:10 +0000 (GMT)
+From: Amit Machhiwal <amachhiw@linux.ibm.com>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Amit Machhiwal <amachhiw@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gautam Menghani <gautam@linux.ibm.com>,
+        Harsh Prateek Bora <harshpb@linux.ibm.com>,
+        R Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Alexander Graf <agraf@suse.de>, linux-hardening@vger.kernel.org,
+        stable@vger.kernel.org, Avi Kivity <avi@redhat.com>
+Subject: [PATCH v3 0/3] KVM: PPC: Fixes for Book3S HV HPT locking and paired-single decoding
+Date: Tue,  6 Oct 2026 17:54:01 +0530
+Message-ID: <20261006122404.99358-1-amachhiw@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 06 Oct 2026 12:08:35 +0200
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Bill Wendling" <morbo@google.com>, "Kees Cook" <kees@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Justin Stitt" <justinstitt@google.com>, "Mark Brown" <broonie@kernel.org>,
- "Marco Elver" <elver@google.com>, alan.maguire@oracle.com,
- namjain@linux.microsoft.com, "Peter Zijlstra" <peterz@infradead.org>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
-Message-Id: <3cd11b18-30da-4dc1-9585-1112778aba38@app.fastmail.com>
-In-Reply-To: <20261006094358.2948476-1-morbo@google.com>
-References: <20261005102518.2400984-1-morbo@google.com>
- <20261006094358.2948476-1-morbo@google.com>
-Subject: Re: [PATCH v4] compiler_types: Allow opting out of __counted_by and
- __counted_by_ptr
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=TOPQ2Fla c=1 sm=1 tr=0 ts=6ac4e874 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=oqY91GN2WXtsPlI78dAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA2MDA0OCBTYWx0ZWRfX/t3z9SrS9xyT
+ /apWL4UfNmfUAk79bcKhw1Yk+Uzdmn33pM3kthOXiqPnlRay219u8JadMGZdg29zpD2cQ2gk6LJ
+ sB7FnvJN1yPlCuMnM2BcGdJJFZQretUIkpTf/ic3DuBQHtcLJItIVEo2wpQJn1OZqF0+CvcCZnn
+ YdFhoMqgrrPhHAi3ACMUj3Sm5cLIL9Ws91zYxpXXOsfOI+O8WgVtiJ7jYqELr5CHlt6U99whJ0d
+ Vyj6pDKSkMkNTXqGN9Qqk1zzyxneuogaSSsyU6Nmc/zvY3hfQaq7XrqWWfH7w8yLPUTW353ROXf
+ 7179rd9syqKgE1LCagVpuXo3zuPbneSp5UKxLJ23UdEAG40VYyIQjP61RpEu0Tm33JI0LgRHt8+
+ 1frsFpbagxxhMC60rls59zF4+iCu8uEVMd7o0pHEeItYYZfi4BtPohnVdnrofq4kEdv8+ipyfCz
+ Wh6xsAnElnvEYAFw+9A==
+X-Proofpoint-GUID: FPMorKzIomUgpvXsPoTvw-NSE_KvZ-y1
+X-Proofpoint-ORIG-GUID: j0MJPDwhh1d3XkqVnIY_GHm7BWHwGdky
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDA2MDA0OCBTYWx0ZWRfX7li4L611Mr8/
+ 9ZoZSuFaEqfShWWGHOZcNY1f28oVV9AcU11lkcvfJWacj9YKpojA4QPKUJvyvo0FDf1D8WXsl3t
+ v3Li7wuQ4R/69ottU1h0MMJs3554dMs=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-06_03,2026-10-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 spamscore=0 adultscore=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 bulkscore=0 phishscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2610060048
+
+This series addresses bug fixes across KVM PPC Book3S HV
+locking/synchronization and paired-single instruction decoding.
+
+Patches 1 & 2 fix synchronization and preemption issues introduced in
+commit 6165d5dd99db ("KVM: PPC: Book3S HV: add virtual mode handlers for
+HPT hcalls and page faults"):
+
+- Patch 1 adds SRCU read lock protection when walking memslots during
+  virtual-mode HPT hcalls to prevent use-after-free races with concurrent
+  memslot updates.
+
+- Patch 2 adds preempt_disable() around all virtual-mode HPTE bit-lock
+  holders — both the guest vCPU paths (kvmppc_hpte_hv_fault() and
+  kvmppc_pseries_do_hpt_hcall()) and the host-side paths
+  (kvm_unmap_rmapp(), kvm_age_rmapp(), resize_hpt_rehash_hpte()) — to
+  prevent CPU stalls and deadlocks on preemption.
+
+Patch 3 fixes paired-single D-form instruction emulation:
+
+- Patch 3 fixes get_d_signext() to correctly extract the full 12-bit D
+  displacement field and perform proper two's-complement sign extension.
+
+Testing:
+========
+All test kernel builds were compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y.
+The following scenarios were verified:
+
+1. Power9 PowerNV (L0) in Radix mode:
+   - Booted L0 host with kernel containing all 3 patches.
+   - Booted KVM guests in both Radix and Hash modes.
+   - Ran kernel build workload inside guests — no errors observed.
+   - Booted L1 guest with the same kernel — booted and ran cleanly.
+
+2. Power9 PowerNV (L0) in Hash mode:
+   - Booted L0 host with kernel containing all 3 patches.
+   - Booted KVM guest in Hash mode.
+   - Ran kernel build workload inside guest — no errors observed.
+   - Booted L1 nested guest with the same kernel — booted and ran cleanly.
+
+3. Power10 LPAR (L1):
+   - Booted Power10 LPAR with the patched kernel.
+   - Booted KVM guest and ran workloads — no errors observed.
+
+Changes in v3:
+==============
+- v2: https://lore.kernel.org/all/20260930173750.56759-1-amachhiw@linux.ibm.com/
+- Patch 2:
+  - Fixed preemption window in kvm_unmap_rmapp() and kvm_age_rmapp(): moved
+    preempt_disable() before lock_rmap() so both the rmap lock and the HPTE
+    bit-lock are held under a single non-preemptible section, and added
+    preempt_enable() on all early exits and retry paths before cpu_relax().
+  - Cleaned up kvm_test_clear_dirty_npages(): removed redundant per-iteration
+    preempt_disable()/preempt_enable() pairs since the caller
+    kvmppc_hv_get_dirty_log_hpt() already holds preempt_disable() across the
+    entire loop.
+  - Reworded commit message to clearly detail the per-function locking design
+    and rationale.
+  - Picked up Reviewed-by tag from Shrikanth Hegde.
+- Patch 3:
+  - Picked up Reviewed-by tag from Shrikanth Hegde.
+
+Changes in v2:
+==============
+- v1: https://lore.kernel.org/all/20260928122837.8782-1-amachhiw@linux.ibm.com/
+- Patch 2: Extended preempt_disable()/preempt_enable() coverage to also wrap
+  the HPTE bit-lock hold windows in four host-side virtual-mode functions:
+  kvm_unmap_rmapp(), kvm_age_rmapp(), kvm_test_clear_dirty_npages(), and
+  resize_hpt_rehash_hpte(). These were identified as vulnerable by Sashiko AI
+  review and confirmed correct by audit.
+- Dropped Reviewed-by from Ritesh as the patch was materially extended.
+- Patch 2: Added warning comment above kvmppc_pseries_do_hpt_hcall()
+  documenting the preemption requirement.
+
+Amit Machhiwal (3):
+  KVM: PPC: Book3S HV: Add SRCU protection for virtual-mode HPT hcalls
+  KVM: PPC: Book3S HV: Add preempt_disable() around virtual-mode HPTE
+    bit-lock users
+  KVM: PPC: Fix get_d_signext() 12-bit displacement for paired-single
+    D-form
+
+ arch/powerpc/kvm/book3s_64_mmu_hv.c      | 10 +++
+ arch/powerpc/kvm/book3s_hv.c             | 80 +++++++++++++-----------
+ arch/powerpc/kvm/book3s_paired_singles.c |  7 +--
+ 3 files changed, 56 insertions(+), 41 deletions(-)
 
 
-
-On Tue, 6 Oct 2026, at 11:43, Bill Wendling wrote:
-> Code that runs outside the kernel proper, such as the EFI stub, gets
-> nothing out of the counted_by annotations: the bounds checks they feed
-> (FORTIFY_SOURCE, UBSAN_BOUNDS) are already disabled there.
->
-> The annotations can also break the build. A __counted_by_ptr() that
-> names a member declared after the pointer needs Clang's
-> '-fexperimental-late-parse-attributes', which the top-level Makefile
-> adds to 'KBUILD_CFLAGS'. The x86 EFI stub builds its own cflags and does
-> not get that flag, so it fails as soon as such a struct is pulled in
-> through a common header.
->
-> Overriding the macros from a Makefile doesn't work:
-> 'compiler_types.h' is pulled in with '-include', which is processed
-> after all -D/-U options, so it re-establishes the definitions. Follow
-> the '__NO_FORTIFY' precedent instead: let a build define
-> '__NO_COUNTED_BY' to turn the corresponding annotation into a no-op.
->
-> Assisted-by: LLM
-> Signed-off-by: Bill Wendling <morbo@google.com>
-> ---
-> v2: Only specify __NO_COUNTED_BY_PTR. Leave __NO_COUNTED_BY until we need it.
-> v3: Add the version to the Subject line.
-> v4: Use __NO_COUNTED_BY to reduce churn later on.
-> ---
->  include/linux/compiler_types.h | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index c5921f139007..05e2b637f1cd 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -371,8 +371,13 @@ struct ftrace_likely_data {
->   *
->   * __bdos on clang < 19.1.3 can be off by 4:
->   * https://github.com/llvm/llvm-project/pull/112636
-> + *
-> + * Code that runs outside the kernel proper (e.g. the EFI stub) can define
-> + * __NO_COUNTED_BY to drop the annotation, since it gains nothing from the
-> + * bounds checks. __NO_COUNTED_BY should be used sparingly, because there are
-> + * better options for opting out of bounds checking.
->   */
-> -#ifdef CONFIG_CC_HAS_COUNTED_BY
-> +#if defined(CONFIG_CC_HAS_COUNTED_BY) && !defined(__NO_COUNTED_BY)
->  # define __counted_by(member)		__attribute__((__counted_by__(member)))
->  #else
->  # define __counted_by(member)
-
-
-What happened to counted_by_ptr() now? __NO_COUNTED_BY should disable that too.
+base-commit: 2c3418fffa9d037b2038a6db48be63f9e2291806
+-- 
+2.54.0 (Apple Git-157)
 
