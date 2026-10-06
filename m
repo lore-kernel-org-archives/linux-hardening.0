@@ -1,67 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0B825A655;
-	Tue,  6 Oct 2026 15:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A3226AA91
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Oct 2026 20:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791301377; cv=none; b=WO7Nr0yYZshIbQ5MadJjmX9FE6HI5Dt3edzz5LBKJB446jUx/RL+6PEr3FfuArrVSY5w8HS8pg+qvmFQZbZ04XHnFpoDfqgaOjZHNZZ8FIDbTOMGc5RUGfMTGp4b/GhJd9s//kW7Sq0tTQfEXbIphZRpxqhOGuYHI6VCKgcn7+o=
+	t=1791318870; cv=none; b=tkzYYw2mOr9+qOVFbHz35+jWjlYQ8ry2mnDq15p0bmCuBZdloQVNMuoeksk9+CEQkPLnD/Ye7EHinEorvPhRapPFJtPXkPXSbDYrG+aVyai9Wp9nvQ+NA09szmEE6oMbBTrIykzdQxBJ/OAEPC7j9gSiCEjCmxXX6goh2KSEBnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791301377; c=relaxed/simple;
-	bh=roU9coQfRxaaeiOH/ZEkXx1JahWrXVJ8XSe6JADNSnA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ig4vQomnP8kYZvNs+jP5HdQHIsCtpbOCh0NdNRVHPLbOfQr2jkh+5r1adCuOlas5IBfoYh3RmUB0v6y/dAHCm+kD9pSzyYG1GWoe7nhoWuwZM81z30s34MdYnc1EAEUwQgYeaJfxsvj+BAWDaDw5ECZqEDDGMNl0q9Q2hpCQcWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtFXPpLC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791318870; c=relaxed/simple;
+	bh=H83w01QOhpdKQ1UAW9PaYaI68lmgbixZr6cWF621kPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FdgPpjAGqL7YleZLAAk+H4ZPTaF8DLWlrLa5n/HzpWE480Em+yvVlPtl0LwjMTIz1a6Vnc9c3a1UOliKs4gfnJKHbovj2vOC7O6FwloOPSfhGrQ9Y5tS1vCLtk/kdTxXMf4kq6cjFOXXKUqtMkNK5+o9q9LxwEWLzWai2prHk6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Xc/5vZJL; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtFXPpLC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E02CC1F0089D;
-	Tue,  6 Oct 2026 15:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791301375;
-	bh=roU9coQfRxaaeiOH/ZEkXx1JahWrXVJ8XSe6JADNSnA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=dtFXPpLCJewLAk5Ox0npsd0Mgz53kla9loWdf5Eeh2AXLLA9D8I6jICAQRkQT5R/X
-	 /wiIowQCQ7f04XKwQWgJTf8+dQJSq/0K/1JWFjklQ4+ThJMfY8OIO0s+TlvpL/q4Pl
-	 mTzVROl+C7LzpKFVCGguqBuViszzQYS8Qe28I1g2sd5/eIel/dJjcdTIpAvBelWBMr
-	 wRVtPNaFVD0lVvtbWshaLWQF5/Lx03FCGpo6t4pmQT7+CgSklhjuwa3WhOVYdgrVQW
-	 O8o2ZaOvKX7SyvUUpkC6tIRc0vc37f2eeWRLdv8klxit8OCFZfInya8svTX5h2U5Z1
-	 Wb7ms5cUKZPEg==
-Date: Tue, 6 Oct 2026 17:42:48 +0200
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm: Move default_gfp() into gfp_types.h
-Message-ID: <asUW5dkEronQezrU@gremlin>
-References: <20260914223212.i.829-kees@kernel.org>
- <20260914223219.901347-1-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Xc/5vZJL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:From:Reply-To; bh=FgUiY2i5W0sKRTUpJ3LGY9dHHIO/rrOyClWJtJtBeLE=; b=
+	Xc/5vZJLwhih5TbhJGDnYsr+C1IMyyBat/gHMLLZErV0v9JtRn5iJm7Ib9+ZvsVlnehVGHzoXVXX3
+	SxQizl2wYFTCLmg6QJVZVtxdyLmHWtr3CtInDoaU+EUvQ/3mPLt9zZ9dvtg3k8HUT4WWUR0eCxQdr
+	aGK13uIAUnAz6x9AwBIZ3YYSPMnrQa1jb/s/5IJAWErGsH90chLy4BteuxGH9pRNLNVhY50ewAh3v
+	ZplrgG7bz2ktgYCEu4DzSE7PR2zob/3vIRTWBNp4kNsICBPGzxfaMq4+wDbJI7n18+SMKlxvaUQpP
+	zo58sfPLiEh+2T51HK22qU2ASCyG8IJUzQ==;
+Received: from [187.90.178.110] (helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1xEBre-00DcJr-HR; Tue, 06 Oct 2026 22:34:18 +0200
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: kees@kernel.org
+Cc: tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	linux-hardening@vger.kernel.org,
+	kernel-dev@igalia.com,
+	kernel@gpiccoli.net
+Subject: [PATCH V2 0/2] Improvements on pstore user experience, take 2
+Date: Tue,  6 Oct 2026 17:22:50 -0300
+Message-ID: <20261006203412.175427-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260914223219.901347-1-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 14, 2026 at 03:32:16PM -0700, Kees Cook wrote:
-> Using default_gfp() only depends on the GFP_KERNEL value. Move
-> default_gfp() into gfp_types.h so that future use in devres.h doesn't
-> require pulling in all of gfp.h.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
+Hi Kees, Tony, all
 
-LGTM so:
+here is the second iteration of the patchset.
 
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+V1 here: https://lore.kernel.org/r/20260922212532.98571-1-gpiccoli@igalia.com/
 
---
-Cheers, Lorenzo
+The main changes of this version are related to potential races Sashiko
+caught, and are hereby addressed (hopefully!). I put the diff V2/V1 in
+each patch. Lemme know if there's anything else to improve and thanks
+for reviews/suggestions!
+Cheers,
+
+Guilherme G. Piccoli (2):
+  pstore: Consolidate compression handling in both init paths
+  pstore: Allow kmsg_bytes parameter to be written at runtime
+
+ fs/pstore/inode.c    |  8 +++++---
+ fs/pstore/platform.c | 44 ++++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 41 insertions(+), 11 deletions(-)
+
+-- 
+2.50.1
+
