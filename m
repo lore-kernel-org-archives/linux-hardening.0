@@ -1,160 +1,92 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139F228488F
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Oct 2026 00:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD97244694;
+	Tue,  6 Oct 2026 00:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791246658; cv=none; b=lVkVu5zNMf80xPlq5H6Anwky8X9EkTUn3NQ7i7As9uAGLcgo8YPDXrwb0XwPfMa+2u8+ebY7CuIFMpsZYDyWFsgkI8s2NbJg6g4EhIUHcq5MUX6TSZN4nvcBDP+5Olhb+uGvfUJjhr2aWJa2amLNKAJOP0LZymdSJObPtxqhD8k=
+	t=1791247964; cv=none; b=O+nhx1095F/rkgOzoueCJ7z6+SXvwJJ8a8FKy1jBwX/YMHdvDpkCsP3ubavQ95EwNvdh/uQvUCXpiTXyp5bLFUDpI1AQ8W57c/uoO630kbfehmT5thKkk9Wg3b98wA6n7WxRuUU9YCVwqI8lsfN09Z5GBxuC/gb7hsXkfpDYcM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791246658; c=relaxed/simple;
-	bh=nlfOu/Cx3dx7WAl82DavblqM7D6pKK70uc9LSQAqkOY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jyT7azkOZzUthLD6EEFtMoKn22qfJY9j/LLoPYnxVratw2OD7rvddssM0RNhkgi1xPYPgMUfEuvBvJBjXzReyeyWXJ9PlXMCNaKmq5eZ69h7YY6XHePxYKaoudL47i0lrFs7kk+aHTTwQ4fVbipR2yhcFOQqRtpmwR7MOvv4i08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=inEWEQNc; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1791247964; c=relaxed/simple;
+	bh=N/gfL2dmPRy+8qNrwzpUEw8CfKnOH8yxOpuxlLZrbSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BFjvJ+OkvWNYYiPOr5qZUzARXXhkwbm6p0MMLimUmahv5Qt9ilujdywcQ565Zeg2dAikCUZ4c9mtci1C1XaeiV63UiD0DCUmydKVrxbOlt39KylDbZ248tbAAmD6lFLipf7uz/k+FEQw5Co8AV7KwFp8hQJWK3cbXHjXMC2ka70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bLnHL2gb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="inEWEQNc"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-93cbc3ab2fdso106353285a.3
-        for <linux-hardening@vger.kernel.org>; Mon, 05 Oct 2026 17:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1791246654; x=1791851454; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=CN7LmvsZdWmYM0BHY8P9OeOGiwwpFgBTQfuLY2b1oDc=;
-        b=inEWEQNchdRW0C5a3Ij3mnDWP+Qn1rJrUIpRlz2ecpMH35Ys//re8a8PPze4x9avVQ
-         nNjLlfoKRHSHkIh+/CyaRyJpWSxgf0PiV0cWEoPXGGhdz3u9Kw+nsR17s45eZ6utSHTK
-         C5i9HMTUDqoiWXey6NWK3/Xc/QDXs3mgRGfTtz+Fr6gGWDfBgz6XrlQs3EGcKz1wLC8p
-         F2aHMYXEuvlE06f7G2HjcFaRDWlmEuv/YxOwrS8DJnmF0h4HH1zZstC18YGeUrpay9Sg
-         fX3hj1IGJ9R5TTbyvNz4/RXdgdura0ILpu37dGTBRTXhwFiFT6VU76l0GWHTMkWuJ/8e
-         JI6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791246654; x=1791851454;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=CN7LmvsZdWmYM0BHY8P9OeOGiwwpFgBTQfuLY2b1oDc=;
-        b=qreiQUTOm/G23pa8vZ+srQfKy2PnU06yFmJuqJ57pdk0vRXs1yx0Vk2fdlVl3iu1SD
-         KKDSZjJlzCP0+hSt9SMAZ5FNQi0Zcsi3ParBA/cTzXiaXUPRgmXFv4rTjXPt88piiFtx
-         iDdo87AHk0Lzi7MIsIQRoiyPFKUTZnpwndcHBsDBfMhlP8370xXvgN0ztbhdJm4G5wVO
-         tt3DceWzxGBaTYfmARmI4JqTfFVsinANw/XaeOzAC6FjzN0sLV/wCht//STOIRGp0tqJ
-         glwrLJ7zqeFa1/rl6Q8gpfSBZpqiccx0YLzNDG0Mpxhcx1eDO5MEYi3X5p5QQ9ZL9hCP
-         1pjA==
-X-Forwarded-Encrypted: i=1; AKwUvBxkvAv3kwVbjg6tYl5bHCOo0H385UzDeILmBllqPNfHy/CsR6Ut4+60ghLhRtDthB/6B75teCx8gAXC/sCZwzE=@vger.kernel.org
-X-Gm-Message-State: AFuF++mYYOCUTj58hhH+ICIF1IPu3DB68OHlATD/MbUf88xrK2AQGwvc
-	7dxmWSy94pxqDxr1fDDh5vn4ixyNshMZOBJQQmMO2w6bamAGdEmirqoIRLtXIISX+UI=
-X-Gm-Gg: AYBFou18vteYMN/oRtyTCArWx30fOHLZLrvRnen/3eDfhqUvvSOBf8TWb39hwMgltS2
-	zdsqqsqYwJdXageWwCsdVO3Met1C/8Wzrs+JPE7eHSSvCI6JKo6xKqxON4Kt7ixXWr2/AydYSIz
-	Efa41rtWmdg8jhc28UMnjyh+NJQfH3+gr6bU7IrFwn+KjYoTywBLeRheovd6kOEX2ggFblKyudQ
-	3b9b40f1c0IjirzlpiR7s5JdQ/PM9h7Hz2Cj/04O8aGGC4FHZsmuoAv1LjwubaH+YFOKpij9exn
-	v4ZqFL77tQeYW+zmWVxh+7NgWDrVO0Kqmc/7LCTpOOOOIAVlj5TRdCUrP1bdYfi/dN2PH+GZvwI
-	SYqLzkafh5Sz0S5fG70/SfJnpxUmNsHl+rcWz66Tgcv45QIZDNsfsjawoMlYt+bw7TK/weOpnk8
-	KajWoDjGzTb6IW7ygbSWwU7vKUdRt0yQthwFgOYstqsOdrOyVhtfujvfNaiU9JpjihDQDzeWI=
-X-Received: by 2002:a05:620a:800e:b0:93c:326b:43b1 with SMTP id af79cd13be357-93e5104ee28mr1517731985a.36.1791246653835;
-        Mon, 05 Oct 2026 17:30:53 -0700 (PDT)
-Received: from [172.22.22.28] ([73.62.185.64])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93cca26371bsm998476985a.30.2026.10.05.17.30.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Oct 2026 17:30:53 -0700 (PDT)
-Message-ID: <c92b8d7f-20a1-4bca-b51e-40ae52155099@riscstar.com>
-Date: Mon, 5 Oct 2026 19:30:51 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bLnHL2gb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA6BB1F000FF;
+	Tue,  6 Oct 2026 00:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791247962;
+	bh=a6yHyvxgSFAtHWCFCMd4s/EWnCMi2wyyPVO4ODcFr4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bLnHL2gbeCWNkbpH9td+jOYWcisFag1WKNYRonRKZsQjeSs/vv73vLl7fIEhngC/u
+	 kr8+q7aBapijn3MEgS1UCicKD1luURaAL5imAaRwbllzE3JS9B9HWzk0YhB8Cx9XIf
+	 /7dv1YJE4Ig+4eASQDDy90UFaMx1grxitiainL0BkT8jrvLdsz8/DUz2kGSepbrxfN
+	 tZPdsKNC8QDKq8VC5rw4vOUtsltue1ZzpehpSm5P5kGNKlWBlQGa2/Hb3IpG6qKb4Z
+	 CIj2dkgElxLscz2EgeZFK1HMxMkVca6J+MexZZRIaVh6zwuSz4BNxh1D6h7I29HyPK
+	 +Pc8utcOPJqHA==
+Date: Mon, 5 Oct 2026 17:52:42 -0700
+From: Kees Cook <kees@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	driver-core@lists.linux.dev, linux-hardening@vger.kernel.org,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <brendan.jackman@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	David Hildenbrand <david@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] devres: Provide kmalloc_obj*-style API for
+ devm_kmalloc
+Message-ID: <202610051752.4516E8CF4@keescook>
+References: <20260914223212.i.829-kees@kernel.org>
+ <20260914223219.901347-2-kees@kernel.org>
+ <2026100532-stench-enrage-0b81@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: qcs6490-rb3gen2: add the clock
- controller
-From: Alex Elder <elder@riscstar.com>
-To: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org
-Cc: abelvesa@kernel.org, kees@kernel.org, gustavoars@kernel.org,
- mohd.anwar@oss.qualcomm.com, lorenzo.bianconi@oss.qualcomm.com,
- danielt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, Daniel Thompson <daniel@riscstar.com>
-References: <20261005230927.2000398-1-elder@riscstar.com>
- <20261005230927.2000398-4-elder@riscstar.com>
-Content-Language: en-US
-In-Reply-To: <20261005230927.2000398-4-elder@riscstar.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2026100532-stench-enrage-0b81@gregkh>
 
-On 10/5/26 6:09 PM, Alex Elder wrote:
-> The clock controller within the TC9564 SoC is accessed via a PCI
-> endpoint bus through BAR 4 of the first embedded PCIe function.
-> A syscon node is created to provide access to a range of memory
-> that is used by the clock controller and shared with other devices.
+On Mon, Oct 05, 2026 at 11:35:16PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Sep 14, 2026 at 03:32:17PM -0700, Kees Cook wrote:
+> > Mirroring the type-based allocation now in use for the kmalloc family of
+> > APIs, provide the same for the devm_kmalloc family of APIs. This will
+> > allow for future plumbing of type information (e.g. alignment) into the
+> > underlying allocations. This immediately gains type check on return
+> > values (instead of the prior "void *" return type).
+> > 
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Cc: Danilo Krummrich <dakr@kernel.org>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: <driver-core@lists.linux.dev>
+> > Cc: <linux-hardening@vger.kernel.org>
+> > ---
+> >  include/linux/device/devres.h | 102 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 102 insertions(+)
 > 
-> Co-developed-by: Daniel Thompson <daniel@riscstar.com>
-> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
-> Signed-off-by: Alex Elder <elder@riscstar.com>
-> ---
-> v2: - Moved the clock devicetree node to be a peer (rather than a child) of
->        the syscon node
-
-Whoops.  I dropped the "reg" property, and that means
-the change mentioned above leads to a warning.
-
-Either make them peers, but keep the clock node "reg"
-property, or drop "reg" and make the clock node
-subordinate to the syscon.
-
-I will address this in version 3 of this series, but
-(unless someone suggests otherwise) I'll wait to get
-feedback on the rest of the series before I send that.
-
-					-Alex
-
 > 
->   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 16 +++++++++++++++-
->   1 file changed, 15 insertions(+), 1 deletion(-)
+> I'm guessing you want this to go through your tree?  If so, that's
+> great:
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> index 0e3bbdaf4661f..06246d185b50f 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> @@ -9,6 +9,7 @@
->   #define PM7250B_SID 8
->   #define PM7250B_SID1 9
->   
-> +#include <dt-bindings/clock/toshiba,tc9564.h>
->   #include <dt-bindings/iio/qcom,spmi-adc7-pmk8350.h>
->   #include <dt-bindings/iio/qcom,spmi-adc7-pm7325.h>
->   #include <dt-bindings/leds/common.h>
-> @@ -961,7 +962,7 @@ dev@0,0 {
->   				#size-cells = <2>;
->   				ranges;	/* This will be updated dynamically */
->   
-> -				pci-ep-bus@4 {
-> +				pcie_s1b5d0f0_bar4_bus: pci-ep-bus@4 {
->   					compatible = "simple-bus";
->   					#address-cells = <1>;
->   					#size-cells = <1>;
-> @@ -989,6 +990,19 @@ pci-ep-bus@4 {
->   	};
->   };
->   
-> +&pcie_s1b5d0f0_bar4_bus {
-> +	tc9564_config_syscon0: syscon@0 {
-> +		compatible = "syscon";
-> +		reg = <0x0 0x2000>;
-> +	};
-> +
-> +	tc9564_clock0: clock {
-> +		compatible = "toshiba,tc9564-clock";
-> +		toshiba,config-syscon = <&tc9564_config_syscon0>;
-> +		#clock-cells = <1>;
-> +	};
-> +};
-> +
->   &pm7325_gpios {
->   	kypd_vol_up_n: kypd-vol-up-n-state {
->   		pins = "gpio6";
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+Awesome; thank you! I'll get it into -next via the hardening tree.
+
+-- 
+Kees Cook
