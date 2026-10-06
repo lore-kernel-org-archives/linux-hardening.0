@@ -1,68 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-00617f01.pphosted.com (mx0a-00617f01.pphosted.com [205.220.165.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5163383982;
-	Tue,  6 Oct 2026 21:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301BB2AD35
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Oct 2026 03:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791323719; cv=none; b=bAmfHtekzWJWRQRbZYwWLc0ywiI+LpgMeWoTHyV3XvL3aR2y7ipSDyKE3NnehOutMy2sfLTZHnWy8Tj0ljuaNZ4DYEPy9L+awPy+OHY33K+08gzWqCUc2jIrCsR74v9WXjlZvEtAsr2vt61A/ZZnqKUyqN0R4osQ6uljkLAMw2s=
+	t=1791344187; cv=none; b=JhqNyVNkonFiXf9jGmdz9M5OeeNCFZQUA5iHIIvSpa/gN3yRsNKjKfkcgQ9rtiw7+xfAW7H9EaDjSahmjiODXCD1deWkyKwD+Jvqh5Su1y0qA3lH0F75fWygEFLBwzbwW8h8hi8PUkpGTcJT0OoVB0Qz5vNAvG1n7nlqcBABm3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791323719; c=relaxed/simple;
-	bh=xHJ9hg4yHkDXfjW444BnDtWp5EuaiG7dT2iCEQzYgK4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OjHcAbXGTiBmS9+bFEagEUkx/n0x93KJlbKLzQWf5HL7M+M/PStM6+EfaBRBlDNHqdoKOCaCuCSpa3Zg/GW52AtgN9CUFGACdszsMpv04KiC12Gy033JMdOYUCmfTJSOnj0Nq5/kMm0rZIrU/LnhvqNIVzZShQMPbcmRa+hxXxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNM4U+Ff; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNM4U+Ff"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D69B1F0089B;
-	Tue,  6 Oct 2026 21:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791323718;
-	bh=p6cFzmPVwnvLGajBYkemFKtr5g0mwddLRoGytSZpBcQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JNM4U+FfrDsXu5990fwPYm6E29Rkx4Z2Jnv2SwaQHObk/terRWHB1dyEp0e6TARv3
-	 he5XCigWKBrVTsXRj+vBYmp+MOTpS18pIF/4QCPC8Oryq9OvaZvGZg/g3GgYXuIuhf
-	 J6Vr14biXn3SW9Igv5wQFFKarNudhjYVJ3TlNzsi3UV3+oYdOt5Zlvzx72+chr+lJA
-	 iTglIHE9dfWIxKGmIYtihtacHmp9QMlTBfYOKNbHXQbBIXJE0ZTypKLL6hNYRElVvp
-	 gWyctowbQSA+0XTQdJTU3vxFX9iVd4i/dcICnRKPyU6QCx2aYE+Kicch5b1UhOq3V6
-	 LWZgF1xyJm80A==
-Message-ID: <007d40e9-221f-4dcc-ab74-e2f1ff706dec@kernel.org>
-Date: Tue, 6 Oct 2026 23:55:11 +0200
+	s=arc-20240116; t=1791344187; c=relaxed/simple;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rPJ+IQESuoSCH/H3p8wAQaU/sZDYf8JJsATogVYLtxU6hb4OoM8puG8pML+O+0tXNX1+hg2I/ROzzUShyf6B3dHzcV23zDZ+5YV9bwmfRr9GwlFHdEl6g6dP4ydnEEO3xFRxmtoi1LObqAGCY27hO0ucI/Ydtr6Kg4XuW02TX8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=psmicorp.com; spf=pass smtp.mailfrom=psmicorp.com; arc=none smtp.client-ip=205.220.165.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=psmicorp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=psmicorp.com
+Received: from pps.filterd (m0247527.ppops.net [127.0.0.1])
+	by mx0a-00617f01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 697002oJ3309987
+	for <linux-hardening@vger.kernel.org>; Tue, 6 Oct 2026 20:07:59 -0400
+Received: from egc-exch2.psmicorp.com (webmail.psmicorp.com [38.142.134.66] (may be forged))
+	by mx0a-00617f01.pphosted.com (PPS) with ESMTPS id 4h5b5e00pn-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Tue, 06 Oct 2026 20:07:58 -0400 (EDT)
+Received: from EGC-EXCH2.psmicorp.com (10.1.1.111) by EGC-EXCH2.psmicorp.com
+ (10.1.1.111) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.61; Tue, 6 Oct
+ 2026 17:55:51 -0400
+Received: from psmicorp.com (10.1.1.107) by EGC-EXCH2.psmicorp.com
+ (10.1.1.111) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.2507.61 via Frontend
+ Transport; Tue, 6 Oct 2026 17:55:50 -0400
+Reply-To: <greg@gospelmusicuniversity.com>
+From: Evans Thomas <_us@psmicorp.com>
+To: <linux-hardening@vger.kernel.org>
+Subject: fund transfer opportunity,Reply..
+Date: Tue, 6 Oct 2026 23:55:47 +0200
+Message-ID: <20261006235547.4FBFD0C2343EBB75@psmicorp.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] devres: Provide kmalloc_obj*-style API for
- devm_kmalloc
-To: Kees Cook <kees@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, driver-core@lists.linux.dev,
- linux-hardening@vger.kernel.org, Lorenzo Stoakes <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Brendan Jackman <brendan.jackman@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- David Hildenbrand <david@kernel.org>, "Liam R. Howlett"
- <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20260914223212.i.829-kees@kernel.org>
- <20260914223219.901347-2-kees@kernel.org>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20260914223219.901347-2-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-GUID: GWzEJrs7INFuDBpu98bP5EETH-_48HUk
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA3MDAwMCBTYWx0ZWRfXzDfoHDFgM3LC
+ X6uaul3CkJ76nLKhKcmWtJPm8qRAn8O9oRVmW6u1nrHGRmXNitBzCwLE8YyjzrI5SLBLE6p53am
+ LewuV4Wz1DM4dwbQ1IhgT1oDxOoj8P8I9ad4YIa2abbdnU7suEzuUddR+IW3JEtvSEyO/V+raPm
+ JB1gOjSj2xqED58neT4QNiyDn6Hq3Mdt3mSprgq6akmKeswERaj/6pl1VCKZ0Rf3C1hIaNoWG8l
+ GybcE05OjPlTjM9cNGdCpHwWD4FRefumFV6J4xhXsELY+anpUeJaBM9yttScH8FNFS9A4xbIv5Z
+ CTUNnJhcF9CFABZMrhfyVC9RxMH3P2j+4xWLoRnO+pyTGLMBOvlTWy2zV7iVo/i6yNt3Wu+06on
+ iSrpiHCEQHSOMNcSSxHh8YzsEAolsq8rUQ2Xb1O07JA2vacVmZIiyoJ5LfEf8AA/FC5jvSte1n4
+ bnX0xM4Plq6lvxYskeg==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDA3MDAwMCBTYWx0ZWRfX/uqY+gZpTmLF
+ 2ljdgP3xDygp0p8WTNGmRRGs+g1FUSGZF71dm53VnWbkqXnz9D7PUNOGJbhSCiqxqtrT6cJEb5L
+ BUnWGTfF1HiJu54RNnW7mRKL/GsvG6WGfY4THw1UB8d7zHBZVREq
+X-Authority-Analysis: v=2.4 cv=GvTXaU1C c=1 sm=1 tr=0 ts=6ac58d5e cx=c_pps
+ a=sNj4pI0fii9qGHoVqNzRVg==:117 a=sNj4pI0fii9qGHoVqNzRVg==:17
+ a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=ZHGAjPH774soz-f4Le74:22
+ a=GfZueQGhKz3ujf-POmTq:22 a=tclcd6dtLQvEqt9_mmAA:9
+X-Proofpoint-ORIG-GUID: GWzEJrs7INFuDBpu98bP5EETH-_48HUk
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610020000 definitions=main-2610070000
 
-On 15.09.26 00:32, Kees Cook wrote:
-> Mirroring the type-based allocation now in use for the kmalloc family of
-> APIs, provide the same for the devm_kmalloc family of APIs. This will
-> allow for future plumbing of type information (e.g. alignment) into the
-> underlying allocations. This immediately gains type check on return
-> values (instead of the prior "void *" return type).
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-Reviewed-by: Danilo Krummrich <dakr@kernel.org>
