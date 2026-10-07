@@ -1,164 +1,254 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9930B3EAC8B;
-	Wed,  7 Oct 2026 18:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791397601; cv=none; b=eXlrtr5arGuA3XIx5wmucxKngfENngrTr/gGXQdBCQtClojLSygRS49N4DNw2acUWuvrdTOka/o7A+ePMP8IlfGTMfcYT9bmtq7aox3i54mhv5WY5hWp2ehJzG+0necIcOrw88GRq0zenJYHVRAPWRCPCPs2UPXNpV4MiPZd5i4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791397601; c=relaxed/simple;
-	bh=MZ4R4/Gg6tc4hQwXGLhZjIc/1e5xCYfDLf8Zvrg1zVk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jPLK05s3xqwApahnGOtasDZesym4725Stxq1FqLOppIW4/HPVmvMnbhjHFLlnkqp2C+82miGHu25SR9N/XS7MEDScguO8ba8Ea6TLujqLD37bYIGjhky7H3C3oO0uTTgR3gVvngwpwPOZyjBs0NJ8zXgpI7Ku1OzrHcsjA6EeKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mS7yXQJL; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE2D3C8705
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Oct 2026 21:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791409784; cv=pass; b=ILRozRg5Y22L5mfHOyR+zzsdWb4GLNTiLQhXS/7xXXYPcxjACebL4kasRbwT9yx8klbqgga0WpYkp8T1VOyLj7DOZ6n0ZiUMnFeMldR+JxveHX7YPKPMBT5+TM5G2hV32xH65EqXrJuakJaEI3F91Fx8bNqs73sqEI0+mqeB0Cc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791409784; c=relaxed/simple;
+	bh=iUfeVPFcJRl2l483RVn1FexTtf702f8k8YD91745DT0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pF1RL4MXaidUL51nJmfXhN8AKD5thBRpitu18unAmIbz0GmcP19vGsnfAr4LjngimqO/VfIymF55PodroFZHAMppz0GqfW9AInr4PKBIeSLYCIdsugtgWaZiKuJQB4Wx8dlCVMqKBEtVFfFz0A/Q8s0t15GVa7MTOUQziUc4fKs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P7du2heG; arc=pass smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mS7yXQJL"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 697F5ffw2823381;
-	Wed, 7 Oct 2026 18:26:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=WlqfKw
-	DhkkKsMTCjnrCGzLKyHRxHSTeOyuF+x9N6HZw=; b=mS7yXQJLEMSlvbMYB8SapY
-	LFrAorSbfrhx1wMI+W8og+BYI4pHfTpn1ZmXLmqXFi3cgROWjDxz3bdtbOr4Nn0n
-	fdMaX4wokYAw2IXQOE0anqYKzm8MrOw+YZkFhKwU07dQ893ylVJggkNO40Mo+bp2
-	34cY+Q/C30zZmmc+EcBBTq6bfmSLtgCvMVPBzMeods7HO29KL7b1b2IiIcqEm8gS
-	y5NhOzXRNPMktNmlHtmSwkXcZ8z2d4M2MBajOOx/PnnDoQjRnpsIQxnfqaTWKC/I
-	zP7jOZkpJ+b+FNunVivAfPElWsLdVvowOZFrCaj/BLpUtka+Bdtlw/vfoBiBUr6w
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4h2se5q5yn-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 07 Oct 2026 18:26:21 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 697IHVfv2307730;
-	Wed, 7 Oct 2026 18:26:20 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4h3dhgyu4v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 Oct 2026 18:26:20 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 697IQGT940829236
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 Oct 2026 18:26:16 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 813AB2004B;
-	Wed,  7 Oct 2026 18:26:16 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C38FF20040;
-	Wed,  7 Oct 2026 18:26:11 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.39.25.208])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  7 Oct 2026 18:26:11 +0000 (GMT)
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Amit Machhiwal <amachhiw@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>,
-        Alexander Graf <agraf@suse.de>, Avi Kivity <avi@redhat.com>,
-        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Gautam Menghani <gautam@linux.ibm.com>,
-        Harsh Prateek Bora <harshpb@linux.ibm.com>,
-        R Nageswara Sastry <rnsastry@linux.ibm.com>,
-        linux-hardening@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH v4 3/3] KVM: PPC: Fix get_d_signext() 12-bit displacement for paired-single D-form
-Date: Wed,  7 Oct 2026 23:56:06 +0530
-Message-ID: <20261007182608.17188-1-amachhiw@linux.ibm.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20261007182116.12479-1-amachhiw@linux.ibm.com>
-References: <20261007182116.12479-1-amachhiw@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P7du2heG"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-48c4d99c32bso1933845f8f.1
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Oct 2026 14:49:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791409780; cv=none;
+        d=google.com; s=arc-20260327;
+        b=LV+tspGxapg2mbspLrO9uCWQ4R6pyLGCOYTMRlszX8ErbIjXnWpdrSw4xjM3OPpg1d
+         EwNUk4Fq1pUVTldm1Z6LpLKJ1MqSmrgVcWvHCPyanuMq6keFdxT/TV+FagObIfcSArly
+         Ai309PYXjiccYECailSHuk8kWZAV9j1J+kInQ/wppZxdc7BMXqQg4TdbCe7jI6b+2AZi
+         K+1Y+Y2lQu46TI9jEkRY1h69BC6Lf1dSJcFst6rkw2dAdT3qAwaa7d4SEp/nfWXF+cL8
+         6AhPch1MbPxfz4dMNgz0hMYWRdX4nLC8VWQeEbDRMCmBfOsqZFgnzydVBIbRncE7zrCE
+         8jdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Dz2+W8ZDe1ZO58k707wXjnIbgkdV89r041+gMmUvvKQ=;
+        fh=LMiH5blefM2N25eTN0zZGGcYwXhccJivM5xAK5ssqLY=;
+        b=RLb4OaPBuXj57hy11ldDfk5gGqnIrJkSJkRs8Lc8nZ6PIiTtFoTHHew+Wx4Kl2GwCT
+         IQWramDjOUenUIDFDmccUuGHftoEjR1Y06xf9kcsHnWCowx2XPXXNM/u6PJ7vst3XvuO
+         3iCY7A2R4HwzH/I/yj9QHYdRY0wo+rRMeifhds85qypULdciTCUUFkSGUUUFrXTIXegu
+         z25utCKTJKrpAYT9L7rKSybYzMqFv2JHdKHhhaVnIHaxvG4IzhcjhXcZzWrhNIo1EYUf
+         KRV20oTQku6RHK4DPPpPrHl5wpsgiBEk9FLSmDaaB7J5OgncqTXF/yC5/aI9+hJJ1nh1
+         Whxw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791409780; x=1792014580; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Dz2+W8ZDe1ZO58k707wXjnIbgkdV89r041+gMmUvvKQ=;
+        b=P7du2heGRRe0NdxFmkQLnmpZhVk6IdKQBDPC/Y+UQy0PXijq9nuRtFz/ETBT6HKKq+
+         sSsQ+P18FwQQVyRn4D51kzd/Cf0YyU62abyqfNRchaTz5EGHGvqw7Xn4qbeiHw9JBc6P
+         eMeYBjLQ08NerlnwSiDNIWCuMiFsin/+26zzaoDcpDmP4gcA1dkS7kiVN0aoWbMXMNUb
+         xegC1bik2ULslvOVb1hmlw4o+2Xx6OgwROwONx9xPwkbgV9PcmMHM62uJ5y6c7qGKBNX
+         Rh93fibkDk3ttVRb7iN+VKVmAxfs/lUrJ/D0Xea3XtxxYGbbAX3FC+dQcxxg9CBmBAnP
+         JVEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791409780; x=1792014580;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Dz2+W8ZDe1ZO58k707wXjnIbgkdV89r041+gMmUvvKQ=;
+        b=LuKv2305hEjvch0O6qlDCRZt7HhJDKiuAhLLCJex7BypsLPtqexRZNW/LJ0IxL+aS/
+         bIYLZKC/CC0/L1PfKM+MfO+Cd6NZ4tN7764eDE+esO0Le4xD4GyAARxHTlMHs+K1J1jr
+         yqxB34UD52HnxB35vIFLUzuh4J0hgVyIkqu9kKB/iF9VySoVJm5ywoLyohrg8jc88aIy
+         HXIvUdoWTGWW8tfEkhrqwml4OlSYCG4UtqDxuWyIfVwZE+MfUo6Xvc3hPJ88h46vnZZ/
+         1pZ6SF4MLcqcc6d70j8F+haar89f3ec/RpHEtGYXAHG4VYXCVHrmqZ7snILwOc3AdxsZ
+         wteg==
+X-Forwarded-Encrypted: i=1; AKwUvByj82oeunkc/isWeJEGgKnyEmKxsoDsP55U6H0fsqrsNWBMpsQJWDnLfajy/YGlDjD6PXMGXv3aor+4nthvfRU=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLTeymKxph1AsaZdEcATWFE2RfeqgEyIzNEdOYQMYA2Pj84ON+v
+	Q/yByGXvNeaAkzxruC7tnHorrWhCvhU5Ip+g92aa7ur/JTDJWYVqhI0+AIxZG+2NWdRPTSyYuDe
+	4nqEAMbGZx4PXgPcJ4t3jsBwAt54Gb58E2IGGKsg2
+X-Gm-Gg: AYBFou3w+UjBGzcGob+IS1uKJ5H+6qDl+l9txVDcXw50bvB0Qx93jsOlbrZiMAC/IkT
+	63aEFDj8dYSUwLV3exPfCfxzOZ2byJRtuXtzW4achRcNsgfqTsbte8LCLzjcwibbpSMtP4kP6Sb
+	80rypqrvMi8VNpg5WO/QtcMknZ+hgvah41mlOf9klluy7Tcqf8ouzslT+2lpjhh8U/oohLNEiuw
+	yDES0QXWUs+X/ZonrZBx8Bu6pOvhnXfrZRYWZMj/9kYo4MYayhMDuEeHGz+1GX4qE7CggfF4BJB
+	8cRdrMHMk5xGc8M/5zaBmebq24muE8k1nYPeugjxCZjO7ms3Tmcjfiyq9WcYu51EYBwaur/z6I7
+	zCJUHsl2FMMSEaeiH6kies60RfinitMyvQM7iK32SW1qeY3T92itvXYVrwPqcSHXZ4Urd6Vr/jc
+	rTpQ==
+X-Received: by 2002:a5d:64c4:0:b0:48b:f92:1f75 with SMTP id
+ ffacd0b85a97d-48c7289726emr6747670f8f.48.1791409779287; Wed, 07 Oct 2026
+ 14:49:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDA3MDA3MiBTYWx0ZWRfX0AS9zhI7wiqi
- 8Le4L56pnXG8lQbytFUgz9esQviG2XLYiinpRJXYfLRGT1SZ43e8lCGZewbendjpidGeo3xyklM
- wDRYS7R1sm5FtWQE7AmydkI1d6OZCVw=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA3MDA3MiBTYWx0ZWRfX4n6uOreidGdF
- kA7REJSJrykf4XQo0yY5nvLSxvPbxZQT0tWfgN58GwgU05m1J8qMmRn9wifAM73//u6nXCCBzZd
- gvDLuGdK0Q8DLi8ahnzZsssdV14WXt1FMk2rSfAxirlrA8YK/9r6NbQbaHFgvWb+uAJ6nsfpe8r
- nBNw+HBK/k5cKOFa2CN2wScIGPaI8yhbgCiGc4psh67pvsGx6sIlGweIXLs1wcxN/g0zu0tWF+p
- 0VesYNzhB3NHvCMN1fC/+gLxQdeJeDJWy6iDasVJOOFyPFX+g1CbQUHWUAF9Gh9zbM7gysvrV/7
- mjtt14WOoPMkobOpdYlTY00L08C8hAaD0StVpmqw7tFCydp7gnx1C9HA5hwNSL024XKgQ6VnzJ9
- 9Yw1sv5JLTxoLE0tM8l+8a/DD82xBmUMpFcRjNdZUOHUWAZ/WJU2wLZs0UdmU/F04e4J5mJZRvI
- vilrztvk+JR6e+Bji4A==
-X-Proofpoint-GUID: jxjboHntsCQBwiRxXf8AbkSQTrbe5Rbt
-X-Authority-Analysis: v=2.4 cv=UNRIjyfy c=1 sm=1 tr=0 ts=6ac68ece cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=WFAfMJoNLMmZCboqhGUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: _6Tjx2towODCH0F-BxDnaow6-tPq5d-e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-07_05,2026-10-06_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0
- phishscore=0 clxscore=1015 priorityscore=1501 suspectscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2610070072
+References: <20261007-b4-landlock-fix-domain-fortify-panic-v1-1-042e9108f5f8@oss.qualcomm.com>
+In-Reply-To: <20261007-b4-landlock-fix-domain-fortify-panic-v1-1-042e9108f5f8@oss.qualcomm.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Wed, 7 Oct 2026 14:49:28 -0700
+X-Gm-Features: AclHuK-XtGI88zcQiAtV3bin7-xktDfZZWB8sWf-q8RSqTy-N84xG7PdKD2ogLk
+Message-ID: <CAKwvOd=nPgEm=AZbEu12Eb90GtRUThY6YAjSiHHuNVHP8TZHwg@mail.gmail.com>
+Subject: Re: [PATCH] landlock: Move the domain layer counter out of the
+ anonymous union
+To: Abel Vesa <abel.vesa@oss.qualcomm.com>, Bill Wendling <morbo@google.com>, 
+	Tingmao Wang <m@maowtm.org>, Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Justin Stitt <justinstitt@google.com>, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-get_d_signext() has two compounding bugs since its introduction in 2010:
+On Wed, Oct 7, 2026 at 9:28=E2=80=AFAM Abel Vesa <abel.vesa@oss.qualcomm.co=
+m> wrote:
+>
+> With Clang 20 and CONFIG_FORTIFY_SOURCE, stacking Landlock domains can
+> trigger a fortify panic in the handled_masks copy in inherit_ruleset():
+>
+>   __fortify_panic
+>   landlock_merge_ruleset
+>   __arm64_sys_landlock_restrict_self
+>
+> Clang miscalculates the location of the __counted_by counter in the
 
-1. The extraction mask 0x8FF silently drops bits 8-10 of the 12-bit D
-   field (PPC ISA bits 21-23), corrupting any displacement that has any
-   of those bits set.
+Thanks for the patch.
 
-2. The sign-magnitude idiom "-(d & 0x7ff)" is wrong for two's-complement:
-   for D=0xFFC (encoding of -4) it returns -252 instead of -4.
+Would you consider this a bug in clang, or an error in how the
+__counted_by attribute is applied?
 
-Together these errors produce a wrong effective address for psq_l, psq_lu,
-psq_st, and psq_stu whenever the displacement is negative or is a positive
-value >= 0x100 with bits 8-10 set — essentially any real-world paired-
-single stack-relative access.
+If the former, then a bug report against upstream llvm-project/ and a
+link to that bug report would be appreciated.  Then Bill can take a
+look.
 
-The D field occupies the bottom 12 bits of the instruction word (confirmed
-by the adjacent W and I extractions via inst_get_field(inst,16,16) and
-inst_get_field(inst,17,19)). Replace the open-coded logic with the standard
-sign_extend32(inst & 0xfff, 11), which correctly performs two's-complement
-sign extension from 12 bits to 32 bits.
+Or if this was a known issue specific to clang 20, then we should have
+a link to the fix (or consider bumping counted_by support to the
+compiler version that is bug free).
 
-Fixes: 831317b605e7 ("KVM: PPC: Implement Paired Single emulation")
-Cc: stable@vger.kernel.org
-Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
----
-Changes in v4:
-- No changes since v3.
+> anonymous structure nested inside the domain's union.  In an arm64 build,
+> __builtin_dynamic_object_size(domain->handled_masks, 1) reads offset 40
+> (the first handled_masks entry) instead of offset 36 (num_layers).
+> Because the destination domain is zero-initialized and its masks have not
+> yet been populated, FORTIFY sees a zero-sized destination and rejects the
+> copy of the parent's layers.
+>
+> Move num_layers and handled_masks to the top level of landlock_domain so
+> that Clang uses the correct counter.
+>
+> Assisted-by: LLM
+> Fixes: bd3a19800dd1 ("landlock: Add counted_by in landlock_domain")
+> Reported-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Co-developed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+> ---
+> Move the domain layer counter and flexible array out of the anonymous
+> union to work around Clang 20 reading the wrong counter for __counted_by.
+> This fixes the FORTIFY panic when copying the parent domain's layer stack=
+.
+>
+> Based on next-20260930. Validated arm64 Landlock object builds with
+> Clang 20 and GCC 14, with CONFIG_FORTIFY_SOURCE enabled, and checked the
+> counter load in Clang-generated code. Not boot-tested.
+> ---
+>  security/landlock/domain.h | 48 +++++++++++++++++++---------------------=
+------
+>  1 file changed, 20 insertions(+), 28 deletions(-)
+>
+> diff --git a/security/landlock/domain.h b/security/landlock/domain.h
+> index caa3d19d2c43..5e65ab004f62 100644
+> --- a/security/landlock/domain.h
+> +++ b/security/landlock/domain.h
+> @@ -216,37 +216,29 @@ struct landlock_domain {
+>                 /**
+>                  * @work_free: Enables to free a domain within a lockless
+>                  * section.  This is only used by landlock_put_domain_def=
+erred()
+> -                * when @usage reaches zero.  The fields @usage, @num_lay=
+ers and
+> -                * @handled_masks are then unused.
+> +                * when @usage reaches zero.  The field @usage is then un=
+used.
+>                  */
+>                 struct work_struct work_free;
+> -               struct {
+> -                       /**
+> -                        * @usage: Number of credentials referencing this
+> -                        * domain.
+> -                        */
+> -                       refcount_t usage;
+> -                       /**
+> -                        * @num_layers: Number of layers that are used in=
+ this
+> -                        * domain.  This enables to check that all the la=
+yers
+> -                        * allow an access request.
+> -                        */
+> -                       u32 num_layers;
+> -                       /**
+> -                        * @handled_masks: Contains the subset of filesys=
+tem and
+> -                        * network actions that are restricted by a domai=
+n.  A
+> -                        * domain saves all layers of merged rulesets in =
+a stack
+> -                        * (FAM), starting from the first layer to the la=
+st one.
+> -                        * These layers are used when merging rulesets, f=
+or user
+> -                        * space backward compatibility (i.e. future-proo=
+f), and
+> -                        * to properly handle merged rulesets without
+> -                        * overlapping access rights.  These layers are s=
+et once
+> -                        * and never changed for the lifetime of the doma=
+in.
+> -                        */
+> -                       struct access_masks
+> -                               handled_masks[] __counted_by(num_layers);
+> -               };
+> +               /**
+> +                * @usage: Number of credentials referencing this domain.
+> +                */
+> +               refcount_t usage;
+>         };
+> +       /**
+> +        * @num_layers: Number of layers that are used in this domain.  T=
+his
+> +        * enables to check that all the layers allow an access request.
+> +        */
+> +       u32 num_layers;
+> +       /**
+> +        * @handled_masks: Contains the subset of filesystem and network =
+actions
+> +        * that are restricted by a domain.  A domain saves all layers of=
+ merged
+> +        * rulesets in a stack (FAM), starting from the first layer to th=
+e last
+> +        * one.  These layers are used when merging rulesets, for user sp=
+ace
+> +        * backward compatibility (i.e. future-proof), and to properly ha=
+ndle
+> +        * merged rulesets without overlapping access rights.  These laye=
+rs are
+> +        * set once and never changed for the lifetime of the domain.
+> +        */
+> +       struct access_masks handled_masks[] __counted_by(num_layers);
+>  };
+>
+>  static inline access_mask_t
+>
+> ---
+> base-commit: 6c2cb8b8b843d216ab549b678a0d8831c43153e0
+> change-id: 20261007-b4-landlock-fix-domain-fortify-panic-510367f8cfe3
+>
+> Best regards,
+> --
+> Abel Vesa <abel.vesa@oss.qualcomm.com>
+>
 
- arch/powerpc/kvm/book3s_paired_singles.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_paired_singles.c b/arch/powerpc/kvm/book3s_paired_singles.c
-index bc39c76c9d9f..532f96293de0 100644
---- a/arch/powerpc/kvm/book3s_paired_singles.c
-+++ b/arch/powerpc/kvm/book3s_paired_singles.c
-@@ -479,12 +479,7 @@ static bool kvmppc_inst_is_paired_single(struct kvm_vcpu *vcpu, u32 inst)
- 
- static int get_d_signext(u32 inst)
- {
--	int d = inst & 0x8ff;
--
--	if (d & 0x800)
--		return -(d & 0x7ff);
--
--	return (d & 0x7ff);
-+	return sign_extend32(inst & 0xfff, 11);
- }
- 
- static int kvmppc_ps_three_in(struct kvm_vcpu *vcpu, bool rc,
--- 
-2.54.0 (Apple Git-157)
-
+--=20
+Thanks,
+~Nick Desaulniers
