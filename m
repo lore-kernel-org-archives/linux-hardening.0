@@ -1,88 +1,81 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f97.google.com (mail-pj1-f97.google.com [209.85.216.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B9D494815
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Oct 2026 11:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1001A4ACC60
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Oct 2026 12:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791373381; cv=none; b=uzB4w8z87NlxjNqEFpKqmv6n76rN+Ki7vMnpcThwJXnIvfdFMgM6wIb5SKYt0PStEEY6A+/TcoQ18Fm99IoOtMLZ53mr+nwwkYetUma7I/NaxKZqFJh5e/NNtkgWF1GkVQ+5qCQiLSXlu+bBKzjHkSm7OVChIBe9eNAMWQ9H+9Y=
+	t=1791377663; cv=none; b=Cu7dMIYJtU6x42w7DdE8vl7ng+TtPqBk31BjkVlnPMvTwttF6EK5E2V/KNzwosdddU1jc3D5oMJSv21ZE4uX6ms9iSi5aztzcXZL/4LDHkqgnCV4V9DLrYAgN09bE01rOrQlbyMYJ6dPxfanGlmWr8ZjNFJw8RGFcY58KFjHcQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791373381; c=relaxed/simple;
-	bh=VkAQ5FXt3jQ8CiSyMqGGK5KKhS1BKmpYpJP7xY2EjrA=;
+	s=arc-20240116; t=1791377663; c=relaxed/simple;
+	bh=vQ5ti0IRpJKxnO/ajOgsAv5J3ZdzP6Vf+7alXOHlJ2U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M2mMBUt2w9jYXe71VVXNmsh1KUcwv77Q9cWGEgoqCK1ba/6Bcl5/AuisMTEBq/042YeAT/AAjf9sXF2ce1fIVVSjFOwnYg/eD3dgM7WqtrrWd0vIh1k0gsEsm2f/glfxQTgasOgdqiqUvoHT+WFCh/ClO6SFZsFa88zKB1z9CC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ossFhE2j; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Wk/uwU0I; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=G7K7wk4sRa0FDY3Ou2vjb8BBt1gcLBbcWNm5r+/aUS5NQRLvuEYUVOIvNmXzTPHlYOcD7zJc3obNZe0eABaPBFCdIGKRaXL6GcROyRvWPWlUxLCgM3+C3N3sWckApL0iGNorhmLmZ1ZWOrh5RhnL7KneH0MYl/+lWM1osohAXF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=RRPuu6+l; arc=none smtp.client-ip=209.85.216.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ossFhE2j";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Wk/uwU0I"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 697BVI5k2802530
-	for <linux-hardening@vger.kernel.org>; Wed, 7 Oct 2026 11:42:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	p6hqW5/rFJFQA/00dhTDWu5js5aE9G0JpWJp/ftxyPU=; b=ossFhE2jchHW7/JU
-	XSgMLbfv9mRDELVMH8mgKH6cs9HBny8UPw1NmJy2c5OakbnBh7GLXz6JRXc/YtYU
-	AWB/3cRLwkU557qecyD1FNAt7zt2O+3DtLHuqbEzZ64zgGtt0T2aBKuukNkMC1Be
-	PGy5g7kGjYVmuuVV8KLbXMxInw2xUbrxsunJu3FxRb0uHwMbhzJCYxLdrviEP1wr
-	8/0zqu2zNv/QoIVR8fpuemAPmf54M5Hm1LSYMWbYauoCepuAD+zg0+SjK+LGH/12
-	vzkN5bs6zvTsUrGmJYrM2Bj2PNyWRlKvqK5MpGQpUNGFSG14L6j0XkVIT77eENKr
-	AzwExg==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4h5mge06nc-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 07 Oct 2026 11:42:36 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3a6d95d6e08so3093348a91.1
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Oct 2026 04:42:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RRPuu6+l"
+Received: by mail-pj1-f97.google.com with SMTP id 98e67ed59e1d1-381b831d535so3937136a91.0
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Oct 2026 05:54:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791377654; x=1791982454;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=WRr2bOzV+ACM051eiPZmuzY0jHiw8RpNfmmijxyyZ5s=;
+        b=dvDtihWRJUiunp0X3Qo1NHRgYPFknd3f0d6zT9X9KwZa0O5vs49di/g3826ACp9+lj
+         RZVLcEWUydA5Qwl4EATEMjEb3NTmpsGaZOCV+D6CicTccCfFclsTNFSnl5A/gyUDHUru
+         dTku+pJplFNYrfqm3pYI0WjzkTG+GmNN7NToKuwGs0wHP8/43hh/F7KKQHYyQfHhcwMH
+         V+aGsDmOibPSjr6/3pCWXC3MAyB2cK3MyoGB1Tu8odbF+Y2Tp+SkFa2UKa8XnGySw26z
+         Bl7Zi9wSCiKtJ/f1F5qVgFkDxlqmpbJIUhBigi9AtXOy0C1R8OV5vfNkkPM6EICjtDco
+         rMoQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwx3hSFg8BcPifyRaHFwUKO8YlmtYkjrGObs0KrOAViqWIJ9fT9ny6UStXQ8WkORweZR1BTF/MdFUM3dY9iA0E=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIkE6qDNcTH1uvRyaSlgDr3yCrA4AeZUZoLdcmYAZVEr5vezIKf
+	YVmLeEYjGYqYeyvlSYD9Ym6Q6rGEZ36w8Pj2hMNdbo7+68BK/VBBqc3xA8piR/3xVHqWnd84x8/
+	iQ5sATBeNZA902zET9+rfAqASy88kBzLED7ZNq02jjKxemwSrBqVyYlS2WBKteDF0NXECUwyLW6
+	KVm8iV6QxuePfKy7fMFdXvFzwKpi2vCF1sgJJfcux9WXYwcHTMNlSiD5DZcqMRwU9Ooha2s4ETQ
+	m4SaCXW+za5a8MYoigWKNgz7HCslA==
+X-Gm-Gg: AYBFou11+8ih+MF0fgdYRhY4hu2IP48mLpFj8SUOSW+7vAtb7KcBlfAv5Zq4+NsuV0V
+	ZAFdYobFYp3Z+T7QUeWK0auPNFGJIfvs15yyQuCsXhzYZqrDJ7eOEgoRWemOI2LPIgiKBq1Iqku
+	7jy4hF5iC3WJugVwvuDSO5QEs1NNWsBIuEH3qZVyn3nfTb1d85SANfCJed2q+mOKw+xcsN8h07S
+	4LVdJBXww8n5NGe3nuKUvX2eEoJXLa53Z6NT+6rg/WCBMG1hsrgyH/lFJRH6pH6b80BODum6FEl
+	CeArpkukxVk1/cZFuVarkax6iZM2CwGwgc/oVA+OQun8F7CeHXy0Ntr5lGAHNv7YNMqqmcdcx8r
+	u0nJ36/I8/XfjmcuRZmNF8ip+p8G+vlswFWVp+haZv0P1sAFOAfz/Tv61RxVgfU3LUJ+bBKCuMo
+	D8gtoH5JEEIrZcVYmwiQd2qHJu06z5EJqad2QvdT9jBA==
+X-Received: by 2002:a17:90b:4b09:b0:3a8:7e69:6e63 with SMTP id 98e67ed59e1d1-3a8a1b91a84mr2185019a91.53.1791377653598;
+        Wed, 07 Oct 2026 05:54:13 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-120.dlp.protect.broadcom.com. [144.49.247.120])
+        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-3a8a48cb52fsm338394a91.3.2026.10.07.05.54.12
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Oct 2026 05:54:13 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-cc73895c7d5so4771947a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Oct 2026 05:54:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1791373356; x=1791978156; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1791377652; x=1791982452; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=p6hqW5/rFJFQA/00dhTDWu5js5aE9G0JpWJp/ftxyPU=;
-        b=Wk/uwU0IfZBNZLDnKFPuS3raayz7HFMvO3IjS7SRJTq33r912ip66hVk+AjgtznXA6
-         nHNkLSSLRywSrMvdENyI4zKrp4I09TiVr+YD+Juu0xtN9SqkqQpNeg6HAk494/gaIIG8
-         eO82fGQqhEPAyWK0bEuHAUnWdXjvX1KURIanDFrhXDTgRxkWJYYw4cSTOtof52DgN9BG
-         Levyd9SzyfNMdRQOEGG2mX2MbcBylzjmPgiPJXtFhiqU/EROT9TQmuLOIfdDOqgA0F+g
-         s7s2E1Rew8Vz1n0cpVsvC5ffYavxyKLAWxw1N53N0JyOZGKkjJrs7LMkIe3Dgyyp0J3c
-         aYfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791373356; x=1791978156;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=p6hqW5/rFJFQA/00dhTDWu5js5aE9G0JpWJp/ftxyPU=;
-        b=dh2GL1l4fltMqFZzBvqo6LXIiHaYcemN/UMPzZIvcq4r389yQt3FX3+oxXrLmDGYUN
-         4VAZJbycz5kJlSwndiKVzOkXQ79Fq1VoexinagnATDMnhllGCP3wCzRtWr0c0iRWYa7x
-         Mu9Pm2ri7MZLbT7ivqVRrzhHy0BZercOkPkcax6ZA0/5DLKTAlQ6My/qYtHtq8j+tohG
-         s0xpm1gH7Uu5xZSa7tbOwxZ0zgPxxmQInsu+xLBPAlXsVqVrszDQ0NcQqcGEnn96L0uw
-         4RSe/DMCipsfz6KLfewGxv6vd0UeV528qySt3Zxg84AT2rR2cTEQkMr5a2Mf2O/wPraG
-         DlTw==
-X-Forwarded-Encrypted: i=1; AKwUvBxFgMXbYombOwnPZVL46vMOcHxkXF+JFFk4t2apwVWPYYOjdxvBappYgODbg8vDVSuKK/VEwmFt4LXU0w7/ZKY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLloEvBE/n0BMT/KNEypVnhuhpHcAXWlDb58DrLxtsEsH5TvyxS
-	3Znl7NaBXncmOj9YK6ICG/pJCC8k1+zYOFAyViVtPLRSbZP9JeWdVnJn0jZmIFyJFXNo919lUn0
-	ECRqz/8xIfDF3y5Ww+hY7CY3vpLeae7v3tqDm2sZdnnO53rVsllYDNJxiSKx5ANo/X9OFHQ==
-X-Gm-Gg: AYBFou2jYLvEF0uq3poQ8MkcJBhZeAhWEm2hMrKztLTkldTL6w4myuP4yoRoT10hocL
-	p6G/p2QRXuBfwYncyooIzU/dknMoxzloBW9RAtT6rYEcBS3xwLTWCwWRzskiawRzrL1mOulCF2N
-	zWpLRfOdNThII9wpxWxnOWnYhfvR4zLrLwqvPs1cRQCB5A4Ssw99ERNGZ183h4Tk6mS5tPY5ufw
-	VqWXyAjFxKjPPvMkOzKZuHSa4UMJBt73X1UeIB433ODg3T0UhuSTV+jaZPvQSjpYbjov2zFFvVe
-	kAgTPrubhhj/lr7FmgbHvvPqSwPet35hswyCBtDyAnF+jqEFm8lsKkxUc0eAXKEvwT667ie+8lm
-	K7g/6KlbCqIsvvtI7PqSdGFxp7bR/hXP6f1bcX69+CSYkrfCEzcPH85qyP8WF452JB2MG5UupWR
-	sA7j2fP59NYHcV16EF
-X-Received: by 2002:a17:90a:e7ca:b0:3a4:b9de:87a1 with SMTP id 98e67ed59e1d1-3a8a1b8e207mr1765294a91.45.1791373355857;
-        Wed, 07 Oct 2026 04:42:35 -0700 (PDT)
-X-Received: by 2002:a17:90a:e7ca:b0:3a4:b9de:87a1 with SMTP id 98e67ed59e1d1-3a8a1b8e207mr1765269a91.45.1791373355392;
-        Wed, 07 Oct 2026 04:42:35 -0700 (PDT)
-Received: from [10.50.61.110] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cd0a58225b8sm1312614a12.2.2026.10.07.04.42.32
+        bh=WRr2bOzV+ACM051eiPZmuzY0jHiw8RpNfmmijxyyZ5s=;
+        b=RRPuu6+lLm6I2x6sXOOrNvh1BLc+q5EIBLLmmXx+lD/h9iH79fNTnhWy6F1udM7B4Y
+         vLGo6TBGs/902r8fPhs883WYm/II5uXZ3yHbWv+89GDFCMfqkSCGc+TAPvli9EocJPLb
+         VR5PnBWs1eANLE7zz+/0g/lVQzf+8ywkIx8us=
+X-Forwarded-Encrypted: i=1; AKwUvBzkLpl2Upw8cINiwLq8q1yw0SNLUOMNO4W3cekw1d6lELPf/K9Jaw1uik2ZXLrEplAUrdRsvYvDJa11DR8z+uA=@vger.kernel.org
+X-Received: by 2002:a05:6a21:3990:b0:3dd:85aa:452c with SMTP id adf61e73a8af0-3e134044716mr1756552637.30.1791377651832;
+        Wed, 07 Oct 2026 05:54:11 -0700 (PDT)
+X-Received: by 2002:a05:6a21:3990:b0:3dd:85aa:452c with SMTP id adf61e73a8af0-3e134044716mr1756535637.30.1791377651379;
+        Wed, 07 Oct 2026 05:54:11 -0700 (PDT)
+Received: from [10.176.2.78] ([192.19.176.227])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cd0a92d5b51sm1411697a12.14.2026.10.07.05.54.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Oct 2026 04:42:34 -0700 (PDT)
-Message-ID: <1b8d82ce-a63f-4158-a767-693d0596b449@oss.qualcomm.com>
-Date: Wed, 7 Oct 2026 17:12:30 +0530
+        Wed, 07 Oct 2026 05:54:10 -0700 (PDT)
+Message-ID: <d28a1cfd-1bcc-4319-bbbf-7189a1ff8dc3@broadcom.com>
+Date: Wed, 7 Oct 2026 14:54:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -90,109 +83,37 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH wireless-next v2 10/16] wifi: nl80211: Define attributes
- to pack SMD BSS Transition context
-To: Johannes Berg <johannes@sipsolutions.net>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20260924-smd-v2-0-bb40094da1d4@oss.qualcomm.com>
- <20260924-smd-v2-10-bb40094da1d4@oss.qualcomm.com>
- <d1f53a596835f79580b2078a83820d98d795ae17.camel@sipsolutions.net>
+Subject: Re: [PATCH 00/13] wifi: brcmfmac: Add BCM4388 support
+To: michael.reeves077@gmail.com, Pieter-Paul Giesberts
+ <pieterpg@broadcom.com>, "Franky Lin (Zhenhui)" <frankyl@broadcom.com>,
+ Mathy Vanhoef <vanhoefm@gmail.com>, Kalle Valo <kvalo@kernel.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+ brcm80211-dev-list.pdl@broadcom.com, asahi@lists.linux.dev,
+ Hector Martin <marcan@marcan.st>, Daniel Berlin <dberlin@dberlin.org>,
+ Janne Grunau <j@jannau.net>, linux-kernel@vger.kernel.org,
+ Hante Meuleman <meuleman@broadcom.com>, linux-hardening@vger.kernel.org
+References: <20260925-brcm4388-submit-v1-0-b5cbc2cde2fb@gmail.com>
 Content-Language: en-US
-From: Pooventhiran G <pooventhiran.g@oss.qualcomm.com>
-In-Reply-To: <d1f53a596835f79580b2078a83820d98d795ae17.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+In-Reply-To: <20260925-brcm4388-submit-v1-0-b5cbc2cde2fb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDA3MDA0NiBTYWx0ZWRfX2IrViGjA4XC2
- 8c79IHL9Sq5kpCuxHqmniwJH8whVmvXdp2RpsKyRQXOAht4rxV1fepFy/xNF1oInZkhUK81RnM8
- cDDeJ4MRAsUKZSbKGVxaYV1jucCSHwM=
-X-Proofpoint-GUID: PdI4BlP84ec4yW1QGBXS-MBoq6d0xfb3
-X-Authority-Analysis: v=2.4 cv=PdJqFShd c=1 sm=1 tr=0 ts=6ac6302d cx=c_pps
- a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
- a=Avq_DrN9Xaf3zyNzFDUA:9 a=QEXdDO2ut3YA:10 a=uKXjsCUrEbL0IQVhDsJ9:22
-X-Proofpoint-ORIG-GUID: PdI4BlP84ec4yW1QGBXS-MBoq6d0xfb3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDA3MDA0NiBTYWx0ZWRfX9m+YPHyM2jTw
- o1Svv1UKirLJ3D69vM2YUAKPVoCE7qSSmwJbnpJ2H0ln8ANbaImBwjZPB7sGBl6A92zsT1yV76r
- b3SQ/QIHqkq/orQRIlAJVHCE97c93A6CQ8jPkqEIXRfTm9i4QFQRHLAQn2jtQRaXNgHZu6mKzgu
- I1orhdVsblHKU7Y59UvRouHMVL1ujILKwhRm6URbX1vPlYD8AYPOrWa069AYeXRDtjuYBndMByE
- ilS2ENntehcKF8vsPOQzrNqYkJ9OTJI+JDvc2teY4HNgm+lTt65y9wd98E8I8JtceU6p1BiPRJf
- qTC77D/hO2CQLQ0/dXMK75cPRAsLmenu5a650MiKYBMEzeGKkbHriPBdJptKBuU7bMWT09AMy+g
- iuSxXL38AoqYTYWd9o/u9B/Z1LhdmAVDAwuArDAToHxMj5NTnLjx2oCm1nzMum8lGYJ0f814mbv
- zBENWwnm6r3T3T0RrBg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-07_04,2026-10-06_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 priorityscore=1501 phishscore=0 suspectscore=0 spamscore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2610070046
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-
-
-On 10/02/2026 01:49 am, Johannes Berg wrote:
-> On Thu, 2026-09-24 at 08:10 +0530, Pooventhiran G wrote:
->> Define nl80211 attributes and policies required to pack SMD BSS Transition
->> context along with NL80211_CMD_FRAME to be sent to userspace, and to set
->> and get the context during roaming via current AP MLD and roaming via
->> target AP MLD. Without these, userspace will not be able to transport the
->> context to the target AP MLD, program the context on the target AP MLD TX
->> and RX queues, nor fetch the context on behalf of the target AP MLD if
->> the ST Execution frame is sent directly to the target.
+On 25/09/2026 15:43, Michael Reeves via B4 Relay wrote:
+> The Broadcom BCM4388 chipset requires new PCIe initialization and
+> firmware interfaces. Add support for these interfaces to brcmfmac to
+> enable basic station operation.
 > 
-> The commit subject and message don't really seem right - you're also
-> adding all the commands.
-> 
+> This series adds:
+> - Signed firmware loading and mailbox transport
+> - Fixes for chip identification and firmware capability matching
+> - Versioned scan and join requests, and extended PMK payloads
+> - Updated event mask handling
 
-True, I will fix it.
+Thanks for this series. It is taking me longer to review the full 
+series, but wanted to let you know I am looking at it.
 
->> + * @NL80211_CMD_SET_SMD_CTX: Set the SMD BSS Transition dynamic context for a
->> + *	non-AP MLD sent from the current AP MLD on the target AP MLD managed by
->> + *	an SMD-ME. This command carries %NL80211_ATTR_MLD_ADDR,
->> + *	%NL80211_ATTR_SMD_CTX_TYPE and %NL80211_ATTR_SMD_CTX.
-> 
-> This is a bit ... brief. Incomplete, I'd even say. How is it meant to
-> work, e.g. this carries PN data which fundamentally maps to a key, so it
-> seems the key must be there before it. Surely the station must be, and
-> it must be in the right state (whichever that is) etc.
-> 
-
-I will update the documentation to mention the required STA state.
-
->> + * @NL80211_CMD_GET_SMD_CTX: Get the SMD BSS Transition dynamic context for a
->> + *	non-AP MLD associated to an AP MLD managed by an SMD-ME. This command
->> + *	carries %NL80211_ATTR_MLD_ADDR and %NL80211_ATTR_SMD_CTX_TYPE.
->> + * @NL80211_CMD_SMD_CTX_EVENT: Event reporting the collected SMD context
->> + *	(requested via %NL80211_CMD_GET_SMD_CTX) to userspace. It carries
->> + *	%NL80211_ATTR_MLD_ADDR, %NL80211_ATTR_SMD_CTX_TYPE, and
->> + *	%NL80211_ATTR_SMD_CTX.
-> 
-> Why would this be async?
-> 
-
-In ath12k implementation, firmware and hardware are queried to get these
-information (SN, PN, etc.,) and the time to collate all these data across all
-valid TIDs varies based on system loads. So, not to hold the NL socket for
-(arbitrary) longer periods, I have made this asynchronous to cleanly report
-back with all the required data once they are available.
-
->> + * @NL80211_SMD_CTX_ATTR_DRV_DATA: Optional (binary) driver-specific blob.
->> + *	Passed through nl80211 as a blob; parsed only at the driver layer of
->> + *	the current AP MLD and target AP MLD. First 3 bytes shall be driver OUI
->> + *	for the driver to parse as required.
-> 
-> That's just a vendor command through the back-door?
-> 
-> What do you envision this carries, and why couldn't that be defined
-> properly? Is the intent to have some kind of optional data there, or
-> would the target possibly refuse the operation if it's not present?
-> 
-
-Driver data had mgmt information and WinStartO equivalents. But I will move
-these to generic definitions so that this can be eliminated.
-
-> johannes
-
+Regards,
+Arend
