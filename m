@@ -1,68 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9F9476CF0;
-	Wed,  7 Oct 2026 09:36:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3733D648F
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Oct 2026 11:19:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791365817; cv=none; b=AlnnTgyy8hvtCKB97Q2B+e/ErYoho2ppFsp3lgoKW3d9iXka8JfgjJxjdrtKcFpKmrlo79Vi2MdMIG/L4zbyfnEB0POE/4SW7LvQMs0XLl3tgaCOpQ1YeThOaTM6kpV8/QF3W79ScNseyw6hOEqHDrjL+XEaUIWC491TLVxQOpU=
+	t=1791371997; cv=none; b=g1FzMU4HA8mRobx1eLgHvPHy8TrZoVMr3N7U4/HwG1UyyjCgZgIXcmEiTWkVeBOTYic4D27A8Fv5zeoSfrwHeD/EMa70V+Ax0D/QsP3QkCUhRT7iMWX5z+dk3YdaiME0yJDIg2pikDM+5FjWsRbl84u1ryC2uHD0fdIJw8KYAVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791365817; c=relaxed/simple;
-	bh=GbUMDGByiIlcp+WrpWlazRAUcVLY3mPJK9tWMwQjoFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p+pJ3Hp8uKITcW0NJom44qxZOMRQtuxqqSSIE/OEbfROrvl+pzOP25EzoVzRyMJxONHaZeLbU8erYZiLHXXPOFYTSIzJtjdf6K0zergK3qYfwjCYEd2lE9dY1T6RMxbfoUKN2Y793sumon23imeJPs+eeSQoQP00JQvN1VX2mSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o2NiXlCw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791371997; c=relaxed/simple;
+	bh=Q1iSp05Y/GM79eVG3nz7d1/FrmFsX5eWbL5dWFDrKic=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sh/9VoXpUD1Y9nyfUNCphNvI8gpXc/dQX6MszCI5JZX4w5O3Z+8DHvBQnTX07gpfQXT8+ci7voLlbrrG60p0mIViPo7I92FlzQDhSShq74cqnO5hQaYWkni/y4RAbf+VwrgfH+zeIS6LAn+ynkRzEHHwt6PsmJKFMSj0XOfwCzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cdkdgpvn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o2NiXlCw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FAC41F0089E;
-	Wed,  7 Oct 2026 09:36:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cdkdgpvn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFCAE1F008A7
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Oct 2026 11:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791365806;
-	bh=4DhdzIwt3MRMXaMV4Mj6A2R3zODdLzHgKo1UW7l68sU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=o2NiXlCwdU4gv6MFWdHENW5pLNJh35tkFSRuUzZrPS1mnmicHzbkYy1jHQ3HnsH0Z
-	 JYoUq4rMncg6icJmodIpK8LYzwRHkye7PNbrfgA76xdNJIGVZf7NNcsA19zYI666Gv
-	 T0wdGfCCXkYKiFtY5WYKDP9IW4ceaYe1pOJ4p3rK8mNsZsGR7qHZ72TsbLDoNLPx/M
-	 auVqwzQv5K9OKt+QeLk0VPirxFXb17AiNyvByWDqzrsl9kRM0UxYF5XIDkRMcuCUca
-	 LaHUNUfdbGYOwplUUK/D4o1/BSJcNhJ28FAF3K05jyBsyLqbOwntvmojBTARSaapCK
-	 kvMr+wnqeOsKQ==
-Date: Wed, 7 Oct 2026 11:36:41 +0200
-From: Nathan Chancellor <nathan@kernel.org>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>, ardb@kernel.org, gustavoars@kernel.org,
-	ndesaulniers@google.com, justinstitt@google.com, broonie@kernel.org,
-	elver@google.com, alan.maguire@oracle.com,
-	namjain@linux.microsoft.com, peterz@infradead.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v4] compiler_types: Allow opting out of __counted_by and
- __counted_by_ptr
-Message-ID: <20261007093641.GA1527653@ax162>
-References: <20261005102518.2400984-1-morbo@google.com>
- <20261006094358.2948476-1-morbo@google.com>
- <202610060642.7C4125F@keescook>
- <20261007090915.GA1504630@ax162>
- <CAGG=3QXPAa-i4r3Vv6-q25A6EvsxGb5RDLn02z1=a5zo7W-7Vw@mail.gmail.com>
+	s=k20260515; t=1791371961;
+	bh=Q1iSp05Y/GM79eVG3nz7d1/FrmFsX5eWbL5dWFDrKic=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=CdkdgpvnWXrleEzlQfwdm2ccr+r1xMfSUAdQPfHJBe5EkXHVzIOORqtLHsmTz5Yzo
+	 dERGTZ6yQGP3aG189XNfkT+NYTKfKKKuOdiO6bx8RLehuHmBDFSGfwiBCHitcwSTYR
+	 GKHBYc6a/xNn+l8PcVFsDbIC/iy0/mp51IXltlZnxh6dvHyoU5t8CWtvmCyBfOcjKf
+	 0bY8PzPk7Y7IH9aB5SRyaGPW9jrr+R7KJ9qRdHuCbVlJWzMG0KJ+m/tMXUCi+XrAAv
+	 tu2uryM6rL7OckmvqnQhQ3bfwLJHdYhJjKGGw9foKbhYSLanqWaXKU5clI55eoei5S
+	 aNtEARcOh3Afw==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-6aa9606ddadso2701883eaf.0
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Oct 2026 04:19:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxVcYl4UPbfPM1NLxtn/5GEj2jAyLrWuKXGcUkZ2GTDjmLb5GI5odPsGvwd6FGFtN5kckFo94ZNB4mvCCoApsg=@vger.kernel.org
+X-Gm-Message-State: AFuF++mVAl2gMrctQUmPBAGaMU8TKTr5OhAeQEAQMFL2EtKmDNJ6nlUq
+	W2wYTe+pdftcYD/sJNwqhWSxzY8asrTgoDDqCsxF3exSJuiKTN8yQPKLlfywj16XR5BmzWotqJr
+	RPhL8DBdx3XfrxRCvBmqZTyyvo4wzLsE=
+X-Received: by 2002:a05:6820:2d07:b0:6d3:402e:1fc4 with SMTP id
+ 006d021491bc7-6e7a6e60903mr2071504eaf.48.1791371960255; Wed, 07 Oct 2026
+ 04:19:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGG=3QXPAa-i4r3Vv6-q25A6EvsxGb5RDLn02z1=a5zo7W-7Vw@mail.gmail.com>
+References: <20260928063824.1386524-1-morbo@google.com> <CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com>
+ <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com>
+ <CAGG=3QV2k-nsZHNSuKEixZb+-LcxvhQsG379ghgyOpiDLTJWzw@mail.gmail.com>
+ <asNuMzqz3G-gmIiD@google.com> <CAGG=3QV1eLy-eAfi3Q49qwMw_Yw-BJ1tmd3J=SLJB_qWrx4bNg@mail.gmail.com>
+In-Reply-To: <CAGG=3QV1eLy-eAfi3Q49qwMw_Yw-BJ1tmd3J=SLJB_qWrx4bNg@mail.gmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Wed, 7 Oct 2026 13:19:03 +0200
+X-Gmail-Original-Message-ID: <CAD++jLmR3hmEYN+-YCAcNq_0Zk0=PijS9jhGaMppkNhvbs90JQ@mail.gmail.com>
+X-Gm-Features: AclHuK8-ODudQDmu_mYfAfdHUSYSOXtS3Zd0jQ7M0p6lH8u25CuCRiFtUDTCe7k
+Message-ID: <CAD++jLmR3hmEYN+-YCAcNq_0Zk0=PijS9jhGaMppkNhvbs90JQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: annotate struct acpi_gpio_mapping with __counted_by_ptr
+To: Bill Wendling <morbo@google.com>
+Cc: Justin Stitt <justinstitt@google.com>, Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	codemender-patching+linux@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 07, 2026 at 02:32:45AM -0700, Bill Wendling wrote:
-> Ard,
-> 
-> What's the reason why x86 doesn't need the KBUILD_CFLAGS flags? Is
-> there something that breaks things?
+On Mon, Oct 5, 2026 at 12:26=E2=80=AFPM Bill Wendling <morbo@google.com> wr=
+ote:
 
-I think it is mostly historical. See Kees's series to address it:
+> I sent a patch to add `__NO_COUNTED_BY` AND `__NO_COUNTED_BY_PTR`
+> macros to prevent this. They're similar to `__NO_FORTIFY`.
+>
+> https://lore.kernel.org/all/20261005102518.2400984-1-morbo@google.com/
 
-  https://lore.kernel.org/20261006204210.i.137-kees@kernel.org/
+I see you are hashing this out with the right people, thanks for
+going the extra mile and fixing this properly!
 
--- 
-Cheers,
-Nathan
+Yours,
+Linus Walleij
