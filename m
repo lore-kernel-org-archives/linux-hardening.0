@@ -1,120 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AABE39CD0C;
-	Thu,  8 Oct 2026 16:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791477674; cv=none; b=RIXWfnwDbc7koA07oMgTbT0ojmfSJhhc/txS1yvJ7TsrdqKBecwr6+cJoxWRlcvNiPjiYOAOb7fdRFP+SM071iLjyrzFT7OPqf40hO+DaPwj8qRK21fdv2MZLh0EEL/EMhKjWI5YdQSerktLwuqxpKDVvfAzyBiZ3tVBKsWvRc8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791477674; c=relaxed/simple;
-	bh=gb0WsiZhhHvYTv0DyD8MX/eH/RRxnQYOHtPCH1VAqd4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=YEUI2Fj4u63acMwro1sIRy4a2/mISQic0PYKjXu0P4auCpR+ftaA4k2WGJ1QRTDGydCy0X1eXwDDU2jxhzKD124wg9ouhDr/pw1EXrIH4lv9wU8I3TX5GITvBrfppP7/5ZCaU/SUY8wr1y0S51mOWmoq21BhttFNfmqmndxIPgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9NHgyIL; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623363B42F2
+	for <linux-hardening@vger.kernel.org>; Thu,  8 Oct 2026 20:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791490729; cv=pass; b=Q93dQHXE2vuRriOvI9wXpKvSPVvRww/jJ3+FmgniLQ00mn8sOZKvGiHb8LuOOwo/MzW/bTdWILoLX1OwJEIT4+ypj4VHHIRGIifqHz0RWCU2dz0unJGx8dRjhHpiFNLBSiGKaIQWFxlGmkiJng/ADfZgSPxSjYkAaAO4VGNH6RE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791490729; c=relaxed/simple;
+	bh=z0YNlsqK8DlWZ011G3qdno2fBl/feavG0dTMz0RNBQs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WGGcOeKdcd/nEvnpm7SdAn3HuQ2jiPG7wGeM7Kgrsive+0ISHHuM3Q4U1R+Ek8sl/Aoj6vKUr3dAoCshesRhPKsuTYJwLfQnW5kj76pSXUbno+7A8AZo2mX1/D2pgvGiV5nmbZnWmrugeidgAteJll5ljkQJtjSriY5h9kQH+Vw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bsMOcwg/; arc=pass smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9NHgyIL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3BDD1F000FF;
-	Thu,  8 Oct 2026 16:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791477668;
-	bh=SZsmK4vppoHWtoqpg/gnMTdL025sRiF1Xq2a4/OeFOA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=h9NHgyILYUDSHkbe+fAQDEV0R+HZrfx1eWudhbBU1+2ZZueY9geCc+riWoSzQDTor
-	 xIedZPuI1ViGj6xpxQqhIxHNrJ8cLCcCO1sNqk/N2MoHBM3UEuSD/0nQ+yzDLsBXqg
-	 slLIBIkMSbxrtJq/0CBZF0WHt0Voc4MheWlLNrxzAwi4GjVy6q5UDG6CecefAP9Att
-	 cPSEudsaUPICR8t5mvkrj53cBd4oDRFhR1dcZNi8jUpdO3eSiFfZvJhtuZGFHxv7oT
-	 eHx3IGR5HxIiKH9Wzm3N14MKL1NKSJEsjAQSmN6Kq3IfvuU53LlWuLWYEA/Y7OVN8u
-	 H+q51YTgk872A==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 1F7E0198003A;
-	Thu,  8 Oct 2026 12:41:06 -0400 (EDT)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Thu, 08 Oct 2026 12:41:06 -0400
-X-ME-Sender: <xms:n8fHau1JvBbOAzvD1mRGlf2KAmiUg-E8VDBtyIVJsbvu3MEiQE02zg>
-    <xme:n8fHar47oWBPAwgiRt-1fdalDHXuuiJpaIQ0Z79G_DRgXk9_RTlzr1s5g71hebuYZ
-    dtj1_Hj8ryaH-QcIIhVQPJTvYGTd8dNsAjS2JJc5bh1JtFT5N_i3Fs>
-X-ME-Proxy-Cause: dmFkZTEzFzB1wU7+qeMo+i+/axzQl+PUr2Jn75vjM4R/6QmGMltUQzY02zaHilTvbtCWyA
-    DgsIbJ9j4lJ2UgsU7UiqjQSpjJ6+Cevu3eoMakV2uyopDtEPYGxqUTo+suMUMyXSmHt9D1
-    qVYpNMbEVNUJjE92NlooqbwaVpraQ+JODZtwSt44/pr/DD/DZ9cHJ2LrkjXp16a/yZNG4J
-    fQ8EdMHBJELI9Zok8m6wj0pUDWg9ppRmN7lTLEhcHCBBKxBhffLye2SH2M+xlRCVoTc9gA
-    YlM7m7ozENg1yUXpC3mZnQZElqr27PD+mapnbsFl29Zt9SJ8hT+tXG+mODftbmRJNb32Ai
-    bn6f2Fa7lKJaaqGh4NSy0usWIJZMMHY04Ba7RPrR+ul69aMV1aSuR/5mZ+YYO9edPyPSG5
-    5GBl5TbJBf+Dzurifxw/+Wk+SHfFq+TrYRc7pB1C8wODqS/BGgJozTbvIafup0OUiscMoQ
-    n3diM1klL2Xl+m9+c2Alr4baWVVjEKT7nT0qyti0y27YC+q/jTyqqKPsss7Q36SiONIkzo
-    sv3d+znPhIwDifnJyxHlx5N4kky8nArjIJjbR7bL4Yhmb+SYLEbGSMRAfU1Zp5HnypCSGA
-    pnqJKKZxiB5FDhdpK+PVaCoLW5ATxqujmXI4hWe+ZZ6rdR522T8P7LAWkcug
-X-ME-Proxy: <xmx:osfHaulT3KOMGe5g1r6WlHV0oiPPnCx_x9vLj3p6ru0htQcJzxhAzA>
-    <xmx:osfHagMlNKifIUrEJLe3cfWLvDac1k7zn1NAHQRGfrAmSdF_huBJ5w>
-    <xmx:osfHaiwU_9x6AzEhmlRAUoqMYgq5WWG5q3uK-QkTB9xhzO5oKkI5og>
-    <xmx:osfHattCsiA8hFP_a9yY6uPbAnZUCpvQMT8yhYuUfFSNkBUMMjiELA>
-    <xmx:osfHalY-BjQKI9OaL6kpiXbzodST32DOyXdjG-UhXFUDlsaMr11rfCBH>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 5C462F8008E; Thu,  8 Oct 2026 12:41:03 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bsMOcwg/"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-7c4818e4165so1122713137.0
+        for <linux-hardening@vger.kernel.org>; Thu, 08 Oct 2026 13:18:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791490727; cv=none;
+        d=google.com; s=arc-20260327;
+        b=K54CE48r3RiY6M+aVv4Do4No5vOgzsEKG2hMJ7QyII+Zp3DuT2RANFYbSF/dhs4EO2
+         0k6B+/ktTUrksPFo5OxUS5uDYSLnFrQNfSxoO85n+3BrOWFjVFYtZThz0kGkyV4X72Ro
+         u8OdSGaWpGIm+u/w0Tr3gbK3VM2w8PH+g4PfEHE8jPHUO80BXXXnyqJNyDh3GWieuHuf
+         KcmE3waQcJKtj2APSVZWtgxU7QIkR0vXNiblpVQH3xSEd7UhJcCsuXSenVKnf+BXKTcr
+         oxp5WGfBDm7AiTumXA/+ioi1d+5W4V0nc9Us9JCiRBjO02bGOKpCYicPe7m6Np7Qhp22
+         ygog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=z0YNlsqK8DlWZ011G3qdno2fBl/feavG0dTMz0RNBQs=;
+        fh=H5o4p8eCh25O4Rcg1kGyTlClt+cLtfNl537adnTsZcU=;
+        b=X9JANWEvhKN9O7Qyrt8QmZ7t/r1nT1NVod761x5/lvFsYEsIs45Na+9VRXrYG3Y9cS
+         JGqJgDBnkj8a2pTpXt//MhTC76ciF7VGsIbr7jEere74n5ZsJi0vrgmMmZrK/RTCnTCd
+         HYB7u5vOFhKzxDpeOJAiN5ZrO1XO2rUT8YRqw/qjx1ib7PLRRjJDTnrqkehbz7K77hYN
+         Ox1TwGCTYYSbvX1fWhQ2dNaocwrObN7zsUk65bXAQ+pOkdhBJaQm+9sg+qgsFud2KDeW
+         hACNVDWdfCG915JTxlRaj5RhxV1Fj9WuQipQY/CceE3yBrsLq8OGTHdbSQqpzAyZgndv
+         mf7A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791490727; x=1792095527; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=z0YNlsqK8DlWZ011G3qdno2fBl/feavG0dTMz0RNBQs=;
+        b=bsMOcwg/TqjNJt6mzjEnBVD5MgjWrM9hZc4gXZhHxG9gOqG3TyxHRnOByo/h5uk28M
+         alY3fz61t0vsyxmrvvaVfugea1e57DWLOXJEoZQTesMdB4UUYdpdtzyUIKYen6GqeGpH
+         /a2acJnDF3aArwA5kbFD6hBSmnZukFnJN2PYLAZ73Fkjtq5h1nhGObzTJbeyPR54f28d
+         qUZBDsoWsOmtmUOEUQKqSXmPgtktKv54yc3QVJAOiq0iM0LpBD1MD18YQH2MzchwgNIP
+         4UsiuF00dP6YTxLhR683n5mjeJbimuZwqTyb+rL/yoXcqkmuqZrn2R5eRtHCdG15nAZx
+         9w5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791490727; x=1792095527;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=z0YNlsqK8DlWZ011G3qdno2fBl/feavG0dTMz0RNBQs=;
+        b=dpchiwCcnq3yR68kw8+2CAJXWqxSrrygdPRd/lcHkT6cNs5qYpmVYnFP1ozVG8vx/u
+         pk6q83IuUyX21xMG8zp6COTDKfRggKr9enhu2iiNnRLz927wzqC2mcDQjuIfk/C5laWU
+         EhtxUP7is9wT7WHpQ3R5R5GHS9nQy1wY/1aWeCh5IH/kj3m02whm/YaEdnnfZ4/ocDxD
+         idVUwV9LCTbFLXdmaEUpRp3ebDHxfew8zJdsxuvdwewASqzoY0BcKWQ6w5fvnXeB+KDk
+         ZzOVMhbltGawQqacvfbxBLXoRIWVaT6I9xDNHv2s0XXEpmoSvVgcNIpns0yGMFTryOO0
+         4PCw==
+X-Forwarded-Encrypted: i=1; AKwUvBy42GPz4HwgqI2WjPr85e+CgCXVx9q08zADTobCwqjiEj6kGXt4nmaAS6vasrK/o7TGk7wseFVAS/NDcsXYgyw=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLEQ5cy+2p464Xf0Dcx31LahPLG19gJYKPJi+4GNMKIaeXl3zJE
+	FNFDeHCebKSVx3LfjXJpmiSaAmx5Pn2d+K3Q8KUHMMv3+DWjVAsdJqXqZoLsMNR0EQs0thIPdDP
+	AI3/SKqgvr65DH8c9TUQd02nBXFXKi46LNi4VxxQ=
+X-Gm-Gg: AYBFou3yZ+NzUiP68UP5ehqiTOksl5NIKTtDiUQkE3qVrMJ/O/VregAeG4qiMtob25n
+	AoB9GN9ri3o7GNHTWyITv3AZ1qw30jOkOgk+lHDM8Mw9hZK8GTl3CxnwlxAIwDCK+x+Gw4yLBak
+	ucivO4EaYXIpA6kINM8sOrnmOU+zHP57T1yoS63ezTA5J410TyjxJV1gL04PVZAhAw7HAtUK721
+	t1l0ujp5b0nZlprg+6KeBBxN6eXLZG/4aMdlBYuRDO894PlxDMUMvwmSs+Sl045KABYJr76otc3
+	X0obfg89CRsOphjW6HAXUkvvFlN5DZ89QkJm+1rjp20it3TuocD3qmz6jdR40YarWjttjuXfXAB
+	J1IcMgf+PHEdfuyvbArZF
+X-Received: by 2002:a05:6102:6b09:b0:7ba:b5ea:c4b8 with SMTP id
+ ada2fe7eead31-7cb36a8c674mr1668137.1.1791490726658; Thu, 08 Oct 2026 13:18:46
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 08 Oct 2026 18:40:42 +0200
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Nathan Chancellor" <nathan@kernel.org>
-Cc: "Bill Wendling" <morbo@google.com>, "Kees Cook" <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Justin Stitt" <justinstitt@google.com>, "Mark Brown" <broonie@kernel.org>,
- "Marco Elver" <elver@google.com>, alan.maguire@oracle.com,
- namjain@linux.microsoft.com, "Peter Zijlstra" <peterz@infradead.org>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
-Message-Id: <eb644465-0c41-431c-85a3-f7eb6bd86cf3@app.fastmail.com>
-In-Reply-To: <20261008161724.GA459@ax162>
-References: <20261005102518.2400984-1-morbo@google.com>
- <20261006094358.2948476-1-morbo@google.com> <202610060642.7C4125F@keescook>
- <20261007090915.GA1504630@ax162>
- <CAGG=3QXPAa-i4r3Vv6-q25A6EvsxGb5RDLn02z1=a5zo7W-7Vw@mail.gmail.com>
- <20261007093641.GA1527653@ax162>
- <bc2e2ae7-02e7-4148-8ad2-ab3c1af3dd7a@app.fastmail.com>
- <20261008161724.GA459@ax162>
-Subject: Re: [PATCH v4] compiler_types: Allow opting out of __counted_by and
- __counted_by_ptr
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20260928063824.1386524-1-morbo@google.com> <CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com>
+ <CAD++jLk2pFCpbpGVCQg2AdrwQecpb=wsehhwSuwTbKAXNeyfoQ@mail.gmail.com>
+ <CAGG=3QV2k-nsZHNSuKEixZb+-LcxvhQsG379ghgyOpiDLTJWzw@mail.gmail.com>
+ <asNuMzqz3G-gmIiD@google.com> <CAGG=3QV1eLy-eAfi3Q49qwMw_Yw-BJ1tmd3J=SLJB_qWrx4bNg@mail.gmail.com>
+ <CAD++jLmR3hmEYN+-YCAcNq_0Zk0=PijS9jhGaMppkNhvbs90JQ@mail.gmail.com>
+In-Reply-To: <CAD++jLmR3hmEYN+-YCAcNq_0Zk0=PijS9jhGaMppkNhvbs90JQ@mail.gmail.com>
+From: Bill Wendling <morbo@google.com>
+Date: Thu, 8 Oct 2026 13:18:30 -0700
+X-Gm-Features: AclHuK92jAkOpDGnAzk73p0KSvQJ46QvtFBZiCrror6Oc7PBOFNeUEbwDIK5rPw
+Message-ID: <CAGG=3QXRPh=3rYyEHT0kTzDZ4omeHOjmN3OZGy=5hupday7jyg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: annotate struct acpi_gpio_mapping with __counted_by_ptr
+To: Linus Walleij <linusw@kernel.org>
+Cc: Justin Stitt <justinstitt@google.com>, Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	codemender-patching+linux@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Oct 7, 2026 at 4:19=E2=80=AFAM Linus Walleij <linusw@kernel.org> wr=
+ote:
+>
+> On Mon, Oct 5, 2026 at 12:26=E2=80=AFPM Bill Wendling <morbo@google.com> =
+wrote:
+>
+> > I sent a patch to add `__NO_COUNTED_BY` AND `__NO_COUNTED_BY_PTR`
+> > macros to prevent this. They're similar to `__NO_FORTIFY`.
+> >
+> > https://lore.kernel.org/all/20261005102518.2400984-1-morbo@google.com/
+>
+> I see you are hashing this out with the right people, thanks for
+> going the extra mile and fixing this properly!
+>
+Always! :-)
 
+I'll ping this thread once we get the problem solved.
 
-On Thu, 8 Oct 2026, at 18:17, Nathan Chancellor wrote:
-> On Thu, Oct 08, 2026 at 04:50:44PM +0200, Ard Biesheuvel wrote:
->> On Wed, 7 Oct 2026, at 11:36, Nathan Chancellor wrote:
->> > On Wed, Oct 07, 2026 at 02:32:45AM -0700, Bill Wendling wrote:
->> >> Ard,
->> >> 
->> >> What's the reason why x86 doesn't need the KBUILD_CFLAGS flags? Is
->> >> there something that breaks things?
->> >
->> > I think it is mostly historical. See Kees's series to address it:
->> >
->> >   https://lore.kernel.org/20261006204210.i.137-kees@kernel.org/
->> >
->> 
->> I've queued that up now in the EFI tree.
->> 
->> Do we still need this patch then?
->
-> I don't think so, since the efistub should now get
-> '-fexperimental-late-parse-attributes' from the main KBUILD_CFLAGS,
-> which is what prompted this patch in the first place:
->
->   
-> https://lore.kernel.org/CAGG=3QWCmQ+LVvn2dtjEauj5WFwvx=pvg4Q6man_A2imdjRe7A@mail.gmail.com/
->
-> As I mentioned up thread and to Kees in person, we should still consider
-> adding '-fexperimental-late-parse-attributes' into CC_FLAGS_DIALECT to
-> cover other areas that may see __counted_by_ptr use but it is probably
-> not as high priority.
->
-
-Excellent.
+-bw
