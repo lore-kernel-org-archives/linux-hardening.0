@@ -1,147 +1,125 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117574FC8FF
-	for <linux-hardening@vger.kernel.org>; Thu,  8 Oct 2026 20:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791491361; cv=pass; b=prZPv6C4O6eLtbZ7kSxVOaSlzfbMuNN6WN+j08guJFhf18O9e7sHLmZfZj+LAIXqQtoxvzrn4eTk0SOIUDkDtCPzcGH//GwWgCUVUeY2KEnwndUV2FnBrYMfSg0vKr0B4IjFGCufT+ly+3D8fkhJkYMl+mUIChz3kplCmH9uHww=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791491361; c=relaxed/simple;
-	bh=7axkb603a82UmmO6yoTtFA4rswXUCvwHcAJzJKwVvkc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hcUHzYQgd+J5oXMQGMkbxgLpnsQ5aRIHts9uYXw7qHcS0OH4JI1T+ml4VaBOf8b6Du2fgLk3UpPNhYHFsyZ8VvVU5migHlBt9tArumA5AIA+U8X3hxpPi/dB/phqPxjfYlfYKhvRmXi/OaOMUzTx3JIEml3YTem+fDoRLJn5fRk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ubWwUgjm; arc=pass smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0C3453A59;
+	Thu,  8 Oct 2026 21:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791494717; cv=none; b=f0p8yBEytPbGG6VWiEMb40c49vkaKks2RY80DrNMC4mYedNARxnucV/aW8JZhbmhA9bpcjb7cOFJ1xh2fm6wNmCzMlNqrpNA3s5YTYwevyodMGDxNw4A8eSyCiELYHWh/jPK9A0qY51kO5sZZ0jNOpwYcOnpIZji6hJtkUvHgj4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791494717; c=relaxed/simple;
+	bh=uPub7OsJ8q3R9qEr6Szplyq7ywrqFt4oHq+xrWrCVEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TgfNLq068SW8JvyjLBUfK4rYfe44iaR7vTgwXQl8rUTK84xlT3a56OSbg6kchHGBTkdH+R4hXs1ACQO70EW3klk7tzGSFRdGemnghhi+CA23qBSejEW116a1C9nX0ifllC2iSB620SIbZnpqm2rG5xX22llxxcL4ird0bAa+TQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZjJl/wo1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ubWwUgjm"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-7c33cc572e6so1109157137.1
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Oct 2026 13:29:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791491358; cv=none;
-        d=google.com; s=arc-20260327;
-        b=czWvuJt5UH8/MGBd6REAnx2AUUZbknQk56z+iv/bsjg6XaLGlUQWL8/5KEd+dwfv7Z
-         eGclAqEUgE7Jn8AEGFftW7Z8DtpuqIXiyIWRuvSk7xWjAkcmiCDz5aljAP7m+u638tqA
-         /aIHZxpVLWdoxZuGqJfKkuCtI5Axc58AN2VaXB0kzZxWvmBg94WjmaF0SSogY2TeXjah
-         Y429myC7T6IYWEjcdCHHoJMYmPjVD4ycrlJQyfYkBAS5bBblPMZvh3udz4pQuTNeB+vQ
-         5rnXViSVsmslb6zzpkqBQtZv5JT+jV4z8PighTOnX5YRChVeSeB+GrGiwriWIron3qZf
-         P8FA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=dEYO+uBmenzQsAKFWdFIK9tsQp7aIojLDDws7AJPz68=;
-        fh=PT2Ehnab6PfyP4yNBLilSpobn+a4waMVDrCyterHvj8=;
-        b=mRbAoEprjO9GRKcyC5FHLNXl4mBmTP2orSpMd49Wolhm2/Z5xQXcu3h+TuX1UaOiGA
-         6YjE+zJ1wZgGM4aEW4mgK6d5u32lpgf1CT5p/RIHaRj/5xtQwmBkXeZTqwyiTxYhdfDM
-         Y2CX1GLtttknqPJNvAMRovV9rgOD+JKzDHCNY0xfOcZ5LT1hajBNXV3EtjMzQwAg6IIN
-         fzimbZj9JUZC6KLA0K0sHNmTiw15xIQZ8jGaAYJs+GJHDMlxtumpNuJgkQ+MGo8xi4WH
-         Hb6NLSnTtUlUkYzYQpRXCImGC/8eNQPy9O/SaGv46tifEw+e4JGBXrTHdyVszKi+namI
-         ozKg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791491358; x=1792096158; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=dEYO+uBmenzQsAKFWdFIK9tsQp7aIojLDDws7AJPz68=;
-        b=ubWwUgjmshpVIK6Kd3t6ndTPrLEDo6MEt7V1pvLj9dwg8zXctxTW8JArssRsunkw6S
-         xRQV28sQWWsWjyqCvNJgq00uaXZCpeNW2UPyMhizeI45hBjNf8+OdfnjrFEUHHsIsWEt
-         kXKaANlAscFQyZJt/88s/38XmOg8OpefiqIyfl3tTTpUdXF7ETTL+VrryhLUGUmr6v80
-         V02Szye8l8s01Mw8d0L4wEc19Yiu5g/Z9eI6u2hPD8wRoU7DnhQJemDR660TngsrEers
-         yVkIMQv6cdk3byciZkVBxiYpU+7EluwC5QBzyUcADrU8AnkmUOGplwXVlRimgpik6PVy
-         kUYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791491358; x=1792096158;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=dEYO+uBmenzQsAKFWdFIK9tsQp7aIojLDDws7AJPz68=;
-        b=fKIQlp2Su0re9TW1zWlXyqRVdV4TtDtp0sSn4gsoJyOeFMSPqLEpNtt13UJR4oAfzU
-         zRmw+rM2+CoPojtQmnYxmG3Zd3lvFl9YJDAkoSLXenUXvfmsfshppF+aSLjvKI2mr9De
-         YABW05pZSieQBjdwFCs++zt5ITG3flxSlpMa9MzJFoSzJjInKAFTx20ThYwjl5XpizFZ
-         lRN8FIMBzDssXuITABf3BW1UiJd2zwgGw784UOcA9ieC7HK+s/ZhyCiTctfT5Q7PClqn
-         9ZQiKch2M4fbhk6RNkk5n3K9tQYA90neUgdhn+MHWN/7D0higtSn4WCPBFJcgFuriT+m
-         sjsw==
-X-Forwarded-Encrypted: i=1; AKwUvBwTXhMgvjDPv3FgGZVm2WegPwS2DSb3zNufzdxvTK1bhZ2ozs9KwLI26np0RTluYp0ZtozLiTdfEIzbFLASsKA=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJaSvhF8Zha/x3ps6oI4S8RfRaPxvUmtafL+SF4DMOXWiMrf98a
-	nHrqUUMUAw2L5uz3/u8cq7MBQmUgWlwN9yl8OIbrR1hj0wFqxLYOL1JKx383gt05cZSSXAYb5lF
-	YaFCLKcN04riVvrl3fvvmWZFB6VAflgs6LqTKLTY=
-X-Gm-Gg: AYBFou20WlrwYmGRU5+mTJG3liPzfu0B571dFeYBetngFtatjkbXHo6Cs5HYokmxutO
-	PEJfeTQwsyJ0Q78oStX1txKDIoH7DEW0FVKzXa0/AHQZWAsY/r4PoO6iw+BX9H05Y06NJKXlsSq
-	BdPFFzZ94g4uRcYDvOMJbJKl9UUMH9w4IYlIRRxWmTPC3ElgjXdUPDlaw0GF5ei9ehsYEmNQG/s
-	rouZoM3Zw9EWZ8dgwXJi5GFX0AWW0r/rzEHNr+yzSaHJL95wV47g/cCwkD0CVYpR/gMCg/sK65h
-	YI7GnCB/OA14BU1c3ali6a26j5B9kxNG8QO0vySLeFYMZ6JG6SnYw/U9P5wAy4Gog+F/di2N9iC
-	n9YUt5wGPIgjynHE4o9W/WWzfKiq1Ti0=
-X-Received: by 2002:a05:6102:22c2:b0:7ca:7226:b414 with SMTP id
- ada2fe7eead31-7cab8948919mr912611137.19.1791491357086; Thu, 08 Oct 2026
- 13:29:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZjJl/wo1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B5F1F000FF;
+	Thu,  8 Oct 2026 21:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791494715;
+	bh=odDRkTcjbS423eFUVzRKgzpHhfm86iv3G3/SNcHY7is=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZjJl/wo18DivxZod9Ph2FuLJmJ0Pe6BmpQB57sdezehMYyARbOEVU8OGYlasU7V/S
+	 0AT+zRfhasFu1NUWqERoTuQdlxiQP3IIeICSISEgSyXXl35VozAJVTNxB2bysN99vf
+	 JfipJu9WkWWRjdDZiddIe/cXmY43UZwTIiDZnEwIxtK2IGH0UoFZxfezn7ejJCJdq4
+	 QGd6BQqNjD2yQzAqk9ixMc4c11z/zcWVonaLCd7MlyrrU4sbCkmiHW5YBwRkvRDG8U
+	 qZmSxy/lRaMiD4+hT2CFnuTLIH1WH3eg5IzgqjHuPhhOOpSdCVlAbQNo7AT/fvx+ph
+	 VX7EkFoGAlt2g==
+Date: Thu, 8 Oct 2026 23:25:13 +0200
+From: Harry Yoo <harry@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, 
+	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Pedro Falcato <pfalcato@suse.de>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Willem de Bruijn <willemb@google.com>, Jason Xing <kerneljasonxing@gmail.com>, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v6 0/8] net: skb: isolate skb data area
+ allocations into a separate bucket
+Message-ID: <asgAh4mrr_yd622U@thinkpad>
+References: <20261006092030.got.500-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261005102518.2400984-1-morbo@google.com> <20261006094358.2948476-1-morbo@google.com>
- <202610060642.7C4125F@keescook> <20261007090915.GA1504630@ax162>
- <CAGG=3QXPAa-i4r3Vv6-q25A6EvsxGb5RDLn02z1=a5zo7W-7Vw@mail.gmail.com>
- <20261007093641.GA1527653@ax162> <bc2e2ae7-02e7-4148-8ad2-ab3c1af3dd7a@app.fastmail.com>
- <20261008161724.GA459@ax162> <eb644465-0c41-431c-85a3-f7eb6bd86cf3@app.fastmail.com>
-In-Reply-To: <eb644465-0c41-431c-85a3-f7eb6bd86cf3@app.fastmail.com>
-From: Bill Wendling <morbo@google.com>
-Date: Thu, 8 Oct 2026 13:29:00 -0700
-X-Gm-Features: AclHuK-6rPfWZEe_Z-sw2qrJwskK3Nn8JlizxagKQ-WxeGZ-k4tgZG1nsqTiy3s
-Message-ID: <CAGG=3QUvZ8k1qjT8jjo1Rft0omyQYAcRUWExKvJw7CGD5B7XeQ@mail.gmail.com>
-Subject: Re: [PATCH v4] compiler_types: Allow opting out of __counted_by and __counted_by_ptr
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Mark Brown <broonie@kernel.org>, 
-	Marco Elver <elver@google.com>, alan.maguire@oracle.com, namjain@linux.microsoft.com, 
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261006092030.got.500-kees@kernel.org>
 
-On Thu, Oct 8, 2026 at 9:41=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wro=
-te:
-> On Thu, 8 Oct 2026, at 18:17, Nathan Chancellor wrote:
-> > On Thu, Oct 08, 2026 at 04:50:44PM +0200, Ard Biesheuvel wrote:
-> >> On Wed, 7 Oct 2026, at 11:36, Nathan Chancellor wrote:
-> >> > On Wed, Oct 07, 2026 at 02:32:45AM -0700, Bill Wendling wrote:
-> >> >> Ard,
-> >> >>
-> >> >> What's the reason why x86 doesn't need the KBUILD_CFLAGS flags? Is
-> >> >> there something that breaks things?
-> >> >
-> >> > I think it is mostly historical. See Kees's series to address it:
-> >> >
-> >> >   https://lore.kernel.org/20261006204210.i.137-kees@kernel.org/
-> >> >
-> >>
-> >> I've queued that up now in the EFI tree.
-> >>
-> >> Do we still need this patch then?
-> >
-> > I don't think so, since the efistub should now get
-> > '-fexperimental-late-parse-attributes' from the main KBUILD_CFLAGS,
-> > which is what prompted this patch in the first place:
-> >
-> >
-> > https://lore.kernel.org/CAGG=3D3QWCmQ+LVvn2dtjEauj5WFwvx=3Dpvg4Q6man_A2=
-imdjRe7A@mail.gmail.com/
-> >
-> > As I mentioned up thread and to Kees in person, we should still conside=
-r
-> > adding '-fexperimental-late-parse-attributes' into CC_FLAGS_DIALECT to
-> > cover other areas that may see __counted_by_ptr use but it is probably
-> > not as high priority.
-> >
+On Tue, Oct 06, 2026 at 02:20:26AM -0700, Kees Cook wrote:
+> Hi!
+
+Hi Kees!
+
+Was hoping to say hi to you at LPC but I missed the chance ;)
+Maybe next time. Safe travels!
+
+Uh, my mailbox stopped working for a few days as I forgot to renew
+subscription. (Kiryl told me it's bouncing, thanks!) Hopefully I didn't
+miss too much...
+
+> This gets the buckets able to handle memcg (GFP_KERNEL_ACCOUNT) with
+> isolation (since it's common due to AF_UNIX),
+
+Cool!
+
+> and GFP_DMA with fall back
+> (since it's rare).
+
+> It gave me an excuse to build out bucket kunit tests
+> too, and that (and LLM review) found a couple other issues that needed
+> fixing too, including msg_msg allocations going uncharged to their memcg
+> when CONFIG_SLAB_BUCKETS=n (fixed in 2/8).
+
+Oh.
+
+> Harry, on your v4 question[1] about bucket users giving their own
+> alignment: I tried that in v5, but a set's allocations don't always
+> come from its own caches. With CONFIG_SLAB_BUCKETS=n, after a failed
+> kmem_buckets_create(), and for the DMA and reclaimable fallbacks, they
+> come from the general kmalloc caches, which can only give kmalloc()'s
+> alignment.
 >
-> Excellent.
+> So v6 goes back to mirroring the kmalloc cache's alignment,
 
-What Nathan said about needing this patch. Once Kees's stuff is
-integrated, all should be well and never break again. (very J/K) :-D
+I might be missing something, but why is that a problem?
 
--bw
+For kmem_buckets users, the reason* to specify alignment is because
+they might need less strict alignment than kmalloc.
+
+(*Perhaps it's nice to document that in the comment)
+
+However, because kmem_buckets can fall back to kmalloc on e.g. kernels
+w/o CONFIG_SLAB_BUCKETS, it should be fine to fall back. No?
+
+Creating kmem_buckets with more strict alignment than
+kmalloc doesn't make sense. 
+
+> and drops the ctor and flags arguments for the same reason.
+
+Uh, for ctor and flags, yes. We can't have them in kmem_buckets.
+
+> And the whole
+> exploration made me realize I had a completely wrong understanding of
+> how memcg worked. :P
+> 
+> The bulk of this is mm/slab, but the final patch is netdev, which Paolo
+> acked in v4, so I'm hoping this whole series can go via slab?
+
+Going thorough slab/for-next sounds reasonable to me once it gets
+some reviews.
+
+Vlastimil?
+
+-- 
+Cheers,
+Harry / Hyeonggon
