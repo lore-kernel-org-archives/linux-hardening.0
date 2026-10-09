@@ -1,183 +1,83 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03EB4E36C2
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Oct 2026 11:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D20498930;
+	Fri,  9 Oct 2026 12:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791546717; cv=none; b=d5LCqygoTclwxTfD86R8pxxvLw3CsDLEt7sdsAQkvsMXBpiTap85DH5g9TzpuYgRRJFfgS1f1Le+mqVEQy4FPmRDV7sRGas1rRFMrDZFwC3rtkE4W1I8FZG0Y7rrVLgUjcVs4qznEZwLoRAww8SBUIh/D9TObY9unogd8io/jfA=
+	t=1791547512; cv=none; b=YVA3FBkwG9gI/DdbExB4kCYZ9EHbOAtzS/erpYWAczS3EkDozakTebjehcEIFCQdU3yH9YGgCEasVuxcYp1LM03pP+lnLEYs+e3Imwb8KVzfdxbWTDq131+7ICE2xKIXjoxk474rV1z5V06RbiY6k9Nw/Pjb2TQnLROl3QCtz2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791546717; c=relaxed/simple;
-	bh=9c10fv+8RlbffEaqllSZarWYu0IWQKMv/n0/uRyLBSA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g/b03JfetLDaZxpQQDac3RhKtueE/YZJwQSug7syhScbhTxkoCs3ThYtZK67B8XpiXJ8yDy5kqoZihAdtGP/VYri8tElsriqBZxIYK9+X4+fnu/K2DUbWDcsq1XoYGOQfGozG+fzFFMgyrjnOCYUOM3Jv+kQHkRrsCNULlkbRn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jO6Eh2ZQ; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791547512; c=relaxed/simple;
+	bh=dDqcPe0rLK4PbarGHkOkE7O3+8XMjQ0lPdGj6+4L48o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GsVljxzQ38NRX2dE1aXPzuw8cE4o3UDVNYViiLEYE1VUNYVVlhS2rMXh6fk/6woI/h1QChQWbuJQTxAVNrtdXjqwYhmPzwZacqAitye+J+Qzo+b3etqhWriYT/+QBS6gh3s2trTZ7Oy8QMVgVg5KigRubuWQ74kmjQ72QagOvGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbpdfxQ0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jO6Eh2ZQ"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-917c04630c2so42869656d6.3
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Oct 2026 04:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791546707; x=1792151507; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=hrr3HiCUZJnv9aA8BpT1SjaAKZ8xaCXAbRRl/khQOqQ=;
-        b=jO6Eh2ZQJWUVs1XkFGOQ2/kkXQqsVbEPVNN3maclXC/GNS0mhJEB4C+Na3oyNMh0bf
-         PgjtmOtYu0AIhLiy4JraPjedasoRm1RjN/ef250aNI/zA4Tmuq4WiT2QBxVMi9brA68N
-         pQEG5tisvimfiiQdObaZSmoTEKX6i6BQI9BA/sfuiuPKQ2s6lztZX0Kx/UbLZwJCel+L
-         Vx2w6J1rjFe1wu8BuV63kPPRyOQ+rPyprI9DV2GjUHSJOErdaO7WIzJMwEtO2RsIi0fJ
-         KKQeGiMBETj2Cxff+ro1B0X8Qc2tXZ/3b5P9Ydyta0sahvmbnNitAo1KvmVYD54toqxW
-         ynVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791546707; x=1792151507;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=hrr3HiCUZJnv9aA8BpT1SjaAKZ8xaCXAbRRl/khQOqQ=;
-        b=Q3QbdmaRLezlg89AKofqHW6mHHgZ5fFOUrVQo0fEBcOAmMSjd5pa7Yl936+mDdv0h5
-         7VI8lW2/7tJU3ObEilCBCzwlGJ3l0Bb48ZFkX7QgMgdxYipV/LAsdtsOwFOMPlt+j57b
-         k56dPjfdv8PwNEkVCmeeCwQnHmjQf4RsIsOChsndyGY0L/d7yV+CfoVP0lvtq3VO16fB
-         15C+g40tzeXD5ngxicZ726ONY3Y9PZAMwJxA6HzFyWfe75JEn4UWpoRUlkpxj2dGHrpX
-         hhbulPkEc2+bWn2dKHaZBoVOwDh1PaDDjQVs7gZs8nixYJTg7wSUvMQmm4Sleafoj6Tg
-         bQ2A==
-X-Forwarded-Encrypted: i=1; AKwUvBxpzTyERs8G4x7qKJn87zPUY7VVJ9Oo8gokViHpOlL3rDp8uRsxT2/y8QBX9lf0iG73shSNtwSK9Q+Pj13jzyg=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJ++9Z2jDiGlx2oO5rk8b43NHdid+XTJ2ajQ317wyq2qgWlk3qP
-	Zz6smfaznmbToU3gAgffs1ITvXP3WpnQVLXGgr5AZadFQ094meyP6gYo
-X-Gm-Gg: AYBFou2PhypaGks70ryaUVSXL0guDZ3QAx75IFuzV3Cg7NNb/Bg0xDdM8/1jUPryycK
-	DgK923pDZhPUmr4HXeBpuyW/zwgjejePNbrOo9H7YSBZPJRrZsthyM9pdNbmplCqfnuvMM88Rt5
-	7cY75JfYbHRrkj58vvM+r42qqaXptaRx/ayo7nUalhMo1RVZLa2//OxbNjZOvGaJtecgmMnkIEl
-	P8MC/LgZDL+fGUgZweNlxw218vM6BiglS50MYYgmgkyLzONoODd2zlRmyQj+RtXRsuhWBdQexB0
-	ssOPWth65a+cnpdBThfwD0DFm6dzw73z0PGfmooION1GNmhjlEbkb44ZrYQTypq3QC+KSZb/jM4
-	VF1zb7JSkLjKhVTDoRn2xILOABvSFBLhEqjD1txcg5rtsbeQ4AMy7tRGPO/tH76IFbDPkEHDcfk
-	mBTLXBod3AjxZOpeVDOi+GPVId7xCfq59M1W9M6EY41tyiGONbjqel02esacjMiLK1Acw0uH7Ef
-	L+4+RdIsPuTq9ev6Sq61+1N1DOpJHUcFBHRaaJP7SjYY/eIVhOv+25ePFrv7xrayuN5ROMSF8bm
-	Y58K1mc4scJhDnk=
-X-Received: by 2002:a05:6214:2f05:b0:918:c4b8:fc57 with SMTP id 6a1803df08f44-91b554f1bbcmr27272116d6.9.1791546707414;
-        Fri, 09 Oct 2026 04:51:47 -0700 (PDT)
-Received: from mobile5.tail6e7dd.ts.net (c-68-48-65-54.hsd1.mi.comcast.net. [68.48.65.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91b54e7f6aesm16537346d6.2.2026.10.09.04.51.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2026 04:51:46 -0700 (PDT)
-From: Mike Bommarito <michael.bommarito@gmail.com>
-To: Abel Vesa <abel.vesa@oss.qualcomm.com>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E . Hallyn" <serge@hallyn.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Tingmao Wang <m@maowtm.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] landlock: Move the domain layer counter out of the anonymous union
-Date: Fri,  9 Oct 2026 07:51:08 -0400
-Message-ID: <20261009115108.17819-1-michael.bommarito@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261007-b4-landlock-fix-domain-fortify-panic-v1-1-042e9108f5f8@oss.qualcomm.com>
-References: <20261007-b4-landlock-fix-domain-fortify-panic-v1-1-042e9108f5f8@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbpdfxQ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC5401F00893;
+	Fri,  9 Oct 2026 12:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791547505;
+	bh=pVMI5xWcSua40R4bqP5clZQ5B96uJET8HzpYwiIlDbs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=AbpdfxQ0K26rRRuXuSJzxqr/e8zU58GHh316KdkMj7ezMxUKEJrLZtOK//OhZBN7N
+	 6qdLzVYyH0x7urYEA3mXNucPHi1GD0aurNrmtETo+orHJxfzJQ0YVYBkFqlRFqFQfg
+	 N6sMuTgQjTe7PJrv2+IzJLKWZ3z7pmM7Q78/bHk7ghi6QL+0vU/1CgVZ/+/qmYsT92
+	 oBZu+IKXs0U0egpxrnFGd/VHFdslnMAIHxKbQeY1EC9EYWu9cFEmZ1TpkwPxUeJs1f
+	 f79BgikHH6gWRBqDisr2LNcpg63RxSPlMjlIf++EZ3s7GjJCZBvGayEz4m3tAj7SN8
+	 lHnCHCwS3ItwA==
+Date: Fri, 9 Oct 2026 13:05:00 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Manuel Ebner <manuelebnerli@mailbox.org>, linux-kbuild@vger.kernel.org, 
+	"Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] kbuild: Mark the kernel image gzip recipes as
+ recursive
+Message-ID: <asjYDiBaS1V5CymE@gremlin>
+References: <20261009062722.i.253-kees@kernel.org>
+ <20261009062733.3119731-1-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261009062733.3119731-1-kees@kernel.org>
 
-On Wed, Oct 07, 2026 at 07:28:30PM +0300, Abel Vesa wrote:
-> With Clang 20 and CONFIG_FORTIFY_SOURCE, stacking Landlock domains can
-> trigger a fortify panic in the handled_masks copy in inherit_ruleset():
-[...]
-> Based on next-20260930. Validated arm64 Landlock object builds with
-> Clang 20 and GCC 14, with CONFIG_FORTIFY_SOURCE enabled, and checked the
-> counter load in Clang-generated code. Not boot-tested.
+On Thu, Oct 08, 2026 at 11:27:30PM -0700, Kees Cook wrote:
+> Since commit 48ebe1cbbeb51 ("kbuild: compress the kernel with pigz if
+> available"), cmd_gzip runs pigz through scripts/jobserver-exec, which
+> takes the job slots make has free. GNU Make passes the jobserver pipe
+> only to recipes it treats as recursive, but leaves --jobserver-auth in
+> MAKEFLAGS for all of them. The make 4.3 in CentOS Stream 9 also hides
+> the pipe in sub-makes (a backport of the fix for GNU Make bug 58232), so
+> jobserver-exec cannot open it, runs pigz on one thread, and prints:
+>
+>   WARNING: Unable to reopen jobserver read-side pipe: FileNotFoundError(2, 'No such file or directory')
+>
+> Mark the gzip recipes as recursive with "+", as commit ecab4115c44cc
+> ("kbuild: mark `rustc` (and others) invocations as recursive") did for
+> rustc. As with those, "make -n" now runs them.
+>
+> Tested ARCH=x86_64 and ARCH=arm64 defconfig with GNU Make 4.3 plus
+> CentOS Stream 9's make-4.3-cloexec.patch, GCC 16.2.0, and -j64: without
+> this change the warning appears and pigz runs with "-p 1"; with it there
+> is no warning, and pigz runs with "-p 54" and "-p 64".
+>
+> Reported-by: Paul E. McKenney <paulmck@kernel.org>
+> Closes: https://lore.kernel.org/all/0ddb5e5e-f801-444c-aa98-0cfe814a3026@paulmck-laptop/
+> Fixes: 48ebe1cbbeb51 ("kbuild: compress the kernel with pigz if available")
+> Assisted-by: LLM
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Hi all, hit this issue yesterday on x86_64 (Framework 13, Meteor Lake),
-v7.3-rc5 built with clang 21.1.8 and CONFIG_FORTIFY_SOURCE=y.  I triggered
-it simply by opening the printer settings on 26.04 (through xz, see below).
+Nice find!
 
-My build tree was recent v7.3-rc5, so I applied the patch, which was clean,
-and then went through the repro steps after rebuilding.  Everything works
-as expected after 10-15 minutes of use - no crash, no other dmesg/journal
-issues.
+Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-I hope you don't mind, but given how irritating it was to track down
-the issue, I am including some of the Claude output below to help others
-find the root cause more quickly if they hit it.  I checked the
-disassembly and ran the tests below myself on this machine.
+Sorry for breaking your build Paul ;)
 
-<CLAUDE>
-This is easy to hit on a stock desktop.  xz 5.8 sandboxes itself with
-nested landlock_restrict_self() calls, so on an unpatched clang build every
-`xz -d` oopses:
-
-  memcpy: detected buffer overflow: 4 byte write of buffer size 0
-  WARNING: lib/string_helpers.c:1037 at __fortify_report+0x1f/0x60, CPU#6: xz/9888
-  kernel BUG at lib/string_helpers.c:1044!
-  Oops: invalid opcode: 0000 [#1] SMP NOPTI
-  RIP: 0010:__fortify_panic+0x9/0x10
-  Call Trace:
-   landlock_merge_ruleset+0x353/0x360
-   __se_sys_landlock_restrict_self+0x1bf/0x470
-   __x64_sys_landlock_restrict_self+0x16/0x30
-
-On Ubuntu, simply opening GNOME Settings -> Printers runs the CUPS driver
-helpers, which run xz.  With kdump-tools installed (panic_on_oops=1), that
-panics the machine.  Nothing more than an unprivileged process is needed;
-the reproducer below triggers it as a normal user:
-
-  prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-  for (i = 0; i < 2; i++) {
-          struct landlock_ruleset_attr a = {
-                  .handled_access_fs = LANDLOCK_ACCESS_FS_MAKE_REG };
-          int fd = syscall(SYS_landlock_create_ruleset, &a, sizeof(a), 0);
-          syscall(SYS_landlock_restrict_self, fd, 0);  /* i == 1 oopses */
-          close(fd);
-  }
-
-The x86_64 codegen matches your arm64 analysis.  Unpatched, with
-num_layers at 0x24 and handled_masks at 0x28:
-
-  mov    0x28(%rbx),%esi      # "count" read from child->handled_masks[0]
-  shl    $0x2,%rsi
-  cmp    %rdx,%rsi
-  jb     <__fortify_panic>
-
-With the patch, num_layers is at 0x40 and handled_masks at 0x44.  The
-count is loaded from the right field, and clang folds away the fortify
-checks after the WARN_ON_ONCE(child->num_layers <= parent->num_layers):
-
-  mov    0x40(%r12),%edx
-  cmp    %edx,0x40(%rbx)
-  ...
-  call   memcpy
-
-Results after booting the patched kernel, with panic_on_oops=1 and
-kdump loaded (the configuration that used to panic):
-
-  nested restrict reproducer:  both layers succeed
-  echo hello | xz | xz -d:     ok
-  lpinfo -m (CUPS -> xz):      ok
-  fortify reports in dmesg:    none; kernel not tainted
-
-The layout change grows struct landlock_domain from 64 to 72 bytes.  A
-one-layer domain is still a kmalloc-96 allocation (68 bytes before, 76
-after); only stacks of 7 or 8 layers move up to kmalloc-128.  That seems
-fine.
-</CLAUDE>
-
-Since this is reachable from unprivileged userspace on any clang +
-FORTIFY_SOURCE build of 7.3-rc, it would be good to get this in before
-v7.3 final.
-
-Tested-by: Mike Bommarito <michael.bommarito@gmail.com>
-
+--
+Cheers, Lorenzo
