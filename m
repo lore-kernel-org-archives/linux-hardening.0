@@ -1,224 +1,319 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8214E80DD
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Oct 2026 15:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE166382373;
+	Fri,  9 Oct 2026 15:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791559687; cv=none; b=Urgy2XkeuWdPVIlvyAnUdahC/T73/ziIgZFAbpgOZY9F9RmsQwCd3qvW9SAG/p4FURmXpiM4aLob1pLyuF5wGVXvBHkAbRXV5Wlv6RkyMclkJemdQBWHBq9SQ28mKwopMiQc2Aa3U1l2Zpxj7DXuTKFS9dJbHbkGPdP7EoHV0Vk=
+	t=1791561081; cv=none; b=nWvoeILIKUrAMvx5mJMrxpZSt9APYfQT+9uHg6l6TFNUTCsQXhs16x6QfTni9TucikpJRj13gmy0rwd0ZMCPLUx8D7y7VXkND1Ikt9EGNkTjXWB6tZJGkiqBWMg/i0t9xEB1cAfOUpUZMaRc2sF/O8lt6m6LB6gGpYvYT6TRO80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791559687; c=relaxed/simple;
-	bh=jfmaWnctqSBU1dtFJUXd14G5f+Bwt3u2QsKEHr4Doww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cw5fwqiWOnbY9UCh8UIy002WH6jYYW1JliMzjdtveyMbl1u5ilGY4gwmO3wdJfK7X4GwJMykedUvlY/2Xq2xt8cnx790s6CxYogF4Jx5xaSIjdfthL9sw19EvSNpmATFLHBiDobLbJFjKRxVgIQsjgvGptVJAdg38nsSzzsLq0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=GFVMesmy; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1791561081; c=relaxed/simple;
+	bh=6I/E3ls6R65hg7gXxWt0LfIc1SzseqQ7dHBDy1GDox0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nMv56a0TC5CdmqJuOo1BvyTu3TpI68ms7qTJr2AQblP+p4kvzXtBMXEYqPmPeI86Fy8oZtD/fiCswjVJOvTvCWC+KhPA2dCvtF80Jk+HJVTfb/2Cn9PSibKZZWkF0OlvXDjd3C7xyWbNNnohaIUU2MwjaZN93uNl/xhTcPXB0OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PD6VrvTA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="GFVMesmy"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-917a6dccc60so21363826d6.0
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Oct 2026 08:27:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1791559677; x=1792164477; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=XWJIKajLi/Hl+bQHGE1r4qQlOKx5Aox6GAQJinOVg0Q=;
-        b=GFVMesmyH/+lK1De9S/UhUOIGuSowSZ/JWylB+TNI4NI/iPlruc1C0JL8EuM3j16GS
-         X2sOChe2yOk/4e8sQBL7IhdvnFWFHPo0u+M8P9OBQgLA0qfSNBb//NaIrmIhIBaiL1Sn
-         IkZTNerL3Lx07Y1n9NJXbzsm+QOphGUeKmY5wYr1rorCc8MNJ+q0OR6LyW4uwG9LfAqz
-         Qdhin89//2pCvCMusLmSrv22Nkqlk72pfKS0yKXVEKDVG3o0KYo4JV1y49/WtwhG6+u2
-         KvfRzvb7RkixU5jz39hoXBosxxwpKopWAUM2Ao+L61jk0VCjgg1XIfGaeJcb8aw0HkFo
-         7aHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791559677; x=1792164477;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=XWJIKajLi/Hl+bQHGE1r4qQlOKx5Aox6GAQJinOVg0Q=;
-        b=w+sVYtf69uq9r4AaG7RBaH+cJMdlUGBTSiQdlSsuq4f4/Peo+9EcONL3Am23DGavvN
-         7lZV3h0/t8s2MSSevR/ulRbVOubQKUDAee472/FqT8ThUMWnmFUf64sOmnE+nfBVAEID
-         vJYmh2ih+E8pNud9mLlLs66IOileSO7yTlLI8aP8B6V8F7pV2K6QceTSA3vWIhdkeR68
-         +V+L6gxBOfZjBb0a1MMOCLUf9T1i0Fi7BYxp05kYcBkj9mikV3Hb/eXxFan4rvU/FIod
-         MLL/0kF79Chedf+8v1WnrleAP3aK+21Mst65+o8RtpPYAofuJNggKmyM/Pjvk5LaNIFd
-         EI7Q==
-X-Forwarded-Encrypted: i=1; AKwUvBwhlFF/QKrVAzNog+sKR52ZSruE2xRPSRrjQROyWMsb8jtYnFDfLZW74swrGC0XkxZWuFk7f10oHH/uhJnVj2w=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJj5G5j+NJB/tWo5A9dPVlJzxCZNN5jUMYYFBH7Q9hmdFy33ZiB
-	Aj7nCV9I/iYG1R8Z1l0lKe3Vc8+kYYVk8iJ3xTIA74A8k5Lpay2yMfA+seIboN3+Np8=
-X-Gm-Gg: AYBFou3yGcqqXs73al/LKNO4CO2Fc7bVKcefK8fYVjlAKlwl55IivjiWaiYegxULoLX
-	uYy3ze0Eg7MQg4PQjD5AxNQHJDqQMV7Rhogked5/vsfJ4p0M81rAeU62twNjFXFjfJxhtLqeKW9
-	nFhJRT0ErKcSMA9ubXKJdJ/BhFbwkrfwTYVCG/TzYa4Xv3QO74vvZTYGLi2tm2WVnMGBPtMXBPS
-	eZNEUxLXV2iHwdg8IbK1oihn1KcJaEA4aVV1S8salBF9TZqYCcR7xBbzUtjImb56kNkvhMwCzsO
-	LBf2c2J+yz8rPZdfrZLCwfarW7KIcgrGgrcbvWEC2IGmfvRrZywkgI9eVLaXOlx8tNRAPzbHdJr
-	yqnriwO0p95wu+bSDdk/SL96FaJPdUoDS/3lH+ZvQogz/7JwgPsDa8AotJ5p/51k+UJZDW4gO77
-	/FBLHIbIW4A67Q7SpezRQ3RTu6BP6LHWhWurumAMOTEvXQcRdZmunnmL5pm6Bj3jA4fPSyZWA=
-X-Received: by 2002:a05:6214:3015:b0:917:99d1:bda2 with SMTP id 6a1803df08f44-91b5d4bd16dmr23896676d6.8.1791559677476;
-        Fri, 09 Oct 2026 08:27:57 -0700 (PDT)
-Received: from [172.22.22.28] ([73.62.185.64])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91b55091fd4sm21019796d6.36.2026.10.09.08.27.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Oct 2026 08:27:57 -0700 (PDT)
-Message-ID: <4a1dacc9-7642-48e4-b9e9-6a20c0e6aa43@riscstar.com>
-Date: Fri, 9 Oct 2026 10:27:55 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PD6VrvTA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 495511F000FF;
+	Fri,  9 Oct 2026 15:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791561079;
+	bh=1JTJsG9iHy7cnxkMGpPJjEaV21cpLxYzGB1ulrApZoo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
+	b=PD6VrvTAd3jYgu30Iis+oILhqIvALacy7lyzxwIB3ceb/lxkvncsyvcMOsH6BAmS+
+	 v8iWpnVwO/Kx4gAeEVqgsUgtti9EvvqpuPpAIJHIw1aEjUDumbyNWfZekmLlQmntOH
+	 ARSAjIO+XpvP8AbNExXCn52gZOPVV+RJGRwdYtmCMco7uOd/lEImcOjAo7HI7dxi0x
+	 klG+LplHs/9YkVYkmDHzjqdT1Onw9kSpQAKhpzxH1yMP0WUPNyXGdvi0Ol4Y2Y/R1K
+	 9CjfnPLjA6BekC99vLugXBplJr0VBt1uZeDHQPkmnlcQ1790EAE1iAMGmPUrwE2nll
+	 yQLSzFcIG/ciQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 056E2CE0B28; Fri,  9 Oct 2026 08:51:19 -0700 (PDT)
+Date: Fri, 9 Oct 2026 08:51:18 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Manuel Ebner <manuelebnerli@mailbox.org>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] kbuild: Mark the kernel image gzip recipes as
+ recursive
+Message-ID: <7fa8e996-d015-4f8d-a197-3f8901e0b31a@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20261009062722.i.253-kees@kernel.org>
+ <20261009062733.3119731-1-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: clock: introduce
- toshiba,tc9564-clock.yaml
-To: Jerome Brunet <jbrunet@baylibre.com>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org,
- kees@kernel.org, gustavoars@kernel.org, mohd.anwar@oss.qualcomm.com,
- lorenzo.bianconi@oss.qualcomm.com, danielt@kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, Daniel Thompson <daniel@riscstar.com>
-References: <20261005230927.2000398-1-elder@riscstar.com>
- <20261005230927.2000398-2-elder@riscstar.com>
- <20261009-gifted-stylish-tortoise-95b14d@quoll>
- <b190fe58-364b-4b94-9cab-c5f81f874289@riscstar.com>
- <aafe2703-bfb8-43da-8472-b1dfa36fa8f9@kernel.org>
- <77dacc46-7294-47c8-899a-fd56b6a2af55@riscstar.com>
- <1jcxtjos65.fsf@starbuckisacylon.baylibre.com>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <1jcxtjos65.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261009062733.3119731-1-kees@kernel.org>
 
-On 10/9/26 9:38 AM, Jerome Brunet wrote:
-> On ven. 09 oct. 2026 at 09:23, Alex Elder <elder@riscstar.com> wrote:
+On Thu, Oct 08, 2026 at 11:27:30PM -0700, Kees Cook wrote:
+> Since commit 48ebe1cbbeb51 ("kbuild: compress the kernel with pigz if
+> available"), cmd_gzip runs pigz through scripts/jobserver-exec, which
+> takes the job slots make has free. GNU Make passes the jobserver pipe
+> only to recipes it treats as recursive, but leaves --jobserver-auth in
+> MAKEFLAGS for all of them. The make 4.3 in CentOS Stream 9 also hides
+> the pipe in sub-makes (a backport of the fix for GNU Make bug 58232), so
+> jobserver-exec cannot open it, runs pigz on one thread, and prints:
 > 
->> On 10/9/26 8:56 AM, Krzysztof Kozlowski wrote:
->>> On 09/10/2026 15:44, Alex Elder wrote:
->>>> On 10/9/26 4:31 AM, Krzysztof Kozlowski wrote:
->>>>> On Mon, Oct 05, 2026 at 06:09:24PM -0500, Alex Elder wrote:
->>>>>> Define the binding for the clock controller functionality present in
->>>>>> the Toshiba TC9564 SoC.
->>>>>>
->>>>>> Co-developed-by: Daniel Thompson <daniel@riscstar.com>
->>>>>> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
->>>>>> Signed-off-by: Alex Elder <elder@riscstar.com>
->>
->> . . .
->>
->>>>>> +properties:
->>>>>> +  compatible:
->>>>>> +    const: toshiba,tc9564-clock
->>>>>> +
->>>>>> +  toshiba,config-syscon:
->>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>>>>> +    description:
->>>>>> +      Phandle for the configuration space system controller.
->>>>>
->>>>> I do not see my previous comment addressed - you have no resources here,
->>>>> so this belongs to the parent. You responded something about pci-ep, but
->>>>> the parent is not pci-ep. Open your code:
->>>>> https://lore.kernel.org/lkml/20260918165234.687224-5-elder@riscstar.com/
->>>>>
->>>>> I clearly see code like:
->>>>>      syscon {
->>>>>        clock@ {
->>>>>        };
->>>>>      };
->>>>>
->>>>> so I do not understand what pci-ep has anything to do here.
->>>>
->>>> What I have now (about to send) looks like this:
->>>>
->>>>        syscon@0 {
->>>>            compatible = "syscon", "simple-mfd";
->>>>            reg = <0x0 0x2000>;
->>>>
->>>>            clock {
->>>>                compatible = "toshiba,tc9564-clock";
->>>>                #clock-cells = <1>;
->>>>            };
->>>>        };
->>>>
->>>> A reset node will also go inside the syscon, so there is another
->>>> function for that MFD.
->>>>
->>>> The regmap belongs to the parent, and is looked up this way:
->>>>
->>>>        regmap = syscon_node_to_regmap(dev_of_node(dev->parent));
->>>
->>> That's driver code, so irrelevant. So how does this solve my comment
->>> from v1?
->>
->> I'm trying Krzysztof.
->>
->> The clock controller uses two registers, 0x1004 and 0x100c,
->> to manage whether a set of clock signals are enabled or not.
->> (The reset controller uses two adjacent registers, 0x1008
->> and 0x1010, to manage whether a set of reset signals are
->> asserted or not.)
->>
->> You said "no resources except a small address space" and I
->> guess it's not clear to me what size is "big enough" to
->> warrant representing something as a separate device.
->>
->> *One* of the managed clocks is a 25 MHz clock, exposed
->> through a pin on the SoC.  That one clock signal is
->> therefore usable by the platform (although on the RB3gen2
->> it's not used).
->>
->> Rather than expose the register addresses in the clock
->> node, a syscon is defined, covering 8 KB, and the actual
->> offsets used are just defined in the clock and reset
->> driver source code.
->>
->> If that's not the right thing to do, please say that.
->>
->>>>> What's more, I still do not see any usage of these clocks outside. And I
->>>>> still did not receive actual answers (or I missed them) how these clocks
->>>>> are routed OUTSIDE of the connector. You said for example:
->>>>> "Ultimately the TC9564 SoC has a single 25 MHz input clock,"
->> . . .
->>
->>>> The single exposed clock *might* justify presenting the
->>>> clock controller device in devicetree.  There are also
->>>> resets exposed externally via GPIOs, and these control
->>>> external entities (PHYs).
->>>
->>> I cannot find any of these exposed. Please point me to DTS code showing
->>> this.
->>
->> It is not used by this platform, but is available for other
->> platforms to use.  Its name is "REFCLKO" and is exposed on
->> ball C17 of the SoC, if a platform designer decided to use it.
->>
->> I only mention its existence as a reason to justify defining
->> the clock as a separate device, but I realize you are arguing
->> that I should do it somehow differently.
->>
->> 					-Alex
+>   WARNING: Unable to reopen jobserver read-side pipe: FileNotFoundError(2, 'No such file or directory')
 > 
-> While on the topic of description, I'm little bit concerned that this
-> controller does not any input ? Does it have an on-board oscillator
-> somehow ?
-
-No, it has an external fixed 25 MHz input, and this is a good
-point, that should be represented.
-
-> None of the clocks described in your driver take a parent from what I
-> can see. It is as if the clocks of this device are generated out of thin
-> air. Is it really how this works ?
-
-No, you're right to point this out.  Thank you.
-
-					-Alex
->>>
->>> Best regards,
->>> Krzysztof
->>
+> Mark the gzip recipes as recursive with "+", as commit ecab4115c44cc
+> ("kbuild: mark `rustc` (and others) invocations as recursive") did for
+> rustc. As with those, "make -n" now runs them.
 > 
+> Tested ARCH=x86_64 and ARCH=arm64 defconfig with GNU Make 4.3 plus
+> CentOS Stream 9's make-4.3-cloexec.patch, GCC 16.2.0, and -j64: without
+> this change the warning appears and pigz runs with "-p 1"; with it there
+> is no warning, and pigz runs with "-p 54" and "-p 64".
 
+Thank you, Kees!
+
+My initial test of this patch (using rcutorture) still showed the failure.
+I am running GCC 11.5.0 and without any patches to "make".  I take it
+that I need to find and apply CentOS Stream 9's make-4.3-cloexec.patch?
+
+But if I use "make -j" instead of rcutorture, this patch does work fine.
+Even with "make -j632".
+
+I put rcutorture in the background using nohup and full redirection,
+but "nohup make -j632 > /tmp/Make.out 2>&1 < /dev/null &" works just
+fine.  And running rcutorture in the foreground still fails.
+
+Very strange.
+
+So I guess I could give a Tested-by for builds using straight-up make,
+but not from rcutorture.  ;-)
+
+							Thanx, Paul
+
+> Reported-by: Paul E. McKenney <paulmck@kernel.org>
+> Closes: https://lore.kernel.org/all/0ddb5e5e-f801-444c-aa98-0cfe814a3026@paulmck-laptop/
+> Fixes: 48ebe1cbbeb51 ("kbuild: compress the kernel with pigz if available")
+> Assisted-by: LLM
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  arch/alpha/boot/Makefile             | 4 ++--
+>  arch/arc/boot/Makefile               | 2 +-
+>  arch/arm64/boot/Makefile             | 2 +-
+>  arch/microblaze/boot/Makefile        | 2 +-
+>  arch/mips/boot/Makefile              | 2 +-
+>  arch/nios2/boot/Makefile             | 2 +-
+>  arch/parisc/boot/compressed/Makefile | 2 +-
+>  arch/riscv/boot/Makefile             | 2 +-
+>  arch/s390/boot/Makefile              | 2 +-
+>  arch/sh/boot/Makefile                | 2 +-
+>  arch/sh/boot/compressed/Makefile     | 2 +-
+>  arch/sparc/boot/Makefile             | 4 ++--
+>  arch/x86/boot/compressed/Makefile    | 2 +-
+>  arch/xtensa/boot/Makefile            | 2 +-
+>  14 files changed, 16 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/alpha/boot/Makefile b/arch/alpha/boot/Makefile
+> index d8dba85e606c..b050753e9015 100644
+> --- a/arch/alpha/boot/Makefile
+> +++ b/arch/alpha/boot/Makefile
+> @@ -40,7 +40,7 @@ endif
+>  
+>  # Compressed kernel image
+>  $(obj)/vmlinux.gz: $(obj)/vmlinux FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  	@echo '  Kernel $@ is ready'
+>  
+>  $(obj)/main.o: $(obj)/ksize.h
+> @@ -85,7 +85,7 @@ $(obj)/vmlinux.nh: vmlinux $(OBJSTRIP) FORCE
+>  	$(call if_changed,objstrip)
+>  
+>  $(obj)/vmlinux.nh.gz: $(obj)/vmlinux.nh FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  $(obj)/tools/lxboot: $(obj)/bootloader $(OBJSTRIP) FORCE
+>  	$(call if_changed,objstrip)
+> diff --git a/arch/arc/boot/Makefile b/arch/arc/boot/Makefile
+> index 5a8550124b73..8a44c3e7ff3e 100644
+> --- a/arch/arc/boot/Makefile
+> +++ b/arch/arc/boot/Makefile
+> @@ -23,7 +23,7 @@ $(obj)/vmlinux.bin: vmlinux FORCE
+>  	$(call if_changed,objcopy)
+>  
+>  $(obj)/vmlinux.bin.gz: $(obj)/vmlinux.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  $(obj)/vmlinux.bin.lzma: $(obj)/vmlinux.bin FORCE
+>  	$(call if_changed,lzma)
+> diff --git a/arch/arm64/boot/Makefile b/arch/arm64/boot/Makefile
+> index b5a08333bc57..d42d07667822 100644
+> --- a/arch/arm64/boot/Makefile
+> +++ b/arch/arm64/boot/Makefile
+> @@ -26,7 +26,7 @@ $(obj)/Image.bz2: $(obj)/Image FORCE
+>  	$(call if_changed,bzip2)
+>  
+>  $(obj)/Image.gz: $(obj)/Image FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  $(obj)/Image.lz4: $(obj)/Image FORCE
+>  	$(call if_changed,lz4)
+> diff --git a/arch/microblaze/boot/Makefile b/arch/microblaze/boot/Makefile
+> index 2b42c370d574..e3df3a64808a 100644
+> --- a/arch/microblaze/boot/Makefile
+> +++ b/arch/microblaze/boot/Makefile
+> @@ -14,7 +14,7 @@ $(obj)/linux.bin.ub: $(obj)/linux.bin FORCE
+>  	$(call if_changed,uimage)
+>  
+>  $(obj)/linux.bin.gz: $(obj)/linux.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  quiet_cmd_strip = STRIP   $< $@$2
+>  	cmd_strip = $(STRIP) -K microblaze_start -K _end -K __log_buf \
+> diff --git a/arch/mips/boot/Makefile b/arch/mips/boot/Makefile
+> index 8473c4671702..996bf41b78de 100644
+> --- a/arch/mips/boot/Makefile
+> +++ b/arch/mips/boot/Makefile
+> @@ -63,7 +63,7 @@ $(obj)/vmlinux.bin.bz2: $(obj)/vmlinux.bin FORCE
+>  	$(call if_changed,bzip2)
+>  
+>  $(obj)/vmlinux.bin.gz: $(obj)/vmlinux.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  $(obj)/vmlinux.bin.lzma: $(obj)/vmlinux.bin FORCE
+>  	$(call if_changed,lzma)
+> diff --git a/arch/nios2/boot/Makefile b/arch/nios2/boot/Makefile
+> index 29c11a06b750..1381e6e428a8 100644
+> --- a/arch/nios2/boot/Makefile
+> +++ b/arch/nios2/boot/Makefile
+> @@ -18,7 +18,7 @@ $(obj)/vmlinux.bin: vmlinux FORCE
+>  	$(call if_changed,objcopy)
+>  
+>  $(obj)/vmlinux.gz: $(obj)/vmlinux.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  $(obj)/vmImage: $(obj)/vmlinux.gz FORCE
+>  	$(call if_changed,uimage)
+> diff --git a/arch/parisc/boot/compressed/Makefile b/arch/parisc/boot/compressed/Makefile
+> index 14eefb5ed5d1..a7fc7d424c00 100644
+> --- a/arch/parisc/boot/compressed/Makefile
+> +++ b/arch/parisc/boot/compressed/Makefile
+> @@ -55,7 +55,7 @@ suffix-$(CONFIG_KERNEL_LZO)  := lzo
+>  suffix-$(CONFIG_KERNEL_XZ)  := xz
+>  
+>  $(obj)/vmlinux.bin.gz: $(obj)/vmlinux.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  $(obj)/vmlinux.bin.bz2: $(obj)/vmlinux.bin FORCE
+>  	$(call if_changed,bzip2_with_size)
+>  $(obj)/vmlinux.bin.lz4: $(obj)/vmlinux.bin FORCE
+> diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
+> index 4a2d75b7e42d..b80a077a8e8f 100644
+> --- a/arch/riscv/boot/Makefile
+> +++ b/arch/riscv/boot/Makefile
+> @@ -23,7 +23,7 @@ $(obj)/Image: vmlinux FORCE
+>  	$(call if_changed,objcopy)
+>  
+>  $(obj)/Image.gz: $(obj)/Image FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  $(obj)/loader.o: $(src)/loader.S $(obj)/Image
+>  
+> diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+> index 10b75e053a6f..e8e43ae80dd5 100644
+> --- a/arch/s390/boot/Makefile
+> +++ b/arch/s390/boot/Makefile
+> @@ -117,7 +117,7 @@ suffix-$(CONFIG_KERNEL_XZ)  := .xz
+>  suffix-$(CONFIG_KERNEL_ZSTD)  := .zst
+>  
+>  $(obj)/vmlinux.bin.gz: $(obj)/vmlinux.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  $(obj)/vmlinux.bin.bz2: $(obj)/vmlinux.bin FORCE
+>  	$(call if_changed,bzip2_with_size)
+>  $(obj)/vmlinux.bin.lz4: $(obj)/vmlinux.bin FORCE
+> diff --git a/arch/sh/boot/Makefile b/arch/sh/boot/Makefile
+> index 1f5d2df3c7e0..cf63e319b786 100644
+> --- a/arch/sh/boot/Makefile
+> +++ b/arch/sh/boot/Makefile
+> @@ -66,7 +66,7 @@ $(obj)/vmlinux.bin: vmlinux FORCE
+>  	$(call if_changed,objcopy)
+>  
+>  $(obj)/vmlinux.bin.gz: $(obj)/vmlinux.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  $(obj)/vmlinux.bin.bz2: $(obj)/vmlinux.bin FORCE
+>  	$(call if_changed,bzip2)
+> diff --git a/arch/sh/boot/compressed/Makefile b/arch/sh/boot/compressed/Makefile
+> index 58df491778b2..b85aa5f0d616 100644
+> --- a/arch/sh/boot/compressed/Makefile
+> +++ b/arch/sh/boot/compressed/Makefile
+> @@ -39,7 +39,7 @@ $(obj)/vmlinux.bin: vmlinux FORCE
+>  	$(call if_changed,objcopy)
+>  
+>  $(obj)/vmlinux.bin.gz: $(obj)/vmlinux.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  $(obj)/vmlinux.bin.bz2: $(obj)/vmlinux.bin FORCE
+>  	$(call if_changed,bzip2_with_size)
+>  $(obj)/vmlinux.bin.lzma: $(obj)/vmlinux.bin FORCE
+> diff --git a/arch/sparc/boot/Makefile b/arch/sparc/boot/Makefile
+> index 339c42d35089..b53cf596611e 100644
+> --- a/arch/sparc/boot/Makefile
+> +++ b/arch/sparc/boot/Makefile
+> @@ -23,7 +23,7 @@ ifeq ($(CONFIG_SPARC64),y)
+>  # Actual linking
+>  
+>  $(obj)/zImage: $(obj)/image FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  	@$(kecho) 'Kernel: $@ is ready' '(#'$(or $(KBUILD_BUILD_VERSION),`cat .version`)')'
+>  
+>  $(obj)/vmlinux.aout: vmlinux FORCE
+> @@ -45,7 +45,7 @@ $(obj)/image.bin: $(obj)/image FORCE
+>  	$(call if_changed,objcopy)
+>  
+>  $(obj)/image.gz: $(obj)/image.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  UIMAGE_LOADADDR = $(CONFIG_UBOOT_LOAD_ADDR)
+>  UIMAGE_ENTRYADDR = $(CONFIG_UBOOT_ENTRY_ADDR)
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 6ec5e031db1d..680ad803cba7 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -133,7 +133,7 @@ vmlinux.bin.all-y := $(obj)/vmlinux.bin
+>  vmlinux.bin.all-$(CONFIG_X86_NEED_RELOCS) += $(obj)/vmlinux.relocs
+>  
+>  $(obj)/vmlinux.bin.gz: $(vmlinux.bin.all-y) FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  $(obj)/vmlinux.bin.bz2: $(vmlinux.bin.all-y) FORCE
+>  	$(call if_changed,bzip2_with_size)
+>  $(obj)/vmlinux.bin.lzma: $(vmlinux.bin.all-y) FORCE
+> diff --git a/arch/xtensa/boot/Makefile b/arch/xtensa/boot/Makefile
+> index d8b0fadf429a..934f9015b15f 100644
+> --- a/arch/xtensa/boot/Makefile
+> +++ b/arch/xtensa/boot/Makefile
+> @@ -36,7 +36,7 @@ $(obj)/vmlinux.bin: vmlinux FORCE
+>  	$(call if_changed,objcopy)
+>  
+>  $(obj)/vmlinux.bin.gz: $(obj)/vmlinux.bin FORCE
+> -	$(call if_changed,gzip)
+> +	+$(call if_changed,gzip)
+>  
+>  boot-elf: $(obj)/vmlinux.bin
+>  boot-redboot: $(obj)/vmlinux.bin.gz
+> -- 
+> 2.55.0
+> 
