@@ -1,127 +1,75 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2612F3B0AF8
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Oct 2026 17:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791566610; cv=pass; b=h44LpHOntZ6Y/90Ek2Yfr7TL/C9NShvPcbjvzfsKlZPwCRy5c7QGYykHp94GGELDoXeJuFJ3AdkVArZhN2ZufYffHCksPTyAfaX0HjOHc0oM342IpH1yzr5RMRTFUnH9NdvJnKsZsttD7keZVf0089DnsZR6D70K8RcmjHo8eHc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791566610; c=relaxed/simple;
-	bh=Ju7gwhPhe+gDtBXlanX2ZOcJL4sUKBXDC/LuKD7vhrw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JlMiKpGoBsbzVqNLjaZWHMcDbb9V/Zo8dPp+2pHqr2eTpHqs06Bd4s9z14YK3f4cGA1fapyJbZsXycscFudvki+yOpix1tXY7hvQlK8w+9Sf8U85pO4HFKxOYsbiDUAOBk2MhPITavJEZppJfbG34958A0BMYLDuwjS7ybcZi14=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MvzCa+VK; arc=pass smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC75388899;
+	Fri,  9 Oct 2026 17:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791567757; cv=none; b=DTi0pP8DOAxP8qI8iW5e2N8RHBplg1F2fn3OGbvLkYZ4ZmjagJw6G6FYIkzDzJUp3PHAFGs30x/9PjiPaXa2jLHdTg2Y6EbnGUDsoFFUREkQf2kyi/T2sskcB0AiYQlBZZZGxv9Zuu1QQmrzHgCdi3ft590cekYwgIBqHV1BvY8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791567757; c=relaxed/simple;
+	bh=MYZCFcnGVwravfQJoAJhoTJQ5YLQriFGFELEWuNGOxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qax6/a6qq1py4kkVAfozHIzY1kF3w3RJH7Cpx/APTaNpf31UjdPOJTCVU8hwx0gnN3ICQbKpsK99fWxiMTZHngwh38I31tJeKTje68TmJLKqREkxsW+JcPMxLVFOVrKa1msDaZICJ68e9l2oDWU9sgJYFtkAbUSQccEuda5gv/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=efXsdIoW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MvzCa+VK"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-48441a2ba1bso25143f8f.1
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Oct 2026 10:23:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791566607; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Ioy2WQEUTRlwdYpCjOgcCAySHytYkrEUsrqvxJUCJS1EYz1N0+hPYDCk1naIC2QaIf
-         +CAkaFtUWYVpId2M7jnkU9IyxTayQZq3yItmDfc5jQ2LDTVb+yUUT3eLWm/s6mlaXrCz
-         G5iZIoRLTC/rTwW19d/TZUImAFc9G0RH9kvRMbtpXknO3w3XHT3vKihMJ2BwUZ3BhGiT
-         DzzQnugsQgoqZK8k4SglLwjYJLH15sBu275fgIi8843u+Chku9Tl26B+ZOY7CCfD9yNS
-         5M3i369nZranlgEAUpdTiP72UZjEWXnjPGwh9QMHL7xXRMjS3W9NmV9JiVoav68PX5Jt
-         6r6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=UviV7uLa4QuU9wMqSrfcZ2tk7TpFd3xUn6hAcyKbZrA=;
-        fh=NBv7UEB3EbzKwXer//RC0OsY8B9q/H/zUCjnSDVc518=;
-        b=N0dbzW39muCaoqicYR527VI47uLChk+0CqV2rGSncpHiq/gf6UZYdQcfSDsE4yndn4
-         9NhZPHQ1ptcyIPATIzwwqw8oEAhX84wV42YWOiSG2mG6EfE1TLkhiahTaipV+T6umW4V
-         XpC6cxKvWDEwfnJ8h6tmbaA4AvDK5EAVVC9xzfyQ9XTeakMNk1ueZN1rsibx2UQDWTXA
-         iI5F2h9mPwKXSa4TPue57tY1CvVWBkJguiKz6I+khKthPRmYKZtJ9ZqTmoa9VExeqY9c
-         Owb0B+8EL6ypDvEKWLV6uBmIC4GwchtEGcmC1WRUaH8OYFQD4E5bcexTuPN+G/Wv8hWU
-         56Vg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791566607; x=1792171407; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=UviV7uLa4QuU9wMqSrfcZ2tk7TpFd3xUn6hAcyKbZrA=;
-        b=MvzCa+VKiyDnelHUmjUccg00cB9OywmIWuU/UXHneMkBqq1XMLSK6/n/9Xc9DKNwFq
-         DGdEKXPBMYnR1JyEnf8cveksXRDGdwZ85EcAjt5d9i+nUW+72rZGzL9iBDfaxB1Qnfid
-         m2Un+0IFsd192m1N6/pQGwZDF58jqbOLuUxsiGiw+bMadnTQm2gUP2HGZHQBNJrv6PNc
-         v0ZztsoiTIHuLKhv9/+npOX73T2uw4nOecIT3tbqKMjiNGWAQcFzJcQX520JgQdKNCcN
-         r4s5GzG2gBNldhH4T04J3iPmZ0JjMeeukHvyC3IcMHY25ZoiQX2bOJXerZ6zteM72FdM
-         9sKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791566607; x=1792171407;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=UviV7uLa4QuU9wMqSrfcZ2tk7TpFd3xUn6hAcyKbZrA=;
-        b=VKA4DnJ9tlkO6fwkWVoYBNioDAozv3UcXWXwnyh98lTV1MYIqlPLQn+rTEob1Xtg26
-         bHARdvCkQBD4Wa0YRXUbK1D8AcyhK4iMV2/yUNdnkqvkXaPktApeCeLvpCEnjmFkPFzr
-         Nv7ZeEGloW1n/AmFGuuFaAkuLred9KupERY4Qr7uR/hk5iPVrubgAF1iT3O+Pb1SGv0p
-         aFJBxX1RMKdV1eyf4fOAB6BqrEkf2Lt3VohSjvG0dfF5uPcvWqC6asryIYbUu240VG3E
-         7PziZD/MwblSxAiew/frDx1nkbnyTyW2UZaOxLQGncMAeepVzycldJZ3K7yfmOLsVohu
-         QZcg==
-X-Forwarded-Encrypted: i=1; AKwUvBwQC0aPJ6pGC3rzrs8aCHULzu6YkpLB/wWQfRcdIfdY7TGFeIS02UyGoyRK9IjCQ+Yd++IUandZI1pnKPSa4tA=@vger.kernel.org
-X-Gm-Message-State: AFuF++me0bl3G11n3GnCpjMRytsShUkDuEffeSlRJ2jGW8K4zVVm/MX+
-	IrXkWHf2tFkcsbADZFazSIZnpfFwnQmejDtN7RxceKtQQLLSvrVdO8Mz9YE7fM4OhJ37FpVSRVK
-	YE0B8kExASISySoG/Gk/N3LZ7K5EQuu/cFAOWG7ig
-X-Gm-Gg: AYBFou0F6CRkHJWjfMgdW9jGPIhJNA7L8FLszQ3/LCECFAWFEeq2zUil0UklzIJQm7+
-	vbCHRiJNlsXemxbOKDSjeARaOD9jLxMZp8BaW8TTHPbBwqb+aX+IE4P2KHrxyN81597HPIau3wA
-	1J+MkAgupkbrPnVZ3VES12kbAaI8309I5VH8GDEuBz7rqmXr0U+KD1p4iz4l5kFke8EKI16LLgR
-	8qSJCl72X99KmxR8f5tOvP4Gk/nKXXcDwMaT8WqV94M9O0YDwYESQ2P7/tNBxDSAqMTMaBkQGZ5
-	fCPrQnNeEC7xNaM03a1mHCFio/DhJdW7Eh7wN2YfkpHZmK7g1zCFDtnWcTBSqvEz9ph/WgnvDCS
-	NlHekgdQg/mogy8IeeRqTqnDW771HdWMPtWw/NzQPB3KnZIrmBHNX3r6LlGHloqB9j1jiserchV
-	QDqhUuTygzQWqaem05kth5BjZc2XjNIA3edgJxRBDYX6hnKkhp0m6eSNS3
-X-Received: by 2002:a05:600c:628b:b0:4a0:251f:dabd with SMTP id
- 5b1f17b1804b1-4a18e48edd5mr43689545e9.16.1791566606839; Fri, 09 Oct 2026
- 10:23:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efXsdIoW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EFE71F000FF;
+	Fri,  9 Oct 2026 17:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791567756;
+	bh=gR9DG1fEHiN2p3/i4oj6eVX6qR2LIOcWYTyiypTAGH4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=efXsdIoWwWqF4ntQor9o80SrU0oukoxl3br5/YUxzxL7ZYcB8kbRNKdthrT5gYshv
+	 goU6Z+2TCoNResQwR5z8+wGLS6jt1WxFNob5uvozEBqmkqorlNKY+vzs4EG9ggRAnD
+	 JOXHxndYjc3NDXybA+qGgV+TPLNabNB48qEmRpPlIvEX3HUC0wwxeRF7/3P7XDlaxO
+	 RbidzmVdo3TTSLIms2n62RcS/LkhfSxrBFK9BZegveEeajldCKKpgQxt0vf0+gzvcH
+	 LRqcF85Z8SERJTMcCPe1TEP3W+hsYsM/xm0KWmtKcabvxj85l8R7U8m9PJSc/vOF1Y
+	 gZbj+KnxOkLig==
+Date: Fri, 9 Oct 2026 19:42:28 +0200
+From: Brian Masney <masneyb@kernel.org>
+To: Alex Elder <elder@riscstar.com>
+Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org,
+	kees@kernel.org, gustavoars@kernel.org, mohd.anwar@oss.qualcomm.com,
+	lorenzo.bianconi@oss.qualcomm.com, danielt@kernel.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Daniel Thompson <daniel@riscstar.com>
+Subject: Re: [PATCH v2 2/3] clk: toshiba: introduce a TC9564 SoC clock driver
+Message-ID: <asknhPZLx1lbvam2@x1g10>
+References: <20261005230927.2000398-1-elder@riscstar.com>
+ <20261005230927.2000398-3-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261007-b4-landlock-fix-domain-fortify-panic-v1-1-042e9108f5f8@oss.qualcomm.com>
- <CAKwvOd=nPgEm=AZbEu12Eb90GtRUThY6YAjSiHHuNVHP8TZHwg@mail.gmail.com> <66usntltyie7ii2rrqajy3izxrvwubwf2vqnery552v3akhwo2@xwb4t76d37wx>
-In-Reply-To: <66usntltyie7ii2rrqajy3izxrvwubwf2vqnery552v3akhwo2@xwb4t76d37wx>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Fri, 9 Oct 2026 10:23:14 -0700
-X-Gm-Features: AclHuK-CLR4BQdqBSfFuLWEHCSgtnQKEmsz-7EKl2ZGIqsJwmtfHX25-OeazvEY
-Message-ID: <CAKwvOd=E7wgGPf+kgOY8sGi0xO-cFMAJK4PMBFknoEupJi1CXw@mail.gmail.com>
-Subject: Re: [PATCH] landlock: Move the domain layer counter out of the
- anonymous union
-To: Abel Vesa <abel.vesa@oss.qualcomm.com>, Bill Wendling <morbo@google.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>
-Cc: Tingmao Wang <m@maowtm.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Justin Stitt <justinstitt@google.com>, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-	michael.bommarito@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261005230927.2000398-3-elder@riscstar.com>
+User-Agent: Mutt/2.4.2 (2026-08-30)
 
-On Thu, Oct 8, 2026 at 4:49=E2=80=AFAM Abel Vesa <abel.vesa@oss.qualcomm.co=
-m> wrote:
->
-> On 26-10-07 14:49:28, Nick Desaulniers wrote:
-> > Would you consider this a bug in clang, or an error in how the
-> > __counted_by attribute is applied?
-> >
-> It turns out Amaan Qureshi has already reported exactly this Landlock
-> issue and proposed an LLVM fix:
->
->   https://github.com/llvm/llvm-project/pull/228309
+On Mon, Oct 05, 2026 at 06:09:25PM -0500, Alex Elder wrote:
+> Define a new platform driver that manages clocks implemented by the
+> Toshiba TC9564 SoC.  There are 21 clocks that can be enabled and
+> disabled.  Two of these are reserved, so only 19 can be managed.
+> 
+> Two registers manage the state of the clocks.  The registers are
+> accessed via a regmap supplied by a system controller, because the
+> region of memory accessed is shared with other drivers.
+> 
+> Access to the memory region is provided via a BAR on a PCIe endpoint
+> function embedded in the TC9564 SoC.  For that reason the PCIe clock
+> cannot be manipulated by this driver (it is assumed to be enabled).
+> Similarly, control is not available for the I2C clock, because the
+> PCIe subsystem on the TC9564 relies on I2C.
+> 
+> Co-developed-by: Daniel Thompson <daniel@riscstar.com>
+> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
+> Signed-off-by: Alex Elder <elder@riscstar.com>
 
-In that case, I would _not_ work around the compiler bug like this and
-instead wait for that fix to land in clang, then bump the required
-version of clang for counted-by.
+Reviewed-by: Brian Masney <masneyb@kernel.org>
 
-Kees and Nathan are traveling for LPC, so I don't expect quick
-feedback from them, but they should confirm whether they agree with my
-proposal.
---=20
-Thanks,
-~Nick Desaulniers
