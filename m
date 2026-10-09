@@ -1,94 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6AB246783;
-	Fri,  9 Oct 2026 15:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791561165; cv=none; b=n8HsYHEkaZovRap78g6MrkUxY93zqRjkJSEbKVZOw3SQ9/Qk+Z2/tthjhk3RKNrtDbquWApgOKPzNGEoQcoDqAw8vcsfp/nYXuZ9aR2PhtoyDc4tXLXnuWQdJw4FnsNmZv38gnoODsU3ntjcNe/keCKBY1dkXwA40Vvltzj5qMU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791561165; c=relaxed/simple;
-	bh=+632BxfAIPKPTC4nLf/PZ9on1zah9Og/rWyomBJqmRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ML7OOUv1aHLiReic4wWdeaClQU2lUoHBtwF/R29ffZ4y/A361HZbJUFAmWPYadbjM2adapQ4i1+gsZz1YtIyBt3ybH1W0mtaItR2bEGqiUKdj/0MEyS49AQd2zU9JH36eW2o3Vsd/GwnM7R/gq0exBf5u7D5mVXGbAUZg+WEJTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KHDMwhBw; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2612F3B0AF8
+	for <linux-hardening@vger.kernel.org>; Fri,  9 Oct 2026 17:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791566610; cv=pass; b=h44LpHOntZ6Y/90Ek2Yfr7TL/C9NShvPcbjvzfsKlZPwCRy5c7QGYykHp94GGELDoXeJuFJ3AdkVArZhN2ZufYffHCksPTyAfaX0HjOHc0oM342IpH1yzr5RMRTFUnH9NdvJnKsZsttD7keZVf0089DnsZR6D70K8RcmjHo8eHc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791566610; c=relaxed/simple;
+	bh=Ju7gwhPhe+gDtBXlanX2ZOcJL4sUKBXDC/LuKD7vhrw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JlMiKpGoBsbzVqNLjaZWHMcDbb9V/Zo8dPp+2pHqr2eTpHqs06Bd4s9z14YK3f4cGA1fapyJbZsXycscFudvki+yOpix1tXY7hvQlK8w+9Sf8U85pO4HFKxOYsbiDUAOBk2MhPITavJEZppJfbG34958A0BMYLDuwjS7ybcZi14=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MvzCa+VK; arc=pass smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KHDMwhBw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 848AD1F00893;
-	Fri,  9 Oct 2026 15:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791561164;
-	bh=0DXjYMvRmEg6F57An+CASAoisofDrEv/t1VR5wLbgNM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To;
-	b=KHDMwhBwPbggKTF8TXjDAZxIfe8YpIevivj37SAKBd5qpesQeolLpZOtNZfk8rcLB
-	 1RA14HatE9GfBdKrFzYqi73t3N6QSY+kudDXEado/f8LqDqKTBktISyWU+RkXJk6F5
-	 o4DCpcNVdtpc3Vczmb70fmBkMXdYH7ITJ54yVsLSgqjMMvRTaMfA2dWtL3tW7dEz78
-	 QAPVZKzNGYE1w/jkyzuqmGXRyU5Dyl50CT3LjCADdr43NygFUUdUYR3iPs2t+59tLR
-	 i/WXvDUORW0aNok2clYBGybCtx+RNxJLI2mjaE2Q+5hHS+e9m94QJVaSDwJv+l60rw
-	 RO9k/xL1i5HXQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 5C2F0CE0B28; Fri,  9 Oct 2026 08:52:44 -0700 (PDT)
-Date: Fri, 9 Oct 2026 08:52:44 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Manuel Ebner <manuelebnerli@mailbox.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] kbuild: Mark the kernel image gzip recipes as
- recursive
-Message-ID: <c160b8c3-7bbf-46f3-bd3f-e0fcf0fcf673@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20261009062722.i.253-kees@kernel.org>
- <20261009062733.3119731-1-kees@kernel.org>
- <asjYDiBaS1V5CymE@gremlin>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MvzCa+VK"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-48441a2ba1bso25143f8f.1
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Oct 2026 10:23:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791566607; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Ioy2WQEUTRlwdYpCjOgcCAySHytYkrEUsrqvxJUCJS1EYz1N0+hPYDCk1naIC2QaIf
+         +CAkaFtUWYVpId2M7jnkU9IyxTayQZq3yItmDfc5jQ2LDTVb+yUUT3eLWm/s6mlaXrCz
+         G5iZIoRLTC/rTwW19d/TZUImAFc9G0RH9kvRMbtpXknO3w3XHT3vKihMJ2BwUZ3BhGiT
+         DzzQnugsQgoqZK8k4SglLwjYJLH15sBu275fgIi8843u+Chku9Tl26B+ZOY7CCfD9yNS
+         5M3i369nZranlgEAUpdTiP72UZjEWXnjPGwh9QMHL7xXRMjS3W9NmV9JiVoav68PX5Jt
+         6r6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=UviV7uLa4QuU9wMqSrfcZ2tk7TpFd3xUn6hAcyKbZrA=;
+        fh=NBv7UEB3EbzKwXer//RC0OsY8B9q/H/zUCjnSDVc518=;
+        b=N0dbzW39muCaoqicYR527VI47uLChk+0CqV2rGSncpHiq/gf6UZYdQcfSDsE4yndn4
+         9NhZPHQ1ptcyIPATIzwwqw8oEAhX84wV42YWOiSG2mG6EfE1TLkhiahTaipV+T6umW4V
+         XpC6cxKvWDEwfnJ8h6tmbaA4AvDK5EAVVC9xzfyQ9XTeakMNk1ueZN1rsibx2UQDWTXA
+         iI5F2h9mPwKXSa4TPue57tY1CvVWBkJguiKz6I+khKthPRmYKZtJ9ZqTmoa9VExeqY9c
+         Owb0B+8EL6ypDvEKWLV6uBmIC4GwchtEGcmC1WRUaH8OYFQD4E5bcexTuPN+G/Wv8hWU
+         56Vg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791566607; x=1792171407; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=UviV7uLa4QuU9wMqSrfcZ2tk7TpFd3xUn6hAcyKbZrA=;
+        b=MvzCa+VKiyDnelHUmjUccg00cB9OywmIWuU/UXHneMkBqq1XMLSK6/n/9Xc9DKNwFq
+         DGdEKXPBMYnR1JyEnf8cveksXRDGdwZ85EcAjt5d9i+nUW+72rZGzL9iBDfaxB1Qnfid
+         m2Un+0IFsd192m1N6/pQGwZDF58jqbOLuUxsiGiw+bMadnTQm2gUP2HGZHQBNJrv6PNc
+         v0ZztsoiTIHuLKhv9/+npOX73T2uw4nOecIT3tbqKMjiNGWAQcFzJcQX520JgQdKNCcN
+         r4s5GzG2gBNldhH4T04J3iPmZ0JjMeeukHvyC3IcMHY25ZoiQX2bOJXerZ6zteM72FdM
+         9sKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791566607; x=1792171407;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=UviV7uLa4QuU9wMqSrfcZ2tk7TpFd3xUn6hAcyKbZrA=;
+        b=VKA4DnJ9tlkO6fwkWVoYBNioDAozv3UcXWXwnyh98lTV1MYIqlPLQn+rTEob1Xtg26
+         bHARdvCkQBD4Wa0YRXUbK1D8AcyhK4iMV2/yUNdnkqvkXaPktApeCeLvpCEnjmFkPFzr
+         Nv7ZeEGloW1n/AmFGuuFaAkuLred9KupERY4Qr7uR/hk5iPVrubgAF1iT3O+Pb1SGv0p
+         aFJBxX1RMKdV1eyf4fOAB6BqrEkf2Lt3VohSjvG0dfF5uPcvWqC6asryIYbUu240VG3E
+         7PziZD/MwblSxAiew/frDx1nkbnyTyW2UZaOxLQGncMAeepVzycldJZ3K7yfmOLsVohu
+         QZcg==
+X-Forwarded-Encrypted: i=1; AKwUvBwQC0aPJ6pGC3rzrs8aCHULzu6YkpLB/wWQfRcdIfdY7TGFeIS02UyGoyRK9IjCQ+Yd++IUandZI1pnKPSa4tA=@vger.kernel.org
+X-Gm-Message-State: AFuF++me0bl3G11n3GnCpjMRytsShUkDuEffeSlRJ2jGW8K4zVVm/MX+
+	IrXkWHf2tFkcsbADZFazSIZnpfFwnQmejDtN7RxceKtQQLLSvrVdO8Mz9YE7fM4OhJ37FpVSRVK
+	YE0B8kExASISySoG/Gk/N3LZ7K5EQuu/cFAOWG7ig
+X-Gm-Gg: AYBFou0F6CRkHJWjfMgdW9jGPIhJNA7L8FLszQ3/LCECFAWFEeq2zUil0UklzIJQm7+
+	vbCHRiJNlsXemxbOKDSjeARaOD9jLxMZp8BaW8TTHPbBwqb+aX+IE4P2KHrxyN81597HPIau3wA
+	1J+MkAgupkbrPnVZ3VES12kbAaI8309I5VH8GDEuBz7rqmXr0U+KD1p4iz4l5kFke8EKI16LLgR
+	8qSJCl72X99KmxR8f5tOvP4Gk/nKXXcDwMaT8WqV94M9O0YDwYESQ2P7/tNBxDSAqMTMaBkQGZ5
+	fCPrQnNeEC7xNaM03a1mHCFio/DhJdW7Eh7wN2YfkpHZmK7g1zCFDtnWcTBSqvEz9ph/WgnvDCS
+	NlHekgdQg/mogy8IeeRqTqnDW771HdWMPtWw/NzQPB3KnZIrmBHNX3r6LlGHloqB9j1jiserchV
+	QDqhUuTygzQWqaem05kth5BjZc2XjNIA3edgJxRBDYX6hnKkhp0m6eSNS3
+X-Received: by 2002:a05:600c:628b:b0:4a0:251f:dabd with SMTP id
+ 5b1f17b1804b1-4a18e48edd5mr43689545e9.16.1791566606839; Fri, 09 Oct 2026
+ 10:23:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <asjYDiBaS1V5CymE@gremlin>
+References: <20261007-b4-landlock-fix-domain-fortify-panic-v1-1-042e9108f5f8@oss.qualcomm.com>
+ <CAKwvOd=nPgEm=AZbEu12Eb90GtRUThY6YAjSiHHuNVHP8TZHwg@mail.gmail.com> <66usntltyie7ii2rrqajy3izxrvwubwf2vqnery552v3akhwo2@xwb4t76d37wx>
+In-Reply-To: <66usntltyie7ii2rrqajy3izxrvwubwf2vqnery552v3akhwo2@xwb4t76d37wx>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Fri, 9 Oct 2026 10:23:14 -0700
+X-Gm-Features: AclHuK-CLR4BQdqBSfFuLWEHCSgtnQKEmsz-7EKl2ZGIqsJwmtfHX25-OeazvEY
+Message-ID: <CAKwvOd=E7wgGPf+kgOY8sGi0xO-cFMAJK4PMBFknoEupJi1CXw@mail.gmail.com>
+Subject: Re: [PATCH] landlock: Move the domain layer counter out of the
+ anonymous union
+To: Abel Vesa <abel.vesa@oss.qualcomm.com>, Bill Wendling <morbo@google.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>
+Cc: Tingmao Wang <m@maowtm.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Justin Stitt <justinstitt@google.com>, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	michael.bommarito@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 09, 2026 at 01:05:00PM +0100, Lorenzo Stoakes (ARM) wrote:
-> On Thu, Oct 08, 2026 at 11:27:30PM -0700, Kees Cook wrote:
-> > Since commit 48ebe1cbbeb51 ("kbuild: compress the kernel with pigz if
-> > available"), cmd_gzip runs pigz through scripts/jobserver-exec, which
-> > takes the job slots make has free. GNU Make passes the jobserver pipe
-> > only to recipes it treats as recursive, but leaves --jobserver-auth in
-> > MAKEFLAGS for all of them. The make 4.3 in CentOS Stream 9 also hides
-> > the pipe in sub-makes (a backport of the fix for GNU Make bug 58232), so
-> > jobserver-exec cannot open it, runs pigz on one thread, and prints:
+On Thu, Oct 8, 2026 at 4:49=E2=80=AFAM Abel Vesa <abel.vesa@oss.qualcomm.co=
+m> wrote:
+>
+> On 26-10-07 14:49:28, Nick Desaulniers wrote:
+> > Would you consider this a bug in clang, or an error in how the
+> > __counted_by attribute is applied?
 > >
-> >   WARNING: Unable to reopen jobserver read-side pipe: FileNotFoundError(2, 'No such file or directory')
-> >
-> > Mark the gzip recipes as recursive with "+", as commit ecab4115c44cc
-> > ("kbuild: mark `rustc` (and others) invocations as recursive") did for
-> > rustc. As with those, "make -n" now runs them.
-> >
-> > Tested ARCH=x86_64 and ARCH=arm64 defconfig with GNU Make 4.3 plus
-> > CentOS Stream 9's make-4.3-cloexec.patch, GCC 16.2.0, and -j64: without
-> > this change the warning appears and pigz runs with "-p 1"; with it there
-> > is no warning, and pigz runs with "-p 54" and "-p 64".
-> >
-> > Reported-by: Paul E. McKenney <paulmck@kernel.org>
-> > Closes: https://lore.kernel.org/all/0ddb5e5e-f801-444c-aa98-0cfe814a3026@paulmck-laptop/
-> > Fixes: 48ebe1cbbeb51 ("kbuild: compress the kernel with pigz if available")
-> > Assisted-by: LLM
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> Nice find!
-> 
-> Acked-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> 
-> Sorry for breaking your build Paul ;)
+> It turns out Amaan Qureshi has already reported exactly this Landlock
+> issue and proposed an LLVM fix:
+>
+>   https://github.com/llvm/llvm-project/pull/228309
 
-Hey, this was the fastest bisection that I have ever done by far!
+In that case, I would _not_ work around the compiler bug like this and
+instead wait for that fix to land in clang, then bump the required
+version of clang for counted-by.
 
-Normally it takes hours per step, but this was about 40 seconds per
-step.  ;-)
-
-							Thanx, Paul
+Kees and Nathan are traveling for LPC, so I don't expect quick
+feedback from them, but they should confirm whether they agree with my
+proposal.
+--=20
+Thanks,
+~Nick Desaulniers
