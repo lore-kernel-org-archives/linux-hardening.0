@@ -1,66 +1,43 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE834D6C21
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Oct 2026 14:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5192E4E4C43;
+	Fri,  9 Oct 2026 14:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791556712; cv=none; b=DslTggPGu5Sms5c9G8jgq+sYFXGmSrDpUtgFwSRFDBSJX0JM9SfslZjy7wWY48hlFT13tNfHPtuBzxPSp+B7YogNTWWg8IH33a2Ldq0sz/p/o+rdb7eOzRR2Mtl6t1AffH9LkgUvWNw1wKM5B50MWjb6QAOvdCrdFgb1PfpE3hg=
+	t=1791557174; cv=none; b=Bn/o9+HehhyFHL7GE2UfheA2QAYgt1dxKmSztU2QsVDF8Io0yloDirND1HKFQ/O3B/jQFdbaWOG0BQa6/oKyFLNZpQWWHG5XWK4ydxkVacn4E6MY7lj+KiKYf5tZeJqGf+QDCGHn0oWg9XhrhzAsLjNUpnPV5xqqCwu/FECnYxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791556712; c=relaxed/simple;
-	bh=fR7q+Enx5sddKW2mLK9nmPbd75EbrXPCo0qCI1rlWN0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WyQYZlBcs39i3p5+yEDqiOxy8sNSPa6phdOTMWsV0Dn9iErlI+uox2v7M4Atq7NJL6ghUaNckuqoSS8dp3h49YToRJ8jOzSU8Dzynman1BE3GyLc4wwOxteNonIsxJF2Zj7VsMwRwTaoCf4HwruadCmyYxCkALHKknuYiQJkBac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=No+ZOGgc; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1791557174; c=relaxed/simple;
+	bh=93kjYLOQu7rxs6t6unplP70FqIIK48qGdTWUIJuE3Hw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h1woLoNKpc1NQqodgDyFSCo5axeFrhQmcqNQLIAgWi18XOUCU4gFzhTTLAVoIgCbTHJHxXoKqhyeNDWouN5GZHLza+214HgsqHJX0XVj/oXo+YOVYuxDxJlYrbdl+xJfuBOxrA5sTEM7R9zC4YpB5oVKJsXFfooa06ECr60FcZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DK1ZSfrs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="No+ZOGgc"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-48c02782159so2807975f8f.0
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Oct 2026 07:38:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1791556708; x=1792161508; darn=vger.kernel.org;
-        h=content-type:mime-version:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pw+7/YrpQiBB458JMj0CBklEjmVY2DERmPYaWqC3uAI=;
-        b=No+ZOGgcBVHwhMV4Wn5JYf1370qKpeHgZVPZ8WSd3YboTxtzzaf6fJfkaWOlLz/FDG
-         DQgkZvV77zmWf6SAdEIdBBGfWUGpIQlovAnTbWPREviYUsCLHfbAqZMffUJHhVvd8wwh
-         f+39i1rEkZFRSONXeWX1+pX561pZoJ8w7/F3adPQ02S2+9zefxlE80ETvPEvYUoAxG0e
-         EKxKFshVokCp53jtLQt3njuZ+v0JR2a2yKqCzQivLdGzeO4fiPhO3nYC5bZTrj9j0Lv1
-         X5c4GyT1B6Pak4syqhVgXoTplUzfR/jmtiHw1R6F4RkAdW4X9tSnWhbMJW9IlyTgqWCL
-         jrGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791556708; x=1792161508;
-        h=content-type:mime-version:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pw+7/YrpQiBB458JMj0CBklEjmVY2DERmPYaWqC3uAI=;
-        b=Dt9pprAnjCI7sVpovbalrARiEdkm1Y0TpLj6B2VTUfH/4ndZbWqTpQMKDhbob0DcvH
-         CmOKCcS6B0uJCCK97sTx9OsMLSjHBm4Xz2S9xH976J3cSXLvcW6is63l67E70dUcJ6ld
-         U3Ex3FbRK5wnpTOf5II6K9evGiqwtZHzaf662dxZzBXkSVmuW/FN55ew3eyR+P6gB3gS
-         DDVaE31q6l08gOOdmYleef2ZX5VC+YqjJvxTKf7qfzId9eUMyPVq/1ZUtkPj5kSqAA43
-         PXU2OA3Ho51hpXPnz43M/gj9TZyyUBCNJ/wO7WdoFObsuUTTpKPn9bu0HZHKfvOweiMZ
-         mYBA==
-X-Forwarded-Encrypted: i=1; AKwUvByKLDChwE7xzujbt+kRsVUM+tj/4/YKuq033GC+JwRetNNAgn9nnrZ3cwjeaRoKOPgRrra1wfIEDpq2tHH3Af4=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKMQamMKYdkhJUq+J25nG2UpvHiUpRAG5TtRCXBEt/hC3nOOOiT
-	RxwFJcvF6l0J1qNgdHYoWhsg2uKIq5amMweaPfn+/8skyMdNQ7AQFC+ew0nvCN6hgq0=
-X-Gm-Gg: AYBFou3vWloc96Sijf87hbDbBr8UJmCBZNYvWf6/LzLxwSpm1br8jNNNcPfk8Qr+oAs
-	e4Mq3/gmFHK/uUYJG4RktmSoqQaqwUwFy30fT5YBUrzKO1HMPQXMid+U6flaIgHuHkN5BFio2Wx
-	LqbaBRyfCcFxf0TWyxwzhuV38UcDZkW3yGmVVEhUwZYpsXL6SLV0lTHq+yrpSMlcsYWR5L4011d
-	x/ggC8/5QKwdb4qfOlLr7eWk8DmmlPgaN1/NAtjQ8W48Z/1LMaFPmX1hWiB8s73HWt++gTc03sg
-	efg1MriEAxXWGdtlg2DCEunypkuS5U00iarE3fbISQAoqU1uvSSULtBW41fqkR1fq9ULnWpSsEZ
-	gkTzOIoSL0VlFpfD8CpPxeP50EgIXyEzGJwE40zL1+yrvHjrvV8U6FgbWnZOuhWcHiLGKuNauVz
-	CvOGRTo4NI1Xe3gKo6KnQeyvEHQL+Oe6A44MazQRJSuZSZ3GN05k7Qv6Ipvfg1uQBM0GuAeZf9o
-	ahjKGgLXZk1iidlag==
-X-Received: by 2002:a5d:5b87:0:b0:48c:5c2e:434d with SMTP id ffacd0b85a97d-48dbaae84eemr2941589f8f.21.1791556707821;
-        Fri, 09 Oct 2026 07:38:27 -0700 (PDT)
-Received: from localhost (82-67-6-57.subs.proxad.net. [82.67.6.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48db94e2ef0sm4359750f8f.20.2026.10.09.07.38.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2026 07:38:27 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Alex Elder <elder@riscstar.com>, Krzysztof Kozlowski <krzk@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DK1ZSfrs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EFC01F00893;
+	Fri,  9 Oct 2026 14:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791557172;
+	bh=6cUenmNTYC7qMAewCrSEbIVswliLQpgsX0IJlOlJnFw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=DK1ZSfrsh/ZGAauXJLhHvNsUJJkK5iaO2GWkqIbGqkkx9YmuCgBLwKRb28NPDRZq6
+	 7Slfs8gc1Xa9ldXqga8Eao4IBiiYK4BZA0U3K/1ump+w5Pq9AdayLS3v2U6KR2jX5K
+	 Bm1cNI6v7KDCgfKmSWxalw5M5YdBcQ539lzd92Lg9zdvD3YB5XbSlq5TZfgxZk34Ur
+	 jNLGkWXVeinT8oy3xLfEsvQaHsQKdTTj0/YdbIcAFmgWes9m3KD1s29JQYbL+hFT/D
+	 MSCKiCO2tiGF8CKYZkYx9hjgyjx9+YVuteMoXBw1lVRzVtrzVZT0P5+HGbx30chCQY
+	 HfPv0CiLc2kSw==
+Message-ID: <ad511ae7-755d-42bc-a55d-12b93d49ddaf@kernel.org>
+Date: Fri, 9 Oct 2026 16:46:02 +0200
+Precedence: bulk
+X-Mailing-List: linux-hardening@vger.kernel.org
+List-Id: <linux-hardening.vger.kernel.org>
+List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: clock: introduce
+ toshiba,tc9564-clock.yaml
+To: Alex Elder <elder@riscstar.com>
 Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
  andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org,
@@ -69,27 +46,62 @@ Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
  linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
  linux-kernel@vger.kernel.org, Daniel Thompson <daniel@riscstar.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: clock: introduce
- toshiba,tc9564-clock.yaml
-In-Reply-To: <77dacc46-7294-47c8-899a-fd56b6a2af55@riscstar.com>
 References: <20261005230927.2000398-1-elder@riscstar.com>
  <20261005230927.2000398-2-elder@riscstar.com>
  <20261009-gifted-stylish-tortoise-95b14d@quoll>
  <b190fe58-364b-4b94-9cab-c5f81f874289@riscstar.com>
  <aafe2703-bfb8-43da-8472-b1dfa36fa8f9@kernel.org>
  <77dacc46-7294-47c8-899a-fd56b6a2af55@riscstar.com>
-Date: Fri, 09 Oct 2026 16:38:26 +0200
-Message-ID: <1jcxtjos65.fsf@starbuckisacylon.baylibre.com>
-Precedence: bulk
-X-Mailing-List: linux-hardening@vger.kernel.org
-List-Id: <linux-hardening.vger.kernel.org>
-List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGPBBMBCgA5AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJp2mE8AAoJEBuTQ307QWKbeaIP
+ /ihHTkTW4KsN/DQ945JJbyu5tI0J80Wue7QyyLPglyKfhgb5cLLNPpOC8cCIJsc7+W3i2P38
+ s2c1cOH6CYGE7E9ur3Vfme8NW2S2I/Z8VC7bZnzyS23wT17LrsdS/qCpx4o8U+pt/xdXDKph
+ EGRYrIEmMpUWvyYzyYKGIe25FtaayIIKpq8eZYyFcp2f/sG5IkOW5uZzHPMPdcm87jU7fyuQ
+ rAU2vx9r+ulUfQ/q9Z2roC/ode3l7t2pN7BCBCsUDp6JCrUyZrtT1e7EbA0ZRP3aOBNk2P2E
+ DQOgJGjGdO5Yx2Y9LFtltu6JbsBJHi1syGRX3AtQYOMc4Y1WGoeZJmMlvKj2ZqqXNkcWi2DS
+ IQEWB0uW6CqFsBBIMGDa+6OzdaVO/uAVXWDWml02Men3CILdI1MbVjoh8ECqYUY7OQ+JJvNN
+ vnliuq5WM3Ghd3jg/LZZrxXjdIginRHFQCjIJYLKpLZWm1/iDFedcfzqRNYmTtqscdCNHW41
+ oT3Z7BmO9xwdjuwBS6nmS6JJwkbf5Ot2QR4pB/DRU7ZwjT1qHe+9r9gF32wXVQatHNGK/VVu
+ sfwOnkdxCWkp/qb2gdQRmZh+SedStWshigH6sNfuHBloF/q+hjMRc8b2m326OZdrbSHwY1Sz
+ vti8Hn7n8NjdHO9LKB7BIdjkA9DA5WsqOuVCzsFNBFVDXDQBEADNkrQYSREUL4D3Gws46JEo
+ Z9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLueMNsWLJBv
+ BaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6eiOMheesVS
+ 5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wAGldWsRxb
+ f3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA6z6lBZn0
+ WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9YegxWKvX
+ XHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt91pFzBSO
+ IpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gUBLHFTg2h
+ YnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/JoFzZ4B0
+ p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu4vXVFBYI
+ GmpyNPYzRm0QPwARAQABwsF2BBgBCgAgAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtBYpsFAmna
+ YUkACgkQG5NDfTtBYptX+BAApg32CkxwNucNEi8WfWA8oKkW0y8YDuY6ORMo9FWNGiT/OTy0
+ vyJrLocrpn86zwfjVp+eCrssPYh8eqJfnWqmYv6ACQtHPYzPZQ3mSo8H97Z01oUxITzCxpXm
+ ZkLgPIqtDPcC2E3dPM/fVxcyowM8XsaMA9wcsaUYrta8toOq2b9tKcjleKMfMrm0gQ9u7wUc
+ QbLkwj6TCLOwucb07GXzLTNF9PZmaDUpKAZjMjmrW+le+SFvQbhamx0rxLWPR0NWntXpbCn+
+ +ACch03p/JyTBVktxFsFyCt7pTPE1kEaeuXBTe/a2D9iQvRxRW19LvuO2e59/u1wYUiH/orz
+ wbIC2S4dBsPAPihL3ztOU1yE86GPyQtSE0kU+/7snnLt4QGi6PChf3t5gnNjAzjUUovO8rgI
+ c+5yN5heq5loYHgK6OQ9OlHzsPHO9e9MOQcKlFycs1pyijFGzDwdNUm/SchK8iWT2QApTx4A
+ K9bCVaboTA2T77QYkRcRJYSsO1alGX0ome/hMLD1daXlkrNUp1HWa3K4iytLRXjCSIorWiGs
+ n+q3krnpXu3TFkA8qtOFZMdnIiFuiq1yLT8hptsV5xh1TA2nsVvSYiaCr3q4s4BKjS/KrLDb
+ qoxzw8ISjdUp4pA85vb6YLCmb39NgidD+7PmAr65lBNveIFynTgsja1rRQ4=
+In-Reply-To: <77dacc46-7294-47c8-899a-fd56b6a2af55@riscstar.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On ven. 09 oct. 2026 at 09:23, Alex Elder <elder@riscstar.com> wrote:
-
+On 09/10/2026 16:23, Alex Elder wrote:
 > On 10/9/26 8:56 AM, Krzysztof Kozlowski wrote:
 >> On 09/10/2026 15:44, Alex Elder wrote:
 >>> On 10/9/26 4:31 AM, Krzysztof Kozlowski wrote:
@@ -100,9 +112,9 @@ On ven. 09 oct. 2026 at 09:23, Alex Elder <elder@riscstar.com> wrote:
 >>>>> Co-developed-by: Daniel Thompson <daniel@riscstar.com>
 >>>>> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
 >>>>> Signed-off-by: Alex Elder <elder@riscstar.com>
->
+> 
 > . . .
->
+> 
 >>>>> +properties:
 >>>>> +  compatible:
 >>>>> +    const: toshiba,tc9564-clock
@@ -143,71 +155,64 @@ On ven. 09 oct. 2026 at 09:23, Alex Elder <elder@riscstar.com> wrote:
 >>> The regmap belongs to the parent, and is looked up this way:
 >>>
 >>>       regmap = syscon_node_to_regmap(dev_of_node(dev->parent));
->> 
+>>
 >> That's driver code, so irrelevant. So how does this solve my comment
 >> from v1?
->
+> 
 > I'm trying Krzysztof.
->
+
+In v1 I asked to fold the node into the parent. v2 did not have it. v3,
+which you are preparing, still has no node folded, because they are
+separate.
+
+> 
 > The clock controller uses two registers, 0x1004 and 0x100c,
 > to manage whether a set of clock signals are enabled or not.
 > (The reset controller uses two adjacent registers, 0x1008
 > and 0x1010, to manage whether a set of reset signals are
 > asserted or not.)
->
+> 
 > You said "no resources except a small address space" and I
 > guess it's not clear to me what size is "big enough" to
 > warrant representing something as a separate device.
->
+> 
 > *One* of the managed clocks is a 25 MHz clock, exposed
 > through a pin on the SoC.  That one clock signal is
 > therefore usable by the platform (although on the RB3gen2
 > it's not used).
->
+> 
 > Rather than expose the register addresses in the clock
 > node, a syscon is defined, covering 8 KB, and the actual
 > offsets used are just defined in the clock and reset
 > driver source code.
->
+> 
 > If that's not the right thing to do, please say that.
->
+
+Nodes should be squashed.
+
+> 
 >>>> What's more, I still do not see any usage of these clocks outside. And I
 >>>> still did not receive actual answers (or I missed them) how these clocks
 >>>> are routed OUTSIDE of the connector. You said for example:
 >>>> "Ultimately the TC9564 SoC has a single 25 MHz input clock,"
 > . . .
->
+> 
 >>> The single exposed clock *might* justify presenting the
 >>> clock controller device in devicetree.  There are also
 >>> resets exposed externally via GPIOs, and these control
 >>> external entities (PHYs).
->> 
+>>
 >> I cannot find any of these exposed. Please point me to DTS code showing
 >> this.
->
+> 
 > It is not used by this platform, but is available for other
 > platforms to use.  Its name is "REFCLKO" and is exposed on
 > ball C17 of the SoC, if a platform designer decided to use it.
->
-> I only mention its existence as a reason to justify defining
-> the clock as a separate device, but I realize you are arguing
-> that I should do it somehow differently.
->
-> 					-Alex
 
-While on the topic of description, I'm little bit concerned that this
-controller does not any input ? Does it have an on-board oscillator
-somehow ?
+Yeah, but you do not describe the SoC but PCI EP device, thus my claim
+is that clocks cannot be used by the host. The SoC itself for different
+hardware uses would have different binding, so that's not an argument to
+have anything here, unless these different uses are also documented here.
 
-None of the clocks described in your driver take a parent from what I
-can see. It is as if the clocks of this device are generated out of thin
-air. Is it really how this works ?
-
->
->> 
->> Best regards,
->> Krzysztof
->
-
--- 
-Jerome
+Best regards,
+Krzysztof
