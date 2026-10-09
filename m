@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC75388899;
-	Fri,  9 Oct 2026 17:42:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED724F55BF;
+	Fri,  9 Oct 2026 19:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791567757; cv=none; b=DTi0pP8DOAxP8qI8iW5e2N8RHBplg1F2fn3OGbvLkYZ4ZmjagJw6G6FYIkzDzJUp3PHAFGs30x/9PjiPaXa2jLHdTg2Y6EbnGUDsoFFUREkQf2kyi/T2sskcB0AiYQlBZZZGxv9Zuu1QQmrzHgCdi3ft590cekYwgIBqHV1BvY8=
+	t=1791574802; cv=none; b=o75kpSaYuU5wncBdwoGfUNKD7U9lkgpwkQZTFsknVdAa8+chw0bfp58AWwCQT2bbuwCwJjfLb0qpnwX0NQVmlqlaC3jfP4QUJYgGxQn6UmNnnxQDfsyISIMujRMb0WFhjGseysETPs2Jd+lBvHibA9MyaXf8Ma7eGpVdCIIrtwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791567757; c=relaxed/simple;
-	bh=MYZCFcnGVwravfQJoAJhoTJQ5YLQriFGFELEWuNGOxw=;
+	s=arc-20240116; t=1791574802; c=relaxed/simple;
+	bh=A1afFb/uLK5QLrZzYFQc61hLyu5KFVxEsuF7yOPAjUk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qax6/a6qq1py4kkVAfozHIzY1kF3w3RJH7Cpx/APTaNpf31UjdPOJTCVU8hwx0gnN3ICQbKpsK99fWxiMTZHngwh38I31tJeKTje68TmJLKqREkxsW+JcPMxLVFOVrKa1msDaZICJ68e9l2oDWU9sgJYFtkAbUSQccEuda5gv/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=efXsdIoW; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=jCmQYQIQbpL8zwk3LkgVxOjFdzKHv9UJl4goIpaeNPEpmTXMaatF1KhgR5k/qUQCrt5W3PBC6eVsqqQxfR+nynIxj62pgC+OYzm5e5R0Ct0xXrgeNzPHR5hbXXbZrcglXgZhen3GyM5sZptcvWxQfn2YmVcKP+zruie4GID/Mu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8e8DRo/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efXsdIoW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EFE71F000FF;
-	Fri,  9 Oct 2026 17:42:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8e8DRo/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 026761F000FF;
+	Fri,  9 Oct 2026 19:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791567756;
-	bh=gR9DG1fEHiN2p3/i4oj6eVX6qR2LIOcWYTyiypTAGH4=;
+	s=k20260515; t=1791574791;
+	bh=i1X2Q68ZmYsPWobrAu7yZxvAEcunRnI0QLmJSHkQTsw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=efXsdIoWwWqF4ntQor9o80SrU0oukoxl3br5/YUxzxL7ZYcB8kbRNKdthrT5gYshv
-	 goU6Z+2TCoNResQwR5z8+wGLS6jt1WxFNob5uvozEBqmkqorlNKY+vzs4EG9ggRAnD
-	 JOXHxndYjc3NDXybA+qGgV+TPLNabNB48qEmRpPlIvEX3HUC0wwxeRF7/3P7XDlaxO
-	 RbidzmVdo3TTSLIms2n62RcS/LkhfSxrBFK9BZegveEeajldCKKpgQxt0vf0+gzvcH
-	 LRqcF85Z8SERJTMcCPe1TEP3W+hsYsM/xm0KWmtKcabvxj85l8R7U8m9PJSc/vOF1Y
-	 gZbj+KnxOkLig==
-Date: Fri, 9 Oct 2026 19:42:28 +0200
-From: Brian Masney <masneyb@kernel.org>
-To: Alex Elder <elder@riscstar.com>
-Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org,
-	kees@kernel.org, gustavoars@kernel.org, mohd.anwar@oss.qualcomm.com,
-	lorenzo.bianconi@oss.qualcomm.com, danielt@kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Daniel Thompson <daniel@riscstar.com>
-Subject: Re: [PATCH v2 2/3] clk: toshiba: introduce a TC9564 SoC clock driver
-Message-ID: <asknhPZLx1lbvam2@x1g10>
-References: <20261005230927.2000398-1-elder@riscstar.com>
- <20261005230927.2000398-3-elder@riscstar.com>
+	b=Z8e8DRo/AVA9dOkXV7/WAaZmDrCtuRLJu70W9RqRnnftfwEJwAggklQbJlzDjomCd
+	 NcHAvYULKuYrlqcHTP/2dAMwl0XqXyUaa6ZerBn90d3OY9P2HOV1Dns7S9gUcKPRWt
+	 HqeiVb4t7i6RFj+5LKvCj+utjJrsZxcthA5QPKEEFd7/adEixO8ONBnyFVZg/8/vTe
+	 UNyW1qR75zam1ahjU+AIr1Xk7PGei6iSHn46USHvDHsroYic5ZgokBtFw2lRdfp/dv
+	 4DMyQDex+LEiF+I6GU5CFrF/C1yL2LUmemOIqlM4IQ1FSL0EAhAWt3u/zds14kWPay
+	 uSYH8xBv2i/HA==
+Date: Fri, 9 Oct 2026 21:39:48 +0200
+From: Harry Yoo <harry@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Andrew Morton <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org, 
+	linux-mm@kvack.org, Pedro Falcato <pfalcato@suse.de>, 
+	Kuniyuki Iwashima <kuniyu@google.com>, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 2/8] ipc, msg: Account msg_msg allocations
+ with GFP_KERNEL_ACCOUNT again
+Message-ID: <ask5kpMS4mpI8Api@thinkpad>
+References: <20261006092030.got.500-kees@kernel.org>
+ <20261006092035.166776-2-kees@kernel.org>
+ <asjhg2e4-WSeKuXd@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,27 +50,55 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261005230927.2000398-3-elder@riscstar.com>
-User-Agent: Mutt/2.4.2 (2026-08-30)
+In-Reply-To: <asjhg2e4-WSeKuXd@thinkpad>
 
-On Mon, Oct 05, 2026 at 06:09:25PM -0500, Alex Elder wrote:
-> Define a new platform driver that manages clocks implemented by the
-> Toshiba TC9564 SoC.  There are 21 clocks that can be enabled and
-> disabled.  Two of these are reserved, so only 19 can be managed.
+On Fri, Oct 09, 2026 at 04:22:03PM +0200, Harry Yoo wrote:
+> And now I see the initial kmem_buckets design did not sufficiently
+> tackle the question "How this should work when kmem_buckets falls back
+> to kmalloc?"
 > 
-> Two registers manage the state of the clocks.  The registers are
-> accessed via a regmap supplied by a system controller, because the
-> region of memory accessed is shared with other drivers.
-> 
-> Access to the memory region is provided via a BAR on a PCIe endpoint
-> function embedded in the TC9564 SoC.  For that reason the PCIe clock
-> cannot be manipulated by this driver (it is assumed to be enabled).
-> Similarly, control is not available for the I2C clock, because the
-> PCIe subsystem on the TC9564 relies on I2C.
-> 
-> Co-developed-by: Daniel Thompson <daniel@riscstar.com>
-> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
-> Signed-off-by: Alex Elder <elder@riscstar.com>
+> I suppose the kmem_buckets' abstraction should not be too tightly
+> coupled with kmalloc caches. Creating a kmem_buckets should be
+> conceptually equivalent to creating a set of caches with speicifc
+> slab flags, size, align, useroffset/size. (for variable size allocation).
 
-Reviewed-by: Brian Masney <masneyb@kernel.org>
+Just to clarify... I have a few concerns on this area.
 
+1. Complexity.
+
+It's very counter-intuitive to understand how it works when
+SLAB_BUCKETS is not compiled. My brain cannot easily process two
+different implementations w/ and w/o SLAB_BUCKETS.
+
+A "compatibility layer" allows us to assume certain expectations
+and ignore all implementation details when SLAB_BUCKETS is not compiled.
+
+2. Making kmem_buckets tightly coupled with kmalloc's implementation
+   details is not reasonable.
+
+Let's say, at some point we make SLAB_BUCKETS always enabled and drop
+the config option. Then all kmem_buckets users will now have certain
+assumptions inherted from kmalloc (e.g. alignment), which is not
+reasonable.
+
+3. __GFP_ACCOUNT and __GFP_DMA should be applied to all allocations
+in the slab cache. For kmalloc, these flags are only used to select
+the kmalloc cache (which has equivalent SLAB_* flags for __GFP_ACCOUNT
+or __GFP_DMA) to serve the allocation.
+
+Specifying it on individual allocations (rather than as SLAB_ flags)
+makes it easy to break the assumption.
+
+> When it falls back to kmalloc, kmem_buckets itself should provide a
+> compatibility layer when falling back to kmalloc.
+
+For example, calculate_sizes() converts certain SLAB_* flags into
+GFP flags (s->allocflags) for allocation. We can have a similar
+logic when falling back to kmalloc.
+
+Though current implementation does not allow this and requires
+some rework.
+
+-- 
+Cheers,
+Harry / Hyeonggon
