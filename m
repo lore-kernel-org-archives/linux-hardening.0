@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E3B36F8E5
-	for <linux-hardening@vger.kernel.org>; Sat, 10 Oct 2026 08:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379EA2D322E
+	for <linux-hardening@vger.kernel.org>; Sat, 10 Oct 2026 08:10:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791619481; cv=none; b=DhGFx6OzpCjcmcRvIaqsljJaFlne3p0h2UINTdmCJUa5VJysAGVVpqVt89zPxcJxByhEWE53wz8SbINWXiOuKEVcsjuJAyIjFscBF49PZg4YwEEt5Ei2bvhmau572ySrFrj/z6S6jfvdckmnfh4SUp5Rctpp3BziyMcHbOp1dhw=
+	t=1791619836; cv=none; b=Ob4EK2nkXMpufZkYUE2bNFnVDR+maFdUpFE/8BN0GZJVu/zM4FuwliOOEj61MfsvTq6J0nxkYeVw1mxdy67AbZ+lv0QF9dclLjM3pvqPJgTtHlcXOeWsUfi0puanTBxvzuE7zs7nZXN/tZuir65gux86gtZ3ugL2ykuRFeFdHf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791619481; c=relaxed/simple;
-	bh=187akcOhGh77YZm258qZcbsTaff3gX5UZOsoTa0V+qU=;
+	s=arc-20240116; t=1791619836; c=relaxed/simple;
+	bh=zxLLbIJJ0oKA9QCKqkWC9k1rBVCZTq6L58JmtVr3Nf0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HhvpT93+r2TuZ2KG3MpmL/M8Hag79lazXi9qhG/bu/bZkzSzQFVa6sy3oNyc4oYI29EShMenVsjK8cpFfcsmN4gS2vRQV3FE2HliXBR1FxIPgH1kMmx6avrj9IrtMBaeqLdqfPGcsnAFrQDimjORFLusVD9nMR8w7AD0rl0njic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M7aqHAUS; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=cF28uzynQ8hll8kc3ir8b4Vb4MAVozGcJwYzKavpq8BFAtEwk/sju7HTYj4hD1uJoBRdN21FQ3Jm6xRKYTWj6/NZYJd4zqMf/vQYp3y/HN+1S5NwVj9fGBhjuJowgFHSM0Dejhjb78YbBRS465ovjsbvpEtdQGWWYUNvEUSygMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWsWarhm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M7aqHAUS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 200631F000FF;
-	Sat, 10 Oct 2026 08:04:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWsWarhm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1FB11F00893;
+	Sat, 10 Oct 2026 08:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791619479;
-	bh=r5m70wsikJ7ga9aFiGn2QHDa/43Jc59QfQ+nUEEiW+k=;
+	s=k20260515; t=1791619834;
+	bh=zL/3JpWUyg77v/Pnpfuul7ttQ8qC/NcYgaX+KxroUqs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=M7aqHAUS0PoviqELKYpZUat/4iFkbCmAYkrHOhlffEpHMEeEUymjgdX2UbNxG6Bfn
-	 OBqDNIZt8aWgqoo3RHcrQW3hISKT7YBhWBOlBhab1LFTguLc8z9pci5NdF3TjEVGBR
-	 ZCs1nWUD1rUVnwibywDYVu07wZMDKOqqGBqEOXpg+yQVr+qBVGTC8D2vRBZ7qHnEeN
-	 9tjZaiRnBVcw0c/iy0+m8RQ3/Xr8n09l94V/9xN8IGh9jRlWKYSY69n7v8R9mlGg2B
-	 w/AfDdGGseqXCbLxHFV4AY31oRNNVaXyU3S95XiMPVihj8mo7+ZjrUoTqdYANdvxrr
-	 irGPeryqpZ6NQ==
-Date: Sat, 10 Oct 2026 01:04:38 -0700
+	b=eWsWarhmjOmAnAKN8ZfpssyP0aR2w7welrhH1h6uMGeQmd7h3lwxnSyLhlcY9Cn0o
+	 b2qXaq5RQG25h6jbUaXURPigHASlM1a7d06XGgU5l0uUnz2Za0GD6ELhvbhZc/QW8V
+	 bZo3ixKX/BWlqzU8fa1RsPBU+8quEu5gJTYiYJn0dbeBjz8tfPexJ6sTYX9Zg/3JOK
+	 sPon5RVFrTNw/Q9rRvDtUCAwOh3+t7DXy3RXwUCluSV22DzGA4kbDX1R0f3FT/O7dv
+	 D77RphyWGzJtdVrmbmEE/xJ69K/TgOPBrAe5W2uFoO5ZMe1PRNoRXgIfTFb/ay8RC6
+	 moIHWFPLm1pRg==
+Date: Sat, 10 Oct 2026 01:10:34 -0700
 From: Kees Cook <kees@kernel.org>
 To: Jeff Law <jeffrey.law@oss.qualcomm.com>
 Cc: Andrea Pinski <andrew.pinski@oss.qualcomm.com>,
@@ -55,12 +55,12 @@ Cc: Andrea Pinski <andrew.pinski@oss.qualcomm.com>,
 	Osterlund Sebastian <sebastian.osterlund@intel.com>,
 	Constable Scott D <scott.d.constable@intel.com>,
 	gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v17 7/7] riscv: Add RISC-V Kernel Control Flow Integrity
- implementation
-Message-ID: <20261010075835.446f27-kees@kernel.org>
+Subject: Re: [PATCH v17 2/7] kcfi: Add core Kernel Control Flow Integrity
+ infrastructure
+Message-ID: <20261010080449.fe2893-kees@kernel.org>
 References: <20261005154028.out.839-kees@kernel.org>
- <20261005154039.1464721-7-kees@kernel.org>
- <45190057-a50b-40f4-9502-e3001fcac67e@oss.qualcomm.com>
+ <20261005154039.1464721-2-kees@kernel.org>
+ <65c57069-0f3e-44e0-9562-8867548a7443@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,225 +70,178 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <45190057-a50b-40f4-9502-e3001fcac67e@oss.qualcomm.com>
+In-Reply-To: <65c57069-0f3e-44e0-9562-8867548a7443@oss.qualcomm.com>
 
-On Thu, Oct 08, 2026 at 10:39:50PM -0600, Jeff Law wrote:
-> Note that addiw explicitly sign extends the result from bit 32 out to
-> bit 63.   That seems to match what you want with the implementation
-> (since you do a lw do load the ID from the preamble and that's
-> sign-extending from bit 32 to bit 63.
+On Fri, Oct 09, 2026 at 07:35:29AM -0600, Jeff Law wrote:
+> > +#include "coretypes.h"
+> > +#include "rtl.h"
+> In general we try to avoid having .h files include other .h files.
+> Instead push these into the appropriate .cc files.  This make it easier
 
-Right, both sides of the beq are sign-extended the same way, so the
-comparison works for type IDs with bit 31 set.  I was suspicious of
-the sign extension myself and had double-checked it at the edges
-just to be sure when I first worked on this. :)
+Ah-ha, understood! I've fixed this for v18 now.
 
-> So what I can't recall ever seeing is an explanation of why this
-> sequence needs to be emitted as a single assembly block.  That's
-> something we generally try to avoid.  Now if that design decision/need
-> is covered in the talk from the Cauldron, that's fine.  I was
-> intercepted and couldn't get there in time, but I'll certainly make a
-> point to watch the whole thing.
+> > +extern void kcfi_emit_traps_section (FILE *file, rtx trap_label_sym,
+> > +				      int labelno);
+> > +
+> > +/* Extract KCFI type ID from current GIMPLE statement.  */
+> > +extern rtx internal_kcfi_get_type_id_for_expanding_gimple_call (void);
+> Pick one style.  You've got the parameter names in one prototype, but
+> not the other.  The general preference within GCC is without the name.
 
-You asked this back in v2, and my reply then[1] wasn't very helpful.
-Sorry about that!  Here's hopefully more complete reasoning; v18 will
-also put it in the design comment at the top of kcfi.cc, since you're
-right that it was only asserted there.
+I've fixed this for v18.  (I'm used to the opposite in Linux: everything
+has parameter names.)
 
-1. The checked target must stay in the checked register until the call.
-   If the register allocator spilled it after the check and reloaded it
-   (or rematerialized it) before the call, memory an attacker can write
-   would supply an unchecked target, effectively restoring the
-   "pop %target; call %target" gadget that KCFI seeks to remove.
-   Separate insns would give reload and the post-reload passes the
-   freedom to create it again, which needs to be avoided.
+> > +- The check-call instruction sequence must be treated as a single unit: it
+> > +  cannot be rearranged or split or optimized.  The pattern is that
+> > +  indirect calls, "call *%target", get converted into:
+[...]
+> So I sound like a broken record at this point.  I see the assertion that
+> it has to be an atomic unit, but nothing about why.
 
-2. The trap isn't noreturn. It is designed to be continuable: Linux
-   has a permissive (warn-only) mode where the trap handler reports the
-   mismatch and returns, and execution continues into the call right
-   after it. So the trap can't be gen_trap() with a barrier after it,
-   and the trap block must not be moved out of line by bb-reorder or
-   hot/cold partitioning, even though it looks cold.
+Yes, sorry, and I've answered this in detail now in my reply to 7/7. In
+short:
 
-3. The kernel depends on the exact layout. (This is, of course,
-   changeable, but it would require coordination with Linux and Clang.)
-   Specifically on RISC-V, Linux's trap handler (arch/riscv/kernel/cfi.c)
-   reads the beq just before the ebreak to find the register holding the
-   expected type, and the jalr just after it to find the target. On x86,
-   the kernel may rewrite every KCFI call site in place into the FineIBT
-   sequence at boot, patching a fixed number of bytes before the call.
+1. The checked target must stay in the checked register until the call:
+   a spill and reload in between would let attacker-writable memory
+   supply an unchecked target ("pop %target; call %target").
+2. The trap isn't noreturn: in the kernel's permissive mode, execution
+   continues from the trap into the call, so the trap block can't be
+   moved out of line.
+3. The kernel depends on the exact layout: its trap handlers decode the
+   instructions around the trap, and x86 may rewrite call sites in place
+   into FineIBT at boot.
 
-FWIW, Clang KCFI is built the same way: its RISC-V backend emits a
-KCFI_CHECK pseudo that must immediately precede the call through the
-same register (it asserts this), and expands it with specific scratch
-registers when the assembly is printed (RISCVAsmPrinter::LowerKCFI_CHECK).
+v18 will add all of this to the design comment, so the "why" lives next
+to the assertion.
 
-> And note that if it really needs to be an atomic sequence, there's still
-> ways to achieve that that avoid the blobs of assembly code.  See below.
-
-> Generally you don't want to be using types like uint32_t, uint64_t,
-> etc.  Those are properties of the host, not the target.   Given that
-> you're using "lw" and a sign extending "addiw", you probably want this
-> to be a HOST_WIDE_INT (vs an unsigned HOST_WIDE_INT).  It probably
-
-Ah, yes. This is now fixed in v18: RISC-V will hold it as a HOST_WIDE_INT,
-sign-extended from bit 31 to match the lw and addiw, and the other three
-backends will hold it as an unsigned HOST_WIDE_INT. The generated code
-doesn't change.
-
-I went through the rest of the series for the same problem. The type ID
-itself will stay a uint32_t: the ABI defines it as a 32-bit FNV-1a hash,
-computed on the host, so that's the arithmetic it needs. Now
-__builtin_linux_abi_kcfi_hash will return a 32-bit unsigned type even
-where int is 16 bits, and the type ID's size in the preamble will be a
-named constant instead of sizeof (uint32_t).
-
-> Why use fixed registers?   It would seem to work better if you just
-> generated pseudos and let the register allocator do the right thing and
-> assign them to whatever temporary is best.  That would also remove the
-> restrictions around -ffixed-reg.
-
-I'd love to, but the KCFI check is part of/within the call insn and LRA
-allows no output reloads in a CALL_INSN:
-
-	/* CALL_INSNs are not allowed to have any output reloads.  */
-	if (CALL_P (curr_insn))
-	  no_output_reloads_p = true;
-
-So under register pressure the allocator can't provide a scratch register
-for the call pattern, so I had to have each backend instead pick scratch
-registers that are dead at the call (caller-saved temporaries that aren't
-argument registers or the target). I went through this with Andrea for
-AArch64[2][3]. Moving the check out into separate insns, so that pseudos
-would work, runs into point 1 above.
-
-And trying to create an entirely new mode of register allocation for
-use within a CALL_INSN seemed like serious over-kill, given the other
-narrow constraints on KCFI.
-
-The -ffixed-reg restriction could go, though: Clang uses t1 and t2 and
-falls back to t3 through t6, skipping any the user reserved, so it never
-has to reject fixed registers.  I could do the same here, but I had so
-much pain making the ARM backend do this that I didn't want to tackle
-it again. :P  But I can if you'd like to see that here too.
-
-> Why does this need to be an atomic sequence with restrictions around
-> relaxing and compression avoidance?  From other comments I'm guessing
-> you're rewriting that ebreak.  At the least you need to explain why its
-> an atomic sequence.
-
-The atomicity is for the reasons above; the kernel doesn't rewrite the
-ebreak on RISC-V (x86 is where call sites get rewritten).
-
-The directives came from your v12 review[4], where you said that if the
-sequence really must be atomic, it should be wrapped in directives so
-the assembler and linker don't expand macros or relax. However, in
-looking at it more closely now, neither can affect this sequence:
-
-- Nothing in it can be relaxed: the lw is register-relative, the lui and
-  addiw take plain constants with no relocations, the beq goes to a
-  local label, and the jalr is through a register. The linker only
-  relaxes symbol-based sequences marked R_RISCV_RELAX.
-
-- None of the instructions is an assembler macro.
-
-- Compression is harmless: the assembler may use c.lui, c.addiw, c.jalr,
-  or c.ebreak, but the beq can never be compressed (t1 and t2 aren't in
-  the compressed register set, and c.beqz only compares against zero),
-  and the kernel's decoder reads the beq at epc - 4, accepts jalr or
-  c.jalr, and steps over the ebreak by its actual length.
-
-So v18 will drop ".option norelax" and ".option norvc", which also lets
-the sequence shrink with C, and matches Clang, which has none of these
-directives either.
-
-> So if we really don't need to generate an atomic sequence, then you've
-> got the skeleton for generating RTL here.  You've got the register
-
-> This is a "trap" insn.  So
+> > +  kcfi_nop = xstrdup (get_insn_template (code_num, nop_insn));
+> > +  int nop_insn_bytes = get_attr_length (nop_insn);
+> Note that some ports do not track insn lengths, so you'll consistently
+> get back 0 on those.   I would probably recommend asserting the size is
+> nonzero so that if you try to use this on a target without lengths
+> you'll get a compile-time error rather than a runtime surprise.
 >
-> emit_insn (gen_trap ()); or something along those lines.
+> Also note that length computations are not guaranteed to be correct;
+> they are guaranteed to conservatively correct for things like
+> jump/branch relaxing to work.  So in that context conservatively correct
+> means the reported size is no smaller than the actual size.
+>
+> So you need to make sure you're safe if the port reports back a longer
+> size than what gets encoded into the final object.
 
-As in point 2, it can't be a trap with the usual noreturn semantics,
-since execution continues from it into the call in permissive mode.
+Yup, I was able to trigger this mismatch with RISC-V's C extension
+where I get a length of 4, but the assembler emits c.nop (2 bytes),
+so with prefix NOPs the call sites loaded the type ID from the wrong
+offset. (The kernel doesn't use prefix NOPs with KCFI on RISC-V, which
+is why I never hit this.)  v18 will add a TARGET_KCFI_NOP_SIZE hook for
+the size the assembler actually emits; RISC-V will return 2 with C or
+Zca, as Clang does. Without the hook, KCFI will fall back to the length
+attribute and assert that it's nonzero.
 
-> So do you do something fun like rewrite the trap?  Is that why you're
-> generating the atomic sequence?  ANd if so, we can still get you an
-> atomic sequence without emitting blobs of assembly code via emit_barrier
-> () at the start and end of the atomic sequence.
+> > +  if (align_functions.levels[0].log <= 0)
+> > +    return;
+> So what happens if the port does not align functions to a useful boundary?
 
-Marker insns at the start and end would keep the scheduler from moving
-things across them, but they wouldn't stop reload from inserting spill
-code between the check and the call (point 1), and the beq would split
-the sequence into basic blocks that bb-reorder and partitioning are free
-to rearrange (point 2). If there's a way to pin all of that down, I'm
-happy to try it, but it seemed to fight the compiler at every step,
-while emitting the sequence from the call pattern's output routine
-appears to be the simplest and most robust way to get the right output.
-(And, FWIW, Clang ended up in the same place too.)
+That padding is only used in Linux for x86's FineIBT live-patching,
+which needs the __cfi_ label itself to be callable, so the kernel asks
+for it with -falign-functions. But since this padding is supported by
+the core KCFI code, it needs to work on all backends.  On RISC-V with
+C, and on Thumb at -Os, the type ID could end up only 2-byte aligned,
+making the load misaligned. Clang aligns every function that has a KCFI
+type ID to at least 4 bytes, on all targets; v18 will do the same now.
 
-> We probably need to avoid for C++ due to thunks and Fortran due to
-> multiple entry points.  And you may not have a good way to test for
-> those, particularly in an LTO build.  We need to think about that
+> > +  /* Ignore cold partition sections: cold partitions are never indirect call
+> > +     targets.  Only skip preambles for cold partitions (has_bb_partition = true)
+> > +     not for entire cold-attributed functions (has_bb_partition = false).  */
+> > +  if (in_cold_section_p && crtl && crtl->has_bb_partition)
+> > +    return;
+> Is that an design decision in the partitioning code or is it an
+> implementation detail.  If it's the former, than I'm inclined to allow
+> relying on it.  If it's the latter, then it seems we're just setting up
+> a ticking time bomb.  It could well be either, I don't know off the top
+> of my head.
 
-KCFI is C-only: process_options() rejects -fsanitize=kcfi for any other
-front end. And while I tried to enforce this under LTO too, I did now
-find a way that it fails. The check for language accepted LTO's
-"GNU GIMPLE", but that meant a C++ object built with -flto and linked
-with -fsanitize=kcfi would crash on a METHOD_TYPE. v18 will check the
-language of every translation unit the IL came from
-(TRANSLATION_UNIT_LANGUAGE survives streaming), and reject anything that
-isn't C, reporting the offending file:
+It's a design property of partitioning: the cold part of a function is
+never called, only jumped to from its parent. A function's address is
+always its hot entry, so there's no valid entry point into the middle
+of a function, and we don't want KCFI to create one.
 
-  thunk.cc:3:49: sorry, unimplemented: '-fsanitize=kcfi' is only supported for C, but 'thunk.cc' was compiled by the GNU C++20 front end
+bb-reorder enforces this: sanitize_hot_paths() walks up from every hot
+block to the entry and moves that path into the hot partition, so when a
+function is split, its entry block is always hot.
 
-I tested this by hand (and that C-only LTO links are still instrumented),
-but I couldn't find a way to add a regression test for it: the case needs
--fsanitize=kcfi at link time only, which means lto.exp, and lto.exp has
-no way to expect a link to fail; any failed link is a FAIL. If there's
-a way to do this that I've missed, I'd be happy to add one.
+And x86 IBT already depends on the same property. The ENDBR inserter
+(rest_of_insert_endbr_and_patchable_area() in i386-features.cc) only
+puts an ENDBR at the head of the function's first block, never at the
+start of the cold partition. An indirect branch into a cold partition
+would fault under IBT just as it would fail a KCFI check. For example,
+with -O2 -fcf-protection=full -fsanitize=kcfi:
 
-> Really?  Natural instruction alignment for the designs I expect to see
-> almost everywhere is 16 bits (via the C extension which is mandatory for
-> rva23 and used in nearly design I'm aware of).  So you've got a bit of a
-> problem here as unaligned access isn't necessary guaranteed to work.
-> You could do something like force the function alignment to 4 bytes when
-> KFCI is on.  A bit hackish, but probably sensible in practice.
+	__cfi_work:
+		...
+		movl	$0xb8360626, %eax
+	work:
+		endbr64
+		testl	%edi, %edi
+		js	.L4
+		...
+		.section	.text.unlikely
+	work.cold:
+	.L4:
+		subq	$24, %rsp
 
-Oops, yes, thank you for persisting on this. :P  You mentioned it in v12
-too, but I misunderstood it: ".option norvc" around the call sequence
-did nothing for the alignment of the functions it calls. With the C
-extension the preamble was only 2-byte aligned, so the lw could be
-misaligned (and so could the ldr on Thumb at -Os). Clang aligns every
-function that has a KCFI type ID to at least 4 bytes, on all targets,
-"to avoid unaligned access". v18 will do the same, and fix that paragraph
-of the documentation.
+work gets both the ENDBR and the KCFI preamble; work.cold gets neither,
+and is reached only by the direct "js .L4".
 
-> Is the offset always at -4?  Just helps me understand the underlying
-> assumptions you need to make.
+> I'm assuming that things like devirtualizing a call into a direct call
+> are safe, including the speculative forms.
 
-It's -4 plus the size of any prefix NOPs from
--fpatchable-function-entry=N,M, since the type ID sits before them.
-(Call sites can't see per-function patchable_function_entry attributes,
-so KCFI rejects those and uses only the global option.)
+Yes. A call that becomes direct needs no check, since its target is
+immutable. A speculative call keeps the original indirect call as the
+fallback, and that is still an indirect call with its function type, so
+it gets checked. KCFI is C-only, so in practice the speculative form
+comes from indirect call profiling; v18 will add a tree-prof test
+(gcc.dg/tree-prof/kcfi-speculative-call.c) that checks the fallback
+keeps its KCFI check and that the profiled program runs without
+trapping.
 
-But checking this turned up the bug you were predicting about NOP sizing
-in your 2/7 review. I had sized each prefix NOP from the nop insn's length
-attribute (4 bytes), but with the C extension the assembler emits c.nop
-(2 bytes), so with prefix NOPs the call sites loaded from the wrong
-offset. As you pointed out, lengths are only upper bounds. v18 will add
-a TARGET_KCFI_NOP_SIZE hook for the size the assembler actually emits;
-RISC-V will return 2 with C or Zca, matching Clang.  More on this in
-the 2/7 reply...
+> Given we can pretty easily describe the generic call setup in RTL, how
+> painful would it be to instead do the instrumentation in a generic way
+> rather than twiddling each backend?
+>
+> In that kind of design we'd force the target to provide the two marker
+> insns which mark the beginning and end of the atomic region. Target
+> independent code would be used to load the typeid hash from the preamble
+> (using the offset the target provides), compare it to the expected type
+> id, branch around a trap-like insn, the trap-like insn itself, then
+> finally the call.  I'm not demanding this rethink, but I do want it to
+> be at least considered as a design question.
 
-Thank you for the review! :)
+I did consider it, and tried something like it around v2. Two things
+stopped me:
+
+- The marker insns don't make the region atomic in the ways that matter
+  (spill code between the check and the call, and the trap block being
+  moved), as above.
+
+- Each target's call setup is more than the generic call: the call
+  expanders handle calling conventions, sibcalls, PLT and long-call
+  forms, BTI and SLS mitigations, and more. KCFI wraps the call pattern
+  each target already produces, so all of that keeps working, and the
+  per-target part is only the check sequence itself (and the kernel's
+  trap handlers decode a different sequence on each architecture
+  anyway). I described this to Andrea around v5[1].
+
+Clang made the same choice: generic code marks the indirect calls, and
+each target expands its own check sequence just before the call.
+
+Thanks for looking at all this; hopefully I've covered everything.
+Let me know if I need to dig in further anywhere or if I've misunderstood
+anything. :)
 
 -Kees
 
-[1] https://inbox.sourceware.org/gcc-patches/202509152254.8A38F96D91@keescook/
-[2] https://inbox.sourceware.org/gcc-patches/202509141233.33B8C6D4@keescook/
-[3] https://inbox.sourceware.org/gcc-patches/202509171251.BA32F4B@keescook/
-[4] https://inbox.sourceware.org/gcc-patches/6ab27ac0-619b-4960-b37c-e83389d75760@qti.qualcomm.com/
+[1] https://inbox.sourceware.org/gcc-patches/202510221253.D6B51F950@keescook/
 
 -- 
 Kees Cook
