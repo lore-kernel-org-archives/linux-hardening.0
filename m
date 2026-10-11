@@ -1,94 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6AB1CAA92;
-	Sun, 11 Oct 2026 00:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BC4361979
+	for <linux-hardening@vger.kernel.org>; Sun, 11 Oct 2026 02:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791678289; cv=none; b=AlVt5/D8KD8cUN0Xll8X8q7JLuN7ULOF1s03DexcL1DclMsPoiJTji+1M7rbz38kkS+Ucu/cfXea4UJUnppJTzuA5oUUgLGF8nYzappm3LCKqqcBJe7AiFdiZXp1UetFdLriE/6DLefBVEiZ+s6wFTkephXUKLs4hXrEjnWAwMc=
+	t=1791687479; cv=none; b=iU58e1NGMc/ouOCC1Xt/4P9OnelamgUoWIWoGSaFXtBNt+0nSkRQLNqqKla/ywj5jRiC5kKv7BeU3fzMAtB0jg5fA/RJP/M1QKkUneQWOLKAZ6ij0jTxBM089UmEUH/5ecgM9G2U7rq8xKeB6V9P4G/QSH2Z6Sp/Y4pEMibqEfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791678289; c=relaxed/simple;
-	bh=syi0bAhqvABDWP+FafbxLBjPxPKYtPxFATgZud5/4io=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=T2RXo1ArUSUP5lwwXeyHhQik8W5Rq2s512n5ZlOVYSvl4HEuSL5Z1jjhhEM8dcgECbZZ5L6h3eeVTEY8vLNY+miFFFGdLtJ9god+kqh+nywRpHL8ZexhXGa297xfcM0ce1OILGD5aTDYLFPzcfqAwrFpcz+77vit96ukyYxpt8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJWmucUj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791687479; c=relaxed/simple;
+	bh=sghXvtTDPEzJRg8/9muWYo5VMD1FxRyf/W4rKI9KsFU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Xu5wIJyq3QQqcuC0rGzYofOUulSYB1Grq5/KZhlwsuBUgkXa3c2fzykQIMzFPt5ee1PG4mEycw++WvTDDvRHoLvJApHW/ocYiufewTraKvvBmbvM+hL8nEEnyAUNifRuRH94t6qz3ZRNntZucXES08/5L1/MXOoUn6qJfFemw1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sSPY+QRy; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJWmucUj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82BA01F000FF;
-	Sun, 11 Oct 2026 00:24:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791678287;
-	bh=v0LaWk3Eew88CFjY3PFqludp5IAoHra+8emdKdZ65iY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=HJWmucUj7UWd+kKs1fxxhu4RR2SbS8ojS0sPVsFx7Hsrq6yXRhDSXxlBiLAo+G4ZX
-	 +V7ENtx1eRxaquaJszMhmOG93Z9EIyWWp6/EiDLJVtXmz+rxkCik6wkgVV1D1NxHEs
-	 NWxLRrkuGI2Hpe7mcJw0qeZCTyEOYGnrKU855XB8P3AB0jls8SU95pcMYF4HMOKKp/
-	 ObMss35cPUw2YwoVAH4rOHebC8ozV94ADbu6jH3qa2KBw3VZj2F3R0ZqE8P248Obex
-	 p9HT1bhhbb9POxp6IuEC901s5vQ276ka9ntqaf4ywiiU09uHKzKZYBNMVS5rSMwq0/
-	 xCm1TcCQfC3hQ==
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Nicolas Schier <nsc@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
- Manuel Ebner <manuelebnerli@mailbox.org>, Ard Biesheuvel <ardb@kernel.org>, 
- "Paul E . McKenney" <paulmck@kernel.org>, 
- Nicolas Schier <n.schier@fritz.com>, 
- Sami Tolvanen <samitolvanen@google.com>, linux-kbuild@vger.kernel.org, 
- llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20261010081910.stay.092-kees@kernel.org>
-References: <20261010081910.stay.092-kees@kernel.org>
-Subject: Re: [PATCH v2 0/2] kbuild: Give jobserver-exec recipes the
- jobserver
-Message-Id: <179167827085.3510825.11265184087970988253.b4-ty@b4>
-Date: Sun, 11 Oct 2026 01:24:30 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sSPY+QRy"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2e8b20a899fso167125ad.1
+        for <linux-hardening@vger.kernel.org>; Sat, 10 Oct 2026 19:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791687474; x=1792292274; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=sghXvtTDPEzJRg8/9muWYo5VMD1FxRyf/W4rKI9KsFU=;
+        b=sSPY+QRyw9X5FH5owUepnjoeDJ6iXs7R+esYpOFqh6F1/Pg/1vUYI1qd016sQPIE34
+         hyRGpsikP+okyiinphx3LoXI81xyy/HyjooNgrejdF5vT2LdrZyB+kuIXNtRJPrTEHJd
+         cW21tHox37a1IZDfeKDuIvizOcvq1vWF2VXEnstFQc1ZUfx+NhGQLNL+EzhEkWH/3+gy
+         uX3iVRgbrvWgudfgDkM9PpARwY+xX05W42fJApNAJ0Jlf6vLJopeX+5DmmpRNsgF7klz
+         fScTjsibmPbsZ8zqcQUv9SN2lOWJvrBwnqvpb2ucBLwBp21+1OnisWObLhnY3GGqMSEV
+         fDuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791687474; x=1792292274;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sghXvtTDPEzJRg8/9muWYo5VMD1FxRyf/W4rKI9KsFU=;
+        b=cHg1n6iEoQnhSSWKiwSORVUrLqAvSqCrBsx9LlidEicbe6xsuRwgUroPIkJfVw6G7e
+         NYE8+fyJXCl3VVJ1t/cyfN5bAWzk7Vt5vdT34WDgnN88nzxakwGXC/obRWvwnBnZaHeO
+         4WiyftY44iqf74bY1PMg66Rxfx/UyXQ3IFhJSwnSu2jZSIAWQvt+6mXYHOP9ZaASe8PE
+         uaxs/tJG+xiaeiT1Xx2uEU67/sMj/eZWPeelyKT8OjQhQObTnkTyOWsCHp5NLBFvawtb
+         Bieg3u4l0XV/Egk509vAj31uC7+1iB+AWEFIrnofxL2xJBHoYq4Q/g0hqhCvOtOuf3G4
+         Cl2A==
+X-Forwarded-Encrypted: i=1; AKwUvBw6kkLLoRkOojsgNoxoL2/K+rux2tdcuRTJFb6FSsNUdZt3v27WvUykCjyz4zYnQmllsRPaDHvaIhx7+PXuJqc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYK2zzKRTNWuwBngscKY8qxk1/s2XiXWLebZoDG5QXO9Dc1Nmjlo
+	VYn6gFoo66pm7051tWWpt/gQ/q8tF02w2gfXYe5Ier5WdlvWOmh7lXrRc0Bz+PZ5
+X-Gm-Gg: AYBFou2D66dneoB6xXEiWwCA5N+qx1qWdZKP3Lic55zpVRAFVlJVfhmL7+Voy41dsOp
+	4fI8Kp3tEMUeP1FLHs/YDAknt4ktZaCuoQS2DxZADGftOimhIjo9skVeYSzDNZgWDPvpmuSaOCX
+	CcWcmS+h998evaSQMF4YrsL/363YdZw3A6hChxhRg5TE6feVg1npRvlPJ4fmv9k83WhzBP6ZIZq
+	B9QstpGQCObpD4h82HtB/MZTOzCKh5EsKGy9RR0Lp35y+jKQRTvbdS7PWJb/GmQyi7VUOOAa5S2
+	e3qvCdBg21FAah5boDHl15tNxqHF9LMfeHeyDr/pBH+zH3Vld4MEO2q7RxN7SiuW1E56T3mWeYR
+	VUlJmrqSbyPmcEdRMaeeCOdN0FXFQiCmKaQD1x2g+Z++q+uzqit69AQzhQfo9rQm1K0ngKv3t/7
+	hAKyBxzXLuxaUMbESq1wcobZjsqGNkZbre0tuxVH8DsXiYaUS+hE6O8P+ubu523Uy8Ry989Cmrm
+	LvEkSpFOQl3
+X-Received: by 2002:a17:90b:4fcd:b0:3a8:6b84:234e with SMTP id 98e67ed59e1d1-3ab3a7467a1mr4832096a91.28.1791687474219;
+        Sat, 10 Oct 2026 19:57:54 -0700 (PDT)
+Received: from thangnn-ASUS.. ([2a09:bac5:d45a:16c8::245:79])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ab39392e9bsm6403592a91.2.2026.10.10.19.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Oct 2026 19:57:53 -0700 (PDT)
+From: Nguyen Ngoc Thang <ngocthang2710.1999@gmail.com>
+To: Nathan Chancellor <nathan@kernel.org>,
+	Alejandro Colomar <alx+linux-hardening@kernel.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Tingmao Wang <m@maowtm.org>,
+	linux-security-module@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev,
+	syzbot+a0eecb22de4d821a9e5d@syzkaller.appspotmail.com
+Subject: Re: [PATCH] landlock: Drop __counted_by from landlock_domain.layers
+Date: Sun, 11 Oct 2026 09:57:48 +0700
+Message-ID: <20261011025748.8853-1-ngocthang2710.1999@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261010184640.GA40038@ax162>
+References: <20261010184640.GA40038@ax162>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=984; i=nathan@kernel.org;
- h=from:subject:message-id; bh=syi0bAhqvABDWP+FafbxLBjPxPKYtPxFATgZud5/4io=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDFmnrnuIss6a9frGo/XMW3zahM7UHa7X+S4W0uMRGJn0J
- 0QjwFWjo5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAEzkRgTDP43Lp65Mdja4XDvB
- 63Dz4zkTt2S5dS+e2Ve/T15YOfqP5ApGhr7Uj8G3yh+bnWcI2t5y9dxNn50shre2tDl3HHCZY5R
- RxQEA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Transfer-Encoding: 8bit
 
-On Sat, 10 Oct 2026 01:19:09 -0700, Kees Cook wrote:
-> kbuild: Give jobserver-exec recipes the jobserver
-> 
-> Hi!
-> 
-> Paul reported a build failure on CentOS Stream 9 with linux-next[1]: the
-> kernel builds, but scripts/jobserver-exec prints
-> 
-> [...]
+Hi Nathan, Alex,
 
-Applied to
+Thanks for the pointers. I wasn't aware of the earlier thread, so please
+disregard my patch in favor of the one from Qualcomm and the Clang
+version gating of __counted_by.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/kbuild/linux.git kbuild-next-speedups
+To answer Alex's question: I only tested with Clang 22.1.8 (Debian
+22.1.8-1~deb13u4, same as the syzbot build). I did not try Clang 23 or
+later, so I can't say whether it is fixed there.
 
-Thanks!
-
-[1/2] kbuild: Mark the gzip recipes as recursive
-      https://git.kernel.org/kbuild/c/0d4d70da348b0
-[2/2] kbuild: Mark the initcall ordering recipe as recursive
-      https://git.kernel.org/kbuild/c/ae5f6044c4cdf
-
-Please look out for regression or issue reports or other follow up
-comments, as they may result in the patch/series getting dropped or
-reverted. Patches applied to an "unstable" branch are accepted pending
-wider testing in -next and any post-commit review; they will generally
-be moved to the main branch in a week if no issues are found.
-
-Best regards,
--- 
-Cheers,
-Nathan
-
-
+Thanks,
+Nguyen
