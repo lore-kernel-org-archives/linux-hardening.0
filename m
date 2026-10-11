@@ -1,135 +1,199 @@
-Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [83.166.143.169])
+Received: from mail-244106.protonmail.ch (mail-244106.protonmail.ch [109.224.244.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E3E22FF22
-	for <linux-hardening@vger.kernel.org>; Sun, 11 Oct 2026 16:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA07D34EF0C;
+	Sun, 11 Oct 2026 17:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791736519; cv=none; b=GLXUophbvyODxFdtJ5RWzbU2wJwOqkuFXXeN6qO3dMqAOeTx1o2CWY37LpyuEDyECU8qh2ll8pIxQakZZoqMtuznvIU4CaH2f7PQFQ19SPtskRcb3WTLlDI/U7R72DkJXjrCpDU6dZnaNOKLU/bW9dSPL9kkzhDikRD8cx/xKRs=
+	t=1791739803; cv=none; b=Hn23Z6p8Tnl6dK6dlOCIAbf9BsKcwrmet+oExsm0jjkcyrkK+iWLzw6Z7Ns+HFH4HHjzgDBJegfGo1/0o/fRBkJpuJ0qp5dES0wZUpj541Ej03utH53glelFVoVx5aGSPvWNSGMMUz3lfJCILEF5WX0iMvylv7zXjUe15ZCybZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791736519; c=relaxed/simple;
-	bh=ovEY0YmXMmK0ezy3YpGqWNnkix1ueucSA1nQVcwLbuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EBCWF8aBGIL9lHPSy2HXeFDR/jWgH/Uwpq51M6ICdNyb2QW7Cjiyd+TMYGjw96opKXJPPcAKV2W2b0znEhAaVeJ2W5aGycubaa7Q4fgi9FBncKK/fUIegBtLkEvTtU28dttV70lTypki4m7kclxkKi0eNgibegN5+1o+lcZ24Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=yBSScj47; arc=none smtp.client-ip=83.166.143.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1791739803; c=relaxed/simple;
+	bh=ip6YK30AyGnoVEqkQGkufJxt3BIpnmO9Rlu8xdx1PAs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hIbU9RHoQ5pd5KbeS9W9A3PLe/5FmZWYgGKWERK8uDCz1OK+K78N4SL8MZQO017GjdFGttBMDDhD3X92xV+fZJIOfszTzLXb4IJvjwGwzwGM64QP1hFPL50xJ6TBNxb2cali4Vmp7ouNbtnKalofqHDodpbn4++nvtq4ZYdt4nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=tdLQDQEB; arc=none smtp.client-ip=109.224.244.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="yBSScj47"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4j2m1k4f2Lz1Kl;
-	Sun, 11 Oct 2026 18:16:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1791735386;
-	bh=Q622uaE3XGXd2K8FnZQXv/3KqlO3Eh6HjZtQu239NBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yBSScj47hnFs3bArTJvHbI3mzMZEMI6w7VVhXo/Jo2TQ3g6gpPDm5Qxmqe7oEj8dq
-	 /kTyp8l4g49a3JYSUgM96tkUkjFv8lMouUj8EoHJc6PDOsmQ416ZnnZx2XOTpTjjW4
-	 5SRXCo9MpgKpxPUd1SCYsyDnlg4F8uReIw94ThUs=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4j2m1j616bzt86;
-	Sun, 11 Oct 2026 18:16:25 +0200 (CEST)
-Date: Sun, 11 Oct 2026 18:16:25 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack3000@gmail.com>
-Cc: Nguyen Ngoc Thang <ngocthang2710.1999@gmail.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Tingmao Wang <m@maowtm.org>, 
-	linux-security-module@vger.kernel.org, Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, syzbot+a0eecb22de4d821a9e5d@syzkaller.appspotmail.com
-Subject: Re: [PATCH] landlock: Drop __counted_by from landlock_domain.layers
-Message-ID: <20261011.queif1Ohf1Uf@digikod.net>
-References: <6ac91e98.bbc4c7f9.15faa7.0023.GAE@google.com>
- <20261010164450.194439-1-ngocthang2710.1999@gmail.com>
- <20261011.c1055cd53b32@gnoack.org>
- <20261011.oe8teu2LahTh@digikod.net>
+	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="tdLQDQEB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
+	s=protonmail3; t=1791739798; x=1791998998;
+	bh=9cUtiNpw0w3qfgB1GP1HhsDq2TLFEBW2lfjHlYEyc0g=;
+	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=tdLQDQEBDY3kCQKIMEJJpbyiX3UiX0d6HvmpCgMz2P4tsokTs/mXqIUWYHQOKEmE6
+	 /ECDZOF1Q5UeQ9R1oFp8zVnv9HbkBLiBe05O984Wc+AnartfxqTrz8Xbfnl2uPTJtI
+	 6Et5LwN3UVb9KhHKAnY1RWlWfE7yn5jakW4wZWJsEa7ew+Z8ydVP2KPsqi7OvtRiU5
+	 OTYLSvw3qFRUZITa8gP51e1WOV1N6odHRNwpjdGbAr1M4u5R01fQRzYRzF7t3gH9SE
+	 RbZiKLSfq9YHayJ33XJPUVSjHVzmSpkNcHl8a2kN/kHOQ9CHhooZcLXNQu35QSib/z
+	 ucwr2Qkx9uGVA==
+X-Pm-Submission-Id: 4j2nfV0PR8z1DF4p
+From: Aleksandrs Vinarskis <alex@vinarskis.com>
+Date: Sun, 11 Oct 2026 19:29:28 +0200
+Subject: [PATCH v5 1/3] dt-bindings: platform: introduce EC for Dell XPS 13
+ 9345
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20261011.oe8teu2LahTh@digikod.net>
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261011-dell-xps-9345-ec-v5-1-2ab1258b84c1@vinarskis.com>
+References: <20261011-dell-xps-9345-ec-v5-0-2ab1258b84c1@vinarskis.com>
+In-Reply-To: <20261011-dell-xps-9345-ec-v5-0-2ab1258b84c1@vinarskis.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Abel Vesa <abelvesa@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ Abel Vesa <abel.vesa@oss.qualcomm.com>, 
+ Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Stephan Gerhold <stephan.gerhold@linaro.org>, 
+ linux-hardening@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4564; i=alex@vinarskis.com;
+ h=from:subject:message-id; bh=ip6YK30AyGnoVEqkQGkufJxt3BIpnmO9Rlu8xdx1PAs=;
+ b=owGbwMvMwCX2dl3hIv4AZgHG02pJDFmnj/d+zNx8s6fi8K5+jVXa6jLT0yWEzcwjcrrfeOoV/
+ DRi2PWmo5SFQYyLQVZMkaX7z9e0rkVz1zJc1/gGM4eVCWQIAxenAExkoj4jw/8FHztbTu1ylBc6
+ Ve/7UnAqn2qIUr/6jvsrSpk/Po6KW8DIcGayTbjgiSdpu6I3pe/ozwgz9hUvF6y1TEo6W8P3OD+
+ YCwA=
+X-Developer-Key: i=alex@vinarskis.com; a=openpgp;
+ fpr=8E21FAE2D2967BB123303E8C684FD4BA28133815
 
-On Sun, Oct 11, 2026 at 04:32:05PM +0200, Mickaël Salaün wrote:
-> On Sun, Oct 11, 2026 at 03:11:12PM +0200, Günther Noack wrote:
-> > On Sat, Oct 10, 2026 at 11:44:49PM +0700, Nguyen Ngoc Thang wrote:
-> > > With clang 22 and CONFIG_FORTIFY_SOURCE, the second
-> > > landlock_restrict_self() call hits a bogus fortify report in
-> > > inherit_ruleset():
-> > > 
-> > >   memcpy: detected buffer overflow: 16 byte read of buffer size 0
-> > >   Call Trace:
-> > >    __fortify_panic
-> > >    landlock_merge_ruleset+0xc46/0xc90
-> > >    __se_sys_landlock_restrict_self+0x2bc/0xd40
-> > > 
-> > > layers[] lives in an anonymous struct inside the anonymous union
-> > > that overlays work_free.  For such a flexible array, clang computes the
-> > > address of the __counted_by counter as the start of the array instead of
-> > > &num_layers.  The bound is then read from layers[0], i.e. from
-> > > the first layer's configuration, which is not a count.  The same layout
-> > > crashes clang itself in a standalone test.
-> > > 
-> > > The annotation was added as documentation, so drop it rather than
-> > > restructure the union.  Keep the information in the member comment.
-> > > 
-> > > Reported-by: syzbot+a0eecb22de4d821a9e5d@syzkaller.appspotmail.com
-> > > Closes: https://syzkaller.appspot.com/bug?extid=a0eecb22de4d821a9e5d
-> > > Fixes: bd3a19800dd1 ("landlock: Add counted_by in landlock_domain")
-> > > Signed-off-by: Nguyen Ngoc Thang <ngocthang2710.1999@gmail.com>
-> 
-> Thanks for the patch.
-> 
-> > > ---
-> > > Reproduced with clang 22.1.8 and FORTIFY_SOURCE on mic/next (64b9e6eff524):
-> > > the second landlock_restrict_self() hits the report, while 16 nested
-> > > restricts run clean with this patch.  Mickaël, if you prefer to just drop
-> > > bd3a19800dd1 from next, that works as well.
-> > >  security/landlock/domain.h | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/security/landlock/domain.h b/security/landlock/domain.h
-> > > index 60e8eb2d6ac2..4bf1555a4349 100644
-> > > --- a/security/landlock/domain.h
-> > > +++ b/security/landlock/domain.h
-> > > @@ -246,8 +246,12 @@ struct landlock_domain {
-> > >  			 * properly handle merged rulesets without overlapping
-> > >  			 * access rights.  These layers are set once and never
-> > >  			 * changed for the lifetime of the domain.
-> > > +			 *
-> > > +			 * Not annotated with __counted_by(@num_layers): clang
-> > > +			 * miscomputes the counter address for a FAM nested in an
-> > > +			 * anonymous struct within a union, which trips FORTIFY.
-> > >  			 */
-> > > -			struct layer_config layers[] __counted_by(num_layers);
-> > > +			struct layer_config layers[];
-> > >  		};
-> > >  	};
-> > >  };
-> > > -- 
-> > > 2.43.0
-> > > 
-> > 
-> > Reviewed-by: Günther Noack <gnoack3000@gmail.com>
-> > 
-> > I agree - it seems better to drop the __counted_by rather than
-> > restructuring the entire struct for that.
-> > 
-> > Thanks also for adding a comment about it.  The __counted_by() has
-> > only been added very recently in September, in commit bd3a19800dd1
-> > ("landlock: Add counted_by in landlock_domain").  Better to have a
-> > note about it so that we don't accidentally add it back. :)
-> 
-> Actually, I independently wrote a quite similar patch (while traveling),
-> but it applies to v7.3-rc5 instead of mic/next.  I removed the patch
-> series that I applied on mic/next because it conflicts with my patch and
-> I need to send a new version anyway.  If you don't mind, I'll keep
-> Günther's Reviewed-by tag and credit other contributors in my patch.
-> I'll propose it for v7.3-rc7 (today) because it is trivial and will help
-> new patches on top of that.
+Add bindings for Embedded Controller (EC) in Dell XPS 13 9345 (platform
+codename 'tributo'). It may be partially or fully compatible with EC
+found in Snapdragon-based Dell Latitude, Inspiron ('thena').
 
-Here is my rebase:
-https://git.kernel.org/mic/c/3d8cc52db2f86b624308321c58513019f6b21eec
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
+---
+ .../embedded-controller/dell,xps13-9345-ec.yaml    | 91 ++++++++++++++++++++++
+ MAINTAINERS                                        |  5 ++
+ 2 files changed, 96 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
+new file mode 100644
+index 000000000000..3485117b505c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/embedded-controller/dell,xps13-9345-ec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Dell XPS 13 9345 Embedded Controller
++
++maintainers:
++  - Aleksandrs Vinarskis <alex@vinarskis.com>
++
++description:
++  The Dell XPS 13 9345 has an Embedded Controller (EC) which handles thermal
++  and power management. It is communicating with SoC over multiple i2c busses.
++  Among other things, it handles fan speed control, thermal shutdown, peripheral
++  power supply including trackpad, touch-row, display. For these functions, it
++  requires frequently updated thermal readings from onboard thermistors.
++
++properties:
++  compatible:
++    const: dell,xps13-9345-ec
++
++  reg:
++    const: 0x3b
++
++  interrupts:
++    maxItems: 1
++
++  io-channels:
++    description:
++      ADC channels connected to the 7 onboard thermistors on PMK8550.
++      EC requires frequent thermal readings of these channels to perform
++      automated fan speed control.
++    items:
++      - description: ADC channel for sys_therm0
++      - description: ADC channel for sys_therm1
++      - description: ADC channel for sys_therm2
++      - description: ADC channel for sys_therm3
++      - description: ADC channel for sys_therm4
++      - description: ADC channel for sys_therm5
++      - description: ADC channel for sys_therm6
++
++  io-channel-names:
++    items:
++      - const: sys_therm0
++      - const: sys_therm1
++      - const: sys_therm2
++      - const: sys_therm3
++      - const: sys_therm4
++      - const: sys_therm5
++      - const: sys_therm6
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - io-channels
++  - io-channel-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <arm64/qcom/qcom-adc5-gen3.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        embedded-controller@3b {
++            compatible = "dell,xps13-9345-ec";
++            reg = <0x3b>;
++            interrupts-extended = <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
++
++            io-channels = <&pmk8550_vadc ADC5_GEN3_AMUX3_GPIO_100K_PU(1)>,
++                          <&pmk8550_vadc ADC5_GEN3_AMUX4_GPIO_100K_PU(1)>,
++                          <&pmk8550_vadc ADC5_GEN3_AMUX1_THM_100K_PU(1)>,
++                          <&pmk8550_vadc ADC5_GEN3_AMUX2_THM_100K_PU(1)>,
++                          <&pmk8550_vadc ADC5_GEN3_AMUX3_THM_100K_PU(1)>,
++                          <&pmk8550_vadc ADC5_GEN3_AMUX4_THM_100K_PU(1)>,
++                          <&pmk8550_vadc ADC5_GEN3_AMUX5_THM_100K_PU(1)>;
++            io-channel-names = "sys_therm0",
++                               "sys_therm1",
++                               "sys_therm2",
++                               "sys_therm3",
++                               "sys_therm4",
++                               "sys_therm5",
++                               "sys_therm6";
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 252b6d7ee163..1aa035cc1c5b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7465,6 +7465,11 @@ S:	Maintained
+ F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
+ F:	drivers/platform/x86/dell/dell-wmi-sysman/
+ 
++DELL XPS EMBEDDED CONTROLLER DRIVER
++M:	Aleksandrs Vinarskis <alex@vinarskis.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
++
+ DELTA AHE-50DC FAN CONTROL MODULE DRIVER
+ M:	Zev Weiss <zev@bewilderbeest.net>
+ L:	linux-hwmon@vger.kernel.org
+
+-- 
+2.54.0
+
