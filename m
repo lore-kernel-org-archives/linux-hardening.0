@@ -1,199 +1,63 @@
-Received: from mail-106112.protonmail.ch (mail-106112.protonmail.ch [79.135.106.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B1638C2D1;
-	Sun, 11 Oct 2026 17:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A8723EAAF;
+	Sun, 11 Oct 2026 18:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791741024; cv=none; b=MO9MGhU+VTebEhMG4ioz5IYB4grUzEZ1zpV9x809CDGeY684b5ThfpmQ7VSfSGh7DdgMD9h8aeoMwHasLdmvtQ8TVSoVxFlPLgjIaxhQ22TFXbmrO7wWVchlh72WLbEi6li/ULNw3EFt+wZFOay36wsAkTMzP1xBwYgizYRWnPs=
+	t=1791744952; cv=none; b=XLSH93pnFGYKQKOAXxY8s+mAMHThBCfBFPmcXOfoLjoWgWzNCmepXbBphEpLLBD6B9rD8VAmssoQNLW7Xq+vjkZ+te76HOudGMHtRJWuwRm4npBQ99Z/biT+XH+y0TfIkCAtkqVcHe1qyvIkCLe6AN9X7++WyAXUJIkuuOPju6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791741024; c=relaxed/simple;
-	bh=ip6YK30AyGnoVEqkQGkufJxt3BIpnmO9Rlu8xdx1PAs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OA2TKOmZKj5qQiYB35OcOVQY0cTwrOTSjyTDlLmkjx6joi0QQgjxw383e207Y0PKifn0CdnSPIeeRip+TTEgPQK71ebjeFqPjFXgSNRiuMpCGgEp109uAOy4ewItUM7hV/ejRgu/4bxzyEivThdaS9v2y99vcaooNyhyhJrfJ5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=tduPM5BE; arc=none smtp.client-ip=79.135.106.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
+	s=arc-20240116; t=1791744952; c=relaxed/simple;
+	bh=MeNz6+JDbAELaclLPMD6m81PIVT1ibR1soSUJazcll8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HJBebIViutz3lWBLvGc8TP9yTWs2Z0yb+RoYxkRqMlYq47MBg7EKyuI9Zfy0iEkRi2kCQ1z+W00XLDcX6+tgPJ2sNaXetGXNzwK25db4FO18Bua6FEnkzkVKlI9GmkieUsnI4Qu4LqPt6UqC1vDeUM48RtpJwN+S00nbDdptmxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pl19GyM5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="tduPM5BE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
-	s=protonmail3; t=1791741019; x=1792000219;
-	bh=9cUtiNpw0w3qfgB1GP1HhsDq2TLFEBW2lfjHlYEyc0g=;
-	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=tduPM5BE4geuCX38610Ie/0GxlR09DUkf56gndcrE7baRwSVKxaCotOkJxcc8nIeZ
-	 CUPEXqgt+w1Azz6AQOSGzzgTcpAqEfcfOSbM8z9vBXbq/hnVbtS8y7EMPyLnYttX2d
-	 S/stwkC45OYn4zVPJiHcDyL0qGQcOciGgn+DcHJc5WK15sACniTz102SHOiRlyWsQf
-	 jU3xZgdzGiwK9DspaKtPzQ+N6RWWt1fGUYfauOBUttf4itBDyqzzBPZhFgj5S55h2w
-	 bRGtMS+HkPlFQhNm9D6q6ynR5SFYAv1n2bE1LI4Busn1cFI04tx0zEGcIIIF1ZM9CD
-	 mDrwXcLbzFqPw==
-X-Pm-Submission-Id: 4j2p603lTcz2ScPd
-From: Aleksandrs Vinarskis <alex@vinarskis.com>
-Date: Sun, 11 Oct 2026 19:50:08 +0200
-Subject: [PATCH v6 1/3] dt-bindings: platform: introduce EC for Dell XPS 13
- 9345
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pl19GyM5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A211F0089B;
+	Sun, 11 Oct 2026 18:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791744950;
+	bh=cze08nDY1Zme74NA0RyKNr5Uk1h502wJmXo708vIO9E=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc;
+	b=Pl19GyM5ClKuhiyDveUybfx0eaM64FaKXtbHYWQQrAzpzUStBFwLA3Qs9Zmt0B53m
+	 ++PfkMEVEdYMQ6ihx4DHC+9y2l3yLr9u16lQdxDbpoS7A801lirqMyhvhJ4Sr8NVkv
+	 3rPWSnIwFrTM+0eItiIbdKQCw2F/yVxUEVSdlDD40iY7BuDA4nmC7URoR6zIOzoWE8
+	 2nA8jyDTSLIYlmE/eIyZklvB4jnlWhecKAiDM/blvsS8SNb10XPTw2OVtoYhIa0f8m
+	 WTJvq5Lp9cZXadVq8gSxk7xBPtzsmQhHvcK2cXuARYhAEygBBHEpNtkDS6gf41HQhA
+	 DCk3VlvcIcwFw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3A50038119DB;
+	Sun, 11 Oct 2026 18:55:50 +0000 (UTC)
+Subject: Re: [GIT PULL] Landlock fix for v7.3-rc7
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20261011160819.1376118-1-mic@digikod.net>
+References: <20261011160819.1376118-1-mic@digikod.net>
+X-PR-Tracked-List-Id: <linux-security-module.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20261011160819.1376118-1-mic@digikod.net>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/landlock-7.3-rc7
+X-PR-Tracked-Commit-Id: 3d8cc52db2f86b624308321c58513019f6b21eec
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d6d3455d8751854e0d1820f14184682e23ac4475
+Message-Id: <179174494873.2141808.3385832411180590547.pr-tracker-bot@kernel.org>
+Date: Sun, 11 Oct 2026 18:55:48 +0000
+To: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>, Abel Vesa <abel.vesa@oss.qualcomm.com>, Alejandro Colomar <alx@kernel.org>, =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack3000@gmail.com>, Kees Cook <kees@kernel.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Mike Bommarito <michael.bommarito@gmail.com>, Nathan Chancellor <nathan@kernel.org>, Nguyen Ngoc Thang <ngocthang2710.1999@gmail.com>, Nick Desaulniers <ndesaulniers@google.com>, Tingmao Wang <m@maowtm.org>, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, llvm@lists.linux.dev
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261011-dell-xps-9345-ec-v6-1-2a66a364fe70@vinarskis.com>
-References: <20261011-dell-xps-9345-ec-v6-0-2a66a364fe70@vinarskis.com>
-In-Reply-To: <20261011-dell-xps-9345-ec-v6-0-2a66a364fe70@vinarskis.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Abel Vesa <abelvesa@kernel.org>
-Cc: Liviu Nicoara <lnicoara@thinkoid.org>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- platform-driver-x86@vger.kernel.org, Abel Vesa <abel.vesa@oss.qualcomm.com>, 
- Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Stephan Gerhold <stephan.gerhold@linaro.org>, 
- linux-hardening@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4564; i=alex@vinarskis.com;
- h=from:subject:message-id; bh=ip6YK30AyGnoVEqkQGkufJxt3BIpnmO9Rlu8xdx1PAs=;
- b=owGbwMvMwCX2dl3hIv4AZgHG02pJDFmnz4QVtFpH/VYvYRXns9LewvD40C+phzn/f2hMnW6p1
- tBxy9q4o5SFQYyLQVZMkaX7z9e0rkVz1zJc1/gGM4eVCWQIAxenAEzEh4nhn21Vqe6vwnNvjXax
- TljPZDu5+dXVqetWzuDmad/fu2X3RUtGhte/ft7fePqa7JU1h30KvwbWZUZILNpcyhRbpb33qbE
- xAxMA
-X-Developer-Key: i=alex@vinarskis.com; a=openpgp;
- fpr=8E21FAE2D2967BB123303E8C684FD4BA28133815
 
-Add bindings for Embedded Controller (EC) in Dell XPS 13 9345 (platform
-codename 'tributo'). It may be partially or fully compatible with EC
-found in Snapdragon-based Dell Latitude, Inspiron ('thena').
+The pull request you sent on Sun, 11 Oct 2026 18:08:19 +0200:
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
----
- .../embedded-controller/dell,xps13-9345-ec.yaml    | 91 ++++++++++++++++++++++
- MAINTAINERS                                        |  5 ++
- 2 files changed, 96 insertions(+)
+> https://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/landlock-7.3-rc7
 
-diff --git a/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
-new file mode 100644
-index 000000000000..3485117b505c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/embedded-controller/dell,xps13-9345-ec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Dell XPS 13 9345 Embedded Controller
-+
-+maintainers:
-+  - Aleksandrs Vinarskis <alex@vinarskis.com>
-+
-+description:
-+  The Dell XPS 13 9345 has an Embedded Controller (EC) which handles thermal
-+  and power management. It is communicating with SoC over multiple i2c busses.
-+  Among other things, it handles fan speed control, thermal shutdown, peripheral
-+  power supply including trackpad, touch-row, display. For these functions, it
-+  requires frequently updated thermal readings from onboard thermistors.
-+
-+properties:
-+  compatible:
-+    const: dell,xps13-9345-ec
-+
-+  reg:
-+    const: 0x3b
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  io-channels:
-+    description:
-+      ADC channels connected to the 7 onboard thermistors on PMK8550.
-+      EC requires frequent thermal readings of these channels to perform
-+      automated fan speed control.
-+    items:
-+      - description: ADC channel for sys_therm0
-+      - description: ADC channel for sys_therm1
-+      - description: ADC channel for sys_therm2
-+      - description: ADC channel for sys_therm3
-+      - description: ADC channel for sys_therm4
-+      - description: ADC channel for sys_therm5
-+      - description: ADC channel for sys_therm6
-+
-+  io-channel-names:
-+    items:
-+      - const: sys_therm0
-+      - const: sys_therm1
-+      - const: sys_therm2
-+      - const: sys_therm3
-+      - const: sys_therm4
-+      - const: sys_therm5
-+      - const: sys_therm6
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - io-channels
-+  - io-channel-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <arm64/qcom/qcom-adc5-gen3.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        embedded-controller@3b {
-+            compatible = "dell,xps13-9345-ec";
-+            reg = <0x3b>;
-+            interrupts-extended = <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
-+
-+            io-channels = <&pmk8550_vadc ADC5_GEN3_AMUX3_GPIO_100K_PU(1)>,
-+                          <&pmk8550_vadc ADC5_GEN3_AMUX4_GPIO_100K_PU(1)>,
-+                          <&pmk8550_vadc ADC5_GEN3_AMUX1_THM_100K_PU(1)>,
-+                          <&pmk8550_vadc ADC5_GEN3_AMUX2_THM_100K_PU(1)>,
-+                          <&pmk8550_vadc ADC5_GEN3_AMUX3_THM_100K_PU(1)>,
-+                          <&pmk8550_vadc ADC5_GEN3_AMUX4_THM_100K_PU(1)>,
-+                          <&pmk8550_vadc ADC5_GEN3_AMUX5_THM_100K_PU(1)>;
-+            io-channel-names = "sys_therm0",
-+                               "sys_therm1",
-+                               "sys_therm2",
-+                               "sys_therm3",
-+                               "sys_therm4",
-+                               "sys_therm5",
-+                               "sys_therm6";
-+        };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 252b6d7ee163..1aa035cc1c5b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7465,6 +7465,11 @@ S:	Maintained
- F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
- F:	drivers/platform/x86/dell/dell-wmi-sysman/
- 
-+DELL XPS EMBEDDED CONTROLLER DRIVER
-+M:	Aleksandrs Vinarskis <alex@vinarskis.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
-+
- DELTA AHE-50DC FAN CONTROL MODULE DRIVER
- M:	Zev Weiss <zev@bewilderbeest.net>
- L:	linux-hwmon@vger.kernel.org
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d6d3455d8751854e0d1820f14184682e23ac4475
+
+Thank you!
 
 -- 
-2.54.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
