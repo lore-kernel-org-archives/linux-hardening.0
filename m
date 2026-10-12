@@ -1,71 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC9D331EBD;
-	Mon, 12 Oct 2026 08:51:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B7E46EF6A;
+	Mon, 12 Oct 2026 09:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791795118; cv=none; b=SSxBuKFwmf0tD3n/BbuhlrrbDVyjPqiAtfoT82VCnnRqbTc11Irzg+KyM00sRzZCkXvo/4lNqN3C0vhaJoKqPvPI5HHbw11FmFBKFs1CTslbkc1q7HasVUf+MA4vdnF4mOsS/cy4bJ9HMidmDEzg7sBdQ9XPnZ8LKpwRqwX7mSw=
+	t=1791795878; cv=none; b=Jh1qMBWfw47JLD+qTf06e+4nRc0EwEEKaPHl811N2boniFqQBCPHEocvuZPvi7FDLU3Prbp0hzYouakY6qnQpXnzUjNEiiRWRaP6JkJvX/vSrMCqE6jkeZdwO1w9W38sIXHdZd4WsMjvfrPtkIX6V2P+Qe4GSrffOdyFnEDBPGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791795118; c=relaxed/simple;
-	bh=KuYORnh4XFHSjOuXAbf8BKrdcJA53nDf5tDune8yL0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VN5c3dhDwDLdiW1Ex5BUXK3PckEDudXBj4PfhuiGwzxpNRthe/uquN5ABblMlwNd2DWbIBPH2VgT85FhZu1Vns9AdPjKktMB8bRVsr2FdwGy3+l8E5DIegORqfYQm+nJnbxZSubrYNuoyi8cNAZfMLEfErIGw5Adwho2nVlNQUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ETjnOmAb; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791795878; c=relaxed/simple;
+	bh=F+hU7zwvoM4jrDZHnAy/AVYIpxeYgHOwQ6w9X6A+J/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZuFQ94aIk5ohtk4xN87TxyXFV5qNUaY8ZxXwPfTOukKOIVjjaTMlb13X0Q3hLY+X9o6XMYioBGAzSaaqLBZGiJozhIw6aMbNMRcS4dpgGkjKot+cs0V6Obxq9LG2UM1+E9C+tWE6ZEVsh0oTQhfPJDRzgzzVzOqWBIYdVhT8/WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MU553+qa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETjnOmAb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F6601F0089B;
-	Mon, 12 Oct 2026 08:51:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MU553+qa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C17491F0089E;
+	Mon, 12 Oct 2026 09:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791795117;
-	bh=ZN2dzTiC+2BBssvLh2yHOghWh0HLc1sQSHswvJ543so=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ETjnOmAbywI1wneWq7BOKw4lGB2kkLvdv/6KXLwmxlZjfvqP9o+NJQThvZoFrUms8
-	 f63ggiUz4KP0brhWLRhv2x7+QVl5scE6S1z6B+07a+Cuh/rNvtL/DeKO/WGwM4us/K
-	 tzad4DgJ/0H9cQpP0TtZSFjlWnNwaJsYmadJzAaulUHh+ShNbrhNJoVt+vUN94QcSt
-	 ng3p8Jq1R6MXudNMLjr7UaZ5uHJXlAaG8HbEf49lYr2yoteE2ERJwqTdDs5xLkna/n
-	 FLLjyaG6T+H1iWUjfS83ZGnSXYRptXahGvCuS7jP4ZKr0Q4GOdID5kOVsuK4v0AQBt
-	 yeoAk1qP58TIw==
-Date: Mon, 12 Oct 2026 14:21:47 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-phy@lists.infradead.org, 
-	Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"moderated list:ARM/Mediatek USB3 PHY DRIVER" <linux-arm-kernel@lists.infradead.org>, 
-	"moderated list:ARM/Mediatek USB3 PHY DRIVER" <linux-mediatek@lists.infradead.org>, 
-	"open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCHv2] phy: mediatek: tphy: simplify main allocation
-Message-ID: <asyfMEwzhwJFOIZa@debian>
-References: <20260812181857.64544-1-rosenp@gmail.com>
+	s=k20260515; t=1791795876;
+	bh=qCxhAANfVhEXP/8xHY5Cud2Gow55mujn4jh7Fzm4A04=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=MU553+qaNz6AzM0rba9oPDtYAkVfgFIRPAleDgwX/MJuDW4F3MO5Ab1lel9UKN+rw
+	 8wl2G7QX1trbND/URMezfF6ZQh0fNHdBP7EKcNIK0DpVft9LYaG38OkB1kU1o8sq7m
+	 2WTbwTnCB63x69o0EnbCyUD5co5Yqgsu/Gt11p/2sMSf3IrWFjCQeBarvkjLonb1Fd
+	 i4u9RiQ8BBPw/e0uUOY5yOqsxBSxTR+6f4y2BgxA6z1c7q1Duw3hgYE0ocqEnp603B
+	 uHVJBd+tgxo6VcR/195SnRZAf9liKGrNAy/ge9eDKHpYpWU+KcXR6VZ3T79p0apd1h
+	 EMZ7V9TV1li8Q==
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 3/3] objtool: Skip jump table jumps in the kCFI indirect call check
+Date: Mon, 12 Oct 2026 02:04:26 -0700
+Message-ID: <20261012090436.1676525-3-kees@kernel.org>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261012090424.i.497-kees@kernel.org>
+References: <20261012090424.i.497-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1669; i=kees@kernel.org; h=from:subject; bh=F+hU7zwvoM4jrDZHnAy/AVYIpxeYgHOwQ6w9X6A+J/4=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlnFs3irS5IOrOg6v9TTQuP5Rqrvq1Zvv+axBbOLyd4M /escGG27ShlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZiIxxVGhrcL3flNC4N2T147 oYJ/ptxj1QrPgKMXHhrIzTVaELaojYeR4eRGPpY4x1RLh/iDHbUTWP0l/55VEvl0aXam2sGr1q2 VjAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260812181857.64544-1-rosenp@gmail.com>
 
-On Wed, Aug 12, 2026 at 11:18:57AM -0700, Rosen Penev wrote:
-> Use a flexible array member to replace kzalloc + kcalloc with a single
-> kzalloc.
-> 
-> Shuffled some code around as __counted_by requires the counting variable
-> to be assigned first.
-> 
-> Removed NULL check from of_get_match_data as it's never NULL per the
-> device table.
-> 
+With MITIGATION_RETPOLINE=y, GCC lowers the computed goto in
+___bpf_prog_run() to a jump through __x86_indirect_thunk_rdx. objtool
+puts that jump on the retpoline call list along with the indirect calls,
+so with CONFIG_CFI=y the kCFI check wants a UD2 before it:
 
-This statement is stale in v2 :(
+  vmlinux.o: warning: objtool: ___bpf_prog_run+0x1e: no-cfi indirect call!
 
-- Mani
+The jump goes through the "jumptable" array, which objtool already reads
+from .data.rel.ro.c_jump_table, so its targets stay inside the function
+and need no kCFI check. Skip jump table jumps in the check. Clang does
+not emit this jump: with retpolines, it lowers the computed goto without
+an indirect jump.
 
+Build tested ARCH=x86_64 defconfig with CONFIG_LKDTM=y and CONFIG_CFI=y,
+with GCC 17.0.0 (experimental, with the kCFI series).
+
+Assisted-by: LLM
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ tools/objtool/check.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 464f6c9d9ff0..d35c5305075f 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -4199,6 +4199,14 @@ static int validate_retpoline(struct objtool_file *file)
+ 	list_for_each_entry(insn, &file->retpoline_call_list, call_node) {
+ 		struct symbol *sym = insn_sym(insn);
+ 
++		/*
++		 * A jump through a jump table stays inside the function, so
++		 * it has no kCFI check.  GCC turns the computed goto in
++		 * ___bpf_prog_run() into one under MITIGATION_RETPOLINE.
++		 */
++		if (is_jump_table_jump(insn))
++			continue;
++
+ 		if (sym && (is_notype_sym(sym) ||
+ 			    is_func_sym(sym)) && !sym->nocfi) {
+ 			struct instruction *prev =
 -- 
-மணிவண்ணன் சதாசிவம்
+2.55.0
+
