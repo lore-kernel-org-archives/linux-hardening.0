@@ -1,67 +1,33 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FCB4AA007
-	for <linux-hardening@vger.kernel.org>; Mon, 12 Oct 2026 16:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040363191D3;
+	Mon, 12 Oct 2026 16:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791821086; cv=none; b=Qy0tyM5SMOiIAZHXcvyoFd6EN4YmogUFtej/6uUC9mA98bfJ3aBeUlZcPklaWOktD2fCMwdJtv/7nmJ9l8A7HoFh9YhiB+NrI+sQyD+AAUB8vQZYhYqfrqMgEacnykT75DIKhQHhyxFE4mgcL9cOWIfO8vq1SUtmnOdSAY9PnO4=
+	t=1791823615; cv=none; b=MGC4oWlHlWaYykm26NwPRokr7wwJc7Ik4LadkCn4M1CvaJmXv34yf19Ej27oF4p+W4LKG1B24aqBpY9QlJWu31ZSH5PPBNJnY1rSb59pIAmosjUqXR7TXILxbrLalggNWpuzMmkAlwcyY+XHsHKtrrak+RbutRBvl97RDxwYoto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791821086; c=relaxed/simple;
-	bh=CjNPhM0F82Wbn9n1JTCsaGj/k6ngpDFON2KbxOAWJKY=;
+	s=arc-20240116; t=1791823615; c=relaxed/simple;
+	bh=bJ19nHZhEMmOqTlHI69TQlMDCVicITKlR/TSUSSiudU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pky2D7gu3qH+gpu5EjUGF4l9ZZtC8MSQkNOE86zh9R8Mu7haA9JvIgQB30CQIUdmftGO48hRPYL1LGk/Q/CTzBkm/ECvSYcrKkkNSgCo7mjbD7v/7vSRN9IO3w75ZpSvjjfsA7vyYxSWqE6x99KPFgp/UDt89OoftWzumCsE5Ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=E+hLkr+v; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	 In-Reply-To:Content-Type; b=WUisbtvCoc6a0oGKbgX9lGzhZApU4H8ah5vWBzTSCW3FEl1VkwD5KgnySpgHBNw+Tv77OuKbe/1vxXtLMxl957vyZ024EH8a/+S69xSgOE8ksLntxifle6ETUkLaYqjCdqQZVrL2I0U7NJA8uudAeR8S3VngV1ej+ejwoK9tIvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGySc7jB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="E+hLkr+v"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-93e63522076so154559985a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 12 Oct 2026 09:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1791821082; x=1792425882; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2P5NI99EVME0P3LVAaEWnF0MPg3G/2buC7fzHXtZUQ4=;
-        b=E+hLkr+vbnHqrCmBY6XEISAAWMuWV7E//Z13k0cv/4i5hCb/Y4LCuyoEuj6nwqhyHB
-         J9ULxntwDLdRJpTYgXpBRDH1k+eeEAl/yNg0ATRtior+9bpgmqpeVSUFaAvDlcbdszE9
-         crvYWVYTDZhTj0DwqblpoqoXeN8aSxAZrcp5Wgk9XLx1qr9BatjgeHaJTqbkSVlz5w7V
-         1O4eRLFIiGcwy/0IkiPK5eR6fcfev9CtGMRzjGLn5j/J5wQDoem0JJ23WJMNpS//jEKR
-         k4AS/GnI1idznuC6VSHYBEn4CQt+fNFACCbbLo92ix86XJ389v8bRpX9fYuBI4Z5cPFN
-         +/RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791821082; x=1792425882;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=2P5NI99EVME0P3LVAaEWnF0MPg3G/2buC7fzHXtZUQ4=;
-        b=mWB0/OJgJjEg+bScweYcOnIizbZYhIovW5vurrxMs1TGLwChL+ZUzE9foEmG1woTpj
-         PIiTMLKcldkISAQZ6aeOzBJp1hqoMq2juvMjFCQtGEBz62UbTNZBnEZcCgBkqEAJACp5
-         RES8TNAXMve6NCCavtD7g/hH+Qe118Pul+wQ7N/r9b4WESZyiBUOprr9yljxOI72lk1U
-         OoQT/mVS8psRa2oKSjCSMoQOGqhGzd/umtPbVYNLDTDvV3rcbfi80Ikjko+pSZ8RcwQi
-         Zd5mu01rPfrvgFJUThNs4ofyQfm1pa5X50gU+8wNaalEPOIgKAa4y1XFiQK9uM5G9zAg
-         5/YQ==
-X-Forwarded-Encrypted: i=1; AKwUvByu9UzZzTdcSDUDKFlPTdeLthVz1J3E/qa6XsT+2luu3bTK5vagEYeHA4LnT+c3lqMrHviXiikM6cZjf6mNpEo=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKfJ3fA5xiMscDJf8hU1Xemp9dgZ/jBmuua/bON+VHYIacYv/Na
-	wAAYaxnu/ORaMlxfwZLG2vtgT+RFCG/CcBl8sBFNipHFjc+QP2Qq786NF1yXHTHPIgQ=
-X-Gm-Gg: AYBFou3fxqpREcEFcIamluRtqBzTo6xEsFu/WosI9nsUOVySYxPGWGlITsrvgsaOUE3
-	SVNuoOk0qtTCZkObPqqY4/UgoIzIEHCoCyovaRH2KVrmZK2dxYeOsn0mIRjFE0daOdJA3PCKG5W
-	gQVBpjLqgdCTXG1bC0Uy6CN26Ri2nbTD/4AFuXG8DkNKv+kh1GgdAHcCyoXE+BXmFVhQJC6XwI9
-	MrayyPqyLtJVZAVgb9UvS/29LbyXN5P1YarNWopoTCBJ7zXEZ/Aa9UOXkvk2G2VGirbDYdN1bHb
-	iHaQQvrjDyfiX/m7FP8QBblOBoPq2An38o+mdKoABGEOnK0pjKsFnSCkqDxCpjNMncEcOlZmQvb
-	J6xI5VC1D3UrPQ5uRGhzGVjjqGFT/abO4ZIIv+y3y1ml4cLH1AJNtrR4YobGhLwzkcF5oqqWraO
-	k5vBPS0Js1YUM6SMx3KP7HL2JJNvQqpINvBoat1DQnAO3vZ/DmF+KgzeChIjDInHoC7LBP/fY=
-X-Received: by 2002:a05:620a:3720:b0:93e:5dcb:eb9b with SMTP id af79cd13be357-93ebd24ecabmr1816777885a.42.1791821082270;
-        Mon, 12 Oct 2026 09:04:42 -0700 (PDT)
-Received: from [172.22.22.28] ([73.62.185.64])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-93ef4d31b91sm22701385a.0.2026.10.12.09.04.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Oct 2026 09:04:41 -0700 (PDT)
-Message-ID: <ddd1a236-c2fa-4b97-834b-d4c511e153db@riscstar.com>
-Date: Mon, 12 Oct 2026 11:04:39 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGySc7jB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7C11F0089B;
+	Mon, 12 Oct 2026 16:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791823613;
+	bh=0UrN5VSM1Sm71gRbWyyCAhAHasLekx/YSqvnQwMreug=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=DGySc7jB23/V1Z0AiUJki0Z8E+1NITPebzHJoljKGLolAv23dMkVULASEv6xcM3hP
+	 URvKzoUwGJbKWzmEXSPRHB9IBLvJSHW5FjeLNe3ZH5AXI7XnbJP67L/oF7D/DiaWnl
+	 aDMZEIjcEVpwUF7XuHEB9FvmbBwqDzgtukk98Rm+p5gsCZCSHsxXM0yYjSbt31HnDy
+	 eIk294Mjj0CNM7ykSZ0YscTCi0i6vupSrnS4gWjraC7oKXpky4BUIRati+wEhVDL56
+	 YV6QnEC2eKQmVROYtSGXUKnJLLGUX8CtEkIA729wb5QlNYCQ4J0hiU6P+qFKp1Sglk
+	 MzL4zw2ZPN3Sg==
+Message-ID: <4866a382-42d9-44da-b68b-377d36642528@kernel.org>
+Date: Mon, 12 Oct 2026 18:46:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,57 +35,84 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] arm64: dts: qcom: define a fixed 25 MHz clock
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, sboyd@kernel.org,
- bmasney+clk@redhat.com, jbrunet+clk@baylibre.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org
-Cc: abelvesa@kernel.org, kees@kernel.org, gustavoars@kernel.org,
- mohd.anwar@oss.qualcomm.com, lorenzo.bianconi@oss.qualcomm.com,
- danielt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, Daniel Thompson <daniel@riscstar.com>
-References: <20261012152408.3729237-1-elder@riscstar.com>
- <20261012152408.3729237-4-elder@riscstar.com>
- <51552a90-60bd-4b87-8bc6-080d49e030d6@oss.qualcomm.com>
+Subject: Re: [PATCH net-next v6 2/8] ipc, msg: Account msg_msg allocations
+ with GFP_KERNEL_ACCOUNT again
 Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <51552a90-60bd-4b87-8bc6-080d49e030d6@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>
+Cc: Harry Yoo <harry@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>, Roman Gushchin <roman.gushchin@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
+ cgroups@vger.kernel.org, linux-mm@kvack.org, Pedro Falcato
+ <pfalcato@suse.de>, Kuniyuki Iwashima <kuniyu@google.com>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261006092030.got.500-kees@kernel.org>
+ <20261006092035.166776-2-kees@kernel.org> <asjhg2e4-WSeKuXd@thinkpad>
+ <202610092010.934197B@keescook>
+ <20261010153714.b9e91801ea93675da099e903@linux-foundation.org>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Autocrypt: addr=vbabka@kernel.org; keydata=
+ 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
+In-Reply-To: <20261010153714.b9e91801ea93675da099e903@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/12/26 11:02 AM, Konrad Dybcio wrote:
-> On 10/12/26 5:24 PM, Alex Elder wrote:
->> The TC9564 SoC has a single 25 MHz fixed-rate input clock.  Add it
->> to the definition associated with the chip.
->>
->> Co-developed-by: Daniel Thompson <daniel@riscstar.com>
->> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
->> Signed-off-by: Alex Elder <elder@riscstar.com>
->> ---
->> v3: - New patch in this version of the series
->>
->>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
->> index 0e3bbdaf4661f..b8d290eed2f38 100644
->> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
->> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
->> @@ -891,6 +891,12 @@ pcie@0,0 {
->>   		pinctrl-0 = <&tc9563_resx_n>;
->>   		pinctrl-names = "default";
->>   
->> +		clock-25000000 {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +			clock-frequency = <25000000>;
->> +		};
+On 10/11/26 00:37, Andrew Morton wrote:
+> On Fri, 9 Oct 2026 20:14:20 -0700 Kees Cook <kees@kernel.org> wrote:
 > 
-> This and patch 4 should be squashed
-
-OK, will do.  Thanks for the review.	-Alex
-
+>> Anything with Fixes: will end up in stable, so I just leave off the
+>> stable CC these days.
 > 
-> Konrad
+> -stable maintainers have been asked to Not Do That for mm patches. 
+> Other subsystems are doing the same.
+> 
+> I don't know how they determine whether something is an mm patch.  A
+> patch which covers do-do-that and dont-do-that parts of the tree is
+> likely to be mishandled.
+> 
+> So yeah, add that cc:stable to reduce the possibility of mistakes.
 
+There's also this from the list of pain points at
+https://lwn.net/Articles/1099594/
+
+    Kroah-Hartman: subsystems that do not add CC: stable@vger.kernel.org
+tags to patches, but which still expect the stable team to pick up the
+important fixes anyway. The stable maintainers are overwhelmed as it is and
+are not doing that.
