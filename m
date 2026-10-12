@@ -1,222 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BECD135A53;
-	Mon, 12 Oct 2026 03:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8955E395D8B;
+	Mon, 12 Oct 2026 03:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791775164; cv=none; b=Y1Lv+NWR7FNDkCn8dyD8oEkfLxarqGImaRw5qVnTf8PCON+9c77xO+flR5H4CXdxL13u8YFwhsVkjtmMcZa9W6lObp/h7hHfNtyW0R4k4uhegD/I4+ygtXaoxBTRj28jZubTr9avXBkWsl0mmO00wnLcLFzrS1DF1RuRLTTEr6c=
+	t=1791775906; cv=none; b=gORKanJGnC295N/8JGXwQ0vDiDn0csqFXfqE1lIvXKmbW15/04aI1VfukQh91uVazilOCkKftw2csHaRzzwSsjeBm7zgckoCpqysxhpN+qz0gSeNsJDTaTgn3UWda68oaOl94MXfdLloM3T1oqfUi31TQ7AOjNvP9eDoNO6Mg70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791775164; c=relaxed/simple;
-	bh=XI3HOXLgYYYo9T2K41J9F1jvmxYlzw5a08uXZYR2K/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NI45srtK2E6DH36v6+jPV6Uj2NFN17mX8GsQV5XyhK6ba2vk2H4gjRtkieuiTpVVZlX3usH3TBRiXkWxPcWczTZPehZqG2yj0GlEq/cXJ4RNkCrtJPH1n1FyHrDyTt6ZtQTWxIACXR6TVGKm7JDMDiCYi4SQg9VlC6DSYv0Vj7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILa9lzHL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791775906; c=relaxed/simple;
+	bh=yEk78BFdEWjGsRY7o9eAQq4BaLG+BDDUtopCI2v7/aA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h0AgCFmVnPXjjVpXJ9JCxsOTN93XYvWxootG0ki9Y4YPXeQdL1VjZbVyrvzufAMPLC5836I3+hLwYZKwSH875XFbN1weHNFfA3DrqVLJ6xnMMemiSwiFoUJGdIOiQfqaiYgNu4smyR36GgVjgR8lXi4qTnQTQc/8ZrihUCabD2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EU0s54rZ; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILa9lzHL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB661F0089B;
-	Mon, 12 Oct 2026 03:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791775162;
-	bh=xFH3XSsdAEjCBs6d+khIbPn/UOj37pBjqAzm5pVCVjE=;
-	h=From:To:Cc:Subject:Date;
-	b=ILa9lzHL+z9O6OPxKvPdm+P2wqi+n+JHiE7tvkflmDh2z8l5EQUNv0O0PURZ1/o64
-	 xTD50OwwtPQ5ljbdHfgYFb1HyWXvJvIS1HVVe3SSjsGgcXf94YtJHEmi6XfwwGSbeG
-	 NumITTeH7CCMVB8OThvxvHD+gpV+kebeOvY6aW2TCrIGWw6G11ktMJvYYWhnp2pxrs
-	 z1EWRzPZzShfCnOyMY0YQB+63yGDeaQOlYvCzpihVgMir8mpeXfaDSL3wEyQnrbPIA
-	 8gpLO0T69qrz8Lw2r1yDzeJl/lvKU/EJaJf5nF5rzpsU8HFUmXwv/t403d/+Q0eNz1
-	 2dZ1mgm96OuAg==
-From: Kees Cook <kees@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Kees Cook <kees@kernel.org>,
-	Taehee Yoo <ap420073@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	linux-crypto@vger.kernel.org,
-	llvm@lists.linux.dev,
-	kernel test robot <lkp@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] crypto: x86/aria - Take the address of each asm function in one file
-Date: Sun, 11 Oct 2026 20:19:21 -0700
-Message-ID: <20261012031920.i.329-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EU0s54rZ"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69C2EeWq3156732;
+	Mon, 12 Oct 2026 03:31:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=T+SbBR
+	5gX/WtRVsS4FVkIfpd8oxF7wqOXq5potRnwgM=; b=EU0s54rZ1iyJYu1J1v+8Yi
+	GpoEZDHKqhMnyJ/QACfp423xlOlx2+TFZis2gpFTCDiL7ep/OlFijNqHR+F4f57+
+	+YZ/KwAMMU8oXCzJqy8BHeOyG/PbqLRNy/ffo8Oth+woFwkJSQCevTquE9ui5ZeN
+	UV4xxOmOOd/GlvpRzOKVSo88GdayjITFIk+r8cwjLfk7WUzwgcmOOnVIOSuUkcPH
+	Vkjq4XEBBSfzsocI3EkY1Q5NQwJEw3SYvutCkwyAxVv4f3zEfvIgFhpCpP5f2yMQ
+	UNfQ/wudm8hNWuOudm2fAd/Omy5USuZ9+x0pjgpecgU7zwE7cTKecBjCROGoulNg
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4h7dug70kb-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 12 Oct 2026 03:31:21 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69C1nwRV522102;
+	Mon, 12 Oct 2026 03:31:20 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4h80pjkhw8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Oct 2026 03:31:20 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69C3VG5s40239612
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 12 Oct 2026 03:31:16 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 81B9E20043;
+	Mon, 12 Oct 2026 03:31:16 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 81DAE20040;
+	Mon, 12 Oct 2026 03:31:12 +0000 (GMT)
+Received: from Linuxdev.bl1-in.ibm.com (unknown [9.123.8.83])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 12 Oct 2026 03:31:12 +0000 (GMT)
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, Amit Machhiwal <amachhiw@linux.ibm.com>
+Cc: Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gautam Menghani <gautam@linux.ibm.com>,
+        Harsh Prateek Bora <harshpb@linux.ibm.com>,
+        R Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Alexander Graf <agraf@suse.de>, linux-hardening@vger.kernel.org,
+        stable@vger.kernel.org, Avi Kivity <avi@redhat.com>
+Subject: Re: [RESEND PATCH 0/3] KVM: PPC: Fixes for Book3S HV HPT locking and paired-single decoding
+Date: Mon, 12 Oct 2026 09:01:11 +0530
+Message-ID: <179177344611.763259.8666438787088008833.b4-ty@linux.ibm.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260928122837.8782-1-amachhiw@linux.ibm.com>
+References: <20260928122837.8782-1-amachhiw@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7595; i=kees@kernel.org; h=from:subject:message-id; bh=XI3HOXLgYYYo9T2K41J9F1jvmxYlzw5a08uXZYR2K/g=; b=owGbwMvMwCVmps19z/KJym7G02pJDFlnAndMzuBMN5T++bbyYPSXic9/ymw+Zb4ue/GPiVq5M xLnaHJzd5SyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAExE+SEjw/bNz+VDpRN7A8+9 eTR/XnLDjtbmU0Uc3JevJR/gNtxylIOR4cPEAhXVST7blrbxb1kcq6Iu7lneOMn/yu27Vknzj8g f4wMA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=Cr0q4X4D c=1 sm=1 tr=0 ts=6acc5489 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
+ a=OxHsgNImaD429JQx8ZsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: iAjixt9z5N4hr9Tjob1PHqiFKs9bitHE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDEyMDAxMiBTYWx0ZWRfX4cNdI810VKcb
+ rjqrBOTpfHz/m5HvJoqilhbO2sJgT0KvSyw+XoqCXlyaT7uuPF8bXXXPYHraYKMFWdyOQn8VDBa
+ v/hbcIki7nmYw3MGa5ABspBo4YFVUWLqZE5rnJ3DeJ1XEoDJnS6iamZI4S0FjCbKyLuS4C0pCOE
+ mKhD7FSKyGEwK11MU0da4RKlgbTto8ckRabPIMPfjGo0P7ncNAU23UA5/gCaVZziF26f/dwI2eQ
+ bClUH/CI05JAki3jq1+c/2x3f5ScMDI/z3DHoo9RYa0cJ6OVu3iwnw6QpesyAj8PxbC1IQLXCrS
+ Blmr3yrlpxguxa3BlqPivAAZ4iumLhAuYFtOizR8kPy2BJ72h8d7ZL7tEbWAVqoPZ4lGpjSrEax
+ miG435g9TI54+hWg5IVvG1u/RxUggSAQoJdIeaLdW2Ne6WL7GF7blQCcY+0jnEX/PF3S2Ik2shS
+ LgCUn4YNAMH4ErKNhfg==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDEyMDAxMiBTYWx0ZWRfX9IJu/2BT72z0
+ C7A/RDZc8qEo2VMxh9FrHOrplLh447M30TgWdZgJdCWvcjYEwVxjVXb06GNqXHuVnLbBfvDYB/G
+ YdVssvqLeHuZPSMtgnIFpVQkSaBDp/w=
+X-Proofpoint-ORIG-GUID: aU7aU4v3p7_5lACyzVzqyRiIjlLGp91O
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-12_01,2026-10-09_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ malwarescore=0 clxscore=1011 impostorscore=0 lowpriorityscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610120012
 
-A Clang Full LTO bug[1] was fixed in Clang 23 where multiple .o files
-performing an address-take of the same asm-originating typeid weak symbols
-would have those symbols get completely removed instead of just keeping
-one, seen at link time:
+On Mon, 28 Sep 2026 17:58:34 +0530, Amit Machhiwal wrote:
+> This series addresses a few bug fixes across KVM PPC Book3S HV
+> locking/synchronization and paired-single instruction decoding:
+> 
+> Patches 1 & 2 fix synchronization and preemption issues introduced in
+> commit 6165d5dd99db ("KVM: PPC: Book3S HV: add virtual mode handlers for
+> HPT hcalls and page faults"):
+> 
+> [...]
 
-  ld.lld: error: undefined symbol: __kcfi_typeid_aria_aesni_avx_encrypt_16way
-  >>> referenced by aria-aesni-avx-asm_64.S:962
-  >>>               vmlinux.o:(__cfi_aria_aesni_avx_encrypt_16way)
+Applied to powerpc/next.
 
-As a work-around for earlier Clang, add aria_avx_setup_16way_ops() and
-aria_avx2_setup_32way_ops(), exported by the glue that owns each tier's
-asm functions, and fill all three tables with them, so that each asm
-function has its address taken in only one file.
+[1/3] KVM: PPC: Book3S HV: Add SRCU protection for virtual-mode HPT hcalls
+      https://git.kernel.org/powerpc/c/61a39797bb136243c48b46e2586d8a9e2cea6a89
+[2/3] KVM: PPC: Book3S HV: Add preempt_disable() around virtual-mode HPTE bit-lock users
+      https://git.kernel.org/powerpc/c/abbbe5ff83e7c9ed3a4d61b73011f1df7bf87907
+[3/3] KVM: PPC: Fix get_d_signext() 12-bit displacement for paired-single D-form
+      https://git.kernel.org/powerpc/c/31895b0ff96778b524c74b43a108090581271603
 
-Build tested ARCH=x86_64 with the kernel test robot's randconfig
-(CONFIG_LTO_CLANG_FULL=y, CONFIG_CFI=y, and all three ARIA drivers built
-in) and W=1, with Clang 22.1.8 and Clang 24.0.0git: vmlinux.o defines all
-fifteen __kcfi_typeid_aria_* symbols, and vmlinux links. Without this
-change, Clang 22.1.8 fails to link it as above, and Clang 24.0.0git,
-which has the LLVM fix, links it.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202606041643.GyTZgCk1-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202606122021.pA9TozrA-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202608100432.yIX7TckM-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202610112311.o9XQsWsa-lkp@intel.com/
-Link: https://github.com/llvm/llvm-project/pull/204025 [1]
-Assisted-by: LLM
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- arch/x86/crypto/aria-avx.h              |  3 +++
- arch/x86/crypto/aria_aesni_avx2_glue.c  | 35 ++++++++++++++-----------
- arch/x86/crypto/aria_aesni_avx_glue.c   | 29 +++++++++++++-------
- arch/x86/crypto/aria_gfni_avx512_glue.c |  8 ++----
- 4 files changed, 45 insertions(+), 30 deletions(-)
-
-diff --git a/arch/x86/crypto/aria-avx.h b/arch/x86/crypto/aria-avx.h
-index 6e1b2d8a31ed..0fff24861088 100644
---- a/arch/x86/crypto/aria-avx.h
-+++ b/arch/x86/crypto/aria-avx.h
-@@ -59,4 +59,7 @@ struct aria_avx_ops {
- 
- 
- };
-+
-+void aria_avx_setup_16way_ops(struct aria_avx_ops *ops, bool use_gfni);
-+void aria_avx2_setup_32way_ops(struct aria_avx_ops *ops, bool use_gfni);
- #endif
-diff --git a/arch/x86/crypto/aria_aesni_avx2_glue.c b/arch/x86/crypto/aria_aesni_avx2_glue.c
-index 1487a49bfbac..65c850601f49 100644
---- a/arch/x86/crypto/aria_aesni_avx2_glue.c
-+++ b/arch/x86/crypto/aria_aesni_avx2_glue.c
-@@ -37,6 +37,24 @@ asmlinkage void aria_aesni_avx2_gfni_ctr_crypt_32way(const void *ctx, u8 *dst,
- 						     u8 *keystream, u8 *iv);
- EXPORT_SYMBOL_GPL(aria_aesni_avx2_gfni_ctr_crypt_32way);
- 
-+/*
-+ * Set up function pointers for the AVX 32-way asm functions for both this
-+ * module and the the higher-tier modules.
-+ */
-+void aria_avx2_setup_32way_ops(struct aria_avx_ops *ops, bool use_gfni)
-+{
-+	if (use_gfni) {
-+		ops->aria_encrypt_32way = aria_aesni_avx2_gfni_encrypt_32way;
-+		ops->aria_decrypt_32way = aria_aesni_avx2_gfni_decrypt_32way;
-+		ops->aria_ctr_crypt_32way = aria_aesni_avx2_gfni_ctr_crypt_32way;
-+	} else {
-+		ops->aria_encrypt_32way = aria_aesni_avx2_encrypt_32way;
-+		ops->aria_decrypt_32way = aria_aesni_avx2_decrypt_32way;
-+		ops->aria_ctr_crypt_32way = aria_aesni_avx2_ctr_crypt_32way;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(aria_avx2_setup_32way_ops);
-+
- static struct aria_avx_ops aria_ops;
- 
- struct aria_avx2_request_ctx {
-@@ -211,21 +229,8 @@ static int __init aria_avx2_init(void)
- 		return -ENODEV;
- 	}
- 
--	if (boot_cpu_has(X86_FEATURE_GFNI)) {
--		aria_ops.aria_encrypt_16way = aria_aesni_avx_gfni_encrypt_16way;
--		aria_ops.aria_decrypt_16way = aria_aesni_avx_gfni_decrypt_16way;
--		aria_ops.aria_ctr_crypt_16way = aria_aesni_avx_gfni_ctr_crypt_16way;
--		aria_ops.aria_encrypt_32way = aria_aesni_avx2_gfni_encrypt_32way;
--		aria_ops.aria_decrypt_32way = aria_aesni_avx2_gfni_decrypt_32way;
--		aria_ops.aria_ctr_crypt_32way = aria_aesni_avx2_gfni_ctr_crypt_32way;
--	} else {
--		aria_ops.aria_encrypt_16way = aria_aesni_avx_encrypt_16way;
--		aria_ops.aria_decrypt_16way = aria_aesni_avx_decrypt_16way;
--		aria_ops.aria_ctr_crypt_16way = aria_aesni_avx_ctr_crypt_16way;
--		aria_ops.aria_encrypt_32way = aria_aesni_avx2_encrypt_32way;
--		aria_ops.aria_decrypt_32way = aria_aesni_avx2_decrypt_32way;
--		aria_ops.aria_ctr_crypt_32way = aria_aesni_avx2_ctr_crypt_32way;
--	}
-+	aria_avx_setup_16way_ops(&aria_ops, boot_cpu_has(X86_FEATURE_GFNI));
-+	aria_avx2_setup_32way_ops(&aria_ops, boot_cpu_has(X86_FEATURE_GFNI));
- 
- 	return crypto_register_skciphers(aria_algs, ARRAY_SIZE(aria_algs));
- }
-diff --git a/arch/x86/crypto/aria_aesni_avx_glue.c b/arch/x86/crypto/aria_aesni_avx_glue.c
-index e4e3d78915a5..07baf5a27143 100644
---- a/arch/x86/crypto/aria_aesni_avx_glue.c
-+++ b/arch/x86/crypto/aria_aesni_avx_glue.c
-@@ -39,6 +39,25 @@ EXPORT_SYMBOL_GPL(aria_aesni_avx_gfni_ctr_crypt_16way);
- 
- static struct aria_avx_ops aria_ops;
- 
-+/*
-+ * Set up function pointers for the AVX 16-way asm functions for both this
-+ * module's own dispatch table and the higher-tier (AVX2, GFNI/AVX-512)
-+ * modules.
-+ */
-+void aria_avx_setup_16way_ops(struct aria_avx_ops *ops, bool use_gfni)
-+{
-+	if (use_gfni) {
-+		ops->aria_encrypt_16way = aria_aesni_avx_gfni_encrypt_16way;
-+		ops->aria_decrypt_16way = aria_aesni_avx_gfni_decrypt_16way;
-+		ops->aria_ctr_crypt_16way = aria_aesni_avx_gfni_ctr_crypt_16way;
-+	} else {
-+		ops->aria_encrypt_16way = aria_aesni_avx_encrypt_16way;
-+		ops->aria_decrypt_16way = aria_aesni_avx_decrypt_16way;
-+		ops->aria_ctr_crypt_16way = aria_aesni_avx_ctr_crypt_16way;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(aria_avx_setup_16way_ops);
-+
- struct aria_avx_request_ctx {
- 	u8 keystream[ARIA_AESNI_PARALLEL_BLOCK_SIZE];
- };
-@@ -197,15 +216,7 @@ static int __init aria_avx_init(void)
- 		return -ENODEV;
- 	}
- 
--	if (boot_cpu_has(X86_FEATURE_GFNI)) {
--		aria_ops.aria_encrypt_16way = aria_aesni_avx_gfni_encrypt_16way;
--		aria_ops.aria_decrypt_16way = aria_aesni_avx_gfni_decrypt_16way;
--		aria_ops.aria_ctr_crypt_16way = aria_aesni_avx_gfni_ctr_crypt_16way;
--	} else {
--		aria_ops.aria_encrypt_16way = aria_aesni_avx_encrypt_16way;
--		aria_ops.aria_decrypt_16way = aria_aesni_avx_decrypt_16way;
--		aria_ops.aria_ctr_crypt_16way = aria_aesni_avx_ctr_crypt_16way;
--	}
-+	aria_avx_setup_16way_ops(&aria_ops, boot_cpu_has(X86_FEATURE_GFNI));
- 
- 	return crypto_register_skciphers(aria_algs, ARRAY_SIZE(aria_algs));
- }
-diff --git a/arch/x86/crypto/aria_gfni_avx512_glue.c b/arch/x86/crypto/aria_gfni_avx512_glue.c
-index 363cbf4399cc..1eccfceae314 100644
---- a/arch/x86/crypto/aria_gfni_avx512_glue.c
-+++ b/arch/x86/crypto/aria_gfni_avx512_glue.c
-@@ -214,12 +214,8 @@ static int __init aria_avx512_init(void)
- 		return -ENODEV;
- 	}
- 
--	aria_ops.aria_encrypt_16way = aria_aesni_avx_gfni_encrypt_16way;
--	aria_ops.aria_decrypt_16way = aria_aesni_avx_gfni_decrypt_16way;
--	aria_ops.aria_ctr_crypt_16way = aria_aesni_avx_gfni_ctr_crypt_16way;
--	aria_ops.aria_encrypt_32way = aria_aesni_avx2_gfni_encrypt_32way;
--	aria_ops.aria_decrypt_32way = aria_aesni_avx2_gfni_decrypt_32way;
--	aria_ops.aria_ctr_crypt_32way = aria_aesni_avx2_gfni_ctr_crypt_32way;
-+	aria_avx_setup_16way_ops(&aria_ops, true);
-+	aria_avx2_setup_32way_ops(&aria_ops, true);
- 	aria_ops.aria_encrypt_64way = aria_gfni_avx512_encrypt_64way;
- 	aria_ops.aria_decrypt_64way = aria_gfni_avx512_decrypt_64way;
- 	aria_ops.aria_ctr_crypt_64way = aria_gfni_avx512_ctr_crypt_64way;
--- 
-2.55.0
-
+cheers
