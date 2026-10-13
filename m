@@ -1,218 +1,171 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010038.outbound.protection.outlook.com [52.101.69.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6B754B1DB;
-	Tue, 13 Oct 2026 21:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791928790; cv=fail; b=iYCrHU57rkR5BGp3quLZoIxbZeQWUpiw7at9X33g4RdrJbGNeXyLDDttp3WubLEBhCBdTAMTzgX/gnEj3q0v5PMLetknD7oj/CkgLM/0eU2mjHMFNoB5MMOnfbJuWxerElAlWLNIGd2BpRCxXmV0Rmm2CEplkCqJ2BKeRe895vk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791928790; c=relaxed/simple;
-	bh=Y02WAg9LkfZrWNA+yr+r/LEs+bB8gG44YFIg1oZt3jU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QpfNJUYUN8rs8j4qp2nEIxgcn1jjFA8PPeBDI2ry5c6yNtNIAcmwCbWMOuyYstGGyt+ZRu/F/AToctp2g+5L3a6RWcvyhSTF7Z1bLTpTtlvg8YADcdqFHgwvj9kFNIQAPAyIuIsOAYKRrVUh+i8/T2bSx/X4MrxQ2dcLis17JI4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=tRmUfM1s; arc=fail smtp.client-ip=52.101.69.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C3A5616B0
+	for <linux-hardening@vger.kernel.org>; Tue, 13 Oct 2026 22:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791931217; cv=none; b=mipTvvsUBh7hJW1Z4tHK4yEMl4LzYVY7aRdv/cSE1OL66axAElM+lmOUh28xh98lIn8Mm3ojQtGMjhCgISw9X9dlyrloq/7noyli8V7woS3vFHBkR5MFsC2uYp8XBRiQe0RoyD8DY51B7jOY+LfZ+44T0wW9Bz8uDWSb9hW53dY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791931217; c=relaxed/simple;
+	bh=4WrpaiXx1GRQVpjm8b7gmWUkva2m2HTUpEY5WAi28rA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YEDl5xNtc2gwc04K+fV5EvnyL9n7DJHnkcFVWHl2oAFNYsLUmX0y0lajvmSVlJWJGIUod2JkXWND+RqrtEgTAoP/8rDs6nPBW1Bxq0p8JuvmOLZJ/40GwISH+CESbcfqbsWSpy6y6WoYP1cwhnps80TSpXqjuVWPo9yunVve6uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bn7hz90c; arc=none smtp.client-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="tRmUfM1s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LU/cj1MwpCoIWPXkaPefEwFRqbzDIZaqae297G0b9ou1rLtwfN+ioL4Gz94TO/XXlj1J4NEwbSSPz7mM6YqGPD2qHTLijulci9fn8QLXp1eEzjO3Ks35CROtV7gs/mpSLflnrxv3aWt27YvlgQr0KN4+w9zXmJ6M1SOb/ouvEatyijURFI1adHn8USzz+v3fon02KitosmVy5rgamwI3UrPt9RYAm2yryhMBkwOJzHSO+cK1VrCKm1VC39Pe1WWbkRCPP7Pi0ygm9ODylw9DeV5iBx/gheSJ9e4dNAZviG21qLPzo90+ADqd96gxbxoJZjA74nxBshBThYUzrK1G+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Nhe/wjFUoCvty8LtSdiyp7x3mNmPZQcjb6dPJtToQNQ=;
- b=CkPsaf9vlMlC+JQc3NDJjy3EQrDqTxfGr2Ca0ui7DMZjgIhBfxUViY3jjGXKDIWEg9G5Hnv0hc448VmKGTBHoPdbmWXj14HegM/xPfL4NI2sAX9w52lQYGYi305iwVkIctjusoHfese0cAKXRG3DCFDsOkGCeCYl1LuKzsurB4qNNSDx+bffsp6g1zwihE+TvwQIwz2O0hJjTyK66GYhoKJw6WVh0yZlFWUV4qmk8FDTPARlTqYLIbJwfBiRaXxkVWo9zQjVFKyvBDvN73xPN8Gs8z6x7jh04kR9u3ZGSID4B2NwlA8uoITJmrdlDQdoJSIbqrQU0qtZ6Ks5zd6ndQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nhe/wjFUoCvty8LtSdiyp7x3mNmPZQcjb6dPJtToQNQ=;
- b=tRmUfM1scQAZE4kGRfewVK0N2fg64nFWz0GGL/bP0OoRqFqaScoPoVjk6lnjrbrNroh11sjy0JP1xZVK+T6/MwXoARrxw6j7R0WYb5Lv6nBRjM0w0eoIT1zqKm28IycgkbnvgN+dchmDRpYCTdd4544bKv6LuCrrS62RMEz6hbjKYamv/ZqSfbvW7uQOHStRiSLi+uoDdEdb9EkU4WC2mZddeYOlbXWDEE1c1l5OydUUNp6CsuOsdSIRWue3Q1CrIbHokXE6afz4BXxxO1ym7A0a6i6xr3sWPJnBLJ41+MyMl+GkISbRSvPxiErNj8R5OR5K5ZMZiCYhNmXkQY4psA==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by DB9PR04MB9701.eurprd04.prod.outlook.com (2603:10a6:10:300::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.24; Tue, 13 Oct
- 2026 21:59:34 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%7]) with mapi id 15.21.0522.011; Tue, 13 Oct 2026
- 21:59:12 +0000
-Date: Tue, 13 Oct 2026 17:59:05 -0400
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: dmaengine@vger.kernel.org, Lizhi Hou <lizhi.hou@amd.com>,
-	Brian Xu <brian.xu@amd.com>,
-	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Michal Simek <michal.simek@amd.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v2] dmaengine: xilinx: xdma: use kzalloc_flex()
-Message-ID: <as6pqTKcHpSSjY7b@lizhi-Precision-Tower-5810>
-References: <20261005192621.99880-1-rosenp@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261005192621.99880-1-rosenp@gmail.com>
-X-ClientProxiedBy: PH7P220CA0068.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:32c::24) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bn7hz90c"
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-30bcb065bfdso6715943eec.0
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Oct 2026 15:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791931213; x=1792536013; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6CWZGGdh7JOQ6UqV1gxmMbPkjK0LPv1nbOU26QpmZ10=;
+        b=Bn7hz90c5SJwfQmP2+AW3dGAkw3UtweF3iEJs/fRS4ftpX9ZUfay81B5NwyLYLDRu0
+         JjNCwwMOY0bD6FwU7BsgiuLRwurYP8wW9es3IJGv8W7CiB4fefjuPLFLPJCVKKi7I6RI
+         oV6uPm/zxlsOkbWwFy17l83iB7KSy6ghSZjl7g4d+WDxw47jSVJgwBFEE2gZJh3cGYCh
+         AJc/NlWZK3dIlCPz7w6Mhk08iXNFzMsqxUm42YSyD70MPigXT5E+D88R2wBPNCYmOgB9
+         sx+IjU/fnz6dU6nMTKMNh1pR9SUPORMsjJrcOn4zw5C6K9GMMYn0RxKiDx0CTtsij7Gc
+         ISow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791931213; x=1792536013;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=6CWZGGdh7JOQ6UqV1gxmMbPkjK0LPv1nbOU26QpmZ10=;
+        b=UcIS7rHk3LV16G8JON2hkwqzVW6ERVtYC7AQ+Y2NIyAkgKyk2OFgqxBLgWplzQEVoE
+         yN/M1Emk/EKM7JRE5wXIHTomPArHkogHk0WEE6e2J9XG1+nKE7/uiCi2i0Xptsh1X9O0
+         UoD1xm+8I3A6/u/sL72mCrB7JS+KKHIfc/m4ezm9fddupAr07Fmhd1RLF3qQwXWPNWb/
+         tQvK5Mm70rF5HGTJEIsNBVA/RkkhbKr39l8zVpMvVIzNtk75PtEBoY2o7PB9BHd17PAp
+         fTBrswIlYmts6q0sv7iqiP3DWxj0J7Aq+RQL2ta0FqJ9ZCt+VCar3ySOUdfDtogqhR4L
+         25MA==
+X-Forwarded-Encrypted: i=1; AKwUvBx43v5a6ipwUq0E3fJIH/MzACkZl7f7/HJlVA7egaT5BQMfAjT5aL5pkTA7Amc1Pn5NHXtaqLlZ6WGsgVO+FQQ=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKWxCfjJ06ZatXpKhw63E5W53z1wdjBiQz7k1uxUCY+jDD5lxMw
+	UL6Gq7iEw9TyK2Sj8C74LaT+cS0stchCPGR005kbTDljA83BWYYPykqKR99og7uSqWz+nHiqMMm
+	c0LKVrDFpNg==
+X-Received: from dlak14.prod.google.com ([2002:a05:701b:290e:b0:14e:f9ab:6f83])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2309:b0:153:7a27:b89
+ with SMTP id a92af1059eb24-16a5ed4008cmr22709999c88.21.1791931212336; Tue, 13
+ Oct 2026 15:40:12 -0700 (PDT)
+Date: Tue, 13 Oct 2026 15:39:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|DB9PR04MB9701:EE_
-X-MS-Office365-Filtering-Correlation-Id: deffa7e7-b588-4ced-4c1d-08df2975375b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|19092799006|1800799024|7416014|376014|366016|6133799003|18002099003|10067099003|22082099003|11063799006|261009223027099003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	bnfgbVYxeW3nRqg/+3G1yjTlpnt1qrMIgVkhMeo3dzugHtPse72mzg/sDeZGUH79dbTn0za6mixSK+281bjKelsVhPeygRuOfrTOZji3/6A4jHxezfhvP5X28sq11WYaC2l+ujtb5kzzdcegexKyEFXLkdArLYvk39HY+soNNrm0swF57f3AAMYLiZdj6+z+9E/ici8qqZecJ/NIRPMgSR8yy1NJKiUmNQpYpvQjy0JqI15vBRQ3cKxEVXqq9wxRfsklHmHHUDCWwoScSZUydYH3kwOO7uOh6y3YiRNzyEVHL1pwdVr6r1oq9v0sobYesTIHR8iU+GhXZe9P2yGghw5VxREbPNeVwFnPVri/PQQ+kXml7+SC37M6/dfcnD/G4elFKADKb1geJ5knwRUrFJldYGX0VieUrOyzctEkO2+8v4gNOORkkPGwpTcLowBT3bqSMJS/Esb8mFLrSrpJfDBVKsTH4ga6tJsc2S1SqqFtw7JbFzpYpDgrYhHw56XW7eqvESHqm+2nmKGskNUhaLqOCSTNqlfwH8XsygFR7vLPo2g9J/WUi6gVjqR7jR+YjKZ7/YdkFYs5xWX0CT6gm19pVmBHmbpykXkI3ZzYdwWk3jRX9pawopHbxgb4lhkHdIltTFLK5TcmVQ3I8bYH22e5I9ibNfK7Eg/BCigHjbI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(19092799006)(1800799024)(7416014)(376014)(366016)(6133799003)(18002099003)(10067099003)(22082099003)(11063799006)(261009223027099003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KOIBMBRmCo4/6O4KvWNrKY30vr2xgML9acGGSvrzbOTnKpiO1eqF5hFpihiF?=
- =?us-ascii?Q?ihEJN+Mn7e5MaTcS3LLLWhMKslQbaVcdGbK2Y0qQLK5bCIuQz8yWhX7SuEYt?=
- =?us-ascii?Q?/SuFU8mSn9i0cri7nSgVkKzdqYDn33SFqcXOI6cjPO7o4rTIkgpKC66DXNA9?=
- =?us-ascii?Q?JXb7jRqSQJqrYrWRuBK5aiF9QjTM6+R5itUybp/Bx6HPnkOAZMsux429/Z+v?=
- =?us-ascii?Q?8b3jCLGfDsK4AlkQj5WLQLehoFB5N5BVld7cop84sjCbOY1VV9cvzE38EKrQ?=
- =?us-ascii?Q?eUWrrytnphGPdHqLAFrP4hmjWvtOW63S8hHMS/7blK3kVqD9OWRqcHGUc1cT?=
- =?us-ascii?Q?iPWZqPMMpT6XC1Y9dOZ72XMeaTY0fkmAU2+0Uu5SDMs1hHvSigCQvYDWSz2K?=
- =?us-ascii?Q?cSjAaS4vDYbQ7mslUcp94P4qMnllD5ttO9jSalgqvgtwFBdP0fdBIcpOy4AM?=
- =?us-ascii?Q?Zy+uu/a9+2zNemSSQ8M4TzJuo1qcBFHq1BQTgb4dlB4c7aUuq4R+RX3f7tLG?=
- =?us-ascii?Q?q2ndl6/kOlmDDBiolqjqFP2KRqzWo7It6AtTJRL1geszR3ilFyhzCrYy5V7M?=
- =?us-ascii?Q?5kpqThqPFG2CzR0C5NUU22Rsi39hfT2jamLCdRZAJfid1D+Iw4Gj3BV6Xpmk?=
- =?us-ascii?Q?wuFwMA5xtkZUPtyRfKnDJeyn0fV1a3nh7Cvj0YedHlqXyDbZ8kTGD+vR0fqC?=
- =?us-ascii?Q?/aUs4L4pBdtJBEJelLa25v1MyvK3KOYmWHCu6oWhWB/O03PaVN9uMdR1A1/w?=
- =?us-ascii?Q?IxZ5Cxo4Bx1HGusiDY1JxfjDW3c9+4X0OJS1HlFk9SLjr6tRCinZWuKXwrzB?=
- =?us-ascii?Q?WfHv9j0OEuh3BQDWWSbbeK6ZC6ErYVzxH35TdX8L3mZkD6upuDrrH03bLiD+?=
- =?us-ascii?Q?Sli1HsjCQxYnNlAWfKoLuvf4KKHUKji4Ki24FdDW4Zv/RkLhCnQWIB69mcdk?=
- =?us-ascii?Q?YtwvT4Fzingab9fmYip8EtA9PwoOVH7y2AxU/Q4l1zCMnTsi9FRAMYmM4lDN?=
- =?us-ascii?Q?QmxiG2Qw7CeH6btJ5hTdrqHKNSqowMxrGg01EpDamXViQmhQg+3dj8cUbYij?=
- =?us-ascii?Q?HEaBAf2KOX7JasT7rhUktGR5U/brf4F+6NRv6AcrnRIpUf9ov/wJLpbMPGFC?=
- =?us-ascii?Q?RT4kGi9DUnomkURZRXy6GTjbNvlSjjit8JQdlS+01fVSMll69b3taRegxent?=
- =?us-ascii?Q?BkJW/ezPqgeMvo3XSDuX9nxLwTiiqoWfhx35/pO4nJqU4ShJV579Gz8vLWH3?=
- =?us-ascii?Q?4kW6InFYmf8NBDP5Isak1s2Z0gIORosCTZuptrNVqcm6KhnwCjaFa+kZOFnt?=
- =?us-ascii?Q?RkLmxOaH2MhIsB/uxkrBvCz+eMaUH2YCaWx/Lf17mvkxV+6nwPJP8zK7Uf1e?=
- =?us-ascii?Q?fckACr4q4aF5J5+DbZp4gGNWXklaC3u1bvVVutwAaaEXeXwZEmTJe9Gtc1lj?=
- =?us-ascii?Q?EqHd75r5ng2P3etwr+/KaeWWaWd1KBXSH/DbSJ8e/Hzn1+Ycz0Q7urwhsuIF?=
- =?us-ascii?Q?vZvc+d6SLsxnig8f200OkyDH7XhF+hCneLry5SQPE3kS1D+nxzDuN+RBj+9F?=
- =?us-ascii?Q?/xEAIL4PrIBk3j8bueNRi04egYGXDr9VeROXsEt5JEQnThCktJxKAxwja0gN?=
- =?us-ascii?Q?KU1Zl5uqj2U49Zgk9287WUXmCp8wMiVH9oqRW85eBrn2L1aowppyaTw71tJs?=
- =?us-ascii?Q?ptyedckg0x67hJ7DPI+cs0N/fCOMS/ul9YSpNCKC6p0YvgaIeq0M+mA6smyD?=
- =?us-ascii?Q?7LAGdzMrSd99yRg9E+78ZYYzwXqK40Aq09o9jnJefz4Bj3nEgCfT?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: deffa7e7-b588-4ced-4c1d-08df2975375b
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2026 21:59:12.8400
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: laGg/n4MJ5J5sBuP7vr6M53hNn0UB86t5p2kOhwYverJPZthI5eUwfASPe8Mdk0o/hicAbXcYPXUYi7mm41GZmS06F/eNYWNVupo5m9GkTZeRCR2ykxZSCFLyzottKIP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9701
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261013223946.1836757-1-irogers@google.com>
+Subject: [PATCH 00/11] kobject: Require explicit initialization of struct kobj_type::release
+From: Ian Rogers <irogers@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <chleroy@kernel.org>, Nayna Jain <nayna@linux.ibm.com>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	David Teigland <teigland@redhat.com>, Alexander Aring <aahringo@redhat.com>, 
+	Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Richard Weinberger <richard@nod.at>, Zhihao Cheng <chengzhihao1@huawei.com>, 
+	Felix Kuehling <Felix.Kuehling@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, driver-core@lists.linux.dev, 
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, gfs2@lists.linux.dev, 
+	xen-devel@lists.xenproject.org, linux-s390@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Oct 05, 2026 at 12:26:21PM -0700, Rosen Penev wrote:
-> Change desc_blocks to a flexible array member so the descriptor and
-> its block array are allocated together, removing one allocation and
-> its error handling.
->
-> Add __counted_by for extra runtime analysis, and set dblk_num right
-> after allocation which is already done by kzalloc_flex() for GCC >= 15.
->
-> Assisted-by: LLM
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
+Clang supports the 'require_explicit_initialization' attribute on struct
+fields to enforce that the field is explicitly initialized when an
+aggregate object is constructed, emitting -Wuninitialized-explicit-init
+(enabled by default) if the field is omitted.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Following discussion at the Linux Plumbers Conference [1], this series
+introduces __require_explicit_initialization in
+include/linux/compiler_attributes.h and applies it to
+struct kobj_type::release.
 
->  drivers/dma/xilinx/xdma.c | 15 +++++----------
->  1 file changed, 5 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-> index 8d4a5d14e8db..16d202722245 100644
-> --- a/drivers/dma/xilinx/xdma.c
-> +++ b/drivers/dma/xilinx/xdma.c
-> @@ -81,7 +81,6 @@ struct xdma_chan {
->   * @vdesc: Virtual DMA descriptor
->   * @chan: DMA channel pointer
->   * @dir: Transferring direction of the request
-> - * @desc_blocks: Hardware descriptor blocks
->   * @dblk_num: Number of hardware descriptor blocks
->   * @desc_num: Number of hardware descriptors
->   * @completed_desc_num: Completed hardware descriptors
-> @@ -91,12 +90,12 @@ struct xdma_chan {
->   * @period_size: Size of a period in bytes in cyclic transfers
->   * @frames_left: Number of frames left in interleaved DMA transfer
->   * @error: tx error flag
-> + * @desc_blocks: Hardware descriptor blocks
->   */
->  struct xdma_desc {
->  	struct virt_dma_desc		vdesc;
->  	struct xdma_chan		*chan;
->  	enum dma_transfer_direction	dir;
-> -	struct xdma_desc_block		*desc_blocks;
->  	u32				dblk_num;
->  	u32				desc_num;
->  	u32				completed_desc_num;
-> @@ -106,6 +105,7 @@ struct xdma_desc {
->  	u32				period_size;
->  	u32				frames_left;
->  	bool				error;
-> +	struct xdma_desc_block		desc_blocks[] __counted_by(dblk_num);
->  };
->
->  #define XDMA_DEV_STATUS_REG_DMA		BIT(0)
-> @@ -255,7 +255,6 @@ static void xdma_free_desc(struct virt_dma_desc *vdesc)
->  			      sw_desc->desc_blocks[i].virt_addr,
->  			      sw_desc->desc_blocks[i].dma_addr);
->  	}
-> -	kfree(sw_desc->desc_blocks);
->  	kfree(sw_desc);
->  }
->
-> @@ -276,26 +275,22 @@ xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num, bool cyclic)
->  	void *addr;
->  	int i, j;
->
-> -	sw_desc = kzalloc_obj(*sw_desc, GFP_NOWAIT);
-> +	dblk_num = DIV_ROUND_UP(desc_num, XDMA_DESC_ADJACENT);
-> +	sw_desc = kzalloc_flex(*sw_desc, desc_blocks, dblk_num, GFP_NOWAIT);
->  	if (!sw_desc)
->  		return NULL;
->
-> +	sw_desc->dblk_num = dblk_num;
->  	sw_desc->chan = chan;
->  	sw_desc->desc_num = desc_num;
->  	sw_desc->cyclic = cyclic;
->  	sw_desc->error = false;
-> -	dblk_num = DIV_ROUND_UP(desc_num, XDMA_DESC_ADJACENT);
-> -	sw_desc->desc_blocks = kzalloc_objs(*sw_desc->desc_blocks, dblk_num,
-> -					    GFP_NOWAIT);
-> -	if (!sw_desc->desc_blocks)
-> -		goto failed;
->
->  	if (cyclic)
->  		control = XDMA_DESC_CONTROL_CYCLIC;
->  	else
->  		control = XDMA_DESC_CONTROL(1, 0);
->
-> -	sw_desc->dblk_num = dblk_num;
->  	for (i = 0; i < sw_desc->dblk_num; i++) {
->  		addr = dma_pool_alloc(chan->desc_pool, GFP_NOWAIT, &dma_addr);
->  		if (!addr)
-> --
-> 2.56.0
->
+As Documentation/core-api/kobject.rst notes:
+  "One important point cannot be overstated: every kobject must have a
+  release() method, and the kobject must persist (in a consistent state)
+  until that method is called. If these constraints are not met, the code
+  is flawed."
+
+Annotating struct kobj_type::release caught 30 struct kobj_type
+definitions across the tree that omitted .release:
+- Patches 2-10 fix 10 struct kobj_type definitions where dynamically
+  allocated kobjects, ksets, or enclosing structures were either leaked on
+  kobject_put() or freed prematurely before kobject release (risking a
+  use-after-free when CONFIG_DEBUG_KOBJECT_RELEASE=y).
+- Patch 11 annotates struct kobj_type::release with
+  __require_explicit_initialization and explicitly sets .release = NULL
+  (with explanatory comments) on the remaining legacy struct kobj_type
+  definitions whose kobjects are static, per-CPU, or embedded in devm- or
+  parent-managed structures.
+
+[1] https://lpc.events/event/20/contributions/2392/
+
+Ian Rogers (11):
+  Compiler Attributes: Add __require_explicit_initialization macro
+  powerpc/secvar: Add missing kobject release callback to secvar_ktype
+  sh: sq: Add missing kobject release callback to ktype_percpu_entry
+  cpufreq: Initialize kobj_type release callback in ondemand and
+    conservative governors
+  ACPI: CPPC: Free cpc_desc in kobject release callback
+  dlm: Free dlm_ls in kobject release callback
+  xen/sys-hypervisor: Add release callback to hyp_sysfs_kobj_type
+  s390/sclp_mem: Allocate struct sclp_mem dynamically and add kobject
+    release
+  ubifs: sysfs: Use kset_create_and_add() for ubifs_kset
+  drm/amdkfd: Free queue in procfs_queue_type kobject release callback
+  kobject: Require explicit initialization of struct kobj_type::release
+
+ Documentation/conf.py                         |  1 +
+ arch/arm64/kernel/cpuinfo.c                   |  2 +
+ arch/powerpc/kernel/secvar-sysfs.c            |  6 ++
+ arch/sh/kernel/cpu/sh4/sq.c                   |  6 ++
+ drivers/acpi/cppc_acpi.c                      | 39 +++++-----
+ drivers/acpi/sysfs.c                          |  2 +
+ drivers/cpufreq/cpufreq_conservative.c        |  5 +-
+ drivers/cpufreq/cpufreq_governor.c            |  3 +-
+ drivers/cpufreq/cpufreq_governor.h            |  1 +
+ drivers/cpufreq/cpufreq_ondemand.c            |  5 +-
+ drivers/dma/ioat/sysfs.c                      |  2 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_xcp.c       |  4 +
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c      | 10 ++-
+ drivers/gpu/drm/amd/amdkfd/kfd_queue.c        |  5 +-
+ drivers/infiniband/hw/hfi1/sysfs.c            |  2 +
+ drivers/infiniband/hw/usnic/usnic_ib_sysfs.c  |  2 +
+ drivers/parisc/pdc_stable.c                   |  2 +
+ drivers/power/supply/ab8500_fg.c              |  2 +
+ drivers/s390/char/sclp_mem.c                  | 73 +++++++++----------
+ drivers/soc/hisilicon/kunpeng_hccs.c          |  6 ++
+ .../fbdev/omap2/omapfb/dss/display-sysfs.c    |  2 +
+ .../fbdev/omap2/omapfb/dss/manager-sysfs.c    |  2 +
+ .../fbdev/omap2/omapfb/dss/overlay-sysfs.c    |  2 +
+ drivers/xen/sys-hypervisor.c                  |  6 ++
+ fs/dlm/lockspace.c                            | 19 +++--
+ fs/erofs/sysfs.c                              |  4 +
+ fs/f2fs/sysfs.c                               |  6 ++
+ fs/ocfs2/cluster/masklog.c                    |  2 +
+ fs/ubifs/sysfs.c                              | 24 ++----
+ include/linux/compiler_attributes.h           | 11 +++
+ include/linux/kobject.h                       |  2 +-
+ scripts/checkpatch.pl                         |  1 +
+ tools/lib/python/kdoc/xforms_lists.py         |  1 +
+ 33 files changed, 170 insertions(+), 90 deletions(-)
+
+-- 
+2.56.0.385.gd3acb90ef8-goog
+
