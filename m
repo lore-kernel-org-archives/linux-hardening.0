@@ -1,103 +1,161 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182C83B6C18;
-	Tue, 13 Oct 2026 09:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA05D395AE4;
+	Tue, 13 Oct 2026 09:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791882391; cv=none; b=JnrcikYekFrI/4EEZDn3nTCsbxjvbNgv2ioF5pNRbhXOH7CQwFq+5rlknpPhXanu65wGEncS0qXI0ZC043ZSt/s6k1qWdX1bTr3wkNkLi2ONUKCpHjEZ2j2jn9oRvDuIsn+pcqg4AsSDaCcdMaya49aIum/4Vy4p+YNpUV+vhBY=
+	t=1791882572; cv=none; b=ubGue2RrpHng5NlaGyGFKmG6z1x7znFNClKy4xVvcoKx5tMW76sqctPc0YZuE/S2oObGN4imE83LaJwzYl5kAWjnxZ2hh8jMNaP7r6ONhgGMAg/lE6+Cqzy09PWEiBOXvgEx0+L6CgyQjq4afRCo/8LPAxJwp+qGxojTAO8LyMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791882391; c=relaxed/simple;
-	bh=4Gxx4JGIrNNVz11HTGtu39ngIiUWuqI6YvBtR7RUyM4=;
+	s=arc-20240116; t=1791882572; c=relaxed/simple;
+	bh=IQ/UNuFHURdJ5ziTLh4qZrD8MOsGX3B11CY5vdjd4ZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nNaaXqLyRMNo666l071nAWU7cXUiR3IXRTjaxSD8NEnReK/1TpM2uaxQ/ilYnvCvYQvaBh9ZEaHiyAlgp9oAmnIAAjAU9HDdo/9Tqc+VqSwTNs7G1jAFQHVoYOPxIRhB9q81IGw7+302TgXZztu+jOBxrsSUYhRie7hlOAB5wXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nqA7w4U0; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=FU1G4ecdDUbUi/WDiLX1eZMGnCLIREscso5TsSBEUPMpKHlgS6SEqZNz1lY5kFsk3Fk+q6A4KSTM/YtxyHFUmvQRwA+/fPcLXlhTqZBQaK0S8Q9pu72LB+5jskUPhHfXcSA8i5RH3hCpXISk8vsEIizUrcTvwlhEJhYDiTMJ8hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hwG7vtZ6; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nqA7w4U0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=7zrAEGktIYh9nAiw6rmWA3rpgrSvWIioqu8bDZprKTA=; b=nqA7w4U0pDf4wPTzOpQ/ePiPKa
-	cLK0UHIVXuL5AzAbotlZg7lEyEgRVjicONM32uMXHN9z3dabglCnlLKCe6iI9R/bSTsb8q9HwbGAq
-	1kyJZ4s9oNkWtsr65rIlXGbFL8HSjykL6S3GNtK/GP82s7ZGSvlOnJioLPHQUi/Djnv7hsWEfEG9G
-	c6gHUcJMonJKBUVk+EUhOZSJZApngwba5UOhcGe3v08SNWrHRSvoyyfTy74OW6CTf2MShK10hgesj
-	iro62oMvZ86dOahNsxWbqWpCWszUxOj33KdtdgdET9tvfGLvxhTH7Y09alZqYodlioxWa3W+IryMI
-	G7hiTImQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.5 #2 (Red Hat Linux))
-	id 1xGYSc-0000000FJs9-3MPK;
-	Tue, 13 Oct 2026 09:06:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0850C30063F; Tue, 13 Oct 2026 11:06:14 +0200 (CEST)
-Date: Tue, 13 Oct 2026 11:06:13 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/3] objtool: Skip jump table jumps in the kCFI indirect
- call check
-Message-ID: <20261013090613.GE2009045@noisy.programming.kicks-ass.net>
-References: <20261012090424.i.497-kees@kernel.org>
- <20261012090436.1676525-3-kees@kernel.org>
- <20261012092250.GO4121339@noisy.programming.kicks-ass.net>
- <20261012183925.ca026d-kees@kernel.org>
- <20261013064405.GY2009045@noisy.programming.kicks-ass.net>
- <202610130126.E24D003C0@keescook>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hwG7vtZ6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791882571; x=1823418571;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IQ/UNuFHURdJ5ziTLh4qZrD8MOsGX3B11CY5vdjd4ZM=;
+  b=hwG7vtZ6YBR7AfXPt3DffO1F6MMLYFDQchc4k9T2NfR2dDokx/8E9Mej
+   ZHpA6HCI6U+FsX+rNWpqN8HVMBYL1IJJqtIqtKP9RWXrWgzp8N/CNJ7E9
+   OFgovNi5Z3U6KINz9JdhtblHU8BlUk3mfkw4VloBFmDxf359h+iSaYlCS
+   ORL36WNZT0nN37qSpJxxP8O+L8qk79jC5wCopYVdKxnVhxhlKMxL+pnCa
+   IN77ybNQBHPPrveoNRrnyfbd4IroAJaDMTg2Jlt55g2RTvuioon8OHA4A
+   2EkAqVjd4dYmS3RjmGnYuFlFZ//dcUZYt5BXm6wq7pW8gcYXw3E1LDRJe
+   w==;
+X-CSE-ConnectionGUID: fPqzkKJTSviPLrXKqzkBKg==
+X-CSE-MsgGUID: AaWK8NZNSZy+UpjoFEwQnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="595188"
+X-IronPort-AV: E=Sophos;i="6.27,155,1787036400"; 
+   d="scan'208";a="595188"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 02:09:30 -0700
+X-CSE-ConnectionGUID: BgXYAbCpQMSPY4ai3EmgtQ==
+X-CSE-MsgGUID: Z+SacHifQmOu6wFBhA0rHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,155,1787036400"; 
+   d="scan'208";a="1196513"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.48])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 02:09:20 -0700
+Date: Tue, 13 Oct 2026 12:09:18 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Ryan Chen <ryan_chen@aspeedtech.com>,
+	Billy Tsai <billy_tsai@aspeedtech.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <ray.jui@broadcom.com>,
+	Scott Branden <scott.branden@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Chaitanya Vadrevu <chaitanya.vadrevu@emerson.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-rpi-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-parisc@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] serial: 8250: make port operations work on struct
+ uart_8250_port
+Message-ID: <as31PsESOgLUhMB6@ashevche-desk.local>
+References: <cover.1791873876.git.jirislaby@kernel.org>
+ <c59fa203f325e0fe7601ea0fbc0d222c8b37f9eb.1791873876.git.jirislaby@kernel.org>
+ <as3etnbZatn4sbfx@ashevche-desk.local>
+ <c6b08f53-b5ee-44c8-93d1-54fdf5994ed2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202610130126.E24D003C0@keescook>
+In-Reply-To: <c6b08f53-b5ee-44c8-93d1-54fdf5994ed2@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Oct 13, 2026 at 01:37:03AM -0700, Kees Cook wrote:
-> On Tue, Oct 13, 2026 at 08:44:05AM +0200, Peter Zijlstra wrote:
-> > On Mon, Oct 12, 2026 at 11:41:03AM -0700, Kees Cook wrote:
-> > > Clang never has this jump: with retpolines, LLVM's IndirectBrExpand pass
-> > > turns the label addresses into indexes and the "goto *" into a switch,
-> > > which Clang's -fno-jump-tables then makes a compare tree. So it's only
-> > > constructed this way under GCC, but since now we can turn on kCFI with
-> > > GCC, the objtool warning about indirects without kcfi protection trips.
-> > 
-> > OK, then the next question; do we *want* to allow a 'naked' indirect
-> > branch to survive?
+On Tue, Oct 13, 2026 at 09:53:26AM +0200, Jiri Slaby wrote:
+> On 13. 10. 26, 9:33, Andy Shevchenko wrote:
+> > On Tue, Oct 13, 2026 at 08:48:51AM +0200, Jiri Slaby (SUSE) wrote:
+
+...
+
+> > > -	rc = serial8250_register_8250_port(&port);
+> > > -	if (rc < 0)
+> > > +	struct uart_8250_port *uport = serial8250_register_8250_port(&port);
+> > > +	if (IS_ERR(uport)) {
+> > > +		rc = PTR_ERR(uport);
+> > >   		goto err_sysfs_remove;
+> > > +	}
 > 
-> I originally struggled about this. I'd really rather that GCC not codgen
-> like this at all. On the other hand, it's a bounded load and jump through
-> an .rodata table, so that's kind of a manual CFI. :P (And if it gets
-> targeted via ROP, it doesn't matter: everything is a target then.)
-
-With IBT enabled, I would image GCC will also spray ENDBR around like
-there is no tomorrow :/
-
-> > We can simply disable the whole interpreter when kcfi=y. Isn't that
-> > thing recommended disabled anyway?
+> > Also do not define
+> > variables in the middle of the code (it's only allowed for auto cleanup
+> > variables and for-loop iterators).
 > 
-> I don't think that's realistic, as every GCC-building distro will (I
-> hope) enable KCFI as soon as it's in GCC. It's present with
-> CONFIG_BPF_JIT_ALWAYS_ON=y, and only Debian has it off:
-> 
->   │ Debian sid and trixie                      │ not set
->   │ Ubuntu noble                               │ y
->   │ Fedora, CentOS Stream 9 and 10             │ y
->   │ Arch                                       │ y
->   │ openSUSE Tumbleweed, SLE15-SP7             │ y
->   │ Alpine (lts and virt)                      │ y
->   │ Android GKI android16-6.12 (arm64 and x86) │ y
-> 
+> Why, actually?
 
-What an unfortunate situation this is :(
+Because it's the style. Linus also told it many times (I am tired to repeat
+this, I leave it to you to find his words on lore.kernel.org).
 
-But I don't have a better suggestion. Your patch it is then.
+> First, it is used in the kernel quite a few times already
+> [1]. Second, while it is sort of c++ism (and I like to use modern c++), it
+> makes the life of the variable a lot more obvious.
+> 
+> [1] eg. see output of: rg -U -C 5 '}\n+\s+struct .*\*.*=' drivers/
+
+(you made me to install something I haven't heard about, it's better to use
+ `git grep` though)
+
+Note excluded __free() if I get regexp correctly
+
+$ rg -U -l '}\n+\s+struct .*\*[^)]*=' drivers/ | less
+drivers/ufs/host/ufs-qcom.c
+drivers/dma/xilinx/xilinx_dma.c
+drivers/dma/idxd/init.c
+drivers/media/platform/raspberrypi/rp1-cfe/csi2.c
+drivers/gpib/agilent_82357a/agilent_82357a.c
+drivers/gpib/ni_usb/ni_usb_gpib.c
+drivers/tty/serial/samsung_tty.c
+drivers/s390/scsi/zfcp_scsi.c
+drivers/gpio/gpiolib-shared.c
+drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
+drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_dmub.c
+drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+drivers/gpu/drm/msm/msm_gem_vma.c
+drivers/gpu/drm/amd/display/dc/clk_mgr/clk_mgr.c
+drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+
+So, less than dozen of drivers doing wrong is not an argument, try something
+better. But thanks, I will check and address this in some of the above.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
