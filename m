@@ -1,129 +1,103 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F3D542EF5
-	for <linux-hardening@vger.kernel.org>; Tue, 13 Oct 2026 19:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6D64DE700
+	for <linux-hardening@vger.kernel.org>; Tue, 13 Oct 2026 20:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791921217; cv=none; b=LEE7kz6xi1rmMk2HjrpnkzKSk6CchEPqLZNziEus612/FFGsuDkGTgllBtrKRhaRhD2Q2lZ/Fd1hcT1RNkY67kD6O696XWjZ4a7KKBc3Fbr6StzlhkBI4n+FZVbrr2uJuYiICRneCcnUix2h1V9WFDrFPqCoElUt9IPSz3Ke17Q=
+	t=1791923510; cv=none; b=T7y+xoa7C30xJJ3sL8uImaRgJXsqGcrWrd30UPfQMoUSiZzE42wv11Ua9BL8uJ1R/YdXEJqXoqRP7kua8b3+J46967fZe3wk5SEVHy/LI8RjSAYUiCQuscI6gUpAVIX18pQtemzOSlCZtMiXppakqD4vkKjVBHrPhLh/JmqVjV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791921217; c=relaxed/simple;
-	bh=9X+B3VzuP6c2+GbMDzQKaInOmGWlAa6Crsdlsjiub+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rOXdKIhCmaVI4kRojfLmIpP9RNq0HTISXt/5e/9LU1XNJxEsSD2ta9h8PsaeT2PAOxv3pAbfLUEzTvxFO7YOe+h+Rj7FIPPZKA1nH1POpQeKikXDmwIrCFI0g2FOM2g2UnLqgDm/wB5paQbGgZ9dp5KDchiR2H58LK8v8mWolrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org; spf=none smtp.mailfrom=thinkoid.org; dkim=pass (2048-bit key) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.b=EPUCk5Vh; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thinkoid.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=thinkoid.org
+	s=arc-20240116; t=1791923510; c=relaxed/simple;
+	bh=CLcT2P8mvrfGWBSCWhOtFke8LNjfByo/2lto2OrhPXk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MH99pOCXXRiBm7CeHAiFI6Q/m8xKAv95BlZhQA4scRpMK4euqr4M07XyMWKqbm1oIOO50SE3vgWtlmTBVRJb7tTGH9ARcb9vx7Zuyj/nO7D33vbQHcB4ZehdDd0HGyBGtGhcTRlL3vdda4fv/mlXEmIC6FfUCZvZx01Oqb+n4ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XQrn9Dul; arc=none smtp.client-ip=209.85.210.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--morbo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thinkoid-org.20251104.gappssmtp.com header.i=@thinkoid-org.20251104.gappssmtp.com header.b="EPUCk5Vh"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-91b89c6caffso17226606d6.2
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Oct 2026 12:53:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XQrn9Dul"
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-88c768885b0so2489404b3a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Oct 2026 13:31:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thinkoid-org.20251104.gappssmtp.com; s=20251104; t=1791921214; x=1792526014; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=HcBu6oPAez1ljZeSMUFIBe+d1rm2GYp83jcwBgf/ZWA=;
-        b=EPUCk5VhzC4xZLPu5RJNFkGJNQIaQGlNdADxDxWxR//Q6VGL5HifvRB4F1j3YoqkIO
-         D997XkDKGrvbKBkYRhUaDKBlUsJKe3qweZTasPrGov7LJl6T9VnlZ/jVEL3do5ifowEv
-         KFFBa3pDn/YlhqbEdcjCbEbwnQAYj1+yfWPEn6L6CDGymP5DPD3zhoRoqvLcgCmEBvSW
-         6fqfOsaR0+AOsXCEIIGG7hdUpfMQPJ8BTW+dXRpg266MqkkZ0wmvoV7/Q2/4++21uc1S
-         vBq7Wsoi5aVZFMUOpNeRoHGu7kvF3OoQIT0d4xY1dE/HBSO7RL9fVox9wAAAgDxo/q9F
-         FSuw==
+        d=google.com; s=20251104; t=1791923509; x=1792528309; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Mq5q1jaAtxtVtunWf71RDSHZ/xhARAeKAsNXai1vmEk=;
+        b=XQrn9DulQfiUH5nNsVSjlyVqQB/w90Mbf4W9dkHsMhT7MlDmaAHV3r6uS2jWZGDzE3
+         sEVxL2XgKF7CTwE3AMtmdjgo0HjncBSMygku+QnQZkhZpWVUqzmTL4mld/luLFTAYgkD
+         WYdWq6f5PjFi+Aznag2/bCoNh0o9MN1fVZgkC43zwXdijzg6vmtAmITxb+OlGm7Xuhqe
+         yeGMV5KKgH7p8au1xCF92E7/e5+MskYNKUTDC1sdzclrFOdng2RWvUL4wBXZS7uUZC6N
+         8RY1d8bk93zHTJskQ00p2FZ3QuaRBDMW//QjQXfU0SqaR2hLAml2eZGl6RR4GJJCk9Vp
+         CQnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791921214; x=1792526014;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=HcBu6oPAez1ljZeSMUFIBe+d1rm2GYp83jcwBgf/ZWA=;
-        b=0DoCziJaF323uz27xqObvAwPhKtC/81LuEr+YlMSKVxXFsEF4+nmEFnrkRXO8tmgTX
-         uaPCQZ9i/TfIZsq5BrlYTV9cEQp6hNtSZiJ8FQ80Rn5ofsVTj3n+5mzsQsboZUaR7ta8
-         VwCcqZn8m02WW/lDaYK7F3lPOouS+rzE8Y7u6jSO1LtGtq+ONFXxIv+Cu5rQHNU5MWGu
-         XUyb6FcXa1uXA25OjSOodn4VwCrdS0G2yWRAtVMawkVR2jBxNuqqahL+hE5bWnfw+bYq
-         XBxTGOh4gb1G+SSM8wIJntTrguvvQwc/BOGu+qeVQIlSFreImX9jOCVK6MgCJC8MTs6Z
-         on2w==
-X-Forwarded-Encrypted: i=1; AKwUvBwZogb59DkN7N1cG6dXIL9vNPSy71d0KOmNBmqci/8W5bX2yd8KXVQo9zvRCMJaXw4mgSnRYDdG9tUIVU3Un6s=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLQAmMfe2Z2d83diZHowBJORFpolkBL15MMo1cWNrtwaJPb88B1
-	LxOKxNj/iz3BkTw7MCk7SPpB1TvAUenpDFIm9G7ZPFoQXXGLAhzLvBLFTcvGK5IiAhc=
-X-Gm-Gg: AYBFou1vjnqn191Y+avW4ZZC5ViIyuEHI/bPKpOhpQF6t9PP7oXw0JqbzXBUHR2fpEc
-	gZhNd3bN9cc67ePGfT85oZEOzsBgu1u8r3If/1bm7nIEq4fpI0D7KGDdwA2wRpS23l+80A5i09T
-	lYO2OR1w+6qaYc318w86nLMwwdJEl0eUu/musyzzR2InK+x4dIbk2DCMKsjM3QawZkBhX2Rn3pB
-	1WB8eq5msA9llHe1LMEfltCT7T5VFXMXPpClR7ifM4mpFrxDWExenpZnLxAeBxbp5xrsd0OfFLH
-	GgzcrvGLwXbEMK5MwfdH949qW/p16m6OlFExOJF3AXNNZFvy5xnUQQ5hngcvflxjPvtFcHwKXDy
-	IhmfFWptVpOInt1C9vGjzc7FbkEPA0C/kB+xxu+U7TqzMX6y0HRK3BuYrMZ61Ol02aCDVV2OJFC
-	Ojnd4nMT+dQxWJOXnIctatsFIv3f2TrOrXfwMORK0Ws8t+2sG1AMz3rX7XY9RZEC6eNQCcVA==
-X-Received: by 2002:ad4:5fc9:0:b0:91b:8d12:bac9 with SMTP id 6a1803df08f44-91b8d12bb24mr93591896d6.0.1791921214109;
-        Tue, 13 Oct 2026 12:53:34 -0700 (PDT)
-Received: from localhost.localdomain ([2605:a601:a61d:7a00::11])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-91b97c35bfcsm33085666d6.42.2026.10.13.12.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Oct 2026 12:53:33 -0700 (PDT)
-From: Liviu Nicoara <lnicoara@thinkoid.org>
-To: Michael Burch <me@michaelburch.net>,
-	Aleksandrs Vinarskis <alex@vinarskis.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Abel Vesa <abelvesa@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Abel Vesa <abel.vesa@oss.qualcomm.com>,
-	Tobias Heider <tobias.heider@canonical.com>,
-	Val Packett <val@packett.cool>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	linux-hardening@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v6 3/3] arm64: dts: qcom: x1e80100-dell-xps13-9345: introduce EC
-Date: Tue, 13 Oct 2026 15:53:27 -0400
-Message-ID: <20261013195327.19571-1-lnicoara@thinkoid.org>
-X-Mailer: git-send-email 2.56.0
-In-Reply-To: <20261013172718.12355-1-me@michaelburch.net>
-References: <20261013172718.12355-1-me@michaelburch.net>
+        d=1e100.net; s=20260707; t=1791923509; x=1792528309;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Mq5q1jaAtxtVtunWf71RDSHZ/xhARAeKAsNXai1vmEk=;
+        b=lmmUOQ4z4y7ogZC228n7f8bf1TxrXNtY20y97TVj3bX5qAO6g47uV1JZSl5Ei0I5Q1
+         jgdEN8ORw/IahFUaEPHYrkPGNpHsT+hGKVFCA6DjuIyhpA9HB0jP2Lc3krXubcVCWQcH
+         mL8CCuz7DZ79tXM4KOuX6RKdsUHdl6RVWjPPVLKcKIQM7oIrpV2uClL8ibIVvoblyK39
+         nxFAcbSnwXYK8yLUSkUOg+8SPx+MJ1Gyhozp8QoOXmKH4UCQ3oZqba8a3dUcRqI1ebCJ
+         DRsqRa/n6fcbn/s4lPZc2TYCcXeql95z3w9xwklnXBykpuMHNMJGl3Eh4UOwFNAXgNjl
+         2PMg==
+X-Forwarded-Encrypted: i=1; AKwUvBxehQyNpKbuvwvehd+mbYrVYlPc+1nGJZOV1y4Xxqn/ugpCL8kbzn3+SfLPlQ0BGY3K/xv7fXPOEPENiErZLLE=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJTvtGxVbj05Vtkhny8JOVDtBwh5sm+M4rcHWUnTTFm8ROTymDw
+	Q/ia5hKSjuvQBJOJin+o+Mj1hN8Ymdntrh8Zxms3o+klo40CPhpmy8c6rn8P3Fa8IJU5J6HeSW9
+	8
+X-Received: from pfdf24.prod.google.com ([2002:aa7:8b18:0:b0:89a:751f:708f])
+ (user=morbo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:9087:b0:892:8a3f:4515
+ with SMTP id d2e1a72fcca58-897c653fe48mr11646582b3a.13.1791923508682; Tue, 13
+ Oct 2026 13:31:48 -0700 (PDT)
+Date: Tue, 13 Oct 2026 20:31:46 +0000
+In-Reply-To: <20261012205919.4012405-1-morbo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20261012205919.4012405-1-morbo@google.com>
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261013203146.387344-1-morbo@google.com>
+Subject: [PATCH v2] overflow: Match arithmetic in both parts of __builtin_choose_expr
+From: Bill Wendling <morbo@google.com>
+To: Kees Cook <kees@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bill Wendling <morbo@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 13 Oct 2026 12:27:16 -0500, Michael Burch wrote:
-> These two should be AMUX1_GPIO and AMUX2_GPIO. My unit (BIOS 2.14.0)
-> shows what Liviu reported [1]: 0x14c (lpddr5_therm) reads 130.048 C from
-> boot on, and that is the value the EC is sent.
+The two parts of '__builtin_choose_expr()' had different arithmetic
+expressions. This patch corrects it so that both parts calculate:
 
-Same here, and the ADC1 table settles what my readings left open.
-On this unit (also BIOS 2.14.0), with all four GPIO channels defined
-in one DTB on a 7.2.6 kernel:
+  COUNT * sizeof(*MEMBER) + __must_be_array(MEMBER)
 
-0x14a  38.6 C        0x14c  130.0 C (constant)
-0x14b  32.7 C        0x14d   34.7 C
+In practice, '__must_be_array' is meant to assert if 'MEMBER' isn't an
+array and return '0' otherwise. However, symmetry is less prone to
+subtle errors (and far more satisfying).
 
-A charger on the left USB-C port warmed 0x14b by 1.6 C in three
-minutes; 0x14d stayed within 0.1 C. So usb_charger_left_therm is
-AMUX2_GPIO, 0x14b, as your table says; 0x14a reads a board
-temperature and warms with the SoC.
+Signed-off-by: Bill Wendling <morbo@google.com>
+---
+v2: Don't use 'size_add', which just adds more complicated macro cruft to the
+    expression. Instead, just adjust the parentheses.
+---
+ include/linux/overflow.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	sys_therm0: channel@14a {
-> +		reg = <ADC5_GEN3_AMUX1_GPIO_100K_PU(1)>;
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index a8cb6319b4fb..d0f04436343e 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -418,7 +418,7 @@ static __always_inline size_t __must_check size_sub(size_t minuend, size_t subtr
+ #define flex_array_size(p, member, count)				\
+ 	__builtin_choose_expr(__is_constexpr(count),			\
+ 		(count) * sizeof(*(p)->member) + __must_be_array((p)->member),	\
+-		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
++		size_mul(count, sizeof(*(p)->member)) + __must_be_array((p)->member))
+ 
+ /**
+  * struct_size() - Calculate size of structure with trailing flexible array.
+-- 
+2.56.0.385.gd3acb90ef8-goog
 
-One note on the shape: hamoa-pmics.dtsi already defines
-channel@14a and channel@14b as pm8550_gpio_01 and pm8550_gpio_02,
-with gpio3 and gpio4 in high impedance for them. The EC's io-channels
-can reference those two directly; redefining the nodes in the board
-file only adds the labels, which the EC node does not need.
-
-Happy to test a v7 with the two channels moved.
-
-Liviu
