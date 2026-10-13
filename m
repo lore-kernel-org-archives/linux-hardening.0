@@ -1,40 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101C1471D05;
-	Tue, 13 Oct 2026 03:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1C83264F4;
+	Tue, 13 Oct 2026 03:40:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791862211; cv=none; b=K4tHStxQ9vnCucY5/Tz+uhnkUXwH1BGuSVzhZtODtsIzUfFELUyl0eCpfiwPVkR9OTzl4a1qSbNSxC2eeZjQXASJ8HSwxU3+45UskrFf4A2Gs20m4h3HxGCm7yw6vKvRNlQ+gNH2YP0sZRvoCDsHAhlyaYRfaLWMfudrh74BXhI=
+	t=1791862824; cv=none; b=NRzrY+39B/QYx6aBvuZxdRnqVCM4jbcPzeFUsMdZTcftnGpmn3faZ6sC31igjf8ylbpc/lyYKbPEHwZC0LFkg00bC2r9dNxV3GsPc1dBY7Ai+noX2adCy69OtLzkNHu+PJV0i2QhmQUqU3at0FSuVh4ryE+NkWyr47mPjB56Jhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791862211; c=relaxed/simple;
-	bh=4Qef8mw9B/3SyBaLqPmU6dpj0xf6m3vhFa9+oju2XUg=;
+	s=arc-20240116; t=1791862824; c=relaxed/simple;
+	bh=Pf8PDlvhGyxPRJ04hgjmStlPo6N2sQGF+ut0PITXAXs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OphKkrdYH3TT76IoAa+qoqkIZVWppueLg7+DyZHTbx2r/JBrdcxO9IfvOmhbVFT/vfxSGBmQyG/vxasCTIQEIuYgavQVYTFlkidEdPYdE5ZGM3u0urOrKEi19ousChIFkyY2DyGTWwTSgZnCAaIIyPRym6yMaNb2DyJwZ7/027s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APIUhXsN; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=K22IihbqoQvCLepeqjlL0JgZTwKIC3mxLq12oyk7M1MY6S+t5hKD6+eKYmGxc9pSqrn//6EIWDEitJ4op83z+LTl3W4/4DZolh7HMWJyGOr7Sk2Wy0XhW/wvD6RIbx73Xmq1gtQafq+0GcWQkpigFxJYqOynVAJAq408+pkzhxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oj5zpxoG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APIUhXsN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97ECB1F000FF;
-	Tue, 13 Oct 2026 03:30:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oj5zpxoG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4831F000FF;
+	Tue, 13 Oct 2026 03:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791862210;
-	bh=4bIhRUB5qYXPPx9rnaic+yeUzHv9NR67/mntjeyjQlg=;
+	s=k20260515; t=1791862822;
+	bh=MHKRBDHmsXsK48oKqrexgIqndzfvmbI+AVfd803mUSA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=APIUhXsNDCB5dA/RZy8qU0syLou5dggMFD+Ki0LiKZP3OTcTd3M2JvqA1VajCdY1Q
-	 dnWxQw8XwtTBPfnhJ7yKjyqGwYfi2tS5imcMh8k++7coWppCTsbCGRvIbfSjH3Io4c
-	 q+1k2LRslVadompWVSQnkRC98FS3HDz5fn5ySVUYhSMdgLQrm2Zx48oHdMpTTq7Kah
-	 Z5Cu9Dj267RwRHY4SU8hjS1+UqKKGS3AGeuZEVAbLmJZvEKAClzY6fdUHUNcWzUANW
-	 vfX3NE/syhQ1d91b0nkoHGWkOzNoVOZ3XFs9eSIyZw6DFRwvGv2dZeHI7MoOiRiSWg
-	 NwLmLo8A85QEA==
-Date: Mon, 12 Oct 2026 20:30:10 -0700
+	b=Oj5zpxoGgdzmeIog+7KO1QLrI4HUFkQNtnMsz/Sf/iwRjmXaISNO5VFNexwDOfA7I
+	 QLiRzOMZyLuAs0cGPMstdgayiiW91bVrnPRgVfDxA9f45B1BQKQ9Sgcl3vWBYynlem
+	 9eFhgaA4Z7w3AHx2qx192F+EVD8bM8OD2lg7BcxAX3RJCu4AEjGD+/ajUMxe/+F0lU
+	 vAUsbFr/Gr22WvlIBVGbtqHob5Fevhl6bJtrxBAtC9YFcaDUeubtmBEl3k1SWaU16P
+	 wOPAnsesfWb+rpki9Z4AUpY3luNT5svEsOgbs3aNHBuDM0iTMVRSnTo5Z6/YR5f3Xg
+	 YheZMVbSKLEoQ==
+Date: Mon, 12 Oct 2026 20:40:22 -0700
 From: Kees Cook <kees@kernel.org>
-To: Bill Wendling <morbo@google.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Harry Yoo <harry@kernel.org>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, Pedro Falcato <pfalcato@suse.de>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
 	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] overflow: Match arithmetic in both parts of
- __builtin_choose_expr
-Message-ID: <202610122028.BB0EDC98@keescook>
-References: <20261012205919.4012405-1-morbo@google.com>
+Subject: Re: [PATCH net-next v6 2/8] ipc, msg: Account msg_msg allocations
+ with GFP_KERNEL_ACCOUNT again
+Message-ID: <202610122032.A63BB70@keescook>
+References: <20261006092030.got.500-kees@kernel.org>
+ <20261006092035.166776-2-kees@kernel.org>
+ <asjhg2e4-WSeKuXd@thinkpad>
+ <202610092010.934197B@keescook>
+ <20261010153714.b9e91801ea93675da099e903@linux-foundation.org>
+ <4866a382-42d9-44da-b68b-377d36642528@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,29 +56,44 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261012205919.4012405-1-morbo@google.com>
+In-Reply-To: <4866a382-42d9-44da-b68b-377d36642528@kernel.org>
 
-On Mon, Oct 12, 2026 at 08:59:19PM +0000, Bill Wendling wrote:
-> The two parts of the '__builtin_choose_expr()' had different arithmetic
-> expressions. This patch correct it so that both parts calculate:
+On Mon, Oct 12, 2026 at 06:46:48PM +0200, Vlastimil Babka (SUSE) wrote:
+> On 10/11/26 00:37, Andrew Morton wrote:
+> > On Fri, 9 Oct 2026 20:14:20 -0700 Kees Cook <kees@kernel.org> wrote:
+> > 
+> >> Anything with Fixes: will end up in stable, so I just leave off the
+> >> stable CC these days.
+> > 
+> > -stable maintainers have been asked to Not Do That for mm patches. 
+> > Other subsystems are doing the same.
+> > 
+> > I don't know how they determine whether something is an mm patch.  A
+> > patch which covers do-do-that and dont-do-that parts of the tree is
+> > likely to be mishandled.
+> > 
+> > So yeah, add that cc:stable to reduce the possibility of mistakes.
 > 
->   COUNT * sizeof(*MEMBER) + __must_be_array(MEMBER)
+> There's also this from the list of pain points at
+> https://lwn.net/Articles/1099594/
 > 
-> In practice, the call to '__must_be_array' is meant to assert if
-> 'MEMBER' isn't an array and return '0' otherwise. However, symmetry is
-> less prone to subtle errors (and far more satisfying).
-> 
-> Fixes: 230f6fa2c1db ("overflow: Provide constant expression struct_size")
+>     Kroah-Hartman: subsystems that do not add CC: stable@vger.kernel.org
+> tags to patches, but which still expect the stable team to pick up the
+> important fixes anyway. The stable maintainers are overwhelmed as it is and
+> are not doing that.
 
-A Fixes trailer implies a bug being solved. What problem is there here?
-I only see downsides to this change: this adds even more layers of
-macros and inlinings to gain the size_add() for a constant integer 0.
+tl;dr: yup, sorry. I will add CC:stable in the future.
 
-?
-
-> -		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
-> +		size_add(size_mul(count, sizeof(*(p)->member)),		\
-> +			 __must_be_array((p)->member)))
+I went to go figure out where I had gotten this misunderstanding.
+netdev dropped their special handling in 2021 in commit dbbe7c962c3a
+("docs: networking: drop special stable handling"). But I
+really thought I had Greg tell me (in person somewhere?) that
+"Cc: stable" was redundant, and I think what I misread in current
+docs was, "... such tagging is unnecessary if the stable
+team can derive the appropriate versions from Fixes: tags." in
+https://docs.kernel.org/process/stable-kernel-rules.html#stable-kernel-rules
+but that, on closer reading, is about the _versioning_ syntax of the
+"Cc: stable" trailer.
 
 -- 
 Kees Cook
