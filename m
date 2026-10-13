@@ -1,51 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEBA47FAE6;
-	Tue, 13 Oct 2026 03:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56921384242;
+	Tue, 13 Oct 2026 06:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791863182; cv=none; b=d/1yOdmu+rCV+8pc0EwncUhdDQdSjB3KW+bWHNj9qiv6EBYTeBmbqI054b8sfAcAkOtFhKBYZBX8SV1myD8/82aUkM7v4etMR4Iz46bysBGb47B6QNPK0b+vZ6KYphaRlg6VUXv/GCk7NTAFIHxLUmkGdRnwFTfaDl4WAy1uDQc=
+	t=1791873853; cv=none; b=J0OQkYsXgxx42b0mcP5TuMjhXlrXmKXeNp8qJSNG5lxe1B2egg5zcO9fV9hk3sLsCpNIXcFMIm10byIqDeV4sy8EI7oKlp2NCAqpAzUegal6yKB9fkQr4u+t8D7dDCZF0yMKZdlQjCceYqiK/yypT/oFT/favDJ5Q0jzduDJ6CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791863182; c=relaxed/simple;
-	bh=RhIhPrAPsTnz5pQ9KOdBeslQrq84PfQbaYRRruCJAEk=;
+	s=arc-20240116; t=1791873853; c=relaxed/simple;
+	bh=vrSavS8p7pUR78E2HEuhtydxzFGUu7iY/A0/B0lAOIQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=StOaTXHeOTgEogCCEy5k58yT4NLnOi9Sd0n/mobWKPrUBr6zzKCmRSRs8rvkjuwaL1fWCdzUBOnr8msNmmcuxZUK9bbxqf7CgQiQdFqmslEq7bzl9oDiTsDFCyQXKToFA48G1qexVLw2iXhPbS5uWZWcsL4mfqX38McPZLW9aqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cGjuDRH7; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=PCQGD/o+mJcCSzTCY0LcT9ffMOwqvuU6SvRKwr6n8PYVwy/30eF0tt0kbC7Vo1pNwIC/MmCXP+UXW94qyV+v3f8nE5bDasutW/ecdWTFrmTwmt5BUEoKLRNsaBJoLv1BLsMryRSfqjWJJcwMmLBoqdEkBcKZO+I6BWynV8m+NPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IfgQKdEf; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cGjuDRH7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 534BB1F000FF;
-	Tue, 13 Oct 2026 03:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791863181;
-	bh=gC6zFEfTKNW+9VnhF2BDN32Uuy+DW12hIGMiIIHt3k4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cGjuDRH7fd9Q/vGOFT7srXE4MzTaO0zvziw1vupAjmuNfJNV1aw1OWZUFLjuLqLq/
-	 I87VuwtS1dHs5FQ/DKdlQisdn43nyzXs9Kd4T6xzP4a1TQWy45Re6iwudrZ+5QtEFV
-	 fzz0HzS82PYt3Xg92bu5uvNyIhnz725muXUX2lfYjTmpv6xKxmB0EYSWqqZOrA1zQB
-	 1lEKQvnQnz5DIPbu9YI7ZSuAG1Pl0hqbabAb9PpdL1iwfvHMFjz5A/s173yYvtg3Yh
-	 4I6L0EMZ5eWiwYWI/6OsZ2o19PmZpjPcEAGi5dNXnpqJVXBO2/H1jcejotXKyWlDgu
-	 PjEnZQQ010M0w==
-Date: Mon, 12 Oct 2026 20:46:21 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, Pedro Falcato <pfalcato@suse.de>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 2/8] ipc, msg: Account msg_msg allocations
- with GFP_KERNEL_ACCOUNT again
-Message-ID: <202610122044.1E1CDBF72@keescook>
-References: <20261006092030.got.500-kees@kernel.org>
- <20261006092035.166776-2-kees@kernel.org>
- <38befa8c-3885-44eb-813c-0ee34cd55248@kernel.org>
- <be34b92e-e82c-4f69-ac9d-b045081ea418@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IfgQKdEf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+4sQpvtGl8rbG3DbVItMctIXcxgPZJH09YxXRKbkwvU=; b=IfgQKdEfl9R7LR8+vnN3pB1F1G
+	mJBfAzdHrzDOBqzOc7XL+xnjQTnRqGY1GA7ewTFPklo9jrywi89bXQMH7KQTEbRY3ONWeRotV+4BN
+	h18kM73ewhIQaHjVog2bCvFmPTRQ2xIhqtSBl0LPPLSdEV/Awba7SbAjVGAdFvbNnNIwz1kIOzaBO
+	2W9GO3EZXWbWId9xeRan9ezzNSy3q8DLkFlBzLUrYxfQG652QThr3K540FTV37fTLnG28ZvWoJEX/
+	9Ha0FJ6r4iVfl9KlR1yjymvLrZj3WUK5YycBNlg1ichGZCSx6YQ1NhBg3+tF+YPkpV33yM9pUvuAC
+	zFlfSWlQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1xGWF4-0000000Bobs-3VoA;
+	Tue, 13 Oct 2026 06:44:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 068F930045A; Tue, 13 Oct 2026 08:44:06 +0200 (CEST)
+Date: Tue, 13 Oct 2026 08:44:05 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 3/3] objtool: Skip jump table jumps in the kCFI indirect
+ call check
+Message-ID: <20261013064405.GY2009045@noisy.programming.kicks-ass.net>
+References: <20261012090424.i.497-kees@kernel.org>
+ <20261012090436.1676525-3-kees@kernel.org>
+ <20261012092250.GO4121339@noisy.programming.kicks-ass.net>
+ <20261012183925.ca026d-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,46 +57,48 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <be34b92e-e82c-4f69-ac9d-b045081ea418@kernel.org>
+In-Reply-To: <20261012183925.ca026d-kees@kernel.org>
 
-On Mon, Oct 12, 2026 at 11:03:18PM +0200, Vlastimil Babka (SUSE) wrote:
-> On 10/12/26 19:55, Vlastimil Babka (SUSE) wrote:
-> > On 10/6/26 11:20, Kees Cook wrote:
-> >> Since commit 734bbc1c97ea7 ("ipc, msg: Use dedicated slab buckets for
-> >> alloc_msg()"), alloc_msg() allocates with GFP_KERNEL, and a msg_msg is
-> >> accounted only through SLAB_ACCOUNT on its bucket caches. With
-> >> CONFIG_SLAB_BUCKETS=n, kmem_buckets_create() creates no caches and
-> >> kmem_buckets_alloc() is a GFP_KERNEL kmalloc() from the general caches,
-> >> which do not account it; the same happens when kmem_buckets_create()
-> >> fails. Either way, the allocation is not charged to the sender's memory
-> >> cgroup.
-> >> 
-> >> Allocate with GFP_KERNEL_ACCOUNT again, as before that commit. Memcg
-> >> charges such an allocation in whichever cache serves it, so drop the
-> >> SLAB_ACCOUNT, which no longer adds anything.
-> >> 
-> >> Build tested ARCH=x86_64 defconfig with GCC 16.2.0, with
-> >> CONFIG_SLAB_BUCKETS as y and n.
-> >> 
-> >> Fixes: 734bbc1c97ea7 ("ipc, msg: Use dedicated slab buckets for alloc_msg()")
-> >> Assisted-by: LLM
-> >> Signed-off-by: Kees Cook <kees@kernel.org>
-> > 
-> > Could we, for the purposes of a backportable fix, just have both
-> > SLAB_ACCOUNT and GFP_KERNEL_ACCOUNT in place? That should do the right thing
-> > regardless of CONFIG_SLAB_BUCKETS state, no?
+On Mon, Oct 12, 2026 at 11:41:03AM -0700, Kees Cook wrote:
+> On Mon, Oct 12, 2026 at 11:22:50AM +0200, Peter Zijlstra wrote:
+> > I am confused.. I don't see a computed goto in __bpf_prog_run(), and we
+> > build with -fno-jump-tables.
 > 
-> BTW we're thinking to add 1+2 (once this part is clarified) for 7.4 (with
-> stable@ for patch 2). 
+> It's the interpreter, ___bpf_prog_run() (three underscores) in
 
-Yeah, I'll respin with it present on the create and the alloc sides.
+Durr, clearly I wasn't wearing my glasses or something.
 
-> But for the rest we'll have to target 7.5 as it's only
-> a week to the 7.4 merge window now.
+> kernel/bpf/core.c, not the __bpf_prog_run() wrapper in filter.h:
+> 
+> 	static const void * const jumptable[256] __annotate_jump_table = {
+> 		[0 ... 255] = &&default_label,
+> 		...
+> 	};
+> 	...
+> 	select_insn:
+> 		goto *jumptable[insn->code];
+> 
+> So it's a manually constructed jump table, not the "normal"
+> table-from-switch stuff that -fno-jump-tables suppresses (though see
+> below about Clang). objtool already knows about it, with annotations
+> added back in 2019 in commit e55a73251da33 ("bpf: Fix ORC unwinding in
+> non-JIT BPF code").
+> 
+> With retpolines, GCC emits a single dispatch that every handler uses:
+> 
+> 	movzbl (%rbx),%esi
+> 	movzbl %sil,%edx
+> 	mov    jumptable(,%rdx,8),%rdx
+> 	jmp    __x86_indirect_thunk_rdx
+> 
+> Clang never has this jump: with retpolines, LLVM's IndirectBrExpand pass
+> turns the label addresses into indexes and the "goto *" into a switch,
+> which Clang's -fno-jump-tables then makes a compare tree. So it's only
+> constructed this way under GCC, but since now we can turn on kCFI with
+> GCC, the objtool warning about indirects without kcfi protection trips.
 
-Yeah, that's totally fine; I'm in no rush. I want to get it right, and
-I'm still recovering from my surprise about how GFP_KERNEL_ACCOUNT
-actually works. ;)
+OK, then the next question; do we *want* to allow a 'naked' indirect
+branch to survive?
 
--- 
-Kees Cook
+We can simply disable the whole interpreter when kcfi=y. Isn't that
+thing recommended disabled anyway?
