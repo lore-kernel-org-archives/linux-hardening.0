@@ -1,175 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A02F47ECC6;
-	Wed, 14 Oct 2026 10:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791973260; cv=none; b=am8zE+bPh2NLrM5AEZRWlwRs+TMca6kkIjbeayy52sHwEhwiGS4qMyc8VTBlDqus92NGC41A93irUkpeSj9wrdLhFcHlBCatS9uRPDHorU6rrxB+h92vrzxi7J0fuKBkMBDkNXL4VD6j5oCmcRGWw7DiufUTPyQk3XX7h0ybma0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791973260; c=relaxed/simple;
-	bh=VhpDEZvTkXWqvyp2s8oj2CfAOxwHTIQU4dABiDBxRBk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mPSGXP9mOFyRVlZ0F3ZvIYYNlWioJEFyI79ayiPeDMNXz+HCb81/1SXkZwGmmRcGqMXqHcar1esZ6NdXcHenqMEAOXQ5TVzO1V40q5ev7tm7nFZmpRHpt1Ks+lasbsUXL7jFixn7nVPF1zUwRHUh38bgynfrA2pNLPhXXN1Tz8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LzAVM2XJ; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75F84FC8E5
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Oct 2026 11:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791977350; cv=pass; b=T78fGFl8TOVwYkuLa2Jx1oHIMKkGLU7pG9BsN+LvmXUsmlWyP1U3dFxWZARqSOpr/bixAGrn+GGxE6jX/jbIDgOVWlK1h5/AkJi9fn/8sMvGhr1dLsipFstU/TWmFse/NhWK3R0wVgjnQxRAoGvuQFGZBc+sCbqEv4i2FYP9hjM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791977350; c=relaxed/simple;
+	bh=Bm8IXeZCCjjHRHqufoiH0uSm7tIaA4fZ4x02DGLBDgM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NNLC6ReR1O5O4XtSoKpg0aKEKDX851ovlymhTDZqSBmijfZktP6EnG2PXR+rTrHKxFUv71BMl+iaeeGdzoo5T+WP0Y0s42TXJNMCeMngINkYd8ZtNV2uBEXP+hhjRHH9zqR78uZ64L92AjpRhmZQoQfGz3iPkPvumYTDAqKSILM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkAqllS7; arc=pass smtp.client-ip=74.125.82.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzAVM2XJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4A31F000FF;
-	Wed, 14 Oct 2026 10:20:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791973258;
-	bh=gWrSo/PMIGTc7kwWlNZNJ6yFmB8LvpG1bvD0PiyoSR4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LzAVM2XJOLZYS2PM2+BzzYUUSQmQUvTCTh3tI1GNgWp/t+cn0AlhGl6G9jqYjS6Y7
-	 MKdBGy9mPDaqnft8G9IcunnPtBK71JU8j8qdVgb+MSHnp9m+LcX+5Yfk/xVKYpM5fM
-	 gG+6kRKx3hknYdPHoe5Qps09nhFlSnFvKyhWIGf+1tD2xAVojGFa60+jVoehTpEbWd
-	 /l2Kpr4kfSIKY+eBsLj+w3oCytLD1+hogKdCFiam0qAlZu04JCQCgfx2VpLqtQIC66
-	 Qo2i3NXm+ajvZnYrmhCq/oEynJqSVwoOOpxS1Lwc+tkrT3xtThuTDgIou7jBN04psx
-	 3gdVHqX/2Pfyg==
-Message-ID: <9bf93bde-8abe-4a83-afc6-d5f6954ed3c1@kernel.org>
-Date: Wed, 14 Oct 2026 12:20:49 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkAqllS7"
+Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-35179d0747fso306969eec.1
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Oct 2026 04:29:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791977348; cv=none;
+        d=google.com; s=arc-20260327;
+        b=VDGPq6cWLP0Y9MIrUcivgftapgs53fUiGJc3/HE+cxUW02+TxK8jpe0ZD+jMd1pcCe
+         maBFj2kgqzBa3ZqBmcsJAZyIlLyDU3WrTJUEDWH98ncQ+RcuTCfL7L982miLH3ANbQVV
+         6NGaD3SbMcA4Y8Y96Paqpm+TKOlZVJ9IlqfQle3LWftc4Vt2D8qWr5Cn6vj2hAc67IwI
+         kZF2X5Kt6NcGZuVjUo1cxfmGCR1U07WPhwhzLk0OPSEaNkpzVoJOUqfkFFthCaGJ7skb
+         xC6GaJvUoz/dCVMx5eusUOELqUXFI2KMJtu650Vj8TWotk9j1xg3/KLXF022yK6DHbo/
+         DmuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=xWJCwZOmpC49YtbA7QzlowrBvokYI4WD90uvALsrwIA=;
+        fh=cQES0jNkd3GUI+N627/n1uqexiTjFZjAHs8z7ZFinAI=;
+        b=iVKsvLPUwpDfX79Qzp19kD9gavyawTIm4hn7nYnnl/a/B5dyl9TakOiu0brVObHXfZ
+         5TBh0cCTY81HtYprYV6++JPd/69cpRkkkO1Db97IbYR+yLWmneKheu+ChfqlNOXxMqPh
+         8dD9gJsYhsw74UkTWGS0DEEYZfChbtPmDS0yMvIPuWgzhts5NUsCNLU2x7RIYZHhRsN8
+         u7GjDLmxaGvnY4fteE9j5Seb2XIrpfZuqI0aFCVpwbMr+M1YFz46TOesB/0pvgtxbBfJ
+         bSpZoHKr8HUzOESoo+Xyoyv9zwHelVWGha+M/VDJVEbknAniAEDBUiQiE8O1pRBlYNnL
+         G7+Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791977348; x=1792582148; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=xWJCwZOmpC49YtbA7QzlowrBvokYI4WD90uvALsrwIA=;
+        b=EkAqllS7uOOZxDGJ4I1yKdIi3WQSBbyUhPsWLoVzgJERDBlfP0X9cEpWzjyHAR90JC
+         Z1zW2YqVc7X46XPiuAerNf9mNnAJ0uUF6PLz0rzePzi7U1lf5J9vz/gZr1IuRwk27MI/
+         4/D886vhZESIUjDPJZRvHbQYWiiMvCS3NjhX5siJV1JzVFlBVMBE4d5Q1ZOlRDw5uGo0
+         qEQHzjWEYvo+agj8c1xw4Nkq2SVQg9Ys3jvU8s3NkIQ4fYLQcX3kMyght8wz2N51o7tV
+         AXXBZTinlSID6wvgzNqIrr0dJv5ZGB14N23uEZXq5jf7doeVho73k08XFK/CJX/hTW5i
+         pPcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791977348; x=1792582148;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=xWJCwZOmpC49YtbA7QzlowrBvokYI4WD90uvALsrwIA=;
+        b=NBAt3vlphixzKSupYD4UvO7FRwhr7fukFat71S2gZ6ON3RfiAT2zgDChUViLFgnRY3
+         gZLUdd2abDla7TkQN3Wp9tzkpJureGyu1FrC4AeJgTlcapMdev1MaYATIHquiOg2Hgpr
+         /kmQK9erlaHjPJxDSTVnCX1tTlk2akK9wHL2uc14sOJU0uOt4GOs224u8NXBsiZkn1st
+         FQ3+EIEvfkCXd3EBXgMhyj25Yhj5P0WST7SCj3Q88R9x6k7xyuK9wtfo1BwGMjn3pUW/
+         PFIo+pMEjZq3U8MjGjAWdqfOS65FGlOfAQAFyRZ0SHFjGiLPjkRC2A7TD60xkM7eMr9R
+         JPsg==
+X-Forwarded-Encrypted: i=1; AKwUvBxYWvIhCCfEeWK0+Z5eqySHFvDZxTcv6vn55gdSlH1duhfF71RcoRjPHWOLaTDHJ6C5rW1TUsfMerA8VdfwElc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKu2u8nlV3QfQ6BZT1K3DCZjtpv+QcNrhfAR2QVSvo7w8wjy989
+	XAFbDSBr3cT27mFvxKCDiE3zFlimff9GPMIudth6TQ1dQinG/fBcUTmSpY2InquT0pH2YzB/RCB
+	fV/L+3FTpw4qQuAMXZqUWbd5sOWn+a5M=
+X-Gm-Gg: AYBFou2r0Po+VGG4oaA9vnT82yCvDSsQmkvxQWiRYVwUpT88Yyy64+r7e9Q06/5ruMY
+	JQIjQ5grpSFPncE74fumFHNydNlbq4owtULi6gbzFf3F2TfbOLFpKinE3f7N9mfMBptcV+tR4Rt
+	k9IHaAM6+fpGqZBNnwS2hfNV2HwgkxJ3NSI19nkz6r1Gm7aFno4gNBAqC3jGH/9TM0Hqx7Vj5qw
+	Mp6nRrCqKNomY7V0K4sSI/0o+8wwbOl5R7X3r2uVSfv+TfKWdk6ewravFFR1Y8XmZl0KPhETo2h
+	9udZpQ91mGcENdQqTeSfLlemt5vmkLQGQxitjTXq0yW5uiZ7XGPXDb4oUZTYe1DQk1IpmeuVc6P
+	iROe7IWct7bk15grsxrrpKOEdgmXUqh212o5a5LMku98NKt6lK0yKy2vLifH6x24EZp1H7kHaRE
+	uSkkj/Cp/Hl+DKQGO85ZkohTy1Lvzq2uPqt3h0DrF/5ykpwPa1HXg=
+X-Received: by 2002:a05:693c:6215:b0:35b:cb8a:8ce7 with SMTP id
+ 5a478bee46e88-35bcb8a919dmr14326600eec.1.1791977347656; Wed, 14 Oct 2026
+ 04:29:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] arm64: dts: qcom: qcs6490-rb3gen2: add the clock
- controller
-To: Alex Elder <elder@riscstar.com>, sboyd@kernel.org,
- bmasney+clk@redhat.com, jbrunet+clk@baylibre.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org
-Cc: abelvesa@kernel.org, kees@kernel.org, gustavoars@kernel.org,
- mohd.anwar@oss.qualcomm.com, lorenzo.bianconi@oss.qualcomm.com,
- danielt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, Daniel Thompson <daniel@riscstar.com>
-References: <20261012152408.3729237-1-elder@riscstar.com>
- <20261012152408.3729237-5-elder@riscstar.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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
-In-Reply-To: <20261012152408.3729237-5-elder@riscstar.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20261013223946.1836757-1-irogers@google.com> <20261013223946.1836757-2-irogers@google.com>
+In-Reply-To: <20261013223946.1836757-2-irogers@google.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 14 Oct 2026 13:28:55 +0200
+X-Gm-Features: AclHuK8qVHO7HVQy6LgzcUgjYcQf3EimC6SJcN58PVqcWVdOf6T45eXZNeTLsEY
+Message-ID: <CANiq72mLUh1JB=9e=tqStuL_H3=Ormx5v-uFkCDp-0zZm7tBrQ@mail.gmail.com>
+Subject: Re: [PATCH 01/11] Compiler Attributes: Add __require_explicit_initialization
+ macro
+To: Ian Rogers <irogers@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <chleroy@kernel.org>, Nayna Jain <nayna@linux.ibm.com>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	David Teigland <teigland@redhat.com>, Alexander Aring <aahringo@redhat.com>, 
+	Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Richard Weinberger <richard@nod.at>, Zhihao Cheng <chengzhihao1@huawei.com>, 
+	Felix Kuehling <Felix.Kuehling@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	driver-core@lists.linux.dev, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, gfs2@lists.linux.dev, 
+	xen-devel@lists.xenproject.org, linux-s390@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/10/2026 17:24, Alex Elder wrote:
-> The clock controller within the TC9564 SoC is accessed via a PCI
-> endpoint bus through BAR 4 of the first embedded PCIe function.
-> A syscon node is created to provide access to a range of memory
-> that is used by the clock controller and shared with other devices.
-> 
-> Co-developed-by: Daniel Thompson <daniel@riscstar.com>
-> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
-> Signed-off-by: Alex Elder <elder@riscstar.com>
-> ---
-> v3: 
-> - What was formerly described as a "clock" node is now "clock-controller"
-> - Label for the 25 MHz input clock is added (new in this version)
-> - The clock-controller node is now a sub-device of the config syscon
-> - The config syscon is now (also) compatible with "simple-mfd"
-> - The clock-controller DTS node no longer defines a toshiba,config-syscon
->   property, and the config syscon no longer requires a label
-> - The clock-controller now requires a (parent) clock property, which
->   refers to the new 25 MHz clock
-> 
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> index b8d290eed2f38..e7601daf1bc5a 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> @@ -9,6 +9,7 @@
->  #define PM7250B_SID 8
->  #define PM7250B_SID1 9
->  
-> +#include <dt-bindings/clock/toshiba,tc9564.h>
+On Wed, Oct 14, 2026 at 12:40=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> +/*
+> + * Optional: not supported by gcc
+> + *
+> + * clang: https://clang.llvm.org/docs/AttributeReference.html#require-ex=
+plicit-initialization
+> + */
+> +#if __has_attribute(__require_explicit_initialization__)
+> +# define __require_explicit_initialization __attribute__((__require_expl=
+icit_initialization__))
+> +#else
+> +# define __require_explicit_initialization
+> +#endif
 
-Unused.
+The LPC slides mention Clang 14+, but from a quick test in Compiler
+Explorer and a `git log --grep` on the LLVM repository to confirm, it
+seems the attribute was introduced in Clang 20+, no?
 
->  #include <dt-bindings/iio/qcom,spmi-adc7-pmk8350.h>
->  #include <dt-bindings/iio/qcom,spmi-adc7-pm7325.h>
->  #include <dt-bindings/leds/common.h>
-> @@ -891,7 +892,7 @@ pcie@0,0 {
->  		pinctrl-0 = <&tc9563_resx_n>;
->  		pinctrl-names = "default";
->  
-> -		clock-25000000 {
-> +		tc9564_xo_board: clock-25000000 {
->  			compatible = "fixed-clock";
->  			#clock-cells = <0>;
->  			clock-frequency = <25000000>;
-> @@ -967,7 +968,7 @@ dev@0,0 {
->  				#size-cells = <2>;
->  				ranges;	/* This will be updated dynamically */
->  
-> -				pci-ep-bus@4 {
-> +				pcie_s1b5d0f0_bar4_bus: pci-ep-bus@4 {
->  					compatible = "simple-bus";
->  					#address-cells = <1>;
->  					#size-cells = <1>;
-> @@ -995,6 +996,19 @@ pci-ep-bus@4 {
->  	};
->  };
->  
-> +&pcie_s1b5d0f0_bar4_bus {
-> +	syscon@0 {
-> +		compatible = "syscon", "simple-mfd";
-> +		reg = <0x0 0x2000>;
-> +
-> +		tc9564_clock0: clock-controller {
-> +			compatible = "toshiba,tc9564-clock";
-> +			clocks = <&tc9564_xo_board>;
-> +			#clock-cells = <1>;
+If that is correct, then it is not available in all LLVM versions we
+support (LLVM 17+), so we should add:
 
-So here is DTS which is supposed to be the argument why you need inner
-device representation in DTS and... no usage of that at all. Otherwise
-point me which part of this patch references tc9564_clock0 via phandle.
+     * Optional: only supported since clang >=3D 20.0
 
-Best regards,
-Krzysztof
+With that:
+
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+
+Thanks!
+
+Cheers,
+Miguel
