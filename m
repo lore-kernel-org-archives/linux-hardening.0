@@ -1,33 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C18C185B48;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2C63AC0DD;
 	Wed, 14 Oct 2026 22:58:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792018700; cv=none; b=gsw4XByXLAVZOv0B4dOk+g/cQykEFAU8sVYaKqgkgxaAKBkXybEL5dh9j8HKvwDMBTew/kB1/fBdh9GJr16jtqezkvgvotDJLAPhjyVceJ9kpWWx4xwTbx7Vv28SoghrVK68OKqzQa8NZMYtDw7weIVfhQbm7StxYnJYEYFVnMc=
+	t=1792018701; cv=none; b=Nq2S1dbRGUOVDddPcju+OQdLftc9IdUrMS/T7cG7dNTvgdxEBbl7Y/G/DE4/FcyAtCmjQN9M9r5flaJWNJSE8TzmrEVHYLjRfaUiZEijzDC+tFd6Fknwvrf6ilsu2e4N1m9l1RHcnviuVlJPpGuQwaWecGVJASp+brgxTlZ3b0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792018700; c=relaxed/simple;
-	bh=a8GyNuOkJam97IF5PUJ8I6Q97oi1RXSNrJomIAT/JnY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gt+WbF5bO3E1cU71Ifuh5puMnHD2wftYspgXptvagDMcjyAaYXli7CsetBs7I8u5W4rJjhTBnFKFJaYsGxG5Q2zg8x6RskTf9CXKryvGZ/ouC2nKTUfJ29q262MJTzBMu0AqHda/W6zaFaG/7MKxPy4Un9qZzvi1gVAx6NekyxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCR6mqrk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792018701; c=relaxed/simple;
+	bh=fayS1IsvfI/a6hkjc/2WtcL99qkaA9BSMYKKgp1sPZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t3ctJbJdyQLyT871CopBvFOTTisPBPEYBSJVX4NiIi3Nip1n/m4aivF4ZvieUAKUJrOPzoz6Yfph3TskWVylCGpHktfgJFwr3zB4t8N9FHZFQNakd11NBgADqtX1kWCYdgvsEpfD/SliMZnKuS4iadwo1fZUi9cBh5Yy/aXZ7Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5CSnVpy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCR6mqrk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F2A61F000C4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5CSnVpy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 237601F000C5;
 	Wed, 14 Oct 2026 22:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1792018699;
-	bh=hYVhfY5F8PE1JdDUkR9iDsmlsX80vTZYlpXji/UM5Is=;
-	h=From:To:Cc:Subject:Date;
-	b=oCR6mqrkvg9tvUzPi0tmh97KemdR7KpFN8T2OqyFwlz8GVHqveIou13XgfmXmC1wQ
-	 J0MnsDdH1FMnLhnQZaWg1kx+cMkyMa6zNKyeXJItJYdfLe8gOfku6bo4nFJp0kwIKH
-	 tApGjiZJ3SOslF6c/3r5W/UOxj0FUQeEbNq2j8Ezy4UM8zd1jrSBx5Yj1XusmBDsWp
-	 7d9AJi2aD8nRD6/bA760nbPwnqz+j989NeXontesLAADAetTvxJp8hFlDxcujuw6cC
-	 XQJIFTOX79LCjhyoUauiO2vkbXrPg2g0OXt3wg1slrASNEfzimdIJvD1L4fx3QmtH6
-	 GmQP8F37/sNeQ==
+	bh=lxQYzEVBvXOXocjMZoNpLiRnJBxzMGxRySKFZ+2h5dk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=c5CSnVpyFWGe7N2F0yEfhYxmWMsfu1gy0JJJdX9yLFBKuolyU543RFahoatfjetWs
+	 ja6FZncG7TaSI763r1C68FmK2gRuhSCO6nTIrT4+iXxgmH/4WHfHiR50Lqmfzt/z3r
+	 6iyhS98h9xgM9nt2BKB2SEaT7PpfpMgIDq/iOlcAjvktYXVJ4TDPBXXD+tdGQE8wxG
+	 vE0Mj/piSP8xf2ZYvxfxxIDV/5cIpLpetVvV3K5oaaS0+Q1jqXNLXOOfGQaoGdF6UZ
+	 xzXv3wCXS3xdSiOtzNEGzosdvtdxYNYnpHhfeOiscMy4ZkG3wptxc1YjMpUU0YDwO9
+	 NOV/IzTAnXnfQ==
 From: Kees Cook <kees@kernel.org>
 To: Miguel Ojeda <ojeda@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Bill Wendling <morbo@google.com>,
@@ -37,20 +39,17 @@ Cc: Kees Cook <kees@kernel.org>,
 	Joe Perches <joe@perches.com>,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Ian Rogers <irogers@google.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Al Viro <viro@zeniv.linux.org.uk>,
 	llvm@lists.linux.dev,
 	linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
+	Nick Desaulniers <ndesaulniers@google.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 0/2] Add __require_explicit_initialization and its first user
-Date: Wed, 14 Oct 2026 15:58:14 -0700
-Message-ID: <20261014225811.i.852-kees@kernel.org>
+Subject: [PATCH 1/2] Compiler Attributes: Add __require_explicit_initialization macro
+Date: Wed, 14 Oct 2026 15:58:15 -0700
+Message-ID: <20261014225818.3457479-1-kees@kernel.org>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20261014225811.i.852-kees@kernel.org>
+References: <20261014225811.i.852-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,45 +57,101 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1362; i=kees@kernel.org; h=from:subject:message-id; bh=a8GyNuOkJam97IF5PUJ8I6Q97oi1RXSNrJomIAT/JnY=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkXONkbbz2KnNUTIdPJomgRGFTn3FW865j2uy3FisbKe 3qnXPfsKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMjrjQz/FPYp8H5YXhzPbPFN YmXFa76V/LmKrJ2qha4BD9In1CunMDL8Xc0TH77uneL5VY+lvBsWNE/e+9gwUHTfk2DNibMNJr1 kAwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3809; i=kees@kernel.org; h=from:subject; bh=XyxphQYrpxk0PsdbXh+Mbf71UMdCnvnfDdbeL7EBERc=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkXODmun2I+/Y3rRt7aGZ2dM5psTxicmJ9XqSEgFt+5y bp+xgyJjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIkcKmdk+GF+OfNT1Z5kI122 6G8BftMuZc6puVfpe98n5ZqM+JyOLYwMNzKYz6175Faz+WGY/JGVNo3r/N/Una/9/PohV2Ncos8 OZgA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Hi!
+From: Ian Rogers <irogers@google.com>
 
-As discussed in Ian's kobj_type::release series[1], this takes its first
-patch (to add __require_explicit_initialization), with Miguel's requested
-comment tweak (the attribute needs Clang 20 or later), along with a first
-user that needs no fix-ups first: seq_file's seq_operations callbacks,
-which are called without a NULL check. This will make the attribute
-available in v7.4-rc1, while the kobj_type fixes continue separately.
+Clang supports the 'require_explicit_initialization' attribute on struct
+fields to indicate that a field must be initialized explicitly by the
+user when the object is constructed. When an aggregate initializer or
+uninitialized variable omits an annotated field, Clang emits a
+-Wuninitialized-explicit-init warning (enabled by default).
 
-The annotation adds no warnings anywhere in the tree today that I could
-find across allmodconfig builds:
+Add the __require_explicit_initialization macro to
+include/linux/compiler_attributes.h (which is included by
+include/linux/compiler_types.h and include/linux/compiler.h) so kernel
+structs with error-prone initialization (such as mandatory callbacks or
+cleanup handlers) can enforce explicit initialization at compile time,
+as discussed at the Linux Plumbers Conference.
 
-  Clang 24.0.0git: x86_64, arm64, i386, arm, riscv, s390, loongarch, powerpc.
-  GCC 16.2.0: x86_64, arm64, i386, arm, riscv, s390, m68k, mips, parisc,
-	      sparc, loongarch, xtensa, arc, and openrisc.
+Also teach Sphinx (Documentation/conf.py), kernel-doc
+(tools/lib/python/kdoc/xforms_lists.py), and checkpatch.pl about the new
+attribute macro.
 
-Thanks!
-
--Kees
-
-[1] https://lore.kernel.org/all/20261013223946.1836757-1-irogers@google.com/
-
-Ian Rogers (1):
-  Compiler Attributes: Add __require_explicit_initialization macro
-
-Kees Cook (1):
-  seq_file: Require explicit initialization of struct seq_operations
-
+Link: https://lpc.events/event/20/contributions/2392/
+Assisted-by: Antigravity:gemini-3.1-pro
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
  scripts/checkpatch.pl                 |  1 +
  Documentation/conf.py                 |  1 +
  include/linux/compiler_attributes.h   | 12 ++++++++++++
- include/linux/seq_file.h              | 13 +++++++++----
  tools/lib/python/kdoc/xforms_lists.py |  1 +
- 5 files changed, 24 insertions(+), 4 deletions(-)
+ 4 files changed, 15 insertions(+)
 
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 8a7787d228a6..4a3ae6b0100a 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -6871,6 +6871,7 @@ sub process {
+ 				"noreturn"			=> "__noreturn",
+ 				"packed"			=> "__packed",
+ 				"pure"				=> "__pure",
++				"require_explicit_initialization" => "__require_explicit_initialization",
+ 				"section"			=> "__section",
+ 				"used"				=> "__used",
+ 				"weak"				=> "__weak"
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index 5ab26ce89daf..3e5cb9ca0970 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -203,6 +203,7 @@ c_id_attributes = [
+     "__noreturn",
+     "__packed",
+     "__pure",
++    "__require_explicit_initialization",
+     "__section",
+     "__always_unused",
+     "__maybe_unused",
+diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+index 476c4c560d17..625e95e684c7 100644
+--- a/include/linux/compiler_attributes.h
++++ b/include/linux/compiler_attributes.h
+@@ -322,6 +322,18 @@
+  */
+ #define __pure                          __attribute__((__pure__))
+ 
++/*
++ * Optional: not supported by gcc
++ * Optional: only supported since clang >= 20.0
++ *
++ * clang: https://clang.llvm.org/docs/AttributeReference.html#require-explicit-initialization
++ */
++#if __has_attribute(__require_explicit_initialization__)
++# define __require_explicit_initialization __attribute__((__require_explicit_initialization__))
++#else
++# define __require_explicit_initialization
++#endif
++
+ /*
+  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-section-function-attribute
+  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html#index-section-variable-attribute
+diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
+index e3dda2fe8a53..32066fbbe763 100644
+--- a/tools/lib/python/kdoc/xforms_lists.py
++++ b/tools/lib/python/kdoc/xforms_lists.py
+@@ -36,6 +36,7 @@ class CTransforms:
+         (CMatch("CRYPTO_MINALIGN_ATTR"), ""),
+         (CMatch("__private"), ""),
+         (CMatch("__rcu"), ""),
++        (CMatch("__require_explicit_initialization"), ""),
+         (CMatch("____cacheline_aligned_in_smp"), ""),
+         (CMatch("____cacheline_aligned"), ""),
+         (CMatch("__cacheline_group_(?:begin|end)"), ""),
 -- 
 2.55.0
 
