@@ -1,248 +1,198 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CF9385D86
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 15:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FCA53CA85;
+	Thu, 15 Oct 2026 16:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792078979; cv=none; b=IZNRr1HH+3QzstfNUXJbE3WxRDVlYsquTguT7nqprqj9wiBsu83C1gmNadCf/6XeDqmWPAuLkayCUmYbg6BgA0u9T0zGd3IFY2iU9Udak2EX+n19KywMzk1GaqlNIwr7pCHjiSDRP/QmgnB/jbUiib0bV8ahe5pngW0DuzuOAGA=
+	t=1792080850; cv=none; b=UNz542ScDnel7tbtr0Dt2VX4479Iv9+Ije3f/OLy6JKMl7SQnmhgeRcRBQs+BCxm3CjMkvNIl/B/Lme/qLz39gphqXdf5d1MQv+4olG/JcOgYLvEJdZxo/AOJuKA2x3kyvHGnC/s66+LT4AB4t78DaNYWhPQLylHebFk6AUk2a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792078979; c=relaxed/simple;
-	bh=1fUOi+Usxn2LQcFzjoDicMxQvfperVSbtfIS6t3a0mM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m8WBJBE3ydyybkfdEyEEbTvRTEYe/bLqDCnPB8NDmMD96ksdc+H21UcItxgIJBKLXP9Bja4XnJGFwvJuTsX5S3eWmSn3/uoHTzDeT84dt23jqacbVqcW+p9fWDEfY/MFbAeosoPCOftETk67D2KyxjejVAlcHQz/MhYNQwGB7A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=R0UR9SXf; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1792080850; c=relaxed/simple;
+	bh=8bwprqGxRBHun1/JgD/FObTrwdc9bx0DjpMwwt2vpFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mcKHOENI7PDwOy4QUovOYqAtfI0e8Qm2YTL1lnInJo6iHy2OVSazDMuWPYaU9ufQtrts+h/cxjX//mt8DOEpUrsiaknEO6VipD0wFW7WXQpYAEQYXiFjdKytTgh7tsXrQbtRnzwvovZlETv/RaoFkcnc7zifH7jq6YaS4OpF+fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UsjYY5n9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="R0UR9SXf"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4a01933b584so47021795e9.0
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 08:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1792078967; x=1792683767; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8EVUVXTF9B/pmjVEVo0zfJaBGiZoNVg7V5lse2RyO7M=;
-        b=R0UR9SXfSdLRKN8vgsjzhyd81oaEz7tHTwslAVD4uu2yocB8iyTzeaX91HJfAF2HSZ
-         zfyNFy9tY2rveIy5HSk4kHu6cou98Mmm65Nw/ib9mtV2wnXWSnap0yORcKiRn9+bhNLb
-         /HvkgPwk8c21B4vfdeFwnATqt/tKh7V1N6JFjc1GswxG79FMaIisTlhabNQRTkYz/AAi
-         A1KK2BSF7pJOfDu8sLbpi305mh4DqIdXIenAOtLPi3roSTwyU1GWiEULVpymwqlkfLkZ
-         ApWTy1oTpVVOcfy57kt0RsQYUZoCNCDNc0yb16GC0j95gqwCT6HKnJMFBD1/29NWON5y
-         v/Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792078967; x=1792683767;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=8EVUVXTF9B/pmjVEVo0zfJaBGiZoNVg7V5lse2RyO7M=;
-        b=uucTd0RrzmtPkxVkakX5Ml1a2amCebNcSVDllV6Gcusim3Kw3ThKhN1iT+K5XhYkj7
-         tV4kVEoV98mFVGicr0xyE9TjCbvhq1Lo+Ki19aq5KG/yNFJwgdwgnlIKaKhdjaVBOEES
-         CPvSS820oiTXbnIflomB0clYz3vulMTELD9De738RUx8L4H8RXyImz42AqO+Si8s5GSF
-         ZFNFD0VcRPalBBUAzYzrOsxcyoTwiinc79QdqbS50jB9S86Y71fHmC8hHPvlteGyr7pf
-         8dckE9V7qnAAjBz3/idqjJ82h/MgV/1YRRRKUpPT+7UGV23R7zcFRRHQvFd90AFKu9ZK
-         W9aw==
-X-Forwarded-Encrypted: i=1; AKwUvBwM3gPPNyUJA2oVequ3iYRgz0BiK4TE5/qO/+AB/5jnBdHI256a3XwcFQctzIp/7902oBWWvzwPbkKBTnFWlXs=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI/uD5YALUa2x8eMFJY/FBWDN/Lvbem1TBsO1H0clHVaOMa0xvM
-	IE7rvQ9mm6iBuhAkna5wc7UUAZe1L8xl0cWwSqIQcQ9zhRlf8uTukC4IbN91lnFH0ws=
-X-Gm-Gg: AYBFou3H2fU2ZJFy0Ba4FRFqU9N49vYwY6NbwFoJz+ZyP3yLEgNLr3Q14xpvpOH0Gjq
-	AEvLtFeYTsLaFhp5qv6jjia2aLlmM6nVxGrqoJuMCT3f2m86aCKg1ANrot48D5yImwF+JT5ssla
-	7dnigoygNsyprGN+z7xS8uPyYVmLEyimFOLTZRnO6wstCj5XIZHsIkmbhv7LDP3QSP3xX8g5sdy
-	M3IY46Zi6Tyk0LHw897fy6qpeONS2GDPtnaZcD+nxK3zHti7P6fmnQjwXZvwdyMbA661U/S1Hj5
-	Hp5GAOxPtnvw3S5SI34jH47IYjRjV1bzgUXtlOseunlaHS/kh67ZxLrM8Goq+OarXbiU4HfqMBt
-	wNjC9VmPSVOz8maJ6nMKN0rg4m3uIRsWhLAS/6DNBU/fDn+nxxbmNUBkEWe1bVb7i3IP5TQzg8j
-	QlggS2mc9H+uNw05IlzA/qPKa5gq26n/kpPBHfu5CFGba9RGcf2txi347s2FAIAqy0FT7hesc6z
-	U9Yp26YgR8PrGd8IJ51Lpx+Rj3yRlEOlODvcqyVjNZ35w==
-X-Received: by 2002:a05:600c:8b82:b0:49f:fd2d:23c7 with SMTP id 5b1f17b1804b1-4a18e4b887amr354993855e9.27.1792078967287;
-        Thu, 15 Oct 2026 08:42:47 -0700 (PDT)
-Received: from ?IPV6:2a07:de40:8100:0:89a9:fd0e:583d:4a53? ([2001:af0:8000:1409:193:86:92:181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1bd66c5e6sm52172585e9.2.2026.10.15.08.42.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Oct 2026 08:42:46 -0700 (PDT)
-Message-ID: <d17b00f9-2a6c-425f-9697-6bc8f31f7a7a@suse.com>
-Date: Thu, 15 Oct 2026 17:42:45 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsjYY5n9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B9FB1F000C4;
+	Thu, 15 Oct 2026 16:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792080835;
+	bh=30bhUUWIqaWkvxc6HWDx5iOUXFGfR1hON5BVhCv9Fb0=;
+	h=From:To:Cc:Subject:Date;
+	b=UsjYY5n9mJXBX9OS96InGmyeV3KyCpfgjbeMWYr6T76RGfpdTLrt1sy3vOeXrqJXf
+	 WPDxRComZy0EAviqfYuMS8srQoEQdAzsm3FAAE78Q8vPr+8i2Pn6PIP1zLyFkpMQ63
+	 kfk0gvNTzXe6W8wwFU6BA29TRknvA/77c5HUfXND1wKm4O1t+7M7Ma5MvyUDwbszUV
+	 /BsWH3EaiZxCK8SgBVq+9yNy/Gf2qXiTDyWS2t7F4v76WvDWE6qLYMSUL684JZJ4Pv
+	 vlLC+PK2Io+JOn2yqn/MSxB7ZyFUMkqsqMjfvJt+INJmMDcd6RNN6E8oD++NTD227f
+	 oTLc42SZCGvEg==
+From: Kees Cook <kees@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] selftests/seccomp: Test a TSYNC filter arriving during a ptrace stop
+Date: Thu, 15 Oct 2026 09:13:53 -0700
+Message-ID: <20261015161348.i.779-kees@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 13/22] modpost: cache section relocation mismatch state
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Masahiro Yamada <masahiroy@kernel.org>, Alexey Gladkov <legion@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Tamir Duberstein <tamird@kernel.org>, Alexandre Courbot
- <acourbot@nvidia.com>, =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-efi@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-doc@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- linux-hardening@vger.kernel.org
-References: <20260923-build-speedup-v4-0-73128809a4a4@kernel.org>
- <20260923-build-speedup-v4-13-73128809a4a4@kernel.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20260923-build-speedup-v4-13-73128809a4a4@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4801; i=kees@kernel.org; h=from:subject:message-id; bh=8bwprqGxRBHun1/JgD/FObTrwdc9bx0DjpMwwt2vpFo=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkXfh+wa5A2cGmq0rrgLHVN00u2ybhMLGJpS+aHSX+X2 bUb/rDrKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmEiINyPD7J69mrOvB7D+sLif N+upqUq4VPhsoZZZ/9bWPZy1cZPgbEaG2yKLT4vHM89+/nR+0C2zq2xZfcprJnWszddhVFbKM0r nBAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 9/23/26 7:18 PM, Lorenzo Stoakes (ARM) wrote:
-> For every relocation modpost invokes check_section_mismatch() to determine
-> whether there is any kind of mismatch between the source and destination,
-> and if so which classification applies.
-> 
-> Each time it does this it invokes section_mismatch() which iterates
-> through the sectioncheck[] array every time it's called.
-> 
-> When walked a relocation section the source is fixed and there aren't many
-> targets, so the same names are looked up over and over again.
-> 
-> Therefore cache not only mismatch categorisation but also whether a
-> mismatch even exists for a given section and look up the sections in the
-> cache.
-> 
-> Special indices (undefined, absolute, common) take the uncached path as
-> before.
-> 
-> This results in very significant speed ups for allmodconfig incremental
-> builds.
-> 
-> modpost is on the serial tail of every build that links vmlinux.
-> 
-> Whole build, 128-thread Threadripper 9980X, best of N runs:
-> 
->                                          before   after     delta
->                                          -------------------------------
->   x86 defconfig, touch mm/vma.c, gcc        8.5s     8.3s    -0.14s (-2%)
->   x86 defconfig, touch mm/vma.c, clang      7.7s     7.6s    -0.13s (-2%)
->   x86 allmodconfig, touch mm/vma.c, gcc    33.9s    29.4s     -4.5s (-13%)
->   x86 allmodconfig, touch mm/vma.c, clang  31.9s    27.9s     -4.0s (-13%)
-> 
-> Assisted-by: LLM
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Seccomp runs after ptrace at syscall entry so that it checks what the
+tracer left. A thread can get its first filter by TSYNC from a sibling
+while it is stopped at a syscall entry; the generic entry code used the
+syscall work flags read before the stop, missed SYSCALL_WORK_SECCOMP,
+and ran that syscall unfiltered until commit 4a3591287fb7f ("entry: Fix
+seccomp bypass after ptrace with TSYNC").
 
-This looks mostly ok to me. Below are some nits you might want to
-consider addressing.
+Add a test based on the reproducer from that patch's thread, using pipes
+instead of a sleep so the filter is known to be installed before the
+tracer resumes the syscall.
 
-> ---
->  scripts/mod/modpost.c | 66 +++++++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 64 insertions(+), 2 deletions(-)
-> 
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 75374c64b8cc..0fd43c8a89ea 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -1155,12 +1155,67 @@ static void check_export_symbol(struct module *mod, struct elf_info *elf,
->  			 name);
->  }
->  
-> +/*
-> + * mismatch_cache[section index] ->
-> + *   0 - uncached.
-> + *  -1 - no mismatch.
-> + *  >0 - mismatch index + 1.
-> + */
-> +static int *mismatch_cache;
+Tests run under qemu on ARCH=x86_64 defconfig plus the seccomp selftest
+config, with GCC 16.2.0: running the test 20 times all 20 runs pass at
+v7.3-rc2 and fails in all 20 with the fix reverted.
 
-It might be cleaner to maintain this cache per elf_info, since it
-logically belongs to the processing of an individual ELF file. This
-would also be consistent with the existing symsearch cache, which uses
-elf::symsearch.
+Link: https://lore.kernel.org/all/157aa098-a263-4f4f-b0fc-108701480303@huawei.com/
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 112 ++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
-The description could use 'to_secndx' instead of 'section index' to
-clarify whether it refers to the source or destination section of
-a relocation.
-
-> +
-> +static void init_mismatch_cache(unsigned int num_sections)
-> +{
-> +	mismatch_cache = xcalloc(num_sections, sizeof(*mismatch_cache));
-> +}
-> +
-> +static void reset_mismatch_cache(unsigned int num_sections)
-> +{
-> +	memset(mismatch_cache, 0, num_sections * sizeof(*mismatch_cache));
-> +}
-> +
-> +static void free_mismatch_cache(void)
-> +{
-> +	free(mismatch_cache);
-> +	mismatch_cache = NULL;
-> +}
-> +
-> +static const struct sectioncheck
-> +*cache_mismatch(unsigned int secndx, const struct sectioncheck *mismatch)
-
-Similarly here, s/secndx/to_secndx/.
-
-> +{
-> +	if (!mismatch) {
-> +		mismatch_cache[secndx] = -1;
-> +		return NULL;
-> +	}
-> +
-> +	mismatch_cache[secndx] = (mismatch - sectioncheck) + 1;
-> +	return mismatch;
-> +}
-> +
-> +static const struct sectioncheck *get_section_mismatch(const char *fromsec,
-> +		const struct elf_info *elf, unsigned int secndx)
-
-s/secndx/to_secndx/, and the fromsec and elf arguments could be swapped
-for consistency with the rest of the code.
-
-> +{
-> +	int cached;
-> +
-> +	if (secndx >= elf->num_sections)
-> +		return section_mismatch(fromsec, sec_name(elf, secndx));
-> +
-> +	cached = mismatch_cache[secndx];
-> +	if (cached < 0)
-> +		return NULL;
-> +	if (cached > 0)
-> +		return &sectioncheck[cached - 1];
-> +
-> +	return cache_mismatch(secndx,
-> +			      section_mismatch(fromsec, sec_name(elf, secndx)));
-> +}
-> +
->  static void check_section_mismatch(struct module *mod, struct elf_info *elf,
->  				   Elf_Sym *sym,
->  				   unsigned int fsecndx, const char *fromsec,
->  				   Elf_Addr faddr, Elf_Addr taddr)
->  {
-> -	const char *tosec = sec_name(elf, get_secindex(elf, sym));
-> +	const unsigned int to_secndx = get_secindex(elf, sym);
-
-The const qualifier can be dropped from the to_secndx definition to
-match the usual kernel style.
-
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 0622bc2acad4..4da5ad1d7ab3 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -5041,6 +5041,118 @@ TEST(tsync_vs_dead_thread_leader)
+ 	EXPECT_EQ(0, status);
+ }
+ 
++struct tsync_vs_ptrace_args {
++	int go[2];
++	int done[2];
++};
++
++static void *tsync_vs_ptrace_syscall_stop_sibling(void *_args)
++{
++	struct sock_filter filter[] = {
++		BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
++			offsetof(struct seccomp_data, nr)),
++		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_getppid, 0, 1),
++		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ERRNO | ESRCH),
++		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
++	};
++	struct sock_fprog prog = {
++		.len = (unsigned short)ARRAY_SIZE(filter),
++		.filter = filter,
++	};
++	struct tsync_vs_ptrace_args *args = _args;
++	char result = 'N';
++	char go;
++
++	/* Wait for the leader to stop at the entry of getppid(). */
++	if (read(args->go[0], &go, 1) == 1 &&
++	    seccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_TSYNC,
++		    &prog) == 0)
++		result = 'Y';
++	if (write(args->done[1], &result, 1) != 1)
++		exit(3);
++
++	return NULL;
++}
++
++/*
++ * Seccomp runs after ptrace at syscall entry, so that it sees what the
++ * tracer left. A thread's first filter can arrive by TSYNC from a sibling
++ * while the thread is stopped at a syscall entry, and it must still apply
++ * to that syscall once the tracer resumes it.
++ */
++TEST(tsync_vs_ptrace_syscall_stop)
++{
++	struct tsync_vs_ptrace_args args;
++	unsigned long msg;
++	char result;
++	int status;
++	pid_t pid;
++	long ret;
++
++	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
++	ASSERT_EQ(0, ret) {
++		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
++	}
++	ASSERT_EQ(0, pipe(args.go));
++	ASSERT_EQ(0, pipe(args.done));
++
++	pid = fork();
++	ASSERT_GE(pid, 0);
++
++	if (pid == 0) {
++		pthread_t sibling;
++
++		if (pthread_create(&sibling, NULL,
++				   tsync_vs_ptrace_syscall_stop_sibling, &args))
++			exit(1);
++		/* Only this thread is traced; the sibling runs freely. */
++		if (ptrace(PTRACE_TRACEME, 0, NULL, NULL))
++			exit(2);
++		raise(SIGSTOP);
++
++		ret = syscall(__NR_getppid);
++		/* The filter installed during the entry stop must apply. */
++		if (ret != -1 || errno != ESRCH)
++			exit(4);
++		exit(0);
++	}
++
++	ASSERT_EQ(pid, waitpid(pid, &status, 0));
++	ASSERT_TRUE(WIFSTOPPED(status));
++	ASSERT_EQ(SIGSTOP, WSTOPSIG(status));
++	ASSERT_EQ(0, ptrace(PTRACE_SETOPTIONS, pid, NULL,
++			    PTRACE_O_TRACESYSGOOD | PTRACE_O_EXITKILL));
++
++	/* Run the child to its syscall entry stop for getppid(). */
++	do {
++		ASSERT_EQ(0, ptrace(PTRACE_SYSCALL, pid, NULL, 0));
++		ASSERT_EQ(pid, waitpid(pid, &status, 0));
++		ASSERT_TRUE(WIFSTOPPED(status)) {
++			TH_LOG("Child did not stop: status 0x%x", status);
++		}
++		ASSERT_EQ(SIGTRAP | 0x80, WSTOPSIG(status));
++		ASSERT_EQ(0, ptrace(PTRACE_GETEVENTMSG, pid, NULL, &msg));
++	} while (msg != PTRACE_EVENTMSG_SYSCALL_ENTRY ||
++		 get_syscall(_metadata, pid) != __NR_getppid);
++
++	/* Have the sibling install the first filter with TSYNC, and wait. */
++	ASSERT_EQ(1, write(args.go[1], "G", 1));
++	ASSERT_EQ(1, read(args.done[0], &result, 1));
++	ASSERT_EQ('Y', result) {
++		TH_LOG("Sibling could not install the filter with TSYNC");
++	}
++
++	ASSERT_EQ(0, ptrace(PTRACE_CONT, pid, NULL, 0));
++	ASSERT_EQ(pid, waitpid(pid, &status, 0));
++	ASSERT_TRUE(WIFEXITED(status)) {
++		TH_LOG("Child did not exit: status 0x%x", status);
++	}
++	EXPECT_EQ(0, WEXITSTATUS(status)) {
++		if (WEXITSTATUS(status) == 4)
++			TH_LOG("getppid() ran without the TSYNC filter");
++	}
++}
++
+ #ifdef __x86_64__
+ 
+ /*
 -- 
-Thanks,
-Petr
+2.55.0
+
