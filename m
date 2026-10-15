@@ -1,125 +1,147 @@
-Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b7-smtp.messagingengine.com (flow-b7-smtp.messagingengine.com [202.12.124.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D194A7C8B
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 07:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792050472; cv=pass; b=q3seLqpQi9z4FgClSIp4ggcaFOns/kwt5eNO/TTZC+UusYog55UkjisoUBJqL+5PX5EjDz/jZNNDwiJkOe+AuBT6wFqzlofvImoPNvl34gwbTDeNPkibMHIVmZQhYXCXrubcbllqHjd1k8ip/mcyyBvluRl1w24ol9LczLWQhAA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792050472; c=relaxed/simple;
-	bh=qrhbYvBNv/N0VI8PEYpw8zABc5tgbspPTRKzj2j/IcY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TiRu1LIuyL5dZ460HVE4EjCRvoVzMElrlBfLjOVctVyMgNfPmbyq2Va2jTFywV7NzSyXrzy7IaGG4RWpo9MJvX9YFOT5V7z/vC3nu0SzR2TXNxeTPYm9DTIX9epU+wzy5p8EcCHrTrMq3mJz3lWzamx371UtKyJCW2hEsPQpb4U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DP1Cwo5m; arc=pass smtp.client-ip=74.125.82.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB1B409279
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 08:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.142
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792054049; cv=none; b=qzhAIMiJoX4k7gZQz8zIpBZ1hbLFSg+9Umgf5txJhXieqoqsnDyjYJNCxKFHFhrpK+evb+D0VrEjRl4ORxVxVMqq3lFq5bbOUal0tefz9s0WgeREpRMfOllj0uOJ6BbfIyOAARoQ+CVXOv8HUJaz3Y7wXXM+1oWpPV7AHmcmixM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792054049; c=relaxed/simple;
+	bh=3DzHIzJFG/LKDyQ+ooB2t4Kz1ibLoewNe1K4ZAt8fTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FGftrezN8RBVvkOX1+fkIZ3Z4CS46ee1IwVDHOrlxrCQ3o8ttLrtNc1uRxIO+EBvEeirRj5XaHVHOcXIWs1rHPlV2r4ORtR7/bBdYDtKFuSllTgEx41IcjJp8VTSXn86OSOXIfVbz0s4tig7+ghNt9L4AQiDa46Ee4Fa6/OxvbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=nlLDeU3R; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RO/mq21G; arc=none smtp.client-ip=202.12.124.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DP1Cwo5m"
-Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-33c30fcf33fso603733eec.1
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 00:47:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792050468; cv=none;
-        d=google.com; s=arc-20260327;
-        b=HwmLv0rHrwU5ONhCkQRW3rsuqlWC5DkbKWuK9Reis6O3aBd2M+n554NiYnrtDgr54e
-         5oGOGv02T3b3MKFIBxGh2K9NtZpcoxB+F0HB0kpPGzQw59TKfzpQbD97mvVwpsLSJfzD
-         fIJqFjJ5z74LWvnZLVajOrXm+NlAAH1q2oQY4co+2Ug0G27Ho5gzt8oZz2Er1CqsAOP9
-         KyuRnuA1BgxLXHX3EgqWW7cWNtsVUFYoN0+ZWbs1ZXiyb6pvnyYWBTqAod2/BpA+sLog
-         Cuf+4MNvxGQTMsh1Md7kKDyreua0iajX8a9EQpyx+g322VWQD0fhJl6LYQafqxyYI66a
-         O4mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=aZLy1FDhAffyNHLdSNSc3Bq3qLESgLIT723DgtaMR+Q=;
-        fh=DU/WKAF1F6V4XrwWQOCIk9OOl+Vls2VySXWKiETpFbg=;
-        b=ipoMLiscm0aL4LLUhpCecvEYpJuVFg1xsJEVx85OIpYeWAZGx1hYbUvNZHSdicpwrE
-         Oigwslpf6WQ16HQPGSQAIZxl1bnCoMYAbRoTxszvZqRanAoLlCYbSan5+nlTNin2M+sN
-         lbd1WK6VTHuXL5lPcpYiK9wKzbq2l0MSQ97vBi5l5Az4caoncdT6J3K2Q5XgysI2DsHz
-         Hribjd0Sq5B3G4Glr+8M1/vTBjaMvXr5B9IVkrT3Y4Pc0ILvJzJEDjeL/B0GoEAMR2x/
-         3dE1CUxM+Pny7vew7i5NwZUBLpOLNvLa62bxnNY7IeNjwUhZbVmuNrI6sbxUHaVPsKd4
-         HHAQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792050468; x=1792655268; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=aZLy1FDhAffyNHLdSNSc3Bq3qLESgLIT723DgtaMR+Q=;
-        b=DP1Cwo5m/G00Qr36FrXInztSqahs9iMMaMxcJ/hFcP/20kNJe1kQqR6npnz101hC7q
-         rYCdDkfMUQtRBnrzHGBICeicqiUxrC4xZnALWEt9IPH4/3PwfLSPtGtbr3gr7gd3iFBp
-         NyF1Cjs7VZki2xIGfCUzMqsaJHX+xtxdg/vlqTehw2ZLOBKx0g9Tq/sgxWija7I2UoJh
-         5tzlBmM6Z5MGtPKDl5+PVZltvINZbU6t5noxgKfgjE/cF2Djt7Q/tru3JTmDBljIsY5R
-         k9nmP3lcjHHYX3x5OEw/Rh16SPIOpTQEcHrJJRIzvp+H8XrlBpC7KG/Ny0+NgDcohfCI
-         nmvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792050468; x=1792655268;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aZLy1FDhAffyNHLdSNSc3Bq3qLESgLIT723DgtaMR+Q=;
-        b=VRSqTAbKPEJ+Y+3ac6YJcaYNYhD7f1rzabht+TaVg2p0DHvOVgewaVPFBw8xxKc4Fn
-         lFC4EZUsdfgzgTYuR+ISuXfiotJinkCfSsL4LJiqywQNo3LIWcMB2RkL1lHBP+Qf/6QQ
-         w3bAT2HimadoiJ+XEuZOoL5Qu/oKcOZlPuHRLoXzB7IQWmxCmKF5GNdochuLzWmEc8ph
-         2RqZkzFiTrZ0fKSMtwwzatuKi8lRF7pD0hwAsxs26moWF7EtRqNVtvDpXmNVz7/EYH9y
-         kKBD4pKASIld7T0ZUmEUgFwfDn/beLXJ/yOc2G4gHwLlSFG6OUFvZlN9icRIoZcau+G/
-         HRvQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxsUyRkfPZYbNIhJFD35CR++Nx62inOoZazf20hitvbak9f6NgHuP9aXPKbktM5EHIDYfO/u+wouwCW0sDyqsQ=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKhtutDq1CVB+2FV1DYOu5Kca5LHsLyU78ad6TLq1TAWO7+h4TB
-	AIMjBNk+YrWIrcUy0NXXlUb/tSAnWWSY0TZoftjDULyM6gQQNwcNrf+2/pwQppDE5me2vPWqr8P
-	69RlphLhXdwWvlPpcilV+H31/Y4Evin0=
-X-Gm-Gg: AYBFou0Mz+ttwrBMpQKTTkH10k8j+mTWrnmDmD8kKjNjEt2JzTtpgcvx+5hx6zLZNSN
-	ICNq9byvMdj0Hb1cyuWXvwPvmRdhvz6n4AokkyBNs1hBNV1Ep/GlbH5VwamaXIznziF2s7jXThm
-	FjP/6L/CtAdMPWDbtnnUIDlVI1STOoQcEKk6BE4gct1SAvbK72d99okmdvYqey6OuOyxJS5+sqn
-	jBRSzD9K0gQj6ugpXCxcW7s4JfL1kijtGmjp/tDdYeAAQG1sPL9l39WhKVZeWYH5wrP+sqdUwk/
-	qjtni9GG+pZBA8R/y3M4KhFAJg9Cx8ecc7VbbttGG1xmTdYlC0Sh92zRX2nZroOLFk2cJLzo26w
-	l6XkmemxS5/TGBbLirhpNlKtUG+445UyO650iEufj7rb/5MaDJvvDG0WNryXxBTuBM/X5YGiVdO
-	+pxxQabYYdjNssWs6mKtftMuNw6DoKA8yxHblKaYyLps6/QVHmOmU=
-X-Received: by 2002:a05:7300:f3c8:b0:351:7883:bf47 with SMTP id
- 5a478bee46e88-3537dc8e9c0mr38650196eec.0.1792050467352; Thu, 15 Oct 2026
- 00:47:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nlLDeU3R";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RO/mq21G"
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailflow.stl.internal (Postfix) with ESMTP id 9C6731300D0A
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 04:47:27 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Thu, 15 Oct 2026 04:47:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1792054045;
+	 x=1792061245; bh=Xf58ua4FdgrM9Nf7kURSBCDP5FY876Tka1oD3hKlBSY=; b=
+	nlLDeU3R88x+C+XcDEWj6mCG0aacaM47ieOCjV6jMsvXWKNAeSJn+jRphkHQxjVa
+	/Hcjt9Nx4sADAacO6ezlkEaLIS5p4hJ2nixWUDZ1Lm8B0EEjEE15yo0BIGNLvjDY
+	R991/veHVfTvIocmLZ32JaWgZxRp0WizOklplKlPNcisyLB7HArCStpbK6K2j7+6
+	p0Kpl5uBFgjLpqGovCBnso3ajW9/JbFYwbBhyyzHPPXPoRw7R2ygxKpRTEMyurzM
+	bT8deJsY+xxm8SAz+/ckQW0vqTXxnN8pHwY+oxMwU96rdnNPjHomm/fxYYK0HdzP
+	cNDSQIJeLpEZIH1BjHHXcw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792054045; x=
+	1792061245; bh=Xf58ua4FdgrM9Nf7kURSBCDP5FY876Tka1oD3hKlBSY=; b=R
+	O/mq21G6S1V/MDGK5O2JeW3wnBdTY/cNMxw3hkbAvnOh0i2Fw3DgYAgqqYw6megl
+	GAwWvJzMwEFuSvaZXLlodkQR4ZDzcg6xmSqWZqEXFEYTlU6j74AQz9rO3wB2um1p
+	kxzB8+h0dQGWUXPL/HimmVcTZ6omcUui/xsFAS9r0DqxgZ9l7wdJGHUfeDjZImKm
+	EKeYPF6HRAizWckAvJBB8ptYOc1nK8i9v+XJJu3gXKlyZuTKqF2iUsgE6Qs516lr
+	R/0YG34DScYNDLs8ExutwwSCKI3+hnnSUfjFfJxdqFZDh0UsBdt0WMlY824aOg5l
+	wGj4iLYqb4t14GhGOTq4A==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+	action=sign d=kroah.com a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792054045; d=kroah.com;
+	mf=PGdyZWdAa3JvYWguY29tPg==;
+	rt=PGxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmc+;
+	s=fm2:rsa-sha256:oVuCxDGOCFbWtBqXGXLhwopWxFIqyZybp2MYNezTA+PUlyu
+	XzlxNvSj/WkgrH2qZ6Hu8iZtG1P/wKFvgnBxRZO4IWmFQ4YM6CvSWm8Kpg5gb2QO
+	09AbJIMuCDy5zXMqd2gmRecPz4he9IDJo3YEkuhtDo+4F8F0iyHsZYh76Hg4v2TK
+	E3FMb0fmnHmk7iIFBp1uq5qSrL/f3Pp1wBEajhv4IWaZtbRCRyiWLN/oZbSL4jJT
+	jgKve/ovpgzpHqI631egxuLfTE+Ka43x1ULmCw6DL+9p/kf3id2B2uBpyCr1d2xq
+	bJ/1JhsWH2HMgy50P/nQZwo+0WfATsKYqSYB2xQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+	action=mi-m=1; hc=13;
+	hn=cc,content-disposition,content-transfer-encoding,
+	content-type,date,feedback-id,from,in-reply-to,message-id,
+	mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:4z7b+kvGW4W1BUFE+mDvvDnNuAnYVdcCWZXSNWUhwmM=:3DzHIzJFG/LKDyQ+ooB2t4Kz1ibLoewNe1K4ZAt8fTE=;
+X-ME-Sender: <xms:HZPQavoazQGlCC_srZHMX3zRWqrThV6il8fnwG4GbOBfpTAz3_1guQ>
+    <xme:HZPQaqYhfPYR573HAZvMLwDDb7DjT7H9Twd7O97X6q11dQFkwFUgAn7R176AlGKtf
+    vazLFYgW12RMxr9HjC6waKMZhjPhqj9t_D3b0CRP9IX8JdhKg>
+X-ME-Received: <xmr:HZPQalGn4p8xkMKahMV0zzyK9EX2oMyvSaut_hdndJkOJJWw-jzX_7zpcGwBcGb_rQBTXmnG8WcIRpw-0gd6H0xJYFxSkR_3_IiIAkQBTgI>
+X-ME-Proxy-Cause: dmFkZTGdnHDF2BEuJTGH/rfkQEccsg/HRvyWcJAAXBDVUhsoha6DEHd535yO0ryVPimrP0
+    PJs1iev2ttBqSBMTRYqueUudaunYx/fk6khoDVVdL4E+Bxie2LBiACKezmG9jkopFmFqM+
+    KpeBMecM9r5dOdrWk1DwUx8Bzl0yJMnB/2CTC4TwatOmi3P4gQQ1bKQKuhEwTP5//JuQpR
+    DQVVVxzMh9qpzkQy/Faf3dZA/NOyhhP7NMYJkgeeHxgYHy17ui7Ye8SM6OkN57eWqn4RJR
+    hDMQRlhBpytg5bOpfLAXtNKmnu53objtZUDw/OdYr8irRcK6yiAqsMP/Nyo7S5yxz2/rNR
+    LU0WwSuOL+V3NSd0jTcX1dXBGdrCJWwNnE9cF18dOEhVXpixk+d9jhpY66gYCLvWcBtSvj
+    fDe1zQn7OOZ+Unk3EYstRqXQP73r7XhNTeaXbQd0cSZnEptou4XGtK0+Jep0cTcRvBc2Zc
+    NFdIdlMnJ+0Wm44JxC3Fqv9eDXoQhLWHsoygzqsak6+/i5fNUBt/EdsGxCOUvZpvMjMU9e
+    tNWjCvUuDc0d5L4/iiDzJAuq4CmaPfJ/juDmzaw4sr5NBYYn5DzakDdAUmmJTQ6Tci8VBP
+    d6QuajwptKO0izbH6dPfA56pGr/IBZHmPMKs3ulz8YPlp6jVFh89bLSNRbkw
+X-ME-Proxy: <xmx:HZPQaqyZHngyoXjPcGRE03S0wgl1A0YUUZtn5DPbk9SWYKS6tuEzDw>
+    <xmx:HZPQauA4elDgV_z4Uti6KqGx9uSggAW1zonoLEeIVHr63eYLxnVdBg>
+    <xmx:HZPQahXnthiPhLqMqBbMbMmTmZ-jyc9En74IoVuAQBlGWVRMCN1c3g>
+    <xmx:HZPQaoj8rRh2nVnUKW8U2hcP6UunGYIoo9oywsDH2naGWHMfBiQG-A>
+    <xmx:HZPQaq74FgGVpFzFiB6G3lvvVM_1UdCzVTsn49sjIv_dJy4KI2Fuld5l>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 15 Oct 2026 04:47:24 -0400 (EDT)
+Date: Thu, 15 Oct 2026 10:47:29 +0200
+From: Greg KH <greg@kroah.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-fsdevel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/2] seq_file: Require explicit initialization of struct
+ seq_operations
+Message-ID: <2026101515-oversleep-related-e4dd@gregkh>
+References: <20261014225811.i.852-kees@kernel.org>
+ <20261014225818.3457479-2-kees@kernel.org>
+ <2026101517-profane-opponent-4523@gregkh>
+ <CANiq72m_iyquf4Lc8AWvbsBp++ASz4+C_MQ5iYQW-fHd_MNDxA@mail.gmail.com>
+ <C46E97AC-3722-4264-B541-04EBC3091E00@kernel.org>
+ <2026101532-fantastic-deafness-e04c@gregkh>
+ <CANiq72=wS5NJyeKKaYiHKWhDq2Wjk728qkCUNq4xVoHrPEPCRw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261014225811.i.852-kees@kernel.org> <20261014225818.3457479-2-kees@kernel.org>
- <2026101517-profane-opponent-4523@gregkh> <CANiq72m_iyquf4Lc8AWvbsBp++ASz4+C_MQ5iYQW-fHd_MNDxA@mail.gmail.com>
- <C46E97AC-3722-4264-B541-04EBC3091E00@kernel.org> <2026101532-fantastic-deafness-e04c@gregkh>
-In-Reply-To: <2026101532-fantastic-deafness-e04c@gregkh>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 15 Oct 2026 09:47:34 +0200
-X-Gm-Features: AclHuK8JUch3-LLJNkG2OM0JVExMlV2wP7uKNynE1Z6fAhzs1hBzwjLh_wcCofk
-Message-ID: <CANiq72=wS5NJyeKKaYiHKWhDq2Wjk728qkCUNq4xVoHrPEPCRw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] seq_file: Require explicit initialization of struct seq_operations
-To: Greg KH <greg@kroah.com>
-Cc: Kees Cook <kees@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-fsdevel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72=wS5NJyeKKaYiHKWhDq2Wjk728qkCUNq4xVoHrPEPCRw@mail.gmail.com>
 
-On Thu, Oct 15, 2026 at 9:11=E2=80=AFAM Greg KH <greg@kroah.com> wrote:
->
-> __must_init might be smaller?
+On Thu, Oct 15, 2026 at 09:47:34AM +0200, Miguel Ojeda wrote:
+> On Thu, Oct 15, 2026 at 9:11 AM Greg KH <greg@kroah.com> wrote:
+> >
+> > __must_init might be smaller?
+> 
+> That sounds fine too. I like that it says that something *has* to be
+> done (like the original name did). Hmm... On the other hand, I guess
+> "must" could sound like one has to initialize the field "somehow",
+> i.e. writing:
+> 
+>   struct S s = {};
+> 
+> definitely initializes it, yet the compiler would warn. Would
+> "explicit" hint a bit more at the fact that one has to actually
+> "write" the field, even if it may have been initialized anyway?
 
-That sounds fine too. I like that it says that something *has* to be
-done (like the original name did). Hmm... On the other hand, I guess
-"must" could sound like one has to initialize the field "somehow",
-i.e. writing:
+"explicit" is a description, "must" is an action that tells the reader
+what they have to do, so maybe "must" is better?
 
-  struct S s =3D {};
+Anyway, I don't care, naming is hard, either is fine with me, I'll let
+the authors of the patch here pick what they want :)
 
-definitely initializes it, yet the compiler would warn. Would
-"explicit" hint a bit more at the fact that one has to actually
-"write" the field, even if it may have been initialized anyway?
+thanks,
 
-(Of course, if one knows that the attribute only applies to fields,
-then it doesn't make much of a difference)
-
-Cheers,
-Miguel
+greg k-h
