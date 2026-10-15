@@ -1,124 +1,115 @@
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEE4390229
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 03:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5E80397B09;
+	Thu, 15 Oct 2026 04:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792035932; cv=none; b=d16BpWcajyjkBKkvjAB2raSvn1raIM/hXet6si0Fkb49wvixNHPgb5URrurH1K5tB3HCFtB4ap96m0stmrm70V6qBzAHbdTNkpmecuHhkP4MbKThmG1Vf91MMIwuN1q/E1umsaiL7CpudPF9iwNz5qUZqFJCDSAei8fhoRhfN9c=
+	t=1792040163; cv=none; b=DbffaUfEurEfW72bxW7lpb6uu2Cia4aZCjD4FqPxaSwEGbLlcPgbAmAwZeTi1Uy74dnlrNGuzukhZK98RJpiuq6H+gOcmMxJgbl7lG0xFyKtAVBTP3asaBopHo9iTI6Iih+9CzpVaaGgUrwbUDlT6uVWzn13ZUcVtCckX9UwPMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792035932; c=relaxed/simple;
-	bh=9tNs4dqxRFyP90eQFauIOedcWXZRofnOvwz8agHbVaU=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=fcCEziEaVPvsUZiHMbNqhu7BM7x44YnH4ZEQBxFCoOXl5U47xyrbvaYeO36IMYQb+nIdO6ayrjFN6k1ZQiPPBnZxjKAYnLkaI3DT9RYI22ZPmFcnliTY5MahFmag2C4coh3DHn7nYTL1N04KHFCu6NkHlmni+/7mvcIVYvnpfDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hPLD3TsP; arc=none smtp.client-ip=74.125.82.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1792040163; c=relaxed/simple;
+	bh=DYm+etoHR3zNYbhtHG1R4AN3vVGImJ6ZW5Qomh/pmDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hExixbB6v4SV7NVyY7SB28s5VCUkkNB5DMrxKU+Z9Qd20MMc2EUoi63VSMTKq+YuiInqNI+BPntgbjQoay6nUQaQdR4XW+Yc5FpdQpg/1b+zOHp0CkOpYar23hBWldQ1dLB1C03dAB2Fyyw6gccnsAQ5QxKzCHIvwJ1s7czEmDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=h7HAF7FY; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPLD3TsP"
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-14394530ec6so3980586c88.1
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Oct 2026 20:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792035929; x=1792640729; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=ekxAbaTw9lcA/repE4rySfHgfzkYuU+ooIR190sGV+c=;
-        b=hPLD3TsPSGMnptvsYH4IuzPpO6zxpFiXTGuNM538iTOXrk6/earv2op6r2zGPbu4Z0
-         6HQXzaMnxQte1gGlLwGJsRP2UzyUMYcS19bd8qrDyexfQDHZz+aEriGRhV2UvOlJ90Z8
-         P6L8u7CPTKO20IPTXLviOxK6l2IVW0c/tlMZ4mD+jGyfz1dWe8MyWbYZ4qQ20LyC0+6s
-         5/7NyqFwCLlezfSgHwWJyzN3ysnSyQABQ84Muf5/Zm6slKw7/iaQrt7ba+3qzN5utG6u
-         MRuOtlJh6W8ydLW8jO6W4hMeXpUn7TX9rx1QbJ/hcOQeZprv+PMEn8PZU/ebh0n6YFK5
-         K1yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792035929; x=1792640729;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ekxAbaTw9lcA/repE4rySfHgfzkYuU+ooIR190sGV+c=;
-        b=iTtTlUhlxAOJYNhWR80TiFjKS2wAor/8ovGOtwowyWbfos4v9pxWwoU1ROGULGTLEg
-         O4XhBQ3IByjkBd7XUpoJL1c2ERJThzFA4fZgZxW6rLU0YSGX0403Km1KiwdJkIlDiRZ9
-         +G84Ji3+YSI5Q8fjSwPQY/nJOKyRAEumutYLqBty+1qlOah/nNClLLlVQ1QsU41OoYtj
-         JSVooWe9r//G3hhA40XBBDJgoMUzSqkIR2JVEZzpnHqiWI0sBeexzzzGIqdBboqRrswc
-         Cx+lTFEKHGnYfl9H/l7JgrdaqduAuFslvIOjd7NjsYbTVdB+tXTa4T1XDNLhnp5fUxNe
-         3t/w==
-X-Forwarded-Encrypted: i=1; AKwUvBy2q0+SE8/XqYteo5W4QiUusjkRPQptAiSQEUNjC86lJBBia5azIbEmVu/GeiaTnI8QfrqYrO/yF5O/onvHrVM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJdBs1O2Nu5DUXXczioIQ8cJ2S63ETDTJR8l+N8yvPuEICXduN7
-	yQxVCEz5CMfhlcnVXeyO6dJzfCZsI2n8tCBp86UXTfm9harhL/nrg06kqdnX5Q==
-X-Gm-Gg: AYBFou0OocmbfgPy/6QeZBlfCtPfXbnRrerBShngqmxQCDNoBhLujtgDRV3fA6RTScN
-	7DEZ4cIwSSh+ikSZgu4zJ84IFk9UrqRb1fGGQE8G9LsBQolTpHR/WFYqGxRvoMjrDMWG1kAmHR0
-	XgJhLVRX4mGFJ6DgMX6p+9DUJz71C35mBj+exnz0VQcwkBI8WuwR4IKIKaCP/USp/oXInOsycfi
-	Xo16rrBKM91z2PaCMzBUU4ArwQezHRUJcyWS8ng22O/JDZ8Q38VmpBUg8Ml04WjZBZ4wcKavCYj
-	OAXuH6o0tRSiDNzVD128o5oXjfnVewy/WTanxa/A4+XLQahxcfjfxL02dYbo3P/aRUVCX/zqD6X
-	Ll3tRkZnRWVwybuumSkLiVFZn1kFPLVAq2CEdLlC6XFYPuWwb0WjMJgQHS2eq8skS+9WDDxuWSJ
-	4qQEQEln2zPFtNBH+hNSt8ZT1t+OpBYArqHuMX5fLQqMG4DNXZHyWax384olxYDiMnF0Wc
-X-Received: by 2002:a05:7022:7e08:b0:144:fa58:95d8 with SMTP id a92af1059eb24-16a61a6ebb0mr33060504c88.27.1792035929111;
-        Wed, 14 Oct 2026 20:45:29 -0700 (PDT)
-Received: from pve-server ([49.205.216.49])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-169a5866477sm50853605c88.22.2026.10.14.20.45.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2026 20:45:28 -0700 (PDT)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Amit Machhiwal <amachhiw@linux.ibm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Amit Machhiwal <amachhiw@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Shrikanth Hegde <sshegde@linux.ibm.com>, Alexander Graf <agraf@suse.de>, Avi Kivity <avi@redhat.com>, kvm-ppc@vger.kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Gautam Menghani <gautam@linux.ibm.com>, Harsh Prateek Bora <harshpb@linux.ibm.com>, R Nageswara Sastry <rnsastry@linux.ibm.com>, linux-hardening@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] KVM: PPC: Book3S HV: Disable preemption around host-side HPT lock users
-In-Reply-To: <20261014185215.71832-1-amachhiw@linux.ibm.com>
-Date: Thu, 15 Oct 2026 09:14:32 +0530
-Message-ID: <v773r5jz.ritesh.list@gmail.com>
-References: <20261014185215.71832-1-amachhiw@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="h7HAF7FY"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 679981516;
+	Wed, 14 Oct 2026 21:55:49 -0700 (PDT)
+Received: from localhost (a085714.arm.com [10.164.19.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED25A3F871;
+	Wed, 14 Oct 2026 21:55:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1792040152; bh=DYm+etoHR3zNYbhtHG1R4AN3vVGImJ6ZW5Qomh/pmDg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h7HAF7FYATg4eCjmDj57DAFLfy1kQnGIC3BWZg/3co7F6JU2g8y8pjOMgelGFqZlE
+	 LBGHqxwBERJhTrUahiwBtYFiRjEfGLd5NVrb0JSkWybp537bI3UXql1Br2Xc3srC7u
+	 iz22Ot6G3DXMOnu23/ii8tkQIKAI6LSf/K2nw03E=
+Date: Thu, 15 Oct 2026 10:25:49 +0530
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: Iurii Trukhin <yuri@trukhin.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: raise default ARCH_MMAP_RND_BITS for 48-bit and
+ 52-bit VA
+Message-ID: <x4iu6sii7fsxksdfur3wcpu4kb63eubsp5d6pzklxuhta7xtj7@rskyoy7ajncj>
+References: <CAOx7e9Jm0N9O_ndL1UApMPrXUN=P4RiptSNibdDP+9prUsNPOw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOx7e9Jm0N9O_ndL1UApMPrXUN=P4RiptSNibdDP+9prUsNPOw@mail.gmail.com>
 
-Amit Machhiwal <amachhiw@linux.ibm.com> writes:
-
-> A previous change ("KVM: PPC: Book3S HV: Add preempt_disable() around
-> virtual-mode HPTE bit-lock users") at [1] added preempt_disable() around
-> guest vCPU HPT hcalls and page fault handlers executed in virtual mode.
-> This ensures vCPU threads cannot be preempted while holding
-> HPTE_V_HVLOCK or the reverse-map lock.
->
-> However, several host-side virtual-mode paths in book3s_64_mmu_hv.c also
-> acquire HPTE_V_HVLOCK and lock_rmap() in process context with preemption
-> enabled.  Specifically, kvm_unmap_rmapp() and kvm_age_rmapp() take both
-> locks during MMU notifier callbacks and memslot flushes, while
-> resize_hpt_rehash_hpte() acquires HPTE_V_HVLOCK during HPT resizing.  If
-> a host thread is preempted while holding either bit-lock, any guest vCPU
-> thread scheduled on the same CPU spinning for the same lock with
-> preemption disabled will never yield, resulting in a permanent CPU hang.
->
-> Fix this by disabling preemption across these host-side critical
-> sections.
->
-> For kvm_unmap_rmapp() and kvm_age_rmapp(), place preempt_disable()
-> before lock_rmap() so that both the rmap chain lock and the subsequent
-> HPTE_V_HVLOCK bit-lock are held under a single non-preemptible window.
-> To preserve the ABBA lock ordering between the two locks, re-enable
-> preemption after dropping the rmap lock on any retry or early-exit path
-> before spinning on cpu_relax(), allowing the lock holder to be
-> scheduled.
->
-> For kvm_htab_write(), the HPT migration restore path, replace the direct
-> calls to kvmppc_do_h_remove() with kvmppc_virtmode_do_h_remove(), a thin
-> wrapper that brackets kvmppc_do_h_remove() with preempt_disable() and
-> preempt_enable(), mirroring the existing kvmppc_virtmode_do_h_enter()
-> helper.
->
-> For resize_hpt_rehash_hpte(), place preempt_disable() before the
-> try_lock_hpte() spin loop and preempt_enable() after unlock_hpte() at
-> the function exit.
->
-> [1] https://git.kernel.org/powerpc/c/abbbe5ff83e7c9ed3a4d61b73011f1df7bf87907
->
-> Fixes: 6165d5dd99db ("KVM: PPC: Book3S HV: add virtual mode handlers for HPT hcalls and page faults")
-> Cc: stable@vger.kernel.org # v5.14+
-> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+On Wed, Oct 14, 2026 at 07:26:48PM -0500, Iurii Trukhin wrote:
+> Since commit f101c5644771 ("arm64: Support ARM64_VA_BITS=52 when
+> setting ARCH_MMAP_RND_BITS_MAX"), arm64 supports up to 33, 31, and 29
+> bits of mmap ASLR entropy on 48-bit and 52-bit virtual address spaces
+> for 4K, 16K, and 64K pages respectively. However, ARCH_MMAP_RND_BITS
+> still defaults to ARCH_MMAP_RND_BITS_MIN (18, 16, and 14 bits), which
+> was set in commit 8f0d3aa9de57 ("arm64: mm: support ARCH_MMAP_RND_BITS")
+> when 39-bit VA was the 4K default.
+> 
+> Set the default ARCH_MMAP_RND_BITS for 48-bit and 52-bit VA to 28 (4K
+> pages), 26 (16K pages), and 24 (64K pages), matching x86_64's 1 TiB
+> randomization range (5 bits below ARCH_MMAP_RND_BITS_MAX) while keeping
+> ARCH_MMAP_RND_BITS_MIN unchanged for smaller VA configurations.
+> 
+> Closes: https://github.com/KSPP/linux/issues/371
+> Signed-off-by: Iurii Trukhin <yuri@trukhin.com>
 > ---
-> Changes in this version:
-> - Separated host-side fixes in book3s_64_mmu_hv.c into a standalone patch
->   (guest-side paths were merged from v1 resend).
-> - Previous discussion: https://lore.kernel.org/all/20261007182116.12479-3-amachhiw@linux.ibm.com/
->
+>  arch/arm64/Kconfig | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index cab741a695f5..59a53d7a75c5 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -313,6 +313,11 @@ config ARCH_MMAP_RND_BITS_MAX
+>  	default 16 if ARM64_16K_PAGES
+>  	default 18
+> 
+> +config ARCH_MMAP_RND_BITS
+> +	default 24 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_64K_PAGES
+> +	default 26 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_16K_PAGES
+> +	default 28 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52)
+> +
 
-Thanks. Looks good to me. Please feel free to add:
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+Overriding ARCH_MMAP_RND_BITS inside the platform effectively makes this config
+look something like the following on arm64.
+
+config ARCH_MMAP_RND_BITS
+	int "Number of bits to use for ASLR of mmap base address" if EXPERT
+	range ARCH_MMAP_RND_BITS_MIN ARCH_MMAP_RND_BITS_MAX
+	-------------
+	default 24 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_64K_PAGES
+	default 26 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_16K_PAGES
+	default 28 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52)
+	-------------
+	default ARCH_MMAP_RND_BITS_MIN
+	depends on HAVE_ARCH_MMAP_RND_BITS
+	help
+	  This value can be used to select the number of bits to use to
+	  determine the random offset to the base address of vma regions
+	  resulting from mmap allocations. This value will be bounded
+	  by the architecture's minimum and maximum supported values.
+
+	  This value can be changed after boot using the
+	  /proc/sys/vm/mmap_rnd_bits tunable
+
+ARCH_MMAP_RND_BITS_MIN still gets used when VA_BITS != 48 or 52. But this seems
+like a subtle detail. Just wondering - should a comment explaining this default
+random bits fallback sequence be added here as well ?
+
+>  config ARCH_MMAP_RND_COMPAT_BITS_MIN
+>  	default 7 if ARM64_64K_PAGES
+>  	default 9 if ARM64_16K_PAGES
+> -- 
+> 2.56.0
