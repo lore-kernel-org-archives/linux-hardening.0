@@ -1,177 +1,125 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE31414400
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 07:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792049605; cv=none; b=pH7+6tLCH99Gn2WF7Z9ebi9dJmMNs3YNlol0ae3FjFQDzAIpdeXkvYPj1ere+vlPpR3/e+FVHz4tVQejdhUQZ+ShZBTuleOXKkuZkgtKNrNklCtZpBAM5zl5X4lonnwRlglj5mf7QHHNVBT6Q/L72xUqmdmKK658MLo2FtHSK1c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792049605; c=relaxed/simple;
-	bh=Vi+rfJVvIqgKkcyz2ICIQLL5bR+7LUh01MJ2ti2Lny0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ObVTEsgmJwqggg9kGm7AsSDZHFuBM6083Tca6sr+ZoZRcYdu7GiJaei7ulMJvIZhicJW2ap80zakRsfp9hSguUDBYm5ZKjk/chAZIjiZAd7PG8jcR86SkiWVJnikOzNoUteF4qFfyqEgpqaXddG2IGa7t9rBB5I3UXiuMnENyxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PHNwUqV7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=a37jq287; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Tk/KcdEa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1ohB1UH6; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D194A7C8B
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 07:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792050472; cv=pass; b=q3seLqpQi9z4FgClSIp4ggcaFOns/kwt5eNO/TTZC+UusYog55UkjisoUBJqL+5PX5EjDz/jZNNDwiJkOe+AuBT6wFqzlofvImoPNvl34gwbTDeNPkibMHIVmZQhYXCXrubcbllqHjd1k8ip/mcyyBvluRl1w24ol9LczLWQhAA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792050472; c=relaxed/simple;
+	bh=qrhbYvBNv/N0VI8PEYpw8zABc5tgbspPTRKzj2j/IcY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TiRu1LIuyL5dZ460HVE4EjCRvoVzMElrlBfLjOVctVyMgNfPmbyq2Va2jTFywV7NzSyXrzy7IaGG4RWpo9MJvX9YFOT5V7z/vC3nu0SzR2TXNxeTPYm9DTIX9epU+wzy5p8EcCHrTrMq3mJz3lWzamx371UtKyJCW2hEsPQpb4U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DP1Cwo5m; arc=pass smtp.client-ip=74.125.82.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PHNwUqV7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="a37jq287";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Tk/KcdEa";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1ohB1UH6"
-Received: from murzim.nue2.suse.org (unknown [10.168.4.243])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B9A481F7D1;
-	Thu, 15 Oct 2026 07:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792049601; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IJbTsvcvsb0G5y7w606tSXjJzM1A5bxV6bfOl0odZ0A=;
-	b=PHNwUqV7JNPF09xsv1EfDTwOy5Dln5CNj7kNDsq576U0s4lUxYZb0KUDqe/nM0VduhIJXQ
-	3wEBpiS6oGHMKuRazcMTXU9dwuGm+D8obLGMriyIlSsntTJcDjf5X3FbxeqFr09C2Dt4rh
-	vHTbFDpYxVpZjtOxt2lA8H2UKMIbZmM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792049601;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IJbTsvcvsb0G5y7w606tSXjJzM1A5bxV6bfOl0odZ0A=;
-	b=a37jq287UxZrbI1F8XjsUxg//kWYsU+JoWPmQcWBUipUBSGX76fPC6mjizL7luXonjeq7D
-	aq1ZbHoid33gZyBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792049600; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IJbTsvcvsb0G5y7w606tSXjJzM1A5bxV6bfOl0odZ0A=;
-	b=Tk/KcdEarawHSUGJ5O55WuWYYbUabBxigrgmo+dj6FwhRfoZaryJs9Hxa1iM+HkeVWkIf4
-	6p6YUDAFsq6CZKRqp8XPlLScIJYJD+PBrXWgI8O4HCKAqAGgzSU6fn1I2On+0fJbfw1LPQ
-	M9NzbelsFmSYmJ2tTHFR8LdZmkLIea4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792049600;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IJbTsvcvsb0G5y7w606tSXjJzM1A5bxV6bfOl0odZ0A=;
-	b=1ohB1UH6ZOnE0Zt2MWS1lYKfirmzlBsQy2vppx1cwxG7xqSi7AYe9MkK26zInWYXhAFqcR
-	HYS297UlFbheEiAA==
-Date: Thu, 15 Oct 2026 09:33:20 +0200 (CEST)
-From: Richard Biener <rguenther@suse.de>
-To: Kees Cook <kees@kernel.org>
-cc: Richard Biener <richard.guenther@gmail.com>, Jan Hubicka <hubicka@ucw.cz>, 
-    Martin Jambor <mjambor@suse.cz>, gcc-patches@gcc.gnu.org, 
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ipa-icf: Compare access path type sizes without TBAA
- [PR105438]
-In-Reply-To: <20261015052441.7d2b3c-kees@kernel.org>
-Message-ID: <39r25275-0488-rq01-55nq-28rs192rp368@fhfr.qr>
-References: <20261010050537.i.784-kees@kernel.org> <CAFiYyc2gYAjiKDi+TeC9_qEX+LHa7fSxj42JjRtM6Dbi6Yfidw@mail.gmail.com> <20261015052441.7d2b3c-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DP1Cwo5m"
+Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-33c30fcf33fso603733eec.1
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 00:47:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792050468; cv=none;
+        d=google.com; s=arc-20260327;
+        b=HwmLv0rHrwU5ONhCkQRW3rsuqlWC5DkbKWuK9Reis6O3aBd2M+n554NiYnrtDgr54e
+         5oGOGv02T3b3MKFIBxGh2K9NtZpcoxB+F0HB0kpPGzQw59TKfzpQbD97mvVwpsLSJfzD
+         fIJqFjJ5z74LWvnZLVajOrXm+NlAAH1q2oQY4co+2Ug0G27Ho5gzt8oZz2Er1CqsAOP9
+         KyuRnuA1BgxLXHX3EgqWW7cWNtsVUFYoN0+ZWbs1ZXiyb6pvnyYWBTqAod2/BpA+sLog
+         Cuf+4MNvxGQTMsh1Md7kKDyreua0iajX8a9EQpyx+g322VWQD0fhJl6LYQafqxyYI66a
+         O4mA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=aZLy1FDhAffyNHLdSNSc3Bq3qLESgLIT723DgtaMR+Q=;
+        fh=DU/WKAF1F6V4XrwWQOCIk9OOl+Vls2VySXWKiETpFbg=;
+        b=ipoMLiscm0aL4LLUhpCecvEYpJuVFg1xsJEVx85OIpYeWAZGx1hYbUvNZHSdicpwrE
+         Oigwslpf6WQ16HQPGSQAIZxl1bnCoMYAbRoTxszvZqRanAoLlCYbSan5+nlTNin2M+sN
+         lbd1WK6VTHuXL5lPcpYiK9wKzbq2l0MSQ97vBi5l5Az4caoncdT6J3K2Q5XgysI2DsHz
+         Hribjd0Sq5B3G4Glr+8M1/vTBjaMvXr5B9IVkrT3Y4Pc0ILvJzJEDjeL/B0GoEAMR2x/
+         3dE1CUxM+Pny7vew7i5NwZUBLpOLNvLa62bxnNY7IeNjwUhZbVmuNrI6sbxUHaVPsKd4
+         HHAQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792050468; x=1792655268; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=aZLy1FDhAffyNHLdSNSc3Bq3qLESgLIT723DgtaMR+Q=;
+        b=DP1Cwo5m/G00Qr36FrXInztSqahs9iMMaMxcJ/hFcP/20kNJe1kQqR6npnz101hC7q
+         rYCdDkfMUQtRBnrzHGBICeicqiUxrC4xZnALWEt9IPH4/3PwfLSPtGtbr3gr7gd3iFBp
+         NyF1Cjs7VZki2xIGfCUzMqsaJHX+xtxdg/vlqTehw2ZLOBKx0g9Tq/sgxWija7I2UoJh
+         5tzlBmM6Z5MGtPKDl5+PVZltvINZbU6t5noxgKfgjE/cF2Djt7Q/tru3JTmDBljIsY5R
+         k9nmP3lcjHHYX3x5OEw/Rh16SPIOpTQEcHrJJRIzvp+H8XrlBpC7KG/Ny0+NgDcohfCI
+         nmvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792050468; x=1792655268;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=aZLy1FDhAffyNHLdSNSc3Bq3qLESgLIT723DgtaMR+Q=;
+        b=VRSqTAbKPEJ+Y+3ac6YJcaYNYhD7f1rzabht+TaVg2p0DHvOVgewaVPFBw8xxKc4Fn
+         lFC4EZUsdfgzgTYuR+ISuXfiotJinkCfSsL4LJiqywQNo3LIWcMB2RkL1lHBP+Qf/6QQ
+         w3bAT2HimadoiJ+XEuZOoL5Qu/oKcOZlPuHRLoXzB7IQWmxCmKF5GNdochuLzWmEc8ph
+         2RqZkzFiTrZ0fKSMtwwzatuKi8lRF7pD0hwAsxs26moWF7EtRqNVtvDpXmNVz7/EYH9y
+         kKBD4pKASIld7T0ZUmEUgFwfDn/beLXJ/yOc2G4gHwLlSFG6OUFvZlN9icRIoZcau+G/
+         HRvQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxsUyRkfPZYbNIhJFD35CR++Nx62inOoZazf20hitvbak9f6NgHuP9aXPKbktM5EHIDYfO/u+wouwCW0sDyqsQ=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKhtutDq1CVB+2FV1DYOu5Kca5LHsLyU78ad6TLq1TAWO7+h4TB
+	AIMjBNk+YrWIrcUy0NXXlUb/tSAnWWSY0TZoftjDULyM6gQQNwcNrf+2/pwQppDE5me2vPWqr8P
+	69RlphLhXdwWvlPpcilV+H31/Y4Evin0=
+X-Gm-Gg: AYBFou0Mz+ttwrBMpQKTTkH10k8j+mTWrnmDmD8kKjNjEt2JzTtpgcvx+5hx6zLZNSN
+	ICNq9byvMdj0Hb1cyuWXvwPvmRdhvz6n4AokkyBNs1hBNV1Ep/GlbH5VwamaXIznziF2s7jXThm
+	FjP/6L/CtAdMPWDbtnnUIDlVI1STOoQcEKk6BE4gct1SAvbK72d99okmdvYqey6OuOyxJS5+sqn
+	jBRSzD9K0gQj6ugpXCxcW7s4JfL1kijtGmjp/tDdYeAAQG1sPL9l39WhKVZeWYH5wrP+sqdUwk/
+	qjtni9GG+pZBA8R/y3M4KhFAJg9Cx8ecc7VbbttGG1xmTdYlC0Sh92zRX2nZroOLFk2cJLzo26w
+	l6XkmemxS5/TGBbLirhpNlKtUG+445UyO650iEufj7rb/5MaDJvvDG0WNryXxBTuBM/X5YGiVdO
+	+pxxQabYYdjNssWs6mKtftMuNw6DoKA8yxHblKaYyLps6/QVHmOmU=
+X-Received: by 2002:a05:7300:f3c8:b0:351:7883:bf47 with SMTP id
+ 5a478bee46e88-3537dc8e9c0mr38650196eec.0.1792050467352; Thu, 15 Oct 2026
+ 00:47:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_CC(0.00)[gmail.com,ucw.cz,suse.cz,gcc.gnu.org,vger.kernel.org];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[murzim.nue2.suse.org:helo,suse.de:email]
-X-Spam-Score: -2.80
-X-Spam-Level: 
-X-Spam-Flag: NO
+References: <20261014225811.i.852-kees@kernel.org> <20261014225818.3457479-2-kees@kernel.org>
+ <2026101517-profane-opponent-4523@gregkh> <CANiq72m_iyquf4Lc8AWvbsBp++ASz4+C_MQ5iYQW-fHd_MNDxA@mail.gmail.com>
+ <C46E97AC-3722-4264-B541-04EBC3091E00@kernel.org> <2026101532-fantastic-deafness-e04c@gregkh>
+In-Reply-To: <2026101532-fantastic-deafness-e04c@gregkh>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 15 Oct 2026 09:47:34 +0200
+X-Gm-Features: AclHuK8JUch3-LLJNkG2OM0JVExMlV2wP7uKNynE1Z6fAhzs1hBzwjLh_wcCofk
+Message-ID: <CANiq72=wS5NJyeKKaYiHKWhDq2Wjk728qkCUNq4xVoHrPEPCRw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] seq_file: Require explicit initialization of struct seq_operations
+To: Greg KH <greg@kroah.com>
+Cc: Kees Cook <kees@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-fsdevel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 14 Oct 2026, Kees Cook wrote:
+On Thu, Oct 15, 2026 at 9:11=E2=80=AFAM Greg KH <greg@kroah.com> wrote:
+>
+> __must_init might be smaller?
 
-> On Sun, Oct 11, 2026 at 04:50:41PM +0200, Richard Biener wrote:
-> > >     In function 'small_to_big', inlined from 'f' at t.c:22:3:
-> > >     warning: array subscript 'struct big[0]' is partly outside array bounds of 'struct small[1]' [-Warray-bounds=]
-> >
-> > I think these diagnostics are dubious with -fno-strict-aliasing which
-> > essentially says you can access every object via any other objects type.
-> 
-> The source has no such access, though: each function reads and writes
-> members through its own types, and every byte touched is inside the
-> object. The "struct big" access to a "struct small" exists only in the
-> body ICF picked, so the warning is about code GCC wrote rather than
-> code the programmer wrote.
-> 
-> > So instead of this I'd rather work towards inlining the original
-> > body rather than the ICF prevailing one.
-> 
-> That does seem like it could be better, but it's not clear to me how
-> large a project that would be to accomplish.
+That sounds fine too. I like that it says that something *has* to be
+done (like the original name did). Hmm... On the other hand, I guess
+"must" could sound like one has to initialize the field "somehow",
+i.e. writing:
 
-I think for the case of ICF and non-LTO it should be possible to
-"hack" this in;  it should be just to make sure the inline edges
-point to the original body and hopefully the ICF "merge" is somehow
-encoded clearly.  When the inline edge is set up correctly it should
-possibly even work with LTO.
+  struct S s =3D {};
 
-> This patch seems to DTRT, though. It doesn't appear to regress merging
-> in a meaningful way for the Linux at least.
+definitely initializes it, yet the compiler would warn. Would
+"explicit" hint a bit more at the fact that one has to actually
+"write" the field, even if it may have been initialized anyway?
 
-I don't dispute this, but it feels like a hack.  Either ICF should
-work as if -fstrict-aliasing were given, but consistently so, and
-for a good reason, or you could as well do -fno-ipa-icf when
-building the kernel as you are doing so many we-don't-quite-want-C
-things already.
+(Of course, if one knows that the attribute only applies to fields,
+then it doesn't make much of a difference)
 
-> > And force-disable these kind of diagnostics with -fno-strict-aliasing?
-> 
-> I'd really rather not. Linux builds everything with -fno-strict-aliasing,
-> so that would remove these checks from the kernel entirely. GCC's
-> -Warray-bounds is still off by default for the kernel because of false
-> positives like this one (which is why I'm trying to solve it), and I've
-> been working toward enabling it, since it finds real bugs. (I have a
-> stack of a dozen real issues that this found while doing a recent pass.)
-> 
-> For example (since I don't yet have links to the above stack), here
-> are some random examples from a few years ago: a response struct passed
-> where a bigger error struct was expected, whose "error" field was past
-> the end of the object[1]:
-> 
->   drivers/thunderbolt/xdomain.c:226:22: error: array subscript 'const struct tb_xdp_error_response[0]' is partly outside array bounds of 'struct tb_xdp_properties_changed_response[1]'
-> 
-> and a u64 remainder stored into an int on the stack[2]:
-> 
->   include/linux/math64.h:56:20: error: array subscript 'u64 {aka long long unsigned int}[0]' is partly outside array bounds of 'int[1]'
-> 
-> But if you did disable diagnostics, which did you have in mind? If it's
-> only warnings about an access whose type is bigger than the object while
-> the bytes it touches are in bounds, that's narrower, but the first
-> example above would still need to be caught, so I'd much rather just
-> get ICF behaving nicely. :)
-> 
-> -Kees
-> 
-> [1] https://git.kernel.org/linus/19813551701d0
-> [2] https://git.kernel.org/linus/9f3d543a9f737
-> 
-> 
-
--- 
-Richard Biener <rguenther@suse.de>
-SUSE Software Solutions Germany GmbH,
-Frankenstrasse 146, 90461 Nuernberg, Germany;
-GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri; (HRB 36809, AG Nuernberg)
+Cheers,
+Miguel
