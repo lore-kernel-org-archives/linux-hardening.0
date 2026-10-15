@@ -1,198 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FCA53CA85;
-	Thu, 15 Oct 2026 16:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A8D53E3141;
+	Thu, 15 Oct 2026 16:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792080850; cv=none; b=UNz542ScDnel7tbtr0Dt2VX4479Iv9+Ije3f/OLy6JKMl7SQnmhgeRcRBQs+BCxm3CjMkvNIl/B/Lme/qLz39gphqXdf5d1MQv+4olG/JcOgYLvEJdZxo/AOJuKA2x3kyvHGnC/s66+LT4AB4t78DaNYWhPQLylHebFk6AUk2a4=
+	t=1792082120; cv=none; b=QSIQn5vUJCHXvbRZEWYdXHWbcmZmjGX7gDmzC6cwS3QQhresoEgbE8TqxWetGsnUZkeAwP/axxJLXceUWNMHFIYUVRnMsEi0FfHlB7eXtZG4MmJ7GyiHkFsqYlQInDy3icNI+z8qs8b3hnDA+fYnN7pus1BCtsA2HNJxf4TJGl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792080850; c=relaxed/simple;
-	bh=8bwprqGxRBHun1/JgD/FObTrwdc9bx0DjpMwwt2vpFo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mcKHOENI7PDwOy4QUovOYqAtfI0e8Qm2YTL1lnInJo6iHy2OVSazDMuWPYaU9ufQtrts+h/cxjX//mt8DOEpUrsiaknEO6VipD0wFW7WXQpYAEQYXiFjdKytTgh7tsXrQbtRnzwvovZlETv/RaoFkcnc7zifH7jq6YaS4OpF+fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UsjYY5n9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792082120; c=relaxed/simple;
+	bh=lsiH1+9I7R8Zogecgsc8mrMTXuCaEqcuQrsVaEDtkC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YrE0QI8DVwJn1JbBLO7Q/Ww5TjGrZ2unk4b8xQ4nNBOGhkiQqxI+obwRcgku0acX+OKW1M8me0bR6u7KUxQBXTeEyhu9k9Kzkm/4dvScHrHEHTLgOs8hg6O1cX1pJ9yPS4Ltl+gOb/Nov7KWqgEJB1WZGxDM8fNvLKAl16VP17c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=a2AsLQvb; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsjYY5n9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B9FB1F000C4;
-	Thu, 15 Oct 2026 16:13:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792080835;
-	bh=30bhUUWIqaWkvxc6HWDx5iOUXFGfR1hON5BVhCv9Fb0=;
-	h=From:To:Cc:Subject:Date;
-	b=UsjYY5n9mJXBX9OS96InGmyeV3KyCpfgjbeMWYr6T76RGfpdTLrt1sy3vOeXrqJXf
-	 WPDxRComZy0EAviqfYuMS8srQoEQdAzsm3FAAE78Q8vPr+8i2Pn6PIP1zLyFkpMQ63
-	 kfk0gvNTzXe6W8wwFU6BA29TRknvA/77c5HUfXND1wKm4O1t+7M7Ma5MvyUDwbszUV
-	 /BsWH3EaiZxCK8SgBVq+9yNy/Gf2qXiTDyWS2t7F4v76WvDWE6qLYMSUL684JZJ4Pv
-	 vlLC+PK2Io+JOn2yqn/MSxB7ZyFUMkqsqMjfvJt+INJmMDcd6RNN6E8oD++NTD227f
-	 oTLc42SZCGvEg==
-From: Kees Cook <kees@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] selftests/seccomp: Test a TSYNC filter arriving during a ptrace stop
-Date: Thu, 15 Oct 2026 09:13:53 -0700
-Message-ID: <20261015161348.i.779-kees@kernel.org>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="a2AsLQvb"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17A7414BF;
+	Thu, 15 Oct 2026 09:35:02 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC9223F871;
+	Thu, 15 Oct 2026 09:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1792082105; bh=lsiH1+9I7R8Zogecgsc8mrMTXuCaEqcuQrsVaEDtkC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a2AsLQvbUtafLx5JEFU7If/jPUmnKDzQLNnyAKcPeXuraMiO1yHOL9cr1qGxmcFDg
+	 /ZtQ63wu2mEK+d3MgSz1GePJ/sF0hbTvf5y80ElN7tv5niqN5SSKYm3Huz/QQ9fjE3
+	 8WSg6sfzddBzCnipx04jTzq4ZNdtfgDF7erhtQtM=
+Date: Thu, 15 Oct 2026 17:35:00 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Iurii Trukhin <yuri@trukhin.com>
+Cc: Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: raise default ARCH_MMAP_RND_BITS for 48-bit
+ and 52-bit VA
+Message-ID: <atEAtHiHh0eeVPn3@arm.com>
+References: <CAOx7e9K5sgNcWNj4CemyZd0Ar1ZjR4o44B4nryohq-Ue6TNdKA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4801; i=kees@kernel.org; h=from:subject:message-id; bh=8bwprqGxRBHun1/JgD/FObTrwdc9bx0DjpMwwt2vpFo=; b=owGbwMvMwCVmps19z/KJym7G02pJDFkXfh+wa5A2cGmq0rrgLHVN00u2ybhMLGJpS+aHSX+X2 bUb/rDrKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmEiINyPD7J69mrOvB7D+sLif N+upqUq4VPhsoZZZ/9bWPZy1cZPgbEaG2yKLT4vHM89+/nR+0C2zq2xZfcprJnWszddhVFbKM0r nBAA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOx7e9K5sgNcWNj4CemyZd0Ar1ZjR4o44B4nryohq-Ue6TNdKA@mail.gmail.com>
 
-Seccomp runs after ptrace at syscall entry so that it checks what the
-tracer left. A thread can get its first filter by TSYNC from a sibling
-while it is stopped at a syscall entry; the generic entry code used the
-syscall work flags read before the stop, missed SYSCALL_WORK_SECCOMP,
-and ran that syscall unfiltered until commit 4a3591287fb7f ("entry: Fix
-seccomp bypass after ptrace with TSYNC").
+On Wed, Oct 14, 2026 at 10:23:35PM -0700, Iurii Trukhin wrote:
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index cab741a695f5..7bca47269dd5 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -313,6 +313,14 @@ config ARCH_MMAP_RND_BITS_MAX
+>  	default 16 if ARM64_16K_PAGES
+>  	default 18
+> 
+> +# default to 1 TiB (5 bits below ARCH_MMAP_RND_BITS_MAX) on 48-bit and
+> +# 52-bit VA; smaller VA sizes fall back to ARCH_MMAP_RND_BITS_MIN in
+> +# arch/Kconfig
+> +config ARCH_MMAP_RND_BITS
+> +	default 24 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_64K_PAGES
+> +	default 26 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52) && ARM64_16K_PAGES
+> +	default 28 if (ARM64_VA_BITS=48 || ARM64_VA_BITS=52)
 
-Add a test based on the reproducer from that patch's thread, using pipes
-instead of a sleep so the filter is known to be installed before the
-tracer resumes the syscall.
+This looks fine but I was wondering what ARCH_MMAP_RND_BITS_DEFAULT (and
+the compat equivalent) is for. It turns out that an int always evaluates
+to 'n', so not taken into account. It might be worth removing them
+altogether as a separate patch. No-one seems to be using them.
 
-Tests run under qemu on ARCH=x86_64 defconfig plus the seccomp selftest
-config, with GCC 16.2.0: running the test 20 times all 20 runs pass at
-v7.3-rc2 and fails in all 20 with the fix reverted.
-
-Link: https://lore.kernel.org/all/157aa098-a263-4f4f-b0fc-108701480303@huawei.com/
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 112 ++++++++++++++++++
- 1 file changed, 112 insertions(+)
-
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 0622bc2acad4..4da5ad1d7ab3 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -5041,6 +5041,118 @@ TEST(tsync_vs_dead_thread_leader)
- 	EXPECT_EQ(0, status);
- }
- 
-+struct tsync_vs_ptrace_args {
-+	int go[2];
-+	int done[2];
-+};
-+
-+static void *tsync_vs_ptrace_syscall_stop_sibling(void *_args)
-+{
-+	struct sock_filter filter[] = {
-+		BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
-+			offsetof(struct seccomp_data, nr)),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_getppid, 0, 1),
-+		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ERRNO | ESRCH),
-+		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
-+	};
-+	struct sock_fprog prog = {
-+		.len = (unsigned short)ARRAY_SIZE(filter),
-+		.filter = filter,
-+	};
-+	struct tsync_vs_ptrace_args *args = _args;
-+	char result = 'N';
-+	char go;
-+
-+	/* Wait for the leader to stop at the entry of getppid(). */
-+	if (read(args->go[0], &go, 1) == 1 &&
-+	    seccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_TSYNC,
-+		    &prog) == 0)
-+		result = 'Y';
-+	if (write(args->done[1], &result, 1) != 1)
-+		exit(3);
-+
-+	return NULL;
-+}
-+
-+/*
-+ * Seccomp runs after ptrace at syscall entry, so that it sees what the
-+ * tracer left. A thread's first filter can arrive by TSYNC from a sibling
-+ * while the thread is stopped at a syscall entry, and it must still apply
-+ * to that syscall once the tracer resumes it.
-+ */
-+TEST(tsync_vs_ptrace_syscall_stop)
-+{
-+	struct tsync_vs_ptrace_args args;
-+	unsigned long msg;
-+	char result;
-+	int status;
-+	pid_t pid;
-+	long ret;
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+	ASSERT_EQ(0, pipe(args.go));
-+	ASSERT_EQ(0, pipe(args.done));
-+
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+
-+	if (pid == 0) {
-+		pthread_t sibling;
-+
-+		if (pthread_create(&sibling, NULL,
-+				   tsync_vs_ptrace_syscall_stop_sibling, &args))
-+			exit(1);
-+		/* Only this thread is traced; the sibling runs freely. */
-+		if (ptrace(PTRACE_TRACEME, 0, NULL, NULL))
-+			exit(2);
-+		raise(SIGSTOP);
-+
-+		ret = syscall(__NR_getppid);
-+		/* The filter installed during the entry stop must apply. */
-+		if (ret != -1 || errno != ESRCH)
-+			exit(4);
-+		exit(0);
-+	}
-+
-+	ASSERT_EQ(pid, waitpid(pid, &status, 0));
-+	ASSERT_TRUE(WIFSTOPPED(status));
-+	ASSERT_EQ(SIGSTOP, WSTOPSIG(status));
-+	ASSERT_EQ(0, ptrace(PTRACE_SETOPTIONS, pid, NULL,
-+			    PTRACE_O_TRACESYSGOOD | PTRACE_O_EXITKILL));
-+
-+	/* Run the child to its syscall entry stop for getppid(). */
-+	do {
-+		ASSERT_EQ(0, ptrace(PTRACE_SYSCALL, pid, NULL, 0));
-+		ASSERT_EQ(pid, waitpid(pid, &status, 0));
-+		ASSERT_TRUE(WIFSTOPPED(status)) {
-+			TH_LOG("Child did not stop: status 0x%x", status);
-+		}
-+		ASSERT_EQ(SIGTRAP | 0x80, WSTOPSIG(status));
-+		ASSERT_EQ(0, ptrace(PTRACE_GETEVENTMSG, pid, NULL, &msg));
-+	} while (msg != PTRACE_EVENTMSG_SYSCALL_ENTRY ||
-+		 get_syscall(_metadata, pid) != __NR_getppid);
-+
-+	/* Have the sibling install the first filter with TSYNC, and wait. */
-+	ASSERT_EQ(1, write(args.go[1], "G", 1));
-+	ASSERT_EQ(1, read(args.done[0], &result, 1));
-+	ASSERT_EQ('Y', result) {
-+		TH_LOG("Sibling could not install the filter with TSYNC");
-+	}
-+
-+	ASSERT_EQ(0, ptrace(PTRACE_CONT, pid, NULL, 0));
-+	ASSERT_EQ(pid, waitpid(pid, &status, 0));
-+	ASSERT_TRUE(WIFEXITED(status)) {
-+		TH_LOG("Child did not exit: status 0x%x", status);
-+	}
-+	EXPECT_EQ(0, WEXITSTATUS(status)) {
-+		if (WEXITSTATUS(status) == 4)
-+			TH_LOG("getppid() ran without the TSYNC filter");
-+	}
-+}
-+
- #ifdef __x86_64__
- 
- /*
 -- 
-2.55.0
-
+Catalin
