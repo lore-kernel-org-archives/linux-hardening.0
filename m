@@ -1,148 +1,177 @@
-Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3FF4A8402
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 07:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE31414400
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 07:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792048298; cv=none; b=D9HoyweNfO9vgg24ff0aDtYIy4r3vqguD39U3EsDPHOCn0iaA2WJntduW7+KKicvoBx4s3PrIQaJKkyU18YkpcN44GRwbCm0Gs30kwTl4mbV7FqoiCh8iX7JnteeXHZpUkqwei0PxQrkIGLkgwWq5AQ3Z4q+q3+yR5CxnHJLZzI=
+	t=1792049605; cv=none; b=pH7+6tLCH99Gn2WF7Z9ebi9dJmMNs3YNlol0ae3FjFQDzAIpdeXkvYPj1ere+vlPpR3/e+FVHz4tVQejdhUQZ+ShZBTuleOXKkuZkgtKNrNklCtZpBAM5zl5X4lonnwRlglj5mf7QHHNVBT6Q/L72xUqmdmKK658MLo2FtHSK1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792048298; c=relaxed/simple;
-	bh=nqyge/YJtPDcwuFY0ai30R3h+9VL2QlZfBO9AXZ0gkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AcpNBnu1e+16B6uevgoLT30ZwjZx/mBZ5o/y+cONwP52ogWk9mn3EcRznRvL9gu8qfJtuwH85DJhAYw6mJknmWUcwWU3AGP/EDR2SIjuPcIU+oz4dLhjFGo3+kYvAY10nDgiBUlq+yw21L89CsIwnTF1UierE5Beyp98FDudaHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=OrMdfgAV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LqNRl2GP; arc=none smtp.client-ip=202.12.124.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1792049605; c=relaxed/simple;
+	bh=Vi+rfJVvIqgKkcyz2ICIQLL5bR+7LUh01MJ2ti2Lny0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ObVTEsgmJwqggg9kGm7AsSDZHFuBM6083Tca6sr+ZoZRcYdu7GiJaei7ulMJvIZhicJW2ap80zakRsfp9hSguUDBYm5ZKjk/chAZIjiZAd7PG8jcR86SkiWVJnikOzNoUteF4qFfyqEgpqaXddG2IGa7t9rBB5I3UXiuMnENyxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PHNwUqV7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=a37jq287; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Tk/KcdEa; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1ohB1UH6; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="OrMdfgAV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LqNRl2GP"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.stl.internal (Postfix) with ESMTP id 4367D1300CEF
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 03:11:29 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Thu, 15 Oct 2026 03:11:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1792048287;
-	 x=1792055487; bh=kWpbabSXhdWbiJYtYKSzWotKYpXwMvC+M6lHjBExri8=; b=
-	OrMdfgAVZ5soCn7uKRR6Md9IoysXyJN2j0ey7UxnrvFZmG6Y9saj4qc71jAqWiS0
-	F5MSi62rMdlUgWzISuU/0VYPu7WkUs3oP35iEd+H1M2xGDBLLcZm1DwXbGNn+kiG
-	lJ2pVF4rvsHTAGBe/DIfQzqagYaLx8+nqotD4Q+nNKfPpPPdnzroDA03gPveFnIf
-	xUoKBbKBoUZAxeQaykxLTysCW6vz058YVYMxSJ6n9jdw2+8N3CWmslG+ssE2SdzV
-	SYdJgegrvqegPOs8gCZQ84rvJaZtsA7fCxZkIgNQ2jYKfd5YCBm2q8vwGGwUQAOC
-	kxBTrIhSAwcieIIPTULAfw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1792048287; x=
-	1792055487; bh=kWpbabSXhdWbiJYtYKSzWotKYpXwMvC+M6lHjBExri8=; b=L
-	qNRl2GPZSqFSVjqs4IgS+xqrD2okGxqvXa7SmYu0hlcCj4Q42/1nPDNXZzgYueKn
-	sDCkMlPfzwkWsRTyOSj/9ZgTolv+Ig1uc4CEEKJURjLagp6f4jbLsZxlYSE5f4/r
-	hCGs/9m9fIHJelXUadPBKvNoQMNa2R8oV/nnUey48kxw1lGzvp4YVPyUVIorrKZj
-	Qy92/MioV+3y+Xsg01k8bmPDZ3Wmgyk2XcACPtk1q9mAS12UAXAGzRFaQLMYQJ92
-	WfnqW8uI6RGqYa2yxwhAzRnQhxJjH6WvMWRu4hMo26xBpQmANU23c1osz+vRDqSi
-	7ft5nhxHenhEC9/OMBbBg==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
-	action=sign d=kroah.com a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1792048287; d=kroah.com;
-	mf=PGdyZWdAa3JvYWguY29tPg==;
-	rt=PGxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmc+;
-	s=fm2:rsa-sha256:G3oB8YNgiBPDNYbH/fBrtZQnRquRpT7TTV0hFRyN+tKsrKL
-	5f6sRD7MwrHfHPyDya0abrWUGJkxyAY2ab4k2EZeWSQi+I9IzgdoZ5lr2JB+w7CB
-	m9nsiRZjztkFpxWhi7IC6LCt5SVVEOKvl9FPpm/8C01gdf9pWuF3MCHrt2cSe0e/
-	cgKH4S6JsyzYxVTB7k5SzNRwSJYJ0onTb956jKuX1512E1F6Rb6Mcqbz6wV6Agof
-	lENITZGS1lvXrU6MXSPbt5jZ6DcVDZhooVwN0bheJFGVzi50Omm/b0VVM73TKGDj
-	bgXH4h2DRrzxm8AhttUbpm6xaZESCdhcsSGEZfQ==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
-	action=mi-m=1; hc=13;
-	hn=cc,content-disposition,content-transfer-encoding,
-	content-type,date,feedback-id,from,in-reply-to,message-id,
-	mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:5v1S2BselopHJKpcijMJ+QH2LXd5r+IK+uUBIBqg/Ns=:nqyge/YJtPDcwuFY0ai30R3h+9VL2QlZfBO9AXZ0gkE=;
-X-ME-Sender: <xms:nnzQag9-oucjCZwTyfr9ueXdEHb0laRMDkE1LtrPxhODERMj7bUyRQ>
-    <xme:nnzQapcvuBZs3UcLvUQ8uZ64aFxzkU5NjvSaUDeqC-JlCoXpOU-qf_LTuc0u_xvPI
-    -uFyuhFhdj1-pppOFIQ3JQS17oL4Xpei8D04DD5eXJ5NU4zhPE>
-X-ME-Received: <xmr:nnzQau4cJya2jX1hjxPaNccn_xGJrn2zbRDHbSvrWBt2FidsROOQsaQJN9X_U7QCjfO64JMhHEBaYUzWZIpZkSejWzN5bkp49mlsDrMbtcM>
-X-ME-Proxy-Cause: dmFkZTEHCNm8rEckpzA971pz/REHTOd4bY4N7yQHIPOUVfZ8kXfNbonIoHjVjlkxfaWEGv
-    NDSFjZJqgp8garaUvb4+kfP3XH+/K2RmL+PTH8QmtLsHZDZ+SVruE4mPnso0GtKO62rQj/
-    w6QlB7pkaIJun2T766i0DlEAMQivbrHGILNIz01wiEzYj5YwQh2ytk7bOACAJCDoHkjKCF
-    3+sGPhpav7olGxvjraWofyYsQe2HEZBNW8L21uhFJEUZpdt13hRiEuFUtDo6L9a0xGA1zs
-    FIc7EjOueq/f21/FamUys9eDgaPMuxjUiUuxPx+4p5YXVhejmzj0Bo8eGVZsbvxoOWozbz
-    jUPCCFPNVm0Kqd3Km7xHlFGgkrkgn6wGGABGBk/MxmmtfNoa6nM2BXr67jwmtlF6ihpJix
-    rZ1z2b8yvwdcYEutsM2NPI+ZUiYt4id9LydD2KOW0vdtZbQT6qTaxrcOAKX2I90Mn5hhsU
-    XTTx1MYBs/BMwzmuBvTtV/SKB7RcZ0JWR+IK0IREUfIXZqVWcra4D91PI1bzPkQy4zUGmY
-    kopd+clgzcsk30ELasuLG90P/s4V0alrpEvEIQfzDTMNmNxBbwL780cwYTIBDP1cXnlbjT
-    fAKBPskqApyrb+FDEsBGtMDAbmjQzxaMpaFND8lSh4qCl3gND1rhPKqoKiNg
-X-ME-Proxy: <xmx:nnzQaoW7q7cuUVUA2PY8ZzU6x-iz6Z2YTa705VYYlTpZ6wHcIcgDDw>
-    <xmx:nnzQakWYBo7C9zYNdv93ZghEw2wbqAcC0WzWP1TpgGQoWJjY9tvKMg>
-    <xmx:nnzQahZDTPIKPAGdEUWiS02byBaX0xVkrk8OMqWRr_wn8SAJz4_iMg>
-    <xmx:nnzQavUO25yLki4FYEQcU5WuDOuEC7oitvDLdlyI92IrDzKfQNQWqQ>
-    <xmx:n3zQahfhaDP2PswuAmOPWqGz9UJehNplalfZwK08jaF9w0JyqKywmX3l>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 15 Oct 2026 03:11:25 -0400 (EDT)
-Date: Thu, 15 Oct 2026 09:11:30 +0200
-From: Greg KH <greg@kroah.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PHNwUqV7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="a37jq287";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Tk/KcdEa";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1ohB1UH6"
+Received: from murzim.nue2.suse.org (unknown [10.168.4.243])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B9A481F7D1;
+	Thu, 15 Oct 2026 07:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1792049601; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJbTsvcvsb0G5y7w606tSXjJzM1A5bxV6bfOl0odZ0A=;
+	b=PHNwUqV7JNPF09xsv1EfDTwOy5Dln5CNj7kNDsq576U0s4lUxYZb0KUDqe/nM0VduhIJXQ
+	3wEBpiS6oGHMKuRazcMTXU9dwuGm+D8obLGMriyIlSsntTJcDjf5X3FbxeqFr09C2Dt4rh
+	vHTbFDpYxVpZjtOxt2lA8H2UKMIbZmM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1792049601;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJbTsvcvsb0G5y7w606tSXjJzM1A5bxV6bfOl0odZ0A=;
+	b=a37jq287UxZrbI1F8XjsUxg//kWYsU+JoWPmQcWBUipUBSGX76fPC6mjizL7luXonjeq7D
+	aq1ZbHoid33gZyBA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1792049600; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJbTsvcvsb0G5y7w606tSXjJzM1A5bxV6bfOl0odZ0A=;
+	b=Tk/KcdEarawHSUGJ5O55WuWYYbUabBxigrgmo+dj6FwhRfoZaryJs9Hxa1iM+HkeVWkIf4
+	6p6YUDAFsq6CZKRqp8XPlLScIJYJD+PBrXWgI8O4HCKAqAGgzSU6fn1I2On+0fJbfw1LPQ
+	M9NzbelsFmSYmJ2tTHFR8LdZmkLIea4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1792049600;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJbTsvcvsb0G5y7w606tSXjJzM1A5bxV6bfOl0odZ0A=;
+	b=1ohB1UH6ZOnE0Zt2MWS1lYKfirmzlBsQy2vppx1cwxG7xqSi7AYe9MkK26zInWYXhAFqcR
+	HYS297UlFbheEiAA==
+Date: Thu, 15 Oct 2026 09:33:20 +0200 (CEST)
+From: Richard Biener <rguenther@suse.de>
 To: Kees Cook <kees@kernel.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-fsdevel@vger.kernel.org, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] seq_file: Require explicit initialization of struct
- seq_operations
-Message-ID: <2026101532-fantastic-deafness-e04c@gregkh>
-References: <20261014225811.i.852-kees@kernel.org>
- <20261014225818.3457479-2-kees@kernel.org>
- <2026101517-profane-opponent-4523@gregkh>
- <CANiq72m_iyquf4Lc8AWvbsBp++ASz4+C_MQ5iYQW-fHd_MNDxA@mail.gmail.com>
- <C46E97AC-3722-4264-B541-04EBC3091E00@kernel.org>
+cc: Richard Biener <richard.guenther@gmail.com>, Jan Hubicka <hubicka@ucw.cz>, 
+    Martin Jambor <mjambor@suse.cz>, gcc-patches@gcc.gnu.org, 
+    linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ipa-icf: Compare access path type sizes without TBAA
+ [PR105438]
+In-Reply-To: <20261015052441.7d2b3c-kees@kernel.org>
+Message-ID: <39r25275-0488-rq01-55nq-28rs192rp368@fhfr.qr>
+References: <20261010050537.i.784-kees@kernel.org> <CAFiYyc2gYAjiKDi+TeC9_qEX+LHa7fSxj42JjRtM6Dbi6Yfidw@mail.gmail.com> <20261015052441.7d2b3c-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <C46E97AC-3722-4264-B541-04EBC3091E00@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_CC(0.00)[gmail.com,ucw.cz,suse.cz,gcc.gnu.org,vger.kernel.org];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[murzim.nue2.suse.org:helo,suse.de:email]
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-On Wed, Oct 14, 2026 at 10:57:57PM -0700, Kees Cook wrote:
-> 
-> 
-> On October 14, 2026 10:46:02 PM PDT, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
-> >On Thu, Oct 15, 2026 at 7:21 AM Greg KH <greg@kroah.com> wrote:
-> >>
-> >> Anyway, I don't know.  I like this feature, and maybe it's going to be
-> >> used so infrequently it's not a big deal, but feels clunky.
+On Wed, 14 Oct 2026, Kees Cook wrote:
+
+> On Sun, Oct 11, 2026 at 04:50:41PM +0200, Richard Biener wrote:
+> > >     In function 'small_to_big', inlined from 'f' at t.c:22:3:
+> > >     warning: array subscript 'struct big[0]' is partly outside array bounds of 'struct small[1]' [-Warray-bounds=]
 > >
-> >Perhaps we could call it something shorter, like `__explicit_init` or
-> >similar -- I don't see that substring (even without the double
-> >underscores) used anywhere.
-
-__must_init might be smaller?
-
-Naming is hard :)
-
-> That's nice, yeah. And it's not the first time we've changed the "spelling" of an attribute.
+> > I think these diagnostics are dubious with -fno-strict-aliasing which
+> > essentially says you can access every object via any other objects type.
 > 
-> Does anyone object to that? I can replace it with that in my tree...
+> The source has no such access, though: each function reads and writes
+> members through its own types, and every byte touched is inside the
+> object. The "struct big" access to a "struct small" exists only in the
+> body ICF picked, so the warning is about code GCC wrote rather than
+> code the programmer wrote.
+> 
+> > So instead of this I'd rather work towards inlining the original
+> > body rather than the ICF prevailing one.
+> 
+> That does seem like it could be better, but it's not clear to me how
+> large a project that would be to accomplish.
 
-No objection from me to make it shorter, and yes, we can always change
-it going forward if someone comes up with a better term.
+I think for the case of ICF and non-LTO it should be possible to
+"hack" this in;  it should be just to make sure the inline edges
+point to the original body and hopefully the ICF "merge" is somehow
+encoded clearly.  When the inline edge is set up correctly it should
+possibly even work with LTO.
 
-thanks,
+> This patch seems to DTRT, though. It doesn't appear to regress merging
+> in a meaningful way for the Linux at least.
 
-greg k-h
+I don't dispute this, but it feels like a hack.  Either ICF should
+work as if -fstrict-aliasing were given, but consistently so, and
+for a good reason, or you could as well do -fno-ipa-icf when
+building the kernel as you are doing so many we-don't-quite-want-C
+things already.
+
+> > And force-disable these kind of diagnostics with -fno-strict-aliasing?
+> 
+> I'd really rather not. Linux builds everything with -fno-strict-aliasing,
+> so that would remove these checks from the kernel entirely. GCC's
+> -Warray-bounds is still off by default for the kernel because of false
+> positives like this one (which is why I'm trying to solve it), and I've
+> been working toward enabling it, since it finds real bugs. (I have a
+> stack of a dozen real issues that this found while doing a recent pass.)
+> 
+> For example (since I don't yet have links to the above stack), here
+> are some random examples from a few years ago: a response struct passed
+> where a bigger error struct was expected, whose "error" field was past
+> the end of the object[1]:
+> 
+>   drivers/thunderbolt/xdomain.c:226:22: error: array subscript 'const struct tb_xdp_error_response[0]' is partly outside array bounds of 'struct tb_xdp_properties_changed_response[1]'
+> 
+> and a u64 remainder stored into an int on the stack[2]:
+> 
+>   include/linux/math64.h:56:20: error: array subscript 'u64 {aka long long unsigned int}[0]' is partly outside array bounds of 'int[1]'
+> 
+> But if you did disable diagnostics, which did you have in mind? If it's
+> only warnings about an access whose type is bigger than the object while
+> the bytes it touches are in bounds, that's narrower, but the first
+> example above would still need to be caught, so I'd much rather just
+> get ICF behaving nicely. :)
+> 
+> -Kees
+> 
+> [1] https://git.kernel.org/linus/19813551701d0
+> [2] https://git.kernel.org/linus/9f3d543a9f737
+> 
+> 
+
+-- 
+Richard Biener <rguenther@suse.de>
+SUSE Software Solutions Germany GmbH,
+Frankenstrasse 146, 90461 Nuernberg, Germany;
+GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri; (HRB 36809, AG Nuernberg)
