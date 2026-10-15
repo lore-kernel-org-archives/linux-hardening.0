@@ -1,47 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A84E271A94;
-	Thu, 15 Oct 2026 05:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250CC3E63B0
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 05:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792041539; cv=none; b=EktNflyMmjbrY/SLzI47z4fIYeMANm5Y5al1rTYaOzpW5DBI3K0Y50jmYaJ1trkFwBd15nuw4hqY01lscJXTvYO/piazc/v+jWMH2oG7THLEaOrzNB+3DBz1MU41yU2+fEsyAvQuqs8G7H7jTeQ3K4b2dQ+QaTxvqK1LOiTrhac=
+	t=1792041696; cv=none; b=bnVly1O1uGssz7OuITHtFbjWAExSUESy9WZ3qTFUCo2BGT1MWR9HlGHgqo3v0PDxw3iQ9lmkTaN1SdLGeKJXvbVqAaU6/bHBYLxWzCLPNDlTE/PJuez+gO0SWmnOgxBCQEWK1TlysXM5Kn8wAN+bqrhQvQBYKI79b50yxXwP8UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792041539; c=relaxed/simple;
-	bh=ymWE+nEaUpdY7svPzGIY0fesccjJQWkcBebf3MzLR7E=;
+	s=arc-20240116; t=1792041696; c=relaxed/simple;
+	bh=fT+Id2LA74s+kmxJ2r3rEYU7QJ7EFtpYf9vc/1kTxZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SOh1K55OdjdMWWOwksB6mx+3zqwpriHiwFR8QUdT/ixvc98rkvxSaNqPiuBBqM3MzYXd0rBAaaoqmWxy2d3aU2njPF0/pTGvb9r6wG8viKtr0sgJQc1ZRL/j8XpuXUgA0Edq77+M3yfFMOsISy5KIUdseCcIc6VBJSHkLGVNFtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=y7mJAQHH; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=pPw2HdJXO+0F4dTx64FsbfutDGMa2GehrUaahjDpkCUVA9XO2rhiuudbgH7+gMq7X7kVNQTznt3q0xJqv9rrTLIBjZJbRzhJcvFtqVbyDGe8sf4FH0NMo7fGO2ZHcFLLslkjXIJw47phc6At9oeXGqpakh6M98ewrHShJQfcoHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=AdLcoK9d; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sMlwvS3T; arc=none smtp.client-ip=202.12.124.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="y7mJAQHH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2829B1F000C4;
-	Thu, 15 Oct 2026 05:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1792041537;
-	bh=yzkuiALK4hBeasChiOfNDXHmHKuEkzeg8AJfPU9FbHk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=y7mJAQHH1w4rPUzSKg/P6IAjiSpHrN+LYncNMwm7kiU/RDdZGdEYophOOakLKQ2oI
-	 rZg0T1CHHqTRO1hjiOR5CBzitQ4AGonI5ygyLEPSJYvicthcxoB2RSbNfVz+UW1XqD
-	 lGW3rffCSZcDFLb9hUGTrn9Tg5ruEWV8JMODorAI=
-Date: Thu, 15 Oct 2026 07:18:55 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="AdLcoK9d";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sMlwvS3T"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailflow.stl.internal (Postfix) with ESMTP id 80B211300CC9
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Oct 2026 01:21:33 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Thu, 15 Oct 2026 01:21:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1792041691; x=1792048891; bh=YZbXf8XMHi
+	MYDDe4CyAaIrQ1ZOnpEZtXM5Qp9HfiN1Y=; b=AdLcoK9dMpoRAJNea6yrKCITSv
+	O2qWtAhjjSLfwZggoB6ei4EBSZGSCI4iYEiS2AHlz7IWpsyURPvJxT8zr3nL/NMe
+	NlnGZVeSw1Zjg72Sjc9rDb44U8pWdqRUXH9GP501Y52wpjx0I3Q58+p0BCpQbaTM
+	wk0abjowaYYUwHWiC9fNdwUmLkn/5UqYvM599+HkrO+9gtKu7JNo06H+PcbwemxV
+	Ymg1Pyzov++NKDoujH4MPnC/mNqMyM7qiaJWWBN1eMo5GJ0OVIbIxiWPHZ/g66s2
+	xvLamBZC3/GRLU+ZZD7ejCOMk/TQFGf5XjuwdDYOAPgS0tM7mx5XlH9523NA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1792041691; x=1792048891; bh=YZbXf8XMHiMYDDe4CyAaIrQ1ZOnpEZtXM5Q
+	p9HfiN1Y=; b=sMlwvS3T1qO/lPAf1RchbwPOK9KdNVgQ4aKrkIgKErmyrFZLKhI
+	r77yCruC7m2QdzQaEvWMbI+hcDg2C1qIvw9wZwQWvgPGe8Thivhi7gyyhjbsqt1y
+	G7JuE5ZT1xULOQLxGGJy9mWvSJcRerMj2rY1BnRczYTS81THSVfssHyIxHywn+VJ
+	+SpjYfzk6kb5uQTYrH9do0KQhjhCek0OtcYU8sPKjHn2jQDF1JO3+h9E9dCn0Lj/
+	JZaW6xFzQJ7DSWYiBYaMd1oR0M47TuTvjxvzWTroliXqWgsdxqCm2g4sMCrUgRrW
+	0o10v7r557nDTTRfb6rdw1VxbGaCRMBmp/w==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+	action=sign d=kroah.com a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1792041691; d=kroah.com;
+	mf=PGdyZWdAa3JvYWguY29tPg==;
+	rt=PGxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmc+;
+	s=fm2:rsa-sha256:MVpwS/BfkPW0xRQpMEDRS5BxrqefVe3jL4xFarQm0fiRw3Y
+	wIdxYbrcxAosGD8QYvIQ0y9f4/eLj0FPo/g/xXbJpi1MEXvn9HPjBLIhdLajTcGK
+	Fgbc+OfFt8L+slKjctYFRLRBgY6ooK2FRyV/d4lPd9kWsGoL/8swZaGGbT5BSSTE
+	WYPpkgNKJmA7o60xA3rnMoLqOqGtjsxpG7mMWEltM1CJujr8kOnNVNLurJsu3exm
+	KFXDtOVY0YUl8d+f0B/TVqjLcTirYEAkHezTwLU1CKNpcC2kNdeEQ5UlTOTSUSL+
+	yvA0TxppqaIqfb7+V6kMaoIB8HGcWIfE3Iuwvgg==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
+	repo=github.com/dkim2wg/interop; date=2026-10-04; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-disposition,content-type,date,feedback-id,from,
+	in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:hf9AztGCgIRnregB6E6yn/9k05lnr1mC3auL3T/Ps8g=:fT+Id2LA74s+kmxJ2r3rEYU7QJ7EFtpYf9vc/1kTxZ4=;
+X-ME-Sender: <xms:22LQaoctltF2g0XaJmXad11XIXqcrOVXElcGG3OxJQ14AnIjDAXa8A>
+    <xme:22LQarb_b3EyeprQ9rkTc_GwYRM8WB2tJKXAJLEnFINvvcnNpqHFTlvC6ReXy7t-L
+    a52OHEzZi7i0eqkAvBVxncF7kFMROHjLOPJt0tl9TO2X_UPYxc>
+X-ME-Received: <xmr:22LQap9O8GD3F5pCi_3NSxY6E62q-5uUe4McD4YCYFOMn3mRAnt5LFhs5GfgnrWSLj9W5ovfyj1fSkVLtZv6nDA8ohjs62TNWRNoumQAT8w>
+X-ME-Proxy-Cause: dmFkZTEijNWx0cSRy+etHUy1Usc70/NSIPvkJ5iC/hOONowf61UWNZoFG2yenVsGW3xUdm
+    OuOrBTQH9C1zt8QTb3VyZLYiXR8cIZ5kUyG5tijMhlA8jkk4gq5L4NjkzEdquFndv48208
+    ltG2exExMojOk2ZqCqjwN7ICcgjxGcen1H123fzvNF1WToix1u8u4TGVs+/bVbJKUAUKro
+    jVd9MhBj8QjgEd2TEUfwzegeuZHv4KugbkGtnhjkRPZtbGrQUgmiRxmHQrW5z1N6N5deHK
+    bSt21eVraH67bjTMAuWSCriT+VkletTYOl5cj1stZcI++yDd9EcLFsBDplzCkoq6Acm1R9
+    YSccsQq0p06t13unhafYhu2LvHS7xZViO29WAMoTQl4pwdwuekbxDmQDzyS8u7Hq3kwMy4
+    RxdXV6sURH0Mvk8FyOUG3EvdPmoZBb7XTud51WAo1bF2RNu1Cirly3t7FPriS7y8GKD+kf
+    Vex4zvo691tj02ZAT0qxKw+o9o4/qhVlSW9a+/K+Z0jaxkYwqwIzlUZsbs992Unt3SFWRq
+    X/ueS4JTYy15MrSOPb+2q4me3QuaRwYPJm6Tz2WR/J4u94O0nKqc7bxWvZNzqHHCBc3f9e
+    HOHEDLmGrqWBS6N73obzaSsTKeEr4Z8uFcCZMMhzNejiBO9oxyn+wesS7peA
+X-ME-Proxy: <xmx:22LQanXX0wXFRKFwqKEZ46QBqrpYELJE6O1VuzrE1ay85L1tY2ZUdQ>
+    <xmx:22LQaqdCBxFwOnkcBdBiRtFdEXr8lv5CsWgXD4YuQP0HTjX6v34l9w>
+    <xmx:22LQakVL9Xfu6e7z9cCnx1-xps3JoZnXFgNqF6FRkj7b0VhCEQqThg>
+    <xmx:22LQapVog6mxBmXINzHvRfb6IONAnAxsMncbGpvkUdzAFLvezTt4_A>
+    <xmx:22LQakLQlcWi2uU3GotSxqN0eug_7XzPWHq0GzpQmnNwQTI4ZME3YDqe>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 15 Oct 2026 01:21:30 -0400 (EDT)
+Date: Thu, 15 Oct 2026 07:21:28 +0200
+From: Greg KH <greg@kroah.com>
 To: Kees Cook <kees@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Ian Rogers <irogers@google.com>,
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
 	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	llvm@lists.linux.dev, linux-doc@vger.kernel.org,
-	Nick Desaulniers <ndesaulniers@google.com>,
+	linux-fsdevel@vger.kernel.org, llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2] Compiler Attributes: Add
- __require_explicit_initialization macro
-Message-ID: <2026101547-silica-ferris-1389@gregkh>
+Subject: Re: [PATCH 2/2] seq_file: Require explicit initialization of struct
+ seq_operations
+Message-ID: <2026101517-profane-opponent-4523@gregkh>
 References: <20261014225811.i.852-kees@kernel.org>
- <20261014225818.3457479-1-kees@kernel.org>
+ <20261014225818.3457479-2-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,34 +109,60 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261014225818.3457479-1-kees@kernel.org>
+In-Reply-To: <20261014225818.3457479-2-kees@kernel.org>
 
-On Wed, Oct 14, 2026 at 03:58:15PM -0700, Kees Cook wrote:
-> From: Ian Rogers <irogers@google.com>
+On Wed, Oct 14, 2026 at 03:58:16PM -0700, Kees Cook wrote:
+> In the very unlikely chance that a seq_operations didn't get initialized,
+> we wouldn't want them calling some random location. As a first example
+> user of __require_explicit_initialization, annotate them so a missing
+> initializer is a compile-time warning.
 > 
-> Clang supports the 'require_explicit_initialization' attribute on struct
-> fields to indicate that a field must be initialized explicitly by the
-> user when the object is constructed. When an aggregate initializer or
-> uninitialized variable omits an annotated field, Clang emits a
-> -Wuninitialized-explicit-init warning (enabled by default).
+> Every seq_operations in the tree already sets all four, so no new warnings
+> are added.
 > 
-> Add the __require_explicit_initialization macro to
-> include/linux/compiler_attributes.h (which is included by
-> include/linux/compiler_types.h and include/linux/compiler.h) so kernel
-> structs with error-prone initialization (such as mandatory callbacks or
-> cleanup handlers) can enforce explicit initialization at compile time,
-> as discussed at the Linux Plumbers Conference.
-> 
-> Also teach Sphinx (Documentation/conf.py), kernel-doc
-> (tools/lib/python/kdoc/xforms_lists.py), and checkpatch.pl about the new
-> attribute macro.
-> 
-> Link: https://lpc.events/event/20/contributions/2392/
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Acked-by: Miguel Ojeda <ojeda@kernel.org>
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 > Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
+>  include/linux/seq_file.h | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+> index dc0e8c62d9e0..f0e7e52a0905 100644
+> --- a/include/linux/seq_file.h
+> +++ b/include/linux/seq_file.h
+> @@ -28,11 +28,16 @@ struct seq_file {
+>  	void *private;
+>  };
+>  
+> +/* All four are called without checking for NULL. */
+>  struct seq_operations {
+> -	void * (*start) (struct seq_file *m, loff_t *pos);
+> -	void (*stop) (struct seq_file *m, void *v);
+> -	void * (*next) (struct seq_file *m, void *v, loff_t *pos);
+> -	int (*show) (struct seq_file *m, void *v);
+> +	void *(*start)(struct seq_file *m, loff_t *pos)
+> +		__require_explicit_initialization;
+> +	void (*stop)(struct seq_file *m, void *v)
+> +		__require_explicit_initialization;
+> +	void *(*next)(struct seq_file *m, void *v, loff_t *pos)
+> +		__require_explicit_initialization;
+> +	int (*show)(struct seq_file *m, void *v)
+> +		__require_explicit_initialization;
+>  };
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hm, I acked the first patch, but seeing this "in the wild" is
+interesting.  Feels kind of ackward, but I don't really know what to
+suggest instead?  What about just making the lines longer:
+
+	void *(*start)(struct seq_file *m, loff_t *pos)		__require_explicit_initialization;
+	void (*stop)(struct seq_file *m, void *v)		__require_explicit_initialization;
+	void *(*next)(struct seq_file *m, void *v, loff_t *pos) __require_explicit_initialization;
+	int (*show)(struct seq_file *m, void *v)		__require_explicit_initialization;
+
+?
+
+Anyway, I don't know.  I like this feature, and maybe it's going to be
+used so infrequently it's not a big deal, but feels clunky.
+
+thanks,
+
+greg k-h
