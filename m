@@ -1,41 +1,44 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5730145EF4E;
-	Fri, 16 Oct 2026 18:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E538B42123F;
+	Fri, 16 Oct 2026 18:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792175729; cv=none; b=NHbODvAkbTAqDWO9xxkOHTgvJrIsdnCHhnd2XGxadR7gFloZEHejPCsVgkf8/AKzS1WJFBGamNQySciMTXy+VzjKl00CL9I/2RUB2s4dWHgGh8TByrXUnPzcnRm7mtHmEMRMvUmJW/KT1lan6z3ZdM9O5xXIli5W5ipk82PJtEc=
+	t=1792176236; cv=none; b=jajeNOMVWmKIe1WSOwjn4nkkeja4NFDLAJWaK5rPpXVbWo/ZSlfgTxCQa9jvpQ1hmyUwVQFOLc8QHH28YtJlpoRvZaFzsc71SB7wAOVMjx6ix4znEPQpx6wMCwwx9cW+PnBpX6eeJu7TAg+L2I3Ud7L2LQ4lPx/8sja4m0Y5oAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792175729; c=relaxed/simple;
-	bh=QWjv01i+N+E5bS7jcvQ/vtOBTs1zhQXtpGEiQF4EBMg=;
+	s=arc-20240116; t=1792176236; c=relaxed/simple;
+	bh=Ak2c5Tpl9zshnaZLyfIhBDvKkYTuKn4W4OpK6mgxa7E=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tTiN/Da/nxoKaxCf+ejcV8I6o7e17bUfwMKdEkKXEapDk0OQEuKTO0xc1WgtvTAbcHkm/u7VlCAKhbmBaQ60iyChMhpSg53VrZ6xteEjRT67cNMNb0M0GUjoV2tmRy0A+V8tntdbXUHT62JmYYzrsypqNrCd9yIaCKHO8Dnz0QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=zDvptYke; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=YEQ/fZbUR/Em9G1+e9ajySmh1XiXBZoHgRCOBdqnJ5QlKpc42QUTyV3SYFWiZ5sTPh/RYBZX4/FxcqNKN4seKOl9lJJwRlTJvYvs20pCD7UfqmDLpiiP0L6qUIsp4XbdkV3Kkt4PXMkKYN/sXq/DKTe465CG7E/9uAQ0NqyT1Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=EccIHqfG; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="zDvptYke"
-Received: from omf15.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 450D0A81DC;
-	Fri, 16 Oct 2026 18:35:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 0031E1C;
-	Fri, 16 Oct 2026 18:35:22 +0000 (UTC)
-Date: Fri, 16 Oct 2026 14:35:21 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="EccIHqfG"
+Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id D24E6140534;
+	Fri, 16 Oct 2026 18:43:52 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 74F7460010;
+	Fri, 16 Oct 2026 18:43:50 +0000 (UTC)
+Date: Fri, 16 Oct 2026 14:43:49 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Bill Wendling <morbo@google.com>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow
- <david@davidgow.net>, Jiri Kosina <jikos@kernel.org>, Petr Mladek
- <pmladek@suse.com>, Shuvam Pandey <shuvampandey1@gmail.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: David Laight <david.laight.linux@gmail.com>, Bill Wendling
+ <morbo@google.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew
+ Morton <akpm@linux-foundation.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Jiri
+ Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>, Shuvam Pandey
+ <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v5 05/12] seq_buf: Clear what a writer did not claim
  when a seq_buf overflows
-Message-ID: <20261016143521.6b4e439b@gandalf.local.home>
-In-Reply-To: <20261005155708.1471260-5-kees@kernel.org>
+Message-ID: <20261016144349.412a4cbf@gandalf.local.home>
+In-Reply-To: <20261006212552.51e0c3-kees@kernel.org>
 References: <20261005155653.late.426-kees@kernel.org>
 	<20261005155708.1471260-5-kees@kernel.org>
+	<20261005195926.09e240d9@pumpkin>
+	<20261006212552.51e0c3-kees@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -45,49 +48,56 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 0031E1C
-X-Stat-Signature: dgkw88oubs1xq1bwf7gzfc197axo5kep
-X-Rspamd-Server: rspamout01
+X-Stat-Signature: jnpfudwi341r9jy6e5hrarxqqf5xmwae
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 74F7460010
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18NMWFSCLatJOSwfcWa3LzHTrgsg/GgwJE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=kNaeyd1jpCe3Q8kp7QvAvPjafgKnomdKJ3X64V18ZwQ=; b=zDvptYkeMjxfdXWpEWwQb57pGDppDFRNGaLh6ltl4bIIB5QrVCvtST1vr2c9neIbnkGJKLsFrO8muQ5QDIC3gog33At8OpZirjNWWdJ4s9dU2WyMRFaV1kQO2ePBD0OiSTW1kh8D8FH+VN6fwfF2kszlKgrMlSpMUAfKSLPq6nw=
-X-HE-Tag: 1792175722-149224
-X-HE-Meta: U2FsdGVkX1/b7i3Ami5PI4YwYP6/prSl4OV+TU45OHQDy1Que08CD1W2kSJhAmN/+1gO0Tou6B62IjYYtxFunT6hbBm0zjDjmJpQz822tvJqbkR7csCd9z0Q98dtMjguq6JyZtae9qbwTxPEQYuCT89farZWGXmopwJYblRSZkbI0aaRHqUGJamtV/A0yU1CQXzvDD++M+ku2Mjf9tHrFjFkYnPnkekPpmtNcCFtcJo14MPzNKn8sd82Lg+CMWVJ7Hq+hhHyC7NGzfaSQrOXe/0Al0ukok2oYLuMp+n+ahnxUV4VljfI4DcnF+sDI1jLXQZ/HLvhugLL0RmxKosvIdqRb9zx4rqz1FZTXOduZWWfV4OnzyvshlsLv7zv5geOUjn06Qx0qvqnFcjTLPJ5/4P1KPJ0riCkVul+jEgRH/5sohP6AatqxInj8ENaTtkJAGWMmenGD9c=
+X-Session-ID: U2FsdGVkX19pW5plO3xqqKBJderVXovXcs3Dsc3Xr/Q=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=b5tZknHayHOpsUkodzmN+EEcGzSDw6BKjpwEFD9bRMc=; b=EccIHqfG2cId6XX47lGhyVdVHzOZ+OeNcgood1Yy5DsxtKUMKjcImRdbS/TtllolKpMqjExZptAN5aD8uZdDGUCFqlLNW1Y7qfaXDRIvWY85jYSe9tCLWaSmKjYOOMgkvqMcP2OZ97rZY+VP+rDrO/lgRXX3STI/ckMDp66ujpY=
+X-HE-Tag: 1792176230-109148
+X-HE-Meta: U2FsdGVkX18O0howf8PVArtPGEy/UhWoK+SxrtMgOU82uQo5ZbcSWY834ThVahJ3cAdCXAXMy8o15FE6camM3dpqc7VvVniXxDfbHPAnQOTk54PbGFOc/8elY/zmwQzbOZHiCQWw3w+wvozonF2Cc193hHCT52jXHU3g3YxusAD5hTXl/sM2I5NDdRebjQLYRJwL7dCQ6jRbEDhqh925gnKHrm31VXX1zGKze52iAX6x65yuG4I14u58M7EfusZxb1dT5hYFGaeS+bAwf85u99Uc5LQEFpMPeZHOYQ7LDsMmrEoR2F/7QFZrnLkpExsockxR4JjijvNjKKen6hYCJG+2AhOl8XMvthuBKjdYHUXURdNfNWJ22w==
 
-On Mon,  5 Oct 2026 08:56:55 -0700
+On Tue, 6 Oct 2026 14:26:56 -0700
 Kees Cook <kees@kernel.org> wrote:
 
-> Using seq_buf_set_overflow() would leave the bytes between "len"
-> and "size" untouched, so if seq_buf_str() is used on an overflowed
-> seq_buf, those bytes may be exposed. For any paths that don't claim
-> partially written bytes, by setting "len = size" before calling
-> seq_buf_set_overflow(), wipe the unclaimed bytes. The seq_buf_puts()
-> and related APIs already claim those bytes now, so only the unclaimed
-> cases remain. A specific example of this was seq_buf_path() which uses
-> d_path() and would write to the tail before discovering it was out
-> of space, and would correctly mark a seq_buf as overflowed, but the
-> path fragment would be left over.
+> On Mon, Oct 05, 2026 at 07:59:26PM +0100, David Laight wrote:
+> > >  static inline void
+> > >  seq_buf_set_overflow(struct seq_buf *s)
+> > >  {
+> > > +	if (s->len < s->size)
+> > > +		memset(s->buffer + s->len, 0, s->size - s->len);  
+> >
+> > What is the performance impact of zeroing the buffer?  
 > 
-> Clear from len to the end of the buffer in seq_buf_set_overflow(), which
-> every overflow goes through, including seq_buf_commit() with a negative
-> count.
+> Overflow is never a fast path: it happens at most once per seq_buf
+> (after that len > size, so the memset is skipped), and it is already a
+> failure the caller has to handle.
 > 
-> Add a test that fills a seq_buf, leaves it too little room for a path, and
-> checks that nothing of the path is left in the buffer. The tests run before
-> anything writable is mounted, so it takes its file from shmem.
-> 
-> seq_buf_path() was not exported, so the test failed to link as a
-> module. Export it.
-> 
-> Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
-> and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.2.0, and the
-> test builds as a module (CONFIG_SEQ_BUF_KUNIT_TEST=m).
-> 
-> Assisted-by: LLM
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
+> It is also usually zero bytes. printf, bprintf, puts, putmem, and putc
+> all fill to the end before overflowing, so len == size and there is
+> nothing to clear. Only a writer handed the tail by seq_buf_get_buf()
+> that then gives up leaves anything behind (seq_buf_path() with d_path(),
+> or landlock's string_escape_mem()), and then the clear covers only the
+> space that writer was given, which it may have partly filled.
 
-Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
+Correct, overflow means we "failed" (but not critically). And when we do,
+it's just remnants that need to be zero'd; so likely to be small.
+
+> 
+> > I don't think it would be a good idea to be zeroing the buffer on entry
+> > either (I've not looked to see it that happens - but there will be PAGE_SIZE
+> > buffers (maybe 64k) that get a a small number of characters written to them).  
+> 
+> Agreed, and it doesn't: seq_buf_init() writes a single NUL.
+> 
+> > Writing a single '\0' really ought to be enough.  
+> 
+> It would be for seq_buf_str(), but once a seq_buf has overflowed,
+> seq_buf_used() reports the whole buffer, and seq_buf_print_seq() and
+> seq_buf_to_user() copy that many bytes. Whatever followed the NUL (the
+> path fragment d_path() left at the end, say) would still reach the
+> seq_file or userspace.
+
+Agreed.
 
 -- Steve
