@@ -1,142 +1,85 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mta0.migadu.com (out-100.mta0.migadu.com [91.218.175.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C4A384243;
-	Fri, 16 Oct 2026 14:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312294AF67C
+	for <linux-hardening@vger.kernel.org>; Fri, 16 Oct 2026 15:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792161306; cv=none; b=MhzNlXLbyiyyhQjfOrFqwKQ7wwn7j6MNI9A8lI8f5ZpKh7vSmTVg46uaLx+qK5ZjSwcxjIqJCXJQn6+2MtDHuP0EGkdf+edRtPudsbhpbpgpd/jxbp6JLtr4OuSIFM0hZQRuO0SfceT8JSS1tHRwim1mKvOJK05S+4voXfWM+Us=
+	t=1792163958; cv=none; b=EJ4IFzsDg67Yq5/waqppL42k/1INUDCg+z8asjNfxdPOddKrohNjzL+lhgMLRWtyZ6ytXx74pLzaW6HdPNhqTcE/95Qq0XdgXZmwWqlVOqQc3I20m2QpDPgGyUbzEhgD7/NRuOX/cW+quHU5WFPVs63bK1VnchPSrg5x0libHXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792161306; c=relaxed/simple;
-	bh=aBVgL8O/8INZNFlNDJwxZAU+ZC8md4pxGzLmVIYYXgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nYwrvU4zl70VUfxOEGd9TxlUgVmrivf4XJX+UMSKUjGCwXOHr3w2ni5fk9iEw4AzZMYveRZsICljYihusRvQhxPjZL5f6Oc7yzij0YFIf+XaPe8YwiIToZAYdw5L4FsZqbEevU1uueWbSzkRlWggd/0Gsk1/2RNXQKYWpKZxZ/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nrPNjHrN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mMNOoK6G; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nrPNjHrN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mMNOoK6G; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1792163958; c=relaxed/simple;
+	bh=JgjAGc1yvO+GZR/lMz41Sy+B81/XedX2R7qPQROM1P0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NOt8tDcy3cPDxhXtRwJuuXjSpxYFpbNeYlKAUxAiW8FELG4GExxfDi7nNOL9/K36FK9bBDjyWEFLwJncI8JGaOakbGz5iqZMu5h1W9K41MNibeQIA+1SyUT3UCnqlOph8eFSo8sk4sEA9DbRX/D8D5+6fSQiL8Q9oB9T4Cd50zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EmSs2cBc; arc=none smtp.client-ip=91.218.175.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nrPNjHrN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mMNOoK6G";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nrPNjHrN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mMNOoK6G"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CF34B1F445;
-	Fri, 16 Oct 2026 14:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792161303; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DvevIo56gnD9RKfRjHMCZAoapMkclUhhZLXxXNOsKFw=;
-	b=nrPNjHrNIwZqSdnT+S2HVu9fYo8T+GCugireiC7KlLuJP4f+ehAQRuLl6pePQ6dJaIC1q2
-	GNSYj3MEl4wuGijoCWZjAUn/twscjJOIeaosYj9t/XVS7rCZs/weJfF1y23VfbBljJx1oh
-	5Z14GJ8axXI09jlYiKHygstCBYqeAVw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792161303;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DvevIo56gnD9RKfRjHMCZAoapMkclUhhZLXxXNOsKFw=;
-	b=mMNOoK6G6Ocet99MnO8c8h594dYsTr4U2fP4oNNKJ3SNRHni99cmls3pXJoxSDUf/SaCBm
-	NOQl+0z/7m2KJnDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1792161303; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DvevIo56gnD9RKfRjHMCZAoapMkclUhhZLXxXNOsKFw=;
-	b=nrPNjHrNIwZqSdnT+S2HVu9fYo8T+GCugireiC7KlLuJP4f+ehAQRuLl6pePQ6dJaIC1q2
-	GNSYj3MEl4wuGijoCWZjAUn/twscjJOIeaosYj9t/XVS7rCZs/weJfF1y23VfbBljJx1oh
-	5Z14GJ8axXI09jlYiKHygstCBYqeAVw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1792161303;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DvevIo56gnD9RKfRjHMCZAoapMkclUhhZLXxXNOsKFw=;
-	b=mMNOoK6G6Ocet99MnO8c8h594dYsTr4U2fP4oNNKJ3SNRHni99cmls3pXJoxSDUf/SaCBm
-	NOQl+0z/7m2KJnDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BD7C61378C;
-	Fri, 16 Oct 2026 14:35:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MNLIJBY20mr7JAAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Fri, 16 Oct 2026 14:35:02 +0000
-Date: Fri, 16 Oct 2026 15:35:01 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Kees Cook <kees@kernel.org>
-Cc: Vlastimil Babka <vbabka@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org, 
-	linux-mm@kvack.org, Kuniyuki Iwashima <kuniyu@google.com>, 
-	linux-hardening@vger.kernel.org, stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] ipc, msg: Account msg_msg allocations with
- GFP_KERNEL_ACCOUNT again
-Message-ID: <atI1-HjSgPkLCNQT@pedro-suse.tail5790ac.ts.net>
-References: <20261014052338.nothing.279-kees@kernel.org>
- <20261014052344.384723-2-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EmSs2cBc"
+X-Envelope-To: linux-hardening@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=JgjAGc1yvO+GZR/lMz41Sy+B81/XedX2R7qPQROM1P0=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1792163954; v=1; x=1792768754;
+ b=EmSs2cBcB3doNAIjtpdTkto7UMnK2jB3+G1bdN15msWzaKjPK5kl99gpT7nHePSyOk10YEEG
+ yqY9ITUenWi29PZ/YdZ3rxVvC6+9Djmdyu5DwPG3jC0jXIPYdURLqks/AEXGvFqCPfM80UWv3Ld
+ LsBsfQRVBlBOXiCJN4Lmp0Yo=
+X-Envelope-To: linux-hardening@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 8e118369b878a887;
+	Fri, 16 Oct 2026 15:19:13 +0000
+X-Mizu-Trace-ID: 8e118369b878a887
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <6d16da53-0917-45cb-a5eb-5b85de5e2fb1@linux.dev>
+Date: Fri, 16 Oct 2026 23:19:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261014052344.384723-2-kees@kernel.org>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next net] netdev: Hide the netdev_priv() origin from
+ GCC in netdev_from_priv()
+To: Kees Cook <kees@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Jiri Pirko
+ <jiri@resnulli.us>, Brad Spengler <spender@grsecurity.net>,
+ PaX Team <pageexec@gmail.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, netdev@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org,
+ Yeswanth Krishna Tellakula <yeswanth@linux.ibm.com>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261015165959.i.798-kees@kernel.org>
+Content-Language: en-US
+From: Qingfang Deng <qingfang.deng@linux.dev>
+In-Reply-To: <20261015165959.i.798-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 13, 2026 at 10:23:43PM -0700, Kees Cook wrote:
-> Since commit 734bbc1c97ea7 ("ipc, msg: Use dedicated slab buckets for
-> alloc_msg()"), alloc_msg() allocates with GFP_KERNEL, and a msg_msg is
-> accounted only through SLAB_ACCOUNT on its bucket caches. With
-> CONFIG_SLAB_BUCKETS=n, kmem_buckets_create() creates no caches and
-> kmem_buckets_alloc() is a GFP_KERNEL kmalloc() from the general caches,
-> which do not account it; the same happens when kmem_buckets_create()
-> fails. Either way, the allocation is not charged to the sender's memory
-> cgroup.
-> 
-> Allocate with GFP_KERNEL_ACCOUNT again, as before that commit, so the
-> allocation is charged whichever cache serves it.
-> 
-> Build tested ARCH=x86_64 defconfig with GCC 16.2.0, with
-> CONFIG_SLAB_BUCKETS as y and n.
-> 
-> Fixes: 734bbc1c97ea7 ("ipc, msg: Use dedicated slab buckets for alloc_msg()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <kees@kernel.org>
+Hi,
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
- 
+On 10/16/2026 1:00 AM, Kees Cook wrote:
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -2838,6 +2838,13 @@ static inline void *netdev_priv(const struct net_device *dev)
+>    */
+>   static inline struct net_device *netdev_from_priv(const void *priv)
+>   {
+> +	/*
+> +	 * When GCC can see that @priv came from netdev_priv(), it can
+> +	 * compute an object size of 0 for the net_device and its members,
+> +	 * which makes FORTIFY_SOURCE fail valid accesses through the result:
+> +	 * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=127875
+> +	 */
+> +	OPTIMIZER_HIDE_VAR(priv);
 
--- 
-Pedro
+If this bug only affects GCC, you may wrap it with a
+#ifdef CONFIG_CC_IS_GCC block.
+
+>   	return container_of(priv, struct net_device, priv);
+>   }
+>   
+
+Kind regards,
