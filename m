@@ -1,40 +1,45 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C606349BB4A;
-	Fri, 16 Oct 2026 18:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF9949BB61;
+	Fri, 16 Oct 2026 18:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792175315; cv=none; b=PvUz5vzOWi9xSxnyHZld+C3QZ32fZ0aLJiWUgTvPnz8lznK4QXb/Sdg/zFFio7FHfdC69VM7f6JNBE8rqUmeJvQqjFGGK/rj7Zx08mA7Ry9dycf1p0Z7NLYhKDIVTR2uLWiqpnjAnl+ef4gUC21EiBELj6qWCXOMHCU1CGUWRgE=
+	t=1792175349; cv=none; b=jtL2kJFx3QPFbAHfDHaxSNKt4ZTRDvJ2t9NItlBd0TRCcW+7BHywDrKAyy0udFjbPZeKVWnqyGiPA5GPhLuPgaaqJ98wmlj5roiyKTSLVwvH/FqGBCEU2QNAAUKMDZRuMgb6OucyO+v7c32Cf2HsBhHrX7O72O9qhLDfWOwvxcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792175315; c=relaxed/simple;
-	bh=Mqx8SLErC81i9Jrh1XJnXDa92rtYyK0u0D9xlfJd++I=;
+	s=arc-20240116; t=1792175349; c=relaxed/simple;
+	bh=sU8Huw5FGvFuFeiFie3QNStejqRmTyfwZt88UfwRTJ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nNyDwz6YhM/6B0Qw7+tr9/IabOh6cw6UneZZlDxULSjarTp++91sTMuEWYspb05e8yg0C/2/Fg3Qv8ZgEp428l5X/s+VDlkb6M41kNPV/+J2eHr5K1Pjmwg3cV+f2h7xScPf564eTO+0LfWIFktq8VG5hQk5770FaHBkmS0ZZU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=jYLgL8SF; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=p8y70wjdWQ3Lm5ewg+Lpx2gcI4ao7t3gz/KgDbNKbogCSZGbok+8O5uSJadp9cpb109+ljS0enEM39JeI9uRJGmcZPT6LvzWrxqYHq0NoYRt9h2GQC3szFvTprqBOsnv7sukQW+0M+H53bkLNOFqJvSUkPoZr05QJBrEVBNpNo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=kSupG2xX; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="jYLgL8SF"
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id AD25DC055A;
-	Fri, 16 Oct 2026 18:28:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 87B303D;
-	Fri, 16 Oct 2026 18:28:29 +0000 (UTC)
-Date: Fri, 16 Oct 2026 14:28:28 -0400
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="kSupG2xX"
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 85359A0102;
+	Fri, 16 Oct 2026 18:29:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 19AF117;
+	Fri, 16 Oct 2026 18:29:01 +0000 (UTC)
+Date: Fri, 16 Oct 2026 14:28:59 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Bill Wendling <morbo@google.com>, Andrew Morton
- <akpm@linux-foundation.org>, David Gow <david@davidgow.net>, Petr Mladek
- <pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Shuvam
+Cc: Bill Wendling <morbo@google.com>, =?UTF-8?B?R8O8bnRoZXI=?= Noack
+ <gnoack@google.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+ bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Andrew Morton
+ <akpm@linux-foundation.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Petr Mladek <pmladek@suse.com>, Shuvam
  Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 01/12] seq_buf: Do not print an empty line from an
- overflowed seq_buf_do_printk()
-Message-ID: <20261016142828.1b045e94@gandalf.local.home>
-In-Reply-To: <20261005155708.1471260-1-kees@kernel.org>
+Subject: Re: [PATCH v5 02/12] seq_buf: Do not pop from an overflowed seq_buf
+Message-ID: <20261016142859.06a43120@gandalf.local.home>
+In-Reply-To: <20261005155708.1471260-2-kees@kernel.org>
 References: <20261005155653.late.426-kees@kernel.org>
-	<20261005155708.1471260-1-kees@kernel.org>
+	<20261005155708.1471260-2-kees@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -45,40 +50,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: rspamout06
-X-Stat-Signature: yrmkyinkdm55emektfq3wyq59whg9fgy
-X-Rspamd-Queue-Id: 87B303D
+X-Stat-Signature: b5nkuwouyhdy4u993jis7grybge175xf
+X-Rspamd-Queue-Id: 19AF117
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18U1Qqs6jdePvgGBKKJ1UBg7QFpPLyoieo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=vcbJi8BR2eKqQ2Jsf9h5NMGUHIFXwODcHon8O1b9PlI=; b=jYLgL8SFkxvGxHRIGXTmDr3iNXp+0eabPQuERXdkgE+p5UlMMokcIGHpz1a63U484advAvU4E5ul1OJA7rFaNJETqAItPCAVYty5Mg4AvgE4DP3XJKm2WW9NTSyBFTxJMgdyuGRXcJLzGIAHvA3SfLk00VreTMFsRBHMMn90Iac=
-X-HE-Tag: 1792175309-687389
-X-HE-Meta: U2FsdGVkX1+1J8xwDjPLYdsLp4sUTnNJUBeH15PUfy7XOeb5S8k+T5AxFQ6r5/uoKkJMTcUlNNUFnfo7KUZjHTtmsUo/Gr4V3c3Jltpk82f7YZTu/tGkW7NU/c0iUMDzT1b76h6X97FfzZJyNX0dGzTwMPHQK089nqPLN+ihtyqpqwz3HtFisiiLHyTaNOFJqwkvDw2kPa7uUbxvcBaAqoRtgbwlRQmv2Mj5GAygrth0NNhjH0lqy5TWigJBHoIAD6kObEnNzhzMiNK2Ps6i3xFHfSjvOOCp8sLQe8l3yF/OI6Q4aweN8XIHWacvBIgAvEyxEwZkyZjk+p0WdXw6owPnhyHyYqYPMuSoiQCDbTGf7ZgcfvmV5jGMOPnucmIYQhyjfR0+ECyC1cjsRxqgqQ==
+X-Session-ID: U2FsdGVkX1+fj1YGWdwbFm32+9d6zhiqh+led4Jioec=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=nsnHAZht4xXX+NUY+dLaXZLvYlkPS38RZLvaJ/Efn08=; b=kSupG2xX+nSyKoGHdIOevUk2mVcxCRE1bmLaeggcqQdkCUj17Vt4YprEKYZFC3Mh72j06Yc119wIgVM8sqGGgVeBHcUJs1KYVOvbXKp3SX6/TupSQnRywUFLsRCNal8OrJuHxkR9qb6629LhVvGINhpegY933ODevC5KngvenZM=
+X-HE-Tag: 1792175340-407831
+X-HE-Meta: U2FsdGVkX18lzNMQUpfgWhTfZ2S5QXhKq/p+WHUnR5iO7Un9E9CHipp4Z0C+TZhiJpv7OW61sdClHiB1FnByNoJAJPv6e04xeN5kvFfj7e+Z2ir9uJL/m42Z6kvdZuLttn9l5VMV+hxKaSMaiygUIKrypj62CKZQslnaFljBXuV3R1OVGnoFBChdaKvhW6pLyMI8T8Yj20yTAjw5tHFX9bLhWd8SDG4DNg6fSdLM5aHsvZOJ1k6U210wbRfQQ6EC2kj74XjmDigvgeJZWzYdru0E5t8Vt+ct5vsvxth1inXLWd5A5KgwB5YGmiwQVATbuyKGLFPHqVqTdFKSbf9xm0XidHX6ambNt7HGdNlrZvznmg9e+NyvzRSZE9yRQkaHYG5gWgoZ5w3AqqWlEmsoUHIpTlsHf8xOcokP5JgOre4=
 
-On Mon,  5 Oct 2026 08:56:51 -0700
+On Mon,  5 Oct 2026 08:56:52 -0700
 Kees Cook <kees@kernel.org> wrote:
 
-> seq_buf_do_printk() prints a buffer line by line, then prints whatever
-> follows the last newline. When a string has overflowed at exactly a
-> newline, an empty line is printed since the pointer hasn't reached the
-> overflow mark of the seq_buf. Switch to just check if the string is
-> already empty and only print if not.
+> When a seq_buf has overflowed, its len is size + 1, so seq_buf_pop()
+> decrements len to size and reads buffer[size], one byte past the end of
+> the buffer. It also leaves len equal to size, which no longer counts as
+> overflowed, so a truncated seq_buf then looks like a complete, full one.
 > 
-> The only caller is the memory cgroup OOM report, so this could only ever
-> add a blank line to a report whose statistics already did not fit.
+> An overflowed seq_buf logically has no last character to pop: the
+> length of what was written has been lost, and the last byte of the
+> buffer may be the NUL written by vsnprintf() or bytes that were never
+> committed. Return -1 for an overflowed seq_buf, as for an empty one,
+> and leave it overflowed, as the rest of the seq_buf API does until
+> seq_buf_clear() or seq_buf_init().
 > 
-> Add a test that registers a console to count the records that
-> seq_buf_do_printk() emits. It counts the records carrying the test's
-> marker, and the records holding nothing but a line feed that arrive
-> after one, so that unrelated kernel messages do not disturb it. Both
-> states that reach the flaw are covered: exactly full, and overflowed.
+> The current callers do not reach this, e.g. trace_syscalls only calls
+> trace_seq_pop() when the trace_seq it pops from has not overflowed, and
+> kernel/bpf/diagnostics.c sets the length from strnlen() before popping.
+> 
+> Add tests for the pop corner cases.
 > 
 > Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
-> and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.2.0.
+> and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.1.0.
 > 
-> Fixes: 96928d9032a7c ("seq_buf: Add seq_buf_do_printk() helper")
+> Fixes: 32e0f607ac6a2 ("tracing: Add trace_seq_pop() and seq_buf_pop()")
 > Assisted-by: LLM
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
 
-Reviewed-by: Steven Rostedt <rosted@goodmis.org>
+Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
 
 -- Steve
