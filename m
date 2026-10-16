@@ -1,85 +1,85 @@
-Received: from mta0.migadu.com (out-100.mta0.migadu.com [91.218.175.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312294AF67C
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Oct 2026 15:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7261F4DF4AC;
+	Fri, 16 Oct 2026 15:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792163958; cv=none; b=EJ4IFzsDg67Yq5/waqppL42k/1INUDCg+z8asjNfxdPOddKrohNjzL+lhgMLRWtyZ6ytXx74pLzaW6HdPNhqTcE/95Qq0XdgXZmwWqlVOqQc3I20m2QpDPgGyUbzEhgD7/NRuOX/cW+quHU5WFPVs63bK1VnchPSrg5x0libHXo=
+	t=1792164841; cv=none; b=DwQ+xAWEQyfBmrn/xs10WBzI9PN/VnJS9BHghXxuJ8c6QEARLkO9+vK3Gs59N4hLKVkCwTW+r6/rj/wb+ePRAeMztSBam8ioFiS5R5fP/DGvXCDNusTF3oYYyApn4e60bf81L6k5eK6RPa7/rZEsHpeVsLhMGVi5WyTdDw6wQ84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792163958; c=relaxed/simple;
-	bh=JgjAGc1yvO+GZR/lMz41Sy+B81/XedX2R7qPQROM1P0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NOt8tDcy3cPDxhXtRwJuuXjSpxYFpbNeYlKAUxAiW8FELG4GExxfDi7nNOL9/K36FK9bBDjyWEFLwJncI8JGaOakbGz5iqZMu5h1W9K41MNibeQIA+1SyUT3UCnqlOph8eFSo8sk4sEA9DbRX/D8D5+6fSQiL8Q9oB9T4Cd50zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EmSs2cBc; arc=none smtp.client-ip=91.218.175.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1792164841; c=relaxed/simple;
+	bh=sETNLtKYVIgvX6ysWodANn/cYHZ89DFRmyDKzRb9spE=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=XpKzaZIz2JeNf6J9oXKPjO9HP3nXTLDDR52Kcn+Hy/gubsX0BPuRJDS/NXD1XkPqGs8FAMt8vE7VryiFMimn1BW/tH78S7TgTQ0IdM+uHAjdm4jhiJdcwFqtxIj+79iDkcmybCVC0zLavKjbtmlaWXHf4TEUPnD+UWOt7iOwWuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPINw0KH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EmSs2cBc"
-X-Envelope-To: linux-hardening@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=JgjAGc1yvO+GZR/lMz41Sy+B81/XedX2R7qPQROM1P0=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1792163954; v=1; x=1792768754;
- b=EmSs2cBcB3doNAIjtpdTkto7UMnK2jB3+G1bdN15msWzaKjPK5kl99gpT7nHePSyOk10YEEG
- yqY9ITUenWi29PZ/YdZ3rxVvC6+9Djmdyu5DwPG3jC0jXIPYdURLqks/AEXGvFqCPfM80UWv3Ld
- LsBsfQRVBlBOXiCJN4Lmp0Yo=
-X-Envelope-To: linux-hardening@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 8e118369b878a887;
-	Fri, 16 Oct 2026 15:19:13 +0000
-X-Mizu-Trace-ID: 8e118369b878a887
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <6d16da53-0917-45cb-a5eb-5b85de5e2fb1@linux.dev>
-Date: Fri, 16 Oct 2026 23:19:02 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPINw0KH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 716BC1F000C4;
+	Fri, 16 Oct 2026 15:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792164840;
+	bh=g12RPAkUhN6F/vsgmV670xCvS7Raw3QlamgkZuaHpys=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=RPINw0KHRtawvRpWSUfN//FNoW5bd8lgz6UB9Ly/aHPoxfB+oWOQ/Ccvp3DMTkEUS
+	 bToQzp5Im3WJwmqq2odOlRRN1wlG3damOk9fvC/C7v0f/r8wCTYaaHP9oPvzbCHI/+
+	 vJcEIhH8OY/pqED2T62/rFwnYxoYggfEiCCjO3rfzSrnzemToRmkoOT+rimPQqe8ae
+	 exlb3pbs81gFtvUULuOvwqXGQzbVWz72Ucu6iFZ91D6c0WW5LRcXU7F887cOiTSHn/
+	 KaatQxZhvOQK8NkIIMokZjnx9hOwjLhi1eP+oUgI3YYbPW3ZFfD1161oFapFs7G693
+	 Xv26P9PLsI4Hw==
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next net] netdev: Hide the netdev_priv() origin from
- GCC in netdev_from_priv()
-To: Kees Cook <kees@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Jiri Pirko
- <jiri@resnulli.us>, Brad Spengler <spender@grsecurity.net>,
- PaX Team <pageexec@gmail.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, netdev@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org,
- Yeswanth Krishna Tellakula <yeswanth@linux.ibm.com>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261015165959.i.798-kees@kernel.org>
-Content-Language: en-US
-From: Qingfang Deng <qingfang.deng@linux.dev>
-In-Reply-To: <20261015165959.i.798-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] HID: bpf: add __counted_by_ptr attribute to
+ device_data
+From: bentiss@kernel.org
+To: Bill Wendling <morbo@google.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, bpf@vger.kernel.org, 
+ codemender-patching+linux@google.com
+In-Reply-To: <20260923065612.2707049-1-morbo@google.com>
+References: <20260923063114.2683575-1-morbo@google.com>
+ <20260923065612.2707049-1-morbo@google.com>
+Date: Fri, 16 Oct 2026 17:33:54 +0200
+Message-Id: <179216483464.1243348.6374444567336475731.b4-review@b4>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792164838; l=1139;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=sETNLtKYVIgvX6ysWodANn/cYHZ89DFRmyDKzRb9spE=;
+ b=tmZk5QW/9BOZ6A9Ay2Offn6euZSOm8Mo0yCSTa+ZD/C91d++4gfgT/mmwmavWvZFDom5bC8fm
+ 8pcxyubnAMQAXl2MOj+04J+f7OWoFRaQT4j0uAi/QtTJmASVudP2al4
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-Hi,
+> The 'struct hid_bpf' contains a 'device_data' pointer field (of type
+> 'u8 *') and an 'allocated_data' field (of type 'u32') that specifies the
+> size in bytes of the allocated memory for 'device_data'. Since
+> 'device_data' is a pointer to 'u8' (elements of size 1 byte),
+> 'allocated_data' represents the exact count of elements allocated for
+> 'device_data'.
+> 
+> Annotate the 'device_data' field of 'struct hid_bpf' with the
+> '__counted_by_ptr' attribute, pointing to 'allocated_data'. This enables
+> bounds-checking sanitizers (like KASAN and UBSAN) to detect
+> out-of-bounds accesses to 'device_data'.
+> 
+> Because the count 'allocated_data' is always set before any access and
+> accurately tracks the allocated buffer size at all times, adding
+> '__counted_by_ptr' will not cause runtime panics or false-positive
+> bounds checks.
 
-On 10/16/2026 1:00 AM, Kees Cook wrote:
-> --- a/include/linux/netdevice.h
-> +++ b/include/linux/netdevice.h
-> @@ -2838,6 +2838,13 @@ static inline void *netdev_priv(const struct net_device *dev)
->    */
->   static inline struct net_device *netdev_from_priv(const void *priv)
->   {
-> +	/*
-> +	 * When GCC can see that @priv came from netdev_priv(), it can
-> +	 * compute an object size of 0 for the net_device and its members,
-> +	 * which makes FORTIFY_SOURCE fail valid accesses through the result:
-> +	 * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=127875
-> +	 */
-> +	OPTIMIZER_HIDE_VAR(priv);
+I've applied your other patch touching the same area (please always
+regroup patches touching the same area into a single series). Is this
+patch still required? If so, can you  respin it on top of for-7.4/bpf?
 
-If this bug only affects GCC, you may wrap it with a
-#ifdef CONFIG_CC_IS_GCC block.
+Cheers,
+Benjamin
 
->   	return container_of(priv, struct net_device, priv);
->   }
->   
-
-Kind regards,
+-- 
+Benjamin Tissoires <bentiss@kernel.org>
