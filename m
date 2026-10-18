@@ -1,296 +1,158 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f2.google.com (mail-pj2-f2.google.com [74.125.227.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517314C6521;
-	Sun, 18 Oct 2026 15:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1612E3DB30B
+	for <linux-hardening@vger.kernel.org>; Sun, 18 Oct 2026 16:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792337196; cv=none; b=SaluDxclq4lMRBnJ2QkZHt4TLQtWEpjpM9QvCDcfh2l4l5/FtvovrIxYEsgv9HAFZjtIgkcahW/d4sCicxLvS+v4PigdCDZxhygdolpGFFeuFxyX0twVBahePIhWXnJcS9UKNCB4AuLQ7oKx60CN6WEB/3KwL5R6y/k0rkG30p0=
+	t=1792339374; cv=none; b=LKGNfHpjinuF+A8ehJY8Wb93qgKO6QwRY9+un0TdwOBs8SsE/Nm11lYbXIMbl6p3tV2pcP0wN5CsNsrs5jIPBmQ/7cnZ3G+Jq7y/gOXXZ2i93vii0V0E2+8kovJlVwyH5ly1o4vHRK64K9zC0kB9LFPlM3EwGGjMzcczzSu5KUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792337196; c=relaxed/simple;
-	bh=DEzpFRMmEO4WxL6qHyNd2eprKiKJX8CQ5hMWYsDmcrw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mG/TlBqLpcarLoZPQd8HaSspRcxlVPjzah3DazahENGyregPuvrJVkh2yAULfp7UQG+h5E+EwF2RYlD45McSli46B8Iq4dRry57bmEEHbp4WqZVtHNrzMQt5SF9fpI800jHJ8NrfnzdMmKYJPMyU0lyjl3ZVLPEfHjUM8P1EbJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lO1TLL37; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1792339374; c=relaxed/simple;
+	bh=Mzr3VbRrl8kAj9srJsaqIcS01nB54Eujf3nC1FUodv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bXDrfOUELiqhZFpt+DuvY2M9kIimflbb/7UdrA5WH+RZ2UPKp9lOb4/Vr9s1Hst7dA5lkdNKkBeC8cEbv+kQX9/AKsfCmWDjRmkRacr5A1N4upCX/+7u1vzuehUw2njQQJVFtZGuvQQa/olm4rq77XDsz8BdQCjoLMlEVi9NGJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RmCg3j8i; arc=none smtp.client-ip=74.125.227.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lO1TLL37"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69IFEM5k1294246;
-	Sun, 18 Oct 2026 15:26:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=whoUjQfO/MaEvOa7tAljG49R0UiUJE6SLq9r+UfLh
-	/8=; b=lO1TLL37qXwVVO1hlWhXGeFtxzsXC4HM+WAl1uv8Mw8FFvOChfVseJipf
-	gz+ermWKrVVHBv/4TQVdLe1TqHkKnEP0+MxsOralVOSmigYF5q9XBEYareeGLuSD
-	3Zy493gK+9g3WJf4CUyfbd7jBtZA3zfbGlBYAe14mhBQW3NXpYt3Vyu2qOZ/mzCw
-	wSMwZTIpfLYmKm8y0IjsGLLXsQLq7vIO1pRfIJkw9ZQ8B+x8LuZPgiBHDr29xw0q
-	MBQbFwfCIvMU3QB9ridyC4C6tSSqwU/RqJQkl5QDif7bLrkykHGWKOfoaZTIOA36
-	ScqaGQMryRDXqz7yUZGr1bL2r0SOA==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hc0r7ea6v-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Sun, 18 Oct 2026 15:26:23 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 69IFK8oc2779299;
-	Sun, 18 Oct 2026 15:26:23 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4hcp1y9nan-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 18 Oct 2026 15:26:23 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 69IFQJJX47055280
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 18 Oct 2026 15:26:19 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 279EC20043;
-	Sun, 18 Oct 2026 15:26:19 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DFDBD20040;
-	Sun, 18 Oct 2026 15:26:16 +0000 (GMT)
-Received: from li-fbf77acc-29ba-11b2-a85c-e8e934f50a46.ibmuc.com (unknown [9.124.217.98])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 18 Oct 2026 15:26:16 +0000 (GMT)
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: kees@kernel.org, maddy@linux.ibm.com, chleroy@kernel.org,
-        ritesh.list@gmail.com, sshegde@linux.ibm.com
-Cc: linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] gcc-plugins: Add a plugin to ease debugging of memory ordering bugs
-Date: Sun, 18 Oct 2026 20:56:06 +0530
-Message-ID: <20261018152608.1323494-1-gautam@linux.ibm.com>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RmCg3j8i"
+Received: by mail-pj2-f2.google.com with SMTP id d9443c01a7336-2e61817b178so3142145ad.1
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Oct 2026 09:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792339372; x=1792944172; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:mail-followup-to:message-id:subject:cc:to:from:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=OclAn790U4McE2PSKb1Cj/mf9bWrhuoW13sPXANUyZ4=;
+        b=RmCg3j8iUndpoIwFPUkZA0BxsOQnS7LPP6TbqytU1nHDI8rlH+HqHx79j0cfOS4uij
+         HA1vg1uwaehH7Zhg0xM+BrgBpdyRFQW3QoQc2O52/hfRT+qfWGpf1tkN80K7gE6v2m3Z
+         F/DR5dUC55z/nW1j1VpFvqZeoe4VAUISZ3XoUNMpajS0pTp+i3LsjAqHtH8HMP8aBIeU
+         FmqDJXnxE9Ce42juKaqpLMwBsKjUfYOkgiiFePm87RvJPcNnp6ffbBoU2nFELr3KxtDe
+         78dmFJutQDYrjQcLd7mBRvkZiz4lXZe3MRu+FWJRIa0PZ4a2tChcQwFCbr3fUR0Xg5QB
+         /PZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792339372; x=1792944172;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=OclAn790U4McE2PSKb1Cj/mf9bWrhuoW13sPXANUyZ4=;
+        b=yX1Xe0eru69ofOjp+CFDviMfdbf+AKIoQFvJM8IR5yfks36EnzUiJ4NxcsKbIjuw49
+         BUz5cPS3ZFs3K+WzRaWd5+gIVojakNLe30nRc6IQPdRTIvaW+SPwMt8oKbgEeS0HvOyT
+         5gAi1l892criPmgcA++KM4fX5LajUDoYkjdfRIXuotbij5jcUqDTIv3e1yf/emVSEsSC
+         8OmpwfLqBMyIMyJlbDL+VIHEF8RQr24qgOuQ6rr2ohiB3qZWI13rRocAotty5K072cdN
+         nxtmab9JUAe56CuNO8GCz8XD6iHIbaxNR3FseQhrxL1S2JmjhuaRBeQwDXsuJRrOJLIR
+         1pPA==
+X-Forwarded-Encrypted: i=1; AKwUvBwdO42SFZNgt1ip5gJOLSo8J5Xl9b42wFPw2fZJaaTbhU2loCJv/mgsUQAgEWGNNKAKnC/65qxg+iMLb2uGc3o=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIVPJC+fgQ536vpyD0ehnCKqte7HuXfSprFB2vwvZdXTgFecP38
+	o0xEU6gtTYNI936EkxvmIJ7OxCGAA63FypbrmZ6B9tfMf36MM3E1cQLd
+X-Gm-Gg: AYBFou2/Kf9v1E9vkh0tU8b9WVMvLjwrfyodtP5P5kfUrtxZ4FcLdqN0EXHIfU4m2Lq
+	mJ0kg3b+V6sXzJjfzmM+6YQTPEwcKHE0u2WGFO0kxSZ6P6Zz83Bm1c10UaB/Eo6fWpSxAU088yX
+	5LSc6tMZy2ofWbNtzFZUB0Aw27sH0X727Ttz5zef4y4qn/c0TQMDfofZYs0FT/byvEE7dbAQIvW
+	dFnj8gd2XksFeVs9C7J5bifc2lPORw/w8fdwO3udtcMM4Bm0YW5mFYsU6YiyxOxhkudwvaK3aJB
+	wahhHHhAY2qUHbU5ozRnjQ8q3/n+AyVxRFqi3aQmc/nCgBMNd/q1fXZf5ILLoly2KVXTdHgwZzh
+	+lDrS6sc/DXZ1xuVFc5jtFGKlmqTbT4XYAofFhtJyVhcrz0gB8XtjY0gJqe3Oip4KdKazimcnGa
+	tVjZaAdMIaFuMVMlv1aF7PdPklaH5gootTvbndg//ecNsmAKxh0Vp/3DzcjHyUuVWKWu+JkPOwN
+	4EBcmN90SRXR2fU11NnJ2cI8A==
+X-Received: by 2002:a05:6a00:7095:b0:8a0:5de3:a170 with SMTP id d2e1a72fcca58-8a05de3a1dcmr2036797b3a.45.1792339372164;
+        Sun, 18 Oct 2026 09:02:52 -0700 (PDT)
+Received: from J4f-Laptop.localdomain ([183.36.237.113])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-89f57269315sm2981539b3a.23.2026.10.18.09.02.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Oct 2026 09:02:51 -0700 (PDT)
+Date: Mon, 19 Oct 2026 00:02:45 +0800
+From: Shihuang Liu <shlomojune6@gmail.com>
+To: Greg KH <greg@kroah.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	linux-input@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Marcus Folkesson <marcus.folkesson@gmail.com>, Ville Syrjala <syrjala@sci.fi>, 
+	Henk Vergonet <Henk.Vergonet@gmail.com>, Henrik Rydberg <rydberg@bitmath.org>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] Input: joystick - replace strlcat() with strscpy()
+Message-ID: <al4du5juolbkhpa42fmewxaa62kre7ohmz7h6pako2dkjtnqtt@cdziwambsido>
+Mail-Followup-To: Greg KH <greg@kroah.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Marcus Folkesson <marcus.folkesson@gmail.com>, Ville Syrjala <syrjala@sci.fi>, 
+	Henk Vergonet <Henk.Vergonet@gmail.com>, Henrik Rydberg <rydberg@bitmath.org>, 
+	linux-kernel@vger.kernel.org
+References: <20261016170411.51025-1-shlomojune6@gmail.com>
+ <20261016170411.51025-2-shlomojune6@gmail.com>
+ <30bc6e07072076b0591fd416f50f4fc3@gmail.com>
+ <2026101727-ebay-five-72f8@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDE4MDA2MCBTYWx0ZWRfX6/cXMyoNLVZM
- 7wRZ7fEKKbsbhgQhxyUi31OrpDYq9BZ+3KriVyWy6SzX5vDZzTye90lxRb3xbICJ2FbEztQHjTh
- Kjg0+HsCT3Z2TwFmKsrqi5QtRn7Z5oA=
-X-Authority-Analysis: v=2.4 cv=PrUG/AM3 c=1 sm=1 tr=0 ts=6ad4e520 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=SMgOnqTPEg9jcWRg:21 a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=XxtmG6sFAAAA:8
- a=VnNF1IyMAAAA:8 a=Z-CbJQqKeFpCzIUWG4sA:9 a=CYKbh7h7szYBv2aNwBbU:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDE4MDA2MCBTYWx0ZWRfX+6PydY49q/Cf
- uZFJIDw0KZjvP4YoDfhZeNAiT7XyywZbkNSF9k92Xq5Xyrdnoy7+wXH7wsSJ6KtBobjNAnLTreT
- IcZ+/To8ToEtzvUvPbfVA6ZbZ2Wv19XwBG+t8uoOelDvro2yD9U3829yncdUlo2i3Bl1BTJi3WZ
- bpPaSOlpnNLcFQ3j3V89Lk8W7JEhnFlN6VRx0N1d7FKft51cXi2V3ALfg9oh58Ff7DskmF7noZf
- dKhFNWnmMPKerT25zKsMNelGoyr69mH8tZ2oyOesr3dgdyKmQlnRNc3G64ei5Qu7KuUNDBitRFo
- LQGgoyiqddZgKaT0XOceUf1xOFJksfJER40fQjmf0OCCDyeg2UPo/KcBGHJx4m3V2fpa9sG4qP9
- Le0L7DXiMypHPabWcySqvPmRzbZoO9zQOnUuUztMlO0/B1yL5yQwaM6H+CuxfNrjXIwF89RUvP3
- 5Ezvn5jcKx56Zl6Mu1w==
-X-Proofpoint-GUID: n7YQTyMxVFC0rcuCiZ0P3DPaZT7iAWIb
-X-Proofpoint-ORIG-GUID: 6VrlyuLNsFKf0D5A5dGykHD2sSqE8Ncn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-10-18_03,2026-10-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 bulkscore=0 impostorscore=0 phishscore=0
- clxscore=1011 priorityscore=1501 malwarescore=0 suspectscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610080000 definitions=main-2610180060
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2026101727-ebay-five-72f8@gregkh>
 
-On CPUs that support out of order execution, barriers are used to make
-sure that if a cpu updates a variable, all other cpus see the correct
-value. However, sometimes developers forget to put the barriers in the
-right place and this ends up causing bugs.
+On Sat, Oct 17, 2026 at 10:19:59AM +0200, Greg KH wrote:
+> On Fri, Oct 16, 2026 at 12:17:05PM -0700, Dmitry Torokhov wrote:
+> > Hi Shihuang,
+> > 
+> > On Sat, Oct 17, 2026 at 01:04:07AM +0800, Shihuang Liu wrote:
+> > > The pxrc and xpad drivers build the physical path by appending a
+> > > constant "/input0" suffix with strlcat() after usb_make_path().
+> > >
+> > > In preparation for removing the deprecated strlcat() API[1],
+> > > replace it with strnlen() followed by strscpy() into the remainder
+> > > of the buffer, as commit 34b228b739f5 ("HID: usbhid: replace
+> > > strlcat with better alternatives") did for the usbhid drivers.
+> > ...
+> > >  	usb_make_path(udev, pxrc->phys, sizeof(pxrc->phys));
+> > > -	strlcat(pxrc->phys, "/input0", sizeof(pxrc->phys));
+> > > +	len = strnlen(pxrc->phys, sizeof(pxrc->phys));
+> > > +	strscpy(pxrc->phys + len, "/input0", sizeof(pxrc->phys) - len);
+> > 
+> > I really dislike this conversion pattern, and I do not want to see it
+> > open-coded across 18 drivers in this series.
+> > 
+> > usb_make_path() is just a trivial wrapper around snprintf() that already
+> > returns the length of the formatted string. Calling usb_make_path(),
+> > ignoring its return value, rescanning the buffer with strnlen(), and
+> > then open-coding pointer and size arithmetic for strscpy() (along with
+> > an extra local variable in every probe function) makes the code much
+> > uglier and harder to read than what we had before.
+> > 
+> > All of these USB input drivers already include <linux/usb/input.h>, and
+> > drivers across other subsystems (drivers/hid/usbhid/, drivers/media/rc/,
+> > drivers/media/usb/, sound/usb/caiaq/, drivers/usb/storage/onetouch.c)
+> > all use the exact same usb_make_path() + suffix pattern ("/input0",
+> > "/input%d", "/ir0", "/button", etc.).
+> > 
+> > If we want to get rid of strlcat() here, please introduce a generic
+> > helper in include/linux/usb.h (or a USB input helper in
+> > include/linux/usb/input.h) that formats the USB path together with the
+> > subpath in a single pass, for example:
+> > 
+> > __printf(4, 5)
+> > int usb_make_subpath(struct usb_device *dev, char *buf, size_t size,
+> > 		     const char *fmt, ...);
+> > 
+> > (or a simple const char *suffix variant if formatting is not needed).
+> > Then each driver can do:
+> > 
+> > 	usb_make_subpath(udev, pxrc->phys, sizeof(pxrc->phys), "input0");
+> > 
+> > and even drivers/hid/usbhid/hid-core.c can simply do:
+> > 
+> > 	usb_make_subpath(dev, hid->phys, sizeof(hid->phys),
+> > 			 "input%d", intf->altsetting[0].desc.bInterfaceNumber);
+> > 
+> > instead of repeating this strnlen() + strscpy() boilerplate everywhere.
+> 
+> I'm all for that too, and putting it in the USB core for everyone to use
+> would be great.
 
-Introduce a new plugin that can insert barriers after every load/store
-to memory to make it easy to verify if a given bug is due to a missing
-barrier.
+Hi Dmitry, Greg,
 
-Testing:
-To test this plugin on IBM Power systems, I reverted the commit
-bb9b52bd51dc ("KVM: PPC: Book3S HV: Add missing barriers to XIVE code and document them").
+Thanks for the suggestions and review. I'll respin the series on top of a
+new helper in USB core.
 
-I was able to see lockups in the KVM guest with the commit reverted. I
-then used the barriers plugin to insert barriers, and noticed that the
-lockups were no longer observed in the KVM guest.
+Thanks.
 
-Assisted-by: LLM IBM-Bob
-Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
----
- scripts/Makefile.gcc-plugins          |   2 +
- scripts/gcc-plugins/Kconfig           |   6 ++
- scripts/gcc-plugins/barriers_plugin.c | 134 ++++++++++++++++++++++++++
- 3 files changed, 142 insertions(+)
- create mode 100644 scripts/gcc-plugins/barriers_plugin.c
-
-diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
-index b0e1423b09c2..cefc1cdad8df 100644
---- a/scripts/Makefile.gcc-plugins
-+++ b/scripts/Makefile.gcc-plugins
-@@ -8,6 +8,8 @@ ifdef CONFIG_GCC_PLUGIN_LATENT_ENTROPY
- endif
- export DISABLE_LATENT_ENTROPY_PLUGIN
- 
-+gcc-plugin-$(CONFIG_GCC_PLUGIN_BARRIERS)	+= barriers_plugin.so
-+
- # All the plugin CFLAGS are collected here in case a build target needs to
- # filter them out of the KBUILD_CFLAGS.
- GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y)) -DGCC_PLUGINS
-diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-index 6b34ba19358d..d73e00fbb732 100644
---- a/scripts/gcc-plugins/Kconfig
-+++ b/scripts/gcc-plugins/Kconfig
-@@ -36,4 +36,10 @@ config GCC_PLUGIN_LATENT_ENTROPY
- 	   * https://grsecurity.net/
- 	   * https://pax.grsecurity.net/
- 
-+config GCC_PLUGIN_BARRIERS
-+	bool "Insert barriers after every load/store"
-+	help
-+	  By saying Y here barriers will be inserted after every load/store
-+	  instruction.
-+
- endif
-diff --git a/scripts/gcc-plugins/barriers_plugin.c b/scripts/gcc-plugins/barriers_plugin.c
-new file mode 100644
-index 000000000000..54ee8b12e77b
---- /dev/null
-+++ b/scripts/gcc-plugins/barriers_plugin.c
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include "gcc-common.h"
-+
-+#if defined(__powerpc__)
-+# define BARRIER_ASM "sync"
-+#else
-+# define BARRIER_ASM ""  /* compiler barrier only: asm volatile("" ::: "memory") */
-+#endif
-+
-+__visible int plugin_is_GPL_compatible;
-+
-+static struct plugin_info barriers_plugin_info = {
-+	.version = PLUGIN_VERSION,
-+	.help = "Insert barriers after every load/store instruction\n"
-+};
-+
-+/*
-+ * Return true if this GIMPLE statement performs a non-stack memory access.
-+ */
-+static bool is_mem_based(tree expr)
-+{
-+	switch (TREE_CODE(expr)) {
-+	case MEM_REF:
-+	case INDIRECT_REF:
-+	case TARGET_MEM_REF:
-+		return true;
-+	case COMPONENT_REF:
-+		return is_mem_based(TREE_OPERAND(expr, 0));
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool gimple_has_mem_access(gimple stmt)
-+{
-+	if (gimple_code(stmt) == GIMPLE_CALL)
-+		return true;
-+
-+	if (gimple_code(stmt) != GIMPLE_ASSIGN)
-+		return false;
-+
-+	if (is_mem_based(gimple_assign_lhs(stmt)))
-+		return true;
-+
-+	if (is_mem_based(gimple_assign_rhs1(stmt)))
-+		return true;
-+
-+	return false;
-+}
-+
-+/*
-+ * Build a GIMPLE statement for "asm volatile(<barrier_instn> ::: "memory");".
-+ */
-+static gasm *build_mb_asm(void)
-+{
-+	vec <tree, va_gc> *clobbers = NULL;
-+	gasm *stmt;
-+	tree clob = build_tree_list(NULL_TREE, build_const_char_string(7, "memory"));
-+
-+	vec_safe_push(clobbers, clob);
-+	stmt = gimple_build_asm_vec(BARRIER_ASM, NULL, NULL, clobbers, NULL);
-+	gimple_asm_set_volatile(stmt, true);
-+	return stmt;
-+}
-+
-+static unsigned int insert_barriers_execute(void)
-+{
-+	basic_block bb;
-+	unsigned int i;
-+	gimple_stmt_iterator *gsi_p;
-+	gimple stmt;
-+	gasm *barrier;
-+
-+	FOR_EACH_BB_FN(bb, cfun) {
-+		/*
-+		 * Collect the iterator positions of all memory-accessing
-+		 * statements first, then insert. Inserting while iterating
-+		 * would visit the newly-added asm statements on the next step.
-+		 */
-+		auto_vec <gimple_stmt_iterator> to_instrument;
-+
-+		for (gimple_stmt_iterator gsi = gsi_start_bb(bb);
-+		     !gsi_end_p(gsi); gsi_next(&gsi)) {
-+			stmt = gsi_stmt(gsi);
-+			if (!is_gimple_debug(stmt) && gimple_has_mem_access(stmt))
-+				to_instrument.safe_push(gsi);
-+		}
-+
-+		FOR_EACH_VEC_ELT(to_instrument, i, gsi_p) {
-+			barrier = build_mb_asm();
-+			gsi_insert_after(gsi_p, barrier, GSI_CONTINUE_LINKING);
-+			update_stmt(barrier);
-+		}
-+	}
-+	return 0;
-+}
-+
-+#define PASS_NAME insert_barriers
-+#define NO_GATE
-+#define PROPERTIES_REQUIRED  PROP_gimple_any
-+
-+#include "gcc-generate-gimple-pass.h"
-+
-+__visible int plugin_init(struct plugin_name_args *plugin_info,
-+			  struct plugin_gcc_version *version)
-+{
-+	const char * const plugin_name = plugin_info->base_name;
-+	const int argc = plugin_info->argc;
-+	const struct plugin_argument * const argv = plugin_info->argv;
-+	int i = 0;
-+
-+	/*
-+	 * Run before "ssa", the entry to the main GIMPLE optimization pipeline.
-+	 * At this point no memory-access reordering has occurred yet, so the
-+	 * inserted barrier statements are seen by
-+	 * all subsequent passes and act as both compiler and hardware barriers,
-+	 * exactly like the kernel's smp_mb() macro.
-+	 */
-+	PASS_INFO(insert_barriers, "ssa", 1, PASS_POS_INSERT_BEFORE);
-+
-+	if (!plugin_default_version_check(version, &gcc_version)) {
-+		error(G_("incompatible gcc/plugin versions"));
-+		return 1;
-+	}
-+
-+	/* Give the information about the plugin */
-+	register_callback(plugin_name, PLUGIN_INFO, NULL,
-+						&barriers_plugin_info);
-+
-+	register_callback(plugin_name, PLUGIN_PASS_MANAGER_SETUP, NULL,
-+					&insert_barriers_pass_info);
-+
-+	return 0;
-+}
-\ No newline at end of file
--- 
-2.55.0
-
+--
+Shihuang Liu
