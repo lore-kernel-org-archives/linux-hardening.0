@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D333E5EE7;
-	Mon, 19 Oct 2026 06:00:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E4E3E5EE7;
+	Mon, 19 Oct 2026 06:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792389655; cv=none; b=DCOxXwr3ECVjaYCWaKDCAch1hjj3ETof6+REDwwDRm8BT/3drs6DUKqaxhiMzuzptpGvSiZYanQjVs54bNXlAJS9IODi3nIEvC4Knco53xR4VEVdKOhOu+LgEYLe0cA/3B/6JutTKojGi9rUu0j6DuUtEaANt8y/za+oZY77baE=
+	t=1792389711; cv=none; b=XGr6sy3Mn2rhPVTAFl7kZBCbEjsWsQrt0XbIVT+o1+0OJbYNcqyJQ5ta0WkoWc+LcCN+Caa66sRDKO7ij4nsiumnm9Xmrw1/9L8NF8yuR243j9dfZdEWoMjeDz2QmWjuOROrvzADFPB5NjiLeOlcBGBdhka5QuY2mkaHFmA0MGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792389655; c=relaxed/simple;
-	bh=7quTRFphz4yNtwm02mJ5+bRkGYJqbCC4+RsFZyyoHWs=;
+	s=arc-20240116; t=1792389711; c=relaxed/simple;
+	bh=SfevGECX3atyQdwN8SmBVPw0REzDgaWVYDpS8d+k4dQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kglzsg2eBvtLO4BjQQUNMBwfZl1ddPUeX2RjHboUgaSU9rXmE8m5nahV74oUXm7YSKcd9OUvm+0vy/vbNhJ5VCC8APXs7sVVQ/flwspQprQ6/kiVbj85cMHiPRe7ujiIGx/Pa+6DtxTeJw28BwpR7dBRWwvLTqt0x//fnnXmCpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zbpz5q5+; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=d0wdEbnFGGuVQ4kiY1YW1XVl77XnJfdw4I0v1D6Tctj8eTrATZefE4bSPRoPRKGwMkT3U+aCxj3XeVOE+zT1s6xu0o/V0JwydRBJlWFpmthE8A1aoEewnNoKLWLrv/5u162RNzC5umUr3cRBQ06vkVUcDKBv36yLjf4H30fJpTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BOVrdr7S; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zbpz5q5+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9A441F000C4;
-	Mon, 19 Oct 2026 06:00:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BOVrdr7S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5341B1F000C4;
+	Mon, 19 Oct 2026 06:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792389651;
-	bh=hL5PQEK/ie9WfNiFzlAjb8P6kM5LwoPPjq6aWCCppCc=;
+	s=k20260515; t=1792389710;
+	bh=guAxLVnBrzbtbLtxdX+Xt+/dnElaoi1SWUVPVVVeGrc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Zbpz5q5+6RVkJa2gx9yrULY66JBVQz6RjOFTSlHqlXNAAT3zSgoZlF78ffGQ1xwRb
-	 Iwh/3hF1S2K6upOfbfK7Iha58xCpcuPn5EFFGbd2V1BI/EUwx0jgPsJQ453dzbWLFo
-	 Mcq0MNYYZDwRqfkIhOKSZ7kauhqTFhEsckaoB8uwbDHn+R4IDM5YG5lmJAIMvAs+bS
-	 BqjG4zp/5K+IJ/pjA1u+orH6J1v7EkhXM3Oj+C4oMauYCi5ZtWGYlyN9lOcpZhxs1/
-	 VaDXm4qFEc6gXqip0jrt+9mFkO/HsG/GPk5jpuaZHHv4VwWnxn0ea2zlsFqb+xzjOR
-	 Jw+UtE1+PJzlA==
-Message-ID: <c84d861a-2e28-45b0-80c8-e533864d5e6c@kernel.org>
-Date: Mon, 19 Oct 2026 08:00:42 +0200
+	b=BOVrdr7S1kpxFlTBlvGTTGpb/xCPqoF8qa5rcp1V4dPrSCpGrFYUWC5weE+cI72Mf
+	 dyQAbG1Z9Y2+qOU0AKfuNn9jpG+AiYpQ6nrpKjZJRwaOgrDyHW5/4jz66Y8/CL1Gi+
+	 NzfBG9uWXuIW2eaRpS8DJaejOTDhmjWZeus+l6niUdUND6QuJRAKZnd4t/WHBSAjOa
+	 g9T1e4QRVgtIMaVlVcdI64exDExwfiFgMRDWpN8BNDWX3o72D49wFr2mDvPYXhK3iG
+	 woW8YeTF8tJuVcFwbpQTjlBr9Xpx+d4dxe9m8CPXEZ431o3jlQmau7SQXnPqli2Hx0
+	 18a9pqexMSGHw==
+Message-ID: <2f656848-5f03-40c6-88fa-d1fdae10a03c@kernel.org>
+Date: Mon, 19 Oct 2026 08:01:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -102,82 +102,6 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 19/10/2026 07:34, Junyi Zhao via B4 Relay wrote:
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,i3c-a9
-> +      - amlogic,i3c-ao-a9
-
-What is ao?
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-
-Names go here
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +unevaluatedProperties: false
-
-This goes before example
-
-> +
-> +if:
-
-And this in allOf, see example schema or other bindings.
-
-> +  properties:
-> +    compatible:
-> +      const: amlogic,i3c-a9
-> +then:
-> +  properties:
-> +    clocks:
-> +      items:
-> +        - description: APB peripheral clock
-> +        - description: I3C fast clock
-> +    clock-names:
-> +      items:
-> +        - const: pclk
-> +        - const: fast_clk
-
-That's just fast
-
-minItems: 1
-
-> +else:
-> +  properties:
-> +    clocks:
-> +      maxItems: 1
-> +    clock-names:
-> +      items:
-> +        - const: fast_clk
-
-maxItems: 1
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
 > +    i3c@3a7000 {
 > +        compatible = "amlogic,i3c-a9";
 > +        reg = <0x3a7000 0x10000>;
@@ -188,28 +112,9 @@ maxItems: 1
 > +                 <&clkc 16>;
 > +        clock-names = "pclk", "fast_clk";
 > +        status = "disabled";
-> +    };
-> +
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    i3c@22000 {
 
-Drop, one example is enough.
 
-> +        compatible = "amlogic,i3c-ao-a9";
-> +        reg = <0x22000 0x10000>;
-> +        interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-> +        #address-cells = <3>;
-> +        #size-cells = <0>;
-> +        clocks = <&clkc 17>;
-> +        clock-names = "fast_clk";
-> +        status = "disabled";
-> +    };
-> +...
-> 
-
+Drop, your binding was not actually tested.
 
 Best regards,
 Krzysztof
