@@ -1,76 +1,41 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE093A7193
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 06:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6373F7AAC;
+	Mon, 19 Oct 2026 07:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792393177; cv=none; b=nMaPMaB0DHnfnQfjJRrDqvHdMeGtJN50he8IPDEA2MguADty2AZTtImGQG/g4X31zYSC04tuiQ3M7PNzaVpQFwQ6/797q15qHNRqBhD5Lmbg9F1asfzow8BTvYyJaHJFGmYRN94oqSUXQNOvzs4RBdnGZek+z8AG9psWROtwxpE=
+	t=1792394395; cv=none; b=Ld+CIE/C52Afw9jy9v2s/Moz4kSlxtUUS67lML4nPGMw0E2NTtEgS+oziVQNlaubNMwlwPBrQaQwZOkhZvHdvZUckwHraEWHQjtEzbZNIVySkgW4e60l192F4k85aowuV44nsauXpgCD6nXQHBtxyc70FCiARPH4FalXdNkzp1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792393177; c=relaxed/simple;
-	bh=LLMb/HyjYW37Kr2Mya1c8bPVTQR1GTIw0/aQgy8v0sM=;
+	s=arc-20240116; t=1792394395; c=relaxed/simple;
+	bh=X8VHIr51Q3eJOWpF/LhXJx0/7iNxyaqY1pU7380tdnU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Egg0hkQnQsC4/4B3TPgbIxJXGa5zx/C/7/ADHG1VXOpiBc/q/iO3gGu2/Oyzaqjlqb5aOfwHgK/eLgBgrZz0eeUNXiEJV9l7LFcD1u5rS5QW9qAyRLCBinnLuObuddMgCoBiNut2cVyFEmOp1xL7jXdN2L/SM86sFNd+P1BlUBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=plZ6Ae7U; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pM6LOWnHkmyVdd4rDhXuOybRZU8CeLsgDFmZbkVLBsnZnLodkxWH/qiOY95Dh95ncTbjJqwIZELhK9M7O9AcuoxNzvTh1IfNPlgiGQ3ktqSFXGM9A4O4YaFHOWVCZxoP5K+CJnP+D5wHlDSjFBr4osvxKapXBq0pHUj03aZC1Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D07YgRwi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="plZ6Ae7U"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-48e00eee27dso805316f8f.0
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Oct 2026 23:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1792393174; x=1792997974; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=LLMb/HyjYW37Kr2Mya1c8bPVTQR1GTIw0/aQgy8v0sM=;
-        b=plZ6Ae7U9Y49u8L8zdVLZqH67YBg9bHy9+JJCR3KF1uJR3dlsii0pc4KZDCorxHKN9
-         tDcuXhrN8DsXy7jc9YchdgnH4XYcihrs5Wr9tSlnVUSSmp462YqYa2m3Zx0rWoQyPp5d
-         TL1HM9/s4aXpIE3H/BzEUm6LA0IiF9tawTYDMefwvsfAVuuoshM3CfvJ/VJwbFlB0gsY
-         97YqeWlrUyyVvjPHK/qYigdKMiEzcSC3j6ocqVDG0PMDzGGvBU/PQyNIdlvwgcvhX4+c
-         DXuUjF3ccLeD9wF0Ec5hoTdDVon5h0ZhVtXfkqvsFA6JXsvc/u7TSfAa2EI3RMpCTYvd
-         LfMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792393174; x=1792997974;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=LLMb/HyjYW37Kr2Mya1c8bPVTQR1GTIw0/aQgy8v0sM=;
-        b=riPDPkDO1CHnRPkHP36NdAT0Dcf+Ibc4z7rjA+E+NsdIS2zKrQTsRm8sVlKDs3asmF
-         zrJtPJ6kmg8taA6Ul/yVSjVoIA3ppFDPotn2qOZRmrekKNAIItMQCmi+oqnfyZXnSUxr
-         QeyGt+UUFtFkq1h4Q7dny1RSCWrovSbSBM8/jM0JCqRsYfdEoAUkQSU2H39uNAZhYenE
-         MMfRKih+15HQ+KHXwUfxm0nixj155lqD7I5uD1X/snsu3kh/YRIACITZAo9Yu9CcNXzw
-         CupRAZYlMZ58MMGP5atFffwzH9AHDLgvhw3CU+WgaL2r37/EgqiWlwLm1YOYc4XH22Q3
-         xbJA==
-X-Forwarded-Encrypted: i=1; AKwUvByY/p/L8SzpjOM4i5CRiAfOGduyToYWGyRyeP2x7muEqDvaT2jMYN0j1BT2v6/tkwJ7oqpGQEEEDcM3RbBuMDg=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIXytv4zlkdgXm16/ZCdfR3wYoDAkIbAsZC6RJ2WShbtS7PiHqb
-	n0lJkkmjuAoFYyknJGVrV9qhwnscJB1RnO0iTyYkcSxp0RkjfUXnOJW6dcKIP8okXdE=
-X-Gm-Gg: AYBFou15dw+VkKODGpTSa24Vvfx/mqKCb6/0ETCSwIyPtKFtH8K3g2FKkUYBMQzNxi7
-	I+VSIdV0RGUScDCqJAaRCvlBGgYDL/Albboj38Ht/UXES7YpMKF9rmVV0JFJRSiNbkPlaOV+ZFB
-	owhvfbVRTgzIoPvUD6AdTCvmAqLJ+76nGimkWu5BTlNGRAWqpR5xQA6ZgXsC5yBZBsOnz0nS9ra
-	7SGIdyZmgqeX+MFWlJ2otT+Q67jVN3zAYwvr/uKNYlwArpnkIyLEaFRk3g64Mn8RtcA/dC2jvjQ
-	MpabW8V7P7Jco567Jyi6GIXkYqqhz3InlQ6Y06QU10sLfjgimlBgoAJeagPasWJ5xG6tQFH+IdI
-	1+MCQ5EJuAa7pOdUv9+Nfzea+llQjKA/0bUvpPXoeLo4nU1aZN27KlfQ1n6hFlaZG28fGefuYqU
-	1bJX5wpxjQtAp7FoT/UWXAfg+Cfb94c2jHajWLhQ6dxAVv07cqrqhxHip/sMPvQE+anqpp150xe
-	kW5M1ckVQQmn0s81cRYDuUj9oZoZP26bJxn9OUbEw/un7MvymCzXunglw5QCPA=
-X-Received: by 2002:a05:6000:ad0:b0:48e:791:1cb with SMTP id ffacd0b85a97d-48e07fa71d0mr8663688f8f.35.1792393174300;
-        Sun, 18 Oct 2026 23:59:34 -0700 (PDT)
-Received: from localhost (p200300f65f19a9041674bacf58593a35.dip0.t-ipconnect.de. [2003:f6:5f19:a904:1674:bacf:5859:3a35])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-48dfd471877sm17855976f8f.1.2026.10.18.23.59.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Oct 2026 23:59:32 -0700 (PDT)
-Date: Mon, 19 Oct 2026 08:59:31 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Ross Cawston <ross@r-sc.ca>
-Cc: andi.shyti@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, kees@kernel.org, gustavoars@kernel.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] i2c: add driver for GPIO buses sharing one SCL line
-Message-ID: <atW_fsT6BKTsgB7o@monoceros>
-References: <20261018194315.945-1-ross@r-sc.ca>
- <20261018194315.945-3-ross@r-sc.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D07YgRwi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C8F51F000C4;
+	Mon, 19 Oct 2026 07:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792394394;
+	bh=daX9sX15P/KMXP1Bmy3X8p+3DDaxkC96hlWwTodhy34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=D07YgRwiGM80JtRd6S5CmAHS/DuFBK5r0lI2tQrRHijKa8alEjREeD6DQ7ukzujAy
+	 PvpwKEdYDafTMlp+AL0zzvQ7Twl5cNrKe0S7TNdXWDfp5iJGyyAH+7fnO/f4JXNVUZ
+	 5aunfZEKtWySRjkdVm6fuJow4xpi3/rjXOhD8gIaZ1hGAVUSEr2T9YnlNMLCYQia5D
+	 jek4PqqZnVQe9bkrzKmTfFA+Na+VdZbYhlbugfrvN9eds+Q9pwIShnAHawxCc+qhs1
+	 PtRcX/pv0wWubLFPUu+vJ3p3OteiiEt5JBWJtgYBvuo+iedxe60ue37ZzpUVoH99z9
+	 /SiP5bKlhSANA==
+Date: Mon, 19 Oct 2026 09:19:48 +0200
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Iurii Trukhin <yuri@trukhin.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] checkpatch: add vmalloc() and vzalloc() to alloc with
+ multiplies check
+Message-ID: <atXD1bP8NqDfnaoE@debian>
+References: <CAOx7e9K707oLMN94TC=FBBZYKnwACsN-8mDVjsL+N+BBCmWTOA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -78,42 +43,174 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="37wd2qfgr3nnmrjd"
+	protocol="application/pgp-signature"; boundary="4ff7hxtbwsljtdcm"
 Content-Disposition: inline
-In-Reply-To: <20261018194315.945-3-ross@r-sc.ca>
+In-Reply-To: <CAOx7e9K707oLMN94TC=FBBZYKnwACsN-8mDVjsL+N+BBCmWTOA@mail.gmail.com>
 
 
---37wd2qfgr3nnmrjd
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--4ff7hxtbwsljtdcm
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
-Subject: Re: [PATCH 2/2] i2c: add driver for GPIO buses sharing one SCL line
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Iurii Trukhin <yuri@trukhin.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] checkpatch: add vmalloc() and vzalloc() to alloc with
+ multiplies check
+Message-ID: <atXD1bP8NqDfnaoE@debian>
+References: <CAOx7e9K707oLMN94TC=FBBZYKnwACsN-8mDVjsL+N+BBCmWTOA@mail.gmail.com>
 MIME-Version: 1.0
+In-Reply-To: <CAOx7e9K707oLMN94TC=FBBZYKnwACsN-8mDVjsL+N+BBCmWTOA@mail.gmail.com>
 
-On Sun, Oct 18, 2026 at 12:43:15PM -0700, Ross Cawston wrote:
-> +#include <linux/mod_devicetable.h>
-> [...]
-> +#include <linux/platform_device.h>
+Hi Iurii, Kees,
 
-<linux/platform_device.h> already provides of_device_id, so there is no
-need to also #include <linux/mod_devicetable.h> which also pulls in a
-lot of unneeded dependencies.
+> Date: 2026-10-14 20:20:06-0400
+> From: Iurii Trukhin <yuri@trukhin.com>
+>
+> vmalloc() and vzalloc() have 2-factor multiplication argument forms
+> vmalloc_array() and vcalloc() in <linux/vmalloc.h> that protect against
+> integer overflow during size calculation.
+>=20
+> Commit 070580b0b174 ("checkpatch: Suggest kmalloc_obj family for sizeof
+> allocations") updated ALLOC_WITH_MULTIPLY for the (kv|k)[mz]alloc()
+> family to suggest kmalloc_objs(type, count, gfp), while vmalloc_array()
+> and vcalloc() retain the (count, size) signature.
+>=20
+> Extend ALLOC_WITH_MULTIPLY to warn when vmalloc() or vzalloc() is called
+> with a 2-factor sizeof() multiplication and suggest vmalloc_array() or
+> vcalloc() respectively, including --fix support. Also include the 'v'
+> prefix in ALLOC_ARRAY_ARGS so swapped sizeof() first arguments to
+> vmalloc_array() and vcalloc() are flagged.
+>=20
+> Link: https://github.com/KSPP/linux/issues/342
+> Signed-off-by: Iurii Trukhin <yuri@trukhin.com>
+> ---
+>  scripts/checkpatch.pl | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 8a7787d228a6..651a46f1fc40 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -7355,10 +7355,11 @@ sub process {
+>  		}
+>=20
+>=20
+> -# check for (kv|k)[mz]alloc with multiplies that could be
+> kmalloc_objs/kvmalloc_objs/kzalloc_objs/kvzalloc_objs
+> +# check for (kv|k|v)[mz]alloc with multiplies that could be
+> +# kmalloc_objs/kvmalloc_objs/kzalloc_objs/kvzalloc_objs/vmalloc_array/vc=
+alloc
+>  		if ($perl_version_ok &&
+>  		    defined $stat &&
+> -		    $stat =3D~
+> /^\+\s*($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\=
+s*($FuncArg)\s*\*\s*($FuncArg)\s*,/)
+> {
+> +		    $stat =3D~
+> /^\+\s*($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*((?:kv|k|v)[mz]alloc)\s*\=
+(\s*($FuncArg)\s*\*\s*($FuncArg)\s*(?:,|\))/)
+> {
+>  			my $oldfunc =3D $3;
+>  			my $a1 =3D $4;
+>  			my $a2 =3D $10;
+> @@ -7366,6 +7367,8 @@ sub process {
+>  			$newfunc =3D "kvmalloc_objs" if ($oldfunc eq "kvmalloc");
+>  			$newfunc =3D "kvzalloc_objs" if ($oldfunc eq "kvzalloc");
+>  			$newfunc =3D "kzalloc_objs" if ($oldfunc eq "kzalloc");
+> +			$newfunc =3D "vmalloc_array" if ($oldfunc eq "vmalloc");
+> +			$newfunc =3D "vcalloc" if ($oldfunc eq "vzalloc");
+>  			my $r1 =3D $a1;
+>  			my $r2 =3D $a2;
+>  			if ($a1 =3D~ /^sizeof\s*\S/) {
+> @@ -7381,9 +7384,13 @@ sub process {
+>  					 "Prefer $newfunc over $oldfunc with multiply\n" . $herectx) &&
+>  				    $cnt =3D=3D 1 &&
+>  				    $fix) {
+> -					my $sized =3D trim($r2);
+> -					$sized =3D~ s/^sizeof\s*\S\(?([^\)]*)\)?$/$1/;
+> -					$fixed[$fixlinenr] =3D~
+> s/\b($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*(=
+$FuncArg)\s*\*\s*($FuncArg)/$1
+> . ' =3D ' . "$newfunc(" . $sized . ', ' . trim($r1)/e;
+> +					if ($oldfunc =3D~ /^v/) {
+> +						$fixed[$fixlinenr] =3D~
+> s/\b($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*(v[mz]alloc)\s*\(\s*($FuncAr=
+g)\s*\*\s*($FuncArg)/$1
+> . ' =3D ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
+> +					} else {
+> +						my $sized =3D trim($r2);
+> +						$sized =3D~ s/^sizeof\s*\S\(?([^\)]*)\)?$/$1/;
+> +						$fixed[$fixlinenr] =3D~
+> s/\b($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*(=
+$FuncArg)\s*\*\s*($FuncArg)/$1
+> . ' =3D ' . "$newfunc(" . $sized . ', ' . trim($r1)/e;
+> +					}
 
-Best regards
-Uwe
+Could the suggested fix add a typeof() to the first parameter?  The only
+reason (AFAIK) Kees avoided adding typeof() in the first parameter was
+to minimize churn, but if someone is going to fix new code, it would be
+better if they do it good.  The good thing about using types explicitly
+is that it's safer.
 
---37wd2qfgr3nnmrjd
+That is, it should suggest
+	kmalloc_objs(typeof(*p), count, gfp)
+instead of
+	kmalloc_objs(*p, count, gfp)
+
+
+What do you think?
+
+
+Have a lovely day!
+Alex
+
+>  				}
+>  			}
+>  		}
+> @@ -7397,7 +7404,7 @@ sub process {
+>  		}
+>=20
+>  # check for alloc argument mismatch
+> -		if ($line =3D~
+> /\b((?:devm_)?((?:k|kv)?(calloc|malloc_array)(?:_node)?))\s*\(\s*sizeof\b=
+/)
+> {
+> +		if ($line =3D~
+> /\b((?:devm_)?((?:k|kv|v)?(calloc|malloc_array)(?:_node)?))\s*\(\s*sizeof=
+\b/)
+> {
+>  			WARN("ALLOC_ARRAY_ARGS",
+>  			     "$1 uses number as first arg, sizeof is generally wrong\n" .
+> $herecurr);
+>  		}
+> --=20
+> 2.56.0
+>=20
+
+--=20
+<https://www.alejandro-colomar.es>
+
+--4ff7hxtbwsljtdcm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmrVv88ACgkQj4D7WH0S
-/k6ZaggAoHAnurvLGEP3L6zNx3w+6ff5baOUBRRssiTdUqhb5qRZJoYoVEr2Y3Eg
-iNbRJcltWL+Fb1/K3KMyPXBBDjMz8Y9SUVSIJpGTJcaWAjLYpUAxz6avmRzHKGbn
-nF2zqNHukyx3nLFqKPIMOk9EUxS+9MJknWtgi1zDwKJzOQL/9Ga5+pr6ZKqWZ+Wj
-hkZojOEmVsRVbjRcsa2lTp4hSxEkobPEHuN7x4tEWwF4atWSJfIHzf89kap0KIs2
-r7eJiCjHY0ActrFxfVE+Mynl5FHZLA0xJsJQpfB/J1G9h2Wf0EAzba+vQjGNYAIN
-CxJYxyMQGH1ehS326uzLwwPLFM1BAw==
-=ZSot
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrVxJQACgkQ64mZXMKQ
+wqnVnBAApUtNGBp60jKC0BMuYxaCCIdn4mwOdOGLXpExE48hZvSCLdd7DNi4FQWo
+6TygKtQlpR7iwUf5vaR/3Mca83rRr+ahnpW4AoHoHTd1mxb6GU69X4nvXItNGypT
+A3eObnJP0Mnc1gw1JfzzPbc5B1FVwGe2Y9Ox9kgy7eEWsfIsqiYpcLJy/3L/6S2+
+4a5QiAVyPamI5yFnhxJei3LhRaFxz03fm+s+kF0/h7/kuZs++0T6Ah0+ZpXEKsIn
+pczhvn1Hlh1s9b5gixSFlVid7r8AvDe6PfIIzepavou67qxHoaj8uFRJNRCGVr6o
+DBBAS6aovZHoVcZTEzD8h5zoe1t5UjwCDxpncydZTfsgoA4ydYDEU9gDo5Z6Ec2y
+rFdqpTpLCiUujSDs21skn9Gd+C6nySDeLqEXtG6XdsUgF3jkb4bWAnsbhBIbvMy1
+G40pKhKBVVCTCXjt6NVj3fg6Z4NkeptGudPZUOXvONKQAmGaPUF8kUV3jZ4GfwZh
+ROH+VDZcNNdNODZI6ngHMqgsMvIuFEQmuLAp4pWlTFoDqfdGDwODk6CAXOvqGtdG
+TSYUyd0kQEa6dViBBuIYTKlgdnSQ7ftnxNE+cYBScIH+GpCw7Qij9RvuaWfqnYc6
+qWTOly0KobE3APerL2WmJbEOEjgm3jHyE55n0EJ2pay2J1wGkCw=
+=bHVP
 -----END PGP SIGNATURE-----
 
---37wd2qfgr3nnmrjd--
+--4ff7hxtbwsljtdcm--
