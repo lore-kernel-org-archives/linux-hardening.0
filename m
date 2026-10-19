@@ -1,446 +1,353 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8B049364A
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 07:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB5E48E0C8;
+	Mon, 19 Oct 2026 07:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792395618; cv=none; b=aebw9KBDZ5DvWOSisQeIwjIcD4b5M3ogqq+nqBrHfcTaI5IEpRBcbd2nkQJ9kFFDlVuZGeRlzGqRGNV3cXwtmHRnnJ+L7rUTCw5GBVhKsEHq/f/gtiK4stubTPQxzdW/1S7ZtgQNTkGpN9nqH3t+bmbVIRmUt+g9QOC2zHEe8dI=
+	t=1792396113; cv=none; b=fT5aYLPnUmrOzpYEsYrtbimEoWffAJPQdJx6MQ5ObJHN9j2jxrf3lJUyrskghat8rzNFzrzmxqC4F7b+mulcfHMNPVbKGKSrQsnYA/TPxJAjQ7xFZNFz1E+iYQVsqDmbE7WISJMx+5w3h61YpmYQO4htwB0WuaVleWprq3CTwNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792395618; c=relaxed/simple;
-	bh=DT7tWGRorHL45umJe9t2q7qTRzJoJLjHRBL+ufDbIcQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=IEGRE35mhluXK+6W5py1UQDmeVAT1XPVWTDs2KV6IJGxYEBWjwk+9spNkps5AX+gLWOpUMn5smaXj/wAnLz3p+R5XG4lVJcKOP48SUKGtzKkNvTnFiXYGtk2d42/ALWnEpthNnsjKneqKIzKM6zyzsCFxKLF/HWcO0xeG00jDpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V8PhslIJ; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1792396113; c=relaxed/simple;
+	bh=HwvIyERcTboKVk5ALtRMpcsMVGSoX9OJsNLH4jPAD9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e1gu5BD8iJwOlj27qu2zujujiUGqLplWr+mf2feSt1dNteFgoMa0dHHIB7OsdMdiroIbGx3WcpqqCphEv7AXwEoPfrOrQ1w2JYedqwLbfO2DQ2gvs/H+XES7TQYl7xheGi0JvlTx7Uhuzf55wop7ej0HkY5hJN+0NkJeE9KrIRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtLPwN45; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V8PhslIJ"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-48b0584ad71so1115634f8f.0
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 00:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1792395605; x=1793000405; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:organization
-         :autocrypt:content-language:references:cc:to:subject:reply-to:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=M0SUy48Ueh56GzaTiRmwygfsPwqE3Nw6AJaFjvfAhy4=;
-        b=V8PhslIJ14XACrtgoMAmVuPVPo2pHG4PYU/w4DtQwo4DnFh0YXKu0WtcrkGz2W4sRJ
-         f2fHYtbLEzMf7wpRMPwMGYIywrxcqjUwmpCwczxQqxpvk0E1EIbud96W3tttWNQrjASR
-         t7gfNVbcaQ777RXYT3yuxK4hUC6fJ15bPprWIzQ9/TAbvjMr8nK7Jjo7bdum2L7G1Cjb
-         i8Dc/LDVU3CNqUQcD/9aTgJZE3DNAIM7sr/qdjWSzsPzsFzvXir2rER5hiZNh4yU4N1d
-         jBRAMNlE0JRREDTI7/6ZZuT94P99f1bqW8YSX6UqrxSxIXnKXweEPp/WbukboCA/jrdu
-         uIkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792395605; x=1793000405;
-        h=content-transfer-encoding:content-type:in-reply-to:organization
-         :autocrypt:content-language:references:cc:to:subject:reply-to:from
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=M0SUy48Ueh56GzaTiRmwygfsPwqE3Nw6AJaFjvfAhy4=;
-        b=rmQZ2Jbzo6ylnk5dSQzBiMiijqHPi1qXJR9Px8h/XaqRdGfq1AqhS6hEYElL1UiDSZ
-         NGaN2leh7mA+0WUkgBoZyt5rFu1kaNBcjay/2gZDaOtd59b2r3VKtOhjlyY7tAJAbeB9
-         wit+Gwx5ilKmn2P0CxHeDFiQVklR5M/KAuXv5mb/m0LUeg/GMPdq1/WMDun9uI844Jpl
-         VruFhIkGg88C2aEwV2MA1XD0yqGgieeJDcq5VXDoLLNS3h2YNZyOTPwt/cDIdcSHeOoY
-         8z3FOVfRLRqo6u6V6gipiXDeybyYdn2qqhrJiaIKrScOA1bXA3uGKEcSYYPyXibiHP35
-         /jeA==
-X-Forwarded-Encrypted: i=1; AKwUvByn/doYVFRqCdlLdqpDZyVeoaLLmympMlPc+nNlDCfUxsXVUw4MyPske/jWYoFCB/LUhqJgXHUmKRa2TdC+1U4=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKm5Ixexf/G2lWNZ3jZjDDW1k1juA20+B334kYIXwVPR/R4X5JL
-	ukNuv2QYJtpmQ+IQNJBnR2ZZ1zIERDKAHUBfTn7tRF8E1cD7vCb6rX2CV49enRTdFxM=
-X-Gm-Gg: AYBFou3lLbg1W8BLCgbJFhePvKTMlrifA9lOYaNUBq+4YG2n4zZ8LJG/o0b9TDj5Kr2
-	zD3F8WeXMjtQu/6NGuyNDeysM51nPq1Ws6inb69bLWTFYAA+pj9sY6XjNHEygZh9sWL5alB/Unk
-	9wyx3AlqiH39CyPclLUUhySuXjnFAICx8ooS6doWT7Iu82C36GKXqVoZJeVAiYjeYn+ZYfCHnSu
-	EJ2k7qP4TJ0xmLa8vq8fs5gETOGBOKkS58FpuqTv946PQbWe1GwzgdHX9lHNqkVnPHw4LkmrEW6
-	VdOsk4b0+vIr6men5Ra0eMBaR+VDEaHBoYYn0caYN6gko7Y2+UBZtMm4Ql67V/N4RneDR3IUdwy
-	ARgV3F91HHxZNl0b7pjdOp84meHRWk0A3Da16zkVco35jK5/kZ2+AJ7KgWXHpAlw6uo0I9jXow4
-	+59qCZkK121AKmfC2NMmUnv0Gb4TSzxGvdNsi6IaEd1NQXDxi+2GLpeFWyyZ1EFKYFrj4Ic4oQf
-	pAn2GOkV03jVQ4QOJTF5CXVnr372UzVeo8FfDZTjPOyLSRlJIO94A==
-X-Received: by 2002:a05:6000:29c6:b0:48b:5e2:52dd with SMTP id ffacd0b85a97d-48e07bbd36emr9726692f8f.11.1792395604385;
-        Mon, 19 Oct 2026 00:40:04 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:106d:1080:6674:33bf:38d6:bc10? ([2a01:e0a:106d:1080:6674:33bf:38d6:bc10])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd4f8bd9sm22298261f8f.35.2026.10.19.00.40.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Oct 2026 00:40:03 -0700 (PDT)
-Message-ID: <98df3ac1-c6ae-4acb-b0ee-ddda92487660@linaro.org>
-Date: Mon, 19 Oct 2026 09:40:03 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtLPwN45"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2171E1F000C5;
+	Mon, 19 Oct 2026 07:48:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792396111;
+	bh=UFe0OkQtMoIoH7uDUZIBKfcLV2DCg3uzYEgFzr/ymTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=KtLPwN45x/L2gyztWYH+o//fEXM9H/MYD6fMyepvBVwvRxpM63Oe1mtD7RnWNwvOD
+	 PKEQ7eFUw3ia0fL+NndH7UHvXplQUANE5tPcxlbsvLK0+3ul6LHr7rDt/UJR0MTfxC
+	 iIbCqN5id65LYAbtMZBJziezij1wjne62DCBTdobHW9Kx+Y08JcahECxP+0Iez5iUq
+	 xWVWAcHGJgMRAiJwPKLDnSmjTnFS+l/PaAst07LM+H64Hq6zKVBbeuUZNTM39pERAV
+	 rdio4KXkGKzvRuOTGLnNkfQjrboZ0y9GGlyJ3FEM7UwaiYqkptp+QRCaJsSIT0p0KU
+	 dXQtujp3GPwIA==
+Date: Mon, 19 Oct 2026 09:48:26 +0200
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Shihuang Liu <shlomojune6@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Marcus Folkesson <marcus.folkesson@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Ville Syrjala <syrjala@sci.fi>, Henk Vergonet <Henk.Vergonet@gmail.com>, 
+	Henrik Rydberg <rydberg@bitmath.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] Input: misc - replace strlcat() with strscpy()
+Message-ID: <atXHuHxCqqkIuV2w@debian>
+References: <20261016170411.51025-1-shlomojune6@gmail.com>
+ <20261016170411.51025-3-shlomojune6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 3/3] i3c: master: svc: Add Amlogic A9 glue layer
-To: junyi.zhao@amlogic.com, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Frank Li <Frank.Li@nxp.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, imx@lists.linux.dev,
- linux-hardening@vger.kernel.org, xianwei.zhao@amlogic.com,
- Kelvin.Zhang@amlogic.com
-References: <20261019-a9_i3c-v1-0-329d819d621f@amlogic.com>
- <20261019-a9_i3c-v1-3-329d819d621f@amlogic.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20261019-a9_i3c-v1-3-329d819d621f@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="do6dlx2k7e2qhtqq"
+Content-Disposition: inline
+In-Reply-To: <20261016170411.51025-3-shlomojune6@gmail.com>
 
-On 10/19/26 07:34, Junyi Zhao via B4 Relay wrote:
-> From: Junyi Zhao <junyi.zhao@amlogic.com>
-> 
-> Add support for the Amlogic A9 implementation of the Silvaco
-> SVC I3C controller.
-> 
-> The glue layer provides Amlogic-specific operations and resource
-> handling while reusing the common SVC I3C core driver.
-> 
-> Add a corresponding MAINTAINERS entry for the Amlogic I3C
-> controller.
-> 
-> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
+
+--do6dlx2k7e2qhtqq
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Shihuang Liu <shlomojune6@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Marcus Folkesson <marcus.folkesson@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Ville Syrjala <syrjala@sci.fi>, Henk Vergonet <Henk.Vergonet@gmail.com>, 
+	Henrik Rydberg <rydberg@bitmath.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] Input: misc - replace strlcat() with strscpy()
+Message-ID: <atXHuHxCqqkIuV2w@debian>
+References: <20261016170411.51025-1-shlomojune6@gmail.com>
+ <20261016170411.51025-3-shlomojune6@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <20261016170411.51025-3-shlomojune6@gmail.com>
+
+Hi Shihuang,
+
+> Date: 2026-10-17 01:04:08+0800
+> From: Shihuang Liu <shlomojune6@gmail.com>
+>
+> The ati_remote2, cm109, ims-pcu, keyspan_remote, powermate and
+> yealink drivers build the physical path by appending a constant
+> "/input0" suffix with strlcat() after usb_make_path().
+>=20
+> In preparation for removing the deprecated strlcat() API[1],
+> replace it with strnlen() followed by strscpy() into the remainder
+> of the buffer, as commit 34b228b739f5 ("HID: usbhid: replace
+> strlcat with better alternatives") did for the usbhid drivers.
+>=20
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> Signed-off-by: Shihuang Liu <shlomojune6@gmail.com>
 > ---
->   MAINTAINERS                          |   6 +
->   drivers/i3c/master/svc/Kconfig       |   7 +
->   drivers/i3c/master/svc/Makefile      |   1 +
->   drivers/i3c/master/svc/i3c-amlogic.c | 250 +++++++++++++++++++++++++++++++++++
->   4 files changed, 264 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index dffc63af2..478979446 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1398,6 +1398,12 @@ F:	Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
->   F:	drivers/media/platform/amlogic/c3/isp/
->   F:	include/uapi/linux/media/amlogic/
->   
-> +AMLOGIC I3C DRIVER
-> +M:	Junyi Zhao <junyi.zhao@amlogic.com>
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/i3c/amlogic,i3c-a9.yaml
-> +F:	drivers/i3c/master/svc/i3c-amlogic.c
-> +
->   AMLOGIC MIPI ADAPTER DRIVER
->   M:	Keke Li <keke.li@amlogic.com>
->   L:	linux-media@vger.kernel.org
-> diff --git a/drivers/i3c/master/svc/Kconfig b/drivers/i3c/master/svc/Kconfig
-> index 14fa1e542..df3528bc1 100644
-> --- a/drivers/i3c/master/svc/Kconfig
-> +++ b/drivers/i3c/master/svc/Kconfig
-> @@ -18,4 +18,11 @@ config I3C_SILVACO
->   	  compatible strings such as "silvaco,i3c-master-v1" and
->   	  "nuvoton,npcm845-i3c".
->   
-> +config I3C_AMLOGIC
-> +	tristate "Amlogic I3C support"
-> +	default y
-> +	help
-> +	  This selects the Amlogic SoC glue layer support for
-> +	  the Silvaco device driver. This driver is used for A9, C5 SoCs.
-> +
->   endif # SVC_I3C
-> diff --git a/drivers/i3c/master/svc/Makefile b/drivers/i3c/master/svc/Makefile
-> index cf18c5da6..695863d1f 100644
-> --- a/drivers/i3c/master/svc/Makefile
-> +++ b/drivers/i3c/master/svc/Makefile
-> @@ -3,3 +3,4 @@
->   
->   obj-$(CONFIG_SVC_I3C)	+= i3c-main.o
->   obj-$(CONFIG_I3C_SILVACO)	+= i3c-silvaco.o
-> +obj-$(CONFIG_I3C_AMLOGIC)	+= i3c-amlogic.o
-> diff --git a/drivers/i3c/master/svc/i3c-amlogic.c b/drivers/i3c/master/svc/i3c-amlogic.c
-> new file mode 100644
-> index 000000000..82300d6ae
-> --- /dev/null
-> +++ b/drivers/i3c/master/svc/i3c-amlogic.c
-> @@ -0,0 +1,250 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-> +/*
-> + * Copyright (C) 2026 Amlogic, Inc. All rights reserved
-> + */
-> +#include "i3c-main.h"
-> +#include <linux/math64.h>
-> +
-> +/* Amlogic specific registers */
-> +#define I3C_BG_RD_ADDR			0x200
-> +#define I3C_BG_WR_ADDR			0x204
-> +#define I3C_BG_WR_CTRL			0x208
-> +#define I3C_BG_R_TT_LEN			0x20c
-> +#define I3C_BG_X_CNT			0x210
-> +#define I3C_BUS_MON_CTRL		0x214
-> +#define I3C_BUS_MON_ADDR		0x218
-> +#define I3C_BUS_MON_DATA		0x21c
-> +#define I3C_BUS_MON_DATA_MAK		0x220
-> +#define I3C_CLK_SLOW_DIV_CTRL		0x224
-> +#define I3C_BG_R_WCNT_CLR		0x228
-> +#define I3C_DEBUG_MODIFY		0x22c
-> +
-> +#define I3C_AO_CLK_SLOW_DIV_CTRL	0x300
-> +#define I3C_AO_FCLK_DIV_CTRL		0x304
-> +#define I3C_AO_FCLK_DIV_MASK		GENMASK(7, 0)
-> +#define I3C_AO_FCLK_DIV_EN		BIT(8)
-> +#define I3C_AO_FCLK_EN			BIT(9)
-> +#define I3C_AO_DEBUG_MODIFY		0x308
-> +
-> +#define I3C_DEFAULT_FCLK_RATE		25000000UL
-> +
-> +struct amlogic_i3c_priv {
-> +	int num_clks;
-> +	struct clk_bulk_data *clks;
-> +};
-> +
-> +struct amlogic_i3c_drvdata {
-> +	int (*fclk_rate_init)(struct svc_i3c_master *master,
-> +			      struct clk *fclk, unsigned long rate);
-> +};
-> +
-> +static int default_i3c_fclk_rate_init(struct svc_i3c_master *master,
-> +				      struct clk *fclk, unsigned long rate)
-> +{
-> +	int err;
-> +
-> +	err = clk_set_rate(fclk, rate);
-> +	if (err)
-> +		return dev_err_probe(master->dev, err,
-> +				     "setting fast clock rate failed\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int ao_i3c_fclk_rate_init(struct svc_i3c_master *master,
-> +				 struct clk *fclk, unsigned long rate)
-> +{
-> +	unsigned int div_cnt, reg_val;
-> +	unsigned long fin_freq = clk_get_rate(fclk);
-> +
-> +	if (!fin_freq)
-> +		return dev_err_probe(master->dev, -EINVAL,
-> +				     "can't get I3C fast clock rate\n");
-> +
-> +	div_cnt = div64_u64(fin_freq, rate);
-> +	if (!div_cnt || div_cnt > I3C_AO_FCLK_DIV_MASK)
-> +		return dev_err_probe(master->dev, -EINVAL,
-> +				     "requested fast clock frequency too low\n");
-> +
-> +	reg_val = I3C_AO_FCLK_DIV_EN | I3C_AO_FCLK_EN | (div_cnt - 1);
-> +	writel(reg_val, master->regs + I3C_AO_FCLK_DIV_CTRL);
-> +
-> +	return 0;
-> +}
+>
+>  drivers/input/misc/ati_remote2.c    | 4 +++-
+>  drivers/input/misc/cm109.c          | 4 +++-
+>  drivers/input/misc/ims-pcu.c        | 8 ++++++--
+>  drivers/input/misc/keyspan_remote.c | 4 +++-
+>  drivers/input/misc/powermate.c      | 4 +++-
+>  drivers/input/misc/yealink.c        | 4 +++-
+>  6 files changed, 21 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/input/misc/ati_remote2.c b/drivers/input/misc/ati_re=
+mote2.c
+> index 8db2dca84975c..929163f52177e 100644
+> --- a/drivers/input/misc/ati_remote2.c
+> +++ b/drivers/input/misc/ati_remote2.c
+> @@ -767,6 +767,7 @@ static int ati_remote2_probe(struct usb_interface *in=
+terface, const struct usb_d
+>  	struct usb_device *udev =3D interface_to_usbdev(interface);
+>  	struct usb_host_interface *alt =3D interface->cur_altsetting;
+>  	struct ati_remote2 *ar2;
+> +	size_t len;
+>  	int r;
+> =20
+>  	if (alt->desc.bInterfaceNumber)
+> @@ -823,7 +824,8 @@ static int ati_remote2_probe(struct usb_interface *in=
+terface, const struct usb_d
+>  		goto fail3;
+> =20
+>  	usb_make_path(udev, ar2->phys, sizeof(ar2->phys));
+> -	strlcat(ar2->phys, "/input0", sizeof(ar2->phys));
+> +	len =3D strnlen(ar2->phys, sizeof(ar2->phys));
 
-You could also create a clock divider, register it and use a common clk_set_rate()
-for both setups.
+Why strnlen(3)?  ar2->phys should be a string, right?  If it is not,
+then we'd already have a buffer overread in strlcat(3), and then the
+commit should be reporting a bug fix.  This should use strlen(3)
+instead.
 
-Neil
+> +	strscpy(ar2->phys + len, "/input0", sizeof(ar2->phys) - len);
 
-> +
-> +static int amlogic_i3c_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	const struct amlogic_i3c_drvdata *data;
-> +	struct svc_i3c_master *master;
-> +	struct amlogic_i3c_priv *priv;
-> +	struct clk *fclk;
-> +	int ret, i;
-> +
-> +	master = svc_i3c_master_alloc(dev);
-> +	if (!master)
-> +		return -ENOMEM;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	master->drvdata = of_device_get_match_data(dev);
-> +	if (!master->drvdata)
-> +		return -EINVAL;
-> +
-> +	data = master->drvdata->bsp_data;
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	master->regs = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(master->regs))
-> +		return PTR_ERR(master->regs);
-> +
-> +	master->irq = platform_get_irq(pdev, 0);
-> +	if (master->irq < 0)
-> +		return master->irq;
-> +
-> +	priv->num_clks = devm_clk_bulk_get_all(dev, &priv->clks);
-> +	if (priv->num_clks < 0)
-> +		return dev_err_probe(dev, -EINVAL, "can't get I3C clocks\n");
-> +
-> +	for (i = 0; i < priv->num_clks; i++) {
-> +		if (!strcmp(priv->clks[i].id, "fast_clk"))
-> +			break;
-> +	}
-> +
-> +	if (i == priv->num_clks)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "can't get I3C peripheral clock\n");
-> +
-> +	if (IS_ERR(priv->clks[i].clk))
-> +		return PTR_ERR(priv->clks[i].clk);
-> +	fclk = priv->clks[i].clk;
-> +
-> +	ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "can't enable I3C clocks\n");
-> +
-> +	master->dev = dev;
-> +	master->bsp_priv = priv;
-> +	ret = data->fclk_rate_init(master, fclk, I3C_DEFAULT_FCLK_RATE);
-> +	if (ret)
-> +		goto err_disable_clks;
-> +	master->fclk_rate = I3C_DEFAULT_FCLK_RATE;
-> +
-> +	pm_runtime_set_autosuspend_delay(dev, SVC_I3C_PM_TIMEOUT_MS);
-> +	pm_runtime_use_autosuspend(dev);
-> +	pm_runtime_get_noresume(dev);
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-> +
-> +	ret = svc_i3c_master_probe(pdev, master);
-> +	if (ret)
-> +		goto rpm_disable;
-> +
-> +	platform_set_drvdata(pdev, master);
-> +	pm_runtime_put_autosuspend(dev);
-> +
-> +	return 0;
-> +
-> +rpm_disable:
-> +	pm_runtime_dont_use_autosuspend(dev);
-> +	pm_runtime_put_noidle(dev);
-> +	pm_runtime_disable(dev);
-> +	pm_runtime_set_suspended(dev);
-> +
-> +err_disable_clks:
-> +	clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
-> +
-> +	return ret;
-> +}
-> +
-> +static void amlogic_i3c_remove(struct platform_device *pdev)
-> +{
-> +	struct svc_i3c_master *master = platform_get_drvdata(pdev);
-> +
-> +	svc_i3c_master_remove(master);
-> +
-> +	pm_runtime_dont_use_autosuspend(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +}
-> +
-> +static int __maybe_unused amlogic_i3c_runtime_suspend(struct device *dev)
-> +{
-> +	struct svc_i3c_master *master = dev_get_drvdata(dev);
-> +	struct amlogic_i3c_priv *priv = master->bsp_priv;
-> +
-> +	svc_i3c_save_regs(master);
-> +	clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
-> +	pinctrl_pm_select_sleep_state(dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused amlogic_i3c_runtime_resume(struct device *dev)
-> +{
-> +	struct svc_i3c_master *master = dev_get_drvdata(dev);
-> +	struct amlogic_i3c_priv *priv = master->bsp_priv;
-> +	int ret;
-> +
-> +	pinctrl_pm_select_default_state(dev);
-> +	ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	svc_i3c_restore_regs(master);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops amlogic_i3c_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				      pm_runtime_force_resume)
-> +	SET_RUNTIME_PM_OPS(amlogic_i3c_runtime_suspend,
-> +			   amlogic_i3c_runtime_resume, NULL)
-> +};
-> +
-> +static const struct amlogic_i3c_drvdata amlogic_i3c_data = {
-> +	.fclk_rate_init = default_i3c_fclk_rate_init,
-> +};
-> +
-> +static const struct amlogic_i3c_drvdata amlogic_i3c_ao_data = {
-> +	.fclk_rate_init = ao_i3c_fclk_rate_init,
-> +};
-> +
-> +static const struct svc_i3c_drvdata amlogic_a9_drvdata = {
-> +	.quirks = SVC_I3C_QUIRK_FIFO_EMPTY |
-> +		SVC_I3C_QUIRK_FALSE_SLVSTART |
-> +		SVC_I3C_QUIRK_DAA_CORRUPT,
-> +	.bsp_data = &amlogic_i3c_data,
-> +};
-> +
-> +static const struct svc_i3c_drvdata amlogic_a9_ao_drvdata = {
-> +	.quirks = SVC_I3C_QUIRK_FIFO_EMPTY |
-> +		SVC_I3C_QUIRK_FALSE_SLVSTART |
-> +		SVC_I3C_QUIRK_DAA_CORRUPT,
-> +	.bsp_data = &amlogic_i3c_ao_data,
-> +};
-> +
-> +static const struct of_device_id amlogic_i3c_of_match_tbl[] = {
-> +	{ .compatible = "amlogic,i3c-a9", .data = &amlogic_a9_drvdata },
-> +	{ .compatible = "amlogic,i3c-ao-a9", .data = &amlogic_a9_ao_drvdata },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, amlogic_i3c_of_match_tbl);
-> +
-> +static struct platform_driver amlogic_i3c_master = {
-> +	.probe = amlogic_i3c_probe,
-> +	.remove = amlogic_i3c_remove,
-> +	.driver = {
-> +		.name = "amlogic-i3c-master",
-> +		.of_match_table = amlogic_i3c_of_match_tbl,
-> +		.pm = &amlogic_i3c_pm_ops,
-> +	},
-> +};
-> +module_platform_driver(amlogic_i3c_master);
-> +
-> +MODULE_AUTHOR("Junyi Zhao <junyi.zhao@amlogic.com>");
-> +MODULE_DESCRIPTION("Amlogic I3C master driver");
-> +MODULE_LICENSE("GPL");
-> 
+NAKing this.  This is precisely what strlcat(3)'s documentation in
+OpenBSD says you shouldn't do:
 
+	Since it is known how many characters were copied the first
+	time, things can be sped up a bit by using a copy instead of an
+	append:
+
+		char *dir, *file, pname[PATH_MAX];
+		size_t n;
+
+		...
+
+		n =3D strlcpy(pname, dir, sizeof(pname));
+		if (n >=3D sizeof(pname))
+			goto toolong;
+		if (strlcpy(pname + n, file, sizeof(pname) - n) >=3D sizeof(pname) - n)
+			goto toolong;
+
+	However, one may question the validity of such optimizations, as
+	they defeat the whole purpose of strlcpy() and strlcat().  As a
+	matter of fact, the first version of this manual page got it
+	wrong.
+
+<https://man.openbsd.org/strlcpy>
+
+The right approach is to have a function that does the right thing.
+There are two viable alternatives:
+
+-  Write strscat().  It would take the strlen() internally, and so it
+   would be unnecessarily inefficient.  Prefer the next one.
+
+-  Write stpecpy().  It returns a pointer, which allows chaining easily.
+
+Here's a viable implementation of stpecpy():
+
+	char *
+	stpecpy(char *dst, const char end[0], const char *restrict src)
+	{
+		ssize_t  dlen;
+
+		if (dst =3D=3D NULL)
+			return NULL;
+
+		dlen =3D strscpy(dst, src, end - dst);
+		if (dlen < 0)
+			return NULL;
+
+		return dst + dlen;
+	}
+
+This would need to be accompanied by a seprintf() too, which would be
+used by usb_make_path() to produce a pointer suitable for chaining.
+I've been working on adding those.
+
+If you want to keep it easy, I'd do strscat().  We can modify it later
+to be more efficient.  After all, we already have the inefficiency of
+calling strlcat(3) now.
+
+
+Have a lovely day!
+Alex
+
+>  	strlcat(ar2->name, "ATI Remote Wonder II", sizeof(ar2->name));
+> =20
+> diff --git a/drivers/input/misc/cm109.c b/drivers/input/misc/cm109.c
+> index 353d3c1d347d5..d3aee3c498702 100644
+> --- a/drivers/input/misc/cm109.c
+> +++ b/drivers/input/misc/cm109.c
+> @@ -685,6 +685,7 @@ static int cm109_usb_probe(struct usb_interface *intf,
+>  	struct input_dev *input_dev =3D NULL;
+>  	int ret, pipe, i;
+>  	int error =3D -ENOMEM;
+> +	size_t len;
+> =20
+>  	interface =3D intf->cur_altsetting;
+> =20
+> @@ -766,7 +767,8 @@ static int cm109_usb_probe(struct usb_interface *intf,
+> =20
+>  	/* find out the physical bus location */
+>  	usb_make_path(udev, dev->phys, sizeof(dev->phys));
+> -	strlcat(dev->phys, "/input0", sizeof(dev->phys));
+> +	len =3D strnlen(dev->phys, sizeof(dev->phys));
+> +	strscpy(dev->phys + len, "/input0", sizeof(dev->phys) - len);
+> =20
+>  	/* register settings for the input device */
+>  	input_dev->name =3D nfo->name;
+> diff --git a/drivers/input/misc/ims-pcu.c b/drivers/input/misc/ims-pcu.c
+> index b1a0edcc49b4e..697813fb11da8 100644
+> --- a/drivers/input/misc/ims-pcu.c
+> +++ b/drivers/input/misc/ims-pcu.c
+> @@ -205,6 +205,7 @@ static int ims_pcu_setup_buttons(struct ims_pcu *pcu,
+>  	struct input_dev *input;
+>  	int i;
+>  	int error;
+> +	size_t len;
+> =20
+>  	input =3D input_allocate_device();
+>  	if (!input) {
+> @@ -216,7 +217,8 @@ static int ims_pcu_setup_buttons(struct ims_pcu *pcu,
+>  		 "IMS PCU#%d Button Interface", pcu->device_no);
+> =20
+>  	usb_make_path(pcu->udev, buttons->phys, sizeof(buttons->phys));
+> -	strlcat(buttons->phys, "/input0", sizeof(buttons->phys));
+> +	len =3D strnlen(buttons->phys, sizeof(buttons->phys));
+> +	strscpy(buttons->phys + len, "/input0", sizeof(buttons->phys) - len);
+> =20
+>  	memcpy(buttons->keymap, keymap, sizeof(*keymap) * keymap_len);
+> =20
+> @@ -286,6 +288,7 @@ static int ims_pcu_setup_gamepad(struct ims_pcu *pcu)
+>  	struct ims_pcu_gamepad *gamepad;
+>  	struct input_dev *input;
+>  	int error;
+> +	size_t len;
+> =20
+>  	gamepad =3D kzalloc_obj(*gamepad);
+>  	input =3D input_allocate_device();
+> @@ -302,7 +305,8 @@ static int ims_pcu_setup_gamepad(struct ims_pcu *pcu)
+>  		 "IMS PCU#%d Gamepad Interface", pcu->device_no);
+> =20
+>  	usb_make_path(pcu->udev, gamepad->phys, sizeof(gamepad->phys));
+> -	strlcat(gamepad->phys, "/input1", sizeof(gamepad->phys));
+> +	len =3D strnlen(gamepad->phys, sizeof(gamepad->phys));
+> +	strscpy(gamepad->phys + len, "/input1", sizeof(gamepad->phys) - len);
+> =20
+>  	input->name =3D gamepad->name;
+>  	input->phys =3D gamepad->phys;
+> diff --git a/drivers/input/misc/keyspan_remote.c b/drivers/input/misc/key=
+span_remote.c
+> index 70cd6586459ef..f0f31f2823d57 100644
+> --- a/drivers/input/misc/keyspan_remote.c
+> +++ b/drivers/input/misc/keyspan_remote.c
+> @@ -430,6 +430,7 @@ static int keyspan_probe(struct usb_interface *interf=
+ace, const struct usb_devic
+>  	struct usb_keyspan *remote;
+>  	struct input_dev *input_dev;
+>  	int i, error;
+> +	size_t len;
+> =20
+>  	error =3D usb_find_int_in_endpoint(interface->cur_altsetting, &endpoint=
+);
+>  	if (error)
+> @@ -482,7 +483,8 @@ static int keyspan_probe(struct usb_interface *interf=
+ace, const struct usb_devic
+>  			 le16_to_cpu(udev->descriptor.idProduct));
+> =20
+>  	usb_make_path(udev, remote->phys, sizeof(remote->phys));
+> -	strlcat(remote->phys, "/input0", sizeof(remote->phys));
+> +	len =3D strnlen(remote->phys, sizeof(remote->phys));
+> +	strscpy(remote->phys + len, "/input0", sizeof(remote->phys) - len);
+>  	memcpy(remote->keymap, keyspan_key_table, sizeof(remote->keymap));
+> =20
+>  	input_dev->name =3D remote->name;
+> diff --git a/drivers/input/misc/powermate.c b/drivers/input/misc/powermat=
+e.c
+> index 754379d2625cf..dbf9f06f3059e 100644
+> --- a/drivers/input/misc/powermate.c
+> +++ b/drivers/input/misc/powermate.c
+> @@ -299,6 +299,7 @@ static int powermate_probe(struct usb_interface *intf=
+, const struct usb_device_i
+>  	struct input_dev *input_dev;
+>  	int pipe, maxp;
+>  	int error =3D -ENOMEM;
+> +	size_t len;
+> =20
+>  	interface =3D intf->cur_altsetting;
+>  	if (interface->desc.bNumEndpoints < 1)
+> @@ -334,7 +335,8 @@ static int powermate_probe(struct usb_interface *intf=
+, const struct usb_device_i
+>  	pm->input =3D input_dev;
+> =20
+>  	usb_make_path(udev, pm->phys, sizeof(pm->phys));
+> -	strlcat(pm->phys, "/input0", sizeof(pm->phys));
+> +	len =3D strnlen(pm->phys, sizeof(pm->phys));
+> +	strscpy(pm->phys + len, "/input0", sizeof(pm->phys) - len);
+> =20
+>  	spin_lock_init(&pm->lock);
+> =20
+> diff --git a/drivers/input/misc/yealink.c b/drivers/input/misc/yealink.c
+> index 560f895a00cda..1a3bebc8c3513 100644
+> --- a/drivers/input/misc/yealink.c
+> +++ b/drivers/input/misc/yealink.c
+> @@ -812,6 +812,7 @@ static int usb_probe(struct usb_interface *intf, cons=
+t struct usb_device_id *id)
+>  	struct yealink_dev *yld;
+>  	struct input_dev *input_dev;
+>  	int ret, pipe, i;
+> +	size_t len;
+> =20
+>  	interface =3D intf->cur_altsetting;
+> =20
+> @@ -891,7 +892,8 @@ static int usb_probe(struct usb_interface *intf, cons=
+t struct usb_device_id *id)
+> =20
+>  	/* find out the physical bus location */
+>  	usb_make_path(udev, yld->phys, sizeof(yld->phys));
+> -	strlcat(yld->phys,  "/input0", sizeof(yld->phys));
+> +	len =3D strnlen(yld->phys, sizeof(yld->phys));
+> +	strscpy(yld->phys + len, "/input0", sizeof(yld->phys) - len);
+> =20
+>  	/* register settings for the input device */
+>  	input_dev->name =3D nfo->name;
+> --=20
+> 2.43.0
+>=20
+>=20
+
+--=20
+<https://www.alejandro-colomar.es>
+
+--do6dlx2k7e2qhtqq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrVy0MACgkQ64mZXMKQ
+wqlUZQ//deuCQGNox42bGafpkmWhvIKhu/fXy9q79P/UJIslTrRblWKaYgfEMkZm
+qA0ZSvG7IBr6O8FL7FSe5gUDJ+TEneE8b3xzYYsqlgKl9gQcdtvXEHudSH1fePBr
+PtdBD05LNMWbnEvd4RLM5/JSA6Dv1Z5k+NJ6YHJbfcvvdnHwEsoz7GYqcbKmqJiR
+ZZLMpBcCPp0EubIHvod15e6nCkw1E+skQSgbrFSo3L5ujPkAirc07RB1jSvk1Pax
+BX45AoEfIFRdvp9BQ7F4rT13gLFZK0JGIiYHsAmagDoxBD15S3ulUcAkShgoWuvs
+Xcz0ukRbrIxRdv9sJ+HakOhA0O94I0BOLQwIgz4TRc+DYd9E8izF2c5BPhIDXAjv
+N3ozMJn5XIJVM3SbzP1Flfc/e9K94s7z7OJRsg3hEHt/0Yak5fxVgTJfZBtyG+u1
+X2v0ErXjIOkpHpT7m2nc+/wM628SBj2QJzUMEP8X4tIzNxhKne/uAgGIU2BSAWrc
+krk5PrKmk64njRYMr9nVH8KN+t56X1y5r35d1GtzGbSl0eeJJDvNqvlI9SqDKGjN
+VU8OtX3aUfW9ngHi/iZJtXlfpkmfvUqWTQFwd8JAB57c2E23YLamhXypetvhrPOT
+uI5HU+sSUiOBJFdTn2JEZKNF4aKRHkayGv8l/uW+JO1QkJUos+Q=
+=aYCm
+-----END PGP SIGNATURE-----
+
+--do6dlx2k7e2qhtqq--
