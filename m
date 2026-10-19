@@ -1,216 +1,446 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6373F7AAC;
-	Mon, 19 Oct 2026 07:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8B049364A
+	for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 07:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792394395; cv=none; b=Ld+CIE/C52Afw9jy9v2s/Moz4kSlxtUUS67lML4nPGMw0E2NTtEgS+oziVQNlaubNMwlwPBrQaQwZOkhZvHdvZUckwHraEWHQjtEzbZNIVySkgW4e60l192F4k85aowuV44nsauXpgCD6nXQHBtxyc70FCiARPH4FalXdNkzp1o=
+	t=1792395618; cv=none; b=aebw9KBDZ5DvWOSisQeIwjIcD4b5M3ogqq+nqBrHfcTaI5IEpRBcbd2nkQJ9kFFDlVuZGeRlzGqRGNV3cXwtmHRnnJ+L7rUTCw5GBVhKsEHq/f/gtiK4stubTPQxzdW/1S7ZtgQNTkGpN9nqH3t+bmbVIRmUt+g9QOC2zHEe8dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792394395; c=relaxed/simple;
-	bh=X8VHIr51Q3eJOWpF/LhXJx0/7iNxyaqY1pU7380tdnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pM6LOWnHkmyVdd4rDhXuOybRZU8CeLsgDFmZbkVLBsnZnLodkxWH/qiOY95Dh95ncTbjJqwIZELhK9M7O9AcuoxNzvTh1IfNPlgiGQ3ktqSFXGM9A4O4YaFHOWVCZxoP5K+CJnP+D5wHlDSjFBr4osvxKapXBq0pHUj03aZC1Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D07YgRwi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792395618; c=relaxed/simple;
+	bh=DT7tWGRorHL45umJe9t2q7qTRzJoJLjHRBL+ufDbIcQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IEGRE35mhluXK+6W5py1UQDmeVAT1XPVWTDs2KV6IJGxYEBWjwk+9spNkps5AX+gLWOpUMn5smaXj/wAnLz3p+R5XG4lVJcKOP48SUKGtzKkNvTnFiXYGtk2d42/ALWnEpthNnsjKneqKIzKM6zyzsCFxKLF/HWcO0xeG00jDpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V8PhslIJ; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D07YgRwi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C8F51F000C4;
-	Mon, 19 Oct 2026 07:19:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792394394;
-	bh=daX9sX15P/KMXP1Bmy3X8p+3DDaxkC96hlWwTodhy34=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=D07YgRwiGM80JtRd6S5CmAHS/DuFBK5r0lI2tQrRHijKa8alEjREeD6DQ7ukzujAy
-	 PvpwKEdYDafTMlp+AL0zzvQ7Twl5cNrKe0S7TNdXWDfp5iJGyyAH+7fnO/f4JXNVUZ
-	 5aunfZEKtWySRjkdVm6fuJow4xpi3/rjXOhD8gIaZ1hGAVUSEr2T9YnlNMLCYQia5D
-	 jek4PqqZnVQe9bkrzKmTfFA+Na+VdZbYhlbugfrvN9eds+Q9pwIShnAHawxCc+qhs1
-	 PtRcX/pv0wWubLFPUu+vJ3p3OteiiEt5JBWJtgYBvuo+iedxe60ue37ZzpUVoH99z9
-	 /SiP5bKlhSANA==
-Date: Mon, 19 Oct 2026 09:19:48 +0200
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Iurii Trukhin <yuri@trukhin.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] checkpatch: add vmalloc() and vzalloc() to alloc with
- multiplies check
-Message-ID: <atXD1bP8NqDfnaoE@debian>
-References: <CAOx7e9K707oLMN94TC=FBBZYKnwACsN-8mDVjsL+N+BBCmWTOA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V8PhslIJ"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-48b0584ad71so1115634f8f.0
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 00:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1792395605; x=1793000405; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=M0SUy48Ueh56GzaTiRmwygfsPwqE3Nw6AJaFjvfAhy4=;
+        b=V8PhslIJ14XACrtgoMAmVuPVPo2pHG4PYU/w4DtQwo4DnFh0YXKu0WtcrkGz2W4sRJ
+         f2fHYtbLEzMf7wpRMPwMGYIywrxcqjUwmpCwczxQqxpvk0E1EIbud96W3tttWNQrjASR
+         t7gfNVbcaQ777RXYT3yuxK4hUC6fJ15bPprWIzQ9/TAbvjMr8nK7Jjo7bdum2L7G1Cjb
+         i8Dc/LDVU3CNqUQcD/9aTgJZE3DNAIM7sr/qdjWSzsPzsFzvXir2rER5hiZNh4yU4N1d
+         jBRAMNlE0JRREDTI7/6ZZuT94P99f1bqW8YSX6UqrxSxIXnKXweEPp/WbukboCA/jrdu
+         uIkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792395605; x=1793000405;
+        h=content-transfer-encoding:content-type:in-reply-to:organization
+         :autocrypt:content-language:references:cc:to:subject:reply-to:from
+         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=M0SUy48Ueh56GzaTiRmwygfsPwqE3Nw6AJaFjvfAhy4=;
+        b=rmQZ2Jbzo6ylnk5dSQzBiMiijqHPi1qXJR9Px8h/XaqRdGfq1AqhS6hEYElL1UiDSZ
+         NGaN2leh7mA+0WUkgBoZyt5rFu1kaNBcjay/2gZDaOtd59b2r3VKtOhjlyY7tAJAbeB9
+         wit+Gwx5ilKmn2P0CxHeDFiQVklR5M/KAuXv5mb/m0LUeg/GMPdq1/WMDun9uI844Jpl
+         VruFhIkGg88C2aEwV2MA1XD0yqGgieeJDcq5VXDoLLNS3h2YNZyOTPwt/cDIdcSHeOoY
+         8z3FOVfRLRqo6u6V6gipiXDeybyYdn2qqhrJiaIKrScOA1bXA3uGKEcSYYPyXibiHP35
+         /jeA==
+X-Forwarded-Encrypted: i=1; AKwUvByn/doYVFRqCdlLdqpDZyVeoaLLmympMlPc+nNlDCfUxsXVUw4MyPske/jWYoFCB/LUhqJgXHUmKRa2TdC+1U4=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKm5Ixexf/G2lWNZ3jZjDDW1k1juA20+B334kYIXwVPR/R4X5JL
+	ukNuv2QYJtpmQ+IQNJBnR2ZZ1zIERDKAHUBfTn7tRF8E1cD7vCb6rX2CV49enRTdFxM=
+X-Gm-Gg: AYBFou3lLbg1W8BLCgbJFhePvKTMlrifA9lOYaNUBq+4YG2n4zZ8LJG/o0b9TDj5Kr2
+	zD3F8WeXMjtQu/6NGuyNDeysM51nPq1Ws6inb69bLWTFYAA+pj9sY6XjNHEygZh9sWL5alB/Unk
+	9wyx3AlqiH39CyPclLUUhySuXjnFAICx8ooS6doWT7Iu82C36GKXqVoZJeVAiYjeYn+ZYfCHnSu
+	EJ2k7qP4TJ0xmLa8vq8fs5gETOGBOKkS58FpuqTv946PQbWe1GwzgdHX9lHNqkVnPHw4LkmrEW6
+	VdOsk4b0+vIr6men5Ra0eMBaR+VDEaHBoYYn0caYN6gko7Y2+UBZtMm4Ql67V/N4RneDR3IUdwy
+	ARgV3F91HHxZNl0b7pjdOp84meHRWk0A3Da16zkVco35jK5/kZ2+AJ7KgWXHpAlw6uo0I9jXow4
+	+59qCZkK121AKmfC2NMmUnv0Gb4TSzxGvdNsi6IaEd1NQXDxi+2GLpeFWyyZ1EFKYFrj4Ic4oQf
+	pAn2GOkV03jVQ4QOJTF5CXVnr372UzVeo8FfDZTjPOyLSRlJIO94A==
+X-Received: by 2002:a05:6000:29c6:b0:48b:5e2:52dd with SMTP id ffacd0b85a97d-48e07bbd36emr9726692f8f.11.1792395604385;
+        Mon, 19 Oct 2026 00:40:04 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:6674:33bf:38d6:bc10? ([2a01:e0a:106d:1080:6674:33bf:38d6:bc10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd4f8bd9sm22298261f8f.35.2026.10.19.00.40.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Oct 2026 00:40:03 -0700 (PDT)
+Message-ID: <98df3ac1-c6ae-4acb-b0ee-ddda92487660@linaro.org>
+Date: Mon, 19 Oct 2026 09:40:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4ff7hxtbwsljtdcm"
-Content-Disposition: inline
-In-Reply-To: <CAOx7e9K707oLMN94TC=FBBZYKnwACsN-8mDVjsL+N+BBCmWTOA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH 3/3] i3c: master: svc: Add Amlogic A9 glue layer
+To: junyi.zhao@amlogic.com, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Frank Li <Frank.Li@nxp.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, imx@lists.linux.dev,
+ linux-hardening@vger.kernel.org, xianwei.zhao@amlogic.com,
+ Kelvin.Zhang@amlogic.com
+References: <20261019-a9_i3c-v1-0-329d819d621f@amlogic.com>
+ <20261019-a9_i3c-v1-3-329d819d621f@amlogic.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20261019-a9_i3c-v1-3-329d819d621f@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
---4ff7hxtbwsljtdcm
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Iurii Trukhin <yuri@trukhin.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] checkpatch: add vmalloc() and vzalloc() to alloc with
- multiplies check
-Message-ID: <atXD1bP8NqDfnaoE@debian>
-References: <CAOx7e9K707oLMN94TC=FBBZYKnwACsN-8mDVjsL+N+BBCmWTOA@mail.gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <CAOx7e9K707oLMN94TC=FBBZYKnwACsN-8mDVjsL+N+BBCmWTOA@mail.gmail.com>
-
-Hi Iurii, Kees,
-
-> Date: 2026-10-14 20:20:06-0400
-> From: Iurii Trukhin <yuri@trukhin.com>
->
-> vmalloc() and vzalloc() have 2-factor multiplication argument forms
-> vmalloc_array() and vcalloc() in <linux/vmalloc.h> that protect against
-> integer overflow during size calculation.
->=20
-> Commit 070580b0b174 ("checkpatch: Suggest kmalloc_obj family for sizeof
-> allocations") updated ALLOC_WITH_MULTIPLY for the (kv|k)[mz]alloc()
-> family to suggest kmalloc_objs(type, count, gfp), while vmalloc_array()
-> and vcalloc() retain the (count, size) signature.
->=20
-> Extend ALLOC_WITH_MULTIPLY to warn when vmalloc() or vzalloc() is called
-> with a 2-factor sizeof() multiplication and suggest vmalloc_array() or
-> vcalloc() respectively, including --fix support. Also include the 'v'
-> prefix in ALLOC_ARRAY_ARGS so swapped sizeof() first arguments to
-> vmalloc_array() and vcalloc() are flagged.
->=20
-> Link: https://github.com/KSPP/linux/issues/342
-> Signed-off-by: Iurii Trukhin <yuri@trukhin.com>
+On 10/19/26 07:34, Junyi Zhao via B4 Relay wrote:
+> From: Junyi Zhao <junyi.zhao@amlogic.com>
+> 
+> Add support for the Amlogic A9 implementation of the Silvaco
+> SVC I3C controller.
+> 
+> The glue layer provides Amlogic-specific operations and resource
+> handling while reusing the common SVC I3C core driver.
+> 
+> Add a corresponding MAINTAINERS entry for the Amlogic I3C
+> controller.
+> 
+> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
 > ---
->  scripts/checkpatch.pl | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
->=20
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 8a7787d228a6..651a46f1fc40 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -7355,10 +7355,11 @@ sub process {
->  		}
->=20
->=20
-> -# check for (kv|k)[mz]alloc with multiplies that could be
-> kmalloc_objs/kvmalloc_objs/kzalloc_objs/kvzalloc_objs
-> +# check for (kv|k|v)[mz]alloc with multiplies that could be
-> +# kmalloc_objs/kvmalloc_objs/kzalloc_objs/kvzalloc_objs/vmalloc_array/vc=
-alloc
->  		if ($perl_version_ok &&
->  		    defined $stat &&
-> -		    $stat =3D~
-> /^\+\s*($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\=
-s*($FuncArg)\s*\*\s*($FuncArg)\s*,/)
-> {
-> +		    $stat =3D~
-> /^\+\s*($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*((?:kv|k|v)[mz]alloc)\s*\=
-(\s*($FuncArg)\s*\*\s*($FuncArg)\s*(?:,|\))/)
-> {
->  			my $oldfunc =3D $3;
->  			my $a1 =3D $4;
->  			my $a2 =3D $10;
-> @@ -7366,6 +7367,8 @@ sub process {
->  			$newfunc =3D "kvmalloc_objs" if ($oldfunc eq "kvmalloc");
->  			$newfunc =3D "kvzalloc_objs" if ($oldfunc eq "kvzalloc");
->  			$newfunc =3D "kzalloc_objs" if ($oldfunc eq "kzalloc");
-> +			$newfunc =3D "vmalloc_array" if ($oldfunc eq "vmalloc");
-> +			$newfunc =3D "vcalloc" if ($oldfunc eq "vzalloc");
->  			my $r1 =3D $a1;
->  			my $r2 =3D $a2;
->  			if ($a1 =3D~ /^sizeof\s*\S/) {
-> @@ -7381,9 +7384,13 @@ sub process {
->  					 "Prefer $newfunc over $oldfunc with multiply\n" . $herectx) &&
->  				    $cnt =3D=3D 1 &&
->  				    $fix) {
-> -					my $sized =3D trim($r2);
-> -					$sized =3D~ s/^sizeof\s*\S\(?([^\)]*)\)?$/$1/;
-> -					$fixed[$fixlinenr] =3D~
-> s/\b($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*(=
-$FuncArg)\s*\*\s*($FuncArg)/$1
-> . ' =3D ' . "$newfunc(" . $sized . ', ' . trim($r1)/e;
-> +					if ($oldfunc =3D~ /^v/) {
-> +						$fixed[$fixlinenr] =3D~
-> s/\b($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*(v[mz]alloc)\s*\(\s*($FuncAr=
-g)\s*\*\s*($FuncArg)/$1
-> . ' =3D ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
-> +					} else {
-> +						my $sized =3D trim($r2);
-> +						$sized =3D~ s/^sizeof\s*\S\(?([^\)]*)\)?$/$1/;
-> +						$fixed[$fixlinenr] =3D~
-> s/\b($Lval)\s*\=3D\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*(=
-$FuncArg)\s*\*\s*($FuncArg)/$1
-> . ' =3D ' . "$newfunc(" . $sized . ', ' . trim($r1)/e;
-> +					}
+>   MAINTAINERS                          |   6 +
+>   drivers/i3c/master/svc/Kconfig       |   7 +
+>   drivers/i3c/master/svc/Makefile      |   1 +
+>   drivers/i3c/master/svc/i3c-amlogic.c | 250 +++++++++++++++++++++++++++++++++++
+>   4 files changed, 264 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index dffc63af2..478979446 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1398,6 +1398,12 @@ F:	Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
+>   F:	drivers/media/platform/amlogic/c3/isp/
+>   F:	include/uapi/linux/media/amlogic/
+>   
+> +AMLOGIC I3C DRIVER
+> +M:	Junyi Zhao <junyi.zhao@amlogic.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/i3c/amlogic,i3c-a9.yaml
+> +F:	drivers/i3c/master/svc/i3c-amlogic.c
+> +
+>   AMLOGIC MIPI ADAPTER DRIVER
+>   M:	Keke Li <keke.li@amlogic.com>
+>   L:	linux-media@vger.kernel.org
+> diff --git a/drivers/i3c/master/svc/Kconfig b/drivers/i3c/master/svc/Kconfig
+> index 14fa1e542..df3528bc1 100644
+> --- a/drivers/i3c/master/svc/Kconfig
+> +++ b/drivers/i3c/master/svc/Kconfig
+> @@ -18,4 +18,11 @@ config I3C_SILVACO
+>   	  compatible strings such as "silvaco,i3c-master-v1" and
+>   	  "nuvoton,npcm845-i3c".
+>   
+> +config I3C_AMLOGIC
+> +	tristate "Amlogic I3C support"
+> +	default y
+> +	help
+> +	  This selects the Amlogic SoC glue layer support for
+> +	  the Silvaco device driver. This driver is used for A9, C5 SoCs.
+> +
+>   endif # SVC_I3C
+> diff --git a/drivers/i3c/master/svc/Makefile b/drivers/i3c/master/svc/Makefile
+> index cf18c5da6..695863d1f 100644
+> --- a/drivers/i3c/master/svc/Makefile
+> +++ b/drivers/i3c/master/svc/Makefile
+> @@ -3,3 +3,4 @@
+>   
+>   obj-$(CONFIG_SVC_I3C)	+= i3c-main.o
+>   obj-$(CONFIG_I3C_SILVACO)	+= i3c-silvaco.o
+> +obj-$(CONFIG_I3C_AMLOGIC)	+= i3c-amlogic.o
+> diff --git a/drivers/i3c/master/svc/i3c-amlogic.c b/drivers/i3c/master/svc/i3c-amlogic.c
+> new file mode 100644
+> index 000000000..82300d6ae
+> --- /dev/null
+> +++ b/drivers/i3c/master/svc/i3c-amlogic.c
+> @@ -0,0 +1,250 @@
+> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+> +/*
+> + * Copyright (C) 2026 Amlogic, Inc. All rights reserved
+> + */
+> +#include "i3c-main.h"
+> +#include <linux/math64.h>
+> +
+> +/* Amlogic specific registers */
+> +#define I3C_BG_RD_ADDR			0x200
+> +#define I3C_BG_WR_ADDR			0x204
+> +#define I3C_BG_WR_CTRL			0x208
+> +#define I3C_BG_R_TT_LEN			0x20c
+> +#define I3C_BG_X_CNT			0x210
+> +#define I3C_BUS_MON_CTRL		0x214
+> +#define I3C_BUS_MON_ADDR		0x218
+> +#define I3C_BUS_MON_DATA		0x21c
+> +#define I3C_BUS_MON_DATA_MAK		0x220
+> +#define I3C_CLK_SLOW_DIV_CTRL		0x224
+> +#define I3C_BG_R_WCNT_CLR		0x228
+> +#define I3C_DEBUG_MODIFY		0x22c
+> +
+> +#define I3C_AO_CLK_SLOW_DIV_CTRL	0x300
+> +#define I3C_AO_FCLK_DIV_CTRL		0x304
+> +#define I3C_AO_FCLK_DIV_MASK		GENMASK(7, 0)
+> +#define I3C_AO_FCLK_DIV_EN		BIT(8)
+> +#define I3C_AO_FCLK_EN			BIT(9)
+> +#define I3C_AO_DEBUG_MODIFY		0x308
+> +
+> +#define I3C_DEFAULT_FCLK_RATE		25000000UL
+> +
+> +struct amlogic_i3c_priv {
+> +	int num_clks;
+> +	struct clk_bulk_data *clks;
+> +};
+> +
+> +struct amlogic_i3c_drvdata {
+> +	int (*fclk_rate_init)(struct svc_i3c_master *master,
+> +			      struct clk *fclk, unsigned long rate);
+> +};
+> +
+> +static int default_i3c_fclk_rate_init(struct svc_i3c_master *master,
+> +				      struct clk *fclk, unsigned long rate)
+> +{
+> +	int err;
+> +
+> +	err = clk_set_rate(fclk, rate);
+> +	if (err)
+> +		return dev_err_probe(master->dev, err,
+> +				     "setting fast clock rate failed\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int ao_i3c_fclk_rate_init(struct svc_i3c_master *master,
+> +				 struct clk *fclk, unsigned long rate)
+> +{
+> +	unsigned int div_cnt, reg_val;
+> +	unsigned long fin_freq = clk_get_rate(fclk);
+> +
+> +	if (!fin_freq)
+> +		return dev_err_probe(master->dev, -EINVAL,
+> +				     "can't get I3C fast clock rate\n");
+> +
+> +	div_cnt = div64_u64(fin_freq, rate);
+> +	if (!div_cnt || div_cnt > I3C_AO_FCLK_DIV_MASK)
+> +		return dev_err_probe(master->dev, -EINVAL,
+> +				     "requested fast clock frequency too low\n");
+> +
+> +	reg_val = I3C_AO_FCLK_DIV_EN | I3C_AO_FCLK_EN | (div_cnt - 1);
+> +	writel(reg_val, master->regs + I3C_AO_FCLK_DIV_CTRL);
+> +
+> +	return 0;
+> +}
 
-Could the suggested fix add a typeof() to the first parameter?  The only
-reason (AFAIK) Kees avoided adding typeof() in the first parameter was
-to minimize churn, but if someone is going to fix new code, it would be
-better if they do it good.  The good thing about using types explicitly
-is that it's safer.
+You could also create a clock divider, register it and use a common clk_set_rate()
+for both setups.
 
-That is, it should suggest
-	kmalloc_objs(typeof(*p), count, gfp)
-instead of
-	kmalloc_objs(*p, count, gfp)
+Neil
 
+> +
+> +static int amlogic_i3c_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	const struct amlogic_i3c_drvdata *data;
+> +	struct svc_i3c_master *master;
+> +	struct amlogic_i3c_priv *priv;
+> +	struct clk *fclk;
+> +	int ret, i;
+> +
+> +	master = svc_i3c_master_alloc(dev);
+> +	if (!master)
+> +		return -ENOMEM;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	master->drvdata = of_device_get_match_data(dev);
+> +	if (!master->drvdata)
+> +		return -EINVAL;
+> +
+> +	data = master->drvdata->bsp_data;
+> +	if (!data)
+> +		return -EINVAL;
+> +
+> +	master->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(master->regs))
+> +		return PTR_ERR(master->regs);
+> +
+> +	master->irq = platform_get_irq(pdev, 0);
+> +	if (master->irq < 0)
+> +		return master->irq;
+> +
+> +	priv->num_clks = devm_clk_bulk_get_all(dev, &priv->clks);
+> +	if (priv->num_clks < 0)
+> +		return dev_err_probe(dev, -EINVAL, "can't get I3C clocks\n");
+> +
+> +	for (i = 0; i < priv->num_clks; i++) {
+> +		if (!strcmp(priv->clks[i].id, "fast_clk"))
+> +			break;
+> +	}
+> +
+> +	if (i == priv->num_clks)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "can't get I3C peripheral clock\n");
+> +
+> +	if (IS_ERR(priv->clks[i].clk))
+> +		return PTR_ERR(priv->clks[i].clk);
+> +	fclk = priv->clks[i].clk;
+> +
+> +	ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "can't enable I3C clocks\n");
+> +
+> +	master->dev = dev;
+> +	master->bsp_priv = priv;
+> +	ret = data->fclk_rate_init(master, fclk, I3C_DEFAULT_FCLK_RATE);
+> +	if (ret)
+> +		goto err_disable_clks;
+> +	master->fclk_rate = I3C_DEFAULT_FCLK_RATE;
+> +
+> +	pm_runtime_set_autosuspend_delay(dev, SVC_I3C_PM_TIMEOUT_MS);
+> +	pm_runtime_use_autosuspend(dev);
+> +	pm_runtime_get_noresume(dev);
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +
+> +	ret = svc_i3c_master_probe(pdev, master);
+> +	if (ret)
+> +		goto rpm_disable;
+> +
+> +	platform_set_drvdata(pdev, master);
+> +	pm_runtime_put_autosuspend(dev);
+> +
+> +	return 0;
+> +
+> +rpm_disable:
+> +	pm_runtime_dont_use_autosuspend(dev);
+> +	pm_runtime_put_noidle(dev);
+> +	pm_runtime_disable(dev);
+> +	pm_runtime_set_suspended(dev);
+> +
+> +err_disable_clks:
+> +	clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
+> +
+> +	return ret;
+> +}
+> +
+> +static void amlogic_i3c_remove(struct platform_device *pdev)
+> +{
+> +	struct svc_i3c_master *master = platform_get_drvdata(pdev);
+> +
+> +	svc_i3c_master_remove(master);
+> +
+> +	pm_runtime_dont_use_autosuspend(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +}
+> +
+> +static int __maybe_unused amlogic_i3c_runtime_suspend(struct device *dev)
+> +{
+> +	struct svc_i3c_master *master = dev_get_drvdata(dev);
+> +	struct amlogic_i3c_priv *priv = master->bsp_priv;
+> +
+> +	svc_i3c_save_regs(master);
+> +	clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
+> +	pinctrl_pm_select_sleep_state(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused amlogic_i3c_runtime_resume(struct device *dev)
+> +{
+> +	struct svc_i3c_master *master = dev_get_drvdata(dev);
+> +	struct amlogic_i3c_priv *priv = master->bsp_priv;
+> +	int ret;
+> +
+> +	pinctrl_pm_select_default_state(dev);
+> +	ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
+> +	if (ret)
+> +		return ret;
+> +
+> +	svc_i3c_restore_regs(master);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops amlogic_i3c_pm_ops = {
+> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				      pm_runtime_force_resume)
+> +	SET_RUNTIME_PM_OPS(amlogic_i3c_runtime_suspend,
+> +			   amlogic_i3c_runtime_resume, NULL)
+> +};
+> +
+> +static const struct amlogic_i3c_drvdata amlogic_i3c_data = {
+> +	.fclk_rate_init = default_i3c_fclk_rate_init,
+> +};
+> +
+> +static const struct amlogic_i3c_drvdata amlogic_i3c_ao_data = {
+> +	.fclk_rate_init = ao_i3c_fclk_rate_init,
+> +};
+> +
+> +static const struct svc_i3c_drvdata amlogic_a9_drvdata = {
+> +	.quirks = SVC_I3C_QUIRK_FIFO_EMPTY |
+> +		SVC_I3C_QUIRK_FALSE_SLVSTART |
+> +		SVC_I3C_QUIRK_DAA_CORRUPT,
+> +	.bsp_data = &amlogic_i3c_data,
+> +};
+> +
+> +static const struct svc_i3c_drvdata amlogic_a9_ao_drvdata = {
+> +	.quirks = SVC_I3C_QUIRK_FIFO_EMPTY |
+> +		SVC_I3C_QUIRK_FALSE_SLVSTART |
+> +		SVC_I3C_QUIRK_DAA_CORRUPT,
+> +	.bsp_data = &amlogic_i3c_ao_data,
+> +};
+> +
+> +static const struct of_device_id amlogic_i3c_of_match_tbl[] = {
+> +	{ .compatible = "amlogic,i3c-a9", .data = &amlogic_a9_drvdata },
+> +	{ .compatible = "amlogic,i3c-ao-a9", .data = &amlogic_a9_ao_drvdata },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, amlogic_i3c_of_match_tbl);
+> +
+> +static struct platform_driver amlogic_i3c_master = {
+> +	.probe = amlogic_i3c_probe,
+> +	.remove = amlogic_i3c_remove,
+> +	.driver = {
+> +		.name = "amlogic-i3c-master",
+> +		.of_match_table = amlogic_i3c_of_match_tbl,
+> +		.pm = &amlogic_i3c_pm_ops,
+> +	},
+> +};
+> +module_platform_driver(amlogic_i3c_master);
+> +
+> +MODULE_AUTHOR("Junyi Zhao <junyi.zhao@amlogic.com>");
+> +MODULE_DESCRIPTION("Amlogic I3C master driver");
+> +MODULE_LICENSE("GPL");
+> 
 
-What do you think?
-
-
-Have a lovely day!
-Alex
-
->  				}
->  			}
->  		}
-> @@ -7397,7 +7404,7 @@ sub process {
->  		}
->=20
->  # check for alloc argument mismatch
-> -		if ($line =3D~
-> /\b((?:devm_)?((?:k|kv)?(calloc|malloc_array)(?:_node)?))\s*\(\s*sizeof\b=
-/)
-> {
-> +		if ($line =3D~
-> /\b((?:devm_)?((?:k|kv|v)?(calloc|malloc_array)(?:_node)?))\s*\(\s*sizeof=
-\b/)
-> {
->  			WARN("ALLOC_ARRAY_ARGS",
->  			     "$1 uses number as first arg, sizeof is generally wrong\n" .
-> $herecurr);
->  		}
-> --=20
-> 2.56.0
->=20
-
---=20
-<https://www.alejandro-colomar.es>
-
---4ff7hxtbwsljtdcm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrVxJQACgkQ64mZXMKQ
-wqnVnBAApUtNGBp60jKC0BMuYxaCCIdn4mwOdOGLXpExE48hZvSCLdd7DNi4FQWo
-6TygKtQlpR7iwUf5vaR/3Mca83rRr+ahnpW4AoHoHTd1mxb6GU69X4nvXItNGypT
-A3eObnJP0Mnc1gw1JfzzPbc5B1FVwGe2Y9Ox9kgy7eEWsfIsqiYpcLJy/3L/6S2+
-4a5QiAVyPamI5yFnhxJei3LhRaFxz03fm+s+kF0/h7/kuZs++0T6Ah0+ZpXEKsIn
-pczhvn1Hlh1s9b5gixSFlVid7r8AvDe6PfIIzepavou67qxHoaj8uFRJNRCGVr6o
-DBBAS6aovZHoVcZTEzD8h5zoe1t5UjwCDxpncydZTfsgoA4ydYDEU9gDo5Z6Ec2y
-rFdqpTpLCiUujSDs21skn9Gd+C6nySDeLqEXtG6XdsUgF3jkb4bWAnsbhBIbvMy1
-G40pKhKBVVCTCXjt6NVj3fg6Z4NkeptGudPZUOXvONKQAmGaPUF8kUV3jZ4GfwZh
-ROH+VDZcNNdNODZI6ngHMqgsMvIuFEQmuLAp4pWlTFoDqfdGDwODk6CAXOvqGtdG
-TSYUyd0kQEa6dViBBuIYTKlgdnSQ7ftnxNE+cYBScIH+GpCw7Qij9RvuaWfqnYc6
-qWTOly0KobE3APerL2WmJbEOEjgm3jHyE55n0EJ2pay2J1wGkCw=
-=bHVP
------END PGP SIGNATURE-----
-
---4ff7hxtbwsljtdcm--
