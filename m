@@ -1,189 +1,244 @@
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71E148FF77
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 08:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792399468; cv=none; b=pSDspXvXzhoBn6IXb1a25SXUxYKvpr9YVV9r/t6NVXYWzy3Ncakn4WuJf0Tp/Ht0teDVJ3osj5JD72KmgozqZ34NXiHJlR89Mwx0kUJDa1EeYyNUn9SjkFzrYDr8IzNQiO/oxjltH+NZXjZUds6NOziLfInhWWV/KDYprNpx1kM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792399468; c=relaxed/simple;
-	bh=Lf2ltc92yGw13+ZIQaEnX84MOqtAvkx0Yz6xmwkEBM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MRiObpwNfw7vY9Ww5EM1Nn/pdEy7BFn4vTWRrq/ymfd1qvbk07IWWY/Ll/OffYZBxp03v9C69MNvRi10m42YlxXRvjTsLqbCF7uNhtp1d04RzE+mffp6njYneBCS3PDK4dSu2gxWffJcIUqtT9VaX8QvABhK1gY5h0VOo0gt7fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=noTZ1tM/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LQ/PsV/Q; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4C24503ED
+	for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 09:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792402211; cv=pass; b=mzMgN7/W0bz05QuTYCHajjdZBi6NGQf7uEwGMRsReQib2hJHztLRmhzqrMKWQdx1H8Qw5CZxPerHrlF7W4mPY8dc1AStd8A6n54IEK/0O4yQjk84HOoA+PohnhADfF3Az73zmbjoKj/LRPwr+WL0WVpWwvLzc68pwD1uQglDuZI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792402211; c=relaxed/simple;
+	bh=PUjiziNEMHv9KVvAHz5yTGk4BT4l174s5CjTaMAEZ04=;
+	h=MIME-Version:From:In-Reply-To:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=asVWf8wSXCqzjIk8A7URnhMqK8or2jWilUxje/cVisWmm2KmHoBXLef8oeo9F39aIIjRSDYgh8TZsaZYZNTkzvDYYjip2So8pVQCFZeWrMUsOmN+EqOLdyuFxYqYuPMazZX5EmGuMqb7yCtF9qO91xCD6CxyR3FRJq+i49rslBM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trukhin.com; spf=pass smtp.mailfrom=trukhin.com; dkim=fail (0-bit key) header.d=trukhin.com header.i=@trukhin.com header.b=fZad9d1O reason="key not found in DNS"; arc=pass smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trukhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trukhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="noTZ1tM/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LQ/PsV/Q"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id DDAA47A00EF
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 04:44:25 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Mon, 19 Oct 2026 04:44:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1792399465; x=1792485865; bh=YsVloFkfqa
-	hKMtvRLfn5FRI51AxlMq8II2uKnESwYRE=; b=noTZ1tM/7HS+qU1bxdyPoTZNYw
-	OKcz4gOUnjn9zSYgCTvuo8oDoeuqnMJp+A1xB0yQdCZXYVhNrWzB/N9MJVJKu4EP
-	RV+RoY7Vr3i8wjdbRAoFFIZ8clgL27K/G5TsUEcXkXw+S5jygpg0XZjC55iB34en
-	NhDl1ibGxrb2lGja0OJb2aMhyYPThIMXZcKNYvsmndkPsF6OViQydU7i/IOJxpaU
-	Fzg2vbRIP3eZlVS49L9B80UHdLqa2CgQjobg8BUlAdTxtAnM2e56pRdA7yrenUU2
-	jKBGVc9sFQbm1Vye7mqZqeJ3o5OaapYtN87VLBHbjvxQu+L/M6SnNcoUbLvA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1792399465; x=1792485865; bh=YsVloFkfqahKMtvRLfn5FRI51AxlMq8II2u
-	KnESwYRE=; b=LQ/PsV/QTAfh3KP+93KNf5QP/EOQ1nWDt3yFzjOm/yMlto70Cp/
-	WncQeGPYP1+jVbTnTm4SfugdmWCWfj7s8GXLnhg07gbxnbYVSJ6/jGmX/ZQSrF+m
-	unNviohg8rQUvuUdPnhKa3f6Q3RO9tdcA3ev87v0j2tzyeDb9D1H4MZcL6GVtgX+
-	XLrPIXIsEJqjC43Ef5aM65Foq4EqZBp741uN5AKd0fXRCYMv4QmI0fLzSXtvONgA
-	yxGJZAGvyPkraMZyKXbxzFrgaRGybkXS5kNG7/Pq0l/Zv21qT5X5C7HC5xHHjoEB
-	Uo4VKm9O/CjNh34ULbR1hAoI2vPBuV94EoA==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
-	action=sign d=kroah.com a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1792399465; d=kroah.com;
-	mf=PGdyZWdAa3JvYWguY29tPg==;
-	rt=PGxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmc+;
-	s=fm2:rsa-sha256:mDwjIlGxw5uk9MxjTCOK7p7IbtKCMlsXLQMQMktyEEDxhO4
-	soIjH4KO1SX0CMRfHNTjSPLOBjkuo5ucmCpNlLDuiYYpRtRr4fSWIAukOMCS8V4l
-	K1Zs88ABy12zVHRuNI0dCuOMHJmFydJQ4bmovXg6dzJPKmwM8Mwsr9iizyjVY29T
-	F+x0147eVzG5O6KgkgfnM7HuIp3egOFVCSOi5RQj7bk2NEh5ubz/yDuvgzcbtU9n
-	iFMViQY8l9UKTn9I6fOvJSqP1TUhASG6RAUjuAnujCfG9mNXxmrCH1319ZfMQW1Y
-	6jZovKCqIvPknNccTQ6w46bYu8HoCzgBbcMCH0w==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-06;
-	repo=github.com/dkim2wg/interop; date=2026-10-08; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-disposition,content-type,date,feedback-id,from,
-	in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:KM/onkGzTVQhZk+S7ywKdZWa6dBSaTub2Eq20P4k5bU=:Lf2ltc92yGw13+ZIQaEnX84MOqtAvkx0Yz6xmwkEBM0=;
-X-ME-Sender: <xms:aNjVajBodmQidyYcVjqk-3nuiSn9S05B2ArSZWRWByrvnsrTuf6JRw>
-    <xme:aNjVagkToZQ8iytXAoS31ooMBXBAZ4SDkgB71-U9nrZU03_El0zL3nOw9XoAhts91
-    obe5ypkkt6gXsXe041bWNUY6EXPyXj3zWjq8XXaLxgNoiuM3fo>
-X-ME-Received: <xmr:aNjVamRSxWO7d6fxHZvdczTYWoQqZQuA81EBtnsVAFT1e_NUTQTGmWsQItXg2dcha7jT-1coSBbX-uL3JnA>
-X-ME-Proxy-Cause: dmFkZTEkBrlER9gv1SSiXl3a5G+9YMsw4jDITFGP2VBd+KvdxqHmoUbVDlMyOPmA+6YbLb
-    0TQ53Qc1KawKKjfxM19/nJmt8C5YdRXKEDMOsa7stBFWSOZiGfci6SuTJdTNTLxFG7TwI+
-    d09Tel9027sqnDVtSf3YnmIaai4NVI62lI8EJCQ6MseyJe9eGeWOrZ989o6D0LJAQJqmya
-    prcWIneOaj40wF+INA1IxSiRDFraAIsQVKuN5aL95KVjFuUKIzv1Zs383ed8GamX0+30rB
-    N8bTQ/OQJb/qf/+BG/+X6BumpkN8GmCNWnq4vjEN53bH4SQdejHYVZyehbfHlSzP4NV8OI
-    69yC6Ny0YcCzPAMPxzd/tPLZo6TC57hDdwL23Kj/cPiTKvIiqdXYza+sGaq+7KZHuoz7OD
-    43+LUfFta7CuW20pCFO1UM5+slvWOqTxIROp/bu926sNzJz9mbHRQEZD1LC+Iu7gIoV9+t
-    HT8lyq12i16qeUCqODq2mYhqngbkSFSFkSFlwH645zBWUzSSJ82KvztJAsSE98oU8ArhdL
-    ecZaTbV8TF/1MIcwWMUhk2bSOHBWEQfxXDgFwApos7s4U4huugfXd0epOh3NqY2Jepv05a
-    MxNP6whmRP7XNpdGp5MPgaIy36EeFZ7R8hmHkQzmo+SWSAQ7gDL2IrM9IIWw
-X-ME-Proxy: <xmx:aNjVasKgSDl0xtHcf-vZVYJ0tAwvZb1cZVxFDsiyzgDouQlduNF5RA>
-    <xmx:aNjVak_M7JGnEHf-OKpeH-mkVgkfHEbYNPw3tFhkMR18TXFvTOG5AA>
-    <xmx:aNjVauCoB1q_sxiHEsiPQCoi_ETCkonCrikBB9x9L1oQB7HtpzukbA>
-    <xmx:aNjVauorq8Bc89AOgqRtGniLdTiV5LNSBR8d4XnHjKfiYbL5XXQkQA>
-    <xmx:adjVapC80_U4tq3E3U1QIX_FJ1QjdboWTlX_VJDBdnTGRr9tZuitd2FU>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 19 Oct 2026 04:44:24 -0400 (EDT)
-Date: Mon, 19 Oct 2026 10:44:22 +0200
-From: Greg KH <greg@kroah.com>
-To: Alejandro Colomar <alx+linux-hardening@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Shihuang Liu <shlomojune6@gmail.com>, linux-input@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Marcus Folkesson <marcus.folkesson@gmail.com>,
-	Ville Syrjala <syrjala@sci.fi>,
-	Henk Vergonet <Henk.Vergonet@gmail.com>,
-	Henrik Rydberg <rydberg@bitmath.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] Input: joystick - replace strlcat() with strscpy()
-Message-ID: <2026101951-undusted-laziness-d40f@gregkh>
-References: <20261016170411.51025-1-shlomojune6@gmail.com>
- <20261016170411.51025-2-shlomojune6@gmail.com>
- <30bc6e07072076b0591fd416f50f4fc3@gmail.com>
- <2026101727-ebay-five-72f8@gregkh>
- <atXLrTZYBazVZVHr@debian>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=trukhin.com header.i=@trukhin.com header.b="fZad9d1O"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-4af7283bf83so611599b6e.3
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 02:30:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792402209; cv=none;
+        d=google.com; s=arc-20260327;
+        b=AGAm6WYkiVxr5GhRbmEPWAfHyd1Ji2WBxkaj7Nh/k87Kyd6YsNEVD4vzFxjdLUkLZJ
+         Q10G457ZwyPpyugzVl+M0OEgVGZCcBlPtGUJ4buZGBtcZMAqF/ErvrsOi2TO4f7DHBPC
+         fnr0/NxmbM9Klx2rzDe4rsv/wfh13Gv71w45CTLvyKOSiY6b3fh++g+3FqcztBnMxpHu
+         +gCWdUtYedGJ9U9ydLfyok8ZINRCUiOobOnDrXKklM1yfRrmD+LeOjGTrbYN1Ly6UuW5
+         yiDFTHn4fZ3GcUksUHgrlBXw5LvyXHaRiwI36o2iDgGFUgmX1AIA+nuw8nOpCT3MGJp4
+         8VEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:references:in-reply-to:from
+         :mime-version:dkim-signature;
+        bh=hc3pxWFoIL1GHsifcw+K6D0g1vNndK05iALHsmZ6jX0=;
+        fh=+A8NWO3DLDr3rYmgAUA2EEiSN/lrQR4yQe85zb1+U6g=;
+        b=E33vVuvVRPCrCUm7YEZJq2EtBpN5CNG7B2CIve0rCYKn95qa10ACGeXBdd9qfZCoGc
+         VIqXQGl7oRke2ihL4JkvlNHeB4EbkTrLhnMdPBf41NOglv63Bi+Q5qIhHD4m2L9Pn39K
+         JAfO/wh10CLDKr6THOMT4mZ7ssJ1Ly6kdCEJ170p/27aBJWCD/i3qToMkjTxHkrCBbtv
+         FWZrMSkjh9V0wPnw9kuDjBo6+PfjCrlsG6TDD7KGyG388UVtaA/EFG6kw4W2ebJtN78J
+         ZYfCi1BBQ57a7vI7lOUuBHq/QI8EpP/RtU25S82taO3T59TlJ1yJC/Zl8aZUVUuHEVSG
+         DEPg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=trukhin.com; s=google; t=1792402209; x=1793007009; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:references:in-reply-to
+         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=hc3pxWFoIL1GHsifcw+K6D0g1vNndK05iALHsmZ6jX0=;
+        b=fZad9d1OY9NJSrhkU3A+62LbAvDI57kRzZfzmFfvLolWi+O8N5TrbxbEWbSGZYvO6f
+         LwtCb8hxbe1a5ynW3WB3jhvNul1OCAKMmOFJfYSuhihJoZN0/MLCvgcQGJQM2ARM7V/E
+         ZtxmU4VAobh4DZ7zAbYHKWGY1z6ZsEr7ktOmFasY9i7vG1hPL9wazljSmYCE3PrXDOFs
+         IL1DD2AoUf1Y0IjaqcD6TXxokzNpx88Ghlll6/5vjOKu/Am6WOjT5yQawCnjikG/QQts
+         MQ+71uuxNuM1ZLTPb0d55rYMn73w+MTyPVfNwRy+2Bufxh2uRKcIkOOMJ/ARI3tWygAf
+         FA8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792402209; x=1793007009;
+        h=content-type:cc:to:subject:message-id:date:references:in-reply-to
+         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=hc3pxWFoIL1GHsifcw+K6D0g1vNndK05iALHsmZ6jX0=;
+        b=XrI/aKDCzJfMHub+KocTWHy1tyZle9rsciREfguRtn4N1SJ5462CPsnqNHFovmcRRW
+         cHP1hHZ+w3OyPvvnQJuHC2xPu4Wqn5HTGb8kUF983YFK+dUowQrcyveAak3lEIXd8vrj
+         O/F4oUu5sgOIaCRSuTk8K6AoeNnr1kSUwcxGxoUx2DR0oZSXpa1F9Jq6TVej85pNmTZB
+         5cSnyxLKcIWnVpACacMTrcJ3EpQlhMyIB0YHUZZHi+LRWgpanzMh75M9ZsHQqVf8EtvW
+         Dd4z3A9ywquUk2zLhQipQrqVaqMsHl7xUUX9NmH8uV/YVLGFwIly1B7p4P/C1mTIvf3p
+         jmcA==
+X-Forwarded-Encrypted: i=1; AKwUvByRW56biAxvZN7GsD4KBCwfxUHnVhO+vlAaEoq7INBzTk7kvoa+8awrH4aXWYN5dRTYlui30K/hlWMnDL7pcOw=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJks5TQVBmdx+yuot9sXzdu3y6OHyssmsdAf8wOUV3+RuFGvG2p
+	fED8nCkgIyz1gFsyLaBnvSnqstEGF30mkHsOqeN06s6vr0dLJnyvHSg5JUorNfqLRbh2sWmE85n
+	vs116iPaFB/9STVrUQNeSYHk2NTkCy+oYNuS5mjGfpQ==
+X-Gm-Gg: AYBFou2uBosMYWDXiGK25YClqBMLuoFn9AJo82rr3rkPavVKAGKOimFoSgj1PryPHfw
+	IegSBO8CjcruoR3jSAPeR8Pb2PFbuqS8muyuBCfQ2DgTx4fL+SRSk0HNBCUX8Sx3SnFNn0U1qOQ
+	nxyy1wFBXF9eZbn7luinG9uhwtc5CMmNXPqYE1po6EcbiX62D2dB+V03GcSgz6A8mVH663z8P4k
+	ihlw8B6/oWnqnSBRYVfZGBgsYdf9Vg7bmlGDCSjtZM+PFsTIOkE4xLMzrgnFvVNHREVBNzBFzou
+	k1HLVNkfwiycUpY2UmFGzRvMmkaxjpAEuXupkq6y2b1+ZblcTdJsstuX1iW4JK+VC9fhP1VorBL
+	KUHpx5eQ9IeIeeOboSVFX02xmLpq0TjJWMvJHE7vRBXX52g+SEeGpqXmLoQ==
+X-Received: by 2002:a05:6808:10c9:b0:4c3:d087:4446 with SMTP id
+ 5614622812f47-53cd0f1c6d5mr5243860b6e.42.1792402208617; Mon, 19 Oct 2026
+ 02:30:08 -0700 (PDT)
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Mon, 19 Oct 2026 02:30:08 -0700
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Mon, 19 Oct 2026 02:30:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <atXLrTZYBazVZVHr@debian>
+From: Iurii Trukhin <yuri@trukhin.com>
+In-Reply-To: <atXD1bP8NqDfnaoE@debian>
+References: <CAOx7e9K707oLMN94TC=FBBZYKnwACsN-8mDVjsL+N+BBCmWTOA@mail.gmail.com>
+ <atXD1bP8NqDfnaoE@debian>
+Date: Mon, 19 Oct 2026 02:30:08 -0700
+X-Gm-Features: AclHuK9CLzri4J91pqIi2kS9miZl1lVQnycxf40x9LXok0HRJz8gj47iCp1_r6Y
+Message-ID: <CAOx7e9J=HPvJem1fcD6coi=wQeBLUzsGiuAyLWToq0y3aqeh0w@mail.gmail.com>
+Subject: Re: [PATCH] checkpatch: add vmalloc() and vzalloc() to alloc with
+ multiplies check
+To: Alejandro Colomar <alx+linux-hardening@kernel.org>
+Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Oct 19, 2026 at 09:51:37AM +0200, Alejandro Colomar wrote:
-> Hi Greg,
-> 
-> > Date: 2026-10-17 10:19:59+0200
-> > From: Greg KH <greg@kroah.com>
+Hi Alex,
+
+Using typeof(*p) for the existing k/kv object helpers makes sense.
+vmalloc_array() and vcalloc() take a count and a byte size, so their
+fix needs to retain sizeof(...).
+
+I suggest handling the k/kv change separately. While testing this patch,
+I also found that the new vmalloc --fix path could copy masked strings
+or comments from checkpatch's parsed statement. The prepared v2 uses
+the original source instead; the regression tests cover those cases
+and check the existing k/kv behavior.
+
+Kees, would you prefer the typeof() change here or as a follow-up?
+
+Thanks,
+Iurii
+
+
+On Mon, 19 Oct 2026 09:19:48 +0200, Alejandro Colomar
+<alx+linux-hardening@kernel.org> wrote:
+> Hi Iurii, Kees,
+>
+> > Date: 2026-10-14 20:20:06-0400
+> > From: Iurii Trukhin <yuri@trukhin.com>
 > >
-> > On Fri, Oct 16, 2026 at 12:17:05PM -0700, Dmitry Torokhov wrote:
-> > > Hi Shihuang,
-> > > 
-> > > On Sat, Oct 17, 2026 at 01:04:07AM +0800, Shihuang Liu wrote:
-> > > > The pxrc and xpad drivers build the physical path by appending a
-> > > > constant "/input0" suffix with strlcat() after usb_make_path().
-> > > >
-> > > > In preparation for removing the deprecated strlcat() API[1],
-> > > > replace it with strnlen() followed by strscpy() into the remainder
-> > > > of the buffer, as commit 34b228b739f5 ("HID: usbhid: replace
-> > > > strlcat with better alternatives") did for the usbhid drivers.
-> > > ...
-> > > >  	usb_make_path(udev, pxrc->phys, sizeof(pxrc->phys));
-> > > > -	strlcat(pxrc->phys, "/input0", sizeof(pxrc->phys));
-> > > > +	len = strnlen(pxrc->phys, sizeof(pxrc->phys));
-> > > > +	strscpy(pxrc->phys + len, "/input0", sizeof(pxrc->phys) - len);
-> > > 
-> > > I really dislike this conversion pattern, and I do not want to see it
-> > > open-coded across 18 drivers in this series.
-> > > 
-> > > usb_make_path() is just a trivial wrapper around snprintf() that already
-> > > returns the length of the formatted string. Calling usb_make_path(),
-> > > ignoring its return value, rescanning the buffer with strnlen(), and
-> > > then open-coding pointer and size arithmetic for strscpy() (along with
-> > > an extra local variable in every probe function) makes the code much
-> > > uglier and harder to read than what we had before.
-> > > 
-> > > All of these USB input drivers already include <linux/usb/input.h>, and
-> > > drivers across other subsystems (drivers/hid/usbhid/, drivers/media/rc/,
-> > > drivers/media/usb/, sound/usb/caiaq/, drivers/usb/storage/onetouch.c)
-> > > all use the exact same usb_make_path() + suffix pattern ("/input0",
-> > > "/input%d", "/ir0", "/button", etc.).
-> > > 
-> > > If we want to get rid of strlcat() here, please introduce a generic
-> > > helper in include/linux/usb.h (or a USB input helper in
-> > > include/linux/usb/input.h) that formats the USB path together with the
-> > > subpath in a single pass, for example:
-> > > 
-> > > __printf(4, 5)
-> > > int usb_make_subpath(struct usb_device *dev, char *buf, size_t size,
-> > > 		     const char *fmt, ...);
-> > > 
-> > > (or a simple const char *suffix variant if formatting is not needed).
-> > > Then each driver can do:
-> > > 
-> > > 	usb_make_subpath(udev, pxrc->phys, sizeof(pxrc->phys), "input0");
-> > > 
-> > > and even drivers/hid/usbhid/hid-core.c can simply do:
-> > > 
-> > > 	usb_make_subpath(dev, hid->phys, sizeof(hid->phys),
-> > > 			 "input%d", intf->altsetting[0].desc.bInterfaceNumber);
-> > > 
-> > > instead of repeating this strnlen() + strscpy() boilerplate everywhere.
-> > 
-> > I'm all for that too, and putting it in the USB core for everyone to use
-> > would be great.
-> 
-> You might be interested in <https://lore.kernel.org/linux-hardening/cover.1751747518.git.alx@kernel.org/>.
-> I was working on something like that, but actually much simpler.
-> It is meant to replace strscpy()/snprintf() by versions more similar to
-> Plan9's strecpy(2)/seprint(2), but without some important flaw that the
-> Plan9 APIs have (about handling NULL).
-
-Look at the patches from Kees on the hardening list for the seqbuf
-stuff, that ideally will replace these types of string functions
-entirely over time.
-
-thanks,
-
-greg k-h
+> > vmalloc() and vzalloc() have 2-factor multiplication argument forms
+> > vmalloc_array() and vcalloc() in <linux/vmalloc.h> that protect against
+> > integer overflow during size calculation.
+> >
+> > Commit 070580b0b174 ("checkpatch: Suggest kmalloc_obj family for sizeof
+> > allocations") updated ALLOC_WITH_MULTIPLY for the (kv|k)[mz]alloc()
+> > family to suggest kmalloc_objs(type, count, gfp), while vmalloc_array()
+> > and vcalloc() retain the (count, size) signature.
+> >
+> > Extend ALLOC_WITH_MULTIPLY to warn when vmalloc() or vzalloc() is called
+> > with a 2-factor sizeof() multiplication and suggest vmalloc_array() or
+> > vcalloc() respectively, including --fix support. Also include the 'v'
+> > prefix in ALLOC_ARRAY_ARGS so swapped sizeof() first arguments to
+> > vmalloc_array() and vcalloc() are flagged.
+> >
+> > Link: https://github.com/KSPP/linux/issues/342
+> > Signed-off-by: Iurii Trukhin <yuri@trukhin.com>
+> > ---
+> >  scripts/checkpatch.pl | 19 +++++++++++++------
+> >  1 file changed, 13 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 8a7787d228a6..651a46f1fc40 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -7355,10 +7355,11 @@ sub process {
+> >  		}
+> >
+> >
+> > -# check for (kv|k)[mz]alloc with multiplies that could be
+> > kmalloc_objs/kvmalloc_objs/kzalloc_objs/kvzalloc_objs
+> > +# check for (kv|k|v)[mz]alloc with multiplies that could be
+> > +# kmalloc_objs/kvmalloc_objs/kzalloc_objs/kvzalloc_objs/vmalloc_array/vcalloc
+> >  		if ($perl_version_ok &&
+> >  		    defined $stat &&
+> > -		    $stat =~
+> > /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)\s*,/)
+> > {
+> > +		    $stat =~
+> > /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k|v)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)\s*(?:,|\))/)
+> > {
+> >  			my $oldfunc = $3;
+> >  			my $a1 = $4;
+> >  			my $a2 = $10;
+> > @@ -7366,6 +7367,8 @@ sub process {
+> >  			$newfunc = "kvmalloc_objs" if ($oldfunc eq "kvmalloc");
+> >  			$newfunc = "kvzalloc_objs" if ($oldfunc eq "kvzalloc");
+> >  			$newfunc = "kzalloc_objs" if ($oldfunc eq "kzalloc");
+> > +			$newfunc = "vmalloc_array" if ($oldfunc eq "vmalloc");
+> > +			$newfunc = "vcalloc" if ($oldfunc eq "vzalloc");
+> >  			my $r1 = $a1;
+> >  			my $r2 = $a2;
+> >  			if ($a1 =~ /^sizeof\s*\S/) {
+> > @@ -7381,9 +7384,13 @@ sub process {
+> >  					 "Prefer $newfunc over $oldfunc with multiply\n" . $herectx) &&
+> >  				    $cnt == 1 &&
+> >  				    $fix) {
+> > -					my $sized = trim($r2);
+> > -					$sized =~ s/^sizeof\s*\S\(?([^\)]*)\)?$/$1/;
+> > -					$fixed[$fixlinenr] =~
+> > s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1
+> > . ' = ' . "$newfunc(" . $sized . ', ' . trim($r1)/e;
+> > +					if ($oldfunc =~ /^v/) {
+> > +						$fixed[$fixlinenr] =~
+> > s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*(v[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1
+> > . ' = ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
+> > +					} else {
+> > +						my $sized = trim($r2);
+> > +						$sized =~ s/^sizeof\s*\S\(?([^\)]*)\)?$/$1/;
+> > +						$fixed[$fixlinenr] =~
+> > s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1
+> > . ' = ' . "$newfunc(" . $sized . ', ' . trim($r1)/e;
+> > +					}
+>
+> Could the suggested fix add a typeof() to the first parameter?  The only
+> reason (AFAIK) Kees avoided adding typeof() in the first parameter was
+> to minimize churn, but if someone is going to fix new code, it would be
+> better if they do it good.  The good thing about using types explicitly
+> is that it's safer.
+>
+> That is, it should suggest
+> 	kmalloc_objs(typeof(*p), count, gfp)
+> instead of
+> 	kmalloc_objs(*p, count, gfp)
+>
+>
+> What do you think?
+>
+>
+> Have a lovely day!
+> Alex
+>
+> >  				}
+> >  			}
+> >  		}
+> > @@ -7397,7 +7404,7 @@ sub process {
+> >  		}
+> >
+> >  # check for alloc argument mismatch
+> > -		if ($line =~
+> > /\b((?:devm_)?((?:k|kv)?(calloc|malloc_array)(?:_node)?))\s*\(\s*sizeof\b/)
+> > {
+> > +		if ($line =~
+> > /\b((?:devm_)?((?:k|kv|v)?(calloc|malloc_array)(?:_node)?))\s*\(\s*sizeof\b/)
+> > {
+> >  			WARN("ALLOC_ARRAY_ARGS",
+> >  			     "$1 uses number as first arg, sizeof is generally wrong\n" .
+> > $herecurr);
+> >  		}
+> > --
+> > 2.56.0
+> >
+>
+> --
+> <https://www.alejandro-colomar.es>
