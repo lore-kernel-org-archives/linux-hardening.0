@@ -1,100 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.196
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792429732;
-	b=hJJrE3PgN0h9wKv94lStXk6i0rFcNK7aE4gqpOpnXJkS4XC6LX8q/PJsj62HPykrJiUF
-	 ZvbZV191Kyj/u+CesKyNCovmEtKW8TToq+RNVJNZFofgF90HE/+5QfznVrsNTiI6qobqv
-	 3CuslvEiu/CsyQkWE0jESC0QnfONy6FX5OndQKuJM51pe5Dox1z7T4fpV/mFvK/iHWQBA
-	 3Nrc6KkcavbjrXvof6pRMZWPyMG0VElxszo9/IRTk3a7ZzqV2m/YZ0flga1nAMpjvahcu
-	 u8tvjpSTBCc7HnpU06zKkN9y/DI7NlA7vRToo+7gUa/ddnZWkeZ0REuhiVdQRP2+0/A==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792429732;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:Mail-Followup-To:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=H7k9Iqs7nqmgbTx9iPYp3EUuEUIbHa6CKRQHNpNJJgo=;
-	b=sBrdnO7ZX2Bq++jrBulybuAz7zhZFVMKWmAmXxVQ4USZuOhdXBJeQ1kfcZe6+a2PoBBI
-	 BH8Qf3FS0GyAoakIlU4Znhf6H3Dz0RwoHmOr3waa3ClDIJdYplMHA530IrV/gp6qpeyo9
-	 1ZL6Gws/IXoLcyuAY3fLZHrkWp3ElRs2YbZ6MPgT6A+LfyWdhKmUZqc7iyRpdZlcvJJqK
-	 m/jf934YzYocXum2v9QorzlUrW+tsEkcVo8hE5qxmTumEiGKtSNJ4Pmw997x5WKwg7WIT
-	 LWMKLt1b9WGsrMzFUwv3t8inQdL0lJHkS74qGsa5Pa7VlSA89DlWlNWeYk/kjFuLDdA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=FCRCj27h;
-	arc=none smtp.remote-ip=209.85.214.196
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.65.19
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792441972;
+	b=sFlqP9TWS8ApPzqT6ugxeB72nvCc9SScITjT5rtLhifjxcrQ7ugPgeBFsg9mhs+pV0ui
+	 bMMfHQmVFqupNM4s/E4ohYXejpQD48L68r1V1jM1ER80ZoQGQQXjnX+zv527KpGiTSlip
+	 aXnmxPrgEbeeLWXjHbhDXlnv2U1gbOBqwpTaEOYQPZIGlplzh7cjqSRMCQGCBnzTpjH9m
+	 fRbg23DJIq1BlJA1EdxaICupBUZW56H7+UXKoJ0hbg16tCQ/ZFEt+9Czt4RwY5+4q6btz
+	 h5mhgyNX2s0s9NhvfYFxSD1twad1JaSZfu24aL8zcUPo/TnJoBfVuJ43+jL8/x3MK7Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792441972;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:Content-Type:Content-Disposition:
+	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=NnZVSzSXcAj3KELfmay509eAzpFndEelCVPDyrd+ROQ=;
+	b=foH1maRDmzSC5gldWD1Ez4suMD8z3i56g2UmnhfskIKF+yq0efC6qdeSz+W94cgEayTZ
+	 2LeIn4Jr+tXQRRdEn0iuUgVwQ9zBog7XzkWyP2QZ1r3jC79IfNAk0x5EGP9e7vqgaIYEG
+	 v8V2kZv8IhSB5J8xfVLvuhUay2nkE7BF8v6TvBOxwBwErTG3WJQ1UtVchtUSnLm9xfPxI
+	 rgha3HI3ZLZOn6sx9zU1SVbivuY5tmLV3D2IJIxcHlMrb2TJdn/vu36YrhBWqSIFxTP6c
+	 6NVfGsiV1RcXxdYEFEfh4It8BjMmCAMBSh7jtDx412xiIuUQqYPGry0g/A1P8CYCWxA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=oss.nxp.com;
+	spf=pass smtp.mailfrom=oss.nxp.com;
+	dkim=pass header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.a=rsa-sha256 header.s=selector1-NXP1-onmicrosoft-com header.b=QEOJVKki;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.65.19
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011019.outbound.protection.outlook.com [52.101.65.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2254F606A329
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 17:08:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2254F606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDE5606A31C;
+	Mon, 19 Oct 2026 20:32:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4DDE5606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=FCRCj27h
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2e987b4a710so15697175ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 10:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792429730; x=1793034530; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:mail-followup-to:message-id:subject:cc:to:from:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=H7k9Iqs7nqmgbTx9iPYp3EUuEUIbHa6CKRQHNpNJJgo=;
-        b=FCRCj27hrs1m6UPIW1/wCgZ0OcyBJwR4HZ9Xvyfho9JVoG0WdKlR/15jAWIDnxxayo
-         QFYziwXks1uqraHg1uni51bOPAXcRcRa0HhEbn+GtP8hIWGOidjYCizQq7q9MttN5lWL
-         iUKj94legljuVi2SkW02e8l2GZrEy/HL0dnZbWandK+PDaC9ooamYTme5ZHUxBfe3g20
-         +0oc83OS2H7/1xvIE9LUnVQcB6khRU08MHMgBgE010hOJBN8uXKIHweHeYcq27gYEZc3
-         3IoYYDWTplK6PpG1X+W8gJdyuIiU0B35WSIIuMGyr50e4Ho0HEYlgPTYTtKZEbx8lcPl
-         /vSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792429730; x=1793034530;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=H7k9Iqs7nqmgbTx9iPYp3EUuEUIbHa6CKRQHNpNJJgo=;
-        b=EMA+MAOxqRpFFKxJWz8OP7WUOueZEPtNXHN/HKFx3dV2j50Cm6c2Ia+XRlqDCxM4ou
-         d+fHLum/legzFjOY7hd1bGk9GzH36pB02j4UI1u5MhoQLkAwNmEc6qiVuLHJbpfgudPD
-         bZyNYmlXNunnkmeC8BdBWat38y+Jf6yv3fiWb7OaXN/uScqMYPvp9lTo12ZVPSNaashA
-         WJ4fyeZq3UCNrf4SUolg73WdQH15kiZO9vkGtclgIKeyl46dpCqgy8JN9vY3IhxQTZPB
-         qfbeiVDwEAMfMdcQ6gm2Vq+AZpYaKAm1LZelvo0Ckd00g+Dknn5PoAEPKKCpCipa4HDL
-         nMNQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwiNXEa6g7Vl46qFj4Yzl3JcS0cesy39kLyKB1UGNu6yPFLpR+tZqd0assH2e2rGvaIyDHpQ4HeZLRQZfcOe0w=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKQIK5T3vuMJNLiRbxyMYRfzSwCc8m1kRWGVwKz30IwAZ4ueDUg
-	I/0rDj5uM3NG+vgKjxNOW2uSazpSKY0cI/Yn+1rPOpY6E/yCG90p6ZaA
-X-Gm-Gg: AYBFou0diwxhNGIp7zXITaZ5VCXtH4aEnl8KzuGxYjd+TBzudGVigaOxMQ5p04sabD6
-	3hmoGwAmPZHWcEb4kEDIyGPsRTkatfdKPQxhBs2p3ss6YyVBbjUYoADF/I1J81E/5WGa7BHPdvB
-	VvlDQgPTz+1EVPm8cU4ZpnYW+EgBerbjiy4awT8STp9ADrXSv7SR/ClOaHTPscF4lb4WzTK2gSY
-	4/sCGZoR+qxJo/ttGMa8f6AfCKq30gYCX0jWCSKe9R89MrZ3iZuCRyPPxnToLqxBJCQ3sllOVAL
-	v26zMtT/uHS9cs3DV8zdTcOgzEpYGW/aLT84P1J88vQQ/Y+RWbqJME+phEuiWgyOEwB3MCMN83V
-	P+6f0pKJC/T5Hv1yDmTvZs7tCYDAAhrauzQPY8sVuTK0PbLwZBdG1r2q4eNQMvdlzYebOlGgTrC
-	tI8GOIJ7I395y8TRVyCToG3ebodGuZO6ht+sky4EYhalPJoNMaGPePQRuXPxb7un27/4t31wJ4e
-	oftljU1EZCJk2jlw/pCjAO5ys0=
-X-Received: by 2002:a17:903:4405:b0:2e5:ff87:57f3 with SMTP id d9443c01a7336-2e97756f245mr73000545ad.32.1792429730192;
-        Mon, 19 Oct 2026 10:08:50 -0700 (PDT)
-Received: from J4f-Laptop.localdomain ([183.36.237.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ea1501e229sm3706735ad.47.2026.10.19.10.08.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2026 10:08:49 -0700 (PDT)
-Date: Tue, 20 Oct 2026 01:08:44 +0800
-From: Shihuang Liu <shlomojune6@gmail.com>
-To: Alejandro Colomar <alx+linux-hardening@kernel.org>
-Cc: linux-input@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Marcus Folkesson <marcus.folkesson@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Ville Syrjala <syrjala@sci.fi>, Henk Vergonet <Henk.Vergonet@gmail.com>, 
-	Henrik Rydberg <rydberg@bitmath.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] Input: misc - replace strlcat() with strscpy()
-Message-ID: <avxqxhctzivudv7ixjqbl6l3g6x5xxg3nb5v3o5px7brdheitj@qrhj3ki7kdso>
-Mail-Followup-To: Alejandro Colomar <alx+linux-hardening@kernel.org>, 
-	linux-input@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Marcus Folkesson <marcus.folkesson@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Ville Syrjala <syrjala@sci.fi>, Henk Vergonet <Henk.Vergonet@gmail.com>, 
-	Henrik Rydberg <rydberg@bitmath.org>, linux-kernel@vger.kernel.org
-References: <20261016170411.51025-1-shlomojune6@gmail.com>
- <20261016170411.51025-3-shlomojune6@gmail.com>
- <atXHuHxCqqkIuV2w@debian>
+	dkim=pass (2048-bit key, unprotected) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.a=rsa-sha256 header.s=selector1-NXP1-onmicrosoft-com header.b=QEOJVKki
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HKt2Dy7G2p3m/VuaQNpSZC7N21BgzccDqsdc4DYd1fawknPwEog9YSdCYWVqPIbh9WUVd/fGxGoUOUT4bqjzsIS3AUP6piCXDQTT+3gGBmxgMl5g9gqMPcpTbd0s40jMiFVf/H0ini8WEvSmCn5DaMAghvBYQDnBwhREN7M0zQVZAx15gTJVeVsqG++ksIldfg05zcq9JTMhXVqTReaI/KL+j6FihEZS2hhTtRJPvznPDsMJhONHqYv/SylaR9JSYnlX9yWEkkjN/B5DD7e7WI55RT0mvkJiQAF0mmz02gaYHaGdXXXjK0OBPbOfLarO/dXZF7reyw7R/YW/61D1Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NnZVSzSXcAj3KELfmay509eAzpFndEelCVPDyrd+ROQ=;
+ b=DUQsDw9fLb1SHqv0Ql+XEwkHhZtg7bsGUT35jAXUlpuP7n7qu0lVS7t0/iLoBNcUzZzZw75TaPkv3fSrswNKBuukVoJy1kcMfLhWlBAYZ4pys/CuHxepaH1t2ywcc7jHcYs+kKq1XYLQFTdBAROB4L/qiOVJ/vhVnbDOCbaG0ax9zd4hLetZ6agc0Y8rRuBjxYW25191S5Mzj3tMejI9tbE7SYRJHnJjzGtmi4dJSj2/MZNMLzy1rEJYMHwECzRGUlz8w3t9nlid8ImddcoF9lJdWbeCxi0NBqn/gWlvVDtj1AYw7Ud0ZwiRx0Y3kUd0xLzXx+INme1fbn2G1z5gBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NnZVSzSXcAj3KELfmay509eAzpFndEelCVPDyrd+ROQ=;
+ b=QEOJVKkimIDql3c30i6gpuqhn2Re4zLf6R0vrFmK7CmjQQSkaaVJYixKvQeJJ09jZSkci5qk4vjJlJ41PJubaoeT5veclyWffie3YaLdLQvpehfLXnjs0JbKGVz56JCzcq9uzNOdtZv9bvObvOOnK8Y7np+xysn7MtMlhy/CPzdi6OwZ2lnoaSiEWpGZ/yFQ5EylSlz5lNPeND4jNknNLhBx9xjjvfXE1dRzTzuKL4HJEii8m93cGB4KaX4rr6YTof8EvqgHK06pJZvo7SA5dVp9MoBbGx1IX6ReV5vapme6x42Q6CKq3WLCJR9mafE+a1VWTYVw9rlra05PWFRUbA==
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from MI3PR04MB12438.eurprd04.prod.outlook.com (2603:10a6:290:76::14)
+ by PAXPR04MB9105.eurprd04.prod.outlook.com (2603:10a6:102:225::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.19; Mon, 19 Oct
+ 2026 20:32:48 +0000
+Received: from MI3PR04MB12438.eurprd04.prod.outlook.com
+ ([fe80::c715:c32:8bb1:b70b]) by MI3PR04MB12438.eurprd04.prod.outlook.com
+ ([fe80::c715:c32:8bb1:b70b%6]) with mapi id 15.21.0522.017; Mon, 19 Oct 2026
+ 20:32:48 +0000
+Date: Mon, 19 Oct 2026 15:32:35 -0500
+From: Frank Li <Frank.li@oss.nxp.com>
+To: junyi.zhao@amlogic.com
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org, imx@lists.linux.dev,
+	linux-hardening@vger.kernel.org, xianwei.zhao@amlogic.com,
+	Kelvin.Zhang@amlogic.com
+Subject: Re: [PATCH 1/3] i3c: master: Rework SVC I3C to support vendor glue
+ layers
+Message-ID: <atZ-YyEmG-KvUZAF@SMW015318>
+References: <20261019-a9_i3c-v1-0-329d819d621f@amlogic.com>
+ <20261019-a9_i3c-v1-1-329d819d621f@amlogic.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261019-a9_i3c-v1-1-329d819d621f@amlogic.com>
+X-ClientProxiedBy: PH8P222CA0004.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:510:2d7::34) To MI3PR04MB12438.eurprd04.prod.outlook.com
+ (2603:10a6:290:76::14)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -104,157 +111,82 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <atXHuHxCqqkIuV2w@debian>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MI3PR04MB12438:EE_|PAXPR04MB9105:EE_
+X-MS-Office365-Filtering-Correlation-Id: c99f35e9-54c0-49e1-ee0f-08df2e2023a4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|19092799006|1800799024|23010399003|366016|6133799003|18002099003|10067099003|22082099003|4143699003|261009223027099003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	dbgPGYwX89F4FXPQGY/Mj4N21QTpE5JwwtD6zKPDn1qYgGNHHTRVdLLNjU7rcOjECU2EgZHzdHzk8Bs3s5/HGtRIuQLltpNnr7nsxq0iWr8+2xckN07z81WZFvlylOyv3WszY2azO/mWMLQv3dPaGH0/nYCSPKzstkGJBMR91DQ0igqu2HIYFinayVMdUZbFwFI/WdNgRSYRKIDqA4hOSbP0j5hq/OP2Fr+xTGuqiqqAu+TvZIzsRzM/h2VC4m0Uz+mr5cEPpCBqBdAvtFtEPvTtzIKUfNTdAcu4UHc7q3VSALT49iKANrcwqB2TlPCWFnV1GQoT2Qt2kGfZcNnX6vytuOkIPvVNmmJ3+CEfum6ad/eUTjTMb/wz6nX3ZzA+Rx/40gXkTS4eWRJO121OThJEksCs//Mvimm2l9j9vJD+NU9QMWnWM+Ab1hmK3MhCiRkeezEPEwUrh/5jB9DtOvAmqCHZ7saIkgxgxOFbG1Gh1u+jHKt/0zIVglS4jM93HQFM5sVcbDwMISuor3wCtkeUFCJNGP9Ocfx3etKhaH2vUM4pUQMvmTqovWPmn4guESSyOYfvSZj9v+yKy+Acw2tCgtQUOTDf6TrE6fyTd0j8eCgd4wKEjJBO+bYzApMGl1aXMCa9YPJGUEt+0XkMVKILVCKe8zuBq6SaSLbsUS4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MI3PR04MB12438.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(19092799006)(1800799024)(23010399003)(366016)(6133799003)(18002099003)(10067099003)(22082099003)(4143699003)(261009223027099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Yh9oizP5hJ7Bo3Rpc/ri6d/2r/yMxrtrg7faHR4VZyIxm/HIWGnkd/38xlVE?=
+ =?us-ascii?Q?mLFn1/jfVJn9zQi4xAPLIwwSBhv45qo38WhXCH6KFjttI+Hs85YIDPDV2wUh?=
+ =?us-ascii?Q?qkl+e8+O9yogrNoVpPJkPXnSElBPfPteOFOnFOBicH08+AU0LisrjmEUzAwh?=
+ =?us-ascii?Q?lEcBN8Dn6NmKwbXswtDALAOzd37q93DkSZYNkwD253Xw1q1OtX4VKYGg+WhO?=
+ =?us-ascii?Q?CLnONv6GaOXxRxZqAaz1IdwdQACv5EAZ/vMvQ/Ny69Nb7O/bksk1ma3s/FDd?=
+ =?us-ascii?Q?2x5aRkJp8PW9mpVFwrYR6Aw7+7NfEKoXmhmubH9yTNTWs76guhu+lh+M047C?=
+ =?us-ascii?Q?ImppGgfVSEFJXSKD2IpUkZAV+Mqj0VUp70tBi42gXWQnk7NqZ6ch2Frp6/sV?=
+ =?us-ascii?Q?0qYSnsYJAIpS1S7MejbTEHrt2VVhi41MFd5XKWjoCbBVkL1tITovmNqrN3G1?=
+ =?us-ascii?Q?xz/1HAXxGuYOKJHIUiG8aK3ZxdX8CTkWfA3HE9VmiVHWZhA4zrFGGBKJM9S1?=
+ =?us-ascii?Q?NwDLJd+VSZUZwIHtWNKeAZVP2gGJi1RmXUMAew6hmhIVkLaOKBCW4qxtuklL?=
+ =?us-ascii?Q?AFJcFSPgxboT7qsJhaPgrFv3IPLoSvXpb/bESJez6Gsq2ZvO8KUdnlvj08Wj?=
+ =?us-ascii?Q?6mahB+va0tX0kJ8s8AISNlPHnnkE05E0G+VJKkmeySpgksp7GlVG+vSstJ2c?=
+ =?us-ascii?Q?Y0Ca6kJJBjsrr181nMraAEskBZ8rAptKDI5KUWYPHGf795JOvaxFVWurSGrK?=
+ =?us-ascii?Q?gXJAHUv9ATUATCenQ8wVt6Y2TOrfdSZIUKUqTCtuNjrDg8b8A4SNMpWm9ufd?=
+ =?us-ascii?Q?mLx8nJ7VHOAChPrSFAmaK3yLZnUw6/r/zGq0DNngzvlC1qmrRvrtWPQBdMBw?=
+ =?us-ascii?Q?XZRAxaN6RcDbn8vekkxHVSpourW569ihU4C4OBB/YpLcHEh2U+QCpzZV1ooe?=
+ =?us-ascii?Q?XVtvSLAvNyy9JCBKthZaOSYlckjuzWrbrjgXyL2X2meDKm506cIWf6C3z9G4?=
+ =?us-ascii?Q?qqHoCH+h+NhkfZAIGAIN+9q3v1g2U4K7pS3fitBoBxSWeNCtYbh5djRSvFeP?=
+ =?us-ascii?Q?TxCxchpK5gCiSYuThWJ0gr0W6IhoARg5zkBDz95UAFrDlP2yTX3hOmu+xtuX?=
+ =?us-ascii?Q?HOo4EECqNQ/XmoXhZIm8zdviuyP/95wIb9Mb7/WTf1wRWSYh0cteAjg3+IKV?=
+ =?us-ascii?Q?6q5OfAlgKcioGbnZnDNaIFzASYrDo16a8ebi5AzclxLaaDc23Qcxg4Ma8kFA?=
+ =?us-ascii?Q?boCYTT5QL7vLqBFetb2XU5bIp2kcyYpghBYrB8FLR11lns+yCezNz2Ao9Rpr?=
+ =?us-ascii?Q?KfohuVfMHWwA2GSuKWfuzbjz2NORpj7i8msEPoacUnIvUoiXu198wlphiq2i?=
+ =?us-ascii?Q?PO3YwqGHvImFJpzG+AHoNimXNgTr9pNThOAW75ZaviQ6GQdSmyCknDP7M8uP?=
+ =?us-ascii?Q?ucg7FhfOqX8gr8Tr/n+33fmY4/Kwy0sT3WWqHedyeViECw03g8u6ZmDvDU2m?=
+ =?us-ascii?Q?nxvSyoYe0drFVyqKSAzxLfF8L0ubYuAhirVujzJeVVBDyhIJ3KAeT43mC2b4?=
+ =?us-ascii?Q?nErjiuX96X+dSA5W0nx7JkyryxmyNZGzYEeG0qDCDv1JJ8DB6QKnDeA3b/7N?=
+ =?us-ascii?Q?SHxZhn5tMo4oDUgiTJjzDZKVZ5yL10aoKBgiFrJXwpzL0vSqZWrKekVlBbag?=
+ =?us-ascii?Q?dwZ6QPAZgJBMybcC9kLOsXFY/8d3qBb3ElHKzfYP/uK5dBjCisJxhUV+r0UQ?=
+ =?us-ascii?Q?wO40kNI3kYXTJ7RLic902d7X5GVRlH89WeWh/fohvWdw1TBzwqkv?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c99f35e9-54c0-49e1-ee0f-08df2e2023a4
+X-MS-Exchange-CrossTenant-AuthSource: MI3PR04MB12438.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2026 20:32:48.3950
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MrfLepdCehiW98B6anBCBN0ZyOXdfg52vQki4hiVQo8+RBcEXdEwNFAxNz9BrDBvCbjrgHzrYh48WMggXLtzP+5UZnXebENKzrULzPkyp+9E2poaKzDOVPldf0wyyiUc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9105
 
-On Mon, Oct 19, 2026 at 09:48:26AM +0200, Alejandro Colomar wrote:
-> Hi Shihuang,
-> 
-> > Date: 2026-10-17 01:04:08+0800
-> > From: Shihuang Liu <shlomojune6@gmail.com>
-> >
-> > The ati_remote2, cm109, ims-pcu, keyspan_remote, powermate and
-> > yealink drivers build the physical path by appending a constant
-> > "/input0" suffix with strlcat() after usb_make_path().
-> > 
-> > In preparation for removing the deprecated strlcat() API[1],
-> > replace it with strnlen() followed by strscpy() into the remainder
-> > of the buffer, as commit 34b228b739f5 ("HID: usbhid: replace
-> > strlcat with better alternatives") did for the usbhid drivers.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/370 [1]
-> > Signed-off-by: Shihuang Liu <shlomojune6@gmail.com>
-> > ---
-> >
-> >  drivers/input/misc/ati_remote2.c    | 4 +++-
-> >  drivers/input/misc/cm109.c          | 4 +++-
-> >  drivers/input/misc/ims-pcu.c        | 8 ++++++--
-> >  drivers/input/misc/keyspan_remote.c | 4 +++-
-> >  drivers/input/misc/powermate.c      | 4 +++-
-> >  drivers/input/misc/yealink.c        | 4 +++-
-> >  6 files changed, 21 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/input/misc/ati_remote2.c b/drivers/input/misc/ati_remote2.c
-> > index 8db2dca84975c..929163f52177e 100644
-> > --- a/drivers/input/misc/ati_remote2.c
-> > +++ b/drivers/input/misc/ati_remote2.c
-> > @@ -767,6 +767,7 @@ static int ati_remote2_probe(struct usb_interface *interface, const struct usb_d
-> >  	struct usb_device *udev = interface_to_usbdev(interface);
-> >  	struct usb_host_interface *alt = interface->cur_altsetting;
-> >  	struct ati_remote2 *ar2;
-> > +	size_t len;
-> >  	int r;
-> >  
-> >  	if (alt->desc.bInterfaceNumber)
-> > @@ -823,7 +824,8 @@ static int ati_remote2_probe(struct usb_interface *interface, const struct usb_d
-> >  		goto fail3;
-> >  
-> >  	usb_make_path(udev, ar2->phys, sizeof(ar2->phys));
-> > -	strlcat(ar2->phys, "/input0", sizeof(ar2->phys));
-> > +	len = strnlen(ar2->phys, sizeof(ar2->phys));
-> 
-> Why strnlen(3)?  ar2->phys should be a string, right?  If it is not,
-> then we'd already have a buffer overread in strlcat(3), and then the
-> commit should be reporting a bug fix.  This should use strlen(3)
-> instead.
-> 
-> > +	strscpy(ar2->phys + len, "/input0", sizeof(ar2->phys) - len);
-> 
-> NAKing this.  This is precisely what strlcat(3)'s documentation in
-> OpenBSD says you shouldn't do:
-> 
-> 	Since it is known how many characters were copied the first
-> 	time, things can be sped up a bit by using a copy instead of an
-> 	append:
-> 
-> 		char *dir, *file, pname[PATH_MAX];
-> 		size_t n;
-> 
-> 		...
-> 
-> 		n = strlcpy(pname, dir, sizeof(pname));
-> 		if (n >= sizeof(pname))
-> 			goto toolong;
-> 		if (strlcpy(pname + n, file, sizeof(pname) - n) >= sizeof(pname) - n)
-> 			goto toolong;
-> 
-> 	However, one may question the validity of such optimizations, as
-> 	they defeat the whole purpose of strlcpy() and strlcat().  As a
-> 	matter of fact, the first version of this manual page got it
-> 	wrong.
-> 
-> <https://man.openbsd.org/strlcpy>
-> 
-> The right approach is to have a function that does the right thing.
-> There are two viable alternatives:
-> 
-> -  Write strscat().  It would take the strlen() internally, and so it
->    would be unnecessarily inefficient.  Prefer the next one.
-> 
-> -  Write stpecpy().  It returns a pointer, which allows chaining easily.
-> 
-> Here's a viable implementation of stpecpy():
-> 
-> 	char *
-> 	stpecpy(char *dst, const char end[0], const char *restrict src)
-> 	{
-> 		ssize_t  dlen;
-> 
-> 		if (dst == NULL)
-> 			return NULL;
-> 
-> 		dlen = strscpy(dst, src, end - dst);
-> 		if (dlen < 0)
-> 			return NULL;
-> 
-> 		return dst + dlen;
-> 	}
-> 
-> This would need to be accompanied by a seprintf() too, which would be
-> used by usb_make_path() to produce a pointer suitable for chaining.
-> I've been working on adding those.
-> 
+On Mon, Oct 19, 2026 at 01:34:26PM +0800, Junyi Zhao via B4 Relay wrote:
+> [You don't often get email from devnull+junyi.zhao.amlogic.com@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+>
+> From: Junyi Zhao <junyi.zhao@amlogic.com>
+>
+> The SVC I3C controller IP can be integrated into SoCs from different
+> vendors. Peripheral resources associated with the controller, such as
+> clocks, may vary between vendor implementations.
+>
+> Rework the driver to separate common functionality from
+> vendor-specific extensions. The common logic is shared across all
+> implementations, while platform-dependent operations are provided
+> through vendor-specific hooks.
+>
+> Also add a corresponding MAINTAINERS entry for the SILVACO I3C
+> controller.
+>
+> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
+> ---
 
-After sending this patch, I noticed the following comment from an
-earlier patch:
+No big difference. Needn't rework svc-i3c-master.c, you can add amlogic at
+svc-i3c-master.c directly.
 
-> We don't want to do this as merely an open-coded strlen/sprintf; it doesn't gain us anything.
-
-See:
-<https://lore.kernel.org/all/202609151055.AFC6267@keescook/>
-
-Replacing strlcat with an open-coded strlen + snprintf, or with alternatives 
-such as strnlen, strlen, or strscat, would not provide any meaningful benefit.
-
-According to Dmitry's reply to this series, my draft proposal is to replace 
-the usb_make_path() + suffix pattern with a helper defined in the core header, as follows:
-
-    static inline __printf(4, 5)
-    int usb_make_subpath(struct usb_device *dev, char *buf, size_t size,
-                 const char *fmt, ...)
-    {
-        struct va_format vaf;
-        va_list args;
-        int actual;
-
-        va_start(args, fmt);
-        vaf.fmt = fmt;
-        vaf.va = &args;
-        actual = snprintf(buf, size, "usb-%s-%s/%pV", dev->bus->bus_name,
-                  dev->devpath, &vaf);
-        va_end(args);
-
-        return actual >= size ? -1 : actual;
-    }
-
-
-> If you want to keep it easy, I'd do strscat().  We can modify it later
-> to be more efficient.  After all, we already have the inefficiency of
-> calling strlcat(3) now.
-
-Great. Improving its efficiency is exactly what I would like to do as well
-
-Thanks for reviewing this and for your suggestions.
-
-Shihuang
+Frank
