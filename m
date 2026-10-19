@@ -1,69 +1,67 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6531339397
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 01:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CB733CEBD
+	for <linux-hardening@vger.kernel.org>; Mon, 19 Oct 2026 01:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792375113; cv=none; b=IIfb1L5PguU2bamS02oYvb7nDM/AOmMMpSExOACU1p2r8Qwrd2AmXSr0OGH3bLsujVs/kaIouoQ37iFNYLyyAOesUY2iJzEvH0R44jik48r3CYpWIWzn47ws8nB0V1mNVF7lwgc2nNXBwCK2GF6WnG9kMcUclM7YdLiPZRJmxec=
+	t=1792375122; cv=none; b=gbXadO9q6oEJWO3071EwY60SOFxbMFHlpIY+4QTVmjbh0jqeG5apDY8BvH2CDe/DinEPgHaOcBeEAuuRuouwPc/Ef2Cf1pUrHse02/SLcvjSixQ2nnYw2CsewdBb06i4cMFKb4T++Jsrb2WwJ4BKy+6u3ULaPj2TFKucU/QJhis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792375113; c=relaxed/simple;
-	bh=+oaAjyEp6ftj/PHhQbqAgc3i6WKxrkECzgHtOsHcZvQ=;
+	s=arc-20240116; t=1792375122; c=relaxed/simple;
+	bh=J5mMuI/2gP0v9ch0ANotvYhKJbiRS7t/s9fMyFsvGlc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m0vTIZhvBURqunGyNyYu0gHcNq/5PMiCL2hyf4nP4CJFi5fvzEV8MDjDu4Z2dDmNdWrQxFYg4P4FONsry28LGPQiODIgJvaNyC61SRrCER4AzpygCkvKFicJ1JYsZFKxucEiLTw1WHhvCZSHu2LI6cVPEtiygHroSZX93LCQyzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dGFJS24G; arc=none smtp.client-ip=74.125.82.177
+	 In-Reply-To:To:Cc; b=jQeKxU8Ka8IonPXdj9lx6799fzGEIl/sve9YluH2Gic7d0Abh42d0N7c5Yy7Zbh3a+WRnVLmvDdei7P6NX1AvhVxCo/fdeH5PlfzT8hjwdjt/adhGGQFdVpZcFTFI87K5imMk3zOo8ZXIjTHJM5sdqqxeLCkUzysgKJW2xdhjMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hEm+MKtx; arc=none smtp.client-ip=74.125.82.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGFJS24G"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-35829219da8so3008426eec.0
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Oct 2026 18:58:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEm+MKtx"
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-35aa0cf7c40so3275639eec.1
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Oct 2026 18:58:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792375111; x=1792979911; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792375120; x=1792979920; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=wabN2RpcS9yTy4X+yFbisN0o21RKH0fyf1fEhCrMYgc=;
-        b=dGFJS24G2+8l24MB8KPvSCel5scwCuISJ6K+2U/au9gRu4U5UA4FX+BHl5Axj8QA+B
-         ZQk7JlxxsBt/YSZ2Wp9j+9MhxrISRoQaouiIQMeqhgNeZtMXcV7kb1xSM4l8LZ/AAHTx
-         X94NdGfVcYN5mDGea33VPkdL1Gv0ikgDZXURN0l+ZAwUkjj7y9saxcLKc24sxrWBUzDq
-         aUDY0/pT5zDLPTEO7LkpJAzASQWxqMeKEMy7M6q3YM6woibjV4gw46l7H6sERo+yYZeI
-         HS6GA9Xo8/ulxmdKMFSUFOof8poRLLpZlYjN9h++KSUJ83tfH5AeTJWHq2dwoaCo3P7x
-         ZFhg==
+        bh=eX3gFXGtK0qFC1+jmqNQ0ZBmFVgyc6CU75RzS6mT9B0=;
+        b=hEm+MKtxGYdBQVuoQgTh2WX0Qa0qpPJ96tGhdiMZijcVuKqWcUXJukO24kGlJtGQEv
+         MVoUQ7B/kzItelKX7K1NFaQ3F9zVcqEW+P50ei1uqv8YgBbl4iEeWLw/bdFfPFWXOGFJ
+         e28i6BB+2w/qbWoWARaJvQOE4axLFJHuhO4nuKNzXUy/j7fjL9721/eKTBi+9mPPRPqV
+         +2Wo3jE21ypjO6F2tfwQqMBlr1U1X+NDZXDikosaZWjfmDAXDxhyrf8aUcQZexT/kid8
+         Cb+aymvn3O6EiAX2KdlRV7+22yqA0N316FiFJ156HqNQDUA/vkw92ZkrkAvmgPIeP/kL
+         WN2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792375111; x=1792979911;
+        d=1e100.net; s=20260707; t=1792375120; x=1792979920;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=wabN2RpcS9yTy4X+yFbisN0o21RKH0fyf1fEhCrMYgc=;
-        b=eiJzN+yWvK1bL7qq2yU/BIxbGTA7jCIOz1rIHmSlTpl0iB/Oj2lmZ7u6HxWMkUZOnW
-         setU94BvYdwFo0p5K9H4wCw8qaL17bT9jU1gxrClK5tRjMz2p052Wb/p1dPR9hsbj3gJ
-         OYxsLFOG94PaBI9WptwZ42XLaID+A019V0VKZgsaogz8gpnRUQq21aUHKYF6rx/mtOZc
-         DPoPvWP0slXdO1wDDBbSdaTAhQ+plWvOw9GkE1lXqM2cv//BQTezKyzQ22SBAmEeXNnG
-         HDm2sBowKoS4qH+ZZCvFkokKizql/WOYP7ntqHoMvs7akNB/9qH4/45+1YRdhlK/wL+g
-         M3UA==
-X-Forwarded-Encrypted: i=1; AKwUvBxJYpEBc3zTbWQ2jB+u1PrIV5klJw2oMMRYI92gbya+wh0HxF0BiNQrFgJsja7xUQ5QuhbnZqLdGRgziCiBECQ=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJLRc7f5eUfxA3JNl6ZhdXz8RpjcKJPaCN0I+isOGlHHHUGkKwV
-	HmKryy8QBGi6MHhruaWk2fUTMdV5roxbdvuyZZJrdbstAFI2j0moJA7R
-X-Gm-Gg: AYBFou2Em0auDbI19qYaQZZMxtIn2KisWgkZebeUrHgD+S2nZNnKGwfE2+Z0hfFG6x4
-	e0TCxc2NG6X0UUnpWLVU8Q+ON1IgGZ1M2yN8BR2jl8Cldhi+K28W0kzZqLvKwnxkHA4lyXhI7A3
-	ZqouBtAgchYDTsGxUCx1BUIcPvlXjjJdYQ+EUlVScgSJCrtE01tq49BxiUBUOJY2pBqXCPW4iny
-	VTdZaR3e3YoZT26xtEPKaKHuhYiay7mzLG52fbhb4VW8OTWS4wzAru8aXlTDp3F2wSczsh4ETEs
-	eJdxV2/s2EZ7l2lpUpea8dgrFG+D4N0JpkvQfYkpTicYpVzwFEhNZHGy7XZHWY9TBMHHktXU1hA
-	UT1fZTI4JLQ3LnHGXgBigi+URO72FAv6+4qtQ21sLHp6swuwpASaxPTAQqh7FmgHcsbDds8Gy3W
-	xLHIwosuBbYlpkqhzd1ZxBF2QMY+AwZzAQF21UPXvHWmYK3XZtr+PbSzl5xxqaxsGukCbKk4eFc
-	CpT
-X-Received: by 2002:a05:701b:4202:20b0:146:5f73:d45b with SMTP id a92af1059eb24-1850be495b5mr8924712c88.3.1792375110248;
-        Sun, 18 Oct 2026 18:58:30 -0700 (PDT)
+        bh=eX3gFXGtK0qFC1+jmqNQ0ZBmFVgyc6CU75RzS6mT9B0=;
+        b=c98q1i1dnl3uItA3CY+FXIlyavg7ydidR6Ud/48uAcxYM4bEZ7CJsPcFnQQhwK/Bg3
+         on7PWfXbedvTwYvi7Bq6FUfpptpVbCiq15BwdINmv3TDH9k+L0G1DtKCz5UkOpSLlAQM
+         QLtyu+mbTI4KQjnKnDLomqeMsuDEMea9m0VRH98OL6DluZ+j/TdO7jNZjbj/s1hyvko+
+         ZNdJqULGLT/A4ENApo8BtzEkjubnDei8tQ4VO7gFvR4ILiCdpAxWSTEuBXKIGnMb5BRe
+         g+8vyk+zY7knHO3Z+s8+5Nv4GobqnAV5uLYCMV8PTSiokr8M287PR0AIeEeCdcEkQ0kI
+         38Pg==
+X-Forwarded-Encrypted: i=1; AKwUvByUGgT6+5DJNjnWlTosZ9bcKecW707Nof/gtef/WM/l+QzKws2UUTxTPRaqGkvPP8sY8rKy3DliWqdWHRVh9Zc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLekpGC7w2XMqKcjGsvq+0MulyyWcsdf1IixoVPVLOiYggPM2sA
+	VjB7k7VC4O3Bwf2vtV4NK50V8Zhc5+S3nfm1PP4BaYlV9dZFaV8heCR2
+X-Gm-Gg: AYBFou22WwCoV2ceWY8UKC5H19xnntzuaMB9UUgP8BmDHj2Gz/4xTaWc9xjm9EZpKf7
+	yWrS1Kw7zL1Ahuv+FkuB/7mx0aY44WrtfbWbymWCt+smRXHgd/FW9/8AzL2CMLesAOkHv0SkmK7
+	J67JuOOH9IVGAEZObiOac2iDmjuiDDNnvtdEtT45iPr7rfHsGRmGNOVjx+lG7H5Lq3+doGALfCC
+	r9vo0iBcDsIX3KKwb92MKYgjOEQLCQ1YoCAylu136b/YksDeTZUhSVzb1Vmy7SsxHeXvYBVkD4i
+	ACthring35Ye7//ht2GjSiBzgNH3jDG8LiOm972diU+Iez+TJRxhbVq5WchbPXqvS6n9EPuHSdo
+	GXKOfHVcgi9cWufaswpCcpkjF4IihrzL+YRrJyGtgvqxBmu0/0oLju0nWyPBwhCCJmbnCEzByHW
+	L7LOlUwRxLtJ4NoyC8VCx0BjrjVWFnJjNv+HAwLmfuWUfEA7h6vCAEiyQR3SvWNQLKeg==
+X-Received: by 2002:a05:7022:b057:20b0:18a:d0b5:fa42 with SMTP id a92af1059eb24-18ad0b5ffc8mr1432273c88.19.1792375119985;
+        Sun, 18 Oct 2026 18:58:39 -0700 (PDT)
 Received: from [127.0.1.1] ([23.254.208.9])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1831ba424a6sm24177311c88.17.2026.10.18.18.58.21
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1831ba424a6sm24177311c88.17.2026.10.18.18.58.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Oct 2026 18:58:29 -0700 (PDT)
+        Sun, 18 Oct 2026 18:58:39 -0700 (PDT)
 From: Qiliang Yuan <odys.yuan@gmail.com>
-Date: Mon, 19 Oct 2026 09:58:09 +0800
-Subject: [PATCH 1/2] word-at-a-time: check the first byte in
- load_unaligned_zeropad()
+Date: Mon, 19 Oct 2026 09:58:10 +0800
+Subject: [PATCH 2/2] kasan/test: cover load_unaligned_zeropad()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -72,7 +70,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261019-bug-word-at-a-time-zeropad-kasan-v1-1-f21a3ed6a477@gmail.com>
+Message-Id: <20261019-bug-word-at-a-time-zeropad-kasan-v1-2-f21a3ed6a477@gmail.com>
 References: <20261019-bug-word-at-a-time-zeropad-kasan-v1-0-f21a3ed6a477@gmail.com>
 In-Reply-To: <20261019-bug-word-at-a-time-zeropad-kasan-v1-0-f21a3ed6a477@gmail.com>
 To: Russell King <linux@armlinux.org.uk>, 
@@ -102,210 +100,79 @@ Cc: linux-arm-kernel@lists.infradead.org, Kees Cook <kees@kernel.org>,
  linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
  linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  kasan-dev@googlegroups.com, linux-mm@kvack.org, 
- Qiliang Yuan <odys.yuan@gmail.com>, Peter Collingbourne <peter@pcc.me.uk>
+ Qiliang Yuan <odys.yuan@gmail.com>
 X-Mailer: b4 0.13.0
 
-load_unaligned_zeropad() reads a word that may run into an unmapped
-page and recovers through an exception fixup. It does the word loads of
-sized_strscpy() and of the name compare in dentry_string_cmp(), path
-components in hash_name() and hashlen_string(), and the trailing bytes
-in x86's csum_partial().
+On architectures with CONFIG_DCACHE_WORD_ACCESS, load_unaligned_zeropad()
+does the word loads of the dcache name compare and of path name
+hashing.
 
-It is inline assembly on every architecture that implements it, so
-KASAN and KCSAN never see these loads, while read_word_at_a_time() at
-least checks the first byte of each word. A use-after-free or
-out-of-bounds read of a name handed to path lookup goes unreported, and
-so does strscpy() reading from a bad source, which the kasan_strings
-KUnit case expects to be reported. On x86_64 with generic KASAN:
+None of the KASAN test cases reads memory through it, so nothing
+noticed that KASAN did not check these loads at all.
 
-  KASAN and string KUnit suites      failures
-                                  before    after
-  CONFIG_FORTIFY_SOURCE=n              1        0
-  CONFIG_FORTIFY_SOURCE=y              1        0
+Add a case that reads a freed object through load_unaligned_zeropad()
+and expects a report. Skip it with hardware tag-based KASAN, since
+arm64 turns tag checking off for this load:
 
-Check the first byte at the start of load_unaligned_zeropad() on every
-architecture, as read_word_at_a_time() does. All callers only load a
-word whose first byte belongs to the string or buffer they read, so
-the check does not flag their intended reads past the end. Add no-op
-stubs for the powerpc selftest that builds the header in user space.
+  kasan_load_unaligned_zeropad, x86_64, generic KASAN
+  without "word-at-a-time: check the first byte in
+  load_unaligned_zeropad()"                                 FAILED
+  with it                                                   PASSED
 
-Suggested-by: Peter Collingbourne <peter@pcc.me.uk>
 Signed-off-by: Qiliang Yuan <odys.yuan@gmail.com>
 ---
- arch/arm/include/asm/word-at-a-time.h                           | 7 +++++++
- arch/arm64/include/asm/word-at-a-time.h                         | 7 +++++++
- arch/powerpc/include/asm/word-at-a-time.h                       | 6 ++++++
- arch/riscv/include/asm/word-at-a-time.h                         | 6 ++++++
- arch/s390/include/asm/word-at-a-time.h                          | 6 ++++++
- arch/x86/include/asm/word-at-a-time.h                           | 6 ++++++
- tools/testing/selftests/powerpc/primitives/linux/kasan-checks.h | 3 +++
- tools/testing/selftests/powerpc/primitives/linux/kcsan-checks.h | 3 +++
- 8 files changed, 44 insertions(+)
+ mm/kasan/kasan_test_c.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/include/asm/word-at-a-time.h b/arch/arm/include/asm/word-at-a-time.h
-index 5023f98d8293d..f672aad2e30e6 100644
---- a/arch/arm/include/asm/word-at-a-time.h
-+++ b/arch/arm/include/asm/word-at-a-time.h
-@@ -56,6 +56,9 @@ static inline unsigned long find_zero(unsigned long mask)
- #include <asm-generic/word-at-a-time.h>
- #endif
+diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
+index b9e167ed5be32..c791512f6fc49 100644
+--- a/mm/kasan/kasan_test_c.c
++++ b/mm/kasan/kasan_test_c.c
+@@ -28,6 +28,9 @@
+ #include <trace/events/printk.h>
  
-+#include <linux/kasan-checks.h>
-+#include <linux/kcsan-checks.h>
+ #include <asm/page.h>
++#ifdef CONFIG_DCACHE_WORD_ACCESS
++#include <asm/word-at-a-time.h>
++#endif
+ 
+ #include "kasan.h"
+ 
+@@ -1673,6 +1676,26 @@ static void kasan_memcmp(struct kunit *test)
+ 	kfree(ptr);
+ }
+ 
++static void kasan_load_unaligned_zeropad(struct kunit *test)
++{
++#ifdef CONFIG_DCACHE_WORD_ACCESS
++	char *ptr;
 +
- #ifdef CONFIG_DCACHE_WORD_ACCESS
- 
- /*
-@@ -69,6 +72,10 @@ static inline unsigned long load_unaligned_zeropad(const void *addr)
++	/* The tag check is turned off for this load on arm64 with MTE. */
++	KASAN_TEST_NEEDS_CONFIG_OFF(test, CONFIG_KASAN_HW_TAGS);
++
++	ptr = kmalloc(64, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
++	kfree(ptr);
++
++	OPTIMIZER_HIDE_VAR(ptr);
++	KUNIT_EXPECT_KASAN_FAIL_READ(test,
++		kasan_int_result = load_unaligned_zeropad(ptr));
++#else
++	kunit_skip(test, "Test requires CONFIG_DCACHE_WORD_ACCESS=y");
++#endif
++}
++
+ static void kasan_strings(struct kunit *test)
  {
- 	unsigned long ret, tmp;
- 
-+	/* open-coded instrument_read(addr, 1), as in read_word_at_a_time() */
-+	kasan_check_read(addr, 1);
-+	kcsan_check_read(addr, 1);
-+
- 	/* Load word from unaligned pointer addr */
- 	asm(
- 	"1:	ldr	%0, [%2]\n"
-diff --git a/arch/arm64/include/asm/word-at-a-time.h b/arch/arm64/include/asm/word-at-a-time.h
-index 824ca6987a516..11ecca99057aa 100644
---- a/arch/arm64/include/asm/word-at-a-time.h
-+++ b/arch/arm64/include/asm/word-at-a-time.h
-@@ -40,6 +40,9 @@ static inline unsigned long zero_bytemask(unsigned long bits)
- #include <asm-generic/word-at-a-time.h>
- #endif
- 
-+#include <linux/kasan-checks.h>
-+#include <linux/kcsan-checks.h>
-+
- /*
-  * Load an unaligned word from kernel space.
-  *
-@@ -51,6 +54,10 @@ static inline unsigned long load_unaligned_zeropad(const void *addr)
- {
- 	unsigned long ret;
- 
-+	/* open-coded instrument_read(addr, 1), as in read_word_at_a_time() */
-+	kasan_check_read(addr, 1);
-+	kcsan_check_read(addr, 1);
-+
- 	__mte_enable_tco_async();
- 
- 	/* Load word from unaligned pointer addr */
-diff --git a/arch/powerpc/include/asm/word-at-a-time.h b/arch/powerpc/include/asm/word-at-a-time.h
-index 54653a8634149..49c6a1f65c493 100644
---- a/arch/powerpc/include/asm/word-at-a-time.h
-+++ b/arch/powerpc/include/asm/word-at-a-time.h
-@@ -5,6 +5,8 @@
-  * Word-at-a-time interfaces for PowerPC.
-  */
- #include <linux/bitops.h>
-+#include <linux/kasan-checks.h>
-+#include <linux/kcsan-checks.h>
- #include <linux/wordpart.h>
- #include <asm/asm-compat.h>
- #include <asm/extable.h>
-@@ -168,6 +170,10 @@ static inline unsigned long load_unaligned_zeropad(const void *addr)
- {
- 	unsigned long ret, offset, tmp;
- 
-+	/* open-coded instrument_read(addr, 1), as in read_word_at_a_time() */
-+	kasan_check_read(addr, 1);
-+	kcsan_check_read(addr, 1);
-+
- 	asm(
- 	"1:	" PPC_LL "%[ret], 0(%[addr])\n"
- 	"2:\n"
-diff --git a/arch/riscv/include/asm/word-at-a-time.h b/arch/riscv/include/asm/word-at-a-time.h
-index 3802cda71ab7e..fb7e2904dd7fd 100644
---- a/arch/riscv/include/asm/word-at-a-time.h
-+++ b/arch/riscv/include/asm/word-at-a-time.h
-@@ -11,6 +11,8 @@
- 
- #include <asm/asm-extable.h>
- #include <linux/bitops.h>
-+#include <linux/kasan-checks.h>
-+#include <linux/kcsan-checks.h>
- #include <linux/wordpart.h>
- 
- struct word_at_a_time {
-@@ -60,6 +62,10 @@ static inline unsigned long load_unaligned_zeropad(const void *addr)
- {
- 	unsigned long ret;
- 
-+	/* open-coded instrument_read(addr, 1), as in read_word_at_a_time() */
-+	kasan_check_read(addr, 1);
-+	kcsan_check_read(addr, 1);
-+
- 	/* Load word from unaligned pointer addr */
- 	asm(
- 	"1:	" REG_L " %0, %2\n"
-diff --git a/arch/s390/include/asm/word-at-a-time.h b/arch/s390/include/asm/word-at-a-time.h
-index eaa19dee76994..59393cf065964 100644
---- a/arch/s390/include/asm/word-at-a-time.h
-+++ b/arch/s390/include/asm/word-at-a-time.h
-@@ -3,6 +3,8 @@
- #define _ASM_WORD_AT_A_TIME_H
- 
- #include <linux/bitops.h>
-+#include <linux/kasan-checks.h>
-+#include <linux/kcsan-checks.h>
- #include <linux/wordpart.h>
- #include <asm/asm-extable.h>
- #include <asm/bitsperlong.h>
-@@ -52,6 +54,10 @@ static inline unsigned long load_unaligned_zeropad(const void *addr)
- {
- 	unsigned long data;
- 
-+	/* open-coded instrument_read(addr, 1), as in read_word_at_a_time() */
-+	kasan_check_read(addr, 1);
-+	kcsan_check_read(addr, 1);
-+
- 	asm_inline volatile(
- 		"0:	lg	%[data],0(%[addr])\n"
- 		"1:	nopr	%%r7\n"
-diff --git a/arch/x86/include/asm/word-at-a-time.h b/arch/x86/include/asm/word-at-a-time.h
-index 422a47746657a..1319e1d87a9c4 100644
---- a/arch/x86/include/asm/word-at-a-time.h
-+++ b/arch/x86/include/asm/word-at-a-time.h
-@@ -3,6 +3,8 @@
- #define _ASM_WORD_AT_A_TIME_H
- 
- #include <linux/bitops.h>
-+#include <linux/kasan-checks.h>
-+#include <linux/kcsan-checks.h>
- #include <linux/wordpart.h>
- 
- struct word_at_a_time {
-@@ -71,6 +73,10 @@ static inline unsigned long load_unaligned_zeropad(const void *addr)
- {
- 	unsigned long ret;
- 
-+	/* open-coded instrument_read(addr, 1), as in read_word_at_a_time() */
-+	kasan_check_read(addr, 1);
-+	kcsan_check_read(addr, 1);
-+
- 	asm volatile(
- 		"1:	mov %[mem], %[ret]\n"
- 		"2:\n"
-diff --git a/tools/testing/selftests/powerpc/primitives/linux/kasan-checks.h b/tools/testing/selftests/powerpc/primitives/linux/kasan-checks.h
-new file mode 100644
-index 0000000000000..000c92de6baf2
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/primitives/linux/kasan-checks.h
-@@ -0,0 +1,3 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* There is nothing for KASAN to check in user space. */
-+#define kasan_check_read(p, size)	((void)(p), (void)(size))
-diff --git a/tools/testing/selftests/powerpc/primitives/linux/kcsan-checks.h b/tools/testing/selftests/powerpc/primitives/linux/kcsan-checks.h
-new file mode 100644
-index 0000000000000..39c97bc15531e
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/primitives/linux/kcsan-checks.h
-@@ -0,0 +1,3 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* There is nothing for KCSAN to check in user space. */
-+#define kcsan_check_read(p, size)	((void)(p), (void)(size))
+ 	char *ptr;
+@@ -2264,6 +2287,7 @@ static struct kunit_case kasan_kunit_test_cases[] = {
+ 	KUNIT_CASE(kasan_alloca_oob_right),
+ 	KUNIT_CASE(kasan_memchr),
+ 	KUNIT_CASE(kasan_memcmp),
++	KUNIT_CASE(kasan_load_unaligned_zeropad),
+ 	KUNIT_CASE(kasan_strings),
+ 	KUNIT_CASE(kasan_bitops_generic),
+ 	KUNIT_CASE(kasan_bitops_tags),
 
 -- 
 2.43.0
