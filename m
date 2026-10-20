@@ -1,72 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792498331;
-	b=knxIGV7HzZul8Iu9gyu7QljGdDttVXfX3AsQK3ippsn9POPMfMEPNo+qHmFEY/MCgEOI
-	 A4Tmxkj1vyEdH0DA2HjnfYS4Cf/7gmp7ytChRJkEInnRKnyaJoSYgro519VW6M9E++YiY
-	 pXwH8rJrMMZ7IdoXJyrMsV5ApYuEGqzhhsqR8Zop+j2s68jydaqaDZ5XIx52A9Atrycpd
-	 bAAbC4QXHDtTt43d06gJIXdH+lH7l6ouB/YHSWauCenvt6ADB/LnjRfp9NvKWCt9bE59e
-	 LWOluMRfSy6Xwr8phQNKEXwHhpw+Ij89l8xWUPZABOegCaWheNr/dEcE8UzrIV3eLPg==
+	t=1792509277;
+	b=r1/pW4ZHEvrbg71CxQjAGK8LABLUtScVdEWFB9LI5YsMMGTFsMt6ckMiJNrqSHlT3FZH
+	 zRWXN9+CjvCEq3WklCRoDspo0QBwmfRlyX339MhnvHkDS8yylErEbu5gw6Wy0kVSRJyEJ
+	 H1W2ShfNXcvni0CkxS9BglG5b9yEIMGoPBCtbgr8jev1TdAG4eTwxcuDSjhUbzZYyAA+N
+	 6HrLEewyId3e9TH4p5bLKjH6OQO8aPjIIOZRtS4aW4EKmU6rp5JrKJLztP2fKDikIO+1Z
+	 flv/04jw4u6DN5vtSpS5JvxqaSAclFFkGd4xVXS2ksndSlZQQM4FsEiLhsZEuCOgkTQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792498331;
-	h=DMARC-Filter:Received:Received:X-Authority-Analysis:DKIM-Signature:
-	 Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-AntiAbuse:X-AntiAbuse:X-AntiAbuse:
-	 X-AntiAbuse:X-AntiAbuse:X-BWhitelist:X-Source-IP:X-Source-L:X-Exim-ID:
-	 X-Source:X-Source-Args:X-Source-Dir:X-Source-Sender:X-Source-Auth:
-	 X-Email-Count:X-Org:X-Source-Cap:X-Local-Domain:X-CMAE-Envelope;
-	bh=tW+jOFa0bAPRo5ob6iKpdpiylE+QgPpSwSf2SsyL4p0=;
-	b=ZbSRZak4BWU+dGWrOzmVkpbySJ2VLePChwOg40P6YH1FkUy8tXXJaU8Z0QYakvTmOAoo
-	 AnonQjqcX2JMlw2+yucj0yl3ukyR/a3iH5m3MzNV8Gl76CnVlLaltoRrXROOKmoYVKA93
-	 hH6V/VgxCydSirxfQ9FPQSGArblMbsF9sKfowVHK6wZ6F2Znzaarypq1+x0A5zmD8OKW+
-	 7KkKoPkRjof0MAD6BMkhA6RKcfjR6QTHWrB/+mcDILOUXilhmSULeslMFWg6ukwneE+og
-	 MSkMnL/sYIXMmfevA8ys0sj9oyCUnopopd8lug4skhkcev7llyr7HvCypgkd+UXogqw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792509277;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:From:To:Cc:Subject:In-Reply-To:
+	 References:User-Agent:Date:Message-ID:MIME-Version:Content-Type:
+	 X-Spam-Flag:X-Spam-Score:X-Spam-Level:X-Spamd-Result;
+	bh=CqjCtBFUFd+1iHaj1nr2DkTfyqVxORiTyYK/8Gv0TZk=;
+	b=faypXvlEn9E1lBdVmsq1NGIC/T8/LW7cRXrn7/K+xSGqjJ4KY14mLuk60PNORfWYbR2T
+	 RCJRT6EPHENuHxuOT+4On3oPHFYNcAEvx5yzKyvV689Xa0lcYbTUALF0QvgLUG0EZzlyy
+	 QkdYg+UR5CY42IfMdtjFJuMPy8ZRYC0Ealp0uSGTtsv7coXgMeyK5JRivKPK5RoVWLTU/
+	 5Fd8KUlov9OEnLpN48vDkIIkVsUgFe5yrIN/+pGYzBhStiOaC5WmxKhKHwU9+WspBa/77
+	 Ull+H2bIhwkQN8SAKJ7Mve4y9RGQV2CjouloXr9NB/o0WUaJb7HkyTUeA/38AQ7O73g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=embeddedor.com;
-	spf=pass smtp.mailfrom=embeddedor.com;
-	dkim=pass header.d=embeddedor.com header.i=@embeddedor.com header.a=rsa-sha256 header.s=default header.b=AbVyf0EC;
-	arc=none smtp.remote-ip=35.89.44.37
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=suse.cz;
+	spf=pass smtp.mailfrom=suse.cz;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=BhyVvHxe;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=7zFuOTts;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Xl1DC7bo;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=5VRyfUyg;
+	arc=none smtp.remote-ip=195.135.223.130
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A3D606A319
-	for <linux-hardening@vger.kernel.org>; Tue, 20 Oct 2026 12:12:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98A3D606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D671F606A33B
+	for <linux-hardening@vger.kernel.org>; Tue, 20 Oct 2026 15:14:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D671F606A33B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=embeddedor.com header.i=@embeddedor.com header.a=rsa-sha256 header.s=default header.b=AbVyf0EC
-Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
-	by cmsmtp with ESMTPS
-	id J6YexRRf5v0ndJ8hHxLZzF; Tue, 20 Oct 2026 12:12:03 +0000
-Received: from gator4166.hostgator.com ([108.167.190.91])
-	by cmsmtp with ESMTPS
-	id J8hGxo1jxouFZJ8hHxs5Yj; Tue, 20 Oct 2026 12:12:03 +0000
-X-Authority-Analysis: v=2.4 cv=Zd4dNtVA c=1 sm=1 tr=0 ts=6ad75a93
- a=vY9Mjuda9oMEc2E4Cx1x2A==:117 a=vY9Mjuda9oMEc2E4Cx1x2A==:17
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=7T7KSl7uo7wA:10 a=9AdMxfjQAAAA:20
- a=FmNn6hfUth-HS78a2iwA:9 a=QEXdDO2ut3YA:10 a=2aFnImwKRvkU0tJ3nQRT:22
- a=bA3UWDv6hWIuX7UZL3qL:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Unsubscribe-Post:List-Subscribe:List-Post:List-Owner:
-	List-Archive; bh=tW+jOFa0bAPRo5ob6iKpdpiylE+QgPpSwSf2SsyL4p0=; b=AbVyf0ECm4W7
-	tIKrNrtOl/QoYsbOfllsmecnIpcjx7XMr0JAxyB0D+8FDXSGxp9sUKHssuTqvu7XcoD4dB/n4VehD
-	/UUqQg+lcKsgGHanroZ2XiCNePZ8hhEwdk8luTpo1DS6wxPLrg4LXCRsnSb5WCP5/TFD8vQjXwC11
-	XWXs99OZmjcQwjkbqNOoDrylTUpO3h51NGLxYvVEiorCHen2gqpxsclFYkEz1d/dLC80Cj849335X
-	90/z1TZIUUo5BneulKzuw3La3huIen69cHvLQ+5Xwra8BE0RvlEV1scU8zv3JcG5bxGiNKNzbHYIn
-	3Ly49No4/31RKSSWVNooQA==;
-Received: from [1.234.115.197] (port=33036)
-	by gator4166.hostgator.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.100.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1xJ8hE-00000000wsV-45S0;
-	Tue, 20 Oct 2026 07:12:01 -0500
-Message-ID: <6cf42177-5c35-49b8-9e4b-36a4d28aa26e@embeddedor.com>
-Date: Tue, 20 Oct 2026 21:11:47 +0900
+	dkim=pass (1024-bit key, unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=BhyVvHxe;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=7zFuOTts;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Xl1DC7bo;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=5VRyfUyg
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AC2E321BD4;
+	Tue, 20 Oct 2026 15:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1792509275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CqjCtBFUFd+1iHaj1nr2DkTfyqVxORiTyYK/8Gv0TZk=;
+	b=BhyVvHxeWuX/9WDvsA9oO1UJopJKQ3RNZfOTT4RgeepDRlfRGe2nEA02kzwQyXaQQBzgiG
+	PZcr6lV8NX408C1lBxlxpoKn9LVfUQAruRjRVBkeOc959kBI674FRYqPATNf8Q0AEvLh+6
+	WVO/l5M1fDlsvsj2zNyYMDXNKwkJEDA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1792509275;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CqjCtBFUFd+1iHaj1nr2DkTfyqVxORiTyYK/8Gv0TZk=;
+	b=7zFuOTtszKaFAJlGTkZjt/qpTNpl41uFt5jFxTT2pHVQRYbHJjrpisI9WeXHV8X31fhB/S
+	A8ovEvnPWlkksCDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1792509274; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CqjCtBFUFd+1iHaj1nr2DkTfyqVxORiTyYK/8Gv0TZk=;
+	b=Xl1DC7bondVlvqcb1sWlYHDvk3A5Cb4AnXooVzzupQr6UMIl5+IvqDHsY2Bx62BK4nCe8C
+	S1zvPaly0shInWleCBBQa5qP/otcDYDb1I6+5pOa7je2OJdQ2OJTEn8KGVftQqOrFOe+ac
+	CAOsAvfHhEEr6Eb9nnXL2cZMQNw1MxU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1792509274;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CqjCtBFUFd+1iHaj1nr2DkTfyqVxORiTyYK/8Gv0TZk=;
+	b=5VRyfUyg8whal1MMkSk0JunYlLH8WcX7BJke8FdtJcrgiTqydecCfUNRQH17NAr5Rhwwmz
+	cRlgucdeg7EpR0Dw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7FDDF136CC;
+	Tue, 20 Oct 2026 15:14:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mD7+FlqF12rAbgAAD6G6ig
+	(envelope-from <mjambor@suse.cz>); Tue, 20 Oct 2026 15:14:34 +0000
+From: Martin Jambor <mjambor@suse.cz>
+To: Kees Cook <kees@kernel.org>
+Cc: Jan Hubicka <hubicka@ucw.cz>, gcc-patches@gcc.gnu.org,
+ linux-hardening@vger.kernel.org, Richard Biener <rguenther@suse.de>
+Subject: Re: [PATCH] ipa-icf: Step to the next caller past a thunk in
+ redirect_all_callers
+In-Reply-To: <pr158sq2-203s-20n3-q44q-o599q271r309@fhfr.qr>
+References: <20261015194513.i.609-kees@kernel.org>
+ <pr158sq2-203s-20n3-q44q-o599q271r309@fhfr.qr>
+User-Agent: Notmuch/0.38.3 (https://notmuchmail.org) Emacs/31.1
+ (x86_64-suse-linux-gnu)
+Date: Tue, 20 Oct 2026 17:14:25 +0200
+Message-ID: <ri68q3sl7zi.fsf@virgil.suse.cz>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -76,136 +112,92 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc/kexec: Annotate umem_info members with
- __counted_by_ptr
-To: Thorsten Blum <blum@kernel.org>, Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Aditya Gupta <adityag@linux.ibm.com>, Hari Bathini <hbathini@linux.ibm.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260730130248.597249-2-thorsten.blum@linux.dev>
- <7d99725f-9c90-48ca-bee1-30e2e6c06617@linux.ibm.com>
- <asDClaRrHuKB44X-@kernel.org>
- <dbb4580d-7e20-4c38-9716-f39cf81a4942@linux.ibm.com>
- <asNfSSp-AckyeO7P@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <asNfSSp-AckyeO7P@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 1.234.115.197
-X-Source-L: No
-X-Exim-ID: 1xJ8hE-00000000wsV-45S0
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([1.234.115.197]) [1.234.115.197]:33036
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCs95MrWmHxs4bA1mSGVQEKhNtuunIG4WWVbW/q1AnJr+Jqsf6WoamomjemBBNhG/4EfDRbYflVz2RVCgjVlNYMloKeJK8ZFHo9vdY4Jt01Brw+xH9B0
- sGElcJuf9YewtVWcBDRKyYyYDtiG98p+f1GDCCkvC1OtckLXgcp++gpMOFuhuYPmx4zHP3mp+fkLzUGSkM3ec3PBgSFYDfGuJZV8h5ZK3YvJtfROQ49l+IRr
+Content-Type: text/plain
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ipa-icf.cc:url,suse.de:email,imap1.dmz-prg2.suse.org:helo]
+
+Hi,
+
+On Mon, Oct 19 2026, Richard Biener wrote:
+> On Thu, 15 Oct 2026, Kees Cook wrote:
+>
+>> redirect_all_callers walks the callers of N, but steps past a thunk
+>> caller with next_callee, the next call the thunk makes.  A thunk makes
+>> only that one call, so the walk ends there, and so the callers after
+>> the thunk in the list would not be redirected.  This came with the thunk
+>> check in commit 17d1bf760f8 ("re PR target/65263").
+>
+> Huh.  This looks obvious to me, thus OK unless Jan or Martin object
+> soon.
+
+This is fairly obviously OK.
+
+Thanks for catching this!
+
+Martin
 
 
-
-On 10/5/26 17:26, Thorsten Blum wrote:
-> On Mon, Oct 05, 2026 at 01:42:01PM +0530, Sourabh Jain wrote:
->> On 03/10/26 14:23, Thorsten Blum wrote:
->>> On Fri, Sep 25, 2026 at 11:49:04AM +0530, Sourabh Jain wrote:
->>>> On 30/07/26 18:32, Thorsten Blum wrote:
->>>>> Add __counted_by_ptr() to umem_info::buf and umem_info::ranges to
->>>>> improve access bounds checking via CONFIG_UBSAN_BOUNDS and
->>>>> CONFIG_FORTIFY_SOURCE.
->>>>>
->>>>> Set the count fields before assigning the corresponding pointers, return
->>>>> early on krealloc() failure, and use sizeof(*buf) when deriving
->>>>> max_entries from the allocation size.
->>>>>
->>>>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->>>>> ---
->>>>>     arch/powerpc/kexec/file_load_64.c | 22 ++++++++++++----------
->>>>>     1 file changed, 12 insertions(+), 10 deletions(-)
->>>>>
->>>>> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
->>>>> index 8c72e12ea44e..6424b668f0e9 100644
->>>>> --- a/arch/powerpc/kexec/file_load_64.c
->>>>> +++ b/arch/powerpc/kexec/file_load_64.c
->>>>> @@ -34,14 +34,15 @@
->>>>>     #include <asm/cputhreads.h>
->>>>>     struct umem_info {
->>>>> -	__be64 *buf;		/* data buffer for usable-memory property */
->>>>> +	/* data buffer for usable-memory property */
->>>>> +	__be64 *buf __counted_by_ptr(max_entries);
->>>>>     	u32 size;		/* size allocated for the data buffer */
->>>>>     	u32 max_entries;	/* maximum no. of entries */
->>>>>     	u32 idx;		/* index of current entry */
->>>>>     	/* usable memory ranges to look up */
->>>>>     	unsigned int nr_ranges;
->>>>> -	const struct range *ranges;
->>>>> +	const struct range *ranges __counted_by_ptr(nr_ranges);
->>>>>     };
->>>> [...]
->>>>>     const struct kexec_file_ops * const kexec_file_loaders[] = {
->>>>> @@ -83,11 +84,12 @@ static __be64 *check_realloc_usable_mem(struct umem_info *um_info, int cnt)
->>>>>     	new_size = um_info->size + MEM_RANGE_CHUNK_SZ;
->>>>>     	tbuf = krealloc(um_info->buf, new_size, GFP_KERNEL);
->>>>> -	if (tbuf) {
->>>>> -		um_info->buf = tbuf;
->>>>> -		um_info->size = new_size;
->>>>> -		um_info->max_entries = (um_info->size / sizeof(u64));
->>>>> -	}
->>>>> +	if (!tbuf)
->>>>> +		return NULL;
->>>>> +
->>>>> +	um_info->size = new_size;
->>>>> +	um_info->max_entries = um_info->size / sizeof(*um_info->buf);
->>>>> +	um_info->buf = tbuf;
->>>>
->>>> Could you please explain why size and max_entries are updated before the
->>>> buffer itself?
->>> __counted_by_ptr() requires the counter ->max_entries to be set before
->>> the ->buf pointer is assigned; otherwise you have an inconsistent state
->>> where the counter doesn't match the pointer.
->>
->> But isn't updating the counter holding the buffer size before the actual
->> buffer
->> can cause problems?
->>
->> Can you share the document link of __counted_by_ptr() which says that size
->> counter to be
->> updated before the buffer pointer.
->>
->> Here is an example in fs/coredump.c file where size counter is updated after
->> the buffer
->> with __counter_by_ptr():
->>
->> https://github.com/torvalds/linux/blob/a90ee4305c4a5df72c11b31dacfdc76e00fcf78a/fs/coredump.c#L98
->> https://github.com/torvalds/linux/blob/a90ee4305c4a5df72c11b31dacfdc76e00fcf78a/fs/coredump.c#L115
-> 
-> Maybe the order only matters for flexible arrays and __counted_by(), but
-> not for __counted_by_ptr(). I reordered it mostly out of habit from
-> __counted_by() annotations and assumed the same rules apply for
-> __counted_by_ptr(). Happy to restore the old order if it's not required.
-> 
-> Kees or Gustavo, what's your take on this?
-
-The order matters when dereferencing the pointer. In this case, it's just
-an assignment.
-
-Thanks
--Gustavo
-
-
+>
+> Thanks,
+> Richard.
+>
+>> gcc/ChangeLog:
+>> 
+>> 	* ipa-icf.cc (redirect_all_callers): Step to the next caller, not
+>> 	the next callee, past a thunk.
+>> 
+>> Signed-off-by: Kees Cook <kees@kernel.org>
+>> ---
+>> I found this while looking through ICF code and Richard's recently
+>> proposed changes with inlining, so it's technically unrelated, but it
+>> looked wrong.  But I haven't found a way to reach it: on targets with
+>> symbol aliases a thunk calls a local alias of its function (.LTHUNKn),
+>> whose other callers come from redirections and so are ahead of the thunk
+>> in the list, and on targets without them, such as Darwin, thunks are
+>> expanded to GIMPLE before ICF.  So I have not been able to build a test
+>> case for this, and I suspect it may just be accidentally/effectively
+>> dead code?  But the intent of the function didn't seem to match the
+>> result of the "else"'s list-walk.
+>> ---
+>>  gcc/ipa-icf.cc | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/gcc/ipa-icf.cc b/gcc/ipa-icf.cc
+>> index 64cc722bd7aa..7b524bdf16b1 100644
+>> --- a/gcc/ipa-icf.cc
+>> +++ b/gcc/ipa-icf.cc
+>> @@ -995,7 +995,7 @@ redirect_all_callers (cgraph_node *n, cgraph_node *to)
+>>            nredirected++;
+>>  	}
+>>        else
+>> -	e = e->next_callee;
+>> +	e = e->next_caller;
+>>      }
+>>    for (unsigned i = 0; n->iterate_direct_aliases (i, ref);)
+>>      {
+>> 
+>
+> -- 
+> Richard Biener <rguenther@suse.de>
+> SUSE Software Solutions Germany GmbH,
+> Frankenstrasse 146, 90461 Nuernberg, Germany;
+> GF: Stefan Gaiser, Jochen Jaser, Abhinav Puri; (HRB 36809, AG Nuernberg)
