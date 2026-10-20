@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792524607;
-	b=zpJG7Kj9Us6aR83KPPnJvgCacgabjsrqwp4Dzrq05X+EnKCmDPbAJbOUZO8pGA3H6hIf
-	 XmG4v5h1tuVIqA34/Z4IdI1/NvogSNpY1wCGBX4Psr4vap7NFyrU4A2/QNy1jbNPGKV3W
-	 kS82AqZ9/O0do2cs0rESRgPirDHRPNnFemhDzI31UMIBeSwhGyjmk1huEC5G5FZOIIoag
-	 uUMwUtOEJV6Sy/XU8ix9x1pMlxPUdbNty9IKWPShR6Ld2gqShkImdiHa8klxgFd9HLVQP
-	 gWTo6FRX7/perli3ijD6ue2pgfZMldyrsOSh+tUJE2bor0JP+FDK3Pr3bfvDLWrWyvA==
+	t=1792531815;
+	b=Sxwqq3itGX9GiJKjIRKPVKrtf8MMO3pvNsKFq3hdA+uJBBO2fG0ULNURV+rsErX4tib4
+	 LMgqi19XERrvSWlyKYq7MdhW2fR5Ro+X5yw1cJ5tfv7lbYn/jiRmrRW2Cx3rN4lXwl5b7
+	 jwL3AIy9x7ofYdrZQtEhBf1MdnomeRoWbenIvnLTXO7yIPBl6D6AsLhs7NJxQIoSS/07q
+	 s6sHuBVd3nqsCmK/X9RmDt+n9aJWkjG/20jnYOLPNIMmBNawQe19DB44tmhOFo5BaEsbq
+	 mMFFMAl7l1mWa5DQdqDBUr97phXwzjgF+BAYFkAeBKb78v1gNrWePMrRwkZs3IHwdCA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792524607;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792531815;
 	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
 	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
 	 In-Reply-To:To:Cc;
-	bh=wYg9cotcoU0u6A8/hr+EYwsFGArgBF9NN7BKO2SM0po=;
-	b=5DZF6IBY9Lo8kI12OhMz7N5saJ57n8HByXIe3n23iw6bWUJj0e/jCAxuuONbqV6LJJm/
-	 SseytcKHBcdn6phvL9LcYPvm+gSoQqC/CFaONb+aSeQMbSD1Q/x2yQBYvW/qlCWaH/bzR
-	 Wtdlz4HrUky/vX9sUehV7hxWaw+YCuzihjC0omb3Tdsx0AUKHU05N1n6WMWB+xFmdEFU5
-	 OdDLFMT0sXAc5XEBG4cMgo5XeKKBIZ/aKfRVUr4G8bIeh5CU5jEcI62pvocmr9NwCZL0E
-	 89iplQDGt7YmZH2AXxCNkbppT/AFzRPIV3Z+nmer2u08YU0ipLx/+OSjwgOLF79pf+w==
+	bh=J52yf6wiclMJabmxnVaoIJf0AuS/MM8eQ4Dlsmc3wb0=;
+	b=k1Lq0Dn9O6Dch9XTydDH/qjPRYTSCOqB2egSEgmTN2E1qplFWdG/g2mnTfUF6SAWzd4h
+	 QlAhVNopKSnrQ6I07oGbLHXRyFDn/bUOMcwA+GCJ4gDo0hbQ4d2fdUtlwNd0zeQ8xyC/W
+	 cZroUNYcUVp8SsEw2j86c8ZGZQ8MVbPIvD6o0LqLGoa38p7J/rKjLxNkjwUrPlRiAVVg0
+	 a2VHwG/G/xhFEWLoLfOsjWnV0oJbao3KGOcn2iK7nooOcfaUDQ+hfU0NG01Fb0qQfqFUS
+	 5hyyqNTpL9/R64Nzk1x3ffc2EYdS9lYCcRpi4wDz+WlVB5ZAD85HFMOfYQZ9RC1yUhw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nlVIDa9w;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eHQ8yZyY;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE8E606A322;
-	Tue, 20 Oct 2026 19:30:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88FC606A31A;
+	Tue, 20 Oct 2026 21:30:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nlVIDa9w
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 073011F000C9;
-	Tue, 20 Oct 2026 19:30:07 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eHQ8yZyY
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 831311F000CA;
+	Tue, 20 Oct 2026 21:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792524607;
-	bh=wYg9cotcoU0u6A8/hr+EYwsFGArgBF9NN7BKO2SM0po=;
+	s=k20260515; t=1792531814;
+	bh=J52yf6wiclMJabmxnVaoIJf0AuS/MM8eQ4Dlsmc3wb0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=nlVIDa9wW+uOYT5mUetEGavF0EsvitauQHKUabhlYAb6qwusxhS8KE5M1t5uxENXZ
-	 6CtgWcWfha3GUBpEsM5MODslh+VxjuuYO5OwwhBnAz8xsZndVB4qnjD+onfF9t4m/k
-	 Yuimsl9hw0WqOKBJsS2ie90qujWCs01rLX5yzk9Lj6F16URCtkbxbYxjToW1UtGT3P
-	 3O53QD56IORCzQ+sP9lkzV5PPJWDjXUdi5Y1BlGr9HRHywvbWiF02M2IfiSvK0TfwQ
-	 At1B9Y0mL6BT5IHaQ1URvaCwEScR6NmgErOmNrQAYG+3KJVCB/SImnL75QnRAqOIA1
-	 c0JlfOitYGesg==
+	b=eHQ8yZyY84tatF7KM3DslRXtYQ/9q92pR66szqcqv1y4RuBbaoL/hkQNlQAiAYV3G
+	 1/DsF4EMJH0/K2jb7WX6xk2kaCLC26gGRGY8ihRYOYzM3O4t018jieAkR8WaVWS9jh
+	 qE2ztadEnGw3u0vR7dr6dWUOYGd5bmkljGN5nOFqyPF2SmOkQ7eyiGYsEKHkJGaweH
+	 k8g+Ohv5R8CAJK/hhyOOnSJeMeu8ZTaK3nR+CqOCDYt99YgOGUDopLK4wYAjOY9lnz
+	 DnYFYV8IT5FlaMZS4RQmTXT+/dqRQVLbSvWu+BX7GtC9t3/y9YovoDWY3K2AmmmW8+
+	 DontoGP5WKUBQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F15B33808209;
-	Tue, 20 Oct 2026 19:30:06 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 773E03809A09;
+	Tue, 20 Oct 2026 21:30:14 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,45 +54,52 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next net] netdev: Hide the netdev_priv() origin from
- GCC
- in netdev_from_priv()
+Subject: Re: [PATCH net-next v3 0/7] net: mctp: usblib: Increase coverage of
+ kunit testing
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <179252460578.172302.12338872662372096525.git-patchwork-notify@kernel.org>
-Date: Tue, 20 Oct 2026 19:30:05 +0000
-References: <20261015165959.i.798-kees@kernel.org>
-In-Reply-To: <20261015165959.i.798-kees@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: kuba@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
- gustavoars@kernel.org, qingfang.deng@linux.dev, jiri@resnulli.us,
- spender@grsecurity.net, pageexec@gmail.com, morbo@google.com,
- justinstitt@google.com, netdev@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org,
- yeswanth@linux.ibm.com, stable@vger.kernel.org, linux-kernel@vger.kernel.org
+ <179253181301.220085.14897480542454867780.git-patchwork-notify@kernel.org>
+Date: Tue, 20 Oct 2026 21:30:13 +0000
+References: 
+ <20261014-dev-mctp-usb-lib-test-v3-0-ee5bc3ea1db1@codeconstruct.com.au>
+In-Reply-To: 
+ <20261014-dev-mctp-usb-lib-test-v3-0-ee5bc3ea1db1@codeconstruct.com.au>
+To: James Lee <james@codeconstruct.com.au>
+Cc: jk@codeconstruct.com.au, matt@codeconstruct.com.au, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ kees@kernel.org, gustavoars@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
 Hello:
 
-This patch was applied to netdev/net-next.git (main)
+This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 15 Oct 2026 10:00:03 -0700 you wrote:
-> GCC 15.1 and later can compute an object size of 0 for a pointer that
-> container_of() derives from a pointer into a __counted_by flexible array
-> member[1]; Clang gets it right. netdev_from_priv() does this with struct
-> net_device's "priv" array, so when GCC can see that its argument came
-> from netdev_priv(), FORTIFY_SOURCE sees a zero-sized net_device. Since
-> commit 9027497a25e3c ("team: use netdev_from_priv()"), adding a port of
-> another type to a team device can then fail the memcpy() to
-> "dev->broadcast" in team_setup_by_port(), which GCC sees through after
-> inlining team_port_add() into team_add_slave():
+On Wed, 14 Oct 2026 12:47:30 +0800 you wrote:
+> Current usblib tests only check receipt of a limited combination of
+> packets lengths.
+> 
+> Added tests of receiving packets with invalid fields, and more complex
+> packet spanning. Also created tests for transmitting packets, covering
+> most code, except for mctp_usblib_tx_cancel() and allocation failures.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,net] netdev: Hide the netdev_priv() origin from GCC in netdev_from_priv()
-    https://git.kernel.org/netdev/net-next/c/56f8d919739b
+  - [net-next,v3,1/7] net: mctp: usblib: Add to parameterized kunit tests.
+    https://git.kernel.org/netdev/net-next/c/acfb9c263d70
+  - [net-next,v3,2/7] net: mctp: usblib: Add test for splits inside headers
+    https://git.kernel.org/netdev/net-next/c/21e1d4515755
+  - [net-next,v3,3/7] net: mctp: usblib: Add tests of invalid headers
+    https://git.kernel.org/netdev/net-next/c/c0a372f72972
+  - [net-next,v3,4/7] net: mctp: usblib: Complete rx tests
+    https://git.kernel.org/netdev/net-next/c/40e59c00ae21
+  - [net-next,v3,5/7] net: mctp: usblib: Simplify allocation logic in mctp_usblib_test_rx_init
+    https://git.kernel.org/netdev/net-next/c/77cb5c6b3464
+  - [net-next,v3,6/7] net: mctp: usblib: Add initial kunit tx tests
+    https://git.kernel.org/netdev/net-next/c/1e12f734afc1
+  - [net-next,v3,7/7] net: mctp: usblib: Add test for failing append
+    https://git.kernel.org/netdev/net-next/c/9e061caa3bdd
 
 You are awesome, thank you!
 -- 
