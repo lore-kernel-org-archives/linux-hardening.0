@@ -1,66 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.125.25.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792599960;
-	b=PtPUeFUWGAUOHddNl5RwwJ68BOX6W/5kwWRGYbgGXingEWiLwY+O+33P2GR779Q5XEoN
-	 VcCLTMhPW1y21cOlhTaS3qgWz6Fn7ZrMsoHE5Agv+ZsD/c59oYh0YOVmUKo5z+OJKM15e
-	 682toomOzhwLXrMl+halg9mN+0GZI2QS/B6BPR/N4Xywpe3hNZJgVRBd2IuFyueYjFjAI
-	 esPKwYAoH5oiNi0N1wtywJ/WsiWyZ9Asf0yzkSoXEXZS9WBZNq1dPYzLwP7aD9wRtLLdX
-	 up1bvv7gs1YaYCv2/j3q5woxP48C0IFO31hTFNP767ZumVCq4iumXqjVVZXRqzhX5KA==
+	t=1792602032;
+	b=iQL16WOMXJN8HlCxt31DhUkbJPbbLN+n98vyMf7y1+BQrkeBsbZpbnMWdHRiTrs+L/nF
+	 T2gRwUAQjOt/pLU95bRK1lRX9OPjyIqbmaR6wAbqVTPO+2omCMhJ3boa+rf/Yw1w4sObQ
+	 ipVn/zq8Uxr4n8S/bQ5VoyPuHwoqOWZHF4D8b7yMFKh9zfOD1HNwZ74gTl1wJ1/7A52hX
+	 l+TrNxxiP/UKyUtgAPqrpB5QO+QIAAM7WOCm+CoG4pxWFWRSxpA4dMtF1Qr5QRPnv7nnw
+	 +HAbjJ3ngMAbVg9REpUq69Gidiw7TPx+blgLYfviuO0Xtp7VDFpRF72AZAAq1VBkQTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792599960;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:From:To:Cc:Subject:
-	 Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Infomaniak-Routing;
-	bh=6aYN/2On4n7HGoJvZTU3OurKvF7SDr35YC5v5eCOowc=;
-	b=vc58tGBBwXeHPCtER84YBT/dplcSyr8beBjE1Be40z1DZo4hkIkdKOLQPsj14wthT3yD
-	 U+WUJCeumcJMwsv4bJ2/IWICgA+XjcBtGgi9b+nBE6haEljmK80YK3iS0XtUnsqkx8fPc
-	 YauUl7olq+TOdFmTsrndkqSmf9/0eCdirYi/6DEDEvFrKkki4Xgey7+ganxO+9ta4F3H0
-	 1VIVZWzEroAbZ75ICez+a3STXdAu6Gd6aixwfbn8P8xWvI8rVTnbHlVcDQ2Zf71oVIoNH
-	 ZMb9sNA4g3gQxmsq0f4iEDavt6VtlTXWs+HKYR5T4o3s/oQ4TAy5I3B9po3v1PisQAw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792602032;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=4p+sU87b0SPhlui/+SUmlIQxPYDUposWA1I/eyb2zBo=;
+	b=frmowvf07tS7aleWFxQAB36NUJDMe+kMj1aXr1/Nc/aAEDsH7csKt1hq5paTXeyBwkdP
+	 LpQc/p4TcD1P5Wc+JDPvYg+AKZoWsFj/U6upg14hEVxIKOICnJYy3HcG/tvn6ZJIULbIi
+	 GR9vPiQ+t9gR8pNMFjzyQMjXUp+p6+odfwq57eJSGzZlVPRG9SPUfUIc0BtjetYM8GmeA
+	 mY7ORe69utAAXtjcLrl+Q+cfkf1QsNzqO7Tt0nzuyLPAg/Q/8y0I3zx9d1RJfO4wijoK1
+	 kcRd6hX3MMNLMlktkyE+7rERmB6dIE4/9L9D55XgTiqHRIXYZx5oUcbD+OBsI3V/iTw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=digikod.net;
-	spf=pass smtp.mailfrom=digikod.net;
-	dkim=pass header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=EC2wy3Vz;
-	arc=none smtp.remote-ip=185.125.25.14
-Received: from smtp-190e.mail.infomaniak.ch (smtp-190e.mail.infomaniak.ch [185.125.25.14])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=M8RxpCIE;
+	arc=none smtp.remote-ip=74.125.82.175
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B322D606A319;
-	Wed, 21 Oct 2026 16:25:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B322D606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C795606A328
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2026 17:00:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7C795606A328
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=EC2wy3Vz
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4j8vlx1G6dz13rn;
-	Wed, 21 Oct 2026 18:25:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1792599948;
-	bh=6aYN/2On4n7HGoJvZTU3OurKvF7SDr35YC5v5eCOowc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EC2wy3Vz68NDCTpFJUzbNOPF0ExyqXqmkSSqPJKxsLmkFIaggjI9bgDaYHrXnsE7X
-	 he7TUnCvrwDqBOVaHcBYMyJ28azv87LBzc1dKEFzZ1SAImW3SH+waaIOxKlIcfXsIK
-	 EkkkpTFPrIBd2qBiCXR5XsDsgTs1EGqiRbBd6+TI=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4j8vlv58Kvz2Fl;
-	Wed, 21 Oct 2026 18:25:47 +0200 (CEST)
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Christian Brauner <brauner@kernel.org>,
-	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	Haofeng Li <lihaofeng@kylinos.cn>,
-	Paul Moore <paul@paul-moore.com>,
-	Tingmao Wang <m@maowtm.org>,
-	Wang Yan <wangyan01@kylinos.cn>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [GIT PULL] Landlock update for v7.4-rc1
-Date: Wed, 21 Oct 2026 18:25:38 +0200
-Message-ID: <20261021162538.1852602-1-mic@digikod.net>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=M8RxpCIE
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-35f1f76ea84so1373703eec.1
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2026 10:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792602032; x=1793206832; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=4p+sU87b0SPhlui/+SUmlIQxPYDUposWA1I/eyb2zBo=;
+        b=M8RxpCIEofL9gJ5DckeXvGsUslZ6Q4DvS7VvN/32rUbvls5x0t3PpQxbF3xNNiONix
+         G4er9FNPghbqvpcjCB9a90fgehYMDRuFW5AJ1TgGbTTe/viBndxkV7+55C9RctzoDVPu
+         vp1waHkH0RoBy79SmwS4pJifyBGVBE5p39l3jQovCmQ2GXnNTpo6vg8Vvy2e5VV4D+0m
+         n+Oaet1ZG+hG08urdjczDElenH1S2a8m3qmc7ncmcd8+9HUhwyfjWoM7PWCYpq8tOoEP
+         HzG/QgH9KpWICGNaqDhKRS6NlT+7+Rn+PPKi1iKQgP7MbolyXq0hBNvTovNnFCsXojJ/
+         Nc/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792602032; x=1793206832;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4p+sU87b0SPhlui/+SUmlIQxPYDUposWA1I/eyb2zBo=;
+        b=tuo7PVACkpxlemVxj8GxKCAPWZ6V088ywpDne0lfzyNuPFs5JlCdqXeubl/0wLpJtt
+         yysQ8pEDB7Ssfz76a4dbDY/D6S6gqGqikXQa0R41+unLAf7ba16ZwRRjtajFiDkrqSqZ
+         pUCuwPO/5z8d0Snb73QCpWHdoO6hYCr9WmKzrVihzoHni59OVx+Nd2ljQUOYdHyDYgYS
+         nPRyMj8pF+PTlsfC7tJTjrmlBILqfedlg38RFZ/NwRzRtEjQKA6h91igJ1Huv7NcJYFk
+         q6mdNsNAxcaYr6UJ3Lh9lY895kVNn2PypAS4F7RAUc0xvsLYARhVy6+2SQ3d15VIIxqp
+         Wlrw==
+X-Forwarded-Encrypted: i=1; AKwUvBw4Kf5pxV8UdJlbgCAUvptg8Z8KHzoeiXu9CVZcNxspbryBN9N2t0H0A6VvH1zhLpDyUoULv6auszcpw8ETH08=@vger.kernel.org
+X-Gm-Message-State: AFq9FYITsPJgjL6ZI+r4oWFI4BwNLHtAgGYwm/J5acQFKxXATTSRx/Gm
+	xXYdvu8nNIBOWtv/nRVd/EGWYBDRnf0DW9/YuAmMuzpynckGqGaC0QI5
+X-Gm-Gg: AYBFou0RWACgVTocQXUuM0Btm8uGQnq1+S7cSZAjUUduXXHGFRoANusUKDoMiUtnT/q
+	Hu1opnLu5AdORjV0y4k3uRAXxKgSsOMufJeOU2csBfDNL1oo6SAjlfQ7LbkaMA8NPDxa3t697Gu
+	dxt+5olEixAEliv9R+VWd3aMJ03gOw+T1rfSCybkPaf7Xu+R2CWHz6lJHQBBzfA6XDYY2jOYLKd
+	YOEcZGlHLrERJsNxHXecWDCzu7zx+oMikJZhQQsafKwSFS+e65SCzAkD/gfyekQo08fBld4zmhR
+	gAT4qt/J2Y4q9s1vLoQbZbJ3fstuYVd1oxK3g1fzefkXKn65jaP6AqHrhoEdnZx2tEx1efWRgcU
+	b8K9FYDw1BUpBcEzTWylm6Vr221qQbqritFAnbaTcDuIDnop6ZMYG6yEkGidkTY+U/1LQ21uN+U
+	aGlvKk7RmJF1mXiDHZrf94zF9Xi1epkT3MsK/kP2c9JRKNRXQckkjlwanwd3mr7VmhSqp2/24cG
+	a1JDQa23CvZJqN/VMIYOGearJFGBK7pP4pilo1pjPAY1z4es3+79Hu6S8iac3uuK2wPRXeVat5y
+	4Zgo8/6BRs1F3vpZdCrW6A==
+X-Received: by 2002:a05:693c:414b:20b0:367:5e31:ce29 with SMTP id 5a478bee46e88-3675e31ce6bmr3904222eec.20.1792602031067;
+        Wed, 21 Oct 2026 10:00:31 -0700 (PDT)
+Received: from google.com ([2a00:79e0:2ebe:8:92d1:8038:c4e7:1f0c])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-367405ee5e3sm8459829eec.4.2026.10.21.10.00.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Oct 2026 10:00:29 -0700 (PDT)
+Date: Wed, 21 Oct 2026 10:00:26 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Alejandro Colomar <alx+linux-hardening@kernel.org>
+Cc: Shihuang Liu <shlomojune6@gmail.com>, linux-input@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Marcus Folkesson <marcus.folkesson@gmail.com>, 
+	Ville Syrjala <syrjala@sci.fi>, Henk Vergonet <Henk.Vergonet@gmail.com>, 
+	Henrik Rydberg <rydberg@bitmath.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] Input: joystick - use usb_make_subpath()
+Message-ID: <atjvKMOXQY_psYcF@google.com>
+References: <20261021123146.17202-1-shlomojune6@gmail.com>
+ <20261021123146.17202-3-shlomojune6@gmail.com>
+ <ati7yINv0_Z3yPMg@debian>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,135 +100,58 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ati7yINv0_Z3yPMg@debian>
 
-Hi,
+On Wed, Oct 21, 2026 at 03:21:28PM +0200, Alejandro Colomar wrote:
+> Hi Shihuang,
+> 
+> > Date: 2026-10-21 20:31:42+0800
+> > From: Shihuang Liu <shlomojune6@gmail.com>
+> >
+> > The pxrc and xpad drivers build their input device physical paths
+> > by appending "/input0" with strlcat() after usb_make_path().
+> > 
+> > In preparation for removing the deprecated strlcat() API [1],
+> > replace each pair of calls with usb_make_subpath(). The helper
+> > formats the USB path and the "input0" subpath in one call,
+> > avoiding a separate buffer scan and append operation.
+> > 
+> > Link: https://github.com/KSPP/linux/issues/370 [1]
+> > Signed-off-by: Shihuang Liu <shlomojune6@gmail.com>
+> > ---
+> >  drivers/input/joystick/pxrc.c | 3 +--
+> >  drivers/input/joystick/xpad.c | 3 +--
+> >  2 files changed, 2 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/input/joystick/pxrc.c b/drivers/input/joystick/pxrc.c
+> > index 52d9eab667b7a..1a11e73d7cd04 100644
+> > --- a/drivers/input/joystick/pxrc.c
+> > +++ b/drivers/input/joystick/pxrc.c
+> > @@ -169,8 +169,7 @@ static int pxrc_probe(struct usb_interface *intf,
+> >  
+> >  	pxrc->input->name = "PXRC Flight Controller Adapter";
+> >  
+> > -	usb_make_path(udev, pxrc->phys, sizeof(pxrc->phys));
+> > -	strlcat(pxrc->phys, "/input0", sizeof(pxrc->phys));
+> > +	usb_make_subpath(udev, pxrc->phys, sizeof(pxrc->phys), "input0");
+> 
+> To be honest, I think the composed approach is more readable.  You don't
+> need to learn a new _subpath function with all the details it has.
+> 
+> Everyone knows what a str*cat() (or str*cpy, FWIW) function does.
+> 
+> I'd rather improve this by adding strscat().  The reason for removing
+> strlcat(3) is that it is vulnerable to DoS, and that it is inefficient,
+> but it is good at producing readable code, and a replacement should not
+> degrade that.
 
-The main change adds composable Landlock controls for namespace types
-and Linux capabilities, thanks to new LSM hooks (merged via the LSM
-tree).  A umount race condition is also fixed.
+Well, there is absolutely no performance concerns in this code, so
+another option is to simply leave it as is. I see no benefit here from
+using yet another variant of str*cat().
 
-Please pull these changes for v7.4-rc1 .  These commits merge cleanly
-with your master branch.  Kernel changes have been tested in the
-latest linux-next releases, and I recently fixed a new merge conflict
-(see the related merge commit message).
+Thanks.
 
-Test coverage for security/landlock is 91.8% of 2864 lines according to
-LLVM 23, and it was 91.6% of 2625 lines before this PR.
-
-Regards,
- Mickaël
-
---
-The following changes since commit 24a19b953e2a3d0ea5a8c4951a0ab8f32720c907:
-
-  Linux 7.3-rc7 (2026-10-11 20:04:55 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/landlock-7.4-rc1
-
-for you to fetch changes up to 3e271a27c46fd591d1011c7de5a644a41e2010f1:
-
-  landlock: Fix superblock use-after-free in release_inode() (2026-10-20 16:47:24 +0200)
-
-----------------------------------------------------------------
-Landlock update for v7.4-rc1
-
-----------------------------------------------------------------
-Christian Brauner (2):
-      ns: Free anonymous mount namespaces via ns_common_free()
-      lsm: add LSM blob and hooks for namespaces
-
-Günther Noack (1):
-      landlock: Fix superblock use-after-free in release_inode()
-
-Jann Horn (1):
-      cred: clarify that task_struct::cred is only for the current task
-
-Mickaël Salaün (10):
-      lsm: add LSM_AUDIT_DATA_NS for namespace audit records
-      Merge branch 'lsm/dev' into master
-      landlock: Rename quiet_masks to quiet_access
-      landlock: Wrap per-layer access masks in struct layer_config
-      landlock: Enforce namespace use restrictions
-      landlock: Enforce capability restrictions
-      selftests/landlock: Add namespace restriction tests
-      selftests/landlock: Add capability restriction tests
-      samples/landlock: Add capability and namespace restriction support
-      landlock: Add documentation for capability and namespace restrictions
-
-Paul Moore (1):
-      lsm: update the BUILD_BUG_ON() in audit_log_lsm_data()
-
-Wang Yan (1):
-      selftests/landlock: Fix snprintf truncation checks in test files
-
- Documentation/admin-guide/LSM/landlock.rst     |   46 +-
- Documentation/security/landlock.rst            |  177 +-
- Documentation/trace/events-landlock.rst        |   66 +-
- Documentation/userspace-api/landlock.rst       |  243 ++-
- fs/namespace.c                                 |    3 +-
- include/linux/cred.h                           |   17 +-
- include/linux/landlock.h                       |   29 +-
- include/linux/lsm_audit.h                      |    5 +
- include/linux/lsm_hook_defs.h                  |    3 +
- include/linux/lsm_hooks.h                      |    1 +
- include/linux/ns/ns_common_types.h             |    3 +
- include/linux/sched.h                          |    8 +-
- include/linux/security.h                       |   20 +
- include/trace/events/landlock.h                |  244 ++-
- include/uapi/linux/landlock.h                  |  139 +-
- include/uapi/linux/nsfs.h                      |    1 +
- init/init_task.c                               |    2 +-
- kernel/auditsc.c                               |    5 +-
- kernel/cred.c                                  |    2 +-
- kernel/nscommon.c                              |   17 +-
- kernel/nsproxy.c                               |    6 +
- samples/Kconfig                                |   13 +-
- samples/landlock/Makefile                      |    5 +
- samples/landlock/sandboxer.c                   |  269 ++-
- security/landlock/Makefile                     |    4 +-
- security/landlock/access.h                     |   61 +-
- security/landlock/audit.c                      |   32 +-
- security/landlock/cap.c                        |  159 ++
- security/landlock/cap.h                        |   48 +
- security/landlock/cred.h                       |    2 +-
- security/landlock/domain.c                     |   13 +-
- security/landlock/domain.h                     |   97 +-
- security/landlock/fs.c                         |   12 +-
- security/landlock/limits.h                     |    9 +
- security/landlock/log.c                        |   53 +-
- security/landlock/log.h                        |   10 +-
- security/landlock/net.c                        |    2 +-
- security/landlock/ns.c                         |  241 +++
- security/landlock/ns.h                         |   18 +
- security/landlock/ruleset.c                    |   27 +-
- security/landlock/ruleset.h                    |   33 +-
- security/landlock/setup.c                      |    4 +
- security/landlock/syscalls.c                   |  217 +-
- security/landlock/trace.c                      |   27 +-
- security/lsm_audit.c                           |    6 +-
- security/lsm_init.c                            |    5 +-
- security/security.c                            |   72 +
- tools/testing/selftests/landlock/audit_test.c  |    2 +-
- tools/testing/selftests/landlock/base_test.c   |   21 +-
- tools/testing/selftests/landlock/cap_test.c    | 1370 ++++++++++++
- tools/testing/selftests/landlock/common.h      |   13 +
- tools/testing/selftests/landlock/config        |    5 +
- tools/testing/selftests/landlock/fs_test.c     |   13 +-
- tools/testing/selftests/landlock/net_test.c    |    4 +-
- tools/testing/selftests/landlock/ns_test.c     | 2647 ++++++++++++++++++++++++
- tools/testing/selftests/landlock/ptrace_test.c |    2 +-
- tools/testing/selftests/landlock/trace.h       |   52 +-
- tools/testing/selftests/landlock/trace_test.c  |    8 +-
- tools/testing/selftests/landlock/wrappers.h    |   29 +
- 59 files changed, 6437 insertions(+), 205 deletions(-)
- create mode 100644 security/landlock/cap.c
- create mode 100644 security/landlock/cap.h
- create mode 100644 security/landlock/ns.c
- create mode 100644 security/landlock/ns.h
- create mode 100644 tools/testing/selftests/landlock/cap_test.c
- create mode 100644 tools/testing/selftests/landlock/ns_test.c
+-- 
+Dmitry
