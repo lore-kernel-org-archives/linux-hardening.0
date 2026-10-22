@@ -1,60 +1,113 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792688854;
-	b=XeFYNfmZCY284csIsYdku8eiw7YjbB9ftMpg3IV+BgFtMxApGpfL6Nn+bCCFM3hVtMBf
-	 /9FzN68NTnUaMX5zR7blVas2rTxJOQpTBh3n0bnbH9nohRsaKyDWD/r+o8wJn+L35arQL
-	 2cIsG2eXu+AkLF/GFTH2zHzoq7bd3+XUB6AGxIT40C+BYK54LJ9+XK2j+otwedmwjG8Gt
-	 YkOwRYzGM5nHVJIbNnJ2AIwhDAVA9nlwAx0+bQyZF/d8hBbBtJop6hpJFOZ5MiJAlPoRK
-	 GlbBcwkbJEPFBhXWBqEf9PEixBgm0dAbYOn40TdAKFyIfpNKIAvqgNGIRlzqLzBnLsw==
+	t=1792690359;
+	b=PUyzLbZ4qkKdSjqIyIXreOnFBJSsNQbRnRr5bo2Rnb0JWFSdIGFT1zIEzB+m0FVI/mhb
+	 sLdBjdKskt10exd8mj6NXpgMk+fnMF/A5fdgsgz9jitAOwk20QbFJxRSWbJMfpX4tOB6u
+	 vP3kH03NWF1mit/R1ppKdhG4GQYRA0OsufSKUT69DA9pyQdgd8qTwakc7EhqW4q8fjc+s
+	 mLJvwXWspePsEZMeL6Hp2pOejAKDMMWJtvvrSeATL5F/L0b0yWOoykg4EuNGgoUDHLfy4
+	 v2O5ohl5zNMZcNj6sIj6GCnqLurJrXdeNDVo/PizK3n0wFi6YCeWDBeN+q4GX57eIpA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792688854;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=KncKH2UewY/IQiP6GR2JSb1uHy6TFz2Qs/vbYyhK7F4=;
-	b=WPWZbo8byYlWyUIxh4lKsH/tONVyi5Plk15GOSLN0B6IjkxKALK1FD/LyoafeSHMn1BK
-	 oxN+auFube40dTBNZVGQkMxHerhr/Frtl831gn24o4ToAa1wKM91dYnBoQVvDxP3xxYib
-	 X2FDfxzuC05qTE+CIZ21y7yGDqZ3vvEa8pP4qj+7DL+uUA9vmjqt6ksPfHgWYPhHBfuiM
-	 Yjoqw+dJjFl1+1tRvyCrQZ8pzWFa+iy50MNAwXkWrcv+RswL9H/fvy/v1il1iWkGyH82Z
-	 bpBLl/d/9ZVGVllkpN09yzjHp9i1wLDGX/Gq/OjC0gD4w60HsKEDdHZUxwgmiyp8IXA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792690359;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=5TTK5L3C72RVXuyCfPoL1KiCUuBlYM9fSsQ+OoWqJh0=;
+	b=q4z4RJRl9sWVqodQ+HP9Fzp3kXXHkxZ/YqGMzJ4xKUcxYoqn1WhRBkqigt0dZFNjZJCw
+	 hxCPB1lm7mygkrv4fshMuQEYb4LNwEQw+fhZqc/thttbNjsfGtzcpjc7nR25MmaJwp0QC
+	 mudh1z3EgHcI7OzEPsbA08wDLCx+HvxHH7P3wDgSlASqOM539E48ew8rWq/8pJwUmBpYy
+	 UpuyOaSaWWhqvgq3Zxw5ji4BYwANkG4wydLGetnmmsEqiL3tOvx01V8Az5SWuKce6KOTa
+	 9vvnKWnJ00hRxJ/TqgeYPffrn02Wy4OcBK2bvGWsvRuL+XSsLoqbLUPxS0KtD1IYNkg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=vinarskis.com;
-	spf=pass smtp.mailfrom=vinarskis.com;
-	dkim=pass header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=Xz3GQSYr;
-	arc=none smtp.remote-ip=185.70.43.18
-Received: from mail-4318.protonmail.ch (mail-4318.protonmail.ch [185.70.43.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=eeCmVCgM;
+	arc=none smtp.remote-ip=209.85.128.51
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13052606A31A;
-	Thu, 22 Oct 2026 17:07:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 13052606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14C0606A31A
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 17:32:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C14C0606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=vinarskis.com header.i=@vinarskis.com header.a=rsa-sha256 header.s=protonmail3 header.b=Xz3GQSYr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
-	s=protonmail3; t=1792688850; x=1792948050;
-	bh=KncKH2UewY/IQiP6GR2JSb1uHy6TFz2Qs/vbYyhK7F4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=Xz3GQSYrq8v4eGe62C6e13on1kSbd4fOE6dfOZbmVlk/WjJ9aAoEXYN8gxeGpoaxe
-	 rQrhLSbrqx0zxSjIxTeAdW4axJGaX8ObQCqt5DHI6u4Fz8wkFW/mwV15N5ayRw5mHi
-	 7Q23Zs9uM3rDSakmRbCd/Wq+gPjHonvkqyzrlY0qkdElfQKih28Y45dBN0n9Ku1/rD
-	 PpcvyBJkaOtRGyWecbxprhfip0ZlY+F6YTtdvf3We82xVyQldxlzkWLoxguVN3Dbaq
-	 UQMnCIPWRIxQbwL2LCzaHe7ockt9xcnFDmfbXslnuw5gKOhXhtcwYb9IBVo2GzhiVz
-	 R/XKf4QSSyl4A==
-Date: Thu, 22 Oct 2026 17:07:25 +0000
-To: Liviu Nicoara <lnicoara@thinkoid.org>
-From: Aleksandrs Vinarskis <alex@vinarskis.com>
-Cc: Michael Burch <me@michaelburch.net>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Kees Cook <kees@kernel.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Abel Vesa <abelvesa@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>, Neil Armstrong <neil.armstrong@linaro.org>, Stephan Gerhold <stephan.gerhold@linaro.org>, linux-hardening@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v6 3/3] arm64: dts: qcom: x1e80100-dell-xps13-9345: introduce EC
-Message-ID: <NCQ5O8k2_GpmJZBjDzgZL67uwdiYmmuSudO9VmdRaFTDq0u7aec6at00VYbzdwwSVvgJnLnGxewwp_TVO9oTjM2pAjP_LoiURf9JCIKXB-w=@vinarskis.com>
-In-Reply-To: <20261013195327.19571-1-lnicoara@thinkoid.org>
-References: <20261013172718.12355-1-me@michaelburch.net> <20261013195327.19571-1-lnicoara@thinkoid.org>
-Feedback-ID: 158356072:user:proton
-X-Pm-Message-ID: f96dfcfbbb36501a2b9c4dfd42be303868b89fe4
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=eeCmVCgM
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-49d0da752ffso192035e9.3
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 10:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792690357; x=1793295157; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=5TTK5L3C72RVXuyCfPoL1KiCUuBlYM9fSsQ+OoWqJh0=;
+        b=eeCmVCgMegRCMD7vOlGg+I+VL7pQWFbhxv3PU5KxF6XDa0o7ajmM/7XY1L43p9HS5+
+         itOL5APh7mnHzuXNFok96uju1BIDvogoYxKs+LNEoP0KzZqKpZB2h4aJiZfAoVBC9rXI
+         OXBa64Ghjhyr3+zpRWSioZQBJ0F4UnFDPvOW8xL1I0c88FZETbuvhll6WKwGvxuDYd/q
+         NjLKXl/YgtmD82fvvGg/sJb4Rb4nlhHaEawHymhU3n5L5dc4+7NXPF/gaQzxtJS1htSz
+         38lzO8YmLXH2ksX3fpjcSb2gD+VyGT3rVqk4P5zdk3C8pUXkvGTDCmhsvkyUpHkOLD95
+         0LGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792690357; x=1793295157;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5TTK5L3C72RVXuyCfPoL1KiCUuBlYM9fSsQ+OoWqJh0=;
+        b=Uuh0+SZDqiqd+AtLe8xk+FxX8HqkNvfCmtMZYUyRQSEPilzjVuTH7uirzBauKq/Vss
+         s2+7cLd9MmGuSkeDSF17Y3a2dAZ+iQ4uyc1cV5MN7YWWfyK1Ujm0IQcU2N4iKqEdJKtl
+         A8PclNi4vdNNyTqvvzS5stDbaryPpw3bUX+D0IhhUiPWuZ8QXn+DnLgKblPfYA1j4vWV
+         CWQJviZ7wSh6u6oMAhbLi1d5iuVyzU8TXMbt2C7zaD7fS/4yglHEkgX3VM6A7EXJMEXe
+         p96IFiB2cxqu9Wt4DzeEOBYTlE+wTc8M2+s85FTo8Rh5Kdxg07HQCiPiZndsMsJqn86J
+         yXhQ==
+X-Forwarded-Encrypted: i=1; AKwUvByyO8wN4Ab6/SEAK1o/m0h0rnyzqlRn4mZQfl1BMw98Vkp+KoA/avEQewpajawp+RhRWW1fPaDxiIqjWTnRfvM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIL/1Ex2TolCY+oijhCPzjk/PSSAt/Rm9dtgC/pvB8esRXEzQXn
+	qhJt9FQDrAUHnyAiY2T/SeLsnV+mkeXzXOpzSMruAlYVElaM1zQpG2p1
+X-Gm-Gg: AYBFou2QLyTfGu7k/qwK9MpWcHZVIPIVkzRyerr0Pxz2JZu93n2bMUhQyuLQwvzp2Br
+	TrR3772LtiTeroBnTUQF6aaloT5T5ea7WXBPrL0WTAomJ4LBaI0oqcq7Z3fYeW3Tfuc0Mwi2tP3
+	jq0Z6pm3i6e2zjriNaAKzw08hZcy2aLzMOUVVTzKEnlKxaZBLD1728HPflLW+5dp4Fj2f9TSPYG
+	fKSbVRiGLcf5NmvNxmF7VqedNnUdnKXQC10l2GQFAOXuJCaIJ1NCUdZsKVVIFodYWUEZEWL4FaY
+	dne4m3Fn90sZNp7uFPr5ePCWpE2eLajZU0D500uCrejXB9pbwBzJgbR01rC2a4v42gkkhjfmhFV
+	/PXmRhSWVlFgk6W99exYLg7OzQkikI36Bz5uQJpJ8zz/xxzcRAR7IqD1XPa6S+AqXNAIvUS6ILa
+	8m0v1iC0G3BNeUTZnrb6frwMdHY/ncbjW7RbI/I82RIL+dqe3zh4Tk2dlAK4Gwwn8Kf5yT6SkGN
+	YMInowZ45cxVD8kWMCoye9cdfI/Yf3fAY2aaKgTXYoRk3bniWOoAt3QaoopHydfnNHPHgPSLj3r
+	zE3ixLw=
+X-Received: by 2002:a05:600c:8b78:b0:4a2:cbe:bebc with SMTP id 5b1f17b1804b1-4a20cbec0d1mr26844975e9.23.1792690357003;
+        Thu, 22 Oct 2026 10:32:37 -0700 (PDT)
+Received: from localhost.localdomain ([188.190.249.216])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e2581f0d4sm13857279f8f.13.2026.10.22.10.32.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Oct 2026 10:32:36 -0700 (PDT)
+From: Vladyslav Tymoshchuk <tvlad744@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Cc: Abel Vesa <abelvesa@kernel.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Casey Connolly <casey.connolly@linaro.org>,
+	Johan Hovold <johan@kernel.org>,
+	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
+	Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>,
+	Joonhoe Kim <26rote@gmail.com>,
+	Daniel J Blueman <daniel@quora.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vladyslav Tymoshchuk <tvlad744@gmail.com>
+Subject: [RFC PATCH 4/4] power: supply: qcom_battmgr: Allow charger changes to wake up the system
+Date: Thu, 22 Oct 2026 20:32:24 +0300
+Message-ID: <20261022173225.58-1-tvlad744@gmail.com>
+X-Mailer: git-send-email 2.45.1.windows.1
+In-Reply-To: <20261022164151.592-1-tvlad744@gmail.com>
+References: <20261022164151.592-1-tvlad744@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -64,327 +117,73 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tuesday, October 13th, 2026 at 21:53, Liviu Nicoara <lnicoara@thinkoid.o=
-rg> wrote:
+The battery manager notifies about changes of the battery state, many
+of which arrive while the system is asleep, and about changes of the
+USB and wireless charger properties, a charger being plugged in or out
+for one. Only the latter can be worth a wakeup, to show the new
+charging state for example.
 
-> On Tue, 13 Oct 2026 12:27:16 -0500, Michael Burch wrote:
-> > These two should be AMUX1_GPIO and AMUX2_GPIO. My unit (BIOS 2.14.0)
-> > shows what Liviu reported [1]: 0x14c (lpddr5_therm) reads 130.048 C fro=
-m
-> > boot on, and that is the value the EC is sent.
->=20
-> Same here, and the ADC1 table settles what my readings left open.
-> On this unit (also BIOS 2.14.0), with all four GPIO channels defined
-> in one DTB on a 7.2.6 kernel:
->=20
-> 0x14a  38.6 C        0x14c  130.0 C (constant)
-> 0x14b  32.7 C        0x14d   34.7 C
->=20
-> A charger on the left USB-C port warmed 0x14b by 1.6 C in three
-> minutes; 0x14d stayed within 0.1 C. So usb_charger_left_therm is
-> AMUX2_GPIO, 0x14b, as your table says; 0x14a reads a board
-> temperature and warms with the SoC.
+Make the device wakeup capable, and set a wakeup filter that lets
+pmic_glink report only the charger notifications as wakeup events.
+Leave wakeup disabled, so that nothing changes by default: whether a
+charger change should wake up the system is up to user space, through
+power/wakeup.
 
-Hey,
+Signed-off-by: Vladyslav Tymoshchuk <tvlad744@gmail.com>
+---
+I used an AI assistant (Claude) for the analysis and to draft this
+patch and its description; I reviewed the result. The testing is
+described in the cover letter.
 
-Thats a very good find. I have checked and it seems you are right;
-Most of mapping between ADC channels relied on schematics that I
-managed to get my hands on, its now clear that it is not a most up
-to date document... As EC only reacts to some of the temperatures
-fed to it and not all, I missed this in my testing.
+ drivers/power/supply/qcom_battmgr.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Ignoring all the information from schematics now, I am trying to
-re-verify names for all the ADC channels. I do not think the left
-charger you identified is correct - how did you arrive to that
-conclusion? Curious to compare to my method. I run a number of
-stress tests to narrow it down:
+diff --git a/drivers/power/supply/qcom_battmgr.c b/drivers/power/supply/qcom_battmgr.c
+index 636d6f6acecc..7a783a3a320d 100644
+--- a/drivers/power/supply/qcom_battmgr.c
++++ b/drivers/power/supply/qcom_battmgr.c
+@@ -10,6 +10,7 @@
+ #include <linux/mutex.h>
+ #include <linux/nvmem-consumer.h>
+ #include <linux/of_device.h>
++#include <linux/pm_wakeup.h>
+ #include <linux/power_supply.h>
+ #include <linux/property.h>
+ #include <linux/soc/qcom/pdr.h>
+@@ -1596,6 +1597,20 @@ static void qcom_battmgr_sm8350_callback(struct qcom_battmgr *battmgr,
+ 	complete(&battmgr->ack);
+ }
+ 
++static bool qcom_battmgr_is_charger_notification(const void *data, size_t len, void *priv)
++{
++	const struct qcom_battmgr_message *msg = data;
++	unsigned int notification;
++
++	if (le32_to_cpu(msg->hdr.opcode) != BATTMGR_NOTIFICATION ||
++	    len != sizeof(msg->hdr) + sizeof(msg->notification))
++		return false;
++
++	notification = le32_to_cpu(msg->notification) & 0xff;
++
++	return notification == NOTIF_USB_PROPERTY || notification == NOTIF_WLS_PROPERTY;
++}
++
+ static void qcom_battmgr_callback(const void *data, size_t len, void *priv)
+ {
+ 	const struct pmic_glink_hdr *hdr = data;
+@@ -1750,6 +1765,10 @@ static int qcom_battmgr_probe(struct auxiliary_device *adev,
+ 	if (IS_ERR(battmgr->client))
+ 		return PTR_ERR(battmgr->client);
+ 
++	device_set_wakeup_capable(dev, true);
++	pmic_glink_client_set_wakeup_filter(battmgr->client,
++					    qcom_battmgr_is_charger_notification);
++
+ 	pmic_glink_client_register(battmgr->client);
+ 
+ 	return 0;
+-- 
+2.43.0
 
-1. RHS charger getting plugged, 10s wait:
-LABEL                         START        END       DIFF
-pm8550_die_temp              49.5=C2=B0C     49.0=C2=B0C     -0.6=C2=B0C
-vph_pwr_therm                53.3=C2=B0C     53.1=C2=B0C     -0.2=C2=B0C
-usb_charger_right_therm      45.2=C2=B0C     47.5=C2=B0C     +2.3=C2=B0C
-ssd_conn_therm               47.0=C2=B0C     46.6=C2=B0C     -0.4=C2=B0C
-sys_therm5                   39.1=C2=B0C     39.3=C2=B0C     +0.2=C2=B0C
-keyboard_therm               51.6=C2=B0C     51.3=C2=B0C     -0.3=C2=B0C
-pm8550_gpio_01               51.4=C2=B0C     51.1=C2=B0C     -0.3=C2=B0C
-pm8550_gpio_02               44.6=C2=B0C     44.3=C2=B0C     -0.3=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       35.9=C2=B0C     35.8=C2=B0C     -0.0=C2=B0C
-pm8550ve_2_die_temp          50.7=C2=B0C     50.3=C2=B0C     -0.4=C2=B0C
-pmk8550_die_temp             48.1=C2=B0C     47.6=C2=B0C     -0.5=C2=B0C
-pmc8380_3_die_temp           48.6=C2=B0C     48.1=C2=B0C     -0.5=C2=B0C
-pmc8380_4_die_temp           47.1=C2=B0C     46.7=C2=B0C     -0.3=C2=B0C
-pmc8380_5_die_temp           48.8=C2=B0C     48.3=C2=B0C     -0.5=C2=B0C
-pmc8380_6_die_temp           48.0=C2=B0C     47.4=C2=B0C     -0.6=C2=B0C
-pm8550ve_8_die_temp          47.3=C2=B0C     47.8=C2=B0C     +0.5=C2=B0C
-pm8550ve_9_die_temp          51.3=C2=B0C     51.0=C2=B0C     -0.4=C2=B0C
-
-Charger unplugged:
-LABEL                         START        END       DIFF
-pm8550_die_temp              49.3=C2=B0C     48.5=C2=B0C     -0.8=C2=B0C
-vph_pwr_therm                53.0=C2=B0C     52.5=C2=B0C     -0.6=C2=B0C
-usb_charger_right_therm      47.1=C2=B0C     45.7=C2=B0C     -1.4=C2=B0C
-ssd_conn_therm               46.5=C2=B0C     46.1=C2=B0C     -0.4=C2=B0C
-sys_therm5                   39.2=C2=B0C     39.2=C2=B0C     -0.0=C2=B0C
-keyboard_therm               51.3=C2=B0C     51.0=C2=B0C     -0.3=C2=B0C
-pm8550_gpio_01               51.3=C2=B0C     51.0=C2=B0C     -0.3=C2=B0C
-pm8550_gpio_02               44.3=C2=B0C     44.0=C2=B0C     -0.3=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       35.8=C2=B0C     35.8=C2=B0C     -0.0=C2=B0C
-pm8550ve_2_die_temp          50.2=C2=B0C     49.7=C2=B0C     -0.5=C2=B0C
-pmk8550_die_temp             47.5=C2=B0C     47.3=C2=B0C     -0.3=C2=B0C
-pmc8380_3_die_temp           48.4=C2=B0C     47.8=C2=B0C     -0.6=C2=B0C
-pmc8380_4_die_temp           46.8=C2=B0C     46.4=C2=B0C     -0.4=C2=B0C
-pmc8380_5_die_temp           48.6=C2=B0C     48.0=C2=B0C     -0.6=C2=B0C
-pmc8380_6_die_temp           48.1=C2=B0C     47.3=C2=B0C     -0.7=C2=B0C
-pm8550ve_8_die_temp          48.2=C2=B0C     47.3=C2=B0C     -0.9=C2=B0C
-pm8550ve_9_die_temp          51.2=C2=B0C     50.6=C2=B0C     -0.7=C2=B0C
-
-`usb_charger_right_therm` gained 2.3C in 10s, lost 1.4C 10s.
-Clearly follows.
-
-2. LHS charger getting plugged, 10s wait:
-LABEL                         START        END       DIFF
-pm8550_die_temp              47.6=C2=B0C     47.3=C2=B0C     -0.3=C2=B0C
-vph_pwr_therm                51.6=C2=B0C     51.5=C2=B0C     -0.1=C2=B0C
-usb_charger_right_therm      44.2=C2=B0C     43.6=C2=B0C     -0.5=C2=B0C
-ssd_conn_therm               45.2=C2=B0C     45.0=C2=B0C     -0.2=C2=B0C
-sys_therm5                   38.8=C2=B0C     38.6=C2=B0C     -0.2=C2=B0C
-keyboard_therm               50.1=C2=B0C     49.9=C2=B0C     -0.2=C2=B0C
-pm8550_gpio_01               50.0=C2=B0C     49.7=C2=B0C     -0.3=C2=B0C
-pm8550_gpio_02               43.2=C2=B0C     43.3=C2=B0C     +0.2=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       35.8=C2=B0C     35.8=C2=B0C     -0.0=C2=B0C
-pm8550ve_2_die_temp          49.1=C2=B0C     48.8=C2=B0C     -0.2=C2=B0C
-pmk8550_die_temp             46.6=C2=B0C     46.2=C2=B0C     -0.3=C2=B0C
-pmc8380_3_die_temp           47.0=C2=B0C     46.8=C2=B0C     -0.2=C2=B0C
-pmc8380_4_die_temp           45.6=C2=B0C     45.4=C2=B0C     -0.2=C2=B0C
-pmc8380_5_die_temp           47.3=C2=B0C     46.8=C2=B0C     -0.5=C2=B0C
-pmc8380_6_die_temp           46.7=C2=B0C     46.1=C2=B0C     -0.6=C2=B0C
-pm8550ve_8_die_temp          46.2=C2=B0C     45.8=C2=B0C     -0.4=C2=B0C
-pm8550ve_9_die_temp          49.8=C2=B0C     49.5=C2=B0C     -0.3=C2=B0C
-
-Charger unplugged:
-LABEL                         START        END       DIFF
-pm8550_die_temp              47.3=C2=B0C     47.2=C2=B0C     -0.1=C2=B0C
-vph_pwr_therm                51.4=C2=B0C     50.9=C2=B0C     -0.5=C2=B0C
-usb_charger_right_therm      43.8=C2=B0C     43.4=C2=B0C     -0.4=C2=B0C
-ssd_conn_therm               45.0=C2=B0C     44.8=C2=B0C     -0.1=C2=B0C
-sys_therm5                   38.6=C2=B0C     38.4=C2=B0C     -0.2=C2=B0C
-keyboard_therm               49.7=C2=B0C     49.3=C2=B0C     -0.4=C2=B0C
-pm8550_gpio_01               49.6=C2=B0C     49.2=C2=B0C     -0.5=C2=B0C
-pm8550_gpio_02               43.4=C2=B0C     43.3=C2=B0C     -0.1=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       35.8=C2=B0C     35.8=C2=B0C     +0.0=C2=B0C
-pm8550ve_2_die_temp          48.7=C2=B0C     48.4=C2=B0C     -0.3=C2=B0C
-pmk8550_die_temp             46.1=C2=B0C     45.8=C2=B0C     -0.3=C2=B0C
-pmc8380_3_die_temp           46.9=C2=B0C     46.5=C2=B0C     -0.4=C2=B0C
-pmc8380_4_die_temp           45.4=C2=B0C     45.0=C2=B0C     -0.4=C2=B0C
-pmc8380_5_die_temp           46.9=C2=B0C     46.5=C2=B0C     -0.4=C2=B0C
-pmc8380_6_die_temp           46.3=C2=B0C     45.9=C2=B0C     -0.4=C2=B0C
-pm8550ve_8_die_temp          45.8=C2=B0C     45.6=C2=B0C     -0.3=C2=B0C
-pm8550ve_9_die_temp          49.5=C2=B0C     49.1=C2=B0C     -0.4=C2=B0C
-
-pm8550_gpio_02 does NOT clearly follow. In your test you have
-waited multiple minutes, which is enough to heat up a larger
-area on the motherboard.
-
-3. SSD stress test, 30s wait:
-LABEL=09                      START=09   END=09     DIFF
-pm8550_die_temp=09             45.7=C2=B0C=0951.6=C2=B0C=09   +5.9=C2=B0C
-vph_pwr_therm=09             49.6=C2=B0C=0955.0=C2=B0C=09   +5.4=C2=B0C
-usb_charger_right_therm=09     41.5=C2=B0C=0944.4=C2=B0C=09   +2.9=C2=B0C
-ssd_conn_therm=09             42.9=C2=B0C=0947.9=C2=B0C=09   +5.0=C2=B0C
-sys_therm5=09             36.7=C2=B0C=0936.9=C2=B0C=09   +0.2=C2=B0C
-keyboard_therm=09             47.7=C2=B0C=0953.0=C2=B0C=09   +5.3=C2=B0C
-pm8550_gpio_01=09             47.7=C2=B0C=0952.5=C2=B0C=09   +4.8=C2=B0C
-pm8550_gpio_02=09             41.0=C2=B0C=0944.6=C2=B0C=09   +3.6=C2=B0C
-lpddr5_therm=09            130.0=C2=B0C    130.0=C2=B0C=09   +0.0=C2=B0C
-usb_charger_left_therm=09     35.7=C2=B0C=0935.9=C2=B0C=09   +0.2=C2=B0C
-pm8550ve_2_die_temp=09     47.0=C2=B0C=0952.4=C2=B0C=09   +5.4=C2=B0C
-pmk8550_die_temp=09     44.2=C2=B0C=0948.4=C2=B0C=09   +4.2=C2=B0C
-pmc8380_3_die_temp=09     46.0=C2=B0C=0952.8=C2=B0C=09   +6.8=C2=B0C
-pmc8380_4_die_temp=09     43.5=C2=B0C=0948.2=C2=B0C=09   +4.7=C2=B0C
-pmc8380_5_die_temp=09     46.8=C2=B0C=0951.3=C2=B0C=09   +4.5=C2=B0C
-pmc8380_6_die_temp=09     45.3=C2=B0C=0949.7=C2=B0C=09   +4.4=C2=B0C
-pm8550ve_8_die_temp=09     44.2=C2=B0C=0947.4=C2=B0C=09   +3.2=C2=B0C
-pm8550ve_9_die_temp=09     48.4=C2=B0C=0953.4=C2=B0C=09   +5.0=C2=B0C
-
-Cooldown, 10s wait:
-LABEL                         START        END       DIFF
-pm8550_die_temp              50.9=C2=B0C     50.8=C2=B0C     -0.1=C2=B0C
-vph_pwr_therm                54.0=C2=B0C     53.2=C2=B0C     -0.8=C2=B0C
-usb_charger_right_therm      44.6=C2=B0C     44.5=C2=B0C     -0.0=C2=B0C
-ssd_conn_therm               48.1=C2=B0C     47.9=C2=B0C     -0.2=C2=B0C
-sys_therm5                   36.9=C2=B0C     37.0=C2=B0C     +0.0=C2=B0C
-keyboard_therm               52.4=C2=B0C     51.7=C2=B0C     -0.7=C2=B0C
-pm8550_gpio_01               52.1=C2=B0C     51.4=C2=B0C     -0.7=C2=B0C
-pm8550_gpio_02               44.9=C2=B0C     44.8=C2=B0C     -0.0=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       35.9=C2=B0C     35.9=C2=B0C     +0.0=C2=B0C
-pm8550ve_2_die_temp          51.4=C2=B0C     50.6=C2=B0C     -0.8=C2=B0C
-pmk8550_die_temp             48.2=C2=B0C     47.6=C2=B0C     -0.6=C2=B0C
-pmc8380_3_die_temp           49.9=C2=B0C     49.1=C2=B0C     -0.7=C2=B0C
-pmc8380_4_die_temp           47.4=C2=B0C     46.7=C2=B0C     -0.6=C2=B0C
-pmc8380_5_die_temp           50.2=C2=B0C     49.2=C2=B0C     -1.0=C2=B0C
-pmc8380_6_die_temp           48.9=C2=B0C     48.1=C2=B0C     -0.8=C2=B0C
-pm8550ve_8_die_temp          47.2=C2=B0C     46.9=C2=B0C     -0.3=C2=B0C
-pm8550ve_9_die_temp          52.4=C2=B0C     51.5=C2=B0C     -0.8=C2=B0C
-
-This is a bit inconclusive. Both SSD, keyboard, and
-pm8550_gpio_01 (LPDDR5, see below) heated up significantly.
-
-4. Stress RAM, 10s wait:
-LABEL                         START        END       DIFF
-pm8550_die_temp              50.5=C2=B0C     51.0=C2=B0C     +0.5=C2=B0C
-vph_pwr_therm                53.8=C2=B0C     55.9=C2=B0C     +2.1=C2=B0C
-usb_charger_right_therm      45.8=C2=B0C     46.3=C2=B0C     +0.5=C2=B0C
-ssd_conn_therm               47.8=C2=B0C     47.9=C2=B0C     +0.0=C2=B0C
-sys_therm5                   39.9=C2=B0C     39.9=C2=B0C     -0.1=C2=B0C
-keyboard_therm               52.0=C2=B0C     55.1=C2=B0C     +3.0=C2=B0C
-pm8550_gpio_01               51.9=C2=B0C     54.7=C2=B0C     +2.8=C2=B0C
-pm8550_gpio_02               45.6=C2=B0C     45.4=C2=B0C     -0.2=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       35.9=C2=B0C     35.8=C2=B0C     -0.0=C2=B0C
-pm8550ve_2_die_temp          51.0=C2=B0C     53.0=C2=B0C     +2.1=C2=B0C
-pmk8550_die_temp             48.1=C2=B0C     49.3=C2=B0C     +1.1=C2=B0C
-pmc8380_3_die_temp           50.8=C2=B0C     52.7=C2=B0C     +1.8=C2=B0C
-pmc8380_4_die_temp           47.3=C2=B0C     49.7=C2=B0C     +2.4=C2=B0C
-pmc8380_5_die_temp           50.0=C2=B0C     53.0=C2=B0C     +3.0=C2=B0C
-pmc8380_6_die_temp           48.9=C2=B0C     52.9=C2=B0C     +4.0=C2=B0C
-pm8550ve_8_die_temp          50.0=C2=B0C     51.4=C2=B0C     +1.4=C2=B0C
-pm8550ve_9_die_temp          53.7=C2=B0C     55.7=C2=B0C     +2.0=C2=B0C
-
-5. Cooldown, 10s wait:
-LABEL                         START        END       DIFF
-pm8550_die_temp              52.2=C2=B0C     51.3=C2=B0C     -0.8=C2=B0C
-vph_pwr_therm                56.3=C2=B0C     55.2=C2=B0C     -1.1=C2=B0C
-usb_charger_right_therm      47.2=C2=B0C     46.7=C2=B0C     -0.5=C2=B0C
-ssd_conn_therm               49.0=C2=B0C     48.5=C2=B0C     -0.5=C2=B0C
-sys_therm5                   39.4=C2=B0C     39.4=C2=B0C     -0.0=C2=B0C
-keyboard_therm               54.7=C2=B0C     53.6=C2=B0C     -1.1=C2=B0C
-pm8550_gpio_01               54.6=C2=B0C     53.4=C2=B0C     -1.1=C2=B0C
-pm8550_gpio_02               45.8=C2=B0C     45.6=C2=B0C     -0.2=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       35.9=C2=B0C     35.9=C2=B0C     +0.0=C2=B0C
-pm8550ve_2_die_temp          53.5=C2=B0C     52.3=C2=B0C     -1.2=C2=B0C
-pmk8550_die_temp             51.1=C2=B0C     50.0=C2=B0C     -1.1=C2=B0C
-pmc8380_3_die_temp           51.5=C2=B0C     50.2=C2=B0C     -1.3=C2=B0C
-pmc8380_4_die_temp           49.7=C2=B0C     48.7=C2=B0C     -0.9=C2=B0C
-pmc8380_5_die_temp           51.4=C2=B0C     50.1=C2=B0C     -1.3=C2=B0C
-pmc8380_6_die_temp           50.9=C2=B0C     49.8=C2=B0C     -1.1=C2=B0C
-pm8550ve_8_die_temp          50.2=C2=B0C     49.3=C2=B0C     -0.9=C2=B0C
-pm8550ve_9_die_temp          54.3=C2=B0C     53.3=C2=B0C     -1.0=C2=B0C
-
-pm8550_gpio_01 and keyboard_therm clearly respond. This
-would make sense, I am guessing two sensors are located
-very close to each other on the motherboard, but on the
-opposite sides of the PCBA.
-
-6. Hairdryer on the keyboard, 10s wait:
-LABEL                         START        END       DIFF
-pm8550_die_temp              49.3=C2=B0C     49.1=C2=B0C     -0.2=C2=B0C
-vph_pwr_therm                50.6=C2=B0C     50.4=C2=B0C     -0.2=C2=B0C
-usb_charger_right_therm      43.7=C2=B0C     43.6=C2=B0C     -0.1=C2=B0C
-ssd_conn_therm               46.4=C2=B0C     46.3=C2=B0C     -0.1=C2=B0C
-sys_therm5                   36.8=C2=B0C     37.0=C2=B0C     +0.2=C2=B0C
-keyboard_therm               49.6=C2=B0C     49.4=C2=B0C     -0.2=C2=B0C
-pm8550_gpio_01               49.2=C2=B0C     48.9=C2=B0C     -0.2=C2=B0C
-pm8550_gpio_02               44.1=C2=B0C     44.1=C2=B0C     +0.1=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       35.9=C2=B0C     35.8=C2=B0C     -0.1=C2=B0C
-pm8550ve_2_die_temp          48.1=C2=B0C     48.0=C2=B0C     -0.1=C2=B0C
-pmk8550_die_temp             45.3=C2=B0C     45.1=C2=B0C     -0.2=C2=B0C
-pmc8380_3_die_temp           46.0=C2=B0C     45.7=C2=B0C     -0.4=C2=B0C
-pmc8380_4_die_temp           44.6=C2=B0C     44.3=C2=B0C     -0.3=C2=B0C
-pmc8380_5_die_temp           46.3=C2=B0C     45.9=C2=B0C     -0.3=C2=B0C
-pmc8380_6_die_temp           45.3=C2=B0C     45.0=C2=B0C     -0.3=C2=B0C
-pm8550ve_8_die_temp          45.4=C2=B0C     45.1=C2=B0C     -0.3=C2=B0C
-pm8550ve_9_die_temp          48.8=C2=B0C     48.6=C2=B0C     -0.2=C2=B0C
-
-Another 10s wait:
-LABEL                         START        END       DIFF
-pm8550_die_temp              49.0=C2=B0C     49.6=C2=B0C     +0.6=C2=B0C
-vph_pwr_therm                50.6=C2=B0C     51.0=C2=B0C     +0.5=C2=B0C
-usb_charger_right_therm      43.7=C2=B0C     44.3=C2=B0C     +0.6=C2=B0C
-ssd_conn_therm               46.5=C2=B0C     47.2=C2=B0C     +0.7=C2=B0C
-sys_therm5                   37.5=C2=B0C     38.8=C2=B0C     +1.3=C2=B0C
-keyboard_therm               49.6=C2=B0C     50.2=C2=B0C     +0.7=C2=B0C
-pm8550_gpio_01               49.1=C2=B0C     49.7=C2=B0C     +0.6=C2=B0C
-pm8550_gpio_02               44.6=C2=B0C     45.7=C2=B0C     +1.1=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       35.8=C2=B0C     35.9=C2=B0C     +0.1=C2=B0C
-pm8550ve_2_die_temp          48.2=C2=B0C     48.6=C2=B0C     +0.4=C2=B0C
-pmk8550_die_temp             45.3=C2=B0C     46.1=C2=B0C     +0.8=C2=B0C
-pmc8380_3_die_temp           46.0=C2=B0C     46.4=C2=B0C     +0.4=C2=B0C
-pmc8380_4_die_temp           44.5=C2=B0C     45.2=C2=B0C     +0.6=C2=B0C
-pmc8380_5_die_temp           46.3=C2=B0C     46.7=C2=B0C     +0.4=C2=B0C
-pmc8380_6_die_temp           45.3=C2=B0C     46.0=C2=B0C     +0.7=C2=B0C
-pm8550ve_8_die_temp          45.3=C2=B0C     46.1=C2=B0C     +0.8=C2=B0C
-pm8550ve_9_die_temp          48.7=C2=B0C     49.6=C2=B0C     +0.9=C2=B0C
-
-Cooldown, 10s wait:
-LABEL                         START        END       DIFF
-pm8550_die_temp              55.8=C2=B0C     55.3=C2=B0C     -0.5=C2=B0C
-vph_pwr_therm                57.8=C2=B0C     57.3=C2=B0C     -0.5=C2=B0C
-usb_charger_right_therm      51.0=C2=B0C     50.6=C2=B0C     -0.4=C2=B0C
-ssd_conn_therm               54.0=C2=B0C     53.6=C2=B0C     -0.4=C2=B0C
-sys_therm5                   45.8=C2=B0C     45.3=C2=B0C     -0.6=C2=B0C
-keyboard_therm               56.3=C2=B0C     55.8=C2=B0C     -0.5=C2=B0C
-pm8550_gpio_01               55.8=C2=B0C     55.4=C2=B0C     -0.4=C2=B0C
-pm8550_gpio_02               52.5=C2=B0C     51.9=C2=B0C     -0.5=C2=B0C
-lpddr5_therm                130.0=C2=B0C    130.0=C2=B0C     +0.0=C2=B0C
-usb_charger_left_therm       36.0=C2=B0C     36.0=C2=B0C     +0.0=C2=B0C
-pm8550ve_2_die_temp          54.7=C2=B0C     54.2=C2=B0C     -0.5=C2=B0C
-pmk8550_die_temp             52.0=C2=B0C     51.6=C2=B0C     -0.4=C2=B0C
-pmc8380_3_die_temp           51.5=C2=B0C     51.2=C2=B0C     -0.3=C2=B0C
-pmc8380_4_die_temp           50.3=C2=B0C     49.9=C2=B0C     -0.4=C2=B0C
-pmc8380_5_die_temp           51.9=C2=B0C     51.5=C2=B0C     -0.4=C2=B0C
-pmc8380_6_die_temp           51.0=C2=B0C     50.8=C2=B0C     -0.2=C2=B0C
-pm8550ve_8_die_temp          52.7=C2=B0C     52.4=C2=B0C     -0.3=C2=B0C
-pm8550ve_9_die_temp          55.4=C2=B0C     55.1=C2=B0C     -0.3=C2=B0C
-
-I would say it is also inconclusive; Looks more like
-"sys_therm5" is the actual keyboard thermistor.
-
-With this in mind:
-ADC5_GEN3_AMUX1_GPIO_100K_PU - Likely "lpddr5_therm"
-ADC5_GEN3_AMUX2_GPIO_100K_PU - Li
-ADC5_GEN3_AMUX1_THM_100K_PU  -
-ADC5_GEN3_AMUX2_THM_100K_PU  - RHS USB Charger
-ADC5_GEN3_AMUX3_THM_100K_PU  -
-ADC5_GEN3_AMUX4_THM_100K_PU  -
-ADC5_GEN3_AMUX5_THM_100K_PU  -
-
-Would like to hear how you arrived to the labels. I am
-in parallel checking if tearing down the laptop would
-help me identify which thermistor is which, but this
-will take a while. Alternatively, I am leaning to drop
-the labels for anything we are not sure about...
-
-P.S. With most platforms starting sys_therm node count
-from 1 and not 0, and schematics used to make this
-mapping being wrong I would change this series to match
-usual convention in the next series.
-
-Regards,
-Alex
-
->=20
-> > +=09sys_therm0: channel@14a {
-> > +=09=09reg =3D <ADC5_GEN3_AMUX1_GPIO_100K_PU(1)>;
->=20
-> One note on the shape: hamoa-pmics.dtsi already defines
-> channel@14a and channel@14b as pm8550_gpio_01 and pm8550_gpio_02,
-> with gpio3 and gpio4 in high impedance for them. The EC's io-channels
-> can reference those two directly; redefining the nodes in the board
-> file only adds the labels, which the EC node does not need.
->=20
-> Happy to test a v7 with the two channels moved.
->=20
-> Liviu
-> 
