@@ -1,82 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.227.138
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.227.130
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792653020;
-	b=jMgVbIVkzNv0b/VTzu9Eu6BK5ZLmPV7Zn1VbKmSlFng6v+veaWsZwR28BJ1YyJRgsdoc
-	 wqU7HlmmBrq65390sjFh+hE0rZ5AW0SAbKRK6dhjTHgCPk94kou6d1uC5DIDvJ04aBOVX
-	 DegbibyhVyVTaOGnPknwGFDXNCvG0DSnO/AJwjjqkQT0x4XoP2nxMT4nlqb6kzKeb8ZFC
-	 8DNPLL+QK7rY50vbMk5wKSENNr+rBuvpSMuzpCV/e3gRleqD1g7iYlyCHf+BIgOfYJa9m
-	 gSQZTrR7l8QJP5CdL7PCQQ0CqKZMC7KzqtgmO+wdJYde0Xabuht5S4yB+BAiA2L51tQ==
+	t=1792653026;
+	b=kaN6z57akIreQ8D5BgE62fDDOUn+AnXvU4vVaQnh0RZzMDTdNzgJNv6fwv5GnFszDtX5
+	 0MQDxBCEVto//MWMIxC6ppempXh/9PAhzFkJIuwjd0c+oNuC/vLhAMVH8V00XPA08YfAM
+	 F48F/2WhQayU5bhNlyVsBJdaN2djbqlmE6boK+ljUjnjsbd3fNaJEv+v8TRR6xgd0/FUZ
+	 CEbbWULC4d7oJNwC8IS7phEdUNbvP2upnY/1t+DJJZmBUzZ+7fyiy6PLkkMLWEueJxy0d
+	 6mnHUYWdbEppEaE7A61FizHCzCy87Eh1wWPEhrF5Wjh4/VEDyu0iSC/i9a1/fEzU4ow==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792653020;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792653026;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=D0jGTVLtzaIFDc7gI7x4v6SVaJxQo+nXgqAY9AHPQIU=;
-	b=mR0LnJKgEN248EkMThbD1Qy3wM91vncg/lnQBKLfFKMwf1zt67r5wOabhajV8RtJxcDn
-	 Uwco+uEdM/+ITWd5U9vRHTWr/WVMmvd5lnDK5Qj/bqT25UO/pk0mzHeUIh7uDIVd2l2WO
-	 fEPyH9AqwxeWeqFxuYn2O6+wswN8m6yGEQRNWGHjYDhl56TLZvN4Mqy54BHT7UQo619bn
-	 wFit4XazAtj8LwrGhgo983LzJR6fI+bDguLI/yxnRIlMujaXjTDPlbQru+BBANy7FxiO8
-	 9TS6/o5upjH2dN0Rs16QDX0CIXIACUUDqUZHmIluWRfeaE4FbVZTPMsmAnRSV0ic9QA==
+	bh=UlfXExQXyhG92dzdrPUvVvWcK6W0MmRTGKrmc+yyUUM=;
+	b=g1WRKGTYkJEdW6GgrrCya9BcmehhBkc0kc2Fv5nYvmyAksXW03+08qy9iRbna7B41YQ0
+	 BlINnXuJvi3Rv/NlF/Wb2fQGwPtGXPrSwdzKKXkIePejxcjC5n+94uSDYhLf3PHoNYvey
+	 th1nbweVmSs1ZkYLwNncXS9FFNlZ9ii4hB+e/4rOJuzKMQnyFiFXv+l4rP5JEfqd7yqbP
+	 qlGgdiNETfwRJ+76UyFzVsmOnD+ybF5I8ZknFKKG5LGMITXLh/Kg2KGIA0UJcJzQtXTXJ
+	 jHYJOfptmKj6eXVGNpoe/fuajA/ZXkNyfZf3cel7YIfH1MI37cqnvL6VoOp9s60o9Fg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kiOVV5e6;
-	arc=none smtp.remote-ip=74.125.227.138
-Received: from mail-pj2-f10.google.com (mail-pj2-f10.google.com [74.125.227.138])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=qFUMBxMa;
+	arc=none smtp.remote-ip=74.125.227.130
+Received: from mail-pj2-f2.google.com (mail-pj2-f2.google.com [74.125.227.130])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB20606A31E
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 07:10:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2EB20606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7CB606A31A
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 07:10:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D7CB606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=kiOVV5e6
-Received: by mail-pj2-f10.google.com with SMTP id 98e67ed59e1d1-3abe4821449so811456a91.1
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 00:10:19 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=qFUMBxMa
+Received: by mail-pj2-f2.google.com with SMTP id d9443c01a7336-2e651c30dcbso5604385ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 00:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792653018; x=1793257818; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792653025; x=1793257825; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=D0jGTVLtzaIFDc7gI7x4v6SVaJxQo+nXgqAY9AHPQIU=;
-        b=kiOVV5e6J/GurhcFbB5U4EjybcgG1yzCdcXX6qqqH3B8pLf4zT2exbjzkKeu3AkOYG
-         8EQtoM6IijOclz7ZN+NIncP26KuaxJ7N+oPIIOX7hBIcv+ggvbWqc0diJmRQwwrOvOkV
-         K1nu/SzFLysQ/vNIBbzqL3nJP6HzHiBXc/QTPIMFjM/XRDVc+9uKy4JrWsGJ/VXcAauC
-         avfVAKZ3pJKSIk8FLonvgP9p16ZOpzTUbwSWm1ROEhgcbPkvIjW/Yg/jhy9zhVDLSozb
-         udFqaQiSg9Q/PTrYCbTI5X34jL4OHBO9pFrN71nfLTVQwHw5oVidgelNT+DgEBwu91YE
-         Y5Hg==
+        bh=UlfXExQXyhG92dzdrPUvVvWcK6W0MmRTGKrmc+yyUUM=;
+        b=qFUMBxMaK6CdgDBTyOpMWCNdcpfDDqGdiQLb/pR1oPQYi6CKaowEzQBpBV0iOSwnVU
+         n1Ka8uwLGD93La8MP63IB9EKMndadwJWLM7vk+135dSsI6liSrGFTLi4UEh/YQQ7xHUz
+         3L2MDkQdbK//LlcZEuy8jJr3RDvrbPp5fMWbVh6w3HBe5W4Pbq6v2FYBAt4FVakfLI7S
+         amDIaOHHbjSRjkCVAnCyms2ivFmTinl7uvmRVWJvej8mlaWm9ZJHDdP+vwW66PKEJpKf
+         YE2ngiPpfMh5FrXMlWKX2s23wVNEs1a1hMVnfPih+WL79F4ZIlp4iekknikNaemb6weY
+         nLsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792653018; x=1793257818;
+        d=1e100.net; s=20260707; t=1792653025; x=1793257825;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=D0jGTVLtzaIFDc7gI7x4v6SVaJxQo+nXgqAY9AHPQIU=;
-        b=SgJuKXPjx9LxrQvA4evmHt8Z1ao8EL3E2theS85STrT+9XyYYoliZkhLYW4ysSrQgG
-         Yf60UyoSNmOddvdNiHYDCqWkPFSpLoidrvb2dLFlDuuiGVGs4RKdk8rwBsBfuKLhE0OP
-         JWmvurPe1qJW9m0Vl06kqB3sXyIltW6Zv1nnVum8y1BSGkHoNBjj0xAiNv931Ic+Hu6e
-         dHeswjVStVFdcSbM0CPIgQqcqJo2aKVMXVCoN1sgJyXDNpOa78P2paz4+DNzKmMeyJN4
-         sBZpfqryyWCeCTJPNoywHiikwaZBz0zACapQvvIk/tKX97iTk1Py4iDrEX45A5cDzm0P
-         8OxA==
-X-Forwarded-Encrypted: i=1; AKwUvBwaH6rX0Al92y3G94C/NgXe80Our6JyRjaxewdrphckOer9i0QTHLJRpEE14jNJq/gaDtLDqYdRrp22fr62sio=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKWZ5V58ESprg8l1jhskw8A6yQwUHoz/CRKxRghW2ts4IkGNDyb
-	EgC1Bjklds2xQ/D+x8u2k9bf38N7h9no0YoGvpB+y3HJkLjep9hgS7yB
-X-Gm-Gg: AYBFou0mqcIyTgMNEX7BumURYiYir3+h7EKKlo+PVSpRpJ57mLsmacDddXshb66TMJK
-	nIHPEjLABEn7ErN18d5D8oRgAhYQULXSSBJlbzwAVwyRv+ms3s6qyhvBB1rHsMITXmL+Qg0ZUoS
-	F42WhcGxrKtAxkvDzyoz8t9TdSgupQTLmFl5RzdVMacgj7PPuJ8u/K0wY5/GZ7ZPnvlW42oKtpt
-	SRfzIUjh5jiplGKQF1eb2xDk1JeqgiVY3JCnpypVKjGux2rHGdj+2gWMC1vFoINOqJybLCBK3N1
-	ZrnUz3WoAajz6QPMwzx1ynIlzUNIdHH78BWHSx8mNs3i4s5RAsnBL9PfDaa+3yHCNXPW/ZGEqIQ
-	/RqRLUbmi/Uifcn0p0OxJxxx1SnxU6zDv7rFGuCuX0ErUOcyd/Zmluxlfj3ZjBpGtqAHzeV6Jmf
-	FWDnc/szB0HtDoEpaQN9KQWsncQlxpAuacr4UFA2WLc9rZ+Y0V4e6Pk+7ld/qqZfh6ClmvYvBIP
-	6Hu6VYszwMP8NX3Ddd3CQelKkTRhrPJOF5mfEqn3Bh46K/fxFRdUAVP2D/gy+rcSXpX8nwVUw==
-X-Received: by 2002:a05:6a21:4ead:b0:3e0:df21:9de5 with SMTP id adf61e73a8af0-3e287dbdaa0mr3277689637.35.1792653018511;
-        Thu, 22 Oct 2026 00:10:18 -0700 (PDT)
+        bh=UlfXExQXyhG92dzdrPUvVvWcK6W0MmRTGKrmc+yyUUM=;
+        b=ocz2irnWc+BiIVrbxl55Ub6yWbcTpKmYPFsci8fFM1S/aBbvVA3ywfzfFMbrvaggo3
+         d3zDUjQalMsaT5MY5YWXBFGnq8uaFe1ZkcWu/XBE05HJGeS/pu23bd2gFGqSH5naCPnz
+         wz7aqBJT5C6ZJsjiuPCeIPDRQTyX2NqLdZ695hd5vNsVkJd0IUZNWhBvdFoy8ErpgJul
+         ftOMSJnnmMzoh7dj1CKuhbjv+MHgWWECTV5+LDJ5bKLGhlgTDGs/rXfgBec75ySUjQ4Q
+         6HWRN/NeX1vvwEyzHPsjPpnVBLrGjAJMXGINA8KAMXZUfhTX8d9YWOocf3eU/i2nmGHv
+         3A9g==
+X-Forwarded-Encrypted: i=1; AKwUvByRA2xootgldwzhw3h004aqn10k7KRszT0MnMobMJYvR2jYR7FTKb750GuM2N7WduJ9TZBIiNpTniJbhT1O7uk=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI8FX+oMxYXiu+nxE4/asXbetscqCYl3EpFWgt6xZrNpkvcz76v
+	y+BCgxUflhbZcA455e/O+7cdpH4yfZjsx3hBxRe2scC3/LIY/PkcH/Kc
+X-Gm-Gg: AYBFou0zGu/GIh5vEsK0cv8oehyT5KglLBbAmNnytMpFbW30gaTEWB46KU1+ViLGic9
+	1k2bnajtYNlENOouYDSaDUhpZWjXRicN5bIzI2f5GcK1I/6nxOPN4Wxj1R1+iz52UkNeYX7KQQA
+	meHq/XQnFyr5kijpho9VGP3XwSeIKM1W533+Sd+fD53eADa/lKhu9u7fl5ndsJS86un9k9R/F9g
+	xvBuHrg/YQAoPs1Jpxg9HGQSSyq39AjKgHjkTJm3v21Y5ASweCLdgNzItVkTIXc08WLC2Bskz8G
+	5HWYeEs2kf+i9E0c2WF7hZGvRtUMZ41slFTWC59xBNdOObtF6qGapn2JnEGAHC3datGuGe8UdpP
+	IyldVPSfPsVykYprzwD6ESNa9ai1pud+f640DIZo+lnCvosii75wgfQeGeyK+1NjLGJ9/22XyjP
+	RItXEcFLrDRTMrxbcBvBH34bGFYgPN0iV1k2pmJcd2JYMUHp8RhcTrk6oKG0A1RVCXcFWT6A6ru
+	KoH/pD51oBpiyZsylPdc0DK3eCyJkHKJjNMjSu7cG+HsLgSZitkAtEbOZ9+u702oEiOZL57cQ==
+X-Received: by 2002:a05:6a00:2e17:b0:89f:4cd9:241a with SMTP id d2e1a72fcca58-8a089d45677mr3426736b3a.41.1792653024539;
+        Thu, 22 Oct 2026 00:10:24 -0700 (PDT)
 Received: from J4f-Laptop.localdomain ([183.36.237.113])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a0894b49d1sm1706039b3a.12.2026.10.22.00.10.14
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a0894b49d1sm1706039b3a.12.2026.10.22.00.10.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Oct 2026 00:10:17 -0700 (PDT)
+        Thu, 22 Oct 2026 00:10:22 -0700 (PDT)
 From: Shihuang Liu <shlomojune6@gmail.com>
 To: linux-input@vger.kernel.org,
 	linux-usb@vger.kernel.org,
@@ -90,9 +90,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Henrik Rydberg <rydberg@bitmath.org>,
 	Alejandro Colomar <alx+linux-hardening@kernel.org>,
 	Shihuang Liu <shlomojune6@gmail.com>
-Subject: [PATCH v2 RESEND 5/6] Input: tablet - use usb_make_subpath()
-Date: Thu, 22 Oct 2026 15:09:28 +0800
-Message-ID: <20261022070929.20820-6-shlomojune6@gmail.com>
+Subject: [PATCH v2 RESEND 6/6] Input: touchscreen - use usb_make_subpath()
+Date: Thu, 22 Oct 2026 15:09:29 +0800
+Message-ID: <20261022070929.20820-7-shlomojune6@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261022070929.20820-1-shlomojune6@gmail.com>
 References: <20261021123146.17202-1-shlomojune6@gmail.com>
@@ -108,98 +108,49 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The acecad, aiptek, hanwang, kbtab and pegasus_notetaker drivers build
-their input device physical paths by appending "/input0" with strlcat()
-after usb_make_path().
+The sur40 and usbtouchscreen drivers build their input device physical
+paths by appending "/input0" with strlcat() after usb_make_path().
 
 In preparation for removing the deprecated strlcat() API [1], replace
-each pair of calls with usb_make_subpath(). The helper formats the USB
-path and the "input0" subpath in one call, avoiding a separate buffer
-scan and append operation.
+each pair of calls with usb_make_subpath(). The helper formats the
+USB path and the "input0" subpath in one call, avoiding a separate
+buffer scan and append operation.
 
 Link: https://github.com/KSPP/linux/issues/370 [1]
 Signed-off-by: Shihuang Liu <shlomojune6@gmail.com>
 ---
- drivers/input/tablet/acecad.c            | 3 +--
- drivers/input/tablet/aiptek.c            | 6 ++----
- drivers/input/tablet/hanwang.c           | 3 +--
- drivers/input/tablet/kbtab.c             | 3 +--
- drivers/input/tablet/pegasus_notetaker.c | 3 +--
- 5 files changed, 6 insertions(+), 12 deletions(-)
+ drivers/input/touchscreen/sur40.c          | 3 +--
+ drivers/input/touchscreen/usbtouchscreen.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/tablet/acecad.c b/drivers/input/tablet/acecad.c
-index ba79dff21aac8..c12b0a0181837 100644
---- a/drivers/input/tablet/acecad.c
-+++ b/drivers/input/tablet/acecad.c
-@@ -160,8 +160,7 @@ static int usb_acecad_probe(struct usb_interface *intf, const struct usb_device_
- 		strlcat(acecad->name, dev->product, sizeof(acecad->name));
- 	}
+diff --git a/drivers/input/touchscreen/sur40.c b/drivers/input/touchscreen/sur40.c
+index 77ec2c94b91fd..7702eead123e2 100644
+--- a/drivers/input/touchscreen/sur40.c
++++ b/drivers/input/touchscreen/sur40.c
+@@ -690,8 +690,7 @@ static int sur40_probe(struct usb_interface *interface,
+ 	/* Set up regular input device structure */
+ 	input->name = DRIVER_LONG;
+ 	usb_to_input_id(usbdev, &input->id);
+-	usb_make_path(usbdev, sur40->phys, sizeof(sur40->phys));
+-	strlcat(sur40->phys, "/input0", sizeof(sur40->phys));
++	usb_make_subpath(usbdev, sur40->phys, sizeof(sur40->phys), "input0");
+ 	input->phys = sur40->phys;
+ 	input->dev.parent = &interface->dev;
  
--	usb_make_path(dev, acecad->phys, sizeof(acecad->phys));
--	strlcat(acecad->phys, "/input0", sizeof(acecad->phys));
-+	usb_make_subpath(dev, acecad->phys, sizeof(acecad->phys), "input0");
+diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
+index 0bbacb517c286..fd2b896675dee 100644
+--- a/drivers/input/touchscreen/usbtouchscreen.c
++++ b/drivers/input/touchscreen/usbtouchscreen.c
+@@ -1512,8 +1512,7 @@ static int usbtouch_probe(struct usb_interface *intf,
+ 			 le16_to_cpu(udev->descriptor.idVendor),
+ 			 le16_to_cpu(udev->descriptor.idProduct));
  
- 	input_dev->name = acecad->name;
- 	input_dev->phys = acecad->phys;
-diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
-index 0c1acb9e6b437..cc68ee82c12c3 100644
---- a/drivers/input/tablet/aiptek.c
-+++ b/drivers/input/tablet/aiptek.c
-@@ -1705,10 +1705,8 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 	 * & a tablet, and the inputX number actually will tell
- 	 * us something...
- 	 */
--	usb_make_path(usbdev, aiptek->features.usbPath,
--			sizeof(aiptek->features.usbPath));
--	strlcat(aiptek->features.usbPath, "/input0",
--		sizeof(aiptek->features.usbPath));
-+	usb_make_subpath(usbdev, aiptek->features.usbPath,
-+			sizeof(aiptek->features.usbPath), "input0");
+-	usb_make_path(udev, usbtouch->phys, sizeof(usbtouch->phys));
+-	strlcat(usbtouch->phys, "/input0", sizeof(usbtouch->phys));
++	usb_make_subpath(udev, usbtouch->phys, sizeof(usbtouch->phys), "input0");
  
- 	/* Set up client data, pointers to open and close routines
- 	 * for the input device.
-diff --git a/drivers/input/tablet/hanwang.c b/drivers/input/tablet/hanwang.c
-index fd5a7e761dcc4..a9521bbc89646 100644
---- a/drivers/input/tablet/hanwang.c
-+++ b/drivers/input/tablet/hanwang.c
-@@ -350,8 +350,7 @@ static int hanwang_probe(struct usb_interface *intf, const struct usb_device_id
- 	hanwang->usbdev = dev;
- 	hanwang->dev = input_dev;
- 
--	usb_make_path(dev, hanwang->phys, sizeof(hanwang->phys));
--	strlcat(hanwang->phys, "/input0", sizeof(hanwang->phys));
-+	usb_make_subpath(dev, hanwang->phys, sizeof(hanwang->phys), "input0");
- 
- 	strscpy(hanwang->name, hanwang->features->name, sizeof(hanwang->name));
- 	input_dev->name = hanwang->name;
-diff --git a/drivers/input/tablet/kbtab.c b/drivers/input/tablet/kbtab.c
-index 6ce70c8e2d7cc..f777118ed7c8f 100644
---- a/drivers/input/tablet/kbtab.c
-+++ b/drivers/input/tablet/kbtab.c
-@@ -137,8 +137,7 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	kbtab->intf = intf;
- 	kbtab->dev = input_dev;
- 
--	usb_make_path(dev, kbtab->phys, sizeof(kbtab->phys));
--	strlcat(kbtab->phys, "/input0", sizeof(kbtab->phys));
-+	usb_make_subpath(dev, kbtab->phys, sizeof(kbtab->phys), "input0");
- 
- 	input_dev->name = "KB Gear Tablet";
- 	input_dev->phys = kbtab->phys;
-diff --git a/drivers/input/tablet/pegasus_notetaker.c b/drivers/input/tablet/pegasus_notetaker.c
-index 85390ae423076..28fbae98f7399 100644
---- a/drivers/input/tablet/pegasus_notetaker.c
-+++ b/drivers/input/tablet/pegasus_notetaker.c
-@@ -354,8 +354,7 @@ static int pegasus_probe(struct usb_interface *intf,
- 			 le16_to_cpu(dev->descriptor.idVendor),
- 			 le16_to_cpu(dev->descriptor.idProduct));
- 
--	usb_make_path(dev, pegasus->phys, sizeof(pegasus->phys));
--	strlcat(pegasus->phys, "/input0", sizeof(pegasus->phys));
-+	usb_make_subpath(dev, pegasus->phys, sizeof(pegasus->phys), "input0");
- 
- 	INIT_WORK(&pegasus->init, pegasus_init);
- 
+ 	input_dev->name = usbtouch->name;
+ 	input_dev->phys = usbtouch->phys;
 -- 
 2.43.0
 
