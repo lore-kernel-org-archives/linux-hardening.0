@@ -1,113 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792690359;
-	b=PUyzLbZ4qkKdSjqIyIXreOnFBJSsNQbRnRr5bo2Rnb0JWFSdIGFT1zIEzB+m0FVI/mhb
-	 sLdBjdKskt10exd8mj6NXpgMk+fnMF/A5fdgsgz9jitAOwk20QbFJxRSWbJMfpX4tOB6u
-	 vP3kH03NWF1mit/R1ppKdhG4GQYRA0OsufSKUT69DA9pyQdgd8qTwakc7EhqW4q8fjc+s
-	 mLJvwXWspePsEZMeL6Hp2pOejAKDMMWJtvvrSeATL5F/L0b0yWOoykg4EuNGgoUDHLfy4
-	 v2O5ohl5zNMZcNj6sIj6GCnqLurJrXdeNDVo/PizK3n0wFi6YCeWDBeN+q4GX57eIpA==
+	t=1792692393;
+	b=1p5FyrFHOBBLh/xbkylJxwlNPRdO+MsxKzoErPmiBdTKtWSlJFdkseLaAMu+MQtNJ6bm
+	 FWrlGrGjd0ewFXhPP03boFHwc531NgeYbgTlK8Jc8Shv2uTVR3Lplw/mJ8mdQ+kO/31SZ
+	 lDpdGO9hIT67exjxes35/MIjUUYa40RrwUrU47y12y3XLdJiR8d9kgYTTlG5s6qOjLqlB
+	 hyQUlyfEhQD+2Y1O/clDJDrQcR+jKxoFshRrTadH6sCHCCYzRtOAWoAxVyDLm45ID0X/L
+	 EFOgjEwb11t8RlemX+0gruInxMUnizpehovpGdJ5hKef+fp6La6XBkB+S+jW7U7AuQQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792690359;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=5TTK5L3C72RVXuyCfPoL1KiCUuBlYM9fSsQ+OoWqJh0=;
-	b=q4z4RJRl9sWVqodQ+HP9Fzp3kXXHkxZ/YqGMzJ4xKUcxYoqn1WhRBkqigt0dZFNjZJCw
-	 hxCPB1lm7mygkrv4fshMuQEYb4LNwEQw+fhZqc/thttbNjsfGtzcpjc7nR25MmaJwp0QC
-	 mudh1z3EgHcI7OzEPsbA08wDLCx+HvxHH7P3wDgSlASqOM539E48ew8rWq/8pJwUmBpYy
-	 UpuyOaSaWWhqvgq3Zxw5ji4BYwANkG4wydLGetnmmsEqiL3tOvx01V8Az5SWuKce6KOTa
-	 9vvnKWnJ00hRxJ/TqgeYPffrn02Wy4OcBK2bvGWsvRuL+XSsLoqbLUPxS0KtD1IYNkg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792692393;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=Yer8ubWHNy/lk45efo9R29z8i1PYgjz6ECbWxwFT1Cc=;
+	b=A5dGlmMH18ySEqpQNF74SjAWLZcIL+vlWL1D7/B8Qx7ZzljnfTP/cxef6c1k9YDyH/QB
+	 +Mj8Xto5zMNhcVknjn7vXJntKDxsOhoeSXAoZ8woVyUQsjSonBgrCUA1dqkt1+sPr9shC
+	 K1s6kuBEWNw1meZXhpzWlCD1jx/IpLLJl1AH1g72/8SmkZ3WYUS6l6lhZoFT7CccGBekd
+	 R0VxQn1Trp4HdFYLhqSQyc0RiSzfIDOqGVIuCfaLiwa/pgro7++aVko+NIbKBqW/jc95r
+	 C8BrDx4cKwKm1QWjfgZgbEzgX7MPwG82pL8LeaclJQYNy5LaiyDhMgQMm07MCTyiYFA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=eeCmVCgM;
-	arc=none smtp.remote-ip=209.85.128.51
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RMHkI0FQ;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14C0606A31A
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 17:32:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C14C0606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7982606A31A;
+	Thu, 22 Oct 2026 18:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=eeCmVCgM
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-49d0da752ffso192035e9.3
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 10:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792690357; x=1793295157; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=5TTK5L3C72RVXuyCfPoL1KiCUuBlYM9fSsQ+OoWqJh0=;
-        b=eeCmVCgMegRCMD7vOlGg+I+VL7pQWFbhxv3PU5KxF6XDa0o7ajmM/7XY1L43p9HS5+
-         itOL5APh7mnHzuXNFok96uju1BIDvogoYxKs+LNEoP0KzZqKpZB2h4aJiZfAoVBC9rXI
-         OXBa64Ghjhyr3+zpRWSioZQBJ0F4UnFDPvOW8xL1I0c88FZETbuvhll6WKwGvxuDYd/q
-         NjLKXl/YgtmD82fvvGg/sJb4Rb4nlhHaEawHymhU3n5L5dc4+7NXPF/gaQzxtJS1htSz
-         38lzO8YmLXH2ksX3fpjcSb2gD+VyGT3rVqk4P5zdk3C8pUXkvGTDCmhsvkyUpHkOLD95
-         0LGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792690357; x=1793295157;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=5TTK5L3C72RVXuyCfPoL1KiCUuBlYM9fSsQ+OoWqJh0=;
-        b=Uuh0+SZDqiqd+AtLe8xk+FxX8HqkNvfCmtMZYUyRQSEPilzjVuTH7uirzBauKq/Vss
-         s2+7cLd9MmGuSkeDSF17Y3a2dAZ+iQ4uyc1cV5MN7YWWfyK1Ujm0IQcU2N4iKqEdJKtl
-         A8PclNi4vdNNyTqvvzS5stDbaryPpw3bUX+D0IhhUiPWuZ8QXn+DnLgKblPfYA1j4vWV
-         CWQJviZ7wSh6u6oMAhbLi1d5iuVyzU8TXMbt2C7zaD7fS/4yglHEkgX3VM6A7EXJMEXe
-         p96IFiB2cxqu9Wt4DzeEOBYTlE+wTc8M2+s85FTo8Rh5Kdxg07HQCiPiZndsMsJqn86J
-         yXhQ==
-X-Forwarded-Encrypted: i=1; AKwUvByyO8wN4Ab6/SEAK1o/m0h0rnyzqlRn4mZQfl1BMw98Vkp+KoA/avEQewpajawp+RhRWW1fPaDxiIqjWTnRfvM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIL/1Ex2TolCY+oijhCPzjk/PSSAt/Rm9dtgC/pvB8esRXEzQXn
-	qhJt9FQDrAUHnyAiY2T/SeLsnV+mkeXzXOpzSMruAlYVElaM1zQpG2p1
-X-Gm-Gg: AYBFou2QLyTfGu7k/qwK9MpWcHZVIPIVkzRyerr0Pxz2JZu93n2bMUhQyuLQwvzp2Br
-	TrR3772LtiTeroBnTUQF6aaloT5T5ea7WXBPrL0WTAomJ4LBaI0oqcq7Z3fYeW3Tfuc0Mwi2tP3
-	jq0Z6pm3i6e2zjriNaAKzw08hZcy2aLzMOUVVTzKEnlKxaZBLD1728HPflLW+5dp4Fj2f9TSPYG
-	fKSbVRiGLcf5NmvNxmF7VqedNnUdnKXQC10l2GQFAOXuJCaIJ1NCUdZsKVVIFodYWUEZEWL4FaY
-	dne4m3Fn90sZNp7uFPr5ePCWpE2eLajZU0D500uCrejXB9pbwBzJgbR01rC2a4v42gkkhjfmhFV
-	/PXmRhSWVlFgk6W99exYLg7OzQkikI36Bz5uQJpJ8zz/xxzcRAR7IqD1XPa6S+AqXNAIvUS6ILa
-	8m0v1iC0G3BNeUTZnrb6frwMdHY/ncbjW7RbI/I82RIL+dqe3zh4Tk2dlAK4Gwwn8Kf5yT6SkGN
-	YMInowZ45cxVD8kWMCoye9cdfI/Yf3fAY2aaKgTXYoRk3bniWOoAt3QaoopHydfnNHPHgPSLj3r
-	zE3ixLw=
-X-Received: by 2002:a05:600c:8b78:b0:4a2:cbe:bebc with SMTP id 5b1f17b1804b1-4a20cbec0d1mr26844975e9.23.1792690357003;
-        Thu, 22 Oct 2026 10:32:37 -0700 (PDT)
-Received: from localhost.localdomain ([188.190.249.216])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e2581f0d4sm13857279f8f.13.2026.10.22.10.32.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Oct 2026 10:32:36 -0700 (PDT)
-From: Vladyslav Tymoshchuk <tvlad744@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: Abel Vesa <abelvesa@kernel.org>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Casey Connolly <casey.connolly@linaro.org>,
-	Johan Hovold <johan@kernel.org>,
-	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
-	Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>,
-	Joonhoe Kim <26rote@gmail.com>,
-	Daniel J Blueman <daniel@quora.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Vladyslav Tymoshchuk <tvlad744@gmail.com>
-Subject: [RFC PATCH 4/4] power: supply: qcom_battmgr: Allow charger changes to wake up the system
-Date: Thu, 22 Oct 2026 20:32:24 +0300
-Message-ID: <20261022173225.58-1-tvlad744@gmail.com>
-X-Mailer: git-send-email 2.45.1.windows.1
-In-Reply-To: <20261022164151.592-1-tvlad744@gmail.com>
-References: <20261022164151.592-1-tvlad744@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RMHkI0FQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F5FB1F01825;
+	Thu, 22 Oct 2026 18:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792692392;
+	bh=Yer8ubWHNy/lk45efo9R29z8i1PYgjz6ECbWxwFT1Cc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RMHkI0FQgzO7BqMvQqqkHN1EI6E+LTsLJtVis45l5kv6vSsRwUWCN7I5rhEO135ag
+	 7QFQJxB3x+co1bNe/ccs9+Etyiw6rvPUCPLTYbKzU3P0vqYzw5JeoNaH2x2VAVJ7EC
+	 KqQQl6FmgmY8izVY7rl4MbZeaFEx1jZTnmmiHKp/lj1tTil3V9INjRBb70XdPRNCjY
+	 kg42qpwP/yEahDooBakrq/U2IHLMFLUUgtG0SCN9lLjYfiTHykyXrlzOmBJ+f9YEJk
+	 BIEsKboa0ILC/+k/bxMQy+RWyhIyP6VKvtvhza++m8n+5eaizFpS1kXEr4sCPb3Qr2
+	 R93w+Xaljxx/w==
+Date: Thu, 22 Oct 2026 11:06:32 -0700
+From: Kees Cook <kees@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Bill Wendling <morbo@google.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>,
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
+Message-ID: <202610221058.C5626C5172@keescook>
+References: <20261005155653.late.426-kees@kernel.org>
+ <20261005155708.1471260-6-kees@kernel.org>
+ <20261016145928.16eddc9a@gandalf.local.home>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -117,73 +63,117 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261016145928.16eddc9a@gandalf.local.home>
 
-The battery manager notifies about changes of the battery state, many
-of which arrive while the system is asleep, and about changes of the
-USB and wireless charger properties, a charger being plugged in or out
-for one. Only the latter can be worth a wakeup, to show the new
-charging state for example.
+On Fri, Oct 16, 2026 at 02:59:28PM -0400, Steven Rostedt wrote:
+> On Mon,  5 Oct 2026 08:56:56 -0700
+> Kees Cook <kees@kernel.org> wrote:
+> 
+> > +/*
+> > + * NUL-terminate the buffer in @s: directly after the data when there is
+> > + * room for it, otherwise in the last byte of the buffer. @s->size must not
+> > + * be zero.
+> > + *
+> > + * Returns: the offset of the NUL.
+> > + */
+> > +static inline size_t __seq_buf_terminate(struct seq_buf *s)
+> > +{
+> > +	size_t end;
+> > +
+> > +	if (seq_buf_buffer_left(s))
+> > +		end = s->len;
+> > +	else
+> > +		end = s->size - 1;
+> > +
+> > +	s->buffer[end] = 0;
+> 
+> Hmm, I just realized that this could inadvertently overflow the buffer. If
+> len == size, it may not be overflowed. If using seq_buf_putmem() and
+> filling the entire buffer, calling this would force an overflow as we just
+> truncated the last byte.
 
-Make the device wakeup capable, and set a wakeup filter that lets
-pmic_glink report only the charger notifications as wakeup events.
-Leave wakeup disabled, so that nothing changes by default: whether a
-charger change should wake up the system is up to user space, through
-power/wakeup.
+Hm, yes. So the "else" branch needs to include:
 
-Signed-off-by: Vladyslav Tymoshchuk <tvlad744@gmail.com>
----
-I used an AI assistant (Claude) for the analysis and to draft this
-patch and its description; I reviewed the result. The testing is
-described in the cover letter.
+	s->len = s->size + 1;
 
- drivers/power/supply/qcom_battmgr.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> 
+> > +
+> > +	return end;
+> > +}
+> > +
+> >  /**
+> >   * seq_buf_str - get NUL-terminated C string from seq_buf
+> >   * @s: the seq_buf handle
+> > @@ -98,7 +119,14 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
+> >   *
+> >   * Note, if this is called when the buffer has overflowed, then
+> >   * the last byte of the buffer is zeroed, and the len will still
+> > - * point passed it.
+> > + * point passed it. The same happens when the buffer is exactly
+> > + * full: the NUL takes the place of the last byte written, which is
+> > + * lost, though seq_buf_used() still counts it.
+> > + *
+> > + * A zero-sized seq_buf has nowhere to put a NUL, so the empty string
+> > + * is returned instead of writing to @s->buffer. Any other seq_buf
+> > + * returns @s->buffer, even when it holds an empty string, so callers
+> > + * always get their own buffer back.
+> >   *
+> >   * After this function is called, s->buffer is safe to use
+> >   * in string operations.
+> > @@ -107,17 +135,44 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
+> >   */
+> >  static inline const char *seq_buf_str(struct seq_buf *s)
+> >  {
+> > -	if (WARN_ON(s->size == 0))
+> > +	if (s->size == 0)
+> >  		return "";
+> >  
+> > -	if (seq_buf_buffer_left(s))
+> > -		s->buffer[s->len] = 0;
+> > -	else
+> > -		s->buffer[s->size - 1] = 0;
+> > +	__seq_buf_terminate(s);
+> >  
+> >  	return s->buffer;
+> >  }
+> >  
+> > +/**
+> > + * seq_buf_strlen - get the length of the NUL-terminated C string in seq_buf
+> 
+> Hmm,
+> 
+> I don't really like the way this modifies the string, as the request is
+> just to return the string length.
+> 
+> Just like the above, this could cause an inadvertent overflow.
+> 
+> I could envision a use case where we want to use the entire buffer and do
+> not expect it to be nul terminated. And this function could be used to get
+> the length to print. That is, it may want to use the entire length.
 
-diff --git a/drivers/power/supply/qcom_battmgr.c b/drivers/power/supply/qcom_battmgr.c
-index 636d6f6acecc..7a783a3a320d 100644
---- a/drivers/power/supply/qcom_battmgr.c
-+++ b/drivers/power/supply/qcom_battmgr.c
-@@ -10,6 +10,7 @@
- #include <linux/mutex.h>
- #include <linux/nvmem-consumer.h>
- #include <linux/of_device.h>
-+#include <linux/pm_wakeup.h>
- #include <linux/power_supply.h>
- #include <linux/property.h>
- #include <linux/soc/qcom/pdr.h>
-@@ -1596,6 +1597,20 @@ static void qcom_battmgr_sm8350_callback(struct qcom_battmgr *battmgr,
- 	complete(&battmgr->ack);
- }
- 
-+static bool qcom_battmgr_is_charger_notification(const void *data, size_t len, void *priv)
-+{
-+	const struct qcom_battmgr_message *msg = data;
-+	unsigned int notification;
-+
-+	if (le32_to_cpu(msg->hdr.opcode) != BATTMGR_NOTIFICATION ||
-+	    len != sizeof(msg->hdr) + sizeof(msg->notification))
-+		return false;
-+
-+	notification = le32_to_cpu(msg->notification) & 0xff;
-+
-+	return notification == NOTIF_USB_PROPERTY || notification == NOTIF_WLS_PROPERTY;
-+}
-+
- static void qcom_battmgr_callback(const void *data, size_t len, void *priv)
- {
- 	const struct pmic_glink_hdr *hdr = data;
-@@ -1750,6 +1765,10 @@ static int qcom_battmgr_probe(struct auxiliary_device *adev,
- 	if (IS_ERR(battmgr->client))
- 		return PTR_ERR(battmgr->client);
- 
-+	device_set_wakeup_capable(dev, true);
-+	pmic_glink_client_set_wakeup_filter(battmgr->client,
-+					    qcom_battmgr_is_charger_notification);
-+
- 	pmic_glink_client_register(battmgr->client);
- 
- 	return 0;
+Non-C String users would be using seq_buf_used(), not seq_buf_strlen().
+
+> 
+> Having "strlen()" modify the string just seems wrong to me.
+
+No, this is absolutely required. It's nonsensical to work on a C String
+without termination. (And it's the entire purpose of this series...)
+
+> Is it really needed? If the user wants to make sure the string is
+> terminated, it should use the next patch's "seq_buf_terminate()".
+
+The ergonomics on this are very bad. I explicitly don't want to leave a
+foot-gun around for this. :) (i.e. require all C String users also
+remember to terminate it first; the whole point of the API is to have
+the string always be safe.)
+
+> And we need to update it so that if seq_buf_terminate() causes a
+> truncation, it needs to set that it overflowed.
+
+That I agree with. I will send a patch on top of the series since this
+has been in -next for a while and the merge window is here now. :P
+
 -- 
-2.43.0
-
+Kees Cook
