@@ -1,65 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792700406;
-	b=D3WHoC1Jn7iCvkZzGvRYkWyVSsJr1JErwet/oatfQX3SA9zUAnf74xRM4/gGpOA3fLrI
-	 dWAc+J76wGPakatNcxX6ze2BpmARCu3RHzm2H62qbqq0tUsDJIZQiBj3qG1YG1zEpm6B2
-	 b6vmPaYLnsP0pmS98VXngHZ2eoGtBxEGbFR+gxO/onArXlaaXd8o3l5eDVuH6PDeOiCxI
-	 PKVWjZ4HzmwmotTB5IeUQgSobxLfviz1PfVjhCUVAu3OX7YS/ByhCWjQX/ehvkxS9KqLZ
-	 QY4f4ya87HP8F21FO4YcO6vgwADsxHfzcohARRbewoOxMwTl+W8E7UU8ed57mXURVWQ==
+	t=1792701492;
+	b=0kzqp8M+pCmIwpRgoepqXnStfjMuVdz0oIXEoDUMsUjLvxBDNE9+f/X9ZVQXiRQCtL8H
+	 +uK+R9EgJGLyjN3q8DTZif7vXp1DDYC1G3AnLPJqkeC5bIrXmCHHu3gcn8RJQKjZP2T82
+	 odI8GsaNsU76JhIcVYe5HAw+N9ZfmXZYRR+YekxD7hI7W62brQ1K1QrnsI447U8PKS1Ip
+	 i1KwmWUzY/NqJkAxaKkNJfswDMq8JSTRG0dCSnaCLkt4aK1zAlXEPX6SlJkjScB89NRni
+	 FghCyxIf23hAt4j452AhO9WH6jnrd5Nui1Oyk3tk9JbDla9h45YxvLg1V7HHq8ksDPQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792700406;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=hDGNj6FkCanQQ2IhMw7Ss/rx89Zl/6+sIi5NgumxwwM=;
-	b=RVN3vXDUp2tDQLvuLDBQLWTkBBTSkDhM8uAq1xZORIYCbd68jxU0Ss6xID13N/58j6n6
-	 RHrwXxJTImUFdDyPRxaHn1jEEbxtfaZpXxLXX9d6QVTAeReIQf9Ys1bZmRifRp28kS/DP
-	 OyqAQ+gPJlm+Qo8uQUZ5XxLq6WlyDBuYFzOOY5fcqcvcKQ3TalegufQo8WQSD2vRsSLfn
-	 +RLoSOIJFvT7t1XwZg9Ufl9312OeFazcl+kuQ47aCd+baops5pdC4255/4XzRDjd0D+Pr
-	 hByFqAErkn5wXi0Jj2SgrpeOWQPsLIaOzA5U99HAGq0kmx2XqK1RePjI0x6Xi/7sN5w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792701492;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=iq0wiKt8UFLsOvEhUJmvw5CQwixTDiwSvy1HoTDMyHA=;
+	b=ilqAv8Xgl1hIOGQ2Ndzfdr3fhi7QP6XU1ldnO/88Pg0Q5i80B3lZ6jaidn1LTZRqMCuj
+	 2fDrlWK7R1Eq/OfxK3YW59ogaxcMQfaz9wEAX7HzmdPJxUsVXUL30Met8DPSdzeKR2oPw
+	 0RdnJYVESqUupvgp2tVtIg9rDFmRzhufym0zA3R+2aV3q+z+K7r7w2o+dky7dx5dL1Py5
+	 I5EYBBv0GKr/c1tynYfR6SDt/OUpAfNREBY93Sixv7lc7JqTyzO2s/O02a52DVRYSeBvd
+	 f7UHkKnlNUKsQNBYP6MJq9/XFE1NKuFapCkCyJobuqTq7RRONi7VkTdLagjFOndHPdw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=bnFT8bTU;
-	arc=none smtp.remote-ip=216.40.44.15
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lkGEmigS;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA391606A319;
-	Thu, 22 Oct 2026 20:20:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA391606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB07606A319;
+	Thu, 22 Oct 2026 20:38:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=bnFT8bTU
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id E88ED1A022C;
-	Thu, 22 Oct 2026 20:20:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 8C9F520026;
-	Thu, 22 Oct 2026 20:20:01 +0000 (UTC)
-Date: Thu, 22 Oct 2026 16:20:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alejandro Colomar <alx+linux-hardening@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, "Matthew
- Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton
- <akpm@linux-foundation.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr
- Mladek <pmladek@suse.com>, Shuvam Pandey <shuvampandey1@gmail.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lkGEmigS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C47891F01825;
+	Thu, 22 Oct 2026 20:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792701492;
+	bh=iq0wiKt8UFLsOvEhUJmvw5CQwixTDiwSvy1HoTDMyHA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=lkGEmigSeApGbepC6feBlIy1yKlH5o2VNgHU81nbN06uyrGCrZnYmvShX4fOanBLz
+	 +Lm1vIlcG2YvMpEQ8O1JXQEweeiVaFzHlpFOPB/5VKoDJj9hoaZjqN0my1DyZ3EZC7
+	 iYsBv0nok3L7heznSPeRrWeK/yGUeKxQQfnAwrWB+rPPY/bU/UQUMVlrMu+ZRbiKJK
+	 vddZ9Tq1g9kxUgMV58dXu0REDTt8nuD/hEoxFMAZ2yhQ04mxzcBSLfZMpFok3qyXhU
+	 1BoNAjyXbzX1muJMPHWZkYTMxFDkcnWo/dRqjofg8B632Az2vIflBYt1eE9KnC7JlP
+	 WRTfMGCUpD97w==
+Date: Thu, 22 Oct 2026 22:38:03 +0200
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
+	Shuvam Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
-Message-ID: <20261022162000.18aa4162@gandalf.local.home>
-In-Reply-To: <atptYsHyS6YGtzPV@debian>
+Message-ID: <atpyCU3fDyU95hbY@debian>
 References: <20261005155653.late.426-kees@kernel.org>
-	<20261005155708.1471260-6-kees@kernel.org>
-	<20261016145928.16eddc9a@gandalf.local.home>
-	<202610221058.C5626C5172@keescook>
-	<atpmAQ932J3_8IvJ@debian>
-	<20261022155726.7f20c4cb@gandalf.local.home>
-	<atptYsHyS6YGtzPV@debian>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20261005155708.1471260-6-kees@kernel.org>
+ <20261016145928.16eddc9a@gandalf.local.home>
+ <202610221058.C5626C5172@keescook>
+ <atpmAQ932J3_8IvJ@debian>
+ <20261022155726.7f20c4cb@gandalf.local.home>
+ <atptYsHyS6YGtzPV@debian>
+ <20261022162000.18aa4162@gandalf.local.home>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -69,34 +65,138 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 55kgt4ahuw3oexctuuywkqa8ouaskjms
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 8C9F520026
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19GOhrAbK0zI6qqraTTrKkUil+PVjA63Fo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=hDGNj6FkCanQQ2IhMw7Ss/rx89Zl/6+sIi5NgumxwwM=; b=bnFT8bTUxJGzFLINvIbSkb3kfuenXBN7DT3+EARR/UQnruwvhxBsSQ5tTMNHJr8SQyYuTKN1150+E8+IYtx77agdAf8sKjIWdyWw8fZWf0f94iidUDXw12/KllYUF4juDTXguyu7tPO7927fZb/Q9NxlvQwmnHobV8bGvtz1xJ4=
-X-HE-Tag: 1792700401-645610
-X-HE-Meta: U2FsdGVkX1+qUfP3xwYqc/F0G+4fL3WqQ+nGJyPoJDunTH82aA2AQhhfx9qlxkswq+km2n2pUMbZyMU8nWU57EXMBA+LqH71DXs6BAjrsHasmmysykqCpi+D9g7hCJ9F1U/3xX9JeTyqR53VYvAuhSR8NNddqIgyhPuFAvZH1a3InlHqJ/lJlf9LMu7u0OWf/mLJhn2Ko5HfcrROXPM0t9d2AcZnyrCij7vPghIbuLxMta3Qkfo15eu9AnV2Rnk8Fu53O9I5CYznv57cOIN2mNzDEF/ATjp4duPRTVLuLT3uXs7FqUQi5vqkQzVrgdrL19KuUSb7i/KGt4PYQ2r6Ycx6i8sskGNc3G9NGkuhmmWjcZwbXLOx+w==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6qrjot4rnijap6k5"
+Content-Disposition: inline
+In-Reply-To: <20261022162000.18aa4162@gandalf.local.home>
 
-On Thu, 22 Oct 2026 22:11:27 +0200
-Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
 
-> Agree.
-> 
-> But still, a better design would do:
-> 
-> 	static inline void
-> 	seq_buf_set_overflow(struct seq_buf *s)
-> 	{
-> 		s->p = NULL;
-> 	}
-> 
-> This is way more robust, and also easier to understand.  My head is
-> boiling when trying to review this patch set for correctness.  That's
-> not a good sign.
+--6qrjot4rnijap6k5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
+	Shuvam Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
+Message-ID: <atpyCU3fDyU95hbY@debian>
+References: <20261005155653.late.426-kees@kernel.org>
+ <20261005155708.1471260-6-kees@kernel.org>
+ <20261016145928.16eddc9a@gandalf.local.home>
+ <202610221058.C5626C5172@keescook>
+ <atpmAQ932J3_8IvJ@debian>
+ <20261022155726.7f20c4cb@gandalf.local.home>
+ <atptYsHyS6YGtzPV@debian>
+ <20261022162000.18aa4162@gandalf.local.home>
+MIME-Version: 1.0
+In-Reply-To: <20261022162000.18aa4162@gandalf.local.home>
 
-But that loses all data. We still want access to what was written.
+Hi Steven,
 
--- Steve
+> Date: 2026-10-22 16:20:00-0400
+> From: Steven Rostedt <rostedt@goodmis.org>
+>
+> On Thu, 22 Oct 2026 22:11:27 +0200
+> Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
+>=20
+> > Agree.
+> >=20
+> > But still, a better design would do:
+> >=20
+> > 	static inline void
+> > 	seq_buf_set_overflow(struct seq_buf *s)
+> > 	{
+> > 		s->p =3D NULL;
+> > 	}
+> >=20
+> > This is way more robust, and also easier to understand.  My head is
+> > boiling when trying to review this patch set for correctness.  That's
+> > not a good sign.
+>=20
+> But that loses all data. We still want access to what was written.
+
+No, it doesn't lose data.  My proposal is to have this:
+
+	struct my_seq_buf {
+		// .buffer points to the start of the buffer
+		char  *buffer;
+
+		/* .p points to the current position.  This is the last
+		 * '\0' that has been written to the buffer.  On
+		 * truncation, it is a NULL pointer.
+		 */
+		char  *p;
+
+		/* .end always holds ARRAY_END(buffer).  It is a pointer
+		 * one-past-the-last character in the buffer.
+		 */
+		char  *end;
+	};
+
+This would be initialized as (of course, wrapper in static inline
+functions as needed) this:
+
+	char            buf[100];
+	struct seq_buf  b;
+
+	b.buffer =3D buf;
+	b.p =3D buf;
+	b.end =3D ARRAY_END(buf);
+
+Then, you would write to it as:
+
+	b.p =3D stpecpy(b.p, b.end, "foo");
+	b.p =3D stpecpy(b.p, b.end, "bar");
+	...
+	b.p =3D stpecpy(b.p, b.end, "baz");
+	if (b.p =3D=3D NULL)
+		goto fail;
+
+Then, at some point, you might want to initialize a new buffer out of
+the remainings of it:
+
+	struct seq_buf  b2;
+
+	if (b.p =3D=3D NULL)
+		goto fail;
+	b2.start =3D b.p;
+	b2.p =3D b.p;
+	b2.end =3D b.end;
+
+See how simple this becomes?  (So much that you may doubt the necessity
+of the set of APIs at all, but they don't hurt much either.)
+
+
+Cheers,
+Alex
+
+>=20
+> -- Steve
+
+--=20
+<https://www.alejandro-colomar.es>
+
+--6qrjot4rnijap6k5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmradCQACgkQ64mZXMKQ
+wqlSWhAAjY/nTCLI9KEjAWELV/CmLv6FgPG5QzR9BlV/vqVLVVkGgcsKM+eJvjxZ
+xNXBXWTV5Nz04Qf1zgiv4akL5cKTpsrxD/HmxP3w23ktrONkFliZHbrQFFSqXRVL
+Ssr46yfLcj3EO6a9GP/vBNFqEsjtzTjVFABwcCoOKbsTPLfsjMPmrNt5lLzpn5MP
+YISWAiGBorLOaGFADDftZrVB7bAvyM48UisAeD7MkfUxTOuGkKgCMvporzu/sFC4
+NaoDKK43GncTJ9B2/CxBtr0y/W9yCvF4kgdJdpifXybbAPwpPqGyHQPc3eD04cES
+M20BLGucvrg+wz2Ws42ao9Sy/zcI73jeob+8jQUDnTbZ9GjKshIXcEQ7Ffx1hnMA
+jcJQ8aotvyn43okBusXE/G/w0067JDprG4WvEm9iKy6z/ipNHeIsu9LYf/PGG55c
+2ZkYPKFTh++WzxE8NfqWfkOHfV1zntePRaivit3keSLp4f69tvh7R89MPnmWFKUj
+lNXZEZI8PUlNQIcaPRhDcCMb9zZSJkF4Mf9w65e7f+VO2ymHeITTlVzSzGdD4leM
+1S5UL5e5SRWOJHYazuKXtYH6EsxmodvAdE8ejEZ6EyTBv5hnxHLkhzgWng77Nd/2
+NtBB/MIFCgrBVoxG+OwxMzU3jFT3ZtI5mdiFKT+YCLIUhpRJbM4=
+=tZ97
+-----END PGP SIGNATURE-----
+
+--6qrjot4rnijap6k5--
