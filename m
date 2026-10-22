@@ -1,133 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.227.132
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792635520;
-	b=foeyueUMjCUN+/3OtGPGGzA2NWT143zSOJGFL/oQ8X/v6PgBjaKtIfNwC7RBOcM14KIq
-	 QNCbcZxlQtiU3LKbS5sLaUF6hVHNkXuhDKHbz4dm3MliAaSnusBEuucWZrNwz3n4/XWc3
-	 Ls39D1YwZ9ysxjsMvzoPeIzu7dCcEYN1tjzQ/cCqJDEeGDWxN90Mu36sZ6WHSGnjahDAZ
-	 6jgIawTCh01dmuBAGf/sPOa+s9LKW+j3+nZ02VrcRWhTDDEY9W/OeC8sZjj0D33P/0Ypf
-	 Zjs4FSDJY1kSGQ8ixEboPKv4FzGDraTj7f7QtCDhGAwB0ttGVQjdyGT7p68oda93efA==
+	t=1792651755;
+	b=ZUK/rxyMFjdTaFgsxpR410Zud0TLR6jLuxNgu29OHJOyodCMD9PYjVFsmTSO8ynRAopN
+	 a2OpUhLf0aB45+5Sb5VTopMCPABm9xv3yS8RwEppx/kk7ABw7C5aoUwIeHYOxc3YQPFdd
+	 5yL0QV3EYcTUSAPfDQCaxXQA5AGGNmqSGKoqyjksKUcA2RIt81akC4NtA3m9YpMXZgUqx
+	 vVLmiely6JmyC4GA+6tikSTeUmh3IuXIF9oTvHIoyt+/3B7XZlj1Y1u3et6bdksH1rQLn
+	 KyNfHlKoaVxzQDjm2l9O7DP8Or7ezfFfDW1vH4H3d9tUVy1nYOrQF72A2RFJKIipHXg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792635520;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792651755;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=YVLKVn5aYrORuK3mJHdyAM2K05yQ1I4f1Gd2eeFrBFc=;
-	b=ECJGRgIRH4oAi1Pvl56iDzIrhVeKzsLfzaFz6yRQKgAf2TDk8kSINBdNjpek3e6/DQon
-	 E5DyBxMrZveGRnulGDzD2OsjQiYDZkfdIRq+NbJL7g9VSuIHWzCIIQEjY5tBp9bD0S4nh
-	 u70yCiXx9/VTOc4T9bSTYwNSeA7nw9SIfSOTN/8DX/6MNTmVvx8Jt6S4I5Bh/1OJKOlOR
-	 RthAIHfemeahw8GlSmhkGafiWDrC9dpCLjIfpExJwn2P3HZOQzePZ6W75mkVqILdp3TbE
-	 Tf8Wn81qjs8nGCV+bFm1ryfBq46lkz/dKbGTXuojf4CL+3Jmgl8YAQoKlsGA/tF0jOQ==
+	 Date:From:To:Cc:Subject:Message-ID:Mail-Followup-To:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=aOnKxbhQNH1eTmeBnjETvVZlJB22FsVUKhxUnQp3P/Q=;
+	b=UdOCHXf0ROLrdnqcq/+zn6oPjZYKDYysCaEcvRg54Yt0Rfp8EsamnclUvw2tstwHcpej
+	 q4/+kxFVKhV6sY3YWNRpmTYRQhNkvoyX9g41AUHnQT6kL66eFGP9/pjciEWmn4c8oq/zk
+	 XJTIJthb/l2i/t18c8OoeCradHYB7gMOE0KBDrUh+2mWhC/wBCUR62KCK5PNZz6pd0d/Z
+	 Wr5bhyp1eF9J5B+sxQrdbtpnACu5n0d2Ryhx5rGK6o0ID/is0l9RaqAgOIrXZcWPmO0ao
+	 br9MrBiK+ywGHuIUk9ny01RoOpIErCsnQwa6IKCcQIvbULyTG9lu4WldoPN66nXvxEg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=H+eszt1v;
-	arc=none smtp.remote-ip=74.125.82.182
-Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=D0MWwbYm;
+	arc=none smtp.remote-ip=74.125.227.132
+Received: from mail-pj2-f4.google.com (mail-pj2-f4.google.com [74.125.227.132])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA873606A324
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 02:18:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA873606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4DB606A31B
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 06:49:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4B4DB606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=H+eszt1v
-Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-3514b90bb89so3733922eec.1
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2026 19:18:39 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=D0MWwbYm
+Received: by mail-pj2-f4.google.com with SMTP id 98e67ed59e1d1-3a84a12aa97so437207a91.1
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Oct 2026 23:49:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792635519; x=1793240319; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=YVLKVn5aYrORuK3mJHdyAM2K05yQ1I4f1Gd2eeFrBFc=;
-        b=H+eszt1vKQtCU3/KB7Qzaij69qenfu0lG2XuIF4ZWISg5dYrkmC9asbrjtgR4CXkce
-         TBXb4GKHG/wsSGQ+UrZ8+zEcA1NQgtYK91w+B80ULkg3ASikYfCo9UWfYmfwpvEte4XE
-         jTTxbKPQVXpeU8ktIhq/YTivJtLdLSAXqmVf38FDGxukqYkaW7iUTpvQyxAALnq6XXGD
-         ci38T/qydDnsRZLVQQuKo0hUWVY5R+df+t/heaKrcLMGs9Hz98Sz5r75F5L7LBqWlFQI
-         egjfA+nNUHRlxwEXpwXcYyyWcLr+UjLA/NnupQKuiAMqRo8yIe4c9Dms37/DiCtx6ifF
-         hfCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792635519; x=1793240319;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=gmail.com; s=20251104; t=1792651755; x=1793256555; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:mail-followup-to:message-id:subject:cc:to:from:date:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=YVLKVn5aYrORuK3mJHdyAM2K05yQ1I4f1Gd2eeFrBFc=;
-        b=0pYJwVDLJRUFaFTCxOEjQxBMcrHupFaSgztOZIZttORzJIuqXT4WejvDVLCQc/mMWI
-         d8fzAZAezbL6XcLyeV0AL8MKWNOdLCrOkqbUAwNzSbPHNBLDT/Lt3L37mwDoj0eYXI0z
-         HxmsWDhGaFtThuVrntPTzvKOxcS5ljxHe+2JAP7Jaw80C6yIdzu2n+P8klysOs8yV4k8
-         gieBYaiH35ZOmzCrYLfYRx8ydkSBzVklnWj8hMucpSLljeB9rVTwzXrZqWIgqH4cD1jq
-         vfJMsxSfEi2uRWXVXhd6XLmLFCOOPSX2Y4DzBCXYYK/M609oEN2sSNu6DZk0dqkUOYRu
-         5+nw==
-X-Forwarded-Encrypted: i=1; AKwUvByoWqHlvkShflFmiEV9EgFYuqpfBBlsE7GR2ISvbwJY5k/Zy53jJ7vEPmtrCrMuiEAaGWcK0QegCmTHbCyO8kI=@vger.kernel.org
-X-Gm-Message-State: AFq9FYKuQHmkRYj/qcybYxHQ4ZuretqUnxeiWaZpo1mX40a6IERIjAjn
-	tkNKBRhpk20Om5tJKp3UGzI6x8FZt9dt6jNq7mCGKYToeeY8JHHTlrCJ
-X-Gm-Gg: AYBFou2Ba2wJDoMROpP3ozxNLN8o/HXlUCwJkJgxFGBv5No3A2ST+2sbyLqrJL0GgTa
-	MxPCksE9R3v69C5XEz+Rs0vKJnrq30dZGW31xcAdCKTrhlyyWqBGgEKvSDgmPmABr2lXIE9pq7W
-	0sVOWFoW7LfE6LIDPmW94i4S/PeCEkoTgO/iid5DgVTVrI+y06zJ/j4YQc3p1r+LFusIOB0NDGa
-	SEqdVeZ6QetmMEzpyxjdldZtvgcn7ZgvCdu/BfgIMC70MS1MNjO5lUYairuvcvQf2uv1f+IsX9x
-	+Jg2CshwhUef5WYhe5iDiWrDodiOl921B5FNEeMn76qwLCKF6EvkXoG6dNDiDxahLO/iKA1bfOq
-	X2Taj+RBCGo27UjSO9CqqQr1omxoxbgNg8JG/SPpHRVcLF6TsUddftxjOse9TCf7p+3hLVIxCNr
-	wVPH0t2kNQlMdB+h6mcBBBIxKx5ECrIonPDnX6nDhTzmkGReNIU0x52l5xODUaeG+iwXVQ1bO3C
-	ITfs4YLzL/OpwzpenHnKdKutdmad2C+/+RP2ddzcQ8qv88=
-X-Received: by 2002:a05:7301:618e:20b0:35e:2c6:d46c with SMTP id 5a478bee46e88-3674c63d579mr5523810eec.10.1792635518735;
-        Wed, 21 Oct 2026 19:18:38 -0700 (PDT)
-Received: from ubuntu.. ([23.254.208.9])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-368b4b8e9c6sm3556805eec.1.2026.10.21.19.18.25
+        bh=aOnKxbhQNH1eTmeBnjETvVZlJB22FsVUKhxUnQp3P/Q=;
+        b=D0MWwbYmQfuUWSye7rIUiVQ9YWomoQdyoRDN9rrFjnN6XHjz+UIgna9JlH9IBcAYMh
+         rUUqjtC3qFMre85uij61NrdbkTAZEKQf5tPylE5P++bkOSlYpCctsQ1G4I00M19inpZF
+         e6MPOIDcqmm84ygIFvHV2zMS1l8o1Z5DDrAwdtkjXK9xiIZU3/SJuKUadtlMZCHB8Jdl
+         SyZeTze1oZiWYqtjfh2HUdYq0uqwT4nOLh12ZQRrNvp0at+WkR6SuB4Lu7Ml/3cBvd29
+         K5tkvBDpSzU40DIKRzfVXDE/iFFCAH5upLK0fBtZPmQrK32W7lq001wJmChnm6OMnDd7
+         dzEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792651755; x=1793256555;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=aOnKxbhQNH1eTmeBnjETvVZlJB22FsVUKhxUnQp3P/Q=;
+        b=Sh8jANcpdHEK00N4apelGHNoVOUfql83JsHKFMJyNOo7Jq9hsqmVtZRzU2BCmgeT0s
+         C7HiCrK/JR/5nqSY3aoDryh2GPJNL4JTouxh6Q/NWGiJjFD5jexQs7uQNqedPqN7McNM
+         Uxd0q75QOwy61TxyiGc+WkIU/VvakFXSDYpR+QLMGSnTElRW7KQ7FlOXqDRf8Pb2zmnY
+         /i6ScezFTKYMlEkd190rk4CsT4pbbmTgbrH/s/t+MS1W1ysYBz61MuHZNmzzcJt9jbsn
+         twS7vK9mKoBETeZKmRH1sbd9YSYa28+GcDcsD4bp6d9AHSBg4k1Q+MZ9vCw4Iq2e0OcQ
+         Ry+A==
+X-Forwarded-Encrypted: i=1; AKwUvBxRSJpMBLcaGZSC/QqffRr+MkSOc/r9/+nbI/j+sh6IDBp9zTlbY1Hy63AxXp2wZWAtUYT7G+MRv37MosYW9gk=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIOpzRHW6fY/3O6veeCzwVc+sb0Xactj7KlUw0mN9wdcbEjKFQT
+	+dc4JrUJjUwyvNv54iWwL6v464GAt2hq2jpS7tEX6fSl6CjUlh34RKtd
+X-Gm-Gg: AYBFou2UwjkKgomUcuDwYXPP8FnqI7QRpO7KXryWiTA9H+dDnjzHZiGg6KWUp/ThpDu
+	ji0PwdlGvQaR6CLQOj6mC3nHhITmMZUjn5z0wat8KgqBh2ZCWv6AEXLVXwM7WhjyPrMX+We5Qqo
+	jDfSH+bV0cypSyx4GuuBnvbuJ3pPvj4zc80ukwOxydvEyUkVjsALpXY+Zi2FI/eqnLkgyhfm8OM
+	GKrYg6cu3vBmYomJP0Q0FNAJAokq2bmGoEyfJVCaQ6DfKWqBNHUxYi7zV2VfQU7teLYGrRS614y
+	UXa2URPvTtG9WSH4yZJQSmoSpTYFCmVPyIH03ayS51SQmdE+Rzu9EFxuX9moqSTtD96NJ2pw7av
+	VrVbFWoZ9iJ5L1xyXo8KoPouhF/hh7Ho7KqxcS6OL14f14nRcn0Gjp1XuHqJt85SAJ0GkNSviyk
+	U+qOVaz2D96LCT5tk1Kt1HfMLlU444w0tXHF9mmjzKJ6B/5WAeKDWps9XTWn03ZVpiw9XgwIp4i
+	gs4pcwGvAiqpG+qsxt2RFqeBjfzdzs3A4ggIi2y30JEiJYMJi5IXCy0FtNRGeQU5SGOm+DJUbuT
+	XSOwFmU=
+X-Received: by 2002:a17:90a:f944:b0:3ad:1b0b:1246 with SMTP id 98e67ed59e1d1-3ad86d5238fmr3509934a91.32.1792651754537;
+        Wed, 21 Oct 2026 23:49:14 -0700 (PDT)
+Received: from J4f-Laptop.localdomain ([183.36.237.241])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ada49314besm2707437a91.11.2026.10.21.23.49.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 19:18:38 -0700 (PDT)
-From: Qiliang Yuan <odys.yuan@gmail.com>
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-mm@kvack.org,
-	Peter Collingbourne <peter@pcc.me.uk>
-Subject: Re: [PATCH 1/2] word-at-a-time: check the first byte in load_unaligned_zeropad()
-Date: Thu, 22 Oct 2026 10:18:20 +0800
-Message-ID: <20261022021820.1789083-1-odys.yuan@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CAPAsAGyrH1quaLuyui6Qm5sokid8=yjNbAM3cOunynfPNQtfgg@mail.gmail.com>
-References: <20261019-bug-word-at-a-time-zeropad-kasan-v1-0-f21a3ed6a477@gmail.com> <20261019-bug-word-at-a-time-zeropad-kasan-v1-1-f21a3ed6a477@gmail.com> <CAPAsAGyrH1quaLuyui6Qm5sokid8=yjNbAM3cOunynfPNQtfgg@mail.gmail.com>
+        Wed, 21 Oct 2026 23:49:13 -0700 (PDT)
+Date: Thu, 22 Oct 2026 14:49:08 +0800
+From: Shihuang Liu <shlomojune6@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-input@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Marcus Folkesson <marcus.folkesson@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Ville Syrjala <syrjala@sci.fi>, Henk Vergonet <Henk.Vergonet@gmail.com>, 
+	Henrik Rydberg <rydberg@bitmath.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] USB: add usb_make_subpath() for formatted device
+ subpaths
+Message-ID: <gih6jsfknkjemuk5ahmmpxtzp6ymyynergxckpmxfbbybzpdc4@me7k7j472mdu>
+Mail-Followup-To: Greg KH <gregkh@linuxfoundation.org>, 
+	linux-input@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Marcus Folkesson <marcus.folkesson@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Ville Syrjala <syrjala@sci.fi>, Henk Vergonet <Henk.Vergonet@gmail.com>, 
+	Henrik Rydberg <rydberg@bitmath.org>, linux-kernel@vger.kernel.org
+References: <20261021123146.17202-1-shlomojune6@gmail.com>
+ <20261021123146.17202-2-shlomojune6@gmail.com>
+ <2026102104-audition-unbraided-05d1@gregkh>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -137,19 +106,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2026102104-audition-unbraided-05d1@gregkh>
 
-On Tue, 20 Oct 2026 12:58:54 -0400, Andrey Ryabinin wrote:
->> +	/* open-coded instrument_read(addr, 1), as in read_word_at_a_time() */
->
-> Why it's open-coded ?
+On Wed, Oct 21, 2026 at 05:20:31PM +0200, Greg KH wrote:
+> On Wed, Oct 21, 2026 at 08:31:41PM +0800, Shihuang Liu wrote:
+> > USB drivers often build device paths by calling usb_make_path() :and
+> > then appending a subpath. Several callers use the deprecated strlcat()
+> > API for this.
+> > 
+> > In preparation for removing the deprecated strlcat() API[1], add
+> > usb_make_subpath() to format the USB device path.
+> > 
+> > Link: https://github.com/KSPP/linux/issues/370 [1]
+> > Signed-off-by: Shihuang Liu <shlomojune6@gmail.com>
+> > ---
+> >  include/linux/usb.h | 29 +++++++++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> 
+> Did you forget to use get_maintainer.pl for this?
+> 
 
-For the same reason as read_word_at_a_time(): commit ece69af2ede1
-("rwonce: handle KCSAN like KASAN in read_word_at_a_time()") open-coded
-it "to avoid having to pull the entire instrumented.h header into
-rwonce.h". I kept the six asm/word-at-a-time.h headers to the same two
-small headers, kasan-checks.h and kcsan-checks.h, rather than pulling in
-instrumented.h with linux/bug.h and kmsan-checks.h.
+Sorry about that. I'll resend the series with the proper Cc list.
 
-Thanks,
-Qiliang
+Thanks
+Shihuang
