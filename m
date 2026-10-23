@@ -1,62 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792755550;
-	b=AJKawfTw3bK72akZh3GYI9MWuCAzyrN+mv0iqCRhWi3ZzlO/W/5hG59FW5SeUMOf0HW6
-	 npcItC4txikJ/K5oN9yvOthtxAQ4VF2mUEnxbMwhcVv7Gf04RQ+FkhxVst1HdK3ruqXz6
-	 FHI7+yDB7FW0P+0wEsWTIHO8x//s5TcBrmJRQErEQVBztO9l9B36IpIpyWj57KLmh+dea
-	 s4mUHO4KL6E9AVFxPvmPoeWCJgdPSOgN1I1WBOWYV5MT+YW2jXCSPn0gH93jl6Sl6QdIo
-	 HrmzsuhNI85eRxRhptj8DyIh1nBK2Ks9dNqjweNsAzwzaqtEu4pAUUuW+eYQ9M/lPUw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792755550;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=IcSLyYnQnVyiersjjKF/SvZDVy3Kk6BBMwm4jll+NFM=;
-	b=N4gQT/kd8nfe4YWpB3zLMLIj9yyYIIWPavZvMSsgJ+KU+5EqSLjj6HQEJPGOlbmq1WPg
-	 l65eC73rQP+UN1T0eRAL2C++hrNswCRh//7I3heTP8wnF0OUQtQ/iFHcnbquYKQM9tpkm
-	 NuqMwYkbMO46AkVCzEZ3U4z2I3zxT1C/EZ+Xf0G6MpuIPoZ7hIlYmHNKBXKipmDGnMBP1
-	 gWD1zZPHsCouKhvkcWpzuM1MadFY1JpizoaYQXodoxywZNRAqdfSJF5ZSY6aBLyvjpXx0
-	 Q15HlLqh3qOai3B/rAUzEphu7P6+4DIO6JdeGM1KXfiV7eyrt9C3+9HP92og67Y2x3A==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iT2XDmJO;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.215.175
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792757413;
+	b=yx+ww9MqVQVCRT9OVK3BIMCurJjCTzc+XybxNQaRaYaYArJ/8sM92ukPFBlUa4rOfIBd
+	 kloZg9LSnQKoPULEkEvioTYl29M0wsWymnIsQ7ngU4I+BZUJcG4n4j4NIgXDyJs1ZydV0
+	 HO34UIyml6sBB2FSwDlGPHWzQ4wpVgCEZtXmRa6d6V5h/r7OReZ3R+TKnGD1BOY19KOD3
+	 pJQnptjmr4CiAWu30JZ5ntQpM0ZQNgsrRUzCalE8lI5pM1ntNf3cLq0RAGOk5qhUorSbv
+	 KWKpEsQywi5uu0MHNGtirtpSF3HJr6He925apovUnEDbpuLNg0r8lny1Y3tMEWSij/g==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792757413;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=vmXE7xFhodQ9qb16dVHHJRrxUXaSprJpJwS89829b+M=;
+	b=hPXCpfh9t9BoF3liUz7xitNCzZkXiMh5p8mvxf30dHnlyqRUeJXYFNSbxahPE/jEQf8Q
+	 VceTmFXXOL3+gfQVSaCCVrGP4QPNzv20EyOfgmnSf61VC6rY3gy8Vn6f32PjdCHwAs2Sf
+	 eDRkzPccuNPqJVE5ouuABM8bTCwixgouECCZqSIU+FhjsHCheHSBjyHdhG6J6AO97+I3M
+	 tkFAChE7HKZOEhOvLV1SByLfaF05u6APHM0w5eykV4PnVOnkLk1Wio/mKgk2aX4Lsu7l0
+	 ZlORtxBFmquUgArt9aLFlDgxZlg3RkBmWFe3uoKHL0YkJl0OzvuJ3lEXmRk29hEjxyQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=RNXrxh5f;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.215.175
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD60606A31A;
-	Fri, 23 Oct 2026 11:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16FE606A31D
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2026 12:10:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B16FE606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iT2XDmJO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFFB71F01825;
-	Fri, 23 Oct 2026 11:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792755550;
-	bh=IcSLyYnQnVyiersjjKF/SvZDVy3Kk6BBMwm4jll+NFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iT2XDmJOTrOslyxlmZQJ2xXPDNOm2a5z0VR+f0VocZzmfZbT8jHV9Q1k6RMeCLhxY
-	 BvEs510wyZYFwIbspVuTC2+qjbbZteazKZE2NqsLK5EidxtZhWo/IrgEkM46vIAMKD
-	 gQuV1AvmlVpcKEJTInttXEIruFKVShC480Kp/mB5TYLpzFj6FuBGJZ+5ZXJt89Qhdy
-	 N61ySVT0MBJj/hpUsMam2QRb4u3p8MP0KJ3vNlSnDGpvsf2vjR8sZNHznvY3y3vScZ
-	 J2JmsKBsZqofVetvePmTrjTarPf/A1ChoWeDNQEA+FPJJIifEroQVujGO8NAN6NMVY
-	 bm52xkHtPkUBg==
-Date: Fri, 23 Oct 2026 13:38:59 +0200
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
-	Shuvam Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
-Message-ID: <attGeq4iGoQ_i9dQ@debian>
-References: <20261005155653.late.426-kees@kernel.org>
- <20261005155708.1471260-6-kees@kernel.org>
- <20261016145928.16eddc9a@gandalf.local.home>
- <202610221058.C5626C5172@keescook>
- <atpmAQ932J3_8IvJ@debian>
- <20261022155726.7f20c4cb@gandalf.local.home>
- <atptYsHyS6YGtzPV@debian>
- <20261022162000.18aa4162@gandalf.local.home>
- <atpyCU3fDyU95hbY@debian>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=RNXrxh5f
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-cc4be0e5351so328045a12.0
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2026 05:10:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792757412; cv=none;
+        d=google.com; s=arc-20260327;
+        b=VE2bT+8ENU9itkhm3OUb3qcrJfAXf93nZ5Sj9JUX0l/lQwHDTf88Uu+zH5afmcvsP8
+         4QBLO0xBcHfPmsI+K5ZfoPoCdmPP5+OfbjVqx2QI9UQKNibXXiO5Xv/ynyBC9zkI5NuA
+         YBG8feeGAQTmWbmEq5dpbPbjqAnOJGIHW5Y0xo4u8tii6qxqIdyLYMahIH8Te6dWkfPC
+         xmKaGrhscwzn2lf41jxO6eiPl7ENzaQSyELZYV2tnDnaa48iD19M0qeoR7OXsPAFHmz0
+         M3Cf+OBlbVBWnx+aGM1gjyk0cZKo/GpNVSPG9DcB9laRbjzU0mSvko+orM420BxrDhPD
+         u1xA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=vmXE7xFhodQ9qb16dVHHJRrxUXaSprJpJwS89829b+M=;
+        fh=JoPJ6Xw7iaNr0hBqMSZDCfwUbJZ9rLtT7w+vYwzh3is=;
+        b=XxeTpObEqa9gxlogM+pzdsWaR7dnm+ljws3yKajMG0tIhcsPDfHxuh9Cz+3JxNdPB+
+         G6spig5K+5TEAYd/VZyT6HoVt0KiwWzFYucCuj8TPtOMNFSXdWDA1CWh8ex9kRI2ceHN
+         NIHfF1AMTyuy1y6+yWdR20mOfrr8HI6iATRPWOBWjc3K6J+WPiY1KD3urb5W10NQqp54
+         g2RZvYiEsUFTD+54yBDGoDK+APGCjG1kUlrmNDXwYtVTCk59ay+doOKNsnTEC2XirVKR
+         cdlHJwpg5yfTsTs5ei9+HfrvG61H9FfBZZPS4kltNCfjliH1ZLM9XPnfInxcS/ySIDq5
+         9iHw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792757412; x=1793362212; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=vmXE7xFhodQ9qb16dVHHJRrxUXaSprJpJwS89829b+M=;
+        b=RNXrxh5fu4Z+fIUu8LXjTt5UTPvq+85WkYn2PxC/ShshdSZxVXfJoejQkvDRcTHKyy
+         QI+l4F5CVXyIKFQHLs/JhmpUEO0wKkcFcLJmY6KUaQYBOshPXtQ5OC1bleRIcIn5oNm0
+         J24lwY/Yuw828XRePT8HyclnU4x8K2kxTG1kliQBqGpqglq91edPy11Ze49R3XECAwAH
+         SNVPjflCNhwit+b7sPuFPZ3BRu6uzZPkPtIRC2NWA8/PkFnv/btYVPDdUGCnnDkiIk2Z
+         DpaWNG2Rb1w6CTo3g9ltS3QwBXiIQnICKueq8zhBc6NgD2ud0/NP22cWS1VU46Cju3a2
+         xkIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792757412; x=1793362212;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vmXE7xFhodQ9qb16dVHHJRrxUXaSprJpJwS89829b+M=;
+        b=UfIeeF+BRhmpVXXSFd4CbdfFvkoO85++3PYPqYqgNbKMrz+MIey2zg8H79a1Y3UGmz
+         mCK2YliJ4tzEowAZVAMQfpqf79wFZ7qB/zMjlOZvAjRAxIMN5H2vCaJPyWP3sAhYSwqW
+         AkAneV1pnlf07uHueJNnEWmtFrvE/qaG7zRUo6WcuEDuq6wHe4801M+/dV0AUeOrHawd
+         i3Vd18Jpc9HT7cBYoul11N7AE06k6GcXnPKXNz21ww3pAleJu2xdRpNQmCGQuo1mUcny
+         Rw0EOeisQhKytdYIx2Cns29D6p/WHxIESq/RTH0xOHa0XnuhgJMs1J7fLZjI93QB3Quo
+         cgFw==
+X-Forwarded-Encrypted: i=1; AKwUvBxPWAiqQFdl5WFSwBJcZfh2MKnYPWAbwKfsd3/KQBf4/0QXq4xQW5d5kf3mdTPnre9Rnv8U3PYkx2RmyexofUc=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI1ZL33SuOHAm78E8XuoWN6JCe4YzOZGQ3nMxKzX/7C9yngfnXc
+	sCuLJVEZsrMFtZo0OliRBDI1E9P3PnUHIDSJTjSh4PpabWWVqgtXEinUyYAtdmxPO90v7kxI+MP
+	LjXcblrlplNhSZno0ZHp0C15Sy9m9y4M=
+X-Gm-Gg: AYBFou1ZHRVAfGw0Aiz0zuillxxQvU1MXPjZq7ALqOckNxFKFiCQylj6prYakcKAyoy
+	46KpZTNn5gI2DJIQwLR/XhzcgPBKNeSgr9v/Q3vxisCW/HhHyFCbqmap5F6hPcGtO+198lhxZaw
+	J20ThtxHKsTr5ngNXHw3E2Y4unvfIMQ3tyPha+xJKbdxCvHE5DjvirT4tr0GFQbLS7d1CH13d/w
+	V7Rqw8M4gtMlUB6IVkVSjM32Yww5quhP+bwSFU2IA8MjfNcC6/awWJ1eoN8MGBi41kWCcE9iO3K
+	USqjDCXzDLeqWlYNev2lWzLb6C7eGTy3AbjgJxvxS2DIku8EaMu4UC9UeyaBXlDZRfSexkUmg52
+	pJeMmEelE8FZ1zUm/VIK49eCSrgQbHFA=
+X-Received: by 2002:a17:90b:2645:b0:396:41d1:cbc7 with SMTP id
+ 98e67ed59e1d1-3adcdc94d2fmr1844935a91.3.1792757412088; Fri, 23 Oct 2026
+ 05:10:12 -0700 (PDT)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -66,143 +104,51 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oqugeyshl7gyv6bo"
-Content-Disposition: inline
-In-Reply-To: <atpyCU3fDyU95hbY@debian>
-
-
---oqugeyshl7gyv6bo
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20261015194513.i.609-kees@kernel.org> <pr158sq2-203s-20n3-q44q-o599q271r309@fhfr.qr>
+ <ri68q3sl7zi.fsf@virgil.suse.cz> <202610221224.60CF7CE4B@keescook>
+In-Reply-To: <202610221224.60CF7CE4B@keescook>
+From: Richard Biener <richard.guenther@gmail.com>
+Date: Fri, 23 Oct 2026 14:10:00 +0200
+X-Gm-Features: AclHuK9LkaPeQNRGMB0h3M47pxHRje819FzgF7bb1NeRKBI8CbMxvFfTPHw7iyI
+Message-ID: <CAFiYyc14ns+-c5_aJ3WDq5NLTcQAZWDzJ5mV_VdA8TudS7J0EA@mail.gmail.com>
+Subject: Re: [PATCH] ipa-icf: Step to the next caller past a thunk in redirect_all_callers
+To: Kees Cook <kees@kernel.org>
+Cc: Martin Jambor <mjambor@suse.cz>, Jan Hubicka <hubicka@ucw.cz>, gcc-patches@gcc.gnu.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
-	Shuvam Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
-Message-ID: <attGeq4iGoQ_i9dQ@debian>
-References: <20261005155653.late.426-kees@kernel.org>
- <20261005155708.1471260-6-kees@kernel.org>
- <20261016145928.16eddc9a@gandalf.local.home>
- <202610221058.C5626C5172@keescook>
- <atpmAQ932J3_8IvJ@debian>
- <20261022155726.7f20c4cb@gandalf.local.home>
- <atptYsHyS6YGtzPV@debian>
- <20261022162000.18aa4162@gandalf.local.home>
- <atpyCU3fDyU95hbY@debian>
-MIME-Version: 1.0
-In-Reply-To: <atpyCU3fDyU95hbY@debian>
 
-> Date: 2026-10-22 22:38:12+0200
-> From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+On Thu, Oct 22, 2026 at 9:25=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
 >
-[...]
-> No, it doesn't lose data.  My proposal is to have this:
->=20
-> 	struct my_seq_buf {
-> 		// .buffer points to the start of the buffer
-> 		char  *buffer;
->=20
-> 		/* .p points to the current position.  This is the last
-> 		 * '\0' that has been written to the buffer.  On
-> 		 * truncation, it is a NULL pointer.
-> 		 */
-> 		char  *p;
->=20
-> 		/* .end always holds ARRAY_END(buffer).  It is a pointer
-> 		 * one-past-the-last character in the buffer.
-> 		 */
-> 		char  *end;
-> 	};
->=20
-> This would be initialized as (of course, wrapper in static inline
-> functions as needed) this:
->=20
-> 	char            buf[100];
-> 	struct seq_buf  b;
->=20
-> 	b.buffer =3D buf;
-> 	b.p =3D buf;
-> 	b.end =3D ARRAY_END(buf);
->=20
-> Then, you would write to it as:
->=20
-> 	b.p =3D stpecpy(b.p, b.end, "foo");
-> 	b.p =3D stpecpy(b.p, b.end, "bar");
-> 	...
-> 	b.p =3D stpecpy(b.p, b.end, "baz");
-> 	if (b.p =3D=3D NULL)
-> 		goto fail;
->=20
-> Then, at some point, you might want to initialize a new buffer out of
-> the remainings of it:
->=20
-> 	struct seq_buf  b2;
->=20
-> 	if (b.p =3D=3D NULL)
-> 		goto fail;
-> 	b2.start =3D b.p;
+> On Tue, Oct 20, 2026 at 05:14:25PM +0200, Martin Jambor wrote:
+> > Hi,
+> >
+> > On Mon, Oct 19 2026, Richard Biener wrote:
+> > > On Thu, 15 Oct 2026, Kees Cook wrote:
+> > >
+> > >> redirect_all_callers walks the callers of N, but steps past a thunk
+> > >> caller with next_callee, the next call the thunk makes.  A thunk mak=
+es
+> > >> only that one call, so the walk ends there, and so the callers after
+> > >> the thunk in the list would not be redirected.  This came with the t=
+hunk
+> > >> check in commit 17d1bf760f8 ("re PR target/65263").
+> > >
+> > > Huh.  This looks obvious to me, thus OK unless Jan or Martin object
+> > > soon.
+> >
+> > This is fairly obviously OK.
+> >
+> > Thanks for catching this!
+>
+> I don't have commit access, so if someone can do that bit for me, I'd
+> appreciate it. :)
 
-We can actually avoid this error by setting up the new buffer to have an
-empty string if the parent buffer overflowed:
+Done.
 
-	b2.start =3D b.p ?: b.end-1;
+Richard.
 
-This is probably related to that empty string that has been showing
-in seq_buf when the string had overflowed, except that here we don't
-need to point to a new string, but can reuse the old buffer always.
-
-b.end-1 is guaranteed to exist and point to an empty string if b.p=3D=3DNULL
-because b.buffer must come from a real array with at least 1 element,
-and the last element must be a '\0' if the string has overflowed
-(actually, truncated).
-
-
-Have a lovely day!
-Alex
-
-> 	b2.p =3D b.p;
-> 	b2.end =3D b.end;
->=20
-> See how simple this becomes?  (So much that you may doubt the necessity
-> of the set of APIs at all, but they don't hurt much either.)
->=20
->=20
-> Cheers,
-> Alex
->=20
-> >=20
-> > -- Steve
->=20
-> --=20
-> <https://www.alejandro-colomar.es>
-
-
-
---=20
-<https://www.alejandro-colomar.es>
-
---oqugeyshl7gyv6bo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrbR0wACgkQ64mZXMKQ
-wqn8wg/+JwZwbgZHdogknBMXq+EuRjfkfHcqy3EWKgEz18VoLqyjFjAnCyIp3Efs
-67ZkySiDjeV8dXvdfQvwUuVYiaLEa/bCdDzcDxSbdqpWrvX1K9Cy7Y/CWm6W4hTq
-SPm4liiM6PQdc5hdrsruB5vxfyYhTYoNWGPdmgzknsntB/kHqL+5Q05UtG8sY/7b
-ERvdobT7pNV0GmF5x/x01YSq67Y63W1kO54iAlz+dGrwVeP1qhA5X1ly8tjXuHOK
-ocg5ws0yyIx+HLJLVAbDD3OAouQKclDHNK1sObl7U9OsQ6yqQaWSaT0SQV1uIwqB
-/Tg0tnZ9NWGw2dImmyQ/1dEvH+7J9d/6GeAT/7B/PJdK9bYnhZaYVLifvxhmiifd
-xAgFbacE8498YTkrmeSrFI1lh/7sYYUItnUJgDMDWVskOVLXktT+LPb1Zrs6CeM0
-SjCxSHB2d2VollqWVev2Aee5EvvOCVmeDSPviqpv1S6lVgW8nTE/tzqIR6gUrSiq
-bLczAPkqn6kPb/0/2gg9M4KJv9OOqXu3Ej2R4oHcGekUU4rKOadUxoQqmMbzFGI9
-rijhqs7JseeWlzTPxy9JzcaoL/Hj2CyXA55iLD+IOoK/I2uyD0TLmNEIV/yJLpfl
-iLsw7Bv8YitAQOr2qYTfRPt0i3fVyQQfL6vkBjB0RsaiGHuujdE=
-=U7V2
------END PGP SIGNATURE-----
-
---oqugeyshl7gyv6bo--
+> Thanks!
+>
+> --
+> Kees Cook
