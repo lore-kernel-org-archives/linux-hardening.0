@@ -1,69 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.175
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792715840;
-	b=PYnhTSy4T5CNLXFN8XEF+5AQBof6kFUh8rIpSYL80o7b0WMB5XLCWDUqVMv0BrMEhUG/
-	 3/8+B/wpvNlOx40r+4jHzTkd5/cMeIey0GyQ180WPxDJuXCAPZPFM7j0WEmFX4RgX9U09
-	 n7zLsJjcnFp/HydjKpy8tM5ofmJm9JysUn3vBGLTK5CHmyklkbUgY0pbB6sEktmGT/K+4
-	 RmuE24fWHh7Z9evRpguczmdQssZI30lXO9b81m2dhCR64Hu5ntQ5M1oWJi6DwIznN+YfH
-	 89c4kMDZ9AjyGRZAN698F6Sw1cEUSDKhq3KkhLTgiGQKFpxrbYz1Uoxu8zLpAHfyc1Q==
+	t=1792720199;
+	b=3bV5Wquz4TsRvi1ZttQGWk0snEvaRGrIUqRdN2dCugn1JYdILD2meDKdg5YiKDCWwN68
+	 v1msb2Z0BHe8dUr89wwJEEjSDw9PP+lWrXenpfDvmaW9dN2q9PTx5lVW85sENYz7+YbwS
+	 l8FCNygK3bOfb8ILc/Vmg6LMANPHRkBcVIxhC0uaQcT7b00vNEqin8++kEXJAFYOA8k7p
+	 kXPdtuCEi9ld8z5aKpvvTxE3DBfVt7TMC5MjuAtO+rs3mU5App9CeWio9ITunn/S3j8Kl
+	 8JW33DBRW/fshINBDEFYhC5hWuYiM7iyLgMhukP+baU9tDSri1Huw1GrZLtDaDyNQug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792715840;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=axXiTUjtvwMFRrIO/ly38Bs5w5xgTTTJQ7iKGaFvt4c=;
-	b=BTo/151nW/swcSj9UV/nR49Oe1pVgl+zRS9r0uHoJI2ZJCUDw4B32+rqi72iBU3PQJ89
-	 xICfAVZslAdv5EBmYj0zDQlx2PSpg4LnilS8YFxFDNUEfbAfyZAY1JmvC7ETJ+v35/QAP
-	 RMxt1zpo+T17VFfG5kGQ0kuKrzD7097YbL6h7LrquWmjyccsjQ/ofDxsbIG/2/dz5WBan
-	 34UX5Sou1qpyoQz0WpfQBobSWakiaHgLQ9qyvupTEyikmtqFwsSNwVqD7c/fA7yp4tw6X
-	 AYeTksSKW2VEBm4vqmA0SNiMx6eVSL2zXWngIRDTZ7ASAc1/to3UWSWbgAAGkvPQXXA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792720199;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-B4-Tracking:To:Cc:X-Mailer;
+	bh=+p8cIpnt0YjLXT/3n6WuKQxFq68+6JJEn3PVDsIrB3s=;
+	b=efrD6zZJPOpuOZJwMXmEdF84hwmUbdVMBWqft4MblFbqzg4NNhCXwCP58jaXlIpCsOTp
+	 78+UTGSgNNBx7wubqxJktlvL8kZ/1tyM8NHM1tXq3QWneCdvYl/ylG3dSKk4zctLfERfw
+	 5ie6lHjq9Ck7IC+uRuD8YFYwZ+oXoEzAdtC+ipdxbQpkW2eQd7BetTB0/QJ/xKoZNE/23
+	 PZqSc0325dZmpvP6PRWsX5c0vf4j3KLhwNJ/jctJtiy8LKQJH5HOOB2Hb2c20o7zc164p
+	 +0+PxriPKxJAVDT8hFOOUTp030FKA6baSDw0WGrrQJOtMEM4vyMnfy6hywvGzJ6PwIQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=NJAieMiG;
-	arc=none smtp.remote-ip=216.40.44.13
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=PHs0evTi;
+	arc=none smtp.remote-ip=74.125.82.175
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2314F606A31D;
-	Fri, 23 Oct 2026 00:37:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2314F606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D89F606A31D
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2026 01:49:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6D89F606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=NJAieMiG
-Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 67EA54034C;
-	Fri, 23 Oct 2026 00:37:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id EC75C2002C;
-	Fri, 23 Oct 2026 00:37:14 +0000 (UTC)
-Date: Thu, 22 Oct 2026 20:37:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alejandro Colomar <alx+linux-hardening@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, "Matthew
- Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton
- <akpm@linux-foundation.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr
- Mladek <pmladek@suse.com>, Shuvam Pandey <shuvampandey1@gmail.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
-Message-ID: <20261022203713.1adce485@fedora>
-In-Reply-To: <atp4vVMyX65qYcAt@debian>
-References: <20261005155653.late.426-kees@kernel.org>
-	<20261005155708.1471260-6-kees@kernel.org>
-	<20261016145928.16eddc9a@gandalf.local.home>
-	<202610221058.C5626C5172@keescook>
-	<atpmAQ932J3_8IvJ@debian>
-	<20261022155726.7f20c4cb@gandalf.local.home>
-	<atptYsHyS6YGtzPV@debian>
-	<20261022162000.18aa4162@gandalf.local.home>
-	<atpyCU3fDyU95hbY@debian>
-	<20261022165336.3100a5be@gandalf.local.home>
-	<atp4vVMyX65qYcAt@debian>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=PHs0evTi
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-353804b591eso742838eec.0
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Oct 2026 18:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792720198; x=1793324998; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=+p8cIpnt0YjLXT/3n6WuKQxFq68+6JJEn3PVDsIrB3s=;
+        b=PHs0evTiNgq7bTCxWxmObhVX3ilYIc4d8fs7f6MAKtrZpjcCuj6KvG4PaaNKaCq5OP
+         vd0bn33Vmr/5vjZ/OgMwLA7+m/y+AGHg46jurwktN5DTEhdbX3DBjeLk8QkRfaS6Aao/
+         SbxIQWUMZ+xqre+Z3Nwo7JAlI8CQdOX9RJEafX7unWxlJsUhZF2Re1wNvzkWBo3YVvyC
+         Sm2ZJFfP7nSxLE6xo0DC+Zv9m19JmbCRS5JuHSkwa2zpHDknf5RDPlTYWVx4aNCFPsZk
+         93M5iuKr/eLBeRBe01Va3QWhV75VKJ3DHKUbvSiL1d+g0P04+8WVrTfCeFmzkCI3PQUc
+         kYZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792720198; x=1793324998;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=+p8cIpnt0YjLXT/3n6WuKQxFq68+6JJEn3PVDsIrB3s=;
+        b=pWZjXXxGfkKPjGpUNJSePsgoseCDEA5p5cnXHEDLy6IGeLNtiSB4e8DIsIxgGaOYPp
+         t4D7CFVgfjqSuQBklGqkA1Ou7phRVZPmhjEJ/WRZ9iPE0qLA93j/znojtUN8489FuVU8
+         QD2/Z1fxkJUl9vQgfeOBvk5PAOWv0Nz7Qph6RcygJVpgWNtrXAEG8mAGyvcPv8SXywuf
+         rvpoY4CoF1pjCXCsaSEdl91Ox1Fdq+ax41QtmcGaXfNmzEMUM+MsSWdkD8qHI6VH/B9P
+         RszEv8rb8unuliGMFkqeb5jYHqujy8pqb6rN0/yIuZpXCSPSRflkeDRX4dTJsbhrNtZJ
+         emiQ==
+X-Forwarded-Encrypted: i=1; AKwUvByMkchzPgiGwxzCLVUC6yUdJwQMcPQu+yYq83xoI8g60NOgZa7T3sQKH1LY8clJAl2uF9nj9kCQmWctgknLvpU=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI524tJCbr89F6FmPEX9pw0hS82JqgyGn1GX5eeBT7LXjp1pr7q
+	Zc6G37UyvgRdPydfiYAaBa87SJPx5KZ6eg3SdH4KuW+6z2VVqn65MAFw
+X-Gm-Gg: AYBFou1rFiowWE/QUpNFvXGztwB32S05HwtA87912VoUckfXBhQ9Y9CL4klSZuldyy4
+	VtoxM9OZDLZYVvskekVBphUR8F020jASavz1BZvXgmyyWLYFrtmR0Cs1bt12XbOXmApmFAVhl3Q
+	M4cCPjgMRaqUf+9ruKT0oZvzWREUQixo0uCAPTqS3JECTwa1QvN9tqFaoGwS2p1PzDHUaH33tyc
+	ahqp2cRefhCU8LLz151hEpj+q6euOkEKmFR9/9eHeqGoUMqRNg0e4TO5yfLY3DA4uXUqVxZ+g2v
+	FTqx4vvQZKZL/A8Hiz5QZ5FxMSMtD/jLY4kvKViXaBrF0AMgceG0YbRoAZiGARMjmnwWYDVey/W
+	+l7EjKQCyPj/Yx1eU0IQsfBMgswN6SkpdRpgWmAYKpO0WOgKCdqZ9ng1RuzYXy5BL+QhE1Stwlg
+	CjsOIp+jBN/Sm/C8Oz3YLhPCL3QTG1N30eI7kRlKCY8GEUe6cG7EABmbR8ihC1j/B+IT9qsIK4L
+	GlkEZb73JnqpnHuasvNV/fZW5riu5tyiX9JFTF7ZGcm9e9dvT0=
+X-Received: by 2002:a05:7300:c00d:10b0:35f:4780:518e with SMTP id 5a478bee46e88-369d97155f0mr1233857eec.16.1792720198309;
+        Thu, 22 Oct 2026 18:49:58 -0700 (PDT)
+Received: from [127.0.1.1] ([23.254.208.9])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369d9c0e60dsm1971091eec.2.2026.10.22.18.49.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Oct 2026 18:49:57 -0700 (PDT)
+From: Qiliang Yuan <odys.yuan@gmail.com>
+Subject: [PATCH v2 0/2] word-at-a-time: let KASAN see
+ load_unaligned_zeropad()
+Date: Fri, 23 Oct 2026 09:49:47 +0800
+Message-Id: <20261023-bug-word-at-a-time-zeropad-kasan-v2-0-be0ecfbae847@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -73,70 +91,83 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 4hdp6ykrbqhmh6fh37tmjh3b6cr3fcuy
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: EC75C2002C
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19jZHCAHt0bGbMwk6BQ39qd8dVWDXz4emw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=axXiTUjtvwMFRrIO/ly38Bs5w5xgTTTJQ7iKGaFvt4c=; b=NJAieMiGRemya9h0G6J0k9xdE0tqsZ88GSAS1JsV9P0ETKlN1JapzL2+psbnwxZSzRxVIpqQkoaIosfhnS9twO/gq8RmwDtgWlHqJkUap3Xryvk1KCpHFh9YVegQ3xsJOxqVz4GNUqk0gIM/SXvBcdeAcP5TnKWKDSPYQDTdNQA=
-X-HE-Tag: 1792715834-340845
-X-HE-Meta: U2FsdGVkX1+QXw1era8vos6X1aEaQNEyg3QofqQx7S0O/Qs7e60GjAIKiF2yl5nJMSiECwu+0BuzPpD5+S5sTXMDy9hDaJNSBSHTSe6bRF0ocypxUPGr0Q3h/KiQBt2DIHxsOCl7qsMPm0rco/dppq80GA72PP9IQY8oegAlZXwzDqf58AL+5trxpMgCx07QFD/5z658BG6+KfBBCJB0u4MmoIKRjJ/D8ijstepXDb5tUGm8t+Wl7/tiqmJGN3kccW185TP6/HWz3I7i6fcZD0Hrq1m8zRGmQ3vQMweWdG3rF+d5e3JqrfLJW6XIV16QtWJW5o/zsM5EUzyne/RlDqnmW4nfnM+q
+X-B4-Tracking: v=1; b=H4sIADu92moC/5WNSw6CMBBAr0Jm7Zi2khJdeQ/DYqQDTBRK2oofw
+ t2t3MDle4v3FogchCOcigUCzxLFjxnMroCmp7FjFJcZjDJWK33E66PDpw8OKSFhkoHxw8FP5PB
+ GkUak1pRWldYyW8iZKXArr21xqTP3EpMP7+0465/9Iz5rVNgaTQd2lsqqOncDyX3f+AHqdV2/W
+ tfq3NAAAAA=
+To: Russell King <linux@armlinux.org.uk>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Paul Walmsley <pjw@kernel.org>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Heiko Carstens <hca@linux.ibm.com>, 
+ Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>, 
+ Marco Elver <elver@google.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+ Alexander Potapenko <glider@google.com>, 
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org, Kees Cook <kees@kernel.org>, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+ linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ kasan-dev@googlegroups.com, linux-mm@kvack.org, 
+ Qiliang Yuan <odys.yuan@gmail.com>, Peter Collingbourne <peter@pcc.me.uk>
+X-Mailer: b4 0.13.0
 
-On Thu, 22 Oct 2026 23:02:36 +0200
-Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
+load_unaligned_zeropad() is inline assembly, so KASAN and KCSAN never
+see the word loads that sized_strscpy(), the dcache name compare, path
+name hashing and x86 csum_partial() do through it. While reviewing a
+strscpy() KASAN fix, Peter Collingbourne suggested checking the first
+byte inside load_unaligned_zeropad() itself, as read_word_at_a_time()
+does [1].
 
-> > 
-> > I rather not increase its size. It is embedded in the trace_seq.  
-> 
-> The size shouldn't change:
-> 
-> 	alx@debian:~/tmp$ cat seq_buf_size_comparison.c 
-> 	#include <stddef.h>
-> 	#include <stdio.h>
-> 
-> 	struct seq_buf {
-> 		char    *buffer;
-> 		size_t  size;
-> 		size_t  len;
-> 	};
-> 
-> 	struct alx_seq_buf {
-> 		char  *buffer;
-> 		char  *p;
-> 		char  *end;
-> 	};
+Patch 1 adds that check on the six architectures that implement
+load_unaligned_zeropad(). Patch 2 adds a KASAN KUnit case for it.
 
-OK, I was thinking you were adding another pointer.
+[1] https://lore.kernel.org/r/CAPQLkRhXZwozmfhNd_PEx1ihwdH1_5qthP6PANYJ_m-v9vfQTw@mail.gmail.com
 
-> 
-> 	int
-> 	main(void)
-> 	{
-> 		printf("%zu\n", sizeof(struct seq_buf));
-> 		printf("%zu\n", sizeof(struct alx_seq_buf));
-> 	}
-> 	alx@debian:~/tmp$ gcc -Wall -Wextra seq_buf_size_comparison.c 
-> 	alx@debian:~/tmp$ ./a.out 
-> 	24
-> 	24
-> 
-> size_t and pointers should always have the same size, so this doesn't
-> change the size.
-> 
-> Am I missing something?
-> 
-> 
-> Cheers,
-> Alex
-> 
-> > Yes the seq_buf code can be complex, but it's in one location where it can
-> > be highly tested and verified. The point of seq_buf is to do the complexity
-> > so that other places in the kernel doesn't need to.
+Signed-off-by: Qiliang Yuan <odys.yuan@gmail.com>
+---
+V1 -> V2:
+- Call instrument_read() instead of open-coding it (Andrey Ryabinin)
+- Keep Marco Elver's Reviewed-by, as the check itself is unchanged
+- Rebase onto 7be4bc52fd9e, which drops the big-endian branch of the
+  arm64 header and rewrites the s390 load_unaligned_zeropad()
 
-We could look into updating it to pointers later, but right now I
-rather keep what we have. Let's focus first on the new stuff. It's not
-that hard to validate.
+v1: https://lore.kernel.org/r/20261019-bug-word-at-a-time-zeropad-kasan-v1-0-f21a3ed6a477@gmail.com
 
--- Steve
+---
+Qiliang Yuan (2):
+      word-at-a-time: check the first byte in load_unaligned_zeropad()
+      kasan/test: cover load_unaligned_zeropad()
+
+ arch/arm/include/asm/word-at-a-time.h              |  5 +++++
+ arch/arm64/include/asm/word-at-a-time.h            |  4 ++++
+ arch/powerpc/include/asm/word-at-a-time.h          |  4 ++++
+ arch/riscv/include/asm/word-at-a-time.h            |  4 ++++
+ arch/s390/include/asm/word-at-a-time.h             |  4 ++++
+ arch/x86/include/asm/word-at-a-time.h              |  4 ++++
+ mm/kasan/kasan_test_c.c                            | 24 ++++++++++++++++++++++
+ .../powerpc/primitives/linux/instrumented.h        |  3 +++
+ 8 files changed, 52 insertions(+)
+---
+base-commit: 7be4bc52fd9e0e55dc9a2e0232b89427d2c4b614
+change-id: 20261019-bug-word-at-a-time-zeropad-kasan-af2460466ee6
+
+Best regards,
+-- 
+Qiliang Yuan <odys.yuan@gmail.com>
+
