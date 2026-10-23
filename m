@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792748199;
-	b=SzQb6P6GNJDCbEomYF3iCgdMQQYaQEubxCUv/u5Do4+nlJxJoohTRPaavUo6wXxBu9bm
-	 Bpfw1hBHouFhHxiAZ6ki/r0AUqu9MHgkoltMJnT0REFC25r+zICzWO8/FUUxgKXHuN3t9
-	 haNeTM8wEIZoZ5LBARnKK4KXO1+yTGW4Kqwiot+lmC+SdQhDUcW/ndIPtXfxCRLWYcv2/
-	 EJ7DmLKCf2tZavpQdOX7QrZEVqlQnMKoBNPESSDwFb0X4XQtSpyrQrGPYHGYu0z8evMkB
-	 N2nrnVn2Dv8Jijv6j4/PDr6q61bRD0CujEReJ8MNfUUb+3+32mun8vbtCn1dZMR2OtA==
+	t=1792755550;
+	b=AJKawfTw3bK72akZh3GYI9MWuCAzyrN+mv0iqCRhWi3ZzlO/W/5hG59FW5SeUMOf0HW6
+	 npcItC4txikJ/K5oN9yvOthtxAQ4VF2mUEnxbMwhcVv7Gf04RQ+FkhxVst1HdK3ruqXz6
+	 FHI7+yDB7FW0P+0wEsWTIHO8x//s5TcBrmJRQErEQVBztO9l9B36IpIpyWj57KLmh+dea
+	 s4mUHO4KL6E9AVFxPvmPoeWCJgdPSOgN1I1WBOWYV5MT+YW2jXCSPn0gH93jl6Sl6QdIo
+	 HrmzsuhNI85eRxRhptj8DyIh1nBK2Ks9dNqjweNsAzwzaqtEu4pAUUuW+eYQ9M/lPUw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792748199;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792755550;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=U3e4WMfbvQYovUA5zAlkpvDtB90rZb5xthdO1DMW/Pw=;
-	b=5pbhoGp1owKwbeeupih0l+Pb6lVljiRedoeuJj7AKmryrj3OAguHmdb25CCmtv6ollx8
-	 AEc7qNjpnjmewF5WuKGjM9TKN1S9b/7qjn70RDEVGjvzz24kB5uRaMfN1fpd9TWcqoD+y
-	 0uU061QZ7wuOibDbJi3iI4oYOWDGxMJcPNVY6PKaIpQtj3hBYHFbiipzejtnlmZr+X/oO
-	 bsv17Vmepq1LPcOpkcuWZ3GR7r5UaXgANYPd5BW8NNzZK6FRx4AFkyc+BTI57lxwjUhjO
-	 5jfTzyIGBfKPeOVM/04EOMF5UrjGTUZ3c3yyzvVF6zn72SP/NPqwDreS3CY+eT0fPBw==
+	bh=IcSLyYnQnVyiersjjKF/SvZDVy3Kk6BBMwm4jll+NFM=;
+	b=N4gQT/kd8nfe4YWpB3zLMLIj9yyYIIWPavZvMSsgJ+KU+5EqSLjj6HQEJPGOlbmq1WPg
+	 l65eC73rQP+UN1T0eRAL2C++hrNswCRh//7I3heTP8wnF0OUQtQ/iFHcnbquYKQM9tpkm
+	 NuqMwYkbMO46AkVCzEZ3U4z2I3zxT1C/EZ+Xf0G6MpuIPoZ7hIlYmHNKBXKipmDGnMBP1
+	 gWD1zZPHsCouKhvkcWpzuM1MadFY1JpizoaYQXodoxywZNRAqdfSJF5ZSY6aBLyvjpXx0
+	 Q15HlLqh3qOai3B/rAUzEphu7P6+4DIO6JdeGM1KXfiV7eyrt9C3+9HP92og67Y2x3A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AYEZBGwp;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iT2XDmJO;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33064606A31A;
-	Fri, 23 Oct 2026 09:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD60606A31A;
+	Fri, 23 Oct 2026 11:39:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AYEZBGwp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6068E1F01828;
-	Fri, 23 Oct 2026 09:36:35 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iT2XDmJO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFFB71F01825;
+	Fri, 23 Oct 2026 11:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792748198;
-	bh=U3e4WMfbvQYovUA5zAlkpvDtB90rZb5xthdO1DMW/Pw=;
+	s=k20260515; t=1792755550;
+	bh=IcSLyYnQnVyiersjjKF/SvZDVy3Kk6BBMwm4jll+NFM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=AYEZBGwphiwRoylJjOMlAdNPZNavBpK/THkwpND5MsHG/lOn+CbfFAmjocILT5XwN
-	 6AMaKn1YYLo9IbdSaHDlKj/amxFdzc2MLhl0Zp2lCqRufZna37gIK30cLjO/beu3vR
-	 iECB/gSrcZbvEojwjzYi5xvxTjLVxF6ug5ckrBgumy8nwZZUhZjBN5m2Q5IfG0AojW
-	 jsmgyIO0h5nMFP9BlWEiNpWDUoNoA223aovkX4e4F5NTj960nyFYVKzoDGrkW+Uqvl
-	 Tqvai5XrhE3SMVAt5FG91PaxLmLm+5lJ7tbP1a0llksLOCl8c9BCEEkYBVggNpa2tE
-	 Ui40alN8Y8H/w==
-Date: Fri, 23 Oct 2026 11:36:30 +0200
+	b=iT2XDmJOTrOslyxlmZQJ2xXPDNOm2a5z0VR+f0VocZzmfZbT8jHV9Q1k6RMeCLhxY
+	 BvEs510wyZYFwIbspVuTC2+qjbbZteazKZE2NqsLK5EidxtZhWo/IrgEkM46vIAMKD
+	 gQuV1AvmlVpcKEJTInttXEIruFKVShC480Kp/mB5TYLpzFj6FuBGJZ+5ZXJt89Qhdy
+	 N61ySVT0MBJj/hpUsMam2QRb4u3p8MP0KJ3vNlSnDGpvsf2vjR8sZNHznvY3y3vScZ
+	 J2JmsKBsZqofVetvePmTrjTarPf/A1ChoWeDNQEA+FPJJIifEroQVujGO8NAN6NMVY
+	 bm52xkHtPkUBg==
+Date: Fri, 23 Oct 2026 13:38:59 +0200
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, 
@@ -47,17 +47,16 @@ Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
 	Shuvam Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
-Message-ID: <atsqQqzDwHazkUpL@debian>
-References: <20261016145928.16eddc9a@gandalf.local.home>
+Message-ID: <attGeq4iGoQ_i9dQ@debian>
+References: <20261005155653.late.426-kees@kernel.org>
+ <20261005155708.1471260-6-kees@kernel.org>
+ <20261016145928.16eddc9a@gandalf.local.home>
  <202610221058.C5626C5172@keescook>
  <atpmAQ932J3_8IvJ@debian>
  <20261022155726.7f20c4cb@gandalf.local.home>
  <atptYsHyS6YGtzPV@debian>
  <20261022162000.18aa4162@gandalf.local.home>
  <atpyCU3fDyU95hbY@debian>
- <20261022165336.3100a5be@gandalf.local.home>
- <atp4vVMyX65qYcAt@debian>
- <20261022203713.1adce485@fedora>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -68,12 +67,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zsjp26ojlrv6u6zv"
+	protocol="application/pgp-signature"; boundary="oqugeyshl7gyv6bo"
 Content-Disposition: inline
-In-Reply-To: <20261022203713.1adce485@fedora>
+In-Reply-To: <atpyCU3fDyU95hbY@debian>
 
 
---zsjp26ojlrv6u6zv
+--oqugeyshl7gyv6bo
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -84,101 +83,126 @@ Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
 	Shuvam Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
-Message-ID: <atsqQqzDwHazkUpL@debian>
-References: <20261016145928.16eddc9a@gandalf.local.home>
+Message-ID: <attGeq4iGoQ_i9dQ@debian>
+References: <20261005155653.late.426-kees@kernel.org>
+ <20261005155708.1471260-6-kees@kernel.org>
+ <20261016145928.16eddc9a@gandalf.local.home>
  <202610221058.C5626C5172@keescook>
  <atpmAQ932J3_8IvJ@debian>
  <20261022155726.7f20c4cb@gandalf.local.home>
  <atptYsHyS6YGtzPV@debian>
  <20261022162000.18aa4162@gandalf.local.home>
  <atpyCU3fDyU95hbY@debian>
- <20261022165336.3100a5be@gandalf.local.home>
- <atp4vVMyX65qYcAt@debian>
- <20261022203713.1adce485@fedora>
 MIME-Version: 1.0
-In-Reply-To: <20261022203713.1adce485@fedora>
+In-Reply-To: <atpyCU3fDyU95hbY@debian>
 
-Hi Steven,
-
-> Date: 2026-10-22 20:37:13-0400
-> From: Steven Rostedt <rostedt@goodmis.org>
+> Date: 2026-10-22 22:38:12+0200
+> From: Alejandro Colomar <alx+linux-hardening@kernel.org>
 >
 [...]
-> > 	struct seq_buf {
-> > 		char    *buffer;
-> > 		size_t  size;
-> > 		size_t  len;
-> > 	};
-> >=20
-> > 	struct alx_seq_buf {
-> > 		char  *buffer;
-> > 		char  *p;
-> > 		char  *end;
-> > 	};
+> No, it doesn't lose data.  My proposal is to have this:
 >=20
-> OK, I was thinking you were adding another pointer.
+> 	struct my_seq_buf {
+> 		// .buffer points to the start of the buffer
+> 		char  *buffer;
 >=20
-> >=20
-> > 	int
-> > 	main(void)
-> > 	{
-> > 		printf("%zu\n", sizeof(struct seq_buf));
-> > 		printf("%zu\n", sizeof(struct alx_seq_buf));
-> > 	}
-> > 	alx@debian:~/tmp$ gcc -Wall -Wextra seq_buf_size_comparison.c=20
-> > 	alx@debian:~/tmp$ ./a.out=20
-> > 	24
-> > 	24
-> >=20
-> > size_t and pointers should always have the same size, so this doesn't
-> > change the size.
-> >=20
-> > Am I missing something?
-> >=20
-> >=20
-> > Cheers,
-> > Alex
-> >=20
-> > > Yes the seq_buf code can be complex, but it's in one location where i=
-t can
-> > > be highly tested and verified. The point of seq_buf is to do the comp=
-lexity
-> > > so that other places in the kernel doesn't need to.
+> 		/* .p points to the current position.  This is the last
+> 		 * '\0' that has been written to the buffer.  On
+> 		 * truncation, it is a NULL pointer.
+> 		 */
+> 		char  *p;
 >=20
-> We could look into updating it to pointers later, but right now I
-> rather keep what we have. Let's focus first on the new stuff. It's not
-> that hard to validate.
+> 		/* .end always holds ARRAY_END(buffer).  It is a pointer
+> 		 * one-past-the-last character in the buffer.
+> 		 */
+> 		char  *end;
+> 	};
+>=20
+> This would be initialized as (of course, wrapper in static inline
+> functions as needed) this:
+>=20
+> 	char            buf[100];
+> 	struct seq_buf  b;
+>=20
+> 	b.buffer =3D buf;
+> 	b.p =3D buf;
+> 	b.end =3D ARRAY_END(buf);
+>=20
+> Then, you would write to it as:
+>=20
+> 	b.p =3D stpecpy(b.p, b.end, "foo");
+> 	b.p =3D stpecpy(b.p, b.end, "bar");
+> 	...
+> 	b.p =3D stpecpy(b.p, b.end, "baz");
+> 	if (b.p =3D=3D NULL)
+> 		goto fail;
+>=20
+> Then, at some point, you might want to initialize a new buffer out of
+> the remainings of it:
+>=20
+> 	struct seq_buf  b2;
+>=20
+> 	if (b.p =3D=3D NULL)
+> 		goto fail;
+> 	b2.start =3D b.p;
 
-I agree to doing that later.  But I want to do that later.  :-)
+We can actually avoid this error by setting up the new buffer to have an
+empty string if the parent buffer overflowed:
+
+	b2.start =3D b.p ?: b.end-1;
+
+This is probably related to that empty string that has been showing
+in seq_buf when the string had overflowed, except that here we don't
+need to point to a new string, but can reuse the old buffer always.
+
+b.end-1 is guaranteed to exist and point to an empty string if b.p=3D=3DNULL
+because b.buffer must come from a real array with at least 1 element,
+and the last element must be a '\0' if the string has overflowed
+(actually, truncated).
 
 
 Have a lovely day!
 Alex
 
+> 	b2.p =3D b.p;
+> 	b2.end =3D b.end;
 >=20
-> -- Steve
+> See how simple this becomes?  (So much that you may doubt the necessity
+> of the set of APIs at all, but they don't hurt much either.)
+>=20
+>=20
+> Cheers,
+> Alex
+>=20
+> >=20
+> > -- Steve
+>=20
+> --=20
+> <https://www.alejandro-colomar.es>
+
+
 
 --=20
 <https://www.alejandro-colomar.es>
 
---zsjp26ojlrv6u6zv
+--oqugeyshl7gyv6bo
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrbKpUACgkQ64mZXMKQ
-wqmj2g//ZgaNcpMe1IwPzGwZfKQoe914qKdnedl5yDSYSolRspEbdX2b/CD3Isx1
-FnP+ysXQB7yGyOi96xaCuJAhA8Wg+JR8Ueev/HTfHUyJf2L27r64lZA0JT8cm9Pn
-s83GPB2dLAPi5h0HtIziznvWv9sKljSONSCY1LdHV1JefhmoaQW8RIXTLCcuyMCp
-xgIw++a2OgwEOldLQotCGX6pEJGl2tvCaD4SLb6AqkXQs2+s9I/NTel918Xq0uYI
-gkWlJRocxpraQ4LUaexyZgeHdVRdaI+/NJeiyJZQVVD2ExP6Lzbx/9NZ9prdtEmU
-2HadryP4xqiyRCH7M44Smibu0mlThsXUQL2dZF9riQBDk99FzF6oh64il/Z2cwip
-eyAbyR3JaDxcqath8iitr7VaLl+hy3ePZTqOe8gdQxkDVTp9Ut7fEzFC8JhKqU7N
-DntfKdaK93RmW9I0jdnHHSjOpPYwvORJG8ObBujIpBpSohUWQCC3by1BFbOivBci
-/gfW7rICOzlwMb7Cc29x+1IpoFG5DrAIZ+nq0XY/dgXKFeBs2cCdH0SU+L7CSMrG
-nB4oE5gn4ArQ/hJPf9Omx0iRSKNTEKT+cyWjRGwV0ldaywxG/lfkX3OxhmvYog7r
-YSqspcxkYx294SfqEqew3Le+99kC1wOBNV6rp4FZbnFqAfEjF+k=
-=eCEg
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrbR0wACgkQ64mZXMKQ
+wqn8wg/+JwZwbgZHdogknBMXq+EuRjfkfHcqy3EWKgEz18VoLqyjFjAnCyIp3Efs
+67ZkySiDjeV8dXvdfQvwUuVYiaLEa/bCdDzcDxSbdqpWrvX1K9Cy7Y/CWm6W4hTq
+SPm4liiM6PQdc5hdrsruB5vxfyYhTYoNWGPdmgzknsntB/kHqL+5Q05UtG8sY/7b
+ERvdobT7pNV0GmF5x/x01YSq67Y63W1kO54iAlz+dGrwVeP1qhA5X1ly8tjXuHOK
+ocg5ws0yyIx+HLJLVAbDD3OAouQKclDHNK1sObl7U9OsQ6yqQaWSaT0SQV1uIwqB
+/Tg0tnZ9NWGw2dImmyQ/1dEvH+7J9d/6GeAT/7B/PJdK9bYnhZaYVLifvxhmiifd
+xAgFbacE8498YTkrmeSrFI1lh/7sYYUItnUJgDMDWVskOVLXktT+LPb1Zrs6CeM0
+SjCxSHB2d2VollqWVev2Aee5EvvOCVmeDSPviqpv1S6lVgW8nTE/tzqIR6gUrSiq
+bLczAPkqn6kPb/0/2gg9M4KJv9OOqXu3Ej2R4oHcGekUU4rKOadUxoQqmMbzFGI9
+rijhqs7JseeWlzTPxy9JzcaoL/Hj2CyXA55iLD+IOoK/I2uyD0TLmNEIV/yJLpfl
+iLsw7Bv8YitAQOr2qYTfRPt0i3fVyQQfL6vkBjB0RsaiGHuujdE=
+=U7V2
 -----END PGP SIGNATURE-----
 
---zsjp26ojlrv6u6zv--
+--oqugeyshl7gyv6bo--
