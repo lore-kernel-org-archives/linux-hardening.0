@@ -1,124 +1,106 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=205.220.180.131
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792768606;
-	b=zF5g6qGJCN+F0VsAg611Cccpd0GBN61HS/P4Ax/K2i1MwSsoNp+CZ9nTVJWjlXk5lb/m
-	 d6ev1U9D+ZiXn1uT6QDFsbG85VophpK7TqGF5v8gRY16hcbN9UhFR8ovPGexxSs5POUP3
-	 +ZYpgkdR9Gt5tgvUO8t5SJ07blvG5vKqzHDjO/Kchdex/9RqIxshCxyFMpF9VZzFh3xDD
-	 2A7NlvZYdYZAEd6R5nIsTuloK7TGx9CJt0fMkPe4WcUBgBrzaV0JNEf7CtobNS9EQPEbw
-	 3S5JYSPWoKf+I4ja/a+6TnF2BvgsbK728XaAMCoY1gsCWGuFBbLzbn7cxrTvtM8k6Tw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792768606;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:
-	 Cc:Content-Type:Content-Transfer-Encoding:X-Proofpoint-GUID:
-	 X-Authority-Analysis:X-Proofpoint-Spam-Info:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=ntGLFzlDvuBFajhsf5fvpyP7EbCcLO7E8qSpRPn8wxs=;
-	b=fTBq3YnsXqPkL99tuwYHIdZPA4kulVBh8G1QN/FH7KAPJg8EO2dv757OErh3SnvTycop
-	 daK8kmSUtdl+3V5mmpF+cypOYOLs+/P7WCDtRrCMZUCEU23C2iNRqCq0w4UH1XZ3P1jbi
-	 ggfFn8hZij01sUiHPXDCjzBbMxjojmy7zVxoz3quGlPa4+XeqnY983F2PhzLIF3An1oIh
-	 Qw70oNUwGr9WoFU19Zi+ejVUheKNmKYa+vs3Tqm13D/XnQFPB5zg36YpzaXibry1KWExA
-	 GY2ID+aiNW+GEupn5m2BXSIlT0Ftpyl+YOdkDq4/U8JzLhoKulSsi/knkNFFg79VA8w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=RuZfbKXK;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b="L/3gk0HD";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=205.220.180.131
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.180
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792799680;
+	b=myaIxTL9nUxV1TyO8qlJb9G2TNJCoziu0f0TPF6LtAxmRtQplP13Hj+0fuwqwBLZ1FlJ
+	 AVuJ7HB1RFStRik29vXM0Q19Qy1xvI/p/cRwwQGhz6S5lH3TfqRsmnWZ1xp8b60aCss5+
+	 nnEYUUqQgkr/0DyPE+F0dDkMeMVTj9s3aZ3FM1g5SH54valOrKzL0Q5QzNurih5aWTW1M
+	 zF0IA50DapDaY3F8O9/WG7z8VBT3Xck5IEZSSZPnBfsu+UwyPan7qMwkRBhBIC3+fA1rT
+	 RArv5lCarM3ODXPuDwtau2iEkSGSfPDpU3taSy+uWMJSoTD7lxmyAngVocJosJ0huAQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792799680;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=WyWU9QEly82UAo6bEoWPREDKCLnVhT5ADM2LPpXyEAo=;
+	b=2vGNQ1MGQhS3+HL7wnFSLsw5YV+uekJtudl7Fp/JaUhT3XyycVGK7KoOk7Ypsp506A7o
+	 sSupL9VnviRav6MPIwk2VL3y8o+aB6pzYW+vxZ8EsbSu1eLbIgv3IPGYpfLaubJhQITE+
+	 3tYQdtYzgmm5/p62z7QmDOlCIbDhQ2Hd49jnN2BYKWn1iCc8fljilQEgLEARNMmtAb/Zt
+	 2GZBuO4Q11FNMihfH0Xl8xqprhLORIB87rbyxTJWEWNB/8b9PzzDBhm2oMB358IPxpqJp
+	 nn3UOiHq8H3mMZVjKKvmOH9M9PpuJZR86YCFlEVMNOUUyEO2miwvSaawkuudn3LHxMg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=chromium.org;
+	spf=pass smtp.mailfrom=chromium.org;
+	dkim=pass header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b="eipMIJF/";
+	arc=none smtp.remote-ip=74.125.82.180
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BB6606A31B
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2026 15:16:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 96BB6606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C11606A323
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2026 23:54:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 96C11606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=RuZfbKXK;
-	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=L/3gk0HD
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69NE6IAQ3557697
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2026 15:16:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ntGLFzlDvuBFajhsf5fvpyP7EbCcLO7E8qSpRPn8wxs=; b=RuZfbKXKE7ctzwuv
-	czGvcZJqzCy2XCLn0xdke+X9ts8FAcun4WTZQCudkdJKnb3xdFnvARNiR8w9By3I
-	NwA5f19bmPM0F4/1N8NdyKMtmcsewJn8V8CTbPlcN5jFBP0GZaF5wiyzsdocXvUS
-	xcjmTXDeIeiuipdkZxzWk07LUQizJOAFh6S/jElNl3n7/mp18BKLuVQ1wp+bgk9l
-	+FcF1qB2p+MZRT0ltDw0JQzJxLrzFY3qx4BmkwskNY9DfkKwOgNAhobCbeqgzD3C
-	K4wGWwxI6rnBtUmB7j1FsuYzVYhAGBUyEOeSjKp4k/YEspItviojK8felV6wchif
-	2pd1KQ==
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hfqmjc9xx-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2026 15:16:44 +0000 (GMT)
-Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-55bf11583d9so763677b6e.1
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2026 08:16:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792768604; cv=none;
-        d=google.com; s=arc-20260327;
-        b=EXQXwbx+fsV/nngxe0yKGD3NvMu0FNwRvrk4qxBUM3WyYLHuYOmODEEJ/0/joYn1u7
-         2iNN7O/rX4isbqWNZLX711U/lL48tS88Sbm++RgVPcGDrNW7VIwIlyVxF0d5a1SIkpnk
-         SuBz2WCdJ9DaVaoQJWRPOS07SbOc76+hemlZl7kIspkN5+lr2EIrWweyXH1ufsDjZ8AI
-         pGBhzeJCEZNZCUWHIMikL4rG79qcFJJwomu6yYzhMxzbMXp+tPlsyvNAVEduiRhMayXR
-         BX7SCj8Rueavdw3TLRuDkNbcAgNF8wLfZbKj/dvxQVL1/y2LADFkldTvaHf/c5vNLRla
-         0vRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ntGLFzlDvuBFajhsf5fvpyP7EbCcLO7E8qSpRPn8wxs=;
-        fh=IcpSbgZPQTKAbdplgeBD2SeskwCQ272eusENxH0GNzk=;
-        b=WD59bdUvtCj1GOeo4et5EiYzG+uYXryGL218UQV5KSvzw8/glyxJx1NTU3GDtWmKH5
-         0vMfhxL/CbQ/J9j8wBwuhrvLWIhX8mRb2goZTotWe4FR54Ntl/u6f4Oacrp00TR2dh2g
-         SGBj099+3wk9w/laO1f/U4cJDUCfX8vvEl3kKuPkPT4xijGqyGZxTyw93Ph8dGfRiaSi
-         NsFgKhTnFFekCXyWu8YvfhGJIdcN79eLbZyBYI+yqoM/N+HmUtVkJLj8ls+iNUz8XNbU
-         25cJPkusfxDbWLbwUUj5qSfQ4Q4JcS51/5CIKQ4ckeUdr9uQO7E4XuIiTYy0jbF2JClp
-         cT/w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key, unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=eipMIJF/
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-33fb4680717so1622323eec.1
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Oct 2026 16:54:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1792768604; x=1793373404; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ntGLFzlDvuBFajhsf5fvpyP7EbCcLO7E8qSpRPn8wxs=;
-        b=L/3gk0HD6tLj0ZMPDOtdsa+nHmVehU9lqltl0YMtrsiCyjkNKDAUGtTK7TidLO0J13
-         4Glq+DZlulePmP8lbSje8FLFth+Kflvb102fMF+2QL3K2UPB+heJ5IyelRUFwQ2oUnrW
-         zczr4NRYMDe97XpWM3OG1uJLgQmKpeub3DBya9SLloYZ5t7oOYQomwu1QIsOHjiJh+xP
-         L9sybaznrBAP7jvBIa0J80WfrHJ44b0U2l3t2lkDLCXFClMMbgKX3dNDXCytRG2+SVqG
-         JwFEjOMn8DLU96XThSZW6bfSylys1yjMUXUNePQ8vSeFzbRPbF2gNDeiiMAEf3fn1EyU
-         IQXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792768604; x=1793373404;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=chromium.org; s=google; t=1792799678; x=1793404478; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ntGLFzlDvuBFajhsf5fvpyP7EbCcLO7E8qSpRPn8wxs=;
-        b=sXJWcS/l/UX2ywGf1rieAcW8DfO/Q0QG1USnsFxiBzdpf4Nbf0f8hHLI4LXi7+LK4M
-         MioMtaLXARalwkANpEObYKptAR+IGXoyL68Ok1RNUXehP1/A4YW1Rk4foLkZurTfaRDL
-         afUXjPLWCsSEsoqup+6YZxcRSnodrFRyhXDtNV0iyncN8j2jN2qDu+nmyf3j2/l6r1Tm
-         OWFLirW/q/3OXByPffzvV8ZccYTrhmK0aDzj3vUdAXFTiJkH8fiUPPCYQovfMLw7VFNa
-         Z4YaSPUbWnm/81VnVCAw45oPf/ZpiKJwdRR/Q9Fup2AITc/0k5NudyBVYe3I5SfhJHyh
-         ZZPQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwt2Q7iPPF8SNNQPbgZ/JCgd3BF+wwbMZKnymdyNi3dwtGpmh6YcNlld32xTXyzpDgCIoJg9sJobhgv2Y9Roe8=@vger.kernel.org
-X-Gm-Message-State: AFq9FYJi71d5LMioXq69UsSsn1TUhg74A//wcMAvziZJNFuLMuDYPBO8
-	A9pxOmz+ST01Fa4oqmYoQWU7+ZA7C1stGEW53aXfBGgLKpzWMr2uFmJUzSDiyvCszUoYB9+a6jW
-	RR9suLDcRL12MxUy6xab7CTIhQVm5YRNMQ8W/euA9WmJrIS8vjwo1CWgAE22lgnfCv9ByFH1R5L
-	239Nju4o76iUSkh96/s04u13NdrVAgjBfdRXwLqEYS5p9Ayg==
-X-Gm-Gg: AYBFou0/bk2NWiCso05Tbn6yyK1/Wg+kSPGlk72rvBUxrQD1MiPTjNiApwPbfZfs7J1
-	lUnSJ/ygnbim/OEjPPZw9sIJ6MjAhapvoreDPJBvP/wLJHEbpWT6O8i1lLWJu7SD4cW6CgY3mIz
-	N+wXd7OM136Gl4uacnXm86tqf8HM4BHjPI6R4gofPgxIBT12Q9Ab7PtI0DkJLhsZQFlCuPFnBzw
-	jPC9XIkgNkS20zHVmTBWfAoQWvM97XLfhAjOMGsnvmrEb/55IVRoL+gQsWqPbAZdVgSc/SHoGQ=
-X-Received: by 2002:a05:6808:6f86:b0:4b8:4703:db91 with SMTP id 5614622812f47-557eb47d075mr3061858b6e.26.1792768603825;
-        Fri, 23 Oct 2026 08:16:43 -0700 (PDT)
-X-Received: by 2002:a05:6808:6f86:b0:4b8:4703:db91 with SMTP id
- 5614622812f47-557eb47d075mr3061832b6e.26.1792768603405; Fri, 23 Oct 2026
- 08:16:43 -0700 (PDT)
+        bh=WyWU9QEly82UAo6bEoWPREDKCLnVhT5ADM2LPpXyEAo=;
+        b=eipMIJF/+KiVQoBZN+1mDNs4jpn5iVKTQzVaOmEwNVdkZv//EFYFN84Vr/Rp+XGnqO
+         VAlB9tdAUPkCE2Z2mD67sGfMsr0V0D5DI6PwjFTZ4LZJ68ZOQ4ThjufDPggiftsXLg90
+         Lb55duCnTzex3vdlmqcdestl/quKPw25iGd0g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792799678; x=1793404478;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=WyWU9QEly82UAo6bEoWPREDKCLnVhT5ADM2LPpXyEAo=;
+        b=QMw4PlsTldtWwlIzfrlefjDY/5YL+gikYzg0t3YbDEhCzbG8ijvrRL1ci5kzughG17
+         N2ZR2v82fMRF3u8yF5dVJB/Wnkk/jQHlOV8pM1cDH63aH+DAnSFdzYr+tLoezc72Z+sY
+         intLRd9+4QwQ6alzFZXN323+/DLjE/4QqPROzQ2Hc/WVmFs0ajtlh2eu0TTo14kHx9E7
+         5TuxtsXGaUErtxdYCq1Rk4dRZEI4IvnyfxpgyzaL0BDstI/B9jlnWNI/TFQ1vbN7dtyy
+         zDTAszEgBiN3K2f0zRlAKotXCLe3DR23o1rLLK/OQ9nHMB9lBjurdPZIqxGK27pf8yof
+         qPBw==
+X-Forwarded-Encrypted: i=1; AKwUvBw+v7nDsYnvaPAfdyOMRIbCfGOBMPrxidmHr0BG/jWre2PAFgzApkUHDzOzmmvIq+mwDOwD7Z/7OjjGGDDeQ7I=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKsbwHob39ZhdZf6dTdYguJYuvdkXltpDqcAmQvE9UvN7dFwUBu
+	auSEs1am6x/9QimnMyTOY5OSXluy81HAeu6wykapiPluMu2ggYX1/WuJfwR5DJ/gGlzzrTmJl9R
+	pcDJ+lA==
+X-Gm-Gg: AYBFou268j8ll2FF2XH7T3jqZqyKDX6XEZfPrXHPfXFZPx3wFTk5cNO9AZaIExqAbqY
+	ZWeanBNkimvDEwzN6no/eqfXhMnz1JbSXxseT1iTBzX7qeRX1sUiFDypgexpud9aQwc/jspUhK8
+	hdBLLL25ECiPyEuH6TiaxQ3hhLNatQGx1LyVkCiOvLs9NrDmjAbhd3NdHsxTdEQIqdIRQYkafd8
+	EJt1JmW9U+oZZezbffPQqdouZxpDYvbPhl64TFww7rq1Zdq67iERhWTJ46BycHSqbL5J726yTLg
+	zYkv/X7/IpnRRewmAqly3xwVpDLM5ZKTJhnbsUby0nK8of7iemqLGJYTak4qa7fGfIdDFO02Aix
+	Afmutj928ff40WTOtQPW/mSHKEUWYX/JzIY9hhcz/avL286RPyaT88LaXt+ILkFbW1oRKXGd4UL
+	9IazCuDz02OIUImBD+bFabMO+GHsg5mQ7eygyNPotw0T5UYSRL5eJAjs3r2EnNvsXInq2ZqQ7Pz
+	DPB353hHwOTiiiHDrghK+TjPugZZ+QTSt1/YagPq2o4vHO3qq2mZO4/R6mPlpfCDSAqTP1M6Pvz
+	6NHdRpk4K6aCAYgadeYydyUDih6TT+Ea/B/gOMYc
+X-Received: by 2002:a05:7301:1694:b0:366:eda6:8dae with SMTP id 5a478bee46e88-369e84b9a3amr1401168eec.18.1792799677639;
+        Fri, 23 Oct 2026 16:54:37 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2a00:79e0:2e7c:8:f8c2:b3aa:f878:2faa])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369e8daf444sm1460608eec.18.2026.10.23.16.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2026 16:54:36 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Joonwon Kang <joonwonkang@google.com>,
+	Subhash Jadavani <sjadavani@google.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Lucas Wei <lucaswei@google.com>,
+	=?UTF-8?q?Andr=C3=A9=20Draszik?= <andre.draszik@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Brian Norris <briannorris@chromium.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v2 0/4] mailbox: Improve the mbox core then introduce the goog-mba driver
+Date: Fri, 23 Oct 2026 16:52:17 -0700
+Message-ID: <20261023235408.3063350-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.56.0.257.gf7497c7d27-goog
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -128,100 +110,80 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261023-camss-isp-ope-v11-0-0c2937195298@oss.qualcomm.com> <20261023-camss-isp-ope-v11-3-0c2937195298@oss.qualcomm.com>
-In-Reply-To: <20261023-camss-isp-ope-v11-3-0c2937195298@oss.qualcomm.com>
-From: Loic Poulain <loic.poulain@oss.qualcomm.com>
-Date: Fri, 23 Oct 2026 17:16:29 +0200
-X-Gm-Features: AclHuK_gI7FsS6nJkI8EHAiWfGIfmG-kFFxZK8IqQe2rUZA0KJsBBIIrHA95LyY
-Message-ID: <CAFEp6-04RVyYG1M18Dh6Z3J7MycTb-WdMkHxyyVPfyiHVK0z3Q@mail.gmail.com>
-Subject: Re: [PATCH v11 3/9] dt-bindings: media: qcom,qcm2290-camss-ope:
- Document shikra compatible
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Loic Poulain <loic.poulain@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Bryan O'Donoghue" <bod@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Nihal Kumar Gupta <nihal.gupta@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-GUID: Xctm4iPSVfa3zkV38-GFErDs0koB4B-9
-X-Authority-Analysis: v=2.4 cv=cPR1IVeN c=1 sm=1 tr=0 ts=6adb7a5c cx=c_pps
- a=WJcna6AvsNCxL/DJwPP1KA==:117 a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=3WHJM1ZQz_JShphwDgj5:22 a=EUspDBNiAAAA:8 a=43rrA-HyjK99Vs58VTYA:9
- a=QEXdDO2ut3YA:10 a=_Y9Zt4tPzoBS9L09Snn2:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDIzMDA1OSBTYWx0ZWRfX2I1Hjxij3+Kw
- JRfOj1Dj6Tv6+r52SabwSUYRNpyTzOEFZ98mePAnPueqnGJnbEj7te3MgULjOuFdlc8wx+VP6Bl
- G0v8KTYh/OyIWwo8qo5FYXvmRuvhvqk=
-X-Proofpoint-ORIG-GUID: Xctm4iPSVfa3zkV38-GFErDs0koB4B-9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDIzMDA1OSBTYWx0ZWRfX7IFtZrmVYztr
- oGLJoTM6Po+lIl0QGs6opmtgcLQMfaUmN16WuRwfc7zrulq09STjJwJ3k9/cG2WUTWeUAG3TZLj
- Q7fyBhnRoNXFa3MAMS3VkJr25ADY0Vwc5C9ApBI3oXfGgvwvapJznJV77OKRnVIMdxBsJ/I5bZ7
- OLk0BI+B37Yz1zd+1gWBo5gbYB87IwtzM6xVeL4hpYWboAW7G9rYGmfcdbLVkEvD+SNc7YSDlXy
- XBrj8W41vCk363ZE+9Hnr3P49TzkzTPdY/ii+MmLuFlDpAHPtPKLGoQ47IIZQH6f1NStEGbxmHI
- UFIzCYamdHc8BmAUKX1J6oB5T4Im5IeudHq3vEc2GogBE7qpXr5rsWa4Ik4lz3nmdS+BqNcFxbO
- Y5rzMfVgFMiLWWE0fi3Rh3fDdnMVU2S6PH+KSfOjewXR8Txb7cQX0awA6XujaYD7DBB3+JAK3pC
- uoiWvu0aiQ+GR5Wkdow==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-10-23_04,2026-10-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 suspectscore=0
- impostorscore=0 priorityscore=1501 malwarescore=0 clxscore=1015 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610230059
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 23, 2026 at 5:09=E2=80=AFPM Loic Poulain
-<loic.poulain@oss.qualcomm.com> wrote:
->
-> From: Nihal Kumar Gupta <nihal.gupta@oss.qualcomm.com>
->
-> Shikra uses the same Offline Processing Engine hardware as QCM2290,
-> add qcom,shikra-camss-ope compatible string with qcom,qcm2290-camss-ope
-> as the fallback.
->
-> Signed-off-by: Nihal Kumar Gupta <nihal.gupta@oss.qualcomm.com>
-> Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
 
-Note that I missed the trailer update step and therefore did not carry
-over Krzysztof's previous tag.
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+The goal of this series is to land support for the goog-mba (MailBox
+Array) IP block that's present in Pixel 10 phones.
 
-> ---
->  Documentation/devicetree/bindings/media/qcom,qcm2290-camss-ope.yaml | 6 =
-+++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/media/qcom,qcm2290-camss-o=
-pe.yaml b/Documentation/devicetree/bindings/media/qcom,qcm2290-camss-ope.ya=
-ml
-> index f9c31bc88e94b028c241060bbd8e56e0bdc49af5..3359581bfb13e918bb4efb3bc=
-41749e60d772ef4 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,qcm2290-camss-ope.yaml
-> +++ b/Documentation/devicetree/bindings/media/qcom,qcm2290-camss-ope.yaml
-> @@ -19,7 +19,11 @@ description:
->
->  properties:
->    compatible:
-> -    const: qcom,qcm2290-camss-ope
-> +    oneOf:
-> +      - items:
-> +          - const: qcom,shikra-camss-ope
-> +          - const: qcom,qcm2290-camss-ope
-> +      - const: qcom,qcm2290-camss-ope
->
->    reg:
->      maxItems: 6
->
-> --
-> 2.34.1
->
+As can be seen in the device-tree bindings for the goog-mba IP block,
+the mailbox IP block in Pixel 10 phones is fairly sophisticated.
+Notably:
+* It has hardware features that support queuing, meaning that more
+  than one mailbox message can be pending at a time.
+* The "channels" in a given mailbox array aren't homogeneous. Each
+  "channel" in the mailbox array can have a different amount of memory
+  for messages. Really, the "channels" in a mailbox are considered to
+  be full single-channel mailboxes and a grouping of mailboxes is
+  considered a "mailbox array" (hence the IP block being named "mba")
+
+In order to cleanly support `goog-mba`, improvements are made to the
+mailbox core to allow `#mbox-cells = <0>` without a custom xlate and
+to allow mailbox drivers that have more than one sub-node (`fwnode`).
+For TX queue mode, as suggested in v1 review, `goog-mba` exposes each
+hardware queue slot as a virtual mailbox channel rather than adding
+queueing support to the mailbox core.
+
+This is a fairly big rewrite from the downstream MBA driver shipping
+on Pixel 10 phones, which jumped through some awkward hoops because of
+the way it got queuing to work. It has been tested on a Pixel 10 Pro
+XL (Mustang) together with work-in-progress Laguna CPM, pinctrl, PCIe,
+and RTC drivers.
+
+Link to previous versions:
+v1: https://lore.kernel.org/r/20260714222338.2965707-1-dianders@chromium.org/
+
+Changes in v2:
+- Rename binding file to google,lga-mailbox-array.yaml.
+- Drop generic "google,mailbox-array" fallback compatible.
+- Add "google,tx-payload-words" property for queue-mode TX message size.
+- Remove unused labels in DT example.
+- Drop "dt-bindings: mailbox: Don't require #mbox-cells to be 1"
+  (handled by deleting old mailbox.txt and updating dt-schema).
+- Drop "mailbox: Simplify circular queue math with mod arithmetic" and
+  "mailbox: Add support for mailbox controllers that can queue".
+- Expose a mailbox channel per TX queue slot instead of adding
+  `has_queue` to the mailbox core.
+- For queue mode, read `google,tx-payload-words` from DT instead of
+  detecting TX payload size on the first transfer.
+- Match "google,lga-mailbox-array" instead of "google,mailbox-array".
+- Move MAINTAINERS entries under GOOGLE TENSOR SoC SUPPORT.
+- Use guard(spinlock_irqsave) and scoped_guard(spinlock).
+
+Douglas Anderson (4):
+  mailbox: Allow #mbox-cells = <0> without specifying a custom xlate
+  mailbox: Find a matching mailbox by fwnode rather than device
+  dt-bindings: mailbox: goog-mba: Add goog-mba mailbox bindings
+  mailbox: goog-mba: Introduce the goog-mba mailbox driver
+
+ .../mailbox/google,lga-mailbox-array.yaml     | 226 +++++++
+ MAINTAINERS                                   |   3 +
+ drivers/mailbox/Kconfig                       |   8 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/goog-mba-priv.h               | 130 ++++
+ drivers/mailbox/goog-mba-trace.h              | 183 ++++++
+ drivers/mailbox/goog-mba.c                    | 621 ++++++++++++++++++
+ drivers/mailbox/mailbox.c                     |  16 +-
+ include/linux/mailbox/goog-mba-message.h      |  38 ++
+ include/linux/mailbox_controller.h            |   4 +
+ 10 files changed, 1229 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/google,lga-mailbox-array.yaml
+ create mode 100644 drivers/mailbox/goog-mba-priv.h
+ create mode 100644 drivers/mailbox/goog-mba-trace.h
+ create mode 100644 drivers/mailbox/goog-mba.c
+ create mode 100644 include/linux/mailbox/goog-mba-message.h
+
+-- 
+2.56.0.257.gf7497c7d27-goog
+
