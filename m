@@ -1,63 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792702966;
-	b=nyK2BXe6gkCvcDmtiLaJ1OYwccnlBtUNBvmnxnpYctpEDoeBrSfBlXOmFrD7nk4awzwh
-	 2d8mp/E9GpGMCK60YPP1tswRA44Jj3U/2rrMtc81N4GerQ7ViTK5cwr5ghREH6bKVU3kf
-	 Y8BwrtpkBYuqKeTJGPrhw8mqwebmBx6r2fykXrV52+70pB6T9hJj6gNQOG0HT+m9hDJHY
-	 g2G8fJeLX97k+GiVrRwySsH4gFrEa8hSW6ez0g0sEh6grKQDFlKTFSDul2tYD640AySMD
-	 4O9PI8ZsnRAv/W2Jsx2MR+qG/Qqwjgcto1gFJEu7gTqzNqhimI2KIZHv2vZwjoPvm2A==
+	t=1792715840;
+	b=PYnhTSy4T5CNLXFN8XEF+5AQBof6kFUh8rIpSYL80o7b0WMB5XLCWDUqVMv0BrMEhUG/
+	 3/8+B/wpvNlOx40r+4jHzTkd5/cMeIey0GyQ180WPxDJuXCAPZPFM7j0WEmFX4RgX9U09
+	 n7zLsJjcnFp/HydjKpy8tM5ofmJm9JysUn3vBGLTK5CHmyklkbUgY0pbB6sEktmGT/K+4
+	 RmuE24fWHh7Z9evRpguczmdQssZI30lXO9b81m2dhCR64Hu5ntQ5M1oWJi6DwIznN+YfH
+	 89c4kMDZ9AjyGRZAN698F6Sw1cEUSDKhq3KkhLTgiGQKFpxrbYz1Uoxu8zLpAHfyc1Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792702966;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Tj37OmA+fKNRhE1Yis70rKCpc+GQO8jtJOfAeK4DI24=;
-	b=qGMTGCC3kuDWrouz2MDM6AsmM01Vv7oybZ8mY3rU7qw0a8KCWcegvIUl/A6jFGYOBV1k
-	 Zw9Gr5llWIGMtuxJSqQ+9oKU/zSoHi68JqwQBTGIWVWiVzs4uOM2Kshlz6AujZVW2SENP
-	 cDaAGpkbZWndyCJOahkLgAztCigW6glJn1r8m+A09tYzOHQfYIn1l9Msi5i04zpRMkRCr
-	 Nl4PtaqTU+0r5cIgrx1lmXJ0lLDKWJOuf5ZKqJQ712tvZP9d2gdSPwmGhYakVeUOJAcj1
-	 /TeLCx0z2augivdq2PTr6PJNSPUwzwaHqxUZ3gbVCg5e6VmRJZ8BJIAyfFhBeIE1C0A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792715840;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=axXiTUjtvwMFRrIO/ly38Bs5w5xgTTTJQ7iKGaFvt4c=;
+	b=BTo/151nW/swcSj9UV/nR49Oe1pVgl+zRS9r0uHoJI2ZJCUDw4B32+rqi72iBU3PQJ89
+	 xICfAVZslAdv5EBmYj0zDQlx2PSpg4LnilS8YFxFDNUEfbAfyZAY1JmvC7ETJ+v35/QAP
+	 RMxt1zpo+T17VFfG5kGQ0kuKrzD7097YbL6h7LrquWmjyccsjQ/ofDxsbIG/2/dz5WBan
+	 34UX5Sou1qpyoQz0WpfQBobSWakiaHgLQ9qyvupTEyikmtqFwsSNwVqD7c/fA7yp4tw6X
+	 AYeTksSKW2VEBm4vqmA0SNiMx6eVSL2zXWngIRDTZ7ASAc1/to3UWSWbgAAGkvPQXXA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jAquE23J;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=NJAieMiG;
+	arc=none smtp.remote-ip=216.40.44.13
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA95606A31A;
-	Thu, 22 Oct 2026 21:02:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2314F606A31D;
+	Fri, 23 Oct 2026 00:37:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2314F606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jAquE23J
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 049CB1F01825;
-	Thu, 22 Oct 2026 21:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792702966;
-	bh=Tj37OmA+fKNRhE1Yis70rKCpc+GQO8jtJOfAeK4DI24=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jAquE23J1qKmy9gw4YNOQvQ8blj+GO1/UfILYA3orebphMxHa++Fj+H1EWQ007chh
-	 oOcWf+Rz5eplf8HuGz3GTmlqoR1+oq5APAgjLvV/3EOYOxgTdnKAV7545npyLtGYei
-	 pBnNvSNli3CZJ/x0QpsF6MNpqLZwj5rrAaRqtPBr9VW9ryG7shuMfZGz//KstmaUFt
-	 6EPAND4+ETavC7bLqUs5/Hjo0bGlnRewTARfgS6xpXiBnNEZw8LexUSzkMskFfDeW1
-	 tl+CawI0Pxa6BQgRYoXLtPGNTbwMct+A6rXRc8kWuO2ZPeRzpozIQEhVfFh2w0x+uQ
-	 BAA73Wlqv505g==
-Date: Thu, 22 Oct 2026 23:02:36 +0200
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
-	Shuvam Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=NJAieMiG
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 67EA54034C;
+	Fri, 23 Oct 2026 00:37:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id EC75C2002C;
+	Fri, 23 Oct 2026 00:37:14 +0000 (UTC)
+Date: Thu, 22 Oct 2026 20:37:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alejandro Colomar <alx+linux-hardening@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, "Matthew
+ Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr
+ Mladek <pmladek@suse.com>, Shuvam Pandey <shuvampandey1@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
-Message-ID: <atp4vVMyX65qYcAt@debian>
+Message-ID: <20261022203713.1adce485@fedora>
+In-Reply-To: <atp4vVMyX65qYcAt@debian>
 References: <20261005155653.late.426-kees@kernel.org>
- <20261005155708.1471260-6-kees@kernel.org>
- <20261016145928.16eddc9a@gandalf.local.home>
- <202610221058.C5626C5172@keescook>
- <atpmAQ932J3_8IvJ@debian>
- <20261022155726.7f20c4cb@gandalf.local.home>
- <atptYsHyS6YGtzPV@debian>
- <20261022162000.18aa4162@gandalf.local.home>
- <atpyCU3fDyU95hbY@debian>
- <20261022165336.3100a5be@gandalf.local.home>
+	<20261005155708.1471260-6-kees@kernel.org>
+	<20261016145928.16eddc9a@gandalf.local.home>
+	<202610221058.C5626C5172@keescook>
+	<atpmAQ932J3_8IvJ@debian>
+	<20261022155726.7f20c4cb@gandalf.local.home>
+	<atptYsHyS6YGtzPV@debian>
+	<20261022162000.18aa4162@gandalf.local.home>
+	<atpyCU3fDyU95hbY@debian>
+	<20261022165336.3100a5be@gandalf.local.home>
+	<atp4vVMyX65qYcAt@debian>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -67,131 +73,70 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nwadrhiqndqcdlwt"
-Content-Disposition: inline
-In-Reply-To: <20261022165336.3100a5be@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 4hdp6ykrbqhmh6fh37tmjh3b6cr3fcuy
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: EC75C2002C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19jZHCAHt0bGbMwk6BQ39qd8dVWDXz4emw=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=axXiTUjtvwMFRrIO/ly38Bs5w5xgTTTJQ7iKGaFvt4c=; b=NJAieMiGRemya9h0G6J0k9xdE0tqsZ88GSAS1JsV9P0ETKlN1JapzL2+psbnwxZSzRxVIpqQkoaIosfhnS9twO/gq8RmwDtgWlHqJkUap3Xryvk1KCpHFh9YVegQ3xsJOxqVz4GNUqk0gIM/SXvBcdeAcP5TnKWKDSPYQDTdNQA=
+X-HE-Tag: 1792715834-340845
+X-HE-Meta: U2FsdGVkX1+QXw1era8vos6X1aEaQNEyg3QofqQx7S0O/Qs7e60GjAIKiF2yl5nJMSiECwu+0BuzPpD5+S5sTXMDy9hDaJNSBSHTSe6bRF0ocypxUPGr0Q3h/KiQBt2DIHxsOCl7qsMPm0rco/dppq80GA72PP9IQY8oegAlZXwzDqf58AL+5trxpMgCx07QFD/5z658BG6+KfBBCJB0u4MmoIKRjJ/D8ijstepXDb5tUGm8t+Wl7/tiqmJGN3kccW185TP6/HWz3I7i6fcZD0Hrq1m8zRGmQ3vQMweWdG3rF+d5e3JqrfLJW6XIV16QtWJW5o/zsM5EUzyne/RlDqnmW4nfnM+q
 
+On Thu, 22 Oct 2026 23:02:36 +0200
+Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
 
---nwadrhiqndqcdlwt
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <kees@kernel.org>, Bill Wendling <morbo@google.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Gow <david@davidgow.net>, Petr Mladek <pmladek@suse.com>, 
-	Shuvam Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 06/12] seq_buf: Add seq_buf_strlen()
-Message-ID: <atp4vVMyX65qYcAt@debian>
-References: <20261005155653.late.426-kees@kernel.org>
- <20261005155708.1471260-6-kees@kernel.org>
- <20261016145928.16eddc9a@gandalf.local.home>
- <202610221058.C5626C5172@keescook>
- <atpmAQ932J3_8IvJ@debian>
- <20261022155726.7f20c4cb@gandalf.local.home>
- <atptYsHyS6YGtzPV@debian>
- <20261022162000.18aa4162@gandalf.local.home>
- <atpyCU3fDyU95hbY@debian>
- <20261022165336.3100a5be@gandalf.local.home>
-MIME-Version: 1.0
-In-Reply-To: <20261022165336.3100a5be@gandalf.local.home>
+> > 
+> > I rather not increase its size. It is embedded in the trace_seq.  
+> 
+> The size shouldn't change:
+> 
+> 	alx@debian:~/tmp$ cat seq_buf_size_comparison.c 
+> 	#include <stddef.h>
+> 	#include <stdio.h>
+> 
+> 	struct seq_buf {
+> 		char    *buffer;
+> 		size_t  size;
+> 		size_t  len;
+> 	};
+> 
+> 	struct alx_seq_buf {
+> 		char  *buffer;
+> 		char  *p;
+> 		char  *end;
+> 	};
 
-Hi Steven,
+OK, I was thinking you were adding another pointer.
 
-> Date: 2026-10-22 16:53:36-0400
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-[...]
-> > 	struct my_seq_buf {
-> > 		// .buffer points to the start of the buffer
-> > 		char  *buffer;
-> >=20
-> > 		/* .p points to the current position.  This is the last
-> > 		 * '\0' that has been written to the buffer.  On
-> > 		 * truncation, it is a NULL pointer.
-> > 		 */
-> > 		char  *p;
-> >=20
-> > 		/* .end always holds ARRAY_END(buffer).  It is a pointer
-> > 		 * one-past-the-last character in the buffer.
-> > 		 */
-> > 		char  *end;
-> > 	};
-> >=20
-[...]
->=20
-> I rather not increase its size. It is embedded in the trace_seq.
+> 
+> 	int
+> 	main(void)
+> 	{
+> 		printf("%zu\n", sizeof(struct seq_buf));
+> 		printf("%zu\n", sizeof(struct alx_seq_buf));
+> 	}
+> 	alx@debian:~/tmp$ gcc -Wall -Wextra seq_buf_size_comparison.c 
+> 	alx@debian:~/tmp$ ./a.out 
+> 	24
+> 	24
+> 
+> size_t and pointers should always have the same size, so this doesn't
+> change the size.
+> 
+> Am I missing something?
+> 
+> 
+> Cheers,
+> Alex
+> 
+> > Yes the seq_buf code can be complex, but it's in one location where it can
+> > be highly tested and verified. The point of seq_buf is to do the complexity
+> > so that other places in the kernel doesn't need to.
 
-The size shouldn't change:
+We could look into updating it to pointers later, but right now I
+rather keep what we have. Let's focus first on the new stuff. It's not
+that hard to validate.
 
-	alx@debian:~/tmp$ cat seq_buf_size_comparison.c=20
-	#include <stddef.h>
-	#include <stdio.h>
-
-	struct seq_buf {
-		char    *buffer;
-		size_t  size;
-		size_t  len;
-	};
-
-	struct alx_seq_buf {
-		char  *buffer;
-		char  *p;
-		char  *end;
-	};
-
-	int
-	main(void)
-	{
-		printf("%zu\n", sizeof(struct seq_buf));
-		printf("%zu\n", sizeof(struct alx_seq_buf));
-	}
-	alx@debian:~/tmp$ gcc -Wall -Wextra seq_buf_size_comparison.c=20
-	alx@debian:~/tmp$ ./a.out=20
-	24
-	24
-
-size_t and pointers should always have the same size, so this doesn't
-change the size.
-
-Am I missing something?
-
-
-Cheers,
-Alex
-
-> Yes the seq_buf code can be complex, but it's in one location where it can
-> be highly tested and verified. The point of seq_buf is to do the complexi=
-ty
-> so that other places in the kernel doesn't need to.
->=20
-> -- Steve
->=20
->=20
-
---=20
-<https://www.alejandro-colomar.es>
-
---nwadrhiqndqcdlwt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmraeewACgkQ64mZXMKQ
-wql3NA/+J2kecD0AF8NgnxOuKJBkL6tW7SHIExPHo7ltr04Has8hMB0XCSRA83W9
-k8S89DHv6ChbLZ/ubST01VPhdRFlUJIKG4Vw2UFpK4ejbWwI8V5Bqf1A5muKHXm3
-AEmTVxbGgJmqdZmbYKTnpkYpbc8x9Czvg77j6jWQaPXq8lE39b8kCCNwrIYHfki1
-Z7J3cYuOP10wzC3vb7cwDpmwSuveGl1KmMYDDngeufU99h0A6r6iG5i3qyJKAbID
-pl2yK/i61vHGKVwieh+zT0dXfQU9Mh+Kjd+4X9f6UqLlJEreNPocJR+5M3uDByoT
-6NGFsBjKngtllmmF+43cJISwGwFIPPmIxcue/WPgXM0hsQar2oyk3TRm4BWViswX
-dqDt20Q0Bmhw5cps6jmCvGsMGtMUlD6t2/tICMgukjt4+Gsa8YddRMt+jFucN6c5
-nIJA2Z+Vc/U3r0+2pDYaX+Qk8U23zVarsS2CGF9W5vYAsWEeJo76a/L4AgE9wYaP
-CQhBJ6krYcuI45JP/Bz7A9DJEe3L2s/caQjb+TdmBwaZ2ARLnkKbzRKNUWeb0DFG
-Y/NcQYn7LZrnFaOI8nx7XWDflFthzKFD3CfsETu5V7ur6nVQDd1bitMZrzK6s6Cu
-8aUmZwMCydAdpaLhFclr18aKIR5dkebk90FV+FkpyccJ5XCCoNI=
-=BPHW
------END PGP SIGNATURE-----
-
---nwadrhiqndqcdlwt--
+-- Steve
