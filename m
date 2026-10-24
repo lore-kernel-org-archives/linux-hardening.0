@@ -1,60 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792848203;
-	b=DxGskP0Pt+c16JpqK1scvOeaC0KkS2OgkNFIGFr5ZR06XhClhfgYtSAPmDv8wllav33B
-	 5xTN51xqjRsF3aP6H+sc6KeF6u6eUJCxwKF3C3mnYz+p8ZjvurHiuw1qvb0yd5hWvC8Ud
-	 W/+sXwNw9ZhECrNwaqpPF2qMCA0cjQgCr8hH7w423NGtDuo/e+2P0yu/NrKaFAjS6/H03
-	 YRbfPRSIoKhnyGg1zvQ+DS5bxqIrqoaElphgIb2GgdDKoKep+NZt1JfRoUZqRaB/ahjoZ
-	 py4Kc61HjYzeVy9nXEX9AN2JRwnGlNHMNtwLN82QlcYOA6E8Zpi5Z3EuZaz9n5tE67w==
+	t=1792851966;
+	b=MvGqBDspjMrOBU2CVBhO519E2RneDrK7FdQdq3iaUatv6+I5YN+dPGCwUdqqtlOm8k4J
+	 O13Dx5L63TjGJzWE5QHHfakX9JmKHE/1mlQ8euRNYqtJluejnG3+DFoehzh1tmCTAhuCF
+	 +0A595/nrsHNyBNyeoB/KtjthWtRTTTj7enm9d2QdSwEHxD6xDmIX2t7R/l/3thso5zsh
+	 pcC7sx0zJwn1l9+7pY+O2/D60kA+mebGTwmshVFwihAcYOsogWPQGFVJ3Lc0rDa1qi6E0
+	 0qyNaz7lU3OzP4kIvJQCz8c20Bs9n8zxtB2SGbLxBbU2pGHcFwEwFiefbKO6Pk8LidQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792848203;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=AenfdRm90WrSjoi864BFabnLzqWgO/qqA3F0PRLFjp0=;
-	b=L3u/c/TVi4fnca8dkn+MkD1lnrw/b87sNi1CYaywsZxDRcpqibg7IRDtKb2214an2kw/
-	 TEvwRI/GK1NP/dVBZEwsHhteNTmJ2gYIQCy690o0Qxo4Zu9RKZ9AmBIxH1iYvZe6L1n97
-	 +aXY4xFZSVUU+RHmIZZwhhwfdU5vh5QEBsa0R0Fld0IWzo9Y+VV0h44mnMiNLfC9pHzUI
-	 2bD2jENDK4xQoW+13VpeV0kZhiuH3xUhZTRI1hEKPgijQIa4B7r2+9vWGUKIAx5q+Edbh
-	 69HmPndCLUIvWPW45atle9oBKcEGp+IWjRBBgHiGOy12nDt2TYQ7QAto1EEqA2oSxeA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792851966;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Proofpoint-Spam-Info:X-Proofpoint-GUID:
+	 X-Authority-Analysis:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=QYgkOqO9DCagcN8giHA3Z4Bn0QqEAyxgbRKI1vfLIiE=;
+	b=2j/cX+7nk0NsCLNyPFy4B0zmHGqCyscQJ9YSZoUz7qDfSg/AqrcTzdf0lWqUXiKN9C4y
+	 r2bI93HHWsst5P0CvY4YHIOeuDxPR2858cVwDiX2vadC9sCwut8tFU0e+5XT+hG1Lmbph
+	 hayvWAQMyx4T8dab4cKgO68WRoxFLwYun/WZTuVLoZBn98nmq/ildYxJ37OYQUKnX1CAR
+	 ADRcPzeHyJVFsbmMaz2tIRXLXZoz05UVrYsjuVSer3NHKzSBqVCOc+X9/DH07H6qv1oDs
+	 rO4gJ9PKQ84oiF6e/URFQrawDrbziNLrqKSlXuVqPpbuEy+DbH58Mwz9f4FuRrl0o8g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=napl7AQi;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=eFg7piYU;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=S9Q6O+9h;
+	arc=none smtp.remote-ip=205.220.168.131
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332E1606A31A;
-	Sat, 24 Oct 2026 13:23:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92FA606A31A
+	for <linux-hardening@vger.kernel.org>; Sat, 24 Oct 2026 14:26:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A92FA606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=napl7AQi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B4EB1F01825;
-	Sat, 24 Oct 2026 13:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792848202;
-	bh=AenfdRm90WrSjoi864BFabnLzqWgO/qqA3F0PRLFjp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=napl7AQi2UiTBpTwoXjQ8MJt+9SLLnPFu7CuUVg7W/aRolDGozszZGUlIaGY+Cq/N
-	 OM471O3WWvM9+LNDFoZVYSx2OjzdA0u+FiDe6SRoEIwe9QgI2HgFtNIw0KfL8rNN1C
-	 32HI0xaj8v6w0CTprcI98iFZnFQKn2n+ja77zSSYDNUIBkUxaAMMZmyL7RNCmzuvYM
-	 xXu8APRXiotFV/J3gUsH3y1ycY8zXwuC6YoPteRB/kTOqpq87i/lshG/WOt9KNJ7l2
-	 2y5CPcgneTBH/sgUMaPQpWYCZHPWj3xP7tQ4BRrLucpNUdwqSrf25DUssebpwne0sm
-	 AqfzKMgSYqN6Q==
-Date: Sat, 24 Oct 2026 15:23:11 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Yingjie Wang <x-professor@outlook.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, 
-	Manfred Spraul <manfred@colorfullife.com>, Alexey Gladkov <legion@kernel.org>, 
-	"Eric W . Biederman" <ebiederm@xmission.com>, Vasily Averin <vasily.averin@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Michal Hocko <mhocko@suse.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, 
-	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] ipc/sem: reject negative SEMOPM values
-Message-ID: <atyvbQ5xxtxcxBZE@debian>
-References: <cover.1792808260.git.x-professor@outlook.com>
- <c2c9cb6d741fd9290c835679f9c209b147f74f64.1792808260.git.x-professor@outlook.com>
+	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=eFg7piYU;
+	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=S9Q6O+9h
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69O8o4142217267
+	for <linux-hardening@vger.kernel.org>; Sat, 24 Oct 2026 14:26:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	QYgkOqO9DCagcN8giHA3Z4Bn0QqEAyxgbRKI1vfLIiE=; b=eFg7piYUQmU/lyNi
+	NxQw4rol58Y8qyJX+gKvD72zmYh86B/z49D3Am84LnXyUTk/zIZd+QyG4nbyTtZ0
+	Hv7TEDTGadbKoLpwcnjBrCjHvwLEGzpboGQlxRqWerme97M6+DmF5vdwx6H95yMg
+	NbdUsoxEHt6kjxUhi/vwxd9IQXI9nqdjX6/m97rOMwDMrIU2WS1mly4ZGMa07Xq1
+	l2vZJcwkZsa4GquJ/LtEPIOMUSzL1/G6qKPtXiyBVRShT5rsj3btvZHXyeer+y/P
+	0aygViyVoj95wr1WJ5jDv6v2RV0QVVOSaKV9dpksSvMk7oJVcNOhc65bQsIrlNn0
+	FyEhTQ==
+Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hgjcgsegj-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Sat, 24 Oct 2026 14:26:04 +0000 (GMT)
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-154e9d2d94fso4201793c88.0
+        for <linux-hardening@vger.kernel.org>; Sat, 24 Oct 2026 07:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1792851964; x=1793456764; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=QYgkOqO9DCagcN8giHA3Z4Bn0QqEAyxgbRKI1vfLIiE=;
+        b=S9Q6O+9h6ZiV92iNkk9+LYOnN9zMSGy3Vh3VrsAa3SUunOfH9y9+ggFPZZ5mn6GnIn
+         4YMq/9fPKyaeBJCUoaegddD0/3/sBch1Bk8CnWmP0yHAHoP1ZKjMEzSdDgb5TUkeHadl
+         HgL6GZu76Z49Ik0ldR0ymM9zpz9W2hCGHuUAs7KLimlOrSuKRKR9h1KPXYvy/pq2QXik
+         ogl2XxqWCDzEarLsYg/NBR2HNe3bNlsnqVWMF8IrJt3VHeGkSf+QdZ85krjMMWsINvCs
+         JwTntGuRpIao7EOZ452ceU8ccT/kGfHmbDLig8y6Iyj7pKEFpYSBlO//QI/rqPi5KIso
+         RCrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792851964; x=1793456764;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=QYgkOqO9DCagcN8giHA3Z4Bn0QqEAyxgbRKI1vfLIiE=;
+        b=NxNMgdqAmSy556rtjKA4eUxul5h+fMD+jKke/T6ws5ZiZ/ADZDvLx7g6ZN3M0WJYpN
+         RPW4ZS6oh7sT5AQbRe1ZH+HkJTx6muHocA4CDr4+W69SNi/aKyTwBtpZdfCUy0CQQyIH
+         Jqy6QV5gFKWLGE3GJry/hIXcLY7eq+s8dN7e/1yzvTANMopl4HOGi/wJDJlonAf21pJv
+         +90X4wdQMoZOK3Fc3MA75UsSO8ikw6F2Ekh0iIu2FBqMIIZ4dQXfw9Cl4q050YeP/3kI
+         +1ytHiNGrMUsWf3XBtYUYDKauOlfVVbkrBKtKPf3iZAl5tc/CHjPOwbSSlfpirbQgM+Q
+         25/w==
+X-Forwarded-Encrypted: i=1; AKwUvBzp/6jyElJl7nczgYrTfSjoA9+etDHDmKrqlLXN3K1UEbAV/Kp+39+Rqlgd/5SojodHXgOlJnqo/K4N1D0zRnw=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKG4kO4e9sCgeFT4TdDwqu+Wogfy24rYphO6jLbOQRBcWadWBYy
+	yAGx/eVMK4b3VgjW6dGO2Kg8c0gXj9yiW6+GkEHV9WorGB4C498suzHOUdNebPJ6sKQUIGhCQhm
+	eIa5WRoR6NoYqG4siYNrPNi+Dlze2nX8HDMNBhOocMxHhk2Vrks1eF0j56sSZESAewO7UvLw=
+X-Gm-Gg: AYBFou1su3LA9By/n+JG20/fbFNZ6SQxyNsp41Cj0k3WcCwaMhHavAFGnXBziaxuzLo
+	OIYR25KBZfHsjK+4CWhGNb6F1aHpN7T0LmUDKzj9kPWP1XPmQpYK7rzrJiUIFmwPXoQnyzTfvfj
+	IsytQ57fKHGlc6oA6YJeonlD7YxiguL3NexhJIWAAeOZqwZQ0V4txh9sOtLuNN7wGVOB17theO1
+	CN5/EE0Me9jaBM39VN6ArC8EaUF3uVpTpDNmdFRJ9GrOsyv0GWCMc77J2NqbrGY5yci1TZkbIQy
+	+xey/srO6vpcioXQebVLJF6LtCeu/pHbSpihVb3Rmfcb85qxt+0duiQPVSzrq8PSew4QA9YNqvm
+	NIcPm7rstQftNww==
+X-Received: by 2002:a05:7022:eb57:10b0:17c:a0c5:8c9a with SMTP id a92af1059eb24-19936e39957mr3072312c88.42.1792851963820;
+        Sat, 24 Oct 2026 07:26:03 -0700 (PDT)
+X-Received: by 2002:a05:7022:eb57:10b0:17c:a0c5:8c9a with SMTP id a92af1059eb24-19936e39957mr3072265c88.42.1792851963055;
+        Sat, 24 Oct 2026 07:26:03 -0700 (PDT)
+Received: from [172.31.0.30] ([136.59.194.171])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-19894d5a470sm7004586c88.2.2026.10.24.07.26.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 24 Oct 2026 07:26:02 -0700 (PDT)
+Message-ID: <777f4cae-6945-49d1-aa6d-79ec6b40db18@oss.qualcomm.com>
+Date: Sat, 24 Oct 2026 08:24:47 -0600
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -64,236 +115,152 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3ypnmqpyuzbufluf"
-Content-Disposition: inline
-In-Reply-To: <c2c9cb6d741fd9290c835679f9c209b147f74f64.1792808260.git.x-professor@outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v17 2/7] kcfi: Add core Kernel Control Flow Integrity
+ infrastructure
+To: Kees Cook <kees@kernel.org>
+Cc: Andrea Pinski <andrew.pinski@oss.qualcomm.com>,
+        Richard Biener <rguenther@suse.de>,
+        Jeffrey Law <jefflaw@qti.qualcomm.com>,
+        Joseph Myers <josmyers@redhat.com>, Jakub Jelinek <jakub@redhat.com>,
+        Martin Uecker <uecker@tugraz.at>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Jan Hubicka <hubicka@ucw.cz>,
+        Uros Bizjak <ubizjak@gmail.com>,
+        Richard Earnshaw
+ <richard.earnshaw@arm.com>,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        Marcus Shawcroft <marcus.shawcroft@arm.com>,
+        Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+        Kito Cheng <kito.cheng@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Waterman <andrew@sifive.com>,
+        Jim Wilson <jim.wilson.gcc@gmail.com>,
+        Juergen Christ
+ <jchrist@linux.ibm.com>,
+        Dan Li <ashimida.1990@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ramon de C Valle <rcvalle@google.com>,
+        Joao Moreira
+ <joao@overdrivepizza.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Bill Wendling <morbo@google.com>,
+        Osterlund Sebastian <sebastian.osterlund@intel.com>,
+        Constable Scott D <scott.d.constable@intel.com>,
+        gcc-patches@gcc.gnu.org, linux-hardening@vger.kernel.org
+References: <20261005154028.out.839-kees@kernel.org>
+ <20261005154039.1464721-2-kees@kernel.org>
+ <65c57069-0f3e-44e0-9562-8867548a7443@oss.qualcomm.com>
+ <20261010080449.fe2893-kees@kernel.org>
+Content-Language: en-US
+From: Jeff Law <jeffrey.law@oss.qualcomm.com>
+In-Reply-To: <20261010080449.fe2893-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI0MDA1NyBTYWx0ZWRfXyK25UJ3ZLLUj
+ H4/W3hikizypg7eVJwMTE1SHaXXCcD+ozF6o61+ixOLNtSLFgpUmjkswafk1QzrhlCgSwB+cvtm
+ NDrfGVeivhrQOHgf7BO8bXD8lftOfq8=
+X-Proofpoint-GUID: e9QN43YwECKWUx4rbJ5o2SdxpRY-9yC4
+X-Authority-Analysis: v=2.4 cv=JvhkP84C c=1 sm=1 tr=0 ts=6adcbffc cx=c_pps
+ a=bS7HVuBVfinNPG3f6cIo3Q==:117 a=f0mOnocCY+QlKk/R9FCP2g==:17
+ a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22
+ a=YIYIA2ImUFk9vn_Vc48A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=vBUdepa8ALXHeOFLBtFW:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI0MDA1NyBTYWx0ZWRfXz3wHveZtNJhf
+ GFjsnONk6UxQZ3Z8Ha6D2uaEkPkNCSFbDHQ6FQ524ytPKn5QD2tHH6/75SS5ObgTxKCqP4HTjWI
+ Ro3B786cnn2h7csQAn8IUtG7I0z2Tt69CZfd86w91ZwjeGaog7N4ECRaR4t6YEIsZig9bhxwRlb
+ Y8rZZIvOf+49TkLbN5+GM0ytC7FDhOIRwU3zO3QK7CB8+kjI+10p8e5MHVThiNY9gLiQwoUk/Z0
+ 2DB4DuMDoa2w7zJmsaxs/w216NJLc9eOf3iKDr9/2AWLOTw7uQpPbecNdl1tl77G6kJ22urEhw1
+ mMA+OtJQjgWKRvRNHu3K6xdsLr/r8vXujjH2gLrkLVngkb17j0haJBp4GJrAVnD45d7z3bL5TL8
+ BcHjtIigDfrJsLkbm8rhdc9OAd7ozkuOF2U86NzfVSJ/b2jnPuFA9Xsyt6lKu4XWJ29JrMj2OzA
+ 4TqsxklZXKOiVvF7+xg==
+X-Proofpoint-ORIG-GUID: e9QN43YwECKWUx4rbJ5o2SdxpRY-9yC4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-10-24_01,2026-10-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610190000 definitions=main-2610240057
 
 
---3ypnmqpyuzbufluf
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Yingjie Wang <x-professor@outlook.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, 
-	Manfred Spraul <manfred@colorfullife.com>, Alexey Gladkov <legion@kernel.org>, 
-	"Eric W . Biederman" <ebiederm@xmission.com>, Vasily Averin <vasily.averin@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Michal Hocko <mhocko@suse.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, 
-	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] ipc/sem: reject negative SEMOPM values
-Message-ID: <atyvbQ5xxtxcxBZE@debian>
-References: <cover.1792808260.git.x-professor@outlook.com>
- <c2c9cb6d741fd9290c835679f9c209b147f74f64.1792808260.git.x-professor@outlook.com>
-MIME-Version: 1.0
-In-Reply-To: <c2c9cb6d741fd9290c835679f9c209b147f74f64.1792808260.git.x-professor@outlook.com>
 
-Hi Yingjie,
+On 10/10/26 2:10 AM, Kees Cook wrote:
+>> Pick one style.  You've got the parameter names in one prototype, but
+>> not the other.  The general preference within GCC is without the name.
+> I've fixed this for v18.  (I'm used to the opposite in Linux: everything
+> has parameter names.)
+Yea.  We're not as consistent as I'd like within the GCC tree. Hence the 
+"just pick one" rather than forcing to one style or the other.
 
-> Date: 2026-10-24 12:21:42+0000
-> From: Yingjie Wang <x-professor@outlook.com>
 >
-> The SEMOPM field has been stored as an int while semop() receives an
-> unsigned operation count since the beginning of Git history. A negative
-> SEMOPM accepted by proc_dointvec() is converted to a large unsigned value
-> in the comparison, defeating the intended operation-count limit.
->=20
-> Commit 50ec499b9a43 ("sysctl: allow change system v ipc sysctls inside ipc
-> namespace") made kernel.sem writable by IPC namespace owners without
-> capabilities in the initial user namespace.
->=20
-> Parse writes against a temporary copy and validate SEMOPM and SEMMNI
-> before changing the live settings. Hold a per-namespace mutex from the
-> snapshot through publication so concurrent sysctl writers cannot publish
-> stale values for fields they did not supply. Access the live fields with
-> READ_ONCE() and WRITE_ONCE(), preserving the per-field access semantics of
-> proc_dointvec(). Read requests continue to use proc_dointvec() directly.
->=20
-> Failed writes leave the live settings unchanged. Successful partial writes
-> change only the supplied fields relative to the latest locked snapshot.
-> The writer mutex retains the existing per-field visibility for readers.
->=20
-> Keep zero and positive SEMOPM values valid. Zero continues to reject every
-> non-empty semop() request.
->=20
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Link: https://lore.kernel.org/r/20261016155905.2a659b7bb7d61f33467a3263@l=
-inux-foundation.org
-> Link: https://lore.kernel.org/r/51c93c19-f1dd-455f-8698-6b1ee30eb630@colo=
-rfullife.com
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yingjie Wang <x-professor@outlook.com>
-> Reviewed-by: Manfred Spraul <manfred@colorfullife.com>
-> ---
->  include/linux/ipc_namespace.h |  3 +++
->  ipc/ipc_sysctl.c              | 35 ++++++++++++++++++++++++++---------
->  ipc/sem.c                     |  1 +
->  ipc/util.h                    |  9 ---------
->  4 files changed, 30 insertions(+), 18 deletions(-)
->=20
-> diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.h
-> index 12faca29bbb9c..c06568ccfca88 100644
-> --- a/include/linux/ipc_namespace.h
-> +++ b/include/linux/ipc_namespace.h
-> @@ -4,6 +4,7 @@
-> =20
->  #include <linux/err.h>
->  #include <linux/idr.h>
-> +#include <linux/mutex.h>
->  #include <linux/rwsem.h>
->  #include <linux/notifier.h>
->  #include <linux/nsproxy.h>
-> @@ -31,6 +32,8 @@ struct ipc_ids {
->  struct ipc_namespace {
->  	struct ipc_ids	ids[3];
-> =20
-> +	/* Serialize kernel.sem writers. */
-> +	struct mutex	sem_ctls_mutex;
->  	int		sem_ctls[4];
->  	int		used_sems;
-> =20
-> diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
-> index d038d944257f6..a05e28e67c305 100644
-> --- a/ipc/ipc_sysctl.c
-> +++ b/ipc/ipc_sysctl.c
-> @@ -51,21 +51,38 @@ static int proc_ipc_auto_msgmni(const struct ctl_tabl=
-e *table, int write,
->  static int proc_ipc_sem_dointvec(const struct ctl_table *table, int writ=
-e,
->  	void *buffer, size_t *lenp, loff_t *ppos)
->  {
-> +	struct ctl_table ipc_table;
->  	struct ipc_namespace *ns =3D
->  		container_of(table->data, struct ipc_namespace, sem_ctls);
-> -	int ret, semmni;
-> +	int sem_ctls[ARRAY_SIZE(ns->sem_ctls)];
-> +	size_t i;
-> +	int ret;
-> +
-> +	if (!write)
-> +		return proc_dointvec(table, write, buffer, lenp, ppos);
-> =20
-> -	semmni =3D ns->sem_ctls[3];
-> -	ret =3D proc_dointvec(table, write, buffer, lenp, ppos);
-> +	mutex_lock(&ns->sem_ctls_mutex);
-> +	for (i =3D 0; i < ARRAY_SIZE(sem_ctls); i++)
-> +		sem_ctls[i] =3D READ_ONCE(ns->sem_ctls[i]);
-> =20
-> -	if (!ret)
-> -		ret =3D sem_check_semmni(ns);
-> +	memcpy(&ipc_table, table, sizeof(ipc_table));
+>> So I sound like a broken record at this point.  I see the assertion that
+>> it has to be an atomic unit, but nothing about why.
+> Yes, sorry, and I've answered this in detail now in my reply to 7/7. In
+> short:
+>
+> 1. The checked target must stay in the checked register until the call:
+>     a spill and reload in between would let attacker-writable memory
+>     supply an unchecked target ("pop %target; call %target").
+Understood.  And this may in fact be the biggest reason.  I'll ponder in 
+the context of spills.
 
-Why memcpy(3)?  Being a structure, we could use simple assignment, which
-is type safe.
+> 2. The trap isn't noreturn: in the kernel's permissive mode, execution
+>     continues from the trap into the call, so the trap block can't be
+>     moved out of line.
+Yea, but that's easily solvable.  We'd just define something with 
+similar semantics so that the compiler doesn't think the trap halts 
+execution.
 
-	ipc_table =3D *table;
+> 3. The kernel depends on the exact layout: its trap handlers decode the
+>     instructions around the trap, and x86 may rewrite call sites in place
+>     into FineIBT at boot.
+>
+> v18 will add all of this to the design comment, so the "why" lives next
+> to the assertion.
+Right, but we can handle that with the right barriers around the call to 
+force the exact layout.  But given the concerns about spills, an atomic 
+sequence may simply be needed here.
 
-memcpy(3) is way too powerful for this, and that can be dangerous.
-A few ways where it is easy to screw a call to memcpy(3) are:
+>>> +  /* Ignore cold partition sections: cold partitions are never indirect call
+>>> +     targets.  Only skip preambles for cold partitions (has_bb_partition = true)
+>>> +     not for entire cold-attributed functions (has_bb_partition = false).  */
+>>> +  if (in_cold_section_p && crtl && crtl->has_bb_partition)
+>>> +    return;
+>> Is that an design decision in the partitioning code or is it an
+>> implementation detail.  If it's the former, than I'm inclined to allow
+>> relying on it.  If it's the latter, then it seems we're just setting up
+>> a ticking time bomb.  It could well be either, I don't know off the top
+>> of my head.
+> It's a design property of partitioning: the cold part of a function is
+> never called, only jumped to from its parent. A function's address is
+> always its hot entry, so there's no valid entry point into the middle
+> of a function, and we don't want KCFI to create one.
+Duh.  I should have realized  this.  Crossing the partition is never a 
+call, it's just a jump.  Presumably you're not trying to protect 
+indirect jump targets?  I've been out of the ROP/JOP space for years 
+now, but my recollection was that indirect jumps where just as 
+problematical as calls.
+>> Given we can pretty easily describe the generic call setup in RTL, how
+>> painful would it be to instead do the instrumentation in a generic way
+>> rather than twiddling each backend?
+>>
+>> In that kind of design we'd force the target to provide the two marker
+>> insns which mark the beginning and end of the atomic region. Target
+>> independent code would be used to load the typeid hash from the preamble
+>> (using the offset the target provides), compare it to the expected type
+>> id, branch around a trap-like insn, the trap-like insn itself, then
+>> finally the call.  I'm not demanding this rethink, but I do want it to
+>> be at least considered as a design question.
+> I did consider it, and tried something like it around v2. Two things
+> stopped me:
+[ ... ]
+Thanks.  I could probably argue a bit here, but it's probably academic 
+and we've got better things to do with our time I think :-)
 
--  Size of destination doesn't match size of input.
--  Size argument doesn't match size of destination.
--  Type of input doesn't match type of destination.
--  You may forget to copy a flexible array member.
+Still working my way through the other patch and I still want to think 
+about atomicness of the pattern WRT spills.  I think we have similar 
+problems in other contexts and I wonder how we manage them...
 
-In some cases, you really want to defeat those, and then memcpy(3) is
-useful (or you're copying an array, and then you have no choice), but if
-not, memccpy(3) is not the best tool.
-
-[CC +=3D linux-hardening]
-
-
-Have a lovely day!
-Alex
-
-> +	ipc_table.data =3D sem_ctls;
-> =20
-> -	/*
-> -	 * Reset the semmni value if an error happens.
-> -	 */
-> +	ret =3D proc_dointvec(&ipc_table, write, buffer, lenp, ppos);
->  	if (ret)
-> -		ns->sem_ctls[3] =3D semmni;
-> +		goto out_unlock;
-> +
-> +	if (sem_ctls[2] < 0 ||
-> +	    sem_ctls[3] < 0 || sem_ctls[3] > ipc_mni) {
-> +		ret =3D -ERANGE;
-> +		goto out_unlock;
-> +	}
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(sem_ctls); i++)
-> +		WRITE_ONCE(ns->sem_ctls[i], sem_ctls[i]);
-> +
-> +out_unlock:
-> +	mutex_unlock(&ns->sem_ctls_mutex);
->  	return ret;
->  }
-> =20
-> diff --git a/ipc/sem.c b/ipc/sem.c
-> index a8c9807175520..0f7d32c12993f 100644
-> --- a/ipc/sem.c
-> +++ b/ipc/sem.c
-> @@ -249,6 +249,7 @@ static int sysvipc_sem_proc_show(struct seq_file *s, =
-void *it);
-> =20
->  void sem_init_ns(struct ipc_namespace *ns)
->  {
-> +	mutex_init(&ns->sem_ctls_mutex);
->  	ns->sc_semmsl =3D SEMMSL;
->  	ns->sc_semmns =3D SEMMNS;
->  	ns->sc_semopm =3D SEMOPM;
-> diff --git a/ipc/util.h b/ipc/util.h
-> index a55d6cebe6d3b..51b4efa3d6db0 100644
-> --- a/ipc/util.h
-> +++ b/ipc/util.h
-> @@ -245,15 +245,6 @@ int ipcget(struct ipc_namespace *ns, struct ipc_ids =
-*ids,
->  void free_ipcs(struct ipc_namespace *ns, struct ipc_ids *ids,
->  		void (*free)(struct ipc_namespace *, struct kern_ipc_perm *));
-> =20
-> -static inline int sem_check_semmni(struct ipc_namespace *ns) {
-> -	/*
-> -	 * Check semmni range [0, ipc_mni]
-> -	 * semmni is the last element of sem_ctls[4] array
-> -	 */
-> -	return ((ns->sem_ctls[3] < 0) || (ns->sem_ctls[3] > ipc_mni))
-> -		? -ERANGE : 0;
-> -}
-> -
->  #ifdef CONFIG_COMPAT
->  #include <linux/compat.h>
->  struct compat_ipc_perm {
-> --=20
-> 2.43.0
->=20
-
---=20
-<https://www.alejandro-colomar.es>
-
---3ypnmqpyuzbufluf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrcsTcACgkQ64mZXMKQ
-wqnKRRAAt8enQI5cXjKMqVjXRh1pd0f04+raK2ShM3YQhaynNwX7pqaPuQu7CNYn
-XS4UU//IYiVQhRD+/a6w8QixgPRqvYbpQiVSPaOexM4TmCwbciR/XIs0PBVcyjFI
-5GRV9vJBf0c3U1Lcsc2rLqtQT5X7OWK9nEjwHdrKSbYu1JOynmH43gBP+b4wyLW2
-4Jhurv34jdrxGZ+oBgMBBOmSJcr3C7CIUj7kOgaJO6uA4w7d6KVcuwgHraP25Qat
-+kEhFgs9G7SkzZ8QLOSzUhmY59tkAzuNuqpMRM4LfqOaNNrr8LJKEJLW5/BiZzu6
-DewbIzVND0w+PwohgGESVpj+fbEjO3CMlln6tAtmneIB5rrNa5kcqLUyKdhszDIB
-BeV2nVRI13zzbs7tuPa1V4/YAB53+QH+JkYadnDkwwEcKs3gGw6TA48g4Sr/L0nu
-cBp7f/yslXDqiSxIyUwt1Y2AxUX/5zDzTn4/DqDyxUrWwsc6B07X0IY0rvLDSBWJ
-Q68dB2r9lsFdzqdMpBb06OdBl2D/no3BEu/Xni7ROwc2RwlOK9gUS86ILuvIwpGU
-jtPOTnbk7c3NRO6/xmPMPVCqGrsm5HIJEfkL2x8Gvfzp3+hnIh+37aj6/Gc9lfLn
-qEEiMnILRfHuz52Lk+6KQxg4ZjFU11gtlKYtqoo0H4Gm1yGkTnM=
-=dC3A
------END PGP SIGNATURE-----
-
---3ypnmqpyuzbufluf--
+jeff
