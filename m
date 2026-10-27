@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793117089;
-	b=awX3E+39Eo6oa3D+EugKEszQnVKQwxmswbslidMprzzhNOliwz1umSuLmF/tTj7ctnx/
-	 On454xxpNRJ5G5YdyGwYtLB3uRkophFV0tGyErkd95zhydTr6ro7K4pZ/a1f68NyEdB7Q
-	 6vBAgfaioUjOrnME6+J+luXZSagdYnPa0tpw/dddnWwmHSd7GrDsZP2ijnCe7HrqJOU0C
-	 jjvIyn5WrwEivR1fHL4x0rc5Klss1WktgmpohGXuME1uYGTufazA2RdJurOS4X81BHw/P
-	 fAEQ9LbZtmIcjX1FB0fjDX91VYldQu9ooptA+Dbafx2G3GxoNioBzbRjmV8hP1WcUhQ==
+	t=1793117142;
+	b=F8cwl48mCnSJxecgmD5fNHfQtks/nGnqFVsd4M+g4yS4b8tH5d/asA6KJzxQKz+Y0ii/
+	 Twp5VMGHwow6sWdPEe0yqsFfM0c+RjaNioblfcggo8i6QRd5x5bMTz0RclIFsk+IKRXSP
+	 mJzp2diexK9gMSglEl7dSXcqqeO1Ww+N1GzwAoXy0ksfqdI7gEKeYemgHEtnoqBPBO5ko
+	 p2GVEoHECBUgMEfFGQQDNq4ckyaPdKAXi1zZ8wGm5BXfMZNrt+7A0rkfo/i94YIJS5ERC
+	 2OIjzhZAG4gQlQMfl1I/5F1ghQ/1yLtQCV6amgPo7zs24tZ1jFuz67zFmMy7R00IMDw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793117089;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793117142;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=+MYD44DcHjEZ2ajshlbEu8zM2l23xxTluRkoB1K/Gu4=;
-	b=O4EK4n1UJg6nBGNBkUXwbhJkhEcaA23Dtqgkb3+8GTmMM2EwHzrls6lihtf4ALoaMEdl
-	 H3jseIsTujdbyPljzwelvWfQAyrOCWRCbSjPd/g7lBGYcV0Wy9Uk4//nj/KqJGaTdk4Sw
-	 qJke3lON3pbXQu4ysOc/BAdX4BATShxrD+ORJDkQrF4gnzqIgOs/E9nSDr1dYJ/hKhAgG
-	 VDdFlt4O9siKy4gBFE2H6EFE29xSsR2xmrKG6gvkhmV4ETEOCgoZaFwNbv3xuDZ5XkSs2
-	 3w0V4dGCrr2PHDAGJ+GWUeHFbBW+nCWEP5w/TJx2X3x2QQY9dDd5ZiiEHDWzopZEoaw==
+	bh=Gimspkvzpv0L0LYJWO8vCB44gcFGH0Ui/jyvcrmF/LU=;
+	b=PUPotueMQUg9nUljuSWhuX2aqGXq4ibor1ELHHOXZPNqOYxFO5l+dPWBinfmlf8nTqmU
+	 LZNhHlp1YTDXV07ApeKtHk5TIYzEq78V7qiI+ByUg5cgzb69UBfKaccrbQfnBhakKf1so
+	 Qd4cIC3FSXJN4m7TKjD5P6TAlvLs81P3LSVdVzuIUYl0mZWyxPBQVO5PHpIgRXxMjWjAT
+	 lR9m6ml8nXFlqIbJQoxF3WaHgg10Ri+xF+I3vPDnJJAP6Cyi/Y2ydiM4nHQI+fBF5XiYD
+	 qMgccO/VLkwbcg2iXs5Cbb7S7bwu+KFOulImzQcFIYYRNuvyYPgzKQE9M9uLwtcGEtw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0a+oBaPb;
-	arc=none smtp.remote-ip=209.85.216.45
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gvMlyVSc;
+	arc=none smtp.remote-ip=209.85.216.53
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42108606A334
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 16:04:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 42108606A334
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F83E60A260F
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 16:05:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4F83E60A260F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0a+oBaPb
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3ace1f3897cso50818a91.0
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 09:04:49 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=gvMlyVSc
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3a4b3ac8fb7so53182a91.0
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 09:05:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793117089; x=1793721889; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793117142; x=1793721942; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=+MYD44DcHjEZ2ajshlbEu8zM2l23xxTluRkoB1K/Gu4=;
-        b=0a+oBaPbI/eabn9e3ieePEsqdCkA7N+1Hzel8GOwEERcyUcByN6KdcHJU30ygyydDF
-         IcK2VFwmD6hgzZlPDhpww2+aSNsQyGlKFIU42zEBrwSPOxN6SZBgxUEgH9QQbX91EG/h
-         yld/xXamE5wE+h/jXf1OAB9IxL2uljJL42hJNM01Sqtg5mYydd0fC956sXD98lypwaQ6
-         nB/6CWt01DdHbLbJeu3l/lyHrJir48Sxx4j7YDel8ygyzCSuN7MXa0h4lXd7fMYAsrmR
-         mqJvUOkPGChCZ+6H0Mv+x6wviLqWewbzhVZqv9lQQX5UctqnpKPTcYT7umEAjwyzrN63
-         wbCw==
+        bh=Gimspkvzpv0L0LYJWO8vCB44gcFGH0Ui/jyvcrmF/LU=;
+        b=gvMlyVScOXf6a/zmRxZpk4fzMWXajFFDf2b6DydtgSAuxVGkofZa9OduTp19PgEX73
+         ZsleyYxbhNh6Gn+3Eois3oML80olCN+af5eCo8Xox/QQaI5sNA/TS+q1uvpaWyFIqxHg
+         80XMKUlfRtuHpvKUpKru2nIhMARCIyeYEfZXaw2sO/jUTEcFBzq3ZYNDIW6Xb6T2lJlT
+         k2q2UsMCd+jY6DUf0vXvQswCcW8LjY9sWpBPccOgm0FsZfck5or8W9ZDhrwAmioPEAgO
+         tzZoPJumIzpJ74rZ1YUPv+RMQ9ItfpYdd15nlOI/s/s20Tm4u1Ml6BQ41ExHusXggzEQ
+         TSFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793117089; x=1793721889;
+        d=1e100.net; s=20260707; t=1793117142; x=1793721942;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+MYD44DcHjEZ2ajshlbEu8zM2l23xxTluRkoB1K/Gu4=;
-        b=dpf6dDb3fJ/OrTI90/HyrOhZPq46v1CHG1V8xvnDakA/R2Iget4ijExTCpWJdIKFkS
-         yCeR/jCIH3mCaShaZJO17mWogFkgJ4cqpztPqBOZ4+LdfSvKg2iBz7+t4bllDZ/iQZf6
-         AhYftmQWlZxL22Dc7dFYGflSM6lmtWdxfeVuje/vmQUKcl+VDPjsOG+3aY1VWLcc2Bih
-         SuXh8h/l5g/DT68SdVzK6rrhhSAkhCdeNhuvRev/9hEWU64hH2d24fWLSl913o85Emwa
-         rcM6NElHG8UbaoNxY/wgwiE2CZF1xmIrNM179Unx70tiHsom4W2o5zzfdzJ1ZquSSs9y
-         4BXg==
-X-Forwarded-Encrypted: i=1; AKwUvBy9limtlAOjMq8peYL2M0Nak1BlPoP1Yp+5ABHQZGjiPPXBxJyUe4GZmb8/FwaEvLUujOrG8L8x4ICwXQF+KKI=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIBSksicH4xWOXmZTwfZNM8iyg0gdUL3k56JMpQaNOipjXqMGcW
-	M7k1ZCmc1/ffmqheI9s+bI/54jVpH1Wtotwi12V9wSvesYnODPgIc5id
-X-Gm-Gg: AYBFou0+FF56D0tSS2UWNIp+63gVU9+bE5WCmNEU7llHuAifVXcmbLSZQoUdvATTkJo
-	/mIoc7WzqWm0gng5N5JOApgmxtjVrj2Vuas02P7rz3FEUMy0oJxm+vPkrYrPukTc3MwAQwEb8fG
-	ZJZ9ztz7IMR6MSwauU1R0IgzOYX0tzRFVPCCCPYbcUWqatvnMM6PymMwPAS1SUadZ2vKTgyLKHn
-	xRRU780kphBdk/YxnSRxWqrj5RXvzJ00dBYS4LRIglthho8jBeT+wzuxmFmHLtZSFL0IkTQEqs4
-	duEQhwRzK+keueTDXRX6/vTId0VSn4eKwqs88tzki1FI8AK9PhVZe6qL+A226fJVTdP+XADzZP2
-	BL9NHpz92TkkJ9G0dqBTbRonMFN2/yKVnVCBypRz+MjAAjPfLLl2dQwKqdw7F1ttqdYIM/3Z8K/
-	7cOwmjXG8WDMnCcQ5Ul79C5ha7yQ8VPghvC8KKsoAGeuzbI4vUMXHSVbOx/qYvA4sMp0TlSnwVG
-	aDtEGiBEUCNJnEi98GxN/Ry+FegRbJm28vV9S33/y8PRAFNR8PYQQuIKBuJkQNaMS25ulrb+eVc
-	j7h1tf+VriGeOYnth60=
-X-Received: by 2002:a17:90a:e187:b0:3ab:b764:826c with SMTP id 98e67ed59e1d1-3adea898711mr8493030a91.12.1793117088477;
-        Tue, 27 Oct 2026 09:04:48 -0700 (PDT)
+        bh=Gimspkvzpv0L0LYJWO8vCB44gcFGH0Ui/jyvcrmF/LU=;
+        b=kneOhXQ5MKUxl4ET7EVre2i+kAo7WQhra/RlJ1Sbl4xzvqblKoZpjURsltdXXG+KCb
+         0HxSMjR1yy/Xx8afv31QbYm9jD8/oCQbJUv5AMQhkMGI45AOnl0uxKkztlhW+Yr2+K3N
+         Y0+HvCUisbmj+xOb9/xk1DaGFS0OZbY/dahlq/xbdJhuNOWQo0/i/GzDUQuYUeCAzwPj
+         0ZOnThpeIftTPfBNOdFM1ASbKD+8PRISVi+/PRTVa9RGNjJ/0/TUdBwtDd67w2dQ/Iuz
+         bBBIRLVTUkL8/KEwQS5PAWG04wph8SvNONqglH8VD3zg5P5pKt94WUmnCrfSF20i4zv3
+         AVFg==
+X-Forwarded-Encrypted: i=1; AKwUvBwtbYuBrZDKBXGtAniFzZY6EEf4Te25Voqu8F9HHoXQFS0TtRofciRiUkyAa0mWKt2UWmQ7G45hGhob2SlvtbM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKXLwP9YwRD8wIPsPQ1CySCK08ng8BTeBtcvpNIT2iFZJAJgQ2A
+	FRH38zRRi+R8VVGY8iP1jGbvXbrjajSiYNoqB8CXeiRq4RU1PUCex0mr
+X-Gm-Gg: AYBFou2F1WG8eOtv+F6b7nZYDrdZBKxlapTGA+1U/2ri/ZZubCQoSoWPyfwD9Qsp3wF
+	Fy+v9CD7bjBjno4e4SJhmRWP19WdbsbQusWEn0yzOYrZbspv0OrLyQrpbvrC3AwejGUA7XNxGQ3
+	zM1QQ2rkPKLJRm+bwZTpVan5VXxkYYvyPj7gjULV+1uibwzPLcSor5XBMoVA4zMKW2i3Ro8YtCS
+	0zWJgM0FlW85hWbLP2ZiLv+ldMPcHJ8PdtkLirJne05kh6y4DuZtrTD2VRevnaw0SJ0p8WXI52a
+	VYvWo0nZIIt06zu0wW9wL4qPQCRXv7ALgZrBw/PxJt9D17tNRZrSOAr1TCU1OAzUzmsILYxSo9D
+	vs3gThSNCQqHcbo82H+6LCuTEIFT0n7ubB85hTaELb2tQvLrkbCRaOELbun6fokijiFYA8FIcBh
+	KG8zrJZXbbe96mfRFB7ARZAX8+2WyMSuUf91Lw9BRJpaz2eDSN4b5W6lgagDocxXbj06vmvG7LJ
+	lOKCLZJLIn66rWDgVxiSDDEn1LHpoBAR5UuCDVLa/V5F9ToZceFFI8cT239dKFljU/T0zgvmUJE
+	3SwfBnnXABeX4E9Xg0MY
+X-Received: by 2002:a17:90b:4fc2:b0:3ac:9a5e:9ce7 with SMTP id 98e67ed59e1d1-3adeae70fc6mr8364278a91.49.1793117141630;
+        Tue, 27 Oct 2026 09:05:41 -0700 (PDT)
 Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae406361e2sm4290903a91.8.2026.10.27.09.04.39
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae40472ed9sm4449271a91.16.2026.10.27.09.05.30
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 27 Oct 2026 09:04:47 -0700 (PDT)
+        Tue, 27 Oct 2026 09:05:40 -0700 (PDT)
 From: Lian Wang <lianux.mm@gmail.com>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -95,9 +95,9 @@ Cc: linux-kernel@vger.kernel.org,
 	gustavoars@kernel.org,
 	tglx@kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [RFC PATCH v3 03/18] mm/swap: cleanup and document swap device availability flag usage
-Date: Wed, 28 Oct 2026 00:04:21 +0800
-Message-ID: <c3a660c13ec9a98af8a496b5f9139e73eab5aa3a.1793106426.git.lianux.mm@gmail.com>
+Subject: [RFC PATCH v3 04/18] mm/swap: introduce swap device iteration helper
+Date: Wed, 28 Oct 2026 00:05:13 +0800
+Message-ID: <f2d75ba96189520fe66a99ea9c7c0d9894b8ec22.1793106426.git.lianux.mm@gmail.com>
 In-Reply-To: <cover.1793106426.git.lianux.mm@gmail.com>
 References: <cover.1793106426.git.lianux.mm@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -113,396 +113,176 @@ Content-Transfer-Encoding: 8bit
 
 From: Kairui Song <kasong@tencent.com>
 
-Rework swap device flag and metadata handling to make the writable
-publication and disable boundaries explicit.
+There are many users that access the swap info array just to iterate
+through the swap devices to find usable ones. Introduce a generic helper
+for this to prepare for dropping the lock convention.
 
-Introduce swap_device_enable() and swap_device_disable(). Move
-SWP_WRITEOK updates into these boundaries while keeping availability
-updates serialized with swap_avail_lock.
-
-Preserve the existing swap_lock critical section across mapping lookup,
-hibernation checks and the disable transition. Drain cluster allocators
-after dropping swap_lock, retaining the device-identity protection
-without holding swap_lock over all cluster locks.
-
-Document the flag lifetime and locking rules.
+Also slightly adjust __swap_type_to_info to allow access of swapped off
+devices by moving the sanity check into its only current caller, and this
+way makes more sense too: the only caller is __swap_entry_to_info, where
+we should never see an entry referring to a dead device.
 
 Signed-off-by: Kairui Song <kasong@tencent.com>
-Co-developed-by: Lian Wang <lianux.mm@gmail.com>
 Signed-off-by: Lian Wang <lianux.mm@gmail.com>
 ---
- include/linux/swap.h |  27 ++++--
- mm/swapfile.c        | 207 ++++++++++++++++++++-----------------------
- 2 files changed, 115 insertions(+), 119 deletions(-)
+ mm/swap.h     | 12 ++++----
+ mm/swapfile.c | 77 +++++++++++++++++++++++++++++++--------------------
+ 2 files changed, 53 insertions(+), 36 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 4f686709d71f..66b8e602178d 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -188,6 +188,22 @@ struct swap_extent {
- 	((offsetof(union swap_header, magic.magic) - \
- 	  offsetof(union swap_header, info.badpages)) / sizeof(int))
+diff --git a/mm/swap.h b/mm/swap.h
+index d5bf21f517dc..d46d09b8c21f 100644
+--- a/mm/swap.h
++++ b/mm/swap.h
+@@ -107,16 +107,16 @@ static inline unsigned int swp_cluster_offset(swp_entry_t entry)
+  */
+ static inline struct swap_info_struct *__swap_type_to_info(int type)
+ {
+-	struct swap_info_struct *si;
+-
+-	si = READ_ONCE(swap_info[type]); /* rcu_dereference() */
+-	VM_WARN_ON_ONCE(percpu_ref_is_zero(&si->users)); /* race with swapoff */
+-	return si;
++	return READ_ONCE(swap_info[type]); /* rcu_dereference() */
+ }
  
-+/*
-+ * Swap device flags, except the ones documented below, all are immutable
-+ * after exposed by swap_device_enable, and until the device is freed again
-+ * (SWP_USED unset). The exceptions:
-+ * - SWP_USED: Protected by swap_lock. Indicates the device is inuse. Once
-+ *   set, won't be cleared unless all reference to this device is freed and
-+ *   swapoff finished.
-+ * - SWP_WRITEOK: Protected by both swap_lock and swap_avail_lock, clearing
-+ *   this flag also waits for all current cluster lock users to exit so
-+ *   checking this flag while holding any of these locks ensures the device
-+ *   is safe to use at the moment. Note: clearing this flag doesn't affect
-+ *   pending IO or async requests, it only prevents further entry allocation
-+ *   or new async request (e.g. discard) from initiating.
-+ * - SWP_HIBERNATION: Protected by swap_lock. Indicates if the device
-+ *   is pinned for hibernation.
-+ */
- enum {
- 	SWP_USED	= (1 << 0),	/* is slot in swap_info[] used? */
- 	SWP_WRITEOK	= (1 << 1),	/* ok to write to this swap?	*/
-@@ -256,14 +272,9 @@ struct swap_info_struct {
- 	struct file *swap_file;		/* seldom referenced */
- 	struct completion comp;		/* seldom referenced */
- 	spinlock_t lock;		/*
--					 * protect map scan related fields like
--					 * inuse_pages and all cluster lists.
--					 * Other fields are only changed
--					 * at swapon/swapoff, so are protected
--					 * by swap_lock. changing flags need
--					 * hold this lock and swap_lock. If
--					 * both locks need hold, hold swap_lock
--					 * first.
-+					 * Protect cluster lists. Other fields
-+					 * are only changed at swapon/swapoff,
-+					 * so are protected by swap_lock.
- 					 */
- 	struct work_struct discard_work; /* discard worker */
- 	struct work_struct reclaim_work; /* reclaim worker */
+ static inline struct swap_info_struct *__swap_entry_to_info(swp_entry_t entry)
+ {
+-	return __swap_type_to_info(swp_type(entry));
++	struct swap_info_struct *si;
++
++	si = __swap_type_to_info(swp_type(entry)); /* rcu_dereference() */
++	VM_WARN_ON_ONCE(percpu_ref_is_zero(&si->users)); /* race with swapoff */
++	return si;
+ }
+ 
+ static inline struct swap_cluster_info *__swap_offset_to_cluster(
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index cf8c0999655c..4adcfbbb3730 100644
+index 4adcfbbb3730..b72f4fc3e811 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -1207,28 +1207,20 @@ static void del_from_avail_list(struct swap_info_struct *si, bool swapoff)
+@@ -106,6 +106,34 @@ static DEFINE_SPINLOCK(swap_avail_lock);
  
- 	spin_lock(&swap_avail_lock);
+ struct swap_info_struct *swap_info[MAX_SWAPFILES];
  
--	if (swapoff) {
--		/*
--		 * Forcefully remove it. Clear the SWP_WRITEOK flags for
--		 * swapoff here so it's synchronized by both si->lock and
--		 * swap_avail_lock, to ensure the result can be seen by
--		 * add_to_avail_list.
--		 */
--		lockdep_assert_held(&si->lock);
--		si->flags &= ~SWP_WRITEOK;
--		atomic_long_or(SWAP_USAGE_OFFLIST_BIT, &si->inuse_pages);
--	} else {
--		/*
--		 * If not called by swapoff, take it off-list only if it's
--		 * full and SWAP_USAGE_OFFLIST_BIT is not set (strictly
--		 * si->inuse_pages == pages), any concurrent slot freeing,
--		 * or device already removed from plist by someone else
--		 * will make this return false.
--		 */
-+	/*
-+	 * Force remove it only for swapoff. Else, take it off-list only if
-+	 * it's full and SWAP_USAGE_OFFLIST_BIT is not set (strictly
-+	 * si->inuse_pages == pages), so concurrent slot freeing, or
-+	 * concurrent list removal will make the cmpxchg fail and skip
-+	 * the removal.
-+	 */
-+	if (!swapoff) {
- 		pages = si->pages;
- 		if (!atomic_long_try_cmpxchg(&si->inuse_pages, &pages,
- 					     pages | SWAP_USAGE_OFFLIST_BIT))
- 			goto skip;
-+	} else {
-+		atomic_long_or(SWAP_USAGE_OFFLIST_BIT, &si->inuse_pages);
- 	}
- 
- 	plist_del(&si->avail_list, &swap_avail_head);
-@@ -1238,21 +1230,21 @@ skip:
- }
- 
- /* SWAP_USAGE_OFFLIST_BIT can only be cleared by this helper. */
--static void add_to_avail_list(struct swap_info_struct *si, bool swapon)
-+static void add_to_avail_list(struct swap_info_struct *si)
- {
- 	long val;
- 	unsigned long pages;
- 
- 	spin_lock(&swap_avail_lock);
- 
--	/* Corresponding to SWP_WRITEOK clearing in del_from_avail_list */
--	if (swapon) {
--		lockdep_assert_held(&si->lock);
--		si->flags |= SWP_WRITEOK;
--	} else {
--		if (!(READ_ONCE(si->flags) & SWP_WRITEOK))
--			goto skip;
--	}
-+	/*
-+	 * Add the device to the avail list if SWP_WRITEOK is set and
-+	 * SWAP_USAGE_OFFLIST_BIT is still set. Swapoff clears
-+	 * SWP_WRITEOK first, so the device won't be re-added after
-+	 * swapoff starts unless swap_device_enable resurrects it.
-+	 */
-+	if (!(si->flags & SWP_WRITEOK))
-+		goto skip;
- 
- 	if (!(atomic_long_read(&si->inuse_pages) & SWAP_USAGE_OFFLIST_BIT))
- 		goto skip;
-@@ -1308,7 +1300,7 @@ static void swap_usage_sub(struct swap_info_struct *si, unsigned int nr_entries)
- 	 * add it to the plist.
- 	 */
- 	if (unlikely(val & SWAP_USAGE_OFFLIST_BIT))
--		add_to_avail_list(si, false);
-+		add_to_avail_list(si);
- }
- 
- static void swap_range_alloc(struct swap_info_struct *si,
-@@ -1360,7 +1352,7 @@ static bool get_swap_device_info(struct swap_info_struct *si)
- 	 * up to dated.
- 	 *
- 	 * Paired with the spin_unlock() after setup_swap_info() in
--	 * enable_swap_info(), and smp_wmb() in swapoff.
-+	 * swap_device_enable(), and smp_wmb() in swapoff.
- 	 */
- 	smp_rmb();
- 	return true;
-@@ -3078,58 +3070,87 @@ static int setup_swap_extents(struct swap_info_struct *sis,
- 	return generic_swapfile_activate(sis, swap_file, span);
- }
- 
--static void _enable_swap_info(struct swap_info_struct *si)
++static inline struct swap_info_struct *__swap_iter(int *i, unsigned long flag)
++{
++	lockdep_assert_held(&swap_lock);
++	while (*i < nr_swapfiles) {
++		struct swap_info_struct *si = __swap_type_to_info(*i);
++
++		VM_WARN_ON(!si);
++		(*i)++;
++		if (flag && !((si->flags & flag) == flag))
++			continue;
++		return si;
++	}
++	return NULL;
++}
++
++#define __for_each_swap(si, flag)			\
++	for (int __i = 0; ((si) = __swap_iter(&__i, flag));)
++
 +/*
-+ * Mark a fully initialized swap device writable and expose it to the
-+ * allocator. The caller must have resurrected its percpu ref first.
++ * for_each_swap - iterate through all allocated and inuse swap devices
++ * @si: the iterator
++ *
++ * Context: The caller must hold swap_lock. The lock may be dropped during
++ * the loop body but must be re-acquired before the next iteration.
 + */
-+static void swap_device_enable(struct swap_info_struct *si)
++#define for_each_swap(si) __for_each_swap(si, SWP_USED)
++#define for_each_avail_swap(si) __for_each_swap(si, SWP_USED | SWP_WRITEOK)
++
+ static struct kmem_cache *swap_table_cachep;
+ 
+ /* Protects si->swap_file for /proc/swaps usage */
+@@ -2229,26 +2257,18 @@ void swap_free_hibernation_slot(swp_entry_t entry)
+ 
+ static int __find_hibernation_swap_type(dev_t device, sector_t offset)
  {
--	atomic_long_add(si->pages, &nr_swap_pages);
--	total_swap_pages += si->pages;
-+	spin_lock(&swap_lock);
- 
--	assert_spin_locked(&swap_lock);
-+	spin_lock(&swap_avail_lock);
-+	si->flags |= SWP_WRITEOK;
-+	spin_unlock(&swap_avail_lock);
- 
-+	atomic_long_add(si->pages, &nr_swap_pages);
-+	total_swap_pages += si->pages;
- 	plist_add(&si->list, &swap_active_head);
-+	spin_unlock(&swap_lock);
- 
--	/* Add back to available list */
--	add_to_avail_list(si, true);
-+	add_to_avail_list(si);
- }
- 
--/*
-- * Called after the swap device is ready, resurrect its percpu ref, it's now
-- * safe to reference it. Add it to the list to expose it to the allocator.
-- */
--static void enable_swap_info(struct swap_info_struct *si)
-+static int swap_device_disable(struct address_space *mapping,
-+			       struct swap_info_struct **swap_info)
- {
--	percpu_ref_resurrect(&si->users);
--	spin_lock(&swap_lock);
--	spin_lock(&si->lock);
--	_enable_swap_info(si);
--	spin_unlock(&si->lock);
--	spin_unlock(&swap_lock);
--}
+-	int type;
+-
+-	lockdep_assert_held(&swap_lock);
 +	struct swap_info_struct *si;
-+	struct swap_cluster_info *ci;
-+	unsigned long offset, end;
-+	int err = -EINVAL;
  
--static void reinsert_swap_info(struct swap_info_struct *si)
--{
- 	spin_lock(&swap_lock);
--	spin_lock(&si->lock);
--	_enable_swap_info(si);
--	spin_unlock(&si->lock);
--	spin_unlock(&swap_lock);
--}
-+	plist_for_each_entry(si, &swap_active_head, list) {
-+		if ((si->flags & SWP_WRITEOK) &&
-+		    si->swap_file->f_mapping == mapping) {
-+			err = 0;
-+			break;
-+		}
-+	}
-+	if (err)
-+		goto unlock;
+ 	if (!device)
+ 		return -EINVAL;
  
--/*
-- * Called after clearing SWP_WRITEOK, ensures cluster_alloc_range
-- * see the updated flags, so there will be no more allocations.
-- */
--static void wait_for_allocation(struct swap_info_struct *si)
--{
--	unsigned long offset;
--	unsigned long end = ALIGN(si->max, SWAPFILE_CLUSTER);
--	struct swap_cluster_info *ci;
-+	/*
-+	 * Refuse swapoff while the device is pinned for hibernation.
-+	 */
-+	if (si->flags & SWP_HIBERNATION) {
-+		err = -EBUSY;
-+		goto unlock;
-+	}
- 
--	BUG_ON(si->flags & SWP_WRITEOK);
-+	if (security_vm_enough_memory_mm(current->mm, si->pages)) {
-+		err = -ENOMEM;
-+		goto unlock;
-+	}
-+	vm_unacct_memory(si->pages);
- 
-+	spin_lock(&swap_avail_lock);
-+	si->flags &= ~SWP_WRITEOK;
-+	spin_unlock(&swap_avail_lock);
-+
-+	plist_del(&si->list, &swap_active_head);
-+	total_swap_pages -= si->pages;
-+	atomic_long_sub(si->pages, &nr_swap_pages);
-+
-+	end = ALIGN(si->max, SWAPFILE_CLUSTER);
-+unlock:
-+	spin_unlock(&swap_lock);
-+	if (err)
-+		return err;
-+
-+	del_from_avail_list(si, true);
-+
-+	/*
-+	 * The swap allocator doesn't take swap_lock. Looping through every
-+	 * cluster lock after clearing SWP_WRITEOK ensures that allocators see
-+	 * the updated flag and that no allocation remains in flight.
-+	 */
- 	for (offset = 0; offset < end; offset += SWAPFILE_CLUSTER) {
- 		ci = swap_cluster_lock(si, offset);
- 		swap_cluster_unlock(ci);
- 	}
-+
-+	*swap_info = si;
-+	return 0;
- }
- 
- static void free_swap_cluster_info(struct swap_cluster_info *cluster_info,
-@@ -3174,7 +3195,6 @@ static void flush_percpu_swap_cluster(struct swap_info_struct *si)
- 	}
- }
- 
+-	for (type = 0; type < nr_swapfiles; type++) {
+-		struct swap_info_struct *sis = swap_info[type];
 -
- SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
+-		if (!(sis->flags & SWP_WRITEOK))
+-			continue;
+-
+-		if (device == sis->bdev->bd_dev) {
+-			struct swap_extent *se = first_se(sis);
+-
+-			if (se->start_block == offset)
+-				return type;
++	for_each_avail_swap(si) {
++		if (device == si->bdev->bd_dev) {
++			if (first_se(si)->start_block == offset)
++				return si->type;
+ 		}
+ 	}
++
+ 	return -ENODEV;
+ }
+ 
+@@ -2415,16 +2435,13 @@ int find_hibernation_swap_type(dev_t device, sector_t offset)
+ 
+ int find_first_swap(dev_t *device)
  {
- 	struct swap_info_struct *p = NULL;
-@@ -3183,7 +3203,7 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
- 	struct address_space *mapping;
- 	struct inode *inode;
- 	unsigned int maxpages;
--	int err, found = 0;
-+	int err;
+-	int type, ret = -ENODEV;
++	int ret = -ENODEV;
++	struct swap_info_struct *si;
  
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
-@@ -3196,44 +3216,11 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
- 		return PTR_ERR(victim);
- 
- 	mapping = victim->f_mapping;
--	spin_lock(&swap_lock);
--	plist_for_each_entry(p, &swap_active_head, list) {
--		if (p->flags & SWP_WRITEOK) {
--			if (p->swap_file->f_mapping == mapping) {
--				found = 1;
--				break;
--			}
--		}
--	}
--	if (!found) {
--		err = -EINVAL;
--		spin_unlock(&swap_lock);
--		goto out_dput;
--	}
+ 	spin_lock(&swap_lock);
+-	for (type = 0; type < nr_swapfiles; type++) {
+-		struct swap_info_struct *sis = swap_info[type];
 -
--	/* Refuse swapoff while the device is pinned for hibernation */
--	if (p->flags & SWP_HIBERNATION) {
--		err = -EBUSY;
--		spin_unlock(&swap_lock);
--		goto out_dput;
--	}
--
--	if (!security_vm_enough_memory_mm(current->mm, p->pages))
--		vm_unacct_memory(p->pages);
--	else {
--		err = -ENOMEM;
--		spin_unlock(&swap_lock);
--		goto out_dput;
--	}
--	spin_lock(&p->lock);
--	del_from_avail_list(p, true);
--	plist_del(&p->list, &swap_active_head);
--	atomic_long_sub(p->pages, &nr_swap_pages);
--	total_swap_pages -= p->pages;
--	spin_unlock(&p->lock);
--	spin_unlock(&swap_lock);
-+	err = swap_device_disable(mapping, &p);
-+	filp_close(victim, NULL);
- 
--	wait_for_allocation(p);
-+	if (err)
-+		return err;
- 
- 	set_current_oom_origin();
- 	err = try_to_unuse(p->type);
-@@ -3241,8 +3228,8 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
- 
- 	if (err) {
- 		/* re-insert swap space back into swap_list */
--		reinsert_swap_info(p);
--		goto out_dput;
-+		swap_device_enable(p);
-+		return err;
+-		if (!(sis->flags & SWP_WRITEOK))
+-			continue;
+-		*device = sis->bdev->bd_dev;
+-		ret = type;
++	for_each_avail_swap(si) {
++		*device = si->bdev->bd_dev;
++		ret = si->type;
+ 		break;
  	}
- 
- 	/*
-@@ -3302,13 +3289,10 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
- 	p->flags = 0;
  	spin_unlock(&swap_lock);
+@@ -2931,12 +2948,14 @@ success:
+  */
+ static void drain_mmlist(void)
+ {
++	struct swap_info_struct *si;
+ 	struct list_head *p, *next;
+-	unsigned int type;
  
--	err = 0;
- 	atomic_inc(&proc_poll_event);
- 	wake_up_interruptible(&proc_poll_wait);
+-	for (type = 0; type < nr_swapfiles; type++)
+-		if (swap_usage_in_pages(swap_info[type]))
++	for_each_swap(si) {
++		if (swap_usage_in_pages(si))
+ 			return;
++	}
++
+ 	spin_lock(&mmlist_lock);
+ 	list_for_each_safe(p, next, &init_mm.mmlist)
+ 		list_del_init(p);
+@@ -3931,14 +3950,12 @@ out:
  
--out_dput:
--	filp_close(victim, NULL);
--	return err;
-+	return 0;
- }
+ void si_swapinfo(struct sysinfo *val)
+ {
+-	unsigned int type;
++	struct swap_info_struct *si;
+ 	unsigned long nr_to_be_unused = 0;
  
- #ifdef CONFIG_PROC_FS
-@@ -3730,7 +3714,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
- 	/*
- 	 * Allocate or reuse existing !SWP_USED swap_info. The returned
- 	 * si will stay in a dying status, so nothing will access its content
--	 * until enable_swap_info resurrects its percpu ref and expose it.
-+	 * until swap_device_enable resurrects its percpu ref and expose it.
- 	 */
- 	si = alloc_swap_info();
- 	if (IS_ERR(si))
-@@ -3898,7 +3882,8 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
- 	si->swap_file = swap_file;
- 
- 	/* Sets SWP_WRITEOK, resurrect the percpu ref, expose the swap device */
--	enable_swap_info(si);
-+	percpu_ref_resurrect(&si->users);
-+	swap_device_enable(si);
- 
- 	pr_info("Adding %uk swap on %s.  Priority:%d extents:%d across:%lluk %s%s%s%s\n",
- 		K(si->pages), name->name, si->prio, nr_extents,
+ 	spin_lock(&swap_lock);
+-	for (type = 0; type < nr_swapfiles; type++) {
+-		struct swap_info_struct *si = swap_info[type];
+-
+-		if ((si->flags & SWP_USED) && !(si->flags & SWP_WRITEOK))
++	for_each_swap(si) {
++		if (!(si->flags & SWP_WRITEOK))
+ 			nr_to_be_unused += swap_usage_in_pages(si);
+ 	}
+ 	val->freeswap = atomic_long_read(&nr_swap_pages) + nr_to_be_unused;
