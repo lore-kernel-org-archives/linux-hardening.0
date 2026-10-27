@@ -1,64 +1,60 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793120559;
-	b=SI7G273g7D/2QKLcKUBCCjgrkh6+mPyObGfg4bHRjz2N2zn4F9DcpzN6BR+RFDt4L1D5
-	 CpMPiAr8VDGz3S4n8C0RxQT7LTeIehL7m18IDX13zRS06sxGQAuvI/LQVeZWz0q+CBd0L
-	 vWUGxNRVTt+WosKFM9rB9tOO00U4IDP0giK8Axo24jmRY3a9Yig8vYzO0x4mW1S+3tetd
-	 kfY4Zeed0aHzts5V2abUkUGOs0r7o3lI8QYbx3lHDrA2/POT8tQ7IJ/0BdUYH0TNLzT/4
-	 ru1S7b9urYGnKjnLsVrFcICvEbp2AMyrmHaqVVIzVcvKF0PqvQgWGzFGZBj8GRnbapw==
+	t=1793125900;
+	b=gcxvO+wFQnbekB76UITMUmmFgDLTAe+dfPo5/lOoJ4KLoh/LZ4b0jdL5XDjr7m745uu7
+	 4EBI6H7h6tFqSZMrRlgX7Cp7iWJ6GbD+iM9+jPMiROC9IM/SwHuZyy4M4w0jJNBLgpA5A
+	 FRDso3nJbBqJy84XhiEyLj7K2nAER+Wv2v7NNywymb7KJLp7RFieDtzyu1fBnohKnQaJr
+	 7H5NGk962bSCR+I3HzfniI5RvRLy2a20Nal/92PmOPmdntS6wE2RTKEtsinPBk5YJfPqK
+	 E7xh8deEt0hTZ0OX7zNDWYFw6DByyg8Eqgx5nxduQLTOI+Nldjt3u5monJITduIz5ug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793120559;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793125900;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=lz4BcpRRjlIy52XX1xait5NxJ+nHBcl/ZG0w9aFAbtA=;
-	b=ocUY50bt2WNfuU6fiPnKl75YJE92p+vP6QqXdAvLmuyNeheJ+kLBxmllJRkEKn3WtjK6
-	 4LlM8JzPLDZJVh0vlMFsrpz7fSR2CnRKn9YZsqu9B6zjtbeeq+8QFFrU691xtc2BMO4XK
-	 OuWOIOaQcv4s1QAzyk7PwojPo1bCns/nhUWA7irIEk7n9XsnDx0z1JTPX40pVLyC/PiO2
-	 44sstKpZATWPOqPyJkpo0ThhnpiKqXbRTqppn413v1e+v95/m9y7v7dhvqFrcjr5BgjLx
-	 6k+8o73cthbWRdRGd665bYm80Lu4AmVA3ZAfHLXVgx4yEcd8nrQAaiPxebbRuhXsndg==
+	bh=Zy1XjAvFE8Nfo7sM1UI6Kgc6ORVuqVDmnIjZZndivXA=;
+	b=L2+ZQvex4caFAd1BwUAmmrCbdvTH+gix56c+E2e3Zu5IlSRfD03177yL7jKBEBdjF0do
+	 nOH6y7rKYMOn3YnJA9rW7mb2yZ1qsjy3vVkQZAs9imWXHbjU7h2cJqJGkcG9eARYMEKUI
+	 zgb6epxJQTht67lwMXuflBJ1mc7TWTscmgezPkY2akCNLEhnhkKN0365e5MUclx4oX6wX
+	 6xN5sFzk8c9Q3VDNjhN4lPfvvayXSABd/4Ys99B04yTpPKxspYr4QsbjzxWJ2xIpP4SEl
+	 cTtJeaYzegMhp+uRrVlInDCL+py3IQ07qWOlDAMjTQc5NY8OJ40qZIQ8Gz9KyRUP+Fw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PGQzzcz9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jjxHiqsF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB614606A31D;
-	Tue, 27 Oct 2026 17:02:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D55606A31A;
+	Tue, 27 Oct 2026 18:31:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PGQzzcz9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF001F01825;
-	Tue, 27 Oct 2026 17:02:32 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jjxHiqsF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 475FC1F01825;
+	Tue, 27 Oct 2026 18:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793120558;
-	bh=lz4BcpRRjlIy52XX1xait5NxJ+nHBcl/ZG0w9aFAbtA=;
+	s=k20260515; t=1793125899;
+	bh=Zy1XjAvFE8Nfo7sM1UI6Kgc6ORVuqVDmnIjZZndivXA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=PGQzzcz92VDG+hGERDEbtM42qWOa9VrK7DIf7K9SCeXW97YY4peyXBI4up7EhqbXV
-	 KlgVEcArAOm4kGLsInP9NvklxuAfceyRq5oQ1nBRDes94GCP3QSHQKr+CjJzGcMSHW
-	 SVItdcq1fM/b2Ra8/GmVrZCZjv7GX4YCDO+jQEhPoSokm5mDTkB7E9ltcngSia2SJC
-	 p08W7pDUUh7QmG+fpmj4HS8x6+eRK9bZflBASVCHTzd+vBLC4YlOF5zbsqw4EaOcZU
-	 n5oybu2SHoVCoiFiyZkCC8EZNGimLCVLxu5dTyqE6NH0erZiY7jMd7IM1bFkAWdYqq
-	 oTOelA4zT3wtg==
-Date: Tue, 27 Oct 2026 17:02:30 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Chris Down <chris@chrisdown.name>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Kees Cook <kees@kernel.org>, Jeff Xu <jeffxu@chromium.org>, 
-	Andrey Vagin <avagin@gmail.com>, Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH 3/3] selftests/mseal_system_mappings: Test vdso unmap and
- remap
-Message-ID: <auDY6bpeuPZ-jc-_@gremlin>
-References: <cover.1793094611.git.chris@chrisdown.name>
- <621847973ba2ec49d0a58e0261da35a9f3a97eda.1793094611.git.chris@chrisdown.name>
- <auC7_5XYr31fimvL@gremlin>
- <auDUAN9xAQRQhnCo@chrisdown.name>
+	b=jjxHiqsFMUljw0mFy0rB3mF05wn357Z5Avshsq+h6/XJ+4wWpRHRWyb4blIhsmyOa
+	 dEjfVWkOOtDn+MAlzmBhiqXt0FR7Tb86gkV3rz6HYv/N9xl5s7FL7x3pZ2gYnFFR6b
+	 mQj/RcQBOlggEz0Zfy34bACS6vwVemN8bDvDSmV7pv987yMD47L4Oio9ssZsVtO/Tu
+	 ErnOaGJU62MD/T7ZIaOUvVr8vlxFjJCDq5Mxh/bd2y2XzlTd7O1kvt+fme80GsO+ZD
+	 o/Qh4uVMfZy6tTb1oGCG8dJewg/YoXn8q4Fg9UVrfKnSoq7V63IBZJFwMENsHqxfSv
+	 pvp0q9nw2hWww==
+Date: Tue, 27 Oct 2026 18:31:37 +0000
+From: Harry Yoo <harry@kernel.org>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: Chris Down <chris@chrisdown.name>, 
+	Andrew Morton <akpm@linux-foundation.org>, Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Kees Cook <kees@kernel.org>, Marco Elver <elver@google.com>, 
+	GONG Ruiqi <gongruiqi@huaweicloud.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	Kieran Bingham <kbingham@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com
+Subject: Re: [PATCH 0/8] mm/slab: Support selecting slab hardening features
+ at boot
+Message-ID: <179312451613.474906.1475329637924619088@kernel.org>
+References: <cover.1793086056.git.chris@chrisdown.name>
+ <16121542-acd5-4727-b64c-f8d519145b63@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,113 +66,32 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <auDUAN9xAQRQhnCo@chrisdown.name>
+In-Reply-To: <16121542-acd5-4727-b64c-f8d519145b63@kernel.org>
 
-On Wed, Oct 28, 2026 at 12:40:32AM +0800, Chris Down wrote:
-> Lorenzo Stoakes (ARM) writes:
-> > Sorry, in mm we require commit messages. Even for tests :)
->
-> Sure thing, I'll add one.
->
-> > On Tue, Oct 27, 2026 at 07:43:25PM +0800, Chris Down wrote:
-> > > Signed-off-by: Chris Down <chris@chrisdown.name>
-> > > ---
-> > >  .../mseal_system_mappings/sysmap_is_sealed.c  | 92 +++++++++++++++++++
-> > >  1 file changed, 92 insertions(+)
-> > >
-> > > diff --git a/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c b/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
-> > > index ea75ad537620..83b4fadfbfe7 100644
-> > > --- a/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
-> > > +++ b/tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
-> >
-> > Why on earth does 'mseal_system_mappings' have its own directory...??
-> >
-> > Ugh I don't know how I let this stuff go on the original series :/
-> >
-> > Please, for the love of all that's sacred, move these tests over to
-> > tools/selftests/mm/. This is an mm feature, for our sins...
-> >
-> > You can do the move as a prerequisite patch in the series.
->
-> Will do, I'll make the move the first patch.
->
-> > (And, again, I really do insist on your change doing some cleanup here as
-> > well rather than extending this stuff.)
->
-> Yep, see my reply to 1/3.
->
-> > > @@ -10,6 +10,7 @@
-> > >  #include <unistd.h>
-> > >  #include <string.h>
-> > >  #include <stdbool.h>
-> > > +#include <sys/mman.h>
-> > >  #include <sys/utsname.h>
-> > >  #include <zlib.h>
-> > >
-> > > @@ -232,4 +233,95 @@ TEST_F(basic, check_sealed)
-> > >  	EXPECT_EQ(expected, sealed);
-> > >  };
-> > >
-> > > +static bool find_vdso(unsigned long *start, unsigned long *end)
-> > > +{
-> > > +	char line[MAX_LINE_LEN];
-> > > +	bool found = false;
-> > > +	FILE *maps;
-> > > +
-> > > +	maps = fopen("/proc/self/maps", "r");
-> > > +	if (!maps)
-> > > +		return false;
-> > > +
-> > > +	while (fgets(line, sizeof(line), maps)) {
-> > > +		if (strstr(line, "[vdso]") &&
-> > > +		    sscanf(line, "%lx-%lx", start, end) == 2) {
-> > > +			found = true;
-> > > +			break;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	fclose(maps);
-> > > +	return found;
-> > > +}
-> >
-> > There's shared code for this kind of thing, please don't duplicate a
-> > /proc/self/maps thing if unnecessary. Also there's a nicer ioctl interface for
-> > all this.
-> >
-> > See vm_utils.[ch].
->
-> Oh thank you! I will use that.
->
-> > I mean arguably this is an mremap test that belongs with mremap? I guess
-> > debatable...
->
-> Hmm, I'd lean towards keeping it with the sysmap test, since it's really
-> testing that the seal is enforced on these mappings rather than anything
-> about mremap() itself, but I don't feel strongly if you insist, just let me
-> know.
+On Tue, Oct 27, 2026 at 08:10:40AM +0100, Vlastimil Babka (SUSE) wrote:
+> These two should be only a small cpu overhead, which is why distros
+> generally enable them [1].
 
-Actually let's keep them together :) It's always a bit blurry...
+Yeah I'd expect the impact on them to be small enough.
 
->
-> > This all just seems like work that should have been done in the past when this
-> > feature was proposed, and doesn't depend on your changes at all AFAICT? Maybe I
-> > missed it though.
-> >
-> > Valuable in itself, but probably worth sending separately as a result? Otherwise
-> > it's a little disconnected from the actual change you're making.
->
-> Yeah, it doesn't depend on it. I can send it separately on top of the move
-> if you like, I just don't like touching things without tests where possible.
+> >   slab_buckets=
+> >   kmalloc_partition=
+> 
+> These are more valid as there's a memory overhead tradeoff.
 
-Well that's a good instinct for sure :)
+quickly measuring it on a VM with 64 CPUs and 64 GiB RAM:
 
-I mean alternatively you could send as patch 1 and explicitly say you're
-providing a tested foundation for the other changes.
+w/ partitioned kmalloc: 94.0 MiB (235 kmalloc caches)
+w/o partitioned kmalloc: 76.1 MiB (~17.9 MiB diff) (40 kmalloc caches) 
 
->
-> Thanks for the review!
+Mostly due to a large number number of under-utilized slabs after boot.
+(per memalloc profiling)
 
-No worries!
+slab_buckets had relately smaller impact, about ~1MiB after boot.
 
---
-Cheers, Lorenzo
+(Of course this is just after boot, and actual bloat depends on memory
+ usage and fragmentation on production)
+
+-- 
+Cheers,
+Harry / Hyeonggon
