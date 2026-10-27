@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793117255;
-	b=3X4248pRD58sq4kTK6n2q/Va1tOgec0aaPU6h7e+IxYzKgsMxDE7sOGIw1TgZifQXAsE
-	 W1VGKomIEjsBnk/tl0KC1ZrdyDnBijQ4fzLhiBOn3Co8K7pDlkJMjFGufeBUCaDXmudHi
-	 UzPs8UkLyye7li0i2jgaiSmlzIAqYa+mm9CRF7XhWm71fvsdkmsyWcGswmb8hotDRAjd/
-	 +JeKu8sO31xzcg7vFZh8bN2+djiXU2jzQICQM3BpYQgUo9dWiIMl4qbiqhblikDhmoBzn
-	 FVTn8iSoHpZXMguA18NczahX1L/o+xUwIQFPkaU7YbZBjI5k94i8zeKaSfAz1dBtTpw==
+	t=1793117288;
+	b=Ck09W8iWe52ke+nfiFt+RJpWFQmwRbpAZIIjU5lo9wLgB9cVVp9hI8lArGQKnhfrssxO
+	 Bb7mZ8iSrZ0KQEH2SCUt7KSTS7ROHjCuBVxjgkH+hUVtApCedMNmzJyyAobK6nRAmKPbT
+	 Swg/FyOwSYTlejWqwEPm3Pd4TxN4YCUkZK8dmTPWf3QiPWvGLyUZty00LvrBrJkpH14fL
+	 /Mhe+efr6LWg5fTbRzeT1bwK8qprLTn6z+oakPo+dgo9J8Ce5MdbBq4h20UADh2FzKiEo
+	 9BZZovt1E0OZxCb80ERauDu16TJ1RLnw9vA9Q3ZPzCW+bTk6jvUfX0tLsVeaYoo/9dA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793117255;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793117288;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=gSD8mQKziZ5iG8e21wmE1nbLrwweoqqmHmBdVdKDScI=;
-	b=nSTXgYCKH5zvXtv6ilveX46loYqinjNTrD7e7eBYQU/Zss6vBsPwBnaQdu+rtt4/b8Tj
-	 7L3tVuJ87oN0/XeehCtG7L7Lr9sXknvPiT8j/AFq4nj/oxL4MQ8twSPYKLjh5lUScf9lw
-	 Xg7W0KySAlqp0YIhp8SGexwMtDj2pLnPx9egSuZJNz/1mXlxpPDZgYgtB18zkcnVOXrIs
-	 8prMc02OLC97FOF50glgQ3eFx5OLmVyreeyeGF41O7e8uI4d++5taEz9htcQ4/9mT1Jjb
-	 06vuckwK3jmeEX9dkH+9+fGDJEpS+bPS1IjH9eYJtk3VowupdgvAh78qJNz4b+NQzxQ==
+	bh=Wk5sKJyk5V7wJVcqUwHINdY0qu+x+arRPxXrQCPNZAo=;
+	b=LkbSmRkSMAWm0KQ6iYUjXW9zqtT4KfMuYt5l9HmvhSZqfZ1Dzqnq5C65mq8V9x3vvhfP
+	 dfZ5fprSAd4oWPM00OxzQcooqG77FCQK6bfk0n9/ZUUeQZTQU7s7wVMp1Zr9linvVY/ZD
+	 wvbtsiQSuOXpXfHW2ldPrjoS6NjS88kJKe3REUvSsduzi2va4vFEt7c4CVkwxOPNZe9xt
+	 QqchVOQRg4eMHok5KpP/Y6THUadA5Ad5bAfOpwCaj0tOFphk3EI3uGEHDgP5qZ42ia/C1
+	 Deu6DeeOVLNq9ZKOCnNEnG7Jsss/eV+Npf+iKf5FFhagUXoXHTcKjKcoUisK5Uadz3w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lhmII25F;
-	arc=none smtp.remote-ip=209.85.214.174
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UruzF5rX;
+	arc=none smtp.remote-ip=209.85.216.42
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2572606A31B
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 16:07:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F2572606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D90C606A31F
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 16:08:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D90C606A31F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lhmII25F
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ea138a3497so28198805ad.2
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 09:07:34 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UruzF5rX
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3ad2b3b1c02so39064a91.1
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 09:08:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793117254; x=1793722054; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793117286; x=1793722086; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=gSD8mQKziZ5iG8e21wmE1nbLrwweoqqmHmBdVdKDScI=;
-        b=lhmII25FoXT/m8Z3PIUcB21QXxYXr9FjxGaD+4cdOLMdtkqXyummPmszQB0vZqKIId
-         IBa/qpo8M+ZpT6mW1bwhUkpzmY0DZyXqjMpn3VML3hiyV0EIvOkRkBiQ+dRfiPUIviCe
-         9fhTp9vG1x0g5UXwLu3+mj1n3iprRCvPdndqYOtMNgD3SzY/xfTn2qcpJfQNAe1GgMPk
-         69Rx8AaUYAnWoe6l7gS4fDyHlfr1kQJhBTxFRB+XrLznl2QusSJmzKZUPP5hprJx+Cxr
-         iUsWAtJoxUHwjyvRHRbltuOn0bPLgZJlCLh7/xtlR0yT6DibYxMrjbRgECtTK0HIysuT
-         Zwjg==
+        bh=Wk5sKJyk5V7wJVcqUwHINdY0qu+x+arRPxXrQCPNZAo=;
+        b=UruzF5rXoHxSK8yvcnXWRRTwK5EwkNqpdqkOEfUrw6FluI0fCflSj/8y8iYUHDpPjO
+         vZI5pgh/qmuByi4CsWNXmsXUQ3lVzOzo8K4GmvC0FTNhsQjvCkpeeeMejBoI7m4e6okt
+         EGTO5S5lMhkmam3l77DKf2JFxhjmxjNx+/4AQzZZwk5CXKGtGBVTihOUUEThFV7Nzp6T
+         8CkN/DTIiZlyyRzqiAl+jXp5zUQ0AHSyzr1JMPZM+AMbWrlxzpT8q/oVmF2cUYFoC2mR
+         ctcW25SLXgeUv/HpjO7H1izGf3j/Mmf7aWuHUDOmB+yn6vh6xBvEu/hsHCz906dtzPiY
+         k0Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793117254; x=1793722054;
+        d=1e100.net; s=20260707; t=1793117286; x=1793722086;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gSD8mQKziZ5iG8e21wmE1nbLrwweoqqmHmBdVdKDScI=;
-        b=b2fmiOSWH7O/bNH1fRqugrAqxXzihy3GjQCMG/kGUublviO7IyXej7i28xUZYacFgk
-         GIh+tsfRO9KZ4tWZh3e2u+FnacaJqkp5XoBPpEEXxvGT21nYKDHbwtI0Arx8r4eAIUhF
-         +9czPAIWLy42stPAS4n9tXr41ffw5e/LHOaM4IOso+sXzUJfjJi0Toq6dmtyLThkX8rN
-         vCkGds16DJakrdm9+AsqOvO9IaH9jiukxhomsQOGLg3r8PLHWJs3Ez2ID+oJ2JgKVm1B
-         oKfAnnJwgMPtTToiO/nv3pX/UGMDqgDUWAZSTDK8Dp1iNB4FxIRJiKLeez4gz9Ep6c+5
-         Xkzw==
-X-Forwarded-Encrypted: i=1; AKwUvBwympHk8BX4EZpwkPXdV8y/Se2LxIl2OqwBrag14o4MlTurXdmIAEAjNoDalJPcZk1h0bXwbpmgi5eAlvGQYbM=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLFqi4RD6HoVffebBWeWPGupjkNJ/QR/VleSPeJVw0dnUqvtplA
-	AI3VTQWEDT3GmEWJozpGK/RuJ+HzdaS4GmDue2e4MriVVMq/VeJvf6aDGJhkFg==
-X-Gm-Gg: AYBFou3fX2TsgMWjesnSCwrBwqMcE2B4g1/88hZbV7WVW6gc5byq4WsPxktAfg2YMIT
-	v0VMaPDjiHbRUnBvFcxfOju2MAv0wWoW7QDY7eOLH5UcBeXD0jtl0H6YmPDvJ2K+8zqK+ktKLYd
-	WNAaWMDyQK/GkFflY/1FnO/2zg2q7FpK5b1Z6f7zUBKyWHyir7tJz87/zQQmopAI90VAA6leGCv
-	pjsaoxGIDxctbrlU8JHr791ja/wAErI+QO1PQcTDuT+kBm1KazTOZYcvR8venwLRlT7Jw45G0Ba
-	QVvMnXzMHkAiIntSawdx5/jTkVbiRA7SX1z/buryvkX8PAnDGUTQfAlTxX7lhLZFekk10YLWZwe
-	eob+TKyvtI9HfovLBl7n83p7xBXJLqy1npOnpwKFDUxta0w/QY6A72xeZHWwiY+VdFgHwL1UqqY
-	6attGcG15Lyl/fRzbAtuR0WyVErnh3FVL4F112EkJeLa8KOZyplWAq2Sf9XLzxHI1bMJR+mcyDs
-	7/syR8Gu6KHhSjRLB56FKsn4u+8FvSCBILrCJQUugecbqks1ly1z5tv3Zrz5p4lODKZcT+Dyvch
-	NNXNWa+kFzjWhIWSevVWfIz0YclQs0AgOTvIuGutDmndNKwfERuggT0vWYTeK6rgfzUQ
-X-Received: by 2002:a17:902:e807:b0:2e5:54c6:e5c9 with SMTP id d9443c01a7336-2ea9c0c8abamr89571955ad.2.1793117254204;
-        Tue, 27 Oct 2026 09:07:34 -0700 (PDT)
+        bh=Wk5sKJyk5V7wJVcqUwHINdY0qu+x+arRPxXrQCPNZAo=;
+        b=Yi9t4x7WUzZm9Kb97c98gyK604srB+Zgh8tSGA6Vx9WywX90g9kg7AEvn/SsGXdS9o
+         NFQPvdvPL4Urbht5SZp8JoNrlAzkQd1Xu8w7qb7N/AmCyV3yxuuKNY4uMexZAy2WQt/1
+         yxXBW9Yc3OiTiIW9Vk5y/1IhKGSDcTn1q3jzAy0fSMHj/ehpMEtF08yNhhiPzoj9Sl2d
+         CwduVCb2v8c+5k9psKftyo5oK7qFWfkkakVzOtwmX+umcezovxsR0LCp/5zNk4yImSXj
+         6u8jB1/cYLZbARIzO9kUrDsq/eK6GxzkgAIkb6uihJm4YnmV0np6OrTAs45bQrye7Q5C
+         AxiQ==
+X-Forwarded-Encrypted: i=1; AKwUvBz17RktFVzTJZ0k9Axo+HmhQi2on3pwccZFc0kCak9W549G+/JZ/YspMPaaerWYBi7wpYNyDkJnoUnFftTuwBE=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKkFbdSXtWW8pSrGptMMz7Y7waC5JzUXSVI9xaYw1vGmtVoBPuw
+	ZgoR2q+o6Cyuh7NEBjXhQrMZZB2qHCBhRN/F1UYO7N0bJm37Nl4DELGx
+X-Gm-Gg: AYBFou1WKrFIN/mC7b2Gwu5cc2dLjfLf8jEo54++T1Z/aju1gJOiXmXSGoiTi6CCC0M
+	eRya4xlzZ0ERSnt3232HBSr60QBV1LvYdHw9YGPRL60AXNmWTiAW0qzd4UMyM6CKYXM7NqboQov
+	58VYokY/88pMq/nqtqzsSiLPRMJUxdE+1i2QFHLUhQMjAdA2JaOU4DRvjtBWj3zfOUtqwMOhAMi
+	BXFH03ktuqkAhmzgpP3Cm6KwhpHOrDkHFgylfcNqLUXrV+y1MrPr63haMg7rsukf6YYu+O7tY2D
+	kHMw9xe0TGWCfq6iOw84ZS65BKyTSTdqTPuZRpHbQvxSU9WZEIo0mW9GfYR1SPaD5eX5Q+i6+P7
+	NJ/gjlipcDcfpIwzM6nhCtOUIqCVurWgZ+yEtoQBCeHoGs7ID2clhm1M5XpAayObExJLLChguEg
+	k2z2wUvMH77R4EH7T0oHgLa3Q2t7e5xrlUSfrszSRsci0MHeDrcmRSlz66jNLAq2wPwduthQpP/
+	ciu993GgUtXLqPBlQLVz+a+08i4P9nHFlQ6YtWo7yoPnJ7rAWLyWHBbKW5Ovf7aRZoK06Gb/BGR
+	73fHVseg12Fx5b3OPr0=
+X-Received: by 2002:a17:90b:5827:b0:3a8:32f2:f4a5 with SMTP id 98e67ed59e1d1-3adeae78010mr8643146a91.53.1793117286325;
+        Tue, 27 Oct 2026 09:08:06 -0700 (PDT)
 Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6453e90sm12368675ad.1.2026.10.27.09.07.26
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae4066cf2dsm4279314a91.16.2026.10.27.09.07.57
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 27 Oct 2026 09:07:33 -0700 (PDT)
+        Tue, 27 Oct 2026 09:08:05 -0700 (PDT)
 From: Lian Wang <lianux.mm@gmail.com>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -94,10 +94,11 @@ Cc: linux-kernel@vger.kernel.org,
 	kees@kernel.org,
 	gustavoars@kernel.org,
 	tglx@kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [RFC PATCH v3 07/18] mm/swap: consolidate swap inuse accounting helpers
-Date: Wed, 28 Oct 2026 00:07:09 +0800
-Message-ID: <b4951109ce21e1b53e4f339142ffa15b9b0980c6.1793106426.git.lianux.mm@gmail.com>
+	linux-hardening@vger.kernel.org,
+	Baoquan He <bhe@redhat.com>
+Subject: [RFC PATCH v3 08/18] mm/swap: change back to use each swap device's percpu cluster
+Date: Wed, 28 Oct 2026 00:07:41 +0800
+Message-ID: <b4d13a9c14674803424b419645db039ce0a6c72a.1793106426.git.lianux.mm@gmail.com>
 In-Reply-To: <cover.1793106426.git.lianux.mm@gmail.com>
 References: <cover.1793106426.git.lianux.mm@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -111,143 +112,391 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kairui Song <kasong@tencent.com>
+From: Youngjun Park <youngjun.park@lge.com>
 
-Inline the swap_usage_add/sub helpers into their only callers and
-rename the callers to better reflect what they actually do: track
-per-device inuse page counts.
+This reverts commit 1b7e90020eb7 ("mm, swap: use percpu cluster as
+allocation fast path").
 
-No functional change.
+The global percpu cluster causes several issues:
 
+1) It prevents efficient swap allocation for users that do not want
+   the default swap device policy.  Because the cluster cache sits
+   above device selection, all allocation users must stick with the
+   default allocation policy.  This fundamentally conflicts with
+   incoming ideas like swap tiering.
+
+2) It can cause priority inversion.  Consider two memcgs: memcg1 can
+   access devices A and B, where A has higher priority; memcg2 can
+   only access B.  Memcg2 can write the global percpu cluster with
+   device B, then memcg1 takes B in the fast path even though
+   higher-priority device A is not exhausted.
+
+3) The fast-path / slow-path design bundled with the global per-CPU
+   cache is problematic: only the fast path uses the global cache,
+   and the slow path is forced to rotate the allocation list.  This
+   complicates consumers like discard.
+
+Revert to per-device percpu clusters first.  A later patch will
+introduce new infrastructure for a high-performance global
+allocation path.
+
+Suggested-by: Kairui Song <kasong@tencent.com>
+Co-developed-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Youngjun Park <youngjun.park@lge.com>
 Signed-off-by: Kairui Song <kasong@tencent.com>
 Signed-off-by: Lian Wang <lianux.mm@gmail.com>
 ---
- mm/swapfile.c | 64 ++++++++++++++++++++++-----------------------------
- 1 file changed, 27 insertions(+), 37 deletions(-)
+ include/linux/swap.h |  13 +++-
+ mm/swapfile.c        | 170 ++++++++++++++-----------------------------
+ 2 files changed, 63 insertions(+), 120 deletions(-)
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 4c10e4a2d9b3..c531e0c45073 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -49,8 +49,8 @@
- #include "internal.h"
- #include "swap.h"
- 
--static void swap_range_alloc(struct swap_info_struct *si,
--			     unsigned int nr_entries);
-+static void swap_device_inuse_add(struct swap_info_struct *si,
-+				  unsigned int nr_entries);
- static bool folio_swapcache_freeable(struct folio *folio);
- static void move_cluster(struct swap_info_struct *si,
- 			 struct swap_cluster_info *ci, struct list_head *list,
-@@ -992,7 +992,7 @@ static bool __swap_cluster_alloc_entries(struct swap_info_struct *si,
- 	if (cluster_is_empty(ci))
- 		ci->order = order;
- 	ci->count += nr_pages;
--	swap_range_alloc(si, nr_pages);
-+	swap_device_inuse_add(si, nr_pages);
- 
- 	return true;
- }
-@@ -1300,53 +1300,36 @@ skip:
- }
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 80a14a8daba2..1a1ed9d11ad0 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -239,10 +239,17 @@ enum {
+ #endif
  
  /*
-- * swap_usage_add / swap_usage_sub of each slot are serialized by ci->lock
-- * within each cluster, so the total contribution to the global counter should
-- * always be positive and cannot exceed the total number of usable slots.
-+ * swap_device_inuse_add / swap_device_inuse_sub are called within cluster
-+ * update critical sections and serialized by ci->lock within each cluster,
-+ * so the total contribution to the global counter should always be positive
-+ * and cannot exceed the total number of usable slots.
+- * We keep using same cluster for rotational device so IO will be sequential.
+- * The purpose is to optimize SWAP throughput on these device.
++ * We assign a cluster to each CPU, so each CPU can allocate swap entry from
++ * its own cluster and swapout sequentially. The purpose is to optimize swapout
++ * throughput.
   */
--static bool swap_usage_add(struct swap_info_struct *si, unsigned int nr_entries)
-+static void swap_device_inuse_add(struct swap_info_struct *si,
-+				  unsigned int nr_entries)
- {
--	long val = atomic_long_add_return_relaxed(nr_entries, &si->inuse_pages);
-+	long inuse_pages;
++struct percpu_cluster {
++	local_lock_t lock; /* Protect the percpu_cluster above */
++	unsigned int next[SWAP_NR_ORDERS]; /* Likely next allocation offset */
++};
++
+ struct swap_sequential_cluster {
++	spinlock_t lock; /* Serialize usage of global cluster */
+ 	unsigned int next[SWAP_NR_ORDERS]; /* Likely next allocation offset */
+ };
  
- 	/*
- 	 * If device is full, and SWAP_USAGE_OFFLIST_BIT is not set,
- 	 * remove it from the plist.
+@@ -265,8 +272,8 @@ struct swap_info_struct {
+ 					/* list of cluster that are fragmented or contented */
+ 	unsigned int pages;		/* total of usable pages of swap */
+ 	atomic_long_t inuse_pages;	/* number of those currently in use */
++	struct percpu_cluster	__percpu *percpu_cluster; /* per cpu's swap location */
+ 	struct swap_sequential_cluster *global_cluster; /* Use one global cluster for rotating device */
+-	spinlock_t global_cluster_lock;	/* Serialize usage of global cluster */
+ 	struct rb_root swap_extent_root;/* root of the swap extent rbtree */
+ 	struct block_device *bdev;	/* swap device or bdev of swap file */
+ 	struct file *swap_file;		/* seldom referenced */
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index c531e0c45073..2035513d3c61 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -146,18 +146,6 @@ static atomic_t proc_poll_event = ATOMIC_INIT(0);
+ 
+ atomic_t nr_rotate_swap = ATOMIC_INIT(0);
+ 
+-struct percpu_swap_cluster {
+-	struct swap_info_struct *si[SWAP_NR_ORDERS];
+-	unsigned long offset[SWAP_NR_ORDERS];
+-	local_lock_t lock;
+-};
+-
+-static DEFINE_PER_CPU(struct percpu_swap_cluster, percpu_swap_cluster) = {
+-	.si = { NULL },
+-	.offset = { SWAP_ENTRY_INVALID },
+-	.lock = INIT_LOCAL_LOCK(),
+-};
+-
+ /* May return NULL on invalid type, caller must check for NULL return */
+ static struct swap_info_struct *swap_type_to_info(int type)
+ {
+@@ -570,9 +558,10 @@ swap_cluster_populate(struct swap_info_struct *si,
+ 	 * Only cluster isolation from the allocator does table allocation.
+ 	 * Swap allocator uses percpu clusters and holds the local lock.
  	 */
--	if (unlikely(val == si->pages)) {
--		del_from_avail_list(si, false);
--		return true;
+-	lockdep_assert_held(&this_cpu_ptr(&percpu_swap_cluster)->lock);
+-	if (!(si->flags & SWP_SOLIDSTATE))
+-		lockdep_assert_held(&si->global_cluster_lock);
++	if (si->flags & SWP_SOLIDSTATE)
++		lockdep_assert_held(this_cpu_ptr(&si->percpu_cluster->lock));
++	else
++		lockdep_assert_held(&si->global_cluster->lock);
+ 	lockdep_assert_held(&ci->lock);
+ 
+ 	if (!swap_cluster_alloc_table(ci, __GFP_HIGH | __GFP_NOMEMALLOC |
+@@ -585,9 +574,10 @@ swap_cluster_populate(struct swap_info_struct *si,
+ 	 * the potential recursive allocation is limited.
+ 	 */
+ 	spin_unlock(&ci->lock);
+-	if (!(si->flags & SWP_SOLIDSTATE))
+-		spin_unlock(&si->global_cluster_lock);
+-	local_unlock(&percpu_swap_cluster.lock);
++	if (si->flags & SWP_SOLIDSTATE)
++		local_unlock(&si->percpu_cluster->lock);
++	else
++		spin_unlock(&si->global_cluster->lock);
+ 
+ 	ret = swap_cluster_alloc_table(ci, __GFP_HIGH | __GFP_NOMEMALLOC |
+ 					   GFP_KERNEL);
+@@ -600,9 +590,10 @@ swap_cluster_populate(struct swap_info_struct *si,
+ 	 * could happen with ignoring the percpu cluster is fragmentation,
+ 	 * which is acceptable since this fallback and race is rare.
+ 	 */
+-	local_lock(&percpu_swap_cluster.lock);
+-	if (!(si->flags & SWP_SOLIDSTATE))
+-		spin_lock(&si->global_cluster_lock);
++	if (si->flags & SWP_SOLIDSTATE)
++		local_lock(&si->percpu_cluster->lock);
++	else
++		spin_lock(&si->global_cluster->lock);
+ 	spin_lock(&ci->lock);
+ 
+ 	if (ret) {
+@@ -708,7 +699,7 @@ static bool swap_do_scheduled_discard(struct swap_info_struct *si)
+ 		ci = list_first_entry(&si->discard_clusters, struct swap_cluster_info, list);
+ 		/*
+ 		 * Delete the cluster from list to prepare for discard, but keep
+-		 * the CLUSTER_FLAG_DISCARD flag, percpu_swap_cluster could be
++		 * the CLUSTER_FLAG_DISCARD flag, there could be percpu_cluster
+ 		 * pointing to it, or ran into by relocate_cluster.
+ 		 */
+ 		list_del(&ci->list);
+@@ -1040,12 +1031,10 @@ static unsigned int alloc_swap_scan_cluster(struct swap_info_struct *si,
+ out:
+ 	relocate_cluster(si, ci);
+ 	swap_cluster_unlock(ci);
+-	if (si->flags & SWP_SOLIDSTATE) {
+-		this_cpu_write(percpu_swap_cluster.offset[order], next);
+-		this_cpu_write(percpu_swap_cluster.si[order], si);
+-	} else {
++	if (si->flags & SWP_SOLIDSTATE)
++		this_cpu_write(si->percpu_cluster->next[order], next);
++	else
+ 		si->global_cluster->next[order] = next;
 -	}
--
--	return false;
--}
--
--static void swap_usage_sub(struct swap_info_struct *si, unsigned int nr_entries)
+ 	return found;
+ }
+ 
+@@ -1146,13 +1135,17 @@ static unsigned long cluster_alloc_swap_entry(struct swap_info_struct *si,
+ 	if (order && !(si->flags & SWP_BLKDEV))
+ 		return 0;
+ 
+-	if (!(si->flags & SWP_SOLIDSTATE)) {
++	if (si->flags & SWP_SOLIDSTATE) {
++		/* Fast path using per CPU cluster */
++		local_lock(&si->percpu_cluster->lock);
++		offset = __this_cpu_read(si->percpu_cluster->next[order]);
++	} else {
+ 		/* Serialize HDD SWAP allocation for each device. */
+-		spin_lock(&si->global_cluster_lock);
++		spin_lock(&si->global_cluster->lock);
+ 		offset = si->global_cluster->next[order];
+-		if (offset == SWAP_ENTRY_INVALID)
+-			goto new_cluster;
++	}
+ 
++	if (offset != SWAP_ENTRY_INVALID) {
+ 		ci = swap_cluster_lock(si, offset);
+ 		/* Cluster could have been used by another order */
+ 		if (cluster_is_usable(ci, order)) {
+@@ -1166,7 +1159,6 @@ static unsigned long cluster_alloc_swap_entry(struct swap_info_struct *si,
+ 			goto done;
+ 	}
+ 
+-new_cluster:
+ 	/*
+ 	 * If the device need discard, prefer new cluster over nonfull
+ 	 * to spread out the writes.
+@@ -1223,8 +1215,10 @@ new_cluster:
+ 			goto done;
+ 	}
+ done:
+-	if (!(si->flags & SWP_SOLIDSTATE))
+-		spin_unlock(&si->global_cluster_lock);
++	if (si->flags & SWP_SOLIDSTATE)
++		local_unlock(&si->percpu_cluster->lock);
++	else
++		spin_unlock(&si->global_cluster->lock);
+ 
+ 	return found;
+ }
+@@ -1377,41 +1371,8 @@ static bool get_swap_device_info(struct swap_info_struct *si)
+ 	return true;
+ }
+ 
+-/*
+- * Fast path try to get swap entries with specified order from current
+- * CPU's swap entry pool (a cluster).
+- */
+-static bool swap_alloc_fast(struct folio *folio)
 -{
--	long val = atomic_long_sub_return_relaxed(nr_entries, &si->inuse_pages);
+-	unsigned int order = folio_order(folio);
+-	struct swap_cluster_info *ci;
+-	struct swap_info_struct *si;
+-	unsigned int offset;
 -
 -	/*
--	 * If device is not full, and SWAP_USAGE_OFFLIST_BIT is set,
--	 * add it to the plist.
+-	 * Once allocated, swap_info_struct will never be completely freed,
+-	 * so checking it's liveness by get_swap_device_info is enough.
 -	 */
--	if (unlikely(val & SWAP_USAGE_OFFLIST_BIT))
--		add_to_avail_list(si);
+-	si = this_cpu_read(percpu_swap_cluster.si[order]);
+-	offset = this_cpu_read(percpu_swap_cluster.offset[order]);
+-	if (!si || !offset || !get_swap_device_info(si))
+-		return false;
+-
+-	ci = swap_cluster_lock(si, offset);
+-	if (cluster_is_usable(ci, order)) {
+-		if (cluster_is_empty(ci))
+-			offset = cluster_offset(si, ci);
+-		alloc_swap_scan_cluster(si, ci, folio, offset);
+-	} else {
+-		swap_cluster_unlock(ci);
+-	}
+-
+-	put_swap_device(si);
+-	return folio_test_swapcache(folio);
 -}
 -
--static void swap_range_alloc(struct swap_info_struct *si,
--			     unsigned int nr_entries)
--{
--	if (swap_usage_add(si, nr_entries)) {
-+	inuse_pages = atomic_long_add_return_relaxed(nr_entries, &si->inuse_pages);
-+	if (unlikely(inuse_pages == si->pages)) {
- 		if (vm_swap_full())
- 			schedule_work(&si->reclaim_work);
-+		del_from_avail_list(si, false);
- 	}
-+
- 	atomic_long_sub(nr_entries, &nr_swap_pages);
- }
- 
--static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
--			    unsigned int nr_entries)
-+static void swap_device_inuse_sub(struct swap_info_struct *si, unsigned long offset,
-+				  unsigned int nr_entries)
+ /* Rotate the device and switch to a new cluster */
+-static void swap_alloc_slow(struct folio *folio)
++static void swap_alloc_entry(struct folio *folio)
  {
- 	unsigned long end = offset + nr_entries - 1;
- 	void (*swap_slot_free_notify)(struct block_device *, unsigned long);
-+	long inuse_pages;
+ 	struct swap_info_struct *si, *next;
  
- 	zswap_invalidate(si->type, offset, nr_entries);
+@@ -1779,10 +1740,7 @@ int folio_alloc_swap(struct folio *folio)
+ 	}
  
-@@ -1368,7 +1351,14 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
- 	 */
- 	smp_wmb();
- 	atomic_long_add(nr_entries, &nr_swap_pages);
--	swap_usage_sub(si, nr_entries);
-+
-+	/*
-+	 * If device is not full, and SWAP_USAGE_OFFLIST_BIT is set,
-+	 * add it back to the plist.
-+	 */
-+	inuse_pages = atomic_long_sub_return_relaxed(nr_entries, &si->inuse_pages);
-+	if (unlikely(inuse_pages & SWAP_USAGE_OFFLIST_BIT))
-+		add_to_avail_list(si);
+ again:
+-	local_lock(&percpu_swap_cluster.lock);
+-	if (!swap_alloc_fast(folio))
+-		swap_alloc_slow(folio);
+-	local_unlock(&percpu_swap_cluster.lock);
++	swap_alloc_entry(folio);
+ 
+ 	if (!order && unlikely(!folio_test_swapcache(folio))) {
+ 		if (swap_sync_discard())
+@@ -2186,31 +2144,14 @@ out:
+  */
+ swp_entry_t swap_alloc_hibernation_slot(int type)
+ {
+-	struct swap_info_struct *pcp_si, *si = swap_type_to_info(type);
+-	unsigned long pcp_offset, offset = SWAP_ENTRY_INVALID;
+-	struct swap_cluster_info *ci;
++	struct swap_info_struct *si = swap_type_to_info(type);
++	unsigned long offset = SWAP_ENTRY_INVALID;
+ 	swp_entry_t entry = {0};
+ 
+ 	if (!si)
+ 		goto fail;
+ 
+-	/*
+-	 * Try the local cluster first if it matches the device. If
+-	 * not, try grab a new cluster and override local cluster.
+-	 */
+-	local_lock(&percpu_swap_cluster.lock);
+-	pcp_si = this_cpu_read(percpu_swap_cluster.si[0]);
+-	pcp_offset = this_cpu_read(percpu_swap_cluster.offset[0]);
+-	if (pcp_si == si && pcp_offset) {
+-		ci = swap_cluster_lock(si, pcp_offset);
+-		if (cluster_is_usable(ci, 0))
+-			offset = alloc_swap_scan_cluster(si, ci, NULL, pcp_offset);
+-		else
+-			swap_cluster_unlock(ci);
+-	}
+-	if (!offset)
+-		offset = cluster_alloc_swap_entry(si, NULL);
+-	local_unlock(&percpu_swap_cluster.lock);
++	offset = cluster_alloc_swap_entry(si, NULL);
+ 	if (offset)
+ 		entry = swp_entry(si->type, offset);
+ 
+@@ -3188,27 +3129,6 @@ static void free_swap_cluster_info(struct swap_cluster_info *cluster_info,
+ 	kvfree(cluster_info);
  }
  
- static bool get_swap_device_info(struct swap_info_struct *si)
-@@ -1994,7 +1984,7 @@ void __swap_cluster_free_entries(struct swap_info_struct *si,
- 	if (batch_id)
- 		mem_cgroup_uncharge_swap(batch_id, ci_off - batch_off);
+-/*
+- * Called after swap device's reference count is dead, so
+- * neither scan nor allocation will use it.
+- */
+-static void flush_percpu_swap_cluster(struct swap_info_struct *si)
+-{
+-	int cpu, i;
+-	struct swap_info_struct **pcp_si;
+-
+-	for_each_possible_cpu(cpu) {
+-		pcp_si = per_cpu_ptr(percpu_swap_cluster.si, cpu);
+-		/*
+-		 * Invalidate the percpu swap cluster cache, si->users
+-		 * is dead, so no new user will point to it, just flush
+-		 * any existing user.
+-		 */
+-		for (i = 0; i < SWAP_NR_ORDERS; i++)
+-			cmpxchg(&pcp_si[i], si, NULL);
+-	}
+-}
+-
+ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
+ {
+ 	struct swap_info_struct *p = NULL;
+@@ -3260,7 +3180,6 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
  
--	swap_range_free(si, ci_head + ci_start, nr_pages);
-+	swap_device_inuse_sub(si, ci_head + ci_start, nr_pages);
- 	swap_cluster_assert_empty(ci, ci_start, nr_pages, false);
+ 	flush_work(&p->discard_work);
+ 	flush_work(&p->reclaim_work);
+-	flush_percpu_swap_cluster(p);
  
- 	if (!ci->count)
-@@ -2935,7 +2925,7 @@ retry:
- success:
+ 	destroy_swap_extents(p, p->swap_file);
+ 
+@@ -3281,6 +3200,8 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
+ 	percpu_up_write(&swapon_rwsem);
+ 	arch_swap_invalidate_area(p->type);
+ 	zswap_swapoff(p->type);
++	free_percpu(p->percpu_cluster);
++	p->percpu_cluster = NULL;
+ 	kfree(p->global_cluster);
+ 	p->global_cluster = NULL;
+ 	free_swap_cluster_info(cluster_info, maxpages);
+@@ -3629,7 +3550,7 @@ static int setup_swap_clusters_info(struct swap_info_struct *si,
+ {
+ 	unsigned long nr_clusters = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
+ 	struct swap_cluster_info *cluster_info;
+-	int err = -ENOMEM;
++	int cpu, err = -ENOMEM;
+ 	unsigned long i;
+ 
+ 	cluster_info = kvzalloc_objs(*cluster_info, nr_clusters);
+@@ -3639,13 +3560,26 @@ static int setup_swap_clusters_info(struct swap_info_struct *si,
+ 	for (i = 0; i < nr_clusters; i++)
+ 		spin_lock_init(&cluster_info[i].lock);
+ 
+-	if (!(si->flags & SWP_SOLIDSTATE)) {
++	if (si->flags & SWP_SOLIDSTATE) {
++		si->percpu_cluster = alloc_percpu(struct percpu_cluster);
++		if (!si->percpu_cluster)
++			goto err;
++
++		for_each_possible_cpu(cpu) {
++			struct percpu_cluster *cluster;
++
++			cluster = per_cpu_ptr(si->percpu_cluster, cpu);
++			for (i = 0; i < SWAP_NR_ORDERS; i++)
++				cluster->next[i] = SWAP_ENTRY_INVALID;
++			local_lock_init(&cluster->lock);
++		}
++	} else {
+ 		si->global_cluster = kmalloc_obj(*si->global_cluster);
+ 		if (!si->global_cluster)
+ 			goto err;
+ 		for (i = 0; i < SWAP_NR_ORDERS; i++)
+ 			si->global_cluster->next[i] = SWAP_ENTRY_INVALID;
+-		spin_lock_init(&si->global_cluster_lock);
++		spin_lock_init(&si->global_cluster->lock);
+ 	}
+ 
  	/*
- 	 * Make sure that further cleanups after try_to_unuse() returns happen
--	 * after swap_range_free() reduces si->inuse_pages to 0.
-+	 * after swap_device_inuse_sub() reduces si->inuse_pages to 0.
- 	 */
- 	smp_mb();
- 	return 0;
+@@ -3919,6 +3853,8 @@ free_swap_zswap:
+ bad_swap_unlock_inode:
+ 	inode_unlock(inode);
+ bad_swap:
++	free_percpu(si->percpu_cluster);
++	si->percpu_cluster = NULL;
+ 	kfree(si->global_cluster);
+ 	si->global_cluster = NULL;
+ 	inode = NULL;
