@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793117211;
-	b=ve6mWgMJESXC4Km9+z9r79NHnPfqt8MNQHobpe8gmAxZyAgAMzpdZXXljZ7xzCktkkVT
-	 0rN8J2F76HHO2jQuzUQyiVMjZeDcfB1Mwdgew9E0csfTH61R5RLxu3obXC6WGZs8Sz/m0
-	 AMNVJz9vZIIwEGRlNij+Dq0m12xn9NUmfYuxcCqbGl93TnBHd9AnVJHe/B8X1jJJdEaGp
-	 GA/s7D8xg/oA/Q1YtJX2w+bHQKOr+SehqVId4jBvI1eWY5Rb+b+74d15GYHRx1vLcAm44
-	 bwYgdsXu5Lu3JgohLSZcyZl3SlKv4atOXlL7vyDbujiO09/W1hQ5dGrESBrzklPf0Hg==
+	t=1793117255;
+	b=3X4248pRD58sq4kTK6n2q/Va1tOgec0aaPU6h7e+IxYzKgsMxDE7sOGIw1TgZifQXAsE
+	 W1VGKomIEjsBnk/tl0KC1ZrdyDnBijQ4fzLhiBOn3Co8K7pDlkJMjFGufeBUCaDXmudHi
+	 UzPs8UkLyye7li0i2jgaiSmlzIAqYa+mm9CRF7XhWm71fvsdkmsyWcGswmb8hotDRAjd/
+	 +JeKu8sO31xzcg7vFZh8bN2+djiXU2jzQICQM3BpYQgUo9dWiIMl4qbiqhblikDhmoBzn
+	 FVTn8iSoHpZXMguA18NczahX1L/o+xUwIQFPkaU7YbZBjI5k94i8zeKaSfAz1dBtTpw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793117211;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793117255;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=TppI+6UPKL+8iku51pvieIqLoyMGuox9OFKt53vLtFQ=;
-	b=LpO6x9r4yzcTWjYyvGJuXKFIiOLz/K6yALOR7EX3n9qEzJ8baz4YsLTEhE6MYtMV786/
-	 YoKWrYdzURi0hHGPFJsjbP83RRTGUS5RSPHJXx7YSEkR1cHM6YRLUetiMVp/IVSEreyde
-	 RIBJUV0uP/6RZ6svlVY/rXG7b48O1y3q8Nw27573ShZcnlM9FEqVqQJ0XbXGMNsnc7VZR
-	 P1oqa5nMtqoQdClUqmkKcNalWzLlXQwDPpzsYPO06psSkMJCrUVpXr+rzlEeIHJe9F/Zl
-	 Gmmi8M9RFp6vlKVBssvbXhqO12TPByGox+ea4zTA5L952AIOuaBy0QPK9QDvdX7E3lw==
+	bh=gSD8mQKziZ5iG8e21wmE1nbLrwweoqqmHmBdVdKDScI=;
+	b=nSTXgYCKH5zvXtv6ilveX46loYqinjNTrD7e7eBYQU/Zss6vBsPwBnaQdu+rtt4/b8Tj
+	 7L3tVuJ87oN0/XeehCtG7L7Lr9sXknvPiT8j/AFq4nj/oxL4MQ8twSPYKLjh5lUScf9lw
+	 Xg7W0KySAlqp0YIhp8SGexwMtDj2pLnPx9egSuZJNz/1mXlxpPDZgYgtB18zkcnVOXrIs
+	 8prMc02OLC97FOF50glgQ3eFx5OLmVyreeyeGF41O7e8uI4d++5taEz9htcQ4/9mT1Jjb
+	 06vuckwK3jmeEX9dkH+9+fGDJEpS+bPS1IjH9eYJtk3VowupdgvAh78qJNz4b+NQzxQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cjNtAT+F;
-	arc=none smtp.remote-ip=209.85.215.173
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lhmII25F;
+	arc=none smtp.remote-ip=209.85.214.174
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82FB606A321
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 16:06:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B82FB606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2572606A31B
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 16:07:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F2572606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cjNtAT+F
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-cc758830601so77235a12.2
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 09:06:50 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lhmII25F
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ea138a3497so28198805ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 09:07:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793117210; x=1793722010; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793117254; x=1793722054; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=TppI+6UPKL+8iku51pvieIqLoyMGuox9OFKt53vLtFQ=;
-        b=cjNtAT+FXQ8OfSS/etqtgs1iqgQtAqM6fTtgv27+FiQrRHNYimv4CFyAj8CngUwhOw
-         cP5GgVZHeL2A9UArbiDZa9Yx2jceLTGoyacrV5eV6lT0xjMydGycGfgBEHa8qf0CIhvV
-         maemyC5IhZjKEo/cgpsnicmML6pY6Rr8Iec7+LTF66eacMyDuvHg3CKoP3bqgGJRkCwu
-         fLT4kaoVddmvkhsiw+nQoTsv0ypNK4h5SSvu83mhb7Q81jsA129TNjX/2/eQKC7Qv4zP
-         woEcVsV8R6Tb2NUlLPUytu3t4y1I8qH943cBW6Ic5P7B22eCYSn1ucew0HsDRsCEi42J
-         IaxA==
+        bh=gSD8mQKziZ5iG8e21wmE1nbLrwweoqqmHmBdVdKDScI=;
+        b=lhmII25FoXT/m8Z3PIUcB21QXxYXr9FjxGaD+4cdOLMdtkqXyummPmszQB0vZqKIId
+         IBa/qpo8M+ZpT6mW1bwhUkpzmY0DZyXqjMpn3VML3hiyV0EIvOkRkBiQ+dRfiPUIviCe
+         9fhTp9vG1x0g5UXwLu3+mj1n3iprRCvPdndqYOtMNgD3SzY/xfTn2qcpJfQNAe1GgMPk
+         69Rx8AaUYAnWoe6l7gS4fDyHlfr1kQJhBTxFRB+XrLznl2QusSJmzKZUPP5hprJx+Cxr
+         iUsWAtJoxUHwjyvRHRbltuOn0bPLgZJlCLh7/xtlR0yT6DibYxMrjbRgECtTK0HIysuT
+         Zwjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793117210; x=1793722010;
+        d=1e100.net; s=20260707; t=1793117254; x=1793722054;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=TppI+6UPKL+8iku51pvieIqLoyMGuox9OFKt53vLtFQ=;
-        b=dfCRK2nXKCMz+rDmx1YWNt8lpR/vhA6i6y1AIJK8NjhjyK0689GYnG5U0QWnlEx6zG
-         jNMrxIAYYr4PdLGwAbrZ6oCTqRczzcpXj5EJvm76XEfZvGGtUjsWNdoTuDN4TSzOTp48
-         S34rlTiCxQ4RT7r1/ACaITf92/Dm6ikGkUodg3lkML8zwwyWegNIECdXplxvN4Jqw0+D
-         WNjImVZ1Yh93RKILfDPJ9rtriAZd8aYU59X5m+zLnzC3cL4drYrOEV/YbwzZ8Xe9WjKF
-         TxphbS+GcU8woLcdsGH3RMhzTtjWZ0U1Hrc63ia80DwJJQmG7B/cHh2cRxKdvR+0Mx7L
-         reeA==
-X-Forwarded-Encrypted: i=1; AKwUvBx42+yvUnTBeDpSmXgdM4nItRmfrI4mkgPOEur2TnxGMLXTC1FHQSVb+AKnPV7w2rX/0NjzwlrpciyHxuHKmvY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIR6A9ItBqchb8S3NOVGD1WhKLUssw3RtkIbG7BRYpyrtVJMkIm
-	Mey+n8/GPmTr+4mZZwReV091TQrll3UHGmBypufdpGdbpwUhjcuQtP9w
-X-Gm-Gg: AYBFou1SXQoxZbRTHowva73oMXhdKor7DOMMdNktDnoqkHzMCJWXc0omp5ktsL0O3zE
-	ddEm6Roy9oD4YbsnQz88BjOSRa22ZNgSoSFabatN3l5atvAcTzZ9MFZDQpYk5gNvvBAjmi26euP
-	F5fnqx1rL1+U2XYDAynuVP3GcIRzCHu0ORpV4LupJAqb7DK2pwqxGouK3ZTnDYws6Ut4L1FIvi8
-	ftlN8sVt6ucCCAFEA/xQWd6X8e9g26dVjIvq/mWf14j52OO83uKwFm3o7WAWbaqUYHFMcP7mHXb
-	GridfeVwmaHc7aCU+A18KU1GYHHNpIPPVZR8/y4RQuxHk7tj8Y/D0tGBs/QQa2okElbDcEMbTRa
-	UMpz2Jp4jXT4Qo6arLLxSYouP0+AZeNiGk0PfWKjuDB3tjOY/5CdkxTefnTBzknagXOl8sNF/DL
-	65TCpb1d9Qd5xaN17T3wiWWzFCni5EcSkuYMsvA9RHkzgNIsh7FjTxzhCtB15mMx/ZYCb0Xw8JY
-	Nl21j3KFltOf0wXAeyPzDxopo+38gXUvC7xFvWipCVIG42Ywb8CFXj5stBL1od7n1PhTcsMEVX7
-	kmmPEAruWy7toT/Y24E1
-X-Received: by 2002:a17:903:1103:b0:2e9:7190:32dc with SMTP id d9443c01a7336-2ea9c68c70emr91918065ad.11.1793117210052;
-        Tue, 27 Oct 2026 09:06:50 -0700 (PDT)
+        bh=gSD8mQKziZ5iG8e21wmE1nbLrwweoqqmHmBdVdKDScI=;
+        b=b2fmiOSWH7O/bNH1fRqugrAqxXzihy3GjQCMG/kGUublviO7IyXej7i28xUZYacFgk
+         GIh+tsfRO9KZ4tWZh3e2u+FnacaJqkp5XoBPpEEXxvGT21nYKDHbwtI0Arx8r4eAIUhF
+         +9czPAIWLy42stPAS4n9tXr41ffw5e/LHOaM4IOso+sXzUJfjJi0Toq6dmtyLThkX8rN
+         vCkGds16DJakrdm9+AsqOvO9IaH9jiukxhomsQOGLg3r8PLHWJs3Ez2ID+oJ2JgKVm1B
+         oKfAnnJwgMPtTToiO/nv3pX/UGMDqgDUWAZSTDK8Dp1iNB4FxIRJiKLeez4gz9Ep6c+5
+         Xkzw==
+X-Forwarded-Encrypted: i=1; AKwUvBwympHk8BX4EZpwkPXdV8y/Se2LxIl2OqwBrag14o4MlTurXdmIAEAjNoDalJPcZk1h0bXwbpmgi5eAlvGQYbM=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLFqi4RD6HoVffebBWeWPGupjkNJ/QR/VleSPeJVw0dnUqvtplA
+	AI3VTQWEDT3GmEWJozpGK/RuJ+HzdaS4GmDue2e4MriVVMq/VeJvf6aDGJhkFg==
+X-Gm-Gg: AYBFou3fX2TsgMWjesnSCwrBwqMcE2B4g1/88hZbV7WVW6gc5byq4WsPxktAfg2YMIT
+	v0VMaPDjiHbRUnBvFcxfOju2MAv0wWoW7QDY7eOLH5UcBeXD0jtl0H6YmPDvJ2K+8zqK+ktKLYd
+	WNAaWMDyQK/GkFflY/1FnO/2zg2q7FpK5b1Z6f7zUBKyWHyir7tJz87/zQQmopAI90VAA6leGCv
+	pjsaoxGIDxctbrlU8JHr791ja/wAErI+QO1PQcTDuT+kBm1KazTOZYcvR8venwLRlT7Jw45G0Ba
+	QVvMnXzMHkAiIntSawdx5/jTkVbiRA7SX1z/buryvkX8PAnDGUTQfAlTxX7lhLZFekk10YLWZwe
+	eob+TKyvtI9HfovLBl7n83p7xBXJLqy1npOnpwKFDUxta0w/QY6A72xeZHWwiY+VdFgHwL1UqqY
+	6attGcG15Lyl/fRzbAtuR0WyVErnh3FVL4F112EkJeLa8KOZyplWAq2Sf9XLzxHI1bMJR+mcyDs
+	7/syR8Gu6KHhSjRLB56FKsn4u+8FvSCBILrCJQUugecbqks1ly1z5tv3Zrz5p4lODKZcT+Dyvch
+	NNXNWa+kFzjWhIWSevVWfIz0YclQs0AgOTvIuGutDmndNKwfERuggT0vWYTeK6rgfzUQ
+X-Received: by 2002:a17:902:e807:b0:2e5:54c6:e5c9 with SMTP id d9443c01a7336-2ea9c0c8abamr89571955ad.2.1793117254204;
+        Tue, 27 Oct 2026 09:07:34 -0700 (PDT)
 Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6b7cdebsm12246305ad.12.2026.10.27.09.06.42
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6453e90sm12368675ad.1.2026.10.27.09.07.26
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 27 Oct 2026 09:06:49 -0700 (PDT)
+        Tue, 27 Oct 2026 09:07:33 -0700 (PDT)
 From: Lian Wang <lianux.mm@gmail.com>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -95,9 +95,9 @@ Cc: linux-kernel@vger.kernel.org,
 	gustavoars@kernel.org,
 	tglx@kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [RFC PATCH v3 06/18] mm/swap: serialize swap publication before removing swapon mutex
-Date: Wed, 28 Oct 2026 00:06:23 +0800
-Message-ID: <200266a50e30e916ad425ccbe2b7cede7f227d22.1793106426.git.lianux.mm@gmail.com>
+Subject: [RFC PATCH v3 07/18] mm/swap: consolidate swap inuse accounting helpers
+Date: Wed, 28 Oct 2026 00:07:09 +0800
+Message-ID: <b4951109ce21e1b53e4f339142ffa15b9b0980c6.1793106426.git.lianux.mm@gmail.com>
 In-Reply-To: <cover.1793106426.git.lianux.mm@gmail.com>
 References: <cover.1793106426.git.lianux.mm@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -113,159 +113,141 @@ Content-Transfer-Encoding: 8bit
 
 From: Kairui Song <kasong@tencent.com>
 
-Move publication of swap_file, resurrection of the device reference and
-the writable transition into one swapon_rwsem writer section. Split out
-a writer-held enable helper so initial publication can share this
-section, while failed swapoff can use the locking wrapper.
+Inline the swap_usage_add/sub helpers into their only callers and
+rename the callers to better reflect what they actually do: track
+per-device inuse page counts.
 
-With file publication and teardown serialized by the writer, remove
-swapon_mutex and use a topology reader across /proc/swaps iteration.
-Keep the SWP_USED filter when advancing the swap_info array.
-
-The publication boundary excludes proc readers from partially published
-state and gives the lockless live-reference users initialized device
-metadata before the device becomes an allocation candidate.
+No functional change.
 
 Signed-off-by: Kairui Song <kasong@tencent.com>
-Co-developed-by: Lian Wang <lianux.mm@gmail.com>
 Signed-off-by: Lian Wang <lianux.mm@gmail.com>
 ---
- mm/swapfile.c | 39 +++++++++++++++++++--------------------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+ mm/swapfile.c | 64 ++++++++++++++++++++++-----------------------------
+ 1 file changed, 27 insertions(+), 37 deletions(-)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 4ffde6827d44..4c10e4a2d9b3 100644
+index 4c10e4a2d9b3..c531e0c45073 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -140,9 +140,6 @@ static inline struct swap_info_struct *__swap_iter(int *i, unsigned long flag)
+@@ -49,8 +49,8 @@
+ #include "internal.h"
+ #include "swap.h"
  
- static struct kmem_cache *swap_table_cachep;
+-static void swap_range_alloc(struct swap_info_struct *si,
+-			     unsigned int nr_entries);
++static void swap_device_inuse_add(struct swap_info_struct *si,
++				  unsigned int nr_entries);
+ static bool folio_swapcache_freeable(struct folio *folio);
+ static void move_cluster(struct swap_info_struct *si,
+ 			 struct swap_cluster_info *ci, struct list_head *list,
+@@ -992,7 +992,7 @@ static bool __swap_cluster_alloc_entries(struct swap_info_struct *si,
+ 	if (cluster_is_empty(ci))
+ 		ci->order = order;
+ 	ci->count += nr_pages;
+-	swap_range_alloc(si, nr_pages);
++	swap_device_inuse_add(si, nr_pages);
  
--/* Protects si->swap_file for /proc/swaps usage */
--static DEFINE_MUTEX(swapon_mutex);
--
- static DECLARE_WAIT_QUEUE_HEAD(proc_poll_wait);
- /* Activity counter to indicate that a swapon or swapoff has occurred */
- static atomic_t proc_poll_event = ATOMIC_INIT(0);
-@@ -3097,9 +3094,9 @@ static int setup_swap_extents(struct swap_info_struct *sis,
-  * Mark a fully initialized swap device writable and expose it to the
-  * allocator. The caller must have resurrected its percpu ref first.
+ 	return true;
+ }
+@@ -1300,53 +1300,36 @@ skip:
+ }
+ 
+ /*
+- * swap_usage_add / swap_usage_sub of each slot are serialized by ci->lock
+- * within each cluster, so the total contribution to the global counter should
+- * always be positive and cannot exceed the total number of usable slots.
++ * swap_device_inuse_add / swap_device_inuse_sub are called within cluster
++ * update critical sections and serialized by ci->lock within each cluster,
++ * so the total contribution to the global counter should always be positive
++ * and cannot exceed the total number of usable slots.
   */
--static void swap_device_enable(struct swap_info_struct *si)
-+static void __swap_device_enable(struct swap_info_struct *si)
+-static bool swap_usage_add(struct swap_info_struct *si, unsigned int nr_entries)
++static void swap_device_inuse_add(struct swap_info_struct *si,
++				  unsigned int nr_entries)
  {
--	percpu_down_write(&swapon_rwsem);
-+	lockdep_assert_held_write(&swapon_rwsem);
- 	spin_lock(&swap_avail_lock);
- 	si->flags |= SWP_WRITEOK;
- 	spin_unlock(&swap_avail_lock);
-@@ -3107,11 +3104,16 @@ static void swap_device_enable(struct swap_info_struct *si)
- 	atomic_long_add(si->pages, &nr_swap_pages);
- 	total_swap_pages += si->pages;
- 	plist_add(&si->list, &swap_active_head);
--	percpu_up_write(&swapon_rwsem);
+-	long val = atomic_long_add_return_relaxed(nr_entries, &si->inuse_pages);
++	long inuse_pages;
+ 
+ 	/*
+ 	 * If device is full, and SWAP_USAGE_OFFLIST_BIT is not set,
+ 	 * remove it from the plist.
+ 	 */
+-	if (unlikely(val == si->pages)) {
+-		del_from_avail_list(si, false);
+-		return true;
+-	}
 -
- 	add_to_avail_list(si);
- }
- 
-+static void swap_device_enable(struct swap_info_struct *si)
-+{
-+	percpu_down_write(&swapon_rwsem);
-+	__swap_device_enable(si);
-+	percpu_up_write(&swapon_rwsem);
-+}
+-	return false;
+-}
+-
+-static void swap_usage_sub(struct swap_info_struct *si, unsigned int nr_entries)
+-{
+-	long val = atomic_long_sub_return_relaxed(nr_entries, &si->inuse_pages);
+-
+-	/*
+-	 * If device is not full, and SWAP_USAGE_OFFLIST_BIT is set,
+-	 * add it to the plist.
+-	 */
+-	if (unlikely(val & SWAP_USAGE_OFFLIST_BIT))
+-		add_to_avail_list(si);
+-}
+-
+-static void swap_range_alloc(struct swap_info_struct *si,
+-			     unsigned int nr_entries)
+-{
+-	if (swap_usage_add(si, nr_entries)) {
++	inuse_pages = atomic_long_add_return_relaxed(nr_entries, &si->inuse_pages);
++	if (unlikely(inuse_pages == si->pages)) {
+ 		if (vm_swap_full())
+ 			schedule_work(&si->reclaim_work);
++		del_from_avail_list(si, false);
+ 	}
 +
- static int swap_device_disable(struct address_space *mapping,
- 			       struct swap_info_struct **swap_info)
- {
-@@ -3275,7 +3277,6 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
- 	if (!(p->flags & SWP_SOLIDSTATE))
- 		atomic_dec(&nr_rotate_swap);
- 
--	mutex_lock(&swapon_mutex);
- 	percpu_down_write(&swapon_rwsem);
- 	spin_lock(&p->lock);
- 	drain_mmlist();
-@@ -3290,7 +3291,6 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
- 	percpu_up_write(&swapon_rwsem);
- 	arch_swap_invalidate_area(p->type);
- 	zswap_swapoff(p->type);
--	mutex_unlock(&swapon_mutex);
- 	kfree(p->global_cluster);
- 	p->global_cluster = NULL;
- 	free_swap_cluster_info(cluster_info, maxpages);
-@@ -3336,20 +3336,18 @@ static __poll_t swaps_poll(struct file *file, poll_table *wait)
- 	return EPOLLIN | EPOLLRDNORM;
+ 	atomic_long_sub(nr_entries, &nr_swap_pages);
  }
  
--/* iterator */
- static void *swap_start(struct seq_file *swap, loff_t *pos)
+-static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+-			    unsigned int nr_entries)
++static void swap_device_inuse_sub(struct swap_info_struct *si, unsigned long offset,
++				  unsigned int nr_entries)
  {
- 	struct swap_info_struct *si;
--	int type;
- 	loff_t l = *pos;
+ 	unsigned long end = offset + nr_entries - 1;
+ 	void (*swap_slot_free_notify)(struct block_device *, unsigned long);
++	long inuse_pages;
  
--	mutex_lock(&swapon_mutex);
-+	percpu_down_read(&swapon_rwsem);
+ 	zswap_invalidate(si->type, offset, nr_entries);
  
- 	if (!l)
- 		return SEQ_START_TOKEN;
- 
--	for (type = 0; (si = swap_type_to_info(type)); type++) {
--		if (!(si->swap_file))
-+	for_each_swap(si) {
-+		if (!si->swap_file)
- 			continue;
- 		if (!--l)
- 			return si;
-@@ -3370,7 +3368,7 @@ static void *swap_next(struct seq_file *swap, void *v, loff_t *pos)
- 
- 	++(*pos);
- 	for (; (si = swap_type_to_info(type)); type++) {
--		if (!(si->swap_file))
-+		if (!(si->flags & SWP_USED) || !(si->swap_file))
- 			continue;
- 		return si;
- 	}
-@@ -3380,7 +3378,7 @@ static void *swap_next(struct seq_file *swap, void *v, loff_t *pos)
- 
- static void swap_stop(struct seq_file *swap, void *v)
- {
--	mutex_unlock(&swapon_mutex);
-+	percpu_up_read(&swapon_rwsem);
+@@ -1368,7 +1351,14 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+ 	 */
+ 	smp_wmb();
+ 	atomic_long_add(nr_entries, &nr_swap_pages);
+-	swap_usage_sub(si, nr_entries);
++
++	/*
++	 * If device is not full, and SWAP_USAGE_OFFLIST_BIT is set,
++	 * add it back to the plist.
++	 */
++	inuse_pages = atomic_long_sub_return_relaxed(nr_entries, &si->inuse_pages);
++	if (unlikely(inuse_pages & SWAP_USAGE_OFFLIST_BIT))
++		add_to_avail_list(si);
  }
  
- static int swap_show(struct seq_file *swap, void *v)
-@@ -3893,7 +3891,6 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
- 		goto free_swap_zswap;
- 	}
+ static bool get_swap_device_info(struct swap_info_struct *si)
+@@ -1994,7 +1984,7 @@ void __swap_cluster_free_entries(struct swap_info_struct *si,
+ 	if (batch_id)
+ 		mem_cgroup_uncharge_swap(batch_id, ci_off - batch_off);
  
--	mutex_lock(&swapon_mutex);
- 	prio = DEF_SWAP_PRIO;
- 	if (swap_flags & SWAP_FLAG_PREFER)
- 		prio = swap_flags & SWAP_FLAG_PRIO_MASK;
-@@ -3905,11 +3902,14 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
- 	si->prio = prio;
- 	si->list.prio = -si->prio;
- 	si->avail_list.prio = -si->prio;
-+	/* Publish the file, live reference and writable state together. */
-+	percpu_down_write(&swapon_rwsem);
- 	si->swap_file = swap_file;
+-	swap_range_free(si, ci_head + ci_start, nr_pages);
++	swap_device_inuse_sub(si, ci_head + ci_start, nr_pages);
+ 	swap_cluster_assert_empty(ci, ci_start, nr_pages, false);
  
--	/* Sets SWP_WRITEOK, resurrect the percpu ref, expose the swap device */
-+	/* Make the reference live before exposing the writable device. */
- 	percpu_ref_resurrect(&si->users);
--	swap_device_enable(si);
-+	__swap_device_enable(si);
-+	percpu_up_write(&swapon_rwsem);
- 
- 	pr_info("Adding %uk swap on %s.  Priority:%d extents:%d across:%lluk %s%s%s%s\n",
- 		K(si->pages), name->name, si->prio, nr_extents,
-@@ -3919,7 +3919,6 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
- 		(si->flags & SWP_AREA_DISCARD) ? "s" : "",
- 		(si->flags & SWP_PAGE_DISCARD) ? "c" : "");
- 
--	mutex_unlock(&swapon_mutex);
- 	atomic_inc(&proc_poll_event);
- 	wake_up_interruptible(&proc_poll_wait);
- 
+ 	if (!ci->count)
+@@ -2935,7 +2925,7 @@ retry:
+ success:
+ 	/*
+ 	 * Make sure that further cleanups after try_to_unuse() returns happen
+-	 * after swap_range_free() reduces si->inuse_pages to 0.
++	 * after swap_device_inuse_sub() reduces si->inuse_pages to 0.
+ 	 */
+ 	smp_mb();
+ 	return 0;
