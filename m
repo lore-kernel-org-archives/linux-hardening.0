@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793140762;
-	b=vHm06w4SsgwCWxDZJe1GZ76cL6jJnFViAwtABJwsSxXqyrPv50PbYl3TPVEfRCU9EC3r
-	 Lxiw5pXjJ5staSpbBO1FFe6QZahoyfpkfGGRttSQWtRXeXvF45WzW7yNUKRpR9V6NIN/0
-	 wpNV1HZIFNOzA/X5+SYabcSckInGlT4jI6OesbW4qVkBx4+KQMv+ISeZfGm9KYaynE6WB
-	 DLB+hHp6om71m/9OEOVa9jxqGbvJskbSqKoEUJKNz+wVo36RWM2ADzs7ZGfBoOi7seZvZ
-	 XMw6OEpc1EIlC+Eq8T/VbB+W3Gt42IMiHa41MFruT2c4WPTaI91wBTbYm2mdu6/LKBA==
+	t=1793140763;
+	b=x9beGahxcxJqb4tCd/1FprLkGfZX/PapUSYn69wbHRrO9xI4PG95uJxU1nAwiMX5eS3z
+	 frLm59UZMTApdYpG27XoQKfAdSnU5HradiP+LtLvPyZ+dPFWBe3UPpl4EPRe/EDywnBXt
+	 p9VQq1ktukYbMuxnZ8YmcbZH/yzISjHlZg7haltxRHRMrGrTVu90jQ1djW1sScMeoK413
+	 8NzphRwfHsswpzxAHZbMXTOx0Hd13UEQKdpU9NMXGekC6eIYqXrBZpHkpiakIbmxp5/4z
+	 FAzb3aHoL62wzA1GP/7L6f4v4EsY5WLsh5grH2lvQ7OboiLidEiPWP4LNj1Ks1H04Cg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793140762;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793140763;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=dWBu3E1+9O630leKOxiPf33Qem+izCRkowC6gFS9sVM=;
-	b=no4WN3EO/SUOURyhyp/8/vwOqd+935pV0Z6q4uIr1FCNKhtsDXP9Pjcnp1TmYz8cjHad
-	 2VE5ACCwW3GMTSWjMjJhe5qXnpp8wGGLwPXuaCPyPouqEpWZI/bhynj4Zm2D3JevTQCBf
-	 a3vbD3hXv1ss6lfE5hEdmKu1vbsVC5zCjfCtaNsWAWFKoHK1NjjiSdhgqTOpS0QW9yC/K
-	 Szs7R0XkOxLGOdZofLSmDSkw9Wr/MxJUmCZxXd0Bsp9ro/ipzMVWlFZlkMnyAlidlLE7M
-	 QYNDvfndWBjuYV3R0/vB9AW1XKk+hgp1Dc/ccjxyvDfAGmAFk6EOOt5aM11ZOYfpvEg==
+	bh=JWqYb4bGeUKpshpA/YjhKSWXxaEK2QVlfhqplD6YlhY=;
+	b=NEgDF/APb95Rn+nO7oOqX9zWullWfsj00ReZh5NnBQsA3N0INCLakMZIzf3wD3Oeyd0A
+	 65CKgJgfy9Tk0nHzwFsP+4r8gxLT5o5aFMPbhryFUQqpqsgOqJqzcb+OS8/Aj5MKR1Du2
+	 4ckO3fwjlhvdDd1DyIXYMXWeD8xkHnwuPDrZ3ueJX2Lsya3XmlHq6kDnwH0+BaAmYyvYP
+	 FwfF7RakQMTARXdxC+iXRhlMrSnOfEqrzImJhRclkw1g5ZAFamX9P+URdZCQk/yWIElJE
+	 HZQxHlDMpI6nnilItuGk+6I0JcDFJ0ztFr2832N8LqeGyRoi3TAMNa09NWiC0E0d/yw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Ecx7Z7Yr;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=HDVoLyM4;
 	arc=none smtp.remote-ip=74.125.82.200
 Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665B8606A33C
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 22:39:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 665B8606A33C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAE860A262D
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 22:39:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BBAE860A262D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Ecx7Z7Yr
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-30bcb065bfdso523839eec.0
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 15:39:13 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=HDVoLyM4
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-30c0d568830so607981eec.1
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 15:39:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793140753; x=1793745553; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793140762; x=1793745562; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=dWBu3E1+9O630leKOxiPf33Qem+izCRkowC6gFS9sVM=;
-        b=Ecx7Z7YrTfUji8sYJyAUwmTYp73g8n8XJtV3g1Ovi0aAYrvFnBJ3+xg5yXNOklXPYQ
-         z9C3C95INgU3Kxi4Dixa8qWSZcVtAka2S3TI5rED3YKw4tSh6V0biyKwhustYNH9cnlE
-         s18xrBbLvfRBcBfijZUAZvaSiYrJlHLwXZtz+yS9CFjvDRQUUw0KuHx6xfU6zY5z9iNs
-         1euMv0gAIOGjLHzqjjULrUrhmVPTbifnO2Nd/4PNGMj5bXIEi4HnL9xBa4Lag60EMfqh
-         lX38QYyHu9liDYA6R11F3C/KlzQcB7IhBtPte3IL0MvSanWi+JKnktIib9zaD54mxDob
-         VOzw==
+        bh=JWqYb4bGeUKpshpA/YjhKSWXxaEK2QVlfhqplD6YlhY=;
+        b=HDVoLyM4HimbZ0NdCBkHJJXtaKUB7UEI0z0VvuCzMQ3NnSLJtY6ohWi6eX9TEVvq+V
+         0WnWvb38jxn4r4iiiTu9AMhHHNwLka6QKe2I25qkvI3u+Y9134gbpX44tTkZ7WEtcvqu
+         nfY2VhCfjAdduBcYl0Alvanw0WgzZNEGQ4PbRaTwb9WCOA2A+43oNfY6V+UVo3mRKjBe
+         lxJHTMLuSQsd6Rf0LicX0MKvBl8y51Zpx5ZugK4d0qBVb4IZCoYHONcH4qObItsE7IaH
+         wLagXH+JKoAaGHErzx7oFR05NdAvWb5FRfcHffluzvXSnDrN5xUogHyFHCEho+YEIbCr
+         gxew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793140753; x=1793745553;
+        d=1e100.net; s=20260707; t=1793140762; x=1793745562;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=dWBu3E1+9O630leKOxiPf33Qem+izCRkowC6gFS9sVM=;
-        b=FQ7pC2owx1Pp2DR42CrSN4Z+0wEYT7UApJWxvSuwOUP2wxcesxgkIS4+r5ZHbB5//8
-         WxoCu4Xoh/wTUJCZP2LkTj2wKDB5+OwtnDB0/EuMq/wpBR6M2WahQ46kroxHpovDtZDo
-         puN1+8rq8yJXwi7/cvcfB++HZjzmXPdADVNUZar3xqF7/vZTrapoUrr+KhPyoo99m3Lj
-         AsI05vNZLg+VJHfjFxXk7KRpoUP1QocupNSvqu6mroLUtbi+vrUugQyMFmSJhSo7hxUP
-         +858mXg8GAT+ADY8d1pCexp2AOAN1DgMuCvU0xsstuQQCs72qb4AekZAC/wzyScxF87c
-         4Uew==
-X-Forwarded-Encrypted: i=1; AKwUvBwKbJL+mI2vyM2SpChZnd+CnHkB3fvmiAlskykfJVv/+8F8pkAaq3DrgvJ+AEZSU//89/gEyCF5S3mJur23EQY=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIJXF9l9mYw4jgpOyvZLwuBlvTeQl5vIlV/NJyIo3RYh+nNKKwg
-	YLlYBf6JD5fxlkxdaUX4s8gCJftZFnTNYGjPJz1DmUEC000HU/ieEuRx2IomYmylO012zRjnhu7
-	X73GJLxojJw==
-X-Received: from dybnl11.prod.google.com ([2002:a05:7300:cf8b:b0:36a:117:523b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:250d:b0:369:f5f6:36a7
- with SMTP id 5a478bee46e88-36a2014b887mr1132027eec.16.1793140751881; Tue, 27
- Oct 2026 15:39:11 -0700 (PDT)
-Date: Tue, 27 Oct 2026 15:38:36 -0700
+        bh=JWqYb4bGeUKpshpA/YjhKSWXxaEK2QVlfhqplD6YlhY=;
+        b=LOW19uFlfziBEzniFMrt7F3GoXqkTRdRkW+4axgoCXDKEAM08olC3HY+lF4MsqaCSs
+         3+QRnVM3s363OgYyN64KDT6Ug597y0SobP7nnqsCvLCE/g458DRmsA+REfRMJxEH1jaY
+         bzq5NAMaF0DIEhU9nSWGwV0flwdkcYtP2Bk2XO1hRFzRj7jd799CBxDCSD1yTyHak3WB
+         Ekk7r/awL89Uq2Jhpx6d5uRNBIqf7V6kfeayJn9ZM5r4ClBFRRRD3ZZ0TCotMjAND8ab
+         CkRMOViO+kWOosRNVof638ugfzeWTmpIxa+L83ty26ije7RP42LCdmTSDFU9ZVbE17qw
+         ++9g==
+X-Forwarded-Encrypted: i=1; AKwUvBzJTX71ormiSf12wbc7YOb3Jl4IEZK/RsXyQeRx2MmKFQxn9CS2Arrnd8Fn0gzuXkDnlZflLGL7zpfDzwj1xXY=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIPO+lKyK/LVLd141J/D3xCbF6r6LUt51okTA9sG3lS4oUK9fE1
+	0qFWlC4x3viBxLIwXQJ7Ze4c3xAjOB6rI46GpiP31CvKLZ3kHkThLGNGQqbEELln89NCCSXHJ0K
+	eijTqmH+g0A==
+X-Received: from dycna3.prod.google.com ([2002:a05:7300:ea83:b0:36a:1b4f:e8f9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e9c8:10b0:365:d42a:f415
+ with SMTP id 5a478bee46e88-36a2036d4d1mr1220304eec.12.1793140761297; Tue, 27
+ Oct 2026 15:39:21 -0700 (PDT)
+Date: Tue, 27 Oct 2026 15:38:39 -0700
 In-Reply-To: <20261027223847.652884-1-irogers@google.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -81,8 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261027223847.652884-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.313.g2479322e68-goog
-Message-ID: <20261027223847.652884-2-irogers@google.com>
-Subject: [PATCH v2 1/9] Compiler Attributes: Add __must_init macro
+Message-ID: <20261027223847.652884-5-irogers@google.com>
+Subject: [PATCH v2 4/9] cpufreq: governor: Initialize kobj_type release
+ callback statically
 From: Ian Rogers <irogers@google.com>
 To: Kees Cook <kees@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
 	Miguel Ojeda <ojeda@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
@@ -99,106 +100,99 @@ Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google
 	xen-devel@lists.xenproject.org, linux-mtd@lists.infradead.org, 
 	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
 	linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+	Viresh Kumar <viresh.kumar@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Clang supports the 'require_explicit_initialization' attribute on struct
-fields to indicate that a field must be initialized explicitly by the
-user when the object is constructed. When an aggregate initializer or
-uninitialized variable omits an annotated field, Clang emits a
--Wuninitialized-explicit-init warning (enabled by default).
+Export cpufreq_dbs_data_release() and set .kobj_type.release statically
+in the ondemand and conservative governors so their gov_attr_set
+kobjects have a valid release callback statically initialized, matching
+cpufreq_governor_dbs. Remove the redundant runtime assignment in
+cpufreq_dbs_governor_init().
 
-Add the __must_init macro to include/linux/compiler_attributes.h (which
-is included by include/linux/compiler_types.h and
-include/linux/compiler.h) so kernel structs with error-prone
-initialization (such as mandatory callbacks or cleanup handlers) can
-enforce explicit initialization at compile time, as discussed at the
-Linux Plumbers Conference. The shorter __must_init spelling, rather than
-the attribute's full name, keeps annotated struct members readable and
-was suggested by Greg Kroah-Hartman.
+This prepares for annotating struct kobj_type::release with
+__must_init.
 
-Note that Clang does not yet diagnose file-scope objects declared
-without any initializer (initializers at file scope that omit the field
-are diagnosed), see https://github.com/llvm/llvm-project/issues/232483.
-
-Also teach Sphinx (Documentation/conf.py), kernel-doc
-(tools/lib/python/kdoc/xforms_lists.py), and checkpatch.pl about the new
-attribute macro.
-
-Link: https://lpc.events/event/20/contributions/2392/
-Link: https://lore.kernel.org/lkml/2026101532-fantastic-deafness-e04c@gregkh/
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- Documentation/conf.py                 |  1 +
- include/linux/compiler_attributes.h   | 12 ++++++++++++
- scripts/checkpatch.pl                 |  1 +
- tools/lib/python/kdoc/xforms_lists.py |  1 +
- 4 files changed, 15 insertions(+)
+ drivers/cpufreq/cpufreq_conservative.c | 5 ++++-
+ drivers/cpufreq/cpufreq_governor.c     | 4 ++--
+ drivers/cpufreq/cpufreq_governor.h     | 1 +
+ drivers/cpufreq/cpufreq_ondemand.c     | 5 ++++-
+ 4 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 5ab26ce89daf..baaa4035258c 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -203,6 +203,7 @@ c_id_attributes = [
-     "__noreturn",
-     "__packed",
-     "__pure",
-+    "__must_init",
-     "__section",
-     "__always_unused",
-     "__maybe_unused",
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 476c4c560d17..b9c0b56dd22e 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -322,6 +322,18 @@
-  */
- #define __pure                          __attribute__((__pure__))
+diff --git a/drivers/cpufreq/cpufreq_conservative.c b/drivers/cpufreq/cpufreq_conservative.c
+index 02bfd46543e9..146a2353b1a2 100644
+--- a/drivers/cpufreq/cpufreq_conservative.c
++++ b/drivers/cpufreq/cpufreq_conservative.c
+@@ -318,7 +318,10 @@ static void cs_limits(struct cpufreq_policy *policy)
  
-+/*
-+ * Optional: not supported by gcc
-+ * Optional: only supported since clang >= 20.0
-+ *
-+ * clang: https://clang.llvm.org/docs/AttributeReference.html#require-explicit-initialization
-+ */
-+#if __has_attribute(__require_explicit_initialization__)
-+# define __must_init __attribute__((__require_explicit_initialization__))
-+#else
-+# define __must_init
-+#endif
-+
- /*
-  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-section-function-attribute
-  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html#index-section-variable-attribute
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index c9840f5219c2..5232f66d2b80 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -6860,6 +6860,7 @@ sub process {
- 				"noreturn"			=> "__noreturn",
- 				"packed"			=> "__packed",
- 				"pure"				=> "__pure",
-+				"require_explicit_initialization" => "__must_init",
- 				"section"			=> "__section",
- 				"used"				=> "__used",
- 				"weak"				=> "__weak"
-diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
-index 320f977c5bac..3c744cbd2f34 100644
---- a/tools/lib/python/kdoc/xforms_lists.py
-+++ b/tools/lib/python/kdoc/xforms_lists.py
-@@ -36,6 +36,7 @@ class CTransforms:
-         (CMatch("CRYPTO_MINALIGN_ATTR"), ""),
-         (CMatch("__private"), ""),
-         (CMatch("__rcu"), ""),
-+        (CMatch("__must_init"), ""),
-         (CMatch("____cacheline_aligned_in_smp"), ""),
-         (CMatch("____cacheline_aligned"), ""),
-         (CMatch("__cacheline_group_(?:begin|end)"), ""),
+ static struct dbs_governor cs_governor = {
+ 	.gov = CPUFREQ_DBS_GOVERNOR_INITIALIZER("conservative"),
+-	.kobj_type = { .default_groups = cs_groups },
++	.kobj_type = {
++		.release = cpufreq_dbs_data_release,
++		.default_groups = cs_groups,
++	},
+ 	.gov_dbs_update = cs_dbs_update,
+ 	.alloc = cs_alloc,
+ 	.free = cs_free,
+diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
+index f3bd3dbe7c41..f8b5aca09b6b 100644
+--- a/drivers/cpufreq/cpufreq_governor.c
++++ b/drivers/cpufreq/cpufreq_governor.c
+@@ -419,7 +419,7 @@ static void free_policy_dbs_info(struct policy_dbs_info *policy_dbs,
+ 	gov->free(policy_dbs);
+ }
+ 
+-static void cpufreq_dbs_data_release(struct kobject *kobj)
++void cpufreq_dbs_data_release(struct kobject *kobj)
+ {
+ 	struct dbs_data *dbs_data = to_dbs_data(to_gov_attr_set(kobj));
+ 	struct dbs_governor *gov = dbs_data->gov;
+@@ -427,6 +427,7 @@ static void cpufreq_dbs_data_release(struct kobject *kobj)
+ 	gov->exit(dbs_data);
+ 	kfree(dbs_data);
+ }
++EXPORT_SYMBOL_GPL(cpufreq_dbs_data_release);
+ 
+ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
+ {
+@@ -488,7 +489,6 @@ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
+ 	policy->governor_data = policy_dbs;
+ 
+ 	gov->kobj_type.sysfs_ops = &governor_sysfs_ops;
+-	gov->kobj_type.release = cpufreq_dbs_data_release;
+ 	ret = kobject_init_and_add(&dbs_data->attr_set.kobj, &gov->kobj_type,
+ 				   get_governor_parent_kobj(policy),
+ 				   "%s", gov->gov.name);
+diff --git a/drivers/cpufreq/cpufreq_governor.h b/drivers/cpufreq/cpufreq_governor.h
+index 806d8fb4dff1..1026712bb79b 100644
+--- a/drivers/cpufreq/cpufreq_governor.h
++++ b/drivers/cpufreq/cpufreq_governor.h
+@@ -150,6 +150,7 @@ static inline struct dbs_governor *dbs_governor_of(struct cpufreq_policy *policy
+ }
+ 
+ /* Governor callback routines */
++void cpufreq_dbs_data_release(struct kobject *kobj);
+ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy);
+ void cpufreq_dbs_governor_exit(struct cpufreq_policy *policy);
+ int cpufreq_dbs_governor_start(struct cpufreq_policy *policy);
+diff --git a/drivers/cpufreq/cpufreq_ondemand.c b/drivers/cpufreq/cpufreq_ondemand.c
+index 9942dbb38dae..7386d043c665 100644
+--- a/drivers/cpufreq/cpufreq_ondemand.c
++++ b/drivers/cpufreq/cpufreq_ondemand.c
+@@ -374,7 +374,10 @@ static struct od_ops od_ops = {
+ 
+ static struct dbs_governor od_dbs_gov = {
+ 	.gov = CPUFREQ_DBS_GOVERNOR_INITIALIZER("ondemand"),
+-	.kobj_type = { .default_groups = od_groups },
++	.kobj_type = {
++		.release = cpufreq_dbs_data_release,
++		.default_groups = od_groups,
++	},
+ 	.gov_dbs_update = od_dbs_update,
+ 	.alloc = od_alloc,
+ 	.free = od_free,
 -- 
 2.56.0.313.g2479322e68-goog
 
