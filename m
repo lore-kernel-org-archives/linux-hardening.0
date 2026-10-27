@@ -1,47 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793114735;
-	b=1AFMPlP7FX6fGILEFR/33Tdb2ZHlYRL6J8/NjhsPtZJfg/pRMmB7gm+3MhzvC3tVHv0g
-	 V/2j+aNvw31xTrW93/Jd7QQKCy2e0ewUImcb+sym1qS2Z3reyRulL9hDOiY23rx5RW5Gu
-	 5Fifc7RMt9/WuIuXxTpjKb0Nu/Z+odM86O/YTpYk4nm6e+mpy8zLwSwfugcLYABqTBePe
-	 Kemmy+cK6/0mP6RlUp7OxePb3SM6LbegDWop2TisD/kDppvNjyTnMzA1lO/sGcqmmP3vU
-	 GT73gEjmy9l4F39Qf8H6GkPobvysUelKF1bODprDS6+scKJEYt3l/dTpSl/BTUOk+Dg==
+	t=1793116842;
+	b=hwwefwsiVFFeNtCROoWYx+xqWLKSPKQ5jmwTc1PK5G7q+rrM1wa8HbyNFEcLfqYYjolB
+	 H1420lBeoVvjQDkk51zUXmvzE/fTlguIy/d8ykkkDyOH0gX2ktBDgFcdWqY8mmZf0fXB2
+	 /2m2+qnCKLLijgHgW6O9DtfXA5nhUY891JdQEfz1KpPxBH4kDEhljEO0q4hPYGuEbUieC
+	 jeYF3aZr0fskmIkBrxvdT/+H/31Tph9clHkiJOt1OVdOcKAfXDyHjmlNso2jvHVDWftE7
+	 T+Q44/zVVbzH9szN4xAYWSvtq2/O8/i7pgXbsY1ddHsmINJyrzaTuiKq5Z8wsGEJZgQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793114735;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=MAKDx31khoefmfUOeL61lGC9ufpndRmKXdUk86UDyqw=;
-	b=WpwpprhcMW24GZrbc/2wTDAEABTqV7Xezic13fgobe7pBe8qdVrylPxkwsDXLGFWHyz6
-	 tWJXzrN9I4uaFqjyVStYm3QNaGSNkO1bz55HY4Hna2c7KN0ERvwTq/aUb/CPAHt/+Ne9b
-	 s48Q1zqDM4yJAxNS7gvdna5rcEBTpIWTDi/FdqN58PyAAD9L+9qedD8bgQi0E8/Akv7F0
-	 ztM9jvSIdr6SEfPOPMn/ujZWA+Fj0WbZKOavB9VOseCHLJrZddGvXQCyrFa0Q334Lh/VW
-	 mcdi7sPyFo3vPWs1KbjIOSMhN21WXqw8mT3AI1/IbUkS5Iz2WslGBTZFFZX/JVtzhLg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793116842;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=lUFPvWUhnbq1nlKdj+4iPr3v7FCFuq1r2DJKFXSbd2o=;
+	b=IsUVI6qDXMFrLONCNvMa/jm1TzN0SP03MiQPB8Z71SkqT1xN6v9Z2+81dY8oz/rBG/OX
+	 rpY3ORD1ziJxaN3X+pqa35IetJskbSvKdKrAiMLLTKQngmZ8nkCwDBuYYrDWyHr29bq+R
+	 3YeXLxaDLet4lA7+7UQTXA92DwLXu+HmaiYKKsQQX4NSe8LNeWGZNkuoo/SfzcX52+8dL
+	 xZC5aYKHm17uq23x27nosEO6Jbnu+HYVJRR0dNtT94HEKhlbHpELYdq89a7IHD/7W+8PH
+	 fhvyFcZ5LbjdmTj8xD08MDRWOWjVsLv01OkaVxMZ4K4Vpwmx3lRrGooDuvLvpuoisvQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cLnckm3H;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UP4I+lit;
+	arc=none smtp.remote-ip=209.85.215.172
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B4B606A31D;
-	Tue, 27 Oct 2026 15:25:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C99F606A31D
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 16:00:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7C99F606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cLnckm3H
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48E601F01825;
-	Tue, 27 Oct 2026 15:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793114734;
-	bh=MAKDx31khoefmfUOeL61lGC9ufpndRmKXdUk86UDyqw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cLnckm3H8keXxOmWbcw0algepILOQqKfuYzEvH6392uZph2Sn2U1ego1hl+yvw9f/
-	 vKNa4hWvcmAW/DMABwir3vFtT5eLsFk3EpOoLSq+gWgIpgT0lPv87wkKxof/kAWNjW
-	 tWo1yY1QcmScO4OSnJjPRUAZ3DPo6Lq6jB2NtiCraOstdCAWHM54j06m5PjMTfxNKD
-	 +8c5ngOSI+33eXvYF9GMAiph0K20lCr1httWkPpCdoK+KDanveD2RH9opNqhgtZrde
-	 NZ11Rw+KCyjep/llL9tmw5kJqZHAGJeH/VhPm0agumhlY5lBvTHfpOgoGCV6LCzH7N
-	 6EIQ4Hx59Jmfw==
-Message-ID: <e6f56e97-f920-466b-9ad6-ec43be0f5e2a@kernel.org>
-Date: Tue, 27 Oct 2026 16:25:25 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=UP4I+lit
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-cd6acc50b8dso57678a12.3
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 09:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793116842; x=1793721642; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=lUFPvWUhnbq1nlKdj+4iPr3v7FCFuq1r2DJKFXSbd2o=;
+        b=UP4I+lity2OJEUV3qsO7bHkzdbX35UzOsi9Z1qCPcLXNwsd3PIO15GMKJGPsJSKswz
+         +8swA9mTq4HBrCHMrOoXwpfrfddCukMbyU+XJWL2farluTgk1ZO9u+SKEThV2MTNTTGD
+         mr7imid/fvgWdKEMEcCPeAaQgoV1RoKsx7Z7F5rqlS/5zaHOSF0rjchIJLLImzuoGPju
+         2SuLSLfDJ3yh+GVnVYcm+jv9CUjc6kvadeQ7GO2PUbxh/Ylp+zntQTvFXC2+RBN3PkdW
+         r8SYMwqTC5OnUm7aTTZOG33G+owpRGu3Zm6PERP2xmdnnCCLsd/d9St/EjfWn2AnQnMa
+         XZ0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793116842; x=1793721642;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lUFPvWUhnbq1nlKdj+4iPr3v7FCFuq1r2DJKFXSbd2o=;
+        b=xoCBUS3W8/EhaTA+bHEMoMbYpeEdc31NqtZC+3w6qkQ9Iktl/Oq55JEdF7BhXD52ia
+         rS3/jpZjgfibkdswoHOCd3wye+Fo+598PVxnK6ZpX4YM/lsWVkFS6Iko1VBwSF4+Nkh6
+         lIH72AjXYwPWtPrmM/IFQ/gtMded6eb8ycV56yNzj90+W8p0Ut9K+2c//YVL7CwPD90u
+         H76i4OVGxLtkXcV2B4p6mWuz11sCdEPDV3xMDANpAJSAGvmK7sTQy5WL6WEAUNg2QO7b
+         +BGG8ToiRoF2KxYOnd2kVhtIqywWxD+0gYBaTlsnXbgeAB7K6xOVORU9QPjRAvTpwR88
+         lReA==
+X-Forwarded-Encrypted: i=1; AKwUvBy/GGXzuelXfE3xzRyPwecIBLrRsvoQePPdTQWSSXPTvyXFNbMgR2756b/OjHYKlGRC7U1vzS6H3PH2HYahV7Q=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJhq+RoiBseiOLppuIJXbmTP+VT+GVolZUskw1AOUAsvA+qbfU2
+	wWwKBjyWiOJYTMasu7WVIIZerzj5jg1h5s/NVgCBxmWVEEUj+E5NJHMK
+X-Gm-Gg: AYBFou0Ndtj1kHD47JNYpjhjIaItyt794RLxyMnoG13MMntBE7eubD8/MJ2j1T97+2j
+	RxLI/5n5O5d6h/xWBWdZPYa0pof44qj1mIfQxe4dZmFg/erlx/3hfDtqIkhSGKOIIML1zUfYD2N
+	pwscuApwdUJYiG6Jxl5FDa38c99DukKmsxwK6AAELGPBoXjnuA5ETOIUeis47WKkzfxsB/O1/Il
+	n8vbysrTz2OEuGZJdJQVucuSA+LcnFhV8XA41F2P68wOOgZJaikVjjU11TvqGyaJ7XuD2P/QOtX
+	0KGe0LWOEVH/yzAxJ2u0BRPIqmMFeTjEo0KISdH2ZbWsriq8Bq5LUzbGUBTbbBiAXgptFR843ij
+	ctCh7kBlE9mDHpetxeI1b7IulTiQfqHNWwDrbFcX1XR4wDL1FSS6korxtRuMRsHJriud7GECMMK
+	L1uhTgesYjFrBWgVto1VosKhxFb0YAt1aQX8OzoBzQcUBMIXNCDocq3oTQYMKYALICq4l4SARPf
+	vfCj/Vf+foNaEkx6diSe487V6ba1N6fw9+4k8gYqgFyHIzRXL/GRueEHzk1HiNRqYYUfhtQ/pAd
+	MJqsfCrk0LBGzdTQ4e4SFDJRtGsksR2MzuKBU22QslVxB/FIOreScjXfzKzkITKQamfh
+X-Received: by 2002:a17:90b:528c:b0:3a0:e4ce:31fd with SMTP id 98e67ed59e1d1-3adead444ecmr8771470a91.10.1793116841476;
+        Tue, 27 Oct 2026 09:00:41 -0700 (PDT)
+Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae4064f4bdsm4334209a91.11.2026.10.27.09.00.30
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 27 Oct 2026 09:00:40 -0700 (PDT)
+From: Lian Wang <lianux.mm@gmail.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	chrisl@kernel.org,
+	nphamcs@gmail.com,
+	baoquan.he@linux.dev,
+	baohua@kernel.org,
+	youngjun.park@lge.com,
+	shikemeng@huaweicloud.com,
+	kasong@tencent.com,
+	linjh22s@gmail.com,
+	kunwu.chan@linux.dev,
+	kees@kernel.org,
+	gustavoars@kernel.org,
+	tglx@kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [RFC PATCH v3 00/18] mm/swap: introduce priority queues for swap device allocation
+Date: Tue, 27 Oct 2026 23:58:40 +0800
+Message-ID: <cover.1793106426.git.lianux.mm@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -51,160 +106,202 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: clock: introduce
- toshiba,tc9564-clock.yaml
-To: Alex Elder <elder@riscstar.com>
-Cc: sboyd@kernel.org, bmasney+clk@redhat.com, jbrunet+clk@baylibre.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, abelvesa@kernel.org,
- kees@kernel.org, gustavoars@kernel.org, mohd.anwar@oss.qualcomm.com,
- lorenzo.bianconi@oss.qualcomm.com, danielt@kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, Daniel Thompson <daniel@riscstar.com>
-References: <20261005230927.2000398-1-elder@riscstar.com>
- <20261005230927.2000398-2-elder@riscstar.com>
- <20261009-gifted-stylish-tortoise-95b14d@quoll>
- <b190fe58-364b-4b94-9cab-c5f81f874289@riscstar.com>
- <aafe2703-bfb8-43da-8472-b1dfa36fa8f9@kernel.org>
- <77dacc46-7294-47c8-899a-fd56b6a2af55@riscstar.com>
- <ad511ae7-755d-42bc-a55d-12b93d49ddaf@kernel.org>
- <ee6ba585-2b87-4e38-963d-9d2731cf4d78@riscstar.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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
-In-Reply-To: <ee6ba585-2b87-4e38-963d-9d2731cf4d78@riscstar.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 09/10/2026 17:09, Alex Elder wrote:
-> On 10/9/26 9:46 AM, Krzysztof Kozlowski wrote:
->> On 09/10/2026 16:23, Alex Elder wrote:
->>> On 10/9/26 8:56 AM, Krzysztof Kozlowski wrote:
->>>> On 09/10/2026 15:44, Alex Elder wrote:
->>>>> On 10/9/26 4:31 AM, Krzysztof Kozlowski wrote:
->>>>>> On Mon, Oct 05, 2026 at 06:09:24PM -0500, Alex Elder wrote:
->>>>>>> Define the binding for the clock controller functionality present in
->>>>>>> the Toshiba TC9564 SoC.
->>>>>>>
->>>>>>> Co-developed-by: Daniel Thompson <daniel@riscstar.com>
->>>>>>> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
->>>>>>> Signed-off-by: Alex Elder <elder@riscstar.com>
->>>
->>> . . .
->>>
->>>>>>> +properties:
->>>>>>> +  compatible:
->>>>>>> +    const: toshiba,tc9564-clock
->>>>>>> +
->>>>>>> +  toshiba,config-syscon:
->>>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>>>>>> +    description:
->>>>>>> +      Phandle for the configuration space system controller.
->>>>>>
->>>>>> I do not see my previous comment addressed - you have no resources here,
->>>>>> so this belongs to the parent. You responded something about pci-ep, but
->>>>>> the parent is not pci-ep. Open your code:
->>>>>> https://lore.kernel.org/lkml/20260918165234.687224-5-elder@riscstar.com/
->>>>>>
->>>>>> I clearly see code like:
->>>>>>      syscon {
->>>>>>        clock@ {
->>>>>>        };
->>>>>>      };
->>>>>>
->>>>>> so I do not understand what pci-ep has anything to do here.
->>>>>
->>>>> What I have now (about to send) looks like this:
->>>>>
->>>>>        syscon@0 {
->>>>>            compatible = "syscon", "simple-mfd";
->>>>>            reg = <0x0 0x2000>;
->>>>>
->>>>>            clock {
->>>>>                compatible = "toshiba,tc9564-clock";
->>>>>                #clock-cells = <1>;
->>>>>            };
->>>>>        };
->>>>>
->>>>> A reset node will also go inside the syscon, so there is another
->>>>> function for that MFD.
->>>>>
->>>>> The regmap belongs to the parent, and is looked up this way:
->>>>>
->>>>>        regmap = syscon_node_to_regmap(dev_of_node(dev->parent));
->>>>
->>>> That's driver code, so irrelevant. So how does this solve my comment
->>>> from v1?
->>>
->>> I'm trying Krzysztof.
->>
->> In v1 I asked to fold the node into the parent. v2 did not have it. v3,
->> which you are preparing, still has no node folded, because they are
->> separate.
-> 
-> Are you saying to fold it into the PCI function?
+Hi all,
 
-I do not see in the example the parent being PCI function, so I do not
-understand that. What is this node? What is its parent?
+This is v3 of Kairui's swap priority queue RFC [1, 2], retaining the
+original authorship. It separates device selection from device-local
+cluster allocation to support integration with the ongoing swap tier
+work, while preserving existing swap priorities, the swapon interface,
+and memcg swap accounting and limits.
 
+The global per-CPU cluster cache couples device choice to cluster
+locality. Moving that cache below device selection gives each device its
+own allocation hints. The available plist's shared rotation is then
+replaced by a priority-ordered array of same-priority device rings, with
+per-CPU starting offsets and quotas. A task-local cursor keeps each retry
+walk stable. Rotational devices retain per-device sequential hints shared
+across CPUs.
 
-> 
-> If so, could the PCI function be a clock provider and
-> define #clock-cells (and #reset-cells)?
-> 
-> Because as things stand now, clock and reset are used by
-> the two DWMAC Ethernet interfaces as well as a separate
-> interrupt controller (one for each PCI function).
-> 
-> It sounds a little like you might prefer everything being
-> wrapped up in the DWMAC driver, as we originally did six
-> months ago.
-> 
-Not sure which patchset you refer to - v1 was in September.
+This remains an RFC. I would appreciate feedback on the allocation model
+and its integration with the ongoing swap tier work.
+
+Following v1, the changes address related allocation problems:
+
+1) A cache above device selection couples the chosen device to the cached
+   cluster. Device-local ownership lets selection determine the eligible
+   device before consulting its hints, which is useful for tiering.
+
+2) Rotating the available plist changes shared state under
+   swap_avail_lock. Per-CPU readers keep rotation state off that shared
+   selection path, with a quota measured in base pages.
+
+3) Device rotation was tied to cluster draining and the fast/slow split.
+   Selecting a device first also lets allocation handle its pending
+   discard directly, with a bounded amount of synchronous work.
+
+The series is organized as follows:
+
+  01-04: Cleanup, device-state boundaries and iteration helpers.
+  05-07: Locking, writer-serialized publication and accounting.
+  08:    Restore per-device per-CPU cluster locality.
+  09:    Keep cluster metadata population out of direct reclaim.
+  10-11: Introduce the safely published queue and remove the avail plist.
+  12:    Bound synchronous discard to one cluster per device attempt.
+  13-14: Preserve priority-aware throttle selection while removing the
+         active plist and unused plist_requeue API.
+  15-18: Reuse reader capacity, advance cursors directly, bypass singleton
+         rotation and redistribute reader phases on membership changes.
+
+Test results
+============
+The kernel-build and BRD tests follow the v1 workloads on a newer
+baseline. The results below compare the unpatched baseline 4dbe24720eb3
+with queue revision db66c58fac8f. The additional usemem and lock-call
+results compare the same baseline with 18ec4b962755. These are
+measurements of the named revisions; this posting contains revision
+fdfe5fac0d5b.
+
+Eight-ZRAM kernel build
+----------------------
+The workload used eight 8-GiB ZRAM devices and make -j96 in 2-GiB and
+3-GiB memcgs. Each case had 12 fresh-output builds per revision, with no
+warm-up. The workload source was fixed at 4dbe, using x86 defconfig and
+the targets bzImage modules. The revisions ran on separate boots, Before
+first; the 12 samples are within-boot repeats.
+
+Mean system CPU time in seconds (lower is better):
+
+                         Before       Queue (db66)       delta
+  2-GiB memcg          4469.0100          4457.1575       -0.27%
+  3-GiB memcg          2352.7325          2338.9325       -0.59%
+
+Mean elapsed time changed from 170.1283 to 170.3675 s (+0.14%) at 2 GiB
+and from 136.6125 to 136.6775 s (+0.05%) at 3 GiB. No clear regression
+was observed in these kernel-build runs.
+
+Twelve-BRD usemem
+----------------
+The same Before/db66 pair used twelve 8-GiB BRD devices and a private
+memcg with 24 GiB of memory and 64 GiB of swap allowance.
+
+  usemem --init-time -O -y -x -n 32 1536M
+
+There was one complete invocation per revision. Mapped throughput below
+is the requested 48 GiB divided by elapsed time, in MiB/s.
+
+                         Before       Queue (db66)       delta
+  elapsed time (s)          7.00                7.11       +1.57%
+  mapped MiB/s           7021.71             6913.08       -1.55%
+
+All 50 kernel-build and BRD invocations exited successfully, reported no
+memcg OOM events and performed swap I/O.
+
+Additional eight-ZRAM usemem and lock-call measurements
+-----------------------------------------------------
+A separate experiment used eight 8-GiB equal-priority ZRAM devices and
+the same usemem command, with memory.max=24 GiB, memory.swap.max=64 GiB
+and memory.zswap.max=0 in the workload's memcg. Both kernels ran on the
+same x86-64 host with configs differing only in LOCALVERSION. There was
+one workload timing run per revision, with no warm-up, on separate boots,
+18ec first.
+
+                         Before       Queue (18ec)       delta
+  elapsed time (s)          7.97                8.59       +7.78%
+  system CPU time (s)     175.13              192.39       +9.86%
+  pswpout (pages)      6,317,548           6,317,684         +136
+
+Both runs exited successfully and completed 32 workers, with no memcg
+OOM events. The times increased in this single-sample comparison; the
+cause has not been established.
+
+Separate sampled runs recorded 12,451 swap_avail_lock acquisitions at
+the selected allocation callsites in Before. Source and binary inspection
+confirmed that these calls are absent from the 18ec allocation reader
+path. Availability-update callsites recorded zero acquisitions during
+both sampled workload windows. This shows removal of the shared
+selection-lock calls, rather than an end-to-end speedup.
+
+Current revision checks
+-----------------------
+All 18 patches in fdfe replay to their expected intermediate trees and
+pass checkpatch. Static review and userspace checks of the actual helper
+code with ASan/UBSan cover publication, ownership, rollback, selector
+progression and throttle priority selection. These checks use userspace
+shims and do not constitute kernel runtime testing.
+
+Cooperation with swap tiers
+==========================
+Device-local cluster hints remain below device selection, so a future
+tier policy can determine the eligible candidates before those hints are
+used.
+
+V1 proposed taking tiering first and rebasing this queue onto it as an
+optimization [1]. I am happy to follow that route. Another option, if
+reviewers agree, is to take the refactoring under the existing swap
+priority model first, then work with Youngjun on adapting the queue and
+reader scope to the tier infrastructure [3].
+
+Youngjun, which ordering would fit your current work better? Are there
+constraints we should preserve to make a later rebase straightforward?
+
+The integration should have one authority for device membership,
+swapon/swapoff publication and lifetime. Tier policy would determine the
+eligible candidates before any device-local hint is used. Within-tier
+priority semantics need agreement with that work; this series adds no
+tier ABI or per-memcg device-selection control.
+
+Link: https://lore.kernel.org/all/20260714-swap-pcp-priq-v1-0-de9b164ed419@tencent.com/ [1]
+Link: https://lore.kernel.org/all/20260829-swap-pcp-priq-v2-resend-0-68d3d925578c@gmail.com/ [2]
+Link: https://lore.kernel.org/all/20260916183437.2946306-1-youngjun.park@lge.com/ [3]
+
+---
+Changes in v3:
+- Serialize file/ref/writable publication when removing swapon_mutex.
+- Establish metadata and writer allocation safety at their first use.
+- Preserve priority-aware blkcg throttling when removing the active list.
+- Add reader-capacity reuse, direct cursor advancement, singleton
+  selection and membership redistribution.
+- Present the completed ZRAM/BRD results with their tested revisions and
+  sample counts, including the observed time increases.
+- Add measurements of shared selection-lock calls.
+
+---
+Kairui Song (12):
+  mm/swap: remove unused parameter for reading swap header
+  mm/swap: slightly cleanup the code for hibernation error handling
+  mm/swap: cleanup and document swap device availability flag usage
+  mm/swap: introduce swap device iteration helper
+  mm/swap: change the swapon lock into a percpu rwsem
+  mm/swap: serialize swap publication before removing swapon mutex
+  mm/swap: consolidate swap inuse accounting helpers
+  mm/swap: add priority queue for swap device allocation
+  mm/swap: remove available list
+  mm/swap: bound synchronous discard during allocation
+  mm/swap: drop swap active plist
+  lib/plist.c: remove requeue function
+
+Lian Wang (5):
+  mm/swap: avoid direct reclaim when populating swap cluster metadata
+  mm/swap: reuse per-CPU queue readers across priority changes
+  mm/swap: advance the global queue cursor directly between priority
+    rings
+  mm/swap: skip reader rotation for single-device priority rings
+  mm/swap: redistribute queue readers after membership changes
+
+Youngjun Park (1):
+  mm/swap: change back to use each swap device's percpu cluster
+
+ include/linux/plist.h |    2 -
+ include/linux/swap.h  |   43 +-
+ lib/plist.c           |   64 --
+ mm/swap.h             |   12 +-
+ mm/swapfile.c         | 1421 ++++++++++++++++++++++++++---------------
+ 5 files changed, 926 insertions(+), 616 deletions(-)
+---
+base-commit: 4dbe24720eb3811563cd56b35d87ddf3f9beed2a
 
 Best regards,
-Krzysztof
+-- 
+Lian Wang <lianux.mm@gmail.com>
