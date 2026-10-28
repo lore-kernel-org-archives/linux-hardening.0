@@ -1,55 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793209680;
-	b=eFoMlTuqQb8JRO/Cj+8X3JjDBVL75NsfaoHhPJBOz7KMeRkK3hDtZYaa9l0tPnP5LY9/
-	 r4lw3owhidYsib0QaHwjqMc7Q1ZAZa1ZX9b7zr1JuqTXWudSRKzADxfuV/bZNHbID8Tu/
-	 s1SOtr6TOpj/Hj7+j6rvVhBWkrBhRwDYkRNfI59Qe/u5CujazlbU1WsHAexmeVngxHqwi
-	 kAa1nBIjKGZJaJVhTN7RUBoJxt9L5Nyekjkk/C5TTgZ5fa+hwzGjvsQSbRsNExlZ4KCXx
-	 t8fiLfBGKo46gi6XMPPrSU6p2ukBqjbD94vrKK5ZMSyfbU3xQd3RHOWI2YP7qjn1b1w==
+	t=1793210423;
+	b=0TvHcAz2X4LGCwE39FuijzJtEn6+UfsNyI9Q1126raKOlZCvMwDEIHOdEkDeahz8SDaN
+	 cla+Pr6vLhNU38auWePzn6BJHPDH+9fmcSh0u1N9ySPa3jppoBIwmt6IMxOXU+grVWLNM
+	 Ra/E+4hFqPMjaYDhvl+9/frj3zcSI+vzzttMCryav3hDrdpsYXzjwopsn4q3JsdIZtIvi
+	 Zx8w2e2IcDrznZf6TaENU6s+SfKdrVl3qUaRJOh5MG2CCmXz1+LXb5ARc+omj1/kcsx7i
+	 w3qP/FTF7JSHgEa9QqoeqHwBJj2KBBJ856xiULvoZxSzlDizxf7Ewy1HB9NpGeJZGYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793209680;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=RtPgMNhqupyWVsf8g5F2JSW0VnhMO36ohWkyC5M+pL8=;
-	b=hHAOw0F5u0BZL9h7XtHEEI2yuWrELpLxcdTPe9w7lgRi4tdaxmGxms5X07oNMUiXSRpQ
-	 zZJGI5B384m4Q70W+pIvPQ6uzPJq5lMVdKTwkC5v4xGQK+BU0q//2WwJ30OzHjzK6J6BH
-	 IlWaGBs8ias/5PLul1ATzuk8X35e2daxyVjolX70wLXvEhr9yC8b96Mlpl5qn8FWMfNR7
-	 WT3M9kgximozkXl2hVJb7PRxGGpXnXMO3W2DeC1xFB0a6mlpCWTE2TeykromtUAUxip3P
-	 WKfr6CLHm+sw7s6sx0bJvuuCF15xO40fVv2SIeOtjJqhuyKusRKWNDcckwRGOniwI1g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793210423;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=v/U7/rXg7EsEp/osuGKqrhQBi4K3Sjc5+LWGYjqAy0g=;
+	b=IatzacOujnuhUx9Cb2mdJ+MJDQ7XWZ1euB60jIok/q98bcFxymLYq5Y09o8Ha4DDTsxk
+	 SpunRiBbDIFnYAv/q0MSOJDQoLZjT5blFp2BQacwJ9lJv4JgrTS8eq+K/oWaWLDOajFAx
+	 CQRm8Uks5PgQTVnVaF/iQLYTbrvZL464WfrfOSh6MLJEEPpGU3QMWYZS6J1Cd+k6+BeD0
+	 wJa2OwXAUvj00kDZKrjCaP9Zf0YrCjlQSikuaO4rhQ8xZ5DSxh0GaQ0eJsnhCAuQ9Kx3b
+	 N7dVMF0wscnU3uxp8WuYcrHWl5ext21YLtgBEldHcffEkey3Tcxq1EywPjvqZ8HLykw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Du+MnRMC;
-	arc=none smtp.remote-ip=216.40.44.13
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ioWEMP26;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC20F606A31C
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 17:47:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EC20F606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4952D606A31F
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 18:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Du+MnRMC
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 813AD401C7;
-	Wed, 28 Oct 2026 17:47:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 8E10F20025;
-	Wed, 28 Oct 2026 17:47:56 +0000 (UTC)
-Date: Wed, 28 Oct 2026 13:47:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alejandro Colomar <alx+linux-hardening@kernel.org>
-Cc: Jiri Kosina <jkosina@suse.cz>, Petr Mladek <pmladek@suse.cz>, Kees Cook
- <kees@kernel.org>, linux-hardening@vger.kernel.org
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ioWEMP26
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BEF1F01825;
+	Wed, 28 Oct 2026 18:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793210423;
+	bh=v/U7/rXg7EsEp/osuGKqrhQBi4K3Sjc5+LWGYjqAy0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ioWEMP26IckpWkIVNPHDAiK9yb7VciuVjiN1IMTQUO0FNGrppEK2sG5V3ff08xk/E
+	 aN22+niv9lYUwnJ2YFd7cyIzMQCuLvghoI7fL1CA4RGt/Uf43TSahPR5M+gmtOODIt
+	 VW/Q10f7meH2h3mz7rFw4oVW5rarUT1FhBHELAPCHckaDibI/hUuh36b1M4/JvUNkh
+	 lkdJxa7u8mfqpKHnQqn68dYlsdAl1sxbi309TAWXPSUq7uFKK0TmxHKmu1lBGrU70G
+	 izp0hwIjI1DLzqoXLPDjro7piNrdPmOxsCAGEaUcLLfQOXT6BKvAx6hGIkSOTHvC9n
+	 tgrQqW48flC/w==
+Date: Wed, 28 Oct 2026 19:00:19 +0100
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jiri Kosina <jkosina@suse.cz>, Petr Mladek <pmladek@suse.cz>, 
+	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
 Subject: Re: seq_buf_putc() and strings
-Message-ID: <20261028134755.176f8323@gandalf.local.home>
-In-Reply-To: <auIrUV7A8eF8DCGG@devuan>
+Message-ID: <auI38dBMI7aaSkY1@devuan>
 References: <auIrUV7A8eF8DCGG@devuan>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20261028134755.176f8323@gandalf.local.home>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -59,24 +57,71 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 8E10F20025
-X-Stat-Signature: kzujxtrsicqo14unx44t4ohyudrduatt
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18+72OTEEFGF0VD73BioXiRqvn/78+cOwA=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=RtPgMNhqupyWVsf8g5F2JSW0VnhMO36ohWkyC5M+pL8=; b=Du+MnRMCNLMhHyExW52g3zNPJEGkDU2IuoH//Sm4tmXRHWkECEM7thIl1wDj0wszeBuoSaWa9eoEA77iqqDof4zDSNOe/KGVzJah5nZuhX9zPQADWaKOZQxXbync6LbYGObKrsOUB1NoUuJEfH3sNmXQQqPIGYHsweJtxgVkKpo=
-X-HE-Tag: 1793209676-311566
-X-HE-Meta: U2FsdGVkX18GAd+vw7ieM3UVYV+oANDrR+c0Pvj2Gpu38FiXBJWBV6vUqHWnMumfUMWU5hlR7IuJXidH3KWF3u+8x0RaxB8okNAUjAPSRCpuPN4zr4ArGCS/4qZ2CYZQfwlpzfzDJQiA+WTY3yrrZrXcwBdd+fdGU0I3/zvr0cRrisxUqiF4YgcpLLm+G/bViwkPv6Lo1W+XY94wYCRQGT2ZyS3q7Z9oUJ1ckKtkUytj8JAHQcmFcCKl7tdexrxA/Ih0qBUQdAxsdNUP00ctGECne4vzIFqFLFBAsQkXTbP0BWAV25DwBSLaRf0LpcUMrqc2e5Bj4YOH3DifEUDO8cL4wSycgt9Q
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ktx4lrfuldq7qmtx"
+Content-Disposition: inline
+In-Reply-To: <20261028134755.176f8323@gandalf.local.home>
 
-On Wed, 28 Oct 2026 18:13:40 +0100
-Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
 
-> Are there any reasons to not write that NUL byte?
+--ktx4lrfuldq7qmtx
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jiri Kosina <jkosina@suse.cz>, Petr Mladek <pmladek@suse.cz>, 
+	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+Subject: Re: seq_buf_putc() and strings
+Message-ID: <auI38dBMI7aaSkY1@devuan>
+References: <auIrUV7A8eF8DCGG@devuan>
+ <20261028134755.176f8323@gandalf.local.home>
+MIME-Version: 1.0
+In-Reply-To: <20261028134755.176f8323@gandalf.local.home>
 
-Yes, for speed. seq_buf is used in hotpaths in tracing. I purposely made
-the design decision that the seq_buf string is never guaranteed to be NUL
-terminated.
+Hi Steven,
 
--- Steve
+> Date: 2026-10-28 13:47:55-0400
+> From: Steven Rostedt <rostedt@goodmis.org>
+>
+> On Wed, 28 Oct 2026 18:13:40 +0100
+> Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
+>=20
+> > Are there any reasons to not write that NUL byte?
+>=20
+> Yes, for speed. seq_buf is used in hotpaths in tracing. I purposely made
+> the design decision that the seq_buf string is never guaranteed to be NUL
+> terminated.
+
+Hmmm, okay; I'll keep that in mind when rewriting.  Thanks!
+
+
+Cheers,
+Alex
+
+>=20
+> -- Steve
+
+--=20
+<https://www.alejandro-colomar.es>
+
+--ktx4lrfuldq7qmtx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmriOC0ACgkQ64mZXMKQ
+wqmX0A//ZNouAvNYPUIf7YEdv2r0ugJI4Yfm0IVJxK+MvfSmbrgimWHy+90SPIR7
+am4KI74uUwKPiPGRLDUt0Gp3EyLRQEUchgnW2E8PlfteMel5i1Sl0jj+MWusO3Z5
+fyeLCNHuly2s06Tu/LCx/EUtD+dEffc+RBqdbAVAgvm020OS0NhAP/Xbn52Ygs2R
+tJErx4YgpP/UltRvKIFiDSFY4b5S2fmR93dsPJ7FE85w6P+CYMymbC/cR/EsmCl5
+ykQrC1JcUqaoFdUFu2Kx+dTFHFVWtNFFE0XmFUejjLE8hvEOA5o0IPEALbm50I8Y
+7lx9Cs7OlVho2EZiYmp1PzRSEUi1N0jcYiztr2DoeidoAzY/zsX6DHi7XdtJxoSO
+uLGY2J0eJIWlnHTo7o9BHh34rDS2pIDcLhut2Cvl3NfigHOXbDUgEKLDOxa1cdEb
+uw/iSyNJQNicMy7AelmDWk1SKpuW7H6sBWr3O35+EpkK9apHZO5KqU+x/IYvAP6Y
+4pqKUjXizYp6K6u56xanEYQ+SP3Fc91ZLZlCUSeyHMIJhQQ59Cis/oYlydXSTI19
+ZtoNJKZXEJ6p2mnWBVYzVGn1RhypgezkRjHe5UwiR10emILbv3YgHTGV4H8qZK4Q
+FULToLSafEh2RbnF9vyuVNOLO7mii2bNqqTo+m4EyKg54JG4eI8=
+=bKC9
+-----END PGP SIGNATURE-----
+
+--ktx4lrfuldq7qmtx--
