@@ -1,69 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793220663;
-	b=RnTKX0qrVEQvmkHhgzZih28qAQMWRTm/+J1MHLJgWhHaiUEf0gunCLHaCw2s2NAoLTy7
-	 2518TDwb06B55h63dbpNC3DV+wxLeyohxhzVOvXGw+CeV1Pvw2brE1jvHib7S9F20mkss
-	 t016YVtgrTx3uzR/Tch02Wk6JMV5bNjcapwTRiH1DPXYjBUW2e4jmMrrL2y9elpWQGzJA
-	 q2Y5OSWJA5ldbOJWX3ZgRQjN8s+Yz71ZfkomWsb5bmtrMrh3s2CEIULQfevExMa2/SZsV
-	 UZl1bnXpgke2JD3m5VwV/inoibqjpoB9YfffVKLAj2AgKi1qT83p30XlL2IhtszQk4w==
+	t=1793221184;
+	b=q4glERDjlWNAM3hAdMCvYo5h6iVf77ZXn4nw8IV2whlqRBWZcizUFPIwh/erZ/4UEl6O
+	 5671aVRfxtqQp95RkphP6OOzPHR/Wc1RA3VjyoOj4t8Qp6Jy5fzl9gJ/xjvqoh2MRoD0S
+	 gda0QbQ9a+SMKdnWcuktPuSUdNlwu9jiY2TEUkWiZS9g6OSBkzmuARwtKP33ndZD6Z62N
+	 Dkl/l3NkxkP09+joqyZ+htOR9Z4+D2VJVR4l1EZGvLuxVx3l+uP65Tmz0xvG4JHadqOB3
+	 LvicgbaW14zP1Raf80vwsvbNclCtrBBjgb2M8k9YidW4OR5TdEA/LJzvqvQD0IFiM4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793220663;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=TSWTwMYjtaUgzoJmy0hlvkgF3nPSuQTOgGNjFjHGst8=;
-	b=WQ3pyRxSD7jW0knojQFJ5Ewi4YjGgA0kXBh8BqgEIdyBCCreycA4YxYK7xPvOqsa8lna
-	 J67/BDzx7N/8RxZ5iF5koIgFhvK4ji+63w2AIXnUKRC39jkFivgAgdAz/sl7oMB/Gw2fi
-	 0RgIVMQ1eR6imQeOsk61lZK4UvWfsPAMOuf7PKzJ+9Zv16EUeAnUkCjdQuqso8HvlFMwC
-	 +026hBLEJx1HV+zWBCRJ4CtfLMZan19/+Lw4+pWILPG34oSXlbE6MCdkCl++oWYLXirGx
-	 cEDzue0ajyD58XK9iS0AmnHDKLgmbNPlrkIQH+Iihuco89JSf67HUmS25VdR6tGSHFA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793221184;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=9nOlNgC+ffLrqVykbkDTz8rKzDkyZbGtwBA6+1rkdRA=;
+	b=rZHArShynkRswoRDzhFB0h6ivSo+R0tV9xCPbmIKOX8ctqFXHpfmKMW5xspgdon8nxMO
+	 mWjvk/2zqnGZO0fwAOFe0p9U8JgLXBQogaqQ3nc+Hh6KLBiRRnDWNCQhlJcmty31W7HXm
+	 9jYRgzQCzRXsrfcfBk5Q7bv32E/Bwely9tZic4XdL1zppygkg6sm930g7Fe+Sb/EKK5DV
+	 8YJ8i3DHxYetm0dJc57Dc09puweU6ojI9hMd8cjckmqD+uJjpu8QC6SAFcsXWHYT1CCjb
+	 zlZNMLjUg1hcpSWFQzuScXPtZG8UjoxQHOxIQH5qzhVjlgPlgWokVfk9kQOrz4TTTBQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hvBJIToO;
-	arc=none smtp.remote-ip=192.198.163.17
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NDzvS4mZ;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018B6606A31F;
-	Wed, 28 Oct 2026 20:51:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 018B6606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3E5606A32A
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 20:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hvBJIToO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793220661; x=1824756661;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TSWTwMYjtaUgzoJmy0hlvkgF3nPSuQTOgGNjFjHGst8=;
-  b=hvBJIToOh14/KnN8ij7Ib4yNz8rZRRgsygZgGBGVGas16cDhdMcBAIt+
-   mkdRpV7bYQwpPhzuEJAdRiT1iDcSCHxfqCeioAxWnmM8TyZMejPG7MWqs
-   8kVEDnYLnaJ7GPFuI5F5roCcidhydTSy/QLyM7YzDH1NlfUNA9CFxPOvg
-   spYRlnmpyAXLXZPAcvX41axr28BIJnZYEK3fawrSDVmMjv5A1JvtVUW0e
-   dEgMssA+Vbh85UhEt8YVB0KrLJUEVEf8GiQnVt5FL6fCRTWXUXz/LH8XA
-   Ut+NEw8ggTKAzRVQK/GnTVEjNNE3/eVpbA7B2/iYxEKGkcZ01AJBkoVXa
-   w==;
-X-CSE-ConnectionGUID: e4tZDtuFQQ2iRxOPBZ53tw==
-X-CSE-MsgGUID: s1HWQ5PYSF2bcKqqm9Y31A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11949"; a="1971265"
-X-IronPort-AV: E=Sophos;i="6.27,183,1787036400"; 
-   d="scan'208";a="1971265"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2026 13:51:00 -0700
-X-CSE-ConnectionGUID: CfVnjuYjSD+ILdf6xGMCow==
-X-CSE-MsgGUID: 07F29Qw8Trim9omE97SzGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,183,1787036400"; 
-   d="scan'208";a="4860617"
-Received: from jjgreens-desk24.amr.corp.intel.com (HELO [10.125.108.218]) ([10.125.108.218])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2026 13:51:00 -0700
-Message-ID: <3d982c1c-4c97-4dbc-958a-4e71131c0020@intel.com>
-Date: Wed, 28 Oct 2026 13:50:59 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NDzvS4mZ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3252C1F01825;
+	Wed, 28 Oct 2026 20:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793221184;
+	bh=9nOlNgC+ffLrqVykbkDTz8rKzDkyZbGtwBA6+1rkdRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=NDzvS4mZxJazedkhRMxD8boXrkL6d+xwgy4nsA21I9Bk9vVgPtxS1LKnT5Hwy3EMz
+	 SLWpedd01/x/uD5OevKTb2YNsxpHHFhd18uohsaO5wQvkPO7xyL4AQzBInSSgldiyt
+	 W79uZQsSH/CSlCpE4RNhunzCzMN1vsS6CL+/0GTbsgfw2C0HX/Qcv8pTUgKUFWQ0+p
+	 JHznCqNzg0dnqgmTql9q7NUwj9l2DmkJ3Pndp/w+gawyLbZGQ6XESFJSGekbm/iMYo
+	 HlmwO4uT4yL6OetBHQcQl19oRqVdRi2Ut+HQQyqYCkh4U8kmAQD6ROPBO0IeLkJT04
+	 04RDvhEDunfKw==
+Date: Wed, 28 Oct 2026 21:59:39 +0100
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jiri Kosina <jkosina@suse.cz>, Petr Mladek <pmladek@suse.cz>, 
+	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+Subject: seq_buf_used() return value on overflow
+Message-ID: <auJfBNeZGDbvMBxS@devuan>
+References: <auIrUV7A8eF8DCGG@devuan>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -73,96 +56,115 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/entry/32: Harden return-to-user
-To: s1nkhole <dedemorow@gmail.com>
-Cc: x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- hpa@zytor.com, Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <kees@kernel.org>, Brian Gerst <brgerst@gmail.com>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <ac147f25-a2d3-46b9-89c5-44a1c0e4f038@intel.com>
- <20261028192139.32606-1-dedemorow@gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20261028192139.32606-1-dedemorow@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dqjmnpzg4ydcmto5"
+Content-Disposition: inline
+In-Reply-To: <auIrUV7A8eF8DCGG@devuan>
 
-On 10/28/26 12:21, s1nkhole wrote:
-> If you have a moment: this is my first work on arch/x86, and I would like
-> to contribute something that is actually useful. Is there a small task
-> in x86/entry or in kernel hardening that you would suggest as a better
-> starting point, or a place where help with testing or review would be
-> welcome? I can build and run kernels under QEMU.
 
-It's not small, but kernel shadow stacks are an _incredibly_ powerful
-hardening tool. You can buy a system off the shelf that sanely supports
-them (including FRED), but the kernel doesn't support them yet.
+--dqjmnpzg4ydcmto5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jiri Kosina <jkosina@suse.cz>, Petr Mladek <pmladek@suse.cz>, 
+	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+Subject: seq_buf_used() return value on overflow
+Message-ID: <auJfBNeZGDbvMBxS@devuan>
+References: <auIrUV7A8eF8DCGG@devuan>
+MIME-Version: 1.0
+In-Reply-To: <auIrUV7A8eF8DCGG@devuan>
 
-My current work in progress is here:
+Hi Steven,
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/daveh/devel.git/log/?h=kss-2026-10-23
 
-Another set of eyes on that would be nice. Although I do think I'm going
-to abandon tacking the shadow stack on to the thread_union for now. So I
-don't suggest looking at it too deeply until I get another version out
-the door.
+Another question that arised while rewriting seq_buf.
 
-One thing you could do today is go into the list in here:
+There's seq_buf_used(), which replaced (in 2014) the previous
+SEQ_BUF_USED().  That commit changed the value from
+	min((s)->len, (s)->size - 1)
+to
+	min(s->len, s->size)
+but didn't change any other code.  I don't see any mentions about that
+off-by-one change in the commit message.  (There are two 'Link:' tags,
+but I didn't see any discussion about this patch in those; they seem to
+focus on other patches of the same set.)
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/daveh/devel.git/commit/?h=kss-2026-10-21&id=4dab5fe58904ee07b3622f25bbe3c1b7ff820bf5
+I wonder, because when changing to use pointers, the good behavior would
+be with the -1, so I wonder whether we can go back to the old behavior
+easily, or if anything depends on that value.  Was this a regression?
+Or was it a silent fix?  Or is it unimportant at the moment?
 
-and pick a feature or two and figure out if they need fixing for shadow
-stacks or not, and if so what a fix might look like.
+This is the commit that I'm talking about:
 
-Or another set of eyes on this:
+eeab98154dc0 (2014-11-19; "seq_buf: Create seq_buf_used() to find out how m=
+uch was written")
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/daveh/devel.git/log/?h=taskfun-2026-10-26
+Here's what I'd like to change:
 
-It's ready to post but I'm just waiting for the merge window to close.
+	diff --git i/include/linux/seq_buf.h w/include/linux/seq_buf.h
+	index 05e70ac18ddb..63d077dd8a74 100644
+	--- i/include/linux/seq_buf.h
+	+++ w/include/linux/seq_buf.h
+	@@ -78,7 +78,7 @@
+	 /* How much buffer was written? */
+	 static inline unsigned int seq_buf_used(struct seq_buf *s)
+	 {
+	-       return min(s->len, s->size);
+	+       return min(s->len, s->size - 1);
+	 }
+	=20
+	 /**
+
+The rationale for having that -1 is the following:
+Consider a representation of a buffer where s->p holds either a pointer
+to the terminating null byte (or the position where it should be written,
+if not yet written), or NULL if the buffer has overflown, and s->end
+holds unconditionally ARRAY_END() of the buffer.
+
+By doing s->size-1 on overflow, we'd translate it to s->end-1 with the
+pointer representation, which happens to point to the null byte (or
+where it should be written), which would make this offset quite
+consistent.
+
+If we do s->size without the -1, then that offset puts us one-past-the-
+last element, which isn't usable in the same places.
+
+If you would accept a patch to add back that -1, let me know and I'll
+send it, or feel free to do it yourself adding the following:
+
+	Reported-by: Alejandro Colomar <alx@kernel.org>
+	Suggested-by: Alejandro Colomar <alx@kernel.org>
+
+I guess it would be better that I send a patch with a proper commit
+message.
+
+
+Have a lovely night!
+Alex
+
+--=20
+<https://www.alejandro-colomar.es>
+
+--dqjmnpzg4ydcmto5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmriYjUACgkQ64mZXMKQ
+wqnkNQ/+N9eaVJ+D2optyyrF+GVqqfV5KkyWaYFutAXiJPD+qgCLrW2ppeU2NYX+
+uWwVMduZ+WIbNdGyZip8oriV1WA6LuDCnn3Fi7Liutjt7c1nOYOt9UCScYGMKGOy
+TKOnxik9VNDGwLB/RmJTWESUa30ZWp1nCEfYunuwZmozppSFuEG4cFBYOOVLNdNn
+8UojjvikWSHdlhJ2XOoRmuZh4eC5j3E6KwkqVm6aTeHLz1jaEyzWFx2HpUpK1lDx
+JYjIySn14DHj5wK8mY5m6h3qzFAqWk8Ot1z1wV/Sjm8seghJ4vckprl2CfzPsTkZ
+8pQ67ntNxnWw9jEVGh8Hj/84dL/Hebod5HVT0cBgR/et47Ual1TR1TlBG61ngngH
+vv44NzPxnro0Tpt49xlDahT7sMNuPW+CDHw2VEZ6MkBGe2yufm5lEb1PoWH0EwWL
+riAHm4eC+tGnyBI3MFD/xsKwuzkeBataoZeUlnh7kK86FOaOnUAmmfZnduEaCgiO
+qnqLdNxBIEDjIRCsrdNegYAa9zaFf7WBkxhYmQ2mimEk3NhPqPga1i9mFLjzlKef
+XOd4LqPaDbVLyVYbosjFYsVbMZ3YZ4FiBSj+sJfcVVNGFTMYGJj3vsB/mtqprdg1
+SyBwEOyr0XOSEALyu31VaAY3ROM/5bEijp/KwvP17b6rCwcxaCA=
+=SAg8
+-----END PGP SIGNATURE-----
+
+--dqjmnpzg4ydcmto5--
