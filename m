@@ -1,53 +1,107 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793210423;
-	b=0TvHcAz2X4LGCwE39FuijzJtEn6+UfsNyI9Q1126raKOlZCvMwDEIHOdEkDeahz8SDaN
-	 cla+Pr6vLhNU38auWePzn6BJHPDH+9fmcSh0u1N9ySPa3jppoBIwmt6IMxOXU+grVWLNM
-	 Ra/E+4hFqPMjaYDhvl+9/frj3zcSI+vzzttMCryav3hDrdpsYXzjwopsn4q3JsdIZtIvi
-	 Zx8w2e2IcDrznZf6TaENU6s+SfKdrVl3qUaRJOh5MG2CCmXz1+LXb5ARc+omj1/kcsx7i
-	 w3qP/FTF7JSHgEa9QqoeqHwBJj2KBBJ856xiULvoZxSzlDizxf7Ewy1HB9NpGeJZGYA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793210423;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=v/U7/rXg7EsEp/osuGKqrhQBi4K3Sjc5+LWGYjqAy0g=;
-	b=IatzacOujnuhUx9Cb2mdJ+MJDQ7XWZ1euB60jIok/q98bcFxymLYq5Y09o8Ha4DDTsxk
-	 SpunRiBbDIFnYAv/q0MSOJDQoLZjT5blFp2BQacwJ9lJv4JgrTS8eq+K/oWaWLDOajFAx
-	 CQRm8Uks5PgQTVnVaF/iQLYTbrvZL464WfrfOSh6MLJEEPpGU3QMWYZS6J1Cd+k6+BeD0
-	 wJa2OwXAUvj00kDZKrjCaP9Zf0YrCjlQSikuaO4rhQ8xZ5DSxh0GaQ0eJsnhCAuQ9Kx3b
-	 N7dVMF0wscnU3uxp8WuYcrHWl5ext21YLtgBEldHcffEkey3Tcxq1EywPjvqZ8HLykw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ioWEMP26;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.48
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793211145;
+	b=LzbWkLESZP1zKa1Fjo6YQYaQJQTLrY+GwzK+J8mmMw0N4O+F8ImFAjigZQnxMUaqFgDg
+	 PhvGi8bWi3wgwaudmn/uhQmPL5vYBGTGJmbijHYJMNfbnrK4nD22g2QrHOuvrxyZQAG74
+	 Ir22dETSK7tUMHFwp9sLDfg9bV4Vb/5S5syOdaBNa9lO2NfhCoyegCAajf1dzMHBmDFtn
+	 pOahLnmcmaHwodh1SJUieoJdRqSKlW8tM/djz7pfYn/FPjZ/cvIRCreUcC8PcHCI4Y4AX
+	 ANcmUe2YRxaI/3XZDSQE8Xj8ip3K3YhM7Yu9h6ulR/AFhI0UE8Yd5oBZ/PfqxRXpIBw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793211145;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Received:From:In-Reply-To:References:MIME-Version:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=p/wxxGxoBJyhbGLsecA52KNGsy8WsqvTWX50Wr5bw0M=;
+	b=WNcbvbu0WMNDNJ4eEhx+NKCvOB244QWMZZ77785qRUE2TxcAobbRyLiTIwWQw9EedkEf
+	 +zVZyJk/EKHasTtZwyXGL9SLDwGZJg7X5+o0jZbwkOgZ94YGhxazzbQTQtd3amsvheE+A
+	 wb41g9aRwEmfOZzGVKuPoMUbszTGx+YWTegsAbfDFqfrVdalP8VoFPMB+/ei7znqEX0B6
+	 aDVbGBGakhF91tG4h3i4UZDuLxBcFyrl+Q24ilYW1bfr6IILJt6ruVWvia8J9DsLBM/n8
+	 a0m6PrQ+QKoN8fwvpAmtr9yie+QMeaqmOQiEzXPZ5rjcWoTeUJ3Ud4vUYB5LYxvmwJw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ALSf6WKa;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.48
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4952D606A31F
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 18:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352D3606A97A
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 18:12:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 352D3606A97A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ioWEMP26
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BEF1F01825;
-	Wed, 28 Oct 2026 18:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793210423;
-	bh=v/U7/rXg7EsEp/osuGKqrhQBi4K3Sjc5+LWGYjqAy0g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ioWEMP26IckpWkIVNPHDAiK9yb7VciuVjiN1IMTQUO0FNGrppEK2sG5V3ff08xk/E
-	 aN22+niv9lYUwnJ2YFd7cyIzMQCuLvghoI7fL1CA4RGt/Uf43TSahPR5M+gmtOODIt
-	 VW/Q10f7meH2h3mz7rFw4oVW5rarUT1FhBHELAPCHckaDibI/hUuh36b1M4/JvUNkh
-	 lkdJxa7u8mfqpKHnQqn68dYlsdAl1sxbi309TAWXPSUq7uFKK0TmxHKmu1lBGrU70G
-	 izp0hwIjI1DLzqoXLPDjro7piNrdPmOxsCAGEaUcLLfQOXT6BKvAx6hGIkSOTHvC9n
-	 tgrQqW48flC/w==
-Date: Wed, 28 Oct 2026 19:00:19 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jiri Kosina <jkosina@suse.cz>, Petr Mladek <pmladek@suse.cz>, 
-	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
-Subject: Re: seq_buf_putc() and strings
-Message-ID: <auI38dBMI7aaSkY1@devuan>
-References: <auIrUV7A8eF8DCGG@devuan>
- <20261028134755.176f8323@gandalf.local.home>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ALSf6WKa
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-6790c2eb033so219562d50.3
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 11:12:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793211144; cv=none;
+        d=google.com; s=arc-20260327;
+        b=aXaE72J6e3+tKwIe18iSEYHMBI8WHyQfbPN76DhvgVx60ezPelylyUrYR3TgJbeUS8
+         IZOFnCsPF+dPccenErNikphbVzf5KaxUL54EW7WPU+5MpCDaNSpWKTn4OMukMAuID/bI
+         qJnUWckW+r8k/FC8PHpOwAP1cR4krxZfGmf08Ybg0XQAgIX42u+/WWARWeMNVv2ra8pk
+         o8mIw4KMByZ/rRi74HT3OeLz1gttCqlcgN9bGXX3pEg7ziiKCpQ7OkddBdSgqrduPsPm
+         JgZY64p2P1AnkGtfTYBfTy4M78Ps/SxPGPG+bCUBZFRnD9huh31kWZw8qvhJ7gEAY6c/
+         THnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=p/wxxGxoBJyhbGLsecA52KNGsy8WsqvTWX50Wr5bw0M=;
+        fh=tZqvU4qe5subJ6NoobY+p7jFakWfscJJdxKpCSJHie8=;
+        b=bMIB+Uyf9i13XE9pO/v4sAd67efTzpFt5K9J55JhSBq3lh7Dz+foBtVEt4EQ2qskDx
+         zTNP/1E/Y/LlZv9smwcioXi63jrTuB9jOgyhcso3Mpo+6vAqnh+4cEP/vQW8vLqP7hD0
+         8XKIuB9HaWHhpSpUDSYNQT4TpjGl+jKgZAU4pfrkl/grM5PAcZH86rTUl/aW/h2qWqE1
+         1wvOPUHVMI4udCtF/yxJCWNUkx7UEAlqSdEenu3JDErTvqpz5qABa4M+wxbugjWlH4GR
+         EzbWxsPNvzzsPCFiz81h++/LJusWKCj0ps+76zBWG8a0iYeicfmc/F1j31IJmj6xHbgg
+         YAqw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793211144; x=1793815944; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=p/wxxGxoBJyhbGLsecA52KNGsy8WsqvTWX50Wr5bw0M=;
+        b=ALSf6WKanFx5JvmwlsLgV8fFdqXM6xTDgPgW9yrrFjM6/vBGqYK5MP8vdjEFd6Sd98
+         NBVXpxDxP5phBJEQbTM6ZF819Et3/utRfYgAYvVe1/7CPYGeKwjbZCJN2+eWDd+DPgOJ
+         /JYgpa/2NylgB+nTergZPvZ1EvWvqMF606I1SYcSYUg7ByrEMXm1mMsFZ652rdG5agyO
+         B7s01u4kNZ/56+zsY+mpL/w7IdzRejnSTJl0usSaFROTaNzSYew6f1rFzZzNTYa/jteU
+         Duz/k0QuEMkQ11mraTPIuGOS/qrwrzXXpBwPJitSAC/lEqMeD/uihh/wLI3vDBA6yzMf
+         CDng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793211144; x=1793815944;
+        h=content-type:cc:to:subject:message-id:date:mime-version:references
+         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=p/wxxGxoBJyhbGLsecA52KNGsy8WsqvTWX50Wr5bw0M=;
+        b=JB2Dnsa941NwAHAIGEcEm3DgmDbAVVD+nCHBmqlGpxnbNBBZn4XLsRjX/+fxqcn9F8
+         bHcYQSlSsz6u4vnaGPaZXZsPwPmz5gEtekuKnvhwJxcpBX7diLhS37m6oxs+9DbI67XQ
+         1i3dku6g7ybR4vYJrZQ25YepmPMZgyII3EwBfaNDHgCBITzW967Lz4g7EJJOM7cgzMlj
+         rc3ITMxkFKziG5hCdSfSQeqMPncBIt6VhpPQnxs20CO2qb41GccQP/K6duRRCjMbbFbe
+         kBcCEOvTN2z42qPgzfP0MkwC1qLCc4Qqzh8/2zcwilzXDv51VLQxi9uUC3nDTP8HhHf0
+         qZ5Q==
+X-Forwarded-Encrypted: i=1; AKwUvBzIxBScf74cxGdaHbdccEBU3SE6rZuu3V6fdHfJIcm6iZAD01pL5cZaVuVHoH7RhmtSL3TehG4mMOZQla419IE=@vger.kernel.org
+X-Gm-Message-State: AFq9FYKRIfW5mkM+oyx95PS+Gbihb+j7bwThOdxZSK2u6jx2tEpWszRh
+	hTE4NA4EaF2+LEA2I5BvBcY/YvrExVAYSEx2wH5Gn4z1uhUByEFAFHaCp6jgsLAMVTRxDTkJO+C
+	EnQJK8iAjH+mxDHjnomRRqE34QxaMtzs=
+X-Gm-Gg: AYBFou2NSlz8N68aCP7acb3Zs7fZWLKhYs/NeCuTCxSgwAVofsL2MpZfhPVhmr7u3hq
+	SgCKtF1YGh1zknUn3G2VXytGo1B3coMkmdd2EIIaQkndgtrtAW6Ch7eYOegSicIeD604k/8Yp5R
+	8i/hhMxClEyfJPs/upx8V4TlxREVOF3NLzM+Hik6RQDBCkl9yeny5q+jiOuwAF29DgX++P7ysBa
+	nxs6ipDyEaL/wlaWBdTFu4pAGRdmZUbctGUu2QviGZhApORaUylWYHyQOVja9vyReQuhJbZNgLd
+	Cmd+uLUlXY03jWX8HlE0OLGi55fMdtkGEKnjxxxBqzERmd0KHr1gxNDtGVs7hrmZrHABpo1P9b5
+	/viJgmA/kxxiUqfKyB/ih774Ez8NwnQRIILw=
+X-Received: by 2002:a05:690e:a4e:b0:675:6f06:5642 with SMTP id
+ 956f58d0204a3-67a7b9945d2mr4650525d50.1.1793211144098; Wed, 28 Oct 2026
+ 11:12:24 -0700 (PDT)
+Received: from 95991385052 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 28 Oct 2026 11:12:22 -0700
+Received: from 95991385052 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 28 Oct 2026 11:12:22 -0700
+From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+In-Reply-To: <20261023-bug-word-at-a-time-zeropad-kasan-v2-1-be0ecfbae847@gmail.com>
+References: <20261023-bug-word-at-a-time-zeropad-kasan-v2-0-be0ecfbae847@gmail.com>
+ <20261023-bug-word-at-a-time-zeropad-kasan-v2-1-be0ecfbae847@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -57,71 +111,63 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ktx4lrfuldq7qmtx"
-Content-Disposition: inline
-In-Reply-To: <20261028134755.176f8323@gandalf.local.home>
+Date: Wed, 28 Oct 2026 11:12:22 -0700
+X-Gm-Features: AclHuK-o5YV67AfwlA9WNsjqOxV_ScugEYWYzUg986KltKOOqPQjM_oQFfVaIog
+Message-ID: <CAPAsAGyEUL1fj2-1=NGBDDO-z47cOHmcFDFexY9T_1_1LCMQJQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] word-at-a-time: check the first byte in load_unaligned_zeropad()
+To: Qiliang Yuan <odys.yuan@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
+	Shrikanth Hegde <sshegde@linux.ibm.com>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>, Marco Elver <elver@google.com>, 
+	Alexander Potapenko <glider@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org, Kees Cook <kees@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kasan-dev@googlegroups.com, linux-mm@kvack.org, 
+	Peter Collingbourne <peter@pcc.me.uk>
+Content-Type: text/plain; charset="UTF-8"
 
+Qiliang Yuan <odys.yuan@gmail.com> writes:
 
---ktx4lrfuldq7qmtx
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jiri Kosina <jkosina@suse.cz>, Petr Mladek <pmladek@suse.cz>, 
-	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
-Subject: Re: seq_buf_putc() and strings
-Message-ID: <auI38dBMI7aaSkY1@devuan>
-References: <auIrUV7A8eF8DCGG@devuan>
- <20261028134755.176f8323@gandalf.local.home>
-MIME-Version: 1.0
-In-Reply-To: <20261028134755.176f8323@gandalf.local.home>
-
-Hi Steven,
-
-> Date: 2026-10-28 13:47:55-0400
-> From: Steven Rostedt <rostedt@goodmis.org>
+> load_unaligned_zeropad() reads a word that may run into an unmapped
+> page and recovers through an exception fixup. It does the word loads of
+> sized_strscpy() and of the name compare in dentry_string_cmp(), path
+> components in hash_name() and hashlen_string(), and the trailing bytes
+> in x86's csum_partial().
 >
-> On Wed, 28 Oct 2026 18:13:40 +0100
-> Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
->=20
-> > Are there any reasons to not write that NUL byte?
->=20
-> Yes, for speed. seq_buf is used in hotpaths in tracing. I purposely made
-> the design decision that the seq_buf string is never guaranteed to be NUL
-> terminated.
+> It is inline assembly on every architecture that implements it, so
+> KASAN and KCSAN never see these loads, while read_word_at_a_time() at
+> least checks the first byte of each word. A use-after-free or
+> out-of-bounds read of a name handed to path lookup goes unreported, and
+> so does strscpy() reading from a bad source, which the kasan_strings
+> KUnit case expects to be reported. On x86_64 with generic KASAN:
+>
+>   KASAN and string KUnit suites      failures
+>                                   before    after
+>   CONFIG_FORTIFY_SOURCE=n              1        0
+>   CONFIG_FORTIFY_SOURCE=y              1        0
+>
+> Check the first byte with instrument_read() at the start of
+> load_unaligned_zeropad() on every architecture, as read_word_at_a_time()
+> does. All callers only load a word whose first byte belongs to the
+> string or buffer they read, so the check does not flag their intended
+> reads past the end. Add a no-op instrument_read() for the powerpc
+> selftest that builds the header in user space.
+>
+> Suggested-by: Peter Collingbourne <peter@pcc.me.uk>
+> Signed-off-by: Qiliang Yuan <odys.yuan@gmail.com>
+> Reviewed-by: Marco Elver <elver@google.com>
+> ---
 
-Hmmm, okay; I'll keep that in mind when rewriting.  Thanks!
-
-
-Cheers,
-Alex
-
->=20
-> -- Steve
-
---=20
-<https://www.alejandro-colomar.es>
-
---ktx4lrfuldq7qmtx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmriOC0ACgkQ64mZXMKQ
-wqmX0A//ZNouAvNYPUIf7YEdv2r0ugJI4Yfm0IVJxK+MvfSmbrgimWHy+90SPIR7
-am4KI74uUwKPiPGRLDUt0Gp3EyLRQEUchgnW2E8PlfteMel5i1Sl0jj+MWusO3Z5
-fyeLCNHuly2s06Tu/LCx/EUtD+dEffc+RBqdbAVAgvm020OS0NhAP/Xbn52Ygs2R
-tJErx4YgpP/UltRvKIFiDSFY4b5S2fmR93dsPJ7FE85w6P+CYMymbC/cR/EsmCl5
-ykQrC1JcUqaoFdUFu2Kx+dTFHFVWtNFFE0XmFUejjLE8hvEOA5o0IPEALbm50I8Y
-7lx9Cs7OlVho2EZiYmp1PzRSEUi1N0jcYiztr2DoeidoAzY/zsX6DHi7XdtJxoSO
-uLGY2J0eJIWlnHTo7o9BHh34rDS2pIDcLhut2Cvl3NfigHOXbDUgEKLDOxa1cdEb
-uw/iSyNJQNicMy7AelmDWk1SKpuW7H6sBWr3O35+EpkK9apHZO5KqU+x/IYvAP6Y
-4pqKUjXizYp6K6u56xanEYQ+SP3Fc91ZLZlCUSeyHMIJhQQ59Cis/oYlydXSTI19
-ZtoNJKZXEJ6p2mnWBVYzVGn1RhypgezkRjHe5UwiR10emILbv3YgHTGV4H8qZK4Q
-FULToLSafEh2RbnF9vyuVNOLO7mii2bNqqTo+m4EyKg54JG4eI8=
-=bKC9
------END PGP SIGNATURE-----
-
---ktx4lrfuldq7qmtx--
+Reviewed-by: Andrey Ryabinin <ryabinin.a.a@gmail.com>
