@@ -1,69 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=178.62.254.231
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793168197;
-	b=ZP8zMYfPkiAgmaJrGnyEg3QElUEo6zY/997l6BQz1ewgc4z56n8w/50y7IFeXpUxqnpJ
-	 F5nB0EbbMLWpl3VzTBKEpzhePJRA6CzBAI6i9CE3vTZ1qF4r5qRdYlxrbLp8OtTF0pI7d
-	 pvQmRryXaL4ts2pvEtXCuR3VVcmxMl6NnhhBXQNqXmq2hYAvvh87bAYopVXsZeQ5hjT10
-	 HJUb7MVsgc9gigwvW0G3lU6IF55yHz2VLFMqRqNOWC1TPPCeRYztVAj7jVhcz0+sb44cq
-	 P75Qhl9frw3ONxMpUyzJT/HvpC1cI3bE3Y9HnrmsZRq7RRcnOzqBG4r4yAMFIw10rhA==
+	t=1793175642;
+	b=YkrunWWlSX/7BMCyLcJxAQOexZ0/JSgBvQmZ0crPPqkn9Fpj7k9d2cYB/XlRxEj4RDGm
+	 ObZ/WvMLZoRJ9QWWoDBEH7i7KFMKeODANNwzBPyDuHcQwus6JqRH3Cy8f5g2q2IM9SugC
+	 lRLpXShaCzYG6vROkxdwGNGlblPU5wnWN31cWAnufY7mMdKI+0gzNX2v4hLAV+MHEys0D
+	 5EkuFqQJw+9qYDcAopDSpDdz6U0R4jzml9WATAyUih26t2TxpHDCk3DDa9qIZwWFSvLTa
+	 hrb5kigl94F27oE0CM9oWE2n056x1a+uXCnzfGUEtGK0N9kOi8zOze2dJjB8AKESQgA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793168197;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:MIME-Version:X-Received:
-	 In-Reply-To:References:Message-ID:Date:Subject:From:To:Cc:
-	 Content-Type;
-	bh=X4wg8Pbjg2SQve6wgEy6XvKbvCoQemBjrt/2F9Kq2TY=;
-	b=GGkC44moMatUrAR4Uf2K8d8QuVKsDuJV+9JD3eCUhOmcJ2+kRB5vanZPLk9++FHrx2CA
-	 QdIjq/vI+z4ikFykrOx+T2psRXBem96648/re3db/pxNIKTzX2yRqDnDpvrYR7umAltCD
-	 5U10ZrHUie9XJSXY4akP1460ZHFoI4UO7WA5T+z1vAuowivs4kRTgOkvzpaMvMvQwapEd
-	 19yl8v449CTaQvjf4aAlDsEA9ljjdXwWNwnRKp30qe4WkDuPFCfpABIcWHTs4mUnX62JI
-	 ZQyCUSSReGtnFtHbebApFTyQurEbiNTZY+XK2Em/+KljCeyAqJj5Y1C3Muhyt7/FxSw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793175642;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=K5LKyQgYKwl4SQBjA15TdSBAX9bbXAc3tVQHLRXEih8=;
+	b=s5LljF0zPkrRDmD40e4rO+xnIHHSuPwdC+LcbObTM1VfldOJ966N9K0LBpTnyiC9byVx
+	 YDFdomHE8lPYJdaWPS5i4672sIPpDF363NGkBRSo5VU9Ed8nXHP+ynw6NG+FHfb1XDa4t
+	 89yAtD56Rn1QaFm0kSUaOCyHuJLNdnhwMb+utdW4XfBtIY7NWWy/1iITQdWQitKgyY6ua
+	 Z35f1ASPPqOuNSgMxi2LXps1DBkYFHBOu23qDWE7TH6PL7xXf+bpnUYK6yOpachbO+ExC
+	 0UJee5J1mcLSp3p6LKzTXhCHZMHCsYj1tFuYmzvJrqNVlTnhjganvsSyMqetfb3vSjA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=C6Pudu23;
-	arc=none smtp.remote-ip=74.125.82.199
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=ilvokhin.com;
+	spf=pass smtp.mailfrom=ilvokhin.com;
+	dkim=pass header.d=ilvokhin.com header.i=@ilvokhin.com header.a=rsa-sha256 header.s=mail header.b=scmphY3W;
+	arc=none smtp.remote-ip=178.62.254.231
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7640B606A325
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 06:16:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7640B606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62250606A31D;
+	Wed, 28 Oct 2026 08:20:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 62250606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=C6Pudu23
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-359b81ad4e8so843916eec.0
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 23:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793168196; x=1793772996; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=X4wg8Pbjg2SQve6wgEy6XvKbvCoQemBjrt/2F9Kq2TY=;
-        b=C6Pudu23merR8N3QUSSvCl7wNv2iJ4wZUywbEvQhTfxkkwUD1bmyJMvQ2INlo/bCI7
-         3J2m8hD96wmYaDz2HNVTnKY7bDC8tFyaNdiOM1QFSV5826GR/S9EbVVncFbiq7dSSy2t
-         w24/QFazfb8wG5dHVpT8H928MituPMKXEXB8snmifr3Gc2O/tC3crUaeuJw9TS9d5Gvn
-         r5pkfFwogZZk3Efst5f17eYYlK22KsZS0vTvX+rFSthgeT4zRTnDzcMhm7e0c3Erq6Sh
-         bhACPNNEje+m79G8yP5AhOuwbfhrViJl3Ag1sVFrnaEc56uj8+6SQualB4meyXj8OWeW
-         6OeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793168196; x=1793772996;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=X4wg8Pbjg2SQve6wgEy6XvKbvCoQemBjrt/2F9Kq2TY=;
-        b=2esTpMez7CbAZ2s+VPClsUJ7xn9cfpQ5gHS2b4JaNXGRiwAGdUJ+MDMBIbCdW0JoEL
-         6ykFdUiRnTFmFBkxuRrSIrTbt1mBpgJeZNRvWBI4Hm/t0wYmAoRkLaM/0nC0qmh4GBiQ
-         9vsrrqellZOeC3wQE1TuozMDWgTbaHVn6FThys5yOKVYIfBOENIiLTpTAiph4lifBRg2
-         72Eu6RQ3qCRm985Yolqjjuj66JEGVn2nWiPtQCfeaPAeEGzN18szD831F0hHZxoHTC6o
-         AT+qZAyhonhjzf5xayYh5mYT1+LTaZ5191KWKV9lSXn2FHWA6n6Aq4kd/k+uinJ676G0
-         Gyig==
-X-Forwarded-Encrypted: i=1; AKwUvBypJZe7fmv3O+u6xQgOdh2wU+Tzrje9QM9b7NU5tQxIBCA5A8VrHYG8YvjHxkpSpXRfGCHpuzdpD2mtnaR1IZs=@vger.kernel.org
-X-Gm-Message-State: AFq9FYK4yriW0B5kziAmUKGEsLr3rfCT46FADhNFFPx/X47dUdeyKQ/R
-	rC67XapuG5mxqEM97zNIsNM8+c+6RoCNGTIQ7Zq+uJvgmX5GzsogNyaNqw5ug5DsVehI9tIg+ez
-	ah81uLw==
+	dkim=pass (1024-bit key, unprotected) header.d=ilvokhin.com header.i=@ilvokhin.com header.a=rsa-sha256 header.s=mail header.b=scmphY3W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1793175633;
+	bh=K5LKyQgYKwl4SQBjA15TdSBAX9bbXAc3tVQHLRXEih8=;
+	h=From:To:Cc:Subject:Date;
+	b=scmphY3Wunrsmp+34WEVPizPYNuER4OuyqQN+7wcAk8b243s6Ql6ZgZzt2Q3H2Zn3
+	 fwtCXvfv3lUFbjuEGdD5xIfcK8QirvUz/AoB8DzMfhdVnF9ZGl/3QyMwT3LvSHQOfV
+	 tYEhcDcVdgbtrWL1qNZRxMyUJGS6xrDDGVIAFe9A=
+Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id E3225FBCE3;
+	Wed, 28 Oct 2026 08:20:32 +0000 (UTC)
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Ryan Chen <ryan_chen@aspeedtech.com>,
+	Billy Tsai <billy_tsai@aspeedtech.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Whitcroft <apw@canonical.com>,
+	Joe Perches <joe@perches.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org,
+	linux-leds@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-hardening@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: [PATCH 00/10] treewide: switch to __nonnull_args() macro
+Date: Wed, 28 Oct 2026 08:19:39 +0000
+Message-ID: <cover.1793027261.git.d@ilvokhin.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -73,48 +96,65 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Received: from dyx13.prod.google.com ([2002:a05:693c:820d:b0:36a:1d37:273b])
- (user=jeffxu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:6195:10b0:35d:95e4:267d
- with SMTP id 5a478bee46e88-36a200c3b89mr2179969eec.27.1793168196147; Tue, 27
- Oct 2026 23:16:36 -0700 (PDT)
-In-Reply-To: <auGOXLB1XZFWcTfX@chrisdown.name>
-References: <cover.1793094611.git.chris@chrisdown.name> <5bd3c89d733ad22224f296dfa8900769de937de0.1793094611.git.chris@chrisdown.name>
- <auCxjbvY3qPv1sV6@gremlin> <auDTMb6WMFUpxeZy@chrisdown.name>
- <auDTptDQsB4xBcz7@gremlin> <18e2972cb8520c2e.3137322e32382e342e3434.279dd1.0000sendgmr@google.com>
- <auGNkhSHpBRd2U_5@chrisdown.name> <auGOXLB1XZFWcTfX@chrisdown.name>
-Message-ID: <18e29cf9499c7ec0.3137322e32382e342e3434.2a28ab.0000sendgmr@google.com>
-Date: Wed, 28 Oct 2026 06:16:36 +0000
-Subject: Re: [PATCH 1/3] mseal sysmap: Add mseal_system_mappings= boot parameter
-From: Jeff Xu <jeffxu@google.com>
-To: Chris Down <chris@chrisdown.name>
-Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Jeff Xu <jeffxu@chromium.org>, Jeff Xu <jeffxu@google.com>, Andrey Vagin <avagin@gmail.com>, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 
-Hi Chris,
+Commit 22302af28d3f ("cleanup: Annotate guard constructors with
+nonnull") added the __nonnull_args() macro to wrap the raw compiler
+attribute, keeping the attribute's quirks in one place rather than
+open-coded at every call site.
 
-On Wed, Oct 28, 2026 at 01:55:40PM +0800, Chris Down wrote:
-> Chris Down writes:
-> > - Have check_sealed skip as usual when [vdso] isn't sealed and param
-> >   is not set
-> > - A new test, say expect_sealed, fails in the same case
-> > - run_vmtests runs with -T expect_sealed when
-> >   CONFIG_MSEAL_SYSTEM_MAPPINGS=y
+This series replaces the remaining open-coded __attribute__((nonnull))
+users with __nonnull_args() to standardize nonnull attribute usage
+across the tree.
 
-> Er, the other way around. I meant vm_runtests passes -T expect_sealed
-> _unless_ CONFIG_MSEAL_SYSTEM_MAPPINGS=y.
+Each patch can be applied separately by the respective maintainers. The
+only dependency is kernel-doc: the string and lib/list_sort patches need
+patch 1 ("docs: xforms_lists: support __nonnull_args()") in the same
+release, otherwise strends() and list_sort() drop out of the generated
+documentation.
 
-Using kselftest_harness's `-T expect_sealed` together with checking
-`/proc/cmdline` for `no_mseal_sys_mappings` in `check_sealed` sounds
-great to me -- very clean and covers both regression cases without extra
-argument parsing.
+Latest Sparse release could not properly parse __nonnull_args() without
+arguments. Fix was proposed [1] and merged, but until updated version of
+Sparse will reach wide masses it might trip on __nonnull_args() without
+arguments.
 
-Thanks!
-Jeff
+There are few more instances of __attribute__((nonnull)) usages left in
+the tools subdirectory, they are perf related copied files and can
+(should?) be updated separately after this patchset lands.
+
+Build-tested allmodconfig with GCC 11.5.0 and clang 22.1.8.
+
+[1]: https://lore.kernel.org/all/20261019175633.415493-19-bvanassche@acm.org/
+
+Dmitry Ilvokhin (10):
+  docs: xforms_lists: support __nonnull_args()
+  string: Switch to __nonnull_args() macro
+  lib/list_sort: Switch to __nonnull_args() macro
+  xarray: switch to __nonnull_args() macro
+  drm/i915: switch to __nonnull_args() macro
+  drm/amdgpu: switch to __nonnull_args() macro
+  drm/gem: Switch to __nonnull_args() macro
+  leds: pwm: Switch to __nonnull_args() macro
+  soc: aspeed: lpc-snoop: Switch to __nonnull_args() macro
+  checkpatch: suggest nonnull attribute conversion
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c    | 2 +-
+ drivers/gpu/drm/i915/gem/i915_gem_object.h | 4 ++--
+ drivers/gpu/drm/i915/i915_request.h        | 4 ++--
+ drivers/leds/leds-pwm.c                    | 2 +-
+ drivers/soc/aspeed/aspeed-lpc-snoop.c      | 4 ++--
+ include/drm/drm_gem.h                      | 2 +-
+ include/linux/list_sort.h                  | 4 ++--
+ include/linux/string.h                     | 2 +-
+ include/linux/xarray.h                     | 4 ++--
+ lib/list_sort.c                            | 6 +++---
+ scripts/checkpatch.pl                      | 3 +++
+ tools/include/linux/compiler.h             | 4 ++++
+ tools/lib/python/kdoc/xforms_lists.py      | 1 +
+ 13 files changed, 25 insertions(+), 17 deletions(-)
+
+
+base-commit: 6b4b543fa18757297ac756a6fe6e64f506b7844a
+-- 
+2.53.0-Meta
+
