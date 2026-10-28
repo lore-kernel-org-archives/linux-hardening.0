@@ -1,69 +1,109 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793161821;
-	b=mU5BTm71X/n8iSom0HqrsNeYPepJZ+B1ZiuC/3APKVCesiD5/4o/Xa933WDPUTkCIIZm
-	 /Yf1xFVyGblRNiiaaoOTeh17jTM5XyjMm7URbOoVLxeNv2cZi6GgPIi3Z7c8PKH+wwo+h
-	 aAgcls9bDoG4SwdVvPmhnhy6qNHVQKh6P45+5P9TLbfRbxnAvfPPfhRAHn9t4lJIbnUxC
-	 J5N/8yJ2XKZNOdWR+M790MeRIz5QKFVWICUfnJjI2fPy10K9pDPvJX/jpgDnrCEqtPXQ6
-	 o/o2WwPmRD8aOV/nP4UaTdra/e2eQYpOGdlAGvlT7SoB8uQlRLGOyyyggRCeZiK3JAA==
+	t=1793166743;
+	b=0jDlrpfIs2AGEs1pZgvqHayqiiI7q770Cx6JJjQ7wVgZv10gWOIwBAXLhqH+RCpqaS7/
+	 /qUREMZLwG4DqLs4UtTmawQ/DE0T5Fl2XOkke3sCDlxAT0EP1KtOZJbjT18hZHZSj1lRB
+	 P4qONjmKMTW/QYGbj6w3uXuvyh4AClkE7PhYz0LTvhyD2BA/nLmKmh63yXeexilhWLDIQ
+	 kMKJZYCRnVsDWUdgKArRxfedRNRUudV1qK+4DNuaTaglS65WYozLyasu4fMpJl8NrSwgh
+	 pnTv6z3IKH9phF6vo6teDtC/PVvc0qaogg5IiSdVV+PxBYj0aiEPbkEyZFmvfXYriJQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793161821;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793166743;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:MIME-Version:X-Received:
-	 In-Reply-To:References:Message-ID:Date:Subject:From:To:Cc:
-	 Content-Type;
-	bh=kPQx6GgboXmcUMcY5/lzKrJ0ssCkME3FTMDmy2U7T6k=;
-	b=P62Q6WZgVvawMJc/TzLXCF7udUAFc2ox2bFVoRtHhTOD45u/4DbG4+TXzT0/XTCGt+au
-	 ra7RaWv60whWgg0V0lJf1E6avfyJV15nQFf3qUyCNo0GEYiDLBsFMOOVHNuFX69bszsfD
-	 5aUFAJourYVmd2qg+2MJ0MlbCI7UJ42JFwt/IjCY4LdTNUm0PgFWHM8N/SuANHzYxm268
-	 jZVWcHCd86HEIT6jMin8/3Kn+od+Y2i13KhNkDiC1Xsmn4XgPB/f+Z8yvyDag6f2vPX6S
-	 m3NZPVX8+SiPiaawDlEb8naTvThPOD3DtOQ7GE+c+BWkHmvy6hxNcIktKj7wy/bhKJQ==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To:User-Agent;
+	bh=o0+YQ8IhrloxYZmXJNyf64tQivuQ6Pn/Dp36CBxwNv4=;
+	b=ODOGQX42Mh/BYVX/0LzQUcmdHepfeHOOi740M/XDh7rtEoKcDwkBO75rkCX0uzKf/6vg
+	 rfoTPYntXIRdX2GV0bUfgOFW7eP8qDfDCBgGdO8l/7eD4ThLWOhKHlRlfLgk3Hl9h1TL1
+	 xh+QkpiotbUOHGy+tIwX5JE/q3FooKhbyGQ+9BAnPF2kXbmKkxxyav91Ge6Fstlyo4hrf
+	 7HUC7hULz4xOj9BFZROiL0DkKRh+acXZlaCNBBzjaBAwL16Kd7zuJ9542go2LFjJPfJIt
+	 3LB43o2/bSr1EH6w+PpaRGHLcj5Q0p68wy8Gk5FGZa9nA/XG7sfdBSDXndZF2qSrRNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PCQLkeFq;
-	arc=none smtp.remote-ip=74.125.82.197
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	dmarc=pass header.from=chrisdown.name;
+	spf=pass smtp.mailfrom=chrisdown.name;
+	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=u1CUAc5U;
+	arc=none smtp.remote-ip=209.85.210.179
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2CD606A321
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 04:30:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6E2CD606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB45606A322
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 05:52:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9DB45606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PCQLkeFq
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-30bcb065bfdso940793eec.0
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 21:30:21 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=u1CUAc5U
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-8a06454116eso332153b3a.1
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 22:52:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793161820; x=1793766620; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=kPQx6GgboXmcUMcY5/lzKrJ0ssCkME3FTMDmy2U7T6k=;
-        b=PCQLkeFqYzzEc1UNxxO2SwDWNuvwXCTIhjbkdQznKqU2g4DjFA/FXyxGRex5YcdsnA
-         Xgf5iy01BQ8rOnqrN6NVQPlizUrqHh2RZ6ivs+Oyj1MA9ZP9SL6SV4smhPoQSISGLof3
-         bfkA1nptW6pC7C2owKdZR1L+bpDE/sb4uN3KYnQm7kyN18GNyXQlDYxEK1+9gaL4vYUd
-         pnpf58X96pUnGR5kaD/ulKDbAv6Bam86N4YfddjhLeLkpwI9XD/lIKOBIC8VmpxhlctP
-         WGbuwl9Y9WOJy3woSOwZZW3I37lEy/0CEbwuA8XqraBjnRplspQ8Og0S/bGriiZtuOI9
-         k43A==
+        d=chrisdown.name; s=google; t=1793166742; x=1793771542; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:content-type
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=o0+YQ8IhrloxYZmXJNyf64tQivuQ6Pn/Dp36CBxwNv4=;
+        b=u1CUAc5UGEIg8w651QAnSj1ilJ1Hp07nRBlYJYLip7lca9dtV+G4XIVLxIkkYk+9He
+         Gi0KpLWies9ZXilvLmEHfJEIcvI8kzJ1Wyu473aUFgZ+EPn9NADS0gpTZFOInL5tm9Nq
+         7qBSbt2D7PxHKFRNJ0ExDlyKLPKzHEsOpZICg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793161820; x=1793766620;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kPQx6GgboXmcUMcY5/lzKrJ0ssCkME3FTMDmy2U7T6k=;
-        b=L4q+kj+Cdgg5qZ1gbCEjqaa5885nK6tkfUVzZ4cna5XK1aLPewDzd/U/LmDIItUtN2
-         8Mejvb5wQf5xj+uXZMJEVg2xAn5fKtzSO5OK/VDm5NZ/9Hum5hZ+vHyoNKJCF+k7jDCf
-         r3xV8CjEOKaPdK4LZatysf7Y/DilWlebgRFTHBCfcS5f5Env8kZjrHFTL2dq8gGbKOAL
-         vCjxOjTPDzITZMP1xyxW6G6h8G4cZKfo+li9md9FebyYZhXFF+1ojXJjSAUGLQFK43dp
-         sibXTBLXCGIvdp6Lxs4UEC0TaDVwK2Hb8yK84bzHSC9idvRvIYOZgs3qdGAe9Tz+cpWZ
-         u24g==
-X-Forwarded-Encrypted: i=1; AKwUvByJ3jLmKXkajQolbLKKV+0+Dt8czp+ATgSmjqPgDJGGYDiulzxte4IU0/vH5+YiQou0Ss+9idhIL805Fk/kj7A=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIX2c8g3qP6v2TH28xGSKWsMrT5HaqOsGYY1yyQQxbIRu0XPuHb
-	/umS3M15+t80KQPT+zOXgI0akqt+0zIN6eNnQQ832fYF/WYzmwawpJfhrXPNoQtXxcuLodPSbP2
-	S8PpfHA==
+        d=1e100.net; s=20260707; t=1793166742; x=1793771542;
+        h=user-agent:in-reply-to:content-disposition:content-type
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=o0+YQ8IhrloxYZmXJNyf64tQivuQ6Pn/Dp36CBxwNv4=;
+        b=FVBfob0Go+F4n4fiqK4xzzPXeOYis01ZQhYe/y2ri992Z2379cPQUJUYLd1t84xNJT
+         jqixGJZK5XuIQ3pUDKf+aHJKYSZi/W/TyTJIOQu0l4QA0jHyiJdC9vXjaN7cd5sGUFiM
+         q1Dn5vEMXubhBuEp1CBHY8P2xrBCWtfxmBNpuNYmNFCz5iSSqKsjNuZ7S2HYciXMSOfN
+         h/evzQ/NPZVQO2AWg7vJb3RL8t6CVToVoTJd5jX3sYfeSZh78VAViWb8I0DD4EE7MKX4
+         VWCad8C+5xu/QIs4ipNWiEfl5KcMaZwj/zAy9JVXNyPmlDTNKqLk+76kkglWxGvrpL5l
+         9Sow==
+X-Forwarded-Encrypted: i=1; AKwUvBw6fD8tTyYwnUQGlIgn/HOWvwJCystH9BR1AMVXkyl/ixPDl8k4VG8XlfVIBQkoZlujZ0A1tG9c0WtLL4p8VEQ=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJr0A3ndFkpLkMrjlmz5V1MccE7tFVjTN1cY36A72VSKCyMqTu6
+	x/ohxekcTiIrqz0grDBEGHDEHP5lhy6lFaLAabPPqIKQUOR1V5deDyDw26+1UChzJwE=
+X-Gm-Gg: AYBFou31rZnlJWMyVLDHrmrYc4mbEDSZzIsUI2FXWf0Jq+1lA/hssq3JcTH8rgFSdFL
+	5MnY8chT/eWdJPbPpApOVTqc2UjaHk3K27vAjNh6VRTXt90ePvWI2rJZIC6bJyGMeEcX+nNShNH
+	f9Aj30S5PbWLPqsHjxOvVNuyU20xUwG78fmNc1dH4DvG1NSSeMsSkWqN60dJHop7DVHHnxpDfYl
+	/9AouiKIDJKlYm0j7JQMULuaqf7M9ALuRbX1BxpUatnD0NIWkEW26TXof+TrkmDVlcQnqYkSOux
+	i+siUbWNc6ej6CLFEJJeajoZQHVkfLU4F5KA9vvUAexYuTvEMC89UX8OFPzQMkeTXERQSA/L2wN
+	10bdhrJEB2JxpfNxd0gF67xTcxiZIVO2ht1Ng2GL9MNybyb6kQwddLqaSUgjgDzc/atilW/TPuF
+	lWsTwZr27oVKGpOfEqAceTFuIBUfvgMMGHHV6lhj8nJlzdNcfJcJgdH+ZAmrlvpUIVcKX8WFJmJ
+	nhW5rY62sylAvtc31CXpCAEfqOj8iKKH516MyyLCO6TloweuB9a2vgJ0d9FlTfmt5EkgobQGUei
+	iiK1QqndC5LjeoDv2xDFF5FdOIfQfvbY1JmlauqX7+/CSvYXbbMOUKR9DROeyvZmiGuhXRP05Sw
+	MDUreXVufvXFPf9SFHEdZqpUxcjQb69qRYzEAfIi1r+DMQze2wYh1hxbZFSv0uL56NiHUQOCb
+X-Received: by 2002:a05:6a00:4b4f:b0:88d:20ff:15c9 with SMTP id d2e1a72fcca58-8a6e7acb277mr1168038b3a.17.1793166741947;
+        Tue, 27 Oct 2026 22:52:21 -0700 (PDT)
+Received: from localhost ([116.86.153.182])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a6a6cfc785sm695363b3a.38.2026.10.27.22.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Oct 2026 22:52:21 -0700 (PDT)
+Date: Wed, 28 Oct 2026 13:52:18 +0800
+From: Chris Down <chris@chrisdown.name>
+To: Jeff Xu <jeffxu@google.com>
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	David Hildenbrand <david@kernel.org>, Kees Cook <kees@kernel.org>,
+	Jeff Xu <jeffxu@chromium.org>, Andrey Vagin <avagin@gmail.com>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH 1/3] mseal sysmap: Add mseal_system_mappings= boot
+ parameter
+Message-ID: <auGNkhSHpBRd2U_5@chrisdown.name>
+References: <cover.1793094611.git.chris@chrisdown.name>
+ <5bd3c89d733ad22224f296dfa8900769de937de0.1793094611.git.chris@chrisdown.name>
+ <auCxjbvY3qPv1sV6@gremlin>
+ <auDTMb6WMFUpxeZy@chrisdown.name>
+ <auDTptDQsB4xBcz7@gremlin>
+ <18e2972cb8520c2e.3137322e32382e342e3434.279dd1.0000sendgmr@google.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -73,85 +113,53 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Received: from dyaz12-n2.prod.google.com ([2002:a05:693c:638c:20b0:369:fbca:f640])
- (user=jeffxu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:250d:b0:369:f5f6:36a7
- with SMTP id 5a478bee46e88-36a2014b887mr2079336eec.16.1793161819981; Tue, 27
- Oct 2026 21:30:19 -0700 (PDT)
-In-Reply-To: <auDTptDQsB4xBcz7@gremlin>
-References: <cover.1793094611.git.chris@chrisdown.name> <5bd3c89d733ad22224f296dfa8900769de937de0.1793094611.git.chris@chrisdown.name>
- <auCxjbvY3qPv1sV6@gremlin> <auDTMb6WMFUpxeZy@chrisdown.name> <auDTptDQsB4xBcz7@gremlin>
-Message-ID: <18e2972cb8520c2e.3137322e32382e342e3434.279dd1.0000sendgmr@google.com>
-Date: Wed, 28 Oct 2026 04:30:20 +0000
-Subject: Re: [PATCH 1/3] mseal sysmap: Add mseal_system_mappings= boot parameter
-From: Jeff Xu <jeffxu@google.com>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, Chris Down <chris@chrisdown.name>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Kees Cook <kees@kernel.org>, Jeff Xu <jeffxu@chromium.org>, 
-	Jeff Xu <jeffxu@google.com>, Andrey Vagin <avagin@gmail.com>, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <18e2972cb8520c2e.3137322e32382e342e3434.279dd1.0000sendgmr@google.com>
+User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 
-Hi Chris, Lorenzo,
+Hi Jeff,
 
-On Tue, Oct 27, 2026 at 04:57:04PM +0000, Lorenzo Stoakes (ARM) wrote:
-> > One option is to skip if [vdso] isn't sealed, and otherwise expect
-> > all system mappings to be sealed. Then there's parsing at all, and it
-> > also stops failing on kernels built without
-> > CONFIG_MSEAL_SYSTEM_MAPPINGS, which matters more once it's in
-> > run_vmtests.sh. The downside is that it can't notice sealing being
-> > broken entirely.
-> >
-> > Another is to check /proc/cmdline for no_mseal_sys_mappings and
-> > expect the mappings to be unsealed if it's there. That's only a few
-> > lines now, but the test still fails on kernels without the option, as
-> > it does today.
-> >
-> > Do you have a preference between the two?
+Thanks for the review!
 
-> Yeah it's awkward, really moving the tests to mm we'd have to skip them
-> if the vdso isn't sealed, then assume a sealed vdso for a new process =
-> feature enabled.
+Jeff Xu writes:
+>Could we please keep the test coverage for the unsealed [vdso] case and
+>avoid unconditionally skipping whenever [vdso] is unsealed?
+>
+>There are two regressions I'd love for us to still be able to catch:
+>
+>1. Kernel or config regressions when sealing is expected to be on:
 
-> I guess at that point it's redundant to check if disabled?
+Yeah agreed. With the cleanup it matters even more I think because when sealing 
+is set in one place the most likely regression is probably one that unseals 
+everything at once.
 
-Thanks for working on this series!
+>2. Regressions in the new `no_mseal_sys_mappings` boot parameter itself:
 
-Could we please keep the test coverage for the unsealed [vdso] case and
-avoid unconditionally skipping whenever [vdso] is unsealed?
+In v2 I can check /proc/cmdline for no_mseal_sys_mappings to do that.
 
-There are two regressions I'd love for us to still be able to catch:
+Lorenzo, I think that also may inform your question about whether checking for 
+the disabled case is redundant, right?
 
-1. Kernel or config regressions when sealing is expected to be on:
-    Distros/platforms such as ChromeOS and Android enable
-    CONFIG_MSEAL_SYSTEM_MAPPINGS=y. Originally this test lived in its own
-    selftest directory with `CONFIG_MSEAL_SYSTEM_MAPPINGS=y` in its
-    `config` fragment specifically so that if a kernel change accidentally
-    broke system mapping sealing completely, [vdso] being unsealed would
-    trigger a hard FAIL rather than silently turning into a SKIP in CI
-    (whereas `run_vmtests.sh` runs on kernels with
-    `MSEAL_SYSTEM_MAPPINGS=n`).
+>   When booted with `no_mseal_sys_mappings` (or when unsealed), running
+>   the assertions in Patch 3 (verifying system mappings have no `sl` flag
+>   and that `munmap()` / `mremap()` -- and ideally `mprotect(PROT_READ |
+>   PROT_WRITE)` -- on [vdso] succeed) directly verifies that the boot
+>   parameter works and doesn't regress.
 
-2. Regressions in the new `no_mseal_sys_mappings` boot parameter itself:
-    When booted with `no_mseal_sys_mappings` (or when unsealed), running
-    the assertions in Patch 3 (verifying system mappings have no `sl` flag
-    and that `munmap()` / `mremap()` -- and ideally `mprotect(PROT_READ |
-    PROT_WRITE)` -- on [vdso] succeed) directly verifies that the boot
-    parameter works and doesn't regress.
+Sounds good.
 
-If we move the test into `tools/testing/selftests/mm/`, perhaps we could:
-- Check `/proc/cmdline` for `no_mseal_sys_mappings` and actively test the
-   unsealed behavior when it is set (rather than skipping), and
-- Either enable `CONFIG_MSEAL_SYSTEM_MAPPINGS=y` in `selftests/mm/config`,
-   or keep strict failure as an option (e.g. `./sysmap_is_sealed` fails if
-   unsealed without the boot param, while `run_vmtests.sh` passes a flag
-   like `--allow-disabled` when `CONFIG_MSEAL_SYSTEM_MAPPINGS` may not be
-   enabled), so CI environments that expect sealing still catch a broken
-   seal.
+>  or keep strict failure as an option (e.g. `./sysmap_is_sealed` fails if
+>  unsealed without the boot param, while `run_vmtests.sh` passes a flag
+>  like `--allow-disabled` when `CONFIG_MSEAL_SYSTEM_MAPPINGS` may not be
+>  enabled), so CI environments that expect sealing still catch a broken
+>  seal.
 
-Thanks,
-Jeff
+I like this and I think we can do it without adding some of the complexity that 
+Lorenzo was not so happy about:
+
+- Have check_sealed skip as usual when [vdso] isn't sealed and param is not set
+- A new test, say expect_sealed, fails in the same case
+- run_vmtests runs with -T expect_sealed when CONFIG_MSEAL_SYSTEM_MAPPINGS=y
+
+That should be pretty minimal. Lorenzo, Jeff, how does that sound?
