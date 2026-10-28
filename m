@@ -1,112 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793158587;
-	b=P9dx3e51IUW3u1NCDsLiqHpi61G8t8YeUmgQ6ti5MZcR1OD/0JJbYP69D7k3zJiKEn3v
-	 dOpzP1Fy75X17Al71tJ/+GnSEKv8hsiDVOyXvsCcfUBqdG0Shxw0LhwHYrY3JqQiePDYo
-	 QtwSc+ybx56W400qNmObmMx7hiAYk1cZ89xKwc8EP0SzXG7qINepJeNVRIuMs4Zi4Wg8p
-	 u2U1FbwvOVVozeOfm9FK449REgi7uxqq/vxV/OAt5ahqyLRXcIaPjFh54chVy42rWPp2u
-	 VZjaZLxmpS79gK35U6Tr2s1FaSaXJcw5U60oUJOhf7EmBFu7e9Mm2/c1QGQ7WhDTd3Q==
+	t=1793161821;
+	b=mU5BTm71X/n8iSom0HqrsNeYPepJZ+B1ZiuC/3APKVCesiD5/4o/Xa933WDPUTkCIIZm
+	 /Yf1xFVyGblRNiiaaoOTeh17jTM5XyjMm7URbOoVLxeNv2cZi6GgPIi3Z7c8PKH+wwo+h
+	 aAgcls9bDoG4SwdVvPmhnhy6qNHVQKh6P45+5P9TLbfRbxnAvfPPfhRAHn9t4lJIbnUxC
+	 J5N/8yJ2XKZNOdWR+M790MeRIz5QKFVWICUfnJjI2fPy10K9pDPvJX/jpgDnrCEqtPXQ6
+	 o/o2WwPmRD8aOV/nP4UaTdra/e2eQYpOGdlAGvlT7SoB8uQlRLGOyyyggRCeZiK3JAA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793158587;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=/wKdshZSDdNYlVlGGww1CWjddpjIdb7CUnZ1PObkTB4=;
-	b=sWi+n03UoPt4hruX2GP3q7YjgwKJ2ryXkLdpEnpEJ88qkv+7xDLTLJbRkZfj2m2Nq/Ty
-	 PY8cMWTWjhnKEuRyn5S+4yiD+PDmiVE98/Yqc/8wwRiOJuoJ8IUD2JkewBjL/8otss4u8
-	 q/4dgYg+x6ZuW5SMhvCIbw9TkBOx7isFLVcjqJAWSceAsEiZcvG/jC3mzzdkAJStYA8Im
-	 NDn9VcOJz6th6aZVF24IuLInx4zSVMbNvAGIher2FAZSuLIMx15yyMVGI8SUN+ir/o3C+
-	 b86q1VQN6KBPH7c5DhWpTX6LSGvWAEi1B0qC8noVqciz2hTLatLEuNVURy6lkS8xA/g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793161821;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:MIME-Version:X-Received:
+	 In-Reply-To:References:Message-ID:Date:Subject:From:To:Cc:
+	 Content-Type;
+	bh=kPQx6GgboXmcUMcY5/lzKrJ0ssCkME3FTMDmy2U7T6k=;
+	b=P62Q6WZgVvawMJc/TzLXCF7udUAFc2ox2bFVoRtHhTOD45u/4DbG4+TXzT0/XTCGt+au
+	 ra7RaWv60whWgg0V0lJf1E6avfyJV15nQFf3qUyCNo0GEYiDLBsFMOOVHNuFX69bszsfD
+	 5aUFAJourYVmd2qg+2MJ0MlbCI7UJ42JFwt/IjCY4LdTNUm0PgFWHM8N/SuANHzYxm268
+	 jZVWcHCd86HEIT6jMin8/3Kn+od+Y2i13KhNkDiC1Xsmn4XgPB/f+Z8yvyDag6f2vPX6S
+	 m3NZPVX8+SiPiaawDlEb8naTvThPOD3DtOQ7GE+c+BWkHmvy6hxNcIktKj7wy/bhKJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=Jve2qMQH;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=BBE0FowR;
-	arc=none smtp.remote-ip=205.220.168.131
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PCQLkeFq;
+	arc=none smtp.remote-ip=74.125.82.197
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE60606A31E
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 03:36:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8DE60606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2CD606A321
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 04:30:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6E2CD606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=Jve2qMQH;
-	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=BBE0FowR
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69S0irvq3816321
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 03:36:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/wKdshZSDdNYlVlGGww1CWjddpjIdb7CUnZ1PObkTB4=; b=Jve2qMQHUqrEssgK
-	LflW6/l7KZ234zJVmm5v4avWWbV1TcUiioz11IU7xNAS3yhP+6JpgpsoOMhZWZvJ
-	IPei/BNfJ7ExWg/tShStITm6QZsRQXDRsGswXFZFnq+o9ga6nmbSa33m3OhRLXWT
-	jNycF1Ub6eUUeiAVgYu5ZaX6svI7KSL3EU6+K53Rnc/d554YMUVQJALzktVCxxiV
-	q+Kz86xf3mp9SK5/sBZk8qiecR2lpX8aT+GhaHVmok95F2t7X+5DAAukw34dJtRr
-	PnVGLMYR/XaeQ9zEg45sqiPgK2kxAakvx9jugL9konNgiu/4GNvqT3B3MXccU96s
-	aGnIQQ==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hjst1ktm6-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 03:36:25 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-8a0522cdaf3so459627b3a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 20:36:25 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PCQLkeFq
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-30bcb065bfdso940793eec.0
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Oct 2026 21:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1793158585; x=1793763385; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/wKdshZSDdNYlVlGGww1CWjddpjIdb7CUnZ1PObkTB4=;
-        b=BBE0FowRfn7sN6MDFhJ7FmlNiB3uKdW4e+cRAtWrblI7hD+YFhxqnPOU7tpzisVisJ
-         fmEeD90BQvftfZDOccNtAFeLrBTZKfsyegXHwyV0wKlVgLTtCjMFc6HwG5NhJjm3k/C+
-         ad5+gAf9zgyISIfOxIIRVunXhv207IDJQjB94mq7+VI9MJMYMNRfO7jOns7wsvAz4bM9
-         5ba3tSHhD20XqsJaFz3v6Bl7rN6ldLh2ubAgecoEHWvl0MLS0obmwycPGmr2w1CBLAOI
-         eJGZP1D+i5UMtAu5I0NHNr4aAyku+DE5UMfSHnXgokB2sdHVO6EIN0G+P9MH7O/MCHCQ
-         6nMA==
+        d=google.com; s=20260707; t=1793161820; x=1793766620; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:date:message-id:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=kPQx6GgboXmcUMcY5/lzKrJ0ssCkME3FTMDmy2U7T6k=;
+        b=PCQLkeFqYzzEc1UNxxO2SwDWNuvwXCTIhjbkdQznKqU2g4DjFA/FXyxGRex5YcdsnA
+         Xgf5iy01BQ8rOnqrN6NVQPlizUrqHh2RZ6ivs+Oyj1MA9ZP9SL6SV4smhPoQSISGLof3
+         bfkA1nptW6pC7C2owKdZR1L+bpDE/sb4uN3KYnQm7kyN18GNyXQlDYxEK1+9gaL4vYUd
+         pnpf58X96pUnGR5kaD/ulKDbAv6Bam86N4YfddjhLeLkpwI9XD/lIKOBIC8VmpxhlctP
+         WGbuwl9Y9WOJy3woSOwZZW3I37lEy/0CEbwuA8XqraBjnRplspQ8Og0S/bGriiZtuOI9
+         k43A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793158585; x=1793763385;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1793161820; x=1793766620;
+        h=content-type:cc:to:from:subject:date:message-id:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/wKdshZSDdNYlVlGGww1CWjddpjIdb7CUnZ1PObkTB4=;
-        b=mLWUmvWkWMhtKnAJ+Qu58bRlrw93PcufNb27/gtiZaPV1ojz67LGvCrzntngKNAee6
-         luCYfWtgywvuMau433JgYO1FpikbbmdmfKLH+OszKSamb2o0ys/5rkiPvKkSYXglbQoB
-         +RRy8uKOxyE9xw5RxPbQp2WHkPI0FMdEM5J9OTt5DZR2kftPhpEj3LqDf6THJi/mMkpS
-         7ksbutgGWuxXWYv2NAPE/MkD6lZybQzTg/vOVXDZqIuGYXul5aj1/mimJhaXSlnRy/o4
-         YHYxObZQRzShPRYzIKybnG0ky9cjgVa9+oQgLETnq78yZeFnTCusE2hda6UmVZ46ccd9
-         WtWA==
-X-Forwarded-Encrypted: i=1; AKwUvByW9aoTExq4oWSoxBvvvBmtklKwxeazHM1xsbkd3kw68xAJ7yCeVtPDeCAusqygJYm4UjigXjWjVpYRolRmAKg=@vger.kernel.org
-X-Gm-Message-State: AFq9FYLAdWkKkGnqbsrYRmuENJfSCPg38XVIbvpUQX4l14y8UFQztVPx
-	a5IpF8pHNTpdcurj/HRxpnvC+d4Qnj4EEtmZzhYbZXcgVeawr09lbltN7eAOmKOwA7KQwDEl4/y
-	mTtOf60PSWOInX2Xfk/rKaPr+Y7v+VgDwg0r57oiz3bv/8/DGgXC3ASibYlrujK9eGP+zIJM=
-X-Gm-Gg: AYBFou3CnbLmmksCycCcLroB54EN9qPDyvBil6JB9dQBZV2AbwUrmQafw8SpDg1LQfa
-	4HyDpgP/lU1uGd//HN2OROwTQh1kRSvQDCCbJxmho9cPdJHm9Pv2XCPCvfuFVoROl7nN3Sn+763
-	InRs5z8niGuVYTgqfG3TtSrg86oy+G556ylYeojg7Y0MVujPyCmf9I0yoS+lty5cSCS09t5wThx
-	LbYQ2op5AFDkA3TaceojphgCpG2LsfRq4cXUDKOdRrbgq5hOp6e2Mp03xN+k+1qzrHThvgcVUQF
-	DFF7xabO7jhnOtfu5z1LVlyZ0fciks6NP0O+ezOy8I4BX1pGTH+UrLm+XALs2NQ7PGcCmtn7aN3
-	Xicxm2pSUj1q2IOstvHSyFQO/DqaMHnv+npAOJr1fneuUNNbRr2kBGG2QXzCMuMH9jRwdF3pl02
-	rbmxqnXyq1icqXjCR7BKsGFRpOqisxs7SmYEc72j56OhY=
-X-Received: by 2002:a17:90b:5863:b0:3ac:b3ff:b476 with SMTP id 98e67ed59e1d1-3ae581836a6mr818164a91.38.1793158584987;
-        Tue, 27 Oct 2026 20:36:24 -0700 (PDT)
-X-Received: by 2002:a17:90b:5863:b0:3ac:b3ff:b476 with SMTP id 98e67ed59e1d1-3ae581836a6mr818144a91.38.1793158584441;
-        Tue, 27 Oct 2026 20:36:24 -0700 (PDT)
-Received: from [10.133.33.27] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae5a48ec90sm899533a91.6.2026.10.27.20.36.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Oct 2026 20:36:24 -0700 (PDT)
-Message-ID: <e5bd0521-36d1-447d-b71a-94a2e07414e2@oss.qualcomm.com>
-Date: Wed, 28 Oct 2026 11:36:16 +0800
+        bh=kPQx6GgboXmcUMcY5/lzKrJ0ssCkME3FTMDmy2U7T6k=;
+        b=L4q+kj+Cdgg5qZ1gbCEjqaa5885nK6tkfUVzZ4cna5XK1aLPewDzd/U/LmDIItUtN2
+         8Mejvb5wQf5xj+uXZMJEVg2xAn5fKtzSO5OK/VDm5NZ/9Hum5hZ+vHyoNKJCF+k7jDCf
+         r3xV8CjEOKaPdK4LZatysf7Y/DilWlebgRFTHBCfcS5f5Env8kZjrHFTL2dq8gGbKOAL
+         vCjxOjTPDzITZMP1xyxW6G6h8G4cZKfo+li9md9FebyYZhXFF+1ojXJjSAUGLQFK43dp
+         sibXTBLXCGIvdp6Lxs4UEC0TaDVwK2Hb8yK84bzHSC9idvRvIYOZgs3qdGAe9Tz+cpWZ
+         u24g==
+X-Forwarded-Encrypted: i=1; AKwUvByJ3jLmKXkajQolbLKKV+0+Dt8czp+ATgSmjqPgDJGGYDiulzxte4IU0/vH5+YiQou0Ss+9idhIL805Fk/kj7A=@vger.kernel.org
+X-Gm-Message-State: AFq9FYIX2c8g3qP6v2TH28xGSKWsMrT5HaqOsGYY1yyQQxbIRu0XPuHb
+	/umS3M15+t80KQPT+zOXgI0akqt+0zIN6eNnQQ832fYF/WYzmwawpJfhrXPNoQtXxcuLodPSbP2
+	S8PpfHA==
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -116,182 +73,85 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/9] cpufreq: governor: Initialize kobj_type release
- callback statically
-To: Ian Rogers <irogers@google.com>, Kees Cook <kees@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Danilo Krummrich <dakr@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Zhihao Cheng <chengzhihao1@huawei.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>, driver-core@lists.linux.dev,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        linux-s390@vger.kernel.org, gfs2@lists.linux.dev,
-        xen-devel@lists.xenproject.org, linux-mtd@lists.infradead.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        zhongqiu.han@oss.qualcomm.com
-References: <20261027223847.652884-1-irogers@google.com>
- <20261027223847.652884-5-irogers@google.com>
-Content-Language: en-US
-From: Zhongqiu Han <zhongqiu.han@oss.qualcomm.com>
-In-Reply-To: <20261027223847.652884-5-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=HJ1WhYtv c=1 sm=1 tr=0 ts=6ae16db9 cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=660iZSQnnn4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
- a=EUspDBNiAAAA:8 a=1XWaLZrsAAAA:8 a=MbyaxBA4Lnn_ULkWIDkA:9 a=QEXdDO2ut3YA:10
- a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-ORIG-GUID: VBEtDYhlFRwFgRd_3KkFwcI9_qR9_vHV
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI4MDAxNCBTYWx0ZWRfXw2lwHJqDH+Ef
- 4SWJmDStnfvbnSYB865jKZkPcyeCYTI9/R87gDoPZDEqaPJ+JcfMakRaY+25S7QGWONdn31SLAY
- HU+XCFear9U5b6o0YC0aunupyiEPdRk=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI4MDAxNCBTYWx0ZWRfXzlvbrrHbIv1Q
- fjp3YiDsurWTmHEZMXdBHyASJ8uoCJawSk3Yo0sKlel5IxmswXOmNMQPq8JfXWW3KCWpczAaRo/
- OBj4FEr/lhiRYIfAN9TCh9WoCBtNdyzfykvwVZLF7ZZK2jWkyEf+kTRZJnFf2Pl9XShT2W7vbeV
- 5WkTFLi6X7PODHDnygWWJRr2GxIMFCtkNk4+2bjS9WqdmOp9L05ZTR4SrEDUe9LIRoZuhLidMbu
- QiqtuKKjMSicObfye9ZtphfGSQVSsSSec1y4EbaTbLqr76K11AldwIlA5fPf3jrOoJt0u7mpIZC
- FOvdJMLRw5Aiq4xgiPf+VHRhGOAgzUPP2h7O1gaz1P/GzDPbIDOPAX0haz66HFI9tAStQ94/k+l
- pODuWboRtBVRr1sV+h5Pw3f48AqlOvmTl1KsTFmG0KHqWdnykKpdGkKycOXg6SwPgyqei79izHG
- M424aH3NdZHuTpkRKTQ==
-X-Proofpoint-GUID: VBEtDYhlFRwFgRd_3KkFwcI9_qR9_vHV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-10-28_01,2026-10-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
- impostorscore=0 adultscore=0 spamscore=0 phishscore=0 clxscore=1015
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2610190000
- definitions=main-2610280014
+X-Received: from dyaz12-n2.prod.google.com ([2002:a05:693c:638c:20b0:369:fbca:f640])
+ (user=jeffxu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:250d:b0:369:f5f6:36a7
+ with SMTP id 5a478bee46e88-36a2014b887mr2079336eec.16.1793161819981; Tue, 27
+ Oct 2026 21:30:19 -0700 (PDT)
+In-Reply-To: <auDTptDQsB4xBcz7@gremlin>
+References: <cover.1793094611.git.chris@chrisdown.name> <5bd3c89d733ad22224f296dfa8900769de937de0.1793094611.git.chris@chrisdown.name>
+ <auCxjbvY3qPv1sV6@gremlin> <auDTMb6WMFUpxeZy@chrisdown.name> <auDTptDQsB4xBcz7@gremlin>
+Message-ID: <18e2972cb8520c2e.3137322e32382e342e3434.279dd1.0000sendgmr@google.com>
+Date: Wed, 28 Oct 2026 04:30:20 +0000
+Subject: Re: [PATCH 1/3] mseal sysmap: Add mseal_system_mappings= boot parameter
+From: Jeff Xu <jeffxu@google.com>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, Chris Down <chris@chrisdown.name>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Kees Cook <kees@kernel.org>, Jeff Xu <jeffxu@chromium.org>, 
+	Jeff Xu <jeffxu@google.com>, Andrey Vagin <avagin@gmail.com>, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-Hi Ian,
+Hi Chris, Lorenzo,
 
-Thanks for the update.
+On Tue, Oct 27, 2026 at 04:57:04PM +0000, Lorenzo Stoakes (ARM) wrote:
+> > One option is to skip if [vdso] isn't sealed, and otherwise expect
+> > all system mappings to be sealed. Then there's parsing at all, and it
+> > also stops failing on kernels built without
+> > CONFIG_MSEAL_SYSTEM_MAPPINGS, which matters more once it's in
+> > run_vmtests.sh. The downside is that it can't notice sealing being
+> > broken entirely.
+> >
+> > Another is to check /proc/cmdline for no_mseal_sys_mappings and
+> > expect the mappings to be unsealed if it's there. That's only a few
+> > lines now, but the test still fails on kernels without the option, as
+> > it does today.
+> >
+> > Do you have a preference between the two?
 
-On 10/28/2026 6:38 AM, Ian Rogers wrote:
-> Export cpufreq_dbs_data_release() and set .kobj_type.release statically
-> in the ondemand and conservative governors so their gov_attr_set
-> kobjects have a valid release callback statically initialized, matching
-> cpufreq_governor_dbs. Remove the redundant runtime assignment in
+> Yeah it's awkward, really moving the tests to mm we'd have to skip them
+> if the vdso isn't sealed, then assume a sealed vdso for a new process =
+> feature enabled.
 
-"matching cpufreq_governor_dbs" is a bit confusing to me
-(cpufreq_governor_dbs() was removed back in v4.8 by commit e788892ba3cc
-("cpufreq: governor: Get rid of governor events")), as it doesn't
-seem to refer to anything in the tree. Perhaps we could just drop it,
-e.g.:
+> I guess at that point it's redundant to check if disabled?
 
-Export cpufreq_dbs_data_release() and initialize .kobj_type.release
-statically in the ondemand and conservative governors instead of
-assigning it at runtime in cpufreq_dbs_governor_init().
+Thanks for working on this series!
 
+Could we please keep the test coverage for the unsealed [vdso] case and
+avoid unconditionally skipping whenever [vdso] is unsealed?
 
-The code change itself looks good to me. With the changelog updated
-(in a respin if the series needs one for other reasons, or when
-applying):
+There are two regressions I'd love for us to still be able to catch:
 
-Reviewed-by: Zhongqiu Han <zhongqiu.han@oss.qualcomm.com>
+1. Kernel or config regressions when sealing is expected to be on:
+    Distros/platforms such as ChromeOS and Android enable
+    CONFIG_MSEAL_SYSTEM_MAPPINGS=y. Originally this test lived in its own
+    selftest directory with `CONFIG_MSEAL_SYSTEM_MAPPINGS=y` in its
+    `config` fragment specifically so that if a kernel change accidentally
+    broke system mapping sealing completely, [vdso] being unsealed would
+    trigger a hard FAIL rather than silently turning into a SKIP in CI
+    (whereas `run_vmtests.sh` runs on kernels with
+    `MSEAL_SYSTEM_MAPPINGS=n`).
 
-> cpufreq_dbs_governor_init().
-> 
-> This prepares for annotating struct kobj_type::release with
-> __must_init.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   drivers/cpufreq/cpufreq_conservative.c | 5 ++++-
->   drivers/cpufreq/cpufreq_governor.c     | 4 ++--
->   drivers/cpufreq/cpufreq_governor.h     | 1 +
->   drivers/cpufreq/cpufreq_ondemand.c     | 5 ++++-
->   4 files changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/cpufreq_conservative.c b/drivers/cpufreq/cpufreq_conservative.c
-> index 02bfd46543e9..146a2353b1a2 100644
-> --- a/drivers/cpufreq/cpufreq_conservative.c
-> +++ b/drivers/cpufreq/cpufreq_conservative.c
-> @@ -318,7 +318,10 @@ static void cs_limits(struct cpufreq_policy *policy)
->   
->   static struct dbs_governor cs_governor = {
->   	.gov = CPUFREQ_DBS_GOVERNOR_INITIALIZER("conservative"),
-> -	.kobj_type = { .default_groups = cs_groups },
-> +	.kobj_type = {
-> +		.release = cpufreq_dbs_data_release,
-> +		.default_groups = cs_groups,
-> +	},
->   	.gov_dbs_update = cs_dbs_update,
->   	.alloc = cs_alloc,
->   	.free = cs_free,
-> diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
-> index f3bd3dbe7c41..f8b5aca09b6b 100644
-> --- a/drivers/cpufreq/cpufreq_governor.c
-> +++ b/drivers/cpufreq/cpufreq_governor.c
-> @@ -419,7 +419,7 @@ static void free_policy_dbs_info(struct policy_dbs_info *policy_dbs,
->   	gov->free(policy_dbs);
->   }
->   
-> -static void cpufreq_dbs_data_release(struct kobject *kobj)
-> +void cpufreq_dbs_data_release(struct kobject *kobj)
->   {
->   	struct dbs_data *dbs_data = to_dbs_data(to_gov_attr_set(kobj));
->   	struct dbs_governor *gov = dbs_data->gov;
-> @@ -427,6 +427,7 @@ static void cpufreq_dbs_data_release(struct kobject *kobj)
->   	gov->exit(dbs_data);
->   	kfree(dbs_data);
->   }
-> +EXPORT_SYMBOL_GPL(cpufreq_dbs_data_release);
->   
->   int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
->   {
-> @@ -488,7 +489,6 @@ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
->   	policy->governor_data = policy_dbs;
->   
->   	gov->kobj_type.sysfs_ops = &governor_sysfs_ops;
-> -	gov->kobj_type.release = cpufreq_dbs_data_release;
->   	ret = kobject_init_and_add(&dbs_data->attr_set.kobj, &gov->kobj_type,
->   				   get_governor_parent_kobj(policy),
->   				   "%s", gov->gov.name);
-> diff --git a/drivers/cpufreq/cpufreq_governor.h b/drivers/cpufreq/cpufreq_governor.h
-> index 806d8fb4dff1..1026712bb79b 100644
-> --- a/drivers/cpufreq/cpufreq_governor.h
-> +++ b/drivers/cpufreq/cpufreq_governor.h
-> @@ -150,6 +150,7 @@ static inline struct dbs_governor *dbs_governor_of(struct cpufreq_policy *policy
->   }
->   
->   /* Governor callback routines */
-> +void cpufreq_dbs_data_release(struct kobject *kobj);
->   int cpufreq_dbs_governor_init(struct cpufreq_policy *policy);
->   void cpufreq_dbs_governor_exit(struct cpufreq_policy *policy);
->   int cpufreq_dbs_governor_start(struct cpufreq_policy *policy);
-> diff --git a/drivers/cpufreq/cpufreq_ondemand.c b/drivers/cpufreq/cpufreq_ondemand.c
-> index 9942dbb38dae..7386d043c665 100644
-> --- a/drivers/cpufreq/cpufreq_ondemand.c
-> +++ b/drivers/cpufreq/cpufreq_ondemand.c
-> @@ -374,7 +374,10 @@ static struct od_ops od_ops = {
->   
->   static struct dbs_governor od_dbs_gov = {
->   	.gov = CPUFREQ_DBS_GOVERNOR_INITIALIZER("ondemand"),
-> -	.kobj_type = { .default_groups = od_groups },
-> +	.kobj_type = {
-> +		.release = cpufreq_dbs_data_release,
-> +		.default_groups = od_groups,
-> +	},
->   	.gov_dbs_update = od_dbs_update,
->   	.alloc = od_alloc,
->   	.free = od_free,
+2. Regressions in the new `no_mseal_sys_mappings` boot parameter itself:
+    When booted with `no_mseal_sys_mappings` (or when unsealed), running
+    the assertions in Patch 3 (verifying system mappings have no `sl` flag
+    and that `munmap()` / `mremap()` -- and ideally `mprotect(PROT_READ |
+    PROT_WRITE)` -- on [vdso] succeed) directly verifies that the boot
+    parameter works and doesn't regress.
 
+If we move the test into `tools/testing/selftests/mm/`, perhaps we could:
+- Check `/proc/cmdline` for `no_mseal_sys_mappings` and actively test the
+   unsealed behavior when it is set (rather than skipping), and
+- Either enable `CONFIG_MSEAL_SYSTEM_MAPPINGS=y` in `selftests/mm/config`,
+   or keep strict failure as an option (e.g. `./sysmap_is_sealed` fails if
+   unsealed without the boot param, while `run_vmtests.sh` passes a flag
+   like `--allow-disabled` when `CONFIG_MSEAL_SYSTEM_MAPPINGS` may not be
+   enabled), so CI environments that expect sealing still catch a broken
+   seal.
 
--- 
-Thx and BRs,
-Zhongqiu Han
+Thanks,
+Jeff
