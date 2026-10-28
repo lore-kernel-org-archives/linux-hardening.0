@@ -1,67 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.94
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793211495;
-	b=tjMMXn3HDo8isSPeZfKxP3x1H8yxS4mRg47Dw6PqWkzn1CfXK/GJQc/HhGjciUPgodXo
-	 0DP6dxaXYAAIS5dbU/OcqAfUuTzJMkmbQYV+lQyiENgvvftbUU2kbr2/pglDR7IVi+vNJ
-	 BEFXmGQbpnBpIjqpyVabMZPMe35Cf744a84ZwgN+jC4y4nnHW8Kwr7eaIdpctMG0ON9tf
-	 gIZtzUzG+gRyBxbPFEiYT0V9S1YV7mZ5U5/buAxPTDIHrud/otzsa1wsj3RQBuLA6Ov6G
-	 dxUqC8X9rtoMaJ1UZBCkl2Dn228mQxFJsEcPJ1VCwu2OI5vJzr6to/9xo59FQ1k+fPw==
+	t=1793213769;
+	b=yUcLhdx4+LXW7m5fmI4Zfj10jBjZQpCQAXhNvYoEWladLBWn5dGqwOCHbbPvsE93aD2H
+	 0bSjoRvxr5P010fdP1ICbvcCOyBL9J0wwSiJnKkuL6P9kNvVJliUxDmXvCp1fEx+jLRyw
+	 RNO+95J76oedC88msG+GOOLxVZmcDuY++AMzJDkq4ATiz7cBcxcqkm7a9mm1deVFH7ShG
+	 P7EUn4+Er0liDkC8gS+nCZ/pfn6TJ/nxn9YTUXjM/pv2cEF3X34GbGrWe8wXUC4DWCPGR
+	 S/0EtsC/PfHi6fyneh6vxLW6vE3NHt23xHADsYUUC3jo3urDtYAFXK1+567c8IGGjJA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793211495;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793213769;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=0oiry0ZaDpBozgKs3Yn0AN+r5C81GF5EHZ1wjFVYL/k=;
-	b=jqbqccua9Ptw0uo4js6O4se/A6Uqi+fPcMrxXOP79GbcghtXNCWHw6OYoTBRBf3H/i6A
-	 FLLy9mlNgZ7Dw0/LTSaD+0k2qcSLw4Uk/MnfYuNnjWxnKA0HhM9XBaefzpjyEgvlZ20iO
-	 P9+tKOk2/v1v1K/uOAPqxU5croxCS5IIUMhu17OM0qACaSsXCWjCq+CmY4BPL1rTnOsa1
-	 XkAvlwF0H6mGxW7QFDZLhC5aWUuRX5uEDo73HkpWjzCo3xsRB7Pu6rzhX+jLQXxa9DR8e
-	 jI5FgCxEnm0icTIgfteH9dpiCs7fcABWXnLtk8UnZnbsxkVEKeeiSSeSmRAR81VQzFQ==
+	bh=df/xPPyuiQPcm1AE1rSPxuyp5dlFq4Se196rhHrJoBM=;
+	b=Xuc09XunVt1SMuqGBEIuIPxzno32wfx8JNOOfelAmCW4JPWSFQB4Pr23ZX0+4hYzbDyI
+	 fGgPzHhU9CV95cv4TJiOb93TLy/fwOYEhFHU6mzqoqcqF62Zah8fSkX3awLWjqb7jikzL
+	 wwHPe07Mm2YTQVXGM+e7hITVgeXxxEVvmjxyqntAoi0Eg81VNh0D+0u0lhd1vzWob/VtT
+	 HQDAouXDHbvzHP1sTZUcOYqmnLc2wMVlEhlpd8RmUPR/VMWV2d37JNlduZ3+d6JDRwNR/
+	 DFr2nNfSDiZgp9Qxh1IRQyzPTTOFwj4VCrQ/AtOYBS/5sbshRFfvBnBoiTGp0WnimgQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=gU0j6S5l;
-	arc=none smtp.remote-ip=95.215.58.94
-Received: from mta1.migadu.com (out-94.mta1.migadu.com [95.215.58.94])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K+edzg6v;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D1D606A31D
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 18:18:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1D1D606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5838606A31C;
+	Wed, 28 Oct 2026 18:56:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=gU0j6S5l
-X-Envelope-To: linux-hardening@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=FzSLDoLL3l9c7gMzSXMHTUPkCis4CHxPNrJyJmMFlpk=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1793211490; v=1; x=1793816290;
- b=gU0j6S5lCSGrqFK3BVUBPVUpoJjMru/bTOQUq6k4s8hYE7pyHyjgIVQVNpixe8IGEYsHiSTo
- Sa9tQgmS5tlXViRJaa2x65+OMlfI5V623xi1qnOcoJVUKz1oQgC6LPcveWygQ0GXNgY6TXjxYXu
- B7nX71X6/VXlzdJeHTaUT5fQ=
-X-Envelope-To: linux-hardening@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 5ad5a2eaaa496885;
-	Wed, 28 Oct 2026 18:18:10 +0000
-X-Mizu-Trace-ID: 5ad5a2eaaa496885
-X-Migadu-Flow: FLOW_OUT
-Date: Wed, 28 Oct 2026 11:18:08 -0700
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Yingjie Wang <x-professor@outlook.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, 
-	Manfred Spraul <manfred@colorfullife.com>, Alexey Gladkov <legion@kernel.org>, 
-	"Eric W . Biederman" <ebiederm@xmission.com>, Vasily Averin <vasily.averin@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Michal Hocko <mhocko@suse.com>, Alejandro Colomar <alx@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, 
-	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, 
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v4 1/3] ipc/sem: account enlarged sops arrays to memcg
-Message-ID: <auI8CyIxjbLEMeEZ@linux.dev>
-References: <cover.1793207025.git.x-professor@outlook.com>
- <565d855cbd81e0f49018da21df00ff0308f646b1.1793207025.git.x-professor@outlook.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=K+edzg6v
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70D261F01828;
+	Wed, 28 Oct 2026 18:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793213768;
+	bh=df/xPPyuiQPcm1AE1rSPxuyp5dlFq4Se196rhHrJoBM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=K+edzg6vK4sYIgPI0EHAxslJmPd/aExnxCZkYatx9SKb8ztopQpN/Brte7D1uGHDc
+	 +PWfIYIXj2TwEIjrIeT9aSjpQlU/qFISxxHuWsvH08dCGPPiD4L4rx5Tz6bxLuFRvY
+	 RhA3+DjTqfNcnhfh/7faDIzX0CmFsTI2XpkHQ8+jhA2LaeatAD4sqfFj21cmIRpM5b
+	 W2D2wH60j2ajxxUPUQIplNGc0FcQFY/hgWtTB/gjNx5LU362Hvl/ouMKfNIqzO8whL
+	 EQwWzgrE3+OvEllJ5XwE13QwOyNwuhXlhNdKAwm9IJuUZrFACWCEqjTJXX2ww3Zp+t
+	 0+IngOv7LotGw==
+Date: Wed, 28 Oct 2026 11:56:08 -0700
+From: Kees Cook <kees@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Zhongqiu Han <zhongqiu.han@oss.qualcomm.com>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, driver-core@lists.linux.dev,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+	linux-s390@vger.kernel.org, gfs2@lists.linux.dev,
+	xen-devel@lists.xenproject.org, linux-mtd@lists.infradead.org,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 1/9] Compiler Attributes: Add __must_init macro
+Message-ID: <202610281155.4D2AA663@keescook>
+References: <20261027223847.652884-1-irogers@google.com>
+ <20261027223847.652884-2-irogers@google.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -73,56 +81,44 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <565d855cbd81e0f49018da21df00ff0308f646b1.1793207025.git.x-professor@outlook.com>
+In-Reply-To: <20261027223847.652884-2-irogers@google.com>
 
-On Wed, Oct 28, 2026 at 05:03:57PM +0000, Yingjie Wang wrote:
-> Commit 6a4746ba0619 ("ipc: remove memcg accounting for sops objects in
-> do_semtimedop()") removed accounting based on the assumption that sops
-> arrays would remain small, describing a maximum cost of two pages.
+On Tue, Oct 27, 2026 at 03:38:36PM -0700, Ian Rogers wrote:
+> Clang supports the 'require_explicit_initialization' attribute on struct
+> fields to indicate that a field must be initialized explicitly by the
+> user when the object is constructed. When an aggregate initializer or
+> uninitialized variable omits an annotated field, Clang emits a
+> -Wuninitialized-explicit-init warning (enabled by default).
 > 
-> SEMOPM is a UAPI default that can be changed when rebuilding the kernel.
-> It must not also define the accounting policy, since changing that default
-> would enlarge the unaccounted range.
+> Add the __must_init macro to include/linux/compiler_attributes.h (which
+> is included by include/linux/compiler_types.h and
+> include/linux/compiler.h) so kernel structs with error-prone
+> initialization (such as mandatory callbacks or cleanup handlers) can
+> enforce explicit initialization at compile time, as discussed at the
+> Linux Plumbers Conference. The shorter __must_init spelling, rather than
+> the attribute's full name, keeps annotated struct members readable and
+> was suggested by Greg Kroah-Hartman.
 > 
-> Keep the historical small-array range unaccounted with a fixed internal
-> threshold of 1000 operations, and use GFP_KERNEL_ACCOUNT when the actual
-> nsops exceeds it. Requests within that range retain the existing allocation
-> behavior, while larger user-controlled arrays are charged to the caller's
-> memory cgroup.
+> Note that Clang does not yet diagnose file-scope objects declared
+> without any initializer (initializers at file scope that omit the field
+> are diagnosed), see https://github.com/llvm/llvm-project/issues/232483.
 > 
-> Commit 50ec499b9a43 ("sysctl: allow change system v ipc sysctls inside ipc
-> namespace") later made the per-namespace limit tunable by IPC namespace
-> owners without capabilities in the initial user namespace.
+> Also teach Sphinx (Documentation/conf.py), kernel-doc
+> (tools/lib/python/kdoc/xforms_lists.py), and checkpatch.pl about the new
+> attribute macro.
 > 
-> Link: https://lore.kernel.org/r/20261016152609.2528805-1-x-professor@outlook.com
-> Fixes: 6a4746ba0619 ("ipc: remove memcg accounting for sops objects in do_semtimedop()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yingjie Wang <x-professor@outlook.com>
-> ---
->  ipc/sem.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/ipc/sem.c b/ipc/sem.c
-> index 5ec41de7e85b2..a8c9807175520 100644
-> --- a/ipc/sem.c
-> +++ b/ipc/sem.c
-> @@ -176,6 +176,7 @@ static int sysvipc_sem_proc_show(struct seq_file *s, void *it);
->  
->  #define SEMMSL_FAST	256 /* 512 bytes on stack */
->  #define SEMOPM_FAST	64  /* ~ 372 bytes on stack */
-> +#define SEMOPM_NOACCOUNT	1000 /* ~ 2 pages for struct sembuf */
->  
->  /*
->   * Switching from the mode suitable for simple ops
-> @@ -2234,7 +2235,10 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
->  		return -EINVAL;
->  
->  	if (nsops > SEMOPM_FAST) {
-> -		sops = kvmalloc_objs(*sops, nsops);
-> +		gfp_t gfp = nsops > SEMOPM_NOACCOUNT ?
+> Link: https://lpc.events/event/20/contributions/2392/
+> Link: https://lore.kernel.org/lkml/2026101532-fantastic-deafness-e04c@gregkh/
+> Acked-by: Miguel Ojeda <ojeda@kernel.org>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Instead of making this conditional, can you just GFP_KERNEL_ACCOUNT
-unconditionally and benchmark it. The kmem accounting has changed a lot since
-that patch. If the performance impact is fine then we should just use
-GFP_KERNEL_ACCOUNT.
+Reviewed-by: Kees Cook <kees@kernel.org>
 
+As part of this, can you open a Clang bug for the lack of detecting
+global initializers? It'd be nice to get that fixed.
+
+-- 
+Kees Cook
