@@ -1,59 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793251977;
-	b=suQjq0jCM1fRboawjSvj7XPeSKJvCILmOBNVu1RLnhEpWBQLZ3820WBDb059jvHZ5fNA
-	 bAEpdm8/nk91Ght0Af9NivuoRC6jSf7lGTwqfYaVLNwcSyz7fygYlknfJqpuM4dTXt/we
-	 e/Hdc1+bjnl3Eku3m9qQ/N8OsjVq4bXfCUrRFR86Ch5zhEiIXe+d6ztc6YbQlOS34L89F
-	 Qvh2SH0xQEaq2ISMvZFP9Fk4xTkJdPYW5kSYGAhkfBVmB/uqb2afqKFsOcR3hRG1aYLtR
-	 kxTI1/gBC09pyi8SzlJJdvFSofQc5NDK+s1mAZ8N0QTxD6ipkrJ89elHP5JYzeVqmeA==
+	t=1793254033;
+	b=a/+pSmjNJEM0Wx4ZsnrHftnZGPWyu3OwSIm0Q2s+74nXfhum7R+Sqphs9vx11nH+x4B6
+	 gmS0UK0slo7/CXkAcdMJ0x60PeKBenRLO/otqvoXJWGCjc2/bvU7D84Ysojkqydjfthte
+	 uRJHp/oaZ+BHv1sjegz2gvExTPmeo1BBQ6NmtaVyUrzCtExAitkqnoxCNARD8PJjmTe/N
+	 fxjthV3pMDIH+5w2BWSiA86gaCHQzjb6KcSqAmPPv7dPSEW/zCu84I2s8e0Mcq32kGzBg
+	 XG0idbXo4f3A6PvUBC6GwLrFA2VrwYoeRW5dscp2+J3x6FcqEXSUD1w+HH9P8r4m4gQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793251977;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:X-Developer-Signature:X-Developer-Key:
-	 Content-Transfer-Encoding;
-	bh=FhkaABeHOyktDN6PUa1N1F2mjspl8ccZnGo2qj3CXko=;
-	b=VZROSKt4s3pglvN9khAG74esIrpjSku4CyxEipQiRBpNzDsDM76RFgHtTVQNjkenBE5h
-	 +ZW6MPBqNr+/3IZNphAFb8ksUuqCJjXoyt+kdepZ4HyxC7JN5azDs2ta9nPRX67ckRc2A
-	 vqTuO6HN94A0xpoC838qM0eGnGDPwyjneoxfxxy/wxyQbFSg1nJ/iTW8y3PRkPxlyeNNI
-	 KFv/sy/p0geCT3YU+TEtuV7coyHHofXKF8lB2UAC4zmBWCOCLCgVoI1VbouJnLsBiEb6E
-	 1y/GI7tbG3tWe3yHO0dy5L42DWe5MUUmNitkeO4YvFAOhPg4rw4PQsnoYPEOQLLa3ng==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793254033;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:User-Agent;
+	bh=UNSxvxACDv6rV+hh5v7KUi83+vs01nWTUXRQ2PYQNxU=;
+	b=i9/NrVZbzWceVV7Ltqhdvb6gJM3+DEBlkJTGD0/dLzHcCNS4lEs/vTp+t5MkhIu8X1iE
+	 VW94wb1w8Jr7ti+9hpCV66Tk5S89G8OLS34X495fU4U2rjogf/pBrYgd6gaQvF7Eex3P4
+	 367cp53nz3/Y/NJpW56UJEM/7kGbIsEPfHEcgUxD75n1lf2FaGXzn2Gb70eKArp3JZ4do
+	 aqYEyaW1tAh7U1D3MgrD2QTyHNhOmNh5aUodgXmGdbaXfjxnnhEfE9Rqa/czLXTKvioZo
+	 M1Bkc2U3FdDOkS/LnkMTyXq3qe6XiCCwU3Ij4fyrwWZPnDzDXAHMSRDZzms11JnkLaw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=noObcaIX;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=chrisdown.name;
+	spf=pass smtp.mailfrom=chrisdown.name;
+	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b="ho8P/1C5";
+	arc=none smtp.remote-ip=209.85.214.173
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07143606A31A;
-	Thu, 29 Oct 2026 05:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A15606A31E
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Oct 2026 06:07:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06A15606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=noObcaIX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B7DE1F01825;
-	Thu, 29 Oct 2026 05:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793251976;
-	bh=FhkaABeHOyktDN6PUa1N1F2mjspl8ccZnGo2qj3CXko=;
-	h=From:To:Cc:Subject:Date;
-	b=noObcaIX91O9F+FS08lOo/ZPaVfYYH8BmV0Wn7WnZPB9GEc+hx38rAUXFgV9UGsFB
-	 LGJW0RnAtBiwHtTBqVenvlMEzYwZukA3UFfhM3kqr5qWSkItw1rwxYHyqt1xFHgnV/
-	 G3+j3qri3efSHEfRfdfdNjRVzlgQZBlugKonts0Do5anqidnHz+vCgA+bK0E99al1z
-	 LfxfJ39AHDI9awJOGDPuITKmnXhBQiH9S7ejM9IitsicdicCOEoDkSfZNTj84suDpj
-	 h4KM7Ia6fFbGuKCgm1cFQCaL6/XpEgJ/ORUf6iVCWQrYXRhAJlvRHrASqHIExXFkS5
-	 ChL/yb/EA7PYg==
-From: Kees Cook <kees@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bill Wendling <morbo@google.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Shuvam Pandey <shuvampandey1@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] seq_buf: Mark a seq_buf overflowed when terminating it loses a byte
-Date: Wed, 28 Oct 2026 22:32:54 -0700
-Message-ID: <20261029053250.i.220-kees@kernel.org>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=ho8P/1C5
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2e5fb79ce82so10998165ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 23:07:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google; t=1793254032; x=1793858832; darn=vger.kernel.org;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=UNSxvxACDv6rV+hh5v7KUi83+vs01nWTUXRQ2PYQNxU=;
+        b=ho8P/1C58VDquswjb3GmuApdin+fY+YgGO7SBCZ/wPMbXdQrudpzDuUrJH4S6ZUrvR
+         T+OrvnuItCtqAf9/RUcf12PyjpkM12hnNS1Uv8BrIkA1VkPRwhFjpCW1PEJNrcsRQyCj
+         2zfDeWx/VJ8ci2CjCPmBrruNDmJ1NV5pvIeRc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793254032; x=1793858832;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=UNSxvxACDv6rV+hh5v7KUi83+vs01nWTUXRQ2PYQNxU=;
+        b=EqtESIQNgCw71fdn0sCasttb6UplpT0M8kRuTuOSl2WH+Tw63ef+4r1FIgh8eSexpK
+         Y4Ec4p0rP58ic9Uwg32sQFtxKdJ1g232Gch/8Q2BIWaFEyk6MSUqX+PL+pR1eB4cJloy
+         JfPLuAn/YqwwSbqorL0ms2nh6Mlrxd0dzsVKkyjXa8i/zpTF+slosOf8Cwn1PAadK+xj
+         3iplw0a55mlvekhI2Fu8qoP5GVlY3Wqv3oXMWY2U9FfAcRWF/pEuWp8UF58nMWGB96fO
+         XjaJ1CgfJ1B0Zv9n5i1jjhOZWpdsHPkDNU2uy1a1iCZQMJBLovaCRv3AbT6+wUuKzSdJ
+         JNWA==
+X-Forwarded-Encrypted: i=1; AKwUvBybLuwndznKlonzVp+PciPb3gM9egryXdRikgVF6nWZ4v1OT8nBtO5I5nCbE9o9o7MNEu5G4R9/6E2P+2z+A3I=@vger.kernel.org
+X-Gm-Message-State: AFq9FYI3RJP+G0xEnWYwhp1uCCNK2TnLPH+sM/+c2nrjc5WvSO3Ap1eR
+	O3rpNxMMCnerzj5XxK7TdkEDN3cypEl3mOKq3bM7MkzWHiDfEqavDWCNyppibzZWb68=
+X-Gm-Gg: AYBFou3YKM7Mdpp7K6zi/LWOh0ZjQ/W4V2f7HrkkR2E52CZ/hMJrHr5vyO70TQ3lAtw
+	Kyr6OsuUeoBqUSiEp1kTvKXXlBL4cJ/OpD9x9HHHILYatuGF0j167SeKhdSNfLkWs36h42Gjwkq
+	HwOgoOf6X7w12iw3wrAycsGUAfaIrn/ZozIJwOCNE4xypUFB5MNmfUKXTINdLZrym5ZRxXDmwjJ
+	KNyw3/OoaimQBBlbkz7X+ziRMdvOwERo1GhcLF5fZCfJlFSP2tfgoK5d7wOc6YfkZolnne2jpNr
+	5iSSFn5OyLCTzh6GnfNQDtN8oGNKA1G5iJ00J2CWmbMSCIAuFT4CIAIGCuFUAqtHrexpYFNUoYi
+	B76K5ia1dTDn4JV5KaXZAx7xdIkoe23zq35UV5zBADgVNVHK4FvDUA4OaxybheASnwuFcuhMy31
+	jpuIiDIv71c07VIonphAKbWF67YJ/ZdRgvUVRoi85uf1hq2Toou8lRcgeYv5UdCZ8aWFlMxpU6+
+	0iqctqNSdD4WwmCdE9q+jgxdrtfqqnalMVVRp+rfEML4LCQbJrChcvRuOwpFzXQRcYkUXUhOEhh
+	Tbh+4kslbu5ardfaL9996fDs8i5zliOQd6NJBrovQHrP8FV9fMq1OUeYQAjOzTHMtt3laSLH+lb
+	fIhs1GMzR2b+ZFY2csF0tCVkiSVFmZoEgNAQNYdHAML/4RPgH5QVHKnPcJPBpXed0SNRZ/zyvsA
+	==
+X-Received: by 2002:a17:902:fc87:b0:2e2:b7b8:abc5 with SMTP id d9443c01a7336-2eb0038e312mr41423305ad.32.1793254032255;
+        Wed, 28 Oct 2026 23:07:12 -0700 (PDT)
+Received: from localhost ([116.86.153.182])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae64549dfsm29271725ad.4.2026.10.28.23.07.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 23:07:11 -0700 (PDT)
+Date: Thu, 29 Oct 2026 14:07:06 +0800
+From: Chris Down <chris@chrisdown.name>
+To: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Kees Cook <kees@kernel.org>, Marco Elver <elver@google.com>,
+	GONG Ruiqi <gongruiqi@huaweicloud.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: [PATCH v2 0/6] mm/slab: Support selecting slab hardening features at
+ boot
+Message-ID: <cover.1793253633.git.chris@chrisdown.name>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -63,194 +101,59 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8082; i=kees@kernel.org; h=from:subject:message-id; bh=VUlEBLYmWwC5csMRY6js1Lx/4Dcsgh1Rjeq88l5Lm6I=; b=owGbwMvMwCVmps19z/KJym7G02pJDFmPbrUplbJdXyi+4OR54yOVu0x+H2xxXL4yzmGfOM+Ev 3v4n/6t6yhlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjI2SuMDHvkLM1LfDTWbizl +pgaqvfv3QS5uO8zNWR6nMxl7+x73cXI0BS1cxOjWf6Xq0KvFs3jNc2Qc/+7WXzB9defihd1n/Y 5xg4A
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 
-When there is no room after the data for a NUL, __seq_buf_terminate()
-writes it over the last byte of the buffer. An overflowed seq_buf has
-already lost data, but one that is exactly full, as seq_buf_putc(),
-seq_buf_putmem(), and seq_buf_commit() can leave it, has not: the NUL
-replaces the last byte written, and the seq_buf still does not report
-an overflow. seq_buf_str(), seq_buf_strlen(), and seq_buf_terminate()
-all go through it, so each of them can silently truncate what was
-written, and seq_buf_pop() then returns the NUL in place of the byte it
-replaced.
+Slab hardening settings are currently all build time choices. This means
+that, unfortunately, hosts with different requirements end up needing
+separate kernel images. At Meta, for example, some hosts are built with
+these options and the rest of the fleet isn't, and that's one of the
+things that keeps those kernels apart.
 
-Mark the seq_buf overflowed in that case with seq_buf_set_overflow(),
-as suggested in review. Nothing is left between "len" and "size" for it
-to clear there, and seq_buf_used() still counts the lost byte.
+Following the discussion on v1, this series now does two things:
 
-No current caller checks for overflow after terminating a seq_buf that
-can be left exactly full, so none of them behaves differently.
+- SLAB_FREELIST_HARDENED and SLAB_FREELIST_RANDOM are cheap enough with
+  sheaves that it makes more sense to just enable them by default than
+  to make them switchable. With both on, system level benchmarks didn't
+  change measurably, only slowpath heavy microbenchmarks did [1].
 
-Add a test that fills a seq_buf exactly and checks that each of the
-three accessors marks it overflowed, that seq_buf_pop() then returns
--1, and that a seq_buf with room for the NUL is not marked. Update the
-existing tests that terminate an exactly full seq_buf to expect it, and
-move the length check in the seq_buf_do_printk() test after the run,
-so that the buffer still reaches seq_buf_do_printk() exactly full.
+- SLAB_BUCKETS and KMALLOC_PARTITION_CACHES cost memory (Harry measured
+  about 1 MiB and 18 MiB respectively after boot on a 64 CPU VM [2]), so
+  they get slab_buckets= and kmalloc_partition= boot parameters, which
+  default to on when the option is built in.
 
-Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
-and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.2.0, and the new
-test fails with the fix reverted.
+Changes in v2:
+- Make SLAB_FREELIST_HARDENED and SLAB_FREELIST_RANDOM default y instead
+  of adding boot parameters for them (Vlastimil).
+- Skip the memdup_user() part of the slab_buckets test on !MMU
+  (Sashiko).
+- Keep slab_buckets= and kmalloc_partition= separate for now. We can
+  discuss whether to merge them into slab_hardening= or similar, as
+  Harry suggested.
 
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
-Closes: https://lore.kernel.org/all/20261016145928.16eddc9a@gandalf.local.home/
-Fixes: 8d1478bfd63be ("seq_buf: Add seq_buf_strlen()")
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- include/linux/seq_buf.h   | 19 ++++++++++-----
- lib/tests/seq_buf_kunit.c | 49 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 60 insertions(+), 8 deletions(-)
+v1: https://lore.kernel.org/r/cover.1793086056.git.chris@chrisdown.name
 
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index f006f2654e4c..c38b5eccc212 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -128,8 +128,8 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
- 
- /*
-  * NUL-terminate the buffer in @s: directly after the data when there is
-- * room for it, otherwise in the last byte of the buffer. @s->size must not
-- * be zero.
-+ * room for it, otherwise in the last byte of the buffer, which marks @s as
-+ * overflowed. @s->size must not be zero.
-  *
-  * Returns: the offset of the NUL.
-  */
-@@ -137,10 +137,16 @@ static inline size_t __seq_buf_terminate(struct seq_buf *s)
- {
- 	size_t end;
- 
--	if (seq_buf_buffer_left(s))
-+	if (seq_buf_buffer_left(s)) {
- 		end = s->len;
--	else
-+	} else {
- 		end = s->size - 1;
-+		/*
-+		 * About to overwrite a written byte in the last position
-+		 * in the buffer, so it must be considered overflowed now.
-+		 */
-+		seq_buf_set_overflow(s);
-+	}
- 
- 	s->buffer[end] = 0;
- 
-@@ -158,7 +164,8 @@ static inline size_t __seq_buf_terminate(struct seq_buf *s)
-  * the last byte of the buffer is zeroed, and the len will still
-  * point passed it. The same happens when the buffer is exactly
-  * full: the NUL takes the place of the last byte written, which is
-- * lost, though seq_buf_used() still counts it.
-+ * lost, so @s is marked as overflowed, though seq_buf_used() still
-+ * counts that byte.
-  *
-  * A zero-sized seq_buf has nowhere to put a NUL, so the empty string
-  * is returned instead of writing to @s->buffer. Any other seq_buf
-@@ -189,7 +196,7 @@ static inline const char *seq_buf_str(struct seq_buf *s)
-  * without walking it. Unlike seq_buf_used(), this does not count the byte
-  * given up to the NUL when the buffer is full or has overflowed. When the
-  * buffer is exactly full, that byte is the last one written, and calling
-- * either function loses it.
-+ * either function loses it and marks @s as overflowed.
-  *
-  * A zero-sized seq_buf holds no string, so 0 is returned without writing
-  * to @s->buffer, matching what seq_buf_str() returns for one.
-diff --git a/lib/tests/seq_buf_kunit.c b/lib/tests/seq_buf_kunit.c
-index fc53e9ef844c..a67ed6d7b517 100644
---- a/lib/tests/seq_buf_kunit.c
-+++ b/lib/tests/seq_buf_kunit.c
-@@ -504,13 +504,13 @@ static void seq_buf_do_printk_test(struct kunit *test)
- 	seq_buf_putc(&s, '!');
- 	KUNIT_ASSERT_FALSE(test, seq_buf_has_overflowed(&s));
- 	KUNIT_ASSERT_EQ(test, seq_buf_used(&s), 8);
--	KUNIT_ASSERT_EQ(test, strlen(seq_buf_str(&s)), 7);
- 
- 	seq_buf_printk_run(&capture, &s);
- 
- 	/* The one line that was written, and nothing after it. */
- 	KUNIT_EXPECT_EQ(test, seq_buf_printk_marked, 1);
- 	KUNIT_EXPECT_EQ(test, seq_buf_printk_empty, 0);
-+	KUNIT_EXPECT_EQ(test, strlen(seq_buf_str(&s)), 7);
- 
- 	/* Check that lines without a trailing newline are shown. */
- 	seq_buf_puts(&t, SEQ_BUF_PRINTK_MARKER "\n" SEQ_BUF_PRINTK_MARKER);
-@@ -630,7 +630,8 @@ static void seq_buf_strlen_full_test(struct kunit *test)
- 	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&s));
- 	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 4);
- 	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&s), 3);
--	/* seq_buf_strlen() terminates the buffer by itself. */
-+	/* seq_buf_strlen() terminates the buffer by itself, losing the 'd'. */
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
- 	KUNIT_EXPECT_EQ(test, s.buffer[3], '\0');
- 	KUNIT_EXPECT_EQ(test, strnlen(s.buffer, s.size), 3);
- 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "abc");
-@@ -649,6 +650,7 @@ static void seq_buf_strlen_full_test(struct kunit *test)
- 	seq_buf_commit(&t, len);
- 	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&t));
- 	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&t), 7);
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&t));
- 	KUNIT_EXPECT_EQ(test, t.buffer[7], '\0');
- 	KUNIT_EXPECT_EQ(test, strnlen(t.buffer, t.size), 7);
- 	KUNIT_EXPECT_STREQ(test, seq_buf_str(&t), "zzzzzzz");
-@@ -735,6 +737,48 @@ static void seq_buf_terminate_test(struct kunit *test)
- 	KUNIT_EXPECT_STREQ(test, buf, "untouched");
- }
- 
-+static void seq_buf_terminate_full_test(struct kunit *test)
-+{
-+	DECLARE_SEQ_BUF(s, 4);
-+	DECLARE_SEQ_BUF(t, 4);
-+	DECLARE_SEQ_BUF(u, 4);
-+	DECLARE_SEQ_BUF(v, 4);
-+
-+	/*
-+	 * Terminating a buffer that is exactly full puts the NUL over the
-+	 * last byte written, so what it holds is truncated, and each of
-+	 * seq_buf_str(), seq_buf_strlen() and seq_buf_terminate() must mark
-+	 * it overflowed.
-+	 */
-+	seq_buf_putmem(&s, "abcd", 4);
-+	KUNIT_ASSERT_FALSE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "abc");
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&s));
-+	KUNIT_EXPECT_EQ(test, seq_buf_used(&s), 4);
-+	/* The NUL must not be popped in place of the 'd' it replaced. */
-+	KUNIT_EXPECT_EQ(test, seq_buf_pop(&s), -1);
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&s), "abc");
-+
-+	seq_buf_putmem(&t, "abcd", 4);
-+	KUNIT_ASSERT_FALSE(test, seq_buf_has_overflowed(&t));
-+	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&t), 3);
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&t));
-+
-+	seq_buf_putmem(&u, "abcd", 4);
-+	KUNIT_ASSERT_FALSE(test, seq_buf_has_overflowed(&u));
-+	seq_buf_terminate(&u);
-+	KUNIT_EXPECT_TRUE(test, seq_buf_has_overflowed(&u));
-+	KUNIT_EXPECT_STREQ(test, u.buffer, "abc");
-+
-+	/* With room left for the NUL, nothing is lost. */
-+	seq_buf_putmem(&v, "abc", 3);
-+	KUNIT_EXPECT_STREQ(test, seq_buf_str(&v), "abc");
-+	KUNIT_EXPECT_EQ(test, seq_buf_strlen(&v), 3);
-+	seq_buf_terminate(&v);
-+	KUNIT_EXPECT_FALSE(test, seq_buf_has_overflowed(&v));
-+	KUNIT_EXPECT_EQ(test, seq_buf_pop(&v), 'c');
-+}
-+
- static struct kunit_case seq_buf_test_cases[] = {
- 	KUNIT_CASE(seq_buf_init_test),
- 	KUNIT_CASE(seq_buf_init_append_test),
-@@ -760,6 +804,7 @@ static struct kunit_case seq_buf_test_cases[] = {
- 	KUNIT_CASE(seq_buf_strlen_embedded_nul_test),
- 	KUNIT_CASE(seq_buf_strlen_zero_size_test),
- 	KUNIT_CASE(seq_buf_terminate_test),
-+	KUNIT_CASE(seq_buf_terminate_full_test),
- 	KUNIT_CASE(seq_buf_do_printk_test),
- 	{}
- };
+[1] https://lore.kernel.org/r/auITixAJMfLtfa7i@chrisdown.name
+[2] https://lore.kernel.org/r/179312451613.474906.1475329637924619088@kernel.org
+
+Chris Down (6):
+  mm/slab: Enable SLAB_FREELIST_HARDENED by default
+  mm/slab: Enable SLAB_FREELIST_RANDOM by default
+  mm/slab: Support disabling SLAB_BUCKETS at boot
+  slub_kunit: Add a test for the slab_buckets boot parameter
+  mm/slab: Support disabling KMALLOC_PARTITION_CACHES at boot
+  slub_kunit: Add a test for the kmalloc_partition boot parameter
+
+ .../admin-guide/kernel-parameters.txt         | 15 ++++
+ lib/tests/slub_kunit.c                        | 87 +++++++++++++++++++
+ mm/Kconfig                                    | 11 +++
+ mm/slab.h                                     |  8 ++
+ mm/slab_common.c                              | 48 ++++++++--
+ 5 files changed, 163 insertions(+), 6 deletions(-)
+
+
+base-commit: d15d7703166daf7bd62c844a3cb1b3a6279adb4c
 -- 
-2.55.0
+2.54.0
 
