@@ -1,84 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793254131;
-	b=T3MNvy+PvYTUxDe3zBWzlBD9i8Q6mQ32ndplxUQYeOm1YD1h6GPI5bE3kTRsqyJdYXQO
-	 BpSpeqgaKk6/KbOL6ZxlR3DHfOwbuwZooVIpBWeexCHM50UV67DktAVCKLYic6RMhfq+2
-	 Ib1FqHTOFurFfWknu767xRSbNaK0gsQgihg6XD2E5mpLD5o8dCxzdcjB0vOysgpCKhSoe
-	 d55cIEwGVVm+7bAS/s1zR/VM4RjqWzghEZv/02sqEcJ57JQGYgBcfzogCJqDHUxrvKy9X
-	 4tuhRkVG708UzXwvqQmgRcxf2RD8sPc5iPSkgkWXIIRsV+wMacsmV0oUItUy2ERe5fA==
+	t=1793254156;
+	b=VqYTNgekZVlKZNQkACCwr9fumS+TKxOeWVK6ANy1uQFCeL5R5H8Uz4gdpfKNrpoOHO5l
+	 suDrTm9FCi9aaGqXWVas6N7O1evcKzIHzUn5yJ8ANIXp0UOdXxSzCBH/h1h61QvImb8ES
+	 ivtn7Z4wOr0HQBDtFWs1tFGC/0+X/oDeMvqIaYaZLphnMbAPttZCr56Gq3IG8Yp8CTCdf
+	 T4zQ+u4R4OkRrKvswJDTwV+3dYr94OXZjQ8IQ75FuFZUlNJsxqd91EOQhfJMEIoUoY3Cl
+	 FUgJ2hiNyoYCHmuSF7w3v2PhQhkEMLv38U2xVxWcTJeX7izU0oGbZlNZryR0YhXk4hA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793254131;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793254156;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
 	 Content-Type:Content-Disposition:In-Reply-To:User-Agent;
-	bh=fr6lsRVu7pKC2uMXBLAv6yVcpzLAtilFokqfHYV3ttU=;
-	b=Ye5KAuf1IspCiIsUxDVk6RKD4qu5C/uNBqKSDkwItE5vmFxhyK++aftNKzw1U1DIPsGj
-	 0OMrE+ZJkOAc4KacHAdUtjOYGwvHC8ki5FbIzs4NWiot+yYPkKB07zC5yK4DyDaXGsDYt
-	 nijGisEz7mG7ZgcIpRxuczworQzYtDFIA8JiceJVP75l8jFMh3DtpmrONOlLZyfDQY+Su
-	 HUk5I1RUGWfzlFhB53sN2RIyzmSgM9c2ygHwZtoZ7WEw9W3ZokHckBVOtpMqbdL6I6opL
-	 qdp+D+O7BIzcluWjS9Uf14r1UnAIRBLK8TqfCD9Jr1RQ4E4KJpC65z7gsFDIR7F8JkA==
+	bh=TnENC99p6Lehtk+q2wiObbhSP6H/cGEPWJzdL6TBkdc=;
+	b=ACjdkHJHmhtGmdU8XzZz2ubTGa4M/xeYdhC7dUqBK3ZwBWqQDnRuXBoColmdJbgQwtJ5
+	 SWC9vKiyB/2WwExkqRhFLCBOXY/uHd3M5huFSqBjXON1/kWWqLaqm9yDrekDhaaYLzUov
+	 REz2bLFqUuT6o/nyvV5rHxoGbq6T/Y8bSHe0aTI3GRjA9m32LrEhpM8e+l12wRTxOIiQY
+	 FlVRTb7MaV2Z7T2nhgxGyr+qwkGNYa8vOEBuoWleS/VwRGXWtTgX2CmttA1TYm1E3ZaUi
+	 M135B48w7K43bLYvu2evWrZBfouw1pfLnFl73CXUJXwDW/2Yk/ObmFd7BVn4q6FCXsw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=chrisdown.name;
 	spf=pass smtp.mailfrom=chrisdown.name;
-	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=T+1CdUOF;
-	arc=none smtp.remote-ip=209.85.210.182
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=G2oXuuMZ;
+	arc=none smtp.remote-ip=209.85.216.54
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D5A606A321
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Oct 2026 06:08:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 93D5A606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29F4606A323
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Oct 2026 06:09:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F29F4606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=T+1CdUOF
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8a01cac8733so1391949b3a.2
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 23:08:50 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=G2oXuuMZ
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3acd21ba21aso1477972a91.1
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 23:09:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google; t=1793254130; x=1793858930; darn=vger.kernel.org;
+        d=chrisdown.name; s=google; t=1793254155; x=1793858955; darn=vger.kernel.org;
         h=user-agent:in-reply-to:content-disposition:content-type
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to:content-type;
-        bh=fr6lsRVu7pKC2uMXBLAv6yVcpzLAtilFokqfHYV3ttU=;
-        b=T+1CdUOF2S0zxP6AiHPqpBdu2vLU9BYmhx/gn9gkkhvXAQRAAiXpd6gZNfA/d/qjQN
-         FLOXc0F5to357dYDzGiDJ4x4fCpUKnNpYaYd0tHwiuVzMV4Q1xyrAkCPwKfaSAGENrsJ
-         YIMaHUc99k4pzEnBCSEzWenp/JPCpyPrHl8pA=
+        bh=TnENC99p6Lehtk+q2wiObbhSP6H/cGEPWJzdL6TBkdc=;
+        b=G2oXuuMZx27T7MTdteDxVRZzx91gBkxgG+OWKgozn9T+tELcU3T4zLqvl4C1Pv4YUo
+         Q+L0vWHYoy6UEsBnfZNS30p440w5hc97l5DWbBQ/puezPRvYABOkSes28YH4SxkOAt6m
+         VKZU4n3Rn+QkCH2ncZS2bwX4FWyeChexJBRLE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793254130; x=1793858930;
+        d=1e100.net; s=20260707; t=1793254155; x=1793858955;
         h=user-agent:in-reply-to:content-disposition:content-type
          :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=fr6lsRVu7pKC2uMXBLAv6yVcpzLAtilFokqfHYV3ttU=;
-        b=aa+9ODAdLQx9Vht5AniVfPnNVC+TAuUvLylXKuvqTUS2M/27sHvUfZfyclfNawJ2yM
-         mL4BHYjuVw20cDdQOGGVWE9xDZtvWd6YyZ7E5XQf5zMYGoOzFg6v4c7jYRPJ7Z9zBKGW
-         h7LkIQtT5S4SdhuQRvv177XaqK429/rkc7U98KvCTOmurZcjHDqOaVaCf07KL83naLPp
-         ZVWJjvZy2Ic9smQQgEaby3Lnx+CEGVw+dI+groRbMriIOniQS2o/+tKRqZba4CBQ1PIu
-         w4La8+RfYUrEbWlybpkhZdN/UC/ay0ma7QHCZJUuQfW1xZdTq0B1Yi8g7OMtGIhSE7pY
-         TCvA==
-X-Forwarded-Encrypted: i=1; AKwUvBz//FUUz4TCkBEY1MJ0j8vGwACK3Ks8qOX6rYCISWpvYg0V2iJKVPFjV04S07hgf4iD4w8JHMTw6QAieGw/i/8=@vger.kernel.org
-X-Gm-Message-State: AFq9FYIdRFmVYJJ8MMR3abpWtFgbwvLNkZhlXhdXvpKfqbb637EqDFOB
-	xfp92eQ8lb2vfoJMLYKOZNK25gZmDGvF4O5QeYt8dRUZfZhRgJhv1NeBPPcoC5ZRuKM=
-X-Gm-Gg: AYBFou0x8GTKHNJqSuiAkpJHIgZbakBnWSDkCvYCplCGKlFy0wzJl5q4H+RfLK3+7E9
-	4W9+a7qShyKlBjjTOYs0Bmw5USE4HWy+WYF9ljDZC7oTDzWj9zoFnbrYhYo1FkG0JYOMdUOMUi5
-	Vk8TaU/5q8JuEj4AH1HxRB8hzqOolZsPmm6yZ+M1zOYhAWADIGyOpyC4IUZh62/MUYPHEkPc1Z9
-	hcJiHUZ2F0aMco4SLaq/FKyiJt+gqdLrUiDwBHFV1vpxatHj2vs5XiE66wEbJy+dDh8OzdmYLoZ
-	TMAaACTqPMyWCPu7CE0L2Plhzhs1ily0FiaYs5GdJ4vSYA+P48Z14kbrn/dY+dwUlJvKVzycJIU
-	u6/ZiSSEf+HEMcp5zPbr6+WDiBiVDSJmTZdVBhDJ4/v/xPfCYQYnny0Lc36PJXMMGcry94sLiJe
-	JMleryE3fhKYyvfcCjblPubmCmll5nn5ZNFkF/aza9nM84QodeQQq5KsLZyhCWZUhtiVYAOpcWp
-	QjngGpvktZ8hij0S03iC2+ekbvCCFmSOPEQaMua578F3RoLDfGTCDmaQF7G5zu/2+e6QqAB7U71
-	9dRudq6UZfLtAUYwulKpIV76kH3eRU2Csiu21iJofPcajqUrn73xx0lk8nZ/AZgkyYe5jbrdugb
-	BZvPV39E+faFTVzqfHotp8sFcewKenAR21MW5UZm4YLROa+6huhADyPfnd42yCZfB04RiF+Fy1d
-	xdpgyRfRzvFs7TmUm1Ig==
-X-Received: by 2002:a05:6a00:4518:b0:89e:37b1:b81e with SMTP id d2e1a72fcca58-8a6e71e1b92mr3812208b3a.31.1793254130054;
-        Wed, 28 Oct 2026 23:08:50 -0700 (PDT)
+        bh=TnENC99p6Lehtk+q2wiObbhSP6H/cGEPWJzdL6TBkdc=;
+        b=Oh6/m8XR/1Uz1ThYy+3AKls0V6n9MNp6jwrSAyGw3mDr/aw1Hg43/s5yVHr0Jvl/Hl
+         S8ZKOU6Ut9Iuq+1tQ2cZ2FexLg8Iapk0Y3uRQUPQDPH8354F4zGUPBsqSVJu3YqcGUVo
+         P16SH8u/5koRiML8gijgwg7lkGcZyHeiVUc3Z1Ms7umENA+ipQ0oD4EjPiLEf5+icO2e
+         0iZEM1bIdxIMnlgA97c8Ic0ZQJkynORtXL6nCdT7nf30WKc8rikJnP1BPXZ1Lj1Xsw9f
+         63s75Ag9RGvxQe3YCfsjHzTrQqHRn2kMKBdKAgxWkZYM/vEpoZ3oXj4Zc77qm3aoAuWl
+         4VSA==
+X-Forwarded-Encrypted: i=1; AKwUvBx+g7lSHPXefV8rosuRskznwISaw0hI8bkX/f9A2ElRCfnjQzxyij4/hrsRt2OL0mPON4q1Yt1AhW6HhoxwIFE=@vger.kernel.org
+X-Gm-Message-State: AFq9FYJhrq0S2j/Gc3hudt4SxqSXhmML2FJIWPfy0k/lXqObWK7yrp6Q
+	Tk5LyaInHN+EsBIobwSOt8n3qAAuyD70tHvO+xSFb8PMVLbXYIC2GU4UkoUEXur762E=
+X-Gm-Gg: AYBFou12Gz0DrLkvYRMJF382qwz9DmXiI8yW8Zk4NvlF5jRP6gzzFvpDpBo4NAz3R9c
+	4qx8wA19+So4C22azXNbCyguLENbbGaos5Kjzlsg7993XPGim2fqgVqwraaYBAspa9E96kaCOSJ
+	n82Gx1gRtXhAc+SsdYTBNxhO4BknoeMIelSq0jB++nmq+jREXVV2a2AR4ZCgAdOtrTRmx6ZjmAG
+	jnNJ9X3ortWSESrQPmNAtYRLVFHC1yPCwSd5UynbbV8ftYRlWkNduPgYR7xV3kGgYcHG5w/fyL5
+	GzTuhnz0D8J6ng+y32R6iSJSEwIGponX/qoourHpEUkrTuZxMLOGTPiWNun0Wjeo4umIcaG5Wvm
+	erhbFCqidjCCGaZVFb2ooQXQQFKyBvyBgUMScS6DWiFyYFHlOUFt330gHgODXUK9HG+KFZR0ZW2
+	NCik1ROOEq+A3vHFz3sttXqZc4BdHDfkkdTKwfv9CuPfgoO0p4HZaZqv3B5DWEZPyhkuape6Agj
+	Nc54syrBwJqMd4oTB6or9AphR0gOf13oQJW3EFhTptTxelySvAzroXa4ZWefrrGjg9MAPE7swrf
+	ZTaF35KmnijQb6SwVZ5Tu8NmGjYAhGaGIb1Yd+2dVAARsPXS4gspbxPM2w8XloIEG9jqgjUYUh7
+	FKeGLRsPJh5tL9vcYJaVwf0/soOsHfO+OsOM9ZKpRLs9JaPFK7RF72q2e8lDM7TNEg/BGM6RX
+X-Received: by 2002:a17:90b:590d:b0:3ab:2d46:1dd6 with SMTP id 98e67ed59e1d1-3ae57e401aemr3777671a91.4.1793254155497;
+        Wed, 28 Oct 2026 23:09:15 -0700 (PDT)
 Received: from localhost ([116.86.153.182])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a6a6df0b52sm1840758b3a.43.2026.10.28.23.08.49
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ae6e7fe923sm2789462a91.8.2026.10.28.23.09.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 23:08:49 -0700 (PDT)
-Date: Thu, 29 Oct 2026 14:08:44 +0800
+        Wed, 28 Oct 2026 23:09:14 -0700 (PDT)
+Date: Thu, 29 Oct 2026 14:09:09 +0800
 From: Chris Down <chris@chrisdown.name>
 To: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
@@ -90,9 +89,9 @@ Cc: Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
 	Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
 	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: [PATCH v2 4/6] slub_kunit: Add a test for the slab_buckets boot
- parameter
-Message-ID: <47c0b11109203640122a9b5b030d3f41bfbac609.1793253633.git.chris@chrisdown.name>
+Subject: [PATCH v2 5/6] mm/slab: Support disabling KMALLOC_PARTITION_CACHES
+ at boot
+Message-ID: <617bbfdce4fb2689c2510f0cd7f9adbb3ab8edfa.1793253633.git.chris@chrisdown.name>
 References: <cover.1793253633.git.chris@chrisdown.name>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -108,126 +107,99 @@ Content-Disposition: inline
 In-Reply-To: <cover.1793253633.git.chris@chrisdown.name>
 User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 
-Check that memdup_user() allocates from the memdup_user buckets by
-default, and from the regular kmalloc caches when they're turned off
-with slab_buckets=0.
+KMALLOC_PARTITION_CACHES creates several copies of each normal kmalloc
+cache and spreads allocations across them. That costs a fair bit of
+memory: Harry measured about 18 MiB more slab memory after boot on a 64
+CPU, 64 GiB VM, mostly from under-used slabs [1]. Like SLAB_BUCKETS, it
+can only be chosen at build time.
 
+Add a kmalloc_partition= early parameter, enabled by default on kernels
+built with CONFIG_KMALLOC_PARTITION_CACHES=y. When it's off, the copies
+alias the normal caches rather than being created.
+
+Let's leave kmalloc_type() unchanged since each index simply resolves to
+the same cache when partitioning is off.
+
+Link: https://lore.kernel.org/r/179312451613.474906.1475329637924619088@kernel.org [1]
 Signed-off-by: Chris Down <chris@chrisdown.name>
 ---
- lib/tests/slub_kunit.c | 41 +++++++++++++++++++++++++++++++++++++++++
- mm/slab.h              |  4 ++++
- mm/slab_common.c       |  4 +++-
- 3 files changed, 48 insertions(+), 1 deletion(-)
+ .../admin-guide/kernel-parameters.txt         |  7 +++++++
+ mm/Kconfig                                    |  5 +++++
+ mm/slab_common.c                              | 19 ++++++++++++++++++-
+ 3 files changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/lib/tests/slub_kunit.c b/lib/tests/slub_kunit.c
-index e3b63f0338d5..670645875b27 100644
---- a/lib/tests/slub_kunit.c
-+++ b/lib/tests/slub_kunit.c
-@@ -9,6 +9,8 @@
- #include <linux/delay.h>
- #include <linux/perf_event.h>
- #include <linux/kprobes.h>
-+#include <linux/mman.h>
-+#include <linux/string.h>
- #include "../mm/slab.h"
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index de2fd6963a16..6633a553a79c 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3054,6 +3054,13 @@ Kernel parameters
+ 			Configure the RouterBoard 532 series on-chip
+ 			Ethernet adapter MAC address.
  
- static struct kunit_resource resource;
-@@ -296,6 +298,41 @@ static void test_krealloc_redzone_zeroing(struct kunit *test)
- 	kmem_cache_destroy(s);
- }
++	kmalloc_partition= [MM,EARLY]
++			Format: <bool>
++			Enable or disable kmalloc cache partitioning on
++			kernels built with CONFIG_KMALLOC_PARTITION_CACHES=y.
++			Ignored without that option.
++			Default: on.
++
+ 	kmemleak=	[KNL,EARLY] Boot-time kmemleak enable/disable
+ 			Valid arguments: on, off
+ 			Default: on
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 48078c1fd26f..b90b3915fcd5 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -266,6 +266,11 @@ config KMALLOC_PARTITION_CACHES
+ 	  limited degree of memory and CPU overhead that relates to hardware
+ 	  and system workload.
  
-+#ifdef CONFIG_SLAB_BUCKETS
-+static void test_slab_buckets(struct kunit *test)
-+{
-+	unsigned long user_addr;
-+	const char *name;
-+	void *p;
++	  The partitioning can be disabled at boot with the
++	  "kmalloc_partition=0" kernel parameter, in which case the copies
++	  are not created and all normal kmalloc allocations use the
++	  regular kmalloc caches.
 +
-+	if (!slab_buckets_enabled)
-+		KUNIT_EXPECT_NULL(test, kmem_buckets_create("TestSlub_buckets",
-+							    0, 0, INT_MAX, NULL));
-+
-+	if (!IS_ENABLED(CONFIG_MMU))
-+		kunit_skip(test, "userspace allocation needs an MMU");
-+
-+	user_addr = kunit_vm_mmap(test, NULL, 0, PAGE_SIZE,
-+				  PROT_READ | PROT_WRITE,
-+				  MAP_ANONYMOUS | MAP_PRIVATE, 0);
-+	KUNIT_ASSERT_NE_MSG(test, user_addr, 0, "Could not create userspace mm");
-+	KUNIT_ASSERT_LT_MSG(test, user_addr, (unsigned long)TASK_SIZE,
-+			    "Failed to allocate user memory");
-+
-+	p = memdup_user((void __user *)user_addr, 64);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, p);
-+
-+	name = virt_to_slab(p)->slab_cache->name;
-+	if (slab_buckets_enabled)
-+		KUNIT_EXPECT_TRUE_MSG(test, strstarts(name, "memdup_user-"),
-+				      "allocated from %s", name);
-+	else
-+		KUNIT_EXPECT_TRUE_MSG(test, strstarts(name, "kmalloc-"),
-+				      "allocated from %s", name);
-+	kfree(p);
-+}
-+#endif
-+
- #if defined(CONFIG_PERF_EVENTS) || (defined(CONFIG_KPROBES) && defined(CONFIG_SMP))
- #define NR_ITERATIONS 1000
- #define NR_OBJECTS 1000
-@@ -489,6 +526,9 @@ static struct kunit_case test_cases[] = {
- 	KUNIT_CASE(test_kfree_rcu_wq_destroy),
- 	KUNIT_CASE(test_leak_destroy),
- 	KUNIT_CASE(test_krealloc_redzone_zeroing),
-+#ifdef CONFIG_SLAB_BUCKETS
-+	KUNIT_CASE(test_slab_buckets),
-+#endif
- #ifdef CONFIG_PERF_EVENTS
- 	KUNIT_CASE_SLOW(test_kmalloc_nolock_and_friends_perf),
- #endif
-@@ -505,5 +545,6 @@ static struct kunit_suite test_suite = {
- };
- kunit_test_suite(test_suite);
- 
-+MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
- MODULE_DESCRIPTION("Kunit tests for slub allocator");
- MODULE_LICENSE("GPL");
-diff --git a/mm/slab.h b/mm/slab.h
-index e94ac63d10dc..b5b344d6e402 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -390,6 +390,10 @@ extern struct list_head slab_caches;
- /* The slab cache that manages slab cache information */
- extern struct kmem_cache *kmem_cache;
- 
-+#if IS_ENABLED(CONFIG_KUNIT)
-+extern bool slab_buckets_enabled;
-+#endif
-+
- /* A table of kmalloc cache names and sizes */
- extern const struct kmalloc_info_struct {
- 	const char *name[NR_KMALLOC_TYPES];
+ choice
+ 	prompt "Partitioned slab cache mode"
+ 	depends on KMALLOC_PARTITION_CACHES
 diff --git a/mm/slab_common.c b/mm/slab_common.c
-index b7a46c368ab1..9fe48da12010 100644
+index 9fe48da12010..5391149a2eed 100644
 --- a/mm/slab_common.c
 +++ b/mm/slab_common.c
-@@ -29,6 +29,7 @@
- #include <linux/memcontrol.h>
- #include <linux/stackdepot.h>
- #include <trace/events/rcu.h>
-+#include <kunit/visibility.h>
+@@ -781,6 +781,16 @@ unsigned long random_kmalloc_seed __ro_after_init;
+ EXPORT_SYMBOL(random_kmalloc_seed);
+ #endif
  
- #include "../kernel/rcu/rcu.h"
- #include "internal.h"
-@@ -410,7 +411,8 @@ EXPORT_SYMBOL(__kmem_cache_create_args);
++#ifdef CONFIG_KMALLOC_PARTITION_CACHES
++static bool kmalloc_partition_enabled __ro_after_init = true;
++
++static int __init setup_kmalloc_partition(char *str)
++{
++	return kstrtobool(str, &kmalloc_partition_enabled);
++}
++early_param("kmalloc_partition", setup_kmalloc_partition);
++#endif
++
+ /*
+  * Conversion table for small slabs sizes / 8 to the index in the
+  * kmalloc array. This is necessary for slabs < 192 since we have non power
+@@ -1013,8 +1023,15 @@ new_kmalloc_cache(int idx, enum kmalloc_cache_type type)
+ 	}
  
- static struct kmem_cache *kmem_buckets_cache __ro_after_init;
+ #ifdef CONFIG_KMALLOC_PARTITION_CACHES
+-	if (type >= KMALLOC_PARTITION_START && type <= KMALLOC_PARTITION_END)
++	if (!kmalloc_partition_enabled) {
++		/* Use the normal caches, which have already been created. */
++		if (type > KMALLOC_PARTITION_START && type <= KMALLOC_PARTITION_END) {
++			kmalloc_caches[type][idx] = kmalloc_caches[KMALLOC_NORMAL][idx];
++			return;
++		}
++	} else if (type >= KMALLOC_PARTITION_START && type <= KMALLOC_PARTITION_END) {
+ 		flags |= SLAB_NO_MERGE;
++	}
+ #endif
  
--static bool slab_buckets_enabled __ro_after_init = IS_ENABLED(CONFIG_SLAB_BUCKETS);
-+VISIBLE_IF_KUNIT bool slab_buckets_enabled __ro_after_init = IS_ENABLED(CONFIG_SLAB_BUCKETS);
-+EXPORT_SYMBOL_IF_KUNIT(slab_buckets_enabled);
- 
- #ifdef CONFIG_SLAB_BUCKETS
- static int __init setup_slab_buckets(char *str)
+ 	/*
 -- 
 2.54.0
 
