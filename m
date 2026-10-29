@@ -1,56 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793283334;
-	b=xcQib8LfsXKeWSJukk8jyXR2OzDeq6GhtExIxcJsPKIX+8UytkUd9zBtvZeIFbVFsSY0
-	 yy9e5C16l7n2/Mwb2O9h2K40Mt+XCIztox6yDOPQiH7P5j+twe5/HTtu3d+IOvV9QPmcR
-	 dl9GCtIoJZ372qZLDY3vyLfVil6qbuNghDj5ndaE7h8PXLQMrfZo5mTqb+uezyHEWU/oI
-	 eQZjNpkuFOMMTkEv/W4nc0lzQ2WGgdSqvJY4yuxPc7x7MDycHbNnezY4OEeoRlgIxGi/V
-	 fD6PIQ9PZCA0mfYWNVLNemuHHzHLOLyfNIkUNPGxBmkjZYjtasKyapNh6mytwT+hhbQ==
+	t=1793283531;
+	b=ZkeMOTnibaEFUA7yLpsI9mu54Vd+WoEGq9vC68PLtj5HxmbK3cr0D01cWdghhGROMi2u
+	 SPYDtfgwoy9lzDjEqVd1NpZmowu+31V5EOPvMluzCbZ4lAz7GLzMGQTOQui0FLhSFFBtZ
+	 8AL/NmCIzgJf3xw0zMJEsXlhgyqzaL3km39RnOrQtzHrv3PSwjWQcUetrvltTv949CvJU
+	 sEMhUJH51Q3AtzqBoXSiH2f53mvyVtaL5xrQow83WWrKamJlkrRyKbvaWk6KuZRKwIzu/
+	 xbR0E8L9l5KvLFqMEXmqQZjiisLolCxy9KhM1A7ANcQv30c0SwtalNxGaBPQUH8Nh0A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793283334;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=HyPTrBsmYmqM69eKxJsiCi+6VsZcG5vEnaGWF/qeFFg=;
-	b=v+GbSsx69D1FXLKKJ6ese6DDGzKjxDMITmmC4deWvXD3/aBy4Cgqz+G8/szk1UdyS0Xo
-	 Lk9eQaHzcAt852X2yAoroXmWllnS+hi8nLVIqZV0AwJS2rY0o0wCK1t7b32+SJZJ1Llob
-	 uDOaEqyPGUyjmwNaZww77xQqvQY3lzfDz+fHWT8gQhv2vg9qgAdYrOymEtmof+JEv+Oh3
-	 Jk116oZAjUX+c8jmVony8cTtOjtqhJCeRQ/rpN2SqP1FEjU/lq8PJZuQj7tZ3i2mfXFFL
-	 qng36U801iowtT/faeODnH1Pjd0mCGgx6QiEjsB9TnuGp7N0e4ek4eorMbPphnm3Z8Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793283531;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=yjBsJBzmhn2xTB2gXD+mUnafcbwXoR+74vIvVz7S9tM=;
+	b=jtyiu+gi5OdYHCUrrqhzxzEuoFm2dUhs0HEsZ2aNQlaohfuSR7KnGi4r0EDlDgypDAIn
+	 sdAmLWh9BzfEQ5b/EcF9tbqy33psOdsz22lRpPDm/fgjX8dM9Ja4TLf2Tgl/0YZvB+lbw
+	 xUQWV27UtoaUnZKh65IEkBBP58mAG/EVG3KMyRda3JjU+vJvZjT0q2nZDK6euxgV4KkNE
+	 pyf+r97URkTzgtSIG94Q648iozmUZ376iGaXuVjk3hvSC+xNGqZhyQSZ2gy1bD2M0NkWS
+	 cGCedG6RMkDrLFWTAbvOy7qG3ze4l8o3GwwcgRj0gjiPEq7HQTFuWUPb5V5WE1h/NRg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GB+LYI1B;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b="MiYVU/6t";
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E07606A31A
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Oct 2026 14:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FCD60A2618;
+	Thu, 29 Oct 2026 14:18:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D9FCD60A2618
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GB+LYI1B
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F4F31F01828;
-	Thu, 29 Oct 2026 14:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793283333;
-	bh=HyPTrBsmYmqM69eKxJsiCi+6VsZcG5vEnaGWF/qeFFg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GB+LYI1BNDR8GcgSiRWr6dLRXIa9uFyOdoSDslGmfvSBKuHOUSxyjOpVSGssOicSz
-	 9WGYNXPuUhKpX4voYamIxs7n7EVci+km9/bHbrktyDLek4CB5maoxeYMjm2TJa7kTD
-	 rFLRDLmyt/8VTWf9TEhZmHFXUxEethBGDcO1/7v1Np6I37IcIsKXST1xRWBgqA7p6k
-	 jHhEoJZTQeHX1Srb73JzLROwN7NSpsvX/rnHHC1UoUGjDFNlGbaifdjVl2t7tKMPTs
-	 /pzw8S6dGbRaA75Wq1Ml+C0DErG179m+d9KRWkGnGEp4z1iCQdq5SfA+kCjbXklhf7
-	 MeOCUzRa9A1kQ==
-Date: Thu, 29 Oct 2026 15:15:29 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Nathan Lynch <nathanl@linux.ibm.com>, Kees Cook <keescook@chromium.org>
-Subject: Re: [RFC v1] seq_buf: Add seq_buf_create() to implement
- DECLARE_SEQ_BUF()
-Message-ID: <auNRKk_IaN8kBPiS@devuan>
-References: <9bda534b33f05b90a4b14d343ac70cbbe1d7bd2e.1793229193.git.alx@kernel.org>
- <20261028211227.2b644f2e@fedora>
- <auMtYh5eJKLjrubA@devuan>
- <20261029094156.141f8c54@gandalf.local.home>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=MiYVU/6t
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 7101F1A041D;
+	Thu, 29 Oct 2026 14:18:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 4758A2002C;
+	Thu, 29 Oct 2026 14:18:40 +0000 (UTC)
+Date: Thu, 29 Oct 2026 10:18:38 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alejandro Colomar <alx+linux-hardening@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Bill Wendling <morbo@google.com>, Petr
+ Mladek <pmladek@suse.com>, Randy Dunlap <rdunlap@infradead.org>, Shuvam
+ Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] seq_buf: Mark a seq_buf overflowed when terminating it
+ loses a byte
+Message-ID: <20261029101838.7c34a2f2@gandalf.local.home>
+In-Reply-To: <auNNcmUuR8DS7Hys@devuan>
+References: <20261029053250.i.220-kees@kernel.org>
+	<auMwo_T_FsZp5UsB@devuan>
+	<20261029091845.21464a1a@gandalf.local.home>
+	<auNNcmUuR8DS7Hys@devuan>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -60,199 +66,76 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sdexaymik3sw4xva"
-Content-Disposition: inline
-In-Reply-To: <20261029094156.141f8c54@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: as3y68ba6epsjyiw7pmi4ats8z7ecdyo
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 4758A2002C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18UKqmOfY1nCf3ZWjmkztV0xD4xw/NVK6I=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=yjBsJBzmhn2xTB2gXD+mUnafcbwXoR+74vIvVz7S9tM=; b=MiYVU/6torKsAdXEljxYbPg6j85VdAq3xEANUTuqWbv6fmBGrD4B2kB9ElgScSxkmOKHeLfmigk+szD5ZCfNJsn6PsoKj4sa8h/REMGt/msZqfV/yd+fIK6FwXFAUJNqe4NUBWwuLsAx8l25S5AZhuP+Sx+iDeAMENdiuSOuMg0=
+X-HE-Tag: 1793283520-281996
+X-HE-Meta: U2FsdGVkX198uM8ZNCY2U7CsZ6Xo32ASAg9wO8VDiwPVK+wBDG7C2ulOiPCOztoLK+ZZKNwE4Xwf72RuRVNogMhZjy5bc/p0lmpPu4Ylaa6ZBzn5GBAdtN2r4uqAnEoIbw04aMHtUpgWWF8IXgfzGN6dAXozGk3l0EY6B6Ndp9XQwPnnlMT71MJ7eEHQPFUfbkd0ixKtCA7a3W2SyWlNmRX3ABwr3jTS/CfXyj3DQThu3TB2BmcSIKl4KpMGmh2Hc5VV9r8uYkFfGZd5X5U0BvmPYm2rwNGBtfh/W0vrA6A5yeU3PGUwOa5Ds+gUNfGmkgr2PD390ecSF1ObrwcOIyiKFEuw+MSv
+
+On Thu, 29 Oct 2026 14:52:47 +0100
+Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
+
+> > 
+> > This only happens when the user expects the string to have a nul
+> > terminating byte. Don't think too much into this.  
+> 
+> Hmmmm, sounds reasonable under the point of view that users shouldn't
+> expect these buffers to contain strings.  Then, seq_buf_str() would
+> obviously be a write operation, since it transforms to a string from
+> something that wasn't a string.
+
+Right.
+
+> 
+> > > > @@ -137,10 +137,16 @@ static inline size_t __seq_buf_terminate(struct seq_buf *s)
+> > > >  {
+> > > >  	size_t end;
+> > > >    
+> > 
+> > Hmm, I was thinking that this should first check if the string is already
+> > terminated with a nul byte. Why add another one if it is?
+> >   
+> > > > -	if (seq_buf_buffer_left(s))
+> > > > +	if (seq_buf_buffer_left(s)) {  
+> > 
+> > 		if (s->len && !s->buffer[s->len - 1])
+> > 			return;
+> >   
+> > > >  		end = s->len;
+> > > > -	else
+> > > > +	} else {
+> > > >  		end = s->size - 1;  
+> > 
+> > 		if (!s->buffer[end])
+> > 			return;
+> > 
+> > Otherwise this overflows the buffer even when it is already terminated.  
+> 
+> If it is already terminated, s->buffer+s->len points to the NUL, right?
+
+Not necessarially, a seq_buf_putmem() could have added the NUL terminator.
+Then calling seq_buf_str() or seq_buf_terminate() should not overflow it.
 
 
---sdexaymik3sw4xva
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Nathan Lynch <nathanl@linux.ibm.com>, Kees Cook <keescook@chromium.org>
-Subject: Re: [RFC v1] seq_buf: Add seq_buf_create() to implement
- DECLARE_SEQ_BUF()
-Message-ID: <auNRKk_IaN8kBPiS@devuan>
-References: <9bda534b33f05b90a4b14d343ac70cbbe1d7bd2e.1793229193.git.alx@kernel.org>
- <20261028211227.2b644f2e@fedora>
- <auMtYh5eJKLjrubA@devuan>
- <20261029094156.141f8c54@gandalf.local.home>
-MIME-Version: 1.0
-In-Reply-To: <20261029094156.141f8c54@gandalf.local.home>
+> Is so, then we'd only reach this second branch when the buffer has
+> already overflowed (seq_buf_has_overflowed(s)==true).  If the buffer has
+> not overflowed, s->len<s->size, and thus we'd fall in the first branch.
+> 
+> If we have already overflowed, we shouldn't be concerned about further
+> overflowing, right?  And on overflow, if there's a NUL, it certainly
+> must be at s->buffer+s->size-1, so overwriting it with another NUL
+> wouldn't do any harm.  If this helps us avoid a check (and thus a
+> branch), it would be worth it, right?
+> 
+> BTW, I'd very much suggest renaming that 'end' local variable to 'nul',
+> since it is the offset of the NUL byte.  'end' could be confused with
+> the end of the buffer (as in ARRAY_END()).
 
-Hi Steve,
+"end" is just fine.
 
-> Date: 2026-10-29 09:41:56-0400
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> On Thu, 29 Oct 2026 12:33:19 +0100
-> Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
->=20
-> > > > diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-> > > > index 9f2839e73f8a..facc5643c049 100644
-> > > > --- a/include/linux/seq_buf.h
-> > > > +++ b/include/linux/seq_buf.h
-> > > > @@ -25,10 +25,7 @@ struct seq_buf {
-> > > >  };
-> > > > =20
-> > > >  #define DECLARE_SEQ_BUF(NAME, SIZE)			\
-> > > > -	struct seq_buf NAME =3D {				\
-> > > > -		.buffer =3D (char[SIZE]) { 0 },		\
-> > > > -		.size =3D SIZE,				\
-> > > > -	}
-> > > > +	struct seq_buf NAME =3D seq_buf_create((char[SIZE]){0}, SIZE) =20
-> > >=20
-> > > It can't use the DECLARE_* name as that is by default something that
-> > > can be used outside of a function:
-> > >=20
-> > >   DECLARE_SEQ_BUF(foo, 1024);
-> > >=20
-> > > Needs to work. Just because nothing does that now, doesn't mean it wi=
-ll
-> > > not happen in the future. From my understanding, all DECLARE_* macros
-> > > for other types work this way. =20
-> >=20
-> > Hmmmm, then I would like to remove this macro entirely.  It is not
-> > possible to implement it for a structure that has '.p' and '.end'
-> > without a function call.
-> >=20
-> > It would only be implementable with constexpr (or constinit? C++ has too
-> > many constsomething things that slightly differ, and I don't know which
-> > is which) functions that can be called at file scope, but those don't
-> > exist in C.
-> >=20
-> > Would it be okay for you to remove this, and perhaps replace it with
-> > direct calls to seq_buf_create()?  Maybe like this:
-> >=20
-> > 	#define SEQ_BUF_CREATE(SIZE)  seq_buf_create((char[SIZE]){0}, SIZE)
->=20
-> No.
->=20
-> Honestly, you haven't convinced me that the pointer logic is any better. =
-It
-> looks to me that it may be just be moving the complexity elsewhere.
-
-The complexity doesn't move elsewhere, IMO.  It has an issue with file-
-scope initialization, indeed, because derived pointers cannot be
-constant expressions, and thus this precise problem, but other than
-that, there's no off-by-one-prone edges in that design.
-
-However, I understand the fear, so I'll try to prove the simplicity
-before asking you to trust me about it.  (I guess by doing a full
-conversion, and showing that the diff reduces code without showing
-corner cases like the bug we're discussing at the moment in the other
-thread.)
-
-> Yes, using indexes can be error prone, but if you keep all that abstracted
-> out to make sure you can validate that it works, it should be fine. Nothi=
-ng
-> that uses seq_buf should care about the internals.
-
-Actually, there are a few places where those internals somewhat already
-escape the API.  For example:
-
-	avail =3D seq_buf_get_buf(s, &buf);
-	seq_buf_init(&ns, buf, avail);
-
-could be rewritten to use a single function (we can already do that):
-
-	seq_buf_get_tail(&ns, s);
-
-This way, we don't need to have a temporary 'char *buf' that we don't
-really need in the caller, and we also avoid inspecting the available
-size.
-
-This could be done already with this:
-
-	diff --git i/include/linux/seq_buf.h w/include/linux/seq_buf.h
-	index f006f2654e4c..f7ee062374bf 100644
-	--- i/include/linux/seq_buf.h
-	+++ w/include/linux/seq_buf.h
-	@@ -58,6 +58,16 @@ seq_buf_init(struct seq_buf *s, char *buf, unsigned int=
- size)
-		seq_buf_clear(s);
-	 }
-	=20
-	+static inline void
-	+seq_buf_get_tail(struct seq_buf *tail, const struct seq_buf *s)
-	+{
-	+       char *p;
-	+       size_t size;
-	+
-	+       size =3D seq_buf_get_buf(s, &p);
-	+       seq_buf_init(tail, p, size);
-	+}
-	+
-	 /*
-	  * seq_buf have a buffer that might overflow. When this happens
-	  * len is set to be greater than size.
-
-> Using indexes should not
-> be a point of failure as it's not extended outside the scope of the
-> internals of seq_buf.
-
-Except that many places do look at the size by looking at the return
-value of things like seq_buf_get_buf().
-
-> That is, once you prove the internals of seq_buf is correct, then you are=
- done.
-
-And also except that you still need to prove the internals of seq_buf,
-which aren't exactly trivial.  With pointers, those internals become
-simpler.
-
-I have a draft for moving to pointers, and it cleans the implementation
-quite a lot:
-
-	 include/linux/seq_buf.h |  86 +++++++++++----------------
-	 lib/seq_buf.c           | 101 ++++++++++----------------------
-	 2 files changed, 66 insertions(+), 121 deletions(-)
-
-(It's far from ready.)
-
-
-Cheers,
-Alex
-
->=20
-> -- Steve
->=20
->=20
-> >=20
-> > 	...
-> >=20
-> > 	int
-> > 	main(void)
-> > 	{
-> > 		struct seq_buf foo =3D SEQ_BUF_CREATE(1024);
-> > 	}
->=20
-
---=20
-<https://www.alejandro-colomar.es>
-
---sdexaymik3sw4xva
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrjVPsACgkQ64mZXMKQ
-wqlQNQ/9G3tyhNvG01ZB2dAmV5WS6uTrIUpvyfdWFh/2TZtb1XKAr/MC7R5euu5C
-8gYhHz58BJh61+hX49OGVvjC/ZPLeS8P9qpfEA9RJYx1hnbwVyIK1J4SzKBOII03
-m9JLs7J/Byj/FyRSxK8J7eioT8OUC1/+PtvE1W2Nn1Cic8xE/OUQW/BqOXDtHUbN
-5mb24nfG1mgniaiwgEKPSDg/re+6PJRiUY+e/PnJyshIAT/bwht0PKf1v4madPkd
-mOg8det/jQGC3vdr+RUSbV1lS1Tf2pTLN5fTl9v9P/1uMbRJjHk0LuHufFBkjKTX
-RA92Fl+6TRg0veT8yBYlJqNsjNUURXTz/MXCB6ae7fu6x5pH9Cz8YVs3roP3dFqq
-n/MGGJa+5oHzhdoBRuLsVZHXM6U0So+5WT+LCbTuS7ldGCvxg1nrmu+5USCyfau7
-XQxNItPFEwTXlrHBaKDCn1IST7GORXvBB4bvLx0XBiWuf6bsnRPJPHMhYohbaQ0D
-HcTSYwwpeZBruj/NV4LTiSaZ3zpJ1dPOgxJybYDAPNo451O2OJX0FlacEBzmTeht
-42k/z03vskljdbOv1M9dDxTDu6aAKUyYpB9IRt57Y9eyBbVKN4y95iwYnXdD66BX
-Xkj6kG3DQ6jgzfZSKiHGYIlCjcVC0rmkZOpSNXaePZCsjvGloHE=
-=SkcT
------END PGP SIGNATURE-----
-
---sdexaymik3sw4xva--
+-- Steve
