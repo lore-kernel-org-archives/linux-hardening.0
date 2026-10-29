@@ -1,53 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793229568;
-	b=hm5QZ7tfJX3hgB5CB634+b2qaEgJQu0wfGwZiwB/NlJeTa4sUpqW/R81d51urgJky1ft
-	 zL4j5RbBZX+xiREC0KyvL6DYAslu9JHS8EW4SazOjSGXMkpz84hLGKtF/7rM+gekiFdep
-	 4ohK1NH6/dWqSri5Esk2MjhMxISykyhsOdbtsjFQb0ja0Hk6c3uoqmI9VT3oNbftPGfob
-	 o5vCqY3foV+oK7H0pFgyQYzmhTU8FNKIQy4PPw+xTfGsCGDyRwoAin1/yVpvyZduzzDKS
-	 u8lkYGnbIFLEw7ozv+mM3DeatEICkYeJkC9jCe9WZmgaP+Mczsxh5qwDazK37I9h89w==
+	t=1793235890;
+	b=KXYkUoH9eQrL69jQDAkv8kijSYVFcESjlJbDj1mPYF6cRzj7ME7UMucvuVErGQGNiy2B
+	 cFD0DHTk4O37lej8S03GMvAoPhq4sVWYio46Kf/3i0csSgfHtbwDOBohiqr0iCXcDaQu5
+	 MdssHxCgQhZuE0FTZw7UALzJWB1AP7HNdXiwWoedjXQjKi3HestbU4isw2+WSym4/skIm
+	 O19YN8AOZn7T0CBbDVPSCL0QLLz5FnBD5kWI8R3ZheFLbCJ549jiABu82Kf5wiOwy6fyb
+	 0ly9sPXweL80fTNJT8Nq8ZALKyZF3cNjQuzfTFeIYcsmkuY4r5d4/2OveRBadNJfRoA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793229568;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
-	 MIME-Version:Content-Type:Content-Disposition;
-	bh=5cHDxJ03lz4Rl0nWJJ3AQKbjATW0Wcd9MeuudeXwC2I=;
-	b=jpxjIVnluG+Olpv9ZEuMGSK5sL5sA9gCq+APBdZ/HDtlJdVzvzKFs1+fApb7XyZI1G65
-	 1hkx4fWJut5uuKhTEhWy42bMjIvAcpNoORWZXVceSW+0msnM4TMvxWLjBWZ2nJ6J7Zpk9
-	 PRDtvu58Rip95kAVs/QWcSuf7WaT99HsoucjQWmt6dWACM95YqFX+9DgL7FEdcqoA4GFi
-	 T8A0qat/MdeiK1jE+VBfVBZLaMs7n7iLImU6TfF6FOVFktbYI3d7tIg/sX7S8E2YYf15T
-	 rHRlhLMk4fTrS6bb1tDLVAJUbnGlhcCpcPlqMP9SgVBAYJkevr7s/ZZOVprt4W4EmCQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793235890;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Spam-Status:X-Rspamd-Server:
+	 X-Stat-Signature:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=IXFGnVOw0X676vSQw1hYVt1+yXWOOSXyM9zBTmmxqGc=;
+	b=sOZKpNYuz4tdcfMY3oEyZNWrz7PAqjzl1f9bKm8jD58sth8XYwy7TVRaOtJSWOkiOb8O
+	 Gml9nS51y8z0/Ldl4ilJSSsL9Qb8DDkWcqHrl3ZfXwkM2jTiMXGiPCoPzuaXuBzpLpwA8
+	 cFqQnjLdonsijeU+110iUo/UxuB8Ny0hOXR1lKsSL5Qqv6PqOGgXsz6jtRfPdqNYf0p9D
+	 T32xnblvC39eVGRchlqiDACXhJcyAZ0DWJruj0XyXN5gA1u0FHJfqOQE5M5KWsvmBJ3Dm
+	 PI4FTo5FhK40NQOI1qE8MXfXw579L6J2ljm1ko5U7oNlIp1w3ffQdXilFQfRmpO5ouQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPUv4RtX;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=LIjHcQ4x;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D80606A31A
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 23:19:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B4B606A31A
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Oct 2026 01:04:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61B4B606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPUv4RtX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79DCE1F01825;
-	Wed, 28 Oct 2026 23:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793229567;
-	bh=5cHDxJ03lz4Rl0nWJJ3AQKbjATW0Wcd9MeuudeXwC2I=;
-	h=Date:From:To:Cc:Subject;
-	b=bPUv4RtXbTLzRv/dVudE82uR8m+3U431AEtVV46pPt3kAryatUauNgk66DF/ZuywK
-	 XTknw8dmdv7IcCLNrcnjDibY/ws8FwUDWh/ffq2thOhqBplwak1sTsL6Z7RcnTat5V
-	 0SiR2HNzp5rv3IMHc2S71U3jm/MZb1z1Eskve0i6U0OF03QTN7AgygxnLFSFifI/PL
-	 pGHv4aBeYxJWxEKiPo4SEH/9A3VccM6ydjmy8bbTQUVziBfopJwA30qBFzQ7zogic1
-	 i+HGobGKUMZL71kbpfJbMGy315fMqfNDsOPkU31XYJjHFx9skRrYKanBlC5xjz2Hqe
-	 pLwbcIsqKQfVQ==
-Date: Thu, 29 Oct 2026 00:19:24 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: linux-hardening@vger.kernel.org
-Cc: Alejandro Colomar <alx@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Nathan Lynch <nathanl@linux.ibm.com>, 
-	Kees Cook <keescook@chromium.org>
-Subject: [RFC v1] seq_buf: Add seq_buf_create() to implement DECLARE_SEQ_BUF()
-Message-ID: <9bda534b33f05b90a4b14d343ac70cbbe1d7bd2e.1793229193.git.alx@kernel.org>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=LIjHcQ4x
+Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id D1893801F8;
+	Thu, 29 Oct 2026 01:04:47 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 1CD172000E;
+	Thu, 29 Oct 2026 01:04:46 +0000 (UTC)
+Date: Wed, 28 Oct 2026 21:04:44 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alejandro Colomar <alx+linux-hardening@kernel.org>
+Cc: Jiri Kosina <jkosina@suse.cz>, Petr Mladek <pmladek@suse.cz>, Kees Cook
+ <kees@kernel.org>, linux-hardening@vger.kernel.org
+Subject: Re: seq_buf_str() silent truncation (data corruption)
+Message-ID: <20261028210444.295bbf96@fedora>
+In-Reply-To: <auJmkx1p3nIrYeJ_@devuan>
+References: <auIrUV7A8eF8DCGG@devuan>
+	<auJmkx1p3nIrYeJ_@devuan>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -57,118 +60,43 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l3auz4orrhlq6fmg"
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: jfbb6hdqihowiepggcaz5as7aparf8jz
+X-Rspamd-Queue-Id: 1CD172000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18QpaLghy+lZEalie58RQd2SMZcwnpw1qA=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=IXFGnVOw0X676vSQw1hYVt1+yXWOOSXyM9zBTmmxqGc=; b=LIjHcQ4xtQ6p+gflxQmx0+hQs/TA6q9LPuuBEBDyoTOFGtZizPwT1zNy/OLFiDV/uKc73RZ6BQ/1m0UaN4xKbxsLH/mRbHsi1JTyibNZwaSX4dmspKegExhcFkc7jBGoRA5BaPw/rFx/6x7NMbrYZsTqJQYAsjZuX4Aagbbtb10=
+X-HE-Tag: 1793235886-830231
+X-HE-Meta: U2FsdGVkX19kc37UKzl22pVigiyJVigIvYUnb3sYy5WAw/NF9xMDxAhwPXvHtxj+nmQ5tfyBOZDXRQ+TadMwUFEY+IUg2dtSxr9Rlp3Gpo2YiHrugopX11nHi9Ltvhm+m8VBcaTP8FCtK+5VevEEUp4x5/yzMOLX5MAgfTeCBg8MX8CoTps0LZR4b4Wf1JBj68nvH87bwd3/Njf2xaxmvRf0+F3F6/XySlnzHmvbOSE86L28VfN5X7OXJAMcZgXJRLciy5EYKMqdKjf72z3Ji51LDTtIpS4oVaySa6FNcFJo15e3QasSoheI3jFH2uD0Cvx+BKKo8LpoavAhE2i4gdwUx/WDh8Zd
 
+On Wed, 28 Oct 2026 22:30:38 +0100
+Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
 
---l3auz4orrhlq6fmg
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: linux-hardening@vger.kernel.org
-Cc: Alejandro Colomar <alx@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Nathan Lynch <nathanl@linux.ibm.com>, 
-	Kees Cook <keescook@chromium.org>
-Subject: [RFC v1] seq_buf: Add seq_buf_create() to implement DECLARE_SEQ_BUF()
-Message-ID: <9bda534b33f05b90a4b14d343ac70cbbe1d7bd2e.1793229193.git.alx@kernel.org>
-MIME-Version: 1.0
+> Let's see the implementation of seq_buf_str():
+> 
+> 	$ git show v7.3:include/linux/seq_buf.h | grepc seq_buf_str
+> 	(standard input):static inline const char *seq_buf_str(struct seq_buf *s)
+> 	{
+> 		if (WARN_ON(s->size == 0))
+> 			return "";
+> 
+> 		if (seq_buf_buffer_left(s))
+> 			s->buffer[s->len] = 0;
+> 		else
+> 			s->buffer[s->size - 1] = 0;
+> 
+> 		return s->buffer;
+> 	}
+> 
+> The first check is fine (we don't trigger the WARN_ON()).
+> seq_buf_buffer_left(s) will return 0 (it returns 's->size - s->len').
+> This means we'll execute the second branch.  That branch will result in
+> overwriting the third byte with a '\0', without reporting the overflow.
 
-This implements DECLARE_SEQ_BUF() in a way that is independent of the
-members of the structure.
+Yes, Kees and I already discussed this:
 
-This will allow transitioning to a different implementation of seq_buf
-which uses pointers instead of sizes, on which I plan to work soon.
+  https://lore.kernel.org/all/20261016145928.16eddc9a@gandalf.local.home/
 
-The compiler should be able to optimize this out and produce the same
-code as before.
-
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Alejandro Colomar <alx@kernel.org>
----
-
-Hi Steve, Kees,
-
-This is a patch that I could split from the rewrite using pointers, so
-we can apply it earlier to reduce the later diff.
-
-I've built a kernel with 'allmodconfig' to check that it's okay.
-
-The reason I need this patch is that we can't calculate the end pointer
-of the compound literal without passing it to a function.  If you want
-me to hold this patch and send it together with the rest of the rewrite,
-I can also do that, but I thought this might be useful by itself.
-
-
-Have a lovely night!
-Alex
-
-
- include/linux/seq_buf.h | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index 9f2839e73f8a..facc5643c049 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -25,10 +25,7 @@ struct seq_buf {
- };
-=20
- #define DECLARE_SEQ_BUF(NAME, SIZE)			\
--	struct seq_buf NAME =3D {				\
--		.buffer =3D (char[SIZE]) { 0 },		\
--		.size =3D SIZE,				\
--	}
-+	struct seq_buf NAME =3D seq_buf_create((char[SIZE]){0}, SIZE)
-=20
- static inline void seq_buf_clear(struct seq_buf *s)
- {
-@@ -45,6 +42,15 @@ seq_buf_init(struct seq_buf *s, char *buf, unsigned int =
-size)
- 	seq_buf_clear(s);
- }
-=20
-+static inline struct seq_buf
-+seq_buf_create(char *buf, unsigned int size)
-+{
-+	struct seq_buf  s;
-+
-+	seq_buf_init(&s, buf, size);
-+	return s;
-+}
-+
- /*
-  * seq_buf have a buffer that might overflow. When this happens
-  * len is set to be greater than size.
-
-Range-diff against v0:
--:  ------------ > 1:  9bda534b33f0 seq_buf: Add seq_buf_create() to implem=
-ent DECLARE_SEQ_BUF()
---=20
-2.55.0
-
-
---l3auz4orrhlq6fmg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrigvwACgkQ64mZXMKQ
-wqmPWw/8CgyFgH4NJyXHQEUKxHQxVr7YCj9jsNsbCqCKJL7ej8r6GHNl7sflMwxl
-MkFw6lgDZ4AjBE9CL0euLYTj0+Bhff/Jb0/8axSOynT/xH7RZ0TXF+72evWQTyCM
-wWJnRqaD9WTK/AKlJ1Ya0uYFIcSqTmJBuDhMpAuCCzcbV8zuMbAlTvciz7ENZVG+
-H9ZRWKoySx228E2GS7Rtld7z41UNVVqGzrNskTxLmSZ9/Y9F8d6MWrCKjIQU6neB
-ozJVag7lD6v67kgA30YWTmGJICvNVPKqWF2OIA3Rve9uUf5rUbJzDLsIvbOvP8X/
-nS4PYAKomtmDGC9Dhl3nbaU78C5pXd9epYGkgXIb9FcyF2oP4p1Gk/ORidvT2ZgP
-AARhRVq9Ky51ot+26QRV4uD5KkNvUHxcdbhpLxBVmfGYzu+KOgMKD5/lhc7/Mqo7
-L5MVj5eFa7h+XToJ/1y6EIW2SsytZd3jvJm8K63k7F6sSa6os3RWP4uqOXQP77lN
-CxZ0AxFyviPWKGScLFX8hWHb7fvriUkGjo92GZzwmTpN8w/s3FaXMfGpbOC75zvN
-QzyzYBw/oO6umOWGe0e001tAYeGQ3vPU8sJpsMQnQLiKIQNffd5a+JcNp6GVNSG0
-7aOZPnGIaTgufMg7FCE+G7KuapS7bLgR8YP7U5vTuFl2vtSvm7w=
-=K/wX
------END PGP SIGNATURE-----
-
---l3auz4orrhlq6fmg--
+-- Steve
