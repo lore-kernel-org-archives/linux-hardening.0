@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793254033;
-	b=a/+pSmjNJEM0Wx4ZsnrHftnZGPWyu3OwSIm0Q2s+74nXfhum7R+Sqphs9vx11nH+x4B6
-	 gmS0UK0slo7/CXkAcdMJ0x60PeKBenRLO/otqvoXJWGCjc2/bvU7D84Ysojkqydjfthte
-	 uRJHp/oaZ+BHv1sjegz2gvExTPmeo1BBQ6NmtaVyUrzCtExAitkqnoxCNARD8PJjmTe/N
-	 fxjthV3pMDIH+5w2BWSiA86gaCHQzjb6KcSqAmPPv7dPSEW/zCu84I2s8e0Mcq32kGzBg
-	 XG0idbXo4f3A6PvUBC6GwLrFA2VrwYoeRW5dscp2+J3x6FcqEXSUD1w+HH9P8r4m4gQ==
+	t=1793254050;
+	b=wLfcZUxEZTyoeqksayIawAHNyGSco0zPAJQdfaTEpJYzM95ygOb3gy6op0uTDZzlEddi
+	 y627F7rUkjHx5HYvxrCLfY2RFHkNzoPfUCwhUAvCwOer0wRrmkzZHfhqZUEjGgRKIFkOn
+	 MTirnMMQHQgbPbXnu+thC3UWhhsZJhJjpfqp38dFtIZe/N5juWfAt+LbMSrykW+fMGJrL
+	 R8Brb2Rso5z/JVzOWMqYajWY2+zATdtlfQwdiSij32JEFV4WaD6CRlsHRG7WrKDCXoZY7
+	 HR0vaXPqngJQwyirCNohwGeAYyu7JbA5kkVq9JWn8sR/Xceck7ctPfOZD6lGgXwxKDA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793254033;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793254050;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:User-Agent;
-	bh=UNSxvxACDv6rV+hh5v7KUi83+vs01nWTUXRQ2PYQNxU=;
-	b=i9/NrVZbzWceVV7Ltqhdvb6gJM3+DEBlkJTGD0/dLzHcCNS4lEs/vTp+t5MkhIu8X1iE
-	 VW94wb1w8Jr7ti+9hpCV66Tk5S89G8OLS34X495fU4U2rjogf/pBrYgd6gaQvF7Eex3P4
-	 367cp53nz3/Y/NJpW56UJEM/7kGbIsEPfHEcgUxD75n1lf2FaGXzn2Gb70eKArp3JZ4do
-	 aqYEyaW1tAh7U1D3MgrD2QTyHNhOmNh5aUodgXmGdbaXfjxnnhEfE9Rqa/czLXTKvioZo
-	 M1Bkc2U3FdDOkS/LnkMTyXq3qe6XiCCwU3Ij4fyrwWZPnDzDXAHMSRDZzms11JnkLaw==
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To:User-Agent;
+	bh=hEvr/hVOQ19MxZAsJUGrC+tPSerEFjUvPXYsJLofEYw=;
+	b=WQwftfw4B9It0cURChEkN1gay0SdeHKDpfM4mXGMMbyi+RhIuTApYcFNGo9zx3xVp3MU
+	 cn3Ws8TOIw4rJA4fQ0/vpyHY0nPKNxAjatMfRSzGkoJ6nt5iKRMFgOd3h3qVVU3jZHfjv
+	 H/yNAoKMXMVK9F3KSK52QBXTQVOM2BhfyqIRskT2e56bSFx5il/MyClwooAyoeyHxheLq
+	 TlW/pGYmnjor2Zpde7errFED8DhEav5liJsa2uimHnSS/HhOYElkd/Tj1LUf7NN78FhlN
+	 VwFd4cFOstSKYHclW9wiWWd2v2z2fJP6SfFjgwlkohgcSkyamKvM2TTeEGRhmeBZljA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=chrisdown.name;
 	spf=pass smtp.mailfrom=chrisdown.name;
-	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b="ho8P/1C5";
-	arc=none smtp.remote-ip=209.85.214.173
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=wKCE9Rr2;
+	arc=none smtp.remote-ip=209.85.214.172
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A15606A31E
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Oct 2026 06:07:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06A15606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC26606A31D
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Oct 2026 06:07:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EEC26606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=ho8P/1C5
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2e5fb79ce82so10998165ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 23:07:12 -0700 (PDT)
+	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=wKCE9Rr2
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2e5fb79ce82so10999395ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Oct 2026 23:07:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google; t=1793254032; x=1793858832; darn=vger.kernel.org;
-        h=user-agent:content-disposition:content-type:mime-version:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=UNSxvxACDv6rV+hh5v7KUi83+vs01nWTUXRQ2PYQNxU=;
-        b=ho8P/1C58VDquswjb3GmuApdin+fY+YgGO7SBCZ/wPMbXdQrudpzDuUrJH4S6ZUrvR
-         T+OrvnuItCtqAf9/RUcf12PyjpkM12hnNS1Uv8BrIkA1VkPRwhFjpCW1PEJNrcsRQyCj
-         2zfDeWx/VJ8ci2CjCPmBrruNDmJ1NV5pvIeRc=
+        d=chrisdown.name; s=google; t=1793254049; x=1793858849; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:content-type
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=hEvr/hVOQ19MxZAsJUGrC+tPSerEFjUvPXYsJLofEYw=;
+        b=wKCE9Rr2pHlg9Iej+EfB+fHQaFD30y8Iu8WDDxhTeJdE6aGYQr15Q+KLHymc6gwlN6
+         vnUYvr5t+AMhOlR3QljtofN6FTegQofX5SyEouR6+99oQOyuIqA9sl/VpQcNHMItuuP5
+         mT9VUR9wnudDopJMD8QrpR63eOQSWHSbUp90w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793254032; x=1793858832;
-        h=user-agent:content-disposition:content-type:mime-version:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=UNSxvxACDv6rV+hh5v7KUi83+vs01nWTUXRQ2PYQNxU=;
-        b=EqtESIQNgCw71fdn0sCasttb6UplpT0M8kRuTuOSl2WH+Tw63ef+4r1FIgh8eSexpK
-         Y4Ec4p0rP58ic9Uwg32sQFtxKdJ1g232Gch/8Q2BIWaFEyk6MSUqX+PL+pR1eB4cJloy
-         JfPLuAn/YqwwSbqorL0ms2nh6Mlrxd0dzsVKkyjXa8i/zpTF+slosOf8Cwn1PAadK+xj
-         3iplw0a55mlvekhI2Fu8qoP5GVlY3Wqv3oXMWY2U9FfAcRWF/pEuWp8UF58nMWGB96fO
-         XjaJ1CgfJ1B0Zv9n5i1jjhOZWpdsHPkDNU2uy1a1iCZQMJBLovaCRv3AbT6+wUuKzSdJ
-         JNWA==
-X-Forwarded-Encrypted: i=1; AKwUvBybLuwndznKlonzVp+PciPb3gM9egryXdRikgVF6nWZ4v1OT8nBtO5I5nCbE9o9o7MNEu5G4R9/6E2P+2z+A3I=@vger.kernel.org
-X-Gm-Message-State: AFq9FYI3RJP+G0xEnWYwhp1uCCNK2TnLPH+sM/+c2nrjc5WvSO3Ap1eR
-	O3rpNxMMCnerzj5XxK7TdkEDN3cypEl3mOKq3bM7MkzWHiDfEqavDWCNyppibzZWb68=
-X-Gm-Gg: AYBFou3YKM7Mdpp7K6zi/LWOh0ZjQ/W4V2f7HrkkR2E52CZ/hMJrHr5vyO70TQ3lAtw
-	Kyr6OsuUeoBqUSiEp1kTvKXXlBL4cJ/OpD9x9HHHILYatuGF0j167SeKhdSNfLkWs36h42Gjwkq
-	HwOgoOf6X7w12iw3wrAycsGUAfaIrn/ZozIJwOCNE4xypUFB5MNmfUKXTINdLZrym5ZRxXDmwjJ
-	KNyw3/OoaimQBBlbkz7X+ziRMdvOwERo1GhcLF5fZCfJlFSP2tfgoK5d7wOc6YfkZolnne2jpNr
-	5iSSFn5OyLCTzh6GnfNQDtN8oGNKA1G5iJ00J2CWmbMSCIAuFT4CIAIGCuFUAqtHrexpYFNUoYi
-	B76K5ia1dTDn4JV5KaXZAx7xdIkoe23zq35UV5zBADgVNVHK4FvDUA4OaxybheASnwuFcuhMy31
-	jpuIiDIv71c07VIonphAKbWF67YJ/ZdRgvUVRoi85uf1hq2Toou8lRcgeYv5UdCZ8aWFlMxpU6+
-	0iqctqNSdD4WwmCdE9q+jgxdrtfqqnalMVVRp+rfEML4LCQbJrChcvRuOwpFzXQRcYkUXUhOEhh
-	Tbh+4kslbu5ardfaL9996fDs8i5zliOQd6NJBrovQHrP8FV9fMq1OUeYQAjOzTHMtt3laSLH+lb
-	fIhs1GMzR2b+ZFY2csF0tCVkiSVFmZoEgNAQNYdHAML/4RPgH5QVHKnPcJPBpXed0SNRZ/zyvsA
-	==
-X-Received: by 2002:a17:902:fc87:b0:2e2:b7b8:abc5 with SMTP id d9443c01a7336-2eb0038e312mr41423305ad.32.1793254032255;
-        Wed, 28 Oct 2026 23:07:12 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1793254049; x=1793858849;
+        h=user-agent:in-reply-to:content-disposition:content-type
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=hEvr/hVOQ19MxZAsJUGrC+tPSerEFjUvPXYsJLofEYw=;
+        b=nQ/vNlOIIbLEm6lquTlg2yit/nDwPif29HyCWHLsTqUrA/v5HbME8xA8gZiu41Xbrx
+         Xjwo9f4N24Fex5JV6A9RyBJrynFAKtGQPHXRd+UgdU8fUoKHY6WDGHOI257RnzIWHqNe
+         O+UpTwUcgw7W1IOa9cwWZbrmnD55xrVW3WvvwvkG+ykHo7XNR/sFW+5oJf8oWx1TAmVi
+         iXxoBtQsrZ+tHCBJYwM30Q6W+VzFON780pNyYpUm/rNxRQArINfKnbplLGli6USc1yhx
+         NOoSb/KyBHfgVc7W5BjntuD/mOZvvfUUdvUN/3PGE2bqVte6xTGeaCF5iYqAUAyXTXqo
+         AxiA==
+X-Forwarded-Encrypted: i=1; AKwUvBw1p/Q0gDHukOT29MUWvnRKSkUqQWg7ctQ35Vbd5PS32n4pHNTY2qgW7034q8Bb9BMsqLUBr1WzNsOpflgPBvA=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLxWyZStxyOVKLibVv4Zy/960XfFv+1Y3UUE4pEtTZm84msaadm
+	lhEBwc+KHF7WYMplYLklgQVLa5anIPh+fhTJB6cu4WZmoVkFH3WJ1LK/qtuh2ti+Vl4=
+X-Gm-Gg: AYBFou0su7QCpJxr/QqGvCaweDB57XvCTXZI08n2obLd7wtQIrfxQZGctBjK1aaRG1v
+	YdyDDBaaj4FVe0Vaql2BljJo/WDw/71NHywvBNu4cqwQL9s8q2vfWKl55n//tT4kuzeUDSUlqq2
+	LdoUqkF76mI7TBEJXYF96vPXIDK1UjDldk3s30fcBTYM/Vipi6iVyo7M/YxuHatPqJcuvTIdPao
+	+Hy393uTWOtxhUfpnQ8To8hAGiuy59O3K9diHDDMW+00ELFqGBat/r6aiZnBalk8eWEgVwKqzyh
+	a4IVLeouRjHJSi1jBBZO/GwjMg9FN/+2oU0pgTX6quNqlihl6m1h8eVXZeJedyU9i4fHfDJkUk/
+	7+TzEMkMzinv3UfJst8SRsErKXPhMyTpNPY6p9rCsDlIOB55LxoewNFr2JRbYEaLD4g/QVXlXM0
+	/rAT20BfqHgBd9WUn38Yp0e2pV+OeGgPaevgkaoq3u/6kSXdobZFqv9UTaxuNQimfvUhktJ5/uT
+	skf24o7hmLHhG+B7rwq1lSfdEqtNUjYCMuXDstjZxkhN1kosT42EKyBFX29t2XMl1OOWQUi9SLr
+	j+c70GnNDeg6zJlL0BK4DsyjtNWpxHZJ6YL0Frz9BO3kfUSCpCJfZjHUwUhN1dNlac9HVPa36/1
+	Q9JqVnDT4BDe9LIuK83MKpLZ/y61dP9SZnGD/LNJbZCDkVRJEcj5Cv/pzGawmIaMgWXggnS0C
+X-Received: by 2002:a17:902:e545:b0:2e8:2d05:9780 with SMTP id d9443c01a7336-2eb0005dca5mr43806985ad.8.1793254049153;
+        Wed, 28 Oct 2026 23:07:29 -0700 (PDT)
 Received: from localhost ([116.86.153.182])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae64549dfsm29271725ad.4.2026.10.28.23.07.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2eae6b79ce2sm28521545ad.21.2026.10.28.23.07.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 23:07:11 -0700 (PDT)
-Date: Thu, 29 Oct 2026 14:07:06 +0800
+        Wed, 28 Oct 2026 23:07:28 -0700 (PDT)
+Date: Thu, 29 Oct 2026 14:07:22 +0800
 From: Chris Down <chris@chrisdown.name>
 To: Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
@@ -89,9 +89,9 @@ Cc: Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
 	Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
 	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: [PATCH v2 0/6] mm/slab: Support selecting slab hardening features at
- boot
-Message-ID: <cover.1793253633.git.chris@chrisdown.name>
+Subject: [PATCH v2 1/6] mm/slab: Enable SLAB_FREELIST_HARDENED by default
+Message-ID: <2ba9dc862607d70050bbc86fce0091de2e23c023.1793253633.git.chris@chrisdown.name>
+References: <cover.1793253633.git.chris@chrisdown.name>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -103,57 +103,38 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1793253633.git.chris@chrisdown.name>
 User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 
-Slab hardening settings are currently all build time choices. This means
-that, unfortunately, hosts with different requirements end up needing
-separate kernel images. At Meta, for example, some hosts are built with
-these options and the rest of the fleet isn't, and that's one of the
-things that keeps those kernels apart.
+SLAB_FREELIST_HARDENED obfuscates the free pointers stored in free
+objects, and catches naive double frees and frees to the wrong cache.
+Most distros already enable it, and with sheaves its cost is small,
+since the per-cpu fast paths don't touch freelists. Measurements also
+show this quite clearly [1][2].
 
-Following the discussion on v1, this series now does two things:
+So let's just enable it by default. SLAB_BUCKETS defaults to
+SLAB_FREELIST_HARDENED, so it's now enabled by default too.
 
-- SLAB_FREELIST_HARDENED and SLAB_FREELIST_RANDOM are cheap enough with
-  sheaves that it makes more sense to just enable them by default than
-  to make them switchable. With both on, system level benchmarks didn't
-  change measurably, only slowpath heavy microbenchmarks did [1].
+Link: https://lore.kernel.org/all/auITixAJMfLtfa7i@chrisdown.name/ [1]
+Link: https://lore.kernel.org/all/179312451613.474906.1475329637924619088@kernel.org/ [2]
+Suggested-by: Vlastimil Babka <vbabka@kernel.org>
+Signed-off-by: Chris Down <chris@chrisdown.name>
+---
+ mm/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-- SLAB_BUCKETS and KMALLOC_PARTITION_CACHES cost memory (Harry measured
-  about 1 MiB and 18 MiB respectively after boot on a 64 CPU VM [2]), so
-  they get slab_buckets= and kmalloc_partition= boot parameters, which
-  default to on when the option is built in.
-
-Changes in v2:
-- Make SLAB_FREELIST_HARDENED and SLAB_FREELIST_RANDOM default y instead
-  of adding boot parameters for them (Vlastimil).
-- Skip the memdup_user() part of the slab_buckets test on !MMU
-  (Sashiko).
-- Keep slab_buckets= and kmalloc_partition= separate for now. We can
-  discuss whether to merge them into slab_hardening= or similar, as
-  Harry suggested.
-
-v1: https://lore.kernel.org/r/cover.1793086056.git.chris@chrisdown.name
-
-[1] https://lore.kernel.org/r/auITixAJMfLtfa7i@chrisdown.name
-[2] https://lore.kernel.org/r/179312451613.474906.1475329637924619088@kernel.org
-
-Chris Down (6):
-  mm/slab: Enable SLAB_FREELIST_HARDENED by default
-  mm/slab: Enable SLAB_FREELIST_RANDOM by default
-  mm/slab: Support disabling SLAB_BUCKETS at boot
-  slub_kunit: Add a test for the slab_buckets boot parameter
-  mm/slab: Support disabling KMALLOC_PARTITION_CACHES at boot
-  slub_kunit: Add a test for the kmalloc_partition boot parameter
-
- .../admin-guide/kernel-parameters.txt         | 15 ++++
- lib/tests/slub_kunit.c                        | 87 +++++++++++++++++++
- mm/Kconfig                                    | 11 +++
- mm/slab.h                                     |  8 ++
- mm/slab_common.c                              | 48 ++++++++--
- 5 files changed, 163 insertions(+), 6 deletions(-)
-
-
-base-commit: d15d7703166daf7bd62c844a3cb1b3a6279adb4c
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 604c58199acb..17d017e8fbef 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -208,6 +208,7 @@ config SLAB_FREELIST_RANDOM
+ config SLAB_FREELIST_HARDENED
+ 	bool "Harden slab freelist metadata"
+ 	depends on !SLUB_TINY
++	default y
+ 	help
+ 	  Many kernel heap attacks try to target slab cache metadata and
+ 	  other infrastructure. This options makes minor performance
 -- 
 2.54.0
 
