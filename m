@@ -1,77 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793385049;
-	b=muapRm1UW6usFltoQwhRp7mwjbhYI2PqH9JVzR+N9NeD3ElpH+uZY1cmRox4MN0IHaen
-	 k1kzBTDRKKy1yKU3E3u55N7SzFiH5UU2zQnhxdnJWq2FEfH3dLEp3GR2EBbKQkxwHug2I
-	 U71KWOHHLaRyl5kr/LlzHrluW1Om41UiOFFttKv9jvhbgUPYVhVkZG39B9bexVPRxTQVu
-	 RcXY07HMeKOM0q30lZPiFAIOriEfD25TZqMD6lda1dqTmuiwQV61qHA5jCwGpm3EuRSlY
-	 OU6pixBy7NFZ5590DfSaNBit7BSo6IfsV6ezd8vWWxAOKiiXUJr6+zF4JY+iTm4Zl3Q==
+	t=1793387204;
+	b=mN2H+XNNbQqde+VvT7MUietKkHW3Q6QUi+5kqGI1Vrb9x3clh9GYl29aUnD94anLqgEa
+	 S5VED8LcGJYAvEO7hmYN86oPeDdiRpVnKcWxvyhwweY6pkJ4HQZTh/ULU/LBD6pKGmQCX
+	 iY7HJepcI/rvORl7e56eN5Gd+mx2zDPm6UNGDzNybv9yjBOsdHADqXIR3j28HIPLiUPjr
+	 BzgB0CDUJESFinYqwDrJa0qp+F23nqB1Eo6VHAjLQeUwK8tcVTjlQ1HmVcZJemGAv/ukS
+	 /60jNE6IFXqPWx2w1M8db5YHShw+ss0r8P1iB86GhlNbEt5/SdwUGMY2ON110y7oLDw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793385049;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793387204;
+	h=Received:DKIM-Signature:Date:From:To:List-Id:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Ymmdwc5PEMgv61WbZEAXoHrjiG+5VIZ10E632soWGCc=;
-	b=e7SAedFEReOX8ABSAKdqb1d4tlqabu7d1pbog9qTO9PMrmgbJutX7co64P3v/9yhO21g
-	 q9D4b2adVXHFzDdWpCURYuadmtza5A6hEYlquG2SzXGCQZbFzM3IiktiAHGLp6p9BOAds
-	 j2dRwqWAomvy0nd/+ivbY6H143ilBFlodeYqH3+UcHNgx4EMGcGCf/fZeXY1hld4N1Sdt
-	 6wjoQCttZJD8CX4suqI5RMKIdDUZdB4s4L7vvgux6icn2gqwT2mMKe8eMztSadwyphvtk
-	 oiWS0fxMnBhopr//51N85kUYauyGDd3Z3shLXEhzvTWSNB9iZvgZPjY3GkFbVsjwuNg==
+	bh=igS9NIjqOfUuXPFoRBs4EfzR/DCNQe96++qaiu7rMb4=;
+	b=3Vz7wsBMG7d/64z8HY5OaZ0rnX2EuHoQ7POKnn6M1NPcm4wpKyqS1+/N4Y77qRwd7jVc
+	 mXV9vx2xtmoWJ7s397p6BJ8e2iHoL+UIli2E4Bhwr08vz02f+t31JldJhpNw7nJeRAZSS
+	 0rG1oV47Exl42kelLtYqPAKgqDnlWK79miNZ8rvWtgFxuaFbsRlKRuiGNBi1xslibl6sp
+	 Y0dyMcXxeXl/5bcIbOv3TLHtkju92NNbo1jYlNZLVT0lReHLfovJ+rWQSkwlapyjTPZkI
+	 ezyT1rR6wTkjRmQCj7e8PQ8HO0dp5jB62H0ctpTcyyff5nEfCr3qGxJ7K1OF6Lc19Zg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bd5mnlMY;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QfSY0Ojr;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CC2606A31A;
-	Fri, 30 Oct 2026 18:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C73606A31A;
+	Fri, 30 Oct 2026 19:06:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bd5mnlMY
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 365561F000C1;
-	Fri, 30 Oct 2026 18:30:48 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QfSY0Ojr
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E15A1F0093A;
+	Fri, 30 Oct 2026 19:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793385048;
-	bh=Ymmdwc5PEMgv61WbZEAXoHrjiG+5VIZ10E632soWGCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bd5mnlMYQl798ipBazvCyuBvEJ+dWQPwsnUhVWLaW7b1vz5ZxxwwDFJAXipNxVYkZ
-	 1YMHg32fNUCuoVzm2HCBW3ov7kG+JMaBOx03FaMytt2PrrA5GHA2Tvi5hKn/EfloYP
-	 2beONBCAOHLRlOst0mi76+aNgfLm6mIii3Lr5Fvstx8lw6wGj/SrTAbdVuY0LzPwAU
-	 bCJanwYpvATD+HqFWKlmHWzxbYzpj5FiFEot/sqUcaxCu2/PrJulmkzTYLC6de+Ext
-	 aaZWpT6UFdWy/d0gaseRtXTvi4oQtl70vUfG4Wb6sIpH14qDGlI1q3EhfXbEG7UOrn
-	 +aykTDKlAEfuQ==
-Date: Fri, 30 Oct 2026 11:30:48 -0700
+	s=k20260515; t=1793387203;
+	bh=igS9NIjqOfUuXPFoRBs4EfzR/DCNQe96++qaiu7rMb4=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To;
+	b=QfSY0Ojr0sFQ1mFwZ2i26Xl2HA22T+mXqL3M25S7YrxJpnAO2ggABcqyFicaxFtL5
+	 JupaOvol2LGHtrNAcjAbAhcq91KVQmaS/CCPOrbZ0e5KvqhGAzywTXEkm+1FwqFHS1
+	 dY7rMdcWR8gafaSOh6UPVCS2hX5A9QurMlS0vibQ/WPpBajdhAj1uQ9DBm6DhCqpb/
+	 QKMW/5nB2hoboY9GTQmkknjL0kjc1UzBjEw2f1urX7xORD0kXXNKDwkqnr0jmDAFdr
+	 lze/2kkPdbL69MzdXIFExw7KId6jkHEKMAtjkywVenlRlUGWqdnVt4gzQF7X/YdzHe
+	 wQ8ZxxFX7aCiQ==
+Date: Fri, 30 Oct 2026 12:06:43 -0700
 From: Kees Cook <kees@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Zhongqiu Han <zhongqiu.han@oss.qualcomm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, driver-core@lists.linux.dev,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-	linux-s390@vger.kernel.org, gfs2@lists.linux.dev,
-	xen-devel@lists.xenproject.org, linux-mtd@lists.infradead.org,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alejandro Colomar <alx+linux-hardening@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bill Wendling <morbo@google.com>, Petr Mladek <pmladek@suse.com>,
 	Randy Dunlap <rdunlap@infradead.org>,
-	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 1/9] Compiler Attributes: Add __must_init macro
-Message-ID: <202610301130.FEF31E7F@keescook>
-References: <20261027223847.652884-1-irogers@google.com>
- <20261027223847.652884-2-irogers@google.com>
- <202610281155.4D2AA663@keescook>
- <20261028190233.GA669046@ax162>
+	Shuvam Pandey <shuvampandey1@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] seq_buf: Mark a seq_buf overflowed when terminating it
+ loses a byte
+Message-ID: <202610301206.5E80A3396A@keescook>
+References: <20261029053250.i.220-kees@kernel.org>
+ <auMwo_T_FsZp5UsB@devuan>
+ <20261029091845.21464a1a@gandalf.local.home>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -83,24 +65,13 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261028190233.GA669046@ax162>
+In-Reply-To: <20261029091845.21464a1a@gandalf.local.home>
 
-On Wed, Oct 28, 2026 at 12:02:33PM -0700, Nathan Chancellor wrote:
-> On Wed, Oct 28, 2026 at 11:56:08AM -0700, Kees Cook wrote:
-> > On Tue, Oct 27, 2026 at 03:38:36PM -0700, Ian Rogers wrote:
-> > > Note that Clang does not yet diagnose file-scope objects declared
-> > > without any initializer (initializers at file scope that omit the field
-> > > are diagnosed), see https://github.com/llvm/llvm-project/issues/232483.
-> ...
-> > As part of this, can you open a Clang bug for the lack of detecting
-> > global initializers? It'd be nice to get that fixed.
-> 
-> Is that this linked issue or a different one? Looks like you filed that
-> one and it got fixed in clang ToT about a week ago:
-> 
->   https://github.com/llvm/llvm-project/commit/58936cb3678b4b5b96177f24cac3940b9a389fe3
+On Thu, Oct 29, 2026 at 09:18:45AM -0400, Steven Rostedt wrote:
+> Hmm, I was thinking that this should first check if the string is already
+> terminated with a nul byte. Why add another one if it is?
 
-Oh! Hah, it moved so fast I missed it. Great!
+Oh, ew, yes. Fixing...
 
 -- 
 Kees Cook
