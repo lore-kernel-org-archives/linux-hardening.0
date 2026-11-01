@@ -1,45 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793466748;
-	b=pQ+0xPV+6kIxWdQqRR1lBqXOMw63PYK1IIJFf3DL8h000aO478WUqUBIQbAa6I1UHw8N
-	 X/iGEf70G5nC1NXIYM7h7yEnojVSdV3CoOX0m3GNRL4WcqX9Qtp7gVF6w0wRtiwCdK95r
-	 zxHFKD/9RcDg84es9fB5NJHLF4K+tdGjUzxyr0M2Xd6Y/wym1hHwkRY2Rcd0tbdtv6ZWr
-	 JA5zyCTwcmxnZSTanTzMxZp1/ytKr+agaAcsZwc8Cs/j0hS0fh09N2TdOPViIH1sIi9nJ
-	 kuOwaXfxsL94dqkvdJrvkqV4nKLTtPk2FZ5TZ795uLCX4odGmvXzznFX1wBaOAnQGwg==
+	t=1793558058;
+	b=An8R8w/80Wd3XUJYDjje3FY1sGimHRJnC2jF7+jlhcrAq6lK487IMwS0Gu8WXxq7tnuv
+	 hwZtYfMIHfFs0rJm9PR1HwQBCYvcNBbNt0fPD6lAxhj8qzX8hqSDc0k7R+QFWzAoSqtIs
+	 POaDnLfU514ItG2QSFiWg6D5JYTwMO4ZQNQo2W9hUocX3aMQ0Z/35/w7F17N8Nn5YNe/y
+	 iHQfw29Mrs4/7+OFxpn3pwXnXFY+8VZGM+auRtxy0awzsTgiHhVQAvc4f15iBuggjBLLh
+	 hrLFz4IK2tz1q8XDKxpmwb8n2vYqSNQO/blUP8VbVs6CapTh089N8/1XJuGTl8zLGCw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793466748;
-	h=Received:DKIM-Signature:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:References:
-	 Date:Message-Id:X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=GMNH5PJ1zs7wQCaXmS01TMbB9K7ZhNKKB1ihknjVnC8=;
-	b=eBiVT09DZftykgE8BmTxoEUVFBtjfoYFFycALpqEWth8aUgI4tmaB7WFZiuabLKN6wSx
-	 YXvraiaYTvdKpK0CKHZRstmLYtlp7ylnkhp6FEGJUYe7pXUVDkCoUmxHPgh5uGG2CnZPZ
-	 7eqyUDxsArkFVEFtDM/StUGgaC9fi/La+5oKadpa4+G7Ud0lCEKxvO82LeGy5AtPBuJg0
-	 EESNxwZwU6bS5tr+559VjzO4RjhqqS6bmmxfqMg4WUK4sXZHsdde5iojb+RqT5tYSs8HS
-	 R1gimcm4XSPs5mw8iD5fzBIR3fP09MXDZ2cLZ1Nu2kZxYsZUjax5CVvVeXTYHVKSCuw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793558058;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=vmoWTKpodF0sixBD3Bte4QbXRriDHgbk+I5LKRP+ucY=;
+	b=C6qyaPcyBelSu81N2t8cXTTT0V+yGyEDK36IAUZ05GYVTzh1MYq8+JiZvrPBvPawElaH
+	 ukURYGFq4UTTtgOuUb5l/bQ+IrsqxtPqzjvHrZH4KfW4oevmQ0OlTNpCPq0/BmIAwMYJC
+	 yHxky11hJBD3NFGdqydXVYORJUD9RBHnLnTXYXQOxu+ufeN3vFXhe0c9FF3qS3EfJqJu3
+	 ked3MDf6n2/rNJdntLuKkOgUZsaRlQzL9ErhoaKzsLmfoyJ34iN8TmD8otycsadl5AbvH
+	 rW5cNzx6+5gMlatduF5egwC0SiTTnxitWeVcy5Gg7cO8uxPG8Evsb3JCz2IhtZPw/rA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BMaEYJnL;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LAqonWv4;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B30606A31C;
-	Sat, 31 Oct 2026 17:12:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562CD606A324;
+	Sun,  1 Nov 2026 18:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BMaEYJnL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A331F000C1;
-	Sat, 31 Oct 2026 17:12:23 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LAqonWv4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B1151F0093A;
+	Sun,  1 Nov 2026 18:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793466748;
-	bh=GMNH5PJ1zs7wQCaXmS01TMbB9K7ZhNKKB1ihknjVnC8=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=BMaEYJnLIefXDhMWLYdYrrhwXQE62rpfq3dGqj1AU5EeKwav4odEooNw18M8CdsEg
-	 DEGl4kyl//DaTlNwlg1VNv3NZiZFugdHqRvOYJP4ZvJVhFPIs5ZesfSmdB5joFsbpl
-	 wAs2WapbBCTDFiF0Ly6CveX03Vo9O7TlTeLLqqa5/bnMmPkLiTd8YTULcRV6A17LmJ
-	 GD1yJL0ak/fit75+ROYgl81226cPJPYG3jQxm40/lZRIRlUgJeD/90s4GscR1zcraz
-	 aTwjKCeDD6uR7R8S8FVYtzxBOtOIWnfxnjiz0gNdt/BP11sSUwujk1Dhuexz3rElJX
-	 Vcjr/0y9SvkUA==
+	s=k20260515; t=1793558057;
+	bh=vmoWTKpodF0sixBD3Bte4QbXRriDHgbk+I5LKRP+ucY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LAqonWv4/N7g4i3hDOfoLq0a6yhIonzlH+Zb8HBsVvhoBSBqQc0BfmHVwJl8U5NvW
+	 vwnoXAtWuGRsM8Xw1PSr/CKYtB/5G9nCURN2r3MqtGNwY3e2+Ul158+xhPz+BUlwL2
+	 1WIcm6iGrs5GaDSuSclgIo5mScesPMkN6gB1suDAf2gHTG3p3DOv+1V8a9fczc1J1h
+	 14NNfc39ZIRovlkXAKnv1cXgdBW0T1Im57YrzAfxGpT03PVwdyj+gC6+2lIS5IUObU
+	 9yLGCYakHYWK6SKULeUNa/dY6WWSDbF8cfSTT+XLYZTEqPJNMeWYz6ZN0T43YeSVKn
+	 pZzUfr8/Mh7FA==
+Date: Sun, 1 Nov 2026 18:34:15 +0000
+From: Harry Yoo <harry@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Chris Down <chris@chrisdown.name>, Vlastimil Babka <vbabka@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Marco Elver <elver@google.com>, GONG Ruiqi <gongruiqi@huaweicloud.com>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v2 3/6] mm/slab: Support disabling SLAB_BUCKETS at boot
+Message-ID: <aud4gPOUzvHtLYnJ@thinkstation>
+References: <cover.1793253633.git.chris@chrisdown.name>
+ <9a68a4d95830352ad3821437c2e22c30a673055b.1793253633.git.chris@chrisdown.name>
+ <202610302115.8C7AD110@keescook>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -49,47 +62,45 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3] phy: mediatek: tphy: simplify main allocation
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-phy@lists.infradead.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, 
- Vinod Koul <vkoul@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20261012173402.24568-1-rosenp@gmail.com>
-References: <20261012173402.24568-1-rosenp@gmail.com>
-Date: Sat, 31 Oct 2026 22:41:57 +0530
-Message-Id: <179346671702.7309.17461254006600303157.b4-reply@b4>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=398; i=mani@kernel.org;
- h=from:subject:message-id; bh=21ALoJZRF1WHs+ZZUeTM9Q1HsKMp63LeGtOBM/EVfUY=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBq5iFgeuOv1+eLZ12O13MSJlXCmdg89j4NckzP5
- UYGpyFFwNaJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCauYhYAAKCRBVnxHm/pHO
- 9UuHCACno9GivkxmGWGngNdtOGaQSYyvrb833t8/wh68gbuSJ1dIa5ReLAvEYO4lpDCA0wToCRM
- k44utPmmDO+2JxDg2MYNr9C+GIbto5pnYY5tNolcefbrnc1e1H2Z7yA9gOye0Ercntu9EO00sCL
- ZcKgNs35e7SYHzyGpGiuhkcOXH9HFv5aok0KTRRJ9ArHXZtjtPxqYk2Ia8S+twFddHii528/gnV
- nDLH/5sqEH6NIf5gFoGnyyDrLaxMj3XFsjNB37s0PIcuxZKTFHqfYpxjsBGW4M+IIw+WBWoD3Xd
- g7Aa8T2gx/abXj3uTO2Wx5bTy5EHhPn9kerkN7MRsELoWTfR
-X-Developer-Key: i=mani@kernel.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202610302115.8C7AD110@keescook>
 
-On 2026-10-12 10:34 -0700, Rosen Penev wrote:
-> Use a flexible array member to replace kzalloc + kcalloc with a single
-> kzalloc.
+A gentle ping to Kees to hear his thoughts on having a bit more
+coarse grained boot parameter e.g.) `slab_hardening=` to specify
+how much performance/memory is worth sacrificing for enhanced security.
+
+Quoting an email from [1], Harry Yoo wrote:
+> On Wed, Oct 28, 2026 at 11:27:37PM +0800, Chris Down wrote:
+> > Harry Yoo writes:
+> > > If we end up supporting boot-time parameters for hardening,
+> > > I think it should be all enabled (or disabled) by:
+> > > 
+> > >  slab_hardening=none|light|full
+> > >  # please feel free to suggest bertter names
+> > > 
+> > > none: "Turn of all of them to maximize performance"
+> > > 
+> > > light: "I'm willying to sacrifice _some_ memory and CPU for security"
+> > > 
+> > > full: "I'm willying to sacrifice more overhead for security
+> > >
+> > > IMHO more fine-grained knob for each feature doesn't make much sense.
+> >
+> > I think if we did the 4 knobs that is a good idea. Given now it's two, I
+> > think it seems reasonable to keep it as two separate knobs unless you
+> > object? Otherwise I think given it will only cover the latter two, it
+> > should be something like kmalloc_isolation= instead. Let me know what you
+> > think.
 > 
-> Shuffled some code around as __counted_by requires the counting variable
-> to be assigned before any array access.
+> There has been constant, steady efforts to add more and more hardening
+> features over the last decade. So I'd say slab_hardening= is more
+> future proof :-)
 > 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> Kees or Marco might have more insights on this.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+[1] https://lore.kernel.org/linux-mm/auIVIKxjrdXIaUIY@thinkstation
 
-- Mani
-
-
+-- 
+Cheers,
+Harry / Hyeonggon
