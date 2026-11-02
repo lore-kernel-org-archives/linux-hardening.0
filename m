@@ -1,130 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793652391;
-	b=RDzh3JUmpM4DnbgG2irEN8um3bj30CMfF4PWnQsHUxCoVkzDYlV0ib1wwSlEdiLrgiHz
-	 N0TLn0YzpPIE7oUxfzgUvJxUSrLkf+dUV+ub/cppiV3pVwG0GENCObBbVtuhOqmP515GA
-	 UQD67Q+O99Y5PFp9nZWG9pgu4Vrcut+Wss2tPzIecLXc7lhPDnWUDjJxICAr/0ikh9iMD
-	 KFwF4kdZmde8777Zq+ugT2Wm5HbyDZpdXadRezR8D71UgR1BUXYA0sI9ONpKPsBBAHzdX
-	 dvcGKflZyNb3H4oa0JSN50CdUxxcuwmwS1ZjibApWzmPLb8e3nuAKTN42yBAXrXrlBQ==
+	t=1793652799;
+	b=tCY8i8oumj53H7WEneOsJIREqjr0bfuw01yFtykxfzdy8EZ7jsSft6Dha5FSPgQs1g59
+	 PdZVWdfifREN+RxoeT/bVGho9GS48kbjX8DTAg4d04Js2wY2E2n3+eEbIgJnfv7br5SEu
+	 84b8TcAkrurdv32fvBjvni2wMU1NVVfjX3G/j3D1rxIntW2PjbZMnRZsCH2aeP2jgSYCa
+	 hak478yrRXMtWFm6h3IxzC0Xc5rZQXukSE7Ij6k5ahHqlOCHfAkQ25Y3QnBJoh1/Ju6aa
+	 ZAMoRahsivzi0YatY5ztKEgWwLjqSwzQ4qDAF0VIbDrY57lL2tZ39AlO7fAZmnyDNYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793652391;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
-	 Received:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=rIkyhrFM98T/vHO6RdFHgX5SpA5k8kK+utueYBru5u4=;
-	b=faHH6TyNlgrUiNPf/d+m3SKUyV6WTpTyAUYLHQ/RcrRkPg/26QPL6MCx8Gg0yrzwS013
-	 gA4iZxQwbV+w5hjFseXf12OVhEhneat4VQODgADyoJa8/BkdSYtTzFVkQC9sp8iVSS3td
-	 yiZzDeRr6Rbq50Y7nQL2U5Qwq6f4i9Sp00YDaJNFn2n1xevAR3xCRpbp5ga3Jlind+6rv
-	 CQqaS7XV9bUIfSuNavXDAunv6o7bFcOxF8/kbHHSvEc1PkeppZeTKr7Oe2Ax2HEcqXFzd
-	 fjkv76bcn82GOR4JmXpVuTWb3uG5CThqGkgaLOEZAiaNhe7Foc1v6FuZi7fNWInd9CQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793652799;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 X-Received:MIME-Version:References:In-Reply-To:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=117yBiLwKENKL+3PiWG/U5OMCVmGd5cgD5S+cpkVimE=;
+	b=BWYLhT7JwH851bmgrXbkCoBCwpI/m8uCinG9PCHFCxmkjnsgLxMArdxWG1n5cnO3i8sa
+	 UTbuM0C7wI5qEcc96VLIztYGhc4u7cpIJOuOmrIRrs72jcvD+frW/l8en6NyPUGR5Ax/Y
+	 g7hWYlgf66h8YP5rHhby+8YVvSwcNH8GCkW5SC591RyYJB7QSCGShWSjoRCSj7dHTErx1
+	 xhDthxrA0pE2XTUCb2dhbKny5nEqsP5WwVriM3UeH9fnefbNNbk6uLvXZiPhv5inUV0cb
+	 zKtsnOLteCQl9zcZrEq921PAecU7dmVxfaGUU7nGEMn5WdIw1fNE9ySk4awuHSK/jHQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=jannau.net;
-	spf=pass smtp.mailfrom=jannau.net;
-	dkim=pass header.d=jannau.net header.i=@jannau.net header.a=rsa-sha256 header.s=fm1 header.b=dEl4irC7;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b="hb/5GuHx";
-	arc=none smtp.remote-ip=103.168.172.155
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JrjqNRqP;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A55606A327
-	for <linux-hardening@vger.kernel.org>; Mon,  2 Nov 2026 20:46:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 54A55606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B37B606A327
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Nov 2026 20:53:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1B37B606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=jannau.net header.i=@jannau.net header.a=rsa-sha256 header.s=fm1 header.b=dEl4irC7;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=hb/5GuHx
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 741ED1400233
-	for <linux-hardening@vger.kernel.org>; Mon,  2 Nov 2026 15:46:29 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Mon, 02 Nov 2026 15:46:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1793652389; x=1793738789; bh=rIkyhrFM98
-	T/vHO6RdFHgX5SpA5k8kK+utueYBru5u4=; b=dEl4irC7E3FvWjeE0C3xyQtmm7
-	P97SKDgblnSCufI4yAIrH2SNZ5xaaIo6YCW+E+AJEbuzzc7bRRUiIGpmUkhNuQUX
-	lZtFyR9+qp/DbXkHR1NGndJOzqjuuqqTAkteUdlCOhMbLcJrbc+IWa7namxUd0dN
-	yRr+PLHRqmF5mSvYBnXwc8UNvduBVJ+hc41Bo576y/mQNagAFUc17txOtwmSJJ/3
-	ZbWg0AZdn8vHynHHx1zgr424czQVPHRmFsErftVuIL2gyYZro2/Z19Fdy6e1Ux++
-	f1k+Q+MzfQ2MkjTHJBle/Hxu4RBJT3qzZ3U5ih+y2xGtBdnuclQxQhtiOu/w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1793652389; x=1793738789; bh=rIkyhrFM98T/vHO6RdFHgX5SpA5k8kK+utu
-	eYBru5u4=; b=hb/5GuHx9arLWK/83a2O9c+5JIGOXLS+L9Zy66hbfAscUYqwOoc
-	VsYmG6DcF9HURay0Sf2hvm+jMKVEuvWAZUxYXo/RMdNjdBIm6d9f2VBzAA/oCUvw
-	SejtLGAK5+QR6C5sCcdRGnBqAZYDkql+XH/yiNBaqyFwfE4P01OYxWZoImi8UrYq
-	3or/ChFto1BBMGv8886tXleFNf43WbdWikhPnQra09z3klG2LCWXCj6N5SoLamOH
-	Gyx+X4lcNbb8X100yEeNOfGJ6dzIpAc6W7ucXj5T4dZCdLVNiAumdFhWzkCV8kyu
-	2tS0YPgDrqOeZwEwtX5g83eeSCvaImz0RxQ==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
-	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
-	action=sign d=jannau.net a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1793652389; d=jannau.net;
-	mf=PGpAamFubmF1Lm5ldD4=;
-	rt=PGxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmc+;
-	s=fm1:rsa-sha256:EUttCJrFZDV/oxY0tIAWwZLQ0fl27woZTUFgbbbjrLXCnf9
-	G3WU7stofwhAjPzpWmlObntAJ0PrAcHsK2JSzTHMRAqSl1WfsA0viR6EzNecEub1
-	2+Lr28HjjXo0YljhZ4p+KaZ5GyUTGorf4ytycwReJtq+9BdwHnCaTTQzZYHvBOmG
-	zhXm1/DDD9i17CyeKYGQzbM3QJI24bOsGCLZybh0oPH3GdmYtN3bGqy/Pden1DGY
-	govkNf8jkiI6Ty3PWR8zocUWSDwbp0DaGK1hORQDr/tp2TBjgX3ZRdUPeMugEBtX
-	K7dHBAr44YVkkuJ+7HDvVXbTs+T7gPBUn0WWkdA==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
-	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-disposition,content-type,date,feedback-id,from,
-	in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:5qtDy5+gC/134ujdEXJCgDet/gYQRgVF9N+5lkrmpMs=:Gn10J397k5HpCEWL0ZNgmvyOP2E7JV/sxhKi87f4cII=;
-X-ME-Sender: <xms:pfboamHfEo-EZXq2j3tTdktenK2LErO5dL3DKHi3BwrH-lNhDFCrfw>
-    <xme:pfboaml63A9VuyOdytu1CITv7hd_BmmEDM-qWijw280EDttU0JtwBIOUdsWtMGLNu
-    e7zwugBrTaE7cblC8uT2lI31BWMnryWV0xIspocqYhZ3_aaFvoPeacF>
-X-ME-Received: <xmr:pfboai9pBdhEG_OIqx-cDuypCSFrKX2hNzo856S1Vkgxx46ti-YmFYW16MZg-_hAaVRR0QaLIcInMxY_pQje_ZNM0NMvdn3RGXY>
-X-ME-Proxy-Cause: dmFkZTGf099nM2Uoe/+0Y+gh+ygQ0na0IsUtMAqk+PMxwzP2m8G9Q/hXN7oNPOeSqczmlP
-    GpkzUsJ06wZ8msVagoBN4R+93hsBSsBlJ1Mzsf42vFsKBRDuNEvQ/xrdRAqox3ElghD2xK
-    7E75Bgl/us+1sE3ayKnEWsGXBzJxOfXOLmcvkaqgfW7oOMKIZFEoJAsTcyIm27pC8tWWRg
-    vMw4lrmP9zxfk/yl0kVbQIOjqSqcjImNQKY2rPt/hBfr36bijDlsMpbo+Stu3NNd/S4gjY
-    uCKCg4lwJoIn45T0q6O9Xzvwq4TaNxaYnU+dkVnb3jF0Ptrpkj/ADHdCV79kFomBcL0xEI
-    3VK698brKMUkVzsMMpY7zaTUPx9Ehx2ZTdba2+qawwem/ILOdovw+qTHSJnD6c6nI5zBr6
-    Wb3y9K1X5dQyX5v2k9pLWssqDsHud3lCX5bfKPfjcKXw9gxJn+rJSRpJqf4r9eAG9/3lxF
-    8xv1wH1ng3nFJh/TMN+KHo11r3XXHHU4hlH0ntmPhWU8HekGodQFW5Fj+OXm3jEovUvqmD
-    01wpIf+qr659w2oiKf99rBNIxchbUZw1TF26Mk17DVxsP6NVeNfzk9uMLn/adtUc6hPnnA
-    y0FOYVqutYCh8BKc2Lct6LVjixtvhUkR6Fcz8VS4NmZwDQICL66/wRn48u3g
-X-ME-Proxy: <xmx:pfboanna8wzaIV8ebKY_qzXqC-knuQoxidBmRQmg9q3G7yunYoNylw>
-    <xmx:pfboagkE9SIh0sazd6KgHiEDC4mN-pFBp4unPM27i0VGmhQI--icdQ>
-    <xmx:pfboarscQmZJN9G-ta6XpR2emjQFZRHwKW7fNgIQhCButsziRSkW0w>
-    <xmx:pfboaqIkbp8Bc3ttYGfAYX58n479NGSxncc0hy9Cm29aD4p55-kDGA>
-    <xmx:pfboaogzj7z_G_h1QuQGbdxgrZjixRsIF6HwyO8sXoz9H17_gtrM1eUX>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 2 Nov 2026 15:46:28 -0500 (EST)
-Date: Mon, 2 Nov 2026 21:46:27 +0100
-From: Janne Grunau <j@jannau.net>
-To: Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: michael.reeves077@gmail.com,
-	Pieter-Paul Giesberts <pieterpg@broadcom.com>,
-	"Franky Lin (Zhenhui)" <frankyl@broadcom.com>,
-	Mathy Vanhoef <vanhoefm@gmail.com>, Kalle Valo <kvalo@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com, asahi@lists.linux.dev,
-	Hector Martin <marcan@marcan.st>,
-	Daniel Berlin <dberlin@dberlin.org>, linux-kernel@vger.kernel.org,
-	Hante Meuleman <meuleman@broadcom.com>,
-	linux-hardening@vger.kernel.org,
-	Peter Robinson <pbrobinson@gmail.com>,
-	Izabela Bakollari <ibakolla@redhat.com>
-Subject: Re: [PATCH 00/13] wifi: brcmfmac: Add BCM4388 support
-Message-ID: <20261102204627.GB770347@robin.jannau.net>
-References: <20260925-brcm4388-submit-v1-0-b5cbc2cde2fb@gmail.com>
- <d78cbbd2-601a-4cf1-800f-3be57a2b7de2@broadcom.com>
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JrjqNRqP
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1793652792;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=117yBiLwKENKL+3PiWG/U5OMCVmGd5cgD5S+cpkVimE=;
+	b=JrjqNRqP10lz+xwTaT1N5hOMraQMewbNcL6ZPtYs/6qBeMDZq5lyggz1hz5TUE2wvCqKwM
+	IXQbQRbVn/7mLpXXty1C0A86MwLFP717upzSrzHF5Nt1PiF43MqFrw00/Vf94oFs2+EMGE
+	o+EsfhfOm9/h5ijPwHR98WSryq3gxtk=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-687-YHYtSc-gMkaTIK7lpp9PPw-1; Mon, 02 Nov 2026 15:53:09 -0500
+X-MC-Unique: YHYtSc-gMkaTIK7lpp9PPw-1
+X-Mimecast-MFC-AGG-ID: YHYtSc-gMkaTIK7lpp9PPw_1793652788
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-3ab3fc6e459so290141fa.0
+        for <linux-hardening@vger.kernel.org>; Mon, 02 Nov 2026 12:53:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793652788; x=1794257588;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=117yBiLwKENKL+3PiWG/U5OMCVmGd5cgD5S+cpkVimE=;
+        b=BxnMR+z+Z9xoCxwwNbOIk8vajprZ8FSkX3vHI2c/xJo9wYRCuz7leeBg0JsRg7kgWg
+         kyxodCxgYlRUURlOOSQj5OsJtUCXGHm9ZqH0a0PQk/fvWDtJ+TZtRj80caBkAlY9lpB5
+         Z+cDe4U8QZZ/k3oIx3jomu7uRfQYJUCVRLf7pfF3wiGZJ3pWE5YGjBncklVEVz9RxSpA
+         7j7aI2reMX2NOFh1eFTZ3eqIINq9jrX++PHjGozygibAXLt8n5J2qicdvzckSbL6Xd1p
+         6Nm/x4zfgR3OKf6TDgIzy6xA+YGMz5z0ShVq81dCVm5IMZaTEncQRkbsN6+4qToskIYw
+         O9bw==
+X-Forwarded-Encrypted: i=1; AKwUvBxm/bhaJ+FAJDB6tUmx28OOcDMRTMJOyC+EO3VXfc7P+6DaRoQpUQ/9TewUF356cF4INSXrMjiFuYUGX69mxCo=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/x6wza6nJYwlTfi9IURMkBCH3ekwMhL+vuPfVBpE0tr1K8s0DN
+	urLkpPDH2c7RSactp3otGj7BsHRilcPx0SHJtM6eakJlvU11iDUfeYFTOrKfuv0g584BRBZ6YWS
+	BMjgoRbEZvy7wf3UZTN/eOWwCwJ/6G233J00MNWz6k2JwYNVVV2LOAlsy6yxF4j4UrGT7hAZlgd
+	K3t0w4Xhtw8Ck7PCTHmWcDcKsHcBosmhE11iSPyqa58vf0
+X-Gm-Gg: AYBFou3lyBkfufMP2zAG4ib/gDBe2b75xJnXoaatGVHvtoC4/IM86CFHn6jIN3+ugGp
+	URUHFkMtxafCO1v56CGJIhzrYzj8A7/WiqD5K+xqxhmd67ZCP3HPJuo59wYdKInVjOgEJC4qp1G
+	wkac+V0vn5Rtl2X4gtiOBKZP+VFF2h+lH6+/yvncvfnqW5EWq3YHY0BrFh
+X-Received: by 2002:a05:651c:a14e:b0:3ac:4b79:573b with SMTP id 38308e7fff4ca-3acb7aa83b1mr20499051fa.13.1793652788242;
+        Mon, 02 Nov 2026 12:53:08 -0800 (PST)
+X-Received: by 2002:a05:651c:a14e:b0:3ac:4b79:573b with SMTP id
+ 38308e7fff4ca-3acb7aa83b1mr20499011fa.13.1793652787872; Mon, 02 Nov 2026
+ 12:53:07 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -134,51 +90,66 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d78cbbd2-601a-4cf1-800f-3be57a2b7de2@broadcom.com>
+References: <20261027223847.652884-1-irogers@google.com> <20261027223847.652884-6-irogers@google.com>
+In-Reply-To: <20261027223847.652884-6-irogers@google.com>
+From: Alexander Aring <aahringo@redhat.com>
+Date: Mon, 2 Nov 2026 15:52:55 -0500
+X-Gm-Features: AclHuK8pGzNf4aGPekLa6NQcs521xOugw8djA3E8ZMCjZ7yn89XzG5j_wIaQNFk
+Message-ID: <CAK-6q+j-MS_5St04YFU11LG_Cjf1jOuS3q33qk_iK=7TE-iuBg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/9] dlm: Free dlm_ls in kobject release callback
+To: Ian Rogers <irogers@google.com>
+Cc: Kees Cook <kees@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Zhihao Cheng <chengzhihao1@huawei.com>, Zhongqiu Han <zhongqiu.han@oss.qualcomm.com>, 
+	Sumanth Korikkar <sumanthk@linux.ibm.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, driver-core@lists.linux.dev, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, gfs2@lists.linux.dev, 
+	xen-devel@lists.xenproject.org, linux-mtd@lists.infradead.org, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, David Teigland <teigland@redhat.com>, 
+	Greg Kroah-Hartman <gregkh@suse.de>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: iDtoPi1L-6QNlK-2Rm1lKfiyFqkz1oDDu3szsVR5xbc_1793652788
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 01, 2026 at 08:27:22PM +0100, Arend van Spriel wrote:
-> + Peter, Izabela
-> 
-> On 25/09/2026 15:43, Michael Reeves via B4 Relay wrote:
-> > The Broadcom BCM4388 chipset requires new PCIe initialization and
-> > firmware interfaces. Add support for these interfaces to brcmfmac to
-> > enable basic station operation.
-> > 
-> > This series adds:
-> > - Signed firmware loading and mailbox transport
-> > - Fixes for chip identification and firmware capability matching
-> > - Versioned scan and join requests, and extended PMK payloads
-> > - Updated event mask handling
-> > 
-> > These changes include work by Hector Martin and Daniel Berlin from Asahi
-> > Linux, refactored where needed for upstream inclusion.
-> > 
-> > The series provides basic station support only. 6 GHz support is planned
-> > for a follow-up patchset after this lands. The driver retains legacy
-> > interfaces for older firmware.
-> > 
-> > Tested on an Apple M3 MacBook Air (J613):
-> > - Device boot and network scanning
-> > - 5 GHz WPA2-PSK association and DHCP
-> > - Bidirectional TCP traffic
-> 
-> Finally got some time to get this series tested on my setup. The patches 
-> generally look good. So far no regressions observed. It would be good if 
-> some more people could test this series on their equipment. I will do 
-> some more testing and wait some days.
+Hi,
 
-Tested series on top of v7.3 + commit 7ed5dce55fa8 ("wifi: brcmfmac: map
-msgbuf RX packet IDs bidirectional") in wireless/main with resolving the
-conflict by dropping the conflicting hunk of this series.
+On Tue, Oct 27, 2026 at 6:39=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> struct dlm_ls embeds a struct kobject (ls_kobj), but dlm_ktype lacked a
+> .release callback and dlm freed the lockspace structure directly via
+> kfree(ls). With CONFIG_DEBUG_KOBJECT_RELEASE=3Dy, freeing ls before the
+> delayed kobject release runs causes a use-after-free, and unloading the
+> module while the delayed release is pending results in an instruction
+> page fault.
+>
+> Add a completion ls_kobj_done and dlm_ls_release() to complete it when
+> the last kobject reference is dropped, waiting for it in free_lockspace()
+> before kfree(ls) and in the new_lockspace() error path before module_put(=
+).
+> Also delete the kobject via kobject_del() before stopping dlm_recoverd
+> to close the window where concurrent sysfs writes could wake the stopped
+> recovery task.
+>
+> Fixes: 3514faca19a6 ("kobject: remove struct kobj_type from struct kset")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Tested on Mac mini (M1, BCM4378) and Macbook Pro 14-inch (M1 Max,
-BCM4387) without regressions (except for the resolved RX msgbuf
-mapping).
+A somewhat "big change" for just a debug functionality. Althrough I
+agree we shout call "kobject_del()" early to avoid additional sysfs
+changes during removal.
 
-Tested-by: Janne Grunau <j@jannau.net>
+Acked-by: Alexander Aring <aahringo@redhat.com>
 
-thanks,
+Thanks.
 
-Janne
+- Alex
+
