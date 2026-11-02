@@ -1,93 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=185.56.87.7
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1793576310;
-	b=4sNk8th/MQ1oBNoJHmUrnXrgfxoJtT9SY+ExT41t8P6MZGzVgG2X0ACdX6XDUVV4iihK
-	 AxXRcRPamAlSqQrZYSZGD2UBgy6/DNfLNholdUTUAfD4kDZWtJxwQt1rENjhgDz6+0jTI
-	 yBVeQmW3HxGHgAdNf/NRNGE5dImqzBcvl08eEnrEMS7BcDkKmCaWe+e8HLFShs48qRiPr
-	 LbHL2yqoTqpmdG8rrHniV3lrN78pJupLDNvcyV1s1uRUuZpVo4O2BLTaVnxS0tqYOp0Hl
-	 VpYHfHizPrDLylfPJqOKgM6UaHBKs/m2nrlm2xuR+HRsoiWzMPcbdzc8hlx2KDAlL+w==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793576310;
-	h=DMARC-Filter:DKIM-Signature:Received:DKIM-Signature:Received:From:
-	 Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-AntiAbuse:X-AntiAbuse:
-	 X-AntiAbuse:X-AntiAbuse:X-AntiAbuse:X-Source:X-Source-Args:
-	 X-Source-Dir:X-SGantispam-id:X-AntiAbuse:AntiSpam-DLS:AntiSpam-DLSP:
-	 AntiSpam-DLSRS:AntiSpam-TS:CFBL-Address:CFBL-Feedback-ID;
-	bh=18pDHMm0XqeCRNvNB8S0ooGOx5P4hUMuhrJSq5OimuA=;
-	b=FXInq98PU2gYzy0sMxDnIrO4/8P3ywa8GkGd/bEKh4TyC7RnE9HbQN4+889fgH9R+jEZ
-	 Nyz/CjKDY1mDyBlPiuwfYZibc/OpDuyxt2QXqiyXL5ODSNic84gfvLy4xkgCsDQnLss8H
-	 7tdQsoBd52Rn0l2T7AV+lhvwWv4L//ElhOnZzUpaRWTQUs451xJsatsgFKmirkhfTbUw1
-	 rBg1ioecpDONDKAft8zl2th0pg+Cu3cyOcJYHE0/IPrgUQwmesw4TdbedRiIApJ+LUdpf
-	 nj2GhUlzNTsYfmseSZhVmFkrWONwy1NyHiRt8xLGM/muHwBAWXMjHSAzGbLtzbRIcNA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=valla.it;
-	spf=pass smtp.mailfrom=valla.it;
-	dkim=pass header.d=antispam.mailspamprotection.com header.i=@antispam.mailspamprotection.com header.a=rsa-sha256 header.s=default header.b=W7LSFbA4;
-	dkim=pass header.d=valla.it header.i=@valla.it header.a=rsa-sha256 header.s=default header.b=G5XOvsID;
-	arc=fail smtp.remote-ip=185.56.87.7
-Received: from delivery.antispam.mailspamprotection.com (delivery.antispam.mailspamprotection.com [185.56.87.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.173
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793580188;
+	b=a7aacwYSZ4gMMAsRVP9YlTx3wxuKQw4RJni77beqJ8x8drMH9AKUgNBxWIP+TuYYj8y3
+	 +wZ3P7X+nQ22rtxFQpGESvAlgccvHoG0+Vo6Hzz29oOyjoY/4RATGTabVtN+TClVts5uh
+	 /ArVqJe7WUvwkVcDj8XcTJAY2n9g3Hzo9vDiaDdbraKytLdeyDts8KbKlKtaiAtfy/j1J
+	 tS1wilKqz3PAsh51P9mLn2ebyZZ/+5xvdBbOmqt6p2hfKZPwYlkg9B8c+wYgxvlhCUDFk
+	 m7eXB/VIjtgJ0zPgWflZZW68oIpu+pgXK/Y9GefVj0xazdQumTlLZfuWgPbH84tHlSw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793580188;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Received:
+	 X-Forwarded-Encrypted:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=AxLijxCHhlhY2faPDuw/HBU0+yy89FEV9COVq1aaz44=;
+	b=4XL01htnSokzTMB/Bl3+VsL466IbHCajakHkXY6osrW3YDDidayOwcAPGI49l5RtH+fI
+	 P2pdCsj01fePTuzNaHwoDrE+WhT+Dp1aPI5p5yJ4gICGlXpxN95Xi7TuFBekqIh7ZkOW1
+	 xIYG7mWvPJfuAUvZtco4QjHC7m9ZeigDRL9ZjtNF8R2zxd9ZfncCZbSOX95rpPx0hWlVq
+	 xu5Ii+caU5zcgs0pDNdOiHJ8oYEtIBwQ2PWiPLkEEmHVh3qrrKKIgMNr7YkSwBmNuufNR
+	 E4M2l33ESJjijwaWG2D6Mum7aQKxFLuj1+FB20j/J2oqxvmlkDT3N6u2VqyESNZbATA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=gompa.dev;
+	spf=pass smtp.mailfrom=gmail.com;
+	arc=none smtp.remote-ip=209.85.167.173
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C760606A32F;
-	Sun,  1 Nov 2026 23:38:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9C760606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valla.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valla.it
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=antispam.mailspamprotection.com header.i=@antispam.mailspamprotection.com header.a=rsa-sha256 header.s=default header.b=W7LSFbA4;
-	dkim=pass (1024-bit key, unprotected) header.d=valla.it header.i=@valla.it header.a=rsa-sha256 header.s=default header.b=G5XOvsID
-ARC-Seal: i=1; cv=none; a=rsa-sha256; d=outgoing.instance-europe-west4-xdd7.prod.antispam.mailspamprotection.com; s=arckey; t=1793576309;
-	 b=GuaTFSWq6L6tF/AGZdFpCZHKjx5pq9ARDOameEezZPVrfiNQi29EROaG0zzJlHm3AjwzeYVtRn
-	  iDG0ivd7TgnOTUCfrJP2OAXKiuaxATaCrRGT591SRIrA9FdJSUSdHg1MpK3Jgf7d9KNEVfM9V8
-	  1U7YZ0nX4qAW0JcK8jfApXTlYFor4cIRl9NO0ZRl/PgSNLooB4oujQ/l142fQR1p2E5reaRLHe
-	  z4oTrJShcZY283zY8d3gOselpl0KjPjE2eCrLgXVHdhdHGyEICbX6neKXB+jEyx7rBfT1bkOPX
-	  4Z+rl/oie6v0l78bWccodx/pmYuc5FlrEsk+7KbTYwBviA==;
-ARC-Authentication-Results: i=1; outgoing.instance-europe-west4-xdd7.prod.antispam.mailspamprotection.com; smtp.remote-ip=35.214.173.214;
-	iprev=pass (214.173.214.35.bc.googleusercontent.com) smtp.remote-ip=35.214.173.214;
-	auth=pass (LOGIN) smtp.auth=esm19.siteground.biz;
-	dkim=pass header.d=valla.it header.s=default header.a=rsa-sha256;
-	arc=none
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed; d=outgoing.instance-europe-west4-xdd7.prod.antispam.mailspamprotection.com; s=arckey; t=1793576309;
-	bh=7sSWwWaTdi8eub1qzTC0gPuMXFcGQ/27nlgu71hjiaU=;
-	h=Cc:To:In-Reply-To:References:Message-ID:Content-Transfer-Encoding:
-	  Content-Type:MIME-Version:Subject:Date:From:DKIM-Signature:DKIM-Signature;
-	b=lsbAlGHC5rlTUgeSX1LlzkCgBx9IQh0zUfttr2GHFQTjmoLxFzxssCzi/5/qWIPFX7y96ikr9I
-	  FlrUVsgW9T+XjMX1StOQjF2ewa6PuALpMxyrHJyCxA6u6vEY1xaVGvCestIYty2RvQCXFiTTzB
-	  cpBIe3i81G5jPWX/2oa8GcsexyZ5ONIFefpJqc7pMt5kjR3GFR6w3GcpSeWJx+h2JQadb8gBD8
-	  yEsI90ytMlgMGv8KlM9OcVxhcgPwZN8CtRYbX7W6iv4o7OFeTyg5FYCsWiPc3o87uxB2msjlsG
-	  UX+N6VIoylhVnIjdg0iV5ZAYhddXMANUhxvCQMe0zokJSw==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=antispam.mailspamprotection.com; s=default; h=CFBL-Feedback-ID:CFBL-Address
-	:Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject
-	:Date:From:Reply-To:List-Unsubscribe;
-	bh=18pDHMm0XqeCRNvNB8S0ooGOx5P4hUMuhrJSq5OimuA=; b=W7LSFbA4xyLPGwBOJcg9+RBgFX
-	kgUHp2qjJjDIYaJWU2+iM3ZIAzAYCsHOndR0Y9p/GIbt+CAogzxxkYB4H3OE6LoZw17GW9f6I3FJK
-	nROJT/ti4ThJ3msnZS3AloEPo7SX8oB40H6yLxq42LAaQvaQ18yac2lISxQIOU2PYLPY=;
-Received: from 214.173.214.35.bc.googleusercontent.com ([35.214.173.214] helo=esm19.siteground.biz)
-	by instance-europe-west4-xdd7.prod.antispam.mailspamprotection.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.100.1)
-	(envelope-from <francesco@valla.it>)
-	id 1xNf87-00000005pXg-0R84;
-	Sun, 01 Nov 2026 23:38:27 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=valla.it;
-	s=default; h=Cc:To:Subject:Date:From:list-help:list-unsubscribe:
-	list-subscribe:list-post:list-owner:list-archive;
-	bh=18pDHMm0XqeCRNvNB8S0ooGOx5P4hUMuhrJSq5OimuA=; b=G5XOvsID4NOflI9PqG6tJoz65d
-	CPoIHKRNxE0wJRiKaDQuuqn9GWbsPTeP+qeZOaH2dQbcnD4GKW8u2Y4Irpp70QlQ0M+lHH8Y95Ryk
-	lG1gsdql1owqhV535+itVZvb2xWwlsXLHVmy4qtzOwEIg9GN3D70N8jv23gRh3zEJgow=;
-Received: from [79.17.15.196] (port=60226 helo=[192.168.178.175])
-	by esm19.siteground.biz with essmtpa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.100.1)
-	(envelope-from <francesco@valla.it>)
-	id 1xNex5-000000002I5-12xV;
-	Sun, 01 Nov 2026 23:27:03 +0000
-From: Francesco Valla <francesco@valla.it>
-Date: Mon, 02 Nov 2026 00:26:48 +0100
-Subject: [PATCH RFC v2 11/11] PoC: arm64: dts: imx93-11x11-frdm: add
- multiple vdevs
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AA4606A32F
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Nov 2026 00:43:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 20AA4606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-56431524c22so291921b6e.0
+        for <linux-hardening@vger.kernel.org>; Sun, 01 Nov 2026 16:43:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793580187; x=1794184987;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=AxLijxCHhlhY2faPDuw/HBU0+yy89FEV9COVq1aaz44=;
+        b=P8spwIjDuJLPaYmr47LS51HSKpLWyvOYnn4Xnovtppac2lvLManPn9UnirtwMqNvQ+
+         Gzq73MUNjMGb1s1FySslpykQX+GotmUXQw+sVqK3ZLa3dcs5IDR7QxAh3EuZMTfh/ErT
+         dTBM4CjKxgtR06Ww+qUKrBnL1Cy8MJHpLRzhokJAK+gBi8g5mUNXJmF0BnqOq/jsgaQi
+         7NBRjBT6RPrtFUwbvSPBnFWIl6Bjna4A7CcuzAe6F+bxGCi6fDvPtWaQauCHU2xv6MVE
+         1kyze9+XrI6RJHRowqj2ZbdF6thtISX6BD/XPlU81Mz+9u34FSk/KcB+9qozatep/Ijm
+         MC0w==
+X-Forwarded-Encrypted: i=1; AKwUvBxo9kDHHqrbGnZ3zsw1rOtGDoWlNlUpO/AG8T8WtJ+eFTAT5CE4rbqn8XntU2EWez6GaD17WV4+ZMxrOSK1iaE=@vger.kernel.org
+X-Gm-Message-State: AFq9FYLVyzuqdpDdvdH3nh7B5BhmYjeiDAL0+cWOgomSXxFDu4rVANiw
+	MZz2wWv25jY8s5T6u2qj8CIj5XlmyWy4FsboYAXHv/V81LBQ6/+uedqhPK0NhlBW
+X-Gm-Gg: AYBFou0zvJ65WcdX3tHMPdPuLToLlHkSwkcv/nvlSyz2C6+WlEvCOno87j/ICDlqdFM
+	9Cv3nSzQqiR2Gcdv6ZM8OOPCL42KX20vuYlbue8fhLzLXZtQtHU6oZCqUwiQy67t6antBgVPekR
+	JeB3uDWv+3f65p/sD3tsxrFEm/zx/0o6MD6vVXiEk/1o5mEwGRfGYDRr+i8gUoPrDewyKxR8j8f
+	246xhqBQ+GSOq/k9KnvD4S45Unu0pg2EzrVdNxhtuzLfuWaQZ5xAl8irkEb6EFrMSaHUEDJYQCi
+	WCidjZOOhrWS4hexLtlQV9G3mOKJu7lzZY1eQER4FYXmFDhm1gi4d1HD53rUTCYsY9BiKcqIOTH
+	1y2H1HkyAnIAbtF1NFotiDKwpj3LvRt65C17X1idShc/Hh+VR7Y16ANO2ZLLdwoOpDuIEr945Rp
+	cGfYYQtrOztbCOuOyi1erpMQyBAw1BWD1CRBvunJQ5X9bZ5kHE+SahyxRqzHVtG8rD9ooOmO3mD
+	vpfIps3e4vqCt2qTBE6rSZubOOcXQPGD9vtyEaraD+0mGekyDjE5RlmHQQbaYF6oDuZVt+2RrFw
+	12cn2pj+jgISVVfnQSACt2tYRqvBIm++sc21pCamuXtMFMSQA4sxI/B0d6L2ljwiyQz9caB/Jai
+	XjGdjWbIzpiIihAyMWkCFptd4PiV8RmqDgGiwbJbde3K6OQEtdEY0l65cFvW/VO54jzFPqN4Da6
+	k=
+X-Received: by 2002:a05:6808:30a7:b0:55b:f88d:6e8b with SMTP id 5614622812f47-5640dce892bmr6342588b6e.13.1793580186616;
+        Sun, 01 Nov 2026 16:43:06 -0800 (PST)
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com. [209.85.210.47])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-5640fd95562sm6758201b6e.4.2026.11.01.16.43.05
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Nov 2026 16:43:05 -0800 (PST)
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-82109f51565so1138757a34.2
+        for <linux-hardening@vger.kernel.org>; Sun, 01 Nov 2026 16:43:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBw+cZqa+CIImmKoQQmntrc0pBt9WFOQ0v9UNNLMInQn10yPWCj+51gNXHWy8eVXSnFlf/8bUb+devaIfMFXFcs=@vger.kernel.org
+X-Received: by 2002:a05:6830:3e03:b0:814:b62d:3122 with SMTP id
+ 46e09a7af769-85d365b1f81mr6135908a34.22.1793580185285; Sun, 01 Nov 2026
+ 16:43:05 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -97,290 +83,108 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-remoteproc_virtio_map-v2-11-26b300e01c62@valla.it>
-References: <20261102-remoteproc_virtio_map-v2-0-26b300e01c62@valla.it>
-In-Reply-To: <20261102-remoteproc_virtio_map-v2-0-26b300e01c62@valla.it>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Francesco Valla <francesco@valla.it>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, Frank Li <Frank.Li@nxp.com>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, linux-remoteproc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5433; i=francesco@valla.it;
- h=from:subject:message-id; bh=7sSWwWaTdi8eub1qzTC0gPuMXFcGQ/27nlgu71hjiaU=;
- b=owGbwMvMwCX2aH1OUIzHTgbG02pJDFnPT+3Zf6yTVVnmlPfLqdymm19lH6yJfiB9QiFRdeUrt
- S3P2d30O0pZGMS4GGTFFFlC1t24t2eu+be0DYyPYOawMoEMYeDiFICJ9Gox/NM5KtapZmmRzBvZ
- 8rt/Lp8c4z5Jhf1dwYYbQ1f9t2SfIcXIMOXAhi9lc16/mzFj+gLdDp61l/UY952N6FV7MrXojoy
- aITcA
-X-Developer-Key: i=francesco@valla.it; a=openpgp;
- fpr=CC70CBC9AA13257C6CCED8669601767CA07CA0EA
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - esm19.siteground.biz
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - valla.it
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-SGantispam-id: 7756c959dc21fe76546c7b0ffe8f257f
-X-AntiAbuse: ID - 7756c959dc21fe76546c7b0ffe8f257f
-AntiSpam-DLS: false
-AntiSpam-DLSP: 
-AntiSpam-DLSRS: 
-AntiSpam-TS: 1.0
-CFBL-Address: feedback@antispam.mailspamprotection.com; report=arf
-CFBL-Feedback-ID: 1xNf87-00000005pXg-0R84-feedback@antispam.mailspamprotection.com
-Authentication-Results: outgoing.instance-europe-west4-xdd7.prod.antispam.mailspamprotection.com;
-	iprev=pass (214.173.214.35.bc.googleusercontent.com) smtp.remote-ip=35.214.173.214;
-	auth=pass (LOGIN) smtp.auth=esm19.siteground.biz;
-	dkim=pass header.d=valla.it header.s=default header.a=rsa-sha256;
-	arc=none
+References: <20260925-brcm4388-submit-v1-0-b5cbc2cde2fb@gmail.com>
+In-Reply-To: <20260925-brcm4388-submit-v1-0-b5cbc2cde2fb@gmail.com>
+From: Neal Gompa <neal@gompa.dev>
+Date: Sun, 1 Nov 2026 19:42:28 -0500
+X-Gmail-Original-Message-ID: <CAEg-Je918POdPr-=6Dzpdkx_i+Hv4wxv5-8A3MUDEqC8SA59NA@mail.gmail.com>
+X-Gm-Features: AclHuK_r7QD-EGzh5icdkxVPJ8YDU4Pcq4HDNCl7O8hh8I3jnfCORQFhQybBRTw
+Message-ID: <CAEg-Je918POdPr-=6Dzpdkx_i+Hv4wxv5-8A3MUDEqC8SA59NA@mail.gmail.com>
+Subject: Re: [PATCH 00/13] wifi: brcmfmac: Add BCM4388 support
+To: michael.reeves077@gmail.com
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>, 
+	Pieter-Paul Giesberts <pieterpg@broadcom.com>, "Franky Lin (Zhenhui)" <frankyl@broadcom.com>, 
+	Mathy Vanhoef <vanhoefm@gmail.com>, Kalle Valo <kvalo@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-wireless@vger.kernel.org, 
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, 
+	asahi@lists.linux.dev, Hector Martin <marcan@marcan.st>, 
+	Daniel Berlin <dberlin@dberlin.org>, Janne Grunau <j@jannau.net>, linux-kernel@vger.kernel.org, 
+	Hante Meuleman <meuleman@broadcom.com>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add rings and buffers for multiple virtio devices exposed by the
-firmware running on the Cortex-M33 processor which is part of the i.MX93.
-It is expected that such firmware exposes, through its resource table,
-the following vdevs:
+On Fri, Sep 25, 2026 at 9:49=E2=80=AFAM Michael Reeves via B4 Relay
+<devnull+michael.reeves077.gmail.com@kernel.org> wrote:
+>
+> The Broadcom BCM4388 chipset requires new PCIe initialization and
+> firmware interfaces. Add support for these interfaces to brcmfmac to
+> enable basic station operation.
+>
+> This series adds:
+> - Signed firmware loading and mailbox transport
+> - Fixes for chip identification and firmware capability matching
+> - Versioned scan and join requests, and extended PMK payloads
+> - Updated event mask handling
+>
+> These changes include work by Hector Martin and Daniel Berlin from Asahi
+> Linux, refactored where needed for upstream inclusion.
+>
+> The series provides basic station support only. 6 GHz support is planned
+> for a follow-up patchset after this lands. The driver retains legacy
+> interfaces for older firmware.
+>
+> Tested on an Apple M3 MacBook Air (J613):
+> - Device boot and network scanning
+> - 5 GHz WPA2-PSK association and DHCP
+> - Bidirectional TCP traffic
+>
+> Testing required separate Apple PCIe and devicetree patches, as well as
+> Janne Grunau's port-authorization fix [1].
+>
+> [1] https://lore.kernel.org/linux-wireless/20260915-brcmfmac-4way-handsha=
+ke-offload-authenticated-event-v2-1-fbb9cc7ac177@jannau.net/
+>
+> ---
+> Daniel Berlin (1):
+>       wifi: brcmfmac: Support versioned scan parameter layouts
+>
+> Hector Martin (6):
+>       wifi: brcmfmac: Support newer PCIe core startup and interrupts
+>       wifi: brcmfmac: Negotiate PCIe mailbox transport with firmware
+>       wifi: brcmfmac: Load signed PCIe firmware images
+>       wifi: brcmfmac: Accept newer BSS information versions
+>       wifi: brcmfmac: Support versioned join requests
+>       wifi: brcmfmac: Add BCM4388 support
+>
+> Michael Reeves (6):
+>       wifi: brcmfmac: pcie: Report the detected chip ID to the bus
+>       wifi: brcmfmac: Match complete firmware capability names
+>       wifi: brcmfmac: Fall back to RSSI-only default join preferences
+>       wifi: brcmfmac: Use event_msgs_ext for event masks
+>       wifi: brcmfmac: Handle larger firmware band lists
+>       wifi: brcmfmac: Handle extended PMK command payloads
+>
+>  .../wireless/broadcom/brcm80211/brcmfmac/Makefile  |   1 +
+>  .../net/wireless/broadcom/brcm80211/brcmfmac/bus.h |   9 +
+>  .../broadcom/brcm80211/brcmfmac/cfg80211.c         | 368 +++++++-------
+>  .../wireless/broadcom/brcm80211/brcmfmac/chip.c    |  36 +-
+>  .../wireless/broadcom/brcm80211/brcmfmac/common.c  |  27 +-
+>  .../wireless/broadcom/brcm80211/brcmfmac/core.c    |   5 +-
+>  .../wireless/broadcom/brcm80211/brcmfmac/core.h    |  18 +
+>  .../wireless/broadcom/brcm80211/brcmfmac/feature.c | 124 ++++-
+>  .../wireless/broadcom/brcm80211/brcmfmac/feature.h |   2 +
+>  .../wireless/broadcom/brcm80211/brcmfmac/fweh.c    | 130 ++++-
+>  .../wireless/broadcom/brcm80211/brcmfmac/fweh.h    |   1 +
+>  .../broadcom/brcm80211/brcmfmac/fwil_types.h       | 141 +++++-
+>  .../wireless/broadcom/brcm80211/brcmfmac/msgbuf.c  |  65 ++-
+>  .../wireless/broadcom/brcm80211/brcmfmac/msgbuf.h  |   9 +-
+>  .../wireless/broadcom/brcm80211/brcmfmac/pcie.c    | 560 +++++++++++++++=
+++----
+>  .../broadcom/brcm80211/brcmfmac/scan_param.c       | 416 +++++++++++++++
+>  .../broadcom/brcm80211/brcmfmac/scan_param.h       |  13 +
+>  .../broadcom/brcm80211/include/brcm_hw_ids.h       |   2 +
+>  .../broadcom/brcm80211/include/chipcommon.h        |   5 +
+>  19 files changed, 1593 insertions(+), 339 deletions(-)
+> ---
+> base-commit: 42a9fb3382fc2573e92f41d203b095d9a372cfc9
+> change-id: 20260925-brcm4388-submit-5cb8d3e6d6a5
+>
 
-  - vdev0: rpmsg
-  - vdev1: entropy
-  - vdev2: gpio
-  - vdev3: i2c
-  - vdev4: spi
-  - vdev5: can
+Works for me and looks good.
 
-The order in which the devices are contained inside the resource table
-is critical, since it is used both to associate vrings and buffers to a
-vdev and to map additional dt nodes to them.
+Reviewed-by: Neal Gompa <neal@gompa.dev>
 
-All vdev buffers except the one for the rpmsg bus are declared as
-restricted-dma-pool, because the corresponding drivers need bounce
-buffering for the communication to work correctly.
 
-Nodes for the gpio and i2c vdevs with example children devices are
-included.
-
-NOTE: this is a Proof-Of-Concept, not meant to be integrated!
-
-Signed-off-by: Francesco Valla <francesco@valla.it>
-
----
-
-Notable diff from RFC v1: the rsc-table node has been re-introduced to
-focus on the changes that are truly in scope for the series. I still
-believe something is off with the current implementation, but I'll
-tackle it separately.
----
- arch/arm64/boot/dts/freescale/imx93-11x11-frdm.dts | 188 +++++++++++++++++++++
- 1 file changed, 188 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx93-11x11-frdm.dts b/arch/arm64/boot/dts/freescale/imx93-11x11-frdm.dts
-index 6e8351d12016..84324b02c45d 100644
---- a/arch/arm64/boot/dts/freescale/imx93-11x11-frdm.dts
-+++ b/arch/arm64/boot/dts/freescale/imx93-11x11-frdm.dts
-@@ -137,3 +137,191 @@ MX93_PAD_SD3_DATA3__GPIO3_IO25		0x31e
- 		>;
- 	};
- };
-+
-+/* Multi-vdev PoC */
-+
-+#include <dt-bindings/input/linux-event-codes.h>
-+
-+/ {
-+	reserved-memory {
-+		rsc_table: rsc-table@2021e000 {
-+			reg = <0 0x2021e000 0 0x1000>;
-+			no-map;
-+		};
-+
-+		/* vdev0: rpmsg */
-+		vdev0vring0: vdev0vring0@a4000000 {
-+			reg = <0 0xa4000000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		vdev0vring1: vdev0vring1@a4008000 {
-+			reg = <0 0xa4008000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		vdev0buffer: vdev0buffer@a4020000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0xa4020000 0 0x100000>;
-+			no-map;
-+		};
-+
-+		/* vdev1: entropy */
-+		vdev1vring0: vdev1vring0@a4010000 {
-+			reg = <0 0xa4010000 0 0x1000>;
-+			no-map;
-+		};
-+
-+		/delete-node/ vdev1vring1@a4018000;
-+
-+		vdev1buffer: vdev1buffer@a4120000 {
-+			compatible = "restricted-dma-pool";
-+			reg = <0 0xa4120000 0 0x10000>;
-+		};
-+
-+		/* vdev2: GPIO */
-+		vdev2vring0: vdev2vring0@a4011000 {
-+			reg = <0 0xa4011000 0 0x2000>;
-+			no-map;
-+		};
-+
-+		vdev2vring1: vdev2vring1@a4013000 {
-+			reg = <0 0xa4013000 0 0x2000>;
-+			no-map;
-+		};
-+
-+		vdev2buffer: vdev2buffer@a4130000 {
-+			compatible = "restricted-dma-pool";
-+			reg = <0 0xa4130000 0 0x20000>;
-+		};
-+
-+		/* vdev3: I2C */
-+		vdev3vring0: vdev3vring0@a4015000 {
-+			reg = <0 0xa4015000 0 0x2000>;
-+			no-map;
-+		};
-+
-+		vdev3buffer: vdev3buffer@a4150000 {
-+			compatible = "restricted-dma-pool";
-+			reg = <0 0xa4150000 0 0x20000>;
-+		};
-+
-+		/* vdev4: SPI */
-+		vdev4vring0: vdev4vring0@a4017000 {
-+			reg = <0 0xa4017000 0 0x4000>;
-+			no-map;
-+		};
-+
-+		vdev4buffer: vdev4buffer@a4170000 {
-+			compatible = "restricted-dma-pool";
-+			reg = <0 0xa4170000 0 0x90000>;
-+		};
-+
-+		/* vdev5: CAN */
-+		vdev5vring0: vdev5vring0@a401b000 {
-+			reg = <0 0xa401b000 0 0x2000>;
-+			no-map;
-+		};
-+
-+		vdev5vring1: vdev5vring1@a401d000 {
-+			reg = <0 0xa401d000 0 0x2000>;
-+			no-map;
-+		};
-+
-+		vdev5vring2: vdev5vring2@a401f000 {
-+			reg = <0 0xa401f000 0 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev5buffer: vdev5buffer@a4200000 {
-+			compatible = "restricted-dma-pool";
-+			reg = <0 0xa4200000 0 0x80000>;
-+		};
-+	};
-+
-+	gpio-keys-virtio {
-+		compatible = "gpio-keys";
-+
-+		button-v1 {
-+			label = "Button V1";
-+			linux,code = <BTN_3>;
-+			gpios = <&v_gpio 23 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button-v2 {
-+			label = "Button V2";
-+			linux,code = <BTN_4>;
-+			gpios = <&v_gpio 24 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led {
-+			gpios = <&v_gpio 18 GPIO_ACTIVE_HIGH>;
-+			label = "LED V";
-+		};
-+	};
-+};
-+
-+&cm33 {
-+	memory-region = <&vdev0buffer>, <&vdev0vring0>, <&vdev0vring1>,
-+			<&vdev1vring0>, <&vdev2vring0>, <&vdev2vring1>,
-+			<&vdev3vring0>, <&vdev4vring0>, <&vdev5vring0>,
-+			<&vdev5vring1>, <&vdev5vring2>, <&rsc_table>;
-+
-+	virtio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* vdev1: entropy */
-+		vdev@1 {
-+			reg = <1>;
-+			memory-region = <&vdev1buffer>;
-+		};
-+
-+		/* vdev2: GPIO */
-+		vdev@2 {
-+			reg = <2>;
-+			memory-region = <&vdev2buffer>;
-+
-+			v_gpio: gpio {
-+				compatible = "virtio,device29";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+		};
-+
-+		/* vdev3: I2C */
-+		vdev@3 {
-+			reg = <3>;
-+			memory-region = <&vdev3buffer>;
-+
-+			i2c {
-+				compatible = "virtio,device22";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				eeprom@50 {
-+					compatible = "atmel,24c1025";
-+					reg = <0x50>;
-+				};
-+			};
-+		};
-+
-+		/* vdev4: SPI */
-+		vdev@4 {
-+			reg = <4>;
-+			memory-region = <&vdev4buffer>;
-+		};
-+
-+		/* vdev5: CAN */
-+		vdev@5 {
-+			reg = <5>;
-+			memory-region = <&vdev5buffer>;
-+		};
-+	};
-+};
-
--- 
-2.56.0
-
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
