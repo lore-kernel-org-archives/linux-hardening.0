@@ -1,123 +1,125 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.226
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793714405;
-	b=yarbBnaMxs7EYJYhwlRSLi4JS4LmRwnJhqPeHeUhEqshjTIt5+ATiiJ5tJos5RGL2Rb/
-	 oTYAodGLrzQwO+T9Nv9TRTtSOKLTfMBRwKhJTXBZGA9Vq9SbMCtQJm3KJQcxo+RXu70aq
-	 g/Q1WklHvWh4nwOwOou2BB1Al39TX+FY/KGRIA/uc7xCVbpT8/NiGPZDRl4Vj2xfldMQW
-	 VTL/V/+3VNeCZa+RJQat3J0sX5LD0WX/Jd+29G2UdqulASej5LdOR5qThjYAludV+uKk7
-	 GkKmqUDB/oiNn/t6QkKf1Tm5IQeBfwvAFb0bi1wI62uSrV93iCF5IUNiCqEfMEn9l2w==
+	t=1793719070;
+	b=ILf2+GwXGDvp4Qx/IO62Y5bdW0phJWkNK16617vJSlJ5JTX0L+9wl2iofid5FIzpN4Hr
+	 As38rpSswANDcx5TxTp4NEocOn72tysASwx4RIlPl+ARlPRJBFS9Y5sH8H/6V7h6MxEcv
+	 uxEiVR68lnReNTzqSWjPGO3ylOGJ6opn1+Mr8BBHzycuvIJH3UEh0lVlaQCXhpE+Dwf3B
+	 yQaVl2lKOlPLKOefktgCdaSH5akZbk+DfwPIL10HtCwD0mSm99RHxmGv2iziwiVUGUtZs
+	 +v7a5TtrNONuF6T/3c8Por+3zourBXT3DQJ8vGSd5SHlARy4dmmC1NYMtnlY13WoNgQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793714405;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:X-Relaying-Domain:
-	 X-CFilter-Loop:Received:DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Received:X-Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-DetectorID-Processed;
-	bh=qw4Aw0jcq5gAZzmvQPuYkoKDSkJMWpxQEuocOLkzgts=;
-	b=cnJh73sU0KNF2Ti18YQGZecJL8KCAlhTT4PktMpe1EUm0XowxIWFvCJKr/YLRgUEbiBt
-	 w+zoN0POHS4iImBsWzrm8n8fsMN6HxqQc43glXcL0tOYKWuLC6QS/aXovk03Zp8RiJtjp
-	 C14HdNGrivhgN/ho8gXSmNd9YX1neTwf7AdR/CgHA28eUZ8irMsQqCHCkS7gLloKi0epD
-	 WNCGVwVPcTH35nmjM2fE7h84tk+YArVOGmlU4lIhw6hTJ+NwMaALoRnWOT8EbBgzWD+MB
-	 NTuJw5IsmLuMIEad7nq3zb+RT2zRweTehs5hDpIIhw4+c0zNjCcZkE6Z4TeV3PoINyw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793719070;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:User-Agent;
+	bh=Kv57rrW9AR5Uyx8+S36d+hVUEIxbqmnbUnmaj9pRDPc=;
+	b=I+CwEbokyVTZOQCFDopjS9pVLqGsIjg+0494zY3vPmFGgfxtEsIGvhbIeIKpVAB2/8BK
+	 LaoI4CoB6XJbA1yc3jr/qVw/xxX9ct7LlruMdu/zLxEMeT2X0QPluF+DS413N9ahAFfSM
+	 8J8zY1d1WAVfik8rCmiKR3EVkli4i50YLVJEjwwj91+623HkF9K1UAbf9N/AS3pv2ahxk
+	 On7GDiLxP0N9dqWleh8GpUs1vayC+3GdBoc3+SdVa/Z4+Ah1ILz5666woyGyqq9TbPbTx
+	 4zIm44pU63tQA0bor++FID1FlKjHqW5Nmm0DfU9d3Kwr3u4xUcvUfso5j1j/UuORF6Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=broadcom.com;
-	spf=fail smtp.mailfrom=broadcom.com;
-	dkim=pass header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=bsXp1poO;
-	arc=none smtp.remote-ip=209.85.215.226
-Received: from mail-pg1-f226.google.com (mail-pg1-f226.google.com [209.85.215.226])
+	dmarc=pass header.from=chrisdown.name;
+	spf=pass smtp.mailfrom=chrisdown.name;
+	dkim=pass header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=UTWV8h2n;
+	arc=none smtp.remote-ip=209.85.216.51
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C740960A260F
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Nov 2026 14:00:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C740960A260F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB90606B24E
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Nov 2026 15:17:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6AB90606B24E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chrisdown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisdown.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=bsXp1poO
-Received: by mail-pg1-f226.google.com with SMTP id 41be03b00d2f7-cc7d154ec4fso1810326a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Nov 2026 06:00:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793714404; x=1794319204;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:dkim-signature:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qw4Aw0jcq5gAZzmvQPuYkoKDSkJMWpxQEuocOLkzgts=;
-        b=w6bxuknwsmYCvvClKXtEGmaVdOh0T9CAp3HZeCCF6ywxXGoR33lxgZzo7gHcVfkCyl
-         nCsby77YU0IqqtVci+Hu9IDNV493muvj3wQsdeWZA5V+JDkV34GYgZLFjHJW1u0cdUGG
-         EM0yl4YpsnRv+f2ra3KQ89MHiQKIWrK/kJr8uJCVPEZcBIAMRunAyRjjRKMr/FHt7IEU
-         ZHjpdmtaeZXwH28+pNkIva1lQLTFqQszjWhz0SIhItzdEPanWikrj0aAAqtzQveS6rWi
-         S5yiKm5WwaSdWCWzqvemGAtqHIwG48+rVef39GADBzKOJcmNckp3Kqsoj5eWjWIN2UYN
-         S3wQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxfmm6TML6zmxTDys+qpJwgQcwu9Gv4w6XosUQmgfEEHQYyWUmqs8hpCtlshSIeu0OA4pYraUC+vc32ocIaasA=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9SqFEMcJA6lftSp9QZHAz2V1WfTFRyAG4WR7Oh+BsLXfcYk0n4
-	fUoeJ9KGGC4l8I3aLXDsvUiNVY03Cc1XrJn3hW9KpgJzC0HSVkxgpPNSi+O/0/TmfhDWNXZ2JYP
-	VZZIdyXhjsP9FUwaOWDsGPWRIFSkcT47xjox6eCEQLxjrAjk5vlepByjaNJiTqPjVq5LAEuQnwx
-	iaSsa+Gm5ANxya1676bhIHbEmkmJA3Pak96R8SLAmd8p9nDhcPBGcCTUrIRNUjQlw+IJKDh4qwI
-	aFsfm//g4+UAfM3TbyG/nngwNuSag==
-X-Gm-Gg: AYBFou1t8RKQLinCMV+lcStOqCUHdxhM1U1EDWdVHue57EKp+yKGBT4IPln6kbsvNBy
-	2xRKdDHtSLXia8/NDhwoZkpdcrydaYIrd75wJwuKIO9MRNmxHyqDmfSGT8ArgxKclSBz90Wzrp5
-	hT4TxZEAc/XyqexcgUzPwdOmyy9KJFzqhfqyADuY9r36PmiaaWTyVikqdfKbemi/vCw0aCY4ciN
-	yNuS7p+Wb+3tTiS89ml6RoqwPH1HSvTb+MtIM+j9sn7BpnOtt45W2UkBwEEYyrxGnY5ngO2uemM
-	POjiHY61hZ70wozSKLm2drS7fX4HY1hF8zcr+PVwJij2loI+39BjS2WkTCr8iF094EJ/+9CvpIC
-	xAS6ChED9wKOlHJgvpCXZkJ3Bt7WcCV2LBappJMWjG1/sqXgoDiHqQmXgsOHw4Nd313uEv19q1E
-	Zh1hh4RFSZMK1T7uV6qvd8l2jaHzkWSbWeM7zq8iU=
-X-Received: by 2002:a17:90b:35c4:b0:3ac:3e42:60a2 with SMTP id 98e67ed59e1d1-3ae8982a538mr10238861a91.33.1793714404130;
-        Tue, 03 Nov 2026 06:00:04 -0800 (PST)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-28.dlp.protect.broadcom.com. [144.49.247.28])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-3b07c7ae5besm2009242a91.2.2026.11.03.06.00.02
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Nov 2026 06:00:04 -0800 (PST)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-1b20a4b5f2bso2140043c88.1
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Nov 2026 06:00:02 -0800 (PST)
+	dkim=pass (1024-bit key, unprotected) header.d=chrisdown.name header.i=@chrisdown.name header.a=rsa-sha256 header.s=google header.b=UTWV8h2n
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3ac77270fbfso2158070a91.2
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Nov 2026 07:17:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1793714401; x=1794319201; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=qw4Aw0jcq5gAZzmvQPuYkoKDSkJMWpxQEuocOLkzgts=;
-        b=bsXp1poOV8qg0cdbZn14/0NL6F0eOk7Sdr1LkDO9dbMo6UXkRW/NLAOXRO6+WfO+lx
-         pu36WNwOA7kC/Iw9V+lo5rjvl2fqueUMYHKEZ0aNte0ohmIvIkppUOkxQ8hm+5VO5QaZ
-         egCnHKiH1Ulv97Ufza+R/mTLjWUpAOiCdSeRs=
-X-Forwarded-Encrypted: i=1; AKwUvBy+fx5dMa4RRHewC6kfnr029u5Zp3zSx9gdtvAQiadZeNPOJ58DYnqjxqF49P6j/YfGsvfoLy5TU8Ybq4kJgPY=@vger.kernel.org
-X-Received: by 2002:a05:7022:c43:b0:1ae:b906:7733 with SMTP id a92af1059eb24-1aeb9067966mr14495781c88.23.1793714401174;
-        Tue, 03 Nov 2026 06:00:01 -0800 (PST)
-X-Received: by 2002:a05:7022:c43:b0:1ae:b906:7733 with SMTP id a92af1059eb24-1aeb9067966mr14495751c88.23.1793714400382;
-        Tue, 03 Nov 2026 06:00:00 -0800 (PST)
-Received: from bld-bun-02.bun.broadcom.net ([192.19.176.227])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac18458e07sm41658755c88.8.2026.11.03.05.59.56
+        d=chrisdown.name; s=google; t=1793719069; x=1794323869; darn=vger.kernel.org;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Kv57rrW9AR5Uyx8+S36d+hVUEIxbqmnbUnmaj9pRDPc=;
+        b=UTWV8h2nFTZ0eInmgrs3DEF7YRTvpPFa3wXSTzrgbTJdxS8o6LX18nP95bFPdtGbel
+         mhOBG2L0OGKLRHHR5Df5WGSB4ANOi/n6F8HnF4gGjy7OOMbjUQlof9V2g4MRUDoAwbYS
+         /cttKPQyPKLAjztUy3DJqrlEkWxeSKvdMeTW0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793719069; x=1794323869;
+        h=user-agent:content-disposition:content-type:mime-version:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Kv57rrW9AR5Uyx8+S36d+hVUEIxbqmnbUnmaj9pRDPc=;
+        b=ybKxPL+j66Lrcl7qpQrnQelqCYVzDJoh1Yp60odhKdAE+XBbjZ/IuagwDVpXhU2Xo4
+         4FSUFIABPxxMyBNQsMvaj44osQUpypgeUNKblFIjAGh6zRpT4+LBTBZEmekHx7Bhh8Us
+         tOhuCbPcPHbWVeZonsL66EFoKgy09IvvsNSfQAnI5bWBn5KndcAK8RBtQ+JTVzOcPnEx
+         d3krazgGH34C1qvIX01/ZbFBGiBydLKoFJmkKuMuhmbRi76YHQCGbU+mory9V20sPkhU
+         de6aRZl9yv8XzTV53t19wbiKCxlh+4c7CziIvjXSIGL5hJ1wTtOdgIIQX+5D9KqcvhJ0
+         YC8w==
+X-Forwarded-Encrypted: i=1; AKwUvBw4MA/dDOHhDcJGb3ZvlkxlchbXZM/spBn3Zmx7Jyb2Yi+bpXCcaGjUUUtnH/6D4CXstlKO0+7r5TB9feAbI9A=@vger.kernel.org
+X-Gm-Message-State: APuU4Z82iynp3FFEE7yaRWzIg94dzJ9Ys3EAxfucbJCcDnYlZL28XVUE
+	6tiREzo5lImvfH3pysUrF8GjYGSFLNgCOWxDlcfxJFKII1Vor967PgtQsMzxIrFDKY8=
+X-Gm-Gg: AYBFou0GIjS8ts5Ke0wTAU2/CL3wbHjxBzf68fa1ND9iJEuw4j6SZsQsaOVmPd6CRAg
+	Wn1Jx6hy9iey7gwiqRXtyIr9HqLwfTDvUDsN4Y7DoUFbbCPSHMDrkQFj3yk1LzcRDYjAWJCJwOR
+	lDRoQBnXLGhSvLrypPHuVA60jC+XViQavsqbQIZibAkoZlbNt+viwEv/15SY+BdSOPgjvQdLalw
+	dLYuNHS9numI+c0JifCEOxGdkH2sODEdPpdSB1Lzw8beHav9Cr8zCCYZpbUVe/ke8mEbfdCpS1t
+	cxFjhz5mzmMY25bBNd6sblK9REJAD+3y20ADlwDULCZYligJaId7NcpwtJOCDtBVOkUwuvkeneh
+	xFFlZTptLdkiGPgIKhUa9PtpMFwnTQ80kKE5Q9BVn90MwgQHVVRI6J4FUCH0iNBplZYFr9G9W9a
+	ps5sW6WdhZ/pcFWDIYC1M3YpQ42PW22vXZC3GaYra7oV+Pd+PK5XZzhokmqGJEOUDLa53ikwy/n
+	TZ76hxYj+1Xo6sA1rWg7m7VWeUyEupmhT2Pt8YB9qmY41kUxWW6gxv8KWptjZgiwgO6aqnclec1
+	fLLgaEh/CbZvx8kUhIVp/gsnyODMXovLaXdIuyep/Tfc6U73RdZRHVrUtNaAmWdyRsW/ZRonlfj
+	ktAbhgJvVAfxYwvRgWy55/3NZQeWzYqSCLgs+g/hX4qTJ/UUZnptlOO8NHMMaKInyTiFzOFBYCX
+	WJWIgIy0gmv1U8Diw4tw==
+X-Received: by 2002:a17:90b:3f84:b0:3ab:b39f:41da with SMTP id 98e67ed59e1d1-3ae89776af6mr10813768a91.11.1793719068633;
+        Tue, 03 Nov 2026 07:17:48 -0800 (PST)
+Received: from localhost ([116.86.153.182])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b07c62984bsm4849760a91.9.2026.11.03.07.17.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 05:59:59 -0800 (PST)
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-To: Michael Reeves <michael.reeves077@gmail.com>
-Cc: Pieter-Paul Giesberts <pieterpg@broadcom.com>,
-	"Franky Lin (Zhenhui)" <frankyl@broadcom.com>,
-	Mathy Vanhoef <vanhoefm@gmail.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	asahi@lists.linux.dev,
-	Hector Martin <marcan@marcan.st>,
-	Daniel Berlin <dberlin@dberlin.org>,
-	Janne Grunau <j@jannau.net>,
-	linux-kernel@vger.kernel.org,
-	Hante Meuleman <meuleman@broadcom.com>,
-	linux-hardening@vger.kernel.org,
-	Arend van Spriel <arend.vanspriel@broadcom.com>
-Subject: Re: [PATCH 12/13] wifi: brcmfmac: Handle extended PMK command payloads
-Date: Tue,  3 Nov 2026 14:58:56 +0100
-Message-ID: <20261103135856.3676311-13-arend.vanspriel@broadcom.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260925-brcm4388-submit-v1-12-b5cbc2cde2fb@gmail.com>
-References: <20260925-brcm4388-submit-v1-12-b5cbc2cde2fb@gmail.com>
+        Tue, 03 Nov 2026 07:17:47 -0800 (PST)
+Date: Tue, 3 Nov 2026 23:17:43 +0800
+From: Chris Down <chris@chrisdown.name>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Lorenzo Stoakes <ljs@kernel.org>
+Cc: Jeff Xu <jeffxu@google.com>, David Hildenbrand <david@kernel.org>,
+	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Kees Cook <kees@kernel.org>,
+	Andrey Vagin <avagin@gmail.com>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	Shuah Khan <shuah@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: [PATCH v2 0/8] mseal sysmap: Choose system mapping sealing at boot
+Message-ID: <cover.1793718940.git.chris@chrisdown.name>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -127,30 +129,91 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/2.3.3 (9073d26d) (2026-06-12)
 
-On Fri, 25 Sep 2026 23:43:47 +1000, Michael Reeves <michael.reeves077@gmail.com> wrote:
-> From: Michael Reeves <michael.reeves077@gmail.com>
->
-> Some firmware rejects the legacy BRCMF_C_SET_WSEC_PMK payload despite
-> advertising firmware supplicant support.
->
-> Add the extended PMK layout. Try the legacy payload first when the key
-> fits, and retry with the extended layout only after -EBADE. Use the
-> extended layout directly for larger keys and reject keys that exceed its
-> capacity.
->
+System mapping sealing is currently a build time choice. Hosts which
+want it and hosts which need to move or unmap these mappings therefore
+need separate kernels, which is not ideal. Let's allow the administrator
+to choose at boot time.
 
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+v2:
 
-Regards,
-Arend
+- Skip destructive vDSO tests on unsealed 32-bit x86 mappings
+- Move the sysmap tests into selftests/mm (Lorenzo)
+- Use shared vm_util helpers in the sysmap tests (Lorenzo)
+- Use PROCMAP_QUERY for the vDSO lookup (Lorenzo)
+- Keep test changes in separate patches (Lorenzo)
+- Put the enforcement tests before the kernel changes (Lorenzo)
+- Move MSEAL_SYSTEM_MAPPINGS to mm/Kconfig (Lorenzo)
+- Remove VM_SEALED_SYSMAP (Lorenzo)
+- Seal mappings in __install_special_mapping() (Lorenzo)
+- Leave a sealed uprobe trampoline mapped if optimisation fails
+- Replace the boolean parameter with no_mseal_sys_mappings (Lorenzo)
+- Drop MSEAL_SYSTEM_MAPPINGS_DEFAULT_ON (Lorenzo)
+- Drop the CHECKPOINT_RESTORE dependency (Lorenzo)
+- Document the software which sealing breaks (Lorenzo)
+- Keep Kconfig default-n regardless of CHECKPOINT_RESTORE (Andrei)
+- Retain sealing by default when built in, with no_mseal_sys_mappings as
+  the boot-time opt-out (Lorenzo)
+- Explain the security rationale (Lorenzo)
+- Describe the Meta/Reverie use case (Lorenzo)
+- Skip general checks on unsealed kernels (Lorenzo)
+- Add expect_sealed for strict CI checks (Jeff)
+- Use the existing -T filter to exclude strict checks when needed (Jeff)
+- Test that no_mseal_sys_mappings leaves mappings unsealed (Jeff)
+- Add the vDSO mprotect() enforcement test (Jeff)
 
-> Co-developed-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Michael Reeves <michael.reeves077@gmail.com>
-> ---
->  .../broadcom/brcm80211/brcmfmac/cfg80211.c         | 39 ++++++++++++++++------
->  .../broadcom/brcm80211/brcmfmac/fwil_types.h       | 18 ++++++++++
->  2 files changed, 46 insertions(+), 11 deletions(-)
+v1: https://lore.kernel.org/r/cover.1793094611.git.chris@chrisdown.name
+
+Chris Down (8):
+  selftests/mm: Move sysmap_is_sealed into mm
+  selftests/mm: Skip sysmap_is_sealed when system mappings aren't sealed
+  selftests/mm: Test that the seal on system mappings is enforced
+  mm/mseal: Move MSEAL_SYSTEM_MAPPINGS to mm/Kconfig
+  uprobes/x86: Leave sealed trampolines in place on optimisation failure
+  mm/mseal: Seal system mappings in __install_special_mapping()
+  mm/mseal: Add no_mseal_sys_mappings boot parameter
+  selftests/mm: Check that no_mseal_sys_mappings unseals system mappings
+
+ .../admin-guide/kernel-parameters.txt         |   7 +
+ Documentation/userspace-api/mseal.rst         |  12 +-
+ arch/arm64/kernel/vdso.c                      |   9 +-
+ arch/loongarch/kernel/vdso.c                  |   3 +-
+ arch/riscv/kernel/vdso.c                      |   2 +-
+ arch/s390/kernel/vdso.c                       |   2 +-
+ arch/x86/entry/vdso/vma.c                     |   5 +-
+ arch/x86/kernel/uprobes.c                     |   2 +-
+ include/linux/mm.h                            |   6 -
+ init/Kconfig                                  |   5 +-
+ kernel/events/uprobes.c                       |   2 +-
+ lib/vdso/datastore.c                          |   2 +-
+ mm/Kconfig                                    |  23 ++
+ mm/mseal.c                                    |  12 +
+ mm/vma.c                                      |   2 +
+ mm/vma.h                                      |   8 +
+ security/Kconfig                              |  21 --
+ tools/testing/selftests/Makefile              |   1 -
+ tools/testing/selftests/mm/Makefile           |   1 +
+ tools/testing/selftests/mm/config             |   1 +
+ tools/testing/selftests/mm/run_vmtests.sh     |   6 +
+ tools/testing/selftests/mm/sysmap_is_sealed.c | 259 ++++++++++++++++++
+ tools/testing/selftests/mm/vm_util.c          |   5 +
+ tools/testing/selftests/mm/vm_util.h          |   1 +
+ .../mseal_system_mappings/.gitignore          |   2 -
+ .../selftests/mseal_system_mappings/Makefile  |   6 -
+ .../selftests/mseal_system_mappings/config    |   1 -
+ .../mseal_system_mappings/sysmap_is_sealed.c  | 119 --------
+ 28 files changed, 345 insertions(+), 180 deletions(-)
+ create mode 100644 tools/testing/selftests/mm/sysmap_is_sealed.c
+ delete mode 100644 tools/testing/selftests/mseal_system_mappings/.gitignore
+ delete mode 100644 tools/testing/selftests/mseal_system_mappings/Makefile
+ delete mode 100644 tools/testing/selftests/mseal_system_mappings/config
+ delete mode 100644 tools/testing/selftests/mseal_system_mappings/sysmap_is_sealed.c
+
+
+base-commit: 734a9da61a5bc5d82b496a86bacc097d11dc6871
+-- 
+2.54.0
+
