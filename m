@@ -1,51 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793712431;
-	b=lLY5kZSCO3nyQY1RHicU+0yzFHOOWF27pPeemSShIPmdEjzm6VVFOBbKhOXlTfVPw/48
-	 jsNzUg9nv/kwA7Nn9P4l9yQPCV4qJ6a3iKl+1zc+3gHNJ9fJiam8/yFvRKUa2CQbg//Q9
-	 gE4rkGcIVZv8NF/Juw4j5VxYTA5oAqIEqoCNYV8IMaZ0DAJ5CngnN0sve4tCjzgN6xynF
-	 UPwrEnQb3j5+hA1xGZM4g7yK+CGkpmTLzP3UxhWg/FCMpytGlt1JlTm9ouZnb02UjPorN
-	 5gAZegeBSAH2qYJstGDmK5MokaUrJ3OkEroOqHfniw5a+EPWMKuJocU4wPcfYL3awjQ==
+	t=1793712434;
+	b=PBzBxp//ZGr5G21zB+42gmoIb7O1q6lN4yoYpYOuEmNp7Bd0MbyD+GxSnR01vhxbHUb7
+	 zdrwkVsMRrnSKo6/eTu2olKgVnARlWjTJBNryQl+iwh5kSsYViDL0Gb/u/YgnOM3lZ2G5
+	 HEkYYYCAhU3KmV0YOs4ME3nl86RzR3DPpNP9g+u4WwUSGbGRMh6gkJEx/dyodMcFte8X1
+	 pG/HUorg9vLa+RF4zrNA182f2dJYVVplULpbsmZ+GQJ4uixvdrF3cVNpmR5j5gBlqFjQc
+	 072T09ZfXtuBvQL3lqK+FoNqAh8BTAsv34/guuMtN1Fola38b0F7Wwj8HJqOjE1zrmA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793712431;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793712434;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
-	 MIME-Version:Content-Type:Content-Disposition;
-	bh=tDNZ/z9F/s7zgYkf/IN8IpT3HLwOBUU20CqMLqmY2SY=;
-	b=HdfCpK+UqZOw0t/NyAJ13M2kP1lVSo/GTop/qlOWab6DEI5YGqkUurMO1IIGTuwkqMPi
-	 554kt7uvVzlPGniFBXZQsSZC6wCoGK7UZJJgzqQepO3GeSxCiKnQJFyLO5Gs//r9eP/wj
-	 xAgrLglNXp8vel0Yby3MhX63Ylp7ey8u7MRCZBtKhw4QYG74NtUgCGpExTtzOjs4AaUoQ
-	 b2VOMgj9WFGV9+lwTcwn9i/YVLm1L6Yr4UjOl9ujoDGUnIs8eZmHmmPcVg95rsmRq9fdp
-	 0XZK/AviqBUnAbn5bfO2308fxY7U+f2Cjhp+o1CelH11z4wRT8GDaLLCJjG+zUh17dw==
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=ZpoEys7LKvHIobqEfGUaeEUkexdg19RlyyN+9oOsNHI=;
+	b=P4LzH18ricbTaLE76QVS5SkTXBrL9OuIRGnT7nd+GVRtxNTEIqsfN6mlxyKsj+rNh/xy
+	 wpszYNBwRAAPLJRHBVPgHEQLVmENhULBnkOVH14tpOdZCBY2Wycp9KmU/26yTpL9GP8oC
+	 4ruqtyANzS9suLB6J7WG2zfrOX7akrhhLZjcc8xe/RM5nGNTQVKUAlhU7zkTmuJP2mq/f
+	 atiKcGBlo7MkVsKkJYhE6K9MOCI22UbpexqDooCyYSFVissXcR0aTS7bX1Aatv5CZqqH6
+	 ox6jqkkCVxFD0iIDgd2ANB3yxZQ6JeNALLyfGx55GHXOIvDW6QlqgMk/0tuDtUF3Vdg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JfbIHWJz;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GEz2lju8;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045646083636
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Nov 2026 13:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64017608508A
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Nov 2026 13:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JfbIHWJz
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0B31F00A17;
-	Tue,  3 Nov 2026 13:27:09 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GEz2lju8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3DB1F00919;
+	Tue,  3 Nov 2026 13:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793712430;
-	bh=tDNZ/z9F/s7zgYkf/IN8IpT3HLwOBUU20CqMLqmY2SY=;
-	h=Date:From:To:Cc:Subject;
-	b=JfbIHWJzSItQJfe27GQv4Q1dcPU480d5aVVW+ql0gh/TvcXTDw+l9wb4RW+3SJUoL
-	 DwwZC4FBulR8xJtjjFfOty5CzTTqp/jL7HWH1vI5KY12Cx7mCZEmbEdi6yZwQmSUxw
-	 7b0zn436bKEbYznHdscVvqV/6hfpUWF2GcNqsjvWR65FnVnDVv44JSW0PzKn7eDOnH
-	 8ZpoZ6cnp5zm+tl3Jvj4VVtQ2MNCcfrlXJkqwfP8mL2Ak3D25zdQsMf+9+tCR6CTnC
-	 Zw6ArL24dks4Z13/AHsDk1A67Cs7AS7XH5OjMcOOP3laSdIw9MNPKMpyiZSLXGCSo6
-	 D4cz23+pvmF6Q==
-Date: Tue, 3 Nov 2026 14:27:08 +0100
+	s=k20260515; t=1793712434;
+	bh=ZpoEys7LKvHIobqEfGUaeEUkexdg19RlyyN+9oOsNHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=GEz2lju8PHiXRODh50oazOuLQQ3/HQwYR7gWkn0qJ+zeGdhso54B0NgAfwbwBNwnw
+	 0OYDW8qD9HvE4VXRvt0IyzG1efdxBgVGWt1hkCzyNgwvQKBkVTDhWKBxVbD3EEvQ3g
+	 dKpBh5A/NhyJYZ0rAbKLP0YFtp1Vvx8szIHcshRXwUZUiv3tToQydUWkJcXYWxbH+4
+	 JlhmmDdftmEHpKE1/zut26AUrJ4Jnv3RyCA2uayOSd9jaNC4cMuhd/kwlPWL7ti9cW
+	 ZsVaCHBKsqhr4TuVf8+gYs8r9ZBhzb9p9kAJb1+IuhsneiZqySH75INmtnMWGHGAJo
+	 mC1/TBi0VgYwg==
+Date: Tue, 3 Nov 2026 14:27:11 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 0/2] Simplify implementation of strscpy()
-Message-ID: <cover.1793712214.git.alx@kernel.org>
+Subject: [PATCH v1 1/2] args: Add DEFARG() to implement macro default
+ arguments
+Message-ID: <be1057524eb2d7bb378d205c3fc8074acbf124e2.1793712214.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
+References: <cover.1793712214.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -56,69 +58,89 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qt4zqqt3uhhlb3eh"
+	protocol="application/pgp-signature"; boundary="3y24ymvbymfwlvjt"
 Content-Disposition: inline
+In-Reply-To: <cover.1793712214.git.alx@kernel.org>
 
 
---qt4zqqt3uhhlb3eh
+--3y24ymvbymfwlvjt
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx@kernel.org>
 To: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 0/2] Simplify implementation of strscpy()
-Message-ID: <cover.1793712214.git.alx@kernel.org>
+Subject: [PATCH v1 1/2] args: Add DEFARG() to implement macro default
+ arguments
+Message-ID: <be1057524eb2d7bb378d205c3fc8074acbf124e2.1793712214.git.alx@kernel.org>
+References: <cover.1793712214.git.alx@kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <cover.1793712214.git.alx@kernel.org>
 
-Hi!
+It needs __VA_OPT__, which is a C23 feature, but it's provided by GCC
+and Clang in GNU-C mode as an extension even without C23.  __VA_OPT__
+was implemented in GCC 9 and Clang 6, I think, so it should be widely
+available.
 
-Here's a simpler implementation of the default arguments in strscpy(9).
-It avoids having to build concatenated names, the ignored '...' in
-__strscpy0, counting arguments, etc.  It's replaced by a quite simple
-macro that takes two arguments, and picks the last non-empty one.
+Here's a small example program showing how this works:
 
-It requires a C23 feature, but it's supported as a GNU extension in
-GNU C11 mode, and was implemented a long time ago, so it should be fine.
+	alx@devuan:~/tmp$ cat d.c
+	#define D__(x, ...)  (x)
+	#define D_(x, ...)   D__(__VA_ARGS__ __VA_OPT__(,) x)
+	#define D(a, b)      D_(a, b)
+	D(1, 2)
+	D(1, )
+	D(, 2)
+	D(,)
+	alx@devuan:~/tmp$ gcc -E -Wall -Wextra d.c | grep '^[^#]'
+	(2)
+	(1)
+	(2)
+	()
 
+Signed-off-by: Alejandro Colomar <alx@kernel.org>
+---
+ include/linux/args.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Have a lovely day!
-Alex
-
-Alejandro Colomar (2):
-  args: Add DEFARG() to implement macro default arguments
-  string: Simplify strscpy[_pad]()
-
- include/linux/args.h   |  5 +++++
- include/linux/string.h | 22 ++++------------------
- 2 files changed, 9 insertions(+), 18 deletions(-)
-
-Range-diff against v0:
--:  ------------ > 1:  be1057524eb2 args: Add DEFARG() to implement macro d=
-efault arguments
--:  ------------ > 2:  31096484d9be string: Simplify strscpy[_pad]()
+diff --git a/include/linux/args.h b/include/linux/args.h
+index 0562dc51435e..5886011cf791 100644
+--- a/include/linux/args.h
++++ b/include/linux/args.h
+@@ -3,6 +3,11 @@
+ #ifndef _LINUX_ARGS_H
+ #define _LINUX_ARGS_H
+=20
++/* Expand to 'arg' if non-empty, or to 'def' if 'arg' is empty.  */
++#define ___DEFARG(x, ...)   (x)
++#define __DEFARG(def, ...)  ___DEFARG(__VA_ARGS__ __VA_OPT__(,) def)
++#define DEFARG(def, arg)    __DEFARG(def, arg)
++
+ /*
+  * How do these macros work?
+  *
 --=20
 2.55.0
 
 
---qt4zqqt3uhhlb3eh
+--3y24ymvbymfwlvjt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrp4SsACgkQ64mZXMKQ
-wqnEihAAkRlgr1/YzGWZ4iKT7Ih+5MEK3aYJG8lVMUFzMT+1cKKJli/kHBuMbzde
-0WaR6n7x9/Mg35xhOYDgYo3Fb6OT3t+1MzMw/eZRqb3ZKd65CLxuKsYIScblZYRn
-OtzfI9y06TKOZN4uUCCuVeGgPK0kY9V5p96QYX4Jd4eXeW6tLNExFgaDN6Z/itWa
-0sfkHeagBXOZuo8QLNLPpXNa8Cq9tgKz7nioajJAIsPe2HiQjbBqEa1hyIbVkti7
-VX7Lx8c88F7Y4xYdvHsBYT5L9vNT1X1YdSeFks0k7YSWRIaxdfnZH+IvVKm5iyC8
-LDHyae0n0jZmSO69WXQdxNPeA/0RTNfY0HS3vHw2+lVCPA8eyc/MXkbYOYjkjjYD
-t38wvjyoQxMaIuPEpzrmO6piAvGexfOBjAZv6VSuX/Lb9fcgeW6sE/IzF4HaKNMr
-u3gsRpEZR+U0xmiTdqrU0lDWdaW8iGumNEjRTCHUVfGMXtiUUhDNAC13rVC/MWY9
-ybmHgR2EfJuO8xG18db2Z0qGYZItgbE78NnY4rBvftwnSJEWu92+OAb9kC/VS/ty
-HBmOwAboEgTWPRsNlg8IdAYaTAq1/FxTm7B9uxnk1QdxL9+KyDKnfR87Zz2vY2hV
-8ZczEDFUll1tSy+uPHJe53bUREkTSVN4gIULJULSYjp22Qs0XUo=
-=G56b
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrp4S8ACgkQ64mZXMKQ
+wqkBdg//dvJXzkKfJAqk85DY/hNVZSAA0EYhMv6+2IEDVjyWDT32H3dZ84mz/vHy
+B34Va2JILC5/FmBry+G3NU3Pv55/JEHlnw92TDNB1LrIRY9450HYdizT+S87rCiW
+2lsLcXcwh5LmG1BnRygq2F7V55JH6S/Pi1UGoJ7z+U7nymEpLdlshblzhUljWCGp
++tGOHMDyhOK4hrkiTr+UVrnjcZjQs//fLCB7mYvdyLA+WRSMT8yKnTgPDGa9WQVW
+r9vYq+Q21RbsxkTbrkKyvHpqOAAXwZjoxqTOmOh3WmqJTmm6yUwiIdMPcLg/7Arg
+ybrt6Utw/zzQOVkP1CPRZb87G1yrE0O6v7uDMrxWRf0vWJMsFgWWQtI2xqDHco3D
+XDo3NH5OtrOCZzPBIHdC3mqHfaThJyrRUd22sPSG6yGZkL5zdnC591zPTKf3FbvM
+TzTsgYT/1Aqm+FoZKyI2v8m/gCIt8QXIG4yHI9EdecjejxSmloWESSs0ewzw3aOK
+p4QUTHl3Np4/WG/4IF8KleMvFEkWA80TSklMNcNQ7mXEaKWEOPchr+xMxlYiDd9t
+QfFp04vE0pyT73nv9kIwSs7peewjSFr/6V7zw0UoD7lDoT3aqDsGBP+HmqVOwAzH
+VtLcZ3p6RbZd1FSgb6e96/ZU4FJ88bOFpPLTxYgTPdk4mavqjWY=
+=tbwR
 -----END PGP SIGNATURE-----
 
---qt4zqqt3uhhlb3eh--
+--3y24ymvbymfwlvjt--
