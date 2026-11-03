@@ -1,51 +1,50 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793712434;
-	b=PBzBxp//ZGr5G21zB+42gmoIb7O1q6lN4yoYpYOuEmNp7Bd0MbyD+GxSnR01vhxbHUb7
-	 zdrwkVsMRrnSKo6/eTu2olKgVnARlWjTJBNryQl+iwh5kSsYViDL0Gb/u/YgnOM3lZ2G5
-	 HEkYYYCAhU3KmV0YOs4ME3nl86RzR3DPpNP9g+u4WwUSGbGRMh6gkJEx/dyodMcFte8X1
-	 pG/HUorg9vLa+RF4zrNA182f2dJYVVplULpbsmZ+GQJ4uixvdrF3cVNpmR5j5gBlqFjQc
-	 072T09ZfXtuBvQL3lqK+FoNqAh8BTAsv34/guuMtN1Fola38b0F7Wwj8HJqOjE1zrmA==
+	t=1793712438;
+	b=4tSWDDaSZfMIEeqZq85snOeKUmURtjzzoveeNs3ckPUceA14ja5+THa8sM5HhPClbvHk
+	 10lcyiV5uZ6Q6rK1IM7nfsDE1Vfhai9JXOyDzgvOpweWeW88kCIU7dojS9IIfDIt5kxXC
+	 xmy6OWkKcvPHzi9xACCvbDVU0EooK81aiEHMO1P5ntctkTkgElOQ1k5SLYFbc9mgKa81v
+	 ElliS9vw23bvp9smaPNoytfaAvhaCPzSOTFUiiDtopmwocQAUC2E4qZ94aalqrbKOtCr2
+	 iKgASo6ysWy2A5gQwa5eYBM7bq5M84aUaOGlrf/xbDNXuOiruoE+emYKlJej/nMF7fg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793712434;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793712438;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=ZpoEys7LKvHIobqEfGUaeEUkexdg19RlyyN+9oOsNHI=;
-	b=P4LzH18ricbTaLE76QVS5SkTXBrL9OuIRGnT7nd+GVRtxNTEIqsfN6mlxyKsj+rNh/xy
-	 wpszYNBwRAAPLJRHBVPgHEQLVmENhULBnkOVH14tpOdZCBY2Wycp9KmU/26yTpL9GP8oC
-	 4ruqtyANzS9suLB6J7WG2zfrOX7akrhhLZjcc8xe/RM5nGNTQVKUAlhU7zkTmuJP2mq/f
-	 atiKcGBlo7MkVsKkJYhE6K9MOCI22UbpexqDooCyYSFVissXcR0aTS7bX1Aatv5CZqqH6
-	 ox6jqkkCVxFD0iIDgd2ANB3yxZQ6JeNALLyfGx55GHXOIvDW6QlqgMk/0tuDtUF3Vdg==
+	bh=apKhX4kG9OwOW1IQDL1yZG4qw6/s/0QEtFSoTj400P4=;
+	b=owZ9h5m+T/ZZOFMU4rBzfl+YEgD9SCOCbbXEUblPDxc7Oz4u2x9rXGXdQFPIiiWLTulb
+	 3SS6yj1pj66Dgj9fVQudbYarn5k3nKHLVtIosXQ38OX2oNg52V/bRoBSEbzElQNeoHqN2
+	 fo+XEFHfxs/IOtCGLuMZgiFU08ppJwjy+ERw8iWqg3fKNeTIwryCjh6j17mmLj4oqLQ+o
+	 zGOk8BQ0yzfBbgtw4ziE4XpAWMMrHtXJVLjsSt038TBG33RTp/nahV/ohVoOGpsizN+0j
+	 1CLLHqASJzL65z+sVRtFb82W6qjQRdbhzNkU91C5kFD0Fmh42yeaZBWuqV9ccbiGd8g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GEz2lju8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IygRsno4;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64017608508A
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Nov 2026 13:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DC0606D80E
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Nov 2026 13:27:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GEz2lju8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3DB1F00919;
-	Tue,  3 Nov 2026 13:27:12 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IygRsno4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335131F00919;
+	Tue,  3 Nov 2026 13:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793712434;
-	bh=ZpoEys7LKvHIobqEfGUaeEUkexdg19RlyyN+9oOsNHI=;
+	s=k20260515; t=1793712437;
+	bh=apKhX4kG9OwOW1IQDL1yZG4qw6/s/0QEtFSoTj400P4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GEz2lju8PHiXRODh50oazOuLQQ3/HQwYR7gWkn0qJ+zeGdhso54B0NgAfwbwBNwnw
-	 0OYDW8qD9HvE4VXRvt0IyzG1efdxBgVGWt1hkCzyNgwvQKBkVTDhWKBxVbD3EEvQ3g
-	 dKpBh5A/NhyJYZ0rAbKLP0YFtp1Vvx8szIHcshRXwUZUiv3tToQydUWkJcXYWxbH+4
-	 JlhmmDdftmEHpKE1/zut26AUrJ4Jnv3RyCA2uayOSd9jaNC4cMuhd/kwlPWL7ti9cW
-	 ZsVaCHBKsqhr4TuVf8+gYs8r9ZBhzb9p9kAJb1+IuhsneiZqySH75INmtnMWGHGAJo
-	 mC1/TBi0VgYwg==
-Date: Tue, 3 Nov 2026 14:27:11 +0100
+	b=IygRsno4NOHfE/iBNfzdCIZL1f7GksXNFEHtc4kTUoenDGqAhr/XDfOfJoxVADq4V
+	 GetzlPEjKCPR6aGBrPdksDj6cQ5YhKIQ6CzaqYFyONb4j5+3rUc6mZFu5KqS9oj+MR
+	 /GXGLZIJ7yOOTykSFhCDqe8F6ylkvx79lkFMADLZDhuHX0zQwlT2w5A7MmtvwGjjsS
+	 LdbcZjzOAV/aoFSe8MrTKRsKKo2nYhTGWjhJ2GvEDyjYgQrg68jpKEAb1DyF3IFPia
+	 7k3u84BqwCGHtgTF/WE3zCL407sLlZMhNWvv/uvKsMkpb/s8WIS3+DZgawg0rFunc8
+	 5T8kGK0j6V64A==
+Date: Tue, 3 Nov 2026 14:27:14 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 1/2] args: Add DEFARG() to implement macro default
- arguments
-Message-ID: <be1057524eb2d7bb378d205c3fc8074acbf124e2.1793712214.git.alx@kernel.org>
+Subject: [PATCH v1 2/2] string: Simplify strscpy[_pad]()
+Message-ID: <31096484d9be38ed36bfdfe8a5ff3302bd5b8266.1793712214.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1793712214.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,89 +57,103 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3y24ymvbymfwlvjt"
+	protocol="application/pgp-signature"; boundary="gjpmhifg5dlkzgvp"
 Content-Disposition: inline
 In-Reply-To: <cover.1793712214.git.alx@kernel.org>
 
 
---3y24ymvbymfwlvjt
+--gjpmhifg5dlkzgvp
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx@kernel.org>
 To: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 1/2] args: Add DEFARG() to implement macro default
- arguments
-Message-ID: <be1057524eb2d7bb378d205c3fc8074acbf124e2.1793712214.git.alx@kernel.org>
+Subject: [PATCH v1 2/2] string: Simplify strscpy[_pad]()
+Message-ID: <31096484d9be38ed36bfdfe8a5ff3302bd5b8266.1793712214.git.alx@kernel.org>
 References: <cover.1793712214.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1793712214.git.alx@kernel.org>
 
-It needs __VA_OPT__, which is a C23 feature, but it's provided by GCC
-and Clang in GNU-C mode as an extension even without C23.  __VA_OPT__
-was implemented in GCC 9 and Clang 6, I think, so it should be widely
-available.
-
-Here's a small example program showing how this works:
-
-	alx@devuan:~/tmp$ cat d.c
-	#define D__(x, ...)  (x)
-	#define D_(x, ...)   D__(__VA_ARGS__ __VA_OPT__(,) x)
-	#define D(a, b)      D_(a, b)
-	D(1, 2)
-	D(1, )
-	D(, 2)
-	D(,)
-	alx@devuan:~/tmp$ gcc -E -Wall -Wextra d.c | grep '^[^#]'
-	(2)
-	(1)
-	(2)
-	()
+Remove the need for intermediate macros and COUNT_ARGS().
 
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- include/linux/args.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/string.h | 22 ++++------------------
+ 1 file changed, 4 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/args.h b/include/linux/args.h
-index 0562dc51435e..5886011cf791 100644
---- a/include/linux/args.h
-+++ b/include/linux/args.h
-@@ -3,6 +3,11 @@
- #ifndef _LINUX_ARGS_H
- #define _LINUX_ARGS_H
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 6cb5cdd01158..b17c7b9d8bc9 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -69,22 +69,6 @@ extern char * strcpy(char *,const char *);
+ #endif
+ ssize_t sized_strscpy(char *, const char *, size_t);
 =20
-+/* Expand to 'arg' if non-empty, or to 'def' if 'arg' is empty.  */
-+#define ___DEFARG(x, ...)   (x)
-+#define __DEFARG(def, ...)  ___DEFARG(__VA_ARGS__ __VA_OPT__(,) def)
-+#define DEFARG(def, arg)    __DEFARG(def, arg)
-+
- /*
-  * How do these macros work?
-  *
+-/*
+- * The 2 argument style can only be used when dst is an array with a
+- * known size.
+- */
+-#define __strscpy0(dst, src, ...)	\
+-	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst) +	\
+-				__must_be_cstr(dst) + __must_be_cstr(src))
+-#define __strscpy1(dst, src, size)	\
+-	sized_strscpy(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
+-
+-#define __strscpy_pad0(dst, src, ...)	\
+-	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst) +	\
+-				    __must_be_cstr(dst) + __must_be_cstr(src))
+-#define __strscpy_pad1(dst, src, size)	\
+-	sized_strscpy_pad(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(s=
+rc))
+-
+ /**
+  * strscpy - Copy a C-string into a sized buffer
+  * @dst: Where to copy the string to
+@@ -108,7 +92,8 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+  * truncated.
+  */
+ #define strscpy(dst, src, ...)	\
+-	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
++	sized_strscpy(dst, src, DEFARG(sizeof(dst) + __must_be_array(dst), __VA_A=
+RGS__) + \
++				__must_be_cstr(dst) + __must_be_cstr(src))
+=20
+ #define sized_strscpy_pad(dest, src, count)	({			\
+ 	char *__dst =3D (dest);						\
+@@ -143,7 +128,8 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+  * * -E2BIG if count is 0 or @src was truncated.
+  */
+ #define strscpy_pad(dst, src, ...)	\
+-	CONCATENATE(__strscpy_pad, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
++	sized_strscpy_pad(dst, src, DEFARG(sizeof(dst) + __must_be_array(dst), __=
+VA_ARGS__) + \
++				__must_be_cstr(dst) + __must_be_cstr(src))
+=20
+ #ifndef __HAVE_ARCH_STRCAT
+ extern char * strcat(char *, const char *);
 --=20
 2.55.0
 
 
---3y24ymvbymfwlvjt
+--gjpmhifg5dlkzgvp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrp4S8ACgkQ64mZXMKQ
-wqkBdg//dvJXzkKfJAqk85DY/hNVZSAA0EYhMv6+2IEDVjyWDT32H3dZ84mz/vHy
-B34Va2JILC5/FmBry+G3NU3Pv55/JEHlnw92TDNB1LrIRY9450HYdizT+S87rCiW
-2lsLcXcwh5LmG1BnRygq2F7V55JH6S/Pi1UGoJ7z+U7nymEpLdlshblzhUljWCGp
-+tGOHMDyhOK4hrkiTr+UVrnjcZjQs//fLCB7mYvdyLA+WRSMT8yKnTgPDGa9WQVW
-r9vYq+Q21RbsxkTbrkKyvHpqOAAXwZjoxqTOmOh3WmqJTmm6yUwiIdMPcLg/7Arg
-ybrt6Utw/zzQOVkP1CPRZb87G1yrE0O6v7uDMrxWRf0vWJMsFgWWQtI2xqDHco3D
-XDo3NH5OtrOCZzPBIHdC3mqHfaThJyrRUd22sPSG6yGZkL5zdnC591zPTKf3FbvM
-TzTsgYT/1Aqm+FoZKyI2v8m/gCIt8QXIG4yHI9EdecjejxSmloWESSs0ewzw3aOK
-p4QUTHl3Np4/WG/4IF8KleMvFEkWA80TSklMNcNQ7mXEaKWEOPchr+xMxlYiDd9t
-QfFp04vE0pyT73nv9kIwSs7peewjSFr/6V7zw0UoD7lDoT3aqDsGBP+HmqVOwAzH
-VtLcZ3p6RbZd1FSgb6e96/ZU4FJ88bOFpPLTxYgTPdk4mavqjWY=
-=tbwR
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrp4TIACgkQ64mZXMKQ
+wqksog//brmInBU/TqpkD8s94JRg/IypnrTiPkrw1hbIaVX8QxuPmedJPg91aQ3E
+roDqlxIXNIlpTW/B5BGjz9qz0gnyxYDsoBWUj5aSlYDgboja0NiaZwRKw2jfk2hS
+WoP+7/3H0PdAAKHvEMt+s8JAJ18B8ZDK+6nqrzHyk9UpnNXF0c5Pgbn295JQoFE0
+ZIicc3lWxInJQbtBWJDYalVOPtDodbCV/59DrH/KNdHAbGJ4yOJXrCDNhMZFwgnE
+1ao9lzJXWZtqKbKgaKSgd/bWjbr2a+oKXwFKHEvR+ULSxYZLFoJnmTExhzJuCCyE
+zCp36R+ffkclGD3TwJzm2d+GCUPvOEKtCfbZkFN+JytsG6+jPsg2P++799x8f0AO
+rG5upWg9IcL2pypKkwe0M7nu7uofX1hBOB+iY3wdLZ+tx/DQ+L4WZWdPOxPyD9aA
+K7HFoGH9MERZlOBuKa+rowvEfoOfNYMtKD0MihzKW29Hf94J0EcSc0vQ1z2PJjxJ
+LhQBCxGodvCkpuq177PzZ4YxucJx4yaoVIHJ1OleoDjcCEQQtAQJTaxuG0Wr0uzf
+t/+/SqcZRLoeu/Z/WEWcN5iiBctSiOxVhlKZHeE/TFWCEfoEGg8mllgn9pgUpqDh
+W1B3kETdQ6QO1RUfrY3Cwh6WFziC9Nru5lAtY6YHPzURfIwm05A=
+=iiC2
 -----END PGP SIGNATURE-----
 
---3y24ymvbymfwlvjt--
+--gjpmhifg5dlkzgvp--
