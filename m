@@ -1,98 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.226
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.227
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793714347;
-	b=FqidcieCkAKqjoIrbQw9ZH+Iy9ef+sVbMvFVACjD0msW/eyhkWMV6VM3gLd9S+P4GxIj
-	 YK9tBj2t+mnKd4XNk2gJsJLI+/sz4xtbK7FS9oH5tH61XnRkpm2xQ+MjWL7UCagmvX0Td
-	 Y/Upq/MI9OX/m6VXfkDfB2CYILxkuh5PTEEv/Xm+I3aE4S/u99cbKVULo2Bjj7tjx6sxV
-	 slDUstvjwMCEgCeD3SZbkr4ZVTEm1c0+BN3qLkiqjtx1+it4MvHHD6Teua08Ix112lABm
-	 WyHsuuRYfuyn8jq03Dbzp3C/j5AdOAQDMWE8AQKBiSllCvNHKcshhpXHgvw+eqNELTw==
+	t=1793714352;
+	b=UkKsj6ek3pwB+4UoKohi35WsDdphouvNzMBEESkMkjCkPg407eS3IHCbT8CStqJN1fQU
+	 fOaV/Vzh5omahuAJlF8dNfhBNaNl3285ZeGXzZnbln83JrZyUGl/1ipCzq185xBnITR88
+	 UH6rQtD8hq8KTXa8vBQNIOL3aVVke4QFiBRyPggamrQ+XSuangYNv11ikeQUeTy312rZg
+	 5NC0llrXOU1pxAhuztcBKJ0QDBuwQLRn2ytJFf5/l2vzDiJ3pJMxvL0pX798Qc+RL3acA
+	 pkkQ6pFncm5LkzkWx05f9m8hGeGmODgrsBKdb4jc42pBArhwD4IFpDXQTHr1xZ3vsKQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793714347;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793714352;
 	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:X-Relaying-Domain:
 	 X-CFilter-Loop:Received:DKIM-Signature:X-Forwarded-Encrypted:
 	 X-Received:X-Received:Received:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:X-DetectorID-Processed;
-	bh=bmndstez1ROjl3SXVUcZnwGvUr5BBU/f9ozJwfuLHnI=;
-	b=rfXueF9U54EPx2+zCBqnFkUEZLR4E/PU6PIkas3zQ6rzH0Xmu94bv7tM0Yoh2zhdss5r
-	 8Oj6AXe8Zxs576krBD64x4eMuOlKpTIc9c3IFKvdpnuC1CLP33xN0lSTGUdZyZfMYTdU9
-	 oeFD/8QTuhEJ0WfGNrKI0zWb6GMnUab/7mfKmMtz4apzNpx3BnFA9qSi03RxflnQ2v3F/
-	 MtwW9wJ3n7KYTqZ6gPoJtgyUKfStJofSucl9scXIBZiUu0k4ClUbunzn630N8hRAoMkd+
-	 LcZcMLHX2Z5VoIj8ySN2VVQhzn6eRiqLuTlGIJKQPktYJpU/yT7OPfIxKx5kP+ZOenA==
+	bh=ccP5HEXTeJ0Y3jbzqMoy8v3yamoeB3mTuClgVh9AD5I=;
+	b=FWCaqFUoASGzqZDTKLYd4E9kqlGSM9790sFLcOZkQetQ3gtwZjtswMgFin/AugS9et7e
+	 tol37S18ekoNUv9zGQJYXLo4c/5QCdx91779IM4wyBKrR2i7Fo59W22yXYWcb9CWOx5Hz
+	 CxvvJqGnRtjf38lTSHSFNNzOxfG4Ht52hNUhHPZWwxZMDYhRkm5GKJCcKa1nnWM7U0LBp
+	 m4jekSgjf3sFodsJveS39WGcQLBO1cw2x57w0V8ENtZHTu5hyptZqnaNLONChh83W8nP9
+	 chVphMfURwdWM2QYnIIE99ScA1/W4Py0UBRW2EaKYrNg99VHZm8rvuXUuVbu+6fHhaw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=broadcom.com;
 	spf=fail smtp.mailfrom=broadcom.com;
-	dkim=pass header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=Qj5XYort;
-	arc=none smtp.remote-ip=209.85.160.226
-Received: from mail-qt1-f226.google.com (mail-qt1-f226.google.com [209.85.160.226])
+	dkim=pass header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=RMAZnIWi;
+	arc=none smtp.remote-ip=209.85.214.227
+Received: from mail-pl1-f227.google.com (mail-pl1-f227.google.com [209.85.214.227])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF59606A327
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Nov 2026 13:59:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BCF59606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20A5606D80D
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Nov 2026 13:59:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E20A5606D80D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=Qj5XYort
-Received: by mail-qt1-f226.google.com with SMTP id d75a77b69052e-54465f79af8so31166291cf.0
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Nov 2026 05:59:06 -0800 (PST)
+	dkim=pass (1024-bit key, unprotected) header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=RMAZnIWi
+Received: by mail-pl1-f227.google.com with SMTP id d9443c01a7336-2e99b1e5b4cso25521705ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Nov 2026 05:59:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793714346; x=1794319146;
+        d=1e100.net; s=20260707; t=1793714351; x=1794319151;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:dkim-signature:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=bmndstez1ROjl3SXVUcZnwGvUr5BBU/f9ozJwfuLHnI=;
-        b=DeDclfuflRoYPEy3+E/lb+XB4MEq9p3LwGAsKxDKVZdYhroTyYHu63ff6EkxhzIQfh
-         fsa3ic9T5ZC2/f25Snn2qHcrLHm6P9J6FuOyEL7VTslO6lRXf90tTHSRUZJBFONbLdK3
-         QWAhMWN/fUoV32GJzVhxCNLhRGw6pcCqErJY5ICUJhZK1mc41pXkGjRD2b/P+gqLJG2U
-         FTS2V/7TxZEvePxb96UBJSVzPr6JreE/GghvkIguWlT60Co2Js8W3yQ8eODlhRdLuHUP
-         JLPhPM20sMm/aLp7a/7+YMVxyQezLGLFxHLX7KtdGcePjLkHrwc+k6dMz8Ukfnh1xzZ5
-         nyOQ==
-X-Forwarded-Encrypted: i=1; AKwUvByp+GbieD4KhJleZmAxdt461JiCnTaWjFP9InDSItmuivcN3gQ6+EzciC2CLac4Uc3S/JcnasctCfLl8qLPJtY=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9aR+uzACJreBp5srYZIz4+huYssbwfVKivxxXe5PFmCe5UVZRK
-	+EtnGablidu6dDWNi7WoDbFmTSRRr4ICHYPGMH1fMMR32Up0v0hNNGZXkPBOakF/qjtQUyb4yQ+
-	P482H0MIoErNVYKsNnAzVz6TwxBJYE0DqIKoJTxn/z+2mTy8m6eAajQTUyx5OzJY+XNf9rxM+m+
-	CPKv4yKX6Pjz8tl0STW7rBx/ZOicS98AVYE9VoP6PrPBkKeAu/Q/F1QgbGp//h/R0S/z30nWREd
-	uLd91ezQvTKM5Uzdlq143ylBqRytA==
-X-Gm-Gg: AYBFou02+G0wS0MyfUstFH/xnQ5hA2ofA+DZIOT/XFCqCNVyXK/vQ4OZ4jfdPB24nse
-	XxrCJdt/I4mfwNTvC1ICBq03tqKf68NMiEmV/sxofq0qh+AsEuVQnsy/7mgPe4uQBBPB+Q3WUEr
-	zn0JjoBTSk1cvIftT2otvVTc3ozwKACoj6rDAg1sUyTKEG9CAdZiaTTraIR7HzIz4s1jakW0QwA
-	77U6cMaGznsrEshh/lbr3URnYm3n9PmV7nvQ5d38FmgqJ8bgw9ZoB5AuOqbKRynBDbmYxBMZlCM
-	RM9Xx8fbkdkJzw3tW+WYhkgqu4g62IH1uDI1qaYRLU5jPoRzEuWNcv7XHxuTqGfO3vnzCqv3DWx
-	ARRV/gdpv0A/aUjw4NUtSTptk4y+uR4nQxK03kjmS8txg+3ZWjcsYJ92jmbyC86plO5wmwNnxvs
-	I+t6godDOLg3tvZQMhCxwQljvqIhWdcKEFj52RRbo=
-X-Received: by 2002:ac8:610a:0:b0:536:575b:8dd6 with SMTP id d75a77b69052e-542b0b83425mr224494981cf.0.1793714345554;
-        Tue, 03 Nov 2026 05:59:05 -0800 (PST)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-28.dlp.protect.broadcom.com. [144.49.247.28])
-        by smtp-relay.gmail.com with ESMTPS id d75a77b69052e-5498c479e25sm240431cf.33.2026.11.03.05.59.05
+        bh=ccP5HEXTeJ0Y3jbzqMoy8v3yamoeB3mTuClgVh9AD5I=;
+        b=jY5sd9W41v/yEcRXSbKnKAel0F1FNw7czz0UFu78DFUgRtJgi+yC4Qu6rn7M9G0MMA
+         IhSl1Vy8x+fPA7p8SCLDDKDeQvKb6fYfMj6eWMqtElS46fjWiicXagE4bItUdrBPpkDw
+         C7pZDYtpdytggEgisXmj6x4+dSUDfK+c498jVgU8zbh6tb+TGjMmYLOLr5KcLGln0kKA
+         GyFSoEi34TfqknfgmUvkHDAbJPQ6hmhKXg50ne+H2T6xslMHJtZW5/WogI0tJGvNQGN/
+         eb+cNYHJsBbutPEr71US6v5C9TctykdbT6QqoRnQ6AGKJanCu/FaHl7UU2k503a22clW
+         Hlxg==
+X-Forwarded-Encrypted: i=1; AKwUvBxINZj0tcFB2yZOgImZFu+WR2+WJsJH85rr8OueBKQGV+wtRFOeKWsu4vZceICJNGe6IFb3GOyCpIGUFcxuY4I=@vger.kernel.org
+X-Gm-Message-State: APuU4Z87z2ahx49KnFjlN6FFusjjt5dc0SgfQLkzCEVrgEtq5CG642zI
+	8qQAvqMMDB+ryfsGwbkBvycpk6Satgs4H5BWo/yLB02rVgVFcQAlfgwaWAuyCFoIaQnDpBkygtc
+	IiU5b+abfeCHruMYGc4hpX8Ic5biCi1va8GIpY1mNp3VGrSL059ZjRKRDNTcGcT9mgjcmjHCPFJ
+	+CPBoQXkUs+oCoC/fpZ2Mh/gM3V2A2LLiN/5Vz0Uc8EdBqGhpz6EdkNz23SiOQTNdPQd3pRiKTk
+	nYUIRSv8J+X2qMKsFwthswtee3Qcg==
+X-Gm-Gg: AYBFou1F/YGwgjV53Aueft2iwJti09+1DAXLEh48XjZScxeK1HkNSawVM82TO1sfY/t
+	eFJ9JCr/1BQ2piFgEWsrpzDZsjtQhhv2LlHiSeq1ykB6gzl6xZZCt/kqWLXzL0bAn6nncDn35Fj
+	k7fwvueHfax2XUkKWZfoM65hmc+5Gml/onu1i+o7bAzINyA2Kim/L4eui1iiATDmkyIlCVEmbAq
+	dbH5uSxEl5OAw6J8PwFF46oC5GnIzLl5DHnw5ltPD+qLzw81eKNCRQBLcPh/a0zzE0jdmXQ3gov
+	0dNkdmMJ53hwOvUBoG3wn/OXV6FJKaJ9ozK1QQJ8/NBS/f468/KQawHmuQYr0zV23ztZML/r7lP
+	wsNwwUWNnRoZYGwqcK8Aq2SP+Y9ahAYMgKd3sXEOZJm8RXpEs879A2agLkKCW6WeB3ZbjQw6FS/
+	7IVrUSusfShdMRNQOBGELV6nWHukLm3im1xVVzUU8=
+X-Received: by 2002:a17:903:3910:b0:2e9:3dd2:a904 with SMTP id d9443c01a7336-2eb3648b6aemr123254465ad.16.1793714351247;
+        Tue, 03 Nov 2026 05:59:11 -0800 (PST)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-13.dlp.protect.broadcom.com. [144.49.247.13])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-2eb3922cae2sm2144645ad.14.2026.11.03.05.59.10
         for <linux-hardening@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Nov 2026 05:59:05 -0800 (PST)
+        Tue, 03 Nov 2026 05:59:11 -0800 (PST)
 X-Relaying-Domain: broadcom.com
 X-CFilter-Loop: Reflected
-Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-147be78cd56so10472764c88.1
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Nov 2026 05:59:05 -0800 (PST)
+Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-14373747468so5533837c88.1
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Nov 2026 05:59:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1793714344; x=1794319144; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1793714349; x=1794319149; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=bmndstez1ROjl3SXVUcZnwGvUr5BBU/f9ozJwfuLHnI=;
-        b=Qj5XYorta1jw+8PbfZqY71LtnJoR1VdZw+gTUwW6/ozIzSv0aM10Tyy7BI2/uYiYCA
-         FFvVmgp8cNb/J02cehNMBCQNCabMVVX+SMB+ewHIIaQBee38RYLRWMlG4CbQBgoiVPtS
-         H1SC9bf9/blmL5n2lOHDZfwrGjSvAf63thBc8=
-X-Forwarded-Encrypted: i=1; AKwUvBwk7qcKklE2UCWMDCghnzM0WH0GO/WY3+ieXKihS1Fi12VRM7vgBcy3/TgVIJltdjw2zsN3rCDqUhzUeqgMHrg=@vger.kernel.org
-X-Received: by 2002:a05:7022:ea55:20b0:1a2:a5b1:884f with SMTP id a92af1059eb24-1ac5da7726bmr20328252c88.31.1793714344032;
-        Tue, 03 Nov 2026 05:59:04 -0800 (PST)
-X-Received: by 2002:a05:7022:ea55:20b0:1a2:a5b1:884f with SMTP id a92af1059eb24-1ac5da7726bmr20328216c88.31.1793714343237;
-        Tue, 03 Nov 2026 05:59:03 -0800 (PST)
+        bh=ccP5HEXTeJ0Y3jbzqMoy8v3yamoeB3mTuClgVh9AD5I=;
+        b=RMAZnIWiFfRJoex6o5xMUANJBFWQC6wSRALcRXyo1dHHHP6MEzHp/RwWVLlWZmyxzZ
+         0k61IZ0PaWLzU+C/Kk+A4B+gR/AKLjy2ycVL2IFbfNeh7liW6wF9Oi3HXq1dN+9rXYgY
+         IqojDwR3yiTYQdSXrgR4s1PP+EvhdtRgkS5IE=
+X-Forwarded-Encrypted: i=1; AKwUvBz/JdQ/iSIbpJDr1KVNjot8RNku4RCXWQgqZ3sls479VH0EjOZjw62SFwzSQw7XNptCkqBgIcn+2s7pDqTPvxU=@vger.kernel.org
+X-Received: by 2002:a05:701b:2702:b0:143:5cb4:30 with SMTP id a92af1059eb24-1ac5577508cmr18346093c88.3.1793714348712;
+        Tue, 03 Nov 2026 05:59:08 -0800 (PST)
+X-Received: by 2002:a05:701b:2702:b0:143:5cb4:30 with SMTP id a92af1059eb24-1ac5577508cmr18346046c88.3.1793714347953;
+        Tue, 03 Nov 2026 05:59:07 -0800 (PST)
 Received: from bld-bun-02.bun.broadcom.net ([192.19.176.227])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac18458e07sm41658755c88.8.2026.11.03.05.58.58
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac18458e07sm41658755c88.8.2026.11.03.05.59.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 05:59:02 -0800 (PST)
+        Tue, 03 Nov 2026 05:59:07 -0800 (PST)
 From: Arend van Spriel <arend.vanspriel@broadcom.com>
 To: Michael Reeves <michael.reeves077@gmail.com>
 Cc: Pieter-Paul Giesberts <pieterpg@broadcom.com>,
@@ -112,12 +112,12 @@ Cc: Pieter-Paul Giesberts <pieterpg@broadcom.com>,
 	Hante Meuleman <meuleman@broadcom.com>,
 	linux-hardening@vger.kernel.org,
 	Arend van Spriel <arend.vanspriel@broadcom.com>
-Subject: Re: [PATCH 04/13] wifi: brcmfmac: Support newer PCIe core startup and interrupts
-Date: Tue,  3 Nov 2026 14:58:44 +0100
-Message-ID: <20261103135856.3676311-1-arend.vanspriel@broadcom.com>
+Subject: Re: [PATCH 01/13] wifi: brcmfmac: pcie: Report the detected chip ID to the bus
+Date: Tue,  3 Nov 2026 14:58:45 +0100
+Message-ID: <20261103135856.3676311-2-arend.vanspriel@broadcom.com>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260925-brcm4388-submit-v1-4-b5cbc2cde2fb@gmail.com>
-References: <20260925-brcm4388-submit-v1-4-b5cbc2cde2fb@gmail.com>
+In-Reply-To: <20260925-brcm4388-submit-v1-1-b5cbc2cde2fb@gmail.com>
+References: <20260925-brcm4388-submit-v1-1-b5cbc2cde2fb@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -130,24 +130,12 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-On Fri, 25 Sep 2026 23:43:39 +1000, Michael Reeves <michael.reeves077@gmail.com> wrote:
-> From: Hector Martin <marcan@marcan.st>
+On Fri, 25 Sep 2026 23:43:36 +1000, Michael Reeves <michael.reeves077@gmail.com> wrote:
+> From: Michael Reeves <michael.reeves077@gmail.com>
 >
-> Newer Broadcom chips, such as BCM4388, require changes to PCIe register
-> access, watchdog reset, and RAM size detection. PCIe core revision 64
-> and higher uses a different BAR0 register window. ChipCommon revision 65
-> and higher requires a different watchdog reset sequence.
->
-> Update register access and reset for these revisions. Decode the SYSMEM
-> bank counts according to the core revision and exclude ROM banks from
-> RAM size calculation. Disable all detected D11 cores during CA7 setup
-> and select H2D doorbells based on the firmware DAR flag.
->
-> In MSI mode, firmware can clear the mailbox interrupt status before the
-> host reads it. Requiring a nonzero status can therefore discard valid
-> interrupts. Process ring events without that requirement when MSI is
-> enabled. Use release/acquire ordering on irq_ready to publish the
-> initialized rings before the interrupt thread accesses them.
+> The devinfo->coreid field is never assigned, so bus->chip remains zero
+> and chip-specific feature checks cannot match. Assign bus->chip from
+> devinfo->ci->chip, which contains the detected chip ID.
 >
 
 Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
@@ -155,11 +143,7 @@ Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
 Regards,
 Arend
 
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Co-developed-by: Michael Reeves <michael.reeves077@gmail.com>
 > Signed-off-by: Michael Reeves <michael.reeves077@gmail.com>
 > ---
->  .../wireless/broadcom/brcm80211/brcmfmac/chip.c    |  35 +++-
->  .../wireless/broadcom/brcm80211/brcmfmac/pcie.c    | 197 ++++++++++++++++-----
->  .../broadcom/brcm80211/include/chipcommon.h        |   5 +
->  3 files changed, 183 insertions(+), 54 deletions(-)
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
