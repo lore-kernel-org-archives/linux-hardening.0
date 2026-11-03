@@ -1,45 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793743282;
-	b=A+nlbbpxT7/y9grg2Gfk1xOl2VicU3NNJAdfFwZDvVh2bg84nhDa6xTD3ZhIdB/0FLsC
-	 oZPU9I7grvvhKT9jH10MpE9hgQLJNm7tEtIkaRLNx62lHB4UO7ihOf2+AxdIQqEBTPtr5
-	 7xuyQQUyos9jjL65gAB/fCkceDvVybN+7Nj2FIG/KLL5JuT+6xKAauAs591rY4c4WiSLU
-	 5LOkPdenQO1kFO3rBtnUCvvxeDkCesj2NWtyjg0XoNO4vptQC1FjkKwaF3rOVMjOpsy3s
-	 CB6jeoR2eqoC7IxlS7U55RyLcFlGglcx+M/01CYx7v7JBDokIKxBEcqkinv2APWiKCw==
+	t=1793748104;
+	b=fOCvktYrgy0aO+LG7rZ2eyEc6dReUfVSqjqd3v+Xoit3aIWmDba3NZOV2Kg0B69iqCiT
+	 6klGDmTWQjHJ5UlZnFxFu2aR21yUql5B8V16Luq5prvhaSumHUVkQyuCKLBMiqpUvo9BR
+	 LZTv0X1mcMNBRXcYH2JKce9GJjZ5c1canAc+QkSNq8qmAYVb6Cv3JHdanzQUMJYUpG4de
+	 HMiVMScdqnjmuV/vNPVlj8ghzohfCkp7sySNNF5RZ0LctHTFl7HKMADU8MsfPBhIl/eaB
+	 rj4apMesR36Q+AfJqavwSTCPoWlpwOAo1S+1ObdDBjBQaG+6sAYEWkd29M1B+5z9XIg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793743282;
-	h=Received:DKIM-Signature:Mime-Version:Content-Transfer-Encoding:
-	 Content-Type:Date:Message-Id:Subject:Cc:To:From:References:
-	 In-Reply-To;
-	bh=R6uA9hX7fD85rhN6sNXcNNPGP4g4K/KhTQ6rqqOfAX0=;
-	b=rwUD/tZacd8iRjT5H5CHidT5B1xGKxAx5Y0Lu7y1rh37mH74CmQVVzNR+opJgYE1tBC1
-	 Acmy1rI8xY0NE4uxYEl9gmbX5ICQEJ1PVIOKkodrbLddoHPRp+deQpr2+8lWXAk7m5W40
-	 tL0+iJ8t0p+mW/1T/PPsKZJmyaVfFPPTgwztQpekHSWX8cMzPcTrSpUdvzBZykMkSu7wb
-	 V5p7uilW2A/hk9/qBjJNJH1b2KK+NxwIOyDfyXW8x1sUlSPJLbb8kvFh6T+ilCZKf+m5B
-	 cPcUoPbnxCnS0xztf0p1nRy2YQAnE4zCvBh5Zy2+uvpt9zqqFIY3t3CL07tQyg7ESRw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793748104;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=1BLBzDgyH4D0f7Nlpo8pZW2IwEta3qwghWOoH3Ds6Cc=;
+	b=TqAfv0a3JFNDITYH2zPC4NY3thcaFefT1UzAQ5QFmyx2v4O5uzhhYfFGK0mKp+IfkpXO
+	 Pb0t3WXfWyntRrFVYyf5VMOduKhW+DcQS5Z4LUqG+lpMIcogljEcr2G4Lbz5qdu+DWQBu
+	 1ptaeJB/MBx0A7i43shFlZWkgIEcHnK0vOfLKskWtffivIjHIIau4xTlXLX3CkKw6REwa
+	 xu145zyXlGWW4M/rbgkKVnQM8W3vuXEejL7azBS8atl/6A4ShVjTYgfKcGX3MANbWCRD4
+	 UZmburq+kNTKuOoBlYX6VuTvre9hcOOgzBCAs0VRswRYR6Aha1cz1jJ+apm0kAw8ILw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AuKAd+2p;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PYj8xxwJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6B2606A31B;
-	Tue,  3 Nov 2026 22:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F155606A31B;
+	Tue,  3 Nov 2026 23:21:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AuKAd+2p
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E5C1F000C1;
-	Tue,  3 Nov 2026 22:01:16 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PYj8xxwJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823BF1F00919;
+	Tue,  3 Nov 2026 23:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793743281;
-	bh=R6uA9hX7fD85rhN6sNXcNNPGP4g4K/KhTQ6rqqOfAX0=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To;
-	b=AuKAd+2pAiWxmodz6a5kLrzOGag2dQXGCvIWfiU2SqiHPwjnt+DZeZOIZzwDoeFgW
-	 f5tvI82TTyJbTTJBeMupREcEqkEJOTnvm2tcg6rR6KzI977TOiUnB4XfJblBR0m8Ko
-	 3on7l/RW87okd18TkMziqprxQ9KNwBaxunuTpwN+wdELBok8svqqglFYItI7OaAie9
-	 SaIAxAjUUZc0FGMB/GEzff7Fem5FCCZW2y7K8Ha9aPGJ34HwNpxMac8F2DMTukXzX4
-	 NMMYmaBoHXuYiAJmGYwn0YL5KCqaN+IzO8Fe7/dimMO7SXev4BOPXOSMGcMZiQPmb5
-	 yEemvUz0AwJZg==
+	s=k20260515; t=1793748104;
+	bh=1BLBzDgyH4D0f7Nlpo8pZW2IwEta3qwghWOoH3Ds6Cc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=PYj8xxwJb91gicJm4gm1fLpxTfeGOHsa7btTMWJ8JZvODnqrZOMK2RfIQM45vswyT
+	 Fm0yJKs4JVWZK+MgMlbkwtI8xkocRo1ysuwYChJLSqbGBXLUx/U2yT3Dn//jKPG5Ye
+	 Xk5ImbQhvwp2mbmuB16t1wHu4rM1r/DXzctyP7SEOICHqkz9phuSZfXTE/04B0Ifpj
+	 rvrWs9nCWUb6DAg+LzaWJnIPSzibubPF2PR14XZbTCkfEZBd3sI0dS6ZuXUIEccaAD
+	 3ZuP5pFxlYfR5D+JMEJYbTgdDA+r4tUVsSgMQRXDulSvkSm5fe+//nf1+i6jqGmsY3
+	 TRoy5+HZhJFzg==
+Date: Wed, 4 Nov 2026 00:21:39 +0100
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Chris Li <sparse@chrisli.org>, linux-sparse@vger.kernel.org
+Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
+	linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH v1 0/2] Simplify implementation of strscpy()
+Message-ID: <auprDNQJl90tLBrQ@devuan>
+References: <cover.1793712214.git.alx@kernel.org>
+ <auoxn2Pe10D4HPKm@ashevche-desk.local>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -48,60 +57,99 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oi66qub5e35lwsy5"
+Content-Disposition: inline
+In-Reply-To: <auoxn2Pe10D4HPKm@ashevche-desk.local>
+
+
+--oi66qub5e35lwsy5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 03 Nov 2026 23:01:15 +0100
-Message-Id: <DMLWX8NY1N1N.2OMQMQCIVRR18@kernel.org>
-Subject: Re: [PATCH v2 0/9] Add __must_init and require explicit
- kobj_type::release
-Cc: "Kees Cook" <kees@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Rafael J
- . Wysocki" <rafael@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>, "Miguel Ojeda"
- <miguel.ojeda.sandonis@gmail.com>, =?utf-8?q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, "Zhihao Cheng" <chengzhihao1@huawei.com>,
- "Zhongqiu Han" <zhongqiu.han@oss.qualcomm.com>, "Sumanth Korikkar"
- <sumanthk@linux.ibm.com>, "Bill Wendling" <morbo@google.com>, "Justin
- Stitt" <justinstitt@google.com>, <driver-core@lists.linux.dev>,
- <llvm@lists.linux.dev>, <linux-hardening@vger.kernel.org>,
- <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-acpi@vger.kernel.org>, <linux-pm@vger.kernel.org>,
- <linuxppc-dev@lists.ozlabs.org>, <linux-sh@vger.kernel.org>,
- <linux-s390@vger.kernel.org>, <gfs2@lists.linux.dev>,
- <xen-devel@lists.xenproject.org>, <linux-mtd@lists.infradead.org>,
- <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
- <linux-kernel@vger.kernel.org>
-To: "Ian Rogers" <irogers@google.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20261027223847.652884-1-irogers@google.com>
-In-Reply-To: <20261027223847.652884-1-irogers@google.com>
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Chris Li <sparse@chrisli.org>, linux-sparse@vger.kernel.org
+Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
+	linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH v1 0/2] Simplify implementation of strscpy()
+Message-ID: <auprDNQJl90tLBrQ@devuan>
+References: <cover.1793712214.git.alx@kernel.org>
+ <auoxn2Pe10D4HPKm@ashevche-desk.local>
+MIME-Version: 1.0
+In-Reply-To: <auoxn2Pe10D4HPKm@ashevche-desk.local>
 
-On Tue Oct 27, 2026 at 11:38 PM CET, Ian Rogers wrote:
-> Clang supports the 'require_explicit_initialization' attribute on struct
-> fields to enforce that the field is explicitly initialized when an
-> aggregate object is constructed, emitting -Wuninitialized-explicit-init
-> (enabled by default) if the field is omitted.
+Hi Andy,
+
+> Date: 2026-11-03 21:10:23+0200
+> From: Andy Shevchenko <andriy.shevchenko@intel.com>
 >
-> Following discussion at the Linux Plumbers Conference [1], patch 1 adds
-> the attribute to include/linux/compiler_attributes.h as __must_init. In
-> v1 it was called __require_explicit_initialization. Kees picked up that
-> patch with a first seq_file user [2], and in that thread Greg suggested
-> the shorter __must_init spelling, which Kees and Miguel agreed to. As
-> the attribute did not land in the v7.4 merge window, Kees asked that
-> this series carry the renamed attribute. The Acked-by/Reviewed-by tags
-> on patch 1 were given for the original spelling; the rename is
-> mechanical.
+> On Tue, Nov 03, 2026 at 02:27:08PM +0100, Alejandro Colomar wrote:
+> >=20
+> > Here's a simpler implementation of the default arguments in strscpy(9).
+> > It avoids having to build concatenated names, the ignored '...' in
+> > __strscpy0, counting arguments, etc.  It's replaced by a quite simple
+> > macro that takes two arguments, and picks the last non-empty one.
+> >=20
+> > It requires a C23 feature, but it's supported as a GNU extension in
+> > GNU C11 mode, and was implemented a long time ago, so it should be fine.
+>=20
+> Yes and no.
+> See 551d44200152 ("default_gfp(): avoid using the "newfangled" __VA_OPT__=
+ trick")
+> for the details.
 
-This looks ready, and I plan to pick it up through the driver-core tree wit=
-h the
-minor commit message correction.
+Hmmmm, so sparse is a problem.  DEFARG() cannot be implemented with
+##__VA_ARGS__ (I believe), so I think this is frozen until sparse is
+improved to add support for __VA_OPT__.
 
->   powerpc/secvar: Add missing kobject release callback to secvar_ktype
->   sh: sq: Add missing kobject release callback to ktype_percpu_entry
->   xen/sys-hypervisor: Add release callback to hyp_sysfs_kobj_type
+The implementation in that commit you pointed takes advantage of the
+fact that the default value is hard-coded in the macro, and the macro
+has zero fixed parameters, which makes it work, but if you add one fixed
+parameter (which we need for a generic DEFARG() macro), then it doesn't
+work.  GCC's ## is quite limited compared to __VA_OPT__().
 
-Some ACKs would be appreciated. :)
+I've CCed the sparse matinainer and mailing list.  Let's see if they can
+add support for __VA_OPT__().
 
-Thanks,
-Danilo
+> So far NAK from me.
+
+Makes sense.  Thanks for the review!
+
+
+Have a lovely night!
+Alex
+
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
+>=20
+>=20
+>=20
+
+--=20
+<https://www.alejandro-colomar.es>
+
+--oi66qub5e35lwsy5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrqbH0ACgkQ64mZXMKQ
+wqkllw/+MNLFZy2UY09IjzXaCkcbHoGv9kywCSe8aJVa7WVh33CZtBb4cZQ2LwbH
+hoJV7PWzfZZVR6xn7/l6igHw3T/d8IE7dO0EPj8iMdiUr5gRaBONZPo/H9Cz7aNa
+C710oEaUDYVzYyt3+dMkFE3YPNuwQKqDrY7uxUOZVYENc/o4Nck57MMdknWA+wU1
+e7N4lzoWp+xelXPKpW7HE2D/D1IUOc6lkicka/QNkk9PhzofUMKxj8+MUFJth480
+tAi3D5VAkQV6vypgGawZP/BHHQDxgaExzGbUK2mkTH9PhrzqmLPr3AzA+4sFzD9Y
+7Yg68UT/ZJhbD571HfnW/MxqpOIHZscKZd2c0pDDnO0KWSCAiw8OAoOLx+GizGen
+SpkZokhOiLg9AN9ySPHGyYFzlUsOnzJZTXx0Lk/8IEpodhc6sFsTK7EcE0Tg0g1I
+Ic1/ZoiuDzJQUwj42jVFQMbz+no1EduHY1lo/43nNU6RQFU7yL0tDSH7sFAPMnDw
+qsBymtD0UhHPZ/Ltqt2JzZJg5LFaFgFdsgDMuOX4WAKr+niRTv9P3cEn55aqqroE
+gMwdkpwkCt1aLCalkujcjnxeWnfcyu++CFjdyCKJqlPnvzt4LE1qVVYx5wLTwZ30
+FkwhxIlQYy0JtJVZFRJYxvAsWoOSfyq9pFMUmMqRBFPtNspA4nQ=
+=/std
+-----END PGP SIGNATURE-----
+
+--oi66qub5e35lwsy5--
