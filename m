@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.198.48
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.17
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793729724;
-	b=zql0BmtM9CWzxrFWC1XZ8CEYbt9QBKt37HemyPaBykxRlLPcYXx9Vi7P4T4gV0RK8x2E
-	 EQpx8LZEkCeiKzrm6YSwnF9NfHJ9kDWm/eDubadruC/tPigblfzhgo4ILY/asD7A/ppit
-	 t9bSU3cEEHR1FkedasKz8Rbmvzu15maNo3mpIDmS6T2GmF8+NJzj6TX3aXNKzYywcVJD+
-	 +zXxAEWCs2J3+o2yYd2gWjAGUZEwEtNdbTyJQey0mT/P9t/q73qfcs9XMmZS/o1mjj8O9
-	 ODa4ychN1oaicI2PHCsHzKbGrGthH9jAoUTxP/hw2ZDQTTSmvpiAXcHpPNbN/CEwHtQ==
+	t=1793729720;
+	b=S6VQ9fv8YC0lSHiZhXL+R+68g71Mobb5aFY72ggMEfOfGMFmvJWoDYAa0Hc+qdoD9rup
+	 YVX+ifb4VghnPrdy8nOW+PyI4Pgxi+eCcwOtuj6/F5TMPq9bw99Eekpr7mHRHUnwwQYcQ
+	 r3hXZlsWapJr2Y/IbHduWGnt/t+HS7Q3CLgkqRGNPlO0C1Rbpj0e1atSYu8RkknCiQc7G
+	 tzzf5XI0MUtt3sGbXTYZ1ktzXimFsNPU4km/oePiIMcALAURjktITkPrPZG724bdIa7X4
+	 pNlssStcFrRLTftU5SwQ2en5luEY6keIV9D2ttoEq3zy0WUlEzU8R2scC6DOcNfet1w==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793729724;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793729720;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:
 	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
@@ -26,53 +26,53 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
 	 X-MS-Exchange-CrossTenant-FromEntityHeader:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=tvSFiv8YXy5gDkYbInS8cGSN/RcKa83Mi//VfKJtWLo=;
-	b=qpIPYjAt+Pxje3ZGSK9NBGSvYvsWd+ZSKPPg1gNKBn3t29aAEesaqSkrXZKn6vctZRbb
-	 r0FdSXdT452+Hy0q5wvpYc7BdL9+Q8/ZCdlJPTYojOntUuAFoZG+nzSd6DSpc+nIP9nZO
-	 RuRZzX3X5sUOxmmMkTjxYLX2cTwsYbSfvbd7RXa0W04pYO4g1F6E9PvIaYZKXPRg/d8Di
-	 z62NMXtPphupdgkGJaMKgKx67h3fKo9RQFk1j1DV/pfhnlZs7nfsDYll5uyCHXTY96Czv
-	 BLGmLKC8MI2JWlqhjRZpAxMNbnkea0efahMxeIyWvLyZViwHAMPEx7u/cmzOz7xawqg==
+	bh=CH3p52RrmqbXb8j7718xeM2OUydrx3PIe6Yd1ZRi7ho=;
+	b=vEnGyJ7kC5sdiHdn8VzOfj1Un08Ck+Ysoj68P02v0V7CVATV6djqCKnexwdg5PR2/lZi
+	 PPofPoCODc5JVC1eWzNoNZJO3p+XS0mruE7MtIdgY8aRtrqx8vNfyHvfI+kjxmi/Ue3Tv
+	 MNFxgJyPq/AhTDkCF45Dh4KnbOhxtHKFc8bYvfO62/9ufyN77hWAx8zeFo4bmRXILD0KP
+	 QEYfGWR5ROWl7ES/GVsuEfidbPFO/jmSuB2fUECyJ4cQC3zI99EETNN/hTHU9ZCQZeF9E
+	 4MIh65aVVpY6lku+/r303tj6G4cI0aI5nbmS4lJKBDwr4WRUhZYYDlrLdPN4/DjGnAg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=amd.com;
 	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=TpT836TQ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.198.48
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010048.outbound.protection.outlook.com [40.93.198.48])
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=AUf8CIya;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.17
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011017.outbound.protection.outlook.com [40.107.208.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54306606A33A;
-	Tue,  3 Nov 2026 18:15:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 54306606A33A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23101606A324;
+	Tue,  3 Nov 2026 18:15:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23101606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=TpT836TQ
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=AUf8CIya
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zN8/7/pDYzU4AvtrM0kFzjiDkoPzuvVhYOlTNBch9vYKQ0Q2pCYSVVzWwOKjbnLVMAKJAk8kTbguA3NRlcTyNCmRG8f2Rq5gqifcWepPy+ECABdkWUX4WywZd7RsEdog3TG6mQA2TxVfOm9RQWGHr8lJYLZbtt4hh6XYoZBhUYUeFQEzvOrBpqw+RA8Die3ZzNGyuzCMnWH7vYzH/1r6npAMU7rrYqYl97zFemQ645IuN46hJjTMxa8XF8Lv8rZS2QEWb+eee+QtmqaTAgTW5iLU/hClsW+WZGt76NlFM/k8A0lfnyi3eDApIALvd7kJluS3zsx6y0hsRqVWlTgFJg==
+ b=QR7u+bnbFb95xgmf3+ZSPoCK6+SacBLYsuAP+nfDUGyxCw4Y20bBKH4vK4TTSrlhqih19a7SSuC8/v7GIcahLmTiiGLJm2ciKVKG6FFT2auHUpUQEbiWvzhBBienTa5n2lFg33v9admVpk8oDEsk3RRyBOXonJ4a7i25V3Kcpc2gm5S21wBtgPZEfFQzG40Z2iKLvsGBKyk5sxNebVHyZVlWWfdNrXI3/MbJ8JtxCxUe/Twaj2YL18VSWlIVFPCI03cvihl0NWYn22QnDVjctjZk0XoblU6EJtcexR0U433mkgEbVR+HBDAOY8E931BVAhRopTrTZOPllK2RDpG3RA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tvSFiv8YXy5gDkYbInS8cGSN/RcKa83Mi//VfKJtWLo=;
- b=Ai42mTCqAUUc5aS0daAWtkbRHbYVKpw5pIWHhIQb6N+xZqsqTo4KxmjNdNVTX6OWn3WDgzTEnpSxOMyBHbq8vrSdjPrQMtIb/x/l5+l+WA4lhIp8Sh7idTha3F5HCUzJWAZkOaMQ0dEOF3g4+tKxpQbkMwXVseKlutp+FvBgRcB81kVZMjkiSViYmwD4iWR67BmsPpUJg+yirOFhjNA/XDM8IPj8T8WBVZbpr7jA3aDGIDcJbdeVvwfoyJol/GllTEhGu26g00xRfyPO4seUW+xWbpitSd+Qg0IYIMUjcB2RI7R+HGZMAnlCInmck+HraA9WSCYz47dCte2rGWHWnQ==
+ bh=CH3p52RrmqbXb8j7718xeM2OUydrx3PIe6Yd1ZRi7ho=;
+ b=yW42H6KM0t9F/EjyeeLIsQwafvaPnUSxVKXS3bybr0V5fYVZo2vso38qCNP48KxlMPta/DL5pz4ccVnQ/DxHks12vBKZDtNFOdmzm4msW6CrHy7l69cvDkQ6sKbeYikpOJGUNizfv43wg8Rwhsa6ewBK/SmF+T95cmS0HJTyj8ol6yjzwyUg8idwcAZXpbKVx31hPRXKO8pgv2ueln3K3WMdufbLE2nvX2m3md/LRYtLGTHxnlx4w//QYFRZjT99H7bUXNGMvdNkeQHOg7m3RUNtpfv7BFVyffpA72AKP3sh98xWaimuzgwftTnkGi3tV3t74lCkKmowa8HkR4pRZA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tvSFiv8YXy5gDkYbInS8cGSN/RcKa83Mi//VfKJtWLo=;
- b=TpT836TQh/dFUtgVEpYCrM6+womTbrlyXDvB4+pNxquzEZMv95/npo/qZYFjxUpHYlk1fwAEIZ0DBHzyB3EiaehBWUooUR/PFklFn3TOppjih2LN6UMecFBdlGMFgv/ehYMxQqpZ7vim3jk5bfeM/Bd9imOZepMnKBnB1NL90KQ=
-Received: from ROAP284CA0441.BRAP284.PROD.OUTLOOK.COM (2603:10d6:10:147::18)
- by CH3PR12MB7596.namprd12.prod.outlook.com (2603:10b6:610:14b::5) with
+ bh=CH3p52RrmqbXb8j7718xeM2OUydrx3PIe6Yd1ZRi7ho=;
+ b=AUf8CIyaKYHYYg3trxEDTnxYeBVqlpaggMJyx0QxKFM4PWOUsq1WdazWJq3QGYms4ZfuWte7Tx5MFbUZTqqDwW3Rm80CCnfiOj0jy0BQE9rePOJM/UUYr9QUmKvTnfCD+lVTwYOGdstPUmo1xkVQbg7u4aUnxJuyJLjKslr/DLg=
+Received: from MW4P222CA0017.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::22)
+ by PH8PR12MB6817.namprd12.prod.outlook.com (2603:10b6:510:1c8::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Tue, 3 Nov 2026
- 18:15:14 +0000
-Received: from BN2PEPF0000A88F.namprd04.prod.outlook.com
- (2603:10d6:10:147:cafe::6) by ROAP284CA0441.outlook.office365.com
- (2603:10d6:10:147::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Tue, 3 Nov
+ 2026 18:15:14 +0000
+Received: from EA8PEPF00000005.namprd05.prod.outlook.com
+ (2603:10b6:303:114:cafe::21) by MW4P222CA0017.outlook.office365.com
+ (2603:10b6:303:114::22) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.592.8 via Frontend Transport; Tue, 3
- Nov 2026 18:15:13 +0000
+ Nov 2026 18:15:14 +0000
 X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
  is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -80,17 +80,17 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BN2PEPF0000A88F.mail.protection.outlook.com (10.167.248.181) with Microsoft
+ EA8PEPF00000005.mail.protection.outlook.com (10.167.249.228) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.592.5 via Frontend Transport; Tue, 3 Nov 2026 18:15:12 +0000
+ 15.21.592.5 via Frontend Transport; Tue, 3 Nov 2026 18:15:14 +0000
 Received: from [192.168.0.1] (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Tue, 3 Nov
- 2026 12:15:08 -0600
+ 2026 12:15:09 -0600
 From: "Nikhil P. Rao" <nikhil.rao@amd.com>
-Date: Tue, 3 Nov 2026 18:14:47 +0000
-Subject: [PATCH net-next 2/4] ionic: add device interface definitions for
- hardware monitoring
+Date: Tue, 3 Nov 2026 18:14:48 +0000
+Subject: [PATCH net-next 3/4] ionic: add an auxiliary device for hardware
+ monitoring
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -102,7 +102,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20261103-pr46-b4-v1-2-850ab7fbec19@amd.com>
+Message-ID: <20261103-pr46-b4-v1-3-850ab7fbec19@amd.com>
 References: <20261103-pr46-b4-v1-0-850ab7fbec19@amd.com>
 In-Reply-To: <20261103-pr46-b4-v1-0-850ab7fbec19@amd.com>
 To: Brett Creeley <brett.creeley@amd.com>, Andrew Lunn
@@ -115,411 +115,267 @@ To: Brett Creeley <brett.creeley@amd.com>, Andrew Lunn
 CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-hwmon@vger.kernel.org>, <linux-doc@vger.kernel.org>,
 	<linux-hardening@vger.kernel.org>, Abhijit Gangurde
-	<abhijit.gangurde@amd.com>, Arun Kumar Prakash <ArunKumar.Prakash@amd.com>,
-	Eric Joyner <eric.joyner@amd.com>, "Nikhil P. Rao" <nikhil.rao@amd.com>
+	<abhijit.gangurde@amd.com>, "Nikhil P. Rao" <nikhil.rao@amd.com>
 X-Mailer: b4 0.15.2
 X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF0000A88F:EE_|CH3PR12MB7596:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc137034-b13b-477a-9033-08df39d66736
+X-MS-TrafficTypeDiagnostic: EA8PEPF00000005:EE_|PH8PR12MB6817:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8fb98fe5-36ea-4908-ce7d-08df39d66810
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|23010399003|1800799024|82310400026|36860700016|921020|11063799006|56012099006|261009223027099003|261022105027099003|261102123227099003|261021135927099003|261021121427099003|261021123027099003|261026140227099003|261028144727099003|261026121527099003|10067099003|6133799003|22082099003|18002099003|3023799007;
+	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|23010399003|36860700016|6133799003|10067099003|22082099003|56012099006|261102123227099003|261102130727099003|18002099003|261009223027099003|11063799006|921020|261021121427099003|261022105027099003|261021135927099003|261026121527099003|261026140227099003|261028144727099003;
 X-Microsoft-Antispam-Message-Info:
-	iMY5VXET/2zH4B+IbhBnJ6Y8AHie8RgpTg+ldvVILIVE8gKcoUcKU69ky7RZJchbkDYLCzo1LlrESQCYms8OMj0FUeqxVZJn99qsQnNbJX5X+uJ2wwvpxF1JDytGtHyqOYZHjdfstU8a7UftukmR/oOXPJ8H4PZQli8/Nmo7Qkp2VQ3+yxklElc2AdENt2JFZppBv3SyQ5RztvKlnI2oT6Bb5lLNWNj0OPdM7TZeUL3iLvSbvAOAQ/iYI0OHo6MRmA9MsayL0THXR1d5XRHF2Hp6XI70Elp3UKMm/jPho1ypij0HSRkofecPufz5N3wMGKbsWuRPLzDzS1+BXjYixsV0fmN5hng5J2vlvn2YoASs0POb56oRtvIYmuMkzQ9KLiJx2VWgEROfRskktV9nkptcGF5Y/qrzoOmmz7U1kzfuPbdyI+03s6avidG45DaSF/EJwf0mGP4T8Vc1pg1LGwZKQAnSZWADPvvGWmxJZqhGcFv/uqHvpV4njdePyNVYDLar2iDRFIzFwvplBryxNhs2jnFaPMKMuDCGMhRGThF7lPBbe0yxAGwPefKwhlIb5cnM0gOTi2IfHi5hEZJHuskwwhXPyhUoegQYXC665T9zJfw8ceNrXNK432YHuqji3Jm1xbw1CLL12kpEu+K8lLveBoTol6NZUr24lrqE2pzeMpGp+aVE9lEaFldsY+za84NVxw9d7pinuYRT26zj5h2+Vgm5qcMrfvlmyuhsqKXGrqBOqZ1zW2Ned71oSQfQ
+	zIEmJ8/zo2fWVt96Kr4qliqYsQdgMCNtAtn4NgfXVZ+Otec0fQ8xp0/3B6wOFzNbHz1DV/Ji8acHcm4p63/lBKouREWUAOh32SMg0VrVZWhM+tf+XWOFpcQEtFwWffXzbX+GYSEu5kihFPipDxWJAp27yToq2aFN7Nw+Id5Z1JY/mWgO5ombCsswniKjGZmAQJGDyH4lyaT8WaFg/3Zm/M/q/RBzDlwUk1YE9KZXySvy52Mg5xqP/gZ7I2mfDRgr1HxT4VWVhLSugXsycZ3wV0CgyC4I/LkQwU8unXx5OTlj+JDaNodEk5nNFMwKtPWR/axEJ6MliEIoM1V851LNxHQvSo0HPQpIMPGXRU7pFIqzf5UhvNJRIVbY2ZIPcVji/pDop7Sa15BuGqghmd6WY16Q+X3Ah/qTvkvoaC2pOJk7Y+n7bQiZAbcJdVZuf2+aQuO1l9BRNJFEe4bvnH3e/MIjSbJ+i6dF6HWHbPi/zb6o5FmqmzNAiJtJs6MDKbrV1j0TDTVR+VL2hDmyCMCQ5nAXoLucnQllsHh7VZGaxOThr3IOuXPX7kqXeZML/9pcO4AoNbZNWcWv4cMby8kSoeWJPCmWprPZAGMXVRpwKCqgDgZxNF+quVZMDwstNlxNXe6XzrA626+yFC+y37or2Z5K0Ezg93W0r52Y8H8J0yE5GfpS0WW+FCWHBOQQXdVxjMls1rZeW9+7tFueVKNa6qUeiMD93eM5QqDOshg8QwtjGx45t8B+0lKYs5pzafjH
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(1800799024)(82310400026)(36860700016)(921020)(11063799006)(56012099006)(261009223027099003)(261022105027099003)(261102123227099003)(261021135927099003)(261021121427099003)(261021123027099003)(261026140227099003)(261028144727099003)(261026121527099003)(10067099003)(6133799003)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(23010399003)(36860700016)(6133799003)(10067099003)(22082099003)(56012099006)(261102123227099003)(261102130727099003)(18002099003)(261009223027099003)(11063799006)(921020)(261021121427099003)(261022105027099003)(261021135927099003)(261026121527099003)(261026140227099003)(261028144727099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	ms4J3CBM6ymqwUp0iKfZ4ZB7q/7UTm5oig7UsKmyy9xeRQdcsRLtBS9bBv6j5Mw+6XylhktYwzg5K3EwqlOXLiqOYY5ZgtGswGqbr6+VF5KPYys1WyDjyWIOpNUZmQFWpFWqBGikyPz+Si04iTzX20hztqNLNUlnq1RsNYH0lxPR2Z/C5xbA4CsC4IJXh7+5BYFxvmYpOPAo7IMmQ2V/2dc2uKTzmSiYhV5Yn/Af/MNfEIGrcOsxPbcCN52Q62An2/ssEK3jLIxi3oxZUNvyJBDYbkFLmfCzxxRAcWO2LYo+BDutmFMN4LFGSBu+nk2R8javdLjd2SEsJUJErtmgKV7wUIxCfOCVJ8YYWLg1eupD6pnqSgHtDsAFBvBxwUzCuHcLFXxoDwtV2+/dvFKunUSuue4LG7+ZOdf+US/R1NJRWN6WW7LZ1p5qwlF523//
+	fqBbCmQwcEl8qtFPxgcMRDoI76eESNuoyfb7LcICinZ/QCMP3fKMpJaj6TseuzyC9z546XpoU9QSK87l3/C0v8Qoqcv9HFtQtxKlhJLBrEqtvvg30Y0gH681RTZb9QUGsMENLweZ0CQnudP7tAbfa7gzOLzfu43tGd3Yxx6SOFebDk6Pfi7xalYdORcJ5tLIvRYaiqJmmcP8RmxoLlPq78kA55CiSN7fHtA+hHRvYKS4j2CQh4a9EIngPym9SNbqWK1SXikMvCynlwyQg16ZkNQT57z6N/iipuN4+sraECvWgaK4XfazbRKtwor8+4b3o+pcUceYVN6y5qHmfdzsBIvAChpcVkkGedM9YNtn5GE/fYjZlNfEVpX05171KFhGd0BZMCur9y03fbRHN3gaeSgut6yp4bpQlMS+yY7Rvj84TzD4G5QHGKNwS7XYsRIj
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 18:15:12.6897
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 18:15:14.0263
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc137034-b13b-477a-9033-08df39d66736
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fb98fe5-36ea-4908-ce7d-08df39d66810
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF0000A88F.namprd04.prod.outlook.com
+	EA8PEPF00000005.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7596
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6817
 
-From: Arun Kumar Prakash <ArunKumar.Prakash@amd.com>
+When the firmware sets IONIC_DEV_CAP_HWMON, create an "hwmon" auxiliary
+device so the adapter's sensors can be exposed by a driver in
+drivers/hwmon/ rather than by the Ethernet driver.
 
-Add the admin queue commands the device uses to describe and report its
-sensors: IONIC_CMD_HWMON_GETCAPS returns a buffer enumerating the sensor
-types, their channel counts and per-channel attribute capabilities, and
-IONIC_CMD_HWMON_GETATTR reads a single attribute of a single channel.
+The GETCAPS response buffer belongs to ionic for the life of the device,
+not to the hwmon driver, so a command abandoned on timeout or unbind can
+only write into that buffer, never into freed memory.
 
-The capability buffer has a variable layout that depends on the number
-of sensor types the firmware supports, so it cannot be expressed as a C
-struct and its format is documented in a comment instead.
-
-The sensor types, attribute IDs and capability buffer layout go in a
-new public header, include/linux/ionic/ionic_hwmon.h, because the hwmon
-driver that parses the buffer lives outside the ionic directory.
-
-Signed-off-by: Arun Kumar Prakash <ArunKumar.Prakash@amd.com>
-Signed-off-by: Eric Joyner <eric.joyner@amd.com>
 Reviewed-by: Brett Creeley <brett.creeley@amd.com>
-Co-developed-by: Nikhil P. Rao <nikhil.rao@amd.com>
 Signed-off-by: Nikhil P. Rao <nikhil.rao@amd.com>
 ---
- MAINTAINERS                                      |   1 +
- drivers/net/ethernet/pensando/ionic/ionic_dev.h  |   8 ++
- drivers/net/ethernet/pensando/ionic/ionic_if.h   | 104 +++++++++++++++++
- drivers/net/ethernet/pensando/ionic/ionic_main.c |   4 +
- include/linux/ionic/ionic_hwmon.h                | 138 +++++++++++++++++++++++
- 5 files changed, 255 insertions(+)
+ drivers/net/ethernet/pensando/ionic/ionic.h     |   2 +
+ drivers/net/ethernet/pensando/ionic/ionic_aux.c | 109 ++++++++++++++++++++++++
+ drivers/net/ethernet/pensando/ionic/ionic_lif.h |   1 +
+ include/linux/ionic/ionic_hwmon.h               |  40 +++++++++
+ 4 files changed, 152 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09713dc4c6a7..220b26c73b37 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21804,6 +21804,7 @@ L:	netdev@vger.kernel.org
- S:	Maintained
- F:	Documentation/networking/device_drivers/ethernet/pensando/ionic.rst
- F:	drivers/net/ethernet/pensando/
-+F:	include/linux/ionic/
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic.h b/drivers/net/ethernet/pensando/ionic/ionic.h
+index 555a77db1b1e..814d70b8623b 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic.h
++++ b/drivers/net/ethernet/pensando/ionic/ionic.h
+@@ -64,6 +64,8 @@ struct ionic {
+ 	int num_vfs;
+ 	struct timer_list watchdog_timer;
+ 	int watchdog_period;
++	void *hwmon_caps_buf;
++	dma_addr_t hwmon_caps_pa;
+ };
  
- PER-CPU MEMORY ALLOCATOR
- M:	Dennis Zhou <dennis@kernel.org>
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_dev.h b/drivers/net/ethernet/pensando/ionic/ionic_dev.h
-index db90e39a1442..869adb0a0e0c 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_dev.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_dev.h
-@@ -9,6 +9,7 @@
- #include <linux/workqueue.h>
- #include <linux/skbuff.h>
- #include <linux/bpf_trace.h>
+ int ionic_adminq_post(struct ionic_lif *lif, struct ionic_admin_ctx *ctx);
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_aux.c b/drivers/net/ethernet/pensando/ionic/ionic_aux.c
+index 370a7eff3e28..521f3bd9aee1 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_aux.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_aux.c
+@@ -2,6 +2,8 @@
+ /* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
+ 
+ #include <linux/kernel.h>
 +#include <linux/ionic/ionic_hwmon.h>
- 
- #include "ionic_if.h"
- #include "ionic_regs.h"
-@@ -116,6 +117,13 @@ static_assert(sizeof(ionic_rx_filter_del_comp) == 16);
- static_assert(sizeof(struct ionic_rdma_reset_cmd) == 64);
- static_assert(sizeof(struct ionic_rdma_queue_cmd) == 64);
- 
-+/* HWMON commands */
-+static_assert(sizeof(struct ionic_hwmon_getattr_cmd) == 64);
-+static_assert(sizeof(struct ionic_hwmon_getattr_comp) == 16);
-+static_assert(sizeof(struct ionic_hwmon_getcaps_cmd) == 64);
-+static_assert(sizeof(struct ionic_hwmon_getcaps_comp) == 16);
-+static_assert(sizeof(struct ionic_hwmon_chan_caps) == 164);
 +
- /* Events */
- static_assert(sizeof(struct ionic_notifyq_cmd) == 4);
- static_assert(sizeof(union ionic_notifyq_comp) == 64);
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_if.h b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-index e911fad545d6..271731a35d9f 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-@@ -60,6 +60,10 @@ enum ionic_cmd_opcode {
- 	/* CMB command */
- 	IONIC_CMD_DISCOVER_CMB			= 80,
+ #include "ionic.h"
+ #include "ionic_lif.h"
+ #include "ionic_aux.h"
+@@ -17,11 +19,39 @@ static bool ionic_rdma_supported(struct ionic *ionic)
+ 	return le64_to_cpu(ionic->ident.lif.capabilities) & IONIC_LIF_CAP_RDMA;
+ }
  
-+	/* Hardware monitoring commands */
-+	IONIC_CMD_HWMON_GETATTR			= 110,
-+	IONIC_CMD_HWMON_GETCAPS			= 111,
++static bool ionic_hwmon_supported(struct ionic *ionic)
++{
++	return le64_to_cpu(ionic->ident.dev.capabilities) & IONIC_DEV_CAP_HWMON;
++}
 +
- 	/* QoS commands */
- 	IONIC_CMD_QOS_CLASS_IDENTIFY		= 240,
- 	IONIC_CMD_QOS_CLASS_INIT		= 241,
-@@ -274,11 +278,13 @@ union ionic_drv_identity {
-  * enum ionic_dev_capability - Device capabilities
-  * @IONIC_DEV_CAP_VF_CTRL:     Device supports VF ctrl operations
-  * @IONIC_DEV_CAP_DISC_CMB:    Device supports CMB discovery operations
-+ * @IONIC_DEV_CAP_HWMON:       Device supports hardware monitoring
-  * @IONIC_DEV_CAP_EXTRA_STATS: Device supports extra stats schema
-  */
- enum ionic_dev_capability {
- 	IONIC_DEV_CAP_VF_CTRL        = BIT(0),
- 	IONIC_DEV_CAP_DISC_CMB       = BIT(1),
-+	IONIC_DEV_CAP_HWMON          = BIT(3),
- 	IONIC_DEV_CAP_EXTRA_STATS    = BIT(4),
++static int ionic_hwmon_prepare(struct ionic *ionic)
++{
++	void *buf;
++
++	if (ionic->hwmon_caps_buf)
++		return 0;
++
++	buf = dmam_alloc_coherent(ionic->dev, IONIC_HWMON_CAPS_BUF_SIZE,
++				  &ionic->hwmon_caps_pa, GFP_KERNEL);
++	if (!buf) {
++		dev_warn(ionic->dev, "Failed to allocate hwmon buffer\n");
++		return -ENOMEM;
++	}
++
++	ionic->hwmon_caps_buf = buf;
++	return 0;
++}
++
+ static const struct ionic_aux_type_info ionic_aux_types[IONIC_AUX_MAX] = {
+ 	[IONIC_AUX_RDMA] = {
+ 		.name = "rdma",
+ 		.supported = ionic_rdma_supported,
+ 	},
++	[IONIC_AUX_HWMON] = {
++		.name = "hwmon",
++		.supported = ionic_hwmon_supported,
++		.prepare = ionic_hwmon_prepare,
++	},
  };
  
-@@ -2526,6 +2532,100 @@ struct ionic_qos_clear_stats_cmd {
+ static void ionic_auxbus_release(struct device *dev)
+@@ -117,6 +147,85 @@ void ionic_auxbus_unregister(struct ionic_lif *lif)
+ 	mutex_unlock(&lif->adev_lock);
+ }
  
- typedef struct ionic_admin_comp ionic_qos_reset_comp;
++static struct ionic_lif *ionic_hwmon_lif(struct auxiliary_device *adev)
++{
++	return container_of(adev, struct ionic_aux_dev, adev)->lif;
++}
++
++int ionic_hwmon_get_caps(struct auxiliary_device *adev, u8 max_ver,
++			 const void **buf, size_t *len, u8 *ver)
++{
++	struct ionic_lif *lif = ionic_hwmon_lif(adev);
++	struct ionic *ionic = lif->ionic;
++	struct ionic_admin_ctx ctx = {
++		.work = COMPLETION_INITIALIZER_ONSTACK(ctx.work),
++		.comp.comp.status = IONIC_RC_EIO,
++		.cmd.hwmon_getcaps = {
++			.opcode = IONIC_CMD_HWMON_GETCAPS,
++			.ver = max_ver,
++			.lif_index = cpu_to_le16(lif->index),
++			.resp_buf_len = cpu_to_le32(IONIC_HWMON_CAPS_BUF_SIZE),
++			.resp_dma_addr = cpu_to_le64(ionic->hwmon_caps_pa),
++		},
++	};
++	int err;
++
++	if (!ionic->hwmon_caps_buf)
++		return -ENODEV;
++
++	memset(ionic->hwmon_caps_buf, 0, IONIC_HWMON_CAPS_BUF_SIZE);
++
++	err = ionic_adminq_post_wait_nomsg(lif, &ctx);
++	if (err)
++		return err;
++
++	if (ctx.comp.comp.status)
++		return ionic_error_to_errno(ctx.comp.comp.status);
++
++	*buf = ionic->hwmon_caps_buf;
++	*len = IONIC_HWMON_CAPS_BUF_SIZE;
++	*ver = ctx.comp.hwmon_getcaps.ver;
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(ionic_hwmon_get_caps, "NET_IONIC");
++
++int ionic_hwmon_get_attr(struct auxiliary_device *adev, u8 type, u8 channel,
++			 u8 attr, u32 *val)
++{
++	struct ionic_lif *lif = ionic_hwmon_lif(adev);
++	struct ionic_admin_ctx ctx = {
++		.work = COMPLETION_INITIALIZER_ONSTACK(ctx.work),
++		.comp.comp.status = IONIC_RC_EIO,
++		.cmd.hwmon_getattr = {
++			.opcode = IONIC_CMD_HWMON_GETATTR,
++			.lif_index = cpu_to_le16(lif->index),
++			.sensor_type = type,
++			.channel = channel,
++			.attr = attr,
++		},
++	};
++	int err;
++
++	err = ionic_adminq_post_wait_nomsg(lif, &ctx);
++	if (err)
++		return err;
++
++	if (ctx.comp.comp.status)
++		return ionic_error_to_errno(ctx.comp.comp.status);
++
++	*val = le32_to_cpu(ctx.comp.hwmon_getattr.attr_value);
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(ionic_hwmon_get_attr, "NET_IONIC");
++
++struct device *ionic_hwmon_dev(struct auxiliary_device *adev)
++{
++	return ionic_hwmon_lif(adev)->ionic->dev;
++}
++EXPORT_SYMBOL_NS_GPL(ionic_hwmon_dev, "NET_IONIC");
++
+ void ionic_request_rdma_reset(struct ionic_lif *lif)
+ {
+ 	struct ionic *ionic = lif->ionic;
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.h b/drivers/net/ethernet/pensando/ionic/ionic_lif.h
+index d04503b19c51..95bcfcded562 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.h
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.h
+@@ -182,6 +182,7 @@ struct ionic_phc;
  
-+/**
-+ * struct ionic_hwmon_getattr_cmd - Hardware monitoring get attribute command
-+ * @opcode:      Command opcode (IONIC_CMD_HWMON_GETATTR)
-+ * @rsvd:        reserved byte(s)
-+ * @lif_index:   LIF index
-+ * @sensor_type: Sensor type from enum ionic_hwmon_sensor_type
-+ * @channel:     Channel index within the sensor type
-+ * @attr:        Attribute ID from sensor-specific attribute enum
-+ * @rsvd2:       reserved byte(s)
-+ *
-+ * A *_ATTR_LABEL attribute ID must never be sent in this command.  The label is
-+ * already reported in ionic_hwmon_chan_caps.label; the attr_caps LABEL bit only
-+ * signals that a label is present.
-+ */
-+struct ionic_hwmon_getattr_cmd {
-+	u8      opcode;
-+	u8      rsvd;
-+	__le16  lif_index;
-+	u8      sensor_type;
-+	u8      channel;
-+	u8      attr;
-+	u8      rsvd2[57];
-+};
-+
-+/**
-+ * struct ionic_hwmon_getattr_comp - Hardware monitor get attribute completion
-+ * @status:     Status of the command (enum ionic_status_code)
-+ * @rsvd:       reserved byte(s)
-+ * @comp_index: Index in the descriptor ring for which this is the completion
-+ * @attr_value: Attribute value
-+ * @rsvd2:      reserved byte(s)
-+ * @color:      Color bit
-+ *
-+ * attr_value depends on the (sensor_type, attr) pair being read:
-+ *
-+ *   temperature INPUT, CRIT   millidegrees Celsius, signed 32-bit
-+ *   temperature CRIT_ALARM    0 or 1
-+ *   voltage INPUT             millivolts
-+ *   power INPUT, MAX          milliwatts
-+ */
-+struct ionic_hwmon_getattr_comp {
-+	u8      status;
-+	u8      rsvd;
-+	__le16  comp_index;
-+	__le32  attr_value;
-+	u8      rsvd2[7];
-+	u8      color;
-+};
-+
-+/**
-+ * struct ionic_hwmon_getcaps_cmd - Hardware monitoring get capabilities command
-+ * @opcode:         Command opcode (IONIC_CMD_HWMON_GETCAPS)
-+ * @ver:            Highest capability buffer layout version supported by
-+ *                  the driver
-+ * @lif_index:      LIF index
-+ * @resp_buf_len:   Length of response buffer
-+ * @resp_dma_addr:  DMA address for response data
-+ * @rsvd2:          reserved byte(s)
-+ *
-+ * The device writes the capability buffer in the highest layout version it
-+ * supports that does not exceed @ver, and reports that version in the
-+ * completion.  IONIC_HWMON_CAPS_VERSION_0 is the layout documented in
-+ * include/linux/ionic/ionic_hwmon.h.
-+ */
-+struct ionic_hwmon_getcaps_cmd {
-+	u8      opcode;
-+	u8      ver;
-+	__le16  lif_index;
-+	__le32  resp_buf_len;
-+	__le64  resp_dma_addr;
-+	u8      rsvd2[48];
-+};
-+
-+/**
-+ * struct ionic_hwmon_getcaps_comp - Hardware monitoring get caps completion
-+ * @status:     Status of the command (enum ionic_status_code)
-+ * @rsvd:       reserved byte(s)
-+ * @comp_index: Index in the descriptor ring for which this is the completion
-+ * @ver:        Layout version of the capability buffer written by the device
-+ * @rsvd2:      reserved byte(s)
-+ * @color:      Color bit
-+ *
-+ * Devices that predate @ver leave it zero, which is
-+ * IONIC_HWMON_CAPS_VERSION_0.
-+ */
-+struct ionic_hwmon_getcaps_comp {
-+	u8      status;
-+	u8      rsvd;
-+	__le16  comp_index;
-+	u8      ver;
-+	u8      rsvd2[10];
-+	u8      color;
-+};
-+
- /**
-  * struct ionic_fw_download_cmd - Firmware download command
-  * @opcode:	opcode
-@@ -3306,6 +3406,8 @@ union ionic_adminq_cmd {
- 	struct ionic_rx_filter_del_cmd rx_filter_del;
- 	struct ionic_rdma_reset_cmd rdma_reset;
- 	struct ionic_rdma_queue_cmd rdma_queue;
-+	struct ionic_hwmon_getattr_cmd hwmon_getattr;
-+	struct ionic_hwmon_getcaps_cmd hwmon_getcaps;
- 	struct ionic_fw_download_cmd fw_download;
- 	struct ionic_fw_control_cmd fw_control;
- };
-@@ -3319,6 +3421,8 @@ union ionic_adminq_comp {
- 	struct ionic_lif_getattr_comp lif_getattr;
- 	struct ionic_admin_comp lif_setphc;
- 	struct ionic_rx_filter_add_comp rx_filter_add;
-+	struct ionic_hwmon_getattr_comp hwmon_getattr;
-+	struct ionic_hwmon_getcaps_comp hwmon_getcaps;
- 	struct ionic_fw_control_comp fw_control;
+ enum ionic_aux_type {
+ 	IONIC_AUX_RDMA,
++	IONIC_AUX_HWMON,
+ 	IONIC_AUX_MAX,
  };
  
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-index 38b47b959a11..9955ab77d86d 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-@@ -185,6 +185,10 @@ static const char *ionic_opcode_to_str(enum ionic_cmd_opcode opcode)
- 		return "IONIC_CMD_VF_GETATTR";
- 	case IONIC_CMD_VF_SETATTR:
- 		return "IONIC_CMD_VF_SETATTR";
-+	case IONIC_CMD_HWMON_GETATTR:
-+		return "IONIC_CMD_HWMON_GETATTR";
-+	case IONIC_CMD_HWMON_GETCAPS:
-+		return "IONIC_CMD_HWMON_GETCAPS";
- 	default:
- 		return "DEVCMD_UNKNOWN";
- 	}
 diff --git a/include/linux/ionic/ionic_hwmon.h b/include/linux/ionic/ionic_hwmon.h
-new file mode 100644
-index 000000000000..62667e3d7135
---- /dev/null
+index 62667e3d7135..bc82f2903386 100644
+--- a/include/linux/ionic/ionic_hwmon.h
 +++ b/include/linux/ionic/ionic_hwmon.h
-@@ -0,0 +1,138 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR Linux-OpenIB) OR BSD-2-Clause */
-+/* Copyright(c) 2026 Advanced Micro Devices, Inc */
-+
-+#ifndef _LINUX_IONIC_HWMON_H_
-+#define _LINUX_IONIC_HWMON_H_
-+
-+#include <linux/types.h>
-+
-+#define IONIC_HWMON_CAPS_BUF_SIZE	4096
-+#define IONIC_HWMON_CAPS_VERSION_0	0
+@@ -135,4 +135,44 @@ struct ionic_hwmon_caps_hdr {
+ 	__le16	n_channels[];
+ };
+ 
++struct auxiliary_device;
++struct device;
 +
 +/**
-+ * enum ionic_hwmon_sensor_type - Hardware monitoring sensor types
-+ * @IONIC_HWMON_TYPE_TEMP:      Temperature sensors
-+ * @IONIC_HWMON_TYPE_VOLTAGE:   Voltage sensors
-+ * @IONIC_HWMON_TYPE_POWER:     Power sensors
-+ * @IONIC_HWMON_TYPE_CHIP:      Chip wide attributes
-+ * @IONIC_HWMON_TYPE_CURRENT:   Current sensors
-+ * @IONIC_HWMON_TYPE_ENERGY:    Energy sensors
-+ * @IONIC_HWMON_TYPE_HUMIDITY:  Humidity sensors
-+ * @IONIC_HWMON_TYPE_FAN:       Fan speed sensors
-+ * @IONIC_HWMON_TYPE_PWM:       PWM controllers
-+ * @IONIC_HWMON_TYPE_INTRUSION: Intrusion detection
-+ * @IONIC_HWMON_TYPE_MAX:       Number of sensor types defined by this interface
++ * ionic_hwmon_get_caps - Read the sensor capabilities from the device
++ * @adev:    ionic "hwmon" auxiliary device
++ * @max_ver: highest capabilities buffer layout version the caller parses
++ * @buf:     set to the capabilities buffer
++ * @len:     set to the length of @buf
++ * @ver:     set to the layout version of @buf, as reported by the device
 + *
-+ * These values do not necessarily match enum hwmon_sensor_types.
++ * The buffer belongs to ionic and is overwritten by the next call.
++ *
++ * Return: zero or negative error status
 + */
-+enum ionic_hwmon_sensor_type {
-+	IONIC_HWMON_TYPE_TEMP		= 0,
-+	IONIC_HWMON_TYPE_VOLTAGE	= 1,
-+	IONIC_HWMON_TYPE_POWER		= 2,
-+	IONIC_HWMON_TYPE_CHIP		= 3,
-+	IONIC_HWMON_TYPE_CURRENT	= 4,
-+	IONIC_HWMON_TYPE_ENERGY		= 5,
-+	IONIC_HWMON_TYPE_HUMIDITY	= 6,
-+	IONIC_HWMON_TYPE_FAN		= 7,
-+	IONIC_HWMON_TYPE_PWM		= 8,
-+	IONIC_HWMON_TYPE_INTRUSION	= 9,
-+	IONIC_HWMON_TYPE_MAX		= 10,
-+};
++int ionic_hwmon_get_caps(struct auxiliary_device *adev, u8 max_ver,
++			 const void **buf, size_t *len, u8 *ver);
 +
 +/**
-+ * enum ionic_hwmon_temp_attr - Temperature sensor attributes
-+ * @IONIC_HWMON_TEMP_ATTR_INPUT:      Temperature input reading
-+ * @IONIC_HWMON_TEMP_ATTR_LABEL:      Temperature sensor label
-+ * @IONIC_HWMON_TEMP_ATTR_CRIT:       Critical temperature threshold
-+ * @IONIC_HWMON_TEMP_ATTR_CRIT_ALARM: Critical temperature alarm status
++ * ionic_hwmon_get_attr - Read one sensor attribute from the device
++ * @adev:    ionic "hwmon" auxiliary device
++ * @type:    sensor type from enum ionic_hwmon_sensor_type
++ * @channel: channel index within @type
++ * @attr:    attribute ID from the attribute enum for @type
++ * @val:     set to the attribute value, in the units documented for
++ *           struct ionic_hwmon_getattr_comp
++ *
++ * Return: zero or negative error status
 + */
-+enum ionic_hwmon_temp_attr {
-+	IONIC_HWMON_TEMP_ATTR_INPUT		= 0,
-+	IONIC_HWMON_TEMP_ATTR_LABEL		= 1,
-+	IONIC_HWMON_TEMP_ATTR_CRIT		= 2,
-+	IONIC_HWMON_TEMP_ATTR_CRIT_ALARM	= 3,
-+};
++int ionic_hwmon_get_attr(struct auxiliary_device *adev, u8 type, u8 channel,
++			 u8 attr, u32 *val);
 +
 +/**
-+ * enum ionic_hwmon_voltage_attr - Voltage sensor attributes
-+ * @IONIC_HWMON_VOLTAGE_ATTR_INPUT: Voltage input reading
-+ * @IONIC_HWMON_VOLTAGE_ATTR_LABEL: Voltage sensor label
++ * ionic_hwmon_dev - Device to parent the hwmon device to
++ * @adev: ionic "hwmon" auxiliary device
++ *
++ * Return: the PCI function's device
 + */
-+enum ionic_hwmon_voltage_attr {
-+	IONIC_HWMON_VOLTAGE_ATTR_INPUT	= 0,
-+	IONIC_HWMON_VOLTAGE_ATTR_LABEL	= 1,
-+};
++struct device *ionic_hwmon_dev(struct auxiliary_device *adev);
 +
-+/**
-+ * enum ionic_hwmon_power_attr - Power sensor attributes
-+ * @IONIC_HWMON_POWER_ATTR_INPUT: Power input reading
-+ * @IONIC_HWMON_POWER_ATTR_LABEL: Power sensor label
-+ * @IONIC_HWMON_POWER_ATTR_MAX:   Maximum power threshold
-+ */
-+enum ionic_hwmon_power_attr {
-+	IONIC_HWMON_POWER_ATTR_INPUT	= 0,
-+	IONIC_HWMON_POWER_ATTR_LABEL	= 1,
-+	IONIC_HWMON_POWER_ATTR_MAX	= 2,
-+};
-+
-+/**
-+ * struct ionic_hwmon_chan_caps - Per-channel capability descriptor
-+ * @attr_caps:  Attribute bitmask where bit N indicates attribute N is supported
-+ *              (use sensor-type-specific attribute enums:
-+ *              ionic_hwmon_temp_attr, ionic_hwmon_voltage_attr,
-+ *              ionic_hwmon_power_attr)
-+ * @mode:       Permissions for attribute N, as a single octal rwx digit
-+ *              (4 = readable).  Zero hides the attribute.  Values above 7
-+ *              are not a mode and hide the attribute too.
-+ * @label:      NUL-terminated channel label string
-+ *
-+ * Every channel reports at least one attribute that its sensor type defines.
-+ * Firmware that adds attributes keeps reporting one that older drivers
-+ * recognise, and uses @mode to control what is visible.
-+ *
-+ * The structure needs to be packed since the size of n_channels in the
-+ * capability buffer layout documented below is variable, so the channels
-+ * array is not guaranteed to start on a 4 byte boundary.
-+ */
-+struct ionic_hwmon_chan_caps {
-+	__le32	attr_caps;
-+	__le32	mode[32];
-+	char	label[32];
-+} __packed;
-+
-+#define IONIC_HWMON_MODE_MASK		0x7
-+#define IONIC_HWMON_MODE_READ		4
-+
-+/*
-+ * Hardware monitoring capabilities buffer layout
-+ *
-+ * The buffer is a struct ionic_hwmon_caps_hdr followed by the channel
-+ * descriptors, so where the descriptors start depends on num_types:
-+ *
-+ *   struct ionic_hwmon_caps_buf {
-+ *       __le16  num_types;
-+ *       __le16  n_channels[num_types];
-+ *       struct ionic_hwmon_chan_caps channels[total_channels];
-+ *   };
-+ *
-+ * total_channels is the sum of n_channels, and the channels of each sensor
-+ * type are contiguous, in n_channels order.  A driver reads at most
-+ * IONIC_HWMON_TYPE_MAX entries of n_channels and ignores the channels of
-+ * any further types, which follow the ones it knows.
-+ *
-+ * num_types and n_channels come from the device, and the completion does not
-+ * report how much was written, so a parser checks every offset against the
-+ * resp_buf_len sent in IONIC_CMD_HWMON_GETCAPS.
-+ */
-+
-+/**
-+ * struct ionic_hwmon_caps_hdr - Start of the capabilities buffer
-+ * @num_types:  Number of sensor types described by firmware
-+ * @n_channels: Channel count for each sensor type, num_types entries
-+ */
-+struct ionic_hwmon_caps_hdr {
-+	__le16	num_types;
-+	__le16	n_channels[];
-+};
-+
-+#endif /* _LINUX_IONIC_HWMON_H_ */
+ #endif /* _LINUX_IONIC_HWMON_H_ */
 
 -- 
 2.43.0
