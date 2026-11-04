@@ -1,55 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793791711;
-	b=AOaB1WL0fVJ7mOEkjunWIAIVbzHiL3BWSkl81tF+P0ciHlvnkWSVJbwjQffsRxyzhIIF
-	 ST66CjZXYAxweZGDNBpEN16jAXvKj7EyhuL/O8h5RrDFTQBXdj6W3j7k8r8wYcB8fLX1g
-	 PVCKXU/OZOFw6gtjVMwf31+yU1Nz1fMtCdmJyL/Ra3zyVzunD5ekc3LCvwnCAHMoS3fwI
-	 J3MQIzxkgVLCFybBx8RYhykCTih3W9JJE6Dvfsnsb/yA3jkF+0fISQANiy9VuOd3whS9/
-	 Oeu9XS13WAvzqKQOdnPTPJXR1pTO+KiMwdZ9gmS35C2lxQnibbv32LWOf2v0iuiSQcA==
+	t=1793799661;
+	b=FNloOW1oi8UApoHO2AstxEem/zOKve6MA2GEPqK44KAUMpSQ+5gyiIGe3/byG/l82/p5
+	 hyMgYgpJPWfiL4wgN0+wc8dtGCzYo3lH5gJEcwginfyPGJDXByN2ysppnsHPZRtz9UKG6
+	 p84dCXJt0xWRX4qJYzsyf4h8j9h5W8BPaCvx57tE+/05y7YBHYbnj0CKX5Ld+1wI1hyvH
+	 DOQXj5JRO4YA9hx9W7ib5RyygiUX8vN2DMkLfG+KNs/E1U3EIjzx8q4G77B/ucaSqHHI/
+	 vQmqVV6aFnD0oEqb+glAqs4xwttVtnLpbToZwJbeXRHlH1N1Fvg67O+03dlU6O3uUZQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793791711;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=obTKOLqkDEZJYmfrFowrSlbEyKDQTJslblmInhvIYrU=;
-	b=K+3qKljCFIHjEMdkxYI+AEJWSZ3Lz20+mqphAX7pftbqjlOxVTMgiijlEd5kW0bBz9vV
-	 0SL1WItuvtaaQl5ph+PB52qEdapR7k9TgbNrD38AgUpGbCa2gYKIKEzEeAMvLvxdNSfii
-	 vgy+4OlCaAazmeu7ZP2GBRnWIfhZPD4mLvpgMaM8tTS5nKlDZ6caKNSgMRhQOP7sKU5/D
-	 gwKk2IBrr/GnEdeDaVzqIhgzCKZJG69FWs7gZJl0MitDN3/QaM1SX5Sm4f5clLq8HH7T9
-	 YQj+vQqUzT4CIrCoxBJSIG7Iy+8GMF7BiPC3cB8oqLkAtzC4636YzbmNl3n7sELqBsA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793799661;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Spam-Status:X-Rspamd-Server:
+	 X-Stat-Signature:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=P81IHL03zQBoiogTU8xh359b7GRLBvWNln5bYsL7/pk=;
+	b=kLo0tmFZluathbIDb3uhR9jgpYLh8XrCcCmtSeSsWiOTTaL0y9pv8xfGzuEH/mH9FfMX
+	 ecfbW4q0KSTZHXW1qZiFvoHDwL665DvKaxcT6LrghT3Fx3IFQpxrmtmikYh6MzkLeZHfW
+	 Yt1oIQWFipHGQMDSBrVNS1H9qV1rfCEVIJ3zsvhyX1WDosu/65OOuM8QpI0/6WIHfJ1M3
+	 8PwZGxPX+pDpbo6bMddGL4Me4Nrhd2I6wurys+q2nBQvcQ8ndzHsd/LGW9cb2QRXm+RTW
+	 uaY1bHXEKnQ/a3yp6AGoKYavNQoNB1TxIGpPoJtF4WwCZH1F3jqigARlgAvY2QAvO4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oAZVctUf;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=UZ3E2Onu;
+	arc=none smtp.remote-ip=216.40.44.17
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40406606A326;
-	Wed,  4 Nov 2026 11:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10631606A31B;
+	Wed,  4 Nov 2026 13:40:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 10631606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oAZVctUf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19B001F000C1;
-	Wed,  4 Nov 2026 11:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793791711;
-	bh=obTKOLqkDEZJYmfrFowrSlbEyKDQTJslblmInhvIYrU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=oAZVctUfAQYDYpcTT3DfbNyi5v306d8OBmGf6ULDQnY0cukQKA3ZDmlP2uNXWxAA3
-	 yCT9HSBOFGG0ADKuFfXN6OuoFiff3hRWJh0WakssEzNOExKGp4UxxG48sbcfagI8hO
-	 fQBE+5alMc+VJaty0EkqliFKLh8fz4oAWGhVg3F1qUZWx56F3fdq8UCL0Sq3qi1zAV
-	 CYBsFUa3Q2tKGRou4yLOO+KvfLNFfzMB+g14qnPwqY8xK3i2gFb1P1aUYN7j/OtiSW
-	 b00ZI8wS9WIOoOb+vxq4rUEtVGQaX8EQqJFsttC496ffYOutyqw/SR4742FA417rOk
-	 /JWrAqRlvYvKQ==
-Date: Wed, 4 Nov 2026 12:28:27 +0100
-From: Alejandro Colomar <alx@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=UZ3E2Onu
+Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 16A7CA7F86;
+	Wed,  4 Nov 2026 13:40:58 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id D7D1C20010;
+	Wed,  4 Nov 2026 13:40:55 +0000 (UTC)
+Date: Wed, 4 Nov 2026 08:40:54 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Kees Cook <kees@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bill Wendling <morbo@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Shuvam Pandey <shuvampandey1@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc: Alejandro Colomar <alx@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Bill Wendling <morbo@google.com>, Petr
+ Mladek <pmladek@suse.com>, Randy Dunlap <rdunlap@infradead.org>, Shuvam
+ Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v3] seq_buf: Mark a seq_buf overflowed when terminating
  it loses a byte
-Message-ID: <ausWlN1oWc0Utnxb@devuan>
+Message-ID: <20261104084054.2dae0ebe@gandalf.local.home>
+In-Reply-To: <20261104033110.out.418-kees@kernel.org>
 References: <20261104033110.out.418-kees@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -59,34 +63,20 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4kqgamovhkgw6p7w"
-Content-Disposition: inline
-In-Reply-To: <20261104033110.out.418-kees@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: r9hg4jjpeo15d5xnaagkqts5deiecyoo
+X-Rspamd-Queue-Id: D7D1C20010
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/FW9BZLaREI7WKqsf4x4YXZ8T3wBZNAwM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=P81IHL03zQBoiogTU8xh359b7GRLBvWNln5bYsL7/pk=; b=UZ3E2OnumBjP5rBXiqSC8RbwQASWwcI9yazjENzZJyVQnNIHIysW6a0A/uCraumAlk8P5c16wnUzTECnrWN+IP6dPMZxv5lLlKnHGbpu1LGrfpRyTflyYU8atNw8xZ4Ful4uYVCnMAn9t4AIvZGhLVTsnTwmD4d4khpx75NdT4k=
+X-HE-Tag: 1793799655-402340
+X-HE-Meta: U2FsdGVkX18Mw1zi6lqmlRMCwlPzaJfH+5lNI9ESrsdqOmzUryGAExY+ZDLVSfpxdK6dBBEkppyVwCR4paFzw58qcoX1loy4T9YrqF7PiV7sqam7zXV9KjFUzLdu/dd/MUBzdaVaqP77TvHtDi7Mk4dttKRrGPYE3dqA65bFkFQH8u6gm/pGoT/3Fq7OiDa5VY919sTixST+akU6VooA++rCQivX3xq7HzyrhkETfNzAYEE/BqNLPL6M//5jex0YDb+0jLXQ6pHDYdO9nr8H8Gfog1FEmWLo4/ZJq4KwFvk+hB6sXLkjmlAu82oOnPmP0fExJs91zb8/oDn+bj61LQymK4hQR+gZWKMiSp9RXZUEKElU4NmlkWkXQPanPL3pJaWiUEnT0OsyHrVqTVODPA==
 
+On Tue,  3 Nov 2026 19:31:13 -0800
+Kees Cook <kees@kernel.org> wrote:
 
---4kqgamovhkgw6p7w
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bill Wendling <morbo@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Shuvam Pandey <shuvampandey1@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] seq_buf: Mark a seq_buf overflowed when terminating
- it loses a byte
-Message-ID: <ausWlN1oWc0Utnxb@devuan>
-References: <20261104033110.out.418-kees@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20261104033110.out.418-kees@kernel.org>
-
-Hi Kees,
-
-> Date: 2026-11-03 19:31:13-0800
-> From: Kees Cook <kees@kernel.org>
->
 > When there is no room after the data for a NUL, __seq_buf_terminate()
 > writes the NUL over the last byte of the buffer. An overflowed seq_buf
 > has already lost data, but one that is exactly full, as seq_buf_putc(),
@@ -95,15 +85,15 @@ Hi Kees,
 > overflow. seq_buf_str(), seq_buf_strlen(), and seq_buf_terminate() all
 > go through it, so each of them can silently truncate what was written,
 > and seq_buf_pop() then returns the NUL in place of the byte it replaced.
->=20
+> 
 > Mark the seq_buf overflowed in that case with seq_buf_set_overflow().
 > Nothing is left between "len" and "size" for it to clear there, and
 > seq_buf_used() still counts the lost byte. Data that already ends in a
 > NUL is left as is.
->=20
+> 
 > No current caller checks for overflow after terminating a seq_buf that
 > can be left exactly full, so none of them behaves differently.
->=20
+> 
 > Add a test that fills a seq_buf exactly and checks that each of the
 > three accessors marks it overflowed, that seq_buf_pop() then returns
 > -1, and that a seq_buf with room for the NUL is not marked, and another
@@ -111,54 +101,16 @@ Hi Kees,
 > existing tests that terminate an exactly full seq_buf to expect it, and
 > move the length check in the seq_buf_do_printk() test after the run,
 > so that the buffer still reaches seq_buf_do_printk() exactly full.
->=20
-> Tests passed under qemu on ARCH=3Dx86_64 with GCC 16.2.0 and CONFIG_KASAN=
-=3Dy,
-> and on big-endian ARCH=3Ds390 with GCC s390x-linux-gnu 16.2.0, and the new
+> 
+> Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
+> and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.2.0, and the new
 > tests fail with the fix reverted.
->=20
+> 
 > Reported-by: Steven Rostedt <rostedt@goodmis.org>
-> Closes: https://lore.kernel.org/all/20261016145928.16eddc9a@gandalf.local=
-=2Ehome/
+> Closes: https://lore.kernel.org/all/20261016145928.16eddc9a@gandalf.local.home/
 > Fixes: f2616c772c768 ("seq_buf: Add seq_buf_terminate() API")
 > Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  v3:
->  - Reword comments: "left as is", and no "must" (Steven Rostedt)
->  - Fixes: the bug predates seq_buf_strlen(), back to the addition of
->    seq_buf_terminate() (Alejandro Colomar)
 
-Please include:
+Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
 
-Cc: Alejandro Colomar <alx@kernel.org>
-
-(or perhaps a second Reported-by.)
-
-
-Cheers,
-Alex
-
---=20
-<https://www.alejandro-colomar.es>
-
---4kqgamovhkgw6p7w
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrrFtoACgkQ64mZXMKQ
-wqnaXA/+PvzG0uYoc4RLDX5FAjBokvA+YBc6R7Fu8Hp8lEXo5dYG0X60zpM7Bi/k
-hDbB+ODWsKFVKSXOBpYzxaeILMjlFLDW01ADbnQmfJXkxNuhcL5rvpNvpvSnzWAj
-r7SzY447DaFlvkeijj8ezXf5tyndtEvD98CYA3821gnj1A0054wLvKRdlrUendcO
-XNgR8pSHDsE6SVHJTBbJH8Wlb2gj4S5Br8yRKRZBhJAcgBBgm6zewptt/5YYqR9R
-/mrqYn7tzi+foLI+k9djU3KeFa+B74KytXo9Yd4ENF69o4zh2oKCvpFb8D4911q5
-p9eurio+nR3n800B7KnjL2Ln1mMFbFhdL+nULRTx7CYWxcl7tsVOAk6zqaTcs4d5
-okOjnWT5q7nqYEPdiWGWOwWf7afk+lOqkhF+Jb0nA+y/7hUsc624j+jJGCypYF95
-VB/vHbuA5JYzgnk4Zwcup5PuATBc1gBrX6fcfpzAKi6nztw0TO+8jowOcdtp7kft
-RHo4if6L9g2QJPytV2AIFfltENOdajw0Ta2YazbwuVzQTRfslsXSARCK6I090VGL
-iS4Skye9/6CJ2SexE334TkAb0mehhyMQEoCPxxYgxoZf28GfQbV7+pMXB/I58eGt
-1eeEvDG4MbpN4fgVSHGM0wOeibNjkacHSx42qgSyR5peAIarnRc=
-=a70G
------END PGP SIGNATURE-----
-
---4kqgamovhkgw6p7w--
+-- Steve
