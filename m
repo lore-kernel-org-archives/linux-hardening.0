@@ -1,77 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793781884;
-	b=lNRGnhdA9DUGif8fs/O41mdb/XrPYX2sqhvrt8RA9RGrVilbMK0ORhkoI/gnOJyM9U5s
-	 9wOYSduxzjoHmJ0d/8vFl29YQt8AGgtZyox2jty/nGoDb+nuXcyOV/fbcKyEzWLXAvyiv
-	 SX+P2Z1GD45z5ZSnsux5BapUtUkLMV4+ZrW+8h7pa3HoYc3lZwbxYkFaIC6iYNXKZyzml
-	 Q5PQ2GtAAxPYSAaOHEb+FBPoMmCkvgECdjzM7LwKE6W520bnZwi3P0z7ly0Vk0ROeR8If
-	 5QKb6VNE+q9ro8sdJB0eFgShBAg9LEuPevEOll4lRQGkF+oNffum9JcRchyUM7MGijg==
+	t=1793781959;
+	b=oOK9AcsWBDyR+v1sB+3GXtJRjJo712HktidjJFTLatXtxw3lE4KBD/4d7x21PQXZsPzJ
+	 uKkC1gaE79jioYhOyNBa65UhlSxrTr3+SUTCEIZezQYfp3/RwkINTOHgFOTbrfxQkwOkB
+	 zCwRztMR62N5CMpPYXbLgHbH4Ssopvoi2EZ4UjYjoltZIjEYAwPdN9XdP6FlDqQ48/h/0
+	 GL4eskDp8bsflyTsIYgaZCKEIugFiwA+VJ61aWGODYUGs+Ao3LFUooSab1tEtxRVyM+Fw
+	 4BLLhcvzYfCdUz2V/GKbJGOfw5JOr6MuqREoL6jOyz1RU5CVBCUR0D2GU7pEEP+NZwg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793781884;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Received:
-	 X-Forwarded-Encrypted:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type;
-	bh=yUcMHykGBsdlMngLe5E8c5GRiAK228iYooBSZKs6auk=;
-	b=v1WVhQ7j2tEMcKkZlSsdBh1qKq8QEIbK08StcHLAwt8jnRAuCYk0t/jgK/6urWkVUjkX
-	 gXt515najhCskI4sh3X9KmTjtByME3B3xZ0e9vJ0Kv8i5/Sr9/qv4k929DPyAEavWS0PG
-	 e6gFcZcxriULqsT1AXaFv70uZZKAUhIHbsKv+GNio4J1GrRoMoHtuFbPo5Xlw2cEJD9HG
-	 Y4Yaottn4EUQJWEmZ1FRSJSHTV4b7nc7z2NJQ72QHV7i+mRtjKXIswQOBHWDaFMO7Fc51
-	 jMvYXoHIw+CjwuqAm79vNAcJMatnPWjPdO2sh87kVH+FjJyacmArSj9efZhYQZ6jLiQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793781959;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=kd/11XJESmnoYClx6518f24RJOB+dmaatqOOEga8bOQ=;
+	b=tsgTP5cGHBAcK0shAw6xF6wzpfnc09WrwYhiPcht//pJ7cabwUNLFay1Rla3mmVbVgl1
+	 KbdOJpg37MitLHEQznqt6l3Y3LaKJLoi+ofNKSv4Mao4a1KZbqR2eL0C6TD+tyj/ScJms
+	 KBKIMoirUlR6ChriYCvhGJcZr/WWNslGq0QoT5+mYOrzuG6Ur9y12FdvDZUspnVsHGhyr
+	 /pQlIsmUMOoZYvGfKFOfhW6tupopqfpNTepWNEQP/3rj180YAwNjJNDYS64Pg+NwoUhAx
+	 GZl11oHt9hULrSwc5nKUEzT9MUvC+qQA2hHywEt7zsiVg6zTA0H3RK6QTmAEfJu+jtg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=telaak.dev;
-	spf=pass smtp.mailfrom=gmail.com;
-	arc=none smtp.remote-ip=209.85.216.41
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ro5dQBMj;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25C3606A32F
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Nov 2026 08:44:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B25C3606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=telaak.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3ae6b4c669fso1000196a91.0
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Nov 2026 00:44:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793781883; x=1794386683;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=yUcMHykGBsdlMngLe5E8c5GRiAK228iYooBSZKs6auk=;
-        b=sOmFVKnqEyDEmz8WikmfBCYeYLpgAz6Wb/0hCDDPVUAXQC9a0a6yeJStzf/NJaoWwq
-         9+pQ2rS5EN/wVMgyW7layTeh340qZ6ZtMzDf61uacda1SDq8gujbhXxfuf65Qfw1kCKf
-         1OKjE9T6r0mke3I7Sa8OIwwqSWBI4ZhkK1L3TAM5I4nTrcwEhkmC/FIh8jWnxBkvscLg
-         AiAV3QzyUZTyUQGHYTh95sfJzXlfyP2fQzj/2EJEDMyJJab1wIRv5x/9rQCpV0L1L/yv
-         TNqapM4qIKhGP4tZxjayI0mLbvetnCA2ZTRQnyC942y3Pm+Hl+pnVDyMVLnq/7DDQRw7
-         t60Q==
-X-Forwarded-Encrypted: i=1; AKwUvBzgD+9dsEeDCvnaDp6jTuGW80NZ0HWo3Ta4382TQK60csbRcOgLTGZfC8eQmcGh6IK9CISFzebDNmJcrWoM+3s=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8iS4NlZC8Ls2K+cZArypBqhlpQlpWm8QL1BAZLX/lWuDcyGntL
-	w/wElC1OKI75X9LKxAm0P+ZoiL2rHS9BN1/mDkdMVDem/cN1NIhHyPLeb8z2jHmA
-X-Gm-Gg: AYBFou3Pus3UK8c6y/jPwZTiz/jM/MpH6DbbBFyT0jogMrK1HYDU4R7LI+2ihe2DoeX
-	qPkQDHTVFUzJYSEQ0TpYS9Wyi7+AVmkCMB+BGQE7WAl7gFhOHLSZfAFuGyZ4uy3mgrv5eSMkGGA
-	pGPjjIvUPz9qwfvH7aOTd/giN+d8aA52ERZ4DlYNQt77jQ80vX1bDeEBZockPMuPvBbXN9/uSIO
-	4EfX/o8/DHCaPDCevRuHt1N3s1v2JcMoWR3VMSM6NFZJKEvkcofbLrN2XJRVu2nOHyVsjdosDBW
-	DKmI5etIGXpDrIdjKdJqVIAI1XNyqtz9+plXErxJxFPpBetSb/Vp9436+6s+3iSz0E6fKLVGUnF
-	KfbEzO4pVedG0oTE1APFzlFUaG8VxLlyiSnnV0WPK9zTAph9uvSJLp3xZHSy6DtrUN2dg7mTnUO
-	Pk/TQl+k7zoVO/HjfioJPpe3eMy4oL8kOwbv+SV1mHe590zmrEU2Mj5vr7JqhzsjwhAoHWykn6W
-	+iWNZWifm8yQtJzusho40bzxc8QXYBjAGkOjtVD/unjg5FzSmMUgH1TFxb6m6RNcYYsCOlMD+UW
-	DrAZmC0QKCAtckGKFZFs4lQupTn+1S3L5KE5gBPcHDxt7cOQiYcMHegwt4vDtkgJWZXUOPqKwXQ
-	7qjJoledMQV+6Yk470DBwhgDVAjNUIKJaeFAZvxlRmu4=
-X-Received: by 2002:a17:90b:1b0d:b0:3ac:36c7:c144 with SMTP id 98e67ed59e1d1-3ae89776936mr8643944a91.28.1793781882983;
-        Wed, 04 Nov 2026 00:44:42 -0800 (PST)
-Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com. [74.125.82.179])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b07c896cc6sm8143095a91.9.2026.11.04.00.44.42
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Nov 2026 00:44:42 -0800 (PST)
-Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-36c9a93a1abso360526eec.1
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Nov 2026 00:44:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBzKmyBYJ8DT+XNIMFTiHT31FX6j+/dlpO0lclGJF2QpIUdoMDQNL2P5YRlnlqEnaw6lJsFWRvZ6yyIPQh2BjOc=@vger.kernel.org
-X-Received: by 2002:a05:7300:c5a7:b0:36c:a1bc:6102 with SMTP id
- 5a478bee46e88-36ca1bc68a8mr2873501eec.0.1793781881630; Wed, 04 Nov 2026
- 00:44:41 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04662606A31B;
+	Wed,  4 Nov 2026 08:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ro5dQBMj
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD311F000C1;
+	Wed,  4 Nov 2026 08:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793781958;
+	bh=kd/11XJESmnoYClx6518f24RJOB+dmaatqOOEga8bOQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Ro5dQBMjOwLw/yDsVSSMI0kDHJQKj0kAyzaaBVli+FkJuFXt6haLuKjhwlhyibnh3
+	 agLrXrCverQu9IRH+fDie8YfQndR6GtX7XJvLPmSenzEODlRadyTs3RMuTysEVUhJG
+	 3cUA8VUElysd874W8x9QEsm5wqOuajVYr4jCFJ4BIjzJ5zTha/tubR88uSLDFuqA9f
+	 cKnpl8QFvvLODcNRqzcMA/eOTe9aQyOpqHVR9ELwz6u+yxFj/4AjxpboeSKyA5ZKwW
+	 cwfwvWC6dbBdRi9mohLmfBJKhxw9m68NJg5g6S3BaIXAyDkYOtDMX4kcdQITQQNLIy
+	 eRuo6aOFHkXHw==
+Message-ID: <4fb6c428-85fd-4674-8480-919191db1277@kernel.org>
+Date: Wed, 4 Nov 2026 09:45:49 +0100
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -81,32 +51,86 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261101-ktd202x-et6326-v1-0-eb51eddad08c@telaak.dev>
- <20261101-ktd202x-et6326-v1-5-eb51eddad08c@telaak.dev> <20261102-enthusiastic-flounder-of-domination-fb3a01@quoll>
-In-Reply-To: <20261102-enthusiastic-flounder-of-domination-fb3a01@quoll>
-From: Joseph Telaak <joseph@telaak.dev>
-Date: Wed, 4 Nov 2026 03:44:30 -0500
-X-Gmail-Original-Message-ID: <CAPY4CJ4cm117fjoZa302TKRmok_NnO62HhBWTSpNEzD8qAacdg@mail.gmail.com>
-X-Gm-Features: AclHuK9nnsy6U4khk5cNnlQ4F7O21MbUU3fY_2pf7x3dkjkCudC-yc-EGP9flSY
-Message-ID: <CAPY4CJ4cm117fjoZa302TKRmok_NnO62HhBWTSpNEzD8qAacdg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 05/10] dt-bindings: leds: kinetic,ktd202x: Add Etek ET6326
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Griffin Kroah-Hartman <griffin@kroah.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, linux-leds@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+To: Joseph Telaak <joseph@telaak.dev>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Griffin Kroah-Hartman <griffin@kroah.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Apitzsch?=
+ <git@apitzsch.eu>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap
+ <rdunlap@infradead.org>, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20261101-ktd202x-et6326-v1-0-eb51eddad08c@telaak.dev>
+ <20261101-ktd202x-et6326-v1-5-eb51eddad08c@telaak.dev>
+ <20261102-enthusiastic-flounder-of-domination-fb3a01@quoll>
+ <CAPY4CJ4cm117fjoZa302TKRmok_NnO62HhBWTSpNEzD8qAacdg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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
+In-Reply-To: <CAPY4CJ4cm117fjoZa302TKRmok_NnO62HhBWTSpNEzD8qAacdg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> Drop.
->
-> Please run scripts/checkpatch.pl on the patches and fix reported
-> warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-> patches and (probably) fix more warnings.
+On 04/11/2026 09:44, Joseph Telaak wrote:
+>> Drop.
+>>
+>> Please run scripts/checkpatch.pl on the patches and fix reported
+>> warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+>> patches and (probably) fix more warnings.
+> 
+> Thanks, v2 drops it, and the series is clean with checkpatch and
+> checkpatch --strict.
 
-Thanks, v2 drops it, and the series is clean with checkpatch and
-checkpatch --strict.
+No, it is not. It has clear and obvious checkpatch warning.
+
+If you claim otherwise, it means you work on some ancient or old tree,
+so anyway this should not be reviewed.
+
+Best regards,
+Krzysztof
