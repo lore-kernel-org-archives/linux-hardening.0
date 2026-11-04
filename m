@@ -1,96 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.41
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793773506;
-	b=wm/1yBbcxb7NM3lRDolEovCV51e/6GcNMNSf+D5BlQDX3ZrZsYysaL1wMEJ5bFtffYOf
-	 MSbT9cOqlJ9U63XRzUyq3/jIR7EZstdpI9YTy+lf7HtF07YRoSFTRTURXrCAGvPaA+DyT
-	 isj4IqUolpYnspp43TUvLwnTLR/+L2t5qSzZ9fuXS4EuuJO1Z64Mdns/xc5oI+v+Z5UqI
-	 cSFd/Jdfyz5mF63tCYicdEP9VqchfYJjUN3jzd8XTUe3ylfcvFXhiJJclbePxvb9zjgg1
-	 KuxdJhR0yHJjcqh4I9bIVhEa4mWodAhMtKvqxgK/CjJgXJKMObdxXuVTIzHj956ELdw==
+	t=1793781884;
+	b=lNRGnhdA9DUGif8fs/O41mdb/XrPYX2sqhvrt8RA9RGrVilbMK0ORhkoI/gnOJyM9U5s
+	 9wOYSduxzjoHmJ0d/8vFl29YQt8AGgtZyox2jty/nGoDb+nuXcyOV/fbcKyEzWLXAvyiv
+	 SX+P2Z1GD45z5ZSnsux5BapUtUkLMV4+ZrW+8h7pa3HoYc3lZwbxYkFaIC6iYNXKZyzml
+	 Q5PQ2GtAAxPYSAaOHEb+FBPoMmCkvgECdjzM7LwKE6W520bnZwi3P0z7ly0Vk0ROeR8If
+	 5QKb6VNE+q9ro8sdJB0eFgShBAg9LEuPevEOll4lRQGkF+oNffum9JcRchyUM7MGijg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793773506;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=6aqflyyGibB6JpqtJHNzZdrDhDz9SBMlPar0zuxq8rw=;
-	b=nUvyvo0UYUp9SfU/C1ZQbgQHGCUTVvDhvXcdIVwYm0S7URBTDeL7b8hK4L7fGB/jTOW1
-	 3dhVsi7GfE5oTO/8+Y+JlwMBgoSpfiSjgKqU9GPR/9sJ7YGrdxDVsWY046JmOaNRhq2Ri
-	 0bEsZC13k0HnAJ/JX8gxDM8PMPzwBcPIrJhwvkxXM/Mfd/0hINIRQFzdef5H8m8iPDXIM
-	 YDFzft8YuFwovXiDSOaSBvSHa96EoF5z4nvpSzK6E98A+IqcMH8u6SvhfC4objbe+gJrT
-	 v6oEK3kH2irLSQXLrxC2SZX1+UbrJRC6CXbBlvwd1IcSAss7w4Zr6RCimG0dp4D5SfQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793781884;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Received:
+	 X-Forwarded-Encrypted:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type;
+	bh=yUcMHykGBsdlMngLe5E8c5GRiAK228iYooBSZKs6auk=;
+	b=v1WVhQ7j2tEMcKkZlSsdBh1qKq8QEIbK08StcHLAwt8jnRAuCYk0t/jgK/6urWkVUjkX
+	 gXt515najhCskI4sh3X9KmTjtByME3B3xZ0e9vJ0Kv8i5/Sr9/qv4k929DPyAEavWS0PG
+	 e6gFcZcxriULqsT1AXaFv70uZZKAUhIHbsKv+GNio4J1GrRoMoHtuFbPo5Xlw2cEJD9HG
+	 Y4Yaottn4EUQJWEmZ1FRSJSHTV4b7nc7z2NJQ72QHV7i+mRtjKXIswQOBHWDaFMO7Fc51
+	 jMvYXoHIw+CjwuqAm79vNAcJMatnPWjPdO2sh87kVH+FjJyacmArSj9efZhYQZ6jLiQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
+	dmarc=none header.from=telaak.dev;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=S+2n7Ak7;
-	arc=none smtp.remote-ip=74.125.82.52
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+	arc=none smtp.remote-ip=209.85.216.41
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB987606A328
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Nov 2026 06:25:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AB987606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25C3606A32F
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Nov 2026 08:44:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B25C3606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=telaak.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=S+2n7Ak7
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-14fc585291cso367807c88.1
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Nov 2026 22:25:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793773505; x=1794378305; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=6aqflyyGibB6JpqtJHNzZdrDhDz9SBMlPar0zuxq8rw=;
-        b=S+2n7Ak7tV2EJGZD2ZPpD4lN8xiJfS5kAxeubkDJcpbqw0AFxfAIHpdR5fzsjv0cs+
-         i7CUhFQj9ik/a1NcJEP7H7+kR850mD41LPurwO/jH89nmuJG7G70LvXom89npCcGEVSh
-         OmqyEQlukw+KPed/wEqrj81aVM4OJ395XPiAEPbGdHJ+lkBD0hRXCJRYqH768oXOG0GC
-         RTAuwLizS6+M6y7QISup/pRQqhcoY94bFwFqK/Bi88ygcaaBhs6W7YTmGK+O7TXVkX5s
-         59g8jINCi9yykjdI/DwtgU3LbHPEyEuwGY9w4ZDOVb3VyLTr04NmyIGZ/ykzQBSKBV+r
-         MYYA==
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3ae6b4c669fso1000196a91.0
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Nov 2026 00:44:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793773505; x=1794378305;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=6aqflyyGibB6JpqtJHNzZdrDhDz9SBMlPar0zuxq8rw=;
-        b=vvSfYIRe6r94zjy019VJOdoVmTRt/cKyCBGJI2EFvEJZDYX1DXvYBYOv/CV0U6uv1c
-         gzqV5Xsb0bDh2XYpGMbwjaIFFCpqJI/8cIq1PzbWVVDA3ezBNxLAU9ZYprRCNAk22MVQ
-         HXeRtiWkzx43qzf+bL1CNIFBRmElT5qhKvYjTK9zIlp92k+3tmtck7h48NBWy3oW75xY
-         QeRUOB8hVFwWg+O+Kbmte+1QRXYnclOrE4mxTHvyk3aswPuaqBdn1NA14x/ykUybs2z1
-         9CLe3bCtuCcNRhKc9g1kUF7DDOgEk9Gji0W2K9mt4bgu/e5CkRO/rjQpmCPE/GRQCP/R
-         R+0Q==
-X-Forwarded-Encrypted: i=1; AKwUvBxwTj6gALKIkrRUUEIk6fdu2gMyhVoOFdr+Be9kJJ5jmMmiJuQ1Q86nn/Ncz6qzS0caTQ5bB4a8U7NqyBM5RZo=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/Gc5sLpWYqMQ93szKH1g/m6u+AywOtonUh1HrRN3jMw1+ugC4j
-	0jt6joVuCblfhEom3QULwu4LBQnY5UTim8FkwUGlUF579fSt0DK7PiQn
-X-Gm-Gg: AYBFou0P85jWYi6BBKbqgTFpZrNrEfdoQyVogqSnoUcu++HUygJj9OLFFXORyMVRlRF
-	s6il/H878qRF3ldmXmcRUWllE1HOYw4AxLUc8YlEd80BPvbgLTll2w596WwrEhNDpF8YZUaCy3C
-	Lhgcn/t1BDCIdgfOX/91dCiq63NHQLjGvjKRmIQgbHncIT3v8U+x5NbSFcMAJmzoTy0uKVeYlux
-	Dq7qYaKTkey9PC6p28AFJM/1W3gLVVFNCdcdwPy6U+TdiT7+wZnPIp/d9VCmXj7pa8VJDJKb4hc
-	OprZ9CQ8bf6cfYVKKLrkQcR59P/mto/CIU6pSjw7Y1pRG/2msqYcvR8JuUMeQ4yb+eErWEMOJXc
-	QgYW4Tlp+jERys1UhjUAr582Km1iKQBnr14R2DaJ8XNpzZrdxliVRXcF9lLgCxX6ZD22FyjR+io
-	lQF2XQ8UNGR9ADszUcxJ6d9KO3y7Gg7t0B9EtYmYbLXAoTYetCI5ezkHfRQPFLcm8nhbxfdOLjU
-	fVKn0QcD95KyHyqudkKjW+rDDg3F01hsRXQ2ouUmyuGGi8MepzLEGyaDQ/8eZAbpxdGF+N6kU28
-	FsnGazCWvL2BNMBT3c3Mw1fz0hL+9Srj7oxVpGBV6FwqQ8pdwFlOHanQUm1uV6ohlErYmaeI85X
-	+6XJs
-X-Received: by 2002:a05:7022:5e09:b0:1a4:3169:cb with SMTP id a92af1059eb24-1ac5cfe5610mr20134833c88.17.1793773504605;
-        Tue, 03 Nov 2026 22:25:04 -0800 (PST)
-Received: from homik.search.charter.net ([2603:8002:ad40:56f0:37bc:b892:b6fa:fd6e])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36ca39b8eb3sm5615163eec.27.2026.11.03.22.25.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2026 22:25:03 -0800 (PST)
-From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-To: dmitry.torokhov@gmail.com
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	kees@kernel.org,
-	justinstitt@google.com,
-	morbo@google.com,
-	Mariia Nikitash <nikitash.mariiaw@gmail.com>
-Subject: [PATCH] Input: mouse: vsxxxaa: Replace strlcat() with strscpy()
-Date: Tue,  3 Nov 2026 22:23:18 -0800
-Message-ID: <20261104062319.288360-1-nikitash.mariiaw@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20260707; t=1793781883; x=1794386683;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=yUcMHykGBsdlMngLe5E8c5GRiAK228iYooBSZKs6auk=;
+        b=sOmFVKnqEyDEmz8WikmfBCYeYLpgAz6Wb/0hCDDPVUAXQC9a0a6yeJStzf/NJaoWwq
+         9+pQ2rS5EN/wVMgyW7layTeh340qZ6ZtMzDf61uacda1SDq8gujbhXxfuf65Qfw1kCKf
+         1OKjE9T6r0mke3I7Sa8OIwwqSWBI4ZhkK1L3TAM5I4nTrcwEhkmC/FIh8jWnxBkvscLg
+         AiAV3QzyUZTyUQGHYTh95sfJzXlfyP2fQzj/2EJEDMyJJab1wIRv5x/9rQCpV0L1L/yv
+         TNqapM4qIKhGP4tZxjayI0mLbvetnCA2ZTRQnyC942y3Pm+Hl+pnVDyMVLnq/7DDQRw7
+         t60Q==
+X-Forwarded-Encrypted: i=1; AKwUvBzgD+9dsEeDCvnaDp6jTuGW80NZ0HWo3Ta4382TQK60csbRcOgLTGZfC8eQmcGh6IK9CISFzebDNmJcrWoM+3s=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8iS4NlZC8Ls2K+cZArypBqhlpQlpWm8QL1BAZLX/lWuDcyGntL
+	w/wElC1OKI75X9LKxAm0P+ZoiL2rHS9BN1/mDkdMVDem/cN1NIhHyPLeb8z2jHmA
+X-Gm-Gg: AYBFou3Pus3UK8c6y/jPwZTiz/jM/MpH6DbbBFyT0jogMrK1HYDU4R7LI+2ihe2DoeX
+	qPkQDHTVFUzJYSEQ0TpYS9Wyi7+AVmkCMB+BGQE7WAl7gFhOHLSZfAFuGyZ4uy3mgrv5eSMkGGA
+	pGPjjIvUPz9qwfvH7aOTd/giN+d8aA52ERZ4DlYNQt77jQ80vX1bDeEBZockPMuPvBbXN9/uSIO
+	4EfX/o8/DHCaPDCevRuHt1N3s1v2JcMoWR3VMSM6NFZJKEvkcofbLrN2XJRVu2nOHyVsjdosDBW
+	DKmI5etIGXpDrIdjKdJqVIAI1XNyqtz9+plXErxJxFPpBetSb/Vp9436+6s+3iSz0E6fKLVGUnF
+	KfbEzO4pVedG0oTE1APFzlFUaG8VxLlyiSnnV0WPK9zTAph9uvSJLp3xZHSy6DtrUN2dg7mTnUO
+	Pk/TQl+k7zoVO/HjfioJPpe3eMy4oL8kOwbv+SV1mHe590zmrEU2Mj5vr7JqhzsjwhAoHWykn6W
+	+iWNZWifm8yQtJzusho40bzxc8QXYBjAGkOjtVD/unjg5FzSmMUgH1TFxb6m6RNcYYsCOlMD+UW
+	DrAZmC0QKCAtckGKFZFs4lQupTn+1S3L5KE5gBPcHDxt7cOQiYcMHegwt4vDtkgJWZXUOPqKwXQ
+	7qjJoledMQV+6Yk470DBwhgDVAjNUIKJaeFAZvxlRmu4=
+X-Received: by 2002:a17:90b:1b0d:b0:3ac:36c7:c144 with SMTP id 98e67ed59e1d1-3ae89776936mr8643944a91.28.1793781882983;
+        Wed, 04 Nov 2026 00:44:42 -0800 (PST)
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com. [74.125.82.179])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b07c896cc6sm8143095a91.9.2026.11.04.00.44.42
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Nov 2026 00:44:42 -0800 (PST)
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-36c9a93a1abso360526eec.1
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Nov 2026 00:44:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBzKmyBYJ8DT+XNIMFTiHT31FX6j+/dlpO0lclGJF2QpIUdoMDQNL2P5YRlnlqEnaw6lJsFWRvZ6yyIPQh2BjOc=@vger.kernel.org
+X-Received: by 2002:a05:7300:c5a7:b0:36c:a1bc:6102 with SMTP id
+ 5a478bee46e88-36ca1bc68a8mr2873501eec.0.1793781881630; Wed, 04 Nov 2026
+ 00:44:41 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -100,36 +81,32 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20261101-ktd202x-et6326-v1-0-eb51eddad08c@telaak.dev>
+ <20261101-ktd202x-et6326-v1-5-eb51eddad08c@telaak.dev> <20261102-enthusiastic-flounder-of-domination-fb3a01@quoll>
+In-Reply-To: <20261102-enthusiastic-flounder-of-domination-fb3a01@quoll>
+From: Joseph Telaak <joseph@telaak.dev>
+Date: Wed, 4 Nov 2026 03:44:30 -0500
+X-Gmail-Original-Message-ID: <CAPY4CJ4cm117fjoZa302TKRmok_NnO62HhBWTSpNEzD8qAacdg@mail.gmail.com>
+X-Gm-Features: AclHuK9nnsy6U4khk5cNnlQ4F7O21MbUU3fY_2pf7x3dkjkCudC-yc-EGP9flSY
+Message-ID: <CAPY4CJ4cm117fjoZa302TKRmok_NnO62HhBWTSpNEzD8qAacdg@mail.gmail.com>
+Subject: Re: [PATCH 05/10] dt-bindings: leds: kinetic,ktd202x: Add Etek ET6326
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Griffin Kroah-Hartman <griffin@kroah.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, linux-leds@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-In preparation for removing the deprecated strlcat() API[1], use
-strscpy() to initialize the mouse device name.
+> Drop.
+>
+> Please run scripts/checkpatch.pl on the patches and fix reported
+> warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+> patches and (probably) fix more warnings.
 
-The destination is zero-initialized, and the constant string fits
-within the buffer. Since the return value is unused, this preserves
-the existing behavior.
-
-Link: https://github.com/KSPP/linux/issues/370 [1]
-Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
----
- drivers/input/mouse/vsxxxaa.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/mouse/vsxxxaa.c b/drivers/input/mouse/vsxxxaa.c
-index 042a17fe81db..b3a0d7ff5738 100644
---- a/drivers/input/mouse/vsxxxaa.c
-+++ b/drivers/input/mouse/vsxxxaa.c
-@@ -463,8 +463,8 @@ static int vsxxxaa_connect(struct serio *serio, struct serio_driver *drv)
- 
- 	mouse->dev = input_dev;
- 	mouse->serio = serio;
--	strlcat(mouse->name, "DEC VSXXX-AA/-GA mouse or VSXXX-AB digitizer",
--		 sizeof(mouse->name));
-+	strscpy(mouse->name, "DEC VSXXX-AA/-GA mouse or VSXXX-AB digitizer",
-+		sizeof(mouse->name));
- 	snprintf(mouse->phys, sizeof(mouse->phys), "%s/input0", serio->phys);
- 
- 	input_dev->name = mouse->name;
--- 
-2.43.0
-
+Thanks, v2 drops it, and the series is clean with checkpatch and
+checkpatch --strict.
