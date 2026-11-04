@@ -1,69 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.21
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793823297;
-	b=BVKWG288CRIgQ2f4mXyQ1Yxz9Ei92JhITEIVwxszoKBX4AJIx0RscotcboE/JECmWOxM
-	 U2qnkvfPglY0lIIT3fxC8j3t+EkIS+EkMs+8M/WUv625dQdrWH1DGwsVDb+3EMpjajx6p
-	 e3KPKEzQSgeOaisaTFabcQY49EGVAOjkAScVgSka6ifxVhphQowhnM2NmQRse3YJSGM/z
-	 Kl7DdW+pkUg+CSbk9guqSY3sGZHPcmqxX+YYTntSF4Sdd+6g+jPVkWVVOqVZ7ragn4Bbb
-	 WBXxGCwdXDLEr/7E1iPaCs+NJPukSrdxfyXXUit9zGQOAyeWGnTzOU2HQhgXJI4AFEQ==
+	t=1793826462;
+	b=xPLPTEmD2T72gJDKGuV3x+T5/wcMc1AFPRYhB6p5cr5Z0OPEl/+eIqP0y0VvK/5qH0WG
+	 Koph7n8OoYHiR2khLXlnZlGJ45IAHdr6BYIW8PbxZ36bAHTIw52bgynMSQDsViH9ndk62
+	 fHhF1OZClYUVLhagGW17Kgoueuw3ISnd8S0dprAV1nwQmQL5u9ECN3P/4E0Tu04b/yMAx
+	 AlXBIEvqKVF9Qfk/3yrgJQtO0UzdWo3t5FmdZB8lHmLp5JhKMNCAP7oCVU2Z6hQ+WE9ZO
+	 ORbx4lsxGNoElrobllSSA/sJmDN6tjzaGB4NXWHDIWg+1oWQM5m77d/olC97zYLEE/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793823297;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:MIME-Version:X-Received:
-	 In-Reply-To:References:Message-ID:Date:Subject:From:To:Cc:
-	 Content-Type;
-	bh=AS/luxCxZZ4IKfwOyJu4Ue765u+vBG+6P6QAZr4AiP8=;
-	b=396DqOMTU/Ogurki7tv7lzOzPPI4Z41aIsGvqK4kaYMlxHEuj+rEds1+iqMpmpWU/p0N
-	 7CG78d5EBtlVlKI3x1hrNAavaXf5XBbwzEq7BQzyj/Jc6WLF1DM7Kv0x+WQ6skoHa0AoD
-	 sm0JTHkfHiFYTqh+IdLbSoahdj4qBeWPptHIC1ehjQmTebQwUVelpDC6WfC1OGYrwSBfc
-	 Dc6rNHZxVbznmj2EOfz6vTNKdbtrJE0n2HKHf8owAXkRepeUbp7Ye4zUQ9/4c7CP2u645
-	 h94E78DV6t4ZVbDhKIyYmt+5VKPGRlN/ZYbozTXGu/7KamgTo4k1N+JV91UbCemU9Hg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793826462;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Organization;
+	bh=BIWwTRYTaBPAHlWposIOtokLSiwg9bL7hag8t7zvCh4=;
+	b=If7Y6Isi0zkanQCgpGUvSr3/4msaYQk3ZqI29g/eQ0xpO7vzlfJjv7Gb75ZUn7l0+Hhf
+	 zyqegsKTAJ60XOjJnEAWeNrTDsrxN/iuyqZKbJxWcsQS/DaA9GG860F5pf+MG7aXDdQFw
+	 4nxye3Dheg/PgeSlrrTKEOmPeAuEz9o7gJRJof5nG7MTtv7m7nHtgPHanP1cBtBtaCFLr
+	 hw6IbluM5ZfTXu6YB9WLGczSThNmcTVAyRwPu5PiBsxwLgB5zUfRjNZU1HV1hpFtIgaPo
+	 B0Hasj+2cvfEFh9K26HrYFg/MMIn4PFJkVXMyY9kX1XxTGbhWjHoq1l/GLqUqJxG7Kg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=WOmd94Mh;
-	arc=none smtp.remote-ip=74.125.82.199
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AyUYoNNM;
+	arc=none smtp.remote-ip=198.175.65.21
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329396070F1D
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Nov 2026 20:14:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 329396070F1D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jeffxu.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E075606D816;
+	Wed,  4 Nov 2026 21:07:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6E075606D816
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=WOmd94Mh
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-341eff9e381so1961045eec.1
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Nov 2026 12:14:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793823296; x=1794428096; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=AS/luxCxZZ4IKfwOyJu4Ue765u+vBG+6P6QAZr4AiP8=;
-        b=WOmd94Mh+1IsHCPkayZDec6JPAxqUizBUQICw7d1GTvFYhvGyIcRDUYVGA4mrhJ2Gw
-         LlwBfvWxf6C/dkbd/wYeCVyGFNqSQNTNemKeHNozM+B3thODy6YTQUG8zPI+Zc0fLAsc
-         ywPjVR6u2U7pkPrIYEEEE7pR/Fv2GUmpGF5C6hZYbFhN+xzjvjlTlZgt1yXCOuMk8ZV8
-         7dgvN0RspKuuDt9X8QL4OxxBptYW7RdbVtxUU3AipSC6ioGA6dVwnv5HTegyIPEZQbol
-         lNJjqnZui4CPRajfzE+ydyWOkaI+BYJB/fWwmMyfr6ch4/bN/0JzLGDra0aJW3LNaEPF
-         9UKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793823296; x=1794428096;
-        h=content-type:cc:to:from:subject:date:message-id:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=AS/luxCxZZ4IKfwOyJu4Ue765u+vBG+6P6QAZr4AiP8=;
-        b=eW0W9phXRiWoxmjHTeNTGyxG+37NEY4YaAsSPs+yT0HgGgVKFuF/MxQqk0DPIlBtes
-         lkr+F8Ov6cJJkoT3voaBUu2eByxVYqhqTFC3EJEYNTxyMqJB20ZYu1AaYaIN20Di2w4u
-         NohbWqslBzljZbwwyhcw+B67dPa6TAhzLOrja7vSmGq0aTkBdTnExjed3n7vKVlvHa/b
-         4QbuDMAGwI0SUPKSSQN6wQykXk73L4MkEesFmmkAZ+76lVyIeZ8n+J67/izEBDJypYyn
-         SbNqYAo6OI91QN/EfLhhdwB4bgWtlqdGSZolvmBuDao7WjU0CLd2f1qH41yF/obcNT6H
-         gNew==
-X-Forwarded-Encrypted: i=1; AKwUvByGPiocYmzqdISMKlysVOC0C+x/9Hi8gk/uRydjt0rLsAQMDaJhG3Zx/j9gHRZv2ODMdqIdCzmbZ5xjrN1xEFI=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+ZOUuu+Kb7uilQB6zlEOCR9FzQylBN2dSUqZltPfrvqzdr13SQ
-	U022Kf/fHsmQxAhDebxE9jYjolj8SxsQZR0y4Jk2Qf4CLaCkvoJk45F3WqNgvhW5tMwRzuKRMFA
-	VdOrRHQ==
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AyUYoNNM
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793826457; x=1825362457;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=O1F8JaJ8aiqw0BarEPO1tt+vgJs6Xe8tWpLSoVWHy5U=;
+  b=AyUYoNNMGT6JiRQC4+lJw8bYolDc9Avgqu6ReF7vbsD/qT8ioBOZhKL+
+   GSuA3DVfz8qUwcxqNEyLaC9mx40wKsxt4aYpNb47I7mfosur756dIk8gR
+   FnrbwPbtltg67Dr14cMYOEfiWiKhOuBb6LZnhn9QMDkynB6kZHYTJrMqC
+   r4RyrNtaroW2VxVkwWonxdT+oPqg/2ZznaAD6b+VmHH6GPyN+yNWWALmS
+   umh7N5whoVqVg1P1dSsOAMuj1fC46N5sjqkl8AaxwCR3MYFD+YLY7xCVy
+   CKhbf+mzOg3fQoBVgQnw8OK4JxSxWyWzxQfZYVynkrgdbE98iG7clB5t4
+   g==;
+X-CSE-ConnectionGUID: wGpApA3WTy25tuij3K3vFQ==
+X-CSE-MsgGUID: sMRVhrBFSGOvYK8nNqKuaA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11956"; a="2690643"
+X-IronPort-AV: E=Sophos;i="6.27,195,1787036400"; 
+   d="scan'208";a="2690643"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 13:07:36 -0800
+X-CSE-ConnectionGUID: UIRrZ91lR6iQIZbysWdYCQ==
+X-CSE-MsgGUID: 5AcLI8a6Qoie1kFAiVTJEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,195,1787036400"; 
+   d="scan'208";a="6982505"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.24])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 13:07:30 -0800
+Date: Wed, 4 Nov 2026 23:07:28 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
+	Hans Verkuil <hverkuil@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Len Brown <lenb@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/9] lib: string_helpers: implement a CLASS() for string
+ arrays
+Message-ID: <auuekJTgjp8oSfgX@ashevche-desk.local>
+References: <20261104-fwnode-for-each-prop-v1-0-6e28fe1c72c4@oss.qualcomm.com>
+ <20261104-fwnode-for-each-prop-v1-2-6e28fe1c72c4@oss.qualcomm.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -73,52 +94,27 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Received: from dybkf8.prod.google.com ([2002:a05:7301:3a88:b0:36a:e67:fbc2])
- (user=jeffxu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1608:b0:185:4ad4:3d15
- with SMTP id a92af1059eb24-1ac56302329mr19203878c88.1.1793823295901; Wed, 04
- Nov 2026 12:14:55 -0800 (PST)
-In-Reply-To: <cover.1793718940.git.chris@chrisdown.name>
-References: <cover.1793718940.git.chris@chrisdown.name>
-Message-ID: <18e4f0c895c8d2ed.3137322e32382e342e3434.27cc5b.0000sendgmr@google.com>
-Date: Wed, 04 Nov 2026 20:14:55 +0000
-Subject: Re: [PATCH v2 0/8] mseal sysmap: Choose system mapping sealing at boot
-From: Jeff Xu <jeffxu@google.com>
-To: Chris Down <chris@chrisdown.name>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>
-Cc: Jeff Xu <jeffxu@google.com>, David Hildenbrand <david@kernel.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Kees Cook <kees@kernel.org>, Andrey Vagin <avagin@gmail.com>, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Shuah Khan <shuah@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261104-fwnode-for-each-prop-v1-2-6e28fe1c72c4@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Nov 3, 2026 at 11:17:43PM +0800, Chris Down wrote:
-> System mapping sealing is currently a build time choice. Hosts which
-> want it and hosts which need to move or unmap these mappings therefore
-> need separate kernels, which is not ideal. Let's allow the administrator
-> to choose at boot time.
+On Wed, Nov 04, 2026 at 03:03:44PM +0100, Bartosz Golaszewski wrote:
+> Provide a CLASS() for managed arrays of strings. It can be used for
+> automated release of temporary string arrays when they go out of scope.
 
-Thanks Chris for the updates and for adding the unsealed boot parameter
-test coverage! The v2 series looks good to me.
+...
 
-Reviewed-by: Jeff Xu <jeffxu@google.com>
+> +struct kstrarray {
+> +	char **array;
+> +	size_t size;
+> +};
+
+Hmm... Why struct strarray can't be used?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
