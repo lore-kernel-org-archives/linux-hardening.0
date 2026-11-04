@@ -1,59 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793799661;
-	b=FNloOW1oi8UApoHO2AstxEem/zOKve6MA2GEPqK44KAUMpSQ+5gyiIGe3/byG/l82/p5
-	 hyMgYgpJPWfiL4wgN0+wc8dtGCzYo3lH5gJEcwginfyPGJDXByN2ysppnsHPZRtz9UKG6
-	 p84dCXJt0xWRX4qJYzsyf4h8j9h5W8BPaCvx57tE+/05y7YBHYbnj0CKX5Ld+1wI1hyvH
-	 DOQXj5JRO4YA9hx9W7ib5RyygiUX8vN2DMkLfG+KNs/E1U3EIjzx8q4G77B/ucaSqHHI/
-	 vQmqVV6aFnD0oEqb+glAqs4xwttVtnLpbToZwJbeXRHlH1N1Fvg67O+03dlU6O3uUZQ==
+	t=1793801016;
+	b=aq2N8Zn07UnGj9i1xSDbW0PHBVeSjJI7qiEMsm/gVgAGrldXoOosHKLkNlcsV2S33Su2
+	 eB0gvWSec17blFcf0tJumtF7yzPYCx+D3qp7ZzAnQl99EtnyHj7u8PPavvZqWO/HvIwJp
+	 m8zHmFj0eiIODLqWhyBAuAi8NkD+VIJMTDVaJ/J0MvmWm0ixnhrdwsSCEoUNQ1ClheFpj
+	 wsVqQ+SjXuhtNu9oCOgnhd/DSohpvKuspDFk0xZGSqIn9wZ1gcN/K5jNKMSPZG5m05t1P
+	 FAGcOB00Ef3tlxWRjtZIPEWc/4wOMdoC3DHVoypzt8kIEwfFGcJU9bXs7pC0oxI6HCw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793799661;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Spam-Status:X-Rspamd-Server:
-	 X-Stat-Signature:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=P81IHL03zQBoiogTU8xh359b7GRLBvWNln5bYsL7/pk=;
-	b=kLo0tmFZluathbIDb3uhR9jgpYLh8XrCcCmtSeSsWiOTTaL0y9pv8xfGzuEH/mH9FfMX
-	 ecfbW4q0KSTZHXW1qZiFvoHDwL665DvKaxcT6LrghT3Fx3IFQpxrmtmikYh6MzkLeZHfW
-	 Yt1oIQWFipHGQMDSBrVNS1H9qV1rfCEVIJ3zsvhyX1WDosu/65OOuM8QpI0/6WIHfJ1M3
-	 8PwZGxPX+pDpbo6bMddGL4Me4Nrhd2I6wurys+q2nBQvcQ8ndzHsd/LGW9cb2QRXm+RTW
-	 uaY1bHXEKnQ/a3yp6AGoKYavNQoNB1TxIGpPoJtF4WwCZH1F3jqigARlgAvY2QAvO4w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793801016;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=uknA9LO5XfZyma+M7n03w/JxLoJTVSxXbrmN0E2Qqwk=;
+	b=PeHiqWSnkeFtNH78B+P2dz6JguOCl/6vKYdtqVAr6wwHUaFqq1W63E0I5+bhndynxjON
+	 tEL75d4Xo93+JkMyWHFcjTq0IY72m8Z6V6VNkjKaWl3P/L4FJQ2jWkljN4FOZUUybkIMY
+	 xAWcbVGaoChaeclB2rAX/IYnAfiV0uKv28Ch9kvkv/vSCumhlB6/yoYMIGDFmCNKYWdMQ
+	 hapx9qUHnuP2L8JkJOg/1If3srC0D8hZaaJ/sAfiWwwFmYs4fx3SlduQz08XVir1T/blp
+	 l1o5w1t41rk6k6gPN3PvzjJV4XtIjg7csiLtdFlhaemtg8J4qekVDjKtdz6gNLcSz4Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=UZ3E2Onu;
-	arc=none smtp.remote-ip=216.40.44.17
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G3zOtOlW;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10631606A31B;
-	Wed,  4 Nov 2026 13:40:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 10631606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CC9606A31B;
+	Wed,  4 Nov 2026 14:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=UZ3E2Onu
-Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 16A7CA7F86;
-	Wed,  4 Nov 2026 13:40:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id D7D1C20010;
-	Wed,  4 Nov 2026 13:40:55 +0000 (UTC)
-Date: Wed, 4 Nov 2026 08:40:54 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Bill Wendling <morbo@google.com>, Petr
- Mladek <pmladek@suse.com>, Randy Dunlap <rdunlap@infradead.org>, Shuvam
- Pandey <shuvampandey1@gmail.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] seq_buf: Mark a seq_buf overflowed when terminating
- it loses a byte
-Message-ID: <20261104084054.2dae0ebe@gandalf.local.home>
-In-Reply-To: <20261104033110.out.418-kees@kernel.org>
-References: <20261104033110.out.418-kees@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G3zOtOlW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E94E1F000C1;
+	Wed,  4 Nov 2026 14:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793801016;
+	bh=uknA9LO5XfZyma+M7n03w/JxLoJTVSxXbrmN0E2Qqwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=G3zOtOlWX3MGmRDd5z/B4xbOCZZdTwCaGj35JCzfNwkvryB8Lgtd5yWEpArAooh63
+	 enx/9Uowo+XlfwgYddKPXN6IvHQ4UwitDFFZQoqMGWZ/5jrWG1mB7Ub2T8mrtnwK9C
+	 10xfSV0BEtoZVLwAlTkPWG8llG+QezSFxQ/L6TrOof5EMwuow2nGs3tAziCJ68WAZW
+	 46U0Jsi7d+s8ZenOVI99LKlKuV7LjsmcBEf85/SKzlI4/wLMBnG7KnScjRDe3ZQ9xR
+	 GBMlM7hGYZfi6l728afXvYzWPew12XKhawrid3K7RnZ5BRXRuMKvRnPbK27W++r1iK
+	 ngFpNwQY8LX+w==
+Date: Wed, 4 Nov 2026 15:03:32 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Shan-Chun Hung <shanchun1218@gmail.com>
+Cc: ychuang3@nuvoton.com, schung@nuvoton.com, vkoul@kernel.org, 
+	Frank.Li@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	kees@kernel.org, gustavoars@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: dma: nuvoton,ma35d1-pdma: Document
+ MA35D1 PDMA controller
+Message-ID: <20261104-vole-of-legendary-plenty-811cf1@quoll>
+References: <20261103022202.2139674-1-shanchun1218@gmail.com>
+ <20261103022202.2139674-2-shanchun1218@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -63,54 +61,173 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: r9hg4jjpeo15d5xnaagkqts5deiecyoo
-X-Rspamd-Queue-Id: D7D1C20010
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/FW9BZLaREI7WKqsf4x4YXZ8T3wBZNAwM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=P81IHL03zQBoiogTU8xh359b7GRLBvWNln5bYsL7/pk=; b=UZ3E2OnumBjP5rBXiqSC8RbwQASWwcI9yazjENzZJyVQnNIHIysW6a0A/uCraumAlk8P5c16wnUzTECnrWN+IP6dPMZxv5lLlKnHGbpu1LGrfpRyTflyYU8atNw8xZ4Ful4uYVCnMAn9t4AIvZGhLVTsnTwmD4d4khpx75NdT4k=
-X-HE-Tag: 1793799655-402340
-X-HE-Meta: U2FsdGVkX18Mw1zi6lqmlRMCwlPzaJfH+5lNI9ESrsdqOmzUryGAExY+ZDLVSfpxdK6dBBEkppyVwCR4paFzw58qcoX1loy4T9YrqF7PiV7sqam7zXV9KjFUzLdu/dd/MUBzdaVaqP77TvHtDi7Mk4dttKRrGPYE3dqA65bFkFQH8u6gm/pGoT/3Fq7OiDa5VY919sTixST+akU6VooA++rCQivX3xq7HzyrhkETfNzAYEE/BqNLPL6M//5jex0YDb+0jLXQ6pHDYdO9nr8H8Gfog1FEmWLo4/ZJq4KwFvk+hB6sXLkjmlAu82oOnPmP0fExJs91zb8/oDn+bj61LQymK4hQR+gZWKMiSp9RXZUEKElU4NmlkWkXQPanPL3pJaWiUEnT0OsyHrVqTVODPA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261103022202.2139674-2-shanchun1218@gmail.com>
 
-On Tue,  3 Nov 2026 19:31:13 -0800
-Kees Cook <kees@kernel.org> wrote:
+On Tue, Nov 03, 2026 at 10:22:01AM +0800, Shan-Chun Hung wrote:
+> Add binding for Nuvoton MA35D1 PDMA controller.
+> 
 
-> When there is no room after the data for a NUL, __seq_buf_terminate()
-> writes the NUL over the last byte of the buffer. An overflowed seq_buf
-> has already lost data, but one that is exactly full, as seq_buf_putc(),
-> seq_buf_putmem(), and seq_buf_commit() can leave it, has not: the NUL
-> replaces the last byte written, and the seq_buf still does not report an
-> overflow. seq_buf_str(), seq_buf_strlen(), and seq_buf_terminate() all
-> go through it, so each of them can silently truncate what was written,
-> and seq_buf_pop() then returns the NUL in place of the byte it replaced.
-> 
-> Mark the seq_buf overflowed in that case with seq_buf_set_overflow().
-> Nothing is left between "len" and "size" for it to clear there, and
-> seq_buf_used() still counts the lost byte. Data that already ends in a
-> NUL is left as is.
-> 
-> No current caller checks for overflow after terminating a seq_buf that
-> can be left exactly full, so none of them behaves differently.
-> 
-> Add a test that fills a seq_buf exactly and checks that each of the
-> three accessors marks it overflowed, that seq_buf_pop() then returns
-> -1, and that a seq_buf with room for the NUL is not marked, and another
-> that checks the same accessors on data ending in its own NUL. Update the
-> existing tests that terminate an exactly full seq_buf to expect it, and
-> move the length check in the seq_buf_do_printk() test after the run,
-> so that the buffer still reaches seq_buf_do_printk() exactly full.
-> 
-> Tests passed under qemu on ARCH=x86_64 with GCC 16.2.0 and CONFIG_KASAN=y,
-> and on big-endian ARCH=s390 with GCC s390x-linux-gnu 16.2.0, and the new
-> tests fail with the fix reverted.
-> 
-> Reported-by: Steven Rostedt <rostedt@goodmis.org>
-> Closes: https://lore.kernel.org/all/20261016145928.16eddc9a@gandalf.local.home/
-> Fixes: f2616c772c768 ("seq_buf: Add seq_buf_terminate() API")
-> Signed-off-by: Kees Cook <kees@kernel.org>
+Looks like valid Sashiko review, so only few nits, not a full review:
 
-Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Shan-Chun Hung <shanchun1218@gmail.com>
+> ---
+>  .../bindings/dma/nuvoton,ma35d1-pdma.yaml     |  72 +++++++++++
+>  include/dt-bindings/dma/ma35d1-pdma.h         | 113 ++++++++++++++++++
+>  2 files changed, 185 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/nuvoton,ma35d1-pdma.yaml
+>  create mode 100644 include/dt-bindings/dma/ma35d1-pdma.h
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/nuvoton,ma35d1-pdma.yaml b/Documentation/devicetree/bindings/dma/nuvoton,ma35d1-pdma.yaml
+> new file mode 100644
+> index 000000000000..cd752571242c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/nuvoton,ma35d1-pdma.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/nuvoton,ma35d1-pdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Nuvoton MA35D1 PDMA controller
+> +
+> +description:
+> +  This describes the devicetree bindings for four Peripheral DMA engines to perform
 
--- Steve
+Do not describe what the binding document is describe. Just describe
+that directly, so explain the hardware. Look at other examples.
+
+> +  memory-to-memory, memory-to-peripheral, or peripheral-to-memory data transfer
+> +  capable of supporting 10 channels, implemented in Nuvoton MA35D1 SoCs.
+> +
+> +maintainers:
+> +  - Shan-Chun Hung <shanchun1218@gmail.com>
+> +
+> +allOf:
+> +  - $ref: dma-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: nuvoton,ma35d1-pdma
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  "#dma-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the channel number. The second cell is the
+> +      peripheral request source (REQSRC) selection, which defines which
+> +      peripheral is connected to that PDMA channel.
+> +
+> +  dma-channels:
+> +    const: 10
+
+Why isn't this implied by the compatible? Drop.
+
+> +
+> +additionalProperties: false
+
+This goes after required block.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - interrupts
+> +  - "#dma-cells"
+> +  - dma-channels
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/nuvoton,ma35d1-clk.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        dma-controller@40080000 {
+> +            compatible = "nuvoton,ma35d1-pdma";
+> +            reg = <0x0 0x40080000 0x0 0x2000>;
+> +            interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&clk PDMA0_GATE>;
+> +            #dma-cells = <2>;
+> +            dma-channels = <10>;
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/include/dt-bindings/dma/ma35d1-pdma.h b/include/dt-bindings/dma/ma35d1-pdma.h
+> new file mode 100644
+> index 000000000000..0ddc99d29661
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/ma35d1-pdma.h
+
+Filename must match the binding filename.
+
+> @@ -0,0 +1,113 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright (C) 2026 Nuvoton Technology Corp.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_DMA_MA35D1_PDMA_H__
+> +#define __DT_BINDINGS_DMA_MA35D1_PDMA_H__
+> +
+> +#define MA35D1_PDMA_MEM			0
+
+
+Hole
+
+> +#define MA35D1_PDMA_UART0_TX		4
+> +#define MA35D1_PDMA_UART0_RX		5
+> +#define MA35D1_PDMA_UART1_TX		6
+> +#define MA35D1_PDMA_UART1_RX		7
+> +#define MA35D1_PDMA_UART2_TX		8
+> +#define MA35D1_PDMA_UART2_RX		9
+> +#define MA35D1_PDMA_UART3_TX		10
+> +#define MA35D1_PDMA_UART3_RX		11
+> +#define MA35D1_PDMA_UART4_TX		12
+> +#define MA35D1_PDMA_UART4_RX		13
+> +#define MA35D1_PDMA_UART5_TX		14
+> +#define MA35D1_PDMA_UART5_RX		15
+> +#define MA35D1_PDMA_UART6_TX		16
+> +#define MA35D1_PDMA_UART6_RX		17
+> +#define MA35D1_PDMA_UART7_TX		18
+> +#define MA35D1_PDMA_UART7_RX		19
+> +#define MA35D1_PDMA_UART8_TX		20
+> +#define MA35D1_PDMA_UART8_RX		21
+> +#define MA35D1_PDMA_UART9_TX		22
+> +#define MA35D1_PDMA_UART9_RX		23
+> +#define MA35D1_PDMA_UART10_TX		24
+> +#define MA35D1_PDMA_UART10_RX		25
+> +#define MA35D1_PDMA_UART11_TX		26
+> +#define MA35D1_PDMA_UART11_RX		27
+> +#define MA35D1_PDMA_UART12_TX		28
+> +#define MA35D1_PDMA_UART12_RX		29
+> +#define MA35D1_PDMA_UART13_TX		30
+> +#define MA35D1_PDMA_UART13_RX		31
+> +#define MA35D1_PDMA_UART14_TX		32
+> +#define MA35D1_PDMA_UART14_RX		33
+> +#define MA35D1_PDMA_UART15_TX		34
+> +#define MA35D1_PDMA_UART15_RX		35
+> +#define MA35D1_PDMA_UART16_TX		36
+> +#define MA35D1_PDMA_UART16_RX		37
+> +#define MA35D1_PDMA_QSPI0_TX		54
+
+You should not have holes in the ABI or this is not DT ABI, so drop or
+move out entire file from bindings.
+
+Best regards,
+Krzysztof
+
