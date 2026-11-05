@@ -1,64 +1,77 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793887291;
-	b=2vGzIVcQmW4I5sZDxNV0NdjlApieNGttcLRZwgqqW5QcDsDkOtYLz1qHKmWL1roA6UfY
-	 EYlqZL1lBZMgEFxA/+rT5tRl3hSdQCQ0sBjuxslQJMzPcl8Pb6YAGkCzSL5Oggi6vGCED
-	 F//v85jGBQRp9qctaTO3ZC4oSK7nbld/OeMP0Z3ng+YFlwM8I7IURksFY/tr2/WFZdxTl
-	 Zbop6gdOZxWYZXB8eIuOCqYItW/Yfy9MgF3DinkNKPun3QL9b98/Uq6mr90c/bvomPw3O
-	 77ueqbrFs5DxTzfGvBb/WLMVVKwVI5HA2JHebt16iiOEOQm6vsgtCC7sNs/gx0gPRYA==
+	t=1793888066;
+	b=i1a793zL/oX39Bk3mnaBjFiDDgZVAq17vz/zmvFidiRJEoOIxZaqNZNTMehf0ByckfBH
+	 R8QMmP7yBmwyBXpEy2SM1LQ2C68BqX0bC9DByvz118ooDK8o3ESseMlJZmr71bsi5A3mf
+	 36kor7cGYL5LXmsREPnlH9LylqBLfReBfm0DwBHmUYViVMTQl85ARSNUVBrb/A8d83pFC
+	 hRNgSmxQJZTzTC0NQM+V2ij73XxcfVfHznukNmnWXYeKPGV2LocWDkbFr25lCzd/rOxWP
+	 JMfMZYMoNMFwAxZPxCj5HUCbilWD8vwHoOxKBjFfBXxMiaqv/NVR0XkNmGr40TPa9Lw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793887291;
-	h=Received:DKIM-Signature:Date:From:To:List-Id:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=8DY4TUzp8evO7EYLufNjnQuf0+aROvdRw1EKq47FB+I=;
-	b=gqczCKvRpSlqaaSxwIcvlE3QCYOoUKupTbsPE8VcWt2GIG8+nr/vPJNPQDsHMysWYxNR
-	 W3XMnClD4GAAmK4UnlBsGKknw2wgfJ3m6omo1yohTlOgDXRPdLVKIGAK3fcBkqZRZe7UQ
-	 1JpTuwt/KeqkRIzO9aZObqsn2lLKhZxdBvVW38AL6wvDgMgfa/a2RnHPj6565qTuy4eCa
-	 zx3Ph6Vq7Yrd/lLejcOVZO0c088ga/6u8rXgak4hLUt6YoBv2kd64vNYmsmp/7I1/IgHe
-	 yx2ju8aoYA34uunN7wRJQByEEAHdJSoSyMsL2OAvmIS/NQ5yFk7nCHAfekg1WYNABwA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793888066;
+	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
+	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Mailer;
+	bh=4QpYJSS9gn8AjXi8jX/3Dtqw7BlVuFU8dH7dnogBVO0=;
+	b=BgLohuSeZMZIaDr8O2VZ8kLrYts1KGUCH/tdFBMIa019RxnucZxV6jvsirfdEQZas3tw
+	 PpVsF9YzvCRaKDlZgcEy428qWX/DqGDdMv1Y2EVzlb9WPsbRGqJ6rG9b3gpK3vpwkLbce
+	 Uj26qMhDHXr9oeJxj3eOvsOa+WwrjofgqQoUSlbwex9GLxPQnUoc1Bht0iqYnCVb50+jI
+	 14lFaJGWFf0xbqaZ7QuhNDPCHJznIFCccgpB5VNHmoBNtMQxfVUDREcySkCq45dnbRl6x
+	 UgX95Bq2AxOsNLCx+CvJdeOq5TfXHjTtUR5v9CXtR5l1nlR2qBVLYALckvymvoZJn0Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JGPrdc1W;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZHt7HSGu;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id AB8C1606A31B;
-	Thu,  5 Nov 2026 14:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B5E606D812;
+	Thu,  5 Nov 2026 14:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JGPrdc1W
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 0C5D61F0093A;
-	Thu,  5 Nov 2026 14:01:29 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZHt7HSGu
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2B311F00A1B;
+	Thu,  5 Nov 2026 14:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793887290;
-	bh=8DY4TUzp8evO7EYLufNjnQuf0+aROvdRw1EKq47FB+I=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To;
-	b=JGPrdc1WTvMbqA0T4cByajspeoIyncKLUDZ5AcTWZvTXcu1W1E5XUaOgcKHrTtzFG
-	 drk9VKaH4SRjmwdoeRDLBGQJDQEPaT66XFi91Cjs7jLgTjPGHeb1DtzA7KnopSvzr5
-	 H1WudlrX1WmyeQOP80DgpoALbTvrC7TLrW0zSEKt7P2lKy5Wor7kwzOgKQNjd7y3W3
-	 z998Am3t77vTy7bnPVby2gqw8YMCasZhopSfP0GZgDLh/yFURRWApmUIZBz5F2eVuI
-	 kCA+bnVxDuluxi8jpOrq9lsVW+t926uCPpY4vGHt+dxMmci2+YxMN2hWkOEZkt/vmh
-	 z/NbHbC9HVLHA==
-Date: Thu, 5 Nov 2026 15:01:22 +0100
-From: Bartosz Golaszewski <brgl@kernel.org>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-hardening@vger.kernel.org, alx+linux-hardening@kernel.org, 
-	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Add strprefix() and fix a bug with it
-Message-ID: <qwpovcqznx6eltou4inmj3v62qhh6ouvihqnze7bobnd7lmcbw@rcri4e623icb>
-References: <cover.1793876837.git.alx@kernel.org>
- <cover.1793882260.git.alx@kernel.org>
+	s=k20260515; t=1793888065;
+	bh=4QpYJSS9gn8AjXi8jX/3Dtqw7BlVuFU8dH7dnogBVO0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=ZHt7HSGugybN5tt7aBm2DYpjLqmVSzGHPf+FbQmlOA5T4Nk5fCKWzCEZb+J82PHlw
+	 l6AVe6kDbgKPpfD8/3R3rRcmmEPrg353sNwySWNZPUaC8eFmRslm5bIRcVZkF6IdyU
+	 ruk1UXsR2KoKlIyaiX4m5Bt2MaupvTmPsJkjn50vKnSDxBeKsVV4bwubvy7qds1fXh
+	 dHtWj4Z4lh+pj2d8Bkkjb5jAZcuLTyb0EPvvsrr0CO/XIRBV5F5Y3YmW39L6T82LYq
+	 MDqcufEATybJTn1bGcMM2j64t0KtpUgUMcx8vhy/hXPFsBB7xQM1sVp6uE3gUGspMg
+	 8BTqLnNf590eA==
+From: Lee Jones <lee@kernel.org>
+To: Alex Deucher <alexander.deucher@amd.com>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Jani Nikula <jani.nikula@linux.intel.com>, 
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+ Tvrtko Ursulin <tursulin@ursulin.net>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, 
+ Ryan Chen <ryan_chen@aspeedtech.com>, 
+ Billy Tsai <billy_tsai@aspeedtech.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+ Matthew Wilcox <willy@infradead.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Randy Dunlap <rdunlap@infradead.org>, Dmitry Ilvokhin <d@ilvokhin.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
+ linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-hardening@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+ linux-doc@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>
+In-Reply-To: <ed2b0b67c306bb458ba389f16dc92904203a104b.1793027261.git.d@ilvokhin.com>
+References: <ed2b0b67c306bb458ba389f16dc92904203a104b.1793027261.git.d@ilvokhin.com>
+Subject: Re: (subset) [PATCH 08/10] leds: pwm: Switch to __nonnull_args()
+ macro
+Message-Id: <179388805861.2575351.14283088205507759337.b4-ty@b4>
+Date: Thu, 05 Nov 2026 14:14:18 +0000
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -68,30 +81,26 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1793882260.git.alx@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.16-dev-ad80c
 
-On Thu, Nov 05, 2026 at 01:46:20PM +0100, Alejandro Colomar wrote:
-> Hi!
+On Wed, 28 Oct 2026 08:19:47 +0000, Dmitry Ilvokhin wrote:
+> Commit 22302af28d3f ("cleanup: Annotate guard constructors with
+> nonnull") added the macro __nonnull_args() to wrap raw compiler
+> attribute.
 > 
-> str_has_prefix() is based on sizes and lengths, which means it must
-> overload the valid length 0 to mean not found.  This is a typical
-> consequence of choosing to design an API around sizes and lengths, and
-> vanishes when moving to pointer-based similar APIs.
+> Replace __attribute__((nonnull)) with __nonnull_args() to standardize
+> nonnull attribute usage across the tree and keep the attribute's quirks
+> in one place rather than open-coded at every call site.
 > 
-> This patch set adds strprefix(), deprecates str_has_prefix(), and uses
-> strprefix() in one place to fix a bug reported by Bartosz.
-> 
-> We can later work on replacing the other uses of str_has_prefix(), which
-> might hide similar bugs.
-> 
+> [...]
 
-I have no idea what causes it but I'm getting so many patches lately
-that are subsequent iterations of a series sent with In-Reply-To: header
-pointing to a previous thread.
+Applied, thanks!
 
-Don't do this. Each new iteration must be a separate thread. Please use
-b4 to manage patch series.
+[08/10] leds: pwm: Switch to __nonnull_args() macro
+        commit: 687615faae92e36a2b6c5ab0d007751e8e88a645
 
-Bart
+--
+Lee Jones [李琼斯]
+
