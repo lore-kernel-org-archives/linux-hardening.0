@@ -1,65 +1,69 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793882981;
-	b=YFKVbMx5diwngJneDm5PERzfsto1adqV8pLmmgnWuQvqrU7hmghZ/HMpNALorIyH2HDS
-	 1jHvBkxdiTJoHaX83ZD4SjKXU6NzF0a8/HjSvt78pI7+aPkcwuCjewywAjudxHJ27RDp8
-	 KcSg47UwHQv6UQrFmSjK1eWbufwg93Z+WTFbvQhlPLROsIUIag4kVTKZImX7+NyB+dTBr
-	 QFqWjK3aHKrsjdOkf0mxVRHfchMonGEMh0sj4CT327Z330lLNO0wnDydFVqV3vWF5qN5d
-	 JfsZCKe7qB8OddsP5F8nUQO7M3eD8v3GJ9JuwZY+Stt9AWSOXodebQZKpoiPuBjPqvA==
+	t=1793883123;
+	b=bYCtQWVDn3ktjbTmMoMNK4sStBThrRtld+Uzusgfiu37PXaZQTGsMUdbWCRxqnDHIg08
+	 n75GC2kLdAL0bpu0QAwbWjPqTsYfnTnssV6ZvTdRnJs048jR2kNW4HAudVEI2j1wlxM9T
+	 maq6oN3U1Bs5IXRNF6DzQOsYagqHUaPm6GskeOi8GQkGWKEdGCcSgljbEC1RDrA8Spdal
+	 u6T5g5lYvkenlfT+4tofUmc0IxRTuK+kUauwCgXsxLRtNF5fvY0HAJub/yMUJePdnnptO
+	 Z+joM8zlAeTwJw77UmiJJi9Wxq4Vz2RVAAxk71EG4QW0kX2418fzeZubhQMDNRc0G7w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793882981;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=M15O/B9yC/WOawdn7jyj2AadwGXmudVfBrAQSwYveoQ=;
-	b=j4n8B07YDQd2PoHTLQCBuDXI0vuWMokmiu2IUhu8UmOFTBLxXrLOyoTB3aAWDx9QsVvp
-	 hn9uS2VGQ8GgvZ0o61o9reMIa68sUsj4ZDsPzO+t8FqzVj70/wzljnqFPV1PeFso6THP+
-	 Ylu+U6dCUyuR1eOZVJch3Hbzkop80hGbWzcIxnl6ul71A4pPVRwPekJYb3ohC9Zezcogq
-	 6u+DbZlt3E6BtPWhzK/zv3SAL9QD+kGpfY8ekm9hoUsi2JBweEDq8QRizgwD/0HlfqGNn
-	 9Xn+8fDRXDBib8T+mCZzWUNvggynkb+tWBfNvG0GlkPorpqlf31QXW3MmN/E+DRq/MA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793883123;
+	h=Received:From:To:List-Id:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=fLAksqUutuMmZ393ZwmJo+qovjnv36EAtEGhBHrix14=;
+	b=TnKm2oTtGUmrlSIfZ+hRC7Q9mh/VZiFA/CNhtMignA6oCiVHH6uF0fKm8s73yyqZEzr1
+	 hRoCnlCVIBvzsgZyb9g5yMvpiVF3xbBvk0QizBZM8W+xuOxTD8SRVp9BUXPf4Pnf9sNpS
+	 BqutCGQbkyUeRJu+0IDpx6agYeRWNIjdDOsJDr8qf26xrEX9fZAeYT5C/sjO4AoFPxDFf
+	 PJxNt05WbavT7tY/P+kIE+64wuhVQS8iTw28R4cATivCbhyU6eGnT7SVyLBrE4uzOrmFL
+	 xKBaMXRcMquXdkMzDBawmw2zQitc2zw0W9EpmZwK5mTz5bbVwFHhbJJTy00xvUt9pWw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ibOo1Rtg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C0E606A31B;
-	Thu,  5 Nov 2026 12:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ibOo1Rtg
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4909A1F000C1;
-	Thu,  5 Nov 2026 12:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793882980;
-	bh=M15O/B9yC/WOawdn7jyj2AadwGXmudVfBrAQSwYveoQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ibOo1Rtg85Epay9/H+AegOFjwAPptCrIhp+JD5uEZimCF5bJi4Y04CR6dhTOkVZDO
-	 Ht9hiqhz+6HHU2xZoey9L8SAKBsTQ6qmFX9m8lTmJDrqfEgkhA2NO0WMDSeRPxJXeq
-	 a6prvOBaUtodxm6JQNGzxCQ0CeBmnddZMdNmUsdOW7sp49A7J0/aOAHIIxxyyCPFJb
-	 1xBnFmN/EncwUCFynwiJSKsgGZpTfEPmT54Xh0K9NdE/FNKFW7A1FZMoi6KuIG/TM6
-	 vwpsvVUVRI2xyDh6LC94Od4T0Bir11QaQ8G2cfofhUt+swmKQCtW7AjDd6pFHxepKS
-	 B0sz/3POPGJUQ==
-Date: Thu, 5 Nov 2026 13:49:33 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 0/2] Add strprefix() and fix a bug with it
-Message-ID: <aux7GHsXcRxzB5RO@devuan>
-References: <cover.1793876837.git.alx@kernel.org>
- <i6htkk2ggfh5fdgooihazeaqlnx25seyb3y77qyvldu2efj4ud@4dgvnv2xpbl2>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E4B606D810;
+	Thu,  5 Nov 2026 12:52:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 268F41F00919;
+	Thu,  5 Nov 2026 12:51:55 +0000 (UTC)
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: alx@kernel.org
+Cc: alx+linux-hardening@kernel.org,
+	andy@kernel.org,
+	bartosz.golaszewski@oss.qualcomm.com,
+	brgl@kernel.org,
+	dakr@kernel.org,
+	devicetree@vger.kernel.org,
+	djrscally@gmail.com,
+	driver-core@lists.linux.dev,
+	gregkh@linuxfoundation.org,
+	heikki.krogerus@linux.intel.com,
+	hverkuil-cisco@xs4all.nl,
+	joe@perches.com,
+	johan@kernel.org,
+	kees@kernel.org,
+	laurent.pinchart@ideasonboard.com,
+	lenb@kernel.org,
+	linusw@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	namhyung@kernel.org,
+	rafael@kernel.org,
+	robh@kernel.org,
+	rostedt@goodmis.org,
+	sakari.ailus@linux.intel.com,
+	saravanak@kernel.org,
+	schwab@linux-m68k.org,
+	torvalds@linux-foundation.org,
+	zanussi@kernel.org
+Subject: Re: [PATCH v2 1/2] string: Add strprefix(), and deprecate str_has_prefix()
+Date: Thu,  5 Nov 2026 13:51:54 +0100
+Message-ID: <20261105125154.83478-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <d3b325ecefd1d991ca25a4de2a859353f3ad7cfb.1793882260.git.alx@kernel.org>
+References: <d3b325ecefd1d991ca25a4de2a859353f3ad7cfb.1793882260.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -69,97 +73,90 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="e4bitkibv2evwuva"
-Content-Disposition: inline
-In-Reply-To: <i6htkk2ggfh5fdgooihazeaqlnx25seyb3y77qyvldu2efj4ud@4dgvnv2xpbl2>
+Content-Transfer-Encoding: 8bit
 
+	Hi Alejandro,
 
---e4bitkibv2evwuva
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 0/2] Add strprefix() and fix a bug with it
-Message-ID: <aux7GHsXcRxzB5RO@devuan>
-References: <cover.1793876837.git.alx@kernel.org>
- <i6htkk2ggfh5fdgooihazeaqlnx25seyb3y77qyvldu2efj4ud@4dgvnv2xpbl2>
-MIME-Version: 1.0
-In-Reply-To: <i6htkk2ggfh5fdgooihazeaqlnx25seyb3y77qyvldu2efj4ud@4dgvnv2xpbl2>
+On Thu, 5 Nov 2026 13:46:29, Alejandro Colomar wrote:
+> As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
+> between an empty prefix matching an empty string from a non-matching
+> prefix.  This is a fundamental design flaw in this API, and not
+> something that can be fixed.
+> 
+> As always, this is a consequence of choosing sizes instead of pointers.
+> Sizes are often the wrong choice.  In this specific case, pointers are
+> more capable of differentiating these cases, as NULL is a special
+> sentinel value that doesn't need to overload a valid value.
+> 
+> Let's implement strprefix(), a function that returns a pointer
+> right after the prefix if found, and a null pointer if not found.
+> 
+> We'll slowly migrate existing code from str_has_prefix() to strprefix().
+> 
+> Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Alejandro Colomar <alx@kernel.org>
 
-Hi Bartosz,
+Thanks for your patch!
 
-> Date: 2026-11-05 13:30:08+0100
-> From: Bartosz Golaszewski <brgl@kernel.org>
->
-> On Thu, Nov 05, 2026 at 12:12:55PM +0100, Alejandro Colomar wrote:
-> > Hi!
-> >=20
-> > str_has_prefix() is based on sizes and lengths, which means it must
-> > overload the valid length 0 to mean not found.  This is a typical
-> > consequence of choosing to design an API around sizes and lengths, and
-> > vanishes when moving to pointer-based similar APIs.
-> >=20
-> > This patch set adds strprefix(), deprecates str_has_prefix(), and uses
-> > strprefix() in one place to fix a bug reported by Bartosz.
-> >=20
-> > We can later work on replacing the other uses of str_has_prefix(), which
-> > might hide similar bugs.
-> >
->=20
-> Thanks. As Andy said, we'd need kunit tests for that.
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -545,16 +545,33 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+>  	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
+>  })
+>  
+> +/**
+> + * strprefix - string prefix
 
-Agree.  v2 (sent a few seconds ago) contains kunit tests.
+Naive me assumes this function must return the prefix of the string,
+so IMO is it named badly.
 
-> I can also fold it
-> into my series that actually triggered the problem if you like.
+> + * @s: The string to be tested
+> + * @prefix: The string to see if @s starts with
+> + *
+> + * Returns:
+> + * *  @s+strlen(@prefix) if @s starts with @prefix
+> + * *  NULL if @s does not start with @prefix
+> + */
+> +static __always_inline char *strprefix(const char *s, const char *prefix)
 
-Sounds good.  Thanks!
+This returns a non-const substring of the original const parameter, thus
+allowing the caller to modify the original even when it is const.
 
+While this is not uncommon behavior for existing standard string
+helpers, I think it would be good to make new functions safer, by not
+allowing to drop constness.  Using _Generic() can be used to support
+both const and non-const strings in a safe way.
 
-Have a lovely day!
-Alex
+> +{
+> +	size_t len = strlen(prefix);
+> +	return strncmp(s, prefix, len) == 0 ? (char *) s + len : NULL;
+> +}
+> +
+>  /**
+>   * str_has_prefix - Test if a string has a given prefix
+>   * @str: The string to test
+>   * @prefix: The string to see if @str starts with
+>   *
+> + * DEPRECATED: Use strprefix()
+> + *
+>   * A common way to test a prefix of a string is to do:
+>   *  strncmp(str, prefix, sizeof(prefix) - 1)
+>   *
+>   * But this can lead to bugs due to typos, or if prefix is a pointer
+> - * and not a constant. Instead use str_has_prefix().
+> + * and not a constant. Instead use strprefix().
+>   *
+>   * Returns:
+>   * * strlen(@prefix) if @str starts with @prefix
 
->=20
-> Bart
->=20
+Gr{oetje,eeting}s,
 
---=20
-<https://www.alejandro-colomar.es>
+						Geert
 
---e4bitkibv2evwuva
-Content-Type: application/pgp-signature; name="signature.asc"
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrse1wACgkQ64mZXMKQ
-wqkf2g//dAqTvtCu9yZxvUMFRKCF48KLSUCPu6uRODX46y9DQNpvNIXB3nZGsEFC
-5VDia828Tmg802ue95bBDb0hjp3pL6gNldzY5uEfar55WwUtEXEKzAl33m3F/Y20
-8/TqYpsAVrVFmSYzum/W5QR3BE44lPFZ5SDDqbwJdnPXUeHp01igeXyAl2bMvGDn
-OVghBH0gvLj8PzUbC2WCheo8IS6g2FvSy124QeQm5Qj1Ndaq2RJXgQXW7Z2ktDHW
-8khkKbuSdrONhXcTW+o6bct3v74BEZRsEZl+SGVD9to9VNRZJUWMhtiV4FXupktN
-aR5fc7KBwqk25ek8E1WDr0LNFF215jFxyu0BA4fcrxbYPCT7hvTI277UUpaT2PSQ
-g5DDMRNbdUEbbBujhF39Vz7yuvRlzbfZc+lBkVSx2/+C/ClVj6aXv2utCR6Lrz+V
-tyomeHG0MW3nkTeCCt4ed1ZqWA4HucU+Yre/Fa6JsLi2n7dt1A1a5Bb8IwocIlgB
-qTyG/YfGyzs62peqsmVXdvxAOBDAmceXjR48f6dEAmb2R9fWYCMcr5u8QGMKxkxz
-3Eu3hdDEtSCnOGaVrD0r38+EMblBvsUgikhiE5SigIPdSgeAgNlcZKjSycId17hq
-9TiMmwA4ERx4ArfbylcIStdpEoLKtkKdc15QbRkk8P6xh9lERZY=
-=8wgW
------END PGP SIGNATURE-----
-
---e4bitkibv2evwuva--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
