@@ -1,72 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793913855;
-	b=tUa99nzE9QU9ynbodx7GayVs8SItia7M7NmC9RN5Vdescq3CceTALvc2ZUn0zHIRgb3T
-	 vZtipEq+D0eRiZrHs95B8D4zwmqccpSRKNhFWtUnwsx8ZGLOoE1t/XemL5ZXlCDZmy09f
-	 9okDcQZjlwQNzUgygaM22+kiVQxUkkavmKUkz+CcIKtVWSnfL30x/FJYpzsZdrurNGVRF
-	 9i/qrRJ80DGCEma8BcCmg29oA8CImjlwhlC8DY+cdYS3NzXdUQzKzazhNk1Oh93vdBav6
-	 YWw0SyrrUWrw398x472DPYxutcfTTvvxIj+ayj/Pd1Ehu29TtvWqhNU0n8KB4AHB5pw==
+	t=1793914783;
+	b=rgFbmHiGwksZUpn5RX0O+QCi/4jeXfltkTU6NXW2u/uvJdYh6RYplvdCWra1mawKOZZH
+	 7EiFSOkd1iflsswrGwLa2C+PB1GaYguzbMAfow0dIv/4zh0yTn1Yz2UHkrEWcSYS8bFY3
+	 FOMAg2IaeMzPPRjsQN8s8QByuGgZwOXac26lvIIyz8KJmdF2KViBr5kvlpqe40o6+YYZl
+	 YKlk7QYtl/QDwL7M3xIL3piPCVI9onUNkDor+FCBYnmDozmRkUAzkd+VlAtk3Z8AHKC8q
+	 WcdqnsLCjCrUCzt9HlHI/tTqipxiP2PmaNybL3unD6u3I7JFq6D0PlIbvWiTXcWuPuw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793913855;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793914783;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=RL5BhiqJaN/kv+lpAW+VL6m3SxBczrfzmnRexU7rIck=;
-	b=jw8MPSG46GMNemrSIt2DOgEJJnIOyYkaJJSZOjjzZZIdlgIbnjiNjgwitgSYkcAmM4b3
-	 4p+Bno2wM3+9o8pSHPPr/E3rJncbZBdLkrvK4xOBIAuVy+BbI9g7sh7Zax/dyHE1YNim4
-	 WjdHilj8rO9Hz3x3gHkiXXVlLnOYTwgveHsUu3zu5CFWXVZwQjU0DFaY7wLrzgREAmxyn
-	 0fDC80CzlZR3Ad2yYoNDChWcPQBn9t2L8QgAo0FUqEp6v/YVLZczSVjqFC+9U3CYiQJ0f
-	 YWzl3J6RLD0Mn0TMhpJTOnCNmKqbVq0x67MEDekPr61hTqHRI9CF/HruzCQv2N0/sdA==
+	bh=4uSDodCcgcYDH1ty4ZcJJW34BiY+PpPXgdxxUZKLRO8=;
+	b=TwuGkjeZW5hRd3RlIho9x3SV2joev07E4/8xziToxAAo6R8GfRSN/2cKgHg1Ajfj4GA7
+	 JOZXyDNf1A1xieqKp2Z/0IBnz6zhj7KIB51XDRGUT6DLj+DZsRo9bgqN0gly45U4hvW1B
+	 2LKH1yiL75bM3d5kVDyB7H/1b2Wp8GBFPuAKntS415ESfwOm5Q79WkY2jZfGje/qkzI/Z
+	 W7O1VSnqOCTCYSLYzJXu2np+2hsimraErstn2W8auADgZ3n0+CT7iSFvs++ta9xymBqst
+	 sCBcRRAMCnVk6vx/Nhav7GZ8w9N0T1IdzNBYNr6lzXKDhhsnIJfsP+tezZZjJ520yCw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gbsA1GaX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Z3poS2/d";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8103606A31B;
-	Thu,  5 Nov 2026 21:24:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D4B606A32C;
+	Thu,  5 Nov 2026 21:39:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gbsA1GaX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E52121F0089F;
-	Thu,  5 Nov 2026 21:24:08 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z3poS2/d
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED1CF1F0089F;
+	Thu,  5 Nov 2026 21:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793913854;
-	bh=RL5BhiqJaN/kv+lpAW+VL6m3SxBczrfzmnRexU7rIck=;
+	s=k20260515; t=1793914782;
+	bh=4uSDodCcgcYDH1ty4ZcJJW34BiY+PpPXgdxxUZKLRO8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gbsA1GaXPI4QnttpwObOJr6cz6NiyjV4gcFXP4+DlrAX21vVmLOwHoUY34gJ1eBiD
-	 lDCjiaD5XNdUK6sslw7T/y+IsTWrf+XXg+RT+XqQ4FvmnInd6GhmqjFxwwrAIe505T
-	 taveJhHFkKCknGncsIH2+Zt/xTD7nTwtOUWP3ds07tEz6fDYCkA/UbnXjdt7yjykkd
-	 a0E5SE/Ly92P2mgvV8IRxG0WA7QGSkscPWWMBb7/4Y1gSlAKnMPyNfR1CHuZgbhIHo
-	 CJOsXZCbj3PrR60qpdWkvaayVoQ/5EMbY4X0JPtz76slazQ+0HSfyhV7XGyk7qG5jN
-	 wbT9FSJVPA7JQ==
-Date: Thu, 5 Nov 2026 22:24:06 +0100
+	b=Z3poS2/dx8gpVGvc+K5PHUiHPBIB8w0BzSbY7tZVQX5egSFjZqhg+9O8rKZVAz0BY
+	 4oet+NrcYj83moN3He0+UmHjJVJFKaQ/t6kV+5NZhbJGwFzTmMGQH+13WPzgX/MbB4
+	 mW6DD0Zo5NTcWqnI6rfZL1wV3JfFHugvncx2PVOQZv5e6riQtrwOilE8RwEPfTx7ls
+	 kHWg8h+duxUUitlPglVEQl+3Up/MZ1EJItDaFbYsGFJrI1TgP7AGmXHqmub9kx+Kuj
+	 bUtwNzV3CUUJAk9Fm732smd7gGEpYFgTqce5Y/hemmxnN1MX+0H1zvfczKbLAKtL13
+	 5EsI/I6BWiNQw==
+Date: Thu, 5 Nov 2026 22:39:38 +0100
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] string: Add strprefix(), and deprecate
- str_has_prefix()
-Message-ID: <auzxXyAU6zyHtMtn@devuan>
-References: <cover.1793876837.git.alx@kernel.org>
- <9c81f6f62fd0e908e683c4c08b09a1f95bc2ec9c.1793876837.git.alx@kernel.org>
- <20261105111423.360f4ba8@gandalf.local.home>
- <auyuINXEJKc1KoG7@devuan>
- <20261105115019.2fe7c91b@gandalf.local.home>
- <auy0O467UqOzqYub@devuan>
- <auzGMV1YbO9DodBq@ashevche-desk.local>
- <auzHFRzd86iV4-RA@ashevche-desk.local>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Mariia Nikitash <nikitash.mariiaw@gmail.com>, 
+	dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kees@kernel.org, justinstitt@google.com, morbo@google.com
+Subject: Re: [PATCH] Input: mouse: vsxxxaa: Replace strlcat() with strscpy()
+Message-ID: <auz0ONYzkWIETv8T@devuan>
+References: <20261104062319.288360-1-nikitash.mariiaw@gmail.com>
+ <20261105112813.13210334@pumpkin>
+ <auxrRmyg50gvP1HE@devuan>
+ <20261105205321.7b303231@pumpkin>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -77,209 +61,157 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2jm3oxexb27di5hk"
+	protocol="application/pgp-signature"; boundary="texyoxswryydtnzk"
 Content-Disposition: inline
-In-Reply-To: <auzHFRzd86iV4-RA@ashevche-desk.local>
+In-Reply-To: <20261105205321.7b303231@pumpkin>
 
 
---2jm3oxexb27di5hk
+--texyoxswryydtnzk
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] string: Add strprefix(), and deprecate
- str_has_prefix()
-Message-ID: <auzxXyAU6zyHtMtn@devuan>
-References: <cover.1793876837.git.alx@kernel.org>
- <9c81f6f62fd0e908e683c4c08b09a1f95bc2ec9c.1793876837.git.alx@kernel.org>
- <20261105111423.360f4ba8@gandalf.local.home>
- <auyuINXEJKc1KoG7@devuan>
- <20261105115019.2fe7c91b@gandalf.local.home>
- <auy0O467UqOzqYub@devuan>
- <auzGMV1YbO9DodBq@ashevche-desk.local>
- <auzHFRzd86iV4-RA@ashevche-desk.local>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Mariia Nikitash <nikitash.mariiaw@gmail.com>, 
+	dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kees@kernel.org, justinstitt@google.com, morbo@google.com
+Subject: Re: [PATCH] Input: mouse: vsxxxaa: Replace strlcat() with strscpy()
+Message-ID: <auz0ONYzkWIETv8T@devuan>
+References: <20261104062319.288360-1-nikitash.mariiaw@gmail.com>
+ <20261105112813.13210334@pumpkin>
+ <auxrRmyg50gvP1HE@devuan>
+ <20261105205321.7b303231@pumpkin>
 MIME-Version: 1.0
-In-Reply-To: <auzHFRzd86iV4-RA@ashevche-desk.local>
+In-Reply-To: <20261105205321.7b303231@pumpkin>
 
-Hi Andy,
+Hi David,
 
-> Date: 2026-11-05 20:12:37+0200
-> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Date: 2026-11-05 20:53:21+0000
+> From: David Laight <david.laight.linux@gmail.com>
 >
-> On Thu, Nov 05, 2026 at 08:08:57PM +0200, Andy Shevchenko wrote:
-> > On Thu, Nov 05, 2026 at 06:46:18PM +0100, Alejandro Colomar wrote:
-> > > > Date: 2026-11-05 11:50:19-0500
-> > > > From: Steven Rostedt <rostedt@goodmis.org>
+> On Thu, 5 Nov 2026 12:49:59 +0100
+> Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
 >=20
-> [...]
->=20
-> > > > Oops, typo, I meant trace_event_filter.c
-> > >=20
-> > > Still not found.
-> > >=20
-> > > 	alx@devuan:~/src/linux/linux/master$ find | grep trace_event_filter.c
-> > > 	alx@devuan:~/src/linux/linux/master$ find | grep trace.event.filter
-> > > 	alx@devuan:~/src/linux/linux/master$=20
->=20
-> Besides that the above is yet another "Useless use of grep".
-
-See below (spoiler: not so useless).
-
-> > Oh, you are an oldschool guy :-)
-
-In this sense, yep.  :-)
-
+> > > Personally I think that while there are issues with strlcat()
+> > > (mostly to do with its return value), and that there are often
+> > > much better (and faster - so sprintf is out) ways of getting
+> > > the same result, the deprecation really needs to propose a
+> > > sensible alternative (not inlined strlen() + strscpy()). =20
 > >=20
-> > I can't believe people with Git index available are using `find`
-> > and not `git ls-files`. `find` is too slow...
+> > One alternative would be to add strscat(), with the obvious internal
+> > strlen(3).  This would be a drop-in replacement, and wouldn't have the
+> > issues of strlcat(3) --mainly, the DoS vulnerability which is
+> > consequence of the return value, and also the more difficult error
+> > handling of doing '>=3Dsizeof(...)' than '<0'--.
 >=20
-> $ time find . -name trace_events_filter.c
-> ./kernel/trace/trace_events_filter.c
+> I've had thoughts of a more general function - but I've not tried to
+> write it.
 >=20
-> real    0m0.081s
-> user    0m0.028s
-> sys     0m0.053s
+> int str_append(char *dest, size_t dest_sz, size_t dest_off, const char *s=
+rc, size_t src_max_len);
 >=20
-> $ time git ls-files \*trace_events_filter.c
-> kernel/trace/trace_events_filter.c
+> Where dest_sz is usually sizeof(*dest) and the header can substitute that=
+ for
+>   a constant zero.
+> dest_off would similarly default to strlen(dest), if -ve the function wou=
+ld
+>   return that value immediately.
+> src_max_len would be used for an effective strnlen(src, src_max_len).
 >=20
-> real    0m0.014s
-> user    0m0.010s
-> sys     0m0.005s
+> The idea would be that calls like:
+> 	char tgt[100];
+> 	len =3D str_append(tgt, 0, strscpy(tgt, src_1), src_2, 0);
+> would append src_1 and src_2 in tgt returning -ve on overflow.
+> (Further chaining would then work.)
 >=20
-> $ time git ls-files \*trace_events_filter.c
-> kernel/trace/trace_events_filter.c
->=20
-> real    0m0.014s
-> user    0m0.004s
-> sys     0m0.010s
->=20
-> $ time find . -name trace_events_filter.c
-> ./kernel/trace/trace_events_filter.c
->=20
-> real    0m0.083s
-> user    0m0.021s
-> sys     0m0.063s
->=20
-> (with IPC to `grep` it will be even slower)
+> But, as I said, I've not tried to write it or see what it would look like=
+ in use.
 
-Actually, IPC to grep(1) makes it faster, not slower.  :)
-Not only that, but I get to use a regex, which is more comfortable than
-a glob for finding stuff.
+I think it's too complex for what it does.  See how stpecpy() works:
 
-Even if only for the regex, I find it already worth it, but the better
-performance makes it even better.
+	char  tgt[100];
+	char  *p, *e;
 
-	$ time find . -name trace_events_filter.c
-	./kernel/trace/trace_events_filter.c
+	e =3D tgt + _Countof(tgt);
+	p =3D tgt;
+	p =3D stpecpy(p, e, src_1);
+	p =3D stpecpy(p, e, src_2);
+	p =3D stpecpy(p, e, src_3);
+	p =3D stpecpy(p, e, src_4);
+	p =3D stpecpy(p, e, src_5);
+	...
+	p =3D stpecpy(p, e, src_9);
+	if (p =3D=3D NULL)
+		goto truncated;
 
-	real	0m0.064s
-	user	0m0.025s
-	sys	0m0.040s
-	$ time find . | grep trace_events_filter.c
-	./kernel/trace/trace_events_filter.c
+	// 'p - tgt' is the length of the string.
+	// In other words, 'p' points to the '\0'.
 
-	real	0m0.059s
-	user	0m0.023s
-	sys	0m0.043s
-	$ time find . | grep trace_events_filter.c
-	./kernel/trace/trace_events_filter.c
+It copies all the strings into tgt, with truncation.  If any of the 5
+calls resulted in truncation, it will be reported as a NULL.
 
-	real	0m0.058s
-	user	0m0.033s
-	sys	0m0.032s
-	$ time find . -name trace_events_filter.c
-	./kernel/trace/trace_events_filter.c
+You can also do the chain in a single line:
 
-	real	0m0.070s
-	user	0m0.020s
-	sys	0m0.050s
+	p =3D stpecpy(stpecpy(stpecpy(p, e, src_1), e, src_2), e, src_3);
 
-About why, I'm not sure if find(1) is slow at filtering, or if having
-a separate CPU working on the filtering makes it more powerful (perhaps
-both).
+But IMO it reads better one per line.
 
-I think it might indeed be that find(1) is slow at filtering, because
-using git-ls-files(1) is faster without piping to grep(1):
+Then, strscpy(9) is trivially implementable as:
 
-	$ time git ls-files | grep trace_events_filter.c
-	kernel/trace/trace_events_filter.c
+	ssize_t
+	strscpy(char *dst, const char *src, size_t dsize)
+	{
+		char  *p;
 
-	real	0m0.023s
-	user	0m0.018s
-	sys	0m0.010s
-	$ time git ls-files \*trace_events_filter.c
-	kernel/trace/trace_events_filter.c
+		BUG_ON(dsize =3D=3D 0);
+		p =3D stpecpy(dst, dst + dsize, src);
+		return p ? p - dst : -E2BIG;
+	}
 
-	real	0m0.016s
-	user	0m0.012s
-	sys	0m0.004s
-	$ time git ls-files \*trace_events_filter.c
-	kernel/trace/trace_events_filter.c
+And a hypothetical strscat() would be:
 
-	real	0m0.011s
-	user	0m0.011s
-	sys	0m0.000s
-	$ time git ls-files | grep trace_events_filter.c
-	kernel/trace/trace_events_filter.c
+	ssize_t
+	strscat(char *dst, const char *src, size_t dsize)
+	{
+		char  *p;
 
-	real	0m0.023s
-	user	0m0.017s
-	sys	0m0.012s
+		BUG_ON(dsize =3D=3D 0);
+		p =3D stpecpy(dst + strlen(dst), dst + dsize, src);
+		return p ? p - dst : -E2BIG;
+	}
 
-Still, the fact that grep(1) is easier to remember than git-ls-files(1)
-means that it's worth it for me to pipe to grep(1).  But indeed, using
-git-ls-files(1) in this pipeline to replace find(1) might be reasonable.
-After all, I don't want to search in temporary files.
-
-BTW, on top of all this, the interface of find(1) is so badly designed
-that I can never remember how to use it properly.  Compare that to
-piping to grep(1), which everyone knows how to do with eyes closed.
-
-Necessary link when discussing about find(1):
-<https://doc.cat-v.org/unix/find-history>
-(it's quite fun; recommended read!)
+I have been working literally years on this API, and believe it has
+reached perfection.  It includes some feedback I got from Doug McIlroy
+about the design, which improved the usability and safety.
 
 
 Have a lovely night!
 Alex
 
+>=20
+> David
+
 --=20
 <https://www.alejandro-colomar.es>
 
---2jm3oxexb27di5hk
+--texyoxswryydtnzk
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrs8+4ACgkQ64mZXMKQ
-wqkiFhAAqFKamchoNDNeTetmiCh3yJp6GUbHyaX2RrrE5EdmqnhkEX4NQk0+JaXn
-1ImkNyzgBAAOwyJaDxo7nnveXmK9DzPk8aIMt7ciqhb5d2O5sZJ3PLxNMl4Fzuoe
-lGjop+rtjDb69AMcqOuPdlDqxwh8uiinyVeCqP0hqwN7OmOjajGSlQr11buRLI+d
-pgMJZGiws5vKtInNzV1/weIgBQtgM6fqpWiS40XQlgyALWl/h2d+5wT7veje8quA
-VtCLbm+Wgv/WUyAEcVd88h8U/M/8B7YGq3tD8LXinuDvXf02/crJn6eHn4bWBnPS
-XRQunxLUeSL0xmiFZHYYOzIaVbJHr4Gc3c3mzqiGPJlXFvmyPMwKjJza1Ix7WKij
-I06KwMkQSj9rSFi69ppg5TJ4KgAg99lGEV8eJH4M5Itxcvd6LmTkYktnBfWTrVDm
-btA8iOPm94SE3RGW+LLQS6Ozz/lvGsIytydiwnMJ+8c66x70PNHSkIaWJ1wj38HR
-uXdg1EhLTpAzVvJ+nSzx4Bz7o3HxsYkc/XdwKdlzCriAj2rPHc26AYhCv6ES9XCw
-yY3UO8+D56tuq/bM5SBi51bIFpch6ATnPpo2FuYVvNqoD/e/DR2G1ruK3iRkEtlD
-mpz+6bnkWoaknK3xeyJXiS5YuoSfFWeM8sE+gfUmjTZ7Ett3iRA=
-=oZOp
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrs95QACgkQ64mZXMKQ
+wqnt8hAArQKkrFf3cPneOOUukZQn7yuE1roHjBZJO4iCuSSkG1LCHJvvA8IwZtJo
+ZvFpo+MsKge+JhY0WSKaxZ+01uxMbxKwDJbMSVXwfGhcJe6p6jmI6pLyxa4ZgBPq
+ro9fgQFydaj2Ve0Tu048+JKiv4hDzW4/KSgVVPamlcqXn4uH4RMKHpuQ/D0xHggi
+E89XbZLSJiBqDk3s5vbxDLUsqnspEQlvWCEDlaoRfM7+EzdDyDQGWKK8QKmFODue
+HiUIXkcbyCOyOGL2q8X+LT8x1caEouMzRKGV/N2l8PBa9nNCYjwFwKduNXm1KLlj
+ZqBsmjAewEPdFvhP0S68VN9kczJqbPcg0kJzKoFaNhunEPYajJ5gJ81N5tIvCD/p
+KLHqZFG9PEu/Yas3GhfALtrTSqsK89Oa3c6w9b+gioRW1WZVtwNkzpFoF0ZbaA06
+SYdxXaMVzcrHXt1xot4UZ/YNx5ZOerX2teOxSUKI0a0Ly6TcTBqucOqtDg6Tb/SA
+Hnxxg5OTh7VAlfYi8WqFfMiteHmOkakt1Alc0z9icZbpV8h/C6TJu5w1+ttl//9K
+lAbJqNF3HtRJb0q+RJTv3sdx2jZa7RjTC5d625VRSDL7wQVagcf+AFilGsdRg6B+
+q3gTlVz7brjCf24YSdoiACniz1CobI1iNEvy/f9iipmdvNx6TD4=
+=NSFj
 -----END PGP SIGNATURE-----
 
---2jm3oxexb27di5hk--
+--texyoxswryydtnzk--
