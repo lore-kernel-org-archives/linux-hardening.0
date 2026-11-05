@@ -1,46 +1,46 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793882789;
-	b=lMQNLLBP1fllZfNjC0+JdllNKZ8vmlNO2tWx3ODMSHYwAEypb9Drz930B9rjFQU33RRX
-	 FBk/FIazD8uMECEq6cGh/+mz6MauaFpQd8814ziejcJ+pvmbDTw+TC37ZzV8H2ksniSaW
-	 O5inTbmMVGfDURWou563d81t9z4qecGsnfII2j8Aq8maGIfn4y6Im8kwhw35lC78ynjbF
-	 37ow/VVBUaKsKnFZyE/ZzZunZfiuEfoYNJOcLNMVghuKdXQo1qsDBqq9Jl9yK68vpr8Hi
-	 W8z/IIT47cY4M2KKQ7zaV5+5MDEdYXIqeLJkj7CdKUrGl74kQjdkWVifdygTKBhid3A==
+	t=1793882805;
+	b=0CvUcU49aRyJv/7SUZhStETaStZkncbE4+RQHUSTOz5vdGFhK2IkT5bmS95eGtgVgMey
+	 EcZFXogvCWAoY3hQIlEjYYUmx2/btag2QWzxuhDoodikgxqAyUw6aaeeGkY7sivR8X4sP
+	 g1kLKn2Y3iTUj2oUgjFY0xlmV6VmO0MgA+FdMotjzKS08CjVwsZfYTy+QXOjB6TUWW0o1
+	 U8PKUG0BvbxvpM7tdwtNMei5QAf4Dpur2HbXCxX6ZQbG4o/MTqyd53OEdgGw4+lux/Oxl
+	 0wNhp1I7v5dWQL24RKJB758kzxx2X0iU3Gymf90+DBfrRyQ4V6jRRV93U+Cbx9VtHTQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793882789;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793882805;
 	h=Received:DKIM-Signature:Date:From:To:List-Id:Cc:Subject:Message-ID:
 	 X-Mailer:References:MIME-Version:Content-Type:Content-Disposition:
 	 In-Reply-To;
-	bh=HyzKvsSHqgPO50rdEeW4QLU+dE7ILQaIuU/K9EajKEM=;
-	b=191U9rBbj0qPQQOZOgbyT9ElmW/oKq0GgmKTnYHzeg9vmuPkDdHQtqEZAh+MJPNJVRBo
-	 I19nsFX3iyKZJsxDz16bsh7shDAG81Sc0oleuOrsGYED6adATktkfcPA9niuK//Ml2Re0
-	 y+Qwm9JX8AdzItevnejIJF2xPmCl6BQB6JENfJIb200FPhpYJs8jZNc0MR4qeunBxppPE
-	 YvBrYt0oGI55GPm738OZFtBWcry3QE2mIssjQYZAWBdJ1fEtfjy63A1YKH79o66EkxbhX
-	 +ZtbIMFBle8JHmeyJCGWmEjqvDHyH0BULHYQH4hSPpAgLfZi2pRrsPgIX1ra5ZiC/Wg==
+	bh=tlCqC29pZRMjBzBT+P2pTBhh1ci6MKOQbd3RaQU0Kj0=;
+	b=3rxqDnzp4s59ceDcREhmq/Cv+jdb6ULH2P0DbKeTLT+t3RA7Qwc3j6XWi1pexqdd7G8H
+	 vknRWoFTX9Lb1UjcTjhsU8VHlzei5/VEHx4S9QA9+ABN/JCMWWISA1IftcDp+cbF4iw8o
+	 b14vbpTftI01t1zqFgQpCdeZSDuawrG0dyWA0woHTQuRT1NEuuv6FPSJztb5zQHOovXzA
+	 3GS2buPKPg2YCmdL9BEd5Zwj5sDzaYadQg2XnyGcx544eEXr+t6NEueuzTiYPTsiTMu7N
+	 Vrv438e7EqlGJlkBUtZNu/uLFfJRFCrof6Br/Wtrfr7fmwO4BgDldgqfncZ17HcEqgQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="mGJrm/8U";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Isrf9WnN;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0642F606A339;
-	Thu,  5 Nov 2026 12:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC4D606A33A;
+	Thu,  5 Nov 2026 12:46:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mGJrm/8U
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 658621F000C1;
-	Thu,  5 Nov 2026 12:46:23 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Isrf9WnN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92F21F000C1;
+	Thu,  5 Nov 2026 12:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793882788;
-	bh=HyzKvsSHqgPO50rdEeW4QLU+dE7ILQaIuU/K9EajKEM=;
+	s=k20260515; t=1793882804;
+	bh=tlCqC29pZRMjBzBT+P2pTBhh1ci6MKOQbd3RaQU0Kj0=;
 	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To;
-	b=mGJrm/8UYxj8MJaIQAXhg8wrElLZKDTpekKhLPyl4/R8PFwGKjUzjM77f4CoTwmCj
-	 J9AbOyK055n64ec1X0SHJm96kTl9mRAaOQ92QJ7Qe2xmWrEj6HoGdMwUxmDSO/ujg3
-	 nUShnYQeZiHRFmdPe9uLUBFq/3VLAtztCXVXX6sNhqy4OBnU64wi9HjB+XNUdWwn7H
-	 xaleH21BsVvMdolCNvsY4OCBerTuD/Je+w2CjKhk7tZLLUvSSe4BQWFWjGhwBKjFIk
-	 f7bly4Hh1GMVftP3VLzuwbCAGB/OZHgJhBgLnN4o5fYyWhkQUVJGlc2ydqGy2S65JF
-	 i5lEy3YZZzgdQ==
-Date: Thu, 5 Nov 2026 13:46:20 +0100
+	b=Isrf9WnN4bsWUtXwUrC2rfE29DcOMsk4peOkvOOlv8rNAbVODbdltOJ+nS2UCIvVh
+	 MzrUfjUEsX1uQc8Ou9gWz/9db0x4s2H2emnPub16hwCEuuCgjYSqI0KOhE06YWBefT
+	 /ISd4hiqvHSDN50I23WnwZ6/jbwzDqC4Ohi30hDY8VtaCwfFeEO81nhCetbYFUkOGT
+	 ymxF3eWqqvO2D42so1Axz+XvV7K7j7QroVYTk36Vucs24qnFKvgxYutdDdpo8s/CcY
+	 +SHBBgj579cDJJxwgUVwfIFpySkT8zSoNQiaNURUS9q/nQC64uRpCjRvBjChSo1yny
+	 1OUkWUhyIYKkw==
+Date: Thu, 5 Nov 2026 13:46:37 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, alx+linux-hardening@kernel.org, 
@@ -55,11 +55,13 @@ Cc: Alejandro Colomar <alx@kernel.org>, alx+linux-hardening@kernel.org,
 	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
 	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
 	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 0/2] Add strprefix() and fix a bug with it
-Message-ID: <cover.1793882260.git.alx@kernel.org>
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH v2 2/2] device property: Fix fwnode_name_eq() for empty node
+ names
+Message-ID: <ac9728afa0279375c640b6db0a6ca1dd3d600970.1793882260.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
-References: <cover.1793876837.git.alx@kernel.org>
+References: <cover.1793882260.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,12 +72,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jti7rjabgq6a3xqs"
+	protocol="application/pgp-signature"; boundary="u57eysqcc2vtxbdy"
 Content-Disposition: inline
-In-Reply-To: <cover.1793876837.git.alx@kernel.org>
+In-Reply-To: <cover.1793882260.git.alx@kernel.org>
 
 
---jti7rjabgq6a3xqs
+--u57eysqcc2vtxbdy
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -94,274 +96,77 @@ Cc: Alejandro Colomar <alx@kernel.org>, alx+linux-hardening@kernel.org,
 	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
 	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
 	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 0/2] Add strprefix() and fix a bug with it
-Message-ID: <cover.1793882260.git.alx@kernel.org>
-References: <cover.1793876837.git.alx@kernel.org>
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH v2 2/2] device property: Fix fwnode_name_eq() for empty node
+ names
+Message-ID: <ac9728afa0279375c640b6db0a6ca1dd3d600970.1793882260.git.alx@kernel.org>
+References: <cover.1793882260.git.alx@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cover.1793876837.git.alx@kernel.org>
+In-Reply-To: <cover.1793882260.git.alx@kernel.org>
 
-Hi!
+str_has_prefix() returns the prefix length on match and 0 on mismatch,
+so the mistmatch case can't be told from "empty prefix matched an empty
+string".
 
-str_has_prefix() is based on sizes and lengths, which means it must
-overload the valid length 0 to mean not found.  This is a typical
-consequence of choosing to design an API around sizes and lengths, and
-vanishes when moving to pointer-based similar APIs.
+For instance: the OF root node's name as returned by
+fwnode_get_name() is "" and will return 0 for any name matched against
+it and since len is 0 too, fwnode_name_eq() will return true.
 
-This patch set adds strprefix(), deprecates str_has_prefix(), and uses
-strprefix() in one place to fix a bug reported by Bartosz.
+Let's use strprefix() instead, which also makes this function simpler.
 
-We can later work on replacing the other uses of str_has_prefix(), which
-might hide similar bugs.
+Fixes: a9c8c738066b7 ("device property: Add fwnode_name_eq()")
+Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Alejandro Colomar <alx@kernel.org>
+---
+ drivers/base/property.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Changes in v2
-~~~~~~~~~~~~~
-
--  Added tests, as suggested by Andy.
--  Remove Cc tags from the commit messages.  [Andy]
-
-Testing
-~~~~~~~
-
-The new tests added for strprefix() pass.  Below is the session I ran
-for testing.  The important line is:
-
-	[13:26:30] [PASSED] string_test_strprefix
-
-Full session:
-
-	$ cat .kunitconfig=20
-	CONFIG_KUNIT=3Dy
-	CONFIG_STRING_KUNIT_TEST=3Dy
-	$ mkdir -p ~/tmp
-	$ export TMPDIR=3D$HOME/tmp
-	$ ./tools/testing/kunit/kunit.py run "string*"
-	[13:26:28] Configuring KUnit Kernel ...
-	[13:26:28] Building KUnit Kernel ...
-	Populating config with:
-	$ make ARCH=3Dum O=3D.kunit olddefconfig
-	Building with:
-	$ make all compile_commands.json scripts_gdb ARCH=3Dum O=3D.kunit --jobs=
-=3D24
-	[13:26:30] Starting KUnit Kernel (1/1)...
-	[13:26:30] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	Running tests with:
-	$ .kunit/linux 'kunit.filter_glob=3Dstring*' kunit.enable=3D1 mem=3D1G con=
-sole=3Dtty kunit_shutdown=3Dhalt
-	[13:26:30] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D string-stream-test (12 =
-subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[13:26:30] [PASSED] string_stream_managed_init_test
-	[13:26:30] [PASSED] string_stream_unmanaged_init_test
-	[13:26:30] [PASSED] string_stream_managed_free_test
-	[13:26:30] [PASSED] string_stream_resource_free_test
-	[13:26:30] [PASSED] string_stream_line_add_test
-	[13:26:30] [PASSED] string_stream_variable_length_line_test
-	[13:26:30] [PASSED] string_stream_append_test
-	[13:26:30] [PASSED] string_stream_append_auto_newline_test
-	[13:26:30] [PASSED] string_stream_append_empty_string_test
-	[13:26:30] [PASSED] string_stream_no_auto_newline_test
-	[13:26:30] [PASSED] string_stream_auto_newline_test
-	[13:26:30] [PASSED] string_stream_performance_test
-	[13:26:30] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [PASSED] string-s=
-tream-test =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[13:26:30] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D strin=
-g (29 subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[13:26:30] [PASSED] string_test_memset16
-	[13:26:30] [PASSED] string_test_memset32
-	[13:26:30] [PASSED] string_test_memset64
-	[13:26:30] [PASSED] string_test_strlen
-	[13:26:30] [PASSED] string_test_strnlen
-	[13:26:30] [PASSED] string_test_strchr
-	[13:26:30] [PASSED] string_test_strnchr
-	[13:26:30] [PASSED] string_test_strrchr
-	[13:26:30] [PASSED] string_test_strspn
-	[13:26:30] [PASSED] string_test_strprefix
-	[13:26:30] [PASSED] string_test_strcmp
-	[13:26:30] [PASSED] string_test_strcmp_long_strings
-	[13:26:30] [PASSED] string_test_strncmp
-	[13:26:30] [PASSED] string_test_strncmp_long_strings
-	[13:26:30] [PASSED] string_test_strcasecmp
-	[13:26:30] [PASSED] string_test_strcasecmp_long_strings
-	[13:26:30] [PASSED] string_test_strncasecmp
-	[13:26:30] [PASSED] string_test_strncasecmp_long_strings
-	[13:26:30] [PASSED] string_test_strscpy
-	[13:26:30] [PASSED] string_test_strcat
-	[13:26:30] [PASSED] string_test_strncat
-	[13:26:30] [PASSED] string_test_strlcat
-	[13:26:30] [PASSED] string_test_strtomem
-	[13:26:30] [PASSED] string_test_memtostr
-	[13:26:30] [PASSED] string_test_strends
-	[13:26:30] [SKIPPED] string_bench_strlen (not enabled)
-	[13:26:30] [SKIPPED] string_bench_strnlen (not enabled)
-	[13:26:30] [SKIPPED] string_bench_strchr (not enabled)
-	[13:26:30] [SKIPPED] string_bench_strrchr (not enabled)
-	[13:26:30] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
- [PASSED] string =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-	[13:26:30] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D string_helpers (4=
- subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[13:26:30] [PASSED] test_get_size
-	[13:26:30] [PASSED] test_upper_lower
-	[13:26:30] [PASSED] test_unescape
-	[13:26:30] [PASSED] test_escape
-	[13:26:30] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [PASSED] st=
-ring_helpers =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[13:26:30] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[13:26:30] Testing complete. Ran 45 tests: passed: 41, skipped: 4
-	[13:26:31] Elapsed time: 2.509s total, 0.001s configuring, 2.192s building=
-, 0.271s running
-
-
-Cheers,
-Alex
-
-Alejandro Colomar (2):
-  string: Add strprefix(), and deprecate str_has_prefix()
-  device property: Fix fwnode_name_eq() for empty node names
-
- drivers/base/property.c  |  5 +----
- include/linux/string.h   | 19 ++++++++++++++++++-
- lib/tests/string_kunit.c |  9 +++++++++
- 3 files changed, 28 insertions(+), 5 deletions(-)
-
-Range-diff against v1:
-1:  9c81f6f62fd0 ! 1:  d3b325ecefd1 string: Add strprefix(), and deprecate =
-str_has_prefix()
-    @@ Commit message
-         We'll slowly migrate existing code from str_has_prefix() to strpre=
-fix().
-    =20
-         Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
-=2Ecom>
-    -    Cc: Andreas Schwab <schwab@linux-m68k.org>
-    -    Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-         Cc: Andy Shevchenko <andy@kernel.org>
-    -    Cc: Bartosz Golaszewski <brgl@kernel.org>
-    -    Cc: Daniel Scally <djrscally@gmail.com>
-    -    Cc: Danilo Krummrich <dakr@kernel.org>
-    -    Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    -    Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-    -    Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-    -    Cc: Joe Perches <joe@perches.com>
-    -    Cc: Johan Hovold <johan@kernel.org>
-    -    Cc: Kees Cook <kees@kernel.org>
-    -    Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-    -    Cc: Len Brown <lenb@kernel.org>
-    -    Cc: Linus Torvalds <torvalds@linux-foundation.org>
-    -    Cc: Linus Walleij <linusw@kernel.org>
-    -    Cc: Namhyung Kim <namhyung@kernel.org>
-    -    Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-    -    Cc: Rob Herring <robh@kernel.org>
-    -    Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-    -    Cc: Saravana Kannan <saravanak@kernel.org>
-    -    Cc: Steven Rostedt <rostedt@goodmis.org>
-    -    Cc: Tom Zanussi <zanussi@kernel.org
-    -    Cc: linux-acpi@vger.kernel.org
-    -    Cc: driver-core@lists.linux.dev
-    -    Cc: linux-kernel@vger.kernel.org
-    -    Cc: linux-hardening@vger.kernel.org
-    -    Cc: devicetree@vger.kernel.org
-    -    Cc: linux-gpio@vger.kernel.org
-         Signed-off-by: Alejandro Colomar <alx@kernel.org>
-    =20
-      ## include/linux/string.h ##
-    @@ include/linux/string.h: void memcpy_and_pad(void *dest, size_t dest_=
-len, const v
-       *
-       * Returns:
-       * * strlen(@prefix) if @str starts with @prefix
-    +
-    + ## lib/tests/string_kunit.c ##
-    +@@ lib/tests/string_kunit.c: static void string_test_strspn(struct kun=
-it *test)
-    + 	}
-    + }
-    +=20
-    ++static void string_test_strprefix(struct kunit *test)
-    ++{
-    ++	KUNIT_ASSERT_EQ(test, 0, strcmp(strprefix("foobar", "foo"), "bar"));
-    ++	KUNIT_ASSERT_EQ(test, 0, strcmp(strprefix("foobar", ""), "foobar"));
-    ++	KUNIT_ASSERT_EQ(test, 0, strcmp(strprefix("foobar", "foobar"), ""));
-    ++	KUNIT_ASSERT_NULL(test, strprefix("foobar", "bar"));
-    ++}
-    ++
-    + static char strcmp_buffer1[STRCMP_LARGE_BUF_LEN];
-    + static char strcmp_buffer2[STRCMP_LARGE_BUF_LEN];
-    +=20
-    +@@ lib/tests/string_kunit.c: static struct kunit_case string_test_case=
-s[] =3D {
-    + 	KUNIT_CASE(string_test_strnchr),
-    + 	KUNIT_CASE(string_test_strrchr),
-    + 	KUNIT_CASE(string_test_strspn),
-    ++	KUNIT_CASE(string_test_strprefix),
-    + 	KUNIT_CASE(string_test_strcmp),
-    + 	KUNIT_CASE(string_test_strcmp_long_strings),
-    + 	KUNIT_CASE(string_test_strncmp),
-2:  37eafcd682b0 ! 2:  ac9728afa027 device property: Fix fwnode_name_eq() f=
-or empty node names
-    @@ Commit message
-    =20
-         Fixes: a9c8c738066b7 ("device property: Add fwnode_name_eq()")
-         Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
-=2Ecom>
-    -    Cc: Andreas Schwab <schwab@linux-m68k.org>
-    -    Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-         Cc: Andy Shevchenko <andy@kernel.org>
-    -    Cc: Bartosz Golaszewski <brgl@kernel.org>
-    -    Cc: Daniel Scally <djrscally@gmail.com>
-    -    Cc: Danilo Krummrich <dakr@kernel.org>
-    -    Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    -    Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-    -    Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-    -    Cc: Joe Perches <joe@perches.com>
-    -    Cc: Johan Hovold <johan@kernel.org>
-    -    Cc: Kees Cook <kees@kernel.org>
-    -    Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-    -    Cc: Len Brown <lenb@kernel.org>
-    -    Cc: Linus Torvalds <torvalds@linux-foundation.org>
-    -    Cc: Linus Walleij <linusw@kernel.org>
-    -    Cc: Namhyung Kim <namhyung@kernel.org>
-    -    Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-    -    Cc: Rob Herring <robh@kernel.org>
-    -    Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-    -    Cc: Saravana Kannan <saravanak@kernel.org>
-    -    Cc: Steven Rostedt <rostedt@goodmis.org>
-    -    Cc: Tom Zanussi <zanussi@kernel.org
-    -    Cc: linux-acpi@vger.kernel.org
-    -    Cc: driver-core@lists.linux.dev
-    -    Cc: linux-kernel@vger.kernel.org
-    -    Cc: linux-hardening@vger.kernel.org
-    -    Cc: devicetree@vger.kernel.org
-    -    Cc: linux-gpio@vger.kernel.org
-         Signed-off-by: Alejandro Colomar <alx@kernel.org>
-    =20
-      ## drivers/base/property.c ##
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 51109794d727..7728116e2968 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -692,15 +692,12 @@ const char *fwnode_get_name_prefix(const struct fwnod=
+e_handle *fwnode)
+ bool fwnode_name_eq(const struct fwnode_handle *fwnode, const char *name)
+ {
+ 	const char *node_name;
+-	ptrdiff_t len;
+=20
+ 	node_name =3D fwnode_get_name(fwnode);
+ 	if (!node_name)
+ 		return false;
+=20
+-	len =3D strchrnul(node_name, '@') - node_name;
+-
+-	return str_has_prefix(node_name, name) =3D=3D len;
++	return strprefix(node_name, name) =3D=3D strchrnul(node_name, '@');
+ }
+ EXPORT_SYMBOL_GPL(fwnode_name_eq);
+=20
 --=20
 2.55.0
 
 
---jti7rjabgq6a3xqs
+--u57eysqcc2vtxbdy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrsepwACgkQ64mZXMKQ
-wqlGEg//VGEqCjaZlhibqTKSLSnyKsgDN6teK1rp/OtYo6FgO5AJq8gImQig7LyH
-wMuQJiWdCvHBxngMNyijtu3N5JMG9H1btdxzihjiz0PxX9RXxwsoWdcSMJb2ZZJL
-Fe8qPynXr8MDLYlwjFOvuXfAYG3RWM0pSWg2omzowFQaeTweXNVjC0fsar6JE0Pz
-vNLGYt4HHtZ5XdO3LjWrcm++iFvS5f2S4bI3si/qIyMN23VzgtIeBUbW2zqtPsqz
-TvgrzvzwB6HzUs7znLZshAEvibPgQYa3id/82lFN/BHrQwG41J8rz5zDOY8yeymN
-gGvf0kxWWABFxGhNhW2KZzRRSlDxW/sMISuQa7N/zynGW5Pn0+NOUf/kP4YR2L5d
-+3kDP1vexWtjGTLr5wz35+dQQjzMfOJzj7UxQaAXbpnS2gQoCkKa8J/r1j6tzH+t
-Bsk+mOx0yNJuLvHjszeapZZOjpxszqGxVO+iSYYDNVzkqVg6tRDLNQB+iVf0NWNy
-Nq2p+m4pU251Z0a61S2AZUZMjXyBK375/ShAf1qKWctoqzjPt2SemqXhEaOaCYCh
-Ms1C0oZagRE9LW2GH3mhvG66munv9A8TKi8cPr2ozseuUmv11zy6qg0N4qsPAamx
-ELkWBJzFRjrByv7WRIUy2zbNGnUIyLkh9d3gA8vXjTaml4V7NGw=
-=Yrxs
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrseq0ACgkQ64mZXMKQ
+wqk6hw//Xsdq+D+ghUWyzNo28OhMsmcV4U28pLayMFnImqbSa7akkbrj3egLxMwy
+Uf9RMqq54HmKJiLNHMzBM3gjaYkyBZ84r4z77jhGkBmcesGnQxW2RTL1CfZ13b6K
+mBNexlR7vRH5+UlEKaO7b+zsc8PpsA3cbjuXkpTttGTZDRmdO3SEULwNb6lPLBMU
+vdGwQNNYbCtniwtEPsqX/o4h6wvBfFFRBsmw4AVOMIm/hxAx3dCFN5/rVdbfdWCa
+0GT5Faqyxb5NosqE89ZySJzTbr6/ADPOwGWlVRq+6Wnq9t9/DLRRBekReCt6cZMr
+AMr2yxB8CzvrVu+Y6pecdksKrHuFMgnpvvksNPO638c0axGPDnwC006tm4YjWXoK
+jfqZK8dFjdl37tk4NbQdxqedBLE1AiLE/Q1VBj6miLRtffegfkWW82p9gXiud8x/
+7mYV0d4q50fPKLeSywZCps9wEiwcMzGMf5/g7t89lF05A0Lbu27WTo1fUsUQ9mdX
+wHIJ/N75b2Xh35cDWhuezoNlzbaTxoU5vcGZuCrZOf7LTEeCVM+sRVo8smOF8yXT
+Yj1hp3mqX+3EMAsH6E0tV3IGrEhc79bsHzaen1NbMLCUQmBvQ81Cz/GioeXjNEKW
+JVPTUfWCeOB5GhLnQ9HxgRMm+aWIDJXIS0BUoghlidzPL/Jsmrk=
+=hZ8T
 -----END PGP SIGNATURE-----
 
---jti7rjabgq6a3xqs--
+--u57eysqcc2vtxbdy--
