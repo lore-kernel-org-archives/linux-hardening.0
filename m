@@ -1,54 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.21
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793879404;
-	b=2GVasFjSL9efANEyO9jvx5bl1zYhOmExFayhV31P3FG/0XAvTIHyLEOP3ebx8UXbVLQ5
-	 Ycha9QLP0PUAZiRfvv2Y+XUFZiAyKON6dF0YuFwsN4KksittOJ5XdOAf6yMZEnJJIKsl2
-	 lolDJ4qQxwFR7UyzWcrBdRou7pQeMYSlV8ezduCP/7gik3/8/FMhFuhc/rf9zbDusA/3V
-	 SxlRm2c1qnratSU443uazQX0kIB0ceomIpbU/gzvLPdIETD1fo2WPoTyZ6SkgZVwR/DQ7
-	 1KvCv9N0RJGxRoNbjtrQzud7ORfBgSIfBq5wyD51j9YLtQb07b+sr3FjseOyC7qWCIg==
+	t=1793879995;
+	b=wzMKeNZ7hFLEJEJ69Sq2HUxxQe4e7tZw3xWkcDJ5oql602M2a1qLunjN8HOsmbE8XgZ1
+	 CHpEun4PkaF/BoM0TEfE0A/6TaTyanh3icd68V/8vkcMxRNOt1EsWNRkgZnHWnQhrkhI2
+	 2I+q4DVV6+0n/3xLM9mrRP9+BM1650xFsbKyrhqhIq8k4repQfRJR2cLlqUucdCFpxdPt
+	 szycmWW9+3mX4g10VC1PYqZKraRp1EksQjWoYlz9RRDPWKJZbj4afV1ITfh8/0vISyW29
+	 WvKs7Bg1qh2Lxov/T+/Fbg+0nx8+CYz5ju+E/TSiCvGhImZcv7p2/uKDCVPmRMjT8mA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793879404;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=oDKfQDAIoGUbqzr7+NW0qlqn3XhkGoaI8l2e454ELsg=;
-	b=JNNQYO+jo3FacfOF0NVhXSaqKKQHS1KFy40k7LFwfkpSHKP2ryxumHcaWAqJmbWu7n+a
-	 /ooqRNEgIY3uKnUUbwhEXI1rRZfhLTs6xvFVZIN30mPTXR4rWVXA2CcB2E4rM+1ukHP6B
-	 5HZ98e5AYoCG5SIcGsmd4KZkDVLpjwdZYxfucc+GsOcL/QKhJjNpox4l07gZjNW1RoCef
-	 Ro6QGZV0Aamt1TH+MajjRPtv1wEguMQgjGWQ27B9rybKP7OXVlUtGBEosDBUp9UmBM9b9
-	 mBpdCkK6FNV2xTGmloMYna22Y927xtYzeZpO8OjWWyl1zqoZvsNHl7ie0T7B8i70xTQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793879995;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To:
+	 Organization;
+	bh=55ziTKuLaUytKA90JjVsAjKL4og9cquzU6OFv/arPMc=;
+	b=eNvj7DssMf0oHvGzOlMOgusK/th3nAlz/dmzTHV1zZ/z7tYDIklWmSoY1BxEDgAsKfJw
+	 jrj+KfJ17sBX0LSObh6AZtPR1eVbA2C+Qt2aaJM2RTBIVblj2fPmxzSw8JS6WI3EdJbNR
+	 0YZXhdbO5GiDMWLz6oeWi97FrbCr5Pix4Kh4n1HRZUIACe9Qx4NC4KV4TpEZ2gmnz9K23
+	 16gYr9MqqHHjzvBxziuC9C/Te0Hky/LImqPReNYKWHNJPrOKXSiJJasioJ51BxzTffWB2
+	 q35QKefDILOBaBl7L59FesoqcG4AsUZOYd/Egr3JvxG7hPQ46hN49ieGiFtd24E9dVA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MTaO8neH;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YbDiy4rs;
+	arc=none smtp.remote-ip=198.175.65.21
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEC5606D819;
-	Thu,  5 Nov 2026 11:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523C6606A31B;
+	Thu,  5 Nov 2026 11:59:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 523C6606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MTaO8neH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C997F1F00A20;
-	Thu,  5 Nov 2026 11:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793879403;
-	bh=oDKfQDAIoGUbqzr7+NW0qlqn3XhkGoaI8l2e454ELsg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=MTaO8neHaewLBM/bDyKXSqHYZNXi63YLUP1tARtL9v7p35p4N4rT+Tj3p52qK6g95
-	 hzAuCkpEpDggwkgzCAddPGZp2APD0vjNcP8no8G1SZzjJVblpMSw30JJhtbA933v+G
-	 15roy3x4+JxFE967FILojGjNP/UXNfIkr5l0kmMyrLs36M7WR5X+LtORotz8ShSrcE
-	 6/U2vUZ5XoToEVKzPFjfDUyUsPwHD3uhCeFYdZgR4yzRCMmi3qx8Ypg/WJD5pmgCYz
-	 LZBbgpVRjrwS/7eWQpPbRCETxYTT7k+SO+aLdWq/mPpy5gLVsXERE4BPhULSSpQXBb
-	 CDiWvU4LPSDTw==
-Date: Thu, 5 Nov 2026 12:49:59 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Mariia Nikitash <nikitash.mariiaw@gmail.com>, 
-	dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, kees@kernel.org, justinstitt@google.com, morbo@google.com
-Subject: Re: [PATCH] Input: mouse: vsxxxaa: Replace strlcat() with strscpy()
-Message-ID: <auxrRmyg50gvP1HE@devuan>
-References: <20261104062319.288360-1-nikitash.mariiaw@gmail.com>
- <20261105112813.13210334@pumpkin>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YbDiy4rs
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793879995; x=1825415995;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=8YvxtWgLQBW0AzQWnk0oKqSHDpGrA9Gbt/fWjyjghwg=;
+  b=YbDiy4rsz2k1UcVf9ymx2c4OSv0Vi6DkJEIYUrrs4HuBWpyNoNIOZjKo
+   a6KpXfZdddmUuoJIxE5Qzg1q5jxtX2ShLRI8bat416KKVIc6+4xXLry7y
+   0IP3BztDIokCx+tpb40Z0sPtIIeATqcv4bsuS4eyfVfhPFaFwmQ9nr11k
+   GM3dFsdnTzZ0MvFsCzuM+O5X/s4RDTtC+GCq+gnyrRlVWBVXHGPje+huw
+   3fkIB+2qcQQmCAGjyfRYN8hIfYNAlYeYXxREKoUWkAyjXtiGpo5rqRKTQ
+   0Dtf48DJ/qOyg692wDY0udpMuoTOR9JBRa1trgu9sXFDH5kIRemVVYMgo
+   A==;
+X-CSE-ConnectionGUID: WAKQ7i5BR5WhDhUvEo3Fhw==
+X-CSE-MsgGUID: 5QEXNvO/SbSPW9g3/F7TTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11956"; a="2756505"
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="2756505"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 03:59:54 -0800
+X-CSE-ConnectionGUID: 1uRZnbrxRheLw/xzWZLFaQ==
+X-CSE-MsgGUID: xp2+bDVwRnS+waA63Sa6CQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="6867168"
+Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.144])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 03:59:47 -0800
+Date: Thu, 5 Nov 2026 13:59:44 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Alejandro Colomar <alx+linux-hardening@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Andreas Schwab <schwab@linux-m68k.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Len Brown <lenb@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] Add strprefix() and fix a bug with it
+Message-ID: <auxvsAZ4D-osszY1@ashevche-desk.local>
+References: <cover.1793876837.git.alx@kernel.org>
+ <CAHp75VdFH146fNhw1ysUbgCPbpv+K++kWvbyZxU=V7tDh0T88Q@mail.gmail.com>
+ <auxn9fKsOKeIFIJa@devuan>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -58,141 +105,48 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="r3dy3xcwqerpul3i"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261105112813.13210334@pumpkin>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <auxn9fKsOKeIFIJa@devuan>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+
+On Thu, Nov 05, 2026 at 12:38:47PM +0100, Alejandro Colomar wrote:
+> > Date: 2026-11-05 13:24:18+0200
+> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+...
+
+> > > Testing
+> > > ~~~~~~~
+> > >
+> > > I've built this patch set with 'allmodconfig'.  I've not run the
+> > > resulting kernel, though.
+> > 
+> > No, all lib/ new code should be accompanied with new (Kunit) test
+> > cases. Update the respective lib/tests/* for that or if not yet
+> > converted to Kunit something in lib/*test*.c
+> 
+> Thanks!  Does this sound good to you?
+
+Let's put it this way — it's a good start!
+
+> BTW, I don't see any existing tests of str_has_prefix() --the API I'm
+> replacing-- under lib/.
+> 
+> 	$ grep -rn str_has_prefix lib/
+
+Can we use a common sense? lib/tests/ lists these:
+printf_kunit.c
+string_helpers_kunit.c
+string_kunit.c
+
+One of them (supposedly string_kunit.c) is what you are looking for.
+If the test cases are not present, create them! It's as simple as that.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---r3dy3xcwqerpul3i
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Mariia Nikitash <nikitash.mariiaw@gmail.com>, 
-	dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, kees@kernel.org, justinstitt@google.com, morbo@google.com
-Subject: Re: [PATCH] Input: mouse: vsxxxaa: Replace strlcat() with strscpy()
-Message-ID: <auxrRmyg50gvP1HE@devuan>
-References: <20261104062319.288360-1-nikitash.mariiaw@gmail.com>
- <20261105112813.13210334@pumpkin>
-MIME-Version: 1.0
-In-Reply-To: <20261105112813.13210334@pumpkin>
-
-Hi David,
-
-> Date: 2026-11-05 11:28:13+0000
-> From: David Laight <david.laight.linux@gmail.com>
->
-> On Tue,  3 Nov 2026 22:23:18 -0800
-> Mariia Nikitash <nikitash.mariiaw@gmail.com> wrote:
->=20
-> > In preparation for removing the deprecated strlcat() API[1], use
-> > strscpy() to initialize the mouse device name.
-> >=20
-> > The destination is zero-initialized, and the constant string fits
-> > within the buffer. Since the return value is unused, this preserves
-> > the existing behavior.
-> >=20
-> > Link: https://github.com/KSPP/linux/issues/370 [1]
-> > Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-> > ---
-> >  drivers/input/mouse/vsxxxaa.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/input/mouse/vsxxxaa.c b/drivers/input/mouse/vsxxxa=
-a.c
-> > index 042a17fe81db..b3a0d7ff5738 100644
-> > --- a/drivers/input/mouse/vsxxxaa.c
-> > +++ b/drivers/input/mouse/vsxxxaa.c
-> > @@ -463,8 +463,8 @@ static int vsxxxaa_connect(struct serio *serio, str=
-uct serio_driver *drv)
-> > =20
-> >  	mouse->dev =3D input_dev;
-> >  	mouse->serio =3D serio;
-> > -	strlcat(mouse->name, "DEC VSXXX-AA/-GA mouse or VSXXX-AB digitizer",
-> > -		 sizeof(mouse->name));
-> > +	strscpy(mouse->name, "DEC VSXXX-AA/-GA mouse or VSXXX-AB digitizer",
-> > +		sizeof(mouse->name));
->=20
-> You might as well use the 2 argument form.
-> Moreover, if you use strcpy() you'll get a compile-time error if the
-> string doesn't fit.
-> strscpy() will truncate and return an errors.
->=20
-> The other question is whether mouse->name even has to be char[].
->=20
-> Personally I think that while there are issues with strlcat()
-> (mostly to do with its return value), and that there are often
-> much better (and faster - so sprintf is out) ways of getting
-> the same result, the deprecation really needs to propose a
-> sensible alternative (not inlined strlen() + strscpy()).
-
-One alternative would be to add strscat(), with the obvious internal
-strlen(3).  This would be a drop-in replacement, and wouldn't have the
-issues of strlcat(3) --mainly, the DoS vulnerability which is
-consequence of the return value, and also the more difficult error
-handling of doing '>=3Dsizeof(...)' than '<0'--.
-
-There's an implementation of strscat() in shadow-utils, where we call it
-strtcat() --because what it does is Truncating the string, so a T feels
-more appropriate--:
-<https://github.com/shadow-maint/shadow/blob/214a2e6e0a5f81fa281b272be7cf9e=
-9d3aff8f34/lib/string/strcpy/strtcat.h#L28>
-
-Another alternative which would avoid the internal strlen(3) call, and
-thus would be faster, would be to add a stpecpy() function, similar to
-stpcpy(3), but which would take a pointer one-past-the-last element in
-the buffer, to perform truncation.  This is fundamentally Plan9's
-strecpy(2), except that Plan9's API has a bug.
-
-There's an implementation of stpecpy() in shadow-utils:
-<https://github.com/shadow-maint/shadow/blob/214a2e6e0a5f81fa281b272be7cf9e=
-9d3aff8f34/lib/string/strcpy/stpecpy.h#L28>
-
-We've been using stpecpy() quite extensively in shadow-utils, and it's
-a great API.  Of course, there's also the decades-long experience in
-Plan9, which apart from their bug --which I found, by comparing their
-implementation to mine--, shows that it's a quite useful API.
-
-And stpecpy() produces the simplest code of all truncating functions.
-
-
-Have a lovely day!
-Alex
-
-> This case is, of course one of the 'better ways' cases.
->=20
-> David
->=20
-> >  	snprintf(mouse->phys, sizeof(mouse->phys), "%s/input0", serio->phys);
-> > =20
-> >  	input_dev->name =3D mouse->name;
->=20
->=20
-
---=20
-<https://www.alejandro-colomar.es>
-
---r3dy3xcwqerpul3i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrsbWIACgkQ64mZXMKQ
-wqkq9Q//UW6QwkSie8ECdEChrKHPAnBCwiZw1qTwxY4XWzrHHNlPa0FYuC31kBbq
-+qWM8MEQ+eolkMZxZibf9GRvHUJVyi4dR6uiLURvNRJ9PzSPqRftGrnFkFFMEge0
-wqsXrJIFqW90ZaJINRVKtfqApEDIABnD9TWgA5ldyOgAvH8Qctw6rVWIchV0fg9u
-y8HoYY0oeRWdXS4Xi1JjF3t2YbxcaNkgRvFe4IyOehrzITZVVw6V73KXJ7tk75qn
-Zt4rM8Ge66zdPBJe3vyNG+o3Cd1+5jDVklD2fSYmQ7+cQickIJNAjf906GbBaZGH
-URb5e3imbM/UXt2VpD6+sRjLtmo3SOKa3SnIvJnfUCs4RYYRd9G5N61aBsj8Lsm4
-aGShVCJ7ruXIZgUHh4LarOWVfvZtBTirc0sYgg4s9OsV6yxtmI4MkzmvF5NH/XRD
-qXVbWM/fWNgFL/7VBaoTMCQ13/3iDj321nTfbG76l+B1mkhyxdEe7nXtNXArTi4y
-bsL+nFoc7trM7DBPBpr7TzOuLcg3eJhynRW9UU/vF+p3WZyLnHrl6Bhfsbomwo/+
-k3IxB5EDufvzia2R5NXYd+tV6BUDnU/Gw1vxJZQyGagG3GCUBIyuwMoqoTR14taB
-1CTBz9raaaEZLYFVLA6nnWXjGSYpCqtzKoOiipAIbc3kEc0qCSY=
-=CGAl
------END PGP SIGNATURE-----
-
---r3dy3xcwqerpul3i--
