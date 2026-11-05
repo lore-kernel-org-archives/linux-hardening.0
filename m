@@ -1,94 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793864114;
-	b=wrpkggXx/RwXKVixhtIGnoNUQUTxQX8fet54nzMjOtSQ9Ft2kedxkTzsN62HEGbBSB87
-	 x7tEbQXPSxaS8D/DgAUQlEgl7Sveq3A7C0VGruVHpqiaZbtZ/EMqtHg1aH9UVjRkecEj2
-	 sGUkIbBgC4MrV8+X0LXVTMsibHyKuXy0D8MAIU3K4egEksw3C6DTNxmK+joD4jP2tIFKr
-	 snh6tzB7AhUSHct4xqW4vX14r+wcTh0SOH4RlXhiWY4k71FlFma/jZqg2db0LUgV161x/
-	 QeBqPB1JNgbGVr1cZ9YXd+EwoqRp7amLVt1udLOWy7yzxV8vdYr4nzKwfPfryyeLhhw==
+	t=1793866747;
+	b=he8v1yxUSvzjKNMhX4iAigAroHYHMnYF5LBda2CIUfjU1HwtA+npxNvAj8Ii1EakjIHu
+	 vRiw/u3Wp2rBBNT0Ezr29+Y5u0ePhY6PgoiA5jOq4AUE0kpNLr77PYw2YmHOrsC7u2Mri
+	 oiKIB5g1J2yAOTU8eet5C6/daKSY4tCD4UleUGvGttFNIsLISH+QGen5CpAhWdhjutWZA
+	 u89suLuXtJylubSQrZL1tgsr8+Ex8H3ShQOjMF/NIhJf41zyH0jIO1sKK2apwjWafTvG9
+	 bBo8EFhS0zAlD9OWN7dp3y4IkPMbcxCiu1Ne9TtNj4aA7TiAVM3YzmbrLZC+kqufWmg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793864114;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=fJrSMcznO+jXm0R/Gb4sVutzbYoC421vKFMchCji1M8=;
-	b=nOMjhQG7+Xl53SlePzTUsHgirbUX2lrMSEdnD8N+VFmfDGTxKvcyn24meoOKbMBnuUfk
-	 N0DFtwTv33vKk8RBjp/JpxUKdBJ5G2Bo6wNVrzidCxanjVZH7jvwsEHVTgTX3U3fJF9RS
-	 zAyurmhyCNmYpFYnzjuzO7UVggkMQht3L7ppsTlDwzk1W6ew+aIl1Lr+m/5fDMiOgrTTF
-	 1NrBmUVOKO7OBG6XJuLaE5uH08saYg97oNik5idrF5f6lQN9HaY/r7TfldB49/2rlM2lY
-	 Zt68f/IqeiSqV1W4VwLvsKHRAEBzDuCmvlxiblbtkVSP9MbCZ/oa9ArAeY13V+zjLHg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793866747;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:From:To:Cc:References:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=voXWE43TKZzjj6nJV8gFDultxRVrBwVOyi5RshFaUXQ=;
+	b=Ebr4IuamH/W6V5CL016JKq+++ohfhgHGv3L1g2RNZhapd3F9I0+MsyzcRi6B9YCuP+/t
+	 08Wr3l9VyVub/jFxg6Bmv7z/k+3RD3j0MnBylybdk+R8XKh/b0QJvsJisu6EnMvsbogni
+	 qX276bVLmwAk+RgjUaLeie+C7lalLC927/OAHBT3svBjt3wj7mKiGCB9mTDzgChnA0pwt
+	 WOv9N1QV9/mRPPefb77gxdDkr4N0VWj8o3PozsPYQoTranYWX4JcRzO7jjMnZJMGEXuVg
+	 CHjZTWG9nlEBvSU/3canecqwGYsMaO6eg36Z9pBTbpI9BFRwgh7WfVgSilFyS6LD1RA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mMdqqgJ1;
-	arc=none smtp.remote-ip=198.175.65.20
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C20B606A31B;
-	Thu,  5 Nov 2026 07:35:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4C20B606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=YEc9uOwK;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5152F606A336
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Nov 2026 08:19:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5152F606A336
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mMdqqgJ1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793864114; x=1825400114;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/FfPBMUOPLe/QDkESDBHjFZFt+ydwEnQtH3CnagBhAQ=;
-  b=mMdqqgJ17Hm4OBGhcDS3oX0BE+t49VRKfRoSoxzEcrCj2+ipynCXUZP3
-   RqAvVn/RGtMCEd8PqEY3k0DsqJECn1V1XBKAStUiqgOLPHxVLEIfgnIaq
-   NQILUriG4m6tvyORDaLf4VLirbUV97TZqLgWsAYH9vxqkjDSV1r23fouW
-   rIhwSTptTaryYC/pOQ/r+NSQq0koQLYdl0VsswLAz1b5iu74V9aY6+wSN
-   tZ6XqEfN3CYBQZMDAZYhgnO+77WRl1kSuiXVZwo5UaldqWiRthERRzs/m
-   gQb9BEZa9D6EERHXB1ikRvmMGd74QdRMD/ud8jJlao7NduurDoPAKIRm1
-   g==;
-X-CSE-ConnectionGUID: A+V4Cj2fRFetiQEJHa9wuw==
-X-CSE-MsgGUID: MfjE4yDySxuYxO7KnmX/3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11956"; a="2676547"
-X-IronPort-AV: E=Sophos;i="6.27,196,1787036400"; 
-   d="scan'208";a="2676547"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 23:35:13 -0800
-X-CSE-ConnectionGUID: tLiMaRPcTziaRantES99tA==
-X-CSE-MsgGUID: o10u2ZxSSZmlxdEUbRPtDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,196,1787036400"; 
-   d="scan'208";a="7099548"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 04 Nov 2026 23:35:06 -0800
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xOs00-00000000lrT-0h1L;
-	Thu, 05 Nov 2026 07:35:04 +0000
-Date: Thu, 5 Nov 2026 15:34:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Hans Verkuil <hverkuil@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Kees Cook <kees@kernel.org>, Len Brown <lenb@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Linus Walleij <linusw@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-acpi@vger.kernel.org,
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 9/9] gpio: shared: generalize most code to firmware nodes
-Message-ID: <202611051523.HtiYeAbK-lkp@intel.com>
-References: <20261104-fwnode-for-each-prop-v1-9-6e28fe1c72c4@oss.qualcomm.com>
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=YEc9uOwK
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63EAF15A1;
+	Thu,  5 Nov 2026 00:19:01 -0800 (PST)
+Received: from [10.57.17.66] (unknown [10.57.17.66])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D64D83F673;
+	Thu,  5 Nov 2026 00:18:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1793866744; bh=bTT01ldQJro64DbDN3GZnqw1GrxcI2GgeVkpWVQKF/w=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=YEc9uOwKpkG3VIo8BNC1Jc7JWkHGwFeOGrZAhgcSe9JSpicwMRNHh7/SpXxFugEKd
+	 E/6WcZEpwSmKf6a6pwXYQ7KDsDvx2WH4QQu0QPTrI2+4h5in1ky6m7xvJKypoPzaYn
+	 wAB7G83GeLBT0zBXUpBtBuY78ekPLBN/1DQrDT3s=
+Message-ID: <d0e63c8c-ac81-4daa-b359-622f16e91d67@arm.com>
+Date: Thu, 5 Nov 2026 09:18:38 +0100
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -98,63 +53,95 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261104-fwnode-for-each-prop-v1-9-6e28fe1c72c4@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v9 08/25] arm64: Initialize POR_EL1 register on
+ cpu_resume()
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: Linu Cherian <linu.cherian@arm.com>
+Cc: linux-hardening@vger.kernel.org, Andrew Morton
+ <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "David Hildenbrand (Arm)" <david@kernel.org>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Kees Cook <kees@kernel.org>, Linus Walleij <linusw@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Maxwell Bland <mbland@motorola.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
+ Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+References: <20260818-kpkeys-v9-0-743ad31b2c8f@arm.com>
+ <20260818-kpkeys-v9-8-743ad31b2c8f@arm.com>
+ <apkMDaRKqX3TTINV@a079125.arm.com>
+ <139b273a-d868-4d82-92b6-cccfb0048c44@arm.com>
+Content-Language: en-GB
+In-Reply-To: <139b273a-d868-4d82-92b6-cccfb0048c44@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Bartosz,
+On 03/09/2026 18:45, Kevin Brodsky wrote:
+> On 03/09/2026 07:56, Linu Cherian wrote:
+>> Kevin,
+>>
+>> On Tue, Aug 18, 2026 at 03:08:50PM +0100, Kevin Brodsky wrote:
+>>> From: Yeoreum Yun <yeoreum.yun@arm.com>
+>>>
+>>> The POR_EL1 register is reset to an unknown value after cpu_suspend().
+>>> Since POR_EL1 always holds POR_EL1_INIT when entering cpu_suspend(),
+>>> initialize POR_EL1 with POR_EL1_INIT before cpu_do_resume().
+>>>
+>>> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+>>> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+>>> ---
+>>>  arch/arm64/kernel/sleep.S | 12 ++++++++++++
+>>>  1 file changed, 12 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/kernel/sleep.S b/arch/arm64/kernel/sleep.S
+>>> index f093cdf71be1..e0a6ad85cd24 100644
+>>> --- a/arch/arm64/kernel/sleep.S
+>>> +++ b/arch/arm64/kernel/sleep.S
+>>> @@ -3,6 +3,7 @@
+>>>  #include <linux/linkage.h>
+>>>  #include <asm/asm-offsets.h>
+>>>  #include <asm/assembler.h>
+>>> +#include <asm/kpkeys.h>
+>>>  #include <asm/smp.h>
+>>>  
+>>>  	.text
+>>> @@ -134,6 +135,17 @@ SYM_FUNC_START(_cpu_resume)
+>>>  	/* load sp from context */
+>>>  	ldr	x2, [x0, #CPU_CTX_SP]
+>>>  	mov	sp, x2
+>>> +
+>>> +#ifdef CONFIG_ARM64_POE
+>>> +alternative_if_not ARM64_HAS_S1POE
+>>> +	b	.Lskip_por_set
+>>> +alternative_else_nop_endif
+>>> +	mov_q	x2, POR_EL1_INIT
+>>> +	msr_s	SYS_POR_EL1, x2
+>>> +	/* isb can be skipped since cpu_do_resume() will do it. */
+>>> +.Lskip_por_set:
+>>> +#endif /* CONFIG_ARM64_POE */
+>> Would it be better to move this under__cpu_setup ?
+> I didn't think about that, that's quite neat as it avoids having to take
+> care of the resume path separately. It also feels fairly logical as
+> POR_EL1 should be configured very early (since it impacts all accesses
+> once enabled). Will do in the next version, thanks!
 
-kernel test robot noticed the following build warnings:
+Turns out there's a complication here: __cpu_setup() always runs at EL1,
+even when we will run with VHE at EL2. To make that case work, we would
+also need to amend __finalise_el2 to transfer POR_EL1 into POR_EL2.
 
-[auto build test WARNING on 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4]
+Overall it doesn't seem to be easier, and my impression is that we avoid
+handling registers in __cpu_setup/__finalise_el2 if it can be done at a
+later stage. I'll leave the approach unchanged in RFC v10.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/device-property-fix-fwnode_name_eq-for-empty-node-names/20261104-150343
-base:   6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
-patch link:    https://lore.kernel.org/r/20261104-fwnode-for-each-prop-v1-9-6e28fe1c72c4%40oss.qualcomm.com
-patch subject: [PATCH 9/9] gpio: shared: generalize most code to firmware nodes
-config: sh-randconfig-1001-20261105 (https://download.01.org/0day-ci/archive/20261105/202611051523.HtiYeAbK-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 16.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261105/202611051523.HtiYeAbK-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202611051523.HtiYeAbK-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/gpio/gpiolib-shared.c:300:12: warning: 'gpio_shared_fwnode_traverse' defined but not used [-Wunused-function]
-     300 | static int gpio_shared_fwnode_traverse(struct fwnode_handle *curr)
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   Assembler messages:
-   {standard input}:165: Error: offset to unaligned destination
-   {standard input}:477: Error: offset to unaligned destination
-
-
-vim +/gpio_shared_fwnode_traverse +300 drivers/gpio/gpiolib-shared.c
-
-   299	
- > 300	static int gpio_shared_fwnode_traverse(struct fwnode_handle *curr)
-   301	{
-   302		int ret;
-   303	
-   304		if (gpio_shared_fwnode_ignore(curr))
-   305			return 0;
-   306	
-   307		ret = gpio_shared_fwnode_scan_properties(curr);
-   308		if (ret)
-   309			return ret;
-   310	
-   311		fwnode_for_each_child_node_scoped(curr, child) {
-   312			ret = gpio_shared_fwnode_traverse(child);
-   313			if (ret)
-   314				return ret;
-   315		}
-   316	
-   317		return 0;
-   318	}
-   319	
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Kevin
