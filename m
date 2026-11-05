@@ -1,79 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793915397;
-	b=xFU+JriNSDSU+kKcE3IxdAvVIOVPNSodHWDSfywJSUqr6JPk921+/moan0rGTEqB8hXf
-	 ZpxyM2SvoLeYq+ETIqMqSfhnfK9X2cqjSLpWPcZeCRilelTRbRxaRXYmajBelXn8iLUvk
-	 TbBLBxN7S6jiUAm8p+6r/kN0os5RqOSyKgoXWIJxdyBHwj8NIcgr6L3Go5SEClJSG42ok
-	 RXQEev1hxB9oK0EUfzhv3kHSMIBxoFCNixbPIQA0o2JESyzSbG0yIYRJHlUXFWZ7E5ocj
-	 Fj0qHIS1cKM1YfH2Raxo26UmmjlL2y+S+cYJfdKodGQ91o3Wh1rA3jNuSj/oQeNkZ7w==
+	t=1793915641;
+	b=BGcDSs+y88c4Ir/tZeGybx8WSYwfuajUh6jvtHC9Ar90RX/OqbvDJ35zi0ouAYc9yvFZ
+	 X6Odu1Fl/1ICY0UH5Sg6a9kuR29Y9Z4uiX5zYaZ6JbJ1M0abAUQxtB5RBUbaO8ZrP0rMY
+	 gWPGvnjF4DIYpBg8LAPX/uRxJgqJeY788GupmuL6cNZ19t0axpVrf93Sp96E0K29xbZ2N
+	 5eNpqa0UB+uP9yhGutpb8d//WNqi+9aavOFkZJB7mXmovqKFD5uiKQad5twO5wtn4jdj/
+	 Rwf0G/R0q2pf16EfUw9OItS7c0Ges9S4I2Ns4JrTjLetikcO39P5HjVSfbSfNBuv/nQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793915397;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Received:
-	 X-Forwarded-Encrypted:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=oHIzt9l6ZqX1+4fgIF4dpM8hMXfpU4Wy6+rPpNQD3cg=;
-	b=o4wF+5yKz4tN9KVf9aMhDxJsdtvGP9O+QErcve0J8eGEYMCYpggDBEwQypIsvcZN8Hk+
-	 OIb087czmnEHA8NQJJ4ZkDSV6nA8W5/96pdy//vmn4r4Fq5BMQB0nHt2ssp9ARcJ9+CgI
-	 1zgH1UEmZE37xe0zq8gtIERkxC1O0HT3CNHknjhXo9fHgiOfOYMLuGl4dKosY1/JRbZ/8
-	 +xJAi18JUDvwse4yK01+hsbXHRIpT9I6CbCa1NYEWb5nbV2Q6/7tP7dv13RlHtYYewYFz
-	 tI/hLQnwsiaP63r9tuD/kXY3bOD1SQKb5N2mPN0eaQddH426wPiIQ4b43zhsg1bjWJg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793915641;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Received:X-Forwarded-Encrypted:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=l8n+OopgLwypxqFGetb5HIgCgsMRDuPspITkC+2T1Gk=;
+	b=gf6r6QRFFMDaGIthZ9PE9FCWrUONFCassFu16L7gQfQRbvCIBjPPZ07w5KJqNmJnSzu1
+	 NtCQ168ooH+bU0RaMTAUpsnLVepfuMKHCkcOQGnUn4iZdja0N/VkWF5nJJ6VaBQdMwv+O
+	 thSO9c8rMTKwhf0oisnaT7ipkJPgxdGO8Go24v+05mxwusnGqjFKoonpAIesI3wTypWvk
+	 /lXpnWXZfm/bbKMpUpIRH2FxJCISvC7ktB6mrEUKTZBGvt6pK7DWddpZyZifP1zsIJVzC
+	 Cou7c5+j9YJr/w5WrtIwMM3dw2JZAZdsJooJxrl9IEKzzKVIGrvcdh5r/fSJ2YjamkQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=gompa.dev;
-	spf=pass smtp.mailfrom=gmail.com;
-	arc=none smtp.remote-ip=209.85.161.44
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	dmarc=none header.from=linux-foundation.org;
+	spf=pass smtp.mailfrom=linuxfoundation.org;
+	dkim=pass header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=google header.b=MfV9AI4+;
+	arc=none smtp.remote-ip=209.85.208.52
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14228606A31B
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Nov 2026 21:49:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 14228606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-6e560e00a86so32028eaf.1
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Nov 2026 13:49:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793915396; x=1794520196;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2223606A31B
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Nov 2026 21:53:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2223606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=google header.b=MfV9AI4+
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6b57182c4c6so2459611a12.2
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Nov 2026 13:53:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1793915638; x=1794520438; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=oHIzt9l6ZqX1+4fgIF4dpM8hMXfpU4Wy6+rPpNQD3cg=;
-        b=mfVbT8VI5KU2Dcht5nKLUaMjfFbOptwG39zW+CzOJ3pTmDombn/tDX0BLCyqsiLJTe
-         d94poY0TSM9K+CHF1n313tr0+0sW+8Y21yhEMXdhbonD9NlrYr3eWZ8WjSOCSfDzfC1/
-         fQ8F9XiQxTf31KHMw6w41OoU00CbZFw4zDpONFPivVXIbN44X+QFD2YN/VKlZrRTBp07
-         tKg2SmKN6VsuBNKIWwQ/kFtWVG2YqtCETgK+id61scqCj4R20sh2Cq8ou0tzCJDZs8yU
-         xudhQzTtb9cjzvKnpEJeX09+zvexV1LLPZTY4m0ATF2h2XTNCypzTp4mT5wZytFP1wvG
-         fZsQ==
-X-Forwarded-Encrypted: i=1; AKwUvByAh1i6O0SIKDjUu5mR6g7VYM+/VyuqLIN5rVI3BSDokPeS3oFDB9KjZAp1tVW4+60wOzMxAJ4mRutCY1lohGU=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9lFHTLGa8CUrBiXraZE/+QQzUI+uF6wZ8UUo49hez0Aa+odTko
-	avHW/Me+TNZftgk3/MyZWolaABm2fMhXExkk8hGy1oqlnxd3SXOOMLCglMMkEgZs
-X-Gm-Gg: AYBFou1NgxdfOp5Is6Pcdrs2Lov8gzLoUNQ8Hx3PBlvNF12K6ijh1tO2jtLtoHh8iW+
-	xa1d/Xecc5TWRVEYXh/7k/cXBtjvyrAyCYkHLS3hsuhdtLlPjqMy97/JLnX2nxiRCtgFzelIZQ4
-	GMBsi0xo6CYIB3h3ZEOYE8lFOMKmoPsK/+F7chE2rjf0KnZtZAnbUzW9uXnJ9qGcCtRiQxOe8mb
-	ydtX65KbbKu2t5g+CH9ueR41T453KVrsa2zNUJfWVKq3CG02HvfWfGf1jWrGB23c74eMmpVrRUD
-	75uzCWz3w4oelGwiE2KgMmuDQag65oA6+f2/nbU34ZD+E/IbCigyN9GY0/hMW7nIbC4QxiGuVhg
-	UsQLrAb4MXIHxvqbTYP5v0T5bdpurkYav5Yf6AWtfYp4B5HkJCBh4ze5ad5yHAP89PiZqwbHUm5
-	GdCdj6MOKzl/PEy1proANjq4FOfCMu++aw1ByauMKnwee019UtdI2yCqGITGqIkvbqGZxnTvfgb
-	wJXrjCBLNDJmP+2gnQ3wNX7rAzv3D36V8l9oIyO00PwF6pRJcH2d1rUihkbDlr7xQ7ziSqJNyFb
-	EfTWJ7Cl71YI4N49WRzn0aRK+AOCtuxLBol2btN+o5ZadGYUZUU//S7YiNz44YBiR5LOJmRr9TA
-	H+Ha+qSFQCQi7Nc14gPw0LLV2lDYPiB0cDw1wL/9M/v3T4WvdhTjhkDJ8+ormdMVDdWgV3yz9D0
-	Vr0OHAx/+gu1tfSJUQDjrQ
-X-Received: by 2002:a4a:e90b:0:b0:6cd:3fdb:fa69 with SMTP id 006d021491bc7-716e7abb984mr618965eaf.84.1793915395917;
-        Thu, 05 Nov 2026 13:49:55 -0800 (PST)
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com. [209.85.210.54])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4ad979eba0bsm436226fac.10.2026.11.05.13.49.55
+        bh=l8n+OopgLwypxqFGetb5HIgCgsMRDuPspITkC+2T1Gk=;
+        b=MfV9AI4+9+3yFfAFj+fC5uXrdcRWgE3qdD4NzBpHI1Z2pg1cNnvt7bUpgsJH3G1sZu
+         /G/pxpD+tCMIurmKYElpvWah3L7k/sFx5bCDoBTLSZGj6h/6Ls+t5PrYifrNFCBJQ8mb
+         hl+TVoAJeSfc5VH4kVzvvaIK3nmqv2A8Hp0u4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793915638; x=1794520438;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=l8n+OopgLwypxqFGetb5HIgCgsMRDuPspITkC+2T1Gk=;
+        b=KNwWELpYNRHmd2aRzmtWy/oaWM3CWcyFxWbWz8D+0/4NQItayZkH8TdmGa4B8Gru8l
+         2S5/6+pIQxvhzFihM+9HfcQtcJnHWFkButlYi7pEXarWXoAa1EuFdEeE+LzLHbr0igUe
+         iV1tmDIYP/bLNCIgcDh8S/X3Fk5Xl2kTntCu68brHzPGcq2A4aatGbwRJDs2D/fORgrV
+         vCqGx85ury5S8FSEyra1uVoid7kGGA/ktBvpj8DZJrbPkwlYRg8sgTqOIvmC4o39QnVd
+         2B/x/r7hBDYZplUys2KnkDsBRJ0XroZFFXm46IR3BC9My8tPCiWZ+XM2kOzdmYiB/u9v
+         mcLQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzxV7j2iSfkOwGLJj71CF/2V11/ksdn6QDM85YdeWTKSLFFUizW2/sDDwsSb2dcXHlSXhRCGDWY1oFQS+hKJeE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9KFSTXqJKp1/kQ1ES7Ol7L0kbb/Pb2/S0dmRB6cak+5iPeDlow
+	g6lFjwyAnphcVsEQlSNBWhAyCZPz5oJVW22sxw9tfHvvTil6yUn/4ZAJvbIoTDBYWLYnGjmkgUy
+	FZuOZY9mkuA==
+X-Gm-Gg: AYBFou3UNRLxNPTMVAL0D27lfBv5QdciWG50zKn67CG64Da+JjgQc98BDTuyOVY8TjB
+	iEW9eP6HlbwVsFI2Bqt+6H+sZohohglTluYnbwhQftS1oDiFXBFTVgH2OUKeuE6AG6lEMvSZzXz
+	Rlp6Z5IJJ9dGPBVcwKnYDssAvEJlieQ7w7BjIsc7AaqnD6Yeq9OW5xw0Z8LHlo760uHW49lMoXO
+	+McpVSsFknLFXMdwq1mQihLmsir1s4rUM8B1drBvZtEReNlZs9aYKxiMZsIiNFJToFhQWtCs57F
+	FkoL0CT9BvYeU3IJnfIlvkD429KKeEpCPQBfMzDPxxoHQFeVuofFuT9ubuVV648bBEXP2qlV3PG
+	k9lZ59dtjbSU1eaSChkrgEznTN5Bk37ZqWiKQ7HKUEc4Fq9NZoPm2AebF1B4Qcnq0XTrc3C77Qg
+	Tb9nFQohswJSDt2Tsc2D5kZmDaf7wJzz5FzSmeIP1WB9tKXdPwR5mxPpud0aT0LAa6zgF6ISWZo
+	WtJPJemv6O1LwcYxUAYLlA99wJt3vDsPN2/ElVhzhYqOInVK6XCjcSz7ZM9P35BJfXooycIxHzt
+	ZFAmEqYi+OLxjT2+C70woWmvzUbpIeAfPQRmwbpN/GxkAhKf6TJWhRr71AEmk/0x4BQF4ETwfO+
+	bCg==
+X-Received: by 2002:a05:6402:428e:b0:6b1:ef16:1855 with SMTP id 4fb4d7f45d1cf-6b5977d14b0mr338014a12.18.1793915638010;
+        Thu, 05 Nov 2026 13:53:58 -0800 (PST)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b577ed823asm1106587a12.21.2026.11.05.13.53.57
         for <linux-hardening@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2026 13:49:55 -0800 (PST)
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-823e4047037so38235a34.2
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Nov 2026 13:49:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AKwUvBzFi1iJFsO9x+yY6YqSxKr2O2Wr05f8DQoHI0VMSFxj6o8+zNAL4+KttpY71j02zdv1IEWKBBj1dFgrmDxoec0=@vger.kernel.org
-X-Received: by 2002:a05:6820:4d48:b0:70b:8831:8c5e with SMTP id
- 006d021491bc7-716e79aa3abmr562272eaf.51.1793915091517; Thu, 05 Nov 2026
- 13:44:51 -0800 (PST)
+        Thu, 05 Nov 2026 13:53:57 -0800 (PST)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6b56221d361so2573331a12.3
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Nov 2026 13:53:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AKwUvBypHPJqSTzuOIprjdRP2t/4kAqEAwF96XeG9HybbP1cMOfJAeWXwV3FovU41AA27+3KcYf71B/qKmociuEvinA=@vger.kernel.org
+X-Received: by 2002:a17:907:2da2:b0:c40:b59:1b with SMTP id
+ a640c23a62f3a-c4d34d39a58mr58567866b.44.1793915314942; Thu, 05 Nov 2026
+ 13:48:34 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -83,125 +94,74 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260925-brcm4388-submit-v1-0-b5cbc2cde2fb@gmail.com>
- <CAEg-Je918POdPr-=6Dzpdkx_i+Hv4wxv5-8A3MUDEqC8SA59NA@mail.gmail.com> <1a19d3270b8.2873.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-In-Reply-To: <1a19d3270b8.2873.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-From: Neal Gompa <neal@gompa.dev>
-Date: Thu, 5 Nov 2026 16:44:14 -0500
-X-Gmail-Original-Message-ID: <CAEg-Je_xkZ1oGsg=uPtCT-Eh8_-TuLEwxEx02BfLiOB2bZyg-Q@mail.gmail.com>
-X-Gm-Features: AclHuK92anjNPVWCBzaMzrlLgp2aPs-ERNpv9JXE7UUqwrJIWMbDdlGrpwi1rH4
-Message-ID: <CAEg-Je_xkZ1oGsg=uPtCT-Eh8_-TuLEwxEx02BfLiOB2bZyg-Q@mail.gmail.com>
-Subject: Re: [PATCH 00/13] wifi: brcmfmac: Add BCM4388 support
-To: Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: michael.reeves077@gmail.com, Pieter-Paul Giesberts <pieterpg@broadcom.com>, 
-	"Franky Lin (Zhenhui)" <frankyl@broadcom.com>, Mathy Vanhoef <vanhoefm@gmail.com>, Kalle Valo <kvalo@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-wireless@vger.kernel.org, 
-	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, 
-	asahi@lists.linux.dev, Hector Martin <marcan@marcan.st>, 
-	Daniel Berlin <dberlin@dberlin.org>, Janne Grunau <j@jannau.net>, linux-kernel@vger.kernel.org, 
-	Hante Meuleman <meuleman@broadcom.com>, linux-hardening@vger.kernel.org
+References: <cover.1793876837.git.alx@kernel.org> <9c81f6f62fd0e908e683c4c08b09a1f95bc2ec9c.1793876837.git.alx@kernel.org>
+ <20261105111423.360f4ba8@gandalf.local.home> <auyuINXEJKc1KoG7@devuan>
+ <20261105115019.2fe7c91b@gandalf.local.home> <auy0O467UqOzqYub@devuan>
+ <auzGMV1YbO9DodBq@ashevche-desk.local> <auzHFRzd86iV4-RA@ashevche-desk.local> <auzxXyAU6zyHtMtn@devuan>
+In-Reply-To: <auzxXyAU6zyHtMtn@devuan>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 5 Nov 2026 13:48:18 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjD-fQvBvozu7+TjXa4=arAFgVzyixw4W_A=14Y8rhSLA@mail.gmail.com>
+X-Gm-Features: AclHuK9v-o21t8pmiI4INk2NQJoSrOcmPCpk8IDpuzUs81f6KLpwaM7gxXogW80
+Message-ID: <CAHk-=wjD-fQvBvozu7+TjXa4=arAFgVzyixw4W_A=14Y8rhSLA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] string: Add strprefix(), and deprecate str_has_prefix()
+To: Alejandro Colomar <alx+linux-hardening@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, 
+	Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
+	linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 2, 2026 at 11:58=E2=80=AFAM Arend van Spriel
-<arend.vanspriel@broadcom.com> wrote:
+On Thu, 5 Nov 2026 at 13:24, Alejandro Colomar
+<alx+linux-hardening@kernel.org> wrote:
 >
-> Op 2 november 2026 01:43:07 schreef Neal Gompa <neal@gompa.dev>:
->
-> > On Fri, Sep 25, 2026 at 9:49=E2=80=AFAM Michael Reeves via B4 Relay
-> > <devnull+michael.reeves077.gmail.com@kernel.org> wrote:
-> >>
-> >> The Broadcom BCM4388 chipset requires new PCIe initialization and
-> >> firmware interfaces. Add support for these interfaces to brcmfmac to
-> >> enable basic station operation.
-> >>
-> >> This series adds:
-> >> - Signed firmware loading and mailbox transport
-> >> - Fixes for chip identification and firmware capability matching
-> >> - Versioned scan and join requests, and extended PMK payloads
-> >> - Updated event mask handling
-> >>
-> >> These changes include work by Hector Martin and Daniel Berlin from Asa=
-hi
-> >> Linux, refactored where needed for upstream inclusion.
-> >>
-> >> The series provides basic station support only. 6 GHz support is plann=
-ed
-> >> for a follow-up patchset after this lands. The driver retains legacy
-> >> interfaces for older firmware.
-> >>
-> >> Tested on an Apple M3 MacBook Air (J613):
-> >> - Device boot and network scanning
-> >> - 5 GHz WPA2-PSK association and DHCP
-> >> - Bidirectional TCP traffic
-> >>
-> >> Testing required separate Apple PCIe and devicetree patches, as well a=
-s
-> >> Janne Grunau's port-authorization fix [1].
-> >>
-> >> [1]
-> >> https://lore.kernel.org/linux-wireless/20260915-brcmfmac-4way-handshak=
-e-offload-authenticated-event-v2-1-fbb9cc7ac177@jannau.net/
-> >>
-> >> ---
-> >> Daniel Berlin (1):
-> >> wifi: brcmfmac: Support versioned scan parameter layouts
-> >>
-> >> Hector Martin (6):
-> >> wifi: brcmfmac: Support newer PCIe core startup and interrupts
-> >> wifi: brcmfmac: Negotiate PCIe mailbox transport with firmware
-> >> wifi: brcmfmac: Load signed PCIe firmware images
-> >> wifi: brcmfmac: Accept newer BSS information versions
-> >> wifi: brcmfmac: Support versioned join requests
-> >> wifi: brcmfmac: Add BCM4388 support
-> >>
-> >> Michael Reeves (6):
-> >> wifi: brcmfmac: pcie: Report the detected chip ID to the bus
-> >> wifi: brcmfmac: Match complete firmware capability names
-> >> wifi: brcmfmac: Fall back to RSSI-only default join preferences
-> >> wifi: brcmfmac: Use event_msgs_ext for event masks
-> >> wifi: brcmfmac: Handle larger firmware band lists
-> >> wifi: brcmfmac: Handle extended PMK command payloads
-> >>
-> >> .../wireless/broadcom/brcm80211/brcmfmac/Makefile  |   1 +
-> >> .../net/wireless/broadcom/brcm80211/brcmfmac/bus.h |   9 +
-> >> .../broadcom/brcm80211/brcmfmac/cfg80211.c         | 368 +++++++------=
--
-> >> .../wireless/broadcom/brcm80211/brcmfmac/chip.c    |  36 +-
-> >> .../wireless/broadcom/brcm80211/brcmfmac/common.c  |  27 +-
-> >> .../wireless/broadcom/brcm80211/brcmfmac/core.c    |   5 +-
-> >> .../wireless/broadcom/brcm80211/brcmfmac/core.h    |  18 +
-> >> .../wireless/broadcom/brcm80211/brcmfmac/feature.c | 124 ++++-
-> >> .../wireless/broadcom/brcm80211/brcmfmac/feature.h |   2 +
-> >> .../wireless/broadcom/brcm80211/brcmfmac/fweh.c    | 130 ++++-
-> >> .../wireless/broadcom/brcm80211/brcmfmac/fweh.h    |   1 +
-> >> .../broadcom/brcm80211/brcmfmac/fwil_types.h       | 141 +++++-
-> >> .../wireless/broadcom/brcm80211/brcmfmac/msgbuf.c  |  65 ++-
-> >> .../wireless/broadcom/brcm80211/brcmfmac/msgbuf.h  |   9 +-
-> >> .../wireless/broadcom/brcm80211/brcmfmac/pcie.c    | 560 +++++++++++++=
-++++----
-> >> .../broadcom/brcm80211/brcmfmac/scan_param.c       | 416 +++++++++++++=
-++
-> >> .../broadcom/brcm80211/brcmfmac/scan_param.h       |  13 +
-> >> .../broadcom/brcm80211/include/brcm_hw_ids.h       |   2 +
-> >> .../broadcom/brcm80211/include/chipcommon.h        |   5 +
-> >> 19 files changed, 1593 insertions(+), 339 deletions(-)
-> >> ---
-> >> base-commit: 42a9fb3382fc2573e92f41d203b095d9a372cfc9
-> >> change-id: 20260925-brcm4388-submit-5cb8d3e6d6a5
-> >
-> > Works for me and looks good.
->
-> So what does "Works for me" mean here. Did you verify it is working on so=
-me
-> hardware you have? If so, please share the info.
->
+> I think it might indeed be that find(1) is slow at filtering, because
+> using git-ls-files(1) is faster without piping to grep(1):
 
-Sorry, I have tested on a 14" M1 Pro MacBook Pro and a 14" M2 Max MacBook P=
-ro.
+No. Your find | grep" speedup is because you use two cores for this.
+So it's slower, but does it in parallel, which is faster on a machine
+with idle cores.
 
+The reason git ls-files is faster is different: it's because git
+ls-files is just that fast.
 
+And it's so fast that now the pipe overhead is much much more
+expensive than git itself, and so doing "git ls-files | grep" is
+slower and only adds overhead even if you have idle cores.
 
---
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
+And the reason git ls-files is so fast is because it doesn't do any
+directory searches. It just looks at the git index file.
+
+So git ls-files really does something very different from 'find'. It
+just looks at the files that git already knows about, and it basically
+only opens '.git/index' and parses it.
+
+You can *make* git ls-files do a directory read: if you ask for "other
+files" (with the -o option) then git ls-files will basically do that
+whole directory traversal that 'find' does.
+
+Anyway, if you search sources and don't want to care about object
+files or other generated files etc, I'd heavily suggest using "git
+ls-files" and "git grep" exactly because it's much faster.
+
+(Ok, "git grep" isn't always faster, the whole regex algorithm issue
+can go both ways, but 'git grep' does do the same "just look at files
+that are actually known to git" thing, and obviously it can look at
+different revisions etc too, so it's really *good* at greapping the
+actual committed history, although if you go back in history you'll
+obviously be paying a much higher price because now the cost is often
+not the regex, but the unpacking of the objects etc)
+
+            Linus
