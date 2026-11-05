@@ -1,63 +1,64 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793877143;
-	b=X1qg4GI5puUQwRzqH+wxeX94t5KA3UGGb+w6ec27GCxccdPTTlecjzbw4DdTE8FXOMEE
-	 p2Y6XHPg0h9djvb3sjGMp/xFCH8Mqz0p4BMIf8sM8fKQdeaqApoCXLHIdaSeSHGiKofOp
-	 jQDBCC8PK9wjTP6GGsKfW0GPhXhgv8Oum23EPRs0Ztn49bRjmEd1clnCuDUca+bQCV7jo
-	 rToGXNScpwjeAtdBfKZIqyEDXU47YA27lEu+p23Xo7u7uQAxUa8IithWzrrSQz9W0eO52
-	 JIrF0Zl0jNAILkEUooWXWdUYrvq8Z6i1FKECTddyOHCY43Y6NWIBjmC2QlRd4kdHN2Q==
+	t=1793877183;
+	b=oWPWyhCzWXEGlRRDkN0rNvPmR73bmhxPaxJja9uEJJRyZzK1QzQjuzkG9PvKfO6877bH
+	 urpgiM8gQ025oNj51X8pl1Bzx9f69efkiqwyzHrqgHjiSF3fwTV9Ip0jOWn0zGolNd3xV
+	 Okw5FXWBhscmAxpvkmv8SA5LQEV7/wAkkHmUrcZs4/GQeg58lWNpUOJglX0RlJk+s2lFg
+	 vHKv69D8w2oZD2k/KuIhuYvHapZnKibm3HLuGKv2f9H9Y5fk0BY7ALJz+NPCDDgJC2RqU
+	 24QIFN2+GZqDKCg9wbEEbZ0PvnT+p7tWBiYjL5dR4RtjVBo6+Ycwal/wAsjNo4DBkRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793877143;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=vBz1e/DTkbeVLR+CgZnq/81MF85Dt9/oRuB9tLUw1f4=;
-	b=u2cOzSs4Tu1vZDvXijdwMJeIrKEd13y9bm9P2HF+MNRjgtqYoVvDwH+yjPEBzJbGhdmk
-	 c3S9s8NBBqIhfGEYl4jQaVCSSudAKLOXRYcafWloUJfhXHTJyWya5uCCmDS7WfkwUDv7B
-	 XUOzAob+zo0RPl6x8QlJ+d2GQEecOFQT3fWTryjxqdjutu7jsu5ZixYS1re7C+Zk+lEfV
-	 uUJ6DnnGXOVj6sjuMtUvg8djxHdGjt0+JVnhrFqBV2J+wybYqhqmQaNrCYGMDMk4z8H6u
-	 g2ZJrqL9S775Td8KBX6uvimlLK90OqfplaKTsiRPgPFnfARwAnIXCmJOqLnHz7YBJDw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793877183;
+	h=Received:DKIM-Signature:Date:From:To:List-Id:Cc:Subject:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:Content-Disposition;
+	bh=zwhdkb/FX7XgqeOXnGWlh03jUQFZ+bFCBVltb+Toynw=;
+	b=uoOxotYFe4WOEY1UTsx6PRdirDs7Nb6Ts5Ejwa7tU54hxuDHK5JKnXaHg5zrw6iAE3Vf
+	 JD/S1SnZkaq+YQqk2YO+ynV0rGa8d/6gk+3qd329CsytlTPVOHL48lKyKLJhRnomnomkp
+	 q7sJ0eQlR64znT4hZ59/RLeMacesPGRSq8gV62v1y9Egcs05n3ox+uiqBW+wMtN48vhDt
+	 ff6WTsnfnokyy71/Kl/C5s9jiAo7dWJ5ev8JVa00P9zwooaTiWdaoZKJWiIV9dNUmNbjB
+	 hwX8Mbayx8Yaoev/4bfNh151CCexLHcfuhAhFIclklFdqiGGXNgwklGXkGudgOqdqQw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oiKDow4D;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XIkevbHs;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A24606A31B;
-	Thu,  5 Nov 2026 11:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57971606A338;
+	Thu,  5 Nov 2026 11:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oiKDow4D
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF801F00919;
-	Thu,  5 Nov 2026 11:12:18 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XIkevbHs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330D71F00919;
+	Thu,  5 Nov 2026 11:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793877142;
-	bh=vBz1e/DTkbeVLR+CgZnq/81MF85Dt9/oRuB9tLUw1f4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=oiKDow4DVHPcbHYnfnI5K9cDwTYmcgUBZIFceXzoLTmNZKP6qSPC18kUFDy9lhCZD
-	 Dk8fzRSdLag5TXKw9HMmJs623EHxPfyCH/O3IgelwQ3Hl/G2U+5t+ULJoO1zpyz7OA
-	 TSp7E7ZUmFlLWvw6vzNOn+r+VeEhULraYnnDSQ7YP4bhKVKV9WpDarmsjQIsUwvrZ4
-	 eKxR9HqKhDSh/4RnY9kFWo7/6BOEORZxd8sDlblmKYRasnikTEg8SXSyIterYiPpmj
-	 Ktthx7Pcd5ooSaFAweMBN5CbosIM4LsNMYmR8t87biKW0HiJUSyk4ffP2eWWfnUn3S
-	 Tflu+n9Eoc46A==
-Date: Thu, 5 Nov 2026 12:12:14 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>, 
-	Hans Verkuil <hverkuil@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/9] device property: fix fwnode_name_eq() for empty node
- names
-Message-ID: <auxXdlSWo2zG7iFP@devuan>
-References: <20261104-fwnode-for-each-prop-v1-0-6e28fe1c72c4@oss.qualcomm.com>
- <20261104-fwnode-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com>
+	s=k20260515; t=1793877183;
+	bh=zwhdkb/FX7XgqeOXnGWlh03jUQFZ+bFCBVltb+Toynw=;
+	h=Date:From:To:List-Id:Cc:Subject;
+	b=XIkevbHsIuFatnIQvUdyH53B34yzxrvtzro+0Jrutc5WWjZ0Fd8SodiGTmVObLFpy
+	 UOgs9oxsOwC+eF0Z8ntKi31nw/tJA1INR336g9pVLRBv6k8JigcEiH6gUMG70bIzAc
+	 ZSS7h/YcV+tOrx3v+op+ycSZ+n7hBVihOw3KS80tTHJqIY5uH45XtiKE7GgsLda5s1
+	 UUpOTTf58b6XZYH5qB3f6J8J6jOiRIprGwwHGNDTNHvW9CuyaKYJwYzm30+3YjL1B0
+	 QssZ/OxFQfFf80LiyYFbXCr5km+40fwyEXqKfLspFXgAuJojjrkYgiveCNATAlvHYw
+	 HvtVmHsjW+cZg==
+Date: Thu, 5 Nov 2026 12:12:55 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: linux-hardening@vger.kernel.org
+Cc: alx+linux-hardening@kernel.org, Alejandro Colomar <alx@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Andreas Schwab <schwab@linux-m68k.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v1 0/2] Add strprefix() and fix a bug with it
+Message-ID: <cover.1793876837.git.alx@kernel.org>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -68,156 +69,93 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l2ze5nypzbxx3qxf"
+	protocol="application/pgp-signature"; boundary="r6xff2usp7bnktkk"
 Content-Disposition: inline
-In-Reply-To: <20261104-fwnode-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com>
 
 
---l2ze5nypzbxx3qxf
+--r6xff2usp7bnktkk
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>, 
-	Hans Verkuil <hverkuil@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/9] device property: fix fwnode_name_eq() for empty node
- names
-Message-ID: <auxXdlSWo2zG7iFP@devuan>
-References: <20261104-fwnode-for-each-prop-v1-0-6e28fe1c72c4@oss.qualcomm.com>
- <20261104-fwnode-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com>
+From: Alejandro Colomar <alx@kernel.org>
+To: linux-hardening@vger.kernel.org
+List-Id: <linux-hardening.lore.kernel.org>
+Cc: alx+linux-hardening@kernel.org, Alejandro Colomar <alx@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Andreas Schwab <schwab@linux-m68k.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v1 0/2] Add strprefix() and fix a bug with it
+Message-ID: <cover.1793876837.git.alx@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20261104-fwnode-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com>
 
-Hi Bartosz,
+Hi!
 
-> Date: 2026-11-04 15:03:43+0100
-> From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
->
-> str_has_prefix() returns the prefix length on match and 0 on mismatch,
+str_has_prefix() is based on sizes and lengths, which means it must
+overload the valid length 0 to mean not found.  This is a typical
+consequence of choosing to design an API around sizes and lengths, and
+vanishes when moving to pointer-based similar APIs.
 
-This is indeed a problem.  str_has_prefix() is a bad design.
+This patch set adds strprefix(), deprecates str_has_prefix(), and uses
+strprefix() in one place to fix a bug reported by Bartosz.
 
-> so the mistmatch case can't be told from "empty prefix matched an empty
-> string".
+We can later work on replacing the other uses of str_has_prefix(), which
+might hide similar bugs.
 
-Indeed.
+Testing
+~~~~~~~
 
-The better solution would be to fix str_has_prefix().  In other
-projects, I've been using a similar function, but it returns a pointer
-to after the prefix, which is more useful *and* doesn't have this bug.
-
-	char *
-	strprefix(const char *s, const char *prefix)
-	{
-		if (strncmp(s, prefix, strlen(prefix)) !=3D 0)
-			return NULL;
-
-		return (char *) s + strlen(prefix);
-	}
-
-> For instance: the OF root node's name as returned by
-> fwnode_get_name() is "" and will return 0 for any name matched against
-> it and since len is 0 too, fwnode_name_eq() will return true.
->=20
-> Do what OF code already does in of_node_name_eq(): check if the length
-> of the expected name matches the length of the actual node name before
-> comparing it.
->=20
-> Fixes: a9c8c738066b ("device property: Add fwnode_name_eq()")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/base/property.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 51109794d7275ddaf4571584d0e77d8573ebb475..a97575ff9199004b4f401f432=
-aed6c95e40d0c25 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -700,7 +700,7 @@ bool fwnode_name_eq(const struct fwnode_handle *fwnod=
-e, const char *name)
-> =20
->  	len =3D strchrnul(node_name, '@') - node_name;
-> =20
-> -	return str_has_prefix(node_name, name) =3D=3D len;
-> +	return len =3D=3D strlen(name) && !strncmp(node_name, name, len);
-
-This would be going back to the stone age, and introducing code that is
-prone to bugs.  Please don't.
-
-I'd suggest adding strprefix(), and then simplifying all this into the
-following:
-
-	diff --git a/drivers/base/property.c b/drivers/base/property.c
-	index 51109794d727..7728116e2968 100644
-	--- a/drivers/base/property.c
-	+++ b/drivers/base/property.c
-	@@ -692,15 +692,12 @@ const char *fwnode_get_name_prefix(const struct fwno=
-de_handle *fwnode)
-	 bool fwnode_name_eq(const struct fwnode_handle *fwnode, const char *name)
-	 {
-		const char *node_name;
-	-       ptrdiff_t len;
-	=20
-		node_name =3D fwnode_get_name(fwnode);
-		if (!node_name)
-			return false;
-	=20
-	-       len =3D strchrnul(node_name, '@') - node_name;
-	-
-	-       return str_has_prefix(node_name, name) =3D=3D len;
-	+       return strprefix(node_name, name) =3D=3D strchrnul(node_name, '@');
-	 }
-	 EXPORT_SYMBOL_GPL(fwnode_name_eq);
-	=20
-
-
-I'll send a pair of patches in a moment.
+I've built this patch set with 'allmodconfig'.  I've not run the
+resulting kernel, though.
 
 
 Have a lovely day!
 Alex
 
->  }
->  EXPORT_SYMBOL_GPL(fwnode_name_eq);
-> =20
->=20
-> --=20
-> 2.47.3
->=20
->=20
+Alejandro Colomar (2):
+  string: Add strprefix(), and deprecate str_has_prefix()
+  device property: Fix fwnode_name_eq() for empty node names
 
+ drivers/base/property.c |  5 +----
+ include/linux/string.h  | 19 ++++++++++++++++++-
+ 2 files changed, 19 insertions(+), 5 deletions(-)
+
+Range-diff against v0:
+-:  ------------ > 1:  9c81f6f62fd0 string: Add strprefix(), and deprecate =
+str_has_prefix()
+-:  ------------ > 2:  37eafcd682b0 device property: Fix fwnode_name_eq() f=
+or empty node names
 --=20
-<https://www.alejandro-colomar.es>
+2.55.0
 
---l2ze5nypzbxx3qxf
+
+--r6xff2usp7bnktkk
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrsZI0ACgkQ64mZXMKQ
-wqlTQA//W1clNm9koD5im1+p/cxNw122A4ZOpbBKWZPs/sZzSx8bQ4B6Wx75n4Yr
-4GH4EwpC1263aOxO2wHydCz3+pCbfUL/HvRBw51llAASoKkVhz8UUELO86MmilA2
-1jETDaD5nBjmGBiCvpkeSAuirQvGncIbf8gvVcb1lrPOVYY+kHJ5dF+z2LGzPROR
-oiSdMHgPVSFo1jUS3egZWje2ImCcqVW1drh/7b2Z0TtGU9ieqEXLnyoftS/zmww8
-WV/miGSrWUDDPjvJRZisbp5Owp5RXlO5eCq08lNfdu0cVm7bDj6v9BLZ6gtNTN3v
-kt3a5n4kBsHQSUAl99u5Ve/MeMsHieFvfo8QbZIBiRzRqt9sBuW8jo7R3EB0tX2N
-JkJtYjrkObFAGo6TEAsMnrIEBJWiR/ArNHqqWMIfywNsk9QTDOz/S6sRJTwJx6+/
-HCFVlv9iMTe3UXvoDyz49XZgPYZfX3C9T9iob9iZ4JUM3gzJbGmXWH3G+YQfZ6xd
-GFlIRxCn9l/Bihr9VseAnKkLI6EV3ttykDwggL30UIfpWz8oviATlybgAHV1h9uh
-AKxPJqFM6w09GUjgsa01ERqYRRUgNiEGa3Sl1UIhX0xgBrLnaMdt7rSFfYNP31gh
-r+LjzY76L/iGmZUaBQmVGxHxbqQFJEN9jO5cU8i5L5qgt/cerdg=
-=j4iX
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrsZLcACgkQ64mZXMKQ
+wqmjpg/+K1xFGAApGF5BLfzlRzVRpA+1k5MiUCC49l6XlbXGUB2uQKu+OojHxCCc
+Gh7JfPJFn9abea3K2Ym4d9yrDgPCn9e6lf+GLP44VAUqoSC+mLlLhKicIut7CBYx
+aCXDUIgSofgmLiMyt83mQnhzdtbAWxRfA/Nyh4HEhxMH9CpCbtyycYRt23c67St4
+VJSUM1G5arNmAB1Qfsq3r+3q8eUGXIeeIDwN3bLIwIfzT9I0MZdo0xOlRDQuLmRZ
+e5UU1Zx1TL1LGU1Mtw8axmw5hA9k/+hB5NsihuT0mJblpNMOmEAQ+7VdKfDwi5/F
+8w+2nxlDVp0w7h0q9lVi9L281Fkx4sjoyjtYfBf7ArAb9Gl0KQWFzKNVQnTPn9z5
+Q0BB/9mTqeH9qdnPOQMx6d76YMYEUaDiWGdsuYRL/wZO3mNv9iAGPPG7vKdcfvLw
+uMg3WRPQJg/oxhGdixM2srF1tqG7onvf75YxMH0D0Ph31KN15F8BOxxwskWYuOmp
+i1hIhcXfxTVoKSBQiPCetc1n8Bpf944Foe2vloqgM7vxrT/XP+nj7opx6kcDK6ch
+fhtQhHSIGevflJO4xRWJVg/I0mGYs2aJE/1WvnQ1vPDizW0r/k7mAKIVrlUghPF/
+8q5WI9ZpWUuvlT8Vf8YMpaF+vMI94Idp9BsqBiE+c3XhRm6pfAg=
+=0/kl
 -----END PGP SIGNATURE-----
 
---l2ze5nypzbxx3qxf--
+--r6xff2usp7bnktkk--
