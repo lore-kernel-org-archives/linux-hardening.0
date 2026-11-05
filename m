@@ -1,47 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793892075;
-	b=HlXJf6AIxv2YmSvwTWT/gpiNggj6nEah/XVJ0dgYArkf/EIa9jQOaZ1fPlW9n9meAI/y
-	 vdEJ55+1g7TQIW1OXB0PSCaw3rrx75QH6mToNgQ/Tue7BIzF/p29CBa70QP3cbDqh9aW1
-	 5PcYANuBeT8MqnML4hyWW6gD+V62YCDxzPuwYwE9DE5N3mRrT3Gqr9CVK+YzhaZFzN40S
-	 EQtHoCnIfQEkNs9qDUABc8ZSUsgTzm/tmOXY/9Q+YxAOEwqhTRAlSrRNlASsM57Hce+Q0
-	 CLr+Pc9MXUkHICyM13VZ3PJbI0Tf5spw0uWObhVz3SmzJsGn8YVx4Bt3ggYJ6eYMx7g==
+	t=1793895275;
+	b=wUkIsQV/78nkfaK07DePGb9fpUHBshIWQA/HRu/Rb4GXzwgaWswj6gAmJ7bst46c8FKK
+	 nZybFEvHQsPP2Bq2mOuoNylgrTLO+LVE1P3bujToads1/n34JiUW/YJMocRH++h0yW744
+	 9MsqJOqvdan3RBvccNUtfnKhIdhBcc3M243LHgRuRhTFk3PnF9ckqZeM0OE/a8JjWa2eY
+	 iz/UE4Ej0ImWbGOrcVeuTabigRbEDCYi5Oj+YyPUMT/t/1Tuzro4iK0U6xBjWRvrIDwcS
+	 qW10LKpbmzmcFsDIZ5G7NNE7PbSU9Wg+a4J5kCeyG6cG2wv4iIrJrLovjaMUBeyduhg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793892075;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:List-Id:To:Cc:References:From:Content-Language:Autocrypt:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=NzjDcogdjGLC/Z3rU4KyBTyFDp1K6wM2WbeYqpBBZB8=;
-	b=LvfpEQgBT1SwxkieSxgQcFETyu5c+ndWw9d6gCFyXOmEQLK91DilWvUyOg0o1EA9AtQ4
-	 K01aoyaoFdQlJGSnuEskFtCSZXCGCLdiIyQt2qePllMw7I0QKdTuyRS/zE3UaB0UuBFAO
-	 lQLf71wRTbZtqn7cSMfI/r2Gbze6zvClI/wauKlBdP/BHvLgpJ1hswG5YZSntCmUGY3P3
-	 t5bWgVG9nwuP1If3tVjypNwjkr2ptl0y40F3h61l4yNqyReuzX30VDx3CXZ/NbPR+lgeV
-	 btcvnR4jhuk65TdekTqOOMB4UZtzgNqy2OahQE0yI9n+u1vL/GomXl9QFZTzlOFO3vw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793895275;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=TlUJgWbu4oWGG2rIsrlDGpx3BkgzAGEHnQrvA+cmu/I=;
+	b=2uMyG39qqpPGxADUjzePLcPVlm2X7gADiJvMwLePaRFDv2ajNChzwnFwtAbUPTssokFu
+	 SuIwbeTgjmiYh+E1DpPM7W21XyOexmlzsI0w2Qgx2deCADrPGFuRElI31uvwVcGy/rc6U
+	 RIYTQ+sYNnWmEfzIRETPPlmyLdXEM1Cv5IIXyVtMebf/5R6+4VnRLPCpnAzacRC9T2REt
+	 SGe2KT0q/q1L4cgvQmdT1/QnYhwJVj8ZbO+sqPk4s3thfgMoBi/x/jM0x8zAfi0jBMX97
+	 4pNIawIrz8stbzz0OsaPYi7mym1Mfrdsg4iivtf+pMkN5a1Yp5Cdoc58eEoRqaBDMOg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gPtiiDW7;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Nrt87YtL;
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7597606A32D;
-	Thu,  5 Nov 2026 15:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C0B606A32C;
+	Thu,  5 Nov 2026 16:14:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B6C0B606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gPtiiDW7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D8BA1F000C1;
-	Thu,  5 Nov 2026 15:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793892074;
-	bh=NzjDcogdjGLC/Z3rU4KyBTyFDp1K6wM2WbeYqpBBZB8=;
-	h=Date:Subject:List-Id:To:Cc:References:From:In-Reply-To;
-	b=gPtiiDW7VtcwOZuPjL74NRmVyBGWaOGiWCF3GFXluwlU0ZxlvNe+cQJokH6UkM7tA
-	 3qDv2ZKXsX+7KWH/6JY+NDNNht/+GEjiUinSV2dYzxUzsHYE05Vz0+YfMsGu+LZ9pv
-	 I6SwbzEc4tJSGd+Gu4v73xaU+3hCQ12Oey1rYlZhLCwAJcDBwfr8IobWu62rMt261t
-	 X8lkbvN2XIooPjgUCA/W1j2wL+CCU0D9Wmu4DDAvCWUeXiRwv+qjKbIOwdU4WyhYFF
-	 bjQoLlzYSg3gb+rEh7JGgMZJID6QbmAg1XYlDMu0SDOhed5UtIPWg1OvWMGqiYyn7m
-	 gmgLFOu+PzFUA==
-Message-ID: <5001d8c2-2334-48bd-bc95-6b33e3922a46@kernel.org>
-Date: Thu, 5 Nov 2026 16:21:02 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Nrt87YtL
+Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id EB70B120A7D;
+	Thu,  5 Nov 2026 16:14:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id D50E92001C;
+	Thu,  5 Nov 2026 16:14:24 +0000 (UTC)
+Date: Thu, 5 Nov 2026 11:14:23 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-hardening@vger.kernel.org, alx+linux-hardening@kernel.org, Bartosz
+ Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Andreas Schwab
+ <schwab@linux-m68k.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>,
+ Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches
+ <joe@perches.com>, Johan Hovold <johan@kernel.org>, Kees Cook
+ <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Len Brown <lenb@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>,
+ linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] string: Add strprefix(), and deprecate
+ str_has_prefix()
+Message-ID: <20261105111423.360f4ba8@gandalf.local.home>
+In-Reply-To: <9c81f6f62fd0e908e683c4c08b09a1f95bc2ec9c.1793876837.git.alx@kernel.org>
+References: <cover.1793876837.git.alx@kernel.org>
+	<9c81f6f62fd0e908e683c4c08b09a1f95bc2ec9c.1793876837.git.alx@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -51,131 +77,87 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Add strprefix() and fix a bug with it
-To: Alejandro Colomar <alx+linux-hardening@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org,
- Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>,
- Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>,
- Kees Cook <kees@kernel.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>,
- Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Saravana Kannan <saravanak@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>,
- linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <cover.1793876837.git.alx@kernel.org>
- <cover.1793882260.git.alx@kernel.org>
- <qwpovcqznx6eltou4inmj3v62qhh6ouvihqnze7bobnd7lmcbw@rcri4e623icb>
- <auyOkL1Vb1iKicS9@devuan>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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
-In-Reply-To: <auyOkL1Vb1iKicS9@devuan>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: D50E92001C
+X-Stat-Signature: re8d5pkjrgf4w6oyde7458ed8r8qxghn
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX180OMWVvz7pZZGYzhX+zu43VxGyggjBmUw=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=TlUJgWbu4oWGG2rIsrlDGpx3BkgzAGEHnQrvA+cmu/I=; b=Nrt87YtLalkWkst5vwjAiRvM24+Ip9K7Q0HUKV2DGTKMQUiy7WgDwuuBYuCpd/0j2YF79k4RIZfBxZ0ajTmC4QvrtMR85cJ07ejGEpIrNs7u36+hESqobejHExonFkIUVIwnKekabxqGfkq61A/Cf1AQv4puRi0igIKLqRLlqbI=
+X-HE-Tag: 1793895264-672208
+X-HE-Meta: U2FsdGVkX1+vyVPZLQAZdLNS2wyT3JFId0OxXMm7K3LLPGSNyXEiNc0thgtN3v3LejPo/orfLtSJgneGWrAQWhq6JsVJ15veWMPwEVD3iQCpVEXA2MSVChPtf628ymAh2CtwttILHqREF05f7aEZTnW+NHNMSYhrbnFYZv9WbIqnaMC/vVDEZKHuzI/0li2WHWRC8VY/F8P3XtLBn9LsKD8hIuTBDMdrPd7VWQfSHDzNb+oM9iz27j1TazkkcbfpyskgcXy9G+JGQDHWbLBhXJaefWGPkUp0e0321tBVV3Cu/DjOBatTtfTn4TsKiR0R2ZYrJKN9V/tgrCtDf4myomhGQ3wRJRrw0x6vY/VS4PausVqHJ43w8g==
 
-On 05/11/2026 15:16, Alejandro Colomar wrote:
-> Hi Bart,
+On Thu, 5 Nov 2026 12:13:03 +0100
+Alejandro Colomar <alx@kernel.org> wrote:
+
+> As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
+> between an empty prefix matching an empty string from a non-matching
+> prefix.  This is a fundamental design flaw in this API, and not
+> something that can be fixed.
 > 
->> Date: 2026-11-05 15:01:22+0100
->> From: Bartosz Golaszewski <brgl@kernel.org>
->>
-> [...]
->>
->> I have no idea what causes it but I'm getting so many patches lately
->> that are subsequent iterations of a series sent with In-Reply-To: header
->> pointing to a previous thread.
+> As always, this is a consequence of choosing sizes instead of pointers.
+> Sizes are often the wrong choice.  In this specific case, pointers are
+> more capable of differentiating these cases, as NULL is a special
+> sentinel value that doesn't need to overload a valid value.
 > 
-> I don't know what others do, but in my case it's a conscious manual
-> action.  I use --in-reply-to in git-format-patch(1) to make all
-> revisions of patch sets be descendants of the cover letter of v1.
+> Let's implement strprefix(), a function that returns a pointer
+> right after the prefix if found, and a null pointer if not found.
 > 
-> We do this in the Linux man-pages, as it helps me keep track of all
-> revisions of a patch set easily in mutt(1), without having to follow
-> links or use more-complex tools like b4(1).
+> We'll slowly migrate existing code from str_has_prefix() to strprefix().
+> 
+> Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-My mailbox gets 200-300 patches per day (not counting replies), so I
-have no idea how that could be manageable if all versions of some series
-were threaded to itself. Some old thread popping up to the top,
-half-read, deeply nested like 20-deep indentation?
+Is there a link to the report? Please add that.
 
-But even in second workflow, reviewing individual patches via b4 or mutt
-after shazaming (my main workflow of DT) not via inbox, would get huge
-irrelevant thread of past discussions requiring me to look for stuff
-actually for the review. How to find actual patch to review in this huge
-thread? I tried many times, takes much more time than reviewing simply
-current version.
+>  
+> +/**
+> + * strprefix - string prefix
+> + * @s: The string to be tested
+> + * @prefix: The string to see if @s starts with
+> + *
 
-b4 is not so more complex, honestly it's just new interface and after
-learning a few new commands is straightforward and easy. And solves
-successfully, without creating noise or problems to others, all problems
-which you might be trying to solve: referencing earlier versions, easy
-comparing between any version, collecting trailers, sending nice
-thank-you letters with commit and tree references etc.
-
-I believe there should be no excuse for modern maintainer to not use b4
-in the workflow. The same BTW for submitters of anything bigger than
-3-patch series.
-
-And for maintainers, along with `b4 review tui` above statement will
-only grow.
-
-Final note, you will receive template-nags from several maintainers if
-you keep send them series threaded to past versions, but of course there
-are also folks who are fine with that.
+Needs a better description. Feel free to use the one for str_has_prefix().
 
 
-Best regards,
-Krzysztof
+> + * Returns:
+> + * *  @s+strlen(@prefix) if @s starts with @prefix
+> + * *  NULL if @s does not start with @prefix
+> + */
+> +static __always_inline char *strprefix(const char *s, const char *prefix)
+> +{
+> +	size_t len = strlen(prefix);
+> +	return strncmp(s, prefix, len) == 0 ? (char *) s + len : NULL;
+> +}
+> +
+>  /**
+>   * str_has_prefix - Test if a string has a given prefix
+>   * @str: The string to test
+>   * @prefix: The string to see if @str starts with
+>   *
+> + * DEPRECATED: Use strprefix()
+
+No, it is still useful. Converting trace_event_filter() to strprefix()
+would be very painful, and likely error prone.
+
+> + *
+>   * A common way to test a prefix of a string is to do:
+>   *  strncmp(str, prefix, sizeof(prefix) - 1)
+>   *
+>   * But this can lead to bugs due to typos, or if prefix is a pointer
+> - * and not a constant. Instead use str_has_prefix().
+> + * and not a constant. Instead use strprefix().
+
+The above can be replaced with:
+
+ * This is useful for testing for a prefix and returning the length.
+ * If you only need to test the prefix and perhaps get the pointer to the
+ * position of the string after the prefix, then use strprefix().
+
+-- Steve
+
+
+>   *
+>   * Returns:
+>   * * strlen(@prefix) if @str starts with @prefix
+
