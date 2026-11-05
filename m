@@ -1,53 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793895275;
-	b=wUkIsQV/78nkfaK07DePGb9fpUHBshIWQA/HRu/Rb4GXzwgaWswj6gAmJ7bst46c8FKK
-	 nZybFEvHQsPP2Bq2mOuoNylgrTLO+LVE1P3bujToads1/n34JiUW/YJMocRH++h0yW744
-	 9MsqJOqvdan3RBvccNUtfnKhIdhBcc3M243LHgRuRhTFk3PnF9ckqZeM0OE/a8JjWa2eY
-	 iz/UE4Ej0ImWbGOrcVeuTabigRbEDCYi5Oj+YyPUMT/t/1Tuzro4iK0U6xBjWRvrIDwcS
-	 qW10LKpbmzmcFsDIZ5G7NNE7PbSU9Wg+a4J5kCeyG6cG2wv4iIrJrLovjaMUBeyduhg==
+	t=1793896044;
+	b=0+TF4bcKBaUtfkkhQNepybgb4AMP86IKMY6ODraSztmxtOIPQiWYcVDxEOqCbBmK2fV+
+	 VeAyTMuBDj+BFkyht2UOKzXTehpdHHdGm1CwUqwP5EX6xekc1jDgdlG44CWoUGneCZ5bk
+	 7q/mep+QWoBg3a78qe2C6DrhxtK1i2ioAoDx7HV+S5ivw1Or5ANN0DVA1E90jYiRHmFqB
+	 Nkbo5ajXYgDujdUVMjHmhLlVDNvL9ICmVAeihuKWTcU8DLb/7vf9a+FFwN2cfE6grMOvy
+	 Bs82xSvqvKgMfVgftgPu/SCTrgQDPa+E+yTDScJS83Y7YwTennkgH/GfEMP1NG+7ZrA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793895275;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793896044;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
 	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
 	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=TlUJgWbu4oWGG2rIsrlDGpx3BkgzAGEHnQrvA+cmu/I=;
-	b=2uMyG39qqpPGxADUjzePLcPVlm2X7gADiJvMwLePaRFDv2ajNChzwnFwtAbUPTssokFu
-	 SuIwbeTgjmiYh+E1DpPM7W21XyOexmlzsI0w2Qgx2deCADrPGFuRElI31uvwVcGy/rc6U
-	 RIYTQ+sYNnWmEfzIRETPPlmyLdXEM1Cv5IIXyVtMebf/5R6+4VnRLPCpnAzacRC9T2REt
-	 SGe2KT0q/q1L4cgvQmdT1/QnYhwJVj8ZbO+sqPk4s3thfgMoBi/x/jM0x8zAfi0jBMX97
-	 4pNIawIrz8stbzz0OsaPYi7mym1Mfrdsg4iivtf+pMkN5a1Yp5Cdoc58eEoRqaBDMOg==
+	bh=cl6qWXAwKxsVwTkKY8JXxlaaCkzuu5lHBNqnNBZkMHw=;
+	b=RBZFMi7x7KAG/mCStr4WPZGvWvlqSj/PHBiD5E4CpM3wtYsHJj1iw9z+EnZe3qkegSD5
+	 cJrXVWZin1IN8tRj2SDNRS6DjvxX0BgB8S2McpEYhZxrK/jpAKxEjSXAjRMvaiQzDjygc
+	 ti+rDD7qZ23aAotRjsG9eBfmOoDaCYFSg3SGG/2x5p9JHLfYo41T7g2PXprYwHAHlfqw2
+	 ksmQgOFtjBWXfLNkb/0kEvi4FjghKIeiEzUO6i1qdKE/JA1FikiTxEmsZmubheXYYyFFo
+	 PzodAxqkk12IVZbB8oyvpH3F3UmEFD33ISPg2xp2/diRqj0WOHVdnjxe5ZmakgeEmPw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Nrt87YtL;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=isGRszzZ;
+	arc=none smtp.remote-ip=216.40.44.12
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C0B606A32C;
-	Thu,  5 Nov 2026 16:14:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B6C0B606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6764606D836;
+	Thu,  5 Nov 2026 16:27:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C6764606D836
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Nrt87YtL
-Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id EB70B120A7D;
-	Thu,  5 Nov 2026 16:14:30 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id D50E92001C;
-	Thu,  5 Nov 2026 16:14:24 +0000 (UTC)
-Date: Thu, 5 Nov 2026 11:14:23 -0500
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=isGRszzZ
+Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id EF57EA0B2C;
+	Thu,  5 Nov 2026 16:27:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id E897F2002D;
+	Thu,  5 Nov 2026 16:27:08 +0000 (UTC)
+Date: Thu, 5 Nov 2026 11:27:07 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-hardening@vger.kernel.org, alx+linux-hardening@kernel.org, Bartosz
- Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Andreas Schwab
- <schwab@linux-m68k.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>,
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Alejandro Colomar <alx+linux-hardening@kernel.org>, Bartosz Golaszewski
+ <brgl@kernel.org>, Alejandro Colomar <alx@kernel.org>,
+ linux-hardening@vger.kernel.org, Andreas Schwab <schwab@linux-m68k.org>,
+ Andy Shevchenko <andy@kernel.org>, Daniel Scally <djrscally@gmail.com>,
  Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman
  <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
  Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches
@@ -57,16 +56,18 @@ Cc: linux-hardening@vger.kernel.org, alx+linux-hardening@kernel.org, Bartosz
  <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki"
  <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>,
- linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] string: Add strprefix(), and deprecate
- str_has_prefix()
-Message-ID: <20261105111423.360f4ba8@gandalf.local.home>
-In-Reply-To: <9c81f6f62fd0e908e683c4c08b09a1f95bc2ec9c.1793876837.git.alx@kernel.org>
+ <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, Tom
+ Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org,
+ driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] Add strprefix() and fix a bug with it
+Message-ID: <20261105112707.3e523564@gandalf.local.home>
+In-Reply-To: <5001d8c2-2334-48bd-bc95-6b33e3922a46@kernel.org>
 References: <cover.1793876837.git.alx@kernel.org>
-	<9c81f6f62fd0e908e683c4c08b09a1f95bc2ec9c.1793876837.git.alx@kernel.org>
+	<cover.1793882260.git.alx@kernel.org>
+	<qwpovcqznx6eltou4inmj3v62qhh6ouvihqnze7bobnd7lmcbw@rcri4e623icb>
+	<auyOkL1Vb1iKicS9@devuan>
+	<5001d8c2-2334-48bd-bc95-6b33e3922a46@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,84 +81,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: D50E92001C
-X-Stat-Signature: re8d5pkjrgf4w6oyde7458ed8r8qxghn
+X-Rspamd-Queue-Id: E897F2002D
+X-Stat-Signature: 1j5wr87cyuobkeessu4smpn1kt6uqm7y
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX180OMWVvz7pZZGYzhX+zu43VxGyggjBmUw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=TlUJgWbu4oWGG2rIsrlDGpx3BkgzAGEHnQrvA+cmu/I=; b=Nrt87YtLalkWkst5vwjAiRvM24+Ip9K7Q0HUKV2DGTKMQUiy7WgDwuuBYuCpd/0j2YF79k4RIZfBxZ0ajTmC4QvrtMR85cJ07ejGEpIrNs7u36+hESqobejHExonFkIUVIwnKekabxqGfkq61A/Cf1AQv4puRi0igIKLqRLlqbI=
-X-HE-Tag: 1793895264-672208
-X-HE-Meta: U2FsdGVkX1+vyVPZLQAZdLNS2wyT3JFId0OxXMm7K3LLPGSNyXEiNc0thgtN3v3LejPo/orfLtSJgneGWrAQWhq6JsVJ15veWMPwEVD3iQCpVEXA2MSVChPtf628ymAh2CtwttILHqREF05f7aEZTnW+NHNMSYhrbnFYZv9WbIqnaMC/vVDEZKHuzI/0li2WHWRC8VY/F8P3XtLBn9LsKD8hIuTBDMdrPd7VWQfSHDzNb+oM9iz27j1TazkkcbfpyskgcXy9G+JGQDHWbLBhXJaefWGPkUp0e0321tBVV3Cu/DjOBatTtfTn4TsKiR0R2ZYrJKN9V/tgrCtDf4myomhGQ3wRJRrw0x6vY/VS4PausVqHJ43w8g==
+X-Session-ID: U2FsdGVkX18LWE+TJn1V15fX2nd3ghD2tOKUsGtbMPo=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=cl6qWXAwKxsVwTkKY8JXxlaaCkzuu5lHBNqnNBZkMHw=; b=isGRszzZS5nfoejHUDzDLGhTBvLgv90g+WAVgonIoqoULmQosElt/YkkmtZCG/er4K4ZDKb0kvSLTzAeUcyaUu4POFEAYxPTS6kMiAlaGQ3/+yVTsb3rWeyefPXmtiZk3db+mHiAByy9IyaKv9Iky/h8qdJfJcl9UUIXaMNjsIE=
+X-HE-Tag: 1793896028-287696
+X-HE-Meta: U2FsdGVkX18/tmyfkjZHklw+whjWpw3EGPMbFU48rlVLVJORRKfHV20NxtljGLQ4CE8FlNIE1rUiJxJvhAu9wOEnwcNS7/wSWe42xYAVcG8z7ibSqnS3xC+4OEBmRMkEbT/1aHTTHx54xVL22ry2Y9Hi9Lc0tUuU/U096RSJ21Toj9fJN+ji6hTb6eCaoPkSDrj4n5cZm0JsW/A+rUK4rVjEJ6TqGN/yiIrtPfWVdgyekmXHJaqJalSxYxmHSQ+wC5gwzDcaKumA6i9rN4JpSe+JmQ5GvXGWboNIwn7a1LhGzSZvw5btCmyVvyIR1WY2MQV515HGAy7ca34d9q8hFBfjSl485DUR
 
-On Thu, 5 Nov 2026 12:13:03 +0100
-Alejandro Colomar <alx@kernel.org> wrote:
+On Thu, 5 Nov 2026 16:21:02 +0100
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
-> between an empty prefix matching an empty string from a non-matching
-> prefix.  This is a fundamental design flaw in this API, and not
-> something that can be fixed.
-> 
-> As always, this is a consequence of choosing sizes instead of pointers.
-> Sizes are often the wrong choice.  In this specific case, pointers are
-> more capable of differentiating these cases, as NULL is a special
-> sentinel value that doesn't need to overload a valid value.
-> 
-> Let's implement strprefix(), a function that returns a pointer
-> right after the prefix if found, and a null pointer if not found.
-> 
-> We'll slowly migrate existing code from str_has_prefix() to strprefix().
-> 
-> Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> I believe there should be no excuse for modern maintainer to not use b4
+> in the workflow. The same BTW for submitters of anything bigger than
+> 3-patch series.
 
-Is there a link to the report? Please add that.
+I still don't use it ;-)
 
->  
-> +/**
-> + * strprefix - string prefix
-> + * @s: The string to be tested
-> + * @prefix: The string to see if @s starts with
-> + *
-
-Needs a better description. Feel free to use the one for str_has_prefix().
-
-
-> + * Returns:
-> + * *  @s+strlen(@prefix) if @s starts with @prefix
-> + * *  NULL if @s does not start with @prefix
-> + */
-> +static __always_inline char *strprefix(const char *s, const char *prefix)
-> +{
-> +	size_t len = strlen(prefix);
-> +	return strncmp(s, prefix, len) == 0 ? (char *) s + len : NULL;
-> +}
-> +
->  /**
->   * str_has_prefix - Test if a string has a given prefix
->   * @str: The string to test
->   * @prefix: The string to see if @str starts with
->   *
-> + * DEPRECATED: Use strprefix()
-
-No, it is still useful. Converting trace_event_filter() to strprefix()
-would be very painful, and likely error prone.
-
-> + *
->   * A common way to test a prefix of a string is to do:
->   *  strncmp(str, prefix, sizeof(prefix) - 1)
->   *
->   * But this can lead to bugs due to typos, or if prefix is a pointer
-> - * and not a constant. Instead use str_has_prefix().
-> + * and not a constant. Instead use strprefix().
-
-The above can be replaced with:
-
- * This is useful for testing for a prefix and returning the length.
- * If you only need to test the prefix and perhaps get the pointer to the
- * position of the string after the prefix, then use strprefix().
+That's because I have been perfectly happy with patchwork, which is where I
+download my patches from.
 
 -- Steve
-
-
->   *
->   * Returns:
->   * * strlen(@prefix) if @str starts with @prefix
-
