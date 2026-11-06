@@ -1,87 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.175
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793925590;
-	b=0AWP+Ad96lp6htjE3KAGg+2Qg5GBnlw3dxRWocalMIC6OLYNBbPRA0U6uvgaVTy4PwLf
-	 Yfzj8Q8aZFcMaTvhxTy1fD/+oUqo3lN2xMYNve6HM0kUu3S5xW3JOJB2XzdhP3NuVLQK3
-	 ZlmWQlzhWQ2n3uWAh/SKyzJ1FTv8IE8lCddfeo/emc87PRiZRMr39xZD/cbt7u43Oo+g8
-	 qP4M8aFOSg9Iy1L4k9M5rlCtYQWnJv8EIrZAfZToT+v5PPZeGixrfVxz6X72gxrGVmPLs
-	 5I2QoKDNb0t5O6azGcyRejHkyWS5Zzuj6T1C/gfTNUTNRXFM9dL9Nxrxo3QYka+ynmQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793925590;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.46
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793938114;
+	b=1cUJ6lYBjQS6+DZfvnDirjkrkkOPPfNxis0Y3MLpDrQvUgnbgOo5dScsqU5rUTVX2wV/
+	 MxIqAZJN9COr5Tpn1xMHp+TNdO+1mtl0RouJJvRxRwZIqFOByu/kKgEm36P/7MTOXsPuB
+	 OTajr17gDm2bXeOG/6NFhfLBapcdbvhf5GDi7TEj4gv4DK415QNysWa/bclvnw4bfwu2n
+	 tduNHU4dkVy5O8E6I/pYfUNt/Ja1Ve0suQx97W3aVJEOrUtius/UOUGpC+M4AJO1IGLIR
+	 C32cRUA2QnZS3duz6CUVLcm/2wYRKLcs18daedmv+ZJp02oX94ni3djHvHVRW/hhp8g==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793938114;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:From:To:Cc:References:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=WL8nwJ/wMqsPR/6qL4tukpzx0z/mXpqqzRzogjQyULk=;
-	b=t+nAd7h/G086ecYsvBidsEnAgZNz0m/FH4ysvH7TMW/I5j7IxAL9lLQctKp6TSdbleJt
-	 4z+ZTfFZVE1Fux93wdAYtwP8rThxyZy7y6gCQ5OeuBRpO5x6fLQuU3sNxSXQ2+Py+pEWS
-	 De/MgJIqrHDBqTPDGBLXfTQD9rkBlLcxRWgE6mbzF4dXDQ7/JYUZN5GVGQBGPBcAITCzp
-	 j6teX4WU2N3EnCfKUUnlZe2MoAL6RWjT1+5qyL3o9F/o98jA1tqgoTPM4blwtJydVInEB
-	 CEYqZ7woE7sEyD05MfE7CfVVUuXismDJnbGFhDYECWwQ+KX02S2eGqTQPzeFMX9xk7Q==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=/pk3SmESaznUmyk4iOi3We1OgCG1jt/asSQB3At8gf0=;
+	b=1JEkymCMAiEMErnm5cx/SfRX/gs/PnvEaZqY0Q8yr22icgG5nhAP3ogN1DlycO3292D0
+	 povORNXoKF6BUZqinVO4Cj9tQOTy1Y4od8SSSQmEHxy36gm8d+hiJh36GRSd3G9ZdhUuN
+	 W4tF9mTTH8rJWsQoDV916kV1+G9u/Oo8PnCpQZm/psRCPojCU6MoJCmJh1CUXxVdJ7ERC
+	 j1B/TIhbZ/750n1rKVkyYkyLZxxrbfHrAwknf4BvvvlmEirqt+4t/tMt4qqjpPObVd4Rt
+	 FyQoCwvkb/JSscQ/EdjscIN5JNoLXz0GErAKsu/mgB6Kjnxl9SisG8XD2rEfn+Leurw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="SM/lD++c";
-	arc=none smtp.remote-ip=209.85.215.175
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AaCL5TeV;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.46
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4178E606A329
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Nov 2026 00:39:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4178E606A329
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D9A606A326
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Nov 2026 04:08:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24D9A606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SM/lD++c
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-cdb2893531bso50763a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Nov 2026 16:39:50 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AaCL5TeV
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-8446af403b5so169915a34.2
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Nov 2026 20:08:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793938113; cv=none;
+        d=google.com; s=arc-20260327;
+        b=imgimj6JxlljEKsXPFvWKUoPL8P8sTtPe2iFe1BQI3FpBpajUjxHxRb59r6f9xSg3F
+         BAIpCVOp5MVzBw/TI3zkLqNfoK+t8I9ymAWikGvonbiJahHkk97tmA67ZjtYpLSwn6iD
+         Z7FMpU0Vl2+Ltj0mO0dZZSt2lHVW5Lr8yfgvnw96qlpRbUVDv6fXZJ2sO/gGuhni5n/R
+         BnPczMwNkQLLC0QAB7DI3N+vmUihbg/UbBZuc/od07DEvwRV4Hzpyo9uATciqmak8K7L
+         FnQ+bCs+ZD8BtNcoZHttJo6jJ1c8uND3Mptn8863GdrXA8iDk3EGSZwBiDZNO+kkKooz
+         8j0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=/pk3SmESaznUmyk4iOi3We1OgCG1jt/asSQB3At8gf0=;
+        fh=ENk3Jr5srQ9OHKwrOEeru7HqYlcdsc9uZGN3kxkBzkk=;
+        b=IRo3eHYUG5WDSk/VJU1zdBvhjHb7jyauRG03UjlOCWgWeoAVonX8nLbxApUjwDns5j
+         etmqYzoh/NU+1ZbKc8NxebhyJXCNVezBLRlfteCOxapIQAsJbuDJfz/Sq+L71xkVVt+U
+         8r1zntlxE/ctuKt0QUIcFEP57+cu+sWSwgSPP57sxDRgoRJOK1ZezoJqc30dAqOet2YY
+         fUG5+PxXSNnbwGrGfB7g1xS1ktL8fux+QZAzB/cW91PkX2zd9ieEMygB12U9VA0PNQTC
+         iLFO6tIzZ8CtwQX1t2/BOQ8HuVDbvGXLi9QK5gAclTV4OPpaBIE3z/vNLQlKe/JWUSEQ
+         SAwQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793925589; x=1794530389; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=WL8nwJ/wMqsPR/6qL4tukpzx0z/mXpqqzRzogjQyULk=;
-        b=SM/lD++c6lirjLOLHvGOARsCbeXJx0kzVB7LOKmQZ+hXKpnJD7Le8+indVem8SmHIG
-         xgiOgoZK5SSqk/+gCMRsSn7DQi8mj8YyKqldXps1yVFfqcY0+wLxEIJ1k1LvGROg0nYa
-         ZiVAGyd8D2qvJ7A+vQpMmcP9Bh7sn9b8PebgkeG4+mKNUu4qSZ6gWDZ0ElTjC/CwI48+
-         pVV0toREk/pTX16I520nKhw2Ds2Vwdap5BTYCVKvFg2e0kMqMuDqGTMH35OJkX4IAAZH
-         bXmYSoB1BU3fmVnIgxP4Ym1DUf1D3au1/+ZNHFgSm5kPPfAPDHu2arg9fr+RdECeJ06P
-         DfIA==
+        d=gmail.com; s=20260707; t=1793938113; x=1794542913; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=/pk3SmESaznUmyk4iOi3We1OgCG1jt/asSQB3At8gf0=;
+        b=AaCL5TeVWhCmOWRruX6RQ6uYlbxEmgGW0Fu1FL4Te6OGDFc2+E0dbhTmVykihBcvXc
+         qW10F+az4GWUxFwfiqI+9lc4XYVEIwEDIhY4R4GQl+Wt06dOdwqAqbrKFKjIbCSDCFWz
+         pYZpH++iT7LvufaCGF9Z1/BAjBZFjjaztq2+Y1vL3wkwrdDuXfW3sQ57A/rzTShVijSe
+         ZAoS0eFzO5FsQdT+jdv+jDpQRsSMcmGkQc4UTpwS5svzqAROo8Kpf1MKedp0lW+tMIuY
+         bss/LwjkCpG+lqsPeXxivKA3ZOlWwv4t1kExE7+N5n/+/dIHDNJf7GsRmJOWy7EVuft0
+         8hTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793925589; x=1794530389;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=WL8nwJ/wMqsPR/6qL4tukpzx0z/mXpqqzRzogjQyULk=;
-        b=g1cUNRVUc24wvfgrmkwap4MxeuewSeQfsoSe9LQb12DFlrgGD1tf4HodYc0GMmBS7m
-         j0Dk+yyJPbIfXwj1XlIHH28IykaHOTIWQ7658Q/u65gnavmR0zu23qq2gEAMHzxzX8hB
-         qJa+5L3UuS0TbkJbHzMAxK7Qp8B2i2YmvqxVwGwFZ/OBDCZ6baeaSZt+ATpDAWPB9ECQ
-         PiCDWK4TdcRTZwl1T/0vdDr/qqyRA5yaevLevyuF79mNzqK2sSpspDzfGQ4Kr9Ntrvbj
-         9sJA85jX5YJeSQzhXc4y4pd+4oftIgoehT1x9DrEFE3DmZ1PXj4Cbt7hy8SANA87QRNP
-         mmfg==
-X-Forwarded-Encrypted: i=1; AKwUvBwbaQMDX7VBwIB4SB9YNQHHMwriVQzwMmnQ1SZFOh+p6IFsy8AraZeeyonODNxCxDIXLY6TYbI77/4/RYGxc2M=@vger.kernel.org
-X-Gm-Message-State: APuU4Z96Z42afaYCb+Lgv572GTaJDVI3gvF08YqN2SYivvw336POtscR
-	7R7OG37m9zBqiGHh3CSpIrcrvnlSLlCP2sI89JbrHoHy5D2qXmUtzTWV
-X-Gm-Gg: AYBFou0PCBAypSD8FWHtxk24GljU5e4HT9iknfpEjP1k5pdfshozBoEzdIhnlUz1pT/
-	KoPv2NSxtZGbyQUHCPkHS2Qt5DkqATD+nAM2MoWxZDAsmUu6Wh3VS+3h8F1Coz/aOs2hWJJBbNp
-	2HpY8eYV+hb2SsQ+taa3ZkP6qAeqkdWsG28ZYPGPPyhdfN6bzhc1R1YIjKT6RngoGa3iNcUb5ES
-	mR/cuSY5mVfZ1MhC/TisjalXo+mY7RfnHyWcyZTAm8StwVTdugREptCh/YC9mDBjL/RJ5637mJE
-	6UpNJ/mcX8McPn2Bxbi2lAPCD+/n6YhkHshOSsiDm89MHDFuYl56NBqExc00AN5T7OsIBH8Brga
-	A1Y7orpmsICnneFxd/BTLIixcSiUe0e3P6z66R3o9yYSHFPaZU/xw3FO+Gw/e/L7A/z0OqDKOnt
-	rbuEpvH6849HJt2/IKuV5si+eROvf9Jj8DSZ8ahziCZEMrN0sijDk9NMgGDgDWRHI2xMWl41S5S
-	E87Tbr9s+obK0QHPmqfqkofNAxShl3ZynsN7Cs1Tric/AOICE2ImF09YPT6nGJkc7oM6r9r3byR
-	BatU/rNw+8iWXyIfValeP5puXZP28ZZk8Eo8CyIlQzfE3KsPahY/Qm4SR561LXMpT3BkWabYUgy
-	v0YY=
-X-Received: by 2002:a17:90b:3890:b0:39d:84af:a0b3 with SMTP id 98e67ed59e1d1-3b0db6bba9cmr784048a91.18.1793925589389;
-        Thu, 05 Nov 2026 16:39:49 -0800 (PST)
-Received: from [172.19.1.51] (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b0993fb8a8sm5197377a91.4.2026.11.05.16.39.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2026 16:39:48 -0800 (PST)
-Message-ID: <4d739128-248f-4b35-8e0c-6f6b8fbebc3b@gmail.com>
-Date: Fri, 6 Nov 2026 08:39:35 +0800
+        d=1e100.net; s=20260707; t=1793938113; x=1794542913;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=/pk3SmESaznUmyk4iOi3We1OgCG1jt/asSQB3At8gf0=;
+        b=SQjdNm3e1sKZ0g36UvCt1iHTbSLYNT5hx5j87QxR44FilhXiK7Uz7qdkiKgOVfhQC2
+         T89gSCw1ylG9xcHTFoqLcZZXiW0KajjHgqo6ZccHLMaulkDDQoVLzN2XmK7tv7WRzI1L
+         p0+zQKJIOFvbl0CGnj0BT3h+YO4ulcpidqvk4stbzd6jqZLTlk57fpH+0lvHqCfaXDWn
+         eI4B+YxoTeCP70EGo/n3gITAXOCTWx/ygpXh31zMf+TAEsWQwX+IUSPCYKU9kXLqxPj7
+         cFW5BcF7GNsPzta2WFQiwgfSq1XxnUp/uPabVVFd3wrXh27Nlo4b3SPit35fOhTcqmrW
+         1P1Q==
+X-Forwarded-Encrypted: i=1; AKwUvBz1Z3ekWB9CHiG5OPUAjTVXja5LV0pe7GPrV4EYrqFL8XHY5hGi/zRjWeVr51mcZbgEGvNYeCT1613U5wCjRck=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+qSfBOzPWYc2qCUS4WokKwyKeLkW+vdUEtfEOAA/egodZIwdcy
+	+p/ngLcjjy1ryo9PXoZ3fNfct86HFQReoDb6Gb8S3qRKL5p1MaXUBMQDXW/iuJy5K3km4rLqxvk
+	S0Q6QVf3UrHxGlE+K2AbEMfumPkUTnaU=
+X-Gm-Gg: AYBFou1FsL13otD2JhPsZPJc5PhfpB3HVq/Ych6r50uaZP+ezFDGMhewEj+tprMJAvA
+	ElVWBAMSYuShdtgEXuYS/qmRG0/D4A9wa4xfY0SzNJLIfmDiNxXMfieEC+/FbtNITGj3CYdrims
+	z/LqKaCpA1z9rcCduuq1ZB6IpQ2vIfDp3A8aymYvQ08uiNXz6VvxHIM6g3bLdVIMfGvnnlafwcd
+	IhpwDKqEWROgABBxVrzD0ys7gvNm3/ZLy5ATnQPagJcMVeYIMkPCKCMd+WaQQAmfDelsTbDGDq0
+	JsnG09cPZuzVwKl4QC5plkqcHGt/7q755K/kH6ZIaD6OSqEeGbf3msH2NpmrBKHctL4bhjH6uw1
+	uWHlfzRxt7rzeDUAkVAv2WYTMRWfPtxXUejTtf4vcMN/0hzpbMRly4QscR6OVJbfTLhFph6N7
+X-Received: by 2002:a05:6808:190a:b0:53a:6769:c35b with SMTP id
+ 5614622812f47-567e14c6645mr1033843b6e.12.1793938112995; Thu, 05 Nov 2026
+ 20:08:32 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -91,273 +104,94 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dmaengine: ma35d1-pdma: Add MA35D1 PDMA driver
-From: Shan-Chun Hung <shanchun1218@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: ychuang3@nuvoton.com, schung@nuvoton.com, vkoul@kernel.org,
- Frank.Li@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, kees@kernel.org, gustavoars@kernel.org,
- linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20261103022202.2139674-1-shanchun1218@gmail.com>
- <20261103022202.2139674-3-shanchun1218@gmail.com>
- <20261104-airborne-vivid-caterpillar-991425@quoll>
- <de0bcd11-edfe-471b-a22d-f1e748a7fda6@gmail.com>
-Content-Language: en-US
-In-Reply-To: <de0bcd11-edfe-471b-a22d-f1e748a7fda6@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20261104090239.311074-1-nikitash.mariiaw@gmail.com>
+ <ausVkYs1-3rJ5Fj0@devuan> <20261105113229.4126d872@pumpkin>
+In-Reply-To: <20261105113229.4126d872@pumpkin>
+From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+Date: Thu, 5 Nov 2026 20:08:20 -0800
+X-Gm-Features: AclHuK9Esb9F2uyydCP0odZv_dxt9WsR5I2SP--qP46odrTEOGmh5Cneq9YrqqY
+Message-ID: <CAPDEY+WvnrFgriCyvL6tjY2GiBJ+Dsz0Tz4hJz=n1xW_fywTEQ@mail.gmail.com>
+Subject: Re: [PATCH] media: siano: Replace strlcat() with snprintf() in sms_ir_init()
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Alejandro Colomar <alx+linux-hardening@kernel.org>, mchehab@kernel.org, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kees@kernel.org, justinstitt@google.com, 
+	morbo@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+On Thu, Nov 5, 2026 at 3:32=E2=80=AFAM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Wed, 4 Nov 2026 12:25:17 +0100
+> Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
+>
+> > Hi Mariia,
+> >
+> > > Date: 2026-11-04 01:02:39-0800
+> > > From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+> > >
+> > > In preparation for removing the deprecated strlcat() API[1],
+> > > replace the strscpy() and strlcat() calls with a single snprintf()
+> > > call to construct the IR device path.
+> > >
+> > > Both the source and destination buffers have the same capacity,
+> >
+> > The line above seems irrelevant, and potentially confusing.
+> > The size of the input is not important, because since we're appending
+> > stuff after it, truncation may actually happen.
+>
+> And gcc's stupid format overflow check is going to complain.
 
-Sorry, I missed this comment.
+Thanks for pointing this out! I initially tested with Clang, but
+reproduced the warning with GCC. I've switched to seq_buf for v3.
 
+>
+> David
+>
 
-On 11/5/2026 12:11 PM, Shan-Chun Hung wrote:
-> Hi Krzysztof,
-> 
-> Thanks for your review.
-> 
-> On 11/4/2026 10:06 PM, Krzysztof Kozlowski wrote:
->> On Tue, Nov 03, 2026 at 10:22:02AM +0800, Shan-Chun Hung wrote:
->>> +#include <linux/align.h>
->>> +#include <linux/bitfield.h>
->>> +#include <linux/bits.h>
->>> +#include <linux/clk.h>
->>> +#include <linux/compiler_types.h>
->>> +#include <linux/container_of.h>
->>> +#include <linux/dev_printk.h>
->>> +#include <linux/device.h>
->>> +#include <linux/dma-direction.h>
->>> +#include <linux/dma-mapping.h>
->>> +#include <linux/dma/ma35d1-pdma.h>
->>> +#include <linux/dmaengine.h>
->>> +#include <linux/err.h>
->>> +#include <linux/errno.h>
->>> +#include <linux/gfp_types.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/io.h>
->>> +#include <linux/irqreturn.h>
->>> +#include <linux/limits.h>
->>> +#include <linux/list.h>
->>> +#include <linux/math.h>
->>> +#include <linux/minmax.h>
->>> +#include <linux/mod_devicetable.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_dma.h>
->>> +#include <linux/overflow.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/scatterlist.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/spinlock.h>
->>> +#include <linux/spinlock_types.h>
->>> +#include <linux/stddef.h>
->>> +#include <linux/string.h>
->>> +#include <linux/types.h>
->>
->> Do you use all these defines?
-I'll double-check the defines.>>
->> I don't see usage of header with bindings, though.
-The bindings header is indeed unused and will be removed in the next 
-revision.
->>
->>> +
->>> +#include "dmaengine.h"
->>> +#include "virt-dma.h"
->>> +
->>
->> ...
->>
->>> +static int ma35d1_pdma_probe(struct platform_device *pdev)
->>> +{
->>> +    int i, irq, nr_chans, ret;
->>> +    struct clk *pdma_clk;
->>> +    struct device *dev = &pdev->dev;
->>> +    struct device_node *node = dev->of_node;
->>> +    struct ma35d1_chan *ch;
->>> +    struct ma35d1_pdmadev *pdmadev;
->>> +    void __iomem *reg_base;
->>> +
->>> +    pdma_clk = devm_clk_get_enabled(dev, NULL);
->>> +    if (IS_ERR(pdma_clk))
->>> +        return dev_err_probe(dev, PTR_ERR(pdma_clk), "Failed to get 
->>> clk\n");
->>> +
->>> +    ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    irq = platform_get_irq(pdev, 0);
->>> +    if (irq < 0)
->>> +        return irq;
->>> +
->>> +    ret = of_property_read_u32(node, "dma-channels", &nr_chans);
->>> +    if (ret)
->>> +        return dev_err_probe(dev, ret, "Failed to get dma-channels\n");
->>> +
->>> +    if (nr_chans > PDMA_MAX_CHANS) {
->>> +        dev_warn(dev, "dma-channels %d exceeds max %d, clamping\n",
->>> +             nr_chans, PDMA_MAX_CHANS);
->>> +        nr_chans = PDMA_MAX_CHANS;
->>> +    }
->>> +
->>> +    pdmadev = devm_kzalloc(dev, struct_size(pdmadev, channels, 
->>> nr_chans), GFP_KERNEL);
->>> +    if (!pdmadev)
->>> +        return -ENOMEM;
->>> +
->>> +    pdmadev->nr_chans = nr_chans;
->>> +
->>> +    reg_base = devm_platform_ioremap_resource(pdev, 0);
->>> +    if (IS_ERR(reg_base))
->>> +        return dev_err_probe(dev, PTR_ERR(reg_base),
->>> +                     "Failed to map pdma global registers\n");
->>> +
->>> +    dma_cap_zero(pdmadev->ddev.cap_mask);
->>> +    dma_cap_set(DMA_SLAVE, pdmadev->ddev.cap_mask);
->>> +    dma_cap_set(DMA_PRIVATE, pdmadev->ddev.cap_mask);
->>> +    dma_cap_set(DMA_MEMCPY, pdmadev->ddev.cap_mask);
->>> +    dma_cap_set(DMA_CYCLIC, pdmadev->ddev.cap_mask);
->>> +
->>> +    pdmadev->ddev.dev = dev;
->>> +    pdmadev->ddev.src_addr_widths = PDMA_SLAVE_BUSWIDTHS;
->>> +    pdmadev->ddev.dst_addr_widths = PDMA_SLAVE_BUSWIDTHS;
->>> +    pdmadev->ddev.directions = BIT(DMA_MEM_TO_DEV) | 
->>> BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_MEM);
->>> +    pdmadev->ddev.device_prep_dma_memcpy = ma35d1_prep_dma_memcpy;
->>> +    pdmadev->ddev.device_prep_slave_sg = ma35d1_prep_slave_sg;
->>> +    pdmadev->ddev.device_prep_dma_cyclic = ma35d1_prep_dma_cyclic;
->>> +    pdmadev->ddev.device_free_chan_resources = 
->>> ma35d1_free_chan_resources;
->>> +    pdmadev->ddev.device_issue_pending = ma35d1_issue_pending;
->>> +    pdmadev->ddev.device_tx_status = ma35d1_tx_status;
->>> +    pdmadev->ddev.device_config = ma35d1_slave_config;
->>> +    pdmadev->ddev.device_terminate_all = ma35d1_terminate_all;
->>> +    pdmadev->ddev.device_synchronize = ma35d1_synchronize;
->>> +
->>> +    spin_lock_init(&pdmadev->lock);
->>> +    INIT_LIST_HEAD(&pdmadev->ddev.channels);
->>> +    for (i = 0; i < nr_chans; i++) {
->>> +        ch = &pdmadev->channels[i];
->>> +        ch->dev = dev;
->>> +        ch->pdmadev = pdmadev;
->>> +        ch->id = i;
->>> +        ch->base = reg_base;
->>> +        ch->vc.desc_free = ma35d1_pdma_desc_free;
->>> +        vchan_init(&ch->vc, &pdmadev->ddev);
->>> +    }
->>> +
->>> +    ret = devm_request_irq(dev, irq, ma35d1_pdma_interrupt, 0, pdev- 
->>> >name, pdmadev);
->>> +    if (ret)
->>> +        return dev_err_probe(dev, ret, "Failed to request IRQ\n");
->>> +
->>> +    ret = dmaenginem_async_device_register(&pdmadev->ddev);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    ret = of_dma_controller_register(node, ma35d1_of_xlate, pdmadev);
->>> +    if (ret)
->>> +        return dev_err_probe(dev, ret, "of_dma_controller_register 
->>> failed\n");
->>> +
->>> +    platform_set_drvdata(pdev, pdmadev);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static void ma35d1_pdma_remove(struct platform_device *pdev)
->>> +{
->>> +    struct ma35d1_pdmadev *pdmadev = platform_get_drvdata(pdev);
->>> +    int i;
->>> +
->>> +    of_dma_controller_free(pdev->dev.of_node);
->>> +    writel(0, pdmadev->channels[0].base + PDMA_INTEN);
->>> +
->>> +    for (i = 0; i < pdmadev->nr_chans; i++)
->>> +        tasklet_kill(&pdmadev->channels[i].vc.task);
->>> +}
->>> +
->>> +static const struct of_device_id ma35d1_pdma_match[] = {
->>> +    { .compatible = "nuvoton,ma35d1-pdma" },
->>> +    { /* sentinel */ }
->>> +};
->>> +MODULE_DEVICE_TABLE(of, ma35d1_pdma_match);
->>> +
->>> +static struct platform_driver ma35d1_pdma_driver = {
->>> +    .probe = ma35d1_pdma_probe,
->>> +    .remove = ma35d1_pdma_remove,
->>> +    .driver = {
->>> +        .name = "ma35d1-pdma",
->>> +        .of_match_table = ma35d1_pdma_match,
->>> +    },
->>> +};
->>> +module_platform_driver(ma35d1_pdma_driver);
->>> +
->>> +MODULE_DESCRIPTION("PDMA controller driver for Nuvoton MA35D1");
->>> +MODULE_AUTHOR("Shan-Chun Hung <shanchun1218@gmail.com>");
->>> +MODULE_LICENSE("GPL");
->>> diff --git a/include/linux/dma/ma35d1-pdma.h b/include/linux/dma/ 
->>> ma35d1-pdma.h
->>> new file mode 100644
->>> index 000000000000..13f1410d74da
->>> --- /dev/null
->>> +++ b/include/linux/dma/ma35d1-pdma.h
->>> @@ -0,0 +1,24 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->>> +/*
->>> + * Header file for the MA35D1 PDMA Controller driver
->>> + *
->>> + * Copyright (C) 2026 Nuvoton Technology Corp.
->>> + */
->>> +#ifndef _MA35D1_PDMA_H
->>> +#define _MA35D1_PDMA_H
->>> +
->>> +/**
->>> + * struct ma35d1_peripheral - PDMA peripheral configuration
->>> + * @prescaler: timeout prescaler value
->>> + * @counter: timeout counter value
->>> + *
->>> + * Slave device drivers fill in this structure and pass it via
->>> + * dma_slave_config.peripheral_config/peripheral_size to configure
->>> + * the MA35D1 PDMA engine's per-channel timeout detection block.
->>
->> Hm? Confusing, how is it supposed to be used? Do you just reimplement
->> board files?
-> 
-> Sorry, the comment did not clearly explain the intended usage.
-> 
-> For UART RX DMA, the UART driver calculates the PDMA timeout prescaler 
-> and counter values based on the current baud rate, then passes them 
-> through dma_slave_config.peripheral_config to configure the channel's 
-> timeout detection. These are runtime settings.
-> 
-> However, I understand that passing raw prescaler and counter values 
-> couples the UART driver to the MA35D1 PDMA register layout. I will 
-> consider having the UART driver specify the required timeout duration 
-> and letting the PDMA driver convert it into the hardware settings.
-> 
-> In the next revision, I will remove this timeout configuration interface 
-> and revisit it together with the UART DMA support patches, so the 
-> intended usage and client implementation can be reviewed together.
->>
->>> + */
->>> +struct ma35d1_peripheral {
->>> +    unsigned int prescaler;
->>> +    unsigned int counter;
->>> +};
->>> +
->>> +#endif /* _MA35D1_PDMA_H */
->>> -- 
->>> 2.25.1
->>>
-> 
-> Best Regards,
-> Shan-Chun
+Best,
+Mariia
 
-Best Regards,
-Shan-Chun
-
+> >
+> > > and the return values are unused. This preserves the resulting
+> > > string, including truncation behavior.
+> > >
+> > > Link: https://github.com/KSPP/linux/issues/370 [1]
+> > > Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+> >
+> > Except for the small comment above,
+> >
+> > Reviewed-by: Alejandro Colomar <alx@kernel.org>
+> >
+> >
+> > Cheers,
+> > Alex
+> >
+> > > ---
+> > >  drivers/media/common/siano/smsir.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/media/common/siano/smsir.c b/drivers/media/commo=
+n/siano/smsir.c
+> > > index 283770d583d5..636ff228108b 100644
+> > > --- a/drivers/media/common/siano/smsir.c
+> > > +++ b/drivers/media/common/siano/smsir.c
+> > > @@ -55,8 +55,8 @@ int sms_ir_init(struct smscore_device_t *coredev)
+> > >     snprintf(coredev->ir.name, sizeof(coredev->ir.name),
+> > >              "SMS IR (%s)", sms_get_board(board_id)->name);
+> > >
+> > > -   strscpy(coredev->ir.phys, coredev->devpath, sizeof(coredev->ir.ph=
+ys));
+> > > -   strlcat(coredev->ir.phys, "/ir0", sizeof(coredev->ir.phys));
+> > > +   snprintf(coredev->ir.phys, sizeof(coredev->ir.phys),
+> > > +            "%s/ir0", coredev->devpath);
+> > >
+> > >     dev->device_name =3D coredev->ir.name;
+> > >     dev->input_phys =3D coredev->ir.phys;
+> > > --
+> > > 2.43.0
+> > >
+> > >
+> >
+>
