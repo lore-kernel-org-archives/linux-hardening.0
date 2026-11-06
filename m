@@ -1,100 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.46
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793938114;
-	b=1cUJ6lYBjQS6+DZfvnDirjkrkkOPPfNxis0Y3MLpDrQvUgnbgOo5dScsqU5rUTVX2wV/
-	 MxIqAZJN9COr5Tpn1xMHp+TNdO+1mtl0RouJJvRxRwZIqFOByu/kKgEm36P/7MTOXsPuB
-	 OTajr17gDm2bXeOG/6NFhfLBapcdbvhf5GDi7TEj4gv4DK415QNysWa/bclvnw4bfwu2n
-	 tduNHU4dkVy5O8E6I/pYfUNt/Ja1Ve0suQx97W3aVJEOrUtius/UOUGpC+M4AJO1IGLIR
-	 C32cRUA2QnZS3duz6CUVLcm/2wYRKLcs18daedmv+ZJp02oX94ni3djHvHVRW/hhp8g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793938114;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.53
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793938621;
+	b=nu4/5XT2usYfqJRMs2gM5nL/E/R9SDbgUR8g3CwkFTF67cws4GIrg1ssXeD3wOySfX/N
+	 zse4sM5xewbRlhHZ/tjtyqmTRgzShxBc/hkXi6hJPwdGz7h3OQqAKoNK2w7pY7PtI+FiH
+	 6n4FLS7C0+v7jj7b4hPM2Il+e8w1oUUNlk0J6DR1Yt+XhDbulNLb2YuCKHVbN+9dBqUqo
+	 S8oD6mT6ETjAFaMH0vcbJqr72aprEUPzzlhDjIKCsYJUfQced5EcBs7Tbx4GGYJ1cVUDG
+	 FWr0eZq/5nWAYfc6FDhz4//MsoFhK9AtnnjxaTTZ+MFIjDgKSdVKMQTKIV4QG85Uj/g==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793938621;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=/pk3SmESaznUmyk4iOi3We1OgCG1jt/asSQB3At8gf0=;
-	b=1JEkymCMAiEMErnm5cx/SfRX/gs/PnvEaZqY0Q8yr22icgG5nhAP3ogN1DlycO3292D0
-	 povORNXoKF6BUZqinVO4Cj9tQOTy1Y4od8SSSQmEHxy36gm8d+hiJh36GRSd3G9ZdhUuN
-	 W4tF9mTTH8rJWsQoDV916kV1+G9u/Oo8PnCpQZm/psRCPojCU6MoJCmJh1CUXxVdJ7ERC
-	 j1B/TIhbZ/750n1rKVkyYkyLZxxrbfHrAwknf4BvvvlmEirqt+4t/tMt4qqjpPObVd4Rt
-	 FyQoCwvkb/JSscQ/EdjscIN5JNoLXz0GErAKsu/mgB6Kjnxl9SisG8XD2rEfn+Leurw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=IFRCE426UTc7sdwYXe1TU+8o/imwLSKisQnbNMcuaUE=;
+	b=uUqT1jiSDd3XFiyIosMUPus+OLKlzaUL5AR0FehWLpmZPX0xTWEiYw4D42KEWsUinFnV
+	 7MzQLGxg/wD71HRpfPLSDVW/zOYjyWsNH7LBTA/9tx1GESxEiVBj4cT1sOJilhGD4Bcnz
+	 x/8d9yv3c2EfNHr2NHaQpBkGqIpARDOKXugXe7UeITeAliZhn4/V7gf5sy+tiXqpgJKhX
+	 n/dZLoWR8IQASF/c73dBTTwYVGGsYGktCEntESOmzPlGDbOrOyQ+qmY3v9SpZzRl/t8j3
+	 JGlgZWDWAVbIwmR/QMvzcYR6gvlY9JxVHKzV3qe3QTeru2EKh9SvrSCe7IAxfEc9vkA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AaCL5TeV;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.46
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="0PSuoYQ/";
+	arc=none smtp.remote-ip=74.125.82.53
+Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D9A606A326
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Nov 2026 04:08:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24D9A606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E7A606A326
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Nov 2026 04:17:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70E7A606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AaCL5TeV
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-8446af403b5so169915a34.2
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Nov 2026 20:08:33 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793938113; cv=none;
-        d=google.com; s=arc-20260327;
-        b=imgimj6JxlljEKsXPFvWKUoPL8P8sTtPe2iFe1BQI3FpBpajUjxHxRb59r6f9xSg3F
-         BAIpCVOp5MVzBw/TI3zkLqNfoK+t8I9ymAWikGvonbiJahHkk97tmA67ZjtYpLSwn6iD
-         Z7FMpU0Vl2+Ltj0mO0dZZSt2lHVW5Lr8yfgvnw96qlpRbUVDv6fXZJ2sO/gGuhni5n/R
-         BnPczMwNkQLLC0QAB7DI3N+vmUihbg/UbBZuc/od07DEvwRV4Hzpyo9uATciqmak8K7L
-         FnQ+bCs+ZD8BtNcoZHttJo6jJ1c8uND3Mptn8863GdrXA8iDk3EGSZwBiDZNO+kkKooz
-         8j0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=/pk3SmESaznUmyk4iOi3We1OgCG1jt/asSQB3At8gf0=;
-        fh=ENk3Jr5srQ9OHKwrOEeru7HqYlcdsc9uZGN3kxkBzkk=;
-        b=IRo3eHYUG5WDSk/VJU1zdBvhjHb7jyauRG03UjlOCWgWeoAVonX8nLbxApUjwDns5j
-         etmqYzoh/NU+1ZbKc8NxebhyJXCNVezBLRlfteCOxapIQAsJbuDJfz/Sq+L71xkVVt+U
-         8r1zntlxE/ctuKt0QUIcFEP57+cu+sWSwgSPP57sxDRgoRJOK1ZezoJqc30dAqOet2YY
-         fUG5+PxXSNnbwGrGfB7g1xS1ktL8fux+QZAzB/cW91PkX2zd9ieEMygB12U9VA0PNQTC
-         iLFO6tIzZ8CtwQX1t2/BOQ8HuVDbvGXLi9QK5gAclTV4OPpaBIE3z/vNLQlKe/JWUSEQ
-         SAwQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=0PSuoYQ/
+Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-14394530ec6so380874c88.1
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Nov 2026 20:17:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793938113; x=1794542913; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=/pk3SmESaznUmyk4iOi3We1OgCG1jt/asSQB3At8gf0=;
-        b=AaCL5TeVWhCmOWRruX6RQ6uYlbxEmgGW0Fu1FL4Te6OGDFc2+E0dbhTmVykihBcvXc
-         qW10F+az4GWUxFwfiqI+9lc4XYVEIwEDIhY4R4GQl+Wt06dOdwqAqbrKFKjIbCSDCFWz
-         pYZpH++iT7LvufaCGF9Z1/BAjBZFjjaztq2+Y1vL3wkwrdDuXfW3sQ57A/rzTShVijSe
-         ZAoS0eFzO5FsQdT+jdv+jDpQRsSMcmGkQc4UTpwS5svzqAROo8Kpf1MKedp0lW+tMIuY
-         bss/LwjkCpG+lqsPeXxivKA3ZOlWwv4t1kExE7+N5n/+/dIHDNJf7GsRmJOWy7EVuft0
-         8hTw==
+        d=gmail.com; s=20260707; t=1793938620; x=1794543420; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IFRCE426UTc7sdwYXe1TU+8o/imwLSKisQnbNMcuaUE=;
+        b=0PSuoYQ/sCYEOgxrzrYUEjIs689Jf5aIAV/ibbqqocYuVykp3jPiOXUR6N8O0mRQ0g
+         FxYoiOcpXXbj5DwaFwQIjWrFFbCgpi7EjrwRiykn3++Pj6+twbNrTV+jEtawKZgMlJFM
+         SwhNl7gijMdnYJV3vldVZmtExXfOMWiSQCxMqOPwAfo9oN2/yxsGZivmuhmpeCGZcJM5
+         WnBB0Sd2hyIYoHY89EYpDJ5cvhBnQ0glC22sFfqJWndLiUm+Sm/o4DpbJWrtsza/bVq+
+         bx2zNKG6oJoTLNX6cuojFw16Lu7tNewxblxsSmEy75pjOQYUhzcpB/+WIZGXgzDjbWJ0
+         55Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793938113; x=1794542913;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/pk3SmESaznUmyk4iOi3We1OgCG1jt/asSQB3At8gf0=;
-        b=SQjdNm3e1sKZ0g36UvCt1iHTbSLYNT5hx5j87QxR44FilhXiK7Uz7qdkiKgOVfhQC2
-         T89gSCw1ylG9xcHTFoqLcZZXiW0KajjHgqo6ZccHLMaulkDDQoVLzN2XmK7tv7WRzI1L
-         p0+zQKJIOFvbl0CGnj0BT3h+YO4ulcpidqvk4stbzd6jqZLTlk57fpH+0lvHqCfaXDWn
-         eI4B+YxoTeCP70EGo/n3gITAXOCTWx/ygpXh31zMf+TAEsWQwX+IUSPCYKU9kXLqxPj7
-         cFW5BcF7GNsPzta2WFQiwgfSq1XxnUp/uPabVVFd3wrXh27Nlo4b3SPit35fOhTcqmrW
-         1P1Q==
-X-Forwarded-Encrypted: i=1; AKwUvBz1Z3ekWB9CHiG5OPUAjTVXja5LV0pe7GPrV4EYrqFL8XHY5hGi/zRjWeVr51mcZbgEGvNYeCT1613U5wCjRck=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+qSfBOzPWYc2qCUS4WokKwyKeLkW+vdUEtfEOAA/egodZIwdcy
-	+p/ngLcjjy1ryo9PXoZ3fNfct86HFQReoDb6Gb8S3qRKL5p1MaXUBMQDXW/iuJy5K3km4rLqxvk
-	S0Q6QVf3UrHxGlE+K2AbEMfumPkUTnaU=
-X-Gm-Gg: AYBFou1FsL13otD2JhPsZPJc5PhfpB3HVq/Ych6r50uaZP+ezFDGMhewEj+tprMJAvA
-	ElVWBAMSYuShdtgEXuYS/qmRG0/D4A9wa4xfY0SzNJLIfmDiNxXMfieEC+/FbtNITGj3CYdrims
-	z/LqKaCpA1z9rcCduuq1ZB6IpQ2vIfDp3A8aymYvQ08uiNXz6VvxHIM6g3bLdVIMfGvnnlafwcd
-	IhpwDKqEWROgABBxVrzD0ys7gvNm3/ZLy5ATnQPagJcMVeYIMkPCKCMd+WaQQAmfDelsTbDGDq0
-	JsnG09cPZuzVwKl4QC5plkqcHGt/7q755K/kH6ZIaD6OSqEeGbf3msH2NpmrBKHctL4bhjH6uw1
-	uWHlfzRxt7rzeDUAkVAv2WYTMRWfPtxXUejTtf4vcMN/0hzpbMRly4QscR6OVJbfTLhFph6N7
-X-Received: by 2002:a05:6808:190a:b0:53a:6769:c35b with SMTP id
- 5614622812f47-567e14c6645mr1033843b6e.12.1793938112995; Thu, 05 Nov 2026
- 20:08:32 -0800 (PST)
+        d=1e100.net; s=20260707; t=1793938620; x=1794543420;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IFRCE426UTc7sdwYXe1TU+8o/imwLSKisQnbNMcuaUE=;
+        b=Z/ja8i9iBNlz2tjbuZkArJttaTRRwTgQJlONgN6fIqTgSKJg7p0u4w2g2LTgtOb7ec
+         xODVTR5llHsHXyFq1/CvXjfIhjYxEZCkrFwJKShQ86jRahwntJ/cCh0kMH9QIiyW/6sz
+         PfGJQT4mRscQrV8ziWhO2KyTHXtsL5Gxktp4ydV81ooWiUS6uJqjDKiTs452uJLx0WJb
+         jI3VDjNww0PG4kbynRCeE/tgDOwWW+RqMsxE84nlY1KfgUDxc17o3fVFmjUM3pQy6IRN
+         0E3sGdHCwA8oq8C8tRbWKrDxZrEZRbM8LzR3+wgYP0yWyOeQyK5YzT1YYperSHjLsNh1
+         zy7A==
+X-Forwarded-Encrypted: i=1; AKwUvBySGbChUL54A/pg63NdE0741O4meulBTYEP1uPw7LID9YFx3i3WEnSzMTX39nH0wxA4e+Gi39i1WFaO16+HfY0=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+OlNvlaCHMMTIirW/buEo8991sYu045lJHVuLs0fBEE2uBIJAm
+	lU5wqezK1AflcqWA3Ry7EVE2lDEWsnAMDZcKB12ygB23SLlR0CZMd2lt
+X-Gm-Gg: AYBFou00kXf9mzS0Tf5qN9WewZ3h9xKwCJ+GsAXRBesOKBMtLS8E8K/4drx7IKEMFEX
+	j3eIGaWbywkuPyxEFtNbQtmlNtmp3vUwSfxiBzYvL94f73y42e7WqBRwN6f95RM8i9sg9/vE3fK
+	wvoAW6pSvVvF6VODjPWsKFcfxXrPy7trXMhgN6/hi0VXEW6MRc+JIrjOo/J/dsy9gNTsOJrdxL6
+	MnW42R799YYgw9GEYgPE2zWARL9BNq7d8tAgLvANIUfGrDV+/Q5JIxXE/+r8yDTtIlSRWaKwfQ5
+	XdII+XdczwfR11I8d32QETY0Wxvf16VxmTDNOaaHrRjCpQ8O++g9S3aPj1Gb8ZfzbCMuHzeHygN
+	MSCsgEBzvV9E42TTZgwL8ll94VRJ586P6uWaffzEVYyAkMdad9VWHIfDH5Cac0I/tUb30e3+sHU
+	Rc3T0e0ZK+lZmAB0GoSHXQQz0B6jnRuw78i3UBIhYG1nTf5aOWlJMeLOFvQSU+A48S55ITRrYC6
+	UwR3otnHBxM5tgVS5TSsQwTwfjbzhzQQwbIYEBJxz0CNUjhNKq0a6kbSroyryVKO37g4mvxqoW4
+	MCeuclmO/kUjgkp3wB/gN1hoznRN181+fE6zZExJzgBXI/b3N2W2klrzJ50D
+X-Received: by 2002:a05:7022:5f1a:b0:1b2:4e79:bfb0 with SMTP id a92af1059eb24-1b25d31aafcmr1190947c88.23.1793938620004;
+        Thu, 05 Nov 2026 20:17:00 -0800 (PST)
+Received: from homik.search.charter.net ([2603:8002:ad40:56f0:5644:8cb0:c50e:37b6])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b25e4f03f5sm1698464c88.21.2026.11.05.20.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Nov 2026 20:16:58 -0800 (PST)
+From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+To: mchehab@kernel.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	kees@kernel.org,
+	justinstitt@google.com,
+	morbo@google.com,
+	alx@kernel.org,
+	shlomojune6@gmail.com,
+	Mariia Nikitash <nikitash.mariiaw@gmail.com>
+Subject: [PATCH v3] media: siano: Replace strlcat() with seq_buf in sms_ir_init()
+Date: Thu,  5 Nov 2026 20:16:53 -0800
+Message-ID: <20261106041653.439536-1-nikitash.mariiaw@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261104090239.311074-1-nikitash.mariaw@gmail.com>
+References: <20261104090239.311074-1-nikitash.mariaw@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -104,94 +104,63 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261104090239.311074-1-nikitash.mariiaw@gmail.com>
- <ausVkYs1-3rJ5Fj0@devuan> <20261105113229.4126d872@pumpkin>
-In-Reply-To: <20261105113229.4126d872@pumpkin>
-From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-Date: Thu, 5 Nov 2026 20:08:20 -0800
-X-Gm-Features: AclHuK9Esb9F2uyydCP0odZv_dxt9WsR5I2SP--qP46odrTEOGmh5Cneq9YrqqY
-Message-ID: <CAPDEY+WvnrFgriCyvL6tjY2GiBJ+Dsz0Tz4hJz=n1xW_fywTEQ@mail.gmail.com>
-Subject: Re: [PATCH] media: siano: Replace strlcat() with snprintf() in sms_ir_init()
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Alejandro Colomar <alx+linux-hardening@kernel.org>, mchehab@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, kees@kernel.org, justinstitt@google.com, 
-	morbo@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 5, 2026 at 3:32=E2=80=AFAM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Wed, 4 Nov 2026 12:25:17 +0100
-> Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
->
-> > Hi Mariia,
-> >
-> > > Date: 2026-11-04 01:02:39-0800
-> > > From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-> > >
-> > > In preparation for removing the deprecated strlcat() API[1],
-> > > replace the strscpy() and strlcat() calls with a single snprintf()
-> > > call to construct the IR device path.
-> > >
-> > > Both the source and destination buffers have the same capacity,
-> >
-> > The line above seems irrelevant, and potentially confusing.
-> > The size of the input is not important, because since we're appending
-> > stuff after it, truncation may actually happen.
->
-> And gcc's stupid format overflow check is going to complain.
+In preparation for removing the deprecated strlcat() API[1],
+replace the strscpy() and strlcat() calls with seq_buf operations
+to construct the IR device path.
 
-Thanks for pointing this out! I initially tested with Clang, but
-reproduced the warning with GCC. I've switched to seq_buf for v3.
+This preserves the resulting string, including truncation behavior.
 
->
-> David
->
+Link: https://github.com/KSPP/linux/issues/370 [1]
+Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+---
+Changes in v3:
+- Replace snprintf() with seq_buf operations after reproducing
+  the GCC -Wformat-truncation warning noted by David Laight.
+- Drop the previous Reviewed-by tags due to the implementation change.
 
-Best,
-Mariia
+Changes in v2:
+- No code changes.
+- Remove the statement about buffer capacities from the commit message.
+- Add Reviewed-by tags from Alejandro Colomar and Shihuang Liu.
 
-> >
-> > > and the return values are unused. This preserves the resulting
-> > > string, including truncation behavior.
-> > >
-> > > Link: https://github.com/KSPP/linux/issues/370 [1]
-> > > Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-> >
-> > Except for the small comment above,
-> >
-> > Reviewed-by: Alejandro Colomar <alx@kernel.org>
-> >
-> >
-> > Cheers,
-> > Alex
-> >
-> > > ---
-> > >  drivers/media/common/siano/smsir.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/common/siano/smsir.c b/drivers/media/commo=
-n/siano/smsir.c
-> > > index 283770d583d5..636ff228108b 100644
-> > > --- a/drivers/media/common/siano/smsir.c
-> > > +++ b/drivers/media/common/siano/smsir.c
-> > > @@ -55,8 +55,8 @@ int sms_ir_init(struct smscore_device_t *coredev)
-> > >     snprintf(coredev->ir.name, sizeof(coredev->ir.name),
-> > >              "SMS IR (%s)", sms_get_board(board_id)->name);
-> > >
-> > > -   strscpy(coredev->ir.phys, coredev->devpath, sizeof(coredev->ir.ph=
-ys));
-> > > -   strlcat(coredev->ir.phys, "/ir0", sizeof(coredev->ir.phys));
-> > > +   snprintf(coredev->ir.phys, sizeof(coredev->ir.phys),
-> > > +            "%s/ir0", coredev->devpath);
-> > >
-> > >     dev->device_name =3D coredev->ir.name;
-> > >     dev->input_phys =3D coredev->ir.phys;
-> > > --
-> > > 2.43.0
-> > >
-> > >
-> >
->
+ drivers/media/common/siano/smsir.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/common/siano/smsir.c b/drivers/media/common/siano/smsir.c
+index 283770d583d5..faca379ceebc 100644
+--- a/drivers/media/common/siano/smsir.c
++++ b/drivers/media/common/siano/smsir.c
+@@ -12,6 +12,7 @@
+ 
+ #include "smscoreapi.h"
+ 
++#include <linux/seq_buf.h>
+ #include <linux/types.h>
+ #include <linux/input.h>
+ 
+@@ -41,6 +42,7 @@ int sms_ir_init(struct smscore_device_t *coredev)
+ 	int err;
+ 	int board_id = smscore_get_board_id(coredev);
+ 	struct rc_dev *dev;
++	struct seq_buf s;
+ 
+ 	pr_debug("Allocating rc device\n");
+ 	dev = rc_allocate_device(RC_DRIVER_IR_RAW);
+@@ -55,8 +57,10 @@ int sms_ir_init(struct smscore_device_t *coredev)
+ 	snprintf(coredev->ir.name, sizeof(coredev->ir.name),
+ 		 "SMS IR (%s)", sms_get_board(board_id)->name);
+ 
+-	strscpy(coredev->ir.phys, coredev->devpath, sizeof(coredev->ir.phys));
+-	strlcat(coredev->ir.phys, "/ir0", sizeof(coredev->ir.phys));
++	seq_buf_init(&s, coredev->ir.phys, sizeof(coredev->ir.phys));
++	seq_buf_puts(&s, coredev->devpath);
++	seq_buf_puts(&s, "/ir0");
++	seq_buf_terminate(&s);
+ 
+ 	dev->device_name = coredev->ir.name;
+ 	dev->input_phys = coredev->ir.phys;
+-- 
+2.43.0
+
