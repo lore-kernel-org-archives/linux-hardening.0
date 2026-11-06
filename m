@@ -1,79 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793949196;
-	b=ZzpHCyHi5MsT6mAe7Qg7bYLjM9/3po5ocJVO2/VekJiHEaHZDcFymWSzzJd0UC/wPeB0
-	 DmNSbv4pRnkfHlBqyyUF+RhBXfapXFlNBPi/NSEU4JLgSQMRm5tX4p/Pk8k9du1nFsvOB
-	 vDiuBeqnnSNJW+C6nTroamo+FwZHOK6mVWf67g/aqB27F4r5aLSP3dYQoqBbMmpZNacNo
-	 1lBRe2mzY90PN1+5LWleOe8J/DKam8OzEOCk8WHUX91zoRGy0LEI0EqFsnTc4a38chLAG
-	 6uNF1WXerGWo5EUZyC4YJewOORjc9/c3/q/ynNhm3a61NFb4D7nByN6w3+pLBLi7nbQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793949196;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=z/ZZ/v2ozrIFzFDjrSLFseMeWg/94kHqZgMwNJDg2q4=;
-	b=Tu7I/NviFQq6Bh7+KObi/nnhS+hbVMzenHmJXYkUeFSgN8MM+EONPW+ZJ3KWU/lGiOpN
-	 /dHqhkcqlxpyib0p6+o40mUNrBqQnh+2zopVcbtVil1lW8lDOaSwuCFULreWqIs2dC7VA
-	 vYCJZ+ZLainB0zUFqIhTzHKgxvU8TgcOxszx3Z8/vHzp2nvDNXaPegX8ASiImDaippbsz
-	 Bc2rcOvh/WhEM52+UhkZ4Sm8sa1aag9m2v88r1SmArmGe2zTHKXxF1p7v+/MlNNYt5LE0
-	 MoYQ7/2dGZBX44keakAmJUIPfUfuTBt9Yp3YvkicDwGXxVbBYcx2boHWFuVD/v71jaA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Tj4eP/rS";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793949372;
+	b=hg4IGMDVZdvukJ8grliab3b1mBKVNAyH3AvpLzmvxW0jXZ4OrkOXULj2C6UdESbq8Dsu
+	 0BAXJsOZVZRO1N9nx6nFmHiORAJiZ3rhpPXXMiYFz6lX4GSfFciGgRFJ0xvazD06D7qOG
+	 oPX+w736aC0UQxMzZv+xqiEuFKlH74KrxcBbRhta2kPFdFBafr2wgbWaoR/eBi8Dn6ULA
+	 qf2qIXYDlpnY83sn0FJS4DovNavogdPz7MCtzVDoT5Z77ynamo5AjFyehaz3wnl9vbCFD
+	 2trFJduw58G0wss95sbAobAPllmuoSi7t9jByJxGXC1xD4CVqq1mDqbFzySDTtYAUjQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793949372;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:List-Id:To:Cc:References:From:Content-Language:Autocrypt:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=bxyhLGFli38ds0TGUbKdVWpQ1ZVJ1vM6lFd2Hmh0ka4=;
+	b=k87bHuUD+vdrZUIWTrKraDJNY40U+t1M3WUGPoTfLM7XRumWQwf9RHSm0ax6qEtgXD0S
+	 v6gGLaBT7076SSHfTNTDSKfSA4LDzDzPMOqbDbVqLelco1N4XFiLgZN4CpuzCRMMgS4N4
+	 CoTv+4YZHbmzrCDThvBrOyNpPlJhfdDHkPm4mQ1ogHMrzIwE7oNi+mHuR9wToQBQMBjYh
+	 cub1wDEnPombQWjeGb/DCdJdd9jgY/vzz6l5i8Nk6fzltrdTWz+2V/wOEy5QoeLcabNtY
+	 OIys9/p8Y/0/oYqAfyNb+dwsvjO/lccs5yZfUrvGxlSCv5wUt9e2HqrJqN5FLUGfmnA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NnmTzAuS;
+	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C83606A33B;
-	Fri,  6 Nov 2026 07:13:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0E8606A32C;
+	Fri,  6 Nov 2026 07:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tj4eP/rS
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1793949195;
-	b=MkQZ68AHze0Xfm1F/RbPek8pf33GX7SQVdWuViwlISyA4gxUsM4wM1xpiLwntkE5hhvw
-	 4NxubdzmfDu+KbL/JvdBDfuEBVy26tXKYG1G6v1aXMiDVoYraiyCkBD6MhEgcRVArUHCp
-	 +c4ruE0jFoKVRImEfzKyHT40UTzCQED6JASS6EXrjRXEU2cOOgOZ/xvDvRPwAWd+42gkw
-	 TQP7luBqmiEWRu5o9G+9pbJxKcPCeRJ2SY/dRXZXqgBENnUzF17PbGRGdcx8mH8Z7WF2q
-	 EA0gf2+cgw4O1/jUWtGHLVRhocQjm6r6RIdeb/pQXG+FfiptTOCLUQGpoCZGg2rBfCA==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1793949195;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=z/ZZ/v2ozrIFzFDjrSLFseMeWg/94kHqZgMwNJDg2q4=;
-	b=Xopdpj4VYGxioNFZqfIcj4ok1F7jTuq/ckUeJWJTHKoW4Tn3oDrpgKGu/1DhJGsqcjER
-	 U+POpKH2zLG9aGY4z9uQxnjDAmezV3VYdAmlQIXyb5+3iCHn5XoDZMVEgkedlaYvkn9Tj
-	 kqc0on2FytD8EAbY4+kokhFtoNaZaoKFI6qY1gtcKPDo2UiWoSmrC4RkYN2nBETDLWBhf
-	 Gn63rXYtTpLVoGLVnJbvxRZO1hN98NnVy/4iuYnIxOy4/STZvMhJZMVOTzj10hEUZuvSh
-	 7D0WWANQOSNyoN/jhtcJd2K4BWvihli1BidI/vMTIE/JfYGPEdIXpOgqjpS/kCLq9JQ==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 841861F008A3;
-	Fri,  6 Nov 2026 07:13:14 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NnmTzAuS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392061F0089F;
+	Fri,  6 Nov 2026 07:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793949195;
-	bh=z/ZZ/v2ozrIFzFDjrSLFseMeWg/94kHqZgMwNJDg2q4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=Tj4eP/rSdBUkUPuoM1W9YYwEfrRZJBBBzlJodJHuEK+LZQjWEVWjIRqvKTYIYRgET
-	 AKBM9GHVyKGn9q8ryheAE+VpvMrzNfOCIqpWfdhOnCkPGSZkHQl+rh4rKw4JJAIZWP
-	 ++rs853Vs2jpGu5x46/Ad5SLORAaA8XR+GnDaTCKoHfEaxtCadmHYdCu6siryECF0w
-	 oAo/F5LMYnpfJm+gaDSSfIxruCETRuIzs/QgIRux9k/eb+QtpF9gD696as/SuZravG
-	 VKRHRrq9+BHgejKyO/uaXock2tYqpG32hWATGvRNZQH+wh26q5QudokPGYhBZJaO7Z
-	 /b/LjQ9KOgv1Q==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 12C9545C3F;
-	Fri,  6 Nov 2026 07:13:14 +0000 (UTC)
-From: Junyi Zhao via B4 Relay <devnull+junyi.zhao.amlogic.com@kernel.org>
-Date: Fri, 06 Nov 2026 15:13:09 +0800
-Subject: [PATCH v3 2/2] dt-bindings: i3c: silvaco,i3c-master: Add Amlogic
- A9 support
+	s=k20260515; t=1793949371;
+	bh=bxyhLGFli38ds0TGUbKdVWpQ1ZVJ1vM6lFd2Hmh0ka4=;
+	h=Date:Subject:List-Id:To:Cc:References:From:In-Reply-To;
+	b=NnmTzAuS3u3p3vuTqR4A2aqgMSLmxTKrTLQZgKuqWKEHlzJH8GDhFnjshmUKBY76h
+	 Tkj4/e+ou9dXfwlpfYpBDZ/2mi5iFsdj4EJ9TqaNapNtP2xsz033O9lHgyN58UHKLd
+	 9c+EHBk21/mZNyAHj+43KpTSZqQlooCKAVvlPfC5mIb+h+a9fszlIh/ZuNFX9OZN2O
+	 oxRCX9B2CCVJ4u8NtsWFJUltrcY4iOt07xDvOznYSW7mNH+Tnco38wUN2Opi4PYIpF
+	 lvWPWG04a+d+dYLMuqjonN5bXTwo4jSdKfHROJePeGHMnGZBM/Ov4445rAMCvtsdz3
+	 nHikKEUYQJ4jA==
+Message-ID: <2ed0ae18-8e64-4725-bcb4-4ca45cb59fda@kernel.org>
+Date: Fri, 6 Nov 2026 08:15:58 +0100
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -83,132 +51,111 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261106-a9_i3c-v3-2-804b69b9095b@amlogic.com>
-References: <20261106-a9_i3c-v3-0-804b69b9095b@amlogic.com>
-In-Reply-To: <20261106-a9_i3c-v3-0-804b69b9095b@amlogic.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, imx@lists.linux.dev, 
- linux-hardening@vger.kernel.org, xianwei.zhao@amlogic.com, 
- Kelvin.Zhang@amlogic.com, Junyi Zhao <junyi.zhao@amlogic.com>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1793949192; l=3008;
- i=junyi.zhao@amlogic.com; s=20260924; h=from:subject:message-id;
- bh=EbBk034GgwE/lc2KD1CPaTtRovIqCoOmYzsKMI0uw94=;
- b=PL+f2g6aiQBoYwgwUjM03HWozXwwqI0y/oLp6OneE8FG5gPq4DZyr64D1ghA4gICEt8xHaQ1y
- 9pNv4KLHqkuDz3THgyulcyimgZl9v3xIkMzMNoMEjC8oF7YiQIRy8Ft
-X-Developer-Key: i=junyi.zhao@amlogic.com; a=ed25519;
- pk=hiL5PjGIksGFiWvEx9J3MhQqU/ro6vNbj72NIw4bbvA=
-X-Endpoint-Received: by B4 Relay for junyi.zhao@amlogic.com/20260924 with
- auth_id=1054
-X-Original-From: Junyi Zhao <junyi.zhao@amlogic.com>
-Reply-To: junyi.zhao@amlogic.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] string: Add strprefix(), and deprecate
+ str_has_prefix()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Alejandro Colomar <alx+linux-hardening@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Alejandro Colomar <alx@kernel.org>,
+ linux-hardening@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>,
+ Kees Cook <kees@kernel.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>,
+ Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Saravana Kannan <saravanak@kernel.org>, linux-acpi@vger.kernel.org,
+ driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <cover.1793876837.git.alx@kernel.org>
+ <9c81f6f62fd0e908e683c4c08b09a1f95bc2ec9c.1793876837.git.alx@kernel.org>
+ <20261105111423.360f4ba8@gandalf.local.home> <auyuINXEJKc1KoG7@devuan>
+ <20261105115019.2fe7c91b@gandalf.local.home> <auy0O467UqOzqYub@devuan>
+ <auzGMV1YbO9DodBq@ashevche-desk.local>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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
+In-Reply-To: <auzGMV1YbO9DodBq@ashevche-desk.local>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-From: Junyi Zhao <junyi.zhao@amlogic.com>
+On 05/11/2026 19:08, Andy Shevchenko wrote:
+> On Thu, Nov 05, 2026 at 06:46:18PM +0100, Alejandro Colomar wrote:
+>>> Date: 2026-11-05 11:50:19-0500
+>>> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> [...]
+> 
+>>> Oops, typo, I meant trace_event_filter.c
+>>
+>> Still not found.
+>>
+>> 	alx@devuan:~/src/linux/linux/master$ find | grep trace_event_filter.c
+>> 	alx@devuan:~/src/linux/linux/master$ find | grep trace.event.filter
+>> 	alx@devuan:~/src/linux/linux/master$ 
+> 
+> Oh, you are an oldschool guy :-)
+> 
+> I can't believe people with Git index available are using `find`
+> and not `git ls-files`. `find` is too slow...
 
-Amlogic A9 SoCs integrate the Silvaco I3C master IP in two domains:
-the EE-domain instance (amlogic,a9-i3c) takes "pclk" and "fast_clk"
-like the NXP integration, while the AO-domain instance
-(amlogic,a9-ao-i3c) lives in the Always-On domain and generates its
-bus clock from a divider inside the controller's own register space,
-so there is no external fast clock and only "pclk" is exposed.
+You all are oldschool! When I need to find a file in Git repo, I ask
+Claude to write me a simple Rust application searching for given
+filename, store it somewhere and then execute it, giving me the result
+output.
 
-The two instances differ from the vanilla Silvaco/NXP integrations in
-clock topology and required init, so the driver matches them by
-dedicated compatibles instead of the "silvaco,i3c-master-v1"
-fallback: a fallback would bind the generic driver data, which
-neither programs the fast clock rate nor handles the AO internal
-divider, and the variant would then fail to work.
+Thanks to this I already have 25 apps to find specific files, so I can
+even re-use them later. Ha, think about that, how optimal is that!
 
-Add both compatibles to the schema without the fallback, following
-nuvoton,npcm845-i3c, and use per-compatible if/then conditionals to
-enforce the clock counts: two clocks for the EE-domain instance and
-one clock for the AO-domain instance.
-
-Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
----
- .../bindings/i3c/silvaco,i3c-master.yaml           | 26 ++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
-index 853092f75..d892d42be 100644
---- a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
-+++ b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
-@@ -13,6 +13,8 @@ properties:
-   compatible:
-     oneOf:
-       - enum:
-+          - amlogic,a9-i3c
-+          - amlogic,a9-ao-i3c
-           - nuvoton,npcm845-i3c
-           - silvaco,i3c-master-v1
-       - items:
-@@ -28,14 +30,14 @@ properties:
-     maxItems: 1
- 
-   clocks:
--    minItems: 2
-+    minItems: 1
-     items:
-       - description: system clock
-       - description: bus clock
-       - description: other (slower) events clock
- 
-   clock-names:
--    minItems: 2
-+    minItems: 1
-     items:
-       - const: pclk
-       - const: fast_clk
-@@ -70,15 +72,35 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - amlogic,a9-i3c
-               - nxp,imx94-i3c
-               - nxp,imx95-i3c
-     then:
-       properties:
-         clocks:
-+          minItems: 2
-           maxItems: 2
-         clock-names:
-+          minItems: 2
-           maxItems: 2
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - amlogic,a9-ao-i3c
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 1
-+          description:
-+            The "ao" variant is the controller instance in the Always-On (AO)
-+            domain, which has no separate bus clock and derives the
-+            bus clock from an internal divider.
-+        clock-names:
-+          maxItems: 1
-+
- unevaluatedProperties: false
- 
- examples:
-
--- 
-2.42.0
-
-
+Best regards,
+Krzysztof
