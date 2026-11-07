@@ -1,124 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794061369;
-	b=b065i91d9OutyIRuOC0Cy1oUNXSg8FYxIDm9SwPxf8vqm4AZqLjXVqeTZTiUxlDx6TYX
-	 IoupEw8aheoHTKjuPpXAbtm07E/fqZHiXIfIXB4r7oczp9MDx0+n/poroED01RhrpVGBb
-	 5V5M020fPLNw8CY6wNpiPRwuaM5lurTixW9M7bQsWlqaaW4WJnQyXHqppdeHVCvFaZbzX
-	 RxiYPrlWOtxY+p5FBSXY2GbLBRIQijyXtQ9WB0oakiEsKZrDk7148ucZdJudJPEDwD+gM
-	 auwGQP7YYgeP5kZ6CubXK4lXNvS+dyvYBu41SuHn3VHgN+RK+B7pTVyw8j68uxCHmRQ==
+	t=1794064663;
+	b=GHR4b1JeoNTkwl3r3wie99qda4XNo9JN1QLJwF2Fbqr5S34ofz4s0PxARWEBjnpNYArS
+	 vbUgx/mLbBL4RS47JMiLxEBTyZHXNjAHADkLjUXUV/HXnUG33QQvFOvFemxPN3d7jRkCG
+	 //phlsTy2gb5G76arvHJn6A3FF7K1PJALyQY2Shm9vswoSibAGZDS8GZNmm80cwUwa3vG
+	 3D9XQZveMOnyRlomGcnWjIbA2dPdOLxki1H5TzYyXTrbPwVGboyWBkSsXsNU+XV/cl6t/
+	 E7U+t1XlE82K71/2rFLvFUFys0Vaz+n/ZTa0BwBYAwdD6xyUVm9pGLK4H90B8Db/qZg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794061369;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:X-UD-Smtp-Session:Date:
-	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=Zc76TO6qUVRGeeHVXQdMS6eOYrg3MPsFB1Ka1Yvj58U=;
-	b=uAOS9e0kdX7Mz8l/2ws9g9IVFdYsSy/YTUtz9Ofcp9LuxYm+gX9gvP38j5sPiZhmRe58
-	 5ksFcEn2vb+Ny0a3q5iKCpMFqurGuaMncmVjUmnkl6EI9ZH/EwOzgArtY8GOM9vciz/i7
-	 gI+CGh2QJ4mm/zedW/1SZKW4ZC4laW2S422rbA1y1mHR9hK+Z2G84AlpEW3pt2g0JFNOc
-	 DyaLFuYiPAh37Lw+nxsmXzuAgHmu+BxqLijqvk2Wic3Vom+LmVZXBflWFO+gQ88xCOtFj
-	 XFxKHnRq9cNMz6DT+rb8iT9e4qRLMw04lK4mX0ZpsPPV0ycSRr+nzfv3LAihYQYwKbA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794064663;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=MeF/1bFkHYSuxzskpfZlny2NzE7wY2okieEwz4QfiGw=;
+	b=XMMmIMji3tkhhPe7ND3Aa70fn+3M6L0D2pSli8fOMaWF6VlFtG4TTCzU3yHn83FVBoR2
+	 gPz/XmVQiVH+3CGPQ+OD0lI06maAgQO0hvyACb3yJMRCKjXDCAsphGSlQVCKzAVo4TSa6
+	 XcPtW7KZTZBvx9rIb9+H4XqfibwLZ6mh1vb2OMzYjzzWwTPc1tZVZDGeTcWeYzQWQ60H0
+	 C5HiYaVqthhwhcHZrxoC0ozvKDzqrEpaPMKsvSmaFjm8AwQEchps4ulov0OXE+7+RGvXL
+	 o/2fzG/hpF35ksP4Bi1qJFvibGpkzvKEluEdkw+d6C8R/tnRTI1eqLe3ONaFpfoyVGQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=sang-engineering.com;
-	spf=pass smtp.mailfrom=sang-engineering.com;
-	dkim=pass header.d=sang-engineering.com header.i=@sang-engineering.com header.a=rsa-sha256 header.s=k1 header.b=deMBkNlk;
-	arc=none smtp.remote-ip=194.117.254.33
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mEx9JaoF;
+	arc=none smtp.remote-ip=209.85.208.170
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9465A606D81B
-	for <linux-hardening@vger.kernel.org>; Sat,  7 Nov 2026 14:22:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9465A606D81B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D84B6082BDB
+	for <linux-hardening@vger.kernel.org>; Sat,  7 Nov 2026 15:17:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9D84B6082BDB
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=sang-engineering.com header.i=@sang-engineering.com header.a=rsa-sha256 header.s=k1 header.b=deMBkNlk
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=Zc76
-	TO6qUVRGeeHVXQdMS6eOYrg3MPsFB1Ka1Yvj58U=; b=deMBkNlkuoAHsHcvg+VW
-	/JOGUyDVHLSNz2M2P318rSNR8ihhOn/icNfH112ofFlA9vj9/Cq1/GB2kPS93Y40
-	YF/E/JzExb1+S9I1cstiBzedJlDUnUSkE30QPeWQc507bnuBni0Z3NyRW4Kbgikv
-	A33vNAj4UQjDG+RAKO5HfUR7weMBMBqiqmK0raV2oPWm0SZWyc4pewIm8g0fDZne
-	LkWZdfpDHRtTXcDecdPHMvKhMX5AroogrzfiJHaQZyQZEmMUS5nMy4dWe/94uyCo
-	CxZZl4Q8KqM0Whbjetz1A4x1NAoLWi2ICCJyuUW9bykg7e8j4gzLaz/eOC4I3nFt
-	YQ==
-Received: (qmail 2530674 invoked from network); 7 Nov 2026 15:22:35 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 7 Nov 2026 15:22:35 +0100
-X-UD-Smtp-Session: l3s3148p1@G1+7dbBfHLcFFu4j
-Date: Sat, 7 Nov 2026 16:22:34 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Danila Tikhonov <danila@jiaxyga.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Amit Kucheria <amitk@kernel.org>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alex Elder <elder@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Avri Altman <avri.altman@wdc.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Andy Gross <agross@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Georgi Djakov <djakov@kernel.org>,
-	Loic Poulain <loic.poulain@oss.qualcomm.com>,
-	Robert Foss <rfoss@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Imran Shaik <quic_imrashai@quicinc.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-	David Wronek <david@mainlining.org>,
-	Jens Reidel <adrian@mainlining.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-	linux-scsi@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev, linux-remoteproc@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org,
-	linux@mainlining.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 20/33] dt-bindings: i2c: qcom-cci: Add the SM7150
- compatible
-Message-ID: <au80Kv5YDDtUW2L5@shikoro>
-References: <20250422213137.80366-1-danila@jiaxyga.com>
- <20250422213137.80366-4-danila@jiaxyga.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mEx9JaoF
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3ab3b29a298so11456701fa.3
+        for <linux-hardening@vger.kernel.org>; Sat, 07 Nov 2026 07:17:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794064661; x=1794669461; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=MeF/1bFkHYSuxzskpfZlny2NzE7wY2okieEwz4QfiGw=;
+        b=mEx9JaoFVWqn81xBnARZosOA2nexoirrYwD4tcRgXFTI4v7vXnV8xXRdGkhzNYK9Fn
+         BdI46ZJRyvh0BagG3hjda4IwH4W6CrhfIlmg52m/q9Is79OjTCAneo2dGtS/537dvkI4
+         xLJrZbGfBZ6oUR2eCZRxRnzUyNfnhx70JiVyxXo7tDb1Qcoir0tEvY5RETs/UGFVn00j
+         8l50nzCYoNt5jBeKeDeoqM2YiMxcsy/8EuDCf3f5Ewybi2OkpSxoLHAQ66RM+2Jz2XU5
+         sGajPlZRf9VswyfQkzPoMlkaJun1HnoA9UwDJgfcbmyIQEeQeDLukm0C8630NrppMLGO
+         3Lmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794064661; x=1794669461;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=MeF/1bFkHYSuxzskpfZlny2NzE7wY2okieEwz4QfiGw=;
+        b=EDyQUiDC7/brg8JCnFcewk1/x0AuR1rqKUivprSVhDZkWZeGmT46SblzjIfM6WNh/F
+         yO/Cmdt4yrhjqcx44kMrXfWL2Qnx0uKp0odXZ/OLjkDgjmzaWRZPunXciHxJqzDmzBu5
+         o7hnahNDPaQXGFkxsStKU+/vWucO4ILNXzGdHDptSHYr1Ldn0hZD4VOFvpG/sYqDj9YE
+         GRe9iGy7kofkJl2IH+HRzi4dFoj2isxPoXR1VJx5mTFbA8vsBUtojJ3535E7ntRZnC77
+         LwWnFaTTgeczoN0vxB7qCYSwvLo7uW7vizpy2I5biy6pZQWH1pSLEppYeGzwdD8vEKwx
+         zEBQ==
+X-Forwarded-Encrypted: i=1; AL+hErHlu/PmuPxIiskfpQA2BJLyTBWIZy3VftTOugKmCZu7dduwVXESDSCIOWikKKGHdWF9kb0n1eK3grdMd4MXb10=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/WMVAqPw4CMTNbJaVs3rb61UFJyWMdXcVG7ALufCzMz7pLKNhx
+	Hg8jxlaeOJ6TgAwG/43Hn2gFHE8nljkcd7zoCeGpfyFbRKyg9k63RsMa
+X-Gm-Gg: AYBFou3Z553fD0nilthuOex7Y9HLRr3Oak1XY5qHxGyjiRYw/BDN8485Q72ib4Sp+5F
+	FjBCJUYbIupdagLX84+hhvT9YPfirinxQ4qtpKMYNUpcV7YmFg54in1VCSuexvl2HKyKmpmUYpy
+	iRzmN+fXFa3u7FRMN3wuT1SQ92LIMHN8dIBHcCD3UaqyvfOUrYdIY26PmRlAgA6YXWXfoHBILCy
+	bLGZ+sZ4nN5ncNUCERqdN/7yXB26aVoKAElx87UmeX266wkl4tNjJ3WWNUmFsrQMSc1w1UYEXn6
+	4f9BqLYd/GralMz1W0WJuA7bYF0abmVEY5KZm90wT4+jGFg2HYXdKLxmIPXBScWcHWsUs893y74
+	rbwIudbswCaW6jDfts8vr1l4qYUP2yE7Lb82YvHZAQtKlZgMwPfAkRelVv54/6KByYJicGFL/qX
+	QaWfFUlQPkD/fbvCcjz30BIOAL4ZT1FRN1SZrMSjacj5bfQVdhywq97emRT+26ZgDbTLs8sMqVz
+	l22V+wL6+IaFZZMbyMeR291mQZCqdhWpCx3buof8RDXH5Y2XNPFSWIx03CQkst6sxL/JrkUdfrn
+	9jcwuynq9QIQ108vurZ9rifHn+HqLyvFSeWERuIdPq0=
+X-Received: by 2002:a2e:a542:0:b0:3ac:41ca:1104 with SMTP id 38308e7fff4ca-3acf36e890bmr11461021fa.0.1794064660640;
+        Sat, 07 Nov 2026 07:17:40 -0800 (PST)
+Received: from thinkpad ([92.36.72.88])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3ad976a9911sm1616151fa.38.2026.11.07.07.17.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Nov 2026 07:17:38 -0800 (PST)
+From: Andrey Zakharov <dedemorow@gmail.com>
+To: x86@kernel.org
+Cc: tglx@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	luto@kernel.org,
+	kees@kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC] x86/ioperm: boot-time switch to disable iopl()/ioperm()?
+Date: Sat,  7 Nov 2026 18:17:24 +0300
+Message-ID: <20261107151724.74703-1-dedemorow@gmail.com>
+X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261027220904.15896-1-dedemorow@gmail.com>
+References: <20261027220904.15896-1-dedemorow@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -128,18 +104,16 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422213137.80366-4-danila@jiaxyga.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 12:31:24AM +0300, Danila Tikhonov wrote:
-> Add the SM7150 CCI device string compatible.
-> 
-> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Acked-by: Andi Shyti <andi.shyti@kernel.org>
+Hi,
 
-Andi already acked this, so I guess qcom tree is fine.
+Sorry to bother you again. I was just wondering whether anyone has had
+a chance to look at the question above. No rush at all.
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+I would be glad to help if a boot parameter for iopl()/ioperm() is
+useful, and I am equally happy to leave it alone if it is not. Any
+hint is welcome, even a short "not needed".
 
+Thanks,
+Andrey
