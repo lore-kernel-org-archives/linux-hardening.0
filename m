@@ -1,53 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=203.137.112.168
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794147842;
-	b=msm2JGQYVlXOJTGXh/iKkJCMAk23F82HWWyOCOYKzZcg5G+edBymVygqoIs0E22hzUMe
-	 r5UDHvDq9ST5BaeXB3eBvB4WTIxQy+39YhIzFW6HUNIK55Td5TYuHbF7kFsDAQbdgUr0F
-	 goyoLzIHoQ+1i2mpefG2S278GWKFiwBeKluKbwcmjwtVje6QwYBt4NmUhZ+H8ntvb8pUl
-	 deMhZUIb8FRceHF3bCBGi97UyE6RBdJiRY9wWq7M1QZUpV+jxpOzByeSp9EIGINp0geJQ
-	 3xVi9Zhg82BW5ZzQk1mx0q7k+9EkK9YAfEOFs7tbnJLc9WYj5GCxWmzGE8D4zJQ+K0w==
+	t=1794153200;
+	b=22iN+fHvFl4g104SSUSlYx03TBQ/llS/dbEzhwdR/iitQniy88MyLURsLAM00QELbsJF
+	 03mt/VJBAx8im5BP+o7jrfpMeYgd+rTldZ5af0fvPOLcXmt4q0FQURpxpYQWRPgNvxjw8
+	 9uWiAfNAApiGgjb/ym+B1p4sp1RbNpY3SpWPqJreRO6KWHon9MreGBOaYiME8lWBJ2mJE
+	 wH5yo7DRD+5uAn5uanwNleufuBjn0Ki1bKSVBfg3ckios7LlO+mE8lpWVjOFEVFT3q0IQ
+	 Gjl+0WPI9qnmhHTJQ/PRDTB8xy4x4DFuafT4ntTbdlttNFQuUlnNxe0/owLSINHlxmA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794147842;
-	h=DMARC-Filter:DKIM-Signature:Date:From:To:Subject:Message-ID:
-	 MIME-Version:Content-Type:Content-Disposition;
-	bh=tO9kSL/xN8Y10+a6avUg71v47JzAd9km3qSicQjl954=;
-	b=FlWw4DcsywPg7PoRwhgXMcBx2aH3IXjg/ZD96DxCxc9K4TQjMODBgxIOGPSrkEJrVwFu
-	 jx7O0y5PaiVFblEBzpvInMWvdHMGoGppbwoAHaoHCBSAQkEEhNkHhcLDlWQtlhF6HbkJm
-	 NKUug49mIJk57DCe+JyyjsVm5Lxmz4M0oydIWMy5x2dhs469/01WvF2MnQGqql/aQfn+o
-	 YvvRxZ4MQgNiCctC2J2qYXh+ErVpf01wLDUo6bizqJcXggz6BqVyh0AqFSJwWPPldHHfC
-	 DbfwuISmcwgo1jUSGYy6dJ1TvLgdI+Tf/Sji1UIOS+XbrEFiQ1nQ1NppVyDVOz6EhnA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794153200;
+	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
+	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=/S9XJ5Sf+ha4mJ4om/24R0+J7GuBzOrBmWjf2t5Bxd8=;
+	b=AsNvje9oj9C0GHm2Z6/S8iuNwLsN+qZFyjyPY6V83odtiMJ2FNUZ/vbwORrM6bm5hAw7
+	 nvPoBWt3ow9OZ7NXfsKYsqvCAoul4GO5IfIaMNkt1oFY0W+pZHHy7JAapAI+KB6g9o1o0
+	 cojnN888GvPLFUmvwQdxNpaYQg6qCpBN+zv00VCGCo4fsGXvFjhG/NXGB79rVe4WAlIhm
+	 xe+N+LuXROYRo2OIBW28qI3FzkZDpvvMUpB9aWT63QrSJg/67mxMukP39ZEu1cZMuQlOb
+	 sZ9J71cNmmwEqnk2Aahpqw54GM6QxGrtBSWZflOvofEKS4GhqwiZuSO6Dd2kWG540uA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=vicb.net;
-	spf=pass smtp.mailfrom=vicb.net;
-	dkim=pass header.d=vicb.net header.i=@vicb.net header.a=rsa-sha256 header.s=f747d04263f05989 header.b=NuDrcowj;
-	arc=none smtp.remote-ip=203.137.112.168
-Received: from mx0.gmx.wtf (mx0.gmx.wtf [203.137.112.168])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cFJVzurq;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0499606A320;
-	Sun,  8 Nov 2026 14:24:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0499606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vicb.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vicb.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536E7606A31C
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Nov 2026 15:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=vicb.net header.i=@vicb.net header.a=rsa-sha256 header.s=f747d04263f05989 header.b=NuDrcowj
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vicb.net;
-	s=f747d04263f05989; t=1794147833;
-	bh=tO9kSL/xN8Y10+a6avUg71v47JzAd9km3qSicQjl954=;
-	h=Date:From:To:Subject:From;
-	b=NuDrcowjLdNhnlvUmfjrfqfCOOO3fRkamqLxP+l5raLl12hQkN940qM4JvqE8uptD
-	 5h2SCKEnql78bI1adTc6jU0j8DCT2Cos1H2IuVHzp0YgIBqg7D4cJ+xTDCoEae7Xts
-	 fxOiJ1upmP1N4ZlxDrbacGS++KlXjSMNAUx0dGPIVfuQ70prCWdEAnMczcSyvgDzvN
-	 2fmKtIayC31Rv8pvRYs7pJFGML40EIM5fOa3Vxxuk+dWBqB5d6J81r7BK0S9T2woxc
-	 USOit4Qmw0UiaopeNCv+jTUQeMGS080cDB098lpMlrUHdK6uYkP42ZuAyMHKNn/WKE
-	 qUFFIAIEdEsng==
-Date: Sun, 8 Nov 2026 15:23:51 +0100
-From: Vic B <linux@vicb.net>
-To: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>
-Subject: [PATCH] security: Restrict unprivileged access to /proc/config.gz
-Message-ID: <avCF9zEHV48EHjgG@vicb.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cFJVzurq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EF41F008A7
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Nov 2026 15:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794153200;
+	bh=/S9XJ5Sf+ha4mJ4om/24R0+J7GuBzOrBmWjf2t5Bxd8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=cFJVzurq9HbKbqEWGxr01b1RQqds6QMtBC1E7K90XsZMRtQnK9HSjS+nFUW7T7IsP
+	 1XCemhABaTppK7yZQGG/tAkmTDOtTiq0yPwAV66Cc5PQxt/PxinItvHkqIDsSgKzGb
+	 NaIHxPjkAoglzLoYp9V7yVVDLWYfRHZtS3BpRQUhwXHoRB0Q0ZEZFIZx6wiIPQ49uJ
+	 aaLuW0CDkXvmDBYbhqDT46xbhfycfXg6rGn2sOBzT1r+m4tTApb26Q2Hrnx20etEdl
+	 9PdohjnYg224/l+HXjePyqzQvx+azdRrtWzz77DZrjauVgsRBfdLndiQkNy6f2rJwG
+	 /nPBWtWszVooQ==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5bfbc25a76aso216112e87.0
+        for <linux-hardening@vger.kernel.org>; Sun, 08 Nov 2026 07:53:20 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErG/arMEs1ZVmtCo9CJNcnwixjQnDEAV/8HrPQPjNjRSoLHatjGYJn4ObMQCyPcvrQsrKlhz1ljZ1ozLFKIjDN8=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/wq9ZhqtAqgFH8W+HbtsR7lq9+IALRw1VjNSEzM7VUi4t3p8Rl
+	lW10DiNovp0G2jSr8j0rx/F3h1lboZ6lVoMj16/s07aXhik3pIaA9UxqDdAe5MNdd3NYjFY7DKR
+	qLu5OwxglRrf8ixumPPEVtI7Rwf68Clw=
+X-Received: by 2002:a05:6512:250d:b0:5c1:4f4a:68f4 with SMTP id
+ 2adb3069b0e04-5c14f4a6a11mr46761e87.32.1794153198892; Sun, 08 Nov 2026
+ 07:53:18 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -57,88 +59,44 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20260928063824.1386524-1-morbo@google.com>
+In-Reply-To: <20260928063824.1386524-1-morbo@google.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Sun, 8 Nov 2026 16:53:06 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkm-S_0oDt9K1xn5kOVp7f6KwG7y7nCNE2asD5K69M=PQ@mail.gmail.com>
+X-Gm-Features: AclHuK9CiXVomc9vdDMRXSjLJTZjnIEg_krpNQUFLmn-Tbw0yt_ODEgP0qy0xbA
+Message-ID: <CAD++jLkm-S_0oDt9K1xn5kOVp7f6KwG7y7nCNE2asD5K69M=PQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: annotate struct acpi_gpio_mapping with __counted_by_ptr
+To: Bill Wendling <morbo@google.com>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	codemender-patching+linux@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When using CONFIG_IKCONFIG_PROC, the built-in configuration is
-world-readable through /proc/config.gz, which somewhat weakens existing
-address hiding defences, as it allows an unprivileged user to simply
-read built-in config from the running kernel and build their own copy
-with identical System.map.
+On Mon, Sep 28, 2026 at 8:38=E2=80=AFAM Bill Wendling <morbo@google.com> wr=
+ote:
 
-This patch adds a configuration option to restrict access to
-/proc/config.gz to superuser only.
+> The 'data' pointer field in 'struct acpi_gpio_mapping' is associated
+> with the 'size' field, which represents the number of elements of
+> type 'struct acpi_gpio_params' allocated for 'data'.
+>
+> To improve bounds checking via CONFIG_UBSAN_BOUNDS and
+> CONFIG_FORTIFY_SOURCE, annotate 'data' with the __counted_by_ptr
+> attribute.
+>
+> Analysis of allocation, assignment, and access points shows that the
+> pointer is never accessed before the count is set, which guarantees that
+> this annotation is safe and will not cause runtime panics or
+> false-positive bounds checks.
+>
+> Cc: codemender-patching+linux@google.com
+> Assisted-by: LLM
+> Signed-off-by: Bill Wendling <morbo@google.com>
 
-Signed-off-by: Vic B <linux@vicb.net>
----
- kernel/configs.c |  8 +++++++-
- security/Kconfig | 27 +++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 1 deletion(-)
+Prerequisites handled in EFI so:
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-diff --git a/kernel/configs.c b/kernel/configs.c
-index a28c79c5f713..11106164756f 100644
---- a/kernel/configs.c
-+++ b/kernel/configs.c
-@@ -37,6 +37,12 @@ asm (
- extern char kernel_config_data;
- extern char kernel_config_data_end;
- 
-+#ifdef CONFIG_SECURITY_IKCONFIG_RESTRICT
-+#define IKCONFIG_MODE S_IRUSR
-+#else
-+#define IKCONFIG_MODE S_IRUGO
-+#endif
-+
- static ssize_t
- ikconfig_read_current(struct file *file, char __user *buf,
- 		      size_t len, loff_t * offset)
-@@ -57,7 +63,7 @@ static int __init ikconfig_init(void)
- 	struct proc_dir_entry *entry;
- 
- 	/* create the current config file */
--	entry = proc_create("config.gz", S_IFREG | S_IRUGO, NULL,
-+	entry = proc_create("config.gz", S_IFREG | IKCONFIG_MODE , NULL,
- 			    &config_gz_proc_ops);
- 	if (!entry)
- 		return -ENOMEM;
-diff --git a/security/Kconfig b/security/Kconfig
-index f7bf6cdc6229..0e8b8947150a 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -19,6 +19,33 @@ config SECURITY_DMESG_RESTRICT
- 
- 	  If you are unsure how to answer this question, answer N.
- 
-+config SECURITY_IKCONFIG_RESTRICT
-+	bool "Restrict unprivileged access to /proc/config.gz"
-+	depends on IKCONFIG_PROC
-+	default n
-+	help
-+	  The built-in configuration of the running kernel may be used to build
-+	  an identical kernel and expose information about kernel addresses,
-+	  which can make exploiting easier.
-+
-+	  Selecting this option makes the built-in configuration in
-+	  /proc/config.gz readable to superuser only.
-+
-+	  This is mostly useful with custom kernels, as distribution kernels
-+	  tend to have their configuration and address maps available online.
-+
-+	  If you decide to restrict access to built-in config with this option
-+	  for the above reasons, you should also make sure that access to the
-+	  on-disk kernel image, configuration and System.map is restricted as
-+	  well, e.g. by making the /boot directory accessible to superuser
-+	  only.
-+
-+	  When using packaged kernels or image-based updaters, keep in mind
-+	  that kernel packages or update images may also be accessible to
-+	  unprivileged users via package manager or updater caches, or from
-+	  network repositories. In such cases it's a good idea to restrict
-+	  access to these as well.
-+
- choice
- 	prompt "Allow /proc/pid/mem access override"
- 	default PROC_MEM_FORCE_PTRACE
--- 
-2.47.3
-
+Yours,
+Linus Walleij
