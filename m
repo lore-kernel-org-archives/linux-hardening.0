@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794177584;
-	b=J7xzEHBTTKRPh2348Y+N95k4A9rzqvoB8144VXedYZV/hhQ8tl7cCqnlCo8P9AX3ZL24
-	 6RHJoL+a2HTzKkOKuaFxJmlc4AcFt3CN6Znal0hhlitGZOgTp1rRJIwdZ4qbedYtv76PT
-	 nFxW0rNWP9oI+R5Q6NKXiEPNACAYUEswhxLtCDKli0UwPqVfYHN7Q3MOw8QkFTQgCHvVN
-	 gt7s+PCnrxxam+RRweafu8ckdC8PSkNssiSp4LPFFSzaAtDSCdIN2mJIweMW4r0BSo5hP
-	 ajUrYp8l4utdzZ4WgtOQMELS13vy5N9ZWVBWN3i3r5OOyiaBHLWvvof5NMn/26yT4jw==
+	t=1794177585;
+	b=5fSAfSqK9q0C85/5mh2nwjeTjkddAfvylkQU0YSpC/NoFM7qKB7+EAfdskRl5vTfr3gJ
+	 bn27+XhfsasLkWOozJxzWYPh8TAlaQZKhtAxZxmABKoPBUQZN1RdjtLG/AKayfx28Uqfd
+	 AbTBBRPeLhaziBtXjy3JLym8M6v5tIe6rZO22RrFNjhoUbuCV4UugXOR9Azd9vYdx0Gn/
+	 Fu0bDAMRgHtaqA7VZxfTjsW2xlPl5O2JdcGMJoP6d4OTOQA96wvebougwxXu84ENQOclG
+	 h36IeHGoI4Hw4xzzMFWS9g29rkf3FtdmNT/OcsDh03lzMoPVQAHUCKAYT4Ca7E2SYHg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794177584;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794177585;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=AHLMqwM6/67Zcd/LOxQ2+hhUbtfPU/BOw3z2THUGUxg=;
-	b=qGiLAfBeLErrBwufCDjwaTSmadP9yHs+bzFL6mjfppLfeoCJrqo2f/yswkPRzQozogo7
-	 SbHG5aXJ3h1tFuy4I95MuzM4ipMsyBKwg7y7f3eOvp64FQ5IrbHTwF5lfpfAVB29f+rec
-	 a052UQkoUKisGg1Tqk6li/cDDlStNvJ82djhrfqK6Bsd+jPHUyMTMuEQQkwPDoUWWEPm5
-	 OgqjGPpJAGTdYfaMW805Umi1JC4ZKOnyKrq/BFnTPRuZgt9esK6DKdNsyhAaowOwed2qs
-	 QT27eDX5+qK8JMvLvJJeQZ4BRYGosTbGhPZHbj6sYZIbu+NiP/yocanAHfleKGqMk9A==
+	bh=4kX4Ed3A+P912IudIYmkHnIS6SHmJhWXUKLWP4ZNJ5k=;
+	b=f2z+VI92Y81hQWCeScxrVf2AgTMFlLvnss9WMESlHOy/6U0qIgW+Yf4Zn1XeYLlT5W+5
+	 oZVueeVp3BFa/9wTNG8/OBBNxSRi34qOoOYPBzkWzXR5kxMc74PH+kojxTFGbYhlLtdXh
+	 velreUWDJ6daMex7NHSeEMdq5gjt4BpxPXlMNLLxQfKCf+BEbk5SBf/5dswRi0arubRNQ
+	 R5y7nDrcarw6cMMbfHVpOsvvOo5o7DpMi1DDP2wixFMsw+1/vG8E3ana1MTvyk9G1zI2K
+	 J+eyUHwuLfxCQH3XTJFv1Fbz65PQKW2vy8lGFgkc1PZAZlV9zkDE9cjTwYHv8c9vGTQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DDM9ziHH;
-	arc=none smtp.remote-ip=74.125.82.69
-Received: from mail-dl1-f69.google.com (mail-dl1-f69.google.com [74.125.82.69])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NF6P22Ua;
+	arc=none smtp.remote-ip=74.125.82.71
+Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500DA606D806
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Nov 2026 22:39:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 500DA606D806
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534AD606D82B
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Nov 2026 22:39:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 534AD606D82B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DDM9ziHH
-Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-1b0d864826cso1320179c88.1
-        for <linux-hardening@vger.kernel.org>; Sun, 08 Nov 2026 14:39:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NF6P22Ua
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-1b0d864826cso1320314c88.1
+        for <linux-hardening@vger.kernel.org>; Sun, 08 Nov 2026 14:39:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794177582; x=1794782382; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794177584; x=1794782384; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=AHLMqwM6/67Zcd/LOxQ2+hhUbtfPU/BOw3z2THUGUxg=;
-        b=DDM9ziHHycZyyJZHGRL6PqLNcLxbYkI0L6RfQVmG2hrXn/doLWCV2deQ4V57vXvCff
-         R7ROEEVWQOoTe6MTYd765lzcdcorknCcL9ldDYylTgEf3C18y/+Jitg6xj/LYAvEAqN1
-         VFF7kwjKwF+XfQxq/WOea6xr8MRXQoXjBCrOiXLryI2lAArDzjLGDCzOR3oaGhYc3sr8
-         vqzBDRqyx3tf4PgG/kY/GT67mXthfKrNZfYYpiQTouxXHIjuji9785S1A1QEmIwDGlVE
-         iCvvPkunW2GZyIM0xjFAGkKaC77nayP+lv55bdHSAn3i0AwchyOC8iN73cuZO2+a84Rn
-         /keQ==
+        bh=4kX4Ed3A+P912IudIYmkHnIS6SHmJhWXUKLWP4ZNJ5k=;
+        b=NF6P22UaPGr1HDfea9kIcWbvRKcCIqN8QEnwFDbKz7tk/YbwkvRrkeVgpGhGtL4pd4
+         hfj9fQFfEsWjRGIU/+FpesE50zkmrNYtB0biAoRbXjgTG8kMFlw/AC5Ttr/5yXHV58NT
+         pvVgwNyRYk/BerQZCNGYBlTcX/bdD89VaZWATi3zdy9xhnS3TijcKHBVOoyTt5heM+Ck
+         cKpvfTO3CnEyaewDLme9eiHmbl56rQt1ycDdA87P+CCgihWAn4/ugTKalEaouLl+FTTk
+         pJH/XwedfFvWkr1XlZ3RGbE9CRxI3L+P1FZ7lzjMyolBo8TwkVZOI96BhudO+UAAzah5
+         6xKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794177582; x=1794782382;
+        d=1e100.net; s=20260707; t=1794177584; x=1794782384;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=AHLMqwM6/67Zcd/LOxQ2+hhUbtfPU/BOw3z2THUGUxg=;
-        b=WDugrLkTRu0Jkibm5KWZEsZ2DTiB+dx/bwxpbKmBsw2UtdWNmKP0eTDisE2n+O41xC
-         Rbt9YT0mzXxyP6SobbpEhbmyRP1wyLpzjaoRjl1U6O0Ka58g/cV1OYFDYktmpt0WUrUF
-         RGC02vfD/N3V177lbAfHwfpEmxXIfFv60+Gm7S+41ZJMEcuuPp/WWZwVeGx3ZrxpsZwU
-         QLUscppMzHD9rAc3GncqVMGH+ArqThv+3f0QV4IJCIUvAcS+yajH/ilBIf7IGblDCnNc
-         Mmkb1mTeox6uonIK3ZqM1Fv0xY2aor/H4fEYk4eAD8VNegYgsPGrcQ06GyNOxt68yJx1
-         gJNw==
-X-Forwarded-Encrypted: i=1; AL+hErGvdib8tU+GJUaxfUjn0tVWGi0DkNSMPjaNS8HKqlGz35QF8pLJRHFyRmAUDxwlQ+A/uY3vbtsGJcEpL/csKl8=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9nbL7OuCopu5msM4tnWpSKAGU6lZnGfiMFRNH6At6u13R/SzpU
-	je+uIiVsBBFJ4JhxMR7G4ThQuogl/ifL4B1clD0+rIWlgenRAU3iXgY73CST/mrpbsicTAGRbYn
-	+ryXboN0T+w==
-X-Received: from dlbox21.prod.google.com ([2002:a05:7022:1215:b0:1ab:fb55:f657])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b884:b0:1b2:695b:79f0
- with SMTP id a92af1059eb24-1b39fef03f3mr3576923c88.32.1794177581955; Sun, 08
- Nov 2026 14:39:41 -0800 (PST)
-Date: Sun,  8 Nov 2026 14:39:05 -0800
+        bh=4kX4Ed3A+P912IudIYmkHnIS6SHmJhWXUKLWP4ZNJ5k=;
+        b=z2trL1yAnlxhEpO/uy/TFC7EFrujfk1jRA2S+9OaPEiFeoRhim+CPTtC65GGt3niMm
+         hZxfSXG9mi6gSgBeVjT8HVuC5ViQePhZu45lBo+w/o0G8VCZXyYOX+yZGL0dx9n+xETs
+         nldeTPqPp8/tAMQ4XW31M7B7SnLsj7sTeNBxR7T1Zxib5Z9kOyAQFS41eUymqiAVkbiQ
+         QJ4+klW3hnLbAO8MsseyvuN1cw5n4vzLkCvyIk2J3OLTci/nIh7Se+arYLjsoV+YmVuh
+         g7+D1f2zBjGLzgu11YgMQV7NYkTufy52AHl9fLqcHtWKLJegZyxZoFrBks8FfdJhTsRK
+         o9jA==
+X-Forwarded-Encrypted: i=1; AL+hErEzDzXOwJX2A6hq38cDUcHnB3AMOzh4i88jX95CMCv8js4kBLdZzb89cFUZlRE7qsTyF9UolrAlyCgKYyaUSEg=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9tE2X+XjDW1kOBCKHXQg5B210KmKBt2xQ6AU2ychsOxbPE3PT5
+	zAFTFzCN4A8w8pNqPPADxkyAA8Nl61PeG8jRJ+Pa+WcSyH0KEvwZNxpylgj75ZcTBYqEkmqslNx
+	s5fLoyZnN6Q==
+X-Received: from dlad1.prod.google.com ([2002:a05:701b:2201:b0:1b2:6421:f4fb])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ea8a:b0:163:bee9:b250
+ with SMTP id a92af1059eb24-1b39fedbec2mr3348910c88.22.1794177583902; Sun, 08
+ Nov 2026 14:39:43 -0800 (PST)
+Date: Sun,  8 Nov 2026 14:39:06 -0800
 In-Reply-To: <20261108223913.3624571-1-irogers@google.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -81,8 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261108223913.3624571-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.455.g6c5a503b38-goog
-Message-ID: <20261108223913.3624571-2-irogers@google.com>
-Subject: [PATCH v3 1/9] Compiler Attributes: Add __must_init macro
+Message-ID: <20261108223913.3624571-3-irogers@google.com>
+Subject: [PATCH v3 2/9] powerpc/secvar: Add missing kobject release callback
+ to secvar_ktype
 From: Ian Rogers <irogers@google.com>
 To: Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
 	Kees Cook <kees@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -109,104 +110,39 @@ Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id
 	linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Clang supports the 'require_explicit_initialization' attribute on struct
-fields to indicate that a field must be initialized explicitly by the
-user when the object is constructed. When an aggregate initializer or
-uninitialized variable omits an annotated field, Clang emits a
--Wuninitialized-explicit-init warning (enabled by default).
+In add_var(), a struct kobject is dynamically allocated with
+kzalloc_obj() and initialized with secvar_ktype. If kobject_add() or
+sysfs_create_file() fails, kobject_put(kobj) is called to clean up.
+However, secvar_ktype does not define a .release callback, which results
+in a memory leak of kobj (and a pr_debug warning in kobject_cleanup()
+when CONFIG_DEBUG_KOBJECT_RELEASE is enabled).
 
-Add the __must_init macro to include/linux/compiler_attributes.h (which
-is included by include/linux/compiler_types.h and
-include/linux/compiler.h) so kernel structs with error-prone
-initialization (such as mandatory callbacks or cleanup handlers) can
-enforce explicit initialization at compile time, as discussed at the
-Linux Plumbers Conference. The shorter __must_init spelling, rather than
-the attribute's full name, keeps annotated struct members readable and
-was suggested by Greg Kroah-Hartman.
+Provide a secvar_release() callback that calls kfree(kobj).
 
-Note that Clang versions prior to the fix for
-https://github.com/llvm/llvm-project/issues/232483 do not diagnose
-file-scope objects declared without any initializer (initializers at
-file scope that omit the field are diagnosed).
-
-Also teach Sphinx (Documentation/conf.py), kernel-doc
-(tools/lib/python/kdoc/xforms_lists.py), and checkpatch.pl about the new
-attribute macro.
-
-Link: https://lpc.events/event/20/contributions/2392/
-Link: https://lore.kernel.org/lkml/2026101532-fantastic-deafness-e04c@gregkh/
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Kees Cook <kees@kernel.org>
+Fixes: bd5d9c743d38 ("powerpc: expose secure variables to userspace via sysfs")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- Documentation/conf.py                 |  1 +
- include/linux/compiler_attributes.h   | 12 ++++++++++++
- scripts/checkpatch.pl                 |  1 +
- tools/lib/python/kdoc/xforms_lists.py |  1 +
- 4 files changed, 15 insertions(+)
+ arch/powerpc/kernel/secvar-sysfs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 5ab26ce89daf..baaa4035258c 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -203,6 +203,7 @@ c_id_attributes = [
-     "__noreturn",
-     "__packed",
-     "__pure",
-+    "__must_init",
-     "__section",
-     "__always_unused",
-     "__maybe_unused",
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 476c4c560d17..b9c0b56dd22e 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -322,6 +322,18 @@
-  */
- #define __pure                          __attribute__((__pure__))
+diff --git a/arch/powerpc/kernel/secvar-sysfs.c b/arch/powerpc/kernel/secvar-sysfs.c
+index 395399bbab2c..f3f6ac25ea78 100644
+--- a/arch/powerpc/kernel/secvar-sysfs.c
++++ b/arch/powerpc/kernel/secvar-sysfs.c
+@@ -126,7 +126,13 @@ static const struct attribute_group secvar_attr_group = {
+ };
+ __ATTRIBUTE_GROUPS(secvar_attr);
  
-+/*
-+ * Optional: not supported by gcc
-+ * Optional: only supported since clang >= 20.0
-+ *
-+ * clang: https://clang.llvm.org/docs/AttributeReference.html#require-explicit-initialization
-+ */
-+#if __has_attribute(__require_explicit_initialization__)
-+# define __must_init __attribute__((__require_explicit_initialization__))
-+#else
-+# define __must_init
-+#endif
++static void secvar_release(struct kobject *kobj)
++{
++	kfree(kobj);
++}
 +
- /*
-  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-section-function-attribute
-  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html#index-section-variable-attribute
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index b8b64f720191..6a091c45b1a1 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -6888,6 +6888,7 @@ sub process {
- 				"noreturn"			=> "__noreturn",
- 				"packed"			=> "__packed",
- 				"pure"				=> "__pure",
-+				"require_explicit_initialization" => "__must_init",
- 				"section"			=> "__section",
- 				"used"				=> "__used",
- 				"weak"				=> "__weak"
-diff --git a/tools/lib/python/kdoc/xforms_lists.py b/tools/lib/python/kdoc/xforms_lists.py
-index db23fb650ea8..42956b98aae3 100644
---- a/tools/lib/python/kdoc/xforms_lists.py
-+++ b/tools/lib/python/kdoc/xforms_lists.py
-@@ -36,6 +36,7 @@ class CTransforms:
-         (CMatch("CRYPTO_MINALIGN_ATTR"), ""),
-         (CMatch("__private"), ""),
-         (CMatch("__rcu"), ""),
-+        (CMatch("__must_init"), ""),
-         (CMatch("____cacheline_aligned_in_smp"), ""),
-         (CMatch("____cacheline_aligned"), ""),
-         (CMatch("__cacheline_group_(?:begin|end)"), ""),
+ static const struct kobj_type secvar_ktype = {
++	.release	= secvar_release,
+ 	.sysfs_ops	= &kobj_sysfs_ops,
+ 	.default_groups = secvar_attr_groups,
+ };
 -- 
 2.56.0.455.g6c5a503b38-goog
 
