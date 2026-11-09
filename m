@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794240114;
-	b=2TahMaDvFPC0lG8o8kAXpYMNlrcoi/BMVwUTxUJ606ST9NHN+it/SMV7OsDMSSsg2b+A
-	 emfi3qcmYiZghRELeJxuQqAjm+kOepKFT9PCVi3E9+mqWla/c6ocPb+h8KilsWd7U9LFb
-	 fg5b8G5Vqjja32xDKQJfSahTsk9xY7rmFzbXEcdEYfYVmB4M4+OmM23D7e8zJmOUBM3+6
-	 XQqOF+IsL+VuxfooucSyRMUIjd2plnkZdnw/N0MiEu6euAQiVFMve6G2XX89b/2LX9rmb
-	 6z8cX0DFWG+F1n1e6h6Ovv7R6GL+FSvW280SYFFEdP1zVT+iLJMWNCh0k5VR1a5clKA==
+	t=1794240124;
+	b=3OEqKZbj8b0JZYk2BdpGcegFBIpVjzuPYwox3jeQG/RkUKEAEofPXghFyU6ZegyUvy59
+	 PYdY69sNC+Qz6tyEwzEuCy8OYgHSaWWmZctiA4yl9cXazHG4leNqVLkIUsYts1PV2zFs0
+	 hgpxJxQvGsifcGQJVudsNj0rptjE+r9TV63f4/f+GO5q+Au5Vgc5IgYWf/jUSGBeq5enx
+	 dqGMoL6MU/0y27coX2p6LRRC9byWStzd7wAVLaFVrCNXB762J4F7uq3KvxoXXKIMub4QS
+	 4a9tDmUTli5zsYXWGZLV8PymR+UtY1fkAkOyhko42kgXCd1YXRGMi+Xk9BUbbkmA5wg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794240114;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794240124;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
 	 X-Developer-Key;
-	bh=I20sRd/PRulOIZRhd+UEj/sasH6pZnvh1x/HC0d3HPs=;
-	b=rQsSRhOum8QtCQoLkBAhkA6UOIyc0Wil/h8KZ0d2ebuTGLMhYgb1di0oTAnyjXvR4PTu
-	 75b+HjVR8CAzvWK8pRw1K0qwLF/osMV5MMo4EfW6rF2XH2GQp/KMxdE8JDWIg38kPAafB
-	 BpoCIBa1wc5lxYeAc6iAm8zRyyH43INX+TLASpN2Hi8Yz/rKRYH9JuS14Y4EqyFo5Dbob
-	 vCDHZvymhLKeAGVizzXuSE8Onl3kw7H//OOMGFJoiMKc6+hWtEzaBux2Ocvc6m5DYVNlh
-	 dJrkUKw9KxXhruvAJo6oitt+o1ygUghi8BuPfGC1LmQhpcI1gU36Fh9rQ9LR/qOOFnQ==
+	bh=PWH/40FIqyLP2HM1UmBjogshcVKge2e/eg7YNNWZxRA=;
+	b=m+rqsHsmPb7VRRa2dDBx/yoo6dNQnQPPuzrdbreVDtM+0ZghVTqz0KOpn73KmBfBGWP3
+	 tFlCUmTngYjuUv6IXwMqg+d+4zleOQmBJGVqpwGy+5a68/nNiKjZ6aZqAG39S3ROnr8M4
+	 N9COvuYqZn8cdknR5ZrDBmJ/rE1+3ccKcCU7xVZw68DSJgd3KWrPPgzmMg9NHv/NBqDas
+	 JlaiVchoogdeDN7r0vffD4sT68RbqMGSXGN6e/9gW4M06H8Ii2kT9/AtQ8VthGr9OyIq6
+	 7umNIyjoha2wrEFzpGrkyhG3z1HjRLdb+KTdEsYplcTz69NIMWnZ2f42SCmIQ7uf8bw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=arm.com;
 	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=lTHZ+qb8;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=QLRNhzZH;
 	arc=none smtp.remote-ip=217.140.110.172
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3F49606EE87;
-	Mon,  9 Nov 2026 16:01:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D3F49606EE87
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ECB76082BE0;
+	Mon,  9 Nov 2026 16:02:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2ECB76082BE0
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=lTHZ+qb8
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=QLRNhzZH
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 160072F;
-	Mon,  9 Nov 2026 08:01:50 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A7EA14BF;
+	Mon,  9 Nov 2026 08:02:00 -0800 (PST)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39EAA3F632;
-	Mon,  9 Nov 2026 08:01:48 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D8B03F632;
+	Mon,  9 Nov 2026 08:01:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1794240113; bh=x0fs4aL6amulindDHORyceQYe6RPCjEvCe7RN43wDF8=;
+	t=1794240123; bh=4sCNGHUK8a+nA0I4Chgpt6cz5TZ6O43DyF+ejpn7dJA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lTHZ+qb8Lpb5MdGoi5c6jMxnW2x0nCEFq0oX1jDx8IG7OVlTjwulAINb2xlF9ymah
-	 cOQTnqS9PT61Dl+Oidh19ri+5GXv0wrMFklaMGMHgi2oS6TrL60lyr61AtTCJHAc81
-	 G76uWFAfR8qpm0XbXv4dpBu0AcJao1wvunC2ofCU=
+	b=QLRNhzZHekFuUQsq0AWTGQpNGB046jveGgekZe61G9dbHw6pQV6whq0aia/ObCBvD
+	 GJvVFMvBELXTCmcMfJNPrfCHxQtRcb68AtE9sefGlUCYy8GSgQlQyBhrymk9Q+xSFS
+	 BoIiDJGW6o0ZJFGFRaIJVFMsdFTDLRa4F46BsE4Y=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Mon, 09 Nov 2026 15:58:40 +0000
-Subject: [PATCH RFC v10 15/22] arm64: kpkeys: Implement
- arch_supports_kpkeys_early()
+Date: Mon, 09 Nov 2026 15:58:42 +0000
+Subject: [PATCH RFC v10 17/22] arm64: kpkeys: Ensure the linear map can be
+ modified
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -58,7 +58,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261109-kpkeys-v10-15-aa6c4d9603bc@arm.com>
+Message-Id: <20261109-kpkeys-v10-17-aa6c4d9603bc@arm.com>
 References: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
 In-Reply-To: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
 To: linux-hardening@vger.kernel.org
@@ -86,72 +86,62 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  Ira Weiny <iweiny@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
  Thomas Gleixner <tglx@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794240029; l=1943;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794240029; l=1906;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=x0fs4aL6amulindDHORyceQYe6RPCjEvCe7RN43wDF8=;
- b=GI39UyqJq4/O0CdszPupFvOqE4Y/AHbk7Ja0HguyPHLzW9XAa/I3Sv7T0zG456AtmVEcUY1Ez
- gJM++4wBYmHC2L1Cg92cXl5qVHAPKbZNyE9HaVOaJcos0Hph2srQROE
+ bh=4sCNGHUK8a+nA0I4Chgpt6cz5TZ6O43DyF+ejpn7dJA=;
+ b=zHz2C3i1VBSSKWpf7Zi8FAzpoWhJ399jCh5pRME6NVSQtdP3NuRk9Ki9LSALcptG8C/7FVprk
+ Q8GTwsRXUSLCG2F2oyUmrzX9qBqX+adtMO0X3w7NQkER0tvzXahhAMy
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 
-We need to check if the kpkeys_hardened_pgtables feature is going to
-be enabled very early during boot, to decide how to set up the
-linear map and how to allocate early page tables. This happens even
-before boot CPU features are detected.
+When the kpkeys_hardened_pgtables feature is enabled, we need to be
+able to modify attributes (specifically the pkey/POIndex) in the
+linear map at page granularity.
 
-Implement the arch_supports_kpkeys_early() helper by directly
-checking if the boot CPU supports POE, if it is called before boot
-CPU features are detected. It may also be called later, in which
-case we simply check the POE feature.
+Add the appropriate check to can_set_direct_map() on the same
+principle as rodata_full and other features.
+
+kpkeys_hardened_pgtables currently requires the linear map to be
+fully PTE-mapped, so we also need to ensure that force_pte_mapping()
+returns true, like for DEBUG_PAGEALLOC.
+
+Both functions can be called very early, before POE is actually
+detected, so the early_enabled() helper is used.
 
 Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/include/asm/cpufeature.h | 12 ++++++++++++
- arch/arm64/include/asm/kpkeys.h     |  7 +++++++
- 2 files changed, 19 insertions(+)
+ arch/arm64/mm/mmu.c      | 2 +-
+ arch/arm64/mm/pageattr.c | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-index e3c8a1493dc8..062d444da4ea 100644
---- a/arch/arm64/include/asm/cpufeature.h
-+++ b/arch/arm64/include/asm/cpufeature.h
-@@ -1114,6 +1114,18 @@ static inline bool cpu_has_lpa2(void)
- #endif
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index a61ea65bd496..c1e3260bd0db 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -781,7 +781,7 @@ static inline bool force_pte_mapping(void)
+ 	const bool bbml3 = system_capabilities_finalized() ?
+ 		system_supports_bbml3() : cpu_supports_bbml3();
+ 
+-	if (debug_pagealloc_enabled())
++	if (debug_pagealloc_enabled() || kpkeys_hardened_pgtables_early_enabled())
+ 		return true;
+ 	if (bbml3)
+ 		return false;
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 7143bb2dfecd..35f3e8ab0baa 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -101,7 +101,8 @@ bool can_set_direct_map(void)
+ 	 * Realms need to make pages shared/protected at page granularity.
+ 	 */
+ 	return rodata_full || debug_pagealloc_enabled() ||
+-		arm64_kfence_can_set_direct_map() || is_realm_world();
++		arm64_kfence_can_set_direct_map() || is_realm_world() ||
++		kpkeys_hardened_pgtables_early_enabled();
  }
  
-+static inline bool cpu_has_poe(void)
-+{
-+	u64 mmfr3;
-+
-+	if (!IS_ENABLED(CONFIG_ARM64_POE))
-+		return false;
-+
-+	mmfr3 = read_sysreg_s(SYS_ID_AA64MMFR3_EL1);
-+	return cpuid_feature_extract_unsigned_field(mmfr3,
-+						    ID_AA64MMFR3_EL1_S1POE_SHIFT);
-+}
-+
- #endif /* __ASSEMBLER__ */
- 
- #endif
-diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
-index 4f9bdb369b47..70d85b0d69d6 100644
---- a/arch/arm64/include/asm/kpkeys.h
-+++ b/arch/arm64/include/asm/kpkeys.h
-@@ -21,6 +21,13 @@ static inline bool arch_supports_kpkeys(void)
- 	return system_supports_poe();
- }
- 
-+static inline bool arch_supports_kpkeys_early(void)
-+{
-+	/* POE is a boot feature */
-+	return boot_capabilities_finalized() ?
-+		system_supports_poe() : cpu_has_poe();
-+}
-+
- #ifdef CONFIG_ARM64_POE
- 
- static inline u64 por_set_kpkeys_context(u64 por, enum kpkeys_ctx ctx)
+ static int update_range_prot(unsigned long start, unsigned long size,
 
 -- 
 2.56.0
