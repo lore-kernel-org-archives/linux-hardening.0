@@ -1,79 +1,80 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
 	t=1794251066;
-	b=5hUJ4o8JGjVY4NYwt0w31jUnY9Cmgc35qrOldRfhYTaSzEbzK6jvX/slAKYlAN0Ab/Gs
-	 Ca/jjtS7MFamicp05QfAAYSB7BMK3zWgP6pa8FWyYhQlRutCtpMMnX3BF8qhVaFAjiZNH
-	 7RSgEE6VZwEWerTL6SVmUekrsKi7d72OIVF9u2A90N33f2s50VrkubgA3L37alKeFVKQF
-	 OR4URBaxSfpVYVoQSd7UlFjSgXaXXc1bVeWHnpGOJrfjxDSsZ8XguNMORXa1RWt3i6iAL
-	 zXb2I7zF4E0GHCjQsv4dZIoaXW3BVBiUyFoNcehZDADgyw0pWWvUekLsWcBUAUbYIfQ==
+	b=mB7FLM9jqwpvAmQpSjbu0tvYwzCEEZmJLCC4b425YczZt5q0n7sRD90NeQV61xRCmHS4
+	 woIS9C4jROg7R6WRkRdNqsOPrQ+WLu7E6URYfJ9SQyAsDBNjuAvZDh6epvk2D9xrSyZx5
+	 VCFHCZmdS8RIMuV7ILu7f70OlnSZRkCc2WHJaxL2rCNOj0G1pY31LDcLjYFi9Yem1VGX1
+	 3PSEcYCNyr7wkCZYnhWx0NCwRc3G+9IWnco0fRjHeYjhhyBRVcNA8JnlFr4dY1pUs81b5
+	 fF+1s7+fPUbuDrbBRkMqu8WSSRXnbDeLV7JxbhnUohM/L2U/XowDgmoAqcc5suYkLQw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794251066;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=49taFnAvJKb1RIMPamI90VyoncoDiyY+nPIAJJZ8N+s=;
-	b=t+2xjlHDTAKE2PpfwHSw3FQLnYP0HPZ70bBlO6UW8KtBDVLOb5QxApvy5fW/NDsSMrUN
-	 4I/cgQKtxHJxdRwb0inxvYzqnBzJ5fMWkZYrE218cs42oF2sxiW9PzX7RxNPa4v2Ob0OD
-	 bqJSUIULF5YVOhm8KEVDuhUgCjj5jXSjfIvu7UVWrDRNKwTaSQN0bnKoJwzIsaHsmnxuu
-	 Qk8wqzNWmH2K2XSdDTPZuRXjPheKjDvQFwe5Y+3IjWgkECfM9ID3IS7uuyOLc7K72ygiK
-	 urpzd1r5whAwleqCHH/QW1eGBj8nw8kdWEAPMU2FI6gatPERc2DK5HTJj6LtUXr9Akg==
+	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Endpoint-Received:X-Original-From:Reply-To;
+	bh=4uA0ECMu2b55pwP9gfn3+qomka7S+BVxFd2I+0ipV0Y=;
+	b=SWa1XAhdmBm94Hw1jzfV285P79Fr62xsqwrbEZDkfpnmj18NYebnwKAyxK1zGlGXSi2K
+	 TkKm2rjyogbd5hTcgmKKAer09rD4mafoDUF5q8RJCOz9LShKgn83xCcnJsfzlNUo3fhYu
+	 wOGFnKiHtnfErQsz6PggvPmGV7hU2hNtYbJLgA/fIipy4rbG4pZNlyXAVBG39SCoe77M7
+	 uaBA49tGgUMMJmrLRw+9dQrQNm9/iqdqlaaV9oaFDpykZJyqb+lnX2ia0tBUth1WQZmKs
+	 KZb0kzcYvuN86StfCvR13MLOpP/ifcsXlWAy9PXEH3WLITSVYDx+4ZfoEbSHRJjCsqQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ms4gVD8P;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WZ6dbFCd;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447ED606A334;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0A560A2602;
 	Mon,  9 Nov 2026 19:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ms4gVD8P
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WZ6dbFCd
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794251064;
-	b=JtMKcsFmDyfmzHNOqeBLX8y78ao+St6qDkTDY+XDZYRno3LR6/1m8euwguR7KyD3Cvc6
-	 Mq5JbTY/bL9gScJsjCglzSrZ5RLzbUHpnFpN75zJosdFPL5HSTncuStSfaYNWJuH/5v7F
-	 QNLjGAS2lhIRU/bo0pY8uONt8iGrv6yjVo9fFeb6p4LBZawbFRad/IhwMo9lie2GTlUex
-	 VM3aVtTf/0+hk0LHftLzA8rLqaqX8vkumJGLs3MyNdM59dCiS9Ft0kVBW5Q6Wa/mRgQt/
-	 IjGgKJ5DgwBvAqIb3DLtazIKitYhx4W3vkFf2AmCBuI5B9ncsxRTEP81h89VREM3DOg==
+	t=1794251065;
+	b=gjO6dryt5hIaO9BijqNCjywwbgt45tdfI5ksyspLGPuLRdc7xVmrg602bp1Z3S8Vo351
+	 j4IuwIHj/dRbK91zwlRPyIEQlmtMdwJ01yR/VbB9K4NJPI1Zsc9Q256a2eMvY3FX73FBM
+	 jPcd+R/WPKZiulT+qzPlEbllN+5g41l+GC3HppYIQoFcT7Xc3PNPnkbPzTroXubbbkXhT
+	 2xMEWE29b+vDzrZKmq5hEQ4MaV4hVzrJ0UsRims+SsjgPaaY/RcLZxHuhK+jeX1Kj90iq
+	 YjphGjf9Qts00ob1NvdlgWaeWZkL5LFP+kdFbhwy9uNN9kBC6N68Pe31OC1LUZBkc5w==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794251064;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=49taFnAvJKb1RIMPamI90VyoncoDiyY+nPIAJJZ8N+s=;
-	b=29/Gx5L4GPJAc4zu0SoJKYbXypf+iQrLWLmHmWf6aV93/uB5AU6TfK6cmV+Zj9JiRmRc
-	 XrUMLGSjXUZVc538xlit03k8R/sDrEQuz34qW/c0h4kCDlsUtpfNH/LJaN3MvFSIgmKcg
-	 7k0bzJUVT7mXyV1YPWMetTyS81CicQ/58wjt0keIa/8Gbycz639e11VOa0QIakyIaUuM0
-	 FwMkEamHQmHlVhXLend+71PNV80v+TLeo0nlnm/s3BaflAx0UHxNC28IHsXCY1Oo1ktUU
-	 +ydJc9EOKhVe576I4UbrFXY//FCWQtr/gE4t5TREmbVzyQlLLQvtF3vUvwOvlCRncXw==
+	c=relaxed/relaxed; t=1794251065;
+	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=4uA0ECMu2b55pwP9gfn3+qomka7S+BVxFd2I+0ipV0Y=;
+	b=I7EsGPpcxFz1NBALNlEmxLkMbWAs/+SkBJXPnSuJmhTc+9tuXqp4+hgWd1caVWptUgKn
+	 DPj/3i8PNCimGTMAR3s6zpefUgDLMZ+IGXUcg7i4vLmgwv8oMu4AsIeCEDFeGk/dE7z/B
+	 8L0o5tAiUWPEVlZWx3DUYTz8efnuc5CR/oIeF0mEaGTgR5xuS0B8kg4wIf0nGgNokjzC+
+	 x3tmm8cTiPiPuZ0MAe3Uyn4K5p4qrYdgE5Pni1rfBvW0awX4nXg7VWQr66fq/2JdBTfwV
+	 NbCQ4Tjk4OX9mFS5nADnimAHWFQFGIcj/OsRrPTtsbicNgZXFD4HBho9tilR+l+JCHw==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id D6F381F008A4;
+	by smtp.kernel.org (Postfix) with ESMTPS id B02ED1F0089F;
 	Mon,  9 Nov 2026 19:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794251064;
-	bh=49taFnAvJKb1RIMPamI90VyoncoDiyY+nPIAJJZ8N+s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=ms4gVD8PyI8JoNdCdrdtYX0hJXjV5i5Xim+JjJPzNy0v9Gp3QK3b+olrdvJ2j7mLU
-	 b+bwyMGPEWhsn1wQFhdhtXW/ZjOm1573Pv3TRgFgy8aMj0zz9RLGyo08htmQ4lGYP0
-	 Ei1AGpcmx7CDWBd38QHIwhovQfsZT9XA2v+TUvXfKNRQYbKWkd/ZVsQVoFj0IFzBRp
-	 CluFMUnSPCO+74i83QEHTtEsM+5FqpFXCjau2rBoRP9nWgWJ7PbeFMXh5K+K5eN5iZ
-	 +rbpvC2DehJbqtrP271mRSFjQmJBOBQKPXvSBxs/EufpqaBO6fSMjStWcnP0Q22Pw+
-	 b65JOH715yCzw==
+	s=k20260515; t=1794251065;
+	bh=4uA0ECMu2b55pwP9gfn3+qomka7S+BVxFd2I+0ipV0Y=;
+	h=From:Subject:Date:To:Cc:Reply-To;
+	b=WZ6dbFCdqhSg1sAOeA7dF8QlN8nglXJZBvSsLoFuYuCMM4nsguYwwFKpbVkHHGDnf
+	 pyhUzI6hjyq7VCl5VF0xxzP3kYY+0l1ozFQ1i/5ziXI7UTmzN3hE6xmCmBhisuWRVb
+	 QC4oz/khMXl9jOotmzFcHlQytPIUmA0GlfbH6ac2qqeufZcmzQC6z2SSswqCm7eGyt
+	 YJmChJ0RrGvTzqwOIasUwyGLdFlnajfFK2T9ke871+vyKeZselSo4psBsMW29fSOr2
+	 oNKJwUOyINSHxqtECkCuZe4d7EUwv499fvU5KWYWlPJlBrjmzG1alIe91Co/EnNzU2
+	 Bu3SDDg4k+FhQ==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 5A0B3485EE;
+	by lkml.kernel.org (Postfix) with ESMTP id 0B33C485E2;
 	Mon,  9 Nov 2026 19:04:23 +0000 (UTC)
 From: Joseph Telaak via B4 Relay <devnull+joseph.telaak.dev@kernel.org>
-Date: Mon, 09 Nov 2026 14:03:40 -0500
-Subject: [PATCH v2 04/11] leds: rgb: ktd202x: Fix a division by zero with
- long blinks
+Subject: [PATCH v2 00/11] leds: ktd202x: Add Etek ET6326, hardware
+ breathing and fixes
+Date: Mon, 09 Nov 2026 14:03:36 -0500
+Message-Id: <20261109-ktd202x-et6326-v2-0-56e97c226658@telaak.dev>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -84,9 +85,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261109-ktd202x-et6326-v2-4-56e97c226658@telaak.dev>
-References: <20261109-ktd202x-et6326-v2-0-56e97c226658@telaak.dev>
-In-Reply-To: <20261109-ktd202x-et6326-v2-0-56e97c226658@telaak.dev>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAgZ8moC/3WNyw6CMBREf4XctTV9QDWu/A/DovRepWKAtLXBk
+ P67Bdfu5iQzZ1YI5B0FuFQreEouuGksIA8V2N6MD2IOC4PkUgvBBRsilrwwilpJzU6KUPFa20b
+ VUEazp7tbduGt/XF4d0+ycbNsjd6FOPnP/pjE1vsrT4JxRl0jCNEgP9trpJcxwxEpQZtz/gLqU
+ V1LvwAAAA==
+X-Change-ID: 20261101-ktd202x-et6326-73ed3046c534
 To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
  Griffin Kroah-Hartman <griffin@kroah.com>, Kees Cook <kees@kernel.org>, 
  "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
@@ -98,84 +102,129 @@ To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
 Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-doc@vger.kernel.org, stable@vger.kernel.org, 
- Joseph Telaak <joseph@telaak.dev>
+ Joseph Telaak <joseph@telaak.dev>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794251062; l=2494;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794251061; l=5730;
  i=joseph@telaak.dev; s=20261104; h=from:subject:message-id;
- bh=7z9O3spgFaG/KPiRDFqlglhrq5SskileVglyCLyPmHI=;
- b=PSkHXAqlRN1p/zhRbsVHGWpSmXPInhNbyja/3AhCzWdTMSidWfocndbj7e1NVaDUdMZSlLrjj
- F4Eo9uAcoW2Bfdtc0L8GHr9Zvt4we5GyOo2+53NPumXmthGtlrR6tvd
+ bh=mo03YxdyCyet1fAfFCpijqknmNkkvOo45gFPE/4DdII=;
+ b=8o5GsehNbtdbJDEauQSnyKEEbRzyOecIqDfdJvlt6QzPHhlP1u6mhGOfcI1dGuZ9K02tTs4Ad
+ Qvig0Ewm5B7C4rcJolgmBAk0W/r3YyUZ1ZhHUQGglwFvR6n3YjxRL0p
 X-Developer-Key: i=joseph@telaak.dev; a=ed25519;
  pk=oQI+UfddlZ0wK2ac4WKOGNjUl1ZEN8j9ZVFSqEDoNP0=
 X-Endpoint-Received: by B4 Relay for joseph@telaak.dev/20261104 with
  auth_id=1404
 X-Original-From: Joseph Telaak <joseph@telaak.dev>
 Reply-To: joseph@telaak.dev
-Content-Transfer-Encoding: 7bit
 
-From: Joseph Telaak <joseph@telaak.dev>
+The Etek ET6326 drives the status LED of the GL.iNet GL-SFT1200 (Opal)
+router. It is register compatible with the Kinetic KTD2026, except for
+the flash period: Reg1 = n is (n + 1) * 128 ms on the ET6326 and
+256 ms + n * 128 ms on the KTD202x. Patches 6 and 7 add it with the
+KTD2026 as fallback, so older kernels drive it with slightly off blinks.
 
-blink_set() works out the on time as delay_on * 256 / (delay_on +
-delay_off) in unsigned long, with delays straight from the timer
-trigger's sysfs files:
+Patches 1 to 5 fix bugs that have been there since the driver was
+added, and come first so they can be applied on their own:
+- a blink shorter than 256 ms became a 16 s blink on 32 bit
+- with fewer LEDs in the DT than channels, as on this board, the driver
+  read past the end of its LED array
+- a blink with a very short on time was programmed as never on
+- delays from the timer trigger that add up to 2^32 (or 2^64) divided
+  by zero, and long blinks overflowed the on time on 32 bit
+- a blinking multicolor LED also lit its colors at brightness 0
 
-- when the two delays add up to exactly 2^32 on 32 bit, or 2^64 on
-  64 bit, the sum wraps to 0 and the kernel divides by zero, for
-  example with "echo 2147483648" into both delay_on and delay_off.
-  That oopses on x86 and gives an arbitrary result on MIPS and arm64.
-- on 32 bit the product already overflows once delay_on is above about
-  4.6 hours, and a sum that wraps sets the wrong period, so long blinks
-  get an arbitrary duty cycle
+Patch 8 lets the pattern trigger's hw_pattern use the chip's rise and
+fall ramps, so a breathing LED needs no I2C traffic. Patch 9 honors
+led-max-microamp on single color LEDs: the GL-SFT1200 drives three LEDs
+in parallel on each channel at 1.375 mA, and the driver's full
+brightness is 24 mA. Patch 10 fails the probe when nothing answers at
+the address. Patch 11 stops a second blinking LED from silently
+retiming the first: it shares the flash timer only with the same
+timing, and otherwise blinks in software. The second PWM timer is no
+help, since in the timer slot the driver uses it repeats the first.
 
-Saturate the sum, and compute the on time with mul_u64_u64_div_u64().
+ET6326 datasheet:
+https://www.etekmicro.com/wp-content/uploads/datasheets/ET6326_datasheet.pdf
 
-Fixes: 0ebdb7210943 ("leds: Add ktd202x driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Joseph Telaak <joseph@telaak.dev>
+Tested on a GL-SFT1200 (SF19A2890, MIPS32) with OpenWrt and Linux
+6.18.60, with the two LEDs of the board (blue and white, three LEDs in
+parallel on each channel, led-max-microamp = <1375>):
+- brightness 1 to 11 (max_brightness 11 from led-max-microamp), and
+  waking the chip from sleep
+- the timer trigger from 1/1 ms to 500/500 ms; a camera measured a
+  0.917 s period for 896 ms, the same 2.2 % slow oscillator as with the
+  stock firmware, so the ET6326 period encoding is the one used here
+- a 1/200 ms blink, which keeps blinking after a new delay_off, and
+  delays that add up to 2^32 ms
+- a second LED blinking at another rate falls back to software and
+  leaves the first one alone; with the same delays it shares the timer
+  in step with the first; a LED that blinks in software takes the timer
+  over at its own brightness once it is free
+- the timer programmed again after the chip slept
+- breathing through hw_pattern, written right after selecting the
+  pattern trigger
+- invalid patterns and finite repeats rejected
+- the same pattern on both LEDs shares the timer, and a pattern that
+  cannot get the timer leaves its LED off
+- 240 writes to one LED while the other stayed lit, module unload and
+  reload, and a reboot while blinking
+The bug fixes were also checked with a simulated chip under ASan and
+UBSan, and the series builds with W=1 on x86_64, i386, MIPS and arm64.
+
 ---
- drivers/leds/rgb/leds-ktd202x.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Changes in v2:
+- New patch 5: a blinking multicolor LED keeps its colors at brightness
+  0 off. The bug is older than the series.
+- Patch 6: add Krzysztof's Ack.
+- Patch 7: report delay_on rounded to the nearest ms and at least 1 ms.
+  On the 128 ms ET6326 period a short on time read back as 0 ms, and the
+  timer trigger's next delay_off write then turned the LED off.
+- Patch 8:
+  - skip the colors at brightness 0, and build the channel list under
+    the mutex
+  - use GPL-2.0-only, not the deprecated GPL-2.0 SPDX identifier, in the
+    new document
+- Patch 10: the KTD2026/7 does not ACK the byte that resets it, so v1
+  failed the probe on every KTD2026/7. Ignore that write again, and fail
+  the probe when the write that puts the chip to sleep fails.
+- Patch 11:
+  - write the timer registers whenever no other LED uses the timer, so
+    they are set again after the chip lost power, and release the timer
+    when the write fails
+  - hold the chip mutex from the brightness to the timer in blink and
+    hw_pattern, and track the timer from the brightness being set, not
+    cdev->brightness
+  - blink at blink_brightness, not max_brightness
+  - check the timer before a pattern touches the LED, and leave the LED
+    as it was on -EBUSY
+- Link to v1: https://lore.kernel.org/r/20261101-ktd202x-et6326-v1-0-eb51eddad08c@telaak.dev
 
-diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-ktd202x.c
-index 8c890ea5a754..feea33b7e885 100644
---- a/drivers/leds/rgb/leds-ktd202x.c
-+++ b/drivers/leds/rgb/leds-ktd202x.c
-@@ -9,10 +9,12 @@
- 
- #include <linux/i2c.h>
- #include <linux/led-class-multicolor.h>
-+#include <linux/math64.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/overflow.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- 
-@@ -296,7 +298,8 @@ static int ktd202x_blink_set(struct ktd202x_led *led, unsigned long *delay_on,
- 	/* Convert into values the HW will understand. */
- 
- 	/* Integer representation of time of flash period */
--	delay_total_ms = *delay_on + *delay_off;
-+	if (check_add_overflow(*delay_on, *delay_off, &delay_total_ms))
-+		delay_total_ms = ULONG_MAX;
- 	if (delay_total_ms < KTD202X_FLASH_PERIOD_MIN_MS)
- 		num_steps = 0;
- 	else
-@@ -308,8 +311,8 @@ static int ktd202x_blink_set(struct ktd202x_led *led, unsigned long *delay_on,
- 	 * Integer representation of percentage of LED ON time. A value of 0
- 	 * keeps the LED dark, so use the shortest on time instead.
- 	 */
--	on = (*delay_on * KTD202X_FLASH_ON_MAX) / (*delay_on + *delay_off);
--	on = max(on, 1);
-+	on = mul_u64_u64_div_u64(*delay_on, KTD202X_FLASH_ON_MAX, delay_total_ms);
-+	on = clamp(on, 1, KTD202X_FLASH_ON_MAX - 1);
- 
- 	/* Actually used delay_{on,off} values */
- 	delay_total_ms = num_steps * KTD202X_FLASH_PERIOD_STEP_MS + KTD202X_FLASH_PERIOD_MIN_MS;
+---
+Joseph Telaak (11):
+      leds: rgb: ktd202x: Fix the flash period of short blinks on 32 bit
+      leds: rgb: ktd202x: Fix an out-of-bounds read with unused channels
+      leds: rgb: ktd202x: Never program an on time of zero
+      leds: rgb: ktd202x: Fix a division by zero with long blinks
+      leds: rgb: ktd202x: Keep the unlit colors of a blinking LED off
+      dt-bindings: leds: kinetic,ktd202x: Add Etek ET6326
+      leds: rgb: ktd202x: Add Etek ET6326 support
+      leds: rgb: ktd202x: Add hardware pattern support
+      leds: rgb: ktd202x: Limit the LED current to led-max-microamp
+      leds: rgb: ktd202x: Fail the probe when the chip does not answer
+      leds: rgb: ktd202x: Don't let a blinking LED retime another one
 
--- 
-Git-155)
+ .../devicetree/bindings/leds/kinetic,ktd202x.yaml  |  15 +-
+ Documentation/leds/index.rst                       |   1 +
+ Documentation/leds/leds-ktd202x.rst                |  51 ++
+ drivers/leds/rgb/Kconfig                           |   3 +-
+ drivers/leds/rgb/leds-ktd202x.c                    | 578 +++++++++++++++++----
+ 5 files changed, 546 insertions(+), 102 deletions(-)
+---
+base-commit: 59cf91cf87abb67a49b1bb7b9d3b06486abde8cf
+change-id: 20261101-ktd202x-et6326-73ed3046c534
+
+Best regards,
+--  
+Joseph Telaak <joseph@telaak.dev>
 
 
