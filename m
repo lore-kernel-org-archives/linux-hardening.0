@@ -1,89 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.172
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794183274;
-	b=k98Etd5ddZfhXihWOBNmWjIcfQ8L2bnNpwQ4hvJZOpLKVG5ggGCSMrUcc4frXqexRxLF
-	 B4RQWQlfPIwqaN/rJNbMoguo9zMb8NLm2J/Ifh+fPOIbJblYEMI+D+mILyEoKA1sQNZS9
-	 1H/Y9pK0hZUM2jB6uJ0Qi7zFGO0uOYybolkXngCSo4AZwz3WiaeJ/4a1RwiBmTjGamUu7
-	 UnBGJmn3QaWsPCZExzGeaivrlMuK448M1tDwu1lRvYIq0p7QbajCc7GSeev/FnpcDuWJ2
-	 gQzfjmACfVDe8RprJp9QzQ/SDcNIqutOHBKfQpt0rZ56QlmNJCt50flW5ndi8XzIMYg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794183274;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.50
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794198842;
+	b=nc39bv3LLht4ntNX2wxdWevzpgYTGbTwbs0N3srzkvoDuFZSfUNpFM7vY/b2aniaYMcc
+	 z20J6nOil4lwtS0sPKuuMORH6fq1lrDjG7SSJIEXM2hR639BAk/IKrpxZyOOP4HxDBYj0
+	 KmbRgusHezsoIZ6eMfd6ZRG2xNqeAOMsKSvF0qCJDbFbf93XO+EVPU0sHE/RdRMFHQGN6
+	 8lRIWzBfXv7rqdkaTOzzZz1P0lK4HuTHrhsjXKPObr5ZqltC9axy051i/Pn+rlcHs/WQX
+	 0Pl4E/T+b+WX39XoO5afCUCqtDoA45gjvxqY0HNk9IRS9ZaUqZo661eQCCFHYXEAQXg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794198842;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=PKbaPQsHHOhvacrmvvpMN5t1cCuxJyoRdKRaZq+8jRY=;
-	b=Wvk+8ysU2QxZqCLL7zCpb80hWrLmPT7bg6FJCVWRvJS/N0R9OZb5fVaYmNnOpgEcCsUf
-	 JVfvni+JwlWC7oR6JFZuVuOmoLK8lhRHOv4Wzb0IaQh0zCIGNqxK+Im5UwExllmVXwl9p
-	 8Ghmpf/Dyk1G46NJIMXionE2/v318Y5g3N3E/kqn343F/ffT1SAZHZu65zdZq8aqjdSxq
-	 iCF6dU3elEGCvqYQQHKZJlqaWVgekDx4xwok+/QQ6OKNGpzwmNot3fAV0BQ33EVL8NKc/
-	 m42VA8lWdBHv8PAWt8pxNPLV3ddteF3TxIv4S0Q1njUJDZ66C2ayOOBUNwHFvZycjpg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=+KZfMQTyVl02e8ANbgPdMXZ52kWV3/1B9wyIuCkTXxg=;
+	b=qpw+xPzJrRw+6IQEwijYVT84ZjJK/QIOCZHNiMr6tgunaaRqf70DzNK1eT1vhiJ6Bosd
+	 2pAxp+fCZh5TOgjO5S1UDnU0XhTNS5RVtzE8D2YJwHlccPfpSVWtdtpxjbg33GOr8fR1M
+	 8QGekQkrzG3+g228Ja+g5JVAUTnvzWlQj0zkdXbx8Vpj9xFWCIckQYH6p49gLVChkl9OL
+	 E4MzDvWcucZUR5zXlFtXjomMP4o5s/G+L1MJE+j+miudeqIa8HnW2onVSu/yuGyNMcYnV
+	 UKCcgQPyjjsuMyGTifkmHWalDDipnCV+JB8mDbO6Mn5hN5PlinvkMjPtJF4YKLQNGOA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZWSuo7o1;
-	arc=none smtp.remote-ip=209.85.210.172
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cE+TvgUh;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.50
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6AF606A322
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Nov 2026 00:14:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC6AF606A322
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3DB606D801
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Nov 2026 04:34:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A3DB606D801
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZWSuo7o1
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-8b68e59ab33so237278b3a.2
-        for <linux-hardening@vger.kernel.org>; Sun, 08 Nov 2026 16:14:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cE+TvgUh
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c4203bbb1e9so59460466b.3
+        for <linux-hardening@vger.kernel.org>; Sun, 08 Nov 2026 20:34:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794198840; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ZqsURJ1E7yXZXFIsO2dpl76AiyINd7l1b/OeoZZE0d/fofMFMpooSUsGJVGyktTQvk
+         Sq8DlKtVGpZiKsIRkmLQ2spC72RGtGLwZDtIheqdXRTBSiJcUnnAtMvOWjAVssdw/1y6
+         n5EWzOfMZKs2qm/F4tyF3fcKSkrZAyuzBAnWWHNZOwKABMDQeE4/CqibGd51VZhawas4
+         /AJh79a8DvSU/T+1kzAKJ3MAZdP9lHn8VhP9nOyP5uQVb6rIK6LLkNthRzz4xow1aigU
+         AVVLWFQk8MC3AKNrhdy6mIJl/42KtRYZk9MuZEUk4UsWbLulkaNDQfsas38A50qIxC3s
+         y+GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+KZfMQTyVl02e8ANbgPdMXZ52kWV3/1B9wyIuCkTXxg=;
+        fh=jZqGpdnAZMC2p6vMInuziNnIlGWPVw0qf0YuVDXgtRE=;
+        b=k9UM19XiIRZmbbstjCrmcXKef3901AGuGHp7KFG/xqYwzi3LypnILgESaH1WwzfWwz
+         oeJc6fyHfmrUysGSJ+2CguGgfA/RyPEd+eViqf5BPh8RZnDb3yBs1prCHRRxo8a/rMvC
+         TeOpDPl4TKXvYv97OJirXsDC7aKGsw7G3ZeJS/gtSJnDzMW9+36D+OxCSWF75n3NFj2C
+         Sa394AYgVoJr1z0dBFc2gJOCp90vbm/08SzbI4C56QfOuDnKqN0dicanx0XiQiwCqCo4
+         4pdukr3Pt/VCqixmTD8NhKkhfZ5Ge61XHKCrRmEyEqbkqBywqJ/C8/t663iYO0Q5VkY/
+         b7Nw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794183273; x=1794788073; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PKbaPQsHHOhvacrmvvpMN5t1cCuxJyoRdKRaZq+8jRY=;
-        b=ZWSuo7o1a8UnAu8ncnh5mn3fSiYXc6RaBhlIVj34wIGCkP5oIgEI3ZIhR1PPCStR99
-         es4VkceP4A/YQn5zgOskoYrNJsBpiioGXm3dcDwHrc8p0VGbjsVLtf3jpirm4WdIHvyo
-         sfNsyrKFGOVtf3DpRkI6+42XEXYU3fPJOpGpRxgKiZsKwZhZe+DhMXYaEjvOE2B1uIef
-         L9Z6YW+NrmHGtXWy9t7wPwht+DC66M6tPa8JwfVAfUPQ1K3aT8E0L2RedPDVvIOz+JCS
-         igIyLiHooDBiJvvx/F62nscNzDw0Ur+9CODjcwXv/BkqGwA+wl8dx6yOae32sk1bvulp
-         nZ+Q==
+        d=gmail.com; s=20260707; t=1794198840; x=1794803640; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+KZfMQTyVl02e8ANbgPdMXZ52kWV3/1B9wyIuCkTXxg=;
+        b=cE+TvgUhFThTLr3JE+C1ZlQ+Q55N6LLNa0OrEiv09d8eghwiw2yMa6WZV12mkUrdMl
+         6Mvy1LGFKpPerf4MWw5xwfnNBxN2q7iDFIUUYYvKZUI5mNWTU29YtpXqsIEYqb38YrVC
+         87R94ilSNUWGde3/XNm3SoMTaPSPkCN/sD4icSKv0BxLBA0NndnohpeajtrujTTERf+o
+         cyPO5iVi7O4afFUufZoGNOdUi+2WtqRUVXk7xsGwOd/glIUVjMg4D9DmY/t4Kk7N0J6E
+         5sl3Ulzmz8xDP4ew87+pN+PBjCzZsZyUUn/faa1N5nFEUcx6Hbk6sgeo4HN371cKMSG+
+         kM9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794183273; x=1794788073;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=PKbaPQsHHOhvacrmvvpMN5t1cCuxJyoRdKRaZq+8jRY=;
-        b=IOzVgE1ZV58K+7EPhejoor8ECfUvpqoRiMtlewlpSgzm4D2gl2Fegy7Dx8AaZyxQai
-         mr7fTPvAM3jnV1aHz6NUqJVNkGeHwSPw3d5tuMDsL50iyJYPlD1jMH3pwDkcp/6q5aTu
-         vF8fpdLZJZKFyDkmY1gO9jhs4Ag5+vZWUJC9R2weriQOyzS9KYSiZiASYVIGC5v74KGD
-         H0Zzpzf/eKFmFivDDOTcYW0XqUQ0DQ2PAOUoW9r+tNh6jH1aPuBX00ihW/PEJk8Y+qaW
-         11rEshWsZ4qp9LUsEYbmx+p7C25AoIy55BzUkPhhRi8KsSHi/DhpMtvcVH1EnZD8UpPo
-         VMGg==
-X-Forwarded-Encrypted: i=1; AL+hErHMKtoHqgK/L0ayyWgMoWkXYMu+wTUSrQ9C1+J6fL6Wj94bsdWPqiSApoG3wvH1PGyfb0STRwhra3d5JENK+7g=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+DKyGaNbcTcNcq5waDugeWP5muS1ssdiuVeEwz1uRaFU4qM2jm
-	OnEhdGx5fssx1GrahKZfTU1W9CzbAg3kPVVgbOBmF/qdVzB4QMpJ95v+
-X-Gm-Gg: AYBFou3Es9+eYdOOONSTOziVo0npHw2ObXkyjTo+VbGDNg0Zs5sMD+7R+R9yL/8x2bF
-	rXFSze3P6dLVVr/ZQSeCzxRQuV20C30A+iHFoU6se3L5QsbP8mh+iXvNNJ7o2aa48pDvi7PMt75
-	6myw4+op/zAx5k1LrtFUM7YvVKm3V1VvZby45MRCM+C8rNTJqogqPdwB94fTUx9Z/uDFSB/HI0L
-	zyBGSMunGGN8wSPBHaCCuY5qBKuwlNlg1igHW52SmVZmuds2eqd+IP1nMkHDkrKdFAz45KFz0ws
-	/FxIK4mIpvwxk0oKOIsFtuig4vzH6WfRnCN7r+og4vvnhhj1+9Tnnh4bo7mK+ozWc/yggUFzqYR
-	PObDYT9DZg4LvXzcqtSqYEkug9XYjMqKCKY1nCJKDdV8BYpArbZYg2UkXccoT1p22X6Y48KFrsJ
-	uLn8+g4vjT20HZcsoP2xhKDrBoR8N64rnwz65l/Akspok3Tw8nwKsf815qYCFZ2FV0nLW/GJrDh
-	FrELXyDiiafR6ZYC6V36Wd+DFlsLkZADHxR7QVzPB0zz3PxkjMad/Me6DmDOMocIUjB7IxnIcX6
-	imuew3K8883hMG7j56S2Z6hF2NNCTliNecURJ5B2eGVv53A6xy1EEDc7c4diSvRZmlb1GSfaCVv
-	1sjw=
-X-Received: by 2002:a05:6a00:9a3:b0:897:ffff:c18a with SMTP id d2e1a72fcca58-8b66c3a7923mr2227291b3a.7.1794183272958;
-        Sun, 08 Nov 2026 16:14:32 -0800 (PST)
-Received: from [172.19.1.51] (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8b649821abesm777951b3a.34.2026.11.08.16.14.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Nov 2026 16:14:32 -0800 (PST)
-Message-ID: <faa957ac-badf-4027-b86b-e12b8dd4bc7e@gmail.com>
-Date: Mon, 9 Nov 2026 08:14:16 +0800
+        d=1e100.net; s=20260707; t=1794198840; x=1794803640;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+KZfMQTyVl02e8ANbgPdMXZ52kWV3/1B9wyIuCkTXxg=;
+        b=d+nfZiEbJu1lXiZhma9zhqTqPcXsp1pmUlYz5ujP97Ocmfk+w2sd14FC7DoO8rbMf1
+         agM+F9SkumvHOtMs/gyz7dRjBsw51RSk+dpQnl5kK417ZdquZmFhOXz6FfJthOUetuca
+         zffWnJIWC+GIX6J2cORAmZmDadYbDNoP9WiIO3qoRX0RyJInIQNvw3eWGcbZ6qpAkxnN
+         fhYaFr/rg6rZUEGCZJTTEfFR9BVD7OmmF+YQ+PE/RBB8d9H+vVXYbRVKEoyOhT3nwkoo
+         UubDO2A/CaD8buJmaUSgPzYuikla36P4F9YjWKQ2+hPhlp3dnwPVkwotcSIimkfXZBKP
+         SFgw==
+X-Forwarded-Encrypted: i=1; AL+hErGVWKQz1AnVlYlhy9RCWQ68NkvjYvvY0i27ZtfMwsc/pLT4VRqykz5dkGlNywsn3JwhWj1HUtLJiYM6OJNf4Mo=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8BLaxskAGA7yz1rKtRrZBmPGdmUVUJ+Pnq9b9UdhFLzyT6tOFc
+	bJq4Go0+FMg3M/8AobTLcipIzodvTSOr8Ayd+5XOg+PU7X3tnqm6GhuMicde2yp8nH6pvHVEmOa
+	EthT+4d8c23plvyBrQCjGXsFtEKUYP1w=
+X-Gm-Gg: AYBFou21TceUWtWTglNFwV124OLlBdWlEhHrJSt/hI+rsUBeilsujhdD3N9N5WtxjU3
+	l+lvNhCDczpLtPlWiD94w5OEjMp8L9Ska5RDlR0BlL55wb+YChQvqBVFrJDQo11WpwLTnoM4f3c
+	yZgrnx6POs3XnuH7Kd7BTtuE583SPLbv4lHbCNSujqauQL0L+9NKdbWWKHlvNb5x7PRKY7yP9LX
+	6qFK2g10pdP5emEK+JoRdMmCUfSnkNXUhKAtzdHpEPe/lL5oDCmkVFttrRT0GvNAoeCCpOkw0tP
+	3r1b6dL8kJRLS4A2z0N3dH9D32pMYI31Ajw9ZmW6yX05TU4ddDU0oqsKv+nlt6Yuskb+jbBwUYD
+	BXCvFUMW4b/FktyxxLbRh8hgKgSAscOsTtXIRcMuweiUErZanivleeZBX0AqERY1yyxozQ+w4yg
+	PIyR0eLhW99t8Z
+X-Received: by 2002:a17:907:72c2:b0:c2e:4292:d268 with SMTP id
+ a640c23a62f3a-c4d6daf7c64mr226694166b.16.1794198840452; Sun, 08 Nov 2026
+ 20:34:00 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -93,43 +105,125 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dmaengine: ma35d1-pdma: Add MA35D1 PDMA driver
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: ychuang3@nuvoton.com, schung@nuvoton.com, vkoul@kernel.org,
- Frank.Li@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, kees@kernel.org, gustavoars@kernel.org,
- linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20261103022202.2139674-1-shanchun1218@gmail.com>
- <20261103022202.2139674-3-shanchun1218@gmail.com>
- <au4GkvPTXmcvReoj@monoceros>
-Content-Language: en-US
-From: Shan-Chun Hung <shanchun1218@gmail.com>
-In-Reply-To: <au4GkvPTXmcvReoj@monoceros>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20261005001118.576198-1-rosenp@gmail.com>
+In-Reply-To: <20261005001118.576198-1-rosenp@gmail.com>
+From: Inki Dae <daeinki@gmail.com>
+Date: Mon, 9 Nov 2026 13:33:24 +0900
+X-Gm-Features: AclHuK8JGFlUXZkSE5CgvPvR5Q5pqnVQnyO-MTmGLdNc0lY8Yjx1OxeFaWmjmHc
+Message-ID: <CAAQKjZObmQm1X28cbpjd+dEVx93wfBwKNaaaxpU08o8JeFaZfA@mail.gmail.com>
+Subject: Re: [PATCH] drm/exynos: fimc: allocate formats as a flexible array member
+To: Rosen Penev <rosenp@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, Seung-Woo Kim <sw0312.kim@samsung.com>, 
+	Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Peter Griffin <peter.griffin@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be|_ptr)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Uwe,
+Hi,
 
-Thanks for your review.
+2026=EB=85=84 10=EC=9B=94 5=EC=9D=BC (=EC=9B=94) =EC=98=A4=EC=A0=84 9:11, R=
+osen Penev <rosenp@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> The formats array is allocated separately with devm_kcalloc() and only
+> referenced through the fimc_context. Make it a flexible array member at
+> the end of the context and allocate both in one go with struct_size().
+>
+> Annotate it with __counted_by(num_formats) so the array accesses can be
+> bounds checked with FORTIFY_SOURCE and UBSAN_BOUNDS.
+>
+> Assisted-by: LLM
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
-On 11/7/2026 12:57 AM, Uwe Kleine-König wrote:
-> Hello,
-> 
-> On Tue, Nov 03, 2026 at 10:22:02AM +0800, Shan-Chun Hung wrote:
->> +#include <linux/mod_devicetable.h>
->> [...]
->> +#include <linux/platform_device.h>
-> 
-> Please don't use <linux/mod_devicetable.h>. <linux/platform_device.h> is
-> good enough to provide of_device_id already. If you insist on full iwyu,
-> please use <linux/device-id/of.h> instead.
-I will remove it.
-> 
-> Best regards
-> Uwe
+The allocation size, initialization order, and format array lifetime
+look correct to me.
+checkpatch.pl reports an error for Assisted-by: LLM like below. Please
+describe the AI assistance in the commit message instead of using this
+trailer.
 
-Best Regards,
-Shan-Chun
+WARNING: Non-standard signature: Assisted-by:
+#57:
+Assisted-by: LLM
+
+ERROR: Unrecognized email address: 'LLM'
+#57:
+Assisted-by: LLM
+
+
+Thanks,
+Inki Dae
+
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_fimc.c | 17 +++++------------
+>  1 file changed, 5 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimc.c b/drivers/gpu/drm/e=
+xynos/exynos_drm_fimc.c
+> index 09e33a26caaf..079d24d0671c 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+> @@ -99,7 +99,6 @@ struct fimc_context {
+>         void            *dma_priv;
+>         struct device   *dev;
+>         struct exynos_drm_ipp_task      *task;
+> -       struct exynos_drm_ipp_formats   *formats;
+>         unsigned int                    num_formats;
+>
+>         void __iomem    *regs;
+> @@ -108,6 +107,7 @@ struct fimc_context {
+>         struct fimc_scaler      sc;
+>         int     id;
+>         int     irq;
+> +       struct exynos_drm_ipp_formats   formats[] __counted_by(num_format=
+s);
+>  };
+>
+>  static u32 fimc_read(struct fimc_context *ctx, u32 reg)
+> @@ -1273,20 +1273,16 @@ static int fimc_probe(struct platform_device *pde=
+v)
+>         if (exynos_drm_check_fimc_device(dev) !=3D 0)
+>                 return -ENODEV;
+>
+> -       ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +       num_formats =3D ARRAY_SIZE(fimc_formats) + ARRAY_SIZE(fimc_tiled_=
+formats);
+> +       ctx =3D devm_kzalloc(dev, struct_size(ctx, formats, num_formats),=
+ GFP_KERNEL);
+>         if (!ctx)
+>                 return -ENOMEM;
+>
+> +       ctx->num_formats =3D num_formats;
+> +       formats =3D ctx->formats;
+>         ctx->dev =3D dev;
+>         ctx->id =3D of_alias_get_id(dev->of_node, "fimc");
+>
+> -       /* construct formats/limits array */
+> -       num_formats =3D ARRAY_SIZE(fimc_formats) + ARRAY_SIZE(fimc_tiled_=
+formats);
+> -       formats =3D devm_kcalloc(dev, num_formats, sizeof(*formats),
+> -                              GFP_KERNEL);
+> -       if (!formats)
+> -               return -ENOMEM;
+> -
+>         /* linear formats */
+>         if (ctx->id < 3) {
+>                 limits =3D fimc_4210_limits_v1;
+> @@ -1320,9 +1316,6 @@ static int fimc_probe(struct platform_device *pdev)
+>                 formats[j].num_limits =3D num_limits;
+>         }
+>
+> -       ctx->formats =3D formats;
+> -       ctx->num_formats =3D num_formats;
+> -
+>         /* resource memory */
+>         ctx->regs =3D devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(ctx->regs))
+> --
+> 2.56.0
+>
+>
