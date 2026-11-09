@@ -1,92 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.15
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794245322;
-	b=37r7/e89T/tpEBaq0jnlKKrqkxdmgK8u/6BhbkFcf+vWlgBjSxQSF5WIvbE1fuGjzEfQ
-	 j/2+WYXSwXJUTf5ShVKt5xgUtKWE6AtgEz/y3bZF8wNHOGOOitLYUE0M/fuhfVsM1JgzH
-	 07b7kOB+PbGDYthQfq7GjH1tmbvTVoZA3b/vM72r9URxO/l8Q0738U+0/2M17xb3drkDP
-	 aLpDgfgqnGGZozyxmclrQjHenPeyqjkddZdMTrBIxmREyDuoxJWGMsK/SKu2GIRFW076W
-	 VHnHqZVnwNqPzCrOFZH8RQyJxvjv5WtnQRFv0k/MQ03mJDYU46Ax31eKXPQtgTQX7dA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794245322;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:Organization;
-	bh=qRjzt/bH5jDngzJr4W8d1d/oZfLkUy/oU6+unqf5Pk4=;
-	b=SWmj8afr7Fe5sOpb45pmYAjB1UY0eZhowzRzF7778AteP7rgvo/z6Gngc180lobvOj8J
-	 fk8otKB/5rABFAuuf7nAr3v5i0c6NOkLDU9MxNZlYGITrQQ/ZPssrpznS35mKfnF+mf+T
-	 zxDuRKfpgJ2GoduLrOhxgI6k680EB8o99qE7rUqaNqxZsoU0LdQqB1LjhbG7D+lTz9Vk8
-	 Iz7fylDqyEYWbtABjrEMqkCrusKjcFv8BayazTn6JG7nnQ07nPxm6c3eAImpXHastxs5o
-	 Xg8m2kf2wKKbSmCtwHntPRABBWcYLqCA0XZZzRQU1dg0rgv6fXc045XZNp5vcY8+FaQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=PjfNukQx;
-	arc=none smtp.remote-ip=192.198.163.15
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794251065;
+	b=HyWpXoUayC0hD5vUGrC5tk6o3GE2X6M1iMUw0zIluJSyFM4MH7GdC6toWPc0FgvktqHY
+	 PpTDTusUp5F/AZhpphqITU1vUenvoLR0vCAS47elC3mveM5JyiamN/fNgcfIwFjTQJerV
+	 l/P5LZpUfx1zwjwPdjdrBB6AxyilT8f1VLH5BUeWSrFGDH0u6BjTcqdoCi9x80QIV2IK3
+	 dfNtGCrQojs/b2DHpNWNf9oGMOg9WIck9Q1oC4jtcBKBU7vy16HgTSQosRXM+DokJ9+sK
+	 2ow+I/bqkQi5JR7Vt/RP/OESyA2b8IrV4jkA6OwOsE5b2yiJCr7EAOrWEM/r8q9r7lA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794251065;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=RpUh4/i5yEgJrvnefCqxvh6+JPi28ndM/f1eQAaNtJs=;
+	b=xQJifmYBIEr1+4AE555kHSGvVymfRl0hiGSujoGrjX0w3kumiq6c0u1KWNKrR0bXxbv3
+	 CBMcVFwejnx/u6PTnw985I6UTtkarbB2Mvw1raIL0PSBT4ck5QFLDdkKiB4hxI/hCmlJr
+	 S1xfLSJxD0woa0ncZF6kgcCKM1dIeBRmNEIG6sjcaM6DyPwyN4rcYBQ8E/e8M2rVAbacf
+	 yzT6i6JhCFRU6VbQe9q58Fpnx1cIxhV6kWf+VH4TzZj8IaZ/Jc9zE/BFIWey3e6h8kIDi
+	 s0huV+bT9Q4clgkLkyK6qDdx3FSKGCJMXQseJzc3mZAY8Df7rrIlWtJi9UA9/733WpQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fAbPfh9S;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE5F606A330;
-	Mon,  9 Nov 2026 17:28:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BAE5F606A330
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BB7606A325;
+	Mon,  9 Nov 2026 19:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=PjfNukQx
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794245322; x=1825781322;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ar1TVtAm+rvGquAEzkco4mRBe7I0DyfasS/JM+grgNc=;
-  b=PjfNukQxbqA3dtIT/h64Gv6izhyVEfhLKz5J/Ei27qEpKK2pZAvOXFkj
-   ww4tdn163l0DtTeOISBiLN7V22nQfl8juvb1ek5ONlbxXqUyaY9div7bJ
-   V5I4V7KUDjqieU+480r67PGPsIChzxbl6bsOdUshye9VtfWpyhqtnZ1Fi
-   Sr2HuJwHB5M52RE+Rb19+X3AckITUDAeOlu+fdZ1P8Gb6Q0SGCSwe/n1x
-   dS1hkFBY9Ent+sHM68syZ546qLLMRZ/4xLgFdz0RaiiTih7O5mEUlpWpq
-   HB0jUZeTUT5Mx2ij6/NbFvqzTdRSNvk9OBuTQjoPueUnZE+bE5+AY6RD5
-   w==;
-X-CSE-ConnectionGUID: kQULd7oLTjmchRuVTUZwBA==
-X-CSE-MsgGUID: 428/Vel6Qu2Nui9WYPJDYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="2970916"
-X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
-   d="scan'208";a="2970916"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 09:28:41 -0800
-X-CSE-ConnectionGUID: VdCIUz+9TlyfdNc/xxFYmA==
-X-CSE-MsgGUID: ucYIODM9ShSeTtbSAloFqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
-   d="scan'208";a="8069574"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.144])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 09:28:36 -0800
-Date: Mon, 9 Nov 2026 19:28:33 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Hans Verkuil <hverkuil@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Len Brown <lenb@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Linus Walleij <linusw@kernel.org>, linux-acpi@vger.kernel.org,
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 5/9] of: property: implement the .property_get_names()
- fwnode operation
-Message-ID: <avICwdxyi-W1Y3PD@ashevche-desk.local>
-References: <20261104-fwnode-for-each-prop-v1-0-6e28fe1c72c4@oss.qualcomm.com>
- <20261104-fwnode-for-each-prop-v1-5-6e28fe1c72c4@oss.qualcomm.com>
- <auuhy40x1BMoW96-@ashevche-desk.local>
- <7sfr4ljlwbehal3or4dmy5jxbjz6ya2lf3dq3yptr54wym5tea@eqaexflmocih>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fAbPfh9S
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1794251064;
+	b=E6TBaAOyMG11ljYXk+2djcyVuvdQsj0sEwIWSuEBqksp5XryZ6Xxub8Sk8PBYROUiZ8a
+	 89E7b5PAv6XHN5kDPEEVMkUyVaUee9wHCUORP2OyXfP+OZSp7Cny26PM/UVrA3GZ6+9Sm
+	 6alRi/bXoECSrBwq2edrf9uTjwVLW4gnAc5l/ui+XSgnYe+JyNR5/4u08bIhTgX+ApjBX
+	 ntr8YuFuE1KsT7d8KyuWlgHNiM1qdTkZeyI/UfS3L+Fi7x6Z5xx2lR7nt9dR/ntPbgWll
+	 mrYdhCoG0WEwxVmL+G/8GYluSh+BWMTscly3grW79/L7vZt/MOF4dHDFkfpvjY/I7qQ==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1794251064;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=RpUh4/i5yEgJrvnefCqxvh6+JPi28ndM/f1eQAaNtJs=;
+	b=KAh0PciY3rABwRsSFkzJRTfMQUvPAOwpUASx0JFHAnNamoSdR3cCdTjhL8Ixz6E8kl7Z
+	 5mSuQXDfwsPbJYEQaivOHJ1ZvSd5YKdRgNrb5TbquE7bA4lJdN/RfktPPBMNSFF98AFO+
+	 iKCvflZI5+VSCtbjfc5u6nyUeQ36KDM6ISkmOQqewgV/z6iKJKytoutzi7+i+jwgY5noX
+	 mMHVSD+wZkOudWWSc8yohpuRfP7Sy8dxCvckdn/wMUJDsT1DvSVBx36HlN26eH7p7RDL1
+	 GiEnLUrYAkgG7GRZ/u3Bm/Q7OmMbq8ubO7J/cbprB+4idW/PBimk+Kuoh76Zeaeczkg==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPS id B078A1F008A2;
+	Mon,  9 Nov 2026 19:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794251064;
+	bh=RpUh4/i5yEgJrvnefCqxvh6+JPi28ndM/f1eQAaNtJs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=fAbPfh9SHdVJw/5O+++D3MCiokGxPvcE4C9XRaVKhOQASu5F7tOUFtvw17l1krETH
+	 hYY5mMOIFjYwkfLX/VPxC0qmwgcXT0LKI7mnZUpg8xi95KFE06Hhl16dPCZ8jx/uBy
+	 3g6c6kBi6DV8So4UmwfBWHEDOwsEEwu8wNhcq0EEtaGs+YKCZ8nwVOgXcwmX+ZmuQy
+	 04LXAu8Ob9E1h4OHJ1q6Mjcu6oddKx+8urdnrJ1f32wfKbYw/EVE+s48PmlwSfs5mX
+	 3PjrTs4wol3pRaA1G6yKRl+JnrJQe+EhA2YXeypfH97WpZR6mfR1wh1bub3BU2cnxm
+	 ZgcEEsr0zx//Q==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 353F7485E6;
+	Mon,  9 Nov 2026 19:04:23 +0000 (UTC)
+From: Joseph Telaak via B4 Relay <devnull+joseph.telaak.dev@kernel.org>
+Date: Mon, 09 Nov 2026 14:03:38 -0500
+Subject: [PATCH v2 02/11] leds: rgb: ktd202x: Fix an out-of-bounds read
+ with unused channels
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -96,51 +83,91 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7sfr4ljlwbehal3or4dmy5jxbjz6ya2lf3dq3yptr54wym5tea@eqaexflmocih>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261109-ktd202x-et6326-v2-2-56e97c226658@telaak.dev>
+References: <20261109-ktd202x-et6326-v2-0-56e97c226658@telaak.dev>
+In-Reply-To: <20261109-ktd202x-et6326-v2-0-56e97c226658@telaak.dev>
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Griffin Kroah-Hartman <griffin@kroah.com>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-doc@vger.kernel.org, stable@vger.kernel.org, 
+ Joseph Telaak <joseph@telaak.dev>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794251062; l=1977;
+ i=joseph@telaak.dev; s=20261104; h=from:subject:message-id;
+ bh=WIevyBVu88sXpVFkOrkZHCBIjBM1tLa+KjKrKOEfUlA=;
+ b=je58tgYPuvVRDFPZspy1+/3EWSCiKDZxyHGOMap0N0co44VNKM39+rC3aorCj/F8V6k0JyJwV
+ fRxUWp+a8CqAjqSftWfq+T9s+XS4tqFl7k18ipY8JYbpCMNoCaFIR+J
+X-Developer-Key: i=joseph@telaak.dev; a=ed25519;
+ pk=oQI+UfddlZ0wK2ac4WKOGNjUl1ZEN8j9ZVFSqEDoNP0=
+X-Endpoint-Received: by B4 Relay for joseph@telaak.dev/20261104 with
+ auth_id=1404
+X-Original-From: Joseph Telaak <joseph@telaak.dev>
+Reply-To: joseph@telaak.dev
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 09, 2026 at 02:07:46PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Nov 04, 2026 at 11:21:15PM +0200, Andy Shevchenko wrote:
-> > On Wed, Nov 04, 2026 at 03:03:47PM +0100, Bartosz Golaszewski wrote:
+From: Joseph Telaak <joseph@telaak.dev>
 
-...
+The LED array is allocated for the number of child nodes, but
+ktd202x_chip_in_use() walks it up to num_leds, the number of channels of
+the chip. With fewer LEDs in the device tree than channels, for example
+two LEDs on a KTD2026, it reads past the end of the allocation and the
+__counted_by() annotation hides that from the bounds checkers.
 
-> > > +	for_each_property_of_node(node, prop)
-> > > +		count++;
-> > 
-> > Hmm... Don't we have a helper for that already?
-> 
-> I haven't found one. Though I'm thinking that maybe
-> fwnode_property_get_names() with props == NULL could serve that purpose?
-> Possibly wrapped in a static inline fwnode_property_count()? Would
-> anyone use it though?
+Allocate one entry per channel.
 
-I haven't found any users for this. Most of the current ones of
-for_each_property_of_node() are filtering by property name.
+Fixes: 0ebdb7210943 ("leds: Add ktd202x driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Joseph Telaak <joseph@telaak.dev>
+---
+ drivers/leds/rgb/leds-ktd202x.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-...
-
-> > > +		names[i] = kstrdup(prop->name, GFP_KERNEL);
-> > 
-> > Can property be statically defined somewhere? We might want to also optimize
-> > these duplications with const variant (here or elsewhere, for fwnode generic
-> > path, I believe).
-> 
-> Please rephrase because I'm not quite following what you're saying.
-
-Can prop->name come from something that is declared as
-
-static const ... foo = {
-	... .name = "bar";
-};
-
-?
+diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-ktd202x.c
+index 539cf425cdb7..482af28e8370 100644
+--- a/drivers/leds/rgb/leds-ktd202x.c
++++ b/drivers/leds/rgb/leds-ktd202x.c
+@@ -537,6 +537,7 @@ static int ktd202x_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+ 	struct ktd202x *chip;
++	unsigned long num_leds;
+ 	int count;
+ 	int ret;
+ 
+@@ -544,10 +545,13 @@ static int ktd202x_probe(struct i2c_client *client)
+ 	if (!count || count > KTD202X_MAX_LEDS)
+ 		return dev_err_probe(dev, -EINVAL, "Incorrect number of leds (%d)", count);
+ 
+-	chip = devm_kzalloc(dev, struct_size(chip, leds, count), GFP_KERNEL);
++	/* Loops over the LEDs go up to the number of channels, not of child nodes */
++	num_leds = (unsigned long)i2c_get_match_data(client);
++	chip = devm_kzalloc(dev, struct_size(chip, leds, num_leds), GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
++	chip->num_leds = num_leds;
+ 	chip->dev = dev;
+ 	i2c_set_clientdata(client, chip);
+ 
+@@ -562,8 +566,6 @@ static int ktd202x_probe(struct i2c_client *client)
+ 	if (ret)
+ 		return ret;
+ 
+-	chip->num_leds = (unsigned long)i2c_get_match_data(client);
+-
+ 	chip->regulators[0].supply = "vin";
+ 	chip->regulators[1].supply = "vio";
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(chip->regulators), chip->regulators);
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Git-155)
 
 
