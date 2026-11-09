@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794252432;
-	b=FDrMMstZHJHy5bqNa/JTFRtv/x9zTDCuax6S/bZI5WUrzbaVxME4GWkkhl1GO4RQTNWU
-	 FPglwUfASut8NRKm/zejRvFmEDSrugZ/cugNzidyQ4t236henL5BpU6JnvVKiaDeWFkGj
-	 bXoGFkRbQBaj/lHD7305Wat2IzAhlX5t/x8nwoYHIEKWTlofmNM0qXmGWmtJkyHEUWYCV
-	 eu3sr2ZscDGARILtfNqWUvaz/sh2Eci7Hhb0VRO+bLARz6rYob3g9m4XfOOqz7xeGkyPy
-	 JTlLgC6wVHZgdMywBeWs7H2mcqF8ZE146qSCPYd/rWKaFFLj6LhWVqmutXotLES4qKg==
+	t=1794252446;
+	b=LtzzD9XFnJxtI3SUD4+zlzs4EonzrjBsSmdM9xn/Vrdo4CCQ+AEF3/kGD69Te/7EmCNk
+	 lCrzaOjQdvG8KwDee174ENmxVrX+GES8NJNSrK1TioC7/p/MotRmGuyGQ8f6COnVMfgeK
+	 zXSwkDzoKYXBeqYpKj59TXQT0Hy2pQQ1sVKnmg6dT6rGdk5cKqcvxafeaZYzFtNCAa+cu
+	 E0wEc9PgFbZdZy3TUMEGGfBmKR3Bf2+PXPH9AZzqK7m5x17cuaOJNz1gwk69synl+eGPu
+	 9dvmvis+YLJqwagVUCBx4Hnzn+lWaDOLrqBOxTU24QjI1sSUVH72obGolFJVPUMXybA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794252432;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794252446;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=R+tOXrTvvuf/l6pDacnlsvDL8MUGfsR5981h/f7U3eA=;
-	b=knsnUQ5/b/v8lHKF+7ugT4HQalBWV500HFod5LacJbE+0K+MrgCeWcLKzLKtK6SlgERL
-	 6lLCxGzFURs36h7MiFQv+N9mufZpjCMB7WGCUKjF5I92nnjTyzoLS9476CDDo8bUbEFz4
-	 3irCMHCDebI3ldRXLFbXrCnzvw/Tv08V9fRqJTLyQDVRjyAmQV/3Z8T2MFf561+EtTM1h
-	 ecWaO92hoe8Z4B0VuIATDfJ8EwtOkr9+yp1fGxyrljlBB0x++w3zT3SVIgfBoWC4mGy1D
-	 wc5TVZ3gvYJv7yHMLek8i25TJ5RvxLEgiTGrD/tG4RzobOQx3RL132e9lsbkX+DHwdw==
+	bh=VqI4vEj9I0PE8OdnRFGraF5rg0lsij7ceArvqc84Ggc=;
+	b=Ukue1JBu3Q/dYR2Ok+19Ksh/IZ9UCOOkVamlXJpPPO6DEA+OwrExxv9RyoycNnESemHy
+	 VjHqUaXmVwCpPYlqxSUmVMQIEl70fQk05S2mp0Bev5SxGlssq2TW2OrypHgJuqv3lYFcp
+	 uadi0BQnoSefZdNszOPdTghQ084rSk5IlsVAEy/6An0Ustu+3irGQAQ0bF9RFoqJaDFuS
+	 wEASKsoJhbKYAXelU0SaSAAmXFBkJrhR7BLw+AbEJ2I329PILFGnaLWCwnvcxNTR46PNM
+	 tnDj6rWmoLzEAbDI5ZLQhXdWYWp3GWkuNHEOIcrI6Uq1LUkP6wrIeCRUl46CtB9xOVA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gb8kGgbQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ALXmOPih;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F48606A321;
-	Mon,  9 Nov 2026 19:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF82606A321;
+	Mon,  9 Nov 2026 19:27:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gb8kGgbQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E36F01F0089F;
-	Mon,  9 Nov 2026 19:27:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ALXmOPih
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F9741F0089F;
+	Mon,  9 Nov 2026 19:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794252431;
-	bh=R+tOXrTvvuf/l6pDacnlsvDL8MUGfsR5981h/f7U3eA=;
+	s=k20260515; t=1794252445;
+	bh=VqI4vEj9I0PE8OdnRFGraF5rg0lsij7ceArvqc84Ggc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gb8kGgbQZR8b7EU+UyEn4QSAeEhTPPDlmUw/Bl4dj6kIwwsZpvn2R+2KcW5qNYSap
-	 kWd6h0uY1xMts+iEbfX+ovy/lcK+37tOIQLOeGi70MnFUtaGMGj2HxRdlQvauxeydE
-	 bR2F+53DZX3OAzU/BnCjqiwmu5K/6pX7zTaF13c8m4mejs6RRoAnOi+pbhwmOQKz7R
-	 +jHCopNPBLpPlwRWS/3XquqKNiV1OqgwVqeVKmWGgiLbiVciVR7JlmwqWLSJfRzA/M
-	 xJa6SGEeSUYTl1dKEZMzRMHCw0r9L4c7EVq/KI+z4ncveZR9iTK775rOjxRN5Fi1vb
-	 BvZ0oqVzb2XjQ==
-Date: Mon, 9 Nov 2026 19:27:05 +0000
+	b=ALXmOPihuMxoB5rOy1DtnfFXSpYohLI+nUQJjB4I2A2RzJ6Aj6yhCZ0BqF5gxv7Yo
+	 O0WCPpcIRxOSPq5EQhKDAuJ/jqVeFdFvrcKxdH9YfftJMv6LQiU2cPSt52b7zfzJ0w
+	 8BLKelnSCcmb4PlRkLw1CVwr6ACGGNja6hlYaWXhv2h5bOPgB27RS5U9RCj87IvJiz
+	 63NFE51VHmkwSUvb3kCfiffJKYXpdXH281uLhRmIoGynzY3EAR6Uy82IILhivtoBbz
+	 JUmu8UXs+6+iTVqXeXSml5Me6mtfF2Ap6w8mDJg8VG4ucJtNhT3e6gbimIIY9U7kh1
+	 vuu6o3M4OESsw==
+Date: Mon, 9 Nov 2026 19:27:19 +0000
 From: Simon Horman <horms@kernel.org>
 To: "Nikhil P. Rao" <nikhil.rao@amd.com>
 Cc: Brett Creeley <brett.creeley@amd.com>,
@@ -55,14 +55,12 @@ Cc: Brett Creeley <brett.creeley@amd.com>,
 	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
-	Abhijit Gangurde <abhijit.gangurde@amd.com>,
-	Arun Kumar Prakash <ArunKumar.Prakash@amd.com>,
-	Eric Joyner <eric.joyner@amd.com>
-Subject: Re: [PATCH net-next 2/4] ionic: add device interface definitions for
- hardware monitoring
-Message-ID: <20261109192705.GZ18859@horms.kernel.org>
+	Abhijit Gangurde <abhijit.gangurde@amd.com>
+Subject: Re: [PATCH net-next 3/4] ionic: add an auxiliary device for hardware
+ monitoring
+Message-ID: <20261109192719.GA18859@horms.kernel.org>
 References: <20261103-pr46-b4-v1-0-850ab7fbec19@amd.com>
- <20261103-pr46-b4-v1-2-850ab7fbec19@amd.com>
+ <20261103-pr46-b4-v1-3-850ab7fbec19@amd.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -74,28 +72,18 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261103-pr46-b4-v1-2-850ab7fbec19@amd.com>
+In-Reply-To: <20261103-pr46-b4-v1-3-850ab7fbec19@amd.com>
 
-On Tue, Nov 03, 2026 at 06:14:47PM +0000, Nikhil P. Rao wrote:
-> From: Arun Kumar Prakash <ArunKumar.Prakash@amd.com>
+On Tue, Nov 03, 2026 at 06:14:48PM +0000, Nikhil P. Rao wrote:
+> When the firmware sets IONIC_DEV_CAP_HWMON, create an "hwmon" auxiliary
+> device so the adapter's sensors can be exposed by a driver in
+> drivers/hwmon/ rather than by the Ethernet driver.
 > 
-> Add the admin queue commands the device uses to describe and report its
-> sensors: IONIC_CMD_HWMON_GETCAPS returns a buffer enumerating the sensor
-> types, their channel counts and per-channel attribute capabilities, and
-> IONIC_CMD_HWMON_GETATTR reads a single attribute of a single channel.
+> The GETCAPS response buffer belongs to ionic for the life of the device,
+> not to the hwmon driver, so a command abandoned on timeout or unbind can
+> only write into that buffer, never into freed memory.
 > 
-> The capability buffer has a variable layout that depends on the number
-> of sensor types the firmware supports, so it cannot be expressed as a C
-> struct and its format is documented in a comment instead.
-> 
-> The sensor types, attribute IDs and capability buffer layout go in a
-> new public header, include/linux/ionic/ionic_hwmon.h, because the hwmon
-> driver that parses the buffer lives outside the ionic directory.
-> 
-> Signed-off-by: Arun Kumar Prakash <ArunKumar.Prakash@amd.com>
-> Signed-off-by: Eric Joyner <eric.joyner@amd.com>
 > Reviewed-by: Brett Creeley <brett.creeley@amd.com>
-> Co-developed-by: Nikhil P. Rao <nikhil.rao@amd.com>
 > Signed-off-by: Nikhil P. Rao <nikhil.rao@amd.com>
 
 Reviewed-by: Simon Horman <horms@kernel.org>
