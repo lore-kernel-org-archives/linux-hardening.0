@@ -1,51 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794240129;
-	b=S/87Jxr01x7jroFeDU9oU+qdG/NKsqeGjFqSw0rXKtGf7TRviVHMEp76gPRkI9HWamyH
-	 wzFagKy5YnbltUUNnxBnP9vIS+T3cIHgRvOlpHCxVnEFhi6s2W6BbXo8j/y+07F3p9s4p
-	 jupCNneBJ1zp+8NVQ/F2WkGursyvMRW8eIz9hB8BNeNi9ffAB6cY14NzZz8jYwqz7cz9f
-	 DpST5pF7UXhd9lgmW8uA1DfPOGvEAAKzj+RBBlQP3l+vxlgNFKdxhbt1pE/1jqDE141VH
-	 +BS22kfSBf5n9BwvUyZMihtA2l8pRDvzO5pSmIbnM1WHVVGHawf41YHMzApDUNrwgCg==
+	t=1794240140;
+	b=iXoJmMMhOFXfzEAe9cUgNdL4TSEWjHvb7BM6KJTIQoy2kWpGPuS0ryaJ3cgD5s69jOsC
+	 ztS8hNYc3UlKH129NDYHVbv3frXHeWVgyz/tNN8eH5tk/ejHLgQ8EBXd3qlWV2Xnpw8WY
+	 EqmCcXSgrhBxqMNnBdlcZlu198PlnGK6riw4wi/0sD1TdNPifOYOQhUKGuWnQ1eWzHM7a
+	 eyEIh2SUie5TVwrm4VhMO/Ikgxy27+fFHSCC2MJYmHQOT1Y2pUc5U5LwMJhEpAQNQH0Qn
+	 AsZ5OjmrjLNh9QFkK7mCv28MxyU9T6uQ+DUef0My05MKxwBNVMLJBMeZFUMsClThRwA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794240129;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794240140;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
 	 X-Developer-Key;
-	bh=a5aexMwK+2MFktlu7rHzowEh/NG7elaL0zrvutdRtI8=;
-	b=Lm2K2vakdBq2eSKme0phJAbe5MX2ASPeQKfClH31n19/EcRR63yJbXguzyyEZzzyqWIC
-	 Ad0//by+QckW11bFzgpg26wHT2tJAj4yVs7C7wT1XfgH20ZzcLDoDPJrxE2fhs8u7FROH
-	 ugnOBtsc/P0a1Y1zKDPJ4JRa/tibKBq6noNU1t1mlQqAMuza5754ZlXBLzSoRGGdC5nzV
-	 rDbpwgWakGk+R9CW2ppurdw12TMh+NVYKbGrAdLDl9cy0cKWI9s6JTqffOmo/g5gNFtN0
-	 TTPulxLM5fa425bRpBtXqY1X0Imm0D25KfBjKLSLxaep/+smWGReQUb5W18mGgZTHIg==
+	bh=wDt336sOLHXoyK1vJ5DHTHNJA3h4jiPSQ6EBbN6VPPU=;
+	b=KKlT9GBq16CPGnTa2VY+eoeiuYIpoqYKUla8RqRzVWP/fYp9MJhLpHnd3NvDcQ1eRiJv
+	 cdBt4+VYN20+Bwda4PdI3DNeihB1kdyuxex9Tu6c7OCbCZChEf8/BrGX9v6nM5ZlO7o4I
+	 6m+pmZuRJ3G8O38xAn3ebc4Xi1Bicvgc8rfr1ogmrWs33/48ZvrMK3zmoFknQ6EoLa2ui
+	 rndZCq3Y3+qeF/gc7UlHDGtiHPZwRRqZhSBDl1ZsBSC7LVh2HuVce8MV1tSLiDEB8kHm0
+	 mrIE8eUr4chIyBPK7Esn9xe+PWDQfM8shVJsKbUnqQaMreq4owBh6CGtX8xYnEuHScw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=arm.com;
 	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=vbUKJvs3;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=dH8ZXeaw;
 	arc=none smtp.remote-ip=217.140.110.172
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6696C60A260B;
-	Mon,  9 Nov 2026 16:02:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6696C60A260B
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97E9760A2625;
+	Mon,  9 Nov 2026 16:02:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 97E9760A2625
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=vbUKJvs3
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=dH8ZXeaw
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACD7B2F;
-	Mon,  9 Nov 2026 08:02:05 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23A1E1516;
+	Mon,  9 Nov 2026 08:02:16 -0800 (PST)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D04EF3F632;
-	Mon,  9 Nov 2026 08:02:03 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41B3D3F632;
+	Mon,  9 Nov 2026 08:02:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1794240128; bh=cUlLtdPRs8XVu22eeE08h4AwX9MJVfNOjzEFNCjlLx0=;
+	t=1794240139; bh=NFQEFSsYO/fKnRgE7J5ZDxamR8/pZMozASGHFiXFzxE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=vbUKJvs3Qdz7D4NxK50Ih0d1cPV51KEXxUyloY50+aDWWwJhRrfUaay3bbH4LO0E2
-	 APQBVrEsm5vFl4V6V0bWwOAUCk5yKdsCeDwjC/t4h18LBIMif9t/QoAkawW5pH8UD3
-	 ap4+IAAV8sS/IJmkte/B7IjY3MHrIxVKHmz+wawE=
+	b=dH8ZXeawxo9RYVWjKlz7VEpjb0FcZ2mBlznPXMI297grRoAkdMGTUFZAdtqQ2aB8C
+	 QAT7+pPg38V9AmeqHCdZL7tGeQk0d6JEhmHFaveFPzheIA0+E5uC4CuyHsOAOiEjVj
+	 FUXkCI059PuOzATmarafG9qY4ZXGvOFOmhN05d1E=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Mon, 09 Nov 2026 15:58:43 +0000
-Subject: [PATCH RFC v10 18/22] arm64: kpkeys: Guard page table writes
+Date: Mon, 09 Nov 2026 15:58:45 +0000
+Subject: [PATCH RFC v10 20/22] arm64: kpkeys: Enable
+ kpkeys_hardened_pgtables support
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -57,7 +58,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261109-kpkeys-v10-18-aa6c4d9603bc@arm.com>
+Message-Id: <20261109-kpkeys-v10-20-aa6c4d9603bc@arm.com>
 References: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
 In-Reply-To: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
 To: linux-hardening@vger.kernel.org
@@ -85,174 +86,35 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  Ira Weiny <iweiny@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
  Thomas Gleixner <tglx@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794240029; l=4952;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794240029; l=759;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=cUlLtdPRs8XVu22eeE08h4AwX9MJVfNOjzEFNCjlLx0=;
- b=MLBX1RjqBqwxlpGOI54Mr1paZcEmc9jPld6P5zWRz+PnxFR1FQTc2xDmuz69qpttX6tNinCHn
- 5BEIdJg46dPCu+KVbvQiJPmvNs4SJAjCE4dVZM5yyeijEXoc3MIqP4j
+ bh=NFQEFSsYO/fKnRgE7J5ZDxamR8/pZMozASGHFiXFzxE=;
+ b=PIyC1APa/UtTe2vo0XydEUgKuIvFCyLXYBF/FwYrpD/9Sxq+MAqmcDszgEbt7wQGtA3IiadoY
+ of5pIoerUJaBLMTbjWxhnozwdg5vsRjGujKle7TLPrIZ86KcBsAMXdB
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 
-When CONFIG_KPKEYS_HARDENED_PGTABLES is enabled, page tables (both
-user and kernel) are mapped with a privileged pkey in the linear
-mapping. As a result, they can only be written in a privileged
-kpkeys context.
+All the pieces are in place to advertise support for
+kpkeys_hardened_pgtables. Do it by selecting
+ARCH_HAS_KPKEYS_HARDENED_PGTABLES if ARM64_POE is enabled.
 
-Introduce a kpkeys guard that sets POR_EL1 appropriately to allow
-writing to page tables, and use this guard wherever necessary. The
-scope is kept as small as possible, so that POR_EL1 is quickly reset
-to its default value. Where atomics are involved, the guard's scope
-encompasses the whole loop to avoid switching POR_EL1 unnecessarily.
-
-This patch is a no-op if CONFIG_KPKEYS_HARDENED_PGTABLES is disabled
-(default).
-
-Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/include/asm/pgtable.h | 23 ++++++++++++++++++++++-
- arch/arm64/mm/fault.c            | 17 ++++++++++-------
- 2 files changed, 32 insertions(+), 8 deletions(-)
+ arch/arm64/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index a474c9fb485a..5f46d4cb3882 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -39,6 +39,14 @@
- #include <linux/mm_types.h>
- #include <linux/sched.h>
- #include <linux/page_table_check.h>
-+#include <linux/kpkeys.h>
-+
-+#ifdef CONFIG_KPKEYS_HARDENED_PGTABLES
-+KPKEYS_GUARD_COND(kpkeys_hardened_pgtables, KPKEYS_CTX_PGTABLES,
-+		  kpkeys_hardened_pgtables_enabled())
-+#else
-+KPKEYS_GUARD_NOOP(kpkeys_hardened_pgtables)
-+#endif
- 
- static inline void emit_pte_barriers(void)
- {
-@@ -360,6 +368,7 @@ static inline pte_t pte_clear_uffd(pte_t pte)
- 
- static inline void __set_pte_nosync(pte_t *ptep, pte_t pte)
- {
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*ptep, pte);
- }
- 
-@@ -789,6 +798,7 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
- 	}
- #endif /* __PAGETABLE_PMD_FOLDED */
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*pmdp, pmd);
- 
- 	if (pmd_valid(pmd))
-@@ -850,6 +860,7 @@ static inline void set_pud(pud_t *pudp, pud_t pud)
- 		return;
- 	}
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*pudp, pud);
- 
- 	if (pud_valid(pud))
-@@ -928,6 +939,7 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
- 		return;
- 	}
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*p4dp, p4d);
- 	queue_pte_barriers();
- }
-@@ -1053,6 +1065,7 @@ static inline void set_pgd(pgd_t *pgdp, pgd_t pgd)
- 		return;
- 	}
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	WRITE_ONCE(*pgdp, pgd);
- 	queue_pte_barriers();
- }
-@@ -1254,6 +1267,7 @@ static inline bool __ptep_test_and_clear_young(struct vm_area_struct *vma,
- {
- 	pte_t old_pte, pte;
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	pte = __ptep_get(ptep);
- 	do {
- 		old_pte = pte;
-@@ -1301,7 +1315,10 @@ static inline pte_t __ptep_get_and_clear_anysz(struct mm_struct *mm,
- 					       pte_t *ptep,
- 					       unsigned long pgsize)
- {
--	pte_t pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
-+	pte_t pte;
-+
-+	scoped_guard(kpkeys_hardened_pgtables)
-+		pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
- 
- 	switch (pgsize) {
- 	case PAGE_SIZE:
-@@ -1374,6 +1391,7 @@ static inline void ___ptep_set_wrprotect(struct mm_struct *mm,
- {
- 	pte_t old_pte;
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	do {
- 		old_pte = pte;
- 		pte = pte_wrprotect(pte);
-@@ -1407,6 +1425,7 @@ static inline void __clear_young_dirty_pte(struct vm_area_struct *vma,
- {
- 	pte_t old_pte;
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	do {
- 		old_pte = pte;
- 
-@@ -1454,6 +1473,7 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
- 		unsigned long address, pmd_t *pmdp, pmd_t pmd)
- {
- 	page_table_check_pmd_set(vma->vm_mm, address, pmdp, pmd);
-+	guard(kpkeys_hardened_pgtables)();
- 	return __pmd(xchg_relaxed(&pmd_val(*pmdp), pmd_val(pmd)));
- }
- #endif
-@@ -1784,6 +1804,7 @@ static inline bool ptep_try_set(pte_t *ptep, pte_t new_pte)
- {
- 	pteval_t old = 0;
- 
-+	guard(kpkeys_hardened_pgtables)();
- 	if (!try_cmpxchg(&pte_val(*ptep), &old, pte_val(new_pte)))
- 		return false;
- 
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index b22736853fcd..37a4d8187aa1 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -239,13 +239,16 @@ int __ptep_set_access_flags_anysz(struct vm_area_struct *vma,
- 	 */
- 	pte_val(entry) ^= PTE_RDONLY;
- 	pteval = pte_val(pte);
--	do {
--		old_pteval = pteval;
--		pteval ^= PTE_RDONLY;
--		pteval |= pte_val(entry);
--		pteval ^= PTE_RDONLY;
--		pteval = cmpxchg_relaxed(&pte_val(*ptep), old_pteval, pteval);
--	} while (pteval != old_pteval);
-+	scoped_guard(kpkeys_hardened_pgtables) {
-+		do {
-+			old_pteval = pteval;
-+			pteval ^= PTE_RDONLY;
-+			pteval |= pte_val(entry);
-+			pteval ^= PTE_RDONLY;
-+			pteval = cmpxchg_relaxed(&pte_val(*ptep), old_pteval,
-+						 pteval);
-+		} while (pteval != old_pteval);
-+	}
- 
- 	/*
- 	 * Invalidate the local stale read-only entry.  Remote stale entries
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index f7e4ffbc07ac..28023dd0fd4b 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -2301,6 +2301,7 @@ config ARM64_POE
+ 	select ARCH_USES_HIGH_VMA_FLAGS
+ 	select ARCH_HAS_PKEYS
+ 	select ARCH_HAS_KPKEYS
++	select ARCH_HAS_KPKEYS_HARDENED_PGTABLES
+ 	help
+ 	  The Permission Overlay Extension is used to implement Memory
+ 	  Protection Keys. Memory Protection Keys provides a mechanism for
 
 -- 
 2.56.0
