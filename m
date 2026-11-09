@@ -1,79 +1,79 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
 	t=1794251065;
-	b=HyWpXoUayC0hD5vUGrC5tk6o3GE2X6M1iMUw0zIluJSyFM4MH7GdC6toWPc0FgvktqHY
-	 PpTDTusUp5F/AZhpphqITU1vUenvoLR0vCAS47elC3mveM5JyiamN/fNgcfIwFjTQJerV
-	 l/P5LZpUfx1zwjwPdjdrBB6AxyilT8f1VLH5BUeWSrFGDH0u6BjTcqdoCi9x80QIV2IK3
-	 dfNtGCrQojs/b2DHpNWNf9oGMOg9WIck9Q1oC4jtcBKBU7vy16HgTSQosRXM+DokJ9+sK
-	 2ow+I/bqkQi5JR7Vt/RP/OESyA2b8IrV4jkA6OwOsE5b2yiJCr7EAOrWEM/r8q9r7lA==
+	b=PNdaguv4n7sAISbD24w1acVWokMb4QhgA7qgZOX+2IuUIns7swlhE+BMbQL+sm7/lyNn
+	 bSIbms7sDvXCr3z8W8DMFtNMc/fpH2Rvt637K9DtQ5fuAU70zfyJPG9nSQVKfp9nC5yz+
+	 LhIZsNYweC17u7+kZuODgBdHui/Oj6QkbxWiM0h5tqIuHTg96W5N0dwrfANcTa6Z3tPC2
+	 6yaY0r7Xi0moX4OHqg3T5QhGBaKMT2LaZVdAXm/mORpzo8JYbCmAMm1wuoX4BAToKurrW
+	 dpxrA6DpylN2yEZzfJXoq56lSaIZld5N8UQJdZCo7EBXTbUu2Ea+dMBrFN2Iydi+afA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794251065;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=RpUh4/i5yEgJrvnefCqxvh6+JPi28ndM/f1eQAaNtJs=;
-	b=xQJifmYBIEr1+4AE555kHSGvVymfRl0hiGSujoGrjX0w3kumiq6c0u1KWNKrR0bXxbv3
-	 CBMcVFwejnx/u6PTnw985I6UTtkarbB2Mvw1raIL0PSBT4ck5QFLDdkKiB4hxI/hCmlJr
-	 S1xfLSJxD0woa0ncZF6kgcCKM1dIeBRmNEIG6sjcaM6DyPwyN4rcYBQ8E/e8M2rVAbacf
-	 yzT6i6JhCFRU6VbQe9q58Fpnx1cIxhV6kWf+VH4TzZj8IaZ/Jc9zE/BFIWey3e6h8kIDi
-	 s0huV+bT9Q4clgkLkyK6qDdx3FSKGCJMXQseJzc3mZAY8Df7rrIlWtJi9UA9/733WpQ==
+	bh=9DhueLum8Z1bpHDqZK0vZGxoFbrR9/gjrhWzlk/HNW0=;
+	b=FF9WKDwlLQ757L/2lUedFaI4N15oNFs/HRNV9drI3XLWezes01kLp2ew7JQqLrqHppKQ
+	 XDxp83q91OCk3v9QMEBHIfHUAbN/DE6vliVCh9emxnKaZt6LBsTL3xVwnHQC5jnLxaCol
+	 vrHGX0ddHJiSHN09ZbTXgjglB9f9DDcXK8e/BGzLh5DMaVbFqBO1g68uSTlGGwMr6M2od
+	 4dSQKeyl3mxi3l0RqQ+KUbhlsWUV/nTVr+9JWAlUU2Eq9IjknT4sATPSp0br6gjC/lT+X
+	 bZsmXq9DqnreRKEuvV0welaD6zK2+l/dImuJyyJIbqZV590nlB2hgFX30DBh5wC0Dlg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fAbPfh9S;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FIuCsgP9;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BB7606A325;
-	Mon,  9 Nov 2026 19:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457E8606A335;
+	Mon,  9 Nov 2026 19:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fAbPfh9S
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FIuCsgP9
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
 	t=1794251064;
-	b=E6TBaAOyMG11ljYXk+2djcyVuvdQsj0sEwIWSuEBqksp5XryZ6Xxub8Sk8PBYROUiZ8a
-	 89E7b5PAv6XHN5kDPEEVMkUyVaUee9wHCUORP2OyXfP+OZSp7Cny26PM/UVrA3GZ6+9Sm
-	 6alRi/bXoECSrBwq2edrf9uTjwVLW4gnAc5l/ui+XSgnYe+JyNR5/4u08bIhTgX+ApjBX
-	 ntr8YuFuE1KsT7d8KyuWlgHNiM1qdTkZeyI/UfS3L+Fi7x6Z5xx2lR7nt9dR/ntPbgWll
-	 mrYdhCoG0WEwxVmL+G/8GYluSh+BWMTscly3grW79/L7vZt/MOF4dHDFkfpvjY/I7qQ==
+	b=HfTe1+JwTHdKikNV6oNnVRG5cNUt1NS73WUNKtJsWb4JscHdjBRps8XXGiBh8CItEX8z
+	 5Ql3Y4m8ERoG+LG98ArsExvQEpqc5TGbOyIl095rGjiT+O9Yrbqiekvyo2tcq+rHVN7AO
+	 V79/tgomtoSJmFLFqiJFNFgbI2BcDos8HdVnLnzrmB70EyWYMwTNExxhdR8gsh6XBIx/r
+	 Tvi4WcEYzswoCp62JKfgOxHJl9PrYnyBGwAt/omhlu+VjTrjzJ9Y5LSobFKP2ALPRUjkD
+	 0KAeUyRJhGP3pzL3mmV11nYnLQ6dFAeeX0wa4NeDxiV2C5yrzkB+JI7g122qrqtinXQ==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
 	c=relaxed/relaxed; t=1794251064;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=RpUh4/i5yEgJrvnefCqxvh6+JPi28ndM/f1eQAaNtJs=;
-	b=KAh0PciY3rABwRsSFkzJRTfMQUvPAOwpUASx0JFHAnNamoSdR3cCdTjhL8Ixz6E8kl7Z
-	 5mSuQXDfwsPbJYEQaivOHJ1ZvSd5YKdRgNrb5TbquE7bA4lJdN/RfktPPBMNSFF98AFO+
-	 iKCvflZI5+VSCtbjfc5u6nyUeQ36KDM6ISkmOQqewgV/z6iKJKytoutzi7+i+jwgY5noX
-	 mMHVSD+wZkOudWWSc8yohpuRfP7Sy8dxCvckdn/wMUJDsT1DvSVBx36HlN26eH7p7RDL1
-	 GiEnLUrYAkgG7GRZ/u3Bm/Q7OmMbq8ubO7J/cbprB+4idW/PBimk+Kuoh76Zeaeczkg==
+	bh=9DhueLum8Z1bpHDqZK0vZGxoFbrR9/gjrhWzlk/HNW0=;
+	b=WtTk4A/z7gooJRuPCcwQEHhFKjZbVLrxeFyEsKTBJiwKP2brdd15DZuat4mU3yjmVbPV
+	 XPRsShzdjn67Kh3luqJ0g7YX+Cbmp0JxNOZcnQ4FsYkYpd9wg7y2kuok2JNTz3EtvKdFf
+	 tWyyiMPKY4pb8k7I4Wvvoghu5nNECM9NYI/Gl+6vbieFar7/ekSAALnmhkD3dJ5RbRcSR
+	 +Z7JSvwcQcrw6Cw8OL853w2uNhRSo+ouNIQ9kTeC2iiEWDGGYk5d0EGdO8ggejnxuHHn2
+	 fj/5cgN/EK7TVtivqxLWM799P1x7k8vvWabSc+W0ZNnZzWdbkCZ0Lfv4CT8ezT9lrBg==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id B078A1F008A2;
+	by smtp.kernel.org (Postfix) with ESMTPS id BDA251F008A3;
 	Mon,  9 Nov 2026 19:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794251064;
-	bh=RpUh4/i5yEgJrvnefCqxvh6+JPi28ndM/f1eQAaNtJs=;
+	bh=9DhueLum8Z1bpHDqZK0vZGxoFbrR9/gjrhWzlk/HNW0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=fAbPfh9SHdVJw/5O+++D3MCiokGxPvcE4C9XRaVKhOQASu5F7tOUFtvw17l1krETH
-	 hYY5mMOIFjYwkfLX/VPxC0qmwgcXT0LKI7mnZUpg8xi95KFE06Hhl16dPCZ8jx/uBy
-	 3g6c6kBi6DV8So4UmwfBWHEDOwsEEwu8wNhcq0EEtaGs+YKCZ8nwVOgXcwmX+ZmuQy
-	 04LXAu8Ob9E1h4OHJ1q6Mjcu6oddKx+8urdnrJ1f32wfKbYw/EVE+s48PmlwSfs5mX
-	 3PjrTs4wol3pRaA1G6yKRl+JnrJQe+EhA2YXeypfH97WpZR6mfR1wh1bub3BU2cnxm
-	 ZgcEEsr0zx//Q==
+	b=FIuCsgP9jmn4Drcs1eZyxoxfN280aY78UOYGBoUpaQVAh8uArVio6nBcKb2svC5kt
+	 9ykrbRdTAjdYc41eemZE0NWB8qI7PO13hIoQBigdDbQpTQMvMutRJVF2nIC+/yvOTM
+	 lJnhQ4INb6tuUvOs/PUzMq2BFFXZ5qKh4ft29/ugK99we4qAKWr1uFGH+zkt9gfJKK
+	 b9LArrgmy1G1x9chYiE2W36d8txwv4gQXSXEh7Rd/SKQG1fulp4M3oT7VTKR9Jgefu
+	 mIcxyTKO+KI2SLEUxQX2Sd3FLR3+YvINpx8KC5I2vssb2dzNQ+S0o1XGBOzF2ESG8G
+	 Jeox0FzSFzPJw==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 353F7485E6;
+	by lkml.kernel.org (Postfix) with ESMTP id 47ADC485EA;
 	Mon,  9 Nov 2026 19:04:23 +0000 (UTC)
 From: Joseph Telaak via B4 Relay <devnull+joseph.telaak.dev@kernel.org>
-Date: Mon, 09 Nov 2026 14:03:38 -0500
-Subject: [PATCH v2 02/11] leds: rgb: ktd202x: Fix an out-of-bounds read
- with unused channels
+Date: Mon, 09 Nov 2026 14:03:39 -0500
+Subject: [PATCH v2 03/11] leds: rgb: ktd202x: Never program an on time of
+ zero
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -84,7 +84,7 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261109-ktd202x-et6326-v2-2-56e97c226658@telaak.dev>
+Message-Id: <20261109-ktd202x-et6326-v2-3-56e97c226658@telaak.dev>
 References: <20261109-ktd202x-et6326-v2-0-56e97c226658@telaak.dev>
 In-Reply-To: <20261109-ktd202x-et6326-v2-0-56e97c226658@telaak.dev>
 To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
@@ -97,14 +97,13 @@ To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
  Randy Dunlap <rdunlap@infradead.org>
 Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-doc@vger.kernel.org, stable@vger.kernel.org, 
- Joseph Telaak <joseph@telaak.dev>
+ linux-doc@vger.kernel.org, Joseph Telaak <joseph@telaak.dev>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794251062; l=1977;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794251062; l=1420;
  i=joseph@telaak.dev; s=20261104; h=from:subject:message-id;
- bh=WIevyBVu88sXpVFkOrkZHCBIjBM1tLa+KjKrKOEfUlA=;
- b=je58tgYPuvVRDFPZspy1+/3EWSCiKDZxyHGOMap0N0co44VNKM39+rC3aorCj/F8V6k0JyJwV
- fRxUWp+a8CqAjqSftWfq+T9s+XS4tqFl7k18ipY8JYbpCMNoCaFIR+J
+ bh=EV1hmMaaQNopYbNm1qmtCvLAT8YUulReeH2UbRD8tX4=;
+ b=5N6+AXHYwh9K+UQFzXUIn312YRX3LuAYUQmwV4Tgf5T/HL84uozk/eH7bTzjryK47HfTo6lmW
+ x5nyDoLh/aUCzecIRTCZZ3cQgz72pFFGw2XO7KMPzCYYP9BfrvGUd40
 X-Developer-Key: i=joseph@telaak.dev; a=ed25519;
  pk=oQI+UfddlZ0wK2ac4WKOGNjUl1ZEN8j9ZVFSqEDoNP0=
 X-Endpoint-Received: by B4 Relay for joseph@telaak.dev/20261104 with
@@ -115,57 +114,38 @@ Content-Transfer-Encoding: 7bit
 
 From: Joseph Telaak <joseph@telaak.dev>
 
-The LED array is allocated for the number of child nodes, but
-ktd202x_chip_in_use() walks it up to num_leds, the number of channels of
-the chip. With fewer LEDs in the device tree than channels, for example
-two LEDs on a KTD2026, it reads past the end of the allocation and the
-__counted_by() annotation hides that from the bounds checkers.
+blink_set() turns delay_on into a fraction of the period in 1/256 steps.
+When delay_on is less than 1/256 of the period, for example 1 ms on and
+1000 ms off, that fraction is 0: the LED stays dark, while the timer
+trigger reports that it is blinking with delay_on = 0.
 
-Allocate one entry per channel.
+Use the shortest on time the hardware has, 1/256 of the period, and
+report it back.
 
 Fixes: 0ebdb7210943 ("leds: Add ktd202x driver")
-Cc: stable@vger.kernel.org
 Signed-off-by: Joseph Telaak <joseph@telaak.dev>
 ---
- drivers/leds/rgb/leds-ktd202x.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/leds/rgb/leds-ktd202x.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-ktd202x.c
-index 539cf425cdb7..482af28e8370 100644
+index 482af28e8370..8c890ea5a754 100644
 --- a/drivers/leds/rgb/leds-ktd202x.c
 +++ b/drivers/leds/rgb/leds-ktd202x.c
-@@ -537,6 +537,7 @@ static int ktd202x_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct ktd202x *chip;
-+	unsigned long num_leds;
- 	int count;
- 	int ret;
+@@ -304,8 +304,12 @@ static int ktd202x_blink_set(struct ktd202x_led *led, unsigned long *delay_on,
+ 				  (delay_total_ms - KTD202X_FLASH_PERIOD_MIN_MS) /
+ 				  KTD202X_FLASH_PERIOD_STEP_MS);
  
-@@ -544,10 +545,13 @@ static int ktd202x_probe(struct i2c_client *client)
- 	if (!count || count > KTD202X_MAX_LEDS)
- 		return dev_err_probe(dev, -EINVAL, "Incorrect number of leds (%d)", count);
+-	/* Integer representation of percentage of LED ON time */
++	/*
++	 * Integer representation of percentage of LED ON time. A value of 0
++	 * keeps the LED dark, so use the shortest on time instead.
++	 */
+ 	on = (*delay_on * KTD202X_FLASH_ON_MAX) / (*delay_on + *delay_off);
++	on = max(on, 1);
  
--	chip = devm_kzalloc(dev, struct_size(chip, leds, count), GFP_KERNEL);
-+	/* Loops over the LEDs go up to the number of channels, not of child nodes */
-+	num_leds = (unsigned long)i2c_get_match_data(client);
-+	chip = devm_kzalloc(dev, struct_size(chip, leds, num_leds), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
- 
-+	chip->num_leds = num_leds;
- 	chip->dev = dev;
- 	i2c_set_clientdata(client, chip);
- 
-@@ -562,8 +566,6 @@ static int ktd202x_probe(struct i2c_client *client)
- 	if (ret)
- 		return ret;
- 
--	chip->num_leds = (unsigned long)i2c_get_match_data(client);
--
- 	chip->regulators[0].supply = "vin";
- 	chip->regulators[1].supply = "vio";
- 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(chip->regulators), chip->regulators);
+ 	/* Actually used delay_{on,off} values */
+ 	delay_total_ms = num_steps * KTD202X_FLASH_PERIOD_STEP_MS + KTD202X_FLASH_PERIOD_MIN_MS;
 
 -- 
 Git-155)
