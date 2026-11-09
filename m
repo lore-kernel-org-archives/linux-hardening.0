@@ -1,66 +1,81 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794252446;
-	b=LtzzD9XFnJxtI3SUD4+zlzs4EonzrjBsSmdM9xn/Vrdo4CCQ+AEF3/kGD69Te/7EmCNk
-	 lCrzaOjQdvG8KwDee174ENmxVrX+GES8NJNSrK1TioC7/p/MotRmGuyGQ8f6COnVMfgeK
-	 zXSwkDzoKYXBeqYpKj59TXQT0Hy2pQQ1sVKnmg6dT6rGdk5cKqcvxafeaZYzFtNCAa+cu
-	 E0wEc9PgFbZdZy3TUMEGGfBmKR3Bf2+PXPH9AZzqK7m5x17cuaOJNz1gwk69synl+eGPu
-	 9dvmvis+YLJqwagVUCBx4Hnzn+lWaDOLrqBOxTU24QjI1sSUVH72obGolFJVPUMXybA==
+	t=1794252517;
+	b=bqH9p35tDQ+cQwS+P26FLKelj0CRv75UwaMLQotucX1W+sLF8ZYcQ74SSz8MEHLFPF8o
+	 ZQHrNZZWGABkqyb1jXJfoZ7G1q5p2B4D2YMYN4uhVOPIRmvjGI3HDdxePLCQJhqJaZ235
+	 ckGuPgGpzuI9CkCZkWEBu1NrdL4fNfe0anmrgS7D+NA1sokMAtCacHa8ZPwzUyt4XOnew
+	 IykK4Zj2zSEJl6mwDmzGkbq4Hc0IrBUrtguJdq1dXqsNU2h7FxO+XKm5McRxp+M1UOVLc
+	 HojmexMdJoV1fy9i5IJesGmDIwyzW5KxVt9oTazBVMrS+yTRLpxv3CQQ5axE5QT9KHQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794252446;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=VqI4vEj9I0PE8OdnRFGraF5rg0lsij7ceArvqc84Ggc=;
-	b=Ukue1JBu3Q/dYR2Ok+19Ksh/IZ9UCOOkVamlXJpPPO6DEA+OwrExxv9RyoycNnESemHy
-	 VjHqUaXmVwCpPYlqxSUmVMQIEl70fQk05S2mp0Bev5SxGlssq2TW2OrypHgJuqv3lYFcp
-	 uadi0BQnoSefZdNszOPdTghQ084rSk5IlsVAEy/6An0Ustu+3irGQAQ0bF9RFoqJaDFuS
-	 wEASKsoJhbKYAXelU0SaSAAmXFBkJrhR7BLw+AbEJ2I329PILFGnaLWCwnvcxNTR46PNM
-	 tnDj6rWmoLzEAbDI5ZLQhXdWYWp3GWkuNHEOIcrI6Uq1LUkP6wrIeCRUl46CtB9xOVA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794252517;
+	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+	 X-Cookie;
+	bh=PvK1FBUlQu92e+3qOO46yvXvWJ6xY3Ch9e+qtHZ8ifM=;
+	b=159sSVPtIaoiZ8E4RjihyMN/wscTTScqRSYfMAEkJVc1iKndzX+vGY2V1/RjMdBX2kZ6
+	 tKXeCOD8H7qO1oRboegQeYduRHQXtRTKdxa+CBHPc+9Vpahl+zeXDOB2h4wPNUW0IgvFI
+	 US3nfiP/iBlDkoD7gcBKbQ6TSaWvCLYQUkVpOGWf7KSHXYTgIEszQ6+hiDdAqr7oRJxkM
+	 7CQhKtrHN807b046xDiZaI9I4fB8Y0hAEERvNk9/MdGUEM+RmV3FZ/b/TYH+vjpBfMdHw
+	 HvTiffUsmRiylC6YMbUynCDW8IYMWdmdPFTyE835rWEsHqNP5JCDQkzHhmcSkvcWriQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ALXmOPih;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IYUVVpaQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF82606A321;
-	Mon,  9 Nov 2026 19:27:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99982606A325;
+	Mon,  9 Nov 2026 19:28:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ALXmOPih
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F9741F0089F;
-	Mon,  9 Nov 2026 19:27:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IYUVVpaQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A741F008A2;
+	Mon,  9 Nov 2026 19:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794252445;
-	bh=VqI4vEj9I0PE8OdnRFGraF5rg0lsij7ceArvqc84Ggc=;
+	s=k20260515; t=1794252517;
+	bh=PvK1FBUlQu92e+3qOO46yvXvWJ6xY3Ch9e+qtHZ8ifM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ALXmOPihuMxoB5rOy1DtnfFXSpYohLI+nUQJjB4I2A2RzJ6Aj6yhCZ0BqF5gxv7Yo
-	 O0WCPpcIRxOSPq5EQhKDAuJ/jqVeFdFvrcKxdH9YfftJMv6LQiU2cPSt52b7zfzJ0w
-	 8BLKelnSCcmb4PlRkLw1CVwr6ACGGNja6hlYaWXhv2h5bOPgB27RS5U9RCj87IvJiz
-	 63NFE51VHmkwSUvb3kCfiffJKYXpdXH281uLhRmIoGynzY3EAR6Uy82IILhivtoBbz
-	 JUmu8UXs+6+iTVqXeXSml5Me6mtfF2Ap6w8mDJg8VG4ucJtNhT3e6gbimIIY9U7kh1
-	 vuu6o3M4OESsw==
-Date: Mon, 9 Nov 2026 19:27:19 +0000
-From: Simon Horman <horms@kernel.org>
-To: "Nikhil P. Rao" <nikhil.rao@amd.com>
-Cc: Brett Creeley <brett.creeley@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Abhijit Gangurde <abhijit.gangurde@amd.com>
-Subject: Re: [PATCH net-next 3/4] ionic: add an auxiliary device for hardware
- monitoring
-Message-ID: <20261109192719.GA18859@horms.kernel.org>
-References: <20261103-pr46-b4-v1-0-850ab7fbec19@amd.com>
- <20261103-pr46-b4-v1-3-850ab7fbec19@amd.com>
+	b=IYUVVpaQejpurCnmiYSSdzB7QEEI0r4B85C8K76h9yFnNJIPW8dxlBgo8Gf4RbywF
+	 912hcLYLrkWoewMKDW5nvpzv1yqTIW7T1NnukrfgH/RGFu6tU7g49C/aBzA1eoOU2+
+	 Xco6d23rGLqJTWskOkobA8dwadTfpbw96TxH97fHifLyMitYEsxHmuiVhiazCf2XGq
+	 tvK1Tu9Yy3MzftA4rdouKVLkIgY13lIQdoTva7UujOM3xVVABeA1nHBEtYJelTnwZE
+	 m2SKA95aBi7aBeiElZpEqK6RW3yOxjRmRh0thPi4BYk2+J0Xe+HNRJeyQXbyck8mT2
+	 a6f6ciRegoZLg==
+Received: by traversing.sirena.org.uk (Postfix, from userid 1000)
+	id 54E2F2FC6B1B; Mon, 09 Nov 2026 19:28:14 +0000 (GMT)
+Date: Mon, 9 Nov 2026 19:28:14 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ard Biesheuvel <ardb+git@google.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
+	Joey Gouly <joey.gouly@arm.com>, Kees Cook <kees@kernel.org>,
+	Linu Cherian <linu.cherian@arm.com>,
+	Linus Walleij <linusw@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Maxwell Bland <mbland@motorola.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pierre Langlois <pierre.langlois@arm.com>,
+	=?iso-8859-1?Q?Pierre-Cl=E9ment?= Tosi <ptosi@google.com>,
+	Quentin Perret <qperret@google.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Vlastimil Babka <vbabka@kernel.org>, Will Deacon <will@kernel.org>,
+	Yang Shi <yang@os.amperecomputing.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+	x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+Subject: Re: [PATCH RFC v10 22/22] mm: Add basic tests for
+ kpkeys_hardened_pgtables
+Message-ID: <2d13fbb7-b5b4-446e-8709-5b43349ff19a@sirena.org.uk>
+References: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
+ <20261109-kpkeys-v10-22-aa6c4d9603bc@arm.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,21 +85,44 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="/fHNA9/ObvvJyqoU"
+Content-Disposition: inline
+In-Reply-To: <20261109-kpkeys-v10-22-aa6c4d9603bc@arm.com>
+X-Cookie: Whoever dies with the most toys wins.
+
+
+--/fHNA9/ObvvJyqoU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261103-pr46-b4-v1-3-850ab7fbec19@amd.com>
 
-On Tue, Nov 03, 2026 at 06:14:48PM +0000, Nikhil P. Rao wrote:
-> When the firmware sets IONIC_DEV_CAP_HWMON, create an "hwmon" auxiliary
-> device so the adapter's sensors can be exposed by a driver in
-> drivers/hwmon/ rather than by the Ethernet driver.
-> 
-> The GETCAPS response buffer belongs to ionic for the life of the device,
-> not to the hwmon driver, so a command abandoned on timeout or unbind can
-> only write into that buffer, never into freed memory.
-> 
-> Reviewed-by: Brett Creeley <brett.creeley@amd.com>
-> Signed-off-by: Nikhil P. Rao <nikhil.rao@amd.com>
+On Mon, Nov 09, 2026 at 03:58:47PM +0000, Kevin Brodsky wrote:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+> ---
+>  mm/Makefile                               |   1 +
+>  mm/tests/kpkeys_hardened_pgtables_kunit.c | 200 ++++++++++++++++++++++++++++++
+>  security/Kconfig.hardening                |  12 ++
+>  3 files changed, 213 insertions(+)
 
+> +config KPKEYS_HARDENED_PGTABLES_KUNIT_TEST
+> +	bool "KUnit tests for kpkeys_hardened_pgtables" if !KUNIT_ALL_TESTS
+> +	depends on KPKEYS_HARDENED_PGTABLES
+> +	depends on KUNIT=y
+> +	default KUNIT_ALL_TESTS
+
+I'd also expect to see this added to one of the KUnit config fragments
+somewhere so it gets run as standard, though that's a little awkward
+given that KPKEYS_HARDENED_PGTABLES isn't universally available.
+
+--/fHNA9/ObvvJyqoU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHQEABYKAB0WIQReagvpf3TrrA7BoYYv73Ows9A4iQUCavIezQAKCRAv73Ows9A4
+ibK2AQCrJzPayeKs4GAc3zkVW3UwqtkA+D8a/edVfuY3OR/2bwD3XTl245dfPaNz
+6bNpvbbPF3MhEBTENHBe9r4fl/a7Bw==
+=iCAm
+-----END PGP SIGNATURE-----
+
+--/fHNA9/ObvvJyqoU--
