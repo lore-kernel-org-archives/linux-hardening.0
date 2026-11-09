@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794240057;
-	b=L0ace5dhlubyQAdC94BXuEmeSHdUou0J684pPMGiAfVKnJkOn1/KqHu37+7F1GcDdzyw
-	 g3P+dc24F3z2Bav2xYaO6ZGSz9YmZBAPcWAQg7rMIWVtvRMdr0jtnH+dK/XzuZBbHk+x+
-	 nUb8SAVeoJ9Wk9JVEwI8u7g7riwGlAMkxGG6EjyTnurbCZQlizet+Mv6z8DDut3YO1bqy
-	 xpJfLz82pSsoPWAjw3s1R/Lbv9PcPQ9FD7gBAt90g/ktyivkGPyZclkwDaBThgfHa4uiQ
-	 z9cB/5dauPPIC55xmfBgQCLx7nU3DyEWEGOeazHk73shn4B8zyL5QlpHKfmGxB9Fwtg==
+	t=1794240067;
+	b=H/KyTdmBSXLVzeuMekMlhA1vM8wZuwhkEEHr22Rsi6EuCNJ145ARsndeaJ6Tiuhl1kWn
+	 Q9l4TYWLJeuduLvXM5QfiwPhB/6HH1g6WffDc3qFdrBsqGZjdhqPLPZUUuJYcPoLOfuEm
+	 y5yhexlBu3KsUigD7l+o4wOP1JotI+hjpWmPd3x8ZKUyyK0QPoeHgz1EUytRemaAky3CF
+	 gg1QBecjrpsaIads7PBzu3DZp3IM4pEPnHqDJbUhcz8XflQU+NFZSGwl2xHfJLdMg4UMF
+	 1S1PFHxH018SEEazZLaxwhLBl1LRBC4+rT/xK/lCXmKEfUO+i/YoqyGxvVIUBaTst2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794240057;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794240067;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
 	 X-Developer-Key;
-	bh=AcRyVl3av4/w754axH9VXzJaDMMrkqSxrG13JEt9n1A=;
-	b=ADvupcPHQIJCZZjM57qav0aJ+yBqajvCKbOSZm249gcWJqHykxgFx78jALpFA77GDf9f
-	 ocKipnyQxDu6qKUt9vGigYpKglAu/M8P3MvFr/Ol/gcyNJssC9DstcNE6cbMNvxXvKvJu
-	 pxcSht2p/ctfvbD3yZWP7B1Aa5vcQjp8tT6HQPqv1tP5mBPVhqfaK7FfBOzfSiU8eArFD
-	 uX+r+IWLBhhu2Aha+DSP3EHFaJO9h0q6AVhu2Wf7C3BjriZKLACRStE4ILDsSJmC/fNFu
-	 Wnf6eyVI+Gtp61TJCq1VmjDfTBlkyjjLeA6a5ahy47LpgC52r47RSzf+YoWOkEUizaQ==
+	bh=ySuENrGpUqjNOnPLgMFrEVBetZNZ5PFApDQ/o4nKV7Q=;
+	b=vHW6+EaiT8AfYvY6IZZLOF/+TgFvbYK/TIl2/BoJcOFP66Kezue7WHpCgmU71wNXhz9e
+	 EF9NXuuPbx9zAktykDrn7u3avuzaLVCENT1eVJD6XB3WbPP8qkz1N7syS7A3HVH8sIHb6
+	 sjUxAMjLExHltCVkNeEQZzs9y8ZU6PUpnXSiPszGvObgp/8dCNz0aJzcP2KRX45NE0IBF
+	 1i809WzqGWXvLjjGG6BaCU9T7FVmplFqtjRzHwwQQahV7TWp+98+57smQq/LQMfzD0sdB
+	 0umlqq/zEj76eTlmjBf7zlLZxs2Z3j7jkMBC2G1x2IUUlax3Ns5UwwFlmWf+gcsVQ4A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=arm.com;
 	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=ICz3usDE;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=d4mirWSg;
 	arc=none smtp.remote-ip=217.140.110.172
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FA5B60A3802;
-	Mon,  9 Nov 2026 16:00:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4FA5B60A3802
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD813606EE82;
+	Mon,  9 Nov 2026 16:01:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CD813606EE82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=ICz3usDE
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=d4mirWSg
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBCAC1691;
-	Mon,  9 Nov 2026 08:00:52 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D08314BF;
+	Mon,  9 Nov 2026 08:01:03 -0800 (PST)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DABAA3F632;
-	Mon,  9 Nov 2026 08:00:50 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E7A73F632;
+	Mon,  9 Nov 2026 08:01:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1794240055; bh=V64+QxW1I268L+mXq7JODtz29+UgFMI5wp/RRCsFELQ=;
+	t=1794240066; bh=ME8w8wWVjC6kFFTloB33po9XzJ2RJqfmLmS2WG/lKf8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ICz3usDEI+AJFOSM9CwmodLqDlnKEquYVwFBN+vqqHVaIQsn0lUi6P9NdeFrQn90O
-	 riUKSigPGNIjWu4bu90GFbApTlIDZB/d63VRiOCV+d1PLlOgLnvXqDXRLxfG+E3MEf
-	 YnDpeGpz/KsBBSsxNQetzLP05ZpWWxfF98ywIXZs=
+	b=d4mirWSgxEi/JKu2hm3pp69pzDfwTMhGF+FxTJjtWYJGttTFyyMTaLtQF/oOiyJn9
+	 h57+SBa9UM84EVZ5zS3Ap4mgf+iwD0lxSqxx1XC/tvqYGFdzzGa5mf+CX3SaCBrFAs
+	 nuOU8SkMYKk5YSjml0jU4OLWE+u4Rf23ebx0aWdw=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Mon, 09 Nov 2026 15:58:29 +0000
-Subject: [PATCH RFC v10 04/22] arm64: Implement asm/kpkeys.h using POE
+Date: Mon, 09 Nov 2026 15:58:31 +0000
+Subject: [PATCH RFC v10 06/22] arm64: Disable EL2 trapping of POR_EL1
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -57,7 +57,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261109-kpkeys-v10-4-aa6c4d9603bc@arm.com>
+Message-Id: <20261109-kpkeys-v10-6-aa6c4d9603bc@arm.com>
 References: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
 In-Reply-To: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
 To: linux-hardening@vger.kernel.org
@@ -85,152 +85,36 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  Ira Weiny <iweiny@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
  Thomas Gleixner <tglx@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794240029; l=3746;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794240029; l=759;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=V64+QxW1I268L+mXq7JODtz29+UgFMI5wp/RRCsFELQ=;
- b=rmjR5AVjdB2ZyCgHS6vrWjKRVgyGGKu82qWQVc7ReZI8FFlR4sPvoyVMXljt7m3b5NfGLfzjl
- X8eWGgyj4ghCK8iUfkL6ITdyn97DuqqOqE27Wu/HHkaxuv3GRw+/nJ5
+ bh=ME8w8wWVjC6kFFTloB33po9XzJ2RJqfmLmS2WG/lKf8=;
+ b=rL512vL81TftsgVlNw/YWtwNuWTlsI6Cej/ghKNCNj73xPNjGm4Cg71LdhCcqnj1mhqyTW3HF
+ I/KR6KaqUYRBomiLeE6iHzlv6Nr+WcGKvkmbY0SilOz0QDq5L3+GWlM
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 
-Implement the kpkeys interface if CONFIG_ARM64_POE is enabled.
-The permissions for pkey 0 are set to RWX as this pkey is also used
-for code mappings.
-
-arch_kpkeys_enter_context() returns whether it modified POR_EL1, and
-saves its old value when it does. arch_kpkeys_leave_context() is
-only called if POR_EL1 actually needs to be restored.
-
-To allow <asm/kpkeys.h> to be included from assembly, also add
-appropriate #ifdefs to <asm/por.h>.
+Make sure EL2 doesn't trap kernel accesses to POR_EL1 by setting the
+nPOR_EL1 bit in HFGRT{R,W}_EL2.
 
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/include/asm/kpkeys.h       | 73 +++++++++++++++++++++++++++++++++++
- arch/arm64/include/asm/kpkeys_types.h | 15 +++++++
- arch/arm64/include/asm/por.h          |  4 ++
- 3 files changed, 92 insertions(+)
+ arch/arm64/include/asm/el2_setup.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/kpkeys.h b/arch/arm64/include/asm/kpkeys.h
-new file mode 100644
-index 000000000000..4f9bdb369b47
---- /dev/null
-+++ b/arch/arm64/include/asm/kpkeys.h
-@@ -0,0 +1,73 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __ASM_KPKEYS_H
-+#define __ASM_KPKEYS_H
-+
-+#include <linux/kpkeys_types.h>
-+
-+#include <asm/barrier.h>
-+#include <asm/cpufeature.h>
-+#include <asm/por.h>
-+
-+/*
-+ * Equivalent to por_set_kpkeys_context(0, KPKEYS_CTX_DEFAULT), but can also be
-+ * used in assembly.
-+ */
-+#define POR_EL1_INIT	POR_ELx_PERM_PREP(0, POE_RWX)
-+
-+#ifndef __ASSEMBLY__
-+
-+static inline bool arch_supports_kpkeys(void)
-+{
-+	return system_supports_poe();
-+}
-+
-+#ifdef CONFIG_ARM64_POE
-+
-+static inline u64 por_set_kpkeys_context(u64 por, enum kpkeys_ctx ctx)
-+{
-+	por = por_elx_set_pkey_perms(por, 0, POE_RWX);
-+
-+	return por;
-+}
-+
-+static __always_inline void __kpkeys_set_pkey_reg_nosync(u64 pkey_reg)
-+{
-+	/*
-+	 * Writing to POR_EL1 potentially affects all memory accesses, so
-+	 * use barrier() to ensure load/store instructions cannot be reordered
-+	 * past the write.
-+	 */
-+	barrier();
-+	write_sysreg_s(pkey_reg, SYS_POR_EL1);
-+	barrier();
-+}
-+
-+static __always_inline
-+bool arch_kpkeys_enter_context(enum kpkeys_ctx ctx,
-+			       struct arch_kpkeys_state *state)
-+{
-+	const u64 prev_por = read_sysreg_s(SYS_POR_EL1);
-+	const u64 new_por = por_set_kpkeys_context(prev_por, ctx);
-+
-+	if (prev_por == new_por)
-+		return false;
-+
-+	state->por = prev_por;
-+	__kpkeys_set_pkey_reg_nosync(new_por);
-+	isb();
-+
-+	return true;
-+}
-+
-+static __always_inline
-+void arch_kpkeys_leave_context(const struct arch_kpkeys_state *state)
-+{
-+	__kpkeys_set_pkey_reg_nosync(state->por);
-+	isb();
-+}
-+
-+#endif /* CONFIG_ARM64_POE */
-+
-+#endif	/* __ASSEMBLY__ */
-+
-+#endif	/* __ASM_KPKEYS_H */
-diff --git a/arch/arm64/include/asm/kpkeys_types.h b/arch/arm64/include/asm/kpkeys_types.h
-new file mode 100644
-index 000000000000..e9c59a26ee7a
---- /dev/null
-+++ b/arch/arm64/include/asm/kpkeys_types.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __ASM_KPKEYS_TYPES_H
-+#define __ASM_KPKEYS_TYPES_H
-+
-+#include <linux/types.h>
-+
-+#ifndef __ASSEMBLY__
-+
-+struct arch_kpkeys_state {
-+	u64 por;
-+};
-+
-+#endif	/* __ASSEMBLY__ */
-+
-+#endif	/* __ASM_KPKEYS_TYPES_H */
-diff --git a/arch/arm64/include/asm/por.h b/arch/arm64/include/asm/por.h
-index 66d8c9a73224..b89be3cf0a0c 100644
---- a/arch/arm64/include/asm/por.h
-+++ b/arch/arm64/include/asm/por.h
-@@ -10,6 +10,8 @@
+diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+index 12a500181291..a55e8d5f1eb8 100644
+--- a/arch/arm64/include/asm/el2_setup.h
++++ b/arch/arm64/include/asm/el2_setup.h
+@@ -380,7 +380,8 @@
+ 	ubfx	x1, x1, #ID_AA64MMFR3_EL1_S1POE_SHIFT, #4
+ 	cbz	x1, .Lskip_poe_fgt_\@
  
- #define POR_EL0_INIT	POR_ELx_PERM_PREP(0, POE_RWX)
+-	/* Disable trapping of POR_EL0 */
++	/* Disable trapping of POR_ELx */
++	orr	x0, x0, #HFGRTR_EL2_nPOR_EL1
+ 	orr	x0, x0, #HFGRTR_EL2_nPOR_EL0
  
-+#ifndef __ASSEMBLY__
-+
- static inline bool por_elx_allows_read(u64 por, u8 pkey)
- {
- 	u8 perm = POR_ELx_PERM_GET(pkey, por);
-@@ -38,4 +40,6 @@ static inline u64 por_elx_set_pkey_perms(u64 por, u8 pkey, u8 perms)
- 	return (por & ~mask) | field_prep(mask, perms);
- }
- 
-+#endif	/* __ASSEMBLY__ */
-+
- #endif /* _ASM_ARM64_POR_H */
+ .Lskip_poe_fgt_\@:
 
 -- 
 2.56.0
