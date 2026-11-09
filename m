@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794240062;
-	b=STy0AD1dsXSudgBO6OGDtnS/pYHt1P8hau0CCDZdfhcpuIsyIHT++UZtEVqooYl97y7F
-	 krdP9mXOJp5qezJE+sPOGO5c0lCpWtrycvk8NbqNwhzfCW/LtWdt9QtDmtuPBaCYdXVIf
-	 I/7R4PTyCIoFWw3+j/rQgDq96cijeso5ENTNkCkJMt+k1269QB0TYN/EOtAxfYHh4aZ2p
-	 Gkn0yZTD4atZNP4R6XTf15mNLoSK7IVMweQLanZWfzZeFqviFje4bGdiFexKonQ3JsIx/
-	 UAAICKRJjMowMoMxrRjPnM5DewT12jDphZg2tWCNJP06KJsHHrEdgPNx014DGLXk4ig==
+	t=1794240072;
+	b=aLH7+I4UywEkZf0/4R9sQNKLKA359yAxG0upypWgVWBFSP7pzKjUr1Av/0Iyd6g7yrvo
+	 5/lHqITcQJpL8xoKA4sBs7j0o8PxDXTU13m2NS0xrKr8X69VoqI6JK+FotP2ToWjTwcoE
+	 m+8Vr63QQxlHFbzYaPoBNUGHJFu9sXaJBqDLY8KFX8pHOr+Ofacrev1jFvoxy3mhU9B6M
+	 B5eSi9IzfAAxxMAtz70Hf4/wtq8sAiWVm35TQmrEg/DGhyZ5e7F3JMZCV8pvBRsHiTK1n
+	 ESOnMUAGIbGYXQPp+AHIlYvZ58EsDLvKxwaKo4LzZSV981tDUjNcX/A7mg+8IH1bXfw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794240062;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794240072;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
 	 X-Developer-Key;
-	bh=w/xadSNxlF1dcE7NrliZqcaX647rTwn6tKWJSB5uaPw=;
-	b=DYZ41FGfMPeU9JuniIQdkOlXFwRWcYbuyfcY8IxZQ4iTai0dKelM9duZgudBvSkUen18
-	 Bh7XsnJV8tfXem9d0jScMz143s4tboiWkhtdP/AbBwVLUZlDVf7IlDxZJ0JzusT9py77S
-	 ndH88pDeoWUcWEmCW61LDFnOeUbgkugI5fyC4ccfiE66rf/O5gEJBuKV1mNOw4XqokOp5
-	 kPb93HOQQi50lKd3YWr7vXWW88JSewhA4V9xvGCn9jqHep1+9iIMiP1F8KrFciwtMvRz5
-	 LsInEC8VUqw58kfoSrgbt2Ti9YBBPhILS+ymbR8M2smnZYfoEAI5sgeEtiSOU6hhfRQ==
+	bh=btt91I3qkVKycKN2iTEdAlTvCKoqHGuYdHT3imsqzq4=;
+	b=HaZVpATmI2MBcP15D7acgwh1QgI3PHFjQRf+O8TznHTlp0groTX0eOMwu/lgdMVmYUTo
+	 F7gBbA7MFtmmEFzxw4x9RcY5d9bqkUIR3b16OWyjyGVmQOS2Rz8UJeIXQWMe8/POfMV4U
+	 sOVWg/iZvbm1+BmzCZtg4hqhKLRe2h7rNCLL3Xm70pxDrbSCXH3ku7n9OqFIexSwc8ZJQ
+	 6DZrxhwmT4NdozGpKFGStQHScIbPtVLKg9YmBJ4w0qBu+UD2d52BODml5mO4fchvWD3sc
+	 d9Tofw9RvIHoCQavUV9MhsJF6WmbD4pxOj1iwJ6zTj0DBnLmTTu5nsrRAkdzi2puhuQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=arm.com;
 	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=ldaoIdlx;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=TlZPPpIu;
 	arc=none smtp.remote-ip=217.140.110.172
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA75B6082BF7;
-	Mon,  9 Nov 2026 16:01:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA75B6082BF7
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C7F1606EEB3;
+	Mon,  9 Nov 2026 16:01:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1C7F1606EEB3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=ldaoIdlx
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=TlZPPpIu
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED4381758;
-	Mon,  9 Nov 2026 08:00:57 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6469014BF;
+	Mon,  9 Nov 2026 08:01:08 -0800 (PST)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C7CE3F632;
-	Mon,  9 Nov 2026 08:00:55 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 834683F882;
+	Mon,  9 Nov 2026 08:01:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1794240061; bh=VFlm1dBZL32mMpdbEZlu0B521tRtjxv6y79g4lyfR7M=;
+	t=1794240071; bh=mOcsxuhd+SBVwiebOzIYBEP81ioeefXUqmJIoRAwM7k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ldaoIdlxnbqof2ygpu7uoIS36TRPBb0a7KqSQG47lJO/WyvgR3DFvILsv50YAk0y9
-	 YPbtFv4E19oYZr9mArtAtTya0NZev3zEDxoQQ+SFGyaoI9nR7OVEAfsZj+yDBnj9r7
-	 azx2Nrk5IQtYdL2p6rRsHUcMe572fiAZENG3IiO8=
+	b=TlZPPpIuSAP4I+z+O/V0g8YhQgOIXJl6Swij87O2nM0jC0yFMqzP4RnfBDhA0K2Np
+	 zmenIGRDNNxgb7EkMlF/p+DzoptibtBufaC0+Z5nwO7L9q+HCuGpXOjPZRSyhynVh1
+	 hhvLy4QHJR7+kuEIs/mMW0IpVln0Rc0+cAtMCVYk=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Mon, 09 Nov 2026 15:58:30 +0000
-Subject: [PATCH RFC v10 05/22] arm64: set_memory: Implement
- set_direct_map_pkey()
+Date: Mon, 09 Nov 2026 15:58:32 +0000
+Subject: [PATCH RFC v10 07/22] arm64: Initialize POR_EL1 register on
+ cpu_resume()
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -58,7 +58,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261109-kpkeys-v10-5-aa6c4d9603bc@arm.com>
+Message-Id: <20261109-kpkeys-v10-7-aa6c4d9603bc@arm.com>
 References: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
 In-Reply-To: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
 To: linux-hardening@vger.kernel.org
@@ -86,80 +86,56 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  Ira Weiny <iweiny@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
  Thomas Gleixner <tglx@kernel.org>
 X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794240029; l=2186;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794240029; l=1238;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=VFlm1dBZL32mMpdbEZlu0B521tRtjxv6y79g4lyfR7M=;
- b=VcY+DXHdsUztqYXuF9Z+OxZq5jyyzLtxxEifnN6W5UAiKiDqSWPeuNeQjq7koKky74S76Ikfc
- 0B9SJZKJAOlBze/gVmLterM9t1uoECjb0BHcViK70dZmXCfp5Ka6tQ/
+ bh=4EcOfPYkS35WfcSTzCjV7Pft44Nt32DKIqSeTlSaAlM=;
+ b=aF1hedIOdeeWnADYrxt7bKksACglTWRg1rdNE6Tt2euac3s0EchtRVpNYwIndfJ4IH5PknKuN
+ icAYPbNLp7LAakUjUWc2ZYtxrMWslhblR5VgrliKrZYqBjuZmpAYHAn
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 
-Implement set_direct_map_pkey() using POE.
+From: Yeoreum Yun <yeoreum.yun@arm.com>
 
-Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
+The POR_EL1 register is reset to an unknown value after cpu_suspend().
+Since POR_EL1 always holds POR_EL1_INIT when entering cpu_suspend(),
+initialize POR_EL1 with POR_EL1_INIT before cpu_do_resume().
+
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/arm64/include/asm/set_memory.h |  4 ++++
- arch/arm64/mm/pageattr.c            | 26 ++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ arch/arm64/kernel/sleep.S | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm/set_memory.h
-index 0091ba12200e..8322615b8ffb 100644
---- a/arch/arm64/include/asm/set_memory.h
-+++ b/arch/arm64/include/asm/set_memory.h
-@@ -18,4 +18,8 @@ bool kernel_page_present(struct page *page);
- int set_memory_encrypted(unsigned long addr, int numpages);
- int set_memory_decrypted(unsigned long addr, int numpages);
+diff --git a/arch/arm64/kernel/sleep.S b/arch/arm64/kernel/sleep.S
+index f093cdf71be1..e0a6ad85cd24 100644
+--- a/arch/arm64/kernel/sleep.S
++++ b/arch/arm64/kernel/sleep.S
+@@ -3,6 +3,7 @@
+ #include <linux/linkage.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/assembler.h>
++#include <asm/kpkeys.h>
+ #include <asm/smp.h>
  
-+#ifdef CONFIG_ARCH_HAS_KPKEYS
-+int set_direct_map_pkey(unsigned long addr, int numpages, int pkey);
-+#endif
+ 	.text
+@@ -134,6 +135,17 @@ SYM_FUNC_START(_cpu_resume)
+ 	/* load sp from context */
+ 	ldr	x2, [x0, #CPU_CTX_SP]
+ 	mov	sp, x2
 +
- #endif /* _ASM_ARM64_SET_MEMORY_H */
-diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-index de7bf95003ea..7143bb2dfecd 100644
---- a/arch/arm64/mm/pageattr.c
-+++ b/arch/arm64/mm/pageattr.c
-@@ -9,6 +9,8 @@
- #include <linux/sched.h>
- #include <linux/vmalloc.h>
- #include <linux/pagewalk.h>
-+#include <linux/pkeys.h>
-+#include <linux/kpkeys.h>
- 
- #include <asm/cacheflush.h>
- #include <asm/pgtable-prot.h>
-@@ -319,6 +321,30 @@ int __set_memory_enc_dec(unsigned long addr, int numpages, bool encrypt)
- 				      __pgprot(PTE_PRESENT_INVALID));
- }
- 
-+#ifdef CONFIG_ARCH_HAS_KPKEYS
-+int set_direct_map_pkey(unsigned long addr, int numpages, int pkey)
-+{
-+	unsigned long set_prot = 0;
++#ifdef CONFIG_ARM64_POE
++alternative_if_not ARM64_HAS_S1POE
++	b	.Lskip_por_set
++alternative_else_nop_endif
++	mov_q	x2, POR_EL1_INIT
++	msr_s	SYS_POR_EL1, x2
++	/* isb can be skipped since cpu_do_resume() will do it. */
++.Lskip_por_set:
++#endif /* CONFIG_ARM64_POE */
 +
-+	if (!kpkeys_supported() || !can_set_direct_map())
-+		return 0;
-+
-+	if (!__is_lm_address(kasan_reset_tag((void *)addr)))
-+		return -EINVAL;
-+
-+	if (pkey < 0 || pkey >= arch_max_pkey())
-+		return -EINVAL;
-+
-+	set_prot |= pkey & BIT(0) ? PTE_PO_IDX_0 : 0;
-+	set_prot |= pkey & BIT(1) ? PTE_PO_IDX_1 : 0;
-+	set_prot |= pkey & BIT(2) ? PTE_PO_IDX_2 : 0;
-+
-+	return __change_memory_common(addr, PAGE_SIZE * numpages,
-+				      __pgprot(set_prot),
-+				      __pgprot(PTE_PO_IDX_MASK));
-+}
-+#endif
-+
- #ifdef CONFIG_DEBUG_PAGEALLOC
- void __kernel_map_pages(struct page *page, int numpages, int enable)
- {
+ 	/*
+ 	 * cpu_do_resume expects x0 to contain context address pointer
+ 	 */
 
 -- 
 2.56.0
