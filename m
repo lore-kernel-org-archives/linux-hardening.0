@@ -1,68 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794327255;
-	b=oM6q4e3Ni0DWbDQ9VCLc8K8pSyAAJRg7CijSc2GbneXwaWT+lPWAG4v/PvbnbCZFjNOb
-	 xKad3P3ybB7pMsJDOtBxOAcGzDvG0dw3KTSfuJ6zIgMs4mYAawvGrTbQG0zQYQzPWwnxF
-	 zlG8BfuS2gk6gkG8Ks0khHZ6Caha+P7ow75PQavE8q9xRuuaL+C7uzcim514qI39OoTN1
-	 LMOhX2HKj772F+mG9eppWSOEWbeVRe5kWgglfK/kVFcwczvaIQ49WyNpl/TL1sBGbwcEw
-	 Pzp9BXSW3NZO7tKphHtBJ4y1cHrpueX9iYNQGl8S5aYXZ9rk/x1ZWA9amc+AcUtSCmQ==
+	t=1794327860;
+	b=G0udZ7pro7jQrUt1eOJPHqsGFm2OCQXtFSjkNr0VtpJV+lnl6On8UJnYbNjYwP8PJ+On
+	 eapzfeScMHGQeHmlftHLYz9cgQTPvbVsVMBvARsaJM5mO5Ukxtcfr1Wi4rgv1g+iev4BF
+	 gkyeupaOnhToGemlsG+Rk7LHPNJrFCefrr+zHeD8qF5LqwV42UCYYh3cWViFf3hHQYag9
+	 7VI4S5+x5haOgCCfIwI02yG2wLHgEC08i+yM6GnsG+PfonGlqf7iHGa+RMPCngo/IOTgb
+	 McYHL++HPnn/Rqjt2Q36s09LEYrf9MmATHSlZjHVv7X23W6NiKpoGZ1rlg03C2FjTFw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794327255;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=a2d/fBfzfFNSaTFIalghXmF7Nmh1cwB84PjdUqrUwow=;
-	b=5W3kgm8av3RSD18LPCL+7ym100CwW71uMfhSpH5uINe0Nu6KMUEeOaIwzx9CTGviXktL
-	 qHPn48YFisLtK+9mn1dL0W6fyE2qxIYGNfeYEjXQB/6qL1YZJzIPmf63IvFfmOQjUAFHR
-	 AXN63WTPXp0m0knkGiYg2RKYwlD4dxcgmpmnuKstvtJgMUOsYNW/TSWMB5yAycCjmUQ+L
-	 nufcoldT7CerCHVVq6AyAW8Y5Tw9ER2UF42dhhSZGZob6w8wGrUhpezujdxpVUFYvdn95
-	 2E6Ys/HLavW0ckef/1iJIaqVuiuRehS8jfsKQyp77WGNonXF640jW4+eebnFgzEepAw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794327860;
+	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:Subject:Date:
+	 Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-B4-Tracking:X-Change-ID:To:Cc:X-Developer-Signature:
+	 X-Developer-Key;
+	bh=VMVsIg9meqQ62t0+CY5CMduv42wKWJXNSJQ6i89MUtU=;
+	b=oYZbKIiE7hYnCUxqedFC18ELrZK1c8hKCG+xangq5nYdTBJa8Cw1z06API8/nJ9rJ+Ie
+	 p2oNjqcGgnwnJzjPMLSA/z+JWbeYq2PjSMYRylaoewDwZvPCID2VrEzQsiffkU5swDFWs
+	 y8ZuuVJzu0jx8lCWVL0dIz0NTEsZKyfUib57X4LonFbzahjPSfXcRS0ptD7usjFQUlr4j
+	 pktb++rZgx3XTV32BBjP1ERmlxHbx4G8avlwuDmi5t6Cm7o8MbWEdX5uVFAoorsljR2Ej
+	 Bf0nRdEecjQLsJtrshsv7RMT9Cuvp77h/uVtlMQFH1j6xE497WLkd0Jo8gNsXWJFzuQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ab06j4EB;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=EENM8nu1;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=qZvIy9Hq;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CD5606A326;
-	Tue, 10 Nov 2026 16:14:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8508D606A33A;
+	Tue, 10 Nov 2026 16:24:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8508D606A33A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ab06j4EB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C847B1F008A1;
-	Tue, 10 Nov 2026 16:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794327254;
-	bh=a2d/fBfzfFNSaTFIalghXmF7Nmh1cwB84PjdUqrUwow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ab06j4EBUjZ+I1S1yBO2pSb67Qh9FrF+mRBi623YxyIQJdHvKj8/hKxJ6AToz63uF
-	 CQmgrkwCpgpk9UPECCP68pkPAt3CIGH61Pp5zRTVYQLxplg1lb/h3WlIKhMIxrgRD0
-	 2Zk4bIzZfy0TFiS6dNEdxGzk7Lqy7xk5BUq4jNCVLPq0m0Kfi5SM8XUCJOxIpu68HQ
-	 f+w5nXCIF2afv98n20t9bLBX+sYXVQTnKuzBIJYXg8sPe3MR1NiVUjAm6E1LvaZ5Gd
-	 IU2DODwMwILlW6MHbuJg1AX13CqOwS8SEZ3T9g+eIodWABWWc+lprmxnm7Kf2CIQcA
-	 4WR5drvhOFJVw==
-Date: Tue, 10 Nov 2026 17:14:06 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Joe Perches <joe@perches.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v3 1/5] string: Add strprefix(), and deprecate
- str_has_prefix()
-Message-ID: <avNCY5ghSn-M8oqB@devuan>
-References: <cover.1794323750.git.alx@kernel.org>
- <556766412884389a7cecfe6affcc9fa3a78f9807.1794323750.git.alx@kernel.org>
- <e7b48186a65a759935fdfdc2003b266d05ee2d4c.camel@perches.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=EENM8nu1;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=qZvIy9Hq
+From: Gregor Herburger <gregor.herburger@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1794327857;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VMVsIg9meqQ62t0+CY5CMduv42wKWJXNSJQ6i89MUtU=;
+	b=EENM8nu1gPjUplzI0LyqYGDYDX8ydEIilY2kjl2L4RJM3e8Zgf0G7mP7B96tI6B+vMgdaT
+	2u5+ES4kgbgdRK3MmNArmOuQe1pvBz+jr/6bhDcm0b/zJoB9OAFoE7dWT7dcvYUYBTKRZK
+	3Wc67DDXgJ8/LnYUc8jFGzbgUcibwaVigomk992mb2zK6xJsXCkfh1qXr7Y2safpN8ss0I
+	L6LuAO6s9CIB9Y3gpn5PLm6IwwMiPrSeAqtmZjVAlOH7Ioi3Y45BwQazlZlrdhBvfp7Bcv
+	4uUYy4y3GeeaYj0cl+FLvrKZmRNgZ+HisihcwVby16knSiQaoef2uu1dHOtd/g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1794327857;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VMVsIg9meqQ62t0+CY5CMduv42wKWJXNSJQ6i89MUtU=;
+	b=qZvIy9HqzdP4cmxki1IfCUc3zcjfH8nAuG9BO2d3g8Ig0zYDMXzkTbk/y6I3uP/mop1xVg
+	yMwKWeViyNHeTECg==
+Subject: [PATCH v7 00/11] nvmem: Add Raspberry Pi OTP nvmem driver
+Date: Tue, 10 Nov 2026 17:24:01 +0100
+Message-Id: <20261110-rpi-otp-driver-v7-0-2345d0ee65f0@linutronix.de>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -72,95 +68,120 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6az5minxxtrwr4gt"
-Content-Disposition: inline
-In-Reply-To: <e7b48186a65a759935fdfdc2003b266d05ee2d4c.camel@perches.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACFF82oC/3XQzU7DMAwH8FeZcibIcZsvTrwH4rAmDgtCbZV01
+ dDUdycZByqlHP+y/bPsO8uUImX2crqzRGvMcRpL0E8n5i7n8YN49CUzBFTQg+FpjnxaZu5TXCl
+ xLYMj4V0I2rMyNCcK8fYA395/c74On+SWqtSOS8zLlL4fG1dR+/7FV8GBE6AXfiAFYF6/4nhd0
+ jTG27MnVhes+EdIkA2BlbBCK3IaTaePiG5PqIboCoG2V6WuOmXlEdHvifaQvhAuGK9RemNQHBF
+ yRyA0hCzEgIqkBUN0dkeE2hPYEKoSUGat9qLH5p3btv0ATWr5tRECAAA=
+X-Change-ID: 20260408-rpi-otp-driver-75fce1dcff7d
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
+ Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Gregor Herburger <gregor.herburger@linutronix.de>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794327856; l=3710;
+ i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
+ bh=nOC1D+FzrtqhciV4vMD0rRrY6gGMlplEHYuBvs/KV+4=;
+ b=HjfrNLCGJwvmuPU54O2NOIyR8TehJe80KJDwMAsf2C1JBqXCQ8+9TTtwi3JjD6c02kW6BzKlV
+ EtDgHACOrCdB4WVB1kNI5jmu28zsggtdIhsVZJMaF7ckweXexiMi7OU
+X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
+ pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
 
+Hi,
 
---6az5minxxtrwr4gt
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Joe Perches <joe@perches.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v3 1/5] string: Add strprefix(), and deprecate
- str_has_prefix()
-Message-ID: <avNCY5ghSn-M8oqB@devuan>
-References: <cover.1794323750.git.alx@kernel.org>
- <556766412884389a7cecfe6affcc9fa3a78f9807.1794323750.git.alx@kernel.org>
- <e7b48186a65a759935fdfdc2003b266d05ee2d4c.camel@perches.com>
-MIME-Version: 1.0
-In-Reply-To: <e7b48186a65a759935fdfdc2003b266d05ee2d4c.camel@perches.com>
+This series adds support for the Raspberry Pis OTP registers. The
+Raspberry Pi has one or more OTP regions. These registers are accessible
+through the firmware. Add a driver for it and add updates the devicetree
+for the Raspberry Pi 5.
 
-Hi Joe,
+---
+Changes in v7:
+- Rebase to v7.4-rc2
+- Added Patch to register rtc driver by soc enum from drvdata
+- Link to v6: https://patch.msgid.link/20260522-rpi-otp-driver-v6-0-b0eac97d1428@linutronix.de
 
-> Date: 2026-11-10 07:47:55-0800
-> From: Joe Perches <joe@perches.com>
->
-> On Tue, 2026-11-10 at 16:33 +0100, Alejandro Colomar wrote:
-> > As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
-> > between an empty prefix matching an empty string from a non-matching
-> > prefix.  This is a fundamental design flaw in this API, and not
-> > something that can be fixed.
-> >=20
-> > As always, this is a consequence of choosing sizes instead of pointers.
-> > Sizes are often the wrong choice.  In this specific case, pointers are
-> > more capable of differentiating these cases, as NULL is a special
-> > sentinel value that doesn't need to overload a valid value.
-> >=20
-> > Let's implement strprefix(), a function that returns a pointer
-> > right after the prefix if found, and a null pointer if not found.
-> >=20
-> > We'll slowly migrate existing code from str_has_prefix() to strprefix().
->=20
-> Most uses of str_has_prefix could use the existing strstarts.
+Changes in v6:
+- Use %pe in dev_err
+- Include <linux/slab.h> to fix build on arm
+- Add arm defconfigs: multi_v7_defconfig and bcm2835_defconfig
+- Reword commit messages
+- Link to v5: https://patch.msgid.link/20260520-rpi-otp-driver-v5-0-b26e5908eeac@linutronix.de
 
-Hmmm, actually, both str_has_prefix() and strstarts() can be replaced by
-strprefix(), which provides functionality for both use cases.  It's the
-more generic API for this.  And I expect compilers can optimize the
-unused parts if actually unused.
+Changes in v5:
+- Move alignment check to nvmem core
+- Use IS_REACHABLE to simplify Kconfig
+- use root_only for private driver
+- Add driver as module to arch64 defconfig
+- Use MODULE_DEVICE_TABLE
+- Remove some unused attributes, fix typos, minor fixups
+- Link to v4: https://patch.msgid.link/20260508-rpi-otp-driver-v4-0-cf8d725d8821@linutronix.de
 
+Changes in v4:
+- Additional patch to drop unnecessary select schema
+- fix dt-bindings
+- use __counted_by_le
+- additional alignment check in read/write callbacks
+- Link to v3: https://patch.msgid.link/20260506-rpi-otp-driver-v3-0-294602663695@linutronix.de
 
-Have a lovely day!
-Alex
+Changes in v3:
+- dts: add "raspberrypi,bcm2835-firmware" as fallback and fix dt-bindings
+- Fix Kconfig depends
+- Changed firmware data fields to __le32
+- Add MODULE_ALIAS
+- Link to v2: https://patch.msgid.link/20260505-rpi-otp-driver-v2-0-e9176ec72837@linutronix.de
 
---=20
-<https://www.alejandro-colomar.es>
+Changes in v2:
+- register nvmem driver from firmware driver and drop firmware sub nodes
+- Use struct_size and __counted_by for dynamic array
+- Drop unneeded comment in Kconfig
+- Use NVMEM_DEVID_NONE
+- Use kzalloc
+- Update module description
+- Link to v1: https://patch.msgid.link/20260408-rpi-otp-driver-v1-0-e02d1dbe6008@linutronix.de
 
---6az5minxxtrwr4gt
-Content-Type: application/pgp-signature; name="signature.asc"
+---
+Gregor Herburger (11):
+      soc: bcm2835: Use IS_REACHABLE for function declaration
+      nvmem: core: Enforce stride and alignment checks for nvmem_device functions
+      dt-bindings: raspberrypi,bcm2835-firmware: Add bcm2712-firmware compatible
+      nvmem: Add the Raspberry Pi OTP driver
+      firmware: raspberrypi: register nvmem driver
+      arm64: dts: broadcom: bcm2712: add raspberrypi,bcm2712-firmware compatible
+      dt-bindings: raspberrypi,bcm2835-firmware: Drop unnecessary select
+      arm64: defconfig: Enable the raspberrypi otp driver as module
+      ARM: bcm2835_defconfig: Enable the raspberrypi otp driver as module
+      ARM: multi_v7_defconfig: Enable the raspberrypi otp driver as module
+      firmware: raspberrypi: use drvdata to register rtc driver
 
------BEGIN PGP SIGNATURE-----
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml      |  20 ++--
+ arch/arm/configs/bcm2835_defconfig                 |   2 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ .../boot/dts/broadcom/bcm2712-rpi-5-b-base.dtsi    |   4 +-
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/firmware/raspberrypi.c                     |  62 +++++++++-
+ drivers/nvmem/Kconfig                              |  11 ++
+ drivers/nvmem/Makefile                             |   1 +
+ drivers/nvmem/core.c                               |  12 ++
+ drivers/nvmem/raspberrypi-otp.c                    | 131 +++++++++++++++++++++
+ include/soc/bcm2835/raspberrypi-firmware.h         |  17 ++-
+ 11 files changed, 246 insertions(+), 16 deletions(-)
+---
+base-commit: c9ea4adf1af3e26c64c45ab8005295c420a5703b
+change-id: 20260408-rpi-otp-driver-75fce1dcff7d
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrzQskACgkQ64mZXMKQ
-wqnQMQ/+JSd+d9JXXdBlPNG7Sau+EnfWITQPtqNVph42m8pmt0QrtmNSgdOTgyRU
-UJDFWdQ+pD9VzeNRedBQVbE/5zu0AxKunpKIM6aUGvl7UER57ZMKzR1gyHB2bY7M
-FLd3hIfedcj+DfqqUzXUMZuf8D3CqQRlv07iy92PvC0ZScwyuGkI/E/r2cNQ+Exn
-xk+2Ko1d1tvMspJfkcNtGGS3Nb5qrSpUXPK0+O6xXmHftcAAhRe5pESoiuymHtib
-VO0+alNsE/U9qP6isgMbwxvBtO3KoCmZAD74eOg912eG6+yuJjgEg4YXDEVGWhxo
-CRUjGaUVMBuTOq6HJyWwD4/kW3S9BtGnsDrUh2/xHtUMwUVQeiuxOTRTJMnlGt+Y
-dNGV43DEQGatNPcQ6BRYiT8DAFmvRh2TZP1JHr6iJVWoF/Xv4iw+VMDyZPKd93wk
-ygi6Ju+mF8TEOYuKaG+9vCpi3yIDTYax+xW7WjeIaVpqCI1P+vth96BocsIEo7XI
-nqoha2jX7YdkkLNw410UrdEvyR5H0TdykNxHZAv6AT2xlkegEOVIrJKGdsVOf4+E
-mH/FCJj8eLjYA+hQVgTR82PUnWi0kuaGq3xbU601GJdFnunqQ8oFqBipVftrEfhd
-FoTAWprqrPzqAP5sERTQEy/HwnqrWfT5ccRo3UfkOy0IGoK84jw=
-=Ddl8
------END PGP SIGNATURE-----
+Best regards,
+--  
+Gregor Herburger <gregor.herburger@linutronix.de>
 
---6az5minxxtrwr4gt--
