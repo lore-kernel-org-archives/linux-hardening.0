@@ -1,116 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794311278;
-	b=d4I2zgVl1SdwlRebt3YYdSWqqteujB9Lxnm01ohZZGmHaQ5CSLBsu3xX5XcfBncJMyvr
-	 a+OrescJiwPNEFhqqN8N8GUQCE9uSXlf1TB5aIm7Qpju4fLwZ1CRu/jjmAbUVogZ3opXO
-	 aTnC5AKqFcbkJt2tHmxWI6UBhrQb2pprlG9ialEeCVyaXAdnLvRvmjE395lqmlWgec8jA
-	 Lu2iFdvB4oL55a7liIRLC20NcvMPLxeuDymjFDohuvXtl8yMfvUJSSp5dsrGvD1SIrp5c
-	 saTBrzYA9uV57DMY5rdea7JeWHlYG6m+RfKbqwgMig/eTgsIcqFESuZ1435UZYHzSVw==
+	t=1794318889;
+	b=t7lDcd41xWrUsY1RIUkPrB50ZBaaw7eViPiBi//ovFhiBfM/UaYu8jfZuXL6t25hooXk
+	 bPcHQ1bEJ9MPlmNhtdsxx2RLzr4K4HAlHO4xFAIctT38iJS6UXclV6fyFNTd5q23yREJ/
+	 MeWmp+yIXxfKH2wnVdN7rQEcPfTibgiIt7N1aOJBKGbmZ8yuG89EgSHy5+FLNK7jf2vAl
+	 Er28eke/2ClmwbjGdqXpRpW5OLHBavcz3+UOAt/flRIvEQtj8HhK4e81MtLGyaceklTJV
+	 GzQI4NOx/Gs2pK5yr8zvlOmykLsLXJerbZmtAAjOPy+75yLifW4DLJJFtTc7hbyDIrw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794311278;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 X-Spamd-Result:X-Rspamd-Server:X-Rspamd-Action:X-Spam-Flag:
-	 X-Spam-Score:X-Spam-Level:X-Rspamd-Queue-Id;
-	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
-	b=CLx/QNs+fzg1cOkJa9hFkDolX2F7tTU8Rn/1OF/yaaAvQ/hKlH1ATjQkSUzThnUEtQUl
-	 CeQwfsCO2nNaV3f6AQCA9JnTQGp5u8BYE3zMgTfMSMKO03jZ4WYBJ0OrkJU2lnzNfJyBU
-	 4kLX4B0YInSXZpDFMvaoPj0FgJWBi4sWVp6k4my/FjNeFkrLvetxgLjU/oEV5sjbSRYYB
-	 7RKEK4+z1g77gcihEzpsfoS1oXRP6oRC/YQS63ZejtSkpwxZSVU4/awJDri9bMDyEvq7p
-	 fNeFznvufwWUxWhM0n060Uc3x/Pt+9rGL9ULLy5S62z3V5EEoRnIxkrHJFuThWuZ8gA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794318889;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=RYPhgJGQCwOuBRuJsUZG5jqL37WaDmQ33hS03hfIFgk=;
+	b=dQ/kJDYyRytcG3Fc1oklUFRyJqIJqw9HroBWHt7vOJuz66LpdSl8AO25+/vmGEDOYxd9
+	 hnbquBTm+PEOIxinirDejaI9QS7s80AUE8SoHf0Lk/GM3jmyWBlkacWpSjiX31nVbOmfL
+	 bMKmkEFi8O+xRVqkj2fSKwE7l11tcVoiiNCNHC8V5enq0pq77Mq9EJ6NnT0sxT86rp2pG
+	 pCqgt++vyUrcC1yQhjYAKZGq/ck+M8NMVF2VQu07+c6vVpyVg9SlJZIKNb68bYBh/vpbC
+	 htg4Dq7abSpPY9qClilfOZondcfbcuXn1vZ6Fa1gTcvEhdPXX9acFMSQ5ZT9M2BnxJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.de;
-	spf=pass smtp.mailfrom=suse.de;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=U6qQmIOe;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=WIwzEQN8;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=U6qQmIOe;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=WIwzEQN8;
-	arc=none smtp.remote-ip=195.135.223.130
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ET24+BCt;
+	arc=none smtp.remote-ip=209.85.128.54
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5019A606A32E;
-	Tue, 10 Nov 2026 11:47:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5019A606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9091A606A321
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Nov 2026 13:54:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9091A606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=U6qQmIOe;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=WIwzEQN8;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=U6qQmIOe;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=WIwzEQN8
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3C00E21ECD;
-	Tue, 10 Nov 2026 11:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1794311275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
-	b=U6qQmIOe4LvIJA+DVbIM/USCgGP3Cvm2/v13Ni2PC8EpzU10lX24ukr0eO9SFWetRwpSBd
-	esprniFiFGj+wf3Xk/G4UbA6Lf2T57d4d+XkbCxTKmVUMLfk7rEVyxnFzCgFsdXRbpJ0CS
-	JAvVo6oLslQd+JKTA/j0KzsfOvNvp30=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1794311275;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
-	b=WIwzEQN8OeUdjpJtUl13rh/DMUycjp1FwDjrGfpA8v7bpJTaRmUDjKMG7dEeXGBRYXsfji
-	NfmQfnBsPoDaCXAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=U6qQmIOe;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WIwzEQN8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1794311275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
-	b=U6qQmIOe4LvIJA+DVbIM/USCgGP3Cvm2/v13Ni2PC8EpzU10lX24ukr0eO9SFWetRwpSBd
-	esprniFiFGj+wf3Xk/G4UbA6Lf2T57d4d+XkbCxTKmVUMLfk7rEVyxnFzCgFsdXRbpJ0CS
-	JAvVo6oLslQd+JKTA/j0KzsfOvNvp30=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1794311275;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
-	b=WIwzEQN8OeUdjpJtUl13rh/DMUycjp1FwDjrGfpA8v7bpJTaRmUDjKMG7dEeXGBRYXsfji
-	NfmQfnBsPoDaCXAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C3F4E13479;
-	Tue, 10 Nov 2026 11:47:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CJDRJWoE82rwewAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 10 Nov 2026 11:47:54 +0000
-Date: Tue, 10 Nov 2026 12:47:54 +0100
-Message-ID: <87pkwcvrf9.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: soc-core: reset rtd->num_components after allocation
-In-Reply-To: <87bj7yw9e2.wl-tiwai@suse.de>
-References: <20261109102536.357134-1-ghidoliemanuele@gmail.com>
-	<87bj7yw9e2.wl-tiwai@suse.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ET24+BCt
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a35d5d4a20so24456365e9.2
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Nov 2026 05:54:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794318887; x=1794923687; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=RYPhgJGQCwOuBRuJsUZG5jqL37WaDmQ33hS03hfIFgk=;
+        b=ET24+BCttaFJhFjFN6Eks2eX8C7MGzZ1SLB8gH6G9gFUT8E5qOKkXXMlpScMkMSxwP
+         Du7v/5gUag1yzuXJxIFaV3YF0d4wo1IWLcZbzKLDnlNn88334khYUalL7W8s8hmLYldR
+         PiyaJyEKNFOkTELbJ4iF7ktMe9D9cL69s6PRaNXKL/bNZOLQD/AU9RHXCaX5vnfLYFs6
+         wae4vlZoYtiIXmHxCDuImSOykO1mEIMdA4Y5xk4b0LqG4JG0DwiCmuV9GSlHgGAIrOOj
+         fDeAxOs/li94i9Os4YCgtYzWf49OlUt1xLE5+7c9mNFksNfT34pPe/o+113YlMRCO7tU
+         Kh9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794318887; x=1794923687;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=RYPhgJGQCwOuBRuJsUZG5jqL37WaDmQ33hS03hfIFgk=;
+        b=r4qkfM0CdXOt0zKWfAOD+uk3JP7Fk+bKRZYt8drGEbf3PSQFHLJIXDqSfS63I6hnLc
+         ZrTVur2nqtwsQ3tetv42GKuMvzXPp9cDIezt5ePbjLK0JzlN6N6EB99YgaOL3G5NkqrK
+         NHkmAnrnvOxpkUHwEUbn2pMIRG2Fe16qqxt1XQn5RakQ0kLu1SDISacag2NOuTFmHO10
+         11LaUHIWurEuSmt1Ogj9LWu9AnLM2xSG0Pi6xvLYRve5d/nbntfqY8TEv16aihe1RXUl
+         Gs9XzadA+B1wpOl95m6aOGZGREEE3xpDytRIhm6tBEhOHkdDqVZRPQw5Mgif6lhl50EM
+         Lniw==
+X-Forwarded-Encrypted: i=1; AL+hErFKXGHxnZxaWPhwOD4VrjDKM39zWVcAxUnJsEy1+aSYvS9Nna5wVID6QQwhOGvUSxCgWt20dPkH6dab6dVPJFo=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8dFPcHaau+UIkMJFYgrR2KmJVvl5B0EGgGH5mRhxhTF9MH98uS
+	AlB3A+8KSjbJXu9kSYHhwbTqHK+ikpdh895tIgJYnR9GtDOUIrtsiKKI
+X-Gm-Gg: AYBFou1i6mU0+UHBVoPAjY2VIgKbLsMVg7btPpPC+iLC9wd63/9itUzulWPJZiHAktz
+	B3+Q9krASfqBx05oqxDX45gEbu25tmTapKAImntwqMSYa2SIJnYQvgWnzZPbCp5KQF+5S4yg59N
+	vFn5r2CjQgYwQRHeRpafVZXzoIiGP9KPBdqJ0UbIKrYV66XxtQ6Q9+8eNPFxuUJOMzS8Av5FQvu
+	8JKQWUU5p1qviP3qZgbtH9rJkmYtW0sLDQt1frShKy9BUMVL0Y+8YTMkB0x1cjwLMj88ucrzJIJ
+	7s+DYaor13Htzz7JOpGo7mGhzqywvGIWLnEYbaLiFO3u+p5jasTVPQpV+5zEovrbt6gQbZlNmnh
+	LKGrVlRY8Z2FT4xrE7BDHQICOp2fiCWmfn+YGF5IarheZT06SG0RRuE8tmEfFxJU9n6MbI6W/BE
+	oDoqn7oGOo14gjShOg6iuZjdtOD9wCtwuOf2H0tv5AtfDWp8aGdSMZC/eYMEEarHU+/ZkGUcTrR
+	N+1UiuGNYz8G9Ykg/KVKbuoNPt87M9AxZp0Wjr0QI9vAV7VTBEvhimVY1abxUAMMKVaCWeVhQlo
+	0+fB22nq86pcF1wI1rXVKhQuX+tVPHIwgoML9GQLA79CYttnNGzkC02o1mNEsvgmkg==
+X-Received: by 2002:a05:600c:46c6:b0:4a2:1196:db0e with SMTP id 5b1f17b1804b1-4ba023508a8mr51664645e9.30.1794318886866;
+        Tue, 10 Nov 2026 05:54:46 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4ba01fe2c5asm104946385e9.5.2026.11.10.05.54.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 05:54:46 -0800 (PST)
+Date: Tue, 10 Nov 2026 13:54:44 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Hans Verkuil <hverkuil+cisco@kernel.org>
+Cc: Mariia Nikitash <nikitash.mariiaw@gmail.com>, hverkuil@kernel.org,
+ mchehab@kernel.org, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ kees@kernel.org, justinstitt@google.com, morbo@google.com
+Subject: Re: [PATCH] media: radio: Replace strlcat() with seq_buf in TEA
+ drivers
+Message-ID: <20261110135444.7d8070ec@pumpkin>
+In-Reply-To: <cd073632-0919-4015-8daf-39cfe24391e8@kernel.org>
+References: <20261106074639.452630-1-nikitash.mariiaw@gmail.com>
+	<cd073632-0919-4015-8daf-39cfe24391e8@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -119,112 +101,113 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-12.51 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,toradex.com,kernel.org,perex.cz,suse.com,vger.kernel.org];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,toradex.com:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -12.51
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 3C00E21ECD
+Content-Transfer-Encoding: 7bit
 
-On Mon, 09 Nov 2026 12:07:33 +0100,
-Takashi Iwai wrote:
+On Tue, 10 Nov 2026 11:08:30 +0100
+Hans Verkuil <hverkuil+cisco@kernel.org> wrote:
+
+> On 06/11/2026 08:46, Mariia Nikitash wrote:
+> > In preparation for removing the deprecated strlcat() API[1],
+> > replace the strscpy() and strlcat() calls used to construct
+> > V4L2 card names in the TEA5777 and TEA575x radio drivers.
+> > 
+> > seq_buf tracks the current write position and remaining capacity
+> > across appends, avoiding repeated scans of the destination buffer.
+> > This preserves the resulting strings, including truncation behavior.
+> > 
+> > Link: https://github.com/KSPP/linux/issues/370 [1]
+> > Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>  
 > 
-> On Mon, 09 Nov 2026 11:25:20 +0100,
-> Emanuele Ghidoli wrote:
-> On Mon, 09 Nov 2026 11:25:20 +0100,
-> Emanuele Ghidoli wrote:
-> > 
-> > From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-> > 
-> > 
-> > Commit 4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to the
-> > devm_kmalloc_obj() family") switched the snd_soc_pcm_runtime allocation
-> > in soc_new_pcm_runtime() to devm_kzalloc_flex(). components[] is
-> > annotated with __counted_by(num_components), so when the compiler
-> > provides __builtin_counted_by_ref() the allocation now also sets
-> > rtd->num_components to the number of allocated slots.
-> > 
-> > snd_soc_rtd_add_component() fills components[] one entry at a time and
-> > expects num_components to start at zero. Starting from the allocated
-> > size, for_each_rtd_components() stops at the first, still NULL, entry,
-> > so the runtime has no components: they are not probed, no controls or
-> > user-visible PCM devices are created and the card registers empty,
-> > without any error message. In addition, each added component is stored
-> > past the end of components[]. On the tested board these stores still
-> > land in the slack of the kmalloc bucket that devres rounds the
-> > allocation up to, so KASAN does not report them.
-> > 
-> > Reset num_components after the allocation.
-> > 
-> > Seen on a Colibri iMX7D (simple-audio-card, fsl-sai, sgtl5000): the card
-> > is listed in /proc/asound/cards, but /proc/asound/pcm is empty and
-> > 
-> >   amixer: Unable to find simple control 'Capture Mux',0
-> >   aplay: main:850: audio open error: No such file or directory
-> > 
-> > Tested on that board with v7.4-rc2 built with GCC 15.2 (first seen with
-> > GCC 16.2): the failure is there without this change; with it, playback,
-> > capture and the codec controls work again.
-> > 
-> > The root cause analysis, this change and the testing were done with the
-> > help of an AI coding assistant (Claude Code, Claude Opus 5.5).
-> > 
-> > Fixes: 4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to the devm_kmalloc_obj() family")
-> > Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+> Nacked-by: Hans Verkuil <hverkuil+cisco@kernel.org>
+> 
+> This is silly. Just use scnprintf().
+
+Or wait for someone to add a call that just does what is needed.
+In this case the first stscpy() returns the length (and it is often
+known).
+So you could have:
+	len = strscpy(buf, tea->card[, buflen]);
+	len = strscpy_at(buf, len, " TEA5777"[, buflen]);
+or:
+	len = strscat(buf, buflen, tea->card, " TEA5777", ....);
+or some variant that will do a strnlen(buf, buflen) to get the offset.
+
+But it really is best to leave the strlcat() calls in there for now.
+
+David
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
 > > ---
-> > 4dd10fbbeb9c only reached mainline in v7.4-rc2 (not in broonie/sound yet),
-> > so this is based on v7.4-rc2.
+> >  drivers/media/radio/radio-tea5777.c | 10 ++++++++--
+> >  drivers/media/radio/tea575x.c       | 10 ++++++++--
+> >  2 files changed, 16 insertions(+), 4 deletions(-)
 > > 
-> > The other devm_k[mz]alloc_flex() sites added by 4dd10fbbeb9c were checked
-> > too: none of them fills a __counted_by() counter one entry at a time, so
-> > this one looks like the only user hit by the preset counter.
+> > diff --git a/drivers/media/radio/radio-tea5777.c b/drivers/media/radio/radio-tea5777.c
+> > index fb9de7bbcd19..2b1c7f6ddd60 100644
+> > --- a/drivers/media/radio/radio-tea5777.c
+> > +++ b/drivers/media/radio/radio-tea5777.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/init.h>
+> >  #include <linux/module.h>
+> >  #include <linux/sched.h>
+> > +#include <linux/seq_buf.h>
+> >  #include <linux/slab.h>
+> >  #include <media/v4l2-device.h>
+> >  #include <media/v4l2-dev.h>
+> > @@ -255,10 +256,15 @@ static int vidioc_querycap(struct file *file, void  *priv,
+> >  					struct v4l2_capability *v)
+> >  {
+> >  	struct radio_tea5777 *tea = video_drvdata(file);
+> > +	struct seq_buf s;
+> >  
+> >  	strscpy(v->driver, tea->v4l2_dev->name, sizeof(v->driver));
+> > -	strscpy(v->card, tea->card, sizeof(v->card));
+> > -	strlcat(v->card, " TEA5777", sizeof(v->card));
+> > +
+> > +	seq_buf_init(&s, (char *)v->card, sizeof(v->card));
+> > +	seq_buf_puts(&s, (const char *)tea->card);
+> > +	seq_buf_puts(&s, " TEA5777");
+> > +	seq_buf_terminate(&s);
+> > +
+> >  	strscpy(v->bus_info, tea->bus_info, sizeof(v->bus_info));
+> >  	return 0;
+> >  }
+> > diff --git a/drivers/media/radio/tea575x.c b/drivers/media/radio/tea575x.c
+> > index c37315226c42..e49228eb7c46 100644
+> > --- a/drivers/media/radio/tea575x.c
+> > +++ b/drivers/media/radio/tea575x.c
+> > @@ -9,6 +9,7 @@
+> >  #include <linux/module.h>
+> >  #include <linux/init.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/seq_buf.h>
+> >  #include <linux/sched.h>
+> >  #include <asm/io.h>
+> >  #include <media/v4l2-device.h>
+> > @@ -221,10 +222,15 @@ static int vidioc_querycap(struct file *file, void  *priv,
+> >  					struct v4l2_capability *v)
+> >  {
+> >  	struct snd_tea575x *tea = video_drvdata(file);
+> > +	struct seq_buf s;
+> >  
+> >  	strscpy(v->driver, tea->v4l2_dev->name, sizeof(v->driver));
+> > -	strscpy(v->card, tea->card, sizeof(v->card));
+> > -	strlcat(v->card, tea->tea5759 ? " TEA5759" : " TEA5757", sizeof(v->card));
+> > +
+> > +	seq_buf_init(&s, (char *)v->card, sizeof(v->card));
+> > +	seq_buf_puts(&s, (const char *)tea->card);
+> > +	seq_buf_puts(&s, tea->tea5759 ? " TEA5759" : " TEA5757");
+> > +	seq_buf_terminate(&s);
+> > +
+> >  	strscpy(v->bus_info, tea->bus_info, sizeof(v->bus_info));
+> >  	return 0;
+> >  }  
 > 
-> I guess a bugzilla entry that was reported recently is also related
-> with this problem.
->   https://bugzilla.kernel.org/show_bug.cgi?id=222249
 > 
-> My first gut feeling was that it might be safer to revert the use of
-> devm_kmalloc_flex() in that code, as it has a significant side-effect
-> unlike other straight conversions.  But, if this fix covers well, we
-> can go with this fix, of course.
 
-And it seems working for the bugzilla issue above, too.
-
-Mark, could you pick this up quickly?  It looks like a severe
-regression.
-
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=222249
-
-
-thanks,
-
-Takashi
