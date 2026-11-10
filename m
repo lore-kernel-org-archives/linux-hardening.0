@@ -1,79 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.9
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794335967;
-	b=p8vyWVAmFXPrTLvwMS9CIUjqiew/Vv8iu2ghpmwa3z8V+M6dOga8eaA5VagBfSa2MGST
-	 YNQtIXclnm6KPKUYNakD9vUwhcvYHb+PZl8GI/rmFNa+T0+axN0CMb/p2Ldkg3ZAXEJPP
-	 tpSoqRSZDaZS2CFhKPfy3mFDtkMpSbsqxt9v7U0jbiwC5zhUkoZdhSHDwQPZmdIxokysr
-	 0h2O4i6EMBRt+rlW/YYw/TjJ2NKSRUm4MLuYQGt62E9B4uDzU87X+zRIqFaVEdtQK6tn0
-	 sWlWLR4orCBRJUwwuojmta+Xgg/XtoYleZt1B/IxgesbHFd+kWjML2yJrcHKF0WMiPw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794335967;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=ni0dTEFkOEdqX3aB5/r5AsPbCHUNITe03X/RTMKqB9s=;
-	b=44aG4KZ24CvVBbRP8DiTgnDqGW3Tzrgdo7tZP+Ry98QqZNElmzRbxNjGUwaUqkj2X2MY
-	 nXE6zXEQtYtFDeUI0TN9ybqMydgYa8c0AhziTeucCXVt4bFTj0SJPhovUAwjuoSoVkBrI
-	 VPhnbiOI3QvWUxB9pVMIIXh19VBd2sCpQzMav29xAHCdpoVwwQUZzZ4LqixW3ddFYbJNL
-	 SY8T5rJX/o2cYEZmysaB/q8+QYm0TG/7Lbj5B4dP1qSuXokymb0RSwK6KeWcYfPUHOmy9
-	 xtsMX+Gx1W9eKWlVcn9+KtGvLeFrwkhuf8CGCiPNDc4I33YsIbpyKcJ/XlfZFKYVE+Q==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hZj7yuLJ;
-	arc=none smtp.remote-ip=198.175.65.9
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.42
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794336080;
+	b=GC8Pg2w3ocmwX0019PXLBraBUlji/SXRDPR6CR7zKAm08ltby4EFk+x0q5kmhwIbHgXL
+	 1+b0f01XHNkzBV0xVLDX7KpqtLACw3kl2v0oy+Pwf0HBOvrwGbLXC322hozAFiUTzwhcc
+	 Wf9QBC7VLLsvFG1V2XtBRgdFz9eVTX6sU8QLGCBs8vJOmEsrnUroXHY3r6Zra2O5ovGO0
+	 zN5SntgbCqXmn1T7+vBilwD1ezZFh6Q+8c34UmL6+gVg+Wrrz5mLzwbOuPdUk5T8CMg8d
+	 ZwBnU2J5ltIaUoo/b7ijCYX0uIbkqEe4uFwx9rV/RF/fl68tHwjdWdyfzDioNdYfS2A==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794336080;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=av4ENrPPV1tGMkw5tLRd7+RJ2zUb0Iw82xvXCZIZOuU=;
+	b=moJqYDKym2tlJrxRAvgqXvpG41DZCD+ZA8gHklMghAb+gF1XrDbQ8zwe+BQlDLywZxwK
+	 HB8Yae4MHcRjZ2U0L0ICExA5oEKyiEylr9We4vMWKlUkYw+g3YfGv8oskhmVyGaPWCuu6
+	 EGEWujiF8SHhf6cx6YtDvG28evll52c3+aODaJYSIyfA+L8FzJ4X56PJaH/DnAaONRIlt
+	 N7wGYFiIpg2+PUUefe0Wu9Q3JJAYbjasxVtIcZ+7Lu5U6pskH+UTPI/zm0Qd/cf89HnQ2
+	 H4Ysxvci0pHQ5Joy4wh8EM9olncfntRSLyLEyyfORo7jLHZWjqXYqtDgxbKeOwJDPHQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="DtcS/EXD";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.42
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564E8606A32D;
-	Tue, 10 Nov 2026 18:39:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 564E8606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44DA60A6F4F
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Nov 2026 18:41:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B44DA60A6F4F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hZj7yuLJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794335966; x=1825871966;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=5IIWJTjMiWzzw1rqGkI1LkFpGuY5WUpCBfbX01vYXnc=;
-  b=hZj7yuLJymPao9f2N9WVsdwKSZsLEfgTNIUiItWxV5uMDlFu7ST4kaRD
-   1JjcNcYpTdn7ni8wMEuOaFCf1xkv6Y51+lxqJNMe1v2Xx5TU4jEcHGc5o
-   d+TX+Ly7eRRCSthR4Km5lqpFhdDKoiCBhzbpJc5+O2cu1s/PRgDi/v1PG
-   0WCY+W+hHT/Awiye1LBVycFP4xhkMnDBAfZkgVzYAjae1oWLpEuvXiid/
-   Ry/ayLT4NjTZ/RrkoPtGzTEcqmy5i1FQT37FxtM7zw18vuD67trFQ788i
-   O8/2iW0arsROhV2VbYUTpdg1XC39FV6949C5+L8iXJH3s8Wses5l02hTJ
-   A==;
-X-CSE-ConnectionGUID: lSh6Tr/8R0esO48f/1r3+Q==
-X-CSE-MsgGUID: AFHltO6lTyCCL2PQCYipVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11962"; a="3000743"
-X-IronPort-AV: E=Sophos;i="6.27,206,1787036400"; 
-   d="scan'208";a="3000743"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 10:39:25 -0800
-X-CSE-ConnectionGUID: pGYfelFnRri63STqEVTRcA==
-X-CSE-MsgGUID: C853midoRQ+w5QvwW93Qaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,206,1787036400"; 
-   d="scan'208";a="8045289"
-Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.64])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2026 10:39:21 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Nov 2026 20:39:17 +0200 (EET)
-To: Yury Norov <ynorov@nvidia.com>
-cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    linux-hardening@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Yury Norov <yury.norov@gmail.com>, jorge.lopez2@hp.com, 
-    Hans de Goede <hansg@kernel.org>, Muhammad Bilal <meatuni001@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v1 1/1] string: Export strnchrnul()
-In-Reply-To: <avNb_7QmpPkxa8xq@yury>
-Message-ID: <df77dcec-08ea-b307-53bc-d52078fce7a2@linux.intel.com>
-References: <20261110164222.698745-1-andriy.shevchenko@linux.intel.com> <avNb_7QmpPkxa8xq@yury>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DtcS/EXD
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4a207b02a2cso16605485e9.1
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Nov 2026 10:41:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794336078; cv=none;
+        d=google.com; s=arc-20260327;
+        b=WzMkl5hRVLul9MEzOiC2MjPrz8aVCIquBHMDkhS84w5ykvJWuDhiuykeXqyh6ZHo/R
+         Ii8q5/UDSEzswKI4pRy6MLhLTWCxm+9eeWGRRTzq+7uhTmO+HTrWxTA9w5KZS94U0pNO
+         ii18PZoLPYHAtAarJrW7D1CVl4TsiI+JR5HDzp9Xxd8MnXhnSgD/lPG3OpoZFbi4qen3
+         0HKiDGzp4J1Ta0qpf13fMTpM4kED/Os6KRlwtjBhKYiZyinlsU4eQHt5ssodqYLZpg9x
+         3tjDiXxlRLoBhmEl+Vbb6I/z/FW92OF92x67A0kLUj9Ek6/5MPjHXG0r6N/LAlmwAFeY
+         jBWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=av4ENrPPV1tGMkw5tLRd7+RJ2zUb0Iw82xvXCZIZOuU=;
+        fh=GomwHqWuC8PHqB8GFqkxHjPkLntbLcS3PjOQ0QzV8BU=;
+        b=HvpFHV+QPZxTs47jNw5+LsdD5OgHjZcA8pTZoqj2+DHds6Bf3u/TREmJzjEooSxYXA
+         b25/KUJJCgaMhDQ94FEeybBMV0r9lRD2wwZ1FIQmB22r/kloAb2RFuFvQsX9dx/XTQ5J
+         t9BPgzHJ+8vnHZi/WkU8cHpivL5L5cwWiU5JD+6Y2VZMxyAILB5bGEIn6/MxvM9L1e4Y
+         TEYtCiyAJxkRzJiHjr+yzaB2lTu5V5cz6/Hr0RYJuw9nzwXHzEHjxmNzv4cks4GY/G3O
+         K3qscPhWe+9JVjNKncP+luNtowuIYCm5+y/w2JoIhZ5B+vb50II4y44BboGMDyOc0yi4
+         UcEg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794336078; x=1794940878; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=av4ENrPPV1tGMkw5tLRd7+RJ2zUb0Iw82xvXCZIZOuU=;
+        b=DtcS/EXD9Ce+96Ky5V6gDgJEKfa8GTqySzpgPBqvf+DY8iFoulGaFbygjpNNvjG/jX
+         CFeUtcWzvnPfCOu1H5kobRE8nwug+xDTEUERU4B6M59NUgrJ1evjNpEeDcVAbesU4Uyj
+         hlrjUAthBeVRD8Qb4uzBlnjokI7iy/1e3Fyuye2yUNSt8i2CB4Z4gvMul/+ZeO/bUv8K
+         QVZxdvamx3o4dwIWpG9m4m3Xpj6vC+K3wGn1eTjpjB0N5qY531tLbw9bNgZtJDU8qDCV
+         jcfFyWlXhJQqIjO7bo+Ch/eZCNRN6Ln++xQ4tvg6vvBN7qtKqydo1aEMqufS9zaCxXtG
+         94Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794336078; x=1794940878;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=av4ENrPPV1tGMkw5tLRd7+RJ2zUb0Iw82xvXCZIZOuU=;
+        b=ShUhdP5aCib7Jt59eXUqZ+2VUgUJwAXC/6EbQFH0U4i+kOtc3/DVSSiA18oli2X4s5
+         q9FRFom5s5sdYp87H+NEzntZZhVNzyRDuQD20hx+OpjuvwAfwX5ANN9HegRgO5EIiYh9
+         yOuiVrUxGAMEhZ2zvmPd1UDD7IUy3GD3m+8lftb8ybo+FAvOWypC/LqsvSYxL7f9BkGg
+         x3NvdP9vefgjX/IHfIDb02qUSmL0ge+ACCND6UFNdDlWHfxUj9ykyI3SVJ41xBSS5q7o
+         zexbJ+nqlh2B9DUUCOs6OgzgMtM1a0MROz+O2gBTqR/UhKIOJlPwvHhQLso8VElmR+6s
+         rxOA==
+X-Forwarded-Encrypted: i=1; AL+hErEW3DOF6MaTMwX9w3c2Ut2uWSOeGxKlntGH3ySmfdBet1fZ2R0I0qdB9x87XTfgLDp6Ij2z2U19p1fp12SKkeM=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+oiU3cR2llGxhvKxQ0Dqphl6pBfrzy+UH4OLJUIjxoit7AUEsp
+	gU5pPK8cGew2L862EIzZH/iF6kDIt89F6X+ltKKT30sED+pH7bBvLcZdF6BU66mU2HSwqg/svL7
+	v/WAmbwYNmoro4tOyUnsX2UgYw1HKWNo=
+X-Gm-Gg: AYBFou2bGq8EPGZOcVRUzT39JtnKFi+4k8wrh5o24xBHrw7hkdY1+19g+kalBfDUEhM
+	YZTTRsMaedNA0kOb7MGC6+4pxK4Hx8bVlOQS/LFmNgtyoqkgi7Gjc19ac/kbdQ449R5CouVQwab
+	lago5KyO2woJ3rk8FyqqrjyNw+642oiLX+HzHcXarcGn+cEHK3DNmyKkvxGl7dFKdqTn+RrWApm
+	Hk40tjTbFhftPM7iQMmqa/jHq3DiRVKrB4TFbDawhsQh8XP9pfnQ5bQ8dtUSxjfBU6BtK3hRZD3
+	BVEzayPSl444/jtdZoQ7q18WV9amoPeC84OxFAWRYHCp2WA+zpHmAxdHTeokzix+3a9hKjGXu9T
+	gYpa8oduv1AqpwgPQofwXxytoOHGHb4oWalwbgUEvNoMj+MvgqvszNe/RfqbUPpS3fPZwlYZ2
+X-Received: by 2002:a05:600c:4e41:b0:4b7:6942:39be with SMTP id
+ 5b1f17b1804b1-4ba0234ed60mr59966285e9.24.1794336077840; Tue, 10 Nov 2026
+ 10:41:17 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -83,61 +104,152 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20261106074639.452630-1-nikitash.mariiaw@gmail.com>
+ <cd073632-0919-4015-8daf-39cfe24391e8@kernel.org> <20261110135444.7d8070ec@pumpkin>
+In-Reply-To: <20261110135444.7d8070ec@pumpkin>
+From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+Date: Tue, 10 Nov 2026 10:41:06 -0800
+X-Gm-Features: AclHuK9_7M2m4zG_NQ4qW5SK5DvtnSnNqDvZRn6nCgKPOE6JXbdQL3_rS3KQX_Y
+Message-ID: <CAPDEY+X=pVsiY5cib8e_Vu3KNW0QNV6hXF+GSLs9gyD8rMXa6w@mail.gmail.com>
+Subject: Re: [PATCH] media: radio: Replace strlcat() with seq_buf in TEA drivers
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Hans Verkuil <hverkuil+cisco@kernel.org>, hverkuil@kernel.org, mchehab@kernel.org, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kees@kernel.org, justinstitt@google.com, 
+	morbo@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Nov 2026, Yury Norov wrote:
+On Tue, Nov 10, 2026 at 5:54=E2=80=AFAM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Tue, 10 Nov 2026 11:08:30 +0100
+> Hans Verkuil <hverkuil+cisco@kernel.org> wrote:
+>
+> > On 06/11/2026 08:46, Mariia Nikitash wrote:
+> > > In preparation for removing the deprecated strlcat() API[1],
+> > > replace the strscpy() and strlcat() calls used to construct
+> > > V4L2 card names in the TEA5777 and TEA575x radio drivers.
+> > >
+> > > seq_buf tracks the current write position and remaining capacity
+> > > across appends, avoiding repeated scans of the destination buffer.
+> > > This preserves the resulting strings, including truncation behavior.
+> > >
+> > > Link: https://github.com/KSPP/linux/issues/370 [1]
+> > > Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+> >
+> > Nacked-by: Hans Verkuil <hverkuil+cisco@kernel.org>
+> >
 
-> On Tue, Nov 10, 2026 at 05:41:50PM +0100, Andy Shevchenko wrote:
-> > Export strnchrnul() for users that may be compiled as modules.
-> > 
-> > Reported-by: Armin Wolf <W_Armin@gmx.de>
-> > Closes: https://lore.kernel.org/r/1969fb5a-38ef-4b4b-9d2f-cb9a4348b968@gmx.de
-> > Fixes: 0bee0cece2a6 ("lib/string: add strnchrnul()")
-> 
-> Not sure that exporting a symbol is actually a fix. It rather looks
-> like a normal development. Also, I'd like to have this patch attached
-> to the PDx86 or whatever series that uses it.
+Hi,
 
-I did put it now before the change that broke because of the missing 
-export.
 
-I dropped Closes and Fixes tags as the issue should be non-problem after 
-the history rewrite.
 
--- 
- i.
+> > This is silly. Just use scnprintf().
+>
+> Or wait for someone to add a call that just does what is needed.
+> In this case the first stscpy() returns the length (and it is often
+> known).
+> So you could have:
+>         len =3D strscpy(buf, tea->card[, buflen]);
+>         len =3D strscpy_at(buf, len, " TEA5777"[, buflen]);
+> or:
+>         len =3D strscat(buf, buflen, tea->card, " TEA5777", ....);
+> or some variant that will do a strnlen(buf, buflen) to get the offset.
+>
+> But it really is best to leave the strlcat() calls in there for now.
+>
 
-> Their implementation may change, so this would become the exported
-> symbols space bloat.
-> 
-> Thanks,
-> Yury
-> 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> > 
-> > Assumed to go via PDx86 where the first (wow!) module user wants to use it.
-> > 
-> >  lib/string.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/lib/string.c b/lib/string.c
-> > index a3778d5aab4a..cc8982a93afc 100644
-> > --- a/lib/string.c
-> > +++ b/lib/string.c
-> > @@ -352,6 +352,7 @@ char *strnchrnul(const char *s, size_t count, int c)
-> >  		s++;
-> >  	return (char *)s;
-> >  }
-> > +EXPORT_SYMBOL(strnchrnul);
-> >  
-> >  #ifndef __HAVE_ARCH_STRRCHR
-> >  /**
-> > -- 
-> > 2.50.1
-> > 
-> 
+Thanks Hans and David for the feedback.
 
--- 
- i.
+I agree that seq_buf is too complex here. I'll look into using
+scnprintf() as Hans suggested.
 
+David, I also see your point about leaving strlcat() in place until a
+more suitable append helper is available. I'll revisit the approach
+before deciding on a v2.
+
+
+Best,
+Mariia
+
+> David
+>
+> >
+> > Regards,
+> >
+> >       Hans
+> >
+> > > ---
+> > >  drivers/media/radio/radio-tea5777.c | 10 ++++++++--
+> > >  drivers/media/radio/tea575x.c       | 10 ++++++++--
+> > >  2 files changed, 16 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/media/radio/radio-tea5777.c b/drivers/media/radi=
+o/radio-tea5777.c
+> > > index fb9de7bbcd19..2b1c7f6ddd60 100644
+> > > --- a/drivers/media/radio/radio-tea5777.c
+> > > +++ b/drivers/media/radio/radio-tea5777.c
+> > > @@ -13,6 +13,7 @@
+> > >  #include <linux/init.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/sched.h>
+> > > +#include <linux/seq_buf.h>
+> > >  #include <linux/slab.h>
+> > >  #include <media/v4l2-device.h>
+> > >  #include <media/v4l2-dev.h>
+> > > @@ -255,10 +256,15 @@ static int vidioc_querycap(struct file *file, v=
+oid  *priv,
+> > >                                     struct v4l2_capability *v)
+> > >  {
+> > >     struct radio_tea5777 *tea =3D video_drvdata(file);
+> > > +   struct seq_buf s;
+> > >
+> > >     strscpy(v->driver, tea->v4l2_dev->name, sizeof(v->driver));
+> > > -   strscpy(v->card, tea->card, sizeof(v->card));
+> > > -   strlcat(v->card, " TEA5777", sizeof(v->card));
+> > > +
+> > > +   seq_buf_init(&s, (char *)v->card, sizeof(v->card));
+> > > +   seq_buf_puts(&s, (const char *)tea->card);
+> > > +   seq_buf_puts(&s, " TEA5777");
+> > > +   seq_buf_terminate(&s);
+> > > +
+> > >     strscpy(v->bus_info, tea->bus_info, sizeof(v->bus_info));
+> > >     return 0;
+> > >  }
+> > > diff --git a/drivers/media/radio/tea575x.c b/drivers/media/radio/tea5=
+75x.c
+> > > index c37315226c42..e49228eb7c46 100644
+> > > --- a/drivers/media/radio/tea575x.c
+> > > +++ b/drivers/media/radio/tea575x.c
+> > > @@ -9,6 +9,7 @@
+> > >  #include <linux/module.h>
+> > >  #include <linux/init.h>
+> > >  #include <linux/slab.h>
+> > > +#include <linux/seq_buf.h>
+> > >  #include <linux/sched.h>
+> > >  #include <asm/io.h>
+> > >  #include <media/v4l2-device.h>
+> > > @@ -221,10 +222,15 @@ static int vidioc_querycap(struct file *file, v=
+oid  *priv,
+> > >                                     struct v4l2_capability *v)
+> > >  {
+> > >     struct snd_tea575x *tea =3D video_drvdata(file);
+> > > +   struct seq_buf s;
+> > >
+> > >     strscpy(v->driver, tea->v4l2_dev->name, sizeof(v->driver));
+> > > -   strscpy(v->card, tea->card, sizeof(v->card));
+> > > -   strlcat(v->card, tea->tea5759 ? " TEA5759" : " TEA5757", sizeof(v=
+->card));
+> > > +
+> > > +   seq_buf_init(&s, (char *)v->card, sizeof(v->card));
+> > > +   seq_buf_puts(&s, (const char *)tea->card);
+> > > +   seq_buf_puts(&s, tea->tea5759 ? " TEA5759" : " TEA5757");
+> > > +   seq_buf_terminate(&s);
+> > > +
+> > >     strscpy(v->bus_info, tea->bus_info, sizeof(v->bus_info));
+> > >     return 0;
+> > >  }
+> >
+> >
+>
