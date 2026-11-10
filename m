@@ -1,74 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794439649;
-	b=ZrRfPCpYShvh0I1mu5yeSZl6QMP80cUvrVb8Qib/ZfB0PewRK31/oAPjA65fJtum+dLF
-	 JI51e2L6g5b/qxbBvKToN1akmWtQ/i2Ecmqjes59nB3fS2Mz4ON4LcfpooI8ssIxZ9zmQ
-	 UyG+DDFkqiM0U2HVl3x3nCumugydM4yEdOAR3xOH/4YQ5fF/8JNQUduMavxcRckjBmL7f
-	 raLlUphD/r0GGrrR/YCTVm1qmV4xWuKJl1XasxLsWO4WObiQSXNOUyjc3vCRvQlgCaw4x
-	 1gLO1dIiTgapgGNWHVLtLY5VZtM3rP2a62U0+18izYZ9o+0Zo1hLwmuKnbkxeYaP5Sg==
+	t=1794440836;
+	b=Cv+0XqL0a9w/AhotdlW0onlRIe+5yJIAZK1idHUApp5SCyWqY40LtXu2VK5lxiSZL5lT
+	 ylMhavhYV5v+gfUL76EEoccJnI6FmbRJ48GEib01rrQx15pRLQ5m2hRYDULufIzWEM4n2
+	 xzeu1t3eeK2Mh0NxwmeagSi+H5jifmRBFgj2i1+viyHjsFeBvRK9vwxtsv0ng3jVdkT4d
+	 nOA+KSijnlyA5RQEaqc/hGfeZSIODJyd3CmnUdBfxjW9Io5n2eZ2d6zEwyFoWNK4scJTo
+	 fxBWId9WUltlMLR3hTqeRXl6SYHZ9IPg7MzYmbcHBpLcL36RvhjXupXcvi2QN9pacaw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794439649;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=l3ncA7LGC0e8S60f6Aii7X3fJT4GkRwmt3Q/dedOq/0=;
-	b=HtYRuUywFHdd/yeukywwTX2DN5rw03ujd+9YItnVUImAULs2tQnZHD0ExxnOMom2i2PJ
-	 zp0nCT+TEaU58Ki86RQqk/wyeFT/pwwLGzTYZfMjIjVdFglUHV5G1/CjqDO36hz9JIsd/
-	 NMcDgynfChWesgy4xUw4ARCcrgJ9zJlr3GM3bn1aXJ0sAd1XjFeSalt4/rKg+xGI28t0w
-	 ZhjDdPDv0ik82hNqsr9cYOiESqO/90caXR66ixRJpMjmP4xLbZ8ctdHCaYflNjLuJevPY
-	 026qz4n46rD8uwxvPvSsUXtnTuT6aNArXMAaDdKkJWiXTCFuA6dYiyiL1BmA5Rsx8sg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794440836;
+	h=Received:DKIM-Signature:Received:From:To:Cc:In-Reply-To:References:
+	 Subject:Message-Id:Date:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Mailer:X-Developer-Signature:
+	 X-Developer-Key;
+	bh=xHbyHuioBIGf0RlIQt+BtCTaaBXKA9z4RA+h6F/Zyag=;
+	b=QKyxSJ5UNWA2vJOiHRryoQ1QrcSD2EnshdugvAswvDKNYT3IspcwmrZ0fzDX/JEX8QQI
+	 SnFLnzYOZ1AfG9Q4ufIAwMuYyLQQgntrMoY6EZzx+kOXySDtTpHLz/sOm6B8GpJyPPe0K
+	 OLq0JIopkMah/j4KCxoGqN+iU8zwlvT63nMuqpqpzvlbZOWCZZAIKcCi9imvXXBvlPtPH
+	 4P+x+ZV6qD4/C1wTqf6HzssODR7qEeTFXV91WzJ3VsqcJ7kfvr6PNQUdumt0mpPnohjNC
+	 YVfP0wERn1cG906jp9CB/Xg1888NBesioSe00anIcg7sFqK9ddY6OTGnFbEt5LBxqug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=m3oPiefK;
-	arc=none smtp.remote-ip=209.85.210.71
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com [209.85.210.71])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mkKiQyvN;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717C3606A334
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Nov 2026 23:27:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 717C3606A334
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C57606A336;
+	Wed, 11 Nov 2026 23:47:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=m3oPiefK
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-85f39501878so4749269a34.1
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Nov 2026 15:27:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794439647; x=1795044447; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=l3ncA7LGC0e8S60f6Aii7X3fJT4GkRwmt3Q/dedOq/0=;
-        b=m3oPiefKK1pKNC1ByZp+CXLtguk52lx3tFmKkDLzRxnW2ziQO1e7nwERWF0O++DoaM
-         DBil3J92yz5eO8nWIXRIFFQs2SnwU27FC0s0xcywJek3tgeb92DrIYoLHbKkp9/sLqo7
-         W92iZI+qpSCm3StXd5Foqhvo6NMJ//IsqYGlPyGXzBa9EIaLtbCadT6935bd9YxWR4X7
-         YzQxVqH3jCrkZjGe/cm0dpVdShRlJc2McL67UEAYvFd51oJ1Z5PIbINQciNLla9oAebb
-         yh3jgtSDjBYWuDG1/dP0T9eCHun8+1or8gEJHXVs9vC5iqafDiryJd8GmIszleNBR7Qt
-         2LgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794439647; x=1795044447;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=l3ncA7LGC0e8S60f6Aii7X3fJT4GkRwmt3Q/dedOq/0=;
-        b=wfTCpzJ72cmqx14KacZaxXbYWDUhJ5FoshKZ0ZbuLLQAnmzeoqjuW76Nr9HAZvBRaX
-         Ur/2WJfcIuR/xCKfqRxhNoXTlZwA3QQV1yGAegL2eDQfihum/GWTu8DThXEJJ37gGo6g
-         p9QlAA2HIhOT8b6RcV2NWx/a0hEQ9o/c7O419zY/x5Nx35t9OUFcXfsBkeqzbxwQYbvQ
-         7WbLx2LEtp86kQNQ1/Mj2y26fe9EU5WMrFmzV0re3M1tL9r31/0E3Cc6OBqrifI9PMwe
-         kmibufUZVKTshxI9pQFQXwx+rZuUxADeKywoqPD7Rm4yDA4a0EFOoqzyNy70sWb7Fuei
-         pIDQ==
-X-Forwarded-Encrypted: i=1; AL+hErFR1AB/UeEznuugNL36GLM4GfRuSc+Jq2nvOQP03eHP7S4975QKbVEd0/a/R8maufure0DxEPHBqsoL1yvZDOQ=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/e2FwqlfNd+hs/tISv8oZHw6aTxC1544upScRQUz7XHjhZe+F3
-	ZdhVXu209IkGnaQ44Y2bhJjw1aldOQxhSikuRltuBof8PtRzTrCA9Id3fUzf3gPkWGnuuw+YMzp
-	qC0cMjW8peZ7TDmTkNFndLL46ww==
-X-Received: from ioz8.prod.google.com ([2002:a05:6602:20c8:b0:9c7:7bc8:8c7b])
- (user=justinstitt job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:2388:b0:517:dd67:aeb7 with SMTP id 5614622812f47-56b97e2b6cbmr3870593b6e.56.1794439646997;
- Wed, 11 Nov 2026 15:27:26 -0800 (PST)
-Date: Wed, 11 Nov 2026 15:27:25 -0800
-In-Reply-To: <20261105084518.386234-1-nikitash.mariiaw@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mkKiQyvN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55FD1F00A05;
+	Wed, 11 Nov 2026 23:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794440836;
+	bh=xHbyHuioBIGf0RlIQt+BtCTaaBXKA9z4RA+h6F/Zyag=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=mkKiQyvN8ZZCMZfPxFad71oFuPH9BmsyREualtPqwgXmpqEiaqp96ftanjbsr7nw9
+	 s1dSL8+wXKzYvc9B7uUIZLGoYOwputC7BWQPI3bnqLdLjuVKEtSUZNIuIiJ4tK/JYs
+	 cmrHJks4CG+4uorDPpZb54gQ0pJPtVsqkVaFUPUEboRXhfJxxc7xj4vLxwgQFk3pmB
+	 SMkOwBfSHawJyeJbwD6Le9PO3nae2OuxeuIxfEDqiXvxcFGNO8e5Wh7IK0GAXx1XWd
+	 K5XkiYUNUtupfSKuQq2hUx+hgXCmQAhE9/TUbFXjnlYP8DaZ8F3QVhtDl41lXdxPhF
+	 EPrC6qkBecfBg==
+Received: from traversing.sirena.org.uk (localhost [IPv6:::1])
+	by traversing.sirena.org.uk (Postfix) with ESMTP id 344133180A49;
+	Wed, 11 Nov 2026 23:47:13 +0000 (GMT)
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Emanuele Ghidoli <ghidoliemanuele@gmail.com>
+Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ linux-sound@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20261109102536.357134-1-ghidoliemanuele@gmail.com>
+References: <20261109102536.357134-1-ghidoliemanuele@gmail.com>
+Subject: Re: [PATCH] ASoC: soc-core: reset rtd->num_components after
+ allocation
+Message-Id: <179433275081.125181.11084186158708006210.b4-ty@b4>
+Date: Tue, 10 Nov 2026 17:45:50 +0000
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -77,75 +66,47 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-References: <20261105084518.386234-1-nikitash.mariiaw@gmail.com>
-Message-ID: <avT5yrP3PYemJNCI@google.com>
-Subject: Re: [PATCH] media: verisilicon: Replace strlcat() with seq_buf
-From: Justin Stitt <justinstitt@google.com>
-To: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-Cc: nicolas.dufresne@collabora.com, benjamin.gaignard@collabora.com, 
-	p.zabel@pengutronix.de, mchehab@kernel.org, linux-media@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, kees@kernel.org, morbo@google.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1138; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=fcs4qASP8MpkKr3Vxee85rgke2DVVAlTvbo68ARJbc4=;
+ b=owGbwMvMwCWm/754w+YLFp2Mp9WSGLK+/Kv6ujjIY2uPUcTD/eInNlSZ+Fhx8C1X/unQtl5kn
+ tax2RnBHaUsDGJcDLJiiixxWdwv60ter+E7uLANZg4rE8gQBi5OAZjIy3sM/+M53tlmtv/ZtWtW
+ AZPt55N1MuyXuVeq86meYDR5Kdy8sYXhn7beiykHzSfGK+rHfdjgZyChyGnxwCU8df36Sz47evW
+ leAA=
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Hi,
+On Mon, 09 Nov 2026 11:25:20 +0100, Emanuele Ghidoli wrote:
+> ASoC: soc-core: reset rtd->num_components after allocation
 
-On Thu, Nov 05, 2026 at 12:45:18AM -0800, Mariia Nikitash wrote:
-> In preparation for removing the deprecated strlcat() API[1], replace
-> the strscpy() and strlcat() calls with seq_buf operations when
-> constructing Hantro video device names.
-> 
-> This preserves the resulting strings, including truncation
-> when the compatible string and suffix exceed the destination
-> buffer's capacity.
-> 
-> Link: https://github.com/KSPP/linux/issues/370 [1]
-> Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-> ---
->  drivers/media/platform/verisilicon/hantro_drv.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/platform/verisilicon/hantro_drv.c b/drivers/media/platform/verisilicon/hantro_drv.c
-> index 26e5d5547466..2bfcd45cc55e 100644
-> --- a/drivers/media/platform/verisilicon/hantro_drv.c
-> +++ b/drivers/media/platform/verisilicon/hantro_drv.c
-> @@ -17,6 +17,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/seq_buf.h>
->  #include <linux/slab.h>
->  #include <linux/videodev2.h>
->  #include <linux/workqueue.h>
-> @@ -883,6 +884,7 @@ static int hantro_add_func(struct hantro_dev *vpu, unsigned int funcid)
->  	const struct of_device_id *match;
->  	struct hantro_func *func;
->  	struct video_device *vfd;
-> +	struct seq_buf s;
->  	int ret;
->  
->  	match = of_match_node(of_hantro_match, vpu->dev->of_node);
-> @@ -902,9 +904,12 @@ static int hantro_add_func(struct hantro_dev *vpu, unsigned int funcid)
->  	vfd->vfl_dir = VFL_DIR_M2M;
->  	vfd->device_caps = V4L2_CAP_STREAMING | V4L2_CAP_VIDEO_M2M_MPLANE;
->  	vfd->ioctl_ops = &hantro_ioctl_ops;
-> -	strscpy(vfd->name, match->compatible, sizeof(vfd->name));
-> -	strlcat(vfd->name, funcid == MEDIA_ENT_F_PROC_VIDEO_ENCODER ?
-> -		"-enc" : "-dec", sizeof(vfd->name));
-> +
-> +	seq_buf_init(&s, vfd->name, sizeof(vfd->name));
-> +	seq_buf_puts(&s, match->compatible);
-> +	seq_buf_puts(&s, funcid == MEDIA_ENT_F_PROC_VIDEO_ENCODER ?
-> +			"-enc" : "-dec");
-> +	seq_buf_terminate(&s);
->  
->  	if (funcid == MEDIA_ENT_F_PROC_VIDEO_ENCODER) {
->  		vpu->encoder = func;
-> -- 
-> 2.43.0
-> 
+Applied to
 
-Reviewed-by: Justin Stitt <justinstitt@google.com>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.4
 
-Justin
+Thanks!
+
+[1/1] ASoC: soc-core: reset rtd->num_components after allocation
+      https://git.kernel.org/broonie/sound/c/d00ba321499c
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
