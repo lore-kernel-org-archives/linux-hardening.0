@@ -1,65 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794327864;
-	b=EvFn+mMWErejlTBw9Yrgi8ZkVqcpkmibKdSXnGhtEYKeQ7vzRqsASdiWg9ObVc/AifRA
-	 O9nBkwwOPH0uai4riX0G8zdSKT05zuWbFvYaNWJGM9bucLkEYt34xRzlVHFO6XIoVEQET
-	 jxYs06/+fxGA62RzHMlM0UeXzpHEbi3SvuH+U/8IgTbWy+7PndpG+bO0t63mKwzl9V1N3
-	 BD8J1cKcZg6SBAbQSHmIuRB/X6m6n0RkIWb5QFxKY0dW1WHlDnlNI7mt12SJbpgl8AD/v
-	 6LrWQqrKXsmL56oAb1tORdQqQYKZzNF1QA8wJ16uLPvHr+z+hRtnyPhgyLpabIR196Q==
+	t=1794328375;
+	b=Ibe0/d5v8U98ZMWBKc5cmXSUhTfro1uUdHjqjhXKhmp4Gxsh0wFCU4jjNLYyfRj2Ckd/
+	 1YROxa6STZOru0HW8w95+cADC8v5eQxwJ+/5ajoa4CtupLfD9CEudBUKs2B1o7UXhHZe2
+	 7C0L5Q3lr9VsRWjq5AhRvDOQmuIVARC++IpDpj4zsd+k8lUVs6zmZwrfR/QyQWOXPkKOZ
+	 XFl1L7e9Vxe2r1PknN8jBKKs6cQWrXstOdmlgFVzOMJeoGKB27MwtJCSMTNIYUDq7qv8z
+	 3Y8RLSt4Y8cQuXgisGexsiFL9/wxxK8y/vRq2qoY+lyImIZkaVVcft6zSDqkbhdu21A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794327864;
-	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:Date:Subject:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
-	 References:In-Reply-To:To:Cc:X-Developer-Signature:X-Developer-Key;
-	bh=utibFfDFq4bVa7w80q4m2c30lWgg7YBiQK/do3c4QEM=;
-	b=XaxudROD6AG8dQJXqnU2apyAzg3AEdQ2jn9mVlxWf8siwHvYLQeho4dBdkzgGh2IN2RI
-	 c0pokChK9jfLZUz7CmTEXTSiLd4oXQiRWCMZbPiWt031gvEK9AJZN5tmuFWFPWRWQgzBL
-	 kb2N45hPjNY8Ry05TREHWRODNbOzbwkYJllG+fDyolTU6/hlrkzgCMX4o7F1Ype0QQWW0
-	 H0rt+COK++hmwaw69Kj5FnvbmvdDq0zbE3gIpyZcTg8SV1Jful/oVNA6/ZLnAg4q0d3rT
-	 FrvaxNEXurT9AcM8FkvdwxClPq7EJh7bN95xo3hsw7SWiyitEc93u3m1AIxkxAoUGyg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794328375;
+	h=DMARC-Filter:Received:Received:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 User-Agent:MIME-Version:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:X-HE-Tag:
+	 X-HE-Meta;
+	bh=O7Jegl1jgTWHpCnkVKKRRzSGStNzjcqpAmRoYpUqNSo=;
+	b=BwSdPQ4QHmMQjx5DRDSIPZqZjsy31QO5kxHB64X24103XhQOhN1Gv8t5VLUfXgHmekK9
+	 Z8mlFja7G3laYjXC5dDMoM/uBfxU9byKkuca3QrWEgI44bCs8axVbOHCuKZV/9ysB/nLJ
+	 /aiy5Y+xvTnOIewchBBmi7hUoGFDqWxzSPAqrLPy9ty2DTcecGhLoXErpwlADRMSOlTdD
+	 ITEOFr2aEZ8qdv8NG6RuxF59Eyx1fET2tgsOCctCkj0+D+u1UEVHT6yKdJoNIBLKfQ0Re
+	 MYoZtd4d6W4BpDxWvKP3xjYN/ppd9Bzp2HGlkSspdLc0UVkuokhqngC8BTKtQIAox2g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=AzdU25Qs;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=+sv14zzU;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	dmarc=none header.from=perches.com;
+	spf=pass smtp.mailfrom=perches.com;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE0A60A5BC2;
-	Tue, 10 Nov 2026 16:24:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5AE0A60A5BC2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=AzdU25Qs;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=+sv14zzU
-From: Gregor Herburger <gregor.herburger@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1794327863;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=utibFfDFq4bVa7w80q4m2c30lWgg7YBiQK/do3c4QEM=;
-	b=AzdU25Qsl+dgngDEQ1PtMA5g5GJUWREYD1f5pxi7D/zxXMwKs41KOK4ShZBSsHBMfumdWk
-	gQexZwb1aOiCd8aPAzEchFSYtBihpiF+n806GWMUwIKt7fZD9Es6HDwQEcjNunCudX9NOp
-	yYa3KRqFYV+IG217AkZU7LBvryWv12AiDdigdZnP3iuS3kPzjR9EAIqk2E4dihdTmXudjW
-	wQhDKluoNi+mQ8qbiAKzf/bIiGbD3w8aG9RhngwiU2kOaK9nugWT3zesZXX5lLCmGYYIDb
-	mTC9wNCeov4GUTbo1grOW75SoGp8+cEk31/oR3l8eIkZxSwS+RqgJjE+sUi+8Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1794327863;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=utibFfDFq4bVa7w80q4m2c30lWgg7YBiQK/do3c4QEM=;
-	b=+sv14zzU69omykrRcf5gUgxZZJ63ftsoytj65+QPm+SIB5PPDTJWyrk2srXtfBVLca89TM
-	JfM4g8JBmA/G5nDg==
-Date: Tue, 10 Nov 2026 17:24:12 +0100
-Subject: [PATCH v7 11/11] firmware: raspberrypi: use drvdata to register
- rtc driver
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2AC606A204;
+	Tue, 10 Nov 2026 16:32:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EF2AC606A204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 0DD7E1C4341;
+	Tue, 10 Nov 2026 16:32:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf01.hostedemail.com (Postfix) with ESMTPA id EE3BD60016;
+	Tue, 10 Nov 2026 16:32:41 +0000 (UTC)
+Message-ID: <64aa89daf23821f95780813fe96882ff61688578.camel@perches.com>
+Subject: Re: [PATCH v3 5/5] string: Make strprefix() const-qualifier-generic
+From: Joe Perches <joe@perches.com>
+To: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki"	
+ <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Andreas
+ Schwab	 <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, Bartosz
+ Golaszewski	 <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, Danilo
+ Krummrich	 <dakr@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johan Hovold
+ <johan@kernel.org>, Kees Cook <kees@kernel.org>, Laurent Pinchart	
+ <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Linus Walleij
+ <linusw@kernel.org>, Namhyung Kim	 <namhyung@kernel.org>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Rob Herring	 <robh@kernel.org>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Saravana Kannan	 <saravanak@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi	 <zanussi@kernel.org>,
+ linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Date: Tue, 10 Nov 2026 08:32:41 -0800
+In-Reply-To: <35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
+References: <cover.1794323750.git.alx@kernel.org>
+	 <35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -69,68 +74,36 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261110-rpi-otp-driver-v7-11-2345d0ee65f0@linutronix.de>
-References: <20261110-rpi-otp-driver-v7-0-2345d0ee65f0@linutronix.de>
-In-Reply-To: <20261110-rpi-otp-driver-v7-0-2345d0ee65f0@linutronix.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
- Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Gregor Herburger <gregor.herburger@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794327856; l=1263;
- i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
- bh=GviQG78udImKkh93JAYuiO3wqf5GT1E5ZSWcEvo9qAI=;
- b=+RIngs+Zh1k+cSB2d6HeglbeGQQU8zikxAEcTM9ZkMFL+ggPBRiSRGVLiWcMehaWQiN88eFDk
- +wqwkWxBrekAgr7duWdalPZxzBUMDrVgXfTfivtBatBw0P21AZbQDHP
-X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
- pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: EE3BD60016
+X-Stat-Signature: mp8xao1qrwddju9nzuyip8mr885n8do4
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18QrhYeut7Lp9jEX7fMdRrU/x1vmS6is5s=
+X-HE-Tag: 1794328361-279135
+X-HE-Meta: U2FsdGVkX19mRZocbBpptel45dGmmyuITr1m5kU6f/MCdgw7zyp42Lt9p8rwk1AwtWwqvUuTXSrVbbpC+WZMCNQlScguvbF/fp8QvUKZy6bX5OrrWZVylJIK5F/uf/mP//94tQRpit19ctDzMHGmXyZHRUFZIahy7AXe+ttUOBAh8XiedqLFbcyMoZseYLv8KKb9P525JfTfeaipS3TohBcIVQOrwjl0q7sqJVCQkzab2gi2Y6fSCJY9aE/ycYkpvrssOELldVCYA/OT+QQagS8c/evSCjag8q9+FlL47GakQTWD6qMRb/yjUefhkQv+0cylqj9qmuN3Dgv6C1hQH070PEeodHlIUH5Xx5H14aAuv5AkhkMaKT8d8hNm0FHqaTzMXG236F+W/jDWUK48Bw==
 
-There are two bcm2712 steppings available that are not compatible.
-Therefore we have "raspberrypi,5-model-b-d0" and
-"raspberrypi,5-model-b". Some features of the Raspberry Pi are only
-available on the 5th generation, e.g. the private OTP register and the
-RTC clock.
+On Tue, 2026-11-10 at 16:33 +0100, Alejandro Colomar wrote:
 
-Use the newly added fw->soc data to decide whether to register the rtc
-driver.
+no commit description on proposed patch
 
-Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
----
- drivers/firmware/raspberrypi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+> ---
+>  include/linux/string.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 9e59f9697c9e..55ca4cb5122c 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -590,7 +590,9 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+>   * *  @s+strlen(@prefix) if @s starts with @prefix
+>   * *  NULL if @s does not start with @prefix
+>   */
+> -static inline char *strprefix(const char *s, const char *prefix)
+> +#define strprefix(s, pfx)  const_cast(CQChar_of(s) *, strprefix(s, pfx))
+> +
+> +static inline char *(strprefix)(const char *s, const char *prefix)
 
-diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
-index 755f845754c1c..0cf893eb8b786 100644
---- a/drivers/firmware/raspberrypi.c
-+++ b/drivers/firmware/raspberrypi.c
-@@ -237,13 +237,14 @@ static void rpi_register_clk_driver(struct device *dev)
- 
- static void rpi_register_rtc_driver(struct device *dev)
- {
-+	struct rpi_firmware *fw = dev_get_drvdata(dev);
- 	struct platform_device *pdev;
- 
- 	/*
- 	 * Check if our model of Raspberry Pi board is from the 5th gen
- 	 * as the RTC is only present on that model.
- 	 */
--	if (!of_machine_is_compatible("brcm,bcm2712"))
-+	if (fw->soc != RPI_FIRMWARE_SOC_BCM2712)
- 		return;
- 
- 	pdev = platform_device_register_data(dev, "raspberrypi-rtc",
-
--- 
-2.47.3
-
+Why introduce a new coding style?
