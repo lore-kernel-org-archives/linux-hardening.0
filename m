@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794324836;
-	b=094+BvUreguZPlQ+LLxBuEQJ6CwqiFKrboFwi6J+IE/j7VvUaRuZYXpMKrPuHr90W6Vz
-	 59u0hvL6NrEMoKA4hpZ+q63p1q9Ve3ZLVvRGA4BmAc/irl7LeLzZJyQsHTLJtYpS0vicV
-	 8nB9JGtJQQR0pcmVOu+Q9AMX9rE0XD3nCZGxCfOfvUpTC53kp+RJWJMJIITpxJZS/rtvk
-	 J8u/5rhBd/6gIJ+RmGSq7APaX6zqhCavejVY+RnzOikyx+gayO2yW7LCWWUBp5pdz3tJB
-	 l2raFqliLELV5L7Ks9A93CNCsLjQANhlOzbOpRbzJ6Gxu+DdqyB1BEvLmeqIwKE+TMw==
+	t=1794324844;
+	b=WjRQLWeMwP+rngnD4A4rR4GBQuwNgn1PpXRelE6u3lLniyPdY+/R2bZUNCupJOosaNNe
+	 HI8WWQ1FC8iDEGWQnJKYRsWTwQfz7C1vMMqyd+ZmzNx7aHnNz08UsgKcJ5e/hSBqpo92i
+	 To4bk8/YXiLrOUj+H+Kn5ZWVZkRjTlxlU2vLU0B0jvVgD9AemWkoebe55uKgC7vZpVC8K
+	 ndCGvMnNV2ekQQHK+6e+bhZi4cxkZE0abg0y9TZ7VYZ3sWk9Dvxmefw/uXOXjMekksgDF
+	 gre+Y3I4+GEHdHbKLYQ59hSW230ltXgKgPqdqf+feQGeU3yzbRW//ABN4mJfvEWf1rA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794324836;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794324844;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=3owOOx7owO0YzW+AS/1sjv03XsYwvN9g+0EiAc1SJKM=;
-	b=HanrY5QL4tDwstvoqiPbUZ4FI8r35QDnhuzhapliZvEtMqUulGnoDCAtlJmZDJpx9jRR
-	 op34wch11Omq4UYqNImklCJi5nKZkMFR7FzJvOpkic46RHIyOuB7OHSPw8HP/tWRtQOBy
-	 Dhwg1lpDLXLBy4EGhggTvp0a4zPfelmtvKXAHBa4BKBcaowYfjrTjqtVxn3sf2OaiRTuu
-	 KpzacugTBva6p2nUcXbNcEQ0jmWKeU2rTgf0xb6xPK8g5M9vFC0bwr+vQX4iETEk6MeZf
-	 9qhbni5TtwtjAmTY0VvwMtLZUlARWHoLPHSHehM4wHB750hDerYaS5fqzCxOMMJQqcg==
+	bh=suPwDnEQ4Nuqw9vmAHzmrX5geUBzqPwGK0H7vf0Futs=;
+	b=xcrL5gJWeY/qodJPLAkgKQc9duuWEEN0f/c/nzGgTq2LdLPU9K7f8o1+raYlWJb7l2sN
+	 P/n6n//e5niKMeNqzcf8De8ngdOehLs8HVEA+y3zZ9nZrboNH4dTBE7DKcuFaYN88/FM9
+	 QSr9r+3wTzcxCi8HqH3Yg8vAQsK/W6MPfx0iiKlwpaUT3MMS6P/j6qvEadl6jK7hK/Rix
+	 MKdWsALgPZK+aKfBpmxJCNZLFgTC8Knsshm/1UrWpKMTmHuDacl8EhWsy6NhT8E5O7FeS
+	 5gN56otuO/nDnHl8NQzqetqLs9Inicbr0IhazHW2pJGBAqMrEztzGyiHBaVtlPuPTMA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q4oM7nrx;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GMMDR55l;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A3F606A33E;
-	Tue, 10 Nov 2026 15:33:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F70606A33B;
+	Tue, 10 Nov 2026 15:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q4oM7nrx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E32FF1F0089F;
-	Tue, 10 Nov 2026 15:33:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GMMDR55l
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05BC81F008A6;
+	Tue, 10 Nov 2026 15:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794324835;
-	bh=3owOOx7owO0YzW+AS/1sjv03XsYwvN9g+0EiAc1SJKM=;
+	s=k20260515; t=1794324844;
+	bh=suPwDnEQ4Nuqw9vmAHzmrX5geUBzqPwGK0H7vf0Futs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Q4oM7nrxcrrlczuZqvPnLiHAqazfrBHUvuSz2o3p9VOjHGMtSzK1hC968kqIHgCYJ
-	 1jeTc8Ynh96dbrYr9Uft7K0o/zjP39HYpfY2VvBvuZeINr2xj4XoURY7i/ZktdRnVp
-	 fQ3Btd+ZvmWr+tXFA1VKPVlLFbQ3EplnxIzXz8Fal03O8ylNDe5VOL7SQlrYLZ9OE+
-	 Opn8BCzmK8lAUdLvGZOcKdGiV5EpBLnd+5g9kNeehVj/LyW5NYIvDF/gxqhXBjScO7
-	 Y97rdbXf6wgvhlH05tBqaldtqNp79yuVlBKQPenDI9wDkMqyGnnv6vmyM9EOgCgd8X
-	 2LdGQIkClXx4g==
-Date: Tue, 10 Nov 2026 16:33:48 +0100
+	b=GMMDR55lRHfWeXagXOdigkIRL7+nf5KxAXntF9PRcNLgt0f9VlLELaK20V8rAMfA3
+	 m+8Ky4bX+D0FZT4IM9fPzhXUbSccvjptmMwKMj5IxWVR+2J3QHegPebmaTpTI/nKlS
+	 o4fPFBwlKnofG07NUcr0jHr1aQnYRvWf+tiaXrBSxdyUlLVcbVKuhXqLH2XKvU6+rk
+	 c8hYb2y8o6zBBzqqTruuosv1Er8tEpz37somlOdHWzjzGgI/m7p07WLyKbE15q+tsE
+	 Qpa6EK/uyVWnr5xLptw9qYHvmUyDoaam2T/4/RYImfDBEvRO+mmcqwKJE6/Y90Idip
+	 Sgo9lpr/XkkKA==
+Date: Tue, 10 Nov 2026 16:33:56 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
@@ -57,8 +57,8 @@ Cc: Krzysztof Kozlowski <krzk@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-gpio@vger.kernel.org
-Subject: [PATCH v3 4/5] string: Add [C]QChar_of() and QVoid_of()
-Message-ID: <415453a31ebf1aed3b41da1a28913f5cbe58f175.1794323750.git.alx@kernel.org>
+Subject: [PATCH v3 5/5] string: Make strprefix() const-qualifier-generic
+Message-ID: <35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1794323750.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -71,12 +71,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="edzk26a3huisnjhz"
+	protocol="application/pgp-signature"; boundary="2akalsv6evdjykkq"
 Content-Disposition: inline
 In-Reply-To: <cover.1794323750.git.alx@kernel.org>
 
 
---edzk26a3huisnjhz
+--2akalsv6evdjykkq
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -97,83 +97,56 @@ Cc: Krzysztof Kozlowski <krzk@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-gpio@vger.kernel.org
-Subject: [PATCH v3 4/5] string: Add [C]QChar_of() and QVoid_of()
-Message-ID: <415453a31ebf1aed3b41da1a28913f5cbe58f175.1794323750.git.alx@kernel.org>
+Subject: [PATCH v3 5/5] string: Make strprefix() const-qualifier-generic
+Message-ID: <35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
 References: <cover.1794323750.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1794323750.git.alx@kernel.org>
 
-These macros serve to implement qualifier-generic macros as those
-specified in ISO C23.
-
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- include/linux/string.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ include/linux/string.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/include/linux/string.h b/include/linux/string.h
-index 12e31c17f0d3..9e59f9697c9e 100644
+index 9e59f9697c9e..55ca4cb5122c 100644
 --- a/include/linux/string.h
 +++ b/include/linux/string.h
-@@ -14,6 +14,36 @@
- #include <linux/stdarg.h>
- #include <uapi/linux/string.h>
-=20
-+/**
-+ * QVoid_of - qualified void of
-+ *
-+ * @p: Pointer to test for qualifiers
-+ *
-+ * This macro produces the type name 'void',
-+ * qualified with any qualifiers present in the element of @p.
-+ */
-+#define QVoid_of(p)       typeof((__QVoidptr_of(p)){0}[0])
-+#define __QVoidptr_of(p)  typeof(1?(p):(void*){0})
+@@ -590,7 +590,9 @@ void memcpy_and_pad(void *dest, size_t dest_len, const =
+void *src, size_t count,
+  * *  @s+strlen(@prefix) if @s starts with @prefix
+  * *  NULL if @s does not start with @prefix
+  */
+-static inline char *strprefix(const char *s, const char *prefix)
++#define strprefix(s, pfx)  const_cast(CQChar_of(s) *, strprefix(s, pfx))
 +
-+/**
-+ * QChar_of - qualified char of
-+ *
-+ * @Q: Qualifier to test.
-+ * @p: Pointer to test for the @Q qualifier
-+ *
-+ * This macro produces the type name 'char',
-+ * @Q-qualified iff the input pointer points to a @Q-qualified element.
-+ */
-+#define QChar_of(Q, p)  typeof                                        \
-+(                                                                     \
-+	_Generic((QVoid_of(p) *){0},                                  \
-+		Q void *:  (Q char){0},                               \
-+		void *:    (  char){0}                                \
-+	)                                                             \
-+)
-+// CQChar_of - const qualified char of
-+#define CQChar_of(p)  QChar_of(const, p)
-+
- extern char *strndup_user(const char __user *, long);
- extern void *memdup_user(const void __user *, size_t) __realloc_size(2);
- extern void *vmemdup_user(const void __user *, size_t) __realloc_size(2);
++static inline char *(strprefix)(const char *s, const char *prefix)
+ {
+ 	size_t len =3D strlen(prefix);
+ 	return strncmp(s, prefix, len) =3D=3D 0 ? (char *) s + len : NULL;
 --=20
 2.55.0
 
 
---edzk26a3huisnjhz
+--2akalsv6evdjykkq
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrzOVwACgkQ64mZXMKQ
-wqnzfA/9GrZZK+W+KOb7/G65cAjO7rx/x9rBOsQvMCeJEwmDSJn3Be/VpJVier7+
-sUkHYATUyU+q+9GkR0OGKk0Kq1pf8y2wU/NJGFtM4FovgbG6NpZ3ciKSnftLI7p0
-JqixEpOHsDJtGgO4LvA1KiJnJhyWOLDIETHMCSEcn3ZLn4VLPfHa0rWIizUCkNpn
-BapLhk/76ZVtaUjc17zzlLnApa9VNwi6zdJZWnkicVGFVv8aUc8nXR6tarGsnbkN
-2VvWCHG32+Ex9+bXDNcTs4MvOS/m/o9A8k8uttKdhmV4vYu+4NeIBo3wCo0W1bbV
-fZI5ZFDqnbNWLnnm8DxyHegN5+fo+yorzE5rD0Bqm9y4Cip0knABMDhw1z7vKT0i
-SOvZ4mRB89i8iTMgRF0yLW9vYB5busWZ/xtTKlfQltGV3e/r/QO3f6J8YATYNPxY
-0rwViY3O36B7vTpQzAZRSKFElDojX8yJNEmEggc2kHWSyJ8YOSkUJd+1uAtWhm/p
-uTZicBjl1vKF7q11LevobiEZIPOobOEj9sB1IhqtVZSEbiRoYjJLzmODg8teLs1Y
-wi0WKcqUqdfQrLzPfWHIrvwtzGRxC/sByE9v+PT7xkauL8zQ1jSgQscLR+RrX1JB
-uXAh0bzgn8Lq9sxaWF6XoRmqYNObiby+RGvcm2t2nF0UaJwWvm8=
-=llC6
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrzOWQACgkQ64mZXMKQ
+wqlcyA//QPet05X7Vq71O9QY6rC2CAd9KE+ARESBD95/8CRIJyyKSmnZbemnUMk7
+Q8st9ldGgylY8jP1iGRSP8dM8TwSLt/AqMQSU6PlbCqWqTXwNOSQeqP1pD836p+m
+sT/uMUwL8M9MTZJGOAprbpToUg+zg3QcNQ3RfbHkLSQM80FoZi/GAp0YsVBx21h2
+mhMQoZ2l1k2GAZ1Y9H1btEa9s8hMiwDrKO/Jgf1OuKmb3p1ctfTaZcd+rnVcH80M
+0uLiL/0fMqWJAgiNfVLJRsKDl77unPN8kdBiLmakm4OTk+kKaooIo2J5dpHLQIj4
+iC64N0eTQN2gjw3N2ZfmKcYnYvg6peoZs26ElWUfV7/6fOhDjc8ZWLtHJyD4m3Jg
+BDq3a4ngDplvCJiRuvI0z67/EwF3uspXE6DUJwfQrndBVD5AMmNhjq4gU+zzTrqb
+eeQOfOslcFSX8Q0as5cKK88sQrhdMfvMVoyLNSaH33li/xPI4brt5bbAUyHZY86m
+wgqRQP7iUb7YYr+MA5prX8rdl892kolIgAiqiIsvpaXNW8UoUBdDE5dTm6WiBIPy
+EFO8EyqL6yuiB7a4f1hgIIvarlgV+TRnc8paZRZj53EBlDXizX9yz5OBnTEG/Tek
+yjwMRNfd643ozhEQJLPhy7feOnXgbTMMWiSBVUbmajUfY8v5EOA=
+=s6WA
 -----END PGP SIGNATURE-----
 
---edzk26a3huisnjhz--
+--2akalsv6evdjykkq--
