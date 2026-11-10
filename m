@@ -1,108 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794325566;
-	b=GdT6bixh0FOMk1Mgm/8o5BmAaloZoNFtU1Jz/WEDGGcJ5olKeaVP/LO5CjkHwGHrq1DO
-	 V7Id6cT7xizGLWZLB6MGvNIpbn1vvF+G/Zt6AkTGcADNcyrhRO4pNW5U2UJJkziHN5+tI
-	 uZrzy8A2K0OyavMr5CWVkaeo5DQZZEGNXsspK+9lcECNxJ7L/W377QvSG8g0btTgTJM5M
-	 UIz9n4PH12oDho1X8CMOY8Z32RRp7mF3zG0/6MwH+h0agCB+KRxvKs8uLDOECRK0bx9SR
-	 QXmSHJUahUT9v/uiXV8etNslqNSGTfEpO7dgPTzf9BZLy8on5URWJR+g7C0Nctp784Q==
+	t=1794325695;
+	b=peY1v6YC8RiyKRlaSRmy7i9mdw5KO7NbNqEmn2oFyXdwb6DFp8S/0QlUbeabEPdnvOvd
+	 uAj41oZUV7+Zy0+QRmrj6cuNwjncbxPCW/JeVHg7WQBWYc76PdTKoERBgXTF7XTYQ/E7l
+	 uQoqWcxUcdNDdovjhT/2WnXBpi8JDiDyN4+sF5f4W0e6JguaG8LoZEGiniMNx1tQNuxCl
+	 Dvj1Jx4XQc5YLPvb4Tu2PpoGE/LK9W7lKNlTS/WkFZWGXmhaAP0p2y9bKI55dtLiBmGIo
+	 ntBGk2HogjnwyhAj1zHtMdGAa56JvhJSS9Hf5tgYg5ToncCidlxax5NqNG6NQ6WDKxQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794325566;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=I6jvLVTJ6/L/P1TOo+cN1ccJTZcH95Jo/fx+GgYHa7w=;
-	b=zvUBqZ2xU9IcO24tQ+ADx3lCizL4Tk1lNJew0fWo2lQBIutcL3DUwLBloPTHOiFdj7JG
-	 OA1AACEGIwXK0UYolwep942El9b5iMjo6fj1RlZXgAeBL2FAepY02TKgQE6O4u6WfDb0u
-	 xky6LZOtQRU2KRr1mMFRrHTXjhkrxX8L+1WO9/I5ImAHZ95FAG6p3OICDfAUSOllcunrN
-	 SgAatsu897Er08/1rxm0YrZfKMzVhVGPmVhNCtpnnVFQkClQHZmHgDTjTJKB5dg5ht7aj
-	 PQV5ghtOMLc5m45n1CYtW0QeJQQkoXX3egUZNkvwBbfmhliAARmCMHlbMyg6BWh1KdQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794325695;
+	h=DMARC-Filter:Received:Received:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 User-Agent:MIME-Version:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:X-HE-Tag:
+	 X-HE-Meta;
+	bh=UAwyQ/bEfICw1lHx5rCY/pV9EvLuRsJGgBLXgqR0Hi0=;
+	b=2klRADVVfnKSBNpsM8abmNhlx/msLC4cDSVkAP5rw1CgqwIxQQE/TCbCdrvY9vkObYSZ
+	 4Q4XA6cqOE/iq1altZL/6Y7Q8UVpmar68DZKHMsFvdxov1TSrxLJyKxBb0ILgpT2L3Fyu
+	 lrDk423kuT4aZZxkWKisBXxHIv6VaH7jOJC5pOf8Acrcfi3NahBqlaSLXkKonfaYIsBZD
+	 mfp7WnRFMoQQ3SLsHThBf6oWeB/jY9a6+FqxfayyqNPo6/ecpZfeiYkCINShnp3BGri75
+	 CUyrjuIPwJJiiy6COR5IcGQNfABOEdUjBAqyzU85/EPvPzvLumDHrzieBo1M1URXhKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linaro.org;
-	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b="TxW0Z/LW";
-	arc=none smtp.remote-ip=209.85.216.48
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=perches.com;
+	spf=pass smtp.mailfrom=perches.com;
+	arc=none smtp.remote-ip=216.40.44.17
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC90606AB73
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Nov 2026 15:46:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ADC90606AB73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=TxW0Z/LW
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3b08cf16decso1426942a91.0
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Nov 2026 07:46:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1794325565; x=1794930365; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=I6jvLVTJ6/L/P1TOo+cN1ccJTZcH95Jo/fx+GgYHa7w=;
-        b=TxW0Z/LWuMJ4ao/uG9mGPMndIv5WC3u70B6uIi8rUgqnmcROMdn9Sl0bVRAXmI59M4
-         /AycfUqZ0pFWfuRkTZyWmAmLqaPNQXOX5W9WGgBiOlmkKsTPL6Sx1k0opbLsIDTni2XS
-         CRCzdKwHbXTTEcJCNQ5liJoYpkajPt4r8MVPmNjLlZYQOPAEQggPHOCuZQDTNChULRor
-         ahABAHl81KNf9V3L/ToxTodxcpB8GsRxYtHCwuYwsc7ex1IYkms0uwl7+Lwe9BoYdtc9
-         NtM3Jj9BI3qZC1OcYx1l9fBWEsd7CSF0dm4d6iGz7gQehCPciPKJyH5cn18rcMALAOQT
-         k2AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794325565; x=1794930365;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=I6jvLVTJ6/L/P1TOo+cN1ccJTZcH95Jo/fx+GgYHa7w=;
-        b=imFvFIAD+jChFaTz9ivhfzQgUV3gDWiM1fU2TOZpiy0GKHxJRYhFyFZV0WO2MmbSAC
-         xnZeVVuuKCog01hS/K110QnUCOf6ORVcO4toye5HJlXBa2i43jw/kC0Tu2KHiaO+ipLR
-         2V4aBL3D4OaSleVyzlWjkwnX4ovaUAPIOMSN5tiybcSiB5W84l02PSHscQym1ecVNZ+G
-         kz2ABAn1YGH7obOXqiXU3EB5JcqJvU8CR3kO+dF5BAhgCXrntY724pxEHRR7WaF+VL+w
-         xukcKyEDFutooFGTDkd+SaCp24RtybNhoIq7PduF+AMpbryV133gCNldAQ01vZtDZdfW
-         DM7w==
-X-Forwarded-Encrypted: i=1; AL+hErFcvBXZQmfe+AMF+EKASrmoa/bV9/Oj2HIMghV3KPUqUUeCPcj5kN7r0kTyQnr4C8rnSSQdlD3+iCdzIlDitlw=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8DVq6KmXEBizCFOoC+YftxvugPhVCOrTTDUEsjm3/XFnji6IQA
-	WBXwnQpuRLfd+F5KKgu9lV+qbnDj2LonU9muI4ZHyGNUGZeRppicDPwiENL6rgCp/Xs=
-X-Gm-Gg: AYBFou2rV0mGeISCllWooe1uZJBDfIZKng4bSygDKXBBBAX0tswWgKE2gw9/hqGMHVF
-	/R83NnXrmxAsXAApudSIrxv157AdQ+yRVmGtU/AZUEVDi0K2NwDKMZriC+uYHhmKXc+T7SwEgI5
-	ShH9DL6w/JZOMvXfnQT1q8dZfHGg/q7Wy8K76E/DHkvyTlNhcofjc2aUTEG8gQSl+C+XCgMBh7T
-	m2c2WSLp3QEgYqEPn8Q2fjf7Qm86htxjBzf4m+dKZFeuHBO1dq52W2udWDhtmyvtK+atnKvt0Xt
-	rzR8WgVbsAmnU9N0s/RJgmShG/Swv5nYAtmBrA44hP8DaSMMv+j254Cbx30+0RfLTwws3lPG1Mg
-	FGycJYfzc2m1Fy6Ah+mDzvGdv75K+aXT32DlDGmkeZI+idV45ZP1n042fwlOAzr1A2z6T8Smn3i
-	FtS57wPAb5wq9/sfnsEKkCuspy1dNbwD25o3/ViLFfvrURdHtenhfABXGdjHlqrrjxeMKpnALqX
-	Hg6HOrWA+x6d+nZWBDGwJ0H4/jjK8RXowt8HF0Mf9pMbCs6ElHOwZ6eqT2FnTfy8jLKPp9AXZP1
-	iTVLuViJbXP97ARqq446TvfpgLSMNpAup+mO/L5QbAKWM/u+VpcqOw==
-X-Received: by 2002:a17:90b:57cf:b0:3b0:b64e:1e34 with SMTP id 98e67ed59e1d1-3b166ce8e72mr3333472a91.51.1794325564896;
-        Tue, 10 Nov 2026 07:46:04 -0800 (PST)
-Received: from p14s ([2604:3d09:148c:c800:a917:5683:7f92:9eda])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17db2fcfesm325724a91.4.2026.11.10.07.46.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 07:46:04 -0800 (PST)
-Date: Tue, 10 Nov 2026 09:46:01 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Francesco Valla <francesco@valla.it>
-Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>, Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v2 04/11] remoteproc: report VIRTIO_F_VERSION_1 for
- non-rproc-specific vdevs
-Message-ID: <avM8OYHxB4nAKCnb@p14s>
-References: <20261102-remoteproc_virtio_map-v2-0-26b300e01c62@valla.it>
- <20261102-remoteproc_virtio_map-v2-4-26b300e01c62@valla.it>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3FB60A263E;
+	Tue, 10 Nov 2026 15:48:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA3FB60A263E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id C9921A85BC;
+	Tue, 10 Nov 2026 15:48:05 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf03.hostedemail.com (Postfix) with ESMTPA id 679516000A;
+	Tue, 10 Nov 2026 15:47:56 +0000 (UTC)
+Message-ID: <e7b48186a65a759935fdfdc2003b266d05ee2d4c.camel@perches.com>
+Subject: Re: [PATCH v3 1/5] string: Add strprefix(), and deprecate
+ str_has_prefix()
+From: Joe Perches <joe@perches.com>
+To: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki"	
+ <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Andreas
+ Schwab	 <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, Bartosz
+ Golaszewski	 <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, Danilo
+ Krummrich	 <dakr@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johan Hovold
+ <johan@kernel.org>, Kees Cook <kees@kernel.org>, Laurent Pinchart	
+ <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Linus Walleij
+ <linusw@kernel.org>, Namhyung Kim	 <namhyung@kernel.org>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Rob Herring	 <robh@kernel.org>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Saravana Kannan	 <saravanak@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi	 <zanussi@kernel.org>,
+ linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Bartosz Golaszewski	
+ <bartosz.golaszewski@oss.qualcomm.com>
+Date: Tue, 10 Nov 2026 07:47:55 -0800
+In-Reply-To: <556766412884389a7cecfe6affcc9fa3a78f9807.1794323750.git.alx@kernel.org>
+References: <cover.1794323750.git.alx@kernel.org>
+	 <556766412884389a7cecfe6affcc9fa3a78f9807.1794323750.git.alx@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -112,110 +76,28 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261102-remoteproc_virtio_map-v2-4-26b300e01c62@valla.it>
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 679516000A
+X-Stat-Signature: jfwhutdpd88zfz37tr54rxpcmsbdz7uh
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+itX/azYWscfSefJ1cEeZtVDBix6JdnqE=
+X-HE-Tag: 1794325676-569192
+X-HE-Meta: U2FsdGVkX185pC9GD+XhwDY8fHTdpb4bEWMa7jC2vmoDxUm1jtR0t65c4Gtf7cyCvm9M4TppdazpgmUQRhwjk/CxFnV/hUKlqniGchOmsyNAb16mfHvFATFnXjIooXXdQQXJSnIIkhegnkJAYKeuTiaN4ixgIMtRnua1HUa4VNEpVGqk/i1+umqDu0u8ZEWjUZgW4IlcCejQBkAdglRIFYA2fLf73M2AoS28U821DoGSjmwiZ4FLuuVwkNB16ewyGLJT0BKECphGhHwwugANfTpnxmrvKOdIzCMJ8eS+rI0QIx/MTX0a6tNRWuLtWQfa
 
-Hi,
+On Tue, 2026-11-10 at 16:33 +0100, Alejandro Colomar wrote:
+> As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
+> between an empty prefix matching an empty string from a non-matching
+> prefix.  This is a fundamental design flaw in this API, and not
+> something that can be fixed.
+>=20
+> As always, this is a consequence of choosing sizes instead of pointers.
+> Sizes are often the wrong choice.  In this specific case, pointers are
+> more capable of differentiating these cases, as NULL is a special
+> sentinel value that doesn't need to overload a valid value.
+>=20
+> Let's implement strprefix(), a function that returns a pointer
+> right after the prefix if found, and a null pointer if not found.
+>=20
+> We'll slowly migrate existing code from str_has_prefix() to strprefix().
 
-I started reviewing this set, making it to this patch.  I will continue tomorrow
-but due to the KVM forum later this week, I may not finish before next week.
-That said, I applied the first 2 patches so no need to include them in the next
-revision.
-
-Thanks,
-Mathieu
-
-On Mon, Nov 02, 2026 at 12:26:41AM +0100, Francesco Valla wrote:
-> There is currently no way to report the VIRTIO_F_VERSION_1 using the
-> resource table alone, as the per-vdev feature array is limited to 32
-> bits.
-> 
-> Considering that the VIRTIO 1.0 specification is now ~10 years old,
-> always report the VIRTIO_F_VERSION_1 feature for virtio devices that
-> are not specific for remoteproc usage. These latter, which as of today
-> are rpmsg and rproc-serial, are excluded to avoid impacting the existing
-> usecases, since VIRTIO_F_VERSION_1 changes the semantics of the
-> communication (e.g., the configuration space is assumed to be
-> little-endian rather than follow the device's endianness).
-> 
-> While at it, replace BUG_ON() with WARN_ON() and return an appropriate
-> error in case of features that would overflow the 32 bits limit.
-> 
-> Signed-off-by: Francesco Valla <francesco@valla.it>
-> ---
->  drivers/remoteproc/remoteproc_virtio.c | 28 +++++++++++++++++++++++++---
->  1 file changed, 25 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-> index c56d3330adfe..f1b362158a9c 100644
-> --- a/drivers/remoteproc/remoteproc_virtio.c
-> +++ b/drivers/remoteproc/remoteproc_virtio.c
-> @@ -16,6 +16,7 @@
->  #include <linux/of_reserved_mem.h>
->  #include <linux/platform_device.h>
->  #include <linux/remoteproc.h>
-> +#include <linux/rsc_table.h>
->  #include <linux/virtio.h>
->  #include <linux/virtio_config.h>
->  #include <linux/virtio_ids.h>
-> @@ -27,6 +28,11 @@
->  
->  #include "remoteproc_internal.h"
->  
-> +static bool rproc_virtio_rsc_vdev_rproc_specific(struct fw_rsc_vdev *rsc)
-> +{
-> +	return (rsc->id == VIRTIO_ID_RPMSG || rsc->id == VIRTIO_ID_RPROC_SERIAL);
-> +}
-> +
->  static int copy_dma_range_map(struct device *to, struct device *from)
->  {
->  	const struct bus_dma_region *map = from->dma_range_map, *new_map, *r;
-> @@ -268,8 +274,17 @@ static void rproc_virtio_synchronize_cbs(struct virtio_device *vdev)
->  static u64 rproc_virtio_get_features(struct virtio_device *vdev)
->  {
->  	struct fw_rsc_vdev *rsc = vdev_to_rsc(vdev);
-> +	u64 features = (u64)rsc->dfeatures;
->  
-> -	return rsc->dfeatures;
-> +	/*
-> +	 * All non-remoteproc-specific virtio devices are assumed to be
-> +	 * compliant with virtio specifications 1.x; there is no other method
-> +	 * to transmit this capability from the remote processor to the host.
-> +	 */
-> +	if (!rproc_virtio_rsc_vdev_rproc_specific(rsc))
-> +		features |= (1ULL << VIRTIO_F_VERSION_1);
-> +
-> +	return features;
->  }
->  
->  static void rproc_transport_features(struct virtio_device *vdev)
-> @@ -285,6 +300,7 @@ static void rproc_transport_features(struct virtio_device *vdev)
->  static int rproc_virtio_finalize_features(struct virtio_device *vdev)
->  {
->  	struct fw_rsc_vdev *rsc = vdev_to_rsc(vdev);
-> +	u64 features;
->  
->  	/* Give virtio_ring a chance to accept features */
->  	vring_transport_features(vdev);
-> @@ -292,8 +308,14 @@ static int rproc_virtio_finalize_features(struct virtio_device *vdev)
->  	/* Give virtio_rproc a chance to accept features. */
->  	rproc_transport_features(vdev);
->  
-> -	/* Make sure we don't have any features > 32 bits! */
-> -	BUG_ON((u32)vdev->features != vdev->features);
-> +	/* Make sure we don't have any features > 32 bits except the expected ones. */
-> +	features = vdev->features;
-> +
-> +	if (!rproc_virtio_rsc_vdev_rproc_specific(rsc))
-> +		features &= ~(1ULL << VIRTIO_F_VERSION_1);
-> +
-> +	if (WARN_ON((u32)vdev->features != features))
-> +		return -EINVAL;
->  
->  	/*
->  	 * Remember the finalized features of our vdev, and provide it
-> 
-> -- 
-> 2.56.0
-> 
+Most uses of str_has_prefix could use the existing strstarts.
