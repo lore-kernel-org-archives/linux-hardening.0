@@ -1,68 +1,116 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.130
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794310522;
-	b=HbowaCFyvZMO6frs1W7AdIar5Iu9icl8fwXOOZI7XUOv2wsMQohfls+KOzCyNv+nryxX
-	 Y36NsMJjiLsyCKcTgBDrJ0Ebz1OC41BXDh0OinOdwxTO3P+5tHhPkbZ6vgSeEohvcX/IA
-	 Uu82uVjfqYC2EB5SQ3xcdZhOVxVDNtMs3iVXoUBASARnBbGBVuHZCbvi1mEjTf+lZGFYS
-	 Bo3j6fp2e+wVo+dLf4rhxZ69FDVxaPzkjF1+a9OFkq8pSauZg/M8yhUCJR8zm4xBZXBDV
-	 mrPxJXNfwOhngFK+MgYf4Sk9Jqhf7uydxPyIPU5BgJciXogRhQxzykfbwgvDhDx6VVA==
+	t=1794311278;
+	b=d4I2zgVl1SdwlRebt3YYdSWqqteujB9Lxnm01ohZZGmHaQ5CSLBsu3xX5XcfBncJMyvr
+	 a+OrescJiwPNEFhqqN8N8GUQCE9uSXlf1TB5aIm7Qpju4fLwZ1CRu/jjmAbUVogZ3opXO
+	 aTnC5AKqFcbkJt2tHmxWI6UBhrQb2pprlG9ialEeCVyaXAdnLvRvmjE395lqmlWgec8jA
+	 Lu2iFdvB4oL55a7liIRLC20NcvMPLxeuDymjFDohuvXtl8yMfvUJSSp5dsrGvD1SIrp5c
+	 saTBrzYA9uV57DMY5rdea7JeWHlYG6m+RfKbqwgMig/eTgsIcqFESuZ1435UZYHzSVw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794310522;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=BbpERa55+bAqGoKd07R6gWLaZO/6XQcmtI/WmnBnKK0=;
-	b=omzX3QaZu4BJTbKWqASAKatBZlrx2UDvzFIrIGtXu7frByFC5+67Sc9JIMA59T2gKbuv
-	 jPeIhDjvYQ2w1S6HoUbqaUfgK2vPdtYvSVBP2nxN0a1AcWnmt29Je31lmxzcZMrb/u4W5
-	 sw+BWjriz29ptVoGt4PYeXv9R+zBCY6jpln7+hAq38f5xtUdH6T4aFFGnXIhQMJV6uOS+
-	 Sx1mXRHytj0Oa+65CcUe8+4PwMCgo7th8ZNxuI+BlKpfqoUNiKX1Udz4UfcXpBem6bW0u
-	 MZq2aqfraVCkV3mcxC3wJUymIrraE1wZi7gSxaqq07G3aWP9jIgv+Gu9n7PGKPMcFYg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794311278;
+	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
+	 DKIM-Signature:Received:Received:Date:Message-ID:From:To:Cc:Subject:
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 X-Spamd-Result:X-Rspamd-Server:X-Rspamd-Action:X-Spam-Flag:
+	 X-Spam-Score:X-Spam-Level:X-Rspamd-Queue-Id;
+	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
+	b=CLx/QNs+fzg1cOkJa9hFkDolX2F7tTU8Rn/1OF/yaaAvQ/hKlH1ATjQkSUzThnUEtQUl
+	 CeQwfsCO2nNaV3f6AQCA9JnTQGp5u8BYE3zMgTfMSMKO03jZ4WYBJ0OrkJU2lnzNfJyBU
+	 4kLX4B0YInSXZpDFMvaoPj0FgJWBi4sWVp6k4my/FjNeFkrLvetxgLjU/oEV5sjbSRYYB
+	 7RKEK4+z1g77gcihEzpsfoS1oXRP6oRC/YQS63ZejtSkpwxZSVU4/awJDri9bMDyEvq7p
+	 fNeFznvufwWUxWhM0n060Uc3x/Pt+9rGL9ULLy5S62z3V5EEoRnIxkrHJFuThWuZ8gA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="HQJT/BMO";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=suse.de;
+	spf=pass smtp.mailfrom=suse.de;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=U6qQmIOe;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=WIwzEQN8;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=U6qQmIOe;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=WIwzEQN8;
+	arc=none smtp.remote-ip=195.135.223.130
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59566606A325;
-	Tue, 10 Nov 2026 11:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5019A606A32E;
+	Tue, 10 Nov 2026 11:47:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5019A606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HQJT/BMO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8388E1F0089F;
-	Tue, 10 Nov 2026 11:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794310522;
-	bh=BbpERa55+bAqGoKd07R6gWLaZO/6XQcmtI/WmnBnKK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HQJT/BMOysNk2pBuRiNkoHZMo5RU/FWxxT7T64FMMsKnYjIpK9fnEphlbftVYkezl
-	 U6W1DegmBEpaTiFZVdAQSNMC92VHMUWvj+PPtWUBHq8VbkTNETA6ugEMhpSIIudyhC
-	 qV2aA7Bw07ex9Cc50hyTOLKk7O+OgKwR7KFjPPdp6cqXqa3Pv6rCMCTpdn4SUS6ehh
-	 yYHCTnVtKETDRWPYDryI7fvVqAM2Ry6qDc+mguJbP1tiR/SaA2kCvdLMaIEDBPFNTQ
-	 7mFkpp+as+jal0yDw7xqEkbG2R5PxJUYNy2W8UiZ/eyyyj8TBhLbGQ4kYyqgt1nft5
-	 2H7bulKQqSbEw==
-Date: Tue, 10 Nov 2026 12:35:15 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>, 
-	Hans Verkuil <hverkuil@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 5/9] of: property: implement the .property_get_names()
- fwnode operation
-Message-ID: <avMBNUEL9_V7WnK-@devuan>
-References: <20261104-fwnode-for-each-prop-v1-0-6e28fe1c72c4@oss.qualcomm.com>
- <20261104-fwnode-for-each-prop-v1-5-6e28fe1c72c4@oss.qualcomm.com>
- <auuhy40x1BMoW96-@ashevche-desk.local>
- <7sfr4ljlwbehal3or4dmy5jxbjz6ya2lf3dq3yptr54wym5tea@eqaexflmocih>
- <avICwdxyi-W1Y3PD@ashevche-desk.local>
- <ab73ez55exen3ew52svsxfinwsuatppdodu2e2zp6izjwwqwwu@2imxzxwclgtl>
- <avL4LoCz2wc164zo@devuan>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=U6qQmIOe;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=WIwzEQN8;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=U6qQmIOe;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=WIwzEQN8
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3C00E21ECD;
+	Tue, 10 Nov 2026 11:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1794311275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
+	b=U6qQmIOe4LvIJA+DVbIM/USCgGP3Cvm2/v13Ni2PC8EpzU10lX24ukr0eO9SFWetRwpSBd
+	esprniFiFGj+wf3Xk/G4UbA6Lf2T57d4d+XkbCxTKmVUMLfk7rEVyxnFzCgFsdXRbpJ0CS
+	JAvVo6oLslQd+JKTA/j0KzsfOvNvp30=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1794311275;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
+	b=WIwzEQN8OeUdjpJtUl13rh/DMUycjp1FwDjrGfpA8v7bpJTaRmUDjKMG7dEeXGBRYXsfji
+	NfmQfnBsPoDaCXAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=U6qQmIOe;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WIwzEQN8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1794311275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
+	b=U6qQmIOe4LvIJA+DVbIM/USCgGP3Cvm2/v13Ni2PC8EpzU10lX24ukr0eO9SFWetRwpSBd
+	esprniFiFGj+wf3Xk/G4UbA6Lf2T57d4d+XkbCxTKmVUMLfk7rEVyxnFzCgFsdXRbpJ0CS
+	JAvVo6oLslQd+JKTA/j0KzsfOvNvp30=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1794311275;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qGURqmXpzK2RLNXVuRSk2BdtnPUh0Q968Z0BGF6BGuk=;
+	b=WIwzEQN8OeUdjpJtUl13rh/DMUycjp1FwDjrGfpA8v7bpJTaRmUDjKMG7dEeXGBRYXsfji
+	NfmQfnBsPoDaCXAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C3F4E13479;
+	Tue, 10 Nov 2026 11:47:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CJDRJWoE82rwewAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 10 Nov 2026 11:47:54 +0000
+Date: Tue, 10 Nov 2026 12:47:54 +0100
+Message-ID: <87pkwcvrf9.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: soc-core: reset rtd->num_components after allocation
+In-Reply-To: <87bj7yw9e2.wl-tiwai@suse.de>
+References: <20261109102536.357134-1-ghidoliemanuele@gmail.com>
+	<87bj7yw9e2.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -71,178 +119,112 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4kcwff6zv5lgihta"
-Content-Disposition: inline
-In-Reply-To: <avL4LoCz2wc164zo@devuan>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-12.51 / 50.00];
+	SUSE_INTERNAL_BYPASS(-9.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,toradex.com,kernel.org,perex.cz,suse.com,vger.kernel.org];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,toradex.com:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -12.51
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 3C00E21ECD
+
+On Mon, 09 Nov 2026 12:07:33 +0100,
+Takashi Iwai wrote:
+> 
+> On Mon, 09 Nov 2026 11:25:20 +0100,
+> Emanuele Ghidoli wrote:
+> On Mon, 09 Nov 2026 11:25:20 +0100,
+> Emanuele Ghidoli wrote:
+> > 
+> > From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+> > 
+> > 
+> > Commit 4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to the
+> > devm_kmalloc_obj() family") switched the snd_soc_pcm_runtime allocation
+> > in soc_new_pcm_runtime() to devm_kzalloc_flex(). components[] is
+> > annotated with __counted_by(num_components), so when the compiler
+> > provides __builtin_counted_by_ref() the allocation now also sets
+> > rtd->num_components to the number of allocated slots.
+> > 
+> > snd_soc_rtd_add_component() fills components[] one entry at a time and
+> > expects num_components to start at zero. Starting from the allocated
+> > size, for_each_rtd_components() stops at the first, still NULL, entry,
+> > so the runtime has no components: they are not probed, no controls or
+> > user-visible PCM devices are created and the card registers empty,
+> > without any error message. In addition, each added component is stored
+> > past the end of components[]. On the tested board these stores still
+> > land in the slack of the kmalloc bucket that devres rounds the
+> > allocation up to, so KASAN does not report them.
+> > 
+> > Reset num_components after the allocation.
+> > 
+> > Seen on a Colibri iMX7D (simple-audio-card, fsl-sai, sgtl5000): the card
+> > is listed in /proc/asound/cards, but /proc/asound/pcm is empty and
+> > 
+> >   amixer: Unable to find simple control 'Capture Mux',0
+> >   aplay: main:850: audio open error: No such file or directory
+> > 
+> > Tested on that board with v7.4-rc2 built with GCC 15.2 (first seen with
+> > GCC 16.2): the failure is there without this change; with it, playback,
+> > capture and the codec controls work again.
+> > 
+> > The root cause analysis, this change and the testing were done with the
+> > help of an AI coding assistant (Claude Code, Claude Opus 5.5).
+> > 
+> > Fixes: 4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to the devm_kmalloc_obj() family")
+> > Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+> > ---
+> > 4dd10fbbeb9c only reached mainline in v7.4-rc2 (not in broonie/sound yet),
+> > so this is based on v7.4-rc2.
+> > 
+> > The other devm_k[mz]alloc_flex() sites added by 4dd10fbbeb9c were checked
+> > too: none of them fills a __counted_by() counter one entry at a time, so
+> > this one looks like the only user hit by the preset counter.
+> 
+> I guess a bugzilla entry that was reported recently is also related
+> with this problem.
+>   https://bugzilla.kernel.org/show_bug.cgi?id=222249
+> 
+> My first gut feeling was that it might be safer to revert the use of
+> devm_kmalloc_flex() in that code, as it has a significant side-effect
+> unlike other straight conversions.  But, if this fix covers well, we
+> can go with this fix, of course.
+
+And it seems working for the bugzilla issue above, too.
+
+Mark, could you pick this up quickly?  It looks like a severe
+regression.
+
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=222249
 
 
---4kcwff6zv5lgihta
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>, 
-	Hans Verkuil <hverkuil@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 5/9] of: property: implement the .property_get_names()
- fwnode operation
-Message-ID: <avMBNUEL9_V7WnK-@devuan>
-References: <20261104-fwnode-for-each-prop-v1-0-6e28fe1c72c4@oss.qualcomm.com>
- <20261104-fwnode-for-each-prop-v1-5-6e28fe1c72c4@oss.qualcomm.com>
- <auuhy40x1BMoW96-@ashevche-desk.local>
- <7sfr4ljlwbehal3or4dmy5jxbjz6ya2lf3dq3yptr54wym5tea@eqaexflmocih>
- <avICwdxyi-W1Y3PD@ashevche-desk.local>
- <ab73ez55exen3ew52svsxfinwsuatppdodu2e2zp6izjwwqwwu@2imxzxwclgtl>
- <avL4LoCz2wc164zo@devuan>
-MIME-Version: 1.0
-In-Reply-To: <avL4LoCz2wc164zo@devuan>
+thanks,
 
-> Date: 2026-11-10 12:10:57+0100
-> From: Alejandro Colomar <alx+linux-hardening@kernel.org>
->
-> Hi Bart,
->=20
-> > Date: 2026-11-10 10:00:42+0100
-> > From: Bartosz Golaszewski <brgl@kernel.org>
-> >
-> [...]
-> > > > > > +		names[i] =3D kstrdup(prop->name, GFP_KERNEL);
-> > > > >=20
-> > > > > Can property be statically defined somewhere? We might want to al=
-so optimize
-> > > > > these duplications with const variant (here or elsewhere, for fwn=
-ode generic
-> > > > > path, I believe).
-> > > >=20
-> > > > Please rephrase because I'm not quite following what you're saying.
-> > >=20
-> > > Can prop->name come from something that is declared as
-> > >=20
-> > > static const ... foo =3D {
-> > > 	... .name =3D "bar";
-> > > };
-> > >
-> >=20
-> > You can't know it for every instance of struct fwnode_handle, so the
-> > answer is: no.
-> >=20
-> > PS: is there a way of using match_string() with non-const data?
->=20
-> Given the definition here:
->=20
-> 	$ grepc match_string .
-> 	./include/linux/string.h:int match_string(const char * const *array, siz=
-e_t n, const char *string);
-> 	./lib/string_helpers.c:int match_string(const char * const *array, size_=
-t n, const char *string)
-> 	{
-> 		int index;
-> 		const char *item;
->=20
-> 		for (index =3D 0; index < n; index++) {
-> 			item =3D array[index];
-> 			if (!item)
-> 				break;
-> 			if (!strcmp(item, string))
-> 				return index;
-> 		}
->=20
-> 		return -EINVAL;
-> 	}
->=20
-> You should be able to call it with a cast.  It's dangerous, but
-> technically it works.  I'm not encouraging it, though.  :)
->=20
-> 	char **strings;
->=20
-> 	...
->=20
-> 	i =3D match_string((const char *const *) strings, n, "foo");
->=20
-> This is a historic problem in C, which was solved in C++.
-
-BTW, self-correction:  it is solved for char *const *, but char** is not
-convertible to const char *const *, neither in C++ nor in future C.
-
-
-Cheers,
-Alex
-
->  I have
-> a proposal paper for the C Committee for solving it as in C++:
-> <https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3987.htm>
->=20
-> This paper will be discussed (and probably voted in) in the next meeting
-> of the committee (which happens next week), so there's a chance that
-> this will be solved for C2y, and thus the cast will no longer be
-> necessary.
->=20
-> The history of why this is not allowed in C but is in C++ is, as far as
-> I've been told, the following:
->=20
-> Back before C and C++ were standardized, C++ invented const, with rules
-> slightly more allowing than what they are now.  This was going to be
-> standardized first in C89.  But very close to the release of C89, they
-> realized about the danger of converting a const char** to a char**
-> implicitly.  They were so close to the release, that they opted for the
-> safest approach: disallow any non-trivial conversions.
->=20
-> Later, while standardizing C++98, they realized we could allow a few
-> more conversions safely, and so they did.
->=20
-> C could have taken advantage of that, and pick C++ rules in C99 or C11,
-> but for some reason, nobody proposed that.  I'm proposing it now.  :)
->=20
-> We've already discussed this proposal informally within the committee
-> for some a year and a half, and there seems to be consensus that we want
-> it.  We're only being careful about the specific language.  But I think
-> I finally got it, and it will go in next week.
->=20
->=20
-> Have a lovely day!
-> Alex
->=20
-> >=20
-> > Bart
-> >=20
->=20
-> --=20
-> <https://www.alejandro-colomar.es>
-
-
-
---=20
-<https://www.alejandro-colomar.es>
-
---4kcwff6zv5lgihta
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrzAXMACgkQ64mZXMKQ
-wqn4jA/+Nrjt3oAo7ab82L0PwByaKld2tiUanIh5j9GnTXUIvFhJ1Fzha4b1DL1/
-F31kpq3MdXc3dB+R5Q+MkyYGvGOysxAmn9LzyJ0yJ+L8AkIHKBgogLdkcINvw2+1
-AOVVJLFEffs07j2zedSkQYDwQWMi8p60Mfo+qL6ZE3TxoTGv8I8vYeYMEgY1lTai
-c46jn3KHvn8xZdV9rU5097tSPg6jhikn68+IK2mL51Im93fceRJ41jpkKA17Qrwx
-bJm0psSpancqH6pLWveNR+3iuyJ966tU7nP5sDlOIBB0/vbsYUuuYwg4q1YCakOZ
-duPcdG9L3JYLfqdg+v2pHcrCSWsw2ae+tUivZVd/g+pYf0jzd6m8Yujp+HzhIC7S
-uazeu8telgKmOlvy3ETLSb2tdMy4/6Gze7qVTO4PVSAoGPLyPLk+XwRb0nvzxIeF
-sBShqOUMxlnVbAOIxWPp5h+ks8Deakq6W4qdDhdlW8dzvUyHovoSZDThED9mrKw2
-tn1b4AZ93P39gIAR+oFBKx/wMQW/i0hCMyAhd6zdnMTj1wmFyOdWjdNu7lkGObhM
-hJ/Lg8856jNfMaGtT59Uq/1MDbxy4IAMNyfXty5JFRWeU2ZR8zdDEQ4El0kOKdmU
-cBe9ucoZvZrH4TJt39ztQZhRFQbos3mNe1SIlUjE6S64GC3SIcE=
-=HIIa
------END PGP SIGNATURE-----
-
---4kcwff6zv5lgihta--
+Takashi
