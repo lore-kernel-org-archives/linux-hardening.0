@@ -1,97 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794263793;
-	b=ykrV5v8js5kOrtEEHcq1Fv10ueJtEhkpR92BXWwVJ4JKcmxDfNskQMzsBT8fNhDGxZHC
-	 475QeGVLTFgtxfqo7WhylTaZAQYIkzV6YjcTyQCTODFSQdx3KNkrTeZ6hHIM6uKE+V6xT
-	 K1lFzJQKHYUIxbHt6BEj1IEAmaWl2d3Wp4K9vVYy2ZA5oTtMtTkokXI0ebHBaEbwsI1xw
-	 vZ4R8Dj93OEOrmwjBpoSw89OC5abhxVXj639dEmrdP9kRE6ZuKTWqAl2mB9PLfqLGL3b8
-	 I2GMpP02cde8CmSlTRHFGwIewfq4sBUhsuEA31NLEGzq9RkWTlsstXaI1mpDpB6FOFg==
+	t=1794271177;
+	b=WCIvMXb8WQb/wZeydXoevMFtvDjdsVeXSZ1QX/iYnc3usXIYBepwQbkcXsW3vM3l1eVs
+	 40Epiidvaj7wA8PDIAbTroWBnZWR9TvYe/PHrWYk4DbiB5jnRyjJirR2OXbCjcFKMYeBs
+	 1E+2wvkv/uxlsbodtsewgyj7XPWmNhTxzA1mW11ulbiu4NcT+EULHrv2TU9WuafneDVi9
+	 5eVUMJzQay6VBOu98pnk9Fo8uZDlwvOAgyQkfWQT+64bN3ASVUcnEtYA31HCHgVwRG4ov
+	 xluhuS2pgKSL3hK2pjzwbyDwieBAdZTRWWqFAInN4hRAsI210P39lctUV2Jejn5yK8w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794263793;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:Organization;
-	bh=RAD7j9whtlVxi4idGzxZNOOQo3aSRCIudDY3EkMacks=;
-	b=h1N4Oj36Soa9scINYriD4/+/3Y5w2C9nqtatYuAM/+jZdBzkISynQ6C8Keswc2wZDTHj
-	 bBDd/hlqdT+WU1T6sw54gpqskbLi9Rj6L7VtPE9Ye538iCc3fj/8Blai3P+RqX0Ka707P
-	 aKyjYOCu/H8mjYY3Hezq4IFWlcvLSd9/txbhMa9o1DCb5A8KnmXqHuXCZTT1w9dGuIKp7
-	 +1OQs6NfA4wyk+YwoDRl8Ihs/1jVGNpjFrY5tGlYyk3bEFqjvODwxso0qdFRnrTDYLMVe
-	 E7CJotgDmAao77zafJMo9sYbbVXibum+2wbHIV2Niruh27mIb98v6uA1Njvjjr5OjdQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794271177;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=IoWT26L+lCNjLByITvEDqGCl/vVklbh6utt0NNZqd+U=;
+	b=CKW/FvNX9HnuoynqLZNaLqid9wXVsfvjnZVpE0k2Jeg3MlHYEv3RLlvmbMibYViZdQ94
+	 kqhXM0v9k/7QZpnJw3ZDGForgHbP/+sxC0nORjizZGAwVV7vS1/3WUi3X5AQ77wnaU183
+	 pI6Tz5+Q+RX3+XPaPoLCpKq3mMB90Osyyu0PrrnjJW7lQUdpBasjvFWlOIEwsU3ePgpyz
+	 G1TSRJG2Rb9w1lHIfmm4X2fXQgVXFcMKBd5pEB8ijJn0imK9JWjhcE6SQKLpCt0Ey5LT6
+	 wJEACmXzKwv3sZaPOd9gypufDz1gAtDnkjnbnqAJe765OJBKw3f5khMOZK9hh21DozA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=bly0HD4a;
-	arc=none smtp.remote-ip=198.175.65.18
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=a6nYydig;
+	arc=none smtp.remote-ip=209.85.216.53
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69689606A325;
-	Mon,  9 Nov 2026 22:36:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 69689606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91470606A326
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Nov 2026 00:39:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 91470606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=bly0HD4a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794263793; x=1825799793;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qoEBEYWCz9dH5MiLs3jExw8OGhdQVJnuSBEorHHTbAQ=;
-  b=bly0HD4aJEyDtMu7hSRADCJmNcsB58G31IXeggR8ja2ohPRmY4UN0ybQ
-   8i8YdJ7FFGBi7Ar5bXgSv/7vGsuFGwqw1iPZeDcQjc8gKmZJPHIi8cZI1
-   doZBBvHGDkTBAwlFjIOtyfkv9SjEs/pk4iYF+W+IuniXcLdmwvvdYE0Zw
-   QleqXpVxcQFdFALLG9IHsbwVpXFHQshiwLlUJ6N6JW2TvS2Hek1uAL+xf
-   ya186Q6cye4T9rYT65sFmg+d0USfb08MHrAcgAZ6NvHw8K6R2OFeJadn/
-   mtM1vTXALrhFznKP+RwRvKufwKgqiSPM07zN2egnjtlNV0NTscBhqAXwV
-   A==;
-X-CSE-ConnectionGUID: Rprrm0S6SSSc43dV3t9CuA==
-X-CSE-MsgGUID: C1FIyUsBSZGSPZx8k5czvQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11961"; a="3012003"
-X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
-   d="scan'208";a="3012003"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 14:36:32 -0800
-X-CSE-ConnectionGUID: VmjHkxDAT6SPVaN2PnVDmA==
-X-CSE-MsgGUID: rqdczbCuRKSkmkeXwVwD3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,204,1787036400"; 
-   d="scan'208";a="8125082"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.144])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2026 14:36:25 -0800
-Date: Tue, 10 Nov 2026 00:36:23 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Alejandro Colomar <alx+linux-hardening@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Geert Uytterhoeven <geert@linux-m68k.org>, andy@kernel.org,
-	bartosz.golaszewski@oss.qualcomm.com, brgl@kernel.org,
-	dakr@kernel.org, devicetree@vger.kernel.org, djrscally@gmail.com,
-	driver-core@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	heikki.krogerus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-	joe@perches.com, johan@kernel.org, kees@kernel.org,
-	laurent.pinchart@ideasonboard.com, lenb@kernel.org,
-	linusw@kernel.org, linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, namhyung@kernel.org,
-	rafael@kernel.org, robh@kernel.org, rostedt@goodmis.org,
-	sakari.ailus@linux.intel.com, saravanak@kernel.org,
-	schwab@linux-m68k.org,
-	Linus Torvalds <torvalds@linux-foundation.org>, zanussi@kernel.org
-Subject: Re: [PATCH v2 1/2] string: Add strprefix(), and deprecate
- str_has_prefix()
-Message-ID: <avJK54xRN9_Sta3k@ashevche-desk.local>
-References: <d3b325ecefd1d991ca25a4de2a859353f3ad7cfb.1793882260.git.alx@kernel.org>
- <20261105125154.83478-1-geert@linux-m68k.org>
- <aux8LYQkGSNjCGHv@devuan>
- <alpine.DEB.2.21.2611070223510.17804@angie.orcam.me.uk>
- <au7TvMP0YhW2e_oM@debian>
- <alpine.DEB.2.21.2611071115110.17804@angie.orcam.me.uk>
- <avBglVuXPjbKnWwl@debian>
- <avBikocxPXRos_GF@debian>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=a6nYydig
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3b094e649d3so965898a91.0
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Nov 2026 16:39:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794271176; x=1794875976; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=IoWT26L+lCNjLByITvEDqGCl/vVklbh6utt0NNZqd+U=;
+        b=a6nYydig6QvSKo7EkEElyV2YraExoirso0hjPWfiBXMd5zbsE5V2+ys7gBTXGBgLMy
+         KztL3S4lXSLQNQFXbomWBbd4uwbtyFzJ3PlMxe3uSSdlmkG5VE/Md9tv0hOKnruaYi0x
+         aPiGZY/Lb/b9UIj6yOm3Bkfm7pAV+dJnpXqlq919gh7//xQg6gdoEVc1qcuuy4ZsBpqV
+         bd01OkHyArnS20r2xDk3ROR//CEabXF5XGAQjI7VyXzuf/s1A2ioL/h/VL0QUAHHRZFz
+         iXsyGWYm6ejppGHGdXnl0oclHQR9TKzhn0HYYCOubjWw6Rhb4LBRNRyKYxgjASXaQTqt
+         k2Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794271176; x=1794875976;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IoWT26L+lCNjLByITvEDqGCl/vVklbh6utt0NNZqd+U=;
+        b=dn2lYPJrYeOQYL0JG0ns3RXPGVDh+V9/JT5HC8rkoqgMTEQEGn0O4C0+w05oUAzW7U
+         i22TTha/PfJPM9k3/vW/EQR5EidCm0MmmR4dysCWSz6ky63056sLufyodPifrTzKJV2L
+         Ase7T6rpKXyIzI6T16PrJytle1TwZkQ58gjKhkHOdQMKovavPFbvasuwRP1LD2GuB33H
+         Vo64YsJJCQv1z4uZWC3ULX4j+ZjE1loqIV6xYEptxord76+kMxnrxhziFgvETGfsg288
+         ddXVE9vVVwsilTiOqMtkiadrAKgGarJgJW15jlOtOHq63+KQVvNYJgPAHOm2qk45qCDT
+         pFiw==
+X-Forwarded-Encrypted: i=1; AL+hErGpW6INOk6LqYfX4wPZ4WcFvpGufKrOtLNf/nE8x3OjdVaCKE4tV+ndBDtG+kbWMXxtP+XfHbuHhPNBJEiHIpY=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8YlmxChzHoAUxhDs0H+q/qr4cjA83wgCVZTVfSAvessCinAHpi
+	zHG6SlyYYw/z9Jq4YDDITZvLivk96MijTpMaoY8uA3vt/Q7klCJYiANdbiV4eM4I
+X-Gm-Gg: AYBFou04eU4JOZWGOmmGXSsbU3Wm06RgLRE7jYjAxXPKdmu2kL7vis3qy9Ki5bzEn2D
+	pgFrit/8//Gp8/PcUn1LyuPrtRreHDXe7kib0oNARhCUq4koBdvBLHRpKS7FIyQ8i4yUiLlYIOy
+	dc/1a8CmDZquZuXU1YYuQEffD6BdwkY46FdWHoN1xnoAfuWvakQUoLk2bZAPAtFb7UsLbUThc/y
+	Lzoo+7fQIjhUHhxDlziEsofAKlKk9RmdoOdXkEWjvwJzWJWXnxCXQI1JcF3avSIBTYSKETo2pu3
+	j20zjsOBDM1eV0U5MbwBmd89tSzM9kP54mVdGEYy/COKYL0TRzOZoCEPlfFkBZo1nOOC2ZKjEPQ
+	p/KIkzmuOQ/GmO0an8OiU4lEqjr1zF1NbNso18rmeMl1vZ5ohwxbFUdyPdf5HbJg7NcXHeJqnxD
+	7V1JNfX3R/KeFDmwLWFML8twNdPOkL0aGSX0s99ImQi8uFnaZv177DPAU75EF2xcMH6YNWvVJe9
+	uMw+ullPGVNYpgrL5c0qOS7yerQNMxSdc8Nke5qN11zFNx9rbjsD5WwyphzN9aNnyfvoJNtCGzg
+	IX8GoKazlo6Trc4vI7vxGpjD3oMjHEL+7wNs7Vv2K2CWCmGeq4ILzz+oeqQ3x7qwuAZFus2YBAR
+	BRPeB
+X-Received: by 2002:a17:90b:4ad0:b0:3ac:9d83:8856 with SMTP id 98e67ed59e1d1-3b166ad1ee5mr1415032a91.9.1794271175917;
+        Mon, 09 Nov 2026 16:39:35 -0800 (PST)
+Received: from [172.19.1.51] (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b16779d5c8sm1512711a91.2.2026.11.09.16.39.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Nov 2026 16:39:34 -0800 (PST)
+Message-ID: <d2f451a0-33bb-47ab-b31e-aa40df9d7ab7@gmail.com>
+Date: Tue, 10 Nov 2026 08:39:18 +0800
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -101,88 +93,44 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <avBikocxPXRos_GF@debian>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: dma: nuvoton,ma35d1-pdma: Document
+ MA35D1 PDMA controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: ychuang3@nuvoton.com, schung@nuvoton.com, vkoul@kernel.org,
+ Frank.Li@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, kees@kernel.org, gustavoars@kernel.org,
+ linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20261109052900.2960473-1-shanchun1218@gmail.com>
+ <20261109052900.2960473-2-shanchun1218@gmail.com>
+ <20261109-petite-imposing-ermine-fbbbcd@quoll>
+Content-Language: en-US
+From: Shan-Chun Hung <shanchun1218@gmail.com>
+In-Reply-To: <20261109-petite-imposing-ermine-fbbbcd@quoll>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Nov 08, 2026 at 12:54:33PM +0100, Alejandro Colomar wrote:
-> > Date: 2026-11-08 12:49:08+0100
-> > From: Alejandro Colomar <alx@kernel.org>
-> >
-> > Hi Maciej,
-> > 
-> > > Date: 2026-11-08 11:05:51+0000
-> > > From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-> > >
-> > > On Sat, 7 Nov 2026, Alejandro Colomar wrote:
-> > > 
-> > > > Hi Maciej,
-> > > > 
-> > > > > Date: 2026-11-07 02:44:23+0000
-> > > > > From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-> > > > >
-> > > > > On Thu, 5 Nov 2026, Alejandro Colomar wrote:
-> > > > > 
-> > > > > > Do you think strafterprefix() would be better?  Do you have any other
-> > > > > > suggestions?
-> > > > > 
-> > > > >  FWIW strsuffix() seems an obvious choice to me.  After all what the API 
-> > > > > does is request the string's suffix beyond the specified leading part.
-> > > > 
-> > > > Actually, strsuffix() is something else:
-> > > > 
-> > > > 	char *
-> > > > 	strsuffix_(const char *str, const char *suffix)
-> > > > 	{
-> > > > 		ptrdiff_t  off;
-> > > > 
-> > > > 		off = strlen(str) - strlen(suffix);
-> > > > 		if (off < 0)
-> > > > 			return NULL;
-> > > > 
-> > > > 		if (!streq(str + off, suffix))
-> > > > 			return NULL;
-> > > > 
-> > > > 		return str + off;
-> > > > 	}
-> > > > 
-> > > > It finds the start of a suffix in a string.  That is:
-> > > > 
-> > > > 	strcmp(strsuffix("foobar", "bar"), "bar") == 0;
-> > > 
-> > >  Hmm, I'd have called that strskipto().  If that's not possible for some 
-> > > reason (I can't see it used in Linux), then strskip() or strskipover() 
-> > > could be used for this API.
+Dear Krzysztof,
+
+Thanks for the review
+
+On 11/9/2026 9:16 PM, Krzysztof Kozlowski wrote:
+> On Mon, Nov 09, 2026 at 01:28:59PM +0800, Shan-Chun Hung wrote:
+>> Add binding for Nuvoton MA35D1 PDMA controller.
+>>
+>> Signed-off-by: Shan-Chun Hung <shanchun1218@gmail.com>
+>> ---
+>>   .../bindings/dma/nuvoton,ma35d1-pdma.yaml     | 71 +++++++++++++++++++
+>>   1 file changed, 71 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/dma/nuvoton,ma35d1-pdma.yaml
 > 
-> Another issue with the name strskipto() is that the name doesn't make it
-> clear whether the second argument is a string, or a list of characters.
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 > 
-> That is, would strskipto() something similar to strpbrk(3)?
-> It's not clear from the name.  From strprefix() and strsuffix(), the
-> meaning of the second argument is clear from the function name.
+> Best regards,
+> Krzysztof
 
-On this bikeshedding thread I'm with Alejandro.
-
-> > strsuffix() exists in many projects, and in all of them it seems to have
-> > these semantics (or very similar ones).
-> > 
-> > Just look at a Debian code search of those names.
-> > 
-> > The strprefix() and strsuffix() pair of functions are widely
-> > implemented, and while the exact details of the return value differ
-> > slightly (some return just a boolean, others return a pointer that can
-> > be used as a boolean too), the overall semantics of them are quite
-> > consistent.  strsuffix() has less drift than strprefix().
-> > 
-> > If we added strsuffix() here with the semantics commonly attributed to
-> > strprefix(), and then had strskipto() with the semantics commonly
-> > attributed to strsuffix(), I'd expect programmers to eventually get
-> > confused and use the wrong one. 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best Regards,
+Shan-Chun
 
