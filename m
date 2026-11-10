@@ -1,40 +1,40 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794328452;
-	b=Q2HJeQiadW0SEHaBC0kAepvmYyBzUUwyIGslZlKL81xQCfs5rnRLiWu2EtAlX0EqzZ0J
-	 +E1q5t4ixZiji8PXzpu0Me3GhjoZAR85Y3A/0nrfKrMi4mabSiXFvIBztMO4W1AP2Kx8Y
-	 vgKZ8QlLGL80y1CfoacjJxOkTlY57asFAI+anvXrQAczkBWT1P14U8epSZpZja3TXcaqg
-	 M85wRV9cThMlt1DUVrsNP2PNwtRYps4B8inQRrp4QH70YpWPSvG7qItD2zAcL7t4ZVfAT
-	 7rWNOkszGkznloE30b22idbWowaVcF4CmNBgWfOsapP/zMcBVc8HrmoyARSDfJvyCQg==
+	t=1794328453;
+	b=AFU+gUHvH5QbXCR4G5w9W4oX7X/V5rfSFQ5cr7OGdXmvSNkTYUFN56koAqtB9ixf9cbi
+	 VPfZ/DLJo6S9xgwTvA8vZXRt3UBJ+b+2X2FyIcyRoe9hSq5BkS+yS+wU0EJTQ7jhiRI2q
+	 6iE5PERuzPMNIDh0rcnVO2Vcrifwat8FO+CsXR+Ih3Hh3ywCnPSX5rvNJlRA0ir7JButw
+	 XWM7bUmFvj5SmZVctvTat26wYuYKUONwb4q2gREo5d44U17nT6FR/78u7ElC105OMKqeb
+	 MsO9uouFZLjAXW/ys42gPYk61KpAlkpmEIDtxHMrglZx2VWrR2vTFff0CY6A8D4O9kA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794328452;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794328453;
 	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Developer-Signature:X-Developer-Key;
-	bh=HVMSgz3CY/8/3JYVAcyQp/zth9ub02Ou+XtUUypEUVI=;
-	b=qXG0+Kk4/ugj18XvhqV21fQa6rtZ6RO537Bs4afzxoO20jRewDxESCUogF2nUhWVmwxI
-	 jUFYvl8YtHA/La8jXWZzSh7UJS5FGVjtgWkP+b3sXZfcyxZDvt8tlEfYwqX5nqfHI/+42
-	 GY/DNLFxP3l4gPNHvNmJMLPMdOThKGoGLnU80/U1tXCZmUcGWXW6ibjDaCDGq94s2Db9X
-	 Exz5D4gwskQCkcp9v4z5YS4HwSappVka3WL2I/40x9wZcaeTZa2YfBXJpLQdIPoixRzHl
-	 a9p7OFXomp8L7Dm6RNWo6V5fUpG8u6jBDIGWlWs+v5VoH50zGzEaUDMEF4h1Xs0JhoQ==
+	bh=Lr/x5IlnZq4eIBfp/lJaUR2Ue53H914EWTxEd+hd3Uw=;
+	b=lbGlH6LyQNP5sc50UtJwj95tLc8lFqCBSHifJVLBLsmtfK4xktsRx2njnJYGWK81Tvx2
+	 JgyAc6OzGGKFtNLJCmr/tnCoUl+MzXHITdEZIWGtma7MftNKmC4hUbCDdzXqdGVbnhZen
+	 guwDMXox4uEorNkwwl2XtrOhTX9LHK/T9diuPPGRTK0T7Lyl+YNbAKR71XKnEuarbZYk2
+	 X0N5H9g5RJdpSiUL37Caojn4AsXlxsUDwkufkLN/Tx9qI8yrXF8s6Iy38axfCWaSwSsIa
+	 4A2ovur3vL9naPwdjhSw0VOzkN64DZ0iK2jgQnTy+ek88of7q4+PRoWMNHqg+zyHz8A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linutronix.de;
 	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=ta6nf+j7;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=70O6f4JL;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=E+So8ZNc;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=Ees8fCyG;
 	arc=none smtp.remote-ip=193.142.43.55
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB31C60A2616;
-	Tue, 10 Nov 2026 16:34:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CB31C60A2616
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A82606A20F;
+	Tue, 10 Nov 2026 16:34:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 57A82606A20F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=ta6nf+j7;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=70O6f4JL
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=E+So8ZNc;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=Ees8fCyG
 From: Gregor Herburger <gregor.herburger@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1794328450;
@@ -42,24 +42,24 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HVMSgz3CY/8/3JYVAcyQp/zth9ub02Ou+XtUUypEUVI=;
-	b=ta6nf+j7Pk7YGrUj0E8g1PafYjWgYlup843DRym19ZNPaLPxAH9KJN7B1kow9bqMWr7CO9
-	3My3b1qVuUQAFoJuOM9G22wzpN3XkFdSu+QxyJXfCUq8n9AjiRGVgUuSIYDfr4cNqs/ULL
-	DRZ2Obgn3+JeIQnYoi261uZ5iqXgjGQzq0KMN0ESRJSM1xw43EO2Nati7ghUcy4d9BU0VL
-	isTXvFlyLp1UIKX9O2OyCwToA0aet/L6lJ/u2HaaPXw7JvHdd3hxt/D/g0/+m3+WlVA1dG
-	GnwjVA5YfYFBfpxLhmNm0EdgXTPSty92bVCrZ+2S1B/1MZRV3tE8VTn1twi4FA==
+	bh=Lr/x5IlnZq4eIBfp/lJaUR2Ue53H914EWTxEd+hd3Uw=;
+	b=E+So8ZNcgf+elvtMsO/0RgAl+eGb/8WXXA2I+3n3yd5DtjpbiWPTiuz3ng3P8G52we+99/
+	V565cNbTYzQ9OUW/Y/Wec/gtrWBCKUtt9KePOb8tsjyNJaC1HLR8ELUH0rMbbqn3BoKxui
+	QnPryiIA+7aVdK/xAyjRRYnbih0T2V9cIvL8wWYcRpKboE5jK4LUEnswIV9Ee7RItY37qd
+	nXGRmw1azJ/LW/crDiu4l6srtvxsuCpnAQwe95pW7yY04BUo+Mn8zbZY07mE0tp9WzA71U
+	DWAPsuA91abt5ANtX5O1qSMJ2JpVmVuCjQSzgLVn8QdzPIpzGTevv5w+oLbqmQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1794328450;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HVMSgz3CY/8/3JYVAcyQp/zth9ub02Ou+XtUUypEUVI=;
-	b=70O6f4JLIdC5jN8uNfhQ8XF4uhO9ho0IVHeFZPsVvGTwDmMHZfkTQOsVo0ZUF+er6QKoYH
-	d7RdPNLuEQ5FNzCw==
-Date: Tue, 10 Nov 2026 17:34:01 +0100
-Subject: [PATCH v8 02/12] soc: bcm2835: Use IS_REACHABLE for function
- declaration
+	bh=Lr/x5IlnZq4eIBfp/lJaUR2Ue53H914EWTxEd+hd3Uw=;
+	b=Ees8fCyGZOIGewaaR+aG3eE1+t225iV9Bwd/7wnATtTLOfrW7qJHznNByddbDi/D8tpUSN
+	JF5uYoycB6Jvw+AQ==
+Date: Tue, 10 Nov 2026 17:34:02 +0100
+Subject: [PATCH v8 03/12] nvmem: core: Enforce stride and alignment checks
+ for nvmem_device functions
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -71,7 +71,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20261110-rpi-otp-driver-v8-2-797e0577d414@linutronix.de>
+Message-Id: <20261110-rpi-otp-driver-v8-3-797e0577d414@linutronix.de>
 References: <20261110-rpi-otp-driver-v8-0-797e0577d414@linutronix.de>
 In-Reply-To: <20261110-rpi-otp-driver-v8-0-797e0577d414@linutronix.de>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -88,50 +88,59 @@ Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
  linux-hardening@vger.kernel.org, 
  Gregor Herburger <gregor.herburger@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794328449; l=1460;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794328449; l=1407;
  i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
- bh=uxXK8avB9nb6Zmd3jDyY1bgqVIcNgF3TcaoqB76MexM=;
- b=eKk5HELHoY2U4YN8NqP54WhS2Unof1lVuRJBUwPgQdp4fc7r5I5mdh7InL/Jqh/v98oVe/112
- Q1gUHP1pTyhC9yK40tXAfJnsm87Hy35VBBGYMJtd8LMCq6ZyycMWx3z
+ bh=sGhuitAXl4CJ9+ca/zc+cLRMyNRzuEDqHymnYStad9o=;
+ b=aMCAcNsL2pUU94GEr3AtbJY12UrT1onyq+zukWfkCjUdFnPrwNb+1zuTTI5AmHW9gAM+5SPNR
+ E46ydHIMtZ0DJOrAtjBuOnNkJqT8Qus6eX9XnWyuqgadSVv0SyA6sZx
 X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
  pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
 
-The drivers that depend on the RASPBERRYPI_FIRMWARE use
+The stride and word_size attributes in the nvmem_config struct are
+currently only used when reading/writing through sysfs functions
+bin_attr_nvmem_read/bin_attr_nvmem_write and in the nvmem_cell api.
+Reads and writes with nvmem_device_write/nvmem_device_read still allow
+unaligned access.
 
-	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
+Add a check to these functions to enforce word_size and stride_length
+aligned reads and writes.
 
-This should ensure that the driver is not compiled in when
-RASPBERRYPI_FIRMWARE is 'm' on COMPILE_TEST which leads to linker
-errors.
-
-The same can be achieved by using IS_REACHABLE in the
-raspberrypi-firmware header. This evaluates to false when invoked from
-built-in code. This way the Kconfig can be written as
-
-	depends on RASPBERRYPI_FIRMWARE || COMPILE_TEST
-
-Which is a more readable variant.
-
-Suggested-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Reviewed-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
 ---
- include/soc/bcm2835/raspberrypi-firmware.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvmem/core.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-index 5a0cbb18d0b6c..33ac26f2f135a 100644
---- a/include/soc/bcm2835/raspberrypi-firmware.h
-+++ b/include/soc/bcm2835/raspberrypi-firmware.h
-@@ -201,7 +201,7 @@ struct rpi_firmware_clk_rate_request {
- 		.id = cpu_to_le32(_id),		\
- 	}
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index d976c0d6603ba..f16c7b7cd2b0f 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -2072,6 +2072,12 @@ int nvmem_device_read(struct nvmem_device *nvmem,
+ 	if (!nvmem)
+ 		return -EINVAL;
  
--#if IS_ENABLED(CONFIG_RASPBERRYPI_FIRMWARE)
-+#if IS_REACHABLE(CONFIG_RASPBERRYPI_FIRMWARE)
- int rpi_firmware_property(struct rpi_firmware *fw,
- 			  u32 tag, void *data, size_t len);
- int rpi_firmware_property_list(struct rpi_firmware *fw,
++	if (!IS_ALIGNED(offset, nvmem->stride))
++		return -EINVAL;
++
++	if (!IS_ALIGNED(bytes, nvmem->word_size))
++		return -EINVAL;
++
+ 	rc = nvmem_reg_read(nvmem, offset, buf, bytes);
+ 
+ 	if (rc)
+@@ -2100,6 +2106,12 @@ int nvmem_device_write(struct nvmem_device *nvmem,
+ 	if (!nvmem)
+ 		return -EINVAL;
+ 
++	if (!IS_ALIGNED(offset, nvmem->stride))
++		return -EINVAL;
++
++	if (!IS_ALIGNED(bytes, nvmem->word_size))
++		return -EINVAL;
++
+ 	rc = nvmem_reg_write(nvmem, offset, buf, bytes);
+ 
+ 	if (rc)
 
 -- 
 2.47.3
