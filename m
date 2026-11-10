@@ -1,40 +1,40 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794327863;
-	b=kqf5wz/GAS/ngMelaCIU22gX7Egx/ADZ08Wz+gDY+MzFSiT77bpIP/WgmFBSBmN1s+U6
-	 W/vl8LNmsBaBkq5sXWVImMvCRGUZVHcolX4qcsNomFME12Rrj7eyA8jenMYkRFu4X70Aw
-	 tnXhkopM3CR0Qc2d7UeFMgnTDkLl9hEJRr/ySg1sQScT55MDR+dXMsGMyXxOU0KmGSmPv
-	 Dla5Ju283trZBCjcnrWk1BRWS5yJgedbyT3H6M9IYsp3AEt+w1gA7K+jz6zglhqaaFOka
-	 z5VRUdKXhhNGy/pwyDZKKOm+N9JTFNkW6BVq9Ep4h96YOzxVHfb0qBPpEQQLN8aZGhA==
+	b=BlLNY33bkWR2i4q3k4EdUAt/k70MIl8xzn0KHntHhULVOLo4qkk0BgHNSvfR2dHlXaP6
+	 8X8LQq2HN2CdM13ZwdREIQ+hkheukLD9ZceAT8a9yR6Ik61AgxIPxba9Ik7Y1RymXGhnX
+	 nZviLq3nQtT5HuTrSFALvYAAt8zWkYtOJMvHHDByBKlKqNptYLycwJW1RSTnejrnpF5hS
+	 7ZkwGrg0DqL5f38ibIBrGmLHct8QbEG2c6eUkQiul6OuFTo3pOL87zo0eBN7bOaJeX6E+
+	 Pxc/R5J2y01X+t1ne/zntuHsINiaY41Fh8n34yHCtTuiuHn9hDQ+7333UUvsqtbFZiw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794327863;
 	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Developer-Signature:X-Developer-Key;
-	bh=TJKemrzXK1q+mQp0AASaxKgzFL0wc+OvZ98MS05tDK0=;
-	b=yGqQm+4YGAcL0TN/hqGywRzxg1r01TqvpnoteUEIbjKGQgxgakpRq/IeqsHzWkH/jyt5
-	 GfVYtKiAiL/Kfs07k/z/ltvZ2+bwvCRrp30isq8u8s8tabbbglufiCFYl0JJ+kpklN8d/
-	 tQy3Vr58IHDrWlMqwfXtxCIWkukwWGSY6zYFDZpFAOrBUHl+zyO4tL3n4Tl3A1JACirgq
-	 RjJVrCNAgekSASIt/BMR0s5iocoP7SsCGBM16douMJNQTOlj+E0Llvz1B5RmDLJmSHhZH
-	 vZj/jMGulgIZ654w2VdbUD4DIc65sNeWtkFYThX3VC3lzMhp/Sd53Q40uuhSNrXibqQ==
+	bh=S3e2DLc/EFtAmhQSbf1IYEBcV1UrLcWSeCvbdOXz2tM=;
+	b=aSGcCssOvdQ+sHpd+6fvR9/6ByVha2bN2wwqVqLlonwo7K1cyHiW+ZrNTwg7BN3BpfZS
+	 iIVFM+pFbKTGZniqWgCbcKMMf6uaBvyl7OR/b7QmSJUzGNn7bESHq8voykX0G/nfLP9he
+	 SSKx/8T2I7oMqtuVZ/gvTnJ/8/Dx0Cqc2QC/A/qavFvcVQ/0nTBWDpYTuQQxqdQY9q2VK
+	 ensgQKGMnbmxP0LY3u81L8rHKeFaazIJk6zInyT0io9ZeXgnqnS08P54X8SVAZUBLk6jz
+	 /S1tt/elpbWKEYuP/Pnfn2w18OtnWcoGRzhHYfQH8qUCgBOF6K+JveDfNcoFcNEW/Cw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linutronix.de;
 	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=GqM9DJSF;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=NjyFM1i2;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=2ADUSuV9;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=pdx5nWQi;
 	arc=none smtp.remote-ip=193.142.43.55
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926B360A3809;
-	Tue, 10 Nov 2026 16:24:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 926B360A3809
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243D060A3818;
+	Tue, 10 Nov 2026 16:24:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 243D060A3818
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=GqM9DJSF;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=NjyFM1i2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=2ADUSuV9;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=pdx5nWQi
 From: Gregor Herburger <gregor.herburger@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1794327861;
@@ -42,24 +42,24 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TJKemrzXK1q+mQp0AASaxKgzFL0wc+OvZ98MS05tDK0=;
-	b=GqM9DJSFVl+ZoZFqnw+dkl0tThH/3AKJYMv4RQ4O8tZglMGEi3aYowkJhejVRH8qyYVJBc
-	rJrzP28t79/8pxA1lwxIDibiIP6nIUBexOcm6T/Ls96s4CM/hG3vtneND7aZVoo/Zu1/9t
-	RTlxjQ2q9jMDoNE6LSX903nFuhFYjFN1KIrha3QPGeNrP3Fx+xLuzgj1sAVKp/6it8Uut5
-	0Zjyq9XOvSoHvF4jFfIQLqUF7T7iBG1atgO7VoJqX4LoD8kvEoKaQ0bP17UuibVKqL37DT
-	HTtBvJ4Bce2cqMrPejljx1jsr8ZVI7TC2HL1xzAIDiv9hHpttgn5ynZSQnBDiQ==
+	bh=S3e2DLc/EFtAmhQSbf1IYEBcV1UrLcWSeCvbdOXz2tM=;
+	b=2ADUSuV9X4bNSOWDhK1G/Qbq/PDBcw0ZG1PX55+wRcJyjvy3nxNyIKTmIeRTwg481ImUji
+	Rj7KrciWJrzAd1sH3UC2+QENVPcnEVmbAXsbdcau283cfo4b+ytEUvrn9ROpygZzvrwGus
+	yvnkGx2eLlCudZA1hH288pFO65s4vZ9SwRl+x3gb+rrR/IUsuqr9+f/0mnZdsaVsT8Qnfd
+	OTRz6GwkEQyDOfcC0MYCB6Tc0HNEyhCCvalF4cZ+7XdodifHDRKkFbo9yFU3WjOfrhJcOh
+	S9cCIVP2LUjj88llKKAxKbhSy3Gzfcdwpcv3bGIjFFtb2epwp6vA/0yjPuQAnQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1794327861;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TJKemrzXK1q+mQp0AASaxKgzFL0wc+OvZ98MS05tDK0=;
-	b=NjyFM1i2tJS6CsEWtKuvl7/86vdQGqhGnMQ8Ox5Vv4jCLINtkX9ixDrNh0hG5NK6w+Qess
-	jmT2YDPaWdVP9oDg==
-Date: Tue, 10 Nov 2026 17:24:08 +0100
-Subject: [PATCH v7 07/11] dt-bindings: raspberrypi,bcm2835-firmware: Drop
- unnecessary select
+	bh=S3e2DLc/EFtAmhQSbf1IYEBcV1UrLcWSeCvbdOXz2tM=;
+	b=pdx5nWQiUCT6eIDuzVu6eKoXwDsOy9XFnuvisgC9zyrKUzmF1o62E8uJ6JPhS/nXYPXsbf
+	IgQtv1RmuDvPtjBA==
+Date: Tue, 10 Nov 2026 17:24:09 +0100
+Subject: [PATCH v7 08/11] arm64: defconfig: Enable the raspberrypi otp
+ driver as module
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -71,7 +71,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261110-rpi-otp-driver-v7-7-2345d0ee65f0@linutronix.de>
+Message-Id: <20261110-rpi-otp-driver-v7-8-2345d0ee65f0@linutronix.de>
 References: <20261110-rpi-otp-driver-v7-0-2345d0ee65f0@linutronix.de>
 In-Reply-To: <20261110-rpi-otp-driver-v7-0-2345d0ee65f0@linutronix.de>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -86,46 +86,42 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Russell King <linux@armlinux.org.uk>
 Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
+ linux-hardening@vger.kernel.org, 
  Gregor Herburger <gregor.herburger@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794327856; l=1090;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794327856; l=987;
  i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
- bh=Racxfoc4BFZdJxwpm7i43GQXuCiRduffKpGtvxfjlFg=;
- b=ijU/2P97KgBOLA9w+pE5519vPJbJzb8Qn1TKF+/9dTTmYNCBFRRHfsOxn1ASykZtKQP8EFXa3
- qkvC2PbgXMHA/3yJ2Sz3i0t/MYB5yyyX3DtEiwyqk6IxnR6SLqCQ80m
+ bh=6YL5o+FkfRNe3jisn0G42FaZ58Ui5doUPUkjSlQYsNY=;
+ b=7HLXLgHtQEriR+V9jkLKzAMI/ntWvjTTVujde45O8cCbz7rS50LsgVaW5GkshJMbPCdQT/MGi
+ tJJglZTfbrrCqVqP6BHXg8Fk1qusKNZLVAGQnOQMffOhQBElJE0yJAK
 X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
  pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
 
-The "select" in schema is not necessary anymore since dtschema drops
-simple-mfd when constructing the select/filter query for schemas with
-compatibles.
+Enable the newly added Raspberry Pi OTP driver as module to allow access
+to the otp registers. This driver provides access to the OTP registers
+present on all Raspberry Pi boards and the private OTP registers present
+on the Raspberry Pi 5.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Enabling this in the generic arm64 defconfig allows standard upstream
+kernels to use these registers on Raspberry Pi 3, 4 and 5 out of the
+box.
+
 Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
 ---
- .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml           | 9 ---------
- 1 file changed, 9 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-index 9519157006b65..02b5b9b480756 100644
---- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-+++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-@@ -10,15 +10,6 @@ maintainers:
-   - Eric Anholt <eric@anholt.net>
-   - Stefan Wahren <wahrenst@gmx.net>
- 
--select:
--  properties:
--    compatible:
--      contains:
--        const: raspberrypi,bcm2835-firmware
--
--  required:
--    - compatible
--
- properties:
-   compatible:
-     oneOf:
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 7b4985b29b21c..023def2297331 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1740,6 +1740,7 @@ CONFIG_NVMEM_SPMI_SDAM=m
+ CONFIG_NVMEM_SUNXI_SID=y
+ CONFIG_NVMEM_UNIPHIER_EFUSE=y
+ CONFIG_NVMEM_ZYNQMP=m
++CONFIG_NVMEM_RASPBERRYPI_OTP=m
+ CONFIG_FPGA=y
+ CONFIG_FPGA_MGR_ALTERA_CVP=m
+ CONFIG_FPGA_MGR_STRATIX10_SOC=m
 
 -- 
 2.47.3
