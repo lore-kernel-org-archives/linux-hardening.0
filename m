@@ -1,51 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.41
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794363262;
-	b=yO3mHN8le3fN/sIMrSEQHX+YaXdvYRHSLn+VEtZIcz8V3KvGuMGFcy8H86kbkmcWFpJj
-	 KfCM6r/kQZV0ll783cQja870ara9187h1yhXImsI2ujnJVBRXm4FhFKs9fPBIlIdlEKyE
-	 S7JVNWp9ItuQtf5WLyu38hkxO9Wbh87I2Gh2G7pLouuD1wqwJPi+9/ldztuBKoybc/uPI
-	 0waoEGhB26YDjEac3jh9mmgB4zRNy1DmC+U8XYvE62iE+Ay39pL/YPH7SKOLW+z7fPRG6
-	 /uEPuwwSY4MRSP90EwXcUoe9PIjslN1ps+uM7io2tLM1QW8GK785CSsRSCGvif//6Ig==
+	t=1794363509;
+	b=B4+ssXtLnKsNokOv/9GHJ479kLjKesDVCebBSjgnpDDRpGDjEcE0WFDu0WPn61KJITgz
+	 E5iFG9z4OpshUqbxK78iGNFenQ3EYUCP4f2FlEd+rJRw1v6G6FNzGnTxeivOrrxMl0a1K
+	 eCLoR2PbURSgwR18M6GBrv22P663IPT7CmNpELLnmVvVMvVFPwSkcBA/8Z1zIXIXkYUG9
+	 qr/VfDIF9NAQo8v/eLYZNPJVQxaPMIDs7TbSEl/GXi28wrT78/2Npq2AZqUApmQefmNk+
+	 2dhW0JRdk1LAwtD4DcM5kbfUN1upmsm8Q/iWzDfViA9Cqo0oY2BDOkO4zctU99AMSuA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794363262;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=l0w/1yDI89XOAGhQ/WS9dsByIozBKDOh521vH2pREDU=;
-	b=XO87rpP/SG+4gUd8dTK9cIRn3fWNtgd7hiZVaqadzj7TFUzagNalmNgVT65yfXkh1o+l
-	 Ngazg3IqzGKbbnMvdUpb1T2Uy0k2+6qqiFfjEhGDan3SmVPAiu/jxsQtZbWoSWTi6qOSM
-	 ejmiaKojN3iS77K2cATGgjd32KphRCdh5yt5GNXd5pC3pF6oM/Q8yxJ/2jG1P9mT/ZF8t
-	 Jwa43X+6nCB4f5AOeDUmfWQe8UmfFjAQE0eiJdfhMdgZX2P1pUbHEij53zcwRISfgLsGR
-	 GR894oAh2rM8/GT5SZfe/+T7dYWFodXvhDwnrJoOudBPU+7WmubSLetTyvFQIDynIEw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794363509;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=LrJY2Fwepo7894Ql+NtyrHeNRWa8RX4cvLszfyzbChY=;
+	b=OOK+Cd5BLPLtr+TlQwPu+t515DgrEOIS7Q2HzjOKeGhfDTh2sGqtHGYO86ZtLsqae/Yq
+	 bISTrFP0jmwVpZ4TtFkGTOfK3UOoUYHHXOpyMLDQWiGeL0AC7/96z1Tdi8n+To2VwIolG
+	 oOxOyP1lUz24AF4n0b8jUAo39feTyxB2UrsOPcASovxZDETOKwul9IaHD8XZsvtipcHFW
+	 4bcrBhrN+BHvl/WDql4RZjRReN4AThnqH7F51Wap7F+2SGlf1hi0Fh7adaNYSjGDXE+xO
+	 dMBuDloHZz1gcxfyZ/ByXpo+LrMoBHohHi/KtEQzLQTnIfdd2X6p+PjDdr1Qbkvz/ZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=cmUHpVtO;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QTFXJwxw;
+	arc=none smtp.remote-ip=209.85.216.41
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E291606A320;
-	Wed, 11 Nov 2026 02:14:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8CE606A32A
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Nov 2026 02:18:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1B8CE606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=cmUHpVtO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28E601F0089F;
-	Wed, 11 Nov 2026 02:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1794363257;
-	bh=l0w/1yDI89XOAGhQ/WS9dsByIozBKDOh521vH2pREDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cmUHpVtOp+OnwJ7oyMYLYODcLFDyDJDba2Ov3IAWnIssdC9mOK2buxDZGOf8iUXHT
-	 xiXMd2/kVzVPyflvgicdZAP4aLq5EzCoA3TsUegsOKy7i7v5v2txJfTN96LwCwTGZJ
-	 Rm4FoWJefXp3lSwBP82MqvCSRheD1TPpsUM28y0s=
-Date: Tue, 10 Nov 2026 21:14:15 -0500
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Kees Cook <kees@kernel.org>
-Cc: CVE Assignment Team <cve@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>, workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QTFXJwxw
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3b17b277a68so390021a91.1
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Nov 2026 18:18:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794363508; x=1794968308; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=LrJY2Fwepo7894Ql+NtyrHeNRWa8RX4cvLszfyzbChY=;
+        b=QTFXJwxwMGi3KYiPUC3uGm1ejP9JeD0ap+Sc+8ZKk7AA+OBcdrTjSUDDEQ80ejyupY
+         tnMsX6HSAMgzQmFT6Iu5Ulyf4l14ZD1Zr7JmfVheB3rz6DhdPbG7Lari0K6dMpx3GFu4
+         yrVSfdBjNtgTdM/fAaEkKnGzFyI2MFr1WprZz1tS7CiNRq5h66zNeQ/HsbmblmiTV/AR
+         3MFT4TAx5h6bEzcjG3Gdx8QGBDJuOlE/yUFfCxAmlWRI8rSJ5MYrQCI0iVpLUAyDh+xH
+         N4CwaLOKv1KwXRF7RsPnxQdQT1vHhtPJCeV/aF19kPrrPj4gRCFZaXYHzCkWKfIrD+Mp
+         sp3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794363508; x=1794968308;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=LrJY2Fwepo7894Ql+NtyrHeNRWa8RX4cvLszfyzbChY=;
+        b=xOM1gAaFf5pBvh7MAwnJqIfwIitNRD3jvrd/JlnYZkcAbVGUBFOH0xiV6ePN5M79DU
+         IjvEPboWjxj29A3NDG6AoYXKVQdg32oeruInYWvOeHQHlf1icC5gHHrp+SgKo6EMqQxn
+         671MR76lEepMpd2DKa1+TylO0C0LnnTTqqh4un08UNhH+WLuUUiuYPonfmMk+5XkQPcP
+         32eUqWERKBv6G3iBVz2C+rZD9Kr0EuVLXZTKHdDP/glY7PxwBic8bigck2LFM0FT5hPk
+         7lMgGm9uhFRJ+xcW0PkX7nlxlgUWmtt8xlplvww88gZA3jPmKdOfVMBIt+bqP2ssD0jq
+         hxag==
+X-Forwarded-Encrypted: i=1; AL+hErFQ/dkT4VzgRryBDRg0tHTWgTBISfNNtXIRIZDeCz/Xnm9ht7Pc8zGBJib8NNKHaUnMK33pprJpgC68YOVszPw=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+Os9khYPUU0sJU2fl8J62sLULqtEliqw9n0E999uMHph1Rc9j8
+	4BBL9VC7xahNuk2nwM5QT4otBK2shPb8UagBshh2OW8tdFjJSGq5LVCf
+X-Gm-Gg: AYBFou2X+srR5c4hOBC/q7Vu0O00s8UWT4NZ924r4Z7/zPf44GImTyVx34VX9q3Nsxj
+	nMq8kzP5zmFgFfd8UA4C9vWjWcX3GeX6cE07fBldjyM5uBP5IPvPAY7TvZcnPYPrWBC/f1kQK1i
+	HiVb9krrgh4ZA+J9FdDUWAU+1lqU/3yzY5eoscgCuq/INOa8z2Xx170pMwrKViWF2hNCkXA/P+x
+	fWyhzkL2uGvDwl8k28MDVoIKFewg3IQiMZiZ9nkKlRHxMHwyRMtAxP0RN1+UsRI5dLjvLaf0H6h
+	3YGQxQSsUoWPFl9B9ItgOirEj9dtEBMjzDjo5UDlTB83hldZI/+x0agouSWr795DAzzaJ/dS/TV
+	CHTXEHlxlQ8exzlQF1EiB1fGLeeUn7+RAExNxwiGnFQr7eU4UGpSmT8zLNL5AXBVTHZI65+ToK2
+	eIWnNvEVV/lpNjmfzk8iY1aU7MZ1uoSCgOerHGH3BwM3Qyiji1LD/D7lz6sXDKWNpkYyYJHJbLC
+	mKauzIm/2xCYAseTu+qbgbDO3znMYxdgQrJbLQf/+upS/J8OCaFw4AL/SkYvX/U6fwidTNUaxTG
+	yQSL8eZX/3rvrpAPldsEjJmJsbA6EGd2BOVDqRToqP420WZN9FkZYXQhyKOzoisVprLc8FzfxCw
+	cZ+T8rgtkwopLV66ERdEb5SgzOXGXXkbMFKIb/4+7AxVDoWBteGxs7P8a0QSZ9BjwscPoBMSQXU
+	cH76noAWfVPDYIEnvpplwAHHlo
+X-Received: by 2002:a17:90b:4c50:b0:3b1:6cab:f68b with SMTP id 98e67ed59e1d1-3b182ec2051mr1060564a91.11.1794363508275;
+        Tue, 10 Nov 2026 18:18:28 -0800 (PST)
+Received: from ryzen.lan ([2601:644:8000:37f::e34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17db9d1fbsm2034540a91.15.2026.11.10.18.18.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 18:18:27 -0800 (PST)
+From: Rosen Penev <rosenp@gmail.com>
+To: Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	Kees Cook <kees@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] docs: cve: Describe how security fixes reach users
-Message-ID: <2026111024-stilt-regalia-b637@gregkh>
-References: <20261111014419.i.586-kees@kernel.org>
+Subject: [PATCH v2] EDAC/ecs: simplify allocation for context
+Date: Tue, 10 Nov 2026 18:18:08 -0800
+Message-ID: <20261111021808.60779-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -55,68 +100,49 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261111014419.i.586-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 10, 2026 at 05:44:23PM -0800, Kees Cook wrote:
-> Recent threads on kernel-hardening proposed new mechanisms for
-> mitigating kernel CVEs while waiting for distributions to ship their
-> fixes. The CVE documentation does not say how fixes reach users, or
-> whose job it is to get them into a vendor's kernel. Add a section that
-> does, summarizing the answers given in those threads.
-> 
-> Link: https://lore.kernel.org/all/2026110719-zipping-silliness-2443@gregkh/
-> Link: https://lore.kernel.org/all/2026111052-spectator-legwarmer-4c1e@gregkh/
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  Documentation/process/cve.rst | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/Documentation/process/cve.rst b/Documentation/process/cve.rst
-> index 5e2753eff729..d16b5c2bf7ba 100644
-> --- a/Documentation/process/cve.rst
-> +++ b/Documentation/process/cve.rst
-> @@ -119,3 +119,33 @@ assigned to all fixes for all issues, but sometimes we will fail to
->  notice fixes, therefore assume that some changes without a CVE assigned
->  might be relevant to take.
->  
-> +Getting security fixes
-> +======================
-> +
-> +Fixes for security issues reach users the same way as every other
-> +fix: through the stable and longterm kernel releases listed at
-> +https://kernel.org/releases.html.  These are released frequently, each
-> +one tested as a whole by many community members.  The CVE assignment team
-> +announces these fixes on the linux-cve-announce mailing list,
-> +and only once a fix is in a stable kernel tree, so the fix is already
-> +available when its CVE is announced, and no vendor learns of a CVE before
-> +anyone else (except for the very rare case of :ref:`embargoed flaws
-> +<process/security-bugs:Disclosure and embargoed information>`,
-> +which do not include :ref:`AI-discovered flaws
-> +<process/security-bugs:What qualifies as a security bug>`).
-> +All of this is available to everyone, at no cost.
-> +
-> +The best response to a CVE, and the quickest way to receive its fix, is
-> +to run one of those kernels and keep updating it.  A kernel version
-> +that is no longer supported there only gets a fix after someone
-> +backports it, and that work is done outside the kernel community.
-> +
-> +If your kernel comes from a Linux distribution or another vendor,
-> +getting fixes into it is that vendor's responsibility.  The kernel
-> +developers and stable maintainers publish the fixes, but they do not
-> +integrate them into each vendor's kernel.  If fixes reach you later
-> +than you need them, raise it with your vendor, particularly if you pay
-> +them for support, since keeping your kernel up to date and secure is
-> +part of what that support provides.  If your vendor cannot keep up,
-> +some distributions follow the stable releases closely and ship their
-> +fixes promptly, also at no cost.
-> -- 
-> 2.55.0
-> 
+Use a flexible array member to combine allocations
 
-Thanks for documenting this.  Hopefully the companies that don't keep up
-to date kernels will get the proper pushback from their customers to fix
-their release processes...
+Add __counted_by for extra runtime analysis.
 
-greg k-h
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ v2: use devm_kzalloc_flex
+ drivers/edac/ecs.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/edac/ecs.c b/drivers/edac/ecs.c
+index 332872d4214c..e7f7e189cc76 100644
+--- a/drivers/edac/ecs.c
++++ b/drivers/edac/ecs.c
+@@ -33,7 +33,7 @@ struct edac_ecs_fru_context {
+ 
+ struct edac_ecs_context {
+ 	u16 num_media_frus;
+-	struct edac_ecs_fru_context *fru_ctxs;
++	struct edac_ecs_fru_context fru_ctxs[] __counted_by(num_media_frus);
+ };
+ 
+ #define TO_ECS_DEV_ATTR(_dev_attr)	\
+@@ -149,16 +149,11 @@ static int ecs_create_desc(struct device *ecs_dev, const struct attribute_group
+ 	struct edac_ecs_context *ecs_ctx;
+ 	u32 fru;
+ 
+-	ecs_ctx = devm_kzalloc_obj(ecs_dev, *ecs_ctx);
++	ecs_ctx = devm_kzalloc_flex(ecs_dev, *ecs_ctx, fru_ctxs, num_media_frus);
+ 	if (!ecs_ctx)
+ 		return -ENOMEM;
+ 
+ 	ecs_ctx->num_media_frus = num_media_frus;
+-	ecs_ctx->fru_ctxs = devm_kzalloc_objs(ecs_dev, *ecs_ctx->fru_ctxs,
+-					      num_media_frus);
+-	if (!ecs_ctx->fru_ctxs)
+-		return -ENOMEM;
+-
+ 	for (fru = 0; fru < num_media_frus; fru++) {
+ 		struct edac_ecs_fru_context *fru_ctx = &ecs_ctx->fru_ctxs[fru];
+ 		struct attribute_group *group = &fru_ctx->group;
+-- 
+2.56.0
+
