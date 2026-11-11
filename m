@@ -1,63 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794402570;
-	b=yby5hZDcYEJP05nSmf8d7DItd1RTEB8rEvuI8I3OnaG+JpSsr40nCzJK0wh9DdxJnzMO
-	 PlRUvdnT5hHqFKn//rPoAdEvgK4uwg6C3aKCYt1uPwejwsNxVD3B4NAhzTH+O8pcEwchV
-	 zkvN4L9yWBbUw1hVtYjDwHiKnO0paPCK3mHqE62ZVaDIBrbjHxF65U1cdNQ+T8U9gedDn
-	 /HM2jFeLq0vNZDmbRx8x4Ymze5KBI4T9pB5o2c1DWJuJf14d6w6twKx8gVOzIXo1bEBcg
-	 1yjF2sXq0cz0O+86ChlBSxVI+90CDyekaguHiYOZsxdFd5DzUmdiSzKIkJQ38BLjQPg==
+	t=1794410545;
+	b=y2GAD1CWaxW3P2iJmcrfR3ElWeeql7wwFWkzIL+9x9tZfDVTusZLbHGuZsPLaHK4fTJF
+	 FsWtZ4+HzWynrRQzpGVjvc4SyWexIgMDsdfcVYfKU49MxcVDuLV7wf45/GSkZ4tu0qAeU
+	 zhaN2KxmeMq2qs+CH7S3bZdOtKxfibDDoBrEVcp2yJOX3kreA8FA6pOs2+mFGua+UiNHH
+	 SVOI9XvnoC/33vnh7V0+yoOnzGzokJxwN4hdsaKoPgma51Qz15Nd1JRH6oDCRzsHMID73
+	 WTifrM80fUolylcAFpRuCKo7GgmU2xDHm2jnaFm0L62Uphp6iite+RMUKMEau280DPA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794402570;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-	 X-Cookie;
-	bh=myTzMTEVgNJ9R2A9o9uEj3ASLDjoWKyGqA3BNP4iJWk=;
-	b=hSDFd7wsLUiL1/zQvmYZkjp8uLXfx8JpLU5sycMpJsxWuCorNQUvLO3sycTWRLtFHgMr
-	 OIQbmScuzSeyJRSQI2CI8TnLl/PfxUNBaMU/dBHvQ8uOFdByreOm0TrzfVJ63i44UtVt4
-	 I/812tOLI4/K9ZrPh77vVrzabYm+YvTGIz8Drqaht95h0rk6sp/JSnOZ6jIHExL1fVT+l
-	 r8L20xqd8ApaZd22cxTkGi3q+L4UI9PzZW9IvsYtuZO1SIvRPAWT5gPBCWy2uzFp1iNVc
-	 vovPwFJY4JhIl95EHgCiswO29abHmEzVzBkr5FK3UYRBDWMtHbGUWbd2FTvpBlemiEQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794410545;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=mBSo8+i91CrACZrxGkLXrZpH+5L8K8Z5H9NJzXzfrR4=;
+	b=UbygsxD900NBtYx1yXo3SLqXvQe3Y4DxvIPjDJM1ejaPELYKvFexlBll7ua/sqTkGMlu
+	 kD9C36FhrUuRYR9K5OU4Oi6CYIzSkq7QJ1eF/QrjzYYvIjE2/XVsL5HP3CVGpf46kflmD
+	 OCoMPLask0NzITOOp07vpg9eFyksIBJdx8t4q3N3A0oKVjGQzwTG4/en4GSrWmVb3e0wo
+	 O18t1GIsiA/fHy62h9KYjleiMXtXTVPHsGe+b6D6LdNghlOZs+2qSdF7vjmBG3JoTKb8b
+	 Hl6YoPmEMG5eiyGFLqFfRiiS5JTtsZsdTFkWDjNmQZteEn8ShIHbDb6ozcLKxclWYmg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B1HsNoS3;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE66606A888;
-	Wed, 11 Nov 2026 13:09:30 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=CPe6sEoD;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7378A606A32D;
+	Wed, 11 Nov 2026 15:22:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7378A606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B1HsNoS3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C05631F00A06;
-	Wed, 11 Nov 2026 13:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794402570;
-	bh=myTzMTEVgNJ9R2A9o9uEj3ASLDjoWKyGqA3BNP4iJWk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=B1HsNoS3ZmRDWZNuYSbODVDeuktqIoLR2c1a6m8O18dO/Tj3h7a3jwY7KJaLMROW2
-	 WcRjv0oYpnT/zVPk8zwYtfhRUf7ZRTmiQbax4uzSs4S2FzIZhEWsEhwY6wKTPYXywQ
-	 LwtpUVRr8Tm+IYUmQ+OUXah4oBsYYhID014GbwaA0iz9ioLQZ1hdZ5jffVTt7fScJ1
-	 FVWfjRXvcPzbZKbsg4pz0pzkcq4F6z5NzC84VNV4ERwWDf5lCCNIht7/pcNRpOTiyP
-	 83HLodIFXqbHtrUMD60fOuoVv4777BzkpKlk4YPeD+7t1afOoTu2SSlEcjmtKnUKhp
-	 I1PT6bjqp+XWQ==
-Date: Wed, 11 Nov 2026 13:09:25 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: soc-core: reset rtd->num_components after
- allocation
-Message-ID: <853110dc-2ab9-4271-9e81-20ce5068ecc0@sirena.org.uk>
-References: <20261109102536.357134-1-ghidoliemanuele@gmail.com>
- <87bj7yw9e2.wl-tiwai@suse.de>
- <87FF4A7B-853C-466A-AB01-2D9137DEE6CC@kernel.org>
- <EAAF07EF-6B11-4EA5-A5AF-A7787CA2F196@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=CPe6sEoD
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1AC61576;
+	Wed, 11 Nov 2026 07:22:21 -0800 (PST)
+Received: from [10.43.20.72] (e126510-lin.lund.arm.com [10.43.20.72])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2A903F632;
+	Wed, 11 Nov 2026 07:22:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1794410544; bh=mBSo8+i91CrACZrxGkLXrZpH+5L8K8Z5H9NJzXzfrR4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CPe6sEoDXEq0CUSjZ6jny/Hfzg7F0nl2TvWdHaTVM/Z8om2nXFrbUEHiNinOsLi3G
+	 b+zM4dJw+QxdRaUrtNxakmzC6AiBkhYtoNt/T+Y94M/CGZNoMTkg+so51tIkMogts4
+	 Zp7PhvG4gHcOkBuMpB9jhCJKm3Tc9Y9pOp0sQA68=
+Message-ID: <0a48af69-d0a9-410e-9d10-389eed0827c9@arm.com>
+Date: Wed, 11 Nov 2026 16:22:13 +0100
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -67,46 +53,49 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+JyK9ecf3AVrKjur"
-Content-Disposition: inline
-In-Reply-To: <EAAF07EF-6B11-4EA5-A5AF-A7787CA2F196@kernel.org>
-X-Cookie: Do not pick the flowers.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v10 06/22] arm64: Disable EL2 trapping of POR_EL1
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-hardening@vger.kernel.org, Andrew Morton
+ <akpm@linux-foundation.org>, Ard Biesheuvel <ardb+git@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "David Hildenbrand (Arm)" <david@kernel.org>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Kees Cook <kees@kernel.org>, Linu Cherian <linu.cherian@arm.com>,
+ Linus Walleij <linusw@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Maxwell Bland <mbland@motorola.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
+ Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org,
+ Ira Weiny <iweiny@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>
+References: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
+ <20261109-kpkeys-v10-6-aa6c4d9603bc@arm.com>
+ <3500936b-4177-4ba0-a9df-7eb9d9d75b0a@sirena.org.uk>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <3500936b-4177-4ba0-a9df-7eb9d9d75b0a@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 10/11/2026 16:29, Mark Brown wrote:
+> On Mon, Nov 09, 2026 at 03:58:31PM +0000, Kevin Brodsky wrote:
+>
+>> Make sure EL2 doesn't trap kernel accesses to POR_EL1 by setting the
+>> nPOR_EL1 bit in HFGRT{R,W}_EL2.
+> This wants a matching update in booting.rst as well for when the kernel
+> is booted at EL1.
 
---+JyK9ecf3AVrKjur
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Good catch, in fact POE requirements are completely missing from
+booting.rst. Will post a separate patch for what we already need
+upstream (i.e. POE at EL0), and then expand the section in this patch.
 
-On Tue, Nov 10, 2026 at 09:59:12PM -0800, Kees Cook wrote:
-
-> For example, what keeps snd_soc_rtd_add_component() from overflowing
-> that array? If you want to protect the array, add another member, say
-> max_component, and use that for the counter, which gets set at
-> allocation time and protects the array from indexing beyond the actual
-> allocation size.
-
-We could do that, and it'd certainly be good to do so, but anything
-that's in a position to do anything here will already have sufficient
-access to the system that it can just directly cause issues.
-
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
-
---+JyK9ecf3AVrKjur
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmr0aQQACgkQJNaLcl1U
-h9CDogf/S3na6XdVpn5IhiTtPHeH6LC6TYfn8B33uirn/dIJ54WsGUXcX64eocfM
-p3hLO+Y6AEQg9cbbeexeLqmF+pNbyC7AozLPIkhtLQjQRCdsfjPXFn6Q7HGgjJyD
-hvWOdhAW2KrDE0/TFplotVcYyWwMCspu5QsIORFSIE8ckoUkCppCEmmcsHYxjvIm
-IroNxhmPQJrXFbBveGZhRhdgONBkucVoBoYm9evLazFa1dbb3GrvLG6yZLNcE1fF
-bSafzYSHj02eVuEGuCI8w2/pYu7bPkCO77KgunPYBBtvW0bPZBhIq6ykxLR26Hb+
-LVTnSa/HAJQ3F91CFZJNrf3NLHJToQ==
-=6thM
------END PGP SIGNATURE-----
-
---+JyK9ecf3AVrKjur--
+- Kevin
