@@ -1,67 +1,69 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794394298;
-	b=uKNdJ36+FbZ9/uj3pvubXi2jWSVChK3eOIbmpAzse0pc+qGK9RgRARl4XE1xcaEe09Dc
-	 6SbwawCu9KaZ7BgtU0YBeQ2YyBLaWUa6W6kWyMLcZCKgqGXotpmOsyL43ru9YVNoZoubX
-	 iep01mRNl54eXCU5tj7vUo0GbCIZJVurWuFTxb9nsWdElS+Uf8k3NC3c+qWTDy8U28fHT
-	 5yf8e8q0ri3E5VzxTDinLA3HG8drit/z2v9D5JxEdwinGMhYLI0DQeH04xCn86UBRGTLU
-	 67W6SLIcZCrbCH/e3VLxYPRS4AA3GKOdKDepO5/1n6mp1WDEfhFomiuoqP9gVrlItOA==
+	t=1794394754;
+	b=bk/QSiKHbchQPlXy8igEz9LvBEBqnf10O34bykCUBNhAmwn4DEuCA0FPAv2RBboObfGX
+	 t/O4DFMO6y3Nt+GgA/9Br7Wgz6ifDEGA7Ug5cT1qXRKGQwcVFUK2UWzfaPglZ5TkDSSwT
+	 Qyo9pu9HRgYjrnTpI5iKiT0+6a9f+yv7z+lYqui6m7l1BrmYMlhzLMYpAQ+hoFAD4+Zc0
+	 sWDuLGUpdSjxoE637c+BLwislb5m0RVUGv4rctOkFrGgP9Q937+0ZDsxkJMjh/rVIqbNW
+	 IFaJKafwMYQHeoRLSPyol43MTVGK2P0NY3oee015rRL8OJMgolJil/E3EW59nzk/ufQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794394298;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794394754;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=rjS78XqnLRkcuOiyknQtcMbtEegSaHf+eCvs3lFWAlg=;
-	b=WfWLJ09nLPh8YpYMWRsupzulZ1w76oeDawNhySTsvTGP+NQNf0erpuDRqas19WZxCmWQ
-	 dkyMiD0Ap3RfsvSGrZ0Iynhx8mM58KxX51ts3TMTFZM7lFYzW0cgoXdSmXYdeAGPUD1wD
-	 LuD7b/kk3ye51kmaA8CzLIhpkSjodr+/1312fHUoXuqy2njjkiYD4OPOQvNgPGcXAk26h
-	 xRHJvOZlj0EhOy8Tn22UoZiL2t9NGUXrR7ol3biRG23QaIaFYDpuPLItFu24PLHy/Hup3
-	 iJoukLsa9dqt3yH3oxLovVkDmln1gXwgxOyrOtVPsykQiRhL7JTYQ/gSA/KVLbMXhBg==
+	bh=9o4ST70UuO46LLtkIMPxTPAkfT/+TeanQNFZfYQrPrE=;
+	b=XjBiCs+T2SCG7wZU4UGq4mokCXIkZWGuywir6vCTtnxbfXCNAmyJYhFA+YgvCSIH3wMz
+	 y7byCZdv0BkcJSZIGAFePY3VXtioWqESgMzHLF+JueszKcTSTdTziJ7dLZJzM30tzLOVH
+	 fy3Xj7H26Ak8StCU6tPVyaj1McxlOtwilSezdb/S2gwBgc4KujRXIS00EQ4OvfxY3HO+m
+	 EVHK0Ijbx4L8VQg/MkhGsq6oy2mRdo7vFvyUwFLU7FalecPYhElpjwHG0ftf/eKbnieoX
+	 yL+X/7Gij8i7+E4UswX4QOV5hIaaroKCzVT9AoZSh1SHeWx7IQtg+vzWL7Zlg7++U4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iK7QsGrs;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X+C81saN;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0FA606A31C;
-	Wed, 11 Nov 2026 10:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB14D606A31C;
+	Wed, 11 Nov 2026 10:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iK7QsGrs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 237181F00A05;
-	Wed, 11 Nov 2026 10:51:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X+C81saN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395AD1F00A05;
+	Wed, 11 Nov 2026 10:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794394298;
-	bh=rjS78XqnLRkcuOiyknQtcMbtEegSaHf+eCvs3lFWAlg=;
+	s=k20260515; t=1794394754;
+	bh=9o4ST70UuO46LLtkIMPxTPAkfT/+TeanQNFZfYQrPrE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iK7QsGrsjq4AlHhkK3Z05yAvRe+MbBLWRl7ZxSr0u6NRz2n1mzILNIczCStRFSkdM
-	 C0EKKx6aSEeQcwF1AM94ShQrypQYxXn2LS526gMzSkED139sMFZ+pesBij2lq4JSod
-	 wdEOuY88REcRf6NkPKeR2N/iv4783+Th8xDgcpC9i0t/5HrnXQrPJzFOpjmqbP+Ypm
-	 pLaRsiy/idrGvdxlcE3frA7wMtuSEun6ths7NVMNuq8LDVMY4WiYFWaF7+NF9+w/P4
-	 xGaGrhlRbqDqbh0zhLuftnXHp5NnGCajbO/2EEAzLkmSLIl62PkQcSC5HVCBo+xxHC
-	 7RSoYUs66fN/Q==
-Date: Wed, 11 Nov 2026 11:51:29 +0100
+	b=X+C81saNxCyYeNerjLrjfYH67ag3HjJ0s0IEHn9r6ikrVQ7UlH97OpChbMH7gVcoN
+	 XvRgc+5dDzkp4ze//9mJ2bJYBMddwCDGHGIA0+zfUP1oNPwxmYsmUEB6G4f0fS0Hcd
+	 CdlDXjg2edBVgptBdp5RVMz/JIEseNTF19NlCfh2N7RqZ0oxkXDuFNTb/qNp/6nV/P
+	 g4MqrclLquJ9XgDjWuzObmvrJAPrQII9Msm+4vEdkcz7CM7ERIsdNpTYyoSFyh809i
+	 CeSBXDU2Dj6sYOmuntw57mEgWxuo2EQ+iqDxKRdtCq/kweowl6u2QfnpZHui/ZL97t
+	 MuVgWB3TMOUKw==
+Date: Wed, 11 Nov 2026 11:59:05 +0100
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
 To: David Laight <david.laight.linux@gmail.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] stddef: Add const_cast()
-Message-ID: <avRGnEBOpKhK8BMz@devuan>
+Cc: Joe Perches <joe@perches.com>, Alejandro Colomar <alx@kernel.org>, 
+	linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] string: Make strprefix() const-qualifier-generic
+Message-ID: <avRKYMNAQEUDVnS-@devuan>
 References: <cover.1794323750.git.alx@kernel.org>
- <2bf5cf7baad87b5b7b7f833df390596a033fd6f6.1794323750.git.alx@kernel.org>
- <20261111102535.434c2eee@pumpkin>
+ <35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
+ <64aa89daf23821f95780813fe96882ff61688578.camel@perches.com>
+ <avOn57pfHntiwcaD@devuan>
+ <20261111102836.759ec121@pumpkin>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -72,136 +74,131 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="btplz6fw3gpwuxwj"
+	protocol="application/pgp-signature"; boundary="5ivl7qlzmrv4rlgf"
 Content-Disposition: inline
-In-Reply-To: <20261111102535.434c2eee@pumpkin>
+In-Reply-To: <20261111102836.759ec121@pumpkin>
 
 
---btplz6fw3gpwuxwj
+--5ivl7qlzmrv4rlgf
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
 To: David Laight <david.laight.linux@gmail.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] stddef: Add const_cast()
-Message-ID: <avRGnEBOpKhK8BMz@devuan>
+Cc: Joe Perches <joe@perches.com>, Alejandro Colomar <alx@kernel.org>, 
+	linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] string: Make strprefix() const-qualifier-generic
+Message-ID: <avRKYMNAQEUDVnS-@devuan>
 References: <cover.1794323750.git.alx@kernel.org>
- <2bf5cf7baad87b5b7b7f833df390596a033fd6f6.1794323750.git.alx@kernel.org>
- <20261111102535.434c2eee@pumpkin>
+ <35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
+ <64aa89daf23821f95780813fe96882ff61688578.camel@perches.com>
+ <avOn57pfHntiwcaD@devuan>
+ <20261111102836.759ec121@pumpkin>
 MIME-Version: 1.0
-In-Reply-To: <20261111102535.434c2eee@pumpkin>
+In-Reply-To: <20261111102836.759ec121@pumpkin>
 
 Hi David,
 
-> Date: 2026-11-11 10:25:35+0000
+> Date: 2026-11-11 10:28:36+0000
 > From: David Laight <david.laight.linux@gmail.com>
 >
-> On Tue, 10 Nov 2026 16:33:40 +0100
-> Alejandro Colomar <alx@kernel.org> wrote:
+> On Wed, 11 Nov 2026 00:27:28 +0100
+> Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
 >=20
-> > This macro serves to cast const away without risking unwanted
-> > conversions due to mistakes in the cast.
+> > Hi Joe,
 > >=20
-> > It's similar to C++'s const_cast(), but it is more restrictive: it can
-> > only cast away 'const', and not arbitrary qualifiers.
+> > > Date: 2026-11-10 08:32:41-0800
+> > > From: Joe Perches <joe@perches.com>
+> > >
+> > > On Tue, 2026-11-10 at 16:33 +0100, Alejandro Colomar wrote:
+> > >=20
+> > > no commit description on proposed patch =20
 > >=20
-> > Signed-off-by: Alejandro Colomar <alx@kernel.org>
-> > ---
-> >  include/linux/stddef.h | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
+> > There isn't much to say, but I'll add something (the explanation of why
+> > the parentheses are needed around the function name, for example).
 > >=20
-> > diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-> > index e1851c50c89b..d79a81406b78 100644
-> > --- a/include/linux/stddef.h
-> > +++ b/include/linux/stddef.h
-> > @@ -194,4 +194,16 @@ enum {
-> >  #define TRAILING_OVERLAP(TYPE, NAME, FAM, MEMBERS)				\
-> >  	__TRAILING_OVERLAP(TYPE, NAME, FAM, /* no attrs */, MEMBERS)
-> > =20
-> > +/**
-> > + * const_cast() - Drop const in the left-most derivation of a pointer
-> > + *
-> > + * @T: Type for the cast.
-> > + * @p: Pointer to be casted.
-> > + *
-> > + * If @p is of type const @T, then it is casted to @T.
-> > + * Otherwise, @p is returned without any casts.
-> > + * This avoids mistakes that change anything other than 'const' in a c=
-ast.
-> > + */
-> > +#define const_cast(T, p)  _Generic(p, const T: (T) (p), default: (p))
+> > > > Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > Signed-off-by: Alejandro Colomar <alx@kernel.org>
+> > > > ---
+> > > >  include/linux/string.h | 4 +++-
+> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > >=20
+> > > > diff --git a/include/linux/string.h b/include/linux/string.h
+> > > > index 9e59f9697c9e..55ca4cb5122c 100644
+> > > > --- a/include/linux/string.h
+> > > > +++ b/include/linux/string.h
+> > > > @@ -590,7 +590,9 @@ void memcpy_and_pad(void *dest, size_t dest_len=
+, const void *src, size_t count,
+> > > >   * *  @s+strlen(@prefix) if @s starts with @prefix
+> > > >   * *  NULL if @s does not start with @prefix
+> > > >   */
+> > > > -static inline char *strprefix(const char *s, const char *prefix)
+> > > > +#define strprefix(s, pfx)  const_cast(CQChar_of(s) *, strprefix(s,=
+ pfx))
+> > > > +
+> > > > +static inline char *(strprefix)(const char *s, const char *prefix)=
+ =20
+> > >=20
+> > > Why introduce a new coding style? =20
+> >=20
+> > It's not style; the parentheses are technically needed to avoid macro
+> > expansion, since the macro has the same name as the function.
+> >=20
+> > Alternatively, I could rename the function to __strprefix().
 >=20
-> Should it be de_const_cast(), or just de_const().
+> Or put the #define after the function definition.
 
-If we want to be explicit about it being for dropping, perhaps
-drop_const() or cast_drop_const() feels more readable to me than
-de_const().  I had been calling this const_cast() for following C++'s
-name.
-
-> It is a shame you need to specify the type,
-
-In some cases we don't want to drop const; it's a "maybe drop const",
-actually.  Perhaps for this reason, cast_drop_const() might be
-misleading, in that it tells you that it dropped const, but sometimes
-it didn't.  On the other hand, if you thougt you had dropped const and
-haven't, you'll get build errors, so it's not a big problem.
-
-The reason why we may want to not drop const is that since we do:
-
-	const_cast(CQChar_of(s) *, strprefix(s, pfx))
-
-'CQChar_of() *' expands to either 'const char *' or 'char *', depending
-on the qualification of 's'.  In case it expands to 'const char *', we
-want to retain const, and not drop it.  The most accurate name would be
-cast_at_most_drop_const_but_maybe_not().  :)
-
-> but why not:
-> 	_Generic(p, T: p, const T: (T)(p))
-> so that you get a compile time error from the _Generic() if the type
-> is wrong.
-
-Thanks!  I like that being more robust.
+Done for v4.
 
 
-Have a lovely day!
+Cheers,
 Alex
+
+>=20
+> David
+>=20
+> >=20
+> >=20
+> > Have a lovely night!
+> > Alex
+> >=20
+>=20
+>=20
 
 --=20
 <https://www.alejandro-colomar.es>
 
---btplz6fw3gpwuxwj
+--5ivl7qlzmrv4rlgf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr0SKwACgkQ64mZXMKQ
-wqlkrw/+IO0ydpOzz1GwpDbDPEn62YIboIVlzzJZw9hARy4+BkgGCvu54LrKCmdd
-5gqMP/Q9O+UTMhdyu9MULP2LJi+lwCiaf+w82JrsNE8BlcvdFLIRJhePbMRAnBqW
-eYNF+Rn/Bl6IqlR0ouYo7m4rRBUGH3vIMjGMeXBzssKZ1pdok+hNUv50I187agZf
-y2d3377FI0saE/zdf3HlQYCL07vkbMHsTvznB5aEzRkQDJoUXfol+I7gMo1N4A3F
-5YKII+lCC9zOOn3ne/kyQSlFwZ8BZ4aSNd5WJL53fjI8QrQC/r4yNx4il1+KjzzL
-Gx6XwSG9g6I4H4xX6E0FrZ0ymk/JrC1tm7KPvmvBCLipPm47pI59aNhJb2U5TPp3
-7w0WJs3+mQsomF//SOtS+LJgKbf+dQhgAz+AiOPjgK9oedfkizCs/zuvOKygu2TX
-VMVqpKmfKYGHTPPmYKGTPUhj5PZZoH66YNsnpmPXvzKN/vJebT8Laz3u1pqQg7Tc
-9ENwHWQ8wLaiXLyZRaLUvqPwcj8Qgo1IxZcIhhdjPLlDyMJ2X2XT7fC47FbU/LnT
-i8qweKHzZyj41TPUZg2vy5WF78hXDf+N+rClI+NZANA7MuWTw1MC5v20OZZ6fzvt
-U8fbg+wgaw9yu0cU9PE2/rh+rF4dXWOZUiecw813sqQYo43cdPQ=
-=yVph
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr0SnkACgkQ64mZXMKQ
+wqkSIw/+JANAA68nz5/+CG2Uu2FsDG/gwOlqCGmdZXBmRcZJU8hhQqw3mrZAC8D3
+87/DX6VsCnivD0LWOuqVybLeLXV8hfdE5AuccAnhXvNHNR2nJzl3VnIBxRh9/+rk
+BKA7J1WLaOY4qBVNB4A6Napon9uwLwMjCa8qLheKVJXcAi3r/aCWkjPZVDijD41w
+bp3DfOTRvzN6baIyu1J2cKhU/HJxIIXDnKFWykwcFwCi6bhJJZYRyI4l48poIZxo
+o1VIiASPJnfSrs7l5/k0GdM5g9wAD/cIge7HxlAEsu6jYCZ3TLTOod1UNi9Tel/5
+XZkqEF23vXriQc6KSYpbAX4QwRlu5p9m6CWSnwKBH9AqbmZ9kAiFT1qE/Xvdq0zZ
+u4WQ6r4lGqu7rOd4uhXM2cBU/bD7wMjuTHeqqQF2ay9WN08S5AsrW9De439mdKVP
+K9whrKLOTfjz2oWglsMIY1sDt0MmjVFA1+N6rB06jXGprYNPptJfOAhc4ktulq8l
+de4HZR2dPsF1YOwagXCfmHoMFU02ZnNnKLYqb2VrlAA7s1xeR4t+uQNknaAZShYX
+HeNI8vDCSK+aOuEf5r1HjK44NVtUxd/ZzgB8nJskAsGzOxfpVkDVeIOYZrVfcbDn
+Qihv6z0V8jh2CmUbkWzfK04Hw+dHgaoqt6tHCOntuTECFHZzuDs=
+=1grF
 -----END PGP SIGNATURE-----
 
---btplz6fw3gpwuxwj--
+--5ivl7qlzmrv4rlgf--
