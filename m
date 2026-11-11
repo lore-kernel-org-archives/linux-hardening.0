@@ -1,85 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.40.3.216
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794387108;
-	b=MICvr2dfUcS52WcDXhqy50cRNz4v9D31HpgBR5yf2bO+J+D7bVBCOdp+xB1hxXnyzplM
-	 PLovZf7i/GjFY7W+hNXspIcgjg/UFXE2v9f1me5F+bMQy8CiF7AU+ntJoKlVVP4gqKxQk
-	 GFZ4+km2G3HkpmHrSQzCk9d35MpI17XgAbQjtfb61ieGB/vrkPpmoW/exF9lx99qOygOz
-	 ADT4WHxrbI+NzURbhHssNF2Sb29AjHKgUF/Aj2vpigycXGRv9TYjS3Vvi6jdbCjeGtFtn
-	 pDBnGcvvt4KBdG6FDop77GkjeeERTLbResetxTqu07w05G42NuPlN+BKZ+yTYrqf6ww==
+	t=1794391567;
+	b=EDFuX7hc2JfqtagjkgkIo4BLFRXG150WFMY5giSxi56/GFCnDbfGoGmHHEO3dppuH7pD
+	 zfue3mlB9r9mSa6xIHwmtz7g7547tolCmSgrrIl5pHrvh4v5e6NObmt5twHtxjAhY5FHk
+	 0wy/tz/f0du7baFnvD+/J6d3xg462iv3QWHL6u4pERypPYcr+UgdwuWoUNrRv9wRR99Nt
+	 Df+Xg+dS2a2HMmZkyaoHKNUa3oLl31Zn1WJh8I1ZX+USjRETNw2y6q24iYjQSMnN1nKbb
+	 /FjTUq9x4AhZ+N4E8nUKbkR1m9OdIdYCEgfdyRPlmBYZ9fXQiL/rC/YcNd11KiYtMkA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794387108;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:Organization;
-	bh=gd5ljs4/qKYUBgu8GzfErIA54VXrKMWLrbXEO+MFhGA=;
-	b=tZ/P+uEZV4hprnuQpcFtkUOSfwU0w3sKE6ZkyXXeZD/IdQ+NRme4UFSTFGPgkI6rszwn
-	 8+R4U2omdGjyDkkCWdI8iFRz0yTbtGWl15cYmMRZmJ6grYYYus07H4+lH3xo+ePA4DWNk
-	 yy8jbqhTrclIPTgXEKzWLtkWWxcaWyKIECLdz8N1NHKNX5UJhSSYiyLS03RAk1IsYO/9u
-	 J4BriewntmNOCbLOjK0XwR1caSqycmGiq9RpqMT6zCKxzJY0wGePzNVQK0lcfSRu6DE+i
-	 4/Etm34ejTiN7mpDRrurqoYE92DEiWXZ3MCWeS6YuUgnCsmf+8TW6Bc9itP3Gtudfkg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794391567;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:Organization:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:X-Virus-Scanned;
+	bh=+PZREDVu6udbS/MihShnEiQ1U4HP69UPMFupt24cgpg=;
+	b=MHt8YtKHz9opTJgaSUdU+4lduQP6zr9agVSVOayBukRR/VviRkjygwGZUw9qqrxY01Qu
+	 xaxdD2tCSLoA/lUhJVdGu6JSFXR0Gms96rhthKlTC3Akp119gCDh4U+zx/ueeyP4vB78K
+	 2gMv4ea2jfA10/dUQ1r1cjekSIo0zz+8ka+1fJMC0qiyd+VvHn4LbFWAa89993ncb45xQ
+	 eUQwiK6NiLsRKwe4EbX4d4u0IdUQ3rQTwXtMZJBliO1o4BHQAT62AlJnNBud4nuInjDu2
+	 h55srBLMOjO5Hfygx6HV67SK/7hgIIBRVv0tPES55szn+CLE4kwYDYs3xvftHJs1/Lw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="oAF/pjci";
-	arc=none smtp.remote-ip=192.198.163.9
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=ew.tq-group.com;
+	spf=pass smtp.mailfrom=ew.tq-group.com;
+	dkim=pass header.d=ew.tq-group.com header.i=@ew.tq-group.com header.a=rsa-sha256 header.s=default2602 header.b=eTjZemmm;
+	arc=none smtp.remote-ip=188.40.3.216
+Received: from www537.your-server.de (www537.your-server.de [188.40.3.216])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D60606A321;
-	Wed, 11 Nov 2026 08:51:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 28D60606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EE1606A321;
+	Wed, 11 Nov 2026 10:06:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 56EE1606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=oAF/pjci
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794387108; x=1825923108;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hL6MDknBFZ9siaHf0BWsE0tS4TqOjUvSfsHROpvn8kQ=;
-  b=oAF/pjciHP5JyeF+UzEgOIUXJh613gI69oW3nNhLkHaeT/VcMLWZ+r62
-   ww/c3hYRMXvvN1lBytYRRatFCdrAmDc1t3dQTkuhS4q6kxa6zzqQKyBrY
-   rQ5Ar9MHniE+z5mK3T0lHpsstR7YqnrNR6MRqZLBRKD+oHqbCIfEophWs
-   UkW4n8eMHa8zFuYw+x6Hnj8JAd7NTRW1q68nZYjuIi71sJqQj0/teGbRG
-   JRHK0vLnW2AbdxxJITR6rXaKs2QLPwOJ9pUcyf1lz5kXLt06wacQl/LyR
-   0YC/E6NtA72Svce97oSBfxcTwX5nY3+SKf24aWzVAv4tdFui/jr19c+Xu
-   g==;
-X-CSE-ConnectionGUID: dGSx5VVKTzmrq4BE//sAYA==
-X-CSE-MsgGUID: jxE2tvMMQ8iPYoKtoezdXQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11962"; a="3039781"
-X-IronPort-AV: E=Sophos;i="6.27,207,1787036400"; 
-   d="scan'208";a="3039781"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 00:51:48 -0800
-X-CSE-ConnectionGUID: tnDZWFXtRh606hfDYPwhAA==
-X-CSE-MsgGUID: Py318lLCSSC4pgkoGZ4cbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,207,1787036400"; 
-   d="scan'208";a="8684010"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.142])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2026 00:51:46 -0800
-Date: Wed, 11 Nov 2026 10:51:41 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-hardening@vger.kernel.org,
-	Alejandro Colomar <alx+linux-hardening@kernel.org>,
-	Alejandro Colomar <alx@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Bill Wendling <morbo@google.com>, Petr Mladek <pmladek@suse.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Shuvam Pandey <shuvampandey1@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] seq_buf: Mark a seq_buf overflowed when terminating
- it loses a byte
-Message-ID: <avQsnSkg7Zx5zz5Y@ashevche-desk.local>
-References: <20261104033110.out.418-kees@kernel.org>
- <ausWlN1oWc0Utnxb@devuan>
- <20261110220716.37bfac-kees@kernel.org>
- <avOp9udFzahnsmN_@devuan>
- <84CE5129-3519-4B33-856A-5304C17596F2@kernel.org>
+	dkim=pass (2048-bit key, unprotected) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.a=rsa-sha256 header.s=default2602 header.b=eTjZemmm
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ew.tq-group.com; s=default2602; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=+PZREDVu6udbS/MihShnEiQ1U4HP69UPMFupt24cgpg=; b=eTjZemmmDK/nUMvH0MIwylgxRp
+	zBJijZmwANAtGI6XeYJN0AaK1/WNNowTqDGffMcflPH0LtvMTl23DmEBiTmwg3zcuP+i8uo6VT5Ev
+	h8Pltkah4Pvgl9RGNRfM2xO/i3iPo3ktotyka1EIQOVGsT2WPUTggvRz7HrcCT03LnHZnaQC2CtFI
+	KfIDQcYamMU5azfY0oop856p6giY3X6ACi87PMYdvjN03G+NpXTiN4h+JiDlouhEOpA8GEe/H8p90
+	/9N+qIVT/u8T3hEdEPLpbcSE/mfQ8j+j/CEAlBpFGpf+GADntCsBSlPaTUM/bPufoiIhkZ+DGN+9q
+	bZ8HfCyA==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www537.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <alexander.stein@ew.tq-group.com>)
+	id 1xR5DQ-0003dD-0D;
+	Wed, 11 Nov 2026 11:06:04 +0100
+Received: from localhost ([127.0.0.1])
+	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <alexander.stein@ew.tq-group.com>)
+	id 1xR5DP-000CYs-1A;
+	Wed, 11 Nov 2026 11:06:03 +0100
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ linux-sound@vger.kernel.org
+Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-sound@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Emanuele Ghidoli <ghidoliemanuele@gmail.com>
+Subject:
+ Re: [PATCH] ASoC: soc-core: reset rtd->num_components after allocation
+Date: Wed, 11 Nov 2026 11:06:02 +0100
+Message-ID: <4024352.mvXUDI8C0e@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20261109102536.357134-1-ghidoliemanuele@gmail.com>
+References: <20261109102536.357134-1-ghidoliemanuele@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -89,40 +80,101 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84CE5129-3519-4B33-856A-5304C17596F2@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Virus-Scanned: Clear (ClamAV 1.4.6/28180/Wed Nov 11 07:24:27 2026)
 
-On Tue, Nov 10, 2026 at 10:16:35PM -0800, Kees Cook wrote:
-> On November 10, 2026 3:35:30 PM PST, Alejandro Colomar <alx+linux-hardening@kernel.org> wrote:
-> >> Date: 2026-11-10 14:07:24-0800
-> >> From: Kees Cook <kees@kernel.org>
-> >> On Wed, Nov 04, 2026 at 12:28:27PM +0100, Alejandro Colomar wrote:
+Hi,
 
-> >> > Please include:
-> >> >
-> >> > Cc: Alejandro Colomar <alx@kernel.org>
-> >> > (or perhaps a second Reported-by.)
-> >> 
-> >> You were Cc'd. :)
-> >
-> >Yup; what I meant is please store my name in the patch body, since
-> >I want to be CCd if anyone looks at this patch in the future.  :)
-> 
-> Ah! In that case, you might want to look at using lei to deliver arbitrary
-> queries to your inbox, which doesn't require depending on inducing other
-> people's email clients to send to you (which even that goes awry when
-> get_maintainers isn't used or git history is ignored, etc).
+thanks for the patch.
 
-Indeed, this is even better than rely on `b4 trailers` functionality.
+Am Montag, 9. November 2026, 11:25:20 Mitteleurop=C3=A4ische Normalzeit sch=
+rieb Emanuele Ghidoli:
+> From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+>=20
+>=20
+> Commit 4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to the
+> devm_kmalloc_obj() family") switched the snd_soc_pcm_runtime allocation
+> in soc_new_pcm_runtime() to devm_kzalloc_flex(). components[] is
+> annotated with __counted_by(num_components), so when the compiler
+> provides __builtin_counted_by_ref() the allocation now also sets
+> rtd->num_components to the number of allocated slots.
+>=20
+> snd_soc_rtd_add_component() fills components[] one entry at a time and
+> expects num_components to start at zero. Starting from the allocated
+> size, for_each_rtd_components() stops at the first, still NULL, entry,
+> so the runtime has no components: they are not probed, no controls or
+> user-visible PCM devices are created and the card registers empty,
+> without any error message. In addition, each added component is stored
+> past the end of components[]. On the tested board these stores still
+> land in the slack of the kmalloc bucket that devres rounds the
+> allocation up to, so KASAN does not report them.
+>=20
+> Reset num_components after the allocation.
+>=20
+> Seen on a Colibri iMX7D (simple-audio-card, fsl-sai, sgtl5000): the card
+> is listed in /proc/asound/cards, but /proc/asound/pcm is empty and
+>=20
+>   amixer: Unable to find simple control 'Capture Mux',0
+>   aplay: main:850: audio open error: No such file or directory
+>=20
+> Tested on that board with v7.4-rc2 built with GCC 15.2 (first seen with
+> GCC 16.2): the failure is there without this change; with it, playback,
+> capture and the codec controls work again.
+>=20
+> The root cause analysis, this change and the testing were done with the
+> help of an AI coding assistant (Claude Code, Claude Opus 5.5).
+>=20
+> Fixes: 4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to the devm=
+_kmalloc_obj() family")
+> Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 
-> https://people.kernel.org/monsieuricon/lore-lei-part-1-getting-started
+This fixes TQMa8MPxL/MBa8MPxL as well which is also affected by commit
+4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to the
+devm_kmalloc_obj() family").
+=46WIW:
+Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+
+> ---
+> 4dd10fbbeb9c only reached mainline in v7.4-rc2 (not in broonie/sound yet),
+> so this is based on v7.4-rc2.
+>=20
+> The other devm_k[mz]alloc_flex() sites added by 4dd10fbbeb9c were checked
+> too: none of them fills a __counted_by() counter one entry at a time, so
+> this one looks like the only user hit by the preset counter.
+>=20
+>  sound/soc/soc-core.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+> index 68b54e509b65..06a1d5718997 100644
+> --- a/sound/soc/soc-core.c
+> +++ b/sound/soc/soc-core.c
+> @@ -387,6 +387,12 @@ static struct snd_soc_pcm_runtime *soc_new_pcm_runti=
+me(
+>  		device_unregister(dev);
+>  		return NULL;
+>  	}
+> +	/*
+> +	 * devm_kzalloc_flex() presets the __counted_by() counter to the
+> +	 * allocated size when the compiler has __builtin_counted_by_ref(),
+> +	 * but snd_soc_rtd_add_component() expects it to start from zero.
+> +	 */
+> +	rtd->num_components =3D 0;
+> =20
+>  	rtd->dev =3D dev;
+>  	INIT_LIST_HEAD(&rtd->list);
+>=20
+> base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+>=20
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+=2D-=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+http://www.tq-group.com/
 
 
