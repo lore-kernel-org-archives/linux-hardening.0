@@ -1,58 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794353734;
-	b=WvKmeAXnRxgwYPAGhotGdMsGmcOKwPXsvVSYxTLpp7AljwvWiP+PR23AxTATkpu05ODG
-	 a9egx4iWiOLqm/NjT569VFLGm6PU1IaFKGmD5wEt1/UjCwCEMUSYa/HiRq+AoWStGc7uo
-	 qtRvuxkZrqbAETYri/D3jEFNwvabN2JGVUep6EddK5AP0hPG/dxVJThoIYfphA3x+jQlT
-	 bRACmKLcuYkfUWNP62DC83OYw6q599A1W/UVZJMMhtKB7R5BwbO4GY41eP5oRMAruOuuH
-	 bXNZCcSrXrIcqlJIMcSV7y+bo6RiI96hSo0Wph6ftxNCTuLdYGNdaIR/f+Zo9O2g62Q==
+	t=1794355430;
+	b=TxoL0i6Asera+hTuH0kp/sI3+AnwVqwbHrruLrNfGCuq3tAeM+K1DIq+lH8mX44Zckoq
+	 U+AC3Cvg012yoXKWKVMdt3K7xOXZ8vP8ApJMZCin5thl/lHrGlTX0/AexugUAh0JzHoAu
+	 zbihFV6Ee5+J9SmXSWAvdnzmRE5qwVEuTlDlWU1km/tatnOq6sOqng3n1a81vC4J6v8L4
+	 +G4txGrYHAakr6wKwTkeyW/KLBXzKymNJGWmUbIZg9To1qB/nkbsgjbBPowuGmkHclBBj
+	 IzjtLHL4kKEvh9Rk4pQhBJhhhk4st7AGyVOVuewB659DRGYP8oCG4Fth5xaXOGq6dvw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794353734;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794355430;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=FVWSedM9iFS/LbbcpBco1ZXRMtpFb+1Ki8reNQusrt8=;
-	b=RhiqiZwVd/bveJ+wv6fVuvvAvsztJmVUs+iBINcpwxoVINdU5N8IkXaEnJHdytS92yaS
-	 HLQ63wrLPLiCqnLc1XtYJPqfWf/P9QSok4Acwkqm+Zc3rIWONMb8qXhS66Wj9vHSWmwA4
-	 v4nm+76RyKgt9SQLfI+FaDvLb036Q7MQvGEbNFAQ7uX0jwDuqxxsh+VMwzoIf8EUoNv1P
-	 vd5TyPOY2GaJVXACjdUTTMpSQX9DMiT+NWNKhJSgmNfQPeqPiQe/qcBpF6F8GGjWiw3RB
-	 M8AoaL2vxwYsWRGpB4Pl1SNyMqDeAnEptk7i6QobgIUXUJwGMBHj9wTnt88Xl5toeHA==
+	bh=G6vtQZE3ujvpxlS2I2KZ02SKJAR98+LOdANoRmy/Db8=;
+	b=f51UNJiu0AVyj/2DDO4ZHt4+KLU5QA/SW0qTSlkDflSWqMmbcoqKM3alUTBc6iNwULOw
+	 kE4EFdOXXXJCjmHZS/gHhnamx/3azQ78KVIxcI9ongOf61XQ1ueEa5hmYVhfFMpzp33kE
+	 IRkhTUd2t2/EDq5lbgl7UIAQ+G0MxXUgCxMCf3GUn3So/fle1n5wEISaxIZg/Aj/s11VK
+	 tGHNzJPgsvVK8ou26dNZw1deA4VZEoCJo6ZtvWS5r2pnWcg/pxHlloOntXGdIn6gUCkKc
+	 xbP6rhl3YjQUyVhDPIzTpGDSboP9xeCbSImh3PeCTr9BRBfe4qFYx+JgmMfUtWfy28w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iGJ9KVVM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gf6gFqXN;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3D4606A31C;
-	Tue, 10 Nov 2026 23:35:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDD8606A321;
+	Wed, 11 Nov 2026 00:03:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iGJ9KVVM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BC151F0093C;
-	Tue, 10 Nov 2026 23:35:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gf6gFqXN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A60A1F0089F;
+	Wed, 11 Nov 2026 00:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794353734;
-	bh=FVWSedM9iFS/LbbcpBco1ZXRMtpFb+1Ki8reNQusrt8=;
+	s=k20260515; t=1794355429;
+	bh=G6vtQZE3ujvpxlS2I2KZ02SKJAR98+LOdANoRmy/Db8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iGJ9KVVMtOheJnMsrM8uFL1zU74tBZwEjfSs9NWaXiRiVIWesCIbpQwlMXDmG8NYU
-	 lOk16zlM0e0p8y7PjxXn8RMvwEoRSKM++rmA1QbFvw5ebnH30pQfH+6e8ElyWM2GsA
-	 +pLjPgPfuoelXlFhTBfQhrzowubnwYvnANRmGqWJPNEPLKtk2VNPl1ABKAgcvZPKre
-	 cJLxLTilnW5BSDd6/NmAm7kuN7SlCNHN8yRXbjmEjYn5rDsouS5iuxANZm5RULyR6J
-	 JWtIX93PXolctO2ONcQacrBAdtv4dnxGElKoptoPzAlXfBjmz9hwOthXgvR5SP2Qf5
-	 pDtUkLxbpQ8Xg==
-Date: Wed, 11 Nov 2026 00:35:30 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bill Wendling <morbo@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Shuvam Pandey <shuvampandey1@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] seq_buf: Mark a seq_buf overflowed when terminating
- it loses a byte
-Message-ID: <avOp9udFzahnsmN_@devuan>
-References: <20261104033110.out.418-kees@kernel.org>
- <ausWlN1oWc0Utnxb@devuan>
- <20261110220716.37bfac-kees@kernel.org>
+	b=gf6gFqXNZ9CoFov+cIHt/cLKduR6rdDO3hZNovZFqQjIJb91tU7vfitfeuSQzC/fv
+	 fWIQCb2bUxxHk1W128Gd//Ji/w6uMyBqoBfIIg1ntXT9Qu6jwAxnVcWbOmSQwChBVT
+	 vMwFfp+4vDBcfwQPf2vXZOCtwgNtFkWXPW70CNmirYevx4C7KuBUIL4HZkNIkONfb+
+	 MD8kMgoXiD9tNKkXeZgTuaDEEFDDdd8vzWfCqJczzmWOgxK9oAQgi94iYZXH8CRGcC
+	 prnhCdr6jI5sdhjddXFqbDL1iF0YsQOB/cUkGz9cD5XljsTwQ9bOI/jHOPLUZTl+8N
+	 QGJamtB4FVfwQ==
+Date: Wed, 11 Nov 2026 01:03:46 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	robh@kernel.org, conor+dt@kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] string: Add [C]QChar_of() and QVoid_of()
+Message-ID: <avOuLrmqKK5Vb2vH@devuan>
+References: <cover.1794323750.git.alx@kernel.org>
+ <415453a31ebf1aed3b41da1a28913f5cbe58f175.1794323750.git.alx@kernel.org>
+ <sashiko-outbox-207285@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -63,84 +59,152 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qx2e4j7hkek3tvqm"
+	protocol="application/pgp-signature"; boundary="k4z2mch3442cdwfc"
 Content-Disposition: inline
-In-Reply-To: <20261110220716.37bfac-kees@kernel.org>
+In-Reply-To: <sashiko-outbox-207285@kernel.org>
 
 
---qx2e4j7hkek3tvqm
+--k4z2mch3442cdwfc
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bill Wendling <morbo@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Shuvam Pandey <shuvampandey1@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] seq_buf: Mark a seq_buf overflowed when terminating
- it loses a byte
-Message-ID: <avOp9udFzahnsmN_@devuan>
-References: <20261104033110.out.418-kees@kernel.org>
- <ausWlN1oWc0Utnxb@devuan>
- <20261110220716.37bfac-kees@kernel.org>
+From: Alejandro Colomar <alx@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	robh@kernel.org, conor+dt@kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] string: Add [C]QChar_of() and QVoid_of()
+Message-ID: <avOuLrmqKK5Vb2vH@devuan>
+References: <cover.1794323750.git.alx@kernel.org>
+ <415453a31ebf1aed3b41da1a28913f5cbe58f175.1794323750.git.alx@kernel.org>
+ <sashiko-outbox-207285@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20261110220716.37bfac-kees@kernel.org>
+In-Reply-To: <sashiko-outbox-207285@kernel.org>
 
-Hi Kees,
-
-> Date: 2026-11-10 14:07:24-0800
-> From: Kees Cook <kees@kernel.org>
+> Date: 2026-11-10 15:45:13+0000
+> From: sashiko-bot@kernel.org
 >
-> On Wed, Nov 04, 2026 at 12:28:27PM +0100, Alejandro Colomar wrote:
-> > Please include:
-> >
-> > Cc: Alejandro Colomar <alx@kernel.org>
-> > (or perhaps a second Reported-by.)
+> Thank you for your contribution! Sashiko AI review found 2 potential
+> issues to consider:
+> - [High] string: void pointer subscript in QVoid_of() breaks Clang
+>   builds
+
+It seems I can't build with LLVM in the way that sashiko suggested in
+the other mail, so I can't reproduce this:
+
+	$ make LLVM=3D1
+	  SYNC    include/config/auto.conf
+	  HOSTCC  scripts/basic/fixdep
+	clang: error: invalid linker name in argument '-fuse-ld=3Dlld'
+	make[3]: *** [scripts/Makefile.host:114: scripts/basic/fixdep] Error 1
+	make[2]: *** [Makefile:682: scripts_basic] Error 2
+	make[1]: *** [/srv/alx/src/linux/linux/llvm/Makefile:912: include/config/a=
+uto.conf] Error 2
+	make[1]: *** [include/config/auto.conf] Deleting file 'include/generated/r=
+ustc_cfg'
+	make[1]: *** [include/config/auto.conf] Deleting file 'include/generated/a=
+utoconf.h'
+	make: *** [Makefile:248: __sub-make] Error 2
+
+But I see no reason why Clang shouldn't build this.  I've written
+a small test program just to see, and Clang seems to just work well:
+
+	alx@devuan:~/tmp$ cat const.c=20
+	#include <stddef.h>
+
+	#define QVoid_of(p)       typeof((__QVoidptr_of(p)){0}[0])
+	#define __QVoidptr_of(p)  typeof(1?(p):(void*){0})
+
+	int
+	main(void)
+	{
+		const void  *p;
+		QVoid_of(p) *q;  // const void *
+	}
+	alx@devuan:~/tmp$ gcc -Wall -Wextra -Wno-unused const.c=20
+	alx@devuan:~/tmp$ clang -Wall -Wextra -Wno-unused const.c=20
+	alx@devuan:~/tmp$=20
+
+Unless anyone can actually reproduce the build issue, I'll assume this
+report is nonsense.
+
+> - [Medium] string: QChar_of() fails to compile when pointee has
+>   qualifiers other than Q
+
+That's actually desirable.  You don't want to call strchr(3) with
+a pointer to volatile.
+
+> --
 >=20
-> You were Cc'd. :)
+> commit cea37634307d89ede7b6ca6128f006d50a90391c
+> Author: Alejandro Colomar <alx@kernel.org>
+>=20
+> string: Add [C]QChar_of() and QVoid_of()
+>=20
+> This commit introduces the QVoid_of(), QChar_of(), and CQChar_of() helper
+> macros in include/linux/string.h to support qualifier-generic string macr=
+os.
+>=20
+> > diff --git a/include/linux/string.h b/include/linux/string.h
+[...]
+>=20
+> [Severity: High]
+> Does applying the array subscript [0] to a void pointer in QVoid_of()
+> break Clang builds?
 
-Yup; what I meant is please store my name in the patch body, since
-I want to be CCd if anyone looks at this patch in the future.  :)
+I don't see why it would.  I can't use LLVM myself, so can't reproduce,
+but a small test program shows that Clang works just fine with it.
 
-> I try to avoid explicitly listing CCs in patch bodies,
-> though I don't always manage to wrangle "git send-email" correctly.
+> __QVoidptr_of(p) produces a pointer to (qualified) void.  Because array
+> subscripting requires a pointer to a complete object type, Clang rejects
+> (__QVoidptr_of(p)){0}[0] even inside typeof() with an incomplete type
+> error, and GCC emits a -Wpointer-arith warning when pointer arithmetic
+> warnings are enabled.  Using unary * instead of [0], such as
+> typeof(*(__QVoidptr_of(p)){0}), avoids both issues.
 
-Then a second Reported-by might be better there.
+This is a lie, unless anyone can confirm.
+
+[...]
+> [Severity: Medium]
+> Can QChar_of() fail to compile when the pointed-to type of p carries a
+> qualifier other than Q?
+
+Indeed, a desirable property.
+
+> QVoid_of(p) preserves all qualifiers on the target of p, but the _Generic
+> selection only matches exact Q void * and unqualified void *.  Passing a
+> volatile char * or const volatile char * to CQChar_of(p) produces a
+> volatile void * or const volatile void * controlling expression, which
+> matches neither association and fails at compile time.  Matching against
+> Q QVoid_of(p) *: (Q char){0} and default: (char){0} would test specifical=
+ly
+> for Q regardless of other qualifiers.
+
+You certainly don't want to pass a volatile char* to strchr(3).
 
 
-Cheers,
 Alex
-
->=20
-> -Kees
->=20
-> --=20
-> Kees Cook
->=20
 
 --=20
 <https://www.alejandro-colomar.es>
 
---qx2e4j7hkek3tvqm
+--k4z2mch3442cdwfc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrzqkIACgkQ64mZXMKQ
-wqnYlhAAnbMPVhP+XfjyXqCOqNN4q754m0vECI4rSlv64ulG4xNY2Xa+g54/6fqp
-LBqcEJMqPT6NPUmlEsQGu9GDxoR2QrDjREhbEzuuWNKgQgz0d5J1ad8qbX78n5PX
-uAZ/t6ZcTnnIohGSpkzeDbNvVx3ZvvTxUmmLRMocAFNaCO0/ArbctTVTyVwhu4Q+
-lD8RbJEjz6TyfRiHIk4dbcrP3cJwfQ20ci15X6f+ZMqJBHyfTZ7zZXR2uZXqWPHP
-WBt0mjHILBt8U37D95phwr+HOY/3DgUkpFWwJo/vqE+gIZGe1CW+0/1SBJyt1cAY
-pgafzXH2Wb1oTnRPTgodajqkNtheDHyNJ1xuT0Mxhe8h4vhhZaoH3gbxtHeUDrJq
-RaNw16lwYSQxqYXv2sP/ljxZgp3NZpJ0yN5/9UfWL/5PT3g19sPKbu5sRvk1ozxa
-TYntODN9yiG7vUYMMmmZ2qd/UplljcSckk7/X5vBu+stArtgwBZXRLq4qM/kRjWt
-7BLVzn2B35ngsrAIMbRgBppkhQ33I+xRSDErbUH6Iq2ixtclFOuvLCOFfcUWqra0
-W11+szy0+hdAamf3zVlYUYIvBc4BYdrOdPQzrXJLadedzdyrZr4SjaT4TqEWn3Kb
-20zOzykyxyLDwxcWRLIuPnbFce2oinEmTUPz9hid47hT7m5QUTE=
-=JnEy
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrzsNsACgkQ64mZXMKQ
+wqlYyA//WP431CwOyyGiJ5Z4Nq4DkoB7lbZioy90Yl+g7zuCkZGvPoK5u3DTM6y2
+RcILdOR7a+CcZwlnfZ+uq6cFM0MSdsj4AkNWGVChYTCRKNaO3K4Ln6S62Gj9/xqR
+f1EGFr7gHkARKeFJCb+nAUUKHuRXXOsXEmAvFZrxsG/SM33rP3kmnKO829UvLoBQ
+DDi3V2Gmf3N3AS9MKk8yfv7yWFktDkogn2WPwRr7l+7QP0KbM8pyeFCQ8DtxXzMQ
+nHJ4/Xyg3O1SYFOFSr30b7TVDSg9sX0WHFTg6vy6Q097B/+nZ0mcXtUebgFc6i+v
+ctGoaRYlL9/ULqWYqyOWb/yMxDXKJuiLmLh2BVGfQsIHG+KC19F+aSoCehyawg0J
+2Sv1qGWgZhaE/5DdwPr2VRD3bYDx79n6JemIS2z3YDMpN4YmjNkOHolqFr3I8qMZ
+p7+mc5t7ACtB7psgUh4BJ+oUAPaLflvXKCjn0tFtbNRS94SfiMpwxfYrMT+MzPI1
+h0HvUuS+8kGTZhvriKw5pKLe5qXf1m+iwIfzznyEY0e5Dsz/hdxLK/vhDORsnGSJ
+UBW2c9G67/dZS8FdNJC+GLfLLeJSFLEf1onrBjtigp5ebFOwwjrM5j+m5XZO8gfM
+3T5YUS4eDKCZLwzH38VjkYqQ+ztrEmFtGggF746acwwtrGj9wTo=
+=N5aI
 -----END PGP SIGNATURE-----
 
---qx2e4j7hkek3tvqm--
+--k4z2mch3442cdwfc--
