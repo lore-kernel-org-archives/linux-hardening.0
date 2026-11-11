@@ -1,110 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794393283;
-	b=XSKXP5NFlOSr2MaBv9BT2UDrjRzIKizwm4qZ8VLJlPvDyaCFMY3pbMExUA1tHn+v7kYD
-	 yPyHh4JMGG+kROCOyiJIZuou7AGOm7O1/aczDW8ZzYYP8+bd0kN22GBtSfjIGSLWBzXZT
-	 Mb5cTLQX4UrPZVD68DNYv/U3jZttvIgYbemZeZUyS5YKkePG9ZuRwZwRky4vpbUIXh5F9
-	 RIMYWUqRlsoJdm86HtQ85E1cx2JuHW4OLkBMlsX09Hv0O6T8Ur5Q/QJ22eH8F5B1obeBC
-	 GGVX3taBAGku7CSVVGFV05jVy5Lwg3/8e28QgwRxdIqAYXjXmJdzTH7+o00wPsO7Leg==
+	t=1794393361;
+	b=vbSopIH9/iTEVCV4nrfMVM+/pqpYceBp5xb5sT7wEeWPk5WUbRv05oKLB7VTzKpzWnhi
+	 7PKlGRxuR4rs65KKxFvILYtE3pIgQceH/RHUf5ZDA0pNt0KTBryX2aMRY6CjkNIahDOCW
+	 8LKfcddxjJILJJRRWX0s9r3f8dpV72ktonNtwmIllEI5hnK3JdxpKVVx/KlEATae7OSSS
+	 rS8Sr0N/ewjYOY3bv5LL2WEGTl1R3Yz95/pRBNKqupW9hjNGODF3VWSyF73UvZcAnJrff
+	 EjtF/o1myonsHavm9JIH9n3pL/LsGfLiyQ/wc1PoRIyzhQXVDSwrEs72p6i8p/HJlOA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794393283;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:In-Reply-To:References:X-Mailer:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=B0BstBB2s+mXG455PQXyfJhRhSXomdgOjXb5/JFNaGE=;
-	b=1QWtDLeexdOFc2LdDWog87GunE9zm292TLLHGgAaWi/2h3NBH2IpL/Qu44yvMr4qOV+S
-	 QjpcAeCgNGsg4/g/1Dk9DLBgomHZFTsP7rp3PnjiU7xD5OHu5Ugr51HKctTTfTy0KzYZh
-	 RfmrjyUOCWOwvnqg8TgV+ERI0pKNWxct9+/89mQlQQKA9gTeqo4w14aYnG4bRT10YcTCh
-	 0K4eKUSj1OYHK28h1VTGw6VVGomFGdgNx4Nx1kdVtK5GOP2w8VtRGE9ntSKsJ3EXC5re1
-	 FPGmxzEJI2IDg8x2XJVCxHyAICuGQM2QI06c4/+5me9nZxDd8GJM1Pd8ZB+1VVItGzQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794393361;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=3/Qm8F9jS9txwPiJ9OMTxV+9BbKodPA2/hA4qfKSOTY=;
+	b=gB+Ns0bIXbkqEISK/ZG8v8pySh52nZUyY+Vs8dslf20FxkjOXT0CY5Qi0jVZAIlISsXU
+	 mIuM1HXf2Kr5pg6R8fktwP0xHbQJ3W5z52WC5wfy1iRqrMRyIIRY2aep1eghekLm5/LvQ
+	 MRUor/vEzTO17dNuI0X1lL7C6+Amuka2a4uV7qsD2ES8ATvOXKxZmMOtF410axbH1xKkQ
+	 P/mJfVEuK/kK0B6LwNh/F7eXEjgHVzbXpnhEgveCKlYJH44CCPjIUF4c3uaSSHM2jk4mB
+	 EjTZXaN8g1Sgmq+P4lXPEp0zIo1yuNIAzXAezDfCLP62RB/IligP+0IuiISMGxB+bAQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Wo4+YNlr;
-	arc=none smtp.remote-ip=209.85.128.49
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ekdPx+2L;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D320606A32D
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Nov 2026 10:34:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D320606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1345606A339;
+	Wed, 11 Nov 2026 10:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Wo4+YNlr
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4a3517554f7so31742085e9.2
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Nov 2026 02:34:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794393281; x=1794998081; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=B0BstBB2s+mXG455PQXyfJhRhSXomdgOjXb5/JFNaGE=;
-        b=Wo4+YNlrKrnltc3dTrFhFyp8o565rovrnVKvkcx3eVzs7mE3qiNP4os9f3zKzIUO7q
-         Mo/E6HxBENrz/Twy6Hr0jn0S9RD9and66fqE4mLAn/XVoQ9oGhz/5FprThWZmcB1lSHC
-         Xw3GiW0FU0e05EIYsy/TOTtxkzFOG4Rc7Et1sma46iXKPmLCVl1BoEbBdP3bAJIvboW5
-         RDrss8nRI9XAY9vaYK8uPgGc9tmFypYAcAnxtmeiIEQdKL+6MGcergbBBIDQPsOYUs9v
-         8reLcEbCJIqvaqTXvPspIf7k32+QOuydWVQAkHaiFp6OoRWnSK1pNXkuh2Jp185lV3Xr
-         MWcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794393281; x=1794998081;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=B0BstBB2s+mXG455PQXyfJhRhSXomdgOjXb5/JFNaGE=;
-        b=C73wHTkJ2z03eeP125vB0z9hyN7Je4o+iR09Akl3WT2IsmrSzBOs95xCtFKo48r+cf
-         iVGIhTRh0A80cJrbWkS1D7c7tFEBRQcdD1GoQrlNiXkl6D63EOKXyM/8ULd4ViwQRb6t
-         dbYioSgfJk4dfIDUS43tITjagRmaYXKkWTwHKhhY7Hz7gOHKCQUaAym3YrnAyaU4vcDR
-         1ycKIKJVcBTJYSNIwkas/8WRpAy6AaNnuYVp/wrJcoXUTFVaVdZn53nROcsJhBbtdXAL
-         TiX+lP5+a+y+28Pt2sHSobxCA/47f+mqi9wTFILYwCDu8L13meUG5ILsXu2YxnTf8+li
-         TdiQ==
-X-Gm-Message-State: APuU4Z/eTIjcLN8736g9mCVb0Xy7aB4Yd2cT21iJ7arVyEg1xCJ/Rj8+
-	6/zJb1MroRFG5zI91Wgs+mrTOOa2KI/gu7dAHgCBD8ZIg79EKdRwWOaT
-X-Gm-Gg: AYBFou1QV3lG2Hx2q81K5Ry6UmEYjj9GxMzjhsgprV9bgy/IMKHV9876RJDknH7bV6K
-	vdj/eY7/DXvLZ/c7RuUmWqkT9EXC/KbJXMPB1KJQ9rbd8yeIwEGWNawwdZJHO7+O2fwaWfn+afd
-	RFDb0M6H00bamf9K+LZzN9YP68SfjukF1j6ItnwDSwgTK4YSh9Iex1yZvnxexesYzRUIkOVgQIy
-	GpJcZqs4Mi8ZYRyaQIVuMDql0yqqK7Cn2c9kdaoaospqAX7wOvjf/t+N1MvblFcInAmd8p5o/Xh
-	M0mjTfp1/rBHgXYGG8GhH9DQ9r9lfScWc51SJNhlTp+6o88hdURVdbsYEpfPEmmjsEKYhiNI8ra
-	G3ot28KqDVOJ00mn/pCuDc7TeWi4dz++WAiG6dBQhHiZQO0FFA5HBDSI5Oz44bShnLsywxEhOZ/
-	cPuSVJ0ELjMFaqZtmm3JcdgEvKvWFXyE7irrK1He/NMf+T5q29n4Y3hKq76YlM9BPQzlElDvm4m
-	CltxxiNybshDIdJM1blsBITJhluNC/xREpBdC+kuFFT6k9+3zOP+3y8N93F76OMVJOup5NCikmn
-	bg7gqWNT1TjuLh9jz9GC7uWAZzzU5KaiMrUEue6bHXI3CWW17t52HtOk3kQ4ceOITU4=
-X-Received: by 2002:a05:600c:b86:b0:4a3:2f35:38b4 with SMTP id 5b1f17b1804b1-4ba09377b2amr30972055e9.10.1794393281331;
-        Wed, 11 Nov 2026 02:34:41 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4ba01fba476sm157078915e9.2.2026.11.11.02.34.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2026 02:34:40 -0800 (PST)
-Date: Wed, 11 Nov 2026 10:34:38 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
- "Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, Andy
- Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Daniel
- Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil
- <hverkuil-cisco@xs4all.nl>, Heikki Krogerus
- <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan
- Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, Linus
- Torvalds <torvalds@linux-foundation.org>, Linus Walleij
- <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>,
- linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] string: Make strprefix() const-qualifier-generic
-Message-ID: <20261111103438.2f822202@pumpkin>
-In-Reply-To: <35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
-References: <cover.1794323750.git.alx@kernel.org>
-	<35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ekdPx+2L
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCD91F00A05;
+	Wed, 11 Nov 2026 10:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794393360;
+	bh=3/Qm8F9jS9txwPiJ9OMTxV+9BbKodPA2/hA4qfKSOTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ekdPx+2LWD0BQ/C3SpSBmJYPcQSKYU9rl2B5z5fg8d66hMIDCS9kQgX5wH0OFXyqp
+	 mM1zaLdTlBmHFxU4H70B38f/o+ymU4bEwsQWp6B3nJ7yHGcxIICCNArodCFiFzSQOn
+	 ecov57Sv2N7NEhTF0/mcY/KX0t/jBnjRgDvfgBXYa96MZ42rQhA3DH1Z+ZF6tTXDGN
+	 dW3bO0BTpWrbNgeHp4syQPmrkEcJV2iggtkE62VwsmyepRJZCfX4oBwWiUx0sSjyRD
+	 7ajUeab4QZjU2gcdS2WA7VW5SI4S+93QzS3d76IvyvqqtOQon4YKx9ItGmemNAnKEs
+	 0rK9svrg0GVKQ==
+Date: Wed, 11 Nov 2026 11:35:55 +0100
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+Cc: nicolas.dufresne@collabora.com, benjamin.gaignard@collabora.com, 
+	p.zabel@pengutronix.de, mchehab@kernel.org, hverkuil+cisco@kernel.org, 
+	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kees@kernel.org, justinstitt@google.com, morbo@google.com, 
+	david.laight.linux@gmail.com
+Subject: Re: [PATCH v2] media: verisilicon: Replace strlcat() with scnprintf()
+Message-ID: <avRE7QDuHyK2aFUo@devuan>
+References: <20261105084518.386234-1-nikitash.mariiaw@gmail.com>
+ <20261111032446.29803-1-nikitash.mariiaw@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -114,39 +60,103 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="beiyeemi46p27lup"
+Content-Disposition: inline
+In-Reply-To: <20261111032446.29803-1-nikitash.mariiaw@gmail.com>
 
-On Tue, 10 Nov 2026 16:33:56 +0100
-Alejandro Colomar <alx@kernel.org> wrote:
 
-> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+--beiyeemi46p27lup
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+Cc: nicolas.dufresne@collabora.com, benjamin.gaignard@collabora.com, 
+	p.zabel@pengutronix.de, mchehab@kernel.org, hverkuil+cisco@kernel.org, 
+	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kees@kernel.org, justinstitt@google.com, morbo@google.com, 
+	david.laight.linux@gmail.com
+Subject: Re: [PATCH v2] media: verisilicon: Replace strlcat() with scnprintf()
+Message-ID: <avRE7QDuHyK2aFUo@devuan>
+References: <20261105084518.386234-1-nikitash.mariiaw@gmail.com>
+ <20261111032446.29803-1-nikitash.mariiaw@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <20261111032446.29803-1-nikitash.mariiaw@gmail.com>
+
+Hi Mariia,
+
+> Date: 2026-11-10 19:24:46-0800
+> From: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+>
+> In preparation for removing the deprecated strlcat() API [1], replace the
+> strscpy() and strlcat() calls in hantro_add_func() with a single
+> scnprintf() call.
+>=20
+> This preserves the resulting string, including NUL termination
+> and truncation behavior.
+>=20
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+
+Reviewed-by: Alejandro Colomar <alx@kernel.org>
+
+
+Have a lovely day!
+Alex
+
 > ---
->  include/linux/string.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index 9e59f9697c9e..55ca4cb5122c 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -590,7 +590,9 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
->   * *  @s+strlen(@prefix) if @s starts with @prefix
->   * *  NULL if @s does not start with @prefix
->   */
-> -static inline char *strprefix(const char *s, const char *prefix)
-> +#define strprefix(s, pfx)  const_cast(CQChar_of(s) *, strprefix(s, pfx))
+> Changes in v2:
+> - Replace seq_buf with a single scnprintf() call, as suggested
+>   by Hans Verkuil.
+>=20
+>  drivers/media/platform/verisilicon/hantro_drv.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/verisilicon/hantro_drv.c b/drivers/me=
+dia/platform/verisilicon/hantro_drv.c
+> index 26e5d5547466..d8854ceb4fed 100644
+> --- a/drivers/media/platform/verisilicon/hantro_drv.c
+> +++ b/drivers/media/platform/verisilicon/hantro_drv.c
+> @@ -902,9 +902,8 @@ static int hantro_add_func(struct hantro_dev *vpu, un=
+signed int funcid)
+>  	vfd->vfl_dir =3D VFL_DIR_M2M;
+>  	vfd->device_caps =3D V4L2_CAP_STREAMING | V4L2_CAP_VIDEO_M2M_MPLANE;
+>  	vfd->ioctl_ops =3D &hantro_ioctl_ops;
+> -	strscpy(vfd->name, match->compatible, sizeof(vfd->name));
+> -	strlcat(vfd->name, funcid =3D=3D MEDIA_ENT_F_PROC_VIDEO_ENCODER ?
+> -		"-enc" : "-dec", sizeof(vfd->name));
+> +	scnprintf(vfd->name, sizeof(vfd->name), "%s%s", match->compatible,
+> +		  funcid =3D=3D MEDIA_ENT_F_PROC_VIDEO_ENCODER ? "-enc" : "-dec");
+> =20
+>  	if (funcid =3D=3D MEDIA_ENT_F_PROC_VIDEO_ENCODER) {
+>  		vpu->encoder =3D func;
+> --=20
+> 2.43.0
+>=20
+>=20
 
-Isn't in enough to do:
-#define strprefix(s, pfx) ((typeof(s))strprefix(s, pfx))
+--=20
+<https://www.alejandro-colomar.es>
 
-which correctly preserves all qualifiers.
+--beiyeemi46p27lup
+Content-Type: application/pgp-signature; name="signature.asc"
 
-David
+-----BEGIN PGP SIGNATURE-----
 
-> +
-> +static inline char *(strprefix)(const char *s, const char *prefix)
->  {
->  	size_t len = strlen(prefix);
->  	return strncmp(s, prefix, len) == 0 ? (char *) s + len : NULL;
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr0RQUACgkQ64mZXMKQ
+wqmqRQ//REbcSjHBIDUOxJhm/720bIqOHJt+3DKA+HoHM0PTMB1GcDpZ0Cb1GFDz
+xRHYtg0O9h95qP0G/IoLsrZj3NkMamOmFu/Ofly9gLTOqQL1rz9owJ1CLhvmYd9I
+8cWB/QtXkMiuQXlZJrNXDq2SByNEaJ4bsPjvvE77eID9cbp5ZTSUuz/T4BDE0kGV
+qI4XWwCmA7aKluSWJsM9Imr0WNtNVjxq4TF/HFG9H7XsqZOfX1nQAb9fAZUFFMaB
+3w11l20mRk2vqfAG49JgcN5w+AwJ3Bt/xkBhHkylWG3KPherYIRq1PPXFF6QhxBo
+rw4Ybqo42Vb/EZfR4zVr10O/fFRwYveJTCrkT43f5gAChRNaa6N/WR5neV9/CoJk
+5m4QyRrraxSx+l+loUZSINAa/N0AJemDBsFstXMakaO+/RzNe/QidFSURRxL+e4N
+3mxIPmFGNR0EJcNf5rQscL2BJJI9DJMqfeIOS+M2zS1B4W58VUP4ccOpwg+mSBDJ
+qbQdnjTEWfWc8K0W/WC8OXcIAt53kwI3Vm8b4e3TUSYHoHOpwleImvVH8PDtXy9a
+OBfQO51X4evfcPbAgBSXe4WinWJmALl94hy9R3DhEwaLDP0VgWkb/pSC66goebpb
+Cbpqbegoxy8DO7Off0TR0a5KECKu5jQH6X9CiAFWA3DRXeZN0kw=
+=ogB2
+-----END PGP SIGNATURE-----
 
+--beiyeemi46p27lup--
