@@ -1,54 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.231.75
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794356876;
-	b=D0iobn8vR2TeJH02e9xnin2w3UeFtMaAYTl0+xrox3pwnTP/6Nb1OLq6qDcswPajI0St
-	 LdEiv2kIq5qONSmsf1hJReHn2fZbvrMzAOywt7n187I1sDyJaVK4oatYycNlbXKNHxxWf
-	 lCfT8B/GXDeSXnnoeG2NQZyqWC5AQryiE13YWxMDAQnpml4cmLZaHq1uP3F2lDc/jZ1Y+
-	 D56HAJsB+J+HK1YXNRSamiyW+TIyuKQXd6B51uV3xdD8g+MpD0iIwpA9T99uBERvHrS8B
-	 RQyGKDvqjmXG+m9nh2a0tM3K1btCSjrzadPL1v8Xo/4zznQef0PSdnTxAnyp1iSwxJg==
+	t=1794359940;
+	b=uadihPwNIqKVOytqS97CpjL2cZKoZWMpDLsDaYHYYEfZz7Apd0H1f97DGiUR9gbnbsut
+	 4ojCRn1DmQI7xbG3Oc9R5JLrTQazDDAr86Vy48R1TtolJNBz9WqnvIFBgA6HGPu2UETLO
+	 ESo4vpHScnjMQmpvgqVltoDxEtlPC098diO1zhglwv0Sw4uKOCifbTMIEtvQMo0Rqh8QQ
+	 hJqFHSUzBurEIX5X5dGeJYfOxu0cc/+Eq87K/pI3trSRPVbLbj4gDYEAv9hHy/hQvQK0w
+	 UKS7JItlwy9OPrfD7dTUYwh0Th+mF++ERR61VQjZ04E2ozoLq2Ej3L4nctrHfDZGrgg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794356876;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=QxouRG1KYEdTCRqc89wWZcbxBTtvnYZZATf1L46tV18=;
-	b=QO6cr19zL1l9huGhxiRGNC4gvOzGIXArkAk/dksD8sS9o1to1cX4FBcrZa8tov6v8jU5
-	 fZ4btRSK+bxNwkKkIsJSWJ/kEGplQsonV2EPd4U1HKHc1SgaGGuTzWP1yH+QrdgbCCspy
-	 5QRmTDVwJvHZSH/RG2fQgBM1y/6JhV1TDld+UV56S/xs7zY8i+zOrlkcTQZIykeVHlown
-	 fh1D+FK0krh3myNEb4aSKg09iDqRQUMROfzB5/6tT9PcJEGOyyW73bG6Ahe6gdVKCHDrK
-	 FMHd8eGXPb7ya8fE+QKe6KeiIe2NAzm3GaHbnB7y5q9Uz3Pqu6CymHOlSPJeuiOnq/w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794359940;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key;
+	bh=gNyPl8hvDz2s418waBm5wB0iV5wzq1cuI+c5xRhCVXE=;
+	b=dY0u0AwUD4cnAy0EdF2h4ZoR2dXgeRCpL17rxHFyYh8x3hB2WK9dNB3Hq1FDO5w3TosL
+	 4X1Bgb3lYqkImYkvXgWW2xMEq5Y2k256WK3LTjLmUQP4J8IjxP32gY0tlK+ylCe+NrQBM
+	 xXszOTELiWs7R0fln78LcUKp98xr+NSDXNPbn2oZXTQO52XTGeKdJqSYAe51I4DLFaq2l
+	 V5/LjMqZWAkRqgQzoy+O5fMbmtGQkZSSlHZavRteCNDCkZbeWUdWL30r5vk0Ig8DFENN+
+	 nNof0xt/o5jE4HTLSj3bjt9hyEJAAqw/k6YXcp1ihidusgWT5d13qEGGIdXvWgxCX4Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i8yNWGFP;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ixHBnGoN;
+	arc=none smtp.remote-ip=74.125.231.75
+Received: from mail-oa2-f11.google.com (mail-oa2-f11.google.com [74.125.231.75])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E190606A31C;
-	Wed, 11 Nov 2026 00:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3898606A321
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Nov 2026 01:18:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A3898606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i8yNWGFP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BA5E1F0089F;
-	Wed, 11 Nov 2026 00:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794356875;
-	bh=QxouRG1KYEdTCRqc89wWZcbxBTtvnYZZATf1L46tV18=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=i8yNWGFPsUq6WxBEAz4FCU2EgZSv4uWyeQZsCObLRbazsnyDmOcF1yc/xdRjS/kX2
-	 +aTWhv0gs8ERKg471ZEJ0l/ZyvIvJBWElC9dEY/eUmkZkBJjRCZZG1Bf0aOey/4No7
-	 +U6MDol+Oxxiw2066UxjBzAHIz4ygPERr8KaeHYvZUKJYjU1kfABuQeSL16Yimwx1a
-	 3KW4ThZSGtowi0pd1ZB9dAlyVTuHnRPge1cRlmq+NrSyMqsiTM8pl44F6KuxdjtVKr
-	 B1/o8MkyncXJTdwOi/ApjNRTruuMi75IUoGC864GRcwyP0KSX3ylN19533FZiLqRKB
-	 mKr/zRFclEPIg==
-Date: Wed, 11 Nov 2026 01:27:52 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] string: Make strprefix() const-qualifier-generic
-Message-ID: <avOw9gLozCslpK_D@devuan>
-References: <cover.1794323750.git.alx@kernel.org>
- <35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
- <sashiko-outbox-207284@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ixHBnGoN
+Received: by mail-oa2-f11.google.com with SMTP id 586e51a60fabf-4a77fe1bc0bso1161152fac.0
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Nov 2026 17:18:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794359938; x=1794964738; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=gNyPl8hvDz2s418waBm5wB0iV5wzq1cuI+c5xRhCVXE=;
+        b=ixHBnGoNmKLHQjnp1EcyhfIGBb4m/7l4WLpuZeHvcXjjRCFSyz6DiGp+CUUuZyL+ni
+         sc7rZxVGjrXwtLjtapYWMxcVvz4WZXQhUqirQ0embkyJvK80VU2yv0WPJa/LWjjvJr09
+         AiP+81YK5M0TG7Z1djmSyh0qoTsF+q/HU5yYIWBHl0wxl7BwrdqfXfmNg7Nyqvti88E1
+         pKd/OISxGMwBdHXLr+6vH6utbPQ/DGkbOtVYU0JO3mtOLHJEAddsSZuLvqsfU5AX5/GO
+         NUDrOPTHrgyX/zlKuTDRhkbNiNlKLPWEN/DSBXJXV4RUgC5ymdOXq6DbNfVeEqVclr/w
+         /juA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794359938; x=1794964738;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=gNyPl8hvDz2s418waBm5wB0iV5wzq1cuI+c5xRhCVXE=;
+        b=OMO/v7ruVL1cEa7R9YPJT1ffmjZ5s4ZWgDLWhjrgW/PcoopUm91lzj98YbnssOtGHN
+         5tEByvtjsKlqcEwRJVR1PVxo3xJsARSjUHVuRG7oFM3p8xNMyxjWw/GmbodDVDj8Fw/X
+         nF74chArmwWjBfGXb+BL7EQny8wGAGBvw3hf1gAnIaN9Bp0hD+c4b2DpHXusLmQchv9m
+         T8julVmeeABklIHzylZgtPnT+CVWemcIDUZa8ge6SLsi75TTq5zfntXIVcypfpf8zbaS
+         XKy+aJcfKWQaji/e4azzT22nDyTtSleVi37vFiK+yK4l4lT5T7tXO4SmMrmtEX16eccy
+         3ugg==
+X-Forwarded-Encrypted: i=1; AL+hErEBQXHMYb1AehqKIG+tGDiryKQqv4P3SHCiKr85Eq6mw95XeAV23+2Fxh2nYCgVNCgfvYDMM49K4utvKmbuAgA=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+7UeAKAYgZvOUmhC0nOWg6Lj3DFzOFLP587Yb3CY717C9cQX04
+	sNWFgDSLToC6aCBX4Usa7Rje/nLDfJCau+JsGoas9Ra3R0O7+fJ5cpi+
+X-Gm-Gg: AYBFou1O46K5Q6MINf2uNcRSNnimyjFouWzs/xT52DKuHjb8PE5A9m+XJTU+TbiarH0
+	ZljtabcvdijLyUFtGg9QmACDFI8zcaUoxNvLF08Xd51Ar0vALoxHr7NVCmRFxaXDco2HZjDkwYJ
+	aUPLqyXy9snIj6paupDATwW/sa8DvG13+m4k0p0Pu93pSTn4EBpHnpwd3pykvjjxJZ9ZmsWvp/U
+	97Dz1vGmSq8hi267H+e+Jzx2B+SfNymol7LfWqEkFhucZ0Mlx5YpcJYZ72UW/das0Q29Zd9tg7N
+	v4YVioFnsYaZwTZQjZ0CLBetDPJvbXvynjJqRmasDTsZxeq/ig67a3UCCCxN7eflV4N6FBxeDxl
+	FNXAqTKC7cZD0mQ3EF1xGTwyZuAWN90Z2ERN+NMXvbhdTaXnDTOxLpflEA/Q76icga8OSVuoXPC
+	GT8nP+zXpMV7oXMIskgg6rvX0jpIOut8At2gIDl36zipojECmvbHGFIqYMj1sLwp7HlHFvLTqBo
+	Wxwr1WSwWbgU7AnJJIH17zRjSLx+UZ1ZNV9t7DopHcy3EGhSL01hU5aW4HbeVR5Un0BqJ4xUoeV
+	+YnohOTtzzF/KKT6jIE3zwBR
+X-Received: by 2002:a05:6870:f61d:b0:485:d1ab:793c with SMTP id 586e51a60fabf-4ae46b8c334mr1051565fac.29.1794359938319;
+        Tue, 10 Nov 2026 17:18:58 -0800 (PST)
+Received: from [192.168.18.164] ([2600:8804:5716:d800::f01a])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4ae23095c16sm2489357fac.17.2026.11.10.17.18.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 17:18:56 -0800 (PST)
+From: Ryan Brue <ryanbrue.dev@gmail.com>
+Date: Tue, 10 Nov 2026 19:18:53 -0600
+Subject: [PATCH] ASoC: soc-core: start the runtime's component count at
+ zero
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -58,179 +92,79 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="khawwxmlw3jv7fmk"
-Content-Disposition: inline
-In-Reply-To: <sashiko-outbox-207284@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261110-rbrue-asoc-rtd-num-components-v1-1-fa0c9e0cb361@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAA/x3MQQqDQAwAwK+EnA0YW0T3K6WHdU3bHMxKolIQ/
+ 17oPGBODHGVwAQnuhwaWg0TcANYPtneQjpjAuzarmfmlnzyXShHLeTbTLYvVOqyVhPbgsZb5om
+ H4d6Pgg3g6vLS7/9/PK/rB3kgbNJvAAAA
+X-Change-ID: 20261110-rbrue-asoc-rtd-num-components-93a1b188469e
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Kees Cook <kees+treewide@kernel.org>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Ryan Brue <ryanbrue.dev@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794359935; l=2050;
+ i=ryanbrue.dev@gmail.com; s=20260906; h=from:subject:message-id;
+ bh=ISg7w++wXHyL53KnX6PWd5Fq+DoqRxUq2YHTwfGGjcg=;
+ b=wbo217doE1MovnyyC6sTYiw+dP+3D+mWK2mBBMyznqJSZf1dme7lbFHchWw868o9OFxhx2Ggp
+ PP6G+cKDim7AjA3kswBmP0IQsZkiRCi7R8woGpbbXASTnjxZ1KB/DIl
+X-Developer-Key: i=ryanbrue.dev@gmail.com; a=ed25519;
+ pk=KsUvVaP//v/2q+ZBuacc7cLbsyEYn+AD71Sn28oZWKo=
 
+Since commit 4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to
+the devm_kmalloc_obj() family"), soc_new_pcm_runtime() allocates the
+runtime with devm_kzalloc_flex(). Since components[] is
+__counted_by(num_components), that also sets num_components to the array's
+capacity, but snd_soc_rtd_add_component() treats num_components as the
+number of components added so far and appends after it.
 
---khawwxmlw3jv7fmk
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] string: Make strprefix() const-qualifier-generic
-Message-ID: <avOw9gLozCslpK_D@devuan>
-References: <cover.1794323750.git.alx@kernel.org>
- <35bf6672f84f07de3f40e8db9e7fcfd643894fec.1794323750.git.alx@kernel.org>
- <sashiko-outbox-207284@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <sashiko-outbox-207284@kernel.org>
+Every component is therefore written past the end of the allocation, and
+for_each_rtd_components() stops at the first, still NULL, entry, so a
+link's components are never found. On an MT8173 board the RT5514 link's
+init can no longer route to the codec's AMICL widget and the card fails
+to register:
 
-> Date: 2026-11-10 15:44:36+0000
-> From: sashiko-bot@kernel.org
->
-> Thank you for your contribution! Sashiko AI review found 3 potential
-> issues to consider:
-> - [High] string: strprefix() breaks Clang builds via void * subscript in
->   QVoid_of()
+  mt8173-mt6391 sound: ASoC: Failed to add route Int Mic -> AMICL(*)
+  RT5514 Codec: ASoC error (-19): at snd_soc_link_init() on RT5514 Codec
 
-This seems nonsense; already replied to in the review of 4/5.
+Reset the count after the allocation.
 
-> - [Medium] string: strprefix() always returns char * due to non-const
->   (strprefix)()
+Fixes: 4dd10fbbeb9c ("treewide: Convert devm_kmalloc() family to the devm_kmalloc_obj() family")
+Signed-off-by: Ryan Brue <ryanbrue.dev@gmail.com>
+---
+Since v7.4-rc2, every ASoC card writes its runtimes' components past the
+end of their allocation, because devm_kzalloc_flex() now sets the
+__counted_by counter that snd_soc_rtd_add_component() expects to start at
+zero. On an MT8173 tablet (amazon-suez) this left the card unregistered.
+This fix brings it back.
 
-Hmmm.  Fixed for v4.
+This patch was developed with the help of an LLM.
+---
+ sound/soc/soc-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> - [Low] string: strprefix() macro parameter pfx mismatches @prefix
->   kernel-doc
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 68b54e509b65..7b3d980ef10d 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -388,6 +388,8 @@ static struct snd_soc_pcm_runtime *soc_new_pcm_runtime(
+ 		return NULL;
+ 	}
+ 
++	rtd->num_components = 0;
++
+ 	rtd->dev = dev;
+ 	INIT_LIST_HEAD(&rtd->list);
+ 	for_each_pcm_streams(stream) {
 
-Hmmm.  Fixed for v4.
+---
+base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+change-id: 20261110-rbrue-asoc-rtd-num-components-93a1b188469e
 
-> --
->=20
-> commit f882ec908122ee0c3f780648b859ed41700664d0
-> Author: Alejandro Colomar <alx@kernel.org>
->=20
-> string: Make strprefix() const-qualifier-generic
->=20
-> This commit wraps strprefix() in a const_cast(CQChar_of(s) *, ...) macro =
-so
-> that its return type preserves the const qualifier of its first argument.
->=20
-> > diff --git a/include/linux/string.h b/include/linux/string.h
-> > index cb096e9eb9835..3e8a0537b86bb 100644
-> > --- a/include/linux/string.h
-> > +++ b/include/linux/string.h
-> > @@ -577,7 +577,9 @@ void memcpy_and_pad(void *dest, size_t dest_len, co=
-nst void *src, size_t count,
-> >   * *  @s+strlen(@prefix) if @s starts with @prefix
-> >   * *  NULL if @s does not start with @prefix
-> >   */
-> > -static inline char *strprefix(const char *s, const char *prefix)
-> > +#define strprefix(s, pfx)  const_cast(CQChar_of(s) *, strprefix(s, pfx=
-))
->=20
-> [Severity: High]
-> Does expanding CQChar_of(s) here break Clang builds (make LLVM=3D1)?
+Best regards,
+-- 
+Ryan Brue <ryanbrue.dev@gmail.com>
 
-I can't even seem to build with LLVM=3D1, so can't reproduce, but as said
-in the other subthread (4/5), this makes no sense.  Clang accepts this
-code just fine.
-
-> CQChar_of(s) expands to QChar_of(const, s), which expands QVoid_of(s):
->=20
-> include/linux/string.h:
-> #define QVoid_of(p)       typeof((__QVoidptr_of(p)){0}[0])
-> #define __QVoidptr_of(p)  typeof(1?(p):(void*){0})
->=20
-> Because __QVoidptr_of(p) is void * or const void *, applying the [0] array
-> subscript operator to it fails to compile under Clang ("error: subscript =
-of a
-> pointer to void") in every translation unit that calls strprefix(), such =
-as
-> drivers/base/property.c, and triggers -Wpointer-arith under W=3D3 in GCC.
-
-Hmmmm, I see why it says Clang may not compile.  For that to happen, one
-needs to enable non-usual diagnostics.
-
-	alx@devuan:~/tmp$ cat const.c=20
-	#include <stddef.h>
-
-	#define QVoid_of(p)       typeof((__QVoidptr_of(p)){0}[0])
-	#define __QVoidptr_of(p)  typeof(1?(p):(void*){0})
-
-	int
-	main(void)
-	{
-		const void  *p;
-		QVoid_of(p) *q;  // const void *
-	}
-	alx@devuan:~/tmp$ gcc -Wall -Wextra -Wpointer-arith -Wno-unused const.c=20
-	const.c: In function =E2=80=98main=E2=80=99:
-	const.c:3:55: warning: pointer of type =E2=80=98void *=E2=80=99 used in ar=
-ithmetic [-Wpointer-arith]
-	    3 | #define QVoid_of(p)       typeof((__QVoidptr_of(p)){0}[0])
-	      |                                                       ^
-	const.c:10:9: note: in expansion of macro =E2=80=98QVoid_of=E2=80=99
-	   10 |         QVoid_of(p) *q;  // const void *
-	      |         ^~~~~~~~
-
-I think this diagnostic isn't very useful, which is why it isn't in
--Wall -Wextra.
-
-> [Severity: Low]
-> Does naming the macro parameter pfx instead of prefix cause scripts/kerne=
-l-doc
-> warnings?  The kernel-doc comment immediately above documents @prefix, and
-> scripts/kernel-doc binds that comment to the macro definition that follow=
-s it.
-
-Solved.
-
-> > +
-> > +static inline char *(strprefix)(const char *s, const char *prefix)
-> >  {
-> >  	size_t len =3D strlen(prefix);
-> >  	return strncmp(s, prefix, len) =3D=3D 0 ? (char *) s + len : NULL;
->=20
-> [Severity: Medium]
-> Does strprefix(s, pfx) still unconditionally return char * even when s is
-> const char *?
->=20
-> include/linux/stddef.h:
-> #define const_cast(T, p)  _Generic(p, const T: (T) (p), default: (p))
->=20
-> In const_cast(CQChar_of(s) *, strprefix(s, pfx)), the first _Generic
-> association is const CQChar_of(s) *, which is const char *.  Because the
-> underlying (strprefix)() function returns char *, the controlling express=
-ion
-> never matches const char * and always selects the default branch, returni=
-ng
-> an unqualified char * and stripping const from read-only strings.  Should
-> (strprefix)() return const char * and avoid casting s to char *?
-
-Solved.
-
->=20
-> --=20
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1794323750.=
-git.alx@kernel.org?part=3D5
-
---=20
-<https://www.alejandro-colomar.es>
-
---khawwxmlw3jv7fmk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrztogACgkQ64mZXMKQ
-wqkDsA//TrX0eaNU2ZrsuPHyztzNkL4tyerQqWmXJ1YWMYONjTmVggnDol7/6kmz
-FuwHqMDUIuhLuDyuUlKREO075UEFaqh4CgaONl79PE8TGgqfgh+mD5M1aKgpWyjx
-efmJutiWmQrwUrXdq7s0o2hjKrWFmDS7Fakren6/asWJiUmjw8Gud6eFyUGCcT7V
-i9JuoWRn5ZtmbNhqwMDVKRXWzluHEz88Vu06VC1DHyW71r8zpcSKIh8z/vY92ZCS
-S6JS9hLzto2pNp9sRtZSedpJVCUyPN3V4pXVztFJzkBnJNzVrkVKMU8zme/mVjoJ
-LIq+nv1tZHqsux9yTPWSP+r86YEuVJoF3xyZrtaTVEffX7jGxYpZAwtRVH+Op2cn
-nXyWfZvQW4kHk1XghRN6oiidLarQgL2SxPndIvzLnW7SHtpwyoQ9lD4nONGvW0ho
-0+U3IX+1N7wPYbI0NigZGUxM9h1kVNfWnEU82K1raV7boQ1HP41PxhxrsOnRt22l
-/M8UABw1395cOvD9HUUYuN4n24U/S2JPL0fJJVK2z8xaU4qMMHqZW4dDFiYKmbxu
-cXaSw5HnmZ+JZiaJr7gvtF9SMCRtDx36Mu2gr04K6KQ2rVGgO+S5AI6aPMIYZAq+
-0vrsXL31Fz6f3EHD9rhGpcNdUus7vsgf4oVSg3cuywAv4zpOZvI=
-=JswK
------END PGP SIGNATURE-----
-
---khawwxmlw3jv7fmk--
