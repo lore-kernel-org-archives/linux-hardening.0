@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794427656;
-	b=f+W6UivBapi3PTOsyFVj4Af+0zeJm/YsvZa1kr7W1a2bADmLJuPoYnZCJKA6w+SQA2ig
-	 0zln1oYrv4oTB9Fkm7VgRGRzEleaxYEU1UTUZmItXquCA8Pwm580YF1u7A5KZ1cgUy5Cr
-	 +flbkztsod90lZYQ1d4Mudlmgdl/940XDzWcL5aOI/yuvu+lWvXGTNW84c9p7lxqp3Unj
-	 F73gbhTFGgMtA0ShPfYqEACYdI6WHEkNAIlFO2IXkKT1XZErWqX4h6Ux6vittKajls00/
-	 nKSlSQHQaD5gEjj2fuGUSoCAdc0dj/5WwmbpefNwfjtvs3Zys4P399ZJRhsWNUEchmg==
+	t=1794428294;
+	b=vEqbOAOzmQV4BPqsUJPDYe2FTaN2rswqBV7bzgKpkkiTmPJp/9ayLcvNbmgTRiNNhE1Z
+	 MAyQ5gsFGHOAU+Cu1iK1Nw/BGyq8hLYnz9c0wQEd7dyOMgrEGDPsckSSWoKzuFrvV93k0
+	 rDNdd6gPM+R5L4hQ6FN+YSDyKMAE2BycCONLzRFUNJBCXTkFPQw9siI0k14FlTRppGHTK
+	 ScGMWjpwNYQcf7hfohVmnbvOQH4ZF9aFVLhiEHdCjEYxayFWQQA72eaPnvGGuTqVGSKbV
+	 9JNcPl8jOdNyqGTfaafmDkkuY0aYOLEBoFJdvoGPTiJ487RNngl1G+dWDjMmLiF1kXA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794427656;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794428294;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=lXweVJ/XkYgJByHlOBLO1riU9AfOcOECoeF7DgHtmRM=;
-	b=Rbaz1awmrdgkE4WIbgI2GHvSn0w/SimO4xLLvScJDHPpPFzC2JOe40AwDTk0D2e6qzaE
-	 yQ1qfIYgCaKlDix6LQYUcyw8YBl8WnbdFTfEO0a/iBIOWAEfhDqJjn4nmdWNq1VM42+LW
-	 L6R4G0ns4ke2VMNB5q8RpjivHzjUvR83lUxf1fi+GtagiDlxjaDOD/aol03IM8cYkK87q
-	 c0+bo3pkpezv4bGRBrYAEYMwIeBApNB9lm7SdETjanzDqKrCczL7gyLA7fsU4ugjGYRSo
-	 JTHoClGrsjfjjC1UN2cu0NhNlWVmmVFfoAV/XgPhWigXb2tXcAvY2GzXls2qXUVqcXA==
+	bh=Els3/l9AGCSjcC7efz1j19ntkOAQMAY8UI2QWizsyMU=;
+	b=R/w0ioztyeTGpw+iH81efs75Gr11u1T7FTX/D4R6WRKdGM/r/Lxg5Fn4aF4IZS9cakik
+	 DWqOto5Gp03qWXLqEHRnpMTRtsBGWSz89HDyRYoJ9xuP2WV9FqSRq7viKIsGFf/EpxS4Z
+	 hjPDdD8lKrC6iJVYfIaxD6a1FIO+FYYj5AtX16tBYNuzTprcLRCCMugChIX/nWtvfivnp
+	 tZBhoB41xazDU0K2euchANBodL1Tt5oFBtHeIbu/RTJI3ALUGL5Vel1Q2BwC9Tdx7aDwy
+	 jJGol60jVPU70+ZPu1+xO9lbm1bWjibvr0Qg6k3Rv2fYZ+LNhNjvWu+crD/fXZxQL5g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a3jStdQb;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="nLI3/DNW";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15663606A31C;
-	Wed, 11 Nov 2026 20:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAF3606A321;
+	Wed, 11 Nov 2026 20:18:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a3jStdQb
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0A2B1F00A05;
-	Wed, 11 Nov 2026 20:07:29 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nLI3/DNW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE5FC1F00A05;
+	Wed, 11 Nov 2026 20:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794427655;
-	bh=lXweVJ/XkYgJByHlOBLO1riU9AfOcOECoeF7DgHtmRM=;
+	s=k20260515; t=1794428293;
+	bh=Els3/l9AGCSjcC7efz1j19ntkOAQMAY8UI2QWizsyMU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=a3jStdQb8/c/hsEUANdapn6XLJVc0QouxE/0Bd2EQmoOgr2pwgQ405FnlumJlB3i6
-	 9UfMke040DZ8M6CvO4Mxzym6xqlRSpVJK5WvK6Ko1MvpCW6cNhazXetv8VYREJiIvc
-	 g2i9w6RH/EU6DM+wKDYoc9+441xOIYgAYL4nEhNfQ0wMl8VTwyldPpNswAvUBwaM5h
-	 191NXHr6hp3+AgRHIePTss5zmdtVZzOqIngtQ3IaETLlgyBIf7vbjNHoNDZoqHTSNF
-	 AXJS/Q4XY7MlTIn9gKbV8IEw/U9Cclqv6aDQWNbQPukU414iQqXLHDIOdYF94Zk/aF
-	 EdPUE7qnZhC7w==
-Date: Wed, 11 Nov 2026 21:07:27 +0100
+	b=nLI3/DNWdeV0x1vHF44IGq1ZgW1d12PIIB+PI2iGWrUtJREN6UWn50o5jtAKDZHAP
+	 VGvfhxb5Y89pzBf6edS//7RnKRcqZRrMIYW7a1vY5srKD0JLCv3IfAUSt2JBhKSiFE
+	 kvMBGL71p1wRbe5uOqiV+7JcSYZOmAsLDhU2/AcyuoDWcu5WOegiWpyeWiCUyAGPrV
+	 GbUnZqgqkhG+L6a8A/qLfBXYEhL5XdQ5lCXIvca5JL4WgtWLqQSNJstSHEKd+7NZ0S
+	 /vEOx3OgGLn3Zpky4EquBRs3HjuxoWtbaPgQ7k31pOA+ekt+GnkTDLtexOAModBNgp
+	 4e2OsXagqP1xA==
+Date: Wed, 11 Nov 2026 21:18:05 +0100
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Alejandro Colomar <alx@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
 Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
 	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
 	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
@@ -56,10 +56,10 @@ Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
 	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
 	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 0/6] Add strprefix() and fix a bug with it
-Message-ID: <avTK1lHYJhn_rozA@devuan>
-References: <cover.1793876837.git.alx@kernel.org>
- <cover.1794425425.git.alx@kernel.org>
+Subject: Re: [PATCH v4 4/6] stddef: Add const_cast()
+Message-ID: <avTMrylZawfodg_A@devuan>
+References: <cover.1794425425.git.alx@kernel.org>
+ <ce623fe0432ba7fe74e12171e52d2dd1f1ad2c39.1794425425.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,17 +70,17 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ykipaqb2ba6zydjw"
+	protocol="application/pgp-signature"; boundary="wqjyunsqqp33uwdl"
 Content-Disposition: inline
-In-Reply-To: <cover.1794425425.git.alx@kernel.org>
+In-Reply-To: <ce623fe0432ba7fe74e12171e52d2dd1f1ad2c39.1794425425.git.alx@kernel.org>
 
 
---ykipaqb2ba6zydjw
+--wqjyunsqqp33uwdl
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Alejandro Colomar <alx@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
 Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
 	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
 	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
@@ -95,46 +95,102 @@ Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
 	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
 	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 0/6] Add strprefix() and fix a bug with it
-Message-ID: <avTK1lHYJhn_rozA@devuan>
-References: <cover.1793876837.git.alx@kernel.org>
- <cover.1794425425.git.alx@kernel.org>
+Subject: Re: [PATCH v4 4/6] stddef: Add const_cast()
+Message-ID: <avTMrylZawfodg_A@devuan>
+References: <cover.1794425425.git.alx@kernel.org>
+ <ce623fe0432ba7fe74e12171e52d2dd1f1ad2c39.1794425425.git.alx@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cover.1794425425.git.alx@kernel.org>
+In-Reply-To: <ce623fe0432ba7fe74e12171e52d2dd1f1ad2c39.1794425425.git.alx@kernel.org>
 
-Sorry; I forgot:
+Hi David,
 
-v1: <https://lore.kernel.org/linux-hardening/cover.1793876837.git.alx@kerne=
-l.org/>
-v2: <https://lore.kernel.org/linux-hardening/cover.1793882260.git.alx@kerne=
-l.org/>
-v3: <https://lore.kernel.org/linux-hardening/cover.1794323750.git.alx@kerne=
-l.org/>
+> Date: 2026-11-11 20:55:39+0100
+> From: Alejandro Colomar <alx@kernel.org>
+>
+> This macro serves to cast const away without risking unwanted
+> conversions due to mistakes in the cast.
+>=20
+> It's similar to C++'s const_cast(), but it is more restrictive: it can
+> only cast away 'const', and not arbitrary qualifiers.
+>=20
+> David made it a bit more robust.
+>=20
+> Link: https://lore.kernel.org/linux-hardening/20261111102535.434c2eee@pum=
+pkin/
+> Co-developed-by: David Laight <david.laight.linux@gmail.com>
+> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+> ---
+>  include/linux/stddef.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>=20
+> diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+> index e1851c50c89b..5201d71db387 100644
+> --- a/include/linux/stddef.h
+> +++ b/include/linux/stddef.h
+> @@ -194,4 +194,16 @@ enum {
+>  #define TRAILING_OVERLAP(TYPE, NAME, FAM, MEMBERS)				\
+>  	__TRAILING_OVERLAP(TYPE, NAME, FAM, /* no attrs */, MEMBERS)
+> =20
+> +/**
+> + * const_cast() - At most, drop const in the left-most derivation of a p=
+ointer
+> + *
+> + * @T: Type for the cast.
+> + * @p: Pointer to be casted.
+> + *
+> + * If @p is of type const @T, then it is casted to @T.
+> + * If @p is of type @T, then it is returned without any casts.
+> + * This avoids mistakes that change anything other than 'const' in a cas=
+t.
+> + */
+> +#define const_cast(T, p)  _Generic(p, const T: (T) (p), T: (p))
 
+Ouch!  I _thought_ I had built with this already, but I might have done
+something wrong.  Trying to build now, it fails to compile.  Which
+reminds me why I used 'default:' in the first place: when T is the same
+type as const T, this fails to build, because _Generic() can't have two
+identical selectors.
+
+So, indeed, we need default:.  It's not a big problem, because since
+the type T is already validated by the function itself: it T is not
+something that can be passed to strprefix()'s first parameter, it will
+fail to compile.
+
+So, I'll revert this in v5.
+
+
+Have a lovely night!
+Alex
+
+> +
+>  #endif
+> --=20
+> 2.55.0
+>=20
 
 
 
 --=20
 <https://www.alejandro-colomar.es>
 
---ykipaqb2ba6zydjw
+--wqjyunsqqp33uwdl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr0yv8ACgkQ64mZXMKQ
-wqkIeQ//a4J5GAtKXiDtLIFbagGYLZ60kDEveljZEfxDn8dDW77FmdAJVWYX/h+1
-Ti9OOO1q2zGR7wXuPy9A7aKhxlveKpvU4ppn9XsvrJjHW6TTkWhXqIg2QQoHWddI
-xOrgMD8cL5WFVeHRH1/DanJ24G1rnidMIKKod5AKrmZSTIqNGodL+k2Xqg7KxGeq
-v05ct6hAu7fK8O3ox2wx2vjeyvACQqhYKEoOCnn0GcMaiHjLyQpGZ935eOvZ4XTB
-ANiXfu8o6Vp8Pa6/rh9657abKTFimI1YDaiYLsg+9RMTxizD8/UxL/pdCiFnWIh7
-NXj5o0TfBa2hkZUADVO0gJy7r/0nXkGEwCADnqyUyd6szNfF5pEGQfp1Olz+EZnK
-NBH7ez8YS172iAbXA1ih4384TtrjERZMEYeqbOJskGkXSe0jesiNK7YRCA2bgUTV
-bcgEeTF2x/WbmpA7S5uPoUxsiuiT6wnb/XtVrOj0Dlqy2YNn8BhQVLrV9OT2eE1l
-wZ6Rus1rRcqawvnXF+iYHzG25XGyfS5Iza6XTsdYQdyBIKWLe4dlM3sR/8fjGV6a
-wWfMsktGOgNQ1hNEq3MCHHVxgNMxau7mGL8RI0h4GavjHlarzg84dzX6WSFy6sWC
-kngzqtznmLFd5S2+aOCiRk7xZgydUbzPZMb44fXDUlOqT3KA3Mo=
-=YTyE
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr0zXcACgkQ64mZXMKQ
+wqkGUA/+OaiDbeJU30QN+XXhjq4wsZoadkGM+HONKlcYIvwd1wpZCXvTexjqEAiu
+rBOd45EWU9TJmFtZfv0ss7JTAc5xMLd7aFuqjFWXUQeb0xlMmHyb1RyU8wEHf2TP
+b9l8iEe2F0wpccRV30rYPspU28euHBBwvIVQaoWRFNztin3JDGFM76O8OPXI4ySP
+oErRSC5piw6pB1fLLy0YfyobN4qkzm9TU6qjnz8W+LUWE2lLq3L2AyRwth6oE/5E
+Y3l1kVzSJFuyvlf2pFUxGsNTt0GyHP0UD3tRB0uSJkg/VKOCPChJPXNZiM8IERPU
+EH8hK4TivyOOgfEl6M35wtjASXP3TUtZqIajnGuVKIDCb1lq/s5nZGJavY5G9NCQ
+NCN5azwflC5oLRU+4gVaTaoXGRq06ZPZYTpMlR6qcHQAhexT+K1/MJXmCDiRpD2f
+T4HSIzb2y/3jZW48Ac+5miIOz/AJn3/kq7yu0VvSwmYqBMDqouuPYaOyD7v1CvPW
+CT/T3+VPGXsYTAgyZ/4bj4noo33Rr0K1SgBQcwrgtbKOSbCyCf3wny0cFngFZeEj
+cm0nPs5WLLhnD6aDNwvrPKRN0U6r5Dkqp/BDgQqqkIr+nDlauvmgPYboFufrkQs/
+bKfX7UNnK9v+T1LTE3qorD8tPCCSYtCabBda3K3CYLRCkdw3kic=
+=i3+x
 -----END PGP SIGNATURE-----
 
---ykipaqb2ba6zydjw--
+--wqjyunsqqp33uwdl--
