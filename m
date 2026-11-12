@@ -1,83 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794480473;
-	b=zUmpa+z1DMZiWVvj8MXVBeEZaYDN46WF+Iev8PT1tdI8Bnu0oIXlv9tlPhSC4lGlC9zZ
-	 tl2b1rRe8Srdn63B9FGcuDqaiAPI/Wr1X9hSb0naJeXEh92wCy00ceW6oKUr8cV5yo0EE
-	 H+gHO2H0lhvDgEb+DzhY0r+Dk0AkH5Q2+RuA/+Tl3jj7l0vbGSK1kPFnma3ihxtQWVwoq
-	 Y8ffu8XTpVsflWY9xfU4bm3o+tcXQmSOWej1w5aIVUo37rqgNY2auR2/HcRh8ncYiIEUY
-	 AtBmJOi6l/cg9AzDWCXNR4KJtHBpd2KQu+TxrHPVV+btO6rAm55EUXuW4EpjopiMlyA==
+	t=1794481563;
+	b=S/i7jTSaPH3rNr7Ozn5SWpMkl1avk1OVhPOzQ1O8Jl2ccCHj3MKwbkcjSeY7/UfW44Xo
+	 gp3XEeIIPYwoWEvaAeeca+8H9Zxr8PH3cOV4C4WgW0TvDGlBifm3CECtPU8PZX34KE5j/
+	 Tj1wvS+/UNJQxTv0Sj9Yi9LWEKxwgVrWlk9KSxHzdD3t2Kej9R9mwRfraUvBmbxhBbTRh
+	 8XuSAwwttVLsBy0unj7ZuEfllfTaiUOv5B8C5IBz/TrXmqjBCUxQLE3ukhDz11rLGoqa7
+	 PF1eUyxDDrlluT2XOWbJvDAGLN/UP9oeX1lUnYT6hf0ARn06XsYP4PnXJ40rU9F52kQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794480473;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=LaAKKhAngwkFxDGEu7glsCDhQDKP6or5IXQD5q9C6lk=;
-	b=OFcbvIjbOzHGNtCHG4HXx0ddP1wgbt/3Y/+r4tWI7i36QpRA3TGP0QsB2bseewFlcLCS
-	 8I4tTQUplDSzJVrhdpMpR0IPnJtPlzQeXnXCJHIuJdi76Lsr5SF1+BD+TFKCEaPbbO/s6
-	 5RrHs6wJ+YP4kvKLu1McTyGz84P2VIYLHaSHB0/Jvz52Lmq3vffGz/sCSYW9ThnJAB2uW
-	 wLDOrhRz5qCp/OgUEPfDJD+H/xDPh2Fyy0xck4E6UXLMLJnSFGtJH9n25BHQRvUXCdzYu
-	 /2xSs4cwMFQuddCM4BELRVLokR3ISqVgFmbrCOJfCSf3kiFteblPsdztAfgfHSwhG4A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794481563;
+	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=fKrWjpYZqdQRIuPQ0j1cPkoi1b1sm7ely2cunlMR4gQ=;
+	b=b9bROs6CsgQGdx+XOuYTjzzmUtK7gya2Cd1OBeyZae49Eg6Zc9r/FwwqwvvXS/kjsFwQ
+	 pAZ9WdaUKLRqN7vYWfdBdp6YvAJbXimk/dOciMX/sZjGxhQsNMhXXIk1Vk9tuVZFCk+Aa
+	 q130GiXEOObltutqORId5nqNPbOR/AKbi1Zy+E3W205YNllpNQ5/nXczfMTnPvqZDntGa
+	 I4x2uAIINNgbA8e+Y234VI4jTFjecWVKS5+FwVuiRz0nl8ddGYS3USiWPgkUuMpWulYcl
+	 +/07yI4LN9sLyUWGvhcxBy0POnUTZePm0YBs0lxGObXzhN7okFrXcGCdRsnk1dJZQoQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="bhRW52/O";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KaPEPqDO;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505CF606A32D;
-	Thu, 12 Nov 2026 10:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA44F606A31C;
+	Thu, 12 Nov 2026 11:06:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bhRW52/O
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D85FD1F00A05;
-	Thu, 12 Nov 2026 10:47:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KaPEPqDO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58DAD1F00A09;
+	Thu, 12 Nov 2026 11:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794480472;
-	bh=LaAKKhAngwkFxDGEu7glsCDhQDKP6or5IXQD5q9C6lk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bhRW52/OaiERqOjVo+YsX7WenTAM+RkUSYdDbFFgDeELIFl5MCvdrQ4/lrfg3PaBP
-	 OJEvlXHrGI0KP6Sf7isOdA90CQUC1tSnbnlL7KMlGmOGy1uOT4Tps4k2NALfzc5lt4
-	 GBKdaLdl6Hn4QG7D1jOt3xg+R2SbDhwXqrQ5QTOpBVzV6PCDTf9sB1jcXxmSVYEwEX
-	 9k1ve7B7mHoKt9f85FezBUXVhvbLCq9DZT0dTEHtWXQsiFKFjjwdYqhwDGS2C9B8hk
-	 PMIxYSXrd0qwW336ZZGtXr/22P+Xd17f+e0rYlMLg9nZUtItJXlZjgdtGYx+r60Y9l
-	 +6iWNMqoSTUaQ==
-Date: Thu, 12 Nov 2026 11:47:38 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Bence Csokas <bence.csokas@arm.com>
-Cc: Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Philipp Stanner <phasta@kernel.org>, 
-	Sudeep Holla <sudeep.holla@kernel.org>, Cristian Marussi <cristian.marussi@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, Lyude Paul <lyude@redhat.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Zack Rusin <zack.rusin@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Selvin Xavier <selvin.xavier@broadcom.com>, 
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Chengchang Tang <tangchengchang@huawei.com>, 
-	Junxian Huang <huangjunxian6@hisilicon.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Hans de Goede <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
-	Jes Sorensen <Jes.Sorensen@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Benson Leung <bleung@chromium.org>, 
-	Tzung-Bi Shih <tzungbi@kernel.org>, Guenter Roeck <groeck@chromium.org>, 
-	Nilesh Javali <njavali@marvell.com>, GR-QLogic-Storage-Upstream@marvell.com, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] stddef: Add offsetofend() variant of
- struct_offset()
-Message-ID: <avWY8kNFlkLyxIrX@devuan>
-References: <20261112-offsetof-v2-0-276ede839967@arm.com>
- <20261112-offsetof-v2-1-276ede839967@arm.com>
+	s=k20260515; t=1794481562;
+	bh=fKrWjpYZqdQRIuPQ0j1cPkoi1b1sm7ely2cunlMR4gQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=KaPEPqDOixAktqc7+kPJeflmA/co+JGai7US59qP8P8BekbbO0ubFyTObSkNJ7Xep
+	 /L+uzpnK/+7ybHODD76TeulYnGFytmk+gLqm+KKPJKFn0eyah951nmtyx5hmvGhvMQ
+	 guN8gzKwCBVTz4aAGu0zk65/lH4ZAwbofBEY1mrOB930BuGkGJLMHxxCilZegxOhML
+	 33ilipQhJqh9YkPYfpqxAvDZgzZSQJdYafwzqTrOHYautS8HkQJ9k5WOGlr+We5Pd9
+	 bcHXGyqM7jz0qrtqzD6ScRjtAM7mRagHd1N134sEyA/VDCm78btTYy5zvuRvZkClvM
+	 UjCKNzyWrOlWQ==
+Message-ID: <e1b93076-f837-401f-895c-bee6bf3c9504@kernel.org>
+Date: Thu, 12 Nov 2026 11:05:57 +0000
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -87,139 +51,88 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hmbonzz4lyxux25l"
-Content-Disposition: inline
-In-Reply-To: <20261112-offsetof-v2-1-276ede839967@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 4/9] media: uapi: Add CAMSS ISP configuration
+ definition
+To: Loic Poulain <loic.poulain@oss.qualcomm.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Bryan O'Donoghue <bod@kernel.org>,
+ Abel Vesa <abelvesa@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ Hans de Goede <johannes.goede@oss.qualcomm.com>
+References: <20261106-camss-isp-ope-v14-0-49c426cd2715@oss.qualcomm.com>
+ <20261106-camss-isp-ope-v14-4-49c426cd2715@oss.qualcomm.com>
+From: Bryan O'Donoghue <bod@kernel.org>
+Content-Language: en-GB
+Autocrypt: addr=bod@kernel.org; keydata=
+ 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
+In-Reply-To: <20261106-camss-isp-ope-v14-4-49c426cd2715@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 06/11/2026 13:55, Loic Poulain wrote:
+> +struct camss_params_wb_gain {
 
---hmbonzz4lyxux25l
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Bence Csokas <bence.csokas@arm.com>
-Cc: Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Philipp Stanner <phasta@kernel.org>, 
-	Sudeep Holla <sudeep.holla@kernel.org>, Cristian Marussi <cristian.marussi@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, Lyude Paul <lyude@redhat.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Zack Rusin <zack.rusin@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Selvin Xavier <selvin.xavier@broadcom.com>, 
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Chengchang Tang <tangchengchang@huawei.com>, 
-	Junxian Huang <huangjunxian6@hisilicon.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Hans de Goede <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
-	Jes Sorensen <Jes.Sorensen@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Benson Leung <bleung@chromium.org>, 
-	Tzung-Bi Shih <tzungbi@kernel.org>, Guenter Roeck <groeck@chromium.org>, 
-	Nilesh Javali <njavali@marvell.com>, GR-QLogic-Storage-Upstream@marvell.com, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] stddef: Add offsetofend() variant of
- struct_offset()
-Message-ID: <avWY8kNFlkLyxIrX@devuan>
-References: <20261112-offsetof-v2-0-276ede839967@arm.com>
- <20261112-offsetof-v2-1-276ede839967@arm.com>
-MIME-Version: 1.0
-In-Reply-To: <20261112-offsetof-v2-1-276ede839967@arm.com>
+Per our discussion elsewhere documenting here, we've decided that these 
+names should follow the module version i.e. camss_params_wb_gain_1.1.1 - 
+with 1.1.1 as an example.
 
-Hi Bence,
+For many of these formats the module structure will be used again and 
+again but for some it will not.
 
-> Date: 2026-11-12 10:29:33+0100
-> From: Bence Csokas <bence.csokas@arm.com>
->
-> Many call sites of offsetofend() use it for the purpose of pointer
-> artihmetic. Thus, a common usage pattern is:
->=20
->   offsetofend(typeof(*ptr), member)
->=20
-> Capturing this in one macro helps keep lines short and terse, while
-> still making the purpose clear. It also helps discourage spelling out
-> the type name on every callsite, leading to more maintainable code.
->=20
-> A similar struct_offset() macro already exists, so add an offsetof()
-> variant in the same spirit.
->=20
-> Signed-off-by: Bence Csokas <bence.csokas@arm.com>
-> ---
->  include/linux/overflow.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->=20
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index d0f04436343e..060dad4b6f3e 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -464,6 +464,18 @@ static __always_inline size_t __must_check size_sub(=
-size_t minuend, size_t subtr
->   */
->  #define struct_offset(p, member) (offsetof(typeof(*(p)), member))
-> =20
-> +/**
-> + * struct_offsetofend() - Calculate the end of a member within a struct
-> + * @p: Pointer to the struct
-> + * @member: Name of the member to get the end offset of
-> + *
-> + * Calculates the offset of the end of a particular @member of the struc=
-ture
-> + * pointed to by @p.
-> + *
-> + * Return: number of bytes to the location of @member.
-> + */
-> +#define struct_offsetofend(p, member) (offsetofend(typeof(*(p)), member))
+Example:
 
-The outer parentheses are unnecessary (they are unnecessary in
-struct_offset() too, but that already exists).
+OPE wb gains are 16 bit but on IFE generally these are 24 bits. The 
+pertinent information is the version of the format structure not the 
+fact that it comes from IFE, OPE or ICP/BPS/IPE.
 
-
-Have a lovely day!
-Alex
-
-> +
->  /**
->   * __DEFINE_FLEX() - helper macro for DEFINE_FLEX() family.
->   * Enables caller macro to pass arbitrary trailing expressions
->=20
-> --=20
-> 2.56.1
->=20
->=20
-
---=20
-<https://www.alejandro-colomar.es>
-
---hmbonzz4lyxux25l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr1mUAACgkQ64mZXMKQ
-wqniCg//WgRXXz7luTnHUaMXrHNthttFpY3wBO557jzGIfLwMa+0tJqYgSh8MGS8
-7F44pQ7lX8E0qC+aMkDd3ItqdrKeD3McIbqqgpr8iU1VT0ljohr8pnTU7UIyIP/u
-bX/o22pWYohJFt/xcJcLxQ63rHmjcfjH2ug2i8ZgZHh/YGX+Biah79nfkcAB+uYX
-NI+43mSTP1aHvUK3Jf/z7PJF/v1/vyv1zJ/nsoN74w3JhlYGMggMcXHSu+dp0jmX
-qJUkyYJ5SQEzMdU/n2pSgOJFIZl6YS957I6fhU3GxEPXSldcnd/VIH/QRKMpSyjM
-jWzBsyjyyink+9RSw7AcmU46DJ28GeWMW5jZdg7jXq6ZGjO0/AKleOtMrevQLN4s
-hB7CzUrtofXBv5Oa5javphhfKIEoawgDsDch5eXFQW/Rm9rSflWysbPTCST5n/h0
-GfKbUEzD+COFj6I+Y8COEceKp4Xv8Y08A3r6CyyNIPzPwcc0CulK6xAmHbsMxIXZ
-c6uz3LLfqukMfbuquIZE4KhlNt+ZLRtnxL6rFfFkvLYdz4KwIsljmiPqoyPQxp9A
-OX5vOdZ9ulzmuuNoTY5OeJWSlsI6edzNc17hE6jjR1+wFfJSzVF2cvvv6mRGnpY/
-bGpmsQZFuH/KWJutZlHbsMGYEKF7lo42UH0Tqx57oaglMss89x4=
-=8quq
------END PGP SIGNATURE-----
-
---hmbonzz4lyxux25l--
+---
+bod
