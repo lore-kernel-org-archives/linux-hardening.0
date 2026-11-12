@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794508079;
-	b=qlw0CCja7o19fVRCj+cKjkA/NuTBGY6r+KRODIpVjJPZ4LwQqprP1dmKOnrdVJCv/L+m
-	 jQWcO0u7CiJhhpSDVEtT4LTFDTBY8bDJuoTJrH+qFylysvx+FWxGQMggtwXFI1Syx7pK1
-	 4FMU10MtxUmHqoXsdLODij+ONQ4aXp2Q72vPGaVbwiaXiDqkmAbVywLG7I0scrga3i6rp
-	 jWmg5Gp5nBQSfeKsTwFutrRKdwLFyifcng2C5Nl6KakySPSjFZBX9f9Gi8kxRjPY9Zb1H
-	 KPnsg/QWVScKRQIf9BVA1QLYcKRgq6H7au+Y9dCbYGPeZD9TR69etkOUOpDHxE96K4g==
+	t=1794508792;
+	b=K/hdKb/Q1f95styyflwnq3tplXLvtU57VHHQF0Otw6BedNVfA0u38YSo5vwcotZdLdlI
+	 GE+Pn2YWJKTuTE+G2bs9L2Ds5d/X6dsLHhf1lCTVYhUDv0JBkYDHhsNaUoiUZBwJDVcJJ
+	 YKuN02agXvTEV/20DwR5Is8qVn/xvIiF1TVP9tnx22gTzRJ2qnHjMU14Tc4fXEVrbWibC
+	 fhd6/YHI8OWciMLG/LWL7psjOSJG8Ut+KF6uN65kSKdNnuEROUXNSMHHU5v4AF8B/9Eq6
+	 QzsqYiEL8gBYsl5yej5CsT4/QYBTjfGe4atIGguGaLDcZ3QtlmE3bXCV2uuUdjwfp1g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794508079;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794508792;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=n2B1g6rUWTzaGvCjrue47KnOs8o8AYoZ1Erjwb9P5cs=;
-	b=HLm8HeWdCZqqyc426e+qqlEZYWvo7AkewUvikR3HSwL0+JlWHKeOSpwwBlFtUJi4RcRQ
-	 Z2LskVgEU2VGwuUQH37/mqpcvXAr9LcvOiqTf4Xd5srUk/E5APCzmMbHMTGue/mZbMbSF
-	 wwPDAvSxdfXZmqjbv3ORNdCM1pfFS5puH/wEvKj5ngeceICjP7sSysl4aZ545M9SOuWhJ
-	 auQCjc7mD+OiqmJXWjkm3yZlNurxybbC60esvT5Wo2zHt1XeAZfB/5MnuKYpHHFanfZXG
-	 NDMRdR/W3zMisDgUUTZdSQMKvJ3L6/f7pd/PsbB5qKBuA0sLDm/tjHn8KSvx/6Ob7CQ==
+	bh=7IpB5wJW74xYwGanhmC7DHQajEzsrcbC4df9jW6z3C8=;
+	b=sjoiBgLQMTxAJcZGflTaoc3KDcsxl/TVocVm/ulR1HB9y+IFXAKnAJwpqB+/Gs/cBfKF
+	 H7dbO/KLJugdFYOrcs3k+bUFTjt2azqpd4BC4KAmYJ34ygyOh+E8dunEt2Xrk4bY5PZuH
+	 aCP6LGLnXtbVSHthtPoQhhNqeNlspbriqF92UT0Yp45Vq1KgYa4BzWZj0d2dtLFs8d7Gk
+	 gvSVJiEU6I4Fh5ilK2wlcrpTFw6KIOavl+BymMkkwNGKP4gyRFiAxL3C+xJrUs9KX+JhR
+	 cxQE//1bK3nyXogM6ohqw5tQuguvdzlKgBzhAAWTjx63d4RPV3N+OmTUG4HtK/x/8fA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gf8SFvW+;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZME8eefb;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF698606A31C;
-	Thu, 12 Nov 2026 18:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA122606A889;
+	Thu, 12 Nov 2026 18:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gf8SFvW+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8C51F000C5;
-	Thu, 12 Nov 2026 18:27:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZME8eefb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13B51F000CA;
+	Thu, 12 Nov 2026 18:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794508079;
-	bh=n2B1g6rUWTzaGvCjrue47KnOs8o8AYoZ1Erjwb9P5cs=;
+	s=k20260515; t=1794508792;
+	bh=7IpB5wJW74xYwGanhmC7DHQajEzsrcbC4df9jW6z3C8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gf8SFvW+cWcPIX2hjrsa8llV4wQAtOX9H3tSwPersFCvE7xbZWRT9rsA/xaOli+K0
-	 NsFo4JlssWwPRE9PWQ6Zc/bDZE+nc/3azxjmf4om5SLyeS+2Tib6yBUDXP0gQe9FWc
-	 NFZyq4tWB+TpMyTjiUcI8e3KI0HELLFml8YZIqQ44o/OzEYEfCdj+hCyySnr7lKWdo
-	 WrjRfSQ0G5DVVkErFqUCDl7iP4v77rtgwAyWXHObTkdcjWHoEkln3g4uUyXLLtkUGv
-	 6PNiaADcgWrjLLU8lArYd3SC9UQtZ39R9bvEBHirBEaWPO2EfuoLr3Evbn3OnlDCh7
-	 /ZeYSqCnKATGg==
-Date: Thu, 12 Nov 2026 10:27:58 -0800
+	b=ZME8eefbYjJSAdhqvvEOGHQCDYSepUI/4At4ClK7DqOdbWzlskQ+Zaflf22UNPbMV
+	 UzXLHAXZgUW4PSSmk90d+x3d0rMQ5Jn12oQbg/i8X7HYh9r6m4efZVDn0VwTvk4uu8
+	 eGt7n4Y/p7N/64m7FHt//t1vug0UF4/qobL/vNiw9oqPCM166k3rlF81vV2k7m0Gou
+	 Szkfh+A/Or/flwLqATZaephn7a9zfUUbrM1vXgKWZhcm3rFdd3WQ32aUkSdRFWTR5h
+	 WOglvIAPLpfhQULwD8wknoT4+j9kEwB1Vj02WfracMFr42W2Ohg9IqzXwz3tAJNK8U
+	 F2xZrXNWt6Hzg==
+Date: Thu, 12 Nov 2026 10:39:52 -0800
 From: Kees Cook <kees@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Mariia Nikitash <nikitash.mariiaw@gmail.com>, dmitry.torokhov@gmail.com,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, justinstitt@google.com,
-	morbo@google.com
-Subject: Re: [PATCH] Input: mouse: vsxxxaa: Replace strlcat() with strscpy()
-Message-ID: <202611121026.23C58B347@keescook>
-References: <20261104062319.288360-1-nikitash.mariiaw@gmail.com>
- <20261105112813.13210334@pumpkin>
+To: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+Cc: abbotti@mev.co.uk, hsweeten@visionengravers.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	morbo@google.com, justinstitt@google.com,
+	codemender-patching+linux@google.com
+Subject: Re: [PATCH] comedi: comedi_bond: Refactor strlcat() to seq_buf in
+ do_dev_config()
+Message-ID: <202611121039.836B308B1@keescook>
+References: <20260927060000.518354-1-nikitash.mariiaw@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -61,46 +61,92 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261105112813.13210334@pumpkin>
+In-Reply-To: <20260927060000.518354-1-nikitash.mariiaw@gmail.com>
 
-On Thu, Nov 05, 2026 at 11:28:13AM +0000, David Laight wrote:
-> On Tue,  3 Nov 2026 22:23:18 -0800
-> Mariia Nikitash <nikitash.mariiaw@gmail.com> wrote:
+On Sat, Sep 26, 2026 at 11:00:00PM -0700, Mariia Nikitash wrote:
+> From: Bill Wendling <morbo@google.com>
 > 
-> > In preparation for removing the deprecated strlcat() API[1], use
-> > strscpy() to initialize the mouse device name.
-> > 
-> > The destination is zero-initialized, and the constant string fits
-> > within the buffer. Since the return value is unused, this preserves
-> > the existing behavior.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/370 [1]
-> > Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-> > ---
-> >  drivers/input/mouse/vsxxxaa.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/input/mouse/vsxxxaa.c b/drivers/input/mouse/vsxxxaa.c
-> > index 042a17fe81db..b3a0d7ff5738 100644
-> > --- a/drivers/input/mouse/vsxxxaa.c
-> > +++ b/drivers/input/mouse/vsxxxaa.c
-> > @@ -463,8 +463,8 @@ static int vsxxxaa_connect(struct serio *serio, struct serio_driver *drv)
-> >  
-> >  	mouse->dev = input_dev;
-> >  	mouse->serio = serio;
-> > -	strlcat(mouse->name, "DEC VSXXX-AA/-GA mouse or VSXXX-AB digitizer",
-> > -		 sizeof(mouse->name));
-> > +	strscpy(mouse->name, "DEC VSXXX-AA/-GA mouse or VSXXX-AB digitizer",
-> > +		sizeof(mouse->name));
+> do_dev_config() builds a space-separated list of bonded devices in
+> devpriv->name by formatting each "minor:subdev " pair into a temporary
+> stack buffer with snprintf() and appending it with strlcat() in a loop.
 > 
-> You might as well use the 2 argument form.
+> In preparation for removing the deprecated strlcat() API[1], use struct
+> seq_buf and seq_buf_printf() to format each entry directly into
+> devpriv->name. This avoids repeated rescanning of devpriv->name and
+> eliminates the temporary buffer.
+> 
+> Link: https://github.com/KSPP/linux/issues/370 [1]
+> Cc: codemender-patching+linux@google.com
+> Assisted-by: LLM
+> Signed-off-by: Bill Wendling <morbo@google.com>
+> Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+> ---
+>  drivers/comedi/drivers/comedi_bond.c | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/comedi/drivers/comedi_bond.c b/drivers/comedi/drivers/comedi_bond.c
+> index 8e10ecab4f0d..a10cfbd04c72 100644
+> --- a/drivers/comedi/drivers/comedi_bond.c
+> +++ b/drivers/comedi/drivers/comedi_bond.c
+> @@ -39,6 +39,7 @@
+>  
+>  #include <linux/module.h>
+>  #include <linux/string.h>
+> +#include <linux/seq_buf.h>
+>  #include <linux/slab.h>
+>  #include <linux/comedi.h>
+>  #include <linux/comedi/comedilib.h>
+> @@ -170,10 +171,11 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
+>  {
+>  	struct comedi_bond_private *devpriv = dev->private;
+>  	DECLARE_BITMAP(devs_opened, COMEDI_NUM_BOARD_MINORS);
+> +	struct seq_buf s;
+>  	int i;
+>  
+>  	memset(&devs_opened, 0, sizeof(devs_opened));
+> -	devpriv->name[0] = 0;
+> +	seq_buf_init(&s, devpriv->name, sizeof(devpriv->name));
+>  	/*
+>  	 * Loop through all comedi devices specified on the command-line,
+>  	 * building our device list.
+> @@ -250,15 +252,9 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
+>  			}
+>  			devpriv->devs = devs;
+>  			devpriv->devs[devpriv->ndevs++] = bdev;
+> -			{
+> -				/* Append dev:subdev to devpriv->name */
+> -				char buf[20];
+> -
+> -				snprintf(buf, sizeof(buf), "%u:%u ",
+> -					 bdev->minor, bdev->subdev);
+> -				strlcat(devpriv->name, buf,
+> -					sizeof(devpriv->name));
+> -			}
+> +
+> +			/* Append dev:subdev to devpriv->name */
+> +			seq_buf_printf(&s, "%u:%u ", bdev->minor, bdev->subdev);
+>  		}
+>  	}
+>  
+> @@ -267,6 +263,8 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
+>  		return -EINVAL;
+>  	}
+>  
+> +	seq_buf_str(&s);
 
-I'd agree: this is a true array, so the sizeof() can be dropped. But
-it's also exactly the same binary output, so I'm fine either way:
+If this hasn't been applied yet, a v2 with the above changed to the
+now-available seq_buf_terminate() would be nice to have. Either way:
 
 Reviewed-by: Kees Cook <kees@kernel.org>
 
-And I echo the surprise over strlcat being used on an empty string. :P
+
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.43.0
+> 
 
 -- 
 Kees Cook
