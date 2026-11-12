@@ -1,112 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794522673;
-	b=lebO0hm21N3/MN/G/NMY1vfSN/IPVWow7l1tWQ18UM1V6xBd5Cn4+l9qrwehNn5EKTQF
-	 Jm821EGSql30xT4Yunbcr4b3uwttzKP9GsWD+0fPHH+R9JAJu6KXpGToiAXnJj8VU/+zZ
-	 8UZx1STs4Gy9rDTjeuzaWm/zbFYtQz5mlIteFicKz9olztETZBbzkIKnyO1rYkIKekPw8
-	 H26tkzyb6vzG6VogV4f+lxN0J3n4wckTAPJUdzceW9PoT0zrF6GFdeZwPj0tKwsZLfqEV
-	 cVrt74GX4LWeBMoyTWWolVEu98W4l298jwb8Rn49ldy+heqra7RpYpOv+XmCciJO0AA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794522673;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.222.178
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794525841;
+	b=lrQrKN5MQFf5Wpq8NqcBaNEz0ikRCZHRZLAFFElUmGABDwau8nv5fTjvYWIUZ9X2qWiD
+	 vQ1GOXAIY9IBR/9BAt1shUNswgaKTh8ff2Tgw2U0ZK2P7tm+/sN4Zcv+gv/2DuyMgo4u0
+	 EtcRfF1w0FnCthKWKDi4Ll+eE7Lo+vpY/ubWRPOKc8AjPtclaEp8GIDZfIrS11DJ7CTBL
+	 Zg/DKDjWpN9LUsgQ8CtwTQCbGt5Xeyl3IB8fq4d5z94q52NfpNWdrKRjiFDT7/2UJM1Qr
+	 7gOYFnU+EGx8LFoZWhIzR/+hCRwnYuEWi0+wiMJado/8J27XN9OYxEMOPanZvX5WeQA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794525841;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:In-Reply-To:References:X-Mailer:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=+JTSqev9V+WnU5MiL+EzLENGXn9aXmam81GQLiwSL0o=;
-	b=cw1ZCvzRxgP4JlbiUYxw8pBkXC66oVvW2KAXqp2fdWoWGfmWt/tqGzzjulXOFWEO4KCo
-	 ipmApqy/QSIu29TuycYu3ZzeEqelBdW/Ay5AZ6/qzXA4fblAAFE73aTHLqyS0XkGTG4rr
-	 Bd8delqaVWYOQFhNEer+Dk8FA7A4BsAiARnXwd1Ng0CTCrnpL8Vsi6BiNqnrTFAphTs6+
-	 hSDEDH2AqAPdMu3yywlNQcRQ9gZatC0v97ZaKmuBVHZUfQmf0jJ/2G7szmnzO8Tn1ImT1
-	 1SQ9Rf8s8E3sOC/acdmUqJuEuaHMUM9mgXM/qiuuizEd2pT8p/2UhP2rDgsbfJ2aGUw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QK6ov+6P;
-	arc=none smtp.remote-ip=209.85.128.52
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=drls+PXlcGZoLfnoPObObwbc1/HPzgky5rGb/FCeY3w=;
+	b=Zpxfb5fTIwGN2gu9Xy7m3LNf/sUkjdGtYpCFbrzzETMZ7ncda26ao2lrleyLjUAE2yYn
+	 yrBq3MyMgdDjbGAfWQFYO3CG9eiZL+XNrU2CsB3zADFUncZM8VnjNJBYRWxYJkmDHg4u3
+	 kVc4oQbgbP6+ycfDQE8gqjBqLzwbOZ43FvBMyyGWccbA0iILfv86MkWmj0m2UWZGXTeKt
+	 xQZ4H/2QYZZm8nkUkuYb/kTo4+HPwzgWiyPz6LAxXxev0cnpT6TVJurxmkT8GuCYIfq+F
+	 tytWAPXBfB9rcEQK0Pe4tbixtW1qv4nGtlCC25wCPanu7XCVaU4bAnjgiyKAitgXrZg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=ausil.us;
+	spf=pass smtp.mailfrom=gilmore.net.au;
+	dkim=pass header.d=ausil.us header.i=@ausil.us header.a=rsa-sha256 header.s=google header.b=focqTQf7;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.222.178
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6CD606A321
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 22:31:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0D6CD606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C80606A32A
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 23:24:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41C80606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ausil.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gilmore.net.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QK6ov+6P
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4b79502c27aso2174745e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 14:31:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ausil.us header.i=@ausil.us header.a=rsa-sha256 header.s=google header.b=focqTQf7
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-93e55db58cfso45760185a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 15:24:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794525840; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Ab8E72TJ8Zh96pV9Xq6welnnHwYQhKjmvEnGyVdqOCchxKMRBX0phC9TCICcjxJBRq
+         FlZfzNum5PdfUyteKTKtnt/YC9Qmvq2ow+fNixMG83fZupZ8Icapnql1Z9gR0yaM4c1E
+         92TB8wfvaGCFEVk35P0HZhwCE1y2gFiOybpVmKGY19IsB6z74CbH3ikt/EdRBTWVQpgm
+         IKz1WO4w5J7/rjLU6Gz/pqQDXVSTEeIruR/Z9XK5zTSuBOG2cshtQbMpkeI32zUnwg5j
+         4GNTmrmrGCg2NqaXFoJaY1thdnJRjpGzQy0I/11AnuTouMclExcPLF/9TFLZJFBq7vTI
+         hwDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=drls+PXlcGZoLfnoPObObwbc1/HPzgky5rGb/FCeY3w=;
+        fh=xYNP1+KBTNKBQ+SSVQUS4BMhi9DNQlAXYTV+2+vy5jw=;
+        b=I3OCrB0P+9I5Y04A3a3SXK9BClymb61LK69brEYgnPteYUNrArp5xTQCjHDsSZMv1L
+         nxWBGODPJKg5e3nNr81wGgOitKQi+KxDQY2S9jpTe7G6KDzlsQ9Gh4ZlUbd06+EsLIsM
+         oa93XtGp1qK0aeshXkLncmtimEmYRjWvfhLsZC5uR2GyE7sUWFKQ1G83JbpG72QNAQRQ
+         sEMAi1hLNSjOpwMYCng6Q6653rHE8FIM/TydPgAb6jfRd0tnohIGaJr3KAe3B0G6jXid
+         cIvExY5uvMIaN03bwd6dFnvooG93CMAMCF7e08J4CyW9i3PNTXbQsUyb/LIKh8o+v9qA
+         M9Yw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794522670; x=1795127470; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+        d=ausil.us; s=google; t=1794525840; x=1795130640; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=+JTSqev9V+WnU5MiL+EzLENGXn9aXmam81GQLiwSL0o=;
-        b=QK6ov+6PfLWnModUmHpQoTJIO9mbqa69iTI14JlGFF9k8M6Ls+sAJSveNj8g+ueWnu
-         8b1zPQX2xIDQFGLZZjP1wMJvqMwZrq8x4IVPtqAZCLsofyk15O0AyKmBHtJfr6U8kAvS
-         onsPYX4BfCr1/z4vKD/vtm5bTh4Ke0Nf0vZ5qmaap6QPuXT3JM5d70mPl8hNaMJiiXOV
-         BS69sbm1OaKF8ENOfh8zbA3xf8oTQrmKxdb2EsE2Sq6SkJ/ifxcWmEnu3XuTthkueQEB
-         tQEoWykjpdUTsskQqwORhSWLyFmUa+cB2XJayhfwgqwrS/xatUifmK6gAIoTkDZfBdkw
-         PDCQ==
+        bh=drls+PXlcGZoLfnoPObObwbc1/HPzgky5rGb/FCeY3w=;
+        b=focqTQf7naFVCGV/My2d+xpcLS+yKtintmrypuRzht8YS8h99AlJDL/3AsFgqMzzSq
+         LiYGDn8kpDU+Vupp3Eklu4tet98WA+Gg98hsss9HKVRYsSKcuOWLgCqfGsfC9WtJjhFv
+         LVwgrg9eok9OlzpqlzH2V2tb6xEKnyNGK9EIbw7aYhPvoo9CRZELkbf0uLrIc2cGVhxU
+         6S4QL30WvyiEW8bbRF9PJYgUnokd8ZbLUVvW9iSO395H8jdjvkvbCelBuukjOeNCOIvm
+         Fgkyz48jdUU8emc2E0zd2TfHJq+ABdg8by9UYtuG/i481sA94eZ4XT8IFqFFLbKcla+Y
+         4srQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794522670; x=1795127470;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20260707; t=1794525840; x=1795130640;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=+JTSqev9V+WnU5MiL+EzLENGXn9aXmam81GQLiwSL0o=;
-        b=Ua/csiMhSVKNBvagL/FHjNmiu94xAhSTYd2dKjW/hsRD/1P6S16YpuWSvRSsxBq0OV
-         amP7ysQz+yzArtmElOuZtmHeL8BrdfOZBGFDrfDbAVDKYpTku2M6WFd+qlApzm46siDj
-         GwzHiR2LqGxQmBc8Fe6w9BU/ggavuuJdMFepVi+oQfoeFwHLieuTaa0mMRBwpYPm0QEC
-         g+jmmXr418KETJKfIG23rznPRDIljf4sIB3vcT+UP67r/D5sx1tfczHyl7kGwIH4blWx
-         XycNBnCNEov/D/2phsye8TrU1Vzhrdkvl/N0CwJnsExgEr0F7p6KUkV1D8RjNB7mfChu
-         caCA==
-X-Gm-Message-State: APuU4Z9C4WIyEwMd2np99KYyKg3TQtsm6ElpiHicPceysytUt1nM9RME
-	5XaJjosGbOGzyCjoMrMBD4ud4MrtglS6uETjqbDhnl65zVXxtbCNvj9o
-X-Gm-Gg: AYBFou1ea3gfxe33h+HbeWUN+GMuZCJfggGCxlXJjxLFw8vyLrTjNXeWMmgju+lor+m
-	1WfBCwgyWZcDVWIo/5bLv1Z8mEXNAOWYSlOFAxyqhFQj/NEW4iDgP5hq7LlDsU0X1+RGW75td7k
-	Y90VHI1FI0y2AgWz4CEvGXx0cIGtGXltKA+5NWf8Zyv0Q3I/YBT/ibHWMfcD9ZZG49F2GGh0v+z
-	m9sssZ8PXqvdExizSX4etBaMlCn2VI3uV3r8Rbm6KkIapRP/x1LAmTyMhMA8bDGJqFPU2n+1Ij2
-	ZNjLsfrWhMXlobAJWE3bOoR/cZTj6WXZyPVSHOT1eqIf2cbVxC1E1T5NAIe8YSsJjR8lbVsmUbP
-	lHyarQqb+xmWNz1lD3kUf/NzH2yZAjtioGm/wihX5xzeJlkquFnq4tWrXke1JLHWClSWXGHtxqE
-	wQxBghl8f8thY2GeQH7M18sv61wruGnuJMsHogbnfCiXxBj4scbzaVpzfBk8kSjLz9BgnVQxBM8
-	uBdc9Q2G3RJyPZoTXW+MlCM8uYM6/WQgbbEqTu8UjU5q+6Y7f7cyQ1kYaDnl0MmnQ/3IOFDda+s
-	64CKVE8xtfkAvJeEpWyHbo+676dBrAM14i8s1y3gyK2iba5PJ8TFJQYux2auJ6sgnQ==
-X-Received: by 2002:a05:600c:8b8a:b0:4a1:9078:911 with SMTP id 5b1f17b1804b1-4bb55abbadamr13368985e9.31.1794522670201;
-        Thu, 12 Nov 2026 14:31:10 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb5720e9c2sm42715e9.3.2026.11.12.14.31.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 14:31:09 -0800 (PST)
-Date: Thu, 12 Nov 2026 22:31:07 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
- "Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, Andy
- Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Daniel
- Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil
- <hverkuil-cisco@xs4all.nl>, Heikki Krogerus
- <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan
- Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, Linus
- Torvalds <torvalds@linux-foundation.org>, Linus Walleij
- <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>,
- linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v4 1/6] string: Add strprefix(), and deprecate
- str_has_prefix()
-Message-ID: <20261112223107.3a9efb85@pumpkin>
-In-Reply-To: <a74fabd985a874da7556ae1601053b4bcc100f13.1794425425.git.alx@kernel.org>
-References: <cover.1794425425.git.alx@kernel.org>
-	<a74fabd985a874da7556ae1601053b4bcc100f13.1794425425.git.alx@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=drls+PXlcGZoLfnoPObObwbc1/HPzgky5rGb/FCeY3w=;
+        b=AlhMEPP9L8FUcpPyQrapuR+s2BDWtJxNvvKjJW/BPgKnibi+dfButQjoQX4mRS/Snq
+         xDQ3JneWjuvu7H05ylmwtofx9Ho3PCs7oi++LS3cOqPyEnddSTNYXCw8uBmLIochJLVW
+         AHVPTeCj7dWsvEXcAywtbHH0s72JwU/C2PiR/w8rkQQlvLvmUBSBfZxOPwHNqjnWXIN4
+         UtXRMExRY2zaY210JUZy+VrtooH/CPscAeJK4YPJiKd8JhcljZZs80t6uFxqkY0WfAFA
+         GY00cWFLMPlgD+Bhsr0uh7RngBtc/obsMhsuOwllOAxY2l4udxmSE7bgVgFpsR3UDy9q
+         rBWQ==
+X-Forwarded-Encrypted: i=1; AL+hErGrmiYutQZT2xPbMniIk5L6EP5D0EH7o7cslhN7RXgJj8MBgqtHDvbsOpQdg97JtjM9UVGMD7v2aIlSpBNJ2/4=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9A0yYF7WcFVPUvNEJgi/dWMD4QZTJ8b8b/DafMOUTsbSof1fUg
+	fCLPVMX61UmQCDOXc3AlZ/KfL0Zmv+Wps3NcZ4WbAYwYW7B670uukPqooC3Nw6iRyj4USl+llaI
+	wf3lhHHXT5wHslkmpu2YZHffeO++kWoWA11f9bDL75g==
+X-Gm-Gg: AYBFou141kjhTx5fSa0Di51Uv5Mu/+F5e/Mj2jplYuvZ/SP7cztbgSP8J4oKNmbHWjz
+	P4RhmRRbAIVN3pKvV8MuM3M2Og2THumBt4ILuGNC4+PY/AU08rN5ZbrLmsqvljwAGQa+mToBx6D
+	Krux/ITgCC0CNhXVB2cn8EF7VuPpfr/7fx3p7zP9NFA76p7amNy/XIocUEgMck7pRaG3NtkCvjM
+	sGkiU1yHWlbygeEbsbbEbQGu0cNSWAn++ADb2L2XbAGt4MHtncUpUUU21Gyf2YhqFwRKtQsUwkG
+	un7pnvWe9cm3c87/nIKZhW8Ar63BATKADjnIo+M4NPkx19p9RaInr/+ec3PlkBmC3gX9xuLrdmE
+	eOt9B7YzbfvtuULJYBJNZPXt7ntUZ44+2jqwiEDGnGVjWWCTgS0o83Xgk/R0qLkCv6sRYZsKA/k
+	EmWpu+6YmHPGp9TLgDUXAOpCPa
+X-Received: by 2002:a05:620a:371b:b0:93f:43a4:a48c with SMTP id
+ af79cd13be357-9494bc3a400mr175911185a.45.1794525840268; Thu, 12 Nov 2026
+ 15:24:00 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -116,131 +105,39 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20261112025252.71375-1-dennis@ausil.us> <179448342405.66517.5463730214277229760.b4-review@b4>
+In-Reply-To: <179448342405.66517.5463730214277229760.b4-review@b4>
+From: Dennis Gilmore <dennis@ausil.us>
+Date: Thu, 12 Nov 2026 17:23:47 -0600
+X-Gm-Features: AclHuK84GnsbCUnbGFWAfzcRIsf9sLCdYOCcLTFaLBRnNzS4e4KBe3sc65us-XE
+Message-ID: <CAABkxwsn9bkx37C1oEuMC1o+5Jtf+EnJgw5o7pso8hGxxJx34w@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: soc-core: start rtd->num_components at zero
+To: Mark Brown <broonie@kernel.org>
+Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, kees@kernel.org, 
+	gustavoars@kernel.org, linux-sound@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	michael.hennerich@analog.com, nuno.sa@analog.com, dlechner@baylibre.com, 
+	linux-spi@vger.kernel.org, miriam.rachel.korenblit@intel.com, 
+	linux-wireless@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 11 Nov 2026 20:55:15 +0100
-Alejandro Colomar <alx@kernel.org> wrote:
+On Thu, Nov 12, 2026 at 5:37=E2=80=AFAM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> > Since the conversion to devm_kzalloc_flex(), the allocator sets the
+> > __counted_by() counter num_components to the allocated length
+> > (num_cpus + num_codecs + num_platforms). This only happens when the
+> > compiler supports __builtin_counted_by_ref() (GCC 16 here). With
+> > older compilers the counter stays zero, as before.
+>
+> This doesn't apply against current code, I think this is an issue that
+> was already fixed.  Please check and resend if it's still needed.
 
-> As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
-> between an empty prefix matching an empty string from a non-matching
-> prefix.  This is a fundamental design flaw in this API, and not
-> something that can be fixed.
-> 
-> As always, this is a consequence of choosing sizes instead of pointers.
-> Sizes are often the wrong choice.  In this specific case, pointers are
-> more capable of differentiating these cases, as NULL is a special
-> sentinel value that doesn't need to overload a valid value.
-> 
-> Let's implement strprefix(), a function that returns a pointer
-> right after the prefix if found, and a null pointer if not found.
-> 
-> We'll slowly migrate existing code from str_has_prefix() to strprefix().
-> 
-> Move the description from str_has_prefix(), and describe
-> str_has_prefix() by comparing it to strprefix().
-> 
-> Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> Link: https://lore.kernel.org/linux-hardening/20261104-fwnode-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
-> Cc: Andy Shevchenko <andy@kernel.org>
-> Signed-off-by: Alejandro Colomar <alx@kernel.org>
-> ---
->  include/linux/string.h   | 28 +++++++++++++++++++++++-----
->  lib/tests/string_kunit.c |  9 +++++++++
->  2 files changed, 32 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index 6cb5cdd01158..d08ca10c39a2 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -545,16 +545,34 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
->  	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
->  })
->  
-> +/**
-> + * strprefix - string prefix
-> + * @s: The string to be tested
-> + * @prefix: The string to see if @s starts with
-> + *
-> + * A common way to test a prefix of a string is to do:
-> + *  strncmp(s, prefix, sizeof(prefix) - 1)
-> + *
-> + * But this can lead to bugs due to typos, or if prefix is a pointer
-> + * and not a constant.  Instead use strprefix().
-> + *
-> + * Returns:
-> + * *  @s+strlen(@prefix) if @s starts with @prefix
-> + * *  NULL if @s does not start with @prefix
-> + */
-> +static inline char *strprefix(const char *s, const char *prefix)
-> +{
-> +	size_t len = strlen(prefix);
-> +	return strncmp(s, prefix, len) == 0 ? (char *) s + len : NULL;
-> +}
+Looks like it was already fixed in
+https://lore.kernel.org/all/20261109102536.357134-1-ghidoliemanuele@gmail.c=
+om/
+I missed that when looking.
 
-I suspect this would be better as a real function.
-Possibly even just a simple loop rather than based on calls to
-both strlen and strncmp().
-(Even if the strelen() is mostly a compile-time constant.)
-
-Something like:
-#undef strprefix // Or put it the name in ()
-const char *strprefix(const char *s, const char *prefix)
-{
-	do {
-		if (!*s)
-			return *p ? NULL : s;
-	} while (*s++ == *p++);
-	return p[-1] ? NULL : s - 1;
-}
-
-And in the header:
-const char *strprefix(const char *s, const char *prefix);
-#define strprefix(s, p) ((typeof(s))strprefix(s, p))
-
-David
-
-> +
->  /**
->   * str_has_prefix - Test if a string has a given prefix
->   * @str: The string to test
->   * @prefix: The string to see if @str starts with
->   *
-> - * A common way to test a prefix of a string is to do:
-> - *  strncmp(str, prefix, sizeof(prefix) - 1)
-> - *
-> - * But this can lead to bugs due to typos, or if prefix is a pointer
-> - * and not a constant. Instead use str_has_prefix().
-> + * This is similar to strprefix(), but returns an offset instead of
-> + * a pointer.
->   *
->   * Returns:
->   * * strlen(@prefix) if @str starts with @prefix
-> diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-> index 0819ace5b027..73d2614b1474 100644
-> --- a/lib/tests/string_kunit.c
-> +++ b/lib/tests/string_kunit.c
-> @@ -287,6 +287,14 @@ static void string_test_strspn(struct kunit *test)
->  	}
->  }
->  
-> +static void string_test_strprefix(struct kunit *test)
-> +{
-> +	KUNIT_ASSERT_EQ(test, 0, strcmp(strprefix("foobar", "foo"), "bar"));
-> +	KUNIT_ASSERT_EQ(test, 0, strcmp(strprefix("foobar", ""), "foobar"));
-> +	KUNIT_ASSERT_EQ(test, 0, strcmp(strprefix("foobar", "foobar"), ""));
-> +	KUNIT_ASSERT_NULL(test, strprefix("foobar", "bar"));
-> +}
-> +
->  static char strcmp_buffer1[STRCMP_LARGE_BUF_LEN];
->  static char strcmp_buffer2[STRCMP_LARGE_BUF_LEN];
->  
-> @@ -891,6 +899,7 @@ static struct kunit_case string_test_cases[] = {
->  	KUNIT_CASE(string_test_strnchr),
->  	KUNIT_CASE(string_test_strrchr),
->  	KUNIT_CASE(string_test_strspn),
-> +	KUNIT_CASE(string_test_strprefix),
->  	KUNIT_CASE(string_test_strcmp),
->  	KUNIT_CASE(string_test_strcmp_long_strings),
->  	KUNIT_CASE(string_test_strncmp),
-
+> --
+> Mark Brown <broonie@kernel.org>
