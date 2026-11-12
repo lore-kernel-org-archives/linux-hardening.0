@@ -1,55 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794508792;
-	b=K/hdKb/Q1f95styyflwnq3tplXLvtU57VHHQF0Otw6BedNVfA0u38YSo5vwcotZdLdlI
-	 GE+Pn2YWJKTuTE+G2bs9L2Ds5d/X6dsLHhf1lCTVYhUDv0JBkYDHhsNaUoiUZBwJDVcJJ
-	 YKuN02agXvTEV/20DwR5Is8qVn/xvIiF1TVP9tnx22gTzRJ2qnHjMU14Tc4fXEVrbWibC
-	 fhd6/YHI8OWciMLG/LWL7psjOSJG8Ut+KF6uN65kSKdNnuEROUXNSMHHU5v4AF8B/9Eq6
-	 QzsqYiEL8gBYsl5yej5CsT4/QYBTjfGe4atIGguGaLDcZ3QtlmE3bXCV2uuUdjwfp1g==
+	t=1794510426;
+	b=qTqcZDbbxjP+5BQFlLMYdV87JrEiz2KWhnY/JdjgbygbLzjlaM5lDTZ8f0Vy8hHLdCDJ
+	 VU/o/gowgZ2lNPAavHCe669e53GD0/cxoARZwywYLiV8XVJsxiwqsGB3nXymv9Dg2wRkw
+	 Hku7I/ZwyXAkuHZzRUf7/EyA3YZHPtiBZGupYbN6fSKC/iqgIkwG/vwsK3UlOrUIDJ5RQ
+	 2HwF30WE00XcXPbiQMH32rx4p3T6muUx4tSsS0/wW8nV0jSCfffn9BcJYJB2cIasmxgtJ
+	 JHFzFHZHvLDlsPZ9mILvTbQsXynHhRTnOrZ2pdaFgCYBwVSsfxICvCl3VdiUb8/bMRQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794508792;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=7IpB5wJW74xYwGanhmC7DHQajEzsrcbC4df9jW6z3C8=;
-	b=sjoiBgLQMTxAJcZGflTaoc3KDcsxl/TVocVm/ulR1HB9y+IFXAKnAJwpqB+/Gs/cBfKF
-	 H7dbO/KLJugdFYOrcs3k+bUFTjt2azqpd4BC4KAmYJ34ygyOh+E8dunEt2Xrk4bY5PZuH
-	 aCP6LGLnXtbVSHthtPoQhhNqeNlspbriqF92UT0Yp45Vq1KgYa4BzWZj0d2dtLFs8d7Gk
-	 gvSVJiEU6I4Fh5ilK2wlcrpTFw6KIOavl+BymMkkwNGKP4gyRFiAxL3C+xJrUs9KX+JhR
-	 cxQE//1bK3nyXogM6ohqw5tQuguvdzlKgBzhAAWTjx63d4RPV3N+OmTUG4HtK/x/8fA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794510426;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=1O1U6qPhJPf5Ji+Q9AqdK3EWLHHYlrm+QU8LLYnbjMI=;
+	b=NlJxgyrE0Om8apJpYh2oF2pM3XfF6pla0FsnwDJbEgaT7E0v69ESP8lzJRMaNKhBghPs
+	 saMp9Xfym4aJ1PyX89qzXsMQAlNeLxCX3AyX/M+w3UxFzX0D3UBfxAYU/0j7wr3uWwCjH
+	 h1EpmsDZkw9pRhNWV9L3iznJLAsRVFLC9Rm6tyizoNPuAnISzkoK5NtrygekSSc7GLSvL
+	 eAwPGHuO2/Zd3m21yKjOKrJjL6rvc5GWqaZM6mCxa0t6RqdQNAzauGHRP/y7BA33i07r4
+	 a/1gVscVmYhO5V6Yfwr5fYbAZAaiWfM8le4q80hjjYU/rYw1nTecST4H5L/TB4wZj1A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZME8eefb;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AL3XOhdQ;
+	arc=none smtp.remote-ip=209.85.128.44
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA122606A889;
-	Thu, 12 Nov 2026 18:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C31B606A32A
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 19:07:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5C31B606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZME8eefb
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13B51F000CA;
-	Thu, 12 Nov 2026 18:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794508792;
-	bh=7IpB5wJW74xYwGanhmC7DHQajEzsrcbC4df9jW6z3C8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ZME8eefbYjJSAdhqvvEOGHQCDYSepUI/4At4ClK7DqOdbWzlskQ+Zaflf22UNPbMV
-	 UzXLHAXZgUW4PSSmk90d+x3d0rMQ5Jn12oQbg/i8X7HYh9r6m4efZVDn0VwTvk4uu8
-	 eGt7n4Y/p7N/64m7FHt//t1vug0UF4/qobL/vNiw9oqPCM166k3rlF81vV2k7m0Gou
-	 Szkfh+A/Or/flwLqATZaephn7a9zfUUbrM1vXgKWZhcm3rFdd3WQ32aUkSdRFWTR5h
-	 WOglvIAPLpfhQULwD8wknoT4+j9kEwB1Vj02WfracMFr42W2Ohg9IqzXwz3tAJNK8U
-	 F2xZrXNWt6Hzg==
-Date: Thu, 12 Nov 2026 10:39:52 -0800
-From: Kees Cook <kees@kernel.org>
-To: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-Cc: abbotti@mev.co.uk, hsweeten@visionengravers.com,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	morbo@google.com, justinstitt@google.com,
-	codemender-patching+linux@google.com
-Subject: Re: [PATCH] comedi: comedi_bond: Refactor strlcat() to seq_buf in
- do_dev_config()
-Message-ID: <202611121039.836B308B1@keescook>
-References: <20260927060000.518354-1-nikitash.mariiaw@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AL3XOhdQ
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4a208d93758so1314875e9.3
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 11:07:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794510425; x=1795115225; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=1O1U6qPhJPf5Ji+Q9AqdK3EWLHHYlrm+QU8LLYnbjMI=;
+        b=AL3XOhdQcgM07eN1urgtxjJd/5hgP7smoF5mflSEa/geSkQ40Po6j8smLYalL6BC5t
+         kxR9I9ztuXBzZkxfp+tuDnQL7O17TlYtf29l1KyhZqQpNzZTW/o+azm8xXnmmJVFQ2zS
+         +3znKKC/yrSsrB0MO1873LHHCja07smNI+qfZ3c2k7/Kkr75M2gCjiv+Fhbc6nDm9Da3
+         wzfMfZLD3om1yx27F+8HwaUIuuReudmIcqEIvhE5aYlQjoIVvDptYhqy5dB9sDc+UVcC
+         xqwJV55olC3Weu1/uZ6oG+2E1ygTRU8dK0L4iXWQ2rIVKLV4u3O3XxMNeeCR1kEzoFik
+         XbxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794510425; x=1795115225;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=1O1U6qPhJPf5Ji+Q9AqdK3EWLHHYlrm+QU8LLYnbjMI=;
+        b=zXS5yfixfbYx1nc8wLOMotTwOr3daldCHzW9N5WaClOMM3/iRKvhYk6HCuVxncrFgM
+         arUCReAQCSx0x4pqzKA8KwLLCAUDQXwr+tDccEtaVxsMSf1WKqL0umSeELWYRPAWDZtG
+         KqAGJpco32UfG6PZaa4WNkQ4hq3+85jsTk/FcbcGeXbRGVDGKxJeenPYXEsiQBVTQwWP
+         vx8OLlSsXJoZr9awQLfR2tBOSJUHJQIsYu+OxFktQMR3EhQ7AVxXAXk2mSwUlBdaEpPi
+         JMlKvACkC4d8lHgD1YFHgN4ZLgoVn9QdbU+vmNZQAMIXgZT1ToCSRgrSstuMCHWmQmCA
+         Wqkw==
+X-Forwarded-Encrypted: i=1; AL+hErFN7Q/uVHYq/qhUKPPs8TjkUG//Ek12h+IfDPStIr8ieDAguWAGm6FlhrflkSVH4yd3PsDtjGRTBCVlfwhHwlg=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/UONgivkkx3NPFhjUtKVbTc4Eb06p4QVWgtILnJu/Iz52oH6Ny
+	e2tcoy2HiC96uH+QJWt5HEjyxDg30+nIZ+EmcIDIVLwzLtmgNKqRCIUF
+X-Gm-Gg: AYBFou3f39frmD0pTMuV3jRjIVmboyAs8nT5+XK55HxggQMD/Z84zJ7ey5bGC7pyMeh
+	hNakJiC3fjVu+8h5pAOFs73i1/bpiCmWoqCr7mqReDOumNp2wYbMou4avovwz0A69JoMhbCVLsi
+	caJGT5uBUy3PNpmm7eyFGb56Acb5Ai/n0az+VUYfq5ZMJoAPQmVbVVqZ3HtaDs1bdeOriLjHYOb
+	6PGReO48drNdmwRhZ5o2SaJgApunZWqScdcqMqQYYyqwibNf+oPLQ0rYDd1mbfa90FsnXiE+fbO
+	WzsDCdzHkVcKXszbmz4CKi4jEDTjMpkhKCLj/CGPH6jeiTPz10xocJWrGd0oiLRQJdbZUaHPSTc
+	rCDG/DNhEPkcodSkzmnlwVXixtNCL62bTL8QnSjrziPXSNnItGBPi1fpm1hvbbcQYopr6PlkLEt
+	THEXVtwVFWQXnQll4qtiZf7XkpR/BN2VQs2jAj9uAVmRoe+cCMIXUTc3eTe2Fyw2qvdNKyOpCSJ
+	LOOnsIMYTXq3Zu1D9ai9ldJ0TRkl4AIusdCKnGooQ0K7slosRDJeJwzKe+r0LapDjUqqUHjcbWe
+	MoAl5gYGRVvlSdGa+DFfmltoFCJNMpdK6gnqGAC1axwNLjt1TsuaWe/Nl0pMIqLvhg==
+X-Received: by 2002:a05:600c:4e56:b0:4b3:9540:47a6 with SMTP id 5b1f17b1804b1-4bb55aad2demr2986685e9.28.1794510424573;
+        Thu, 12 Nov 2026 11:07:04 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49c5ff2cd05sm718945f8f.31.2026.11.12.11.07.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2026 11:07:04 -0800 (PST)
+Date: Thu, 12 Nov 2026 19:07:02 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Alejandro Colomar <alx+linux-hardening@kernel.org>, Mariia Nikitash
+ <nikitash.mariiaw@gmail.com>, hverkuil@kernel.org, mchehab@kernel.org,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, justinstitt@google.com, morbo@google.com
+Subject: Re: [PATCH] media: radio: Replace strlcat() with seq_buf in TEA
+ drivers
+Message-ID: <20261112190702.480740d2@pumpkin>
+In-Reply-To: <202611120947.AC428BE4B@keescook>
+References: <20261106074639.452630-1-nikitash.mariiaw@gmail.com>
+	<20261108210232.13800dd3@pumpkin>
+	<avDmyLYpWOQ2WB-i@debian>
+	<202611120947.AC428BE4B@keescook>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -59,94 +104,114 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260927060000.518354-1-nikitash.mariiaw@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Sep 26, 2026 at 11:00:00PM -0700, Mariia Nikitash wrote:
-> From: Bill Wendling <morbo@google.com>
+On Thu, 12 Nov 2026 09:54:15 -0800
+Kees Cook <kees@kernel.org> wrote:
+
+> On Sun, Nov 08, 2026 at 10:25:35PM +0100, Alejandro Colomar wrote:
+> > Hi David,
+> >   
+> > > Date: 2026-11-08 21:02:32+0000
+> > > From: David Laight <david.laight.linux@gmail.com>
+> > >  
+> > [...]  
+> > > 
+> > > seq_buf is just OTT.
+> > > Using to replace a single strcat() is just silly.
+> > > There is no point doing these patches until there is a sensible alternative.  
+> > 
+> > Agree.
+> > 
+> > [...]  
+> > > >  	strscpy(v->driver, tea->v4l2_dev->name, sizeof(v->driver));
+> > > > -	strscpy(v->card, tea->card, sizeof(v->card));
+> > > > -	strlcat(v->card, " TEA5777", sizeof(v->card));  
+> > > 
+> > > What is wrong with (and almost OTT):
+> > > #define TEA5777 " TEA5777"
+> > > 	BUILD_BUG_ON(sizeof(TEA5777) <= sizeof(v->card))
+> > > 
+> > > 	len = strscpy(v->card, tea->card, sizeof(v->card) - sizeof(TEA5777) + 1);  
+> > 
+> > I can answer this one: bugs (particularly, off by one) are quite prone
+> > in such code.
+> > 
+> > From the Authors of strlcat(3), you can look at OpenBSD's manual page:
+> > 
+> > 	Since it is known how many characters were copied the first
+> > 	time, things can be sped up a bit by using a copy instead of an
+> > 	append:
+> > 
+> > 		char *dir, *file, pname[PATH_MAX];
+> > 		size_t n;
+> > 
+> > 		...
+> > 
+> > 		n = strlcpy(pname, dir, sizeof(pname));
+> > 		if (n >= sizeof(pname))
+> > 			goto toolong;
+> > 		if (strlcpy(pname + n, file, sizeof(pname) - n) >= sizeof(pname) - n)
+> > 			goto toolong;
+> > 
+> > 	However, one may question the validity of such optimizations, as
+> > 	they defeat the whole purpose of strlcpy() and strlcat().  As a
+> > 	matter of fact, the first version of this manual page got it
+> > 	wrong.
+> >   
+> > > 	if (len < 0)
+> > > 		goto fail;
+> > > 	memcpy(v->card + len, TEA5777, sizeof(TEA5777);
+> > > 
+> > > What might be useful is a helper that would let you write:
+> > > 	len = strscpy(v->card, tea->card);
+> > > 	len = strscpy_at(v->card, len, " TEA5777" [, implied_length]);
+> > > 	if (len < 0)
+> > > 		goto fail;  
+> > 
+> > Indeed, as said in other threads, I have such an API:
+> > 
+> > 	p = v->card;
+> > 	e = ARRAY_END(v->card);
+> > 	p = stpecpy(p, e, tea->card);
+> > 	p = stpecpy(p, e, " TEA5777");
+> > 	if (p == NULL)
+> > 		goto fail;
+
+That one is playing with pointers.
+They do make it harder to do any kind of compile-time (or compler helped)
+sanity checks.
+
+> > Linus didn't like my function name.  We could indeed call it strscpy_at().  
 > 
-> do_dev_config() builds a space-separated list of bonded devices in
-> devpriv->name by formatting each "minor:subdev " pair into a temporary
-> stack buffer with snprintf() and appending it with strlcat() in a loop.
+> I really just don't want to have bare pointers or lengths being used for
+> any of these manipulations. strlcat needs to go away because it's part
+> of the whole C string API that is confused about array vs pointer and
+> has no sense of handling bounds. Yes, FORTIFY does its best, but between
+> lack of sane bounds and doing a strlen for every action, it has to go.
+
+But both snprintf() and seq_buf are far more expensive than doing the
+strlen().
+There is the separate issue that strlcpy() manages to needlessly inline a
+strnlen() in a lot of the call sites - instead of deferring it to the
+helper function.
+
+David
+
 > 
-> In preparation for removing the deprecated strlcat() API[1], use struct
-> seq_buf and seq_buf_printf() to format each entry directly into
-> devpriv->name. This avoids repeated rescanning of devpriv->name and
-> eliminates the temporary buffer.
+> And I'd like _fewer_ APIs (I realize that didn't happen at all for
+> seq_buf, but that our current best direction). And I especially don't
+> want a "len" getting passed around. It needs bounds to be *in* the data
+> type. And that means either true arrays, or internal bounds tracking
+> (like seq_buf), and it shouldn't have "extra work" associated with it
+> (e.g. stpecpy above still has to find the current end of the C string).
+> C strings were a mistake, but here we are.
 > 
-> Link: https://github.com/KSPP/linux/issues/370 [1]
-> Cc: codemender-patching+linux@google.com
-> Assisted-by: LLM
-> Signed-off-by: Bill Wendling <morbo@google.com>
-> Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
-> ---
->  drivers/comedi/drivers/comedi_bond.c | 18 ++++++++----------
->  1 file changed, 8 insertions(+), 10 deletions(-)
+> So, for "easy" constructions, sprintf-family, and for complex
+> constructions, seq_buf. And probably the large bit of thought at each
+> place where it is possible, is "how should truncation be communicated?"
 > 
-> diff --git a/drivers/comedi/drivers/comedi_bond.c b/drivers/comedi/drivers/comedi_bond.c
-> index 8e10ecab4f0d..a10cfbd04c72 100644
-> --- a/drivers/comedi/drivers/comedi_bond.c
-> +++ b/drivers/comedi/drivers/comedi_bond.c
-> @@ -39,6 +39,7 @@
->  
->  #include <linux/module.h>
->  #include <linux/string.h>
-> +#include <linux/seq_buf.h>
->  #include <linux/slab.h>
->  #include <linux/comedi.h>
->  #include <linux/comedi/comedilib.h>
-> @@ -170,10 +171,11 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
->  {
->  	struct comedi_bond_private *devpriv = dev->private;
->  	DECLARE_BITMAP(devs_opened, COMEDI_NUM_BOARD_MINORS);
-> +	struct seq_buf s;
->  	int i;
->  
->  	memset(&devs_opened, 0, sizeof(devs_opened));
-> -	devpriv->name[0] = 0;
-> +	seq_buf_init(&s, devpriv->name, sizeof(devpriv->name));
->  	/*
->  	 * Loop through all comedi devices specified on the command-line,
->  	 * building our device list.
-> @@ -250,15 +252,9 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
->  			}
->  			devpriv->devs = devs;
->  			devpriv->devs[devpriv->ndevs++] = bdev;
-> -			{
-> -				/* Append dev:subdev to devpriv->name */
-> -				char buf[20];
-> -
-> -				snprintf(buf, sizeof(buf), "%u:%u ",
-> -					 bdev->minor, bdev->subdev);
-> -				strlcat(devpriv->name, buf,
-> -					sizeof(devpriv->name));
-> -			}
-> +
-> +			/* Append dev:subdev to devpriv->name */
-> +			seq_buf_printf(&s, "%u:%u ", bdev->minor, bdev->subdev);
->  		}
->  	}
->  
-> @@ -267,6 +263,8 @@ static int do_dev_config(struct comedi_device *dev, struct comedi_devconfig *it)
->  		return -EINVAL;
->  	}
->  
-> +	seq_buf_str(&s);
-
-If this hasn't been applied yet, a v2 with the above changed to the
-now-available seq_buf_terminate() would be nice to have. Either way:
-
-Reviewed-by: Kees Cook <kees@kernel.org>
-
-
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.43.0
+> -Kees
 > 
 
--- 
-Kees Cook
