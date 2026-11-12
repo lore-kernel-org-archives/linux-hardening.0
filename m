@@ -1,62 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.144
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.147
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794486563;
-	b=M5m8h+CoLhkNuaudt2fLUW0WBI/H7XYtjXMykGqwgBfCGHoUtGdc/MEb0rbdSiOoMwI9
-	 g5m3lvRb7eczFRkM1wIEXlw9yrTL8aCchOlYVGKjTXfEFuCYZsYiORWwDKWbmnMaVb+nw
-	 eIur28FHb3OkleqXZK9aow/r96JtZZTbEwcydVl6dnoxBBleYM9Cnzovgui1ODckyji0r
-	 gPduOqYoJ57/Vz0jb3uxlacKhFIhSL5qp73TjkfwxGUClQuqpWuS6LKWonxSYU86h0pIC
-	 AdJk5tyuD72T7oGFlCzJSrhzsrC49+1HW9qBXN0IwaTdr18mDrnIhw36FKDbbo5iLNw==
+	t=1794486575;
+	b=g9KZo3mehwjfeBdRZPm4j91brYd19ttRamKVWN7mW9h+i+CRz7Cxk8lOx6QTZLkAKhGM
+	 ik+8GEMvJQvsSgcmNMm6eyNx0dQAhap1qRIokGASyyFZ9H+H31o/R/TIqoX1NmeXBUHPo
+	 sohtqVwBguaFXL3800Nb63kubKb5IUA6N6pLcwd8lXgWOydfmKhUrDVflccXqg0cNfGPV
+	 oL9ytc7JoWt++iU1uhd2zrK82kME48rbA5WSkHWC7YG4xibUNlsmnOEoZfd8srbuP6d1i
+	 8lCcyE7rZ9Cwy8Jx8JoEupHaBNbNB2wYw87ltO14OxWanUpsT/LI50vOjFLxOvloFRQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794486563;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794486575;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer;
-	bh=JUownZ9i4fagdIA01DIWXWA9WN5+CaB8lCEugi8eWWg=;
-	b=quO8Bt9p9ANUcFewhVMmxIxrkSN6+g7nXOdQ2Sa6wI53jwgL3uCVWkXFwrB/GOdFQXuS
-	 RoParN9shmpqCA53E8JZVsfmc61hQ8kv+KljFyMJ63GchWrrRquMbheG5J9R8n63ZDO8u
-	 2DO6lLXec4vAAcFkh+CjPlPh6j/o5bA1+O1C440hswXLTf4ga+T+MpY7YuL6qUnnZ5Ul/
-	 r5BYLkWgLelsrqlHlmBi7U2m99wgxxx7KksZmC5kMlDRAZmPfbG3To3xP0X75wqlC5Y04
-	 xXtOoV/yG3lFvD3nqm5Fwx8ojUQiPbfZv2fwbj6SEJLaUZo79GypB3MujpljnciKEXg==
+	bh=E3uK4ToIL2mUz3Svln8sWa7foOIYRKuRK6T5m3vJSVY=;
+	b=OtKF/d8zCoyLzm+Ed1363eiIFfilAwb7a1Qka4Z4eUEAG96eQjmf2wyO7HZFN5nHutjS
+	 dfY6VIjlbVRVvaP4ELjkz1JZM5USV4cCwLfbTzSsySQCU4NzUnH9K7sRC7rpnSwDadkY7
+	 UPUdmmvjk2VBfD/XwGKawFTJ6V5RyDT5owbjTA5kCKpwgqVsrj+LhP8QzWihtTkZryStr
+	 8YCmSZFgLjBBJS+CP2E3I08O1RrfZ/7fa9YjmfFvOqILMnMoGSH/8nuRejDWP1w27LU2K
+	 PRX44Z2CVMkF/aLKH8UwHI/plhIciw/Ac+pwpmLbFxNgPZCvDEletIJq7heHC3CfLIg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mobileye.com;
 	spf=pass smtp.mailfrom=mobileye.com;
-	arc=none smtp.remote-ip=23.90.104.144
-Received: from esa1.hc555-34.eu.iphmx.com (esa1.hc555-34.eu.iphmx.com [23.90.104.144])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC31606A31C;
-	Thu, 12 Nov 2026 12:29:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5EC31606A31C
+	arc=none smtp.remote-ip=23.90.104.147
+Received: from esa2.hc555-34.eu.iphmx.com (esa2.hc555-34.eu.iphmx.com [23.90.104.147])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FAA5606A894;
+	Thu, 12 Nov 2026 12:29:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5FAA5606A894
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1794486563; x=1826022563;
+  t=1794486581; x=1826022581;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=T3xhb/1ELvNoo66BKk4ECC6rQdLhk2tH2mSUSvFvCsE=;
-  b=Q7AUoQPVer3xv6RZqcmJgRQE3gK9+PpdP/b6f/XY6Tc44Vw55W0PGmw+
-   tWSeYRYxPaX8kDz/5AGrZ8CVXXTXFqFEInheU4vxCMUrO5/ed5xONfYDo
-   44a/Mnyw+S7B56p0NECfGmVcf2oD9A8TCCSRlz2N1a/VcjGs0FCr07fco
-   hRyUWHgnELHD6n6lOo8Wyd3MP5y0pWbupgWLaRXVwMe/25KENFIB4SiHE
-   HH1lBuE6vzrX6nh6keY4b0sgzF1JD8IvQKoA697BaGZA6r4zO/i3FRbox
-   HfLfFGimKYEIMgG0EKq0DU94S/BltaYp4YwlH8IcQmGCgCZAsTrQaWMCO
-   w==;
-X-CSE-ConnectionGUID: Jly7lB5MTe+QEe3/IDSYWg==
-X-CSE-MsgGUID: ycBjS/VmS3aAFjlSZ0Ta4Q==
+  bh=CVPab+eqiu3Puch8ckhPaA7dUxIgv7j+PTZCvvIA2cs=;
+  b=CDfZ3H0QaFmRAQDEpTLrzuNHQc7g/zasEBIXDJ7b4ruPUUjQocSpTgX4
+   h4sMKYijD1UxKGuX9ZFAaNMZEi0O/4BnByChmanbPi5Xkrz7iqgHBjyVp
+   nqYaLKndkTl49nxgEQK8dKH3LAIKOrL5uBVpX64M3MQPiReq5IMg/tSia
+   /RycTBOuQw6UZzRitP1HJ5lzmvsXdg77ArSOFCHtcABYqpzS6lBNVTalJ
+   WFRDTKe5huSZX6rK0orDEa8T7dfdmWT7z5FWYfQvJdec3c4FC/J8ay3Aw
+   jhcxQOArhpWuAlWhv6Y95rpT0OlPY7XFfF5GSXFQDwlPIZN+D4k7kkUOM
+   g==;
+X-CSE-ConnectionGUID: Onf6UB9YRtWDDtYrsJWD9A==
+X-CSE-MsgGUID: QOon83Y6Tom8tCX4zAk+gQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
-  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 14:29:20 +0200
-X-CSE-ConnectionGUID: UNVFG+yMSkuWtO+xpASqGQ==
-X-CSE-MsgGUID: nhdtPckwRuiNLLpkqcVBmQ==
+Received: from unknown (HELO ces01_data.me-corp.lan) ([146.255.191.134])
+  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 14:29:31 +0200
+X-CSE-ConnectionGUID: zrfLJ32aT/e9A3NIpkHx5Q==
+X-CSE-MsgGUID: eQ1Chy+aQ7SpgWhbo53KEQ==
 Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
-  by ces02_data.me-corp.lan with SMTP; 12 Nov 2026 14:37:27 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Nov 2026 14:29:19 +0200
+  by ces01_data.me-corp.lan with SMTP; 12 Nov 2026 14:37:36 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Nov 2026 14:29:22 +0200
 From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Thu, 12 Nov 2026 14:29:00 +0200
-Subject: [PATCH v2 3/6] MIPS: CM: export the symbols needed to access the
- GCRs from a module
+Date: Thu, 12 Nov 2026 14:29:03 +0200
+Subject: [PATCH v2 6/6] MIPS: eyeq6_defconfig: enable the CM3 PMU
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -68,7 +67,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261112-i6500-cm3-pmu-v2-3-cd2569571819@mobileye.com>
+Message-Id: <20261112-i6500-cm3-pmu-v2-6-cd2569571819@mobileye.com>
 References: <20261112-i6500-cm3-pmu-v2-0-cd2569571819@mobileye.com>
 In-Reply-To: <20261112-i6500-cm3-pmu-v2-0-cd2569571819@mobileye.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
@@ -91,82 +90,34 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
  linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org
 X-Mailer: b4 0.16.0
 
-Allow modules to use the GCR and CPC accessors from asm/mips-cm.h and
-asm/mips-cpc.h:
-
-- mips_gcr_base and mips_cpc_base are the mapped register blocks;
-- the CPS_ACCESSOR macros consult mips_cm_is64 on every 64-bit register
-  access;
-- mips_cm_lock_other() / mips_cm_unlock_other() are the only way to
-  reach the registers of another cluster through the redirect block.
-
-This is a prerequisite for building the CM3 PMU driver as a module.
+Enable perf events and build the Coherence Manager 3 PMU driver as a
+module.
 
 Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 ---
- arch/mips/kernel/mips-cm.c  | 5 +++++
- arch/mips/kernel/mips-cpc.c | 2 ++
- 2 files changed, 7 insertions(+)
+ arch/mips/configs/eyeq6_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index 3bfe85e86a9a..ed98021418b5 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/errno.h>
-+#include <linux/export.h>
- #include <linux/of.h>
- #include <linux/percpu.h>
- #include <linux/spinlock.h>
-@@ -14,8 +15,10 @@
- #include <asm/mipsregs.h>
- 
- void __iomem *mips_gcr_base;
-+EXPORT_SYMBOL_GPL(mips_gcr_base);
- void __iomem *mips_cm_l2sync_base;
- int mips_cm_is64;
-+EXPORT_SYMBOL_GPL(mips_cm_is64);
- bool mips_cm_is_l2_hci_broken;
- 
- static char *cm2_tr[8] = {
-@@ -373,6 +376,7 @@ void mips_cm_lock_other(unsigned int cluster, unsigned int core,
- 	 */
- 	mb();
- }
-+EXPORT_SYMBOL_GPL(mips_cm_lock_other);
- 
- void mips_cm_unlock_other(void)
- {
-@@ -389,6 +393,7 @@ void mips_cm_unlock_other(void)
- 
- 	preempt_enable();
- }
-+EXPORT_SYMBOL_GPL(mips_cm_unlock_other);
- 
- void mips_cm_error_report(void)
- {
-diff --git a/arch/mips/kernel/mips-cpc.c b/arch/mips/kernel/mips-cpc.c
-index 3e386f7e1545..4a8bd56bc2e8 100644
---- a/arch/mips/kernel/mips-cpc.c
-+++ b/arch/mips/kernel/mips-cpc.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/errno.h>
-+#include <linux/export.h>
- #include <linux/percpu.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -14,6 +15,7 @@
- #include <asm/mips-cps.h>
- 
- void __iomem *mips_cpc_base;
-+EXPORT_SYMBOL_GPL(mips_cpc_base);
- 
- static DEFINE_PER_CPU_ALIGNED(spinlock_t, cpc_core_lock);
- 
+diff --git a/arch/mips/configs/eyeq6_defconfig b/arch/mips/configs/eyeq6_defconfig
+index 0a00a201937b..2d06d9ed6526 100644
+--- a/arch/mips/configs/eyeq6_defconfig
++++ b/arch/mips/configs/eyeq6_defconfig
+@@ -19,6 +19,7 @@ CONFIG_USER_NS=y
+ CONFIG_SCHED_AUTOGROUP=y
+ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_EXPERT=y
++CONFIG_PERF_EVENTS=y
+ CONFIG_EYEQ=y
+ CONFIG_MACH_EYEQ6H=y
+ CONFIG_MIPS_CPS=y
+@@ -86,6 +87,7 @@ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_SDHCI_CADENCE=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_RESET_CONTROLLER=y
++CONFIG_MIPS_CM3_PMU=m
+ # CONFIG_NVMEM is not set
+ CONFIG_EXT4_FS=y
+ CONFIG_EXT4_FS_POSIX_ACL=y
 
 -- 
 2.43.0
