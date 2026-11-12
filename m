@@ -1,64 +1,83 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794478377;
-	b=F0BuMLxbJ16F0/i5b01MTW3T+fXM4GM2UtjiPFEXwEhjcRHy+4Cb1g4C0+TZn4XGZorA
-	 lfTNJ5EigP84TwU8KQYSpZDBfXc9pvcokGNpiY92r76MTEeizHqnd77u/BaJCek3xIlZj
-	 8/lhBIW4dEgkJgdV5Sswk81PEFK8Hlenbg1a+utVshpi9fzVYFAAjuU089+dARQt5tyPk
-	 N7n7c59pbwf6KKdZbtwLc87xH4bJ2qfzxTQOAiLob4P7nNzmCuKJx+ipzN3LQ3jtaYHlS
-	 xaysCvi/GdlbBLo4ziEfhbDonrfFOyswpcywKp7ayAsRWfI0Eud5209oIjQRALXhFyg==
+	t=1794480473;
+	b=zUmpa+z1DMZiWVvj8MXVBeEZaYDN46WF+Iev8PT1tdI8Bnu0oIXlv9tlPhSC4lGlC9zZ
+	 tl2b1rRe8Srdn63B9FGcuDqaiAPI/Wr1X9hSb0naJeXEh92wCy00ceW6oKUr8cV5yo0EE
+	 H+gHO2H0lhvDgEb+DzhY0r+Dk0AkH5Q2+RuA/+Tl3jj7l0vbGSK1kPFnma3ihxtQWVwoq
+	 Y8ffu8XTpVsflWY9xfU4bm3o+tcXQmSOWej1w5aIVUo37rqgNY2auR2/HcRh8ncYiIEUY
+	 AtBmJOi6l/cg9AzDWCXNR4KJtHBpd2KQu+TxrHPVV+btO6rAm55EUXuW4EpjopiMlyA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794478377;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794480473;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=a4Hiwgo7R+HZm4bqUhmJ5Y10eCIYQ+s+J5vOxQfUPYk=;
-	b=v2wcHGiK82DJZd2i4ubEvtUjiId4kPX0i8sXtvFeAgp0G2wSNifM71kg2Em0BWIH3nAP
-	 ejHaUOghR5bRLQDpP+1T0a4Vf3AQfX1tCdiVzHI17B6GvjVIlR9AMFCmtXZFey0J2nmru
-	 piQhW+E6TVNRfnb9StwWlelmPdF41QaLgyyWdJ0wo8KEjgBl5F+kx31BlfFeQbfJ1XcvZ
-	 dYdbJCcdcO/qYjw4R+bAl7rj41ik3QOeHG2z9itLhg1e7o6ZeLPLqBi1TT0m/NOHTF5bL
-	 jRMrUN2rzCtWCCcxapC01Pq4+8bUfjt/4Xet6oIwdWNOWRmLN/n3lduCZqrHCdjHFmQ==
+	bh=LaAKKhAngwkFxDGEu7glsCDhQDKP6or5IXQD5q9C6lk=;
+	b=OFcbvIjbOzHGNtCHG4HXx0ddP1wgbt/3Y/+r4tWI7i36QpRA3TGP0QsB2bseewFlcLCS
+	 8I4tTQUplDSzJVrhdpMpR0IPnJtPlzQeXnXCJHIuJdi76Lsr5SF1+BD+TFKCEaPbbO/s6
+	 5RrHs6wJ+YP4kvKLu1McTyGz84P2VIYLHaSHB0/Jvz52Lmq3vffGz/sCSYW9ThnJAB2uW
+	 wLDOrhRz5qCp/OgUEPfDJD+H/xDPh2Fyy0xck4E6UXLMLJnSFGtJH9n25BHQRvUXCdzYu
+	 /2xSs4cwMFQuddCM4BELRVLokR3ISqVgFmbrCOJfCSf3kiFteblPsdztAfgfHSwhG4A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Yfmx3/iC";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="bhRW52/O";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC65606A880;
-	Thu, 12 Nov 2026 10:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505CF606A32D;
+	Thu, 12 Nov 2026 10:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Yfmx3/iC
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B837E1F00A05;
-	Thu, 12 Nov 2026 10:12:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bhRW52/O
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D85FD1F00A05;
+	Thu, 12 Nov 2026 10:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794478377;
-	bh=a4Hiwgo7R+HZm4bqUhmJ5Y10eCIYQ+s+J5vOxQfUPYk=;
+	s=k20260515; t=1794480472;
+	bh=LaAKKhAngwkFxDGEu7glsCDhQDKP6or5IXQD5q9C6lk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Yfmx3/iC/7XtkB87cVZUt+yQ4qrcZxoz5n2K/zeQh5PybM8KDx7GSTbpdn0CBfUat
-	 8fhbQHgcRoBqhQdIY5LSKJ9+pKm7SpKTtQhY1cR7ZzbGRRSc6zPu4tohQzA7pOwQL3
-	 sjOiqNKz8zc03lqdij4x1Bp6X9jNWSwLxR/0SuiepQPmPeN//gYR8VIPrimvfe0Dc/
-	 6sLopGM8zQ+51e1IU6qLm1vjenouGD3zZMEiBCxvxCu4absUCiMSeSUhb/4KgW5dFH
-	 k6XRaz5uyrKziJ1ClqBRisgmdsRmVEFgVEJk/s/O0hnb4vKKjerHwGNfwAaaoo+rhf
-	 C7SVOe9aZdsvQ==
-Date: Thu, 12 Nov 2026 11:12:48 +0100
+	b=bhRW52/OaiERqOjVo+YsX7WenTAM+RkUSYdDbFFgDeELIFl5MCvdrQ4/lrfg3PaBP
+	 OJEvlXHrGI0KP6Sf7isOdA90CQUC1tSnbnlL7KMlGmOGy1uOT4Tps4k2NALfzc5lt4
+	 GBKdaLdl6Hn4QG7D1jOt3xg+R2SbDhwXqrQ5QTOpBVzV6PCDTf9sB1jcXxmSVYEwEX
+	 9k1ve7B7mHoKt9f85FezBUXVhvbLCq9DZT0dTEHtWXQsiFKFjjwdYqhwDGS2C9B8hk
+	 PMIxYSXrd0qwW336ZZGtXr/22P+Xd17f+e0rYlMLg9nZUtItJXlZjgdtGYx+r60Y9l
+	 +6iWNMqoSTUaQ==
+Date: Thu, 12 Nov 2026 11:47:38 +0100
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Linus Torvalds <torvalds@linuxfoundation.org>
+To: Bence Csokas <bence.csokas@arm.com>
 Cc: Kees Cook <kees@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	driver-core@lists.linux.dev, linux-hardening@vger.kernel.org, 
-	Lorenzo Stoakes <ljs@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] devres: Provide kmalloc_obj*-style API for
- devm_kmalloc
-Message-ID: <avWNCC3_Ff0knO6J@devuan>
-References: <20260914223212.i.829-kees@kernel.org>
- <20260914223219.901347-2-kees@kernel.org>
- <20261112004039.GA523044@killaraus.ideasonboard.com>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Philipp Stanner <phasta@kernel.org>, 
+	Sudeep Holla <sudeep.holla@kernel.org>, Cristian Marussi <cristian.marussi@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Zack Rusin <zack.rusin@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Selvin Xavier <selvin.xavier@broadcom.com>, 
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Chengchang Tang <tangchengchang@huawei.com>, 
+	Junxian Huang <huangjunxian6@hisilicon.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Hans de Goede <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
+	Jes Sorensen <Jes.Sorensen@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Benson Leung <bleung@chromium.org>, 
+	Tzung-Bi Shih <tzungbi@kernel.org>, Guenter Roeck <groeck@chromium.org>, 
+	Nilesh Javali <njavali@marvell.com>, GR-QLogic-Storage-Upstream@marvell.com, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] stddef: Add offsetofend() variant of
+ struct_offset()
+Message-ID: <avWY8kNFlkLyxIrX@devuan>
+References: <20261112-offsetof-v2-0-276ede839967@arm.com>
+ <20261112-offsetof-v2-1-276ede839967@arm.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -69,215 +88,138 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l52whvkkcz7sedlr"
+	protocol="application/pgp-signature"; boundary="hmbonzz4lyxux25l"
 Content-Disposition: inline
-In-Reply-To: <20261112004039.GA523044@killaraus.ideasonboard.com>
+In-Reply-To: <20261112-offsetof-v2-1-276ede839967@arm.com>
 
 
---l52whvkkcz7sedlr
+--hmbonzz4lyxux25l
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Linus Torvalds <torvalds@linuxfoundation.org>
+To: Bence Csokas <bence.csokas@arm.com>
 Cc: Kees Cook <kees@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	driver-core@lists.linux.dev, linux-hardening@vger.kernel.org, 
-	Lorenzo Stoakes <ljs@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Brendan Jackman <brendan.jackman@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] devres: Provide kmalloc_obj*-style API for
- devm_kmalloc
-Message-ID: <avWNCC3_Ff0knO6J@devuan>
-References: <20260914223212.i.829-kees@kernel.org>
- <20260914223219.901347-2-kees@kernel.org>
- <20261112004039.GA523044@killaraus.ideasonboard.com>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Philipp Stanner <phasta@kernel.org>, 
+	Sudeep Holla <sudeep.holla@kernel.org>, Cristian Marussi <cristian.marussi@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Zack Rusin <zack.rusin@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Selvin Xavier <selvin.xavier@broadcom.com>, 
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Chengchang Tang <tangchengchang@huawei.com>, 
+	Junxian Huang <huangjunxian6@hisilicon.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Hans de Goede <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
+	Jes Sorensen <Jes.Sorensen@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Benson Leung <bleung@chromium.org>, 
+	Tzung-Bi Shih <tzungbi@kernel.org>, Guenter Roeck <groeck@chromium.org>, 
+	Nilesh Javali <njavali@marvell.com>, GR-QLogic-Storage-Upstream@marvell.com, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] stddef: Add offsetofend() variant of
+ struct_offset()
+Message-ID: <avWY8kNFlkLyxIrX@devuan>
+References: <20261112-offsetof-v2-0-276ede839967@arm.com>
+ <20261112-offsetof-v2-1-276ede839967@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20261112004039.GA523044@killaraus.ideasonboard.com>
+In-Reply-To: <20261112-offsetof-v2-1-276ede839967@arm.com>
 
-[CC +=3D Linus]
+Hi Bence,
 
-Hi Laurent, Linus,
-
-> Date: 2026-11-12 02:40:39+0200
-> From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Date: 2026-11-12 10:29:33+0100
+> From: Bence Csokas <bence.csokas@arm.com>
 >
-> Hi Kees,
+> Many call sites of offsetofend() use it for the purpose of pointer
+> artihmetic. Thus, a common usage pattern is:
 >=20
-> On Mon, Sep 14, 2026 at 03:32:17PM -0700, Kees Cook wrote:
-> > Mirroring the type-based allocation now in use for the kmalloc family of
-> > APIs, provide the same for the devm_kmalloc family of APIs. This will
-> > allow for future plumbing of type information (e.g. alignment) into the
-> > underlying allocations. This immediately gains type check on return
-> > values (instead of the prior "void *" return type).
-> >=20
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Danilo Krummrich <dakr@kernel.org>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: <driver-core@lists.linux.dev>
-> > Cc: <linux-hardening@vger.kernel.org>
-> > ---
-> >  include/linux/device/devres.h | 102 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 102 insertions(+)
-> >=20
-[...]
-> > +#define devm_kmalloc_flex(DEV, VAR_OR_TYPE, FAM, COUNT, ...) \
-> > +	__devm_alloc_flex(devm_kmalloc, DEV, default_gfp(__VA_ARGS__), \
-> > +			  typeof(VAR_OR_TYPE), FAM, COUNT)
-> > +
-> > +/* All devm_kzalloc aliases for devm_kmalloc_(obj|objs|flex). */
-> > +#define devm_kzalloc_obj(DEV, P, ...) \
-> > +	__devm_alloc_objs(devm_kzalloc, DEV, default_gfp(__VA_ARGS__), typeof=
-(P), 1)
-> > +#define devm_kzalloc_objs(DEV, P, COUNT, ...) \
-> > +	__devm_alloc_objs(devm_kzalloc, DEV, default_gfp(__VA_ARGS__), \
-> > +			  typeof(P), COUNT)
+>   offsetofend(typeof(*ptr), member)
 >=20
-> I was recently made aware by Geert of an unfortunate side effect of the
-> default GPF_KERNEL argument. I've fixed a memory leak in the imx8-isi
-> driver by using devm_kzalloc_objs() as follows:
+> Capturing this in one macro helps keep lines short and terse, while
+> still making the purpose clear. It also helps discourage spelling out
+> the type name on every callsite, leading to more maintainable code.
 >=20
-> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/driver=
-s/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> index 0ae5f35e017c..9373a5256224 100644
-> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> @@ -488,7 +488,8 @@ static int mxc_isi_probe(struct platform_device *pdev)
+> A similar struct_offset() macro already exists, so add an offsetof()
+> variant in the same spirit.
 >=20
->  	isi->pdata =3D of_device_get_match_data(dev);
+> Signed-off-by: Bence Csokas <bence.csokas@arm.com>
+> ---
+>  include/linux/overflow.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 >=20
-> -	isi->pipes =3D kzalloc_objs(isi->pipes[0], isi->pdata->num_channels);
-> +	isi->pipes =3D devm_kzalloc_objs(dev, isi->pipes[0],
-> +				       isi->pdata->num_channels);
->  	if (!isi->pipes)
->  		return -ENOMEM;
->=20
-> So far, so good. However, the following code also compiles:
->=20
-> 	isi->pipes =3D devm_kzalloc_obj(dev, isi->pipes[0],
-> 				      isi->pdata->num_channels);
->=20
-> (note the *obj* instead of *objs*) because the third argument is
-> interpreted as gfp flags. It's clearly a bug, but one that the compiler
-> doesn't catch. The typo is easy to make.
->=20
-> Sparse catches the issue:
->=20
-> drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c:491:22: warning: inco=
-rrect type in argument 3 (different base types)
-> drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c:491:22:    expected r=
-estricted gfp_t [usertype] gfp
-> drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c:491:22:    got unsign=
-ed int const num_channels
->=20
-> I'm however not sure if build bots report sparse warnings or only
-> errors.
->=20
-> Is this an issue you're aware of, and do you think it should be
-> addressed ?
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index d0f04436343e..060dad4b6f3e 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -464,6 +464,18 @@ static __always_inline size_t __must_check size_sub(=
+size_t minuend, size_t subtr
+>   */
+>  #define struct_offset(p, member) (offsetof(typeof(*(p)), member))
+> =20
+> +/**
+> + * struct_offsetofend() - Calculate the end of a member within a struct
+> + * @p: Pointer to the struct
+> + * @member: Name of the member to get the end offset of
+> + *
+> + * Calculates the offset of the end of a particular @member of the struc=
+ture
+> + * pointed to by @p.
+> + *
+> + * Return: number of bytes to the location of @member.
+> + */
+> +#define struct_offsetofend(p, member) (offsetofend(typeof(*(p)), member))
 
-Indeed, this is a known problem of these macros.  I reported it in March:
-<https://lore.kernel.org/lkml/abhGS0n_RsUG97Ni@devuan/>
-
-The link contains a detailed report of the issue, and why it happens.
-
-There is not a single cause of this bug, but rather a combination of
-several of them.
-
-I suggest removing kmalloc_obj() entirely, and using kmalloc_objs()
-always, with a second argument of 1 when we want a single object.  This
-would remove the risk of that typo.  That is, instead of:
-
-    int *p =3D kmalloc_objs(int, 42);
-    int *q =3D kmalloc_obj(int);
-
-we should do
-
-    int *p =3D kmalloc_objs(int, 42);
-    int *q =3D kmalloc_objs(int, 1);
-
-I also suggest having default arguments without variadic macros.  The
-way to do that is using empty arguments.  Linus complained that it hurts
-his eyes, but it really makes these macros much safer.
-
-That is, instead of
-
-	int *p =3D kmalloc_objs(int, 42);
-
-we should do
-
-	int *p =3D kmalloc_objs(int, 42,);
-
-By having an explicitly empty third parameter, we'd be asking explicitly
-for the default value, which the compiler can verify, compared to having
-to guess whether we asked for it or we just forgot about its existence.
-
-Any of these two changes would already reduce the chances of this bug
-significantly, but if we apply both, it's almost impossible to have it.
-
-Another issue with that macro is accepting an expression instead of a
-type name.  Consider the following mistake:
-
-    p =3D kmalloc_objs(42, *p);
-
-The compiler can't catch that we swapped the order of arguments
-accidentally, and will allocate a wrong number of objects (whatever
-happens to be in *p, if already initialized, else we might be lucky and
-get an uninitialized diagnostic).  If we require that the first
-parameter is a type name, it will preclude that problem.
-
-Please let me know if any of these changes is wanted, and I can prepare
-some patches.
+The outer parentheses are unnecessary (they are unnecessary in
+struct_offset() too, but that already exists).
 
 
 Have a lovely day!
 Alex
 
->=20
-> > +#define devm_kzalloc_flex(DEV, P, FAM, COUNT, ...) \
-> > +	__devm_alloc_flex(devm_kzalloc, DEV, default_gfp(__VA_ARGS__), \
-> > +			  typeof(P), FAM, COUNT)
-> > +
-> >  static inline __realloc_size(3, 4) void * __must_check
-> >  devm_krealloc_array(struct device *dev, void *p, size_t new_n, size_t =
-new_size, gfp_t flags)
-> >  {
+> +
+>  /**
+>   * __DEFINE_FLEX() - helper macro for DEFINE_FLEX() family.
+>   * Enables caller macro to pass arbitrary trailing expressions
 >=20
 > --=20
-> Regards,
+> 2.56.1
 >=20
-> Laurent Pinchart
 >=20
 
 --=20
 <https://www.alejandro-colomar.es>
 
---l52whvkkcz7sedlr
+--hmbonzz4lyxux25l
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr1kRoACgkQ64mZXMKQ
-wqnFkw//auHnN2vErNki0HxNo/v/DxKacndGhaD1gjlvZ17kHd7QrS7rh03uK44/
-3JD96vW7Z7g1/Hm0cu+j4jx0A8Sw6FbuqUTNU8MxTBYjgtTCNUoqHBJvS+ltbuJn
-zFCpENgoctzObQiPLgL7KeEz2a0kUN1tTxTY9WeldL+Zq9CPOChtWVYLdJToke5n
-Ho2/sRndWnGTPTNLKbgaB2YaBbHHBkcNgYeO7J4H3gzkpaFzqU8WlBFX/snbki7n
-he/JQP7kSIenbsUhcV1PzMfMaH3xP0E+qXK1Gla/J4y8qqwpe+bPWTEnHbgwrx0E
-dsgC1DoCLwXwMTJw3efjsut5zFh0YtMtH5CX+8S7Fto1u6y3nVvYD45ie7xTlFc8
-IYDxLb2JEoSBhtPXIIg5HK7yIVIhwDBcaTOvrm9aJP+um556Nm0GRu5hxRHl7pOK
-+cenvuXCc0DRsYgwTxH/bnSDh3aBva2op42VGmdgDEh1xm/4HC4y3X5Z6EYLGiSV
-JXLfqoUh/FrmlVMRp1OcMvUrAn4QkDQbumWcHTNDtaIfezP4PbNerwK9M/FsflFG
-SD1JTaSOAOXlEHn8HgnqgvpBYco6DAV9HYG6i+kP9fvPWQkUr3xC1fUp2qylhk1C
-pspEDaquGj62LlF+VSz0h4VktU968CI3/vzOr4A7tV00Rd67qCI=
-=0siK
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr1mUAACgkQ64mZXMKQ
+wqniCg//WgRXXz7luTnHUaMXrHNthttFpY3wBO557jzGIfLwMa+0tJqYgSh8MGS8
+7F44pQ7lX8E0qC+aMkDd3ItqdrKeD3McIbqqgpr8iU1VT0ljohr8pnTU7UIyIP/u
+bX/o22pWYohJFt/xcJcLxQ63rHmjcfjH2ug2i8ZgZHh/YGX+Biah79nfkcAB+uYX
+NI+43mSTP1aHvUK3Jf/z7PJF/v1/vyv1zJ/nsoN74w3JhlYGMggMcXHSu+dp0jmX
+qJUkyYJ5SQEzMdU/n2pSgOJFIZl6YS957I6fhU3GxEPXSldcnd/VIH/QRKMpSyjM
+jWzBsyjyyink+9RSw7AcmU46DJ28GeWMW5jZdg7jXq6ZGjO0/AKleOtMrevQLN4s
+hB7CzUrtofXBv5Oa5javphhfKIEoawgDsDch5eXFQW/Rm9rSflWysbPTCST5n/h0
+GfKbUEzD+COFj6I+Y8COEceKp4Xv8Y08A3r6CyyNIPzPwcc0CulK6xAmHbsMxIXZ
+c6uz3LLfqukMfbuquIZE4KhlNt+ZLRtnxL6rFfFkvLYdz4KwIsljmiPqoyPQxp9A
+OX5vOdZ9ulzmuuNoTY5OeJWSlsI6edzNc17hE6jjR1+wFfJSzVF2cvvv6mRGnpY/
+bGpmsQZFuH/KWJutZlHbsMGYEKF7lo42UH0Tqx57oaglMss89x4=
+=8quq
 -----END PGP SIGNATURE-----
 
---l52whvkkcz7sedlr--
+--hmbonzz4lyxux25l--
