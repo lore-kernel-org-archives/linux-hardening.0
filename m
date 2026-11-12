@@ -1,61 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.147
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794486575;
-	b=g9KZo3mehwjfeBdRZPm4j91brYd19ttRamKVWN7mW9h+i+CRz7Cxk8lOx6QTZLkAKhGM
-	 ik+8GEMvJQvsSgcmNMm6eyNx0dQAhap1qRIokGASyyFZ9H+H31o/R/TIqoX1NmeXBUHPo
-	 sohtqVwBguaFXL3800Nb63kubKb5IUA6N6pLcwd8lXgWOydfmKhUrDVflccXqg0cNfGPV
-	 oL9ytc7JoWt++iU1uhd2zrK82kME48rbA5WSkHWC7YG4xibUNlsmnOEoZfd8srbuP6d1i
-	 8lCcyE7rZ9Cwy8Jx8JoEupHaBNbNB2wYw87ltO14OxWanUpsT/LI50vOjFLxOvloFRQ==
+	t=1794487106;
+	b=x6KxH+3ajnPGBqufugb6+VHSpEDKYrp/T+EtC/zWtPG3SfPrlF9sksElcPiNcafFQ5WR
+	 AdFJAQJZAIh07/TuS+hXiTD0rTfNPUjovgf9aoNkF50+fhX7Wrswn0VIAZNlXHYtrHgoA
+	 2lc9602UtSPHc0m3dO9wUQGZ1m0Qv2500g6/1Nbg/3gMvDAwFfhtPqL9vpeCyoe1CeZPH
+	 NKvXeXLciMXEhd4ZHpS6uHLQp1JEQ/DsOphvb8toKjgEh+5zNXpM0CkwglbVmQQV6zDv1
+	 TNndtBU9Qu9HIDp46PV46h1Mf6EJYHmH/LLKYYVdrUDo12QK4FbYb6bSAh0N03sb2sw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794486575;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer;
-	bh=E3uK4ToIL2mUz3Svln8sWa7foOIYRKuRK6T5m3vJSVY=;
-	b=OtKF/d8zCoyLzm+Ed1363eiIFfilAwb7a1Qka4Z4eUEAG96eQjmf2wyO7HZFN5nHutjS
-	 dfY6VIjlbVRVvaP4ELjkz1JZM5USV4cCwLfbTzSsySQCU4NzUnH9K7sRC7rpnSwDadkY7
-	 UPUdmmvjk2VBfD/XwGKawFTJ6V5RyDT5owbjTA5kCKpwgqVsrj+LhP8QzWihtTkZryStr
-	 8YCmSZFgLjBBJS+CP2E3I08O1RrfZ/7fa9YjmfFvOqILMnMoGSH/8nuRejDWP1w27LU2K
-	 PRX44Z2CVMkF/aLKH8UwHI/plhIciw/Ac+pwpmLbFxNgPZCvDEletIJq7heHC3CfLIg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794487106;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=qwGHYWqkzjPKzDNH4i/tvvgZ4hxVWyzdRGgiuO5uYi0=;
+	b=b8jSOqoEgnwfCIzadTFxAV2BlpBfxRww2J82IaD9qezBG720/dfdul3P5o4NtJpKlTX5
+	 gc8SQaPdgOgjYXRlX4JKfEE/67eacQQX8D0mJ2mbBiXPWur0T1flXadX1KUSK9gvddfp8
+	 MF88IqdeQkeSTGjzjKBz9FhKtd1Uv1UqAkqu5Nj8F6ND8coFWrxN3KbEuGswhdmCJA43q
+	 KKAfuMEcHB5S6iii7GR7DAfjs0+NSEtZy9tay1P/sYAKKw99Fvgo1z17pBaUxHUarjzK+
+	 gvEESsq7wIa+VGUbzodpb2MzsRGfySNYT0e9B+Xgpy2RlbZ2URM91ZtwvzkXhY1cJxg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mobileye.com;
-	spf=pass smtp.mailfrom=mobileye.com;
-	arc=none smtp.remote-ip=23.90.104.147
-Received: from esa2.hc555-34.eu.iphmx.com (esa2.hc555-34.eu.iphmx.com [23.90.104.147])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FAA5606A894;
-	Thu, 12 Nov 2026 12:29:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5FAA5606A894
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1794486581; x=1826022581;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=CVPab+eqiu3Puch8ckhPaA7dUxIgv7j+PTZCvvIA2cs=;
-  b=CDfZ3H0QaFmRAQDEpTLrzuNHQc7g/zasEBIXDJ7b4ruPUUjQocSpTgX4
-   h4sMKYijD1UxKGuX9ZFAaNMZEi0O/4BnByChmanbPi5Xkrz7iqgHBjyVp
-   nqYaLKndkTl49nxgEQK8dKH3LAIKOrL5uBVpX64M3MQPiReq5IMg/tSia
-   /RycTBOuQw6UZzRitP1HJ5lzmvsXdg77ArSOFCHtcABYqpzS6lBNVTalJ
-   WFRDTKe5huSZX6rK0orDEa8T7dfdmWT7z5FWYfQvJdec3c4FC/J8ay3Aw
-   jhcxQOArhpWuAlWhv6Y95rpT0OlPY7XFfF5GSXFQDwlPIZN+D4k7kkUOM
-   g==;
-X-CSE-ConnectionGUID: Onf6UB9YRtWDDtYrsJWD9A==
-X-CSE-MsgGUID: QOon83Y6Tom8tCX4zAk+gQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces01_data.me-corp.lan) ([146.255.191.134])
-  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 14:29:31 +0200
-X-CSE-ConnectionGUID: zrfLJ32aT/e9A3NIpkHx5Q==
-X-CSE-MsgGUID: eQ1Chy+aQ7SpgWhbo53KEQ==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
-  by ces01_data.me-corp.lan with SMTP; 12 Nov 2026 14:37:36 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Nov 2026 14:29:22 +0200
-From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Thu, 12 Nov 2026 14:29:03 +0200
-Subject: [PATCH v2 6/6] MIPS: eyeq6_defconfig: enable the CM3 PMU
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=G92ewwS6;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BB51606A31C;
+	Thu, 12 Nov 2026 12:38:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0BB51606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=G92ewwS6
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 354211477;
+	Thu, 12 Nov 2026 04:38:21 -0800 (PST)
+Received: from [10.57.59.183] (unknown [10.57.59.183])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0E6E3F673;
+	Thu, 12 Nov 2026 04:38:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1794487104; bh=GXDArifiTXzGS/TEyKUeQy694OV8tzZyyHhxUDTufKU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=G92ewwS69xI/sQnwPuFxDuaGeeicD5gWXRAQcqnYkeOnE+1AhuhQD+T9u+2gEnSvA
+	 8Tz0b5fy8Nanp500jVMIfPIBqybgWOu28wUx9eUNS6BsJB8hlKLfKfowurrVqb8yg0
+	 gegWtANRaNOjC5bAe0P7rnTdXxQKCb9wTnu50CiQ=
+Message-ID: <7b92f7c8-1543-447e-8ef3-aba608141699@arm.com>
+Date: Thu, 12 Nov 2026 13:38:13 +0100
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -65,60 +53,64 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v10 07/22] arm64: Initialize POR_EL1 register on
+ cpu_resume()
+To: Yeoreum Yun <yeoreum.yun@arm.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-hardening@vger.kernel.org, Andrew Morton
+ <akpm@linux-foundation.org>, Ard Biesheuvel <ardb+git@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "David Hildenbrand (Arm)" <david@kernel.org>, Jann Horn <jannh@google.com>,
+ Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
+ Kees Cook <kees@kernel.org>, Linu Cherian <linu.cherian@arm.com>,
+ Linus Walleij <linusw@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Maxwell Bland <mbland@motorola.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Pierre Langlois <pierre.langlois@arm.com>,
+ =?UTF-8?Q?Pierre-Cl=C3=A9ment_Tosi?= <ptosi@google.com>,
+ Quentin Perret <qperret@google.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Vlastimil Babka <vbabka@kernel.org>,
+ Will Deacon <will@kernel.org>, Yang Shi <yang@os.amperecomputing.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, x86@kernel.org, Ira Weiny <iweiny@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Thomas Gleixner <tglx@kernel.org>
+References: <20261109-kpkeys-v10-0-aa6c4d9603bc@arm.com>
+ <20261109-kpkeys-v10-7-aa6c4d9603bc@arm.com>
+ <be361be8-c5ad-4ff7-a6db-7b0815bfe1d0@sirena.org.uk>
+ <avNH_AdvK9AqvfF7@e129823.arm.com>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <avNH_AdvK9AqvfF7@e129823.arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261112-i6500-cm3-pmu-v2-6-cd2569571819@mobileye.com>
-References: <20261112-i6500-cm3-pmu-v2-0-cd2569571819@mobileye.com>
-In-Reply-To: <20261112-i6500-cm3-pmu-v2-0-cd2569571819@mobileye.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>, 
- Gregory CLEMENT <gregory.clement@bootlin.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Fu Chao-Ying <chao-ying.fu@globalfoundries.com>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-rt-devel@lists.linux.dev, devicetree@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org
-X-Mailer: b4 0.16.0
 
-Enable perf events and build the Coherence Manager 3 PMU driver as a
-module.
+On 10/11/2026 17:36, Yeoreum Yun wrote:
+> On Tue, Nov 10, 2026 at 03:53:30PM +0000, Mark Brown wrote:
+>> On Mon, Nov 09, 2026 at 03:58:32PM +0000, Kevin Brodsky wrote:
+>>> From: Yeoreum Yun <yeoreum.yun@arm.com>
+>>>
+>>> The POR_EL1 register is reset to an unknown value after cpu_suspend().
+>>> Since POR_EL1 always holds POR_EL1_INIT when entering cpu_suspend(),
+>>> initialize POR_EL1 with POR_EL1_INIT before cpu_do_resume().
+>>>> +#ifdef CONFIG_ARM64_POE
+>>> +alternative_if_not ARM64_HAS_S1POE
+>>> +	b	.Lskip_por_set
+>>> +alternative_else_nop_endif
+>>> +	mov_q	x2, POR_EL1_INIT
+>>> +	msr_s	SYS_POR_EL1, x2
+>>> +	/* isb can be skipped since cpu_do_resume() will do it. */
+>>> +.Lskip_por_set:
+>>> +#endif /* CONFIG_ARM64_POE */
+>> cpu_do_resume() will update TCR2_EL1 to enable POE again, a sufficiently
+>> unhelpful implementation could potentially decide to do that before this
+>> POR_EL1 value takes effect AFAICT given that there's no barriers.
+> Thanks. seems required to isb() after initialising SYS_POR_EL1.
 
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
----
- arch/mips/configs/eyeq6_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Agreed (as Sashiko reported as well). Presumably that means we also need
+an ISB after writing to POR_EL1 in cpu_enable_poe(), as that's basically
+the same situation.
 
-diff --git a/arch/mips/configs/eyeq6_defconfig b/arch/mips/configs/eyeq6_defconfig
-index 0a00a201937b..2d06d9ed6526 100644
---- a/arch/mips/configs/eyeq6_defconfig
-+++ b/arch/mips/configs/eyeq6_defconfig
-@@ -19,6 +19,7 @@ CONFIG_USER_NS=y
- CONFIG_SCHED_AUTOGROUP=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_EXPERT=y
-+CONFIG_PERF_EVENTS=y
- CONFIG_EYEQ=y
- CONFIG_MACH_EYEQ6H=y
- CONFIG_MIPS_CPS=y
-@@ -86,6 +87,7 @@ CONFIG_MMC_SDHCI_PLTFM=y
- CONFIG_MMC_SDHCI_CADENCE=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_RESET_CONTROLLER=y
-+CONFIG_MIPS_CM3_PMU=m
- # CONFIG_NVMEM is not set
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
-
--- 
-2.43.0
-
+- Kevin
