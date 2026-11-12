@@ -1,103 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794503876;
-	b=mUqnESIeq/ymsAmp8Q4KAGKk07Bmpd6Z6c9p9p8EN7IBF4ObEBZzP83DhzeHfaHCyx/D
-	 ce5HqslU5MDrJnCm71C6sfElkLD9ZgNnelNCTVb+7iLZMWaRKhE+Pugb1KTAD1V+SwWPL
-	 jf+tNW7yZkB69RvijNtWqc795etdUa3p4AiaflBNf/7a4l4HtCcNZ91EWbtyzb5MDqTdK
-	 L6g75FSwo6PUBOuKcvXHrVL9Ce/LmPNUF5eyBaT8wmQ0NNy1k2cmySvFGiC2MWBOBUwis
-	 PhzxLqkfTWL2nCBcZLFxCjHmaSvFoWXRdHw6c3WJlsRMgMuzyxSpqPWXa4iICvlg4uQ==
+	t=1794504217;
+	b=X7OwiJbHA2+eI9KI7SQFbgEIgAlwDhEj4lrrjEvH2H9iyoSqKk0jd1yQzvRXvvgS3M/+
+	 MA9PU4bSLXGj97qw/BYdcX33xXyDrJnTYN+Zwo1x//inxpi/YhwsSkHG/yZzKmjPilQND
+	 JgD84YwDf7FJmZPJqqGQT4ub7h1SFzY5ZZzQZikXDPRdeJWAeWDz7DUJSlfXYk0E558qs
+	 yQKs16k7if1bfepWW62SZMhPYqBo5EqK2O+2slGDp7tX/1IBXUjGah03EjEfGRvbJ8i37
+	 beeMCP3g1hxnX8fRpDlM1to9l4M1besAT+/m4ainwcjQhnZrTmwuZdyXDu2ABeWp5Pw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794503876;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=VMi+hIkLWXT7siLEN9ATyCll+A1V4GrHFAEeCBcDPio=;
-	b=25EheIKy2mCkG8KJlAlZepDJWxlqrKr+5BN9JIO/HMNByML0t0lLkBu4Zaf+7kH51Lny
-	 DYkTXFwlZAsxwcsi6YduH5D+XS8Cwdq0kv1PlDhwN855MVJSaJKkXLjBdPgdRQJLN2vBG
-	 r8eaGZpfhZWDUlNj50PVceX+1SYrhFq0+W6oaO2XHMr7+IvXMfoNo9xTuD67DEyKFI4cc
-	 t/hPuGPnNt48OnmjFSR//Min+O/yId5ZzT7zdZc3v+1wT8ayhWQ4tKB0h70EOEV/tvaj5
-	 B5kL53GbKUfL5e3XjxkJAlyDyBkN5VKE1prug4a3OFXHrhXPTY941KK7co0zesIKq3g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794504217;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Received:X-Forwarded-Encrypted:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=CPqL/jXjgacEff5dEPASqy6/Bbk+NnoKXgfKHY7JVag=;
+	b=vl4O+nfy5gL8JboqcfV6mhblGlg+wFOmq5ClL2N6HN6L7nZJviR2rdNFk9DjUC/+EGk1
+	 P08zlPeuj/rVnQ6tBUH4/M0R866ULvBRq3M1T9blKxL2O0anRdOgJCPU/f+JbSW99rsjF
+	 FfsL+RIjHLOmgzI1Xn98SsnCW14dWkiPlIswNN1uE/lFceArCtG/v8+obXUQ+2BdGnncb
+	 aH0ukwudUXB67zoV5M4Dq2t4aveOUEh2ZQgX7Djm9MqECSLkVZox1nCBx+pDB18AGPN6J
+	 /v+Tdg23bWoKyVa5LTXZgJyr1/1YN3jm/MxLsBpGQgP8vL8P+196aBzgwNXZsMWvoWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xi1M0Wrq;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linuxfoundation.org;
+	spf=pass smtp.mailfrom=linuxfoundation.org;
+	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=google header.b=Gx7py7bJ;
+	arc=none smtp.remote-ip=209.85.208.43
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F8A606A321;
-	Thu, 12 Nov 2026 17:17:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601E4606A31C
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 17:23:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 601E4606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xi1M0Wrq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B9171F000C5;
-	Thu, 12 Nov 2026 17:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794503876;
-	bh=VMi+hIkLWXT7siLEN9ATyCll+A1V4GrHFAEeCBcDPio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Xi1M0WrqH5bMvx0n0pi4w5v7a8qJzrxjW4xzgjyJBTk4w5Ha9LDFHd8Q2SIO4bI0/
-	 R1AH44wKcxNJXbaWLeAun1BY623lBE7mWeM8MlocaX0VT4oGCtm1o/G3AsbPIXS1Ln
-	 HAfe4Gi1tJJQuDHDrzTAcmJcvP7xkP9KNg6uFt8kIbAQS0k0mQOiMe1zrTRcGbMEAP
-	 QjV4y8GkI+IFa+IR6J9g75IGth5ijUGZ2Wd4tjx81In8/mDCI0Hl19n37GOo0mpyES
-	 RMm1owYYSjXmybNXysJzMRsSMwbMIAEWBzrarLAWP33yYlnJBqzwDlRjfOGVF8svjx
-	 eUQ0ymv8EqhZg==
-Date: Thu, 12 Nov 2026 09:17:55 -0800
-From: Kees Cook <kees@kernel.org>
-To: Bence Csokas <bence.csokas@arm.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	Zack Rusin <zack.rusin@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Selvin Xavier <selvin.xavier@broadcom.com>,
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Chengchang Tang <tangchengchang@huawei.com>,
-	Junxian Huang <huangjunxian6@hisilicon.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Jes Sorensen <Jes.Sorensen@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Nilesh Javali <njavali@marvell.com>,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <mkp@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-	chrome-platform@lists.linux.dev, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Add struct_offsetofend() for pointer arithmetic
-Message-ID: <202611120916.3619B95@keescook>
-References: <20261112-offsetof-v2-0-276ede839967@arm.com>
+	dkim=pass (1024-bit key, unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=google header.b=Gx7py7bJ
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6b547d6c07bso49928a12.1
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 09:23:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1794504215; x=1795109015; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=CPqL/jXjgacEff5dEPASqy6/Bbk+NnoKXgfKHY7JVag=;
+        b=Gx7py7bJqnuJzaODcnZwn2ksXw0n3M4na/4CCr7bYh9jsFNkfPQiDuVzGaMhJUH0Mt
+         8gpn9mQeUbivywi6uhHmQDFnWmh7ZT/USOs4Gx/Ar80c4vjtEhwrq98h8K4rgX5T+sb1
+         fwoEiDX3NGBOVJC/cOsbnN/HyaGNZcE4NiSdg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794504215; x=1795109015;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=CPqL/jXjgacEff5dEPASqy6/Bbk+NnoKXgfKHY7JVag=;
+        b=eVZ0hM7+XU7piUlNq/RH7BkktqQVX6Mgmo/3h0sZFtmYDCBKSv9rh9LhWzxnaUBpx9
+         HbvSi2/o6W1U3LbgtoRW/CsQNuhKBkkQMK8S2dMO4gUWusauVQA7pVHo9KA7PH0vthld
+         5ka//StFVgvfucv7eIUJ3xlkhPPu1sX56JWKFy6KnTAKYL+AgxZ4+NJYVjt8awbcT0L4
+         IWrabq5/JmBT0vR8x7uXjHtQyY1HJrnc6j8GG8hbEN0ksVyI7s8p70SqBtcFPYbq1rs2
+         csjXo9VcHHcmQjj8NfLGCGI9OJdL3jl5nHVp8xQzF1X9JLxFsh0uDTZlfU/MoTZJnhyh
+         E4gA==
+X-Forwarded-Encrypted: i=1; AL+hErG5tg+3fPwf2XIbrG1r9nrwX3guZlw7ZwqDVfh5rZqMZgmEfWOmpUA+6UR/qbKDYmFIDLbjUnMzAa8QL87uM20=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/lAwg30FniZgeBa3w2C+bWesCzdUDlcNrf6tu8UqV0DZOqPYaO
+	CW/aMm5aG4pJufiHEY7PpNq82guQheR7oVW0vK7IUo8SoCqwXIxC4tRyg+disEYKraUrxkcE9M8
+	gjGjeuusKDA==
+X-Gm-Gg: AYBFou1VgpE+ylzrjXe57hBAFJ9/IprDn6au4QkQHb+kRLvKgN5S0ifHET0lkhdpo4G
+	31ESW6wvuPQWWLiqJD1nBs3Jm6TXczC8RbFholMDM3Mt53YRyQYfTx9A9DqJAbLWH8wFgF0wX7D
+	4NWOpBQPjVRRXBuitfeYovH+XYaVc1eP3APoIAzV8tpEAE4Ijr09uzRV6+I3HGtFjXBZVyxhVFJ
+	klOKiRG6LD7TxQLLdppuvC4e8cSo6E/8E4iX4JZ8pg8sf8YOnB4ivke89IvlMkdta+By92YaRrY
+	rQfPo6z8oPaEIRUWd2W/deUEElbpRPz36UmP6GW3yWHmWWjls+8BwWQz+2CnOY4gfOW/Jt2+I+E
+	SLRYlf19OOIXkxFgXuDMc/6amzkcSyyLkoeO+tw28khkp1WEI+ZqAlBsIX5ZGcc8j5koUpFusZ1
+	MLCIsIn8MT8RWMrYECz84xP6rBOJaQmbeWq3Tuzw1E0eCY8pqnDlyWnVyBnRlrgHOQHYIKQtjLu
+	wLzPdmbUW/PhPIAfslNBjqTB/P1yj0S0lUqZ4chy4zgr+5t4h3Y8gtQ1d8b1Q91zOomq7BZ96h2
+	vnZmBhTETOGtHMRYPGhymAFcGVNifK3m/0/Tt0AAvC2fOzz0XaFvrLQFypKRDRlhy+mnrtktDY2
+	sjQ==
+X-Received: by 2002:a05:6402:2113:b0:6b5:962e:e00f with SMTP id 4fb4d7f45d1cf-6b7c0c6dbe3mr263237a12.28.1794504214741;
+        Thu, 12 Nov 2026 09:23:34 -0800 (PST)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b7578d2caesm3736609a12.16.2026.11.12.09.23.34
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Nov 2026 09:23:34 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c3f04e0e65fso684656866b.2
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 09:23:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErGuRZscQZIIcKW3YnZpbYqMqmmRWtMwHeQsk6AqmCy5e3r5p7ciiVvhom94eb2H/TGK6TfuoHvOEV0zifD9D2o=@vger.kernel.org
+X-Received: by 2002:a17:907:2d9e:b0:c50:4b7a:de71 with SMTP id
+ a640c23a62f3a-c5066c973bfmr611766466b.28.1794504214466; Thu, 12 Nov 2026
+ 09:23:34 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -107,150 +94,46 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20261112-offsetof-v2-0-276ede839967@arm.com>
+References: <20260914223212.i.829-kees@kernel.org> <20260914223219.901347-2-kees@kernel.org>
+ <20261112004039.GA523044@killaraus.ideasonboard.com> <avWNCC3_Ff0knO6J@devuan>
+ <CAHk-=wgYBrhvo2NAG_Ja-0ovPf=xO20Gcopv9Yrr1u=QVxECZw@mail.gmail.com> <202611120905.DF88D9849@keescook>
+In-Reply-To: <202611120905.DF88D9849@keescook>
+From: Linus Torvalds <torvalds@linuxfoundation.org>
+Date: Thu, 12 Nov 2026 09:23:18 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whAF3brA9Wrcf3KDhNn_653zhUsoqe1MSneYJWtS5505Q@mail.gmail.com>
+X-Gm-Features: AclHuK_HNQpT4tCfX_FLYbv7PC35fGzeh8ZhM2vC9ghehMzLoLgyRTCdJiNaTCw
+Message-ID: <CAHk-=whAF3brA9Wrcf3KDhNn_653zhUsoqe1MSneYJWtS5505Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] devres: Provide kmalloc_obj*-style API for devm_kmalloc
+To: Kees Cook <kees@kernel.org>
+Cc: Alejandro Colomar <alx+linux-hardening@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, driver-core@lists.linux.dev, 
+	linux-hardening@vger.kernel.org, Lorenzo Stoakes <ljs@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	David Hildenbrand <david@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, justinstitt@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Nov 12, 2026 at 10:29:32AM +0100, Bence Csokas wrote:
-> A common usage pattern for offsetof() is the following:
-> 
->   offsetof(typeof(*ptr), member)
-> 
-> This is exactly the definition of struct_offset(). Some call sites use
-> offsetofend() instead of offsetof(). Add this variant, then replace all
-> call sites with the corresponding macros.
+On Thu, 12 Nov 2026 at 09:09, Kees Cook <kees@kernel.org> wrote:
+>
+> One thing Justin was poking at was adding a "strict" mode to typedef
 
-Yeah, I think this is reasonable. I'd prefer to see the Coccinelle
-script explicitly added to tools/coccinelle/api/ though, so it can be
-trivially re-run as needed.
+Honestly, the sparse setup is superior. It does that 'strict' thing
+(except it calls it 'nocast') _and_ it has 'bitwise' that is a nocast
+that also disallows non-bit type checks (which is *very* useful for
+things like "this is a big-endian value: you can only do bitwise
+checks against other big-endian values).
 
-Also, while Alejandro is right about the needless outer parens, I think
-I'd like to keep them just to match the other define, and they do no
-harm.
+So the compiler addition may be worth it, but  even the "poking at" is
+weaker than what sparse already does.
 
--Kees
+And the 'struct' model is honestly superior to both when it works -
+but can add extra overhead (but can also end up being nicer than both:
+instead of casting with special "I really mean it" casts, you can
+derefence the struct and get its value that way)
 
-> 
-> Signed-off-by: Bence Csokas <bence.csokas@arm.com>
-> ---
-> Changes in v2:
-> - Use struct_offset() instead of reinventing it
-> - Rename offsetofendp() to struct_offsetofend()
-> - Merge the two treewide patches
-> - Link to v1: https://patch.msgid.link/20261105-offsetof-v1-0-4153f5c10edc@arm.com
-> 
-> To: Kees Cook <kees@kernel.org>
-> To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> To: Marcel Holtmann <marcel@holtmann.org>
-> To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-> To: Sumit Semwal <sumit.semwal@linaro.org>
-> To: Christian König <christian.koenig@amd.com>
-> To: Philipp Stanner <phasta@kernel.org>
-> To: Sudeep Holla <sudeep.holla@kernel.org>
-> To: Cristian Marussi <cristian.marussi@arm.com>
-> To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> To: Maxime Ripard <mripard@kernel.org>
-> To: Thomas Zimmermann <tzimmermann@suse.de>
-> To: David Airlie <airlied@gmail.com>
-> To: Simona Vetter <simona@ffwll.ch>
-> To: Jani Nikula <jani.nikula@linux.intel.com>
-> To: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> To: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> To: Tvrtko Ursulin <tursulin@ursulin.net>
-> To: Lyude Paul <lyude@redhat.com>
-> To: Danilo Krummrich <dakr@kernel.org>
-> To: Zack Rusin <zack.rusin@broadcom.com>
-> To: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-> To: Selvin Xavier <selvin.xavier@broadcom.com>
-> To: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
-> To: Jason Gunthorpe <jgg@ziepe.ca>
-> To: Leon Romanovsky <leon@kernel.org>
-> To: Chengchang Tang <tangchengchang@huawei.com>
-> To: Junxian Huang <huangjunxian6@hisilicon.com>
-> To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> To: Hans de Goede <hansg@kernel.org>
-> To: Mauro Carvalho Chehab <mchehab@kernel.org>
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> To: Wei Liu <wei.liu@kernel.org>
-> To: Dexuan Cui <decui@microsoft.com>
-> To: Andrew Lunn <andrew+netdev@lunn.ch>
-> To: "David S. Miller" <davem@davemloft.net>
-> To: Eric Dumazet <edumazet@kernel.org>
-> To: Jakub Kicinski <kuba@kernel.org>
-> To: Paolo Abeni <pabeni@redhat.com>
-> To: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-> To: Jes Sorensen <Jes.Sorensen@gmail.com>
-> To: Ping-Ke Shih <pkshih@realtek.com>
-> To: Johannes Berg <johannes@sipsolutions.net>
-> To: Benson Leung <bleung@chromium.org>
-> To: Tzung-Bi Shih <tzungbi@kernel.org>
-> To: Guenter Roeck <groeck@chromium.org>
-> To: Nilesh Javali <njavali@marvell.com>
-> To: GR-QLogic-Storage-Upstream@marvell.com
-> To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> To: "Martin K. Petersen" <mkp@kernel.org>
-> Cc: linux-hardening@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-bluetooth@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linaro-mm-sig@lists.linaro.org
-> Cc: arm-scmi@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: nouveau@lists.freedesktop.org
-> Cc: linux-rdma@vger.kernel.org
-> Cc: linux-hyperv@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-wireless@vger.kernel.org
-> Cc: chrome-platform@lists.linux.dev
-> Cc: linux-scsi@vger.kernel.org
-> 
-> ---
-> Bence Csokas (2):
->       stddef: Add offsetofend() variant of struct_offset()
->       treewide: Use struct_offset()
-> 
->  drivers/bluetooth/btmrvl_main.c                    | 12 +++++-----
->  drivers/dma-buf/dma-resv.c                         |  2 +-
->  drivers/firmware/arm_scmi/base.c                   |  2 +-
->  drivers/gpu/drm/drm_edid.c                         | 26 +++++++++++-----------
->  drivers/gpu/drm/i915/gem/i915_gem_object.c         |  4 ++--
->  drivers/gpu/drm/i915/i915_active.c                 |  2 +-
->  drivers/gpu/drm/i915/i915_sw_fence_work.c          |  2 +-
->  .../gpu/drm/nouveau/nvkm/subdev/gsp/rm/r535/gsp.c  |  2 +-
->  drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c            | 12 +++++-----
->  drivers/infiniband/hw/bnxt_re/qplib_fp.c           |  2 +-
->  drivers/infiniband/hw/hns/hns_roce_cq.c            |  4 ++--
->  drivers/infiniband/hw/hns/hns_roce_qp.c            |  6 ++---
->  drivers/media/usb/uvc/uvc_v4l2.c                   |  4 ++--
->  drivers/net/hyperv/rndis_filter.c                  |  2 +-
->  drivers/net/wireless/intel/iwlwifi/iwl-drv.c       |  2 +-
->  drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c     |  2 +-
->  drivers/net/wireless/intel/iwlwifi/mvm/rs.c        |  2 +-
->  .../net/wireless/intel/iwlwifi/pcie/ctxt-info-v2.c |  5 ++---
->  drivers/net/wireless/realtek/rtl8xxxu/core.c       |  2 +-
->  drivers/net/wireless/realtek/rtw88/fw.c            |  2 +-
->  drivers/net/wireless/realtek/rtw89/core.c          |  2 +-
->  drivers/net/wireless/realtek/rtw89/fw.c            |  8 +++----
->  drivers/net/wireless/virtual/mac80211_hwsim_main.c |  4 ++--
->  drivers/platform/chrome/cros_ec_lightbar.c         |  4 ++--
->  drivers/scsi/qla2xxx/qla_gs.c                      |  2 +-
->  drivers/scsi/qla2xxx/qla_mbx.c                     |  2 +-
->  drivers/scsi/qla2xxx/qla_os.c                      |  2 +-
->  drivers/scsi/qla2xxx/qla_tmpl.c                    |  4 ++--
->  drivers/scsi/scsi_transport_fc.c                   |  2 +-
->  include/linux/overflow.h                           | 12 ++++++++++
->  30 files changed, 75 insertions(+), 64 deletions(-)
-> ---
-> base-commit: 9d66f26fefacebfeed15de31c1123451a17ff119
-> change-id: 20261105-offsetof-f62aa6348f0d
-> 
-> Best regards,
-> --  
-> Bence Csokas <bence.csokas@arm.com>
-> 
-
--- 
-Kees Cook
+              Linus
