@@ -1,90 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794504217;
-	b=X7OwiJbHA2+eI9KI7SQFbgEIgAlwDhEj4lrrjEvH2H9iyoSqKk0jd1yQzvRXvvgS3M/+
-	 MA9PU4bSLXGj97qw/BYdcX33xXyDrJnTYN+Zwo1x//inxpi/YhwsSkHG/yZzKmjPilQND
-	 JgD84YwDf7FJmZPJqqGQT4ub7h1SFzY5ZZzQZikXDPRdeJWAeWDz7DUJSlfXYk0E558qs
-	 yQKs16k7if1bfepWW62SZMhPYqBo5EqK2O+2slGDp7tX/1IBXUjGah03EjEfGRvbJ8i37
-	 beeMCP3g1hxnX8fRpDlM1to9l4M1besAT+/m4ainwcjQhnZrTmwuZdyXDu2ABeWp5Pw==
+	t=1794504427;
+	b=pdnYlF1PTSb07ZI94E7KCMdzabn6wVUS5BshTngGTwUp91r86WirVT46D1QDUjc0N4vE
+	 Xzo4t0iM/x3IB1IjEYHvjCXe+baPdHi68CjXYdtejlCtU4IcllmTWHYv0BFG2/WRxd586
+	 13ewVJPHtkhMifUCk5bVIz5rr9Y3OiXhfv2AQSopwKe3INgeg/GQLiigAi+eciR4tTDwQ
+	 ICjef+ZCwjnnzhFdVP7WV+CYkuKtahNiznt0QUXVOo2vsvTHhvpZJwN6x6N0SRV68xcrv
+	 LFol2f3qmPm8hzKvSshnvNXcObRQKYtoqVx/3NlNsIIU5uK3dUSWtS6VrMPqB32XQhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794504217;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Received:X-Forwarded-Encrypted:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=CPqL/jXjgacEff5dEPASqy6/Bbk+NnoKXgfKHY7JVag=;
-	b=vl4O+nfy5gL8JboqcfV6mhblGlg+wFOmq5ClL2N6HN6L7nZJviR2rdNFk9DjUC/+EGk1
-	 P08zlPeuj/rVnQ6tBUH4/M0R866ULvBRq3M1T9blKxL2O0anRdOgJCPU/f+JbSW99rsjF
-	 FfsL+RIjHLOmgzI1Xn98SsnCW14dWkiPlIswNN1uE/lFceArCtG/v8+obXUQ+2BdGnncb
-	 aH0ukwudUXB67zoV5M4Dq2t4aveOUEh2ZQgX7Djm9MqECSLkVZox1nCBx+pDB18AGPN6J
-	 /v+Tdg23bWoKyVa5LTXZgJyr1/1YN3jm/MxLsBpGQgP8vL8P+196aBzgwNXZsMWvoWQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794504427;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=Glvz53zLbLbW8bLhJ7jWkgAZpG3+a8zrKk+EYR0fOlo=;
+	b=yQIgA2vF1BTXflOGKgO5SrCFhgSXk15wTIjQcOPnbQcioZJymuZO9PlhfUZQSiMlbAfw
+	 B7oyvd8tJKV4GZDGyOU377tJarUAn0j9RQe0tWHkkqW5HwjbWXPSc+F+LSFW6RFCRVOS4
+	 1LHlBbb5iBpTDRG2mAYc0TcRJIdsEsihS1hyYIGLLKjcuVPqxXK0KH/JL/tBG3+Oka6nM
+	 9fy37de1KDrJg/yh9Lqv2e4HLFADcYCR/pq8oD1rGf4Qq3ixTZNDmFVR9NpmTaH7O/kaq
+	 fW6g1LlHrGQ7uQKdXCE5JNBWQ/zm0k5h938JHB88DtqC+HYpZpjH2eT5kC7bEZ8ccvg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linuxfoundation.org;
-	spf=pass smtp.mailfrom=linuxfoundation.org;
-	dkim=pass header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=google header.b=Gx7py7bJ;
-	arc=none smtp.remote-ip=209.85.208.43
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hGVxhXwB;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601E4606A31C
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 17:23:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 601E4606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C96606A32D;
+	Thu, 12 Nov 2026 17:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=google header.b=Gx7py7bJ
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6b547d6c07bso49928a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 09:23:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1794504215; x=1795109015; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=CPqL/jXjgacEff5dEPASqy6/Bbk+NnoKXgfKHY7JVag=;
-        b=Gx7py7bJqnuJzaODcnZwn2ksXw0n3M4na/4CCr7bYh9jsFNkfPQiDuVzGaMhJUH0Mt
-         8gpn9mQeUbivywi6uhHmQDFnWmh7ZT/USOs4Gx/Ar80c4vjtEhwrq98h8K4rgX5T+sb1
-         fwoEiDX3NGBOVJC/cOsbnN/HyaGNZcE4NiSdg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794504215; x=1795109015;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=CPqL/jXjgacEff5dEPASqy6/Bbk+NnoKXgfKHY7JVag=;
-        b=eVZ0hM7+XU7piUlNq/RH7BkktqQVX6Mgmo/3h0sZFtmYDCBKSv9rh9LhWzxnaUBpx9
-         HbvSi2/o6W1U3LbgtoRW/CsQNuhKBkkQMK8S2dMO4gUWusauVQA7pVHo9KA7PH0vthld
-         5ka//StFVgvfucv7eIUJ3xlkhPPu1sX56JWKFy6KnTAKYL+AgxZ4+NJYVjt8awbcT0L4
-         IWrabq5/JmBT0vR8x7uXjHtQyY1HJrnc6j8GG8hbEN0ksVyI7s8p70SqBtcFPYbq1rs2
-         csjXo9VcHHcmQjj8NfLGCGI9OJdL3jl5nHVp8xQzF1X9JLxFsh0uDTZlfU/MoTZJnhyh
-         E4gA==
-X-Forwarded-Encrypted: i=1; AL+hErG5tg+3fPwf2XIbrG1r9nrwX3guZlw7ZwqDVfh5rZqMZgmEfWOmpUA+6UR/qbKDYmFIDLbjUnMzAa8QL87uM20=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/lAwg30FniZgeBa3w2C+bWesCzdUDlcNrf6tu8UqV0DZOqPYaO
-	CW/aMm5aG4pJufiHEY7PpNq82guQheR7oVW0vK7IUo8SoCqwXIxC4tRyg+disEYKraUrxkcE9M8
-	gjGjeuusKDA==
-X-Gm-Gg: AYBFou1VgpE+ylzrjXe57hBAFJ9/IprDn6au4QkQHb+kRLvKgN5S0ifHET0lkhdpo4G
-	31ESW6wvuPQWWLiqJD1nBs3Jm6TXczC8RbFholMDM3Mt53YRyQYfTx9A9DqJAbLWH8wFgF0wX7D
-	4NWOpBQPjVRRXBuitfeYovH+XYaVc1eP3APoIAzV8tpEAE4Ijr09uzRV6+I3HGtFjXBZVyxhVFJ
-	klOKiRG6LD7TxQLLdppuvC4e8cSo6E/8E4iX4JZ8pg8sf8YOnB4ivke89IvlMkdta+By92YaRrY
-	rQfPo6z8oPaEIRUWd2W/deUEElbpRPz36UmP6GW3yWHmWWjls+8BwWQz+2CnOY4gfOW/Jt2+I+E
-	SLRYlf19OOIXkxFgXuDMc/6amzkcSyyLkoeO+tw28khkp1WEI+ZqAlBsIX5ZGcc8j5koUpFusZ1
-	MLCIsIn8MT8RWMrYECz84xP6rBOJaQmbeWq3Tuzw1E0eCY8pqnDlyWnVyBnRlrgHOQHYIKQtjLu
-	wLzPdmbUW/PhPIAfslNBjqTB/P1yj0S0lUqZ4chy4zgr+5t4h3Y8gtQ1d8b1Q91zOomq7BZ96h2
-	vnZmBhTETOGtHMRYPGhymAFcGVNifK3m/0/Tt0AAvC2fOzz0XaFvrLQFypKRDRlhy+mnrtktDY2
-	sjQ==
-X-Received: by 2002:a05:6402:2113:b0:6b5:962e:e00f with SMTP id 4fb4d7f45d1cf-6b7c0c6dbe3mr263237a12.28.1794504214741;
-        Thu, 12 Nov 2026 09:23:34 -0800 (PST)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6b7578d2caesm3736609a12.16.2026.11.12.09.23.34
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Nov 2026 09:23:34 -0800 (PST)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c3f04e0e65fso684656866b.2
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 09:23:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErGuRZscQZIIcKW3YnZpbYqMqmmRWtMwHeQsk6AqmCy5e3r5p7ciiVvhom94eb2H/TGK6TfuoHvOEV0zifD9D2o=@vger.kernel.org
-X-Received: by 2002:a17:907:2d9e:b0:c50:4b7a:de71 with SMTP id
- a640c23a62f3a-c5066c973bfmr611766466b.28.1794504214466; Thu, 12 Nov 2026
- 09:23:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hGVxhXwB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 741471F000C6;
+	Thu, 12 Nov 2026 17:27:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794504426;
+	bh=Glvz53zLbLbW8bLhJ7jWkgAZpG3+a8zrKk+EYR0fOlo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hGVxhXwB/EN0+UEepRhMiIUwZF3NTeqJdbcF2aWDAYIUv/z44L/8ZpvnuXDYd+RFc
+	 4GwHY1ml311TymQ3n5RLQfQYpU7LnGUQcm9HOjkwUNjzSHP+jSlZ0aDvxUDUj6IwgO
+	 LaNnjasMf8r60oqCditXg23z+ImYJqCpf871ryVTghPUjgaKW6favdiUStEeWgnB5c
+	 AAu6YMgq/oYnWOoZHEdAXDUQQPxREuRM+LMMhnFXtDLE4+UPox/aRkD22cJsTIRSgz
+	 XdsVcZBy/qDo17bX2NxgCxqcW/ovpPmDUo6SIdDDfapLI7DuTKQAthNx1FWK1jZe9Y
+	 AZXuDSWZPcvOA==
+Date: Thu, 12 Nov 2026 09:27:06 -0800
+From: Kees Cook <kees@kernel.org>
+To: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, wenst@chromium.org,
+	angelogioacchino.delregno@collabora.com
+Subject: Re: [PATCH] ASoC: soc-core: reset rtd->num_components after
+ allocation
+Message-ID: <202611120924.2058DD59@keescook>
+References: <20261109102536.357134-1-ghidoliemanuele@gmail.com>
+ <87bj7yw9e2.wl-tiwai@suse.de>
+ <87FF4A7B-853C-466A-AB01-2D9137DEE6CC@kernel.org>
+ <EAAF07EF-6B11-4EA5-A5AF-A7787CA2F196@kernel.org>
+ <a64e2fa1-6670-4018-80b8-b6856709ad5f@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -94,46 +67,52 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260914223212.i.829-kees@kernel.org> <20260914223219.901347-2-kees@kernel.org>
- <20261112004039.GA523044@killaraus.ideasonboard.com> <avWNCC3_Ff0knO6J@devuan>
- <CAHk-=wgYBrhvo2NAG_Ja-0ovPf=xO20Gcopv9Yrr1u=QVxECZw@mail.gmail.com> <202611120905.DF88D9849@keescook>
-In-Reply-To: <202611120905.DF88D9849@keescook>
-From: Linus Torvalds <torvalds@linuxfoundation.org>
-Date: Thu, 12 Nov 2026 09:23:18 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whAF3brA9Wrcf3KDhNn_653zhUsoqe1MSneYJWtS5505Q@mail.gmail.com>
-X-Gm-Features: AclHuK_HNQpT4tCfX_FLYbv7PC35fGzeh8ZhM2vC9ghehMzLoLgyRTCdJiNaTCw
-Message-ID: <CAHk-=whAF3brA9Wrcf3KDhNn_653zhUsoqe1MSneYJWtS5505Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] devres: Provide kmalloc_obj*-style API for devm_kmalloc
-To: Kees Cook <kees@kernel.org>
-Cc: Alejandro Colomar <alx+linux-hardening@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, driver-core@lists.linux.dev, 
-	linux-hardening@vger.kernel.org, Lorenzo Stoakes <ljs@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Brendan Jackman <brendan.jackman@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	David Hildenbrand <david@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, justinstitt@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a64e2fa1-6670-4018-80b8-b6856709ad5f@gmail.com>
 
-On Thu, 12 Nov 2026 at 09:09, Kees Cook <kees@kernel.org> wrote:
->
-> One thing Justin was poking at was adding a "strict" mode to typedef
+On Wed, Nov 11, 2026 at 11:28:52AM +0100, Emanuele Ghidoli wrote:
+> 
+> 
+> On 11/11/26 06:59, Kees Cook wrote:
+> > 
+> > 
+> > On November 10, 2026 9:50:08 PM PST, Kees Cook <kees@kernel.org> wrote:
+> > 
+> > For example, what keeps snd_soc_rtd_add_component() from overflowing
+> > that array? If you want to protect the array, add another member,
+> > say max_component, and use that for the counter, which gets set at
+> > allocation time and protects the array from indexing beyond the actual
+> > allocation size.
+> 
+> Hello Kees,
+> 
+> Mark has already applied the fix to for-7.4 (d00ba321499c). I agree that
+> your proposal is far better, but the applied patch was meant as the
+> minimal change to fix the regression.
 
-Honestly, the sparse setup is superior. It does that 'strict' thing
-(except it calls it 'nocast') _and_ it has 'bitwise' that is a nocast
-that also disallows non-bit type checks (which is *very* useful for
-things like "this is a big-endian value: you can only do bitwise
-checks against other big-endian values).
+Yes, totally correct. :) I was just looking at it from a root-cause
+perspective. Each time we hit issues with counted_by I try to understand
+what the problem was, since the goal is to make it "easy to use". :P
 
-So the compiler addition may be worth it, but  even the "poking at" is
-weaker than what sparse already does.
+> On your question about what keeps snd_soc_rtd_add_component() from
+> overflowing the array: nothing, and it already seems possible today.
+> 
+> From an LLM-assisted review of the code: the platform loop in
+> snd_soc_add_pcm_runtime() adds every component that matches the platform
+> dai_link_component, while components[] has one entry per
+> platform. On mt8173, for example, the AFE registers three components on the
+> same device and the front-end links use it as platform, so four components go
+> into three entries. The extra store has gone unnoticed in the slab slack, but
+> with max_components as the counter UBSAN_BOUNDS would report it.
+> 
+> I can't work on a follow-up. If someone picks it up, components[] probably
+> needs to be sized by the matching components before the counter is switched to
+> max_components.
 
-And the 'struct' model is honestly superior to both when it works -
-but can add extra overhead (but can also end up being nicer than both:
-instead of casting with special "I really mean it" casts, you can
-derefence the struct and get its value that way)
+Yeah, I think we need some better documentation about best practices for
+counted_by, as there is clearly 2 very distinct cases it's getting
+applied to, and the "usage count" case is the most fragile.
 
-              Linus
+-- 
+Kees Cook
