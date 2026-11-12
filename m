@@ -1,59 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794516349;
-	b=3eFdxuf4A8p6Je9DgCa/gBFAumj0DoT83wHCOXzi3DCBcgJm9UW+wYj7szA/rkU55M8E
-	 Sx6mHZ+5apu7nsyovfpHnliKopfNr/haTRaOsgwgyjsKU1f8XX3saPhXSoWNjn0v9kja2
-	 LJ5UX121/EaCwvjfRpQGNNSqPj17HoO85eKskPjCN8fL9IuVWwIDw0TMxsqjxyZs8A4rO
-	 D+22Ab672tXedK3XvUV2viseHZZqeq2KjQIa+2nocRyIepCTMP4PLyVy8Cu2MDoT+A5P8
-	 SZQ/W6G8W6LNsvCLQOmRsN9EZu4EISz/qqV5JUoWMTIFfneQpRRaJ9VAGCNVXvez3Yw==
+	t=1794518499;
+	b=fEK9+Gn3VdL8QqNHofe0PxzaoyLSeZSukPEOzXNVa/wx+nTFzbPLfzcP1iwngvYGkaeL
+	 BkFICXgGx6bwTL/wevdqXK2kar+j044LoHIFqIN5hzUpY55RrrjplLpZ2m54B6rajV6Bm
+	 hxoSG8Gb8ZuLlp2c5osbem4K37gAJe/sCKG4F33KMjGBtKoJQbh+9ep0iZ5CfbRW+NNJX
+	 ZLmZQP2rvqjCq1jalwuE7Q+4Uv3IrYM+64LMlnHRyNIv86yL3zWsAc16t0inneyqFAchQ
+	 mQe6TnS6qsQ/XPSHx+giipg6Zokm9JgA7jaLClz0QcDFC/LicvrFL1pJRl2riFM+vSg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794516349;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794518499;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=vExIF6BLPxilcEzmeQ44C3+EI0WD/Najy1w9BlH7ZrA=;
-	b=yXUnJY7rbpSrIkxvAFcAScLDAiK1QE3e+HbnCGjVcFmT+AfxtZlXZ8gaf9KNZdz28SmX
-	 g/gUiCXApmfBqAa75aq4rw4okfk3XDsGFqbFxoQlpmPd6y1szA69bw27H76OC3x3U/Ljp
-	 5zYOBojFgW/KHdAa6ZT43t2bIinS1DIwyx4QoorfeEOy5ayE25J4QnijUDmrFwZdrXwYg
-	 i2RREFj2ruNxaxQwS9EAXMM5o8DzCDK0Pv5uxxyRaElMM+X70zWd1nOGHrHC7g4Xs/itg
-	 epqZOf1R7Q6YPEm656tlKPnO3ssNpN/Gatnb8ABfV1B6EiO6VDWNfHUga4at1LB4QxQ==
+	bh=4eqgGqhIANhj0nYQ+5ubzZJVoiDxk2sGBwrmrqN3BXk=;
+	b=tLx1wApSlg4bJUO9uf7C1C6rTkQcmjVy/3wNE7gUhlfRup/6J61ABW86KN47alzidxBE
+	 ZUIQRJUcu22Lcc0FqYDttD8u+qTxr0wxJncJIxYRUjwXf3ThepgRBFWFTkl4phoyp/rQf
+	 XIAYOHaLvnsZ+Tk/jpt0mhK1DEscNAa2v4sciIsjqZcCXDAaafZFXto9U7Zw6EUGjJvt0
+	 KperC5PKeLQl9olOW9OWgLavs5/LweGzd750dD9IyQeFCJWRHipJPIOoB4XuIBs8YivBu
+	 HAaClYzu/u3lDr/eK5xegBUenzflQoXzH5AudO7YB2m+UiZDu7RGNu2pFMYA0gws/Ug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bnTlgR2z;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UVPMOnnS;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D779660A2622;
-	Thu, 12 Nov 2026 20:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3E8606A31C;
+	Thu, 12 Nov 2026 21:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bnTlgR2z
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F951F000C5;
-	Thu, 12 Nov 2026 20:45:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UVPMOnnS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B1061F000C4;
+	Thu, 12 Nov 2026 21:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794516349;
-	bh=vExIF6BLPxilcEzmeQ44C3+EI0WD/Najy1w9BlH7ZrA=;
+	s=k20260515; t=1794518499;
+	bh=4eqgGqhIANhj0nYQ+5ubzZJVoiDxk2sGBwrmrqN3BXk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bnTlgR2zNej1/jMfIJfET7Ftvcp5O+JbEvwTIwChPZ7SkRsHdUJD58A3YopMYrBR5
-	 3RmSFO7z9CLI/6CVeJasToJu2h0SYlnwUiHxwTq3pG17mSvsTcBw69kzs+EdqippEF
-	 qPgrYDTbUlic/c4NWH45S05EPBgVslRBBN9JBfa4iABnBtHQ5kMR6HbdkCp8j5FHPb
-	 ryKntZW2dO2BE5fyp5NexcrghC/k12C+XV1K3FWOUg+CwdZJMUcSu+Z/siXVOAIv0e
-	 3W3gOdiHREXzjNBqXIcJjB3tDoNjpBbFQaBhqaJQEppmuZGD9ZVcIoJAlMxYoKZpC5
-	 WmHSWNDLxlDCw==
-Date: Thu, 12 Nov 2026 12:45:49 -0800
-From: Kees Cook <kees@kernel.org>
-To: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Cc: Mark Brown <broonie@kernel.org>, Dennis Gilmore <dennis@ausil.us>,
-	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-	gustavoars@kernel.org, linux-sound@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michael.hennerich@analog.com, nuno.sa@analog.com,
-	dlechner@baylibre.com, linux-spi@vger.kernel.org,
-	miriam.rachel.korenblit@intel.com, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH] ASoC: soc-core: start rtd->num_components at zero
-Message-ID: <202611121234.8619E8D182@keescook>
-References: <20261112025252.71375-1-dennis@ausil.us>
- <179448342405.66517.5463730214277229760.b4-review@b4>
- <f55dddf1-d745-471a-8001-8f9e5768d97d@oss.qualcomm.com>
+	b=UVPMOnnSNBD6Ajg0ijIcJ/fQ8stFM0AIVKJJH8IDsiZzZTe1bjDhpTRO5gjXfWZBy
+	 tbLgVlsFFdOtWlI1fwzMngfZmTXoyQUp4+FtjDCsrCBUiyWE6RtU6djOT5soTVPhGA
+	 z44Tp1slG9Io7EsVPtphu9+vrdqP0A53Tjq4L1PfJ+FlX1pkKc8FT0cZZ0bZqc6GBy
+	 wITMK3Q1uR84p33Ib10kpe1TTxPhoQW6RBCpR0nS/yS91mkvisDMNkWIjQdNKlOvM1
+	 eKyE1FzJrh8kpbv13WGkXCVVNI8I+nhzttgq4ZQF3nL95sU0Ih44GzsaTp87Atdg80
+	 vB+ANY8QfWfUA==
+Date: Thu, 12 Nov 2026 22:21:35 +0100
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: David Laight <david.laight.linux@gmail.com>, 
+	Mariia Nikitash <nikitash.mariiaw@gmail.com>, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, justinstitt@google.com, 
+	morbo@google.com
+Subject: Re: [PATCH] Input: mouse: vsxxxaa: Replace strlcat() with strscpy()
+Message-ID: <avYtm-vs_V0dPfyR@devuan>
+References: <20261104062319.288360-1-nikitash.mariiaw@gmail.com>
+ <20261105112813.13210334@pumpkin>
+ <202611121026.23C58B347@keescook>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -63,45 +60,109 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ahzol4ylc7553tv5"
 Content-Disposition: inline
-In-Reply-To: <f55dddf1-d745-471a-8001-8f9e5768d97d@oss.qualcomm.com>
+In-Reply-To: <202611121026.23C58B347@keescook>
 
-On Thu, Nov 12, 2026 at 02:34:17PM +0100, Hans de Goede wrote:
-> @Kees, have you seen Dennis' remark about the same problem with
-> devm_kzalloc_flex() changing the semantics with the num-components
-> counter now no longer being initialized to zero in at least 2 other
-> places? :
 
-Eek, thank you. I will go look at these!
+--ahzol4ylc7553tv5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: David Laight <david.laight.linux@gmail.com>, 
+	Mariia Nikitash <nikitash.mariiaw@gmail.com>, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, justinstitt@google.com, 
+	morbo@google.com
+Subject: Re: [PATCH] Input: mouse: vsxxxaa: Replace strlcat() with strscpy()
+Message-ID: <avYtm-vs_V0dPfyR@devuan>
+References: <20261104062319.288360-1-nikitash.mariiaw@gmail.com>
+ <20261105112813.13210334@pumpkin>
+ <202611121026.23C58B347@keescook>
+MIME-Version: 1.0
+In-Reply-To: <202611121026.23C58B347@keescook>
 
-> 
-> """
-> Kees, the same pattern (a *_flex() allocation followed by code that uses
-> the counter as a fill index starting from zero) looks to be present in
-> two places converted by 69050f8d6d07 ("treewide: Replace kmalloc with
-> kmalloc_obj for non-scalar types"). I have only read the code for these.
-> I have no hardware for either and have not reproduced them, so please
-> treat them as possible issues rather than confirmed bugs:
-> 
->  - drivers/spi/spi-axi-spi-engine.c: spi_engine_optimize_message()
->    allocates p with kzalloc_flex(*p, instructions, p_dry.length + 1),
->    which presets p->length, and spi_engine_compile_message() then
->    appends with p->length++ through spi_engine_program_add_cmd().
+Hi Kees, Mariia,
 
-Oh, this was from before:
-69050f8d6d07 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
+> Date: 2026-11-12 10:27:58-0800
+> From: Kees Cook <kees@kernel.org>
+>
+> On Thu, Nov 05, 2026 at 11:28:13AM +0000, David Laight wrote:
+> > On Tue,  3 Nov 2026 22:23:18 -0800
+> > Mariia Nikitash <nikitash.mariiaw@gmail.com> wrote:
+> >=20
+> > > In preparation for removing the deprecated strlcat() API[1], use
+> > > strscpy() to initialize the mouse device name.
+> > >=20
+> > > The destination is zero-initialized, and the constant string fits
+> > > within the buffer. Since the return value is unused, this preserves
+> > > the existing behavior.
+> > >=20
+> > > Link: https://github.com/KSPP/linux/issues/370 [1]
+> > > Signed-off-by: Mariia Nikitash <nikitash.mariiaw@gmail.com>
+> > > ---
+> > >  drivers/input/mouse/vsxxxaa.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/drivers/input/mouse/vsxxxaa.c b/drivers/input/mouse/vsxx=
+xaa.c
+> > > index 042a17fe81db..b3a0d7ff5738 100644
+> > > --- a/drivers/input/mouse/vsxxxaa.c
+> > > +++ b/drivers/input/mouse/vsxxxaa.c
+> > > @@ -463,8 +463,8 @@ static int vsxxxaa_connect(struct serio *serio, s=
+truct serio_driver *drv)
+> > > =20
+> > >  	mouse->dev =3D input_dev;
+> > >  	mouse->serio =3D serio;
+> > > -	strlcat(mouse->name, "DEC VSXXX-AA/-GA mouse or VSXXX-AB digitizer",
+> > > -		 sizeof(mouse->name));
+> > > +	strscpy(mouse->name, "DEC VSXXX-AA/-GA mouse or VSXXX-AB digitizer",
+> > > +		sizeof(mouse->name));
+> >=20
+> > You might as well use the 2 argument form.
+>=20
+> I'd agree: this is a true array, so the sizeof() can be dropped. But
+> it's also exactly the same binary output, so I'm fine either way:
 
->  - drivers/net/wireless/intel/iwlwifi/mld/d3.c:
->    iwl_mld_process_netdetect_res() allocates netdetect_info with
->    kzalloc_flex(..., matches, n_matches), presetting n_matches, and
->    iwl_mld_set_netdetect_info() stores at matches[n_matches] and then
->    increments it. The per-match kzalloc_flex(..., channels, n_channels)
->    has the same issue with match->n_channels.
+Indeed, the 2-arg strscpy() call would be much safer.  I'd prefer using
+it, since we can.
 
-Same.
 
-I'll send fixes.
+Have a lovely night!
+Alex
 
--- 
-Kees Cook
+>=20
+> Reviewed-by: Kees Cook <kees@kernel.org>
+>=20
+> And I echo the surprise over strlcat being used on an empty string. :P
+>=20
+> --=20
+> Kees Cook
+>=20
+
+--=20
+<https://www.alejandro-colomar.es>
+
+--ahzol4ylc7553tv5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr2LdkACgkQ64mZXMKQ
+wqlb/Q//Z+6oJ6b4j7TzZmc0/KZODa14tNbJCvi4tcZTLjMM9TBSIC5RD8NdQNac
+Y3ePfMFpvVnwmlRjl/pSkHH+bj6+IW4TP9BD0eT/DSG2x/LlUp1cO2+IBz9R2KZL
+H5A33gGL43Rmw80rJZWHctuqS+w1tzVv/9QA5bgUqkDsGok0pgdpZ1iw9LkIVzR7
+xPHxni0VR3sRBwWTisKnY37O2Io5QnWhHqU6SF0kx6JyqOUQQIRYt7/RcBxP4XPO
++tvvUxCvAbckY57k+uEwo1hF56sWhSBQOWX/4rfegox/74NkWrB8qrhSzXmNUBCu
+Ptjg7CVUgL0EkJ/PisFsK5aJK34UJkTLBqctbcyUYvPjHzrlaugYD2yBmexacket
+aAYLCGatrRzx6SnFBe48FFyavPZy+RpmN9B2PvmLrRv9b59t6xOl5zzl4bYueOen
+OrCWJ3xkNoFS/uv12lOVq/b8g2kePxnUdBRIx1+LZfqssAh9UepkLFE5oh2TT2pf
+rofdPWFWUUe+c7dXENeBTcIV0fJxbvI5Ed1conjA9mxKlOO0qT3dJB8FMR323kba
+mNIzKeexa5Yc/D1iLNDYcbiCBAk1WzyXlKZvvvEqa6dkIMmvVleJ89pEh5oN891p
+pjb/XXRRYQzwpjFFAUVJMxq/zFa+epmbXWAAY4ZavbwgL8/YkoQ=
+=a/wb
+-----END PGP SIGNATURE-----
+
+--ahzol4ylc7553tv5--
