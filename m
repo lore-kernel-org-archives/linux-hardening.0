@@ -1,58 +1,112 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794521239;
-	b=ZhKjSdFfzjXHFiR87dHPF1mXTgo3aUX6JdbO/x2hT1CsNmuLdGixx2+7ai/MnRzZdQjj
-	 1We7SJuXpW577vv7dU9f1IxUg0S1sbnfWIHMtDF/pWOOqvF677JAK97uiuHDbufrZ4SnO
-	 RWqpprXPFlzkGh1dZM3VAJlVknAAqJJYvfqt/0C6ZEOLecD9A/GQ1Ud0btsIqB/0zKFD3
-	 5+gCSHep7qbO0JZCmXGmpk2lPyEJsrtQMz+Lxsl0SNe2Vq+Gg2AyQ/IwaIkk+sFzxFbHm
-	 QIMkC9GxOXmO2MeH2AuyMeDjOsLBmE0LUhUR3y6O32wieJ0MW5FlZ721Z2wGkk1Ts6Q==
+	t=1794522673;
+	b=lebO0hm21N3/MN/G/NMY1vfSN/IPVWow7l1tWQ18UM1V6xBd5Cn4+l9qrwehNn5EKTQF
+	 Jm821EGSql30xT4Yunbcr4b3uwttzKP9GsWD+0fPHH+R9JAJu6KXpGToiAXnJj8VU/+zZ
+	 8UZx1STs4Gy9rDTjeuzaWm/zbFYtQz5mlIteFicKz9olztETZBbzkIKnyO1rYkIKekPw8
+	 H26tkzyb6vzG6VogV4f+lxN0J3n4wckTAPJUdzceW9PoT0zrF6GFdeZwPj0tKwsZLfqEV
+	 cVrt74GX4LWeBMoyTWWolVEu98W4l298jwb8Rn49ldy+heqra7RpYpOv+XmCciJO0AA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794521239;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=ReVyqXe2av4g6tLUV9DHWUBpBCC6BZrEGkcX74zqGJI=;
-	b=XToLKekdJN3TJIfzBHedf7TDFs1pX6CEd3q3q/nJT1kaNriT/MPzvFSFm6ZymHu+eBko
-	 dnMLTNBWPNyH59n/LXXzQsIdNyU/EJcyQfSUM2sa5MujAJs/37912U/X38UlNh4jz1yjQ
-	 v0EdhyYsau65iuKhIBuS6UKo/AnXD5DLHpoSjJjA7Otyy7e395GOlv5mztkhQ4ZZOUi7W
-	 gyl6VxrfSXouvVM/WrYcb9o00/U9mXx+SMg0a/KYArnFRKIYaCphGznOpn5VgWNTCshtQ
-	 95lR4gcYOsj38nw4tTIGmDQ60sJDyngCSqNYQ0oWwhokumWN+aBltjOO5gN8NeFVnrw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794522673;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:In-Reply-To:References:X-Mailer:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=+JTSqev9V+WnU5MiL+EzLENGXn9aXmam81GQLiwSL0o=;
+	b=cw1ZCvzRxgP4JlbiUYxw8pBkXC66oVvW2KAXqp2fdWoWGfmWt/tqGzzjulXOFWEO4KCo
+	 ipmApqy/QSIu29TuycYu3ZzeEqelBdW/Ay5AZ6/qzXA4fblAAFE73aTHLqyS0XkGTG4rr
+	 Bd8delqaVWYOQFhNEer+Dk8FA7A4BsAiARnXwd1Ng0CTCrnpL8Vsi6BiNqnrTFAphTs6+
+	 hSDEDH2AqAPdMu3yywlNQcRQ9gZatC0v97ZaKmuBVHZUfQmf0jJ/2G7szmnzO8Tn1ImT1
+	 1SQ9Rf8s8E3sOC/acdmUqJuEuaHMUM9mgXM/qiuuizEd2pT8p/2UhP2rDgsbfJ2aGUw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Lmb4n366;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QK6ov+6P;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2611606A31C;
-	Thu, 12 Nov 2026 22:07:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6CD606A321
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 22:31:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0D6CD606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Lmb4n366
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 584561F000C4;
-	Thu, 12 Nov 2026 22:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794521239;
-	bh=ReVyqXe2av4g6tLUV9DHWUBpBCC6BZrEGkcX74zqGJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Lmb4n366DeTQad5TR+vZZv189w2+Kbw+FFoTqw4gmi63TuCtczBRzlcLJU+qkJzUf
-	 reJwO4Pq+R2qE5IbfO21sPoLc40jim9PgmKNlhik9rKkim50sfb3kIk9tF5kgM9JX7
-	 xrOYGTx9v5Lx7xvw8RqpFivEblMmmOgNhpBpTxgwy+n6kNx95+AZVcPfihH58b/Otj
-	 B/1uSNg1MX8268oJjG+ePnaXOrZLZqtMgXQ0MwOwsmqhePXYDTBk7U43YW1TrKtVuG
-	 GoimiIlzcjrFJ5jjq69yrh96Bi+OCJ49WPtP8lpHBL/rdQNxIWkD4rsAI1Q8/sqlBV
-	 js1ErIeKab7XQ==
-Date: Thu, 12 Nov 2026 23:07:14 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: David Laight <david.laight.linux@gmail.com>, 
-	Mariia Nikitash <nikitash.mariiaw@gmail.com>, hverkuil@kernel.org, mchehab@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	justinstitt@google.com, morbo@google.com
-Subject: Re: [PATCH] media: radio: Replace strlcat() with seq_buf in TEA
- drivers
-Message-ID: <avYuEyBCkrNrvvJL@devuan>
-References: <20261106074639.452630-1-nikitash.mariiaw@gmail.com>
- <20261108210232.13800dd3@pumpkin>
- <avDmyLYpWOQ2WB-i@debian>
- <202611120947.AC428BE4B@keescook>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=QK6ov+6P
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4b79502c27aso2174745e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Nov 2026 14:31:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794522670; x=1795127470; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+JTSqev9V+WnU5MiL+EzLENGXn9aXmam81GQLiwSL0o=;
+        b=QK6ov+6PfLWnModUmHpQoTJIO9mbqa69iTI14JlGFF9k8M6Ls+sAJSveNj8g+ueWnu
+         8b1zPQX2xIDQFGLZZjP1wMJvqMwZrq8x4IVPtqAZCLsofyk15O0AyKmBHtJfr6U8kAvS
+         onsPYX4BfCr1/z4vKD/vtm5bTh4Ke0Nf0vZ5qmaap6QPuXT3JM5d70mPl8hNaMJiiXOV
+         BS69sbm1OaKF8ENOfh8zbA3xf8oTQrmKxdb2EsE2Sq6SkJ/ifxcWmEnu3XuTthkueQEB
+         tQEoWykjpdUTsskQqwORhSWLyFmUa+cB2XJayhfwgqwrS/xatUifmK6gAIoTkDZfBdkw
+         PDCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794522670; x=1795127470;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+JTSqev9V+WnU5MiL+EzLENGXn9aXmam81GQLiwSL0o=;
+        b=Ua/csiMhSVKNBvagL/FHjNmiu94xAhSTYd2dKjW/hsRD/1P6S16YpuWSvRSsxBq0OV
+         amP7ysQz+yzArtmElOuZtmHeL8BrdfOZBGFDrfDbAVDKYpTku2M6WFd+qlApzm46siDj
+         GwzHiR2LqGxQmBc8Fe6w9BU/ggavuuJdMFepVi+oQfoeFwHLieuTaa0mMRBwpYPm0QEC
+         g+jmmXr418KETJKfIG23rznPRDIljf4sIB3vcT+UP67r/D5sx1tfczHyl7kGwIH4blWx
+         XycNBnCNEov/D/2phsye8TrU1Vzhrdkvl/N0CwJnsExgEr0F7p6KUkV1D8RjNB7mfChu
+         caCA==
+X-Gm-Message-State: APuU4Z9C4WIyEwMd2np99KYyKg3TQtsm6ElpiHicPceysytUt1nM9RME
+	5XaJjosGbOGzyCjoMrMBD4ud4MrtglS6uETjqbDhnl65zVXxtbCNvj9o
+X-Gm-Gg: AYBFou1ea3gfxe33h+HbeWUN+GMuZCJfggGCxlXJjxLFw8vyLrTjNXeWMmgju+lor+m
+	1WfBCwgyWZcDVWIo/5bLv1Z8mEXNAOWYSlOFAxyqhFQj/NEW4iDgP5hq7LlDsU0X1+RGW75td7k
+	Y90VHI1FI0y2AgWz4CEvGXx0cIGtGXltKA+5NWf8Zyv0Q3I/YBT/ibHWMfcD9ZZG49F2GGh0v+z
+	m9sssZ8PXqvdExizSX4etBaMlCn2VI3uV3r8Rbm6KkIapRP/x1LAmTyMhMA8bDGJqFPU2n+1Ij2
+	ZNjLsfrWhMXlobAJWE3bOoR/cZTj6WXZyPVSHOT1eqIf2cbVxC1E1T5NAIe8YSsJjR8lbVsmUbP
+	lHyarQqb+xmWNz1lD3kUf/NzH2yZAjtioGm/wihX5xzeJlkquFnq4tWrXke1JLHWClSWXGHtxqE
+	wQxBghl8f8thY2GeQH7M18sv61wruGnuJMsHogbnfCiXxBj4scbzaVpzfBk8kSjLz9BgnVQxBM8
+	uBdc9Q2G3RJyPZoTXW+MlCM8uYM6/WQgbbEqTu8UjU5q+6Y7f7cyQ1kYaDnl0MmnQ/3IOFDda+s
+	64CKVE8xtfkAvJeEpWyHbo+676dBrAM14i8s1y3gyK2iba5PJ8TFJQYux2auJ6sgnQ==
+X-Received: by 2002:a05:600c:8b8a:b0:4a1:9078:911 with SMTP id 5b1f17b1804b1-4bb55abbadamr13368985e9.31.1794522670201;
+        Thu, 12 Nov 2026 14:31:10 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb5720e9c2sm42715e9.3.2026.11.12.14.31.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2026 14:31:09 -0800 (PST)
+Date: Thu, 12 Nov 2026 22:31:07 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+ "Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, Andy
+ Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Daniel
+ Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil
+ <hverkuil-cisco@xs4all.nl>, Heikki Krogerus
+ <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan
+ Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Linus Walleij
+ <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>,
+ linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@oss.qualcomm.com>
+Subject: Re: [PATCH v4 1/6] string: Add strprefix(), and deprecate
+ str_has_prefix()
+Message-ID: <20261112223107.3a9efb85@pumpkin>
+In-Reply-To: <a74fabd985a874da7556ae1601053b4bcc100f13.1794425425.git.alx@kernel.org>
+References: <cover.1794425425.git.alx@kernel.org>
+	<a74fabd985a874da7556ae1601053b4bcc100f13.1794425425.git.alx@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -62,301 +116,131 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v3qgrxyijyqfgzgl"
-Content-Disposition: inline
-In-Reply-To: <202611120947.AC428BE4B@keescook>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Wed, 11 Nov 2026 20:55:15 +0100
+Alejandro Colomar <alx@kernel.org> wrote:
 
---v3qgrxyijyqfgzgl
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: David Laight <david.laight.linux@gmail.com>, 
-	Mariia Nikitash <nikitash.mariiaw@gmail.com>, hverkuil@kernel.org, mchehab@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	justinstitt@google.com, morbo@google.com
-Subject: Re: [PATCH] media: radio: Replace strlcat() with seq_buf in TEA
- drivers
-Message-ID: <avYuEyBCkrNrvvJL@devuan>
-References: <20261106074639.452630-1-nikitash.mariiaw@gmail.com>
- <20261108210232.13800dd3@pumpkin>
- <avDmyLYpWOQ2WB-i@debian>
- <202611120947.AC428BE4B@keescook>
-MIME-Version: 1.0
-In-Reply-To: <202611120947.AC428BE4B@keescook>
+> As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
+> between an empty prefix matching an empty string from a non-matching
+> prefix.  This is a fundamental design flaw in this API, and not
+> something that can be fixed.
+> 
+> As always, this is a consequence of choosing sizes instead of pointers.
+> Sizes are often the wrong choice.  In this specific case, pointers are
+> more capable of differentiating these cases, as NULL is a special
+> sentinel value that doesn't need to overload a valid value.
+> 
+> Let's implement strprefix(), a function that returns a pointer
+> right after the prefix if found, and a null pointer if not found.
+> 
+> We'll slowly migrate existing code from str_has_prefix() to strprefix().
+> 
+> Move the description from str_has_prefix(), and describe
+> str_has_prefix() by comparing it to strprefix().
+> 
+> Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> Link: https://lore.kernel.org/linux-hardening/20261104-fwnode-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+> ---
+>  include/linux/string.h   | 28 +++++++++++++++++++++++-----
+>  lib/tests/string_kunit.c |  9 +++++++++
+>  2 files changed, 32 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 6cb5cdd01158..d08ca10c39a2 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -545,16 +545,34 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+>  	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
+>  })
+>  
+> +/**
+> + * strprefix - string prefix
+> + * @s: The string to be tested
+> + * @prefix: The string to see if @s starts with
+> + *
+> + * A common way to test a prefix of a string is to do:
+> + *  strncmp(s, prefix, sizeof(prefix) - 1)
+> + *
+> + * But this can lead to bugs due to typos, or if prefix is a pointer
+> + * and not a constant.  Instead use strprefix().
+> + *
+> + * Returns:
+> + * *  @s+strlen(@prefix) if @s starts with @prefix
+> + * *  NULL if @s does not start with @prefix
+> + */
+> +static inline char *strprefix(const char *s, const char *prefix)
+> +{
+> +	size_t len = strlen(prefix);
+> +	return strncmp(s, prefix, len) == 0 ? (char *) s + len : NULL;
+> +}
 
-Hi Kees,
+I suspect this would be better as a real function.
+Possibly even just a simple loop rather than based on calls to
+both strlen and strncmp().
+(Even if the strelen() is mostly a compile-time constant.)
 
-> Date: 2026-11-12 09:54:15-0800
-> From: Kees Cook <kees@kernel.org>
->
-> On Sun, Nov 08, 2026 at 10:25:35PM +0100, Alejandro Colomar wrote:
-> > Hi David,
-> >=20
-> > > Date: 2026-11-08 21:02:32+0000
-> > > From: David Laight <david.laight.linux@gmail.com>
-> > >
-[...]
-> > > >  	strscpy(v->driver, tea->v4l2_dev->name, sizeof(v->driver));
-> > > > -	strscpy(v->card, tea->card, sizeof(v->card));
-> > > > -	strlcat(v->card, " TEA5777", sizeof(v->card));
-> > >=20
-> > > What is wrong with (and almost OTT):
-> > > #define TEA5777 " TEA5777"
-> > > 	BUILD_BUG_ON(sizeof(TEA5777) <=3D sizeof(v->card))
-> > >=20
-> > > 	len =3D strscpy(v->card, tea->card, sizeof(v->card) - sizeof(TEA5777=
-) + 1);
-> >=20
-> > I can answer this one: bugs (particularly, off by one) are quite prone
-> > in such code.
-> >=20
-> > From the Authors of strlcat(3), you can look at OpenBSD's manual page:
-> >=20
-> > 	Since it is known how many characters were copied the first
-> > 	time, things can be sped up a bit by using a copy instead of an
-> > 	append:
-> >=20
-> > 		char *dir, *file, pname[PATH_MAX];
-> > 		size_t n;
-> >=20
-> > 		...
-> >=20
-> > 		n =3D strlcpy(pname, dir, sizeof(pname));
-> > 		if (n >=3D sizeof(pname))
-> > 			goto toolong;
-> > 		if (strlcpy(pname + n, file, sizeof(pname) - n) >=3D sizeof(pname) - =
-n)
-> > 			goto toolong;
-> >=20
-> > 	However, one may question the validity of such optimizations, as
-> > 	they defeat the whole purpose of strlcpy() and strlcat().  As a
-> > 	matter of fact, the first version of this manual page got it
-> > 	wrong.
-> >=20
-> > > 	if (len < 0)
-> > > 		goto fail;
-> > > 	memcpy(v->card + len, TEA5777, sizeof(TEA5777);
-> > >=20
-> > > What might be useful is a helper that would let you write:
-> > > 	len =3D strscpy(v->card, tea->card);
-> > > 	len =3D strscpy_at(v->card, len, " TEA5777" [, implied_length]);
-> > > 	if (len < 0)
-> > > 		goto fail;
-> >=20
-> > Indeed, as said in other threads, I have such an API:
-> >=20
-> > 	p =3D v->card;
-> > 	e =3D ARRAY_END(v->card);
-> > 	p =3D stpecpy(p, e, tea->card);
-> > 	p =3D stpecpy(p, e, " TEA5777");
-> > 	if (p =3D=3D NULL)
-> > 		goto fail;
-> >=20
-> > Linus didn't like my function name.  We could indeed call it strscpy_at=
-().
->=20
-> I really just don't want to have bare pointers or lengths being used for
-> any of these manipulations.
+Something like:
+#undef strprefix // Or put it the name in ()
+const char *strprefix(const char *s, const char *prefix)
+{
+	do {
+		if (!*s)
+			return *p ? NULL : s;
+	} while (*s++ == *p++);
+	return p[-1] ? NULL : s - 1;
+}
 
+And in the header:
+const char *strprefix(const char *s, const char *prefix);
+#define strprefix(s, p) ((typeof(s))strprefix(s, p))
 
-> strlcat needs to go away because it's part
-> of the whole C string API that is confused about array vs pointer and
-> has no sense of handling bounds. Yes, FORTIFY does its best, but between
-> lack of sane bounds and doing a strlen for every action, it has to go.
+David
 
-I disagree that the whole C string API is confused.  In the future,
-when array parameters become actual arrays (so you can use _Countof() on
-them), you'll have better language support for that.
+> +
+>  /**
+>   * str_has_prefix - Test if a string has a given prefix
+>   * @str: The string to test
+>   * @prefix: The string to see if @str starts with
+>   *
+> - * A common way to test a prefix of a string is to do:
+> - *  strncmp(str, prefix, sizeof(prefix) - 1)
+> - *
+> - * But this can lead to bugs due to typos, or if prefix is a pointer
+> - * and not a constant. Instead use str_has_prefix().
+> + * This is similar to strprefix(), but returns an offset instead of
+> + * a pointer.
+>   *
+>   * Returns:
+>   * * strlen(@prefix) if @str starts with @prefix
+> diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
+> index 0819ace5b027..73d2614b1474 100644
+> --- a/lib/tests/string_kunit.c
+> +++ b/lib/tests/string_kunit.c
+> @@ -287,6 +287,14 @@ static void string_test_strspn(struct kunit *test)
+>  	}
+>  }
+>  
+> +static void string_test_strprefix(struct kunit *test)
+> +{
+> +	KUNIT_ASSERT_EQ(test, 0, strcmp(strprefix("foobar", "foo"), "bar"));
+> +	KUNIT_ASSERT_EQ(test, 0, strcmp(strprefix("foobar", ""), "foobar"));
+> +	KUNIT_ASSERT_EQ(test, 0, strcmp(strprefix("foobar", "foobar"), ""));
+> +	KUNIT_ASSERT_NULL(test, strprefix("foobar", "bar"));
+> +}
+> +
+>  static char strcmp_buffer1[STRCMP_LARGE_BUF_LEN];
+>  static char strcmp_buffer2[STRCMP_LARGE_BUF_LEN];
+>  
+> @@ -891,6 +899,7 @@ static struct kunit_case string_test_cases[] = {
+>  	KUNIT_CASE(string_test_strnchr),
+>  	KUNIT_CASE(string_test_strrchr),
+>  	KUNIT_CASE(string_test_strspn),
+> +	KUNIT_CASE(string_test_strprefix),
+>  	KUNIT_CASE(string_test_strcmp),
+>  	KUNIT_CASE(string_test_strcmp_long_strings),
+>  	KUNIT_CASE(string_test_strncmp),
 
-strlcat(3) indeed has some problems, and has to go, but I would like to
-not put the whole C string API in that sack.
-
->=20
-> And I'd like _fewer_ APIs
-
-That's a mistake, IMO.  The reason why programmers write bugs using the
-string APIs is precisely because they try to use few APIs, and try to
-use them even in places where a more appropriate API would be better.
-
-Take for example strncpy(3).  It has been abused in so many ways, and we
-all know the results of that.  Now look at what you've done in the
-kernel: it's been replaced by around a dozen different APIs.  Quoting
-the documentation:
-
-	The replacements for strncpy() are:
-
-	- strscpy() when the destination must be NUL-terminated.
-	- strscpy_pad() when the destination must be NUL-terminated and
-	  zero-padded (e.g., structs crossing privilege boundaries).
-	- memtostr() for NUL-terminated destinations from non-NUL-terminated
-	  fixed-width sources (with the `__nonstring` attribute on the source).
-	- memtostr_pad() for the same, but with zero-padding.
-	- strtomem() for non-NUL-terminated fixed-width destinations, with
-	  the `__nonstring` attribute on the destination.
-	- strtomem_pad() for non-NUL-terminated destinations that also need
-	  zero-padding.
-	- memcpy_and_pad() for bounded copies from potentially unterminated
-	  sources where the destination size is a runtime value.
-
-And that is the right thing to do.  In parallel, we've developed
-fundamentally the same functions in shadow-utils.  I think that's where
-research converges to: one API for each different use case.  That makes
-the APIs more descriptive of the action they perform, which let's the
-programmer better understand the code.  They're also way more robust, as
-you can add many safety checks in the macros that implement them.
-
-> (I realize that didn't happen at all for
-> seq_buf, but that our current best direction).
-
-I think the problem in seq_buf is not the amount of functions, but
-rather the fact that it tries to support both strings and nonstrings at
-the same time.  That's literally repeating the mistake of strncpy(3)
-with this new type.  You may try to patch it with tape, but it's
-fundamentally flawed, and it will eventually show up (we've already seen
-the bugs in its implementation).
-
-> And I especially don't
-> want a "len" getting passed around.
-
-I partially agree with this.  I don't like passing a length, because
-lengths and sizes are too problematic.  However, I would like you to
-trust me that pointers aren't that bad.  We've been using them in
-shadow-utils extensively, and they're super-comfortable if the functions
-are well designed.
-
-> It needs bounds to be *in* the data
-> type. And that means either true arrays,
-
-Indeed, there's work towards that.  I'll show some preview of what may
-come in future dialects of C.
-
-Now, we can have a stpecpy() function:
-
-	char *
-	stpecpy(char dst[], const char end[0], const char *restrict src)
-	{
-		ssize_t  dlen;
-
-		if (dst =3D=3D NULL)
-			return NULL;
-		dlen =3D strscpy(dst, src, end - dst);
-		if (dlen < 0)
-			return NULL;
-
-		return dst + dlen;
-	}
-
-In GCC, you can improve the prototype:
-
-	char *
-	stpecpy(char dst[], const char end[];
-	    char dst[dst?end-dst:0], const char end[0], const char *restrict src)
-
-With a patch I'm working on for GCC (it might land in GCC 17 if we're
-lucky, but it's more likely to end up in GCC 18), we'll be able to use
-_Countof() on array parameters, so we could use the two-arg version of
-strscpy() for implementing this:
-
-	char *
-	stpecpy(char dst[], const char end[];
-	    char dst[dst?end-dst:0], const char end[0], const char *restrict src)
-	{
-		ssize_t  dlen;
-
-		if (dst =3D=3D NULL)
-			return NULL;
-		dlen =3D strscpy(dst, src);
-		if (dlen < 0)
-			return NULL;
-
-		return dst + dlen;
-	}
-
-And in a few years, we might end up having slices in C, which would
-allow having the same functionality with just 2 arguments:
-
-	char
-	stpecpy(char dst[:], const char *restrict src)[:]
-	{
-		ssize_t  dlen;
-
-		if (dst =3D=3D NULL)
-			return NULL;
-		dlen =3D strscpy(dst, src);
-		if (dlen =3D=3D -1)
-			return NULL;
-
-		return dst + dlen;
-	}
-
-So, there's a bright future for traditional C string APIs.  And it's not
-too far away.
-
-> or internal bounds tracking
-> (like seq_buf),
-
-I believe that's going to bite eventually, and it will also be difficult
-to return to the simplicity of the C string API once we have these few
-features that make it safe.
-
-> and it shouldn't have "extra work" associated with it
-> (e.g. stpecpy above still has to find the current end of the C string).
-
-No!  stpecpy() is really the same as strscpy(9).  It's *not* a cat
-function.  See the implementation(s) above: there's no strlen(3) in it.
-
-The closest relative to it is stpcpy(3) from POSIX, which is really just
-strcpy(3), but returning a pointer that encodes the position.  That was
-designed precisely to solve the performance issues of strcat(3).
-
-> C strings were a mistake, but here we are.
-
-Trust me: it's not.  The problems with C strings are, as you said above,
-the limited support for array parameters in the language.  But it's not
-too difficult to solve that problem.  And once that is solved, magically
-the traditional string APIs become much better than the structure types,
-by being at least as safe, but much simpler.
-
-So, I'd like you to trust me to add stpecpy() --whatever we end up
-calling it--, and perhaps the sprintf() variant of it, and see how it
-really improves the code.  In the coming years, when we solve the issues
-with array parameters in the language, they will become even better.
-
-> So, for "easy" constructions, sprintf-family, and for complex
-> constructions, seq_buf. And probably the large bit of thought at each
-> place where it is possible, is "how should truncation be communicated?"
->=20
-> -Kees
-
-
-Have a lovely night!
-Alex
-
---=20
-<https://www.alejandro-colomar.es>
-
---v3qgrxyijyqfgzgl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr2OIwACgkQ64mZXMKQ
-wqmEHQ//W1DL7SYtAzAHPc7wioVh7RmVJF/FZORDB+Hdz2e9X/Fz+ViF03FJ1RnP
-ARhTyZgOn/Bsc/btKgfeLwipnzZmWNqj1XitoUdKkXOezHJf9fFGQmVpohwx/eZm
-/o59tzgr2SopEsUwLlma0D48VMbfpag4cL/SR1iHwdOMXK7avkaFRXvOEzFjMBnY
-TARbtXMtATdyCSnSwChtcesWd8AHgu4YBauXpyKFWAV7b7BAH3cng4OFBya53pXn
-bK3GMKAvp57LlrAuNZ6U8rTMnRuB6q9rSGh0w3QEFXEG/NT8SSBoXqZjxGksTM6/
-VPH01UG5sc8fGYz5IKvIa2OWQwJiG+U1vqsesgEY+LH6WsA9HZaqNH/BbDvuRmrr
-qVvuGzVMtpfXze+lBYJr967hsllhxy1tF0tXlal16PAYTf09hcnZmXiLtJEh95G0
-/zmdcFYlO7UsdgZJyIK2E4V9ckIveHfzyp4cqhByininulLeZPIqv/AoDCvGPmYH
-ar+OiJzDlEzsBm30Dd3epiKPyFcPzNOhUSrYb0l06Jn4AdjvryrHayJorzodNktH
-msgUbRP5ZhEbxbDhEKekyOHcQuUHZFhxMhYNlHMofBbsg/WfcOz4jCWtSprnigoL
-UzjYL2Kdr1k5GUdjteMG8q6Nlqnq/FZi4cI51jUcHe+QDQ1X2TM=
-=aDiz
------END PGP SIGNATURE-----
-
---v3qgrxyijyqfgzgl--
