@@ -1,66 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.21
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794607160;
-	b=Phj4YgnmNgtuUqnxoat9aSkQyFgBzP4sNOBnmGhRWyuP9tgGl1pQsr6vKQYjTd9WuAQt
-	 cLviL2EPuyyjvz8UZBqmZuaGivNmljf8QZVFO+raOeLETN6WtroKMRNufmrpkfzG6q/IU
-	 10ekGqofIYdSnLgsLBextn1svQ5iWy9ukjmXUIGN/W9sXLduJ5YCtZY/8p86pZLFu1u2Q
-	 uwpAXYBgq8huwebYljyWjvKzLNvMYwcZ1zJzh3XLoO0qjWvCnOTfjitW0a9N6IGFDyRrQ
-	 k76eJzYa8pe5YnDwsEuJ8qzrVd3gA3J6yOD5Pr2ZjWv01hi/yaCMbjRzpvqf4W+BLVw==
+	t=1794608025;
+	b=iCyJ+t+tsioVsYd86dZqlcYyHOityklkdTteKmIP3qqbrlPARgw7idjFlLJ+gh3JY1q3
+	 6K6tU1Z7QohzmONwdo5Dn9UDxmfzZpMMxuuKfNhu8MZk/qnv3dqf+tKtX6EL6rLTTAsaa
+	 McVxBSaHz2eP7XFM+Exv6uWdodow2sOECy3MiIW+LR7Eka+7Nx3BX13375K4FivcMTH+W
+	 +o1p+iCbTXgtWKbgvcCTW7b5+zlSqdOm/uRlaCOT95a2Oa/DUoFpDa6YrNYVY0uYFvKZr
+	 bBbRVOqBIPKSZS98F7+vyTFba5ewVFeEi4luzKSgtMXxojLzcbk5bJIYbi30JBVD5SQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794607160;
-	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=7ifjFCac933JF6hRAF3X68K0PAA4uFjFHVSURYbAqFA=;
-	b=flpUx81cXaEWaQehgo8PLOefWmBMxo75qwPXyg/xWx2jbfdxvWxqq5uIsYkKtdJfG6iP
-	 GNqruLrMrU99uxXC9hu6pKObfT/C8eAECCQrFkWwJBQpUg67vVZuIe854OKy9Guqnt0IB
-	 WreZg17HIZXQpHDNdLtCH0gRcPXRNhXkG9JxzWa/BTBp5oTA2rczbUCb2FEVEQWbFbO+u
-	 P5QXtdCvdjpwKdDpqQeU1njN67gvm+BI/64EwN2SSgBr/0xgg7fIRwCQYtFwMWRfBx/NF
-	 Oz4dNTWrobDVjV5UGglj1SEoTGk9n0yoRSOPj5mLTLAMdoqMBRGxP1/SBBCIHQYKLyg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794608025;
+	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
+	 X-UI-Sender-Class:Received:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-Provags-ID:
+	 X-Spam-Flag:UI-OutboundReport;
+	bh=1APlPunBoDj1BI8mj+IbyZx7pU1qnOexHufDgnUoh0s=;
+	b=QQXT6+DLzMZ4InY4J59NiajZ+EyXTUvVYfkd5yTQEXoBELODK2bhvUciokd4ffZxnVIx
+	 rt3fOTqbqZP3kUFl6LoRtyq3YJaBXwFpA0xiIoSkWDaUB6DwDFYQCC1u1cthustAqU+fP
+	 c0EoTZSYgpgncmQW/qWve+lvLHriPZdWpW05S1V2ugveoTZDi6Sx4qnsbaTgQl7JcxwnA
+	 xA3vOEfz9VSi8005xSwyoTKnKEFCybG0ADCAkNZeRflHutLTzxHxK1DhMvFN60m4RPIDN
+	 E0F1HGfyKpZbzsFjykqcioSCRzcjClUgdVLdCIo+jWwQYkH73hFyVe8OqdfkYV8saPg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.microsoft.com;
-	spf=pass smtp.mailfrom=linux.microsoft.com;
-	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=SZLbHbU5;
-	arc=none smtp.remote-ip=13.77.154.182
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23AEE606A33A;
-	Fri, 13 Nov 2026 21:59:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23AEE606A33A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	dmarc=pass header.from=gmx.de;
+	spf=pass smtp.mailfrom=gmx.de;
+	dkim=pass header.d=gmx.de header.i=f3lix.dev@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=iSRJgcQM;
+	arc=none smtp.remote-ip=212.227.17.21
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044B9606A332
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Nov 2026 22:13:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 044B9606A332
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=SZLbHbU5
-Received: by linux.microsoft.com (Postfix, from userid 1216)
-	id 7AB4220B7169; Fri, 13 Nov 2026 13:59:14 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7AB4220B7169
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1794607154;
-	bh=7ifjFCac933JF6hRAF3X68K0PAA4uFjFHVSURYbAqFA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SZLbHbU5SwTPfmEDtQdZsCuIDA6foZLsRz8hfs1JOuf2i6YuGm3UT0LLULWnJubVj
-	 LyYe/r1WXh6/EzH00EpIgjPUbGViO98NblPzY1DOa0alZd6VW+AJhYGPrRZ1AoEC7O
-	 hIxUveqAbKeuBg9fI8tUsErAziYPTheiNtlyi81M=
-From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-To: dri-devel@lists.freedesktop.org
-Cc: Dexuan Cui <decui@microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hyperv@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=f3lix.dev@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=iSRJgcQM
+DKIM2-Signature:  i=1; m=1; t=1794608021;
+ mf=PGYzbGl4LmRldkBnbXguZGU+;
+ rt=PGxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmc+;
+ d=gmx.de;
+ s=s31663417:rsa-sha256:uDRvt8GwsBfraZ55aizhiFkzbYzd
+   XmADA0NDUzlIbtcqXt9GKY+WK832/nyvtBFyvjXcuc2aBoHXPXD42YtO+QqVNqxmdpFWvbcFkUo
+   pBB40Fz6dHs9D3D7Zr76xwPGtxKZPTbxd7WMsiAY2aHDT+Ahnlre20eq34PMpch9WbYi9eorwC3
+   0JKJBLpxjjqdiQjILbSBE4cPQwiUf/Xx5pMPs1MzFc4hWU3JKByc2ablNFYwF8q+9fTTu0veBGa
+   W4aytMTsbtFBSz/hIpPBMeMGyenrkkyRf27W9lqeiDQ6ZZIRH2fqrkZf9ulY8KwDDmy0+gu4Ozh
+   iO9s+Nyw5Thk9Q==;
+Message-Instance:  m=1;
+ h=sha256:
+   ByK8lr/d/c2qF6jNv7YOjfg5LqffyJh8MlJqbLkRYdE=:
+   BAh+AYGkQfGwvejFJXmMQBzbqktADkrcebCYjF38WtA=,
+  sha512:
+   KJei4gKmMC3I15uiipcaslebHWZmOdo1uRw3KDWzaTX2cMqqwSJXlmz5bEzRjJPqH0/064lsiHt7ZOjoAOuE/g==:
+   tALft6IDZZlS6rg/CRS/VzdZL+jUaJQ1csnYHq3F1tHXeVODUandGF2CqIlAkaaZSCMWuutihB7+Obg7A6V1zw==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1794608021; x=1795212821; i=f3lix.dev@gmx.de;
+	bh=1APlPunBoDj1BI8mj+IbyZx7pU1qnOexHufDgnUoh0s=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=iSRJgcQMZ4Iidss5JiSQbnuMN8vF6yeKEeLyWtS/EGysqMrp99AvtL+JUsGl0cQ9
+	 oTBZNePoaTZdMcpmoiFn3pzsycSmu4Qm21qMwS1CJRZkCZwG9cdsBCZN3YQiO6sGP
+	 S+JfWwgePHiU19Wh7a8LuE3ETmJb86rYKM4fqA6TXWcfrI7GLTJZOoB5qGCdcmP6e
+	 TIKw5/BFSCbOdMxAZMdMLgnWoQjKdtHieZiGKKMXEt+qlGBIsgeLFqVEBxojknOeJ
+	 tPjAVvRXWAO4toONK3hNBLpw8O5toM/ha2x/ZBBn/YzfrQdoENxy2exntjwQGl11b
+	 M1KdEUSgfM07ITN+fg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N4QsY-1wQiGp2dxG-00yS7C; Fri, 13
+ Nov 2026 23:13:41 +0100
+From: Felix Hoffmann <f3lix.dev@gmx.de>
+To: Jann Horn <jannh@google.com>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	Tamas Koczka <poprdi@google.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	linux-mm@kvack.org
+Cc: Kees Cook <kees@kernel.org>,
+	Harry Yoo <harry@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hao Li <hao.li@linux.dev>,
+	Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
 	linux-hardening@vger.kernel.org,
-	Michael Kelley <mhklinux@outlook.com>,
-	Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-Subject: [PATCH 2/2] drm/hyperv: batch dirty rectangles
-Date: Fri, 13 Nov 2026 16:58:43 -0500
-Message-ID: <20261113215843.1939889-3-hamzamahfooz@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20261113215843.1939889-1-hamzamahfooz@linux.microsoft.com>
-References: <20261113215843.1939889-1-hamzamahfooz@linux.microsoft.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/slub: Flush virtual-slab work before cache destruction
+Date: Fri, 13 Nov 2026 23:13:30 +0100
+Message-ID: <20261113221330.162567-1-f3lix.dev@gmx.de>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,184 +96,174 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:akNYmqQvLVur68rWWgy3sX/p77RzGQ7hIrKAsCvMWSFrYKJc3po
+ T7IziOU5S91CgQHKN98TLrwiU2X2HcLM9qjQnNIMy+pdfr8cpmmWmyHyTgCu/19D0I1Wlez
+ QjnR3606oYQxdIOYPD6Ns27beobS1DSURa2ZACCjYF1yOWrEL83CA1fNfU6WndU0aSiWPZq
+ JABrloYamZeIFvp7q68oA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1nLtmfppK6U=;RANPJBYQr2ShfjpeY6cGH3nihSM
+ 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
 
-Every damage clip of a primary plane update is sent to the host in a
-dirt message of its own, although a dirt message can hold up to 255
-rectangles and updates may come with many clips, e.g. up to 256 from
-the DIRTYFB ioctl.
+Under CONFIG_SLAB_VIRTUAL, freeing a slab queues it to
+slub_tlbflush_work. The worker later follows slab->slab_cache to take the
+cache's virtual-slab lock and update its lists.
 
-So, collect the clips of an update in one message instead, and send it
-once all of them were copied to VRAM, or earlier whenever it is full.
-The panic handler keeps sending a message of its own, as it may
-interrupt a plane update.
+__kmem_cache_shutdown() can report success after the last slabs have been
+removed from the cache's accounting but before that deferred work runs.
+The cache can then be released while queued slabs still refer to it. When
+the worker runs, it dereferences the freed kmem_cache and corrupts its
+lists.
 
-Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
----
- drivers/gpu/drm/hyperv/hyperv_drm.h         |  6 ++
- drivers/gpu/drm/hyperv/hyperv_drm_drv.c     |  4 ++
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c |  3 +-
- drivers/gpu/drm/hyperv/hyperv_drm_proto.c   | 69 +++++++++++++++++----
- 4 files changed, 68 insertions(+), 14 deletions(-)
+Flush the virtual-slab worker after confirming that every cache node is
+empty and before allowing cache destruction to proceed. This drains both
+queued and running work that can still reference the cache.
 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm.h b/drivers/gpu/drm/hyperv/hyperv_drm.h
-index 6006d665343b..c17f06f18232 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm.h
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm.h
-@@ -47,6 +47,8 @@ struct hv_drm_cursor {
- 	u8 msg_buf[VMBUS_MAX_PACKET_SIZE];
- };
- 
-+struct synthvid_msg;
-+
- struct hv_drm_device {
- 	/* drm */
- 	struct drm_device dev;
-@@ -73,6 +75,7 @@ struct hv_drm_device {
- 	struct completion wait;
- 	u32 mmio_megabytes;
- 	bool dirt_needed;
-+	struct synthvid_msg *dirt_msg;
- 
- 	u8 init_buf[VMBUS_MAX_PACKET_SIZE];
- 	u8 recv_buf[VMBUS_MAX_PACKET_SIZE];
-@@ -96,6 +99,9 @@ int hv_drm_cursor_init(struct hv_drm_device *hv);
- void hv_drm_cursor_set_hidden(struct hv_drm_cursor *cursor);
- void hv_drm_update_cursor(struct hv_drm_device *hv, bool shape);
- void hv_drm_restore_cursor(struct hv_drm_device *hv);
-+int hv_drm_dirt_init(struct hv_drm_device *hv);
-+void hv_drm_flush_dirt(struct hv_drm_device *hv);
-+void hv_drm_add_dirt(struct hv_drm_device *hv, const struct drm_rect *rect);
- int hv_drm_update_dirt(struct hv_device *hdev, struct drm_rect *rect);
- int hv_drm_connect_vsp(struct hv_device *hdev);
- void hv_drm_disconnect_vsp(struct hv_device *hdev);
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-index 21e5fcc3eb68..56995eaec4d1 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-@@ -124,6 +124,10 @@ static int hv_drm_vmbus_probe(struct hv_device *hdev,
- 	if (ret)
- 		goto err_hv_set_drv_data;
- 
-+	ret = hv_drm_dirt_init(hv);
-+	if (ret)
-+		goto err_hv_set_drv_data;
-+
- 	ret = hv_drm_connect_vsp(hdev);
- 	if (ret) {
- 		drm_err(dev, "Failed to connect to vmbus.\n");
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index 177f804dca0c..b04b0a30a1c1 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -217,8 +217,9 @@ static void hv_drm_plane_atomic_update(struct drm_plane *plane,
- 			continue;
- 
- 		hv_drm_blit_to_vram_rect(new_state->fb, &shadow_plane_state->data[0], &damage);
--		hv_drm_update_dirt(hv->hdev, &damage);
-+		hv_drm_add_dirt(hv, &damage);
+Fixes: 0d6f38b78adda ("mm/slub: allocate slabs from virtual memory")
+Signed-off-by: Felix Hoffmann <f3lix.dev@gmx.de>
+=2D--
+Tested on x86-64 with KCSAN enabled:
+
+  - on the unmodified SLAB_VIRTUAL feature kernel, a stress module that
+    repeatedly created, filled, emptied and destroyed a non-mergeable cach=
+e
+    triggered list corruption in slub_tlbflush_worker() and panicked the
+    kernel almost immediately
+  - with this change, the identical module completed 10,000 cache
+    create/destroy cycles (81.92 million allocation/free pairs) without a
+    BUG, warning, KCSAN report or panic
+  - the fixed KCSAN kernel and the external stress module build with W=3D1
+
+The reproducer and complete console logs are available privately on reques=
+t.
+ mm/slub.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index b4c64b2bbd334..dbfd42b31a0a2 100644
+=2D-- a/mm/slub.c
++++ b/mm/slub.c
+@@ -8541,6 +8541,11 @@ int __kmem_cache_shutdown(struct kmem_cache *s)
+ 		if (n->nr_partial || node_nr_slabs(n))
+ 			return 1;
  	}
-+	hv_drm_flush_dirt(hv);
- }
- 
- static int hv_drm_plane_get_scanout_buffer(struct drm_plane *plane,
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-index 81ffb88ba6a1..1f35a32858e4 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-@@ -133,10 +133,12 @@ struct rect {
- 	s32 x2, y2; /* bottom right corner, exclusive */
- } __packed;
- 
-+#define SYNTHVID_MAX_DIRT_COUNT 255
 +
- struct synthvid_dirt {
- 	u8 video_output;
- 	u8 dirt_count;
--	struct rect rect[1];
-+	struct rect rect[] __counted_by(dirt_count);
- } __packed;
- 
- #define SYNTHVID_EDID_BLOCK_SIZE	128
-@@ -442,6 +444,57 @@ int hv_drm_cursor_init(struct hv_drm_device *hv)
++#ifdef CONFIG_SLAB_VIRTUAL
++	/* The TLB flush worker still dereferences slab->slab_cache. */
++	kthread_flush_work(&slub_tlbflush_work);
++#endif
  	return 0;
  }
- 
-+int hv_drm_dirt_init(struct hv_drm_device *hv)
-+{
-+	hv->dirt_msg = drmm_kzalloc(&hv->dev,
-+				    offsetof(struct synthvid_msg, dirt) +
-+				    struct_size_t(struct synthvid_dirt, rect,
-+						  SYNTHVID_MAX_DIRT_COUNT),
-+				    GFP_KERNEL);
-+
-+	return hv->dirt_msg ? 0 : -ENOMEM;
-+}
-+
-+static void hv_drm_add_dirt_rect(struct synthvid_dirt *dirt,
-+				 const struct drm_rect *rect)
-+{
-+	u8 idx = dirt->dirt_count++;
-+	struct rect *r = &dirt->rect[idx];
-+
-+	r->x1 = rect->x1;
-+	r->y1 = rect->y1;
-+	r->x2 = rect->x2;
-+	r->y2 = rect->y2;
-+}
-+
-+static int hv_drm_send_dirt(struct hv_device *hdev, struct synthvid_msg *msg)
-+{
-+	msg->vid_hdr.type = SYNTHVID_DIRT;
-+	msg->vid_hdr.size = sizeof(struct synthvid_msg_hdr) +
-+		struct_size(&msg->dirt, rect, msg->dirt.dirt_count);
-+	msg->dirt.video_output = 0;
-+
-+	return hv_drm_sendpacket(hdev, msg);
-+}
-+
-+void hv_drm_flush_dirt(struct hv_drm_device *hv)
-+{
-+	struct synthvid_msg *msg = hv->dirt_msg;
-+
-+	if (msg->dirt.dirt_count && hv->dirt_needed)
-+		hv_drm_send_dirt(hv->hdev, msg);
-+
-+	msg->dirt.dirt_count = 0;
-+}
-+
-+void hv_drm_add_dirt(struct hv_drm_device *hv, const struct drm_rect *rect)
-+{
-+	if (hv->dirt_msg->dirt.dirt_count == SYNTHVID_MAX_DIRT_COUNT)
-+		hv_drm_flush_dirt(hv);
-+
-+	hv_drm_add_dirt_rect(&hv->dirt_msg->dirt, rect);
-+}
-+
- int hv_drm_update_dirt(struct hv_device *hdev, struct drm_rect *rect)
- {
- 	struct hv_drm_device *hv = hv_get_drvdata(hdev);
-@@ -451,18 +504,8 @@ int hv_drm_update_dirt(struct hv_device *hdev, struct drm_rect *rect)
- 		return 0;
- 
- 	memset(&msg, 0, sizeof(struct synthvid_msg));
--
--	msg.vid_hdr.type = SYNTHVID_DIRT;
--	msg.vid_hdr.size = sizeof(struct synthvid_msg_hdr) +
--		sizeof(struct synthvid_dirt);
--	msg.dirt.video_output = 0;
--	msg.dirt.dirt_count = 1;
--	msg.dirt.rect[0].x1 = rect->x1;
--	msg.dirt.rect[0].y1 = rect->y1;
--	msg.dirt.rect[0].x2 = rect->x2;
--	msg.dirt.rect[0].y2 = rect->y2;
--
--	hv_drm_sendpacket(hdev, &msg);
-+	hv_drm_add_dirt_rect(&msg.dirt, rect);
-+	hv_drm_send_dirt(hdev, &msg);
- 
- 	return 0;
- }
--- 
-2.56.0
+=20
+=2D-=20
+2.43.0
 
