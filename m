@@ -1,92 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794586767;
-	b=GjwXwcVe68Xg3PQ6nlzMuCnAK9EJ5xHjBcy4hMh1R+jLokK4cwrd1HiW5BwKINd7fsKN
-	 BmTlt4N1m22r0iqVCOBaKQS7YVGMoocTg+bBwinVn8puOeO2yGTaMoSPMngEceS1Stedd
-	 oqkvrfKNKd1pMlmtTAY04a4nMvOhi4Cf4DltAmPwcHutl/dglIc41nYVjBmtH3H4WFsYw
-	 2ybcPKehwsBgdr0R+oujG5kKqCqz2heeOKFXbkVfqoskWkc/kWqlxWUXDo1Q9KphAjS0u
-	 bf65LwZndZwI1bMSHPwfqGQNNbyTPnrRsyJu1Fdd2oR05KywBrXNoFIL5opKjuBPl/Q==
+	t=1794591765;
+	b=igOc0K47aZ+5G0jQ4rb0bMEglA6h5AnX2DbgzsTXoqQ81C6lU/wJ0Pmw/Vu718cTYK+S
+	 QUhaher77/R9Xn+aGZtdYi+1aQ8Sv0VspmuPGEv3y0vuyKmG+B8nsJrxiGvWQUqZQPPLx
+	 ngo/SvBZb14q3ruB4oe3AJlTep48T6EB/Thq+EVbzEBJV7C8ZcCHjTx99EmA/Hl/BJEs9
+	 GaZKR19BBtPNAciqG5OMM2KKYoG45aSGSUVU2OEPoyN2ByTGjvN0lHsArM5+/RRzozX0M
+	 3bsqNfeQ9y8TChJtkmSUTBXsxBzmeSv9n10VC+WDrX+lwmDV/RamBcXoRphLggItNpQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794586767;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:Organization;
-	bh=oO/L4wT+HAyKwurpfHTFIZjxjNbn4DtR8FDLIyKt6mQ=;
-	b=uWi0IdWnhv74H/sW/5lLocjE0f45g4M8NVL8homYlOeuskaR+y/gnmCnoW0ylpWx/K96
-	 51/VxhTljOL5ui1fMibJPOMAEn/kZ3vHnmygWn9HMSqi+F2Kb/3vKF3/NKTSH05FmScIk
-	 wwxYOo+646bP8/uOkLh63NSqDK0Iqnf/9g/Ay+QfcaJgLfdgKHp22wm5n/0hpUAbHjBPp
-	 d6MS0MCcDlEBW+NXyIvdi0ieYPSLSkJLX+rNRXi6+jStgK1k6pKN5OBkmkJSKqy1vwngz
-	 yje6wOIEyhyyRixE5pV4hpCebBrq+n8waNMOoQdhjJ8VSFUmHElu0r8euMQj7HOFPxA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794591765;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:X-Developer-Signature:X-Developer-Key:
+	 Content-Transfer-Encoding;
+	bh=ZB/j2Y+ajec24/8et75ghp7KfZsaiFEAzsihkwlDilQ=;
+	b=SktYbh2EioJs1VUobbLXdgD+2njPgGOf/JUfSCxt+WxeUhGUxZ9F7ckSkbYkPMQbaGlq
+	 X6pL+BQabDKlNDm5Wafd50miTrDFyVrAG0UTsIK+tZyk7oYt7MrvfbxS7v0/RUZrNAzyO
+	 jwG8F8ogK2LoaEJHwcTDLQsOv7OLNScj5Nj9kv77os5DZt3TYWUtsbx9Wlqb64mIyXOjp
+	 0xid74yspHbBkHo/TpAZsj4s3l4ISNfFlCpbcojXfjVMVBbeA5w6q0J0aznsVH2wJ2MPP
+	 0EVDvT8XXGjxX4OJMb6oRBqy8hl7hNaw0V0WuL47+/BAs5mMh5OpKZMaT/JekG3Wi8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=C4ScWfhF;
-	arc=none smtp.remote-ip=192.198.163.8
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bqdxbtab;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CDA606A881;
-	Fri, 13 Nov 2026 16:19:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32CDA606A881
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A61606A33A;
+	Fri, 13 Nov 2026 17:42:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=C4ScWfhF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794586768; x=1826122768;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=w/H3vxilWiIY/oBeomI3Vr9aXfPsr8K8inhIjjgOnYo=;
-  b=C4ScWfhFMkAry+zfOO/DjBIL6OrgZY+CvDgWtfqfEh0GF9RVzR1b5/sb
-   xZhfvWHNLnIh20yCYevfn9Pw3x6XyO58neFB/DT/hYSNj3WHzJxRmQChf
-   TuFlxCt5XoHsH5qWt163GfpnK23ysMb3nN2vOETCAyeU5nDBR4y/LwNNl
-   7hd0fFubaJScuslYTPnFCu7aXGV1tCdzLmubUiWyUmudbh2yZQ63Ub+Y9
-   K0e5NAUFiCsP9SGJOtpeS0fA1ZSYQ+D3sTH1EF9qWUKVwPWzAUVnH3ek+
-   ztIjuBJkAkxIlbfqONbaSIyBlLn3sNYnwONnSNBNHrchGKuZL7Se9/084
-   g==;
-X-CSE-ConnectionGUID: HUoctku+SD64Zas1iCnhUg==
-X-CSE-MsgGUID: UtTxuqX2S0qvNim72gw0Bg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11965"; a="3282226"
-X-IronPort-AV: E=Sophos;i="6.27,211,1787036400"; 
-   d="scan'208";a="3282226"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 08:19:23 -0800
-X-CSE-ConnectionGUID: sqDIhBnTTNqwivE1rQNtUg==
-X-CSE-MsgGUID: /+xFyyifSpayyMkgOohuzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,211,1787036400"; 
-   d="scan'208";a="9128992"
-Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.148])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 08:19:17 -0800
-Date: Fri, 13 Nov 2026 18:19:15 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Hans Verkuil <hverkuil@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Len Brown <lenb@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 10/10] gpio: shared: generalize most code to firmware
- nodes
-Message-ID: <avc4g9cbAOEElzRX@ashevche-desk.local>
-References: <20261113-fwnode-for-each-prop-v2-0-4edc23d5cf50@oss.qualcomm.com>
- <20261113-fwnode-for-each-prop-v2-10-4edc23d5cf50@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bqdxbtab
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB911F000C4;
+	Fri, 13 Nov 2026 17:42:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794591765;
+	bh=ZB/j2Y+ajec24/8et75ghp7KfZsaiFEAzsihkwlDilQ=;
+	h=From:To:Cc:Subject:Date;
+	b=BqdxbtabkdyvXWTyMXAqaiUCb/ZWlynacmGazxvyRqw7qMRDxtKkDDlbAwGSdQ5xg
+	 dMtrQUlT5mbSpkgKfQLu6qAOZ8xaSKNdDjIpN0j91beE0OCbaiwGAz/6iMAvQpth3n
+	 dZsRFGuoXIBvdHEWkqcmB0XsDpbBPrxkQPG7yx4k05SOCamg4Vtou9Rcm0qaa7qoX+
+	 Zqy1kn/2/RDvVmrglnFieJeTxSqoTym+OQslt/7JTv+Vh9vTmM1QJE+QNunIsv5Zab
+	 CBhn0NsJYmgsAVUUVtIstTSUMWNNde/wbQaIzxVpqZkNjeigmt2PCQId3TBQn4oyXy
+	 nu/8ubWV83VyA==
+From: Kees Cook <kees@kernel.org>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] dt-bindings: reserved-memory: ramoops: Update Kees's email
+Date: Fri, 13 Nov 2026 09:42:41 -0800
+Message-ID: <20261113174237.i.303-kees@kernel.org>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -96,59 +63,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261113-fwnode-for-each-prop-v2-10-4edc23d5cf50@oss.qualcomm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Developer-Signature: v=1; a=openpgp-sha256; l=838; i=kees@kernel.org; h=from:subject:message-id; bh=GC/mDh6VeYmI6daJlmvsekB/zSiq87wEfX+IW8DztTs=; b=owGbwMvMwCVmps19z/KJym7G02pJDFnffQTLGJnuKe55+fp3xXv9i/oPjbob7+V/Z3ivXLz7W 4IGj0pdRwkLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwESkFBj+6X4rKv5h4FW8unfa xKlnF3EdTY7T1jc/4bjui9WG9kdftzL82Jjn8pdtit/SaYY/J+pbawkpBy6zuDnzNXN8uXDUTU9 eAA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 13, 2026 at 04:47:10PM +0100, Bartosz Golaszewski wrote:
-> Ahead of adding support for sharing of GPIOs for other types of firmware
-> nodes, convert as much code in gpiolib-shared.c as possible to using
-> fwnode APIs and guard the remaining OF-specific bits with CONFIG_OF
-> guards.
+Don't rely on .mailmap to get things emailed to me. Update to my
+@kernel.org address.
 
-...
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ Documentation/devicetree/bindings/reserved-memory/ramoops.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> -static int gpio_shared_of_scan(void)
-> +static __maybe_unused int gpio_shared_fwnode_traverse(struct fwnode_handle *curr)
->  {
-> -	if (of_root)
-> -		return gpio_shared_of_traverse(of_root);
-> +	int ret;
-> +
-> +	if (gpio_shared_fwnode_ignore(curr))
-> +		return 0;
-> +
-> +	ret = gpio_shared_fwnode_scan_properties(curr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	fwnode_for_each_child_node_scoped(curr, child) {
-> +		ret = gpio_shared_fwnode_traverse(child);
-> +		if (ret)
-> +			return ret;
-> +	}
->  
->  	return 0;
->  }
-> -#else
-> +
->  static int gpio_shared_of_scan(void)
->  {
-> +#if IS_ENABLED(CONFIG_OF)
-> +	if (of_root)
-> +		return gpio_shared_fwnode_traverse(of_fwnode_handle(of_root));
-> +#endif
-> +
->  	return 0;
->  }
-> -#endif /* CONFIG_OF */
-
-Hmm... What do you exactly get from the compiler without this uglyfication?
-
+diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+index 45cc39ecc9f8..5a12064eb3c7 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+@@ -24,7 +24,7 @@ description: |
+   must be set non-zero, but are otherwise optional as listed below.
+ 
+ maintainers:
+-  - Kees Cook <keescook@chromium.org>
++  - Kees Cook <kees@kernel.org>
+ 
+ allOf:
+   - $ref: reserved-memory.yaml
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.55.0
 
