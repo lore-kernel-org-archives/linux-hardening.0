@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794575469;
-	b=yEBx+gObhxOueAAb/cLibi9HRCiUzzNxn2ry84YSkl2e61FsKY5s0sNf+UPXlBafGHIF
-	 +wl+rkgB//dRfTuM5NPvn3YouCQ4aiW1467/vmkUSkdKp4hHqRKWtCJzs7YlEKpkhaBoq
-	 Ny7kTPKPnPxtgJMwNZPVCWpm6qF9+3/LgbqQJVCSJ9f/dL2m8BVq09nV5lopESz60Q8Au
-	 ZbpTJAryFmsjd5B0tULThCkJuFtCe8E3jXWcKmTh3JXuNMf9uz+uknI1D0jdDDTnMLWN+
-	 QNQLCSlZA8jT0UsCV9TY6znrSWvHT4pc0pyNDSTwWVUGrGH9ebdbfW5F80acQjHMpxg==
+	t=1794575477;
+	b=0bcr3n0K6epNKTTjZMSpPZDLG1AMCnmYKqHnBEPl2wTRdSuVniKezp7lFuWSLffVK580
+	 Nd2I2BMT3bXed6ICkQ2VIc1NN7y7Bp7BjBWu/YcEbBLlhuK27/hrRNwkRVis74RN5HFg6
+	 b2xMgNeKR/Lu5+Q2OB/5ao6TSk3YwSPSm5prNe9sXeI2n9rgMQkMlxVx0+OJitXHjPs5H
+	 uYJcMq9dmOXTELUU4ZnOwvIPGtRvFftuEjRnOq7OBg0dwZQ80QxWIsCCMglafIuDeW2fN
+	 xVPMvIypzQVfESCtAPJ9icOscpAxEQc/msGecv/xsIeOcaFgS+SYBpLdmX/1VKrp6lQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794575469;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794575477;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=cV058yayD8lqQNsj8kt3xdjGSO6Uw35IkBTo2SsxDvA=;
-	b=s93Jvxn5/Twkuy9hM6+A8jeCpxWLbC2CDC6HU7yYDhr41gv+5zZMyVI8U+p8opFFQofO
-	 pRc9IpUosp2MvE6um2dGNHJiYXETg/kVzkj4lfOb/9BvkWz8xz8clCTLzd5AZg+u76JfM
-	 BRrB5T0YlBvxF//YMwIFuhe6UfHgbgxzDi9aLettIs9g+Oby38KXidAws+c29vdGLKIhM
-	 sDoqRhsOwdr5Jg0wyOhNDXSxRjF2c/ZC7894bjcGVGw4Omnh5mmaDKhRxdxXWQYeJoZ+d
-	 GMEviqS5tRo51804yQJYWEj+oOlozkjWTpWmQULQ5gXWNIJ4SPCdYtlaN9aWUOxjVgQ==
+	bh=2IdJqO7H1pfkyyGWaWMSZ8sDfdyknWASryND+ME9Ais=;
+	b=FWy9HOv98/1iMrFCoijTevyHak9+nFPlCo1ZwTDZ29sXgPIlY8cpI93+zqOrwW8vaEK9
+	 mhPO060RZRWkC4DqQvb8goec5vT1sUBJq5/Yb2+8SmpbLsuxGHwqpCWNUbcBFieCx/AfA
+	 3azcMag2oHbJmXo07BzvCWcOgl65A+ZlK/+k2U0+a1DBptzFhS1wi6/TTOahv2RaJ4Dok
+	 VU7qHwqGv8pr5gNbYL0pUlBvpjWIYTXM0BVtJNh7RQErmylKe4eh2ss2LH9lNsIQkw9D2
+	 RA1Jf4vqb+Mf6149Q/48Nf9n4Dko+IUzZM2Vep32IrcQhuDp5EBLBQNl93Yw78JkvJg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BkOopfCs;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BVjce68U;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF9060A3833;
-	Fri, 13 Nov 2026 13:11:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF1D606A898;
+	Fri, 13 Nov 2026 13:11:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BkOopfCs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F4F91F000CF;
-	Fri, 13 Nov 2026 13:11:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BVjce68U
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34AD01F000D4;
+	Fri, 13 Nov 2026 13:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794575469;
-	bh=cV058yayD8lqQNsj8kt3xdjGSO6Uw35IkBTo2SsxDvA=;
+	s=k20260515; t=1794575477;
+	bh=2IdJqO7H1pfkyyGWaWMSZ8sDfdyknWASryND+ME9Ais=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=BkOopfCsRZJgJZMB1Binr5GWVdSnpZhBLWLMzygopwCChfOober9A2y1U3OA4BJxw
-	 xsmfjv7tAg+4lhnBXxgpErTgm/GvwIYIDjWCrEoBWB2YEWou9JlZc7G/Cs5WLt9B3C
-	 3OKhurmkAHc4PCNxpUmcSyZvSDo8yEIaNW+5lF75/5Oq26Gj0FtTOPbx1pAe7JdiHC
-	 VE3rZ50slOlwfR3AX8XSD8SxKjKl3UMFMOGZCOmVb34r9i402eOhP6d7+Xl2p0kqu7
-	 C02PaFXEX5v2ZsVaZYOEjfTpLPhNwsKOWi6d/iG0w6hPA2XEnv2CW5LFPwdr97oO37
-	 PqOqVVY1Nl+JA==
-Date: Fri, 13 Nov 2026 14:11:01 +0100
+	b=BVjce68Ug4+K43xR+VdmgwahfxDFNZZNKoxtQKpncr5Rc+/f6rWiBSyBhoj3iSkhv
+	 6FTQuFVZO1D21W5tZugRO7j45oEDGpXHHE6UduBMaQHeSjA9lRMzUVyyRX4Mas73Jg
+	 3g2JbquoNkwq/ta/JWxcjY3hJuFTaudenNwpBJ6bBh7JFkdzP90F7cDr26cKk8Owwm
+	 OxN1j2if2fxsmV6/lneYvK8BoViTnfT4oYVRRsX6iX/5/AXXZw+zKP9+j6fJjXK0oa
+	 dMr9w7fbfRTe+TAr6VOISD5hQU2IKgqHztrbzf/bu9J1WaQUtqtghZYzKIr5fDZS9m
+	 YSDthWSPuzKUg==
+Date: Fri, 13 Nov 2026 14:11:09 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, 
@@ -56,9 +56,9 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v5 5/7] string: Add [C]QChar_of() and QVoid_of()
-Message-ID: <1294b3d64440346b67b0fc79006984a343fc8bf6.1794574496.git.alx@kernel.org>
+	linux-gpio@vger.kernel.org, David Laight <david.laight.linux@gmail.com>
+Subject: [PATCH v5 6/7] string: Make strprefix() const-qualifier-generic
+Message-ID: <0ca0b7aabcfcdff06dc3f77b4f74e36f1298338e.1794574496.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1794574496.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -71,12 +71,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="htjckynr2h2tacdi"
+	protocol="application/pgp-signature"; boundary="i5qsai24wbe35a6n"
 Content-Disposition: inline
 In-Reply-To: <cover.1794574496.git.alx@kernel.org>
 
 
---htjckynr2h2tacdi
+--i5qsai24wbe35a6n
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -96,84 +96,72 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v5 5/7] string: Add [C]QChar_of() and QVoid_of()
-Message-ID: <1294b3d64440346b67b0fc79006984a343fc8bf6.1794574496.git.alx@kernel.org>
+	linux-gpio@vger.kernel.org, David Laight <david.laight.linux@gmail.com>
+Subject: [PATCH v5 6/7] string: Make strprefix() const-qualifier-generic
+Message-ID: <0ca0b7aabcfcdff06dc3f77b4f74e36f1298338e.1794574496.git.alx@kernel.org>
 References: <cover.1794574496.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1794574496.git.alx@kernel.org>
 
-These macros serve to implement qualifier-generic macros as those
-specified in ISO C23.
+Add a macro of the same name, which returns a pointer that is
+const-qualified iff the input string is const-qualified.  The return
+type is a possibly-const-qualified pointer to char, even if the input
+is a possibly-const-qualified pointer to void, which is why we require
+the CQChar_of() macro.
 
+The function now needs to return 'const char *', because const_cast()
+can only drop const, but never add it.
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: David Laight <david.laight.linux@gmail.com>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- include/linux/string.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ include/linux/string.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/string.h b/include/linux/string.h
-index dcda1b7801bb..5f3ac760df2e 100644
+index 5f3ac760df2e..b1468d3913f6 100644
 --- a/include/linux/string.h
 +++ b/include/linux/string.h
-@@ -14,6 +14,36 @@
- #include <linux/stdarg.h>
- #include <uapi/linux/string.h>
+@@ -591,11 +591,12 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+  * *  @s + strlen(@prefix) if @s starts with @prefix
+  * *  NULL if @s does not start with @prefix
+  */
+-static inline char *strprefix(const char *s, const char *prefix)
++static inline const char *strprefix(const char *s, const char *prefix)
+ {
+ 	size_t len =3D strlen(prefix);
+-	return strncmp(s, prefix, len) =3D=3D 0 ? (char *) s + len : NULL;
++	return strncmp(s, prefix, len) =3D=3D 0 ? s + len : NULL;
+ }
++#define strprefix(s, pfx)  const_cast(CQChar_of(s) *, strprefix(s, pfx))
 =20
-+/**
-+ * QVoid_of - qualified void of
-+ *
-+ * @p: Pointer to test for qualifiers
-+ *
-+ * This macro produces the type name 'void',
-+ * qualified with any qualifiers present in the element of @p.
-+ */
-+#define QVoid_of(p)       typeof(*(__QVoidptr_of(p)){0})
-+#define __QVoidptr_of(p)  typeof(1?(p):(void*){0})
-+
-+/**
-+ * QChar_of - qualified char of
-+ *
-+ * @Q: Qualifier to test.
-+ * @p: Pointer to test for the @Q qualifier
-+ *
-+ * This macro produces the type name 'char',
-+ * @Q-qualified iff the input pointer points to a @Q-qualified element.
-+ */
-+#define QChar_of(Q, p)  typeof                                        \
-+(                                                                     \
-+	_Generic((QVoid_of(p) *){0},                                  \
-+		Q void *:  (Q char){0},                               \
-+		void *:    (  char){0}                                \
-+	)                                                             \
-+)
-+// CQChar_of - const qualified char of
-+#define CQChar_of(p)  QChar_of(const, p)
-+
- extern char *strndup_user(const char __user *, long);
- extern void *memdup_user(const void __user *, size_t) __realloc_size(2);
- extern void *vmemdup_user(const void __user *, size_t) __realloc_size(2);
+ /**
+  * strstarts - does @str start with @prefix?
 --=20
 2.55.0
 
 
---htjckynr2h2tacdi
+--i5qsai24wbe35a6n
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr3DGUACgkQ64mZXMKQ
-wqk2Sg//QfQrb1UrLd8CGvqMwU/rdASv0ZafhJ4KUapXbTyNZDou8hC3oVk37F8C
-kk/SiDmvHMRYEvoJEhbUmvihjd9ojf3v/c5FEn303JOYXq3JEGKBBQCFVGQUEfY2
-mmT56JnJUKBCuanMr0V1OQDWjXTRL8SBqwgwKQVgUBvYtXLyThOcf4NDmfLynvzO
-bEk+RVxsZ6baveUv7Crds81DaQK30KIl6f63lM/ean/qj2ua951Z40pWgMgXovM8
-CoLHqrKDhbaxbZcvHRBw+ew6qIBK1UfVg1a0Bwgnk0n2J9tya09M9ADUt6NfmPH8
-oPu/nHFcpaQu2pm8Ko+FZBrRvIEnzcD9d+vBn0IgM2+szcPN7P3AMD2/dFXFLDT0
-EeLDuG0kvG22dMOOXYDNywjPaYPBcDGJ9mRCCW2DuZmuMnt9cz6dRrvn9nrN0jYk
-P4w/xPZQxGirYhtob3w4v5zMELwmxk49jkSbDVDJ/dLr2MT/2Bp9YWY/CYyu2ygt
-bMcfvVEp703SF/a+oEf5RZBLvEBbV66MNCqsi28AMk1WQyFf9JBJyFts6uQ11qkQ
-PHrLlAN04YbEyTaYDp7ExYi9igQc5oEUJLznGPKy0JFsbz0zju+LIvbp0ZLu5mbo
-A3ASKcqD9eSwDVRTlHPmwvWR7BIFzQa0ytOtmvbiR4wkVmVJLT4=
-=2XCv
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr3DG0ACgkQ64mZXMKQ
+wqmtpQ/9FqSVKEd5S68Yl/iTPNzT5abQ6aLd8jnKt/59BsYwr1FJUfQyfMq7M//w
+IdMANHxUMZV/aJJyuXOqPjso34nrPat6Z45nu5TwJWiSXbVLLbcyZ21RRBzgcVIq
+bfVJeELdUE5ky3GURp39XaZrxfOYR6hnVsvzVbeXKF09XmN0XCDi4XJBrXzgNkKE
+WTO1qOswGzGnI7p++w5Z9Jp7PhcRq6bU7Ri90P+lrK6uZY4utW3ivJBHhUB1wo66
++qQajVD8sgOl9IKZoRCyKEO7kIhvaj8hGX6/273+iO+PJjGB37jAyOAYWNlJnJPu
+HFN0/1DxPI/jRARW1fKsR6q5i8FP1XC0j4/Jhny2qcIAOWZQWntMcKDaB2xFT5Kl
+OBH17rh9tfuFl3ualcktXGES2w0dd/BwCY0rLKqejYUQTIdFZ80mCR49fqAAuVRI
+mj9iHXWkdGCgfQWu+zoBcCSvvvIn1l2sT4EL3AOvghPJQ9VCnsCpPqhp6Vmtc4Zb
+NCWoLcWWOFz3xMUirbCeQ8Ucje0dP3jqrNVUznwXC61m3h51pT0tPO8Nny12hBGq
+opFa1xdtl+WarD7IFMvxBOhvNL2iQmg2QoLrek9A8wwqKTSpcY9q6yw4+FWzhR2j
+Sr66HjDHWZV6NcDwjet4xJQHDpeBv+lZ9nPY9w/BYyKAdrv1Hy8=
+=bZGI
 -----END PGP SIGNATURE-----
 
---htjckynr2h2tacdi--
+--i5qsai24wbe35a6n--
