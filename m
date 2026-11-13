@@ -1,68 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.180.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794584383;
-	b=QXGPryYDwGzMw6mhKNlYkTf1RKQ+XozhvPFxQw4fovFNV7ECXytkdwbyO8zMcSBsDyJt
-	 UM3J9D/mzIE1S896+5A3+arURCWDsCUU4rO6SuwgZzM5KscWZQp18u/WE/YxjnULq2+3t
-	 s4TTePk7jRSREorNVAtSXh85TRiTQTkS3496vVrQ0eFjHv/5ZxSiiokMgUqfs7VGkC52/
-	 EGBIZWiU2blndZfHYB3JCAfrEMTF/G5gGGQ2JTos6QpBRsR3fIiqLH6D4PTtFTM6AM2nR
-	 Sn+AdbeuFy1bjO367NkX85nUF5z27coGfCCm+PJArJIpWxfR3k1VUvRUgISQkNtWamQ==
+	t=1794584829;
+	b=X7va2Cw2NBTRpKrHNuJwiL26FJ3+Tq5g/MfMtM9O/5+1iY+6g2RRwBWt/uTN7S2nY6uI
+	 8ZzrxYYN75yORsMBFXO9OJEiLsDotmuz1s88nKbB34nJL/F5odbYWzm3y4cMchfSIxn2t
+	 j7cx7Seaku1BcGb5ctCzxA1gx134ELV503QCaQtTFEVNe7dPUgJa8CdOiyfRGhXfgrQBq
+	 386fLiMnArpK9L98nZilt6XblUndR9gj9wnWhLazP3hcs2oJw7JZQtgZPdpuxOSRkHW58
+	 tTi0OvEGPja9sdYRuOlFViGPUJFBN+bU50WiCnQk92BeycD8Z9Q06QfdpmJSZdvo0rw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794584383;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=WTYbhOQb0nbXf5t2IZCat65pMPi3J4tXZO3ZqFrLRAI=;
-	b=1qpvsB1XOHrNPo5ox4dPdJ9QER0LLZKSL/uVsP2KdlrOcb8QCnBfZdLWJ46XEXdAjHXE
-	 b3dJoGEde6OdmVGQ01vZd6/I39SakLlac383zOh2tLhHXU2/bXtjB4/Xw9YzFoXX9oe2g
-	 I54Whgj/emQMduR9PMjj3l87Kz4P8Ca3+V3N5J7P1/jFZPDOckKicTZlbG6Xq/latz7AD
-	 n1c6lA381u/lgkOhaau5E9lQhebi0XZS+d8WouLDONtYhHUMuHNnr9rlTL5g0x/8ic3Dt
-	 mege9LIzcgeLZmxgIEzBYoasd91CEjELEVumxl6nQNCosqqCsOFcrXHqzsodD1ZoDeg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794584829;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:From:
+	 Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-GUID:X-Authority-Analysis:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=LhvoIjPwf8qgSokp0XPAMhIk3AI3O12ul9x+XjikETM=;
+	b=NWf/C3EyrTP6Z7vpNYg5phxj2L4vjRYwqLUltrj2GIxINpjHsDQt9oBTLcWMbDcVCpTX
+	 LcVr5Ja0lGAYjUl3kSDdtwv3uv7I64SP1l6IAEYdZ7nzVB62M4KiB7PkAa3zzkIDkrlLr
+	 JwJAmzOTSeoNfYFtsC5BrLgAAF5qXZSHZUj8ZMEUOgISL9oTf9W0hwcIeXcOyEYkpRNjc
+	 um08wJkk6MMy3O1RxlY8dIx5IRhBYSlAVj3zFQY37yhzkkHS2pkew6WR4sCKoeAyO2Jec
+	 t73kEJsgpJYR94W6/MZUcShaW7RabtObfcEunN2xW0+wsZOyGM+b7nJLZCUZlGnMr7w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mscDjltS;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=CXdqUjNd;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b="Dpf/rL+g";
+	arc=none smtp.remote-ip=205.220.180.131
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8722606A323;
-	Fri, 13 Nov 2026 15:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D367606A330
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Nov 2026 15:47:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4D367606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mscDjltS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98CA41F000C4;
-	Fri, 13 Nov 2026 15:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794584382;
-	bh=WTYbhOQb0nbXf5t2IZCat65pMPi3J4tXZO3ZqFrLRAI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mscDjltSDITSat8S9wUj+2TJnbQm+X07N/08IrqdSpooq7IEfs67cHVxETyHL5mZM
-	 JOFZgZtHpFjZ5dyXhzoWFPPh6mtfFxYp9vmVyiRttPN5hHZVOUC8pz+MzPuV8sjYMm
-	 uGmcB981N1rV9L+fZwkMetkWSxpLxmD6KRmNMY6dSLVdQNZZIVJdewD3PLmRedWF9V
-	 t7HAdAmo35nhEdhFABfph/jI3mVuRZHLOkCfAQT3pNSWhguk+K7TX4hPDwYxEHHDPA
-	 zR+gQrwhDs8Sd7gF1SCeoy9e8fyf9ngXwc7DeTjgvKVFo+ZQVMT3e3OuXggwLJXUF2
-	 iSyqXpUpzVLsQ==
-Date: Fri, 13 Nov 2026 16:39:34 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5 7/7] string: Implement strstarts() with strprefix()
-Message-ID: <avcrlaWDlBVAHpnj@devuan>
-References: <cover.1794574496.git.alx@kernel.org>
- <382a44f7c68672ecead2436d9f569ee23f383830.1794574496.git.alx@kernel.org>
- <avciONW-b_WXoetv@ashevche-desk.local>
- <avcj0YbmHRyhFW-Y@devuan>
- <avcntwOjI2i4seyB@ashevche-desk.local>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=CXdqUjNd;
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=Dpf/rL+g
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6ADFRAv81076329
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Nov 2026 15:47:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=LhvoIjPwf8qgSokp0XPAMh
+	Ik3AI3O12ul9x+XjikETM=; b=CXdqUjNdwxfkESc6nmWW9DKUrkFP4+VWDxMyIT
+	5zzkDzxJlvdNGzHXqnGzmZ00HYGZit8pVYaM0vt741QDL2k70Tojlp72dbAANGqs
+	wiy8BWIYlEoRmlzBTPoGDwizSxMEWU9tuHtAXkjNuKqkmTU+sjVWQPAoBptzXTyJ
+	/5DNwvl4TO/BmJ8Ljd7MVy6JFGHypREnTuPgghIGuirod6Q2Whauhbae56WMq3Gv
+	+HSYrZrsmBfXXAtmmDDb64gRmMO91Ermzbwlsq5op84HwqWYIQPME2Oo8SSwK93b
+	zHTDm3LbTUtLXEt7vennFsueax088RWq2ATKTaAj2lwKlCqA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hwh0amejs-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Nov 2026 15:47:08 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-947a607ec40so109976385a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Nov 2026 07:47:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1794584828; x=1795189628; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=LhvoIjPwf8qgSokp0XPAMhIk3AI3O12ul9x+XjikETM=;
+        b=Dpf/rL+gPjmBR3zlAb3rGwjyBFx/o9+Cc5v5iMe4skEZm/TPCF0TXsE5mcleolmDSX
+         WYkZww6R6PumLs5w0gxJi5NWlOtJxsamHu8/SngLuromWW0/1ODcOaBCrpNfI+giMUZW
+         WcvZZZvbwA+iGOn6avo08eHlk3tvWeb+4guURkYxAYCB/uxVFGg0q62V3gWEtgoLp21F
+         Q7Zora6qnY4t1njtutNPmKo8rHkXdGDOtG7SgImppj+S5OnXwoHZ1YuHfv9hwxVL8UMe
+         87tVfp+IT7mecJFUY7AstCluO3xMTg1kHdcjWH6T9lfWJFZclnG0Ujad5Nbl5eAx5Eaq
+         HwbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794584828; x=1795189628;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=LhvoIjPwf8qgSokp0XPAMhIk3AI3O12ul9x+XjikETM=;
+        b=ZdOHN4/ULRJQy0XLXRi3gdDS1WAz+bfMe3BoDw4YN7sKo2eQijGPs/GeJ4begcNWkz
+         rFq/jNlZQkI56vK/5rX5GBSEWpKz4x7aBmbyo/Zrj7cqvPs3bcJyBVIcefUiS8B1ACWx
+         PB4h4g0q/qbYoDIjnINwPVC8AhrYE3i9zygYisBAEU2kCIkkSo8zvIWVFnuSkwT+N32G
+         sbbG/YPajuXJ4eBM1vXArb0sg5Wz3MxLC3ViQqenGa5gQ/DqL7Ow9iDV/nTKNV82aGGc
+         7fLNrLcuWdwF3rZHN0DTCjWF8/J22ZcPrD23KPLWCRj8E+yF9EOUpQFfLB3s8EOVl2YE
+         tOcQ==
+X-Forwarded-Encrypted: i=1; AL+hErEQa5fHUIB50f8ZX1o8QKMgTci2FMho8sL2QAgF4TD1WrJW+Zgfu94mCdAReGZSNuwRfas3APHnTUzGbjBGHwI=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9yP8JbTjv0pGqfSDsEWawvQYYy1PHIA7ISX7BvmybKTUEmKxl6
+	89Gu3An2ORGoqgBskbbriam1rCl1atGq9qy0Ga9nqh0Urd4BXOomRBCu9UlgeoA52AUWR17vjIy
+	gmqdk8xJ0/jmtC4RKKZEQshvS8Lym1XAeouxR7qY9teeYAUnOQsq827sqIhiqZYV5QMkmR+0=
+X-Gm-Gg: AYBFou0sLDRjRUD7MBLaOqGlg2F1tjUL1RnqP0SjypFCOjDuilhhZ+8bTQH9cvqE5Aq
+	7DoqD+dl0cRZzURCNRllNKAm5IKRJwNTc+SYg8GkaF9Bh/wsg29aLzPnoAXXIFKbYzbZDmvb1Zi
+	5LD8qEhH5l2E2MPRGjIJazwKIiYm8iW8WWDm3akZ/E1X1CyN0vHOeGkJD5XG/o/S0ft2S1NWzr2
+	8dNlqKtYYZU/u8TFm/NYJYvCjKkHMCDtqYopOrui7g1KBN0gxhAcnVNPHddA2OV0emVm+w0fifL
+	Ut6UrvF7BHl0pl4FVLHP2A7rh8ORpx09iVzpYmhc2uAH48iqJKRFru1A5RSiFLzP0/GBtl+n9BN
+	P1BtwYelTY0WPH0exSXX8raUwohF0FAQInhss8oGa/mzTBz3/KqVS/omEhaOh0+WkbFYr3Oj60g
+	p7RQ==
+X-Received: by 2002:a05:620a:4448:b0:949:3017:1f91 with SMTP id af79cd13be357-9494bc117f3mr479651785a.48.1794584827234;
+        Fri, 13 Nov 2026 07:47:07 -0800 (PST)
+X-Received: by 2002:a05:620a:4448:b0:949:3017:1f91 with SMTP id af79cd13be357-9494bc117f3mr479643985a.48.1794584826652;
+        Fri, 13 Nov 2026 07:47:06 -0800 (PST)
+Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:8916:7b9b:97a2:6c96])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-49c5f5972a7sm5636519f8f.21.2026.11.13.07.47.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Nov 2026 07:47:05 -0800 (PST)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH v2 00/10] gpio: make gpiolib-shared more fwnode-centric
+Date: Fri, 13 Nov 2026 16:47:00 +0100
+Message-Id: <20261113-fwnode-for-each-prop-v2-0-4edc23d5cf50@oss.qualcomm.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -72,199 +115,158 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="onvsso5rgalquyac"
-Content-Disposition: inline
-In-Reply-To: <avcntwOjI2i4seyB@ashevche-desk.local>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPUw92oC/22PwW7DIBBEf8XiXBAQimMrqvIfVQ4ULzaqDc5CX
+ FdR/r3Yvvay0qxm580+SQL0kEhbPQnC4pOPoQj5VhE7mNAD9V3RRHKpeSM0dT8hdkBdRArGDnT
+ GONOuNto1HOrT6UzK6Yzg/LrHft6KHnzKEX93yiK27R4oBFf/By6CcqpBnh0IW0urrjEldn+Y0
+ cZpYmWQ2+sAIdwfpXY+aOTLJKCbyee2CrBmepCE3IpNkJLZn2qri40LIBN1o95rpRrNep+ZGdf
+ rN2CAkUXsPwrm9QdzGO/QJQEAAA==
+X-Change-ID: 20260916-fwnode-for-each-prop-d7a6f90e7338
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Bartosz Golaszewski <brgl@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Hans Verkuil <hverkuil@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+        Len Brown <lenb@kernel.org>, Rob Herring <robh@kernel.org>,
+        Saravana Kannan <saravanak@kernel.org>,
+        Linus Walleij <linusw@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3990;
+ i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
+ bh=pLIlI74EKk0YI7MaPzy0iJBswk4SNJ2VXVWpc/TRWOw=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBq9zD2JMfefMzgqf2gQI9HjEGkS03S9cU/+15NM
+ rjVlFW/aLKJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCavcw9gAKCRAFnS7L/zaE
+ wxq6D/4xjxqWZq/YBLoZmFR+/rPVSoOwX8rkCks6n/OX3Jp78z4FF2adFhLx8bJ85Oku2/BISm2
+ m0RUgQdn75xNST+tnoX5HcmYJUf9nUSGKP3T+L8P3rrEs5OnL4TKmPZXyNVtEq061edragWxV2D
+ vfxLRfqfi7lKeG/PbEZcXRjHi2UqY9D1mMiU8me0zhg0ImJaediNulfKFjUF1Y73AeuvZmR6i4w
+ Gob+FXXfoBEnFp95jPNEvvHRYhXdIR8SHZpbFIeO/7mADCMgnvCQSMd8jWyGUh6RieF4V88REBA
+ hHtGU63S6UYK2MkpWdLHPPnopb0XTokOHJilHGLzNiyAEgmpIrtDjBMEN7VzbYz62y0cB9P1+xR
+ x7uTqVCf9uwwCd40S53BeI0oxF4V3QJzlN2E2+zZaIsogr8xdBTnJhJe0VGPqNAan07bORhfS1q
+ VaiuWXjNCRTflQk8sZN1TTPvDbb+AdUFBQl2NRiZLmicOVRCTVQspSV9zguDKhOa5BP/cZan7Ix
+ H41ArOd4d//xYhalyUpxpFArnnmtHBX5/+4QSfi61MxWo1vukSRKdmbH79qduBXtA5ICXeCG8th
+ dCpmdUvPCMKmQd7XdDLog0WiuOIYXKYStd3asW/exPaOEffaSzlDW839ujQevrvVhUZgOELL53A
+ 0wFciXGXz9Avuxw==
+X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTEzMDA2MiBTYWx0ZWRfX8c60CaD9hovX
+ H7mX2azonxoybrcQH14RHncudnsRzIvFKT1Vd7taLDEjzUEXB9dsWWCLmOf9+ZGSntm0u/V5u7v
+ ReZJx6u8tE/6xiC77gXFZaqUD/AQoqU=
+X-Proofpoint-GUID: LF3EugyWvoJN7HPMY3wjDDBHNto2Avsc
+X-Authority-Analysis: v=2.4 cv=N+e8hG9B c=1 sm=1 tr=0 ts=6af730fc cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22 a=bC-a23v3AAAA:8
+ a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=sw4_LmjLfTFoMrZgmVIA:9 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=FO4_E8m0qiDe52t0p3_H:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTEzMDA2MiBTYWx0ZWRfX158vyHngncvc
+ nmlo4o5sf425FL3vEzQONcDEZ8k1uehetEhcBQZqnR18IFDISmSfkMEQMFFjvHkn4w9GHzASSbq
+ XzcQICn8dl/fK/7bLytPMNOaA1oe+ndqtM/kDqjx9nVE7wcbdDBwECJcvR6zTm2q650VwHRACbv
+ iWw6w0vLNDEMl+B5tyOiYD8Q7orD1CG5YyFGaBypcbb58RjhcMJRhARab/u733syPxjBs1x3oRl
+ zV+eesIwT9niijdgSboGt/j1NTSqhXHbZju0i+FIXy0i+GL3qoBCMgeRnl7lnBIQtXUa7Ue6DDs
+ f1M4bvhiRWy55kq7WLDmuSC1IY1yKPhvE+eF3FDy8Iyi3BujnVyK+SExpCVRClV8zdesXxnvYVh
+ BySRL+HqLtcD/w/F0/RPlQYKKYte1bVyWMZ7UsmX+CctFm5wp3ASwpJiYogEynHRMhFRkAQaSES
+ EMktKoeUIIDOmyZnrPQ==
+X-Proofpoint-ORIG-GUID: LF3EugyWvoJN7HPMY3wjDDBHNto2Avsc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-13_05,2026-11-11_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 clxscore=1015 malwarescore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611130062
 
+Currently the code in gpiolib-shared.c only supports OF nodes and uses a
+lot of OF-specific APIs. This series attempts to make the code more
+generic, ahead of extending support for sharing GPIOs to other types of
+firmware nodes, by defining two new fwnode operations, implementing them
+for OF nodes and using them in GPIOLIB in order to limit the OF-specific
+API usage to only a few places guarded by ifdefs.
 
---onvsso5rgalquyac
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5 7/7] string: Implement strstarts() with strprefix()
-Message-ID: <avcrlaWDlBVAHpnj@devuan>
-References: <cover.1794574496.git.alx@kernel.org>
- <382a44f7c68672ecead2436d9f569ee23f383830.1794574496.git.alx@kernel.org>
- <avciONW-b_WXoetv@ashevche-desk.local>
- <avcj0YbmHRyhFW-Y@devuan>
- <avcntwOjI2i4seyB@ashevche-desk.local>
-MIME-Version: 1.0
-In-Reply-To: <avcntwOjI2i4seyB@ashevche-desk.local>
+The new fwnode APIs are:
+a) property_get_names() - this closes the gap between OF nodes and
+   fwnodes: OF nodes allow users to iterate over all properties while
+   fwnodes don't advertise all properties in any way at the moment
+b) count_references() - there's currently no way of counting references
+   in an fwnode reliably: using fwnode_property_get_reference_args()
+   does not work for empty references (e.g.: phandle = <0>, <&foo 1 2>;)
 
-Hi Andy,
+The first patch adds a CLASS() for string arrays. The following 6 define
+and implement new fwnode operations. The final patch generalizes the code
+in gpiolib-shared.c.
 
-> Date: 2026-11-13 17:07:35+0200
-> From: Andy Shevchenko <andriy.shevchenko@intel.com>
->
-> On Fri, Nov 13, 2026 at 03:59:46PM +0100, Alejandro Colomar wrote:
-> > > On Fri, Nov 13, 2026 at 02:11:17PM +0100, Alejandro Colomar wrote:
->=20
-> ...
->=20
-> > > >  static inline bool strstarts(const char *str, const char *prefix)
-> > > >  {
-> > > > -	return strncmp(str, prefix, strlen(prefix)) =3D=3D 0;
-> > > > +	return strprefix(str, prefix);
-> > > >  }
-> > >=20
-> > > There is no sense to keep strstarts() at this point.
-> >=20
-> > I agree.  Actually, it seems my guess that strprefix() would be
-> > optimized out was wrong, because the kernel builds with
-> > -fno-delete-null-pointer-checks and other flags that prevent this
-> > optimization.
-> >=20
-> > > Can it be simply redefinition?
-> >=20
-> > I was thinking that we could just do a simple search and replace
-> > s/strstarts/strends/, prepending !! in some cases if needed.
-> >=20
-> > By 'redefinition', do you mean making strstarts() return a pointer
-> > instead of a bool?  A problem with strstarts() is again the function
-> > name: it doesn't seem to naturally fit with a function that returns a
-> > pointer to the position.  It also doesn't clarify whether it searches
-> > for a string, or for a list of characters (like for example strspn(3)).
->=20
-> We have str_has_*() for that?
+Merging strategy: patches 1-8 should go through the driver core tree and
+be provided on an immutable branch to me so that I can pull it and queue
+the final 2 patches via the GPIO tree.
 
-I don't fully understand.  str_has_prefix() --which is the only
-str_has_*() function, BTW-- is meant to be the same as strprefix(),
-except for using an offset instead of a pointer.
+This series depends on the series from Alejandro Colomar adding
+strprefix() as indicated in the b4 tracking.
 
--  strstarts():
-	It could be improved by returning a boolean-like pointer,
-	instead of a bool, but:
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+---
+Changes in v2:
+- Integrate the series from from Alejandro Colomar adding strprefix() into
+  this series as a b4 dependency
+- Reuse the existing struct strarray in the new CLASS() for string
+  arrays
+- Make sure that props != NULL in fwnode_property_get_names()
+- Replace string.h with string_helpers.h instead of including both
+- Tweak the kerneldocs (Andy)
+- Use size_add() from overflow.h
+- Mark gpio_shared_fwnode_traverse() as __maybe_unused for !CONFIG_OF
+- Return early in the OF variant of fwnode_property_get_names() if no
+  properties are defined
+- Add commit removing unused leftover code
+- Remove useless alias variables
+- Link to v1: https://patch.msgid.link/20261104-fwnode-for-each-prop-v1-0-6e28fe1c72c4@oss.qualcomm.com
 
-	-  We may need to fix some callers, since some of them might
-	   need an explicit conversion with !!.  It'd be risky to change
-	   the implementation without first verifying that.
+---
+Bartosz Golaszewski (10):
+      lib: string_helpers: export and rename struct strarray
+      lib: string_helpers: implement a CLASS() for string arrays
+      fwnode: define the property_get_names() operation
+      device property: provide fwnode_property_get_names()
+      of: property: implement the .property_get_names() fwnode operation
+      fwnode: define the count_references() fwnode operation
+      device property: provide fwnode_property_count_references()
+      of: property: implement the count_references() fwnode operation
+      gpio: shared: removed unused field from struct gpio_shared_entry
+      gpio: shared: generalize most code to firmware nodes
 
-	   To avoid that risk, I prefer adding a new API, and
-	   deprecating strstarts() for new code.  Over time, I could
-	   slowly migrate users from strstarts() to strprefix().
+ drivers/base/property.c        | 115 +++++++++++++++++++-
+ drivers/gpio/gpiolib-shared.c  | 242 ++++++++++++++++++++++-------------------
+ drivers/of/property.c          |  41 ++++++-
+ include/linux/fwnode.h         |  15 +++
+ include/linux/property.h       |   4 +
+ include/linux/string_helpers.h |  12 ++
+ lib/string_helpers.c           |   9 +-
+ 7 files changed, 315 insertions(+), 123 deletions(-)
+---
+base-commit: 161837d37055642b03475137461d4438c65dbddf
+change-id: 20260916-fwnode-for-each-prop-d7a6f90e7338
+prerequisite-message-id: <cover.1794574496.git.alx@kernel.org>
+prerequisite-patch-id: 6c8ea11afdfadea1c72457e460596f9140195f8a
+prerequisite-patch-id: 81834766a605fc75e62501a8459944c87aa7848e
+prerequisite-patch-id: 49110713d1b10ae2972ae738da383215d9be001b
+prerequisite-patch-id: 97bf1ce8e594218715d5df30711d0523c7f07bc5
+prerequisite-patch-id: c94cdf0377763fbdcb942add8a058161503f9024
+prerequisite-patch-id: d0e6af689d680619ee07aabb50635328052bc9af
+prerequisite-patch-id: 1006c25c87a8e46129fdba68822b9592c3f5e0e9
 
-	-  The name isn't ideal, since "starts" doesn't specify whether
-	   it looks for a string that starts with a given prefix, or if
-	   it looks for a string that starts with any of the given
-	   characters.
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-	   That is, by the name, I wouldn't be able to know whether
-	   strstarts implements
-
-		bool strstarts(const char *s, const char *xxx)
-		{
-			return strspn(s, xxx);
-		}
-	   or
-		bool strstarts(const char *s, const char *xxx)
-		{
-			return strprefix(s, xxx);
-		}
-
--  strends():
-	Same as with strstarts() but from the end.
-
--  str_has_prefix():
-	It was an attempt at strprefix(), but with a problematic
-	approach.  It's frozen because of trace code.
-
--  strprefix()/strsuffix():
-	I'd add them to slowly replace strstarts()/strends().
-
->=20
-> > I prefer replacing strstarts()/strends() with strprefix()/strsuffix().
-> >=20
-> > But if you prefer changing strstarts() to return a pointer, I'm also
-> > okay-ish with it.  It's not a perfect name, but I can live with it.
-> >=20
-> > > However, after looking at the uses in the kernel, I prefer
-> > > to see the strprefix() be not implemented at all, just optimization a=
-gainst
-> > > strstarts()/strends() if required can be performed.
-> >=20
-> > I don't understand this last sentence.
->=20
-> It's basically repeats the idea of having only one pair out of two.
-
-Ok.
-
-> With this series will be
->=20
-> str_has_previx()
-> strstarts()
-> strends()
-> strprefix()
-> // potentially strsuffix()
-
-Yes.  I'd like to replace strstarts()/strends() with
-strprefix()/strsuffix(), but prefer to do that slowly, to avoid
-introducing bugs due to missing explicit conversions to bool.
-
-Should I add notes that the strstarts()/strends() APIs are deprecated?
-
-> To me seems too many for the similar task. I understand that trace user is
-> special one, but does it use strstarts()/strends()?
-
-I didn't find any uses:
-
-	$ git ls-files | grep kernel/trace/ | xargs grep strstarts
-	$ git ls-files | grep kernel/trace/ | xargs grep strends
-
-> Despite on naming I think we just good to have only str_has*() and one of
-> strprefix()/strsuffix(), strstarts()/strends().
-
-In the long term, I agree.  But I think the transition should be
-careful.  What do you think?
-
-
-Cheers,
-Alex
-
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
->=20
->=20
-
---=20
-<https://www.alejandro-colomar.es>
-
---onvsso5rgalquyac
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr3LywACgkQ64mZXMKQ
-wqnZ6A//bHweRCQEI+Ep4ar2zK96tVtAoU9xoCT9dHWvPjP+CjHCxG5XJbmBGN2d
-QJJE+ZfLf8/d4dCnpyQbnhnWEWyiCHUlCjmU8JIiI47kX0uAm4kXzc7717dW1Gz2
-VmOGBV6uB3XSxba7NYx7nQc4MDkF5FVpFSvEUXz5ePhWsnazwNx/fM5vTa56ICWL
-wWsEu2wVIvkn1HTrhIiKrnFX7OVinrYEeECsqdg/1lDkLDJGNWPP6920xp8243Eb
-fiewCQqdovnMJu2MZOcceXWrZZi2OSPgzDUGRa+zkpjfhN4h4nptR+RfWdTLRd4B
-7sjQQ0xgI8JlodC9d0IW4Hr4lM3v8GxQCa/cjA1XGWkvwZ7Yw3XNVMgHfgu0M2qS
-Rm4B3ApgQGHuRpUzVhesWg/BhxIQG4Clp/u3ZFwtIS7+l0f68oDpTCO/4RRifUSJ
-0n+f571JH44hP0a++YbcYioDI1Vs/zivRCGUPwq/dcDg6db4eMZyVXBNFxZr1ZG7
-pIe7+UhTlNptfDa1HDVXEE8fmwZYQbyeyYDpz46ApXZXyd5pWqn1nmm030ddVHOK
-aB1e0knvHo1ZYqJ6oCsAzTf5WT4Kh+gwjlWQigeKXdQUr3vmzHHs4T9AK8LrNUi9
-C7xA5/ing4t1Ay2Y+30vsER3sWWMMPIp3v9C+yLlopgRAqOdXEc=
-=Srfb
------END PGP SIGNATURE-----
-
---onvsso5rgalquyac--
