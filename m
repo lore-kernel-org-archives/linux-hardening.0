@@ -1,101 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794582465;
-	b=IBV+mZ1CpEn1+cU1GHjgj3MqbxKMBzS0SLMiTpg1YAtGLdgyc7r/QVqxuHKrcfPSU8i9
-	 2CDVR8kexV7n/3sfoHUWxedKnHchG31C2qYldyX1dqHNWywFnektOSwA72IixUiJOaJ48
-	 FngPwJw0F0FXtsNCqQoFxJrAJc/IXy06nEaughPvwcYjaAuykq+GYSH00K+ZwPqRIJMTw
-	 2zIGepTZBXQU6j+xTMUl7mo2xLavVkO4himy7lJW5+nsb5nV0TDbtXEwK+0V+Piismewr
-	 g3m5OoMNQKpKuaQQLOYkanLRO+f6RxYmKX/iWn3WsaqxD6TutlZ2t8UGKlZllg2FEXw==
+	t=1794583227;
+	b=sxrMg5UmClVYG2QMmnvJQcsSwkmKuoKMuwdHeG+7q7uwDPgnyKRIPs3zlofqKBGxP+yL
+	 EFF1iRueimVKqoXt3IdRwOwbI+hlKPXVmW/nHcD9iDS7jtPUvyng1HI3QJMwa43lrFPXo
+	 ZL6JqmXQa8c4T7/yoK4Vv7W3kkQDKcEfooJquS1Ha0kqqSraLLLXtqJTFrw5oHYSoJpXm
+	 +X+y4ll69p0r/AMrtL6jdP7dz+IPJzpiuyZbOVx5SdhSvD+ajGRZ8ScdN6Lx505CHV5lp
+	 wLkKAtNtwPX9Z/9l++JwhcSayZkckvRJuehRCOuLat1riGB0VRLWjd5t5C7oVmtHCPg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794582465;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:Organization;
-	bh=03m8EdAbJ/zO+l0cdep4kEIEormT+7Rtyw+UHpPUI1c=;
-	b=U/Qao/A3iiXAUSan9Z5F9wza9JGmULC1952x1Mj7WjMkuqPeXIeU6P9FEkFqOomx/KCV
-	 ltzFoEtCN1FXgqqGFJ+huiCd3lxhi1OSWOOktnSGyFaYHe0H+aiufMm4xBvhU69VFdrv0
-	 +vnwaw8QWpWDYl266rAPCZNlTuz8lKXrJMgdsdcJIAvnFFeR9+VuuoeH9fDyNh6xr0VxX
-	 RPfxZaTO0WF/QN94as/iuWl5ikciVrM/Wd0H2BCb+mLTXoMpBfpioxuR5NrfyZEznIO6q
-	 vRApKXP+O6wF3pXwOT1nHJanZI3kB6bxfo7A87jp5MBX/9I0eZgo30Af15qi/35wnjQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794583227;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=QJq+GUc6PAR3xy+Pfkqz+19LZE/YeqLmKaLV5oi4iko=;
+	b=NzvqdA5N/CABAfT30pCpYOmlku2S46oD1KcLiuEW9odrz44VsS1BcQBpUBlaMfr/LlAa
+	 fT4qIi3xqXSo8m+TzMJR5iZc634BNOvU4kArgncsb6rr11WmomILlh97kEOmNx/hBU0N4
+	 j47rwjep0nCdDBRf2AnN6bHUw8Nx8wexLZT0pQkfGRiYWgTEdqY2B1FyJTEMSIqN6NGOD
+	 XtFA2I66cAFKWxfVMlE/2Ivnfazmcrgz4aAYxuPTv5x2ObClB0pdYjvIYn+jlARA93dU/
+	 FA3R99pAbzx/KmLch22th5wbmXo82ZrtUOKCVHa7JI5/qwI5HX2uRCHNsIhTfvJavkA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Yb9rmeSW;
-	arc=none smtp.remote-ip=198.175.65.12
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=baylibre.com;
+	spf=pass smtp.mailfrom=baylibre.com;
+	dkim=pass header.d=baylibre.com header.i=@baylibre.com header.a=rsa-sha256 header.s=google header.b=NnjU6d5V;
+	arc=none smtp.remote-ip=209.85.161.45
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EE5606A32E;
-	Fri, 13 Nov 2026 15:07:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4EE5606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565FC606A891
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Nov 2026 15:20:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 565FC606A891
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Yb9rmeSW
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794582465; x=1826118465;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=erSG/G2+WfX2Q8AjqmIx2mTDrQSka9NMFykf/cHBB8Y=;
-  b=Yb9rmeSWChIG3aaS81ohWWk2By8X0iURq+UBnlm5HOmGafGytBAzTACG
-   xGXhxijf+EBCWPc/U9yPZHEAcPufmO1R8TIbNfdfYjY51oZI5AP6d7cA2
-   lpvjg7cmiuJFgU1+H2oRjiG+9O7nYCndI5qF9QN5N9jcGCzxAyO1JtLkQ
-   JDsMHtiYHpJrvYhpHm5wTHNvDSXSmVbEYS9CXalmtPtyMuuM9kIv/QpL5
-   4H3ZJ2+D+hNvsPR9Ckk00idznQxGcWv7Ir1uJ0rv96AShZW1cpc3cE5On
-   nX+pITbx707QrXI8wDljlTixMx62aXIykYKH366JYSdSS0oNY6KnSYmYx
-   w==;
-X-CSE-ConnectionGUID: gITlO6xwSQSPTPhQp3aByg==
-X-CSE-MsgGUID: Uzsxq0d7TGOPCTGWC+COvQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11965"; a="3256303"
-X-IronPort-AV: E=Sophos;i="6.27,211,1787036400"; 
-   d="scan'208";a="3256303"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 07:07:44 -0800
-X-CSE-ConnectionGUID: LiWXPMtKReOdEIHNDC2Vmg==
-X-CSE-MsgGUID: cUhmMB93SSC4PbzqOcRs+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,211,1787036400"; 
-   d="scan'208";a="10841478"
-Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.148])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2026 07:07:37 -0800
-Date: Fri, 13 Nov 2026 17:07:35 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Andreas Schwab <schwab@linux-m68k.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Len Brown <lenb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org,
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5 7/7] string: Implement strstarts() with strprefix()
-Message-ID: <avcntwOjI2i4seyB@ashevche-desk.local>
-References: <cover.1794574496.git.alx@kernel.org>
- <382a44f7c68672ecead2436d9f569ee23f383830.1794574496.git.alx@kernel.org>
- <avciONW-b_WXoetv@ashevche-desk.local>
- <avcj0YbmHRyhFW-Y@devuan>
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.a=rsa-sha256 header.s=google header.b=NnjU6d5V
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-716b58a4365so1222678eaf.3
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Nov 2026 07:20:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1794583225; x=1795188025; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=QJq+GUc6PAR3xy+Pfkqz+19LZE/YeqLmKaLV5oi4iko=;
+        b=NnjU6d5VxM7A0+O4guD0V8fANOGIUq+iGf3jiYWrUO8W0bs9Y90UbrZhLlkWFpHJW2
+         r+BfTji7EQkDUffbPgCw3SB3lRIl66kt/GBWpF5/sBULa1TCVPuFwubp16ZHonT1+mMY
+         U77t3R3OpIp33QNWWn6UJmgljvsaCZP2yA7MYTykh/Kw+QxN/OrOZVjiNDi4z4RAHXPV
+         i8dDuP3eRItU4MQ5XYXc/HdVjf9q1UqhxPAb1IXs5p4aVzMacS7F71GMeae5upCHZR3Q
+         MriSbLqAcPOe9sNMQHZqwn5MW80lzKIYQ9bjbvMBq6tu0sz9R8TTHe2r/VreYnkKPPq/
+         i/JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794583225; x=1795188025;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=QJq+GUc6PAR3xy+Pfkqz+19LZE/YeqLmKaLV5oi4iko=;
+        b=NmC0YOMXk7mVQ7JbSdOmkbIkG35MrcOf+QjlQgZ7OTBIOWsIT7RZvsgB7DGFeXHtkn
+         +FRvaIWt716KotN3fkKVIj0IBEGezgJxlvzusSN4ntSdBBYkKNqDrn5AUtpm3LlhqTX8
+         Bxq61LUYRJjpkNtLVnV/cuYwltjSZPAvIb6J402cHZ315iTlf4rudUWKmKLFR1LQ1eIF
+         do7r09uVf6X2Lel+Kf9/FL+Qj+uJk0RQrSeTFJujhzL5hAbGOKeC/pMb2HsZ4zl42zrF
+         qRhscYUvxgTiAW9Oxw+Ey+LlM/r/wtKyV0JUS3tINl48Zj/4HdFLjOZbIpaei4420LK/
+         f4Ww==
+X-Forwarded-Encrypted: i=1; AL+hErGDtXjNhgWYHOLLc1EAwrO1iTpTWhE7mQYm0NjGN93SWdA+y5cqh/Yb7CAvO/gt8qbxJOjdhut40zIEi+8xwrk=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9bjGdpibu4BTnay5I1IDA6vTosigqTEBKCNdb7EtJcDLfJp1bu
+	kh4JLwpBDUJdSCFEovTEFh0amNDH41bTLDzf8iB8Z8zOaBzQ9ldngWX2NdcXC6FeukQ=
+X-Gm-Gg: AYBFou3FRSESF6xRCo1lPZ/6a7JVS1o44q52Z774jJjbRK/34YGDuhs/HgEz79VpZco
+	6aU6XBV4hkfxf7Ts8sznmG5qYqhf3ho2Ic+gBoJS1isLWB1oyLF/JZnXR8n9KVNaq1QA9DixVg/
+	bewDxQYgN7ruvmPeuCWv3g/sBUoeoWM/twNC605qMpsnL2hmdPQiwW87pitbZbSysp25N6zVNmr
+	y6DjYCQ9faVhH/Cvaf5jsnpxdxcfAOjfCMR+xv4FcJhL4JYbTfDgcg6wwfWE+Wfgo3y9HLAkWqJ
+	uiQE2GblRg1i70wE9U0uhSNaprlsibiUEcrSyiJq9ADxjke02f6Iuw9AoK1xi8xGVTQdR8mtBlt
+	/6AhrJCJziBW5AYbuppiLFZfW78lwEvF9ONHGEyQrDgCTQTPI5XQvERkX3LsZ09HDPfKyUvgQsZ
+	n5fUyaMdOunmMr+R1Ci2VpGPpks/CrC0CnRn77V6xgQul/nKsAYBbasNF2rpH1wy7Ntl3zmoLWo
+	nTT0YvQ/DSzy6iEj5OPIe3vPYobQTcZdvYAOFutVu62fKzL1Ad4C5HPRdcoJ89xuIFAW0tSV1vT
+	2o7aprRVklXGdPjzZS8pWufjno2m8mP+aPlR681D12I6yeCteJi8c+l+7TTOoQbyCfn+lRl+CdX
+	XmIc=
+X-Received: by 2002:a05:6820:55c6:20b0:6d9:e2f3:9b51 with SMTP id 006d021491bc7-71ab5084396mr1064228eaf.66.1794583225149;
+        Fri, 13 Nov 2026 07:20:25 -0800 (PST)
+Received: from ?IPV6:2600:8803:e7e4:500:fb76:8640:983b:6899? ([2600:8803:e7e4:500:fb76:8640:983b:6899])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-71ab4338765sm2019311eaf.14.2026.11.13.07.20.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Nov 2026 07:20:24 -0800 (PST)
+Message-ID: <06f0a178-5d98-4c6c-b596-c0eba8ae9234@baylibre.com>
+Date: Fri, 13 Nov 2026 09:20:23 -0600
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -105,72 +93,59 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <avcj0YbmHRyhFW-Y@devuan>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: axi-spi-engine: Start the program length at zero
+To: Kees Cook <kees@kernel.org>,
+ Michael Hennerich <michael.hennerich@analog.com>
+Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Mark Brown <broonie@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, linux-spi@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Dennis Gilmore <dennis@ausil.us>,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261113065508.i.606-kees@kernel.org>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20261113065508.i.606-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 13, 2026 at 03:59:46PM +0100, Alejandro Colomar wrote:
-> > On Fri, Nov 13, 2026 at 02:11:17PM +0100, Alejandro Colomar wrote:
-
-...
-
-> > >  static inline bool strstarts(const char *str, const char *prefix)
-> > >  {
-> > > -	return strncmp(str, prefix, strlen(prefix)) == 0;
-> > > +	return strprefix(str, prefix);
-> > >  }
-> > 
-> > There is no sense to keep strstarts() at this point.
+On 11/13/26 12:55 AM, Kees Cook wrote:
+> spi_engine_optimize_message() allocates the program with kzalloc_flex(),
+> which sets the __counted_by() counter "length" to the allocated size when
+> the compiler supports __builtin_counted_by_ref(). The program is then
+> filled by spi_engine_program_add_cmd(), which increments "length" and
+> stores at length - 1, expecting it to start at zero as it did when the
+> program came from kzalloc().
 > 
-> I agree.  Actually, it seems my guess that strprefix() would be
-> optimized out was wrong, because the kernel builds with
-> -fno-delete-null-pointer-checks and other flags that prevent this
-> optimization.
+> Reset "length" after the allocation, since it is a "usage" counter, not
+> a "total allocation" counter.
 > 
-> > Can it be simply redefinition?
+> Build tested ARCH=x86_64 defconfig with CONFIG_SPI_AXI_SPI_ENGINE=m and
+> W=1, with GCC 16.2.0.
 > 
-> I was thinking that we could just do a simple search and replace
-> s/strstarts/strends/, prepending !! in some cases if needed.
+> Reported-by: Dennis Gilmore <dennis@ausil.us>
+> Closes: https://lore.kernel.org/all/20261112025252.71375-1-dennis@ausil.us/
+> Fixes: 69050f8d6d075 ("treewide: Replace kmalloc with kmalloc_obj for non-scalar types")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+
+Reviewed-by: David Lechner <dlechner@baylibre.com>
+
+>  drivers/spi/spi-axi-spi-engine.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> By 'redefinition', do you mean making strstarts() return a pointer
-> instead of a bool?  A problem with strstarts() is again the function
-> name: it doesn't seem to naturally fit with a function that returns a
-> pointer to the position.  It also doesn't clarify whether it searches
-> for a string, or for a list of characters (like for example strspn(3)).
-
-We have str_has_*() for that?
-
-> I prefer replacing strstarts()/strends() with strprefix()/strsuffix().
-> 
-> But if you prefer changing strstarts() to return a pointer, I'm also
-> okay-ish with it.  It's not a perfect name, but I can live with it.
-> 
-> > However, after looking at the uses in the kernel, I prefer
-> > to see the strprefix() be not implemented at all, just optimization against
-> > strstarts()/strends() if required can be performed.
-> 
-> I don't understand this last sentence.
-
-It's basically repeats the idea of having only one pair out of two.
-
-With this series will be
-
-str_has_previx()
-strstarts()
-strends()
-strprefix()
-// potentially strsuffix()
-
-To me seems too many for the similar task. I understand that trace user is
-special one, but does it use strstarts()/strends()?
-
-Despite on naming I think we just good to have only str_has*() and one of
-strprefix()/strsuffix(), strstarts()/strends().
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
+> index ead5b295e680..9cfee409f15c 100644
+> --- a/drivers/spi/spi-axi-spi-engine.c
+> +++ b/drivers/spi/spi-axi-spi-engine.c
+> @@ -818,6 +818,8 @@ static int spi_engine_optimize_message(struct spi_message *msg)
+>  	p = kzalloc_flex(*p, instructions, p_dry.length + 1);
+>  	if (!p)
+>  		return -ENOMEM;
+> +	/* spi_engine_program_add_cmd() counts the instructions as it adds them. */
+> +	p->length = 0;
+>  
+>  	spi_engine_compile_message(msg, false, p);
+>  
 
