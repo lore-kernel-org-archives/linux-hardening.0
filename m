@@ -1,54 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794682830;
-	b=WdQq+QN62ZQz50e0GLA7SprPEya4ShIY8tq/LFpPSO7qSf9zgKq988c3LZgT7jYRRLHP
-	 6jFWsy28Lej/JIwkWlJV/2KNsXi7ssD/zAyvDP6Iyu3KLOXUmRTaTeArlnWhuawkOndmb
-	 rrsl33Vp/5dOLon/GK673vWyli9hp5TZeAvRONZd/0U7l+l35y48yxmKuo6Yhm4fhkdxe
-	 JwL6NZ7WCUGSZKhEgkI1gOihdGsKxpQDItJOM7d13ORTorpGLCng691wswNi0d1dHh271
-	 ikImBOzqAsQdf4AF7VYN3gbpfFJ5aWV6FfXLSi4bWxi3cXRGI8aSN6q8PyiC6mEI6FQ==
+	t=1794685770;
+	b=0cfBeR2ndFs2z/+qMe+rVj9rF3SuQOoJmDReXYBA6QlAPCsY2dr18TwLNUtwk3l2UoVd
+	 ZG+36Y3pVMNwZPSSoq7t3xJqFLmtrDiNon8A08ZiGPCWMjClqO2jA3Tcc/AAHLX2PAykL
+	 NnpTM7OHa15XQle7YThb2Kxv3NX5Yu4HIckI1diowJLVOMawREou4dfjXBTJb68bU0pvk
+	 F+nlqk6V1VkkM9CqqNRXstmzKTH449/teQQmODxjrkmB+QoEPJXxbxaozuG4VMyKb8pPL
+	 4++6a5LjIgdIQ4af7xs0wQSq4m6Jercx9Q4oZTUaNuzawmMxD9+tpsfgoY2Y5hdraig==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794682830;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794685770;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=ykOliHYisYLBLFi//mbVDidPMVZQXccME0RpNUmjbYw=;
-	b=4OIdeg1NFWgjD13W9996t1foyvMhdP+Eym5eeI3mcpD0AripfaAzoBCOuMR0hW6yIbi5
-	 IK0sfVCKA/ZJdE13eePO/H7rip2/YPJv0OFE0IRad3QwC/YCRHo3XJyGB8lVFNWPFarLK
-	 M/2AxT6/ILbDG4j/jkFexUv0bgJ+z0MiM1i23FtCSojyGLaaftCsy4XqosfkNkl6ImAPW
-	 9DEidL+vu/+iG/x0RSm5nQSDWektzPO6jp7sN2WTO9j3xauWpDFqrOJURl82b0w9d8VJJ
-	 zvcshHIC2A3nv8YYI26jnZm7LVWqOMnjSu2IXx5zUlZPHuTXiPJgleS9aZz+WvwOhIQ==
+	bh=+i5vfUNEuREbfhD/vTTdKxtwJJjI4Spi6fBQPs8xNP4=;
+	b=GCLM/jg4kXOixLrudSNT0I/xB/13i/6D5lYpmAvOS8iibdL2HMGnIMVCFnGCINyu0+M1
+	 guLehEUMPaqR18EVKZj+lZoMZF0QYEv37QRGWFkLfvodY2QgIkKaQJlcM84KYoRhCW6+C
+	 nzmXna5xPS5HoCUZVbu66gDiTD3LiwnD7ofFWVNO1/1qGzLt/hTN1kSFxgKkeLt8bwr4S
+	 kbUM32anWkJ9fvujI4s90gX19LmxTVDRa0BBDAFpI3xFapfzuz8WZnma+sSmJu7V+p246
+	 oXeqsZXG3/ADh9fKFI9c4QUsOAsKrkbV89h0ufx/GgwoVHCRJQ+A75A58ObiEuz5NOw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Rfg0/1Pk";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=otY8nTnL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30936606A334;
-	Sat, 14 Nov 2026 19:00:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC78F606A329;
+	Sat, 14 Nov 2026 19:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rfg0/1Pk
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 001B61F000C5;
-	Sat, 14 Nov 2026 19:00:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=otY8nTnL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECF551F000C4;
+	Sat, 14 Nov 2026 19:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794682830;
-	bh=ykOliHYisYLBLFi//mbVDidPMVZQXccME0RpNUmjbYw=;
+	s=k20260515; t=1794685770;
+	bh=+i5vfUNEuREbfhD/vTTdKxtwJJjI4Spi6fBQPs8xNP4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Rfg0/1Pk8suTUhXDA0y90Ui/FXQ4F06sERFWjW4pyC83dFj8izLJwUt7QzrrMFNSD
-	 ql02v31bmtjF8ZR2YRHnahby7K2E6o11BVCT3FxRQB5JRjSO9UPLAsrQmkyAXmxIxF
-	 3CBMYWmhQ8oNeyiaEoEaEgdsShOFnvbCBLpTckOIoErmebq8wvG4f6h5Ey11vHlWRc
-	 NRJD7ylckfHUYWfHmH9DdnC5aUgBSOrwgc1H1JYVNImibEi5ELw3xbDgj+d0BYBj5v
-	 cDIJNe0+wwVKhNrh8gT6BWrLRsSxMKT20yN5fX8fonNWqvshzQl/ifdqQ6nFhte+BJ
-	 OIY+K2eSyrv5Q==
-Date: Sat, 14 Nov 2026 20:00:22 +0100
+	b=otY8nTnLe/3TyqJ1DMc6IvhNSaTnS5QPd5VEtkyQ5ydGqleXpsM2+Uw6dnp/95UqD
+	 fSe5LewETi6VWlXb3scDtzRK9ws33bzAlzkAAiu9mPeJILDCdFzkzwJk58WqGybilI
+	 2llxmepWI3m8W5zfSrJk6lFBjtmmQ+HVneUVRDVhzy4BIQxEaDB2uCgyrlsIrsQk6F
+	 wqzf3+2VNsAh3cRUk08CnWb8Q6Ic1beRRXTF9iGgK36AA5rXVmHYC4fnsJwfPji3Af
+	 pVYUD1vkR5DpqKuEcZooGgjAvVSSkqwj/0jmsRQYcltRfuEblwZvRAqFfZM9REVL0L
+	 r6zygl3Aoq58g==
+Date: Sat, 14 Nov 2026 20:49:21 +0100
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Joe Perches <joe@perches.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
+To: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, 
+	Joe Perches <joe@perches.com>, Alejandro Colomar <alx@kernel.org>, 
+	linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
 	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
 	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
 	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
@@ -57,13 +59,12 @@ Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org,
 	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v6 02/19] string: Add strprefix()
-Message-ID: <avitCbGKfZgrfh3e@devuan>
+Subject: Off-by-one in arch/mips/bcm47xx/time.c (was: [PATCH v6 02/19]
+ string: Add strprefix())
+Message-ID: <avi54hgKgovNHfKy@devuan>
 References: <cover.1794667407.git.alx@kernel.org>
  <0eaa4ce73a2b164fd49e3a9f71244a2e3f45b7bb.1794667407.git.alx@kernel.org>
  <c113f651d1ce1b2d42ab9d0c59ae5a0cd17ddb6a.camel@perches.com>
- <aviOPo6bZ-WGsndf@devuan>
- <32e7bdb5b8a4a522566b00763ba13974733290dd.camel@perches.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -74,24 +75,26 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="35i2uj2e65774ccj"
+	protocol="application/pgp-signature"; boundary="psztgxc2iosdbtjc"
 Content-Disposition: inline
-In-Reply-To: <32e7bdb5b8a4a522566b00763ba13974733290dd.camel@perches.com>
+In-Reply-To: <c113f651d1ce1b2d42ab9d0c59ae5a0cd17ddb6a.camel@perches.com>
 
 
---35i2uj2e65774ccj
+--psztgxc2iosdbtjc
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Joe Perches <joe@perches.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
+To: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, 
+	Joe Perches <joe@perches.com>, Alejandro Colomar <alx@kernel.org>, 
+	linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
 	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
 	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
 	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
@@ -100,89 +103,41 @@ Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org,
 	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v6 02/19] string: Add strprefix()
-Message-ID: <avitCbGKfZgrfh3e@devuan>
+Subject: Off-by-one in arch/mips/bcm47xx/time.c (was: [PATCH v6 02/19]
+ string: Add strprefix())
+Message-ID: <avi54hgKgovNHfKy@devuan>
 References: <cover.1794667407.git.alx@kernel.org>
  <0eaa4ce73a2b164fd49e3a9f71244a2e3f45b7bb.1794667407.git.alx@kernel.org>
  <c113f651d1ce1b2d42ab9d0c59ae5a0cd17ddb6a.camel@perches.com>
- <aviOPo6bZ-WGsndf@devuan>
- <32e7bdb5b8a4a522566b00763ba13974733290dd.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <32e7bdb5b8a4a522566b00763ba13974733290dd.camel@perches.com>
+In-Reply-To: <c113f651d1ce1b2d42ab9d0c59ae5a0cd17ddb6a.camel@perches.com>
 
-Hi Joe,
+Hi Hauke,
 
-> Date: 2026-11-14 10:24:26-0800
+> Date: 2026-11-14 07:53:25-0800
 > From: Joe Perches <joe@perches.com>
 >
-> On Sat, 2026-11-14 at 17:59 +0100, Alejandro Colomar wrote:
-> > > A negative of this is that it implies the return should
-> > > always be tested even though it can be known that the
-> > > return is effectively bool.
-> >=20
-> > I'm not sure I follow.  The attribute is about the arguments, not the
-> > return value.  Perhaps I don't understand what you mean by "this".
+[...]
+> And these are all candidates for converted uses to
+> whatever is the function name or steq:
 >=20
-> 'this' is the return of the strprefix function itself.
->=20
-> It returns either a const char * or a char * or NULL.
->=20
-> Because it can return NULL, then the return value
-> could/should be tested.
+> $ git grep -P '[^w]strncmp\s*\(\s*[\w\.\-\>\s]*,\s*\"\w*"\s*,\s*\d+\s*\)'=
+ -- '*.[ch]' | wc -l
+> 946
 
-Yes, it must be tested, when not used as a boolean.
-The usual replacement of
-	s +=3D str_has_prefix(s, prefix);
-would be
-	s =3D strprefix(s, prefix) ?: s;
+Looking at those, I've seen a bug in BCM47XX, introduced in 2224de9d152b
+(2013-10-29; "MIPS: BCM47XX: Fix clock detection for BCM5354 with 200MHz
+ clock").
 
-The boolean use remains trivial:
+Look at this line of code:
 
-	-       return strstarts(name, ".init") ||
-	-               strstarts(name, ".ARM.extab.init") ||
-	-               strstarts(name, ".ARM.exidx.init");
-	+       return strprefix(name, ".init") ||
-	+               strprefix(name, ".ARM.extab.init") ||
-	+               strprefix(name, ".ARM.exidx.init");
-and
-	-       if (!str_has_prefix(p, "console=3D") && !strstr(p, " console=3D"))=
- {
-	+       if (!strprefix(p, "console=3D") && !strstr(p, " console=3D")) {
+	$ grep strncmp arch/mips/bcm47xx/time.c
+			if (len >=3D 0 && !strncmp(buf, "200", 4))
 
-The non-boolean use would look like this (actual diffs from the patch
-set):
-
-	-       prefix_len =3D str_has_prefix(name, PDSC_FW_COMPONENT_PREFIX);
-	-       if (prefix_len)
-	-               name +=3D prefix_len;
-	+       name =3D strprefix(name, PDSC_FW_COMPONENT_PREFIX) ?: name;
-
-(the old code, actually, didn't need that test, and could have been
- simply 'name +=3D str_has_prefix(name, PDSC_FW_COMPONENT_PREFIX);')
-
-and
-	-       len =3D str_has_prefix(*str, "brl,");
-	-       if (len) {
-	+       p =3D strprefix(*str, "brl,");
-	+       if (p) {
-			*brl_options =3D "";
-	-               *str +=3D len;
-	+               *str =3D p;
-			return 0;
-		}
-
-and
-		cmp =3D strstrip(option);
-	=20
-	-       len =3D str_has_prefix(cmp, "no");
-	-       if (len)
-	+       p =3D strprefix(cmp, "no");
-	+       if (p) {
-			neg =3D 1;
-	-
-	-       cmp +=3D len;
-	+               cmp =3D p;
-	+       }
+That strncmp(3) call is wrong, as it's really behaving as strcmp(3),
+since the 4 is off-by-one.  I'd like to know what was the intention.
+Was it meant to be !strncmp(buf, "200", 3)?  Or was it meant to be just
+!strcmp(buf, "200")?
 
 
 Have a lovely night!
@@ -191,24 +146,24 @@ Alex
 --=20
 <https://www.alejandro-colomar.es>
 
---35i2uj2e65774ccj
+--psztgxc2iosdbtjc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4r8UACgkQ64mZXMKQ
-wqlfkg//V7LVhwRC67R3K+HVDesilnNmhBhL9ma7hlpnjFIiV+UwBz+EYDH02pVT
-POFfgIzuRWM09i/+cn/scMVxlUr0slXUWWzJ4BTX2cpaMFVay+zefnbfRJ83+fcL
-0koUgrp24/dDHTF5u1XgaqrXpRmehSHWRCOPkVknoLKtpTh72YeAIFlJPRvgBtYi
-+mt+rEsnbPZRarv1i/T/Gf+ymSLkNWFPEDVJ2/thk6aEFUewMMQFLOntut8+eBcl
-ENUHgp3KsnlSvYafsGKCVczTpxFhjWQJidlRGjTPWjdPeWVEbO1BsQvjLJmo+9Tn
-s2FbjVOo/gLX5RgE07ojZA3ZS4oQ2mXjHSW0GxSKdLLoyB0K4++ib3MqbekqcUA2
-+ZZK84OudamjbhYAnJFhgeAJ9OIuoKP8bA0yG3977nGMQkaLv3+FEQKrXLVeI/K6
-ehRXT3Gs6s2RSbX7BFZWZpwQ/Fo8duTc4+fum4f0rQqjr59WU57RZlY4xtVg2elE
-8YobEAPhZDlh1Xkj4aL69SR20dx14MUPfMN5XTZki43dUZqup8LGTuPYO6wvnUdd
-X2271H5JQ4NmXvQfjfVWHFaWWG1fqJewD9fKXRjUSanHhUeTR/NLXPJiDN5SY7rK
-upWO1K7/qWdEWjkv3G7M/vKPBAI1VsDKUEj13IJzb9HUYJGtZxU=
-=rAzI
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4uzkACgkQ64mZXMKQ
+wqnPmxAAqT7UmP76O2Mq/J5Sa/uqqP5eSBhdUMsMoPaJ9FCc8DOJZJlQptoSNFP8
+WvoQpWn2WYGTI24yXj3+Ag5dUrCKcfBeGZqZBPpYsx7anZFcbWPwp40W9A3WgGme
+TkpkcAZwyrnWlwzrKJ9lKEOh25m6AJXXzntLr59yQB6JwzXTQMCcfgCyaJdw/xH4
+27jqSFHyq5DeFOHrhlXs289J9sfJJpluh5YiQhmmS2sk/lZJwRGEcpZ0y0FB+Lsx
+4UkarFSJsYbdZEF2Bmz3+oVNQFIEiYIslmPntRvaqvtOD85vFYJW4oKmp7yDw/QD
+4XZvO6a1EkYNFhN8/dGWjj5ju5/kk6TfXsbJJzlXsaXP2zH9gwAJlsHda6AAfKNs
+t9Cr+97aGMrnNGDucM6v2dUhEb7wu1I5FIeIEY2H+XdFX8zZXP5TiG10ji3Lo4KW
+96SkNumWGfOTvfSPuvG4uVMX6AP7Nl7/CLD6QwkLLvONwhXtsYsaokMHFD/Uiu3A
+DOSyfiYNoYTwL4MXm9rgQDKJr3pZqCHhl9JqnOVlbhTs4KjEV+yrPLGq9GyC4H2M
+i+T5SGijShofKVgxqnIDCMhQulRthbwhX/36331pru8maHR6bSXorDQiQwUXKPRN
+DW2Fm8RrdXVd+xdU0n7wBonsthXSFJ7adi1+lv7ZyKcUasBglv8=
+=jCr6
 -----END PGP SIGNATURE-----
 
---35i2uj2e65774ccj--
+--psztgxc2iosdbtjc--
