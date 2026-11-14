@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794669744;
-	b=U+AAEaQnSV+fSynYVzQ1YhN+68SlEOzi5bSRo6qlD/twrKYiVLroQ3phl69GJoz4JeHQ
-	 OnfMvWm7DqZ/FByg39QLznxVbayGXAfPZf86y1TGUFO7tAJuhhBytfd28QF1gO9Jnd7Bc
-	 5110TsgQ3lJlyJQVpQ291o+7LXuwJDGDWF3f/T7FUUcUiI0iVq7kFeiyJd2xci426kMLv
-	 hDpfPvfnCvjWCBb6OG2+1JTbS2BPxTiIpadGmxCsqFYv2TkgsUTi5+wmiePLkBSS/GcOL
-	 s148DowKkZYLkmV0GfSrFyAwXuNCp0a8QyqXEVbOiTUa5mJxQwUExcnq47FFAmCIxSg==
+	t=1794669752;
+	b=jFnEAyLTkvY20sgniAQ4PiNWv6pz/1jF8DbLxWNdFwIO1OF2qLA05yhBFAGUd2pKNr8b
+	 wgNZR6mDrKm/JQTxFsc+EFT88SssGfNPCuje+MNcCJBifYsdkunrW/T3519JoIKhR9OLP
+	 ZgfjIL63JGtcJMgmZHyJHx7rwH7QO0JDcEv16wpbJH3Z9W9pnCF0gapxr1U/4QnDsAVc0
+	 mj2MS63vHAMyMh5F2UeLumPTcAsP69a2cs78GK1IV9kdG1Jh37IEPJ7k9Z2DSrFfiCLok
+	 +hH/2AJMUIDxG1+2ARk0SMPnF+GNhH/32qucd3QdXN9fW6Y+Y80wvhfdn4Y7wRwZi2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794669744;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794669752;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=7RTVeZnoQXzbrU5aWExKZbE1jrQcxoBFuEURSiW+QPc=;
-	b=Xng+JSrufnXH9Sb9bd+BLJJSjDWB9qIuvh0Q3f/8tW6RatK/C+ho6L3PWjUaBdIAlLT6
-	 EO9hf/k3NgStSKcHiOnGpf5CQF6gNn1Wg/+looNOapXPi9Q6HR9J355pOi2CiK9vsig6S
-	 FDZR6IvzaSRHGywVBQmCh/AXnqDe6jAiL4ffVDzqpTtWte7d/gv7/tMO2NxDIYlf1OfRP
-	 XP+W9qWDfO1Sv54HGaci9or9Y45F74bejhWGvcGB8aefVH+RYA6jTLvOV9kxlgGftvVV7
-	 T7Tl4ny3O2MTHFd3xaDJbPFMsvALN+0LFjIdBga1Jni0NoJ9ZippxVKAIiEw2U5ps7A==
+	bh=OP3AzJS4XnYnwQdjtlDg7CLyrUQRQV4aYy6zMdvdmZs=;
+	b=ShQr1TRkXe5wG8gufGQaYCx1IYGddBLn+LXXTN7RHXZViS+K+aHfCnIgCtJ0oUmmpfGv
+	 k1Tc8Bx4pa8p4V/PwEbsCwV687AfI5ceMOCdvtSfNA/28h4AH5UybJh5K5sfJ6Nf7tfcz
+	 NakSafq8+gj3JZtrNTJcTjH/gSR3WgTsldAPLv7Ew49/u2VdEPZwe1fEGf7IydXJCk+JY
+	 dycSHWoUgpOOd8FGmv3kZ89SwTuUCWCNmCcJfcdjabIP5ecusT9y22/RMT0zixV7EbMGs
+	 4/PQmdw0P1X3nd2HNVaDCENKiiojuyRJyzP4n8kvsblSkdKSUeiB+Y837gTLNUfaceA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jksVCXwV;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WtiQVcJA;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE915606A323;
-	Sat, 14 Nov 2026 15:22:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4ACB606A327;
+	Sat, 14 Nov 2026 15:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jksVCXwV
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 449B81F000C4;
-	Sat, 14 Nov 2026 15:22:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WtiQVcJA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A011F000C5;
+	Sat, 14 Nov 2026 15:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794669744;
-	bh=7RTVeZnoQXzbrU5aWExKZbE1jrQcxoBFuEURSiW+QPc=;
+	s=k20260515; t=1794669752;
+	bh=OP3AzJS4XnYnwQdjtlDg7CLyrUQRQV4aYy6zMdvdmZs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jksVCXwVycSECQPQRrvL6DiV+xbpL1efm9kh2UdTDJlP/m6F93RlSq11GpUzaDhqr
-	 qizv6nkr1wa1cQg3iv2aLzEBPhmuJnJ0pOuTBJtTuhvCaXyqHgLBWET9NQxP+wI69P
-	 DUhGWfnMYTreJoBsTst+DLd9IdRRptak+IjNXsxGvhd47T4wQ/dLXQ6QBff6KHDT5i
-	 3lpEwh2Sbpu7XOj03nNGPPPeMZqj7as0NH6sFrZm6c961wY+GXb6E6gAe0yWxaUA3B
-	 HWQjqEdwFzoZKtSysoeGuFKK0G4OUAzX73/jqsFRVugOd6pKvdbExAT8cj0yr/rwxb
-	 NKvoajiuEv2mw==
-Date: Sat, 14 Nov 2026 16:22:16 +0100
+	b=WtiQVcJAjSKwpXAXF7zT03821FeCAuztGt67o+fy+aCEa8QfR8T2+53bOfL0ly206
+	 ce5pD7IPPJlk3Lfgs86GWQwkrsPykQnkovrwZXywgPF/GUaCpuNq+LR4ZJ+722E+zh
+	 gvhpHd3ytBHEw4k5esTe73ORZ4vH2BqfsEwAGrwEin1gQBm+CKVYjRvC+hUd/HiMHl
+	 yqZsd31fHgeHDl35rNScXY7AYmEcOn8eiHFf4B1P4tMGdFLNM56KphAigWt3fQx7lu
+	 V7mnJpG2gZSfzUCDRCXGmYQ1Rjk3FlC7UgdNnMGuJ0GcnsOufLtJ9w02o41Y/O+neg
+	 i3BtwbM0YoFZw==
+Date: Sat, 14 Nov 2026 16:22:24 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, 
@@ -56,10 +56,9 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v6 04/19] device property: Fix fwnode_name_eq() for empty
- node names
-Message-ID: <7fc1321995f1aec9d7b92c6a89047cc9fb28c52a.1794667407.git.alx@kernel.org>
+	linux-gpio@vger.kernel.org, David Laight <david.laight.linux@gmail.com>
+Subject: [PATCH v6 05/19] stddef: Add const_cast()
+Message-ID: <2a26768609bd10ebf0f5d2e112f18b3b4fd870d0.1794667407.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1794667407.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -72,12 +71,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wtdlqwxcwgefkbpm"
+	protocol="application/pgp-signature"; boundary="osgjwfrujg7jszxw"
 Content-Disposition: inline
 In-Reply-To: <cover.1794667407.git.alx@kernel.org>
 
 
---wtdlqwxcwgefkbpm
+--osgjwfrujg7jszxw
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -97,77 +96,68 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v6 04/19] device property: Fix fwnode_name_eq() for empty
- node names
-Message-ID: <7fc1321995f1aec9d7b92c6a89047cc9fb28c52a.1794667407.git.alx@kernel.org>
+	linux-gpio@vger.kernel.org, David Laight <david.laight.linux@gmail.com>
+Subject: [PATCH v6 05/19] stddef: Add const_cast()
+Message-ID: <2a26768609bd10ebf0f5d2e112f18b3b4fd870d0.1794667407.git.alx@kernel.org>
 References: <cover.1794667407.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1794667407.git.alx@kernel.org>
 
-str_has_prefix() returns the prefix length on match and 0 on mismatch,
-so the mistmatch case can't be told from "empty prefix matched an empty
-string".
+This macro serves to cast const away without risking unwanted
+conversions due to mistakes in the cast.
 
-For instance: the OF root node's name as returned by
-fwnode_get_name() is "" and will return 0 for any name matched against
-it and since len is 0 too, fwnode_name_eq() will return true.
+It's similar to C++'s const_cast(), but it is more restrictive: it can
+only cast away 'const', and not arbitrary qualifiers.
 
-Let's use strprefix() instead, which also makes this function simpler.
-
-Fixes: a9c8c738066b7 ("device property: Add fwnode_name_eq()")
-Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-for-each-pr=
-op-v1-1-6e28fe1c72c4@oss.qualcomm.com/
-Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: David Laight <david.laight.linux@gmail.com>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- drivers/base/property.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ include/linux/stddef.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 51109794d727..7728116e2968 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -692,15 +692,12 @@ const char *fwnode_get_name_prefix(const struct fwnod=
-e_handle *fwnode)
- bool fwnode_name_eq(const struct fwnode_handle *fwnode, const char *name)
- {
- 	const char *node_name;
--	ptrdiff_t len;
+diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+index e1851c50c89b..26c657465e60 100644
+--- a/include/linux/stddef.h
++++ b/include/linux/stddef.h
+@@ -194,4 +194,15 @@ enum {
+ #define TRAILING_OVERLAP(TYPE, NAME, FAM, MEMBERS)				\
+ 	__TRAILING_OVERLAP(TYPE, NAME, FAM, /* no attrs */, MEMBERS)
 =20
- 	node_name =3D fwnode_get_name(fwnode);
- 	if (!node_name)
- 		return false;
-=20
--	len =3D strchrnul(node_name, '@') - node_name;
--
--	return str_has_prefix(node_name, name) =3D=3D len;
-+	return strprefix(node_name, name) =3D=3D strchrnul(node_name, '@');
- }
- EXPORT_SYMBOL_GPL(fwnode_name_eq);
-=20
++/**
++ * const_cast() - At most, drop const in the left-most derivation of a poi=
+nter
++ *
++ * @T: Type for the cast.
++ * @p: Pointer to be casted.
++ *
++ * Cast @p to type @T.  The macro verifies that @p is of type const @T.
++ * This avoids mistakes that change anything other than 'const' in a cast.
++ */
++#define const_cast(T, p)  _Generic(p, const T: (T) (p))
++
+ #endif
 --=20
 2.55.0
 
 
---wtdlqwxcwgefkbpm
+--osgjwfrujg7jszxw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4fKgACgkQ64mZXMKQ
-wqkeRBAAnz5kSdyFIrsMCZm/jZiNO6Z1J760d63tT0d1t93QE0cgoSD/g03DWN/u
-xTxhoTi2BIjqEaZ9tJcD0KDOHG8gz4QG+5Mh4UTKq8BeMkzL9TzIzX6xfKnhCpg6
-ITOfyIn3Ib8uWchjIQiDr7qbuSsog3Kr460utB+DcLlvlKbmWKv+zAepZrwQ/4tr
-q+NPZ/VlkRxJrVVmvXHglb+R4ZF3+Du2Z93zugqvD0dgI+oc2T5qcv0N3neJUqbi
-pCynlsqSnLRG32S0k7EXFO5hM+e6VjyrPb/ZTJkvTHcF8w68Cqj3T87G5xU7yMIm
-g6xNPmR/2HS8JG8qoY7VffnNqKWR1vYne9J3wIsCErij6vugssDoVDGk0e3Rdx8d
-4jCfcR4Ekxwg4ZpnuUeWjRqlfxpLJbILA07A4fhS3cuKgBYc4vywlR2VBUpp2CVO
-vF5PmhsLbbtNxQpfP7duFKnrXjJi3I2GFnzOX+xJJ2pabFAHMQQTuJnZB3mPT7tX
-bv6ea9TmS60a7zARVJbTE1OnSdg8jJzscuiU5ixU48qmgdm10YkiQATxuZ4A3ydY
-/Q2VnCP2oeilW83n0eLZoLtDiN05AYCgOQSRPUuWWST6UswFj0PcgjyaCzlwBBOe
-vYXrJPGusmBLntbJra3o/pnRjySbFn1w+sGP4YknDG0lqkP8yfY=
-=U5m0
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4fLAACgkQ64mZXMKQ
+wqnYpw//Qv1FJzCGFZCVSLb+OmWyxvPWE0p+P+wXkWyg9KP53Qge+keBtgpH6o8p
+RXFmJ99aT7D+byW7Madez2ElSCC1ZFex9SkzujbeL8YMotc33TowR86i56sEqC9s
+nzRaSVqIN97L7R0++82/amYx//zgKX5j15NVswJZq7WF1iT5OOe9lIekm2NeBMwb
+s14v04OVS5eOM8C0dWS9ZPvSr0gmkwCHT542cZU08VCXz0zMyXU8SCqOJqINDIJC
+iIYwnSykYQX5AZ7QKU+RXVj+S1ZHGsrrAoacFlx4/m0mKzG0rZYoz2srdCFK6CKE
+f0dDYIlhCPXyOgbCyWcE4AYXgg04VE4QGPqcBG5jNYyfGzG8LvkPABWIN17ktqdS
+qGJ9i8PUFl/gpqycCbDrxoQpJagHYW0vOfBsSM4z9uqqYMBSYS4+OuxLJr4t5QWt
+lrXFFv59v9eRpcbphLWnwpRJ2LhJiyUocDC6i1g5DMC74AtpRbXvIxayq/K+Jr2z
++EQftTGVcuwPmAmDwfkGDwWv9/ZnQUujqS0fmBFYOVNPHY7dIx9djc+UneSJC7oa
+lspErxKP/UkYNUHozuhQbRhPlm0LpPOQ8TYgQx4Bazv10DvXdkDQxXyKaFjiqRSm
+4sWuO+hGSTbR7UYutEfhfBAZ6b/azskONZvHpmtzpnMPUXZDRwE=
+=LMRo
 -----END PGP SIGNATURE-----
 
---wtdlqwxcwgefkbpm--
+--osgjwfrujg7jszxw--
