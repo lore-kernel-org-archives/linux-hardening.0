@@ -1,92 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794608025;
-	b=iCyJ+t+tsioVsYd86dZqlcYyHOityklkdTteKmIP3qqbrlPARgw7idjFlLJ+gh3JY1q3
-	 6K6tU1Z7QohzmONwdo5Dn9UDxmfzZpMMxuuKfNhu8MZk/qnv3dqf+tKtX6EL6rLTTAsaa
-	 McVxBSaHz2eP7XFM+Exv6uWdodow2sOECy3MiIW+LR7Eka+7Nx3BX13375K4FivcMTH+W
-	 +o1p+iCbTXgtWKbgvcCTW7b5+zlSqdOm/uRlaCOT95a2Oa/DUoFpDa6YrNYVY0uYFvKZr
-	 bBbRVOqBIPKSZS98F7+vyTFba5ewVFeEi4luzKSgtMXxojLzcbk5bJIYbi30JBVD5SQ==
+	t=1794627507;
+	b=vWb9SAEH344O5u27n2VmodSouEk6Ay6h/yP6T0TOPGqB+5I4K+qWvucSM0f4TCCPStvZ
+	 PdZW5SkGv1F1Ovp1spzjWyWb5A9supHPbbsnmxSNUsLKvt0sY8oNolvbjUo/dTNd2Z5nY
+	 rq7ojpq78dFopMg6pR3GaGi/GiRrt5V2V6xnqVm4s62xLFDNrVXdvc55Mp0yMQaXfRvut
+	 agw6d+1dCYg0WvxHRZT9e0aupyVh1ub9LHucm8mXkPQGNwKtrg+P5kJAfjRAC2xV7cWXG
+	 DMoEp22RUAFNG3Rwhu7K6pykHCw8bGLLnC/dMhdUeMiQgsjxrMYR+U1eMwCXpMNzbMA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794608025;
-	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
-	 X-UI-Sender-Class:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-Provags-ID:
-	 X-Spam-Flag:UI-OutboundReport;
-	bh=1APlPunBoDj1BI8mj+IbyZx7pU1qnOexHufDgnUoh0s=;
-	b=QQXT6+DLzMZ4InY4J59NiajZ+EyXTUvVYfkd5yTQEXoBELODK2bhvUciokd4ffZxnVIx
-	 rt3fOTqbqZP3kUFl6LoRtyq3YJaBXwFpA0xiIoSkWDaUB6DwDFYQCC1u1cthustAqU+fP
-	 c0EoTZSYgpgncmQW/qWve+lvLHriPZdWpW05S1V2ugveoTZDi6Sx4qnsbaTgQl7JcxwnA
-	 xA3vOEfz9VSi8005xSwyoTKnKEFCybG0ADCAkNZeRflHutLTzxHxK1DhMvFN60m4RPIDN
-	 E0F1HGfyKpZbzsFjykqcioSCRzcjClUgdVLdCIo+jWwQYkH73hFyVe8OqdfkYV8saPg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794627507;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=yU/5BPJ2TQOxgYVVI8HlorlFhoWXcWnPPL8fgZ8lABI=;
+	b=OdZGYKSee+ost6E8xbEfMrA5WJi6zYCZMgd7/RlFE1kABeN5noQrB322LNbkEfBiJ0G4
+	 sq9L3aDoR9m29YqkLG6Itcxdr+rV+fZ7aiS6pJGc22jXzKPjbNGINu6206r2Ci1eeULp7
+	 bDY4vZOgtxd/TYxxVj+ByKUC4UcoES3yWdo0PhI1pW9UHO5WHuniQ3y+P9cXkLl52Sjkg
+	 b3Ba1eZVQaJEpnzUSOCWsajcUM5xtCyDkOFhs2IsBBLZwTPdCrgcKvvxwuhCRaqyoZ3rc
+	 DwKfZNeUpa6uE+nQbCp9/rj4VMV7mkisvpHMT2mNZC3D6c6ujm3xIkrP3UiTy3+/RNg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmx.de;
-	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=f3lix.dev@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=iSRJgcQM;
-	arc=none smtp.remote-ip=212.227.17.21
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ckspue12;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044B9606A332
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Nov 2026 22:13:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 044B9606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B90F606A881;
+	Sat, 14 Nov 2026 03:38:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=f3lix.dev@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=iSRJgcQM
-DKIM2-Signature:  i=1; m=1; t=1794608021;
- mf=PGYzbGl4LmRldkBnbXguZGU+;
- rt=PGxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtlcm5lbC5vcmc+;
- d=gmx.de;
- s=s31663417:rsa-sha256:uDRvt8GwsBfraZ55aizhiFkzbYzd
-   XmADA0NDUzlIbtcqXt9GKY+WK832/nyvtBFyvjXcuc2aBoHXPXD42YtO+QqVNqxmdpFWvbcFkUo
-   pBB40Fz6dHs9D3D7Zr76xwPGtxKZPTbxd7WMsiAY2aHDT+Ahnlre20eq34PMpch9WbYi9eorwC3
-   0JKJBLpxjjqdiQjILbSBE4cPQwiUf/Xx5pMPs1MzFc4hWU3JKByc2ablNFYwF8q+9fTTu0veBGa
-   W4aytMTsbtFBSz/hIpPBMeMGyenrkkyRf27W9lqeiDQ6ZZIRH2fqrkZf9ulY8KwDDmy0+gu4Ozh
-   iO9s+Nyw5Thk9Q==;
-Message-Instance:  m=1;
- h=sha256:
-   ByK8lr/d/c2qF6jNv7YOjfg5LqffyJh8MlJqbLkRYdE=:
-   BAh+AYGkQfGwvejFJXmMQBzbqktADkrcebCYjF38WtA=,
-  sha512:
-   KJei4gKmMC3I15uiipcaslebHWZmOdo1uRw3KDWzaTX2cMqqwSJXlmz5bEzRjJPqH0/064lsiHt7ZOjoAOuE/g==:
-   tALft6IDZZlS6rg/CRS/VzdZL+jUaJQ1csnYHq3F1tHXeVODUandGF2CqIlAkaaZSCMWuutihB7+Obg7A6V1zw==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1794608021; x=1795212821; i=f3lix.dev@gmx.de;
-	bh=1APlPunBoDj1BI8mj+IbyZx7pU1qnOexHufDgnUoh0s=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=iSRJgcQMZ4Iidss5JiSQbnuMN8vF6yeKEeLyWtS/EGysqMrp99AvtL+JUsGl0cQ9
-	 oTBZNePoaTZdMcpmoiFn3pzsycSmu4Qm21qMwS1CJRZkCZwG9cdsBCZN3YQiO6sGP
-	 S+JfWwgePHiU19Wh7a8LuE3ETmJb86rYKM4fqA6TXWcfrI7GLTJZOoB5qGCdcmP6e
-	 TIKw5/BFSCbOdMxAZMdMLgnWoQjKdtHieZiGKKMXEt+qlGBIsgeLFqVEBxojknOeJ
-	 tPjAVvRXWAO4toONK3hNBLpw8O5toM/ha2x/ZBBn/YzfrQdoENxy2exntjwQGl11b
-	 M1KdEUSgfM07ITN+fg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N4QsY-1wQiGp2dxG-00yS7C; Fri, 13
- Nov 2026 23:13:41 +0100
-From: Felix Hoffmann <f3lix.dev@gmx.de>
-To: Jann Horn <jannh@google.com>,
-	Matteo Rizzo <matteorizzo@google.com>,
-	Tamas Koczka <poprdi@google.com>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	linux-mm@kvack.org
-Cc: Kees Cook <kees@kernel.org>,
-	Harry Yoo <harry@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Hao Li <hao.li@linux.dev>,
-	Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/slub: Flush virtual-slab work before cache destruction
-Date: Fri, 13 Nov 2026 23:13:30 +0100
-Message-ID: <20261113221330.162567-1-f3lix.dev@gmx.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ckspue12
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95471F000CB;
+	Sat, 14 Nov 2026 03:38:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794627507;
+	bh=yU/5BPJ2TQOxgYVVI8HlorlFhoWXcWnPPL8fgZ8lABI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Ckspue12vhtoodYEOl81nD3fwNQ/qoegECvhTq8vaJ+UbCR+wKH1UTuwbk7sAWGza
+	 VL0hUZB87GCd6EV5jOWkMr7zAClDVgNA/0g1t6fZQRLlktqV7qKUjC/rM3B8C51/dh
+	 fCL8Y21AYDytFPuxUczkPTHQ1RgrTBU0b6gdT5M9zKHFOdU6SNjoa7kP00JxBOYLH4
+	 FA2KtMqlzpQohSAowkmIHngmDEz0JmFi3pOLDVKgbLOdnnwY+Xag/Taqeat85bPRRl
+	 dRFSdPd7+2vogdN/w3sz1NZDXn7oIqDm7aIDZejDwgf3VCCheVfOdKSgyJoNSfx6MX
+	 IZP9e2DuBSv/g==
+Date: Sat, 14 Nov 2026 03:38:25 +0000
+From: Harry Yoo <harry@kernel.org>
+To: Felix Hoffmann <f3lix.dev@gmx.de>
+Cc: Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>, 
+	Tamas Koczka <poprdi@google.com>, Vlastimil Babka <vbabka@kernel.org>, linux-mm@kvack.org, 
+	Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/slub: Flush virtual-slab work before cache destruction
+Message-ID: <179462737686.1463521.17920259642574913474@kernel.org>
+References: <20261113221330.162567-1-f3lix.dev@gmx.de>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -96,174 +60,63 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:akNYmqQvLVur68rWWgy3sX/p77RzGQ7hIrKAsCvMWSFrYKJc3po
- T7IziOU5S91CgQHKN98TLrwiU2X2HcLM9qjQnNIMy+pdfr8cpmmWmyHyTgCu/19D0I1Wlez
- QjnR3606oYQxdIOYPD6Ns27beobS1DSURa2ZACCjYF1yOWrEL83CA1fNfU6WndU0aSiWPZq
- JABrloYamZeIFvp7q68oA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1nLtmfppK6U=;RANPJBYQr2ShfjpeY6cGH3nihSM
- 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
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261113221330.162567-1-f3lix.dev@gmx.de>
 
-Under CONFIG_SLAB_VIRTUAL, freeing a slab queues it to
-slub_tlbflush_work. The worker later follows slab->slab_cache to take the
-cache's virtual-slab lock and update its lists.
+Hi Felix,
 
-__kmem_cache_shutdown() can report success after the last slabs have been
-removed from the cache's accounting but before that deferred work runs.
-The cache can then be released while queued slabs still refer to it. When
-the worker runs, it dereferences the freed kmem_cache and corrupts its
-lists.
+CONFIG_SLAB_VIRTUAL is not in the upstream kernel.
+Maybe you sent a patch for a downstream tree to the upstream?
 
-Flush the virtual-slab worker after confirming that every cache node is
-empty and before allowing cache destruction to proceed. This drains both
-queued and running work that can still reference the cache.
-
-Fixes: 0d6f38b78adda ("mm/slub: allocate slabs from virtual memory")
-Signed-off-by: Felix Hoffmann <f3lix.dev@gmx.de>
-=2D--
-Tested on x86-64 with KCSAN enabled:
-
-  - on the unmodified SLAB_VIRTUAL feature kernel, a stress module that
-    repeatedly created, filled, emptied and destroyed a non-mergeable cach=
-e
-    triggered list corruption in slub_tlbflush_worker() and panicked the
-    kernel almost immediately
-  - with this change, the identical module completed 10,000 cache
-    create/destroy cycles (81.92 million allocation/free pairs) without a
-    BUG, warning, KCSAN report or panic
-  - the fixed KCSAN kernel and the external stress module build with W=3D1
-
-The reproducer and complete console logs are available privately on reques=
-t.
- mm/slub.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index b4c64b2bbd334..dbfd42b31a0a2 100644
-=2D-- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -8541,6 +8541,11 @@ int __kmem_cache_shutdown(struct kmem_cache *s)
- 		if (n->nr_partial || node_nr_slabs(n))
- 			return 1;
- 	}
-+
-+#ifdef CONFIG_SLAB_VIRTUAL
-+	/* The TLB flush worker still dereferences slab->slab_cache. */
-+	kthread_flush_work(&slub_tlbflush_work);
-+#endif
- 	return 0;
- }
-=20
-=2D-=20
-2.43.0
-
+On Fri, 13 Nov 2026 23:13:30 +0100, Felix Hoffmann wrote:
+> Under CONFIG_SLAB_VIRTUAL, freeing a slab queues it to
+> slub_tlbflush_work. The worker later follows slab->slab_cache to take the
+> cache's virtual-slab lock and update its lists.
+>
+> __kmem_cache_shutdown() can report success after the last slabs have been
+> removed from the cache's accounting but before that deferred work runs.
+> The cache can then be released while queued slabs still refer to it. When
+> the worker runs, it dereferences the freed kmem_cache and corrupts its
+> lists.
+>
+> Flush the virtual-slab worker after confirming that every cache node is
+> empty and before allowing cache destruction to proceed. This drains both
+> queued and running work that can still reference the cache.
+>
+> Fixes: 0d6f38b78adda ("mm/slub: allocate slabs from virtual memory")
+> Signed-off-by: Felix Hoffmann <f3lix.dev@gmx.de>
+> ---
+> Tested on x86-64 with KCSAN enabled:
+>
+>   - on the unmodified SLAB_VIRTUAL feature kernel, a stress module that
+>     repeatedly created, filled, emptied and destroyed a non-mergeable cache
+>     triggered list corruption in slub_tlbflush_worker() and panicked the
+>     kernel almost immediately
+>   - with this change, the identical module completed 10,000 cache
+>     create/destroy cycles (81.92 million allocation/free pairs) without a
+>     BUG, warning, KCSAN report or panic
+>   - the fixed KCSAN kernel and the external stress module build with W=1
+>
+> The reproducer and complete console logs are available privately on request.
+>  mm/slub.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/mm/slub.c b/mm/slub.c
+> index b4c64b2bbd334..dbfd42b31a0a2 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -8541,6 +8541,11 @@ int __kmem_cache_shutdown(struct kmem_cache *s)
+>  		if (n->nr_partial || node_nr_slabs(n))
+>  			return 1;
+>  	}
+> +
+> +#ifdef CONFIG_SLAB_VIRTUAL
+> +	/* The TLB flush worker still dereferences slab->slab_cache. */
+> +	kthread_flush_work(&slub_tlbflush_work);
+> +#endif
+>  	return 0;
+>  }
+>
+> --
+> 2.43.0
