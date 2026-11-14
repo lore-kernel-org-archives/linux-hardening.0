@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794669768;
-	b=dE0T3j1i9gwS7xq+8sNMnjRLJ6/5ilFCg6dT7BRzkYP7XYUulXcOYUlX/bu1ZXKlo+mE
-	 e8m6xGiwETDOH6SuJqlvHQ9Wk7fdPE1Ex3OnSmlq9+QIsPZmi90YQeZMj8hbyUX76fi1A
-	 KYcoSLK7MWEkKStz0Hm2XB/aGdJGlAECdJKwy1RcdHSEpwZA5pMAoRcizY8L7seqVTSwp
-	 fWAc3oB+8nWRRovId6fz3oPQZ1gEqXFo2NtY954aHVk1iPWLnMXBLNuvYeI1H4tFZ98BI
-	 A/js9T2BAX1y9RxFXBVAd3aX+M+jYr03T6dNWwaFZrG/YSU9a/kowX9pwmEUeo1wBIw==
+	t=1794669776;
+	b=RLsqSyFPbjmVhX0I8jB2efoBHz4XGpuF6xIM3y+xL5AMUEpIfc3g3VDtdEf0Qu9GXDKF
+	 T8EYxVGQpToLVR4TAEydJ31Luv5Q+OQUqFOllehG9fwsqo6Brrw0Q0Q6NzRWu4csYCKmt
+	 WWhN+T/6l0LOvTuxOcNT7NPwRvtfu7qySAdRw8rw/YQHAOl5agW8iVK3WhHyEyX8eY09x
+	 0bal5+Sc3/IMauQzPxBRxOR8PNxJ3/zhwVo5d3d8Qck5LQXbri1K5jr35Z1Ax9qNiWQVl
+	 Xv6313U3ZYpzU3OBC9l2r08DpJaCrWzzq2kyqya4vNG6UQRgFGm/k85QNmxT4Qu4HCw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794669768;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794669776;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=DTEbOkVQeeMRj4lQHO6ngLc6Wi8Xf1GXCAwQ7awk1QA=;
-	b=GTULVNp3SCLBkCCLsvznyq6qsWgk4y5gLAFrtADpLXkIifmf9FyGQk0l22X5cb/Cvi/X
-	 bL53TZVbpBgpRXj2sv4IwS6tYflIy3U+b4ULjgTJPGSUqAkTXworgmrDCV3f+gBW+KpCg
-	 9ddVlT1EWxrMR3UnpfVvd8dIK3elGBToUtpt/HcxWZAq/OevbsvLu2vZb3NC99aZBuO7X
-	 UhCieuLuQs1DWmx3kyh+uxEYbEOXeXEXG0gYjttBfdgUWXp7lTjAHH4k2XkagI75LBRPO
-	 pzQD94sRshvuXbsc/qbJM0JRhbJUzFnFU/asZlfR/1SqT8IApkeQ7K1VuvpuPu4Pwdg==
+	bh=hzdxJka0eQ/09r15UlCX3+QgNz+4joamuCtkkp+OfuQ=;
+	b=yXZVfPsh4CMf5881OdmUAs/4uFoI97eGlXjlUIYtMUglEYnlq7ZTRAC1NSi1PueFLrA6
+	 DTNPz9LBMHwpC4u4Sfnou5QRUtOr1vscreI48PjoKjORkXDpkZt2hE3Y80mC08i63B9y+
+	 Az35ozPV/KIRLaatp1bdiMH6zmS1Uejk9jFjEEfMRpba79l08qtBoo9PPcDhT8SyN/5bK
+	 VQRpq1DqUVrjOp9OoVNJfy/57FPWyzKE0CgwZa455qgb+oE9WkUgTtX3IfqrTcyBA3/ZT
+	 lNeRW7+eMre6KhZaaO73vLgQlWfdNvf/P0w7QEABEANgU67gTnQyb3z2FqxKwKdPN8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ks3m8d5L;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M7YKBvrx;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD237606A331;
-	Sat, 14 Nov 2026 15:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21B6606A332;
+	Sat, 14 Nov 2026 15:22:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ks3m8d5L
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 891CC1F000C8;
-	Sat, 14 Nov 2026 15:22:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M7YKBvrx
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE421F000CF;
+	Sat, 14 Nov 2026 15:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794669768;
-	bh=DTEbOkVQeeMRj4lQHO6ngLc6Wi8Xf1GXCAwQ7awk1QA=;
+	s=k20260515; t=1794669776;
+	bh=hzdxJka0eQ/09r15UlCX3+QgNz+4joamuCtkkp+OfuQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ks3m8d5LKMCeAXtFjFtIGlMw/YzsRzwe0NfSrsMsSQOnSZHATIga3cDrAe1lhTgaV
-	 UAYzlK05sRNGJFtqbV9g6KsQjCbcUTFhwbqBhl5/rnDNhWHBRpaGpOdpUY3bZKUGrD
-	 6BubuQNxBB2M5Q6oDFa+6qqf4zXX1pNpvL9GLV5Co/piOmxoKyo6y03VyYbNKkfYLT
-	 MBnP57gwqzsciZL8QDFJmf1d+p5CHUcvjcqWhIYmlLaAEDNvcwvcj6WpBaKKPh4MxU
-	 hZS5l244brKScwZEST3edP5zoDB3JOAyp2YxQceJYJlUS+MZZQeMzLvziIeCBVKu48
-	 QHoDk4nr2AJ0A==
-Date: Sat, 14 Nov 2026 16:22:40 +0100
+	b=M7YKBvrxmtIhSkVzJIS5mCxgHF0rYo6OJIGUwFm3yT7lyRUe9LJZOfavh+6qs7fh3
+	 4frNOfHx/3yhJhgmxg80E5t6V35VHwzypwDgFHgseh3wzKtzuNSUnwaMLTEkxhVVW5
+	 Wnkbo35BRopYLupomoy4c3rqWZTLrpS5jTudg1V4lcYKlOLzUTCKhxmX+Pd8Ug4oEA
+	 G56D1ZdwQYA/cyGMCOafB4F8yxPxoF8Yz2dEcmt+nuoiejXW6Ke8IoBQ+/b+bBNqyY
+	 tVhedEDdIA99KOVlXeZ/9/TP9UjEKTnyXJiqSNxnkoiOvTkp8uZdM3UQa33hjF7HVK
+	 9keFIeEBSkyZA==
+Date: Sat, 14 Nov 2026 16:22:49 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, 
@@ -56,9 +56,9 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH v6 07/19] string: Make strprefix() const-qualifier-generic
-Message-ID: <9def9160f7779e021be79db1ca42b49891febbbe.1794667407.git.alx@kernel.org>
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v6 08/19] perf map: Use bool for return type instead of int
+Message-ID: <8a3c50cfe298a82869619b2e676e4b9c5da589d5.1794667407.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1794667407.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -71,12 +71,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="q3bua4ubejpbjh7t"
+	protocol="application/pgp-signature"; boundary="3ccdlp5suel6rycl"
 Content-Disposition: inline
 In-Reply-To: <cover.1794667407.git.alx@kernel.org>
 
 
---q3bua4ubejpbjh7t
+--3ccdlp5suel6rycl
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -96,72 +96,56 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH v6 07/19] string: Make strprefix() const-qualifier-generic
-Message-ID: <9def9160f7779e021be79db1ca42b49891febbbe.1794667407.git.alx@kernel.org>
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v6 08/19] perf map: Use bool for return type instead of int
+Message-ID: <8a3c50cfe298a82869619b2e676e4b9c5da589d5.1794667407.git.alx@kernel.org>
 References: <cover.1794667407.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1794667407.git.alx@kernel.org>
 
-Add a macro of the same name, which returns a pointer that is
-const-qualified iff the input string is const-qualified.  The return
-type is a possibly-const-qualified pointer to char, even if the input
-is a possibly-const-qualified pointer to void, which is why we require
-the CQChar_of() macro.
+This is not strictly necessary, but is more robust and readable.
+We already use bool in that file, so this improves consistency too.
 
-The function now needs to return 'const char *', because const_cast()
-can only drop const, but never add it.
-
-Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: David Laight <david.laight.linux@gmail.com>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- include/linux/string.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/map.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index ede8883c99a1..013c6169def0 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -603,11 +603,12 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
-t void *src, size_t count,
-  * *  NULL if @s does not start with @prefix
-  */
- __attribute__((nonnull(1, 2)))
--static inline char *strprefix(const char *s, const char *prefix)
-+static inline const char *strprefix(const char *s, const char *prefix)
- {
- 	size_t len =3D strlen(prefix);
--	return strncmp(s, prefix, len) =3D=3D 0 ? (char *) s + len : NULL;
-+	return strncmp(s, prefix, len) =3D=3D 0 ? s + len : NULL;
- }
-+#define strprefix(s, pfx)  const_cast(CQChar_of(s) *, strprefix(s, pfx))
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 41cdddc987ee..944f10d32796 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -16,7 +16,7 @@
+ #include "thread.h"
+ #include "vdso.h"
 =20
- /**
-  * str_has_prefix - Test if a string has a given prefix
+-static inline int is_android_lib(const char *filename)
++static inline bool is_android_lib(const char *filename)
+ {
+ 	return strstarts(filename, "/data/app-lib/") ||
+ 	       strstarts(filename, "/system/lib/");
 --=20
 2.55.0
 
 
---q3bua4ubejpbjh7t
+--3ccdlp5suel6rycl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4fMAACgkQ64mZXMKQ
-wqkNAg/+OXQZ64ODduq3/r05+kK8aC4+ycbMcAXU0vExmE46LISpFNaSEasfPLpD
-G75DDo8bPAEUQZ6/WFOTy3tl6+5htpazth08sw67Hs8mZoKhze8x+dTNldvSEScM
-iwRi3+0MiVz1OoRHjuYxVgKMAY4M/HZIQ5XAvz93Oux31xPksn5xW1cNA2PVcoS4
-kxEQrpxCveActVdvQ8OK8gjycvyzKY52JmIxCXuArsfQiBDK28YH9m9cXzxgheN0
-xxWaXT004p2dPKvFoF0UcTNmskI6xgZnetuuD8s4TNdHQBUJRP2ieq1rQ67zlUP/
-sVbhgNnQdk398JbCVUD2VaRZUsG474Sk0paUq57EGkNrubh9tZ4vm0CiMZhyqmyC
-iVlV6J4e8BrPbDMhSdK33CFzwAX0X5d4B8Ao3FT6KGRWy2HFScRMmPulvAdg9/JK
-5OHQnqeJPwMAHmsoaNcBkTskuV5Oz4rUO3c0DRCgGMqzjJGNSTv+Yi2OswhwgEes
-IU32wdTb90XKCa6c/OpYq0QGBunS827D/D7EzZjG84R61NLNtjmbamXOLGmlkzLL
-kDH8Nh1hct3hgHqtfTPfbDf34vwMY/VdCaQ9QxnNcQRUDdXh8YmidivSillbfGOk
-ECAoAEjjOmaTue4PRDlHps0Aj7SM/1d/duwQjtMFCsbpHRDPJfc=
-=HMwO
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4fMgACgkQ64mZXMKQ
+wqmjVxAAgmd8UT1wnpWzOpu4PcBc1BJdVclCM+ut0EFH5B1XWDlNoe4O4NoSWoUW
+krX6vT5QvYQuJagTx4qPAmWlfRlWdfA/krhgeiA+s32NsGHqFpyKf6v3wd+ZEeWq
+VkaVHafK3IDpXnmJEstRpwcIdMW28A2vxngQbgV0sEA06MuorE5ZENKWRBEop/fp
+pyDIBDmbDXXReOHpKmXfg43jV+MlKVbG0RDgH0cAm+mkqyR4nQXFmUqk7Geyc0F3
+/Ddj52TZdECI0g6PaCY9tb/pMeenrSXgovJ9JYzOQRWtVmQwT+99FINyQRMtPp25
+G2nZQejDlktEMrQvp0TBKbnI747WMpN4D4cbrC3SOKmuBvKZkXzaBV4MRRjOsVv4
+uZNYWkeNBw8T3oIwxy6MOSocAyu8MA9HQCBI/8MSuXlNuP6vvimOBPug4eqM9Add
+k1TOEtLGprGlMHM393A/XiYrsoT16AbLYB6zPMEn/xHb7wNg5EDqf6dOmUMyGX8x
+GqnexQxPTRwFhEoaTKmMGY2mms/zGXvmu7BjMCvxhALwA61bKOFqDEVbSthG4BH6
+7hPZ4WyDc8PNQvf3iqxGoxgMasrz4nleBgHlGWvRh+9dmTlXBvwzx+14XNAuSkac
+eADo94XAUVU5/cG2guXatGaolZf6sbbBAB/irHNb8xsKlt3IPBc=
+=fP12
 -----END PGP SIGNATURE-----
 
---q3bua4ubejpbjh7t--
+--3ccdlp5suel6rycl--
