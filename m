@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794681358;
-	b=OvC/SSxJwIMLG2soH/CTQGiUK8XzhUTgK1pYj6VnMYvDa8ngfsYh5KXkOk8JdUYHQ8E5
-	 9/OKJN6nE0mT1+giM6Ht2J2gXEEoIV1Wq+G/mEqNks7N3H2XqxG7Kn3ShZ5MCvu2TtwWT
-	 dRqUmXmQ5GitDdXNVoEbrnmMzPWX5NrPLl7F+3wOkJEZxYoOj53SK1fSb4YtAsssoGuyx
-	 yAQ24rPdqqzwLeu29bGxCYU6nAGHWvmt4cvHE9tss/SpgSEFX4w4ROMiOe+AJjOmGRIZA
-	 R/J7/YEcWobiJ0AuswM63or3ZA0aonHA+izMYZHr7iJE6u6g/qQVWds2/s/qGYUZMAQ==
+	t=1794682830;
+	b=WdQq+QN62ZQz50e0GLA7SprPEya4ShIY8tq/LFpPSO7qSf9zgKq988c3LZgT7jYRRLHP
+	 6jFWsy28Lej/JIwkWlJV/2KNsXi7ssD/zAyvDP6Iyu3KLOXUmRTaTeArlnWhuawkOndmb
+	 rrsl33Vp/5dOLon/GK673vWyli9hp5TZeAvRONZd/0U7l+l35y48yxmKuo6Yhm4fhkdxe
+	 JwL6NZ7WCUGSZKhEgkI1gOihdGsKxpQDItJOM7d13ORTorpGLCng691wswNi0d1dHh271
+	 ikImBOzqAsQdf4AF7VYN3gbpfFJ5aWV6FfXLSi4bWxi3cXRGI8aSN6q8PyiC6mEI6FQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794681358;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794682830;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=2ooyXWRMtFslw9WzwoZWv+EIcdXi9S1dTvlk9W/PTIE=;
-	b=qeiwR3mwtde9ZvAaQ/MvpdLjyCp79yyHXM5mUf212uIdmFYhcYrppr6Nl/H/rCMx9B88
-	 J7UtfuKeQZhUJPrZ60kM86soz0G1dnsEPjkEqfpIuoF/I9SyyRww/4B4U9FRcmYBTyXG7
-	 15QQlZnRDlHn6zN6g9IMFHuaE66AWKj6FRJKR7fVqCaWMed0vt7J5dSapEM3bDTG5DMBB
-	 TkJm2rJKz0DNcvxKA6OR7X/RBrIlX3cZs2ajCK9nBmCrVZ3Wj9EEdKnEhrm2SwIJpNPbi
-	 rcKz2/UuBGizwWI/t92kBWfxF2DpMHrODZV1lZ98HBnKAbbispu+LijjaQozwdBV14A==
+	bh=ykOliHYisYLBLFi//mbVDidPMVZQXccME0RpNUmjbYw=;
+	b=4OIdeg1NFWgjD13W9996t1foyvMhdP+Eym5eeI3mcpD0AripfaAzoBCOuMR0hW6yIbi5
+	 IK0sfVCKA/ZJdE13eePO/H7rip2/YPJv0OFE0IRad3QwC/YCRHo3XJyGB8lVFNWPFarLK
+	 M/2AxT6/ILbDG4j/jkFexUv0bgJ+z0MiM1i23FtCSojyGLaaftCsy4XqosfkNkl6ImAPW
+	 9DEidL+vu/+iG/x0RSm5nQSDWektzPO6jp7sN2WTO9j3xauWpDFqrOJURl82b0w9d8VJJ
+	 zvcshHIC2A3nv8YYI26jnZm7LVWqOMnjSu2IXx5zUlZPHuTXiPJgleS9aZz+WvwOhIQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bvGeDvAO;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Rfg0/1Pk";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A89606A327;
-	Sat, 14 Nov 2026 18:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30936606A334;
+	Sat, 14 Nov 2026 19:00:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bvGeDvAO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8FE61F000C4;
-	Sat, 14 Nov 2026 18:35:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rfg0/1Pk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 001B61F000C5;
+	Sat, 14 Nov 2026 19:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794681357;
-	bh=2ooyXWRMtFslw9WzwoZWv+EIcdXi9S1dTvlk9W/PTIE=;
+	s=k20260515; t=1794682830;
+	bh=ykOliHYisYLBLFi//mbVDidPMVZQXccME0RpNUmjbYw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bvGeDvAO9fZn7rhcv/WgdJM/KFNwzPYGLc418Ij+GG+hDc3S1mmLwamBELXK5VjAZ
-	 A5SQAQVs1MfXnkqOEymwEJfE+OOjkwtn9pVM+vA8TO9X7ckAHNdYrRaNTx8mGjTnot
-	 EWSRiDTQkpHquERzhDu5B0PiGT4u4KooNDYV3FxNyH0891Z/q7/AjMuIBhsWGxZeff
-	 YOT0cacdmprENJEmLXOfjoIOWyZ4r82KpJD6l5qZ5b5v1hjZJwNg8fzgdaAujJgVNg
-	 YW4/EhDchhtVC+M4ddJ0HGytkPJZZk9qwkNFFmchfwubd8VhpAFBkmDgI7dUmir820
-	 Ko6dkkrBwTu5A==
-Date: Sat, 14 Nov 2026 19:35:49 +0100
+	b=Rfg0/1Pk8suTUhXDA0y90Ui/FXQ4F06sERFWjW4pyC83dFj8izLJwUt7QzrrMFNSD
+	 ql02v31bmtjF8ZR2YRHnahby7K2E6o11BVCT3FxRQB5JRjSO9UPLAsrQmkyAXmxIxF
+	 3CBMYWmhQ8oNeyiaEoEaEgdsShOFnvbCBLpTckOIoErmebq8wvG4f6h5Ey11vHlWRc
+	 NRJD7ylckfHUYWfHmH9DdnC5aUgBSOrwgc1H1JYVNImibEi5ELw3xbDgj+d0BYBj5v
+	 cDIJNe0+wwVKhNrh8gT6BWrLRsSxMKT20yN5fX8fonNWqvshzQl/ifdqQ6nFhte+BJ
+	 OIY+K2eSyrv5Q==
+Date: Sat, 14 Nov 2026 20:00:22 +0100
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
 To: Joe Perches <joe@perches.com>
 Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
@@ -56,13 +56,14 @@ Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org,
 	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
 	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Rusty Russell <rusty@rustcorp.com.au>
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Subject: Re: [PATCH v6 02/19] string: Add strprefix()
-Message-ID: <avioOefTkbt9RRd-@devuan>
+Message-ID: <avitCbGKfZgrfh3e@devuan>
 References: <cover.1794667407.git.alx@kernel.org>
  <0eaa4ce73a2b164fd49e3a9f71244a2e3f45b7bb.1794667407.git.alx@kernel.org>
- <6de04b9cf2dfe9ff1dacdddc0a76752a714a991c.camel@perches.com>
- <aviTcYS995cB-lTY@devuan>
+ <c113f651d1ce1b2d42ab9d0c59ae5a0cd17ddb6a.camel@perches.com>
+ <aviOPo6bZ-WGsndf@devuan>
+ <32e7bdb5b8a4a522566b00763ba13974733290dd.camel@perches.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -73,12 +74,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o7urukik6pfwpygo"
+	protocol="application/pgp-signature"; boundary="35i2uj2e65774ccj"
 Content-Disposition: inline
-In-Reply-To: <aviTcYS995cB-lTY@devuan>
+In-Reply-To: <32e7bdb5b8a4a522566b00763ba13974733290dd.camel@perches.com>
 
 
---o7urukik6pfwpygo
+--35i2uj2e65774ccj
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -98,117 +99,116 @@ Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org,
 	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
 	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Rusty Russell <rusty@rustcorp.com.au>
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Subject: Re: [PATCH v6 02/19] string: Add strprefix()
-Message-ID: <avioOefTkbt9RRd-@devuan>
+Message-ID: <avitCbGKfZgrfh3e@devuan>
 References: <cover.1794667407.git.alx@kernel.org>
  <0eaa4ce73a2b164fd49e3a9f71244a2e3f45b7bb.1794667407.git.alx@kernel.org>
- <6de04b9cf2dfe9ff1dacdddc0a76752a714a991c.camel@perches.com>
- <aviTcYS995cB-lTY@devuan>
+ <c113f651d1ce1b2d42ab9d0c59ae5a0cd17ddb6a.camel@perches.com>
+ <aviOPo6bZ-WGsndf@devuan>
+ <32e7bdb5b8a4a522566b00763ba13974733290dd.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <aviTcYS995cB-lTY@devuan>
-
-[CC +=3D Rusty]
+In-Reply-To: <32e7bdb5b8a4a522566b00763ba13974733290dd.camel@perches.com>
 
 Hi Joe,
 
-> Date: 2026-11-14 18:03:44+0100
-> From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+> Date: 2026-11-14 10:24:26-0800
+> From: Joe Perches <joe@perches.com>
 >
-> Hi Joe,
->=20
-> > Date: 2026-11-14 07:28:23-0800
-> > From: Joe Perches <joe@perches.com>
-> >
-> > On Sat, 2026-11-14 at 16:22 +0100, Alejandro Colomar wrote:
-> > > As Bartosz reported, str_has_prefix() has a bug: it can't differentia=
-te
-> > > between an empty prefix matching an empty string from a non-matching
-> > > prefix.  This is a fundamental design flaw in this API, and not
-> > > something that can be fixed.
+> On Sat, 2026-11-14 at 17:59 +0100, Alejandro Colomar wrote:
+> > > A negative of this is that it implies the return should
+> > > always be tested even though it can be known that the
+> > > return is effectively bool.
 > >=20
-> > I still think this description is poor.
-> > It's neither a bug nor a flaw.
-> > It's a design choice.
+> > I'm not sure I follow.  The attribute is about the arguments, not the
+> > return value.  Perhaps I don't understand what you mean by "this".
 >=20
-> As explained in more detail in the subthread, I think it is a bug.
+> 'this' is the return of the strprefix function itself.
 >=20
-> If the function name were strprefix_len(), it would be a legitimate
-> design choice, since 0 would indeed be the length of such a prefix, and
-> it would be arguably useful to return 0 on a non-matching prefix.
+> It returns either a const char * or a char * or NULL.
 >=20
-> But the function is named str_has_prefix().  Since an empty string is by
-> convention (strstr(3), etc.) the prefix of every string, returning false
-> is a bug.  Since the function returns 0 for such a case, it misbehaves.
->=20
-> Perhaps we can reach an agreement if I prepend this commit with one that
-> renames all uses of str_has_prefix() to strprefix_len().  Then, I would
-> agree to consider this as a design choice, and remove the text above.
+> Because it can return NULL, then the return value
+> could/should be tested.
 
-Here's the list of categories from Rusty Russell:
+Yes, it must be tested, when not used as a boolean.
+The usual replacement of
+	s +=3D str_has_prefix(s, prefix);
+would be
+	s =3D strprefix(s, prefix) ?: s;
 
-	10. It's impossible to get wrong.
-	9. The compiler/linker won't let you get it wrong.
-	8. The compiler will warn if you get it wrong.
-	7. The obvious use is (probably) the correct one.
-	6. The name tells you how to use it.
-	5. Do it right or it will always break at runtime.
-	4. Follow common convention and you'll get it right.
-	3. Read the documentation and you'll get it right.
-	2. Read the implementation and you'll get it right.
-	1. Read the correct mailing list thread and you'll get it right.
+The boolean use remains trivial:
 
-	-1. Read the mailing list thread and you'll get it wrong.
-	-2. Read the implementation and you'll get it wrong.
-	-3. Read the documentation and you'll get it wrong.
-	-4. Follow common convention and you'll get it wrong.
-	-5. Do it right and it will sometimes break at runtime.
-	-6. The name tells you how not to use it.
-	-7. The obvious use is wrong.
-	-8. The compiler will warn if you get it right.
-	-9. The compiler/linker won't let you get it right.
-	-10. It's impossible to get right.
+	-       return strstarts(name, ".init") ||
+	-               strstarts(name, ".ARM.extab.init") ||
+	-               strstarts(name, ".ARM.exidx.init");
+	+       return strprefix(name, ".init") ||
+	+               strprefix(name, ".ARM.extab.init") ||
+	+               strprefix(name, ".ARM.exidx.init");
+and
+	-       if (!str_has_prefix(p, "console=3D") && !strstr(p, " console=3D"))=
+ {
+	+       if (!strprefix(p, "console=3D") && !strstr(p, " console=3D")) {
 
-str_has_prefix() would get a -7, because the obvious use is wrong, or
-perhaps a -6, because the name tells you how not to use it.
+The non-boolean use would look like this (actual diffs from the patch
+set):
 
-strprefix() is not perfect, but it's decent.  I'd say it can be a 3 at
-least, if we document it as the following:
+	-       prefix_len =3D str_has_prefix(name, PDSC_FW_COMPONENT_PREFIX);
+	-       if (prefix_len)
+	-               name +=3D prefix_len;
+	+       name =3D strprefix(name, PDSC_FW_COMPONENT_PREFIX) ?: name;
 
-	This function determines whether the string pointed to by @s
-	starts with the sequence of characters
-	(excluding the terminating null character)
-	in the string pointed to by @prefix.
+(the old code, actually, didn't need that test, and could have been
+ simply 'name +=3D str_has_prefix(name, PDSC_FW_COMPONENT_PREFIX);')
 
-	Returns:
-	*  @s + strlen(@prefix) if @s starts with @prefix
-	*  NULL if @s does not start with @prefix
+and
+	-       len =3D str_has_prefix(*str, "brl,");
+	-       if (len) {
+	+       p =3D strprefix(*str, "brl,");
+	+       if (p) {
+			*brl_options =3D "";
+	-               *str +=3D len;
+	+               *str =3D p;
+			return 0;
+		}
+
+and
+		cmp =3D strstrip(option);
+	=20
+	-       len =3D str_has_prefix(cmp, "no");
+	-       if (len)
+	+       p =3D strprefix(cmp, "no");
+	+       if (p) {
+			neg =3D 1;
+	-
+	-       cmp +=3D len;
+	+               cmp =3D p;
+	+       }
 
 
-Cheers,
+Have a lovely night!
 Alex
 
 --=20
 <https://www.alejandro-colomar.es>
 
---o7urukik6pfwpygo
+--35i2uj2e65774ccj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4qf8ACgkQ64mZXMKQ
-wqlOew//WE0aX4ca1YyO/Zijt2BYJ5MSLj5QZkLLEsWA85Wf3chHvFXvlnkrneNq
-FLXNKjeA3XFDF0RXFf+ZFMhqqxVZgQfdM503fF0X42F1Tath3Ibf+yBp8QGbgVkc
-S3rqLOPZGXvscFA+35gjairoCGswgcWojy5knXOTHKN0TA3WOY8fyQWSKXDTSSFO
-Es0c8m7upIsEEZRbcuqs5QuxoS4fqBYyerr4fEdZmrm67hTlNQmtuYGF4i3z12f7
-Kn+2oB4+SRqwmNnTReffYoyv6F/RNuJEEXebyFqT5EejINvJLIfI15F3GbSKmpp7
-sUue6IAYMJxmWGJkXJngaMiwwElE+1rYMcm2wNpFxjAXNukOrF9mRiYuLNw3sVKV
-Tol1dbKLwkY2HUrx9MeK5D4SafQWUkNx8hKGWeu6uAqHGeCN3dB8hoYbviUkLPSc
-VOIQ8Sh6uSOxAljt9p5dSpPgvBcJQ8Hin6ZrHt+BELfhk10uPXqQn2yuiAGys3Ga
-KosuEcNl/c+RKrf6aHAqd+Z2DrFp9yD/vXVBwLr/HMr/C48buGuwkFsc1DJsku0D
-gQU17bBYAwdTYP0bLERgXz0XSzndrd6FB3a6Zr4wmCy8TW5/1J3JYGoTTVkKX1X/
-8/v5CoWKb+Psas4r4pnwTlETclXA3wECzYTymRjWNP34gQBMvPc=
-=gajV
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4r8UACgkQ64mZXMKQ
+wqlfkg//V7LVhwRC67R3K+HVDesilnNmhBhL9ma7hlpnjFIiV+UwBz+EYDH02pVT
+POFfgIzuRWM09i/+cn/scMVxlUr0slXUWWzJ4BTX2cpaMFVay+zefnbfRJ83+fcL
+0koUgrp24/dDHTF5u1XgaqrXpRmehSHWRCOPkVknoLKtpTh72YeAIFlJPRvgBtYi
++mt+rEsnbPZRarv1i/T/Gf+ymSLkNWFPEDVJ2/thk6aEFUewMMQFLOntut8+eBcl
+ENUHgp3KsnlSvYafsGKCVczTpxFhjWQJidlRGjTPWjdPeWVEbO1BsQvjLJmo+9Tn
+s2FbjVOo/gLX5RgE07ojZA3ZS4oQ2mXjHSW0GxSKdLLoyB0K4++ib3MqbekqcUA2
++ZZK84OudamjbhYAnJFhgeAJ9OIuoKP8bA0yG3977nGMQkaLv3+FEQKrXLVeI/K6
+ehRXT3Gs6s2RSbX7BFZWZpwQ/Fo8duTc4+fum4f0rQqjr59WU57RZlY4xtVg2elE
+8YobEAPhZDlh1Xkj4aL69SR20dx14MUPfMN5XTZki43dUZqup8LGTuPYO6wvnUdd
+X2271H5JQ4NmXvQfjfVWHFaWWG1fqJewD9fKXRjUSanHhUeTR/NLXPJiDN5SY7rK
+upWO1K7/qWdEWjkv3G7M/vKPBAI1VsDKUEj13IJzb9HUYJGtZxU=
+=rAzI
 -----END PGP SIGNATURE-----
 
---o7urukik6pfwpygo--
+--35i2uj2e65774ccj--
