@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794669719;
-	b=XxVFwe5rQvKMVLb0GsHTCQdxe8fInbWwTDelNT9iL3Hv1PkgWQ80weXceVbCT01128xc
-	 ZphGc9g8sAL5gghcxBJQ8Glj2yWk5sEOkZ71zUaH3GGg+ktHuUtcCr8HcUwzmtSot6kpd
-	 jvmxU4Wl2EnWaHRHMdLgWnn6z+d8kH9PcJHCIX/5j7qzFj4asd1EkBxHB/a2kv4etvM3o
-	 HqsaKQ6iYWI6aN1GlpIaU1dh29hMVabiTdaVyCN2oVxQomKrWn2BnO5e90WNR3me0fvY5
-	 F+5Vg5R48j89f/zxHiViJQcuBMp1VC961t7OuE3hJ9VdDPwTU4Q0VN6RjIwQrhO1FJA==
+	t=1794669728;
+	b=H9rfHF0u1hd6l1x1uDayVdPvw2PJaJ3UIo7Sr9wFj+K9er4hkGxtHra8OeXK5KASg8O9
+	 yxHiysRu2uc87ndQKRRhEhaDa5zahrlkgZrVFc5xxwjr4vyeYODuZNUYCNjVhR4I8rMgL
+	 2xhjQ45tSibmhcrFhGSCnAzOT8Wj4YW/RflgPUX57y+NjLpAXo4xW0+SUxb1ZSLOS/CLw
+	 iVgfoRde4G74l9+biesyda7wIvCZOcCYo6bGUIJ3BWUJECpHIFweI+XjG5KdpD4GT/QC7
+	 9gZQH98/TWxz3SFqLBWJm6VDKafTpox+jLsNIXmU+zAdqkf8QfEcrDzxKg3nIdIbpSQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794669719;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794669728;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=eyRjOj1n2GcWdTB8gZXqJMxfVkyspEp3nTiT7oAcNU8=;
-	b=sBKD1RYtJ09HuJVmH6jBQqutLYY4bj3iAZ4SKnN8eT0slmKerUEDcoLOxygEYlNdQ7kL
-	 9fRr6PIlF40HHzUKltz5LDdAtdhQNwqAMdqyt9k3m6vIFQ4qJHfTDyjSKwITu2fa7SHDk
-	 V139d1v1+9J9lWdqmBPe6VglC86BhdELwVii9s0iSPUPqLzQxHgtnTVhb4OeEBEKsgpX2
-	 QLJ7icQgkiKaSH4q9RKKkeHiW2Ep9s+f/F1f5kEEImEZQ63M6kbjOcwHhGiP7CIlMZ3qt
-	 weOxacfN739wxuaEnkm0QKC1rF6K8Caal6eYbnIRXvNfu9faOgr2sUgfOPPE6lMZl/w==
+	bh=5S97dQBMmN49bMaQCLPn0HmAJs1jIuiDMykCwDKKc3c=;
+	b=UR1fWPL/OpfoGih6/i6Xod2l0D4nNUEUava4oSX2VHORmUyry16vZT+uGHFJl0xepRHW
+	 6nCBzYY5P7/sGjde3Htou8r+cfDZI0oxKTlRoggD3+Gjv43l73ZfqNu4p2BB3+JkigSpQ
+	 /2usE0NNd/cMUxhKx6VGF79Dx2FONqATJ8B+Z7HozejhL/5Bk2ykw3tz343Ts405w4/mf
+	 yuAGufUmV8mcgW8N1/SQgdGE9st/Nqqk/0JtdzJV703CVMhb66F6GRORLhVEJ4lLqMUjk
+	 XhvR0ngD+Hn5FCeKu3v9sdywXwDvL9k7BxB4FO9UJNfTwMVCYfcmxyIfS4nvx+kr7kw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="P4fK/Omq";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=orwaEWMU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48BF606A32E;
-	Sat, 14 Nov 2026 15:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449C6606A329;
+	Sat, 14 Nov 2026 15:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P4fK/Omq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6CDA1F000C7;
-	Sat, 14 Nov 2026 15:21:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=orwaEWMU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66F01F000C4;
+	Sat, 14 Nov 2026 15:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794669719;
-	bh=eyRjOj1n2GcWdTB8gZXqJMxfVkyspEp3nTiT7oAcNU8=;
+	s=k20260515; t=1794669727;
+	bh=5S97dQBMmN49bMaQCLPn0HmAJs1jIuiDMykCwDKKc3c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=P4fK/OmqPKerQa8iu0KU9xzKTMoI9DS4B1p8sgJN6j0hTO9ltIkQwod7o5nq+Er9j
-	 hDZcNTNR3DOMZoEe0CHllJny9tOsHTprMO4BtzzAbpTfo8jECXQI1xJd+FDbNE5eeZ
-	 6fmjFbsarnbfHfYYtB1Q89og2nDVdJmm4inkAQRhTilTweiygxbwhF/GkYa+TCazj8
-	 vJ/fEOjlmvN0dUCuUAWnplGTbJi6Gu93jKMTMoh7UA4tj9qv+DUL3sdk9CT/cYcDq9
-	 JqyklOZ7gzbcknqvrkqcJkJtLTaPpsKqIS0euL1Cj+b/hyQdkfGCX1OQq+lKkYRiVd
-	 FlhoA0zcYr6mQ==
-Date: Sat, 14 Nov 2026 16:21:52 +0100
+	b=orwaEWMUs4czFpdPOlzjNUJKCCWhfhgHzZQ/emxCcxeAdWigUhF/gwoXjkoglBUPw
+	 02FkBnVryE4iiiDcraNlu9A88TTYF1oYMnMSymB/DwWKC/Mo363czsTkZNW8+8QYyi
+	 JJAWFQTDIQNH5zZ4NWHbtEcoQy7FfpILlSVE9pZHWM874e3sscWMgu4hj9qTjQNQmO
+	 SR9IwyVHc/o1eyd1zWTJCoB9Ye68O2nLbBiAmnlt4iER6pKWofYS6HmWStkzorOv1P
+	 6vcZ0gpJiu6bfCZOA3nDaIny0IE9uUxfWK4AZ0xh1OV8NLezJOMCAWf1ELuLB5OfSk
+	 6mB4LeyXBciuA==
+Date: Sat, 14 Nov 2026 16:22:00 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, 
@@ -56,9 +56,9 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v6 01/19] string: Add streq()
-Message-ID: <cff11fd710fd57aacc6fd8f4c544d58ee94f527b.1794667407.git.alx@kernel.org>
+	linux-gpio@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH v6 02/19] string: Add strprefix()
+Message-ID: <0eaa4ce73a2b164fd49e3a9f71244a2e3f45b7bb.1794667407.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1794667407.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -71,12 +71,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="s56ps5r27eve3rn6"
+	protocol="application/pgp-signature"; boundary="iueglycp6irasl3b"
 Content-Disposition: inline
 In-Reply-To: <cover.1794667407.git.alx@kernel.org>
 
 
---s56ps5r27eve3rn6
+--iueglycp6irasl3b
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -96,98 +96,135 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v6 01/19] string: Add streq()
-Message-ID: <cff11fd710fd57aacc6fd8f4c544d58ee94f527b.1794667407.git.alx@kernel.org>
+	linux-gpio@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH v6 02/19] string: Add strprefix()
+Message-ID: <0eaa4ce73a2b164fd49e3a9f71244a2e3f45b7bb.1794667407.git.alx@kernel.org>
 References: <cover.1794667407.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1794667407.git.alx@kernel.org>
 
-The return value of strcmp(3) being reversed makes it prone to mistakes.
-Since most of the time we're only interested in simple equality, add
-this API for those cases.
+As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
+between an empty prefix matching an empty string from a non-matching
+prefix.  This is a fundamental design flaw in this API, and not
+something that can be fixed.
 
-This removes some driver-specific definitions of streq(3).
+As always, this is a consequence of choosing sizes instead of pointers.
+Sizes are often the wrong choice.  In this specific case, pointers are
+more capable of differentiating these cases, as NULL is a special
+sentinel value that doesn't need to overload a valid value.
 
+Let's implement strprefix(), a function that returns a pointer
+right after the prefix if found, and a null pointer if not found.
+
+We'll slowly migrate existing code from str_has_prefix() to strprefix().
+
+Move the description from str_has_prefix(), and describe
+str_has_prefix() by comparing it to strprefix().
+
+Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-for-each-pr=
+op-v1-1-6e28fe1c72c4@oss.qualcomm.com/
+Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- drivers/clk/socfpga/clk-gate-a10.c |  2 --
- drivers/clk/socfpga/clk.h          |  1 -
- include/linux/string.h             | 12 ++++++++++++
- 3 files changed, 12 insertions(+), 3 deletions(-)
+ include/linux/string.h   | 29 ++++++++++++++++++++++++-----
+ lib/tests/string_kunit.c |  9 +++++++++
+ 2 files changed, 33 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/socfpga/clk-gate-a10.c b/drivers/clk/socfpga/clk-g=
-ate-a10.c
-index ba12179061b3..df9f660db8a0 100644
---- a/drivers/clk/socfpga/clk-gate-a10.c
-+++ b/drivers/clk/socfpga/clk-gate-a10.c
-@@ -11,8 +11,6 @@
-=20
- #include "clk.h"
-=20
--#define streq(a, b) (strcmp((a), (b)) =3D=3D 0)
--
- #define to_socfpga_gate_clk(p) container_of(p, struct socfpga_gate_clk, hw=
-=2Ehw)
-=20
- /* SDMMC Group for System Manager defines */
-diff --git a/drivers/clk/socfpga/clk.h b/drivers/clk/socfpga/clk.h
-index 9a2fb2dde5b8..2008e6f34a5d 100644
---- a/drivers/clk/socfpga/clk.h
-+++ b/drivers/clk/socfpga/clk.h
-@@ -19,7 +19,6 @@
-=20
- #define SOCFPGA_MAX_PARENTS		5
-=20
--#define streq(a, b) (strcmp((a), (b)) =3D=3D 0)
- #define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel) \
- 	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
-=20
 diff --git a/include/linux/string.h b/include/linux/string.h
-index 6cb5cdd01158..9b3e578d9aca 100644
+index 9b3e578d9aca..14e825e902eb 100644
 --- a/include/linux/string.h
 +++ b/include/linux/string.h
-@@ -14,6 +14,18 @@
- #include <linux/stdarg.h>
- #include <uapi/linux/string.h>
+@@ -557,16 +557,35 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+ 	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
+ })
 =20
 +/**
-+ * streq - strings equal
++ * strprefix - string prefix
++ * @s: The string to be tested
++ * @prefix: The string to see if @s starts with
 + *
-+ * @s1: string to compare
-+ * @s2: string to compare
++ * A common way to test a prefix of a string is to do:
++ *  strncmp(s, prefix, sizeof(prefix) - 1)
 + *
-+ * Compare two strings for equality.
++ * But this can lead to bugs due to typos, or if prefix is a pointer
++ * and not a constant.  Instead use strprefix().
 + *
-+ * Return: true iff the strings are equal
++ * Returns:
++ * *  @s + strlen(@prefix) if @s starts with @prefix
++ * *  NULL if @s does not start with @prefix
 + */
-+#define streq(s1, s2)  (strcmp(s1, s2) =3D=3D 0)
++__attribute__((nonnull(1, 2)))
++static inline char *strprefix(const char *s, const char *prefix)
++{
++	size_t len =3D strlen(prefix);
++	return strncmp(s, prefix, len) =3D=3D 0 ? (char *) s + len : NULL;
++}
 +
- extern char *strndup_user(const char __user *, long);
- extern void *memdup_user(const void __user *, size_t) __realloc_size(2);
- extern void *vmemdup_user(const void __user *, size_t) __realloc_size(2);
+ /**
+  * str_has_prefix - Test if a string has a given prefix
+  * @str: The string to test
+  * @prefix: The string to see if @str starts with
+  *
+- * A common way to test a prefix of a string is to do:
+- *  strncmp(str, prefix, sizeof(prefix) - 1)
+- *
+- * But this can lead to bugs due to typos, or if prefix is a pointer
+- * and not a constant. Instead use str_has_prefix().
++ * This is similar to strprefix(), but returns an offset instead of
++ * a pointer.
+  *
+  * Returns:
+  * * strlen(@prefix) if @str starts with @prefix
+diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
+index 0819ace5b027..f603e89866d1 100644
+--- a/lib/tests/string_kunit.c
++++ b/lib/tests/string_kunit.c
+@@ -287,6 +287,14 @@ static void string_test_strspn(struct kunit *test)
+ 	}
+ }
+=20
++static void string_test_strprefix(struct kunit *test)
++{
++	KUNIT_ASSERT_TRUE(test, streq(strprefix("foobar", "foo"), "bar"));
++	KUNIT_ASSERT_TRUE(test, streq(strprefix("foobar", ""), "foobar"));
++	KUNIT_ASSERT_TRUE(test, streq(strprefix("foobar", "foobar"), ""));
++	KUNIT_ASSERT_NULL(test, strprefix("foobar", "bar"));
++}
++
+ static char strcmp_buffer1[STRCMP_LARGE_BUF_LEN];
+ static char strcmp_buffer2[STRCMP_LARGE_BUF_LEN];
+=20
+@@ -891,6 +899,7 @@ static struct kunit_case string_test_cases[] =3D {
+ 	KUNIT_CASE(string_test_strnchr),
+ 	KUNIT_CASE(string_test_strrchr),
+ 	KUNIT_CASE(string_test_strspn),
++	KUNIT_CASE(string_test_strprefix),
+ 	KUNIT_CASE(string_test_strcmp),
+ 	KUNIT_CASE(string_test_strcmp_long_strings),
+ 	KUNIT_CASE(string_test_strncmp),
 --=20
 2.55.0
 
 
---s56ps5r27eve3rn6
+--iueglycp6irasl3b
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4fJAACgkQ64mZXMKQ
-wqmTlA//UrvgDircwX44TszIxO7pcaTer4e7iBsYHv2YNS8hx1koC/81PTpyGCNY
-4GaA5RMvUuulWO65dTWw7eTafyyOEljkKlq9cvs+rZIiM1qoXYlSFc5Q4v65YMvw
-ZHMy7PDX9vg7uxNXdnlaAv4MqztgzHT6m38tQbLBfSplUsvoNY+UHN4GjTGJdAAc
-a0eEQkq7HeFQemJDkxTTNJkmfV+Gv5Wm9aOYNj+LOckTBJFxsILE935Fw2aA2C6x
-Moq6IIjVhWlTQKG7qiNQo5sB8PWfER/pe4VJwNDlmNYURvz9lGdZZojkPk+QhVs0
-njbCNzmeJanmKR448tz2G7URl1KPMxDjmWubhptKsfhbrHThrct4oy3kEqUy25hN
-bv6tS3D9ZV9cIG62VTC4FzQ8b5n2CCeNKaN7WMZy0vU7R+cVmQ7aZ0fkVVJMfC78
-jwqD0SyrncEG25KX/9VJ0I8CksrpylYFA+omJTA5Q5j0/bhUeUfEWnaaUlQcVMZc
-rzZNtu8ZRyOw2q/BFefS6j/a3QE56Z1g9SOTRWfT/9U6Jp+wZd8j3mavxPJ11rLd
-7exnaKYykRWcWSnP/FVrcF2xJJhrKjVDPiQVG4XVb59a/dlZY6aylc4CtW//Bclu
-I9YzlC5VeUQyB3SOmnUujPQkXgvpKoPg9LFwaxjwHeODVXi/VHo=
-=wUTo
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4fJcACgkQ64mZXMKQ
+wqmbrQ/8DTa5Qc/kIjm+hMwTjs6qXgwjRbslegS1errdEZ0bMTEVriYP+C8xJ0+Z
+vVavpWeNiePLxwYPnsNbZ8p7+3WZX3ZB5166MIE3t1a2jJ1F8fM+H+StkJQmR6Bz
+q6BaGIcwqWTrma0y6jOYAFFIyGgNNESAS6CL4AYW1v9CeXFPZKdtL2jduZNdke+P
+NAD1Ez4WNSShNuXgaG7UOVE04xW1Ta/FFCSGjY7GWGduH2kEgGw7sGXt3U6DYgVU
+kJdQnYAQJTyQ7FgJyim5SG36Vl3EccTeAc2Y9WB/WssnEJRmw6dw1TnNydhRnDj8
+yUjRZmJMP5EZ5GuFyuVDXYWiFpr5Jdb1I/by3U0NNiobH7g8Tg/yxWX2r3tVDhW4
+23slMjT5LIPt7Jwy8fAl3eWNH1pLOeU/g5+54fahSp8uhk3yhIOkw6+Bu9XXJCyG
+coImvQnUBm1jLp4pzilgc53vfChRTfBw74PEKkhKJPywn2ugb2a4RIJiWjYeerck
+L9sE/YFvBCXgiaY/HWmy4RpOWf+PVz1oc0Sj5OrKSWFJP57b8tgj3nUk0K5R17sE
+YLfsCY95lra+8Gw59PVluqstgMmEJG6Mg1XexwtgPxWHj6yujxx2ete4kfVPgUWf
+y6l+WLXE6YvPdM1ssBh1XkO3z8bCuN0POR//MZK3Oko4c+kT30A=
+=+USz
 -----END PGP SIGNATURE-----
 
---s56ps5r27eve3rn6--
+--iueglycp6irasl3b--
