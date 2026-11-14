@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794669849;
-	b=p0AmDhRUvHDi8cef/uhnKyobJN/S3aYT9hKTtKBBSEdjPn3rE3nly0038vW5svVG/fBp
-	 rucpTu3KdF9xamNAJMjbXpIN/iQRzxU0GLnGFMOnOeEvXWN3SkenKdrWaMbAMk/CiFLp/
-	 dkb3KOVMjaE806sAfN3S7UdCFgrARw8P6IpYEC9l0AUMdEqplrqhVy2zlr7BZK/YUaqJA
-	 zDFvmGI3YPPCsWS29fhJQ40W4mZhvcVcYwDeB2yF9xgqiWusI6ZOV9YgU+615v7JHElEN
-	 vDCW8iGha3NzTJPdEW4yiG5bg5Ko7yGx1/X5yv5qx/b+yQReuTP6B67CpcgCtVmNHEw==
+	t=1794669841;
+	b=3stKOqpmtwPXP5c7FrQN7C3bfXjyiOgugII7nzsXdSSd/rfPFgG5JBj1NDYVzPP9Ylcq
+	 yyk3QrEMxZpWwZ7r9z8JwdxroQi9L+7WK4kOextdSzPx0N1zcFqSwvNoPfKs2zNcwHjXm
+	 idZbXt9Nqim7Uq6idT7Dbhyn4h5tQ57wrqCQRQwvaeI6T6lMQ1BkePtFzwz5VbeK9kz2T
+	 FhTy87eJoab9M4T9tbAkoK2zm1wg99aTlwgDKXxzHat7s2ZIdrq9W0vd8neYs4akgmlx5
+	 XFJuDnBlZsc+yMNgFHv7uZkL9Xnu9GPuZ7WEof3MmEwFICPeLO2zuENnbHvKp0JJ/ew==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794669849;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794669841;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=T2Kcmx3WJSx/Ne5USlaUSCaBRqAq+CXbrA7aH/FsNZw=;
-	b=i0Mdf19EIfArFKaNGDimUw1F3K6IcSxZEdZYq0D7+q4mexYKhYmePXD6wLZR/9E7Rrgk
-	 3EYff9NrRn7Zx+uOLdSaT9OjVr8LZ4Pi8wizpy+ifxDanXnr+Hp1FpI7wol7cwth6qV13
-	 EaZkM+hoboKV2OjKuWcIoMnsXqa/EW/ddCRXP9+o2hIMooiTFJ+2TuvW4CI3orvIdNcMY
-	 xRGBg/ac//m5PFPCEp7Fe/QTd1LR0cM1sveJCtKpTOk1+lUSspXQXrI2GvBW/9EwIQUnF
-	 +lQE49+Z9qVh2jhAAV5ArKyCc+IDHDtQRhLNOA3F34wpNqhiiECyynGmbXmg5amGgvA==
+	bh=xMSNIiJdSa9iRidaXSnoagbPK9Gb5hgqhXB3yqy3gdU=;
+	b=meDQHMMakUMaUdgpGrP9P2u8JT5JVHqa8+9/hKHEQANvG/0XCXdWckMCiE51BCmebZFk
+	 xXIZ7KIWb5qCGiHYVeFy22nj801HtO1zxd5e9/swQWqJSDYm6MQsF78UyZe4kwf/Knn9c
+	 Olyt4OidJPBhkmXPPdlmPA26T9Bi8n98HMtlMFNJ662j2J05+7tL8+CQdfYR3sQpS0icA
+	 ZYwDnSGxhGqiZR5c6wcXjYjaLeiZl3NbpyMOF8mEv7TsUPbJ0l9wyy6oXp6fT7xgsSRGS
+	 gORGdO875MY6F/Clt4zstQJTO86jpweC0fB9o37iU56ntAuDRzwcRYCdWLafM6L63Rw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LdNyczk9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WvNYV54I;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C050606A32D;
-	Sat, 14 Nov 2026 15:24:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B48606A33D;
+	Sat, 14 Nov 2026 15:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LdNyczk9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A281F000C4;
-	Sat, 14 Nov 2026 15:24:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WvNYV54I
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA8A1F000C4;
+	Sat, 14 Nov 2026 15:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794669848;
-	bh=T2Kcmx3WJSx/Ne5USlaUSCaBRqAq+CXbrA7aH/FsNZw=;
+	s=k20260515; t=1794669840;
+	bh=xMSNIiJdSa9iRidaXSnoagbPK9Gb5hgqhXB3yqy3gdU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LdNyczk9Vhx58M26hS9zuZ8OCyU1uGWu67MnAfu4Mpnu+Xn+087ag7/h+cFQbpisS
-	 ctRNt8XH1Pwfwvs9UCbSkNc5zzIK9xquMkB3eiA7FqZbFzZoB+jbzxZJ8Zv/t6UkWj
-	 ODnZTig7ZS5TYf81hwUoRVJgdbGrx69nVzINgKE8OdNLMxttwHxCd9uTUdjZ395wWS
-	 3/h4mRFBLRvIIc18083AeurZEdDGUgAVT2r94veU4zfGmPcj5XuaeMhUpFy6zMNobr
-	 rBEv/HaqgLAzm3k7iXM3GCFAoHkwvCZrMGRRnRmFLDmyd6iPJxYHFrgDFOyB0W0/CH
-	 hM4NmwSxIzp8g==
-Date: Sat, 14 Nov 2026 16:24:01 +0100
+	b=WvNYV54I/VeRWhC9kQQmPqzCUTN32PTg0VKfiP9JX//HLjAxB5gC7/zRJsHaPFdow
+	 iQPbHcLabeCH/+7wPDu3EVwyDIsG+Oszx10Gbr8SsLBbCX2YcnKEkhnnqeSS33RK6Z
+	 lxt8cj7zZbPKn/O4Lt/mUIPY4Ol0qH0kdu1TwTsp9vuCM/rJbdk1oiDXHPZmkR7ZzR
+	 aHTW1fBXZQQCZFt+Br4C9cx3Y3G3eNs4Kt6ZcAIWal35nmsY3nMNwpsRWEwdMRNYQB
+	 oWQcx7TX6Hzie4V4v2lLoHBPSr0AJH9WZdwNmoE55jr4Nu1IWFLtCXMvnUfPCpjW7n
+	 wY/eyNcMzOaUQ==
+Date: Sat, 14 Nov 2026 16:23:53 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, 
@@ -57,9 +57,8 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-gpio@vger.kernel.org
-Subject: [PATCH v6 17/19] string: Make strends() a legacy alias for
- strsuffix()
-Message-ID: <8aa3d317d63c7538628b798845dc2092b3f999f8.1794667407.git.alx@kernel.org>
+Subject: [PATCH v6 16/19] string: Add strsuffix()
+Message-ID: <636fe759a4eb0f40bd76a50f64e6bf430a78b37e.1794667407.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1794667407.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -72,12 +71,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zlbfher2u4f7fn6l"
+	protocol="application/pgp-signature"; boundary="bawuhcytuvmf75wf"
 Content-Disposition: inline
 In-Reply-To: <cover.1794667407.git.alx@kernel.org>
 
 
---zlbfher2u4f7fn6l
+--bawuhcytuvmf75wf
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -98,88 +97,89 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-gpio@vger.kernel.org
-Subject: [PATCH v6 17/19] string: Make strends() a legacy alias for
- strsuffix()
-Message-ID: <8aa3d317d63c7538628b798845dc2092b3f999f8.1794667407.git.alx@kernel.org>
+Subject: [PATCH v6 16/19] string: Add strsuffix()
+Message-ID: <636fe759a4eb0f40bd76a50f64e6bf430a78b37e.1794667407.git.alx@kernel.org>
 References: <cover.1794667407.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1794667407.git.alx@kernel.org>
 
-strsuffix() is drop-in compatible with strends() --but see caveats
-below--, and provides more functionality for cases where we're
-interested in the position of where the suffix is in the string.
-
-strsuffix() returns a pointer that can be converted to bool.  This is
-converted implicitly in most places, but if the target type is not bool,
-then it might be problematic and require an explicit conversion with !!.
-I checked that we don't need this anywhere, and also, I expect the
-compiler would likely diagnose in such a case, so this should be safe.
+This is drop-in compatible with strends(), but is more useful, as it
+gives more information.
 
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- include/linux/string.h | 20 +-------------------
- 1 file changed, 1 insertion(+), 19 deletions(-)
+ include/linux/string.h | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/string.h b/include/linux/string.h
-index 2f7fb2c70662..7469d4634b3e 100644
+index 6b0de932e23a..2f7fb2c70662 100644
 --- a/include/linux/string.h
 +++ b/include/linux/string.h
-@@ -633,6 +633,7 @@ static inline const char *strsuffix(const char *s, cons=
-t char *suffix)
- 	return streq(s + off, suffix) ? s + off : NULL;
+@@ -47,8 +47,8 @@
+ /**
+  * streq - strings equal
+  *
+- * @s1: string to compare
+- * @s2: string to compare
++ * @s1: String to compare
++ * @s2: String to compare
+  *
+  * Compare two strings for equality.
+  *
+@@ -610,6 +610,30 @@ static inline const char *strprefix(const char *s, con=
+st char *prefix)
  }
- #define strsuffix(s, sfx)  const_cast(CQChar_of(s) *, strsuffix(s, sfx))
-+#define strends(s, sfx)    strsuffix(s, sfx)  // legacy alias
+ #define strprefix(s, pfx)  const_cast(CQChar_of(s) *, strprefix(s, pfx))
 =20
++/**
++ * strsuffix - string suffix
++ * @s: The string to be tested
++ * @suffix: The string to see if @s ends with
++ *
++ * Returns:
++ * *  @s + strlen(@s) - strlen(@suffix) if @s ends with @suffix
++ * *  NULL if @s does not end with @suffix
++ */
++__attribute__((nonnull(1, 2)))
++static inline const char *strsuffix(const char *s, const char *suffix)
++{
++	size_t  len, sfxlen, off;
++
++	len =3D strlen(s);
++	sfxlen =3D strlen(suffix);
++	if (len < sfxlen)
++		return NULL;
++
++	off =3D len - sfxlen;
++	return streq(s + off, suffix) ? s + off : NULL;
++}
++#define strsuffix(s, sfx)  const_cast(CQChar_of(s) *, strsuffix(s, sfx))
++
  /**
   * str_has_prefix - Test if a string has a given prefix
-@@ -656,23 +657,4 @@ static __always_inline size_t str_has_prefix(const cha=
-r *str, const char *prefix
- 	return strncmp(str, prefix, len) =3D=3D 0 ? len : 0;
- }
-=20
--/**
-- * strends - Check if a string ends with another string.
-- * @str: NULL-terminated string to check against @suffix
-- * @suffix: NULL-terminated string defining the suffix to look for in @str
-- *
-- * Returns:
-- * True if @str ends with @suffix. False in all other cases.
-- */
--static inline bool __attribute__((nonnull(1, 2)))
--strends(const char *str, const char *suffix)
--{
--	unsigned int str_len =3D strlen(str), suffix_len =3D strlen(suffix);
--
--	if (str_len < suffix_len)
--		return false;
--
--	return !(strcmp(str + str_len - suffix_len, suffix));
--}
--
- #endif /* _LINUX_STRING_H_ */
+  * @str: The string to test
 --=20
 2.55.0
 
 
---zlbfher2u4f7fn6l
+--bawuhcytuvmf75wf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4fREACgkQ64mZXMKQ
-wqnvQw//Z7yF0JaUo1CyQfP0Fch+vd7ks0v5L8lxZUHICeXrBEV9SzwnXhxYg6G5
-WC2sLIgXL0vUeBr2m77gsJ/Qf9n/UjCdqh+M3R5WxB5+WeiEy2YTzA4BQg0IihWN
-sWbibPt4dm2D8fCGHxCQRv6PauBt1uTWDCx4ngW69aLiyJaGZawvoOJumyeUEMbC
-R4Eownz78AV0VBnW9ABDBZg4wEwYnktM/+8ZxFwcSJvQj33itpgBgoThYMyHkHq6
-/19bzgihkrRU9QRIAUqC0R3PULg8kP/W449z4ET0RSZTl3WU8jglGZgeFohdBMqB
-Wd6rk6R5CY8nfXv+UxWA6qCp3umzIuKAxg9bL5yB1/GBahIFOYGb0VXwU40mrwb+
-s6ybeqP7ucyhJeVBcZwnaC7l9HoE+iw35mbu4M9SyYK1AReosZRai8bHM3TFWtQD
-jI+PLnZP0dNJ6zHXoAfEXLNx/eyxdgQagQtqS0C9kMxmdNI941cfWZ5TtXy08cw8
-o48jPosqSenQj8fvPfaKKQ0KuJTVUfX36wMnNgDeV2WqV1vX6UbFeRaAgpUQ95sX
-MI1EiPkZaErz+SdjMZLSKq7/h5zcDZGIvmTfIQmQcx+zUFagUZ7iRXstUGApE6OU
-aqzSQCVwhL7aLTJNS+dntunplzgq7SA33d5t4dBcXBIAL5YgFr8=
-=w55K
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4fQkACgkQ64mZXMKQ
+wqkfjxAAlfzfy4TNz/o7eyG/IF81nthlNGaZK77F77e+tDxtqT7RwadhXLq67Gdv
+CqWfJioUPXg5Y2TZJkB4gprA0d4b4TAIOMXppcwNkAf3WXatkHt4EGk/mo1EjuPZ
+wuVMta288X1BAlkiVsTBpeMv0G1uLIqJBYky9WT+xnhjI2Ku5XrFxsXGiVRB5Juf
+sEF+hWGcylL1ILLsyWQqfPHAcaCzlze6X/sgk2rr03zKDRG7ggu7axYSMT6F6Uie
+LzaXiQXbzpGAklcTm/H5N//M9WiLsfwOnFo78er4hVUa8rf1T26OlQqAs+t0xByM
+vnpXHJKdXiRvqSagX/Ec22nlcbJgNLCeFF94iHJo5Iw/bLYa1hIiDT1zxRsuqplY
+pq222//WVvfZK/tLGZyjME6lW5FsLqX5fiJrHCzfV9c8CG9Ix5whFeGe5rmu1rn5
+9UZrzUnmFCi+74XY/7hyXJOVPjYA1HluibpI2A83WOnQ6qM3d7cAJZl48BueP74m
+3uVoq5V5p29mHppIeGAAVRNLF1vOhf6hZMmAHv2fa/lT2LQiwu0Akdr0NUCQesiH
+UzZcnwIs4+1IAGVvR7ynGSW0VHfB4tviDUXJZMUNeqlPhocVKxAFm+U62L6sCT3m
+GaxGjO6xVvMIGjaflwEYlgizEtIeTAuhwH//pVNeHi94u6Y4ie4=
+=d8QH
 -----END PGP SIGNATURE-----
 
---zlbfher2u4f7fn6l--
+--bawuhcytuvmf75wf--
