@@ -1,55 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794671518;
-	b=49GCTNxDnE2m6ovRMnUl6mQpeKeKxlwXrwKA8gor3tkiaEX8dyWH0YfKv6c/79p7XoB/
-	 J5JZXzNjSuQVTA16urEEBb0/v7i3RBFvyrqN0AL8ADr7mVcHDS/xfYaO+DqdVtpCOCrKG
-	 xpWLs234H7Qc5iAPv5E1zax1+UDBwqU+/R0vcLVlyDoVtTx+Rj9JlgJEEiUrA/efUj94K
-	 W04Qv2nZYnba9ChzLosjniF78keAZTnqKqm5YIKdoxb49FYodPVHmv6Q4ganIoVowlGVk
-	 RVeh9eqBNy5CZQ8XjiHpUVd3Z0d3nrpEFGAo1Ooo6nFX29iNfibNuhhjqCh2olUxX6w==
+	t=1794671620;
+	b=QaLALX4jUIbcV3hfFLqjCxxwBL89hvAb7CT41Y7mz543pRMIYUqIyyU6K0dmEt+iK2FA
+	 AyhTBjMVYMpI2Md60T0pJF09Uit1cFsueKG/L33fiv39an0Y36NDCc4ibxK4JvWBHdAh8
+	 MwxPs+66c9B/KYsNFf83gmBmPcGXWy61hnk9zctxfUgDYULrI0mwxoNGqGPHH1gVk/NYW
+	 HftoOFu2PNHbLkD1y+kyAYf/BDO9XJ1r51zxHwit0NnRkBO+RTuQe+HTnAePG4E8WnQQH
+	 r718yY4C4h2FZh4nlfCUudIPNz4I9TCuVe9ZetNtBLaO5p8WrCozIC83yaPozD/e3HA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794671518;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Ay+4tVhIMp+XOI4JVfrSEwfzZS0QIhMQhkQl15NaVGg=;
-	b=09UKs3meGaBk3YUN1H0PRg/wiZpvTcTbseM5axPun9Y2PeU3OKuV5aFTNFlG+S/WeFGG
-	 G5TPBUzBc4mkC+eIK6jzF3+vzTv5V7ROxEJBX428xVHI4XqCAAahU2dtJkYRDoG8u0740
-	 AO6Y28erGHywFHJbey/bvSyiGfiPDFv2vIBrXOw0xx+gpFHahusM8acEMAP112ZVzxw0w
-	 xkHgSRkFp7auPPW6cvUh9XEk4wCFSGPD4YAgtgHqlH0A4thcVRxO5Jz+u8lsPCQdi2D0c
-	 3WXUHsu/6s/DONz1CiisQSvY0NTbcqcz1qBeHScF1Gjc5IrlRKKc9YScrToiEZt7nhw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794671620;
+	h=DMARC-Filter:Received:Received:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 User-Agent:MIME-Version:X-Rspamd-Queue-Id:X-Rspamd-Server:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:X-HE-Tag:
+	 X-HE-Meta;
+	bh=eNWfi9GOiU1H0L6HIja6i+gawTbPJhBoUQGTRucnQ9U=;
+	b=LGT1C/gjitshqygSSqarb1wclX0sz6AEZcCotY3RW73xgBqL7l1L4x1fqR/3sku2D7Fa
+	 6QDaWHSjooI3uHj8m+t6AGFzfdxYaNlKZSnWX09M5PVdOFyTAITFAZtamA25JqNhiN/vl
+	 szasOfaaWEzST1rmgd3HwJyy+3w0QaoCnWuyQZfZuJKzP7OQFZI9KgNT4d7ZtdQHqkort
+	 FFHGd/wPFKhZJUsuTlT9cSUA0ZTw+zIUUpPlNpn114q+MYT3jclsQG9FW5W4ajs1t+eqp
+	 yCA+9gU3K4kOiRVlcaJiLB71yyTX6AuyV6GPsIiz+uawMWwTm7n7gourQhR5fuCV0qw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fI+WIJxv;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=perches.com;
+	spf=pass smtp.mailfrom=perches.com;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608B5606A327;
-	Sat, 14 Nov 2026 15:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fI+WIJxv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EAF1F000C4;
-	Sat, 14 Nov 2026 15:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794671518;
-	bh=Ay+4tVhIMp+XOI4JVfrSEwfzZS0QIhMQhkQl15NaVGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fI+WIJxvVDi8sUkeBnt+UyOUFmChw37gp0llcUVcGMcI/r7TEkC0ay7x59CVpk39H
-	 QGCF1SWaNjmwTvZ3QP/40ysmgTOmx9kmvRQlwp/V65Sc37MgXD7AWdyi8UBdufMjiM
-	 6JuhfhmW0iSuGGQzOl+sZ1dNnjDO02sYeDW4O48TNLIf8DFsPKgc6Lhbba0tEAj77V
-	 dtYC4XTbcXQmw0/tvA8ja3/zJOvRElvVoM2B/LGi5uwwLlAnuPAw2x0yrSEtJqhHK1
-	 d+XiNfa4rghcAWfH8QUYmj5fUiU71rHOddkOHNc81YnCHVze5L/Z9VEoCwSXfgDalp
-	 ABB7xl4PyhM9Q==
-Date: Sat, 14 Nov 2026 16:51:54 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: sashiko-reviews@lists.linux.dev, linux-hardening@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v6 09/19] string: Make strstarts() a legacy alias for
- strprefix()
-Message-ID: <aviDEUMYSy19Ce2P@devuan>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DC5606A323;
+	Sat, 14 Nov 2026 15:53:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B2DC5606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf20.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 826291C36F3;
+	Sat, 14 Nov 2026 15:53:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf20.hostedemail.com (Postfix) with ESMTPA id 1370B20026;
+	Sat, 14 Nov 2026 15:53:25 +0000 (UTC)
+Message-ID: <c113f651d1ce1b2d42ab9d0c59ae5a0cd17ddb6a.camel@perches.com>
+Subject: Re: [PATCH v6 02/19] string: Add strprefix()
+From: Joe Perches <joe@perches.com>
+To: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki"	
+ <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Andreas
+ Schwab	 <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, Bartosz
+ Golaszewski	 <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, Danilo
+ Krummrich	 <dakr@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johan Hovold
+ <johan@kernel.org>, Kees Cook <kees@kernel.org>, Laurent Pinchart	
+ <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Linus Walleij
+ <linusw@kernel.org>, Namhyung Kim	 <namhyung@kernel.org>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Rob Herring	 <robh@kernel.org>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Saravana Kannan	 <saravanak@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi	 <zanussi@kernel.org>,
+ linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Bartosz Golaszewski	
+ <bartosz.golaszewski@oss.qualcomm.com>
+Date: Sat, 14 Nov 2026 07:53:25 -0800
+In-Reply-To: <0eaa4ce73a2b164fd49e3a9f71244a2e3f45b7bb.1794667407.git.alx@kernel.org>
 References: <cover.1794667407.git.alx@kernel.org>
- <212e7fc2cb99b631c493f59b8b38e1fd3db81231.1794667407.git.alx@kernel.org>
- <sashiko-outbox-214720@kernel.org>
+	 <0eaa4ce73a2b164fd49e3a9f71244a2e3f45b7bb.1794667407.git.alx@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -59,114 +75,92 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pzvscjedtxxqgz4u"
-Content-Disposition: inline
-In-Reply-To: <sashiko-outbox-214720@kernel.org>
+X-Rspamd-Queue-Id: 1370B20026
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: xnwnob8oq6t6i5c5p5cjbo3brg66pmci
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/iviamKIERabUGi7VyUJDz6YDYNMM0ODY=
+X-HE-Tag: 1794671605-49699
+X-HE-Meta: U2FsdGVkX1/PscWlXj8hrMl1UReSYw3dM2m3OiBWsvz3QyeKXfa9mr/+pRCD6ATTC2OKs3NQpXJcuoducTEvCc2emcwDrcObIvk4Gx48OMsXSH/TsUDdl72G/M2cyJ9H+vxXxdcdovXNA8lpy8Da9SXAmEmInPyI33xN5WLNIAjVXPHEOeBc4LBGkko3rT/TL6xeGVOpBt8xGl6OtBka7S8WaLAfXd3o/wEANc6uWX4CAiEYNiPEwlXB1mq3exRHaDvn8YQvxEYyO10MWg1d1u3mVBGGOj+4QV1Yzi8HjGXpUvmlkHqytcKlrbefNtuxfD2Q7nIFgS0mvSFf/tGEicSlADm5IA2G1s8rZ0z5vjQPUKspU/bztA==
 
-
---pzvscjedtxxqgz4u
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: sashiko-reviews@lists.linux.dev, linux-hardening@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v6 09/19] string: Make strstarts() a legacy alias for
- strprefix()
-Message-ID: <aviDEUMYSy19Ce2P@devuan>
-References: <cover.1794667407.git.alx@kernel.org>
- <212e7fc2cb99b631c493f59b8b38e1fd3db81231.1794667407.git.alx@kernel.org>
- <sashiko-outbox-214720@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <sashiko-outbox-214720@kernel.org>
-
-> Date: 2026-11-14 15:33:19+0000
-> From: sashiko-bot@kernel.org
->
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue to consider:
-> - [High] string: strstarts() macro expansion shadowed by local strprefix
->   variable
-> --
+On Sat, 2026-11-14 at 16:22 +0100, Alejandro Colomar wrote:
+> As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
+> between an empty prefix matching an empty string from a non-matching
+> prefix.  This is a fundamental design flaw in this API, and not
+> something that can be fixed.
 >=20
-> commit e4b277f22320c7ff4dbc9e8cc88221ad43eb8ba6
-> Author: Alejandro Colomar <alx@kernel.org>
+> As always, this is a consequence of choosing sizes instead of pointers.
+> Sizes are often the wrong choice.  In this specific case, pointers are
+> more capable of differentiating these cases, as NULL is a special
+> sentinel value that doesn't need to overload a valid value.
 >=20
-> string: Make strstarts() a legacy alias for strprefix()
+> Let's implement strprefix(), a function that returns a pointer
+> right after the prefix if found, and a null pointer if not found.
 >=20
-> This commit replaces the inline strstarts() function with a macro alias f=
-or
-> strprefix().
+> We'll slowly migrate existing code from str_has_prefix() to strprefix().
 >=20
-> > diff --git a/include/linux/string.h b/include/linux/string.h
-> > index 013c6169def05..0a466360dbb39 100644
-> > --- a/include/linux/string.h
-> > +++ b/include/linux/string.h
-> > @@ -609,6 +609,7 @@ static inline const char *strprefix(const char *s, =
-const char *prefix)
-> >  	return strncmp(s, prefix, len) =3D=3D 0 ? s + len : NULL;
-> >  }
-> >  #define strprefix(s, pfx)  const_cast(CQChar_of(s) *, strprefix(s, pfx=
-))
-> > +#define strstarts(s, pfx)  strprefix(s, pfx)  // legacy alias
+> Move the description from str_has_prefix(), and describe
+> str_has_prefix() by comparing it to strprefix().
 >=20
-> [Severity: High]
-> Does expanding strstarts() to strprefix() break the build when a caller h=
-as
-> a local variable named strprefix?
+> Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-for-each-=
+prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
+> Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+> ---
+>  include/linux/string.h   | 29 ++++++++++++++++++++++++-----
+>  lib/tests/string_kunit.c |  9 +++++++++
+>  2 files changed, 33 insertions(+), 5 deletions(-)
 >=20
-> drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c:hp_populate_securi=
-ty_buffer() {
-> 	u16 *auth =3D authbuf;
-> 	char *strprefix =3D NULL;
-> 	int ret =3D 0;
->=20
-> 	if (strstarts(authentication, BEAM_PREFIX)) {
->     ...
-> }
->=20
-> Because the strprefix() macro expands to a call to the inline function
-> strprefix() in the caller's scope, the local pointer variable strprefix
-> shadows the function identifier and breaks compilation when
-> CONFIG_HP_BIOSCFG is enabled.  A later patch in this series, commit
-> "platform/x86: hp-bioscfg: Rename local variable", renames that variable =
-to
-> prefix and should be ordered before this commit to keep the series
-> bisectable.
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 9b3e578d9aca..14e825e902eb 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -557,16 +557,35 @@ void memcpy_and_pad(void *dest, size_t dest_len, co=
+nst void *src, size_t count,
+>  	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
+>  })
+> =20
+> +/**
+> + * strprefix - string prefix
+> + * @s: The string to be tested
+> + * @prefix: The string to see if @s starts with
+> + *
+> + * A common way to test a prefix of a string is to do:
+> + *  strncmp(s, prefix, sizeof(prefix) - 1)
+> + *
+> + * But this can lead to bugs due to typos, or if prefix is a pointer
+> + * and not a constant.  Instead use strprefix().
+> + *
+> + * Returns:
+> + * *  @s + strlen(@prefix) if @s starts with @prefix
+> + * *  NULL if @s does not start with @prefix
+> + */
+> +__attribute__((nonnull(1, 2)))
 
-This reivew is wrong.  A local variable cannot shadow a macro.  Also,
-a function-like macro is only expanded if it's followed by an opening
-parenthesis.  In the case of spmobj-attributes.c, the local variable
-doesn't have a parenthesis, and thus doesn't trigger expansion.
+__nonnull_args(1, 2)
 
->=20
-> --=20
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1794667407.=
-git.alx@kernel.org?part=3D9
+A negative of this is that it implies the return should
+always be tested even though it can be known that the
+return is effectively bool.
 
---=20
-<https://www.alejandro-colomar.es>
+Also the block
 
---pzvscjedtxxqgz4u
-Content-Type: application/pgp-signature; name="signature.asc"
+> + * A common way to test a prefix of a string is to do:
+> + *  strncmp(s, prefix, sizeof(prefix) - 1)
 
------BEGIN PGP SIGNATURE-----
+IMO isn't useful and the description doesn't say what happens
+when prefix is an empty string (which IMO should match).
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4g5oACgkQ64mZXMKQ
-wqmwHhAAiFVjyiefbzb/8bh8qNeVDW7MN5bBDviUhLr9ZdbHwxFsBd4fmeH3wVPh
-pns7YoLgPS42KCZODZy09iExymulnFs4F0axM0xn+bhjxYBBrv2LvZvIaLAPNfQ/
-wpWVn7/b7hSMnH0qwQBWcdX1zyXI6Br6oz7kPNf8U6fFi6zxrUNJPdnA86zhgoUn
-Ut8oExqMGwnPVif/FLMuSdbpOxDMv4ZLVKgnly3qSJss7uJyk9dalcjqgtqaBdEn
-Ii3HeNXZhQMU7yDbhom8bfGIrRoCdJaOA3dbUnvLU4Ouc2CSNc/bGnsih39iLES9
-sB0qjlGW/+iEbfyjTlCqMBhztkMZ9xB/p7A7wuPiPDrMLw2p2dnSawkMrTBpr63k
-k877MyHmkdLQbp4/dUhmGd7mZdj/l1TJo0kzShnsxbJJB06ALcPVEcwUHMpyRD+J
-gdAkeqyUVJmT6RSHDYqoeIAFaFF3mEVlk+5M0WSqxj9JpSvh5ev7cXhm03Sgzxzg
-J1OFd8tG+kG4gC9nN2Wpw4AxMTB8NDIew1Kl8DrAjWCixVzh7+lm/n5uaZ6eXQyD
-TV4J5zsOLX+gMjVuHXunK9GIOv3MA+jkGIpJZHhfG5Yw4SSNi0AtM2FMluwNmEyA
-25YPsspTgmfei3yh8/i8Xal/hk084tAPVY10+4CAhm+WzAPpjfI=
-=mfNa
------END PGP SIGNATURE-----
+And the name strprefix could be confused with a function
+that actually prefixes a string to another string.
 
---pzvscjedtxxqgz4u--
+maybe strprefixed or str_is_prefixed ?
+
+And these are all candidates for converted uses to
+whatever is the function name or steq:
+
+$ git grep -P '[^w]strncmp\s*\(\s*[\w\.\-\>\s]*,\s*\"\w*"\s*,\s*\d+\s*\)' -=
+- '*.[ch]' | wc -l
+946
+
+[^w] because of prom_strncmp
