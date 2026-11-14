@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.180
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794667948;
-	b=5tSp2op+QHS4nz0lEHlgysYcvuSEnJ9ZylWBWUKTZbUGzFrUqs97of0iOeAkP0kDUWTa
-	 8XnjteurdFm7xIYhZtv4ADUu5M0ZfnoKRjnqJjkCezhpU89mDEdIXrHy1pYbTQYgw/i08
-	 X17sCKxpGuODEFGSTMjTOqTKfreeV9pkxcC5e5Kw6M2ax9ExiFRNS5eUXJk2vN/S7DWWo
-	 tTIXeK4vzdkyKKwQ0Oo0i2IuW2bLkzTXxchZ4KAx3iRjGhyjy+U9mtG8/tEntsqwJlHij
-	 dAQVvSIIO1g29gd+q70FCcul8hoGXMBep1YwQlKgVnc1NZOUVSJKx0GcatS91ONo6xw==
+	t=1794667957;
+	b=WVzE0NitMd6tobsLNOVp0ZQF9lZ6TszrxuirrxUiAwawS+Kpwv7OYKFKo/LiJwGUQ7Wt
+	 fIoQ44tuu/VGXJVdBLwiVG2mgtLLzo1n3pXv+VEIeX+aK5Lvt8lQLS+aziCS5nEM96IyF
+	 n3JkMwPbYnrW+2ICItyeTx9PgqssFQJJzqdf4al9FBJPe7Sf5TMVfvGGQLtifz6G9LH/o
+	 3zSvoM8CPs4HxyWk+2qOPdxf/jmyNUkJhx37yvHwEkCoeNlFMDIMqzgfW7p/yVcg5kA4U
+	 13o2gKELSBQB1s1NSxXOMUlNNHFVhV7vYMBq2FEtPESygDSWpEJAFtg05a+MArWQGWg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794667948;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794667957;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=oTRaNJjnhz2jjoFCzuWRnC9Bci53/lYdl7KWMCnuH+8=;
-	b=JrJxHExEMF1js0e5qNJ+fu8oYDKGhD/MgKbWbaE291PHhCNxIKVzcgcZIQQ9heNyjwDH
-	 mviQkObfv69fMYf1ibtfdUH9NkS+oU5gCm+WeJwH0pko8/sRm4Fr+kLpIinEm2cB9kCkQ
-	 p5qdc3rOg605H9eMkgfrlLXaViqtpBJitApw+WAC4PHKsMie0+FwhgaNBpA5SsGWwlzQO
-	 kxezL9eS1uIIQlvz0fIUSxWE+K5lQQkm1cO/CL/vC5R7SRHRtEkccnCRARsha0KhuWD45
-	 CFPIwfLXjgGcqKev9VeMUAr25s+edKcND5qn8TvfKiNF4pUHR4xGG2fQZBU5cBm0Juw==
+	bh=A3QqAYG/uE4i1SkonwP/uDxgDXolAyrEYNmgqxrP7PU=;
+	b=cnJY5J2/U3wJgHgrI3IQQqJjCqKRNSxn4JawN/MYZmfmypGIaQ/yKZioL4aZsNZ7jzpv
+	 q4wjHZQ5Fsph941ViqXlLSrz3HabYudNejp2bXub0ZXmhbYnSxZN9zP4qfRk1pQj051kn
+	 EXdtA+syKmUJW+7+DelZyzH+wIxNr2hFSWYrAPOmR1KEdc7ldi0nFn3r26xbvNHIgx8vw
+	 BuLGAONAPOKF/kATqy8PeL0LQ3SJ8foKSRU2EWs5C9qxoJvyEbPacoSJri+T9ImAQsBVf
+	 Q7Ib2n5tuM5eYG/sbCA76+xqLjOWI9omvMt6A9vDDaIg4fRcJtTWiWp7BfJEFz/K8ig==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=OwdwJbMz;
-	arc=none smtp.remote-ip=209.85.216.47
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ydcwPZto;
+	arc=none smtp.remote-ip=209.85.214.180
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA28606A333
-	for <linux-hardening@vger.kernel.org>; Sat, 14 Nov 2026 14:52:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1FA28606A333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BF6606A890
+	for <linux-hardening@vger.kernel.org>; Sat, 14 Nov 2026 14:52:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 57BF6606A890
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=OwdwJbMz
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3b1535be329so1663274a91.3
-        for <linux-hardening@vger.kernel.org>; Sat, 14 Nov 2026 06:52:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ydcwPZto
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2ed28bac8d7so8569955ad.0
+        for <linux-hardening@vger.kernel.org>; Sat, 14 Nov 2026 06:52:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794667947; x=1795272747; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794667957; x=1795272757; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=oTRaNJjnhz2jjoFCzuWRnC9Bci53/lYdl7KWMCnuH+8=;
-        b=OwdwJbMzdHBy9oKyEWrP5XaQofmC6pfOfmQzIjATHeM5HWF1hSoSWb6meMMRlcINwG
-         fnBgcAiuyiEWplSbnlT9aVWqzktSR/zDuOUg3vqqvUvP+S+sl7GqFtygqLjIlhcYMtU9
-         Va5czVlqMEZ9FPnZxJMel3sJuFD7l3DhbC/AdGCo7zOs/DaUZ1B70ZL7d5HT9pK5gXWj
-         iIQs8lfimoZR/McV1zRpC7L53Dbeh2TO2KHPwTwGCBybHTs+xIkWv4qDZ9eQBT3gU9ZS
-         ozry+sIBPCqGP357Oz1FSwGW2bgWWnKhfTP/XsrE7/VP/TewmdiSn2quoVDG6JYX9B6n
-         lKJg==
+        bh=A3QqAYG/uE4i1SkonwP/uDxgDXolAyrEYNmgqxrP7PU=;
+        b=ydcwPZtohhbdg6yll3aXSA8PehfsJqyNMMy6Iaxzri/DJOz5kNXICNfBYDcjmz5aQy
+         qk+Zsl/cgTwaACFiZj/Ceq4m9QMM7y/gkGD5OJ9KyNxVidtBHPJx8oDN0DApr79fpg12
+         42Q4enSzZSuwRHIiGzABFK7Khq/NV/9dyMs1AxIfyWQv1w3b1gGf2JrnqLLBHqfAbWaG
+         IlcFbTuHzNUxyCr4coxiYZwcJ7RyD4iUG9BGtzzRD8q1PjnMGE7odWk3GvwPLUkS7hbF
+         sFvGmfV1MnA1FkGC4GSZscxPeF2FRhskyQp+o267R++ZRQzPd4N1Oz6Y8kDmhLWQiMzV
+         IHdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794667947; x=1795272747;
+        d=1e100.net; s=20260707; t=1794667957; x=1795272757;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=oTRaNJjnhz2jjoFCzuWRnC9Bci53/lYdl7KWMCnuH+8=;
-        b=CFVgPN7f+lRsqrsjph6ka+WrNB2NyoOGuItQ/O2j2ZbR5dbqD2fhDtzMdiV3Rp3mM+
-         d5IXnmheZ5Q4e6din0669KT8IrM6t4nSfCI29jcm5KZk4JqoLrbNPibZ9/3VhpaaTf8l
-         cVX5ZJsHF+mCDyeUEcQ05ZlvojzBI/lo4nDQLTZKY7uPnJiAdZ7Zi9ATNJyeaBC94F2x
-         Y99b5UuryClIP2SRwe9KrbqwnXlwUNjiUT6Dbz8HkQ++tgUd2iqjJc285FJk0IGxpegH
-         /k+XiCAYJHyzpD2mf0DBeMnt/MPAzSpfNLARHa/3S+9lCr7N4TPunyLlat9AWI/tO2Dx
-         BBTw==
-X-Forwarded-Encrypted: i=1; AL+hErFlfw5b/347GBmzHRar8BpFxTL5PkpTh+SUpTF18WuEBG7G4Hmh+o7Si+6+jEbYA95aH6SYRdoazgSp7l9epvg=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9EiXGeZITMSCZcV9JL3sQNnr5SxoBzpb8++3u7DppLwIFiZa0K
-	jIuRk0lQ1444lz3HceuLwD6JcuyA2GurYug3hGQCVDIj1L1o7CO8mZ8l
-X-Gm-Gg: AYBFou1QTSwfcbXGO0mpYCaOEYlVlXsiV9Q9gjvfKi2mwCNZLe0W9ZemNmu4ZHvu3X4
-	VXvEcQlRq2+Y8LmifqLKdHLI0F8mpJtQTVvRJlyhSXYmFaJdmrmB5PFKCaMWjgTp08WdMdrkVBo
-	QucbFNPsQ+ZrrPyRuOUgZKs9K7vUGn452osKUhzNcC8DidjjjYPz2+KOtlbm9TWB4mLRecfHTvT
-	P6NFXEmDYBGSAx8MjAtBzPzjnmaj4mfXuhfz8YKMshrwwWBKw42q2/Vq3CTgIDaukteEVOkovrs
-	RJQRFyG07EizPDbhPZW/oHX0jJ5q6Q2oeFCASJm0WCPKGcu1/u7k8ptnGIjkDD7Mde3N1bBhhFl
-	UCWWpzWuHsP0FmbKx44j2pVef70SQs4vi9FFRm4u0mDqkDtgcbi5TbADvemyK6jcGpQS15nWz8A
-	ZbMHQtBe8/GLetrgUtRCIpnWZO7i3Ka5zqUJzoRRIyzCiYsyatoZ7PYRyNZDvow/YUbIErxwGI/
-	UmzO+ic3wFZXHxOJq2Pn/fomDZ1ZzP26cXoML0l0C4GHN0NOzDF6agQpZMUlpMun0hjQ8T5PvwL
-	Busq1SZ90b6SFFzIubIoCXoIxsg9sZiBKWsCzLduMMBuYDXa3bZI8BmoWSTN/rx2Gd95
-X-Received: by 2002:a17:90a:c88b:b0:3ac:8741:e2e4 with SMTP id 98e67ed59e1d1-3b1b0a4e341mr5623665a91.52.1794667947352;
-        Sat, 14 Nov 2026 06:52:27 -0800 (PST)
+        bh=A3QqAYG/uE4i1SkonwP/uDxgDXolAyrEYNmgqxrP7PU=;
+        b=k+kFf28/bfh/RFEFSDjdDdRlTcsgTYUB/aVtuwGq1SuY64oBO5SQvGqk2QhR91WaXg
+         PN5xemii1In3O7kMeuyGRhWX7bpiKBCKlg/d80x4+qhsWEWC+B+fHE+eqLc5vLMpAHQY
+         1ioiCadBKgs6rROphUaXpG39jwCkIdjgh+cE3/cDU2B0UQzcRoLASfAjeb8j2BvXJR1c
+         RugahBCS38ylEqkYUlOO4DllnumSJL9FyGdoKrhlbdNQDGyLlWciPu4Ayvx3VpJMAWpE
+         i3cqbsaqaLrjznkkPysq7ce+wZPSeKFVsMpgxObynFWWJGRxZDk6O1pM+0En2NoIw4WR
+         ikZw==
+X-Forwarded-Encrypted: i=1; AL+hErHZhxU1iKqVUQongXKfxMu0UZS/B+1ZBCF6s8EZSRhHlZUJQJkudf77H1lWz0pQSfb12hXxH5N/aV/eJVKzmuM=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9/rafU2WiNc7+B5GulmNb6ef9Fl/7peVQOgrESBjlu+0KBg26C
+	v1JHCAsmjsCwPQjKdCdG30vdplsZRdDb/+8aKa3rCluNyCU+z7rOEPZx
+X-Gm-Gg: AYBFou0+Ucelz5kwHT/lLF5z+6iHWcGUPNfd10PRhxfIZnTcclFZ0GXW3PBrKS6HfFb
+	i3Yc6puGDVdibrbz2aLoA5hyv5qkIhB4sTanIQ9oGFgAfK3Vy56wTOoZUJaeACCvObY4qNQ1bWp
+	yB5MVD4yU4w883+BEe6GeGHc8NBRf+xpyH43/Hi5mfeGeX1ohMW70hD5EnwRXiP9+xKwXnGwVqA
+	QaPxVjThM0GwOix2G9Rh4iavF8bZogNHdw1drme//wKx90uolrUISRy1JN2ODGzTEx8AC2exsrl
+	arACmbapc7OdHWn8KOFTnhWA1cUSaSTjYR3uvznXSfEItAhmYruxpqKaCb4cTWVYLGpMA9Fmvd6
+	FvHNl3BU/N8ZbDFrd45KaaO02ndJw+NApmvcjROYHpV7Yd0jqi4Nk7j/9Z/nrF5hZBI8DMKvAmw
+	NkuXKS+CverOKodwVzBsogIitQYzXRyp/4k0JxlgvdBTvxma6Qzpa+tLOWU86e7Gf1MwBUa3M1S
+	rTEPI9UkjqvrKj40YPbAaiseE19Vvtv6FRVPC/tgv8I9cHSUanHfhfaXVfXEnedWGtNOkQTjdxK
+	MXE5FpqutYe04sDaUQzTUepNCxUYkN3wVV9GeIoqsgvnO1jnbIBzxt2DlFrfxMT56bQd
+X-Received: by 2002:a17:903:11c6:b0:2e6:f3ed:a551 with SMTP id d9443c01a7336-2ee0dd2a28cmr41758785ad.8.1794667956678;
+        Sat, 14 Nov 2026 06:52:36 -0800 (PST)
 Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1b3f09b92sm4082810a91.4.2026.11.14.06.52.20
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ee0f862426sm22028765ad.46.2026.11.14.06.52.31
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sat, 14 Nov 2026 06:52:27 -0800 (PST)
+        Sat, 14 Nov 2026 06:52:36 -0800 (PST)
 From: Lian Wang <lianux.mm@gmail.com>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -95,9 +95,9 @@ Cc: linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Thomas Gleixner <tglx@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [RFC PATCH v4 15/18] mm/swap: reuse per-CPU queue readers across priority changes
-Date: Sat, 14 Nov 2026 22:52:15 +0800
-Message-ID: <c7ee52cc6aa423b40c67d4c24dcb9d30b7e07824.1794666741.git.lianux.mm@gmail.com>
+Subject: [RFC PATCH v4 16/18] mm/swap: advance the global queue cursor directly between priority rings
+Date: Sat, 14 Nov 2026 22:52:27 +0800
+Message-ID: <e72074ac198130494037e80655685cf25ff4bb5b.1794666741.git.lianux.mm@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1794666741.git.lianux.mm@gmail.com>
 References: <cover.1794666741.git.lianux.mm@gmail.com>
@@ -112,109 +112,142 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Inserting a new priority allocates a replacement per-CPU reader array
-even when earlier ring removal left enough storage. An unnecessary
-allocation can add swapon work or fail despite sufficient capacity.
+The allocation walk previously passed a total retry index to the selector.
+Each retry translated it back to a priority ring by scanning from the
+beginning of swap_queue. Keep the ring index and the number of attempted
+peers in the task-local cursor instead.
 
-Track the installed reader capacity and retain its high-water mark
-until the queue becomes empty. Reuse existing storage when the new ring
-fits, initializing every valid ring index for the new topology. Prepare
-larger storage outside the writer only when growth is required and
-recheck capacity under the writer before publishing.
+Snapshot the starting device only on the first visit to each ring and
+advance each peer exactly once, including masked entries. Preserve the
+large-folio same-ring boundary and the stale reader-offset correction.
+The selector's complete walk is linear in the devices and priority groups;
+device cluster scanning and availability updates have their own costs.
 
-Preserve the existing prepare/install ownership and failure rollback
-protocol. Device removal continues to avoid per-CPU shrinking allocation
-under the writer.
+Keep the topology read lock and CPU migration protection across the walk.
+The global selector uses only existing priorities and adds no per-memcg
+device-selection state or ABI. Existing swap charging and limits remain
+in folio_alloc_swap(), whose failure path classifies allocation errors.
+
+The walk no longer returns an ignored internal error to that caller.
 
 Signed-off-by: Lian Wang <lianux.mm@gmail.com>
 ---
- mm/swapfile.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ mm/swapfile.c | 51 ++++++++++++++++++++++++---------------------------
+ 1 file changed, 24 insertions(+), 27 deletions(-)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index bd098114ee4b..5e5c1aef010f 100644
+index 5e5c1aef010f..616339c5ae5b 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -202,6 +202,8 @@ struct swap_queue_cursor {
+@@ -195,10 +195,10 @@ struct swap_queue_reader {
+ };
+ 
+ struct swap_queue_cursor {
+-	bool valid;
+ 	bool ring_only;
+ 	unsigned int ring_idx;
+ 	unsigned int offset;
++	unsigned int nr_iter;
  };
  
  static __percpu struct swap_queue_reader *swap_queue_readers;
-+/* Keep the high-water capacity until the last priority ring is removed. */
-+static unsigned int swap_queue_readers_capacity;
+@@ -308,28 +308,32 @@ static void swap_queue_install_readers(struct swap_queue_reader __percpu *reader
+ 	swap_queue_reset_readers();
+ }
  
- static inline bool swap_device_masked(struct swap_info_struct *si)
+-static struct swap_info_struct *swap_queue_get_device(long nr_alloc, int nr_iter,
+-						      struct swap_queue_cursor *cursor)
++static struct swap_info_struct *
++swap_queue_get_device(long nr_alloc, struct swap_queue_cursor *cursor)
  {
-@@ -241,7 +243,7 @@ static bool swap_queue_needs_readers(int prio)
- 			return false;
- 	}
+ 	bool rotate = false;
+ 	struct swap_info_struct *si;
+ 	struct swap_ring_iterator *ri;
+ 	struct swap_prio_ring *ring;
+-	unsigned int dev_idx, queue_idx;
++	unsigned int dev_idx, queue_idx, nr_iter;
  
--	return true;
-+	return swap_queue_len >= swap_queue_readers_capacity;
+-	if (!swap_queue_len)
++	queue_idx = cursor->ring_idx;
++	if (queue_idx >= swap_queue_len)
+ 		return ERR_PTR(-ENOENT);
+ 
+-	queue_idx = 0;
+-	while (nr_iter >= swap_queue[queue_idx]->size) {
+-		nr_iter -= swap_queue[queue_idx]->size;
+-		if (++queue_idx >= swap_queue_len)
+-			return ERR_PTR(cursor->ring_only ? -E2BIG : -ENOENT);
+-	}
+-	if (cursor->ring_only && cursor->ring_idx != queue_idx)
+-		return ERR_PTR(-E2BIG);
+-
+ 	ring = swap_queue[queue_idx];
++	if (cursor->nr_iter >= ring->size) {
++		if (cursor->ring_only)
++			return ERR_PTR(-E2BIG);
++		queue_idx = ++cursor->ring_idx;
++		if (queue_idx >= swap_queue_len)
++			return ERR_PTR(-ENOENT);
++		cursor->nr_iter = 0;
++		ring = swap_queue[queue_idx];
++	}
++
++	/* Consume masked peers too, so every walk remains bounded. */
++	nr_iter = cursor->nr_iter++;
+ 	local_lock(&swap_queue_readers->lock);
+ 	ri = this_cpu_ptr(&swap_queue_readers->ri[queue_idx]);
+ 	/*
+@@ -337,9 +341,7 @@ static struct swap_info_struct *swap_queue_get_device(long nr_alloc, int nr_iter
+ 	 * iterator can move between retries, but the cursor must visit every
+ 	 * device in the ring exactly once before falling through.
+ 	 */
+-	if (!cursor->valid || cursor->ring_idx != queue_idx) {
+-		cursor->valid = true;
+-		cursor->ring_idx = queue_idx;
++	if (!nr_iter) {
+ 		if (ri->rr_counter < nr_alloc)
+ 			rotate = true;
+ 		else if (ri->offset >= ring->size)
+@@ -1847,29 +1849,25 @@ static bool get_swap_device_info(struct swap_info_struct *si)
+ 	return true;
+ }
+ 
+-static int swap_alloc_entry(struct folio *folio)
++static void swap_alloc_entry(struct folio *folio)
+ {
+ 	struct swap_queue_cursor cursor = {};
+ 	long nr_pages = folio_nr_pages(folio);
+ 	struct swap_info_struct *si;
+-	int nr_iter, ret;
+ 
+ 	percpu_down_read(&swapon_rwsem);
+ 	migrate_disable();
+-	for (nr_iter = 0;; nr_iter++) {
+-		si = swap_queue_get_device(nr_pages, nr_iter, &cursor);
++	for (;;) {
++		si = swap_queue_get_device(nr_pages, &cursor);
+ 		if (IS_ERR(si)) {
+-			ret = PTR_ERR(si);
+-			if (ret == -EBUSY)
++			if (PTR_ERR(si) == -EBUSY)
+ 				continue;
+ 			break;
+ 		}
+ 		cluster_alloc_swap_entry(si, folio);
+ 
+-		if (folio_test_swapcache(folio)) {
+-			ret = 0;
++		if (folio_test_swapcache(folio))
+ 			break;
+-		}
+ 
+ 		/*
+ 		 * For large allocations, try every device at the same priority,
+@@ -1884,7 +1882,6 @@ static int swap_alloc_entry(struct folio *folio)
+ 
+ 	migrate_enable();
+ 	percpu_up_read(&swapon_rwsem);
+-	return ret;
  }
  
  /*
-@@ -289,13 +291,15 @@ static void swap_queue_reset_readers(void)
- 	}
- }
- 
--static void swap_queue_install_readers(struct swap_queue_reader __percpu *readers)
-+static void swap_queue_install_readers(struct swap_queue_reader __percpu *readers,
-+				       unsigned int capacity)
- {
- 	int cpu;
- 
- 	lockdep_assert_held_write(&swapon_rwsem);
- 	free_percpu(swap_queue_readers);
- 	swap_queue_readers = readers;
-+	swap_queue_readers_capacity = capacity;
- 	if (!readers)
- 		return;
- 
-@@ -432,7 +436,8 @@ static int swap_queue_add(struct swap_info_struct *si,
- 	}
- 
- 	/* No ring at this priority: insert a new one at pos. */
--	if (!*readers || nr_readers <= swap_queue_len)
-+	if (swap_queue_len >= swap_queue_readers_capacity &&
-+	    (!*readers || nr_readers <= swap_queue_len))
- 		goto failed;
- 	new_queue = kmalloc_array(swap_queue_len + 1, sizeof(*swap_queue), gfp);
- 	if (!new_queue)
-@@ -460,8 +465,12 @@ static int swap_queue_add(struct swap_info_struct *si,
- 	memalloc_noreclaim_restore(noreclaim_flag);
- 	kfree(old_queue);
- 
--	swap_queue_install_readers(*readers);
--	*readers = NULL;
-+	if (swap_queue_len > swap_queue_readers_capacity) {
-+		swap_queue_install_readers(*readers, nr_readers);
-+		*readers = NULL;
-+	} else {
-+		swap_queue_reset_readers();
-+	}
- 	return 0;
- 
- add_to_ring:
-@@ -504,10 +513,9 @@ static void swap_queue_del(struct swap_info_struct *si)
- 	}
- 
- 	/*
--	 * Shrinking the small topology arrays is optional. Keep reader storage
--	 * until a new priority is inserted or the queue is empty: per-CPU
--	 * allocation must not run under this writer's noreclaim scope, which
--	 * can grant backing pages reserve access.
-+	 * Shrinking the small topology arrays is optional. Keep reader capacity
-+	 * until the queue is empty: per-CPU allocation must not run under this
-+	 * writer's noreclaim scope, which can grant backing pages reserve access.
- 	 */
- 	gfp = GFP_NOIO | __GFP_HIGH | __GFP_NOMEMALLOC;
- 	noreclaim_flag = memalloc_noreclaim_save();
-@@ -550,7 +558,7 @@ static void swap_queue_del(struct swap_info_struct *si)
- 			swap_queue = NULL;
- 		}
- 		if (!swap_queue_len)
--			swap_queue_install_readers(NULL);
-+			swap_queue_install_readers(NULL, 0);
- 	}
- 	spin_unlock(&swap_queue_update_lock);
- 
