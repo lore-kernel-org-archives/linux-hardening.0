@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794768383;
-	b=OU7BVR3TdA8NOk39tYMwqjFQsy48hO57WLHFfpOxKYv9n/FcGqs0N9hNwBdWo9sxz1WZ
-	 4fFgZPYzNXQCKDQVvo4C+mIeL5RClVFojCq/r0MRdwj2lYtvaeKgzVOInyVCPvWoyOWr2
-	 Y5J0QZ5DsZdtzBitnk3X6vZ7CZcuYoJi19y+FPKzARvwMyjQxj93LTbI9FyiOUdQlpCY8
-	 Xg3Hwnv/tROXp6g3puS/ZlaHTZspaKKmNTZ2uhAbKJGH90JvKg8wQypWYQqop8Y+hcZT8
-	 QWT1ptvmdH6hqUerqltnjyXUdF6aprll3vRSWI+bITlJy4rblK1I8qEU3QaAdE0Urvw==
+	t=1794768387;
+	b=z6wK0dHcHNz6rUwFs9Noil0TAaa7C43GXh6HGO6YictDQmd0ks3yh3VpA2H7q9W9ZytY
+	 4BZbKHlcPMHWP/2ywg3Cmsef9cj4uuwp3vu/QFD/reYY5rEMToavkZC1WkbdYo6Q/2dmS
+	 jZFqON4R241HyL18/O6VXl5yXon7j8X+jcliTQDDhgNC2v9qu/qSKxJ3cJJjk8xduyrpD
+	 vz+83HzFpMHNfn4bdQEvOXBdyj7x1CDlWoRElwWWsXWp5P1VZ5cUHtlVhG72tJms9iuGW
+	 pCFkegK7UOJ81FlM9jBSNgAQslqBmNu2JONUcfCT0E8wHjtEd+bRzQtp4cw+wEO3h/w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794768383;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794768387;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=KoJSFZsHBs3kIAXDN97K9Q73gk+TWhURLNxXf/w+TTI=;
-	b=L2n3MSP76OuLzZvAXPgtlZrThHCbHefbOjz9/idkKR5jPvi40k3JAuNOjIQvYaSJ9+Lo
-	 cVYoEvzyItuBcHQ8HRv9zj8zn55D2oN0URsZIrM7OzroLyilPofB3pf+6GWz6QzPv+vBK
-	 //euaEnzFP6WtFa63PF2doBt/XM7g8FVYuVNH3IJGrDUOztZMNoSztl/XhTE1BpphPgpr
-	 gsnzHaQ8CoO91RwMAqhe3e8mhKfOF3DOo5IUaMe350h+d18NArKNS7f5Tdh86qTlKtxDH
-	 2FSIimBx7CiB2nS7cx3ft2MUdVgKTfGqbhS8fgqRyYcikJttw8/dYjVYMUDUHqZ+lWw==
+	bh=fScWBKoUqg8cT4axIzp0iWAhjNNBSxhgCq7HWGCsLrY=;
+	b=FMCOqW6X1ertSkVtn5Fc9/dK+z7L9Wl7KTbD0W5rIh4mCJ1xGNw+IrWMU6UvqGuKNqcs
+	 rOOe3bo3Nw8Oekg8ztO15itfDaOeK7B9f66BHW5CK0cHXDABS79t3CPf4+VX8bBqymtid
+	 +yX5XyAJLwlFJUqojsY/tYbieX47Z9Njp9GBhZvxTOEX9lG+SbWalDL22YU/iJ5ICQXQH
+	 R6s9kI17/9ROfGMhGBOIq+KyfQ78GyOWDvNlHgd4AsUIV16wwvY5KIDWHmOfySUEmWy+9
+	 LGnueGJqU3wBrzgE2DdOlGS+mT6qRFtdgSc2HHEdu5hHbo7N1IAGQtkAvubGwPbDVTQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iUICaTI4;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nEXjManc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B4F606A31E
-	for <linux-hardening@vger.kernel.org>; Sun, 15 Nov 2026 18:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5834B606A31A
+	for <linux-hardening@vger.kernel.org>; Sun, 15 Nov 2026 18:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iUICaTI4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675CC1F000C4;
-	Sun, 15 Nov 2026 18:46:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nEXjManc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B625F1F000C4;
+	Sun, 15 Nov 2026 18:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794768383;
-	bh=KoJSFZsHBs3kIAXDN97K9Q73gk+TWhURLNxXf/w+TTI=;
+	s=k20260515; t=1794768386;
+	bh=fScWBKoUqg8cT4axIzp0iWAhjNNBSxhgCq7HWGCsLrY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iUICaTI4OuZk41yaKejof5K7HebSGpoMenmuNxzgNye88o2TaH3FhPlgk1xWHKThF
-	 tG+0sU++R1WocvxXnFkcZEnIghNmB+3v82gwGUaXezDsftQPoyZGkhJXTW4APVCjr+
-	 d23mfFfvMH5JRp4xV3UEQkGzFYDTjclfzsZytir06rJstcMMxyV9gOQG7VC/f5rCga
-	 4KO3YuRgRQWEEBe+jTqpSSDXELMsA+b8FyZLMQEaNCBY2Yq/YyLHRtm7rb39vVxLCD
-	 1r8ELV20Gyuj00qq1TMD96yBjBfZ/NkPfi+4qgb7NZl2ijOP+Ve8rlmStFePPuTYEp
-	 lEBkMaJVHD7yQ==
-Date: Sun, 15 Nov 2026 19:46:20 +0100
+	b=nEXjManczzpx1ToZlAknTs8k2hNId0+S+kmZCJnX60yUgG6kPsx53DGhpXU/+8rTa
+	 anhk8hK5EAgwPpRcNGtxQY+oLCito4THxSZimqEy+WCCoKDZRCs0vlOWCruCbon78n
+	 6q/9P/lCpPmynUthScrHJgU/aOlJwgD7rV3EZt1tCfY5+fDn8jCKjqDmpZzrpmEURj
+	 0lLvsaT1/uZjODr+yWf2hY8Pz7zvvAqIl2BCFPcdKe4jjn2+MSnZeqlEI1A9NMTmLt
+	 F4hVAa/DQ2gfOWMtJRFPzTVCdcftbQKQLVeEQvXJ/8oDpA3AcULpLW6Jqaw14CEaLm
+	 z0rxs6pRXSeww==
+Date: Sun, 15 Nov 2026 19:46:24 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, alx+linux-hardening@kernel.org, 
 	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 3/4] treewide: Use streq(3) instead of confusing uses of
+Subject: [PATCH v1 4/4] treewide: Use streq(3) instead of unnecessary uses of
  strncmp(3)
-Message-ID: <b93e0d00573973327bf90ad1a10806743d692d19.1794767906.git.alx@kernel.org>
+Message-ID: <7994b5827030d909928a7b7dab35d8b049974fa4.1794767906.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1794767906.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,12 +59,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wt3ehubhuzaffvrh"
+	protocol="application/pgp-signature"; boundary="cat6wfyj3lkwkym3"
 Content-Disposition: inline
 In-Reply-To: <cover.1794767906.git.alx@kernel.org>
 
 
---wt3ehubhuzaffvrh
+--cat6wfyj3lkwkym3
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -72,226 +72,310 @@ From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, alx+linux-hardening@kernel.org, 
 	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 3/4] treewide: Use streq(3) instead of confusing uses of
+Subject: [PATCH v1 4/4] treewide: Use streq(3) instead of unnecessary uses of
  strncmp(3)
-Message-ID: <b93e0d00573973327bf90ad1a10806743d692d19.1794767906.git.alx@kernel.org>
+Message-ID: <7994b5827030d909928a7b7dab35d8b049974fa4.1794767906.git.alx@kernel.org>
 References: <cover.1794767906.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1794767906.git.alx@kernel.org>
 
-Uses of strncmp(a, b, N) where N=3D=3Dstrlen(b)+1 are really the same as
-strcmp(a,b).  It's hard to distinguish whether the strcmp(3) behavior
-was intentional, or it strstarts() behavior was intended.
+Uses of strncmp(foo,"bar",sizeof("bar")) are really the same as
+strcmp(foo,"bar").  There's no good reason to use strncmp(3).
 
 This code seems to have been confused, and probably thought using
 strncmp(3) was somehow safer than strcmp(3), but it is not.
 
 Let's rewrite with streq(3), which makes it more readable.
 This patch is not changing the behavior of the existing code.
-If any of these was actually a bug and intended to write strstarts(),
-that should be fixed in a separate patch.
 
 These cases were found with the following script:
 
-$ seq 20 \
-| while read n; do
-	git grep -E 'strncmp\([^,]*, "[^"]{'"$n"'}", '"$(expr 1 + $n)"'\)';
-done;
+	$ git grep -E 'strncmp\([^,]*, [^,]*, sizeof.*[A-Z"]' \
+	| grep -v -- '- 1';
 
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- arch/arm/mach-omap2/sr_device.c                    | 8 ++++----
- arch/mips/bcm47xx/time.c                           | 2 +-
- arch/powerpc/kernel/security.c                     | 2 +-
- drivers/net/ethernet/intel/i40e/i40e_ddp.c         | 2 +-
- fs/ocfs2/filecheck.c                               | 6 +++---
- net/netfilter/xt_set.c                             | 2 +-
- tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 8 ++++----
- tools/testing/selftests/kvm/steal_time.c           | 2 +-
- tools/testing/selftests/kvm/x86/xen_shinfo_test.c  | 4 ++--
- 9 files changed, 18 insertions(+), 18 deletions(-)
+ arch/m68k/sun3/prom/console.c                  | 6 +++---
+ drivers/edac/amd64_edac.c                      | 2 +-
+ drivers/edac/i10nm_base.c                      | 2 +-
+ drivers/edac/igen6_edac.c                      | 2 +-
+ drivers/edac/imh_base.c                        | 2 +-
+ drivers/edac/pnd2_edac.c                       | 2 +-
+ drivers/edac/sb_edac.c                         | 2 +-
+ drivers/edac/skx_base.c                        | 2 +-
+ drivers/gpu/drm/tilcdc/tilcdc_panel_legacy.c   | 2 +-
+ include/linux/remoteproc/pruss.h               | 2 +-
+ sound/hda/codecs/side-codecs/tas2781_hda_i2c.c | 2 +-
+ tools/bpf/bpftool/btf.c                        | 4 ++--
+ tools/perf/util/callchain.c                    | 8 ++++----
+ tools/perf/util/evsel.c                        | 3 +--
+ 14 files changed, 20 insertions(+), 21 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/sr_device.c b/arch/arm/mach-omap2/sr_devic=
-e.c
-index 758d90e0340b..dfc27dc25293 100644
---- a/arch/arm/mach-omap2/sr_device.c
-+++ b/arch/arm/mach-omap2/sr_device.c
-@@ -92,12 +92,12 @@ static int __init sr_init_by_name(const char *name, con=
-st char *voltdm)
- 	struct omap_volt_data *volt_data;
- 	static int i;
-=20
--	if (!strncmp(name, "smartreflex_mpu_iva", 20) ||
--	    !strncmp(name, "smartreflex_mpu", 16))
-+	if (streq(name, "smartreflex_mpu_iva") ||
-+	    streq(name, "smartreflex_mpu"))
- 		sr_data =3D &omap_sr_pdata[OMAP_SR_MPU];
--	else if (!strncmp(name, "smartreflex_core", 17))
-+	else if (streq(name, "smartreflex_core"))
- 		sr_data =3D &omap_sr_pdata[OMAP_SR_CORE];
--	else if (!strncmp(name, "smartreflex_iva", 16))
-+	else if (streq(name, "smartreflex_iva"))
- 		sr_data =3D &omap_sr_pdata[OMAP_SR_IVA];
-=20
- 	if (!sr_data) {
-diff --git a/arch/mips/bcm47xx/time.c b/arch/mips/bcm47xx/time.c
-index 74224cf2e84d..6ab6f55ce47e 100644
---- a/arch/mips/bcm47xx/time.c
-+++ b/arch/mips/bcm47xx/time.c
-@@ -60,7 +60,7 @@ void __init plat_time_init(void)
-=20
- 	if (chip_id =3D=3D 0x5354) {
- 		len =3D bcm47xx_nvram_getenv("clkfreq", buf, sizeof(buf));
--		if (len >=3D 0 && !strncmp(buf, "200", 4))
-+		if (len >=3D 0 && streq(buf, "200"))
- 			hz =3D 100000000;
- 	}
-=20
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index 600596cb4ffb..8c1484ae6c21 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -273,7 +273,7 @@ enum stf_barrier_type stf_barrier_type_get(void)
- /* This is the generic flag used by other architectures */
- static int __init handle_ssbd(char *p)
- {
--	if (!p || strncmp(p, "auto", 5) =3D=3D 0 || strncmp(p, "on", 2) =3D=3D 0 =
-) {
-+	if (!p || streq(p, "auto") || strncmp(p, "on", 2) =3D=3D 0 ) {
- 		/* Until firmware tells us, we have the barrier with auto */
- 		return 0;
- 	} else if (strncmp(p, "off", 3) =3D=3D 0) {
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ddp.c b/drivers/net/ether=
-net/intel/i40e/i40e_ddp.c
-index daa9f2c42f70..c84eddf98b06 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ddp.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ddp.c
-@@ -452,7 +452,7 @@ int i40e_ddp_flash(struct net_device *netdev, struct et=
-htool_flash *flash)
- 	/* If the user supplied "-" instead of file name rollback previously
- 	 * stored profile.
- 	 */
--	if (strncmp(flash->data, "-", 2) !=3D 0) {
-+	if (!streq(flash->data, "-")) {
- 		struct i40e_ddp_old_profile_list *list_entry;
- 		char profile_name[sizeof(I40E_DDP_PROFILE_PATH)
- 				  + I40E_DDP_PROFILE_NAME_MAX];
-diff --git a/fs/ocfs2/filecheck.c b/fs/ocfs2/filecheck.c
-index 75334e4bd082..3fcd538ff2c5 100644
---- a/fs/ocfs2/filecheck.c
-+++ b/fs/ocfs2/filecheck.c
-@@ -258,11 +258,11 @@ ocfs2_filecheck_args_get_long(const char *buf, size_t=
- count,
- static int
- ocfs2_filecheck_type_parse(const char *name, unsigned int *type)
- {
--	if (!strncmp(name, "fix", 4))
-+	if (streq(name, "fix"))
- 		*type =3D OCFS2_FILECHECK_TYPE_FIX;
--	else if (!strncmp(name, "check", 6))
-+	else if (streq(name, "check"))
- 		*type =3D OCFS2_FILECHECK_TYPE_CHK;
--	else if (!strncmp(name, "set", 4))
-+	else if (streq(name, "set"))
- 		*type =3D OCFS2_FILECHECK_TYPE_SET;
- 	else
- 		return 1;
-diff --git a/net/netfilter/xt_set.c b/net/netfilter/xt_set.c
-index 4ae04bba9358..6f4e306196fe 100644
---- a/net/netfilter/xt_set.c
-+++ b/net/netfilter/xt_set.c
-@@ -436,7 +436,7 @@ set_target_v3_check_hooks(const struct xt_tgchk_param *=
-par)
- 	const struct xt_set_info_target_v3 *info =3D par->targinfo;
-=20
- 	if (info->map_set.index !=3D IPSET_INVALID_ID) {
--		if (strncmp(par->table, "mangle", 7)) {
-+		if (!streq(par->table, "mangle")) {
- 			pr_info_ratelimited("--map-set only usable from mangle table\n");
- 			return -EINVAL;
+diff --git a/arch/m68k/sun3/prom/console.c b/arch/m68k/sun3/prom/console.c
+index eb4f6c903fb8..f54a52b1e8d2 100644
+--- a/arch/m68k/sun3/prom/console.c
++++ b/arch/m68k/sun3/prom/console.c
+@@ -92,7 +92,7 @@ prom_query_input_device()
+ 		if(prom_node_has_property(st_p, "keyboard"))
+ 			return PROMDEV_IKBD;
+ 		prom_getproperty(st_p, "device_type", propb, sizeof(propb));
+-		if(strncmp(propb, "serial", sizeof("serial")))
++		if(!streq(propb, "serial"))
+ 			return PROMDEV_I_UNK;
+ 		prom_getproperty(prom_root_node, "stdin-path", propb, sizeof(propb));
+ 		p =3D propb;
+@@ -139,12 +139,12 @@ prom_query_output_device()
+ 		local_irq_restore(flags);
+ 		propl =3D prom_getproperty(st_p, "device_type", propb, sizeof(propb));
+ 		if (propl >=3D 0 && propl =3D=3D sizeof("display") &&
+-			strncmp("display", propb, sizeof("display")) =3D=3D 0)
++			streq("display", propb))
+ 		{
+ 			return PROMDEV_OSCREEN;
  		}
-diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/tes=
-ting/selftests/dmabuf-heaps/dmabuf-heap.c
-index 1d49df671919..af4692942810 100644
---- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-+++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-@@ -507,9 +507,9 @@ static int numer_of_heaps(void)
- 	int heaps =3D 0;
+ 		if(prom_vers =3D=3D PROM_V3) {
+-			if(strncmp("serial", propb, sizeof("serial")))
++			if(!streq("serial", propb))
+ 				return PROMDEV_O_UNK;
+ 			prom_getproperty(prom_root_node, "stdout-path", propb, sizeof(propb));
+ 			p =3D propb;
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 0c0d11c72925..19bba83a900f 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -4137,7 +4137,7 @@ static int __init amd64_edac_init(void)
+ 		return -EBUSY;
 =20
- 	while ((dir =3D readdir(d))) {
--		if (!strncmp(dir->d_name, ".", 2))
-+		if (streq(dir->d_name, "."))
+ 	owner =3D edac_get_owner();
+-	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
++	if (owner && !streq(owner, EDAC_MOD_STR))
+ 		return -EBUSY;
+=20
+ 	if (!x86_match_cpu(amd64_cpuids))
+diff --git a/drivers/edac/i10nm_base.c b/drivers/edac/i10nm_base.c
+index 87e541c3bf4b..338101240c8d 100644
+--- a/drivers/edac/i10nm_base.c
++++ b/drivers/edac/i10nm_base.c
+@@ -938,7 +938,7 @@ static int __init i10nm_init(void)
+ 		return -EBUSY;
+=20
+ 	owner =3D edac_get_owner();
+-	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
++	if (owner && !streq(owner, EDAC_MOD_STR))
+ 		return -EBUSY;
+=20
+ 	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+diff --git a/drivers/edac/igen6_edac.c b/drivers/edac/igen6_edac.c
+index 776c5db2f598..4225ad0ae13f 100644
+--- a/drivers/edac/igen6_edac.c
++++ b/drivers/edac/igen6_edac.c
+@@ -1990,7 +1990,7 @@ static int __init igen6_init(void)
+ 		return -EBUSY;
+=20
+ 	owner =3D edac_get_owner();
+-	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
++	if (owner && !streq(owner, EDAC_MOD_STR))
+ 		return -EBUSY;
+=20
+ 	rc =3D pci_register_driver(&igen6_driver);
+diff --git a/drivers/edac/imh_base.c b/drivers/edac/imh_base.c
+index 6ca0df031bf5..5fbbd5dc69f3 100644
+--- a/drivers/edac/imh_base.c
++++ b/drivers/edac/imh_base.c
+@@ -543,7 +543,7 @@ static int __init imh_init(void)
+ 		return -EBUSY;
+=20
+ 	owner =3D edac_get_owner();
+-	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
++	if (owner && !streq(owner, EDAC_MOD_STR))
+ 		return -EBUSY;
+=20
+ 	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
+index ea208c637113..5f2bbf2a89e4 100644
+--- a/drivers/edac/pnd2_edac.c
++++ b/drivers/edac/pnd2_edac.c
+@@ -1528,7 +1528,7 @@ static int __init pnd2_init(void)
+ 		return -EBUSY;
+=20
+ 	owner =3D edac_get_owner();
+-	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
++	if (owner && !streq(owner, EDAC_MOD_STR))
+ 		return -EBUSY;
+=20
+ 	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
+index 6e248855a549..38948fd88c16 100644
+--- a/drivers/edac/sb_edac.c
++++ b/drivers/edac/sb_edac.c
+@@ -3629,7 +3629,7 @@ static int __init sbridge_init(void)
+ 		return -EBUSY;
+=20
+ 	owner =3D edac_get_owner();
+-	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
++	if (owner && !streq(owner, EDAC_MOD_STR))
+ 		return -EBUSY;
+=20
+ 	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+diff --git a/drivers/edac/skx_base.c b/drivers/edac/skx_base.c
+index ae2fda006632..2fcb766527e0 100644
+--- a/drivers/edac/skx_base.c
++++ b/drivers/edac/skx_base.c
+@@ -612,7 +612,7 @@ static int __init skx_init(void)
+ 		return -EBUSY;
+=20
+ 	owner =3D edac_get_owner();
+-	if (owner && strncmp(owner, EDAC_MOD_STR, sizeof(EDAC_MOD_STR)))
++	if (owner && !streq(owner, EDAC_MOD_STR))
+ 		return -EBUSY;
+=20
+ 	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel_legacy.c b/drivers/gpu/drm=
+/tilcdc/tilcdc_panel_legacy.c
+index 7583b6ebba2a..9201080106ba 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_panel_legacy.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_panel_legacy.c
+@@ -74,7 +74,7 @@ static int __init tilcdc_panel_copy_props(struct device_n=
+ode *old_panel,
+=20
+ 	/* Copy all panel properties to the new panel node */
+ 	for_each_property_of_node(old_panel, prop) {
+-		if (!strncmp(prop->name, "compatible", sizeof("compatible")))
++		if (streq(prop->name, "compatible"))
  			continue;
--		if (!strncmp(dir->d_name, "..", 3))
-+		if (streq(dir->d_name, ".."))
+=20
+ 		ret =3D tilcdc_panel_update_prop(&ocs, new_panel, prop->name,
+diff --git a/include/linux/remoteproc/pruss.h b/include/linux/remoteproc/pr=
+uss.h
+index 039b50d58df2..0ff71e8ca016 100644
+--- a/include/linux/remoteproc/pruss.h
++++ b/include/linux/remoteproc/pruss.h
+@@ -74,7 +74,7 @@ static inline bool is_pru_rproc(struct device *dev)
+ {
+ 	const char *drv_name =3D dev_driver_string(dev);
+=20
+-	if (strncmp(drv_name, PRU_RPROC_DRVNAME, sizeof(PRU_RPROC_DRVNAME)))
++	if (!streq(drv_name, PRU_RPROC_DRVNAME))
+ 		return false;
+=20
+ 	return true;
+diff --git a/sound/hda/codecs/side-codecs/tas2781_hda_i2c.c b/sound/hda/cod=
+ecs/side-codecs/tas2781_hda_i2c.c
+index 0c8faa583baa..28e33c9e960d 100644
+--- a/sound/hda/codecs/side-codecs/tas2781_hda_i2c.c
++++ b/sound/hda/codecs/side-codecs/tas2781_hda_i2c.c
+@@ -109,7 +109,7 @@ static int tas2781_read_acpi(struct tasdevice_priv *p, =
+const char *hid)
+ 	sub =3D acpi_get_subsystem_id(ACPI_HANDLE(physdev));
+ 	if (IS_ERR(sub)) {
+ 		/* No subsys id in older tas2563 projects. */
+-		if (!strncmp(hid, "INT8866", sizeof("INT8866"))) {
++		if (streq(hid, "INT8866")) {
+ 			p->speaker_id =3D -1;
+ 			goto end_2563;
+ 		}
+diff --git a/tools/bpf/bpftool/btf.c b/tools/bpf/bpftool/btf.c
+index abd661db91e6..0a38e7f5cebb 100644
+--- a/tools/bpf/bpftool/btf.c
++++ b/tools/bpf/bpftool/btf.c
+@@ -860,13 +860,13 @@ static int dump_btf_kfuncs(struct btf_dump *d, const =
+struct btf *btf)
  			continue;
- 		heaps++;
- 	}
-@@ -533,9 +533,9 @@ int main(void)
- 	ksft_set_plan(12 * numer_of_heaps());
 =20
- 	while ((dir =3D readdir(d))) {
--		if (!strncmp(dir->d_name, ".", 2))
-+		if (streq(dir->d_name, "."))
- 			continue;
--		if (!strncmp(dir->d_name, "..", 3))
-+		if (streq(dir->d_name, ".."))
- 			continue;
+ 		name =3D btf__name_by_offset(btf, t->name_off);
+-		if (strncmp(name, KFUNC_DECL_TAG, sizeof(KFUNC_DECL_TAG)) =3D=3D 0) {
++		if (streq(name, KFUNC_DECL_TAG)) {
+ 			err =3D ptr_array_push(ft, &kfuncs);
+ 			if (err)
+ 				goto out;
+ 		}
 =20
- 		ksft_print_msg("Testing heap: %s\n", dir->d_name);
-diff --git a/tools/testing/selftests/kvm/steal_time.c b/tools/testing/selft=
-ests/kvm/steal_time.c
-index 82b94a82dd03..64327e8fbd78 100644
---- a/tools/testing/selftests/kvm/steal_time.c
-+++ b/tools/testing/selftests/kvm/steal_time.c
-@@ -526,7 +526,7 @@ int main(int ac, char **av)
- 	bool verbose;
- 	int i, cpu;
+-		if (strncmp(name, FASTCALL_DECL_TAG, sizeof(FASTCALL_DECL_TAG)) =3D=3D 0=
+) {
++		if (streq(name, FASTCALL_DECL_TAG)) {
+ 			err =3D ptr_array_push(ft, &fastcalls);
+ 			if (err)
+ 				goto out;
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index 31c675cbab63..bcdb5da09b1f 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -277,7 +277,7 @@ int parse_callchain_record(const char *arg, struct call=
+chain_param *param)
 =20
--	verbose =3D ac > 1 && (!strncmp(av[1], "-v", 3) || !strncmp(av[1], "--ver=
-bose", 10));
-+	verbose =3D ac > 1 && (streq(av[1], "-v") || streq(av[1], "--verbose"));
+ 	do {
+ 		/* Framepointer style */
+-		if (!strncmp(name, "fp", sizeof("fp"))) {
++		if (streq(name, "fp")) {
+ 			ret =3D 0;
+ 			param->record_mode =3D CALLCHAIN_FP;
 =20
- 	/* Set CPU affinity so we can force preemption of the VCPU */
- 	cpu =3D pin_self_to_any_cpu();
-diff --git a/tools/testing/selftests/kvm/x86/xen_shinfo_test.c b/tools/test=
-ing/selftests/kvm/x86/xen_shinfo_test.c
-index aaa414c677ad..e254720df86f 100644
---- a/tools/testing/selftests/kvm/x86/xen_shinfo_test.c
-+++ b/tools/testing/selftests/kvm/x86/xen_shinfo_test.c
-@@ -438,8 +438,8 @@ int main(int argc, char *argv[])
- 	pthread_t thread;
- 	bool verbose;
+@@ -285,7 +285,7 @@ int parse_callchain_record(const char *arg, struct call=
+chain_param *param)
+ 			if (tok) {
+ 				unsigned long size;
 =20
--	verbose =3D argc > 1 && (!strncmp(argv[1], "-v", 3) ||
--			       !strncmp(argv[1], "--verbose", 10));
-+	verbose =3D argc > 1 && (streq(argv[1], "-v") ||
-+			       streq(argv[1], "--verbose"));
+-				if (!strncmp(tok, "defer", sizeof("defer"))) {
++				if (streq(tok, "defer")) {
+ 					param->defer =3D true;
+ 				} else {
+ 					size =3D strtoul(tok, &name, 0);
+@@ -296,7 +296,7 @@ int parse_callchain_record(const char *arg, struct call=
+chain_param *param)
+ 			break;
 =20
- 	int xen_caps =3D kvm_check_cap(KVM_CAP_XEN_HVM);
- 	TEST_REQUIRE(xen_caps & KVM_XEN_HVM_CONFIG_SHARED_INFO);
+ 		/* Dwarf style */
+-		} else if (!strncmp(name, "dwarf", sizeof("dwarf"))) {
++		} else if (streq(name, "dwarf")) {
+ 			const unsigned long default_stack_dump_size =3D 8192;
+=20
+ 			ret =3D 0;
+@@ -311,7 +311,7 @@ int parse_callchain_record(const char *arg, struct call=
+chain_param *param)
+ 				ret =3D get_stack_size(tok, &size);
+ 				param->dump_size =3D size;
+ 			}
+-		} else if (!strncmp(name, "lbr", sizeof("lbr"))) {
++		} else if (streq(name, "lbr")) {
+ 			if (!strtok_r(NULL, ",", &saveptr)) {
+ 				param->record_mode =3D CALLCHAIN_LBR;
+ 				ret =3D 0;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d060fca8090f..a40ca32fdaf7 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -445,8 +445,7 @@ bool evsel__is_function_event(struct evsel *evsel)
+ {
+ #define FUNCTION_EVENT "ftrace:function"
+=20
+-	return evsel->name &&
+-	       !strncmp(FUNCTION_EVENT, evsel->name, sizeof(FUNCTION_EVENT));
++	return evsel->name && streq(FUNCTION_EVENT, evsel->name);
+=20
+ #undef FUNCTION_EVENT
+ }
 --=20
 2.55.0
 
 
---wt3ehubhuzaffvrh
+--cat6wfyj3lkwkym3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr5/fwACgkQ64mZXMKQ
-wqlW6Q/+O84iXjLhqrfibocobE8unCIyqHEnZJS/GXNZh209bypBhf9WtQnvcr/4
-BA+ooY29H/oLrGw6gSEXaphDAg1IxzjsiuDWQcIY8Sw7ObO7cAqBNmoIgL4qu6U9
-6be3H8mTgilWttz2it0jil0IC3BFgzab6jXj8IqqzFnjAfZPorhejzB9xpwou+iy
-tioJvyCJcGQuco7svFTtnz9rXrs7EazDjt1sMQKJckxqFzLM23u1D3Cu+jC/tJV3
-U7y0dTW98LG38Q2TzFSlDxVWsmGuSZrOb4yTiqvvyLPs2GCCouYWlM1G/YlO5n9b
-wXa+PSA/bHu3LXWembSUIuEHczMcLToo4IDTn7owHwxuX44o1bj0vS758WeLpfs2
-KwAcklwko7p+CYJj8viaJAorg2v4p1IxCsI9fUYaNpO1Tfr2fgf53Nd8LUiDaAWC
-R0h3E/b4SHKre5wFMel3/H4oqbDcE6WOlSKbkuCM9FyL1vrSqLjS4/OagOsmAwqr
-WeKLFGf0WrN0exVzahLK99gPdGjben2MLkjZomfal7DOtchrcTZU9ezD+fWF/cPW
-ro0VgCgqhCuJIzwiJQQ7tfqbRT2NBlzgla/G0j2/DogpnAtPqzKwMSRxNn3GVkfP
-d/GZ2LBA+WI/fsj9Iox5xiBRVxO433U5b0XRsok5cf1OwcspViM=
-=qxVK
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr5/f8ACgkQ64mZXMKQ
+wqm4vw//ZgJLdQ6Q0+1KocDkBuS2+L6JwW4G9I+tlqQ1kG9qfYmHnmJXrLYM+n+W
+RGwSE8d//whYkBf+qJvNAVhRrNLBJJ17+wSp9Cw+MpfEpcENzi6xqR4Tni/tHmfj
+yDP6vMK3IlifATb3oWtnbuY71/0Oc3aJWsRK3QbN4M97cP9WVkyPeIAakQbtoqgi
+AauGHK2OG5ncAEXMzCvbwAPQcUWU1eWMH5BBVPQquza8Gm+M6jn0mO5FZdARbUTw
+6h4nUiwXG9oWZ9F+yWS8rHnqlzMDNftPEvGzs9kw046Lat676g7cUt7Wc+GXAzVG
+szCk+OOQ2JUnskr5hYZ8J5PFIbjMcuty0sYg3eoi93In638O8ypT3qkr/hiKBoYf
+6EU431Ih1MZN3nwP85Dx/PI38bHtSO8yONvd540AtYK/1EC0Uz5ybc911GegeOa/
+q4P8N20iCYrtwrXOq8RLUMlLkuPpN+8Isz1A8+rGi3HyrcxQ0wN0mEL+eKQR34CE
+AmbUI5Eh/FuS3GtVVXPo7ysyyJPx9zzUB2x/rVxvqADyuUX9WgUnbzoHm7yvCOY5
+Vf+Ow9lw5Fngj3ofRDC/DLTPUaUZzz67ZtvGufwfiDarEZ927kwA15FP3llHKR6b
+vncaoL3Z1VEU4d5jNH4Hs85AYSuVHc3knYVHGQA+4IqzSAh0gyA=
+=MfHB
 -----END PGP SIGNATURE-----
 
---wt3ehubhuzaffvrh--
+--cat6wfyj3lkwkym3--
