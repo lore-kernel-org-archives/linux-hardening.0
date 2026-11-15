@@ -1,58 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794756874;
-	b=0x7+tbb8Q2C0Bxsb0kK+4qv8c0EJBVnS3DfKSm2i0FvvpBaz7i7G1FErVHmi0pOZI1re
-	 SS4XdRiBWXkJIkCV2u1ygyao3oQa+xbeOTiyN+DKU+Osrosvltgjw7vJj4NvQj+lZALPH
-	 hBPPsEtmFH+yCCsDz7r94Jm9EhmEbvkPZjsMEIidFaQMDScFNPKRnBVYMdm8A3NLF99lS
-	 LeRsCpHc7V30KvLTBtlgG9O7rUvCK147SJtpQFe1ikmByX2VjptXdwkzg5AX8T3KF8FiU
-	 pAm0k5NLj+ZKmmrip19U9UOdfDbhnkJtSHbxlTjWJ2eYbRPzteko58Mg/eXNS2lR/TQ==
+	t=1794759362;
+	b=Z1Fqf8u+MHNeLB4NOfBJMrgpa6AClaBestbBSGQF7iEtYV1iWFNrZDUjdutvt9KT+kvT
+	 F2reGjb9q9eNfyvGq/ReVPhFbD4/PAicu4TMIlIdn+syJwwSZTMspFPOnQc75+HfuC2uW
+	 nTKE8EdXZEHr6tP2HE0mdWcTDNtL01SYLZfI0VqykrxoYayOolmuxSscvp/2dLV0C7qe4
+	 Y4AOBYbms8MJ5QZlVRWcGCnBw6OKrlJsLxAlSEW7RaelOPAVaF1fKr2mv4ZBRQzx/oCs9
+	 MxWhjmK6rzxNcshia9sQ4xcxeTOuM7FYYnty1xHItXaJGnal/+yWoepfKnLh8DXLKhQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794756874;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=fgl4RblzZJ8So9KBu3tfGKhQR2hNoBDCy44F1/CLS0c=;
-	b=Y2g5MWS9zwax/sv2F4LE2PDFvXusp7ZFEP1MELYcAd0AT4tLTo2cdq4PqMJFAl7JOgcD
-	 vX9QpA5WLJ4Lokf6n55KqprJRuGUZ7jrXUz0cw/C1+MX+YNHQILZo9tR3em6vnxHI04Dv
-	 g5IZMPwoALZVMHPLVATKdlkPKQwftsPTIU3l6Z7uw0n7xTNEMKmHpqC1KADnN1qD0Huz8
-	 +5ToU5jLdibcxb5HFIa32LknS9oGG9YmN8QAqdCTTfe3Vaj4FpsbuoCILbTUJUAmY0sNL
-	 mjsfd855pmXwx47rfbQQ9HmgWaAMdQ1NKF/04KTCWlj/wuTjFUMhMY2nzlC31DsNTyA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794759362;
+	h=DMARC-Filter:Received:Received:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 User-Agent:MIME-Version:X-Stat-Signature:X-Spam-Status:
+	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
+	 X-HE-Tag:X-HE-Meta;
+	bh=y1SyaCbxPgxUqPKDIPzlhYz46szeJkR1Qe7QsbB6fso=;
+	b=drnv0suRgAx7Mku4nNImh0T9mm7L88IsATN0azzTGCuEugcM5yDrvyQlmlzVjp1Mt/lm
+	 ADqFghD7Yj/9P1iTKWGdqRYOi376V4adEaTJV5DT4UatOhWEAwriFpT4SD0CmlvJMkbcf
+	 /g/xu3u6NQZdCCKWW04OCBZs/qU/HMe7HLZ4dupaxhC6doZ1bVCGhsWMXzyEMndXrVL6D
+	 KDX4/BHhNpe21T7esUbeBktb6INTdz7EMDqzHpQl9j942gk2xYOY3Z7g97HmCw93g0jRq
+	 NkR+t/CyPFbzRukIzdl2izz4iXvlpp2hPES1Bu9mJTmlls2UDJEIXUIpUtwNZXjsoaA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="WFV324J/";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=perches.com;
+	spf=pass smtp.mailfrom=perches.com;
+	arc=none smtp.remote-ip=216.40.44.16
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D7F606A334;
-	Sun, 15 Nov 2026 15:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WFV324J/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70BC71F000C4;
-	Sun, 15 Nov 2026 15:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794756874;
-	bh=fgl4RblzZJ8So9KBu3tfGKhQR2hNoBDCy44F1/CLS0c=;
-	h=From:To:Cc:Subject:Date;
-	b=WFV324J/Xjc7fwLn1nE30tsmFLUDWySOdzGUwijIhPBX52FjhkrGnzvUS4x7W8dW9
-	 LrBxap8M9GhwHvWB3LwoZbcWQcAwB8BI7stIIzBVdwCOmvN3O0Mq3KB04v93E2sDfW
-	 F6BekJwAm1s4CrMxJ+a9xmp9AK86l8LUSlcn/q/gVcdpUbwvNFRpfFvibNbq3Pl6yI
-	 v524esditEE9EKkgWxOzz0zZkZiOikAI8PsaLfPoNtUTfezSd8kohpOa8vEzxNeisZ
-	 3KXwFFBHmJLDJQMZkhAGMVTktxdHbsgj8APn4xhlArnha4gb2mbuMi5M/V4Sr7o+hS
-	 wXsQfRBEQKuug==
-From: Sasha Levin <sashal@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Petr Mladek <pmladek@suse.com>,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] seq_buf: always inline seq_buf_terminate()
-Date: Sun, 15 Nov 2026 10:34:29 -0500
-Message-ID: <20261115153430.1607764-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E0C606A31F;
+	Sun, 15 Nov 2026 16:16:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F3E0C606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 71263C07F4;
+	Sun, 15 Nov 2026 16:15:55 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf19.hostedemail.com (Postfix) with ESMTPA id BCC1A20025;
+	Sun, 15 Nov 2026 16:15:53 +0000 (UTC)
+Message-ID: <43c991a975d649c11706714e05ab9bd438e0d7d5.camel@perches.com>
+Subject: Re: [PATCH v6 18/19] treewide: s/\<strends\>/strsuffix/g
+From: Joe Perches <joe@perches.com>
+To: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Date: Sun, 15 Nov 2026 08:15:52 -0800
+In-Reply-To: <3cad861d30901777d9bdafec1ccf113e0a3fcfa7.1794667407.git.alx@kernel.org>
+References: <cover.1794667407.git.alx@kernel.org>
+	 <3cad861d30901777d9bdafec1ccf113e0a3fcfa7.1794667407.git.alx@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-3.fc44) 
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -62,62 +58,35 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Stat-Signature: r19jq57b5fooramtpn76iatrj36ksds7
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: BCC1A20025
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX182ECguAhdUhQpHiucwxJWxrPvpXC04QtQ=
+X-HE-Tag: 1794759353-214076
+X-HE-Meta: U2FsdGVkX1/FXeh89E7cosGKxXXZcZjwTNVlP4Y681zLNS9/CqaaXEeufAhYwqLsfNXonTRTZYSXtNOZyByrCzeKKa7RUf9BKjWW9Gc+naFC2NfGcCwxFQJsXs9h3SALRbT0sQw2uK3vBYHZfLW2kPH25Drhj/CYd/X4S7qwqbN4mC77SlS7tl9svN//Dco/w0Q2YVsD1CEfltPi4ft2XPgH95AjSRE1t6wjiU9Jjyer7rFrHi194jbpL6iF2xXmPxxnBliN/RvqMuWBd9vkErr81scgeohcxlQ/4B3hC07LqzXENBZvW+1BShacR0+Cmlp5DTBWyLRCbSBpPfxAdDAl6bwm3pzio8VKwWq1kKbaCFLByFJHDDWfgSgVGtXPRxQoWrN2wet3NqLOjeGGXQ==
 
-Commit 7b8cd26b6aab8 ("seq_buf: Mark a seq_buf overflowed when terminating it
-loses a byte") made __seq_buf_terminate() bigger, and clang no longer inlines
-seq_buf_terminate() into its two callers in kernel/trace/trace_events.c. Both
-pass bootup_event_seq, which is __initdata, so the out-of-line copy sits in
-.text with that address in it and modpost warns:
+On Sat, 2026-11-14 at 16:24 +0100, Alejandro Colomar wrote:
+> Except for the changes to "lib/tests/string_kunit.c", this was
+> a scripted change:
+>=20
+> 	$ git ls-files \
+> 	| grep '\.[ch]$' \
+> 	| grep -v -e ^tools/ -e ^scripts/ -e ^include/ \
+> 	| xargs grep -l strends \
+> 	| xargs sed -i 's/strends/strsuffix/g';
 
-  WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_terminate+0x12 (section: .text) -> bootup_event_seq (section: .init.data)
+You should really use coccinelle (spatch)
+and this should probably be 2 patches.
 
-Both callers are __init, so nothing uses the buffer after it is freed.  But the
-warning shows up in allmodconfig builds, and it is an error with
-CONFIG_SECTION_MISMATCH_WARN_ONLY=n.
+https://coccinelle.gitlabpages.inria.fr/website/docs/main_grammar016.html
 
-Mark seq_buf_terminate() and __seq_buf_terminate() __always_inline.  Marking
-only seq_buf_terminate() is not enough, as the same thing then happens to
-__seq_buf_terminate().
+something like:
 
-Fixes: 7b8cd26b6aab8 ("seq_buf: Mark a seq_buf overflowed when terminating it loses a byte")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202611110802.zPIiPSnJ-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202611120138.Fwm5Ljmj-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202611122226.vTBpAmtr-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202611122323.IvGv8FYK-lkp@intel.com/
-Suggested-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-7b8cd26b6aab8 is on both for-next/kspp and for-linus/hardening.
+@@
+expression a1;
+expression a2;
+@@
 
- include/linux/seq_buf.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index 6b915c67d2358..f72dd258206fb 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -134,7 +134,7 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
-  *
-  * Returns: the offset of the NUL.
-  */
--static inline size_t __seq_buf_terminate(struct seq_buf *s)
-+static __always_inline size_t __seq_buf_terminate(struct seq_buf *s)
- {
- 	size_t end;
- 
-@@ -240,7 +240,7 @@ static inline size_t seq_buf_strlen(struct seq_buf *s)
-  * After this function is called, s->buffer is safe to use
-  * in string operations.
-  */
--static inline void seq_buf_terminate(struct seq_buf *s)
-+static __always_inline void seq_buf_terminate(struct seq_buf *s)
- {
- 	if (s->size == 0)
- 		return;
-
-base-commit: 7b8cd26b6aab8cf147165610d13964f79200a5a7
--- 
-2.53.0
-
+-	strends(a1, a2)
++	strsuffix(a1, a2)
