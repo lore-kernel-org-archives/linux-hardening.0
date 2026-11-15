@@ -1,55 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794687062;
-	b=jDL6NJc0PhJM/n2h3hyXLYfHPKYN4ge32hGnyteoMZfJ6+R2cFBbRT7/7odNt5e8/DM5
-	 5EjK2zftMWeo/Htw6pPkTNw8SVT1/dvKtGzpox+y9oZjHEZINK4fgCJpwqUfahXNk+hwP
-	 VfrgxVCJbswCWr8cKEGopkoC2siNNzyHPjlWdwA8SFajasmlRNvarB9KQ3FEAHFupmiiH
-	 Ok8Q8Ut+/FI4CkD7f3ZDWdWvR7+o4dQrQKNGHjBr2/4TfPYIaqKJSNAotGzLK0421LxXl
-	 3aomIwfrVSLxLpIFClwiHCtsQvMQtSNev4hscCYmj7l2yF985w+WgeI86Tp7WNL4mmA==
+	t=1794726132;
+	b=SCGzjbn8rJaz1T6Pq4WYIyzV22VshuBOV0qo1wZgpOh1eXm8FcgCoZpuIASrs0weoqaF
+	 g1zWB/vbiL3r0FDHifguKZCOV9XHD9ObWiip5QMMN0Qgkfpnu7VpYEBEctGMkjAyDeMPz
+	 6rYjBAXlzdQL21XF35QBd3d6v4fSOaSU1yAlDJq+KtF8Ry28X4+KQmgeRF0UJTEl0JD+x
+	 lndaY+vWsqmLy+Ia5hqs6tcaOtMzC9ECL/W0rkME6czmrKNV1/F66cNh/Szh2AWR8y+xX
+	 nJQlb0cBvfx2WDyQ2juECj5ls3o7NX3vwT35h78VWKR2TDz8gyklQQTgYUgMfDG5X/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794687062;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
-	 MIME-Version:Content-Type:Content-Disposition;
-	bh=8l+12b6m4tjoQkXqXgXCvA2lEKsZmoFOuBWiDGcCyxw=;
-	b=oXSAUKZ6wL7ai++SoLl++9g5RVxpfr4WjqoFCZmbWggoSsaQ4zEvgkHpHcUpuyT55gcf
-	 bxq1bVERO6e//pRRdjFvqBRp5fgJ/JV/w2dWHdOcoGgWRnRQaEJL/McKG9VibS6aI/f/z
-	 1572aaC4Ds3hy7y8KKt5O29zTOJIxmGTEf+RcflPE01IuuMV71ykIdmBD3ehzDBqBPrzL
-	 u/mFnKobw8ItIt1K5M2P0AOFCJmdk0XMUOeAo33YlqAFLNVYwxF3FdWJykzJzH9IpOCcy
-	 WP3qj2TgagpQ9Zk+yMtqWGz7QYVUb1pjJvFzStGqjYuVuP+qATr6/kvcy655MRZVEcA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794726132;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-version:Content-type:Content-Transfer-Encoding;
+	bh=WlvaTcb4vTukTns5YClT9/RRVqSRloX/GzQ0iNm2R4A=;
+	b=TLKJFGoKWgxBtbj3K6xcEnfLO6N2ZEG7mq7D45x+dX/GUhjKynD2MoFWzz70rPU1VULZ
+	 U5WuhYCCkun73yvFGURMizusuNfmJLpCh5+JzGRQ180IPD9J9ndluxalqjVX0eDjv+q7A
+	 DL1NbiR8Zm8VITU7voE+U+fXT6VbO+eaeLEG5FBw1mp+SEp/HZzH6qtGeclDp3hww5+5k
+	 DT/xtipigjP0u895SMnbv8aWemIbVQtsmRiwEC9cHkAw7GOfkFOnJba75NgoVVmcJ+Su/
+	 LGkTCogDmntFtdqQ2+AR/wkTdFUtNSulJG1fB7G+4Y8DkZL863mOZ6M+kZQMZf03YQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eBSI6JF1;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=T5VT5x22;
+	arc=none smtp.remote-ip=74.125.82.174
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27DE606A33F
-	for <linux-hardening@vger.kernel.org>; Sat, 14 Nov 2026 20:11:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5A6606A327
+	for <linux-hardening@vger.kernel.org>; Sun, 15 Nov 2026 07:02:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A5A6606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eBSI6JF1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 136DB1F000C5;
-	Sat, 14 Nov 2026 20:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794687062;
-	bh=8l+12b6m4tjoQkXqXgXCvA2lEKsZmoFOuBWiDGcCyxw=;
-	h=Date:From:To:Cc:Subject;
-	b=eBSI6JF1lDfzpJJDi7TK0oMXlsKjtQ7UNRLafCsJuvHgULdsOyvFqLf/kJpzwcSMw
-	 r3v2KldMc24FCma3IuwM0nBwF8Hi/lEtrLfbGQ4rAGA/nfjzfzx8alb2h19HlOXlVR
-	 8j3nRTRQlRwiBovwHGFQ2Rg4AEJ5dwGHqJdryE1NGQ/oqmiXy08KSYSxVbSXVa89Oj
-	 K41c0pi32TJK04JoBA3tuDkISSW2zOUjzekpP22FDBGocyPXl97x47lTeGlcN5D8DH
-	 PO+BZuIWTPO3bGkzyer1h0De6DB/HZohW65dP52xPkSpPGOenRWBybGswNuOyuMYUN
-	 YmQDxwICtDocg==
-Date: Sat, 14 Nov 2026 21:10:58 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	alx+linux-hardening@kernel.org, Nicholas Piggin <npiggin@gmail.com>, 
-	Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>, Michael Neuling <mikey@neuling.org>, 
-	Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v1] powerpc: Fix off-by-one bug
-Message-ID: <1f7d29cebba5823400ad0bc5d95610f05f55e2d0.1794686962.git.alx@kernel.org>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=T5VT5x22
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-33bf40b0c8bso1370652eec.0
+        for <linux-hardening@vger.kernel.org>; Sat, 14 Nov 2026 23:02:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794726131; x=1795330931; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :message-id:date:in-reply-to:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=WlvaTcb4vTukTns5YClT9/RRVqSRloX/GzQ0iNm2R4A=;
+        b=T5VT5x22hAvEetbfMecA5QGtPWcaor6wWjOcqgkDwWOu/4+5R526HOiSKJfl7GZg76
+         PEoBu9NaR17qx0nHrxX27wL5iS6kOTIsnFQDGpRi5a0jNSkJpG2Bzl8CZMPxjDRU6lR2
+         y6fYb1wZRtUOUpTBvb7e1XQrJ0xtOll+4UOhxhZaG1M2w4wIfH/n5IeSl/jbRPcoQmZ9
+         uQ8+DdyJWhrG/QATWjuuWrLuyet34UJf3CrXkXXYXjL2xpYroFoQsYC6pgrVZ6448pF/
+         Yjkwk911G91vu0ZHwM0RzJizQ+bj/kgTpr6iYjpP1k0cI7fw11dzirBZMme6qmF+3YEz
+         pV0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794726131; x=1795330931;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :message-id:date:in-reply-to:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WlvaTcb4vTukTns5YClT9/RRVqSRloX/GzQ0iNm2R4A=;
+        b=i6RRAyDjaLklrnGO4ZcA2m/u40lDf4+wEnSwxv0M9n2xnRpdoHBG9XZrBIO1vOMaz3
+         yPzjy3H/GK+V69KMEMCZVTc1usUiFPQjuXVBChYmsXuJUzlVktrBfXSaKjbpQK2HRNGb
+         ctsBue/SP/lfqgsjwqDyD8bYgDU/xtYoih/ehKOOZ3UvOFl4zyjM3Yx2WgAAaTi5abxO
+         vLkqBc3MGlocNkQ9nNaDEHBaF99DH6MCgMtHLm5M3K9huf5u7I3QdwIEZaDXbPP8zFk+
+         oixHEciyHL4l26XPwgjcSDzKEduk93SP5RsyLLxFhWzmKFNEN7T9RFO80mFBStxYHdHC
+         nEpg==
+X-Forwarded-Encrypted: i=1; AL+hErG7yvO3iANhQdyj3yfHs0TUsNktJ9tXAI6QVV24CuN2HCXf4l3+1xeePdIYVdQCCFXXWaNwOqHEd5jOFz5N0Bk=@vger.kernel.org
+X-Gm-Message-State: APuU4Z97s47sm8ARhNY6OdT9TRDnFvxvmHLCryRtgD558N8U78lfxrgt
+	wZ6pzW+1HFavodgr34875g0O5cNGYrYOMcNrGueACD63QXVpSvVEoXjy
+X-Gm-Gg: AYBFou2vTsD+Zy+zhRl7gHgd0rYj/JZz1SBTEsuCGtHZ933CU5esR5url6RUK0e6XUL
+	lk2MDY0Co05OkuIP9HHAbxPW+X8jTRlCEYZS8NTmB5fw5oIPeM6wPoN5nog5q59QiWP74ZkLwV7
+	vyWyVjnFJY48Xcy3zZo3gAelQRQLKyqlnaFmoVCU2XBYj32pFWMnNr4rHeSr8UGIn45tfg7NkhQ
+	aF+1AKFA4Ip/yR0gsDkDunbzrC1/ldg1okSuPpKfnbOURLi+kuttDATcbIyRVZzw+np5xmZdN9K
+	YGUUCR65gqMrj2/P2enaQdIAXOmOneAr4wkn56/NyO72HQYXfIwdDfjKDUrtgPG2arKvvaOXHpq
+	hHXzr99tkDYt6oTKVWi96AtlKcIzCdu+FLiQ5cj04EScR3x3LVhdqpGk42zzUwvueudPVDM3HGU
+	zk6YmZukrHVSXBx1soxR7uKQV4Hk1uwi0aMBSWKB7mFiKIZj/6fmYEeBeloIXG9UkgiV62XZTKR
+	kwPaPfZlcXWO+3YIEA1A/PjgoqUE7umR5SOdp8lgRLGGO2qmRnp9S16lh4XwT+emvRpq7Ns5we9
+	juulZ2/s3wFOfcUZRVg7srK9ZxA=
+X-Received: by 2002:a05:693c:88c3:10b0:36e:4aaf:6c7b with SMTP id 5a478bee46e88-3796740c786mr6920484eec.39.1794726131042;
+        Sat, 14 Nov 2026 23:02:11 -0800 (PST)
+Received: from pve-server ([49.205.216.49])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-379563e6b6dsm40284667eec.21.2026.11.14.23.02.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Nov 2026 23:02:09 -0800 (PST)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Alejandro Colomar <alx@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org,
+ alx+linux-hardening@kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+ Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>, Michael Neuling
+ <mikey@neuling.org>, Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>,
+ Michael Ellerman <mpe@ellerman.id.au>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v1] powerpc: Fix off-by-one bug
+In-Reply-To: <1f7d29cebba5823400ad0bc5d95610f05f55e2d0.1794686962.git.alx@kernel.org>
+Date: Sun, 15 Nov 2026 11:17:37 +0530
+Message-ID: <5wxy8x3a.ritesh.list@gmail.com>
+References: <1f7d29cebba5823400ad0bc5d95610f05f55e2d0.1794686962.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -58,81 +100,47 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ys7an7pdgy32so6a"
-Content-Disposition: inline
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
+Alejandro Colomar <alx@kernel.org> writes:
 
---ys7an7pdgy32so6a
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	alx+linux-hardening@kernel.org, Nicholas Piggin <npiggin@gmail.com>, 
-	Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>, Michael Neuling <mikey@neuling.org>, 
-	Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v1] powerpc: Fix off-by-one bug
-Message-ID: <1f7d29cebba5823400ad0bc5d95610f05f55e2d0.1794686962.git.alx@kernel.org>
-MIME-Version: 1.0
+> From the surrounding similar calls, the intention seems obvious: this
+> seems intended to check for a prefix.
+>
 
-=46rom the surrounding similar calls, the intention seems obvious: this
-seems intended to check for a prefix.
+Could be, however the existing code is not functionally wrong either.
 
-However, I do not understand this code, so take my reading with a grain
-of salt.
+I agree it would have been nicer if all three were consistent. However,
+x86 handles the same parameters with exact matches, so if anything "auto"
+is the one doing the right thing here :)
 
-Fixes: a048a07d7f453 ("powerpc/64s: Add support for a store forwarding barr=
-ier at kernel entry/exit")
-Signed-off-by: Alejandro Colomar <alx@kernel.org>
----
+But making "on"/"off" exact matches on powerpc now could change
+behaviour for someone passing e.g. "offline" today, so I'd rather leave
+those alone too.
 
-I found this while looking into replacing this code with calls to
-strprefix().
+> However, I do not understand this code, so take my reading with a grain
+> of salt.
+>
+> Fixes: a048a07d7f453 ("powerpc/64s: Add support for a store forwarding barrier at kernel entry/exit")
 
- arch/powerpc/kernel/security.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+IMHO, I don't think this patch fixes anything functional. So, I don't
+think it will be correct to call this as: "Fix off-by-one bug" or 
+add fixes tag to it.
+And so, I would suggest, we leave leave today's code as is, based on the
+previous reasoning.
 
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index 600596cb4ffb..37999555bfe6 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -273,7 +273,7 @@ enum stf_barrier_type stf_barrier_type_get(void)
- /* This is the generic flag used by other architectures */
- static int __init handle_ssbd(char *p)
- {
--	if (!p || strncmp(p, "auto", 5) =3D=3D 0 || strncmp(p, "on", 2) =3D=3D 0 =
-) {
-+	if (!p || strncmp(p, "auto", 4) =3D=3D 0 || strncmp(p, "on", 2) =3D=3D 0 =
-) {
- 		/* Until firmware tells us, we have the barrier with auto */
- 		return 0;
- 	} else if (strncmp(p, "off", 3) =3D=3D 0) {
---=20
-2.55.0
+> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+> ---
+>
+> I found this while looking into replacing this code with calls to
+> strprefix().
+>
 
+For your conversion, I think, we should keep today's behaviour as is.
+Maybe streq() for "auto" and strprefix() for "on" and "off", which means
+there is is nothing to change or fix.
 
---ys7an7pdgy32so6a
-Content-Type: application/pgp-signature; name="signature.asc"
+-ritesh
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr4wFIACgkQ64mZXMKQ
-wqkSTQ/9Hl6YBCGT4ghLfidjZfi5Br8fuavBYgESR82RDZB/BJGlXWUoj9wcdnWN
-JzQPQgDQPE0oWF1jm54rUZgrntBNDMzvuBT5l9QRJa7gf6PDw44DKeNDv1d1P6J0
-TzSHek5YKoAkNWI6K9nRabXWGqwGnwwP0ICcfZSoTvV6u2KunSGVQCm6y+rN2s8I
-xsZKBxq2oc204UiddF14m8WA5WrUBO4v8+Fn1fT7W43qztLwz/olTUmg9dg7qqI4
-eqQLqIRMKT80H303iyeR06LrcMMvOnUUlSEI6HbK+czzGidLi6eDZxq/rRWEQuls
-PAK5X563XyDWupHl8wOkFZKOqtEXRyWBkDwGUxmQIb2KY3Ac9cmq4VY+4h/AkZSS
-qAo9stRufUbZGI7ysmWpkao+PoeT2mD5vkU+Mdt5EAS91J0bQGl9GW+TS/eZNgO5
-GELjmQ1m4+gEDpuanoOiml/h00w85L58kpyupHF1hP4tcpyE1dJHjBtvgAmMtLaO
-a3Ej4DMXZi2/IEnw4f8ppjM6Ec72qaOVIbXoiyFtChLTfYuAkwAn09Slo4Q4mKs+
-Per3v/Q0HEGE13hR7E/InaXVP75qNNUIxt671RIxc+K73dus/XjFEt8PltUCjxl0
-q2FN3zdKmOLUurBDxFZB+XZyJn6USwIRo0H1TlAy3XoO3/VVXZ4=
-=VL6+
------END PGP SIGNATURE-----
-
---ys7an7pdgy32so6a--
