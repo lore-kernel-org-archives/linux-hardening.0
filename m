@@ -1,47 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794848121;
-	b=m8KQoh+AZRG/gYCXXREejqbV0kE6F84WdBqIYXv5Tgq2dVRGOauv1oqRTVWVymltes3J
-	 Ngs3MI7S4mGHmChSy8g6XlVAQzIRMMAhNhq/Tx6yQMN8ABrQ2y4EazWtobrSswD5iqPy2
-	 /QDkUPy6uAe40TVeHAdSLMlh38PpPM2b1fcZIOjOLHA5MXzfwWsbdACzXkXzqG9N1lxc2
-	 KkE7uaNM4n+2KTTJkySzfFP1W/mVzJP38plBxjFQDo3W24EYh83wpAOHPm8LFiCIgELOP
-	 t6EkUqWYiOBdEp7s4O8Qe8KaYiS6ls/amddI58vUDYAP5Kz4l/VvF+Pso8ruCoC4v+w==
+	t=1794849377;
+	b=u5ws+t0HYfah59nTOAsvOjUeYBcfUsddnnL6qCWeDWKNvLs048JoLYZT2mPtSmk5LH0f
+	 qWlxuVsXc64mkgbDqSQhsBR86X/unGugoApos/Q9ZpuWetJFAdExntHprYagpt3qWf2Ru
+	 jb+Kg6agm5fmP3MB5oSLsF+2jAV1aFcGCH27jhdAloGXWvdcUWDRA6kP6kYk17BDw1YmQ
+	 59FtkDH5KLQLX1MOrpK/F6l1ws+xKPli/KbL1H3t3yB22uZAAk2A/VRbZX3t4qUl7vWcG
+	 eoH0QtcmE0nCUhKIWEtXqJIHJPcvTHDmWl++ZZlq7SiKzVzjk4BS8vEUkPCFUdKrD7w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794848121;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=8rZOm9cyO9/o+jh32Sv8L1QuooKEur+vb0oVWZZU+ZU=;
-	b=kmQgGw0SSSvDvm1g0RUHwbTqwrnJqVUJc8smzgHRuZOvbSPff5MM9M5SsPsioGSt4z6u
-	 OyixQIWja5K2/pYwJx7b7YKf34ryQ6HCHzdX+pt1r9KBbH131ktFIicO2scWIOQnQXYSk
-	 ugod3DaHB58uGv7R2hOyvCafW1slhkEDLD/+lSdQVgOrX2bCqT6NtKljPR+qSSxF3207I
-	 Z9Rtwt/zqTBmwcIBeI5RyFUza8NtSJ8sXFLKk/smbb5oyjBw1SW5lkoXv7l7iI4n87kpF
-	 4Zw2e9iyaAyN1cVQk6je8JymOkBji5VaOGbhewA366nV80UdVuksqEqrTqtMU6WR7NQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794849377;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=Bd5KkZtIi9hEU9aTOnohsJP4GtQbznYQgq/LOm2c1XM=;
+	b=dNzrSwnDH33q0GeyvmJnNgwOZixUnN4J/pa6/RWd+CfzAoQgvyRSgWevZU8X1eSZemS7
+	 Y4X6yQABmdi0SO+/TtisTndASlaJgH98EfRFtzqvnIts/eBGJLAKDlelPRzDCdIkBxjvH
+	 /HWTYoJCIKxLHOt73pKz98F1Cmr+A8MKJfQdAtP+qA3n6Dv3B2KDkCgf58rRT1RTNPKu4
+	 lxzEXq2ir6XcRdvCG0oFYBNu+mGqygCfaAI3+453LHC5RWKoe58XIsATTceheL6OkeDs5
+	 BSphADNj5/yt3P3UFmQEHUewjXcbEBpTO6MBGKU464eIZs3zcWib1TqJu6zJu23m0vw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kWP9t9GW;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=HkMSiR+d;
+	arc=none smtp.remote-ip=209.85.215.182
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDC2606A33B;
-	Mon, 16 Nov 2026 16:55:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF85606A31C
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 17:16:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4FF85606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kWP9t9GW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DCA1F000C9;
-	Mon, 16 Nov 2026 16:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794848121;
-	bh=8rZOm9cyO9/o+jh32Sv8L1QuooKEur+vb0oVWZZU+ZU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=kWP9t9GWCos5WxA/8KiAvu/sE8CPjNex6w0Ru8Q8v8Ip7RAYzqA2897SZQeZ5QGLD
-	 xYdYlmsIDi2gxlN/OAma8mu0rKgphAhZm1zFqBVEAZn4xcCKt4gv9y/VuMMFe2Pqqp
-	 UzWr8iiBZ66BO8r5pCgm9Fd871j/xXaH+EhAQ9Xs25ia7p2cjSd+rECkZYEOqD2mWm
-	 Fsun+U99Gt90g5ktgNz7zD54HwS0QRrhM1qlEfd75tBHYL0PQkX2mvcNROMBu9Hhg7
-	 PoAOHIR9iSfIYVNhLslCbaUgRGeOh2A5L4Iz4gKewxF9b9NfcXiYwwkydsh1hgdfxd
-	 SzMeDGQjP/evw==
-Message-ID: <8b6e489a-eb73-4b2a-ac65-dfadc8c73bfc@kernel.org>
-Date: Mon, 16 Nov 2026 17:55:16 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=HkMSiR+d
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-cc147d86bebso53678a12.0
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 09:16:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1794849376; x=1795454176; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Bd5KkZtIi9hEU9aTOnohsJP4GtQbznYQgq/LOm2c1XM=;
+        b=HkMSiR+dksGlcwGZWXhn8RdtxqBYdJQtbxVMvbLI96Ikx2BxI3kJdM8SEHvcYMuweq
+         Mg3EHEZsItCRb824lZUmdTkkxwc2OpLow4+0NsHeKkxKzP6xOXIY59In7u3SCoBtPfqY
+         BJZM4/S1UARezX28Zhx/rN944CAeFFzwvXAXf0YdLsW6fmthJG+3kSv7zhsrNw6xnVr7
+         IJsBWKe+bcNa1RisuddA3+9M9p14aEOUNjmYrYHbT3epecNIi+eb132pbV75ve6d780Q
+         PSoRo+KCZDtD9ZU+3rUiMM71agE0dNDUtfWgY4kZCgotc3BWLs8iYy3Abq959FUkwprJ
+         9vSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794849376; x=1795454176;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Bd5KkZtIi9hEU9aTOnohsJP4GtQbznYQgq/LOm2c1XM=;
+        b=qL2PaYvAebW/TFNPoLJYbUqSXK01N09Qk2/GY/gAF5dcZDtU6OXHwA16/zlsKEpmp9
+         9on5Uj4J2URv07PtlNkI2FhI02q3rJ70aLbklo2+Hd6/qaFBNZvRoFV+EG1IvtSneh0F
+         hVBiHN7RECZNygKN3uwxl4oukVWLey08fuOdylmY+N6x38I/39t7/ca6POx/NRP7+dVU
+         lWHU03I7aXc9ZB6m8VoHagEd8pHo1LzIyscTVu/5xRDRiNNaU11zwPmCR26lk8cYmN+K
+         TgpI9a3zySv8mPO4tCH3AmFeNIvQRWrPEyMSSIGL6tRRYRk/di6FN08AB0TFg8nXsliR
+         B9GA==
+X-Forwarded-Encrypted: i=1; AL+hErGnN7wodVPLNxErYo0EfQhr6oTI9nbhX8YZQB6FGkYlj4ygVKpQ2xuoPmYpJgYVpD33cUBSgn33CwqtgQzbTHc=@vger.kernel.org
+X-Gm-Message-State: APuU4Z95YLCy3NhpZYIPoBNOBzSZBtFKF8dhu22Hn1205oTUz5CMj0+l
+	rL6q4v3iG3unDm2x/oIxEEjs+A+mfh9759pjNWtuRaIlUjDJ6CvlKKt51m/4dlGoNYM=
+X-Gm-Gg: AYBFou3QOAH7UTuTg4GJJ/4vNT26RISwZJWkxbT0nqZ8lhK8ev1CLZaRwVfd12mDh7Y
+	9Sc4lKkHO4y142OzPy6DXl/YK2/QPOJmp0zctDbK7P89cwLgfmIsOJfE5hukaciBCZHkpMFqzt3
+	5q+tUGjAsiE+ucr2lKuT9A1ihqgQ+GT14nNkAUfjCdifK9kGGd4aJRQQZrkYcwwxIvV3uT72TnE
+	jZuqvmQYfRZ0BbWmEwyWPXwaY/AKESNTDUdKUZOe2NOLrAq71UKbe7Z4L6vgJQrXj9eCPkN/zEq
+	qchM5B5WoRl677JBdpw70S8z7bS8ATEDACuKk2n+j8gHNDgaRPdf9gk72rcDGI3dIW7ZKNl/Hsh
+	A4clBhpRgHGS92VmrNiKwjmDvFBJhVnKotzvGcgDVj3OPNUGwdhrYJJBYZbwu3RxSN79FwTFoJn
+	XBDWyK8lSu6dDdPbDLnrXAakisqc2Ym7V9PBF3TPldJSZFt+CX5G06szyKXVooMhkwdpuyJ9Oie
+	5N+QMU1knMgY9fDyWhkZ5rkb8blhdoMaQYkagTJ+8rYTaObt3v5EBaDD5RUsDWIOmJxaRo/eyxn
+	6XFYmTNkjlc07azcc5Z6a1CfI65EtWlC
+X-Received: by 2002:a05:6a21:7a46:b0:3de:71c4:a22b with SMTP id adf61e73a8af0-3fd29c153b2mr84093637.1.1794849376336;
+        Mon, 16 Nov 2026 09:16:16 -0800 (PST)
+Received: from p14s ([2604:3d09:148c:c800:ea6f:45e1:c614:f10f])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8bed12a97f9sm3778408b3a.14.2026.11.16.09.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2026 09:16:15 -0800 (PST)
+Date: Mon, 16 Nov 2026 11:16:13 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Francesco Valla <francesco@valla.it>
+Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC v2 05/11] remoteproc: virtio: report
+ VIRTIO_F_ACCESS_PLATFORM when required
+Message-ID: <avs6XQpoQmY_MNYx@p14s>
+References: <20261102-remoteproc_virtio_map-v2-0-26b300e01c62@valla.it>
+ <20261102-remoteproc_virtio_map-v2-5-26b300e01c62@valla.it>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -51,146 +112,84 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] mm/slab: Support selecting slab hardening features
- at boot
-Content-Language: en-US
-To: Chris Down <chris@chrisdown.name>, Harry Yoo <harry@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
- David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Kees Cook <kees@kernel.org>,
- Marco Elver <elver@google.com>, GONG Ruiqi <gongruiqi@huaweicloud.com>,
- Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
- linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <cover.1794506262.git.chris@chrisdown.name>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <cover.1794506262.git.chris@chrisdown.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261102-remoteproc_virtio_map-v2-5-26b300e01c62@valla.it>
 
-On 11/13/26 09:51, Chris Down wrote:
-> Slab hardening settings are currently all build time choices. This means
-> that, unfortunately, hosts with different requirements end up needing
-> separate kernel images. At Meta, for example, some hosts are built with
-> these options and the rest of the fleet isn't, and that's one of the
-> things that keeps those kernels apart.
+On Mon, Nov 02, 2026 at 12:26:42AM +0100, Francesco Valla wrote:
+> Depending on the driver originating them, data buffers used for virtio
+> communication can either:
 > 
-> This series does two things:
+>   - already be allocated from the coherent memory area that is
+>     accessible by the remote processor; this is the case of
+>     remoteproc-specific virtio devices, i.e., rpmsg and rproc-serial;
+>   - be allocated from generic kmem, and thus not necessarily accessible
+>     directly by the remote processor.
 > 
-> - SLAB_FREELIST_HARDENED and SLAB_FREELIST_RANDOM are cheap enough with
->   sheaves that it makes more sense to just enable them by default than
->   to make them switchable. With both on, system level benchmarks didn't
->   change measurably, only slowpath heavy microbenchmarks did [1].
+> In the second case, the DMA APIs can be exploited to obtain a
+> functional communication, since they will take care of cache maintenance
+> and - if required - bounce buffering. The VIRTIO_F_ACCESS_PLATFORM
+> feature flag can be used for this purpose: with it set, the virtio
+> framework will use the aforementioned DMA APIs to map and unmap buffers.
 > 
-> - SLAB_BUCKETS and KMALLOC_PARTITION_CACHES cost memory (Harry measured
->   about 1 MiB and 18 MiB respectively after boot on a 64 CPU VM [2]), so
->   they get slab_buckets= and kmalloc_partition= boot parameters, which
->   default to on when the option is built in.
+> Bounce buffering will be transparently used in two cases:
+> 
+>   - if the buffer address supplied by the virtio driver is not suitable
+>     for DMA transfers, or
+>   - if the reserved memory associated to the vdev is a
+>     restricted-dma-pool; in this case, *all* buffers will be bounced to
+>     and from this pool.
+> 
+> With this support in place, any kind of virtio device can be supported
+> through the remoteproc-virtio transport, at least from a data exchange
+> standpoint.
+> 
+> Note that remote processors behind an IOMMU need da == pa for the memory
+> region(s) the buffers are allocated from.
 
-I'm not thrilled about the "default to on". We usually do these features
-opt-in. Now our distro kernel would likely need to have these "disable this"
-options in the default command line, with documentation to remove it for a
-hardened setup.
+I'm not sure to understand the da == pa requirement - can you expand more on
+that?
 
-But yeah doing it opt-in, the hardened setups would now have to start
-passing the extra params to enable this, even if until now enabling the
-config option was enough. Also not great, but we can argue they are still
-the minority?
-
-Of course there's always the possibility of adding another _DEFAUT_ON
-configs. Not great either. Sigh.
-
-> Whether those two should be folded into a single slab_hardening= is
-> still open [3].
 > 
-> v3:
+> Existing use cases (e.g., rpmsg and virtio-console) are not impacted as
+> they are explicitly excluded.
 > 
-> - Rebase onto slab/for-next.
-> - Always build the slab_buckets and kmalloc_partition tests and skip them
->   at runtime when the option isn't built in, instead of leaving them out
->   with #ifdef (Kees).
-> - Declare slab_buckets_enabled and kmalloc_partition_enabled in
->   mm/slab.h without any #if (Kees).
-> - Drop the remaining #ifdefs around slab_buckets= and
->   kmalloc_partition=. Both are now always registered and ignored when
->   the option isn't built in (Kees).
-> - Keep both flags as plain __ro_after_init bools rather than static
->   keys, since they're only read when caches are created and not on the
->   allocation path.
+> Signed-off-by: Francesco Valla <francesco@valla.it>
+> ---
+>  drivers/remoteproc/remoteproc_virtio.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> v2:
+> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+> index f1b362158a9c..1496659ddff9 100644
+> --- a/drivers/remoteproc/remoteproc_virtio.c
+> +++ b/drivers/remoteproc/remoteproc_virtio.c
+> @@ -280,9 +280,14 @@ static u64 rproc_virtio_get_features(struct virtio_device *vdev)
+>  	 * All non-remoteproc-specific virtio devices are assumed to be
+>  	 * compliant with virtio specifications 1.x; there is no other method
+>  	 * to transmit this capability from the remote processor to the host.
+> +	 *
+> +	 * Virtio devices that are specific for remoteproc usage take care on
+> +	 * their own to allocate memory from the device's coherent pool; use
+> +	 * the DMA APIs for the others through VIRTIO_F_ACCESS_PLATFORM.
+>  	 */
+>  	if (!rproc_virtio_rsc_vdev_rproc_specific(rsc))
+> -		features |= (1ULL << VIRTIO_F_VERSION_1);
+> +		features |= ((1ULL << VIRTIO_F_VERSION_1) |
+> +			     (1ULL << VIRTIO_F_ACCESS_PLATFORM));
+>  
+>  	return features;
+>  }
+> @@ -312,7 +317,8 @@ static int rproc_virtio_finalize_features(struct virtio_device *vdev)
+>  	features = vdev->features;
+>  
+>  	if (!rproc_virtio_rsc_vdev_rproc_specific(rsc))
+> -		features &= ~(1ULL << VIRTIO_F_VERSION_1);
+> +		features &= ~((1ULL << VIRTIO_F_VERSION_1) |
+> +			      (1ULL << VIRTIO_F_ACCESS_PLATFORM));
+>  
+>  	if (WARN_ON((u32)vdev->features != features))
+>  		return -EINVAL;
 > 
-> - Make SLAB_FREELIST_HARDENED and SLAB_FREELIST_RANDOM default y instead
->   of adding boot parameters for them (Vlastimil).
-> - Skip the memdup_user() part of the slab_buckets test on !MMU
->   (Sashiko).
-> - Keep slab_buckets= and kmalloc_partition= separate for now. We can
->   discuss whether to merge them into slab_hardening= or similar, as
->   Harry suggested.
+> -- 
+> 2.56.0
 > 
-> v2: https://lore.kernel.org/r/cover.1793253633.git.chris@chrisdown.name
-> v1: https://lore.kernel.org/r/cover.1793086056.git.chris@chrisdown.name
-> 
-> [1] https://lore.kernel.org/r/auITixAJMfLtfa7i@chrisdown.name
-> [2] https://lore.kernel.org/r/179312451613.474906.1475329637924619088@kernel.org
-> [3] https://lore.kernel.org/r/aud4gPOUzvHtLYnJ@thinkstation
-> 
-> Chris Down (6):
->   mm/slab: Enable SLAB_FREELIST_HARDENED by default
->   mm/slab: Enable SLAB_FREELIST_RANDOM by default
->   mm/slab: Support disabling SLAB_BUCKETS at boot
->   slub_kunit: Add a test for the slab_buckets boot parameter
->   mm/slab: Support disabling KMALLOC_PARTITION_CACHES at boot
->   slub_kunit: Add a test for the kmalloc_partition boot parameter
-> 
->  .../admin-guide/kernel-parameters.txt         | 15 ++++
->  lib/tests/slub_kunit.c                        | 85 +++++++++++++++++++
->  mm/Kconfig                                    | 11 +++
->  mm/slab.h                                     |  3 +
->  mm/slab_common.c                              | 52 ++++++++++--
->  5 files changed, 157 insertions(+), 9 deletions(-)
-> 
-> 
-> base-commit: ce6518e61e3b4bf4f97f7ac6204049b9eba7eb75
-
