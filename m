@@ -1,104 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794822741;
-	b=xPkxzwblm2GOfsDnJsJuY03Pa2sAYpWkEq7ZZ52rgBfq4JJCdyXGr/Ur+ppxF0IfE4OF
-	 iEpuXR2oUe6mK4efOqWojHzr/hovH3Uek3xjchTOobTDA+nmKZBxeGbwUhVilcLoByOsN
-	 5T7KAv3mwsfSqRtXopMjtiVBN5z8VC58bV6BSwjCj1Uo1R/VUYMcZ6N85ZRv8QFQ8ZoZ3
-	 9sWuS9f5oFcN733zbQLtlqF7q43amFSCrIqrOR6k1Xdf1izLPbJhYx/af9IpXkQv7jL9w
-	 0LjguALLoeofblGPnNnikJiuP2kisY0Gz+qxHs8rzTJlYoGCCn9LL+1HSnLTz1onOzQ==
+	t=1794823853;
+	b=I95jwoDFNgcHMud226KFKjKgIFWqjuIAorbeq0BxP/ENx4JKbrrbuOkuUNy7XkpyhX74
+	 0D5s2jfDl29NYt371MLSGJBmWRcIJwjMplg9UIvzd/aCk0oLZ3ucKOUIvNVJZHJQ0KasF
+	 5RZA0aZWZgukW+2206BgT7vaa2mc/EPs+n/OoFw+Ad7f1jI/oSqwdlogmIMxB9Smxat2k
+	 2vAaOKNBb+kwsFhWKe8WnWeGnGrkAaixdiMpuvYRtt2h+4FV0SyiQznWMm8XkBjls5SSF
+	 1l0y5nK3xDbdR5bQJ6H40hvK8qucyhObRlAbQYeNCxpOX8j9CPWLtK5npq7E4LUbeCQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794822741;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:
-	 Organization:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=my3HxYvSDU/yPH2PpyhhY24GsqtDovmZmnlnlFtVCJI=;
-	b=Ih2NpUKuXJCn8ZqZyQLO5uDaa+hTYqecUxypBzIp5f7USjZU3QPU0kdT5UCvRNtMj5/Q
-	 jh5i3czGO+hjFrHIk2tCeLCX/TUu6KAqkJK2I4ax+a2Bz4DC9Kw7E8+OEsCoF+GJioPgq
-	 7Xz5YZ3aZL8Yj+LIVXdt68abQaBlA4yFa7kg/IlvelZKQtCi9M2LBjFHNEyUpXM4h0rg2
-	 B+X7rFhmpdpMDi+rEeGnDbDFtmPalZp1X5W5u9O+Ma2/6CHA7HRaYaWubXi3FkJjkKc7t
-	 0qCeDCBZfvqdkrO+S8kQ2CVDSW5Niu3OH8BZRxTurdpD3JqbEudqqQHWyxp9lC6x2Rg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794823853;
+	h=DMARC-Filter:From:DKIM-Signature:DKIM-Signature:Date:Subject:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
+	 References:In-Reply-To:To:Cc:X-Developer-Signature:X-Developer-Key;
+	bh=RHav9j+1EqD2/433Q1hpPIUKH2bJxUn00Cekmi4atDI=;
+	b=t2QCym31I0Ul+36VBDrqrghFIDzdIr9df1EWQHCvDcEzjFAQIDErFa3elGRzpO79zAzj
+	 91vBmrqCEr9KaJptcxA86oA2bPsmVZxSl5NzX4CDMJNuZHq3p56A/mXf1S69FNgTz92oI
+	 KQlI2RBEUjCxIc2Ht5qxLde/lUiys6c60V0i1/xfc0oZ8vqOfWoVeeX2oTkxE5up3SpSq
+	 m5puWNf8i0zZdoSFhfqLWoLasnE87D7tQoMWBIj6YW0MxTXK4AQwFvi41T+5uBeqZnWgq
+	 txlH4EAUSaPvwwoaD/QlNqfeQwaWW+lski3p+T0n7QlvpBiUTmQkP5/WejVITV8uiUg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=B3DsTelo;
-	arc=none smtp.remote-ip=198.175.65.11
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=kKQ06HKN;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=Tf9Ymynv;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0334B606A881;
-	Mon, 16 Nov 2026 09:52:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0334B606A881
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFE3606A32C;
+	Mon, 16 Nov 2026 10:10:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CBFE3606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=B3DsTelo
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794822741; x=1826358741;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CKwXvtFiw2YfhixQweSZGyQfnQaxAi/mrgRb3VZGJu8=;
-  b=B3DsTeloTtedE10LrRgGN/7W+5Ry1/1uGvh39+sqMExyqy9jd9WdsGWk
-   azz/fHEAls59udq7r70iPLLfPb5Xqbvj2cq/N9ZzqaBFQrnB6cecCeiOc
-   PK8v5IPmtUNP2sl62MQlnvCujC1TRrpGVgE3K9DLaVSofnSztVl4m3TMY
-   hfmkULIEgyQ60t1b5XxYkMLGSJe1PNEESX5FY/Wrm1an2RxIwg4FSxhMR
-   9DNFnCVy78+0E/hcI4MmUskcLScjME4QInjVEmN2O+8yg6JuEHx5vUswo
-   bLsdpyycVldwOWaa5WnXU+vlbl5PrfQVzFldOlxmz3MYuX6VZaQA+VFd6
-   w==;
-X-CSE-ConnectionGUID: nU3HQP1cQ/G+Apa0C7eS9g==
-X-CSE-MsgGUID: yELcYkz3Sx++Y9z9TraV2g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11967"; a="3447584"
-X-IronPort-AV: E=Sophos;i="6.27,216,1787036400"; 
-   d="scan'208";a="3447584"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 01:52:21 -0800
-X-CSE-ConnectionGUID: c805QEd4TWqPznKBs9CPiA==
-X-CSE-MsgGUID: /nrRhD/GTGO8oAqEdcrC8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,216,1787036400"; 
-   d="scan'208";a="10037323"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.87])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2026 01:52:14 -0800
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id A87F4121B5D;
-	Mon, 16 Nov 2026 11:52:17 +0200 (EET)
-Date: Mon, 16 Nov 2026 11:52:17 +0200
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Andreas Schwab <schwab@linux-m68k.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Len Brown <lenb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org,
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v6 04/19] device property: Fix fwnode_name_eq() for empty
- node names
-Message-ID: <avrSUUM3HMgxTNpl@kekkonen.localdomain>
-References: <cover.1794667407.git.alx@kernel.org>
- <7fc1321995f1aec9d7b92c6a89047cc9fb28c52a.1794667407.git.alx@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=kKQ06HKN;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=Tf9Ymynv
+From: Gregor Herburger <gregor.herburger@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1794823850;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RHav9j+1EqD2/433Q1hpPIUKH2bJxUn00Cekmi4atDI=;
+	b=kKQ06HKN4X7Lbo7FJtE1fBApGRDo/wSHWAYGuWr2TZ/MwditnjUXLr6MZKlNaxFC3l18yO
+	SYmfgv1PvXD9+A8/kDE4cC4p17xsixDGYua8fcTn8uoU8z5kkftFHR9cuejfoyf3f+4OBO
+	hUL/D3QcBFZWRVeXK/37fzirG1u2oVyJIGyJOPVlJI0sZ3E7yUSKj3gPHziZSEwLBEBXIa
+	CEUE4t+GtGVkwM2QcTQP4baaPSh3JqtkirOro3uzJAK8xW5FMq3ucRzVZpZfzNA6JeEPfz
+	FWSFxq2YVuZ59j4aRGUXd7JEPbpm0LhF9URxFVsJ7R8s6SZJPEXNhFMm+4+uDg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1794823850;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RHav9j+1EqD2/433Q1hpPIUKH2bJxUn00Cekmi4atDI=;
+	b=Tf9Ymynv8ykD+wMIEvRax1nLCINaJrzHT4F+DuVqtaT1gzXKBgy7KHtCH+q501dUsMq8U0
+	tJ72YPx8lNAMZaCA==
+Date: Mon, 16 Nov 2026 11:10:25 +0100
+Subject: [PATCH v10 01/12] firmware: raspberrypi: reorder
+ rpi_firmware_property_tag enum
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -108,31 +69,113 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7fc1321995f1aec9d7b92c6a89047cc9fb28c52a.1794667407.git.alx@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261116-rpi-otp-driver-v10-1-15302dcfd5e1@linutronix.de>
+References: <20261116-rpi-otp-driver-v10-0-15302dcfd5e1@linutronix.de>
+In-Reply-To: <20261116-rpi-otp-driver-v10-0-15302dcfd5e1@linutronix.de>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
+ Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ Russell King <linux@armlinux.org.uk>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Gregor Herburger <gregor.herburger@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794823848; l=4711;
+ i=gregor.herburger@linutronix.de; s=20260226; h=from:subject:message-id;
+ bh=/uVtf3kszhzLO1BlweCr+n2EDaewhQfZuSguFQqGLwA=;
+ b=ACXQD5qWjiXA7C2mcDCfZgdMeB8QiKDdbSL5EYxGLXVgNuznrjDHCswXrd1gOkXpSx53KwPf8
+ 8sVvxCUj18sBx7+91/ubGtBPn3ykWEym+leQpI18AdYIhPYGRuDbLsC
+X-Developer-Key: i=gregor.herburger@linutronix.de; a=ed25519;
+ pk=u72Lv7+/lS5CC1hmSrb17lv/6CK7HBh4Lvz77PHA5LM=
 
-Hi Alejandro,
+The enum was once ordered by tag values. The later added tags were added
+in a different order. Reorder the tags again.
 
-On Sat, Nov 14, 2026 at 04:22:16PM +0100, Alejandro Colomar wrote:
-> str_has_prefix() returns the prefix length on match and 0 on mismatch,
-> so the mistmatch case can't be told from "empty prefix matched an empty
-> string".
-> 
-> For instance: the OF root node's name as returned by
-> fwnode_get_name() is "" and will return 0 for any name matched against
-> it and since len is 0 too, fwnode_name_eq() will return true.
-> 
-> Let's use strprefix() instead, which also makes this function simpler.
-> 
-> Fixes: a9c8c738066b7 ("device property: Add fwnode_name_eq()")
-> Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
-> Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+No functional change intended.
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Gregor Herburger <gregor.herburger@linutronix.de>
+---
+ include/soc/bcm2835/raspberrypi-firmware.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
+index 8c3d43977a031..5a0cbb18d0b6c 100644
+--- a/include/soc/bcm2835/raspberrypi-firmware.h
++++ b/include/soc/bcm2835/raspberrypi-firmware.h
+@@ -72,9 +72,16 @@ enum rpi_firmware_property_tag {
+ 	RPI_FIRMWARE_GET_EDID_BLOCK =                         0x00030020,
+ 	RPI_FIRMWARE_GET_CUSTOMER_OTP =                       0x00030021,
+ 	RPI_FIRMWARE_GET_DOMAIN_STATE =                       0x00030030,
++	RPI_FIRMWARE_GET_GPIO_STATE =                         0x00030041,
++	RPI_FIRMWARE_GET_GPIO_CONFIG =                        0x00030043,
++	RPI_FIRMWARE_GET_PERIPH_REG =                         0x00030045,
+ 	RPI_FIRMWARE_GET_THROTTLED =                          0x00030046,
+ 	RPI_FIRMWARE_GET_CLOCK_MEASURED =                     0x00030047,
+ 	RPI_FIRMWARE_NOTIFY_REBOOT =                          0x00030048,
++	RPI_FIRMWARE_GET_POE_HAT_VAL =                        0x00030049,
++	RPI_FIRMWARE_SET_POE_HAT_VAL =                        0x00030050,
++	RPI_FIRMWARE_NOTIFY_XHCI_RESET =                      0x00030058,
++	RPI_FIRMWARE_NOTIFY_DISPLAY_DONE =                    0x00030066,
+ 	RPI_FIRMWARE_GET_RTC_REG =                            0x00030087,
+ 	RPI_FIRMWARE_SET_CLOCK_STATE =                        0x00038001,
+ 	RPI_FIRMWARE_SET_CLOCK_RATE =                         0x00038002,
+@@ -82,17 +89,10 @@ enum rpi_firmware_property_tag {
+ 	RPI_FIRMWARE_SET_TURBO =                              0x00038009,
+ 	RPI_FIRMWARE_SET_CUSTOMER_OTP =                       0x00038021,
+ 	RPI_FIRMWARE_SET_DOMAIN_STATE =                       0x00038030,
+-	RPI_FIRMWARE_GET_GPIO_STATE =                         0x00030041,
+ 	RPI_FIRMWARE_SET_GPIO_STATE =                         0x00038041,
+ 	RPI_FIRMWARE_SET_SDHOST_CLOCK =                       0x00038042,
+-	RPI_FIRMWARE_GET_GPIO_CONFIG =                        0x00030043,
+ 	RPI_FIRMWARE_SET_GPIO_CONFIG =                        0x00038043,
+-	RPI_FIRMWARE_GET_PERIPH_REG =                         0x00030045,
+ 	RPI_FIRMWARE_SET_PERIPH_REG =                         0x00038045,
+-	RPI_FIRMWARE_GET_POE_HAT_VAL =                        0x00030049,
+-	RPI_FIRMWARE_SET_POE_HAT_VAL =                        0x00030050,
+-	RPI_FIRMWARE_NOTIFY_XHCI_RESET =                      0x00030058,
+-	RPI_FIRMWARE_NOTIFY_DISPLAY_DONE =                    0x00030066,
+ 	RPI_FIRMWARE_SET_RTC_REG =                            0x00038087,
+ 
+ 	/* Dispmanx TAGS */
+@@ -109,7 +109,6 @@ enum rpi_firmware_property_tag {
+ 	RPI_FIRMWARE_FRAMEBUFFER_GET_PALETTE =                0x0004000b,
+ 	RPI_FIRMWARE_FRAMEBUFFER_GET_TOUCHBUF =               0x0004000f,
+ 	RPI_FIRMWARE_FRAMEBUFFER_GET_GPIOVIRTBUF =            0x00040010,
+-	RPI_FIRMWARE_FRAMEBUFFER_RELEASE =                    0x00048001,
+ 	RPI_FIRMWARE_FRAMEBUFFER_TEST_PHYSICAL_WIDTH_HEIGHT = 0x00044003,
+ 	RPI_FIRMWARE_FRAMEBUFFER_TEST_VIRTUAL_WIDTH_HEIGHT =  0x00044004,
+ 	RPI_FIRMWARE_FRAMEBUFFER_TEST_DEPTH =                 0x00044005,
+@@ -119,6 +118,7 @@ enum rpi_firmware_property_tag {
+ 	RPI_FIRMWARE_FRAMEBUFFER_TEST_OVERSCAN =              0x0004400a,
+ 	RPI_FIRMWARE_FRAMEBUFFER_TEST_PALETTE =               0x0004400b,
+ 	RPI_FIRMWARE_FRAMEBUFFER_TEST_VSYNC =                 0x0004400e,
++	RPI_FIRMWARE_FRAMEBUFFER_RELEASE =                    0x00048001,
+ 	RPI_FIRMWARE_FRAMEBUFFER_SET_PHYSICAL_WIDTH_HEIGHT =  0x00048003,
+ 	RPI_FIRMWARE_FRAMEBUFFER_SET_VIRTUAL_WIDTH_HEIGHT =   0x00048004,
+ 	RPI_FIRMWARE_FRAMEBUFFER_SET_DEPTH =                  0x00048005,
+@@ -127,10 +127,10 @@ enum rpi_firmware_property_tag {
+ 	RPI_FIRMWARE_FRAMEBUFFER_SET_VIRTUAL_OFFSET =         0x00048009,
+ 	RPI_FIRMWARE_FRAMEBUFFER_SET_OVERSCAN =               0x0004800a,
+ 	RPI_FIRMWARE_FRAMEBUFFER_SET_PALETTE =                0x0004800b,
+-	RPI_FIRMWARE_FRAMEBUFFER_SET_TOUCHBUF =               0x0004801f,
+-	RPI_FIRMWARE_FRAMEBUFFER_SET_GPIOVIRTBUF =            0x00048020,
+ 	RPI_FIRMWARE_FRAMEBUFFER_SET_VSYNC =                  0x0004800e,
+ 	RPI_FIRMWARE_FRAMEBUFFER_SET_BACKLIGHT =              0x0004800f,
++	RPI_FIRMWARE_FRAMEBUFFER_SET_TOUCHBUF =               0x0004801f,
++	RPI_FIRMWARE_FRAMEBUFFER_SET_GPIOVIRTBUF =            0x00048020,
+ 
+ 	RPI_FIRMWARE_VCHIQ_INIT =                             0x00048010,
+ 
 
 -- 
-Regards,
+2.47.3
 
-Sakari Ailus
