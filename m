@@ -1,67 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794844815;
-	b=QKvxoToeMOFi0sBuX3n/0yVUoyPa253t62CHd2iIIw1S72xPFNdtiCxgitAz/6XOwbDr
-	 JKh0TPSDYD2PTKUDW/062zc2jD/CEBomqLkecdlWq02gidfuVg+BlWsyZdntTYia3Avc/
-	 pHYjNXILsgHOd40K8iS0Z71rbYoNmMxp/kE/hQ7dHJWVoN1Fmbp3Z6AMwVnD7wdNR+nYB
-	 aJuvvxfdkPgFg62JXfEu6yFBk5ZMMJYL1WoXcWAcXuKsstJ0yUBHp00Jpnu1ONM3l23Ax
-	 iKMshE7fnHXaxEOwryh2UnDFpiDNOQ45HaltpH+1Ev7KuT8NwIIkvBBJTLk+TggpuRQ==
+	t=1794845243;
+	b=jRt0v/eI8C1Jd5KvW4S+dU8hZQlKaWTUKoXkUonLgezC4k7wSeQ6gv1x8KBmyQVLTYU9
+	 s5m7J0UCtCCYPPEAM7Eptb4LdptHj2g8aFjhOK4rt0SZvXBWSny/VcA3TzBsxWImB2PoW
+	 /hhGXvC9lzoHbsRZgDFdMp3MzFBtjrXe0Ad6Fz8a2TYl1BZPjdHGUq3l493D/0s/tYj1b
+	 LKIG4ZtgYHgcnwOWxUCHgQpwIzMopDWiqkQrJY2NpXMd50sEll2ydR5uy4a5r4SSCf+1R
+	 9dg9QCn8zVwFlC1YrCe6uh6kSEGwdt7y7Cg/YDBhAJoeDSlaNGU7PNiuLwRR1h8Nipw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794844815;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-Id:
-	 In-Reply-To:References:X-Mailer:Mime-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=5FwU8er9jCeLmP2s1OrkSO00t5m4+Uddmg0A6k9pE18=;
-	b=zEqOJp34+/zmTxjK9y3xdESWoe63vjz6lwWfkT764NZ+RtUOX+OuI4d8Sb/Iy66+eycI
-	 VUQXjKYwutpD1HtC61R0AxdTQlxHo3Tg9ccOqt8ZGiJZaTazkLyX76c/AyW4R1nHEsRs3
-	 0LgHVkPQf4uMfzUkCS9cwgirN2NL6HMjnAxEc6U3DMf1vVQ6uJarYkmYwFUhm9DhT67b6
-	 EyPSyyiRlbWsgbfmlMpm0qz2LYUAslmKnohRCh48OB/w/XTY6NYeN8T5CoXgnvw0OE9gS
-	 edcDGYZlmQfBkwHylh+8VXJbCFM4mEt9cDRtdV+h+IGLS4YK2clITHSfCRaw+r0PQXg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794845243;
+	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=IKV0hxoQg5hgOML35K8D4/uSv/9pAoDIN4rBZUJXI8Q=;
+	b=qYfkzcp904Tp0mG8jxpulxxWQiBkq94a2Y/nM9sKeSCEN5D4/dnizgAyDQGEIuakGjR/
+	 ztqNP5Z+WB5mjLqBrPZDLOhDtgft6Vdd3Hu+RUn3dTlRUFW5hzgb9q0LYYq+5lM5wCcxx
+	 49bwJyul0LzDEPyyjxWRoPo4vEV8QdPwtg93O+5HNkJrs67drtPK8kj/P2AH7xT9jXy0q
+	 NYBQNGE88g88b/Ap1iSpzDz9NS//R4W5WNOwDIsVVDlI+31MvmhlTlc7T6/un5kk6/iFm
+	 p1bimcNyXXzS9GUwCpk4bNFH3UC49V+A5KI5nt1gWd2K6QRctZWQ9wWhhRjnlBVbgQQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=korg header.b=BPegepsl;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b="QPjXvev/";
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b="IU/57tgZ";
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A20606A322;
-	Mon, 16 Nov 2026 16:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB52606A323;
+	Mon, 16 Nov 2026 16:07:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8DB52606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=korg header.b=BPegepsl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15E621F000C4;
-	Mon, 16 Nov 2026 16:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1794844814;
-	bh=5FwU8er9jCeLmP2s1OrkSO00t5m4+Uddmg0A6k9pE18=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=BPegepslNzGtyW1r/Rq123aCz2axqzJu12dxkG1nDchgLsphIUbg1Bfqs0vOTmzi1
-	 rc/seV0/CbaEUvvVFZEpifVak1iXewOj2iUUC1KYi1zJZnav1XZIRe1Lm7BZgDhD2G
-	 0DFtsqCaqCGn270wG1Wz5NkU7OmluEweJ+kDGlms=
-Date: Mon, 16 Nov 2026 08:00:13 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Yingjie Wang <x-professor@outlook.com>
-Cc: "shakeel.butt@linux.dev" <shakeel.butt@linux.dev>,
- "manfred@colorfullife.com" <manfred@colorfullife.com>, "legion@kernel.org"
- <legion@kernel.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>,
- "vasily.averin@linux.dev" <vasily.averin@linux.dev>, "hannes@cmpxchg.org"
- <hannes@cmpxchg.org>, "mkoutny@suse.com" <mkoutny@suse.com>,
- "mhocko@suse.com" <mhocko@suse.com>, "alx@kernel.org" <alx@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, "cgroups@vger.kernel.org"
- <cgroups@vger.kernel.org>, "linux-api@vger.kernel.org"
- <linux-api@vger.kernel.org>, "linux-man@vger.kernel.org"
- <linux-man@vger.kernel.org>, "linux-hardening@vger.kernel.org"
- <linux-hardening@vger.kernel.org>, "stable@vger.kernel.org"
- <stable@vger.kernel.org>
-Subject: Re: [PATCH v5 1/3] ipc/sem: account dynamically allocated sops
- arrays to memcg
-Message-Id: <20261116080013.6a0e1f1a4d0421f432b39ec1@linux-foundation.org>
-In-Reply-To: <179481695440.274194.11951572532773505066.semopm-shakeel@outlook.com>
-References: <cover.1793250194.git.x-professor@outlook.com>
-	<07d9034ec1fb5b6fd5eed2cf60ef3c84d5149e51.1793250194.git.x-professor@outlook.com>
-	<avqD2Z3KJwPsCcVG@linux.dev>
-	<179481695440.274194.11951572532773505066.semopm-shakeel@outlook.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=QPjXvev/;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=IU/57tgZ
+Date: Mon, 16 Nov 2026 17:07:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1794845239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IKV0hxoQg5hgOML35K8D4/uSv/9pAoDIN4rBZUJXI8Q=;
+	b=QPjXvev/fmS6baQMvJBooWt282/oYgPtyoqzKqIpkRejy6aJWhsfurqQa378ygpzgJpeiT
+	aqhautM0UdBIonR2K2lYfJD4lRf/KXcI9iJlzmPYMQaHq/tS45NxGn2KQ7vRQtOLMYgg2+
+	cWAnfzs4MaPkNrfvw8EbL6V6jX/3L21fsPz/ms+TYmTKnNhDSP+PX/xhVfeJb8wIB9k/+g
+	ST3DkvRqEfAgTHDzDhPX05Z6tKw+7E/RhUxoVRYtFvRLmEn/wggWsjMSZePi8uRgQNnoBA
+	fHKl2MUgkSM8P02kR/pCri04E1Cl7wZdqNrazsoOXnrb0fv1Kos5T7lKeFXVag==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1794845239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IKV0hxoQg5hgOML35K8D4/uSv/9pAoDIN4rBZUJXI8Q=;
+	b=IU/57tgZJYBCfpVisNGjzh93D7596t+Pl1ZUmiCHZzHb39PZoAhhQB+ZLrU+pByZTEEmiq
+	FCcW9vUaWjDaH2DQ==
+From: Gregor Herburger <gregor.herburger@linutronix.de>
+To: Srinivas Kandagatla <srini@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v8 00/12] nvmem: Add Raspberry Pi OTP nvmem driver
+Message-ID: <dzxhqxl4dn7jeqjr3qhvmzegyqyxnrstwotoqkoqoxiipwfxao@pzawf4vd3gos>
+References: <20261110-rpi-otp-driver-v8-0-797e0577d414@linutronix.de>
+ <336dc797-2406-4d81-b322-61b85ac52bdd@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,41 +81,50 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <336dc797-2406-4d81-b322-61b85ac52bdd@kernel.org>
 
-On Mon, 16 Nov 2026 08:20:52 +0000 Yingjie Wang <x-professor@outlook.com> wrote:
+Hi Srini,
 
-> > There is no kmem accounting in root cgroup, do you know why there is an increase
-> > of 2.3% there?
+On Mon, Nov 16, 2026 at 03:56:06PM +0000, Srinivas Kandagatla wrote:
 > 
-> I think the 2.3% mainly reflects boot-to-boot variation. The unchanged
-> 64-operation stack path also slowed down by 1.9%, even though it does
-> not reach the changed allocation.
 > 
-> For successful calls, the per-boot medians were:
+> On 11/10/26 4:33 PM, Gregor Herburger wrote:
+> > Hi,
+> > 
+> > This series adds support for the Raspberry Pis OTP registers. The
+> > Raspberry Pi has one or more OTP regions. These registers are accessible
+> > through the firmware. Add a driver for it and add updates the devicetree
+> > for the Raspberry Pi 5.
 > 
->   nops  V4 boots (ns)           V5 boots (ns)
->   64    230.5 229.4 230.0       231.2 235.0 235.4
->   65    546.0 551.2 548.2       551.2 562.6 566.3
-> 
-> The first V5 boot was very close to the upper end of the V4 results at
-> 65 operations, while the later two boots were slower at both sizes.
-> That is why I interpret the increase mainly as boot-to-boot variation,
-> rather than root-cgroup charging.
-> 
-> __GFP_ACCOUNT does still change the allocation path, including selecting
-> the kmalloc-cg cache, so a small contribution from that is also possible.
-> 
-> Andrew, could we clarify the root-cgroup result in the [1/3] changelog?
-> Please change
-> 
->   and successful calls in the root cgroup by at most 2.3%.
-> 
-> to
-> 
->   and successful calls in the root cgroup by at most 2.3%, which
->   appears to be mainly boot-to-boot variation.
+> What is the merge strategy for this series?
+> Am happy to pick up non-dt patches 1-6/12 and 12/12.
+> let me know other wise.
+Wondering why you answer on the v8 series. Have you seen that I have sent
+another series with some additional fixes?
+see: https://lore.kernel.org/all/20261116-rpi-otp-driver-v10-0-15302dcfd5e1@linutronix.de/ 
 
-Yes, I have made both requested edits.
+Also please note that the first patch has already been applied by Florian. So
+one of you must drop that patch.
+see: https://lore.kernel.org/all/20261114032710.874144-1-florian.fainelli@broadcom.com/
+I included the patch here because I didn't knew which was going to be applied
+first and I wanted that the series can be applied cleanly by Sashiko.
+
+Maybe Florian can pick the rest of the patches?
+
+Best regards
+-- 
+Gregor Herburger
+Linutronix GmbH | Bahnhofstrasse 3 | D-88690 Uhldingen-Mühlhofen
+Phone: +49 7556 25 999 35; Fax.: +49 7556 25 999 99
+
+Hinweise zum Datenschutz finden Sie hier (Informations on data privacy 
+can be found here): https://linutronix.de/legal/data-protection.php
+
+Linutronix GmbH | Firmensitz (Registered Office): Uhldingen-Mühlhofen | 
+Registergericht (Registration Court): Amtsgericht Freiburg i.Br., HRB700 
+806 | Geschäftsführer (Managing Directors): Dr. Wilfried Wessner, 
+Katharina Kopp, Alexander Gieringer
