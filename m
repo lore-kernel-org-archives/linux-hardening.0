@@ -1,71 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794790384;
-	b=veEk0M1ndnVsTFO8SES0hoOhxNEhscMiQ3YwTyUcVHPx5W8JV8SntndEyQWVzBP0XoX9
-	 l9SWcVtfEL9DRIQ0mJt6+RLgodoIZVHHPVt912sRqN5sq56PWoiyZ8mfbMPtcxzF/zOEg
-	 1C/ylvLknFwsy/aj0X7I47vstLb/5X8IWTRcEhla7tNyqhE8zjwytHALxkkW97JGR0tz8
-	 TRwf+SQ6zOjm9v1tpL2vO5xHNT7RV0SwdYq0H+OwG2/OaqtC65BHsZ7HNzOPjXb6iHcbM
-	 IPkrIq5H+XQbA3ImjVHF3tvCbEPzEIjK80A/CwqKTAmzt27nhAOjIxYNCCKolLFUtCA==
+	t=1794794255;
+	b=YtVdW8tE4f5yE8P6z8A4pFTzRwJbubDSXU3r8lp74UOYnOVw2HjXORVOCzJF9MQEGoVG
+	 aLijVysM2vkNwOfyYxlT2/mX2nw3PDHwlL4mRZVkpW9VwtiJS8s0DxF8XOBFkMM/3mxOn
+	 NOz45z0fjgWtsIkRE0iYltVUh0cUL/PbBHycxHgpsZ2BrRyx44w+Cd5Mk1eo+0QxZtO0L
+	 9OI59Bu1LZb11FqMesz5Qq4mGG/zLQVCIboypdZWI5An+/wEp2agPro2sN9FQ8JccjjKH
+	 x0viqJDdQThpGfCqsP6v6xCZKJxJ2y7HXm2sR+CWM20A4sJWmKHOHmuoWDDMYup2o6w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794790384;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794794255;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
 	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=TbXR1DlKKuOwhV3PqlSfdkNh4TOa9cw6NjlogJdKa+E=;
-	b=mDoRDuR+GP1qnQUvsQW3oH18fjhg2hH0LwWwq3obBcEZAVopMzEMLY6L0/0hRfpBzxxR
-	 Zfx3rc23irOIj8xyvgWpVY8/HB221wR/7hhwNr8Iu+ZbNd4cq/oPd4DC7KUeYlkLKTaY9
-	 KUFG/mUWuzmyQJznEw6cM48tGfWgZH1LIv4LWIDiePJYNYQ1v2Gy9rUVycS6TjwGkMPav
-	 J9iU2xCqelbClVZyZYpqclqnDf80EcLjv/9U7qPZY4yg4vjgFDR+jPUiijx2e1hER4zFE
-	 gPUVgpRjsjsk8yTdt65ps7kCN8csL7++HLSCELMUC3YBOgchKiDgc2xs0jDobPm/WAw==
+	bh=7mjaddvdfdXIqJHMDGeE0zxMt8d1OR3a8cVa2gY6S28=;
+	b=wW0RoGxakATsyxmkI3tLXWbRsjrVmr0mxhxCmhOfc0wQaxO/A0grdhHrXn/f5sfS1Byu
+	 23sPN5s1ANZFYgrw7NxbbozKIjcSOEhURFXpOsMbKOiNTP1ilcbcUyz5/UA8nfE+pnA57
+	 PrPSR68B2L1m8Vk2eqUCAFgU6hLHgJnm3H65cho6nZM7AyAr9tYxp3LFuW4zFOfxsCcET
+	 U7ue//cw5ROCxHiMaZJhMvHR0NgECfPMWuNKbnwNf9K+FVeSfVrL/Y/0ouhMmyUIm9C1w
+	 4iw7FIgwuoDtjcawJzx8f18JrQEh4RONSej4BMYZOrLFgAwVL2e2Um1uVfmxiL+x11w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Ov0zrn7S;
-	arc=none smtp.remote-ip=192.198.163.11
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YZr6S5Md;
+	arc=none smtp.remote-ip=198.175.65.17
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35A8606A32F;
-	Mon, 16 Nov 2026 00:53:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D35A8606A32F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7593606A31C;
+	Mon, 16 Nov 2026 01:57:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A7593606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Ov0zrn7S
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YZr6S5Md
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794790384; x=1826326384;
+  t=1794794255; x=1826330255;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=oC4EL+G54eJpi+ckY286iUB3+w/3VL3BuLJIsdbKVSo=;
-  b=Ov0zrn7SH4OOOV0OUcesz/WiMjxwqCq9H7EucNOcS9TrGeRB6eshldqG
-   MJrSQZEHPgXjAyJ409UqbaPENJfZiNVyUzXObKkE6iJu06Qo923sIBiF2
-   oj6yTGNeFJSCmXKKPU8/ZYTiYILBESNJKym5LYOT+4JdBmGaalDd4GBZK
-   G7PWZB7biuB7aAeIwcNvD7pMi31DzMGSwSui3HFG7gg+9WFrHINBHee5s
-   qbpe2EQPYSkTs27hwk5IBoz/ViX827JYDG8xiWQ78+1j7zW9GanEFOApI
-   XVEoIhGhfDXgHxSMVTjOAil8mTRCEVWKWJD7XxCaE74wCQtEFgICytJtm
-   g==;
-X-CSE-ConnectionGUID: zk/I/jEVRJqNssHpk3ITEg==
-X-CSE-MsgGUID: AszOYwQgTEa+uPsMBFIgbw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11967"; a="3436245"
+  bh=gr3NUTKOR9X04vWpQlUnShjx5c3VBNHn9Snx+3Wmlv8=;
+  b=YZr6S5Md1rpkdV4o6QEB7JdGWa5J2flkI64uqhLRPc+fo0pjAGHYummC
+   D06G36PQCmoj7iUz3MdAdtwseOsZT3nDV5WHvyLk3KS+4iv2zqKUENtRV
+   uREc4i2Vb1sc+jGJw4JB0OvJHmYxqffhqubbOe7HJkOL6Se3oRJeCQ2+h
+   LJiol9gYlMoS5PYSjVDlFnIKxxmYOba5TpeAu1g81oKOkUAYyxqeKrpo7
+   PA5/s151cI0aEcAaN7OfBoSEv+P7NjBbm7sNzcVT5ajGYeV8QUtZ5VsN4
+   ivNIjzwwF3XjViHMLYWZ04mk7X1xexNlNZokgDc6ZCzBHfhv0XVxoVzM9
+   w==;
+X-CSE-ConnectionGUID: 8AGO8sOiSnOwwz4zRR1wZw==
+X-CSE-MsgGUID: i3xaBU6gTBiUQTPVsYVCgQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11967"; a="3537210"
 X-IronPort-AV: E=Sophos;i="6.27,215,1787036400"; 
-   d="scan'208";a="3436245"
-Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2026 16:53:03 -0800
-X-CSE-ConnectionGUID: XlWbHG4ZTUaLA2VnjtdcFg==
-X-CSE-MsgGUID: qIe+KKi/QrmnQzUK/p+f1w==
+   d="scan'208";a="3537210"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2026 17:57:35 -0800
+X-CSE-ConnectionGUID: IADebuhCQ4CUXARAYLMORg==
+X-CSE-MsgGUID: FuyDH1K1QKOl3dWmwOcyIw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,215,1787036400"; 
-   d="scan'208";a="11141439"
+   d="scan'208";a="11202770"
 Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by fmviesa012.fm.intel.com with ESMTP; 15 Nov 2026 16:53:01 -0800
+  by fmviesa011.fm.intel.com with ESMTP; 15 Nov 2026 17:57:32 -0800
 Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1xSkxu-000000017YW-1ua5;
-	Mon, 16 Nov 2026 00:52:58 +0000
-Date: Mon, 16 Nov 2026 08:51:54 +0800
+	id 1xSlyL-000000017eC-0say;
+	Mon, 16 Nov 2026 01:57:29 +0000
+Date: Mon, 16 Nov 2026 09:57:18 +0800
 From: kernel test robot <lkp@intel.com>
 To: Sasha Levin <sashal@kernel.org>, Kees Cook <kees@kernel.org>
 Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
@@ -75,7 +75,7 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Petr Mladek <pmladek@suse.com>, linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] seq_buf: always inline seq_buf_terminate()
-Message-ID: <202611160835.RPhYOuAv-lkp@intel.com>
+Message-ID: <202611160950.wYHyNZ3g-lkp@intel.com>
 References: <20261115153430.1607764-1-sashal@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -100,23 +100,23 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Sasha-Levin/seq_buf-alway
 base:   7b8cd26b6aab8cf147165610d13964f79200a5a7
 patch link:    https://lore.kernel.org/r/20261115153430.1607764-1-sashal%40kernel.org
 patch subject: [PATCH] seq_buf: always inline seq_buf_terminate()
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20261116/202611160835.RPhYOuAv-lkp@intel.com/config)
+config: i386-buildonly-randconfig-1004-20261116 (https://download.01.org/0day-ci/archive/20261116/202611160950.wYHyNZ3g-lkp@intel.com/config)
 compiler: clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261116/202611160835.RPhYOuAv-lkp@intel.com/reproduce)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261116/202611160950.wYHyNZ3g-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202611160835.RPhYOuAv-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202611160950.wYHyNZ3g-lkp@intel.com/
 
 All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
->> WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x3 (section: .text) -> bootup_event_seq (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0xd (section: .text) -> bootup_event_seq (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x16 (section: .text) -> bootup_event_seq (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x1d (section: .text) -> bootup_event_seq (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x2b (section: .text) -> bootup_event_seq (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x35 (section: .text) -> bootup_event_seq (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x1 (section: .text) -> bootup_event_seq (section: .init.data)
+>> WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x9 (section: .text) -> bootup_event_buf (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x13 (section: .text) -> bootup_event_seq (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x19 (section: .text) -> bootup_event_buf (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x25 (section: .text) -> bootup_event_seq (section: .init.data)
+WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_set_overflow+0x2c (section: .text) -> bootup_event_buf (section: .init.data)
 
 --
 0-DAY CI Kernel Test Service
