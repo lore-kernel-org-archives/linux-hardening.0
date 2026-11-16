@@ -1,55 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=13.77.154.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794833101;
-	b=hd48KRYRxDTe5DpujCJ88CBZw+uVnEDmY+KLBYoJ2ybiWG9T1loL4rn9RcYOST+YjpX+
-	 R4UOi1UEV7W8SyWmAkbEkzjPjxOdKxZirYPyOFGToPibmtLdrzbEBej/FmrN5wdv9PbHZ
-	 Z188YkMgXVUCGLKWiwrxh+b/rMPhnh6jlLkCl8Jls8aoU1uXb6iHuKDcRmlN6enMNmEkR
-	 8cZ6lA8pMpXNTVLx+aPXtjGcrx0KcNJPK3RG55vH3nfZeJhpdiaJKUf6GQlKYZLgRiyAX
-	 LN9ZZCCDU+PPMuN4GdcYW6KcrO8dpWONktSUKGQed6FXtp/ldxgHL5DW88Ei22H/LTw==
+	t=1794841361;
+	b=YDaD+ttQqDlhzLU0zj4GksxNCbPF43s+9RHGOjnmttqJ6WR6rrk0T1ZGFYsgp8lgGDTJ
+	 VINgYm1FUk/Hq6F5/XXGxCsNpQClnmddfNnVgWgLkTCBRQ+Gq6UQkNSddF4lvZ0XGy3bB
+	 KnW/V0p27+/2FfJXGzWIOz0iALkdFj/ifD+MDh01qymyo7D0Qu0hGyu8azQ4QuAMi5FM1
+	 uCKzIF9NdzwtVL4iExYVnXOLjBsn0zSkmcgLAwyO9cQui9k2fAld+JrTn3xEsFPvI+JV4
+	 cmWWOfTkBztrGfOqtWQ7xsLnGIOmRVI5ff3rZozhFWZW15Q5cLZW5dbDpIDZ1zkQIHA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794833101;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Gd3JtHSjhZkWyKm59T5sGeqovV+uq4UZpWkp1MKhIxA=;
-	b=HAPiSkphzVU2J3MN4k8GiQoAsnhSppWLK2QIpeT1gMH3cXQ1C6CBB33w/wYIHA7Q21iI
-	 2mPbJci1O/YdTskKB28vYkF1tcXGQf8q6dtjAG0RsTKxn8HPhQndiGoThUnZxYoGNF2JT
-	 UReei9Bq81aDYwg4i8G0K1VCdthhebXJX4zvrRd4asvZf7LCaagXYy7UbBjhsOm97zKJs
-	 HFj0p+1KJVqeuLPrjBQtcKRrXlmYJ9v8TASX8j/R/lkgvysQ3e3toebdPn92362Zbx1zm
-	 anOKIJ0vzGbLQHMWcKtIIBW2osb2/ouC/U6+DbIhO2MjYo7fYubkrUCv4qN9R/RI4rg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794841361;
+	h=DMARC-Filter:Received:DKIM-Filter:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=UrYcNCnPwkCr55f9wx8oAre7u+b0LDqMaAoFyZ5VaPg=;
+	b=Gs/3/k2D1AiLNmT1VeS1adxSDZOcRDcuvtgTsM+YkrnwCSzz3nReH+xZTNMizpMRp2xP
+	 +jt1uGt3UGvTtLYCWfE/QUGni2glNWemgJTlXq6kTIc2hrU3YLWwD+P9gNNGawZtZSYhl
+	 OIHZS5ZLL3ZsLA3fMiplrd/mRRGCI4MnSgo/dSulhQMsM3HX6nNyWKlc6oWjyoX01fE2z
+	 6yeNMcJtXlCywmD2XH5IofhNTp1uMKjILjmZiAuN64VZ+PO+eVO96Lu68t9XngzMLrHtF
+	 uS2FIqzorUhc5MDgEYMYHxY2o1DN1TS5erQU3cXoz00CAF+SfzuXtvrn/s4jzVn+7Bw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="X//yu1fT";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9F0606A335
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 12:45:01 +0000 (UTC)
+	dmarc=pass header.from=linux.microsoft.com;
+	spf=pass smtp.mailfrom=linux.microsoft.com;
+	dkim=pass header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=ERypDUVe;
+	arc=none smtp.remote-ip=13.77.154.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A8C606A89B;
+	Mon, 16 Nov 2026 15:02:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 40A8C606A89B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X//yu1fT
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E23591F000C9;
-	Mon, 16 Nov 2026 12:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794833101;
-	bh=Gd3JtHSjhZkWyKm59T5sGeqovV+uq4UZpWkp1MKhIxA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=X//yu1fTGN2lhFmXBbWYXkOxKg20bzlNBb6mR6C8HiUqRwum1kMlrRPjACAEWsjsN
-	 xfT9VxfR3gHpagUcxRVOuvnu1U1Xo2JIubUO3nvMK2MKP5KfAhLaufPiSklYDFI4gN
-	 M4Jf78dnTERNTd/nMLfl0Q0SyCSaaIsTQ1/tHnjhtkdmyVREX/2MGbBQe8GSKcRl37
-	 M5iDaG7cD1IK6cpEXfyFMXUBE4kXTLiWRMB4E3KwyFz2fPe9UaltmyrXDrRD9sWwA+
-	 NJlYxUw5f35ykdv31gaZ3TJc7SJI3nW9rUS0LtW12aBxzxAMFda7/1wQc+Y16ylwEW
-	 KdN5Qo741me6Q==
-Date: Mon, 16 Nov 2026 13:44:57 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v1 4/4] treewide: Use streq(3) instead of unnecessary
- uses of strncmp(3)
-Message-ID: <avr6VxeIaXatWFBC@devuan>
-References: <cover.1794767906.git.alx@kernel.org>
- <7994b5827030d909928a7b7dab35d8b049974fa4.1794767906.git.alx@kernel.org>
- <avr2OGrm9hHG05lU@ashevche-desk.local>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.a=rsa-sha256 header.s=default header.b=ERypDUVe
+Received: by linux.microsoft.com (Postfix, from userid 1216)
+	id C1DBF20B7168; Mon, 16 Nov 2026 07:02:29 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C1DBF20B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1794841349;
+	bh=UrYcNCnPwkCr55f9wx8oAre7u+b0LDqMaAoFyZ5VaPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ERypDUVeu4NV1skzpf8c34AAAzQIG3PkRJQtWby0OLSkQ3SY2aKbeQhqT/Dm96/en
+	 QBTevP16cm96ExjC3d+nw/C85+oOk2rhax6ilL9H7pHsMuKWWdKczebjbxfa/YpNm1
+	 C5WCyZWbv2VYosYIY9eN6Z7Wtq1XqTTfLgniRwhg=
+Date: Mon, 16 Nov 2026 10:02:29 -0500
+From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 0/2] drm/hyperv: address worthwhile gaps
+Message-ID: <avsbBTsIoo09yr9L@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20261113215843.1939889-1-hamzamahfooz@linux.microsoft.com>
+ <MN2PR02MB68638ED8E06516AFFAE4B218D47E2@MN2PR02MB6863.namprd02.prod.outlook.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -59,94 +67,58 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="w5dlod5y2yeudtmp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <avr2OGrm9hHG05lU@ashevche-desk.local>
+In-Reply-To: <MN2PR02MB68638ED8E06516AFFAE4B218D47E2@MN2PR02MB6863.namprd02.prod.outlook.com>
 
+On Sat, Nov 14, 2026 at 05:43:06PM +0000, Michael Kelley wrote:
+> From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com> Sent: Friday, November 13, 2026 1:59 PM
+> > 
+> > I was doing a deep dive into the host spec and noticed some gaps. So,
+> > I went ahead and hacked together the patches in this series for items
+> > that seemed worthwhile to address.
+> 
+> Are you (or someone on the Microsoft side) testing these changes
+> in a Generation 1 VM, as well as on back revs of the Hyper-V host?
 
---w5dlod5y2yeudtmp
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v1 4/4] treewide: Use streq(3) instead of unnecessary
- uses of strncmp(3)
-Message-ID: <avr6VxeIaXatWFBC@devuan>
-References: <cover.1794767906.git.alx@kernel.org>
- <7994b5827030d909928a7b7dab35d8b049974fa4.1794767906.git.alx@kernel.org>
- <avr2OGrm9hHG05lU@ashevche-desk.local>
-MIME-Version: 1.0
-In-Reply-To: <avr2OGrm9hHG05lU@ashevche-desk.local>
+Ya, I have smoke tested all of these patches on WS2016 (both gen1 and
+gen2). Also, I have it on good authority that they should be good at
+least as far back as VMBus v3.0, so it should cover everything that
+is currently supported.
 
-Hi Andy,
-
-> Date: 2026-11-16 14:25:28+0200
-> From: Andy Shevchenko <andriy.shevchenko@intel.com>
->
-> On Sun, Nov 15, 2026 at 07:46:24PM +0100, Alejandro Colomar wrote:
-> > Uses of strncmp(foo,"bar",sizeof("bar")) are really the same as
-> > strcmp(foo,"bar").  There's no good reason to use strncmp(3).
-> >=20
-> > This code seems to have been confused, and probably thought using
-> > strncmp(3) was somehow safer than strcmp(3), but it is not.
-> >=20
-> > Let's rewrite with streq(3), which makes it more readable.
-> > This patch is not changing the behavior of the existing code.
-> >=20
-> > These cases were found with the following script:
-> >=20
-> > 	$ git grep -E 'strncmp\([^,]*, [^,]*, sizeof.*[A-Z"]' \
-> > 	| grep -v -- '- 1';
->=20
-> ...
->=20
-> >  arch/m68k/sun3/prom/console.c                  | 6 +++---
->=20
-> I hope you compile-tested this at least. IIRC PROM is early boot stage on=
- m68k
-> and PPC.
-
-Yes, but never trust my word for that, as I make mistakes.  :)
-That's why I try to explicitly show the testing shell session in the
-cover letter or in a reply to it.  In this case, the cover letter shows
-the full testing I did, including a full build with 'allmodconfig'.
-
-
-Cheers,
-Alex
-
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
->=20
->=20
-
---=20
-<https://www.alejandro-colomar.es>
-
---w5dlod5y2yeudtmp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmr6+skACgkQ64mZXMKQ
-wqmH1BAAo2tQCqvErEmv0GrqT446Jy7YuhLKMa4pDQRknWV4ka2unKN1N4RlvILW
-lb6oA/hKqMfasV006GQshxh4/KLPcbTg+dIPbhe8EapVQH2axAX1TnJ5OHlTdfYl
-3aP+E5lwGm53jzzcvnMduKaL+ryYTiNgrHs05OXHcK7NHLDznpzxf/rsKaYePB6P
-tTLstMCbNR+4m4EQQhCR4eO73ow/EvsvkK3j7LoeSG1qf84S4+oK0a5lXhaB+hJb
-A0H1d4Z0gNIbnSPmOE0+viPHIpikSES9cVNeOSpKVwd2f0Q7WWSU5QPnDN7CNOx4
-nEvpt6oHM1tYk9NqM2EK0T8ixrBYzveNne+c4wDyLBN7dr0cAPReY1+ye7nY1WLr
-zVtS//Nn2lccnpszAFNoeYxNGWRjzAUumDvtYeQ5XDIFlM/zhyjgFfhRAG+BxuuV
-8/kwe6I0pGZ4cGpniP7Yd37UBvFMuaX4cgb0dmbH8nWTHDxXIZaKZ48doZJqmCSk
-lDy+5i9iAbsg/uZLL1ad3U/EYLNd+E634KXp/AkNV+RnqycbLBwk5l8vYOS1eR1V
-UlktYTssf6JCLmElPhr2PQruoPiDAeyzU1bp2rpdyj5caTlUWTk68mVawxeWE2U2
-QWiO8rlWPRkfRm1AmXzMw/hrmSsxTB6sq1bYzgxtgdGEzb5fpT0=
-=1P4a
------END PGP SIGNATURE-----
-
---w5dlod5y2yeudtmp--
+> Testing should go back to Windows Server 2016/Windows 10 for
+> both Gen1 and Gen2.
+> 
+> Same questions apply to your earlier cursor plane support. I just
+> did basic smoke testing of the cursor plane support on both Gen1
+> and Gen2 VMs using vmconnect.exe on an up-to-date Windows 11
+> host -- no obvious problems. But I don't have access to older hosts
+> like WS2016/Win10 to do the back rev testing.
+> 
+> There are multiple frame buffer differences in Gen1 and Gen2 VMs,
+> but most (or all?) are in the lowest layer in how the frame buffer is
+> allocated and mapped. Hopefully these higher-level changes you are
+> making are agnostic of the VM generation, but thoroughness would
+> dictate testing both.
+> 
+> I'm less sure about what might have changed in current Hyper-V
+> versions and WS2016 from 10 years ago. My general impression is
+> that very little, if anything, has changed in the Hyper-V frame buffer
+> support, but again it would be better to not get a bad surprise after
+> the code has gone in.
+> 
+> Michael
+> 
+> > 
+> > Hamza Mahfooz (2):
+> >   drm/hyperv: add modes for all resolutions offered by the host
+> >   drm/hyperv: batch dirty rectangles
+> > 
+> >  drivers/gpu/drm/hyperv/hyperv_drm.h         | 15 ++++
+> >  drivers/gpu/drm/hyperv/hyperv_drm_drv.c     |  4 ++
+> >  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 32 ++++++++-
+> >  drivers/gpu/drm/hyperv/hyperv_drm_proto.c   | 79 ++++++++++++++++-----
+> >  4 files changed, 110 insertions(+), 20 deletions(-)
+> > 
+> > --
+> > 2.56.0
