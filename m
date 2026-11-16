@@ -1,100 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.44
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794801121;
-	b=DU+xB1iqkyvZelgO9LHN418sbnHizzw1nIv2XnnIn72B2y1sOygxYTOn+A8gj++hgi2Z
-	 TiaY4tAfP+7VkNwwn8fjJpyfS3oVlBnKuLXZBQRBJzo+Gsa+1jhooszpNxnx8+ZqK/lNr
-	 igt9Nw8ZMOSKHtl9UmtBpe9qoBNSLvgNsnCC4/JO7IW7Jrsnng7tQfgc0ObBQVajKoIT2
-	 s/T6NGD9KqiK6Zy0HsApDYaqE0Q8Rb6JM3aeIv0C7Mso0XGmQblHh+u1y2QMCdx6UFRW/
-	 5cpPDAqpesHgR8Zbs2Tze8HSKqX30Dv3X8bIr3RavXhL0I8h7XbeuCzGK8zNjVBSVTQ==
+	t=1794801190;
+	b=QSOzESwI1QgPnUYGTbas3PJKRN2o1azP+RLsD+rQbmz6M0Sxio5oOSCSSppPe1hLKIoy
+	 ASI2oz07G6RsgmbgWYRL7bGABBgeTSpQ0Bqzp3Vxw00XJ+CEdjEz3xQp8vqEe23m5PMp+
+	 3D3r1t4ez+nFxEUJ1EmKCnMjZQ7BHkLxjYVlu7+p5oDOGp8+YB+YHwuTAT2mvsZXKNZ+y
+	 ddAuhm5MaYJGBaPrcOv0lMgcAwDpInAJRvvBUnctI97yR3BI0PFwlrW+Z7y7YhkDs3QH/
+	 XflTdZDJ6g/UTFovD11o5mGcgb0VwhCK8oTAaW28NZDM1wGskt2/2dRmaI3DfMbNnlA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794801121;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794801190;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=mHMeLHBcjlpdKQvivDV94WV6xZA1r0k1UiU5sTtS58g=;
-	b=ZW870J7D1tbHE/W0kVEOF1lC0u12Qx+9382oauCsuBFNjhTIiR0wMWvpaQDuTSFbtrOJ
-	 nUVBo8g5e6KSPy1EGxjT9wtec8Gc9FLnsDFjXQGxXYnPmEoBJQJIgiyYG2ITMX3t2r+7S
-	 OLrqJPFZ96KW7qxhYCCp/kS4scOYQt9ewXqoeEDNhfBT1NGj70PFCo+KbtK077FlV8nNs
-	 iOYfNdZfgP38UAq/8BBwUQorIxypMjR96ukB9AsIA+f3SRfgVuN+h18P6pOBl/LFvoswY
-	 EbgVTPeRXlmEwCumYo388dd3qthePeO8oc+D/Z7bykByPKD1c1/kN6wLOwJ1zHBrKGA==
+	bh=4TL7rU67dcCsld58oJYx+NVlFE0fH5IBsAjLGvpEK3U=;
+	b=WoJC/A/C6zXAXh+oETMTQu4bvFRIgil6Xz7ky0XpbTN6+cOwusdQIbultTaOdx0YeQz2
+	 M+B1osFbqLIaR9hNDmjQLq7hC82k3xmC3nqVgrhb5qbRFKZVD02lW1B724JTnbEtx+fgS
+	 p7iehTsd6HVuCbfdweFGxrs7Y51cY/Zb1ssMqVFYPKs7F2jX+OJAozs5D2sbZvpbdBxPj
+	 UGPUCd2BeMsxPO/C/rFkj0QdsuJmVdeEnNKYuPzUZZ/g/ResdQtXERjRwBQeucfJdPNlQ
+	 An0HgNf7hnyEkt2yvuOMRz5CGgzBd5g8kbyyL0ytLhVbwL/hEmCxCmdZKwCNOazTe/g==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=E5G3DvU+;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.51
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GlzZcYad;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.44
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E84606A31F
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 03:52:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06E84606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1F6606A31F
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 03:53:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA1F6606A31F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=E5G3DvU+
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c50cc8e0f84so106556866b.1
-        for <linux-hardening@vger.kernel.org>; Sun, 15 Nov 2026 19:52:00 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794801119; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GlzZcYad
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6b7efd3bc26so1266135a12.1
+        for <linux-hardening@vger.kernel.org>; Sun, 15 Nov 2026 19:53:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794801188; cv=none;
         d=google.com; s=arc-20260327;
-        b=p39U3q2O3efesLBMGA5CaSXnJAML3pRyyl2Vc1KC02l0fYCPNKnd5EsQBTo2+E8k3C
-         mFnB9AsVATgmKd8ExJMjTYU+vHHeWUPqsgfNUHS7mw0mhxNH0dTFFLgFztNMXt0F7KX1
-         nS4Fy22WvOOH5ucc6Y0/tLR4aW5cFDXmCpee6U+0Zp7SQLtkCGcx0l6mVSlxPkg3fPTT
-         vLWAI5BkE65Ul8V+/za1JTkq2dYXb8Hi2ksvF7DXY+NKXsY7xOd9F/Vz0Oyjto6JviSg
-         5gucMDxZmjd4vsccHuPK3XHmLt8mm3AWVdFjmvT7O7mahujd03hKiAqVJiILll0SYRSv
-         j2Uw==
+        b=EVE75RIvFoWwECngRt/5ogISIdgpAgk83QRhCcET5bUC3te6xot9SilWJXg7fR1Jmp
+         rSJQKa+75xCHyp2UN/zF89eRHLvGDuGSzxiGeFoXZT2bCZ1Q8KPtLpbdVOOgwlp15c9L
+         x0Wk5ln+C4+tKxap8mIjznPpBYKlWkJGoTK+mNtnxAxp5rSeVi9T0OvULp923AVh+E9C
+         cDpRv7U8jCexNMGKdUdBbchQ96kXGzxL9fxF11mk7uc/yUQd9KMAhpfHClz+qRevvQyV
+         4AzLTxjqlnkcFG/C2J/Eiki8cdPF2cYCxigDv9yKvm1j2zVSe9ZvWIDEyrKviA709xq+
+         1Vxg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=mHMeLHBcjlpdKQvivDV94WV6xZA1r0k1UiU5sTtS58g=;
-        fh=PXjcGVu26B5SP9+4wGnWf4OMqlZrT2Z4E5ShzDSnpbk=;
-        b=FiU/A9lBO6m+3vZAy1M33rAK2FpdF+qt8WdyxLucC2zMAu4LxABmZLu8VmmTpPc0HS
-         ebtALM8Bz5u94zlDc5yv658GAp4g9O9Ws/dYSPoOEGPJR7V4LzMtFUq2EaFJPum2eArB
-         YP3jyjfkDQKFO6uYR7vm41rF2kbQNQ4BACxU11mqAcIy9DI18zbykehWgBwtmjxPjIXK
-         sbs4ztCt72GAEGKJwllxz48X+gJ23F0YG3KZm93vwtYqGOOEHSV60tn8+5URuSk9ik7J
-         p46ydRTYdcDrosCQIGPMbKY/79KHPaLx+1Gp7CdljBLLW58nMsCHd6LNmzAQCQitbQO7
-         CAZQ==;
+        bh=4TL7rU67dcCsld58oJYx+NVlFE0fH5IBsAjLGvpEK3U=;
+        fh=HUSiElBfE43Q1SZc0Gr4sTODONgkoCBG4IOLxo4p8WQ=;
+        b=LttGsBOXyRhgkIcC9ejfxYq1hfc7S8GJ79NY4OYSdT/dGr4ALvB/6qg6biEv+z3RtL
+         IzhS7ie05MkunIroxYHmCfpUQpY5XLRUqGaclA9Qv9tlDHmnZHMvZzclASjUdFhaEUx7
+         K8UXFanxLqUnE/iInZbjGUeX9XLty5HclUEuUQuSuh3hhKLtXxlNV/uSZgCBwj5dLCiw
+         ZaqgN48zKz4axD5vTL1tQCvWON8j2qr4nJcEHHrXKBOYE5jSeHQL0J65J3j0tC2KDODA
+         f3HL8Qae8+OZ1y7Fnen6CA2qPIuRaa2Cj7xEO8CXiduK1DmFcU9Tzobob8bKKcVRZ84D
+         IQ6w==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794801119; x=1795405919; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794801188; x=1795405988; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=mHMeLHBcjlpdKQvivDV94WV6xZA1r0k1UiU5sTtS58g=;
-        b=E5G3DvU+Yq5hFKIs0mhcY6Hs07QWT1xclq1ysyigPuiQHNZy8hEJXg6Vez8Q21U3Pv
-         y4J+5tE7Pwoi/bC7LJCcLpXBfV4PoPFGx8NrELUjUEvrqjQXL/QEiOYTe5regi0EJVst
-         QCU4VTzy1xsR5rs5hhFbSSK8lEtYZTk6ohRDDtXuWo9arIzhHNf+9k6sTv2j1JiKEK90
-         rF+pkTiCxpBfqFWys58HY9cWQZmGMbMeaI6y2YHtI2MJ5K9Q63kaiFecOOtSS7bK6BX7
-         B+Wsaf1kJk+703Ayop/wlRglRUoNkGhZW86EYnVR/hgHK73fN2Lu7R3ZrfYKMqS3ZCa9
-         QKeA==
+        bh=4TL7rU67dcCsld58oJYx+NVlFE0fH5IBsAjLGvpEK3U=;
+        b=GlzZcYad9U2QnRZPbzhrgqtyZrXsxohqUj/SM0uSbG1TpsUABZ5fJPAYjVegWFbAIp
+         +8qwgSPtsBd3piM4aZXoo0K68A1rwmhwqPripIdONynDYwTCrgGI93lPrOH0zm5BEU7g
+         b4O5CYPelNA5FDBudn6KbWt29SuVgkavIogy5/uwGa68mJ7jVOa03pgEB/DXETu1ag9i
+         mat2ly6GJ32hGzwZH/7mFTMcskfoFbHbrDlwnGAJCuDw+v0f+Aei/GDfSJmOY0v/qj34
+         bUz+R2+4f6f5s8nx3RbDtVV6z20QuGY0EzMpFO3Gs0XvgtHlKEG+pg/Epdw5mEomaYUj
+         H6dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794801119; x=1795405919;
+        d=1e100.net; s=20260707; t=1794801188; x=1795405988;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=mHMeLHBcjlpdKQvivDV94WV6xZA1r0k1UiU5sTtS58g=;
-        b=t507GzI3mXoF7mhM6mm2JkzFdgQMrPxJDyXfMYmWSy/o8ETpNTFhjxdI9fEYXCUIUM
-         ERD7R9UyxB+fhuEZyj0DHVZDqtj6Xj2jEn4EckI5YuYrAkhYKauBrEtIgM3x6FD9mxUA
-         dXTfEmaXw2u94AJkALC8prXxq8P3+ifrXzTI1KqTjhSrBSjVZabTcK79itPvAnT5PE0S
-         CLMy6UvGTCyezwtgTQzFVchAaxcfplIo1BlKRvlAf3JGX9SlUlwj6eomLXo6/g043nzF
-         /TXbj3d4evAvAMwg/MR9sg/geXs0ppAaNPmeV5svEuU210hAPkt09GvGPeGb4xSAQVvf
-         r8LA==
-X-Forwarded-Encrypted: i=1; AL+hErGqSioz3z784oAM9w7R5PVoTaMyX1Jv3j/jB/ci52aa+uwTeFEIr5deiF0svEodku4J+nVdRHcxvLcF2iPB1aY=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9PrxxOBR6d+0wTFUriIU+YYPMoxDMCKrpJDhiAgHeOig3z5mjK
-	GVvF0izFwYTzs3CnaKFZ86Tyv6dYGfl+HniYqYvSIGk+ju4hzqCKuKdFBglZyWR0lCdXBWJksTy
-	BNOHW62DMS+z1UGMhgCaRX3oS8/uAn8I=
-X-Gm-Gg: AYBFou2/H2XmInFGP0rNCfRS0jfrb8/uahSW7dVOAjAd2JQoV7smNSyyfqi9rLXlkVl
-	Lj+omLrnWrm2oi8LlK+1m1Zw5DWy8owiNrAYwnolBEaSxphj1P4itvC9Fb2uVzep7LtjrXJlBx4
-	XXBUPNp4HGLTYb1kqxkOfhbfLjjJdzaTZAkxqMxDcxRUvkTXdKqcaSaWYpiOqRsqg81rgSQG3ci
-	IwY69oM5NQBP0oZ0IniUaC4Yoww1wY3fKhDuPGZKO42Fq1Hv5PTRQj+y5EYoiIkedHBOcoT+7zL
-	fqMWDzM9/txR1DSLQFoom1LIhuxE0IrI/VOQgr1EyZBIJFM4XYcmI4RumWDBaaiAjY/d5U+9O31
-	nv0yeq7YmY78yB6EOb0IFj8R+VuMHQMc9bhU+sgod9eLDSwsdj7LHlDDgCYaLQqyecCb2yQ==
-X-Received: by 2002:a17:907:8687:b0:c4c:f85f:aa2b with SMTP id
- a640c23a62f3a-c509641c620mr670977166b.24.1794801119103; Sun, 15 Nov 2026
- 19:51:59 -0800 (PST)
+        bh=4TL7rU67dcCsld58oJYx+NVlFE0fH5IBsAjLGvpEK3U=;
+        b=Oovym3hhJWe6hFNqEjcqk3SZkkC+vRP63XDEBfWQC00c7/iyTYcByG2TeBVXXjRZzF
+         l3jux+UCP5BJ1z4AfUhPbCkt4qcz90i1iTj8aQT48OLPMu03eyJUEmCM5lyI/cnQN+rL
+         VO9ppFJ2MJKPa1s8QK6thwnq5WfZXGc8RN1iizKcBUMwE8eZmtK2LTQB7FZGmBM0y/DF
+         2QFOHkjmSCvteQhaoMuQKQXhwElq/ogC+Iz5a2hkrCe4GObw0C5YkvmMuNx4eNHTRxd/
+         FZ/u4nqwXETz34uTO0WyrP8E3vtWw5o4Itfb79mfrfKpRXolQJm0KbK5+Ww1l37D7NWu
+         kC6A==
+X-Forwarded-Encrypted: i=1; AL+hErEnvHt5zKJq2Grjlu9LXzBdlXlkk5NRE791vceKEUBzGVSRDJ45cne4c4ox4/no0R1BTVrEpRstjxVeStnJqZ4=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+S5HpkAA20asrGOKW1yTeoN1UVx0t3ezeD6CxLE8aZtN8eP3Y+
+	LegAekjFWUIf7sEIySWjRIzlHjDNaj+f7m5k34zbX5DqAwUJKJjb8u4hHaXEFm08fakhrgr7e6d
+	uFH5XTPkRYjqsD9LHhlZVyrq9fQ2Ezh+GYWZh4E4=
+X-Gm-Gg: AYBFou1QsdoiR+89s5KTmg3MLF0H88yELtprBcLRT43839ZO8icnnY5FHI1DE3OhuSb
+	WZKiP9DybnpMWYmwZzVpjDnXzz3Bs9bGsvgNpoe8bOBEz3HFPL7EI2W4LlcJEP4K7kl2/pwEHql
+	3hg+++qUie9u3jaMBGxvFgsnfyshWm8v9WHgMTGo8knwjJfMNIywiPsGxkW0ahabLFZeSRLYIIe
+	74gOsJsA/IXCIHVA/e2YUfJVy8Qhbx9FVlThtPnyo9/A9e5IabSoDeN9Lmte4LK7+zKvFMbwSC7
+	QqWZLo/ecolb4/juJpbMIXkgiAMaiy1JZ2k2V4R8G4napTtlu45TwYnsAV3E0fmPEKqOne/WmKw
+	0N8v0eZUDSvzIzbdTA6Pw04/ohJe9csO7fZqFDAJK6BMhtEXsBa/qBT++NjUzkB8PqM+/+Q==
+X-Received: by 2002:aa7:d94d:0:b0:6b6:ef7f:600d with SMTP id
+ 4fb4d7f45d1cf-6b7c0bdfeb9mr4989199a12.21.1794801187760; Sun, 15 Nov 2026
+ 19:53:07 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -104,13 +104,14 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <cover.1794666741.git.lianux.mm@gmail.com> <62dce3641b589e9cd42edccf0d4e9b31e7d91e36.1794666741.git.lianux.mm@gmail.com>
-In-Reply-To: <62dce3641b589e9cd42edccf0d4e9b31e7d91e36.1794666741.git.lianux.mm@gmail.com>
+References: <cover.1794666741.git.lianux.mm@gmail.com>
+In-Reply-To: <cover.1794666741.git.lianux.mm@gmail.com>
 From: Kairui Song <ryncsn@gmail.com>
-Date: Mon, 16 Nov 2026 11:51:22 +0800
-X-Gm-Features: AclHuK_Gbzghz_9r5pcBeCg-HWxSEX1oN3xYkrnwlrCQzsB1W6e7M40eujJdLuM
-Message-ID: <CAMgjq7BnyM76DR8cdaz4o5PEg0=4rBAcGvWwoHqFDfPpoqu4BQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 10/18] mm/swap: add priority queue for swap device allocation
+Date: Mon, 16 Nov 2026 11:52:30 +0800
+X-Gm-Features: AclHuK-rF5dWOJJFyqz4l7zmtSSFEl92bKNMjIKJVssyOdhF23YiFc9B9U-bN9Y
+Message-ID: <CAMgjq7Cq5OQWdompBbEpyJTG3PhtdSLFUdb_Dtht3qH+u5HVhw@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 00/18] mm/swap: introduce priority queues for swap
+ device allocation
 To: Lian Wang <lianux.mm@gmail.com>
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
@@ -121,68 +122,146 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 14, 2026 at 10:51=E2=80=AFPM Lian Wang <lianux.mm@gmail.com> wr=
+On Sat, Nov 14, 2026 at 10:48=E2=80=AFPM Lian Wang <lianux.mm@gmail.com> wr=
 ote:
 >
-> From: Kairui Song <kasong@tencent.com>
+> Hi all,
 >
-> Swap device selection rotates swap_avail_head with plist_requeue(),
-> serializing cluster transitions on swap_avail_lock. Separate selection
-> from device-local cluster allocation with same-priority device rings
-> ordered from highest priority to lowest.
+> This is v4 of Kairui's swap priority queue RFC [1, 2], retaining the
+> original authorship. It separates device selection from device-local
+> cluster allocation to support integration with the ongoing swap tier
+> work, while preserving existing swap priorities, the swapon interface,
+> and memcg swap accounting and limits.
 >
-> Keep membership and sizes stable under swapon_rwsem during each
-> allocation walk. Full or disabled devices remain as masked pointers.
-> Serialize tag writers with swap_queue_update_lock and use READ_ONCE()
-> and WRITE_ONCE() for complete tagged-pointer accesses.
+> The global per-CPU cluster cache couples device choice to cluster
+> locality. Moving that cache below device selection gives each device its
+> own allocation hints. The available plist's shared rotation is then
+> replaced by a priority-ordered array of same-priority device rings, with
+> per-CPU starting offsets and quotas. A task-local cursor keeps each retry
+> walk stable. Rotational devices retain per-device sequential hints shared
+> across CPUs.
 >
-> Each CPU has a starting offset and base-page quota per ring. A task-local
-> cursor snapshots its starting device so retries visit every peer once,
-> even if another task changes the shared reader. Disable migration across
-> the sleepable walk. Large folios retry same-priority peers before asking
-> the caller to split instead of falling through after one fragmented
-> device.
+> This remains an RFC. The current scope is global device selection under
+> existing priorities; no tier ABI or per-memcg device-selection control
+> is introduced.
 >
-> Prepare reader storage with GFP_NOIO outside the topology writer, then
-> recheck priority and required length before publication. Transfer the
-> prepared storage only on successful installation; otherwise free it
-> after unlocking. Keep per-CPU backing allocation outside the writer's
-> noreclaim scope because it filters caller GFP flags. Constrain small
-> queue/ring allocations with a scoped noreclaim context and
-> __GFP_NOMEMALLOC, restoring context before cleanup. Deletion keeps reader
-> storage until replacement or an empty queue, avoiding shrinking backing
-> allocations beneath the writer.
+> The series is organized as follows:
 >
-> These boundaries prevent queue updates from reclaiming into a swap
-> allocation that would acquire a reader behind the same writer. The
-> cluster metadata fallback also avoids direct reclaim while the walk
-> retains its outer reader. These recursive paths were identified by
-> source inspection rather than reproduced hangs.
+>   01-04: Parameter/error-path cleanup, device-state boundaries and
+>          iteration helpers.
+>   05-07: Locking, writer-serialized publication and accounting.
+>   08:    Restore per-device per-CPU cluster locality.
+>   09:    Keep cluster metadata population out of direct reclaim.
+>   10-11: Introduce the safely published queue and remove the avail plist.
+>   12:    Bound order-0 synchronous discard outside the allocation reader.
+>   13-14: Preserve priority-aware throttle selection while removing the
+>          active plist and unused plist_requeue API.
+>   15-18: Reuse reader capacity, advance cursors directly, bypass singleto=
+n
+>          rotation and redistribute reader phases on membership changes.
 >
-> Publish swap_file, the live reference, queue membership and SWP_WRITEOK
-> under the same writer. Complete the disable flag and queue mask
-> transition before releasing that writer, so a new allocation reader
-> cannot select a device that is no longer writable.
+> Changes in v4
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> The device-disable and discard paths have been revised following the
+> review of v3 [4], including Sashiko feedback [5, 6]:
 >
-> Mask the off-list flag from the old in-use counter before its full-device
-> comparison so concurrent freeing/refilling keeps availability state
-> consistent.
->
-> Keep the old available plist in parallel while migrating its remaining
-> consumers.
->
-> Link: https://lore.kernel.org/20260714-swap-pcp-priq-v1-9-de9b164ed419@te=
-ncent.com
+> - Complete writable/off-list/availability transitions before releasing
+>   the management lock or topology writer, including intermediate patches.
+> - Run bounded order-0 synchronous discard outside the allocation reader,
+>   holding a live device reference across I/O, then restart selection with
+>   a fresh cursor.
+> - Handle discard queued by late reclaim scans, with at most one
+>   synchronous cluster discard per swap type for each order-0 request.
+>   Preserve large-folio same-priority retry and split handling without
+>   foreground synchronous discard.
 
-Hmm, this patch is now quite different from what I posted in the link
-above, e.g. there wasn't a "struct swap_queue_cursor", and some of the
-naming in it is quite confusing:
-e.g. "ring_only", I think what you actually want is "fallback_allowed"
-or "no_fallback".
+Thanks for the updates!
 
-And since there are three iterator-like structs, we better reorganize
-the naming; 'iterator' vs 'cursor' is confusing. e.g. maybe reame
-swap_ring_iterator to swap_queue_reader_head.
+>
+> Rebase
+> =3D=3D=3D=3D=3D=3D
+> The series is now based on mm-unstable 24231596edf2 (7.4-rc1).
+> The base includes 53a6f71c147a ("mm, swap: stop cluster list scans once
+> swapoff clears SWP_WRITEOK"), so the former standalone scan fix is no
+> longer required as a prerequisite. Its si->lock serialization of
+> WRITEOK changes is preserved.
+>
+> The metadata allocation paths have been adapted to the upstream
+> allocator-lock reacquisition and publish-after-revalidation contract,
+> including -EAGAIN handling and the tableless-cluster relocation guard.
+> The upstream free-cluster preference and hibernation-slot semantics
+> are retained.
+>
+> Test results
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> The tests compare the unpatched baseline 24231596edf2 with the same
+> baseline plus all 18 patches, fbb87083afcc, on the same x86-64 host.
+> The kernel configurations differ only in LOCALVERSION.
+>
+> The kernel-build tests follow the v1 workload: eight 8-GiB ZRAM devices,
+> make -j96, and 12 fresh-output builds per revision in each of the 2-GiB
+> and 3-GiB memcgs. Both revisions built the same workload source
+> (4dbe24720eb3), using x86 defconfig, bzImage/modules and a fixed toolchai=
+n.
+>
+> The BRD case used twelve 8-GiB devices and a memcg with 24 GiB of memory,
+> 64 GiB of swap allowance and memory.zswap.max=3D0:
+>
+>   usemem --init-time -O -y -x -n 32 1536M
+>
+> There was one complete BRD invocation per revision. The BRD capacity and
+> memcg limit are host adaptations; v1 did not specify those parameters.
+>
+> Mean system CPU time, seconds:
+>
+>                          n/arm       Before    Queue (v4)     change
+>   kbuild, 2-GiB             12     4372.4983    4417.2192     +1.02%
+>   kbuild, 3-GiB             12     2314.6025    2322.6550     +0.35%
+>   12-BRD                     1      143.5700     137.9900     -3.89%
 
-And why do we need a "cursor->valid"? I see a following commit dropped
-that, so perhaps accetable to keep it as intermediate step though.
+Nice, but what does n/arm mean?
+
+>
+> Mean elapsed time, seconds:
+>
+>                          n/arm       Before    Queue (v4)     change
+>   kbuild, 2-GiB             12      168.8092     169.1100     +0.18%
+>   kbuild, 3-GiB             12      136.0650     136.3500     +0.21%
+>   12-BRD                     1        6.6500       6.5100     -2.11%
+>
+> For the BRD invocation, mapped throughput was 7391.28 -> 7550.23 MiB/s
+> (+2.15%), calculated as the requested 48 GiB divided by elapsed time,
+> not as a sum of worker rates.
+>
+> All 50 invocations completed successfully, reported no memcg OOM events
+> and performed swap I/O. There were no warm-ups or profiling, and all
+> samples are included. Before ran first on a separate boot; the 12 builds
+> are within-boot repeats, and the 32 BRD workers are one invocation.
+>
+> The kernel-build runs show small increases in system CPU and elapsed
+> time. These descriptive results do not establish equivalence, absence
+> of regressions or a stable performance gain.
+
+It's worth mentioning that the global cluster cache is gone, so tiered
+allocation will have a much better performance.
+
+>
+> Cooperation with swap tiers
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> Device-local cluster hints remain below device selection, so a future
+> tier policy can determine the eligible candidates before those hints
+> are used.
+>
+> The current revision keeps the refactoring under the existing global
+> swap priority model. Integration with Youngjun's tier infrastructure [3]
+> remains follow-up work. Device membership, swapon/swapoff publication
+> and lifetime should have one agreed authority. Within-tier priority
+> semantics and reader scope need agreement with that work; this series
+> does not define a competing tier or memcg policy.
+>
+> Youngjun and Chris, I would appreciate your feedback on the integration
+> boundary and ordering.
+
+It seems the sashiko review is all green, which is great, let's hear
+what the others think about this.
