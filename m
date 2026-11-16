@@ -1,90 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794810586;
-	b=wIAtnSGFkaYtc4Tp8STLfIqaw4/VmRrK54aXcdO/k6VG0iu4dpnGsV/y3SOtSskv8gyM
-	 9fEmZ7ekUaCa1y+NbxPR1SuCV+JaAJ7W4/yJH9Gr3ztDVQn+eUP1KxVx9adsoa53f9kn3
-	 j4wvpNyZlFVAcSOMX4pXj/GbDc5a8wXaZWs/WIMmRMUQd0k+SeDTk0JjWliUYn6nVxeJU
-	 tTDhlwhXz3Ka2aLfZvJXGd4BRS9+S3mRKgkuRs+8w7NaKRShzj3Rqly8GJhgchMON4Sa8
-	 QH1BSdzglJVu7FvtnUp49kfw/H9MkXl7y6dLWYtBOdVyDBbm6xZP8ntW/gpuHW9djIw==
+	t=1794810591;
+	b=SXFRyxKw7IpTNBgPE5Uasuhi72Ghw4tNs92sltI7r7ukAx9eVnjU5u5/phTd2C4lNy+o
+	 pA2O/FZn5oI7Qsaw3l7wMej9aGp7fD5LJVi5GDqIsUnBgoKZmznUJlyHPgx39u5P/jsz1
+	 qLHQrI5FNdBVgg2xH24JXgRITHx3AHUvmC7uNoTOiAbarLBTuQz96tpd082a1OViXGlIU
+	 kDhuRzGyMEQocDXu4l5ofCWFN+DEejCckQdEtA2sJt3IwNbk6UjwD43RT9IQ2eu5mw1tL
+	 iw4z49bdWKnaqX1tefMRfYv0/fBGnkQIXgSH2nI+/tfl2mQHMUu+uvXn/YDBfC649rg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794810586;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794810591;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer;
-	bh=YmcgDcXzirGKH4beEwjMxkTy20P3DS2u1JVhflKNzdU=;
-	b=yBC8GzmCdMz+TyJOj3e50tIQYNUC3U+65xf9YHyiomeBnC7dPZQI+OwLWQltExwv24iV
-	 7D0mnDJHXLWxQrKUDPgoJb0uRmagARrL0q5ozPk01eKSvX6dPwqH3o0nFMWCEsL32tRhM
-	 822FpJ2irwoF/vev7Zb2wk921Ez17PGxB0JX8BxtEbr5gITp67CKQRjBuclJBlwt+2bsA
-	 /NYbNDU1/Bb7DYiXQ0tqabPbQxqqpO194X+jOqsWGPAfVbApuRFBGjhWarZrdneiNgPzV
-	 tq3opCtli9sOHs2GEq4sAzeNrD7e6GW3jsKtUYXZyL+oHUV0AqYHkAisi6lqK9cTIjg==
+	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
+	bh=yS/hV1Wpex2H5DvwJOX7XIt8ngXh0tXweh9lwPbGRNE=;
+	b=u9c4KDbQEEBBwFh57VwMEe6ZlI6DyO36p7TnUIZDEUKPm1pUjNI8A1YDkO5AjMuugdWr
+	 xNjw7AzHZ6yLUWnvSkCbWwE87g3o0UIl/L0/7cZnnnPCxx2pg8aQswLv9JGBGVWyd4GWf
+	 1w7Nu+pF1JXHjHGQhaxjpICEqgKwcjpkeUYe9WJEagGQilyt/IQ85fLd9PM8AJLtEKfFU
+	 +gsMY21GFwZModRuD1gFsOHzWQMpmOQDj/3qlkDhc4E62ejFHdAf5HEjbiSMf/JGbFdbG
+	 jgsjvzsbSlRIrNAfJ6nzuEDgU3A6G+7z4Wf8eEcsJridNzM1NG7vu4qFOK1p7X5tMGQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=W2r3S7yH;
-	arc=none smtp.remote-ip=209.85.161.51
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mUkDmRTT;
+	arc=none smtp.remote-ip=209.85.161.49
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1619606A331
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 06:29:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1619606A331
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B98606A33D
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 06:29:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 11B98606A33D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=W2r3S7yH
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-6b1afdf5196so1046650eaf.2
-        for <linux-hardening@vger.kernel.org>; Sun, 15 Nov 2026 22:29:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mUkDmRTT
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-71ad5f20016so836998eaf.1
+        for <linux-hardening@vger.kernel.org>; Sun, 15 Nov 2026 22:29:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794810584; x=1795415384; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=YmcgDcXzirGKH4beEwjMxkTy20P3DS2u1JVhflKNzdU=;
-        b=W2r3S7yHngCfiQdxmIIxueD3gxrnZlTX/HW/RhCOxUnx6NcJvnFITdY4rJk47uDK9g
-         +GkpiRY8HESSF3wGYAiyfZIoKyvvsFZM83cfQdllQhnGfWxZ+hG8QH1gdULyAWQtF+4D
-         Yd7tvwcIFQDW7FAvepbY4uMVHZaPQHI2Zb8KHJDRYyl4/yVZcWDhqmmO8Ff5Nr6ndx0s
-         2cWMohWhRFKMkQKF+FYH9ZhGJpR8yRi4qpz6yQW9kR0012FnKvFhpBbdlnhKZzbAHn1s
-         3BBbXvnp26tSL+S2TaJ8iVO/KWjn5FzhSspSlxMh8tK/AH/61bhVnuDpIxLqnH9NF1sb
-         6GJA==
+        d=gmail.com; s=20260707; t=1794810590; x=1795415390; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=yS/hV1Wpex2H5DvwJOX7XIt8ngXh0tXweh9lwPbGRNE=;
+        b=mUkDmRTTAwh8VIrtPyA/ViTy8+/4EX7+NJH0Z7TnGPrwRr09HZZ0Scifl4gm4Vf6/u
+         VKBkwrl9ephvKP/W0CR1DRwOMFusFFlKYKAyW4TrWASSq+BTRFWBKYpSEmbIvWmiftfn
+         hn7Px9QxFO5jceX0X8ZGbMuF99ysCmQvg2YAUHfKfaMjSbYL46Pxb3/YjGT6JAflIEXt
+         lnh5ciSPeGHnp+Wrr5xT+xcIivLP7wrosZosiGc0yyUN0OAk4v+nddcTJmIBaHU/WT5X
+         R1/p1uroHduLQ/MYRa7uCa70HgYv3wFzuNj0pV2Pl05eecpJmv+5pEr3q9sOT3dJ0SPE
+         /1Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794810585; x=1795415385;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=YmcgDcXzirGKH4beEwjMxkTy20P3DS2u1JVhflKNzdU=;
-        b=qbkooeKvxQ7glpCD8Ji29nFujS4CyJLYk/nDFxDTsViMAhamgayeGh240Pt4Y2wySF
-         C72UTnc7X4TDLrrik+Nv6OXDlumJvnarjM6CyNOovlVdeCGpdxGFxLwoA/+XCAdqYP0L
-         hT5gHjJkqew+JprcoKWgGHcIjdKU+TzYbP6x8n8+Yt5WiKOA8liDgARxak8a1tiq5AjS
-         TVXocu7dEhv3O4l0/NjILmH0efNbsN+DAxcY2v+yCIobO2LD0j3uwgmqYnkafOSHI48x
-         EliRep6x/ZMFQ74U1NNuLVBAfqg+HkTPb323F14LT/1HCZOOdMSx/K2WqzkFGbjVGclx
-         hFAw==
-X-Forwarded-Encrypted: i=1; AL+hErFgZSRUgA+SPqPWArzEvpAcwZXjopN7wKcymJBb29e1AqRHxJkpyOATUrx60hNqabyqpW4PcHhPoZTHyURU2Bw=@vger.kernel.org
-X-Gm-Message-State: APuU4Z936/oEkbgNzR1G2JKtjKMRWhFGui3xvnyrn0tbzhIBUAvPoKpG
-	eKqY3oQ9+v0nuquFKCIiZ0jgDHoY/aw8FZiGNi+LoZf8VSzgcFRMTkI0
-X-Gm-Gg: AYBFou3rpCa9JK540vyfifnkS7XeRpGJbzp6Awh1h/JQHE+B793dJUijrrxFQYNyclk
-	YfK9aVa54YL2e0BxT2Vj4jd68x76QqwmpNhuPdZDYj8qUnPzmuG9loXeNvGHl6IGFpjDCv03nt4
-	LrhnXeS95/+Nybbt5yLpki8GmIanWN40RDAYSknje/Ty2cVBPFjnLKHI+OJwkJfvsZyF1vBp692
-	gj1xMvwfaeaUWsg9a++e2Aq75N+pxVg/kgUy2gR4PsoqZhDaBB/ins57Kst6BsJWF8tHPSbFS1t
-	9bGsLYbb+SdprxfSiy2uSum0H3i04QzSIJsKNjqYV69eTJx5Zo6K7iF+0/2Vu52iBZJO63srJy7
-	JoMtaCbh8ho5Rl91zP1qatSYbzH65mi+fqH7yOnE9HLbXMKKTC8W7uBegMx54o4RnTzmE/HmMW+
-	2JOP0uYNzm95zLGUlV19Bme8gRfuZMwgmMu87ldfstuTEqYQe6JY/qpHLASQVdXMLqwvd0yXcaP
-	95EnrTCNIqWmoSDYrmRq9ok4AvFR6atgDAsasWJz7UJnvP/ZcS6ildvN7tANmm6rCXIflX0WDTP
-	9AJtPx2EqKB9gZ+eZS+fXSqPfoqLvtV3NudyDO69XykIfNJWnVmRmY0K2VeEsN0twtV0nX0dCjV
-	ssA7Cwb00wZpvNV+/2UkJ05rKDSXL7bmEZfXb+bC5yYstCfYGLznZdirXviiNniuKK6ep0JJBP4
-	EqOjlFxzb106CzSZeBp7FBXBlqLWSvYwi2LIEK4XLBco4fZUqWqls=
-X-Received: by 2002:a05:6820:a28c:20b0:71a:d99b:e86e with SMTP id 006d021491bc7-71ad99bf189mr2184524eaf.36.1794810584460;
-        Sun, 15 Nov 2026 22:29:44 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794810590; x=1795415390;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yS/hV1Wpex2H5DvwJOX7XIt8ngXh0tXweh9lwPbGRNE=;
+        b=frQxku/KRWZGb1OQF8BsgjpCOWb/76ZBYCxiAfSE9YcfcDGI0Kzi/v/z/ED1WRhWDb
+         THu5stUbdN+IeTx2TvT8L6+0UOjf4jsWgNf+XAGEiLZuQrGEkgkr4undyRYAJHahtSCG
+         c9fRP0VzF5XpqPoQ9wu434yyWvgSnIEetpok1nu3qWlxMNgWivo5hjT2TdIuxDloOV/l
+         JbLWaBAt2+1prB32tTHwb4dBzpjXkB32GplGingdrF4iM+bdtgnhs0kC2/SvJPsAFDL3
+         g2rrR62MhSlSIot9Zb2MCibkx7hZZQepW5/XtQr2qqWd0cffQZS75zHw7qO97xoev1be
+         wraw==
+X-Forwarded-Encrypted: i=1; AL+hErHlxP9q5cuQWHNbcRJxQOCXXWT209n4gV2Nb4qgEO8bbDmMu6ADnpdKrOwgrKXbiOJq6Apm91tYWibF40BhFGc=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9sJMOR76FeRT76/qpg/iBEfikZy5HWxJ6tEIebaHKKI7KfFVvu
+	mrt/YGG/2vySKPvDpjz/3PUFkVA1KDPoZn3O8QEvp/D4A94SU43VBy3E
+X-Gm-Gg: AYBFou1E017BK9VTujFJIdzANBLMu/Wqj1MgT5rBKKMg3N4NVeK+rN1fPpApMU8vZjl
+	EWzcqi6kVpU8FHIL4AwBH1oI51u8FYQtsDvtfcx7G/KbbdI1uLeeiw/qX4KfPYviVVsK79bwafj
+	B2A4pq+MIy9Ay5RYRHym9hSi+ldzV4xAKVJt0VXFprORX3zFf4OdMxla4lBApmJlqWBef1pOqRJ
+	f90z2A9zNI1cx1yK643HPs44TDVhLSoRlJBs48jGl1RTR54E8TOJyrFF3oyCLnoOiLN6W8mV+lA
+	txN/fESj7M+ZZjcEnHBLOx0rWJkPfsl0ZyX9r1lDp9W+RqUU4WGDrdkCtiNjeUW019h6bgje7Xr
+	NzZrj4YOflKTM9V4esqeGfW09FLnbD5NyUuflH3mx50F7wd/rjY8fxH4BH3u54yO7Z8aAg8w4S0
+	m/jYN5LumgA/TiZ8qj3DPQfFCPXuZdda2dTSDhn18EuiL+yvws8O5UPit79fY8TZFNvLk21K+8H
+	SplfrxerGycyWZ6bW4aR7bSRIRrYeBGzeiHWjPXjXTaInd7xuwr4+sd4pcw2JoBSK41Px6sT1K5
+	XbWhzf5hE8Zq0Kl1jaiWCm+RoTcmoFCqSrdOHOFtDnQwKfcGfFPr9dSPu8dTj7EHs6rsKUzgPAK
+	/xpRh8fiDJFY4dhaHtos7UgW3wfM10aKBHH5RGD/4vi9P2YarL2aI7Nk1bmG30G2j83l1KeW6kO
+	rGTgSUnZ2CmkGFc86eJOshhKgGzAOZ09PVbQz7wBaWLVFE8nREP/k=
+X-Received: by 2002:a05:6820:7618:b0:71a:cf71:ead2 with SMTP id 006d021491bc7-71acf71f30dmr3917239eaf.42.1794810589744;
+        Sun, 15 Nov 2026 22:29:49 -0800 (PST)
 Received: from [127.0.1.1] (174-29-1-49.hlrn.qwest.net. [174.29.1.49])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-71ab42c41e9sm7994558eaf.6.2026.11.15.22.29.41
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-71ab42c41e9sm7994558eaf.6.2026.11.15.22.29.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Nov 2026 22:29:43 -0800 (PST)
+        Sun, 15 Nov 2026 22:29:49 -0800 (PST)
 From: James Hilliard <james.hilliard1@gmail.com>
-Subject: [PATCH v5 00/58] mtd: rawnand: retain chip and controller state
- across removal
-Date: Sun, 15 Nov 2026 23:29:15 -0700
-Message-Id: <20261115-submit-rawnand-retained-handle-lifetime-v1-v5-0-cbc49c5c5e74@gmail.com>
+Date: Sun, 15 Nov 2026 23:29:19 -0700
+Subject: [PATCH v5 04/58] mtd: retain virtual concatenations across
+ component removal
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -96,432 +96,1074 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/5VUS25kNwy8itHrdEBRlCh5lXsEWYi/8Qv8mXT3O
- AkGvnvYPYPAfjtDKwGqKopV5PfD2U+bnw/3d98PJ3/dztvLc17aL3cHfVjPX/y4Wd4PCNhLATq
- ev8nTdjme1t/P69mOJ7+s7dntmI/t0Y+PW/hle/LjazmCEGLzpg5ySMKvJ4/tn5vY73/8uCfbn
- 66Xq8LPFyf/61tWcfnx7PB1XfQha7i/W63IVCFgLtBozlKrUqnWhvIyLDa5Sh03nv9RUjtPtUW
- W0KwkwSgRjmbQuAs2siCyjyhgacrgRMtmK4bgvibx0DnCVm2u3JvCR9QSXw2Q20QMr20ao6Zyd
- kAUSxEgEWv8EdWYr3UUihCotdQyA5CoYOSfUop0TWh9V+EUR1krv1ICWmUg7FWVBKzOwFiLgqZ
- +RGldNloHMB2Tl9YC4tTAhq2FWXnILO47LVo3TGvVTJVN2pqp6GFZ1+Ki1rFGb/t/zTmzb7Ro4
- szX2labVQA8VdS4xirNd35hqpc1VsWwQmwNHWIaVG6jV5oFbUh4fEQVGmwx1Id3pUFcwpiViUF
- 9pgEDLR3ZdSNdFB89Jg6bmnZKoEqHdLZ1RobRSgmlncvah0/pzeparfcilp2EwMyWaWRuWmj4L
- hvOEHmUjCoYlb6uVtCQyhHLSk8WC9hlI9traibaIJiaO3YCGRmmqBLcFxYOpLlD5R+El/QyO3C
- PiqyzZGCaswwRhJYmF7yiZJ39qC9POdP3d1lZJqo6ZzgkXbcpjN4EdHSz7phh5gzQ4Tq9D9v58
- nL697Y5XsttWH8uCf7MkrjuiSOUUTy7o6Tjty9Pa3v8NWu6ybziO+oCn6LGpM41wQYjZ8RiT13
- fU5dPUdekVs8pyJAzFdtT03vq+ilqSurWuhRj7YjlPfXb29t/apIm8LMFAAA=
-X-Change-ID: 20261104-submit-rawnand-retained-handle-lifetime-v1-0b4225e5ce0b
+Message-Id: <20261115-submit-rawnand-retained-handle-lifetime-v1-v5-4-cbc49c5c5e74@gmail.com>
+References: <20261115-submit-rawnand-retained-handle-lifetime-v1-v5-0-cbc49c5c5e74@gmail.com>
+In-Reply-To: <20261115-submit-rawnand-retained-handle-lifetime-v1-v5-0-cbc49c5c5e74@gmail.com>
 To: Miquel Raynal <miquel.raynal@bootlin.com>, 
  Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
 Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  James Hilliard <james.hilliard1@gmail.com>, 
- Srinivas Kandagatla <srini@kernel.org>, Tze Yee Ng <tze.yee.ng@altera.com>, 
- Richard Cochran <richardcochran@gmail.com>, 
- Jonathan Lemon <jonathan.lemon@gmail.com>, 
- Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
  Yuqiang Sun <izaiahsun@gmail.com>, 
  Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>, 
  Luca Ceresoli <luca.ceresoli@bootlin.com>, 
  Bernhard Frauendienst <kernel@nospam.obeliks.de>, 
  "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>, 
- linux-hardening@vger.kernel.org, Arseniy Krasnov <AVKrasnov@sberdevices.ru>, 
- Boris Brezillon <bbrezillon@kernel.org>, 
- Brian Norris <computersforpeace@gmail.com>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
- Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@kernel.org>, 
- David Woodhouse <dwmw2@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
- Vitaly Wool <vitalywool@gmail.com>, 
- David Woodhouse <David.Woodhouse@intel.com>, 
- Russell King <rmk+kernel@arm.linux.org.uk>, Mike Rapoport <rppt@kernel.org>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Christophe Kerello <christophe.kerello@st.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Jason Roberts <jason.e.roberts@intel.com>, 
- Boris Brezillon <boris.brezillon@collabora.com>, 
- Michal Simek <michal.simek@amd.com>, Mason Yang <masonccyang@mxic.com.tw>, 
- Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>, 
- Lucas Stach <dev@lynxeye.de>, Dmitry Osipenko <digetx@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, 
- Stefan Agner <stefan@agner.ch>, Thierry Reding <thierry.reding@kernel.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>, 
- linux-mediatek@lists.infradead.org, 
- Matthias Brugger <matthias.bgg@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
- linux-rockchip@lists.infradead.org, 
- Yifeng Zhao <yifeng.zhao@rock-chips.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Keguang Zhang <keguang.zhang@gmail.com>, linux-mips@vger.kernel.org, 
- Shan-Chun Hung <schung@nuvoton.com>, Jacky Huang <ychuang3@nuvoton.com>, 
- Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.Li@nxp.com>, 
- imx@lists.linux.dev, Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Sascha Hauer <s.hauer@pengutronix.de>, Han Xu <han.xu@nxp.com>, 
- linux-renesas-soc@vger.kernel.org, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, 
- Liang Yang <liang.yang@amlogic.com>, linux-amlogic@lists.infradead.org, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, linux-arm-msm@vger.kernel.org, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Kamal Dasu <kamal.dasu@broadcom.com>, 
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
- Vladimir Zapolskiy <vz@mleia.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, 
- Paul Cercueil <paul@crapouillou.net>, 
- Maxim Levitsky <maximlevitsky@gmail.com>
+ linux-hardening@vger.kernel.org
 X-Mailer: b4 0.17-dev
 
-An MTD handle can outlive controller unbind. Its metadata and NAND locks
-must remain valid, including when a writable file closes and calls sync,
-while further hardware access must be rejected after disconnection.
+Virtual concatenation keeps hidden partition objects outside the normal
+partition list. They neither retain their backing masters nor get removed
+by registration-failure cleanup. Teardown also compares a master against
+its hidden children, leaving stale pointers when a component disappears.
 
-This builds on earlier MTD removal-lifetime work. Commit 19bfa9ebebb5
-("mtd: use refcount to prevent corruption") added MTD reference counting
-[0], but retaining an MTD reference does not by itself retain the
-driver-owned allocation containing the master. The read/unbind discussion
-also covered raw NAND [1] and draining active operations [2]. Tze Yee Ng's
-SPI-NOR series addresses the corresponding SPI-NOR paths [3].
+Give staged components ownership of managed backing objects and register
+the allocation returned by mtd_concat_create() directly. Serialize staging
+and publication across controllers, keeping components in DT order and
+publishing only after every contributing master finishes registration.
 
-Following Greg's review [7], separate class-device data from the MTD
-backing allocation. Delete the device's interfaces and drain NVMEM and
-class PM callbacks before releasing backing data. Bare device references
-retain an independently allocated device, whose type, PM dispatch and
-final release are built in even when MTD is modular. NVMEM similarly
-disconnects and drains provider and layout callbacks before unregister
-returns; retained consumers keep core-owned metadata and receive -ENODEV
-on subsequent access.
+Disconnect and drain the concatenation before releasing any component.
+Gate all forwarding operations, including OOB-layout callbacks, with SRCU.
+Use its NMI-safe reader flavor because panic writes use the same object.
+Drain while the staging lock still serializes concurrent removals, so a
+second unmanaged master cannot free its state before admitted I/O finishes.
+Then unregister outside the staging lock and release component references.
+An old handle retains disconnected virtual metadata, not a replacement's
+components or hardware callbacks.
 
-Introduce opt-in backing-object ownership for MTD masters. Registered
-nodes and acquired MTD handles retain the chip, while nested partitions
-also retain their parent metadata. Unregister first so removal notifiers
-can finish I/O, then disconnect raw NAND and drain admitted operations.
-Hardware resources can be released without waiting for open files to close.
+Resolve the first component's OOB layout through its master: partitions
+inherit this layout instead of storing their own callbacks.
 
-Virtual concatenations serialize publication and removal across physical
-controllers. Disconnect and drain a published concatenation before any
-component can disappear, then release its component references. An old
-handle keeps the disconnected virtual device, independently of a later
-replacement.
+Unwind hidden components with ordinary partitions on registration failure,
+preserving other masters' staged components for a later probe. Advance the
+partition offset past hidden components, and use a separate partition-lock
+class for virtual masters to allow removal through a physical partition.
 
-Run NAND and controller-specific cleanup during disconnection, while
-the controller driver is still bound. Snapshot the OOB layout in core-owned
-data before publication so metadata queries remain valid without driver
-callbacks. The NAND core frees retained chip and controller allocations;
-the final MTD put never calls back into the controller module. Ordinary
-MTD and NVMEM handles retain the NAND core that implements their
-operations, rather than the hardware driver.
-
-Share allocation ownership across the raw-NAND drivers, including
-partially published probes. Shared controllers remain allocated until
-their last retained chip is released. R852 allocates a new chip for each
-card, and NDFC allocates controller state per binding.
-
-Based on NAND next at 30daaf3e7897, with Tze Yee Ng's module-reference
-ordering fix [4], Karl Mehltretter's OTP cleanup fix [6], and the separately
-posted registration, operation-locking and controller probe/teardown fixes
-identified by the prerequisite metadata. TLA+ models and their assumptions
-and coverage limits are available in [5].
-
-[0] https://lore.kernel.org/r/20230620131905.648089-2-alexander.usyskin@intel.com
-[1] https://lore.kernel.org/r/CAND4H7dz94Gsi_tXSQmLNme9uROnouOUwuCX9BW_+RCc2ZFDqA@mail.gmail.com
-[2] https://lore.kernel.org/r/mafs0bjs73tbq.fsf@kernel.org
-[3] https://lore.kernel.org/r/20261022035352.52129-1-tze.yee.ng@altera.com
-[4] https://lore.kernel.org/r/20261022035352.52129-2-tze.yee.ng@altera.com
-[5] https://github.com/jameshilliard/linux-h616-nand-tla
-[6] https://lore.kernel.org/r/20260816163027.10044-1-kmehltretter@gmail.com
-[7] https://lore.kernel.org/r/2026111037-stir-hermit-cb21@gregkh
-
-Assisted-by: Codex:gpt-6-astra
+Fixes: 43db6366fc2d ("mtd: Add driver for concatenating devices")
+Cc: Yuqiang Sun <izaiahsun@gmail.com>
+Cc: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Bernhard Frauendienst <kernel@nospam.obeliks.de>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Kees Cook <kees@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+Link: https://lore.kernel.org/r/20261103143953.69642-1-izaiahsun@gmail.com/
+Link: https://lore.kernel.org/r/sashiko-outbox-195551@kernel.org/
+Link: https://lore.kernel.org/r/sashiko-outbox-210241@kernel.org/
 Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
 ---
-Changes in v5:
-- Use logical MTD registration state during unregister and failed
-  registration cleanup, independently of retained class devices.
-- Pass the master to provider get hooks, matching the put hooks.
-- Preserve sibling partitions when a child is removed during parsing,
-  and limit subpartition rollback to its parent.
-- Add the introducing Fixes tag for the Technologic node ownership
-  correction and collect Wolfram's Renesas Acked-by.
-- Link to v4: https://patch.msgid.link/20261113-submit-rawnand-retained-handle-lifetime-v1-v4-0-556b1d7c6221@gmail.com
+ drivers/mtd/Kconfig           |   1 +
+ drivers/mtd/mtd_virt_concat.c | 526 +++++++++++++++++++++---------------------
+ drivers/mtd/mtdconcat.c       | 103 ++++++++-
+ drivers/mtd/mtdcore.c         |   3 +-
+ drivers/mtd/mtdpart.c         |  14 +-
+ include/linux/mtd/concat.h    |  22 +-
+ 6 files changed, 399 insertions(+), 270 deletions(-)
 
-Changes in v4:
-- Keep MTD subdirectories behind CONFIG_MTD so boolean child options
-  do not become built-in users of a modular MTD core.
-- Serialize partition publication with deletion and retain a handle
-  while parsing subpartitions. Reject children of removed partitions.
-- Distinguish explicit NULL NVMEM owners from the parent-module
-  fallback, including OTP providers backed by built-in NAND code.
-- Register layout-owned cells explicitly, preserving provider cells
-  added before or after a layout binds.
-- Rebuild cell attributes across layout bind/unbind, free partial
-  allocations on failure and remove attributes before device deletion.
-- Pair NVMEM_REMOVE notifications only with successful NVMEM_ADD
-  notifications and remove the redundant disconnected-device check.
-- Resolve concatenation OOB layouts through the first component's
-  master, including partition-backed components.
-- Link to v3: https://patch.msgid.link/20261111-submit-rawnand-retained-handle-lifetime-v1-v3-0-ce537999741d@gmail.com
+diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+index d13a065874ba..97f10fda30a4 100644
+--- a/drivers/mtd/Kconfig
++++ b/drivers/mtd/Kconfig
+@@ -4,6 +4,7 @@ config MTD_DEVICE
+ menuconfig MTD
+ 	tristate "Memory Technology Device (MTD) support"
+ 	select MTD_DEVICE
++	select SRCU
+ 	imply NVMEM
+ 	help
+ 	  Memory Technology Devices are flash, RAM and similar chips, often
+diff --git a/drivers/mtd/mtd_virt_concat.c b/drivers/mtd/mtd_virt_concat.c
+index 0d501e1565c0..2738e7417e2d 100644
+--- a/drivers/mtd/mtd_virt_concat.c
++++ b/drivers/mtd/mtd_virt_concat.c
+@@ -7,346 +7,356 @@
+  */
+ 
+ #include <linux/device.h>
++#include <linux/lockdep.h>
++#include <linux/module.h>
+ #include <linux/mtd/mtd.h>
+-#include "mtdcore.h"
+-#include <linux/mtd/partitions.h>
++#include <linux/mtd/concat.h>
++#include <linux/mutex.h>
+ #include <linux/of.h>
+-#include <linux/of_platform.h>
+ #include <linux/slab.h>
+-#include <linux/mtd/concat.h>
++
++#include "mtdcore.h"
+ 
+ #define CONCAT_PROP "part-concat-next"
+-#define CONCAT_POSTFIX "concat"
+-#define MIN_DEV_PER_CONCAT 1
+ 
+-static LIST_HEAD(concat_node_list);
++struct mtd_virt_concat_part {
++	struct device_node *node;
++	struct mtd_info *mtd;
++	bool ready;
++};
++
++struct mtd_virt_concat_device {
++	struct list_head node;
++	struct mtd_info *mtd;
++};
+ 
+-/**
+- * struct mtd_virt_concat_node - components of a concatenation
+- * @head: List handle
+- * @count: Number of nodes
+- * @nodes: Pointer to the nodes (partitions) to concatenate
+- * @concat: Concatenation container
+- */
+ struct mtd_virt_concat_node {
+-	struct list_head head;
++	struct list_head node;
++	struct mtd_virt_concat_device *device;
+ 	unsigned int count;
+-	struct mtd_concat *concat;
+-	struct device_node *nodes[] __counted_by(count);
++	struct mtd_virt_concat_part parts[] __counted_by(count);
+ };
+ 
+-/**
+- * mtd_is_part_concat - Check if the device is already part
+- *                       of a concatenated device
+- * @dev:        pointer to 'device_node'
+- *
+- * Return: true if the device is already part of a concatenation,
+- *         false otherwise.
+- */
+-static bool mtd_is_part_concat(struct device_node *dev)
++static LIST_HEAD(concat_node_list);
++static DEFINE_MUTEX(concat_lock);
++static struct lock_class_key concat_partitions_lock_key;
++
++static bool mtd_is_part_concat(struct device_node *node)
+ {
+ 	struct mtd_virt_concat_node *item;
+-	int idx;
++	unsigned int i;
+ 
+-	list_for_each_entry(item, &concat_node_list, head) {
+-		for (idx = 0; idx < item->count; idx++) {
+-			if (item->nodes[idx] == dev)
++	list_for_each_entry(item, &concat_node_list, node)
++		for (i = 0; i < item->count; i++)
++			if (item->parts[i].node == node)
+ 				return true;
+-		}
+-	}
+ 	return false;
+ }
+ 
+-static void mtd_virt_concat_put_mtd_devices(struct mtd_concat *concat)
++/* Hidden partitions have no registered device to own their storage. */
++static void mtd_virt_concat_part_release(struct kref *ref)
++{
++	struct mtd_info *mtd = container_of(ref, struct mtd_info, refcnt);
++	struct mtd_info *master = mtd->ref_master;
++	struct mtd_info *parent = mtd->parent;
++
++	of_node_put(mtd_get_of_node(mtd));
++	release_mtd_partition(mtd);
++	if (master) {
++		if (parent != master)
++			mtd_put_data(parent);
++		mtd_put_lifetime(master);
++	}
++}
++
++static void mtd_virt_concat_part_put(struct mtd_info *mtd)
+ {
++	kref_put(&mtd->refcnt, mtd_virt_concat_part_release);
++}
++
++static void mtd_virt_concat_release(struct mtd_info *mtd)
++{
++	struct mtd_concat *concat = container_of(mtd, struct mtd_concat, mtd);
+ 	int i;
+ 
+ 	for (i = 0; i < concat->num_subdev; i++)
+-		put_mtd_device(concat->subdev[i]);
++		if (concat->subdev[i])
++			mtd_virt_concat_part_put(concat->subdev[i]);
++	kfree(mtd->priv);
++	kfree(mtd->name);
++	mtd_concat_destroy(mtd);
+ }
+ 
+-void mtd_virt_concat_destroy_joins(void)
++static void mtd_virt_concat_unregister(struct list_head *devices)
+ {
+-	struct mtd_virt_concat_node *item, *tmp;
+-	struct mtd_info *mtd;
++	struct mtd_virt_concat_device *device, *next;
+ 
+-	list_for_each_entry_safe(item, tmp, &concat_node_list, head) {
+-		mtd = &item->concat->mtd;
+-		if (item->concat) {
+-			mtd_device_unregister(mtd);
+-			kfree(mtd->name);
+-			mtd_virt_concat_put_mtd_devices(item->concat);
+-			mtd_concat_destroy(mtd);
++	list_for_each_entry_safe(device, next, devices, node) {
++		struct mtd_concat *concat = container_of(device->mtd, struct mtd_concat, mtd);
++		int i;
++
++		list_del(&device->node);
++		mtd_device_unregister(device->mtd);
++		for (i = 0; i < concat->num_subdev; i++) {
++			mtd_virt_concat_part_put(concat->subdev[i]);
++			concat->subdev[i] = NULL;
+ 		}
++		mtd_put_master(device->mtd);
+ 	}
+ }
+ 
+-/**
+- * mtd_virt_concat_destroy - Destroy the concat that includes the mtd object
+- * @mtd:        pointer to 'mtd_info'
+- *
+- * Return: 0 on success, -error otherwise.
+- */
++static bool mtd_virt_concat_contains(struct mtd_info *part, struct mtd_info *mtd)
++{
++	for (; part; part = part->parent)
++		if (part == mtd)
++			return true;
++	return false;
++}
++
+ int mtd_virt_concat_destroy(struct mtd_info *mtd)
+ {
+-	struct mtd_info *child, *master = mtd_get_master(mtd);
+-	struct mtd_virt_concat_node *item, *tmp;
+-	struct mtd_concat *concat;
+-	int idx, ret = 0;
+-	bool is_mtd_found;
+-
+-	list_for_each_entry_safe(item, tmp, &concat_node_list, head) {
+-		is_mtd_found = false;
+-
+-		/* Find the concat item that hold the mtd device */
+-		for (idx = 0; idx < item->count; idx++) {
+-			if (item->nodes[idx] == mtd_get_of_node(mtd)) {
+-				is_mtd_found = true;
+-				break;
+-			}
+-		}
+-		if (!is_mtd_found)
+-			continue;
+-		concat = item->concat;
+-
+-		/*
+-		 * Since this concatenated device is being removed, retrieve
+-		 * all MTD devices that are part of it and register them
+-		 * individually.
+-		 */
+-		for (idx = 0; idx < concat->num_subdev; idx++) {
+-			child = concat->subdev[idx];
+-			if (mtd_get_of_node(child) != mtd_get_of_node(mtd)) {
+-				ret = add_mtd_device(child);
+-				if (ret)
+-					goto out;
++	struct mtd_virt_concat_node *item;
++	LIST_HEAD(devices);
++	unsigned int i;
++
++	/* A virtual master cannot itself be a DT concatenation component. */
++	if (mtd_get_master(mtd)->master.release == mtd_virt_concat_release)
++		return 0;
++
++	mutex_lock(&concat_lock);
++	list_for_each_entry(item, &concat_node_list, node) {
++		for (i = 0; i < item->count; i++) {
++			struct mtd_virt_concat_part *part = &item->parts[i];
++
++			if (!mtd_virt_concat_contains(part->mtd, mtd))
++				continue;
++			if (item->device) {
++				mtd_concat_disconnect(item->device->mtd);
++				list_add_tail(&item->device->node, &devices);
++				item->device = NULL;
+ 			}
++			mtd_virt_concat_part_put(part->mtd);
++			part->mtd = NULL;
++			part->ready = false;
+ 		}
+-		/* Destroy the concat */
+-		if (concat->mtd.name) {
+-			del_mtd_device(&concat->mtd);
+-			kfree(concat->mtd.name);
+-			mtd_virt_concat_put_mtd_devices(item->concat);
+-			mtd_concat_destroy(&concat->mtd);
+-		}
+-
+-		for (idx = 0; idx < item->count; idx++)
+-			of_node_put(item->nodes[idx]);
+-
+-		kfree(item);
+ 	}
++	mutex_unlock(&concat_lock);
++
++	/* Unregistration takes the virtual master's partition lock. */
++	mtd_virt_concat_unregister(&devices);
+ 	return 0;
+-out:
+-	mutex_lock(&master->master.partitions_lock);
+-	list_del(&child->part.node);
+-	mutex_unlock(&master->master.partitions_lock);
+-	kfree(mtd->name);
+-	kfree(mtd);
++}
+ 
+-	return ret;
++static void mtd_virt_concat_free_item(struct mtd_virt_concat_node *item)
++{
++	unsigned int i;
++
++	for (i = 0; i < item->count; i++)
++		of_node_put(item->parts[i].node);
++	kfree(item);
+ }
+ 
+-/**
+- * mtd_virt_concat_create_item - Create a concat item
+- * @parts:        pointer to 'device_node'
+- * @count:        number of mtd devices that make up
+- *                the concatenated device.
+- *
+- * Return: 0 on success, -error otherwise.
+- */
+-static int mtd_virt_concat_create_item(struct device_node *parts,
+-				       unsigned int count)
++static int mtd_virt_concat_create_item(struct device_node *node, unsigned int count)
+ {
+ 	struct mtd_virt_concat_node *item;
+-	struct mtd_concat *concat;
+-	int i;
+-
+-	for (i = 0; i < (count - 1); i++) {
+-		if (mtd_is_part_concat(of_parse_phandle(parts, CONCAT_PROP, i)))
+-			return 0;
+-	}
++	unsigned int i, j;
+ 
+-	item = kzalloc_flex(*item, nodes, count, GFP_KERNEL);
++	item = kzalloc_flex(*item, parts, count, GFP_KERNEL);
+ 	if (!item)
+ 		return -ENOMEM;
+-
+ 	item->count = count;
++	item->parts[0].node = of_node_get(node);
+ 
+-	/*
+-	 * The partition in which "part-concat-next" property
+-	 * is defined is the first device in the list of concat
+-	 * devices.
+-	 */
+-	item->nodes[0] = parts;
+-
+-	for (i = 1; i < count; i++)
+-		item->nodes[i] = of_parse_phandle(parts, CONCAT_PROP, (i - 1));
++	for (i = 1; i < count; i++) {
++		struct device_node *part = of_parse_phandle(node, CONCAT_PROP, i - 1);
+ 
+-	concat = kzalloc_flex(*concat, subdev, count, GFP_KERNEL);
+-	if (!concat) {
+-		kfree(item);
+-		return -ENOMEM;
++		item->parts[i].node = part;
++		if (!part || mtd_is_part_concat(part))
++			goto out;
++		for (j = 0; j < i; j++)
++			if (item->parts[j].node == part)
++				goto out;
+ 	}
+-
+-	item->concat = concat;
+-
+-	list_add_tail(&item->head, &concat_node_list);
+-
++	list_add_tail(&item->node, &concat_node_list);
+ 	return 0;
++out:
++	mtd_virt_concat_free_item(item);
++	return -EINVAL;
+ }
+ 
+-void mtd_virt_concat_destroy_items(void)
++void mtd_virt_concat_destroy_joins(void)
+ {
+-	struct mtd_virt_concat_node *item, *temp;
+-	int i;
++	struct mtd_virt_concat_node *item;
++	LIST_HEAD(devices);
++	unsigned int i;
++
++	mutex_lock(&concat_lock);
++	list_for_each_entry(item, &concat_node_list, node) {
++		if (item->device) {
++			mtd_concat_disconnect(item->device->mtd);
++			list_add_tail(&item->device->node, &devices);
++			item->device = NULL;
++		}
++		for (i = 0; i < item->count; i++) {
++			if (item->parts[i].mtd)
++				mtd_virt_concat_part_put(item->parts[i].mtd);
++			item->parts[i].mtd = NULL;
++			item->parts[i].ready = false;
++		}
++	}
++	mutex_unlock(&concat_lock);
++	mtd_virt_concat_unregister(&devices);
++}
+ 
+-	list_for_each_entry_safe(item, temp, &concat_node_list, head) {
+-		for (i = 0; i < item->count; i++)
+-			of_node_put(item->nodes[i]);
++void mtd_virt_concat_destroy_items(void)
++{
++	struct mtd_virt_concat_node *item, *next;
+ 
+-		kfree(item);
++	guard(mutex)(&concat_lock);
++	list_for_each_entry_safe(item, next, &concat_node_list, node) {
++		list_del(&item->node);
++		mtd_virt_concat_free_item(item);
+ 	}
+ }
+ 
+-/**
+- * mtd_virt_concat_add - Add a mtd device to the concat list
+- * @mtd:        pointer to 'mtd_info'
+- *
+- * Return: true on success, false otherwise.
+- */
+-bool mtd_virt_concat_add(struct mtd_info *mtd)
++int mtd_virt_concat_add(struct mtd_info *mtd)
+ {
++	struct mtd_info *master = mtd_get_master(mtd);
+ 	struct mtd_virt_concat_node *item;
+-	struct mtd_concat *concat;
+-	int idx;
+-
+-	list_for_each_entry(item, &concat_node_list, head) {
+-		concat = item->concat;
+-		for (idx = 0; idx < item->count; idx++) {
+-			if (item->nodes[idx] == mtd_get_of_node(mtd)) {
+-				concat->subdev[concat->num_subdev++] = mtd;
+-				return true;
++	unsigned int i;
++
++	guard(mutex)(&concat_lock);
++	list_for_each_entry(item, &concat_node_list, node) {
++		for (i = 0; i < item->count; i++) {
++			struct mtd_virt_concat_part *part = &item->parts[i];
++
++			if (part->node != mtd_get_of_node(mtd))
++				continue;
++			if (part->mtd)
++				return -EBUSY;
++			kref_init(&mtd->refcnt);
++			/* The master need not have a registered device. */
++			if (master->master.release) {
++				mtd_get_lifetime(master);
++				mtd->ref_master = master;
++				if (mtd->parent != master)
++					mtd_get_data(mtd->parent);
+ 			}
++			of_node_get(mtd_get_of_node(mtd));
++			part->mtd = mtd;
++			return 1;
+ 		}
+ 	}
+-	return false;
++	return 0;
+ }
+ 
+-/**
+- * mtd_virt_concat_node_create - List all the concatenations found in DT
+- *
+- * Return: 0 on success, -error otherwise.
+- */
+ int mtd_virt_concat_node_create(void)
+ {
+-	struct device_node *parts = NULL;
+-	int ret = 0, count = 0;
++	struct device_node *node;
++	int ret, count;
+ 
+-	/* List all the concatenations found in DT */
+-	do {
+-		parts = of_find_node_with_property(parts, CONCAT_PROP);
+-		if (!of_device_is_available(parts))
++	guard(mutex)(&concat_lock);
++	for_each_node_with_property(node, CONCAT_PROP) {
++		if (!of_device_is_available(node) || mtd_is_part_concat(node))
+ 			continue;
+-
+-		if (mtd_is_part_concat(parts))
+-			continue;
+-
+-		count = of_count_phandle_with_args(parts, CONCAT_PROP, NULL);
+-		if (count < MIN_DEV_PER_CONCAT)
++		count = of_count_phandle_with_args(node, CONCAT_PROP, NULL);
++		if (count < 1)
+ 			continue;
+-
+-		/*
+-		 * The partition in which "part-concat-next" property is defined
+-		 * is also part of the concat device, so increament count by 1.
+-		 */
+-		count++;
+-
+-		ret = mtd_virt_concat_create_item(parts, count);
++		ret = mtd_virt_concat_create_item(node, count + 1);
+ 		if (ret) {
+-			of_node_put(parts);
+-			goto destroy_items;
++			of_node_put(node);
++			return ret;
+ 		}
+-	} while (parts);
++	}
++	return 0;
++}
+ 
++static int mtd_virt_concat_register(struct mtd_virt_concat_node *item)
++{
++	struct mtd_virt_concat_device *device;
++	struct mtd_info **parts, *mtd;
++	size_t name_size = sizeof("concat");
++	unsigned int i;
++	char *name, *p;
++	int ret;
++
++	parts = kmalloc_array(item->count, sizeof(*parts), GFP_KERNEL);
++	if (!parts)
++		return -ENOMEM;
++	for (i = 0; i < item->count; i++) {
++		parts[i] = item->parts[i].mtd;
++		name_size += strlen(parts[i]->name) + 1;
++	}
++	name = kmalloc(name_size, GFP_KERNEL);
++	if (!name) {
++		ret = -ENOMEM;
++		goto out_parts;
++	}
++	p = name;
++	for (i = 0; i < item->count; i++)
++		p += sprintf(p, "%s-", parts[i]->name);
++	strscpy(p, "concat", name_size - (p - name));
++	device = kzalloc_obj(*device);
++	if (!device) {
++		ret = -ENOMEM;
++		goto out_name;
++	}
++	mtd = mtd_concat_create(parts, item->count, name);
++	if (!mtd) {
++		ret = -ENXIO;
++		goto out_device;
++	}
++	for (i = 0; i < item->count; i++)
++		kref_get(&parts[i]->refcnt);
++	mtd->parent_dev = parts[0]->parent_dev;
++	mtd_set_of_node(mtd, mtd_get_of_node(parts[0]));
++	mtd->owner = THIS_MODULE;
++	mtd->priv = device;
++	mtd_set_dev_defaults(mtd);
++	lockdep_set_class(&mtd->master.partitions_lock, &concat_partitions_lock_key);
++	mtd_set_release(mtd, mtd_virt_concat_release);
++	device->mtd = mtd;
++	ret = add_mtd_device(mtd);
++	if (ret)
++		mtd_put_master(mtd);
++	else
++		item->device = device;
++	kfree(parts);
+ 	return ret;
+ 
+-destroy_items:
+-	mtd_virt_concat_destroy_items();
+-
++out_device:
++	kfree(device);
++out_name:
++	kfree(name);
++out_parts:
++	kfree(parts);
+ 	return ret;
+ }
+ 
+-/**
+- * mtd_virt_concat_create_join - Create and register the concatenated
+- *                                 MTD device.
+- *
+- * Return: 0 on success, -error otherwise.
+- */
+-int mtd_virt_concat_create_join(void)
++int mtd_virt_concat_create_join(struct mtd_info *master)
+ {
+ 	struct mtd_virt_concat_node *item;
+-	struct mtd_concat *concat;
+-	struct mtd_info *mtd;
+-	ssize_t name_sz;
+-	int ret, idx;
+-	char *name;
+-
+-	list_for_each_entry(item, &concat_node_list, head) {
+-		concat = item->concat;
+-		/*
+-		 * Check if item->count != concat->num_subdev, it indicates
+-		 * that the MTD information for all devices included in the
+-		 * concatenation are not handy, concat MTD device can't be
+-		 * created hence switch to next concat device.
+-		 */
+-		if (item->count != concat->num_subdev) {
+-			continue;
+-		} else {
+-			/* Calculate the legth of the name of the virtual device */
+-			for (idx = 0, name_sz = 0; idx < concat->num_subdev; idx++)
+-				name_sz += (strlen(concat->subdev[idx]->name) + 1);
+-			name_sz += strlen(CONCAT_POSTFIX);
+-			name = kmalloc(name_sz + 1, GFP_KERNEL);
+-			if (!name) {
+-				mtd_virt_concat_put_mtd_devices(concat);
+-				return -ENOMEM;
+-			}
++	unsigned int i;
++	int ret;
+ 
+-			ret = 0;
+-			for (idx = 0; idx < concat->num_subdev; idx++) {
+-				ret += sprintf((name + ret), "%s-",
+-					       concat->subdev[idx]->name);
+-			}
+-			sprintf((name + ret), CONCAT_POSTFIX);
+-
+-			if (concat->mtd.name) {
+-				ret = memcmp(concat->mtd.name, name, name_sz);
+-				if (ret == 0) {
+-					kfree(name);
+-					continue;
+-				}
+-			}
+-			mtd = mtd_concat_create(concat->subdev, concat->num_subdev, name);
+-			if (!mtd) {
+-				kfree(name);
+-				return -ENXIO;
++	guard(mutex)(&concat_lock);
++	list_for_each_entry(item, &concat_node_list, node) {
++		bool ready = true, includes_master = false;
++
++		for (i = 0; i < item->count; i++) {
++			struct mtd_virt_concat_part *part = &item->parts[i];
++
++			if (part->mtd && mtd_get_master(part->mtd) == master) {
++				part->ready = true;
++				includes_master = true;
+ 			}
+-			concat->mtd = *mtd;
+-			/* Arbitrary set the first device as parent */
+-			concat->mtd.parent_dev = concat->subdev[0]->parent_dev;
+-			mtd_set_of_node(&concat->mtd, mtd_get_of_node(concat->subdev[0]));
+-
+-			/* Add the mtd device */
+-			ret = add_mtd_device(&concat->mtd);
+-			if (ret)
+-				goto destroy_concat;
++			ready &= part->ready;
+ 		}
++		if (!ready || !includes_master || item->device)
++			continue;
++		ret = mtd_virt_concat_register(item);
++		if (ret)
++			return ret;
+ 	}
+-
+ 	return 0;
+-
+-destroy_concat:
+-	mtd_concat_destroy(mtd);
+-
+-	return ret;
+ }
+diff --git a/drivers/mtd/mtdconcat.c b/drivers/mtd/mtdconcat.c
+index c97167d51fe2..0ac248c61fb1 100644
+--- a/drivers/mtd/mtdconcat.c
++++ b/drivers/mtd/mtdconcat.c
+@@ -46,6 +46,10 @@ concat_read(struct mtd_info *mtd, loff_t from, size_t len,
+ 	int ret = 0, err;
+ 	int i;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	for (i = 0; i < concat->num_subdev; i++) {
+ 		struct mtd_info *subdev = concat->subdev[i];
+ 		size_t size, retsize;
+@@ -97,6 +101,11 @@ concat_panic_write(struct mtd_info *mtd, loff_t to, size_t len,
+ 	struct mtd_concat *concat = CONCAT(mtd);
+ 	int err = -EINVAL;
+ 	int i;
++
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	for (i = 0; i < concat->num_subdev; i++) {
+ 		struct mtd_info *subdev = concat->subdev[i];
+ 		size_t size, retsize;
+@@ -139,6 +148,10 @@ concat_write(struct mtd_info *mtd, loff_t to, size_t len,
+ 	int err = -EINVAL;
+ 	int i;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	for (i = 0; i < concat->num_subdev; i++) {
+ 		struct mtd_info *subdev = concat->subdev[i];
+ 		size_t size, retsize;
+@@ -180,6 +193,10 @@ concat_writev(struct mtd_info *mtd, const struct kvec *vecs,
+ 	int i;
+ 	int err = -EINVAL;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	/* Calculate total length of data */
+ 	for (i = 0; i < count; i++)
+ 		total_len += vecs[i].iov_len;
+@@ -251,6 +268,10 @@ concat_read_oob(struct mtd_info *mtd, loff_t from, struct mtd_oob_ops *ops)
+ 	struct mtd_oob_ops devops = *ops;
+ 	int i, err, ret = 0;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	ops->retlen = ops->oobretlen = 0;
+ 
+ 	for (i = 0; i < concat->num_subdev; i++) {
+@@ -308,6 +329,10 @@ concat_write_oob(struct mtd_info *mtd, loff_t to, struct mtd_oob_ops *ops)
+ 	struct mtd_oob_ops devops = *ops;
+ 	int i, err;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	if (!(mtd->flags & MTD_WRITEABLE))
+ 		return -EROFS;
+ 
+@@ -356,6 +381,10 @@ static int concat_erase(struct mtd_info *mtd, struct erase_info *instr)
+ 	uint64_t length, offset = 0;
+ 	struct erase_info *erase;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	/*
+ 	 * Check for proper erase block alignment of the to-be-erased area.
+ 	 * It is easier to do this based on the super device's erase
+@@ -472,6 +501,10 @@ static int concat_xxlock(struct mtd_info *mtd, loff_t ofs, uint64_t len,
+ 	struct mtd_concat *concat = CONCAT(mtd);
+ 	int i, err = -EINVAL;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	for (i = 0; i < concat->num_subdev; i++) {
+ 		struct mtd_info *subdev = concat->subdev[i];
+ 		uint64_t size;
+@@ -519,6 +552,10 @@ static int concat_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+ 	struct mtd_concat *concat = CONCAT(mtd);
+ 	int i, err = -EINVAL;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	for (i = 0; i < concat->num_subdev; i++) {
+ 		struct mtd_info *subdev = concat->subdev[i];
+ 
+@@ -541,6 +578,10 @@ static void concat_sync(struct mtd_info *mtd)
+ 	struct mtd_concat *concat = CONCAT(mtd);
+ 	int i;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return;
++
+ 	for (i = 0; i < concat->num_subdev; i++) {
+ 		struct mtd_info *subdev = concat->subdev[i];
+ 		mtd_sync(subdev);
+@@ -552,6 +593,10 @@ static int concat_suspend(struct mtd_info *mtd)
+ 	struct mtd_concat *concat = CONCAT(mtd);
+ 	int i, rc = 0;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return 0;
++
+ 	for (i = 0; i < concat->num_subdev; i++) {
+ 		struct mtd_info *subdev = concat->subdev[i];
+ 		if ((rc = mtd_suspend(subdev)) < 0)
+@@ -565,6 +610,10 @@ static void concat_resume(struct mtd_info *mtd)
+ 	struct mtd_concat *concat = CONCAT(mtd);
+ 	int i;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return;
++
+ 	for (i = 0; i < concat->num_subdev; i++) {
+ 		struct mtd_info *subdev = concat->subdev[i];
+ 		mtd_resume(subdev);
+@@ -576,6 +625,10 @@ static int concat_block_isbad(struct mtd_info *mtd, loff_t ofs)
+ 	struct mtd_concat *concat = CONCAT(mtd);
+ 	int i, res = 0;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	if (!mtd_can_have_bb(concat->subdev[0]))
+ 		return res;
+ 
+@@ -599,6 +652,10 @@ static int concat_block_markbad(struct mtd_info *mtd, loff_t ofs)
+ 	struct mtd_concat *concat = CONCAT(mtd);
+ 	int i, err = -EINVAL;
+ 
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++
+ 	for (i = 0; i < concat->num_subdev; i++) {
+ 		struct mtd_info *subdev = concat->subdev[i];
+ 
+@@ -616,6 +673,33 @@ static int concat_block_markbad(struct mtd_info *mtd, loff_t ofs)
+ 	return err;
+ }
+ 
++static int concat_ooblayout_ecc(struct mtd_info *mtd, int section,
++			      struct mtd_oob_region *region)
++{
++	struct mtd_concat *concat = CONCAT(mtd);
++
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++	return mtd_ooblayout_ecc(concat->subdev[0], section, region);
++}
++
++static int concat_ooblayout_free(struct mtd_info *mtd, int section,
++			       struct mtd_oob_region *region)
++{
++	struct mtd_concat *concat = CONCAT(mtd);
++
++	guard(srcu_fast)(&concat->srcu);
++	if (READ_ONCE(concat->disconnected))
++		return -ENODEV;
++	return mtd_ooblayout_free(concat->subdev[0], section, region);
++}
++
++static const struct mtd_ooblayout_ops concat_ooblayout_ops = {
++	.ecc = concat_ooblayout_ecc,
++	.free = concat_ooblayout_free,
++};
++
+ /*
+  * This function constructs a virtual MTD device by concatenating
+  * num_devs MTD devices. A pointer to the new device object is
+@@ -738,7 +822,8 @@ struct mtd_info *mtd_concat_create(struct mtd_info *subdev[],	/* subdevices to c
+ 
+ 	}
+ 
+-	mtd_set_ooblayout(&concat->mtd, subdev[0]->ooblayout);
++	if (mtd_get_master(subdev[0])->ooblayout)
++		mtd_set_ooblayout(&concat->mtd, &concat_ooblayout_ops);
+ 
+ 	concat->num_subdev = num_devs;
+ 	concat->mtd.name = name;
+@@ -877,13 +962,29 @@ struct mtd_info *mtd_concat_create(struct mtd_info *subdev[],	/* subdevices to c
+ 		erase_region_p->numblocks = tmp64;
+ 	}
+ 
++	if (init_srcu_struct_fast(&concat->srcu)) {
++		kfree(concat->mtd.eraseregions);
++		kfree(concat);
++		return NULL;
++	}
+ 	return &concat->mtd;
+ }
+ 
++void mtd_concat_disconnect(struct mtd_info *mtd)
++{
++	struct mtd_concat *concat = CONCAT(mtd);
++
++	WRITE_ONCE(concat->disconnected, true);
++	synchronize_srcu(&concat->srcu);
++}
++EXPORT_SYMBOL_GPL(mtd_concat_disconnect);
++
+ /* Cleans the context obtained from mtd_concat_create() */
+ void mtd_concat_destroy(struct mtd_info *mtd)
+ {
+ 	struct mtd_concat *concat = CONCAT(mtd);
++
++	cleanup_srcu_struct(&concat->srcu);
+ 	if (concat->mtd.numeraseregions)
+ 		kfree(concat->mtd.eraseregions);
+ 	kfree(concat);
+diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+index 9cbfb9c32737..d9548567945e 100644
+--- a/drivers/mtd/mtdcore.c
++++ b/drivers/mtd/mtdcore.c
+@@ -1209,7 +1209,7 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
+ 		goto out;
+ 
+ 	if (IS_REACHABLE(CONFIG_MTD_VIRT_CONCAT)) {
+-		ret = mtd_virt_concat_create_join();
++		ret = mtd_virt_concat_create_join(mtd);
+ 		if (ret < 0)
+ 			goto out;
+ 	}
+@@ -1230,6 +1230,7 @@ int mtd_device_parse_register(struct mtd_info *mtd, const char * const *types,
+ 
+ out:
+ 	if (ret) {
++		del_mtd_partitions(mtd);
+ 		nvmem_unregister(mtd->otp_user_nvmem);
+ 		nvmem_unregister(mtd->otp_factory_nvmem);
+ 	}
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index 8be604f7c140..bc9bc3c6a233 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -93,6 +93,7 @@ static struct mtd_info *allocate_partition(struct mtd_info *parent,
+ 	child->parent = parent;
+ 	child->part.offset = part->offset;
+ 	INIT_LIST_HEAD(&child->partitions);
++	INIT_LIST_HEAD(&child->part.node);
+ 
+ 	if (child->part.offset == MTDPART_OFS_APPEND)
+ 		child->part.offset = cur_offset;
+@@ -324,6 +325,9 @@ static int __mtd_del_partition(struct mtd_info *mtd)
+ 	struct mtd_info *child, *next;
+ 	int err;
+ 
++	if (IS_REACHABLE(CONFIG_MTD_VIRT_CONCAT))
++		mtd_virt_concat_destroy(mtd);
++
+ 	list_for_each_entry_safe(child, next, &mtd->partitions, part.node) {
+ 		err = __mtd_del_partition(child);
+ 		if (err)
+@@ -375,6 +379,8 @@ int del_mtd_partitions(struct mtd_info *mtd)
+ 	pr_info("Deleting MTD partitions on \"%s\":\n", mtd->name);
+ 
+ 	mutex_lock(&master->master.partitions_lock);
++	if (IS_REACHABLE(CONFIG_MTD_VIRT_CONCAT))
++		mtd_virt_concat_destroy(mtd);
+ 	ret = __del_mtd_partitions(mtd);
+ 	mutex_unlock(&master->master.partitions_lock);
+ 
+@@ -434,7 +440,13 @@ int add_mtd_partitions(struct mtd_info *parent,
+ 		}
+ 
+ 		if (IS_REACHABLE(CONFIG_MTD_VIRT_CONCAT)) {
+-			if (mtd_virt_concat_add(child)) {
++			ret = mtd_virt_concat_add(child);
++			if (ret < 0) {
++				free_partition(child);
++				goto err_unlock;
++			}
++			if (ret) {
++				cur_offset = child->part.offset + child->part.size;
+ 				mutex_unlock(&master->master.partitions_lock);
+ 				continue;
+ 			}
+diff --git a/include/linux/mtd/concat.h b/include/linux/mtd/concat.h
+index f8d4d6ac1fc1..af30d338fee4 100644
+--- a/include/linux/mtd/concat.h
++++ b/include/linux/mtd/concat.h
+@@ -8,6 +8,7 @@
+ #ifndef MTD_CONCAT_H
+ #define MTD_CONCAT_H
+ 
++#include <linux/srcu.h>
+ 
+ /*
+  * Our storage structure:
+@@ -17,6 +18,8 @@
+  */
+ struct mtd_concat {
+ 	struct mtd_info mtd;
++	struct srcu_struct srcu;
++	bool disconnected;
+ 	int num_subdev;
+ 	struct mtd_info *subdev[];
+ };
+@@ -27,6 +30,7 @@ struct mtd_info *mtd_concat_create(
+     const char *name);          /* name for the new device   */
+ 
+ void mtd_concat_destroy(struct mtd_info *mtd);
++void mtd_concat_disconnect(struct mtd_info *mtd);
+ 
+ /**
+  * mtd_virt_concat_node_create - Create a component for concatenation
+@@ -43,23 +47,23 @@ int mtd_virt_concat_node_create(void);
+  * mtd_virt_concat_add - add mtd_info object to the list of subdevices for concatenation
+  * @mtd: pointer to new MTD device info structure
+  *
+- * Returns true if the mtd_info object is added successfully else returns false.
++ * Returns 1 if added, 0 if not a component, or a negative error code.
+  *
+  * The mtd_info object is added to the list of subdevices for concatenation.
+- * It returns true if a match is found, and false if all subdevices have
+- * already been added or if the mtd_info object does not match any of the
+- * intended MTD devices.
++ * A duplicate component is rejected; the caller retains ownership on error
++ * or when the partition does not match a concatenation.
+  */
+-bool mtd_virt_concat_add(struct mtd_info *mtd);
++int mtd_virt_concat_add(struct mtd_info *mtd);
+ 
+ /**
+  * mtd_virt_concat_create_join - Create and register the concatenated MTD device
++ * @master: master whose partition registration has completed
+  *
+  * Returns 0 on succes, or a negative error code.
+  *
+  * Creates and registers the concatenated MTD device
+  */
+-int mtd_virt_concat_create_join(void);
++int mtd_virt_concat_create_join(struct mtd_info *master);
+ 
+ /**
+  * mtd_virt_concat_destroy - Remove the concat that includes a specific mtd device
+@@ -68,9 +72,9 @@ int mtd_virt_concat_create_join(void);
+  *
+  * Returns 0 on succes, or a negative error code.
+  *
+- * If the mtd_info object is part of a concatenated device, all other MTD devices
+- * within that concat are registered individually. The concatenated device is then
+- * removed, along with its concatenation component.
++ * Unregister concatenations containing this device or its partitions and
++ * release its staged components. Components of other masters remain staged
++ * for a later rebind. Acquired handles retain disconnected concat metadata.
+  *
+  */
+ int mtd_virt_concat_destroy(struct mtd_info *mtd);
 
-Changes in v3:
-- Finish NAND and driver cleanup during disconnection, leaving final
-  allocation release in the NAND core, following Greg's networking example.
-- Snapshot OOB layouts before publication and drain complete BBM/BBT
-  updates before releasing their working state.
-- Separate MTD class-device allocation and final release from backing-object
-  ownership, following Greg's review.
-- Drain class PM callbacks under the device lock before detaching backing
-  data; keep device-type and PM dispatch storage with the built-in device.
-- Drain NVMEM provider and layout callbacks during unregister, retaining
-  core-owned metadata for old consumers and retiring cells across rebind.
-- Keep NVMEM consumer-owner references, with converted raw NAND
-  providers naming the NAND core instead of the controller module.
-  Release write-protect GPIOs once provider callbacks are drained.
-- Acquire an MTD handle for PTP OCP firmware updates through a class device.
-- Drain concatenation operations before releasing components, including
-  concurrent removal of masters without opt-in lifetime ownership.
-- Use scoped cleanup consistently in Tegra probe and add the introducing
-  commits for Socrates and FSL UPM, following Sashiko's review.
-- Link to v2: https://patch.msgid.link/20261110-submit-rawnand-retained-handle-lifetime-v1-v2-0-9137d08f05df@gmail.com
-
-Changes in v2:
-- Keep the MTD device callback owner pinned through callback return,
-  with the final module put performed by the device core.
-- Retain virtual-concat components across removal and rebind, serialize
-  staging/publication and unwind incomplete partition registrations.
-- Balance Tegra's probe-time child-node reference separately from the
-  reference retained for the chip lifetime.
-- Refresh the prerequisite stack to the separately posted fixes, using
-  the latest QCOM child-probe revision.
-- Keep the lifetime changes on top of those fixes: preserve QCOM scan
-  before publication, R852 per-card initialization and Intel probe
-  hardware shutdown.
-- Fold Macronix disconnection handling into the NAND disconnect patch;
-  its operation locking is supplied by the posted prerequisite.
-- Use Karl Mehltretter's posted OTP cleanup fix as a prerequisite in
-  place of the duplicate preparatory patch.
-- Keep the NVMEM context callback module pinned until its final callback
-  returns, independently of the provider's consumer owner.
-- Use the posted fixes for dynamic partition publication and partition-node
-  ownership. Keep master get/put accounting independent of
-  later master registration in the MTD ownership patch.
-- Propagate disconnection through BBT error recovery without marking
-  the eraseblock bad.
-- Make suspend of a disconnected, retained NAND device a no-op.
-- Handle R852 card events during removal while preventing new work from
-  being queued.
-- Initialize Denali and Atmel cleanup variables at allocation and add
-  the introducing-commit trailers for Orion and MPC5121.
-- Link to v1: https://patch.msgid.link/20261107-submit-rawnand-retained-handle-lifetime-v1-v1-0-0181ef0cc4c8@gmail.com
-
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Richard Weinberger <richard@nod.at>
-To: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mtd@lists.infradead.org
-
----
-James Hilliard (58):
-      nvmem: disconnect provider callbacks before unregister returns
-      mtd: acquire an MTD handle from a referenced class device
-      mtd: separate class devices from retained backing objects
-      mtd: retain virtual concatenations across component removal
-      mtd: rawnand: separate hardware disconnection from cleanup
-      mtd: rawnand: share retained chip and controller ownership
-      mtd: rawnand: sunxi: retain chip state until the final MTD put
-      mtd: rawnand: plat_nand: retain open-handle state on removal
-      mtd: rawnand: gpio: retain open-handle state on removal
-      mtd: rawnand: stm32_fmc2: retain open-handle state on removal
-      mtd: rawnand: denali: retain chips across controller removal
-      mtd: rawnand: arasan: retain chips across controller removal
-      mtd: rawnand: mxic: retain open-handle state on removal
-      mtd: rawnand: intel: retain open-handle state on removal
-      mtd: rawnand: tegra: retain open-handle state on removal
-      mtd: rawnand: mtk: retain chips across controller removal
-      mtd: rawnand: rockchip: retain chips across controller removal
-      mtd: rawnand: atmel: retain chips across controller removal
-      mtd: rawnand: orion: retain open-handle state on removal
-      mtd: rawnand: socrates: retain open-handle state on removal
-      mtd: rawnand: fsl_upm: retain open-handle state on removal
-      mtd: rawnand: pasemi: retain open-handle state on removal
-      mtd: rawnand: ams-delta: retain open-handle state on removal
-      mtd: rawnand: xway: retain open-handle state on removal
-      mtd: rawnand: hisi504: retain open-handle state on removal
-      mtd: rawnand: vf610: retain open-handle state on removal
-      mtd: rawnand: technologic: retain open-handle state on removal
-      mtd: rawnand: loongson: retain open-handle state on removal
-      mtd: rawnand: ma35d1: retain open-handle state on removal
-      mtd: rawnand: pl35x: retain open-handle state on removal
-      mtd: rawnand: mxc: retain open-handle state on removal
-      mtd: rawnand: fsmc: retain open-handle state on removal
-      mtd: rawnand: gpmi: retain open-handle state on removal
-      mtd: rawnand: omap2: retain open-handle state on removal
-      mtd: rawnand: marvell: retain open-handle state on removal
-      mtd: rawnand: renesas: retain open-handle state on removal
-      mtd: rawnand: meson: retain open-handle state on removal
-      mtd: rawnand: cadence: retain open-handle state on removal
-      mtd: rawnand: qcom: retain open-handle state on removal
-      mtd: rawnand: cafe: retain open-handle state on removal
-      mtd: rawnand: brcmnand: retain open-handle state on removal
-      mtd: rawnand: au1550nd: retain chip state across removal
-      mtd: rawnand: sharpsl: retain chip state across removal
-      mtd: rawnand: davinci: retain chip state across removal
-      mtd: rawnand: sh_flctl: retain chip state across removal
-      mtd: rawnand: lpc32xx_slc: retain chip state across removal
-      mtd: rawnand: lpc32xx_mlc: retain chip state across removal
-      mtd: rawnand: ndfc: retain chip state across removal
-      mtd: rawnand: txx9ndfmc: retain chip state across removal
-      mtd: rawnand: ingenic: retain chip state across removal
-      mtd: rawnand: mpc5121: retain chip state across removal
-      mtd: rawnand: bcm47xxnflash: retain chip state across removal
-      mtd: rawnand: fsl_elbc: retain chip state across removal
-      mtd: rawnand: fsl_ifc: retain chip state across removal
-      mtd: rawnand: r852: retain chip state across removal
-      mtd: rawnand: nandsim: retain chip state across removal
-      mtd: rawnand: cs553x: retain chip state across removal
-      mtd: rawnand: diskonchip: retain chip state across removal
-
- drivers/Makefile                                   |   2 +-
- drivers/media/pci/cobalt/cobalt-flash.c            |   2 +-
- drivers/mtd/Kconfig                                |   5 +
- drivers/mtd/Makefile                               |   5 +-
- drivers/mtd/devices/bcm47xxsflash.c                |   2 +-
- drivers/mtd/devices/docg3.c                        |   4 +-
- drivers/mtd/devices/mchp23k256.c                   |   2 +-
- drivers/mtd/devices/mchp48l640.c                   |   2 +-
- drivers/mtd/devices/mtd_dataflash.c                |   2 +-
- drivers/mtd/devices/mtd_intel_dg.c                 |  30 +-
- drivers/mtd/devices/powernv_flash.c                |   4 +-
- drivers/mtd/devices/spear_smi.c                    |   2 +-
- drivers/mtd/devices/sst25l.c                       |   2 +-
- drivers/mtd/devices/st_spi_fsm.c                   |   8 +-
- drivers/mtd/hyperbus/hyperbus-core.c               |   2 +-
- drivers/mtd/lpddr/lpddr2_nvm.c                     |   2 +-
- drivers/mtd/maps/lantiq-flash.c                    |   2 +-
- drivers/mtd/maps/physmap-core.c                    |   2 +-
- drivers/mtd/maps/plat-ram.c                        |   2 +-
- drivers/mtd/maps/pxa2xx-flash.c                    |   2 +-
- drivers/mtd/maps/sa1100-flash.c                    |   2 +-
- drivers/mtd/maps/vmu-flash.c                       |   2 +-
- drivers/mtd/mtd_blkdevs.c                          |   2 +-
- drivers/mtd/mtd_virt_concat.c                      | 526 +++++++++++----------
- drivers/mtd/mtdconcat.c                            | 103 +++-
- drivers/mtd/mtdcore.c                              | 308 +++++++-----
- drivers/mtd/mtdcore.h                              |   5 +
- drivers/mtd/mtddevice.c                            |  59 +++
- drivers/mtd/mtddevice.h                            |  12 +
- drivers/mtd/mtdpart.c                              |  68 ++-
- drivers/mtd/mtdpstore.c                            |  50 +-
- drivers/mtd/nand/ecc.c                             |   3 +-
- drivers/mtd/nand/onenand/generic.c                 |   2 +-
- drivers/mtd/nand/onenand/onenand_omap2.c           |   2 +-
- drivers/mtd/nand/onenand/onenand_samsung.c         |   2 +-
- drivers/mtd/nand/raw/Makefile                      |   1 +
- drivers/mtd/nand/raw/ams-delta.c                   |  28 +-
- drivers/mtd/nand/raw/arasan-nand-controller.c      |  49 +-
- drivers/mtd/nand/raw/atmel/nand-controller.c       |  44 +-
- drivers/mtd/nand/raw/au1550nd.c                    |  23 +-
- drivers/mtd/nand/raw/bcm47xxnflash/main.c          |  18 +-
- drivers/mtd/nand/raw/brcmnand/brcmnand.c           |  65 ++-
- drivers/mtd/nand/raw/cadence-nand-controller.c     |  51 +-
- drivers/mtd/nand/raw/cafe_nand.c                   |  27 +-
- drivers/mtd/nand/raw/cs553x_nand.c                 |  44 +-
- drivers/mtd/nand/raw/davinci_nand.c                |  26 +-
- drivers/mtd/nand/raw/denali.c                      |  28 +-
- drivers/mtd/nand/raw/denali_dt.c                   |  13 +-
- drivers/mtd/nand/raw/denali_pci.c                  |   9 +-
- drivers/mtd/nand/raw/diskonchip.c                  |  17 +-
- drivers/mtd/nand/raw/fsl_elbc_nand.c               |  56 ++-
- drivers/mtd/nand/raw/fsl_ifc_nand.c                |  48 +-
- drivers/mtd/nand/raw/fsl_upm.c                     |  20 +-
- drivers/mtd/nand/raw/fsmc_nand.c                   |  19 +-
- drivers/mtd/nand/raw/gpio.c                        |  18 +-
- drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c         |  19 +-
- drivers/mtd/nand/raw/hisi504_nand.c                |  20 +-
- drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c    |  41 +-
- drivers/mtd/nand/raw/intel-nand-controller.c       |  20 +-
- drivers/mtd/nand/raw/internals.h                   |   2 +-
- drivers/mtd/nand/raw/loongson-nand-controller.c    |  21 +-
- drivers/mtd/nand/raw/lpc32xx_mlc.c                 |  38 +-
- drivers/mtd/nand/raw/lpc32xx_slc.c                 |  40 +-
- drivers/mtd/nand/raw/marvell_nand.c                |  46 +-
- drivers/mtd/nand/raw/meson_nand.c                  |  49 +-
- drivers/mtd/nand/raw/mpc5121_nfc.c                 |  26 +-
- drivers/mtd/nand/raw/mtk_nand.c                    |  40 +-
- drivers/mtd/nand/raw/mxc_nand.c                    |  23 +-
- drivers/mtd/nand/raw/mxic_nand.c                   |  23 +-
- drivers/mtd/nand/raw/nand_base.c                   | 103 +++-
- drivers/mtd/nand/raw/nand_bbt.c                    |  24 +-
- drivers/mtd/nand/raw/nand_lifetime.c               | 246 ++++++++++
- drivers/mtd/nand/raw/nand_macronix.c               |   8 +-
- drivers/mtd/nand/raw/nand_onfi.c                   |   4 +-
- drivers/mtd/nand/raw/nandsim.c                     |  21 +-
- drivers/mtd/nand/raw/ndfc.c                        |  34 +-
- .../mtd/nand/raw/nuvoton-ma35d1-nand-controller.c  |  42 +-
- drivers/mtd/nand/raw/omap2.c                       |  27 +-
- drivers/mtd/nand/raw/orion_nand.c                  |  24 +-
- drivers/mtd/nand/raw/pasemi_nand.c                 |  22 +-
- drivers/mtd/nand/raw/pl35x-nand-controller.c       |  38 +-
- drivers/mtd/nand/raw/plat_nand.c                   |  20 +-
- drivers/mtd/nand/raw/qcom_nandc.c                  |  39 +-
- drivers/mtd/nand/raw/r852.c                        | 111 +++--
- drivers/mtd/nand/raw/r852.h                        |   1 +
- drivers/mtd/nand/raw/renesas-nand-controller.c     |  37 +-
- drivers/mtd/nand/raw/rockchip-nand-controller.c    |  45 +-
- drivers/mtd/nand/raw/sh_flctl.c                    |  22 +-
- drivers/mtd/nand/raw/sharpsl.c                     |  22 +-
- drivers/mtd/nand/raw/sm_common.c                   |  15 +-
- drivers/mtd/nand/raw/sm_common.h                   |   2 +-
- drivers/mtd/nand/raw/socrates_nand.c               |  19 +-
- drivers/mtd/nand/raw/stm32_fmc2_nand.c             |  19 +-
- drivers/mtd/nand/raw/sunxi_nand.c                  |  46 +-
- drivers/mtd/nand/raw/technologic-nand-controller.c |  22 +-
- drivers/mtd/nand/raw/tegra_nand.c                  |  27 +-
- drivers/mtd/nand/raw/txx9ndfmc.c                   |  41 +-
- drivers/mtd/nand/raw/vf610_nfc.c                   |  20 +-
- drivers/mtd/nand/raw/xway_nand.c                   |  24 +-
- drivers/mtd/nand/spi/core.c                        |   2 +-
- drivers/mtd/nand/spi/esmt.c                        |   2 +-
- drivers/mtd/nand/spi/micron.c                      |   4 +-
- drivers/mtd/nand/spi/otp.c                         |   2 +-
- drivers/mtd/spi-nor/core.c                         |   2 +-
- drivers/mtd/ubi/build.c                            |   2 +-
- drivers/nvmem/Kconfig                              |   1 +
- drivers/nvmem/core.c                               | 463 ++++++++++++------
- drivers/nvmem/internals.h                          |  16 +-
- drivers/nvmem/layouts.c                            |   2 +
- drivers/nvmem/layouts/fixed-layout.c               |   2 +-
- drivers/nvmem/layouts/onie-tlv.c                   |  20 +-
- drivers/nvmem/layouts/sl28vpd.c                    |   3 +-
- drivers/nvmem/layouts/u-boot-env.c                 |  25 +-
- drivers/ptp/ptp_ocp.c                              |   7 +-
- include/linux/mtd/concat.h                         |  22 +-
- include/linux/mtd/mtd.h                            |  21 +-
- include/linux/mtd/rawnand.h                        |  37 +-
- include/linux/nvmem-provider.h                     |  16 +-
- 118 files changed, 2751 insertions(+), 1265 deletions(-)
----
-base-commit: 30daaf3e7897b4a8d9b72e5b0c86dd6e2a4d7d85
-base-tree: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next
-change-id: 20261104-submit-rawnand-retained-handle-lifetime-v1-0b4225e5ce0b
-prerequisite-patch-id: a51b9cb4077105499133c413d58c7ad21d973b38
-prerequisite-patch-id: b3679cda4dcb45ce7712bffe2dd0576b254df44d
-prerequisite-patch-id: 07b5c70e44ad951d20eea9478c98fda35ec765c0
-prerequisite-patch-id: abea50275922fe359d72ca4de5cbc211b04bbd57
-prerequisite-patch-id: 57776b214ffb0331319f024412f21d35e4ca9056
-prerequisite-patch-id: 09be2baaffe1f053704263cc4b0d39f2faa4f49c
-prerequisite-patch-id: c3ad85600dc897ac310be450d8daa2275fb91ee6
-prerequisite-patch-id: 4a85600553ddcc7db5a9537efd905a71cd623f65
-prerequisite-patch-id: 579990ee4a49297efc5a593b00efb9cd73fa15e8
-prerequisite-patch-id: 2ee61a8a32fd147d52e0f9d03758634912d8bfef
-prerequisite-patch-id: 1487df8ce8e6c48471fd77c7470ce9de582dfe3c
-prerequisite-patch-id: 5ecbe86f928d9c5c0bf2cb6065c5672708511fc4
-prerequisite-patch-id: ac68e9b65d3aa5661bd7ac0f2e77dcf5c75fcfe0
-prerequisite-patch-id: e70f0f0c4d430d416a3ad848b37ffad16bd7df07
-prerequisite-patch-id: 05adcddbc50f745ee2640b8c21f3bf76a217f249
-prerequisite-patch-id: 0b60b7ab6196076f327c919be5e7b8bb2051ee12
-
-Best regards,
---  
-James Hilliard <james.hilliard1@gmail.com>
+-- 
+2.53.0
 
