@@ -1,58 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794795607;
-	b=OgWQPgVuE0cPrYM7SU5crKuuCGaBQ8fCeHLu6BFOQ8Zxp8zWmnhhnE3N4pT02YNcTdof
-	 v32aw3w2W+4bfJJBZnO8eJIIPq+QhzR+DHin8EirV6Z8BTYyJMPb0/Nl+ZAFTmCGODTe0
-	 ydh5Vp0U/5HYGoRrrIrQM32igxXhRs4U5Pl/Th1v2K9TgZIHCsIMtgV2SbBJrvuFa4ryO
-	 lvfvNUwyi4ynecSn+EFqd6jchp9eebJJwpMqAqZCt30px5DyYVb6/XMu/lcSgmeDMmlhQ
-	 0c2EFhJf/HhNmAtZFodACalxMcP1DT4ey85Yaj+M6pEtsMXSlRMjf375U0/rEroheUg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794795607;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=mtDsjVuvFX9+DhdSuhUXhkgY2YLwLBeTv+Zc0QOggoM=;
-	b=en1RKu3PRxhimxIoc6AmbeLK33qRQN7PtI2+cb4a/+y+8MYIPwVNzY1am2vucWPQMOIr
-	 0QeCYHzzacRanOnCfWnsB7nBRMx6sRa89iSTHUUqmeQki6KZtklV5P5W7rlb10MPEfbEz
-	 b0Aq6Tw02Gy36dytKR167vl3u4Vsp2Fdt32Mn83CtydteiHf4whqXrXt8Sy41AM3ot71G
-	 2hvry4/2pqTKNfh/QD7K8z6ZV/w5e8eupy/lLNPGabKJEK/pFtGwfkSxzveOW2XARXRQI
-	 T7z1pxm7Gn/yGD9Iywie2rIkPc7hYV+tnca0z3txgm7Dvy3MBBFQixaKyDV0jJi4jMw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pb7KS2wy;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.52
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794799837;
+	b=3rmIz9rWhiLKRdlCLjlPUFjj67++k5z0qwV3tRYnwzd5FlgKueI72e3HbNEKhfXrIO4M
+	 UCwo0fUIciOIlziNwasBOULyP6gZSGknmxqfZoXz0wMSE2nuPD04L5i6MtMWDhevxKCFI
+	 6aFg/Il4aUpim/olFwJTjAOlV2reaFgsErXVRTopPifwzTFaqbnObWWGSql6ltRXhRKMr
+	 TszMtt1igHrVFNMZn5AhBQ4W/5vwHj3znGCz5AF41V6L9cCjJPmH0yB8IB2983aCW673X
+	 QfQBuM+ODrfPXfmoJkFU5GtBShNf60djDr6dLIpgjS0uwrM7aOQCRwNMVWxccQhvF1A==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794799837;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=EbvHpp+DKB9Zn3Fe95YeqAT/79gj7Jwj0DQknuaYym4=;
+	b=m21rsVgNcGNE8o8zDfYeSoFiC7ZegkVSWStUdg7Rb8DNK85xTk9UolO8L+uOa1HGjVga
+	 ljkNMJTHs8dclxWX9w0pNW8BnaDs8n4GUlrFH4IDLF1AZKW+upnIR0q/JgAJJOjyPIatG
+	 fJhn68clQq1YZFmo2hJgE1kgG5jKzyMRQpSstU5TX2nyXX3nCF4bVLnQzwuDL73P9pgSe
+	 H04B+TthUEcTA5VCGZMLCZ3O8aE7Ljhye8J4VBuuehh6WQ/MnnqeFnfbNNX9kl6hTc+RK
+	 tPlPDyCNHbgVDDjxYiLQGlzcX2ybtVmTu4n3NFRz4OlFnARgxDf72JIFiDKAsu/j0BA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fY1BliL+;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.52
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0D6606A31C;
-	Mon, 16 Nov 2026 02:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A2C606A32C
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 03:30:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C2A2C606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pb7KS2wy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC1561F000C4;
-	Mon, 16 Nov 2026 02:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794795606;
-	bh=mtDsjVuvFX9+DhdSuhUXhkgY2YLwLBeTv+Zc0QOggoM=;
-	h=From:To:Cc:Subject:Date;
-	b=Pb7KS2wy/gqEffBFXXEPx1uockJPskK0qgh3k+kVoMbsYtqE7WfBmGNR0uXxhS4sN
-	 KD4ERbD9PrRfPIxIHQV/5tYnl8NoMkFUth61GhJLfiXWPi0oChtAUA+1ruM4/UZABm
-	 nI7qioYflluwFJlaCTp2gPY5FQySUsUiEFjNhB+AOzkmH2yInRrIgdQ8UKlDeysSxT
-	 6vjouI/VS54idmZCXIcxfq42XtiWZLrqVgAHbtI0dZK0+/Nckhyqvu91WWnpZHZade
-	 eHYFEaLgsoHW9/NXhdbcJYY8ozVqgeRzQ3JodcoUNce1WTWsL9fyOUQEehBzhMzTTC
-	 qSwHDtTpO4ETw==
-From: Sasha Levin <sashal@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Petr Mladek <pmladek@suse.com>,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] seq_buf: always inline seq_buf_terminate() and the helpers around it
-Date: Sun, 15 Nov 2026 21:20:04 -0500
-Message-ID: <20261116022004.2373108-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fY1BliL+
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-c4cdc606b47so513796366b.0
+        for <linux-hardening@vger.kernel.org>; Sun, 15 Nov 2026 19:30:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794799835; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ivb/Fj08IfwHdwNC+u/ZXOA/eZTw0k8ZLY6362Ba7EoTg/roliJ1dqPuf/qTbNlt5H
+         sEJGeJXpAeGXWEpMxfKgEQiUfsWJH5NtJ73MP8KjxyAI4FQanaZ3NMiHod2SvFhnt5fB
+         UiZULbcc0gDPLtIrB5W/gVrjvWzxkE2FEZooqdEatgTW/5mTutNjVU2FjzDDYDAou6fE
+         F8BTxhSsyaEY5yls4uabhFjxPWBBTp5j5SzJes1vHbelorP3fvt6bbDqDCvKj0azKayF
+         u+Ffhgwr5b3m/XJt4VXNNhESdx4k6kRce/S6UmhX3M0tfcFXiUcPjCQ+MTxVf/7zVXFu
+         ce8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=EbvHpp+DKB9Zn3Fe95YeqAT/79gj7Jwj0DQknuaYym4=;
+        fh=ub+TYm7mpAFh8+SvkZnVNZO4k0Y/nkAIUTJrTQCY66M=;
+        b=m3XSMD3m1Njt0X3U5P40g+SjhEVrrFLP3iFzLbgFGIE9H0IW7MOo2VRsP2lihoWMPl
+         0l4XXiPSNDcwef6R082t63G71MYIqEvepy7kwp/ZXU0zCR0EPixxRlWTYu3wVyi4DUs8
+         erXTHD8E+1GFzHZ0fIL4RkLak8HBaXDt6il2Gy5K/NgINvfw11YjS8bf2CpzEhwna8ml
+         CoBlJEofAwasSepqqw5nntYGRo3D89rnvZIvX9rzfV3ls801+/qcRr45Y66T5OdgPRon
+         56/KEdYamYvrznniH2C3HtdFlHoB69AsDuJWa/qZHmM4PvH/u6rPp2pbU7P4mdE6bW/P
+         ujnQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794799835; x=1795404635; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=EbvHpp+DKB9Zn3Fe95YeqAT/79gj7Jwj0DQknuaYym4=;
+        b=fY1BliL+9zdQv8nZG93UnuIRJP9g3H679zNhHC4NgeKVWInAENp2suO49I3jAkA8L3
+         FXTOks3vWrDcjYzIzkNXRce4GaaNqE68ugazs+0cn/ijOr2h4JH1hr9oZ4Syek/qFKNY
+         0ME32RZb8j9NExJJdycfEEwEE+/gOYvP3jHr84wnZvmGdg7AMR/HHYBHaS2m7USUTIDN
+         TqrtT6tSAC7QOREjfQuQYWAn4kdH3E+NR8y+nCGsgxMEvE+nC4EHrhmzsQH8xZHzUtup
+         TB6W9hWqpz0Dp/FT49c64jiCmFBkWOkMDhvh7I83h3U2uHvSXtchqE/ltHGf9YVVEyGj
+         /29A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794799835; x=1795404635;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=EbvHpp+DKB9Zn3Fe95YeqAT/79gj7Jwj0DQknuaYym4=;
+        b=BIC4zq4/CfkVJikm4Bz8HkcdnVzZrLohgh0+CLRjLu+HZFnHJbgLG0IfOwith67PUl
+         MjIdjRi98sWAUAdXTnJ5m6CRKX5oYsL74nm897XLBH2CqVPmwZbF3bzgLGzIknwUETBO
+         d+9A5p29yaQK7+ixHq0dpnCbzUIrJs9Ij3HfWmpvP+IAVx4Sfsj+BNIaG+bbnVRvEfG4
+         yngRAHK+eJeHRjsywdUCBy1P5cD9VN/AcWHwPatW4TCDCb1tQzbwgVjPtL4GB3TTG1dg
+         3rfrk4xXWByt/Oq8A/ltxWzk3yUOsouPiWLNXS9CdNjJr8ILWxIu60wkUwD+Nwv4sSt9
+         o8BA==
+X-Forwarded-Encrypted: i=1; AL+hErGy3hPSuEB2x1DwfrmdcsD2ZvJkGACyYkkBaC29c88MEvrwLzb3M3iO8MT4oQGIpGz6x3dDV6a2py6iRnc496A=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+ZNZPLmhT5nE3Ww2ST3GZQrmEHuonmvdbX9IUPb1xEzw/UaHrT
+	OtixDW5K6MP7zTT43dK9E4w4qDHW67+3FZm1gKo2KmEIuAEbOfaBZbPsPeDAHpCqEarvAE+Ntie
+	/h4B6D3oL7IrWtpWemsVPiwYiu9Vx1Dk=
+X-Gm-Gg: AYBFou0Q4GC+UJsndQGNsDsnlxBmm1u51cWQqDN4wtejdmkRcpNaVA2MRWQabYp8pMr
+	2VK0qMGvIjL2spIE+j4w5pYsRn7aW/R8I1xdi/dcJoTiMffxqJQrhqxpEnCvdJDktwBc1NFTIF8
+	wfAnsmgE811YWEacggX6wPu5M/+fF2crx+Ollzexrcwgm2rEYQ31efhNaGD5ScQjbHlB/P3sD8+
+	tUDlpoY38PnXK6ydLZgOLWx3dk6okuJ5TnOx1oT1jvZwgACRHnyGqiKDg1hgVj7PEXJWQl8xYeW
+	O2lRs8sG3ZFA0TAk1/33oDd8rT4MKDwWXEXV/Bsngkmw6OGTQgSqSRCvI4cqmMs4MYy5am6Qisa
+	Iw6DI1yJ9ARaNdkpRCLigvTdnEOLz7J8IopBp5OkQV6FM2sl9e3/y2Qy8hOK1eVtKXyGpqw==
+X-Received: by 2002:a17:907:ea6:b0:c46:7ec3:fde7 with SMTP id
+ a640c23a62f3a-c50963da4damr741558066b.31.1794799835006; Sun, 15 Nov 2026
+ 19:30:35 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -62,114 +104,74 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1794666741.git.lianux.mm@gmail.com> <fbb87083afcc51fce533308d723edc55263bdf06.1794666741.git.lianux.mm@gmail.com>
+In-Reply-To: <fbb87083afcc51fce533308d723edc55263bdf06.1794666741.git.lianux.mm@gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Mon, 16 Nov 2026 11:29:58 +0800
+X-Gm-Features: AclHuK9SY3SoH2arw4UJU6ntA6zZEp479wBVJLO_t_nMFXkiHdyE_Stm0Vxwk-U
+Message-ID: <CAMgjq7BE_i5FxYFrzSfnNsysBQ8UQzcULRo7AD985_1o27-jDg@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 18/18] mm/swap: redistribute queue readers after
+ membership changes
+To: Lian Wang <lianux.mm@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>, 
+	Youngjun Park <youngjun.park@lge.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Jihan LIN <linjh22s@gmail.com>, Kunwu Chan <kunwu.chan@linux.dev>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Thomas Gleixner <tglx@kernel.org>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 7b8cd26b6aab8 ("seq_buf: Mark a seq_buf overflowed when terminating
-it loses a byte") made __seq_buf_terminate() bigger, and clang no longer
-inlines seq_buf_terminate() into its two callers in
-kernel/trace/trace_events.c. Both pass bootup_event_seq, which is
-__initdata, so the out-of-line copy sits in .text with that address in it
-and modpost warns:
+On Sat, Nov 14, 2026 at 10:53=E2=80=AFPM Lian Wang <lianux.mm@gmail.com> wr=
+ote:
+>
+> Adding a device to an existing priority ring reuses the per-CPU reader
+> storage. A ring that previously contained one device can therefore keep
+> every CPU at the old common starting offset after peers are added.
+> Deleting devices or rings can likewise leave offsets and quotas that
+> describe the previous membership.
+>
+> Reset the valid per-CPU ring offsets and quotas after peer insertion and
+> every nonempty deletion. Run the initialization helper under the topology
+> writer, which excludes allocation walks, without allocating new reader
+> storage or adding selector hot-path work.
+>
+> Use cpu-id modulo placement for a fresh best-effort rotation across all
+> valid rings. This does not move existing slots or guarantee strict balanc=
+e
+> for every active CPU subset. Mask and availability transitions do not
+> trigger the topology reset.
+>
+> Signed-off-by: Lian Wang <lianux.mm@gmail.com>
+> ---
+>  mm/swapfile.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 0c192844b121..eb2128132455 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -497,6 +497,7 @@ static int swap_queue_add(struct swap_info_struct *si=
+,
+>         spin_unlock(&swap_queue_update_lock);
+>         memalloc_noreclaim_restore(noreclaim_flag);
+>         kfree(old_ring);
+> +       swap_queue_reset_readers();
+>         return 0;
+>
+>  failed:
+> @@ -569,6 +570,8 @@ static void swap_queue_del(struct swap_info_struct *s=
+i)
+>                         swap_queue_install_readers(NULL, 0);
+>         }
+>         spin_unlock(&swap_queue_update_lock);
+> +       if (swap_queue_len)
+> +               swap_queue_reset_readers();
+>
+>         kfree(old_ring);
+>         kfree(old_queue);
+>
 
-  WARNING: modpost: vmlinux: section mismatch in reference: seq_buf_terminate+0x12 (section: .text) -> bootup_event_seq (section: .init.data)
+Makes sense, thanks!
 
-Both callers are __init, so nothing uses the buffer after it is freed.
-But the warning shows up in allmodconfig builds, and it is an error with
-CONFIG_SECTION_MISMATCH_WARN_ONLY=n.
-
-Always inlining only seq_buf_terminate() and __seq_buf_terminate() moves
-the problem: clang then leaves seq_buf_set_overflow() out of line with the
-same address in it. So mark every inline helper that trace_events.c
-reaches with bootup_event_seq __always_inline: seq_buf_terminate(),
-__seq_buf_terminate(), seq_buf_set_overflow(), seq_buf_buffer_left(),
-seq_buf_has_overflowed() and seq_buf_used().
-
-Fixes: 7b8cd26b6aab8 ("seq_buf: Mark a seq_buf overflowed when terminating it loses a byte")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202611110802.zPIiPSnJ-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202611120138.Fwm5Ljmj-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202611122226.vTBpAmtr-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202611122323.IvGv8FYK-lkp@intel.com/
-Suggested-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-7b8cd26b6aab8 is on both for-next/kspp and for-linus/hardening.
-
-Changes in v2:
-- v1 moved the warning to seq_buf_set_overflow() instead of removing it,
-  as the kernel test robot found [1]. Mark all six helpers.
-- Checked with modpost itself this time, run on trace_events.o: x86 and
-  arm64 with clang 21 (allmodconfig, defconfig, defconfig with
-  CC_OPTIMIZE_FOR_SIZE, and the robot's config) and with gcc 16 (x86
-  allmodconfig and the size-optimized configs). No mismatch is left.
-
-v1: https://lore.kernel.org/r/20261115153430.1607764-1-sashal@kernel.org
-
-[1] https://lore.kernel.org/oe-kbuild-all/202611160835.RPhYOuAv-lkp@intel.com/
-
- include/linux/seq_buf.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index 6b915c67d2358..da69f2f09772e 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -62,7 +62,7 @@ seq_buf_init(struct seq_buf *s, char *buf, unsigned int size)
-  * seq_buf have a buffer that might overflow. When this happens
-  * len is set to be greater than size.
-  */
--static inline bool
-+static __always_inline bool
- seq_buf_has_overflowed(struct seq_buf *s)
- {
- 	return s->len > s->size;
-@@ -74,7 +74,7 @@ seq_buf_has_overflowed(struct seq_buf *s)
-  * seq_buf_str() terminates it, so clear whatever was not written: a writer
-  * sets len to how much it filled, and anything past that was never adopted.
-  */
--static inline void
-+static __always_inline void
- seq_buf_set_overflow(struct seq_buf *s)
- {
- 	if (s->len < s->size)
-@@ -111,7 +111,7 @@ seq_buf_init_append(struct seq_buf *s, char *buf, unsigned int size)
- /*
-  * How much buffer is left on the seq_buf?
-  */
--static inline unsigned int
-+static __always_inline unsigned int
- seq_buf_buffer_left(struct seq_buf *s)
- {
- 	if (seq_buf_has_overflowed(s))
-@@ -121,7 +121,7 @@ seq_buf_buffer_left(struct seq_buf *s)
- }
- 
- /* How much buffer was written? */
--static inline unsigned int seq_buf_used(struct seq_buf *s)
-+static __always_inline unsigned int seq_buf_used(struct seq_buf *s)
- {
- 	return min(s->len, s->size);
- }
-@@ -134,7 +134,7 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
-  *
-  * Returns: the offset of the NUL.
-  */
--static inline size_t __seq_buf_terminate(struct seq_buf *s)
-+static __always_inline size_t __seq_buf_terminate(struct seq_buf *s)
- {
- 	size_t end;
- 
-@@ -240,7 +240,7 @@ static inline size_t seq_buf_strlen(struct seq_buf *s)
-  * After this function is called, s->buffer is safe to use
-  * in string operations.
-  */
--static inline void seq_buf_terminate(struct seq_buf *s)
-+static __always_inline void seq_buf_terminate(struct seq_buf *s)
- {
- 	if (s->size == 0)
- 		return;
-
-base-commit: 7b8cd26b6aab8cf147165610d13964f79200a5a7
--- 
-2.53.0
-
+Reviewed-by: Kairui Song <kasong@tencent.com>
