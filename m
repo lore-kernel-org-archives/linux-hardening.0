@@ -1,84 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.178
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794827462;
-	b=VdN6vGYAqHb+se7ZtIBrEquAOD3b6iU3YvHtmI4voQBPqfa2S3FWtV/80vFnLWmU04wd
-	 jftA0AgecBIbFvyn5H2nmMdLhtO7o74BktGoYCLFavw5gkfZBakY/xEZqGKZpt87vBVlG
-	 Bf3DW9kf4FbHUS7b2Vqdvaud4Aq0pNcrawG/Mnj9J8k4RkB1bufDurLd2Qz9xxCKzS/+S
-	 vhOupDMmezW77r2yj6Ey6AZBJ45n/HuVyuFGs1oeYGs7TFMpZgwxpBRTTVk8ETgosO5er
-	 FMrri7LSCtI3PQSLCU7dR0ONwpZF+OJMIDbrknlcDdIEuHN4bK6Mnu6M4Nvzy5Z8FTg==
+	t=1794827511;
+	b=j8FIey62GLetkDZupyDUMm8WhElPYMHUdt9PEs3HtA6jr0VET65O3idySf/epXxPOAyJ
+	 AiPtLTLOeoo8H5iGRaoJUwwmCtIhnT26HgUKjv/bQK0eNs5a2NgrI+T3IAN2sVwCK5fVu
+	 0la7hjOrVeQcRvDQoMUksAmfAZUeK8KwfyV/aTo6I33Ls6VoHtkZW6IqLUBUpYL/Z7vot
+	 zoZNeYLDit/B93ba5flbEV0DLF5AL2M+iDbwSVD4rjMgg4sN/43GxsLWO5mNoh9kBOC7Z
+	 48LvwttbScO7iRDKuck3NJMEoAk7H7u3muX4yFeEmdRLnSZRXoMVga+zO4TllqfgyYQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794827462;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794827511;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=rzDRDu7/JODZwbuavobSKTv49NxzFkRfd84aGaTT9+E=;
-	b=NbiyfVaIkRPRA1Zjp37w4yxmvsSWccLjxJAZpbIc8bQchSABxlycGQoKNmmgB56xFQwg
-	 w7Us4jwvMCEl6AzhHuSbuS/XjFQ5b6C4dVesfp39m+rfgo87Tz35+TW9+33Y0Ax3FIv2g
-	 4sZOBE9yoWn0dgyrzwOGjwrysswADS5TL5nb6tATQ1lRBzO+FE4uCdAjhgq/uXQ32rsv/
-	 7EGTHTWYj19Mhx3b/bUrpQElAcHT9Gd0navlddC3R600zetw/swvazMN4Hlfpw3GV3TYX
-	 ftvXaZo8yjCfhgu+OhVIDF2Qm/E8b6qlwQ7JjYb10PYU5GoC/hy23q33HPQd0IErA9w==
+	bh=X92jc3HOiTUE60p5qYpnfogS3YHWVykNZQDGs9aRJi4=;
+	b=auOakV34rO2yJO/wyreh+ZvluUGfxiEiSJWOJX3WsdN91OvCcUbC86dg5dr5AtVrE1ed
+	 cIVdnuzEn5yf/VYcTnY6XBqPPohlsMXeuiOEWpgfMqeLKFKphqk3755B+NX4GzLAP/AYf
+	 D0tCrV0C4imdIdzbA6IZ4X8NDR+RjrUYs+y1wCXVZDDAfxarKn8y2vmtimusmAtelycvP
+	 LSaoZPrOUIdD7f0cukq42Vr9DWOagiTs9qza6ToLbLX9jtJtVdqkXgph7V7ygJKss05ex
+	 1ZeA4cA9mvXEzaNadTxjH9x0f1r+scKaWj7aP5kbmwU7wRVH568ajFbWeaqGkmYN2aw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=FZtYDDyN;
-	arc=none smtp.remote-ip=209.85.214.178
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=XvhRGNuE;
+	arc=none smtp.remote-ip=209.85.215.178
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CE86083780
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 11:11:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 39CE86083780
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543DD606A8AE
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 11:11:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 543DD606A8AE
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=FZtYDDyN
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2e9d7791b00so32963035ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 03:11:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=XvhRGNuE
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-cd6acc50b8dso1518643a12.3
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Nov 2026 03:11:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794827461; x=1795432261; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794827510; x=1795432310; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=rzDRDu7/JODZwbuavobSKTv49NxzFkRfd84aGaTT9+E=;
-        b=FZtYDDyNbIjuUUoA3QzBBqqfv8lLw3rZlhyluQN2H52/PSXZFPJPkFTfUMsWLpVcZB
-         +/f7W3mjC8sThyJJEcQQ91j2NdvFAztL1ncVMMk6UXuT9opRL/PYqTvivGY0P89LqggE
-         Y1/qTrI6JWRwkjMo5niHIqxeAFeDgJoU37ZmlzjAZF8T4v0I0JsCPwDaWCUdyOBoZxEq
-         +HQY9SQaicWAwcUlZKP4H/glriZRjHz2Z8mMw6cahYt8YTsJF5t/75KMo9oWAD+f6PbF
-         PFW+qoQp8ahdR1jTbstdRagOq1ph7sTAUAOrkMuQuTON7rNiDbqbs2cF9esIAzxWDE3w
-         o8Yw==
+        bh=X92jc3HOiTUE60p5qYpnfogS3YHWVykNZQDGs9aRJi4=;
+        b=XvhRGNuEpRT2Zo/9mCTTw+7gqHSe/jmEHLoj4sZ2Nz9qBgmisLHpN0Z2GLasVLDop6
+         l9cqpBtTirK20HFfEsHPsQ0SdJUooUZQkCIcVO0AgQhsK/feqV5erCY+H0YXBGxVY9fd
+         ZPxAEvAVFShC9ISFwdzjOWF9JQn9dB+AzWWFdGqnkvgFdwWqVK2U0D4JAe/5gE603gz6
+         CkFYtKOfFRhytnd9ZJVbeaqJMpTL0mynNee74STyJ5CV61c04JuI8wos/H8vqboon/fT
+         bSh6nirirpDg2yHS0Jsq4f20njD+hSODNZ4aq4jSdsOlLuUodhkT3XAl04EecEn5fnA8
+         qLUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794827461; x=1795432261;
+        d=1e100.net; s=20260707; t=1794827510; x=1795432310;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=rzDRDu7/JODZwbuavobSKTv49NxzFkRfd84aGaTT9+E=;
-        b=Di8MTIK4TWQEZbZC6udAb1hv3Y7vMaZcXuk9ZwnZDIH5t5T2TgY4I59FmhJL4WbstH
-         sxLs5Gq4dIwOO0/xEOyty4RLZHZZqt3ypMb8xP2jwq55uagVq5L6dcai+AAQdp75qptt
-         /hZZsOQNLuuhNlOvoAbN/EiPKvWNEjFmSZNK9hXkoGTt1OdsWvjhKL095cEfUeOeQ38Y
-         LdMzWXnskpSq4c4U1yV/gnNbduHu9L0ypLZyL7t9TfKM2SujxYtavCdOSlgFxzkhm2kF
-         RHqI+7Hg4BXbzH6H1h7AATL2aYPS4ap+khuByqVJLaip/gIc/9zM73IbtrLTX2AdI4wE
-         y1yQ==
-X-Forwarded-Encrypted: i=1; AL+hErG8UIWUgGEJ0ZR0u60q3iP8OYXYuMB/nOCKyqz/v/rB/ABfCDKBWWAiJVRbNZEbEaK0r5Y/l8o6narovlrrHfw=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/4T0lowAcKoaSpV45+0LO8BeN6ntMOISUrSlBoZJ4R+hlv1i27
-	wNLEknKzrJkZuGXMS01hkUzjaFUxrn4pPhmk3N7d26FWq6VoYc6BvibU
-X-Gm-Gg: AZFdTZdBn9umQKwdhmnSuxNyb64+FR0Ag+/NSjL638yw50vR7Ghfkf/XUVm679pDOZo
-	ykOtv1yXiA5UEbiKKlqBU+Veyb4wdobYGW/NP2lqacHTv6SRUKd3x39LMbA/r5EzKYWWBN6x89Y
-	i0bdGIb+Oo7BTqaTS/7RTzj7faEaWoKYmv8frLEUheBQnhupCFd+wrBdmGcQsQWgk1YlKRmzWdc
-	W91oj1HZiROSReq+r3pEBp2L0MW+tS6IUEyBCxObrz+K1P6k06HCu1dpz6CSgaybDIC2AXT1+v2
-	p2C6WyBUFAK9sUm8nAKu2jzIDDse0EbWcfpUG1I03cz4XKRZYhgvULOEbAHaYTa7G+GZYzdvV14
-	EX3FJi6JrrhHKlGwMJ1UaPCx35jnX11jtyV+tPP5+GSonFQcUIJPRlK+SCBOaaoVCP+eD3JNJIQ
-	r9/HECvnXLsJVlIAH1Rx7VTOIvWuoMVqDhCXnRefsW5dw9zTL/qI/bfT023bq78yQjk/54XTKUJ
-	4504hCTLxDm6eHOMF8A2ST6mtC1BXQ+Fy3v5wHQuWyVI2qxBRylgXQ8u1jU/tPHdWLAvUYIfvbr
-	emptjxMa0vkVNExif8kZjJ1Soo/+AhSjbbGtR5VFAsD67eqsrkdlbmkkUiFi4ItHF3I2nhHyn6M
-	cSHLRLxXB6nAJlzA=
-X-Received: by 2002:a17:90b:588b:b0:3b0:9984:18c9 with SMTP id 98e67ed59e1d1-3b1b09f37ccmr8454898a91.11.1794827461360;
-        Mon, 16 Nov 2026 03:11:01 -0800 (PST)
+        bh=X92jc3HOiTUE60p5qYpnfogS3YHWVykNZQDGs9aRJi4=;
+        b=wOqA7XNq23VFXO8XNk5V/vT0Kq5pBTVCvqPHjEnEnkxquLLfX3snBK0riWDZOrpUFF
+         aXN5twHkxwJhXLrgaqcuivDMuOF7YmrvEMUK4ghm4dQPMzcFmCqnFhWc9WrU/EdITLgy
+         IOQ5Q0UMjHSHkcg/ZZaszO5Px0vzOIwKwT47qoYUwBxSH/V7vFUek0WIpK8yimb8tjKJ
+         NlMkfx0OBQDwNoKEMghhIH50cuegT07Ok25uavLdZEDDE8S4zUGXxHenVv535xOiIxfR
+         riw/6AuHkcSXoNMylQ/Zxs8+F4BcIko2WFyH2GcWolgZfojnTlWqt5UAsDjkHH5mAtFQ
+         w85Q==
+X-Forwarded-Encrypted: i=1; AL+hErEiVO6MqsF8o6wLRLzuzZZ7uUpCYsoi2pLgTWB/iQ5jTKalBA/ZmKdBFDv1h1ZLW0wuPWnwEaWpUy/Of445l7Y=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+79cdo6mpRw3wrsxuzeaS1KVIDNdhPvk44ec31vU6UjvgKIQ50
+	USMnx2J4HgTMLq7XlAMV5qdE6vxHYQlbe55KtPKNtyzZXbYUQTpxgDVN
+X-Gm-Gg: AZFdTZci0mXOf7iAFaSREgNxK10YaF3M10twLbxLXZnVR6tokQQn4BrgQXPw2itI5tX
+	MZ/RPJumXzizJiEtm6XWJhY3kTfIF8GaFzgSiYtUHH+uSJX3RMd9lpJbCKmkaAx5NObBVJXYXsl
+	kCXJygBWMmJ+98RsT5fZ/CBhNWnw2Vpo788iJv0ER0bgS6zZbHyzSQDhk/pxyrqq71kdVgnw+av
+	Scu4tHPp68X+srO5Wdpn4sM6G8FR9Do1tC3u3/LuNnP1R8jOIShYfaLH0uSUB//yS7mD3Rq7yY/
+	RYSiWttz7PzSuxYjeLRci/rJROqV6E1ghTA0pC4gYEpMpKbew5H5Dk70qIesoUQS72UH9Ry/8PH
+	EHQjsBwgr2N/6rrAng6+HE8uYVi/Bg8xxQ+k9DP2cbr1/owYOhcsuYpCfAhwJODXaaleVgOAQjl
+	35C2gmYe/eJlgrvrmgdAG2bEUPUjjagf0A/3CrdGu6c10HyntUo0YBWtHHNfjb4LVb+gzKKpc7n
+	kMs7IQQGTEP9KfDiR/KPPS1sMJYQ4eJgLroVtHohG4kexp8jZ2oitlu4iafLZVYDik3at6s/7pp
+	tkcFrXsRwSX77Zf04vY++yagCSw7M95uSJwqsIJbT+LQYkjM1+/1BimKehB/Z8V+xUd0
+X-Received: by 2002:a17:90b:4cc6:b0:3ab:2737:3392 with SMTP id 98e67ed59e1d1-3b1b0ba9108mr10216941a91.53.1794827510403;
+        Mon, 16 Nov 2026 03:11:50 -0800 (PST)
 Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1b1e9ef15sm9162815a91.0.2026.11.16.03.10.56
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2efcfd7e302sm1080965ad.13.2026.11.16.03.11.45
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 16 Nov 2026 03:11:00 -0800 (PST)
+        Mon, 16 Nov 2026 03:11:49 -0800 (PST)
 From: Lian Wang <lianux.mm@gmail.com>
 To: Kairui Song <ryncsn@gmail.com>
 Cc: linux-mm@kvack.org,
@@ -96,12 +95,12 @@ Cc: linux-mm@kvack.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Thomas Gleixner <tglx@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH v4 00/18] mm/swap: introduce priority queues for swap device allocation
-Date: Mon, 16 Nov 2026 19:10:30 +0800
-Message-ID: <20261116111044.28724-1-lianux.mm@gmail.com>
+Subject: Re: [RFC PATCH v4 10/18] mm/swap: add priority queue for swap device allocation
+Date: Mon, 16 Nov 2026 19:11:23 +0800
+Message-ID: <20261116111136.28790-1-lianux.mm@gmail.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <CAMgjq7Cq5OQWdompBbEpyJTG3PhtdSLFUdb_Dtht3qH+u5HVhw@mail.gmail.com>
-References: <cover.1794666741.git.lianux.mm@gmail.com> <CAMgjq7Cq5OQWdompBbEpyJTG3PhtdSLFUdb_Dtht3qH+u5HVhw@mail.gmail.com>
+In-Reply-To: <CAMgjq7BnyM76DR8cdaz4o5PEg0=4rBAcGvWwoHqFDfPpoqu4BQ@mail.gmail.com>
+References: <cover.1794666741.git.lianux.mm@gmail.com> <62dce3641b589e9cd42edccf0d4e9b31e7d91e36.1794666741.git.lianux.mm@gmail.com> <CAMgjq7BnyM76DR8cdaz4o5PEg0=4rBAcGvWwoHqFDfPpoqu4BQ@mail.gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -115,26 +114,29 @@ Content-Transfer-Encoding: 8bit
 
 Hi Kairui,
 
-On Mon, 16 Nov 2026 11:52:30 +0800 Kairui Song <ryncsn@gmail.com> wrote:
+On Mon, 16 Nov 2026 11:51:22 +0800 Kairui Song <ryncsn@gmail.com> wrote:
 
-> Thanks for the updates!
+> Hmm, this patch is now quite different from what I posted in the link
+> above, e.g. there wasn't a "struct swap_queue_cursor", and some of the
+> naming in it is quite confusing:
+> e.g. "ring_only", I think what you actually want is "fallback_allowed"
+> or "no_fallback".
 > 
-> Nice, but what does n/arm mean?
+> And since there are three iterator-like structs, we better reorganize
+> the naming; 'iterator' vs 'cursor' is confusing. e.g. maybe reame
+> swap_ring_iterator to swap_queue_reader_head.
 > 
-> It's worth mentioning that the global cluster cache is gone, so tiered
-> allocation will have a much better performance.
-> 
-> It seems the sashiko review is all green, which is great, let's hear
-> what the others think about this.
+> And why do we need a "cursor->valid"? I see a following commit dropped
+> that, so perhaps accetable to keep it as intermediate step though.
 
-Thanks for the feedback. By n/arm I meant the number of runs per kernel:
-12 builds for each memory limit, and one BRD invocation. I'll use a
-clearer table heading.
+Thanks for the review. You're right, this patch has changed quite a bit
+from the original. I'll give the naming more thought.
 
-I'll tidy up the cover letter to make the motivation and scope clearer,
-including how removing the global cluster cache helps tiered allocation.
-Once I've collected the remaining feedback, I'll fold the changes into
-the next version and drop the RFC tag.
+I haven't explained the reasoning behind all the changes clearly enough,
+especially with the adjustments following Sashiko's feedback on v3.
+I'll go back over the changes and make the naming and intent clearer.
+
+Thanks again for taking the time to go through this.
 
 Best regards,
 Lian Wang
