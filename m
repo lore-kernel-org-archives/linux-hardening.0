@@ -1,75 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794927353;
-	b=q0S7wCEABa6/3+JP4saK9LOanxXOxv8dkG/FqYz66akeyDaTvLMwYTBHG3pUR5LqtIHN
-	 GDSqvW1HICCAIQWdfcma22aAZyj+lx8JxeDB64c3NpxLyaRxKvHt3sQ4DYcNU9hib2cXR
-	 H5Rp5zev3MEbsqnhXbI+EiCZxvMvq72TNx/qwIOW6S27t26BUDXY2UDtBIW8FnxkwVfLM
-	 eVid/HrhcDplirMfP/ICEC6rLmesB/GSQ8noQhs5300COSK+0vXX+z1vTeOdYvbmdx5Ti
-	 K+pAclyUKtF1Kw2QCo9S+MKl4+sxS+kk3ikpdmDiyMTQQnk2OGefFFdf4l6yoLAgVZg==
+	t=1794932923;
+	b=bwvp9nCxbnrSjkZ+keXbSdPCMt6wkl1b14X//dZcbUcZQYnfwYSFKRuNRa+/TmcrLNBt
+	 GbwKm8sHVa8penC4K39xMyHIwWSB1JHwGC5oNp1dtMR9l+ZcrESQpev6ErcftC+8Jly4S
+	 3uR0K4Mjoe0eLaz9GN3jTfNXNFj60jZOzEfX88yeXJdfiU62xwjRyNbqKaI1UYqoE55uc
+	 Ju74B5OdOsumc30aNc76t22QakSP/rOHVQA8QPBCgNo6S9Je/Ss0MIQ5V/afG+jVmw89K
+	 f8ONn9yfS9k1SQ05up1zhzaVT3WbntvJsRxq9D4wm6vaylKKzl72WzqRV04cJqhA1CA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794927353;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794932923;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
-	 Content-Type;
-	bh=j/02eyou4M60KpUrF8lLMNeinWTXVYjClptMJA9JWgg=;
-	b=ZKKLSQCrKaBfyBNT6T6yeaDwNmCliOLKuQrrhIiYkPgBtqcYcsaI2dJQnkH4oOKsw7jW
-	 ipkWmLaKsuaCDC+vROZY1je5D2preRP6dDElcI6IsvWf7SMSndhg7muSH3gHPny3N/Oum
-	 m6Dn+UFSDmw9MfUjlgCtvgSuk7wb6DBON0Mde/IpAEaCEJrBlAkM5aaKruANxZeFLJT26
-	 L0ZR/MXH6FskHiDthBmc0Zl7IADtqE41qZ+WoZ8xZts/Vlw85FRmCVgQvI7tuYrBN8fbN
-	 CVGWhyd+QzM4SKvO0liEOvjHhkHVkObnRYM7dAGZchl+38qTvZgDl6LPybn8Ss99LvQ==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=z9knRtCcMgIWWsx+jn+Ep/GYomBKonoGDT8JCXsB+Dc=;
+	b=OPvV4d6JmWh/NX6Ok0eUtE0z0WFMLDN/yWmEXQBycI0irhAIqPsYwO3D0TZnHUat18HU
+	 KVUTUbIMyIsbGPnCReTpVL0kLFP8acGkiBUQFd9vbo0yurL0bRiHQmLu1XfH/E1aIC1gB
+	 UuZhz8V9FUwANouxtR/b3zdA4JyIkkM88Rjca8UCIhKQdHUYHozsm4qtnTaRUCiQucfIL
+	 GuutsSkq8/HI/v1XzvOTiKmLAgOgWYUDp/G70dinM3OArhlU0TaoF3W0UGSq+JdJqKUu9
+	 hToJ2xbYVO0xW5TFnBMeg139L73ekw9bv52BdCy5ZuzWhQ8GDeEq0T3bFBBUVtkHlKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--stani.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=A81waOJF;
-	arc=none smtp.remote-ip=209.85.128.200
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com [209.85.128.200])
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=gYkOXE36;
+	arc=none smtp.remote-ip=209.85.215.170
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6B6606C705
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 14:55:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6A6B6606C705
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--stani.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A64606A32C
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 16:28:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E5A64606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=A81waOJF
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-8b0cfe694c3so70577987b3.2
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 06:55:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=gYkOXE36
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-cddac941ed1so13071a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 08:28:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794927352; x=1795532152; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=j/02eyou4M60KpUrF8lLMNeinWTXVYjClptMJA9JWgg=;
-        b=A81waOJFnF8DhHvqdyiRdXI0Dw3tyTQYB4xPCpoInj+PjW00fid38fbCYe+hZGAHMY
-         cIuSyBOaWwrxGIbrnafniE0Kbyd1KLtuiKPUpEbCqHlqL45NoLLZyI+dKW1X44mVBSJ7
-         YSJ6PZE151Sx+HiCJqvj7+KNEGS8HjxoV/guLI8ENcVK+c2RnTrj1GswSBBb28ziDcvj
-         X3+ecSHgN5r+HF04R4WFO4jtdx0+qRoUv3mkdvYP8WxLUKeU9VTJFHfa1krBCglr0kNn
-         jQjFMxto+iM05icjKzMmktgUan8UXx/k6DZDaLP6JSR1qxWYbh/2cSiQsRlgengRQ+J/
-         pCeQ==
+        d=linaro.org; s=google; t=1794932922; x=1795537722; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=z9knRtCcMgIWWsx+jn+Ep/GYomBKonoGDT8JCXsB+Dc=;
+        b=gYkOXE36LvPXoQfL6aSBJHmNbbme+s9cnk9acjuy56Vmj3PoJvFZb/K63ZS/539zUL
+         bYhAI8uvQKlMiiOMytgcSOF+1zOLMqcfCFnXfJt+aSPPfd/r7xj+DoKoE2MbXqVPtEKp
+         38p92sJIeYys8Alu8V1nOqPLNUzrhrz5szblsSwNzd7FPJLb5tyR9Xx7C+XYZegIpdPp
+         j0c5BTv//RIvjz2XOgjvip+T4NI93mfkTee/6T8Q80TxYvdnXOiDS+4QTmixV0fFubuB
+         vq1M8vt74x0WX3IPF5TVRKnJoKNtjA9db134IkMe5J0IjuRH2IpMxrj/CHXLh8oz/rJZ
+         gXDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794927352; x=1795532152;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=j/02eyou4M60KpUrF8lLMNeinWTXVYjClptMJA9JWgg=;
-        b=RtrKkqLLeCoMuMe4CHyCKHkdTHOpinHVQqmONJDYAMEnEa1ABrltS+HsYdAMPP3jt6
-         Cc2VUV+gDvZltZVxRSliSscKmg0Nflw4SFD9eoV9LxsuQ+mM5VCJ1zWG/PhjqOzpTxTm
-         ELP3sggW+9Kq+1PKzP/5lMSPRI4SiGR6T5tSCh0p/Vq6a4gKFO1KDAQkAY3j3ibsurYU
-         sQ0v7NMcPcfoEy07zftQf36gTjxpNhs/V3tk20Jm1lCsjxDSKgYm6jUdES7/anD3AS0w
-         0pGhT1D2VS4IrWnZVoWYpe5Vt1DVVjWIVznirt4mY+m7pQW78ne/cuUPlCJmMD0+FzuU
-         H12w==
-X-Forwarded-Encrypted: i=1; AL+hErGfituXZXyMClF2BePfRYSukRu0KzFeeLMt9SYOg1CYjcTjikt0125YTRr3KSF+LBhPl/A+AXKJCBLw/UuGwUU=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+I8rNaYMuaTOUi9rOAhcxPOYvKY3U4CwQcQ4xWWN81qrmCNRjK
-	KrA0B/mo6HAzaxKPbl23k2W4MK1FYNLBxZxsHQ9v/SMVtT7QW8nTtS5SvpMbDwNYant7P1JcQgb
-	zfg==
-X-Received: from ywzz28.prod.google.com ([2002:a05:690c:a71c:b0:8ab:3345:c617])
- (user=stani job=prod-delivery.src-stubby-dispatcher) by 2002:a05:690c:e64b:b0:8b0:d9ff:4f74
- with SMTP id 00721157ae682-8b4aa32e148mr55968407b3.42.1794927352263; Tue, 17
- Nov 2026 06:55:52 -0800 (PST)
-Date: Tue, 17 Nov 2026 14:55:21 +0000
-In-Reply-To: <20261117145522.1910636-1-stani@google.com>
+        d=1e100.net; s=20260707; t=1794932922; x=1795537722;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=z9knRtCcMgIWWsx+jn+Ep/GYomBKonoGDT8JCXsB+Dc=;
+        b=dhqBavWnSWH2pV/FIuY6I6hS6uV/GqDkH04ahHjvuaxaUGuIRuGQhqJ3ALRpItUAs9
+         x9fM6G9Z/YR2yxZnWW3BbZsHiSJt/o9PD4oROdCzVrNLadarAbA/mwqQ6oeGyRaUG74R
+         Nxc64kfMjHCBP5qYOA22pTMFGJzzckg5gAHgmaPNFceqC9Zf7fILCKEgjfwlrhBD9doJ
+         KUFDkyjAzHKLut5vKVRoj9OG1nVF/M3tBIvpX68L42yb1J1WbwreLey3T3s4cy09ZYOF
+         jk1aMDg1yMjCkJ9NhGdiXpywrJspKC8+5kssDaxOI+t6hrVy2rdrjnjZRwVvatdnu0Je
+         GZdg==
+X-Forwarded-Encrypted: i=1; AL+hErH+qNir934d7QL0AvBAM/vYmeFRM39nd/qj00C1exw9t1C512UAAnTexg1r17Hkfoo8vvjNy3HmfqGaEyJ60fE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8gTQxocq/9G5CPBr7sshAMbK7USfP3qpZ+WDtdGhPwQG5WGpkF
+	Gr0gpUdorplJgwCedGCX79MvAtBNAOTuU3A6yG03TcjAJ276Ni+YabEafKYiLhI30YY=
+X-Gm-Gg: AZFdTZcIKf6yzDO08hsPqG3+JXetfVZhxvpUrEn2Gru1pUUUZmBsAkK6WWnA3H5Sh/9
+	gCfCNJkoIwJwxGhYnuGnmz7FYBVUicnqVeJlQFKAhrDiCHEtlz43HIuTgfS5tkjBP8d7Mksb47f
+	lYB2GIf4cwyWID3WHZLfRzvlX2a3E3JrUwzSPDhA9ofSXwtGKbH+/EUiCvU9NZnvHZcgU4bqWXH
+	BmolMTRx+mcbdV1UiuAD3aB+LvUVde8T0pUOMNOHk/3Qhn4apMvnVcJ1wz3XMQfZuFhtbsfawqZ
+	XNre2KqwIi3E5yfBW/qwnIA23bYCCg3G+5XmL9ywBfnCFeg4GJ4S72lGoc/9TphpvxEEClL6geN
+	0flZY2HQHkRLDFrAAqejxhFMVmsNZf0tjqA1WUCxVPjtnSVITHHE2ANgVRHcScpYl6EPzX8lHEZ
+	VbPOdcHZbcnpMEY5d3350jTKN/Ue4dPtJ2YNB/8WLfvRWpuZvukJKJLmK3Wvu5NIgiEMBigkcB3
+	0OoZFxEL6+3iVSAdXCoeZAv1QRax6/FbjNzRBfiUEiZL2cMP41tM90PQyp0rUNqxarw2vwbR7K4
+	klvExLlzWvQfJf1UtDedAVKErxSWwwaC
+X-Received: by 2002:a17:90b:6c7:b0:3b0:9183:23ef with SMTP id 98e67ed59e1d1-3b1b07e41b9mr15684802a91.3.1794932922021;
+        Tue, 17 Nov 2026 08:28:42 -0800 (PST)
+Received: from p14s ([2604:3d09:148c:c800:61f7:13ac:b599:b52c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3abe8b263sm5082310a91.13.2026.11.17.08.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Nov 2026 08:28:41 -0800 (PST)
+Date: Tue, 17 Nov 2026 10:28:38 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Francesco Valla <francesco@valla.it>
+Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC v2 07/11] remoteproc: assign fwnode during vdev
+ registration
+Message-ID: <avyAtmxdbfEBbZ87@p14s>
+References: <20261102-remoteproc_virtio_map-v2-0-26b300e01c62@valla.it>
+ <20261102-remoteproc_virtio_map-v2-7-26b300e01c62@valla.it>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -78,222 +111,216 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-References: <20261117145522.1910636-1-stani@google.com>
-X-Mailer: git-send-email 2.56.0.679.gc527c65306-goog
-Message-ID: <20261117145522.1910636-16-stani@google.com>
-Subject: [PATCH iwl-next 15/15] idpf: psp: add psp tx key registration
-From: Stan Iliev <stani@google.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, intel-wired-lan@lists.osuosl.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Decotigny <decot@google.com>, Madhu Chittim <madhu.chittim@intel.com>, 
-	Emil Tantilov <emil.s.tantilov@intel.com>, Sridhar Samudrala <sridhar.samudrala@intel.com>, 
-	Brian Vazquez <brianvv@google.com>, Li Li <boolli@google.com>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, Daniel Zahka <daniel.zahka@gmail.com>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261102-remoteproc_virtio_map-v2-7-26b300e01c62@valla.it>
 
-Add idpf_psp_queue_insert(), which queues a TX key for insertion:
-- The key reserves a SADB entry, released if the insertion fails, or
-  once its SA index was deleted. An SA index that couldn't be deleted
-  keeps its SADB entry, as does the SA index of a late insertion reply
-  until it is deleted.
-- New keys are refused with -ENOSPC once the SADB or the insert queue
-  (IDPF_PSP_INS_QUEUE_MAX keys) is full.
-- The RX SPI allocation refuses the RX keys of new connections then,
-  instead of failing their TX keys later.
+On Mon, Nov 02, 2026 at 12:26:44AM +0100, Francesco Valla wrote:
+> The virtio subsystem already supports a fwnode describing a vdev; search
+> for a specific node during vdev registration and supply it to the
+> rproc-virtio platform device that is being registered.
+> 
+> A memory-region specified inside that node is also used for the virtio
+> device if a carveout was not supplied for it through the parent device's
+> node.
+> 
+> Signed-off-by: Francesco Valla <francesco@valla.it>
+> ---
+>  drivers/remoteproc/remoteproc_core.c   | 48 +++++++++++++++++++++++++++++++---
+>  drivers/remoteproc/remoteproc_virtio.c | 41 +++++++++++++++++++++++++++++
+>  2 files changed, 85 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index c946ecd980a5..e833853ae7f6 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -440,6 +440,33 @@ void rproc_remove_rvdev(struct rproc_vdev *rvdev)
+>  	if (rvdev)
+>  		list_del(&rvdev->node);
+>  }
+> +
+> +static struct fwnode_handle *rproc_get_vdev_fwnode(struct device *dev, u32 idx)
+> +{
+> +	struct fwnode_handle *group, *child;
+> +	u32 reg;
+> +	int ret;
+> +
+> +	group = device_get_named_child_node(dev, "virtio");
+> +	if (!fwnode_device_is_available(group)) {
+> +		fwnode_handle_put(group);
+> +		return NULL;
+> +	}
+> +
+> +	fwnode_for_each_available_child_node(group, child) {
+> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> +		if (ret)
+> +			continue;
+> +
+> +		if (idx == reg)
+> +			break;
+> +	}
+> +
+> +	fwnode_handle_put(group);
+> +
+> +	return child;
+> +}
+> +
+>  /**
+>   * rproc_handle_vdev() - handle a vdev fw resource
+>   * @rproc: the remote processor
+> @@ -475,7 +502,16 @@ static int rproc_handle_vdev(struct rproc *rproc, void *ptr,
+>  	struct device *dev = &rproc->dev;
+>  	size_t rsc_size;
+>  	struct rproc_vdev_data rvdev_data;
+> +	struct platform_device_info pdev_info = {
+> +		.parent = dev,
+> +		.name = "rproc-virtio",
+> +		.id = PLATFORM_DEVID_AUTO,
+> +		.data = &rvdev_data,
+> +		.size_data = sizeof(rvdev_data),
+> +	};
+>  	struct platform_device *pdev;
+> +	struct fwnode_handle *fwnode;
+> +	int ret = 0;
+>  
+>  	/* make sure resource isn't truncated */
+>  	rsc_size = struct_size(rsc, vring, rsc->num_of_vrings);
+> @@ -498,20 +534,24 @@ static int rproc_handle_vdev(struct rproc *rproc, void *ptr,
+>  	rvdev_data.rsc_offset = offset;
+>  	rvdev_data.rsc = rsc;
+>  
+> +	fwnode = rproc_get_vdev_fwnode(dev->parent, rvdev_data.index);
+> +	pdev_info.fwnode = fwnode;
+> +
+>  	/*
+>  	 * When there is more than one remote processor, rproc->nb_vdev number is
+>  	 * same for each separate instances of "rproc". If rvdev_data.index is used
+>  	 * as device id, then we get duplication in sysfs, so need to use
+>  	 * PLATFORM_DEVID_AUTO to auto select device id.
+>  	 */
+> -	pdev = platform_device_register_data(dev, "rproc-virtio", PLATFORM_DEVID_AUTO, &rvdev_data,
+> -					     sizeof(rvdev_data));
+> +	pdev = platform_device_register_full(&pdev_info);
+>  	if (IS_ERR(pdev)) {
+>  		dev_err(dev, "failed to create rproc-virtio device\n");
+> -		return PTR_ERR(pdev);
+> +		ret = PTR_ERR(pdev);
+>  	}
+>  
+> -	return 0;
+> +	fwnode_handle_put(fwnode);
+> +
+> +	return ret;
+>  }
+>
+>  /**
+> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+> index 1496659ddff9..950d65480be5 100644
+> --- a/drivers/remoteproc/remoteproc_virtio.c
+> +++ b/drivers/remoteproc/remoteproc_virtio.c
+> @@ -13,10 +13,12 @@
+>  #include <linux/dma-map-ops.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/export.h>
+> +#include <linux/of.h>
+>  #include <linux/of_reserved_mem.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/remoteproc.h>
+>  #include <linux/rsc_table.h>
+> +#include <linux/swiotlb.h>
+>  #include <linux/virtio.h>
+>  #include <linux/virtio_config.h>
+>  #include <linux/virtio_ids.h>
+> @@ -394,6 +396,23 @@ static void rproc_virtio_dev_release(struct device *dev)
+>  	put_device(&rvdev->pdev->dev);
+>  }
+>  
+> +/*
+> + * Attach the memory region declared inside the vdev's own devicetree node.
+> + *
+> + * A restricted-dma-pool region is attached by of_dma_configure() when the
+> + * platform device is probed, but it is released together with the virtio
+> + * device (see rproc_virtio_dev_release()); attach it again if needed, e.g.
+> + * when the remote processor is restarted during a crash recovery.
+> + * Any other kind of region (e.g., shared-dma-pool) is attached only here.
+> + */
+> +static int rproc_virtio_init_vdev_mem(struct device *dev)
+> +{
+> +	if (is_swiotlb_for_alloc(dev))
+> +		return 0;
+> +
+> +	return of_reserved_mem_device_init_by_idx(dev, dev->of_node, 0);
+> +}
+> +
+>  /**
+>   * rproc_add_virtio_dev() - register an rproc-induced virtio device
+>   * @rvdev: the remote vdev
+> @@ -410,6 +429,7 @@ static int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
+>  	struct device *dev = &rvdev->pdev->dev;
+>  	struct virtio_device *vdev;
+>  	struct rproc_mem_entry *mem;
+> +	bool has_mem_region;
+>  	int ret;
+>  
+>  	if (rproc->ops->kick == NULL) {
+> @@ -417,11 +437,24 @@ static int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
+>  		return -EINVAL;
+>  	}
+>  
+> +	has_mem_region = of_property_present(dev->of_node, "memory-region");
+> +
+>  	/* Try to find dedicated vdev buffer carveout */
+>  	mem = rproc_find_carveout_by_name(rproc, "vdev%dbuffer", rvdev->index);
+>  	if (mem) {
+>  		phys_addr_t pa;
+>  
+> +		if (has_mem_region) {
+> +			/*
+> +			 * The carveout takes precedence: drop the region that
+> +			 * of_dma_configure() might have attached at probe time.
 
-Signed-off-by: Stan Iliev <stani@google.com>
----
- drivers/net/ethernet/intel/idpf/idpf_psp.c    | 62 +++++++++++++++++++
- drivers/net/ethernet/intel/idpf/idpf_psp.h    |  2 +
- .../net/ethernet/intel/idpf/idpf_psp_def.h    |  4 ++
- .../ethernet/intel/idpf/idpf_psp_virtchnl.c   |  4 ++
- 4 files changed, 72 insertions(+)
+I don't understand this part - why would someone configure vdevXbuffer with the
+same name at the rproc and rproc-virtio level?  This should be an error.
 
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_psp.c b/drivers/net/ethernet/intel/idpf/idpf_psp.c
-index 95926ac99777..1dfec4177c43 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_psp.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_psp.c
-@@ -11,6 +11,9 @@
- /* Delay before the PSP work sends again a request that couldn't be sent */
- #define IDPF_PSP_RETRY_MSEC		100
- 
-+/* Maximum number of TX keys queued for insertion */
-+#define IDPF_PSP_INS_QUEUE_MAX		1024
-+
- /**
-  * idpf_queue_psp_work - Queue the PSP work
-  * @adapter: private data struct
-@@ -237,6 +240,8 @@ void idpf_psp_init(struct idpf_adapter *adapter)
- 	atomic_set(&psp->keys_inserted, 0);
- 	atomic_set(&psp->insert_errors, 0);
- 	atomic_set(&psp->insert_late, 0);
-+	atomic_set(&psp->sadb_used, 0);
-+	atomic_set(&psp->keys_refused, 0);
- 
- 	WRITE_ONCE(psp->enabled, true);
- }
-@@ -436,6 +441,8 @@ void idpf_psp_tx_key_failed(struct idpf_adapter *adapter,
- 			    struct idpf_psp_tx_key *key)
- {
- 	atomic_inc(&adapter->psp.insert_errors);
-+	/* The SADB entry reserved for the key wasn't used */
-+	atomic_dec(&adapter->psp.sadb_used);
- 
- 	spin_lock_bh(&key->lock);
- 	if (key->idx == IDPF_PSP_IDX_IN_PROG)
-@@ -443,6 +450,54 @@ void idpf_psp_tx_key_failed(struct idpf_adapter *adapter,
- 	spin_unlock_bh(&key->lock);
- }
- 
-+/**
-+ * idpf_psp_sadb_full - Check if new PSP keys must be refused
-+ * @adapter: private data struct
-+ *
-+ * Return: true if the SADB or the insertion queue is full, false otherwise.
-+ */
-+static bool idpf_psp_sadb_full(struct idpf_adapter *adapter)
-+{
-+	/* sadb_entries fits in 26 bits, see idpf_psp_negotiate_caps() */
-+	return atomic_read(&adapter->psp.sadb_used) >=
-+	       (int)adapter->psp.sadb_entries ||
-+	       READ_ONCE(adapter->psp.ins_queued) >= IDPF_PSP_INS_QUEUE_MAX;
-+}
-+
-+/**
-+ * idpf_psp_queue_insert - Queue a TX key for insertion into the SADB
-+ * @adapter: private data struct
-+ * @key: the TX key, with its SPI and key set
-+ *
-+ * Reserve a SADB entry for the key and queue it for insertion. The PSP work
-+ * inserts the queued keys, see idpf_send_insert_psp_keys(), and releases the
-+ * reference taken on @key once the insertion completed.
-+ *
-+ * Return: 0 on success, -ENOSPC if the SADB or the insertion queue is full.
-+ */
-+int idpf_psp_queue_insert(struct idpf_adapter *adapter,
-+			  struct idpf_psp_tx_key *key)
-+{
-+	struct idpf_adapter_psp *psp = &adapter->psp;
-+
-+	spin_lock_bh(&psp->insert_lock);
-+	if (idpf_psp_sadb_full(adapter)) {
-+		spin_unlock_bh(&psp->insert_lock);
-+		atomic_inc(&psp->keys_refused);
-+		return -ENOSPC;
-+	}
-+
-+	atomic_inc(&psp->sadb_used);
-+	idpf_psp_tx_key_get(key);
-+	list_add_tail(&key->ins_node, &psp->ins_list);
-+	WRITE_ONCE(psp->ins_queued, psp->ins_queued + 1);
-+	spin_unlock_bh(&psp->insert_lock);
-+
-+	idpf_queue_psp_work(adapter);
-+
-+	return 0;
-+}
-+
- /**
-  * idpf_psp_set_config - Set the PSP device configuration
-  * @psd: PSP device
-@@ -515,6 +570,13 @@ static int idpf_psp_rx_spi_alloc(struct psp_dev *psd, u32 version,
- 		return -EOPNOTSUPP;
- 	}
- 
-+	/* Refuse new connections whose TX key couldn't be inserted */
-+	if (idpf_psp_sadb_full(adapter)) {
-+		atomic_inc(&adapter->psp.keys_refused);
-+		NL_SET_ERR_MSG_MOD(extack, "PSP SADB full");
-+		return -ENOSPC;
-+	}
-+
- 	err = idpf_send_allocate_psp_key(adapter, &rx_key);
- 	if (err) {
- 		NL_SET_ERR_MSG_MOD(extack, "Failed to allocate RX SPI and key");
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_psp.h b/drivers/net/ethernet/intel/idpf/idpf_psp.h
-index 0b2ae019b4a0..377cd4889f51 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_psp.h
-+++ b/drivers/net/ethernet/intel/idpf/idpf_psp.h
-@@ -59,6 +59,8 @@ void idpf_psp_tx_key_inserted(struct idpf_adapter *adapter,
- 			      struct idpf_psp_tx_key *key, u32 saidx);
- void idpf_psp_tx_key_failed(struct idpf_adapter *adapter,
- 			    struct idpf_psp_tx_key *key);
-+int idpf_psp_queue_insert(struct idpf_adapter *adapter,
-+			  struct idpf_psp_tx_key *key);
- 
- #else /* !CONFIG_INET_PSP */
- 
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_psp_def.h b/drivers/net/ethernet/intel/idpf/idpf_psp_def.h
-index 5af3347d9596..449bcb3c9ee2 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_psp_def.h
-+++ b/drivers/net/ethernet/intel/idpf/idpf_psp_def.h
-@@ -134,6 +134,7 @@ struct idpf_psp_rx_gen {
-  *		  see idpf_psp_insert_timeout()
-  * @ins_list: TX keys queued for insertion
-  * @ins_queued: number of keys in @ins_list
-+ * @sadb_used: SADB entries used, or reserved by keys queued for insertion
-  * @keys_allocated: RX keys allocated
-  * @keys_inserted: TX keys inserted into the SADB
-  * @insert_errors: TX keys whose insertion failed
-@@ -141,6 +142,7 @@ struct idpf_psp_rx_gen {
-  * @keys_removed: SA indexes deleted
-  * @keys_lost: SA indexes that couldn't be deleted
-  * @del_retries: SA indexes retried after a failed deletion request
-+ * @keys_refused: RX and TX keys refused, SADB or insertion queue full
-  * @psp_dev: the PSP device, see idpf_psp_register()
-  * @caps: capabilities of @psp_dev
-  */
-@@ -172,6 +174,7 @@ struct idpf_adapter_psp {
- 	struct timer_list insert_timer;
- 	struct list_head ins_list;
- 	u32 ins_queued;
-+	atomic_t sadb_used;
- 	atomic_t keys_allocated;
- 	atomic_t keys_inserted;
- 	atomic_t insert_errors;
-@@ -179,6 +182,7 @@ struct idpf_adapter_psp {
- 	atomic_t keys_removed;
- 	atomic_t keys_lost;
- 	atomic_t del_retries;
-+	atomic_t keys_refused;
- 	struct psp_dev *psp_dev;
- 	struct psp_dev_caps caps;
- };
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.c b/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.c
-index 480b56ce8164..0843f8e0ffea 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.c
-@@ -416,6 +416,7 @@ static void idpf_psp_delete_done(struct idpf_adapter *adapter,
- 	struct idpf_psp_tx_key *key, *tmp;
- 
- 	atomic_add(removed, &adapter->psp.keys_removed);
-+	atomic_sub(removed, &adapter->psp.sadb_used);
- 	if (lost) {
- 		atomic_add(lost, &adapter->psp.keys_lost);
- 		net_warn_ratelimited("%s: %u SA indexes couldn't be deleted\n",
-@@ -661,6 +662,8 @@ static void idpf_psp_insert_late(struct idpf_adapter *adapter,
- 			continue;
- 
- 		atomic_inc(&adapter->psp.insert_late);
-+		/* The SA index is used until it is deleted */
-+		atomic_inc(&adapter->psp.sadb_used);
- 		key = idpf_psp_tx_key_alloc();
- 		if (!key) {
- 			atomic_inc(&adapter->psp.keys_lost);
-@@ -826,6 +829,7 @@ void idpf_psp_recv_late_reply(struct idpf_adapter *adapter,
- 				max(atomic_read(&adapter->psp.keys_lost), 0));
- 		atomic_sub(deleted, &adapter->psp.keys_lost);
- 		atomic_add(deleted, &adapter->psp.keys_removed);
-+		atomic_sub(deleted, &adapter->psp.sadb_used);
- 		break;
- 	case VIRTCHNL2_OP_PSP_INSERT_KEYS:
- 		if (idpf_is_psp_ena(adapter) && !ctlq_msg->chnl_retval)
--- 
-2.56.0.679.gc527c65306-goog
+> +			 */
+> +			dev_warn(dev,
+> +				 "vdev%dbuffer carveout found, ignoring memory-region\n",
+> +				 rvdev->index);
+> +			of_reserved_mem_device_release(dev);
 
+Who would have called of_reserved_mem_device_init_by_XYZ()?  The remoteproc core
+or virtio core?  
+
+> +		}
+> +
+>  		if (mem->of_resm_idx != -1) {
+>  			struct device_node *np = rproc->dev.parent->of_node;
+>  
+> @@ -451,6 +484,14 @@ static int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
+>  				return ret;
+>  			}
+>  		}
+> +	} else if (has_mem_region) {
+> +		/* Use the memory region declared in the vdev's own node */
+> +		ret = rproc_virtio_init_vdev_mem(dev);
+> +		if (ret) {
+> +			dev_err(dev, "Can't associate vdev memory-region: %d\n",
+> +				ret);
+> +			return ret;
+> +		}
+
+Mixing the initialisation of the legacy rproc-virtio and authentic rproc-virtio
+devices is very confusing.  I think there is value in splitting them, even if it
+entails some code duplication.
+
+Thanks,
+Mathieu
+
+>  	} else {
+>  		struct device_node *np = rproc->dev.parent->of_node;
+>  
+> 
+> -- 
+> 2.56.0
+> 
