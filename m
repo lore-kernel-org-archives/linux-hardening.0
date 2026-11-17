@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.200
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794927348;
-	b=AgIH23f4DYmCjK2dggZcEMQ4Vp3WJql0nFDu89LTTsyumAp3wYg1HJBkoeqF8ETfq3du
-	 RDOieKh8ApdfEdrnaQgBmkWkSxmmCR1WqlT4xnPGrM8FQ+cQHA5RM+QHVc/oXbcRXhFys
-	 3ZlEH89TArBE2GBIHnmE6j9k03deEymNi7AM0lzMGseI57bQ6juzqFGvo2J4C+4/3ZO0K
-	 U052gJOr/ZTboU2+lwc1WIxsuYDZepk+7RfC7bn/tay1K1kyh/3dCdMVR7fle1CJ95vDT
-	 DOJUhH81TyxhYFeHqX2oYUmRDZxk2NOubb1fNQNd36HGKoPEgdo8xd08YMmkPkGm46g==
+	t=1794927349;
+	b=IhFyHXvMTULzeTeJwFYs0tjOpriz/OhLcYVesozGLQYPHR7HN/5gz9vpy8CYhgjI1jsG
+	 TG17E2FBAk8BENyq/P8zKrOjY/08U7t2u1xs5tA0dcYBnysrf25W9CGHdwYEqikW6LzSA
+	 KAqepLGmTZn71l5vk9TwIEMmCzbe6cdFygvqblKwRVzGhBAc4v+qILb6UVBi9GNzd8ZVs
+	 +atH6APZOhEe4u1xq0CjB6mQUFs2d1EkOLJJg8WuHWz0U9h/l8OHgT1gom/7jYIfzj70Z
+	 eME/Mqyi/2RFmx5XSyfPvftDkQ9nKNBN6uOMJk+18OzKm6PjLzcw1/ZCPnk/EKRV4/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794927348;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794927349;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=fCjsxvLvDqNAhuuyphXheko6IGHWuFB4ZrRzdmRJqpI=;
-	b=ND8ri7FNWfJ4iST6l7FrQad0Y34ZnnXmZZTeRDHPPUQPeKma+h8xB/8+ehpXcy0pze3H
-	 FQBpa6sNLrf1UKF8d8UoPEZo3D6XTAIrbbyz3wojmmr5AkkSZ0caDvfB2TPKg0f/eSIHA
-	 NsMYsd1Fvbgi1jQw8yGU1EtjsOymt3OGtKD5jLvFbVoju1efSisbRBmgqwdbZTNi8gvZy
-	 B2Ra7j2K4a8Cgr2wYHBmUUTCcKfIQUInXagH9e9mbPnKf7LQJF69NuiUPpg/L6qVRsCU/
-	 lLGrYrYFucAlhy/E1hu52gfypHusWlAfmw8wVSo6gaFQ+gDuS5oodDA2loJHkYjfhNA==
+	bh=Yrk3C/Qn8YI7zDrjT4eCPCundwlQjbduafoUtLob2BE=;
+	b=ETYxVfiKps89RUqETHvrRbvo61WNcnSbA1p706jz/vR2uvUd1jnDwJ9pVrYPYAE2UAI3
+	 E8QYxn6qFisT169XHrfRlyXJ3OcLRN3THPGc5+4Ggy/NmNJ8HTNlEruf2s2CMNbzDzQj2
+	 JwGzSjV8CBTozC7bGZyZwlDMPJCggBwrVc4eAKWEsGM3u4Ywx1EYZZJAGhKGx8W0vNam2
+	 PNqxJHc7BN4KBygYIVsg4c3i0E43Peds1ln/Kj9ZJbKJXBq9OWOEFFkg72upq/l0rdYGn
+	 yvWWvd1n9FOSCW54yMEMBrze/CHFaJkNQ8dtmPmK/oWarns+bNLhzisrO5su44G2HZg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--stani.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Hl59UCoa;
-	arc=none smtp.remote-ip=209.85.128.199
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com [209.85.128.199])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=pZABDHHR;
+	arc=none smtp.remote-ip=209.85.222.200
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EDE60A383A
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 14:55:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 05EDE60A383A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E581D606A895
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 14:55:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E581D606A895
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--stani.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Hl59UCoa
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-8b37869f851so73040027b3.2
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 06:55:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=pZABDHHR
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-94970ad532bso446400485a.0
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 06:55:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794927347; x=1795532147; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794927346; x=1795532146; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=fCjsxvLvDqNAhuuyphXheko6IGHWuFB4ZrRzdmRJqpI=;
-        b=Hl59UCoa9cEoiZGnMQByF69Qouam7ijpD8tyz37uR/viDg/G7WzzVQd1DOcybxdM+b
-         3J/t7enzv2rezq5zM4lTL5dt5krVyXeHJJ3gsd4qIR3e6w8wIvX/PytSaBIZV2DuSHlI
-         +PMrFwm4a+yZCTZd56CMJP/Eaz9BjC2nBoL+NgczevmBeROqAq83anUPfAUsh1gwzjsQ
-         YxvObPB/J+OOn7wvrnKWSAsyIk56UjpypxFFQkVasCprQq8iS4+g50YMOdN14xOkCrUF
-         AbxB48gbvTxq+pF/FA4jHarjSaGGqu9kWdj0Y2HE2xTrFzVLyCGHX7GlrVc/nhlNlbEo
-         pH5A==
+        bh=Yrk3C/Qn8YI7zDrjT4eCPCundwlQjbduafoUtLob2BE=;
+        b=pZABDHHRbIJZWYhxsKHo85i9SDPuDUjIyNBXQtYHao0piwT5yTH5QfXsfIpbG70Yv+
+         jQ9FbO/sd5D4aK+8/V2WFBIjw6ryTNeuBPTzlXOIkfGTWRd4oyCsdYOsDksnCzoeKMm3
+         3mzf9udvp5iDdWvJ9gwueI/z+XyuOHZ1bdgk6trvHWvX1QwE2sinVUL17Srqo5tdDSO5
+         BLO/mrCL5pwcLgsISfrLhPsUc/e2mDbY6EiuIpRjtygMQDF1q2YmJjkO8iDvrYFU/nN5
+         SMwThSJZzP0y/yjx6ccHIugn2H2PPUl3e/42ClqN6iemROxrc7G79eLY2Cv/WD1KzF97
+         3o6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794927347; x=1795532147;
+        d=1e100.net; s=20260707; t=1794927346; x=1795532146;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=fCjsxvLvDqNAhuuyphXheko6IGHWuFB4ZrRzdmRJqpI=;
-        b=zpAm+4fpZkyrHQ4NVjo+W2sYTHnCImbba25h3wMGBlmx7rqFBLHitq2fh43hjPKoR1
-         dB/SgEbJxwSLixSJz81IGSJdQAkMFU/sFhKgVTJXJ9A64SE7UWXFoz2smuYFG5kQLxgs
-         JtHGUuIfTD3n77Pr0LlZr5nO5K6zwZEcoKJtWmLYOrXlFlBaNfbffaorKxuGTY35OjdS
-         1rSO0g86EpWJOSuMafc9hL6ENd/p4L/baLGsNl1dmdIQYlADu06LaYzuoUMEO+7J0auk
-         hrvY0ua1CreXPTNnzPT62IXZ5JeUg088AUIiiSH9KSffGJiMlNQmetWGs5ammnCEi1+i
-         Xk5Q==
-X-Forwarded-Encrypted: i=1; AL+hErHdNXsbWU7A5CkEs3tgaymIV7zKVKR2bRIInS7InoyIYSUJwfYZTOp+Y6gmDRFI4POoPzJ4uVEFfBMGoc9gKYc=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8qBj6lSQBeLFLeBY3wdtwCkpwh5+1IGHKfHNOTKR4XHQ8iANTS
-	87KYUHyLWbDh6Ms5G3X5cBH2MD8KJDCeeLuxv1j/ipvR2FYYPo3lxLB3wwQokvcw2ydhoHkh4SR
-	l4A==
-X-Received: from yxwr8.prod.google.com ([2002:a53:adc8:0:b0:675:468d:a8e2])
- (user=stani job=prod-delivery.src-stubby-dispatcher) by 2002:a05:690e:138f:b0:67d:b3b0:e00e
- with SMTP id 956f58d0204a3-67db3b0e39amr2293513d50.58.1794927346597; Tue, 17
- Nov 2026 06:55:46 -0800 (PST)
-Date: Tue, 17 Nov 2026 14:55:15 +0000
+        bh=Yrk3C/Qn8YI7zDrjT4eCPCundwlQjbduafoUtLob2BE=;
+        b=0a4LXRuf4hYygCWEv1+DPr6V051fzRFFxXY/6ScazqPXCeKZUvX8g7YYPgF7iT7VQM
+         ZtbVr0f3o5RosAigFIwjW55HfMDwvtY7UBM2yhNIsdoYzahLagNayNsX3kBbGvpfkKQd
+         jtXdFMCFSwriN8kKDnTouKf34zU4fP770ZWBii+fN9fWn3+0X7tNDDvxiAuUEzpnyTN0
+         N7WD1A2jtn4Zb0wXdcAoSjfPP6BVmJSgx71pShnGIZEW0veSoKb1CsEtTqARoUTcKmNC
+         gAmhg4l2qfhSvu0b8tUrpm6jpbxlpc/7tHnA+bTEWkOaRp73N6MyE3NcySQ89K1nWAde
+         Zgbw==
+X-Forwarded-Encrypted: i=1; AL+hErHinM33ahvve4z/JxRtSgVr+psk/82ho5ZbArZLEhnBRDqfFVBqtRnHjbuXCkTuzH8DvO6rDkC3PRlGXawB25o=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9lhvqRnYP4Uv1JLivpQ1h9HmKRH/lqz+ZkZNq0T2DwLWcTNa7K
+	xulMA/jfyZkO15ow1Fsz5hrLa51JVCEVLKYgPK7IgKCK5BhVOuq1voyHzUqSUq9VRB9BoerKFrJ
+	SQw==
+X-Received: from qkhx17.prod.google.com ([2002:ae9:f811:0:b0:93f:18ba:bf7a])
+ (user=stani job=prod-delivery.src-stubby-dispatcher) by 2002:a05:620a:6497:b0:947:7857:bb7c
+ with SMTP id af79cd13be357-9494bc3834fmr2027349985a.33.1794927345501; Tue, 17
+ Nov 2026 06:55:45 -0800 (PST)
+Date: Tue, 17 Nov 2026 14:55:14 +0000
 In-Reply-To: <20261117145522.1910636-1-stani@google.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261117145522.1910636-1-stani@google.com>
 X-Mailer: git-send-email 2.56.0.679.gc527c65306-goog
-Message-ID: <20261117145522.1910636-10-stani@google.com>
-Subject: [PATCH iwl-next 09/15] idpf: psp: add support for psp key rotation
+Message-ID: <20261117145522.1910636-9-stani@google.com>
+Subject: [PATCH iwl-next 08/15] idpf: psp: add support for psp rx key allocation
 From: Stan Iliev <stani@google.com>
 To: Tony Nguyen <anthony.l.nguyen@intel.com>, 
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>, "David S. Miller" <davem@davemloft.net>, 
@@ -97,136 +97,103 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add support for PSP master key rotation:
-- Introduce VIRTCHNL2_OP_PSP_ROTATE_KEYGEN_REQUEST (563),
-  struct virtchnl2_psp_rotate_keygen_request/_response,
-  VIRTCHNL2_EVENT_PSP_ROTATE_KEY (4) and
-  struct virtchnl2_psp_rotation_event/_data.
-- Implement the key_rotate PSP device op with
-  idpf_psp_rotation_request(), which fails with -EOPNOTSUPP if
-  VIRTCHNL2_CAP_PSP_REQUEST_ROTATION was not granted. The PSP core
-  increments the PSP device generation before calling the op and
-  doesn't restore it if the op fails: the op restores it then.
-- Track the master key of the allocated RX SPIs, to report their
-  generation on receive in a later patch: bit 31 of an SPI selects one
-  of the two master keys of the CP, and the CP master key generation
-  of the allocation tells when a master key was replaced. The packets
-  of a master key get the PSP device generation that was current when
-  its first SPI was allocated, which is the generation of the
-  associations using it. Associations then survive one rotation, as the
-  PSP core expects.
-- Handle VIRTCHNL2_EVENT_PSP_ROTATE_KEY in idpf_recv_event_msg() with
-  idpf_psp_rotation_event(), which logs the new master key generation.
-  The PSP core can't be told about rotations it didn't request, like
-  in mlx5: document the limitation and a possible solution.
+Add support for allocating PSP RX keys on demand:
+- Introduce VIRTCHNL2_OP_PSP_ALLOCATE_KEYS (560),
+  enum virtchnl2_psp_allocate_response_flags,
+  struct virtchnl2_psp_allocate_keys_request/_response and
+  struct virtchnl2_allocate_psp_key_v0/_v1.
+- Implement idpf_send_allocate_psp_key(), which allocates one V0 RX
+  key with a synchronous request, validates the reply (key type,
+  keys_size_bytes, length, and an SPI with a key ID, which the PSP core
+  requires) and wipes the key from the mailbox buffer. The key, its SPI
+  and its master key generation are returned in struct idpf_psp_rx_key.
+- Implement the rx_spi_alloc PSP device op. It gets the adapter from
+  the netdev of the PSP device, as the vports can be freed while the
+  PSP device is registered.
+- Keep a copy of the vport ID in adapter->psp.vport_id, for the same
+  reason.
+- Wipe the RX keys of late replies, which libie passes to
+  idpf_recv_event_msg() after the request timed out.
 
 Signed-off-by: Stan Iliev <stani@google.com>
 ---
- drivers/net/ethernet/intel/idpf/idpf_psp.c    | 72 +++++++++++++++
+ drivers/net/ethernet/intel/idpf/idpf_lib.c    |  3 +
+ drivers/net/ethernet/intel/idpf/idpf_psp.c    | 43 +++++++++
  drivers/net/ethernet/intel/idpf/idpf_psp.h    |  6 ++
- .../net/ethernet/intel/idpf/idpf_psp_def.h    | 23 +++++
+ .../net/ethernet/intel/idpf/idpf_psp_def.h    | 19 ++++
  .../ethernet/intel/idpf/idpf_psp_virtchnl.c   | 89 +++++++++++++++++++
- .../ethernet/intel/idpf/idpf_psp_virtchnl.h   |  1 +
+ .../ethernet/intel/idpf/idpf_psp_virtchnl.h   |  2 +
  .../net/ethernet/intel/idpf/idpf_virtchnl.c   |  3 +
- include/linux/net/intel/virtchnl2.h           | 53 +++++++++++
- 7 files changed, 247 insertions(+)
+ include/linux/net/intel/virtchnl2.h           | 78 ++++++++++++++++
+ 8 files changed, 243 insertions(+)
 
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_lib.c b/drivers/net/ethernet/intel/idpf/idpf_lib.c
+index 1385209519b2..062753a62f59 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_lib.c
++++ b/drivers/net/ethernet/intel/idpf/idpf_lib.c
+@@ -1144,6 +1144,9 @@ static struct idpf_vport *idpf_vport_alloc(struct idpf_adapter *adapter,
+ 	/* fill vport slot in the adapter struct */
+ 	adapter->vports[idx] = vport;
+ 	adapter->vport_ids[idx] = idpf_get_vport_id(vport);
++	/* Copy for the PSP requests that can run while the vports are freed */
++	if (IS_ENABLED(CONFIG_INET_PSP) && !idx)
++		WRITE_ONCE(adapter->psp.vport_id, adapter->vport_ids[idx]);
+ 
+ 	adapter->num_alloc_vports++;
+ 	/* prepare adapter->next_vport for next use */
 diff --git a/drivers/net/ethernet/intel/idpf/idpf_psp.c b/drivers/net/ethernet/intel/idpf/idpf_psp.c
-index 8ce390bcd617..cf0216640ddc 100644
+index 67f1f1d7508c..8ce390bcd617 100644
 --- a/drivers/net/ethernet/intel/idpf/idpf_psp.c
 +++ b/drivers/net/ethernet/intel/idpf/idpf_psp.c
-@@ -106,6 +106,11 @@ void idpf_psp_init(struct idpf_adapter *adapter)
+@@ -106,6 +106,9 @@ void idpf_psp_init(struct idpf_adapter *adapter)
  		dev_warn(dev, "Failed to get PSP FIPS compliance status: %d\n",
  			 err);
  
-+	/* The master keys are tracked again for the new PSP device */
-+	psp->generation = 0;
-+	psp->rx_gen[0].gen = IDPF_PSP_GEN_UNKNOWN;
-+	psp->rx_gen[1].gen = IDPF_PSP_GEN_UNKNOWN;
++	/* The counters cover the time since the core init */
++	atomic_set(&psp->keys_allocated, 0);
 +
- 	/* The counters cover the time since the core init */
- 	atomic_set(&psp->keys_allocated, 0);
+ 	WRITE_ONCE(psp->enabled, true);
+ }
  
-@@ -139,6 +144,36 @@ static int idpf_psp_set_config(struct psp_dev *psd, struct psp_dev_config *conf,
+@@ -136,9 +139,49 @@ static int idpf_psp_set_config(struct psp_dev *psd, struct psp_dev_config *conf,
  	return 0;
  }
  
 +/**
-+ * idpf_psp_rx_gen_update - Track the master key of an allocated SPI
-+ * @adapter: private data struct
-+ * @psd: PSP device, locked
-+ * @spi: SPI allocated by the CP
-+ * @cp_gen: CP master key generation of @spi
-+ *
-+ * Bit 31 of an SPI selects one of the two master keys of the CP, a rotation
-+ * replaces the older one. The HW doesn't tell which master key decrypted a
-+ * packet: report the PSP device generation that was current when the first
-+ * SPI of the master key was allocated, which is the generation of the
-+ * associations using it, see idpf_psp_rx_process_skb(). The CP master key
-+ * generation tells when a master key was replaced, including by a rotation
-+ * the PSP core didn't request, see idpf_psp_rotation_event().
-+ */
-+static void idpf_psp_rx_gen_update(struct idpf_adapter *adapter,
-+				   struct psp_dev *psd, __be32 spi, u32 cp_gen)
-+{
-+	struct idpf_psp_rx_gen *rx_gen;
-+
-+	lockdep_assert_held(&psd->lock);
-+
-+	rx_gen = &adapter->psp.rx_gen[be32_to_cpu(spi) >> 31];
-+	if (rx_gen->gen != IDPF_PSP_GEN_UNKNOWN && rx_gen->cp_gen == cp_gen)
-+		return;
-+
-+	rx_gen->cp_gen = cp_gen;
-+	WRITE_ONCE(rx_gen->gen, psd->generation);
-+}
-+
- /**
-  * idpf_psp_rx_spi_alloc - Allocate a PSP RX SPI and key
-  * @psd: PSP device
-@@ -171,6 +206,8 @@ static int idpf_psp_rx_spi_alloc(struct psp_dev *psd, u32 version,
- 		return err;
- 	}
- 
-+	idpf_psp_rx_gen_update(adapter, psd, rx_key.spi, rx_key.generation);
-+
- 	key->spi = rx_key.spi;
- 	memcpy(key->key, rx_key.key, sizeof(rx_key.key));
- 	memzero_explicit(&rx_key, sizeof(rx_key));
-@@ -178,10 +215,45 @@ static int idpf_psp_rx_spi_alloc(struct psp_dev *psd, u32 version,
- 	return 0;
- }
- 
-+/**
-+ * idpf_psp_key_rotate - Rotate the PSP master keys
++ * idpf_psp_rx_spi_alloc - Allocate a PSP RX SPI and key
 + * @psd: PSP device
++ * @version: PSP version
++ * @key: filled with the allocated SPI and key
 + * @extack: netlink extended ack for error reporting
 + *
-+ * The PSP core increments the PSP device generation before calling this op
-+ * and doesn't restore it if the op fails, see psp_nl_key_rotate_doit(): restore
-+ * it then, the master keys didn't change.
++ * Allocate one RX key with a synchronous VIRTCHNL2_OP_PSP_ALLOCATE_KEYS
++ * request.
 + *
 + * Return: 0 on success, negative error code on failure.
 + */
-+static int idpf_psp_key_rotate(struct psp_dev *psd,
-+			       struct netlink_ext_ack *extack)
++static int idpf_psp_rx_spi_alloc(struct psp_dev *psd, u32 version,
++				 struct psp_key_parsed *key,
++				 struct netlink_ext_ack *extack)
 +{
 +	struct idpf_adapter *adapter = idpf_netdev_to_adapter(psd->main_netdev);
++	struct idpf_psp_rx_key rx_key;
 +	int err;
 +
-+	err = idpf_psp_rotation_request(adapter);
++	/* Only version 0 keys are allocated, see idpf_psp_register() */
++	if (psp_key_size(version) != sizeof(rx_key.key)) {
++		NL_SET_ERR_MSG_MOD(extack, "Unsupported PSP version");
++		return -EOPNOTSUPP;
++	}
++
++	err = idpf_send_allocate_psp_key(adapter, &rx_key);
 +	if (err) {
-+		psd->generation = adapter->psp.generation;
-+
-+		if (err == -EOPNOTSUPP)
-+			NL_SET_ERR_MSG_MOD(extack, "PSP key rotation request not granted by CP");
-+		else
-+			NL_SET_ERR_MSG_MOD(extack, "PSP key rotation request failed");
-+
++		NL_SET_ERR_MSG_MOD(extack, "Failed to allocate RX SPI and key");
 +		return err;
 +	}
 +
-+	adapter->psp.generation = psd->generation;
++	key->spi = rx_key.spi;
++	memcpy(key->key, rx_key.key, sizeof(rx_key.key));
++	memzero_explicit(&rx_key, sizeof(rx_key));
 +
 +	return 0;
 +}
@@ -234,282 +201,307 @@ index 8ce390bcd617..cf0216640ddc 100644
  /* PSP device operations, see idpf_psp_register() */
  static struct psp_dev_ops idpf_psp_ops = {
  	.set_config	= idpf_psp_set_config,
- 	.rx_spi_alloc	= idpf_psp_rx_spi_alloc,
-+	.key_rotate	= idpf_psp_key_rotate,
++	.rx_spi_alloc	= idpf_psp_rx_spi_alloc,
  };
  
  /**
 diff --git a/drivers/net/ethernet/intel/idpf/idpf_psp.h b/drivers/net/ethernet/intel/idpf/idpf_psp.h
-index fcafe71d3d00..34534076da47 100644
+index 0f89dcc3b398..fcafe71d3d00 100644
 --- a/drivers/net/ethernet/intel/idpf/idpf_psp.h
 +++ b/drivers/net/ethernet/intel/idpf/idpf_psp.h
-@@ -13,6 +13,8 @@ void idpf_psp_register(struct idpf_adapter *adapter);
+@@ -11,6 +11,8 @@ void idpf_psp_init(struct idpf_adapter *adapter);
+ void idpf_psp_free(struct idpf_adapter *adapter);
+ void idpf_psp_register(struct idpf_adapter *adapter);
  void idpf_psp_unregister(struct idpf_adapter *adapter);
- void idpf_psp_recv_late_reply(struct idpf_adapter *adapter,
- 			      const struct libie_ctlq_msg *ctlq_msg);
-+void idpf_psp_rotation_event(struct idpf_adapter *adapter,
-+			     const struct libie_ctlq_msg *ctlq_msg);
++void idpf_psp_recv_late_reply(struct idpf_adapter *adapter,
++			      const struct libie_ctlq_msg *ctlq_msg);
  
  #else /* !CONFIG_INET_PSP */
  
-@@ -25,6 +27,10 @@ static inline void
- idpf_psp_recv_late_reply(struct idpf_adapter *adapter,
- 			 const struct libie_ctlq_msg *ctlq_msg) { }
+@@ -19,6 +21,10 @@ static inline void idpf_psp_free(struct idpf_adapter *adapter) { }
+ static inline void idpf_psp_register(struct idpf_adapter *adapter) { }
+ static inline void idpf_psp_unregister(struct idpf_adapter *adapter) { }
  
 +static inline void
-+idpf_psp_rotation_event(struct idpf_adapter *adapter,
-+			const struct libie_ctlq_msg *ctlq_msg) { }
++idpf_psp_recv_late_reply(struct idpf_adapter *adapter,
++			 const struct libie_ctlq_msg *ctlq_msg) { }
 +
  #endif /* CONFIG_INET_PSP */
  
  #endif /* !_IDPF_PSP_H_ */
 diff --git a/drivers/net/ethernet/intel/idpf/idpf_psp_def.h b/drivers/net/ethernet/intel/idpf/idpf_psp_def.h
-index f21bd7de5ae8..3132efe00559 100644
+index 0829d0bbd92b..f21bd7de5ae8 100644
 --- a/drivers/net/ethernet/intel/idpf/idpf_psp_def.h
 +++ b/drivers/net/ethernet/intel/idpf/idpf_psp_def.h
-@@ -24,6 +24,23 @@ struct idpf_psp_rx_key {
- 	u8 key[VIRTCHNL2_PSP_KEY_SIZE_V0];
- };
+@@ -3,6 +3,7 @@
+ #ifndef _IDPF_PSP_DEF_H_
+ #define _IDPF_PSP_DEF_H_
  
-+/* PSP device generation of an SPI phase whose master key isn't known */
-+#define IDPF_PSP_GEN_UNKNOWN		0xff
-+
++#include <linux/net/intel/virtchnl2.h>
+ #include <net/psp.h>
+ 
+ /* SA index widths supported by the driver, negotiated per adapter with
+@@ -11,6 +12,18 @@
+ #define IDPF_PSP_SAIDX_WIDTH_21		21
+ #define IDPF_PSP_SAIDX_WIDTH_26		26
+ 
 +/**
-+ * struct idpf_psp_rx_gen - Generation of the master key of an SPI phase
-+ * @cp_gen: CP master key generation of the SPIs allocated in the phase
-+ * @gen: PSP device generation reported for the packets of the phase,
-+ *	 IDPF_PSP_GEN_UNKNOWN if no SPI was allocated in the phase
-+ *
-+ * Bit 31 of an SPI selects one of the two master keys of the CP, see
-+ * idpf_psp_rx_gen_update().
++ * struct idpf_psp_rx_key - PSP RX key allocated by the CP
++ * @spi: SPI of the key
++ * @generation: CP master key generation of the key
++ * @key: the key
 + */
-+struct idpf_psp_rx_gen {
-+	u32 cp_gen;
-+	u8 gen;
++struct idpf_psp_rx_key {
++	__be32 spi;
++	u32 generation;
++	u8 key[VIRTCHNL2_PSP_KEY_SIZE_V0];
 +};
 +
  /**
   * struct idpf_adapter_psp - PSP offload state of an adapter
   * @enabled: PSP was negotiated with the CP in the last core init, see
-@@ -35,6 +52,10 @@ struct idpf_psp_rx_key {
-  * @vport_id: ID of adapter->vports[0] for the PSP requests. A copy, as the
-  *	      PSP device stays registered while the vports are freed and
-  *	      allocated again during a soft reset. Set in idpf_vport_alloc().
-+ * @generation: PSP device generation after the last key rotation, protected
-+ *		by the PSP device lock, see idpf_psp_key_rotate()
-+ * @rx_gen: generation of the master key of each SPI phase, protected by the
-+ *	    PSP device lock, see idpf_psp_rx_gen_update()
-  * @keys_allocated: RX keys allocated
+@@ -19,6 +32,10 @@
+  * @saidx_width: SA index width granted by VIRTCHNL2_OP_CRYPTO_GET_CAPS
+  * @psp_caps: PSP capabilities granted by VIRTCHNL2_OP_PSP_GET_CAPS, see
+  *	      enum virtchnl2_psp_caps
++ * @vport_id: ID of adapter->vports[0] for the PSP requests. A copy, as the
++ *	      PSP device stays registered while the vports are freed and
++ *	      allocated again during a soft reset. Set in idpf_vport_alloc().
++ * @keys_allocated: RX keys allocated
   * @psp_dev: the PSP device, see idpf_psp_register()
   * @caps: capabilities of @psp_dev
-@@ -45,6 +66,8 @@ struct idpf_adapter_psp {
+  */
+@@ -27,6 +44,8 @@ struct idpf_adapter_psp {
+ 	u32 sadb_entries;
  	u8 saidx_width;
  	u32 psp_caps;
- 	u32 vport_id;
-+	u8 generation;
-+	struct idpf_psp_rx_gen rx_gen[2];
- 	atomic_t keys_allocated;
++	u32 vport_id;
++	atomic_t keys_allocated;
  	struct psp_dev *psp_dev;
  	struct psp_dev_caps caps;
+ };
 diff --git a/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.c b/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.c
-index aa50948873a7..ddb9fd90291f 100644
+index 0502ce0b7abe..aa50948873a7 100644
 --- a/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.c
 +++ b/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.c
-@@ -261,6 +261,95 @@ int idpf_send_allocate_psp_key(struct idpf_adapter *adapter,
+@@ -194,3 +194,92 @@ int idpf_send_get_fips_compliance_status(struct idpf_adapter *adapter)
+ 	libie_ctlq_release_rx_buf(&xn_params.recv_mem);
  	return err;
  }
- 
++
 +/**
-+ * idpf_psp_rotation_request - Request a PSP master key rotation
++ * idpf_send_allocate_psp_key - Allocate a PSP RX key
 + * @adapter: Driver specific private structure
++ * @key: filled with the allocated SPI and key and their master key generation
 + *
-+ * Return: 0 on success, -EOPNOTSUPP if VIRTCHNL2_CAP_PSP_REQUEST_ROTATION was
-+ * not granted, other negative error code on failure.
++ * Allocate one RX key with a synchronous VIRTCHNL2_OP_PSP_ALLOCATE_KEYS
++ * request. The caller must be allowed to sleep.
++ *
++ * Return: 0 on success, negative error code on failure.
 + */
-+int idpf_psp_rotation_request(struct idpf_adapter *adapter)
++int idpf_send_allocate_psp_key(struct idpf_adapter *adapter,
++			       struct idpf_psp_rx_key *key)
 +{
 +	struct libie_ctlq_xn_send_params xn_params = {
-+		.chnl_opcode	= VIRTCHNL2_OP_PSP_ROTATE_KEYGEN_REQUEST,
++		.chnl_opcode	= VIRTCHNL2_OP_PSP_ALLOCATE_KEYS,
 +		.timeout_ms	= IDPF_VC_XN_DEFAULT_TIMEOUT_MSEC,
 +	};
-+	const struct virtchnl2_psp_rotate_keygen_response *resp;
-+	struct virtchnl2_psp_rotate_keygen_request req = { };
++	const struct virtchnl2_psp_allocate_keys_response *vc_reply;
++	struct virtchnl2_psp_allocate_keys_request key_req = { };
++	const struct virtchnl2_allocate_psp_key_v0 *v0_key;
++	size_t reply_sz;
++	u32 spi;
 +	int err;
 +
-+	if (!(adapter->psp.psp_caps & VIRTCHNL2_CAP_PSP_REQUEST_ROTATION))
-+		return -EOPNOTSUPP;
++	BUILD_BUG_ON(sizeof(key->key) != sizeof(v0_key->v0_key));
 +
-+	req.vport_id = cpu_to_le32(READ_ONCE(adapter->psp.vport_id));
-+	/* req.domain stays zeroed: VIRTCHNL2_PSP_DOMAIN_NONE */
++	key_req.vport_id = cpu_to_le32(READ_ONCE(adapter->psp.vport_id));
++	key_req.num_keys = cpu_to_le32(1);
++	key_req.key_type = VIRTCHNL2_PSP_KEY_TYPE_V0;
++	/* key_req.domain stays zeroed: VIRTCHNL2_PSP_DOMAIN_NONE */
 +
-+	err = idpf_send_mb_msg_stack(adapter, &xn_params, &req);
-+	if (err) {
-+		net_warn_ratelimited("%s: err %d\n", __func__, err);
++	err = idpf_send_mb_msg_stack(adapter, &xn_params, &key_req);
++	if (err)
 +		return err;
++
++	reply_sz = xn_params.recv_mem.iov_len;
++	vc_reply = xn_params.recv_mem.iov_base;
++	if (reply_sz < sizeof(*vc_reply) + sizeof(*v0_key) ||
++	    vc_reply->key_type != VIRTCHNL2_PSP_KEY_TYPE_V0 ||
++	    le32_to_cpu(vc_reply->keys_size_bytes) != sizeof(*v0_key)) {
++		net_warn_ratelimited("%s: invalid reply of %zu bytes\n",
++				     __func__, reply_sz);
++		err = -EIO;
++		goto release_rx;
 +	}
 +
-+	resp = xn_params.recv_mem.iov_base;
-+	if (xn_params.recv_mem.iov_len >= sizeof(*resp))
-+		dev_dbg(&adapter->pdev->dev,
-+			"PSP master key generation %u after rotation\n",
-+			le32_to_cpu(resp->master_key_generation));
-+	libie_ctlq_release_rx_buf(&xn_params.recv_mem);
++	v0_key = (const struct virtchnl2_allocate_psp_key_v0 *)vc_reply->keys;
++	spi = le32_to_cpu(v0_key->spi);
++	if (!(spi & PSP_SPI_KEY_ID)) {
++		net_warn_ratelimited("%s: invalid SPI %#x\n", __func__, spi);
++		err = -EIO;
++		goto release_rx;
++	}
 +
-+	return 0;
++	key->spi = cpu_to_be32(spi);
++	key->generation = le32_to_cpu(vc_reply->master_key_generation);
++	memcpy(key->key, v0_key->v0_key, sizeof(key->key));
++	atomic_inc(&adapter->psp.keys_allocated);
++
++release_rx:
++	/* Don't leave the RX key in the recycled mailbox buffer */
++	memzero_explicit(xn_params.recv_mem.iov_base, reply_sz);
++	libie_ctlq_release_rx_buf(&xn_params.recv_mem);
++	return err;
 +}
 +
 +/**
-+ * idpf_psp_rotation_event - Handle a VIRTCHNL2_EVENT_PSP_ROTATE_KEY event
++ * idpf_psp_recv_late_reply - Handle a late reply to a PSP request
 + * @adapter: Driver specific private structure
-+ * @ctlq_msg: event message, its receive buffer is released by the caller
++ * @ctlq_msg: reply, its receive buffer is released by the caller
 + *
-+ * The CP rotated the master keys, it reports the generation of the new active
-+ * master key. The driver tracks the master keys of the RX SPIs it allocates,
-+ * see idpf_psp_rx_gen_update(): the next SPIs of the new master key are
-+ * reported with the PSP device generation of their associations.
-+ *
-+ * The PSP core is not told about a rotation that it didn't request: the
-+ * associations whose master key the rotation discarded can't receive anymore,
-+ * but they aren't marked stale and no key rotation notification is sent. mlx5
-+ * has the same limitation, see "no support for protecting against external
-+ * rotations" in mlx5e_psp_key_rotate(). The PSP device lock can't be taken
-+ * here, as it is held across synchronous mailbox requests that are completed
-+ * by the mailbox task running this handler.
-+ *
-+ * A possible solution, not implemented: a PSP core helper for drivers, e.g.
-+ * psp_dev_key_rotated(psd, generation), doing what psp_nl_key_rotate_doit()
-+ * does after the ->key_rotate() op succeeded: set the generation, mark the
-+ * associations of the discarded master key stale with psp_assocs_key_rotated()
-+ * and send the key rotation notification. idpf would call it with the PSP
-+ * device lock held from a work item queued here, for the events whose
-+ * generation is not the one returned by idpf_psp_rotation_request(): the CP
-+ * also sends the event for the rotations the driver requested.
++ * libie passes the replies to requests that timed out to idpf_recv_event_msg().
++ * The RX key of an allocation reply is wiped.
 + */
-+void idpf_psp_rotation_event(struct idpf_adapter *adapter,
-+			     const struct libie_ctlq_msg *ctlq_msg)
++void idpf_psp_recv_late_reply(struct idpf_adapter *adapter,
++			      const struct libie_ctlq_msg *ctlq_msg)
 +{
-+	const struct virtchnl2_psp_rotation_event *rt_event;
 +	const struct kvec *buff = &ctlq_msg->recv_mem;
 +
-+	if (!idpf_is_psp_ena(adapter)) {
-+		net_warn_ratelimited("PSP not enabled, ignoring PSP rotation event.\n");
-+		return;
++	switch (ctlq_msg->chnl_opcode) {
++	case VIRTCHNL2_OP_PSP_ALLOCATE_KEYS:
++		if (buff->iov_base)
++			memzero_explicit(buff->iov_base, buff->iov_len);
++		break;
++	default:
++		break;
 +	}
-+
-+	if (!buff->iov_base || buff->iov_len < sizeof(*rt_event)) {
-+		net_warn_ratelimited("Invalid payload size for PSP rotation event, payload size: %zu, expected min: %zu\n",
-+				     buff->iov_len, sizeof(*rt_event));
-+		return;
-+	}
-+
-+	rt_event = buff->iov_base;
-+
-+	net_info_ratelimited("PSP Rotation Event processed, active master key generation %u.\n",
-+			     le32_to_cpu(rt_event->psp_rotate_event.active_master_key_generation));
 +}
-+
- /**
-  * idpf_psp_recv_late_reply - Handle a late reply to a PSP request
-  * @adapter: Driver specific private structure
 diff --git a/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.h b/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.h
-index 7ba86b540f2b..f1b4f7747908 100644
+index 2ade2df2e34e..7ba86b540f2b 100644
 --- a/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.h
 +++ b/drivers/net/ethernet/intel/idpf/idpf_psp_virtchnl.h
-@@ -14,5 +14,6 @@ int idpf_send_get_psp_caps(struct idpf_adapter *adapter,
+@@ -12,5 +12,7 @@ int idpf_send_get_crypto_caps(struct idpf_adapter *adapter,
+ int idpf_send_get_psp_caps(struct idpf_adapter *adapter,
+ 			   struct virtchnl2_psp_get_caps *caps);
  int idpf_send_get_fips_compliance_status(struct idpf_adapter *adapter);
- int idpf_send_allocate_psp_key(struct idpf_adapter *adapter,
- 			       struct idpf_psp_rx_key *key);
-+int idpf_psp_rotation_request(struct idpf_adapter *adapter);
++int idpf_send_allocate_psp_key(struct idpf_adapter *adapter,
++			       struct idpf_psp_rx_key *key);
  
  #endif /* !_IDPF_PSP_VIRTCHNL_H_ */
 diff --git a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-index 056fd82b3162..90fe5212095d 100644
+index 3f669683c8c0..056fd82b3162 100644
 --- a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
 +++ b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-@@ -114,6 +114,9 @@ void idpf_recv_event_msg(struct libie_ctlq_ctx *ctx,
- 	case VIRTCHNL2_EVENT_LINK_CHANGE:
- 		idpf_handle_event_link(adapter, v2e);
- 		break;
-+	case VIRTCHNL2_EVENT_PSP_ROTATE_KEY:
-+		idpf_psp_rotation_event(adapter, ctlq_msg);
-+		break;
- 	default:
- 		dev_err(&adapter->pdev->dev,
- 			"Unknown event %d from PF\n", event);
+@@ -91,6 +91,9 @@ void idpf_recv_event_msg(struct libie_ctlq_ctx *ctx,
+ 
+ 	adapter = container_of(ctx, struct idpf_adapter, ctlq_ctx);
+ 	if (ctlq_msg->chnl_opcode != VIRTCHNL2_OP_EVENT) {
++		/* Late reply to a PSP request that timed out */
++		idpf_psp_recv_late_reply(adapter, ctlq_msg);
++
+ 		dev_dbg(&adapter->pdev->dev,
+ 			"Unhandled message with opcode %u from CP\n",
+ 			ctlq_msg->chnl_opcode);
 diff --git a/include/linux/net/intel/virtchnl2.h b/include/linux/net/intel/virtchnl2.h
-index 0ae439009f44..29dfa075e169 100644
+index c3a0e7b1b8e2..0ae439009f44 100644
 --- a/include/linux/net/intel/virtchnl2.h
 +++ b/include/linux/net/intel/virtchnl2.h
-@@ -86,6 +86,7 @@ enum virtchnl2_op {
+@@ -85,6 +85,7 @@ enum virtchnl2_op {
+ 	VIRTCHNL2_OP_GET_FLOW_RULE			= 552,
  	VIRTCHNL2_OP_DEL_FLOW_RULE			= 553,
  	/* Crypto/PSP opcodes */
- 	VIRTCHNL2_OP_PSP_ALLOCATE_KEYS			= 560,
-+	VIRTCHNL2_OP_PSP_ROTATE_KEYGEN_REQUEST		= 563,
++	VIRTCHNL2_OP_PSP_ALLOCATE_KEYS			= 560,
  	VIRTCHNL2_OP_CRYPTO_GET_CAPS			= 564,
  	VIRTCHNL2_OP_PSP_GET_CAPS			= 565,
  	VIRTCHNL2_OP_GET_FIPS_COMPLIANCE_STATUS		= 567,
-@@ -302,6 +303,7 @@ enum virtchnl2_event_codes {
- 	VIRTCHNL2_EVENT_UNKNOWN			= 0,
- 	VIRTCHNL2_EVENT_LINK_CHANGE		= 1,
- 	/* Event type 2, 3 are reserved */
-+	VIRTCHNL2_EVENT_PSP_ROTATE_KEY		= 4,
+@@ -1891,6 +1892,15 @@ enum virtchnl2_psp_domain_type {
+ 	VIRTCHNL2_PSP_DOMAIN_OEM_END			= 0xffff,
  };
  
- /* Transmit and Receive queue types are valid in legacy as well as split queue
-@@ -1987,6 +1989,57 @@ struct virtchnl2_psp_allocate_keys_response {
++/* VIRTCHNL2_PSP_ALLOC_KEY_EXHAUSTED: the keys derived from the current master
++ * key are exhausted and a master key rotation will be performed
++ * automatically. Only set on partial success, i.e. if fewer keys than
++ * requested, but at least one, were allocated.
++ */
++enum virtchnl2_psp_allocate_response_flags {
++	VIRTCHNL2_PSP_ALLOC_KEY_EXHAUSTED		= BIT(0),
++};
++
+ /**
+  * struct virtchnl2_psp_key_domain - PSP key domain
+  * @type: See enum virtchnl2_psp_domain_type
+@@ -1909,6 +1919,74 @@ struct virtchnl2_psp_key_domain {
  };
- VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_psp_allocate_keys_response);
+ VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_psp_key_domain);
  
 +/**
-+ * struct virtchnl2_psp_rotate_keygen_request - Request master key rotation
++ * struct virtchnl2_psp_allocate_keys_request - Allocate PSP RX keys request
 + * @vport_id: Virtual port ID
++ * @num_keys: Number of keys requested, 0 only reads the active master key
++ *	      generation
++ * @key_type: See enum virtchnl2_psp_key_type
 + * @pad: Reserved/padding
 + * @domain: Key domain, must be zero-filled if VIRTCHNL2_CAP_PSP_DOMAIN was
 + *	    not granted
 + */
-+struct virtchnl2_psp_rotate_keygen_request {
++struct virtchnl2_psp_allocate_keys_request {
 +	__le32 vport_id;
-+	u8 pad[4];
++	__le32 num_keys;
++	u8 key_type;
++	u8 pad[7];
 +	struct virtchnl2_psp_key_domain domain;
 +};
-+VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_psp_rotate_keygen_request);
++VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_psp_allocate_keys_request);
 +
 +/**
-+ * struct virtchnl2_psp_rotate_keygen_response - Master key rotation response
-+ * @vport_id: Virtual port ID
-+ * @master_key_generation: Master key generation
-+ */
-+struct virtchnl2_psp_rotate_keygen_response {
-+	__le32 vport_id;
-+	__le32 master_key_generation;
-+};
-+VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_psp_rotate_keygen_response);
-+
-+/**
-+ * struct virtchnl2_psp_rotation_data - Master key rotation async event payload
-+ * @active_master_key_generation: Active master key generation
++ * struct virtchnl2_allocate_psp_key_v0 - Allocated PSP V0 key entry
++ * @spi: Security parameter index
 + * @pad: Reserved/padding
-+ * @domain: Key domain
++ * @v0_key: 128-bit key
 + */
-+struct virtchnl2_psp_rotation_data {
-+	__le32 active_master_key_generation;
++struct virtchnl2_allocate_psp_key_v0 {
++	__le32 spi;
 +	u8 pad[4];
-+	struct virtchnl2_psp_key_domain domain;
++	u8 v0_key[VIRTCHNL2_PSP_KEY_SIZE_V0];
 +};
-+VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_psp_rotation_data);
++VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_allocate_psp_key_v0);
 +
 +/**
-+ * struct virtchnl2_psp_rotation_event - Master key rotation async event
-+ * @event: Event opcode (VIRTCHNL2_EVENT_PSP_ROTATE_KEY = 4)
-+ * @pad: Reserved/padding, aligns @psp_rotate_event to 8 bytes
-+ * @psp_rotate_event: Rotation event payload
++ * struct virtchnl2_allocate_psp_key_v1 - Allocated PSP V1 key entry
++ * @spi: Security parameter index
++ * @pad: Reserved/padding
++ * @v1_key: 256-bit key
 + */
-+struct virtchnl2_psp_rotation_event {
-+	__le32 event;
++struct virtchnl2_allocate_psp_key_v1 {
++	__le32 spi;
 +	u8 pad[4];
-+	struct virtchnl2_psp_rotation_data psp_rotate_event;
++	u8 v1_key[VIRTCHNL2_PSP_KEY_SIZE_V1];
 +};
-+VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_psp_rotation_event);
++VIRTCHNL2_CHECK_STRUCT_LEN(40, virtchnl2_allocate_psp_key_v1);
++
++/**
++ * struct virtchnl2_psp_allocate_keys_response - Allocate PSP RX keys response
++ * @vport_id: Virtual port ID
++ * @key_type: See enum virtchnl2_psp_key_type
++ * @allocate_response_flags: See enum virtchnl2_psp_allocate_response_flags
++ * @pad1: Reserved/padding
++ * @master_key_generation: Master key generation, increased by 1 every time
++ *			   the set of active master keys changes
++ * @keys_size_bytes: Total size of keys payload in bytes
++ * @keys: Flexible array of struct virtchnl2_allocate_psp_key_v0 or
++ *	  struct virtchnl2_allocate_psp_key_v1 entries
++ */
++struct virtchnl2_psp_allocate_keys_response {
++	__le32 vport_id;
++	u8 key_type;
++	u8 allocate_response_flags;
++	u8 pad1[2];
++	__le32 master_key_generation;
++	__le32 keys_size_bytes;
++	u8 keys[] __counted_by_le(keys_size_bytes);
++};
++VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_psp_allocate_keys_response);
 +
  /**
   * struct virtchnl2_get_fips_compliance_status_resp - FIPS compliance response
