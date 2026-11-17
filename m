@@ -1,71 +1,72 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=68.232.154.123
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794921496;
-	b=M3lleyDJqRF4ZYgt0Ozfl8LmzyXdvb+x/NMCk3x19atvfrC4S8g7BVitHL1pEuHdGlvn
-	 5vhEJba6RiueJjSliGTZen+3qdEOacCzJENQXyIVDu7HaNoESf/Y8NQC+5XLSuEZrr/bc
-	 NLL4NBtszFlB5UBetsVjDr4G2IQfaABS+MnvJpXEAacqESXdhnbuJ5DX+HSSjM+cpWOKC
-	 VxNkhIdFBbk6l7IeTx8gnbot9x7DrfcP7Ck/2GFgAHbr51UvzNcsnjyEDLyG39vSKLGLn
-	 qZePLIsA0UJ8tv4sp0DMsSLeQbpEW1BWmgImck2sCmaTKuo5B48RrcfkGhk27rAOTaQ==
+	t=1794921503;
+	b=f6Shl3cxCDC3FKH4LKhfN6SWdQerWKfcuTJWWUZzaaRMd3lRTQG0uhbgxj2+SEG8BZon
+	 NncWGI4lhNyw90j2SO1E5itHo8mBuZoDtI/qla8bu3/Q7IcZpstVY/Yepm/OB04xXdgXf
+	 t28H7AuLlyD6aI3dO78Ezwpit87E2HFwCP9Jef3jlQu5a4NBYpyHiYtx+M1iCRTOtNs2c
+	 d/JW0MLEA7Eht9KH3zF9Oyc+TBajqzAhYnIXsdpZNe6qtH6DUqQbMWyra7UBB3S/m8emO
+	 Slvu3ImflMmaGuAKACqfrwk4PgBtQ3R/ZCNxPfNhq3XDX8a7kIDhooF6VBr+qcjUzNg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794921496;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794921503;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-Amp-Result:Received:Received:Received:From:Date:
 	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-ID:References:In-Reply-To:To:CC:X-Mailer;
-	bh=lo+eud9QBy9Mhh7jiBe4DkOyfA3rlFDhT8A9XsI5gxA=;
-	b=X9l0qxmua9aIMNp/BpxGxVrMKn6izgLX7pH7pZm0EBBrqgB39utnEdgRmudjS8rYlRPG
-	 5EVeUaF3JGuNQBOevC0idq6OoE1bVXyiSbpV5emEYjAmwUuXI76Ng2lhhbjl+26lgTvEH
-	 HAbEOaz8J6hwPY/C+NdLx/4lebyl8Wow86xy2phj+ozRILmbiy+tuJfEl2QTqufa5qGpt
-	 795MORXsjT/D/qdGKIqu/3Q/dMrONF5Bn236rqcQU6Lz5yAjj1WjOfd7j9MZAdOI64Hcr
-	 doJC2NjNABNNpxc74hWDoD/vm5lGSODpENlz/jXlG3kZO4OKavUbKBnYqr0WTRXI3+Q==
+	bh=yXEs6uhNdaVSRLXO0hXE3cDhSy37uLC1l2oLGVvD32k=;
+	b=F00YXJMrkg8/lV36jm+u/Mzj2l/FQK3yas8Plk0IDU0A3tNGatOIBWhS7G+4H5Maul5U
+	 LbO7dFyrnfJfuMoWcbvcl4vXy4PjVatkP1KfO5G+Dpd6abCxreipXliSKSe3d2SUXMtoQ
+	 YAvLxtbme9DM0GCDCZb2CigTN/gut6IDY1MD7urWa36wLmkyXHL4Q3liSGV3t2rBoyQSJ
+	 Wzrn9CAjzXvpYIGVXCt87PwNl/rQ27nEtU+bgAKWxu4fcm0KGNArk0utA8kZsfOyoTQxc
+	 WZYxrrr/p08+km+nXhvWNhAFp/GpSpkXN1NC1aog6Sd7Lo9/fq18O2GHVlpqcQv682w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=microchip.com;
 	spf=pass smtp.mailfrom=microchip.com;
-	dkim=pass header.d=microchip.com header.i=@microchip.com header.a=rsa-sha256 header.s=mchp header.b=Lsh+I95H;
+	dkim=pass header.d=microchip.com header.i=@microchip.com header.a=rsa-sha256 header.s=mchp header.b=KsI4aZip;
 	arc=none smtp.remote-ip=68.232.154.123
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A04606A32A;
-	Tue, 17 Nov 2026 13:18:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 19A04606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC451606A323;
+	Tue, 17 Nov 2026 13:18:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC451606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.a=rsa-sha256 header.s=mchp header.b=Lsh+I95H
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.a=rsa-sha256 header.s=mchp header.b=KsI4aZip
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1794921494; x=1826457494;
+  t=1794921510; x=1826457510;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=xpYJMY8VAf/P18xwxp6He3jRGlz70QtC45nH671hk6g=;
-  b=Lsh+I95HoVQxuj9hWu+7XaLEv8p8YcPxbph/WbbF69ohvIhsUmZUrkXu
-   BVg+XKqM5/jcCaVIlSgYPe+L59zh9+ECEz0i88ZOJ+o55rOdOnUTKwBXy
-   6/poLuAeqLYkWxd0NUpetUK7Af79WI440AZ7Rg/Bo45m4svNWGPl6HsmB
-   9l7sK8T9EqNS0qJagZf2Gckz8RQGJQcnj2v/v7Fj3lpusNO/WbkPoCAj7
-   cd5hQiV5chooZd+VCuMCJwr6s6tHzBayWVeI7EEr2TVNWI7kAbCTxJnrU
-   KX7DXs81Nq2Ki5dQNSgBxw+ZbWJ4lDuEZuIiwJIrVwvi6ge3ywv61+fla
+  bh=ItZZv5Eu/tDavInoWJrmXA5oVZ7DaT+1B9o5NUFZc1o=;
+  b=KsI4aZip/OPxt2d3I0fJnLWFw/C6ZJsTO1cyiS0p/WsQjdhJOLWwDJRB
+   yBGUXqUQNau/yAg9T7nFhOpR2mtdLRpNCq6PjUP+UkMt5VSsi+97YP58r
+   y/6az6M5zUdH7UkvCu5yZTvW3lE5Wey/xPkebLBhpQ0tMzRP7KvQ3os6/
+   L1Yn7OJU0SRfPGaY5c30hjqUobeEw0LEfhDIxDm9WOvTXjB3u4fhIZl77
+   CoAE7UggrQGoo8h9Lov5JcJxP/U0Y2UtxmzmLkf9WUUJKqsgj/dXeUFvu
+   yl/CVAn945J8PZtyulDnXGC2BENMOH5rTiexGUa+MB5VMyK0dIlVSqnfk
    Q==;
-X-CSE-ConnectionGUID: WXSXeOKXRYm+44tfoIX+FQ==
-X-CSE-MsgGUID: KiDRO1ixQTOr7EcvrChjiQ==
+X-CSE-ConnectionGUID: p9PgQP3gRniFzphfdamHlQ==
+X-CSE-MsgGUID: IiNDpHCkRqKZKLn1x6PG3g==
 X-IronPort-AV: E=Sophos;i="6.27,218,1787036400"; 
-   d="scan'208";a="65663142"
+   d="scan'208";a="233689768"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 06:18:14 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 06:18:29 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
  chn-vm-ex3.mchp-main.com (10.10.87.32) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.56; Tue, 17 Nov 2026 06:18:14 -0700
+ 15.2.2562.56; Tue, 17 Nov 2026 06:18:21 -0700
 Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex03.mchp-main.com
  (10.10.85.151) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.58 via Frontend
- Transport; Tue, 17 Nov 2026 06:18:10 -0700
+ Transport; Tue, 17 Nov 2026 06:18:18 -0700
 From: =?utf-8?q?Jens_Emil_Schulz_=C3=98stergaard?=
 	<jensemil.schulzostergaard@microchip.com>
-Date: Tue, 17 Nov 2026 14:17:37 +0100
-Subject: [PATCH net-next v3 1/3] net: sparx5: add l3 routing registers
+Date: Tue, 17 Nov 2026 14:17:39 +0100
+Subject: [PATCH net-next v3 3/3] net: sparx5: keep router legs in sync with
+ the bridge
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -77,7 +78,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-ID: <20261117-sparx5_l3_routing-v3-1-e680ed79c7dc@microchip.com>
+Message-ID: <20261117-sparx5_l3_routing-v3-3-e680ed79c7dc@microchip.com>
 References: <20261117-sparx5_l3_routing-v3-0-e680ed79c7dc@microchip.com>
 In-Reply-To: <20261117-sparx5_l3_routing-v3-0-e680ed79c7dc@microchip.com>
 To: Horatiu Vultur <horatiu.vultur@microchip.com>,
@@ -93,786 +94,371 @@ CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<jensemil.schulzostergaard@microchip.com>
 X-Mailer: b4 0.15-dev
 
-Add the registers used to configure L3 routing, on both sparx5 and
-lan969x: the common routing and router leg configuration of ANA_L3, its
-per VLAN and per VMID router leg configuration and its ARP table, the
-router leg MAC and per VMID router leg control of REW, the router leg
-MAC of EACL, and the VCAP_S2_MISC_CTRL register of ANA_ACL.
+The conditions for offloading a leg are evaluated when an address is
+added, but the bridge and the upper can change afterwards.
+
+A change that would leave the chip routing differently from the kernel
+destroys the leg before it takes effect: disabling VLAN filtering,
+changing the bridge to a VLAN protocol other than 802.1Q, linking the
+upper to a master, and changing the upper's MAC.
+
+The global leg base MAC follows later bridge MAC changes. When the first
+switch port joins a bridge again, the reconcile runs at once and creates
+the legs for its uppers that kept their addresses while the bridge was
+not offloaded.
+
+While the upper is administratively down the leg is disabled as an
+ingress router leg. The same holds while the bridge itself does not
+carry the leg's vid, or carries it untagged, since the kernel then does
+not deliver that vid to the upper. A bridge vlan delete, or an add that
+makes the vid untagged, disables the leg at once.
+
+A leg with an IPv4 address is kept while the upper is down, so it is
+available again when the interface comes back up. Unless
+keep_addr_on_down is set, link down removes IPv6 addresses, so an IPv6
+only leg goes with its last address.
+
+IPv6 addresses that the kernel adds without calling the validator, such
+as SLAAC and temporary addresses, get their leg from the reconcile, which
+the address notifier queues for them.
 
 Signed-off-by: Jens Emil Schulz Østergaard <jensemil.schulzostergaard@microchip.com>
 ---
- .../microchip/sparx5/lan969x/lan969x_regs.c        |  11 +
- .../ethernet/microchip/sparx5/sparx5_main_regs.h   | 528 +++++++++++++++++++++
- .../net/ethernet/microchip/sparx5/sparx5_regs.c    |  11 +
- .../net/ethernet/microchip/sparx5/sparx5_regs.h    |  11 +
- 4 files changed, 561 insertions(+)
+ .../net/ethernet/microchip/sparx5/sparx5_main.h    |   4 +
+ .../net/ethernet/microchip/sparx5/sparx5_router.c  | 142 ++++++++++++++++++++-
+ .../ethernet/microchip/sparx5/sparx5_switchdev.c   |  25 +++-
+ 3 files changed, 164 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_regs.c b/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_regs.c
-index 5650550d4294..6858772c964f 100644
---- a/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_regs.c
-+++ b/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_regs.c
-@@ -82,12 +82,15 @@ const unsigned int lan969x_gaddr[GADDR_LAST] = {
- 	[GA_ANA_CL_COMMON] = 87040,
- 	[GA_ANA_L2_COMMON] = 561928,
- 	[GA_ANA_L3_COMMON] = 370752,
-+	[GA_ANA_L3_VMID] = 360448,
-+	[GA_ANA_L3_ARP] = 294912,
- 	[GA_ANA_L3_VLAN_ARP_L3MC_STICKY] = 368580,
- 	[GA_ASM_CFG] = 18304,
- 	[GA_ASM_PFC_TIMER_CFG] = 15568,
- 	[GA_ASM_LBK_WM_CFG] = 15596,
- 	[GA_ASM_LBK_MISC_CFG] = 15608,
- 	[GA_ASM_RAM_CTRL] = 15684,
-+	[GA_EACL_COMMON] = 37408,
- 	[GA_EACL_ES2_KEY_SELECT_PROFILE] = 36864,
- 	[GA_EACL_CNT_TBL] = 30720,
- 	[GA_EACL_POL_CFG] = 38400,
-@@ -111,6 +114,7 @@ const unsigned int lan969x_gaddr[GADDR_LAST] = {
- 	[GA_QSYS_RAM_CTRL] = 2204,
- 	[GA_REW_COMMON] = 98304,
- 	[GA_REW_PORT] = 49152,
-+	[GA_REW_VMID] = 96768,
- 	[GA_REW_VOE_PORT_LM_CNT] = 90112,
- 	[GA_REW_RAM_CTRL] = 93992,
- 	[GA_VOP_RAM_CTRL] = 16368,
-@@ -133,6 +137,8 @@ const unsigned int lan969x_gcnt[GCNT_LAST] = {
- 	[GC_ANA_L2_ISDX_LIMIT] = 256,
- 	[GC_ANA_L2_ISDX] = 1024,
- 	[GC_ANA_L3_VLAN] = 4608,
-+	[GC_ANA_L3_VMID] = 127,
-+	[GC_ANA_L3_ARP] = 1024,
- 	[GC_ASM_DEV_STATISTICS] = 30,
- 	[GC_EACL_ES2_KEY_SELECT_PROFILE] = 68,
- 	[GC_EACL_CNT_TBL] = 512,
-@@ -143,6 +149,7 @@ const unsigned int lan969x_gcnt[GCNT_LAST] = {
- 	[GC_PTP_PTP_PINS] = 8,
- 	[GC_PTP_PHASE_DETECTOR_CTRL] = 8,
- 	[GC_REW_PORT] = 35,
-+	[GC_REW_VMID] = 127,
- 	[GC_REW_VOE_PORT_LM_CNT] = 240,
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_main.h b/drivers/net/ethernet/microchip/sparx5/sparx5_main.h
+index 7ce7ad607c34..96e6a2857721 100644
+--- a/drivers/net/ethernet/microchip/sparx5/sparx5_main.h
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_main.h
+@@ -556,6 +556,10 @@ int sparx5_rr_router_init(struct sparx5 *sparx5);
+ void sparx5_rr_router_deinit(struct sparx5 *sparx5);
+ void sparx5_rr_bridge_legs_flush(struct sparx5 *sparx5,
+ 				 const struct net_device *bridge);
++void sparx5_rr_legs_reconcile(struct sparx5 *sparx5);
++void sparx5_rr_legs_reconcile_schedule(struct sparx5 *sparx5);
++void sparx5_rr_bridge_vlan_clear(struct sparx5 *sparx5,
++				 const struct net_device *bridge, u16 vid);
+ 
+ struct sparx5_router {
+ 	struct sparx5 *sparx5;
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c b/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
+index 26aeee17733c..7412db7a6e7b 100644
+--- a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
+@@ -32,6 +32,8 @@ struct sparx5_rr_router_leg {
+ 	struct list_head leg_list_node; /* Router member */
+ 	u16 vmid; /* Internal id */
+ 	u16 vid; /* VLAN id */
++	/* The bridge carries vid as a vlan of its own. */
++	bool vlan_present;
  };
  
-@@ -202,7 +209,10 @@ const unsigned int lan969x_fsize[FSIZE_LAST] = {
- 	[FW_ANA_L2_AUTO_LRN_CFG_AUTO_LRN_ENA] = 30,
- 	[FW_ANA_L2_DLB_CFG_DLB_IDX] = 9,
- 	[FW_ANA_L2_TSN_CFG_TSN_SFID] = 8,
-+	[FW_ANA_L3_L3_UC_ENA_L3_UC_ENA] = 30,
-+	[FW_ANA_L3_VMID_CFG_VMID] = 7,
- 	[FW_ANA_L3_VLAN_MASK_CFG_VLAN_PORT_MASK] = 30,
-+	[FW_ANA_L3_ARP_CFG_0_ARP_VMID] = 7,
- 	[FW_FDMA_CH_CFG_CH_DCB_DB_CNT] = 2,
- 	[FW_GCB_HW_SGPIO_TO_SD_MAP_CFG_SGPIO_TO_SD_SEL] = 7,
- 	[FW_HSCH_SE_CFG_SE_DWRR_CNT] = 5,
-@@ -234,6 +244,7 @@ const unsigned int lan969x_fsize[FSIZE_LAST] = {
- 	[FW_QSYS_ATOP_ATOP] = 11,
- 	[FW_QSYS_ATOP_TOT_CFG_ATOP_TOT] = 11,
- 	[FW_REW_RTAG_ETAG_CTRL_IPE_TBL] = 6,
-+	[FW_REW_RLEG_CTRL_DECAP_IRLEG] = 7,
- 	[FW_XQS_STAT_CFG_STAT_VIEW] = 10,
- 	[FW_XQS_QLIMIT_SHR_TOP_CFG_QLIMIT_SHR_TOP] = 14,
- 	[FW_XQS_QLIMIT_SHR_ATOP_CFG_QLIMIT_SHR_ATOP] = 14,
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_main_regs.h b/drivers/net/ethernet/microchip/sparx5/sparx5_main_regs.h
-index 1bf7dabf622e..db49e1c74cdc 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_main_regs.h
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_main_regs.h
-@@ -722,6 +722,101 @@ extern const struct sparx5_regs *regs;
- #define ANA_ACL_SWAP_IP_CTRL_IP_SWAP_IP4_TTL_ENA_GET(x)\
- 	FIELD_GET(ANA_ACL_SWAP_IP_CTRL_IP_SWAP_IP4_TTL_ENA, x)
+ static void sparx5_rr_schedule_work(struct sparx5 *sparx5,
+@@ -40,9 +42,10 @@ static void sparx5_rr_schedule_work(struct sparx5 *sparx5,
+ 	queue_work(sparx5->router->sparx5_router_owq, work);
+ }
  
-+/* ANA_ACL:COMMON:VCAP_S2_MISC_CTRL */
-+#define ANA_ACL_VCAP_S2_MISC_CTRL                                              \
-+	__REG(TARGET_ANA_ACL, 0, 1, regs->gaddr[GA_ANA_ACL_COMMON], 0, 1, 592, \
-+	      416, 0, 1, 4)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_MAPPED_PORT_ENA GENMASK(27, 24)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_MAPPED_PORT_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_MAPPED_PORT_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_MAPPED_PORT_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_MAPPED_PORT_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_AFFIX_OVERLOAD_ENA GENMASK(23, 20)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_AFFIX_OVERLOAD_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_AFFIX_OVERLOAD_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_AFFIX_OVERLOAD_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_AFFIX_OVERLOAD_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ISDX_OVERLOAD_ENA GENMASK(19, 16)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ISDX_OVERLOAD_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_ISDX_OVERLOAD_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ISDX_OVERLOAD_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_ISDX_OVERLOAD_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_PAG_FORCE_VID_ENA GENMASK(15, 12)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_PAG_FORCE_VID_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_PAG_FORCE_VID_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_PAG_FORCE_VID_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_PAG_FORCE_VID_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_VLAN_PIPELINE_ACT_ENA BIT(11)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_VLAN_PIPELINE_ACT_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_VLAN_PIPELINE_ACT_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_VLAN_PIPELINE_ACT_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_VLAN_PIPELINE_ACT_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_IGR_RLEG_STAT_MODE BIT(10)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_IGR_RLEG_STAT_MODE_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_IGR_RLEG_STAT_MODE, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_IGR_RLEG_STAT_MODE_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_IGR_RLEG_STAT_MODE, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_EGR_RLEG_STAT_MODE BIT(9)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_EGR_RLEG_STAT_MODE_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_EGR_RLEG_STAT_MODE, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_EGR_RLEG_STAT_MODE_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_EGR_RLEG_STAT_MODE, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_FORCE_ES0_VID_ENA BIT(8)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_FORCE_ES0_VID_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_FORCE_ES0_VID_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_FORCE_ES0_VID_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_FORCE_ES0_VID_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_UPDATE_CL_VID_ENA BIT(7)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_UPDATE_CL_VID_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_UPDATE_CL_VID_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_UPDATE_CL_VID_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_UPDATE_CL_VID_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_SEL     GENMASK(6, 5)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_SEL_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_SEL, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_SEL_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_ACL_RT_SEL, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_LBK_IGR_MASK_SEL3_ENA BIT(4)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_LBK_IGR_MASK_SEL3_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_LBK_IGR_MASK_SEL3_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_LBK_IGR_MASK_SEL3_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_LBK_IGR_MASK_SEL3_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_MASQ_IGR_MASK_ENA BIT(3)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_MASQ_IGR_MASK_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_MASQ_IGR_MASK_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_MASQ_IGR_MASK_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_MASQ_IGR_MASK_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_FP_VS2_IGR_MASK_ENA BIT(2)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_FP_VS2_IGR_MASK_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_FP_VS2_IGR_MASK_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_FP_VS2_IGR_MASK_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_FP_VS2_IGR_MASK_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_VD_IGR_MASK_ENA BIT(1)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_VD_IGR_MASK_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_VD_IGR_MASK_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_VD_IGR_MASK_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_VD_IGR_MASK_ENA, x)
-+
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_CPU_IGR_MASK_ENA BIT(0)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_CPU_IGR_MASK_ENA_SET(x)\
-+	FIELD_PREP(ANA_ACL_VCAP_S2_MISC_CTRL_CPU_IGR_MASK_ENA, x)
-+#define ANA_ACL_VCAP_S2_MISC_CTRL_CPU_IGR_MASK_ENA_GET(x)\
-+	FIELD_GET(ANA_ACL_VCAP_S2_MISC_CTRL_CPU_IGR_MASK_ENA, x)
-+
- /* ANA_ACL:COMMON:VCAP_S2_RLEG_STAT */
- #define ANA_ACL_VCAP_S2_RLEG_STAT(r)                                           \
- 	__REG(TARGET_ANA_ACL, 0, 1, regs->gaddr[GA_ANA_ACL_COMMON], 0, 1, 592, \
-@@ -1917,6 +2012,194 @@ extern const struct sparx5_regs *regs;
- #define ANA_L3_VLAN_CTRL_VLAN_ENA_GET(x)\
- 	FIELD_GET(ANA_L3_VLAN_CTRL_VLAN_ENA, x)
+-static void sparx5_rr_legs_reconcile_schedule(struct sparx5 *sparx5)
++void sparx5_rr_legs_reconcile_schedule(struct sparx5 *sparx5)
+ {
+-	sparx5_rr_schedule_work(sparx5, &sparx5->router->legs_work);
++	if (sparx5->router)
++		sparx5_rr_schedule_work(sparx5, &sparx5->router->legs_work);
+ }
  
-+/* ANA_L3:COMMON:L3_UC_ENA */
-+#define ANA_L3_L3_UC_ENA                                                       \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_COMMON], 0, 1, 184, 8,\
-+	      0, 1, 4)
-+
-+/* SPARX5 ONLY */
-+/* ANA_L3:COMMON:L3_UC_ENA1 */
-+#define ANA_L3_L3_UC_ENA1                                                      \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_COMMON], 0, 1, 184,   \
-+	      12, 0, 1, 4)
-+
-+/* SPARX5 ONLY */
-+/* ANA_L3:COMMON:L3_UC_ENA2 */
-+#define ANA_L3_L3_UC_ENA2                                                      \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_COMMON], 0, 1, 184,   \
-+	      16, 0, 1, 4)
-+
-+#define ANA_L3_L3_UC_ENA2_L3_UC_ENA2             BIT(0)
-+#define ANA_L3_L3_UC_ENA2_L3_UC_ENA2_SET(x)\
-+	FIELD_PREP(ANA_L3_L3_UC_ENA2_L3_UC_ENA2, x)
-+#define ANA_L3_L3_UC_ENA2_L3_UC_ENA2_GET(x)\
-+	FIELD_GET(ANA_L3_L3_UC_ENA2_L3_UC_ENA2, x)
-+
-+/* ANA_L3:COMMON:ROUTING_CFG */
-+#define ANA_L3_ROUTING_CFG                                                     \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_COMMON], 0, 1, 184,   \
-+	      104, 0, 1, 4)
-+
-+#define ANA_L3_ROUTING_CFG_L3_ENA_MODE           BIT(30)
-+#define ANA_L3_ROUTING_CFG_L3_ENA_MODE_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_L3_ENA_MODE, x)
-+#define ANA_L3_ROUTING_CFG_L3_ENA_MODE_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_L3_ENA_MODE, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP6_MC_DIP_FWD_ENA    BIT(29)
-+#define ANA_L3_ROUTING_CFG_IP6_MC_DIP_FWD_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP6_MC_DIP_FWD_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP6_MC_DIP_FWD_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP6_MC_DIP_FWD_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP4_MC_DIP_FWD_ENA    BIT(28)
-+#define ANA_L3_ROUTING_CFG_IP4_MC_DIP_FWD_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP4_MC_DIP_FWD_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP4_MC_DIP_FWD_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP4_MC_DIP_FWD_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_RT_SMAC_UPDATE_ENA    BIT(27)
-+#define ANA_L3_ROUTING_CFG_RT_SMAC_UPDATE_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_RT_SMAC_UPDATE_ENA, x)
-+#define ANA_L3_ROUTING_CFG_RT_SMAC_UPDATE_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_RT_SMAC_UPDATE_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_RLEG_NONIP_UC_REDIR_MODE GENMASK(26, 25)
-+#define ANA_L3_ROUTING_CFG_RLEG_NONIP_UC_REDIR_MODE_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_RLEG_NONIP_UC_REDIR_MODE, x)
-+#define ANA_L3_ROUTING_CFG_RLEG_NONIP_UC_REDIR_MODE_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_RLEG_NONIP_UC_REDIR_MODE, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP6_LEN_REDIR         BIT(22)
-+#define ANA_L3_ROUTING_CFG_IP6_LEN_REDIR_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP6_LEN_REDIR, x)
-+#define ANA_L3_ROUTING_CFG_IP6_LEN_REDIR_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP6_LEN_REDIR, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP4_LEN_REDIR         BIT(21)
-+#define ANA_L3_ROUTING_CFG_IP4_LEN_REDIR_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP4_LEN_REDIR, x)
-+#define ANA_L3_ROUTING_CFG_IP4_LEN_REDIR_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP4_LEN_REDIR, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP6_L2_BC_COPY_ENA    BIT(20)
-+#define ANA_L3_ROUTING_CFG_IP6_L2_BC_COPY_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP6_L2_BC_COPY_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP6_L2_BC_COPY_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP6_L2_BC_COPY_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP4_L2_BC_COPY_ENA    BIT(19)
-+#define ANA_L3_ROUTING_CFG_IP4_L2_BC_COPY_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP4_L2_BC_COPY_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP4_L2_BC_COPY_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP4_L2_BC_COPY_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_RLEG_IP6_SIP_RPF_REDIR_ENA BIT(18)
-+#define ANA_L3_ROUTING_CFG_RLEG_IP6_SIP_RPF_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_RLEG_IP6_SIP_RPF_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_RLEG_IP6_SIP_RPF_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_RLEG_IP6_SIP_RPF_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_RLEG_IP4_SIP_RPF_REDIR_ENA BIT(17)
-+#define ANA_L3_ROUTING_CFG_RLEG_IP4_SIP_RPF_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_RLEG_IP4_SIP_RPF_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_RLEG_IP4_SIP_RPF_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_RLEG_IP4_SIP_RPF_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP6_DIP_ADDR_VIOLATION_REDIR_ENA GENMASK(16, 15)
-+#define ANA_L3_ROUTING_CFG_IP6_DIP_ADDR_VIOLATION_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP6_DIP_ADDR_VIOLATION_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP6_DIP_ADDR_VIOLATION_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP6_DIP_ADDR_VIOLATION_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP4_DIP_ADDR_VIOLATION_REDIR_ENA GENMASK(13, 11)
-+#define ANA_L3_ROUTING_CFG_IP4_DIP_ADDR_VIOLATION_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP4_DIP_ADDR_VIOLATION_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP4_DIP_ADDR_VIOLATION_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP4_DIP_ADDR_VIOLATION_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP6_SIP_ADDR_VIOLATION_REDIR_ENA GENMASK(10, 8)
-+#define ANA_L3_ROUTING_CFG_IP6_SIP_ADDR_VIOLATION_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP6_SIP_ADDR_VIOLATION_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP6_SIP_ADDR_VIOLATION_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP6_SIP_ADDR_VIOLATION_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP4_SIP_ADDR_VIOLATION_REDIR_ENA GENMASK(7, 5)
-+#define ANA_L3_ROUTING_CFG_IP4_SIP_ADDR_VIOLATION_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP4_SIP_ADDR_VIOLATION_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP4_SIP_ADDR_VIOLATION_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP4_SIP_ADDR_VIOLATION_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_CPU_RLEG_IP_HDR_FAIL_REDIR_ENA BIT(4)
-+#define ANA_L3_ROUTING_CFG_CPU_RLEG_IP_HDR_FAIL_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_CPU_RLEG_IP_HDR_FAIL_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_CPU_RLEG_IP_HDR_FAIL_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_CPU_RLEG_IP_HDR_FAIL_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_CPU_IP6_HOPBYHOP_REDIR_ENA BIT(3)
-+#define ANA_L3_ROUTING_CFG_CPU_IP6_HOPBYHOP_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_CPU_IP6_HOPBYHOP_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_CPU_IP6_HOPBYHOP_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_CPU_IP6_HOPBYHOP_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_CPU_IP4_OPTIONS_REDIR_ENA BIT(2)
-+#define ANA_L3_ROUTING_CFG_CPU_IP4_OPTIONS_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_CPU_IP4_OPTIONS_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_CPU_IP4_OPTIONS_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_CPU_IP4_OPTIONS_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP6_HC_REDIR_ENA      BIT(1)
-+#define ANA_L3_ROUTING_CFG_IP6_HC_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP6_HC_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP6_HC_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP6_HC_REDIR_ENA, x)
-+
-+#define ANA_L3_ROUTING_CFG_IP4_TTL_REDIR_ENA     BIT(0)
-+#define ANA_L3_ROUTING_CFG_IP4_TTL_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ROUTING_CFG_IP4_TTL_REDIR_ENA, x)
-+#define ANA_L3_ROUTING_CFG_IP4_TTL_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ROUTING_CFG_IP4_TTL_REDIR_ENA, x)
-+
-+/* ANA_L3:COMMON:RLEG_CFG_0 */
-+#define ANA_L3_RLEG_CFG_0                                                      \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_COMMON], 0, 1, 184,   \
-+	      112, 0, 1, 4)
-+
-+#define ANA_L3_RLEG_CFG_0_RLEG_MAC_LSB           GENMASK(31, 8)
-+#define ANA_L3_RLEG_CFG_0_RLEG_MAC_LSB_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CFG_0_RLEG_MAC_LSB, x)
-+#define ANA_L3_RLEG_CFG_0_RLEG_MAC_LSB_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CFG_0_RLEG_MAC_LSB, x)
-+
-+/* ANA_L3:COMMON:RLEG_CFG_1 */
-+#define ANA_L3_RLEG_CFG_1                                                      \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_COMMON], 0, 1, 184,   \
-+	      116, 0, 1, 4)
-+
-+#define ANA_L3_RLEG_CFG_1_RLEG_MAC_TYPE_SEL      GENMASK(25, 24)
-+#define ANA_L3_RLEG_CFG_1_RLEG_MAC_TYPE_SEL_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CFG_1_RLEG_MAC_TYPE_SEL, x)
-+#define ANA_L3_RLEG_CFG_1_RLEG_MAC_TYPE_SEL_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CFG_1_RLEG_MAC_TYPE_SEL, x)
-+
-+#define ANA_L3_RLEG_CFG_1_RLEG_MAC_MSB           GENMASK(23, 0)
-+#define ANA_L3_RLEG_CFG_1_RLEG_MAC_MSB_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CFG_1_RLEG_MAC_MSB, x)
-+#define ANA_L3_RLEG_CFG_1_RLEG_MAC_MSB_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CFG_1_RLEG_MAC_MSB, x)
-+
-+/* ANA_L3:VLAN:VMID_CFG */
-+#define ANA_L3_VMID_CFG(g)                                                     \
-+	__REG(TARGET_ANA_L3, 0, 1, 0, g, regs->gcnt[GC_ANA_L3_VLAN], 64, 0, 0, \
-+	      1, 4)
-+
-+#define ANA_L3_VMID_CFG_VMID\
-+	GENMASK(regs->fsize[FW_ANA_L3_VMID_CFG_VMID] + 0 - 1, 0)
-+#define ANA_L3_VMID_CFG_VMID_SET(x)\
-+	spx5_field_prep(ANA_L3_VMID_CFG_VMID, x)
-+#define ANA_L3_VMID_CFG_VMID_GET(x)\
-+	spx5_field_get(ANA_L3_VMID_CFG_VMID, x)
-+
- /* ANA_L3:VLAN:VLAN_CFG */
- #define ANA_L3_VLAN_CFG(g)                                                     \
- 	__REG(TARGET_ANA_L3, 0, 1, 0, g, regs->gcnt[GC_ANA_L3_VLAN], 64, 8, 0, \
-@@ -1999,6 +2282,171 @@ extern const struct sparx5_regs *regs;
- #define ANA_L3_VLAN_MASK_CFG2_VLAN_PORT_MASK2_GET(x)\
- 	FIELD_GET(ANA_L3_VLAN_MASK_CFG2_VLAN_PORT_MASK2, x)
+ static void sparx5_rr_split_mac(const unsigned char *mac, u32 split,
+@@ -100,6 +103,19 @@ sparx5_rr_leg_find_by_vid(struct sparx5 *sparx5, u16 vid)
+ 	return NULL;
+ }
  
-+/* ANA_L3:VMID:RLEG_CTRL */
-+#define ANA_L3_RLEG_CTRL(g)                                                    \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_VMID], g,             \
-+	      regs->gcnt[GC_ANA_L3_VMID], 64, 0, 0, 1, 4)
++static bool sparx5_rr_bridge_has_legs(struct sparx5 *sparx5,
++				      const struct net_device *bridge)
++{
++	struct sparx5_rr_router_leg *leg;
 +
-+#define ANA_L3_RLEG_CTRL_RLEG_EVID               GENMASK(31, 19)
-+#define ANA_L3_RLEG_CTRL_RLEG_EVID_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_EVID, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_EVID_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_EVID, x)
++	list_for_each_entry(leg, &sparx5->router->leg_list, leg_list_node) {
++		if (vlan_dev_real_dev(leg->dev) == bridge)
++			return true;
++	}
 +
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_STAT_IP_ONLY_ENA BIT(18)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_STAT_IP_ONLY_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP6_STAT_IP_ONLY_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_STAT_IP_ONLY_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP6_STAT_IP_ONLY_ENA, x)
++	return false;
++}
 +
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_STAT_IP_ONLY_ENA BIT(17)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_STAT_IP_ONLY_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP4_STAT_IP_ONLY_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_STAT_IP_ONLY_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP4_STAT_IP_ONLY_ENA, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_SIP_RPF_MODE   GENMASK(15, 14)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_SIP_RPF_MODE_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP6_SIP_RPF_MODE, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_SIP_RPF_MODE_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP6_SIP_RPF_MODE, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_SIP_RPF_MODE   GENMASK(13, 12)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_SIP_RPF_MODE_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP4_SIP_RPF_MODE, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_SIP_RPF_MODE_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP4_SIP_RPF_MODE, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_TTL_DECR_DIS   BIT(9)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_TTL_DECR_DIS_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP6_TTL_DECR_DIS, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_TTL_DECR_DIS_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP6_TTL_DECR_DIS, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_TTL_DECR_DIS   BIT(8)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_TTL_DECR_DIS_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP4_TTL_DECR_DIS, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_TTL_DECR_DIS_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP4_TTL_DECR_DIS, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_UC_ENA         BIT(7)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_UC_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP6_UC_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_UC_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP6_UC_ENA, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_UC_ENA         BIT(6)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_UC_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP4_UC_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_UC_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP4_UC_ENA, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_MC_ENA         BIT(5)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_MC_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP6_MC_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_MC_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP6_MC_ENA, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_MC_ENA         BIT(4)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_MC_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP4_MC_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_MC_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP4_MC_ENA, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_ICMP_REDIR_ENA BIT(3)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_ICMP_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP6_ICMP_REDIR_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_ICMP_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP6_ICMP_REDIR_ENA, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_ICMP_REDIR_ENA BIT(2)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_ICMP_REDIR_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP4_ICMP_REDIR_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_ICMP_REDIR_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP4_ICMP_REDIR_ENA, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_VRID_ENA       BIT(1)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_VRID_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP6_VRID_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP6_VRID_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP6_VRID_ENA, x)
-+
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_VRID_ENA       BIT(0)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_VRID_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_RLEG_CTRL_RLEG_IP4_VRID_ENA, x)
-+#define ANA_L3_RLEG_CTRL_RLEG_IP4_VRID_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_RLEG_CTRL_RLEG_IP4_VRID_ENA, x)
-+
-+/* ANA_L3:VMID:MAX_LEN */
-+#define ANA_L3_MAX_LEN(g)                                                      \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_VMID], g,             \
-+	      regs->gcnt[GC_ANA_L3_VMID], 64, 28, 0, 1, 4)
-+
-+#define ANA_L3_MAX_LEN_IP6_MAX_LEN               GENMASK(31, 16)
-+#define ANA_L3_MAX_LEN_IP6_MAX_LEN_SET(x)\
-+	FIELD_PREP(ANA_L3_MAX_LEN_IP6_MAX_LEN, x)
-+#define ANA_L3_MAX_LEN_IP6_MAX_LEN_GET(x)\
-+	FIELD_GET(ANA_L3_MAX_LEN_IP6_MAX_LEN, x)
-+
-+#define ANA_L3_MAX_LEN_IP4_MAX_LEN               GENMASK(15, 0)
-+#define ANA_L3_MAX_LEN_IP4_MAX_LEN_SET(x)\
-+	FIELD_PREP(ANA_L3_MAX_LEN_IP4_MAX_LEN, x)
-+#define ANA_L3_MAX_LEN_IP4_MAX_LEN_GET(x)\
-+	FIELD_GET(ANA_L3_MAX_LEN_IP4_MAX_LEN, x)
-+
-+/* ANA_L3:ARP:ARP_CFG_0 */
-+#define ANA_L3_ARP_CFG_0(g)                                                    \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_ARP], g,              \
-+	      regs->gcnt[GC_ANA_L3_ARP], 32, 0, 0, 1, 4)
-+
-+#define ANA_L3_ARP_CFG_0_MAC_MSB                 GENMASK(31, 16)
-+#define ANA_L3_ARP_CFG_0_MAC_MSB_SET(x)\
-+	FIELD_PREP(ANA_L3_ARP_CFG_0_MAC_MSB, x)
-+#define ANA_L3_ARP_CFG_0_MAC_MSB_GET(x)\
-+	FIELD_GET(ANA_L3_ARP_CFG_0_MAC_MSB, x)
-+
-+#define ANA_L3_ARP_CFG_0_ARP_VMID\
-+	GENMASK(regs->fsize[FW_ANA_L3_ARP_CFG_0_ARP_VMID] + 7 - 1, 7)
-+#define ANA_L3_ARP_CFG_0_ARP_VMID_SET(x)\
-+	spx5_field_prep(ANA_L3_ARP_CFG_0_ARP_VMID, x)
-+#define ANA_L3_ARP_CFG_0_ARP_VMID_GET(x)\
-+	spx5_field_get(ANA_L3_ARP_CFG_0_ARP_VMID, x)
-+
-+#define ANA_L3_ARP_CFG_0_ZERO_DMAC_CPU_QU        GENMASK(6, 4)
-+#define ANA_L3_ARP_CFG_0_ZERO_DMAC_CPU_QU_SET(x)\
-+	FIELD_PREP(ANA_L3_ARP_CFG_0_ZERO_DMAC_CPU_QU, x)
-+#define ANA_L3_ARP_CFG_0_ZERO_DMAC_CPU_QU_GET(x)\
-+	FIELD_GET(ANA_L3_ARP_CFG_0_ZERO_DMAC_CPU_QU, x)
-+
-+#define ANA_L3_ARP_CFG_0_SIP_RPF_ENA             BIT(3)
-+#define ANA_L3_ARP_CFG_0_SIP_RPF_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ARP_CFG_0_SIP_RPF_ENA, x)
-+#define ANA_L3_ARP_CFG_0_SIP_RPF_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ARP_CFG_0_SIP_RPF_ENA, x)
-+
-+#define ANA_L3_ARP_CFG_0_SECUR_MATCH_VMID_ENA    BIT(2)
-+#define ANA_L3_ARP_CFG_0_SECUR_MATCH_VMID_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ARP_CFG_0_SECUR_MATCH_VMID_ENA, x)
-+#define ANA_L3_ARP_CFG_0_SECUR_MATCH_VMID_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ARP_CFG_0_SECUR_MATCH_VMID_ENA, x)
-+
-+#define ANA_L3_ARP_CFG_0_SECUR_MATCH_MAC_ENA     BIT(1)
-+#define ANA_L3_ARP_CFG_0_SECUR_MATCH_MAC_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ARP_CFG_0_SECUR_MATCH_MAC_ENA, x)
-+#define ANA_L3_ARP_CFG_0_SECUR_MATCH_MAC_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ARP_CFG_0_SECUR_MATCH_MAC_ENA, x)
-+
-+#define ANA_L3_ARP_CFG_0_ARP_ENA                 BIT(0)
-+#define ANA_L3_ARP_CFG_0_ARP_ENA_SET(x)\
-+	FIELD_PREP(ANA_L3_ARP_CFG_0_ARP_ENA, x)
-+#define ANA_L3_ARP_CFG_0_ARP_ENA_GET(x)\
-+	FIELD_GET(ANA_L3_ARP_CFG_0_ARP_ENA, x)
-+
-+/* ANA_L3:ARP:ARP_CFG_1 */
-+#define ANA_L3_ARP_CFG_1(g)                                                    \
-+	__REG(TARGET_ANA_L3, 0, 1, regs->gaddr[GA_ANA_L3_ARP], g,              \
-+	      regs->gcnt[GC_ANA_L3_ARP], 32, 4, 0, 1, 4)
-+
- /* ASM:DEV_STATISTICS:RX_IN_BYTES_CNT */
- #define ASM_RX_IN_BYTES_CNT(g)                                                 \
- 	__REG(TARGET_ASM, 0, 1, 0, g, regs->gcnt[GC_ASM_DEV_STATISTICS], 512,  \
-@@ -4620,6 +5068,34 @@ extern const struct sparx5_regs *regs;
- #define DSM_TAXI_CAL_CFG_CAL_PGM_SEL_GET(x)\
- 	FIELD_GET(DSM_TAXI_CAL_CFG_CAL_PGM_SEL, x)
+ static void sparx5_rr_leg_base_mac_set(struct sparx5 *sparx5,
+ 				       const unsigned char *mac)
+ {
+@@ -154,6 +170,16 @@ static void sparx5_rr_leg_hw_uc_set(struct sparx5 *sparx5,
+ 		 ANA_L3_RLEG_CTRL(leg->vmid));
+ }
  
-+/* EACL:COMMON:RLEG_CFG_0 */
-+#define EACL_RLEG_CFG_0                                                        \
-+	__REG(TARGET_EACL, 0, 1, regs->gaddr[GA_EACL_COMMON], 0, 1, 216, 64, 0,\
-+	      1, 4)
++/* Route ingress on the leg only while the kernel would receive on it: the
++ * upper is up and the bridge carries its vid.
++ */
++static void sparx5_rr_leg_hw_uc_update(struct sparx5 *sparx5,
++				       struct sparx5_rr_router_leg *leg)
++{
++	sparx5_rr_leg_hw_uc_set(sparx5, leg,
++				netif_running(leg->dev) && leg->vlan_present);
++}
 +
-+#define EACL_RLEG_CFG_0_RLEG_MAC_LSB             GENMASK(23, 0)
-+#define EACL_RLEG_CFG_0_RLEG_MAC_LSB_SET(x)\
-+	FIELD_PREP(EACL_RLEG_CFG_0_RLEG_MAC_LSB, x)
-+#define EACL_RLEG_CFG_0_RLEG_MAC_LSB_GET(x)\
-+	FIELD_GET(EACL_RLEG_CFG_0_RLEG_MAC_LSB, x)
-+
-+/* EACL:COMMON:RLEG_CFG_1 */
-+#define EACL_RLEG_CFG_1                                                        \
-+	__REG(TARGET_EACL, 0, 1, regs->gaddr[GA_EACL_COMMON], 0, 1, 216, 68, 0,\
-+	      1, 4)
-+
-+#define EACL_RLEG_CFG_1_RLEG_MAC_TYPE_SEL        GENMASK(25, 24)
-+#define EACL_RLEG_CFG_1_RLEG_MAC_TYPE_SEL_SET(x)\
-+	FIELD_PREP(EACL_RLEG_CFG_1_RLEG_MAC_TYPE_SEL, x)
-+#define EACL_RLEG_CFG_1_RLEG_MAC_TYPE_SEL_GET(x)\
-+	FIELD_GET(EACL_RLEG_CFG_1_RLEG_MAC_TYPE_SEL, x)
-+
-+#define EACL_RLEG_CFG_1_RLEG_MAC_MSB             GENMASK(23, 0)
-+#define EACL_RLEG_CFG_1_RLEG_MAC_MSB_SET(x)\
-+	FIELD_PREP(EACL_RLEG_CFG_1_RLEG_MAC_MSB, x)
-+#define EACL_RLEG_CFG_1_RLEG_MAC_MSB_GET(x)\
-+	FIELD_GET(EACL_RLEG_CFG_1_RLEG_MAC_MSB, x)
-+
- /* EACL:ES2_KEY_SELECT_PROFILE:VCAP_ES2_KEY_SEL */
- #define EACL_VCAP_ES2_KEY_SEL(g, r)                                            \
- 	__REG(TARGET_EACL, 0, 1, regs->gaddr[GA_EACL_ES2_KEY_SELECT_PROFILE],  \
-@@ -7662,6 +8138,34 @@ extern const struct sparx5_regs *regs;
- #define REW_ES0_CTRL_ES0_LU_ENA_GET(x)\
- 	FIELD_GET(REW_ES0_CTRL_ES0_LU_ENA, x)
+ static void sparx5_rr_leg_hw_init(struct sparx5 *sparx5,
+ 				  struct sparx5_rr_router_leg *leg)
+ {
+@@ -172,7 +198,7 @@ static void sparx5_rr_leg_hw_init(struct sparx5 *sparx5,
+ 		 ANA_L3_RLEG_CTRL_RLEG_EVID, sparx5,
+ 		 ANA_L3_RLEG_CTRL(leg->vmid));
  
-+/* REW:COMMON:RLEG_CFG_0 */
-+#define REW_RLEG_CFG_0                                                         \
-+	__REG(TARGET_REW, 0, 1, regs->gaddr[GA_REW_COMMON], 0, 1, 1232, 1156,  \
-+	      0, 1, 4)
-+
-+#define REW_RLEG_CFG_0_RLEG_MAC_LSB              GENMASK(23, 0)
-+#define REW_RLEG_CFG_0_RLEG_MAC_LSB_SET(x)\
-+	FIELD_PREP(REW_RLEG_CFG_0_RLEG_MAC_LSB, x)
-+#define REW_RLEG_CFG_0_RLEG_MAC_LSB_GET(x)\
-+	FIELD_GET(REW_RLEG_CFG_0_RLEG_MAC_LSB, x)
-+
-+/* REW:COMMON:RLEG_CFG_1 */
-+#define REW_RLEG_CFG_1                                                         \
-+	__REG(TARGET_REW, 0, 1, regs->gaddr[GA_REW_COMMON], 0, 1, 1232, 1160,  \
-+	      0, 1, 4)
-+
-+#define REW_RLEG_CFG_1_RLEG_MAC_TYPE_SEL         GENMASK(25, 24)
-+#define REW_RLEG_CFG_1_RLEG_MAC_TYPE_SEL_SET(x)\
-+	FIELD_PREP(REW_RLEG_CFG_1_RLEG_MAC_TYPE_SEL, x)
-+#define REW_RLEG_CFG_1_RLEG_MAC_TYPE_SEL_GET(x)\
-+	FIELD_GET(REW_RLEG_CFG_1_RLEG_MAC_TYPE_SEL, x)
-+
-+#define REW_RLEG_CFG_1_RLEG_MAC_MSB              GENMASK(23, 0)
-+#define REW_RLEG_CFG_1_RLEG_MAC_MSB_SET(x)\
-+	FIELD_PREP(REW_RLEG_CFG_1_RLEG_MAC_MSB, x)
-+#define REW_RLEG_CFG_1_RLEG_MAC_MSB_GET(x)\
-+	FIELD_GET(REW_RLEG_CFG_1_RLEG_MAC_MSB, x)
-+
- /* REW:PORT:PORT_VLAN_CFG */
- #define REW_PORT_VLAN_CFG(g)                                                   \
- 	__REG(TARGET_REW, 0, 1, regs->gaddr[GA_REW_PORT], g,                   \
-@@ -7888,6 +8392,30 @@ extern const struct sparx5_regs *regs;
- #define REW_PTP_GEN_STAMP_FMT_RT_FMT_GET(x)\
- 	FIELD_GET(REW_PTP_GEN_STAMP_FMT_RT_FMT, x)
+-	sparx5_rr_leg_hw_uc_set(sparx5, leg, true);
++	sparx5_rr_leg_hw_uc_update(sparx5, leg);
  
-+/* REW:VMID:RLEG_CTRL */
-+#define REW_RLEG_CTRL(g)                                                       \
-+	__REG(TARGET_REW, 0, 1, regs->gaddr[GA_REW_VMID], g,                   \
-+	      regs->gcnt[GC_REW_VMID], 4, 0, 0, 1, 4)
-+
-+#define REW_RLEG_CTRL_DECAP_IRLEG\
-+	GENMASK(regs->fsize[FW_REW_RLEG_CTRL_DECAP_IRLEG] + 13 - 1, 13)
-+#define REW_RLEG_CTRL_DECAP_IRLEG_SET(x)\
-+	spx5_field_prep(REW_RLEG_CTRL_DECAP_IRLEG, x)
-+#define REW_RLEG_CTRL_DECAP_IRLEG_GET(x)\
-+	spx5_field_get(REW_RLEG_CTRL_DECAP_IRLEG, x)
-+
-+#define REW_RLEG_CTRL_RLEG_VSTAX2_WAS_TAGGED     BIT(12)
-+#define REW_RLEG_CTRL_RLEG_VSTAX2_WAS_TAGGED_SET(x)\
-+	FIELD_PREP(REW_RLEG_CTRL_RLEG_VSTAX2_WAS_TAGGED, x)
-+#define REW_RLEG_CTRL_RLEG_VSTAX2_WAS_TAGGED_GET(x)\
-+	FIELD_GET(REW_RLEG_CTRL_RLEG_VSTAX2_WAS_TAGGED, x)
-+
-+#define REW_RLEG_CTRL_RLEG_EVID                  GENMASK(11, 0)
-+#define REW_RLEG_CTRL_RLEG_EVID_SET(x)\
-+	FIELD_PREP(REW_RLEG_CTRL_RLEG_EVID, x)
-+#define REW_RLEG_CTRL_RLEG_EVID_GET(x)\
-+	FIELD_GET(REW_RLEG_CTRL_RLEG_EVID, x)
-+
- /* REW:RAM_CTRL:RAM_INIT */
- #define REW_RAM_INIT                                                           \
- 	__REG(TARGET_REW, 0, 1, regs->gaddr[GA_REW_RAM_CTRL], 0, 1, 4, 0, 0, 1,\
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_regs.c b/drivers/net/ethernet/microchip/sparx5/sparx5_regs.c
-index ce5f0bbf0e65..3a382603cb01 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_regs.c
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_regs.c
-@@ -82,12 +82,15 @@ const unsigned int sparx5_gaddr[GADDR_LAST] = {
- 	[GA_ANA_CL_COMMON] = 166912,
- 	[GA_ANA_L2_COMMON] = 566024,
- 	[GA_ANA_L3_COMMON] = 493632,
-+	[GA_ANA_L3_VMID] = 458752,
-+	[GA_ANA_L3_ARP] = 327680,
- 	[GA_ANA_L3_VLAN_ARP_L3MC_STICKY] = 491460,
- 	[GA_ASM_CFG] = 33280,
- 	[GA_ASM_PFC_TIMER_CFG] = 34716,
- 	[GA_ASM_LBK_WM_CFG] = 34744,
- 	[GA_ASM_LBK_MISC_CFG] = 34756,
- 	[GA_ASM_RAM_CTRL] = 34832,
-+	[GA_EACL_COMMON] = 118480,
- 	[GA_EACL_ES2_KEY_SELECT_PROFILE] = 149504,
- 	[GA_EACL_CNT_TBL] = 122880,
- 	[GA_EACL_POL_CFG] = 150608,
-@@ -111,6 +114,7 @@ const unsigned int sparx5_gaddr[GADDR_LAST] = {
- 	[GA_QSYS_RAM_CTRL] = 2344,
- 	[GA_REW_COMMON] = 387264,
- 	[GA_REW_PORT] = 360448,
-+	[GA_REW_VMID] = 389120,
- 	[GA_REW_VOE_PORT_LM_CNT] = 393216,
- 	[GA_REW_RAM_CTRL] = 378696,
- 	[GA_VOP_RAM_CTRL] = 279176,
-@@ -133,6 +137,8 @@ const unsigned int sparx5_gcnt[GCNT_LAST] = {
- 	[GC_ANA_L2_ISDX_LIMIT] = 1536,
- 	[GC_ANA_L2_ISDX] = 4096,
- 	[GC_ANA_L3_VLAN] = 5120,
-+	[GC_ANA_L3_VMID] = 511,
-+	[GC_ANA_L3_ARP] = 2048,
- 	[GC_ASM_DEV_STATISTICS] = 65,
- 	[GC_EACL_ES2_KEY_SELECT_PROFILE] = 138,
- 	[GC_EACL_CNT_TBL] = 2048,
-@@ -143,6 +149,7 @@ const unsigned int sparx5_gcnt[GCNT_LAST] = {
- 	[GC_PTP_PTP_PINS] = 5,
- 	[GC_PTP_PHASE_DETECTOR_CTRL] = 5,
- 	[GC_REW_PORT] = 70,
-+	[GC_REW_VMID] = 511,
- 	[GC_REW_VOE_PORT_LM_CNT] = 520,
- };
+ 	/* Configure egress VLAN in rewriter */
+ 	spx5_rmw(REW_RLEG_CTRL_RLEG_EVID_SET(leg->vid), REW_RLEG_CTRL_RLEG_EVID,
+@@ -260,6 +286,15 @@ static void sparx5_rr_router_leg_destroy(struct sparx5_rr_router_leg *leg)
+ 	kfree(leg);
+ }
  
-@@ -202,7 +209,10 @@ const unsigned int sparx5_fsize[FSIZE_LAST] = {
- 	[FW_ANA_L2_AUTO_LRN_CFG_AUTO_LRN_ENA] = 32,
- 	[FW_ANA_L2_DLB_CFG_DLB_IDX] = 13,
- 	[FW_ANA_L2_TSN_CFG_TSN_SFID] = 10,
-+	[FW_ANA_L3_L3_UC_ENA_L3_UC_ENA] = 32,
-+	[FW_ANA_L3_VMID_CFG_VMID] = 9,
- 	[FW_ANA_L3_VLAN_MASK_CFG_VLAN_PORT_MASK] = 32,
-+	[FW_ANA_L3_ARP_CFG_0_ARP_VMID] = 9,
- 	[FW_FDMA_CH_CFG_CH_DCB_DB_CNT] = 4,
- 	[FW_GCB_HW_SGPIO_TO_SD_MAP_CFG_SGPIO_TO_SD_SEL] = 9,
- 	[FW_HSCH_SE_CFG_SE_DWRR_CNT] = 7,
-@@ -234,6 +244,7 @@ const unsigned int sparx5_fsize[FSIZE_LAST] = {
- 	[FW_QSYS_ATOP_ATOP] = 12,
- 	[FW_QSYS_ATOP_TOT_CFG_ATOP_TOT] = 12,
- 	[FW_REW_RTAG_ETAG_CTRL_IPE_TBL] = 7,
-+	[FW_REW_RLEG_CTRL_DECAP_IRLEG] = 9,
- 	[FW_XQS_STAT_CFG_STAT_VIEW] = 13,
- 	[FW_XQS_QLIMIT_SHR_TOP_CFG_QLIMIT_SHR_TOP] = 15,
- 	[FW_XQS_QLIMIT_SHR_ATOP_CFG_QLIMIT_SHR_ATOP] = 15,
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_regs.h b/drivers/net/ethernet/microchip/sparx5/sparx5_regs.h
-index 17abaa5798cb..a9741a3e35de 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_regs.h
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_regs.h
-@@ -91,12 +91,15 @@ enum sparx5_gaddr_enum {
- 	GA_ANA_CL_COMMON,
- 	GA_ANA_L2_COMMON,
- 	GA_ANA_L3_COMMON,
-+	GA_ANA_L3_VMID,
-+	GA_ANA_L3_ARP,
- 	GA_ANA_L3_VLAN_ARP_L3MC_STICKY,
- 	GA_ASM_CFG,
- 	GA_ASM_PFC_TIMER_CFG,
- 	GA_ASM_LBK_WM_CFG,
- 	GA_ASM_LBK_MISC_CFG,
- 	GA_ASM_RAM_CTRL,
-+	GA_EACL_COMMON,
- 	GA_EACL_ES2_KEY_SELECT_PROFILE,
- 	GA_EACL_CNT_TBL,
- 	GA_EACL_POL_CFG,
-@@ -120,6 +123,7 @@ enum sparx5_gaddr_enum {
- 	GA_QSYS_RAM_CTRL,
- 	GA_REW_COMMON,
- 	GA_REW_PORT,
-+	GA_REW_VMID,
- 	GA_REW_VOE_PORT_LM_CNT,
- 	GA_REW_RAM_CTRL,
- 	GA_VOP_RAM_CTRL,
-@@ -143,6 +147,8 @@ enum sparx5_gcnt_enum {
- 	GC_ANA_L2_ISDX_LIMIT,
- 	GC_ANA_L2_ISDX,
- 	GC_ANA_L3_VLAN,
-+	GC_ANA_L3_VMID,
-+	GC_ANA_L3_ARP,
- 	GC_ASM_DEV_STATISTICS,
- 	GC_EACL_ES2_KEY_SELECT_PROFILE,
- 	GC_EACL_CNT_TBL,
-@@ -153,6 +159,7 @@ enum sparx5_gcnt_enum {
- 	GC_PTP_PTP_PINS,
- 	GC_PTP_PHASE_DETECTOR_CTRL,
- 	GC_REW_PORT,
-+	GC_REW_VMID,
- 	GC_REW_VOE_PORT_LM_CNT,
- 	GCNT_LAST,
- };
-@@ -215,7 +222,10 @@ enum sparx5_fsize_enum {
- 	FW_ANA_L2_AUTO_LRN_CFG_AUTO_LRN_ENA,
- 	FW_ANA_L2_DLB_CFG_DLB_IDX,
- 	FW_ANA_L2_TSN_CFG_TSN_SFID,
-+	FW_ANA_L3_L3_UC_ENA_L3_UC_ENA,
-+	FW_ANA_L3_VMID_CFG_VMID,
- 	FW_ANA_L3_VLAN_MASK_CFG_VLAN_PORT_MASK,
-+	FW_ANA_L3_ARP_CFG_0_ARP_VMID,
- 	FW_FDMA_CH_CFG_CH_DCB_DB_CNT,
- 	FW_GCB_HW_SGPIO_TO_SD_MAP_CFG_SGPIO_TO_SD_SEL,
- 	FW_HSCH_SE_CFG_SE_DWRR_CNT,
-@@ -247,6 +257,7 @@ enum sparx5_fsize_enum {
- 	FW_QSYS_ATOP_ATOP,
- 	FW_QSYS_ATOP_TOT_CFG_ATOP_TOT,
- 	FW_REW_RTAG_ETAG_CTRL_IPE_TBL,
-+	FW_REW_RLEG_CTRL_DECAP_IRLEG,
- 	FW_XQS_STAT_CFG_STAT_VIEW,
- 	FW_XQS_QLIMIT_SHR_TOP_CFG_QLIMIT_SHR_TOP,
- 	FW_XQS_QLIMIT_SHR_ATOP_CFG_QLIMIT_SHR_ATOP,
++static bool sparx5_rr_bridge_vlan_present(struct net_device *bridge, u16 vid)
++{
++	struct bridge_vlan_info info;
++
++	return !br_vlan_get_info(bridge, vid, &info) &&
++	       info.flags & BRIDGE_VLAN_INFO_BRENTRY &&
++	       !(info.flags & BRIDGE_VLAN_INFO_UNTAGGED);
++}
++
+ static struct sparx5_rr_router_leg *
+ sparx5_rr_router_leg_create(struct sparx5 *sparx5, struct net_device *dev,
+ 			    u16 vid, struct netlink_ext_ack *extack)
+@@ -285,6 +320,9 @@ sparx5_rr_router_leg_create(struct sparx5 *sparx5, struct net_device *dev,
+ 	/* Global router leg base MAC tracks the bridge MAC. */
+ 	sparx5_rr_leg_base_mac_set(sparx5, vlan_dev_real_dev(dev)->dev_addr);
+ 
++	leg->vlan_present = sparx5_rr_bridge_vlan_present(vlan_dev_real_dev(dev),
++							  vid);
++
+ 	list_add(&leg->leg_list_node, &sparx5->router->leg_list);
+ 	sparx5_rr_leg_hw_init(sparx5, leg);
+ 
+@@ -476,7 +514,7 @@ static int sparx5_rr_inet6addr_event(struct notifier_block *nb,
+ 	struct net_device *dev = if6->idev->dev;
+ 	struct sparx5_router *router;
+ 
+-	if (event != NETDEV_DOWN)
++	if (event != NETDEV_UP && event != NETDEV_DOWN)
+ 		return NOTIFY_DONE;
+ 
+ 	if (!net_eq(dev_net(dev), &init_net))
+@@ -529,6 +567,20 @@ static int sparx5_rr_inetaddr_valid_event(struct notifier_block *nb,
+ 					       ivi->extack);
+ }
+ 
++static void sparx5_rr_leg_withdraw(struct sparx5 *sparx5,
++				   struct net_device *dev)
++{
++	struct sparx5_rr_router_leg *leg;
++
++	mutex_lock(&sparx5->router->lock);
++	leg = sparx5_rr_leg_find_by_dev(sparx5, dev);
++	if (leg) {
++		sparx5_rr_router_leg_destroy(leg);
++		sparx5_rr_legs_reconcile_schedule(sparx5);
++	}
++	mutex_unlock(&sparx5->router->lock);
++}
++
+ /* Called with RTNL. */
+ static int sparx5_rr_netdevice_event(struct notifier_block *nb,
+ 				     unsigned long event, void *ptr)
+@@ -547,6 +599,36 @@ static int sparx5_rr_netdevice_event(struct notifier_block *nb,
+ 	sparx5 = router->sparx5;
+ 
+ 	switch (event) {
++	case NETDEV_PRECHANGEUPPER: {
++		struct netdev_notifier_changeupper_info *upper_info = ptr;
++
++		if (upper_info->linking && upper_info->master)
++			sparx5_rr_leg_withdraw(sparx5, dev);
++		break;
++	}
++	case NETDEV_CHANGEUPPER:
++		if (is_vlan_dev(dev))
++			sparx5_rr_legs_reconcile_schedule(sparx5);
++		break;
++	case NETDEV_UP:
++	case NETDEV_DOWN:
++		mutex_lock(&router->lock);
++		leg = sparx5_rr_leg_find_by_dev(sparx5, dev);
++		if (leg)
++			sparx5_rr_leg_hw_uc_update(sparx5, leg);
++		mutex_unlock(&router->lock);
++		break;
++	case NETDEV_PRE_CHANGEADDR:
++		sparx5_rr_leg_withdraw(sparx5, dev);
++		break;
++	case NETDEV_CHANGEADDR:
++		mutex_lock(&router->lock);
++		if (sparx5_rr_bridge_has_legs(sparx5, dev))
++			sparx5_rr_leg_base_mac_set(sparx5, dev->dev_addr);
++		mutex_unlock(&router->lock);
++		if (is_vlan_dev(dev))
++			sparx5_rr_legs_reconcile_schedule(sparx5);
++		break;
+ 	case NETDEV_UNREGISTER:
+ 		mutex_lock(&router->lock);
+ 		leg = sparx5_rr_leg_find_by_dev(sparx5, dev);
+@@ -568,19 +650,66 @@ static void sparx5_rr_router_legs_flush(struct sparx5 *sparx5)
+ 		sparx5_rr_router_leg_destroy(leg);
+ }
+ 
+-static void sparx5_rr_legs_reconcile(struct sparx5 *sparx5)
++/* Follow a vlan of the bridge itself, the kernel only receives on a vlan
++ * upper while the bridge carries its vid.
++ */
++void sparx5_rr_bridge_vlan_clear(struct sparx5 *sparx5,
++				 const struct net_device *bridge, u16 vid)
++{
++	struct sparx5_rr_router_leg *leg;
++
++	if (!sparx5->router)
++		return;
++
++	mutex_lock(&sparx5->router->lock);
++	list_for_each_entry(leg, &sparx5->router->leg_list, leg_list_node) {
++		if (leg->vid != vid || vlan_dev_real_dev(leg->dev) != bridge)
++			continue;
++		leg->vlan_present = false;
++		sparx5_rr_leg_hw_uc_update(sparx5, leg);
++	}
++	sparx5_rr_legs_reconcile_schedule(sparx5);
++	mutex_unlock(&sparx5->router->lock);
++}
++
++void sparx5_rr_legs_reconcile(struct sparx5 *sparx5)
+ {
+ 	struct sparx5_rr_router_leg *leg, *tmp;
++	struct net_device *bridge, *dev;
+ 	struct sparx5_router *router;
++	struct list_head *iter;
+ 
+ 	ASSERT_RTNL();
+ 
+ 	router = sparx5->router;
++	if (!router)
++		return;
+ 
+ 	mutex_lock(&router->lock);
+ 	list_for_each_entry_safe(leg, tmp, &router->leg_list, leg_list_node) {
+-		if (sparx5_rr_dev_addr_list_empty(leg->dev))
++		if (sparx5_rr_dev_addr_list_empty(leg->dev) ||
++		    !sparx5_rr_dev_real_is_vlan_aware(sparx5, leg->dev)) {
+ 			sparx5_rr_router_leg_destroy(leg);
++			continue;
++		}
++
++		bridge = vlan_dev_real_dev(leg->dev);
++		leg->vlan_present = sparx5_rr_bridge_vlan_present(bridge,
++								  leg->vid);
++		sparx5_rr_leg_hw_uc_update(sparx5, leg);
++	}
++
++	bridge = sparx5->hw_bridge_dev;
++	if (!bitmap_empty(sparx5->bridge_mask, SPX5_PORTS) && bridge) {
++		netdev_for_each_upper_dev_rcu(bridge, dev, iter) {
++			if (!is_vlan_dev(dev) ||
++			    sparx5_rr_dev_addr_list_empty(dev))
++				continue;
++			if (__sparx5_rr_inetaddr_event(sparx5, dev, NETDEV_UP,
++						       NULL) && net_ratelimit())
++				netdev_warn(dev,
++					    "Failed to offload L3 router leg\n");
++		}
+ 	}
+ 	mutex_unlock(&router->lock);
+ }
+@@ -681,6 +810,7 @@ int sparx5_rr_router_init(struct sparx5 *sparx5)
+ 
+ 	INIT_LIST_HEAD(&r->leg_list);
+ 
++	/* The exported helpers use leg_list once sparx5->router is set. */
+ 	sparx5->router = r;
+ 
+ 	r->sparx5_router_owq = alloc_ordered_workqueue("sparx5_router_owq", 0);
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_switchdev.c b/drivers/net/ethernet/microchip/sparx5/sparx5_switchdev.c
+index 46b3351f717f..baa46d21e7ba 100644
+--- a/drivers/net/ethernet/microchip/sparx5/sparx5_switchdev.c
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_switchdev.c
+@@ -152,6 +152,11 @@ static int sparx5_port_attr_set(struct net_device *dev, const void *ctx,
+ 		sparx5_port_attr_ageing_set(port, attr->u.ageing_time);
+ 		break;
+ 	case SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING:
++		/* L3 offload requires a VLAN aware bridge. */
++		if (!attr->u.vlan_filtering)
++			sparx5_rr_bridge_legs_flush(port->sparx5,
++						    attr->orig_dev);
++		sparx5_rr_legs_reconcile_schedule(port->sparx5);
+ 		/* Used PVID 1 when default_pvid is 0, to avoid
+ 		 * collision with non-bridged ports.
+ 		 */
+@@ -160,6 +165,13 @@ static int sparx5_port_attr_set(struct net_device *dev, const void *ctx,
+ 		port->vlan_aware = attr->u.vlan_filtering;
+ 		sparx5_vlan_port_apply(port->sparx5, port);
+ 		break;
++	case SWITCHDEV_ATTR_ID_BRIDGE_VLAN_PROTOCOL:
++		/* A leg is classified by vid alone, whatever the protocol. */
++		if (attr->u.vlan_protocol != ETH_P_8021Q)
++			sparx5_rr_bridge_legs_flush(port->sparx5,
++						    attr->orig_dev);
++		sparx5_rr_legs_reconcile_schedule(port->sparx5);
++		return -EOPNOTSUPP;
+ 	case SWITCHDEV_ATTR_ID_PORT_MROUTER:
+ 		sparx5_port_attr_mrouter_set(port,
+ 					     attr->orig_dev,
+@@ -179,9 +191,11 @@ static int sparx5_port_bridge_join(struct sparx5_port *port,
+ 	struct switchdev_brport_flags flags = {0};
+ 	struct sparx5 *sparx5 = port->sparx5;
+ 	struct net_device *ndev = port->ndev;
++	bool first;
+ 	int err;
+ 
+-	if (bitmap_empty(sparx5->bridge_mask, SPX5_PORTS))
++	first = bitmap_empty(sparx5->bridge_mask, SPX5_PORTS);
++	if (first)
+ 		/* First bridged port */
+ 		sparx5->hw_bridge_dev = bridge;
+ 	else
+@@ -211,6 +225,10 @@ static int sparx5_port_bridge_join(struct sparx5_port *port,
+ 	flags.val = flags.mask;
+ 	sparx5_port_attr_bridge_flags(port, flags);
+ 
++	/* The bridge's legs were flushed when its last port left. */
++	if (first)
++		sparx5_rr_legs_reconcile(sparx5);
++
+ 	return 0;
+ 
+ err_switchdev_offload:
+@@ -448,6 +466,10 @@ static int sparx5_handle_port_vlan_add(struct net_device *dev,
+ 		/* Flood broadcast to CPU */
+ 		sparx5_mact_learn(sparx5, sparx5_get_pgid(sparx5, PGID_BCAST),
+ 				  dev->broadcast, v->vid);
++		if (v->flags & BRIDGE_VLAN_INFO_UNTAGGED)
++			sparx5_rr_bridge_vlan_clear(sparx5, dev, v->vid);
++		else
++			sparx5_rr_legs_reconcile_schedule(sparx5);
+ 		return 0;
+ 	}
+ 
+@@ -683,6 +705,7 @@ static int sparx5_handle_port_vlan_del(struct net_device *dev,
+ 				     switchdev_blocking_nb);
+ 
+ 		sparx5_mact_forget(sparx5, dev->broadcast, vid);
++		sparx5_rr_bridge_vlan_clear(sparx5, dev, vid);
+ 		return 0;
+ 	}
+ 
 
 -- 
 2.52.0
