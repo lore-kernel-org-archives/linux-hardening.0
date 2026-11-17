@@ -1,49 +1,50 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.64.146
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.64.213
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794916432;
-	b=SqmWCpAVL1DTobc9p7ZquFcEph/Wf3awf9nO6a/+8ehB1lXgaUREqNt7nQR2ThDY+gjg
-	 G7TZykcoKIZVvzwrjwbqREb7inLyukIf67527CjG31OLUa2SdyEmB+KgHqUCwqjrDupVn
-	 uGVtlDNrGc2f6r89kGFNzVrmAmEUcUYfa9dKCFGGx9vMrPlEkYPoeAQKppG1oRP55JhML
-	 V9GawPMBFzrGK7pq5UDui9dnFF8YLQPiMcMalx9T+Hg6rc9SwM3UYaeyoJUXZ/yTRllPE
-	 0s1xNCY/gg8ZJfWufJ5WIYjYpOc6aOM1z9Q2a5xdL1OYT7eFBQAd1z2Lx6bsvzIlw8A==
+	t=1794916437;
+	b=EWueU9da7niDMSpeJHXwfcYHU9iMWnacvhhjnM/fir54PwCf6L4hKcABltGPLnIDaWZU
+	 b6meOf89+5cPWIJ+DUVQIq1w+kejySuaduvUR+KRSkXAuop1lXyibF5+oMAJqnW3Cr8Cy
+	 qfo6ubDNM/S46DoNKjj527d3lMR3ZOg5sP2Mq6xHWxFJwPYHzE6nkk2ZPtkyDecIwAUfZ
+	 DboYyJZnZq88Y+MS51V1u1EkPe+/X7/sdlwxZfW5LiypfkbegWZhLRDMNo8mtn/OT4yg2
+	 6kd+jK+MLBo31kTlO6jk6DzHmZEaQOzzAiH5O7YKNIMNbaZKdgeKs5XbJsZ5lqxJ1/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794916432;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794916437;
 	h=DMARC-Filter:Received:X-ICL-RepId:Dkim-Signature:
 	 mail-alias-created-date:Received:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-Authority-Info-Out:X-Proofpoint-GUID:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:X-JNJ;
-	bh=/FnNG8vqcCiU2cyM1KkwsgWOUElHYE9t3oC7rJ9yncA=;
-	b=WvGT3RSi7X+Vm+qxTYpQMsAX8GT/LDU0BWUnkj5YAThwMikJZaxLGj+bUoRPWQhizGgV
-	 zbiLeXQFfQ2l1xPbX3notWiVydvtnfJpVo/x80xD7dhYgl8hHRXoGZsvq0Sd1MP42Ga7/
-	 i1SCY59sUuSn2g/FvobuG5CDxNZqJflkTCsple/SqNeBYjvnSL/TYpFXPnwmQJZNgVlrp
-	 VrJFts7UAR6JKA7s7yuEzVPwnJX5SzBizl9zYnQPHqQHbIp7AvlPo44BEuhECMlodsy76
-	 qyzeaZvP9Ullovoc/0QhxPeYWPsiQobDVIwN+o/C48MeHKCnfRo7663Y+d15gBlRc1g==
+	 Content-Transfer-Encoding:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-Spam-Details-Enc:X-Authority-Info-Out:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID:X-JNJ;
+	bh=1mziqc7iCo3GycX+OIidCj8rWEHHQUb8Q9gKlOt9Y7A=;
+	b=3F8CWnIWxzIwNHymfEf8jJYW7Q2eJeIW8brzDzFSSUCAmGAukJbW8M1m2xFiUUwVXCXP
+	 oK8RlE6ojXBlQ796weLHXzeqM5fl/9t/Dk23kxHkDNHfJE0wr625rFe51PDqHOU0vKOYB
+	 WkEVK4evi7yxnwLvjd2/UkhO12XaI4nssJ3ciZpBVevbvCYe3YL7sCtDr4bkMyPh9fsds
+	 yIn864A5qkVFRYKJUT7KFR3C9TTbFx9m986i4RGLRt8GGn8y0QvRGP+x7bw5CMmwlHUtY
+	 v4+H9sZrmOdbU3GxMeFDI9OEejdXHODWnqcgMFEbcvSbo/PptToao2lM8Ebk1wOwSgQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=verdict.gg;
 	spf=pass smtp.mailfrom=verdict.gg;
-	dkim=pass header.d=verdict.gg header.i=@verdict.gg header.a=rsa-sha256 header.s=sig1 header.b=e4kZUtng;
-	arc=none smtp.remote-ip=57.103.64.146
-Received: from outbound.pv.icloud.com (pv-2002j-snip4-5.eps.apple.com [57.103.64.146])
+	dkim=pass header.d=verdict.gg header.i=@verdict.gg header.a=rsa-sha256 header.s=sig1 header.b=iIZ5uQDk;
+	arc=none smtp.remote-ip=57.103.64.213
+Received: from outbound.pv.icloud.com (pv-2002e-snip4-2.eps.apple.com [57.103.64.213])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78943606A33E
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 11:53:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 78943606A33E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D928606A8A3
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 11:53:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8D928606A8A3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=verdict.gg
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=verdict.gg
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=verdict.gg header.i=@verdict.gg header.a=rsa-sha256 header.s=sig1 header.b=e4kZUtng
+	dkim=pass (2048-bit key, unprotected) header.d=verdict.gg header.i=@verdict.gg header.a=rsa-sha256 header.s=sig1 header.b=iIZ5uQDk
 Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-west-1a-20-percent-1 (Postfix) with ESMTPS id EFED318000BC;
-	Tue, 17 Nov 2026 11:53:46 +0000 (UTC)
-X-ICL-RepId: 01a1e95b-2497-7cf0-9c77-3bf765588f1f
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verdict.gg; s=sig1; t=1794916429; x=1826452429; bh=/FnNG8vqcCiU2cyM1KkwsgWOUElHYE9t3oC7rJ9yncA=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=e4kZUtngllAAcMXLhDcoNaGeEf9XdNSmFy4g3oZgrMykjhU+TddLjximwVCVzGcI3WGJXe5Mgz3Fq+sbqJCiXKq+F7U7PAamBQRQlW2hOHOvnmEEy07WNrnj2f2Shxq9y7Xjo/Y7+bgJ54aeZJ0E6MD1PlYZTqc2/B0YEE+0MT8jeMT1VfNvrqsvQLJT8Q7cD84FOHTokYF9Kkjt323jtKgNzLQBerWoTYbZBxAmTJm79N0oPNjrL7xPCiQpXPY9Uoo9IDonDaSzgQiX7GNJt4fE/mpGg2hFs7dp/S0GOHrQN6wPGAksSepE+DJbdycUXnPl7xn0Numz7+h6i6nU1w==
+	by p00-icloudmta-asmtp-us-west-1a-20-percent-1 (Postfix) with ESMTPS id 716CC1800154;
+	Tue, 17 Nov 2026 11:53:51 +0000 (UTC)
+X-ICL-RepId: 01a1e95b-3618-7ef0-9fd5-8f088efaaaa9
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verdict.gg; s=sig1; t=1794916435; x=1826452435; bh=1mziqc7iCo3GycX+OIidCj8rWEHHQUb8Q9gKlOt9Y7A=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=iIZ5uQDkJt2upTptYptd1IRWEsFO0JCXSheQrzhXCVrvpBThideX3ch2bACvdIHhvLVB/YKOV5SzgqLrb+pLHNpALopZqMNo35tLCDrn71xdzGrtphxCsoETZJuBYio4DyMw0BkmC8dptazKHt9eK7hQQt8YWqhMFK1Gjnq6nnigTSgLgu51oFmllvCo/OyUuZl5dRbJph9woKpKw5ZoimsckdzwI04NAPcJVBuNcG/KYoJNbeh1WAq7InWiSPHiL3i5LMs00ZbOPYuzGntBFrFQVXVVJRV7t1dWV09u/boQbXflmcgrR/wW4Fb+a/hW2I8LsAiAnckvlSAU4M0NXg==
 mail-alias-created-date: 1621344842221
 Received: from DelNac.mail.msk (unknown [17.156.192.29])
-	by p00-icloudmta-asmtp-us-west-1a-20-percent-1 (Postfix) with ESMTPSA id 5A85018001A9;
-	Tue, 17 Nov 2026 11:53:42 +0000 (UTC)
+	by p00-icloudmta-asmtp-us-west-1a-20-percent-1 (Postfix) with ESMTPSA id C3A0C180020F;
+	Tue, 17 Nov 2026 11:53:46 +0000 (UTC)
 From: Vladimir Vdovin <deliran@verdict.gg>
 To: Pablo Neira Ayuso <pablo@netfilter.org>,
 	Florian Westphal <fw@strlen.de>,
@@ -66,9 +67,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Fernando Fernandez Mancera <fmancera@suse.de>,
 	Vladimir Vdovin <deliran@verdict.gg>
-Subject: [PATCH nf-next v1 1/5] netfilter: nf_conncount: bound the gc walk by examined entries
-Date: Tue, 17 Nov 2026 14:53:04 +0300
-Message-ID: <20261117115308.95134-2-deliran@verdict.gg>
+Subject: [PATCH nf-next v1 2/5] netfilter: nf_conncount: check last_gc before taking list_lock in gc_list
+Date: Tue, 17 Nov 2026 14:53:05 +0300
+Message-ID: <20261117115308.95134-3-deliran@verdict.gg>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261117115308.95134-1-deliran@verdict.gg>
 References: <20261117115308.95134-1-deliran@verdict.gg>
@@ -82,159 +83,71 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Authority-Info-Out: v=2.4 cv=f+5FxeyM c=1 sm=1 tr=0 ts=6afc404c
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE3MDA0NyBTYWx0ZWRfXytRjcHo7NObN
+ tIX/HnUIUu4bNf9CbqNjLbaNwZamVCmpyV2d2Dica/V1niSBk+Ey4u0yrJQKp+y2t7XLBDYmUWJ
+ yL5Cu45iORtBBWGVz2zCWxJIatUJG7c=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE3MDA0NyBTYWx0ZWRfXyKylkw1SG2qi
+ 1jWJxbuWzUJOjvBv0MYpk/gtdFADoftxSXepvyfsiQztz2gcdABWINCgVnwqzupeY/RUUUGLmoy
+ rvbJutmnk93yaE8t7/8uWda0yyfeWX8Excs+5eNeuvr1f07LJ8Rgy/wdJuZZYmymrXg5lOktD27
+ +u/w9WxREIO0ic0EXym3O8hQ8NAhiucu57ZQBNq31TNOnNMaPG0nd52tKPm5EtzanhAQj7lQVey
+ YqJ0AOrjV+6sYS00ITXl/uOyDsq0DIpqpK3E/ypJosTqoIbYmEKzBVL2c6qJ31q9k2rNPDtgfVs
+ faonCpBfpd2tVd04IB0K6DHFe7WzlyE4NcuVjL020uG/YUskL0FO5HiquZRD2M=
+X-Authority-Info-Out: v=2.4 cv=CtMq4X4D c=1 sm=1 tr=0 ts=6afc4051
  cx=c_apl:c_pps:t_out a=aW9mcIavGNWWFvFFKOxBSA==:117
  a=aW9mcIavGNWWFvFFKOxBSA==:17 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Y_NIGFiZ6U2ltCn7DMEA:9
-X-Proofpoint-GUID: GtEXESwVMOMfDuoaNcvlo_Mwg5R3km_b
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE3MDA0NyBTYWx0ZWRfX9jbzQhTkSopV
- joqfBH+Iccnu9qLjdSnp7AZeIdrf+EBRr2cNR45fxlRWxJI98g2N/iw8cdiqNDIiOEZd8bPrc0u
- pS97uyh804O+lbBvE/IcSVYavEbOMH8S3mEFy/WRvvN1GLMxt4v4PTmRq6KneHILEw3dAIlPR9D
- dZ9rpWbvJYfWeO7toJBXLn1GRj36Xxu6NEcBt98DGtdZm0f5xhBgS2VOEH2wiQ0667yXtJwUTk4
- IxNv8/7N6ogVT8pzv+0dC1btjBo23ZuYCa5+WzYFEgeA6T3UjtkkJa0W/n07DzwKfEHX4mBw5s1
- 9ZjLe1mp2/MnRtHGtV1/pAgUY5WD3vhj/9LjIydpTlXJEPpsTS80E93U8uYBQI=
-X-Proofpoint-ORIG-GUID: GtEXESwVMOMfDuoaNcvlo_Mwg5R3km_b
-X-JNJ: AAAAAAABlLv8BcWSW2AxynIy4vyDYETJcqdS45kX6kSxavv5zhuw1qMawmYTkRDjKNr50F
- pJHyH2MXj8LiyV1b/x8UxqOgxW9WhlBKR4YGET/plPR5zLuxqCR4LVbE1Ft425oNGtYMK5
- 2PtLX+7n9T/HVZh1qB6nn5+8hGE/hEnJ5o4ww5QnMK+vA2Ix0ulEDIEqIzS5jiBHBtlloc
- cVRhoOj9IaQShFgftrHy36l+44AT7mx7WsjRfxLOJehlSgxKwQhuisAP349M9xfQsI+jFL
- Nlb1bxv5G+9tKgmUREZyyUaZbfrAH1kZYu7+7UZjfmWZW6EWRWO74yvtPZ/VibbfU52wc9
- kIAUwk99XrQM+FM3EVNxsf+UjxEqnkGLH4wYLoUDLaNbfUvSNM/yNSI/dQtWDXWblYRGo/
- uW4MAkUfFizMgZ2wQ3P4B98wJ6ILBovlU/UFMCChMFjJoqhi75hwwc9UuBHhNOrHQZe0Pe
- IU9H6sM5PBHStldDqxr3TtcbNyAx/5QU3GaU6yW9hZJqDzpVhi5uVqib5P7CDmUA8wqhmF
- COQWq4khsBvAnXrQjRUwMAxHWjS9RUIHokoWbq7u9ZDoxmZcl7kme/RjXY3wfyG8vCWgNf
- YI9Z+izoMF+BLT81OIB1wuyj+VtQOuwJWi8BHH51/ZNttRudQ1pMFlNwSaS9bzj3toWk/D
- d47NgU9umL3y6cXuDfoLnlM1S+zB7huuIaY+G8E7o4g/+vvwpvjGwvHkIjxwTpFyxxSVPk
- nPNq384a8fTMHBLFN5gvuo8v2ih1hjeAEYwtBHP7Xg7uSE0+K+3f24hrAz71WNFsMmZp8L
- bB76PDI2s0qAaHhaianBgE4DKTEA5UL98NBBYoszKgnYRS/IdeLdNiWMxfnn5fN8UL3lu7
- fIE0Nm7VqeUn9wqPcKxVD9jFPfRuRvebzm17bz65l9yRQTygSQJI3pIjIUAJtwkNR6tQZX
- M9Uh
+ a=Lz8lNifEoAKVmCoaIBl5:22 a=zaE7u2tvhngv6054aE9a:22 a=fToKmBgkPectip-2dAkA:9
+X-Proofpoint-ORIG-GUID: uhL8h6THw53LEpvX-W2BxRDsTORi6KqC
+X-Proofpoint-GUID: uhL8h6THw53LEpvX-W2BxRDsTORi6KqC
+X-JNJ: AAAAAAABcM0dWPpN9O6S6SJnrOu62RmtpkBYygQC8UKav6WZDbCEid1GDx9kXKHM9M5vVK
+ GEP0fWwuV8rCjDFahqalPj1NOssu1h5jTbqZ8DxNVwyhhk6mvP5Lrl8dygyfcloAZC4lus
+ qDP/tsobOxG8m4KlqCePJNVEwPTnNGs5y10bDGJjDyj+44xb1Fyuqyq3t9qMOsIZjUkeLq
+ A2y12wgZ9LN9Ts6RGGNVC+JOl694JmLaz8xPobul5U5HMlVSZryY1J7njxuExULj9Vhp1w
+ B2u6AxWtyLxEq0+MzjmN6CjeOsgn9047sxQnnp6k1pAiDf2Wl89hcn5/PCE74sqlMLzkO9
+ juC2BnSqWtrl6Pqb0d37JSCY8+AX3AhUl5NfXizWVdG749BZ1d/T2CU6t5JMc8l79+zJEV
+ vX5fQaLMfnP07fmahmqVNNHY7iMURMVXSnpNZGeYjFYWLo7OmuVZ1Wjm2OQDeVjW1cdf/O
+ 2SJHCU7qNj7x9wUj5ia+UqRDcWqKuIUFZ3KXwDQtQAJD3oNDisCTHpg2FsBAYaXbz+YE+r
+ 9K7Pe2FWy+LoZJtbpZLl2r+Jy8WkCL8gUtQ3o9Ci3io3u/+JUy84opRcJ0CG90JMUbUoNk
+ VgUtqFWQa/+GOd7uTcikEDmaMOeQh18JxY6jwPugX1cXMaAeurI6gHHwXWYtuFbHwMX8wP
+ iXX2uw5pW1vV/YOPlRr4Xaq+D1gDkbvEsXwEXt7Y2XOCIYFon7WA3zatID3zQN/g7o57HO
+ MyGUGaYPD1UdAMAEetLgf9kDhOHtUEtIfgeHPxLUw/YcVSj+XetF3ULUzywLAfDsrelBnj
+ GV6bTqXbUo7KWcmtKSbTcMrboDKFcJDlLp/ktVedTisqkdONELNBGXvBytxNY3qJCbRSKg
+ V2mIZmpTRVfOPyTnOkRE9caIx8eJsgWeZSvm5EqgmRUW/xjdRPWxnA/IHA5CgNzlQFf+59
+ gMpn5bU6PWQLEK4V
 
-The gc walk in __nf_conncount_add() and __nf_conncount_gc_list() stops
-once CONNCOUNT_GC_MAX_COLLECT entries have been evicted, but nothing
-bounds how many entries it examines to get there. Live entries and
-entries another cpu is still adding (-EAGAIN) do not count, so on a
-list made of such entries every pass walks the whole list, one
-conntrack hash lookup per entry, under list_lock with BH disabled.
+nf_conncount_gc_list() takes list_lock first and only then finds out,
+in __nf_conncount_gc_list(), that gc already ran during this jiffy and
+there is nothing to do. The trylock still writes to the lock, so every
+caller contends on it even though at most one of them per jiffy does
+any work.
 
-Stop a pass after CONNCOUNT_GC_MAX_SCAN examined entries and rotate
-the list so that the next pass resumes where this one stopped.
-Successive passes still cover the whole list, so stale entries are
-reclaimed as before, spread over several passes instead of one.
+This matters on the count-only path of nf_conncount_count_skb(), where
+the lookup itself is lockless: when many cpus query the same list at
+once, the gc attempt is the only thing they serialize on.
 
-The walk done for an already confirmed conntrack looks for a
-duplicate, which can be anywhere in the list, so it stays unbounded.
+Read last_gc before the trylock and leave early. The check under the
+lock stays, as it is the one that decides when two cpus race for the
+same jiffy.
 
 Signed-off-by: Vladimir Vdovin <deliran@verdict.gg>
 ---
- net/netfilter/nf_conncount.c | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+ net/netfilter/nf_conncount.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/net/netfilter/nf_conncount.c b/net/netfilter/nf_conncount.c
-index eca7a8d330ce..84290e363245 100644
+index 84290e363245..be9e395e25b6 100644
 --- a/net/netfilter/nf_conncount.c
 +++ b/net/netfilter/nf_conncount.c
-@@ -36,6 +36,8 @@
+@@ -382,6 +382,10 @@ bool nf_conncount_gc_list(struct net *net,
+ {
+ 	bool ret;
  
- #define CONNCOUNT_GC_MAX_NODES		8
- #define CONNCOUNT_GC_MAX_COLLECT	64
-+/* Upper bound on the number of entries examined by one gc pass. */
-+#define CONNCOUNT_GC_MAX_SCAN		(CONNCOUNT_GC_MAX_COLLECT * 2)
- #define MAX_KEYLEN			5
- 
- /* we will save the tuples of all connections we care about */
-@@ -98,6 +100,19 @@ static void conn_free(struct nf_conncount_list *list,
- 	kmem_cache_free(conncount_conn_cachep, conn);
- }
- 
-+/* A gc pass that stopped at @conn has examined every entry in front of it.
-+ * Move those behind @conn so that the next pass resumes where this one
-+ * stopped instead of rescanning the same live entries over and over.
-+ */
-+static void gc_resume_at(struct nf_conncount_list *list,
-+			 struct nf_conncount_tuple *conn)
-+{
-+	lockdep_assert_held(&list->list_lock);
++	/* don't bother if we just did GC */
++	if ((u32)jiffies == READ_ONCE(list->last_gc))
++		return false;
 +
-+	if (&conn->node != &list->head)
-+		list_rotate_to_front(&conn->node, &list->head);
-+}
-+
- static const struct nf_conntrack_tuple_hash *
- find_or_evict(struct net *net, struct nf_conncount_list *list,
- 	      struct nf_conncount_tuple *conn)
-@@ -176,8 +191,10 @@ static int __nf_conncount_add(struct net *net,
- 	struct nf_conncount_tuple *conn, *conn_n;
- 	struct nf_conntrack_tuple tuple;
- 	struct nf_conn *ct = NULL;
-+	unsigned int max_scan = CONNCOUNT_GC_MAX_SCAN;
- 	struct nf_conn *found_ct;
- 	unsigned int collect = 0;
-+	unsigned int scanned = 0;
- 	bool refcounted = false;
- 	int err = 0;
- 
-@@ -195,6 +212,10 @@ static int __nf_conncount_add(struct net *net,
- 			goto out_put;
- 		}
- 
-+		/* The entry for this connection can be anywhere in the list,
-+		 * so deduplication needs a full walk.
-+		 */
-+		max_scan = UINT_MAX;
- 		goto check_connections;
- 	}
- 
-@@ -205,8 +226,9 @@ static int __nf_conncount_add(struct net *net,
- check_connections:
- 	/* check the saved connections */
- 	list_for_each_entry_safe(conn, conn_n, &list->head, node) {
--		if (collect > CONNCOUNT_GC_MAX_COLLECT)
-+		if (collect > CONNCOUNT_GC_MAX_COLLECT || scanned >= max_scan)
- 			break;
-+		scanned++;
- 
- 		found = find_or_evict(net, list, conn);
- 		if (IS_ERR(found)) {
-@@ -247,6 +269,7 @@ static int __nf_conncount_add(struct net *net,
- 
- 		nf_ct_put(found_ct);
- 	}
-+	gc_resume_at(list, conn);
- 	list->last_gc = (u32)jiffies;
- 	list->last_gc_count = list->count;
- 
-@@ -310,6 +333,7 @@ static bool __nf_conncount_gc_list(struct net *net,
- 	struct nf_conncount_tuple *conn, *conn_n;
- 	struct nf_conn *found_ct;
- 	unsigned int collected = 0;
-+	unsigned int scanned = 0;
- 	bool ret = false;
- 
- 	/* don't bother if we just did GC */
-@@ -317,6 +341,11 @@ static bool __nf_conncount_gc_list(struct net *net,
+ 	/* don't bother if other cpu is already doing GC */
+ 	if (!spin_trylock_bh(&list->list_lock))
  		return false;
- 
- 	list_for_each_entry_safe(conn, conn_n, &list->head, node) {
-+		if (collected > CONNCOUNT_GC_MAX_COLLECT ||
-+		    scanned >= CONNCOUNT_GC_MAX_SCAN)
-+			break;
-+		scanned++;
-+
- 		found = find_or_evict(net, list, conn);
- 		if (IS_ERR(found)) {
- 			if (PTR_ERR(found) == -ENOENT)
-@@ -337,9 +366,8 @@ static bool __nf_conncount_gc_list(struct net *net,
- 		}
- 
- 		nf_ct_put(found_ct);
--		if (collected > CONNCOUNT_GC_MAX_COLLECT)
--			break;
- 	}
-+	gc_resume_at(list, conn);
- 
- 	if (!list->count)
- 		ret = true;
 -- 
 2.56.0
 
