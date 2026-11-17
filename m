@@ -1,50 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.64.64
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=57.103.64.73
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794916445;
-	b=MBjLI1BEQ0TzvxGdHLTchjDYPnhJxwIOxgeE9vxdmdFMETGhlOWges3PPTh9wLmQPQe4
-	 rGIX6UReQr8FbzH+IrfA8ZNbPhkTaBwn6kOrrxabsYcQ/QDuQfuO9KyZlkCd3ZEsPdeA+
-	 WhG8q7Qaftayp7XyCnt5sqUMUnYlxSTUivdLzTdmra7swYfyRIu/ssIc3fnQ1Gy+JrutS
-	 jn2mv5zHpwRZpUXe+TmzslgBY2yNY6FtBnXuLDB9fUdBfjx72KqBr6/d6uRKJ2euiSu+f
-	 3hfO4XMbYCSH9GlJym5tWHUeGA0J/EpGKEqVUKQpAdAoxkxDkyeMZQffW7emfQkIA/g==
+	t=1794916448;
+	b=sUGg+fy8YvKFyW9o1FFjaQt8rx8J4Ty5+UCgSVFaiSiNG5e4sLXEyVQyZuLgT4CbCjxR
+	 Jf5FYbMTZ8rLom2FxgNgowA7D3KChrqdN8+/VP4qIe3n85tuReaUK7gBuLOk18KRjuc+1
+	 //m5P5YUBToGJX0EQ4X+jjEJ2kTmccCGT8xvLsD8ojlhy/wpxBp0DUFAIJ6coMHYjenBZ
+	 U4dM9eeHO8N/yGq8Y0K51taps5sEE7x+f93CXNVD/IjYC21GCXu6NXZoPuLVBY0VlCLNP
+	 Eh1nQlVhPi9G/Cl9zCZ9UFdRraOrP2WroHo7OJMLALJl6zyIfk4qDGExkjWeHMwslGQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794916445;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794916448;
 	h=DMARC-Filter:Received:X-ICL-RepId:Dkim-Signature:
 	 mail-alias-created-date:Received:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-Proofpoint-GUID:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
-	 X-Authority-Info-Out:X-JNJ;
-	bh=FfaegcM4A57BNyCt6xFHx30B4jeGSW9JyHGcmPfnxrQ=;
-	b=RJhUC++q5GTLZTqIxXyYsbdG9LPItRXp7V6scWTM4yKXT6/KaYxoBMGA1vmNGbu0NQEz
-	 M9Nq/dXxqrl8epcJPxJrCAc+MW+i4g+F9e+rHW9sVHSHOeh2u9kCyMG/7Dq5Qzo5OU/4v
-	 /9fsC9hPIqIL5qthPUbF07rwCaC0tgF/dXrjD9d0/7/rOc4Au5ssI678qcIdqo3jHYi7f
-	 2SJ5wFSXNofuleMZZcYYbyhPt4R5j8Dv1AsHnErGnuBf9CksbXdXWOfjMswyBZV54ffp9
-	 5yirWWKbVq33I7i4sh5j5w7bU3w8TDxFlo+pS9LVbZiD4tXn1iG2frksMyHvCMzbuqg==
+	 Content-Transfer-Encoding:X-Authority-Info-Out:X-Proofpoint-GUID:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:X-JNJ;
+	bh=P0xxoUs9j0P1CWGaxnGX6Bo+wyuRqKebG/yVs9MJHlY=;
+	b=uSLxzpEQjqChWh4ldgV4HKzK6IPV7SZvrMxIavG8gBz8EnrKG7kGmlnzrvXEpANDY84p
+	 IhDnV8mNL6RYRRBqXA4/xM8vwPvshXRXYZSHvfaBWIXrjm+UDbojOqr45a4QNBQNAcqq+
+	 cQnLNRpcAdLVzokWC8NHf1XQkbXHNfNfpYoCwQnaMjXkBNYL6nB9nTMB1gKcG+TEwYlkq
+	 xLgM/yXIL3zR+2FC9oQ/9opOP45UgIIlei1I2mc+69v1RDY8XwOyuGek5OV2lu8xgmXcY
+	 m4QziAvLDCFLjpq0aAHWXJGqgAAZwUDG+ZyZwhO2/7ZEwCevyvBOncAmaOBpuZLHEBA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=verdict.gg;
 	spf=pass smtp.mailfrom=verdict.gg;
-	dkim=pass header.d=verdict.gg header.i=@verdict.gg header.a=rsa-sha256 header.s=sig1 header.b=nvxkrOpf;
-	arc=none smtp.remote-ip=57.103.64.64
-Received: from outbound.pv.icloud.com (pv-2001a-snip4-1.eps.apple.com [57.103.64.64])
+	dkim=pass header.d=verdict.gg header.i=@verdict.gg header.a=rsa-sha256 header.s=sig1 header.b=IO4c26DH;
+	arc=none smtp.remote-ip=57.103.64.73
+Received: from outbound.pv.icloud.com (pv-2001a-snip4-11.eps.apple.com [57.103.64.73])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC08606A88E
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 11:54:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9CC08606A88E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867E160A2606
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 11:54:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 867E160A2606
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=verdict.gg
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=verdict.gg
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=verdict.gg header.i=@verdict.gg header.a=rsa-sha256 header.s=sig1 header.b=nvxkrOpf
+	dkim=pass (2048-bit key, unprotected) header.d=verdict.gg header.i=@verdict.gg header.a=rsa-sha256 header.s=sig1 header.b=IO4c26DH
 Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-west-1a-20-percent-1 (Postfix) with ESMTPS id 5D2E01800590;
-	Tue, 17 Nov 2026 11:54:00 +0000 (UTC)
-X-ICL-RepId: 01a1e95b-58eb-79b4-bc29-3a631571c354
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verdict.gg; s=sig1; t=1794916444; x=1826452444; bh=FfaegcM4A57BNyCt6xFHx30B4jeGSW9JyHGcmPfnxrQ=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=nvxkrOpfdUyekpUfBYIzSQ8RuDRRXWiZAtJ8VxzvfVjyHM4wIvcxbaROfXubZSsoFSDGcFhX1mRk81sUZxQKa+88RTY2FLhBqf9ehY4SryB7MrGklYvybJFsLHAYygKa8Pa3OwsHi5WZTZRbCyj6+36w+JJguz5tni2guNoVkdIjcZfuCiZTq57xIUI7bd2lTERd9XNnVYtwZH6OsiUoFfSH/C6Qco1savVYwPK4UkToBdTp2z/YbrUHXUEOXFeEd2iZRJXtpy3KWTshjwnNCgYkV6cXfp+fq3oGwY6n6ghOCwLJ1iUnI4HP/Iqe6ibB0ve0qIy2cbjTld1yfOWpkQ==
+	by p00-icloudmta-asmtp-us-west-1a-20-percent-1 (Postfix) with ESMTPS id BED0F18003BA;
+	Tue, 17 Nov 2026 11:54:04 +0000 (UTC)
+X-ICL-RepId: 01a1e95b-6a21-7453-8695-5d61e638757a
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verdict.gg; s=sig1; t=1794916448; x=1826452448; bh=P0xxoUs9j0P1CWGaxnGX6Bo+wyuRqKebG/yVs9MJHlY=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=IO4c26DHkOV23xyXp+/IXaiWu6OJcUi03SUgaqpWGwAh5kYv2hf9hR5qWH3kB41sFjnvS+FRpuFnqk6g30BkuLX80j0eDRYDA79ehNZNq8bMoUcx7HzPCPXXzs24pY/GwtP0XEzBPP264jro+6rc7Ww2V36D0411dCOThJ2PPFpzyYld4/zvnkIO7VMcD0KuwPYoJ/dEPcslfbYILwdgDxgyPnoLVnEDIwNf3NFn1rNbQgLL0eJSXiVcAcQUKSIMkSLg4ONMZ4OuYLwttqevRsIi2Ib8G7boXHV7YyYTaIikeajH/1zP1aUixtwUKZFoLrFY5wn1TA1z5ojPwmfwEA==
 mail-alias-created-date: 1621344842221
 Received: from DelNac.mail.msk (unknown [17.156.192.29])
-	by p00-icloudmta-asmtp-us-west-1a-20-percent-1 (Postfix) with ESMTPSA id AD6C2180020F;
-	Tue, 17 Nov 2026 11:53:55 +0000 (UTC)
+	by p00-icloudmta-asmtp-us-west-1a-20-percent-1 (Postfix) with ESMTPSA id 2C9A018000B8;
+	Tue, 17 Nov 2026 11:54:00 +0000 (UTC)
 From: Vladimir Vdovin <deliran@verdict.gg>
 To: Pablo Neira Ayuso <pablo@netfilter.org>,
 	Florian Westphal <fw@strlen.de>,
@@ -67,9 +66,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	linux-hardening@vger.kernel.org,
 	Fernando Fernandez Mancera <fmancera@suse.de>,
 	Vladimir Vdovin <deliran@verdict.gg>
-Subject: [PATCH nf-next v1 4/5] openvswitch: conntrack: do not record connections above the zone limit
-Date: Tue, 17 Nov 2026 14:53:07 +0300
-Message-ID: <20261117115308.95134-5-deliran@verdict.gg>
+Subject: [PATCH nf-next v1 5/5] openvswitch: conntrack: warn about a zone above its limit without a lock
+Date: Tue, 17 Nov 2026 14:53:08 +0300
+Message-ID: <20261117115308.95134-6-deliran@verdict.gg>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261117115308.95134-1-deliran@verdict.gg>
 References: <20261117115308.95134-1-deliran@verdict.gg>
@@ -83,74 +82,106 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: gPGlgoP6yisFV7EkyvXZSTS99B0aG4_r
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE3MDA0NyBTYWx0ZWRfXxxQQuCgtzCLi
- cViC6UHdfAJv/SfkAcCPyROaa1+/zFdpiL+aIv5bxD5U6yL9C19XIXbZGdoQL3dWSKwQ16aYW1i
- R/1whHiiWd310/MC3p98P+hzc3Fb+MNhG/XwBlW2aCHaHC3x6U4JZVi5B1ENDLVjtBsjRRXnh8I
- Dm90Jp+TUlUp+JGxIhgZOVkhVDjhIA4+cBzY6KxYRAulgf3qd2JUIzvP8bKWOvUNHjZ+AlgWnAG
- zdUdbPN2mn6DhmrNFzicXMM/oHviODvtkKkGXoNwoW4o8xmP/PHQVKkHMuiwoWIshRydN02QQji
- 8iX8s8QIMrlptepAhKS0CvjW9TDcVXLmxdHJoaDSdoQkVqWVirG1elj/zM2tDU=
-X-Proofpoint-ORIG-GUID: gPGlgoP6yisFV7EkyvXZSTS99B0aG4_r
-X-Authority-Info-Out: v=2.4 cv=ZMDaWH7b c=1 sm=1 tr=0 ts=6afc4059
+X-Authority-Info-Out: v=2.4 cv=JJQ2csKb c=1 sm=1 tr=0 ts=6afc405e
  cx=c_apl:c_pps:t_out a=aW9mcIavGNWWFvFFKOxBSA==:117
  a=aW9mcIavGNWWFvFFKOxBSA==:17 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=V9PnWA5gqNY3N47hGgUA:9
-X-JNJ: AAAAAAABtHZCfKoXD+vXwrUqDiN4CysCExAL7oe3ijLCb67KmOEACo/yHa5ev614U6Pnq1
- AdLbAaFLjfBWWWws91R0qvGqZOieVlOy+D7fLKq0Yq9XKSyBzTi2VBjfa1qUJuBY7q2CSq
- BQ1UOdViuulUVS3bbBPrwz4xi84o60kfPecStld+nmR5iwANESJs8/RFcduVZB6aFLrl2N
- RF7tL0v72PTw/lVIiit79qVKqPMaUJnkvp4OrGACBpYXLTMUmT5Ofxk1LC1gZSLM5+iaHt
- N1yYlv8Ptn5d+IZs4cGFVaXmvzbqddmwhISz43oJ3jIZMQhgd2LApnWRopj8xEH1fVzsY6
- dTwD7dfeZ0H8L+lD5Mjb9l5XXVLYFEk6PIqY9TFiBcx0TsjGQSQxHXbKAVZp6vE6e1A9Ib
- f6VPxoKwwZvtSFF+qWk+1yTZICuPUv44iGHn0bZEbh8DoOArLYSKSd3SfcL2609DlmNcUo
- utMdvh+shdAGkb4K1DqR0HLQxkqnRJXzffcmCIgp37qwvOj4CxafvxMtDCNptJrqg25TAa
- h4iyjGKIwSUhUOVLXBO0KFSx9+CE7FOFikUcHmpAn3Yu5HPrMf1Ktv1vu6VkvLbFFyPVrj
- 9tgbuyaRvCKZss33/1MNR9gaYckt+AuvF5I2TYUMsIe9XYenCvaN5dAzHJD9mQJ9mS/32W
- WA8+pTITUhPAVhGgJDz5IZp0fO9ChyF9A/+wGIBmJuekTz5hLlyAj0/lyHNl73jUdCvioZ
- RMY5iA3yIiu6pWcI1Q+cTj9MeJ7EYU1jBQgs0duEhB/ekGgCwO69p68UZwmDwIaHheMJv1
- 2w/j3oiWPxhDgrlP1OC7GyHATCXXHyXnGdfM6AbcBpCToubTML70WgTSC5SqO5spWltrFf
- ujcUyBlRr0VLYGeVFSj1eQih8MUwsueYMutYCSHqd6+nQpSWhgoHY2FUot0AEltvQFTWCh
- 6qzRp/CmtgjDRiy+abHzFjZ8
+ a=TH7meFVQux7_ahsOFuAA:9
+X-Proofpoint-GUID: tlQ7z3Qdkz-utRS8JQ5irt5Uum3hKtv6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE3MDA0NyBTYWx0ZWRfX6GilhJKgNguZ
+ igc44ZHids+OApCaZbfrORCvrayqTTvSLL1osoyuHv/XmJGTz/TdnkcmbV0ZAre1KmBpTnVz2PW
+ wKvl07bw8fbnYFFPDbJOKClTj9s0ZTK/3mIeTaWNa1IhcKBwdXEhMYkoxlh7tv/D5PcOzwnT1uc
+ c0gk6THnT67R/0mQ2/cI59Pj67CTzCR9kVbNTWjCmR0F1SAza/NhjgBkziQXe0WV77EvtnTDatk
+ jTLPj1HoH/au2VZEhj1t3AiixUjyTkzQkzgzUTrxPYXVzPfei24Jh7hJmDhfmaA2Nbiqa/afSgg
+ J9QOOMPvteomTO8h1XXnShsQxObGsqcCJFZwp9IQmthcPRPtUQgRpBELZr4fco=
+X-Proofpoint-ORIG-GUID: tlQ7z3Qdkz-utRS8JQ5irt5Uum3hKtv6
+X-JNJ: AAAAAAABChmYh3zpw/IMiSEunOG8IUvP3o7hQ1CNIIe0ZowKDuRcc5rsyM72gkg/lsKI/G
+ 9b+XzCieL1jVha5hyEl7Gjv5PJLPSXmKRXWOELkYGflu8IGY2uuRZCcSdgI4hy/1vXdv1+
+ O2CffnQD91UygBXqQgHzdeGIG+bmOu/yoU1lE8Jf573gpj7T1OwF/GbmE6/3jK1En1PuXA
+ xMk9zmPwtSTtwyCWsJKsGnpacADeomFtqgNEzZArY1tY+rj92boNR00kU5zgLjHu8xZ+b6
+ ODL+871T3Y8QEzEQAXghbKXGmiZ62anKRYJFu4reE76mkDpVcTFssP0TDja4xeA1vR//ix
+ POzYw/knuRrSt+B0wDiJ1dPj1oo8C0boQAlBCJqy1h3RxIy1D8aEm0rUeZYKwgdvmFGEmq
+ LjUPmxLZASWaWtFUyAq3ZYKUwjX/ye3alHX0Nj5S9dlfGdKTWgVpXBRrrwVwEKZ+4EHGK9
+ RV5VYyqd+znA49lsxSPhnwhXqmh4a0vjcCVgH0VcUQi1TdJBER/zjbszZC7C0RKNxkr4Nd
+ 2L+g59yUuRRwzrlRwCxs008On12IojI55MxfCUPfFi6S9aH4Kti1NfDSpZwr4pC7JaqEhP
+ R9jch6W1KK59v6oiAJ76oWuxHveikOgGOk8RY90RruutGjJzjago941/dgU3T0SWG+At+V
+ 2o7faSd70JMURAzh6sowIbjQ+A3DSOyVwAzkUyeKwLlKd/pSsPROTEb+iKcXHVLvGlkGYt
+ bsGOcqlJbppm9t7xQR/zP8/xKaIBBNcmgKZWyI7YXoCPTqaSH8dR6reXN34sKQwSSfnSyf
+ XXD7WoM7AKas3CK0S2Yg0tVR0uPSbEPG/Fw/VrXroZ09v/VIvgd1WSlSEgj4r2GY7G4qDi
+ Vd3NUnjUaKRghcoWj4v2BXMNfhW0FYejemJJ7/yQ==
 
-ovs_ct_check_limit() records every new connection in nf_conncount and
-only then rejects it when the zone is above its limit. Recording means
-taking the zone's list_lock and walking the list for gc, so above the
-limit every rx cpu serializes on that lock for every packet, to add an
-entry that is rejected right after and that gc has to evict later.
+ovs_ct_commit() warns through net_warn_ratelimited() for every new
+connection a zone above its limit refuses. The rate limiting itself
+costs: every call serializes on the shared ratelimit state, and with
+a zone at its limit under flood that is every rx cpu for every packet.
 
-Look the count up first. nf_conncount_count_skb() without an skb does
-a lockless rbtree lookup, runs gc on the list if it has not been done
-during this jiffy, and returns the count without recording anything.
-When the zone has no room for another connection, reject on that
-count and never touch list_lock. Below the limit the connection is
-recorded as before, at the cost of one extra lockless lookup.
+Keep one timestamp per netns instead: a caller that finds it in the
+future returns at once, the first one past it moves it a second ahead
+and warns. Two cpus racing past it in the same jiffy may both warn,
+which is harmless, and nothing is serialized.
 
 Signed-off-by: Vladimir Vdovin <deliran@verdict.gg>
 ---
- net/openvswitch/conntrack.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ net/openvswitch/conntrack.c | 20 +++++++++++++++++---
+ net/openvswitch/datapath.h  |  1 +
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
 diff --git a/net/openvswitch/conntrack.c b/net/openvswitch/conntrack.c
-index d3326edcabf7..e78a62cec051 100644
+index e78a62cec051..ee90af14ac81 100644
 --- a/net/openvswitch/conntrack.c
 +++ b/net/openvswitch/conntrack.c
-@@ -955,6 +955,17 @@ static int ovs_ct_check_limit(struct net *net,
- 	if (per_zone_limit == OVS_CT_LIMIT_UNLIMITED)
- 		return 0;
+@@ -936,6 +936,21 @@ static u32 ct_limit_get(const struct ovs_ct_limit_info *info, u16 zone)
+ 	return info->default_limit;
+ }
  
-+	/* Nothing is recorded while the zone has no room for another
-+	 * connection: a lookup without an skb is lockless and only runs gc
-+	 * on the list, so the count keeps following the real number of
-+	 * connections while new ones are being rejected.
-+	 */
-+	connections = nf_conncount_count_skb(net, NULL, info->family,
-+					     ct_limit_info->data,
-+					     &conncount_key);
-+	if (connections >= per_zone_limit)
-+		return -ENOMEM;
++/* At most one warning per second. net_warn_ratelimited() would do, but it
++ * serializes its callers on the ratelimit state, and when a zone is above
++ * its limit every rx cpu is a caller for every packet.
++ */
++static void ovs_ct_limit_warn(struct net *net, u16 zone)
++{
++	struct ovs_net *ovs_net = net_generic(net, ovs_net_id);
 +
- 	connections = nf_conncount_count_skb(net, skb, info->family,
- 					     ct_limit_info->data,
- 					     &conncount_key);
++	if (time_before(jiffies, READ_ONCE(ovs_net->ct_limit_warn_next)))
++		return;
++
++	WRITE_ONCE(ovs_net->ct_limit_warn_next, jiffies + HZ);
++	pr_warn("openvswitch: zone: %u exceeds conntrack limit\n", zone);
++}
++
+ static int ovs_ct_check_limit(struct net *net,
+ 			      const struct sk_buff *skb,
+ 			      const struct ovs_conntrack_info *info)
+@@ -999,9 +1014,7 @@ static int ovs_ct_commit(struct net *net, struct sw_flow_key *key,
+ 		if (!nf_ct_is_confirmed(ct)) {
+ 			err = ovs_ct_check_limit(net, skb, info);
+ 			if (err) {
+-				net_warn_ratelimited("openvswitch: zone: %u "
+-					"exceeds conntrack limit\n",
+-					info->zone.id);
++				ovs_ct_limit_warn(net, info->zone.id);
+ 				return err;
+ 			}
+ 		}
+@@ -1638,6 +1651,7 @@ static int ovs_ct_limit_init(struct net *net, struct ovs_net *ovs_net)
+ 		pr_err("openvswitch: failed to init nf_conncount %d\n", err);
+ 		return err;
+ 	}
++	ovs_net->ct_limit_warn_next = jiffies;
+ 	rcu_assign_pointer(ovs_net->ct_limit_info, info);
+ 	return 0;
+ }
+diff --git a/net/openvswitch/datapath.h b/net/openvswitch/datapath.h
+index 7a7afaeceee5..9c6a5b5a8939 100644
+--- a/net/openvswitch/datapath.h
++++ b/net/openvswitch/datapath.h
+@@ -177,6 +177,7 @@ struct ovs_net {
+ #if	IS_ENABLED(CONFIG_NETFILTER_CONNCOUNT)
+ 	struct ovs_ct_limit_info __rcu *ct_limit_info;
+ 	struct ovs_ct_limit_info *ct_limit_exit_data;
++	unsigned long ct_limit_warn_next;
+ #endif
+ 	bool xt_label;
+ };
 -- 
 2.56.0
 
