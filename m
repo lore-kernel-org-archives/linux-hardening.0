@@ -1,108 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794936688;
-	b=vSa+kGr82P4ZRg2M/VfwMtJGw5ieDzJbcLMLTwU8L4vi5XLAqPyEDLYWxxcUBrZ+HLbY
-	 t+O2nGvzarRMZBmINsCOIpLafporwYOTe6Elg5oSCqgRhcRe4V8ov7Q7GEVtjjTTneK28
-	 r1ua9GUYMkoK4OPSZr0r1kITQTacsPLVP3vc1Fl6Q3LJlRIDB0WZ0XQ/+YiH+LDWkJ6jN
-	 PzbhyRrAG/dzpTgGeq2hKWZMxBKBYrmJhTZEDP/S8Z7AHG4Obu2EtHvRZ/DVmbDgHihtS
-	 9JCOAiTeHX0baJwZpAd+G7wehu9TW4vSH52eVSzFVO2vqZ6teEGNFV4F21Zz5C8zDPQ==
+	t=1794936866;
+	b=e+0zkh3+fNmFDrZTm3zllhT0CxEW4fH/W56ZcONaL24aUIm1JCtkZzEonVfFiGFhMLHV
+	 zAy+4ra9YyCBuE0dhZmP8eqkOb19PfGSdA9oZ1m5ws2ld3waqXgyDAMv/FeCAtMI+Wosd
+	 YHPg3UftrxstHaD2+RLRJSn3AA1jfRqOd1R43IIbBDV9P3Cc6A/g0qvx0Yb8hiYh0BsJq
+	 hp17gkMTKCAvoAusKhy+MdP7QHaKFJua91xGoEm5utvXWHeiz7THSgSF0gBWbX2PQwxRN
+	 VowfW99nptWf9lDmGG73DIszgkikFDqjJvA/f+cAAyuDw/QltG5k2JudvKNwEMWQW9A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794936688;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794936866;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=5cYrB3RoftR9+ZJufZSneOA3rg0mkVzJBEfjOWndr34=;
-	b=mk8lSsNGt7KAL0mbtwL8VmYrk5vttYzYWnZAyh8A79HQn/ZSdjKfzD3a8BdeQ1KAHxp1
-	 Lzo89OCD6CwSfRta41VEFjm61vTIKQtXQHIXcM5tOQisZS/t0lOTMeiMt83X3BXgBIPrv
-	 XUnwF8wpEClnpLsRPFUxXAx9LHxOoTgNK+nVnlzZxTjdYtZBHGNmZY5BLGRDEBT+ywYDg
-	 MXRf8ActcoXdP+eapORzR+M8x2CzohY3tuykEcdwgvLnnVbI7RAFAhcSw3poJ0TSw+00A
-	 6urDBCL113ihkL/DGWZC0MHHyHx8td0AbL9gMLKQ6Q/VWsuJdD4Th9EcmNZUPUH3JNA==
+	 Mime-Version:Content-Transfer-Encoding:Content-Type:Date:Message-Id:
+	 From:To:Cc:Subject:X-Mailer:References:In-Reply-To;
+	bh=pVxrfzsOkS8R/UI8C/+4VKwcJVz62eWVYB27WSqCUBg=;
+	b=fbcQQjwgM2bD80ha0JAyptvcTsN3PdMzhmTDDNFITRsDmaPx1BZZKNwpumtSx34Y+xaj
+	 nDZSkkWPTQaKmOFoQHgx/VJwe6s+bdFUb6dsSmMUP1aP4ejeZZdHvtKn6FLQnZ6Q8qnb9
+	 vcUMjzaEG/2T83K6GkPA8iJD7HayI3COaT6bfImOTOd6UjbPRsr4f09L47O1UnpfvMWiO
+	 M8+YQvu7zRy8hOwzQLItaJr+5jRwtMAde2bpj+hLi7MNzkW6TA3BpbTeWYACqDNP3hoWX
+	 Cc54337QsTP0Zit5sayDkurX1SazZ+W5n/yMIBFNUVki+v4fVdVvx/g0N/xmQGOsp6g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linaro.org;
-	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=e5Zp8ZAy;
-	arc=none smtp.remote-ip=209.85.216.46
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Qr7XUmH6;
+	arc=none smtp.remote-ip=209.85.222.179
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3D0606A330
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 17:31:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BF3D0606A330
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11AB606A32C
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 17:34:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E11AB606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=e5Zp8ZAy
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3b09a83d12aso4575986a91.2
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 09:31:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Qr7XUmH6
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-93f20b304c0so7825485a.3
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Nov 2026 09:34:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1794936687; x=1795541487; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=5cYrB3RoftR9+ZJufZSneOA3rg0mkVzJBEfjOWndr34=;
-        b=e5Zp8ZAytFfxgwA1egXYSHtX5reKgsfJ9Yi8rapzShoui1aILV3DByS1TjDMzLv4QD
-         lT7xAdJd6OhO49AB3wpGJtkRzAPmLynrM3S4a8HP4r9BLCLH57FaKmub6533kkM2+vmC
-         pip7BlKK6g+frBZnTZqQQa+C+9epFUILmgZNm/jyrumxPDWTO/qYUOa/u/AJX3haQPA9
-         paLLOHVRuff7J5v5d34M8QcyelhR9WuHvUr4blvROXbt1pavYmgWo9VVxHVJ5qJGpDiC
-         7I7qMLYH0yPJtZD80GBIJ18hbthI/+QCFL7Lf9cJWiVFnhWPUCb7Udaan5GrzXrInloi
-         Y24g==
+        d=gmail.com; s=20260707; t=1794936865; x=1795541665; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=pVxrfzsOkS8R/UI8C/+4VKwcJVz62eWVYB27WSqCUBg=;
+        b=Qr7XUmH6x8Z/p+YdIWnygkcR2vJShVVMJrdU+zOSWrQ5wZaG+5mXDdsYZq65eGEmao
+         GbogGEj7gmhDe8I4Z+d96Ba1grCDYluAq46K//hsHcPLjbJFms1SK49YtUu9bYz4ztL1
+         2aLBCzCaH+mLAPUwOZo7NeXwmkN5fTptUBwZOC2lidhDC5vNgHQvrE6P0S6BzU59GzYz
+         wntVAsKhzTUN1HacDyMFsTDKVnj2KPZ089oSwjY6RjBC41n3xl+mG73QzADcyWYpaOql
+         Bh8BciCQXirQzs2Vb8oXVdH5maxlxBPZ1W0p1mDAw1xcQHt3FtrEDW0xM4raCPKzaTcj
+         Z06g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794936687; x=1795541487;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20260707; t=1794936865; x=1795541665;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=5cYrB3RoftR9+ZJufZSneOA3rg0mkVzJBEfjOWndr34=;
-        b=J0uoF2As+7/8fS88NLUvsoygkZYksSFxv8cgQPCXZKsHdH4Vz67ofztyjmx9e/n98R
-         GXoZIBYsAj6bzUCn2yftn1xiu28RoOZG90v5J/LYXt7xgczhu+uGDXlIzuTm8C6LjGLT
-         a3ajzWD2ynVzTi22xGr57+68nWggZcMjFE+ZFYx/IgB6MgdXYtjAqIk52eJctrBvsl/t
-         Ygnn6r1Db2+LJIJxC9tJ6heDkN1En4J5CD1sP1bxBuuI8nuOjb3XyBOa7sFgO4mDQB8N
-         WqmpahYVxFNVKvfdKzvZ/1xzswAkVyjHmkXKtvyG6NsVm7XIcGxhoZAIm6yLIJVWv2wa
-         5LPQ==
-X-Forwarded-Encrypted: i=1; AL+hErGXDr0u3tVtZWaRnIBOspZc96yByRw2siU/c7g5TzSzHEeR4BWd+b3xPo3DwImZqxmRfVBvHKNcElrW2GfVdaM=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+V1HBezCDv+2FdAMbiSEZRaZmXt15LiVuopL/MNEEesOh7a1N6
-	OWqcqQBpQ1gSofpaNEQlgfWslhYwyfMWSk9Jn+hqgbaP37iK8mf72i8DkcB+XFEk6aE=
-X-Gm-Gg: AZFdTZdymtq+FdF7h7ilEE/yje8ki/zR6N6wmaXQm91ImxiaUX5RsxqSIlTZZUjHAfb
-	fAta/Mrpvq1s/mdUGDNjUjpAnEenc3JTFgFpzv3360aULoEDuiZa35jY1l7BomT3eY4bzoab+zw
-	A3MGWMyEZSfkSDhgswUwkgQBeY/kURj5dSUwnnU40YUD30prC9YyP/8++18hKl37nxNkRgjt9Q0
-	khUBi5dTorQ8KUFsNM/q5X+aEji62NY868tJ6AIcowxGUQpL2G0m0L0py4x8CjLCc0pD0zj1Qq7
-	FEhxNPrciK3E+D0ywFWpA4Gwa8T4omIks8N7Z/voXTEv54meOZXSQdhSNt1z7Up0f7ZLxZSOz+6
-	VW8RTM8X5XOuILC2OV2Ms3cqLPOGfBMldkIY2jiq8fezSLpQfaLq5jGcMDsmzgHc1fAtb1EHqVd
-	+Xe/Om8ZzZfz2HrlEwBdz7pASkcm4YhVv2E+R5mq9Wh7zHG3cOMkb75F8QyFAL4eAtnkOOp18KD
-	tLZlF9SD6pcN4EL9WcEZ1NvB0ujp331lsVVJf3UYc/KdiWxG4gUMQk65ueocjjS6zPNkuFLLbDw
-	ZbmsgdeIPHwGrEgRmCJrvlK9J7tl0O2SzTofRyZAWotBWTLWqvk7+A==
-X-Received: by 2002:a17:90b:3892:b0:3ac:9f24:44be with SMTP id 98e67ed59e1d1-3b3d07becb8mr123850a91.29.1794936686801;
-        Tue, 17 Nov 2026 09:31:26 -0800 (PST)
-Received: from p14s ([2604:3d09:148c:c800:61f7:13ac:b599:b52c])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3abeaf532sm4936578a91.14.2026.11.17.09.31.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2026 09:31:26 -0800 (PST)
-Date: Tue, 17 Nov 2026 11:31:23 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Francesco Valla <francesco@valla.it>
-Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>, Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v2 08/11] Documentation: remoteproc: expand virtio
- support section
-Message-ID: <avyPa5rSx9rhf9yO@p14s>
-References: <20261102-remoteproc_virtio_map-v2-0-26b300e01c62@valla.it>
- <20261102-remoteproc_virtio_map-v2-8-26b300e01c62@valla.it>
+        bh=pVxrfzsOkS8R/UI8C/+4VKwcJVz62eWVYB27WSqCUBg=;
+        b=PJxduSRVEvGi4u5CeCCmSwmKfkzuJin+JLrN8YQjk+QF1MTEGhBF3tRKghQ2TvGHAc
+         1DevF9u9UyXSvqJ8DZquBdJsBZ9jBcVtuEnBkCvzrRzKgL6SL+6dyRy9onRnOJemXd90
+         MGGeIZt91A4Qwj9nAy03arSFxJTiWJJC6VgNRa5lVPSug7Sd3CugZvKF69AgxtG5e7Kk
+         lXYIroLPFSBmlupf0N3qrKf1B4qJ/hHWhQyqsLWvpt7G7nSj2Oi9/VHUDJF3WZ1zH+Vu
+         IAr7H8uNi+MREanXI/xydClvBgPTofrgyUDtEs3APimFYRr9Uz9J0gQKSmhYVApToEbW
+         UbDQ==
+X-Forwarded-Encrypted: i=1; AL+hErE1xOkXJ3nLP7an5ta8y0JLJgIeXo/W/rZg0vGEwW/tlVOR1TKN6IuHWpzaHky6ZEs4GbojfexwlSvPJWhnBXc=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/3OLVQCChJ4+P+YfuLuegUBS1S+zXtNY+Zg6LQRP99oKBc4w02
+	KPSyL1iESvw3RDy1r8V7WYEBx6sRNFxGRokqxt81DMVI0KB9dzc/sd9f
+X-Gm-Gg: AYBFou1TQnB0S7g+3UrNVAPsHC7M2RTGJodmXg+BT0AebUweC7NlKi1NXlbnY2wf3HC
+	nGSE8JONRD3UWDSESdxYAlJ00bD7ZqBeBSIx4banFloW/D4Kq1iALp1d6UqD7VbmmUOrfLmXZLy
+	wiBC2ykFjfOBASu8BLAgDtiCeHmzs4rPnOVx40qE/zaxk6h52AeI7wgYxiqR/25i936rchumq5V
+	4MHyFrhogLXX+IGML4D2fDgN7zsQRusOPkiGAE38ooQPDhkC//XkMqquKQ33O4ozM8Kv5WYSuTy
+	kO+LGEpSwQExDGS85OPTzzSeH7Qh08tiRXQfpB7hm0/UoSx5T04bmun9//75BkF8TszUKKk2VJI
+	LRpPF+bD5vdcgwAJ1GfUbrOQvFmhdjPwKEDZcIfNioQeplsLbzWY726iQGCGlIHzGJyTwzPwBqb
+	fk6Rl+/PGBfPP4fIh5U5rPBMZa796SagnkdNHHO2JUrXjlf/cuGAHDt9E7cNKeqnoH9QTslpDb3
+	OhSTD/ZlBLIbWttIF4L5amZ+fy/fUk5E/YBQvW9kdzphRiF/lft1JVn+2X8WIrnLd4olPXARHHD
+	cy0i/cd4YatGCvTvlw==
+X-Received: by 2002:a05:620a:1714:b0:949:73f3:83c with SMTP id af79cd13be357-94999572b95mr73032085a.21.1794936864878;
+        Tue, 17 Nov 2026 09:34:24 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::7:5db8])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9494c831b7dsm1139318185a.20.2026.11.17.09.34.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Nov 2026 09:34:24 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -111,141 +87,71 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261102-remoteproc_virtio_map-v2-8-26b300e01c62@valla.it>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 17 Nov 2026 12:34:23 -0500
+Message-Id: <DMXO0JIUCNYA.1940X1XHRX6SF@gmail.com>
+From: "Daniel Zahka" <daniel.zahka@gmail.com>
+To: "Stan Iliev" <stani@google.com>, "Tony Nguyen"
+ <anthony.l.nguyen@intel.com>, "Przemek Kitszel"
+ <przemyslaw.kitszel@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@kernel.org>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ <intel-wired-lan@lists.osuosl.org>
+Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "David
+ Decotigny" <decot@google.com>, "Madhu Chittim" <madhu.chittim@intel.com>,
+ "Emil Tantilov" <emil.s.tantilov@intel.com>, "Sridhar Samudrala"
+ <sridhar.samudrala@intel.com>, "Brian Vazquez" <brianvv@google.com>, "Li
+ Li" <boolli@google.com>, "Alexander Lobakin"
+ <aleksander.lobakin@intel.com>, "Daniel Zahka" <daniel.zahka@gmail.com>,
+ "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>, "Kees Cook"
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH iwl-next 04/15] idpf: psp: add psp offload
+ initialization
+X-Mailer: aerc 0.21.0-threadmapfix
+References: <20261117145522.1910636-1-stani@google.com>
+ <20261117145522.1910636-5-stani@google.com>
+In-Reply-To: <20261117145522.1910636-5-stani@google.com>
 
-On Mon, Nov 02, 2026 at 12:26:45AM +0100, Francesco Valla wrote:
-> Expand the section on virtio support over remoteproc with details on
-> memory allocation setup and constraints.
-> 
-> Signed-off-by: Francesco Valla <francesco@valla.it>
+On Tue Nov 17, 2026 at 9:55 AM EST, Stan Iliev wrote:
+> Add the PSP offload initialization:
+> - Introduce VIRTCHNL2_CAP_CRYPTO (bit 26 of the other capabilities)
+>   and request it in VIRTCHNL2_OP_GET_CAPS if CONFIG_INET_PSP is
+>   enabled.
+> - Add struct idpf_adapter_psp to struct idpf_adapter.
+> - Implement idpf_psp_init(), called from idpf_vc_core_init() on each
+>   core init, including after a hard reset, and idpf_psp_free(), called
+>   from idpf_remove(). PSP is enabled if VIRTCHNL2_CAP_CRYPTO was
+>   granted, see idpf_is_psp_ena(). A failure disables PSP instead of
+>   failing the core init.
+> - Add the PSP device ops with idpf_psp_set_config(), and
+>   idpf_psp_register()/idpf_psp_unregister(). The PSP device is
+>   registered in a later patch, once all mandatory PSP device ops and the
+>   datapath are implemented.
+> - Build idpf_psp.c only with CONFIG_INET_PSP, with static inline stubs
+>   in idpf_psp.h otherwise.
+>
+> Signed-off-by: Stan Iliev <stani@google.com>
 > ---
->  Documentation/staging/remoteproc.rst | 99 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 98 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/staging/remoteproc.rst b/Documentation/staging/remoteproc.rst
-> index c117b060e76c..4b42ed582fb4 100644
-> --- a/Documentation/staging/remoteproc.rst
-> +++ b/Documentation/staging/remoteproc.rst
-> @@ -354,7 +354,104 @@ it supports. A firmware may support any number of virtio devices, and
->  of any type (a single remote processor can also easily support several
->  rpmsg virtio devices this way, if desired).
->  
-> +Memory carveouts
-> +----------------
 > +
-> +For a virtio device at position ``X`` among the RSC_VDEV resources declared by
-> +the resource table, the remoteproc framework will search for memory carveouts
-> +for:
-> +
-> +* all the vrings the specific virtio device requires (as ``vdevXvringY``);
-> +* the memory area to allocate communication buffers from (as ``vdevXbuffer``).
-> +
-> +The carveouts can be provided by the remote processor itself as RSC_CARVEOUT
-> +resources inside the resource table and/or supplied by the remoteproc driver
-> +and will be indexed by their name.
+> +/**
+> + * idpf_psp_set_config - Set the PSP device configuration
+> + * @psd: PSP device
+> + * @conf: new configuration
+> + * @extack: netlink extended ack for error reporting
+> + *
+> + * The configuration is applied by the PSP core.
+> + *
+> + * Return: 0.
+> + */
+> +static int idpf_psp_set_config(struct psp_dev *psd, struct psp_dev_confi=
+g *conf,
+> +			       struct netlink_ext_ack *extack)
+> +{
+> +	return 0;
 
-The remoteproce driver doesn't supply carvouts, it gets them from the device
-tree.
-
-> +If a carveout with the same name is provided through both means, the one
-> +supplied by the remote processor should be marked as dynamically allocable,
-> +i.e., with the device address set to ``FW_RSC_ADDR_ANY`` (-1).
-> +
-
-Right, as per my comment in the previous patch, carveouts at the virtio level
-should be distinct from those declared at the remote processor level.  Hopefully
-this will keep the remoteproc core simple and make it easy to differentiate
-between code paths that handle legacy and authentic rproc-virtio devices.
-
-> +If a ``vdevXvringY`` carveout is not provided, the remoteproc framework will
-> +try to allocate it using dma_alloc_coherent(), which will resort to allocate it
-> +either from the first ``restricted-dma-pool`` region associated to the virtio
-> +device's parent (i.e., the remote processor device), if present, or the global
-> +DMA pool.
-> +
-> +.. WARNING::
-> +
-> +    This fallback mechanism can result in a vring being allocated using a
-> +    ``vdevXbuffer`` area meant for another vdev, so a particular care shall be
-> +    adopted when defining the carveouts. In particular, ``restricted-dma-pool``
-> +    memory regions should be specified inside the virtio device's devicetree
-> +    nodes and not attached to the parent remote processor.
-> +
-> +If a ``vdevXbuffer`` carveout is not provided, the remoteproc framework will
-> +use the memory region declared by the virtio device's own devicetree node (see
-> +Documentation/devicetree/bindings/remoteproc/remoteproc-virtio.yaml), if any.
-> +Otherwise, it will try to replace it with the first memory region (of any type)
-> +associated to the virtio device's parent (i.e., the remote processor device);
-> +if no such memory region is present, it will be replaced with the global DMA
-> +pool.
-> +
-> +If both a ``vdevXbuffer`` carveout and a memory region inside the virtio
-> +device's devicetree node are present, the carveout takes precedence and the
-> +memory region is ignored.
-> +
-> +Declaring the memory region inside the virtio device's devicetree node is the
-> +preferred method for ``restricted-dma-pool`` regions, since listing them among
-> +the memory regions of the remote processor device would make the first of them
-> +the (forced) bounce buffer for the remote processor device itself as well.
-> +
-> +Buffer allocation
-> +-----------------
-> +
-> +There are different kinds of buffer allocation scenarios:
-> +
-> +* if the remote processor can access the whole DMA memory area of the host, no
-> +  special arrangement needs to be performed, since either the drivers (in case
-> +  of rpmsg and rproc-serial devices) or the DMA APIs (in case of any other
-> +  virtio device type) will take care of any necessary translation;
-> +* if the remote processor has limited access to the host memory space, for
-> +  example because of a different addressing scheme or for memory isolation
-> +  constraints, the memory reserved for buffer allocation shall be selected
-> +  depending on the virtio device type:
-> +
-> +  - for rpmsg and rproc-serial devices, a simple contiguous memory region
-> +    (e.g.: one declared in devicetree as ``shared-dma-pool``) is sufficient and
-> +    should be preferred, since it allows zero-copy message transmission between
-> +    the host and the remote processor;
-> +  - for any other virtio device type, a swiotlb-enabled memory region (e.g.:
-> +    one declared in devicetree as ``restricted-dma-pool``) is required, because
-> +    such devices need bounce buffering to work correctly.
-> +
-> +For virtio devices other than rpmsg and rproc-serial, the remoteproc framework
-> +offers the ``VIRTIO_F_ACCESS_PLATFORM`` feature, so the buffer addresses written
-> +in the vring descriptors are the DMA addresses returned by the DMA APIs for the
-> +virtio device. The virtio device inherits the DMA mask and the DMA range map
-> +(i.e., the translation described by the ``dma-ranges`` devicetree property) of
-> +the remote processor device, and is never attached to an IOMMU: these DMA
-> +addresses are therefore host physical addresses, translated only through the
-> +DMA range map. The remote processor must be able to access the buffers at
-> +these addresses.
-> +
-> +.. WARNING::
-> +
-> +    For remote processors that access memory through an IOMMU managed by the
-> +    remoteproc framework (i.e., with ``has_iommu`` set), the IOMMU domain only
-> +    contains the mappings created for the RSC_CARVEOUT and RSC_DEVMEM entries
-> +    of the resource table, at the device addresses they specify; no mapping is
-> +    created for the buffers of the virtio devices. Such remote processors are
-> +    supported only if all the memory that can hold virtio buffers (e.g., the
-> +    ``restricted-dma-pool`` region associated to the virtio device) is mapped
-> +    with its device address equal to its physical address, for example through
-> +    an RSC_DEVMEM entry. The same constraint applies to any fixed address
-> +    translation applied by the remote processor that is not described by the
-> +    DMA range map of the remote processor device.
-> +
-> +Allocation of virtio devices
-> +----------------------------
-> +
->  Of course, RSC_VDEV resource entries are only good enough for static
->  allocation of virtio devices. Dynamic allocations will also be made possible
->  using the rpmsg bus (similar to how we already do dynamic allocations of
-> -rpmsg channels; read more about it in rpmsg.txt).
-> +rpmsg channels; read more about it in Documentation/staging/rpmsg.rst).
-> 
-> -- 
-> 2.56.0
-> 
+this is supposed to enable/disable PSP Rx on the device. It should
+probably either do something or have a TODO or comment explaining that
+the HW doesn't support disabling parsing packets as PSP.
