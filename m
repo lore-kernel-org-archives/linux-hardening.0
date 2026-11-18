@@ -1,49 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795005860;
-	b=X3jkP8f0js3/0iYc1Itpx1FDTenz/IuGcHvRZ7d2TLtOan4fV3g2vL2vi4yKvEJOsLtE
-	 ie6DSE3EsUpqSNZgcqkX64Me4BIGzG21D1wm70aX5jSc1qstAvOC1PhXAAqzfjYYRnxL/
-	 lz9Qoppjt5EeEqECUaPsnM6xICEUU8Tx4ANHk9V8c1KG7q8eJkFEO9YDGVdiVY45bS9kx
-	 nDu6SriwKpIZEEsAwNMwYYuuQQdJkdCEJvO/dJzrXEkDd3zUELXX9z3GWv7cJZuZiXs7X
-	 kl4dqeEPcQs6Uf3Ki2tKj1M3k/955xBUSdRJeF4NI+HD4BQ30rCozEQR2zMAkjz95qg==
+	t=1795005856;
+	b=Nr5Lb7LRvbUn9cooLRZ8e9shBU3sd65olPCPTKAmK9KOTk2vy9fMIDqh6Tu5q1Wt1LlJ
+	 ifbiQx36errGeD3/3pHh0dLUtmbQFNJlYifgNLBMMOl7xmjBUHZ4YvS6oWLeF9SSdmL5N
+	 d/21caQeecLAGsrAgcoJXNQcVZRoi06gSyfO+Asquixc7EjnSuajdhH/ar23FD0aqb6J9
+	 3VekFuaFpC4TpuEAEWPuDIJyy2I4XrbWhDkGqodiQSdaF4PiDA3IQjJtsjHORkuJHD5HQ
+	 aWFQi29NtTMd0mgHU6SQGFc9efp+mc7dvRwD5Amt0X5wCnfZtsrISza2TIb7qR4etFQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795005860;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795005856;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=qpk9XEKvThcdJFjlz5LJdwaViNuq34svrbiJiMCaHM8=;
-	b=SXb6FrsjNcxzJKoXJM6y318nhlFO2SvA1gKPgTeIr0/ibiWyWzzzx66f6Hhw/AAzV4gc
-	 y8inOd6PAps2vTp1NzTrZz9Jzf+pftOEQTFbkHxF5JW8tWUECALyC/p/HWmEGRVb+QgrM
-	 PneBdSZHvDG+BYAgzmC4+6iNpGhU21tQYHE+oQQewh+CdVLLyLtad/Op/trBEOm+8Bja6
-	 lHEIDFQf+YUSu77KBAUazkuBM17W6aSM6l+m2s5VfpjzeBvAmXnr8T9L9YnHlR7TgDkhK
-	 EiPdczwMbRm/iVTXaUWo820CYOqfDOiHnWdBwn62TgaHde8or0BPsQtjLaaDFkaujfQ==
+	bh=DY05hwkfLcKckCQ+HSL4XaVG4JORuAqMF+yJ88Y9BpQ=;
+	b=x2lx+MVHg61q5i7tR30zeFjECcP9KgdvdCeuYfA9V0vovCYDbyqZb9g/UZmS3S7zaVCJ
+	 w4BXMgDdHgfD/2wbZuEcADOekL6FY09OHIgAidydh2sM11p6N85FsXlP/2ChiVBhwHV+c
+	 /OpApc+19s0ccs7nMiucYVuuLPwDGLxfZgis5p3rZVwIelU7oCcyupvAViH/gsRIMt1iO
+	 cW0OmYgsR2UvguRp9H0HPbOpZA5ZvrmVJOpZ8Xg9KZFHYLCn5HHNG4ElLXaLVRzq3ulf8
+	 PYkrjB6R6beEXasblam8y1SkOtLZZ7+YEadVM9ub5/Z7A6j7noCr7C2qL+oFKq7mdXg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XhQ0yZfa;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DPBgNA9K;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773FD60A260A;
-	Wed, 18 Nov 2026 12:44:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6805606A32C;
+	Wed, 18 Nov 2026 12:44:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XhQ0yZfa
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CB421F000C5;
-	Wed, 18 Nov 2026 12:44:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DPBgNA9K
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC231F000C8;
+	Wed, 18 Nov 2026 12:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795005860;
-	bh=qpk9XEKvThcdJFjlz5LJdwaViNuq34svrbiJiMCaHM8=;
+	s=k20260515; t=1795005855;
+	bh=DY05hwkfLcKckCQ+HSL4XaVG4JORuAqMF+yJ88Y9BpQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=XhQ0yZfayEkTaaREtrrwfOhDzFl4Q2dtDAWZkQ1Kg7saH3O933WJF1v6mhf44FGQW
-	 +y79KLdfH7VSLaigXRF1kfedTuUCnifTJ/lh/+RLh25wfRW2xeQlfry8UF8DZi9yjx
-	 WUrfeI8AHbWl9BQe2IqO8gQB+xq4F8tuuS3Bwy45nvWmBAdGgdFux8wOIaq0+pIcM3
-	 01ZhfkYxFO5MHBWAZ6CTumrN4Fq1RoOroJESWJS2lXu4uYV0LnxjxluLhF5Z5KzuXJ
-	 MG0v/3aOJKJq6PhcQEUsxow0s7P+OcrrXSphgaA0xwsy64Gi0oz3kPpsqkm/jRMk6e
-	 /TxsnLshkOA8g==
+	b=DPBgNA9KAABQ22erkRT2ULLPZqYDan5UAdbpalumHVijpm4RDyvdBWrggTSvJc6l3
+	 2UXHsLIWD7maTPq+i3+iiA3WRJZgCaY1iVscm4iqp+ThETMvhyKqubCJoZb00OIzkK
+	 Lm8l18XWrFK+b8mZ64qa/Uo21AvWnzkapf5pkEwGrxDMhF17QX2x62xuLS7dAohigi
+	 11uOrWxNQJsQQveF/1jBn2YtrLjDkzelGnNZNbhra9mvAsPobmMthx/jcqkezW2tRi
+	 gkspnnka8RVhd87nyvlir7TtTR384GXPa1lh7qM4L3EGHHfstguhMKNAZsCIQI3xd9
+	 p1bhSWQtb4S8Q==
 From: Mattijs Korpershoek <mkorpershoek@kernel.org>
-Date: Wed, 18 Nov 2026 13:43:53 +0100
-Subject: [PATCH RFC v2 09/16] Documentation: media: Add Media controller
- event documentation
+Date: Wed, 18 Nov 2026 13:43:51 +0100
+Subject: [PATCH RFC v2 07/16] media: mc: Add MEDIA_IOC_DQEVENT
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -55,7 +54,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261118-v4l2-sensor-detect-v2-9-1bb1a445b556@kernel.org>
+Message-Id: <20261118-v4l2-sensor-detect-v2-7-1bb1a445b556@kernel.org>
 References: <20261118-v4l2-sensor-detect-v2-0-1bb1a445b556@kernel.org>
 In-Reply-To: <20261118-v4l2-sensor-detect-v2-0-1bb1a445b556@kernel.org>
 To: Hans Verkuil <hverkuil+cisco@kernel.org>, 
@@ -73,293 +72,689 @@ Cc: Mattijs Korpershoek <mkorpershoek@kernel.org>,
  Maxime Ripard <mripard@kernel.org>, linux-media@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8696;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=19624;
  i=mkorpershoek@kernel.org; h=from:subject:message-id;
- bh=iMwjFIn5BNb1TUM8DMHBaUPcXBV1TZU5XSRmhTpL5Ds=;
- b=owEBbQGS/pANAwAKARkNHbRmThk1AcsmYgBq/Z2LJg6tfB+S2JCW9A6QyThinnlVoRxi6Oht8
- +Jqjc/6q3WJATMEAAEKAB0WIQQu6UKnth9qvlMTrQAZDR20Zk4ZNQUCav2diwAKCRAZDR20Zk4Z
- NYwLB/9SgAyTu/4OOfU9ymrRJCbvlw4shRmus0qIms5wLWsy9IYQTRgxKkojmUpOX/H/d+9FfiN
- EzmnvVEKl2y1GCiDkTfV3x15NOghPvnaEriF7WNKNysMmfyrJlj5Dhgvk5saDJg8nTIw2MVEd3J
- 4wnE0b1Per0eeyINDMcmqqqKLNZCXHJTn7wcHTebj4FXcacPpMzaJNYKiOz3WLdR6rfYAoyCH2t
- EVvWZSS2t6LmJNMhczcGHTE2zJ+BwRDz2q6tVlfi8fVtF/JZoSdHAEjPRakBHJ4VK0xhGQphOvI
- qpqQPvjENz1q0JJh+L+Bvw6OhFaX0e0VJW4WU5EeQITskyqi
+ bh=jH/Lvt7jHSsYNBQBXJehNrFEfYnEGTzGK6Zj8kfN7Y0=;
+ b=owEBbQGS/pANAwAKARkNHbRmThk1AcsmYgBq/Z2Lg9243TaRE1Bn31ARJCGIOYtViEJ0NRM4U
+ J0lQww3RySJATMEAAEKAB0WIQQu6UKnth9qvlMTrQAZDR20Zk4ZNQUCav2diwAKCRAZDR20Zk4Z
+ Na10CACwMCVdZYAyWvGa3PACbMnQ3/MZP36grHPKTARVpp4iYwqeEq4iDAk7Ywe3rbZhNYVHRyb
+ Vq1PEkp1ja6kz1+kFSDbTso7E/Alcaq3ay0ApZIA/2NKW0fS8cQLkyl1+bgGYk7+8tx84UrcQCV
+ GzCmVBArUPttOYbpslX91akHWYuMMo1+r8ocGJpSX7pne+Nxskg2/lOrWrBID9iF2ITrbLWsbKi
+ 0iAQ5cteFF/fYXvjOeoQWnhIWA6hKFMLkRaAq9IEt8dxKlzMk3vdnX9CrDdgo+i+7fhaI+HKRBm
+ YHXwKN52YeEXjX13Qtm3lXOx+fZm32Q0ipd7nbVFjLI2M4fx
 X-Developer-Key: i=mkorpershoek@kernel.org; a=openpgp;
  fpr=8234A35B45C0D26B31C1A2DA570338B018144F28
 
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-Add documentation for the Media controller event IOCTLs as well as an
-event, MEDIA_EVENT_ENTITY_REGISTRATION.
+Events on a media device tell about completion of requests. Blocking and
+non-blocking operation is supported.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@kernel.org>
 ---
- .../userspace-api/media/mediactl/media-funcs.rst   |   2 +
- .../media/mediactl/media-ioc-dqevent.rst           | 125 +++++++++++++++++++++
- .../media/mediactl/media-ioc-subscribe-event.rst   | 112 ++++++++++++++++++
- 3 files changed, 239 insertions(+)
+ drivers/media/Kconfig        |   1 +
+ drivers/media/mc/Makefile    |   2 +-
+ drivers/media/mc/mc-device.c |  48 +++++++++
+ drivers/media/mc/mc-event.c  | 244 +++++++++++++++++++++++++++++++++++++++++++
+ include/media/media-device.h |   3 +
+ include/media/media-event.h  | 181 ++++++++++++++++++++++++++++++++
+ include/media/media-fh.h     |   5 +
+ include/uapi/linux/media.h   |  24 +++++
+ 8 files changed, 507 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/userspace-api/media/mediactl/media-funcs.rst b/Documentation/userspace-api/media/mediactl/media-funcs.rst
-index e896296812c1..a9ce38b7144f 100644
---- a/Documentation/userspace-api/media/mediactl/media-funcs.rst
-+++ b/Documentation/userspace-api/media/mediactl/media-funcs.rst
-@@ -19,6 +19,8 @@ Function Reference
-     media-ioc-enum-links
-     media-ioc-setup-link
-     media-ioc-request-alloc
-+    media-ioc-subscribe-event
-+    media-ioc-dqevent
-     request-func-close
-     request-func-ioctl
-     request-func-poll
-diff --git a/Documentation/userspace-api/media/mediactl/media-ioc-dqevent.rst b/Documentation/userspace-api/media/mediactl/media-ioc-dqevent.rst
+diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+index 70e090757492..5ffcd5565bd1 100644
+--- a/drivers/media/Kconfig
++++ b/drivers/media/Kconfig
+@@ -12,6 +12,7 @@ source "drivers/media/cec/Kconfig"
+ menuconfig MEDIA_SUPPORT
+ 	tristate "Multimedia support"
+ 	depends on HAS_IOMEM
++	select MEDIA_EVENT
+ 	help
+ 	  If you want to use media devices, including Webcams, Video grabber
+ 	  devices and/or TV devices, V4L2 codecs, etc, enable this option
+diff --git a/drivers/media/mc/Makefile b/drivers/media/mc/Makefile
+index d501327436a5..1e6540161e0c 100644
+--- a/drivers/media/mc/Makefile
++++ b/drivers/media/mc/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ mc-objs	:= mc-device.o mc-devnode.o mc-entity.o \
+-	   mc-request.o
++	   mc-request.o mc-event.o
+ 
+ ifneq ($(CONFIG_USB),)
+ 	mc-objs += mc-dev-allocator.o
+diff --git a/drivers/media/mc/mc-device.c b/drivers/media/mc/mc-device.c
+index b64322efd99e..98d323c89b41 100644
+--- a/drivers/media/mc/mc-device.c
++++ b/drivers/media/mc/mc-device.c
+@@ -8,6 +8,7 @@
+  *	     Sakari Ailus <sakari.ailus@iki.fi>
+  */
+ 
++#include <linux/atomic.h>
+ #include <linux/compat.h>
+ #include <linux/export.h>
+ #include <linux/idr.h>
+@@ -22,6 +23,7 @@
+ #include <media/media-device.h>
+ #include <media/media-devnode.h>
+ #include <media/media-entity.h>
++#include <media/media-event.h>
+ #include <media/media-fh.h>
+ #include <media/media-request.h>
+ 
+@@ -57,6 +59,14 @@ static int media_device_open(struct file *filp)
+ 		return -ENOMEM;
+ 
+ 	filp->private_data = &fh->fh;
++	init_waitqueue_head(&fh->wait);
++
++	fh->ev_fh.lock = &mdev->fh_list_lock;
++	fh->ev_fh.wait = &fh->wait;
++	INIT_LIST_HEAD(&fh->ev_fh.available);
++	INIT_LIST_HEAD(&fh->ev_fh.subscribed);
++	fh->ev_fh.sequence = -1;
++	mutex_init(&fh->ev_fh.subscribe_lock);
+ 
+ 	spin_lock_irqsave(&mdev->fh_list_lock, flags);
+ 	list_add(&fh->mdev_list, &mdev->fh_list);
+@@ -78,6 +88,9 @@ static int media_device_close(struct file *filp)
+ 		spin_unlock_irqrestore(&mdev->fh_list_lock, flags);
+ 	}
+ 
++	media_event_unsubscribe_all(fh);
++	mutex_destroy(&fh->ev_fh.subscribe_lock);
++
+ 	kfree(fh);
+ 
+ 	return 0;
+@@ -414,6 +427,25 @@ static long media_device_request_alloc(struct media_device *mdev,
+ 	return media_request_alloc(mdev, alloc_fd);
+ }
+ 
++static long media_device_event_dequeue(struct media_device *mdev,
++				       struct file *file, void *arg)
++{
++	return media_event_dequeue(media_device_fh(file), arg,
++				   file->f_flags & O_NONBLOCK);
++}
++
++static long media_device_event_subscribe(struct media_device *mdev,
++					 struct file *file, void *arg)
++{
++	return media_event_subscribe(media_device_fh(file), arg, 0, NULL);
++}
++
++static long media_device_event_unsubscribe(struct media_device *mdev,
++					   struct file *file, void *arg)
++{
++	return media_event_unsubscribe(media_device_fh(file), arg);
++}
++
+ static long copy_arg_from_user(void *karg, void __user *uarg, unsigned int cmd)
+ {
+ 	if ((_IOC_DIR(cmd) & _IOC_WRITE) &&
+@@ -464,6 +496,9 @@ static const struct media_ioctl_info ioctl_info[] = {
+ 	MEDIA_IOC(SETUP_LINK, media_device_setup_link, MEDIA_IOC_FL_GRAPH_MUTEX),
+ 	MEDIA_IOC(G_TOPOLOGY, media_device_get_topology, MEDIA_IOC_FL_GRAPH_MUTEX),
+ 	MEDIA_IOC(REQUEST_ALLOC, media_device_request_alloc, 0),
++	MEDIA_IOC(DQEVENT, media_device_event_dequeue, 0),
++	MEDIA_IOC(SUBSCRIBE_EVENT, media_device_event_subscribe, 0),
++	MEDIA_IOC(UNSUBSCRIBE_EVENT, media_device_event_unsubscribe, 0),
+ };
+ 
+ static long media_device_ioctl(struct file *filp, unsigned int cmd,
+@@ -574,9 +609,22 @@ static long media_device_compat_ioctl(struct file *filp, unsigned int cmd,
+ }
+ #endif /* CONFIG_COMPAT */
+ 
++static __poll_t media_device_poll(struct file *filp,
++				  struct poll_table_struct *wait)
++{
++	struct media_device_fh *fh = media_device_fh(filp);
++
++	poll_wait(filp, &fh->wait, wait);
++	if (media_event_pending(fh))
++		return EPOLLPRI;
++
++	return 0;
++}
++
+ static const struct media_file_operations media_device_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = media_device_open,
++	.poll = media_device_poll,
+ 	.ioctl = media_device_ioctl,
+ #ifdef CONFIG_COMPAT
+ 	.compat_ioctl = media_device_compat_ioctl,
+diff --git a/drivers/media/mc/mc-event.c b/drivers/media/mc/mc-event.c
 new file mode 100644
-index 000000000000..f7a2cd2675f5
+index 000000000000..2369e40e522f
 --- /dev/null
-+++ b/Documentation/userspace-api/media/mediactl/media-ioc-dqevent.rst
-@@ -0,0 +1,125 @@
-+.. SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later
-+.. c:namespace:: MC
++++ b/drivers/media/mc/mc-event.c
+@@ -0,0 +1,244 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Media events
++ *
++ * Copyright (C) 2019, 2026 Intel Corporation
++ * Copyright (C) 2009--2010 Nokia Corporation.
++ *
++ * Based on V4L2 events in drivers/media/v4l2-core/v4l2-events.c .
++ */
 +
-+.. _media_ioc_dqevent:
++#include <linux/mm.h>
++#include <linux/sched.h>
++#include <linux/slab.h>
++#include <linux/export.h>
 +
-+***********************
-+ioctl MEDIA_IOC_DQEVENT
-+***********************
++#include <media/media-device.h>
++#include <media/media-event.h>
++#include <media/media-fh.h>
 +
-+Name
-+====
++static int media_evop_add(struct media_subscribed_evbase *mse, unsigned int elems)
++{
++	struct media_subscribed_event *sev = to_media_subscribed_event(mse);
 +
-+MEDIA_IOC_DQEVENT - Dequeue a Media controller event
++	if (sev->ops && sev->ops->add)
++		return sev->ops->add(sev, elems);
 +
++	return 0;
++}
 +
-+Synopsis
-+========
++static void media_evop_del(struct media_subscribed_evbase *mse)
++{
++	struct media_subscribed_event *sev = to_media_subscribed_event(mse);
 +
-+.. c:function:: int ioctl( int fd, MEDIA_IOC_DQEVENT, struct media_event *argp )
-+    :name: MEDIA_IOC_DQEVENT
++	if (sev->ops && sev->ops->del)
++		sev->ops->del(sev);
++}
 +
++static bool media_evop_replace(struct media_subscribed_evbase *mse,
++			       struct media_evbase *old,
++			       const void *new)
++{
++	struct media_subscribed_event *sev = to_media_subscribed_event(mse);
 +
-+Arguments
-+=========
++	if (sev->ops && sev->ops->replace) {
++		sev->ops->replace(&to_media_kevent(old)->event, new);
++		return true;
++	}
 +
-+``fd``
-+    File descriptor returned by :ref:`open() <media-func-open>`.
++	return false;
++}
 +
-+``argp``
-+    Pointer to struct :c:type:`media_event`.
++static void media_evop_merge(struct media_subscribed_evbase *mse,
++			     const struct media_evbase *old,
++			     struct media_evbase *new)
++{
++	struct media_subscribed_event *sev = to_media_subscribed_event(mse);
 +
++	if (sev->ops && sev->ops->merge)
++		sev->ops->merge(&to_media_kevent_const(old)->event,
++				&to_media_kevent(new)->event);
++}
 +
-+Description
-+===========
++static void media_evop_queue(struct media_evbase *kev, const void *__ev,
++			     u64 ts, u32 sequence, bool copy_payload)
++{
++	struct media_event *old = &to_media_kevent(kev)->event;
++	const struct media_event *new = __ev;
 +
-+The MEDIA_IOC_DQEVENT IOCTL may be used to dequeue Media controller events from
-+the file handle. The :ref:`MEDIA_IOC_SUBSCRIBE_EVENT` IOCTL can be used to
-+subscribe the events.
++	old->type = new->type;
++	if (copy_payload)
++		old->u = new->u;
++	old->id = new->id;
++	old->timestamp = ts;
++	old->sequence = sequence;
++}
 +
-+.. tabularcolumns:: |p{4.6cm}|p{4.4cm}|p{8.7cm}|
++static bool media_evop_is_subscribed(struct media_subscribed_evbase *mse,
++				     const void *__evspec)
++{
++	const struct media_event_spec *evspec = __evspec;
++	struct media_subscribed_event *sev =
++		container_of(mse, struct media_subscribed_event, mse);
 +
-+.. c:type:: media_event
++	return sev->evspec.type == evspec->type &&
++		sev->evspec.id == evspec->id;
++}
 +
-+.. flat-table:: struct media_event
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths:       1 1 2 2
++static bool media_evop_is_queueable(struct media_subscribed_evbase *mse,
++				    const void *__ev)
++{
++	const struct media_event *ev = __ev;
++	struct media_subscribed_event *sev =
++		container_of(mse, struct media_subscribed_event, mse);
 +
-+    * - __u32
-+      - ``type``
-+      -
-+      - Type of the event, see :ref:`media-event-type`.
-+    * - union
-+      - ``u``
-+      -
-+      -
-+    * -
-+      - struct :c:type:`media_event_entity_reg`
-+      -	``entity_reg``
-+      - Event data for event ``MEDIA_EVENT_ENTITY_REGISTRATION``.
-+    * -
-+      - __u8
-+      - ``data``\ [64]
-+      - Event data. Defined by the event type. The union should be used to
-+	define easily accessible type for events.
-+    * - __u32
-+      - ``reserved``\ [8]
-+      -
-+      - Reserved for future extensions. Drivers and applications must set
-+	the array to zero.
-+    * - __u32
-+      - ``pending``
-+      -
-+      - The number of pending events excluding this one.
-+    * - __u32
-+      - ``sequence``
-+      -
-+      - Event sequence number. The sequence number is incremented for
-+	every subscribed event that takes place. If sequence numbers are
-+	not contiguous it means that events have been lost.
-+    * - __u64
-+      - ``timestamp``
-+      -
-+      -	Event timestamp. The timestamp has been taken from the
-+	``CLOCK_MONOTONIC`` clock.
-+    * - __u32
-+      - ``id``
-+      -
-+      - The ID associated with the event source. If the event does not
-+	have an associated ID (this depends on the event type), then this
-+	is 0.
++	return sev->evspec.type == ev->type && sev->evspec.id == ev->id;
++}
 +
-+.. tabularcolumns:: |p{6.6cm}|p{2.2cm}|p{8.7cm}|
++static void media_evop_release(struct media_subscribed_evbase *mse)
++{
++	kvfree(to_media_subscribed_event(mse));
++}
 +
-+.. cssclass:: longtable
++static const struct media_subscribed_evbase_ops media_event_ops = {
++	.add            = media_evop_add,
++	.del            = media_evop_del,
++	.replace        = media_evop_replace,
++	.merge          = media_evop_merge,
++	.queue          = media_evop_queue,
++	.is_subscribed  = media_evop_is_subscribed,
++	.is_queueable   = media_evop_is_queueable,
++	.release        = media_evop_release,
++};
 +
-+.. _media-event-type:
++static int __media_event_dequeue(struct media_evbase_fh *fh,
++				 struct media_event *event)
++{
++	struct media_evbase *mev;
++	struct media_kevent *kev;
++	unsigned long flags;
 +
-+.. flat-table:: Media Event Types
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths:       3 1 4
++	spin_lock_irqsave(fh->lock, flags);
 +
-+    * - ``MEDIA_EVENT_ALL``
-+      - 0
-+      - All events. MEDIA_EVENT_ALL is valid only for
-+	MEDIA_IOC_UNSUBSCRIBE_EVENT for unsubscribing all events at once.
-+    * - ``MEDIA_EVENT_ENTITY_REGISTRATION``
-+      - 1
-+      - Triggered when a media entity is registered to a Media controller
-+        device. The pending field designates the number of entities that are
-+	known to be still missing. This number may be less than the total
-+	number of all missing entities. However if this number is zero, then
-+	all entities have been registered to the media device.
++	mev = __media_evbase_dequeue(fh);
++	if (!mev) {
++		spin_unlock_irqrestore(fh->lock, flags);
++		return -ENOENT;
++	}
 +
-+Return Value
-+============
++	kev = container_of(mev, struct media_kevent, mev);
 +
-+On success 0 is returned, on error -1 and the ``errno`` variable is set
-+appropriately. The generic error codes are described at the
-+:ref:`Generic Error Codes <gen-errors>` chapter.
++	*event = kev->event;
++	event->pending = fh->navailable;
 +
-+ENOENT
-+    The event queue is empty and the file descriptor is in non-blocking
-+    mode.
-diff --git a/Documentation/userspace-api/media/mediactl/media-ioc-subscribe-event.rst b/Documentation/userspace-api/media/mediactl/media-ioc-subscribe-event.rst
++	spin_unlock_irqrestore(fh->lock, flags);
++
++	return 0;
++}
++
++long media_event_dequeue(struct media_device_fh *fh, struct media_event *event,
++			 int nonblocking)
++{
++	int ret;
++
++	if (nonblocking)
++		return __media_event_dequeue(&fh->ev_fh, event);
++
++	do {
++		ret = wait_event_interruptible(fh->wait,
++					       fh->ev_fh.navailable != 0);
++		if (ret < 0)
++			break;
++
++		ret = __media_event_dequeue(&fh->ev_fh, event);
++	} while (ret == -ENOENT);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(media_event_dequeue);
++
++void media_event_queue(struct media_device *mdev, const struct media_event *ev)
++{
++	struct media_device_fh *fh;
++	unsigned long flags;
++	u64 ts;
++
++	if (mdev == NULL)
++		return;
++
++	ts = ktime_get_ns();
++
++	spin_lock_irqsave(&mdev->fh_list_lock, flags);
++
++	list_for_each_entry(fh, &mdev->fh_list, mdev_list)
++		__media_evbase_queue_fh(&fh->ev_fh, ev, ts);
++
++	spin_unlock_irqrestore(&mdev->fh_list_lock, flags);
++}
++EXPORT_SYMBOL_GPL(media_event_queue);
++
++int media_event_pending(struct media_device_fh *fh)
++{
++	return media_evbase_pending(&fh->ev_fh);
++}
++EXPORT_SYMBOL_GPL(media_event_pending);
++
++long media_event_subscribe(struct media_device_fh *fh,
++			   const struct media_event_subscription *sub,
++			   unsigned int elems,
++			   const struct media_subscribed_event_ops *ops)
++{
++	struct media_subscribed_evbase *mse;
++	struct media_subscribed_event *sev;
++
++	if (sub->type == MEDIA_EVENT_ALL)
++		return -EINVAL;
++
++	elems = max(elems, 1U);
++
++	sev = kvzalloc(sizeof(*sev) + array_size(sizeof(struct media_kevent),
++						 elems), GFP_KERNEL);
++	if (!sev)
++		return -ENOMEM;
++
++	sev->evspec.type = sub->type;
++	sev->evspec.id = sub->id;
++	sev->evspec.flags = sub->flags;
++	sev->ops = ops;
++
++	mse = &sev->mse;
++
++	mse->ev_size = sizeof(struct media_kevent);
++	mse->ops = &media_event_ops;
++	mse->fh = &fh->ev_fh;
++	mse->evspec = &sev->evspec;
++
++	return media_evbase_subscribe(&fh->ev_fh, mse, elems);
++}
++EXPORT_SYMBOL_GPL(media_event_subscribe);
++
++void media_event_unsubscribe_all(struct media_device_fh *fh)
++{
++	media_evbase_unsubscribe_all(&fh->ev_fh);
++}
++EXPORT_SYMBOL_GPL(media_event_unsubscribe_all);
++
++long media_event_unsubscribe(struct media_device_fh *fh,
++			    const struct media_event_subscription *sub)
++{
++	struct media_event_spec evspec = {
++		.type = sub->type,
++		.id = sub->id,
++		.flags = sub->flags,
++	};
++
++	if (sub->type == MEDIA_EVENT_ALL) {
++		media_event_unsubscribe_all(fh);
++		return 0;
++	}
++
++	media_evbase_unsubscribe(&fh->ev_fh, &evspec);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(media_event_unsubscribe);
+diff --git a/include/media/media-device.h b/include/media/media-device.h
+index 2e737fec1afc..3ef277309d59 100644
+--- a/include/media/media-device.h
++++ b/include/media/media-device.h
+@@ -19,10 +19,13 @@
+ 
+ #include <media/media-devnode.h>
+ #include <media/media-entity.h>
++#include <media/media-evbase.h>
+ 
+ struct ida;
+ struct media_device;
+ 
++#include <uapi/linux/media.h>
++
+ /**
+  * struct media_entity_notify - Media Entity Notify
+  *
+diff --git a/include/media/media-event.h b/include/media/media-event.h
 new file mode 100644
-index 000000000000..61e537b6ba6d
+index 000000000000..57265d117cf5
 --- /dev/null
-+++ b/Documentation/userspace-api/media/mediactl/media-ioc-subscribe-event.rst
-@@ -0,0 +1,112 @@
-+.. SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later
-+.. c:namespace:: MC
++++ b/include/media/media-event.h
+@@ -0,0 +1,181 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * media-event.h
++ *
++ * Media controller events.
++ *
++ * Copyright (C) 2019, 2026 Intel Corporation
++ * Copyright (C) 2009--2010 Nokia Corporation.
++ *
++ * Based on V4L2 events.
++ */
 +
-+.. _media_ioc_subscribe_event:
++#ifndef MEDIA_EVENT_H
++#define MEDIA_EVENT_H
 +
-+************************************************************
-+ioctl MEDIA_IOC_SUBSCRIBE_EVENT, MEDIA_IOC_UNSUBSCRIBE_EVENT
-+************************************************************
++#include <linux/types.h>
++#include <linux/media.h>
 +
-+Name
-+====
++#include <media/media-evbase.h>
 +
-+MEDIA_IOC_SUBSCRIBE_EVENT - MEDIA_IOC_UNSUBSCRIBE_EVENT - Subscribe or unsubscribe a Media controller event
++struct media_device;
++struct media_device_fh;
++struct media_subscribed_event;
 +
++/**
++ * struct media_event_spec - Event subscription parameters
++ *
++ * @type:	Media event type, MEDIA_EVENT_*.
++ * @id:		Media event id.
++ * @flags:	Media event flags.
++ */
++struct media_event_spec {
++	u32 type;
++	u32 id;
++	u32 flags;
++};
 +
-+Synopsis
-+========
++/**
++ * struct media_subscribed_event_ops - Subscribed event operations.
++ *
++ * @add:	Optional callback, called when a new listener is added
++ * @del:	Optional callback, called when a listener stops listening
++ * @replace:	Optional callback that can replace event 'old' with event 'new'.
++ * @merge:	Optional callback that can merge event 'old' into event 'new'.
++ */
++struct media_subscribed_event_ops {
++	int  (*add)(struct media_subscribed_event *sev, unsigned int elems);
++	void (*del)(struct media_subscribed_event *sev);
++	void (*replace)(struct media_event *old, const struct media_event *new);
++	void (*merge)(const struct media_event *old, struct media_event *new);
++};
 +
-+.. c:function:: int ioctl( int fd, MEDIA_IOC_SUBSCRIBE_EVENT, struct media_event_subscription *argp )
-+    :name: MEDIA_IOC_SUBSCRIBE_EVENT
++/**
++ * struct media_subscribed_event - Describes a single subscribed media event.
++ *
++ * @evspec:	Parameters of the subscribed event.
++ * @ops:	Operations for the subscribed event.
++ * @mse:	Common media event descriptor.
++ */
++struct media_subscribed_event {
++	struct media_event_spec evspec;
++	const struct media_subscribed_event_ops *ops;
++	struct media_subscribed_evbase mse;
++};
 +
-+.. c:function:: int ioctl( int fd, MEDIA_IOC_UNSUBSCRIBE_EVENT, struct media_event_subscription *argp )
-+    :name: MEDIA_IOC_UNSUBSCRIBE_EVENT
++/**
++ * struct media_kevent - Internal kernel event struct.
++ *
++ * @mev:	Generic media subsystem kernel event.
++ * @event:	The media event itself.
++ */
++struct media_kevent {
++	struct media_evbase mev;
++	struct media_event event;
++};
 +
++/**
++ * to_media_kevent - Convert a generic media_evbase into a media_kevent
++ *
++ * @mev: The generic media event
++ */
++static inline struct media_kevent *to_media_kevent(struct media_evbase *mev)
++{
++	return container_of(mev, struct media_kevent, mev);
++}
 +
-+Arguments
-+=========
++/**
++ * to_media_kevent_const - Convert a const generic media_evbase into a
++ *			   media_kevent
++ *
++ * @mev: The generic media event
++ *
++ * This is just like @to_media_kevent, but const.
++ */
++static inline const struct media_kevent *
++to_media_kevent_const(const struct media_evbase *mev)
++{
++	return container_of(mev, const struct media_kevent, mev);
++}
 +
-+``fd``
-+    File descriptor returned by :ref:`open() <media-func-open>`.
++/**
++ * to_media_subscribed_event - Convert a generic media_subscribed_evbase into
++ *			       a media_subscribed_event.
++ *
++ * @mse: The generic media subscribed event base
++ */
++static inline struct media_subscribed_event *
++to_media_subscribed_event(struct media_subscribed_evbase *mse)
++{
++	return container_of(mse, struct media_subscribed_event, mse);
++}
 +
-+``argp``
-+    Pointer to struct :c:type:`media_event_subscription`.
++/**
++ * media_event_dequeue - Dequeue events from a media device.
++ *
++ * @fh: pointer to struct media_device_fh
++ * @event: pointer to struct media_event
++ * @nonblocking: if zero, wait for an event to arrive
++ */
++long media_event_dequeue(struct media_device_fh *fh,
++			 struct media_event *event, int nonblocking);
 +
++/**
++ * media_event_queue - Queue events to a media device.
++ *
++ * @mdev: pointer to &struct media_device
++ * @ev: pointer to &struct media_event
++ *
++ * The event will be queued for all &struct media_device_fh file handlers.
++ *
++ * .. note::
++ *    The driver's only responsibility is to fill in the type and the data
++ *    fields. The other fields will be filled in by the framework.
++ */
++void media_event_queue(struct media_device *mdev,
++		       const struct media_event *ev);
 +
-+Description
-+===========
++/**
++ * media_event_pending - Check if an event is available
++ *
++ * @fh: pointer to &struct media_device_fh
++ *
++ * Returns the number of pending events.
++ */
++int media_event_pending(struct media_device_fh *fh);
 +
-+The MEDIA_IOC_SUBSCRIBE_EVENT IOCTL may be used to subscribe Media controller
-+events to the file handle. The events are identified by their type and id, and
-+the user may set the flags field to specify properties of the subscription. The
-+subscriptions are specific to a file handle.
++/**
++ * media_event_subscribe - Subscribes to a media event.
++ *
++ * @fh: pointer to &struct media_device_fh
++ * @sub: pointer to &struct media_event_subscription
++ * @elems: size of the events queue
++ * @ops: pointer to &media_subscribed_event_ops
++ *
++ * .. note::
++ *
++ *    if @elems is zero, the framework will fill in a default value,
++ *    which is currently 1 element.
++ */
++long media_event_subscribe(struct media_device_fh *fh,
++			   const struct media_event_subscription *sub,
++			   unsigned int elems,
++			   const struct media_subscribed_event_ops *ops);
 +
-+The caller is responsible for setting the value of all fields in the argument
-+struct by either initialising the fields of the entire struct to a known value
-+or by setting the memory of the entire struct to zero and then filling the
-+desired fields.
++/**
++ * media_event_unsubscribe - Unsubscribe from a media event.
++ *
++ * @fh: pointer to &struct media_device_fh
++ * @sub: pointer to &struct media_event_subscription
++ */
++long media_event_unsubscribe(struct media_device_fh *fh,
++			     const struct media_event_subscription *sub);
 +
-+The events may be dequeued using the :ref:`MEDIA_IOC_DQEVENT` IOCTL.
++/**
++ * media_event_unsubscribe_all - Unsubscribe from all media events.
++ *
++ * @fh: pointer to &struct media_device_fh
++ */
++void media_event_unsubscribe_all(struct media_device_fh *fh);
 +
-+The MEDIA_IOC_UNSUBSCRIBE_EVENT IOCTL is used to unsubscribe a subscribed
-+event. A special value of ''MEDIA_EVENT_ALL'' may be used to unsubscribe all
-+events on a file handle.
++#endif /* MEDIA_EVENT_H */
+diff --git a/include/media/media-fh.h b/include/media/media-fh.h
+index 14ae4daaaddd..ca8bf6154096 100644
+--- a/include/media/media-fh.h
++++ b/include/media/media-fh.h
+@@ -12,16 +12,21 @@
+ #include <linux/file.h>
+ 
+ #include <media/media-devnode.h>
++#include <media/media-evbase.h>
+ 
+ /**
+  * struct media_device_fh - File handle specific information on MC
+  *
+  * @fh: The media device file handle
+  * @mdev_list: This file handle in media device's list of file handles
++ * @ev_fh: File handle specific media event information
++ * @wait: File handle's wait queue
+  */
+ struct media_device_fh {
+ 	struct media_devnode_fh fh;
+ 	struct list_head mdev_list;
++	struct media_evbase_fh ev_fh;
++	struct wait_queue_head wait;
+ };
+ 
+ static inline struct media_device_fh *media_device_fh(struct file *filp)
+diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
+index 2da6ae4da003..24b6b3f75592 100644
+--- a/include/uapi/linux/media.h
++++ b/include/uapi/linux/media.h
+@@ -373,6 +373,27 @@ struct media_v2_topology {
+ 	__u64 ptr_links;
+ } __attribute__ ((packed));
+ 
++#define MEDIA_EVENT_ALL		0
 +
-+.. tabularcolumns:: |p{4.6cm}|p{4.4cm}|p{8.7cm}|
++struct media_event {
++	__u32 type;
++	union {
++		__u8 data[64];
++	} u;
++	__u32 reserved[8];
++	__u32 pending;
++	__u32 sequence;
++	__u64 timestamp;
++	__u32 id;
++} __attribute__((packed));
 +
-+.. c:type:: media_event_subscription
++struct media_event_subscription {
++	__u32 type;
++	__u32 id;
++	__u32 flags;
++	__u32 reserved[5];
++} __attribute__((packed));
 +
-+.. flat-table:: struct media_event_subscription
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths:       1 1 2
-+
-+    * - __u32
-+      - ``type``
-+      - Type of the event, see :ref:`media-event-type`.
-+
-+	.. note::
-+
-+	   ``MEDIA_EVENT_ALL`` can be used with
-+	   :ref:`MEDIA_IOC_UNSUBSCRIBE_EVENT <MEDIA_SUBSCRIBE_EVENT>` for
-+	   unsubscribing all events at once.
-+    * - __u32
-+      - ``id``
-+      - ID of the event source. If there is no ID associated with the
-+	event source, then set this to 0. Whether or not an event needs an
-+	ID depends on the event type.
-+    * - __u32
-+      - ``flags``
-+      - Event flags, see :ref:`media-event-flags`.
-+    * - __u32
-+      - ``reserved``\ [5]
-+      - Reserved for future extensions. Drivers and applications must set
-+	the array to zero.
-+
-+.. tabularcolumns:: |p{6.8cm}|p{2.2cm}|p{8.5cm}|
-+
-+.. _media-event-flags:
-+
-+.. flat-table:: Media event Flags
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths:       3 1 4
-+
-+    * - ``MEDIA_EVENT_SUB_FL_SEND_INITIAL``
-+      - 0x0001
-+      - When this event is subscribed an initial event will be sent
-+	containing the current status. This only makes sense for events
-+	that are triggered by a status change such as ``V4L2_EVENT_CTRL``.
-+	Other events will ignore this flag.
-+
-+
-+Return Value
-+============
-+
-+On success 0 is returned, on error -1 and the ``errno`` variable is set
-+appropriately. The generic error codes are described at the
-+:ref:`Generic Error Codes <gen-errors>` chapter.
-+
-+EINVAL
-+    The struct :c:type:`media_event_subscription` specifies an event that may not
-+    generated by the given Media device.
+ /* ioctls */
+ 
+ #define MEDIA_IOC_DEVICE_INFO	_IOWR('|', 0x00, struct media_device_info)
+@@ -381,6 +402,9 @@ struct media_v2_topology {
+ #define MEDIA_IOC_SETUP_LINK	_IOWR('|', 0x03, struct media_link_desc)
+ #define MEDIA_IOC_G_TOPOLOGY	_IOWR('|', 0x04, struct media_v2_topology)
+ #define MEDIA_IOC_REQUEST_ALLOC	_IOR ('|', 0x05, int)
++#define MEDIA_IOC_SUBSCRIBE_EVENT _IOWR ('|', 0x06, struct media_event_subscription)
++#define MEDIA_IOC_UNSUBSCRIBE_EVENT _IOWR ('|', 0x07, struct media_event_subscription)
++#define MEDIA_IOC_DQEVENT	_IOWR('|', 0x08, struct media_event)
+ 
+ /*
+  * These ioctls are called on the request file descriptor as returned
 
 -- 
 2.56.0
