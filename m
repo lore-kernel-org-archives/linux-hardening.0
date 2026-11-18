@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795005853;
-	b=xkn84OoRJTThghTtcthBLAQdNErMfEQZxaxG8vKla2KRzmfhU23X7YXNJQ6pWylVGjKY
-	 pi23L5XuFaQaOBlwacg3FNhnJ53iY9tL0nVq6ycaBZE2P8q8F4iTkKjyYbSD+O+bLRdWb
-	 qJJOmhlrd1K0DcmlBm02390bNMKstIo3LGMenNC42dRNBlhbhY5ZsNkDmG4ywlH7Xa3hx
-	 lZKPwDHu+d5cedHzAHtajy/s8yZXJmyYj6Vy20KAzZoV8jMU5M3Ls+cirabMGHi4wLq6i
-	 Hao0bYFJQmEv04LK4GnCHdTQIyM7vHvVwj+uDhQ45mu1PXXS2iVQD9kkuPZyupFANRw==
+	t=1795005857;
+	b=1CQMCbIOJz8ql5n8/2U1bDT0q2T17fvB+u01VXC8cal3fbXsBK2X5hdVifYN2ePCl8PL
+	 Z721QTvu2WDfJKtX74JYVQ3NWnDWO0Zjt4bSWU5HVbOSYkK8IH7LG4cVYwnkUCSivDch1
+	 dWyMUxecM+cHobk1aNrco2D8JKhn1hjT0JXv5ViP+lAy6WsWogWpXzgs8SJJ+Hr0IUsFQ
+	 XvwyhWoLGFmNV8xgzmn3Kjy/6zN6/mlByflbVVwvMljTeuvD5pwUWDfoW07Bp4R09MiUc
+	 i8SOqiHVPvfARDeHu0ZdVRFW1r+j2cCyWvTQm2wWWVMXjjBESZtuoAsSguZBpN3CCWw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795005853;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795005857;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=D3o0EuRXIdQnK3LLdhyAHrL4ChLMnaQWvqz7xNe+GdE=;
-	b=lTRmsLZ7UNm5TNqNDqc8cv83Ss2jTTieWy3STIPoYLmJKmXRaFPmL9FAHVxEx3+6Gc0g
-	 VQr1kwQCr2bekqZsZag8Q5gowttiKik0Yp0KSHR5nzcjclXDaupCmks6EHc7Pax9/k01w
-	 S6BYXmsg/L7xvjZ2u6TG7nbdPoQInJHULeetyiLOlrUeB3HBRcO7bvXSkgb29baOsRdL5
-	 ZrFDphpaLkgywOZzfZGvwScVxzDE9qNdTqxvSF4PAkW8xWBDwK5wi/PT7gPQXYpHFAhFF
-	 U8n4DpLW5swoCedB1XhjqfSopZjrb3lzAYZxKBSMQpjgFctTkn4RZiCaeHaiaQVSDsA==
+	bh=G6cu1Z82N/KT8p79LEvLWumkU68eKo4xwx6zpd/gmmE=;
+	b=l4qZwUkLGJ5FkQQ8Zv6RbJzvBFlfMfbKNm3JIcc6EVa4SSoZIGTsjyOdlWZ2AxDD4ymR
+	 YSj9zxplQKM+I6i8J4l6SQm4ygNl9EvX1D1sESFY3hhQTUnx82OIyxaGvJcRIEHBsJaar
+	 GPxIU9aRZSBUIsk5XkXyVLTQPFJOMOpINGsj4OWM4xDfVgfBg5qWQKbPOg8aH705IzSV7
+	 24NCqndXl7HMwDVnCco9iKnYr234f+X0o13s44mp8dcRDN204k284hUezVcbsT3XXuOvW
+	 bwUzuHs6FO+MdlEGYAzI9iQyavt0F7Ekginns8KC953iL7Cg/NTi9domKBx+qEQgAdw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OOYcedZQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ByKjxoI3;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A23960A2608;
-	Wed, 18 Nov 2026 12:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF71D60A2612;
+	Wed, 18 Nov 2026 12:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OOYcedZQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A63BD1F000C5;
-	Wed, 18 Nov 2026 12:44:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ByKjxoI3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45FB71F000C5;
+	Wed, 18 Nov 2026 12:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795005853;
-	bh=D3o0EuRXIdQnK3LLdhyAHrL4ChLMnaQWvqz7xNe+GdE=;
+	s=k20260515; t=1795005857;
+	bh=G6cu1Z82N/KT8p79LEvLWumkU68eKo4xwx6zpd/gmmE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=OOYcedZQMmJRh+JOiUDUUHUEecDD7/7Jo7+QJzJtLsjSX4S9wDAVcPXCJys7dM8z5
-	 OfzLTjwci4YwyoDUPyFM/lMCYaDFTJ9cC9waH26arhqP+omBOh1AbK9lIav3kPPDwB
-	 hRE3z3LQDnQxZEp2EDun4T2vfAdPTw6qQdNNtLZ+XX7uBZdsxHz7HF/EiXIaUChcol
-	 H25gbzUlrTn8tWql6P1pykRzKgHBrzvbXV6JXOcuFw19K7RlRIR3m/KHhr77m6mdAD
-	 G6kEXnXKdCgvlzGNdS6umXfCJaf6vfr1fsd1IU+OMGYPHaNQ+6slyMSgW8UYk3gfHK
-	 dxOapq8hOHnKg==
+	b=ByKjxoI34jU+4UcernfSQGDTB/gmwUZS9TfWxme8ng12lXC+pKDrKlCHJOO5VyFbu
+	 eeCz7cJaW4dyHwZihxIDagIcfn7IxKofQH4yd5TC2US22b/gJzkyCuRIqYgvmap1qK
+	 XHarC6mNkDalZMjTyW46Dki76xxVgudSbwVR0GsG0G1y8mg3e5D3kfpZauGCtwGTDp
+	 hVFjT5St0CyAdlNRT1dh8m6pxPSQ1S2gZ7XidUPzqWGc/mlVX7oYfgI6yOa9IIrCbR
+	 abPiNPF+VaJPRVLL/yVYYwT2dBdPJCJ+eaRVyVBoKltOiqYC0xFQOJ4c/AxaeUbMFC
+	 A4RMNIs0CnnxA==
 From: Mattijs Korpershoek <mkorpershoek@kernel.org>
-Date: Wed, 18 Nov 2026 13:43:50 +0100
-Subject: [PATCH RFC v2 06/16] media: mc: Maintain a list of open file
- handles in a media device
+Date: Wed, 18 Nov 2026 13:43:52 +0100
+Subject: [PATCH RFC v2 08/16] media: mc: Add
+ MEDIA_EVENT_ENTITY_REGISTRATION
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -55,7 +55,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261118-v4l2-sensor-detect-v2-6-1bb1a445b556@kernel.org>
+Message-Id: <20261118-v4l2-sensor-detect-v2-8-1bb1a445b556@kernel.org>
 References: <20261118-v4l2-sensor-detect-v2-0-1bb1a445b556@kernel.org>
 In-Reply-To: <20261118-v4l2-sensor-detect-v2-0-1bb1a445b556@kernel.org>
 To: Hans Verkuil <hverkuil+cisco@kernel.org>, 
@@ -73,195 +73,69 @@ Cc: Mattijs Korpershoek <mkorpershoek@kernel.org>,
  Maxime Ripard <mripard@kernel.org>, linux-media@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5545;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1477;
  i=mkorpershoek@kernel.org; h=from:subject:message-id;
- bh=8aVhvo96LkSyDDH5whLqXiYmArPAx/MWFMUrU/cHnS4=;
- b=owEBbQGS/pANAwAKARkNHbRmThk1AcsmYgBq/Z2LRuRZmSmBNUr1M+PAeO21nUzWxIFlKclpZ
- ae9/iecme+JATMEAAEKAB0WIQQu6UKnth9qvlMTrQAZDR20Zk4ZNQUCav2diwAKCRAZDR20Zk4Z
- NQkJB/40c/oqvK98LG95C5V7A2HbauY3Mtj1YGN9hGfBl4lpb+0cmW/88HhqWWzm7g0Rt4+Vec1
- 1zwyiNCWMwiLnQ4pbQAN0PMmTDpetXuWYOVU/uboV0o2bbZaiMrQJTnhr3tZ6eQ86VSAOIEwjPR
- Jiv9Rhjik6oKp1R9KWpEiWYN50IJSr22eVERwcaKraNfXCkoUmupPfF9L9otzC1SqdFKeYttcKg
- Cgbn+PYEd7kmgl1xfn7XB7D0/nFPMHaxIUEhI/BLrB5fU0ohbG/0GM/54j67Hy8U4WLyLZ6LYjD
- 6zh6oV6hf2QPpbCCMiLdcN7SJxaxllqAMDqo6qriw9S6THIq
+ bh=/ow5W/ic0RXTNQHgmu6clXvJzQJun3gx9pBqQxHuVrU=;
+ b=owEBbQGS/pANAwAKARkNHbRmThk1AcsmYgBq/Z2LjxPorZZnTniyz9PgzgcAxs9Z0cY1XFV9C
+ 2vgeUg16S6JATMEAAEKAB0WIQQu6UKnth9qvlMTrQAZDR20Zk4ZNQUCav2diwAKCRAZDR20Zk4Z
+ NZENCACU/l0gv8wlOAVXuJfVE9lu7CtZ6rBYNb014K7rqGT3Tg6as2TB6iosMgFdV6Z6w4NDbRo
+ gKwmpiDMm7olZwa/wkdTfqjZrzKaLCL1tKz5kUJcreBikcv7OKydcOyQyTxEVe0XDInmGxVpqJX
+ 0cx2/bmzg832M8nudy++OK+kqhckPGDJLTFUM6b4SlkjB2cTY83pEXq9aozSATc3by8i+BiKLBj
+ TRyeOHl/gp5bT8fMPEQZr6lKXvhlG1FyGSeLmZq9/vkjS23M7dVyEMZTKQrZ26gREo9piHrS1wC
+ GEYIYs36KZ8jAtxhN6/LadGiHuTw3kGqyL8Y5GWy7XaKxDgC
 X-Developer-Key: i=mkorpershoek@kernel.org; a=openpgp;
  fpr=8234A35B45C0D26B31C1A2DA570338B018144F28
 
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-The list of file handles is needed to deliver media events in the future.
+Add a media event to tell a new media entity has been registered.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mattijs Korpershoek <mkorpershoek@kernel.org>
 ---
- drivers/media/mc/mc-device.c | 35 +++++++++++++++++++++++++----------
- include/media/media-device.h |  7 +++++++
- include/media/media-fh.h     | 32 ++++++++++++++++++++++++++++++++
- 3 files changed, 64 insertions(+), 10 deletions(-)
+ drivers/media/mc/mc-device.c | 5 +++++
+ include/uapi/linux/media.h   | 9 ++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/mc/mc-device.c b/drivers/media/mc/mc-device.c
-index 8d0c35a11944..b64322efd99e 100644
+index 98d323c89b41..82f5676afbc0 100644
 --- a/drivers/media/mc/mc-device.c
 +++ b/drivers/media/mc/mc-device.c
-@@ -22,6 +22,7 @@
- #include <media/media-device.h>
- #include <media/media-devnode.h>
- #include <media/media-entity.h>
-+#include <media/media-fh.h>
- #include <media/media-request.h>
+@@ -746,6 +746,11 @@ int __must_check media_device_register_entity(struct media_device *mdev,
+ 	}
+ 	mutex_unlock(&mdev->graph_mutex);
  
- #ifdef CONFIG_MEDIA_CONTROLLER
-@@ -35,16 +36,6 @@
- #define MEDIA_ENT_SUBTYPE_MASK			0x0000ffff
- #define MEDIA_ENT_T_DEVNODE_UNKNOWN		(MEDIA_ENT_F_OLD_BASE | \
- 						 MEDIA_ENT_SUBTYPE_MASK)
--
--struct media_device_fh {
--	struct media_devnode_fh fh;
--};
--
--static inline struct media_device_fh *media_device_fh(struct file *filp)
--{
--	return container_of(filp->private_data, struct media_device_fh, fh);
--}
--
- /* -----------------------------------------------------------------------------
-  * Userspace API
-  */
-@@ -56,7 +47,10 @@ static inline void __user *media_get_uptr(__u64 arg)
- 
- static int media_device_open(struct file *filp)
- {
-+	struct media_devnode *devnode = filp->private_data;
-+	struct media_device *mdev = devnode->media_dev;
- 	struct media_device_fh *fh;
-+	unsigned long flags;
- 
- 	fh = kzalloc_obj(*fh);
- 	if (!fh)
-@@ -64,12 +58,25 @@ static int media_device_open(struct file *filp)
- 
- 	filp->private_data = &fh->fh;
- 
-+	spin_lock_irqsave(&mdev->fh_list_lock, flags);
-+	list_add(&fh->mdev_list, &mdev->fh_list);
-+	spin_unlock_irqrestore(&mdev->fh_list_lock, flags);
++	media_event_queue(mdev, &(struct media_event){
++		.type = MEDIA_EVENT_ENTITY_REGISTRATION,
++		.u.entity_reg.entity_id = entity->graph_obj.id,
++	});
 +
  	return 0;
  }
+ EXPORT_SYMBOL_GPL(media_device_register_entity);
+diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
+index 24b6b3f75592..b5275acad87f 100644
+--- a/include/uapi/linux/media.h
++++ b/include/uapi/linux/media.h
+@@ -373,11 +373,18 @@ struct media_v2_topology {
+ 	__u64 ptr_links;
+ } __attribute__ ((packed));
  
- static int media_device_close(struct file *filp)
- {
-+	struct media_devnode *devnode = media_devnode_data(filp);
-+	struct media_device *mdev = devnode->media_dev;
- 	struct media_device_fh *fh = media_device_fh(filp);
-+	unsigned long flags;
+-#define MEDIA_EVENT_ALL		0
++#define MEDIA_EVENT_ALL			0
++#define MEDIA_EVENT_ENTITY_REGISTRATION	1
 +
-+	if (mdev) {
-+		spin_lock_irqsave(&mdev->fh_list_lock, flags);
-+		list_del(&fh->mdev_list);
-+		spin_unlock_irqrestore(&mdev->fh_list_lock, flags);
-+	}
++struct media_event_entity_reg {
++	__u32 entity_id;
++	__u32 pending;
++} __attribute__ ((packed));
  
- 	kfree(fh);
- 
-@@ -732,12 +739,14 @@ void media_device_init(struct media_device *mdev)
- 	INIT_LIST_HEAD(&mdev->pads);
- 	INIT_LIST_HEAD(&mdev->links);
- 	INIT_LIST_HEAD(&mdev->entity_notify);
-+	INIT_LIST_HEAD(&mdev->fh_list);
- 
- 	mutex_init(&mdev->req_queue_mutex);
- 	mutex_init(&mdev->graph_mutex);
- 	ida_init(&mdev->entity_internal_idx);
- 
- 	atomic_set(&mdev->request_id, 0);
-+	spin_lock_init(&mdev->fh_list_lock);
- 
- 	if (!*mdev->bus_info)
- 		media_set_bus_info(mdev->bus_info, sizeof(mdev->bus_info),
-@@ -843,6 +852,7 @@ void media_device_unregister(struct media_device *mdev)
- 	struct media_entity *next;
- 	struct media_interface *intf, *tmp_intf;
- 	struct media_entity_notify *notify, *nextp;
-+	unsigned long flags;
- 
- 	if (mdev == NULL)
- 		return;
-@@ -883,6 +893,11 @@ void media_device_unregister(struct media_device *mdev)
- 	dev_dbg(mdev->dev, "Media device unregistered\n");
- 
- 	debugfs_remove_recursive(mdev->media_dir);
-+
-+	spin_lock_irqsave(&mdev->fh_list_lock, flags);
-+	list_del_init(&mdev->fh_list);
-+	spin_unlock_irqrestore(&mdev->fh_list_lock, flags);
-+
- 	device_remove_file(&mdev->devnode->dev, &dev_attr_model);
- 	media_devnode_unregister(mdev->devnode);
- 	/* devnode free is handled in media_devnode_*() */
-diff --git a/include/media/media-device.h b/include/media/media-device.h
-index 749c327e3c58..2e737fec1afc 100644
---- a/include/media/media-device.h
-+++ b/include/media/media-device.h
-@@ -112,6 +112,10 @@ struct media_device_ops {
-  * @media_dir:	DebugFS media directory
-  * @request_id: Used to generate unique request IDs
-  *
-+ * @fh_list:	List of file handles in the media device
-+ *		(struct media_device_fh.mdev_list).
-+ * @fh_list_lock: Serialise access to fh_list list.
-+ *
-  * This structure represents an abstract high-level media device. It allows easy
-  * access to entities and provides basic media device-level support. The
-  * structure can be allocated directly or embedded in a larger structure.
-@@ -189,6 +193,9 @@ struct media_device {
- 	/* debugfs */
- 	struct dentry *media_dir;
- 	atomic_t request_id;
-+
-+	struct list_head fh_list;
-+	spinlock_t fh_list_lock;
- };
- 
- /* We don't need to include usb.h here */
-diff --git a/include/media/media-fh.h b/include/media/media-fh.h
-new file mode 100644
-index 000000000000..14ae4daaaddd
---- /dev/null
-+++ b/include/media/media-fh.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Media device file handle
-+ *
-+ * Copyright (C) 2019 Intel Corporation
-+ */
-+
-+#ifndef MEDIA_FH_H
-+#define MEDIA_FH_H
-+
-+#include <linux/list.h>
-+#include <linux/file.h>
-+
-+#include <media/media-devnode.h>
-+
-+/**
-+ * struct media_device_fh - File handle specific information on MC
-+ *
-+ * @fh: The media device file handle
-+ * @mdev_list: This file handle in media device's list of file handles
-+ */
-+struct media_device_fh {
-+	struct media_devnode_fh fh;
-+	struct list_head mdev_list;
-+};
-+
-+static inline struct media_device_fh *media_device_fh(struct file *filp)
-+{
-+	return container_of(filp->private_data, struct media_device_fh, fh);
-+}
-+
-+#endif /* MEDIA_FH_H */
+ struct media_event {
+ 	__u32 type;
+ 	union {
++		struct media_event_entity_reg entity_reg;
+ 		__u8 data[64];
+ 	} u;
+ 	__u32 reserved[8];
 
 -- 
 2.56.0
