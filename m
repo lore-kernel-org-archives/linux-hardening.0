@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795005867;
-	b=YrTTSj2ELz5qnakqavu9osMtTOrmkNhdWd3H1Ftqxw2cn7/mBt2Ej0OtJo7kKNbIF3eG
-	 o9XWnGtMr/lqIeoKP7l28lvZLhZHr3NFoXNltg69CK+5bNhQPROb8HEUxUD7PbQsl8GJg
-	 flNhInpHLbFyvhrcUy6IC1BANWzjo5Rcr09B8PSnBl2m8cPZRpCEpZVbIBJMb4MduWmaJ
-	 1Pc8sUAHqCGiAmzU8hkoDwJOF7lDFF0lX7Ape2WPRkhMgLj8nGpEKtGvWZtT4pVbtcpht
-	 ipAVh8CBigSqG1qeZrsCQSnLeei6YAxQ8Z/sePf89/mm7Jz0BK5Zzl3sbHlhzxT9Sbg==
+	t=1795005872;
+	b=F4KxcsbfQFrFaWEtc4t/Zqhyp2Pr6Zjj9YTrAX+eDY06aP0i3Vr0ckqZbqfa2bLXDtVV
+	 4LQDj8jj7HE7fK0Lvsh8wCUtDuT7TD789S9281JpmpkzZWcnY5WueqXaEfa08eKjRLKQc
+	 DYYYDZd/1rt5kEVIvy/2bdpR6jrjamAZaViHiJus3rOA85mPuOGdlPUAS7ZAF3dOQNtMX
+	 quWm8D8dnacSzvHxTzbN8cLUlrlzDEFhNoAW3Z1IYGed46lKQEm0182IVizPSF5bINFiY
+	 meD2VVnELI4/OL9Wgx3ZeVaMVh2TYB48i9UggiPStybAEDbmakftz+mzW402J20DwhQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795005867;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795005872;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=cqE2BNkT7Ny7UfvCvLZNY6kEK0BkuwhZlm3qdN8zil0=;
-	b=LUd6t6wk97H4O1mTLvNNjkA+ze1o+UZdSL7ihyvO8V4c5QCyVoUx7N0KYZ5/xBzZooZC
-	 EX/uImdpMjQRUDPYs3aJVAqZ4jcrHHksYLbkEMkoMaN+VmhrR7MZqFWXquZ3RjfRMSCK8
-	 V0vxi8aQ5Nh+5DGZBYSIXN3SBM/Bw/IeosQHn6yYpTSibx5KqmcYBy2jTJivqjkvZKNY9
-	 wGgCbluciAPFT8dWlncsF+TZFCtPA00JDK+GT/NQICMY44aPhI6g+iS77mh6g4xpB1XSZ
-	 UiHz7qovSKenppaimNEbuSXWTUCIDj3Rbt1vRD+ZKOQt48MdZ3Dm2dDONgeTHN1yM+A==
+	bh=zq/i7+yl2MPIxRruYif9nubjiR5feqptCTPNSxOt5p0=;
+	b=nlrPbgYkJgy7QfujtJ3IIZHVSKwIQ+XdIrTWdxOhi4OoF8Rzy/VFpcOTjyd7lg1RipR6
+	 SIPtWE1QDFT30AjYjobGpJAL0kMbSfqenMZh76wouuK+2lBOYvBiZQ8YUr4XkiEimvbzf
+	 XqJjdCFT2hpGlnMZhCzaSLXQJrb3rgMQVINzJPCmnS2MtjvUDMozfORt3cDVj+4nKCdBV
+	 DoeeizEs/8OChb60qimj2cthwI0LCpWOyD4FEEIK03XSd9trb3g1yiUR3uZLecG3xKsM3
+	 /atpcbyySS0ktzHUo51cYnr0g4EcTe7/qpKWxktTNF4hKdeidw0/pIGxWLFAD8ln1+g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zv4I6nMv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fgYotqeD;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174B7606A32F;
-	Wed, 18 Nov 2026 12:44:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2445606A335;
+	Wed, 18 Nov 2026 12:44:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zv4I6nMv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 730831F000C5;
-	Wed, 18 Nov 2026 12:44:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fgYotqeD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 104321F000C4;
+	Wed, 18 Nov 2026 12:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795005866;
-	bh=cqE2BNkT7Ny7UfvCvLZNY6kEK0BkuwhZlm3qdN8zil0=;
+	s=k20260515; t=1795005871;
+	bh=zq/i7+yl2MPIxRruYif9nubjiR5feqptCTPNSxOt5p0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Zv4I6nMvWzn3wECqTmQwc3UEryXWxuEP2SzJLVTbFE3BzPIUDSwhFqvdenzHa3RKG
-	 AByXdDToALbZP1N8luO+9f2SJmewDUJXvGdd3LfuqielmjptUXm3zZ48KvO7E6ed6q
-	 5zzALso1wfr4siev4LyZqLtZIm9wVI8AvB6zNsj5bSxOAKNpVkVYdH5xjmNzOsGuhL
-	 ekzBwxRG5lr79EKXfY4521mdxsf93Wo0x3oRL9OFlI2T9VkY3Zb/abHZN81D1qhEkH
-	 lB7yveebh1u/rJnyGReeoKNUSkSZ9ldoWACr3zpFT96tv9qgcuMt05sP2trtr25exq
-	 ZmXvWI+b0SkvQ==
+	b=fgYotqeDFAlDDAu/HLnqUynZY3oiEtvldhS7N5iFE0xgOhjTPnJGAQklvm5pO8dR0
+	 CSS3BFoZqEzBsRZVqjCtLDOwP3wgKdSjnK5jAbYpb181Lp/e9b45ecXhPSBaSL7LzI
+	 qf62WUz7hxOlnhCykqk/55iKJG9pSdZ9ncAWG4Q+2rW55bS3nH7kMoz3aNU5a9vgWZ
+	 AMisvZZvLOUM/Bh51DcOwH2ryxz9rRt6nU6WUSns+UT2TgcgczzT5tPWAPlAFcFY4v
+	 IckuytYtUPFFw3aPmElzKZmAKn5G/KieKdQuepgWDL9cB9fP8HLXoo9FFIoszZWrBX
+	 vccLPaCsjmULw==
 From: Mattijs Korpershoek <mkorpershoek@kernel.org>
-Date: Wed, 18 Nov 2026 13:43:56 +0100
-Subject: [PATCH RFC v2 12/16] media: mc: Add MEDIA_IOC_G_ENTITY_STATUS
- ioctl
+Date: Wed, 18 Nov 2026 13:43:58 +0100
+Subject: [PATCH RFC v2 14/16] media: mc: Add detect polling helpers for
+ drivers
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -55,7 +55,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261118-v4l2-sensor-detect-v2-12-1bb1a445b556@kernel.org>
+Message-Id: <20261118-v4l2-sensor-detect-v2-14-1bb1a445b556@kernel.org>
 References: <20261118-v4l2-sensor-detect-v2-0-1bb1a445b556@kernel.org>
 In-Reply-To: <20261118-v4l2-sensor-detect-v2-0-1bb1a445b556@kernel.org>
 To: Hans Verkuil <hverkuil+cisco@kernel.org>, 
@@ -73,218 +73,251 @@ Cc: Mattijs Korpershoek <mkorpershoek@kernel.org>,
  Maxime Ripard <mripard@kernel.org>, linux-media@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6740;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7837;
  i=mkorpershoek@kernel.org; h=from:subject:message-id;
- bh=KF2AgFtSkuFxQn7qcz47SIB4KQmxRiBm/YiSoWbaDAI=;
- b=owEBbQGS/pANAwAKARkNHbRmThk1AcsmYgBq/Z2M/1Y7nXk6i3R4avJNNMMvRzIFsTuzftrUa
- UsAtH19KAmJATMEAAEKAB0WIQQu6UKnth9qvlMTrQAZDR20Zk4ZNQUCav2djAAKCRAZDR20Zk4Z
- NWBwB/435Z8CAUO72qmik8uDgOKU2YDKvF2b61pGgLg0ZNI8zF0yhkrODitwhvLjAXGkqtuV9q8
- 0cXdrIO0qHUqjk3njPtethQwq/fE3KbnMtyQlHbvvd6YOV/FfRh1c6d2ZFEHYWA65cEwnWQExfl
- SWffOrjxHhMt26e9XmqWusXzLkqy2kP98jJ5StiMlCQ1aaWTg4k2bEZrHS7Hx85VnTlAhH1NvEj
- xQpPcUw196hxVNkkAr7C8lalHcv68T1vOEMvViwoVkwEJmGkkf4mE9Xlxn+FAMIOGN/PL93+08O
- m2P3SJStKcROBM0S3W/Q2q9+EgQPFUlZUH6VUEr4260ZtAlq
+ bh=BF10ZY5pMgSWR41NphsQ2oXRmCnNrGo9djDtw79PU9w=;
+ b=owEBbQGS/pANAwAKARkNHbRmThk1AcsmYgBq/Z2MbfNCu44s47ln+P8YKTf5at+YaeCmEe4Oo
+ K0fLad2B2uJATMEAAEKAB0WIQQu6UKnth9qvlMTrQAZDR20Zk4ZNQUCav2djAAKCRAZDR20Zk4Z
+ NeMDB/9C809Hy46vWrN8+lqEX8u9aPTdO/oK2JnDVxF6ofUPGyBpdI0Xu8QqZzqRuMx7FkwYyvG
+ //v9ms8ZMraJNEnA7g5cxtP/Psz/VUJ+J4zYbOsIvduAHt2qvaex3qS+mcbMXV+qWV7HHs6o/w/
+ 5lEQFdoXAph0ciJfdgzcboHFJNBozjTz7C+Kyz+k5MKE+F349KL2GNX2rK6xZyed+5taXPlqnwO
+ HD770hqXQ7dowyIrTLTuJX25pjUQw14pdZ8vNIbHT++gxjym0H86hAcQi6dreoPbClGUp0lh5zO
+ Wx7jO693WOgqcSlE+xr5WypsmWz+WK6g9B8vfvRC6XHKrZkG
 X-Developer-Key: i=mkorpershoek@kernel.org; a=openpgp;
  fpr=8234A35B45C0D26B31C1A2DA570338B018144F28
 
-Userspace can get an entity's connection status using 'media-ctl -p'.
-This calls MEDIA_IOC_G_TOPOLOGY which will also provide the entity
-status.
-However, that status is from the cache. When fault tolerance is enabled,
-the status can be only be updated in 2 ways:
-1. During driver probe
-2. When a stream is started
+If a stream is ongoing and an entity gets disconnected from the media
+graph, userspace will hang on DQBUF without any additional information.
 
-Add MEDIA_IOC_G_ENTITY_STATUS which allows userspace to get the hardware
-state at any given time.
-This can be useful for diagnostics, for example.
+When fault tolerance is enabled, the media controller can notify
+userspace of such happening by periodically polling all entities that
+support the .detect() operation.
 
-Calling MEDIA_IOC_G_ENTITY_STATUS will also update the topology's cached
-value.
+If an entity's status change, userspace gets notified via the
+MEDIA_EVENT_ENTITY_STATUS_CHANGE event.
+
+Add media_detect_poll_enable/disable so that drivers can opt-in into
+polling for .detect().
 
 Signed-off-by: Mattijs Korpershoek <mkorpershoek@kernel.org>
 ---
- .../userspace-api/media/mediactl/media-funcs.rst   |  1 +
- .../media/mediactl/media-ioc-g-entity-status.rst   | 92 ++++++++++++++++++++++
- drivers/media/mc/mc-device.c                       | 23 ++++++
- include/uapi/linux/media.h                         |  7 ++
- 4 files changed, 123 insertions(+)
+ drivers/media/mc/mc-device.c | 80 ++++++++++++++++++++++++++++++++++++++++++++
+ include/media/media-device.h |  4 +++
+ include/media/media-entity.h | 32 ++++++++++++++++++
+ 3 files changed, 116 insertions(+)
 
-diff --git a/Documentation/userspace-api/media/mediactl/media-funcs.rst b/Documentation/userspace-api/media/mediactl/media-funcs.rst
-index a9ce38b7144f..54150179227c 100644
---- a/Documentation/userspace-api/media/mediactl/media-funcs.rst
-+++ b/Documentation/userspace-api/media/mediactl/media-funcs.rst
-@@ -21,6 +21,7 @@ Function Reference
-     media-ioc-request-alloc
-     media-ioc-subscribe-event
-     media-ioc-dqevent
-+    media-ioc-g-entity-status
-     request-func-close
-     request-func-ioctl
-     request-func-poll
-diff --git a/Documentation/userspace-api/media/mediactl/media-ioc-g-entity-status.rst b/Documentation/userspace-api/media/mediactl/media-ioc-g-entity-status.rst
-new file mode 100644
-index 000000000000..ee108428c0bb
---- /dev/null
-+++ b/Documentation/userspace-api/media/mediactl/media-ioc-g-entity-status.rst
-@@ -0,0 +1,92 @@
-+.. SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later
-+.. c:namespace:: MC
-+
-+.. _media_ioc_g_entity_status:
-+
-+*********************************
-+ioctl MEDIA_IOC_G_ENTITY_STATUS
-+*********************************
-+
-+Name
-+====
-+
-+MEDIA_IOC_G_ENTITY_STATUS - Get the connection status of an entity
-+
-+Synopsis
-+========
-+
-+.. c:macro:: MEDIA_IOC_G_ENTITY_STATUS
-+
-+``int ioctl(int fd, MEDIA_IOC_G_ENTITY_STATUS, struct media_entity_status *argp)``
-+
-+Arguments
-+=========
-+
-+``fd``
-+    File descriptor returned by :c:func:`open()`.
-+
-+``argp``
-+    Pointer to struct :c:type:`media_entity_status`.
-+
-+Description
-+===========
-+
-+To query the connection status of a given entity, applications set the
-+``id`` field of a struct :c:type:`media_entity_status` and call the ioctl.
-+The driver fills the rest of the structure or returns an
-+EINVAL error code when the ``id`` is invalid.
-+
-+If the entity does not implement detection, the driver sets
-+the ``status`` field to ``MEDIA_ENT_STATUS_CONNECTED``.
-+
-+If the entity supports detection, the driver reads the hardware state at call time
-+and sets the ``status`` field accordingly.
-+
-+.. c:type:: media_entity_status
-+
-+.. tabularcolumns:: |p{1.5cm}|p{3.0cm}|p{12.0cm}|
-+
-+.. flat-table:: struct media_entity_status
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths: 1 2 8
-+
-+    *  -  __u32
-+       -  ``id``
-+       -  Entity ID, set by the application.
-+
-+    *  -  __u32
-+       -  ``status``
-+       -  Entity connection status, see :ref:`media-entity-status`.
-+
-+    *  -  __u32
-+       -  ``reserved``\ [6]
-+       -  Reserved for future extensions. Drivers and applications must set
-+          the array to zero.
-+
-+.. tabularcolumns:: |p{5.5cm}|p{1.0cm}|p{10.0cm}|
-+
-+.. _media-entity-status:
-+
-+.. flat-table:: Entity Status
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths: 3 1 4
-+
-+    *  -  ``MEDIA_ENT_STATUS_CONNECTED``
-+       -  0
-+       -  The entity hardware is connected and reachable.
-+
-+    *  -  ``MEDIA_ENT_STATUS_DISCONNECTED``
-+       -  1
-+       -  The entity hardware is not connected or not reachable.
-+
-+Return Value
-+============
-+
-+On success 0 is returned, on error -1 and the ``errno`` variable is set
-+appropriately. The generic error codes are described at the
-+:ref:`Generic Error Codes <gen-errors>` chapter.
-+
-+EINVAL
-+    The ``id`` references a non-existing entity.
 diff --git a/drivers/media/mc/mc-device.c b/drivers/media/mc/mc-device.c
-index 9151a47887a7..6f5b2daa1177 100644
+index 6f5b2daa1177..76b099aa23cd 100644
 --- a/drivers/media/mc/mc-device.c
 +++ b/drivers/media/mc/mc-device.c
-@@ -501,6 +501,28 @@ struct media_ioctl_info {
- 	long (*arg_to_user)(void __user *uarg, void *karg, unsigned int cmd);
- };
+@@ -20,6 +20,7 @@
+ #include <linux/pci.h>
+ #include <linux/usb.h>
+ #include <linux/version.h>
++#include <linux/workqueue.h>
  
-+static long media_device_get_entity_status(struct media_device *mdev,
-+					   struct file *file, void *arg)
+ #include <media/media-device.h>
+ #include <media/media-devnode.h>
+@@ -700,6 +701,9 @@ static void __media_device_unregister_entity(struct media_entity *entity)
+ 
+ 	ida_free(&mdev->entity_internal_idx, entity->internal_idx);
+ 
++	if (!list_empty(&entity->detect_list))
++		list_del_init(&entity->detect_list);
++
+ 	/* Remove all interface links pointing to this entity */
+ 	list_for_each_entry(intf, &mdev->interfaces, graph_obj.list) {
+ 		list_for_each_entry_safe(link, tmp, &intf->links, list) {
+@@ -738,6 +742,7 @@ int __must_check media_device_register_entity(struct media_device *mdev,
+ 	WARN_ON(entity->graph_obj.mdev != NULL);
+ 	entity->graph_obj.mdev = mdev;
+ 	INIT_LIST_HEAD(&entity->links);
++	INIT_LIST_HEAD(&entity->detect_list);
+ 	entity->num_links = 0;
+ 	entity->num_backlinks = 0;
+ 
+@@ -820,6 +825,76 @@ static int media_device_requests(struct seq_file *file, void *priv)
+ }
+ #endif
+ 
++#define MEDIA_DETECT_POLL_INTERVAL_MS	10000
++
++static void media_detect_work_fn(struct work_struct *work)
 +{
-+	struct media_entity_status *estatus = arg;
++	struct media_device *mdev = container_of(to_delayed_work(work),
++						 struct media_device,
++						 detect_work);
 +	struct media_entity *entity;
 +	int ret;
 +
-+	entity = find_entity(mdev, estatus->id);
-+	if (!entity)
-+		return -EINVAL;
++	if (!mutex_trylock(&mdev->graph_mutex)) {
++		schedule_delayed_work(&mdev->detect_work,
++				      msecs_to_jiffies(MEDIA_DETECT_POLL_INTERVAL_MS));
++		return;
++	}
 +
-+	ret = media_entity_call(entity, detect);
-+	if (ret >= 0)
-+		__media_entity_set_status(entity, ret);
++	list_for_each_entry(entity, &mdev->detect_entities, detect_list) {
++		ret = media_entity_call(entity, detect);
++		if (ret >= 0)
++			__media_entity_set_status(entity, ret);
++	}
 +
-+	memset(estatus->reserved, 0, sizeof(estatus->reserved));
-+	estatus->id = media_entity_id(entity);
-+	estatus->status = entity->status;
++	if (!list_empty(&mdev->detect_entities))
++		schedule_delayed_work(&mdev->detect_work,
++				      msecs_to_jiffies(MEDIA_DETECT_POLL_INTERVAL_MS));
 +
-+	return 0;
++	mutex_unlock(&mdev->graph_mutex);
 +}
 +
- static const struct media_ioctl_info ioctl_info[] = {
- 	MEDIA_IOC(DEVICE_INFO, media_device_get_info, MEDIA_IOC_FL_GRAPH_MUTEX),
- 	MEDIA_IOC(ENUM_ENTITIES, media_device_enum_entities, MEDIA_IOC_FL_GRAPH_MUTEX),
-@@ -511,6 +533,7 @@ static const struct media_ioctl_info ioctl_info[] = {
- 	MEDIA_IOC(DQEVENT, media_device_event_dequeue, 0),
- 	MEDIA_IOC(SUBSCRIBE_EVENT, media_device_event_subscribe, 0),
- 	MEDIA_IOC(UNSUBSCRIBE_EVENT, media_device_event_unsubscribe, 0),
-+	MEDIA_IOC(G_ENTITY_STATUS, media_device_get_entity_status, MEDIA_IOC_FL_GRAPH_MUTEX),
++void media_detect_poll_enable(struct media_entity *entity)
++{
++	struct media_device *mdev = entity->graph_obj.mdev;
++
++	if (!media_fault_tolerance_enabled())
++		return;
++
++	mutex_lock(&mdev->graph_mutex);
++
++	if (!list_empty(&entity->detect_list))
++		goto out;
++
++	list_add_tail(&entity->detect_list, &mdev->detect_entities);
++	schedule_delayed_work(&mdev->detect_work,
++			      msecs_to_jiffies(MEDIA_DETECT_POLL_INTERVAL_MS));
++out:
++	mutex_unlock(&mdev->graph_mutex);
++}
++EXPORT_SYMBOL_GPL(media_detect_poll_enable);
++
++void media_detect_poll_disable(struct media_entity *entity)
++{
++	struct media_device *mdev = entity->graph_obj.mdev;
++
++	if (!media_fault_tolerance_enabled())
++		return;
++
++	mutex_lock(&mdev->graph_mutex);
++
++	if (list_empty(&entity->detect_list))
++		goto out;
++
++	list_del_init(&entity->detect_list);
++
++	if (list_empty(&mdev->detect_entities))
++		cancel_delayed_work(&mdev->detect_work);
++out:
++	mutex_unlock(&mdev->graph_mutex);
++}
++EXPORT_SYMBOL_GPL(media_detect_poll_disable);
++
+ void media_device_init(struct media_device *mdev)
+ {
+ 	INIT_LIST_HEAD(&mdev->entities);
+@@ -828,6 +903,8 @@ void media_device_init(struct media_device *mdev)
+ 	INIT_LIST_HEAD(&mdev->links);
+ 	INIT_LIST_HEAD(&mdev->entity_notify);
+ 	INIT_LIST_HEAD(&mdev->fh_list);
++	INIT_LIST_HEAD(&mdev->detect_entities);
++	INIT_DELAYED_WORK(&mdev->detect_work, media_detect_work_fn);
+ 
+ 	mutex_init(&mdev->req_queue_mutex);
+ 	mutex_init(&mdev->graph_mutex);
+@@ -849,6 +926,7 @@ EXPORT_SYMBOL_GPL(media_device_init);
+ 
+ void media_device_cleanup(struct media_device *mdev)
+ {
++	cancel_delayed_work_sync(&mdev->detect_work);
+ 	ida_destroy(&mdev->entity_internal_idx);
+ 	mdev->entity_internal_idx_max = 0;
+ 	media_graph_walk_cleanup(&mdev->pm_count_walk);
+@@ -945,6 +1023,8 @@ void media_device_unregister(struct media_device *mdev)
+ 	if (mdev == NULL)
+ 		return;
+ 
++	cancel_delayed_work_sync(&mdev->detect_work);
++
+ 	mutex_lock(&mdev->graph_mutex);
+ 
+ 	/* Check if mdev was ever registered at all */
+diff --git a/include/media/media-device.h b/include/media/media-device.h
+index 9a0f38914354..d1db783db4ac 100644
+--- a/include/media/media-device.h
++++ b/include/media/media-device.h
+@@ -16,6 +16,7 @@
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
++#include <linux/workqueue.h>
+ 
+ #include <media/media-devnode.h>
+ #include <media/media-entity.h>
+@@ -199,6 +200,9 @@ struct media_device {
+ 
+ 	struct list_head fh_list;
+ 	spinlock_t fh_list_lock;
++
++	struct list_head detect_entities;
++	struct delayed_work detect_work;
  };
  
- static long media_device_ioctl(struct file *filp, unsigned int cmd,
-diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
-index ab1dea809879..9f9ced3fb0e0 100644
---- a/include/uapi/linux/media.h
-+++ b/include/uapi/linux/media.h
-@@ -377,6 +377,12 @@ struct media_v2_topology {
- 	__u64 ptr_links;
- } __attribute__ ((packed));
+ /* We don't need to include usb.h here */
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index b0e1fc627d17..dea3a742a21a 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -343,6 +343,9 @@ enum media_entity_type {
+  *		re-used if entities are unregistered or registered again.
+  * @pads:	Pads array with the size defined by @num_pads.
+  * @links:	List of data links.
++ * @detect_list: Entry in &media_device.detect_entities for poll-based
++ *		detection. Managed by media_detect_poll_enable() /
++ *		media_detect_poll_disable().
+  * @ops:	Entity operations.
+  * @use_count:	Use count for the entity.
+  * @info:	Union with devnode information.  Kept just for backward
+@@ -372,6 +375,7 @@ struct media_entity {
  
-+struct media_entity_status {
-+	__u32 id;
-+	__u32 status;
-+	__u32 reserved[6];
-+} __attribute__ ((packed));
+ 	struct media_pad *pads;
+ 	struct list_head links;
++	struct list_head detect_list;
+ 
+ 	const struct media_entity_operations *ops;
+ 
+@@ -1067,6 +1071,34 @@ void media_entity_set_status(struct media_entity *entity, u32 status);
+  */
+ int media_entity_detect_or_fail(struct media_entity *entity);
+ 
++/**
++ * media_detect_poll_enable - Enable periodic .detect() polling for an entity
++ * @entity: The entity to poll
++ *
++ * Add @entity to the media device's detect poll list and schedule the
++ * detect worker if not already running. The worker periodically calls
++ * the entity's &media_entity_operations.detect() operation and updates
++ * the entity status on change.
++ *
++ * Intended to be called from the driver's enable_streams() callback,
++ * so that detection polling only runs while the entity is powered and
++ * streaming.
++ *
++ * The entity must implement the .detect() operation.
++ */
++void media_detect_poll_enable(struct media_entity *entity);
 +
- #define MEDIA_EVENT_ALL			0
- #define MEDIA_EVENT_ENTITY_REGISTRATION	1
- 
-@@ -416,6 +422,7 @@ struct media_event_subscription {
- #define MEDIA_IOC_SUBSCRIBE_EVENT _IOWR ('|', 0x06, struct media_event_subscription)
- #define MEDIA_IOC_UNSUBSCRIBE_EVENT _IOWR ('|', 0x07, struct media_event_subscription)
- #define MEDIA_IOC_DQEVENT	_IOWR('|', 0x08, struct media_event)
-+#define MEDIA_IOC_G_ENTITY_STATUS _IOWR('|', 0x09, struct media_entity_status)
- 
- /*
-  * These ioctls are called on the request file descriptor as returned
++/**
++ * media_detect_poll_disable - Disable periodic .detect() polling for an entity
++ * @entity: The entity to stop polling
++ *
++ * Remove @entity from the media device's detect poll list. If no more
++ * entities are being polled, the detect worker is cancelled.
++ *
++ * Intended to be called from the driver's disable_streams() callback.
++ */
++void media_detect_poll_disable(struct media_entity *entity);
++
+ /**
+  * media_entity_pipeline - Get the media pipeline an entity is part of
+  * @entity: The entity
 
 -- 
 2.56.0
