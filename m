@@ -1,49 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795005874;
-	b=RzAqEB8rnJvxNwCiKqbPvQBGHs4ml892HWg4LYtP2QVOF58TkNBLXak34yGtFZ0lm2vB
-	 OTgak/gn0tX7AmfZ3s3ZwHhneLuX1BiJmfPLSoFegPzgPhYbw4GMexiAfq8uUmVT96wwW
-	 HXlLI3DsZF8CLzl6DV5HHhMEJCGresx7hzKhzzF5rfoc2a49RKtXWLtEfPHzI1COoE7f7
-	 R/9JyBwnUswoxrgAIr1AOGHCE/PfBphSASD7uGeb7HBLwFMAhK3v/mJ6icd/5UHYNPcQc
-	 w63wbFLFA0wNNbaJjU0K0HR9C1GbtA+FTwL5AHEishbCLuC9r7gRLVmc4FyUbcFwuRQ==
+	t=1795005869;
+	b=LS2ZySy4o668saRiyUQ5KjG98mPT/wx6tK4slqr7P6HHCPjqfsq3eSW50vsNn9ByfKLP
+	 lMPKUk2+B+T1+rmDN6nrnFP+hsuctzSA2joZWnpqpxCZ5NcSwdQ6zQvuHXCA3+m11TkGz
+	 8NwBiwemWXwGxnUhHPow9ajdmIHTnQVUJmF+O8MfO8OKsne0Z9k4uhmgciDiQYeVUUKXH
+	 IKuYnhJDkN5K9pA0ihlzSqLxp7BCEKHRnyJ7NBx0ZvMDM0zaiI8CukDCx9aIdJe6ABehJ
+	 YdwhsJoyxJNSxS4s1HWxMZoJjCzz0h+mMSOFCKzc3sg+irD2TMoSg8HUe16hP7+A7Ew==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795005874;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795005869;
 	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
 	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=+b/bporVQPERPDqhEJifGRe5RVJXvpB/5W9DRGOoLqU=;
-	b=XWxybwIZ2ZoJH/cx4FMeldtgOy9fTVYobX4Dc8WJ64qMFAQarRRJK1n4I8ER7ulbJuAB
-	 sJaeRhwqdgXEJ1lRD9/nloUp5yJVEY+N64Ca0Hn4hJloprcRx+hDN/iWkWjZpa4lio9i4
-	 NCGNIyl1GYObbN3fli8DOjjBXFlT4ynisM8Q7QJtzf0BnyHvPZBGW+ASK7e/u8ZjAde0a
-	 rpxxfBgfcrNd0Er5zpRqCPIYSEDa0l/RcjYbqyEWMDxWqw0YdZROEBzykIIfFR2HYMc5Z
-	 EBBgtr9PDqIlnPvLywqcNaFePX4W5UdSzyeOva1VSHA/xYU/dIbUI7DxQkyT9t9wTjg==
+	bh=MTEXLwhDcaKZPv6F99Re1w5rP02dqPk/cok6r6WQaXY=;
+	b=3p8rmsdVM/YB+Wc7PAvZgm4tx6jhc09qoR38XMAOvC8Sfu9CSz5Ez4JvVweCsN6P+rEt
+	 OwuYbrIYMEIab3zu5VtGMjuU8wDd/NQCZc67hUciS1pW+szGBuB8XmUOWFF1zE6nMh2hf
+	 NJeUROSCtEmDaVSuK0nwhI8coI5j1KZ1gIXOVZtQllKegN2FObSN0nD7N+t64CZN+HULb
+	 1g2YERucn1gxmtImwvHSf9Z9bENujf/nN6lrm/uGVLZwqrs3CT+XTdOz32lCL+rG9wvHB
+	 ZUcHCDWNSpOWobGCrnepqoZyql/H2Xi8F9Ssu+64Tw5mOsvYQ/2SV3ICxysDmRhgWdQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X3tnCQc7;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g3q4hXU2;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B6F60A2608;
-	Wed, 18 Nov 2026 12:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767D1606A325;
+	Wed, 18 Nov 2026 12:44:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X3tnCQc7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA241F000C7;
-	Wed, 18 Nov 2026 12:44:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g3q4hXU2
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8FA1F000CF;
+	Wed, 18 Nov 2026 12:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795005873;
-	bh=+b/bporVQPERPDqhEJifGRe5RVJXvpB/5W9DRGOoLqU=;
+	s=k20260515; t=1795005869;
+	bh=MTEXLwhDcaKZPv6F99Re1w5rP02dqPk/cok6r6WQaXY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=X3tnCQc7aBbBrOc78+4TIxr5D8PkEdnPSlgMlp/xh1GUUFy680wR8zUAHEz3ONAlF
-	 IbhoLsMdsgO4HU7AN0gjVcTD0K4jh6D8eS3BP/Rt1kG/3H8/65TaAqoFBIt+XFCpZT
-	 bA+3dSLkpWNYpAQ+FnNdYm8W7IuZkEMfVc82GgeYDtMfPjlk+3tBtb9T6QFZEiXuQv
-	 tdT0IoJeL1dyHmkUFlol5NZaBoARpIdKjeV7TYE2001niWmZlmJ94EErSRNfULQbqk
-	 mGbVtfYGSdFrpIM6zfulKtNNGN9IdP06LIomiEJSkgR7Z4cA3o1ffr5eT7JoNZtbxf
-	 24Uk93/rxuz/w==
+	b=g3q4hXU2++EsPefTFxya2SIkKxk3H1uXp0P6E0AVz35TIwvzEl6aOJqgOZTLfrywT
+	 C+N8U4MkJKlBEvmS7CeMYpX9S8xGYttamMFP/8uqi1owQJeblQaZFrP1FFQIHv6S48
+	 guSMy/R/qkD2u/C8K8lSls5gRDgTfsNvhu0RwDD3ZHIduSZ/Wnk2L8S2EH7mpVVRlB
+	 uTisMikcVkaQxEYZggCKK0g8i1F91ETwKCnXWB30wwtfciJ17SgRYgprWcC00YPMbk
+	 Je7OHnkQJ3W+V6emucfNM1ypUvrtGFvi95QGkYmz2jbhidvawZ3088Ev68zkznp8lq
+	 tKzy2JCG6pUUQ==
 From: Mattijs Korpershoek <mkorpershoek@kernel.org>
-Date: Wed, 18 Nov 2026 13:43:59 +0100
-Subject: [PATCH RFC v2 15/16] media: imx219: Allow driver probe with
- missing sensor
+Date: Wed, 18 Nov 2026 13:43:57 +0100
+Subject: [PATCH RFC v2 13/16] media: mc: Add
+ MEDIA_EVENT_ENTITY_STATUS_CHANGE event
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -55,7 +55,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261118-v4l2-sensor-detect-v2-15-1bb1a445b556@kernel.org>
+Message-Id: <20261118-v4l2-sensor-detect-v2-13-1bb1a445b556@kernel.org>
 References: <20261118-v4l2-sensor-detect-v2-0-1bb1a445b556@kernel.org>
 In-Reply-To: <20261118-v4l2-sensor-detect-v2-0-1bb1a445b556@kernel.org>
 To: Hans Verkuil <hverkuil+cisco@kernel.org>, 
@@ -73,150 +73,118 @@ Cc: Mattijs Korpershoek <mkorpershoek@kernel.org>,
  Maxime Ripard <mripard@kernel.org>, linux-media@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 X-Mailer: b4 0.17-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4297;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3964;
  i=mkorpershoek@kernel.org; h=from:subject:message-id;
- bh=VflYp+cMHa/Buc2sISbW+WgltI5f9Bvp5e7CfX2o6Uc=;
- b=owEBbQGS/pANAwAKARkNHbRmThk1AcsmYgBq/Z2MYCrd8p4GkkrDokxabrdoluqCFzAsyTnIo
- Jm+lbiOGpOJATMEAAEKAB0WIQQu6UKnth9qvlMTrQAZDR20Zk4ZNQUCav2djAAKCRAZDR20Zk4Z
- NRWSCACDCs2Meaxyo3N3rJ8EksAVeLUDoE3JWDfMbG/o/BLMHnTZSPybaoHwUl7IYa3ExSVcKMv
- UP9Lbb5wzaeTpQQiz3z1H8btj15uPClgHQv1Fp0oLcn/v+j0YZkSinc7uK7V5KYuS2zDxEKrjT+
- gRyqIt+kfUmO2eUm9bz0HMyitv/eHXU85LtnmlXZ4jGUxCulzH7Mc7oZl+kFY0Il2dG4rWai//Q
- MOSb2SwJ/UFqJXRffrORX11VX7U+gMwkRfmOZcF09i2XdREO9hh5hb8Ffgp3yu16VhdCCTLebgw
- RF1Qbfh9zb2KJGIwRaCxApgGqD+hxBXhBil9Hru+QdSfm0nl
+ bh=DjVyBQWTJwprWSkL8zlrn6TeiodI6ycVgWEqBsX+PTI=;
+ b=owEBbQGS/pANAwAKARkNHbRmThk1AcsmYgBq/Z2MlMKX8NqvG8biXpkL+2PWoI3GOreaj6Zlc
+ lpJvJ8W5BOJATMEAAEKAB0WIQQu6UKnth9qvlMTrQAZDR20Zk4ZNQUCav2djAAKCRAZDR20Zk4Z
+ NX94B/9/TO76zqCOdUegfXl3/WaPQW77+oTqI0dMhXh8gsWiNErFML67dlSW7nK5VVsOg+oFmXu
+ lKhtNDMdkQDBmhjIkK+Twqm2Mc3XZoqq25y1r1jidSAscauxOg3hpo140RlA0c/G1MrnhPzSDMo
+ OWxqYqd14aDJ0pel9CQnDFWa2nAdzcrYCmc/Lim84Z/439o4TYQnc1+w8vitg0ji9EdGj/b5/O9
+ 62u7ABg/ZqsIRq9LDjqBKnj33J7sYX72fdBRCOAYXtGfLA6x58UjSy5Lf4tMvKnFAIYfM52t7GU
+ CbslbOSZCWWDoI9RSPEyaBv63emTC6EN6+akHRRVv3rRq2Bj
 X-Developer-Key: i=mkorpershoek@kernel.org; a=openpgp;
  fpr=8234A35B45C0D26B31C1A2DA570338B018144F28
 
-When media fault tolerance is enabled, probe() should complete even when
-a sensor is disconnected.
-
-Currently, the driver reads the CHIP_ID over i2c in the probe().
-When we can't read CHIP_ID, the probe errors out, which result in the
-v4l2-subdev not being created.
-
-Extract imx219_read_chip_id() from imx219_identify_module() so that
-probe can distinguish an unreachable sensor (I2C read failure) from a
-wrong sensor (CHIP_ID mismatch).
-
-When the sensor is unreachable, skip the LP-11 state initialization and
-continue probe so the v4l2-subdev and media entity are created.
-
-Note that a CHIP_ID mismatch remains a fatal error.
+Add a media event that notifies userspace when an entity's connection
+state changes. This allows userspace to react when a sensor gets
+disconnected. For example, by aborting an ongoing stream.
 
 Signed-off-by: Mattijs Korpershoek <mkorpershoek@kernel.org>
 ---
- drivers/media/i2c/imx219.c | 74 ++++++++++++++++++++++------------------------
- 1 file changed, 36 insertions(+), 38 deletions(-)
+ .../userspace-api/media/mediactl/media-ioc-dqevent.rst         |  5 +++++
+ drivers/media/mc/mc-entity.c                                   | 10 +++++++++-
+ include/media/media-entity.h                                   |  3 ++-
+ include/uapi/linux/media.h                                     |  7 +++++++
+ 4 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index 1580562093e8..02d065fb88d0 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -1099,25 +1099,9 @@ static int imx219_get_regulators(struct imx219 *imx219)
- 				       imx219->supplies);
- }
+diff --git a/Documentation/userspace-api/media/mediactl/media-ioc-dqevent.rst b/Documentation/userspace-api/media/mediactl/media-ioc-dqevent.rst
+index f7a2cd2675f5..2ae72523afc7 100644
+--- a/Documentation/userspace-api/media/mediactl/media-ioc-dqevent.rst
++++ b/Documentation/userspace-api/media/mediactl/media-ioc-dqevent.rst
+@@ -112,6 +112,11 @@ subscribe the events.
+ 	known to be still missing. This number may be less than the total
+ 	number of all missing entities. However if this number is zero, then
+ 	all entities have been registered to the media device.
++    * - ``MEDIA_EVENT_ENTITY_STATUS_CHANGE``
++      - 2
++      - Triggered when a media entity connection status changes. The entity
++        id is in ``entity_id`` and the status is encoded in ``status``.
++        See :ref:`MEDIA_IOC_G_ENTITY_STATUS` for details about entity status.
  
--/* Verify chip ID */
--static int imx219_identify_module(struct imx219 *imx219)
-+static int imx219_read_chip_id(struct imx219 *imx219, u64 *chip_id)
+ Return Value
+ ============
+diff --git a/drivers/media/mc/mc-entity.c b/drivers/media/mc/mc-entity.c
+index 2b5fc5d1b0a4..4c6a1c40d698 100644
+--- a/drivers/media/mc/mc-entity.c
++++ b/drivers/media/mc/mc-entity.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <media/media-entity.h>
+ #include <media/media-device.h>
++#include <media/media-event.h>
+ 
+ static inline const char *intf_type(struct media_interface *intf)
  {
--	struct i2c_client *client = v4l2_get_subdevdata(&imx219->sd);
--	int ret;
--	u64 val;
--
--	ret = cci_read(imx219->regmap, IMX219_REG_CHIP_ID, &val, NULL);
--	if (ret)
--		return dev_err_probe(&client->dev, ret,
--				     "failed to read chip id %x\n",
--				     IMX219_CHIP_ID);
--
--	if (val != IMX219_CHIP_ID)
--		return dev_err_probe(&client->dev, -EIO,
--				     "chip id mismatch: %x!=%llx\n",
--				     IMX219_CHIP_ID, val);
--
--	return 0;
-+	return cci_read(imx219->regmap, IMX219_REG_CHIP_ID, chip_id, NULL);
- }
+@@ -1540,8 +1541,15 @@ void __media_entity_set_status(struct media_entity *entity, u32 status)
  
- static int imx219_check_hwcfg(struct device *dev, struct imx219 *imx219)
-@@ -1194,6 +1178,7 @@ static int imx219_probe(struct i2c_client *client)
- 	struct device *dev = &client->dev;
- 	struct imx219 *imx219;
- 	int ret;
-+	u64 val;
+ 	lockdep_assert_held(&mdev->graph_mutex);
  
- 	imx219 = devm_kzalloc(&client->dev, sizeof(*imx219), GFP_KERNEL);
- 	if (!imx219)
-@@ -1235,36 +1220,49 @@ static int imx219_probe(struct i2c_client *client)
- 				     "failed to get reset gpio\n");
- 
- 	/*
--	 * The sensor must be powered for imx219_identify_module()
-+	 * The sensor must be powered for imx219_read_chip_id()
- 	 * to be able to read the CHIP_ID register
- 	 */
- 	ret = imx219_power_on(dev);
- 	if (ret)
- 		return ret;
- 
--	ret = imx219_identify_module(imx219);
--	if (ret)
--		goto error_power_off;
--
--	/*
--	 * Sensor doesn't enter LP-11 state upon power up until and unless
--	 * streaming is started, so upon power up switch the modes to:
--	 * streaming -> standby
--	 */
--	ret = cci_write(imx219->regmap, IMX219_REG_MODE_SELECT,
--			IMX219_MODE_STREAMING, NULL);
--	if (ret < 0)
-+	/* Verify chip ID */
-+	ret = imx219_read_chip_id(imx219, &val);
-+	if (ret) {
-+		if (!media_fault_tolerance_enabled()) {
-+			dev_err_probe(&client->dev, ret,
-+				      "failed to read chip id %x\n",
-+				      IMX219_CHIP_ID);
-+			goto error_power_off;
-+		}
-+		dev_dbg(&client->dev, "failed to read chip id %x\n", IMX219_CHIP_ID);
-+	} else if (val != IMX219_CHIP_ID) {
-+		ret = dev_err_probe(&client->dev, -EIO,
-+				    "chip id mismatch: %x!=%llx\n",
-+				    IMX219_CHIP_ID, val);
- 		goto error_power_off;
-+	} else {
-+		/*
-+		 * Sensor doesn't enter LP-11 state upon power up until and unless
-+		 * streaming is started, so upon power up switch the modes to:
-+		 * streaming -> standby
-+		 */
-+		ret = cci_write(imx219->regmap, IMX219_REG_MODE_SELECT,
-+				IMX219_MODE_STREAMING, NULL);
-+		if (ret < 0)
-+			goto error_power_off;
- 
--	usleep_range(100, 110);
-+		usleep_range(100, 110);
- 
--	/* put sensor back to standby mode */
--	ret = cci_write(imx219->regmap, IMX219_REG_MODE_SELECT,
--			IMX219_MODE_STANDBY, NULL);
--	if (ret < 0)
--		goto error_power_off;
-+		/* put sensor back to standby mode */
-+		ret = cci_write(imx219->regmap, IMX219_REG_MODE_SELECT,
-+				IMX219_MODE_STANDBY, NULL);
-+		if (ret < 0)
-+			goto error_power_off;
- 
--	usleep_range(100, 110);
-+		usleep_range(100, 110);
+-	if (entity->status != status)
++	if (entity->status != status) {
+ 		entity->status = status;
++
++		media_event_queue(mdev, &(struct media_event){
++			.type = MEDIA_EVENT_ENTITY_STATUS_CHANGE,
++			.u.entity_status.entity_id = entity->graph_obj.id,
++			.u.entity_status.status = status,
++		});
 +	}
+ }
+ EXPORT_SYMBOL_GPL(__media_entity_set_status);
  
- 	ret = imx219_init_controls(imx219);
- 	if (ret)
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index 4d66f9823c9d..b0e1fc627d17 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -1042,7 +1042,8 @@ void __media_entity_set_status(struct media_entity *entity, u32 status);
+  * @status: The new status (%MEDIA_ENT_STATUS_CONNECTED or
+  *	                    %MEDIA_ENT_STATUS_DISCONNECTED)
+  *
+- * Update the entity's connection status.
++ * Update the entity's connection status. If the status has changed, a
++ * %MEDIA_EVENT_ENTITY_STATUS_CHANGE event is queued to the media device.
+  *
+  * The entity must be registered with a media device. To set the initial
+  * status before registration, assign entity->status directly.
+diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
+index 9f9ced3fb0e0..4ccffe7434c9 100644
+--- a/include/uapi/linux/media.h
++++ b/include/uapi/linux/media.h
+@@ -385,16 +385,23 @@ struct media_entity_status {
+ 
+ #define MEDIA_EVENT_ALL			0
+ #define MEDIA_EVENT_ENTITY_REGISTRATION	1
++#define MEDIA_EVENT_ENTITY_STATUS_CHANGE	2
+ 
+ struct media_event_entity_reg {
+ 	__u32 entity_id;
+ 	__u32 pending;
+ } __attribute__ ((packed));
+ 
++struct media_event_entity_status {
++	__u32 entity_id;
++	__u32 status;
++} __attribute__ ((packed));
++
+ struct media_event {
+ 	__u32 type;
+ 	union {
+ 		struct media_event_entity_reg entity_reg;
++		struct media_event_entity_status entity_status;
+ 		__u8 data[64];
+ 	} u;
+ 	__u32 reserved[8];
 
 -- 
 2.56.0
