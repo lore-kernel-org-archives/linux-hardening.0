@@ -1,79 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.176
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795062171;
-	b=ndSAcvsWaqALu6WZyYKNTkLoqzZqxJvxaJZ8dmCQpz2ylTTkiCyG0eJTIYetURp7mGev
-	 H/AHvDAuGMQwzkp7cTfW2iLDNPLbE10ROPLCHzZJbim9FevuUkjezz3wWR5sJZqdh+z3A
-	 3dCnoss5/G1sVFP1c3XdNdetXfjfBXvTQRXSkwAlYeIltJxvCLMuxWQo0De7XydeuED96
-	 fQKTUzcULPCriUuUpepk88qFhRKjvlnN5G00lqhHp+WKXE5e25PH+zXGKWA6QQtXEG0vB
-	 dnB1OFceIXvjvC41U8N2TslMj4o2tgp+rb0uQstA1oEKEmz0yvxHuMUp+drqSuKVoJg==
+	t=1795067159;
+	b=oSMi4ss+TvTf+vnAqR1x8jsqHr6SXNoL6YqtAHyIwx1PU8gjn9v25Fm/cMQZ0Omt8lka
+	 dS7gBBSC/2+sgspW5UEGjWA3LRU2onuWEDi+4STKfYIZr92mgkhvkL6B0yB3vCy8qmJIl
+	 hmAD/4iL3C7eRXxyywmmktf9nCYRuRDBWIFAauvJgn5Vuyw28oNnwZ+KaWdNrfdf3AiM/
+	 0fc5Kw6fzpTwinJDNNgBTOHu2tzXu8+CXdC+ek2f2vH5IYg15SZtgBzivr11b+YXp4gf6
+	 Fjse6zpjUviACGbALbqX7RSC3OMyddfCeOaWhq3Xvvxii/hZnXUODkJw3ycsD0A7RsQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795062171;
-	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
-	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
-	 X-Endpoint-Received:X-Original-From:Reply-To;
-	bh=Yv6d6bSBIIv/IerploKHMuR5GZabm5s7nfjxnfDm4VQ=;
-	b=dostWU6IiZ9EnohKh17EhgTOQ1QmoxuFopv+8H1mEkRyjaookGH2Y8wpmXjynO1+4yhC
-	 ryqOY4+FGiDJKfdUB7eqr194Z+PMaqu9/pF/IPe6eOr1pfEX7tSgDvWrHuTIgkzLqYIzc
-	 q/S0xEiFAEyJj7cuS6bQc35JBLVBWLTh9tJy1RQ1t2w0Wpbr26h+J1ly+3cR0qRV03EJq
-	 ZX0X0kUdfVTLcYS4VupLKQV1nHlcGk3K2osS1Kwup1nBJkVZ0VTS+zISE8dgq6YQ0D0D3
-	 4B6NIiyfFzUcJvYdVdJKNfA2/nOnhCocGhHYOifhKj9yNTxEVYqhAF0VxStu9Xp/B0g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795067159;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=cIkoHsOVRZS7gIowPl6xkao6tH+bfcK9X/Z+HF8PGU0=;
+	b=zdN6BvI7ttFU1KgEUIlE1wrzT9AWyvb8955yEsPqnIz4uTpNcwDka76yIW/TdQltPp8a
+	 w4qR13xZw8cbD62NCwK2KXHcNlwFzX3lEWqV7183sQa2UEZIYjM5vpAfu3nArDYxY9PYF
+	 4I/w16/UUtN8XWWSUGdy9SfFjLF7XANdEIdrYLmgqUlseUyOznyssz+ypRMkmOgYxcHTj
+	 ZH9cN9owbrrE1DQd9Q4GG0MPmMk2RmRGvbS/skFp0Sk8LBZlsAvBccHAnm0le36wYJHaC
+	 jsRf240ldWSzSfwzvFTwTvSnlO5BOpm101AmCIqpsquO+0DB0zzVPVUfIktX3smLFjA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DOez1qSc;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC87606A333;
-	Thu, 19 Nov 2026 04:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DOez1qSc
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795062171;
-	b=ZohhETKuv2c9AGcgHgwOXYIFyucFqArrmvFrje7EcnqLnze0BoAIBhHlA4x4YBkLNaRn
-	 QUf7tZ5VZe/mPTLTwt7S2t7RN6KlByNyrduID5Dsbf5IOpusk0IRzWT1iE3SpwRwMiRtd
-	 xgdPoqWI/Pm9NB59WP0nu4jH8k2XHr3AoxpTZe+V5E/eD6fG4GIvha2kxRrkHhEZdTUIu
-	 f/fJYwwcJHJnQSWGLHNQAj6OkCwH1mgZAQjdjjQZ1yRo64LOVMHspwi+/hSdSJbi9yWUS
-	 mTZ58qWbYpo4I7Vip/4W0DqFlfJS9RKz1hC8QY5lt6VGBrEfbWgCvchLtUQG37PctuA==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795062171;
-	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
-	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To;
-	bh=Yv6d6bSBIIv/IerploKHMuR5GZabm5s7nfjxnfDm4VQ=;
-	b=NjNuaRYtLgxMKO8A2fTpk7aoQ/eEeuPttPKveVfx8M4+ezMZpaJh+OtOYp9g8V/dnbmz
-	 4Qx/ezcQh8p0bQjNAFuZ05JlORPZt8bo2bPu7jIN+yTF7A98UxgyJNDeb50DiTlZT5mow
-	 9GIEl4SRwhWEuni1b1yns61YnrSQGKaIEc7zZkcneOZRXUxbnWn9OOgopSHXvWm63kyjS
-	 Qk6L8hJS6Q2WUZk+M6hqekN62L8ryZwdjJrOQzM0NNG7kHPCjPXV7M4wEJg7ChQ7T6P+i
-	 jAZ0gF/VRUu16Y52qqPw6lEGGl+QHNIF+MuSePjFQ+miW8jJIKBWF/C+hYS+YdBVa2g==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=G9sTcZLh;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.176
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id A726E1F000C7;
-	Thu, 19 Nov 2026 04:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795062171;
-	bh=Yv6d6bSBIIv/IerploKHMuR5GZabm5s7nfjxnfDm4VQ=;
-	h=From:Subject:Date:To:Cc:Reply-To;
-	b=DOez1qScdIAhF+wpQyPSTiXaHmcKfua41dF1J/JMKgsxd3Ur0LYt5lCoMx+Pv/R+9
-	 CWoJ+DZ6Vk0XfHAqNsqwWwQjoCA/5h4XzUC309EAUmQBZ8pbeBFDtQP9q4yV7MSq06
-	 6FbOlTVs9pbnF1hybIGJPnG8cyCJntXJoYSajssyzC8GWgWuDDxU8tnOMvt2LJVKhH
-	 g3PAu1BAnAEayE9ZVOETnVrPKCKRISRqbk9pBO47z0/OrnVQwf/MneiuIR5NG6vlX6
-	 wg8X59fKFjmkpRmruVyP4yBoqNw2SY3sfawea760vhFiRo3M44LGZ+8sqKBaFJJSMw
-	 g7Q1z7OMGYh1Q==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 0660E4B0D5;
-	Thu, 19 Nov 2026 04:22:49 +0000 (UTC)
-From: Junyi Zhao via B4 Relay <devnull+junyi.zhao.amlogic.com@kernel.org>
-Subject: [PATCH v5 0/2] Add Amlogic A9 I3C support
-Date: Thu, 19 Nov 2026 12:22:45 +0800
-Message-Id: <20261119-a9_i3c-v5-0-6ec51f8fb59d@amlogic.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461060A2611
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Nov 2026 05:45:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2461060A2611
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=G9sTcZLh
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-55be673e029so117301cf.1
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Nov 2026 21:45:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795067158; cv=none;
+        d=google.com; s=arc-20260327;
+        b=fBvXolJh54I/NFjnhK/+vhw87agccQMCBvFTgxqgTfkWQcgcVXOuXtzngSqNkB1n07
+         1SkwJPwpUSCFIHHYSFeudI/2RkEYApE0N9YHs+YqJYS+LucErGtyLkaKYyH6/oiDOclO
+         u+6dkD0aJhntD+E9XYK99W3qOQBgJEe5fvanuzZVlsNPhLU9XaxuYAzjUrWZUdxLV6+u
+         myPmxhdMFJPTyasjpcvDoFhmL8NsaVf+nhb9f3yCuMNhhZeY+PouPCmuz3B856n21xFa
+         z4RSKvy0RdC3SeGEjg6jMKEgqlSJ2UtkYodGiRZ4Iwc98delPbDV1xYoZfJLitVC6+29
+         DjLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=cIkoHsOVRZS7gIowPl6xkao6tH+bfcK9X/Z+HF8PGU0=;
+        fh=RNhLd/WSg7rQOE25+ptghdSqP3NpJstCbfCj9VxW8dM=;
+        b=S4inI2COYnc9aqZdAMomdZXfD5gdwmD8pKE2ElO9UdDkhcJgNFvSfS2o8vf3rQcpWh
+         1jOYBXDubS+reb3uBGcUuzXLQF56p34CFVIugkUOu12CMblJaGprPhGluq2UCbppyNgH
+         gwEloWUmsQinNbz8nzvVCAdJmUOhASDUAf4BzpSBijjc/4K1d6jUATdlV43/7Df3O5Ig
+         gj9thFO5J/uLbVj2FUXBLFqEIVxJMYE+0UCDHSeiV12WqG/sGMT9EiCJTyJ742YJgt4W
+         0pnGYWcqAN0su7vE0SKtfjdcDuBx+SlhyD6RiL1ZQw+Zl7zYvLMHX/7Dqa5fhT0ApM/O
+         VSHw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795067158; x=1795671958; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=cIkoHsOVRZS7gIowPl6xkao6tH+bfcK9X/Z+HF8PGU0=;
+        b=G9sTcZLhDZovHsgCx5Yv7CDMxJM8G5FDawL5JBd36y8NAy88YZsvFaSPGxL2OJDQWl
+         D8l1zhaslplXpC+LH5CUyVM6fiya54hKkm3044CoRWwH6cYkMSxwEs9IE4R9vJJik3G9
+         PaGymfho5RIhVhS+d5TUg18WON8Y60WBZxMM5gYyXKhy/KCwkwn+iT9No3gldijeO5tx
+         xp5Gg8oePFUL/bdSJWKKtm4OA3cKKfEuUGn9FzCr/u57K1nN+6BjTy/XuUfYpf49AuBU
+         GF3mrNTIV4ZWpGu4KegbuhUlLkOSriAaKH7KHmdnomUVdJlrrfe8QiZH1hsMd7fqVOCf
+         HQmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795067158; x=1795671958;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=cIkoHsOVRZS7gIowPl6xkao6tH+bfcK9X/Z+HF8PGU0=;
+        b=k8MVlFaBPBoidjVNnRLDBVBJYIOBARcc+5KlcT966HG4tg42q2UBcmv9kcBWYTXlfo
+         RBAusg7Fi99zyRrj25VXCDWMRj7eUs7bUFMONK4gJ6iij+napBRR3Mox87Dz6yC7gLbI
+         mK7J1bArRz2OIgBxgwQxCTpF2RApP0JZwPDpuV4VtiwJKvKMK68IpG3VaFM4ZPkwU1nS
+         8rEi0p4mgFI4xnVV0G0fvaIpl1lybTHaKpehywOqTNQY17nVqo4jXlgHvd9gleTTsuTq
+         nIuZ22bYQQ73YA2svi+LiO4WtSezuLu30RDmZbK8V3WYhEOe7ZVz4nOxq29TM0F+IevH
+         yglg==
+X-Forwarded-Encrypted: i=1; AL+hErF1vmkcswztAxKFCRNCw+2qX3tFLZf/QmmHZezhcRv7qloLi7cDsJd57vKkHvsHxe8bI6FjigDcEY0xf0e6hZ4=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8g7cfvyxLasOduZFdq/o9KwEmufrMiE3FCtYZSm09LJqHAn5FT
+	4HsTd6lbdAQn4IId98z8/JYabWsFvkqFjQQv7YApW/NDSRPm24AcYk8eJNpU0syaqa2wvFJAf89
+	NDU2Yd6l4XKhp1VxUe5ZmMj2TcbAPVVl+EVmHrPJO/uqhWDGaupuSpQvkw+Q=
+X-Gm-Gg: AYBFou0qpX5s1YcKqiCZzIN1ZZnMEnMqaEDLD3IwahdFu229jmmScW00dhFGfqUofxZ
+	IK4x+4MVJ+bG7qKWbjpt7mZ3oweCsXPq6wJaCP0T1z1Bdr6VDQW3FdBC6BCrwACyjCUIP3fA3xQ
+	pXeEa/ZvPdLE/bsZSLJ/15xJQkJuhhhRsYoUf8L7tc7vcAr7sMt77WNYs9eL6r5NOxndxNK35le
+	mvFafZ6Z6JS3ezFamLiwE6iwmLEzAEvPqhqTw4rFBQldRiQqWLqygTfLW+YQ1iOVh1RW2IiAWno
+	GuctSaQAZz41ZRKv5SMbkj1XjIiVWzwNYlB7ExqemTcbD4RGEoEjxvgwbnJeAoGGLswuJ10Ak/a
+	K/vLIgp8Va2d1h1ogBarYeCHIFr4/ZWv0htHz
+X-Received: by 2002:a05:622a:4808:b0:536:934f:7da2 with SMTP id
+ d75a77b69052e-55d6c7995f9mr6557911cf.2.1795067157461; Wed, 18 Nov 2026
+ 21:45:57 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -83,122 +104,109 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJV5/moC/2XO3W7CMAwF4FdBuV6Q7aSl3tXeY5qmxkkg06BTw
- 6oh1HcnAfEzcXmk8x37qHIYU8jqdXFUY5hSTsOuhOZloWTT79ZBJ1+yIqAWAUH3/JmMaPYN2cY
- DW+lUKf+MIaa/89D7xyXnX/cVZF91bWxS3g/j4Xxpwtq7jvJ1dEIN2hD7Dtm3hPGt334P6yRLG
- baqzk50hwh0g1QgiF1ZF0Vi7J+heYTtDZoCO7CuZcfAjXuG9gHiHdr6qjdE5FZInf8P53k+AaC
- VN5lbAQAA
-X-Change-ID: 20261010-a9_i3c-9d5245d094c8
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, imx@lists.linux.dev, 
- linux-hardening@vger.kernel.org, xianwei.zhao@amlogic.com, 
- Kelvin.Zhang@amlogic.com, Junyi Zhao <junyi.zhao@amlogic.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795062168; l=3278;
- i=junyi.zhao@amlogic.com; s=20260924; h=from:subject:message-id;
- bh=xV4H0o4G83ywiHtiXYg2J/lDkmvf0Uuq0lK84mEN59U=;
- b=ASWcwZgj9n6dw2BnDntV1w4pXAefYU4kmHwXGxCQ7A2VkjXfTmf9bLqUvXPIrIjyFVzs5XuNO
- CEjjd0iNLcGAfKkz/H7NHz4FBgFQ0OMAqIX5vwTdcrAgHhF7tOaQzY4
-X-Developer-Key: i=junyi.zhao@amlogic.com; a=ed25519;
- pk=hiL5PjGIksGFiWvEx9J3MhQqU/ro6vNbj72NIw4bbvA=
-X-Endpoint-Received: by B4 Relay for junyi.zhao@amlogic.com/20260924 with
- auth_id=1054
-X-Original-From: Junyi Zhao <junyi.zhao@amlogic.com>
-Reply-To: junyi.zhao@amlogic.com
+References: <20261108223913.3624571-1-irogers@google.com> <20261108223913.3624571-10-irogers@google.com>
+ <DMYN979QJFNV.LM3T6O68OHW6@kernel.org>
+In-Reply-To: <DMYN979QJFNV.LM3T6O68OHW6@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 18 Nov 2026 21:45:45 -0800
+X-Gm-Features: Aa3M54p8GzPfKDPQ_HJcPbdLHGq3vwK7n9VGnVvnVB1ODjbFHeHwrlgOfVCaaEo
+Message-ID: <CAP-5=fXrMyfLFXq6CiqwWMSbtYVRNESxuDo-ddqNwDmq5Nm4SA@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] kobject: Require explicit initialization of struct kobj_type::release
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <kees@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <chleroy@kernel.org>, Nayna Jain <nayna@linux.ibm.com>, 
+	Srish Srinivasan <ssrish@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Zhongqiu Han <zhongqiu.han@oss.qualcomm.com>, Alexander Aring <aahringo@redhat.com>, 
+	Felix Kuehling <felix.kuehling@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Zhihao Cheng <chengzhihao1@huawei.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, driver-core@lists.linux.dev, 
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, 
+	linux-s390@vger.kernel.org, gfs2@lists.linux.dev, 
+	xen-devel@lists.xenproject.org, linux-mtd@lists.infradead.org, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Amlogic A9 SoCs integrate the Silvaco I3C IP, but their peripheral
-clock setup differs from the original implementation: the EE-domain
-controller (amlogic,a9-i3c) takes two clocks, "pclk" and "fast_clk",
-while the AO-domain controller (amlogic,a9-ao-i3c) exposes only
-"pclk" and derives its bus clock from an internal divider inside the
-controller's own register region.
+On Wed, Nov 18, 2026 at 1:11=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> On Sun Nov 8, 2026 at 11:39 PM CET, Ian Rogers wrote:
+> >  static const struct kobj_type cpuregs_kobj_type =3D {
+> > +     /*
+> > +      * Pre-existing: info->kobj is embedded in per-CPU cpu_data;
+> > +      * cpuid_cpu_offline() only calls kobject_del().
+> > +      */
+>
+> All of these comments carry a =E2=80=9CPre-existing:=E2=80=9D prefix, but=
+ that doesn=E2=80=99t
+> distinguish cases with broken lifetime management from those where the st=
+orage
+> remains valid despite the API misuse.
+>
+> For example:
+>
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_xcp.c b/drivers/gpu/drm/=
+amd/amdgpu/amdgpu_xcp.c
+> > index ab14079d1c42..0847134a1391 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_xcp.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_xcp.c
+> > @@ -797,6 +797,11 @@ static const struct sysfs_ops xcp_cfg_res_sysfs_op=
+s =3D {
+> >  };
+> >
+> >  static const struct kobj_type xcp_cfg_res_sysfs_ktype =3D {
+> > +     /*
+> > +      * Pre-existing: xcp_res is embedded in struct amdgpu_xcp_cfg
+> > +      * rather than freed individually by kobject_put().
+> > +      */
+> > +     .release =3D NULL,
+>
+> Being embedded in another structure doesn't explain what guarantees that =
+the
+> enclosing allocation outlives the kobject=E2=80=99s final cleanup.
+>
+> Could you please drop the =E2=80=9CPre-existing:=E2=80=9D prefix and make=
+ that distinction
+> explicit? For broken cases, describe the lifetime problem and mark it as =
+needing
+> a follow-up fix. For cases where the lifetime is safe, explain what guara=
+ntees
+> that safety, while acknowledging that omitting release() still violates t=
+he
+> documented API contract.
+>
+> Also, do you plan to follow up on those cases?
 
-This series consists of:
+Makes complete sense, thanks Danilo!
 
-  - Add the Amlogic compatibles and per-variant clock
-    constraints to the silvaco,i3c-master binding schema.
+Auditing all 17 files in patch 9 with that distinction in mind:
+- Only 3 built-in sites (arm64 cpuinfo, ACPI hotplug profiles, and
+s390 sclp_mem) have backing storage that genuinely remains valid for
+the lifetime of the kernel.
+- The other 14 files either free/zero an enclosing dynamic or devm
+allocation without waiting for final kobject cleanup, or are tristate
+modules that unregister static kobjects/ksets on module_exit and can
+unmap module memory before delayed cleanup finishes.
 
-  - Add a vendor_init callback for the clock setup and an
-    Amlogic-specific bit (AML_I3C_QUIRK_AO) for AO-specific behaviour
-    to the Silvaco I3C master driver, and enable the existing
-    Silvaco workaround quirks for both Amlogic variants.
+I've dropped the "Pre-existing:" prefix, documented the specific
+guarantee or FIXME lifetime hazard at each site in v4, and yes, I plan
+to send follow-up fixes to the respective subsystems once __must_init
+is in place.
 
-Verified on Amlogic A9 (BY401) with both EE and AO controller
-instances. dt_binding_check and dtbs_check pass with this series.
+Thanks,
+Ian
 
-Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
----
-Changes in v5:
-- Check the clock count and name before dereferencing clks[0] in
-  aml_i3c_init(); a DT node without clocks or clock-names would
-  previously NULL-deref.
-- Factor out the fast_clk lookup into a shared NULL-safe helper
-  svc_i3c_master_find_clk().
-
-- Link to v4: https://patch.msgid.link/20261116-a9_i3c-v4-0-3d3222b7128d@amlogic.com
-
-Changes in v4:
-  - Move the DT binding patch before the driver patch.
-  - Add CLK_OPS_PARENT_ENABLE flag for ao tail clocks.
-  - Enable fclk before allocating the new clk bulk array.
-
-- Link to v3: https://patch.msgid.link/20261106-a9_i3c-v3-0-804b69b9095b@amlogic.com
-
-Changes in v3:
-  - Merge vendor quirks into the legacy quirks bitmask and add
-    AML_I3C_QUIRK_AO for the AO variant.
-  - Check the devm_kcalloc() return value when allocating the new
-    clk bulk array.
-  - Enable the clocks before aml_ao_i3c_tail_clocks(), because the
-    divider registers are accessed during registration.
-  - Rework the probe error paths so the clocks are disabled when
-    vendor_init or later steps fail.
-  - Reorder the local variables (longest first).
-  - Convert comments to kernel-doc format.
-  - Depend on COMMON_CLK in Kconfig.
-  - Drop the silvaco,i3c-master-v1 fallback and add a blank line
-    before the new if/then block in the binding.
-  - Explain the I3C peripheral integration details in the binding
-    commit message.
-
-- Link to v2: https://patch.msgid.link/20261102-a9_i3c-v2-0-0c474bfccffa@amlogic.com
-
-Changes in v2:
-
-  - No need rework the Silvaco I3C driver. 
-  - Based on vanilla driver, adapt A9 SoCs through callback 
-    and quirks to handle the variant.
-
-- Link to v1: https://patch.msgid.link/20261019-a9_i3c-v1-0-329d819d621f@amlogic.com
-
----
-Junyi Zhao (2):
-      dt-bindings: i3c: silvaco,i3c-master: Add Amlogic A9 support
-      i3c: master: svc: Add amlogic a9 support
-
- .../bindings/i3c/silvaco,i3c-master.yaml           |  26 +-
- drivers/i3c/master/Kconfig                         |   1 +
- drivers/i3c/master/svc-i3c-master.c                | 301 ++++++++++++++++++++-
- 3 files changed, 311 insertions(+), 17 deletions(-)
----
-base-commit: aac26bee2287c88af5be5a5ff96d783b19a28790
-change-id: 20261010-a9_i3c-9d5245d094c8
-
-Best regards,
---  
-Junyi Zhao <junyi.zhao@amlogic.com>
-
-
+> Thanks,
+> Danilo
+>
