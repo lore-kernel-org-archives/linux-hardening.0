@@ -1,83 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795053297;
-	b=vYMdxOKifKf+F/CfeRnwcpHNdtzitm5MaoJvSpJ30Mt4SpKVpuqJhrB02SElfPYWngEM
-	 hu0pqjxU/eyh+5DcEG4JvPSxArILVWgJDFG5yvazHlPPTuHId4JfFssMRJCgLgmq/eaRl
-	 qFzYNONRZVJmzuKVknB9/FiREAK5YYFBiFqkzpVFueKKXtFMkCWSRFbQxOaA+8OxrQOhW
-	 nlkeduui/X4Eg+AzBeIwQwqOPgZQuqaU+QsudduSDPgnuHHM4cSJIa0bGNftUzRAfdu0j
-	 1P1uTl6soQ16Iu9pa+mpCrcpv4o0jkyXy30AMfqpS3KyFqSyY05B33B1HnNtb7POWYQ==
+	t=1795053301;
+	b=mIJH3UqbfH8jZBvaxZKq5Z2tURwefF2VN5wP1aXAJ90qLOZqKaNbyAKHdtKujTdjxsmb
+	 pqnRORiXP2IM37zWWq78qAZqTS5BXLz9ZxRj5Sh3I9agZc6PZRXlKEJ2edNuyQMRsDEik
+	 +4mgFq1IutiJEqvpv6JNfCs9tP/90k5/QyknyQ9dSXq7tM67mx1xIbvuqFCc28CuM4PfE
+	 0Wl33eBetDZsKCfs34jK/e50Dzl+KB83786g9+CFg0j3UNBHYsCSFgIfY/S902KkRBOW/
+	 hNsOInFFb9/DL88TtxH9BLnxQmP7+lN+aexXgWDUniokyu4ttA8bL0fWaLCgWylRaBw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795053297;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795053301;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=nDoAWY11ZCr0ihHoFalCpChIz8Et8oFGy4RrYPRx3SQ=;
-	b=u5lq/hIsWRAaFour9c14GML+MaZlykVPQmByfTPL6lmjddvGcnIejvsdqf0uSLT0GpGh
-	 rHexI/IehMzL1twchfOrxlV6pFYv3RnCC2xh3NnPSVzJJTttKIMhfHvm5+UADsGkR7c7T
-	 5Wjq+aHmDj7nSX/HUo7/pf+oPOckv7/iFeTfNW5f5OYZpjBmlzanvqkXLC9vcvwGLwKOn
-	 CiBluTgW7d7J3TQeJrkCiX+s2hF4umwnjrjkcXSgIKcPZAkQ/JfeizrpxxeOwzqYmrF2F
-	 D8fOoqeeO9JKofVbG2QhsXTJ1Tj22DoMr3LgxhYco0BZmJYyicAIj33UwJVR+0uvSGA==
+	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=tjBxBXExyy9WLefYOQ4nHcOgOQ5o+ZNc0xlxhA3bZ8E=;
+	b=jyIr3zahW+wkT0saSwQt1uqemNQD5omvkjQ2mf2SS/Mf3VloFloZCB5cMkJbVm1F/LfL
+	 So8TCM3UIYJwGBx1KXNV1LUG6glvJgaD2YW12KCYF3Z31uHObGylL65yQQCRr8+gjlhPM
+	 FYypC0zg17/QppRaPOi4p9mlv0isC73Ltl0/kNQTd12sJRexpzCGzeBs/Tj2PKqhPuKkl
+	 kx0kzN/9OIipQejXp/LVJT/svAcDEr/D4sSFNsKwPPIA52BGuSx8sNbRnDuFOvDlxbvha
+	 78Qwyz+7W4m4im1j09hwCcqzBj0i3bN459aMopFFYslcVPAuc4KNJ/yk00fS8S7n+iw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nltqhrd0;
-	arc=none smtp.remote-ip=209.85.215.175
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yiDpmAby;
+	arc=none smtp.remote-ip=209.85.216.47
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E919260A2609
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Nov 2026 01:54:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E919260A2609
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6831860A2616
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Nov 2026 01:55:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6831860A2616
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nltqhrd0
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-cdb2e0062bbso968639a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Nov 2026 17:54:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yiDpmAby
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3adac5b29ebso1091283a91.2
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Nov 2026 17:55:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795053296; x=1795658096; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=nDoAWY11ZCr0ihHoFalCpChIz8Et8oFGy4RrYPRx3SQ=;
-        b=nltqhrd0MMDZ7546deiSsw2uwq42t4c3i4uOD0uXOHy2rm2POJCcz0TxFstDHvoHpM
-         /7crJUPoUAefBTJsrcZgBfnDlE7lNpDD/qTTwId33wMljgUFI61lnGlVDcLB1YofRILd
-         FQUNgnLEgmL3uaUgOIGiu24veyJztsWw/OMqkQbHz8X5G+bHP8OojWbSlR/cjnoU1va1
-         4cXxRINSVIrjwcRrrdxFNK2+yD0MrGLpdL6QMQ4MqtQO6GuTvicIdWLHmnun1fGBX/b1
-         aQHourZFOB3X7BBJZbioOFbRdaH/AxGZg7lUk+4G+UF4GQxmu5WqJa1nDWRqIOXzCj7q
-         qcig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795053296; x=1795658096;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1795053300; x=1795658100; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=nDoAWY11ZCr0ihHoFalCpChIz8Et8oFGy4RrYPRx3SQ=;
-        b=y+Fn3ycLt15HRqDPLfMDxr+aAZFsM0SkBf2Fzj3kVJ12wjmqW2Qc8eoBVUKUDUDgvs
-         y+H1M52/gnU4hhyOUEVjmN3CoxwYaFkuPdI8RtxLQe0XSw7nkk/Qq69wYFdI7VPfYnU3
-         EWLdQWci9wTp9ODxxrC0M00n8a099z3JTGkITy9UO0XDUAfgrrIxP6jbH5ImR/EwMjq9
-         A/Wa82Qy4T9baDnSIw7H5Rc9lpIAdl0jkdbmJMD08NwRdr1qyG2wCOuzuOqt+QmYlmYY
-         y7AuFjgpWkLhvflrzlQ4awU/EqaU5PrSTpKvUk+KCO2sfgiJ5QqAnAletkJBJ1qKgLmN
-         YhRQ==
-X-Forwarded-Encrypted: i=1; AL+hErGDeN/HST+T9xSCdfX4225euQyMh661uDUwg/wmGP/YpS2bYrF1pLTj+2dpnhBaBNKPH9sO3MQ+I0PJ+UBMDEo=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+syK1+5ujcrMFSK7DHaTaMgW0Z2l45JIZDTTvRLxtSDsd69FZl
-	OCfZjHEIal8RpkALGiUMyg5DudskqeYaS+9IGv5/eLvl5qcJZ2iHxRDi8kOVv+cM
-X-Gm-Gg: AZFdTZceZhrxnPOPfNG3dMnBOK86LmdXkFfJOqK3TdfHxe3TLHeeXf471F7Vsv9lmyC
-	Evse6CCNgIVd3R0bUJUhDjg0iPg8va+4y9N5ah24hJkrJukNCidZzhHh8Jv9feaF7BoF2pCjHJw
-	PoeYOq2vhdR8aao/VAO/lNpta95aZmEJrDWGwqi1vHYJNlnyHycftb7hYKd99Rp1RaxmPBLePpZ
-	ph/It2s+YHl5u0Gd6k7OnPdzG4osCg9gSxIhFo72fv346YGezkaM0Fm1t+fYJX7bt9Y0B7rhi8z
-	NNDX1GmCCIYNP4r/wC29u/VNVJR2stjMA5j/4DalUlX2tZOAA0nBHfeBejEIbzT1fQR+ikZtJrW
-	UdYzgc77aDSh3TQVNh6ol+yJYdA+ReRLshtwx0VQMVF0D2GvwAsJ0IJXRkeUkROn8WFTfd7NtKF
-	yA2Mqa3ydSqyP0VtPmyzPtPIAfli5iGM5jyd5Be/BssDHgxy4AGHOdR7Ulwbzxt4sjsLegg366x
-	qGDsnsa8QF1M0eKFyk2y6ntSXtAd3SJk8pGbq83ockoDiW3dOfSPYI9w9q7rwYCCoNRD7hy4hxl
-	MmhePplN51Ldx3tSoSrC0dNVj0bVomZhKiSvphQCeT6pL32ea9K6Ph7XFkFhor2k0ruQkswP0ZY
-	GyOqM+3rXkUrnUlBZwM9l+vE81chNSLXZflIJ
-X-Received: by 2002:a17:90b:2ec7:b0:3ac:a139:1b13 with SMTP id 98e67ed59e1d1-3b3d07a85e6mr4560280a91.29.1795053296137;
-        Wed, 18 Nov 2026 17:54:56 -0800 (PST)
+        bh=tjBxBXExyy9WLefYOQ4nHcOgOQ5o+ZNc0xlxhA3bZ8E=;
+        b=yiDpmAbyEafa+Bp5TnuXax0bY7p1lXAGnYEyqXmuMV5ajdev7k2TECoemjX6fe/7v5
+         zsDZNStqvnScyh0UBRWmwPPMYLYTkH9ZmmYesSJ60RChor5miC0PQMXYt8iEBxgYWCQ+
+         RH1ZSrSSH2T8DEWV/aKxc3aR/yxQBE3obLRAcmMc0R33nW8Xdw2MFLtXj8KAct24cV5k
+         caDScZtQPTVTY4Pg0cQnfOZyjLVOBGwZTWMcCExLfi+dTfyCnH/UxqB8M1h0kFItcgpA
+         r/30T6Bu9zQcxrqzQ8K93WwLadVtLD3LQk/w0r+hOi78DK19M/4Acx/Fei8pmpkpDYfY
+         Ry5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795053300; x=1795658100;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=tjBxBXExyy9WLefYOQ4nHcOgOQ5o+ZNc0xlxhA3bZ8E=;
+        b=kJLe6ZyyYPUWCLcn4LEHKkRGnwwpQpNM5qSzYVpApSqcOBlb+ano0NrKNyfW6nvQqa
+         tif7DGrQMUbRePT9a8/xNlsic9eUmNI2H9Z0ku9Le/xCW1DNE9z9SuNcCRjDlsqWwHaJ
+         xPhtWSh1xXmpr4oJfiPxgTnZe9U2p+1ayIEps+7uxiXq6OKg7rigwuOYlD5WslrplvNs
+         ApwbWgYwaqHphZmKPA0f6e3M3MHTwj8C0IFZOQMKT9tT52PIXZLCb4sBiXH+sFpUUrhE
+         aum3B8M1vliKfdg7BrjBuIuxm5hj3P73o49Re7NkOKNYXEapdJu31mbxC4HVla5+wfrV
+         bVgQ==
+X-Forwarded-Encrypted: i=1; AL+hErHJKdd0QPF7XZyAYIjPvbbnVwQk1DPv7+aiOYm/xT2bVfxH+zA7O9X8K4nTLaJhLnCPRw2bRI6WSW2F/LivIPI=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+yieRPS9qRP3NhGcRN02Nc/eiouPE/H5ATxwYwv0UuvugCU86O
+	p24rWBggiT0iaoWOc4oF0JHsWChfoiNUjnLbZmFGGw+nRtVUBzR9a6Pt
+X-Gm-Gg: AZFdTZcDnXRe0blEnmlc65vctpTGaSPNkyn2pZf6cGazAsbsuEjAT06UgWTvSrWU6Cd
+	aU5i50hWAEuPNWFMV54s+WsfnP8kg3a5BLJ+vMc77S3J08oBnO+TiF0fnrT5HWigZvpZ9rY153v
+	Lve1SQGwpdneC7rhyLWFsbpKoVF7edUNOldcCY4R+oBEox2OnAb/CLce/RSwoL66eBVV6eK+pxf
+	c4MA/lcMix/UPOA9fpRkWoOioqF8R8nFYON1J1mACeUaYmIWK9HHw7rxTtJxFDlg2lrq+kvPdwE
+	Rly4Pq297fh3/UO5+SE3dZQRFo7cu47HP3kvLdgCRQv/NCRI7ZBrGW0rpTo+7yyt4xIB/qIX9CL
+	/GtWg6ytRJgCsdueAzLwEx2Kyc/Aj0WR+xwVqMhik+CMS4VGulZaJaEQsNCXnzFtPsthT0PEZO0
+	YrlHJpQNx9aEFl3zgvFmGljXlW3dLlrfOb6o4bVKXdIth0UkqhGvNUMRhRJlWnXSmsRAHFToQVg
+	tdj/Nu46dmmrtk27u5b+vNdjgNDmn5+Gd0K+91T/XC7gZiwi7VBSDhD2fywIsuknZizJCTKfW5Y
+	bzXksacP0Ey2Pwt4ILZkiqFkRaKJ4QYLqVYwUtnB2IiHiyelgra/TWq0hC+GjQUZl60Zz8tQIzz
+	qLpeZUdmFXtxg1tA=
+X-Received: by 2002:a17:90b:3d8f:b0:3ab:b39f:41b9 with SMTP id 98e67ed59e1d1-3b3d07cd7c6mr4085733a91.61.1795053299722;
+        Wed, 18 Nov 2026 17:54:59 -0800 (PST)
 Received: from localhost.localdomain (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3fe03c3d4sm773081a91.14.2026.11.18.17.54.52
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3fe03c3d4sm773081a91.14.2026.11.18.17.54.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2026 17:54:55 -0800 (PST)
+        Wed, 18 Nov 2026 17:54:59 -0800 (PST)
 From: Shan-Chun Hung <shanchun1218@gmail.com>
 To: ychuang3@nuvoton.com,
 	schung@nuvoton.com,
@@ -93,11 +94,15 @@ To: ychuang3@nuvoton.com,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Cc: Shan-Chun Hung <shanchun1218@gmail.com>
-Subject: [PATCH v3 0/2] dmaengine: ma35d1-pdma: Add MA35D1 PDMA driver
-Date: Thu, 19 Nov 2026 09:54:45 +0800
-Message-Id: <20261119015447.160470-1-shanchun1218@gmail.com>
+Cc: Shan-Chun Hung <shanchun1218@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
+	Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v3 1/2] dt-bindings: dma: nuvoton,ma35d1-pdma: Document MA35D1 PDMA controller
+Date: Thu, 19 Nov 2026 09:54:46 +0800
+Message-Id: <20261119015447.160470-2-shanchun1218@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20261119015447.160470-1-shanchun1218@gmail.com>
+References: <20261119015447.160470-1-shanchun1218@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -109,59 +114,93 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds the PDMA controller driver and DT binding for the
-Nuvoton MA35D1 SoC.
+Add binding for Nuvoton MA35D1 PDMA controller.
 
-The driver supports memory-to-memory, slave scatter-gather and cyclic
-transfers.
-
-Tested on the MA35D1 SOM board with Linux v7.4-rc3:
- - memory-to-memory with dmatest (2000 iterations of 1MB buffers, no failures)
- - slave scatter-gather with a local (not yet submitted) QSPI patch
- - cyclic slave with a local (not yet submitted) I2S patch
-
-Changes in v3:
- - Use dma_alloc_coherent() for the hardware SG table instead of
-   kzalloc() + dma_map_single(); defer descriptor free in terminate_all().
- - Rename ma35d1_desc_submit() to ma35d1_desc_prep_done(); prep() only
-   prepares the descriptor.
- - Rewrite the IRQ handler: read and ack TDSTS/ABTSTS once, then iterate
-   the set bits.
- - Address issue identified by Sashiko AI review:
-   - Terminate the descriptor with vchan_terminate_vdesc() when a cyclic
-     transfer is aborted, avoiding a use-after-free in vchan_complete().
- - Request the IRQ after the DMA device is registered.
- - Use devm_of_dma_controller_register() and
-   dmaenginem_async_device_register(), and drop remove(); a devm action
-   stops the hardware and kills the tasklets.
-
-Changes in v2:
- - Address issues identified by Sashiko AI review:
-   - Program registers on descriptor start instead of prep.
-   - Fix interrupt completion handling and return IRQ_NONE when idle.
-   - Set PDMA_TBINTDIS on intermediate memcpy chunks.
-   - Validate scatter-gather lengths and bus width alignment.
-   - Fix channel request assignment in of_xlate().
-   - Safe controller teardown order in remove().
-   - Drop peripheral timeout support to simplify driver.
- - binding: describe the hardware in the description, and drop
-   dma-channels and the dt-bindings header.
- - Use a fixed number of 10 channels and trim the includes.
-
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Shan-Chun Hung <shanchun1218@gmail.com>
-
-Shan-Chun Hung (2):
-  dt-bindings: dma: nuvoton,ma35d1-pdma: Document MA35D1 PDMA controller
-  dmaengine: ma35d1-pdma: Add MA35D1 PDMA driver
-
- .../bindings/dma/nuvoton,ma35d1-pdma.yaml     |  71 ++
- drivers/dma/Kconfig                           |  12 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/ma35d1-pdma.c                     | 662 ++++++++++++++++++
- 4 files changed, 746 insertions(+)
+---
+ .../bindings/dma/nuvoton,ma35d1-pdma.yaml     | 71 +++++++++++++++++++
+ 1 file changed, 71 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/nuvoton,ma35d1-pdma.yaml
- create mode 100644 drivers/dma/ma35d1-pdma.c
 
+diff --git a/Documentation/devicetree/bindings/dma/nuvoton,ma35d1-pdma.yaml b/Documentation/devicetree/bindings/dma/nuvoton,ma35d1-pdma.yaml
+new file mode 100644
+index 000000000000..d05971662a5d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/nuvoton,ma35d1-pdma.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/nuvoton,ma35d1-pdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Nuvoton MA35D1 PDMA controller
++
++description:
++  The MA35D1 SoC has four Peripheral DMA (PDMA) controllers. Each controller
++  has 10 channels and performs memory-to-memory, memory-to-peripheral and
++  peripheral-to-memory transfers.
++
++maintainers:
++  - Shan-Chun Hung <shanchun1218@gmail.com>
++
++allOf:
++  - $ref: dma-controller.yaml#
++
++properties:
++  compatible:
++    const: nuvoton,ma35d1-pdma
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  "#dma-cells":
++    const: 2
++    description:
++      The first cell is the PDMA channel number. The second cell is the
++      peripheral request source number, as listed in the reference manual.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++  - "#dma-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/nuvoton,ma35d1-clk.h>
++    #include <dt-bindings/reset/nuvoton,ma35d1-reset.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        dma-controller@40080000 {
++            compatible = "nuvoton,ma35d1-pdma";
++            reg = <0x0 0x40080000 0x0 0x2000>;
++            interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&clk PDMA0_GATE>;
++            resets = <&sys MA35D1_RESET_PDMA0>;
++            #dma-cells = <2>;
++        };
++    };
++
++...
 -- 
 2.25.1
 
