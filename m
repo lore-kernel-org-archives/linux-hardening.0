@@ -1,11 +1,11 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.144
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.77.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795110706;
-	b=UCv4PHfHGe/TpPx8zpH5bzhShmvPqolLwSXIu+V+caKY0hn4P/sFI5jOojNpO86B286H
-	 V9XL3xX0uRPsuFtaBxi/ovD9AZTEmcvzcnVYzUC6jBTdq8ZKIHd8WZgZ/HOWUTGwQtRUx
-	 gdE6vHgzJvV/fjyRFdc8K67BzSa3aafK9W1C+/wM/b12rUh1AXmsDFa9hwdx+ifR36mHY
-	 IzY51NqzgRvaxAcnTWRkTmUCcLEEAM7tbItcezhZCroJNUGJSRW/9zkNKxoB17MtIofON
-	 q2QoHiFF2qQSZNN3le+oDNF4PFv4jDNkczqj/3ixh2TXAxvlWXd1yRmBdhmv1kIUPdA==
+	b=4tuuft/r7+AGhnhmvhdOGWN0cntwj95OgXOz5XjtNqK26RFoASYbPODNdksFlUFCV/ah
+	 OOCIbPqMU5GLxuJoQOdPMFC+DObxrSAo3WitU7h4O+cD6SldDlAqd7R/2aFR+EEzLQ1B0
+	 UeO/FAERNeXc6lgwYdHe/91YDuOO3YWEOJjgwX80iOni+Agntd5m0x3eRpFohN8vaSYjH
+	 vD3l3wnfglIbSL9X/2sLm9mXK0FOlQAhRhQVGMaM6LY4F4KSi6lUbwaEwY9y/thTo/nHU
+	 rBYxYLXwHvMSPOHRRGXQRQd3VQdm5wfb04KPVR6S5w+415t2GsiA5f9GDTx1K3wWmbQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795110706;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
@@ -13,49 +13,49 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer;
-	bh=E3uK4ToIL2mUz3Svln8sWa7foOIYRKuRK6T5m3vJSVY=;
-	b=tDnAtn5S8kQcX7+tiCj4YFf0Qn2iriLsUOQ1s5JVbFkDStGNTonrdVuRkM6advpMx9zT
-	 aHqbc2sAwQEfAC2zYMZ8YqX/DGRlSxzvV1GarTOq+k3fEZM5P1IL3H+I27UKhkq63EHGn
-	 X0ray31ExShBWLPb01db9vHtpGU+hCr2NNL9YQPNw06/g7JaB83s8FyJXZNg9OfSIW/8C
-	 5qJcuMQpgbI45mKuqFeJlbNxWfl3aiEYYOcRN1y3/zm6qjs8siyEScWKz3/cOOsL1eony
-	 JejTEtEmETSKqz2mUe9VUOkxchTx89oKmjOKotHTf+RD9mBcYNiQYmUtxnb6Sjyt/0w==
+	bh=lyATTZSpPwfe+0tTFDl9okuYREBYcyzOpR8HimDcF54=;
+	b=4ompWlQPGdNsKqiiq9N1PetYrxwZD99DrrHVCFwH27obQJG+jtklKVxUyg+rVT4wnW5l
+	 m6WJMPKELZ5akwS2SofrfLCxNh6T3phmf8U9U6OtE5MHbfbenex63e8JAu300qagmk/P9
+	 fRgB+I+lwuYzPzDgnqwrWh+bg33FRlFyGvgzKUkYtPEQq1tD6W/nQoM12j+3T5h9zV069
+	 OZTwiNnmsc+GM+SuM7aTa0xPbvjjHCi5KeQ67PlU+vJ1I8Yfn5nbB3uQIdc7JJVjKUEuC
+	 8bK6dXh2dpbwzpFkjqmVTjvth+8PPworhRU22J8JsD8GhC0aXavWvZVUGfGiO5yeDQQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mobileye.com;
 	spf=pass smtp.mailfrom=mobileye.com;
-	arc=none smtp.remote-ip=23.90.104.144
-Received: from esa1.hc555-34.eu.iphmx.com (esa1.hc555-34.eu.iphmx.com [23.90.104.144])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDAF460A262F;
-	Thu, 19 Nov 2026 17:51:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DDAF460A262F
+	arc=none smtp.remote-ip=207.54.77.50
+Received: from esa3.hc555-34.eu.iphmx.com (esa3.hc555-34.eu.iphmx.com [207.54.77.50])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61D3660A380B;
+	Thu, 19 Nov 2026 17:51:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61D3660A380B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1795110705; x=1826646705;
+  t=1795110706; x=1826646706;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=CVPab+eqiu3Puch8ckhPaA7dUxIgv7j+PTZCvvIA2cs=;
-  b=LxESDmXc93fjTNdXjVGI9EoYSPtsT1OB9SFDTkbomebI9EVFRJ8QiqXU
-   K6tf+UaJuj0I3qFeITgHPubCQ7MW091m09Ornfg6EaHNsyYhHD3BGIPwk
-   +qYf9zmAoTYl49DAJKGZwgCE1CXzqSMpItR8aU7X73ew6Ie3RIJYMh5Sn
-   KUVF+diclJz52zQJhIq//qijIuMocwKUck9Tlgdz4NZgVoZ2rfgcmqmqW
-   Ev6zBzEbPPAFa0w1FBPAcuh4T8dCuxSoyJ0Ei5+B/J1YQitl5B4r1Uq+u
-   LhyUZXRih1Cjqou756P44SnT/2qgv3DdqSSpCDHYa6bTkueqDS3PYTqL7
-   A==;
-X-CSE-ConnectionGUID: bck4BxQFSmuiqAdu90FOmw==
-X-CSE-MsgGUID: Ry9wiaoDRWCGHz/HQ5231Q==
+  bh=huVfTbErH6adnt9mw42pnrtw5P+Ckl7UHBlLJGXkTlo=;
+  b=NTJY4MouyMSvMjumD8gyDbcmFdeA5QHuEd7zWp0mQB3chOqOHbMwk7ko
+   AM3GzLt1z2pyZkPuo9Xa9XQ2IdVNsEUxdnCKcDh4CZcN1q+U22P5w4S2w
+   pQzC1qYyWtuE9YbHnV2VlSBUMs1OHy1poEGTIQzKC6CFuppaQKKPgkuzK
+   PnEzocM0QeSkrEuE3ypQMzDEJ6Jp8tmr+l2wWU2TXdb8IPaN7Lt3ZV63J
+   jKJJKNgCZ2ZvN4hsa6D4Sbd4RrSkym5KCH6eWTPd4hrJK9T0NygSpKdxG
+   YojW1aqxgzBER2MLj4oz++893sBR5jm9VhijjgMXfkrvAMICLnCTvNReT
+   w==;
+X-CSE-ConnectionGUID: e81Wokr5REapb9E2EZOrfw==
+X-CSE-MsgGUID: w2S8m7ojTT6pRmKM229Fww==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
-  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 19:51:37 +0200
-X-CSE-ConnectionGUID: Mn6EQc6oTx6e+bnAzNenoA==
-X-CSE-MsgGUID: UiO8b7LPScOtinUiOEegyg==
+Received: from unknown (HELO ces04_data.me-crop.lan) ([146.255.191.134])
+  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 19:51:39 +0200
+X-CSE-ConnectionGUID: ri2IGrxzQdOPJsIu1/kODA==
+X-CSE-MsgGUID: ODobeq1NQgavWhZ8D8UMoQ==
 Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
-  by ces02_data.me-corp.lan with SMTP; 19 Nov 2026 19:59:53 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 19 Nov 2026 19:51:36 +0200
+  by ces04_data.me-crop.lan with SMTP; 19 Nov 2026 19:59:53 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 19 Nov 2026 19:51:37 +0200
 From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Thu, 19 Nov 2026 19:51:32 +0200
-Subject: [PATCH v3 6/7] MIPS: eyeq6_defconfig: enable the CM3 PMU
+Date: Thu, 19 Nov 2026 19:51:33 +0200
+Subject: [PATCH v3 7/7] MAINTAINERS: Add entry for MIPS CM3 PMU
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -67,7 +67,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261119-i6500-cm3-pmu-v3-6-c86410934b51@mobileye.com>
+Message-Id: <20261119-i6500-cm3-pmu-v3-7-c86410934b51@mobileye.com>
 References: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
 In-Reply-To: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
@@ -90,34 +90,30 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
  linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org
 X-Mailer: b4 0.16.0
 
-Enable perf events and build the Coherence Manager 3 PMU driver as a
-module.
+Add a MAINTAINERS entry covering the driver for the MIPS CM3 PMU
 
 Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 ---
- arch/mips/configs/eyeq6_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/mips/configs/eyeq6_defconfig b/arch/mips/configs/eyeq6_defconfig
-index 0a00a201937b..2d06d9ed6526 100644
---- a/arch/mips/configs/eyeq6_defconfig
-+++ b/arch/mips/configs/eyeq6_defconfig
-@@ -19,6 +19,7 @@ CONFIG_USER_NS=y
- CONFIG_SCHED_AUTOGROUP=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_EXPERT=y
-+CONFIG_PERF_EVENTS=y
- CONFIG_EYEQ=y
- CONFIG_MACH_EYEQ6H=y
- CONFIG_MIPS_CPS=y
-@@ -86,6 +87,7 @@ CONFIG_MMC_SDHCI_PLTFM=y
- CONFIG_MMC_SDHCI_CADENCE=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_RESET_CONTROLLER=y
-+CONFIG_MIPS_CM3_PMU=m
- # CONFIG_NVMEM is not set
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 782389bd5cd3..e9a02076017b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18227,6 +18227,12 @@ F:	arch/mips/configs/generic/board-boston.config
+ F:	drivers/clk/imgtec/clk-boston.c
+ F:	include/dt-bindings/clock/boston-clock.h
+ 
++MIPS CM3 PMU
++M:	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
++S:	Maintained
++F:	Documentation/admin-guide/perf/mips_cm3_pmu.rst
++F:	drivers/perf/mips_cm3_pmu.c
++
+ MIPS CORE DRIVERS
+ M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+ L:	linux-mips@vger.kernel.org
 
 -- 
 2.43.0
