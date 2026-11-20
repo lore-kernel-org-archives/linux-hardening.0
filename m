@@ -1,102 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795127440;
-	b=ThmD2vQsd4yp7zMPNbuLBwPyM9zcAq+F9XZtv+ggJdvRiz9EOkck43dcgJ+moT/xd6C4
-	 COkqEn9BNgjL1d5IGaKM0BWwFo6vdBad/qMGJHeaxzArm6k9a+3jrjMfgfGQ5rAa/fcZN
-	 nkwVYLCxILjC0NUMmGwWX0dJZnvZk+cKb6xmDQ9FTS67U4vc6ACjsveOU0eDpLE5Dre1G
-	 FWGPUx/cWFPapNudEUoXnUuEuY2HXuhTa0omIXim2iNXj1VXU25s2G3t7QSyaPl+bCUWP
-	 Ca2MOKKRN2/jl039HNHQJVVlPoxjbIGU0hNEGQLqwI+6tH/oi5vf45QU+jp7I4JT+Vw==
+	t=1795133257;
+	b=yCMfqdyA5XsF4oCtCIDhAweOeSw6/Fjn2PlnfZcyWqckUHRtoYo4NQg/qdSST1QZn0Uc
+	 0DrTnEQp2xTyc0Cq+ZEbSgL5xYHHBEK0icQ83MgwffVHpvf7NgsvJR5YXcXlpsg9NUrV0
+	 llwHOfDynE8lVms+RXtuaTprqUSt1bVtDTfyalndUiSPiBuotfwgQNCNODch+EmtovL0U
+	 D9nC8V6oi3etMKEHeAIWx67fNAL2aE6JxFfXOtQbP5COpF40D3gy8nGePfs9phZmAViH2
+	 AoFwUdVgXaN35GY0bMNsjTvZdnO4zgCuMKj8MKJSCEkDsrXeY/2xC2CsMgKGfpvD5/g==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795127440;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=I2d2DmRRVx5LZro47jpLhN3VDh+vWYS8zmDUFy6y03o=;
-	b=C8VGsJH068YZaMWrGpPxY3kjPxFQAevljsLQYeF1ny2b3FSWrGN1sqCSc2C7z0KHBHiE
-	 bFIirb7PrUeCy+DwsYsIsbBfK/S4Ji44reClhfIUIi6H7YX2A3ugavj68QYdhm5HioRS5
-	 dTimLk87MRBIGFY/7yNhlFJSz+rO/RAmON2GbS/Yh1N6Jf8Tv7CvZha032QidDcLCB59P
-	 HNxMGmi7Gv+SYnEWKO7dfOs2Ncm5fDHMIhO2acX9Ww1sPFP6J+yIX6851g0qdwobKJ7jm
-	 CJtmje2prRYLEjebJoFVqs8OqCsytax80VAX20RrNYnyNFQ9uPcWFIJJ2izjBZ5O5NQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795133257;
+	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Endpoint-Received:X-Original-From:Reply-To;
+	bh=d2Fp8/mmNnVLXYOoT+FBeI5Lu/MVAAiEMNJhyjgSXco=;
+	b=ka+CufUFIMOzC7if0ku7g580FTyp3saUML2FY+0cZtZw2p9mTCYRGqEqclV9pCdJnidx
+	 6jARcADx3D9dX21LdTATW2CfFW99XrVdKgMDEG1lYOGPKkoRhU1cryn2SC7YEldEesv5Y
+	 HUiu4NAH2dSGH+69OrEO3vMmQNpjiLVOlWtLyH7d28xKgBI4hKdwSi5xuNckc4Kj8h/Ll
+	 pIMCjMhbC9octcqUugCK+wyNfXf89ld1Jg9Zk14flb1YgLQl9npyrEp8bYiho1AO05fQ5
+	 Cjl1SoXBNstkou1iTaiL68PMs5INVkmIG+hSp/t/8oGyjLyUJr4/Sqzj2JzshD/VXRw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=BQ4xrwA1;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.46
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ec23hgFA;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4769A60A260E;
+	Fri, 20 Nov 2026 00:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ec23hgFA
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1795133257;
+	b=hIW96JHhr1xYYw1STwKkS3fYGwNIY3UIhOX+2VDMfobGm2G725eyrF/4KizYly1Ec7Ty
+	 PI36Tkdwkffeh+dDnHUCBJdfzgPhTs1qnqFgg+Du9Peg6cJL4BufQydO6kzMnk9RZBj2B
+	 lWotYb/PY57T+jtDSjyAKcvjhgiwPb4w4BTGRC7vEZTZWXcsWJd8oBCoJMRaqFw2DduMA
+	 zxQMnxxfOduMUDp/4+eAnmsGimpFYc7Z3+mBNpwsKsV9lUMJKoSU4AiQndTqrYe+qMoQ3
+	 4opQs9Y0MZ5LmpRqrdnEf0cnAbN52n4qLcb1RQRc3HfApInWbBNLWl94E7HjDNeLv/A==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1795133257;
+	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=d2Fp8/mmNnVLXYOoT+FBeI5Lu/MVAAiEMNJhyjgSXco=;
+	b=hxaDpyVaMkkQaILfnu95ajCTDhn9oxhpZ1/TtC4Fm6Olc09/y6mceiC3mHgrE757XE0p
+	 OuCc634YBnt6I2Nh8LS+QdHClBdBc991j/BnMFBMmhmeOr4ulRTet1pLfDDcxhoT+8wWI
+	 acY6ag1/o1d9nTK1E3kE4DGba5okyYjhaVPpUUJkhToCAuM5lslI3qDfmzjoK6SmHC0W7
+	 ONmSazcH5HrEIhLP9Ko51Y87X3NRxp5djzXISg1/qh8mgXAGKyFjc8puDtUKMOacyuBf/
+	 i4eEHxF7FHrEtGT9t9QReP4XTKw84K/lGNl5O461hrcNe7vpaTdIUgUQh+2mZ7Umi6A==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E855E606A326
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Nov 2026 22:30:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E855E606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=BQ4xrwA1
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-48e20ed3b9dso187723f8f.2
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Nov 2026 14:30:39 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795127438; cv=none;
-        d=google.com; s=arc-20260327;
-        b=PjvqE/U+3b+EpVpMgLSBu7lKwusj3rKiowgin6hF9+ZKzyGHiPLCk1tUQH8JfT8HM3
-         zb4pPSZzT7k9ogUoethkUykjhWPqpfkB1kynme91AHEhswz5SZj/yRcVVX8aSqXYAjRE
-         4b5Gr++db3V11hy+ipxQ/+gSIu4UMyP8zCU2r9iY4UKyS0NZ9I8yFMoCCNzjYPn+Jxvl
-         YK7SV2NX4Jj5DiVxMm2QX18qRZbfAdzI5MvhhC9qTKEnsXcv7fhncMw4yZXOVYOaEPgL
-         1lOzO94gS/SP7MgJxknB/x4X+kY2r4LPCqvTr47JRSKa6RFQdV3FyDbt49rEzMWUt7Wc
-         +mEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=I2d2DmRRVx5LZro47jpLhN3VDh+vWYS8zmDUFy6y03o=;
-        fh=XjdIWycrJhgAoJcHdmIY7BmPPZQkut2/jCnOaY8k2C4=;
-        b=n7XikYsbEFFjXlg6SzAITwV8ChBNGogG5Ojwpd3nzcDl/DzTCDUfchNqZp2/gHGOBv
-         FwKfPD+Lchhb6xRRsZib1Gcz0TrQobmD2bC5cCFSpS8clXGztBTF3ZpwzZfGuhL9z2wb
-         gl+miXtDoE9+cM7Sdv1QpJusPUelxSetaPazJ1tqULCMosAUex+vdwP2EsSrE/IIjk9i
-         EUH2e9yQtqIhQgrQydaKlMKMvUnKYk+7GRs5VmNcmgt57DkyVx4udWqYkrxyNWjsg13n
-         AQ4xgCq5oQmrZnm+LY2XsAqcQ2ni7Ce9ju49LPlzdUAaDALyLIWZjlgSn4m9EteFTA6/
-         vZEA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795127438; x=1795732238; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=I2d2DmRRVx5LZro47jpLhN3VDh+vWYS8zmDUFy6y03o=;
-        b=BQ4xrwA1vRMLoekmeBRKLeZyKiWCOU9K5XDKaYDdXazTvJlfQ5jUIF9VFw3YnG5IbP
-         KHMmM63D1zcPo+4XmSAC9cYuEjnCho8Kfvxgid+MMSIJZ2PQRPaRRb+S5BIctkU8F/4q
-         cg1zSLSEbZdPrDHojmxg0BGOM5pC7MQ7rzRZHnu+JxQRbRfu0R7LupMmLoJmcJ8xF/72
-         wq8X77MVHGjw8TKwglsYuGYAxkZv1KQ6cPts1lCKJSOABMqPzCYP6edFR6zr+C9b4MQi
-         bP83bNH2HplFz3Ex1RnOR5uSQsk7qVShVEuMPO35YThv23LbAmDnkCC9otx3Olckkafl
-         12IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795127438; x=1795732238;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=I2d2DmRRVx5LZro47jpLhN3VDh+vWYS8zmDUFy6y03o=;
-        b=LjFroR6oiJZsCq75mEvVD0IMN1wayulYBqD8CTCgrao9hzW3koiR7P83qCKWDF4szf
-         NSsWmB5zgGLweky1LEvtU3LOHm0ARE8p9C0LbomDlY2mQsacfgX6J5Be9rP6s4ufmitX
-         92KT0TlJOWQdGH2Npt7PRlfQUvSmr9gLmmXvzsfEk2Flr49BdKofTjvmbJwMDtiaIEMF
-         MKIgy9My00OVclYmNmWLBu9w+ayf3W3z49Lm8NuSwH/5bdFR5Jdhvzop5I0McB6n3Wzg
-         E8ySpb8uuWwGYWZZepZ/qrrnapazwbsCv2KI72EPYmtAkUc92rRQDz9WxF26HNyceiLE
-         EV3w==
-X-Forwarded-Encrypted: i=1; AL+hErFaVejFbDbDxnDCDxtbC6xbEwRc+kM1vJW/vVRnuYLx82OSq6GXi1IHBCqwC12fIfgBt1ga+qoImBCdcSrnzPw=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+UEbUd7B6boD+H6LmbR7uxQhirOKzfL4XMVjvNw9LVA37JZE6b
-	bzvsfbC0VvqIqx2FUQXZkQbY98k7vu9sZhHPmVZYjLlCgQQAabOgUzwLpS0BqOLn0vCw4i5dejN
-	r2jFJmge8wo6n7wxQEnkdBcEaHkgQw1+wJrHS3/1q
-X-Gm-Gg: AZFdTZej0rkWSJZH5xlLe9cFpcMWVB3klgIyc1caf0LQ//C3seL+eiLkTDp0udufmYb
-	eLs1dE/rcoPXT6zgsk3VASd+XHQFgk+Pusq5Tm7PM8jjnHdqIoQWN8ogc2GzTt0bfBkpPPaTvnE
-	wN3sTB6dO49EclqgFUezfAgxF32pxEZJqScE+2WNscrjkgyKXY8+Urahmd6BcUUBW2JaAQXroVM
-	mGxBjV8h2jU3IUIOk1Xs6I362wob8WX7Y5nY8rqyLrIeOoj3PjzdIyoeVlgCXMsE5ACetcAYSYh
-	VbcPLgLvzxZZM5wOgvI+pRk7RscpikhV21OHC6WFhNTNUWH7QjHBYXvK61eU2c2PDE3LdjKpYbG
-	I1N9lG2joLbaE4T7NAci/Rs6BN1Cm/a1nnukBbbGkyP679QoJDazVh7a4GXDxosslMMSdl9Zkx/
-	a4XFnEqNk+lJ6MKfBEFeXXiX7KjpdKKwDhw+4k6C1Qb9SV3mIq7MJHctfx1CrmirYd4KHGegNTy
-	T/9fhIApbQv35C0yxWdPMLUCoAol82u8T2+
-X-Received: by 2002:a5d:5f42:0:b0:4a3:8b21:51c1 with SMTP id
- ffacd0b85a97d-4abb9de7e00mr1547177f8f.53.1795127437643; Thu, 19 Nov 2026
- 14:30:37 -0800 (PST)
+	by smtp.kernel.org (Postfix) with ESMTPS id CF5501F000C6;
+	Fri, 20 Nov 2026 00:07:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795133257;
+	bh=d2Fp8/mmNnVLXYOoT+FBeI5Lu/MVAAiEMNJhyjgSXco=;
+	h=From:Subject:Date:To:Cc:Reply-To;
+	b=ec23hgFAEBsdh0GpUJeJkL2jjbAXBkRgURxUySOV8N0neW5vjS2KmOswv5xwlLMQx
+	 QEUjx4vIneSdQjkEPe70ggYB/fU+p8/+Vt5IPGWxfoteO3yKIwXq+HldoyqI0uDF3f
+	 Rj/t1MNPcizfVFDmLdcUXvlaGHnkA6Fb0bvHopPuElYduykELuI/av0E+lftE4ZwV9
+	 NadwZDM2VGFAR+sHVF1GelzvCiiRcxojFQcnCsIIKiIp9k0omH69tAuNjgtqc1t/ua
+	 ebmx4NyNg7PYEPc8yab6+u+ewoI+1QG4d3zXyZHbzjWMR70dR/snKJe6SCQ9dcDW7Z
+	 flQ3gx1td4rsg==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 4D7F9424D8;
+	Fri, 20 Nov 2026 00:07:35 +0000 (UTC)
+From: Joseph Telaak via B4 Relay <devnull+joseph.telaak.dev@kernel.org>
+Subject: [PATCH v3 00/11] leds: ktd202x: Add Etek ET6326, hardware
+ breathing and fixes
+Date: Thu, 19 Nov 2026 19:07:22 -0500
+Message-Id: <20261119-ktd202x-et6326-v3-0-98b836b1cddc@telaak.dev>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -106,75 +84,178 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261119213147.1094488-1-usama.arif@linux.dev> <20261119213147.1094488-2-usama.arif@linux.dev>
-In-Reply-To: <20261119213147.1094488-2-usama.arif@linux.dev>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Thu, 19 Nov 2026 14:30:25 -0800
-X-Gm-Features: Aa3M54rH-aa26JdIN-pUYW-8cMRdCYq4lpDC8en2IEgeQrnp1pYq2y4nekWn-HI
-Message-ID: <CAKwvOdmCuYrdHX1ACVyC3BBo7V5vQ9HiqSx=+vVCYQ=9d17Kdw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/boot/startup: Disable kernel stack depth tracking
-To: Usama Arif <usama.arif@linux.dev>, Kees Cook <kees@kernel.org>
-Cc: tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	gustavoars@kernel.org, ardb@kernel.org, hca@linux.ibm.com, nathan@kernel.org, 
-	morbo@google.com, justinstitt@google.com, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org, riel@surriel.com, 
-	shakeel.butt@linux.dev, kernel-team@meta.com, rkeilty@meta.com, 
-	atish.patra@linux.dev, dgreid@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADuP/2oC/3WNyw7CIBBFf6VhLYZHoY+V/2FcUBgt1rQGkNQ0/
+ XehbjTG3ZzknjML8uAseNQWC3IQrbfTmIDvCqR7NV4AW5MYMcIkpYTiIZh0zxiC5EziioPhpJR
+ a8BIl6e7gbOcteDy92T+6K+iQK3nRWx8m99w+Rpp3f+ORYoKhExSMUYbU+hDgptSwNxBRrkf26
+ Tc/Pku+kNBUmjEpRf3lr+v6AiwAy9P/AAAA
+X-Change-ID: 20261101-ktd202x-et6326-73ed3046c534
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Griffin Kroah-Hartman <griffin@kroah.com>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-doc@vger.kernel.org, stable@vger.kernel.org, 
+ Joseph Telaak <joseph@telaak.dev>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795133254; l=7350;
+ i=joseph@telaak.dev; s=20261104; h=from:subject:message-id;
+ bh=Xdl7JhCrzMFcD+Yx/GVwMVIDBXAjGW7X5Emk10IWF78=;
+ b=s2Wc4yDz3tHq5DaZYQeN6+q7pyyv3VEQ8qUcMoBG/ek1GMSu/grNuQohPzmrhALdiMAd2pUHF
+ aJl6HX7KveTDEi0kFAM+GDxAsT0auIeENsyPvc3iFRUVnZxqlwGa09h
+X-Developer-Key: i=joseph@telaak.dev; a=ed25519;
+ pk=oQI+UfddlZ0wK2ac4WKOGNjUl1ZEN8j9ZVFSqEDoNP0=
+X-Endpoint-Received: by B4 Relay for joseph@telaak.dev/20261104 with
+ auth_id=1404
+X-Original-From: Joseph Telaak <joseph@telaak.dev>
+Reply-To: joseph@telaak.dev
 
-On Thu, Nov 19, 2026 at 1:31=E2=80=AFPM Usama Arif <usama.arif@linux.dev> w=
-rote:
->
-> Commit 57fbad15c2ee ("stackleak: Rename STACKLEAK to KSTACK_ERASE")
-> renamed DISABLE_STACKLEAK_PLUGIN to DISABLE_KSTACK_ERASE everywhere
-> except in arch/x86/boot/startup/Makefile. The old name now expands to
-> nothing, so the startup code is built with stack depth tracking enabled.
->
-> The startup code is linked with every symbol prefixed by __pi_, so that
-> it cannot call into the rest of the kernel by accident. It has no alias
-> for the tracking callback, and tracking stack depth there is of no use.
->
-> At the default KSTACK_ERASE_TRACK_MIN_SIZE of 100 no startup function is
-> large enough to be tracked, so this went unnoticed. With Clang,
-> CONFIG_AMD_MEM_ENCRYPT=3Dy and a minimum below about 90 bytes,
-> pvalidate_4k_page(), snp_cpuid() and do_vc_no_ghcb() get a call to
-> __sanitizer_cov_stack_depth() and vmlinux fails to link:
->
->   ld.lld: error: undefined symbol: __pi___sanitizer_cov_stack_depth
->
-> Use DISABLE_KSTACK_ERASE, which disables tracking with either compiler.
->
-> Fixes: 57fbad15c2ee ("stackleak: Rename STACKLEAK to KSTACK_ERASE")
+The Etek ET6326 drives the status LED of the GL.iNet GL-SFT1200 (Opal)
+router. It is register compatible with the Kinetic KTD2026, except for
+the flash period: Reg1 = n is (n + 1) * 128 ms on the ET6326 and
+256 ms + n * 128 ms on the KTD202x. Patches 6 and 7 add it with the
+KTD2026 as fallback, so older kernels drive it with slightly off blinks.
 
-tsk tsk, Kees your `grep` might be borked!
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Patches 1 to 5 fix bugs that have been there since the driver was
+added, and come first so they can be applied on their own:
+- a blink shorter than 256 ms became a 16 s blink on 32 bit
+- with fewer LEDs in the DT than channels, as on this board, the driver
+  read past the end of its LED array
+- a blink with a very short on time was programmed as never on
+- delays from the timer trigger that add up to 2^32 (or 2^64) divided
+  by zero, and long blinks overflowed the on time on 32 bit
+- a blinking multicolor LED also lit its colors at brightness 0
 
-> Signed-off-by: Usama Arif <usama.arif@linux.dev>
-> ---
->  arch/x86/boot/startup/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makef=
-ile
-> index 5e499cfb29b5c0..0815105e7205c7 100644
-> --- a/arch/x86/boot/startup/Makefile
-> +++ b/arch/x86/boot/startup/Makefile
-> @@ -3,7 +3,7 @@
->  KBUILD_AFLAGS          +=3D -D__DISABLE_EXPORTS
->  KBUILD_CFLAGS          +=3D -D__DISABLE_EXPORTS -mcmodel=3Dsmall -fPIC \
->                            -Os -DDISABLE_BRANCH_PROFILING \
-> -                          $(DISABLE_STACKLEAK_PLUGIN) \
-> +                          $(DISABLE_KSTACK_ERASE) \
->                            $(DISABLE_LATENT_ENTROPY_PLUGIN) \
->                            -fno-stack-protector -D__NO_FORTIFY \
->                            -fno-jump-tables \
-> --
-> 2.53.1-Meta
->
+Patch 8 lets the pattern trigger's hw_pattern use the chip's rise and
+fall ramps, so a breathing LED needs no I2C traffic. Patch 9 honors
+led-max-microamp on single color LEDs: the GL-SFT1200 drives three LEDs
+in parallel on each channel at 1.375 mA, and the driver's full
+brightness is 24 mA. Patch 10 fails the probe when nothing answers at
+the address. Patch 11 stops a second blinking LED from silently
+retiming the first: it shares the flash timer only with the same
+timing, and otherwise blinks in software. The second PWM timer is no
+help, since in the timer slot the driver uses it repeats the first.
+
+ET6326 datasheet:
+https://www.etekmicro.com/wp-content/uploads/datasheets/ET6326_datasheet.pdf
+
+Tested on a GL-SFT1200 (SF19A2890, MIPS32) with OpenWrt and Linux
+6.18.60, with the two LEDs of the board (blue and white, three LEDs in
+parallel on each channel, led-max-microamp = <1375>):
+- brightness 1 to 11 (max_brightness 11 from led-max-microamp), and
+  waking the chip from sleep
+- the timer trigger from 1/1 ms to 500/500 ms; a camera measured a
+  0.917 s period for 896 ms, the same 2.2 % slow oscillator as with the
+  stock firmware, so the ET6326 period encoding is the one used here
+- a 1/200 ms blink, which keeps blinking after a new delay_off, and
+  delays that add up to 2^32 ms
+- a second LED blinking at another rate falls back to software and
+  leaves the first one alone; with the same delays it shares the timer
+  in step with the first; a LED that blinks in software takes the timer
+  over at its own brightness once it is free
+- the timer programmed again after the chip slept
+- breathing through hw_pattern, written right after selecting the
+  pattern trigger
+- invalid patterns and finite repeats rejected
+- the same pattern on both LEDs shares the timer, and a pattern that
+  cannot get the timer leaves its LED off
+- 240 writes to one LED while the other stayed lit, module unload and
+  reload, and a reboot while blinking
+v3 was run again on a second GL-SFT1200 with Linux 6.18.55: the
+current limit and brightness, the timer trigger, a second LED refused
+the timer or sharing it, a blink started from off, and breathing, with
+the ramps cleared by the next blink.
+The bug fixes were also checked with a simulated chip under ASan and
+UBSan, and the series builds with W=1 on x86_64, i386, MIPS and arm64.
+
+---
+Changes in v3:
+- Patch 2: a blank line between the number of LEDs and the allocation
+  (Lee).
+- Patch 3: name the shortest on time KTD202X_FLASH_ON_MIN (Lee).
+- Patches 5, 8 and 11: a blank line before the colors at brightness 0
+  are skipped (Lee).
+- Patch 7 (Lee):
+  - drop the datasheet URL from the file header; it stays as a Link: in
+    the commit message
+  - call the per chip data caps, and give the flash period limits named
+    defines instead of comments about the period register
+  - chip->num_leds stays next to caps->num_leds, as __counted_by() needs
+    the count in struct ktd202x itself
+- Patch 8 (Lee): KTD202X_RAMP_TFALL_SHIFT, named rise, high, fall and
+  low times, loop counters declared in the for, a mutex guard instead of
+  goto, and lines joined where they fit in 100 columns.
+- Patch 11 (Sashiko):
+  - tell that a LED is off from the brightness it is given, not from its
+    colors, which can all round down to 0 when a multicolor LED is
+    dimmed
+  - in blink, read cdev->brightness once and always set it under the
+    mutex before the timer, as the LED core may have changed it without
+    applying it yet
+  - mutex guards instead of goto in blink and hw_pattern (Lee)
+- Patches 2, 3, 5, 7 and 8 have no functional change.
+- Link to v2: https://patch.msgid.link/20261109-ktd202x-et6326-v2-0-56e97c226658@telaak.dev
+
+Changes in v2:
+- New patch 5: a blinking multicolor LED keeps its colors at brightness
+  0 off. The bug is older than the series.
+- Patch 6: add Krzysztof's Ack.
+- Patch 7: report delay_on rounded to the nearest ms and at least 1 ms.
+  On the 128 ms ET6326 period a short on time read back as 0 ms, and the
+  timer trigger's next delay_off write then turned the LED off.
+- Patch 8:
+  - skip the colors at brightness 0, and build the channel list under
+    the mutex
+  - use GPL-2.0-only, not the deprecated GPL-2.0 SPDX identifier, in the
+    new document
+- Patch 10: the KTD2026/7 does not ACK the byte that resets it, so v1
+  failed the probe on every KTD2026/7. Ignore that write again, and fail
+  the probe when the write that puts the chip to sleep fails.
+- Patch 11:
+  - write the timer registers whenever no other LED uses the timer, so
+    they are set again after the chip lost power, and release the timer
+    when the write fails
+  - hold the chip mutex from the brightness to the timer in blink and
+    hw_pattern, and track the timer from the brightness being set, not
+    cdev->brightness
+  - blink at blink_brightness, not max_brightness
+  - check the timer before a pattern touches the LED, and leave the LED
+    as it was on -EBUSY
+- Link to v1: https://lore.kernel.org/r/20261101-ktd202x-et6326-v1-0-eb51eddad08c@telaak.dev
+
+---
+Joseph Telaak (11):
+      leds: rgb: ktd202x: Fix the flash period of short blinks on 32 bit
+      leds: rgb: ktd202x: Fix an out-of-bounds read with unused channels
+      leds: rgb: ktd202x: Never program an on time of zero
+      leds: rgb: ktd202x: Fix a division by zero with long blinks
+      leds: rgb: ktd202x: Keep the unlit colors of a blinking LED off
+      dt-bindings: leds: kinetic,ktd202x: Add Etek ET6326
+      leds: rgb: ktd202x: Add Etek ET6326 support
+      leds: rgb: ktd202x: Add hardware pattern support
+      leds: rgb: ktd202x: Limit the LED current to led-max-microamp
+      leds: rgb: ktd202x: Fail the probe when the chip does not answer
+      leds: rgb: ktd202x: Don't let a blinking LED retime another one
+
+ .../devicetree/bindings/leds/kinetic,ktd202x.yaml  |  15 +-
+ Documentation/leds/index.rst                       |   1 +
+ Documentation/leds/leds-ktd202x.rst                |  51 ++
+ drivers/leds/rgb/Kconfig                           |   3 +-
+ drivers/leds/rgb/leds-ktd202x.c                    | 566 +++++++++++++++++----
+ 5 files changed, 534 insertions(+), 102 deletions(-)
+---
+base-commit: 59cf91cf87abb67a49b1bb7b9d3b06486abde8cf
+change-id: 20261101-ktd202x-et6326-73ed3046c534
+
+Best regards,
+--  
+Joseph Telaak <joseph@telaak.dev>
 
 
---=20
-Thanks,
-~Nick Desaulniers
