@@ -1,106 +1,105 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795211061;
-	b=BCXA6jzOLsei3gaAOUnXGnamuNlpYA8/SY4z3PgL88u49I4IarSo5ugeGCgkvtRtyukk
-	 ENrGKxq3Waq6strso0qg5kB0r87AlFc6k/0uBhs5h5PAvMBJQzPqAysdtwmvpPJkrKtH/
-	 mNYDrWtk2FepBs8QV1PZNb40F5pyR+uoxjIGVt5tFiKfPFFUCvIHNM6L+1LhXvS9ssUDb
-	 X7VI1LUVl+DVc36R6NtVOvt4YlmJG1I7+afhkGJuQb2fPe8pDRamrc+LluZJI5b/8HoyU
-	 asGc+GMH5tfld/aIdlriQdoHgOGVPPO2yaa/A+/zGUYDN8VMdG96c0JNUJHGdUquF4g==
+	t=1795213340;
+	b=rfSPVSXIW4bibYbsKnvwuBmWumGVPSdGetj1lJgfD/AqGN1drD2ZMgRS3TGmyxSnyypi
+	 ROleQRqa/A7fJvQa4yxpMhPfOoLICJq2GJtGixOxqK7XklbQSkl+YJzio85oVCGpEoSk+
+	 dmLpITToKSpUD3n/ODbAahphpMz3G6rhkZEx63at/4AORkGURzT4SNBR5AAOM9Vw1Vikk
+	 BKQ/kdH9z3k3JAP9oNJ6De5g7taDv6eisAB2XteR4N5tmaRiPf1zoLq6N349bQB5XShyA
+	 ZK4SY/xjgM+9tO5OFct47gddzKoj6HPunMGquf2AvW6zjp8gEo/kU8RpoS/k0zyaA5Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795211061;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795213340;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:X-Mailer:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=rXcNRQCIOSxwLtGXJnstBt6P3fFtFAxQQPTFjcsDhnA=;
-	b=0Z8Uin4wpE/YuOdMOmCfzmWA47/BtsRtARIQ8lDmz8+uuxp9CaqWv6aDFE1+eZ/8SNIm
-	 taeqKbyaWE2OueK4TY7whwDPBUjM1ZSt8WWUNBoSQ73ySAvm9r9b4TLlovYsTupHGZJ4L
-	 4U5u/4FVdijp6u5WC/lte7lw6kJvZAFZe4xvT3BKPUKaa5t3MPYc9YinhVzUWLcTyxMeI
-	 P6+N34k/7yZRGEtlEgnepK+frBwBLM9Dh0mMqSkN28q2kGQEcWRyGVP12xKSJkPh9Qi51
-	 NUnkXIxG/LXtdK+SF8rbdOcaRJvo2TfcxV/r6u4XwEg9DhDsKOx4Qe8C4mqI2Sp0Hug==
+	bh=yzXVm4lahSNyTqJMJ8XzNkiqp9bv+uJ5iG2RmmNtml8=;
+	b=nuvmlYzZmMRLOeDLk77Fsg58XQbKT5mrTxlC0d4syOEooPfoXhuT+Ex1NJd25NTfUFlS
+	 EN1WhTLQwvd6A/YPriGV7yeecv3XkzW4IT8fOUtZXe55Hdu4GgAAAzSVXvmDcm3ruKDAe
+	 l6DparNBZX++CdhlA71xDylPF/8wo/JoNGbaa2mUxdufrh9832bAO0/mN9F8OqEHXCppp
+	 Ib1HNv6IZplzbRh9zx/JGypXEpGuu+G2gH3TDRY6Emtc8Yf+iya92tnjEbasmuOPKf/CG
+	 jrvzttAKNe52eR3ZfLesxYcZtDGLeynlZ0AWvN9gvvM2UweQKPBxHX2D9QaS/JMOE7g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=aaE2m7Do;
-	arc=none smtp.remote-ip=209.85.128.44
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wfoZwPSg;
+	arc=none smtp.remote-ip=209.85.128.47
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A9E606A6AA
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2026 21:44:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 19A9E606A6AA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803FC606A334
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2026 22:22:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 803FC606A334
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=aaE2m7Do
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4a35a60499eso11434835e9.0
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2026 13:44:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wfoZwPSg
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4a35ac4475dso10857905e9.2
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2026 14:22:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795211057; x=1795815857; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795213334; x=1795818134; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:mime-version:references
          :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=rXcNRQCIOSxwLtGXJnstBt6P3fFtFAxQQPTFjcsDhnA=;
-        b=aaE2m7DoQJh6eGOLhWM+gaySpD+JUViVs4QmPHM0Tflg42yuhXUtK5vy+yVVlAF2/O
-         kx/lsqWZcJ+bpbs10W1S+FpvIZ28/Fem6m967lymXET9nK++93s1F0GOQV9rLAKQddx5
-         KGQ1R8/JrutIbsYZfJ9kaMMk9nppMXkxZh7Kg9cxcwiUPQQKrDrwRd+z0tNqN5b0bS/G
-         /D7lMV0n7I3CwSsa5TbVyP8vqCsVyPewShsyoctg/xJkV93nrbByiEgf3GvBsAdk70K1
-         hcpPgIW3VqzVJ0k+twihaDcxmO4jyvV7XLMyglH81bQGeF2uNTpwLeEbQ43xsR9I0k2r
-         qUxA==
+        bh=yzXVm4lahSNyTqJMJ8XzNkiqp9bv+uJ5iG2RmmNtml8=;
+        b=wfoZwPSgr0KHa/TkHNN4+russXXgvfAcywVgjI/2aDjuKUuNQUJ9fY8Znxgz56WoVj
+         yHHQXNfN0nrOzuk37lwF2uEru4XG4tgt3UN4PS10Vkg3W893Il/CIYiwSfPCEVlxSk3+
+         moLyEYWxHGSAiyXTGJD777BdAJe2YBLxzd6vLxAl/hfo3zetLmPo4WMX9MAu4yTWpteO
+         VnTGKMP+xAtC+aYaYYvB+7ini7gNf/CWnq74+UPpRmlPY+4Lr7m8/sgMsd5Guf/wIioC
+         /aNvsduicZEKnwcIPsw4fthEEE4CpVwHXkTqRdYphigIlF5Q2MfhzapALIEx7CG9UozL
+         Y7Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795211057; x=1795815857;
+        d=1e100.net; s=20260707; t=1795213334; x=1795818134;
         h=content-transfer-encoding:content-type:mime-version:references
          :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=rXcNRQCIOSxwLtGXJnstBt6P3fFtFAxQQPTFjcsDhnA=;
-        b=Zh3rRoerkuR8REa8IbMBeTmZQf7rv8Ca8F8WwWlXa+K/z8fU0Dinlor+vhcKP5ohHp
-         yEXVQsIWy+Oc9gSAgvS9biFxf7frIRQ04egNgYSRPMVzcCjdUBtbPyaVb879X4OmCDRY
-         afmCi50OaJ3kDfG5xnv0Jfc4LwgrbHJSb4tJBuo2yzDA4O/20w3c5edJnLlYxBXvWjRP
-         omPiWQUf5cChzD4vsNhdCHVDuSdQEYp8NT8khrp9C0GJDNCuehVHA1/mGAm0qfPT+C4Q
-         4/5VJOBJWlZc7Ob+aEFAwVW39SVou6xIfyZ9RnpN2uuBBSv2iqpycIkjRjGO0vVKY5V2
-         UE0A==
-X-Forwarded-Encrypted: i=1; AL+hErH13x0yP6C4woNsA7g06tc1bAW7rtPTWw3b8iq0x/33vV4Dbw1GwxhHlAyHW8rwKOOd4CNo7Y4r5AdfFlgnyE0=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9xcr+nSwfjHwoyf8/gzK7zKJDEsi8nyPGn7kh/IcGeUmi7cAnq
-	a0L/+xmUYY/6R6imJF+CNG5hXnJpVk+Hq/jTTCvrM/TvnAr/3AMXukN6
-X-Gm-Gg: AYBFou1pQRRQZ508fyHt4GLalkO5EAS3R2UphyScpg9ZC6utItaS2cJwnGEflgaTNW8
-	M+URaNWxAK9eTusUOeUkLFAeZ4H9TN7PND+uwjI+HkgvNI++Rh0Q+hdDBIurt+S4XAtCgHwRBgl
-	vxWcqLqThN6vkcCJcJ0Du/0KLC5iMTLTz3E+X2+gxQ8bDZpK85LlWIBMYzveEQJYV3P7htQLhDU
-	2ju/HMiJ72kSbki8PNZSaHJKyZVzNvYjeQpKfyGyuyL6+v33EpAMOFzXsqTdsDb88q6jdVy9AP5
-	ghD1soDFBljSfFUeXczOhbrmgwmcEN06Q4aECDIfUqCfKj9rh4fbi1iFxKnPnQ2rPgC1qd7IKgZ
-	Fte0EGILa71jdLKRV5iT14badl1RRpRl5zWeQovbtJyC1ObMHQ+kuFCn/Bko50rUoOliYqzq+i8
-	Y5Kl4rS8nuVVn1obITinSElj8Y4kh5sDoeCLQhBeo3kZb5nUNJ3VC3JnIKbtZuCfQ2AXjf73NtV
-	LzDNlFIZAGHUAgZS+hvJ3tOYC2Ct6o6M6z5fGl7RPdmP9vs6LpCC92SW36fWFx3PmNdWJeNJJ2c
-	1PkfPjp/ez8FAXQ31v8twk7u5CiNcFhCLu9YD5tD0mO0RHaS5F48BTsSpQ3qhtBlNZHHJ93d4ko
-	03taP28nQ7rg=
-X-Received: by 2002:a05:600c:820d:b0:4bb:6cef:d14b with SMTP id 5b1f17b1804b1-4bb887c34f1mr109184455e9.2.1795211057153;
-        Fri, 20 Nov 2026 13:44:17 -0800 (PST)
+        bh=yzXVm4lahSNyTqJMJ8XzNkiqp9bv+uJ5iG2RmmNtml8=;
+        b=A22MoPp64aU4ipM4JplZJ3B+Q1vmiTndHkQNK5dX9F26giBjXMn3v5Ii4Xl7DfJH/E
+         cGKBHDXY6s9wsAFi+C4YSfdJgMxnGQbOKxA6GdacP9RZ5bAR2iLwEW7TwkrWYbTkGgj5
+         wVM8jRuxqXMaj+6AyTRSkvFa5gD0aHIhXkl4/i78d7ZKRYPthlu3TvmVxsxxsGjoOCYm
+         hpszQKXcrvWQ9Cgbyiga3cD2/t3HtucGsbvfuyowK6U6cSyg1ivxZ06jvcEiIKYm4HL9
+         4t+zQFqT+V1g1wXFcWU9/JeaTSgqU50ZIzQV//iAZk3dy9e3F2Pw6mhrSSGhr26/FfWQ
+         SMTQ==
+X-Forwarded-Encrypted: i=1; AL+hErGTTCMZE8uXHmUE/WqClHzejOFnb8dX0/6BkbzhOacZCCjIkwK/DOMy21JDZmfKfWwktBJtSwpr8SH5jlSfAkM=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/Ql0aJt9LUIS0pYnTTIjQXWX7OgRBvFG2avnL9qoSmWxFc+YjB
+	og/kNnnGOFyP3RBGnUo939e9eqRVrtGLWf0xErU/0gN6r45UoKWXyqO1
+X-Gm-Gg: AYBFou0ag8SceyYLPWLu2IMt1BW7mk79JacBML3rghQXKTHrPkipwGVril+G6wDl0iD
+	QWeratkgNfaNBkO1mSEMRGoucV47gVguXDaUHyXUIGlrs4e16WU7tWPb9z/B+inGnRP5MDJz/XE
+	9yuJkyRocib/EHAoMkDPBD+4GIBTN+s6P7IVt4dz7OBwD8zNyaxlev+mXo6PztDVQpMaVtVaAFD
+	VXwojYPzNcvGngS+Pkk3IKsV/6D4xfDNqkoJUPpLGkV3An2lu0ClEl4Zu+nZNwSw/wt+YXodDz8
+	3fafqMA8Z3gjVGNKpaEjsAuV7VgTpXKeIskTCobt+Qmym4mah3RoRpM6yQDAy/Nco4XKwvBACef
+	+JFAdzV0109WhM8ErtrNF0HZT4x5TTezCxcSTPwFkrkvZgXtiXi3WC/scyZ6sxkfg0wyHRJAIWa
+	R2aUWFB9Fp8iGLL/EhijNWaqxtm5drNQWyQiOG+Gz4WgM0wT/Dk3wIw3IAp6hHrms1PeLXFfEIV
+	d+pKK+JgXmUKWMH4xIk9KVRNFhafjUUDkIZ+qm257hOHwkllNNPA1nYrttxQyxRL+bEWmT08f26
+	WPi8mjbbSd/c7LSbkKRtzmHIquYtnjHOJtDs6X7WCMd8eXVcWVbY2XkfsBziH8adCw==
+X-Received: by 2002:a05:600c:828e:b0:4a1:e6a9:4086 with SMTP id 5b1f17b1804b1-4bb88785a99mr100126115e9.0.1795213333610;
+        Fri, 20 Nov 2026 14:22:13 -0800 (PST)
 Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853c9170sm161429175e9.14.2026.11.20.13.44.16
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b2c5sm144561245e9.5.2026.11.20.14.22.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 13:44:16 -0800 (PST)
-Date: Fri, 20 Nov 2026 21:44:15 +0000
+        Fri, 20 Nov 2026 14:22:13 -0800 (PST)
+Date: Fri, 20 Nov 2026 22:22:11 +0000
 From: David Laight <david.laight.linux@gmail.com>
 To: Usama Arif <usama.arif@linux.dev>
-Cc: Nick Desaulniers <ndesaulniers@google.com>, tglx@kernel.org,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, kees@kernel.org, hpa@zytor.com, gustavoars@kernel.org,
- ardb@kernel.org, hca@linux.ibm.com, nathan@kernel.org, morbo@google.com,
- justinstitt@google.com, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev, linux-kernel@vger.kernel.org, riel@surriel.com,
- shakeel.butt@linux.dev, kernel-team@meta.com, rkeilty@meta.com,
- atish.patra@linux.dev, dgreid@meta.com
+Cc: Peter Zijlstra <peterz@infradead.org>, ndesaulniers@google.com,
+ tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, kees@kernel.org,
+ hpa@zytor.com, gustavoars@kernel.org, ardb@kernel.org, hca@linux.ibm.com,
+ nathan@kernel.org, morbo@google.com, justinstitt@google.com,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, riel@surriel.com, shakeel.butt@linux.dev,
+ kernel-team@meta.com, rkeilty@meta.com, atish.patra@linux.dev,
+ dgreid@meta.com
 Subject: Re: [PATCH 2/2] x86/kstack_erase: Use REP STOSQ for large stack
  fills
-Message-ID: <20261120214415.060e8375@pumpkin>
-In-Reply-To: <97e94491-ce19-45a1-8737-b30b49e997e8@linux.dev>
+Message-ID: <20261120222211.2f0d5cbc@pumpkin>
+In-Reply-To: <bad389b1-f4a6-43d4-9531-54b75e067c7a@linux.dev>
 References: <20261119213147.1094488-1-usama.arif@linux.dev>
 	<20261119213147.1094488-3-usama.arif@linux.dev>
-	<CAKwvOdnzNU_xtLeb4vXSFe3DLN9QmdNSSReUmQahsLX+1pZxCw@mail.gmail.com>
-	<20261120113825.234bee1c@pumpkin>
-	<20261120124252.14ff8a74@pumpkin>
-	<97e94491-ce19-45a1-8737-b30b49e997e8@linux.dev>
+	<20261120104534.GO2668564@noisy.programming.kicks-ass.net>
+	<20261120122635.GJ2669272@noisy.programming.kicks-ass.net>
+	<bad389b1-f4a6-43d4-9531-54b75e067c7a@linux.dev>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -111,210 +110,294 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Nov 2026 18:46:01 +0000
+On Fri, 20 Nov 2026 18:43:38 +0000
 Usama Arif <usama.arif@linux.dev> wrote:
 
-> On 20/11/2026 04:42, David Laight wrote:
-> > On Fri, 20 Nov 2026 11:38:25 +0000
-> > David Laight <david.laight.linux@gmail.com> wrote:
-> >  =20
-> >> On Thu, 19 Nov 2026 14:28:04 -0800
-> >> Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >> =20
-> >>> On Thu, Nov 19, 2026 at 1:32=E2=80=AFPM Usama Arif <usama.arif@linux.=
-dev> wrote:   =20
-> >>>>
-> >>>> With KSTACK_ERASE, every return to user space poisons the part of the
-> >>>> task stack that was used since the previous return. The generic
-> >>>> __stackleak_poison() does that one word per loop iteration, so a sys=
-call
-> >>>> that went 1-2 KiB deep pays for 128-256 separate stores. On Meta hos=
-ts
-> >>>> running many small VMs, stackleak_erase() accounts for about 1.5% of
-> >>>> non-idle host kernel cycles.
-> >>>>
-> >>>> Override __stackleak_poison() on x86-64, as s390 already does, throu=
-gh
-> >>>> the hook added by commit 491a78663e03 ("stackleak: allow to specify =
-arch
-> >>>> specific stackleak poison function"). Fill spans larger than 512 byt=
-es
-> >>>> with REP STOSQ and keep the word loop for shorter ones, where the fi=
-xed
-> >>>> startup cost of REP STOSQ does not pay off. REP STOSQ starts to win =
-at
-> >>>> about 300-400 bytes on Zen 5c and Cooper Lake, so on both no span ge=
-ts
-> >>>> slower.
-> >>>>
-> >>>> The fill is inline asm, so the noinstr function still makes no calls.
-> >>>> memset64() would be the same instruction, but it is only static inli=
-ne,
-> >>>> and with KMSAN it is an out-of-line function.
-> >>>>
-> >>>> In a Zen 5c KVM guest, stackleak_erase() got about 35% cheaper per r=
-eturn
-> >>>> to user space (71 ns to 46 ns, scan included) over a futex, epoll, p=
-rocfs
-> >>>> and Unix socket syscall mix. Same-vCPU futex wake/wait and Unix sock=
-et
-> >>>> sendmsg()/recvmsg() ping-pong round trips got 5-8% faster.
-> >>>>
-> >>>> Signed-off-by: Usama Arif <usama.arif@linux.dev>
-> >>>> ---
-> >>>>  arch/x86/include/asm/processor.h | 25 +++++++++++++++++++++++++
-> >>>>  1 file changed, 25 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm=
-/processor.h
-> >>>> index 77488ff5eb8c7c..049231d484ad0e 100644
-> >>>> --- a/arch/x86/include/asm/processor.h
-> >>>> +++ b/arch/x86/include/asm/processor.h
-> >>>> @@ -580,6 +580,31 @@ static __always_inline bool on_thread_stack(voi=
-d)
-> >>>>                                current_stack_pointer) < THREAD_SIZE;
-> >>>>  }
-> >>>>
-> >>>> +#ifdef CONFIG_X86_64
-> >>>> +#define __stackleak_poison __stackleak_poison
-> >>>> +static __always_inline void __stackleak_poison(unsigned long erase_=
-low,
-> >>>> +                                              unsigned long erase_h=
-igh,
-> >>>> +                                              unsigned long poison)
-> >>>> +{
-> >>>> +       unsigned long count;
-> >>>> +
-> >>>> +       /* Short spans do not amortize the startup cost of REP STOSQ=
-. */
-> >>>> +       if (erase_high <=3D erase_low + 512) {
-> >>>> +               while (erase_low < erase_high) {
-> >>>> +                       *(unsigned long *)erase_low =3D poison;
-> >>>> +                       erase_low +=3D sizeof(unsigned long);
-> >>>> +               }
-> >>>> +               return;   =20
+> On 20/11/2026 04:26, Peter Zijlstra wrote:
+> > On Fri, Nov 20, 2026 at 11:45:34AM +0100, Peter Zijlstra wrote:  
+> >> On Thu, Nov 19, 2026 at 01:31:08PM -0800, Usama Arif wrote:  
+> >>> +#ifdef CONFIG_X86_64
+> >>> +#define __stackleak_poison __stackleak_poison
+> >>> +static __always_inline void __stackleak_poison(unsigned long erase_low,
+> >>> +					       unsigned long erase_high,
+> >>> +					       unsigned long poison)
+> >>> +{
+> >>> +	unsigned long count;
+> >>> +
+> >>> +	/* Short spans do not amortize the startup cost of REP STOSQ. */
+> >>> +	if (erase_high <= erase_low + 512) {
+> >>> +		while (erase_low < erase_high) {
+> >>> +			*(unsigned long *)erase_low = poison;
+> >>> +			erase_low += sizeof(unsigned long);
+> >>> +		}
+> >>> +		return;
+> >>> +	}
+> >>> +
+> >>> +	count = (erase_high - erase_low) / sizeof(unsigned long);
+> >>> +	asm volatile("rep stosq"
+> >>> +		     : "+D" (erase_low), "+c" (count)
+> >>> +		     : "a" (poison)
+> >>> +		     : "memory");
+> >>> +}
+> >>> +#endif  
 > >>
-> >> gcc 13 onwards makes a meal of that - https://godbolt.org/z/KPP4h8xz6
-> >> It does manage to unroll the loop once - which is good because the int=
-el
-> >> cpu (I've got) won't execute a 'one clock loop' (the zen5 will); but t=
-he
-> >> setup code is horrid.
-> >> But I also think some of the more recent cpu can execute more than
-> >> one write per clock.
-> >> If you unroll the loop 4 times it may run a lot faster.
-> >> Perhaps:
-> >> 	long count =3D (erase_high - erase_low) / sizeof(unsigned long);
-> >> 	if (count <=3D 64) {
-> >> 		while ((count -=3D 4) >=3D 0) {
-> >> 			*(unsigned long *)erase_low =3D poison;
-> >> 			*(unsigned long *)(erase_low + 8) =3D poison; =20
-> >=20
-> > The add (probably) needs to be in the middle...
-> >  			erase_low +=3D 32; =20
-> >> 			*(unsigned long *)(erase_low - 32 + 16) =3D poison;
-> >> 			*(unsigned long *)(erase_low - 32 + 24) =3D poison;
-> >> 		}
-> >> 		if (count & 2) {
-> >> 			*(unsigned long *)erase_low =3D poison;
-> >> 			*(unsigned long *)(erase_low + 8) =3D poison;
-> >> 			erase_low +=3D 16;
-> >> 		}
-> >> 		if (count & 1)
-> >> 			*(unsigned long *)erase_low =3D poison;
-> >> 	} else {
-> >> 		...
-> >> 	}
+> >> Gemini seems to suggest 16-32 words would be sufficient to amortize the
+> >> REP STOS setup. It was also adamant I try and unroll that earlier loop.
 > >>
-> >> Except that gcc makes a mess of it again.
-> >> I don't think the 'erase_low +=3D 32' is going to execute at the
-> >> same time as the last (two probably) writes so costs a clock.
-> >> So it may need to be asm. =20
-> >=20
-> > I threw in enough OPTIMIZER_HIDE_VAR() to stop the optimiser breaking
-> > the code. https://godbolt.org/z/nx477T4M1
-> > gcc then generates:
-> >         movq    %rdx, (%rdi)
-> >         movq    %rdx, 8(%rdi)
-> >         addq    $32, %rdi
-> >         movq    %rdx, -16(%rdi)
-> >         movq    %rdx, -8(%rdi)
-> > .L32:
-> >         subq    $4, %rcx
-> >         jns     .L22
-> > for the code loop (clang is a bit worse - but should be ok).
-> > I think that will be a 'two clock loop' on cpu that can do
-> > two writes/clock; zen3 and ice lake).
-> > For 'stack splatting' rounding up to a multiple of 32 bytes
-> > will save all the 'remainder' code. =20
->=20
->=20
-> The range can't be rounded: erase_low is wherever the poison search
-> stopped, and erase_high is the stack pointer or the bottom of pt_regs
-> (168 bytes, so only 8-byte aligned). Rounding up writes live stack,
-> rounding down can write STACK_END_MAGIC when the stack was used to the
-> end.
+> >> How about something like so, does that make sense? Also, I suppose we
+> >> should make memset64() __always_inline if we use it here. I'm not at all
+> >> sold on the unroll here, the asm is pretty horrid for what it does.  
+> > 
+> > This one is much improved:
+> > 
+> > --- a/arch/x86/include/asm/processor.h
+> > +++ b/arch/x86/include/asm/processor.h
+> > @@ -28,6 +28,7 @@ struct vm86;
+> >  #include <asm/vmxfeatures.h>
+> >  #include <asm/vdso/processor.h>
+> >  #include <asm/shstk.h>
+> > +#include <asm/string.h>
+> >  
+> >  #include <linux/personality.h>
+> >  #include <linux/cache.h>
+> > @@ -580,6 +581,35 @@ static __always_inline bool on_thread_st
+> >  			       current_stack_pointer) < THREAD_SIZE;
+> >  }
+> >  
+> > +#ifdef CONFIG_X86_64
+> > +#define __stackleak_poison __stackleak_poison
+> > +static __always_inline void __stackleak_poison(unsigned long erase_low,
+> > +					       unsigned long erase_high,
+> > +					       unsigned long poison)
+> > +{
+> > +	unsigned long count = (erase_high - erase_low) / sizeof(unsigned long);
+> > +
+> > +	/* Amortize the startup cost of REP STOSQ. */
+> > +	if (count < 32) {
+> > +		unsigned long *ptr = (unsigned long *)erase_low;
+> > +
+> > +		while (count) {
+> > +			unsigned long mod = (count-1) % 4;
+> > +			count -= mod+1;
+> > +			switch (mod) {
+> > +			case 3: ptr[count+3] = poison; fallthrough;
+> > +			case 2: ptr[count+2] = poison; fallthrough;
+> > +			case 1: ptr[count+1] = poison; fallthrough;
+> > +			case 0: ptr[count+0] = poison; break;
+> > +			}
+> > +		}
+> > +		return;
+> > +	}
+> > +  
+> 
+> Hello Nick, Peter and David,
+> 
+> Thanks for the reviews! I should have used memset64 from the get go :)
+> 
+> I have tested 2 possible revisions now as well as this one from Peter,
+> have added both of them at the end of the reply.
+> 
+> - v2.1 where you loop upto 512B and then memset
+> - v2.2: 4 stores per loop up to 512 B, then 64-byte aligned memset64()
+> 
+> I timed stackleak_erase() in a Zen 5c guest over a futex/epoll/procfs/unix
+> syscall:
+> 
+>   No patch                             68.3 ns per erase
+>   v1 (loop up to 512 B, then REP)           46.6 ns
+>   v2.1 (loop up to 512 B, memset64())       46.6 ns
+>   this version                              46.4 ns
+>   v2.2 (4 stores/iteration, aligned REP)    43.7 ns
 
-If the stack down by STACK_END_MAGIC has been written you are almost in
-'deep do-do land' so task_low_bound() could return an aligned address
-and that would let you align down the low address.
-(So leaving the very last few words alone.)
-It also probably doesn't really matter about the top few words.
-So the length could be rounded down.
+What are the lengths of those erases?
+(and where does the 46ns come from??)
+I'd definitely time 'just the code loop  - various loops' and
+'just rep stos'.
 
-Alternatively, do STACK_END_MAGIC and STACK_ERASE_POISON even need
-to have different values?
-(And aren't stacks now allocated with a guard page - so you get a
-fault on overflow much earlier than any check for STACK_END_MAGIC.)
+> The switch doesn't seem to help.
 
-But does this code even work in a useful manner.
-It seems to stop scanning after finding 128 bytes of KSTACK_ERASE_POISON.
-Isn't that going to stop on a function with a large on-stack buffer
-(especially since one is likely to be on the deepest part of the stack).
-I'd have thought you'd jump down the stack in larger lumps than that
-just looking for an unwritten word before even trying to decide if it
-was the boundary.
+To many conditions in the loop.
+You could do it this way:
+	switch (count & 3) {
+	case 0: do { *ptr++ = poison;
+	case 3:      *ptr++ = poison;
+	case 2:      *ptr++ = poison;
+	case 1:      *ptr++ = poison;
+		} while ((count -= 4) > 0);
+	}
+(give or take some off-by-one here and there).
+But I suspect that using Duff's device is frowned up.
+
+> Either way I kept 512 bytes: REP STOSQ only wins from ~430 bytes on Zen
+> 5c against the plain loop (~850 against the unrolled one),
+
+For zen5 you should only need to unroll the loop once (two writes per iteration).
+In my experiments it can execute a loop in one clock.
+Unless the compiler unrolled it for you (and got it right!) the original
+loop would be half the speed 
+
+> and from ~320 on Cooper Lake.
+
+I'd also try some older Intel cpu.
+The setup costs are likely to be higher with FRMS and friends.
 
 David
 
->=20
->=20
-> >=20
-> > David
-> >  =20
-> >> =20
-> >>>> +       }
-> >>>> +
-> >>>> +       count =3D (erase_high - erase_low) / sizeof(unsigned long);
-> >>>> +       asm volatile("rep stosq"
-> >>>> +                    : "+D" (erase_low), "+c" (count)
-> >>>> +                    : "a" (poison)
-> >>>> +                    : "memory");     =20
-> >>>
-> >>> Surely this isn't the only place using `rep stosq` in the tree, right?
-> >>> It's not, see memset64 in arch/x86/include/asm/string_64.h.   =20
-> >>
-> >> Which seems to have very few users.
-> >> memset_p() and memset_l() have almost no users.
-> >>
-> >> David
-> >> =20
-> >>>    =20
-> >>>> +}
-> >>>> +#endif
-> >>>> +
-> >>>>  #ifdef CONFIG_PARAVIRT_XXL
-> >>>>  #include <asm/paravirt.h>
-> >>>>  #else
-> >>>> --
-> >>>> 2.53.1-Meta
-> >>>>     =20
-> >>>
-> >>>    =20
-> >> =20
-> >  =20
->=20
+> 
+> 
+> My personal preference is v2.1, as its much simpler code and the difference
+> in performance between v2.1 and v2.2 isn't actually that much. But if there is
+> a stronger preference for v2.2, I can send that as it is faster.
+> 
+> 
+> v2.1:
+> 
+> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> index 77488ff5eb8c7c..3d205ae8566114 100644
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -28,6 +28,7 @@ struct vm86;
+>  #include <asm/vmxfeatures.h>
+>  #include <asm/vdso/processor.h>
+>  #include <asm/shstk.h>
+> +#include <asm/string.h>
+> 
+>  #include <linux/personality.h>
+>  #include <linux/cache.h>
+> @@ -580,6 +581,26 @@ static __always_inline bool on_thread_stack(void)
+>                                current_stack_pointer) < THREAD_SIZE;
+>  }
+> 
+> +#if defined(CONFIG_X86_64) && !defined(CONFIG_KMSAN)
+> +#define __stackleak_poison __stackleak_poison
+> +static __always_inline void __stackleak_poison(unsigned long erase_low,
+> +                                              unsigned long erase_high,
+> +                                              unsigned long poison)
+> +{
+> +       /* Short spans do not amortize the startup cost of REP STOSQ. */
+> +       if (erase_high <= erase_low + 512) {
+> +               while (erase_low < erase_high) {
+> +                       *(unsigned long *)erase_low = poison;
+> +                       erase_low += sizeof(unsigned long);
+> +               }
+> +               return;
+> +       }
+> +
+> +       memset64((u64 *)erase_low, poison,
+> +                (erase_high - erase_low) / sizeof(u64));
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_PARAVIRT_XXL
+>  #include <asm/paravirt.h>
+>  #else
+> diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+> index 2dae70c2b01465..73cc91254b1381 100644
+> --- a/arch/x86/include/asm/string_64.h
+> +++ b/arch/x86/include/asm/string_64.h
+> @@ -54,7 +54,7 @@ static inline void *memset32(uint32_t *s, uint32_t v, size_t n)
+>  }
+> 
+>  #define __HAVE_ARCH_MEMSET64
+> -static inline void *memset64(uint64_t *s, uint64_t v, size_t n)
+> +static __always_inline void *memset64(uint64_t *s, uint64_t v, size_t n)
+>  {
+>         const auto s0 = s;
+>         asm volatile (
+> 
+> 
+> 
+> 
+> 
+> v2.2:
+> 
+> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> index 77488ff5eb8c7c..5e76e1140908d7 100644
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -28,7 +28,9 @@ struct vm86;
+>  #include <asm/vmxfeatures.h>
+>  #include <asm/vdso/processor.h>
+>  #include <asm/shstk.h>
+> +#include <asm/string.h>
+> 
+> +#include <linux/align.h>
+>  #include <linux/personality.h>
+>  #include <linux/cache.h>
+>  #include <linux/threads.h>
+> @@ -580,6 +582,48 @@ static __always_inline bool on_thread_stack(void)
+>                                current_stack_pointer) < THREAD_SIZE;
+>  }
+> 
+> +#if defined(CONFIG_X86_64) && !defined(CONFIG_KMSAN)
+> +#define __stackleak_poison __stackleak_poison
+> +static __always_inline void __stackleak_poison(unsigned long erase_low,
+> +                                              unsigned long erase_high,
+> +                                              unsigned long poison)
+> +{
+> +       unsigned long *p = (unsigned long *)erase_low;
+> +       unsigned long *end = (unsigned long *)erase_high;
+> +       unsigned long i;
+> +
+> +       /* Fewer than four words, or nothing to do. */
+> +       if (erase_high < erase_low + 4 * sizeof(*p)) {
+> +               while (p < end)
+> +                       *p++ = poison;
+> +               return;
+> +       }
+> +
+> +       /* Four stores per iteration; the last four may overlap. */
+> +       if (erase_high - erase_low <= 512) {
+> +               end -= 4;
+> +               while (p < end) {
+> +                       p[0] = poison;
+> +                       p[1] = poison;
+> +                       p[2] = poison;
+> +                       p[3] = poison;
+> +                       p += 4;
+> +               }
+> +               end[0] = poison;
+> +               end[1] = poison;
+> +               end[2] = poison;
+> +               end[3] = poison;
+> +               return;
+> +       }
+> +
+> +       /* REP STOSQ is faster from a 64-byte aligned destination. */
+> +       for (i = 0; i < 8; i++)
+> +               p[i] = poison;
+> +       p = (unsigned long *)ALIGN(erase_low + 1, 64);
+> +       memset64((u64 *)p, poison, end - p);
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_PARAVIRT_XXL
+>  #include <asm/paravirt.h>
+>  #else
+> diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+> index 2dae70c2b01465..73cc91254b1381 100644
+> --- a/arch/x86/include/asm/string_64.h
+> +++ b/arch/x86/include/asm/string_64.h
+> @@ -54,7 +54,7 @@ static inline void *memset32(uint32_t *s, uint32_t v, size_t n)
+>  }
+> 
+>  #define __HAVE_ARCH_MEMSET64
+> -static inline void *memset64(uint64_t *s, uint64_t v, size_t n)
+> +static __always_inline void *memset64(uint64_t *s, uint64_t v, size_t n)
+>  {
+>         const auto s0 = s;
+>         asm volatile (
+> 
+> > +	memset64((void *)erase_low, poison, count);
+> > +}
+> > +#endif
+> > +
+> >  #ifdef CONFIG_PARAVIRT_XXL
+> >  #include <asm/paravirt.h>
+> >  #else  
+> 
+> 
 
