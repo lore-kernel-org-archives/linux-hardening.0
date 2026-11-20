@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.62
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.245
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795149439;
-	b=joCjGhUvZ16HNYO4KDvZfR802FnwiFxu5iXvCrYMne97dnWtJy1DMrH/5L9kDicRqNWK
-	 HHLYl5A8V/6hQAGCQqSi106n2hqvUY/MTRpu/XyUBwNa5nkGk4Alasrb6jWkuiCac3jhX
-	 Toym/PfKXvia/xSBO71EXMWFoCRa4hAls6srCRqNmsJxe6SVHvNbyfMR/tXBdXPegIT7f
-	 w3CDMGh9MqgVs4/l4Ko5Py3zQ8qqn2iuu1XZuixqobZ5MkrtaoFXfzR6PzzJnvkenIEMI
-	 6mOnlzAWyW+KETzYzV615mtxKqJorkUIFtpNONorqzSdWEouLfKVotp5OocMZPoWSZQ==
+	t=1795149482;
+	b=povus/PJy35KUX4tdZfIcI8EBKm/HmcbRBGttHNVWyVK6UuaTA+ew877qyR4A3ObaaSU
+	 0Krhw8XdhjII7w9MUq25R/5MGCgeEXj5EKfya8ZYL0Z/L+vLhQtqE1C8YxK/1aHhCCv+4
+	 O5OrdpUb2lteUuNDLjhQdOhDJM6+ZF4Uok3E6NTegwTHinH6MQ9l0gQ5DgtkeOYW6kjop
+	 aC7OuR8Ys5Iw//nJzpK2vRN8Jx/XoKTdOzNxdnHdmgDQQnrG+kSpF4YrzeiWdMUzmQzne
+	 k1FEqUMeL/BLTbTXqZuB7KAEQSI0lUIIIqgqNjKAHJ7CbUQ/b5nAutpSpFl/wlr+JBQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795149439;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795149482;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:MIME-Version:Date:Content-Type:
 	 Content-Transfer-Encoding:From:Message-ID:TLS-Required:Subject:To:Cc:
 	 In-Reply-To:References;
-	bh=wC9eJUz4DKLJpJ6vBDEqFE43JAvCeQg51GGXML5L67M=;
-	b=rxQVc0maB5bCl6KBnZcHcpkWPdf5xWzHs7/P7VziIrblCLnNy7pdTQH4n9WlZsKIf83n
-	 jdlKdIoluZpBwW0gWw9yTDTWAV0xM0LpKgTwJNTvy75Kgfn1xn0OzpbcHhxrcxAPEPZ1j
-	 u9v4QDz3RjBcLMjbl+2pm4FNfVJc80/COFxl65FdnF+rIyxpEyRGXJcn1qByVhitw/gPH
-	 L3eSQglx5wQ14TGlD1Jk29XVc2Q4pf93fGxdVPyUTuN92X+uSHK/xTdUjZa2JcCqlMdYE
-	 aK2sqdEFIa1C37QsMwqvKdrW53MBZQqw1ox/MtAlej2hi4Dc/+zTdJ6eQTwTps5fp1A==
+	bh=d7/buK6g7QI/wSja3F3yrr5kbRI73yc4vQHvL0Z70sU=;
+	b=htyL48rb1Rt4CZLKHZdGmEBEXA5Aj2bYPnDLHvr3v/qCilVXYQffIvEDg8e4ziT3rpcv
+	 /rFdnGsR0BFlhQJOnuxTNuA8xhIEi2ucjJyN00cI5nvYEHIVOHhAp17MrwUFCTfNG4WWF
+	 PRpvxc++++zt8nNjH020elVYMKSy/5R7dYLKpLeRDdcHbExbzauNBWsP7Z5p998Ncutwk
+	 Dlm30e///dbPh5TKYJ/F2eiBoKD1KgH4uAAzQnj7AUiLAn/MVAVBciG3DBcxwzdgKy2F0
+	 6yAurAXdSGPMnYu6HTzRY+QitjWlscHMOiB+Q73rn4Hx0zjXxntHHQkq+gXFdmloGyA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b="m/FcdppI";
-	arc=none smtp.remote-ip=95.215.58.62
-Received: from mta1.migadu.com (out-62.mta1.migadu.com [95.215.58.62])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=YxJ2kPsO;
+	arc=none smtp.remote-ip=91.218.175.245
+Received: from mta0.migadu.com (out-245.mta0.migadu.com [91.218.175.245])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F15F606A320
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2026 04:37:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7F15F606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A82A606A325
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Nov 2026 04:38:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A82A606A325
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=m/FcdppI
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=YxJ2kPsO
 X-Envelope-To: linux-hardening@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=zcFjEBIqj6cBYiwCe459AugAgTcvIrqKO3mRoQbcdtQ=;
+DKIM-Signature: a=rsa-sha256; bh=/aPF9fCXwB7LIyQFCDkDmSR064YxzP6iZGZjFNQ3pnE=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795149436; v=1; x=1795754236;
- b=m/FcdppIgHJYfuLm3Jz15SS48v1ECsydPsIwzykwvxsv7uWMy2hNOLPu29xj4bQ7ffnTZgw4
- UBEFF6PBVpWC50sOXx3+vAEXgueh73gIGzUqHz6KmFuqFB/R6826ht7kMXpbyK0v/h4WgY3rGV+
- YvflVYmruXWy+w3ZAXB+u2co=
+ t=1795149480; v=1; x=1795754280;
+ b=YxJ2kPsOCbJtqYLGpQI2iHwQKKldu1MSbbpwAO8eeoJ+GwlQaM3iPDOYmy/O5ORtO/OfEGI7
+ 7byZgsGuI0OMZRDNP7MTqqZNOexvpOlstETOiwc+2XbAouuUgCTw63r6QOSdGJG9eqsL4f7Sj1B
+ d2etvYhU3+gLdkOSuS3zGrcc=
 X-Envelope-To: linux-hardening@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id eddd8fd8e6334fde;
-	Fri, 20 Nov 2026 04:37:16 +0000
-X-Mizu-Trace-ID: eddd8fd8e6334fde
+Received: by smtp.migadu.com with ESMTPS id 4d7de7b7add841ce;
+	Fri, 20 Nov 2026 04:37:59 +0000
+X-Mizu-Trace-ID: 4d7de7b7add841ce
 X-Migadu-Flow: FLOW_OUT
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,13 +56,14 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Date: Fri, 20 Nov 2026 04:37:15 +0000
+Date: Fri, 20 Nov 2026 04:37:59 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 From: "Kunwu Chan" <kunwu.chan@linux.dev>
-Message-ID: <c766c294502b5df1cf14e5941f79080a61f17bcf@linux.dev>
+Message-ID: <cf699b4c6b1ef0e34316d9b67a19082ee996aba7@linux.dev>
 TLS-Required: No
-Subject: Re: [RFC PATCH v4 13/18] mm/swap: drop swap active plist
+Subject: Re: [RFC PATCH v4 15/18] mm/swap: reuse per-CPU queue readers across
+ priority changes
 To: "Lian Wang" <lianux.mm@gmail.com>, linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org, "Andrew Morton"
  <akpm@linux-foundation.org>, "Chris Li" <chrisl@kernel.org>, "Nhat Pham"
@@ -72,189 +73,133 @@ Cc: linux-kernel@vger.kernel.org, "Andrew Morton"
  "Jihan LIN" <linjh22s@gmail.com>, "Kees Cook" <kees@kernel.org>, "Gustavo
  A. R. Silva" <gustavoars@kernel.org>, "Thomas Gleixner"
  <tglx@kernel.org>, linux-hardening@vger.kernel.org
-In-Reply-To: <9ccd81f6f036eb1c3e50d396b44b5e43cff77d2a.1794666741.git.lianux.mm@gmail.com>
+In-Reply-To: <c7ee52cc6aa423b40c67d4c24dcb9d30b7e07824.1794666741.git.lianux.mm@gmail.com>
 References: <cover.1794666741.git.lianux.mm@gmail.com>
- <9ccd81f6f036eb1c3e50d396b44b5e43cff77d2a.1794666741.git.lianux.mm@gmail.com>
+ <c7ee52cc6aa423b40c67d4c24dcb9d30b7e07824.1794666741.git.lianux.mm@gmail.com>
 
 Reviewed-by: Kunwu Chan <kunwu.chan@gmail.com>
 
 Thanks,
 Kunwu
 
+
 >=20
->=20From: Kairui Song <kasong@tencent.com>
+>=20Inserting a new priority allocates a replacement per-CPU reader array
+> even when earlier ring removal left enough storage. An unnecessary
+> allocation can add swapon work or fail despite sufficient capacity.
 >=20
->=20Remove swap_active_head and the associated plist_node. Device identit=
-y
-> lookups can use the writable swap_info iterator without ordering.
+>=20Track the installed reader capacity and retain its high-water mark
+> until the queue becomes empty. Reuse existing storage when the new ring
+> fits, initializing every valid ring index for the new topology. Prepare
+> larger storage outside the writer only when growth is required and
+> recheck capacity under the writer before publishing.
 >=20
->=20Keep priority ordering for the block-cgroup swap throttle target by
-> walking the priority queue under the topology reader. Choose the first
-> unmasked, writable, non-offlist device with a backing block device.
-> Check OFFLIST as well as the pointer tag because full transitions can
-> temporarily leave an unmasked entry, and keep the explicit WRITEOK
-> check. The disable transition already publishes its mask before
-> releasing the topology writer.
+>=20Preserve the existing prepare/install ownership and failure rollback
+> protocol. Device removal continues to avoid per-CPU shrinking allocatio=
+n
+> under the writer.
 >=20
->=20This read-only lookup does not consume per-CPU allocation quotas or
-> change retry cursors. It avoids making the throttle disk depend on
-> swapon's swap-type assignment order when devices have different
-> priorities.
->=20
->=20Signed-off-by: Kairui Song <kasong@tencent.com>
-> Signed-off-by: Lian Wang <lianux.mm@gmail.com>
+>=20Signed-off-by: Lian Wang <lianux.mm@gmail.com>
 > ---
->  include/linux/swap.h | 1 -
->  mm/swapfile.c | 60 +++++++++++++++++++++++---------------------
->  2 files changed, 32 insertions(+), 29 deletions(-)
+>  mm/swapfile.c | 28 ++++++++++++++++++----------
+>  1 file changed, 18 insertions(+), 10 deletions(-)
 >=20
->=20diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index d31f3f023d36..ce8a800751ca 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -263,7 +263,6 @@ struct swap_info_struct {
->  struct percpu_ref users; /* indicate and keep swap device valid. */
->  unsigned long flags; /* SWP_USED etc: see above */
->  signed short prio; /* swap priority of this type */
-> - struct plist_node list; /* entry in swap_active_head */
->  signed char type; /* strange name for an index */
->  unsigned int max; /* size of this swap device */
->  struct swap_cluster_info *cluster_info; /* array, one entry per cluste=
-r */
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 6b2dbaf33cb6..bd098114ee4b 100644
+>=20diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index bd098114ee4b..5e5c1aef010f 100644
 > --- a/mm/swapfile.c
 > +++ b/mm/swapfile.c
-> @@ -42,7 +42,6 @@
->  #include <linux/completion.h>
->  #include <linux/suspend.h>
->  #include <linux/zswap.h>
-> -#include <linux/plist.h>
+> @@ -202,6 +202,8 @@ struct swap_queue_cursor {
+>  };
 >=20=20
->=20 #include <asm/tlbflush.h>
->  #include <linux/leafops.h>
-> @@ -91,12 +90,6 @@ bool swap_migration_ad_supported;
->  static const char Bad_file[] =3D "Bad swap file entry ";
->  static const char Bad_offset[] =3D "Bad swap offset entry ";
+>=20 static __percpu struct swap_queue_reader *swap_queue_readers;
+> +/* Keep the high-water capacity until the last priority ring is remove=
+d. */
+> +static unsigned int swap_queue_readers_capacity;
 >=20=20
->=20-/*
-> - * all active swap_info_structs
-> - * protected with swapon_rwsem, and ordered by priority.
-> - */
-> -static PLIST_HEAD(swap_active_head);
-> -
->  static inline struct swap_info_struct *__swap_iter(int *i, unsigned lo=
-ng flag)
+>=20 static inline bool swap_device_masked(struct swap_info_struct *si)
 >  {
->  lockdep_assert_held(&swapon_rwsem);
-> @@ -3535,7 +3528,6 @@ static void __swap_device_enable(struct swap_info=
-_struct *si)
->  spin_unlock(&si->lock);
->  atomic_long_add(si->pages, &nr_swap_pages);
->  total_swap_pages +=3D si->pages;
-> - plist_add(&si->list, &swap_active_head);
->  add_to_avail_list(si);
+> @@ -241,7 +243,7 @@ static bool swap_queue_needs_readers(int prio)
+>  return false;
 >  }
 >=20=20
->=20@@ -3555,9 +3547,8 @@ static int swap_device_disable(struct address_s=
-pace *mapping,
->  int err =3D -EINVAL;
->=20=20
->=20 percpu_down_write(&swapon_rwsem);
-> - plist_for_each_entry(si, &swap_active_head, list) {
-> - if ((si->flags & SWP_WRITEOK) &&
-> - si->swap_file->f_mapping =3D=3D mapping) {
-> + for_each_avail_swap(si) {
-> + if (si->swap_file->f_mapping =3D=3D mapping) {
->  err =3D 0;
->  break;
+>=20- return true;
+> + return swap_queue_len >=3D swap_queue_readers_capacity;
 >  }
-> @@ -3583,8 +3574,6 @@ static int swap_device_disable(struct address_spa=
-ce *mapping,
->  spin_lock(&si->lock);
->  del_from_avail_list(si, true);
->  spin_unlock(&si->lock);
-> -
-> - plist_del(&si->list, &swap_active_head);
->  total_swap_pages -=3D si->pages;
->  atomic_long_sub(si->pages, &nr_swap_pages);
->=20=20
->=20@@ -3913,7 +3902,6 @@ static struct swap_info_struct *alloc_swap_info=
-(void)
->  */
->  }
->  p->swap_extent_root =3D RB_ROOT;
-> - plist_node_init(&p->list, 0);
->  p->flags =3D SWP_USED;
->  percpu_up_write(&swapon_rwsem);
->  if (defer) {
-> @@ -4323,12 +4311,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, spe=
-cialfile, int, swap_flags)
->  if (swap_flags & SWAP_FLAG_PREFER)
->  prio =3D swap_flags & SWAP_FLAG_PRIO_MASK;
->=20=20
->=20- /*
-> - * The plist prio is negated because plist ordering is
-> - * low-to-high, while swap ordering is high-to-low
-> - */
->  si->prio =3D prio;
-> - si->list.prio =3D -si->prio;
 >=20=20
 >=20 /*
->  * Publish swap_file before making the percpu ref live, then add the de=
-vice
-> @@ -4454,7 +4437,33 @@ int swap_dup_entry_direct(swp_entry_t entry)
->  #if defined(CONFIG_MEMCG) && defined(CONFIG_BLK_CGROUP)
->  static bool __has_usable_swap(void)
->  {
-> - return !plist_head_empty(&swap_active_head);
-> + return READ_ONCE(total_swap_pages) > 0;
-> +}
-> +
-> +static struct swap_info_struct *swap_queue_first_usable_bdev(void)
-> +{
-> + struct swap_prio_ring *ring;
-> + struct swap_info_struct *si;
-> + unsigned int ring_idx, dev_idx;
-> +
-> + lockdep_assert_held(&swapon_rwsem);
-> + for (ring_idx =3D 0; ring_idx < swap_queue_len; ring_idx++) {
-> + ring =3D swap_queue[ring_idx];
-> + for (dev_idx =3D 0; dev_idx < ring->size; dev_idx++) {
-> + si =3D READ_ONCE(ring->dev[dev_idx]);
-> + if (swap_device_masked(si))
-> + continue;
-> + si =3D swap_device_unmask_ptr(si);
-> + if (!(READ_ONCE(si->flags) & SWP_WRITEOK))
-> + continue;
-> + if (atomic_long_read(&si->inuse_pages) &
-> + SWAP_USAGE_OFFLIST_BIT)
-> + continue;
-> + if (si->bdev)
-> + return si;
-> + }
-> + }
-> + return NULL;
+> @@ -289,13 +291,15 @@ static void swap_queue_reset_readers(void)
+>  }
 >  }
 >=20=20
->=20 void __folio_throttle_swaprate(struct folio *folio, gfp_t gfp)
-> @@ -4478,14 +4487,9 @@ void __folio_throttle_swaprate(struct folio *fol=
-io, gfp_t gfp)
+>=20-static void swap_queue_install_readers(struct swap_queue_reader __pe=
+rcpu *readers)
+> +static void swap_queue_install_readers(struct swap_queue_reader __perc=
+pu *readers,
+> + unsigned int capacity)
+>  {
+>  int cpu;
+>=20=20
+>=20 lockdep_assert_held_write(&swapon_rwsem);
+>  free_percpu(swap_queue_readers);
+>  swap_queue_readers =3D readers;
+> + swap_queue_readers_capacity =3D capacity;
+>  if (!readers)
 >  return;
 >=20=20
->=20 percpu_down_read(&swapon_rwsem);
-> - plist_for_each_entry(si, &swap_active_head, list) {
-> - if ((si->flags & SWP_WRITEOK) &&
-> - !(atomic_long_read(&si->inuse_pages) &
-> - SWAP_USAGE_OFFLIST_BIT) && si->bdev) {
-> - blkcg_schedule_throttle(si->bdev->bd_disk, true);
-> - break;
-> - }
-> - }
-> + si =3D swap_queue_first_usable_bdev();
-> + if (si)
-> + blkcg_schedule_throttle(si->bdev->bd_disk, true);
->  percpu_up_read(&swapon_rwsem);
+>=20@@ -432,7 +436,8 @@ static int swap_queue_add(struct swap_info_struct=
+ *si,
 >  }
->  #endif
+>=20=20
+>=20 /* No ring at this priority: insert a new one at pos. */
+> - if (!*readers || nr_readers <=3D swap_queue_len)
+> + if (swap_queue_len >=3D swap_queue_readers_capacity &&
+> + (!*readers || nr_readers <=3D swap_queue_len))
+>  goto failed;
+>  new_queue =3D kmalloc_array(swap_queue_len + 1, sizeof(*swap_queue), g=
+fp);
+>  if (!new_queue)
+> @@ -460,8 +465,12 @@ static int swap_queue_add(struct swap_info_struct =
+*si,
+>  memalloc_noreclaim_restore(noreclaim_flag);
+>  kfree(old_queue);
+>=20=20
+>=20- swap_queue_install_readers(*readers);
+> - *readers =3D NULL;
+> + if (swap_queue_len > swap_queue_readers_capacity) {
+> + swap_queue_install_readers(*readers, nr_readers);
+> + *readers =3D NULL;
+> + } else {
+> + swap_queue_reset_readers();
+> + }
+>  return 0;
+>=20=20
+>=20 add_to_ring:
+> @@ -504,10 +513,9 @@ static void swap_queue_del(struct swap_info_struct=
+ *si)
+>  }
+>=20=20
+>=20 /*
+> - * Shrinking the small topology arrays is optional. Keep reader storag=
+e
+> - * until a new priority is inserted or the queue is empty: per-CPU
+> - * allocation must not run under this writer's noreclaim scope, which
+> - * can grant backing pages reserve access.
+> + * Shrinking the small topology arrays is optional. Keep reader capaci=
+ty
+> + * until the queue is empty: per-CPU allocation must not run under thi=
+s
+> + * writer's noreclaim scope, which can grant backing pages reserve acc=
+ess.
+>  */
+>  gfp =3D GFP_NOIO | __GFP_HIGH | __GFP_NOMEMALLOC;
+>  noreclaim_flag =3D memalloc_noreclaim_save();
+> @@ -550,7 +558,7 @@ static void swap_queue_del(struct swap_info_struct =
+*si)
+>  swap_queue =3D NULL;
+>  }
+>  if (!swap_queue_len)
+> - swap_queue_install_readers(NULL);
+> + swap_queue_install_readers(NULL, 0);
+>  }
+>  spin_unlock(&swap_queue_update_lock);
 >
