@@ -1,104 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.43
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795285333;
-	b=PaQwi69Gl2p3rFzrFlhHb5G7USd4ewW+Baxh1Ys73cYZd0zmESoPBdAfTvPiTKEuqTcm
-	 HxasI7uLhI9sNcFULH1GsHJ0ocSKUf5np7b9eIUDWO99sRhkbdo8saetPuxbeUqOXl2Sn
-	 Zg734j2wHq75tVdmlmdvC1ZIlROR3Nl3psa/JfBldjbyEsovK76f+SUGSg2YSV8vlXbZa
-	 u1KfwLA2eTRHhzalcWK9AsbB7BlTPoJK2SYmGWDWr8Xuu5tMmRM7GsUaP3GQppOoS49mZ
-	 KeLbDI/86AWw8Gre3uM3spZ12y/gQ50ub8ONC4gYuv+EcVYgzaDQDSZPIwY9WjZP0Ug==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795285333;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.217.54
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795293687;
+	b=Wu/QiwPbfPQ6YMUFPS0bHqXCMbpQMbiF1wJSlIT4CMMPaO6ALe0THwnaNVT+ObURgE8w
+	 JPqEoHTp8DahKQ8VaPACTPfHRT5sworrks4z+yZVvYQkbSfop4yyGokYSLSGGG1tQMmQy
+	 itbn5xEBPisucnsO+QlOkP6pkgmzTuStuUTKJgyHceu45zdbwhQ2vFO9SWo/uPeP2RcmU
+	 EnWg/rJdD/ehRtEBwrRmKtpR1OPwVefCwK569S8c2yLdN6Wo8OP0yJBn1hVMlX7dCzkR/
+	 pzgQ9jpscz4FKIxoWP3O6nljmmlJ0ioevjDtIhIWbJSVIe3TQglzbAgq0Qn1F9dZPnQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795293687;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:X-Mailer:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=RrMX+i8/tOMeoT04UhvV0NGNh6gnX10PkADwXNkmHBY=;
-	b=fmuS+Hd3FQ2EIoF9f96gA5FExyMCdpV7W75g4z4f1gLPywRcGo+nke+1qDuxuWBtAWEA
-	 tt1deLXqgx0NwiP8D0QxqjcRV7Ly8d9v8xZ7S7awA2CfUS2YkKOPEwbtRUldTGAfFXn/G
-	 hAI/ARwdUWRfNSNC079i9uC/7PFj/uNUfAy6YIlHz+rTWkk6HJrhsSx0pE2bvWF6ZLgxb
-	 QCY65CFB/id5JFfVZKpXVmGnFR/Joltivs1dZTfu+ZdtjRMgVsBLMQ8B5ttYq4yezU2U3
-	 NvdSLXe1uNsmaPqsxdDabtpYgALxaJUq1Y+q7q5DyXH0TwRdloKLflA16h3wz2EhOzw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=uQdPu5z2EGJ4csNcE/ZMXtBS35QjemgectDDwKWjhJM=;
+	b=wNReg8r9GPoK5FW8RTUfAHFnbOdgWaU6YUmmhC4/bamsPaIcZbAZb1zA+9i5Au/WyI0p
+	 OCGtgtfGUg6nP8450cQejJgsg0+kzRIk4L1/Hy66YuNk7Pf6JJZ0hxCHua4iMmPeSS+oM
+	 esHftzPt16anWccVMmh2Z500+vK4YHbRh+z0nDa4XgHHRgcOqufh8+ThUcegnTCTyxIEQ
+	 OKEf0o+zbgxDCWEpVPv5j1OWQ7ib33Ui9wq4tmm8q8gqvZoVSVCkXukJ3jhLQiONWs0sa
+	 T7Cer6SbChHVJ6Qxxl35VPzGcp+eULdO+wqTKiRDa8ft8uPq6ftR0vreCGuW2NDFYgQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=LRdcqhal;
-	arc=none smtp.remote-ip=209.85.221.43
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sIFKr7zi;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.217.54
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3537606A32C
-	for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2026 18:22:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3537606A32C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3E7606A681
+	for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2026 20:41:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EF3E7606A681
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=LRdcqhal
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-490c3ae81d3so1230943f8f.2
-        for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2026 10:22:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sIFKr7zi
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-7d2ca055399so594663137.3
+        for <linux-hardening@vger.kernel.org>; Sat, 21 Nov 2026 12:41:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795293686; cv=none;
+        d=google.com; s=arc-20260327;
+        b=MsNS56T11dBnLLMwgxeqr+O6dDn9Bh6+G2zDBCWkkX2eL0KIMnTV/CMW1C93QJHo0G
+         dAePOwlXAoXbrEPNRcNmwyOezisPP7A4D/yYkNBHv8Lx5zwLUIZb4iD2FgqAMtxkoGH2
+         SwI4ZH5xLtiOhc7xXRkP4bsUV6xWs6Wpty/+beKGdxuldnrRquVR+mNS8vs6ZN+SUOEO
+         laDNXmf50EQlJHREGJjmbQT9lZdSRqX8jfEO4APJEmEpqYUWQJelsbVzPQRA7FkoKrrH
+         07YUwE3Yiyq+mY/vTQrgVAMrOCrIUFp09u5g6TqqCvtn4TK7ywtL1/ui8rggZ2w1kuP+
+         ZIYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=uQdPu5z2EGJ4csNcE/ZMXtBS35QjemgectDDwKWjhJM=;
+        fh=/iR2kkCGJla+XnZF2vA3gMbaukgXHNr2oJlGxActMRM=;
+        b=TNPqqveZ/5YNWIFfa/jyrdpxWnSBNp33u9SiE5czee6zjRdY5BUXXy9yPZSiUE4/+t
+         ybmMD2nbbC35D5JikspltISxJHa/pKqJCMYjb32tTCC7vOVoZ887znsx9n7lmOXA5tZ+
+         1wj/rwSnK2d03V2QtMlaXiTPY+5Gg5x5tzrZZBTyDNQaAWqJpm6Rsds5IpIPhWTzhi/1
+         W2yOQWI8r0r62JgT1NOsorEhLxIma4OgSKtvZSYnYzpZRDCRhb6Yzld9lmYESJmp0Ue9
+         MmIdq5MvVbW7cw7lEhUz07Vv+SDVoqJTD0BAwIIjpAzlpV//od5Fb/lPyeovX7uW0RR5
+         AaXw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795285330; x=1795890130; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+        d=gmail.com; s=20260707; t=1795293686; x=1795898486; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=RrMX+i8/tOMeoT04UhvV0NGNh6gnX10PkADwXNkmHBY=;
-        b=LRdcqhal3mLUVILWowzsiFeZiD73efiKsODdRNMfMoD7929dsNV8z7UWg7umCsfnN6
-         Uaermhh+aMqgJw22dtJrGVPJzv0TD5saBNwSr6AkkQnRI2A8DztEhBjc/EIuYqXIA6UE
-         rJ8ZHqm6P96CAisdCYnIV20v1UyCQ1DVQAKIXtQI+aum1/mUCbFlxx4EroHy+dciyReL
-         m598pbuo6NUvtbxtGLB70uEi/9Crou7RDkjaypMy1QCXfZ3PybJrOf+uVXoUTDE8XD4B
-         7Erx6ZAJTGoJBYPBfV3L8QgU1clFlR4+2o3r8ORCiPfDC4p5g93GUMhRt3XwecqraVtT
-         OpaA==
+        bh=uQdPu5z2EGJ4csNcE/ZMXtBS35QjemgectDDwKWjhJM=;
+        b=sIFKr7ziVpsnhePY72Z1kJWSV9+Fh66r8G/U2pFQa4HYAgKYVRdx7lznQEXhzxrBQk
+         4SMd+QUAG8kMskObIxl3B3oQJhBeBiFAnch+E5LqUxWCa/ft2mUgjg87hLopzn/oKGlW
+         WGN0j0y0lHv75ZtnrwxCZi+hV5wFXBYlTf8AXT/Wo43ZnxlHGFUnMWt7f47pOzwGsXX8
+         GAzU0m135SM35YHV5gfIeE5/yrjTFv8dfXKQH6yu6G9OJoMuMvFjZDp8La5lsD82fUv9
+         dp/gzHHEmdRMu3bE3fIqVb3AKdZKmwQuQ6BQq0MSzEsDPMcnanrwB6QUa3BfvteE7HWA
+         g6BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795285330; x=1795890130;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20260707; t=1795293686; x=1795898486;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=RrMX+i8/tOMeoT04UhvV0NGNh6gnX10PkADwXNkmHBY=;
-        b=CWSpD7r97mlrH2JyzaHlZj1lfc5wtDVHKjz7GAyR78Juq1zFz96LGM89U0Pv1bNwc4
-         dsCBoYk45hA588JjadQORRpdztYu69iVOtreN8tL2a5GV64+XeeZcBLSu/TizwoK9TEb
-         PafyNZF6Xl34Xf3/n0f6tNK9F6PK/PdmJtJPuoM4HT3J5IySqeNhSnqO4nRKFh3LGmhv
-         bcPJfg/ygnEt7ifv9zrT8IMSG8vwTEXntA5Frrgk0uCMyLTYW+J994+SBx3nOcBBlf4e
-         5lcQppXG1dPs6CyPKpMljf4SLTfqGSOEMovXyM9qMCnh1emNS7MWLoqfhxkuSCTnLVEr
-         8Idw==
-X-Forwarded-Encrypted: i=1; AL+hErErSvqup2nH1Ll5DqDT/+U8pxzLaU7YDHdBzFdk/Och5R/WtUUU4F/WAY+mP+7d3KfuKr2WssUyQCHi2sYfjpk=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+AmIy/dK77AP5tCek98U3OhNdkmeiwDXBkk2b2UrgQ9LQfe6Os
-	XQx1NE5zWzDtn/BgP+27iTMLRSHG8VwLCWgw6eTFvEpC21Ok1n2E9CID
-X-Gm-Gg: AZFdTZd8bcTWZV+DmAgcQXalhYotUR4qkZQDArwKovOalSeHnjsAITA83EKYDjvtAZI
-	BnnZY9jJCCjne73ueU1F4CwJGNfebURwGfVUS/xnsl9tPsx4BMZKRYYJr6tq9heDSGwxhi+SVjU
-	ixcQvPfC217IrL3ocZhaXFscg4Aodye1c29NM57x6hL2Tt3mtwbVtL1RICxHJ23lyOzTQfBfF0P
-	KUjSUQOvBNSrQrZn7ur84Y8oFpA7JrEVdB3W03OIBBRv3ZWxK+ReFKD4Dg06p1T6Wa2519Tab70
-	NnJfcHTddxjH2gUMu5JmAuLF+vYppix+oEvqR1YiWS+DCooet08QlKGPZUDF3LaS1Y2KgpWq8LQ
-	NI/uqIMf3mDTlaXGFqX1fBetxUV+qoZ1lXcyprFVBMGhsjgHCwlEXgjt9L1qfxcnlQrh4dEsMY+
-	MiDz6dNAYFrNfDLc53BXIaddb393zYXZst1aPnAXDrms08i98G3XSSqwYyhA4KMWC4fzGskCFAv
-	3/TTWQOJTP1ZSrw0aLN91xFyyXon/iwyavewwSdBqw0xWdjnAFb8Y8O2fThX4NMPth1d0TQqR9S
-	MRQMWfKeBDO88q1KL6tGtiY/t7Gi9XBHC8q7rQEusjAMwpfderjOboN7h84PgnY3pA==
-X-Received: by 2002:a5d:64c9:0:b0:4a6:bc53:2478 with SMTP id ffacd0b85a97d-4abb0d5256fmr14171006f8f.13.1795285330333;
-        Sat, 21 Nov 2026 10:22:10 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6b10b2c9sm13143736f8f.31.2026.11.21.10.22.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Nov 2026 10:22:10 -0800 (PST)
-Date: Sat, 21 Nov 2026 18:22:08 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Usama Arif <usama.arif@linux.dev>
-Cc: tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, kees@kernel.org,
- hpa@zytor.com, gustavoars@kernel.org, ardb@kernel.org, hca@linux.ibm.com,
- nathan@kernel.org, ndesaulniers@google.com, morbo@google.com,
- justinstitt@google.com, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev, linux-kernel@vger.kernel.org, riel@surriel.com,
- shakeel.butt@linux.dev, kernel-team@meta.com, rkeilty@meta.com,
- atish.patra@linux.dev, dgreid@meta.com
-Subject: Re: [PATCH 2/2] x86/kstack_erase: Use REP STOSQ for large stack
- fills
-Message-ID: <20261121182208.19594445@pumpkin>
-In-Reply-To: <ee4847f9-53ba-4f0a-9297-7ca8b6408f7f@linux.dev>
-References: <20261119213147.1094488-1-usama.arif@linux.dev>
-	<20261119213147.1094488-3-usama.arif@linux.dev>
-	<20261120185513.0445f0b1@pumpkin>
-	<ee4847f9-53ba-4f0a-9297-7ca8b6408f7f@linux.dev>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=uQdPu5z2EGJ4csNcE/ZMXtBS35QjemgectDDwKWjhJM=;
+        b=U41Lmrwl4rZLKY2Swdgu8bZZPOjRSWJa8J87NMHCijZPDIe5Xtdd2X1VF4bqAypYVf
+         VQe/f5Qg/Yk82c/IHp7iaF7QuyOsjBi06FfKUIr3kh6aZLfIvQ2mV/s6jdvlbLuQuRJv
+         YqZXoxpF7j6+5bVVTkCfcWu6vSPXlyHq63t7Z6uTnwctNllb5sdyaBfQWTV18gI/wGnI
+         qELn5M7AJUki4wC5s+s1OiN+KojzGv0wdQobLV8xjuRcCzPdLh0+wkZagP8qb8R3x+7i
+         xWyeHuTqtmNz5/Sixoqxne87X8qlvKK57Azc+ChoNGqyUE/Z8U1+fBZtTrxeKTx0Vlh2
+         3H5g==
+X-Forwarded-Encrypted: i=1; AL+hErGt3gY4fll7Hh4LuovrZHWvH9W3U8gl6yaz7vCcNQ3wKnyQQZjqZB9dt4Zd6BaH/ddM5JCrF+d+NhWeHcYRU9Y=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/YcV7371PDa8JOw2odNK7I9Fa429NiRMLgi7Kp9GyAgO3BMwhJ
+	YjpATnkmwCQm5bY1J+f9CCLNzHKpFR9YD6jbQKZ8BAmmQMLgZfxr0Wfi3Zo8oF+qRGY/7bjPok5
+	9uNK+MjiE/0K0SWZTMiHTuh9qLDFgGYE=
+X-Gm-Gg: AZFdTZeANbiSc+pnGtO7D9UQkpxDjXF76ZvlDLcnWy+EsvZ9G8OGFP7zhg/BFwEBHDm
+	aZqSqCxcyT9JNUcdKnvQ6dv4P8iCA4XFJ8Y1z8Nx0/D4HerkHktQztgBOcPlxDZDfygYXJf0H1R
+	biLqTAFYseZyzY0UI2SPwXAWXF4bqXLMJyCWnA6B9FVoxN9GA2aRi+iz3gPoqz/D7/SCjr8VrSW
+	4mg8uScXQIJT21sVudT3Qp50bjHq0Yonx+D7HexoRQ6PQlO0hi4X1NG/S2Hr6EE76edHXwAGnK/
+	/RuR1iZDZFmFEDIeyx46v4gsyPi4/OA3W06E6BIMWCR2P8/+sHq+OTsxIjPaEaeX1ldJmWPzAz7
+	VMiBou4qpzCw/SfRUg6N86D1IsWelSUca4Aj9Qed8aHNcrVhNjvlTvlAWOd0x8muER3KLPWfy3J
+	M3VCicL3M168/jdDx70x9+NBdWSq+f484159piM/bhb52Wcb0XZ3egx1U8kYVhSMMjaP+tIdQG2
+	2dpYrBlWs8s4ujKVcfYL3ApZ7mPwQ==
+X-Received: by 2002:a05:6102:2ad1:b0:7c4:a0e4:1a79 with SMTP id
+ ada2fe7eead31-7d7395c2401mr2651293137.19.1795293685637; Sat, 21 Nov 2026
+ 12:41:25 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -108,202 +106,200 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20261115-submit-rawnand-retained-handle-lifetime-v1-v5-0-cbc49c5c5e74@gmail.com>
+ <87v75tc7i5.fsf@bootlin.com>
+In-Reply-To: <87v75tc7i5.fsf@bootlin.com>
+From: James Hilliard <james.hilliard1@gmail.com>
+Date: Sat, 21 Nov 2026 13:41:14 -0700
+X-Gm-Features: Aa3M54oFXYK5vYkufMa20MNvSVURFxi72uRFVRNsrbS-Gdn6Fv1aeUhFqCfOY8s
+Message-ID: <CADvTj4opS_oL0AZjL=eBArgpbqtyH-MQxxSC1KdTxDm88OXpKw@mail.gmail.com>
+Subject: Re: [PATCH v5 00/58] mtd: rawnand: retain chip and controller state
+ across removal
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Tze Yee Ng <tze.yee.ng@altera.com>, 
+	Richard Cochran <richardcochran@gmail.com>, Jonathan Lemon <jonathan.lemon@gmail.com>, 
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>, Yuqiang Sun <izaiahsun@gmail.com>, 
+	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Bernhard Frauendienst <kernel@nospam.obeliks.de>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
+	Arseniy Krasnov <AVKrasnov@sberdevices.ru>, Boris Brezillon <bbrezillon@kernel.org>, 
+	Brian Norris <computersforpeace@gmail.com>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@kernel.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Vitaly Wool <vitalywool@gmail.com>, David Woodhouse <David.Woodhouse@intel.com>, 
+	Russell King <rmk+kernel@arm.linux.org.uk>, Mike Rapoport <rppt@kernel.org>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Christophe Kerello <christophe.kerello@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Jason Roberts <jason.e.roberts@intel.com>, Boris Brezillon <boris.brezillon@collabora.com>, 
+	Michal Simek <michal.simek@amd.com>, Mason Yang <masonccyang@mxic.com.tw>, 
+	Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>, Lucas Stach <dev@lynxeye.de>, 
+	Dmitry Osipenko <digetx@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, 
+	Stefan Agner <stefan@agner.ch>, Thierry Reding <thierry.reding@kernel.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>, linux-mediatek@lists.infradead.org, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
+	linux-rockchip@lists.infradead.org, Yifeng Zhao <yifeng.zhao@rock-chips.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Keguang Zhang <keguang.zhang@gmail.com>, 
+	linux-mips@vger.kernel.org, Shan-Chun Hung <schung@nuvoton.com>, 
+	Jacky Huang <ychuang3@nuvoton.com>, Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.Li@nxp.com>, 
+	imx@lists.linux.dev, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Han Xu <han.xu@nxp.com>, 
+	linux-renesas-soc@vger.kernel.org, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Kevin Hilman <khilman@baylibre.com>, Liang Yang <liang.yang@amlogic.com>, 
+	linux-amlogic@lists.infradead.org, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	Manivannan Sadhasivam <mani@kernel.org>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Kamal Dasu <kamal.dasu@broadcom.com>, Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Maxim Levitsky <maximlevitsky@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 21 Nov 2026 13:57:39 +0000
-Usama Arif <usama.arif@linux.dev> wrote:
+On Thu, Nov 19, 2026 at 5:49=E2=80=AFAM Miquel Raynal <miquel.raynal@bootli=
+n.com> wrote:
+>
+> Hi James,
+>
+> On 15/11/2026 at 23:29:15 -07, James Hilliard <james.hilliard1@gmail.com>=
+ wrote:
+>
+> > An MTD handle can outlive controller unbind. Its metadata and NAND lock=
+s
+> > must remain valid, including when a writable file closes and calls sync=
+,
+> > while further hardware access must be rejected after disconnection.
+> >
+> > This builds on earlier MTD removal-lifetime work. Commit 19bfa9ebebb5
+> > ("mtd: use refcount to prevent corruption") added MTD reference countin=
+g
+> > [0], but retaining an MTD reference does not by itself retain the
+> > driver-owned allocation containing the master. The read/unbind discussi=
+on
+> > also covered raw NAND [1] and draining active operations [2]. Tze Yee N=
+g's
+> > SPI-NOR series addresses the corresponding SPI-NOR paths [3].
+> >
+> > Following Greg's review [7], separate class-device data from the MTD
+> > backing allocation. Delete the device's interfaces and drain NVMEM and
+> > class PM callbacks before releasing backing data. Bare device reference=
+s
+> > retain an independently allocated device, whose type, PM dispatch and
+> > final release are built in even when MTD is modular. NVMEM similarly
+> > disconnects and drains provider and layout callbacks before unregister
+> > returns; retained consumers keep core-owned metadata and receive -ENODE=
+V
+> > on subsequent access.
+> >
+> > Introduce opt-in backing-object ownership for MTD masters. Registered
+> > nodes and acquired MTD handles retain the chip, while nested partitions
+> > also retain their parent metadata. Unregister first so removal notifier=
+s
+> > can finish I/O, then disconnect raw NAND and drain admitted operations.
+> > Hardware resources can be released without waiting for open files to cl=
+ose.
+> >
+> > Virtual concatenations serialize publication and removal across physica=
+l
+> > controllers. Disconnect and drain a published concatenation before any
+> > component can disappear, then release its component references. An old
+> > handle keeps the disconnected virtual device, independently of a later
+> > replacement.
+> >
+> > Run NAND and controller-specific cleanup during disconnection, while
+> > the controller driver is still bound. Snapshot the OOB layout in core-o=
+wned
+> > data before publication so metadata queries remain valid without driver
+> > callbacks. The NAND core frees retained chip and controller allocations=
+;
+> > the final MTD put never calls back into the controller module. Ordinary
+> > MTD and NVMEM handles retain the NAND core that implements their
+> > operations, rather than the hardware driver.
+> >
+> > Share allocation ownership across the raw-NAND drivers, including
+> > partially published probes. Shared controllers remain allocated until
+> > their last retained chip is released. R852 allocates a new chip for eac=
+h
+> > card, and NDFC allocates controller state per binding.
+> >
+> > Based on NAND next at 30daaf3e7897, with Tze Yee Ng's module-reference
+> > ordering fix [4], Karl Mehltretter's OTP cleanup fix [6], and the separ=
+ately
+> > posted registration, operation-locking and controller probe/teardown fi=
+xes
+> > identified by the prerequisite metadata. TLA+ models and their assumpti=
+ons
+> > and coverage limits are available in [5].
+>
+> While lifetime issues are a real concern in the kernel, please note that
+> in general, removing or unbinding the flash controller driver is not a
+> practical operation. While highly unlikely, this is possible though. But
+> I am not going to sacrifice all the devm_ calls in favor of reinstating
+> manual error handling just for that. If there is a way, it must be
+> different.
 
-> On 20/11/2026 10:55, David Laight wrote:
-> > On Thu, 19 Nov 2026 13:31:08 -0800
-> > Usama Arif <usama.arif@linux.dev> wrote:
-> >   
-> >> With KSTACK_ERASE, every return to user space poisons the part of the
-> >> task stack that was used since the previous return. The generic
-> >> __stackleak_poison() does that one word per loop iteration, so a syscall
-> >> that went 1-2 KiB deep pays for 128-256 separate stores. On Meta hosts
-> >> running many small VMs, stackleak_erase() accounts for about 1.5% of
-> >> non-idle host kernel cycles.
-> >>
-> >> Override __stackleak_poison() on x86-64, as s390 already does, through
-> >> the hook added by commit 491a78663e03 ("stackleak: allow to specify arch
-> >> specific stackleak poison function"). Fill spans larger than 512 bytes
-> >> with REP STOSQ and keep the word loop for shorter ones, where the fixed
-> >> startup cost of REP STOSQ does not pay off. REP STOSQ starts to win at
-> >> about 300-400 bytes on Zen 5c and Cooper Lake, so on both no span gets
-> >> slower.  
-> > 
-> > As a matter of interest (and separately from the exact code) how did you
-> > measure the performance to get the 300-400 byte gain point?
-> >   
-> 
-> With a userspace benchmark pinned to one CPU. Each sample is one fill of
-> a stack buffer straight after a getppid() syscall, with
-> lfence;rdtsc;lfence around the fill only, an empty call subtracted, and
-> the mean of 15 times taken. The size stayed fixed for a whole run,
-> so the branches were well predicted. The plain loop and REP STOSQ
-> cost the same at about 430 bytes on Zen 5c and 320 bytes on
-> Cooper Lake.
+Unbind is unusual for fixed flash, although there was a report of a
+Denali read racing with unbind [0]. With removable media, this can
+happen during normal use: r852 unregisters the MTD device when the card
+is ejected, while the PCI driver stays bound. It should be possible to
+handle both cases without giving up managed probe cleanup.
 
-The lfence (or mfence - which is the one you really need) take long
-enough that they don't give meaningful timings for anything short.
-I think they manage to overlap with the setup times for 'rep xxx'.
-You also get the problem that the tsc doesn't measure clocks and a lot
-of benchmarks run long enough that the cpu speed changes.
+> Also, this kind of contribution can only be done if you *understand*
+> what you are doing. Getting the big picture here is not optional.
 
-I've updated my benchmark code and run some tests on zen5.
-This uses the PERF_COUNT_CPU_CYCLES counter but directly executing rdpmc.
-I then use data dependencies from the original count to the test code,
-and from the test result to the second rdpmc (which nicely has a register
-number) to get a time that includes the test function with little overhead.
-The clock count for an empty test function is 25, 32 with a memory read.
+Consider a writable /dev/mtdX file that's idle when the card is
+ejected. There's no I/O to drain from that file, but closing it later
+still calls mtd_sync(). That close must not touch the old card or a new
+one inserted in its place. Removal needs to wait for I/O already using
+the device to finish or be aborted, not for userspace to close the file.
 
-Each test is run 10 times and the clock count for each shown separately.
-The first column includes the cost of the I-cache loads and any branches
-that get mispredicted because (in these cases) the length changes.
-This is most obvious for the libc calls.
+> Maybe the problem is MTD refcounting? Maybe the problem is the devm_
+> orderging? I don't know, I haven't looked in depth at all the
+> patches. But the current approach is clearly not acceptable.
 
-memset() to 4k aligned buffer
-0: len   16 ok  445   32   32   32   32   32   32   32   32   32 no_memset
-5: len   16 ok 10538  107   52   52   52   52   52   52   52   52 libc
-6: len  256 ok  193  101   48   48   51   44   51   44   44   44 libc
-7: len  512 ok  120   83   51   51   51   51   51   51   51   51 libc
-8: len 1024 ok  111   56   56   55   56   55   56   55   56   56 libc
-9: len 2048 ok  117   71   72   72   72   72   72   72   72   72 libc
-10: len   16 ok   90   78   74   55   54   55   54   55   54   55 stosb
-11: len  256 ok  112   78   78   78   78   78   78   78   78   78 stosb
-12: len  512 ok   80   80   80   80   80   80   80   87   80   80 stosb
-13: len 1024 ok   90   95   89   95   89   88   89   95   89   95 stosb
-14: len 2048 ok  105  111  104  104  104  111  104  111  104  111 stosb
-15: len   16 ok  104   88   84   58   58   58   58   58   58   58 stosq
-16: len  256 ok  125   80   80   80   80   80   80   80   80   80 stosq
-17: len  512 ok   82   83   83   90   82   82   83   83   82   82 stosq
-18: len 1024 ok   90   91   91   98   91   98   91   98   91   91 stosq
-19: len 2048 ok  106  113  106  113  106  113  106  106  106  113 stosq
-20: len   16 ok  133   65   57   33   33   26   26   26   26   26 longs
-21: len  256 ok  159  152   80   42   42   42   42   42   42   42 longs
-22: len  512 ok  187  115   88   58   56   57   57   57   57   57 longs
-23: len 1024 ok  146  211  167   89   88   88   88   88   88   90 longs
-24: len 2048 ok  213  213  209  167  153  155  153  153  155  152 longs
+The issue is what the MTD reference owns. The change in [1] defers MTD
+core cleanup until the last reference is dropped. In raw NAND, though,
+the mtd_info is embedded in the nand_chip. An MTD reference doesn't
+keep the driver's allocation containing that chip alive. Reordering
+devres cleanup can't protect a close that happens after detach.
 
-memcpy() between 4k aligned buffers
-0: len   16 ok  119   63   59   33   33   33   33   33   33   33 no_copy
-5: len   16 ok 7333  103   51   51   51   51   51   51   51   51 libc
-6: len  256 ok  447  105   51   51   51   51   51   51   51   51 libc
-7: len  512 ok  405   56   56   56   56   56   56   56   56   56 libc
-8: len 1024 ok  421   96   66   65   64   66   64   70   64   70 libc
-9: len 2048 ok  406  139   81   83   81   85   81   83   83   81 libc
-10: len   16 ok   91   81   76   56   56   56   56   56   56   56 movsb
-11: len  256 ok  115   77   76   77   76   77   76   77   76   77 movsb
-12: len  512 ok   80   81   80   81   80   81   81   81   80   81 movsb
-13: len 1024 ok   90   89   90   89   90   89   90   89   90   89 movsb
-14: len 2048 ok  112  106  105  106  105  106  105  106  105  106 movsb
-15: len   16 ok  108   87   85   65   57   65   57   65   57   65 movsq
-16: len  256 ok  119   78   78   78   79   78   79   78   79   78 movsq
-17: len  512 ok   81   83   82   83   82   82   82   83   82   82 movsq
-18: len 1024 ok   91   91   91   91   91   91   91   91   91   91 movsq
-19: len 2048 ok  107  107  107  107  107  107  107  107  107  107 movsq
-20: len   16 ok  110   62   56   32   32   32   32   32   32   32 longs
-21: len  256 ok  203  128   58   57   57   57   57   47   47   47 longs
-22: len  512 ok   97  152  190   95   65   63   65   63   65   63 longs
-23: len 1024 ok  226  185  155  100   99   98  100   98   99   98 longs
-24: len 2048 ok  201  262  260  179  171  166  170  169  171  166 longs
+One way to keep the fix in the core would be to give consumers an MTD
+object whose storage is separate from the chip. At unregister, the core
+could disconnect that object from the driver and drain operations that
+already have access to it, much like NVMEM does for provider operations
+[2]. The driver could then free its private state. Reads and writes on
+the old file would return -ENODEV, and close would drop the reference
+without calling the driver. The main change for raw NAND is that it
+could no longer recover the chip from the consumer's mtd_info by
+assuming one is embedded in the other.
 
-I added enough barrier() and OPTIMIZER_HIDE_VAR() to get the 'longs'
-loop to be sane - it sets/copies two 64bit locations each iteration.
-Both tests manage a loop iteration every clock (on zen5).
+The other way to free the chip at removal is to keep the current layout
+and have every consumer drop its MTD pointer at unregister. That could
+work for mtdchar, but it would also have to cover in-kernel consumers
+such as UBI. Fixing the close path alone wouldn't be enough.
 
-The cutoff for 'rep stos' is pretty much 1k.
-For memcpy() it is a bit lower.
+A shared allocation helper or a per-provider reference, as proposed for
+SPI NOR [3], would keep the allocation until the last put. That's not a
+permanent leak, but an idle file could still pin driver-private memory
+indefinitely. Waiting for the last put during removal would instead let
+the same file block removal indefinitely.
 
-'rep movsq' is slightly slower than 'rep movsb' because of the 'len /= 8'.
-But it is much slower for counts of 1 (included above) and 0.
+Would it make sense to pursue the core-owned MTD object, so an open
+file can survive removal without keeping any driver-private memory
+alive?
 
-I need to boot up one of my other systems to see how older Intel cpu fair.
+[0] https://lore.kernel.org/r/CAND4H7dz94Gsi_tXSQmLNme9uROnouOUwuCX9BW_+RCc=
+2ZFDqA@mail.gmail.com/
+[1] https://lore.kernel.org/r/20230620131905.648089-2-alexander.usyskin@int=
+el.com/
+[2] https://lore.kernel.org/r/20261002101352.1084447-10-srini@kernel.org/
+[3] https://lore.kernel.org/r/20261022035352.52129-1-tze.yee.ng@altera.com/
 
-David
-
-> 
-> > If the count is variable - likely in real life, you'll get a branch
-> > misprediction penalty (about 20 clocks on zen5) every time you change
-> > between the two choices.
-> > The copy loop will have another mispredict penalty for the loop itself.
-> > 
-> > So you are likely to get an overall improvement if you use 'rep stos'
-> > for all lengths - even the ones for with it is slightly slower.
-> > Unless, that is, you know at compile time that most of the length
-> > will be short.  
-> 
-> 
-> I timed every stackleak_erase() in a Zen 5c guest running a
-> futex, epoll, procfs and unix socket mix, with the variants switchable
-> at runtime and alternated over 15 rounds:
-> 
->   Unpatched                     68.3 ns per erase
->   REP STOSQ for all lengths     47.3 ns
->   v1 / v2.1 (loop up to 512 B)  46.6 ns
->   v2.2 (4 stores/iteration)     43.7 ns
-> 
-> The spans aren't random. Unix socket and /proc/self/stat exits were over
-> 1 KiB every time, while getppid(), epoll_wait(), read() and write() exits
-> were under 128 bytes almost everytime.
-> 
-> My preference still is v2.1 because of the simplicity.
-> 
-> > 
-> > David
-> >   
-> >>
-> >> The fill is inline asm, so the noinstr function still makes no calls.
-> >> memset64() would be the same instruction, but it is only static inline,
-> >> and with KMSAN it is an out-of-line function.
-> >>
-> >> In a Zen 5c KVM guest, stackleak_erase() got about 35% cheaper per return
-> >> to user space (71 ns to 46 ns, scan included) over a futex, epoll, procfs
-> >> and Unix socket syscall mix. Same-vCPU futex wake/wait and Unix socket
-> >> sendmsg()/recvmsg() ping-pong round trips got 5-8% faster.
-> >>
-> >> Signed-off-by: Usama Arif <usama.arif@linux.dev>
-> >> ---
-> >>  arch/x86/include/asm/processor.h | 25 +++++++++++++++++++++++++
-> >>  1 file changed, 25 insertions(+)
-> >>
-> >> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> >> index 77488ff5eb8c7c..049231d484ad0e 100644
-> >> --- a/arch/x86/include/asm/processor.h
-> >> +++ b/arch/x86/include/asm/processor.h
-> >> @@ -580,6 +580,31 @@ static __always_inline bool on_thread_stack(void)
-> >>  			       current_stack_pointer) < THREAD_SIZE;
-> >>  }
-> >>  
-> >> +#ifdef CONFIG_X86_64
-> >> +#define __stackleak_poison __stackleak_poison
-> >> +static __always_inline void __stackleak_poison(unsigned long erase_low,
-> >> +					       unsigned long erase_high,
-> >> +					       unsigned long poison)
-> >> +{
-> >> +	unsigned long count;
-> >> +
-> >> +	/* Short spans do not amortize the startup cost of REP STOSQ. */
-> >> +	if (erase_high <= erase_low + 512) {
-> >> +		while (erase_low < erase_high) {
-> >> +			*(unsigned long *)erase_low = poison;
-> >> +			erase_low += sizeof(unsigned long);
-> >> +		}
-> >> +		return;
-> >> +	}
-> >> +
-> >> +	count = (erase_high - erase_low) / sizeof(unsigned long);
-> >> +	asm volatile("rep stosq"
-> >> +		     : "+D" (erase_low), "+c" (count)
-> >> +		     : "a" (poison)
-> >> +		     : "memory");
-> >> +}
-> >> +#endif
-> >> +
-> >>  #ifdef CONFIG_PARAVIRT_XXL
-> >>  #include <asm/paravirt.h>
-> >>  #else  
-> >   
-> 
-
+> Thanks,
+> MIqu=C3=A8l
