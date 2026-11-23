@@ -1,110 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.83.45
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795416524;
-	b=Kh+YUgV+VeoqLLBTflW6R9mV0UrXLEee6Qj9g1fH0K9GPaqOGvju403HBYZEZLwPS79b
-	 oZHq8mxktSDc9frC/lic88EbLRsQzUdLNwa6+nERifbvVS7AA5tcJjK71v201lvDHB9y4
-	 xlSD/L22rVngf8WhrmydypVLOD+nga2yue9iA9IUjCMspZNSli9P19QvX/sal1GMtnPyY
-	 n7BdOZlAgAYFMC3pM+NRqUzydEB1kkTwWCsH0HOZy09gM2T2YSF+PEF+MyT1jtzatHAwh
-	 6CJG3GI7Kk0yA/RPgeA7red3m7kSABjWkQb9kUedQtBljcu9nk2qcnTaSplblmq7Efw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795416524;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=PkirmmGBrHXOzWH/Xd1T0m9vDbCZfqu1QYXH+9sGfFk=;
-	b=VcIoAsgMECJ3KMOAiWS0010tFLgyyq6CZEys6/4ywJ+lFRn0xG2TqkQYB4juvHALc0rQ
-	 VEKDNRAcucfCLcsobfC8K/eluJWHmg3ue4/tII0slXR1pZoQO/S4U7zJq1YOIKdC2FM72
-	 D+Oc9mnH6w6lXs142Hb8SL/o4fj+cShK53cDdnKsxv1QGe2vrjAfS6jUnyIoGgeCKg6ta
-	 /V8779i1ifZ9fTSgeFUH+3gWpqDA/z7w7kFsMWEsA4S3fv0cUy11QwsvH6eu50J3b2RU3
-	 GDLlHn/G9t8vqfSEUtPKPr1llCmQ+2Um4PhSJTBihoJLobMsyPa+1E3bfYS0kozwZKg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mobileye.com;
-	spf=pass smtp.mailfrom=mobileye.com;
-	dkim=pass header.d=mobileye.com header.i=@mobileye.com header.a=rsa-sha256 header.s=selector1 header.b=aCVqtJKm;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.83.45
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013045.outbound.protection.outlook.com [52.101.83.45])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=68.232.153.233
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795424176;
+	b=x7wQy1MGIkkddcOIHQn1wPYw/aMsMUCJEklMRPgU9cQy1xPjqZCxCyWSvmksfqfRBnXr
+	 zCY3CQojjg1KwZY3Qy+GoTKWJpxrUFYck8gJLjkWvcwQDn2Doxfjd1CDY7bLe3g0lhSCp
+	 mlhubWs3LR3/oGYBTsx+GohLzhDtDzDWG2zGSj9rEiURy46V+Qt7MqmpRuTyuC84FrWUC
+	 AEiPg+3olPMUHsnykzV+3g+NqpOriYI7DNQMA5J+VT+GzBALuTAzGq2tEt6hxp33YOGr3
+	 vtJXBsB1nIZc2JKjkK8Z24pV/p3YfRVKtQYvTYs5m0dJq5gJZN8Ktt60mI36gGOjckw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795424176;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-Amp-Result:Received:Received:Received:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:Date:Message-ID:Subject:CC:
+	 From:To:X-Mailer:References:In-Reply-To;
+	bh=BmnMKZZmIQB55ncMr0DcY94/GMqbQqtJc77bZJchLLU=;
+	b=IdVhkEFErh4lZXqTcptuFCt8utI29keE9CG4OgOZBkVhNWTGSWFAdU6eUUrUwxNXo71t
+	 BXS/Ds0Or9j6GqT69FG+T4+HBvgONsMNJyhWOWS8GySSej6LuYnZCH6zs6wKg5T1x7yDX
+	 NO/dCO0wWNtxgSnydw4UpTjcnyIWjyErBaAI0HdeebXoMKfwtrDee2QvEokaIpuJ1fNz3
+	 63eOPAmrAwnoYfVgY4ydSWjNvtXtehd3LLoKGuE+QW4Zf4WhkrPiNujuVU1wygGg4IUG7
+	 TLOOcWrGUL0OtCqsZ0lu3cYsdWUEHUTSc7ipXLIpo8z8BNFsmziwTD9UqLPBlTfAHEA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=microchip.com;
+	spf=pass smtp.mailfrom=microchip.com;
+	dkim=pass header.d=microchip.com header.i=@microchip.com header.a=rsa-sha256 header.s=mchp header.b=NPhCtgWv;
+	arc=none smtp.remote-ip=68.232.153.233
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E0F606A31A;
-	Mon, 23 Nov 2026 06:48:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 26E0F606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D43E606A31A;
+	Mon, 23 Nov 2026 08:56:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D43E606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=mobileye.com header.i=@mobileye.com header.a=rsa-sha256 header.s=selector1 header.b=aCVqtJKm
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IjFOC77VBZeD4bO/hf/zS33JycAWWpkAH9Yv2WQ4ObNx1tSJh22Z5VtT5y5wuGxURtn2mYWYbgEW6cZ5ClasdUNFm0euwyE5R430ElH+AAXdLhY2L2LIaTTkt+WV+hzhuMx2tLGHnDzfNk7utyF+vzGhzX12l5kPcmpy/bwS6vijoHgRGou6QY+0RLUvcsU8kYL03R69B7HM0HXdbMO1DPoAKVcDyLBJ31yT1UZROkJXm4tYITlXSo6iHMAGH/vnGc25FRiOKFd0w24kgoeFr1fCXJ2vI5e3btG574CbXXh8QFmhw9Fxm90HrvkFsWVisCRJ/VOPom/U3CopuTbTFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PkirmmGBrHXOzWH/Xd1T0m9vDbCZfqu1QYXH+9sGfFk=;
- b=kp1yireH3KqD1MHdsj2TmECQgOpMOCnJ8bs6PE/Q8o+un2O817cqlow4q41lvt5lL3ewuJ/2hjQnl4P4QLbWuyOSYvMYPsfYN7Yi56kTZa8iKKE5XSCIaCH9Tzyri3s9TqJCECtezEMQ4DuIdJckDf4uTxpVh7hd5M5mJ0/1rz1VT5yUwT/B2LiWEGc6oUIQqPInDkVL0670kIuW4dzEmAx/69oeHc85CQzPKuD3ntfNhtRQlsxBJ0BfWzu4skr6eZOMqKNdEWpwDFZnQXfAM7Xv/WRCe6b6K/kd1qLvarCu8S6qNtQsc98VmHktLhBHBHXlonNLea1nwjPj1aQoSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mobileye.com; dmarc=pass action=none header.from=mobileye.com;
- dkim=pass header.d=mobileye.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mobileye.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PkirmmGBrHXOzWH/Xd1T0m9vDbCZfqu1QYXH+9sGfFk=;
- b=aCVqtJKmUy0SXnLcCUBvY9FI6dX8Ql/gWdQtNXWimuLrGqUm1H5+KIr0lBTFajYUh78d1pIN2WnU4NIyFswcHbubV+8AXF2X+vKUdq4eENpZnzLmxL/71jifOJ/fgvLOuL0h6aw0FIaIlP4nr4KbMJ8SdFvgzYZLyvQF/hhZie4=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mobileye.com;
-Received: from ZR6PR09MB889505.eurprd09.prod.outlook.com
- (2603:10a6:910:e0::22) by BR0PR09MB492176.eurprd09.prod.outlook.com
- (2603:10a6:2c8:42::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.14; Mon, 23 Nov
- 2026 06:48:40 +0000
-Received: from ZR6PR09MB889505.eurprd09.prod.outlook.com
- ([fe80::9006:1164:b51f:23a2]) by ZR6PR09MB889505.eurprd09.prod.outlook.com
- ([fe80::9006:1164:b51f:23a2%4]) with mapi id 15.21.0639.010; Mon, 23 Nov 2026
- 06:48:39 +0000
-Message-ID: <d7665267-bcf0-4449-b036-cd168c1fce3c@mobileye.com>
-Date: Mon, 23 Nov 2026 08:48:35 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/7] mips: {cm,cpc}: Make cm_core_lock, cpc_core_lock
- raw spinlocks
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- =?UTF-8?Q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>,
- Gregory CLEMENT <gregory.clement@bootlin.com>,
- =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Fu Chao-Ying <chao-ying.fu@globalfoundries.com>, linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-hardening@vger.kernel.org, Paul Burton <paulburton@kernel.org>
-References: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
- <20261119-i6500-cm3-pmu-v3-1-c86410934b51@mobileye.com>
- <20261120114644.VM_HFf9o@linutronix.de>
-Content-Language: en-US
-From: Vladimir Kondratiev <Vladimir.Kondratiev@mobileye.com>
-In-Reply-To: <20261120114644.VM_HFf9o@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TLZP290CA0011.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:9::19) To ZR6PR09MB889505.eurprd09.prod.outlook.com
- (2603:10a6:910:e0::22)
+	dkim=pass (2048-bit key, unprotected) header.d=microchip.com header.i=@microchip.com header.a=rsa-sha256 header.s=mchp header.b=NPhCtgWv
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1795424173; x=1826960173;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   subject:cc:from:to:references:in-reply-to;
+  bh=nOvYNUGI3PD3pe/j1wWkp8TO50U2foUVygE/9kp6vYs=;
+  b=NPhCtgWvq3KZBNcVDi7fin65xM4Y/mFOG0f3HplBZUpCDWDcReBmRKhT
+   2c8QXhS66gQ2OkfeFfsskuLYg86VeuD5zGfZtL4kpN0BTarmWjAZ6QOKB
+   sHvdKOhX2YqJFCWkT2P2990gzSHOqMDY09hhICnNR2y4zEG99qLEmU2aD
+   shKVH8Gmqj3TGiR+ipCmIx82YpILizoM3aYtXcixTAEY045/tWO9AZ4tL
+   lhW2g1U62F9KRVHvPvJwG4DfKlyxiZ1nXKcaoyG1b8Vvn6p+53fBFSKI5
+   XU85NAN9Uod/FfcrHTjb/9nJ/6StYQOPhgXAh0PPlvYH6i1KuzqDka1rW
+   g==;
+X-CSE-ConnectionGUID: OpVKFLk0RW2QtAvrvDKj8w==
+X-CSE-MsgGUID: jO3L0NokTZuWN/acjPMVtQ==
+X-IronPort-AV: E=Sophos;i="6.27,227,1787036400"; 
+   d="scan'208";a="77690234"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Nov 2026 01:56:12 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.58; Mon, 23 Nov 2026 01:56:13 -0700
+Received: from localhost (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.58 via Frontend
+ Transport; Mon, 23 Nov 2026 01:56:12 -0700
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -114,76 +71,273 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZR6PR09MB889505:EE_|BR0PR09MB492176:EE_
-X-MS-Office365-Filtering-Correlation-Id: d0bf4bfb-5503-449e-95b3-08df492dce88
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|23010399003|22082099003|18002099003|11063799006|56012099006|4143699003|261028144727099003|261026140227099003|261026121527099003|261022105027099003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	OZFz8YdxUj88dvSo/pGZ3EMyCoEg9T8EfV6gmMAaHnPB5YsMdYtaRlk1keziUxVYwKcGRnTyW/Ze3rANUfz4BEoyDtYTaWThSqRx5WqNP8/et+sYDNes8v/6n+EuxcqaNlPsJTQXWhgIwXOZ8x08+vppXc1zBKq6pP0GqIxwk7PupkBY/L+cymGEyNUzGAZk4O8FBfZXu9uLIU+fjqJuUE9iUtPqirrFD8PtRbz1i801GtugSUcA6HYJS4nEcWTpQ71ZvSpAxzEbW42vmXs584bKZlfg9JYhQbsf8lFIKa4JR/xVtz1ciGq40uCxRp4G9dzAIyDLLwL8gwLJHilEH9KgpLPz76OmNWx3vvW1oa87eAXP/FO1kQMvkgRytd37LhwBsFnljvcWRSLHMccokl51gZlXU29WNOnZ/CV1O4erZ3AP932yiYApEw4qq3UAPkn36WFRPdkXkcWvUcrGT35tsts1dVEfe7THVj7S0ihrD31dXGCp7s9FvKdrvjLkL+9KHQKaBWXd7ZSMC95zuXsuIjnOdjyOacafnCNi9ylRYSiodgNZRIHmDr3xo9b2uuQDEg5a/JaZ4+WIfjxaSLgBNnE5f/PFwogxGueP+on+ZLqHqD6l0pcaoZLgV+Ec+djLmevvnXqFRDp1DYdszjcw9VJN3sEXKvSOLbS9D4A=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZR6PR09MB889505.eurprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(23010399003)(22082099003)(18002099003)(11063799006)(56012099006)(4143699003)(261028144727099003)(261026140227099003)(261026121527099003)(261022105027099003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dDdCQVFPZjZRbVdicXNEdGFjNTNxUWxmeTZpODg4Zk5taUw3REczci9QS2Mz?=
- =?utf-8?B?bTIyZmVhRTlHbis0NlU5a3BFclgwVjVTMnFMdWdJRno2QW9vNE4ybW5QWWF0?=
- =?utf-8?B?SldlZVgrN2VQTVdSdTVuK3c1RUdXZFJTekJBWWtCTnE4a1Uzb3VlMkNua0JX?=
- =?utf-8?B?ZWpPZmVYeUpOS1ZQM3ZGekRYVFI2MkVnK1l0LzdXZExOTmJSVkdMUWlMa2xq?=
- =?utf-8?B?NFYrU1JGcTJRWC9iZlRpbVRNRkQ0ZjJOUExEZUEyT1dkUDJUeVQxMnhvYkFO?=
- =?utf-8?B?RFBhd2hDb2RQdFM0Z1AybmEwM3NWbWlCMDRESE5JNnRwMk1TMFJUVzRGbVQ4?=
- =?utf-8?B?V1h1N2h4N0FOU0JGYy90VVFjWlBlTWJWcm9adktXZmc0Qjl4REN5TGhpcTIw?=
- =?utf-8?B?cWgwLy9tRWRJSTQ0QUdJTjFFSkJUR1p5ZFFJeUtKRit6S1A2VmI1dmF5REdX?=
- =?utf-8?B?eTZldFJoV2ZJeFBYWnVxWHdMSmlIc3lURTJRVS9WQlNVeDQzNXpYVU1QbXV5?=
- =?utf-8?B?VisrNjZxa3p4ekJWYmpZSlpsODllS3l4Y3JjVXE1RmkvNTlDUFd5SVlzSnN2?=
- =?utf-8?B?QjJnNlAza2FxUWN3NEFaVjExUmxBejlTS2Q3SURXNHFMSXkwZzZ3RmF2TEkv?=
- =?utf-8?B?NUZBRkJ0NUlxTGpVL1FlaEtsYnIyTEthdkhNOHptZHlBYWlPU2RXRTB2eXEz?=
- =?utf-8?B?VDdtQjhnTjdqSG1ZM3h2cEZXN1pHajgzQnJXdkpPUWVDbUwxcjAxM2REUUk3?=
- =?utf-8?B?OUpscWNEUUdBS1IxREJVWm83aUh0dzAwUXQ4QUVMY05hTm8zQzFjelhDUFpV?=
- =?utf-8?B?SE5qcVViTkNPd2xCd3U1RnZaajAvYldsOFRXMjU0R0JmaUlNQy80d05DZDA3?=
- =?utf-8?B?ZStKYUNjV3VOVUhMV2JLSzZPV2paN0xrUTBaTU9DZjBrV1YrMWRxWTJhYUZ0?=
- =?utf-8?B?bW9BSkEwY0xOdE5zTHhPdnRXdGFHQm9KeTJGVmxjUmVtQ0tRamF3VjZ0WkFl?=
- =?utf-8?B?a1hKMDlGaUo3cUF4V29hclI5bWl4bDdsZ3k0VEhhT2xBZWY2V0cvVkhSaUlX?=
- =?utf-8?B?YnRPT2dwNnNNVWlqd1lTMTJvcDdIcnY2dkNnWjBqNGFEQkpRVzhXQlFWcUk1?=
- =?utf-8?B?aklYSXFaMVAzVC9IMERSWVFCRmZYY3lYTzhjMm5KSkZZSkxvL2FHOEdxS2cx?=
- =?utf-8?B?OU1EOWxPZGduQnBuTFFxaWlnMmlleXFKV0dnVWtONGNIU01pMUlpREg0K1Rw?=
- =?utf-8?B?SFA1ZmZRMkttOU5iTU5Qd3M3amNhbGIwV1RZNU8rU1JlZllRMklrR0NabDVa?=
- =?utf-8?B?eFFOek9rZkVXQWpkclUwRTZKb3RvM1hmMEt4aklYWndPWk13VVExdkVvbFoy?=
- =?utf-8?B?c0FMc0Qzb2ZjdzhyVk8venFlYXpHZ3NWSkN3czJxdWxPZ2d6WHdkQUo5VnMv?=
- =?utf-8?B?dkRBZE5teXcyakEzM2NGc3Z3dWNiRlpSeDRPRHN1dEdjb2xMalRpV2VNSGZi?=
- =?utf-8?B?NVF4Yyt5N043bnhZd1I5cXRBQ2NFODlCaGlQRkQ4VkVtT3lSRlZJZVMrY1F3?=
- =?utf-8?B?cUZEVzBiNkE1S0hvaE1oSStrWTBjcHRNZkNJQVp3ZmZqUUE2SWsrVzBKMkZ5?=
- =?utf-8?B?b2dRaFdVY1I4azBGU21GMWNrOHg4cXpnc0N0bmJuYlNUM2NRZHgrUUxGNGoz?=
- =?utf-8?B?UmdOZ1dUeXloRFhGeHJyT0hHL0ZZOFFiQ3JqQnZVQU1HMXhTNllGelJ1QzlG?=
- =?utf-8?B?QVBzeWxSam1FVGxlT05MYnJaR2luanRLb3BuTEx6cVlWQm1UL3pQMnVMb01j?=
- =?utf-8?B?SVNTa3l3UVVWVU9iTHlxM0ozMTRtR1JveWJHR3lqcDVKaFBsY1NpeFYyVndO?=
- =?utf-8?B?MkpEMlBUM0RuQVg1RTlLRWFFV2ptWThMMWxwNyt6bGJjYTdCMnJKYW1ZelU5?=
- =?utf-8?B?dmxQUm1EL1RZZWdKWjQ2ckhxUXY3ajNBcURNeERJMjl5VlFTSi9nemtORlF1?=
- =?utf-8?B?YUhrM3c3TEZFMDNudFVacCtxby90bjFkK3N4MlF5c1pXUFBYcHVFTWJKcTFv?=
- =?utf-8?B?dVpIQmlJWXlwYXprZFNJc3lHOTY2OTgwTDJMUHZqbVQvZjF4ZUN6dTI4VDEw?=
- =?utf-8?B?Mk1FUXBoakRvemF4MlM0b3FibjkweCtyMTVEZTVaeEFtcnIzOVVjNnBlK3hB?=
- =?utf-8?B?cE1Bd09yOUdqS2NPd3NNdy8yL0M5cXB1SDI1WUlRL0Q0WktjVk5GejlaVFUz?=
- =?utf-8?B?cGI2VkhrbCtVRW5HRm5uU3B1UXdmMVFzV1VJVlF3c0pSR1JWc2RPV3FRekFy?=
- =?utf-8?B?VXBadXg3bzZDQlVRM3FvUUxyY0FOSXNhQ2ZramtvOEs1T3RPcjFkUT09?=
-X-OriginatorOrg: mobileye.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0bf4bfb-5503-449e-95b3-08df492dce88
-X-MS-Exchange-CrossTenant-AuthSource: ZR6PR09MB889505.eurprd09.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2026 06:48:39.8268
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f85ba13-6953-46a6-9c5b-7599fd80e9aa
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YEg1SsN2F8wk/E8E0mp3lTwmW00Jd/h/CLLwrBc2i68eHVM6Um8GVXOr+YVmOaTXc3bvHo5+IhVwwG60JsCYYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BR0PR09MB492176
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 23 Nov 2026 09:56:11 +0100
+Message-ID: <DN2GR1X3SMRL.3RJ6A1DJMG1H6@microchip.com>
+Subject: Re: [PATCH net-next v3 3/3] net: sparx5: keep router legs in sync
+ with the bridge
+CC: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <daniel.machon@microchip.com>,
+	<Steen.Hegelund@microchip.com>, <kees@kernel.org>, <gustavoars@kernel.org>,
+	<robert.marko@sartura.hr>, <edumazet@kernel.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-hardening@vger.kernel.org>
+From: =?utf-8?q?Jens_Emil_Schulz_=C3=98stergaard?=
+	<jensemil.schulzostergaard@microchip.com>
+To: <netdev-bot+sashiko@kernel.org>, <jensemil.schulzostergaard@microchip.com>
+X-Mailer: aerc 0.21.0
+References: <20261117-sparx5_l3_routing-v3-3-e680ed79c7dc@microchip.com>
+ <179515919073.3136.18115865975545072840@kernel.org>
+In-Reply-To: <179515919073.3136.18115865975545072840@kernel.org>
 
-On 11/20/26 13:46, Sebastian Andrzej Siewior wrote:
-> The perf interrupts should be per-CPU and not threaded so this is the
-> right to do. However mips does not have ARCH_SUPPORTS_RT set. Is this a
-> longterm goal? Otherwise it doesn't matter since without it set even
-> lockdep dose not complain where it would otherwise.
+On Fri Nov 20, 2026 at 8:19 AM CET, netdev-bot+sashiko wrote:
+> Thank you for your contribution! Sashiko AI review found 4 potential
+> issue(s) to consider.
+>
+> Critical: 0 =C2=B7 High: 1 (1) =C2=B7 Medium: 1 =C2=B7 Low: 2
+>
+> If you believe none of the issues are legitimate, please reply to each
+> issue of Medium severity or higher and explain why the AI is wrong.
+> If any of them are legitimate and you plan to respin, please let patchwor=
+k
+> know by including "pw-bot: cr" as a separate line at the end of your repl=
+y
+> (one such reply per series is enough).
+>
+> - [High] sparx5_rr_legs_reconcile() now walks
+>   netdev_for_each_upper_dev_rcu(sparx5->hw_bridge_dev, ...) from the=E2=
+=80=A6
+> - [Medium] Contrary to the commit message, a router leg can be lost while
+>   its upper is down.
+> - [Low] In sparx5_rr_router_init() the new comment says "The exported
+>   helpers use leg_list once sparx5->router is set".
+> - [Low] The function comment above sparx5_rr_bridge_legs_flush() still
+>   reads "Tear down the router legs of a bridge that is no longer=E2=80=A6
+>
+> Pre-existing issues:
+> - [High] This problem wasn't introduced by this patch, but this patch
+>   extends the affected code.
+>
+> --
+>
+> net: sparx5: keep router legs in sync with the bridge
+>
+> This commit makes the sparx5 L3 router legs follow later changes to the
+> bridge and the vlan upper. A leg is destroyed when vlan filtering is
+> disabled, when the bridge moves to a non-802.1Q protocol, when the upper
+> is linked to a master, or when the upper's MAC changes. Ingress routing
+> on a leg is limited to when the upper is up and the bridge carries the
+> vid tagged, and the reconcile now also creates legs for eligible uppers
+> of the offloaded bridge.
+>
+>> diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c b/dri=
+vers/net/ethernet/microchip/sparx5/sparx5_router.c
+>> index 26aeee17733cd..7412db7a6e7b4 100644
+>> --- a/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
+>> +++ b/drivers/net/ethernet/microchip/sparx5/sparx5_router.c
+>
+> [ ... ]
+>
+>> @@ -568,19 +650,66 @@ static void sparx5_rr_router_legs_flush(struct spa=
+rx5 *sparx5)
+>
+> [ ... ]
+>
+>> +void sparx5_rr_legs_reconcile(struct sparx5 *sparx5)
+>>  {
+>>  	struct sparx5_rr_router_leg *leg, *tmp;
+>> +	struct net_device *bridge, *dev;
+>>  	struct sparx5_router *router;
+>> +	struct list_head *iter;
+>> =20
+>>  	ASSERT_RTNL();
+>> =20
+>>  	router =3D sparx5->router;
+>> +	if (!router)
+>> +		return;
+>> =20
+>>  	mutex_lock(&router->lock);
+>>  	list_for_each_entry_safe(leg, tmp, &router->leg_list, leg_list_node) {
+>> -		if (sparx5_rr_dev_addr_list_empty(leg->dev))
+>> +		if (sparx5_rr_dev_addr_list_empty(leg->dev) ||
+>> +		    !sparx5_rr_dev_real_is_vlan_aware(sparx5, leg->dev)) {
+>>  			sparx5_rr_router_leg_destroy(leg);
+>> +			continue;
+>> +		}
+>
+> [Severity: Medium]
+> The commit message says:
+>
+>   "A leg with an IPv4 address is kept while the upper is down, so it is
+>   available again when the interface comes back up."
+>
+> Does this still hold if the bridge MAC changes while a NET_ADDR_STOLEN vl=
+an
+> upper is down?
+>
+> When the bridge sends NETDEV_CHANGEADDR, vlan_device_event() in
+> net/8021q/vlan.c skips uppers that are not IFF_UP. A down upper therefore
+> keeps the old MAC, and sparx5_rr_dev_real_is_vlan_aware() then fails here=
+:
+>
+> 	if (dev->addr_assign_type !=3D NET_ADDR_STOLEN ||
+> 	    !ether_addr_equal(dev->dev_addr, vlan_rdev->dev_addr))
+> 		return false;
+>
+> On the next reconcile, the new check above destroys the down upper's IPv4
+> leg and frees its VMID.
+>
+> Unrelated events can queue that reconcile: an inet6addr UP/DOWN on any vl=
+an
+> device, a bridge vlan add or del, or the VLAN_FILTERING attr that is sent
+> when a sparx5 port joins. For example, a port with a lower MAC joins the
+> bridge. That queues the reconcile, and br_stp_recalculate_bridge_id()
+> changes the bridge MAC before the reconcile runs.
+>
+> Suppose the bridge MAC then changes back before the upper comes up, for
+> example because the port leaves again or after ip link set br0 address
+> <old>. What recreates the leg then? The bridge NETDEV_CHANGEADDR in
+> sparx5_rr_netdevice_event() does not queue a reconcile, because
+> is_vlan_dev(bridge) is false:
+>
+> 	case NETDEV_CHANGEADDR:
+> 		mutex_lock(&router->lock);
+> 		if (sparx5_rr_bridge_has_legs(sparx5, dev))
+> 			sparx5_rr_leg_base_mac_set(sparx5, dev->dev_addr);
+> 		mutex_unlock(&router->lock);
+> 		if (is_vlan_dev(dev))
+> 			sparx5_rr_legs_reconcile_schedule(sparx5);
+>
+> When the upper is later brought up, the MACs already match, so no
+> CHANGEADDR is sent. The NETDEV_UP case only refreshes an existing leg. Th=
+e
+> IPv4 address already exists, so the validator does not run either. With
+> IPv6 disabled on the upper (disable_ipv6, or addr_gen_mode none), no
+> link-local NETDEV_UP arrives.
+>
+> Wouldn't the upper then stay without a leg until something unrelated
+> triggers a reconcile?
+>
+> Now take the case where the upper comes up while the bridge still has the
+> new MAC. vlan_dev_open()->vlan_dev_inherit_address() does queue a reconci=
+le.
+> But if another upper has taken the freed VMID in the meantime, creating t=
+he
+> leg fails, and only a ratelimited warning is printed.
+>
 
-Yes, very long term goal. Clearing parts that should be cleared
+This is right. A NET_ADDR_STOLEN upper which is down keeps the old MAC
+when the bridge MAC changes, so a reconcile in that window destroys its
+leg. If the MAC is back to the old value when the upper comes up it
+is not requeued. v4 queues the reconcile on NETDEV_UP of a vlan upper of
+the offloaded bridge that has no leg.
 
-Thanks, Vladimir
+>> +
+>> +		bridge =3D vlan_dev_real_dev(leg->dev);
+>> +		leg->vlan_present =3D sparx5_rr_bridge_vlan_present(bridge,
+>> +								  leg->vid);
+>> +		sparx5_rr_leg_hw_uc_update(sparx5, leg);
+>> +	}
+>> +
+>> +	bridge =3D sparx5->hw_bridge_dev;
+>> +	if (!bitmap_empty(sparx5->bridge_mask, SPX5_PORTS) && bridge) {
+>> +		netdev_for_each_upper_dev_rcu(bridge, dev, iter) {
+>
+> [Severity: High]
+> Can this walk a bridge that has already been freed during driver removal?
+>
+> The driver holds no reference on hw_bridge_dev. Only
+> sparx5_port_bridge_leave() clears hw_bridge_dev and bridge_mask, and it r=
+uns
+> from the main sparx5 netdevice notifier on NETDEV_CHANGEUPPER. Before thi=
+s
+> patch, the reconcile walked only leg_list, whose entries hold netdev
+> references.
+>
+> mchp_sparx5_remove() unregisters that notifier before the router notifier=
+s:
+>
+> 	sparx5_unregister_notifier_blocks(sparx5);
+> 	sparx5_rr_router_deinit(sparx5);
+>
+> Suppose ip link del br0 runs in that window. del_nbp() unlinks the ports,
+> but hw_bridge_dev and bridge_mask stay set. The router notifiers are stil=
+l
+> registered, so addrconf_ifdown() on the bridge's vlan uppers can, for
+> example, send inet6addr NETDEV_DOWN, and sparx5_rr_inet6addr_event() queu=
+es
+> legs_work. After rtnl_unlock(), netdev_run_todo() frees the bridge.
+>
+> legs_work can then run, including during the drain in
+> sparx5_rr_router_deinit(), while sparx5->router is still set:
+>
+> 	destroy_workqueue(router->sparx5_router_owq);
+> 	sparx5_rr_router_legs_flush(sparx5);
+> 	sparx5_rr_router_hw_deinit(sparx5);
+> 	sparx5->router =3D NULL;
+>
+> The bridge_mask/hw_bridge_dev check passes on this stale state, and
+> netdev_for_each_upper_dev_rcu() reads the adj_list of the freed bridge.
+> Could a garbage dev then reach __sparx5_rr_inetaddr_event(), which may ca=
+ll
+> netdev_hold() on it and program hardware?
+>
+
+I think this is correct, but it needs a bridge del racing with driver
+removal. mchp_sparx5_remove() unregisters the notifiers that maintain
+hw_bridge_dev and bridge_mask before the router stops, so router work
+can run on stale bridge state. The next version tears the router down
+before the notifier blocks: its notifiers are unregistered and the work
+disabled first, and sparx5->router is cleared under RTNL.
+
+>> @@ -683,6 +705,7 @@ static int sparx5_handle_port_vlan_del(struct net_de=
+vice *dev,
+>>  				     switchdev_blocking_nb);
+>> =20
+>>  		sparx5_mact_forget(sparx5, dev->broadcast, vid);
+>> +		sparx5_rr_bridge_vlan_clear(sparx5, dev, vid);
+>>  		return 0;
+>>  	}
+>
+> [Severity: High]
+> This is a pre-existing issue that this patch did not introduce, but the
+> patch extends the affected branches. The bridge-master paths of
+> sparx5_handle_port_vlan_add() and sparx5_handle_port_vlan_del() never che=
+ck
+> dev =3D=3D sparx5->hw_bridge_dev, or the netns. The switchdev blocking no=
+tifier
+> chain is global.
+>
+> Can a software-only bridge in another namespace remove the broadcast entr=
+y
+> here? The bridge sends master VLAN add/del notifications for every bridge=
+.
+> A user with CAP_NET_ADMIN only in its own user namespace can run:
+>
+>   ip link add br0 type bridge
+>   bridge vlan add vid X dev br0 self
+>   bridge vlan del vid X dev br0 self
+>
+> sparx5_mact_forget() then deletes the chip-wide (ff:ff:ff:ff:ff:ff, X)
+> entry that points at PGID_BCAST. PGID_BCAST is the only flood group that
+> sparx5_start() sets up with CPU copy enabled. After that, broadcasts on v=
+id
+> X of the offloaded bridge no longer reach the CPU, so ARP fails for host
+> interfaces and for the router legs on that vid.
+>
+> The new sparx5_rr_bridge_vlan_clear() and
+> sparx5_rr_legs_reconcile_schedule() calls are added to the same unfiltere=
+d
+> branches. Would an early check like this be appropriate?
+>
+> 	if (dev !=3D sparx5->hw_bridge_dev)
+> 		return 0;
+
+Preexisting, but correct, the bridge master vlan add and del paths act
+on any bridge. The calls this patch adds there only touch legs of the
+bridge passed in, and the reconcile is idempotent, so it does not add to
+this. I do not think this should be fixed in this series.
+
+pw-bot: cr
