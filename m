@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795443615;
-	b=GWHaFmZJIVLGYd7aifp0GXrQDu1T4ix72W5zhVkL3MAGi64FBWmiMAPYxtOO/zsGI33a
-	 0jev7zv+B4QXZBhFRmJKaporAruN9NAd66zXl6UjniaBlbP0qwDiWTlhTGnOZfbw3MwvY
-	 2nu51Xa27PwKuxBuXsbOIX3S7039FqQPYRnDeIJksVjEKPjyZhp2iwFyraa34zTJEa6Jw
-	 6/0Cjybpko91rw5uqGBauQCT3frD7czxd8Y9WKR0N27exO785XiibyWB0qJFYMBwO+9C5
-	 OgNIOinZCIt2GSTM2T6ToaiztNhP9CtMe/neiSejnerqJLQ/TE9E/It2khYIoFYDLtA==
+	t=1795443628;
+	b=jIHwdwI76jcjzgV3WzmRynmyO/djudQ65uNkWAZWse4RMWTJRz5+yZoJLI+yEFJNFmuX
+	 RmY5uwjIDiRL2kK3mhYbJW2nKwGo0ltYTkQUU3DEQzqprA6thjPsu8Er78QklIoob7uMd
+	 VJnWcJC/bQ0cIZqh1YuL+/CRJI8agWTb/B7Mq70VKdd9ftV3UYRlCk8ZI7C09Kg0K8MQ7
+	 hJVis9PL5c1n68GXuj6+9/lOG+8tftdamCtccynjSqlILQjcatU9tvLHe0SdcZTxSPGiz
+	 s3nMcIY1SARa2ZLHFUAcxgzacSvNdN3Fpae9BYHflDTIenEbb58ozGJRNGxFukxR2Xg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795443615;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795443628;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=mXV6+GG0z8PCuL6UAZBUPBZ1GbikKdS6r0oEptKGfNs=;
-	b=JUKK28glm2gBgLplQ1PRyxKvnFYR1PGBS/brLeXd+aihWf7Qg5Mhv4izh/0nvS4WGlDS
-	 N4fJrsZXsqeH1qI494pyYW//jIJ6op4S27+tdYhlDH/8fdz3rxupSUf7sdM6aB5CmOYW8
-	 Q1KCkeuFLTsdc4W1Z6FKwsPvsFntSp3MsIk8ZF1NVfmjSlMjY523OCz3TEnWFGtTeO+8+
-	 +vAN8WyJfVvPZ3w2Mg38Iy/4fzevPksh18KdMkWMA5yNkJuTeNW1kWoQMmmz4ESAPJaFb
-	 C0LWpisQxLacqWh7edIAd8fSk50FQ2eTI7M//ZAzvRd54Jgo9lXt+69iWyfL305dv8g==
+	bh=IAzQq1DJpSBO+XxRF6Vp7LxmR7KfxskrkHM0HAoL/tk=;
+	b=KKZnCB8UYgBzj4OsoBcXcMZ6R1ku1NwHgjPiZhtvCOWIqx+RvCgMNuAlzxESpW1QDZGt
+	 LL9si+BSL/ACS/fXzJr2IU+hikjZaQM9muwWiO8vhx9ZYCzoyC8IHmSvhd+BqZ3xg+pGT
+	 winSefRXcD8dRD/tyQDxbDr/NlZyl4ydtZ8G/69jK6N+QsCh/XyctBMZg9gxBf5/Fk6HW
+	 uOIyuRV6GZ800F9qJ2NySGKc5g6fAZNlQYExvg6SNDb7895PmH4AzBA4iQ4n/8zehkUSt
+	 +hcNAEEyWB0YPqS/PEttmKneQImt2/0dJDVNtAm6+7ahbQliVXDHydHYDEgBCEpJZpQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="f/1w/QGj";
-	arc=none smtp.remote-ip=74.125.82.174
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Rnxolo2A;
+	arc=none smtp.remote-ip=74.125.82.171
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153FA606A31F
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 14:20:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 153FA606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A56E606A31E
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 14:20:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A56E606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=f/1w/QGj
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-38644aedba1so4957685eec.0
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 06:20:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Rnxolo2A
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-385d8a00598so4609110eec.1
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 06:20:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795443614; x=1796048414; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795443627; x=1796048427; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=mXV6+GG0z8PCuL6UAZBUPBZ1GbikKdS6r0oEptKGfNs=;
-        b=f/1w/QGjFccaJiFG3HZ+rpDXw8L2xJoQ59v3syiXQZY4NsO2GBB5fCINp1CyVmMYVF
-         E9mRDiMfjxXdSkoOkf31pz0pJ4TxvwcSoDtkhvk6Qvl+yZe+u8JVB9mW6ybge9moTFE6
-         RppaxbBG5SuEGZm/X7BWDXr0w3ewh7diGkdvyp6O3LZZO64Lg8pMYB80TI8mMSavlKWj
-         R6d4YdSKvDxLHn73RWCVywKgKVQHiAHLH/IVtVvoS1wEAhKPEj6b612KuELFS2sttqdx
-         dfKBjN3hoL4uDPPb1NyELWshyIDzXmci4MqwL3adOt/e0UzHzLY+nfzRAVgttazdZFa9
-         Y6Lw==
+        bh=IAzQq1DJpSBO+XxRF6Vp7LxmR7KfxskrkHM0HAoL/tk=;
+        b=Rnxolo2AuqFjwFHQ+ncS+zjZac5WVgLKB3nOM4CSR3T9FDIDv7sbwyjTEj5hWzhdxq
+         xks25cmqtbYvlu8pfcnMyKhJdaDLA7DlssJYIWc5hHVKHaXekAoXadx/Tfu5YmZSdgB7
+         L6w+fIr5K6djLsdfZaD6eudvcnlupRy4o6JNHgT/cuWMNIEMXmGVkpDZJHt0/Lg0ZIMo
+         VrcwmmKkBYmb3+3iL+bMJP3mTdocGjsdXDl1fC+3jmTt6oTI/ye3zP6uqYwUCSlT9kky
+         H3Ncrua4lKRImP6N56ldnTmIOhH98p7y33ShuJ32kwRSBkqHTWGvwS106bvUuklfj3mU
+         v8Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795443614; x=1796048414;
+        d=1e100.net; s=20260707; t=1795443627; x=1796048427;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=mXV6+GG0z8PCuL6UAZBUPBZ1GbikKdS6r0oEptKGfNs=;
-        b=VsS/5slTJE68ilptnnbBODFdORfajKPUg4MJ2ouRKhpW+aPpR7lrk8dMphJzZmMtbL
-         N7sQ0PjJkv2r35NRkPwJA0vFhOj3JyjklWdIrBHK9jxqO+VHeIz30rnVdNIKvz+a/dmB
-         N/yQBLszEy6yfmBxloUoezpN/fFQ4h/jgutpeBizRgpNAllAtGSTiEGMAP9j1r2fCGwS
-         m3D0Ugh+S8+/QZA/NxTUJoQ2g/Fp57j4wHRN5numUYFnTjn+GDu4qzeC1Cc+ZJtaVumb
-         ZZAUtt556CMnfBLVBjJYPFwXxRfOZtK7HWte3nmWMAFCJ1lhdXtn6AzvESXPR77MbLqg
-         ChSg==
-X-Forwarded-Encrypted: i=1; AL+hErE4eq/0klCX4EUNFySLXXYuGnWecl89NuhWEhuyfPG4KRpzxvjabDdDODvC1OgwvhOFBLyCbaaXLnjyNFfXSdA=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8tFarSYeFfR2zvOEgJAOz7zT8JkecCsv3EwKFwdt598gb2MqYT
-	I5ucNptprJY+bCx5VAQr2TrZhi0RLGI9yLxYNkUjwK190672WE/wHc5j
-X-Gm-Gg: AZFdTZc7Ti4y5cY5KOdRo4OMPcsaDj+7c2YJNZxYgpYf10Yna0LnfONnQapjimd5zi1
-	TOyEl5pOst5NGsdxA78QtOl7rc565p0va+I2xILnZMLx306iwZd3a2wN4L2ZLvJsJLdxRMbDV3U
-	EgG6amqAV+rdpbRZt/Pp08Rdu5RYXGonMcnDmqRt24nwhe+Klz0YWM2SLKtrqi1ARSIDbRi9w+/
-	amlIO5NPRrI1gDdOs6XWwxCo1SYkfx1xSoQthBGK6SfIw/v9t0+LYhrl1rFDBumvpXUrE3dgoOJ
-	UruVYfeM4mLqrpuwY1+HYFItO/A61iuRcgNEgKOuF8pftBv/DnTBKMsSQQKIq05RX8HY7PZrbKi
-	/xDduuhztPCGOFLGkRYs42Rwkt9TU1PIizGWYLkJYuu0Ot1ohjhFh6QuiYDfZBNAqH9HUzlY4+Q
-	TnBvPeR6ukJfQ+EaUPr7+GhVHxmfIhso0Ydp8jHgsmdqPASagYc81HS2MpdzL+ZjBN44NpAUpEA
-	T+Av7jxLjLVeUqz7gTwYkLSgcqcrry3k9Y2FqxZkcJbVHOD/s5GBa06ONH98WSlWOsT/483c64b
-	nPXezveOMrl1L+8vavc1jscbl31zIJfs2vETiz2tfQGLDU1Cw5h3zRu8JEuoXNcHZETb
-X-Received: by 2002:a05:7300:8282:b0:385:af7b:d788 with SMTP id 5a478bee46e88-385af7bda3emr10643390eec.2.1795443614142;
-        Mon, 23 Nov 2026 06:20:14 -0800 (PST)
+        bh=IAzQq1DJpSBO+XxRF6Vp7LxmR7KfxskrkHM0HAoL/tk=;
+        b=ymx7gz1Er2eM0gmQJlZvhAo2roGJMuRALJkFISXAzrad2g/oDTSdvawtxxf/qBjVbB
+         svef5qZ04ZHQ50ph53a+fn1jrc/UbuvIzkH2qUM2na7rcPUcpal2Bw/W9L0YfYjq6Lca
+         YsxRvgruE7vmWQ7vQo/VDrgYi4aq1fdWLmSLVt4dXr9cr5P/0dZdViSsG971XeAG+ZC2
+         YFaBh13/8EEW+hOEf7iA6aBE+7IF8yBj7tXImRl7xne5xxH8VlJRdsiqUd5dlyv7yQni
+         TlHEKz1kleg7HjGE+jgJ2iu/4BYCM8nOQjJD9527HbioIO7kzGWI/2P2HpgScrxPxsZ/
+         mhTQ==
+X-Forwarded-Encrypted: i=1; AL+hErGP8gywmueLxnD0il6dL2YIBTzWt74+tmJA9EPm3bgltIELXLSsawNgs7j+IZPFiIgdeYvawr3WZEiK5K980Og=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9W7oq+/rBrqMQc2Tjs5PTFwv4iMcWTiF0kgJQSnOkdSUch/xyI
+	LjsLONBhUzDNnKmlcemKxPqvaGw6rCO2Eqeu2dAgy8EOxO0ZCKj9Jwqq
+X-Gm-Gg: AZFdTZdRqcfPLiViOM63pUs/O5uXnsHCrm41YCwGsPt8/IlRqPR8gkV1W9mVPHGpTAY
+	NCz107Qr0JsTPeHFyIRtHUukqSGitWavVBAMhmIlFeyTld+kTmBBomn1JapsvibQlBoJEQMFGw9
+	p6jiJp3LedbyfpHZMaPYlRaXp0bxB8nrZ4rxMjX/UEi38Odkp0pIe1IQrwh1s0rj08kpAOsgCTF
+	0iwTxGBYNGc/6TaW7SyGgesQhqoExHFt9oKgMWlZNwAnaB1047t28PCFjeh6iP3YKK7Ds7XXAEb
+	npxcxOZwSlr1efBOvoL1/ao8TJcD0/aBOdxMv/JjbAA58NzsIX639Zqlx8LdWvd+hz9qISiF6cx
+	OG8AbaKtZFYefEAytQynTwvUwtHyToQKePVMhSf6DrBS8jnIw6pQitwP/7a5iDuy0P9HvN/yp88
+	h45yGXhELXXuk+EjMncpz9F/vvAmOBguZxmJdQ1rAyW3ZXmxcRUacdrZHV1ZNPOShBWK0G2gPU5
+	iXvqOedCgrILVEz/Gw5rR5Sc+WgeCQBpy4qkUuFis9py+MpbPLkZDFovAvG4xMEG6ydTyuZxFEu
+	rd+jMd7diCubLWzeo13Wyu0AXVZqpUeWC9DzNdgbVFAc9KQhZotGUnOUA5lo6U2uHeE7
+X-Received: by 2002:a05:7300:6881:b0:386:9ffb:33b4 with SMTP id 5a478bee46e88-3869ffb51abmr7378341eec.33.1795443627312;
+        Mon, 23 Nov 2026 06:20:27 -0800 (PST)
 Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38577214c2dsm35579857eec.17.2026.11.23.06.20.05
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-386b9bdafb5sm3091208eec.9.2026.11.23.06.20.19
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 23 Nov 2026 06:20:13 -0800 (PST)
+        Mon, 23 Nov 2026 06:20:27 -0800 (PST)
 From: Lian Wang <lianux.mm@gmail.com>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -95,9 +95,9 @@ Cc: linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Thomas Gleixner <tglx@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v5 18/19] mm/swap: skip reader rotation for single-device priority rings
-Date: Mon, 23 Nov 2026 22:19:59 +0800
-Message-ID: <e2a77e8a6c81c5cf56694b18f8e27b038055ddd4.1795439990.git.lianux.mm@gmail.com>
+Subject: [PATCH v5 19/19] mm/swap: redistribute queue readers after membership changes
+Date: Mon, 23 Nov 2026 22:20:14 +0800
+Message-ID: <fc69968abaa133c855fe71ee4394251e67b5d905.1795439990.git.lianux.mm@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1795439990.git.lianux.mm@gmail.com>
 References: <cover.1795439990.git.lianux.mm@gmail.com>
@@ -112,45 +112,47 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A priority ring with one device cannot benefit from rotating its starting
-offset or maintaining a quota. Read its only entry directly while the
-caller continues to hold the topology read lock and migration protection.
+Adding a device to an existing priority ring reuses the per-CPU reader
+storage. A ring that previously contained one device can therefore keep
+every CPU at the old common starting offset after peers are added.
+Deleting devices or rings can likewise leave offsets and quotas that
+describe the previous membership.
 
-Consume the cursor attempt and check the full/disabled pointer tag through
-the common path. A masked singleton therefore terminates or falls through
-with the same bounded behavior as a multi-device ring. Keep the existing
-large-folio same-priority failure boundary.
+Reset the valid per-CPU ring offsets and quotas after peer insertion and
+every nonempty deletion. Run the initialization helper under the topology
+writer, which excludes allocation walks, without allocating new reader
+storage or adding selector hot-path work.
 
-This removes reader-local state updates for the common single-device case
-without bypassing device lifetime or availability checks.
+Use cpu-id modulo placement for a fresh best-effort rotation across all
+valid rings. This does not move existing slots or guarantee strict balance
+for every active CPU subset. Mask and availability transitions do not
+trigger the topology reset.
 
+Reviewed-by: Kairui Song <kasong@tencent.com>
 Reviewed-by: Kunwu Chan <kunwu.chan@gmail.com>
 Signed-off-by: Lian Wang <lianux.mm@gmail.com>
 ---
- mm/swapfile.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ mm/swapfile.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 5a8663e9f954..91de93043500 100644
+index 91de93043500..f6a6df8c2595 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -333,6 +333,11 @@ swap_queue_get_device(long nr_alloc, struct swap_queue_cursor *cursor)
+@@ -495,6 +495,7 @@ static int swap_queue_add(struct swap_info_struct *si,
+ 	spin_unlock(&swap_queue_update_lock);
+ 	memalloc_noreclaim_restore(noreclaim_flag);
+ 	kfree(old_ring);
++	swap_queue_reset_readers();
+ 	return 0;
  
- 	/* Consume masked peers too, so every walk remains bounded. */
- 	nr_iter = cursor->nr_iter++;
-+	if (ring->size == 1) {
-+		si = READ_ONCE(ring->dev[0]);
-+		goto check_device;
-+	}
-+
- 	local_lock(&swap_queue_readers->lock);
- 	head = this_cpu_ptr(&swap_queue_readers->heads[queue_idx]);
- 	/*
-@@ -361,6 +366,7 @@ swap_queue_get_device(long nr_alloc, struct swap_queue_cursor *cursor)
- 	si = READ_ONCE(ring->dev[dev_idx]);
- 	local_unlock(&swap_queue_readers->lock);
+ failed:
+@@ -567,6 +568,8 @@ static void swap_queue_del(struct swap_info_struct *si)
+ 			swap_queue_install_readers(NULL, 0);
+ 	}
+ 	spin_unlock(&swap_queue_update_lock);
++	if (swap_queue_len)
++		swap_queue_reset_readers();
  
-+check_device:
- 	if (swap_device_masked(si))
- 		return ERR_PTR(-EBUSY);
- 
+ 	kfree(old_ring);
+ 	kfree(old_queue);
