@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.215
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.221
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795456032;
-	b=BI818y0jW6FQWh8lwLaep/iPYGjSv5FAL2YmLlWsVB7C6fHVY5pPewpbxGQ7HM/k/kTa
-	 xmNAQUN5rzTMWbu1EqeLCtpK4llQwo4Ra6rUaDTXwYd4bDSJD9S9Zf1Oqd1uV1ciKTnSA
-	 mMh0pIeWw+gVkMbQU5utm5qmumKAJKTR4hcpN7nOiU6HmDa8gqHBpDzn3RLJcurLm3B22
-	 XxvZHDa1J1cvGv/RuNMPflbdkmil1j97bRzMTMJ3QIvmnWP1YiqElOLqHqE96bCjQVUrg
-	 Yo/Hqb70XeKK4UbzTO1d6rE8wWiR0FPPX4WQyLSHhLrgCdQQSCu5WR0KunfNk6KN/2w==
+	t=1795456033;
+	b=d0ebBRQC105ipXPZBWTrWP4vrjw3Syt8vvQx3nAdVM2XZ2oqhtvzvVXC38lSMGoBg64f
+	 AH873mctKuznxJ4VfXNUcg/8ww4OkASx9YA8lzYskMKyOTpUHLPd8E5PcEfvrZ6cuv3mn
+	 inZkNBNso3fTJyUSD2BHU0YvGJazitKaTAAZlzJ98VXv1oXPyRogSYe0r3whFO99kn8D9
+	 4UEv4XbpKs/oDBCfR6Yxvx90r2/Ru7JRmUn9OoZ0FzYfh0BvsNpXGH8spFl58eMJrL7SP
+	 edWs4Hek6Jvg/QILGpkxfHhT1UBjiz45mmDlcpr2rz3R4bRe9vWDbPiWYDk5MoKuH9Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795456032;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795456033;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=0t8zKtZ6fbUUYbPPtktIppYZP4GIvXsyFuY7JtvY8tM=;
-	b=F+G41ibBBoqM7qITROsw29a+8OZzTaFzIrU4sWw3IpTiMPYBCMVNBMFlfTkmYCTzSej5
-	 Ojo+oj23DZOwvMYsArJpP1HVfqMV/8GRFt05kmM30ccDT9UXu0620YP5hebMOPSDE68JF
-	 x+J77yZEpAEoyiXlum73ZV9b4dxEh3XIOxT4FghQ4xwibPgnfKWtahKwTrcTLpUv1o1mw
-	 MmZ06SYuZnH2ovsW87MjAM/RUZM4VAPu41kfqAXrboRB/NOO5X5e4m9fq6Crx3tXJjQhz
-	 eiLn7i7KXquw9GyaZ5cTxut/CGbqC0feGWQeLWz5hQIYtyn5SmZW3JI8WLrWroLIanQ==
+	bh=/0wIduwgD559saA9vYvNpeyvjCNWou/2B18nwuhUQBo=;
+	b=WiVtr72JQzbVxtZ8eehyGZAW3baC+NZbQkmov4d2EVSRm4Fhh8J2EOSsVMafXnNAkBrJ
+	 dTXijbbYVeiyGfwcYcAV9EoWPVwA6413T8fiHE1BckEr7b/e6e11xb+h407/PdSWifryN
+	 uWp4TJxAKJNApEwwCJ4GSr+Y4HD9gqemXnbbYx94NQVwGcdcRQozjsywcRQtjaD/Lsw7R
+	 ugnMOlZT8xhdGSs3SQ1Tb0TLZCZ+pl04XA+jQlzFG+17ECCuyirvOgzfnxJW6Xn5rBDq7
+	 jImTA0mT2gqwCnFuRwkeWc8te8U+ECL2SMS1cFYL57fOcmyVKWnqxnITUqxsZfC9QeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xgqvIaD2;
-	arc=none smtp.remote-ip=95.215.58.215
-Received: from mta1.migadu.com (out-215.mta1.migadu.com [95.215.58.215])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Ngua6mHM;
+	arc=none smtp.remote-ip=95.215.58.221
+Received: from mta1.migadu.com (out-221.mta1.migadu.com [95.215.58.221])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBFA606A337
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 17:47:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6BBFA606A337
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FA5606A32E
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 17:47:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 25FA5606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=xgqvIaD2
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=Ngua6mHM
 X-Envelope-To: linux-hardening@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=3Nw85x2cfbSPxOnqDEnKHg1gdA6E9NYWawWTXVjvbSw=;
+DKIM-Signature: a=rsa-sha256; bh=886QTRaKDxxQKQoBIC5/8aa8b0vPRl0k0YvOJlSDRsU=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795456029; v=1; x=1796060829;
- b=xgqvIaD2LrYAxWibzuWNcUp6S/pNNkYjKMeQoJvKIIk7f+4XbK+GgnC8sfSyET3v/r2ODoM4
- C/E0KrgsF6GV0fzcLBC99jGpWyPjOmpY8MvlDdtvSUCMjn8CoGpRChd9rna8ReHWU+WF9JDtoxa
- LMKad5snk9KbNxflCqDhurcI=
+ t=1795456031; v=1; x=1796060831;
+ b=Ngua6mHMeoqLTu0Kju87bjEjDZDcJAoFLSM3eunL0Af/BFZ2FtBmzTMaYj5ooMDxU81UGr6W
+ inQMzXA7y6+Wn8eYnpVGSa5SeVXzlLUtuiK247wHg35IpxfvrRG0FvnZdbsE7vFm8sypXGHS0bE
+ 6HTjLHY9sbMm5jsjNfiZ4JKE=
 X-Envelope-To: linux-hardening@vger.kernel.org
-Received: by mta10.migadu.com with ESMTPS id 24ffb119dd589146;
-	Mon, 23 Nov 2026 17:47:09 +0000
-X-Mizu-Trace-ID: 24ffb119dd589146
+Received: by mta11.migadu.com with ESMTPS id 98d5214fc65059dc;
+	Mon, 23 Nov 2026 17:47:11 +0000
+X-Mizu-Trace-ID: 98d5214fc65059dc
 X-Migadu-Flow: FLOW_OUT
 From: Usama Arif <usama.arif@linux.dev>
 To: tglx@kernel.org,
@@ -73,9 +73,9 @@ Cc: hpa@zytor.com,
 	atish.patra@linux.dev,
 	dgreid@meta.com,
 	Usama Arif <usama.arif@linux.dev>
-Subject: [PATCH v2 1/2] x86/boot/startup: Disable kernel stack depth tracking
-Date: Mon, 23 Nov 2026 09:46:38 -0800
-Message-ID: <20261123174703.133167-2-usama.arif@linux.dev>
+Subject: [PATCH v2 2/2] x86/kstack_erase: Use memset64() for large stack fills
+Date: Mon, 23 Nov 2026 09:46:39 -0800
+Message-ID: <20261123174703.133167-3-usama.arif@linux.dev>
 X-Mailer: git-send-email 2.53.1
 In-Reply-To: <20261123174703.133167-1-usama.arif@linux.dev>
 References: <20261123174703.133167-1-usama.arif@linux.dev>
@@ -90,45 +90,88 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 57fbad15c2ee ("stackleak: Rename STACKLEAK to KSTACK_ERASE")
-renamed DISABLE_STACKLEAK_PLUGIN to DISABLE_KSTACK_ERASE everywhere
-except in arch/x86/boot/startup/Makefile. The old name now expands to
-nothing, so the startup code is built with stack depth tracking enabled.
+With KSTACK_ERASE, every return to user space poisons the part of the
+task stack that was used since the previous return. The generic
+__stackleak_poison() does that one word per loop iteration, so a syscall
+that went 1-2 KiB deep pays for 128-256 separate stores. On Meta hosts
+running many small VMs, stackleak_erase() accounts for about 1.5% of
+non-idle host kernel cycles.
 
-The startup code is linked with every symbol prefixed by __pi_, so that
-it cannot call into the rest of the kernel by accident. It has no alias
-for the tracking callback, and tracking stack depth there is of no use.
+Override __stackleak_poison() on x86-64, as s390 already does, through
+the hook added by commit 491a78663e03 ("stackleak: allow to specify arch
+specific stackleak poison function"). Fill spans larger than 512 bytes
+with memset64(), which is a single REP STOSQ, and keep the word loop for
+shorter ones, where the startup cost of REP STOSQ does not pay off. REP
+STOSQ starts to win at about 320 bytes on Cooper Lake and 430 bytes on
+Zen 5c, so on both no span gets slower.
 
-At the default KSTACK_ERASE_TRACK_MIN_SIZE of 100 no startup function is
-large enough to be tracked, so this went unnoticed. With Clang,
-CONFIG_AMD_MEM_ENCRYPT=y and a minimum below about 90 bytes,
-pvalidate_4k_page(), snp_cpuid() and do_vc_no_ghcb() get a call to
-__sanitizer_cov_stack_depth() and vmlinux fails to link:
+stackleak_erase() is noinstr, so make memset64() __always_inline. With
+KMSAN, x86 does not provide memset64() and the out-of-line lib/string.c
+version would be called, so KMSAN kernels keep the generic loop.
 
-  ld.lld: error: undefined symbol: __pi___sanitizer_cov_stack_depth
+In a Zen 5c KVM guest, stackleak_erase() got 32% cheaper per return to
+user space (68 ns to 47 ns, scan included) over a futex, epoll, procfs
+and Unix socket syscall mix. Same-vCPU futex wake/wait and Unix socket
+sendmsg()/recvmsg() ping-pong round trips got about 6% faster.
 
-Use DISABLE_KSTACK_ERASE, which disables tracking with either compiler.
-
-Fixes: 57fbad15c2ee ("stackleak: Rename STACKLEAK to KSTACK_ERASE")
 Signed-off-by: Usama Arif <usama.arif@linux.dev>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/x86/boot/startup/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/processor.h | 21 +++++++++++++++++++++
+ arch/x86/include/asm/string_64.h |  2 +-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-index 5e499cfb29b5c0..0815105e7205c7 100644
---- a/arch/x86/boot/startup/Makefile
-+++ b/arch/x86/boot/startup/Makefile
-@@ -3,7 +3,7 @@
- KBUILD_AFLAGS		+= -D__DISABLE_EXPORTS
- KBUILD_CFLAGS		+= -D__DISABLE_EXPORTS -mcmodel=small -fPIC \
- 			   -Os -DDISABLE_BRANCH_PROFILING \
--			   $(DISABLE_STACKLEAK_PLUGIN) \
-+			   $(DISABLE_KSTACK_ERASE) \
- 			   $(DISABLE_LATENT_ENTROPY_PLUGIN) \
- 			   -fno-stack-protector -D__NO_FORTIFY \
- 			   -fno-jump-tables \
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 77488ff5eb8c7c..3d205ae8566114 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -28,6 +28,7 @@ struct vm86;
+ #include <asm/vmxfeatures.h>
+ #include <asm/vdso/processor.h>
+ #include <asm/shstk.h>
++#include <asm/string.h>
+ 
+ #include <linux/personality.h>
+ #include <linux/cache.h>
+@@ -580,6 +581,26 @@ static __always_inline bool on_thread_stack(void)
+ 			       current_stack_pointer) < THREAD_SIZE;
+ }
+ 
++#if defined(CONFIG_X86_64) && !defined(CONFIG_KMSAN)
++#define __stackleak_poison __stackleak_poison
++static __always_inline void __stackleak_poison(unsigned long erase_low,
++					       unsigned long erase_high,
++					       unsigned long poison)
++{
++	/* Short spans do not amortize the startup cost of REP STOSQ. */
++	if (erase_high <= erase_low + 512) {
++		while (erase_low < erase_high) {
++			*(unsigned long *)erase_low = poison;
++			erase_low += sizeof(unsigned long);
++		}
++		return;
++	}
++
++	memset64((u64 *)erase_low, poison,
++		 (erase_high - erase_low) / sizeof(u64));
++}
++#endif
++
+ #ifdef CONFIG_PARAVIRT_XXL
+ #include <asm/paravirt.h>
+ #else
+diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+index 2dae70c2b01465..73cc91254b1381 100644
+--- a/arch/x86/include/asm/string_64.h
++++ b/arch/x86/include/asm/string_64.h
+@@ -54,7 +54,7 @@ static inline void *memset32(uint32_t *s, uint32_t v, size_t n)
+ }
+ 
+ #define __HAVE_ARCH_MEMSET64
+-static inline void *memset64(uint64_t *s, uint64_t v, size_t n)
++static __always_inline void *memset64(uint64_t *s, uint64_t v, size_t n)
+ {
+ 	const auto s0 = s;
+ 	asm volatile (
 -- 
 2.53.1-Meta
 
