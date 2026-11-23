@@ -1,83 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795443551;
-	b=ECngTQrWx5cJRcpqR+RKDE9xA1wHAj3TT4xn0mqKNsr/03AkBCa/zU4alxuDIs799qHO
-	 M9nZ6fTObG84dA7br4TEGpDJO6D3AoBc5iYuQUt2KovtivceDzW6zpFRf5SS5w/YWnvOP
-	 YTpYpXSB6sxnUxCTqWhVBx/nU9JUSybuvnyYvzaPbpJix+AiBphXb2e4HPagzlD7ukrpK
-	 wSn5Oyqca5bCiyzYq6O6SzBXwHIG3vILSqNbf7Ac6vlxY3/Xg4vnNemYyKrX3RX29qc5f
-	 li27JBRjXACftHuNj3ZSd0sQ4QFNvb3NAodKQ727t5oVKZsBTdNr83DUAcRonKLKqTA==
+	t=1795443564;
+	b=gufi89pUFTOKh8RCy4zVW8PWNmSyeH6PcoMkrXs9wL/ecMrCM0cOU9Iy+yF26ubVZc6D
+	 0HNMI7tscnm178XtozmZzlS0Fd4fSGfNPWTd4Wd8aL/eEPm9jqj9EUa/ldGS4Fby0FNav
+	 tNKxkCFClfzgV1Ec4LNnkGZrZ2upp2hVxlSJ/7lv39k7/2quQP4+SHr0E+g3iXAdklQAv
+	 g9uy4LCRBl5G0PzvDfpGAjwkfHwZb0+xeiXQRcSLRRXrGfDCqoJR0FBacyoUqv8tZJ8P0
+	 gi8dFIWQjxH3cQOZb2dArNFtYyLUPwx7fXSJE9JHg3lQHInI6eDfEveGRPX0EXDlpaQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795443551;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795443564;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=77msjR0dRhdtgIkE1HozDHoWzLE9oPsBqEtLLPC0LPg=;
-	b=uaZeE7VXe8ZqPrdOxI4PPggHe9tcRdzXpBt9/MGoJm3ayMicgZOzwf46v9JTjpLxMYAM
-	 TsJdYkVHvqv72gpo1txXhXYKpFxUjmOeKnxqSVfGqiSFY8JWXFRRRBBabIKDYRy6y4EzK
-	 H0iqNpvMNRf9NEGxo8lnsoHKTF85NROPiWOASoaXNYloTCdQxWGe1qLn13CRpV0++iZOB
-	 clfJBJgps6IjNm8pSKlG2K6/C8YBwAdAgy+btCSz4SCXgLnwUTZ6EmX8/TFfFvFN8E6ki
-	 CDyzpHzh+ByINVjUoA0wBAG4RAHj8eeoSJVTfd4saaTjbjfXLaPOG7gZwO0c+IGkGbQ==
+	bh=AWoQ0K2b19xOIDahw7K8oHg1peK86ncFA9KLsX9V9fY=;
+	b=xyOQ6RoqNfigeu79XMm5ad6wKOO8Nhr2sz0Ecvzo/ptB+ke86UnXSYnzvQhkVZ6XDXRF
+	 ilnHw/ua2GaKvvzZXlgR9cyEpZtevblEY1xQjA6VGxxJUyq4BgocKPc6PXi88yuDACWNd
+	 nx42GgGhlo61h3pEaMal1nuH6v+GNQmX4LYGHKd6mhd2mzQJaut5H1cs+eLBnVGlyt0qX
+	 6aY1AKDg61MjCgNynKtDyC72mr6vAjnYiuGuQnES3C5vDVSiRUIvWg7K5T7uZolSxdkE/
+	 ug6QYeb1DH0U63FzrVR0Igqdik1yUDzUCu++FGdVDgagxwyHuO4fpXh0B1jbfDZPEhA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Aiz3ba6N;
-	arc=none smtp.remote-ip=74.125.82.170
-Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=dAlwWOW4;
+	arc=none smtp.remote-ip=74.125.82.54
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58259606A31F
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 14:19:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 58259606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69DF606A31F
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 14:19:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E69DF606A31F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Aiz3ba6N
-Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-3869b68caecso4373154eec.0
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 06:19:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=dAlwWOW4
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-1b3beeaf6f9so4079239c88.0
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 06:19:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795443550; x=1796048350; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795443563; x=1796048363; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=77msjR0dRhdtgIkE1HozDHoWzLE9oPsBqEtLLPC0LPg=;
-        b=Aiz3ba6NsmaeRbQcZ6/Q1I0oHuDrwWVVieSVGHRkcO0r9jA8e0BL3y6yZ8hhS2ddhR
-         f25FWw34JxqBwfF4bBgM8tlog1DJJ6bMg1ZkWQNy4eSOXllpr1w3//P7+y1Oh6hSukR+
-         NJXu3/OMF+AaU6kwGbRT10e4PcJcjWTxtdpgDL6/Qr3EhID+l6/EFf7nzIEN4UfnwDwd
-         kP18OG6Cc3dsQYL5i0wP3OYd3peFhHuyb1kVQkHp9GxOWLsHO3GhcaH0AaNlVCm2469/
-         pO7xOd4Eq9x6OI6ltcyQii4n/OkbISgcjVfOER/1vAU2EiWVhliUF/7XS5ZrhdvClRCu
-         pECg==
+        bh=AWoQ0K2b19xOIDahw7K8oHg1peK86ncFA9KLsX9V9fY=;
+        b=dAlwWOW4FZ9n7GhJSBSNH14ZMHykMNOgJZJPH5tZ4jM7PWJpaDKTb3mfDDPPcLaidq
+         8Mx0MkahQy6wP+C+GksuuTVwGclhGd6w0G5cDRENmg8a8OglqSuoYLKubUXMIXrO4Tdh
+         L3q5CixdD+WKPnY6XdtXt3a7A4CNtumD1hkcZDYRo3IKBTZJ+0tp89VQEA3jg91jVw9D
+         IxUGaT2tpnydoEJPSqAGLhslfgKe3heSPoisHRQPMUIdI0GKVgKQ+acBcd/JAPb76bTm
+         gkSTz2IXT5mGPq9strn64DLEMNY9eCp0MKbsydOD90KrTTbdAfTGPX1LY0gD26Uox9YP
+         pPjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795443550; x=1796048350;
+        d=1e100.net; s=20260707; t=1795443563; x=1796048363;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=77msjR0dRhdtgIkE1HozDHoWzLE9oPsBqEtLLPC0LPg=;
-        b=z/7ax5NEFZE2YgW5oFd7XDhBM9hfLXvmjf/oYdERvd1mPdDJXqVaOsHnZrBwf5DGj7
-         b6vP7J9UEF36ZIy0WCY4Y6cqy6gFUhv0CL/ljWhmH1mSgMKpndLc/ARus+Q2NSewYBR/
-         S8gG6k4+t6EiI79e6k7fkplQiiR9H1mVtmfMM+OhDE8BFcGJU9bFLoOU+LS04yRi2zvF
-         7gspDCkKQi6EYC2bdmqgpOyYMNrX8zV0jUsumCwJhmBgWXIZtfL8VBbTntiUZsjHKxK5
-         uAQA+It9cQiJ6l6EYzc2Q0T5GAtM0/obvOqAo9rIU2izq+PcEiwy+82Ahisnu5FP5uFN
-         0hHQ==
-X-Forwarded-Encrypted: i=1; AL+hErF9rByiaG7s36CBwT7ra6Gxm0+3IwjHTMgFF1dajdqT6tM+fCTsUQAoCy2/qbHu7HREV2GwsZGSvWm1zPejFI8=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9zCmIy9Ha6VvNALLmGBEtvP3mxbfQxcW0N/iXqE0ccCy6tuA6z
-	GBxAxhW+D9xgnL/Nz3576wCEFXPSKnvLqDIQ3jwp6lamsKbsyTAq5MZV
-X-Gm-Gg: AZFdTZcW296JCxQQ5fN08oqGCtevDX6lX01L22+6+nQ68u/7YLHSeqfZxVMktKcXPU4
-	nzAXCHZ1yRvo7j4qP+AOe4LOdW/IBRovCo4FmIQfuFHC1SrgFpjfY4B4dTGV/TQ+y6rq+QLxe8/
-	Wz3ybm1UeBBJI+pSsSSFTMJ6Lox/y+VfIF0wrextD1i2qsJ0CCit7psRFpf+hglrR+LjakdZ5Xd
-	IO68n+DTd9+JwZ2uD98acwftaZbE9Z2O0ueO7Dw0/SwviNRTeilkgqzx16woURvWOlFr/DhEDiA
-	vl9CvkWWdcyb4D/XGGfy3GZ91qgVwT5MFGdPdSzft6bGHleKsKhCaMzrpnAGPdI2h0DjWBQ5qWf
-	HBUaarKXDWAe+AwU5mYFettb8rrab9uiouTvsb4/caePAqzsogCGOqzfrT1HluxVlsBcaDJKZw4
-	voM54KRQBTfPpUoJ/t3tG9gesoaVN++BlD6q8cPioV6VdJOi8qMflXbY4xbyHYoWTQh1N3xS7Yu
-	+u6KYf8UtiM2dp9l9u6mBurPCchZ9xjScbhjv5m8mtGv/1kZvjuwQXQb8vPlv5voh8t9G0WsHCd
-	4Yg+FrK0Iw9DOBDy2Bwrj9z41f8Lw64JgFfF9zuW2i5OhKGa2IZ7GuTmt2eRSpH9sXLy
-X-Received: by 2002:a05:7300:6da7:b0:384:5885:2f81 with SMTP id 5a478bee46e88-3856c0c7c05mr16726108eec.5.1795443550374;
-        Mon, 23 Nov 2026 06:19:10 -0800 (PST)
+        bh=AWoQ0K2b19xOIDahw7K8oHg1peK86ncFA9KLsX9V9fY=;
+        b=r7RrHsoYITBn2ic3XJF42meAIuKVwtVhNCb073qy35XtEd/tpnSMjgG07EoK8G2WEW
+         BQCfUGFFWLyu4JA/hvoP7AqRlYS4REkzhPkTeRpKerS+ytB1VTZCjaFlt1MmledvmZbQ
+         6xgmq5y4ZbOHLuCas6IL/+z4GHhO7doa1OtuiEiptQirALOj+1TBcszSBtm82yTcZVn5
+         /WdX9yWYLlmrn+bZ2zZCF9SIfDraRw9PY+jfM5+pTQsMLMse5CWu/KirJXfV078kv4S7
+         gb2FzgNgUWldOFhhpwLAsxGwQpHO3kL40s8JlWEbpYyWBegzEpEwMummtx3Hw4n3yDlB
+         HQqQ==
+X-Forwarded-Encrypted: i=1; AL+hErGAb+AAxtlLgPO7rWGRkgl8povN0keplh3HhMPT2KZ7UwaQ8ZR1IzoOsBncrw9juoXOeQv9eR45lWWidMmH5+w=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9W64fbdcqBoIRm2B0ynevw277azIvXMKsLxwjOv8HdOo2W6C+5
+	POAT8pUP6xEitlSrozrVPcR6YQr6owngOTbJ5g6Q78cciLYX/+YgolwM
+X-Gm-Gg: AZFdTZegKybnZaG4Tk2ZCdw6AS9spmj4ZwM8mlm7MPJKlWpGAdY4K2UfKnzPjRmhvx/
+	7Xr06l/QW2fgNObbpNHJFageTz38edzkeQqxeOBvJWvL5f7e82sNxZl+n5u7XZ5nSg9U93mcFQt
+	/zX9ko8FDFyk5sh6Em5BecD8ZN28hDIBseXsYGAi6LFfMGCe2e8SLPnq51Zu84peRRcencQcxsn
+	5Xj1YF1pK0YW214mo73yb4aUcs9Tg4k4zw/HNgG2WCFj2DaAp2CxN74BlKjMYvVlXqhUbN6XEzZ
+	teKZnmDgMbUsJuH47PwnV3eFcyM+RcW9yNt77TPxUYFWBD6EIoNalqB9yCEv62IeNpVEHIKjjXS
+	xj49F3r5BioxYS563GSuH+IbWGwzzccQQVYrOvGIT5PzEEp0FMWJi+8+hSxIZLWOd00rNE8Xdb8
+	xVzis1gVarJbblChYZqljqwHS2fmS46giZrpynbmxcIakNX4zEMTabVRmp4HM6l3qEUXP5EYwBh
+	DaBTAHKOcrKPoL3ENzBiFg7SD2XNydUdEURQ5ATkom4wRm2mwVjAgz61BsmB+YwGiRxA4a4McPI
+	3ZeykNYQcVzhKtk/C+L5JyWiJeHmBmTpnQIld/lsmx+mXjsDxfhGTAGxncY5jfNC0mM1
+X-Received: by 2002:a05:7022:299:20b0:1b5:7c7b:c1f3 with SMTP id a92af1059eb24-1b57c7bc2a9mr256829c88.15.1795443562761;
+        Mon, 23 Nov 2026 06:19:22 -0800 (PST)
 Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385d2b93dd9sm40230786eec.24.2026.11.23.06.19.02
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b556847fdasm32516063c88.13.2026.11.23.06.19.15
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 23 Nov 2026 06:19:09 -0800 (PST)
+        Mon, 23 Nov 2026 06:19:22 -0800 (PST)
 From: Lian Wang <lianux.mm@gmail.com>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -95,9 +95,9 @@ Cc: linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Thomas Gleixner <tglx@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v5 13/19] mm/swap: bound synchronous discard outside the allocation reader
-Date: Mon, 23 Nov 2026 22:18:58 +0800
-Message-ID: <ed722bf572f44133ee44f5b2c3d90f53b99f38e2.1795439990.git.lianux.mm@gmail.com>
+Subject: [PATCH v5 14/19] mm/swap: drop swap active plist
+Date: Mon, 23 Nov 2026 22:19:11 +0800
+Message-ID: <31eee155bb6d4100e78a071cc101b6afd48feb17.1795439990.git.lianux.mm@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1795439990.git.lianux.mm@gmail.com>
 References: <cover.1795439990.git.lianux.mm@gmail.com>
@@ -114,309 +114,167 @@ Content-Transfer-Encoding: 8bit
 
 From: Kairui Song <kasong@tencent.com>
 
-The synchronous discard fallback drains a list that freeing paths can
-keep replenishing. Limit each foreground step to one cluster, retaining
-CLUSTER_FLAG_DISCARD while I/O is in flight and returning the cluster to
-the free list only after completion. The background worker continues to
-process the remaining list.
+Remove swap_active_head and the associated plist_node. Device identity
+lookups can use the writable swap_info iterator without ordering.
 
-Keep synchronous discard outside the topology reader. Enter this fallback
-only after a complete normal order-0 allocation walk fails. A higher-
-priority device with only pending discard work does not force synchronous
-I/O if a lower-priority device satisfies that walk.
+Keep priority ordering for the block-cgroup swap throttle target by
+walking the priority queue under the topology reader. Choose the first
+unmasked, writable, non-offlist device with a backing block device.
+Check OFFLIST as well as the pointer tag because full transitions can
+temporarily leave an unmasked entry, and keep the explicit WRITEOK
+check. The disable transition already publishes its mask before
+releasing the topology writer.
 
-Find a writable discard-capable device under the reader and take its live
-reference, then release the reader before issuing I/O. Drop the reference
-after completion and restart allocation with a fresh cursor, so a
-concurrent topology change cannot leave stale ring state. This also sees
-discard work produced by the preceding reclaim scans.
+This read-only lookup does not consume per-CPU allocation quotas or
+change retry cursors. It avoids making the throttle disk depend on
+swapon's swap-type assignment order when devices have different
+priorities.
 
-Track the swap types already processed during this folio allocation and
-check each candidate at most once per fallback search. An empty check
-does not consume the I/O budget. Each swap type can complete at most one
-synchronous cluster discard, bounding successful retries by MAX_SWAPFILES
-even if membership changes. Do not keep discarding until this task wins
-a free cluster from a peer.
-
-Large folios retain the existing same-priority retry and split boundary;
-their reader-held cluster walk does not issue synchronous discard. The
-budget bounds work count, not device I/O completion latency.
-
-Link: https://lore.kernel.org/all/CAMgjq7CsYhEjvtN85XGkrONYAJxve7gG593TFeOGV-oax++kWA@mail.gmail.com/
 Signed-off-by: Kairui Song <kasong@tencent.com>
 Reviewed-by: Kunwu Chan <kunwu.chan@gmail.com>
-Co-developed-by: Lian Wang <lianux.mm@gmail.com>
 Signed-off-by: Lian Wang <lianux.mm@gmail.com>
 ---
- mm/swapfile.c | 175 ++++++++++++++++++++++++++++----------------------
- 1 file changed, 100 insertions(+), 75 deletions(-)
+ include/linux/swap.h |  1 -
+ mm/swapfile.c        | 60 +++++++++++++++++++++++---------------------
+ 2 files changed, 32 insertions(+), 29 deletions(-)
 
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index d31f3f023d36..ce8a800751ca 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -263,7 +263,6 @@ struct swap_info_struct {
+ 	struct percpu_ref users;	/* indicate and keep swap device valid. */
+ 	unsigned long	flags;		/* SWP_USED etc: see above */
+ 	signed short	prio;		/* swap priority of this type */
+-	struct plist_node list;		/* entry in swap_active_head */
+ 	signed char	type;		/* strange name for an index */
+ 	unsigned int	max;		/* size of this swap device */
+ 	struct swap_cluster_info *cluster_info; /* array, one entry per cluster */
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 1f31a3ae75d6..d28dd10c92cc 100644
+index d28dd10c92cc..7d932035c961 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -6,6 +6,7 @@
-  *  Swap reorganised 29.12.95, Stephen Tweedie
-  */
+@@ -42,7 +42,6 @@
+ #include <linux/completion.h>
+ #include <linux/suspend.h>
+ #include <linux/zswap.h>
+-#include <linux/plist.h>
  
-+#include <linux/bitmap.h>
- #include <linux/blkdev.h>
- #include <linux/mm.h>
- #include <linux/sched/mm.h>
-@@ -583,6 +584,26 @@ static long swap_usage_in_pages(struct swap_info_struct *si)
- 	return atomic_long_read(&si->inuse_pages) & SWAP_USAGE_COUNTER_MASK;
- }
+ #include <asm/tlbflush.h>
+ #include <linux/leafops.h>
+@@ -91,12 +90,6 @@ bool swap_migration_ad_supported;
+ static const char Bad_file[] = "Bad swap file entry ";
+ static const char Bad_offset[] = "Bad swap offset entry ";
  
-+/*
-+ * Serialize the allocation on single CPU or globally to avoid
-+ * fragmentation and make the workflow easier to follow.
-+ */
-+static void swap_alloc_lock_device(struct swap_info_struct *si)
-+{
-+	if (si->flags & SWP_SOLIDSTATE)
-+		local_lock(&si->percpu_cluster->lock);
-+	else
-+		spin_lock(&si->global_cluster->lock);
-+}
-+
-+static void swap_alloc_unlock_device(struct swap_info_struct *si)
-+{
-+	if (si->flags & SWP_SOLIDSTATE)
-+		local_unlock(&si->percpu_cluster->lock);
-+	else
-+		spin_unlock(&si->global_cluster->lock);
-+}
-+
- /* Reclaim the swap entry anyway if possible */
- #define TTRS_ANYWAY		0x1
- /*
-@@ -914,12 +935,8 @@ static int swap_cluster_alloc_table(struct swap_info_struct *si,
- 
- lock:
- 	if (!locked) {
--		if (si) {
--			if (si->flags & SWP_SOLIDSTATE)
--				local_lock(&si->percpu_cluster->lock);
--			else
--				spin_lock(&si->global_cluster->lock);
--		}
-+		if (si)
-+			swap_alloc_lock_device(si);
- 		spin_lock(&ci->lock);
- 	}
- 	lockdep_assert_held(&ci->lock);
-@@ -1022,10 +1039,7 @@ swap_cluster_populate(struct swap_info_struct *si,
- 	 * which could give allocator hooks and failure cleanup reserve access.
- 	 */
- 	spin_unlock(&ci->lock);
--	if (si->flags & SWP_SOLIDSTATE)
--		local_unlock(&si->percpu_cluster->lock);
--	else
--		spin_unlock(&si->global_cluster->lock);
-+	swap_alloc_unlock_device(si);
- 
- 	gfp = (GFP_KERNEL | __GFP_HIGH | __GFP_NOMEMALLOC) &
- 		~__GFP_DIRECT_RECLAIM;
-@@ -1132,44 +1146,40 @@ static struct swap_cluster_info *isolate_lock_cluster(
- }
- 
- /*
-- * Doing discard actually. After a cluster discard is finished, the cluster
-- * will be added to free cluster list. Discard cluster is a bit special as
-- * they don't participate in allocation or reclaim, so clusters marked as
-- * CLUSTER_FLAG_DISCARD must remain off-list or on discard list.
-+ * Discard one cluster. After the discard is finished, the cluster will be
-+ * added to the free cluster list. Discard clusters are special because they
-+ * don't participate in allocation or reclaim, so CLUSTER_FLAG_DISCARD must
-+ * remain set while a cluster is either queued or being discarded.
-  */
--static bool swap_do_scheduled_discard(struct swap_info_struct *si)
-+static bool swap_discard_one_cluster(struct swap_info_struct *si)
- {
- 	struct swap_cluster_info *ci;
--	bool ret = false;
- 	unsigned int idx;
- 
- 	spin_lock(&si->lock);
--	while (!list_empty(&si->discard_clusters)) {
--		ci = list_first_entry(&si->discard_clusters, struct swap_cluster_info, list);
--		/*
--		 * Delete the cluster from list to prepare for discard, but keep
--		 * the CLUSTER_FLAG_DISCARD flag, there could be percpu_cluster
--		 * pointing to it, or ran into by relocate_cluster.
--		 */
--		list_del(&ci->list);
--		idx = cluster_index(si, ci);
-+	if (list_empty(&si->discard_clusters)) {
- 		spin_unlock(&si->lock);
--		discard_swap_cluster(si, idx * SWAPFILE_CLUSTER,
--				SWAPFILE_CLUSTER);
+-/*
+- * all active swap_info_structs
+- * protected with swapon_rwsem, and ordered by priority.
+- */
+-static PLIST_HEAD(swap_active_head);
 -
--		spin_lock(&ci->lock);
--		/*
--		 * Discard is done, clear its flags as it's off-list, then
--		 * return the cluster to allocation list.
--		 */
--		ci->flags = CLUSTER_FLAG_NONE;
--		__free_cluster(si, ci);
--		spin_unlock(&ci->lock);
--		ret = true;
--		spin_lock(&si->lock);
-+		return false;
- 	}
-+
-+	ci = list_first_entry(&si->discard_clusters,
-+			      struct swap_cluster_info, list);
-+	/*
-+	 * Delete the cluster from the list, but keep CLUSTER_FLAG_DISCARD
-+	 * set while the discard is in flight. A percpu cluster may still
-+	 * point to it, or relocate_cluster() may encounter it.
-+	 */
-+	list_del(&ci->list);
-+	idx = cluster_index(si, ci);
+ static inline struct swap_info_struct *__swap_iter(int *i, unsigned long flag)
+ {
+ 	lockdep_assert_held(&swapon_rwsem);
+@@ -3533,7 +3526,6 @@ static void __swap_device_enable(struct swap_info_struct *si)
  	spin_unlock(&si->lock);
--	return ret;
-+
-+	discard_swap_cluster(si, idx * SWAPFILE_CLUSTER, SWAPFILE_CLUSTER);
-+
-+	spin_lock(&ci->lock);
-+	ci->flags = CLUSTER_FLAG_NONE;
-+	__free_cluster(si, ci);
-+	spin_unlock(&ci->lock);
-+	return true;
+ 	atomic_long_add(si->pages, &nr_swap_pages);
+ 	total_swap_pages += si->pages;
+-	plist_add(&si->list, &swap_active_head);
+ 	add_to_avail_list(si);
  }
  
- static void swap_discard_work(struct work_struct *work)
-@@ -1178,7 +1188,8 @@ static void swap_discard_work(struct work_struct *work)
+@@ -3553,9 +3545,8 @@ static int swap_device_disable(struct address_space *mapping,
+ 	int err = -EINVAL;
  
- 	si = container_of(work, struct swap_info_struct, discard_work);
- 
--	swap_do_scheduled_discard(si);
-+	while (swap_discard_one_cluster(si))
-+		cond_resched();
- }
- 
- static void swap_users_ref_free(struct percpu_ref *ref)
-@@ -1607,15 +1618,11 @@ static unsigned long cluster_alloc_swap_entry(struct swap_info_struct *si,
- 	if (order && !(si->flags & SWP_BLKDEV))
- 		return 0;
- 
--	if (si->flags & SWP_SOLIDSTATE) {
--		/* Fast path using per CPU cluster */
--		local_lock(&si->percpu_cluster->lock);
-+	swap_alloc_lock_device(si);
-+	if (si->flags & SWP_SOLIDSTATE)
- 		offset = __this_cpu_read(si->percpu_cluster->next[order]);
--	} else {
--		/* Serialize HDD SWAP allocation for each device. */
--		spin_lock(&si->global_cluster->lock);
-+	else
- 		offset = si->global_cluster->next[order];
--	}
- 
- 	if (offset != SWAP_ENTRY_INVALID) {
- 		ci = swap_cluster_lock(si, offset);
-@@ -1683,10 +1690,7 @@ static unsigned long cluster_alloc_swap_entry(struct swap_info_struct *si,
- 			goto done;
- 	}
- done:
--	if (si->flags & SWP_SOLIDSTATE)
--		local_unlock(&si->percpu_cluster->lock);
--	else
--		spin_unlock(&si->global_cluster->lock);
-+	swap_alloc_unlock_device(si);
- 
- 	return found;
- }
-@@ -1881,33 +1885,50 @@ static int swap_alloc_entry(struct folio *folio)
- }
- 
- /*
-- * Discard pending clusters in a synchronized way when under high pressure.
-- * Return: true if any cluster is discarded.
-+ * Discard outside the topology reader, holding only the selected device's
-+ * live reference across I/O. Each successful retry starts a fresh queue walk.
-  */
--static bool swap_sync_discard(void)
-+static bool swap_discard_for_alloc(unsigned long *discarded)
- {
--	bool ret = false;
--	struct swap_info_struct *si, *next;
-+	DECLARE_BITMAP(checked, MAX_SWAPFILES) = {};
-+	struct swap_info_struct *si, *candidate;
-+	unsigned int i, j;
-+	bool done;
-+	int type;
- 
--	percpu_down_read(&swapon_rwsem);
--start_over:
--	plist_for_each_entry_safe(si, next, &swap_active_head, list) {
--		percpu_up_read(&swapon_rwsem);
--		if (get_swap_device_info(si)) {
--			if (si->flags & SWP_PAGE_DISCARD)
--				ret = swap_do_scheduled_discard(si);
--			put_swap_device(si);
-+	for (;;) {
-+		candidate = NULL;
-+		percpu_down_read(&swapon_rwsem);
-+		for (i = 0; i < swap_queue_len && !candidate; i++) {
-+			struct swap_prio_ring *ring = swap_queue[i];
-+
-+			for (j = 0; j < ring->size; j++) {
-+				si = swap_device_unmask_ptr(READ_ONCE(ring->dev[j]));
-+				type = si->type;
-+				if (test_bit(type, discarded) || test_bit(type, checked))
-+					continue;
-+				__set_bit(type, checked);
-+				if ((READ_ONCE(si->flags) & (SWP_WRITEOK | SWP_PAGE_DISCARD)) !=
-+				    (SWP_WRITEOK | SWP_PAGE_DISCARD))
-+					continue;
-+				if (get_swap_device_info(si)) {
-+					candidate = si;
-+					break;
-+				}
-+			}
+ 	percpu_down_write(&swapon_rwsem);
+-	plist_for_each_entry(si, &swap_active_head, list) {
+-		if ((si->flags & SWP_WRITEOK) &&
+-		    si->swap_file->f_mapping == mapping) {
++	for_each_avail_swap(si) {
++		if (si->swap_file->f_mapping == mapping) {
+ 			err = 0;
+ 			break;
  		}
--		if (ret)
--			return true;
-+		percpu_up_read(&swapon_rwsem);
-+		if (!candidate)
-+			return false;
- 
--		percpu_down_read(&swapon_rwsem);
--		if (plist_node_empty(&next->list))
--			goto start_over;
-+		type = candidate->type;
-+		done = swap_discard_one_cluster(candidate);
-+		if (done)
-+			__set_bit(type, discarded);
-+		put_swap_device(candidate);
-+		if (done)
-+			return true;
- 	}
--	percpu_up_read(&swapon_rwsem);
+@@ -3581,8 +3572,6 @@ static int swap_device_disable(struct address_space *mapping,
+ 	spin_lock(&si->lock);
+ 	del_from_avail_list(si, true);
+ 	spin_unlock(&si->lock);
 -
--	return false;
+-	plist_del(&si->list, &swap_active_head);
+ 	total_swap_pages -= si->pages;
+ 	atomic_long_sub(si->pages, &nr_swap_pages);
+ 
+@@ -3907,7 +3896,6 @@ static struct swap_info_struct *alloc_swap_info(void)
+ 		 */
+ 	}
+ 	p->swap_extent_root = RB_ROOT;
+-	plist_node_init(&p->list, 0);
+ 	p->flags = SWP_USED;
+ 	percpu_up_write(&swapon_rwsem);
+ 	if (defer) {
+@@ -4317,12 +4305,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+ 	if (swap_flags & SWAP_FLAG_PREFER)
+ 		prio = swap_flags & SWAP_FLAG_PRIO_MASK;
+ 
+-	/*
+-	 * The plist prio is negated because plist ordering is
+-	 * low-to-high, while swap ordering is high-to-low
+-	 */
+ 	si->prio = prio;
+-	si->list.prio = -si->prio;
+ 
+ 	/*
+ 	 * Publish swap_file before making the percpu ref live, then add the device
+@@ -4450,7 +4433,33 @@ int swap_dup_entry_direct(swp_entry_t entry)
+ #if defined(CONFIG_MEMCG) && defined(CONFIG_BLK_CGROUP)
+ static bool __has_usable_swap(void)
+ {
+-	return !plist_head_empty(&swap_active_head);
++	return READ_ONCE(total_swap_pages) > 0;
++}
++
++static struct swap_info_struct *swap_queue_first_usable_bdev(void)
++{
++	struct swap_prio_ring *ring;
++	struct swap_info_struct *si;
++	unsigned int ring_idx, dev_idx;
++
++	lockdep_assert_held(&swapon_rwsem);
++	for (ring_idx = 0; ring_idx < swap_queue_len; ring_idx++) {
++		ring = swap_queue[ring_idx];
++		for (dev_idx = 0; dev_idx < ring->size; dev_idx++) {
++			si = READ_ONCE(ring->dev[dev_idx]);
++			if (swap_device_masked(si))
++				continue;
++			si = swap_device_unmask_ptr(si);
++			if (!(READ_ONCE(si->flags) & SWP_WRITEOK))
++				continue;
++			if (atomic_long_read(&si->inuse_pages) &
++			    SWAP_USAGE_OFFLIST_BIT)
++				continue;
++			if (si->bdev)
++				return si;
++		}
++	}
++	return NULL;
  }
  
- static int swap_extend_table_alloc(struct swap_info_struct *si,
-@@ -2211,12 +2232,16 @@ int folio_alloc_swap(struct folio *folio)
- 		}
- 	}
+ void __folio_throttle_swaprate(struct folio *folio, gfp_t gfp)
+@@ -4474,14 +4483,9 @@ void __folio_throttle_swaprate(struct folio *folio, gfp_t gfp)
+ 		return;
  
--again:
- 	swap_alloc_entry(folio);
- 
- 	if (!order && unlikely(!folio_test_swapcache(folio))) {
--		if (swap_sync_discard())
--			goto again;
-+		DECLARE_BITMAP(discarded, MAX_SWAPFILES) = {};
-+
-+		while (swap_discard_for_alloc(discarded)) {
-+			swap_alloc_entry(folio);
-+			if (folio_test_swapcache(folio))
-+				break;
-+		}
- 	}
- 
- 	/* Need to call this even if allocation failed, for MEMCG_SWAP_FAIL. */
+ 	percpu_down_read(&swapon_rwsem);
+-	plist_for_each_entry(si, &swap_active_head, list) {
+-		if ((si->flags & SWP_WRITEOK) &&
+-		    !(atomic_long_read(&si->inuse_pages) &
+-		      SWAP_USAGE_OFFLIST_BIT) && si->bdev) {
+-			blkcg_schedule_throttle(si->bdev->bd_disk, true);
+-			break;
+-		}
+-	}
++	si = swap_queue_first_usable_bdev();
++	if (si)
++		blkcg_schedule_throttle(si->bdev->bd_disk, true);
+ 	percpu_up_read(&swapon_rwsem);
+ }
+ #endif
