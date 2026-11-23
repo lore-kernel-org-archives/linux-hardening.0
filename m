@@ -1,82 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795443361;
-	b=IxcOpsp9YJhdKOFnpuD9p8j0iE1ASrcSMHxTN3v5+OSpIBWbdJfxGB8Ulmq1Up1otOpH
-	 7WHn44n9059BqdlGTbp/TLnGDa4hcfssDjfs01VjFw+eINrQ+YLh5CuPGvOOyl8FA9cay
-	 ic0RiDLxCVT3pqNV5fgmknmw8haU7zs/04zCizJKaDd3cqLgwFvCOZJY7riNkFJVx1rVi
-	 MQ/iH0Ha9UW3aRjeB4NIGrgNt82qakxMobRlBPQTJKBSqjJGNrhFBYfBpJ2hZ0a+4QKb7
-	 dIxNq7FbV3fzXBbJ3FW8oU99FZ8lQFw/Jlqqp/p1Tl2XXb/t6mQa2J6ZRy7aSC2sCTg==
+	t=1795443372;
+	b=cCmGEQ4jKu7tyJhPeQmGvg1xlgUqTpqzD0RGEd1l+DXXDUgRTWBX0owelsYPvIort1hF
+	 sTX4k7aXYRdbiahQW+bdwK7ERsiW5qA5+2OXAf2oXiQB6uiUwH8yYaukCT5+uu4mCp73s
+	 odG9mSzCwfrw4ZNcHpcsaUDRbWIu/W0b/yrzvmSaTuxzyHBD4szEt1z7H2rMP4khveRSv
+	 S5SzBoraMSXtbzDN7d3tL5Bpo5UWJWf6/MWqSV0ndlLGQaAJA4oNIik020B2QFls+qULJ
+	 zY2q2HbjMEFVoYINAXVb5yX7XztgtRO1chYiTveQlztNFXRAKQJX4qYPMefU+zJAJ3g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795443361;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795443372;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=PjRuNUOgfB3Fg1Fm9BbnbhhqY+ZgAzXM9O/HQJjsyY0=;
-	b=Lcv0nd53SbRLKOE/R+6FygpclAf6JQzF7Gkgm50DLI5fAh7GQyDUKFOEHuCQYpdwiH9z
-	 q7ekmlKCOg/f+Ie4xcmqkgLG+l4NE+Bcy+U/H9w0HttcTGfJdQYaa4RQVmJg2VxC0bTlz
-	 a3U/P2tfDjVdTid33pbcqKkrSMU7lTb56Hkr+tvdCpYtUm42iqZQ1WL7ho7xnAEit8pOX
-	 Cz/AujcHatR1StLQ/5bVrGigUgQ5O6BamdlLwfi/Jq9LcvEfLgZOdgGpik1AQhdU0iPFh
-	 tXN8ZnT6m/qWwelSsdRgoRRok1NUud7fibEkIlRlPsgs+HUtP2XHomoOXNhh6fYBojg==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=q0kaLBG9armAqyKqZcboCnoBFONiD+mZBC8cBIH32JQ=;
+	b=sDjG8HwZ4RB7EXUOFRwebGtfEoi81BADqA9ujg3cPlqc0/tS7ElOJHFcQHMFnVt9zTqe
+	 ZgsibqoptWqQT2JY8scPZ0ZVnEjKgBFlwEhkXPDILORcrp2yTNwWoKvZ13mMXQzlKzvqk
+	 5N9EFS7TX/s1d5GnkMgzHN7Erc89t53Kem1WRpw+9XyzEMH1FoQxsB/JeiWp8x8q445/9
+	 he/3sBfVSwCoeEbrTMXmYBfeepd03sfkp4fWM8xdSXvigXuTSL54Knk60VH7zxtCGUUWz
+	 9h5f+OA9kl0BGegF5NmHylQ+luTzgOG1xVfEKaM+xmx7+4c/RDREWg8KLzsRrduNHXw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JSP+Znqb;
-	arc=none smtp.remote-ip=74.125.82.45
-Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Tc5r9Zpu;
+	arc=none smtp.remote-ip=74.125.82.48
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F40606A337
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 14:16:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 79F40606A337
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210AE606A339
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 14:16:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 210AE606A339
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=JSP+Znqb
-Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-1b3b4944a0eso2280930c88.0
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 06:16:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Tc5r9Zpu
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-15dd124bbe7so2083212c88.1
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 06:16:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795443360; x=1796048160; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=PjRuNUOgfB3Fg1Fm9BbnbhhqY+ZgAzXM9O/HQJjsyY0=;
-        b=JSP+ZnqbcEb0ia/ONGPICfm4AQK9TPsrfUjvnKiYqWlKjXcl13cN5zJH23WVbFMG/C
-         W2PRjEze9BcTUJIZN6qyD6nAbIyDH2eGotrFkLL30X4BWuVewA40x1vHko4Wf07O2avA
-         ZP9FZa8oa4Crf/SlOb1v35TtukW1Qs68Ne8s0FQvkp6TbsxVKEq28YMMUIQ78R96rTDq
-         QSg72i5BTowgDycaDUjs/FHT3vYDbP7aEPJx6ywtLBJeK9g6It2W3gr/duKpLGk+Gc3M
-         2HJxA2zGLfszuE+DxpaBOHkEpCBNuv21A/zmhFZPSKbiluZl02wqOVYXEoJcOY4f4a7W
-         nZ6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795443360; x=1796048160;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1795443371; x=1796048171; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=PjRuNUOgfB3Fg1Fm9BbnbhhqY+ZgAzXM9O/HQJjsyY0=;
-        b=acocePDD+dPwrZyIXtTL45h8hRPeTOOYabrk5gvfj0yiqvomwjRnL8434e2EbrCqlf
-         33hxdKHk2SufLjODE9xJtSOleD7/5zgbrQUhWVpRinfh/X/DUtVAqiikm+nt1xg2Bnh7
-         3L8XjlsUanUg7/8ptzM73dARSx+xIMsO/wrMmSnT0OkWNoG7Gh3SqvgX860Bh8KupXs8
-         tk77Xtb+ZaFZ/qdhJvFKCRASGbvHcStsWNLUEYuxzsU7XM9o0/+Ghz6uPJDVPkHt90t3
-         D/aW+Ys6w5DLfs5IbLrNJX/sAgJYrLablWxiKxHVFTRWNZjiy3LmyIT9MIB2LTs5aaal
-         4mEw==
-X-Forwarded-Encrypted: i=1; AL+hErH0yHLXRCAwe1euv48g9ZuIp1B5cnVO+QPDmLSjl7NCXEdCZZ8VllsySvWgoQz6K6axGkBBFa1U7BXKQcqu/Es=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8ztfhtmw+a4QcwDwlKjDSkanKMwD+rqIvyQ6ZFtXLO/FTOrCGh
-	H/eoc9fYhRuqpuwLIoAiObBa3FvJmbteOFOeyguX4MFsFu1jdF4PbcDwTmtp+1A6
-X-Gm-Gg: AZFdTZfpuiDnsJ2Kd3bxRUi2tip6wZyMWyIWtjIyrlrT9D+4CWJcuDs82c/lz6fz4qR
-	P0orj19L+q7laFogOsr5TZ1ILp3eXjpzgiyqKqPXjQtmti+JIW3elsExy4QEhebHG9uizu4XOFf
-	hDk6EwqEs6VskH0doxyb68VWfUpL0vRUK1IuU5JMj0Aw+bzuhwG6k/TIR+MoG7yX9tee4YTkZ5/
-	Hqs9XhoGOQDXsxzyfxIOgmniBYpaBo8XEaJcPcfvNs5i6wo+ExJ4R9xFPplT2OcszkrPsn+Z5jY
-	fWOJPF0cH1D50bKIcH2fn+wgwk7e+m1Cd5Gtrst1mtFGlOVyuj1R11hjt9VexY/U+S2xK4PwVCu
-	h79P5bt8q1iEWxVT36TMtG1itP7Cuss49ywGny80SKo4DibFeAxi6aCJ3iVQcxmDiMXg3Azk+QS
-	8TV/bT4puGtNj2eSVdlrncn2R2hpFodTJqtbMSm2f1FqrdpTGDyEBMA/x+yM0xb2mWWOySHyrCz
-	9cditF+FhwjRL1YSd3ZQFrJKaHfaVDvQYQdKFZz9Eu/MPY8DfVC7uKxmJzL2z2UNlpDwDeF9mm9
-	FbRElf/wbw8ka9O91PW0mCpnqrJRmVpLaVuaJsPiNu632bOD445TXR+Jm+IUALIZutFz
-X-Received: by 2002:a05:7022:f509:b0:1a4:4194:fc04 with SMTP id a92af1059eb24-1b5568e4322mr11657910c88.28.1795443360380;
-        Mon, 23 Nov 2026 06:16:00 -0800 (PST)
+        bh=q0kaLBG9armAqyKqZcboCnoBFONiD+mZBC8cBIH32JQ=;
+        b=Tc5r9ZpuLoNZ1opGkx+WuPZYVISFpfhmuOmXh1fdY4qwY/bU0+dJxJl0OBFK6EJVLd
+         4rxirb/4eLe6U4ldYzhnc74jNh8kXeh8UVTRffQzO/2SuDgO4Uoo39xmT7I/1RS5/b6Y
+         kWc2ub/cL5QFYDNZZlNNDz1aDE/uU0XBdQzuAitfZEgKEy2jNkli27P9t/k+BZtrvWIJ
+         uJ10GffCWAmoGq7zrOn146R73b1TJsxQYm71WeLuvXvS93qgxjDxwhK3aKWE0ALe1ods
+         t616uj28B+sKZVa8XQWCN/dNNWky1tbT7yhOJeEsZ/SHSjpOO5+FlY3HD0guehyl9dC+
+         G6hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795443371; x=1796048171;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=q0kaLBG9armAqyKqZcboCnoBFONiD+mZBC8cBIH32JQ=;
+        b=hlmaE2Kd5rhRS7H7+CDdt7UM5nIVOkU45Td+uIGLmvI+D9QJQYjCDxr6bgeVCjlG4c
+         f0ls2QjSiRmDO3Npa670qECSps5+HQWxP5U8ke3Nm6ByoYxEKoyw4PjOWcMCkgk1k+iy
+         np8Sf+MNKBTdgj7wn4wQva2wmowP9WjMcsbdQXzO6YfKev4D7eMeurJno0N8X+xjxtX9
+         gcKP0Vug3/uDmouwPCZv51dNCOnOAatgE/UtBVQkcfQEexInWcEdQ5dot1ay8EUlHhl8
+         4k5Z++8gdYLhGK/dCvIZPDT9Q7vmcHrdZbjBYPXvB4qch4Lwp6uRrzINiXofahxcphIW
+         Nb1g==
+X-Forwarded-Encrypted: i=1; AL+hErHqA8DnjUcToum+CkmdVS4p2t5pXJ8acumTHZMvSkuWeIGlBBKvgpDifnfR4kWseLvSNm5hdnBSEGE10pEQ6HY=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/1552UCUcqimZ2bzoH6pQjeAfk7L4igHjrlxSeUnGC+Cl1ZNfG
+	vPjWZPidIYVtDKKRh/Hyvb2c04im3EUiazUx/m0MtfYU90pvUKdd2Qn6
+X-Gm-Gg: AZFdTZc99wbNAD4VLic1m2A15atDh2NQziSDTiPkiek+HjYJVOIRqLGdi3WAaz5Ta8s
+	qQJE5KunJcEMaXjVdupUdnz7GcoZn//fk76nSwNtIqy/icEpWFbgiyIiTtlydUnPzfgQehZmxVu
+	yWOvCxra6GZ2DHOu/Lcfk7uBJC3gVW077O9T3e68wQWydVSTW+APl7ZX+93Bs2KkE0NuBij1kUa
+	fhJMh587iiXZ+Euhn/A1IteHiAxwFlhYBoK6i/M2tlGQmIhULTj7yY9syCAtJ0iIEVPYDzThxb0
+	LtQMP6qGAQgL7dJd8P9c8+BOBP7cN6hcz9B+NwbbgLYzq2VB5OMsS91tZGBvvPPusmv3vYZNMZX
+	4KMCmfj6z3QnEiP6nRZSfROpsC4O4BoEDMg/opkGOFBJPuGIIRX0J/JJrOVtmgatymb6Kof8HUx
+	plUsDuWy8sgR9sUyQCYFhtgLkeCk0FTsGePUHj5dd6Ge+TTWOVRVgn3FR2hjhMOGuz0xJxU/Wdz
+	ARguF36+sNiLt2H4fN/GbYphn4SPsQnGiC3PaIYH3I05ZhyEtFDw2LPG7kE98HulWLFbKJkKLbs
+	+otTzFom2kekn9Urpe5VItjP66VHmIkIQ0sJCXc9373oc0EPv2CJm5kuNMyIl+1P7TGUXw==
+X-Received: by 2002:a05:701b:4558:10b0:1b3:b4cf:8f18 with SMTP id a92af1059eb24-1b556926cfbmr12460036c88.41.1795443371191;
+        Mon, 23 Nov 2026 06:16:11 -0800 (PST)
 Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5567ff27bsm31101950c88.6.2026.11.23.06.15.54
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38567daaf70sm38348685eec.28.2026.11.23.06.16.04
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 23 Nov 2026 06:16:00 -0800 (PST)
+        Mon, 23 Nov 2026 06:16:10 -0800 (PST)
 From: Lian Wang <lianux.mm@gmail.com>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -94,10 +95,12 @@ Cc: linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Thomas Gleixner <tglx@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v5 00/19] mm/swap: introduce priority queues for swap device allocation
-Date: Mon, 23 Nov 2026 22:15:50 +0800
-Message-ID: <cover.1795439990.git.lianux.mm@gmail.com>
+Subject: [PATCH v5 01/19] mm/swap: remove unused parameter for reading swap header
+Date: Mon, 23 Nov 2026 22:16:00 +0800
+Message-ID: <9f3715ab29bc9ee4aaa1bb92bff47c7584b73ee7.1795439990.git.lianux.mm@gmail.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <cover.1795439990.git.lianux.mm@gmail.com>
+References: <cover.1795439990.git.lianux.mm@gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -109,109 +112,42 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+From: Kairui Song <kasong@tencent.com>
 
-This is v5 of Kairui Song's swap priority queue series. Today, choosing
-among swap devices of equal priority means rotating a shared plist.
-With this series, each CPU advances its own position in a ring of
-equal-priority devices. The allocator selects a device before looking for
-slots on it. This keeps the existing global swap priorities and does not
-add a tier ABI or a per-memcg device-selection policy. Memcg swap
-accounting and limits are unchanged.
+The swap_info_struct argument to read_swap_header() is unused. Remove it
+and update the swapon() call site.
 
-Thanks to Kairui and Kunwu Chan for reviewing v4. I'm dropping the RFC
-tag and submitting the series for review.
+No functional change.
 
-Changes since v4:
-
-- Rebased onto mm-unstable at 7d1a16abe4cc (7.4-rc3), retaining the
-  upstream swap size reporting fix in swap_show() and swapon().
-- Following Kairui's review, renamed swap_ring_iterator to
-  swap_queue_reader_head and ring_only to no_fallback. A large folio
-  can still try other devices of the same priority after an allocation
-  failure, but not a lower priority.
-- Following Kunwu's review, retained READ_ONCE() in the availability
-  check, removed a misleading comment about slot reuse, and made both
-  /proc/swaps iterators check the published swap_file under the read
-  lock.
-- Split the off-list bit fix into patch 10, before the queue conversion.
-  The plist allocator also needs to mask that bit when checking whether
-  a swap device is full.
-- Revised patch 04 to distinguish all allocated descriptors from
-  writable devices. drain_mmlist() needs only the usage count and no
-  longer reads the flags. si_swapinfo() takes one flags snapshot when
-  accounting for devices being taken offline. I have not carried the
-  previous Reviewed-by on that patch.
-
-Testing:
-
-I ran Kairui's benchmarks on the 7.4-rc3 base (7d1a16abe4cc) before and
-after applying the then-current v5 patches.
-
-On one x86-64 host, both kernels built the same source (4dbe24720eb3)
-with make -j96 and eight 8-GiB ZRAM devices. Each build used a fresh
-output directory. The BRD test used twelve 8-GiB RAM disks, a 24-GiB
-memcg limit and one invocation per kernel:
-
-  usemem --init-time -O -y -x -n 32 1536M
-
-Times are in seconds (means for kbuild).
-
-  Workload        Runs/kernel   SYS: Before -> After      Wall: Before -> After
-  kbuild, 2 GiB        12       4193.23 -> 4271.06        167.80 -> 168.80
-  kbuild, 3 GiB        12       2257.60 -> 2299.63        136.29 -> 136.77
-  12-BRD                1        141.16 ->  131.44          6.61 ->   6.32
-
-Both kbuild cases used 1.86% more system CPU time; elapsed time rose by
-0.60% and 0.35%, respectively. In the single BRD run, throughput
-(48 GiB mapped divided by elapsed time) rose from 7436 to 7777 MiB/s
-(+4.59%). There was one boot per kernel and the baseline ran first.
-The BRD result alone does not establish a repeatable speedup.
-
-v4:
-https://lore.kernel.org/all/cover.1794666741.git.lianux.mm@gmail.com/
-v1 and original test method:
-https://lore.kernel.org/all/20260714-swap-pcp-priq-v1-0-de9b164ed419@tencent.com/
-Related swap tier work:
-https://lore.kernel.org/all/20260916183437.2946306-1-youngjun.park@lge.com/
-
-Best regards,
-Lian Wang
-
+Signed-off-by: Kairui Song <kasong@tencent.com>
+Reviewed-by: Kunwu Chan <kunwu.chan@gmail.com>
+Signed-off-by: Lian Wang <lianux.mm@gmail.com>
 ---
+ mm/swapfile.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Kairui Song (12):
-  mm/swap: remove unused parameter for reading swap header
-  mm/swap: clean up hibernation error handling
-  mm/swap: cleanup and document swap device availability flag usage
-  mm/swap: introduce swap device iteration helper
-  mm/swap: change the swapon lock into a percpu rwsem
-  mm/swap: serialize swap publication before removing swapon mutex
-  mm/swap: consolidate swap inuse accounting helpers
-  mm/swap: add priority queue for swap device allocation
-  mm/swap: remove available list
-  mm/swap: bound synchronous discard outside the allocation reader
-  mm/swap: drop swap active plist
-  lib/plist.c: remove requeue function
-
-Lian Wang (6):
-  mm/swap: avoid direct reclaim when populating swap cluster metadata
-  mm/swap: mask the off-list bit when checking whether swap is full
-  mm/swap: reuse per-CPU queue readers across priority changes
-  mm/swap: advance the global queue cursor directly between priority
-    rings
-  mm/swap: skip reader rotation for single-device priority rings
-  mm/swap: redistribute queue readers after membership changes
-
-Youngjun Park (1):
-  mm/swap: change back to use each swap device's percpu cluster
-
- include/linux/plist.h |    2 -
- include/linux/swap.h  |   45 +-
- lib/plist.c           |   71 --
- mm/swap.h             |   12 +-
- mm/swapfile.c         | 1446 ++++++++++++++++++++++++++---------------
- 5 files changed, 963 insertions(+), 613 deletions(-)
-
-
-base-commit: 7d1a16abe4cc5dccd21e3d6262e44433a5885d27
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index d59fa8220862..c06f9f532e74 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -3630,9 +3630,8 @@ __weak unsigned long arch_max_swapfile_size(void)
+ 	return generic_max_swapfile_size();
+ }
+ 
+-static unsigned long read_swap_header(struct swap_info_struct *si,
+-					union swap_header *swap_header,
+-					struct inode *inode)
++static unsigned long read_swap_header(union swap_header *swap_header,
++				      struct inode *inode)
+ {
+ 	int i;
+ 	unsigned long maxpages;
+@@ -3863,7 +3862,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+ 	}
+ 	swap_header = kmap_local_folio(folio, 0);
+ 
+-	maxpages = read_swap_header(si, swap_header, inode);
++	maxpages = read_swap_header(swap_header, inode);
+ 	if (unlikely(!maxpages)) {
+ 		error = -EINVAL;
+ 		goto bad_swap_unlock_inode;
