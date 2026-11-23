@@ -1,56 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.202
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795445923;
-	b=JnUZtK0ZcyaNDxZHJNR+1RE7iihxaZ/fY2zDWe2MiA1/+hQgO4Rmjw90LxR/OvHlWuGa
-	 0xXABnOcLS6Y1DtGId0acNU5HARE1O3NoTYUodVvRf3eIyrGWleoiOKOTy0l/zsNp4EnO
-	 TaHhmKctADG7Sy/WhW0k8H8u7AduX0SuTid/wK54AlSD1pg9ptvO8VSu/cb0iPUwC2tp9
-	 6Klys/TSOm827uUV+BUpdOJ/sVAEHnLfcRfItfKYVvu9o/jT5UuhRLtUEHbjbVZrxR82J
-	 yACqiXK/F4yKP1q4YOs4835nnCcxuaSpL6npCnLfMGAUZgBTrA1/Km8RVkrDbqh83nQ==
+	t=1795456029;
+	b=2ga57Eim6OzSXBLvc5u+QHOWQPkpHwpV4yCdV9iasM+zuYC9gUvjgyR1g62d7+eDvgcb
+	 /uoQwp8vxfoNfsFOJgeNdJSgUlQsqHkc3xqQhO93CGgec9VvEn5ZkD1X7fYalM5mN2qp1
+	 asTyrPi+A4QgV8Mf4+FFcwuodcC/NepC1BNjzfW6u8DA3/7Jx/6jMPKrmelW+xgr29s2P
+	 O3ycwMxEOdWCexkvskRVGQy/E0kJ+ut9qVGIKdDcyBTfVA++JJoJ53eCLLwPAYVA8OV4Y
+	 W97oLlHP16wXlx4DjYTQMJb4V2SVVADYEqaaryX7sWgxORwUDu00LcsTRvJNUsDBcWg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795445923;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=IFrYxJ9uxD4vVeZJrwzDiQh9DcS0onJOZvbvGDc1JU8=;
-	b=pEjZ2a9Ei3zkT/9khikYB4MBtNAI7QeX65tihydacwSSqCzFPux4kHjI9Zrlifky9eCe
-	 0E+EISZF7kdojrgtlXKSXwCvw3Om+GEt++wheXHso9oUAF6SxoCTyuC8NygI0c1whoJfK
-	 ptdLDVNiG2OqrPQtBTQmSVGw3eHREl75jdXMEFpsiZ5i+kcAuAc8M3C7ighh01DSgM1rE
-	 Ey8gEqCR4VLUjPDrvh0tuhurqRQU3V98AIdg6A6ruWBSit4xq8nlqmmV3KDe9iIDzcjn6
-	 lR+iPade22kkdINMl0mX07O5ZJenAC/4g8xyNYFOHFrDGnGFq+4NSyudnhxycEy9mYw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795456029;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=+EIsW0Fyp4FUISuPz5cViVS//4FP11RjU+ucX4qbvl4=;
+	b=SMxPLZ7zQCUTwDJBaMakqNGJ9BNZogM4PrUBwdftsBR0Pb289DkRcZIkMuH/KKGQ6PTY
+	 p3tYpTpKegRgPIZdtIvdjsqiocYUrkVAgLzXFh6BGFKOZycj2j0mGOZwW2+QSPF7L/JEX
+	 Eee9wxJwYcDCOTw8FqzV8V5R5KR3SN4cMa46lg/7pDV2gw6ZHknFdIHRee9Br+iAxeg71
+	 mbbKf3VeFi2u22ml8RjoLscHT4ipcRq/RYWccATuWG5BGAXB+BjMLfIfAimfEHzQYPmwo
+	 OAtvzqDPGc2sAKJuUDmtgZBp7quTMnvuYuuBheaH69FvkaFiUMQH7iTM5V1Sm6ZefKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g2qsWLN4;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GhOVZ6hq;
+	arc=none smtp.remote-ip=95.215.58.202
+Received: from mta1.migadu.com (out-202.mta1.migadu.com [95.215.58.202])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1D2606A327;
-	Mon, 23 Nov 2026 14:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9F6606A31E
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 17:47:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4C9F6606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g2qsWLN4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C451F000D1;
-	Mon, 23 Nov 2026 14:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795445923;
-	bh=IFrYxJ9uxD4vVeZJrwzDiQh9DcS0onJOZvbvGDc1JU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=g2qsWLN4UyORalJCuyoZtcK4c1XcnbevUsXqK67HipUQN34ZCI1cD+cynaYtJI/PL
-	 MSbfDRSCgwWjNoKdfa0mjDE5R//DTEiF+F8emfqaJuqF3FtV7W1vSABiVVE83LHCqj
-	 SoB2j3L8SEOnCmrJWhjxQwOLOiQdKJ+kUHEL8TYpV101+OtOmHFN5SRhDgE4IgNkX8
-	 9/82e5AHU15yYepJ0riV4QYNwQXGawZnxbugXQTjyOA4Gm/jUMl5E9Moh4yU9OO7+h
-	 ELsXqoYR16Fy0spgwGTz1j5hFeJiXSMIxT5dzj5HQS3nTNyQ1NODy2c8BL6Da16hO+
-	 jDXLSUDamZ8Wg==
-Date: Mon, 23 Nov 2026 08:58:40 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org,
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=GhOVZ6hq
+X-Envelope-To: linux-hardening@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=vTq/47LX7EXP25/eUB2xcyGE3kvFvEXFYsqeUA9EgO0=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795456026; v=1; x=1796060826;
+ b=GhOVZ6hqFxmUdbdfRzl3aRnSTvvLMHqMb/l6oDMNBEgWG3aZUBD2EPsgbr9sDTmGF2+QAxek
+ IyiZ+nI6RCoJTgPj9Rwj5sKYCfvSvuljTEnG18S5lSDXevIm6Ay25DI/cH6FR/ohhQXxECTIxCW
+ GzGjUf9IVg+ZEi4ZFN4JSCmw=
+X-Envelope-To: linux-hardening@vger.kernel.org
+Received: by mta12.migadu.com with ESMTPS id 91c2c5e67698e3d9;
+	Mon, 23 Nov 2026 17:47:06 +0000
+X-Mizu-Trace-ID: 91c2c5e67698e3d9
+X-Migadu-Flow: FLOW_OUT
+From: Usama Arif <usama.arif@linux.dev>
+To: tglx@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	kees@kernel.org,
+	peterz@infradead.org
+Cc: hpa@zytor.com,
+	gustavoars@kernel.org,
+	ardb@kernel.org,
+	hca@linux.ibm.com,
+	nathan@kernel.org,
+	ndesaulniers@google.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: reserved-memory: ramoops: Update Kees's
- email
-Message-ID: <179544591880.2458636.1601285565367516455.robh@kernel.org>
-References: <20261113174237.i.303-kees@kernel.org>
+	riel@surriel.com,
+	shakeel.butt@linux.dev,
+	kernel-team@meta.com,
+	rkeilty@meta.com,
+	atish.patra@linux.dev,
+	dgreid@meta.com,
+	Usama Arif <usama.arif@linux.dev>
+Subject: [PATCH v2 0/2] Subject: [PATCH v2 0/2] x86/kstack_erase: Faster stack poisoning, plus a startup build fix
+Date: Mon, 23 Nov 2026 09:46:37 -0800
+Message-ID: <20261123174703.133167-1-usama.arif@linux.dev>
+X-Mailer: git-send-email 2.53.1
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -60,20 +85,53 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261113174237.i.303-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
 
+With KSTACK_ERASE, every return to user space poisons the part of the
+task stack used since the previous return, one 8-byte store at a time.
+On Meta hosts running many small VMs, that loop costs about 1.5% of
+non-idle host kernel cycles. Most of it is on the way out of futex,
+epoll, procfs and socket syscalls that go 1-2 KiB deep.
 
-On Fri, 13 Nov 2026 09:42:41 -0800, Kees Cook wrote:
-> Don't rely on .mailmap to get things emailed to me. Update to my
-> @kernel.org address.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  Documentation/devicetree/bindings/reserved-memory/ramoops.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Patch 2 makes x86-64 use memset64() for spans above 512 bytes, through
+the arch hook that s390 already uses. Shorter spans keep the loop, and
+the range and value written do not change.
 
-Applied, thanks!
+Patch 1 is an independent build fix I found while testing patch 2 with a
+small KSTACK_ERASE_TRACK_MIN_SIZE. The startup code still uses the
+pre-rename DISABLE_STACKLEAK_PLUGIN, so with Clang, AMD memory
+encryption and a tracking minimum below about 90 bytes, vmlinux fails
+to link. It can be applied on its own.
+
+Zen 5c KVM guest, one vCPU, before -> after:
+
+  stackleak_erase() per return to user       68 ns -> 47 ns
+  futex wake/wait ping-pong                  6% faster
+  Unix socket sendmsg()/recvmsg() ping-pong  6% faster
+  open+read+close of /proc/self/stat         8% faster
+  getppid() (spans below 512 bytes)          within 1%
+
+v1 -> v2: https://lore.kernel.org/r/20261119213147.1094488-1-usama.arif@linux.dev
+- Patch 1: add Nick's Reviewed-by.
+- Patch 2: use memset64() instead of inline asm and make it
+  __always_inline (Nick, Peter). KMSAN kernels keep the generic loop,
+  as memset64() is out of line there.
+- Patch 2: keep the word loop up to 512 bytes; this is the v2.1
+  variant from the v1 thread. Unrolled loops, Duff's device, a 64-byte
+  aligned REP STOSQ and REP STOSQ for all lengths (Peter, David) all
+  came within 1 ns per erase of it. Most of the time left is the
+  search for the poison, not the fill. This current version is the cleanest
+  one IMO.
+
+Usama Arif (2):
+  x86/boot/startup: Disable kernel stack depth tracking
+  x86/kstack_erase: Use memset64() for large stack fills
+
+ arch/x86/boot/startup/Makefile   |  2 +-
+ arch/x86/include/asm/processor.h | 21 +++++++++++++++++++++
+ arch/x86/include/asm/string_64.h |  2 +-
+ 3 files changed, 23 insertions(+), 2 deletions(-)
+
+-- 
+2.53.1-Meta
 
