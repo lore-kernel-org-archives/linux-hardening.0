@@ -1,79 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795478343;
-	b=iebKBIoyE2qpy4F5xyuTNiKZTGm+Bu8X7GMpymdrFBzBeBS1MobP4c0hR1a6xh6xhkGd
-	 YDIcEbw6o97LabtrfuSyyWYtcccvX1adBNdEShSB4YKqLNs3m2KQoJxlesk+o4kyAeRin
-	 JT2HGrtyyKfFHFZ/Og3MeAqpOqmmdE9dnAhFMdugYavdEvxShUrtdq48eK46ViQcZWk8m
-	 qBSRz8ED8fSeTasbWFCLCjFW3IFSK75tuG1JCdW/rFkfGNc3PuvZcKM0801WsyzohZeUx
-	 0DSSYsakX3R4BcbMxjoYMENQPhpgpiuxgw348+axI+V0sjWe4LgOAfXnvz1yR+HsBYA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795478343;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=Hwii7vj0qMB50+PolmP4b2hhHOl1mk2HpN/JxsVpo4s=;
-	b=CfArPpiZLFqRthmUXS5brxjTQKX/lz4fgvLtoEZl/52zDHjzNxUOvn816Ni6lV/FrWUo
-	 ci9RKA2q2N5VBUNC7QiO49c4w+K18ujwsbTqTW/hR/3HBtSg/GEwyIJbt2OOPdwpcrYg6
-	 wBOoDROtN/pfTv4nAhX1+dALUnQTl10LtBka5t+buuuhlWyFr/1cksxfifstK7Zo9XAfS
-	 4Gh5aXOF+nFHPQ/nbhxDNWlVBz1TTVaAZfBxD8JmUruDcnQLKo7kXDNGiHmXWRW9d9PuZ
-	 s1twU+8OiDeNbmPc4rLqPEqgMrg5Kf1TX7+n22Qwz7TG//V9sDldRwpt+mcr4x8yBDg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YlpsnZCn;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E094606A326;
-	Mon, 23 Nov 2026 23:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YlpsnZCn
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795478342;
-	b=s0tbTPdR+jWQhQlrAz3b4dE4ZENRC3wbNwE64JedaM5vKUKUctXnEn/dmIgFRP19UENl
-	 IlNfKuUTsZK5lEdhtSDEJ2S83mr/tMbge0Ef6jP0KuNmKc3Nmi0hVGSkOR4E0deP51NH2
-	 DYiXl6ppTKRuK8pprZfQulhCdzHumqSmdI6pmjsvEzqQ+w+ONSlm4/J26Ia02/zpBgQT/
-	 4jU+13HLJ8pix5M/qK5DvWLkPMlxGqxAattu4Tj7ClJ0pVUWr3sP5TiNTruXz5PuvbZA/
-	 1pe0U0DRnmBQ3v/JUabY5pr69315/fr0p8ACXfTRljBIUzeszZY8qhO9zw57VqwyQ7A==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795478342;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=Hwii7vj0qMB50+PolmP4b2hhHOl1mk2HpN/JxsVpo4s=;
-	b=XYInjS1GxG7qiFVEf7LmpRchml6NeSMQqrXU1yTBdpF1bu6K32cHznHtmV9+s5+klrb0
-	 MUik16lg93JnDhPGjc1ql+hpC+CQQK1cCjd38iUz7LYGHnkjDbOkFC3Y2YgNNhIRz6NLM
-	 iAZxcvYHWr1dFN3U6HLJQYwQyYSY8hIoiy5bWySFd3bDNRzIf8vf67u5JvLSXOM4khN9n
-	 ZKqqakOpmTQ3tbjE0VbvUAd2V2ngg2yHHKs0g58k3eI5e/TOKDQb7kUEeIqAr/BF9Iva/
-	 RKxnqXMsCb+52l1x9n7PQUfzz4b9151tG9Pq8xTzfc1ue2c4Cp0nh9G+5JmaFHC8gKA==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.46
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795486786;
+	b=Eta1lwNsmVHUvcczB7DqKiWKQUtHLXNSRYPdaR3lhpwWpFLUzOwqP7+/wycowXke5Jo/
+	 +xe4mCOZrnL2wCmvWts72aFKbGkBQwDiwJK6YRkLGJ/3Rtk+m3MBAi+nwqE2HVzC/RCiM
+	 5NChZvexKS9ZfRKyCqvpzwII/luD58gKidIeA+bsJDsSnT5lFIsGmL9xGU0WkTLUsIFMk
+	 MSAcGY2vcY8gMTkmXO1nRqApJo9sX1IQpr4J/8A0K8ZLH10bmf7OYGN3CnX5Dg03MAYZm
+	 IQfWAgksGkpD+iVdMwCkdcS9nt8bmcnz0Bu5X+O7WWrZF/lKOz6qB3BLpyqB+fCwekw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795486786;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Mailer:From:To:Cc:Subject:References:In-Reply-To;
+	bh=vdBhioH55e2rBpiMMIlOy+uYTgZqubhBTCUnkYbH854=;
+	b=JkxR7TUf7HtXXqiTVn8dN3atSDcpK55udj23bdIPOQcMoYEan1Ro3PjzJNWDGGYy1zc0
+	 zbY+qwWsY8wXdskM0CjI+vmcoEK6lxEmqozVDcAtrVg7qYB8p4cw/xwvi67Z2zGWNIlHe
+	 qXECXAbUqVUaXee6LQFlHpvQ2GW+aYd785x7F/pOrpeUmR69tdLlYbzU1AZasR3C7Pqce
+	 ll/a0Z3/5LqDTppK8s0KxvHnC8gJ8pf//BehwMwufFyWvtpVh+xjLaDnkatZ6HUM5/ekw
+	 iFMDh3sPbEUWenDdYFkw9b4HKtaxtTlTp5lG5wr15mIQ5hbcczeozTx7XEHxvzgnViw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=paul-moore.com;
+	spf=pass smtp.mailfrom=paul-moore.com;
+	dkim=pass header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=gXLmoeGp;
+	arc=none smtp.remote-ip=209.85.219.46
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id ABA141F000C0;
-	Mon, 23 Nov 2026 23:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795478342;
-	bh=Hwii7vj0qMB50+PolmP4b2hhHOl1mk2HpN/JxsVpo4s=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=YlpsnZCnDYM5Y0Efu8Qa1tc5iLxAkr65MLam+itVHAxa2cstPu6J+PD9Ih1ZSyL1z
-	 sMVeBZ35Aw24mZS5rtIK+DvMvr71FSOzWaQMmMvKbhHfTi/2KaGDmlDwKbpOnn/zm/
-	 D8USCp6ArjhEw9PeN60I07WfDX3rCAGz5zO/wQKpZ4PTPzDSmIwEeGseTXhQ8yO9xk
-	 myTtx1y5VEhbH1oAL9EaUShQaY1zVcTEtw7HKKZ4cwq5l4PxPyZwCh5x5BVgQ76Bwo
-	 hkByU1MUQcc1itm9smeQpBCnRUMlrGBS+uEvsZABU4B/84er93dXaLZe1bTrl348Q8
-	 9mzkR8XUkaFkQ==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 0F7B44C7CC;
-	Mon, 23 Nov 2026 23:58:57 +0000 (UTC)
-From: Arina Kharlamova via B4 Relay <devnull+arina.kharlamova.mbzuai.ac.ae@kernel.org>
-Date: Tue, 24 Nov 2026 03:58:53 +0400
-Subject: [PATCH] slab: fix the kernel-doc of kmalloc_flex() on counter
- overflow
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01AB606A321
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Nov 2026 02:19:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E01AB606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=gXLmoeGp
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-9212a5a66f8so33964836d6.2
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Nov 2026 18:19:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1795486785; x=1796091585; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-type:mime-version:message-id:date:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=vdBhioH55e2rBpiMMIlOy+uYTgZqubhBTCUnkYbH854=;
+        b=gXLmoeGpp4YC4I6mCpHK2JTvgYkWuqbvABel0yKurKWRD86NbmnEpxOCsbDHXlGUfG
+         90ysuBuVV3x0DumZtT9aZ/ZMYHhmBy129SlMJwiaN8mAMmz94b1JeI8fEf6sRhtwa81j
+         Hs3DSUfs3f63rbs0OuWXTugp+WQHby0xxjMT3FkjK1iEI4yDhlE4ARTLT1uSz5UzDshf
+         SV9ToAVyt3jXDngs7GhS5kJknl+DexPchuFfLV03z3rNdFKMSbp5yx7q/zNMseIEXVlO
+         lON1hdivcYRYe4Eu6AJ54f6kYbiDY+fOh0nj0OVFyMKjghqT5tPUzbqrQfWKUaAl+Hjm
+         3CTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795486785; x=1796091585;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-type:mime-version:message-id:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vdBhioH55e2rBpiMMIlOy+uYTgZqubhBTCUnkYbH854=;
+        b=rsjg+/BsQVXSnzcjJw5LJ8UhkqMn2EMCfwikntE2LFSXGqGOvfJKXOU4Su5aEycHae
+         uzF9+7MCo6mAXVWSCw/maRU9ZwdeXhyvrj+MQNpQbkkMIqW5IYobZNVmN/CntpkZalHp
+         ruiUmYgE2QY/PEf08t/hAL8m5fSjboC51hX/uc7TfVJsNQCCb4YYQ4C6nSNBsaMWCS6s
+         mOiFmEuNHGfIWtREsjjjlaT4PzbRmv7h6U2e4qZ5wxSI9rSsfmcAZdVQ63JHbT+D7bTu
+         I/lN+ynCSVeRWB+j8WmhBiAmfL+25Gg4uh4/K2LXkDtO2x4Vyks+VAH0Eua7z9E9ua9j
+         KErg==
+X-Forwarded-Encrypted: i=1; AL+hErFU/2Z5AaJjzySneEU0C6EKTYOS7LM19VI9f3VjVBzgNe59Nd7ufmzS1o+UgI20i6oCeroXAmwI3UXfTBLUJmU=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/littAxBIEflV1EBgwjUyLNdMtOJIIEcB+AkOVgQBlfajt1T+w
+	ROo+T8RqjFUWj7rIYhig1KSWtyMQfg1Kc3Lvo1uYfO+Oe9zYO7wtrvCCxituOBICrg==
+X-Gm-Gg: AZFdTZfBaovDXIxQCWjZU5KaIcaDNemvv5uQrG0Bqr1PF83Kr8hWl4CI42SdV758C9W
+	CP9ng3iAlXn12McoCLrBCdVV19oayDX7D6UvWy6RStz37/oJiwWS8O52Ne9B4lIPHuOE/TVfj6y
+	3Th6fvmXloSmmq4MnkBWOeaK2w8F617YUj2he3As4YFj2aMY+jY5wIR6MerE8iaGHiiRNKYZfmL
+	u32yGzE4t09h9Wm3l0eK8dQoWwaNdilrES6Qtq3NIHcY1VaoF+5PJaJQuDAxVM/LiuR4NOWnfU/
+	qhFVGQM77Co+pOvjLmB9Lox3vydYZs3Okxi6nhSmV3p6j0mLleQ9wt3IjSyRP933XnbJfGlBRLR
+	6Di5nz+aIQJDlMpm7b/C4yFOcLa1qiuvMY00GYr4HAzKeZCmcoQ9pRB2BQ0Hb4sCptFyQKvLgfF
+	pmjW06O8tDKrW45WsTkgxyaUGvLjHq/hoIvAUSRZslXlXT33lAJNoFgIge/jtYegC+Z+ZuIQWPQ
+	GB0Vx2ox7sOKNy3gQbLxXEfPZSE249AUI7TCXYXjEqrHPIWo7jxVijim62NEKd9hn2K5O3SoZRY
+	in9WWWxI29UFOME5AGUMZbYII1gmkQ9Z+o3iFp0pb+tkFEu20GNUS0ZYWlkDikot5QQPCw15wbm
+	DLWadqcMZPFSAZQqrUZ610ZgfS7d15Q==
+X-Received: by 2002:a05:6214:194b:b0:921:1783:1696 with SMTP id 6a1803df08f44-92134a37126mr252343606d6.9.1795486784823;
+        Mon, 23 Nov 2026 18:19:44 -0800 (PST)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-9213479655asm122232776d6.4.2026.11.23.18.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Nov 2026 18:19:44 -0800 (PST)
+Date: Mon, 23 Nov 2026 21:19:43 -0500
+Message-ID: <04e583c2e9045e6a8990d752a1a2d1eb@paul-moore.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -82,160 +90,61 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261124-slab-doc-v1-1-9f14dfce47c8@mbzuai.ac.ae>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXM3QpAQBCG4VvRHNva3TbhVuRgfwYjoR2k5N4tD
- p96v+8CxkjIUGcXRDyIaZkTVJ6BH+zco6CQDFrqQiltBE/WibB4ocrKeCtNkLKAlK8ROzq/q6b
- 9zbsb0W/vHu77Aa5/koJsAAAA
-X-Change-ID: 20261124-slab-doc-1894ca04d006
-To: Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
- Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
- David Rientjes <rientjes@google.com>, 
- Roman Gushchin <roman.gushchin@linux.dev>
-Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- linux-mm@kvack.org, Arina Kharlamova <arina.kharlamova@mbzuai.ac.ae>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795478335; l=6300;
- i=arina.kharlamova@mbzuai.ac.ae; s=20261123; h=from:subject:message-id;
- bh=5QShQXRZX54gNTgo0Gx3CJ2jzLByJpRHbpnqHOcnA1Q=;
- b=1eSZpwSTpC+3FeEXiCh//wqMlujfe0v75aaKlaNcdfpPcrsBt+RFLknIU+B407OxXm5P23JDj
- 87e/QpMtB2lBBq4wxtsV6OJt5sc0ya3E/trBJjv9gwM1F/sPOy9RgXc
-X-Developer-Key: i=arina.kharlamova@mbzuai.ac.ae; a=ed25519;
- pk=DzQWwMpUtJvSDuzprqvRdbrC72n4Sq8dW6cq3NRt2Mk=
-X-Endpoint-Received: by B4 Relay for arina.kharlamova@mbzuai.ac.ae/20261123
- with auth_id=1625
-X-Original-From: Arina Kharlamova <arina.kharlamova@mbzuai.ac.ae>
-Reply-To: arina.kharlamova@mbzuai.ac.ae
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=UTF-8 
+Content-Transfer-Encoding: 8bit 
+X-Mailer: pstg-pwork:20261123_1724/pstg-lib:20261123_1443/pstg-pwork:20261123_1724
+From: Paul Moore <paul@paul-moore.com>
+To: Arina Kharlamova <arina.kharlamova@mbzuai.ac.ae>, Stephen Smalley <stephen.smalley.work@gmail.com>, =?utf-8?q?Ondrej_Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>, Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: selinux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, stable@vger.kernel.org, Arina Kharlamova <arina.kharlamova@mbzuai.ac.ae>
+Subject: Re: [PATCH] selinux: reject a 65535-byte xfrm context that ctx_len  cannot hold
+References: <20261124-dev-v1-1-00b99ee684ec@mbzuai.ac.ae>
+In-Reply-To: <20261124-dev-v1-1-00b99ee684ec@mbzuai.ac.ae>
 
-From: Arina Kharlamova <arina.kharlamova@mbzuai.ac.ae>
+On Nov 23, 2026 Arina Kharlamova <arina.kharlamova@mbzuai.ac.ae> wrote:
+> 
+> Commit 86c8db86af43 ("selinux: fix selinux_xfrm_alloc_user() to set
+> correct ctx_len") made ctx_len count the terminating NUL. ctx_len is a
+> __u16 and selinux_xfrm_alloc_user() only rejects str_len >= PAGE_SIZE.
+> With 64K pages, str_len = 65535 passes, and ctx_len = str_len + 1 wraps
+> to 0 (kmalloc_flex() stores the same truncated value first).
+> 
+> ctx_str[] is __counted_by(ctx_len), so the following memcpy() of
+> str_len bytes is checked against a buffer of size 0. With
+> CONFIG_FORTIFY_SOURCE this ends in __fortify_panic():
+> 
+>   memcpy: detected buffer overflow: 65535 byte write of buffer size 0
+>   kernel BUG at lib/string_helpers.c:1044!
+>   ...
+>    selinux_xfrm_state_alloc+0x18/0x24
+>    security_xfrm_state_alloc+0x3c/0x6c
+> 
+> The memory written stays inside the allocation (65536 bytes for the
+> string); without FORTIFY_SOURCE the context is stored with ctx_len 0.
+> 
+> A user context of 65535 bytes can reach this hook through PF_KEY
+> (af_key.c only limits sadb_x_ctx_len to PAGE_SIZE); the xfrm netlink
+> path cannot, because there uctx->len (a __u16) includes the header.
+> 
+> Reject a str_len that does not leave room for the NUL in ctx_len.
+> 
+> Found while surveying callers of kmalloc_flex() whose __counted_by()
+> counter is narrower than the count, with the help of an AI coding
+> assistant (Claude); I reviewed the analysis and the fix. Tested on
+> v7.4-rc2, arm64 with ARM64_64K_PAGES, FORTIFY_SOURCE and SELinux, under
+> QEMU (GCC 15.2.0), with a KUnit case that passes a 65535-byte context to
+> security_xfrm_state_alloc(): the unpatched kernel hits the BUG above,
+> the patched one returns -ENOMEM. The PF_KEY path itself was not
+> exercised.
+> 
+> Fixes: 86c8db86af43 ("selinux: fix selinux_xfrm_alloc_user() to set correct ctx_len")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arina Kharlamova <arina.kharlamova@mbzuai.ac.ae>
+> ---
+>  security/selinux/xfrm.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Commit fa5c82f4d2bb ("slab.h: disable completely broken overflow handling
-in flex allocations") removed the overflows_flex_counter_type() check from
-__alloc_flex(), but left the kernel-doc of __alloc_flex() and
-kmalloc_flex(), and the text in deprecated.rst, saying that the
-allocation fails when COUNT cannot be represented by the __counted_by()
-counter.
+Thanks, merged into selinux/stable-7.4.
 
-The code instead allocates COUNT elements and stores COUNT into the
-counter, truncated to the counter's type. With a u8 counter,
-kmalloc_flex(*p, array, 256) returns a 256-element object whose counter
-is 0. With compilers that lack __builtin_counted_by_ref() the counter is
-not written at all.
-
-A caller that relies on the documented check and does not bound COUNT
-itself gets an object whose __counted_by() size is smaller than the
-allocation. Accesses inside the allocation are then reported by
-UBSAN_BOUNDS, and readers that loop up to the counter see fewer elements.
-
-Make the documentation describe what the code does, and fix the
-Returns: text of overflows_flex_counter_type(), which still describes
-the inverted logic that the same commit corrected.
-
-Returning NULL, as the old text described, is not done here. Some
-callers allocate one element more than the counter can hold and then set
-the counter themselves: ext4_htree_store_dirent() calls kzalloc_flex()
-with ent_name->len + 1 elements for a struct whose name_len is a __u8,
-so a 255-byte name would then fail with -ENOMEM.
-
-Found while checking a summary of the kmalloc_obj() family against the
-v7.0 to v7.4-rc2 text of slab.h with a battery of inputs compiled by
-GCC 15.2, with the help of an AI coding assistant (Claude); I reviewed
-the analysis and the patch. A KUnit case (not part of this patch) that
-calls kmalloc_flex() with a u8 counter and COUNT 256 gets a non-NULL
-object with the counter 0 on v7.4-rc2 (UML, GCC 15.2.0); with
-UBSAN_BOUNDS, writing element 255 of that object reports "index 255 is
-out of range for type 'u32 [*]'". This patch changes comments only;
-scripts/kernel-doc -Wall reports the same warnings for slab.h and
-overflow.h before and after it.
-
-Fixes: fa5c82f4d2bb ("slab.h: disable completely broken overflow handling in flex allocations")
-Signed-off-by: Arina Kharlamova <arina.kharlamova@mbzuai.ac.ae>
----
- Documentation/process/deprecated.rst |  8 ++++----
- include/linux/overflow.h             |  5 +++--
- include/linux/slab.h                 | 15 +++++++++------
- 3 files changed, 16 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-index 22a5e62c92ea..f8b7fb6f9629 100644
---- a/Documentation/process/deprecated.rst
-+++ b/Documentation/process/deprecated.rst
-@@ -405,7 +405,7 @@ become, respectively::
- 	__auto_type ptr = kmalloc_obj(struct foo [, gfp] );
- 
- The argument gfp is optional, the default value is GFP_KERNEL.
--If `ptr->flex_member` is annotated with __counted_by(), the allocation
--will automatically fail if `count` is larger than the maximum
--representable value that can be stored in the counter member associated
--with `flex_member`.
-+If `ptr->flex_member` is annotated with __counted_by(), the counter
-+member associated with `flex_member` is set to `count` on compilers that
-+support it. `count` is not checked against the type of the counter, so
-+the caller must make sure it fits.
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index d0f04436343e..6ce610dbc12e 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -566,8 +566,9 @@ static __always_inline size_t __must_check size_sub(size_t minuend, size_t subtr
-  * @FAM: Member name of the FAM within @TYPE.
-  * @COUNT: Value to check against the __counted_by annotated @FAM's counter.
-  *
-- * Returns: true if @COUNT can be represented in the @FAM's counter. When
-- * @FAM is not annotated with __counted_by(), always returns true.
-+ * Returns: true if @COUNT cannot be represented in the @FAM's counter.
-+ * When @FAM is not annotated with __counted_by(), or the compiler cannot
-+ * resolve the counter, @COUNT is checked against size_t.
-  */
- #define overflows_flex_counter_type(TYPE, FAM, COUNT)		\
- 	(overflows_type(COUNT, typeof_flex_counter(((TYPE *)NULL)->FAM)))
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index ad645967a3ee..69fa9066137f 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -1091,10 +1091,13 @@ void *kmalloc_nolock(size_t size, gfp_t gfp_flags, int node);
-  * @FAM: The name of the flexible array member of @TYPE structure.
-  * @COUNT: how many @FAM elements to allocate space for.
-  *
-+ * If @FAM is annotated with __counted_by() and the compiler supports
-+ * __builtin_counted_by_ref(), the counter member is set to @COUNT. @COUNT
-+ * is not checked against the type of that member: a value it cannot
-+ * represent is stored truncated, so the caller must bound @COUNT.
-+ *
-  * Returns: Newly allocated pointer to @TYPE with @COUNT-many trailing
-- * @FAM elements, or NULL on failure or if @COUNT cannot be represented
-- * by the member of @TYPE that counts the @FAM elements (annotated via
-- * __counted_by()).
-+ * @FAM elements, or NULL on failure.
-  */
- #define __alloc_flex(KMALLOC, GFP, TYPE, FAM, COUNT)			\
- ({									\
-@@ -1137,9 +1140,9 @@ void *kmalloc_nolock(size_t size, gfp_t gfp_flags, int node);
-  * @...: optional GFP flags for the allocation (GFP_KERNEL when not specified).
-  *
-  * Returns: newly allocated pointer to @VAR_OR_TYPE on success, NULL on
-- * failure. If @FAM has been annotated with __counted_by(), the allocation
-- * will immediately fail if @COUNT is larger than what the type of the
-- * struct's counter variable can represent.
-+ * failure. If @FAM has been annotated with __counted_by(), the struct's
-+ * counter variable is set to @COUNT when the compiler supports it. @COUNT
-+ * must fit in the type of that variable; it is not checked.
-  */
- #define kmalloc_flex(VAR_OR_TYPE, FAM, COUNT, ...) \
- 	__alloc_flex(kmalloc, default_gfp(__VA_ARGS__), typeof(VAR_OR_TYPE), FAM, COUNT)
-
----
-base-commit: 9b95c9eeec894e969d590f45f9b760e88ba92876
-change-id: 20261124-slab-doc-1894ca04d006
-
-Best regards,
---  
-Arina Kharlamova <arina.kharlamova@mbzuai.ac.ae>
-
-
+--
+paul-moore.com
