@@ -1,68 +1,60 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795645104;
-	b=Ihkdg6a4sie7ICNqzG/SJL+tqDqcVvnpj5M0k1x5OKEp5tJs3bfpfQdvl/wSxrHEbVC9
-	 FYPWG2kILa/5vACif5j2XQ5QTJ3CE3m+OnHFiQtB/6vF4ZeqOKzA3KjigLoLGVNlGvNmZ
-	 TUbut6GBzHGJBTcF0x/saV/2ioJeNsfQcNAzvCP/vS3LjP+vVnDOFndqiz+7/4D9Ujeue
-	 X/rixKhig0mhamNQzl+zmXDpIkgJSL92ZAHEZ+rEj5QRrG+hxkUT3pPh06ESC9ReKRgdp
-	 hrEavHhlQc9AJ8B/BNwKSJWSUWqOuusrCEQLXPTxxsFIrl0OjgfECFgSOzqg0CrFcRQ==
+	t=1795645576;
+	b=TT8gPoqPIBbqIZYW9DT1+E42GnqY/JAIhNekY5ltcsKPNjHL8xoydvveV7bRZrItTvaO
+	 6O2RrRR4b8DEpffIeg7k5TRGubz2LbBx8v/8eV+un/bbZ5NCFw51Fvwk6N94voZbL2Hgw
+	 VEEjqAcgyzuxHZDBvURiV68IzmfMw0J/JVOs92Y3ARuobnJU/mHhJ28P5+nUexII4Oims
+	 lQneC8HsStiugBf3puC3jTB/rQup8ErjUsxHZaDd8Ka4RyhjNiPugzq0o5/E1ozreqCr/
+	 D6WVMVdZbrik99ju7wRISaQCwjr/Jg1yFNZ7E/FsGs2lGWSXNJXOmsuWfdcelUZjxWA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795645104;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=xtBf/yWLHGPRxddLFR7vrkNg0MkmjCSVdxTFGDzFQgM=;
-	b=0vMP9b8Kh8b22BCW0wNWYyOodY2wO3lKXtPBJGEjL9CkKjdDFM2A5nkfOgLQFcKsgKai
-	 o2+HeW1zxP8CKzJp6UR31fgWZp3MK8T/Z03+GuoaZh0uK7IkIHrFIPfOYg/MLQossiTXL
-	 qAVQkBOQ4qQ9k+45jNMqyNnYFSyV+BMHRhMwh+40VXmmSz26YLtUVRHM0oGjXLW6ANGcy
-	 insW4OyurJNyzcQHMzaTnqpgZMUzhBo+RT+OGsG5+y4hQAwfeiUnUo2J3tVl912Y4YrUP
-	 rZSfBw4Tj0A8jv8ll8Ckb39qDA23PVFzIWR7HpwOMbisL3MpjQzwCemWBUM3LyOQz2A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795645576;
+	h=Received:DKIM-Signature:Resent-From:Resent-Date:Resent-Message-ID:
+	 Resent-To:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=Ad4P++K9bZno9nuh/iuXN/ynLGwKsplQDt7xu5Ult50=;
+	b=Lur5g+/fwPl47IwgUee8zfQWoC9K/qKo9Kjk0HOIdDTEUOGCZZwjUlMl19S7a1yp0Sp4
+	 L07ThxFodrYA1H39RkrHY+nnkZf7ClgP6T+zqGWRTKhW8eGL4zauTkcEFYWsPYwd2+Ao5
+	 x+g3rR2qB+JjtkUKL06jO4THiWxTcQPM3wS15VwqlAJrl2jPdNBlVYm7ULW5kRsSltHzH
+	 EHahc4G6IJ77vesl9VaxQdQuMRoLDd1cKpFuCMaphNrTxeo+pMsnShga0e14utbu7o3+T
+	 L5ivWIlAu63SQtU0D0Gs2gxJ43p26Ah2qQF8jaNBy1X5gyixbOexgzD3xjJ6I/kKrLA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CLH5G0oM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ngz+mJyD;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF26606A323;
-	Wed, 25 Nov 2026 22:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6336A606A69E
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Nov 2026 22:26:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CLH5G0oM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F5B51F000CF;
-	Wed, 25 Nov 2026 22:18:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ngz+mJyD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 584541F000D4
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Nov 2026 22:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795645104;
-	bh=xtBf/yWLHGPRxddLFR7vrkNg0MkmjCSVdxTFGDzFQgM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=CLH5G0oM2JLxV/KchDGhSFf/Fq5APGHb9tbSqagYg6FBqtQjMrkOah46W7W0stvww
-	 IqvBmvN03Uz+8K8ZBD0ZUzgToREH6mftcH8vUhMBHajoIY7F0IiplTwt4Q3Oq/XYSy
-	 uLtq40uN1LwxlgfAXtIDRIV2MvbUoRTmkQ7SAd9P5FpQZAX6/YQGDATkBioYmrvoLj
-	 aQpucgH0Qakl0Dx9pg+jyg6Haklkj5UMU5U2O+/DELsV/abDAe6F/6rY/g8ayzSpNx
-	 pFaZp4VAZtuy0J8TCDoU/am1/zj8kTI/CwgWZ63rOsYEunBziTRmV5135hf+d16nUr
-	 r2XRmeu69lwgg==
-Date: Wed, 25 Nov 2026 23:18:16 +0100
+	s=k20260515; t=1795645575;
+	bh=Ad4P++K9bZno9nuh/iuXN/ynLGwKsplQDt7xu5Ult50=;
+	h=Resent-From:Resent-Date:Resent-To:Date:From:To:Cc:Subject:
+	 References:In-Reply-To;
+	b=ngz+mJyDb81j2SGUZ0pABZZuIMjF/HqF+1OxRkDyQhDpT4lMNAMWrmIM9DMdemQSW
+	 LaiYlexH9khIHvPPr50Uj3R0g1T09zwFPh/lSV00CRKrsGsUrrBtZSkJvlg3ooYmWq
+	 /UJEx9j8o8kRlEpD7KHRUEcwfyTGDQEHmg2AEHgnvjB6mz/cNws8X3kp6fUhY93pi5
+	 g+OpCM2DNBYYsOjTHqnzJZiboj5j5rMuPeG+HzMH/jFEQYJob+cssJEOwrJCnbq1z9
+	 LtA3s0XWMdR/Ezq9Wpic4RbcGMRMZAhOCJqrtmt5bn4PQCbeJDD426lmkCZ53oZ9mN
+	 JGB/yTuuigBbQ==
+Resent-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+Resent-Date: Wed, 25 Nov 2026 23:26:13 +0100
+Resent-Message-ID: <awdghW50TxXlrOn-@devuan>
+Resent-To: linux-hardening@vger.kernel.org
+Date: Wed, 25 Nov 2026 23:25:51 +0100
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v7 4/4] device property: Fix fwnode_name_eq() for empty
- node names
-Message-ID: <awddHt_xvc-lIygA@devuan>
+To: sashiko-reviews@lists.linux.dev
+Cc: Alejandro Colomar <alx@kernel.org>, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v7 2/4] string: Add strprefix()
+Message-ID: <awdf5dYKbpkbjSif@devuan>
 References: <cover.1795639368.git.alx@kernel.org>
- <396395e1d02ca080da67cfd91a1c49058b2676b6.1795639368.git.alx@kernel.org>
- <awdaYz9NNVv5fHv9@ashevche-desk.local>
+ <b32d70163fb454fee2667548c63c4d4d3b19d7bb.1795639368.git.alx@kernel.org>
+ <sashiko-outbox-234163@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -73,118 +65,109 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7ejnb7qdmhqer45z"
+	protocol="application/pgp-signature"; boundary="6gr5d72eivgopjii"
 Content-Disposition: inline
-In-Reply-To: <awdaYz9NNVv5fHv9@ashevche-desk.local>
+In-Reply-To: <sashiko-outbox-234163@kernel.org>
 
 
---7ejnb7qdmhqer45z
+--6gr5d72eivgopjii
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-hardening@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v7 4/4] device property: Fix fwnode_name_eq() for empty
- node names
-Message-ID: <awddHt_xvc-lIygA@devuan>
+To: sashiko-reviews@lists.linux.dev
+Cc: Alejandro Colomar <alx@kernel.org>, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v7 2/4] string: Add strprefix()
+Message-ID: <awdf5dYKbpkbjSif@devuan>
 References: <cover.1795639368.git.alx@kernel.org>
- <396395e1d02ca080da67cfd91a1c49058b2676b6.1795639368.git.alx@kernel.org>
- <awdaYz9NNVv5fHv9@ashevche-desk.local>
+ <b32d70163fb454fee2667548c63c4d4d3b19d7bb.1795639368.git.alx@kernel.org>
+ <sashiko-outbox-234163@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <awdaYz9NNVv5fHv9@ashevche-desk.local>
+In-Reply-To: <sashiko-outbox-234163@kernel.org>
 
-Hi Andy,
-
-> Date: 2026-11-26 00:00:03+0200
-> From: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Date: 2026-11-25 21:11:26+0000
+> From: sashiko-bot@kernel.org
 >
-> On Wed, Nov 25, 2026 at 10:03:55PM +0100, Alejandro Colomar wrote:
-> > str_has_prefix() returns the prefix length on match and 0 on mismatch,
-> > so the mistmatch case can't be told from "empty prefix matched an empty
-> > string".
-> >=20
-> > For instance: the OF root node's name as returned by
-> > fwnode_get_name() is "" and will return 0 for any name matched against
-> > it and since len is 0 too, fwnode_name_eq() will return true.
-> >=20
-> > Let's use strprefix() instead, which also makes this function simpler.
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Low] string: kernel-doc parse failure on strprefix() due to
+>   __nonnull_args()
+> --
 >=20
-> ...
+> commit d8e472e1906ee21263f127c3c8452f752cbf8121
+> Author: Alejandro Colomar <alx@kernel.org>
 >=20
-> > Message-ID: <avrSUUM3HMgxTNpl@kekkonen.localdomain>
-> > Message-ID: <nat4ilqmzzpuyrjbuahl367ip22tfnmjorydlppuwqiscxaujo@kf63j4l=
-b3flk>
-> > Message-ID: <nat4ilqmzzpuyrjbuahl367ip22tfnmjorydlppuwqiscxaujo@kf63j4l=
-b3flk>
+> string: Add strprefix()
 >=20
-> What is this?
+> This commit introduces strprefix() to return a pointer after a matched
+> prefix or NULL on mismatch, and adds KUnit tests for it.
+>=20
+> > diff --git a/include/linux/string.h b/include/linux/string.h
+> > index 9b3e578d9aca1..a6a1953c52e35 100644
+> > --- a/include/linux/string.h
+> > +++ b/include/linux/string.h
+> > @@ -557,16 +557,34 @@ void memcpy_and_pad(void *dest, size_t dest_len, =
+const void *src, size_t count,
+> >  	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
+> >  })
+> > =20
+> > +/**
+> > + * strprefix - string prefix
+> > + * @s: The string to be tested
+> > + * @prefix: The string to see if @s starts with
+> > + *
+> > + * This function determines whether the string pointed to by @s
+> > + * starts with the sequence of characters
+> > + * (excluding the terminating null character)
+> > + * in the string pointed to by @prefix.
+> > + *
+> > + * Returns:
+> > + * *  @s + strlen(@prefix) if @s starts with @prefix
+> > + * *  NULL if @s does not start with @prefix
+> > + */
+> > +__nonnull_args(1, 2)
+> > +static inline char *strprefix(const char *s, const char *prefix)
+> > +{
+> > +	size_t len =3D strlen(prefix);
+> > +	return strncmp(s, prefix, len) =3D=3D 0 ? (char *) s + len : NULL;
+> > +}
+>=20
+> [Severity: Low]
+> Does __nonnull_args(1, 2) cause kernel-doc to fail when parsing
+> strprefix()?
+>=20
+> CTransforms.function_xforms in tools/lib/python/kdoc/xforms_lists.py does
+> not strip __nonnull_args, so running scripts/kernel-doc on
+> include/linux/string.h (included by Documentation/core-api/kernel-api.rst)
+> treats __nonnull_args as the function identifier, emits prototype mismatch
+> warnings, and omits strprefix() from the generated documentation.  Either
+> __nonnull_args could be added to CTransforms.function_xforms or
+> __attribute__((nonnull(1, 2))) could be used as in strends() below.
 
-git-am(1) has --message-id and the corresponding am.messageId, which
-stores the Message-ID from the email header field from which the patch
-is taken, to document where the patch was taken from.  It is stored by
-git-am(1) right below the last trailer tag from the patch (which should
-be the 'Signed-off-by' of the author), and before the 'Signed-off-by'
-appended by git-am(1) itself.
-
-	$ MANWIDTH=3D64 man git-am | grep -A5 messageId
-	     am.messageId
-		 Add a Message-ID trailer based on the email header to
-		 the commit when using git=E2=80=90am(1) (see git=E2=80=90interpret=E2=80=
-=90
-		 trailers(1)). See also the --message-id and
-		 --no-message-id options.
-
-It's useful to document where those tags come from, in case it's
-historically useful.
-
-I've extended its use to other tags I take from emails.
-
-> Is it documented tag nowadays?
-
-It is not documented in the kernel, AFAIK.  It is documented in
-git-am(1).  I included it, because I find it useful.  Feel free to drop
-it if it's not wanted (I can remove in in v8 if it's not wanted).
-
-
-Have a lovely night!
-Alex
+What should I do?
 
 --=20
 <https://www.alejandro-colomar.es>
 
---7ejnb7qdmhqer45z
+--6gr5d72eivgopjii
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsHXqIACgkQ64mZXMKQ
-wqlH4Q/+K4tq4+xqA+hdgLFU9RuoGu9qlZ9RqtFtH9W87MQooPrhhUG7AbFMBC9u
-ucTzbnIgGovA2AO7MQsbTJL5+N9firrgftdeDosezvTNFc5p/znYPlW3P5bcrESz
-cS2Auvzbd6s5aqhWgHVxeUNGf5fwQ9QOdkz0Am3ULMnNUXfr/c9KvASfJPO0Qlcj
-NfJTuGv98uzzIeQN54tNftEOnbzqjM+hTGyc0LNUSyh3Fo8pIomM/hL6y36ViS2v
-xgSGxJ+VDq86TbKtvZMgh/JuA2zJ9Mr8SCIGcUWKQMSz0eksGP/MdtDN/q89yUoI
-4u5E7iDcPR/OvgA6MvDIQMlS+LXrSSKAJKrKO+uYO7ee8y0VcmhkSmb6hXnPDpd4
-t89hd/ds+h+MHWdbJhxQCnoEbvWPUnS5bvM5Ez17vLt0LaH0P9WeWNnDsbLRAjvn
-Vr5cSqAHwvQuFCxgoaGhiRhVNtVj6oLf2EqGCSYpXlyjfirNxp+Mhi2x7/xC/szg
-r7LECWvqGXnMh8nZ4b7Ha8dAnETqGLFKwp8X4+3fo/8k0ldmu4VHKhmPWd5FqtsQ
-WgN091lpGuSXNAzGUZLcr1u5FcJG2dTc97jSOk+n9nFnjHHSagJ/S0yhOLywhFok
-BHSOGIKbY88h/xhKT+v6p2wCllPZO4wmjNUaLiQCx3IAcTYt5pg=
-=huBL
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsHYGsACgkQ64mZXMKQ
+wqlpKg/9Eg0tDNXXExM29Z6o0EEbgZkPiV8zGzA+W2gFStSX2ytVV5p/W0iWfitx
+rYaH++VwGTz1qUip3YjGMhVUtAC6sFpVCoEO/dMUuP45kcAKOdsxQwoFnFI2ABRz
+lNdQO1Cq3sgRH6IHf33aOEyo3HXRdhFHccoM68forOp6eH18j8ZU7Wa0eOEiiqXM
+e8zsso5oTGGssXsd69kxXCrZ23Nba1UmYmKNg38lbDdwYAVjZQmB9p/2lO/gCKK1
+E5gqbonvrJNcW7uIz5t9iIWZkH8+mzbrt6gMW2SXnoC24hh2nFOh6zBK5uZrCwdB
+x10XKPa6VwJrG2l7vwHynwFocImWWXsdrTZ+xsFnPOXncoT0WLdA3zjEAApPkiSO
+JOU2GLjfttDsJ+7FsIsCEflTq1U6TjCOXk1qeGydizVm6PXl9V0Qq/h2SVklxQb5
+j/eOyevhRvR4gZ81bhqk0hsYw1xgNbMoN//5jH58h5nHt9AglfBVNqDV5RReYqwN
+kPwS936GvfyHY9PWLZC78gtlLWcesv1y3DYaHMezHAGU4V48mKWtvDCYZx2ZFSr5
+qJHHlt+5nsf0wm50OlkLwK+IdG1f2U/XQVfIxg1sdsh/BpqTFBUOjc96ZjvB7fiu
++uAdetRMOsvgJsy1HkMp8v+zSaN4dfQGmFvjnbl5T4z/nozwLdQ=
+=lbBO
 -----END PGP SIGNATURE-----
 
---7ejnb7qdmhqer45z--
+--6gr5d72eivgopjii--
