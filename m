@@ -1,65 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.132.180.163
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=68.232.153.233
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795607397;
-	b=t21sA4AfpDoCwuRvtArMe7wzNzwt1l8YwrtfaFaLKHZVypOT3V6jtMeOJPEhRfJY71Uc
-	 bzBAVZ/ACNzUtYCGl1enmAqhf38Sp22SURc5IRFG7cClDt1i/g4S5T+ZoxrrSXjGqmJdk
-	 l7Yy/yqoxYnqZGH61N9540xuoMw889slMyOajug1lf9cxO37laPb+cF31todLZXvyWucs
-	 VQzG3Ex8brrimottr2Fs5J42o8SdRP2V5Q142x12lxLre1Jm2g8LBkGS/okvOOedZlHjf
-	 9Zfc7pFaxJHmtJKpHVxCM3H9t1A2HIyTSOQq+RysBuINQmonWwyGQNfyuHgP28XarIA==
+	t=1795613727;
+	b=atvMxOwTXUVeobi0cVu021LNKBMkfiQLgEJq3wSFxvvtJ/VQqBRjSAYc36nhej/HzL5h
+	 EWosTCSBCe8zN7XbcY4y/WsHGZ8z5p+vYfbTpXxFvZwECRoqQdw8y1EPYDCiO6oEpoB5k
+	 IY1ENbKjDBc1b6k97uHaRF3qJRG0qdAhluztOYak/fT5xlU+F11Mnd9XVt97jtuR8h+j1
+	 6tzY1H5Wlxf2RjgsdVPLigQsz+BCKWbzIsehhp8RXnZEJLjPqHVqpyXLye/N7qxzXsBCz
+	 EhPmiZYlK72IrYOY0HZMvSmzoWZKQBAvf07akTf+DpwJ4FSHNa+DM6U+duy/CRNYhsQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795607397;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:Date:
-	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 Message-ID:References:In-Reply-To:To:CC:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Originating-IP:
-	 X-Proofpoint-Spam-Details-Enc:X-Authority-Analysis:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID;
-	bh=DT6kM67LeVqubhl/XQzUsjrbwfVvqg+O4AplUmwA+EM=;
-	b=n2bEcuDUY7sUq+a9ytjkgw5syGkoShnNpaKhoEYc/PGkG96hTx3pSPKC2B4gnMl2QGoq
-	 s3sOmRkVowXXauknew18nQnN8nOQoOIJTYwUc3Wb/dPdJxMXArE9iGPdzgot8L2JhannQ
-	 m0KnOnGy1zr049opogalEnNLwTkDFAmrFlDNYVcgCMZN93uDID66Osk/TSXeFxqcCbfV0
-	 7/5orpruUg7q4OTbWMIGsRkkxSADeE3sWTtjq8MkXaG2WY29uZO2ClvBs9Alsc4qY5szN
-	 urJgPcB4HaHp2dHx8ZIl2F7cUG1tem5eVLpX6nmhOUNDH8R+CPWyFD2+YTc/R+IbDEw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795613727;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-Amp-Result:Received:Received:Received:From:Subject:
+	 Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-B4-Tracking:To:CC:X-Mailer;
+	bh=NQp51liHmYpWiIsC5iPGTHmNNO8ZHyt8Nx/cyeBgMm8=;
+	b=wiX1Y8X3+RkKj28C29zHDg/RY9JtIDWnLO/iaMmoNt45YzkGgRQ2bPRuOGPcZX1b62uv
+	 fcfEgKVMlFJi62W07aSvyhOEdr2AurOBxTnOVITepmInX4S4sUs3X3v6jsqeWUxFBu/by
+	 uzNA2z/rKbGS8qWCvK6KBUv61RrHzEddZXDJHtSZJHQdJmU4F0zXjo4BmsdxsUDa5R0Km
+	 a2Qfh7kLTv8B4iQefHkaS+KLpxkkVpcAYfeOphqmJqz1het+CH/axl8Op2UPrIUxGUMQL
+	 Abp/rDw51BuJ5bwq9Mb3rr9L866e1qAPRGixljpz9G3De6vttQfO6oayHIl/UCZly6g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=imgtec.com;
-	spf=pass smtp.mailfrom=imgtec.com;
-	dkim=pass header.d=imgtec.com header.i=@imgtec.com header.a=rsa-sha256 header.s=dk201812 header.b=DyztP2jM;
-	arc=none smtp.remote-ip=185.132.180.163
-Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
+	dmarc=pass header.from=microchip.com;
+	spf=pass smtp.mailfrom=microchip.com;
+	dkim=pass header.d=microchip.com header.i=@microchip.com header.a=rsa-sha256 header.s=mchp header.b=LLNO9S3J;
+	arc=none smtp.remote-ip=68.232.153.233
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0BF606A69F;
-	Wed, 25 Nov 2026 11:49:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2B0BF606A69F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41ED5606A31E;
+	Wed, 25 Nov 2026 13:35:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41ED5606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.a=rsa-sha256 header.s=dk201812 header.b=DyztP2jM
-Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-	by mx07-00376f01.pphosted.com (8.18.1.12/8.18.1.12) with ESMTP id 6AP7prcw1962352;
-	Wed, 25 Nov 2026 11:48:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=D
-	T6kM67LeVqubhl/XQzUsjrbwfVvqg+O4AplUmwA+EM=; b=DyztP2jMvjhW2dAAn
-	0P4ZdcdZDl8rmt21/NTBoui+Tj+YFEvOyMGIZSK/+mOeNJvj0JMAoreYnaqSiZSh
-	HEiUZ6BSRaz4Z5soUsc/si9vGBsjIiPM5ynMJZOrhEHjexEZVzMwouJatv8pJElQ
-	azKd7spDeZ7C9rWMJlTSwaJUco1VSWPLv9v2Q4oLjHq2jdKdPwh6asiQ1XcCVuAd
-	sPRTz4t+ieKyh6KmMMyLdUCk4bqJxZ7sTDS60kqUyWVfk8EH500ql2BHLcNErrfQ
-	Ju50u/hrqxuL4u5MN9KXMLms/T6mmTotLwCyq+ue1baoqDv+7vwrICLo1I7LgZku
-	FbE1g==
-Received: from hhmail01.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 4j3491kdye-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT key_exchange=secp384r1);
-	Wed, 25 Nov 2026 11:48:59 +0000 (GMT)
-Received: from [127.0.1.1] (172.25.10.203) by HHMAIL01.hh.imgtec.org
- (10.100.10.19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.56; Wed, 25 Nov
- 2026 11:48:57 +0000
-From: Alexandru Dadu <alexandru.dadu@imgtec.com>
-Date: Wed, 25 Nov 2026 13:48:30 +0200
-Subject: [PATCH 2/6] drm/imagination: Fix size of FW header members
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.a=rsa-sha256 header.s=mchp header.b=LLNO9S3J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1795613727; x=1827149727;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=Txjup62vWuwXBbpPq+9a0ZGnVGpiUgDc5L/hZ3rQnrU=;
+  b=LLNO9S3JFm3Yysk4Nk3JpJUc42KegqP3aktrfgNxPh2/DxNVFwGoAQav
+   ejVGtij+rk9ePsF8LZoEut1NcExgTcNuIEevK3t6mWZCR+EoKFRGXNTv+
+   6Kzov2yfQ7PvibTeLdLKVIoepDsK1+z98o5mAeCUvZYOUvhmbCnfzj7CI
+   jbMhmEhWHr0sBvBKsmVBOLmN1DuYRvuFCzzn+UWvvSqWAPuoDH+rbHjDk
+   4Yui7jQS2BrA1webaCZvqbsFusQQjw7sZj0Msh8JJPP3xNl5nYqeYQGl9
+   ce3oel9CYHqj2srvla9hdgnsYex6GqqjuWUB944H0NBQLgVlcEdpROleA
+   Q==;
+X-CSE-ConnectionGUID: lRMufyWDQ7iQiM+bz9qwMw==
+X-CSE-MsgGUID: eCyoESBEQwmqsLB7WoIDbQ==
+X-IronPort-AV: E=Sophos;i="6.27,232,1787036400"; 
+   d="scan'208";a="77846903"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 06:35:26 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
+ chn-vm-ex1.mchp-main.com (10.10.87.30) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.57; Wed, 25 Nov 2026 06:35:25 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.58 via Frontend
+ Transport; Wed, 25 Nov 2026 06:35:22 -0700
+From: =?utf-8?q?Jens_Emil_Schulz_=C3=98stergaard?=
+	<jensemil.schulzostergaard@microchip.com>
+Subject: [PATCH net-next v4 0/3] net: sparx5: add router legs for L3
+ routing offload
+Date: Wed, 25 Nov 2026 14:35:05 +0100
+Message-ID: <20261125-sparx5_l3_routing-v4-0-86a9bac28fcf@microchip.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,98 +78,142 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20261125-b4-commonize-fw-segment-loading-v1-2-69657fa52ac3@imgtec.com>
-References: <20261125-b4-commonize-fw-segment-loading-v1-0-69657fa52ac3@imgtec.com>
-In-Reply-To: <20261125-b4-commonize-fw-segment-loading-v1-0-69657fa52ac3@imgtec.com>
-To: Alessio Belle <alessio.belle@imgtec.com>,
-        Luigi Santivetti
-	<luigi.santivetti@imgtec.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Paul Walmsley <pjw@kernel.org>, "Palmer
- Dabbelt" <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>
-CC: <imagination@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-hardening@vger.kernel.org>,
-        Alexandru Dadu
-	<alexandru.dadu@imgtec.com>,
-        Matt Coster <opensource@mtcoster.net>
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795607333; l=1243;
- i=alexandru.dadu@imgtec.com; s=20260304; h=from:subject:message-id;
- bh=wSXEtBNYX4VW/9eHmVJwMwRIUWDpaPN0ooAORqioPRs=;
- b=m/LbOEwqR6ZJz4lj7z/qGx1EHXodqW9O1g1JhtAaOAG7WNnsXdu56uZUo3aSLZgbkycwOlsJv
- iLHYb2XJDw3BAEypWZdJesfYxtuFGKZdgD4RfFl3z1OwJLVO1JehIZ4
-X-Developer-Key: i=alexandru.dadu@imgtec.com; a=ed25519;
- pk=FU07SyNrYGwhahqSxbWEuzyXlUh47xBXvLvOR7UA6+U=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTI1MDA0NiBTYWx0ZWRfX7/K6c76/rDgo
- /p0jFeSetx3U4aOmlLmItmnUoQMCs3iaZMxrawSkkabW9zpL7alw6mUw9pRv5aqMnluyzbf12sq
- Bkkt57e14ljZcKxBbxPCVH1x0SBEfamcIpmQtugFeF7FgqudOcHlCIuAdAuizGKvWWvcYDGRE5V
- ha9NHco4eoqQEm00CxQv+WBhbOBRu1wXzsCaWt5NWA3ZXSi07O0S9dGC0hqSttPq/tX6g41QR+H
- XIjXRbbks9qOxkDI86LssLj4NiwiFkJUoQm+vO6IMQnioP5g6d6LVkQLFuBjEaIzOB/R3acifLQ
- Mb3EOZvWVUhgvYb9/zHsJIP2A807sy9aOu2zo5PpuE2t6olJ+HWAIERAvhN0pPxNQHDLj5LAWzW
- YYIWggnKFw95JqN6TzWZgSxTgSsVbFh6o05APF32NJpkQ2WIIHesFYP811MOJIL13ajMwnpJYrR
- kcTppoCtpJCMG6lj1pA==
-X-Authority-Analysis: v=2.4 cv=OaENnRTY c=1 sm=1 tr=0 ts=6b06cb2b cx=c_pps
- a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17
- a=4EFqt8Tv61wA:10 a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=kQ-hrUj2-E3RCbRHssb7:22 a=7RYWX5rxfSByPNLylY2M:22
- a=r_1tXGB3AAAA:8 a=iNbrFeQbgqLfWq_HSDUA:9 a=QEXdDO2ut3YA:10
- a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTI1MDA0NiBTYWx0ZWRfX1AlL2Ielwx2F
- RvuWjdcTwJxaahPoL8j2vTH6yfUzclYrk0Zo68ROxMbDVHmvs8p/N08FW8/zM+XBO0kHpINAKfV
- JZg5NV9ZTObWgn+XUv4ZoP4pjyTOebU=
-X-Proofpoint-GUID: QTRFWEKYns1hBUn_zlItTi6g9GARBSEH
-X-Proofpoint-ORIG-GUID: QTRFWEKYns1hBUn_zlItTi6g9GARBSEH
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAnkBmsC/23OwWrDMAwG4FcpPs/FshMn6WnvMUYJstIIVjvYm
+ ckoefcZH1ooQaefH33SQySKTElcTg8RKXPi4EtoPk4C59HfSLIrWWilrdKgZFrGuLXXH3ON4Xd
+ lf5OD1U3bU+OMG0XZWyJNvFXzS3hapadtFd+lmTmtIf7VYxlqX10L+sDNIJWc0CAosGpqhs87Y
+ ww483LGcK9i1i+lP/wu66K0A9kesS8zHinmqQBAd6SYohRDkesG7By+K/u+/wOGWR1ETAEAAA=
+ =
+To: Horatiu Vultur <horatiu.vultur@microchip.com>,
+	<UNGLinuxDriver@microchip.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, Daniel Machon <daniel.machon@microchip.com>,
+	"Steen Hegelund" <Steen.Hegelund@microchip.com>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Robert Marko
+	<robert.marko@sartura.hr>, Eric Dumazet <edumazet@kernel.org>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-hardening@vger.kernel.org>,
+	=?utf-8?q?Jens_Emil_Schulz_=C3=98stergaard?=
+	<jensemil.schulzostergaard@microchip.com>
+X-Mailer: b4 0.15-dev
 
-From: Matt Coster <matt.coster@imgtec.com>
+This is the first series adding L3 unicast routing offload for IPv4
+and IPv6 to Sparx5 and LAN969x. It adds the routing registers and
+the router legs, the hardware interfaces where routing happens. No
+route is offloaded yet. Routing is enabled in the chip, but with no LPM
+rule a routed frame misses the lookup and is redirected to the CPU, so
+the kernel keeps routing every frame in software.
 
-Don't use enum types directly in the FW header structures, since these
-are not guaranteed to be the required 32-bits.
+The chips only route in VLAN aware mode. A router leg is created for a
+direct VLAN upper of the offloaded bridge when it gets its first
+address, provided the upper qualifies for hardware routing: a non-zero
+vid, the bridge VLAN protocol, the bridge MAC and no master. Any other
+configuration is routed in software as usual.
 
-Signed-off-by: Matt Coster <matt.coster@imgtec.com>
-Signed-off-by: Alexandru Dadu <alexandru.dadu@imgtec.com>
+Patch 1 adds the register macros for the L3 routing blocks.
+
+Patch 2 adds the router legs, their lifecycle on address events, the
+global leg base MAC and the hardware enable sequence.
+
+Patch 3 keeps the legs in sync with the bridge. A transition that would
+leave the hardware and kernel routing differently drops the leg instead
+of being refused, and the leg is recreated once the upper qualifies.
+It also follows bridge MAC and vid changes and the upper going down, and
+recreates the legs when a switch port joins the bridge again.
+
+The plan for future series building on this one:
+
+  2: track FIB entries and trap them to the CPU, with the LPM VCAP
+  3: main and local table arbitration, FIB rule refusal and neighbour
+     host routes
+  4: forwarding through a single nexthop, ECMP and blackhole routes
+  5: routes through nexthop objects
+
+The Super VCAP shared-register race reported on v1 is fixed separately
+by commit d7a8d500d7e4 ("net: microchip: vcap: fix races on the shared
+Super VCAP block"), which is now in net-next.
+
+Signed-off-by: Jens Emil Schulz Østergaard <jensemil.schulzostergaard@microchip.com>
 ---
- drivers/gpu/drm/imagination/pvr_fw_info.h | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+Changes in v4:
+- Queue the leg reconcile when the first switch port joins the bridge,
+  so it runs after the bridge MAC is recalculated.
+- Queue the leg reconcile when a vlan upper of the bridge comes up, so a
+  leg lost while the upper was down is created again.
+- Tear the router down before the switchdev and netdevice notifiers on
+  remove.
+- Publish the router only after its workqueue is set up.
+- Link to v3: https://lore.kernel.org/r/20261117-sparx5_l3_routing-v3-0-e680ed79c7dc@microchip.com
 
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_info.h b/drivers/gpu/drm/imagination/pvr_fw_info.h
-index c3639440610e..3ad79c59d5b1 100644
---- a/drivers/gpu/drm/imagination/pvr_fw_info.h
-+++ b/drivers/gpu/drm/imagination/pvr_fw_info.h
-@@ -104,10 +104,18 @@ struct pvr_fw_info_header {
-  *                              section of the firmware image
-  */
- struct pvr_fw_layout_entry {
--	/** @id: Section ID. */
--	enum pvr_fw_section_id id;
--	/** @type: Section type. */
--	enum pvr_fw_section_type type;
-+	/**
-+	 * @id: Section ID.
-+	 *
-+	 * Values are given by enum pvr_fw_section_id.
-+	 */
-+	u32 id;
-+	/**
-+	 * @type: Section type.
-+	 *
-+	 * Values are given by enum pvr_fw_section_type.
-+	 */
-+	u32 type;
- 	/** @base_addr: Base address of section in FW address space. */
- 	u32 base_addr;
- 	/** @max_size: Maximum size of section, in bytes. */
+Changes in v3:
+- Split the series. The router code is now rebuilt as smaller series.
+  This series keeps the registers and the router legs. The VCAP
+  preparation moves to the second series.
+- Tighten which device may carry a router leg: a direct VLAN upper of
+  the bridge whose ports are offloaded, without a master of its own,
+  with a non-zero vid, the bridge VLAN protocol and the bridge MAC.
+- Follow the transitions that would leave the chip and kernel out of
+  sync: enslaving a leg to any master, changing its MAC, and disabling
+  vlan_filtering or changing the VLAN protocol on its bridge drop the
+  leg, which is created again when the upper qualifies.
+- Destroy a leg created from the address validator when the address add
+  fails afterwards, and handle IPv6 address removal from a work embedded
+  in the router rather than one allocated per event.
+- Keep addresses when a leg cannot be created, and route that upper
+  in software.
+- Disable a leg as an ingress router leg while its upper is down or the
+  bridge does not carry its vid.
+- Flush the legs of a bridge when its last switch port leaves and
+  recreate them on rejoin.
+- Program the leg base MAC from the bridge MAC when a leg is created,
+  not only when the bridge MAC changes.
+- Enable unicast routing only on the switch ports, and restore the
+  routing registers when the router is torn down.
+- Carry on without offload when the router cannot initialise, rather
+  than failing the probe, and skip the router without CONFIG_VLAN_8021Q.
+- Remove the blackhole leg and the IPv6 link-local trap.
+- Link to v2: https://lore.kernel.org/r/20260810-sparx5_l3_routing-v2-0-59e68cc8c8ca@microchip.com
 
+Changes in v2:
+- Reworked neighbour lifetime: anchor neighbours to the router leg
+  instead of the most-specific covering FIB entry (matching
+  mlxsw/prestera). Fixes a neighbour-entry leak (memory + VMID + host
+  VCAP rule + netdev reference) and lets the software LPM be removed
+  entirely.
+- Fixed a heap overflow in the fib6 nexthop prune path.
+- Fixed a leak on the router_init() error path.
+- Hardening: netns filtering and offload-ownership checks on the global
+  notifiers, and a NETDEV_UNREGISTER leg-teardown backstop.
+- Fixed do_div() misuse on a 32-bit value. Added the missing RCU
+  annotation on in_dev->ifa_list.
+- Zero-initialise the actionfield data in vcap_rule_mod_action_bit().
+- Updated the sparx5_router.c header comment to describe the
+  leg-anchored model.
+- Link to v1: https://lore.kernel.org/r/20260612-sparx5_l3_routing-v1-0-fc3c10160f49@microchip.com
+
+---
+Jens Emil Schulz Østergaard (3):
+      net: sparx5: add l3 routing registers
+      net: sparx5: add L3 router legs
+      net: sparx5: keep router legs in sync with the bridge
+
+ drivers/net/ethernet/microchip/sparx5/Makefile     |   2 +-
+ .../ethernet/microchip/sparx5/lan969x/lan969x.c    |   1 +
+ .../microchip/sparx5/lan969x/lan969x_regs.c        |  11 +
+ .../net/ethernet/microchip/sparx5/sparx5_main.c    |  13 +-
+ .../net/ethernet/microchip/sparx5/sparx5_main.h    |  36 +
+ .../ethernet/microchip/sparx5/sparx5_main_regs.h   | 528 ++++++++++++
+ .../net/ethernet/microchip/sparx5/sparx5_regs.c    |  11 +
+ .../net/ethernet/microchip/sparx5/sparx5_regs.h    |  11 +
+ .../net/ethernet/microchip/sparx5/sparx5_router.c  | 920 +++++++++++++++++++++
+ .../ethernet/microchip/sparx5/sparx5_switchdev.c   |  30 +-
+ .../net/ethernet/microchip/sparx5/sparx5_vlan.c    |   2 +
+ 11 files changed, 1560 insertions(+), 5 deletions(-)
+---
+base-commit: 612848d37e68b858e15815175f1c5e609e09d719
+change-id: 20260210-sparx5_l3_routing-962458e4d3da
+
+Best regards,
 -- 
-2.43.0
+Jens Emil Schulz Østergaard <jensemil.schulzostergaard@microchip.com>
 
