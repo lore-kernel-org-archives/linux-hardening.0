@@ -1,66 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.79.88.28
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795623039;
-	b=Ml7brfwj58q3qdXfnZwoL9NFAC3cWIc8l1K5yU3r5b2/OmRAkbrl2DdmMT6f74u1IOiB
-	 X1iVgThrE+w0FCny//ZBruPoksRjeL55rK5HEAI98g827Eq4crwQlZwhS6MDajzHnLHaW
-	 KYdw0YaTNbF01GT0ug7gG5AltSzNgLJhxZSFtN8lLMVXFxf1EPP7MA2/fd2AnHQfgE/qf
-	 n+45/sifOrQsVlAPQ5IxjUkwDnD7Ir1N+3VunMbMOhETJBFwgF/AycRenYqDzEyCyuPXs
-	 LUIVsXI3nYESx3MMT0eoxx6WlJAi/w/f3g8H2F+bkTkTee1cvagn1/K3E2pG4pr7Jyg==
+	t=1795624084;
+	b=DqpXV+YVrolQal7YS6Nt9ivElRXHnLoVp5uOxDwEWNJqc4Ljkb26XlJlqC3asaMP5JTB
+	 helBupbtE7e7/7E5pYw6+dgsczjoTSeKxRroU88ZSx/o2jeTX0l93KhnRPg78Z3ZQudwn
+	 SQQ2TYjckhL+E5CROB6VT+0BJXNR48aopge3niHt1P/EwPwq7auFECUzB88X4bXRBQTHo
+	 w6c5scx5hFZJ6xaL7BiOclvXr0IKKZppPyITW0I9YhLkpUC11t/DIfENuur2dcpsIRCc4
+	 qtR2DZ8phRVL1f3u3b+2ldQCVoDMn+waB8Dwkwu4ChcBEZSbnpM42L6C7+wndxCfEJw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795623039;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=O45HxT1I9aVy+grMz3O6JGbii0vdVA8+mf3TGqAUJjg=;
-	b=5egmRP/Wevo6sjny0bepQe2TQdUeNlD3fkak5KDlBqHXpdILlVfFkvN1y7/GCVzY6Q9n
-	 yCFiQjmGBMR8iPRPPfYgohXJkdNGpvgScm5TSjca2jAblsNYv98IrW6x8t/JujtBLhndu
-	 OSxMeXq0hKB+GT1EfQTMhmoCoO94WnC4vc8Mk380zetq3mMp90YW8KpZ19X/JzJJOk92S
-	 VYP/G1FsMIDV+7AcI9CN/Go6U5aO/K/U2dMVCeOIVcgEBLQDeaGDrRnqXQUy1mCpXeKog
-	 iNR1iZBYCfzN/k2rCGQY/7yBFlfxU2do9aCpWkidw8ttkRmBhMv2cYHzTkMkC0NeRTg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795624084;
+	h=DMARC-Filter:DKIM-Filter:DKIM-Signature:Received:From:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type;
+	bh=KC9kQxeHZ76XiJpzcnKl74l0T9w0iam6Tpv78NX5QEY=;
+	b=nktYIJJ/t4BZyeFRvqcX1ztyIszUnDEzvUdwqYTZk2EyqSgEXqwhc/MxCwccZIrtUVY/
+	 wcW6eS7jig3asWueP9tuJMiQghSTJOey0hhiGfbojghn5C3Ey8pYmAaF5r7d0L1mIq1B3
+	 CbhlsWfSNJfMXRkR024HBdKJi8zW6L0Ws+cIomowSh8vN6sZg7UdsDTydkVOLmI3AIUi3
+	 P1MycKb6wP19XL3O9LuqDkfldY4j2buWRBgZhStfAA8ELwnQRH+luLg89qkhZvTgSTBSG
+	 GzoCOHPAKgPY0tvLiRCRj0+9gwmmqbxGbioPadMOcYpYB5e00heDOydwYX+jrIBSzDg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hGp8jYQu;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=lwn.net;
+	spf=pass smtp.mailfrom=lwn.net;
+	dkim=pass header.d=lwn.net header.i=@lwn.net header.a=rsa-sha256 header.s=20201203 header.b=s1AqJYiz;
+	arc=none smtp.remote-ip=45.79.88.28
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with UTF8SMTPS id 65D63606A31E;
-	Wed, 25 Nov 2026 16:10:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F507606A321;
+	Wed, 25 Nov 2026 16:28:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0F507606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hGp8jYQu
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id A747A1F000C4;
-	Wed, 25 Nov 2026 16:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795623038;
-	bh=O45HxT1I9aVy+grMz3O6JGbii0vdVA8+mf3TGqAUJjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=hGp8jYQuXSlhsQGxVeBbuMyBTP2pN4voUsjE0oKeBVZDvRGyJpyaqIinjEce2/WAf
-	 1gP7VVR4tpZg7cn+YQhMJ1t2F7FxFhw6vr9M0wnPXZB2XJOD21B1+csb4JflkF1bS3
-	 SsnDMWjpR9OzpTGRhZAI3fzAPil0PUL9rVjFwy5Sen5oqzkLrosiJHAq7mZ0FWOsyW
-	 l2oFc53MoRiGvFvPIDuw/5yiAIsh+Ca0sfQpmwYphgAKSfDwa/hb/BHJG9fYYTaQgM
-	 1dtF6MR7gj+b+kZyQoNO02gfS7+fwi7P2XhcJwXB0U8L2YXHQ0p0OtOCtuvmcdbMbc
-	 zYiu6yMFSZgow==
-Date: Wed, 25 Nov 2026 17:10:35 +0100
-From: Bartosz Golaszewski <brgl@kernel.org>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v6 04/19] device property: Fix fwnode_name_eq() for empty
- node names
-Message-ID: <nat4ilqmzzpuyrjbuahl367ip22tfnmjorydlppuwqiscxaujo@kf63j4lb3flk>
-References: <cover.1794667407.git.alx@kernel.org>
- <7fc1321995f1aec9d7b92c6a89047cc9fb28c52a.1794667407.git.alx@kernel.org>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.a=rsa-sha256 header.s=20201203 header.b=s1AqJYiz
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 18CE2410D0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1795624083; bh=KC9kQxeHZ76XiJpzcnKl74l0T9w0iam6Tpv78NX5QEY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=s1AqJYizr+FvP5iYZcPd+N/BfMZmAh5TIpB0LduRqooTCOwLal+xqVZ5FyvkSvlZI
+	 mCpFutShYef3q0d46mkEQfZXNUKhmREQjPQ/1wyvKRmf18uybNZ8+2hjuezRIGwxIA
+	 fsuwa4nGpgsjccM6M8KggnJpguVkCnsEc5l5PkxmcsIF8AW+XjCrMnQ2CvU6eTMBX+
+	 Chnf5IiblTLURG7e8NsZqfy/mEiL7SzpQjF4mI8Lc8RNeijq0SUOgZWPNRlqLvOQaU
+	 NFr9EjMsZLMSxGfTFrQwTjsp/VqjWvUevlgqcFxU0YZoZC++uMEAEaJpM8LNZp4MwG
+	 EhSTOP1n29hyg==
+Received: from localhost (unknown [205.220.129.44])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 18CE2410D0;
+	Wed, 25 Nov 2026 16:28:02 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Kees Cook <kees@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] CREDITS: Regularize email address for Kees Cook
+In-Reply-To: <20261113174357.i.748-kees@kernel.org>
+References: <20261113174357.i.748-kees@kernel.org>
+Date: Wed, 25 Nov 2026 09:27:54 -0700
+Message-ID: <87qzg8x4dx.fsf@trenco.lwn.net>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,36 +66,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7fc1321995f1aec9d7b92c6a89047cc9fb28c52a.1794667407.git.alx@kernel.org>
+Content-Type: text/plain
 
-On Sat, Nov 14, 2026 at 04:22:16PM +0100, Alejandro Colomar wrote:
-> str_has_prefix() returns the prefix length on match and 0 on mismatch,
-> so the mistmatch case can't be told from "empty prefix matched an empty
-> string".
-> 
-> For instance: the OF root node's name as returned by
-> fwnode_get_name() is "" and will return 0 for any name matched against
-> it and since len is 0 too, fwnode_name_eq() will return true.
-> 
-> Let's use strprefix() instead, which also makes this function simpler.
-> 
-> Fixes: a9c8c738066b7 ("device property: Add fwnode_name_eq()")
-> Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
-> Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+Kees Cook <kees@kernel.org> writes:
+
+> Update my email address to better reflect reality: company-specific things
+> (hw embargo) to Google, everything else to @kernel.org, drop less-used
+> aliases, but leave copyright-associated email comments as-is.
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
+> I am happy to carry this via pstore or hardening, but figured I'd send
+> it via docs just to avoid any collisions with translation updates.
+> ---
+>  Documentation/process/embargoed-hardware-issues.rst           | 2 +-
+>  .../translations/pt_BR/process/embargoed-hardware-issues.rst  | 4 ++--
+>  .../translations/sp_SP/process/embargoed-hardware-issues.rst  | 2 +-
+>  .../translations/zh_CN/process/embargoed-hardware-issues.rst  | 2 +-
+>  .../translations/zh_TW/process/embargoed-hardware-issues.rst  | 2 +-
+>  fs/pstore/blk.c                                               | 2 +-
+>  fs/pstore/zone.c                                              | 2 +-
+>  lib/test_firmware.c                                           | 2 +-
+>  lib/test_module.c                                             | 2 +-
+>  CREDITS                                                       | 3 +--
+>  10 files changed, 11 insertions(+), 12 deletions(-)
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+I've applied this, thanks.
 
-This series has grown substantially since v1. My GPIO series[1] depends on
-fwnode_name_eq() working correctly so I would really appreciate it if we
-could queue the bits and pieces fixing fwnode_name_eq() separately and sooner
-rather than later (it should also be backported to stable).
-
-Thanks
-Bartosz
-
-[1] https://lore.kernel.org/all/20261120-fwnode-for-each-prop-v3-0-808e304dc73e@oss.qualcomm.com/
+jon
