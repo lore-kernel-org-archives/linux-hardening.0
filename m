@@ -1,62 +1,65 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.79.88.28
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795624084;
-	b=DqpXV+YVrolQal7YS6Nt9ivElRXHnLoVp5uOxDwEWNJqc4Ljkb26XlJlqC3asaMP5JTB
-	 helBupbtE7e7/7E5pYw6+dgsczjoTSeKxRroU88ZSx/o2jeTX0l93KhnRPg78Z3ZQudwn
-	 SQQ2TYjckhL+E5CROB6VT+0BJXNR48aopge3niHt1P/EwPwq7auFECUzB88X4bXRBQTHo
-	 w6c5scx5hFZJ6xaL7BiOclvXr0IKKZppPyITW0I9YhLkpUC11t/DIfENuur2dcpsIRCc4
-	 qtR2DZ8phRVL1f3u3b+2ldQCVoDMn+waB8Dwkwu4ChcBEZSbnpM42L6C7+wndxCfEJw==
+	t=1795624514;
+	b=bNW64B9R8OwtOENPeBAOD4BquYGgwdDrDGsLpOezVqwkDQKV5Wf19Eby+X5O5pXc2r2m
+	 r8c1jyRRE6hvNq5f90BizQcCsrZGDcgHgKloPL7HrBmduCudMLLjwpNkFta8TJk4oo0tq
+	 tAG9x0Y7g2jhoOGgn6muC3G0Y4IiNJ/wvjSmrnUUdzXaLBUM65qdyr31mhZJPCjt+d+U+
+	 oAYwKP+obDiB0ZPWMTj+awCb5LJWdy2QpR3gSIgvTUnzBczEiqrIDVXlME3Sef0cBpni4
+	 +ck8LgA/xGbS9g7wM3KfefcsDqjQuUnsEhywrEYrDItsEroQGQPDHB8aEVxAHPBm9jw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795624084;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795624514;
 	h=DMARC-Filter:DKIM-Filter:DKIM-Signature:Received:From:To:Cc:Subject:
 	 In-Reply-To:References:Date:Message-ID:MIME-Version:Content-Type;
-	bh=KC9kQxeHZ76XiJpzcnKl74l0T9w0iam6Tpv78NX5QEY=;
-	b=nktYIJJ/t4BZyeFRvqcX1ztyIszUnDEzvUdwqYTZk2EyqSgEXqwhc/MxCwccZIrtUVY/
-	 wcW6eS7jig3asWueP9tuJMiQghSTJOey0hhiGfbojghn5C3Ey8pYmAaF5r7d0L1mIq1B3
-	 CbhlsWfSNJfMXRkR024HBdKJi8zW6L0Ws+cIomowSh8vN6sZg7UdsDTydkVOLmI3AIUi3
-	 P1MycKb6wP19XL3O9LuqDkfldY4j2buWRBgZhStfAA8ELwnQRH+luLg89qkhZvTgSTBSG
-	 GzoCOHPAKgPY0tvLiRCRj0+9gwmmqbxGbioPadMOcYpYB5e00heDOydwYX+jrIBSzDg==
+	bh=Hjgt+TFxcPhZLkIHdOXb/NOc51gCKreQtgu/urojjxk=;
+	b=hMJ+iig49w4lAyxHys17ANMVlZ+02wN/7QYxVJzye6+74Z4RQoq7BlHzuqegAsnwN49J
+	 R7PNmoh1aWnAy4I+4m9HQ3j6DgVxPnHFO5uSfO8n6A5G1B14GKtVm5gJSvRgxjD45yjfI
+	 hLYZTOETH4BE7/AcU5HXfsMv4zflSsLoB0OkPMVvHI9f5HYrR43pU3EnOgCjmZtsHmBuT
+	 tPXHy8gB69FuIr4lAQS3NtxBmbZTQTUFWOeZOyOGfCBcozpA8TuLznUAushfzE1QYfePP
+	 U+R2kA4MvzXiDXLxKi51+OnbG4FkxyCqUFXN1et+/ugbk3FB3O7XSYip+JqTqiybxDA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=lwn.net;
 	spf=pass smtp.mailfrom=lwn.net;
-	dkim=pass header.d=lwn.net header.i=@lwn.net header.a=rsa-sha256 header.s=20201203 header.b=s1AqJYiz;
+	dkim=pass header.d=lwn.net header.i=@lwn.net header.a=rsa-sha256 header.s=20201203 header.b=F4ZFtXBd;
 	arc=none smtp.remote-ip=45.79.88.28
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F507606A321;
-	Wed, 25 Nov 2026 16:28:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0F507606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7B8606A338;
+	Wed, 25 Nov 2026 16:35:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BB7B8606A338
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.a=rsa-sha256 header.s=20201203 header.b=s1AqJYiz
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 18CE2410D0
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.a=rsa-sha256 header.s=20201203 header.b=F4ZFtXBd
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net B48A5410D0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1795624083; bh=KC9kQxeHZ76XiJpzcnKl74l0T9w0iam6Tpv78NX5QEY=;
+	t=1795624512; bh=Hjgt+TFxcPhZLkIHdOXb/NOc51gCKreQtgu/urojjxk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=s1AqJYizr+FvP5iYZcPd+N/BfMZmAh5TIpB0LduRqooTCOwLal+xqVZ5FyvkSvlZI
-	 mCpFutShYef3q0d46mkEQfZXNUKhmREQjPQ/1wyvKRmf18uybNZ8+2hjuezRIGwxIA
-	 fsuwa4nGpgsjccM6M8KggnJpguVkCnsEc5l5PkxmcsIF8AW+XjCrMnQ2CvU6eTMBX+
-	 Chnf5IiblTLURG7e8NsZqfy/mEiL7SzpQjF4mI8Lc8RNeijq0SUOgZWPNRlqLvOQaU
-	 NFr9EjMsZLMSxGfTFrQwTjsp/VqjWvUevlgqcFxU0YZoZC++uMEAEaJpM8LNZp4MwG
-	 EhSTOP1n29hyg==
+	b=F4ZFtXBdTsZufllLGA7OuIf1lCn9NzoU9URraJsenDDOnHUYFscs+aucSvgYxUjJA
+	 GraSu1g9b8H2VPHHWN/8d5TycxuQIQncGuMxaCx0uk6RG49+/0KLjBj+Ymc9pCc1vs
+	 g96A9uf1Zh47I5jf8dpQ7lkCbc9nPtNaEvsJAVZ3VGMCd1WYPmkDumnctgDk9G9zkK
+	 uaFPLv+AkeFRSGJ3z86v5fCJM2KsAp+nXWGRM6fMdcrbdO71YKZ4odgj13DL5f0vTg
+	 7nY9by5GhGLACbcaEQk3QPYOhtZTwnHK6Mj0lhC8xruY3+2N4qdZjzjSkQ1RI0jcpz
+	 oLoq3cFN8j0EQ==
 Received: from localhost (unknown [205.220.129.44])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 18CE2410D0;
-	Wed, 25 Nov 2026 16:28:02 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPSA id B48A5410D0;
+	Wed, 25 Nov 2026 16:35:11 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
-To: Kees Cook <kees@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] CREDITS: Regularize email address for Kees Cook
-In-Reply-To: <20261113174357.i.748-kees@kernel.org>
-References: <20261113174357.i.748-kees@kernel.org>
-Date: Wed, 25 Nov 2026 09:27:54 -0700
-Message-ID: <87qzg8x4dx.fsf@trenco.lwn.net>
+To: Kees Cook <kees@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+Cc: Kees Cook <kees@kernel.org>, CVE Assignment Team <cve@kernel.org>, Randy
+ Dunlap <rdunlap@infradead.org>, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] docs: cve: Describe how security fixes reach users
+In-Reply-To: <20261111014419.i.586-kees@kernel.org>
+References: <20261111014419.i.586-kees@kernel.org>
+Date: Wed, 25 Nov 2026 09:35:04 -0700
+Message-ID: <87ik1kx41z.fsf@trenco.lwn.net>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,27 +73,20 @@ Content-Type: text/plain
 
 Kees Cook <kees@kernel.org> writes:
 
-> Update my email address to better reflect reality: company-specific things
-> (hw embargo) to Google, everything else to @kernel.org, drop less-used
-> aliases, but leave copyright-associated email comments as-is.
+> Recent threads on kernel-hardening proposed new mechanisms for
+> mitigating kernel CVEs while waiting for distributions to ship their
+> fixes. The CVE documentation does not say how fixes reach users, or
+> whose job it is to get them into a vendor's kernel. Add a section that
+> does, summarizing the answers given in those threads.
 >
+> Link: https://lore.kernel.org/all/2026110719-zipping-silliness-2443@gregkh/
+> Link: https://lore.kernel.org/all/2026111052-spectator-legwarmer-4c1e@gregkh/
 > Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> I am happy to carry this via pstore or hardening, but figured I'd send
-> it via docs just to avoid any collisions with translation updates.
-> ---
->  Documentation/process/embargoed-hardware-issues.rst           | 2 +-
->  .../translations/pt_BR/process/embargoed-hardware-issues.rst  | 4 ++--
->  .../translations/sp_SP/process/embargoed-hardware-issues.rst  | 2 +-
->  .../translations/zh_CN/process/embargoed-hardware-issues.rst  | 2 +-
->  .../translations/zh_TW/process/embargoed-hardware-issues.rst  | 2 +-
->  fs/pstore/blk.c                                               | 2 +-
->  fs/pstore/zone.c                                              | 2 +-
->  lib/test_firmware.c                                           | 2 +-
->  lib/test_module.c                                             | 2 +-
->  CREDITS                                                       | 3 +--
->  10 files changed, 11 insertions(+), 12 deletions(-)
+>  Documentation/process/cve.rst | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 
-I've applied this, thanks.
+I've applied this, thanks.  Perhaps tweaks can yet be made to address
+Thorsten's concerns.
 
 jon
