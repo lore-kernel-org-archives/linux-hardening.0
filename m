@@ -1,93 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.49
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795636393;
-	b=C12RBtji90KDeEtz7R4XoWDoRhJsFXTfcvqw5MUGgtYGHVbWaA7urlsdNshLcoocxeUb
-	 gLGD+uKtP71KxiVZGA6ueF6RWuOqba2JjRqhDC7ZEFuxDcEnRQhb38JcrSe0yaJpeKRvY
-	 wMT7anxyq+bz2juiS211n6NLmArIxKWaZey3zGnVOJ+EmEgPdXaOZUqm1JjHw4DGR+In5
-	 6M0KlPewrGBqUvjr8t5wzFKP+4MF8UfQ8GlqdepPgK2RfT0cdnnmMiP9aJeNYmk82MSkr
-	 lgBSUA5+G6fm7694/DuuK42jw7vRHIDMt80fe1DEENRfA85SCceVy1NxsFLZfdWK7cw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795636393;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:Content-Type:Content-Disposition:
-	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=lYukfeY6cpsC+JSTj++fhLw+8HPibreSjdNEjaBumlw=;
-	b=faSGiEiZBMFEJHSjsg1MFICMjGdPTeuI1geacGrFkc6FPeELTYUdrHaWicHLZ8G/B9lW
-	 DKbHH+Sp67Mi8oWeVh/7qK5aJZbaGeq7IzVR0/NjSPFd3szbPIbQCfiYRoRzjoOeZeslx
-	 Z4+FuQm0sQIWBgvzFjjqRWp1bAfLOqqO/2KEmtgE35qch47826INBZtCZg9Q3pjd2ZVHo
-	 ncGpTjMId00C4UjJH7ReMisPBG00OGEd5WZwKOXwMCTpyttkrcSQB5OJ5z+9s3XtdXb0J
-	 TSn9c0hHmfPkbWuZggoaE9rKqlFOpV4Wce2w37o/+2CVZTMOs/sl4cbUjBhAJhwWhnA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=yBnKhGJF;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.52.49
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011049.outbound.protection.outlook.com [52.101.52.49])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795640609;
+	b=LIcIWkBI0mIfi5XbPp6+NXBYvhPLnNsWwScurKsEdPkGtqJhpg1aviVq49xCoifKirKM
+	 2ujxK+o/6tCG1712OwjxbEt1FRJ4YxYygX3nCH5a1Q8OYzOVOhxqxvMOmrzC7xq+t4891
+	 wWAbizmR9GokIYYnV+74ejOsD6LqOWqtOVeu94qcl4BgFybQTdB5isOCjjlyVLCcEzrhy
+	 k0PQnDClAUdfyCU+La2fOK20577awk02E+IeDOA1YTpXDjTLXZGuw+hxcfOqRCTSPDyQa
+	 7Uhj3Wcjn04lzQh6retJHiCXabKDM7Mw19DJrIr6ZrJq8rZavqKbQMufVNxi+rmHXDQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795640609;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
+	 Alx-In-Reply-To:MIME-Version:Content-Type:Content-Disposition;
+	bh=xtHYFrKQoYbCgFBgMvYJmjUyH3AVPT8QsMe8YROz4Bk=;
+	b=pWdp826pBIf/WFQdz56eOTMn/PeyDrIWJLpLywRrBxOEgBnlK2wHTTcl3Qk/AMY1LF6V
+	 A0+f6uZOZJcrzOnkUpe/xozGMTIhIsqt4HpdTTO9LbvWVc7v3+YpY9V8OMHQ32QZHqmu+
+	 1hTfWYaJ6Ln9J3rsCkokwh8jp3luvifLtEN1KHgob62gKB17T6yg8vp3O/41QFYC40acU
+	 c8d2tSejyVYaQ7m6/uYXncRW6XpvJDg/rR0+B5scDCRw6WFYEC3HtfENlusBRC2Q+hfAK
+	 IgHT8E8vUNKUrRZnWIuto68mtIyrhDDED43kvuqdQ1GsVrRviCYQnVy6nZ81OMX+qJA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XhOORMrW;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597F1606A31E;
-	Wed, 25 Nov 2026 19:53:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 597F1606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA35606A31E;
+	Wed, 25 Nov 2026 21:03:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=yBnKhGJF
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LOZ5PJoA7SpfnA8T8vkYMWzlIi1easLlc+gyD8j/fnI/y/IxrLMJEzaXR0vZ51S8raHrjKii13E73gpFqwsovisdNVmtK7curGo6FJIciDpVHOc2I9RUYt0smyI8FOh85V2LgG1z5ztFlsDUx8Iz1Fp9STIPIGdDEpYEvfAUKhCRbFDh6/LcnseHSMybdemHdZ8fIAlpUzOpx+xYV/rt/TYaFzOeTRgmWIdgJk+s69Tmb6Fl2z71bsgsQRrkc02Z9Ve+1NFedUO5uA30pySR4Y84NZBHHDg5xwBKww+jGi9ADup+QFJmwyX79HOKsdqwhhZkKLzyEAJq0z9ncZUzFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lYukfeY6cpsC+JSTj++fhLw+8HPibreSjdNEjaBumlw=;
- b=kYnJkIzNHaAJn5WcWvC5Bmhnk8RNsWszyWSKjQOQ+6OqDznM1FN2fzO5HgwLjt8inD81FSi9GJiKrvfR+g/InBNq/K3AXdkxp3cNUHW+dNJfxFQrxDgjHl+XRfGHwJHbDi/J867IRi3eOfWXa8jPRktl4jnqvEkk5r5BG2Za5zmpkHEhw2hPA2uld6EZPOFQLm43EyCHNaYsUBMB+SqrNz/0671Xo6ppOPt+3w3WtswjYftiBgVhvpbeyTT3YRqhyUhgoOj6RrCrZ1USxKJLwJcYidbbrIslNRnHGHjHbo7lZktSJpgdmaeBunnXZajB6M67BF9Bkv9lK0Sg+HeHLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lYukfeY6cpsC+JSTj++fhLw+8HPibreSjdNEjaBumlw=;
- b=yBnKhGJFU05WW/UgOJHSCj4G4MO+C6ypueW216yjUJVH2CHxNJ7XeH5hoBSwQPZZPgszNB5QG+dZ4i1dSAlFP5kM6ASxRNo72UrwiwI3o/O3+YHTRbS50EpvtMdl0zqIG3OssE8mLhbU2UjglMQf033Rhm3CCniuj6nnbU6tHpM=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from EAYPR12MB923140.namprd12.prod.outlook.com
- (2603:10b6:303:2fd::15) by DS5PPF2FA070BDF.namprd12.prod.outlook.com
- (2603:10b6:f:fc00::649) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.662.4; Wed, 25 Nov
- 2026 19:53:06 +0000
-Received: from EAYPR12MB923140.namprd12.prod.outlook.com
- ([fe80::b986:8b81:beda:c167]) by EAYPR12MB923140.namprd12.prod.outlook.com
- ([fe80::b986:8b81:beda:c167%4]) with mapi id 15.21.0639.012; Wed, 25 Nov 2026
- 19:53:06 +0000
-Date: Wed, 25 Nov 2026 14:53:01 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] EDAC/ecs: simplify allocation for context
-Message-ID: <20261125195301.GO2156781@yaz-khff2.amd.com>
-References: <20261111021808.60779-1-rosenp@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261111021808.60779-1-rosenp@gmail.com>
-X-ClientProxiedBy: BN0PR04CA0194.namprd04.prod.outlook.com
- (2603:10b6:408:e9::19) To EAYPR12MB923140.namprd12.prod.outlook.com
- (2603:10b6:303:2fd::15)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XhOORMrW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6537C1F000CA;
+	Wed, 25 Nov 2026 21:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795640609;
+	bh=xtHYFrKQoYbCgFBgMvYJmjUyH3AVPT8QsMe8YROz4Bk=;
+	h=Date:From:To:Cc:Subject;
+	b=XhOORMrWmWUb1XWEAo+i3oAQMLb7ZB2Gl3gxclk07ERPGWPs73HOW7+NvZZ7d79My
+	 HN/WMk6oI0/HxtGrrCi1aA19gneI0K3WRxtB7ZqCU+WJ/7BPe1kq9ABi9SmmqGcNOV
+	 PPOXSnFStcJg484+i8wuB6u5u3Kg72mb0IeK7OtEUuSaHzSd+uvSKDh6eFq93TmYcd
+	 RO/GwCg9jaG2MeaLqGWoblKTCgIL09jmYimU0vcYkCJtZLYxq23wVr6dRk30Zz6j+j
+	 Ay8iD4OyCextJ89mYyUSbv1blbdtnY6T+SgyIOAe6gE5SZ3M0E4WFaVeVEisAAnAIC
+	 Mt4aMRlcsyFWQ==
+Date: Wed, 25 Nov 2026 22:03:21 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: linux-hardening@vger.kernel.org
+Cc: Alejandro Colomar <alx@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
+	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, alx+linux-hardening@kernel.org
+Subject: [PATCH v7 0/4] Add strprefix() and fix a bug with it
+Message-ID: <cover.1795639368.git.alx@kernel.org>
+X-Mailer: git-send-email 2.55.0
+Alx-In-Reply-To: <cover.1793876837.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -97,69 +70,430 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: EAYPR12MB923140:EE_|DS5PPF2FA070BDF:EE_
-X-MS-Office365-Filtering-Correlation-Id: 316eb239-5029-4252-7ddc-08df4b2db8f9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|22082099003|18002099003|56012099006|11063799006|261028144727099003|261022105027099003|261026140227099003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	zW06Xh1VlA5uf1IbOjMWR4EkUo3viDDsKolSPSE1IjjsqVWELhgzdpewiWNY25nJtgFfiRSuINFwHgaK8sBlEbmGmclC7MBvi8EW27qtJDhqglaTAwywSnWwscpdF+ShiKR6XrpHsivysKhLHQvUMlOBRW1tu5qNCihrbsJDZ7FR+qD9MABA04Ox1onPATKGk28m/nJT4Jl0TBA8hXFZ4WA2gXXseHoTZxua9qfSM24vLVKWCtOWEhQ0NMeHsW0xsXVzApqi894p9Nfbr8J90zzI2Uv+/Pp9NfwkBsH8fMcKeIuyew8AYW/Q+zMlhaBjSfjpr0Ad5ZhfHJSOHKBeR18iGcAmon7UiV6EldLD94K2qLk12+P1gNmHQVebPg4phEInYEa3bijZmTmeSw6vZk/3dWJx/k2NvEOs48dVRU8cBxj1DYDRpwrD2VBrMBdFNvpp/aBcb4wQRwUyMhGRjfD8y+ac3xnmPFNSB+rGQf85UBFTR+RyYECdZsp7i2e1PIcEx7tJjfS8Km6Tdni/yESYOClLG/5XbV9L1iOTj9qa2btXAZ/ii0fSCPvVnKvgmuxu5ZUtyjdQIB13m2Oo/RsuWATjAKlw2GsfTKOfPCwnJZ6GpGVPthUjEdWWL+oij1TT7ejB6dwqVA8vDkDLuWKV7PvUUQViCkONjoKnkRo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:EAYPR12MB923140.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(22082099003)(18002099003)(56012099006)(11063799006)(261028144727099003)(261022105027099003)(261026140227099003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?rRMIVf0H5F8jFa/NmnreJLga/ePt+yusLyoiUDk8Zl/POM8eqdzYwCT6Y0zh?=
- =?us-ascii?Q?3vZ1jxq9lK3pjUsQzh8Vzm8A84C/7MwwA7VGl+bSpltrHB/EqOizhhCC0QRk?=
- =?us-ascii?Q?F7o6xDyoThI3IJ5JaO+S2TCwjEjNa9Yz4PmwdAUWyz5xvQ1IHECsOTjm9R81?=
- =?us-ascii?Q?AJ/+2ch801YrltucVPMqxnZmr4n1t9e5LhMDv3nxCo25MYg08L38oFktqXs6?=
- =?us-ascii?Q?87okMMD5Yg1f/RcrA2dngpuFlJJ5FORLJtTZxQCWuyYKDM6H/AxCnqjmxaYj?=
- =?us-ascii?Q?Yp/NzG3yTaOeyYNLFrwTtGhHzI8YEmghzREApnLf1M8dMfud7v7ceiiMhj7p?=
- =?us-ascii?Q?tSycLUJLsUACGd0Z3MiG6QHeYRQQWNTaCZ51dwLpumIbw1NfL48wP7tE4Dh0?=
- =?us-ascii?Q?9jpkZBGd5hXhNYDRyE0jJRPHn3868AmtwvgEznX+bjAh5x+E8AyYnuNkA6WN?=
- =?us-ascii?Q?WmTcex00l0m0rxqRo4x5FvwtVcgCDIPT3v2wchC3ioR8zUtrT0W2pbVB+MOX?=
- =?us-ascii?Q?pNTDJVj9dFxAGJHfoeV+tWi1i7S/RwPNIVlrwPf6u/qkG58ueZqON1V0tfTS?=
- =?us-ascii?Q?2ollJGHpaZ5sPRsQfSeu6a/YtqN7w7T4BkdYcsd4sLBJ/BpbrucFJMhAYkOI?=
- =?us-ascii?Q?0eXXPtJwzUPyOZh06Ujuuwc9E/bCt5MR0oo5yTdF4HVvwzdNf2/F7VmV8oRV?=
- =?us-ascii?Q?PLZsUWCIZEnGQqhHvFXmT0n6uofGZmu4RULyyQ77T5mK/Ly7wXZ05VwUaWKc?=
- =?us-ascii?Q?HlllcXkkdUNZ4n1oyHGjXSZHvxAzMmW4gr2bcVCkB1u/1WIj1HAY8vPiIjTZ?=
- =?us-ascii?Q?YkR0fqJDYy3w5mPiGO6Pl7YHUe8/GvRpy45p0EsyJHFze6HVZ2eOayEbhwgi?=
- =?us-ascii?Q?eK3siam7RDjBfBEnqg9Rm9TkyVhxF/VwZTPXgDJqRX5WH38akQQlYurDvm6g?=
- =?us-ascii?Q?wcq5H3MOixp5R6YfV2XVQHgUvBBHonPYEBwwgdAQd1M6v020hKTvI21yt8HA?=
- =?us-ascii?Q?0+wRvTXlA/5fVNSsBSv34DKYd1J2yVJiQd7dSK22W8zI7JXtMVIH3DMPzee1?=
- =?us-ascii?Q?akBZpwuhqVbUxTBeqwDlAUmdchHvXJZlkteb3ufVOnwg/Z6NMjsymVVED800?=
- =?us-ascii?Q?TENqswPuhtG+aaB0y7mR3/q45AdLO3inrCa+Xs5WB67GuVDPoHnUUfTOn6Mh?=
- =?us-ascii?Q?aGk+egAvylOESX3aLR9+ttvNpRX1D3dGu97j+mrleLWuypIa6f2Assq8uIJ8?=
- =?us-ascii?Q?muJIOQoCzCZOj1LKiT3p5xakwnKC8ObP2Ol8Tu20faW/Q6AejeRvMOaKsZYb?=
- =?us-ascii?Q?xFN1Urll00/pix7fDPxKicjgKV96nZOaY6ywwGHtvSGqWPZYGEau4lBTOQnc?=
- =?us-ascii?Q?dEkPE3ooHDmGaCjsERtAXOTTYFtimjoolZd8/ElyNIiBJd9xSYPmLEN3iNfF?=
- =?us-ascii?Q?9mtmWFQRqlpYYCEyPVajFXslrWfg777knbUZHvBXWAKnZ3ICC4vwFLoy7kcJ?=
- =?us-ascii?Q?BlRhN6RRP5JVbDyiIs1k+4zFr3fuH1oJrv9foQ17ftBR66LYRrJuPmnalS/w?=
- =?us-ascii?Q?rwaHj8j+52Oq7LaBfRhk9ydkTdhqdHdu32GxktGeJ5mHTyDQ1hyvuHe0l1n8?=
- =?us-ascii?Q?fY2pv2LN+a7kgVYBz5g9F4NE/DSiJSkjYIrElyhJmZKNeTggA07sY2KCgtUQ?=
- =?us-ascii?Q?O7cnouJZJnZOPGoTLP/jLWjYXzhCBrbKUInXYHzdhi5IpLW6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 316eb239-5029-4252-7ddc-08df4b2db8f9
-X-MS-Exchange-CrossTenant-AuthSource: EAYPR12MB923140.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2026 19:53:05.9795
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ODAp3KwhLo9P5sksieuw8AKc/R/qTxAgLylIRieOfq7m3ifa/CfpkZpKDtqVM9fwAFc4jlqcpv/B/0MJEk9IUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF2FA070BDF
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xhlrb5vu5bjuvz4z"
+Content-Disposition: inline
 
-On Tue, Nov 10, 2026 at 06:18:08PM -0800, Rosen Penev wrote:
-> Use a flexible array member to combine allocations
-> 
-> Add __counted_by for extra runtime analysis.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
 
-Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+--xhlrb5vu5bjuvz4z
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: linux-hardening@vger.kernel.org
+Cc: Alejandro Colomar <alx@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Andreas Schwab <schwab@linux-m68k.org>, 
+	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Daniel Scally <djrscally@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Linus Walleij <linusw@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Saravana Kannan <saravanak@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, alx+linux-hardening@kernel.org
+Subject: [PATCH v7 0/4] Add strprefix() and fix a bug with it
+Message-ID: <cover.1795639368.git.alx@kernel.org>
+MIME-Version: 1.0
 
-Thanks,
-Yazen
+
+Hi!
+
+str_has_prefix() is based on sizes and lengths, which means it must
+overload the valid length 0 to mean not found.  This is a typical
+consequence of choosing to design an API around sizes and lengths, and
+vanishes when moving to pointer-based similar APIs.
+
+According to its author (Steven R.), str_has_prefix() was never meant to
+accept an empty prefix, but that's not documented, and there's no
+obvious reason why that would be acceptable for a generic string
+function (as opposed to a function very specific to its original use).
+Anyway, as suggested by Steven, I've added a WARN_ON_ONCE() to catch
+such uses, and also added documentation stating this limitation.
+
+If the function had been named something like strprefix_len(), that
+design would have made sense, but being called str_has_prefix(), the
+obvious way to call it will result in bugs, because the name contradicts
+its intended use.
+
+Users of strings need a function whose behavior extends naturally to the
+empty string, and we can do better, by returning a pointer.  And indeed,
+users have ended up using str_has_prefix() with empty prefix, expecting
+it to work (as is natural of a generic string API with that name).
+
+This patch set adds strprefix(), and uses strprefix() in one place to
+fix a bug reported by Bartosz.
+
+It also adds streq(3), just because it simplifies the tests, and is also
+a nice interface.
+
+This patch set doesn't include the sibling strsuffix(), and also doesn't
+replace any other cases which would benefit from strprefix(), to allow
+merging it quickly.  I'll work on a follow-up patch, including the
+patches from v6 that have been dropped in this v7, after this has been
+applied.
+
+
+Have a lovely night!
+Alexo
+
+
+Changes in v7
+~~~~~~~~~~~~~
+
+-  [1/4]
+   -  Add tests for streq(3).
+-  [2/4]
+   -  Use __nonnull_args().  [Joe]
+   -  Rewrite the description entirely, to be descriptive, rather than
+      comparative.  [Joe]
+-  [3/4]
+   -  Remove 'Suggested-by', since the commit changed too much from what
+      he suggested.
+-  [4/4]
+   -  Add 'Reviewed-by' and 'Tested-by' tags, accompanied with the
+      'Message-ID's of the emails in which they were given.
+-  Drop all other commits from v6, to minimize the patch set, and help
+   adopt it quickly.
+
+
+See the range-diff below.
+
+v1: <https://lore.kernel.org/linux-hardening/cover.1793876837.git.alx@kerne=
+l.org/>
+v2: <https://lore.kernel.org/linux-hardening/cover.1793882260.git.alx@kerne=
+l.org/>
+v3: <https://lore.kernel.org/linux-hardening/cover.1794323750.git.alx@kerne=
+l.org/>
+v4: <https://lore.kernel.org/linux-hardening/cover.1794425425.git.alx@kerne=
+l.org/>
+v5: <https://lore.kernel.org/linux-hardening/cover.1794574496.git.alx@kerne=
+l.org/>
+v6: <https://lore.kernel.org/linux-hardening/cover.1794667407.git.alx@kerne=
+l.org/>
+
+Testing
+~~~~~~~
+
+(I've indented the output, to better see the commands.)
+
+$ git log --oneline --graph v7.4-rc1^..strprefix7
+	* 396395e1d02c (HEAD -> strprefix, tag: strprefix7) device property: Fix f=
+wnode_name_eq>
+	* c4131a109098 string: Document corner-case misbehavior in str_has_prefix(=
+) for empty p>
+	* b32d70163fb4 string: Add strprefix()
+	* ad8500a6eb0a string: Add streq()
+	* 6628e7d4c6b2 (tag: v7.4-rc1, master) Linux 7.4-rc1
+$ cp ../kunitconfig .kunitconfig
+$ cat .kunitconfig
+	CONFIG_KUNIT=3Dy
+	CONFIG_STRING_KUNIT_TEST=3Dy
+$ mkdir -p ~/tmp/strprefix7
+$ export TMPDIR=3D$HOME/tmp/strprefix7/
+$ ./tools/testing/kunit/kunit.py run "string*"
+	[21:40:20] Configuring KUnit Kernel ...
+	Generating .config ...
+	Populating config with:
+	$ make ARCH=3Dum O=3D.kunit olddefconfig
+	[21:40:23] Building KUnit Kernel ...
+	Populating config with:
+	$ make ARCH=3Dum O=3D.kunit olddefconfig
+	Building with:
+	$ make all compile_commands.json scripts_gdb ARCH=3Dum O=3D.kunit --jobs=
+=3D24
+	[21:40:39] Starting KUnit Kernel (1/1)...
+	[21:40:39] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	Running tests with:
+	$ .kunit/linux 'kunit.filter_glob=3Dstring*' kunit.enable=3D1 mem=3D1G con=
+sole=3Dtty kunit_shutdown=3Dhalt
+	[21:40:39] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D string-stream-test (12 =
+subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	[21:40:39] [PASSED] string_stream_managed_init_test
+	[21:40:39] [PASSED] string_stream_unmanaged_init_test
+	[21:40:39] [PASSED] string_stream_managed_free_test
+	[21:40:39] [PASSED] string_stream_resource_free_test
+	[21:40:39] [PASSED] string_stream_line_add_test
+	[21:40:39] [PASSED] string_stream_variable_length_line_test
+	[21:40:39] [PASSED] string_stream_append_test
+	[21:40:39] [PASSED] string_stream_append_auto_newline_test
+	[21:40:39] [PASSED] string_stream_append_empty_string_test
+	[21:40:39] [PASSED] string_stream_no_auto_newline_test
+	[21:40:39] [PASSED] string_stream_auto_newline_test
+	[21:40:39] [PASSED] string_stream_performance_test
+	[21:40:39] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [PASSED] string-s=
+tream-test =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	[21:40:39] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D strin=
+g (30 subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	[21:40:39] [PASSED] string_test_memset16
+	[21:40:40] [PASSED] string_test_memset32
+	[21:40:40] [PASSED] string_test_memset64
+	[21:40:40] [PASSED] string_test_strlen
+	[21:40:40] [PASSED] string_test_strnlen
+	[21:40:40] [PASSED] string_test_strchr
+	[21:40:40] [PASSED] string_test_strnchr
+	[21:40:40] [PASSED] string_test_strrchr
+	[21:40:40] [PASSED] string_test_strspn
+	[21:40:40] [PASSED] string_test_streq
+	[21:40:40] [PASSED] string_test_strprefix
+	[21:40:40] [PASSED] string_test_strcmp
+	[21:40:40] [PASSED] string_test_strcmp_long_strings
+	[21:40:40] [PASSED] string_test_strncmp
+	[21:40:40] [PASSED] string_test_strncmp_long_strings
+	[21:40:40] [PASSED] string_test_strcasecmp
+	[21:40:40] [PASSED] string_test_strcasecmp_long_strings
+	[21:40:40] [PASSED] string_test_strncasecmp
+	[21:40:40] [PASSED] string_test_strncasecmp_long_strings
+	[21:40:40] [PASSED] string_test_strscpy
+	[21:40:40] [PASSED] string_test_strcat
+	[21:40:40] [PASSED] string_test_strncat
+	[21:40:40] [PASSED] string_test_strlcat
+	[21:40:40] [PASSED] string_test_strtomem
+	[21:40:40] [PASSED] string_test_memtostr
+	[21:40:40] [PASSED] string_test_strends
+	[21:40:40] [SKIPPED] string_bench_strlen (not enabled)
+	[21:40:40] [SKIPPED] string_bench_strnlen (not enabled)
+	[21:40:40] [SKIPPED] string_bench_strchr (not enabled)
+	[21:40:40] [SKIPPED] string_bench_strrchr (not enabled)
+	[21:40:40] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+ [PASSED] string =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+	[21:40:40] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D string_helpers (4=
+ subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	[21:40:40] [PASSED] test_get_size
+	[21:40:40] [PASSED] test_upper_lower
+	[21:40:40] [PASSED] test_unescape
+	[21:40:40] [PASSED] test_escape
+	[21:40:40] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [PASSED] st=
+ring_helpers =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	[21:40:40] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+	[21:40:40] Testing complete. Ran 46 tests: passed: 42, skipped: 4
+	[21:40:40] Elapsed time: 19.891s total, 2.881s configuring, 16.793s buildi=
+ng, 0.173s running
+
+$ make allmodconfig
+	  HOSTCC  scripts/basic/fixdep
+	  HOSTCC  scripts/kconfig/conf.o
+	  HOSTCC  scripts/kconfig/confdata.o
+	  HOSTCC  scripts/kconfig/expr.o
+	  LEX     scripts/kconfig/lexer.lex.c
+	  YACC    scripts/kconfig/parser.tab.[ch]
+	  HOSTCC  scripts/kconfig/lexer.lex.o
+	  HOSTCC  scripts/kconfig/menu.o
+	  HOSTCC  scripts/kconfig/parser.tab.o
+	  HOSTCC  scripts/kconfig/preprocess.o
+	  HOSTCC  scripts/kconfig/symbol.o
+	  HOSTCC  scripts/kconfig/util.o
+	  HOSTLD  scripts/kconfig/conf
+	#
+	# configuration written to .config
+	#
+$ time make -j24 | ts -s
+	00:00:01   GEN     arch/x86/include/generated/asm/orc_hash.h
+	00:00:01   UPD     arch/x86/include/generated/uapi/asm/bpf_perf_event.h
+	00:00:01   UPD     arch/x86/include/generated/uapi/asm/errno.h
+=2E..
+	00:21:16   LD [M]  net/qrtr/qrtr-tun.ko
+	00:21:16   LD [M]  net/qrtr/qrtr-mhi.ko
+	00:21:16   LD [M]  virt/lib/irqbypass.ko
+
+	real	21m15.252s
+	user	442m14.443s
+	sys	31m3.323s
+
+
+Alejandro Colomar (4):
+  string: Add streq()
+  string: Add strprefix()
+  string: Document corner-case misbehavior in str_has_prefix() for empty
+    prefix
+  device property: Fix fwnode_name_eq() for empty node names
+
+ drivers/base/property.c            |  5 +---
+ drivers/clk/socfpga/clk-gate-a10.c |  2 --
+ drivers/clk/socfpga/clk.h          |  1 -
+ include/linux/string.h             | 42 +++++++++++++++++++++++++++---
+ lib/tests/string_kunit.c           | 22 ++++++++++++++++
+ 5 files changed, 61 insertions(+), 11 deletions(-)
+
+Range-diff against v6:
+ 1:  cff11fd710fd !  1:  ad8500a6eb0a string: Add streq()
+    @@ include/linux/string.h
+      extern char *strndup_user(const char __user *, long);
+      extern void *memdup_user(const void __user *, size_t) __realloc_size(=
+2);
+      extern void *vmemdup_user(const void __user *, size_t) __realloc_size=
+(2);
+    +
+    + ## lib/tests/string_kunit.c ##
+    +@@ lib/tests/string_kunit.c: static void string_test_strspn(struct kun=
+it *test)
+    +   }
+    + }
+    +=20
+    ++static void string_test_streq(struct kunit *test)
+    ++{
+    ++  KUNIT_ASSERT_TRUE(test,  streq("foo", "foo"));
+    ++  KUNIT_ASSERT_TRUE(test,  streq("", ""));
+    ++
+    ++  KUNIT_ASSERT_FALSE(test, streq("foo", "foobar"));
+    ++  KUNIT_ASSERT_FALSE(test, streq("foobar", "foo"));
+    ++  KUNIT_ASSERT_FALSE(test, streq("foo", "bar"));
+    ++  KUNIT_ASSERT_FALSE(test, streq("foo", ""));
+    ++  KUNIT_ASSERT_FALSE(test, streq("", "bar"));
+    ++}
+    ++
+    + static char strcmp_buffer1[STRCMP_LARGE_BUF_LEN];
+    + static char strcmp_buffer2[STRCMP_LARGE_BUF_LEN];
+    +=20
+    +@@ lib/tests/string_kunit.c: static struct kunit_case string_test_case=
+s[] =3D {
+    +   KUNIT_CASE(string_test_strnchr),
+    +   KUNIT_CASE(string_test_strrchr),
+    +   KUNIT_CASE(string_test_strspn),
+    ++  KUNIT_CASE(string_test_streq),
+    +   KUNIT_CASE(string_test_strcmp),
+    +   KUNIT_CASE(string_test_strcmp_long_strings),
+    +   KUNIT_CASE(string_test_strncmp),
+ 2:  0eaa4ce73a2b !  2:  b32d70163fb4 string: Add strprefix()
+    @@ include/linux/string.h: void memcpy_and_pad(void *dest, size_t dest_=
+len, const v
+     + * @s: The string to be tested
+     + * @prefix: The string to see if @s starts with
+     + *
+    -+ * A common way to test a prefix of a string is to do:
+    -+ *  strncmp(s, prefix, sizeof(prefix) - 1)
+    -+ *
+    -+ * But this can lead to bugs due to typos, or if prefix is a pointer
+    -+ * and not a constant.  Instead use strprefix().
+    ++ * This function determines whether the string pointed to by @s
+    ++ * starts with the sequence of characters
+    ++ * (excluding the terminating null character)
+    ++ * in the string pointed to by @prefix.
+     + *
+     + * Returns:
+     + * *  @s + strlen(@prefix) if @s starts with @prefix
+     + * *  NULL if @s does not start with @prefix
+     + */
+    -+__attribute__((nonnull(1, 2)))
+    ++__nonnull_args(1, 2)
+     +static inline char *strprefix(const char *s, const char *prefix)
+     +{
+     +  size_t len =3D strlen(prefix);
+    @@ include/linux/string.h: void memcpy_and_pad(void *dest, size_t dest_=
+len, const v
+       * * strlen(@prefix) if @str starts with @prefix
+    =20
+      ## lib/tests/string_kunit.c ##
+    -@@ lib/tests/string_kunit.c: static void string_test_strspn(struct kun=
+it *test)
+    -   }
+    +@@ lib/tests/string_kunit.c: static void string_test_streq(struct kuni=
+t *test)
+    +   KUNIT_ASSERT_FALSE(test, streq("", "bar"));
+      }
+     =20
+     +static void string_test_strprefix(struct kunit *test)
+    @@ lib/tests/string_kunit.c: static void string_test_strspn(struct kuni=
+t *test)
+      static char strcmp_buffer2[STRCMP_LARGE_BUF_LEN];
+     =20
+     @@ lib/tests/string_kunit.c: static struct kunit_case string_test_case=
+s[] =3D {
+    -   KUNIT_CASE(string_test_strnchr),
+        KUNIT_CASE(string_test_strrchr),
+        KUNIT_CASE(string_test_strspn),
+    +   KUNIT_CASE(string_test_streq),
+     +  KUNIT_CASE(string_test_strprefix),
+        KUNIT_CASE(string_test_strcmp),
+        KUNIT_CASE(string_test_strcmp_long_strings),
+ 3:  5648bb17b88a !  3:  c4131a109098 string: Document corner-case misbehav=
+ior in str_has_prefix() for empty prefix
+    @@ Commit message
+    =20
+         Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-fo=
+r-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
+         Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
+=2Ecom>
+    -    Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+         Signed-off-by: Alejandro Colomar <alx@kernel.org>
+    =20
+      ## include/linux/string.h ##
+ 4:  7fc1321995f1 !  4:  396395e1d02c device property: Fix fwnode_name_eq()=
+ for empty node names
+    @@ Commit message
+         Fixes: a9c8c738066b7 ("device property: Add fwnode_name_eq()")
+         Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-fo=
+r-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
+         Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
+=2Ecom>
+    +    Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+    +    Message-ID: <avrSUUM3HMgxTNpl@kekkonen.localdomain>
+    +    Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
+=2Ecom>
+    +    Message-ID: <nat4ilqmzzpuyrjbuahl367ip22tfnmjorydlppuwqiscxaujo@kf=
+63j4lb3flk>
+    +    Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.c=
+om>
+    +    Message-ID: <nat4ilqmzzpuyrjbuahl367ip22tfnmjorydlppuwqiscxaujo@kf=
+63j4lb3flk>
+         Signed-off-by: Alejandro Colomar <alx@kernel.org>
+    =20
+      ## drivers/base/property.c ##
+ 5:  2a26768609bd <  -:  ------------ stddef: Add const_cast()
+ 6:  d9680e101472 <  -:  ------------ string: Add [C]QChar_of() and QVoid_o=
+f()
+ 7:  9def9160f777 <  -:  ------------ string: Make strprefix() const-qualif=
+ier-generic
+ 8:  8a3c50cfe298 <  -:  ------------ perf map: Use bool for return type in=
+stead of int
+ 9:  212e7fc2cb99 <  -:  ------------ string: Make strstarts() a legacy ali=
+as for strprefix()
+10:  ec94f69d2925 <  -:  ------------ platform/x86: hp-bioscfg: Rename loca=
+l variable
+11:  782e2941d0f1 <  -:  ------------ treewide: s/strstarts/strprefix/g
+12:  cabc673b9ac7 <  -:  ------------ string: Remove strstarts()
+13:  024364c695d5 <  -:  ------------ s390/test_unwind: Use bool for boolea=
+ns
+14:  0c0070455de0 <  -:  ------------ treewide: Replace boolean uses of str=
+_has_prefix() by strprefix()
+15:  95bfed420dd9 <  -:  ------------ treewide: Replace some uses of str_ha=
+s_prefix() by strprefix()
+16:  636fe759a4eb <  -:  ------------ string: Add strsuffix()
+17:  8aa3d317d63c <  -:  ------------ string: Make strends() a legacy alias=
+ for strsuffix()
+18:  3cad861d3090 <  -:  ------------ treewide: s/\<strends\>/strsuffix/g
+19:  8d5cac1ac296 <  -:  ------------ string: Remove strends()
+--=20
+2.55.0
+
+
+--xhlrb5vu5bjuvz4z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsHTRIACgkQ64mZXMKQ
+wqmAXhAAsAiJIPPo+UOOfAVul+my3ZYetfigY31ZZ2nL5TWTUBdMYl8Uapi4QCcL
+yG75gBZ68l46Qk0VVEP86SxzjxvAkjijE5XKy/Cidm++Hrdwey95lvu9JWQe2rTs
+C9S/ShIoiPEUWGaPGzaBssbqw4RKkcbvYpvtbrruyLEhy+br6sgsRx3nXeVtTZbs
+kkJ3BNTMIgLmO1eHzFk+UCKxtEqZ3cwntbp86IzDLceOgKlITqnTS3OUq3Y3dIT6
+jEk7T8QPAa48uygvilxRQobHL0lPvT1rS8Wn9Hl/HglKjGl5lcNcQ8/HCvrf1lpw
+DvLTmH3Vt0HR6Vz2RXHIJ3SxMz0gpqxgR5Fd7UvFnaPgweZOu2EErMfPm4HSQE9G
+AzczBsKCJ/mBhEigC750nW0+a5xKtpX+5zL84/up5j7WYx0IuuQRbLEqMs+OJ8LY
+O3Kz2iWYjeFVT57FtLWTcy4HOK0bSt802DKyo9tNkXs0DBq3Q40N9wmlSIu7fLXo
+IZ5QvzrUdC+yZhcE3/FW8XrKGcckLYFadWBTCZ4WWefH4jOKa8ynAlxsTF53qhrH
+SrTfm1SmAiq/TmrO04CpRz91pOOjgI8zywdV+XSim+SVfr1L/nE5GXQpnWM5x5pG
+3WpIaM7U9S0KTRjqsEGq9Oplq7vq5Xq4PFJIfTbUM2DPfn1I7I8=
+=FdAW
+-----END PGP SIGNATURE-----
+
+--xhlrb5vu5bjuvz4z--
