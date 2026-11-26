@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795672503;
-	b=iRJJa2R6awazBVL61PtuEqsM9DUNBDA7sJriC+uDUuq0xZ0rojB1HacFMfuh+JuGyLnk
-	 HHvb3feEC6YVkNeSyoG76vjTW6dLvaw0I3sPEW2owUslzh4UKin3JJJ/rCQkdyev4Do0m
-	 5NQKhel+W+hilo7sbGfQk+cYdYY2hVn+3/mR3ZBifEjdaSF/uUX/3AbQPGBJYod3HlrV0
-	 RBAc1je8YnZNjll+/CqrLCmhz/R7mYPqyqV4o57Rn1S+w/3N8ornTCZ0ScEytMzozptzG
-	 xAU59TcgD85M+r74hl2T3aCQR8Rv+YNA/15d9XLMVlKhpo//OqHJCiArS0d0l57Z7Qg==
+	t=1795672773;
+	b=Cj3y/ltA7hstPyYk1kLsfGfWTX0/9Th5uiibYowW9FdRIJRDid5k2XLrMH3emYs/Acmt
+	 ZeNp3qarRRO3dy+8bgO6YOo3vBY/YvFBCq/qRdjijo4Yg2ytVGAomaVOGrfmHCIQa9eWY
+	 hijbl+/l2BlEsT8m+wka02QE0dxVNKYkLymHoqoMrxDDfcn15zBcQsV/zvqSjCoSCQHvG
+	 ajoJdz20aXZfnf+E4UxqwgIf3QKrnUhwcYL7L/jwi0qBMRNADxzmSYOcN0rUcaeUPzi6Y
+	 PxHnH9tUSaViSb9Pa3xOtcMgpmd8H7hIV7T7X8BrMkv8ituogcmw+6CFFt9Pi0j5WLQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795672503;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795672773;
 	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
 	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
 	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
 	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=SsXnkh9rZiup8TkTxbsw+huciahwayKl9nCe3uqM0fY=;
-	b=CUELOcJXN20awHeFQ5qNpHdFF3jcakZSRAO03+qAU9vKeNLNIoYjbuVan7xjz0DDyweM
-	 GXID8vsrQ58rQWJBlVYpjfvi4dBy9ScSOSBxDBO/O1827yDcNatmPLFcy76IZYWBKa/89
-	 747uj/PiI7eY+VeQoYjHSCN0zDWySrmMSs/xT2tD/G9TdwmR3aW5lUUNyHbeBDs++NU+n
-	 fvE8RilvMl+oKJQW8TKcBz6OghDHGeQwhijEP3kQWdwevOpMFHmOBn7LuOQfBVO9WEjLt
-	 c6TmHusnqB/1kLQ75tyEXi6b6WF90d/m5OqprVYS+WxRGeStdWqn5NWlxehO8/o3Z1A==
+	bh=VsisjEdAcEQoikyIb1phqdw1n0JZDLyJ/MLeqYyqG0E=;
+	b=Q0agDEVC1wShpo3GqGADkaHn6QDIKNMW4XkvJMrPYDhvMtw3z0kPnGuYXyfAbckeIsG2
+	 YoG96YGGUWrMkhx+GBxDXrPpDMRykAThCA2s/nIKnPe5hmhUI9sbn9IQ1Snabumw+id2i
+	 RiCVz0/6M9epAK4xuLob0cg/UajQcW6LIX9dTfT8jpg+eHV44hpw0yYK6hR8x2Yq5RLU6
+	 oryir9GN9jTsL1nOVT2mNENozoQdXpOrW+tkIEoX9nDsCxm22SfwR5FH5aGeR9+E6ATbp
+	 RRYRBSoxaGp6G1ZsRNmJflnX2J5fmYSF5qUQji6vp0oUkChnQLYdj2JfvMZdtF5fWHw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CspZqle+;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jX5gf0s3;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD00606A31C
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 05:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F1D606A31E
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 05:59:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CspZqle+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CED051F000CA
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 05:55:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jX5gf0s3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B734A1F000D3
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 05:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795672502;
-	bh=SsXnkh9rZiup8TkTxbsw+huciahwayKl9nCe3uqM0fY=;
+	s=k20260515; t=1795672772;
+	bh=VsisjEdAcEQoikyIb1phqdw1n0JZDLyJ/MLeqYyqG0E=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=CspZqle+6/NpEdNZ0XRYOcy3DQM56ynq8GgPFnEww1nIVojCNilLh7XDN96ZKY2FN
-	 luhytLuBN3/zPrOFGgNbPB4YHK+qi+Y6yVKhcsD9eok/bv7Fn9/0JEz4OyJ5H9lDTT
-	 LUWGpKp6wjqyIO2KB0cnxNivSzvl5nz/Ck8uWitSkBJnQ4tYaQK1r1w8tYtOnMVdam
-	 Q2/3vAsiaTJhAOmyWZE5z/U+P6BiZRoGxvAr69hhbxdEqUVDGWTAKLhwd1O1qVNANS
-	 6/iAnM7Apr2h+z9OiKxeuDR2FgSJsZgM/LWbwHBIr55h63YS5SjE/RoKB3JyGC7yC9
-	 OL06PzZyyexLw==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c51bf011392so108037266b.3
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Nov 2026 21:55:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErF1e2Kny+26oUxpxGGGmmGmiKba3I8n9iZIHEqkjkN+R2HTeX4wzwW+5w6TR1MQnbaXpH+leGutj/BkRriN4bw=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9W99ZpLw/pSD95zA6kL+0i+9IN3Qmd02RuuYM35dnDMKOwkK4f
-	P6eCtpi3JNjwZRFzubjB4wLvRAmfsNzwwXvd+YuRPimHt3XsFMtR9MQPlVanVievshg8spF4YRk
-	9YCzIsvHAxk1ya4+O48HyyMEojI3X5oe6JIUsb+UE4w==
-X-Received: by 2002:a17:906:4fc8:b0:c51:ab6:1c73 with SMTP id
- a640c23a62f3a-c513aaff9c8mr1746636066b.23.1795672501752; Wed, 25 Nov 2026
- 21:55:01 -0800 (PST)
+	b=jX5gf0s3CFTwpoga7V0Jihxldl3viYJ63kjPyV3ognxDwWErcdcRKbm3bvkVNtBU2
+	 /gBef46Y9q6v5yjRZPQ5ERn7s96pnEvbPHj/hsqaTrZDKdlNtjs/gOGFRJorIPII/H
+	 bDslLOelA2fmLqD+NzeCFSf8kKgIx6SCvT2EoImDnO8WdBVabWYTR6y2F6VyiiEzEG
+	 wealsmoaZV/QngF7f+H4i4hMppmO1Rh2P8k0w1RBuuNxkQUc3JY6P68T4ZFZeXYM5s
+	 xmYP6BvFaraGVv3bDpSb8IAuF9frERxVKFq2lXAXG8hrQVNDyqe3GCwOhmIOvfFLV4
+	 6eJDSJLvk/EgA==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c515319dd89so187663266b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Nov 2026 21:59:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AL+hErFHy9g8Zl41+3A7J7r1AEc0dhTd+i7YmHVRe2omdbkQ5ThMttyLGvj8sdg9fh6f4nZmcsZL5sc9bpakt9eAe+s=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+D04DuC/ohv3IDMKcwa3cFmqeDBCn/m42L6l8zcUS1QcXq7yOG
+	1R532J2wSzVEOiSCbc2xzt9k5FtLUuciccEYFPxigSwq10lgQKGGHUFz7J0gX96J108mdvEOPV3
+	qOwU9/cx+mq+31HNK1qAOUNeotPR4RFzRVi8xLCVBBw==
+X-Received: by 2002:a17:906:da0e:b0:c46:a72:e0c3 with SMTP id
+ a640c23a62f3a-c513a84dd04mr1356707266b.16.1795672771599; Wed, 25 Nov 2026
+ 21:59:31 -0800 (PST)
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -59,15 +59,14 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <cover.1795439990.git.lianux.mm@gmail.com> <9f3715ab29bc9ee4aaa1bb92bff47c7584b73ee7.1795439990.git.lianux.mm@gmail.com>
-In-Reply-To: <9f3715ab29bc9ee4aaa1bb92bff47c7584b73ee7.1795439990.git.lianux.mm@gmail.com>
+References: <cover.1795439990.git.lianux.mm@gmail.com> <3e8d55101602d5ec982ae636eaf5eb4dcaad3ba8.1795439990.git.lianux.mm@gmail.com>
+In-Reply-To: <3e8d55101602d5ec982ae636eaf5eb4dcaad3ba8.1795439990.git.lianux.mm@gmail.com>
 From: Chris Li <chrisl@kernel.org>
-Date: Wed, 25 Nov 2026 21:54:50 -0800
-X-Gmail-Original-Message-ID: <CACePvbXWL-CHKiG6hw6vFKbERDXLU_v3mfi7V=6hbaW1y8hs8g@mail.gmail.com>
-X-Gm-Features: Aa3M54oBQMzNvzYM2e4PD29_5XhYK-wobZpG4mQp3FDlOc_DSnwaHTsE7U41QGs
-Message-ID: <CACePvbXWL-CHKiG6hw6vFKbERDXLU_v3mfi7V=6hbaW1y8hs8g@mail.gmail.com>
-Subject: Re: [PATCH v5 01/19] mm/swap: remove unused parameter for reading
- swap header
+Date: Wed, 25 Nov 2026 21:59:19 -0800
+X-Gmail-Original-Message-ID: <CACePvbWzE6AvbLzNFe=J5Vid8iy6FFQh0RBgr+V_jJJ4p=OEVw@mail.gmail.com>
+X-Gm-Features: Aa3M54oIbvTBzc16n1b5zBCTLN35erJwZkNIaRd8dYijTduchcrgfU7gWLxR6Vs
+Message-ID: <CACePvbWzE6AvbLzNFe=J5Vid8iy6FFQh0RBgr+V_jJJ4p=OEVw@mail.gmail.com>
+Subject: Re: [PATCH v5 02/19] mm/swap: clean up hibernation error handling
 To: Lian Wang <lianux.mm@gmail.com>
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	Andrew Morton <akpm@linux-foundation.org>, Nhat Pham <nphamcs@gmail.com>, 
@@ -84,10 +83,11 @@ te:
 >
 > From: Kairui Song <kasong@tencent.com>
 >
-> The swap_info_struct argument to read_swap_header() is unused. Remove it
-> and update the swapon() call site.
->
-> No functional change.
+> Restructure the error paths in pin_hibernation_swap_type() using a
+> goto out pattern to avoid repeated spin_unlock() calls and simplify
+> the return flow.  Also simplify unpin_hibernation_swap_type() by
+> making the si NULL check inline, and clean up find_first_swap() to
+> avoid an early return inside the loop.
 >
 > Signed-off-by: Kairui Song <kasong@tencent.com>
 > Reviewed-by: Kunwu Chan <kunwu.chan@gmail.com>
@@ -95,35 +95,107 @@ te:
 
 Acked-by: Chris Li <chrisl@kernel.org>
 
-Chris
-
 > ---
->  mm/swapfile.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+>  mm/swapfile.c | 39 +++++++++++++++++----------------------
+>  1 file changed, 17 insertions(+), 22 deletions(-)
 >
 > diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index d59fa8220862..c06f9f532e74 100644
+> index c06f9f532e74..0ae901296731 100644
 > --- a/mm/swapfile.c
 > +++ b/mm/swapfile.c
-> @@ -3630,9 +3630,8 @@ __weak unsigned long arch_max_swapfile_size(void)
->         return generic_max_swapfile_size();
+> @@ -2331,21 +2331,18 @@ static int __find_hibernation_swap_type(dev_t dev=
+ice, sector_t offset)
+>   */
+>  int pin_hibernation_swap_type(dev_t device, sector_t offset)
+>  {
+> -       int type;
+> +       int ret;
+
+Nitpick: Here "ret" only carries error code. Maybe we can call it "err".
+
+>         struct swap_info_struct *si;
+>
+>         spin_lock(&swap_lock);
+> +       ret =3D __find_hibernation_swap_type(device, offset);
+> +       if (ret < 0)
+> +               goto out;
+>
+> -       type =3D __find_hibernation_swap_type(device, offset);
+> -       if (type < 0) {
+> -               spin_unlock(&swap_lock);
+> -               return type;
+> -       }
+> -
+> -       si =3D swap_type_to_info(type);
+> +       si =3D swap_type_to_info(ret);
+>         if (WARN_ON_ONCE(!si)) {
+> -               spin_unlock(&swap_lock);
+> -               return -ENODEV;
+> +               ret =3D -ENODEV;
+> +               goto out;
+>         }
+>
+>         /*
+> @@ -2354,14 +2351,15 @@ int pin_hibernation_swap_type(dev_t device, secto=
+r_t offset)
+>          * the same session.
+>          */
+>         if (WARN_ON_ONCE(si->flags & SWP_HIBERNATION)) {
+> -               spin_unlock(&swap_lock);
+> -               return -EBUSY;
+> +               ret =3D -EBUSY;
+> +               goto out;
+>         }
+>
+>         si->flags |=3D SWP_HIBERNATION;
+>
+> +out:
+Nitpick: Maybe "unlock"?
+
+Chris
+
+>         spin_unlock(&swap_lock);
+> -       return type;
+> +       return ret;
 >  }
 >
-> -static unsigned long read_swap_header(struct swap_info_struct *si,
-> -                                       union swap_header *swap_header,
-> -                                       struct inode *inode)
-> +static unsigned long read_swap_header(union swap_header *swap_header,
-> +                                     struct inode *inode)
->  {
->         int i;
->         unsigned long maxpages;
-> @@ -3863,7 +3862,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specia=
-lfile, int, swap_flags)
->         }
->         swap_header =3D kmap_local_folio(folio, 0);
+>  /**
+> @@ -2441,11 +2439,8 @@ void unpin_hibernation_swap_type(int type)
 >
-> -       maxpages =3D read_swap_header(si, swap_header, inode);
-> +       maxpages =3D read_swap_header(swap_header, inode);
->         if (unlikely(!maxpages)) {
->                 error =3D -EINVAL;
->                 goto bad_swap_unlock_inode;
+>         spin_lock(&swap_lock);
+>         si =3D swap_type_to_info(type);
+> -       if (!si) {
+> -               spin_unlock(&swap_lock);
+> -               return;
+> -       }
+> -       si->flags &=3D ~SWP_HIBERNATION;
+> +       if (si)
+> +               si->flags &=3D ~SWP_HIBERNATION;
+>         spin_unlock(&swap_lock);
+>  }
+>
+> @@ -2480,7 +2475,7 @@ int find_hibernation_swap_type(dev_t device, sector=
+_t offset)
+>
+>  int find_first_swap(dev_t *device)
+>  {
+> -       int type;
+> +       int type, ret =3D -ENODEV;
+>
+>         spin_lock(&swap_lock);
+>         for (type =3D 0; type < nr_swapfiles; type++) {
+> @@ -2489,11 +2484,11 @@ int find_first_swap(dev_t *device)
+>                 if (!(sis->flags & SWP_WRITEOK))
+>                         continue;
+>                 *device =3D sis->bdev->bd_dev;
+> -               spin_unlock(&swap_lock);
+> -               return type;
+> +               ret =3D type;
+> +               break;
+>         }
+>         spin_unlock(&swap_lock);
+> -       return -ENODEV;
+> +       return ret;
+>  }
+>
+>  /*
