@@ -1,74 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795706427;
-	b=1Uvb9MsKxLZSY+v03lbUt/lb6UPKJRKRGu9v0IGLXQA7K9UbagiTIJO/DEH90fdUQFN4
-	 EmycXUmlp8TzkVRRGwyo5szgVcUaOS0y5OAnxrrxXbh2uXnIOfgdLeefyqUp+d6N5LWy7
-	 cvufrZZpnrCAFyQ/fprY5Jq/lpawOu2kQYdYsELuwDtT8zQ/0npVgd8/C+rPmuga3SZb5
-	 1vX+CdhERt04qX3iK/2pQ4Pw54TdsYF/taykBA+2sqfZ/mJeoV0Jh3IaecCQPznRpbSKF
-	 DLtK3Sxyb1Xn7ptuqEtvMIk7/QBeKuwA3OC96Z3sRJzHMNy7Lsqq7DakZ2nWHAjsmCw==
+	t=1795708511;
+	b=IaNKYiG/2N3fOTThByP6/q/5Vt9mUaAhpTNUkkvNuLyFPbatJmuDxyKqm046w8zlyRr2
+	 o0xWFePZCsIEghZAShEG+bP7/Pr/zSNeeJKW0wsoz3uPzba7zosC2NMXu0kO38D8LLaDM
+	 EL4gd6qnT7dHr69Z8VkgcKjNwwdd8eZ6vWE5cihH6F/m/VD9IMe/Gk1l0D7lb1+yQsJHV
+	 LUPB4kb+OHZZ0/KKZLJHRmsftuzifYaA4zF36KFoVgMicGZcMQ0UqEwfR+zTk04DaRHXr
+	 P6923KI1WsgV2g80jnRzukO+cjAxx4AfowwrfdcOqCnic+x778jxTsh7M7aGgp1h4eQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795706427;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:Organization;
-	bh=8VCDc85rZIzllfXW8iMaAuFOoYvrvzLTu2xqjGFWicM=;
-	b=fWqwcjdz/VgywYZAgHQRvXjBrLHG2/ZrKhbSQhnLxc91r6vsWSDDk+QbyaGVGwwsEZaV
-	 4xA6Cq5+0Y9u5L8Fhdf6tAyS96vC4ZuvEjmy8oReCWy2xTn8fvxyMXkYyGsEg86b7npHH
-	 Ecu4HTzLZzcZk7Toun2DMtSdiXCxhklKqHeQbuRhn7dEVQIGoIVW4/JbPnZGl+iEfQMFC
-	 64S3DHeFgNAYE58X7AGGIZj/1wgQvZN/n8V1xpxjTVRYEBc2WVcYZgjPl/hYaUqPVx3yz
-	 oEoKwvdeIS6/v6c+VjmyxS0q7E0rJlh8dlvhUdw5Fb4EN3lLSE1htn6CnSmDHSc93nA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795708511;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=q3gAoHWLYDHTRnE731e1zotsd1kR8LZw3EShqPsUYcI=;
+	b=XU5XdMP7DWuQS6um9QdCnSbUda68jdonEtoSzvnMyZA/DGatFzOaB/oEL1ZckdY8EtUL
+	 341TG1P3Q/1BJ1PbnFqe3hgoGefN+wpiJDAkXHEyEDXiDlm/B7hvCqVkCHFaOtCoElbp7
+	 ss+sAbemnH3vSuXUG50qTcTjvMMJyfMB7XJTkYFvtYFl/Wf2grN/ssM7Vd5R5RoWwnVGa
+	 X4ogieMkMCjp/+k1dOyazKa7YgtIkE3vL8FUwk5aTb5BeWESyDgphAlIu8WSRifeUWyoK
+	 GdPTweRe02rFAubbyBNywhGsx80XpP9OC2uYsHN10OW84VHg2LJ1fGhgb4XkHsacLJg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="M/+YNiOd";
-	arc=none smtp.remote-ip=192.198.163.16
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UqMc2Vjl;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB3E606A31C
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 15:20:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8CB3E606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F86606A31C
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 15:55:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=M/+YNiOd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795706427; x=1827242427;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8NVCkRju91RxvSv5X3NgnFQn/3ktmzfUGUqBIQF8pws=;
-  b=M/+YNiOdKHx4Kqf/vPU1Tjt+6BNfW4julr9KAZFGRWugCKMivuty7mpc
-   rl4U4jmua/itiaE9yuKYOG3L3RNL8vHDn9MXvDEPPg3T0Vf0pBk7WaMls
-   K9/1vMCRK5Ci+PrZYSYCn25ki68N/i6Zzhj/1WVNgebe4iNc9DaJLwOUM
-   DwbBvUcmIEyiFQkukFKmsQgLMHibDK53xfkArlIC3tUxB/6HRHnBU+avq
-   BJUTNg3qQ0jN/aPx4WOMC45nybnu4q+lOxe6Zre5CL64nwxMU+w4VlIfB
-   PIhYAmWRQh6F9opr8UsQAtIOEvp3LKr3aTiY0XZ3p7RYKH+akl9Tl56dO
-   A==;
-X-CSE-ConnectionGUID: Ag73FQlJQuCY8+rxGc99cA==
-X-CSE-MsgGUID: GkPS4DWMT1uXsJN4yc4+Ew==
-X-IronPort-AV: E=McAfee;i="6800,10657,11978"; a="4637706"
-X-IronPort-AV: E=Sophos;i="6.27,235,1787036400"; 
-   d="scan'208";a="4637706"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2026 07:20:15 -0800
-X-CSE-ConnectionGUID: lD0A5XM+Q06BSemRz+MyUg==
-X-CSE-MsgGUID: AUl+BC0gST2N2a74MxLVRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,235,1787036400"; 
-   d="scan'208";a="12538406"
-Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.208])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2026 07:20:13 -0800
-Date: Thu, 26 Nov 2026 17:20:11 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UqMc2Vjl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A8C41F000CA;
+	Thu, 26 Nov 2026 15:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795708510;
+	bh=q3gAoHWLYDHTRnE731e1zotsd1kR8LZw3EShqPsUYcI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=UqMc2Vjlax6fXVeqx77QsDQo4g5Bsd6POQ3jYcqE1UhfF6AZqP4i381+AegIPRqlo
+	 0LPJ0b6bEXXCkTJSwNvR3jTc9sYep6rHOqh4LORpHvaXFx94KQzeC0IouAiOI3L2yL
+	 YnMRb9fkspvD0zUpbaFHSmdgjxejD1Yt6g+RQ9eX7bgVxMFtAnrHpfb0Zf81wv8vaz
+	 r3lhaN3FtaWMQ/c4Fg+/FaST5jneng5u9ZHfAGBoAzaq/zk+PXaeUgBmwvqsfE/GoQ
+	 i4uj9kZnGTVBaMlx7qhukoE3WrlLBfr/zYoj7xlQJOKOyd4gececddUqPY65ilfN3+
+	 pbi38US23gzVg==
+Date: Thu, 26 Nov 2026 16:55:07 +0100
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
+	linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
 Subject: Re: [PATCH] string: Add missing const
-Message-ID: <awhOK6BFK6Rj0ytu@ashevche-desk.local>
+Message-ID: <awhWDGMVswTMHjzo@devuan>
 References: <9331ce2afba1a44bb84f371581478a9ac5ee7380.1795631164.git.alx@kernel.org>
+ <awhOK6BFK6Rj0ytu@ashevche-desk.local>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -78,22 +57,72 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xs7njw4cqfmxpriw"
 Content-Disposition: inline
-In-Reply-To: <9331ce2afba1a44bb84f371581478a9ac5ee7380.1795631164.git.alx@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-
-On Wed, Nov 25, 2026 at 07:26:38PM +0100, Alejandro Colomar wrote:
-> This pointer is derived from other const pointers.
-
-Constification almost always is a good thing, if this builds and works as
-expected,
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
+In-Reply-To: <awhOK6BFK6Rj0ytu@ashevche-desk.local>
 
 
+--xs7njw4cqfmxpriw
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx+linux-hardening@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
+	linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH] string: Add missing const
+Message-ID: <awhWDGMVswTMHjzo@devuan>
+References: <9331ce2afba1a44bb84f371581478a9ac5ee7380.1795631164.git.alx@kernel.org>
+ <awhOK6BFK6Rj0ytu@ashevche-desk.local>
+MIME-Version: 1.0
+In-Reply-To: <awhOK6BFK6Rj0ytu@ashevche-desk.local>
+
+Hi Andy,
+
+> Date: 2026-11-26 17:20:11+0200
+> From: Andy Shevchenko <andriy.shevchenko@intel.com>
+>
+> On Wed, Nov 25, 2026 at 07:26:38PM +0100, Alejandro Colomar wrote:
+> > This pointer is derived from other const pointers.
+>=20
+> Constification almost always is a good thing, if this builds and works as
+> expected,
+
+Yup, I built it as part of a larger branch.  I didn't run the tests,
+but this should be a compile-time-only thing, so I don't think it's
+necessary.
+
+>=20
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+
+Thanks!
+
+
+Have a lovely day!
+Alex
+
+--=20
+<https://www.alejandro-colomar.es>
+
+--xs7njw4cqfmxpriw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsIVlUACgkQ64mZXMKQ
+wqnQihAAhXudXYWU8qdkfk0xxUEn6jTj/mejPIboKwpvrEW8zSPBqVPsKO44T9jl
+XIXELcS2fvVyoiR5YSPoR7YF4pmI0BxLGOvPIdV6VY93uJDDo6ABAehDTu5hl3N3
+9TLFOUFZpzEW5IBCwXoIo4nvnwQygNPMYtnmarfVnzocjqaufy4aI4sCj9c2SjQf
+VWU8e+j75JJgk98e7vtff6qOyPGHG9nhG3GtNt7PAoh7kxBc1oH/1XJJFlbIDBoy
+EcCi7BSguVe+RiIGBPjCl71obUYCVzVURKYUL4rVPg8lnLwoMrbk/zSD9QQ7vT6M
+z9ZXG0sth2q0HlPehTH7iOxm+mwaya4Kxu1d+v9ueilfSujkwl7gMfIWwC6uqsva
+ooLIN0vcRMaEn6sb3Guqo/g6/4YLSlU+Son/rmH0x0QW9AB5d2qqj1e9nc9PiI8N
+YB5JNd6zzF6XXOqOG1K7H6iFCegMjmB+snLtN5IYt4oY35sMgdZbzHJe/OEVY57N
+//fnnhvwqoCXNznlGXkjokbL2bAc/V3X7tcB4GsF9/gqczhGunhOo3YqdxQhlcYt
+rubmDB/cjoUypRrfDmgF+mseun+jvZ8Wh5yebYEEbaM0W6r5AMe9yT5/kXpeb2Fy
+cZYgFgpfQNstL/OR/y8zPuWemQ5m/maaq+hSbFeWz31pC06h/C0=
+=KupW
+-----END PGP SIGNATURE-----
+
+--xs7njw4cqfmxpriw--
