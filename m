@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795695468;
-	b=cUrhN9R/9jsAAK+ADe4capOAkF72jwIDg6FJLnO7Ckk8QrIOW9sYebLRC7qa5VHA+It7
-	 mrrxYPqh4KTRK7+zNZ8KZok9QAv4Kv79yHGDPwWM7nZHzjgc0+Fvx+3CfbwZQv2qFZX8s
-	 WHCqO5hz0Dn0mjvimx0Rr5jdttFMXKJNR4T8HNdhzqNLvfGsoSiUdVEhMI148uw7+oYjf
-	 VWByjGqpJ8aTuy6AuZVcKXKckmo5S/MRMZ73pBLUsidBkDol0nwZ1902sENYL4vMtEbCW
-	 /QTNcQyECUdd8ArUoNAYykC3m3VoTy+527ZyyA1orDk4+EhVhJ05Gp3xiDncx4KcJsg==
+	t=1795695477;
+	b=li+tMUikE8IXjA00nbFyWMAcMEL/gTtu1hHjyWAUvMfZPoPMdhAJGurNYpPLlN2wiXf+
+	 7//55vQAEZ1+W6jZkp+S8LIl2+tznDpsvEt0OHhW7OBTbvoGuV5r+rPaw86fwWxUW/iDR
+	 d2rkVcITi2k35ZxZOy1Gy2/VqtsRycgF3ApUkfVb28qSsc/+JiCRYRwDA3OJsmyfOjl4k
+	 VONojpMyrLqCUCBDNONAXrZ1+n9zYzz4jbegswfUm0q5d39ALDYVvFyIK7ypgNT8Lbc9/
+	 9MohNmYBUZTQRmujyL0Zx873GYX42fMNxxCe2YwvvzX2eGjJbuS5Wi8IIzrcsezSHZg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795695468;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795695477;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Pw2YP/3ppKrH38kAQoq3pfEZcb2Z8qyJ41eIvEnJU14=;
-	b=TTnm+ELUGqLHgin6flsZXGpb1sLTu30dvRfXlz/Dd6XrGu06MM5xxTbYMDkI4t96UuMf
-	 Ir+t0DzNGIUGjUCzXCjiGsSsdpQNGE3m749ixW667YoXLfL/LM6a/DuPxcV88zPnpb+6f
-	 VfiHIoIoSby7/H+TbIiKPGXKW1KOZu7VM3csFGFBsE0KnZmm4E6s6Ag//JCXRaUKtEDFe
-	 UXxmLS9mq7+CtPxzHj6yGbfAikz9fwOH8GsEQwBlRdxSkXbQckVDRE4S6azE/cpAWrjsu
-	 cECJUY7d8whqIgd2RKCnVnQuas4P9YmUZ6/o6Z6qkt6jVDeOnLpsyvcA6C7v/VUIpjg==
+	bh=GnAg1L+ydpIyuTi1m5RI3tEoPVDFRXuqUhAIOsX8UQY=;
+	b=se7JWdDDHlfFQ+okQwABacZvklvlfu/rMN/EWcxGvsFXeqGv+qvWvludrbtTh2Bh4Nzj
+	 iAvlXxOM9h9vTpGmlPcCTiWl261tdNrlmopPQYuAJKYP6HX1OhhRHDYeHMX6/f4xEQQtW
+	 QO3kCSR09NMjVKGfmNkaM2XTP1bQosp4H3q3rRdSUhs4+mYzsd65uMqs7vYbH0XyPkML5
+	 EIkFJiIOJFhRqgWvIo3Jrbq74jMCaJY7o0H3MKB5d5j09SQma7UFxJTjK3gauX2k/EYhC
+	 7/2lQblMfKordGI4a12xobA4pZrVV36DAwZXoTXQg5lBAvd/dwaFH2MotvYN4lkjDLg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jd68Sf05;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c2wAPxYa;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD26606A326;
-	Thu, 26 Nov 2026 12:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57C7606A31E;
+	Thu, 26 Nov 2026 12:17:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jd68Sf05
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B4851F000D2;
-	Thu, 26 Nov 2026 12:17:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c2wAPxYa
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1DF51F000CA;
+	Thu, 26 Nov 2026 12:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795695468;
-	bh=Pw2YP/3ppKrH38kAQoq3pfEZcb2Z8qyJ41eIvEnJU14=;
+	s=k20260515; t=1795695477;
+	bh=GnAg1L+ydpIyuTi1m5RI3tEoPVDFRXuqUhAIOsX8UQY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jd68Sf05hBtqzDcfKM9luhgMlXeMF7YLzejNDsPVbGOAj9MHHxgjd7IwGy0tyh3K7
-	 MZlbF7vCrRXVp+qJSVqj9lWnhopTPR6AwE9uXxS4oKhC1Kc73Zp+VuWFD1de1wMxfq
-	 rFO/kiCksqMSs8XjIyfDlGKOZT1jyHiVvwsHtgBcpLB2V16cY7jsC99C3BjZEvHUcG
-	 d0vloms5XC/R/AI39YuK3ozHjsA/e3xkQvlNgwF++tx9Dh0PxWf0pJuQJgz4Q5nNtE
-	 pu/c2qzd2X7ogR4kQEbTbMosGIWEsQdDhS4gCMMcjiIYzJJ5p9vj7sYClvcXIMPOBO
-	 U7+9Qcw25kSDw==
-Date: Thu, 26 Nov 2026 13:17:40 +0100
+	b=c2wAPxYa3NMibqBlkLQJwnyQyxSjza+cRgDjyzS04FORe11CqOyF0SbP0XYR6qYB8
+	 JdN5mUHxSW8+KA3EH0rmEhp/9p1aVPrjuIQq3WWAQVbhsIbNKHjmcL74IcOG9ve/Sw
+	 DRgYG+7npVqBeDOoBO713j5eXBf5ZLlHvgU4/kf1yx/vaNHxFSkscFcYJ/kEarPGvY
+	 LGJSgzJyZ/zKrNmdap7mmTudfeDynXwzD+ogwHRFNugZWDnB0/ba4GYeET4XQDpH7O
+	 Udzy3f7duURYaZr0CQDbQJtR0rE7ks7bfbRHi8jGRVJUyKocqwxaPhQjD/ahBNxmC7
+	 bm89o4ikWDcpg==
+Date: Thu, 26 Nov 2026 13:17:49 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, 
@@ -58,9 +58,9 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, alx+linux-hardening@kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v8 3/4] string: Document corner-case misbehavior in
- str_has_prefix() for empty prefix
-Message-ID: <fb24c7a543f8ed0df365fc77261de6438f3d5a0e.1795695151.git.alx@kernel.org>
+Subject: [PATCH v8 4/4] device property: Fix fwnode_name_eq() for empty node
+ names
+Message-ID: <5c23d229235adbd447c16d544bfc0feb27c7524b.1795695151.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1795695151.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -73,12 +73,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7prfxvdcgvrrqsep"
+	protocol="application/pgp-signature"; boundary="ktiyemgvkt6rcag7"
 Content-Disposition: inline
 In-Reply-To: <cover.1795695151.git.alx@kernel.org>
 
 
---7prfxvdcgvrrqsep
+--ktiyemgvkt6rcag7
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -100,66 +100,79 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, alx+linux-hardening@kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v8 3/4] string: Document corner-case misbehavior in
- str_has_prefix() for empty prefix
-Message-ID: <fb24c7a543f8ed0df365fc77261de6438f3d5a0e.1795695151.git.alx@kernel.org>
+Subject: [PATCH v8 4/4] device property: Fix fwnode_name_eq() for empty node
+ names
+Message-ID: <5c23d229235adbd447c16d544bfc0feb27c7524b.1795695151.git.alx@kernel.org>
 References: <cover.1795695151.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1795695151.git.alx@kernel.org>
 
-For an empty prefix, this function returns a value that can't be
-distinguished from a non-matching prefix.  This is wrong, since an empty
-prefix is present in every string, and has resulted in bugs in code that
-called this function without knowing this issue.  Let's document it.
+str_has_prefix() returns the prefix length on match and 0 on mismatch,
+so the mistmatch case can't be told from "empty prefix matched an empty
+string".
 
+For instance: the OF root node's name as returned by
+fwnode_get_name() is "" and will return 0 for any name matched against
+it and since len is 0 too, fwnode_name_eq() will return true.
+
+Let's use strprefix() instead, which also makes this function simpler.
+
+Fixes: a9c8c738066b7 ("device property: Add fwnode_name_eq()")
 Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-for-each-pr=
 op-v1-1-6e28fe1c72c4@oss.qualcomm.com/
 Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- include/linux/string.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/base/property.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index a6a1953c52e3..574eaa8ff527 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -586,6 +586,10 @@ static inline char *strprefix(const char *s, const cha=
-r *prefix)
-  * This is similar to strprefix(), but returns an offset instead of
-  * a pointer.
-  *
-+ * Unlike for strprefix(), if the prefix is an empty string, the
-+ * behavior is undefined.  If you need to support arbitrary prefixes,
-+ * use strprefix().
-+ *
-  * Returns:
-  * * strlen(@prefix) if @str starts with @prefix
-  * * 0 if @str does not start with @prefix
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 51109794d727..7728116e2968 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -692,15 +692,12 @@ const char *fwnode_get_name_prefix(const struct fwnod=
+e_handle *fwnode)
+ bool fwnode_name_eq(const struct fwnode_handle *fwnode, const char *name)
+ {
+ 	const char *node_name;
+-	ptrdiff_t len;
+=20
+ 	node_name =3D fwnode_get_name(fwnode);
+ 	if (!node_name)
+ 		return false;
+=20
+-	len =3D strchrnul(node_name, '@') - node_name;
+-
+-	return str_has_prefix(node_name, name) =3D=3D len;
++	return strprefix(node_name, name) =3D=3D strchrnul(node_name, '@');
+ }
+ EXPORT_SYMBOL_GPL(fwnode_name_eq);
+=20
 --=20
 2.55.0
 
 
---7prfxvdcgvrrqsep
+--ktiyemgvkt6rcag7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsII2QACgkQ64mZXMKQ
-wqlosA//Q4Z/ezWoOY4yYZ1ojLGvP+7AW7VXZvbBor2IaAvSihEEp7Jcen0e60VV
-t951vFfYDhAABUHAi4U96LEQclIkpAXycHekh0nFxgEgwvEvVi9j1lK76VadYa8c
-NtzGfw16MTfLjKYvoxkyUEmUN9juOJKPAmrrUjqEWxUbmQzOCCJPCR+5Ic+DFgbi
-RdG/A0CDQMtHLfEwpRMzNKN+M1DxY/65O5PSGvTd/KXhCet+2Ybe7q9n7udwv9Sw
-qql3ACJJq0qFLVDjvUgLK4hsY4xMzY2NraQDQiJ7ILd+lpem+S3KZQPUheuWeIv0
-wl3BuVUMID46DTDS1rwOWlXkJOmHwazZgn4PevVUIHOhPZnLnfjuqeMjKnGqraQC
-/s7Xr5Xoh6kiTA2tjSQniwMKWcxMB9q4jL1wEtBH+PzPmEfPVvaSqahzOPDc8mcl
-6zJk8tfIHa7PSKO52cO3Z4f3mTdrhbyOgUo4Yh/YJPUZsW08IDnzRRHUX87pdL7A
-ReggJnX0sAxNugfVsq+6iwFT3KWExhEs1RwIWySptEN1HbX2AAcddAY87YtqzE/w
-zb1VbgWRmDqiKm9wUy721l0Oe6XM+paPv7C1Z2w5OuPPx8MyHaR49lhgJD1pL6hi
-KWVfD7aEeh7sC5e3mIshDU3K0F1B7cP70RZXnV0nOxWBJuSNe1s=
-=RYCv
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsII20ACgkQ64mZXMKQ
+wqlScw//V+5iU8A1ZOhNKsJDwVkiBghPhzHnkD6nj9redIkRIbLW9CA3ZpSallwK
+wXUAhO/tIkqcGZyzCsHod6rG9t8CJ+5UcFZhv03gGLCGIKtkNnaxqguLtDZrkFYA
+LN1o+B1FPNRcF32PCaPqEvqbjzCMSM+ODlbZKjsAF7vXBhX2luQ0Y6SObApmVNGU
+b1GzXw+7UFE66et5gPKtDxVEhLrGh7W85H365g0s3Uzdz0ArT6YTAG62uvZnqzJy
+vOIXagFT8ZxiACzwScgMc76jwrX3jGxrzWjrXCwuAi0FyiQY4pBlMXeyJQHk713J
+RlUHp9cYBggEAhhoLXOk1g1xEa+8Far0WXV3DVDnfJttgDhveeDwt7Mdx6V3+Qy7
+aL6IaUxnbqnnMotCL0NYnMMM4HO5YLD3sP5kUmFFfHPQ/cPA1794FRhrHMrcKWWG
+pK7hcKgjmh/6N1ddkGVPiYd7TTlQhgaf1Qi9pBsrCBkb1fUjQeeHhkol8HpDYAuS
+6jC9u9hmXBKIFHwJMPhIf4bmve7q1t+NmXKlcaqcJFFjr5+cYCpd+KCYXNVB5XNe
+ba4eNyC1Z6zEvrd90dKnxKnWvPMJMpjI2z2nT//hGuYjWrrKLsZP3AFeroCRiivn
+0ZSeCviyIvxwmjvbGKm9LP/qd19qClsIJlZ+aLw2U0Ju7Z0njn4=
+=8hnQ
 -----END PGP SIGNATURE-----
 
---7prfxvdcgvrrqsep--
+--ktiyemgvkt6rcag7--
