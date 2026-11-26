@@ -1,48 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795702427;
-	b=nnNrAg0djH8NKbzgx6dRfAlWVSz50V88lz5CwJ5JJ3U4t0hlkNV/eINy6Ag7QkZWih6n
-	 Nji22TvIi8gUtaftLD2qGTWp5/BGfnV1PfrG5FmEacg/HhzqRw0XPK0O8JN37OaBFiWOo
-	 wzQX2yFwcEc0kbbijxTYMXJwp1FJzZOhR9/ujOjUdYBc4/wyVCTEx0iNh6iMintuDSxAE
-	 LXwq1QBV4QrPSeEm60wnURxwZFalDsmXS01bPhC8pwp4vC5K9Qyj9qzdKpMvu2TPn8jYJ
-	 1JTeUfmU2drJ1Je3ZSTvaU9Ukp4WMmqQY2ziVLa97s12xV+0gs8yiIhD2DmLnu175vw==
+	t=1795706427;
+	b=1Uvb9MsKxLZSY+v03lbUt/lb6UPKJRKRGu9v0IGLXQA7K9UbagiTIJO/DEH90fdUQFN4
+	 EmycXUmlp8TzkVRRGwyo5szgVcUaOS0y5OAnxrrxXbh2uXnIOfgdLeefyqUp+d6N5LWy7
+	 cvufrZZpnrCAFyQ/fprY5Jq/lpawOu2kQYdYsELuwDtT8zQ/0npVgd8/C+rPmuga3SZb5
+	 1vX+CdhERt04qX3iK/2pQ4Pw54TdsYF/taykBA+2sqfZ/mJeoV0Jh3IaecCQPznRpbSKF
+	 DLtK3Sxyb1Xn7ptuqEtvMIk7/QBeKuwA3OC96Z3sRJzHMNy7Lsqq7DakZ2nWHAjsmCw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795702427;
-	h=Received:DKIM-Signature:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
-	 X-Mailer:X-Developer-Signature:X-Developer-Key;
-	bh=33K4Azq2ZZpNyKPsW49RA8yazeVp7W2aUTHzcJ9NLrU=;
-	b=m9s0aBaWOY1GyyI87M83/Hbs1oRpiSI3plAvAmL+2tS2XQ3DUh+9KZnDXZl47I7uL08b
-	 Wp6ffWcQ4fPp863uZzpZkehx/ZGdgIRiyvKSAHruLAMFpSrdKgg0258lhvGVoZ2EXFPew
-	 gf12SGCiEc/RCl0hhOmsQTRC+rTbPzg71THh6RoN1wcg5o+U8MWVgsw44HpIbktlyISBm
-	 /G4RkemR3kZiIW1LpIY/D/1rx5ngaaz3PXCttL5ugQerj7+atsa0dJCclMFmpfwDoFKfk
-	 QxSZ6MdsNOvl2R8SFujJql1IK3bLcMqGvN865eQcRRTkQxGobG1oaWBJpOEFOMI1uoA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795706427;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Organization;
+	bh=8VCDc85rZIzllfXW8iMaAuFOoYvrvzLTu2xqjGFWicM=;
+	b=fWqwcjdz/VgywYZAgHQRvXjBrLHG2/ZrKhbSQhnLxc91r6vsWSDDk+QbyaGVGwwsEZaV
+	 4xA6Cq5+0Y9u5L8Fhdf6tAyS96vC4ZuvEjmy8oReCWy2xTn8fvxyMXkYyGsEg86b7npHH
+	 Ecu4HTzLZzcZk7Toun2DMtSdiXCxhklKqHeQbuRhn7dEVQIGoIVW4/JbPnZGl+iEfQMFC
+	 64S3DHeFgNAYE58X7AGGIZj/1wgQvZN/n8V1xpxjTVRYEBc2WVcYZgjPl/hYaUqPVx3yz
+	 oEoKwvdeIS6/v6c+VjmyxS0q7E0rJlh8dlvhUdw5Fb4EN3lLSE1htn6CnSmDHSc93nA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RXSQurCt;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="M/+YNiOd";
+	arc=none smtp.remote-ip=192.198.163.16
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B185606A321;
-	Thu, 26 Nov 2026 14:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB3E606A31C
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 15:20:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8CB3E606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RXSQurCt
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61DF81F000EE;
-	Thu, 26 Nov 2026 14:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795702426;
-	bh=33K4Azq2ZZpNyKPsW49RA8yazeVp7W2aUTHzcJ9NLrU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=RXSQurCt7Cka8FbhvXtiUIsmJluA+YfkEFAwMkBpnf0B1ulN/l/sD1FvMETni+YfK
-	 /jQTeivSoqKUtxs9McYB6QILxiy5m9b3FaiD1nKuvwsWuOndh3F5cgOadmjA08QqWO
-	 BIWdcdlKZzHBOUfeswc/kNoBW+1kESuw85xnSB0eaQ++V2bFXM2kNKDuBG+43Vs3F9
-	 GlBX4iRDSSraGowp1XVcbe7ZwmrzolwJahaKp8WQuZvSqz6pAcS1u09aQD7Dt2/VRA
-	 9Zit8yo2GB0FqoFiYJ+hmfVTi5IZS0omI0BenCyu866LQw/pCuHPKZkobjAaWYQNfI
-	 snPDCL3mTAGKw==
-From: Hannes Reinecke <hare@kernel.org>
-Date: Thu, 26 Nov 2026 15:12:32 +0100
-Subject: [PATCH v7 14/14] nvme-auth: allow to update pre-provisioned keys
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=M/+YNiOd
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795706427; x=1827242427;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8NVCkRju91RxvSv5X3NgnFQn/3ktmzfUGUqBIQF8pws=;
+  b=M/+YNiOdKHx4Kqf/vPU1Tjt+6BNfW4julr9KAZFGRWugCKMivuty7mpc
+   rl4U4jmua/itiaE9yuKYOG3L3RNL8vHDn9MXvDEPPg3T0Vf0pBk7WaMls
+   K9/1vMCRK5Ci+PrZYSYCn25ki68N/i6Zzhj/1WVNgebe4iNc9DaJLwOUM
+   DwbBvUcmIEyiFQkukFKmsQgLMHibDK53xfkArlIC3tUxB/6HRHnBU+avq
+   BJUTNg3qQ0jN/aPx4WOMC45nybnu4q+lOxe6Zre5CL64nwxMU+w4VlIfB
+   PIhYAmWRQh6F9opr8UsQAtIOEvp3LKr3aTiY0XZ3p7RYKH+akl9Tl56dO
+   A==;
+X-CSE-ConnectionGUID: Ag73FQlJQuCY8+rxGc99cA==
+X-CSE-MsgGUID: GkPS4DWMT1uXsJN4yc4+Ew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11978"; a="4637706"
+X-IronPort-AV: E=Sophos;i="6.27,235,1787036400"; 
+   d="scan'208";a="4637706"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2026 07:20:15 -0800
+X-CSE-ConnectionGUID: lD0A5XM+Q06BSemRz+MyUg==
+X-CSE-MsgGUID: AUl+BC0gST2N2a74MxLVRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,235,1787036400"; 
+   d="scan'208";a="12538406"
+Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.208])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2026 07:20:13 -0800
+Date: Thu, 26 Nov 2026 17:20:11 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH] string: Add missing const
+Message-ID: <awhOK6BFK6Rj0ytu@ashevche-desk.local>
+References: <9331ce2afba1a44bb84f371581478a9ac5ee7380.1795631164.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -52,103 +78,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261126-dhchap-keyring-v4-v7-14-ee438ffea527@kernel.org>
-References: <20261126-dhchap-keyring-v4-v7-0-ee438ffea527@kernel.org>
-In-Reply-To: <20261126-dhchap-keyring-v4-v7-0-ee438ffea527@kernel.org>
-To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
- Hannes Reinecke <hare@suse.de>, Chaitanya Kulkarni <kch@nvidia.com>, 
- Eric Biggers <ebiggers@kernel.org>, David Howells <dhowells@redhat.com>, 
- Jarkko Sakkinen <jarkko@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
- keyrings@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Hannes Reinecke <hare@kernel.org>, 
- Martin Belanger <martin.nvme.dev@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795702352; l=2896;
- i=hare@kernel.org; s=20260619; h=from:subject:message-id;
- bh=k8uZimUreD/fN2EnDSCf2QftPYT3UGOnGwunPz2gxwA=;
- b=57WB6XkU9H/tsf23qL6xDpwjvcyOHVLGCasikjEoyeagQ9Vn5VLRBdPjPlJbDGZhSMge4RTa4
- ZFaFQFddnzGDmoXKy1VtFskil5Wb/mGeSrVRJCxRZ+ejJ6GRQN93Xoa
-X-Developer-Key: i=hare@kernel.org; a=ed25519;
- pk=iekPF4ZZFva3sutm7d1ryPNR1G/WFfUgHaDB423JXho=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9331ce2afba1a44bb84f371581478a9ac5ee7380.1795631164.git.alx@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-As we're passing key serial ids between fabrics options and the
-actual nvme controller structure we can implement key rotation by
-allowing the key contents to be updated (ie calling 'keyctl update').
-This results in the key serial to remain stable, and we just need
-to do a re-authentication with the new key contents.
-In order for this to work we need to disallow changing of
-pre-provisioned keys from sysfs, and implement an .update callback
-to the dhchap key type.
+On Wed, Nov 25, 2026 at 07:26:38PM +0100, Alejandro Colomar wrote:
+> This pointer is derived from other const pointers.
 
-Suggested-by: Martin Belanger <martin.nvme.dev@gmail.com>
-Signed-off-by: Hannes Reinecke <hare@kernel.org>
----
- drivers/nvme/common/keyring.c |  1 +
- drivers/nvme/host/sysfs.c     | 20 ++++++++++++++++++--
- 2 files changed, 19 insertions(+), 2 deletions(-)
+Constification almost always is a good thing, if this builds and works as
+expected,
 
-diff --git a/drivers/nvme/common/keyring.c b/drivers/nvme/common/keyring.c
-index bee64c592752a7179e1e6575f96749a7ae26a6d6..ffabd37cd090d8fe3e461a02cdee0dc4cd4135c5 100644
---- a/drivers/nvme/common/keyring.c
-+++ b/drivers/nvme/common/keyring.c
-@@ -100,6 +100,7 @@ static struct key_type nvme_tls_psk_key_type = {
- 	.free_preparse  = user_free_preparse,
- 	.match_preparse = nvme_tls_psk_match_preparse,
- 	.instantiate    = generic_key_instantiate,
-+	.update         = user_update,
- 	.revoke         = user_revoke,
- 	.destroy        = user_destroy,
- 	.describe       = nvme_tls_psk_describe,
-diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
-index 0ffea12fcfb6b5e79100fca4f125a655042695ca..0eb68b3973a1e7d6fbd6b84fba2a6880a1da4dcd 100644
---- a/drivers/nvme/host/sysfs.c
-+++ b/drivers/nvme/host/sysfs.c
-@@ -887,9 +887,17 @@ static ssize_t dhchap_secret_store(struct device *dev,
- 		kfree_sensitive(dhchap_secret);
- 		return ret;
- 	}
-+	if (!generated &&
-+	    key_serial(old_key) != key_serial(key)) {
-+		dev_warn(ctrl->device, "cannot change pre-populated key %08x\n",
-+			 key_serial(old_key));
-+		key_put(key);
-+		kfree_sensitive(dhchap_secret);
-+		return -EPERM;
-+	}
- 	mutex_lock(&ctrl->dhchap_auth_mutex);
- 	old_key = ctrl->host_key;
--	if (old_key && key_serial(old_key) == key_serial(key)) {
-+	if (old_key && old_key == key) {
- 		dev_warn(ctrl->device, "using existing key %08x\n",
- 			 key_serial(old_key));
- 		old_key = key;
-@@ -984,9 +992,17 @@ static ssize_t dhchap_ctrl_secret_store(struct device *dev,
- 		kfree_sensitive(dhchap_secret);
- 		return ret;
- 	}
-+	if (!generated &&
-+	    key_serial(old_key) != key_serial(key)) {
-+		dev_warn(ctrl->device, "cannot change pre-populated key %08x\n",
-+			 key_serial(old_key));
-+		key_put(key);
-+		kfree_sensitive(dhchap_secret);
-+		return -EPERM;
-+	}
- 	mutex_lock(&ctrl->dhchap_auth_mutex);
- 	old_key = ctrl->ctrl_key;
--	if (old_key && key_serial(old_key) == key_serial(key)) {
-+	if (old_key && old_key == key) {
- 		dev_warn(ctrl->device, "using existing ctrl key %08x\n",
- 			 key_serial(old_key));
- 		old_key = key;
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
 -- 
-2.51.0
+With Best Regards,
+Andy Shevchenko
+
 
