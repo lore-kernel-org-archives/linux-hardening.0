@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795695460;
-	b=0rrs7vxZbleWOna77Do0bo3KgY3rdZAe6vWEe4tQ1qfXeuQUgY9/odPHcOL7tb4pwLqU
-	 ExlnVSppai7uNpFkoWwHW6cB4NnicKxlZAcIpHecKYimkuD9MfQ37Kz6V3908O627yaiT
-	 EERqbSmpLHUivKV70wYl6iglSvtpxbM1e2GFDqcBzZjEmK6JFi0AntBMxTx6HT0Hwe0tQ
-	 DgdwfgRadxpxq/nBMCPtWll/LuSwuLVl9j/uVflhqCe9rshwyc7gim6BFch7mNnz8mTRm
-	 A/wRyON2FuB03RkjHHabJ0DnOwaggk0Z5brOuP4EkamoimTauDGn62ZAbteSghj2CYA==
+	t=1795695468;
+	b=cUrhN9R/9jsAAK+ADe4capOAkF72jwIDg6FJLnO7Ckk8QrIOW9sYebLRC7qa5VHA+It7
+	 mrrxYPqh4KTRK7+zNZ8KZok9QAv4Kv79yHGDPwWM7nZHzjgc0+Fvx+3CfbwZQv2qFZX8s
+	 WHCqO5hz0Dn0mjvimx0Rr5jdttFMXKJNR4T8HNdhzqNLvfGsoSiUdVEhMI148uw7+oYjf
+	 VWByjGqpJ8aTuy6AuZVcKXKckmo5S/MRMZ73pBLUsidBkDol0nwZ1902sENYL4vMtEbCW
+	 /QTNcQyECUdd8ArUoNAYykC3m3VoTy+527ZyyA1orDk4+EhVhJ05Gp3xiDncx4KcJsg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795695460;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795695468;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:X-Mailer:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=TKrCprL4bwmGowdMLtA7CW9oomW9938I5ELPxNZ3Qkg=;
-	b=cS85lwG6KmFLDvNKa54KDfumlr9JYG10MXJcr2AudVYPJxxKLJeycCgDSaI2e8egB/s9
-	 8fp8nsLHn/pTcTt5NHQUQcN1ZD2HhCHChQvpkAVlAsHVrM/BgDMEm2oix3oIHa7ulVrrD
-	 f5MiL7o+nypNXhnJ35yr43piE5fCwvE7SOGEymMC/OhEOSm0yFs5OH47jcJTV8oJPRGKf
-	 iAXkDVm58mfLAv8/YD0R2Z3dEo/lFDUPA+rqs9Mv8vqo7BTIe4fD1cYKERzuoKHdvxb3+
-	 7DLlS2wKYQZhhxZiqUn6tjlFH3Av4oJab3jElXulD4wrfbiTjZlhdAr04tIHQkCm/3A==
+	bh=Pw2YP/3ppKrH38kAQoq3pfEZcb2Z8qyJ41eIvEnJU14=;
+	b=TTnm+ELUGqLHgin6flsZXGpb1sLTu30dvRfXlz/Dd6XrGu06MM5xxTbYMDkI4t96UuMf
+	 Ir+t0DzNGIUGjUCzXCjiGsSsdpQNGE3m749ixW667YoXLfL/LM6a/DuPxcV88zPnpb+6f
+	 VfiHIoIoSby7/H+TbIiKPGXKW1KOZu7VM3csFGFBsE0KnZmm4E6s6Ag//JCXRaUKtEDFe
+	 UXxmLS9mq7+CtPxzHj6yGbfAikz9fwOH8GsEQwBlRdxSkXbQckVDRE4S6azE/cpAWrjsu
+	 cECJUY7d8whqIgd2RKCnVnQuas4P9YmUZ6/o6Z6qkt6jVDeOnLpsyvcA6C7v/VUIpjg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fZSOs2ZQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jd68Sf05;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6359A606A331;
-	Thu, 26 Nov 2026 12:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD26606A326;
+	Thu, 26 Nov 2026 12:17:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fZSOs2ZQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A0871F0093C;
-	Thu, 26 Nov 2026 12:17:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jd68Sf05
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B4851F000D2;
+	Thu, 26 Nov 2026 12:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795695459;
-	bh=TKrCprL4bwmGowdMLtA7CW9oomW9938I5ELPxNZ3Qkg=;
+	s=k20260515; t=1795695468;
+	bh=Pw2YP/3ppKrH38kAQoq3pfEZcb2Z8qyJ41eIvEnJU14=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fZSOs2ZQ4Y4qXjaIu5I1Rg9IDkCW/miBUdt5ZbDnUncIB29Dj3zBtVcpddFlDIACM
-	 Z8n3eE6GCXKI27wpkaz4GjLnHGVQlf1GjV3g3t1YWhQHjUd/xFrcXnr+7jLhk2sqYb
-	 hDQgGWDIw2DmDEB97WYAxfyAdh3C0BlZwF6yqAU3JuiDRTd/xLq48R+TCVSpdHjpWE
-	 mTXE3844VBLHwU54Pi5oCLYhkz+GmQ+8pvw3xqEFWYPZGbsf692ZyEdI/P79zp1dYZ
-	 54mFVU7uzLzRMeTRNiVz9qCEDEdNyN3qK44o5MnbPNFty5w32Er7SN0EUq3hMtzuoa
-	 T+wmQ6boOiFVg==
-Date: Thu, 26 Nov 2026 13:17:31 +0100
+	b=jd68Sf05hBtqzDcfKM9luhgMlXeMF7YLzejNDsPVbGOAj9MHHxgjd7IwGy0tyh3K7
+	 MZlbF7vCrRXVp+qJSVqj9lWnhopTPR6AwE9uXxS4oKhC1Kc73Zp+VuWFD1de1wMxfq
+	 rFO/kiCksqMSs8XjIyfDlGKOZT1jyHiVvwsHtgBcpLB2V16cY7jsC99C3BjZEvHUcG
+	 d0vloms5XC/R/AI39YuK3ozHjsA/e3xkQvlNgwF++tx9Dh0PxWf0pJuQJgz4Q5nNtE
+	 pu/c2qzd2X7ogR4kQEbTbMosGIWEsQdDhS4gCMMcjiIYzJJ5p9vj7sYClvcXIMPOBO
+	 U7+9Qcw25kSDw==
+Date: Thu, 26 Nov 2026 13:17:40 +0100
 From: Alejandro Colomar <alx@kernel.org>
 To: linux-hardening@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>, 
@@ -58,8 +58,9 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, alx+linux-hardening@kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v8 2/4] string: Add strprefix()
-Message-ID: <a688f0a1c20afadeed42ec4645b44de75874c223.1795695151.git.alx@kernel.org>
+Subject: [PATCH v8 3/4] string: Document corner-case misbehavior in
+ str_has_prefix() for empty prefix
+Message-ID: <fb24c7a543f8ed0df365fc77261de6438f3d5a0e.1795695151.git.alx@kernel.org>
 X-Mailer: git-send-email 2.55.0
 References: <cover.1795695151.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -72,12 +73,12 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ln3rtl23xmvkvcrj"
+	protocol="application/pgp-signature"; boundary="7prfxvdcgvrrqsep"
 Content-Disposition: inline
 In-Reply-To: <cover.1795695151.git.alx@kernel.org>
 
 
---ln3rtl23xmvkvcrj
+--7prfxvdcgvrrqsep
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -99,29 +100,17 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, alx+linux-hardening@kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v8 2/4] string: Add strprefix()
-Message-ID: <a688f0a1c20afadeed42ec4645b44de75874c223.1795695151.git.alx@kernel.org>
+Subject: [PATCH v8 3/4] string: Document corner-case misbehavior in
+ str_has_prefix() for empty prefix
+Message-ID: <fb24c7a543f8ed0df365fc77261de6438f3d5a0e.1795695151.git.alx@kernel.org>
 References: <cover.1795695151.git.alx@kernel.org>
 MIME-Version: 1.0
 In-Reply-To: <cover.1795695151.git.alx@kernel.org>
 
-As Bartosz reported, str_has_prefix() has a bug: it can't differentiate
-between an empty prefix matching an empty string from a non-matching
-prefix.  This is a fundamental design flaw in this API, and not
-something that can be fixed.
-
-As always, this is a consequence of choosing sizes instead of pointers.
-Sizes are often the wrong choice.  In this specific case, pointers are
-more capable of differentiating these cases, as NULL is a special
-sentinel value that doesn't need to overload a valid value.
-
-Let's implement strprefix(), a function that returns a pointer
-right after the prefix if found, and a null pointer if not found.
-
-We'll slowly migrate existing code from str_has_prefix() to strprefix().
-
-Move the description from str_has_prefix(), and describe
-str_has_prefix() by comparing it to strprefix().
+For an empty prefix, this function returns a value that can't be
+distinguished from a non-matching prefix.  This is wrong, since an empty
+prefix is present in every string, and has resulted in bugs in code that
+called this function without knowing this issue.  Let's document it.
 
 Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-for-each-pr=
 op-v1-1-6e28fe1c72c4@oss.qualcomm.com/
@@ -130,104 +119,47 @@ Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Signed-off-by: Alejandro Colomar <alx@kernel.org>
 ---
- include/linux/string.h   | 28 +++++++++++++++++++++++-----
- lib/tests/string_kunit.c |  9 +++++++++
- 2 files changed, 32 insertions(+), 5 deletions(-)
+ include/linux/string.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/include/linux/string.h b/include/linux/string.h
-index 9b3e578d9aca..a6a1953c52e3 100644
+index a6a1953c52e3..574eaa8ff527 100644
 --- a/include/linux/string.h
 +++ b/include/linux/string.h
-@@ -557,16 +557,34 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
-t void *src, size_t count,
- 	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
- })
-=20
-+/**
-+ * strprefix - string prefix
-+ * @s: The string to be tested
-+ * @prefix: The string to see if @s starts with
-+ *
-+ * This function determines whether the string pointed to by @s
-+ * starts with the sequence of characters
-+ * (excluding the terminating null character)
-+ * in the string pointed to by @prefix.
-+ *
-+ * Returns:
-+ * *  @s + strlen(@prefix) if @s starts with @prefix
-+ * *  NULL if @s does not start with @prefix
-+ */
-+__nonnull_args(1, 2)
-+static inline char *strprefix(const char *s, const char *prefix)
-+{
-+	size_t len =3D strlen(prefix);
-+	return strncmp(s, prefix, len) =3D=3D 0 ? (char *) s + len : NULL;
-+}
-+
- /**
-  * str_has_prefix - Test if a string has a given prefix
-  * @str: The string to test
-  * @prefix: The string to see if @str starts with
+@@ -586,6 +586,10 @@ static inline char *strprefix(const char *s, const cha=
+r *prefix)
+  * This is similar to strprefix(), but returns an offset instead of
+  * a pointer.
   *
-- * A common way to test a prefix of a string is to do:
-- *  strncmp(str, prefix, sizeof(prefix) - 1)
-- *
-- * But this can lead to bugs due to typos, or if prefix is a pointer
-- * and not a constant. Instead use str_has_prefix().
-+ * This is similar to strprefix(), but returns an offset instead of
-+ * a pointer.
-  *
++ * Unlike for strprefix(), if the prefix is an empty string, the
++ * behavior is undefined.  If you need to support arbitrary prefixes,
++ * use strprefix().
++ *
   * Returns:
   * * strlen(@prefix) if @str starts with @prefix
-diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index f84a60d4414c..6c5cc5f85516 100644
---- a/lib/tests/string_kunit.c
-+++ b/lib/tests/string_kunit.c
-@@ -299,6 +299,14 @@ static void string_test_streq(struct kunit *test)
- 	KUNIT_ASSERT_FALSE(test, streq("", "bar"));
- }
-=20
-+static void string_test_strprefix(struct kunit *test)
-+{
-+	KUNIT_ASSERT_TRUE(test, streq(strprefix("foobar", "foo"), "bar"));
-+	KUNIT_ASSERT_TRUE(test, streq(strprefix("foobar", ""), "foobar"));
-+	KUNIT_ASSERT_TRUE(test, streq(strprefix("foobar", "foobar"), ""));
-+	KUNIT_ASSERT_NULL(test, strprefix("foobar", "bar"));
-+}
-+
- static char strcmp_buffer1[STRCMP_LARGE_BUF_LEN];
- static char strcmp_buffer2[STRCMP_LARGE_BUF_LEN];
-=20
-@@ -904,6 +912,7 @@ static struct kunit_case string_test_cases[] =3D {
- 	KUNIT_CASE(string_test_strrchr),
- 	KUNIT_CASE(string_test_strspn),
- 	KUNIT_CASE(string_test_streq),
-+	KUNIT_CASE(string_test_strprefix),
- 	KUNIT_CASE(string_test_strcmp),
- 	KUNIT_CASE(string_test_strcmp_long_strings),
- 	KUNIT_CASE(string_test_strncmp),
+  * * 0 if @str does not start with @prefix
 --=20
 2.55.0
 
 
---ln3rtl23xmvkvcrj
+--7prfxvdcgvrrqsep
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsII1sACgkQ64mZXMKQ
-wqlyWw//Q4W0q+3zp/UnAFmqMdfxKeMPGpVB+FYXnjs0yfezFK8nMoQPtnFu7w5b
-D5V4LrE/ImyRuT1YiS08YfBnm88EdUPdgc8bEdWHvgJl0wQw6UEJLdbSAADAQ0Y6
-XBeUWttwWd/nj6tqpNysNVOWnSaZawvfNk78HdDl986lVh7O+K3YqS4z4RUPyEzJ
-+S8VuScvnGSjdrhP+Fhii8Wtajt3t4rRM2fK+CAbFB2cnOci4XNK5e4j5R1UqZ+m
-0ujK9iMoJkgs+2HmnzdvuDLFATqUGr/IElN4Yt0r15Xhc6FKupONirHNng/W1K8S
-RDAPz+XQpd7HvoK4+dX4fxDYtm9wIaRhN4ekPFekQzhNiH1ChzKsmXXFyE3Y7vC4
-wNB1H4NMcnd+SvV+owxYWFhL93+J0/7D77osf43tSaunFYw0MoNeL+waH19SSzga
-joYq6KrYz8Ma9qntcCZ4QOhYaSaOD3He/THMzD+ueqWIj51SZFQ/uZgrgBKeI+dI
-M/oTfounTljauXIUOx5vyjkBh5TkLLb9MrvwA5HxrDEhIVXEuZz3DXw2CCtUns3e
-fH5BkYq1b3/bA1CC79hsXIhIHf0l8v3oyvJFbQy2csCtQ6CehRRYXWShxtmwZHFE
-CqmqN19tPgHCIdczBSgnvtrOfvyECgwkE4Q+Z8BOMRal8xdcsYs=
-=VtQr
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsII2QACgkQ64mZXMKQ
+wqlosA//Q4Z/ezWoOY4yYZ1ojLGvP+7AW7VXZvbBor2IaAvSihEEp7Jcen0e60VV
+t951vFfYDhAABUHAi4U96LEQclIkpAXycHekh0nFxgEgwvEvVi9j1lK76VadYa8c
+NtzGfw16MTfLjKYvoxkyUEmUN9juOJKPAmrrUjqEWxUbmQzOCCJPCR+5Ic+DFgbi
+RdG/A0CDQMtHLfEwpRMzNKN+M1DxY/65O5PSGvTd/KXhCet+2Ybe7q9n7udwv9Sw
+qql3ACJJq0qFLVDjvUgLK4hsY4xMzY2NraQDQiJ7ILd+lpem+S3KZQPUheuWeIv0
+wl3BuVUMID46DTDS1rwOWlXkJOmHwazZgn4PevVUIHOhPZnLnfjuqeMjKnGqraQC
+/s7Xr5Xoh6kiTA2tjSQniwMKWcxMB9q4jL1wEtBH+PzPmEfPVvaSqahzOPDc8mcl
+6zJk8tfIHa7PSKO52cO3Z4f3mTdrhbyOgUo4Yh/YJPUZsW08IDnzRRHUX87pdL7A
+ReggJnX0sAxNugfVsq+6iwFT3KWExhEs1RwIWySptEN1HbX2AAcddAY87YtqzE/w
+zb1VbgWRmDqiKm9wUy721l0Oe6XM+paPv7C1Z2w5OuPPx8MyHaR49lhgJD1pL6hi
+KWVfD7aEeh7sC5e3mIshDU3K0F1B7cP70RZXnV0nOxWBJuSNe1s=
+=RYCv
 -----END PGP SIGNATURE-----
 
---ln3rtl23xmvkvcrj--
+--7prfxvdcgvrrqsep--
