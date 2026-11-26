@@ -1,92 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795656971;
-	b=G2LqqeZKM5Jaq+B5H3gYA2wEcpF335YfrijGMG1eCyIb4H8Yp9T88tPyoCzMM3lFJUOu
-	 LoOsWrJE08AaEPzGHGI4zUX+UnBIH4I/OpfE+fYyIZaabzeO8p7039Qaty2IzVNVMlUEL
-	 OAMj5HbCl0vmXlzgbYY99tMQNq/gyZDyrJZuswOtLULW4oTyJmQdxLGxQsCr2c1V1mwha
-	 6y5HRopVGPxPuPmcvOhKU/ng9q8DFvCP+Rk7etdbsdoge+wOByBTPrfzOOIQevJwWrGKe
-	 nQTL7aUm8cJR6xLddSxkySnYcQcTkjZl2S4fQ/oOb7NgsDl4wMSPURHrDb6frp6DRjA==
+	t=1795669978;
+	b=LrwJcRzZQAl8XVdz6xHsDQcIiS3zGfjs0CvV5At5HVxbOomcTmhQMw1MICpIKoVOu/ak
+	 qEZlZ0hTikuz/ix/ICYqS6hYgSWEjOIpCp92Y9qYsv35TDV5rOf68wO4b+WMb5exMKry2
+	 9Hf3/FitYQ2FbtfVgyG4t5VyvFmOLF67rqWA/p/uTmAE6SAAaJ00cTMOtpcHFkKx8+BwX
+	 IPL55wdBPUMa2VuACjrlg9gDCsubYNsNNJvq5KH2l2anbQSHtzcoX/4AQJ34Chi0Hh9/h
+	 Fb9ZngQ89VhJmlEtNrFDqQWTSOviJnVj+81XyoN/L4HrWgJ20nk4L/5Eyk/M4kEQOMg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795656971;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=5tMp4+nCkrdqMXbrytBsy8KUnTj5f9f9jbnW4fe3cDk=;
-	b=n7H3dVHCHGRo8F8LdfWxJYdiVD2pVYTW1tFRSf6dOIoDzLi+0KWdyeQnRVZRKUjW8+b6
-	 /FY55bRh2CrHXb63G7VL8jIAsleYmdkDks/iGFYyKgfzCEXmWCqPN10J1rgkQ40lqMucr
-	 e9OrVmsh2tzQmSA3Ccu1HX/v7FCvIuFuxi/yvFy7Kn6bP6rKbGOOdrVkeP/B77Uhi1Zv5
-	 nfM7dZ5bR/wpsyoS3FD8v2KcxFM1eEHiSgXBPfXFIGt+4P3J45XG90F3XnPAvJMwx19mf
-	 M+ISdK3Ro5NPz149L2nOS/C6y58JzpvqqksU9CpdeFfD3i1UY3ekf4+4e4q1gIC6q0A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795669978;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=NWrQlHdndkQpP/UsFk1jr4UJq8XO0pP/4sq3hQBHB9I=;
+	b=0tUGnNLlo5S71+2vo7N/N+pUmZBmVDwy3qZugiyTNKPAjKXYu+VAAfkhtzySyl2guYbO
+	 671i2Vm5lTpzXdqypI0O7mLOItZVXrbxGKzol41Gw50SXZmAkjGoCo5zoWpbIuFvk5wnq
+	 6+NsDdtvbvhZ6D7aE2v0cELqkmXSR4ko1srmaBUzuGoWvpKiRjdIeFRgZv1SBS1H03lzm
+	 blmoXZzgZhDnx++4ud18Dzg4hhC82qbFOeSrLu53F0wUMVyHYyJNc4Q+KDQS4ET19qU0h
+	 n2F4WfJaM9osu+V5Afl42JelQWPL/ivQ9Ckypn0y38/ZFpLHqHB9NGA5JTkOYQm2xBA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=chromium.org;
-	spf=pass smtp.mailfrom=chromium.org;
-	dkim=pass header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=if6kqgG0;
-	arc=none smtp.remote-ip=209.85.216.47
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Lq0b51tc;
+	arc=none smtp.remote-ip=198.175.65.19
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138A8606A31E
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 01:36:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 138A8606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1415B606A31C;
+	Thu, 26 Nov 2026 05:12:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1415B606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=if6kqgG0
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3b44bdcea8aso3647471a91.1
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Nov 2026 17:36:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1795656970; x=1796261770; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=5tMp4+nCkrdqMXbrytBsy8KUnTj5f9f9jbnW4fe3cDk=;
-        b=if6kqgG0b0+6/sY8VbrVQFAzpHTn0s/OAz0OUONut6y0pcwFsIzHguAiKdbwmWr6Vj
-         unGhAOmLA4sWAMEmCPWt3gUMQXFNgOxBhlLvCNood6T9LCJc8qz7nxdJ0XknHS3dtrmX
-         4B5eLSNZpA6BPgBCJAkX/EnyyS73NxwOyhxH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795656970; x=1796261770;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=5tMp4+nCkrdqMXbrytBsy8KUnTj5f9f9jbnW4fe3cDk=;
-        b=Pfm5dqN4Zi15pwOadyX3n8sYDuviQAR0IKncL4bElABnqj5epSoZogCJY8u/tmWiLC
-         4n2FnyWHAa7QXu7/Fky6JMxE7wsgEWnnFxQSpjdU6VuFFf2AOtG1+6Y6kBfL5XkdCku7
-         dQPjgFbn9dQsKK6GOljg+a6ikDC8Mkudp4OWtT5qHZatUmYoCHjBKhpEly6FYfM6ST91
-         GgFmsnC9KBbPu9Fq8E9SsL86qn01qinQdQk/Ci8U3k4HPCS6CITaTn4S3nkomLWNtn5u
-         h+MgM9l7/hXctS97my2nHGJn0CIJG1mwBbmJ+J8bdlI5j1oBScTBvrgzRB9fRALxPoIu
-         iilw==
-X-Forwarded-Encrypted: i=1; AL+hErHffvhUoFN4xIPWE/dgIUNAx79O3jhsRZ1wz8T4faZIhUGjJ7jd7Txj4QUySTYVtw8D7eSPZl5G205N5ZKs/jU=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/YrHo5Lq89vYCtwkIDENf48enZMdTNbo1aIeiQzz2W/7m7ZKH5
-	stT8RmREzhpblprrxbKfzaHLgtcsySKaBHtCw40Shrszo7Uikto3xebXK1Sn9DrsQMet4VnL6uD
-	9ofQ=
-X-Gm-Gg: AZFdTZea09uAqSJTVeXBQhOzKu/rvcE63IUgDyhdUD1z2D5bCZyKWEPR85Zqcp7TDXp
-	sjII/sWdYFlodKYux/TDCRFMglX+K+8m0wSlnzMA4cgbpz4udBxXh9iYgij4HZIuJO0IpmZLhfx
-	hPyY4ol/DM5K8bolk45agjZydOW2onkiWvR1hrx+/zjk87H18SOcT83ZoXJuDLCz1KCgroy/gmv
-	PnSGLqGrAxjmea6vGv9u/LM7ZFfbrqgnyHttETujZIsGMZQ5kyeyvkJw8+2HySVHr3e7tTYVDnx
-	3QDMSyGmqxEu74zcnhXvvl4kBfrdwM/F3l2rNNuvS6nvuxlOGta93htiqnwxp9OiUihTjN63C+X
-	DGT5C10S1ZgDEXGJGFvsSoh1NqjkojHBUAcA/KZUmE2FFeFgUE9MF/bxG0ReS8KJ6jrZ3dTd7Dv
-	b+2htCNaEq0n86UUqd0SsIXHVqcIC1MNPk/Wzq998Y/+uXjQ4p4rfgBhGdo5fHSqSrBegy5JDM9
-	5HOvwuzMk/+rMQ8rna2B/SocuSMNn87dicDwQ1yCxqSLHbPOZrwRt39kG2c3undgICrWDNGswaA
-	M/e28lEZK9DDIidUzkvH0L+K4a1sXwS4V+EXXcyym2y7zQ3rV3fVcCEpaKpCMVt0sg==
-X-Received: by 2002:a17:90b:3b8f:b0:3ac:b3c7:de04 with SMTP id 98e67ed59e1d1-3b41c95f0e1mr13115867a91.34.1795656970314;
-        Wed, 25 Nov 2026 17:36:10 -0800 (PST)
-Received: from google.com ([2a00:79e0:2031:6:59ac:90a:64:4bd7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b4afeaaa84sm14278085a91.10.2026.11.25.17.36.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 17:36:09 -0800 (PST)
-Date: Thu, 26 Nov 2026 10:36:05 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Minchan Kim <minchan@kernel.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-hardening@vger.kernel.org
-Subject: Re: Writing through const-qualified pointer in next_arg() from
- recomp_algorithm_store()
-Message-ID: <aweJUDMS7yF3b7R2@google.com>
-References: <awcpkJD6K1xtx_Pe@devuan>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Lq0b51tc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795669978; x=1827205978;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NqKhtBpJzofc/sJUBakwaXOayso/8xRaZnEIKxBMMEs=;
+  b=Lq0b51tcsARYWLIWz1anX59ZBGIBS+ybu+IQhROW3UCSXIytxASPztaj
+   pn9OFIEu92PjHiiaanflTQxtJE1cC6+Edy1KqP0PtnMYvmtMQaPX4W9Fn
+   H1FpNwYRHCeknDqaTSbNS/jXCJR7VzYVci/3iO4q7dUVixtFGuxxra+9e
+   XxIS2Co61yH2SZqfPVrwlAVGyopvdP1QZef/cT1XFfmC0HkcSkb62KZfe
+   iT/zBaGPonnOr45iD4zf1V76APTMrvRC8Cqx63TMgYE6crcLSgRW89qI5
+   GEvkxvxKjGzbsKJl2z6OL6ZoEOtIcbTNMMmxWNorE9RkuryXhZqbRYWpz
+   Q==;
+X-CSE-ConnectionGUID: kl1evThKTbmVlHNN6S/fLA==
+X-CSE-MsgGUID: 4Sli+D+PTCSMyWwirefj4w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4632446"
+X-IronPort-AV: E=Sophos;i="6.27,234,1787036400"; 
+   d="scan'208";a="4632446"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 21:12:57 -0800
+X-CSE-ConnectionGUID: Oj6siLx/RmWUXqQXQG7QTw==
+X-CSE-MsgGUID: DzDwKbanSm6fIbND0dzqDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,234,1787036400"; 
+   d="scan'208";a="14112070"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by fmviesa013.fm.intel.com with ESMTP; 25 Nov 2026 21:12:53 -0800
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xWRmr-00000001TJi-3Ik9;
+	Thu, 26 Nov 2026 05:12:49 +0000
+Date: Thu, 26 Nov 2026 13:12:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexandru Dadu <alexandru.dadu@imgtec.com>,
+	Alessio Belle <alessio.belle@imgtec.com>,
+	Luigi Santivetti <luigi.santivetti@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, imagination@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-hardening@vger.kernel.org,
+	Alexandru Dadu <alexandru.dadu@imgtec.com>,
+	Matt Coster <opensource@mtcoster.net>
+Subject: Re: [PATCH 3/6] drm/imagination: Save metadata from firmware
+Message-ID: <20261126130340.K8Rznt4t-lkp@intel.com>
+References: <20261125-b4-commonize-fw-segment-loading-v1-3-69657fa52ac3@imgtec.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -98,127 +97,31 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <awcpkJD6K1xtx_Pe@devuan>
+In-Reply-To: <20261125-b4-commonize-fw-segment-loading-v1-3-69657fa52ac3@imgtec.com>
 
-Hi,
+Hi Alexandru,
 
-On (26/11/25 20:08), Alejandro Colomar wrote:
-> I'm working on preserving the const qualifier in some <linux/string.h>
-> APIs.  That uncovered some places where we are currently discarding the
-> const qualifier.
-> 
-> Here's one of the cases I've found:
-> 
-> 	$ grepc recomp_algorithm_store drivers/block/zram/zram_drv.c \
-> 	| grep -e '^\S' -e '\<buf\>' -e '\<args\>';
-> 	drivers/block/zram/zram_drv.c:static ssize_t recomp_algorithm_store(struct device *dev,
-> 					      const char *buf,
-> 	{
-> 		char *args, *param, *val;
-> 		args = skip_spaces(buf);
-> 		while (*args) {
-> 			args = next_arg(args, &param, &val);
-> 	}
+kernel test robot noticed the following build errors:
 
-kernfs_fop_write_iter() gives us a kmalloc(len + 1, GFP_KERNEL) copy of
-the user buffer, so it's "safe" to write to it, per se.  But I get the
-correctness of the code point of view, so... probably another copy of
-the buffer?  :/
+[auto build test ERROR on c88084027d0e922dd925b96e5a0d184ba04a8f43]
 
----
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 96b135e3f727..ca12c1918aec 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1279,10 +1279,15 @@ static ssize_t writeback_store(struct device *dev,
- 	unsigned long lo = 0, hi;
- 	struct zram_pp_ctl *pp_ctl = NULL;
- 	struct zram_wb_ctl *wb_ctl = NULL;
-+	char *kbuf __free(kfree) = NULL;
- 	char *args, *param, *val;
- 	ssize_t ret = len;
- 	int err, mode = 0;
- 
-+	kbuf = kstrndup(buf, len, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
- 	guard(rwsem_write)(&zram->dev_lock);
- 	if (!init_done(zram))
- 		return -EINVAL;
-@@ -1303,7 +1308,7 @@ static ssize_t writeback_store(struct device *dev,
- 		goto out;
- 	}
- 
--	args = skip_spaces(buf);
-+	args = skip_spaces(kbuf);
- 	while (*args) {
- 		args = next_arg(args, &param, &val);
- 
-@@ -1779,12 +1784,17 @@ static ssize_t algorithm_params_store(struct device *dev,
- 	char *args, *param, *val, *algo = NULL, *dict_path = NULL;
- 	struct deflate_params deflate_params;
- 	struct zram *zram = dev_to_zram(dev);
-+	char *kbuf __free(kfree) = NULL;
- 	bool prio_param = false;
- 	int ret;
- 
- 	deflate_params.winbits = ZCOMP_PARAM_NOT_SET;
- 
--	args = skip_spaces(buf);
-+	kbuf = kstrndup(buf, len, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
-+	args = skip_spaces(kbuf);
- 	while (*args) {
- 		args = next_arg(args, &param, &val);
- 
-@@ -1899,12 +1909,17 @@ static ssize_t recomp_algorithm_store(struct device *dev,
- 				      size_t len)
- {
- 	struct zram *zram = dev_to_zram(dev);
-+	char *kbuf __free(kfree) = NULL;
- 	int prio = ZRAM_SECONDARY_COMP;
- 	char *args, *param, *val;
- 	char *alg = NULL;
- 	int ret;
- 
--	args = skip_spaces(buf);
-+	kbuf = kstrndup(buf, len, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
-+	args = skip_spaces(kbuf);
- 	while (*args) {
- 		args = next_arg(args, &param, &val);
- 
-@@ -2578,6 +2593,7 @@ static ssize_t recompress_store(struct device *dev,
- 	struct zram *zram = dev_to_zram(dev);
- 	char *args, *param, *val, *algo = NULL;
- 	u64 num_recomp_pages = ULLONG_MAX;
-+	char *kbuf __free(kfree) = NULL;
- 	struct zram_pp_ctl *ctl = NULL;
- 	s32 prio = ZRAM_SECONDARY_COMP;
- 	u32 mode = 0, threshold = 0;
-@@ -2586,7 +2602,11 @@ static ssize_t recompress_store(struct device *dev,
- 	bool prio_param = false;
- 	ssize_t ret;
- 
--	args = skip_spaces(buf);
-+	kbuf = kstrndup(buf, len, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
-+	args = skip_spaces(kbuf);
- 	while (*args) {
- 		args = next_arg(args, &param, &val);
- 
----
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexandru-Dadu/drm-imagination-Remove-get_fw_obj_gpu_addr/20261125-134829
+base:   c88084027d0e922dd925b96e5a0d184ba04a8f43
+patch link:    https://lore.kernel.org/r/20261125-b4-commonize-fw-segment-loading-v1-3-69657fa52ac3%40imgtec.com
+patch subject: [PATCH 3/6] drm/imagination: Save metadata from firmware
+config: arm64-randconfig-1003-20261126 (https://download.01.org/0day-ci/archive/20261126/20261126130340.K8Rznt4t-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261126/20261126130340.K8Rznt4t-lkp@intel.com/reproduce)
 
-[..]
->
-> Should we make the 'buf' parameter of recomp_algorithm_store() non-const?
->
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/20261126130340.K8Rznt4t-lkp@intel.com/
 
-device attr store requires a const chat *.
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+>> ERROR: modpost: drivers/gpu/drm/imagination/powervr.ko: symbol 'pvr_exp_fw_support' undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
