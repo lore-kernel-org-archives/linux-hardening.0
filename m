@@ -1,55 +1,65 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795729770;
-	b=EHkbDf3h4OTAQr049UjUdcFui898FvwAwBbqooVD4nx8iy3V1UpoOncPB2a7fymRzV8d
-	 lspm9nt1b3i3K7qMPGY5ka2qM3U7eQaI3zsVLI91ml8+Nzx0cPWqx3FhOUoGUpqYvmJKs
-	 h804WrbrV74qwed1lYDUhNBdIG7nrFG4wtO5cYpO+uB30ng5KJguOzNoqqdDjiP6gaiyr
-	 hlWAcep9Bg3r/xajXpvWTvv78HhI4SRzFlJZGdy0ZL7ApxmalJ/I9ViKJrq+IQZoSH3Et
-	 /QzWz6gFLp9aARZ6yeY8zQ/hHlaVVyBqVbFEhbkju3YVAU2Mg83aBAhhN67lTQsUHiw==
+	t=1795729879;
+	b=Iru4q4GHsVOBuhq6caQWBqptoi+L0yS1PjAStgmUO9YMFz49HiEYmQUmEeVpbPU4CAWO
+	 ee84u4pANeziQtiS94c9D7hWuMSbfF217NtbT2Kf8jUGx4h+XQS3FKialFiKc6xwiBVjN
+	 zfqjR67UegUy08/m11eHhvl7ZJe9FY1yDodQV4aLeijUg4GaeFwtZQAB8Mdm8ASDmd86f
+	 AE1Rs8bnosm4CfkC8LQ614gSjCGDAS6I9U39V49ZM/wBfHcyMWt975JZlMmfkGvnieEVZ
+	 2BE4w7u/X97pnUNOQcbyHQ5ES8MLU7IraQooGLDn+hrWrkBElaCmCcTYKpNpLH3/u6Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795729770;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795729879;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=lSFEsXx3nBqQNb7z98ARqhe2UkfetK4VZXZD7RYmnqo=;
-	b=hUoudefvBkwQpyQfJF1b0CvKsEaB0q2+2S2BEQkG3AnglfSOOiDKJLk0hauLcbTd2W1G
-	 nA2OsgPbP5GS8nXEETUI6gfji3pJdzkAPccqKWRerIUOdGSJB+4vWCxpOhEHJD32NAcF/
-	 zoh+jaPJdMz7/Glkl/tLDr3pL6YXREneujiuvTIvHqrubQeg77LVAonVGXTaNUoujOss9
-	 RPHb2z3Gq6fS8Xo+XgZsMudVcsDTLDrkGCHO0GU3VGgwDc8SCzf5VMXDr1+N5DLM0aCHZ
-	 GqI0mUl96h75SE5OTB+2Vk00R2Y/yKR9OIMwUmOCDRrcv4EG7BQLJNeGCXFo5eQM+Hw==
+	bh=WbA+jsGv0wskRc45vxrESitu3ujSAtU/NZMKbke3qrM=;
+	b=cJxX6PcQIJP1mPF/gMWeV/GaCqBnUjk1Hh7V8YzsHN/QVs3AQMFU+NfoP3HGKXsqYfOZ
+	 wg7gsova3jnBVB5m7vcxXTowKCIPPHfpndLJjm8rxVfV30jIaMqLW3LGFt+ns11VfIJ3V
+	 zd24PYezo9F1in8p2Wgq801OUZAaU0B2YQpHFiNpeCvS9bQmdB2bCe/TYcSGW0yyKdvpX
+	 us9+oRdN66l5juHy1hsKzk9o3VMuqFHGcqtlLopiSNY4EPwcJtxZUF24tx+CowrmRCGHY
+	 fA45diN1mVbEA+blJDflWICdrnDAZ8yb4XQhI0Tl2YkBy2D3Ury6ndZ0mXJYBCz+MRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZW8qhcIE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ioRGYjCY;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE78606A31E
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 21:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51208606A31C;
+	Thu, 26 Nov 2026 21:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZW8qhcIE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10911F000C1;
-	Thu, 26 Nov 2026 21:49:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ioRGYjCY
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B6E1F000C1;
+	Thu, 26 Nov 2026 21:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795729770;
-	bh=lSFEsXx3nBqQNb7z98ARqhe2UkfetK4VZXZD7RYmnqo=;
+	s=k20260515; t=1795729878;
+	bh=WbA+jsGv0wskRc45vxrESitu3ujSAtU/NZMKbke3qrM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ZW8qhcIErS+LXUVeFpVj0ld2SPXuD+wvfwXh/gvYQAywfoqlDu+TTQp9wI5ZboMn7
-	 9vG9tetDHGxT8FZxocBb8dhcl3VjkxKJh8k4kH1lhPhSU3qA0cICupKvIY5QwQvJNl
-	 NAChocBgGpRYovhmwdsz8mYsO1tozKLAzgtXVBxGTwddq+9IFNPQvtWRkZlE+wLLuH
-	 opfo9o2jLJKPN97jMW1sNyOKShSKcZh7HOrBk47312nAEP1RMi+m1Ez5OPXIB7d5zf
-	 EXJtaq6dPmG0yzZsSqUUXVR7r38hTCN0uxnHRqxt40VDLjUuA3aycRy1lfAXff2xso
-	 3AjpN6xtXj4WA==
-Date: Thu, 26 Nov 2026 22:49:25 +0100
+	b=ioRGYjCY51cDGF73s01dz3ctyFlRMSE1xVp2PsV2uUvfzrQ8DIWl/XcCCl8GFjSYJ
+	 +32Smpr1Mie5+3Q9CSky9lH/GV3gGFVvP6V4rh8cMDW1pnuRy+UcpOlRSHyrFpdQTK
+	 uiPwpubNBNbSNZ6tFE2j7YhG6p0TEyLra8g1hI3boBQq9c/0laAP+r6pO2u03UKBpU
+	 oyA9QroDaQBH1HQKs7qvkaVBknS7XyOVA5QyNzxHm6xmhr+FmhHvfDTEpIa02thkOO
+	 TrephghAEiEJJILokwwBZOPn9mF/BJzfdI6jCZ1rENGvvbw7GcZkgVUlyh7TSUyqB/
+	 ZQWT525IgczlA==
+Date: Thu, 26 Nov 2026 22:51:11 +0100
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
-	linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH] string: Add missing const
-Message-ID: <awipH14MBd3rxgQj@devuan>
-References: <9331ce2afba1a44bb84f371581478a9ac5ee7380.1795631164.git.alx@kernel.org>
- <awhOK6BFK6Rj0ytu@ashevche-desk.local>
- <awhWDGMVswTMHjzo@devuan>
- <awib7UleD4RO4K9v@ashevche-desk.local>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v8 0/4] Add strprefix() and fix a bug with it
+Message-ID: <awipprsECiIWE6US@devuan>
+References: <cover.1793876837.git.alx@kernel.org>
+ <cover.1795695151.git.alx@kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -60,184 +70,229 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vyr557renkoxvxwo"
+	protocol="application/pgp-signature"; boundary="jfvf2jdenz5dkrbl"
 Content-Disposition: inline
-In-Reply-To: <awib7UleD4RO4K9v@ashevche-desk.local>
+In-Reply-To: <cover.1795695151.git.alx@kernel.org>
 
 
---vyr557renkoxvxwo
+--jfvf2jdenz5dkrbl
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
-	linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH] string: Add missing const
-Message-ID: <awipH14MBd3rxgQj@devuan>
-References: <9331ce2afba1a44bb84f371581478a9ac5ee7380.1795631164.git.alx@kernel.org>
- <awhOK6BFK6Rj0ytu@ashevche-desk.local>
- <awhWDGMVswTMHjzo@devuan>
- <awib7UleD4RO4K9v@ashevche-desk.local>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v8 0/4] Add strprefix() and fix a bug with it
+Message-ID: <awipprsECiIWE6US@devuan>
+References: <cover.1793876837.git.alx@kernel.org>
+ <cover.1795695151.git.alx@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <awib7UleD4RO4K9v@ashevche-desk.local>
+In-Reply-To: <cover.1795695151.git.alx@kernel.org>
 
-Hi Andy,
+Hi,
 
-> Date: 2026-11-26 22:51:57+0200
-> From: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Date: 2026-11-26 13:17:12+0100
+> From: Alejandro Colomar <alx@kernel.org>
 >
-> On Thu, Nov 26, 2026 at 04:55:07PM +0100, Alejandro Colomar wrote:
-> > > On Wed, Nov 25, 2026 at 07:26:38PM +0100, Alejandro Colomar wrote:
-> > > > This pointer is derived from other const pointers.
-> > >=20
-> > > Constification almost always is a good thing, if this builds and work=
-s as
-> > > expected,
-> >=20
-> > Yup, I built it as part of a larger branch.  I didn't run the tests,
-> > but this should be a compile-time-only thing, so I don't think it's
-> > necessary.
+> Hi!
 >=20
-> Running kunit test is so-o easy! Just run
+> str_has_prefix() is based on sizes and lengths, which means it must
+> overload the valid length 0 to mean not found.  This is a typical
+> consequence of choosing to design an API around sizes and lengths, and
+> vanishes when moving to pointer-based similar APIs.
 >=20
-> ./tools/testing/kunit/kunit.py run string
->=20
-> It will fail if compilation fails, so it's 2-in-1.
+> According to its author (Steven R.), str_has_prefix() was never meant to
+> accept an empty prefix, but that's not documented, and there's no
+> obvious reason why that would be acceptable for a generic string
+> function (as opposed to a function very specific to its original use).
+> Anyway, as suggested by Steven, I've added a WARN_ON_ONCE() to catch
+> such uses, and also added documentation stating this limitation.
 
-I've passed the tests now; see below.
+Oops, I forgot to update this text from the cover letter.  There's no
+WARN_ON_ONCE() anymore, and it's instead only documented.
 
 
 Have a lovely night!
 Alex
 
-$ git log -1
-	commit 9331ce2afba1a44bb84f371581478a9ac5ee7380 (HEAD -> qchar)
-	Author: Alejandro Colomar <alx@kernel.org>
-	Date:   2026-11-25 19:25:10 +0100
+>=20
+> If the function had been named something like strprefix_len(), that
+> design would have made sense, but being called str_has_prefix(), the
+> obvious way to call it will result in bugs, because the name contradicts
+> its intended use.
+>=20
+> Users of strings need a function whose behavior extends naturally to the
+> empty string, and we can do better, by returning a pointer.  And indeed,
+> users have ended up using str_has_prefix() with empty prefix, expecting
+> it to work (as is natural of a generic string API with that name).
+>=20
+> This patch set adds strprefix(), and uses strprefix() in one place to
+> fix a bug reported by Bartosz.
+>=20
+> It also adds streq(3), just because it simplifies the tests, and is also
+> a nice interface.
+>=20
+> This patch set doesn't include the sibling strsuffix(), and also doesn't
+> replace any other cases which would benefit from strprefix(), to allow
+> merging it quickly.  I'll work on a follow-up patch, including the
+> patches from v6 that have been dropped in this v7, after this has been
+> applied.
+>=20
+>=20
+> Have a lovely day!
+> Alex
+>=20
+>=20
+> Changes in v8
+> ~~~~~~~~~~~~~
+>=20
+> -  [*/4]
+>    -  Add Tested-by and Reviewed-by tags.
+> -  [4/4]
+>    -  Remove Message-ID tags.  [Andy, Geert, Bartosz]
+>=20
+> See the range-diff and interdiff below.
+>=20
+> v1: <https://lore.kernel.org/linux-hardening/cover.1793876837.git.alx@ker=
+nel.org/>
+> v2: <https://lore.kernel.org/linux-hardening/cover.1793882260.git.alx@ker=
+nel.org/>
+> v3: <https://lore.kernel.org/linux-hardening/cover.1794323750.git.alx@ker=
+nel.org/>
+> v4: <https://lore.kernel.org/linux-hardening/cover.1794425425.git.alx@ker=
+nel.org/>
+> v5: <https://lore.kernel.org/linux-hardening/cover.1794574496.git.alx@ker=
+nel.org/>
+> v6: <https://lore.kernel.org/linux-hardening/cover.1794667407.git.alx@ker=
+nel.org/>
+> v7: <https://lore.kernel.org/linux-hardening/cover.1795639368.git.alx@ker=
+nel.org/>
+>=20
+> Testing
+> ~~~~~~~
+>=20
+> Since there are no code changes since v7, I haven't tested again.
+> See the link for v7 above to see the testing of v7.  Bartosz also
+> tested v7.
+>=20
+>=20
+> Alejandro Colomar (4):
+>   string: Add streq()
+>   string: Add strprefix()
+>   string: Document corner-case misbehavior in str_has_prefix() for empty
+>     prefix
+>   device property: Fix fwnode_name_eq() for empty node names
+>=20
+>  drivers/base/property.c            |  5 +---
+>  drivers/clk/socfpga/clk-gate-a10.c |  2 --
+>  drivers/clk/socfpga/clk.h          |  1 -
+>  include/linux/string.h             | 42 +++++++++++++++++++++++++++---
+>  lib/tests/string_kunit.c           | 22 ++++++++++++++++
+>  5 files changed, 61 insertions(+), 11 deletions(-)
+>=20
+> Interdiff against v7:
+> Range-diff against v7:
+> 1:  ad8500a6eb0a ! 1:  8f3840fa232e string: Add streq()
+>     @@ Commit message
+>     =20
+>          This removes some driver-specific definitions of streq(3).
+>     =20
+>     +    Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
+=2Ecom>
+>     +    Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
+mm.com>
+>          Signed-off-by: Alejandro Colomar <alx@kernel.org>
+>     =20
+>       ## drivers/clk/socfpga/clk-gate-a10.c ##
+> 2:  b32d70163fb4 ! 2:  a688f0a1c20a string: Add strprefix()
+>     @@ Commit message
+>     =20
+>          Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-=
+for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
+>          Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
+mm.com>
+>     +    Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
+=2Ecom>
+>     +    Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
+mm.com>
+>          Signed-off-by: Alejandro Colomar <alx@kernel.org>
+>     =20
+>       ## include/linux/string.h ##
+> 3:  c4131a109098 ! 3:  fb24c7a543f8 string: Document corner-case misbehav=
+ior in str_has_prefix() for empty prefix
+>     @@ Commit message
+>     =20
+>          Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-=
+for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
+>          Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
+mm.com>
+>     +    Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
+=2Ecom>
+>     +    Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
+mm.com>
+>          Signed-off-by: Alejandro Colomar <alx@kernel.org>
+>     =20
+>       ## include/linux/string.h ##
+> 4:  396395e1d02c ! 4:  5c23d229235a device property: Fix fwnode_name_eq()=
+ for empty node names
+>     @@ Commit message
+>          Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-=
+for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
+>          Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
+mm.com>
+>          Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>     -    Message-ID: <avrSUUM3HMgxTNpl@kekkonen.localdomain>
+>          Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
+mm.com>
+>     -    Message-ID: <nat4ilqmzzpuyrjbuahl367ip22tfnmjorydlppuwqiscxaujo@=
+kf63j4lb3flk>
+>          Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
+=2Ecom>
+>     -    Message-ID: <nat4ilqmzzpuyrjbuahl367ip22tfnmjorydlppuwqiscxaujo@=
+kf63j4lb3flk>
+>          Signed-off-by: Alejandro Colomar <alx@kernel.org>
+>     =20
+>       ## drivers/base/property.c ##
+> --=20
+> 2.55.0
+>=20
 
-	    string: Add missing const
-	   =20
-	    This pointer is derived from other const pointers.
-	   =20
-	    Signed-off-by: Alejandro Colomar <alx@kernel.org>
-$ cp ../kunitconfig .kunitconfig
-$ cat .kunitconfig
-	CONFIG_KUNIT=3Dy
-	CONFIG_STRING_KUNIT_TEST=3Dy
-$ mkdir -p ~/tmp/const-string1
-$ export TMPDIR=3D$HOME/tmp/const-string1/
-$ ./tools/testing/kunit/kunit.py run "string*"
-	[22:47:41] Configuring KUnit Kernel ...
-	Generating .config ...
-	Populating config with:
-	$ make ARCH=3Dum O=3D.kunit olddefconfig
-	[22:47:44] Building KUnit Kernel ...
-	Populating config with:
-	$ make ARCH=3Dum O=3D.kunit olddefconfig
-	Building with:
-	$ make all compile_commands.json scripts_gdb ARCH=3Dum O=3D.kunit --jobs=
-=3D24
-	../drivers/base/dd.c: In function =E2=80=98__device_set_driver_override=E2=
-=80=99:
-	../drivers/base/dd.c:406:20: warning: assignment discards =E2=80=98const=
-=E2=80=99 qualifier from pointer target type [-Wdiscarded-qualifiers]
-	  406 |                 cp =3D strnchr(s, len, '\n');
-	      |                    ^
 
-	[22:48:01] Starting KUnit Kernel (1/1)...
-	[22:48:01] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	Running tests with:
-	$ .kunit/linux 'kunit.filter_glob=3Dstring*' kunit.enable=3D1 mem=3D1G con=
-sole=3Dtty kunit_shutdown=3Dhalt
-	[22:48:02] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D string-stream-test (12 =
-subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[22:48:02] [PASSED] string_stream_managed_init_test
-	[22:48:02] [PASSED] string_stream_unmanaged_init_test
-	[22:48:02] [PASSED] string_stream_managed_free_test
-	[22:48:02] [PASSED] string_stream_resource_free_test
-	[22:48:02] [PASSED] string_stream_line_add_test
-	[22:48:02] [PASSED] string_stream_variable_length_line_test
-	[22:48:02] [PASSED] string_stream_append_test
-	[22:48:02] [PASSED] string_stream_append_auto_newline_test
-	[22:48:02] [PASSED] string_stream_append_empty_string_test
-	[22:48:02] [PASSED] string_stream_no_auto_newline_test
-	[22:48:02] [PASSED] string_stream_auto_newline_test
-	[22:48:02] [PASSED] string_stream_performance_test
-	[22:48:02] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [PASSED] string-s=
-tream-test =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[22:48:02] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D strin=
-g (29 subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[22:48:02] [PASSED] string_test_memset16
-	[22:48:02] [PASSED] string_test_memset32
-	[22:48:02] [PASSED] string_test_memset64
-	[22:48:02] [PASSED] string_test_strlen
-	[22:48:02] [PASSED] string_test_strnlen
-	[22:48:02] [PASSED] string_test_strchr
-	[22:48:02] [PASSED] string_test_strnchr
-	[22:48:02] [PASSED] string_test_strrchr
-	[22:48:02] [PASSED] string_test_strspn
-	[22:48:02] [PASSED] string_test_streq
-	[22:48:02] [PASSED] string_test_strcmp
-	[22:48:02] [PASSED] string_test_strcmp_long_strings
-	[22:48:02] [PASSED] string_test_strncmp
-	[22:48:02] [PASSED] string_test_strncmp_long_strings
-	[22:48:02] [PASSED] string_test_strcasecmp
-	[22:48:02] [PASSED] string_test_strcasecmp_long_strings
-	[22:48:02] [PASSED] string_test_strncasecmp
-	[22:48:02] [PASSED] string_test_strncasecmp_long_strings
-	[22:48:02] [PASSED] string_test_strscpy
-	[22:48:02] [PASSED] string_test_strcat
-	[22:48:02] [PASSED] string_test_strncat
-	[22:48:02] [PASSED] string_test_strlcat
-	[22:48:02] [PASSED] string_test_strtomem
-	[22:48:02] [PASSED] string_test_memtostr
-	[22:48:02] [PASSED] string_test_strends
-	[22:48:02] [SKIPPED] string_bench_strlen (not enabled)
-	[22:48:02] [SKIPPED] string_bench_strnlen (not enabled)
-	[22:48:02] [SKIPPED] string_bench_strchr (not enabled)
-	[22:48:02] [SKIPPED] string_bench_strrchr (not enabled)
-	[22:48:02] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
- [PASSED] string =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-	[22:48:02] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D string_helpers (4=
- subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[22:48:02] [PASSED] test_get_size
-	[22:48:02] [PASSED] test_upper_lower
-	[22:48:02] [PASSED] test_unescape
-	[22:48:02] [PASSED] test_escape
-	[22:48:02] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [PASSED] st=
-ring_helpers =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[22:48:02] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-	[22:48:02] Testing complete. Ran 45 tests: passed: 41, skipped: 4
-	[22:48:02] Elapsed time: 20.674s total, 3.447s configuring, 17.058s buildi=
-ng, 0.128s running
 
 --=20
 <https://www.alejandro-colomar.es>
 
---vyr557renkoxvxwo
+--jfvf2jdenz5dkrbl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsIqV8ACgkQ64mZXMKQ
-wqmrqw/7B1etOaM39loIwDIMOJwXQZvv3+CfPSPaclD3lu52b00L6SgXRawc87GB
-atnJXnyPU/T14eGdYP1KL0WrKjRaBGTTrNp7z90Bwy1NsKE8gmOA6HU8MMYXDOTs
-AEUKty1bx9RguaxyDlsiY2zl1VQFR+WWitN5eOp/xcR5DtwticrSZhaVFRRfPvsz
-TCzLP1o75x/SZf3/Dktizf7r0ITqB3rsHOjfNTPzb5VWOXnktzG783bBe9tdayAE
-LmDlNartMYm8aO4SDobbiO3TTh9lOjGlcKKIWLvkNNQSn60WC9xgPoUDYT334fVU
-3giD4xXgExMJnM0y33PGLo1auKInN8h54/+zaFAR4etV3KZfRWg9NnT/LjqVtSjv
-0loFiC8tp/ah+Mb27TFSFjfoOep+Ca1XTuyE81DVPQNvMW3AaIn6648eO/XAV+ZP
-Udwp+zZ0rMnR4BOk6UKLgk+waOLCYIVdrhSf7uoUA/NgrLDpPlTUqjNWse4RnWK4
-jaxDXcoU3XWWtY0oRX0IUH0LiFe/Uw31gkSJ5vyT1yfUV2ltIF0PYo8DewU9eaWy
-ffiM5et+tYxG02DcqcPqHJ6c3lRxk9AZq7av8nROEEdlZAeRm0xUI/w4d12bjuIJ
-MWl2wGNRmTB1rjwh1Te29klG++xyiqtL279h4wkX/ELpfrlSPgQ=
-=62RA
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsIqc4ACgkQ64mZXMKQ
+wqmd1BAAhioU4qXCSPoC9eZ7SMmdqAx2ab3diOPWpJM/5zXgoA56mQKCcP9AnyAj
+/dzdZDy/pPDgrPCuPv1R/EXpfozRg3CNg6cbwb6iHiv919mLuSQClY0CyFKGG3z1
+H3/QUnNgbtUE0ThoxTBWUKKR04vtxmpjzgNthSccPZwRMzlocCIdNwKPEAVGs+S+
+Z/aHYgY0DfIYEVvXiAGQo2dgvfMhHQbuW038Mxi3NrhAvSxoMN13NcjNiSWOWuQQ
++FSyJtRA4/d+6rbiP4/JVcWUL7ErPcU6Cm9MEmCn9D+hVVWcTQ0VWxjUASEqzLgb
+XFitqqaRhGwafYmNTF9f1QV/StqUebcat4BWiJGbmEl+E5olgxKryVB+As4iPdm1
+qcBXZZs95i5KJUg++OL1RYWvsws8cQ/D7qYQXl+gz8rO79+dM7Ccha4NA/TurEgP
+4GpIE3ZxNnJ7Wp/WHFozZD/Q0sWLGFcci4Tju6m7vu6S9wtbGRk5G2ryAXapwJaM
+5wl/UkTGiknqoLkMQRPrD06exME6i/e8MOfjQdLAYk0wyAipxdvYtfpju86iXC6d
+5I+tA2NRn6M9hIZr024dm7Mr1PEkcwW1Mh+ysZp3rWXM/VM0wW2oBxZM8XydZgPT
+DQB9VafJKSDkVr3pdO6uR3P52Q6cjyYAT8QfXqcP0pH5YRLxUVw=
+=8rG6
 -----END PGP SIGNATURE-----
 
---vyr557renkoxvxwo--
+--jfvf2jdenz5dkrbl--
