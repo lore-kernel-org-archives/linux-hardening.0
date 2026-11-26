@@ -1,60 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795645576;
-	b=TT8gPoqPIBbqIZYW9DT1+E42GnqY/JAIhNekY5ltcsKPNjHL8xoydvveV7bRZrItTvaO
-	 6O2RrRR4b8DEpffIeg7k5TRGubz2LbBx8v/8eV+un/bbZ5NCFw51Fvwk6N94voZbL2Hgw
-	 VEEjqAcgyzuxHZDBvURiV68IzmfMw0J/JVOs92Y3ARuobnJU/mHhJ28P5+nUexII4Oims
-	 lQneC8HsStiugBf3puC3jTB/rQup8ErjUsxHZaDd8Ka4RyhjNiPugzq0o5/E1ozreqCr/
-	 D6WVMVdZbrik99ju7wRISaQCwjr/Jg1yFNZ7E/FsGs2lGWSXNJXOmsuWfdcelUZjxWA==
+	t=1795656971;
+	b=G2LqqeZKM5Jaq+B5H3gYA2wEcpF335YfrijGMG1eCyIb4H8Yp9T88tPyoCzMM3lFJUOu
+	 LoOsWrJE08AaEPzGHGI4zUX+UnBIH4I/OpfE+fYyIZaabzeO8p7039Qaty2IzVNVMlUEL
+	 OAMj5HbCl0vmXlzgbYY99tMQNq/gyZDyrJZuswOtLULW4oTyJmQdxLGxQsCr2c1V1mwha
+	 6y5HRopVGPxPuPmcvOhKU/ng9q8DFvCP+Rk7etdbsdoge+wOByBTPrfzOOIQevJwWrGKe
+	 nQTL7aUm8cJR6xLddSxkySnYcQcTkjZl2S4fQ/oOb7NgsDl4wMSPURHrDb6frp6DRjA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795645576;
-	h=Received:DKIM-Signature:Resent-From:Resent-Date:Resent-Message-ID:
-	 Resent-To:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795656971;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
 	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=Ad4P++K9bZno9nuh/iuXN/ynLGwKsplQDt7xu5Ult50=;
-	b=Lur5g+/fwPl47IwgUee8zfQWoC9K/qKo9Kjk0HOIdDTEUOGCZZwjUlMl19S7a1yp0Sp4
-	 L07ThxFodrYA1H39RkrHY+nnkZf7ClgP6T+zqGWRTKhW8eGL4zauTkcEFYWsPYwd2+Ao5
-	 x+g3rR2qB+JjtkUKL06jO4THiWxTcQPM3wS15VwqlAJrl2jPdNBlVYm7ULW5kRsSltHzH
-	 EHahc4G6IJ77vesl9VaxQdQuMRoLDd1cKpFuCMaphNrTxeo+pMsnShga0e14utbu7o3+T
-	 L5ivWIlAu63SQtU0D0Gs2gxJ43p26Ah2qQF8jaNBy1X5gyixbOexgzD3xjJ6I/kKrLA==
+	bh=5tMp4+nCkrdqMXbrytBsy8KUnTj5f9f9jbnW4fe3cDk=;
+	b=n7H3dVHCHGRo8F8LdfWxJYdiVD2pVYTW1tFRSf6dOIoDzLi+0KWdyeQnRVZRKUjW8+b6
+	 /FY55bRh2CrHXb63G7VL8jIAsleYmdkDks/iGFYyKgfzCEXmWCqPN10J1rgkQ40lqMucr
+	 e9OrVmsh2tzQmSA3Ccu1HX/v7FCvIuFuxi/yvFy7Kn6bP6rKbGOOdrVkeP/B77Uhi1Zv5
+	 nfM7dZ5bR/wpsyoS3FD8v2KcxFM1eEHiSgXBPfXFIGt+4P3J45XG90F3XnPAvJMwx19mf
+	 M+ISdK3Ro5NPz149L2nOS/C6y58JzpvqqksU9CpdeFfD3i1UY3ekf4+4e4q1gIC6q0A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ngz+mJyD;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=chromium.org;
+	spf=pass smtp.mailfrom=chromium.org;
+	dkim=pass header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=if6kqgG0;
+	arc=none smtp.remote-ip=209.85.216.47
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6336A606A69E
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Nov 2026 22:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138A8606A31E
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Nov 2026 01:36:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 138A8606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ngz+mJyD
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 584541F000D4
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Nov 2026 22:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795645575;
-	bh=Ad4P++K9bZno9nuh/iuXN/ynLGwKsplQDt7xu5Ult50=;
-	h=Resent-From:Resent-Date:Resent-To:Date:From:To:Cc:Subject:
-	 References:In-Reply-To;
-	b=ngz+mJyDb81j2SGUZ0pABZZuIMjF/HqF+1OxRkDyQhDpT4lMNAMWrmIM9DMdemQSW
-	 LaiYlexH9khIHvPPr50Uj3R0g1T09zwFPh/lSV00CRKrsGsUrrBtZSkJvlg3ooYmWq
-	 /UJEx9j8o8kRlEpD7KHRUEcwfyTGDQEHmg2AEHgnvjB6mz/cNws8X3kp6fUhY93pi5
-	 g+OpCM2DNBYYsOjTHqnzJZiboj5j5rMuPeG+HzMH/jFEQYJob+cssJEOwrJCnbq1z9
-	 LtA3s0XWMdR/Ezq9Wpic4RbcGMRMZAhOCJqrtmt5bn4PQCbeJDD426lmkCZ53oZ9mN
-	 JGB/yTuuigBbQ==
-Resent-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-Resent-Date: Wed, 25 Nov 2026 23:26:13 +0100
-Resent-Message-ID: <awdghW50TxXlrOn-@devuan>
-Resent-To: linux-hardening@vger.kernel.org
-Date: Wed, 25 Nov 2026 23:25:51 +0100
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Alejandro Colomar <alx@kernel.org>, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v7 2/4] string: Add strprefix()
-Message-ID: <awdf5dYKbpkbjSif@devuan>
-References: <cover.1795639368.git.alx@kernel.org>
- <b32d70163fb454fee2667548c63c4d4d3b19d7bb.1795639368.git.alx@kernel.org>
- <sashiko-outbox-234163@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=if6kqgG0
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3b44bdcea8aso3647471a91.1
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Nov 2026 17:36:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1795656970; x=1796261770; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=5tMp4+nCkrdqMXbrytBsy8KUnTj5f9f9jbnW4fe3cDk=;
+        b=if6kqgG0b0+6/sY8VbrVQFAzpHTn0s/OAz0OUONut6y0pcwFsIzHguAiKdbwmWr6Vj
+         unGhAOmLA4sWAMEmCPWt3gUMQXFNgOxBhlLvCNood6T9LCJc8qz7nxdJ0XknHS3dtrmX
+         4B5eLSNZpA6BPgBCJAkX/EnyyS73NxwOyhxH4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795656970; x=1796261770;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5tMp4+nCkrdqMXbrytBsy8KUnTj5f9f9jbnW4fe3cDk=;
+        b=Pfm5dqN4Zi15pwOadyX3n8sYDuviQAR0IKncL4bElABnqj5epSoZogCJY8u/tmWiLC
+         4n2FnyWHAa7QXu7/Fky6JMxE7wsgEWnnFxQSpjdU6VuFFf2AOtG1+6Y6kBfL5XkdCku7
+         dQPjgFbn9dQsKK6GOljg+a6ikDC8Mkudp4OWtT5qHZatUmYoCHjBKhpEly6FYfM6ST91
+         GgFmsnC9KBbPu9Fq8E9SsL86qn01qinQdQk/Ci8U3k4HPCS6CITaTn4S3nkomLWNtn5u
+         h+MgM9l7/hXctS97my2nHGJn0CIJG1mwBbmJ+J8bdlI5j1oBScTBvrgzRB9fRALxPoIu
+         iilw==
+X-Forwarded-Encrypted: i=1; AL+hErHffvhUoFN4xIPWE/dgIUNAx79O3jhsRZ1wz8T4faZIhUGjJ7jd7Txj4QUySTYVtw8D7eSPZl5G205N5ZKs/jU=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/YrHo5Lq89vYCtwkIDENf48enZMdTNbo1aIeiQzz2W/7m7ZKH5
+	stT8RmREzhpblprrxbKfzaHLgtcsySKaBHtCw40Shrszo7Uikto3xebXK1Sn9DrsQMet4VnL6uD
+	9ofQ=
+X-Gm-Gg: AZFdTZea09uAqSJTVeXBQhOzKu/rvcE63IUgDyhdUD1z2D5bCZyKWEPR85Zqcp7TDXp
+	sjII/sWdYFlodKYux/TDCRFMglX+K+8m0wSlnzMA4cgbpz4udBxXh9iYgij4HZIuJO0IpmZLhfx
+	hPyY4ol/DM5K8bolk45agjZydOW2onkiWvR1hrx+/zjk87H18SOcT83ZoXJuDLCz1KCgroy/gmv
+	PnSGLqGrAxjmea6vGv9u/LM7ZFfbrqgnyHttETujZIsGMZQ5kyeyvkJw8+2HySVHr3e7tTYVDnx
+	3QDMSyGmqxEu74zcnhXvvl4kBfrdwM/F3l2rNNuvS6nvuxlOGta93htiqnwxp9OiUihTjN63C+X
+	DGT5C10S1ZgDEXGJGFvsSoh1NqjkojHBUAcA/KZUmE2FFeFgUE9MF/bxG0ReS8KJ6jrZ3dTd7Dv
+	b+2htCNaEq0n86UUqd0SsIXHVqcIC1MNPk/Wzq998Y/+uXjQ4p4rfgBhGdo5fHSqSrBegy5JDM9
+	5HOvwuzMk/+rMQ8rna2B/SocuSMNn87dicDwQ1yCxqSLHbPOZrwRt39kG2c3undgICrWDNGswaA
+	M/e28lEZK9DDIidUzkvH0L+K4a1sXwS4V+EXXcyym2y7zQ3rV3fVcCEpaKpCMVt0sg==
+X-Received: by 2002:a17:90b:3b8f:b0:3ac:b3c7:de04 with SMTP id 98e67ed59e1d1-3b41c95f0e1mr13115867a91.34.1795656970314;
+        Wed, 25 Nov 2026 17:36:10 -0800 (PST)
+Received: from google.com ([2a00:79e0:2031:6:59ac:90a:64:4bd7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b4afeaaa84sm14278085a91.10.2026.11.25.17.36.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 17:36:09 -0800 (PST)
+Date: Thu, 26 Nov 2026 10:36:05 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Minchan Kim <minchan@kernel.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-hardening@vger.kernel.org
+Subject: Re: Writing through const-qualified pointer in next_arg() from
+ recomp_algorithm_store()
+Message-ID: <aweJUDMS7yF3b7R2@google.com>
+References: <awcpkJD6K1xtx_Pe@devuan>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -64,110 +96,129 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6gr5d72eivgopjii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <sashiko-outbox-234163@kernel.org>
+In-Reply-To: <awcpkJD6K1xtx_Pe@devuan>
 
+Hi,
 
---6gr5d72eivgopjii
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Alejandro Colomar <alx@kernel.org>, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v7 2/4] string: Add strprefix()
-Message-ID: <awdf5dYKbpkbjSif@devuan>
-References: <cover.1795639368.git.alx@kernel.org>
- <b32d70163fb454fee2667548c63c4d4d3b19d7bb.1795639368.git.alx@kernel.org>
- <sashiko-outbox-234163@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <sashiko-outbox-234163@kernel.org>
+On (26/11/25 20:08), Alejandro Colomar wrote:
+> I'm working on preserving the const qualifier in some <linux/string.h>
+> APIs.  That uncovered some places where we are currently discarding the
+> const qualifier.
+> 
+> Here's one of the cases I've found:
+> 
+> 	$ grepc recomp_algorithm_store drivers/block/zram/zram_drv.c \
+> 	| grep -e '^\S' -e '\<buf\>' -e '\<args\>';
+> 	drivers/block/zram/zram_drv.c:static ssize_t recomp_algorithm_store(struct device *dev,
+> 					      const char *buf,
+> 	{
+> 		char *args, *param, *val;
+> 		args = skip_spaces(buf);
+> 		while (*args) {
+> 			args = next_arg(args, &param, &val);
+> 	}
 
-> Date: 2026-11-25 21:11:26+0000
-> From: sashiko-bot@kernel.org
+kernfs_fop_write_iter() gives us a kmalloc(len + 1, GFP_KERNEL) copy of
+the user buffer, so it's "safe" to write to it, per se.  But I get the
+correctness of the code point of view, so... probably another copy of
+the buffer?  :/
+
+---
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 96b135e3f727..ca12c1918aec 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1279,10 +1279,15 @@ static ssize_t writeback_store(struct device *dev,
+ 	unsigned long lo = 0, hi;
+ 	struct zram_pp_ctl *pp_ctl = NULL;
+ 	struct zram_wb_ctl *wb_ctl = NULL;
++	char *kbuf __free(kfree) = NULL;
+ 	char *args, *param, *val;
+ 	ssize_t ret = len;
+ 	int err, mode = 0;
+ 
++	kbuf = kstrndup(buf, len, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
+ 	guard(rwsem_write)(&zram->dev_lock);
+ 	if (!init_done(zram))
+ 		return -EINVAL;
+@@ -1303,7 +1308,7 @@ static ssize_t writeback_store(struct device *dev,
+ 		goto out;
+ 	}
+ 
+-	args = skip_spaces(buf);
++	args = skip_spaces(kbuf);
+ 	while (*args) {
+ 		args = next_arg(args, &param, &val);
+ 
+@@ -1779,12 +1784,17 @@ static ssize_t algorithm_params_store(struct device *dev,
+ 	char *args, *param, *val, *algo = NULL, *dict_path = NULL;
+ 	struct deflate_params deflate_params;
+ 	struct zram *zram = dev_to_zram(dev);
++	char *kbuf __free(kfree) = NULL;
+ 	bool prio_param = false;
+ 	int ret;
+ 
+ 	deflate_params.winbits = ZCOMP_PARAM_NOT_SET;
+ 
+-	args = skip_spaces(buf);
++	kbuf = kstrndup(buf, len, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	args = skip_spaces(kbuf);
+ 	while (*args) {
+ 		args = next_arg(args, &param, &val);
+ 
+@@ -1899,12 +1909,17 @@ static ssize_t recomp_algorithm_store(struct device *dev,
+ 				      size_t len)
+ {
+ 	struct zram *zram = dev_to_zram(dev);
++	char *kbuf __free(kfree) = NULL;
+ 	int prio = ZRAM_SECONDARY_COMP;
+ 	char *args, *param, *val;
+ 	char *alg = NULL;
+ 	int ret;
+ 
+-	args = skip_spaces(buf);
++	kbuf = kstrndup(buf, len, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	args = skip_spaces(kbuf);
+ 	while (*args) {
+ 		args = next_arg(args, &param, &val);
+ 
+@@ -2578,6 +2593,7 @@ static ssize_t recompress_store(struct device *dev,
+ 	struct zram *zram = dev_to_zram(dev);
+ 	char *args, *param, *val, *algo = NULL;
+ 	u64 num_recomp_pages = ULLONG_MAX;
++	char *kbuf __free(kfree) = NULL;
+ 	struct zram_pp_ctl *ctl = NULL;
+ 	s32 prio = ZRAM_SECONDARY_COMP;
+ 	u32 mode = 0, threshold = 0;
+@@ -2586,7 +2602,11 @@ static ssize_t recompress_store(struct device *dev,
+ 	bool prio_param = false;
+ 	ssize_t ret;
+ 
+-	args = skip_spaces(buf);
++	kbuf = kstrndup(buf, len, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	args = skip_spaces(kbuf);
+ 	while (*args) {
+ 		args = next_arg(args, &param, &val);
+ 
+---
+
+[..]
 >
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue to consider:
-> - [Low] string: kernel-doc parse failure on strprefix() due to
->   __nonnull_args()
-> --
->=20
-> commit d8e472e1906ee21263f127c3c8452f752cbf8121
-> Author: Alejandro Colomar <alx@kernel.org>
->=20
-> string: Add strprefix()
->=20
-> This commit introduces strprefix() to return a pointer after a matched
-> prefix or NULL on mismatch, and adds KUnit tests for it.
->=20
-> > diff --git a/include/linux/string.h b/include/linux/string.h
-> > index 9b3e578d9aca1..a6a1953c52e35 100644
-> > --- a/include/linux/string.h
-> > +++ b/include/linux/string.h
-> > @@ -557,16 +557,34 @@ void memcpy_and_pad(void *dest, size_t dest_len, =
-const void *src, size_t count,
-> >  	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
-> >  })
-> > =20
-> > +/**
-> > + * strprefix - string prefix
-> > + * @s: The string to be tested
-> > + * @prefix: The string to see if @s starts with
-> > + *
-> > + * This function determines whether the string pointed to by @s
-> > + * starts with the sequence of characters
-> > + * (excluding the terminating null character)
-> > + * in the string pointed to by @prefix.
-> > + *
-> > + * Returns:
-> > + * *  @s + strlen(@prefix) if @s starts with @prefix
-> > + * *  NULL if @s does not start with @prefix
-> > + */
-> > +__nonnull_args(1, 2)
-> > +static inline char *strprefix(const char *s, const char *prefix)
-> > +{
-> > +	size_t len =3D strlen(prefix);
-> > +	return strncmp(s, prefix, len) =3D=3D 0 ? (char *) s + len : NULL;
-> > +}
->=20
-> [Severity: Low]
-> Does __nonnull_args(1, 2) cause kernel-doc to fail when parsing
-> strprefix()?
->=20
-> CTransforms.function_xforms in tools/lib/python/kdoc/xforms_lists.py does
-> not strip __nonnull_args, so running scripts/kernel-doc on
-> include/linux/string.h (included by Documentation/core-api/kernel-api.rst)
-> treats __nonnull_args as the function identifier, emits prototype mismatch
-> warnings, and omits strprefix() from the generated documentation.  Either
-> __nonnull_args could be added to CTransforms.function_xforms or
-> __attribute__((nonnull(1, 2))) could be used as in strends() below.
+> Should we make the 'buf' parameter of recomp_algorithm_store() non-const?
+>
 
-What should I do?
-
---=20
-<https://www.alejandro-colomar.es>
-
---6gr5d72eivgopjii
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsHYGsACgkQ64mZXMKQ
-wqlpKg/9Eg0tDNXXExM29Z6o0EEbgZkPiV8zGzA+W2gFStSX2ytVV5p/W0iWfitx
-rYaH++VwGTz1qUip3YjGMhVUtAC6sFpVCoEO/dMUuP45kcAKOdsxQwoFnFI2ABRz
-lNdQO1Cq3sgRH6IHf33aOEyo3HXRdhFHccoM68forOp6eH18j8ZU7Wa0eOEiiqXM
-e8zsso5oTGGssXsd69kxXCrZ23Nba1UmYmKNg38lbDdwYAVjZQmB9p/2lO/gCKK1
-E5gqbonvrJNcW7uIz5t9iIWZkH8+mzbrt6gMW2SXnoC24hh2nFOh6zBK5uZrCwdB
-x10XKPa6VwJrG2l7vwHynwFocImWWXsdrTZ+xsFnPOXncoT0WLdA3zjEAApPkiSO
-JOU2GLjfttDsJ+7FsIsCEflTq1U6TjCOXk1qeGydizVm6PXl9V0Qq/h2SVklxQb5
-j/eOyevhRvR4gZ81bhqk0hsYw1xgNbMoN//5jH58h5nHt9AglfBVNqDV5RReYqwN
-kPwS936GvfyHY9PWLZC78gtlLWcesv1y3DYaHMezHAGU4V48mKWtvDCYZx2ZFSr5
-qJHHlt+5nsf0wm50OlkLwK+IdG1f2U/XQVfIxg1sdsh/BpqTFBUOjc96ZjvB7fiu
-+uAdetRMOsvgJsy1HkMp8v+zSaN4dfQGmFvjnbl5T4z/nozwLdQ=
-=lbBO
------END PGP SIGNATURE-----
-
---6gr5d72eivgopjii--
+device attr store requires a const chat *.
