@@ -1,65 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795729879;
-	b=Iru4q4GHsVOBuhq6caQWBqptoi+L0yS1PjAStgmUO9YMFz49HiEYmQUmEeVpbPU4CAWO
-	 ee84u4pANeziQtiS94c9D7hWuMSbfF217NtbT2Kf8jUGx4h+XQS3FKialFiKc6xwiBVjN
-	 zfqjR67UegUy08/m11eHhvl7ZJe9FY1yDodQV4aLeijUg4GaeFwtZQAB8Mdm8ASDmd86f
-	 AE1Rs8bnosm4CfkC8LQ614gSjCGDAS6I9U39V49ZM/wBfHcyMWt975JZlMmfkGvnieEVZ
-	 2BE4w7u/X97pnUNOQcbyHQ5ES8MLU7IraQooGLDn+hrWrkBElaCmCcTYKpNpLH3/u6Q==
+	t=1795740720;
+	b=RMcRYWX1CGaJm7KAFCsZJQLzq8pn+jPoIITw4OwrsGW1DUtvrg3wbUG9GaBhpWfCm4A4
+	 kHVf789pCRi2VN3IClFB/4NN8Dv9aZid5tgnCnTZaDmc3TbIkusuCE4voxyKhWJjyBe8N
+	 N6ewbB7QGXYwnnVPb8VoapOLBYNpFCJh9uFX4P4ifwhJ85nocgP6wrGkFkL7ZTqH7q2do
+	 FIGSs9WwWETnvmep0TP0dEHyNRczJTHcMeObleoo1yiWk0EtgX2izZWnmR9ZOfinfnmC+
+	 hr/5aaJNuvJF1GBIoZtBlbekgmRBHNCn0iyNqB33PTZR3/wPullgUWIEOBsjNJrThKw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795729879;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795740720;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=WbA+jsGv0wskRc45vxrESitu3ujSAtU/NZMKbke3qrM=;
-	b=cJxX6PcQIJP1mPF/gMWeV/GaCqBnUjk1Hh7V8YzsHN/QVs3AQMFU+NfoP3HGKXsqYfOZ
-	 wg7gsova3jnBVB5m7vcxXTowKCIPPHfpndLJjm8rxVfV30jIaMqLW3LGFt+ns11VfIJ3V
-	 zd24PYezo9F1in8p2Wgq801OUZAaU0B2YQpHFiNpeCvS9bQmdB2bCe/TYcSGW0yyKdvpX
-	 us9+oRdN66l5juHy1hsKzk9o3VMuqFHGcqtlLopiSNY4EPwcJtxZUF24tx+CowrmRCGHY
-	 fA45diN1mVbEA+blJDflWICdrnDAZ8yb4XQhI0Tl2YkBy2D3Ury6ndZ0mXJYBCz+MRA==
+	bh=2mXKxVp3q1BXtyC7GEBY2jXhHxkGBgswcQNGlms/6J8=;
+	b=tkiP22xZ1SUkyNXuCc+N7qTOiaf52hUZjn3KeD7pBvQvZ/Rfh65BEBCzQvzDx95nUbac
+	 G8O23MXG6iLjemifcHp+EmA+kKZfjVFlmn9dCWRMqL92/jMipfr4pIFVs0k/LTK73+5vv
+	 KqDfNi8I5puxf3IJZnGVhCOKsBPTh2gGtz+l8tkopc2EqgpAM7Q2hygCcwu3mTVS9hgv3
+	 Fasz5WVxv9KFiy+E+1Qw/G5HQkm364EgR7pzTBl4MNVX2jSowVZk+VPAwr3mfEj1LomLB
+	 dleK5fFOVqPrJPBAlJGhb5bWKKmmUzqDoppIPpGDMJ4Cy6jGGlQJGRH7IdzzrMTZMLw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ioRGYjCY;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dPt3oJjw;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51208606A31C;
-	Thu, 26 Nov 2026 21:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77931606A31C;
+	Fri, 27 Nov 2026 00:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ioRGYjCY
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B6E1F000C1;
-	Thu, 26 Nov 2026 21:51:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dPt3oJjw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8539A1F00893;
+	Fri, 27 Nov 2026 00:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795729878;
-	bh=WbA+jsGv0wskRc45vxrESitu3ujSAtU/NZMKbke3qrM=;
+	s=k20260515; t=1795740720;
+	bh=2mXKxVp3q1BXtyC7GEBY2jXhHxkGBgswcQNGlms/6J8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ioRGYjCY51cDGF73s01dz3ctyFlRMSE1xVp2PsV2uUvfzrQ8DIWl/XcCCl8GFjSYJ
-	 +32Smpr1Mie5+3Q9CSky9lH/GV3gGFVvP6V4rh8cMDW1pnuRy+UcpOlRSHyrFpdQTK
-	 uiPwpubNBNbSNZ6tFE2j7YhG6p0TEyLra8g1hI3boBQq9c/0laAP+r6pO2u03UKBpU
-	 oyA9QroDaQBH1HQKs7qvkaVBknS7XyOVA5QyNzxHm6xmhr+FmhHvfDTEpIa02thkOO
-	 TrephghAEiEJJILokwwBZOPn9mF/BJzfdI6jCZ1rENGvvbw7GcZkgVUlyh7TSUyqB/
-	 ZQWT525IgczlA==
-Date: Thu, 26 Nov 2026 22:51:11 +0100
+	b=dPt3oJjw0A/ME05Dmt3Pm3WQghXy1GbsgMVVikokYqaNbSDLM2cduRiK17JLrVxQR
+	 k9oU1VjR5qLpn9eLpOu3kihE952FK8rEgd9M0UcFs7UXZvcZaagtOw3iU3iL9x0lFr
+	 1AIFgPAxeMYlSlubxOlV4VBMVc1FlyGfFgVqT1hrvk2CxpxmtxbJwfMkM15mXpQIHJ
+	 juENld81TGIUo6umFXou3prRpxSGlatICxMCQWPLmfTeNT55fvUdZGr9StjrBVeNPV
+	 9+r2jf6OJfujGxqy7m7nFA8KIHzdttqpyOeTNt5Dz7lHtKfOIMXF0g3bgers6B/Xpw
+	 SZPgX422lEHCA==
+Date: Fri, 27 Nov 2026 01:51:56 +0100
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v8 0/4] Add strprefix() and fix a bug with it
-Message-ID: <awipprsECiIWE6US@devuan>
-References: <cover.1793876837.git.alx@kernel.org>
- <cover.1795695151.git.alx@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: Alejandro Colomar <alx@kernel.org>, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 2/4] string: Add strprefix()
+Message-ID: <awjTa1qL5c1L9pnj@devuan>
+References: <cover.1795695151.git.alx@kernel.org>
+ <a688f0a1c20afadeed42ec4645b44de75874c223.1795695151.git.alx@kernel.org>
+ <sashiko-outbox-235501@kernel.org>
+ <awgmuC_BnyaEpTXD@devuan>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -70,229 +61,121 @@ List-Owner: <mailto:linux-hardening+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jfvf2jdenz5dkrbl"
+	protocol="application/pgp-signature"; boundary="ztitlnbzcvr2amzm"
 Content-Disposition: inline
-In-Reply-To: <cover.1795695151.git.alx@kernel.org>
+In-Reply-To: <awgmuC_BnyaEpTXD@devuan>
 
 
---jfvf2jdenz5dkrbl
+--ztitlnbzcvr2amzm
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 From: Alejandro Colomar <alx+linux-hardening@kernel.org>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Andreas Schwab <schwab@linux-m68k.org>, Andy Shevchenko <andy@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Joe Perches <joe@perches.com>, Johan Hovold <johan@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Len Brown <lenb@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Saravana Kannan <saravanak@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Tom Zanussi <zanussi@kernel.org>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v8 0/4] Add strprefix() and fix a bug with it
-Message-ID: <awipprsECiIWE6US@devuan>
-References: <cover.1793876837.git.alx@kernel.org>
- <cover.1795695151.git.alx@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: Alejandro Colomar <alx@kernel.org>, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 2/4] string: Add strprefix()
+Message-ID: <awjTa1qL5c1L9pnj@devuan>
+References: <cover.1795695151.git.alx@kernel.org>
+ <a688f0a1c20afadeed42ec4645b44de75874c223.1795695151.git.alx@kernel.org>
+ <sashiko-outbox-235501@kernel.org>
+ <awgmuC_BnyaEpTXD@devuan>
 MIME-Version: 1.0
-In-Reply-To: <cover.1795695151.git.alx@kernel.org>
+In-Reply-To: <awgmuC_BnyaEpTXD@devuan>
 
-Hi,
-
-> Date: 2026-11-26 13:17:12+0100
-> From: Alejandro Colomar <alx@kernel.org>
+> Date: 2026-11-26 13:32:21+0100
+> From: Alejandro Colomar <alx+linux-hardening@kernel.org>
 >
-> Hi!
+> > Date: 2026-11-26 12:27:03+0000
+> > From: sashiko-bot@kernel.org
+> >
+> > Thank you for your contribution! Sashiko AI review found 1 potential
+> > issue to consider:
+> > - [Low] string: kernel-doc parse failure on strprefix() due to
+> >   __nonnull_args()
+> > --
+> >=20
+> > commit fa176bccb75ab1dcd9cc8e153bcc5112c790bc7c
+> > Author: Alejandro Colomar <alx@kernel.org>
+> >=20
+> > string: Add strprefix()
+> >=20
+> > This commit adds the strprefix() helper to return a pointer after a mat=
+ched
+> > prefix or NULL on mismatch, along with KUnit tests.
+> >=20
+> > > diff --git a/include/linux/string.h b/include/linux/string.h
+> > > index 9b3e578d9aca1..a6a1953c52e35 100644
+> > > --- a/include/linux/string.h
+> > > +++ b/include/linux/string.h
+> > > @@ -557,16 +557,34 @@ void memcpy_and_pad(void *dest, size_t dest_len=
+, const void *src, size_t count,
+> > >  	       sizeof(*(obj)) - offsetof(typeof(*(obj)), member));	\
+> > >  })
+> > > =20
+> > > +/**
+> > > + * strprefix - string prefix
+> > > + * @s: The string to be tested
+> > > + * @prefix: The string to see if @s starts with
+> > > + *
+> > > + * This function determines whether the string pointed to by @s
+> > > + * starts with the sequence of characters
+> > > + * (excluding the terminating null character)
+> > > + * in the string pointed to by @prefix.
+> > > + *
+> > > + * Returns:
+> > > + * *  @s + strlen(@prefix) if @s starts with @prefix
+> > > + * *  NULL if @s does not start with @prefix
+> > > + */
+> > > +__nonnull_args(1, 2)
+> > > +static inline char *strprefix(const char *s, const char *prefix)
+> > > +{
+> > > +	size_t len =3D strlen(prefix);
+> > > +	return strncmp(s, prefix, len) =3D=3D 0 ? (char *) s + len : NULL;
+> > > +}
+> >=20
+> > [Severity: Low]
+> > Does __nonnull_args(1, 2) break scripts/kernel-doc parsing for strprefi=
+x()?
+> >=20
+> > CTransforms.function_xforms in tools/lib/python/kdoc/xforms_lists.py do=
+es not
+> > strip __nonnull_args(), so kernel-doc mistakes __nonnull_args for the f=
+unction
+> > identifier when processing include/linux/string.h (included by
+> > Documentation/core-api/kernel-api.rst), emitting prototype mismatch war=
+nings
+> > and omitting strprefix() from the generated documentation.
 >=20
-> str_has_prefix() is based on sizes and lengths, which means it must
-> overload the valid length 0 to mean not found.  This is a typical
-> consequence of choosing to design an API around sizes and lengths, and
-> vanishes when moving to pointer-based similar APIs.
->=20
-> According to its author (Steven R.), str_has_prefix() was never meant to
-> accept an empty prefix, but that's not documented, and there's no
-> obvious reason why that would be acceptable for a generic string
-> function (as opposed to a function very specific to its original use).
-> Anyway, as suggested by Steven, I've added a WARN_ON_ONCE() to catch
-> such uses, and also added documentation stating this limitation.
+> As said in v7, I don't know what to do with this.  Any comments?
 
-Oops, I forgot to update this text from the cover letter.  There's no
-WARN_ON_ONCE() anymore, and it's instead only documented.
-
-
-Have a lovely night!
-Alex
-
->=20
-> If the function had been named something like strprefix_len(), that
-> design would have made sense, but being called str_has_prefix(), the
-> obvious way to call it will result in bugs, because the name contradicts
-> its intended use.
->=20
-> Users of strings need a function whose behavior extends naturally to the
-> empty string, and we can do better, by returning a pointer.  And indeed,
-> users have ended up using str_has_prefix() with empty prefix, expecting
-> it to work (as is natural of a generic string API with that name).
->=20
-> This patch set adds strprefix(), and uses strprefix() in one place to
-> fix a bug reported by Bartosz.
->=20
-> It also adds streq(3), just because it simplifies the tests, and is also
-> a nice interface.
->=20
-> This patch set doesn't include the sibling strsuffix(), and also doesn't
-> replace any other cases which would benefit from strprefix(), to allow
-> merging it quickly.  I'll work on a follow-up patch, including the
-> patches from v6 that have been dropped in this v7, after this has been
-> applied.
->=20
->=20
-> Have a lovely day!
-> Alex
->=20
->=20
-> Changes in v8
-> ~~~~~~~~~~~~~
->=20
-> -  [*/4]
->    -  Add Tested-by and Reviewed-by tags.
-> -  [4/4]
->    -  Remove Message-ID tags.  [Andy, Geert, Bartosz]
->=20
-> See the range-diff and interdiff below.
->=20
-> v1: <https://lore.kernel.org/linux-hardening/cover.1793876837.git.alx@ker=
-nel.org/>
-> v2: <https://lore.kernel.org/linux-hardening/cover.1793882260.git.alx@ker=
-nel.org/>
-> v3: <https://lore.kernel.org/linux-hardening/cover.1794323750.git.alx@ker=
-nel.org/>
-> v4: <https://lore.kernel.org/linux-hardening/cover.1794425425.git.alx@ker=
-nel.org/>
-> v5: <https://lore.kernel.org/linux-hardening/cover.1794574496.git.alx@ker=
-nel.org/>
-> v6: <https://lore.kernel.org/linux-hardening/cover.1794667407.git.alx@ker=
-nel.org/>
-> v7: <https://lore.kernel.org/linux-hardening/cover.1795639368.git.alx@ker=
-nel.org/>
->=20
-> Testing
-> ~~~~~~~
->=20
-> Since there are no code changes since v7, I haven't tested again.
-> See the link for v7 above to see the testing of v7.  Bartosz also
-> tested v7.
->=20
->=20
-> Alejandro Colomar (4):
->   string: Add streq()
->   string: Add strprefix()
->   string: Document corner-case misbehavior in str_has_prefix() for empty
->     prefix
->   device property: Fix fwnode_name_eq() for empty node names
->=20
->  drivers/base/property.c            |  5 +---
->  drivers/clk/socfpga/clk-gate-a10.c |  2 --
->  drivers/clk/socfpga/clk.h          |  1 -
->  include/linux/string.h             | 42 +++++++++++++++++++++++++++---
->  lib/tests/string_kunit.c           | 22 ++++++++++++++++
->  5 files changed, 61 insertions(+), 11 deletions(-)
->=20
-> Interdiff against v7:
-> Range-diff against v7:
-> 1:  ad8500a6eb0a ! 1:  8f3840fa232e string: Add streq()
->     @@ Commit message
->     =20
->          This removes some driver-specific definitions of streq(3).
->     =20
->     +    Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
-=2Ecom>
->     +    Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
-mm.com>
->          Signed-off-by: Alejandro Colomar <alx@kernel.org>
->     =20
->       ## drivers/clk/socfpga/clk-gate-a10.c ##
-> 2:  b32d70163fb4 ! 2:  a688f0a1c20a string: Add strprefix()
->     @@ Commit message
->     =20
->          Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-=
-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
->          Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
-mm.com>
->     +    Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
-=2Ecom>
->     +    Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
-mm.com>
->          Signed-off-by: Alejandro Colomar <alx@kernel.org>
->     =20
->       ## include/linux/string.h ##
-> 3:  c4131a109098 ! 3:  fb24c7a543f8 string: Document corner-case misbehav=
-ior in str_has_prefix() for empty prefix
->     @@ Commit message
->     =20
->          Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-=
-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
->          Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
-mm.com>
->     +    Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
-=2Ecom>
->     +    Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
-mm.com>
->          Signed-off-by: Alejandro Colomar <alx@kernel.org>
->     =20
->       ## include/linux/string.h ##
-> 4:  396395e1d02c ! 4:  5c23d229235a device property: Fix fwnode_name_eq()=
- for empty node names
->     @@ Commit message
->          Closes: https://lore.kernel.org/linux-hardening/20261104-fwnode-=
-for-each-prop-v1-1-6e28fe1c72c4@oss.qualcomm.com/
->          Reported-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
-mm.com>
->          Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->     -    Message-ID: <avrSUUM3HMgxTNpl@kekkonen.localdomain>
->          Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualco=
-mm.com>
->     -    Message-ID: <nat4ilqmzzpuyrjbuahl367ip22tfnmjorydlppuwqiscxaujo@=
-kf63j4lb3flk>
->          Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
-=2Ecom>
->     -    Message-ID: <nat4ilqmzzpuyrjbuahl367ip22tfnmjorydlppuwqiscxaujo@=
-kf63j4lb3flk>
->          Signed-off-by: Alejandro Colomar <alx@kernel.org>
->     =20
->       ## drivers/base/property.c ##
-> --=20
-> 2.55.0
->=20
-
-
+Bartosz reported that this is solved in linux-next by the following
+patch:
+<https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit=
+/?id=3Db6b0adb6c845>
 
 --=20
 <https://www.alejandro-colomar.es>
 
---jfvf2jdenz5dkrbl
+--ztitlnbzcvr2amzm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsIqc4ACgkQ64mZXMKQ
-wqmd1BAAhioU4qXCSPoC9eZ7SMmdqAx2ab3diOPWpJM/5zXgoA56mQKCcP9AnyAj
-/dzdZDy/pPDgrPCuPv1R/EXpfozRg3CNg6cbwb6iHiv919mLuSQClY0CyFKGG3z1
-H3/QUnNgbtUE0ThoxTBWUKKR04vtxmpjzgNthSccPZwRMzlocCIdNwKPEAVGs+S+
-Z/aHYgY0DfIYEVvXiAGQo2dgvfMhHQbuW038Mxi3NrhAvSxoMN13NcjNiSWOWuQQ
-+FSyJtRA4/d+6rbiP4/JVcWUL7ErPcU6Cm9MEmCn9D+hVVWcTQ0VWxjUASEqzLgb
-XFitqqaRhGwafYmNTF9f1QV/StqUebcat4BWiJGbmEl+E5olgxKryVB+As4iPdm1
-qcBXZZs95i5KJUg++OL1RYWvsws8cQ/D7qYQXl+gz8rO79+dM7Ccha4NA/TurEgP
-4GpIE3ZxNnJ7Wp/WHFozZD/Q0sWLGFcci4Tju6m7vu6S9wtbGRk5G2ryAXapwJaM
-5wl/UkTGiknqoLkMQRPrD06exME6i/e8MOfjQdLAYk0wyAipxdvYtfpju86iXC6d
-5I+tA2NRn6M9hIZr024dm7Mr1PEkcwW1Mh+ysZp3rWXM/VM0wW2oBxZM8XydZgPT
-DQB9VafJKSDkVr3pdO6uR3P52Q6cjyYAT8QfXqcP0pH5YRLxUVw=
-=8rG6
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmsI1CwACgkQ64mZXMKQ
+wqmf6A/+M9qVTeSuF7m1sBGEx8AURawJb9yFeTyLIGEhBslR1kxB6ek+Ov7xTc5b
+EeHQ4BoOnBtAytdwvAQ5cwcEmEoCfSJY7QXd51HSxx8TmReKqNUBRjzZykvEeD9g
+O5erP31Km6v3ovdP3TWHe8XZqYuOrIlt/RcpRYXn/X+N3TqHz/CMXKvsBih3Mz2M
+s3sWX97ZzplbBNrJlm5fW13bNrGY5eSLA3V7D65i7kQXqeIDbKpwD/RQDIyLlrUn
+TY0JXFPYHQPrVUCpRJZhFR5QI+xkGxNafKIaNcaT9RtebuIlnhtutHNSnZwELG4R
+qeA1bz6NhqWXERaEAYTR9VAk9BsiGOcgC50EoqV0JG9hGYVq9e5KapXbQgM93AYy
+QLWkPGJm2pcGPtqmQE2EbcdjQq1lAzzBE+3WlAN6K7vo61qwLr+gDBZIR2ikkPkN
+haoP4UnrygxptSWEkJjWuATBTSKHT8vUJnkeSwKmwnAKLISgz6a7pwdePbGOAziP
+9mpeLJNJOkqVtCi/hTbPa786SDD4zOG9cLk2+jZr5L6ns7OpsUzxx8UrL6ihVdg6
+qC8nmBIdcqioE89ipQzcEyKfgPskuPcHpCcbYuyDfsDSMONOvJ7HUX865QxmPiN9
+XqEFHt+ergxZbbmcAn1EXauNNu4/UQgl0iuczsP++sJP0uH1O78=
+=RbQI
 -----END PGP SIGNATURE-----
 
---jfvf2jdenz5dkrbl--
+--ztitlnbzcvr2amzm--
