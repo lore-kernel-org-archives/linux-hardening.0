@@ -1,83 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.175
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795851924;
-	b=hI1eH3M9thxV0Oo2QLKlRDXCdHuFH9rezYPmmXKpzXM1nwTWdY2fhhA8wCkNqyu4pZKi
-	 AyaUcmXEBj5sg2ptEeHc3lhKYQ7KESYU9X0fQ6Ef9ENx/5r8oZJCNU52UTdotXRkshdll
-	 F5MOC37NIk3EIksd/jfz7l7A4zjzgDVpUUgc4+7VyGbfIdEZygu07/JhNDGlqCqZwK/FX
-	 7f/Y0/y1/7kWqgUonrwm53vlMLYVO7u0007K5Q1Oa5mBVVEVGabrGWeT0ucu5ug/GEg9a
-	 qZZLKBNAq9i/pSAyMfP96zHtjdgzZnBqwuMVeSXV0/755Sm+4u23O62mT7j9qSbKxcQ==
+	t=1795852641;
+	b=R0YNm24rD5nHk2OdU9DMdvYzly2uWODWKFcMxmRAtwOgBqw9BiY6P4SXgpIoGlbThpUN
+	 sZkeHU4nkC2lSAcneiK/rGDgJvrnvL5PrmHZv3vHXO88uZAtWiHjVp56OevCXmyxvjpeZ
+	 s01CkjvkCnklst2VPIOmeRF7P86dhm4P+PYHjHzrxoGVDpN1df8zo2Lm+hF2p4wbBMzek
+	 IvJFfb0FOke3gy3Zi6SaEATlYidg0IRxXONDp4EVemgVXwwPl+VJE99qvabfZWM+kj0C8
+	 c7P6ZgvHR/WwYVobBftjf29DY5wCTrFLquMOUZeTrq1xFSbocPKkHu5svM2SBVi3amg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795851924;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795852641;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=PvDPwRq8GAh/t3oB1kQXSCGMwADwrNJEuUFh0I6qC50=;
-	b=bfzEFgM7cb8OFjytkAJfttjuS89DrxTVQw5kgStQVhkxlHxXPPY6hjr+d2aeIYGcH0tD
-	 SA5Awh6scTUG51DXfO3WJdknU9dlGFIVgavfu/3wpNHY8YrtNkz7lxdw6eiv9AOeIVRop
-	 R+2yQfboxQjBybQpBtjeLaH+UBDvv2RGbI4aTTWKs7izOFmrd5ZOxIBmP5QMKp1pvcarM
-	 TKkyILNC1vsFLJdGMLG7PrfQWxwdj/hp3kKkLuVcUq6NSbTiU1nB3p4NnvyCaF56ovofr
-	 pbfA0WJxMQoiLHOATREC1yw208xN4v7DWvSrDV+TZYQlu+nZCg8dUUecqe8qNOB/P3g==
+	bh=3YRc+oLAH9CSMjzqL5DaXtGZiCmjzwmhJmG8W8jBwCo=;
+	b=ltG58b2KUKlYUEWrMOBGKBRYTGiDeQSO/wl5qCtNcSHAy5VUmyvZ5ZiDVAYsknck7hc0
+	 f2bfzFFceU1Rv7nGjHeJYMyaZaBmGVjN5pkvTZjpCtK+2+Z/SjjSwVrgqjCLBHW067QuB
+	 Bt203QL8vV/7L5jfNqdrCuOX1iFem/P81o9r3NzPZzKXkQ1w0L2sc1gfnNlM5ZAgHCril
+	 umLlfPEpDg99e+45PZW3cdicCn+Db4MpoE/8W1B4Z8uwVqQY5mN0Q9FTCP75aSAhpzmqB
+	 mbx1hiufueaRDI+F3LZmj5vRVDZdm4UORd6tXkRRkziLZfijuFXzJpMIpA8Plp2qjFQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="estmKI2/";
-	arc=none smtp.remote-ip=74.125.82.175
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mstEU8RA;
+	arc=none smtp.remote-ip=74.125.82.171
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A335F606A31C
-	for <linux-hardening@vger.kernel.org>; Sat, 28 Nov 2026 07:45:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A335F606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D227606A31C
+	for <linux-hardening@vger.kernel.org>; Sat, 28 Nov 2026 07:57:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7D227606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=estmKI2/
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-385c497bf94so9684623eec.1
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Nov 2026 23:45:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mstEU8RA
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-3866a784546so12254751eec.0
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Nov 2026 23:57:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795851923; x=1796456723; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795852641; x=1796457441; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=PvDPwRq8GAh/t3oB1kQXSCGMwADwrNJEuUFh0I6qC50=;
-        b=estmKI2/Je+0ZF5XWrFZEGp2YpgwykMpcxeX38GmVypCWFASEa9hoFypIvfmIJYSnw
-         6smocHz5iokydiXWZXuE7530lM7lqt75TOpc1ryPDmWroBlWxLILPzewYIdyKZweAYtE
-         KZy18phuqxMNPs82wDHzMR8QxKS7JBekWAYOuxovjgjmpZ3OU0CW0ctPxc4IYp66mLwv
-         rLcZo13JREPJv4Ws7fHpWIZJAsZyDeH52grgCePfwvZ3LZYsWZyNd0u6YmvBeTGoZYmX
-         PMczF4txpa4XBHkwCHvLrU+8mXw1YlzBNlhPr20Q/u00/7B0YEPEm65Af05nPxp/CoQt
-         f4IA==
+        bh=3YRc+oLAH9CSMjzqL5DaXtGZiCmjzwmhJmG8W8jBwCo=;
+        b=mstEU8RA5nPzUW+HtM/x3MO7+YviSGCI0+a7bsHHrwCV+zfsDccIDgwjXCUn+yrTwZ
+         WEmS+zV4K8REfZnNqJTAVeBVdNoe0rHLSP3QkNtQedI285RZ3E2ZbPPJZ+Canne5JHuG
+         CMx6pZE98ZFGVKEJJWy/fT0gj4Y104a3Q/wCaNL/yAz7cj/D8clAbY7NmHk8gwjD+l1U
+         yJaE0r/PAMebIwgr3daE1bHk5HDJP8z4SxrvAL9beQJkuamswrpKCwX2M5BoxyM9pDRa
+         WwDz7Oe6XlBnCIBv6Bxvw0U3us1innr8k8j63UuNKyCBzAw8Ht6s55P4dsVQ+/J92jDi
+         cGSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795851923; x=1796456723;
+        d=1e100.net; s=20260707; t=1795852641; x=1796457441;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=PvDPwRq8GAh/t3oB1kQXSCGMwADwrNJEuUFh0I6qC50=;
-        b=fd1LlDpeb6w0WITqpvoTe8rNbZJH5a+1xhhSojMMakGlq7+kw6Pp/ZsY7E8q2DhWBu
-         4Sa0l8S2heaMra8O+J9HavI4RijRp00D773C1GwLBjeEY5Rd6fVyoeSDZQUyCHiuGRBO
-         +02ELp2gd6OC6swXIQrKI2KiM9D35rCzciYJ3kYgZ6rk3n3y3kuMU4N0ewQT+j+dJJzz
-         aL5w3R+AP6kiDvV3d92Ul3M0YjtXhmEfCB2HUTrbE+4tJoxwRqqsz+RKaX0Dh3YgrtLX
-         jHnF2SkZbJwYcMe564ZxmI0RWzoWi6kxHWarVquV0jMJSN2wsoWt3xbRvJNoDlZbmLF6
-         1YYw==
-X-Forwarded-Encrypted: i=1; AL+hErEf+xh+l4k91hkkyYtz21VOk5a7EunhZA3ceQjOJhqng0uzJ77thIqnNtHm19ewP6/TgS9YNwlheCek4FWjf+Y=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/qG0EarYt6YWOu++b33i5FvGhj3dVz4/J1mJAt3m4HPMYtX1bB
-	REYeWILz+4u2NFbmmxIggUQD3tpsqzbH+BVyV/D+dAvdUJfjw9iw9HMA
-X-Gm-Gg: AZFdTZcy6omTpNVSAw4lYwsNIgnBJjTmGkfm+lmNn1u5o2p19vUOSLRj577Paq3PQJk
-	MRr32g16iYRJaHzD99UDjPzKxdM1+HNtJ9j40xTBPIVjSL+8vYDveXddCPu+OylWdp19rszMBE7
-	obaByvgZc0Rwfz/NipGrCjksKgjax2+sHS0EnHw+6dZOyUcPQrEIGJVD9TN6sU7TSIwpylZPVMl
-	vD0+kUiJ03TIr3yf3l1o9sOlwGQhbwzg2cKCXkXIFEY3T4HW9qZXoNIhy6GpEXn4EhRPawjWkic
-	95DG2AwSiazVR3+r5o6fnUwpYvvvleWD647s4/M0sNGt3z6AZYdHAR1ziwvxu7sEMn1LLgOW3kg
-	CcmlO+Bz9pOvQAPDwhkfRREy0Y8loNuw8cyYRMLbRZ4hzIAMZKPShHOkL3bD1hyoDXu1Qeo5b5h
-	KGJaWtfGoVn319TiAPJY25yancY6qL9pYgXGa4A2/kczwE4gMxY3HBOJpyvKzDTEUlNQ7eycmBe
-	8fyIrW+47PBWshEjxGt3P2UMWE40n080u/4vdvUEyrlOIrxcx6o2EZ8ZVBpqKxVcNn8Mh+svWD2
-	PMaDxKRCUMOqCHOXHqOnfzYF77Ont5I+Vgi5ZTbSWyB0XgIqqYiOXWQtF/lvDEBW+QOm
-X-Received: by 2002:a05:7301:f02:b0:384:ce59:5e21 with SMTP id 5a478bee46e88-3856f6503d8mr25637676eec.32.1795851922626;
-        Fri, 27 Nov 2026 23:45:22 -0800 (PST)
+        bh=3YRc+oLAH9CSMjzqL5DaXtGZiCmjzwmhJmG8W8jBwCo=;
+        b=c5CaarGekm8Lp9MJmaskR29U+Hktg9Q3Sd1c6vmQOx8mHywcl5E90t2Y0vyIOn0b1O
+         ePJdczzY7oPxllAh3VJoqHOHuDxnW38kBgFfY+Pd2a9tRvYtG8jVa75JuA7psM+C0oN1
+         aF0O6lQjupabpFCW0kP/sT4orwa70+1jgsgdA3BfArtvMl+BBynh6p21FJUMlAmEKkCH
+         OzoUReLRC0eWfGeGIdkfGfPZ6bLmDb5KxZt3M1igqcxF07C9UF+4sgB4wgeNcIjzEadw
+         bDg4GLlNUouOHLF+KI7f8jfjknLE9dHA/5Tt1ldCUwt7+N+/ZukUFObreC0VnW+icAAy
+         Llcg==
+X-Forwarded-Encrypted: i=1; AL+hErGPAlxpRIEpuD2wjsh4SgxzGN5SKfEXt+ytU2Ty/cr+No/19Chb3quaUWzBBy4jffzRodVOCQaEyAcBdxM2qNg=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8bt5Eic7QHhL/imB8NyNjx3fGoEfPZp0Z6QESU5kiNyqb83B7Z
+	lvbSLQISkdBR+jJOsdKQWM4tryz1NqY64i6HeM5iFiBNKomB/F/HxjAE
+X-Gm-Gg: AZFdTZeSlfuUEdoIzIaGfIh+SHqWNOXyoOByj5Si9BaHGxC1Ugcs1bAScLDxyz3dDKU
+	IczPZjZphkvWdAZhIQYt3jdMYVfwRXHBFh2v6+sGZU5erum9ljJuf8qD0vQ4s1T8/e3a1i9Chg8
+	rP3UAhRzCraP8pe/FMRiJlCj3IqSkRBaSGdT7CZwi7sV/Ry84ogJi6kgji2dSVFwZOtuKaMhA2L
+	G29BF7zBFKSIVqrAugL0yyuqbeI4dZYOirY5QHAZHAEMpEECj0EVaaA9vrHUjtJBRPem337D66P
+	gus52BF34s7j/KfNllgvF9khZKYfSuVc2U1asCbFMRGuuHUKlCJmYc3z+p1v+y/OuHGfRCN0NlM
+	baYxmWhNzJ3GpftmZl8HSJSjo7eV5tP/d08TCSJ4kCVGaWeE5T+xzy9UZs65FQKeAZrcv0d2xSR
+	uTxnsWhvVL5xxowNgynEbsXPbAq5TPTZdXNMPZ66JrrfMf87PwLwbCkQNcUC2V2Jq6p7MJGMl8t
+	mW82GcvMgouAMKbTu4ba5VFESujHQ7CvmIUjHcT6z8ikf/8Z84cd5w+dDvq2kQjcTz0iQQnmfnS
+	NqPHHT5NKvrrRoUj8m0Wv//HvAhsZnN+esbvnsPrBlsgft3JUywM+waJSzgsL0ZClXjEsiRDXaP
+	GjJ+JtV3aI5yZeTA=
+X-Received: by 2002:a05:7300:1486:b0:383:6eb6:5730 with SMTP id 5a478bee46e88-38570e24c0fmr32195217eec.32.1795852640554;
+        Fri, 27 Nov 2026 23:57:20 -0800 (PST)
 Received: from localhost.localdomain (vmi2317719.contaboserver.net. [84.247.152.64])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385c6830815sm72104322eec.20.2026.11.27.23.45.15
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3866f299d0bsm69117082eec.19.2026.11.27.23.57.14
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 27 Nov 2026 23:45:22 -0800 (PST)
+        Fri, 27 Nov 2026 23:57:20 -0800 (PST)
 From: Lian Wang <lianux.mm@gmail.com>
 To: Chris Li <chrisl@kernel.org>
 Cc: linux-mm@kvack.org,
@@ -95,12 +96,12 @@ Cc: linux-mm@kvack.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Thomas Gleixner <tglx@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 06/19] mm/swap: serialize swap publication before removing swapon mutex
-Date: Sat, 28 Nov 2026 15:44:47 +0800
-Message-ID: <20261128074459.34838-1-lianux.mm@gmail.com>
+Subject: Re: [PATCH v5 07/19] mm/swap: consolidate swap inuse accounting helpers
+Date: Sat, 28 Nov 2026 15:56:52 +0800
+Message-ID: <20261128075703.36392-1-lianux.mm@gmail.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <CACePvbUYHBD+To2CGe9b5_zWbYVrYU6Mv-pxzhXEgB7r1DJrdg@mail.gmail.com>
-References: <cover.1795439990.git.lianux.mm@gmail.com> <030796dcb2086484f87e2250d9cf9a04fccf54ab.1795439990.git.lianux.mm@gmail.com> <CACePvbUYHBD+To2CGe9b5_zWbYVrYU6Mv-pxzhXEgB7r1DJrdg@mail.gmail.com>
+In-Reply-To: <CACePvbXsmTWf6GNXi6W7HabdskuGRO8gfUtVgzmr03+oi20itQ@mail.gmail.com>
+References: <cover.1795439990.git.lianux.mm@gmail.com> <21e7cb1a16aed56568fa400f5385acd36513aa46.1795439990.git.lianux.mm@gmail.com> <CACePvbXsmTWf6GNXi6W7HabdskuGRO8gfUtVgzmr03+oi20itQ@mail.gmail.com>
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Post: <mailto:linux-hardening@vger.kernel.org>
@@ -112,34 +113,14 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 26 Nov 2026 10:17:44 -0800 Chris Li <chrisl@kernel.org> wrote:
+On Thu, 26 Nov 2026 10:27:38 -0800 Chris Li <chrisl@kernel.org> wrote:
 
-> The current commit message describes what changed. This is the most
-> critical part of the locking change in this series; it deserves a
-> better description of why this new locking protocol is safe to use.
+> Can you confirm this patch has no behavioral change? It is only about
+> manual inline and rename functions. If so, add that to the commit
+> message. It can help the reviewer.
 
-Before this patch, /proc/swaps held swapon_mutex from ->start() to
-->stop(). On swapon, the mutex covered publishing si->swap_file, while
-swap_device_enable() separately took the write side of swapon_rwsem.
-
-With this patch, swapon sets swap_file, resurrects si->users and makes
-the device writable, in that order, in one writer section. /proc/swaps
-holds the read side across the walk and skips entries with no swap_file.
-On swapoff, the writer clears swap_file before the file is closed: a
-reader that saw the file finishes before the writer can clear it, and
-a later reader skips the entry.
-
-That protects the proc reader, not all users or the whole teardown.
-Users that don't take the rwsem still rely on the live reference;
-swapoff kills it, waits for RCU and drains the references before
-dismantling their state. I'll spell out those two guarantees in the
-commit message.
-
-> The function name can reflect that it is locked. Maybe
-> __swap_device_enable_locked()
-
-Great suggestion. I'll rename the helper to __swap_device_enable_locked()
-in the next revision.
+Thanks for the suggestion, Chris. I'll clarify this in the commit
+message for v6 so the patch is easier to review.
 
 Thanks,
 Lian
